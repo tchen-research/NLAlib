@@ -5,7 +5,9 @@ import Mathlib.Analysis.Matrix.PosDef
 /-!
 # Lemma 7.5.1 — Intrinsic dimension trace inequality
 
-Lean name: `NLAlib.ch7_intrinsic_dimension`.
+Main declaration: `NLAlib.traceFunction_le_intrinsicDimension_mul`.
+
+Atlas: `intrinsic-dimension`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Lemma 7.5.1, printed pp. 112–113.
 -/
@@ -14,7 +16,7 @@ open scoped Matrix.Norms.L2Operator ComplexOrder
 
 namespace NLAlib
 
-lemma ch7_intrinsic_dimension_traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
+private lemma traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
     traceFunction φ A = ∑ i, φ (hA.eigenvalues i) := by
   rw [traceFunction, hA.cfc_eq]
@@ -22,7 +24,7 @@ lemma ch7_intrinsic_dimension_traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
   rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
   simp
 
-lemma ch7_intrinsic_dimension_eig_le_norm {d : ℕ} [NeZero d]
+private lemma eigenvalue_le_norm {d : ℕ} [NeZero d]
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (i : Fin d) :
     hA.eigenvalues i ≤ spectralNorm A := by
   have h := spectrum.norm_le_norm_of_mem (hA.eigenvalues_mem_spectrum_real i)
@@ -32,18 +34,22 @@ end NLAlib
 
 open NLAlib
 
-theorem NLAlib.ch7_intrinsic_dimension {d : ℕ} [NeZero d]
+/-- For convex `φ` on `[0, ∞)` with `φ 0 = 0` and PSD `A`, `tr φ(A) ≤ intdim A · φ ‖A‖`.
+
+Tropp 2015, Lemma 7.5.1. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 7*. -/
+theorem NLAlib.traceFunction_le_intrinsicDimension_mul {d : ℕ} [NeZero d]
     (φ : ℝ → ℝ) (hConvex : ConvexOn ℝ (Set.Ici 0) φ) (hZero : φ 0 = 0)
     (A : Matrix (Fin d) (Fin d) ℂ) (hPSD : A.PosSemidef) :
     traceFunction φ A ≤ intrinsicDimension A * φ (spectralNorm A) := by
   have hA : A.IsHermitian := hPSD.isHermitian
-  rw [ch7_intrinsic_dimension_traceFunction_eq_sum φ A hA]
+  rw [traceFunction_eq_sum φ A hA]
   have htr : (Matrix.trace A).re = ∑ i, hA.eigenvalues i := by
     rw [hA.trace_eq_sum_eigenvalues]
     simp
   have hnn : ∀ i, 0 ≤ hA.eigenvalues i := fun i => hPSD.eigenvalues_nonneg i
   have hle : ∀ i, hA.eigenvalues i ≤ spectralNorm A :=
-    ch7_intrinsic_dimension_eig_le_norm A hA
+    eigenvalue_le_norm A hA
   set N := spectralNorm A with hN
   rw [intrinsicDimension, ← hN, htr]
   have hN0 : 0 ≤ N := le_trans (hnn ⟨0, Nat.pos_of_ne_zero (NeZero.ne d)⟩) (hle _)

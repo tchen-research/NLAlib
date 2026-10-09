@@ -5,7 +5,9 @@ import Mathlib.Probability.Independence.Integration
 /-!
 # Exponential integrability of an independent Hermitian sum
 
-Lean name: `NLAlib.ch3_master_sum_exponential_integrable`.
+Main declaration: `NLAlib.integrable_matrixExp_smul_sum_of_iIndepFun`.
+
+Atlas: `matrix-laplace` (regularity lemma).
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Auxiliary regularity lemma for the proof of Theorem 3.6.1, printed p. 36; Section 2.2.1, printed p. 25, states the standing regularity convention. This is explicit analytic groundwork, not a separately numbered theorem in the book.
 -/
@@ -45,7 +47,14 @@ private lemma matrix_exp_sum_norm_bound {d N : ℕ}
       intro k hk
       exact Real.exp_log (by positivity)
 
-theorem NLAlib.ch3_master_sum_exponential_integrable {Ω : Type*} [MeasurableSpace Ω]
+/-- For independent Hermitian random matrices with integrable `matrixExp (θ • X k)`, the exponential
+`matrixExp (θ • ∑ k, X k)` of the sum is integrable.
+
+Tropp 2015, regularity lemma for Thm 3.6.1. Atlas: `matrix-laplace`. Ported from the Prove2me
+mission *An Introduction to Matrix Concentration Inequalities, Ch 3*.
+
+Auxiliary; not a numbered result in the source. -/
+theorem NLAlib.integrable_matrixExp_smul_sum_of_iIndepFun {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (θ : ℝ)
     (hMeas : ∀ k, Measurable (X k))

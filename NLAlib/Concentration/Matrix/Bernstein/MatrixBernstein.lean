@@ -15,19 +15,21 @@ import Mathlib.Analysis.Convex.Function
 /-!
 # Theorem 6.1.1 — Matrix Bernstein for rectangular matrices
 
-Lean name: `NLAlib.matrix_bernstein`.
+Main declaration: `NLAlib.matrix_bernstein`.
+
+Atlas: `matrix-bernstein`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 6.1.1, equations (6.1.1–4), printed pp. 76.
 -/
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator
 
-namespace TroppMatrixBernstein
+namespace NLAlib
 
 open NLAlib
 
 /-- The Hermitian dilation is real-linear. -/
-noncomputable def dilLin (m n : Type*) :
+private noncomputable def dilLin (m n : Type*) :
     Matrix m n ℂ →ₗ[ℝ] Matrix (m ⊕ n) (m ⊕ n) ℂ where
   toFun := dilation
   map_add' X Y := by
@@ -35,37 +37,37 @@ noncomputable def dilLin (m n : Type*) :
   map_smul' c X := by
     simp [dilation, Matrix.fromBlocks_smul, Matrix.conjTranspose_smul]
 
-lemma dilLin_apply {m n : Type*} (X : Matrix m n ℂ) : dilLin m n X = dilation X := rfl
+private lemma dilLin_apply {m n : Type*} (X : Matrix m n ℂ) : dilLin m n X = dilation X := rfl
 
 /-- The conjugate transpose is real-linear. -/
-noncomputable def ctLin (m n : Type*) : Matrix m n ℂ →ₗ[ℝ] Matrix n m ℂ where
+private noncomputable def ctLin (m n : Type*) : Matrix m n ℂ →ₗ[ℝ] Matrix n m ℂ where
   toFun := Matrix.conjTranspose
   map_add' X Y := Matrix.conjTranspose_add X Y
   map_smul' c X := by simp [Matrix.conjTranspose_smul]
 
 /-- The reindexed dilation `A ↦ reindex (dilation A)` on `Fin (m + n)`. -/
-noncomputable def phiLin (m n : ℕ) :
+private noncomputable def phiLin (m n : ℕ) :
     Matrix (Fin m) (Fin n) ℂ →ₗ[ℝ] Matrix (Fin (m + n)) (Fin (m + n)) ℂ :=
   (Matrix.reindexLinearEquiv ℝ ℂ finSumFinEquiv finSumFinEquiv).toLinearMap ∘ₗ
     dilLin (Fin m) (Fin n)
 
-lemma phiLin_apply {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
+private lemma phiLin_apply {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
     phiLin m n A = Matrix.reindex finSumFinEquiv finSumFinEquiv (dilation A) := rfl
 
 /-- Reindexing as a `⋆`-algebra equivalence over `ℂ`. -/
-noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
+private noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) :
     Matrix ι ι ℂ ≃⋆ₐ[ℂ] Matrix κ κ ℂ :=
   { Matrix.reindexAlgEquiv ℂ ℂ e with
     map_star' := by intro A; rfl
     map_smul' := by intro r A; rfl }
 
-lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
+private lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     ‖Matrix.reindex e e A‖ = ‖A‖ :=
   StarAlgEquiv.norm_map (reindexStarC e) A
 
-lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
+private lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     lambdaMax (Matrix.reindex e e A) = lambdaMax A := by
   have h := AlgEquiv.spectrum_eq (Matrix.reindexAlgEquiv ℝ ℂ e) A
@@ -73,7 +75,7 @@ lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
   unfold lambdaMax
   rw [h]
 
-lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+private lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (X : Ω → Matrix ι ι ℂ) :
     ∫ ω, Matrix.reindex e e (X ω) ∂μ = Matrix.reindex e e (∫ ω, X ω ∂μ) := by
@@ -81,37 +83,43 @@ lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (Matrix.reindexLinearEquiv ℝ ℂ e e).toContinuousLinearEquiv
   exact L.integral_comp_comm X
 
-lemma measurable_phiLin (m n : ℕ) : Measurable (phiLin m n) :=
+private lemma measurable_phiLin (m n : ℕ) : Measurable (phiLin m n) :=
   (phiLin m n).continuous_of_finiteDimensional.measurable
 
-lemma measurable_ct (m n : ℕ) :
+private lemma measurable_ct (m n : ℕ) :
     Measurable (fun A : Matrix (Fin m) (Fin n) ℂ => A.conjTranspose) :=
   (continuous_id.matrix_conjTranspose).measurable
 
-lemma integral_phiLin {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {m n : ℕ}
+private lemma integral_phiLin {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {m n : ℕ}
     (X : Ω → Matrix (Fin m) (Fin n) ℂ) (hX : Integrable X μ) :
     ∫ ω, phiLin m n (X ω) ∂μ = phiLin m n (∫ ω, X ω ∂μ) :=
   (LinearMap.toContinuousLinearMap (phiLin m n)).integral_comp_comm hX
 
-lemma integral_ct {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {m n : ℕ}
+private lemma integral_ct {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {m n : ℕ}
     (X : Ω → Matrix (Fin m) (Fin n) ℂ) (hX : Integrable X μ) :
     ∫ ω, (X ω).conjTranspose ∂μ = (∫ ω, X ω ∂μ).conjTranspose :=
   (LinearMap.toContinuousLinearMap (ctLin (Fin m) (Fin n))).integral_comp_comm hX
 
-lemma lambdaMax_phiLin {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
+private lemma lambdaMax_phiLin {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
     lambdaMax (phiLin m n A) = spectralNorm A := by
   rw [phiLin_apply, lambdaMax_reindex]
   exact (dilation_identities A).2.2.1.trans (dilation_identities A).2.2.2
 
-lemma norm_phiLin {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
+private lemma norm_phiLin {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
     ‖phiLin m n A‖ = ‖A‖ := by
   rw [phiLin_apply, norm_reindex]
   exact (dilation_identities A).2.2.2
 
-end TroppMatrixBernstein
+end NLAlib
 
-open NLAlib TroppMatrixBernstein
+open NLAlib
 
+/-- Matrix Bernstein inequality, rectangular case: for an independent sum `Z` of centered random `m ×
+n` matrices with `‖S k‖ ≤ L`, `𝔼 ‖Z‖ ≤ √(2 v log (m + n)) + L log (m + n) / 3` and `P{‖Z‖ ≥ t} ≤
+bernsteinTail (m + n) v L t`.
+
+Tropp 2015, Thm 6.1.1. Atlas: `matrix-bernstein`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 6*. -/
 theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
     (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) (L : ℝ) (hL : 0 ≤ L)
@@ -147,12 +155,12 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
   have hZZ : ∫ ω, Z ω * (Z ω).conjTranspose ∂μ =
       ∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ := by
     simp_rw [hZh]
-    exact ch6_independent_sum_second_moment μ S id Matrix.conjTranspose measurable_id
+    exact integral_sum_mul_sum_eq_sum_integral_mul μ S id Matrix.conjTranspose measurable_id
       (measurable_ct m n) hMeas hIndep hSL2 hSL2h hMean
   have hZhZ : ∫ ω, (Z ω).conjTranspose * Z ω ∂μ =
       ∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ := by
     simp_rw [hZh]
-    exact ch6_independent_sum_second_moment μ S Matrix.conjTranspose id
+    exact integral_sum_mul_sum_eq_sum_integral_mul μ S Matrix.conjTranspose id
       (measurable_ct m n) measurable_id hMeas hIndep hSL2h hSL2 hSmeanh
   have hv1 : v = max (spectralNorm (∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ))
       (spectralNorm (∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ)) := by
@@ -166,7 +174,7 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     simp [hMean]
   have hZmeas : Measurable Z := Finset.measurable_sum _ (fun k _ => hMeas k)
   have hZL2 : MemLp Z 2 μ := memLp_finsetSum _ (fun k _ => hSL2 k)
-  have hdv := dilation_variance μ Z hZmeas hZL2
+  have hdv := hermitianSecondMoment_dilation_eq_rectSecondMoment μ Z hZmeas hZL2
   rw [hZint] at hdv
   simp only [sub_zero] at hdv
   -- Step 3: the Hermitian dilations on `Fin (m + n)`.

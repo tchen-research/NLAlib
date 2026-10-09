@@ -5,8 +5,6 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 import NLAlib.Gaussian.Basic
 import NLAlib.Matrix.Norms
 import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Probability.Independence.Integration
-import Mathlib.Probability.Moments.Variance
 import Mathlib.LinearAlgebra.Matrix.MvPolynomial
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Algebra.MvPolynomial.Equiv
@@ -19,14 +17,17 @@ import Mathlib.Algebra.MvPolynomial.Funext
 
 * `NLAlib.integral_frobSq_mul_gaussianMatrix_mul`: `E ‖S G T‖_F² = ‖S‖_F² ‖T‖_F²`
   (HMT 2011 Prop 10.1, first identity; atlas `gaussian-frob-second-moment`).
+* `NLAlib.ae_ne_zero_mvPolynomial`, `NLAlib.gaussianMatrix_ae_eval_ne_zero`: a nonzero polynomial
+  in i.i.d. atomless coordinates (in particular in the entries of a Gaussian matrix) is a.s.
+  nonzero.
 * `NLAlib.gaussianMatrix_ae_rank_eq`: a standard Gaussian matrix has full rank almost surely,
   with the corollaries `gaussianMatrix_ae_isUnit_mul_transpose` (wide case, `G Gᵀ` invertible)
   and `gaussianMatrix_ae_isUnit_transpose_mul` (tall case) (HMT 2011 Prop A.5 / §10.2; atlas
   `gaussian-full-rank-ae`).
 
-Proof source: Prove2me workspace, Gaussian Random Matrices series (Frobenius second moment,
-full rank a.s.). The workspace's `frobSq` is `∑ᵢⱼ Aᵢⱼ ^ 2`; the private
-lemma `frobSq_eq_sum_sq_aux` is the bridge to `NLAlib.frobSq`.
+The entry-level facts (`integral_gaussianMatrix_entry_mul`, `gaussianMatrix_map_uncurry`) are in
+`NLAlib.Gaussian.Basic`. Proof source: Prove2me workspace, Gaussian Random Matrices series
+(Frobenius second moment, full rank a.s.).
 -/
 
 noncomputable section
@@ -36,104 +37,18 @@ open scoped Matrix
 
 namespace NLAlib
 
-/-- Bridge: `NLAlib.frobSq A = ∑ᵢ ∑ⱼ Aᵢⱼ²` (the Prove2me workspace's definition of `frobSq`).
-Kept private so this file does not depend on, or clash with, a public copy in `Norms.lean`. -/
-private theorem frobSq_eq_sum_sq_aux {m n : Type*} [Fintype m] [Fintype n] (A : Matrix m n ℝ) :
-    frobSq A = ∑ i, ∑ j, A i j ^ 2 := by
-  simp [frobSq, frobInner, sq]
-
-/-! ### Entries of a Gaussian matrix -/
-
-/-- Each entry of a standard Gaussian matrix is `N(0,1)`. Atlas: `gaussian-matrix-def`. -/
-theorem measurePreserving_gaussianMatrix_entry {p m : ℕ} (a : Fin p) (b : Fin m) :
-    MeasurePreserving (fun G : Fin p → Fin m → ℝ => G a b) (gaussianMatrix p m)
-      (gaussianReal 0 1) :=
-  (measurePreserving_eval (fun _ : Fin m => gaussianReal 0 1) b).comp
-    (measurePreserving_eval (fun _ : Fin p => Measure.pi fun _ : Fin m => gaussianReal 0 1) a)
-
-private lemma memLp_coord {p m : ℕ} (a : Fin p) (b : Fin m) (q : ENNReal) (hq : q ≠ ⊤) :
-    MemLp (fun G : Fin p → Fin m → ℝ => G a b) q (gaussianMatrix p m) :=
-  (memLp_id_gaussianReal' q hq).comp_measurePreserving
-    (measurePreserving_gaussianMatrix_entry a b)
-
-private lemma integral_comp_coord {p m : ℕ} (a : Fin p) (b : Fin m) (f : ℝ → ℝ)
-    (hf : Measurable f) :
-    ∫ G, f (G a b) ∂(gaussianMatrix p m) = ∫ x, f x ∂(gaussianReal 0 1) := by
-  rw [← (measurePreserving_gaussianMatrix_entry a b).map_eq, integral_map]
-  · exact (measurePreserving_gaussianMatrix_entry a b).measurable.aemeasurable
-  · exact hf.aestronglyMeasurable
-
-private lemma integral_coord {p m : ℕ} (a : Fin p) (b : Fin m) :
-    ∫ G, G a b ∂(gaussianMatrix p m) = 0 := by
-  have := integral_comp_coord a b (fun x => x) measurable_id
-  simpa [integral_id_gaussianReal] using this
-
-private lemma integral_coord_sq {p m : ℕ} (a : Fin p) (b : Fin m) :
-    ∫ G, G a b ^ 2 ∂(gaussianMatrix p m) = 1 := by
-  rw [integral_comp_coord a b (fun x => x ^ 2) (by fun_prop)]
-  have h := variance_eq_sub (memLp_id_gaussianReal' (μ := 0) (v := 1) 2 (by simp))
-  rw [variance_id_gaussianReal] at h
-  simp [integral_id_gaussianReal] at h
-  exact h.symm
-
-/-- Second moments of the entries of a standard Gaussian matrix:
-`E[G_ab G_cd] = δ_ac δ_bd`. Atlas: `gaussian-matrix-def` (used for
-`gaussian-frob-second-moment`). -/
-theorem integral_gaussianMatrix_entry_mul {p m : ℕ} (a c : Fin p) (b d : Fin m) :
-    ∫ G, G a b * G c d ∂(gaussianMatrix p m) = if a = c ∧ b = d then 1 else 0 := by
-  by_cases hac : a = c
-  · subst hac
-    by_cases hbd : b = d
-    · subst hbd
-      simpa [← pow_two] using integral_coord_sq a b
-    · simp only [hbd, and_false, if_false]
-      have hrow := measurePreserving_eval
-        (fun _ : Fin p => Measure.pi fun _ : Fin m => gaussianReal (0 : ℝ) 1) a
-      have h1 : ∫ G, G a b * G a d ∂(gaussianMatrix p m)
-          = ∫ x, x b * x d ∂(Measure.pi fun _ : Fin m => gaussianReal (0 : ℝ) 1) := by
-        have := integral_map (μ := gaussianMatrix p m) hrow.measurable.aemeasurable
-          (f := fun x : Fin m → ℝ => x b * x d) (by fun_prop)
-        unfold gaussianMatrix at this ⊢
-        rw [hrow.map_eq] at this
-        exact this.symm
-      rw [h1]
-      have hind : iIndepFun (fun (i : Fin m) (ω : Fin m → ℝ) => ω i)
-          (Measure.pi fun _ : Fin m => gaussianReal (0 : ℝ) 1) :=
-        iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id)
-      rw [(hind.indepFun hbd).integral_fun_mul_eq_mul_integral
-        (measurable_pi_apply b).aestronglyMeasurable (measurable_pi_apply d).aestronglyMeasurable]
-      have h0 : ∫ x, x b ∂(Measure.pi fun _ : Fin m => gaussianReal (0 : ℝ) 1) = 0 := by
-        have hb := measurePreserving_eval (fun _ : Fin m => gaussianReal (0 : ℝ) 1) b
-        have := integral_map (μ := Measure.pi fun _ : Fin m => gaussianReal (0 : ℝ) 1)
-          hb.measurable.aemeasurable (f := fun x : ℝ => x) (by fun_prop)
-        rw [hb.map_eq, integral_id_gaussianReal] at this
-        exact this.symm
-      simp [h0]
-  · simp only [hac, false_and, if_false]
-    have hind : iIndepFun (fun (i : Fin p) (ω : Fin p → Fin m → ℝ) => ω i)
-        (gaussianMatrix p m) :=
-      iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id)
-    have h2 := (hind.indepFun hac).comp (measurable_pi_apply b) (measurable_pi_apply d)
-    have := h2.integral_fun_mul_eq_mul_integral
-      (by
-        have : Measurable (fun ω : Fin p → Fin m → ℝ => ω a b) := by fun_prop
-        exact this.aestronglyMeasurable)
-      (by
-        have : Measurable (fun ω : Fin p → Fin m → ℝ => ω c d) := by fun_prop
-        exact this.aestronglyMeasurable)
-    simp only [Function.comp_def] at this
-    rw [this, integral_coord]
-    simp
+/-! ### The sandwiched second moment -/
 
 private lemma integrable_coord_mul {p m : ℕ} (a c : Fin p) (b d : Fin m) (k : ℝ) :
     Integrable (fun G : Fin p → Fin m → ℝ => k * (G a b * G c d)) (gaussianMatrix p m) :=
-  ((memLp_coord a b 2 (by simp)).integrable_mul (memLp_coord c d 2 (by simp))).const_mul k
+  ((memLp_gaussianMatrix_entry a b 2 (by simp)).integrable_mul
+    (memLp_gaussianMatrix_entry c d 2 (by simp))).const_mul k
 
 private lemma frobSq_expand {ι κ : Type*} [Fintype ι] [Fintype κ] {p m : ℕ}
     (S : Matrix ι (Fin p) ℝ) (T : Matrix (Fin m) κ ℝ) (G : Fin p → Fin m → ℝ) :
     frobSq (S * Matrix.of G * T) = ∑ i, ∑ j, ∑ k, ∑ c, ∑ b, ∑ d,
       (S i k * T b j * S i c * T d j) * (G k b * G c d) := by
-  rw [frobSq_eq_sum_sq_aux]
+  rw [frobSq_eq_sum_sq]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   have h : (S * Matrix.of G * T) i j = ∑ k, ∑ b, S i k * G k b * T b j := by
     simp only [Matrix.mul_apply, Matrix.of_apply, Finset.sum_mul]
@@ -190,7 +105,7 @@ theorem integral_frobSq_mul_gaussianMatrix_mul {ι κ : Type*} [Fintype ι] [Fin
     ∫ G, frobSq (S * Matrix.of G * T) ∂(gaussianMatrix p m) = frobSq S * frobSq T := by
   simp_rw [frobSq_expand]
   rw [integral_quadratic (fun i j k c b d => S i k * T b j * S i c * T d j)]
-  rw [frobSq_eq_sum_sq_aux, frobSq_eq_sum_sq_aux]
+  rw [frobSq_eq_sum_sq, frobSq_eq_sum_sq]
   rw [Finset.sum_mul]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_comm, Finset.sum_mul]
@@ -305,26 +220,6 @@ theorem ae_ne_zero_mvPolynomial {ι : Type*} [Fintype ι] (μ : Measure ℝ)
   rw [MvPolynomial.eval_rename] at hy
   exact hy
 
-private theorem measurable_uncurry_matrix (p m : ℕ) :
-    Measurable fun G : Fin p → Fin m → ℝ => fun ab : Fin p × Fin m => G ab.1 ab.2 :=
-  measurable_pi_lambda _ fun ab => (measurable_pi_apply ab.2).comp (measurable_pi_apply ab.1)
-
-/-- Flattening a standard Gaussian matrix gives i.i.d. standard Gaussians indexed by
-`Fin p × Fin m`. Atlas: `gaussian-matrix-def`. -/
-theorem gaussianMatrix_map_uncurry (p m : ℕ) :
-    Measure.map (fun G : Fin p → Fin m → ℝ => fun ab : Fin p × Fin m => G ab.1 ab.2)
-      (gaussianMatrix p m) = Measure.pi fun _ : Fin p × Fin m => gaussianReal 0 1 := by
-  symm
-  refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.map_apply (measurable_uncurry_matrix p m) (MeasurableSet.univ_pi hs)]
-  have hpre : (fun G : Fin p → Fin m → ℝ => fun ab : Fin p × Fin m => G ab.1 ab.2) ⁻¹'
-      Set.univ.pi s = Set.univ.pi fun a => Set.univ.pi fun b => s (a, b) := by
-    ext G
-    simp only [Set.mem_preimage, Set.mem_univ_pi, Prod.forall]
-  rw [hpre, gaussianMatrix, Measure.pi_pi]
-  simp_rw [Measure.pi_pi]
-  rw [Fintype.prod_prod_type]
-
 /-- A nonzero polynomial in the entries of a standard Gaussian matrix is almost surely nonzero.
 
 Helper for HMT 2011 Prop A.5; atlas `gaussian-full-rank-ae`. -/
@@ -334,7 +229,8 @@ theorem gaussianMatrix_ae_eval_ne_zero (p m : ℕ) (f : MvPolynomial (Fin p × F
   have : NullSingletonClass (gaussianReal 0 1) := nullSingletonClass_gaussianReal one_ne_zero
   have h := ae_ne_zero_mvPolynomial (gaussianReal 0 1) f hf
   rw [← gaussianMatrix_map_uncurry] at h
-  exact ae_of_ae_map (measurable_uncurry_matrix p m).aemeasurable h
+  exact ae_of_ae_map (measurable_pi_lambda _ fun ab =>
+    (measurable_pi_apply ab.2).comp (measurable_pi_apply ab.1)).aemeasurable h
 
 private theorem eval_det_gram (p m : ℕ) (G : Fin p → Fin m → ℝ) :
     MvPolynomial.eval (fun ab : Fin p × Fin m => G ab.1 ab.2)

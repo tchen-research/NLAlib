@@ -1,4 +1,5 @@
 import NLAlib.Sketching.Basic
+import NLAlib.Sketching.SubspaceEmbedding
 import NLAlib.Sketching.JL
 
 /-!
@@ -6,7 +7,9 @@ import NLAlib.Sketching.JL
 
 Layer 3: imports `NLAlib.Matrix`, `NLAlib.Concentration`, `NLAlib.Gaussian`.
 
-Planned files (atlas ids): `JL` (`jl-distributional`, `jl-lemma`), `GaussianOSE`
-(`gaussian-ose`), `Leverage` (`leverage-scores`, `leverage-sampling-ose`), `AMM` (`amm-ose`,
-`amm-sampling`).
+Files (atlas ids): `Basic` (`IsSubspaceEmbedding`), `SubspaceEmbedding` (`ose-def`), `JL`
+(`jl-distributional`, `jl-lemma`).
+
+Planned: `GaussianOSE` (`gaussian-ose`), `Leverage` (`leverage-scores`,
+`leverage-sampling-ose`), `AMM` (`amm-ose`, `amm-sampling`).
 -/

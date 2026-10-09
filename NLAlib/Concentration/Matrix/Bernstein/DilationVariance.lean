@@ -9,26 +9,28 @@ import Mathlib.Topology.Algebra.Module.FiniteDimension
 /-!
 # Equation 2.2.10 — Variance statistic under dilation
 
-Lean name: `NLAlib.dilation_variance`.
+Main declaration: `NLAlib.hermitianSecondMoment_dilation_eq_rectSecondMoment`.
+
+Atlas: `hermitian-dilation`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Section 2.2.8, equations (2.2.7–10), printed pp. 28–29.
 -/
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator
 
-namespace NLAlib.DilationVariance
+namespace NLAlib
 
 open Matrix
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- The square of the dilation is block diagonal. -/
-lemma dilation_sq (X : Matrix m n ℂ) :
+private lemma dilation_sq (X : Matrix m n ℂ) :
     dilation X ^ 2 = fromBlocks (X * Xᴴ) 0 0 (Xᴴ * X) := by
   simp [dilation, sq, fromBlocks_multiply]
 
 /-- Compression by an isometry does not increase the L2 operator norm. -/
-lemma norm_compress_le {k : Type*} [Fintype k] [DecidableEq k]
+private lemma norm_compress_le {k : Type*} [Fintype k] [DecidableEq k]
     (E : Matrix k m ℂ) (hE : Eᴴ * E = 1) (M : Matrix k k ℂ) :
     ‖Eᴴ * M * E‖ ≤ ‖M‖ := by
   have hE1 : ‖E‖ ≤ 1 := by
@@ -45,7 +47,7 @@ lemma norm_compress_le {k : Type*} [Fintype k] [DecidableEq k]
     _ = ‖M‖ := by ring
 
 /-- The L2 operator norm of a block-diagonal matrix is the max of the block norms. -/
-lemma norm_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
+private lemma norm_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
     ‖fromBlocks P 0 0 Q‖ = max ‖P‖ ‖Q‖ := by
   apply le_antisymm
   · rw [cstar_norm_def]
@@ -86,20 +88,20 @@ lemma norm_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
       exact (congrArg norm heq).trans_le h
 
 /-- Upper-left block inclusion as a continuous linear map. -/
-noncomputable def incl₁ : Matrix m m ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
+private noncomputable def incl₁ : Matrix m m ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
   LinearMap.toContinuousLinearMap
     { toFun := fun P => fromBlocks P 0 0 0
       map_add' := fun P P' => by rw [fromBlocks_add]; simp
       map_smul' := fun c P => by rw [fromBlocks_smul]; simp }
 
 /-- Lower-right block inclusion as a continuous linear map. -/
-noncomputable def incl₂ : Matrix n n ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
+private noncomputable def incl₂ : Matrix n n ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
   LinearMap.toContinuousLinearMap
     { toFun := fun Q => fromBlocks 0 0 0 Q
       map_add' := fun Q Q' => by rw [fromBlocks_add]; simp
       map_smul' := fun c Q => by rw [fromBlocks_smul]; simp }
 
-lemma integral_fromBlocks_diag {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+private lemma integral_fromBlocks_diag {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (P : Ω → Matrix m m ℂ) (Q : Ω → Matrix n n ℂ) (hP : Integrable P μ) (hQ : Integrable Q μ) :
     ∫ ω, fromBlocks (P ω) 0 0 (Q ω) ∂μ = fromBlocks (∫ ω, P ω ∂μ) 0 0 (∫ ω, Q ω ∂μ) := by
   have hsplit : ∀ (A : Matrix m m ℂ) (B : Matrix n n ℂ),
@@ -111,13 +113,21 @@ lemma integral_fromBlocks_diag {Ω : Type*} [MeasurableSpace Ω] (μ : Measure �
   rw [integral_add ((incl₁ (n := n)).integrable_comp hP) ((incl₂ (m := m)).integrable_comp hQ),
     ContinuousLinearMap.integral_comp_comm _ hP, ContinuousLinearMap.integral_comp_comm _ hQ]
 
-end NLAlib.DilationVariance
+end NLAlib
 
-open NLAlib NLAlib.DilationVariance Matrix
+open NLAlib Matrix
 
-theorem NLAlib.dilation_variance {Ω : Type*} [MeasurableSpace Ω]
+/-- The matrix variance of the Hermitian dilation of a centered rectangular random matrix equals its
+rectangular variance statistic.
+
+Tropp 2015, §2.2.8, eq. (2.2.10). Atlas: `hermitian-dilation`. Ported from the Prove2me mission
+*An Introduction to Matrix Concentration Inequalities, Ch 6*.
+
+The measurability hypothesis is not used by the proof; it is kept to match the source's standing
+assumptions. -/
+theorem NLAlib.hermitianSecondMoment_dilation_eq_rectSecondMoment {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n : ℕ} [NeZero m] [NeZero n]
-    (Z : Ω → Matrix (Fin m) (Fin n) ℂ) (hMeas : Measurable Z)
+    (Z : Ω → Matrix (Fin m) (Fin n) ℂ) (_hMeas : Measurable Z)
     (hL2 : MemLp Z 2 μ) :
     hermitianSecondMoment μ (fun ω => dilation (Z ω - ∫ ω', Z ω' ∂μ)) =
       rectSecondMoment μ (fun ω => Z ω - ∫ ω', Z ω' ∂μ) := by

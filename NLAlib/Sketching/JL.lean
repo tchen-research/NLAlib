@@ -13,10 +13,14 @@ matrix view `Matrix.of G`). Squared norms are written `v ⬝ᵥ v`.
   `P[|‖Sx‖² − ‖x‖²| > ε‖x‖²] ≤ 2 exp(−k(ε²/4 − ε³/6))` (Dasgupta–Gupta 2003, Lem 2.2).
 * `jl_lemma`: union bound over all ordered pairs of a finite family `p : Fin N → Fin n → ℝ`,
   failure probability `≤ N² · 2 exp(−k(ε²/4 − ε³/6))` (Dasgupta–Gupta 2003, Thm 2.1).
-* `jl_lemma_le_of_log_le`: failure probability `≤ δ` once `k ≥ (ε²/4 − ε³/6)⁻¹ log(2N²/δ)`.
-* `jl_lemma_le_half`, `jl_lemma_exists`: with `k ≥ 48 log N / ε²` (`N ≥ 2`), failure
+* `jl_lemma_prob_le_of_log_le`: failure probability `≤ δ` once
+  `k ≥ (ε²/4 − ε³/6)⁻¹ log(2N²/δ)`.
+* `jl_lemma_prob_le_half`, `jl_lemma_exists`: with `k ≥ 48 log N / ε²` (`N ≥ 2`), failure
   probability `≤ 1/2`, hence a linear map `ℝⁿ → ℝᵏ` preserving all pairwise squared distances
   to within `1 ± ε` exists.
+
+Arithmetic helpers: `sq_div_four_sub_pow_three_div_six_pos` (the exponent `ε²/4 − ε³/6` is
+positive on `(0, 1)`) and `sq_mul_two_mul_exp_neg_mul_le_of_inv_mul_log_le`.
 
 Atlas: `jl-distributional`, `jl-lemma`.
 -/
@@ -88,16 +92,18 @@ theorem jl_lemma (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 
           mul_assoc]
     _ = _ := by rw [hb, mul_assoc]
 
-/-- `ε²/4 − ε³/6 > 0` for `0 < ε < 1`: the JL exponent is positive. Helper for `jl-lemma`. -/
-theorem jl_exponent_pos {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) : 0 < ε ^ 2 / 4 - ε ^ 3 / 6 := by
+/-- `ε²/4 − ε³/6 > 0` for `0 < ε < 1`: the exponent of the Johnson–Lindenstrauss tail
+(Dasgupta–Gupta 2003, Lem 2.2) is positive. Helper for `jl-lemma`. -/
+theorem sq_div_four_sub_pow_three_div_six_pos {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
+    0 < ε ^ 2 / 4 - ε ^ 3 / 6 := by
   have h : ε ^ 2 / 4 - ε ^ 3 / 6 = ε ^ 2 * (3 - 2 * ε) / 12 := by ring
   rw [h]; have : 0 < ε ^ 2 := by positivity
   apply div_pos _ (by norm_num); nlinarith
 
 /-- Arithmetic step of the JL lemma: `N² · 2 exp(−k c) ≤ δ` as soon as `k ≥ c⁻¹ log(2N²/δ)`.
 Helper for `jl-lemma`. -/
-theorem jl_bound_le_of_log_le {N : ℕ} {k c δ : ℝ} (hc : 0 < c) (hδ : 0 < δ)
-    (hk : c⁻¹ * Real.log (2 * (N : ℝ) ^ 2 / δ) ≤ k) :
+theorem sq_mul_two_mul_exp_neg_mul_le_of_inv_mul_log_le {N : ℕ} {k c δ : ℝ} (hc : 0 < c)
+    (hδ : 0 < δ) (hk : c⁻¹ * Real.log (2 * (N : ℝ) ^ 2 / δ) ≤ k) :
     (N : ℝ) ^ 2 * 2 * Real.exp (-k * c) ≤ δ := by
   rcases Nat.eq_zero_or_pos N with rfl | hN
   · simp [hδ.le]
@@ -125,7 +131,7 @@ Deviation: Dasgupta–Gupta take `k ≥ 4 (ε²/2 − ε³/3)⁻¹ log N`, aimin
 in `jl_lemma`.
 
 Atlas: `jl-lemma`; uses `jl-distributional`. -/
-theorem jl_lemma_le_of_log_le (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε δ : ℝ} (hε0 : 0 < ε)
+theorem jl_lemma_prob_le_of_log_le (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε δ : ℝ} (hε0 : 0 < ε)
     (hε1 : ε < 1) (hδ : 0 < δ)
     (hk : (ε ^ 2 / 4 - ε ^ 3 / 6)⁻¹ * Real.log (2 * (N : ℝ) ^ 2 / δ) ≤ k) :
     gaussianMatrix k n {G | ∃ i j, i ≠ j ∧
@@ -134,7 +140,8 @@ theorem jl_lemma_le_of_log_le (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε δ
         - (p i - p j) ⬝ᵥ (p i - p j)| > ε * ((p i - p j) ⬝ᵥ (p i - p j))}
       ≤ ENNReal.ofReal δ :=
   (jl_lemma k n N p hε0 hε1).trans <| ENNReal.ofReal_le_ofReal <|
-    jl_bound_le_of_log_le (jl_exponent_pos hε0 hε1) hδ hk
+    sq_mul_two_mul_exp_neg_mul_le_of_inv_mul_log_le
+      (sq_div_four_sub_pow_three_div_six_pos hε0 hε1) hδ hk
 
 /-- Johnson–Lindenstrauss lemma, `O(ε⁻² log N)` form (Dasgupta–Gupta 2003, Thm 2.1): for
 `N ≥ 2` points, `0 < ε < 1` and `k ≥ 48 log N / ε²`, the Gaussian sketch `S = k^{-1/2} G`
@@ -145,15 +152,15 @@ Deviation: the explicit constant `48` (from `(ε²/4 − ε³/6)⁻¹ ≤ 12/ε�
 at failure probability `1 − 1/N`.
 
 Atlas: `jl-lemma`; uses `jl-distributional`. -/
-theorem jl_lemma_le_half (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε)
+theorem jl_lemma_prob_le_half (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε)
     (hε1 : ε < 1) (hN : 2 ≤ N) (hk : 48 * Real.log N / ε ^ 2 ≤ k) :
     gaussianMatrix k n {G | ∃ i j, i ≠ j ∧
       |((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
           ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
         - (p i - p j) ⬝ᵥ (p i - p j)| > ε * ((p i - p j) ⬝ᵥ (p i - p j))}
       ≤ ENNReal.ofReal (1 / 2) := by
-  apply jl_lemma_le_of_log_le k n N p hε0 hε1 (by norm_num)
-  have hc := jl_exponent_pos hε0 hε1
+  apply jl_lemma_prob_le_of_log_le k n N p hε0 hε1 (by norm_num)
+  have hc := sq_div_four_sub_pow_three_div_six_pos hε0 hε1
   have hε2 : 0 < ε ^ 2 := by positivity
   have hN' : (2 : ℝ) ≤ N := by exact_mod_cast hN
   have hlogN : Real.log 2 ≤ Real.log N := Real.log_le_log (by norm_num) hN'
@@ -208,7 +215,7 @@ theorem jl_lemma_exists (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (
             ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
       · left; have := hij h; linarith
       · right; push Not at h; linarith
-  have h := jl_lemma_le_half k n N p hε0 hε1 hN hk
+  have h := jl_lemma_prob_le_half k n N p hε0 hε1 hN hk
   rw [hall, measure_univ] at h
   have : (1 : ENNReal) ≤ ENNReal.ofReal (1 / 2) := h
   rw [← ENNReal.ofReal_one, ENNReal.ofReal_le_ofReal_iff (by norm_num)] at this

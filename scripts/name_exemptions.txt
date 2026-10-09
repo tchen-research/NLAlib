@@ -1,0 +1,9 @@
+# Declarations exempt from scripts/check_names.py, one per line, with the reason.
+# Gaussian/Basic.lean holds the definition's basic API (law of an entry, flattening, measurability).
+NLAlib.measurePreserving_gaussianMatrix_entry   # basic API of the definition
+NLAlib.integral_gaussianMatrix_entry_mul        # basic API of the definition
+NLAlib.gaussianMatrix_map_uncurry               # basic API of the definition
+NLAlib.aemeasurable_of_map_eq_gaussianMatrix    # basic API of the definition
+NLAlib.measurable_block                         # basic API of the definition
+NLAlib.memLp_gaussianMatrix_entry               # basic API of the definition
+NLAlib.quadForm_eq_sum                          # unfolding lemma

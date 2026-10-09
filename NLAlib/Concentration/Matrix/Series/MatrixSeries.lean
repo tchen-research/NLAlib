@@ -12,19 +12,21 @@ import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 /-!
 # Theorem 4.1.1 — Matrix Gaussian and Rademacher series
 
-Lean name: `NLAlib.ch4_matrix_series`.
+Main declaration: `NLAlib.matrix_gaussian_series`.
+
+Atlas: `matrix-gaussian-series`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 4.1.1, equations (4.1.2–6), printed p. 42.
 -/
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator
 
-namespace TroppCh4MatrixSeries
+namespace NLAlib
 
 open NLAlib
 
 /-- The Hermitian dilation is real-linear. -/
-noncomputable def dilLin (m n : Type*) :
+private noncomputable def dilLin (m n : Type*) :
     Matrix m n ℂ →ₗ[ℝ] Matrix (m ⊕ n) (m ⊕ n) ℂ where
   toFun := dilation
   map_add' X Y := by
@@ -32,10 +34,10 @@ noncomputable def dilLin (m n : Type*) :
   map_smul' c X := by
     simp [dilation, Matrix.fromBlocks_smul, Matrix.conjTranspose_smul]
 
-lemma dilLin_apply {m n : Type*} (X : Matrix m n ℂ) : dilLin m n X = dilation X := rfl
+private lemma dilLin_apply {m n : Type*} (X : Matrix m n ℂ) : dilLin m n X = dilation X := rfl
 
 /-- Reindexing as a `⋆`-algebra equivalence over `ℂ`. -/
-noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
+private noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) :
     Matrix ι ι ℂ ≃⋆ₐ[ℂ] Matrix κ κ ℂ :=
   { Matrix.reindexAlgEquiv ℂ ℂ e with
@@ -43,13 +45,13 @@ noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
     map_smul' := by intro r A; rfl }
 
 /-- Reindexing preserves the L2 operator norm. -/
-lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
+private lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     ‖Matrix.reindex e e A‖ = ‖A‖ :=
   StarAlgEquiv.norm_map (reindexStarC e) A
 
 /-- Reindexing preserves the real spectrum, hence `lambdaMax`. -/
-lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
+private lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     lambdaMax (Matrix.reindex e e A) = lambdaMax A := by
   have h := AlgEquiv.spectrum_eq (Matrix.reindexAlgEquiv ℝ ℂ e) A
@@ -58,7 +60,7 @@ lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
   rw [h]
 
 /-- The Bochner integral commutes with reindexing. -/
-lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+private lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (X : Ω → Matrix ι ι ℂ) :
     ∫ ω, Matrix.reindex e e (X ω) ∂μ = Matrix.reindex e e (∫ ω, X ω ∂μ) := by
@@ -67,9 +69,9 @@ lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
   exact L.integral_comp_comm X
 
 /-- Second moments of the scalar coefficients. -/
-lemma scalar_package {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+private lemma scalar_package {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
     {N : ℕ} (g : Fin N → Ω → ℝ) (hMeas : ∀ k, Measurable (g k))
-    (hLaw : (∀ k, standardGaussianLaw μ (g k)) ∨ (∀ k, rademacherLaw μ (g k))) (k : Fin N) :
+    (hLaw : (∀ k, IsStandardGaussian μ (g k)) ∨ (∀ k, IsRademacher μ (g k))) (k : Fin N) :
     MemLp (g k) 2 μ ∧ ∫ ω, g k ω ∂μ = 0 ∧ ∫ ω, g k ω * g k ω ∂μ = 1 := by
   rcases hLaw with h | h
   · have hk : μ.map (g k) = gaussianReal 0 1 := h k
@@ -111,7 +113,7 @@ lemma scalar_package {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProb
       simp
 
 /-- The second-moment identity for a series with orthonormal scalar coefficients. -/
-lemma second_moment_series {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {N p q r : ℕ}
+private lemma second_moment_series {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {N p q r : ℕ}
     (g : Fin N → Ω → ℝ) (hint : ∀ j k, Integrable (fun ω => g j ω * g k ω) μ)
     (hcorr : ∀ j k, ∫ ω, g j ω * g k ω ∂μ = if j = k then 1 else 0)
     (X : Fin N → Matrix (Fin p) (Fin q) ℂ) (Y : Fin N → Matrix (Fin q) (Fin r) ℂ) :
@@ -134,16 +136,25 @@ lemma second_moment_series {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {
     simp
   simp_rw [h2]
 
-end TroppCh4MatrixSeries
+end NLAlib
 
-open NLAlib TroppCh4MatrixSeries
+open NLAlib
 
-theorem NLAlib.ch4_matrix_series {Ω : Type*} [MeasurableSpace Ω]
+/-- Matrix Gaussian and Rademacher series, rectangular case: for `Z = ∑ k, g k • B k` the variance is
+the maximum of the two row/column sums, `𝔼 ‖Z‖ ≤ √(2 v log (m + n))`, and `P{‖Z‖ ≥ t} ≤
+gaussianSeriesTail (m + n) v t`.
+
+Tropp 2015, Thm 4.1.1. Atlas: `matrix-gaussian-series`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 4*.
+
+Gaussian and Rademacher coefficients are covered by one statement through the disjunctive law
+hypothesis. -/
+theorem NLAlib.matrix_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
     (B : Fin N → Matrix (Fin m) (Fin n) ℂ)
     (g : Fin N → Ω → ℝ) (hMeas : ∀ k, Measurable (g k))
     (hIndep : iIndepFun g μ)
-    (hLaw : (∀ k, standardGaussianLaw μ (g k)) ∨ (∀ k, rademacherLaw μ (g k))) :
+    (hLaw : (∀ k, IsStandardGaussian μ (g k)) ∨ (∀ k, IsRademacher μ (g k))) :
     let Z := fun ω => ∑ k, g k ω • B k
     let v := rectSecondMoment μ Z
     v = max (spectralNorm (∑ k, B k * (B k).conjTranspose))
@@ -185,7 +196,7 @@ theorem NLAlib.ch4_matrix_series {Ω : Type*} [MeasurableSpace Ω]
     Finset.measurable_sum _ (fun k _ => (hMeas k).smul_const (B k))
   have hZL2 : MemLp Z 2 μ :=
     memLp_finsetSum _ (fun k _ => (memLp_const (p := ⊤) (B k)).smul (hpkg k).1)
-  have hdv := dilation_variance μ Z hZmeas hZL2
+  have hdv := hermitianSecondMoment_dilation_eq_rectSecondMoment μ Z hZmeas hZL2
   rw [hZint] at hdv
   simp only [sub_zero] at hdv
   -- Step 3: transport the Hermitian dilation to `Fin (m + n)`.
@@ -212,7 +223,7 @@ theorem NLAlib.ch4_matrix_series {Ω : Type*} [MeasurableSpace Ω]
     simp_rw [hY, hsq]
     rw [integral_reindex, spectralNorm, norm_reindex]
     exact hdv
-  have H := ch4_hermitian_series μ A hA g hMeas hIndep hLaw
+  have H := hermitian_gaussian_series μ A hA g hMeas hIndep hLaw
   obtain ⟨-, H2, H3⟩ := H
   refine ⟨hv1, ?_, ?_⟩
   · simp only [hlam, hvY] at H2

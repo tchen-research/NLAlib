@@ -6,7 +6,9 @@ import NLAlib.Concentration.Matrix.Laplace.LiebRegularityShiftIntegrable
 /-!
 # Lemma 3.5.1 — Subadditivity of matrix cgfs
 
-Lean name: `NLAlib.trace_cgf_subadditivity`.
+Main declaration: `NLAlib.trace_cgf_subadditivity`.
+
+Atlas: `matrix-laplace`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Lemma 3.5.1, equation (3.5.1), printed pp. 35–36.
 -/
@@ -47,15 +49,15 @@ private lemma finite_tensorization {Ω : Type*} [MeasurableSpace Ω]
       dsimp [Z]
       split_ifs
       · simpa using hExp k
-      · simpa using integrable_const (matrixExp (0 : Matrix (Fin d) (Fin d) ℂ))
+      · simp
     have hZi : iIndepFun Z μ := by
       exact hIndep.comp (fun k A => if k ∈ s then A else 0) (fun k => by
         split_ifs <;> fun_prop)
-    have h := ch3_master_sum_exponential_integrable μ Z 1 hZm hZh hZi hZe
+    have h := integrable_matrixExp_smul_sum_of_iIndepFun μ Z 1 hZm hZh hZi hZe
     simpa [Z] using h
   have hshift (s : Finset (Fin N)) (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) :
       Integrable (fun ω => traceExp (B + ∑ k ∈ s, X k ω)) μ :=
-    (ch3_lieb_regularity_shift_integrable μ B hB _ (hm s) (hh s) (he s)).2
+    (integrable_matrixExp_add_and_traceExp_add μ B hB _ (hm s) (hh s) (he s)).2
   induction s using Finset.induction_on generalizing H with
   | empty => simp
   | @insert a s ha ih =>
@@ -73,7 +75,7 @@ private lemma finite_tensorization {Ω : Type*} [MeasurableSpace Ω]
       simpa only [Finset.sum_insert ha, add_assoc, add_left_comm, add_comm] using hshift (insert a s) H hH
     have hreplaced : Integrable (fun ω => traceExp ((H + ∑ k ∈ s, X k ω) + L)) μ := by
       simpa only [add_assoc, add_left_comm, add_comm] using hshift s (H + L) (hH.add hL)
-    have step := ch3_cgf_independent_replacement μ (fun ω => H + ∑ k ∈ s, X k ω)
+    have step := integral_traceExp_add_le_integral_traceExp_add_matrixLog μ (fun ω => H + ∑ k ∈ s, X k ω)
       (X a) hrm (hMeas a) hrh (hHerm a) hri (hExp a) htotal hreplaced
     have finish := ih (H + L) (hH.add hL)
     have step' : (∫ ω, traceExp (H + ∑ k ∈ insert a s, X k ω) ∂μ) ≤
@@ -81,6 +83,11 @@ private lemma finite_tensorization {Ω : Type*} [MeasurableSpace Ω]
       simpa only [L, Finset.sum_insert ha, add_assoc, add_left_comm, add_comm] using step
     simpa only [L, Finset.sum_insert ha, add_assoc] using step'.trans finish
 
+/-- Subadditivity of matrix cgfs: `𝔼 traceExp (∑ k, θ • X k) ≤ traceExp (cumulantSum μ X θ)` for
+independent Hermitian random matrices.
+
+Tropp 2015, Lemma 3.5.1. Atlas: `matrix-laplace`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 3*. -/
 theorem NLAlib.trace_cgf_subadditivity {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (θ : ℝ)

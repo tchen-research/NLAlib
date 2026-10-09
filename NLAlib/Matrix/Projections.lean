@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Mul
 import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.Analysis.InnerProductSpace.PiL2
 import NLAlib.Matrix.Norms
 
 /-!
@@ -21,12 +22,16 @@ import NLAlib.Matrix.Norms
   monotonicity of the residual under range inclusion (HMT 2011, Prop. 8.5, Frobenius case).
 * Range-finder fact: `range(AΩ) ⊆ range(Q)` (written `Q (Qᵀ (A Ω)) = A Ω`) gives
   `(I − QQᵀ) A Ω = 0`.
+* Orthogonal completions: a matrix with orthonormal columns has at most as many columns as
+  rows and extends to an orthogonal matrix (`exists_orthogonal_completion`) or, with the
+  complementary block, to `QQᵀ + Q⊥Q⊥ᵀ = I` (`exists_orthonormal_complement`); for such a
+  completion `QᵀQ⊥ = 0` and `(I − QQᵀ)A = Q⊥Q⊥ᵀ(I − QQᵀ)A`.
 
 Proofs ported from the LRA project (`LRA/Basic.lean`, `LRA/Deterministic/RangeFinder.lean`,
 Chen–Persson formalization), namespace renamed and statements generalised from `Fin` to
 arbitrary `Fintype` index types.
 
-Atlas: `projection-facts`, `eckart-young`.
+Atlas: `projection-facts`, `eckart-young`, `orthonormal-completion`.
 -/
 
 noncomputable section
@@ -223,5 +228,131 @@ theorem frobSq_sub_mul_le_of_isBestRankApprox [DecidableEq q] {k : ℕ} {Q : Mat
     frobSq (A - Q * Y) ≤ frobSq (A - Q * B) := by
   rw [frobSq_sub_mul_eq hQ A Y, frobSq_sub_mul_eq hQ A B]
   exact add_le_add le_rfl (hY.2 B hB)
+
+/-! ### Orthogonality of column blocks and orthogonal completions -/
+
+omit [Fintype n] [Fintype q] in
+/-- `AᵀB = 0 ↔ BᵀA = 0`: orthogonality of column spaces is symmetric.
+Atlas `projection-facts`. -/
+theorem transpose_mul_eq_zero_comm {A : Matrix m n ℝ} {B : Matrix m q ℝ} :
+    Aᵀ * B = 0 ↔ Bᵀ * A = 0 := by
+  constructor <;> intro h <;> simpa using congrArg Matrix.transpose h
+
+omit [Fintype q] in
+/-- `(PᵀQ)ᵀ(PᵀQ) = (QᵀP)(QᵀP)ᵀ`: the Gram matrix of `PᵀQ` is the outer Gram matrix of
+`QᵀP`. Atlas `projection-facts`. -/
+theorem gram_transpose_mul_eq (P : Matrix m n ℝ) (Q : Matrix m q ℝ) :
+    (Pᵀ * Q)ᵀ * (Pᵀ * Q) = (Qᵀ * P) * (Qᵀ * P)ᵀ := by
+  rw [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.transpose_mul,
+    Matrix.transpose_transpose]
+
+/-- If `QᵀQ = I`, `QpᵀQp = I` and `QQᵀ + QpQpᵀ = I`, then `QᵀQp = 0`.
+Atlas `orthonormal-completion`. -/
+theorem transpose_mul_eq_zero_of_completion [DecidableEq m] [DecidableEq n] [DecidableEq q]
+    {Q : Matrix m q ℝ} {Qp : Matrix m n ℝ} (hQ : Qᵀ * Q = 1) (hQp : Qpᵀ * Qp = 1)
+    (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) : Qᵀ * Qp = 0 := by
+  have h := congrArg (fun M => Qᵀ * M * Qp) hcomp
+  simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_one] at h
+  rw [← Matrix.mul_assoc, hQ, Matrix.one_mul, Matrix.mul_assoc, Matrix.mul_assoc, hQp,
+    Matrix.mul_one] at h
+  simpa using h
+
+omit [Fintype n] in
+/-- For an orthogonal completion `QQᵀ + QpQpᵀ = I` of `Q`, the residual lies in `range Qp`:
+`(I − QQᵀ)A = Qp (Qpᵀ (I − QQᵀ)A)` (Chen–Persson, proof of `lem:completion`, item 1).
+Atlas `projection-facts`. -/
+theorem residual_eq_mul_transpose_mul_residual [DecidableEq m] [DecidableEq q] {r : Type*}
+    [Fintype r] {Q : Matrix m q ℝ} {Qp : Matrix m r ℝ} (hQ : HasOrthonormalCols Q)
+    (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) (A : Matrix m n ℝ) :
+    residual Q A = Qp * (Qpᵀ * residual Q A) := by
+  have h : (Q * Qᵀ + Qp * Qpᵀ) * residual Q A = residual Q A := by
+    rw [hcomp, Matrix.one_mul]
+  rw [Matrix.add_mul, Matrix.mul_assoc, Matrix.mul_assoc, transpose_mul_residual hQ A,
+    Matrix.mul_zero, zero_add] at h
+  exact h.symm
+
+/-- Columns of a matrix as vectors of Euclidean space. -/
+private def col {k : ℕ} {ι : Type*} (V : Matrix (Fin k) ι ℝ) (j : ι) :
+    EuclideanSpace ℝ (Fin k) :=
+  WithLp.toLp 2 (fun i => V i j)
+
+private lemma col_orthonormal {k : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : Matrix (Fin k) ι ℝ) (hV : Vᵀ * V = 1) : Orthonormal ℝ (col V) := by
+  rw [orthonormal_iff_ite]
+  intro a b
+  have := congrFun (congrFun hV b) a
+  simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply] at this
+  simp only [col, PiLp.inner_apply, RCLike.inner_apply, conj_trivial]
+  rw [this]
+  by_cases h : a = b
+  · subst h; simp
+  · simp [h, Ne.symm h]
+
+/-- A real matrix with orthonormal columns has at most as many columns as rows.
+Ported from the Prove2me workspace (Gaussian Random Matrices series). Atlas
+`orthonormal-completion`. -/
+theorem card_le_of_transpose_mul_self_eq_one {k : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : Matrix (Fin k) ι ℝ) (hV : Vᵀ * V = 1) : Fintype.card ι ≤ k := by
+  have := (col_orthonormal V hV).linearIndependent.fintype_card_le_finrank
+  simpa [finrank_euclideanSpace] using this
+
+/-- **Orthogonal completion.** A real matrix `V` with orthonormal columns indexed by `ι`, placed
+in the columns `e '' ι` of `Fin k`, extends to an orthogonal `k × k` matrix `W`.
+Helper for HMT 2011 §10.2. Ported from the Prove2me workspace (Gaussian Random Matrices
+series). Atlas `orthonormal-completion`. -/
+theorem exists_orthogonal_completion {k : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : Matrix (Fin k) ι ℝ) (hV : Vᵀ * V = 1) (e : ι ↪ Fin k) :
+    ∃ W : Matrix (Fin k) (Fin k) ℝ, Wᵀ * W = 1 ∧ ∀ i j, W i (e j) = V i j := by
+  classical
+  let v : Fin k → EuclideanSpace ℝ (Fin k) := Function.extend e (col V) 0
+  have hv : Orthonormal ℝ ((Set.range e).domRestrict v) := by
+    have h1 : (Set.range e).domRestrict v =
+        col V ∘ (Equiv.ofInjective e e.injective).symm := by
+      funext x
+      obtain ⟨a, j, rfl⟩ := x
+      have : (Equiv.ofInjective e e.injective).symm ⟨e j, j, rfl⟩ = j :=
+        (Equiv.ofInjective e e.injective).symm_apply_eq.mpr rfl
+      simp only [Set.domRestrict_apply, Function.comp_apply, this, v]
+      exact e.injective.extend_apply _ _ _
+    rw [h1]
+    exact (col_orthonormal V hV).comp _ (Equiv.injective _)
+  obtain ⟨b, hb⟩ := hv.exists_orthonormalBasis_extension_of_card_eq
+    (by simp [finrank_euclideanSpace])
+  refine ⟨Matrix.of fun i a => b a i, ?_, ?_⟩
+  · ext a c
+    have := (orthonormal_iff_ite.mp b.orthonormal) c a
+    simp only [PiLp.inner_apply, RCLike.inner_apply, conj_trivial] at this
+    simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, Matrix.one_apply]
+    rw [show (if a = c then (1:ℝ) else 0) = if c = a then 1 else 0 by simp [eq_comm], ← this]
+  · intro i j
+    simp only [Matrix.of_apply]
+    rw [hb (e j) ⟨j, rfl⟩]
+    simp only [v, e.injective.extend_apply, col]
+
+/-- **Orthonormal complement.** A matrix `Q` with orthonormal columns has a complement `Qp` with
+orthonormal columns and `QQᵀ + QpQpᵀ = I` (here `Qp` has `k − q` columns). From
+`exists_orthogonal_completion`. Atlas `orthonormal-completion`. -/
+theorem exists_orthonormal_complement {k q : ℕ} (Q : Matrix (Fin k) (Fin q) ℝ)
+    (hQ : HasOrthonormalCols Q) :
+    ∃ r : ℕ, ∃ Qp : Matrix (Fin k) (Fin r) ℝ,
+      HasOrthonormalCols Qp ∧ Q * Qᵀ + Qp * Qpᵀ = 1 := by
+  have hqk : q ≤ k := by simpa using card_le_of_transpose_mul_self_eq_one Q hQ
+  obtain ⟨r, rfl⟩ : ∃ r, k = q + r := ⟨k - q, by omega⟩
+  obtain ⟨W, hW, hWQ⟩ := exists_orthogonal_completion Q hQ (Fin.castAddEmb r)
+  have hWW : W * Wᵀ = 1 := mul_eq_one_comm.mp hW
+  refine ⟨r, Matrix.of fun i j => W i (Fin.natAdd q j), ?_, ?_⟩
+  · ext a b
+    have := congrFun (congrFun hW (Fin.natAdd q a)) (Fin.natAdd q b)
+    simpa [Matrix.mul_apply, Matrix.one_apply, Fin.natAdd_inj] using this
+  · ext a b
+    have := congrFun (congrFun hWW a) b
+    rw [Matrix.mul_apply, Fin.sum_univ_add] at this
+    simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply]
+    rw [← this]
+    congr 1
+    refine Finset.sum_congr rfl fun j _ => ?_
+    simp only [Matrix.transpose_apply]
+    rw [← hWQ a j, ← hWQ b j]
+    rfl
 
 end NLAlib

@@ -8,7 +8,9 @@ import Mathlib.Analysis.Normed.Module.FiniteDimension
 /-!
 # Theorem 3.6.1 — Master expectation and tail bounds
 
-Lean name: `NLAlib.master_bounds`.
+Main declaration: `NLAlib.master_bounds`.
+
+Atlas: `matrix-laplace`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 3.6.1, equations (3.6.1–4), printed pp. 36.
 -/
@@ -17,6 +19,11 @@ open scoped Matrix.Norms.L2Operator
 open NLAlib
 set_option autoImplicit false
 
+/-- Master bounds for an independent sum of Hermitian random matrices: the expectation and tail of
+`λmax` (for `θ > 0`) and of `λmin` (for `θ < 0`) are controlled by `traceExp (cumulantSum μ X θ)`.
+
+Tropp 2015, Thm 3.6.1. Atlas: `matrix-laplace`. Ported from the Prove2me mission *An Introduction
+to Matrix Concentration Inequalities, Ch 3*. -/
 theorem NLAlib.master_bounds {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (θ : ℝ)
@@ -41,21 +48,21 @@ theorem NLAlib.master_bounds {Ω : Type*} [MeasurableSpace Ω]
     exact isSelfAdjoint_sum _ (fun k _ => hω k)
   have hYInt : Integrable (fun ω => ∑ k, X k ω) μ :=
     integrable_finsetSum _ (fun k _ => hInt k)
-  have hYExp := ch3_master_sum_exponential_integrable μ X θ hMeas hHerm hIndep hExp
+  have hYExp := integrable_matrixExp_smul_sum_of_iIndepFun μ X θ hMeas hHerm hIndep hExp
   have hTrInt : Integrable (fun ω => traceExp (θ • ∑ k, X k ω)) μ := by
     exact Complex.reCLM.integrable_comp
       ((Matrix.traceLinearMap (Fin d) ℂ ℂ).toContinuousLinearMap.integrable_comp hYExp)
   have hTrNonneg : ∀ᵐ ω ∂μ, 0 ≤ traceExp (θ • ∑ k, X k ω) := by
     filter_upwards [hYHerm] with ω hω
-    exact (ch3_tail_spectral_comparison _ hω θ).1
+    exact (exp_mul_lambdaMax_lambdaMin_le_traceExp_smul _ hω θ).1
   have hTrPos (hθ : θ ≠ 0) : 0 < ∫ ω, traceExp (θ • ∑ k, X k ω) ∂μ := by
     have hPos : ∀ᵐ ω ∂μ, 0 < traceExp (θ • ∑ k, X k ω) := by
       filter_upwards [hYHerm] with ω hω
       rcases lt_or_gt_of_ne hθ with hneg | hpos
       · exact (Real.exp_pos _).trans_le
-          ((ch3_tail_spectral_comparison _ hω θ).2.2 hneg)
+          ((exp_mul_lambdaMax_lambdaMin_le_traceExp_smul _ hω θ).2.2 hneg)
       · exact (Real.exp_pos _).trans_le
-          ((ch3_tail_spectral_comparison _ hω θ).2.1 hpos)
+          ((exp_mul_lambdaMax_lambdaMin_le_traceExp_smul _ hω θ).2.1 hpos)
     apply (integral_pos_iff_support_of_nonneg_ae hTrNonneg hTrInt).2
     have hFull : Function.support (fun ω => traceExp (θ • ∑ k, X k ω)) =ᵐ[μ]
         (Set.univ : Set Ω) := by
@@ -69,8 +76,8 @@ theorem NLAlib.master_bounds {Ω : Type*} [MeasurableSpace Ω]
       traceExp (cumulantSum μ X θ) := by
     simpa only [Finset.smul_sum] using
       trace_cgf_subadditivity μ X θ hMeas hHerm hIndep hExp
-  have hTails := ch3_laplace_tails μ (fun ω => ∑ k, X k ω) θ hYMeas hYHerm hYExp
-  have hMeans := ch3_laplace_expectations μ (fun ω => ∑ k, X k ω) θ
+  have hTails := measure_lambdaMax_ge_le_and_measure_lambdaMin_le_le μ (fun ω => ∑ k, X k ω) θ hYMeas hYHerm hYExp
+  have hMeans := integral_lambdaMax_le_and_le_integral_lambdaMin μ (fun ω => ∑ k, X k ω) θ
     hYMeas hYHerm hYInt hYExp
   constructor
   · intro hθ

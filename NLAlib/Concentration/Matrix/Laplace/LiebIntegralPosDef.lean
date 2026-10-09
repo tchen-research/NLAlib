@@ -5,7 +5,9 @@ import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 /-!
 # Expectation of an almost surely positive-definite matrix
 
-Lean name: `NLAlib.ch3_lieb_integral_posDef`.
+Main declaration: `NLAlib.posDef_integral_of_ae_posDef`.
+
+Atlas: `matrix-laplace` (step of Corollary 3.4.2).
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Auxiliary positive-definite integration fact used in Corollary 3.4.2, printed p. 35; quadratic-form definition (2.1.10), printed p. 20.
 -/
@@ -14,7 +16,14 @@ open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 open NLAlib
 set_option autoImplicit false
 
-theorem NLAlib.ch3_lieb_integral_posDef {Ω : Type*} [MeasurableSpace Ω]
+/-- The expectation of an integrable, almost surely positive definite random matrix is positive
+definite.
+
+Tropp 2015, fact used in Corollary 3.4.2. Atlas: `matrix-laplace`. Ported from the Prove2me
+mission *An Introduction to Matrix Concentration Inequalities, Ch 3*.
+
+Auxiliary; not a numbered result in the source. -/
+theorem NLAlib.posDef_integral_of_ae_posDef {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ}
     (Z : Ω → Matrix (Fin d) (Fin d) ℂ)
     (hInt : Integrable Z μ) (hPD : ∀ᵐ ω ∂μ, (Z ω).PosDef) :

@@ -5,7 +5,9 @@ import Mathlib.MeasureTheory.Integral.Prod
 /-!
 # Lieb replacement for an independent random matrix offset
 
-Lean name: `NLAlib.ch3_cgf_independent_replacement`.
+Main declaration: `NLAlib.integral_traceExp_add_le_integral_traceExp_add_matrixLog`.
+
+Atlas: `matrix-laplace` (step of Lemma 3.5.1).
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Proof of Lemma 3.5.1, printed pp. 35–36, applying Corollary 3.4.2.
 -/
@@ -14,7 +16,12 @@ open scoped Matrix.Norms.L2Operator
 set_option autoImplicit false
 open NLAlib
 
-theorem NLAlib.ch3_cgf_independent_replacement {Ω : Type*} [MeasurableSpace Ω]
+/-- For independent Hermitian random matrices `H`, `X`, replacing `X` by `matrixLog 𝔼 matrixExp X`
+does not decrease `𝔼 traceExp (H + X)`.
+
+Tropp 2015, proof of Lemma 3.5.1 (via Corollary 3.4.2). Atlas: `matrix-laplace`. Ported from the
+Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 3*. -/
+theorem NLAlib.integral_traceExp_add_le_integral_traceExp_add_matrixLog {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} [NeZero d]
     (H X : Ω → Matrix (Fin d) (Fin d) ℂ)
     (hMeasH : Measurable H) (hMeasX : Measurable X)
@@ -56,7 +63,7 @@ theorem NLAlib.ch3_cgf_independent_replacement {Ω : Type*} [MeasurableSpace Ω]
     (ae_map_iff hMeasX.aemeasurable hclosed).2 hHermX
   have hmh : ∀ᵐ A ∂μ.map H, A.IsHermitian :=
     (ae_map_iff hMeasH.aemeasurable hclosed).2 hHermH
-  haveI : IsProbabilityMeasure (μ.map X) := Measure.isProbabilityMeasure_map hMeasX.aemeasurable
+  have : IsProbabilityMeasure (μ.map X) := Measure.isProbabilityMeasure_map hMeasX.aemeasurable
   calc
     (∫ ω, traceExp (H ω + X ω) ∂μ) =
         ∫ p : M × M, traceExp (p.1 + p.2) ∂((μ.map H).prod (μ.map X)) := by
@@ -65,7 +72,7 @@ theorem NLAlib.ch3_cgf_independent_replacement {Ω : Type*} [MeasurableSpace Ω]
     _ ≤ ∫ A : M, traceExp (A + matrixLog (∫ u, matrixExp (X u) ∂μ)) ∂μ.map H := by
       apply integral_mono_ae hp.integral_prod_left hr
       filter_upwards [hmh] with A hA
-      have h := ch3_probabilistic_lieb (μ.map X) A hA id measurable_id hmx he
+      have h := integral_traceExp_add_le_traceExp_add_matrixLog (μ.map X) A hA id measurable_id hmx he
       simpa only [id_eq, integral_map hMeasX.aemeasurable hec.aestronglyMeasurable] using h
     _ = _ := integral_map hMeasH.aemeasurable hrc.aestronglyMeasurable
 

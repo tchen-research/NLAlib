@@ -1,0 +1,21 @@
+{
+  "NLAlib.inv_chi_square_moment": "NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal",
+  "NLAlib.inv_chi_square_moment_fin": "NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal_fin",
+  "NLAlib.schur_diag_inv": "NLAlib.inv_self_mul_transpose_apply_self",
+  "NLAlib.gaussian_residual_law": "NLAlib.pi_gaussianReal_map_sq_dist_rowSpace",
+  "NLAlib.inverse_wishart_mean": "NLAlib.integrable_and_integral_inv_self_mul_transpose_gaussianMatrix",
+  "NLAlib.inverse_wishart_mean_matrix": "NLAlib.integral_inv_self_mul_transpose_gaussianMatrix",
+  "NLAlib.pinv_frobenius_moment": "NLAlib.integrable_and_integral_frobSq_pinvR_gaussianMatrix",
+  "NLAlib.rsvd_inverse_moment_factor": "NLAlib.integral_frobSq_mul_block_mul_pinvR_block",
+  "NLAlib.integrable_rsvd_inverse_moment": "NLAlib.integrable_frobSq_mul_block_mul_pinvR_block",
+  "NLAlib.completion_inverse_moment_factor": "NLAlib.integral_frobSq_pinvL_block_mul_block_mul",
+  "NLAlib.integral_pinvR_frobSq_block": "NLAlib.integral_frobSq_pinvR_block",
+  "NLAlib.integral_coord_mul4": "NLAlib.integral_coord_mul_coord_mul_coord_mul_coord",
+  "NLAlib.mulVec_dotProduct_mulVec_self_of_orthonormal": "NLAlib.mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols",
+  "NLAlib.isSubspaceEmbedding_iff_of_orthonormal": "NLAlib.isSubspaceEmbedding_iff_of_hasOrthonormalCols",
+  "NLAlib.isSubspaceEmbedding_of_specNorm_gram_sub_one_le": "NLAlib.isSubspaceEmbedding_of_specNorm_transpose_mul_self_sub_one_le",
+  "NLAlib.jl_exponent_pos": "NLAlib.sq_div_four_sub_pow_three_div_six_pos",
+  "NLAlib.jl_bound_le_of_log_le": "NLAlib.sq_mul_two_mul_exp_neg_mul_le_of_inv_mul_log_le",
+  "NLAlib.jl_lemma_le_of_log_le": "NLAlib.jl_lemma_prob_le_of_log_le",
+  "NLAlib.jl_lemma_le_half": "NLAlib.jl_lemma_prob_le_half"
+}

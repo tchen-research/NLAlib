@@ -10,7 +10,9 @@ import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 /-!
 # Lemma 5.4.1 — Matrix Chernoff mgf and cgf bounds
 
-Lean name: `NLAlib.ch5_chernoff_mgf_cgf`.
+Main declaration: `NLAlib.chernoff_matrix_mgf_cgf_le`.
+
+Atlas: `matrix-chernoff`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Lemma 5.4.1, printed p. 70.
 -/
@@ -19,10 +21,9 @@ open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 set_option autoImplicit false
 
 namespace NLAlib
-namespace Ch5ChernoffMgf
 
 /-- Scalar chord bound: `exp (θ x) ≤ 1 + g x` on `[0, L]`. -/
-lemma scalar_bound (L θ x : ℝ) (hL : 0 ≤ L) (hx0 : 0 ≤ x) (hxL : x ≤ L) :
+private lemma scalar_bound (L θ x : ℝ) (hL : 0 ≤ L) (hx0 : 0 ≤ x) (hxL : x ≤ L) :
     Real.exp (θ * x) ≤ 1 + chernoffCgfCoefficient L θ * x := by
   unfold chernoffCgfCoefficient
   split_ifs with h
@@ -40,25 +41,25 @@ lemma scalar_bound (L θ x : ℝ) (hL : 0 ≤ L) (hx0 : 0 ≤ x) (hxL : x ≤ L)
       _ ≤ (1 - t) + t * Real.exp (θ * L) := hc
       _ = 1 + (Real.exp (θ * L) - 1) / L * x := by rw [hxe]; field_simp; ring
 
-lemma spec_mem {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
+private lemma spec_mem {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
     (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) : ∀ x ∈ spectrum ℝ A, 0 ≤ x ∧ x ≤ L := by
   intro x hx
   have hfin : (spectrum ℝ A).Finite := by
     rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
   exact ⟨hB.1.trans (csInf_le hfin.bddBelow hx), (le_csSup hfin.bddAbove hx).trans hB.2⟩
 
-lemma matrixExp_smul_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
+private lemma matrixExp_smul_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
     matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
   rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp
     (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
     ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
 
-lemma affine_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
+private lemma affine_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
     (1 : Matrix (Fin d) (Fin d) ℂ) + c • A = cfc (fun x : ℝ => 1 + c * x) A := by
   rw [cfc_const_add 1 (fun x : ℝ => c * x) A (by fun_prop) hA.isSelfAdjoint,
     cfc_const_mul_id c A hA.isSelfAdjoint, map_one]
 
-lemma pointwise {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L θ : ℝ)
+private lemma pointwise {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L θ : ℝ)
     (hL : 0 ≤ L) (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) :
     matrixExp (θ • A) ≤ 1 + chernoffCgfCoefficient L θ • A := by
   rw [matrixExp_smul_eq A hA, affine_eq A hA]
@@ -66,14 +67,14 @@ lemma pointwise {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) 
   have := spec_mem A hA L hB x hx
   exact scalar_bound L θ x hL this.1 this.2
 
-lemma norm_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
+private lemma norm_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
     (hL : 0 ≤ L) (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) : ‖A‖ ≤ L := by
   have h := norm_cfc_le (a := A) (f := fun x : ℝ => x) hL (fun x hx => by
     have := spec_mem A hA L hB x hx
     rw [Real.norm_eq_abs, abs_of_nonneg this.1]; exact this.2)
   rwa [cfc_id' ℝ A hA.isSelfAdjoint] at h
 
-lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
+private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
     (L θ : ℝ) (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) :
     ‖matrixExp (θ • A)‖ ≤ Real.exp (|θ| * L) := by
   rw [matrixExp_smul_eq A hA]
@@ -86,13 +87,13 @@ lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.
     _ = |θ| * x := by rw [abs_mul, abs_of_nonneg this.1]
     _ ≤ |θ| * L := mul_le_mul_of_nonneg_left this.2 (abs_nonneg θ)
 
-lemma nonneg {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
+private lemma nonneg {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
     (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) : (0 : Matrix (Fin d) (Fin d) ℂ) ≤ A := by
   have h : (0 : Matrix (Fin d) (Fin d) ℂ) ≤ cfc (fun x : ℝ => x) A :=
     cfc_nonneg (fun x hx => (spec_mem A hA L hB x hx).1)
   rwa [cfc_id' ℝ A hA.isSelfAdjoint] at h
 
-lemma one_add_le_exp {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) :
+private lemma one_add_le_exp {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) :
     1 + B ≤ matrixExp B := by
   have e1 : (1 : Matrix (Fin d) (Fin d) ℂ) + B = cfc (fun x : ℝ => 1 + x) B := by
     rw [cfc_const_add 1 (fun x : ℝ => x) B (by fun_prop) hB.isSelfAdjoint,
@@ -101,7 +102,7 @@ lemma one_add_le_exp {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermit
   refine cfc_mono (fun x _ => ?_) (by fun_prop) (by fun_prop)
   linarith [Real.add_one_le_exp x]
 
-lemma log_one_add_le {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hpd : (1 + B).PosDef) :
+private lemma log_one_add_le {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hpd : (1 + B).PosDef) :
     matrixLog (1 + B) ≤ B := by
   have hH : (1 + B).IsHermitian := hpd.isHermitian
   have hspec : ∀ y ∈ spectrum ℝ (1 + B), 0 < y := by
@@ -118,26 +119,33 @@ lemma log_one_add_le {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hpd : (1 + B).P
         exact Real.continuousOn_log.mono (fun y hy => (hspec y hy).ne')
     _ = B := e2
 
-end Ch5ChernoffMgf
 end NLAlib
 
 open NLAlib
 
-theorem NLAlib.ch5_chernoff_mgf_cgf {Ω : Type*} [MeasurableSpace Ω]
+/-- For a random positive semidefinite `X` with `λmax X ≤ L`, `𝔼 matrixExp (θ • X) ≼ matrixExp (g(θ) •
+𝔼 X)` and `matrixLog 𝔼 matrixExp (θ • X) ≼ g(θ) • 𝔼 X`, where `g = chernoffCgfCoefficient L`.
+
+Tropp 2015, Lemma 5.4.1. Atlas: `matrix-chernoff`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 5*.
+
+Stated for all real `θ`; `L = 0` is handled by the piecewise definition of
+`chernoffCgfCoefficient`. -/
+theorem NLAlib.chernoff_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} [NeZero d]
     (X : Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 ≤ L)
     (hMeas : Measurable X) (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian)
     (hBound : ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (X ω) ∧ lambdaMax (X ω) ≤ L)
     (θ : ℝ) :
-    loewnerLE (∫ ω, matrixExp (θ • X ω) ∂μ)
+    LoewnerLE (∫ ω, matrixExp (θ • X ω) ∂μ)
       (matrixExp (chernoffCgfCoefficient L θ • (∫ ω, X ω ∂μ))) ∧
-    loewnerLE (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ))
+    LoewnerLE (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ))
       (chernoffCgfCoefficient L θ • (∫ ω, X ω ∂μ)) := by
   set g := chernoffCgfCoefficient L θ with hg
   have hXae : AEStronglyMeasurable X μ := hMeas.aestronglyMeasurable
   have hXint : Integrable X μ := Integrable.of_bound hXae L (by
     filter_upwards [hHerm, hBound] with ω h1 h2
-    exact Ch5ChernoffMgf.norm_le (X ω) h1 L hL h2)
+    exact norm_le (X ω) h1 L hL h2)
   let : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) ℂ) :=
     NormedAlgebra.restrictScalars ℚ ℂ _
   have hcont : Continuous (fun A : Matrix (Fin d) (Fin d) ℂ => matrixExp (θ • A)) := by
@@ -146,12 +154,12 @@ theorem NLAlib.ch5_chernoff_mgf_cgf {Ω : Type*} [MeasurableSpace Ω]
   have hEint : Integrable (fun ω => matrixExp (θ • X ω)) μ :=
     Integrable.of_bound (hcont.comp_aestronglyMeasurable hXae) (Real.exp (|θ| * L)) (by
       filter_upwards [hHerm, hBound] with ω h1 h2
-      exact Ch5ChernoffMgf.norm_exp_le (X ω) h1 L θ h2)
+      exact norm_exp_le (X ω) h1 L θ h2)
   -- pointwise transfer rule and integration
   have hdiff : ∀ᵐ ω ∂μ, (0 : Matrix (Fin d) (Fin d) ℂ) ≤
       ((1 : Matrix (Fin d) (Fin d) ℂ) + g • X ω) - matrixExp (θ • X ω) := by
     filter_upwards [hHerm, hBound] with ω h1 h2
-    exact sub_nonneg.mpr (Ch5ChernoffMgf.pointwise (X ω) h1 L θ hL h2)
+    exact sub_nonneg.mpr (pointwise (X ω) h1 L θ hL h2)
   have h0 := integral_nonneg_of_ae hdiff
   have hAint : Integrable (fun ω => (1 : Matrix (Fin d) (Fin d) ℂ) + g • X ω) μ :=
     (integrable_const _).add (hXint.smul g)
@@ -167,21 +175,21 @@ theorem NLAlib.ch5_chernoff_mgf_cgf {Ω : Type*} [MeasurableSpace Ω]
   have hM0 : (0 : Matrix (Fin d) (Fin d) ℂ) ≤ ∫ ω, X ω ∂μ := by
     apply integral_nonneg_of_ae
     filter_upwards [hHerm, hBound] with ω h1 h2
-    exact Ch5ChernoffMgf.nonneg (X ω) h1 L h2
+    exact nonneg (X ω) h1 L h2
   have hMherm : (∫ ω, X ω ∂μ).IsHermitian := (Matrix.nonneg_iff_posSemidef.mp hM0).isHermitian
   have hBherm : (g • ∫ ω, X ω ∂μ).IsHermitian :=
     hMherm.smul (isSelfAdjoint_iff.mpr (star_trivial g))
-  have h1B := Ch5ChernoffMgf.one_add_le_exp _ hBherm
+  have h1B := one_add_le_exp _ hBherm
   refine ⟨Matrix.le_iff.mp (hE_le.trans h1B), ?_⟩
   -- part (2)
   have hEpd : (∫ ω, matrixExp (θ • X ω) ∂μ).PosDef := by
-    apply ch3_lieb_integral_posDef μ _ hEint
+    apply posDef_integral_of_ae_posDef μ _ hEint
     filter_upwards [hHerm] with ω h1
-    exact (ch3_cgf_exp_log _ (h1.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))).1
+    exact (posDef_matrixExp_and_matrixLog_matrixExp _ (h1.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))).1
   have hD := Matrix.le_iff.mp hE_le
   have h1Bpd : ((1 : Matrix (Fin d) (Fin d) ℂ) + g • ∫ ω, X ω ∂μ).PosDef := by
     have := hEpd.add_posSemidef hD
     rwa [add_sub_cancel] at this
-  have hlog1 := ch8_log_operator_monotone _ _ hEpd h1Bpd hD
-  have hlog2 := Ch5ChernoffMgf.log_one_add_le _ h1Bpd
+  have hlog1 := matrixLog_le_matrixLog _ _ hEpd h1Bpd hD
+  have hlog2 := log_one_add_le _ h1Bpd
   exact Matrix.le_iff.mp ((Matrix.le_iff.mpr hlog1).trans hlog2)

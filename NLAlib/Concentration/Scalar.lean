@@ -1,4 +1,5 @@
 import Mathlib.Probability.Moments.SubGaussian
+import NLAlib.Concentration.Scalar.TailIntegral
 
 /-!
 # Scalar concentration

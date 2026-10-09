@@ -23,8 +23,9 @@ What is proved here is the paper's own reasoning: linearity and monotonicity of 
 Jensen `E Y ≤ √(E Y²)`, and the arithmetic with explicit constants.
 
 Ported from the LRA project (Chen–Persson formalization, same Mathlib pin),
-`LRA/Probability/Assembly.lean` (`expectation_jensen_sqrt`, `rsvd_assembly`, `rsvd_explicit`,
-`gn_assembly`, `gn_explicit`) and `LRA/Arithmetic/Constants.lean` (`completion_factor_mono`).
+`LRA/Probability/Assembly.lean` (`expectation_jensen_sqrt`, here
+`integral_le_sqrt_integral_sq`; `rsvd_assembly`, `rsvd_explicit`, `gn_assembly`, `gn_explicit`)
+and `LRA/Arithmetic/Constants.lean` (`completion_factor_mono`).
 
 Atlas: `rsvd-expected-error`, `gn-expected-error`.
 -/
@@ -44,7 +45,7 @@ variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
 square-integrable random variable `Y`, `E Y ≤ √(E Y²)`. Proved from
 `0 ≤ Var Y = E Y² − (E Y)²`. Helper for atlas `rsvd-expected-error` (Frobenius-norm,
 unsquared form of HMT 2011, Thm 10.5). -/
-theorem expectation_jensen_sqrt [IsProbabilityMeasure μ] {Y : Ω → ℝ} (hY : 0 ≤ Y)
+theorem integral_le_sqrt_integral_sq [IsProbabilityMeasure μ] {Y : Ω → ℝ} (hY : 0 ≤ Y)
     (hYi : Integrable Y μ) (hY2 : Integrable (fun ω => Y ω ^ 2) μ) :
     ∫ ω, Y ω ∂μ ≤ Real.sqrt (∫ ω, Y ω ^ 2 ∂μ) := by
   have hL2 : MemLp Y 2 μ := (memLp_two_iff_integrable_sq hYi.aestronglyMeasurable).mpr hY2
@@ -67,7 +68,7 @@ theorem completion_factor_mono {q k s : ℝ} (hq : 0 ≤ q) (hqk : q ≤ k) (hks
 
 /-- Assembly of Chen–Persson, Theorem `thm:RSVD` (HMT 2011, Thm 10.5, Frobenius case).
 * `X = ‖A − Â‖_F²`, `Zsq = ‖Σ₂ Ω₂ Ω₁†‖_F²`, `OPTsq = ‖Σ₂‖_F² = ‖A − ⟦A⟧ₖ‖_F²`.
-* `hX` is `prop:hmt-struct` (deterministic; `NLAlib.rangeFinder_frobSq_le`).
+* `hX` is `prop:hmt-struct` (deterministic; `NLAlib.frobSq_residual_le_of_range_subset`).
 * `hZ` encodes `lem:moments` + `lem:invmom` after the tower property:
   `E ‖Σ₂ Ω₂ Ω₁†‖_F² = ‖Σ₂‖_F² · k/(t−k−1)`; here with a general constant `c`.
 Atlas `rsvd-expected-error`. -/

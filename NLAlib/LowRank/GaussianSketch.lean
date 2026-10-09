@@ -2,6 +2,7 @@ import NLAlib.LowRank.RSVD
 import NLAlib.LowRank.GeneralizedNystrom
 import NLAlib.Gaussian.Conditioning
 import NLAlib.Gaussian.InverseMoments
+import NLAlib.Matrix.Measurable
 
 /-!
 # Randomized SVD and generalized Nyström with Gaussian test matrices
@@ -54,14 +55,15 @@ theorem ae_isUnit_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
     ((measurable_block V₁).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΩ)) h
 
 /-- Integrability of `‖(V₁ᵀΩ)†‖_F²` for an `n × t` standard Gaussian `Ω`, `V₁ᵀV₁ = 1`,
-`k + 2 ≤ t`: the integrability half of the inverse moment (`pinv_frobenius_moment`) transported
+`k + 2 ≤ t`: the integrability half of the inverse moment
+(`integrable_and_integral_frobSq_pinvR_gaussianMatrix`) transported
 by the block law. HMT 2011 Prop 10.2 and §10.2. Atlas `rsvd-expected-error`
 (uses `gaussian-conditioning`, `pinv-frob-moment`). -/
 theorem integrable_pinvR_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
     (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (hV₁ : V₁ᵀ * V₁ = 1) (hkt : k + 2 ≤ t) :
     Integrable (fun ω => frobSq (pinvR (V₁ᵀ * Matrix.of (Ω ω)))) μ := by
-  have h := (pinv_frobenius_moment hkt).1
+  have h := (integrable_and_integral_frobSq_pinvR_gaussianMatrix hkt).1
   rw [← map_block_eq_gaussianMatrix hΩ V₁ hV₁] at h
   exact h.comp_aemeasurable
     ((measurable_block V₁).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΩ))
@@ -73,14 +75,15 @@ theorem integral_pinvR_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ
     (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (hV₁ : V₁ᵀ * V₁ = 1) (hkt : k + 2 ≤ t) :
     ∫ ω, frobSq (pinvR (V₁ᵀ * Matrix.of (Ω ω))) ∂μ = (k : ℝ) / ((t : ℝ) - k - 1) := by
-  rw [integral_pinvR_frobSq_block hΩ V₁ hV₁, (pinv_frobenius_moment hkt).2]
+  rw [integral_frobSq_pinvR_block hΩ V₁ hV₁,
+    (integrable_and_integral_frobSq_pinvR_gaussianMatrix hkt).2]
 
 end Block
 
 section RSVD
 
 variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
-variable {m n k r r' t q : ℕ}
+variable {m q : Type*} [Fintype m] [Fintype q] [DecidableEq q] {n k r r' t : ℕ}
 
 /-- The three Gaussian inputs of `rsvd_main` / `rsvd_truncated_main` for a standard Gaussian test
 matrix `Ω` (law `gaussianMatrix n t` of the array view `Matrix.of.symm ∘ Ω`): `hunit` (a.s.
@@ -97,10 +100,10 @@ theorem rsvd_gaussian_inputs {V₁ : Matrix (Fin n) (Fin k) ℝ}
       = (k : ℝ) / (t - k - 1) * frobSq S₂) ∧
     Integrable (fun ω => frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω))) μ := by
   refine ⟨ae_isUnit_block hΩ V₁ hV₁ (by omega), ?_, ?_⟩
-  · have h := rsvd_inverse_moment_factor hΩ V₁ V₂ hV₁ hV₂ hV S₂
+  · have h := integral_frobSq_mul_block_mul_pinvR_block hΩ V₁ V₂ hV₁ hV₂ hV S₂
     rw [integral_pinvR_block hΩ V₁ hV₁ hkt] at h
     exact h.trans (mul_comm _ _)
-  · exact integrable_rsvd_inverse_moment hΩ V₁ V₂ hV₁ hV₂ hV S₂
+  · exact integrable_frobSq_mul_block_mul_pinvR_block hΩ V₁ V₂ hV₁ hV₂ hV S₂
       (integrable_pinvR_block hΩ V₁ hV₁ hkt)
 
 /-- The RSVD bound `(1 + k/(t−k−1))‖S₂‖_F²` is nonnegative when `k + 2 ≤ t`. Helper for the
@@ -118,12 +121,14 @@ RSVD; HMT 2011, Thm 10.5, Frobenius case): if `Ω` is an `n × t` standard Gauss
 `rsvd_main` with its Gaussian hypotheses `hunit`, `hinv`, `hZi` discharged. The integrability
 hypothesis `hXi` is also removed: when the error is not integrable its Bochner integral is `0`
 and the (nonnegative) bound holds trivially. No measurability of `Q` is required.
-Deviation: row index types `Fin m`, `Fin n`; `q` fixed (see `RSVD.lean`).
+Deviation: `n`, `k`, `r`, `r'`, `t` are `Fin` (the Gaussian law of `Ω` and the block lemmas of
+`Gaussian/Conditioning.lean` live on `Fin`); the row type `m` and the column type `q` of `Q`
+are arbitrary.
 Atlas `rsvd-expected-error` (uses `gaussian-conditioning`, `pinv-frob-moment`,
 `gaussian-full-rank-ae`, `hmt-9-1-frobenius`). -/
 theorem rsvd_main_gaussian
-    {A : Matrix (Fin m) (Fin n) ℝ} {U₁ : Matrix (Fin m) (Fin k) ℝ}
-    {U₂ : Matrix (Fin m) (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
+    {A : Matrix m (Fin n) ℝ} {U₁ : Matrix m (Fin k) ℝ}
+    {U₂ : Matrix m (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
     {V₂ : Matrix (Fin n) (Fin r') ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
     {S₂ : Matrix (Fin r) (Fin r') ℝ}
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
@@ -131,7 +136,7 @@ theorem rsvd_main_gaussian
     (hkt : k + 2 ≤ t)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
     (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
-    (Q : Ωs → Matrix (Fin m) (Fin q) ℝ)
+    (Q : Ωs → Matrix m q ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω) :
     ∫ ω, frobSq (A - Q ω * ((Q ω)ᵀ * A)) ∂μ ≤ (1 + (k : ℝ) / (t - k - 1)) * frobSq S₂ := by
@@ -147,8 +152,8 @@ Algorithm tRSVD, output `Q⟦QᵀA⟧ₖ`; HMT 2011, Thm 10.5): as `rsvd_main_ga
 remains. Atlas `rsvd-expected-error` (uses `gaussian-conditioning`, `pinv-frob-moment`,
 `gaussian-full-rank-ae`, `hmt-9-1-frobenius`). -/
 theorem rsvd_truncated_main_gaussian
-    {A : Matrix (Fin m) (Fin n) ℝ} {U₁ : Matrix (Fin m) (Fin k) ℝ}
-    {U₂ : Matrix (Fin m) (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
+    {A : Matrix m (Fin n) ℝ} {U₁ : Matrix m (Fin k) ℝ}
+    {U₂ : Matrix m (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
     {V₂ : Matrix (Fin n) (Fin r') ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
     {S₂ : Matrix (Fin r) (Fin r') ℝ}
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
@@ -156,7 +161,7 @@ theorem rsvd_truncated_main_gaussian
     (hkt : k + 2 ≤ t)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
     (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
-    (Q : Ωs → Matrix (Fin m) (Fin q) ℝ) (Y : Ωs → Matrix (Fin q) (Fin n) ℝ)
+    (Q : Ωs → Matrix m q ℝ) (Y : Ωs → Matrix q (Fin n) ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω)
     (hY : ∀ ω, IsBestRankApprox k ((Q ω)ᵀ * A) (Y ω)) :
@@ -172,25 +177,6 @@ end RSVD
 section Completion
 
 variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs}
-
-/-- If `QᵀQ = 1`, `QpᵀQp = 1` and `QQᵀ + QpQpᵀ = 1`, then `QᵀQp = 0`. Atlas
-`gn-expected-error` (helper; belongs in `Matrix/Projections.lean`). -/
-theorem transpose_mul_eq_zero_of_completion {m : Type*} [Fintype m] [DecidableEq m] {q r : ℕ}
-    {Q : Matrix m (Fin q) ℝ} {Qp : Matrix m (Fin r) ℝ} (hQ : Qᵀ * Q = 1) (hQp : Qpᵀ * Qp = 1)
-    (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) : Qᵀ * Qp = 0 := by
-  have h := congrArg (fun M => Qᵀ * M * Qp) hcomp
-  simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_one] at h
-  rw [← Matrix.mul_assoc, hQ, Matrix.one_mul, Matrix.mul_assoc, Matrix.mul_assoc, hQp,
-    Matrix.mul_one] at h
-  -- h : Qᵀ * Qp + Qᵀ * Qp = Qᵀ * Qp
-  simpa using h
-
-/-- `(PᵀQ)ᵀ(PᵀQ) = (QᵀP)(QᵀP)ᵀ`. Atlas `gn-expected-error` (helper). -/
-theorem gram_transpose_mul_eq {m s q : ℕ} (P : Matrix (Fin m) (Fin s) ℝ)
-    (Q : Matrix (Fin m) (Fin q) ℝ) :
-    (Pᵀ * Q)ᵀ * (Pᵀ * Q) = (Qᵀ * P) * (Qᵀ * P)ᵀ := by
-  rw [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.transpose_mul,
-    Matrix.transpose_transpose]
 
 /-- The Gaussian inputs of `completion_reduction` for an `m × s` standard Gaussian `Ψ` and fixed
 `Q`, `Qp` with orthonormal, mutually orthogonal columns, `q + 2 ≤ s`: a.s. full column rank of
@@ -247,7 +233,7 @@ theorem completion_reduction_gaussian_integrable [IsProbabilityMeasure μ] {m s 
   have hQQp := transpose_mul_eq_zero_of_completion hQ hQp hcomp
   obtain ⟨hG₁, hG₁m, hGi⟩ :=
     completion_gaussian_inputs hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A) hqs
-  have hG₂ := completion_inverse_moment_factor hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A)
+  have hG₂ := integral_frobSq_pinvL_block_mul_block_mul hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A)
   refine ⟨?_, completion_reduction Q Qp A hQ hQp hcomp hq hqs Ψ hG₁ hG₂ hG₁m hGi⟩
   refine ((integrable_const (frobSq (residual Q A))).add hGi).congr ?_
   filter_upwards [hG₁] with ω h
@@ -272,70 +258,16 @@ theorem completion_reduction_gaussian [IsProbabilityMeasure μ] {m s q r : ℕ}
       = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) :=
   (completion_reduction_gaussian_integrable Q Qp A hQ hQp hcomp hq hqs Ψ hΨ).2
 
-/-- **Orthonormal complement.** A matrix `Q` with orthonormal columns has a complement `Qp` with
-orthonormal columns and `QQᵀ + QpQpᵀ = I` (here `Qp` has `m − q` columns). From
-`exists_orthogonal_completion`. Atlas `orthonormal-completion` (helper; belongs in
-`Gaussian/Invariance.lean` or `Matrix/Projections.lean`). -/
-theorem exists_orthonormal_complement {m q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ)
-    (hQ : HasOrthonormalCols Q) :
-    ∃ r : ℕ, ∃ Qp : Matrix (Fin m) (Fin r) ℝ,
-      HasOrthonormalCols Qp ∧ Q * Qᵀ + Qp * Qpᵀ = 1 := by
-  have hqm : q ≤ m := by simpa using card_le_of_transpose_mul_self_eq_one Q hQ
-  obtain ⟨r, rfl⟩ : ∃ r, m = q + r := ⟨m - q, by omega⟩
-  obtain ⟨W, hW, hWQ⟩ := exists_orthogonal_completion Q hQ (Fin.castAddEmb r)
-  have hWW : W * Wᵀ = 1 := mul_eq_one_comm.mp hW
-  refine ⟨r, Matrix.of fun i j => W i (Fin.natAdd q j), ?_, ?_⟩
-  · ext a b
-    have := congrFun (congrFun hW (Fin.natAdd q a)) (Fin.natAdd q b)
-    simpa [Matrix.mul_apply, Matrix.one_apply, Fin.natAdd_inj] using this
-  · ext a b
-    have := congrFun (congrFun hWW a) b
-    rw [Matrix.mul_apply, Fin.sum_univ_add] at this
-    simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply]
-    rw [← this]
-    congr 1
-    refine Finset.sum_congr rfl fun j _ => ?_
-    simp only [Matrix.transpose_apply]
-    rw [← hWQ a j, ← hWQ b j]
-    rfl
-
 end Completion
 
 section Measurability
 
-/-- Entries of `pinvL (f z)` are measurable when the entries of `f` are. Atlas
-`gn-expected-error` (measurability helper). -/
-theorem measurable_pinvL_entry_of {γ a b : Type*} [MeasurableSpace γ] [Fintype a] [Fintype b]
-    [DecidableEq b] {f : γ → Matrix a b ℝ} (hf : ∀ i j, Measurable fun z => f z i j)
-    (i : b) (j : a) : Measurable fun z => pinvL (f z) i j := by
-  have hF : Measurable fun z => (fun i j => f z i j : a → b → ℝ) :=
-    measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => hf i j
-  have hc : Continuous fun G : a → b → ℝ => (Matrix.of G)ᵀ * Matrix.of G :=
-    continuous_id.matrix_transpose.matrix_mul continuous_id
-  have hdet : Measurable fun z => ((f z)ᵀ * f z).det := hc.matrix_det.measurable.comp hF
-  have hadj : ∀ a' b', Measurable fun z => ((f z)ᵀ * f z).adjugate a' b' := fun a' b' =>
-    (hc.matrix_adjugate.matrix_elem a' b').measurable.comp hF
-  simp only [pinvL, Matrix.mul_apply, Matrix.transpose_apply, Matrix.inv_def,
-    Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul]
-  refine Finset.measurable_sum _ fun l _ => ?_
-  have h1 := hadj i l
-  have h2 := hf j l
-  fun_prop
-
-/-- Entries of a product of entrywise-measurable matrix maps are measurable. Atlas
-`gn-expected-error` (measurability helper). -/
-theorem measurable_mul_entry_of {γ a b c : Type*} [MeasurableSpace γ] [Fintype b]
-    {f : γ → Matrix a b ℝ} {g : γ → Matrix b c ℝ} (hf : ∀ i j, Measurable fun z => f z i j)
-    (hg : ∀ i j, Measurable fun z => g z i j) (i : a) (j : c) :
-    Measurable fun z => (f z * g z) i j := by
-  simp only [Matrix.mul_apply]
-  exact Finset.measurable_sum _ fun l _ => (hf i l).mul (hg l j)
-
 /-- `z ↦ ‖A − Q(z)(Ψ(z)ᵀQ(z))†Ψ(z)ᵀA‖_F²` is measurable for entrywise-measurable `Q`, `Ψ`.
-Atlas `gn-expected-error` (measurability helper). -/
-theorem measurable_frobSq_sub_sketchedOutput {γ ι : Type*} [MeasurableSpace γ] [Fintype ι]
-    [DecidableEq ι] {m s q : ℕ} (A : Matrix (Fin m) ι ℝ) {Qf : γ → Matrix (Fin m) (Fin q) ℝ}
-    {Ψf : γ → Matrix (Fin m) (Fin s) ℝ} (hQ : ∀ i j, Measurable fun z => Qf z i j)
+Lives here rather than in `NLAlib/Matrix/Measurable.lean` because `sketchedOutput` is a layer-4
+definition. Atlas `gn-expected-error` (measurability helper). -/
+theorem measurable_frobSq_sub_sketchedOutput {γ m ι s q : Type*} [MeasurableSpace γ]
+    [Fintype m] [Fintype ι] [Fintype s] [Fintype q] [DecidableEq q] (A : Matrix m ι ℝ)
+    {Qf : γ → Matrix m q ℝ} {Ψf : γ → Matrix m s ℝ} (hQ : ∀ i j, Measurable fun z => Qf z i j)
     (hΨ : ∀ i j, Measurable fun z => Ψf z i j) :
     Measurable fun z => frobSq (A - sketchedOutput (Qf z) (Ψf z) A) := by
   have hΨt : ∀ i j, Measurable fun z => (Ψf z)ᵀ i j := fun i j => hΨ j i
@@ -347,19 +279,6 @@ theorem measurable_frobSq_sub_sketchedOutput {γ ι : Type*} [MeasurableSpace γ
   have hD := measurable_mul_entry_of hQ hC
   refine measurable_frobSq_of_entries fun i j => ?_
   simp only [sketchedOutput, sketchedCore, Matrix.sub_apply]
-  exact measurable_const.sub (hD i j)
-
-/-- `z ↦ ‖(I − Q(z)Q(z)ᵀ)A‖_F²` is measurable for entrywise-measurable `Q`. Atlas
-`gn-expected-error` (measurability helper). -/
-theorem measurable_frobSq_residual_of {γ ι : Type*} [MeasurableSpace γ] [Fintype ι]
-    {m q : ℕ} (A : Matrix (Fin m) ι ℝ) {Qf : γ → Matrix (Fin m) (Fin q) ℝ}
-    (hQ : ∀ i j, Measurable fun z => Qf z i j) :
-    Measurable fun z => frobSq (residual (Qf z) A) := by
-  have hQt : ∀ i j, Measurable fun z => (Qf z)ᵀ i j := fun i j => hQ j i
-  have hA : ∀ i j, Measurable fun _ : γ => A i j := fun _ _ => measurable_const
-  have hD := measurable_mul_entry_of hQ (measurable_mul_entry_of hQt hA)
-  refine measurable_frobSq_of_entries fun i j => ?_
-  simp only [residual, Matrix.sub_apply]
   exact measurable_const.sub (hD i j)
 
 end Measurability
@@ -392,8 +311,9 @@ measurable, a.s. orthonormal columns and `range(AΩ) ⊆ range(Q)` (the user's c
 `gn_main` with every Gaussian and integrability hypothesis discharged: `hcond` by Fubini for
 independent variables (`lintegral_of_indepFun`) and `completion_gaussian_of_orthonormal` for
 each fixed `Ω`; `hYi` from `‖(I − QQᵀ)A‖_F ≤ ‖A‖_F`.
-Deviations: row index types `Fin m`, `Fin n`; `q` fixed (see `RSVD.lean`); `Q` must factor
-measurably through `Ω` (`hQ`, `hQf`), needed to apply Fubini.
+Deviations: index types are `Fin` (the laws of `Ω` and `Ψ` live on `Fin n → Fin t → ℝ` and
+`Fin m → Fin s → ℝ`); `q` is fixed (see `RSVD.lean`); `Q` must factor measurably through `Ω`
+(`hQ`, `hQf`), needed to apply Fubini.
 Atlas `gn-expected-error` (uses `rsvd-expected-error`, `gaussian-conditioning`,
 `pinv-frob-moment`, `gaussian-full-rank-ae`, `sketched-regression`,
 `orthonormal-completion`, `hmt-9-1-frobenius`). -/

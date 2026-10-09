@@ -13,7 +13,9 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 /-!
 # Theorem 6.6.1 — Hermitian matrix Bernstein
 
-Lean name: `NLAlib.hermitian_bernstein`.
+Main declaration: `NLAlib.hermitian_bernstein`.
+
+Atlas: `matrix-bernstein`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 6.6.1, equations (6.6.1–3), printed pp. 96–99.
 -/
@@ -22,16 +24,15 @@ open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 set_option autoImplicit false
 
 namespace NLAlib
-namespace HermBernstein
 
 /-- Real spectral values of a matrix are bounded in absolute value by the operator norm. -/
-lemma abs_le_norm {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) {x : ℝ}
+private lemma abs_le_norm {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) {x : ℝ}
     (hx : x ∈ spectrum ℝ B) : |x| ≤ ‖B‖ := by
   have h : algebraMap ℝ ℂ x ∈ spectrum ℂ B := (spectrum.algebraMap_mem_iff ℂ).mpr hx
   have := spectrum.norm_le_norm_of_mem h
   simpa using this
 
-lemma traceExp_eq_sum {d : ℕ} [NeZero d]
+private lemma traceExp_eq_sum {d : ℕ} [NeZero d]
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ : ℝ) :
     traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i) := by
   rw [traceExp, matrixExp,
@@ -42,7 +43,7 @@ lemma traceExp_eq_sum {d : ℕ} [NeZero d]
   simp
   simp only [← Complex.ofReal_mul, ← Complex.ofReal_exp, Complex.ofReal_re]
 
-lemma traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian)
+private lemma traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian)
     {c : ℝ} (hc : 0 ≤ c) : traceExp (c • B) ≤ d * Real.exp (c * ‖B‖) := by
   rw [traceExp_eq_sum B hB c]
   calc ∑ i, Real.exp (c * hB.eigenvalues i) ≤ ∑ _i : Fin d, Real.exp (c * ‖B‖) := by
@@ -53,28 +54,28 @@ lemma traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.
         exact (le_abs_self _).trans (abs_le_norm B (hB.eigenvalues_mem_spectrum_real i))
     _ = d * Real.exp (c * ‖B‖) := by simp
 
-lemma traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
+private lemma traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
     0 < traceExp H := by
   have h := traceExp_eq_sum H hH 1
   rw [one_smul] at h
   rw [h]
   exact Finset.sum_pos (fun i _ => Real.exp_pos _) Finset.univ_nonempty
 
-lemma spec_le {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {L : ℝ}
+private lemma spec_le {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {L : ℝ}
     (hb : lambdaMax A ≤ L) : ∀ x ∈ spectrum ℝ A, x ≤ L := by
   intro x hx
   have hfin : (spectrum ℝ A).Finite := by
     rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
   exact (le_csSup hfin.bddAbove hx).trans hb
 
-lemma matrixExp_smul_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
+private lemma matrixExp_smul_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
     matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
   rw [matrixExp,
     ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
     ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
 
 /-- Scalar optimization for the expectation bound. -/
-lemma scalar_expect {x a b L : ℝ} (hL : 0 < L) (ha : 0 ≤ a) (hb : 0 ≤ b)
+private lemma scalar_expect {x a b L : ℝ} (hL : 0 < L) (ha : 0 ≤ a) (hb : 0 ≤ b)
     (h : ∀ θ : ℝ, 0 < θ → θ < 3 / L →
       x ≤ (a + (θ ^ 2 / 2) / (1 - θ * L / 3) * b) / θ) :
     x ≤ Real.sqrt (2 * b * a) + L * a / 3 := by
@@ -144,7 +145,7 @@ lemma scalar_expect {x a b L : ℝ} (hL : 0 < L) (ha : 0 ≤ a) (hb : 0 ≤ b)
     linarith
 
 /-- Scalar optimization for the tail bound. -/
-lemma scalar_tail {P c v L t : ℝ} (hL : 0 < L) (hv : 0 ≤ v) (ht : 0 < t)
+private lemma scalar_tail {P c v L t : ℝ} (hL : 0 < L) (hv : 0 ≤ v) (ht : 0 < t)
     (h : ∀ θ : ℝ, 0 < θ → θ < 3 / L →
       P ≤ c * Real.exp (-θ * t + (θ ^ 2 / 2) / (1 - θ * L / 3) * v)) :
     P ≤ c * Real.exp (-(t ^ 2 / 2) / (v + L * t / 3)) := by
@@ -173,11 +174,16 @@ lemma scalar_tail {P c v L t : ℝ} (hL : 0 < L) (hv : 0 ≤ v) (ht : 0 < t)
       ring
     rwa [e] at h3
 
-end HermBernstein
 end NLAlib
 
-open NLAlib NLAlib.HermBernstein
+open NLAlib
 
+/-- Matrix Bernstein inequality, Hermitian case: for an independent sum of centered Hermitian random
+matrices with `λmax ≤ L`, `𝔼 λmax(Y) ≤ √(2 v log d) + L log d / 3` and `P{λmax(Y) ≥ t} ≤
+bernsteinTail d v L t`.
+
+Tropp 2015, Thm 6.6.1. Atlas: `matrix-bernstein`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 6*. -/
 theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 ≤ L)
@@ -199,7 +205,7 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
   have hd0 : (0 : ℝ) < d := lt_of_lt_of_le one_pos hd
   -- the second moment of the sum
   have hsm : (∫ ω, Y ω ^ 2 ∂μ) = ∑ k, ∫ ω, X k ω ^ 2 ∂μ := by
-    have h := ch6_independent_sum_second_moment μ X id id measurable_id measurable_id hMeas
+    have h := integral_sum_mul_sum_eq_sum_integral_mul μ X id id measurable_id measurable_id hMeas
       hIndep (fun k => hL2 k) (fun k => hL2 k) hMean
 
     simp only [Y, sq]
@@ -298,14 +304,14 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
         have : θ * L < 3 := (lt_div_iff₀ hLpos).mp hθL
         apply div_nonneg (by positivity)
         linarith
-      have hsum : loewnerLE (cumulantSum μ X θ) (((θ ^ 2 / 2) / (1 - θ * L / 3)) • B) := by
-        unfold loewnerLE cumulantSum
+      have hsum : LoewnerLE (cumulantSum μ X θ) (((θ ^ 2 / 2) / (1 - θ * L / 3)) • B) := by
+        unfold LoewnerLE cumulantSum
         rw [hBdef, Finset.smul_sum, ← Finset.sum_sub_distrib]
-        exact Matrix.posSemidef_sum _ (fun k _ => (bernstein_mgf_cgf μ (X k) L θ hLpos hθ hθL
+        exact Matrix.posSemidef_sum _ (fun k _ => (bernstein_matrix_mgf_cgf_le μ (X k) L θ hLpos hθ hθL
           (hMeas k) (hHerm k) (hL2 k) (hMean k) (hBound k)).2)
       calc traceExp (cumulantSum μ X θ)
           ≤ traceExp (((θ ^ 2 / 2) / (1 - θ * L / 3)) • B) :=
-            ch8_trace_exp_monotone _ _ (hcumH θ)
+            traceExp_le_traceExp _ _ (hcumH θ)
               (hBH.smul (isSelfAdjoint_iff.mpr (star_trivial _))) hsum
         _ ≤ d * Real.exp ((θ ^ 2 / 2) / (1 - θ * L / 3) * ‖B‖) := traceExp_le _ hBH hg
         _ = _ := by rw [hv]

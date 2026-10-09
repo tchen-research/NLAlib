@@ -20,8 +20,10 @@ The two norms every NLAlib statement is written in.
 * Products: `⟨PX, QY⟩_F = ⟨X, PᵀQY⟩_F`, invariance under multiplication by matrices with
   orthonormal columns (stated with the raw hypothesis `Qᵀ * Q = 1`, which is
   `NLAlib.HasOrthonormalCols Q` by definition).
-* Spectral norm: transpose, submultiplicativity, the mixed inequalities
-  `‖AB‖_F ≤ ‖A‖₂ ‖B‖_F`, `‖AB‖_F ≤ ‖A‖_F ‖B‖₂`, and `‖A‖₂ ≤ ‖A‖_F`.
+* Rows: `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`, `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, `v ⬝ v ≥ 0`.
+* Spectral norm: transpose, submultiplicativity, `‖I‖₂ ≤ 1`, `‖P‖₂ ≤ 1` and `‖PᵀX‖₂ = ‖X‖₂` on
+  `range P` for orthonormal columns, the mixed inequalities `‖AB‖_F ≤ ‖A‖₂ ‖B‖_F`,
+  `‖AB‖_F ≤ ‖A‖_F ‖B‖₂`, and `‖A‖₂ ≤ ‖A‖_F`.
 
 The Frobenius algebra is ported from the LRA project (`LRA/Basic.lean`,
 `LRA/Deterministic/RangeFinder.lean`, Chen–Persson formalization), namespace renamed.
@@ -227,6 +229,24 @@ theorem frobNorm_neg (A : Matrix m n ℝ) : frobNorm (-A) = frobNorm A := by
 theorem frobNorm_smul (c : ℝ) (A : Matrix m n ℝ) : frobNorm (c • A) = |c| * frobNorm A := by
   rw [frobNorm, frobSq_smul, Real.sqrt_mul (sq_nonneg c), Real.sqrt_sq_eq_abs, frobNorm]
 
+/-! ### Rows and dot products -/
+
+/-- `v ⬝ᵥ v ≥ 0` for real vectors (Mathlib has only the `star` forms
+`dotProduct_star_self_nonneg`). Atlas `norms-frob-spec`. -/
+theorem dotProduct_self_nonneg (v : n → ℝ) : 0 ≤ v ⬝ᵥ v :=
+  Finset.sum_nonneg fun i _ => mul_self_nonneg (v i)
+
+/-- `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`, the sum of the squared norms of the rows. Atlas `norms-frob-spec`. -/
+theorem frobSq_eq_sum_dotProduct_self (A : Matrix m n ℝ) : frobSq A = ∑ i, A i ⬝ᵥ A i := by
+  simp [frobSq, frobInner, dotProduct]
+
+omit [Fintype m] in
+/-- `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, written with dot products. Atlas `norms-frob-spec`. -/
+theorem mulVec_dotProduct_mulVec_eq_sum_sq [Fintype m] (A : Matrix m n ℝ) (v : n → ℝ) :
+    (A *ᵥ v) ⬝ᵥ (A *ᵥ v) = ∑ i, (A i ⬝ᵥ v) ^ 2 := by
+  simp only [dotProduct, sq]
+  rfl
+
 /-! ### Cauchy–Schwarz and the triangle inequality -/
 
 /-- Cauchy–Schwarz for the Frobenius inner product: `⟨A, B⟩_F ≤ ‖A‖_F ‖B‖_F`.
@@ -372,6 +392,40 @@ theorem frobNorm_mul_le_frobNorm_mul_specNorm [DecidableEq p] (A : Matrix m n �
     (mul_nonneg (frobNorm_nonneg A) (specNorm_nonneg B)) ?_
   rw [mul_pow, frobNorm_sq, frobNorm_sq]
   exact frobSq_mul_le_frobSq_mul_specNorm_sq A B
+
+/-- The spectral norm of the identity is at most `1` (it is `1` when the index type is
+nonempty and `0` when it is empty). Standard; atlas `norms-frob-spec`. -/
+theorem specNorm_one_le : specNorm (1 : Matrix n n ℝ) ≤ 1 := by
+  rw [specNorm_eq_norm, ← Matrix.diagonal_one, Matrix.l2_opNorm_diagonal]
+  exact (pi_norm_le_iff_of_nonneg zero_le_one).2 fun i => by simp
+
+/-- A matrix with orthonormal columns has spectral norm at most `1`. The hypothesis is
+`NLAlib.HasOrthonormalCols P` unfolded. Standard; atlas `norms-frob-spec`. -/
+theorem specNorm_le_one_of_orthonormal {P : Matrix m n ℝ} (hP : Pᵀ * P = 1) :
+    specNorm P ≤ 1 := by
+  rw [specNorm_eq_norm]
+  have h : ‖P‖ * ‖P‖ ≤ 1 := by
+    have h1 := Matrix.l2_opNorm_conjTranspose_mul_self P
+    rw [Matrix.conjTranspose_eq_transpose_of_trivial, hP] at h1
+    rw [← h1]
+    exact specNorm_one_le
+  nlinarith [norm_nonneg P]
+
+/-- Spectral isometry on the range of a matrix with orthonormal columns: if `PᵀP = I` and
+`X = P (Pᵀ X)` (i.e. `range X ⊆ range P`), then `‖PᵀX‖₂ = ‖X‖₂`. Standard (used in
+Chen–Persson, proof of `lem:tGN-core`, as `‖Q⊥ᵀA⊥‖ = ‖A⊥‖`); atlas `norms-frob-spec`. -/
+theorem specNorm_transpose_mul_of_eq_mul [DecidableEq p] {P : Matrix m n ℝ} (hP : Pᵀ * P = 1)
+    {X : Matrix m p ℝ} (hX : X = P * (Pᵀ * X)) : specNorm (Pᵀ * X) = specNorm X := by
+  have hP1 : specNorm P ≤ 1 := specNorm_le_one_of_orthonormal hP
+  have hPt : specNorm Pᵀ ≤ 1 := by rw [specNorm_transpose]; exact hP1
+  apply le_antisymm
+  · calc specNorm (Pᵀ * X) ≤ specNorm Pᵀ * specNorm X := specNorm_mul_le _ _
+      _ ≤ 1 * specNorm X := by gcongr; exact specNorm_nonneg _
+      _ = specNorm X := one_mul _
+  · calc specNorm X = specNorm (P * (Pᵀ * X)) := by rw [← hX]
+      _ ≤ specNorm P * specNorm (Pᵀ * X) := specNorm_mul_le _ _
+      _ ≤ 1 * specNorm (Pᵀ * X) := by gcongr; exact specNorm_nonneg _
+      _ = specNorm (Pᵀ * X) := one_mul _
 
 omit [DecidableEq m] [DecidableEq n] in
 /-- Row-wise Cauchy–Schwarz: `‖Ax‖₂² ≤ ‖A‖_F² ‖x‖₂²`, written with explicit sums.

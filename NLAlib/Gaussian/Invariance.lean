@@ -4,6 +4,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_block_indep`).
 -/
 import NLAlib.Gaussian.Basic
+import NLAlib.Matrix.Projections
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.Probability.Independence.Basic
 import Mathlib.Probability.ProductMeasure
@@ -159,62 +160,6 @@ theorem gaussianMatrix_map_orthogonal {p m : ℕ} (U : Matrix (Fin p) (Fin p) �
   exact (flatEquiv p m).map_measurableEquiv_injective key
 
 /-! ### Orthogonal completion and coordinate restriction -/
-
-/-- Columns of a matrix as vectors of Euclidean space. -/
-private def col {n : ℕ} {ι : Type*} (V : Matrix (Fin n) ι ℝ) (j : ι) :
-    EuclideanSpace ℝ (Fin n) :=
-  WithLp.toLp 2 (fun i => V i j)
-
-private lemma col_orthonormal {n : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (V : Matrix (Fin n) ι ℝ) (hV : Vᵀ * V = 1) : Orthonormal ℝ (col V) := by
-  rw [orthonormal_iff_ite]
-  intro a b
-  have := congrFun (congrFun hV b) a
-  simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply] at this
-  simp only [col, PiLp.inner_apply, RCLike.inner_apply, conj_trivial]
-  rw [this]
-  by_cases h : a = b
-  · subst h; simp
-  · simp [h, Ne.symm h]
-
-/-- A real matrix with orthonormal columns has at most as many columns as rows. -/
-theorem card_le_of_transpose_mul_self_eq_one {n : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (V : Matrix (Fin n) ι ℝ) (hV : Vᵀ * V = 1) : Fintype.card ι ≤ n := by
-  have := (col_orthonormal V hV).linearIndependent.fintype_card_le_finrank
-  simpa [finrank_euclideanSpace] using this
-
-/-- **Orthogonal completion.** A real matrix `V` with orthonormal columns indexed by `ι`, placed
-in the columns `e '' ι` of `Fin n`, extends to an orthogonal `n × n` matrix `W`.
-
-Helper for HMT 2011 §10.2; atlas `block-law-indep`. -/
-theorem exists_orthogonal_completion {n : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (V : Matrix (Fin n) ι ℝ) (hV : Vᵀ * V = 1) (e : ι ↪ Fin n) :
-    ∃ W : Matrix (Fin n) (Fin n) ℝ, Wᵀ * W = 1 ∧ ∀ i j, W i (e j) = V i j := by
-  classical
-  let v : Fin n → EuclideanSpace ℝ (Fin n) := Function.extend e (col V) 0
-  have hv : Orthonormal ℝ ((Set.range e).domRestrict v) := by
-    have h1 : (Set.range e).domRestrict v =
-        col V ∘ (Equiv.ofInjective e e.injective).symm := by
-      funext x
-      obtain ⟨a, j, rfl⟩ := x
-      have : (Equiv.ofInjective e e.injective).symm ⟨e j, j, rfl⟩ = j :=
-        (Equiv.ofInjective e e.injective).symm_apply_eq.mpr rfl
-      simp only [Set.domRestrict_apply, Function.comp_apply, this, v]
-      exact e.injective.extend_apply _ _ _
-    rw [h1]
-    exact (col_orthonormal V hV).comp _ (Equiv.injective _)
-  obtain ⟨b, hb⟩ := hv.exists_orthonormalBasis_extension_of_card_eq
-    (by simp [finrank_euclideanSpace])
-  refine ⟨Matrix.of fun i a => b a i, ?_, ?_⟩
-  · ext a c
-    have := (orthonormal_iff_ite.mp b.orthonormal) c a
-    simp only [PiLp.inner_apply, RCLike.inner_apply, conj_trivial] at this
-    simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, Matrix.one_apply]
-    rw [show (if a = c then (1:ℝ) else 0) = if c = a then 1 else 0 by simp [eq_comm], ← this]
-  · intro i j
-    simp only [Matrix.of_apply]
-    rw [hb (e j) ⟨j, rfl⟩]
-    simp only [v, e.injective.extend_apply, col]
 
 /-- Restricting the coordinates of an i.i.d. product measure along an injection gives the
 product measure on the smaller index set. -/

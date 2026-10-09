@@ -14,7 +14,9 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 /-!
 # Theorem 4.6.1 — Hermitian Gaussian and Rademacher series
 
-Lean name: `NLAlib.ch4_hermitian_series`.
+Main declaration: `NLAlib.hermitian_gaussian_series`.
+
+Atlas: `matrix-gaussian-series`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 4.6.1, equations (4.6.1–3), printed p. 51.
 -/
@@ -25,13 +27,13 @@ set_option autoImplicit false
 namespace NLAlib
 
 /-- Real spectral values of a matrix are bounded in absolute value by the operator norm. -/
-lemma ch4hs_abs_le_norm {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) {x : ℝ}
+private lemma abs_le_norm {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) {x : ℝ}
     (hx : x ∈ spectrum ℝ B) : |x| ≤ ‖B‖ := by
   have h : algebraMap ℝ ℂ x ∈ spectrum ℂ B := (spectrum.algebraMap_mem_iff ℂ).mpr hx
   have := spectrum.norm_le_norm_of_mem h
   simpa using this
 
-lemma ch4hs_traceExp_eq_sum {d : ℕ} [NeZero d]
+private lemma traceExp_eq_sum {d : ℕ} [NeZero d]
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ : ℝ) :
     traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i) := by
   rw [traceExp, matrixExp, ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))]
@@ -41,25 +43,25 @@ lemma ch4hs_traceExp_eq_sum {d : ℕ} [NeZero d]
   simp
   simp only [← Complex.ofReal_mul, ← Complex.ofReal_exp, Complex.ofReal_re]
 
-lemma ch4hs_traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian)
+private lemma traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian)
     {c : ℝ} (hc : 0 ≤ c) : traceExp (c • B) ≤ d * Real.exp (c * ‖B‖) := by
-  rw [ch4hs_traceExp_eq_sum B hB c]
+  rw [traceExp_eq_sum B hB c]
   calc ∑ i, Real.exp (c * hB.eigenvalues i) ≤ ∑ _i : Fin d, Real.exp (c * ‖B‖) := by
         apply Finset.sum_le_sum
         intro i _
         apply Real.exp_le_exp.mpr
         apply mul_le_mul_of_nonneg_left _ hc
-        exact (le_abs_self _).trans (ch4hs_abs_le_norm B (hB.eigenvalues_mem_spectrum_real i))
+        exact (le_abs_self _).trans (abs_le_norm B (hB.eigenvalues_mem_spectrum_real i))
     _ = d * Real.exp (c * ‖B‖) := by simp
 
-lemma ch4hs_traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
+private lemma traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
     0 < traceExp H := by
-  have h := ch4hs_traceExp_eq_sum H hH 1
+  have h := traceExp_eq_sum H hH 1
   rw [one_smul] at h
   rw [h]
   exact Finset.sum_pos (fun i _ => Real.exp_pos _) Finset.univ_nonempty
 
-lemma ch4hs_norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
+private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
     (s : ℝ) : ‖matrixExp (s • A)‖ ≤ Real.exp (s * ‖A‖) + Real.exp (-(s * ‖A‖)) := by
   have hsA : (s • A).IsHermitian := hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))
   have h1 : ‖matrixExp (s • A)‖ ≤ Real.exp (|s| * ‖A‖) := by
@@ -69,7 +71,7 @@ lemma ch4hs_norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (h
     rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos x)]
     apply Real.exp_le_exp.mpr
     calc x ≤ |x| := le_abs_self x
-      _ ≤ ‖s • A‖ := ch4hs_abs_le_norm _ hx
+      _ ≤ ‖s • A‖ := abs_le_norm _ hx
       _ = |s| * ‖A‖ := by rw [norm_smul, Real.norm_eq_abs]
   rcases le_total 0 s with hs | hs
   · rw [abs_of_nonneg hs] at h1
@@ -77,7 +79,7 @@ lemma ch4hs_norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (h
   · rw [abs_of_nonpos hs, neg_mul] at h1
     linarith [Real.exp_pos (s * ‖A‖)]
 
-lemma ch4hs_exp_integrable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+private lemma exp_integrable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     [IsProbabilityMeasure μ] {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
     (hA : A.IsHermitian) (g : Ω → ℝ) (hg : Measurable g)
     (hexp : ∀ c : ℝ, Integrable (fun ω => Real.exp (c * g ω)) μ) (θ : ℝ) :
@@ -96,13 +98,13 @@ lemma ch4hs_exp_integrable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
       fun_prop
     exact hcont.comp_aestronglyMeasurable (measurable_const.mul hg).aestronglyMeasurable
   · refine ae_of_all _ (fun ω => ?_)
-    have h := ch4hs_norm_exp_le A hA (θ * g ω)
+    have h := norm_exp_le A hA (θ * g ω)
     have e1 : θ * ‖A‖ * g ω = θ * g ω * ‖A‖ := by ring
     have e2 : -(θ * ‖A‖) * g ω = -(θ * g ω * ‖A‖) := by ring
     simp only [e1, e2]
     exact h
 
-lemma ch4hs_second_moment {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+private lemma second_moment {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     [IsProbabilityMeasure μ] {d N : ℕ} (A : Fin N → Matrix (Fin d) (Fin d) ℂ)
     (g : Fin N → Ω → ℝ) (hMeas : ∀ k, Measurable (g k)) (hIndep : iIndepFun g μ)
     (h2 : ∀ k, MemLp (g k) 2 μ) (h0 : ∀ k, ∫ ω, g k ω ∂μ = 0)
@@ -130,11 +132,11 @@ lemma ch4hs_second_moment {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     simp [sq]
   simp_rw [hinner]
 
-lemma ch4hs_gauss_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    [IsProbabilityMeasure μ] (g : Ω → ℝ) (hg : Measurable g) (hL : standardGaussianLaw μ g) :
+private lemma gauss_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsProbabilityMeasure μ] (g : Ω → ℝ) (hg : Measurable g) (hL : IsStandardGaussian μ g) :
     MemLp g 2 μ ∧ ∫ ω, g ω ∂μ = 0 ∧ ∫ ω, g ω ^ 2 ∂μ = 1 ∧
       ∀ c : ℝ, Integrable (fun ω => Real.exp (c * g ω)) μ := by
-  unfold standardGaussianLaw at hL
+  unfold IsStandardGaussian at hL
   refine ⟨?_, ?_, ?_, ?_⟩
   · have h := memLp_id_gaussianReal' (μ := 0) (v := 1) 2 (by simp)
     rw [← hL] at h
@@ -152,11 +154,11 @@ lemma ch4hs_gauss_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     rw [← hL] at h
     exact (integrable_map_measure (by fun_prop) hg.aemeasurable).1 h
 
-lemma ch4hs_rad_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    [IsProbabilityMeasure μ] (g : Ω → ℝ) (hg : Measurable g) (hL : rademacherLaw μ g) :
+private lemma rad_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsProbabilityMeasure μ] (g : Ω → ℝ) (hg : Measurable g) (hL : IsRademacher μ g) :
     MemLp g 2 μ ∧ ∫ ω, g ω ∂μ = 0 ∧ ∫ ω, g ω ^ 2 ∂μ = 1 ∧
       ∀ c : ℝ, Integrable (fun ω => Real.exp (c * g ω)) μ := by
-  unfold rademacherLaw at hL
+  unfold IsRademacher at hL
   have hS : MeasurableSet {x : ℝ | x = 1 ∨ x = -1} :=
     (measurableSet_singleton 1).union (measurableSet_singleton (-1))
   have hpm : ∀ᵐ ω ∂μ, g ω = 1 ∨ g ω = -1 := by
@@ -191,7 +193,7 @@ lemma ch4hs_rad_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
       (Real.continuous_exp.comp_aestronglyMeasurable
         (measurable_const.mul hg).aestronglyMeasurable) _ hb)
 
-lemma ch4hs_scalar {x a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b)
+private lemma scalar {x a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b)
     (h : ∀ θ : ℝ, 0 < θ → x ≤ a / θ + θ * b / 2) : x ≤ Real.sqrt (2 * b * a) := by
   by_contra hcon
   push Not at hcon
@@ -224,12 +226,20 @@ end NLAlib
 
 open NLAlib
 
-theorem NLAlib.ch4_hermitian_series {Ω : Type*} [MeasurableSpace Ω]
+/-- Matrix Gaussian and Rademacher series, Hermitian case: for `Y = ∑ k, g k • A k` the variance is
+`‖∑ A k²‖`, `𝔼 λmax(Y) ≤ √(2 v log d)`, and `P{λmax(Y) ≥ t} ≤ gaussianSeriesTail d v t`.
+
+Tropp 2015, Thm 4.6.1. Atlas: `matrix-gaussian-series`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 4*.
+
+Gaussian and Rademacher coefficients are covered by one statement through the disjunctive law
+hypothesis. -/
+theorem NLAlib.hermitian_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (A : Fin N → Matrix (Fin d) (Fin d) ℂ) (hA : ∀ k, (A k).IsHermitian)
     (g : Fin N → Ω → ℝ) (hMeas : ∀ k, Measurable (g k))
     (hIndep : iIndepFun g μ)
-    (hLaw : (∀ k, standardGaussianLaw μ (g k)) ∨ (∀ k, rademacherLaw μ (g k))) :
+    (hLaw : (∀ k, IsStandardGaussian μ (g k)) ∨ (∀ k, IsRademacher μ (g k))) :
     let Y := fun ω => ∑ k, g k ω • A k
     let v := hermitianSecondMoment μ Y
     v = spectralNorm (∑ k, A k ^ 2) ∧
@@ -241,15 +251,15 @@ theorem NLAlib.ch4_hermitian_series {Ω : Type*} [MeasurableSpace Ω]
       ∀ c : ℝ, Integrable (fun ω => Real.exp (c * g k ω)) μ := by
     intro k
     rcases hLaw with h | h
-    · exact ch4hs_gauss_facts μ (g k) (hMeas k) (h k)
-    · exact ch4hs_rad_facts μ (g k) (hMeas k) (h k)
+    · exact gauss_facts μ (g k) (hMeas k) (h k)
+    · exact rad_facts μ (g k) (hMeas k) (h k)
   have hd : (1 : ℝ) ≤ d := by
     exact_mod_cast Nat.one_le_iff_ne_zero.mpr (NeZero.ne d)
   have hd0 : (0 : ℝ) < d := lt_of_lt_of_le one_pos hd
   have hBherm : (∑ k, A k ^ 2).IsHermitian := isSelfAdjoint_sum _ (fun k _ => (hA k).pow 2)
   have hv : v = ‖∑ k, A k ^ 2‖ := by
     show spectralNorm (∫ ω, (∑ k, g k ω • A k) ^ 2 ∂μ) = ‖∑ k, A k ^ 2‖
-    rw [ch4hs_second_moment μ A g hMeas hIndep (fun k => (hfacts k).1)
+    rw [second_moment μ A g hMeas hIndep (fun k => (hfacts k).1)
       (fun k => (hfacts k).2.1) (fun k => (hfacts k).2.2.1)]
     rfl
   have hv0 : 0 ≤ v := hv ▸ norm_nonneg _
@@ -263,12 +273,12 @@ theorem NLAlib.ch4_hermitian_series {Ω : Type*} [MeasurableSpace Ω]
     (MemLp.integrable one_le_two (hfacts k).1).smul_const (A k)
   have hXIndep : iIndepFun X μ := hIndep.comp (fun k s => s • A k) hsmulMeas
   have hXExp : ∀ θ : ℝ, ∀ k, Integrable (fun ω => matrixExp (θ • X k ω)) μ := fun θ k =>
-    ch4hs_exp_integrable μ (A k) (hA k) (g k) (hMeas k) (hfacts k).2.2.2 θ
+    exp_integrable μ (A k) (hA k) (g k) (hMeas k) (hfacts k).2.2.2 θ
   have hcumH : ∀ θ : ℝ, (cumulantSum μ X θ).IsHermitian := fun θ =>
     isSelfAdjoint_sum _ (fun k _ => by unfold matrixLog; exact IsSelfAdjoint.cfc)
   have hcgf : ∀ θ : ℝ, traceExp (cumulantSum μ X θ) ≤ d * Real.exp (θ ^ 2 / 2 * v) := by
     intro θ
-    have hk : ∀ k, loewnerLE (matrixLog (∫ ω, matrixExp (θ • X k ω) ∂μ))
+    have hk : ∀ k, LoewnerLE (matrixLog (∫ ω, matrixExp (θ • X k ω) ∂μ))
         ((θ ^ 2 / 2) • A k ^ 2) := by
       intro k
       have e : (fun ω => matrixExp (θ • X k ω)) = fun ω => matrixExp ((θ * g k ω) • A k) := by
@@ -276,35 +286,35 @@ theorem NLAlib.ch4_hermitian_series {Ω : Type*} [MeasurableSpace Ω]
         simp only [X, smul_smul]
       rw [e]
       rcases hLaw with h | h
-      · rw [(ch4_gaussian_mgf_cgf μ (A k) (hA k) (g k) (hMeas k) (h k) θ).2]
+      · rw [(gaussian_matrix_mgf_cgf_eq μ (A k) (hA k) (g k) (hMeas k) (h k) θ).2]
         show ((θ ^ 2 / 2) • A k ^ 2 - (θ ^ 2 / 2) • A k ^ 2).PosSemidef
         rw [sub_self]
         exact Matrix.PosSemidef.zero
-      · exact (ch4_rademacher_mgf_cgf μ (A k) (hA k) (g k) (hMeas k) (h k) θ).2
-    have hsum : loewnerLE (cumulantSum μ X θ) ((θ ^ 2 / 2) • ∑ k, A k ^ 2) := by
-      unfold loewnerLE cumulantSum
+      · exact (rademacher_matrix_mgf_cgf_le μ (A k) (hA k) (g k) (hMeas k) (h k) θ).2
+    have hsum : LoewnerLE (cumulantSum μ X θ) ((θ ^ 2 / 2) • ∑ k, A k ^ 2) := by
+      unfold LoewnerLE cumulantSum
       rw [Finset.smul_sum, ← Finset.sum_sub_distrib]
       exact Matrix.posSemidef_sum _ (fun k _ => hk k)
     have hBH' : ((θ ^ 2 / 2) • ∑ k, A k ^ 2).IsHermitian :=
       hBherm.smul (isSelfAdjoint_iff.mpr (star_trivial _))
     calc traceExp (cumulantSum μ X θ) ≤ traceExp ((θ ^ 2 / 2) • ∑ k, A k ^ 2) :=
-          ch8_trace_exp_monotone _ _ (hcumH θ) hBH' hsum
+          traceExp_le_traceExp _ _ (hcumH θ) hBH' hsum
       _ ≤ d * Real.exp (θ ^ 2 / 2 * ‖∑ k, A k ^ 2‖) :=
-          ch4hs_traceExp_le _ hBherm (by positivity)
+          traceExp_le _ hBherm (by positivity)
       _ = d * Real.exp (θ ^ 2 / 2 * v) := by rw [hv]
   refine ⟨hv, ?_, ?_⟩
   · -- expectation bound
     have hE : ∀ θ : ℝ, 0 < θ → (∫ ω, lambdaMax (Y ω) ∂μ) ≤ Real.log d / θ + θ * v / 2 := by
       intro θ hθ
       have h1 := ((master_bounds μ X θ hXMeas hXHerm hXInt hXIndep (hXExp θ)).1 hθ).1
-      have hpos : 0 < traceExp (cumulantSum μ X θ) := ch4hs_traceExp_pos _ (hcumH θ)
+      have hpos : 0 < traceExp (cumulantSum μ X θ) := traceExp_pos _ (hcumH θ)
       have hlog : Real.log (traceExp (cumulantSum μ X θ)) ≤ Real.log d + θ ^ 2 / 2 * v := by
         calc _ ≤ Real.log (d * Real.exp (θ ^ 2 / 2 * v)) := Real.log_le_log hpos (hcgf θ)
           _ = _ := by rw [Real.log_mul hd0.ne' (Real.exp_pos _).ne', Real.log_exp]
       calc (∫ ω, lambdaMax (Y ω) ∂μ) ≤ Real.log (traceExp (cumulantSum μ X θ)) / θ := h1
         _ ≤ (Real.log d + θ ^ 2 / 2 * v) / θ := div_le_div_of_nonneg_right hlog hθ.le
         _ = Real.log d / θ + θ * v / 2 := by field_simp
-    exact ch4hs_scalar (Real.log_nonneg hd) hv0 hE
+    exact scalar (Real.log_nonneg hd) hv0 hE
   · -- tail bound
     have hT : ∀ θ : ℝ, 0 < θ → ∀ t : ℝ, (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
         d * Real.exp (-θ * t + θ ^ 2 / 2 * v) := by

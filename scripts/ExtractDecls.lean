@@ -7,6 +7,12 @@ Writes `atlas/declarations.json`: every public declaration in namespace `NLAlib`
 docstring, source file and line, and whether it depends on `sorry`. Generated; do not edit.
 Run with `lake env lean scripts/ExtractDecls.lean` after `lake build`. -/
 
+/-- Auto-generated name components: `_x`, `match_1`, `proof_2`, `eq_1`. -/
+def isAutoComponent (s : String) : Bool :=
+  s.startsWith "_" ||
+  ["match_", "proof_", "eq_"].any fun p =>
+    s.startsWith p && (s.drop p.length).length > 0 && (s.drop p.length).all Char.isDigit
+
 def kindOf : ConstantInfo → String
   | .thmInfo _ => "theorem"
   | .defnInfo _ => "def"
@@ -23,7 +29,7 @@ run_cmd do
   let mut out : Array Json := #[]
   let names := env.constants.map₁.toList.filterMap fun (n, ci) =>
     if roots.any (fun r => r.isPrefixOf n) && !n.isInternal && !isPrivateName n
-      && !(n.toString.splitOn ".").any (fun s => s.startsWith "_") then some (n, ci) else none
+      && !(n.toString.splitOn ".").any isAutoComponent then some (n, ci) else none
   let names := names.toArray.qsort (fun a b => a.1.toString < b.1.toString)
   for (n, ci) in names do
     -- skip auto-generated structure projections/recursors noise but keep structure fields

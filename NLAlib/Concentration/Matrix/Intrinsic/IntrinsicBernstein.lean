@@ -16,19 +16,21 @@ import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 /-!
 # Theorem 7.3.1 — Intrinsic matrix Bernstein
 
-Lean name: `NLAlib.ch7_intrinsic_bernstein`.
+Main declaration: `NLAlib.intrinsic_matrix_bernstein`.
+
+Atlas: `intrinsic-dimension`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 7.3.1, equations (7.3.1–2), printed p. 108; independence confirmed in Section 7.7.3, printed p. 117.
 -/
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator ComplexOrder MatrixOrder
 
-namespace TroppCh7IntrinsicBernstein
+namespace NLAlib
 
 open NLAlib Matrix
 
 /-- The Hermitian dilation is real-linear. -/
-noncomputable def dilLin (m n : Type*) :
+private noncomputable def dilLin (m n : Type*) :
     Matrix m n ℂ →ₗ[ℝ] Matrix (m ⊕ n) (m ⊕ n) ℂ where
   toFun := dilation
   map_add' X Y := by
@@ -37,7 +39,7 @@ noncomputable def dilLin (m n : Type*) :
     simp [dilation, Matrix.fromBlocks_smul, Matrix.conjTranspose_smul]
 
 /-- Reindexing as a `⋆`-algebra equivalence over `ℂ`. -/
-noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
+private noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) :
     Matrix ι ι ℂ ≃⋆ₐ[ℂ] Matrix κ κ ℂ :=
   { Matrix.reindexAlgEquiv ℂ ℂ e with
@@ -45,13 +47,13 @@ noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
     map_smul' := by intro r A; rfl }
 
 /-- Reindexing preserves the L2 operator norm. -/
-lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
+private lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     ‖Matrix.reindex e e A‖ = ‖A‖ :=
   StarAlgEquiv.norm_map (reindexStarC e) A
 
 /-- Reindexing preserves the real spectrum, hence `lambdaMax`. -/
-lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
+private lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     lambdaMax (Matrix.reindex e e A) = lambdaMax A := by
   have h := AlgEquiv.spectrum_eq (Matrix.reindexAlgEquiv ℝ ℂ e) A
@@ -60,7 +62,7 @@ lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
   rw [h]
 
 /-- The Bochner integral commutes with reindexing. -/
-lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+private lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (X : Ω → Matrix ι ι ℂ) :
     ∫ ω, Matrix.reindex e e (X ω) ∂μ = Matrix.reindex e e (∫ ω, X ω ∂μ) := by
@@ -69,14 +71,14 @@ lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
   exact L.integral_comp_comm X
 
 /-- Reindexing preserves the trace. -/
-lemma trace_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
+private lemma trace_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     Matrix.trace (Matrix.reindex e e A) = Matrix.trace A := by
   simp only [Matrix.trace, Matrix.reindex_apply, Matrix.diag_apply, Matrix.submatrix_apply]
   exact Equiv.sum_comp e.symm (fun i => A i i)
 
 /-- Reindexing preserves the intrinsic dimension. -/
-lemma intrinsicDimension_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
+private lemma intrinsicDimension_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     intrinsicDimension (Matrix.reindex e e A) = intrinsicDimension A := by
   unfold intrinsicDimension spectralNorm
@@ -85,25 +87,25 @@ lemma intrinsicDimension_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- The square of the dilation is block diagonal. -/
-lemma dilation_sq (X : Matrix m n ℂ) :
+private lemma dilation_sq (X : Matrix m n ℂ) :
     dilation X ^ 2 = fromBlocks (X * Xᴴ) 0 0 (Xᴴ * X) := by
   simp [dilation, sq, fromBlocks_multiply]
 
 /-- Upper-left block inclusion as a continuous linear map. -/
-noncomputable def incl₁ : Matrix m m ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
+private noncomputable def incl₁ : Matrix m m ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
   LinearMap.toContinuousLinearMap
     { toFun := fun P => fromBlocks P 0 0 0
       map_add' := fun P P' => by rw [fromBlocks_add]; simp
       map_smul' := fun c P => by rw [fromBlocks_smul]; simp }
 
 /-- Lower-right block inclusion as a continuous linear map. -/
-noncomputable def incl₂ : Matrix n n ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
+private noncomputable def incl₂ : Matrix n n ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
   LinearMap.toContinuousLinearMap
     { toFun := fun Q => fromBlocks 0 0 0 Q
       map_add' := fun Q Q' => by rw [fromBlocks_add]; simp
       map_smul' := fun c Q => by rw [fromBlocks_smul]; simp }
 
-lemma integral_fromBlocks_diag {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+private lemma integral_fromBlocks_diag {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (P : Ω → Matrix m m ℂ) (Q : Ω → Matrix n n ℂ) (hP : Integrable P μ) (hQ : Integrable Q μ) :
     ∫ ω, fromBlocks (P ω) 0 0 (Q ω) ∂μ = fromBlocks (∫ ω, P ω ∂μ) 0 0 (∫ ω, Q ω ∂μ) := by
   have hsplit : ∀ (A : Matrix m m ℂ) (B : Matrix n n ℂ),
@@ -116,37 +118,42 @@ lemma integral_fromBlocks_diag {Ω : Type*} [MeasurableSpace Ω] (μ : Measure �
     ContinuousLinearMap.integral_comp_comm _ hP, ContinuousLinearMap.integral_comp_comm _ hQ]
 
 omit [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] in
-lemma fromBlocks_diag_sub (A A' : Matrix m m ℂ) (B B' : Matrix n n ℂ) :
+private lemma fromBlocks_diag_sub (A A' : Matrix m m ℂ) (B B' : Matrix n n ℂ) :
     fromBlocks A 0 0 B - fromBlocks A' 0 0 B' = fromBlocks (A - A') 0 0 (B - B') := by
   rw [sub_eq_add_neg, fromBlocks_neg, fromBlocks_add]
   simp [sub_eq_add_neg]
 
 /-- Conjugate transposition as a real-linear continuous map. -/
-noncomputable def ctCLM (m n : Type*) [Fintype m] [Fintype n] :
+private noncomputable def ctCLM (m n : Type*) [Fintype m] [Fintype n] :
     Matrix m n ℂ →L[ℝ] Matrix n m ℂ :=
   LinearMap.toContinuousLinearMap
     { toFun := Matrix.conjTranspose
       map_add' := Matrix.conjTranspose_add
       map_smul' := fun c A => by simp [Matrix.conjTranspose_smul] }
 
-lemma ctCLM_apply {m n : Type*} [Fintype m] [Fintype n] (A : Matrix m n ℂ) :
+private lemma ctCLM_apply {m n : Type*} [Fintype m] [Fintype n] (A : Matrix m n ℂ) :
     ctCLM m n A = Aᴴ := rfl
 
 /-- The transported dilation `A ↦ reindex (dilation A)` as a real-linear continuous map. -/
-noncomputable def Φ (p q : ℕ) :
+private noncomputable def Φ (p q : ℕ) :
     Matrix (Fin p) (Fin q) ℂ →L[ℝ] Matrix (Fin (p + q)) (Fin (p + q)) ℂ :=
   LinearMap.toContinuousLinearMap
     ((Matrix.reindexLinearEquiv ℝ ℂ finSumFinEquiv finSumFinEquiv).toLinearMap ∘ₗ
       dilLin (Fin p) (Fin q))
 
-lemma Φ_apply {p q : ℕ} (A : Matrix (Fin p) (Fin q) ℂ) :
+private lemma Φ_apply {p q : ℕ} (A : Matrix (Fin p) (Fin q) ℂ) :
     Φ p q A = Matrix.reindex finSumFinEquiv finSumFinEquiv (dilation A) := rfl
 
-end TroppCh7IntrinsicBernstein
+end NLAlib
 
-open NLAlib TroppCh7IntrinsicBernstein
+open NLAlib
 
-theorem NLAlib.ch7_intrinsic_bernstein {Ω : Type*} [MeasurableSpace Ω]
+/-- Intrinsic-dimension matrix Bernstein inequality, rectangular case: for `t ≥ √v + L/3`, `P{‖Z‖ ≥ t}
+≤ 4 r exp (-(t²/2)/(v + L t/3))` with `r` the intrinsic dimension of `fromBlocks V₁ 0 0 V₂`.
+
+Tropp 2015, Thm 7.3.1. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 7*. -/
+theorem NLAlib.intrinsic_matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
     (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) (L : ℝ) (hL : 0 ≤ L)
     (V₁ : Matrix (Fin m) (Fin m) ℂ) (V₂ : Matrix (Fin n) (Fin n) ℂ)
@@ -154,9 +161,9 @@ theorem NLAlib.ch7_intrinsic_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
     (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0)
     (hBound : ∀ k, ∀ᵐ ω ∂μ, spectralNorm (S k ω) ≤ L)
-    (hVariance₁ : loewnerLE
+    (hVariance₁ : LoewnerLE
       (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) V₁)
-    (hVariance₂ : loewnerLE
+    (hVariance₂ : LoewnerLE
       (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) V₂) :
     let Z := fun ω => ∑ k, S k ω
     let r := intrinsicDimension (Matrix.fromBlocks V₁ 0 0 V₂)
@@ -186,14 +193,14 @@ theorem NLAlib.ch7_intrinsic_bernstein {Ω : Type*} [MeasurableSpace Ω]
   -- Step 1: the two variance identities.
   have h1 : (∫ ω, Z ω * (Z ω).conjTranspose ∂μ) =
       ∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ := by
-    have := ch6_independent_sum_second_moment μ S id Matrix.conjTranspose measurable_id
+    have := integral_sum_mul_sum_eq_sum_integral_mul μ S id Matrix.conjTranspose measurable_id
       hct_meas hMeas hIndep hSL2 hSHL2 hMean
     show (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) = _
     simp_rw [Matrix.conjTranspose_sum]
     exact this
   have h2 : (∫ ω, (Z ω).conjTranspose * Z ω ∂μ) =
       ∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ := by
-    have := ch6_independent_sum_second_moment μ S Matrix.conjTranspose id hct_meas
+    have := integral_sum_mul_sum_eq_sum_integral_mul μ S Matrix.conjTranspose id hct_meas
       measurable_id hMeas hIndep hSHL2 hSL2 hSHmean
     show (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) = _
     simp_rw [Matrix.conjTranspose_sum]
@@ -245,7 +252,7 @@ theorem NLAlib.ch7_intrinsic_bernstein {Ω : Type*} [MeasurableSpace Ω]
     rcases hV with hv | hv
     · exact hv h00.1
     · exact hv h00.2.2.2
-  obtain ⟨-, hnorm, -⟩ := ch7_block_intrinsic V₁ V₂ hV₁ hV₂
+  obtain ⟨-, hnorm, -⟩ := intrinsicDimension_fromBlocks V₁ V₂ hV₁ hV₂
   have hvV : spectralNorm V = v := by
     rw [hVdef]
     unfold spectralNorm
@@ -273,20 +280,20 @@ theorem NLAlib.ch7_intrinsic_bernstein {Ω : Type*} [MeasurableSpace Ω]
   have hXbound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (Φ m n (S k ω)) ≤ L := fun k => by
     filter_upwards [hBound k] with ω h
     rw [hlam]; exact h
-  have hVar : loewnerLE (∫ ω, (∑ k, Φ m n (S k ω)) ^ 2 ∂μ) V := by
+  have hVar : LoewnerLE (∫ ω, (∑ k, Φ m n (S k ω)) ^ 2 ∂μ) V := by
     have hsq : ∀ ω, (Φ m n (Z ω)) ^ 2 = Matrix.reindex finSumFinEquiv finSumFinEquiv
         (Matrix.fromBlocks (Z ω * (Z ω).conjTranspose) 0 0 ((Z ω).conjTranspose * Z ω)) := by
       intro ω
       rw [Φ_apply, ← dilation_sq, ← Matrix.coe_reindexAlgEquiv ℝ, map_pow]
     simp_rw [hY, hsq]
     rw [integral_reindex, integral_fromBlocks_diag μ _ _ hP hQ, hVdef]
-    unfold loewnerLE
+    unfold LoewnerLE
     rw [← Matrix.coe_reindexLinearEquiv ℂ ℂ, ← map_sub, Matrix.coe_reindexLinearEquiv,
       fromBlocks_diag_sub, Matrix.reindex_apply]
-    obtain ⟨hpsd, -⟩ := ch7_block_intrinsic _ _ hD₁ hD₂
+    obtain ⟨hpsd, -⟩ := intrinsicDimension_fromBlocks _ _ hD₁ hD₂
     exact hpsd.submatrix _
   -- Step 5: apply the intrinsic Hermitian Bernstein inequality.
-  obtain ⟨-, H⟩ := ch7_intrinsic_hermitian_bernstein μ (fun k ω => Φ m n (S k ω)) L hL V hVne
+  obtain ⟨-, H⟩ := intrinsic_hermitian_bernstein μ (fun k ω => Φ m n (S k ω)) L hL V hVne
     hXmeas hXindep hXherm hXL2 hXmean hXbound hVar
   intro t ht
   have := H t (by rw [hvV]; exact ht)

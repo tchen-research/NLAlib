@@ -7,7 +7,9 @@ import Mathlib.Analysis.Normed.Module.FiniteDimension
 /-!
 # Functional calculus and spectrum of a block-diagonal Hermitian matrix
 
-Lean name: `NLAlib.ch8_jensen_block_calculus`.
+Main declaration: `NLAlib.matrixFunction_fromBlocks`.
+
+Atlas: `operator-monotone-convex` (step of the operator Jensen inequality).
 
 Source: Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1, proof of Theorem 8.5.2, printed pp. 132–133 (PDF pp. 138–139), block-diagonal functional-calculus identities.
 -/
@@ -28,15 +30,22 @@ private def blockHom
     cases i <;> cases j <;> simp [Matrix.algebraMap_eq_diagonal, Matrix.fromBlocks, Matrix.diagonal]
   map_star' p := by simp [Matrix.star_eq_conjTranspose, Matrix.fromBlocks_conjTranspose]
 
-theorem NLAlib.ch8_jensen_block_calculus
+/-- A block-diagonal matrix of Hermitian blocks is Hermitian, its spectrum is the union of the block
+spectra, and the functional calculus acts blockwise.
+
+Tropp 2015, proof of Thm 8.5.2. Atlas: `operator-monotone-convex`. Ported from the Prove2me
+mission *An Introduction to Matrix Concentration Inequalities, Ch 8*.
+
+Auxiliary; not a numbered result in the source. -/
+theorem NLAlib.matrixFunction_fromBlocks
     {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     [Fintype κ] [DecidableEq κ] [Nonempty κ]
     (A : Matrix ι ι ℂ) (B : Matrix κ κ ℂ)
     (hA : A.IsHermitian) (hB : B.IsHermitian) (f : ℝ → ℝ) :
     (Matrix.fromBlocks A 0 0 B).IsHermitian ∧
     spectrum ℝ (Matrix.fromBlocks A 0 0 B) = spectrum ℝ A ∪ spectrum ℝ B ∧
-    ch8_matrixFunction f (Matrix.fromBlocks A 0 0 B) =
-      Matrix.fromBlocks (ch8_matrixFunction f A) 0 0 (ch8_matrixFunction f B) := by
+    matrixFunction f (Matrix.fromBlocks A 0 0 B) =
+      Matrix.fromBlocks (matrixFunction f A) 0 0 (matrixFunction f B) := by
   have hblock := hA.fromBlocks (B := (0 : Matrix ι κ ℂ)) (C := 0) (by simp) hB
   refine ⟨hblock, ?_, ?_⟩
   · ext r
@@ -48,7 +57,7 @@ theorem NLAlib.ch8_jensen_block_calculus
       cases i <;> cases j <;> simp [Matrix.algebraMap_eq_diagonal, Matrix.fromBlocks, Matrix.diagonal]
     simp only [Set.mem_union, spectrum.mem_iff, heq, Matrix.isUnit_iff_isUnit_det,
       Matrix.det_fromBlocks_zero₂₁, isUnit_iff_ne_zero, mul_ne_zero_iff, not_and_or]
-  · letI : ContinuousFunctionalCalculus ℝ (Matrix ι ι ℂ × Matrix κ κ ℂ) IsSelfAdjoint := by
+  · let : ContinuousFunctionalCalculus ℝ (Matrix ι ι ℂ × Matrix κ κ ℂ) IsSelfAdjoint := by
       convert IsSelfAdjoint.instContinuousFunctionalCalculus (A := Matrix ι ι ℂ × Matrix κ κ ℂ) using 1
       apply Algebra.algebra_ext
       intro r

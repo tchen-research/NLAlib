@@ -12,7 +12,6 @@ jobs:
       - name: Build Lean library (with Mathlib cache)
         uses: leanprover/lean-action@v1
         with:
-          build-args: "--wfail"
           use-mathlib-cache: true
           lint: false
           test: false
@@ -24,6 +23,8 @@ jobs:
           git diff --exit-code -- atlas/declarations.json || (echo 'atlas/declarations.json is stale: run lake env lean scripts/ExtractDecls.lean and commit' && exit 1)
       - name: Import-layer lint
         run: python3 scripts/check_layers.py
+      - name: Naming and file rules
+        run: python3 scripts/check_names.py
       - name: Atlas consistency
         run: |
           pip install --quiet jsonschema

@@ -13,7 +13,9 @@ import Mathlib.Analysis.Calculus.Deriv.MeanValue
 /-!
 # Lemma 6.6.2 — Matrix Bernstein mgf and cgf bounds
 
-Lean name: `NLAlib.bernstein_mgf_cgf`.
+Main declaration: `NLAlib.bernstein_matrix_mgf_cgf_le`.
+
+Atlas: `matrix-bernstein`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Lemma 6.6.2, printed pp. 97–98.
 -/
@@ -21,15 +23,14 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 
 namespace NLAlib
-namespace BernsteinMGF
 
 /-- Auxiliary function `g(u) = u²/2 - (1 - u/3)(eᵘ - 1 - u)`. -/
-noncomputable def gFun (u : ℝ) : ℝ := u ^ 2 / 2 - (1 - u / 3) * (Real.exp u - 1 - u)
+private noncomputable def gFun (u : ℝ) : ℝ := u ^ 2 / 2 - (1 - u / 3) * (Real.exp u - 1 - u)
 
 /-- Its derivative `h = g'`. -/
-noncomputable def hFun (u : ℝ) : ℝ := u + (Real.exp u - 1 - u) / 3 - (1 - u / 3) * (Real.exp u - 1)
+private noncomputable def hFun (u : ℝ) : ℝ := u + (Real.exp u - 1 - u) / 3 - (1 - u / 3) * (Real.exp u - 1)
 
-lemma hasDerivAt_hFun (u : ℝ) : HasDerivAt hFun ((1 - Real.exp u * (1 - u)) / 3) u := by
+private lemma hasDerivAt_hFun (u : ℝ) : HasDerivAt hFun ((1 - Real.exp u * (1 - u)) / 3) u := by
   have h1 := (((Real.hasDerivAt_exp u).sub_const 1).sub (hasDerivAt_id u)).div_const 3
   have h2 := ((hasDerivAt_id u).div_const 3).const_sub 1
   have h3 := h2.mul ((Real.hasDerivAt_exp u).sub_const 1)
@@ -38,7 +39,7 @@ lemma hasDerivAt_hFun (u : ℝ) : HasDerivAt hFun ((1 - Real.exp u * (1 - u)) / 
   · simp; ring
   · simp [hFun]
 
-lemma hasDerivAt_gFun (u : ℝ) : HasDerivAt gFun (hFun u) u := by
+private lemma hasDerivAt_gFun (u : ℝ) : HasDerivAt gFun (hFun u) u := by
   have h1 := ((Real.hasDerivAt_exp u).sub_const 1).sub (hasDerivAt_id u)
   have h2 := ((hasDerivAt_id u).div_const 3).const_sub 1
   have h4 := ((hasDerivAt_pow 2 u).div_const 2).sub (h2.mul h1)
@@ -46,7 +47,7 @@ lemma hasDerivAt_gFun (u : ℝ) : HasDerivAt gFun (hFun u) u := by
   · simp [hFun]; ring
   · simp [gFun]
 
-lemma hFun_mono : Monotone hFun := by
+private lemma hFun_mono : Monotone hFun := by
   apply monotone_of_deriv_nonneg (fun u => (hasDerivAt_hFun u).differentiableAt)
   intro u
   rw [(hasDerivAt_hFun u).deriv]
@@ -56,7 +57,7 @@ lemma hFun_mono : Monotone hFun := by
   apply div_nonneg _ (by norm_num)
   nlinarith
 
-lemma gFun_nonneg (u : ℝ) : 0 ≤ gFun u := by
+private lemma gFun_nonneg (u : ℝ) : 0 ≤ gFun u := by
   have hdiff : Differentiable ℝ gFun := fun u => (hasDerivAt_gFun u).differentiableAt
   have g0 : gFun 0 = 0 := by simp [gFun]
   have h0 : hFun 0 = 0 := by simp [hFun]
@@ -83,7 +84,7 @@ lemma gFun_nonneg (u : ℝ) : 0 ≤ gFun u := by
     linarith
 
 /-- The scalar Bernstein mgf bound: for `x ≤ L`, `e^{θx} ≤ 1 + θx + c x²`. -/
-lemma scalar_bound {L θ x : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3) (hx : x ≤ L) :
+private lemma scalar_bound {L θ x : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3) (hx : x ≤ L) :
     Real.exp (θ * x) ≤ 1 + θ * x + (θ ^ 2 / 2) / (1 - θ * L / 3) * x ^ 2 := by
   have hux : θ * x ≤ θ * L := mul_le_mul_of_nonneg_left hx hθ.le
   have hpos : 0 < 1 - θ * L / 3 := by linarith
@@ -100,53 +101,58 @@ lemma scalar_bound {L θ x : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3) (hx : x ≤
 
 variable {d : ℕ}
 
-lemma spec_le (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {L : ℝ}
+private lemma spec_le (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {L : ℝ}
     (hb : lambdaMax A ≤ L) : ∀ x ∈ spectrum ℝ A, x ≤ L := by
   intro x hx
   have hfin : (spectrum ℝ A).Finite := by
     rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
   exact (le_csSup hfin.bddAbove hx).trans hb
 
-lemma matrixExp_smul_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
+private lemma matrixExp_smul_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
     matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
   rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
     ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
 
-lemma quad_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ c : ℝ) :
+private lemma quad_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ c : ℝ) :
     1 + θ • A + c • A ^ 2 = cfc (fun x => 1 + θ * x + c * x ^ 2) A := by
   have e1 := cfc_add A (fun x => 1 + θ * x) (fun x => c * x ^ 2)
   have e2 := cfc_const_add 1 (fun x => θ * x) A
   rw [e1, e2, cfc_const_mul_id θ A, cfc_const_mul c (fun x : ℝ => x ^ 2) A,
     cfc_pow_id A 2 hA.isSelfAdjoint, map_one]
 
-lemma exp_le_quad (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {θ c : ℝ}
+private lemma exp_le_quad (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {θ c : ℝ}
     (hb : ∀ x ∈ spectrum ℝ A, Real.exp (θ * x) ≤ 1 + θ * x + c * x ^ 2) :
     matrixExp (θ • A) ≤ 1 + θ • A + c • A ^ 2 := by
   rw [matrixExp_smul_eq A hA θ, quad_eq A hA θ c]
   exact cfc_mono hb
 
-lemma one_add_le_exp (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) :
+private lemma one_add_le_exp (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) :
     1 + B ≤ matrixExp B := by
   have e1 : 1 + B = cfc (fun x : ℝ => 1 + x) B := by
     rw [cfc_const_add (1 : ℝ) (fun x : ℝ => x) B, cfc_id' ℝ B hB.isSelfAdjoint, map_one]
   rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp hB, e1]
   exact cfc_mono (fun x _ => by linarith [Real.add_one_le_exp x])
 
-end BernsteinMGF
 end NLAlib
 
-open NLAlib NLAlib.BernsteinMGF
+open NLAlib
 
-theorem NLAlib.bernstein_mgf_cgf {Ω : Type*} [MeasurableSpace Ω]
+/-- For a centered Hermitian random matrix with `λmax X ≤ L` and `0 < θ < 3/L`, `𝔼 matrixExp (θ • X) ≼
+matrixExp (c • 𝔼 X²)` and `matrixLog 𝔼 matrixExp (θ • X) ≼ c • 𝔼 X²`, where `c = (θ²/2)/(1 -
+θL/3)`.
+
+Tropp 2015, Lemma 6.6.2. Atlas: `matrix-bernstein`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 6*. -/
+theorem NLAlib.bernstein_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} [NeZero d]
     (X : Ω → Matrix (Fin d) (Fin d) ℂ) (L θ : ℝ)
     (hL : 0 < L) (hθ : 0 < θ) (hθL : θ < 3 / L)
     (hMeas : Measurable X) (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian)
     (hL2 : MemLp X 2 μ) (hMean : (∫ ω, X ω ∂μ) = 0)
     (hBound : ∀ᵐ ω ∂μ, lambdaMax (X ω) ≤ L) :
-    loewnerLE (∫ ω, matrixExp (θ • X ω) ∂μ)
+    LoewnerLE (∫ ω, matrixExp (θ • X ω) ∂μ)
       (matrixExp (((θ ^ 2 / 2) / (1 - θ * L / 3)) • (∫ ω, X ω ^ 2 ∂μ))) ∧
-    loewnerLE (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ))
+    LoewnerLE (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ))
       (((θ ^ 2 / 2) / (1 - θ * L / 3)) • (∫ ω, X ω ^ 2 ∂μ)) := by
   have hθL' : θ * L < 3 := (lt_div_iff₀ hL).mp hθL
   set c := (θ ^ 2 / 2) / (1 - θ * L / 3) with hc
@@ -200,9 +206,9 @@ theorem NLAlib.bernstein_mgf_cgf {Ω : Type*} [MeasurableSpace Ω]
     hI1.trans (one_add_le_exp _ hBH)
   refine ⟨Matrix.le_iff.mp h1, ?_⟩
   have hMPD : (∫ ω, matrixExp (θ • X ω) ∂μ).PosDef := by
-    apply ch3_lieb_integral_posDef μ _ hEint
+    apply posDef_integral_of_ae_posDef μ _ hEint
     filter_upwards [hHerm] with ω hH
-    exact (ch3_cgf_exp_log _ (hH.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))).1
-  obtain ⟨hEPD, hlog⟩ := ch3_cgf_exp_log (c • S) hBH
-  have h2 := ch8_log_operator_monotone _ _ hMPD hEPD (Matrix.le_iff.mp h1)
+    exact (posDef_matrixExp_and_matrixLog_matrixExp _ (hH.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))).1
+  obtain ⟨hEPD, hlog⟩ := posDef_matrixExp_and_matrixLog_matrixExp (c • S) hBH
+  have h2 := matrixLog_le_matrixLog _ _ hMPD hEPD (Matrix.le_iff.mp h1)
   rwa [hlog] at h2

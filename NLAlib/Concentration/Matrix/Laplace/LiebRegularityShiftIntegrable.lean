@@ -6,7 +6,9 @@ import Mathlib.Tactic.FinCases
 /-!
 # Exponential integrability survives a fixed Hermitian shift
 
-Lean name: `NLAlib.ch3_lieb_regularity_shift_integrable`.
+Main declaration: `NLAlib.integrable_matrixExp_add_and_traceExp_add`.
+
+Atlas: `matrix-laplace` (regularity lemma).
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Auxiliary regularity lemma for Corollary 3.4.2 and the proof of Lemma 3.5.1, printed pp. 35–36; standing regularity convention in Section 2.2.1, printed p. 25.
 -/
@@ -46,7 +48,14 @@ private lemma matrix_exp_sum_norm_bound {d N : ℕ}
       intro k hk
       exact Real.exp_log (by positivity)
 
-theorem NLAlib.ch3_lieb_regularity_shift_integrable {Ω : Type*} [MeasurableSpace Ω]
+/-- If `matrixExp X` is integrable for a Hermitian random matrix `X`, then so are `matrixExp (H + X)`
+and `traceExp (H + X)` for every fixed Hermitian `H`.
+
+Tropp 2015, regularity lemma for Corollary 3.4.2 and Lemma 3.5.1. Atlas: `matrix-laplace`. Ported
+from the Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 3*.
+
+Auxiliary; not a numbered result in the source. -/
+theorem NLAlib.integrable_matrixExp_add_and_traceExp_add {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ}
     (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian)
     (X : Ω → Matrix (Fin d) (Fin d) ℂ)

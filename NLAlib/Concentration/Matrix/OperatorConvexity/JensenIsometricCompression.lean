@@ -9,7 +9,9 @@ import Mathlib.LinearAlgebra.Matrix.Reindex
 /-!
 # Operator convexity under isometric compression
 
-Lean name: `NLAlib.ch8_jensen_isometric_compression`.
+Main declaration: `NLAlib.OperatorConvexOn.matrixFunction_conjTranspose_mul_mul_le`.
+
+Atlas: `operator-monotone-convex` (operator Jensen inequality for an isometry).
 
 Source: Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1, Theorem 8.5.2 and its unitary dilation proof, printed pp. 132–133.
 -/
@@ -37,13 +39,13 @@ private lemma reindex_cfc {ι κ : Type*} [Fintype ι] [Fintype κ]
   · rw [cfc_apply_of_not_continuousOn A hf, map_zero,
       cfc_apply_of_not_continuousOn _ (by rwa [hs])]
 
-lemma ch8_operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
-    (I : Set ℝ) (f : ℝ → ℝ) (hf : ch8_operatorConvexOn I f)
+private lemma operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    (I : Set ℝ) (f : ℝ → ℝ) (hf : OperatorConvexOn I f)
     (A H : Matrix ι ι ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
     (hAsp : spectrum ℝ A ⊆ I) (hHsp : spectrum ℝ H ⊆ I)
     (t : ℝ) (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1) :
-    loewnerLE (ch8_matrixFunction f (t • A + (1-t) • H))
-      (t • ch8_matrixFunction f A + (1-t) • ch8_matrixFunction f H) := by
+    LoewnerLE (matrixFunction f (t • A + (1-t) • H))
+      (t • matrixFunction f A + (1-t) • matrixFunction f H) := by
   let e := Fintype.equivFin ι
   let E := reindexStar e
   have hs (B : Matrix ι ι ℂ) : spectrum ℝ (E B) = spectrum ℝ B :=
@@ -58,7 +60,7 @@ lemma ch8_operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι] [No
     ← map_sub E] at h
   have hh := h.submatrix e
   simpa [E, reindexStar, Matrix.reindexAlgEquiv, Matrix.reindex_apply,
-    ch8_matrixFunction, loewnerLE, Matrix.submatrix_submatrix] using hh
+    matrixFunction, LoewnerLE, Matrix.submatrix_submatrix] using hh
 
 private lemma unitary_calculus {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     (U A : Matrix ι ι ℂ) (hU : U.conjTranspose = U) (hU2 : U * U = 1)
@@ -84,35 +86,36 @@ private lemma unitary_calculus {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonem
 
 private lemma pinching {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] [Nonempty ι] [Nonempty κ]
-    (I : Set ℝ) (f : ℝ → ℝ) (hf : ch8_operatorConvexOn I f)
+    (I : Set ℝ) (f : ℝ → ℝ) (hf : OperatorConvexOn I f)
     (X : Matrix (ι ⊕ κ) (ι ⊕ κ) ℂ) (hX : X.IsHermitian)
     (hXI : spectrum ℝ X ⊆ I) :
-    loewnerLE (cfc f (X.submatrix Sum.inr Sum.inr))
+    LoewnerLE (cfc f (X.submatrix Sum.inr Sum.inr))
       ((cfc f X).submatrix Sum.inr Sum.inr) := by
   let V : Matrix (ι ⊕ κ) (ι ⊕ κ) ℂ := Matrix.fromBlocks 1 0 0 (-1)
   have hV : V.conjTranspose = V := by simp [V, Matrix.fromBlocks_conjTranspose]
   have hV2 : V * V = 1 := by
     simp [V, Matrix.fromBlocks_multiply, ← Matrix.fromBlocks_one]
   have hcalc := unitary_calculus V X hV hV2 hX f
-  have hh := ch8_operatorConvexOn_finite I f hf X (V * X * V) hX hcalc.1 hXI
+  have hh := operatorConvexOn_finite I f hf X (V * X * V) hX hcalc.1 hXI
     (by rwa [hcalc.2.1]) (1/2) (by norm_num) (by norm_num)
   have hmid : (1/2 : ℝ) • X + (1 - (1/2 : ℝ)) • (V * X * V) =
       Matrix.fromBlocks (X.submatrix Sum.inl Sum.inl) 0 0 (X.submatrix Sum.inr Sum.inr) := by
     rw [← Matrix.fromBlocks_toBlocks X]
     simp only [V, Matrix.fromBlocks_multiply, one_mul, mul_one, neg_mul, mul_neg]
-    ext i j <;> cases i <;> cases j <;> simp <;> ring
-  unfold loewnerLE at hh
-  rw [hmid, (ch8_jensen_block_calculus _ _ (hX.submatrix _) (hX.submatrix _) f).2.2] at hh
+    ext i j
+    cases i <;> cases j <;> simp <;> ring
+  unfold LoewnerLE at hh
+  rw [hmid, (matrixFunction_fromBlocks _ _ (hX.submatrix _) (hX.submatrix _) f).2.2] at hh
   have hr := hh.submatrix Sum.inr
-  unfold loewnerLE
+  unfold LoewnerLE
   convert hr using 1
-  simp only [ch8_matrixFunction]
+  simp only [matrixFunction]
   rw [hcalc.2.2]
   ext i j
   simp [V, Matrix.mul_apply, Fintype.sum_sum_type, Matrix.one_apply]
   ring
 
-private theorem ch8_jensen_reflection_algebra
+private theorem isometry_reflection_identities
     {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
     (K : Matrix ι κ ℂ) (hK : K.conjTranspose * K = 1)
     (A : Matrix ι ι ℂ) (B : Matrix κ κ ℂ) :
@@ -145,14 +148,19 @@ private theorem ch8_jensen_reflection_algebra
 
 
 
-theorem NLAlib.ch8_jensen_isometric_compression
+/-- Operator Jensen inequality for an isometry: if `f` is operator convex on `I` and `Kᴴ K = 1`, then
+`f (Kᴴ A K) ≼ Kᴴ f(A) K`.
+
+Tropp 2015, Thm 8.5.2 (single-isometry form). Atlas: `operator-monotone-convex`. Ported from the
+Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 8*. -/
+theorem NLAlib.OperatorConvexOn.matrixFunction_conjTranspose_mul_mul_le
     {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     [Fintype κ] [DecidableEq κ] [Nonempty κ]
-    (I : Set ℝ) (f : ℝ → ℝ) (hf : ch8_operatorConvexOn I f)
+    (I : Set ℝ) (f : ℝ → ℝ) (hf : OperatorConvexOn I f)
     (A : Matrix ι ι ℂ) (hA : A.IsHermitian) (hAI : spectrum ℝ A ⊆ I)
     (K : Matrix ι κ ℂ) (hK : K.conjTranspose * K = 1) :
-    loewnerLE (ch8_matrixFunction f (K.conjTranspose * A * K))
-      (K.conjTranspose * ch8_matrixFunction f A * K) := by
+    LoewnerLE (matrixFunction f (K.conjTranspose * A * K))
+      (K.conjTranspose * matrixFunction f A * K) := by
   obtain ⟨c, hc⟩ := ContinuousFunctionalCalculus.spectrum_nonempty (R := ℝ) A hA
   let B : Matrix κ κ ℂ := algebraMap ℝ _ c
   have hB : B.IsHermitian := by
@@ -160,7 +168,7 @@ theorem NLAlib.ch8_jensen_isometric_compression
     rw [Algebra.algebraMap_eq_smul_one]
     exact Matrix.isHermitian_one.smul (IsSelfAdjoint.all c)
   let D := Matrix.fromBlocks A 0 0 B
-  have hD := ch8_jensen_block_calculus A B hA hB f
+  have hD := matrixFunction_fromBlocks A B hA hB f
   have hDI : spectrum ℝ D ⊆ I := by
     rw [hD.2.1]
     apply Set.union_subset hAI
@@ -168,7 +176,7 @@ theorem NLAlib.ch8_jensen_isometric_compression
     rw [spectrum.scalar_eq]
     exact Set.singleton_subset_iff.mpr (hAI hc)
   let U := Matrix.fromBlocks (1 - K * K.conjTranspose) K K.conjTranspose 0
-  have hr := ch8_jensen_reflection_algebra K hK A B
+  have hr := isometry_reflection_identities K hK A B
   have hu : U.conjTranspose = U := hr.1
   have hu2 : U * U = 1 := hr.2.1
   have hcalc := unitary_calculus U D hu hu2 hD.1 f
@@ -178,6 +186,6 @@ theorem NLAlib.ch8_jensen_isometric_compression
   have hcfc : (U * cfc f D * U).submatrix Sum.inr Sum.inr =
       K.conjTranspose * cfc f A * K := by
     rw [show cfc f D = Matrix.fromBlocks (cfc f A) 0 0 (cfc f B) from hD.2.2]
-    exact (ch8_jensen_reflection_algebra K hK (cfc f A) (cfc f B)).2.2
+    exact (isometry_reflection_identities K hK (cfc f A) (cfc f B)).2.2
   rw [hcfc] at hp
   exact hp

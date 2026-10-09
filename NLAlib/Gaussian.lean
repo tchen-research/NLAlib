@@ -2,6 +2,12 @@ import NLAlib.Gaussian.Basic
 import NLAlib.Gaussian.Moments
 import NLAlib.Gaussian.InverseMoments
 import NLAlib.Gaussian.Conditioning
+import NLAlib.Gaussian.Concentration
+import NLAlib.Gaussian.Wishart
+import NLAlib.Gaussian.Moments.ApproxMultiplication
+import NLAlib.Gaussian.Moments.FourthMoment
+import NLAlib.Gaussian.Comparison
+import NLAlib.Gaussian.Extreme
 import NLAlib.Gaussian.Invariance
 
 /-!

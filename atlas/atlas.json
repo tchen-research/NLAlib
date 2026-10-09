@@ -742,6 +742,18 @@
      "decl": "LRA.Basic.pinvL / pinvR",
      "status": "stated",
      "note": "full-rank special cases only"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_pinvR_sq",
+     "status": "proved",
+     "usage": "‖G†‖² = ‖(GGᵀ)⁻¹‖ and ‖(AAᵀ)⁻¹‖ = 1/σ_min(Aᵀ)²; no full-rank hypothesis (both sides 0 when singular)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inv_self_mul_transpose_eq",
+     "status": "proved",
+     "usage": "‖G†‖² = ‖(GGᵀ)⁻¹‖ and ‖(AAᵀ)⁻¹‖ = 1/σ_min(Aᵀ)²; no full-rank hypothesis (both sides 0 when singular)."
     }
    ],
    "depends_on": [],
@@ -1341,6 +1353,13 @@
      "library": "mathlib",
      "decl": "ProbabilityTheory.multivariateGaussian",
      "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGaussian_gaussianMatrix",
+     "status": "proved",
+     "usage": "Instance: gaussianMatrix p m is a Gaussian measure in Mathlib's sense (IsGaussian), with HasGaussianLaw for linear forms via linForm.",
+     "note": "bridge to Mathlib's IsGaussian / HasGaussianLaw API (Gaussian/Extreme/LinearForms.lean)"
     }
    ],
    "depends_on": [],
@@ -1602,13 +1621,25 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.frobenius_fourth_moment",
+     "library": "nlalib",
+     "decl": "NLAlib.integral_frobSq_mul_gaussianMatrix_mul_sq",
+     "status": "proved",
+     "note": "E‖SGT‖_F⁴ = (‖S‖_F²‖T‖_F²)² + 2‖SᵀS‖_F²‖TTᵀ‖_F²; with Isserlis on entries and on linear forms as reusable helpers"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_entry_mul_four_gaussianMatrix",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_linear_mul_four_gaussianMatrix",
      "status": "proved"
     }
    ],
    "depends_on": [
-    "gaussian-matrix-def"
+    "gaussian-matrix-def",
+    "norms-frob-spec"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -1664,7 +1695,7 @@
    "tags": [
     "foundation"
    ],
-   "notes": "Special cases (fourth moments) are proved by hand; the general formula would remove the case-by-case work.",
+   "notes": "Isserlis for degree-four products of Gaussian matrix entries and of linear forms is proved in Gaussian/Moments/FourthMoment.lean (integral_entry_mul_four_gaussianMatrix, integral_linear_mul_four_gaussianMatrix); the general pairing formula remains open.",
    "updated_at": "2026-10-09"
   },
   {
@@ -1699,14 +1730,10 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.approx_multiplication",
-     "status": "proved"
-    },
-    {
-     "library": "lra",
-     "decl": "GaussianApproxMultiplication",
-     "status": "assumed"
+     "library": "nlalib",
+     "decl": "NLAlib.integral_frobSq_mul_gram_mul_transpose_sub",
+     "status": "proved",
+     "note": "E‖M(ΩΩᵀ/t)Nᵀ − MNᵀ‖_F² = (‖M‖_F²‖N‖_F² + ‖MNᵀ‖_F²)/t, and ≤ (2/t)‖M‖_F²‖N‖_F²"
     }
    ],
    "depends_on": [
@@ -1824,9 +1851,10 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.chi_square_lower_tail",
-     "status": "proved"
+     "library": "nlalib",
+     "decl": "NLAlib.measure_sum_sq_le_le_gaussianReal",
+     "status": "proved",
+     "note": "P[χ²_d ≤ u] ≤ (eu/d)^{d/2} for 0 ≤ u ≤ d, over Fin d"
     }
    ],
    "depends_on": [
@@ -2113,7 +2141,7 @@
    ],
    "area": "gaussian-inverse",
    "kind": "identity",
-   "status": "stated",
+   "status": "proved",
    "informal": "$\\mathbb{E}\\|G^\\dagger\\|_F^4$ in closed form (second identity of Tropp–Webber Lemma B.2).",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{r\\times k}$ standard Gaussian",
@@ -2128,15 +2156,17 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.pinv_frobenius_fourth_moment",
-     "status": "stated"
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix",
+     "status": "proved",
+     "note": "E‖G†‖_F⁴ = (r²(k−r) − 2r(r−1))/((k−r)(k−r−1)(k−r−3)), Tropp–Webber Lemma B.2"
     }
    ],
    "depends_on": [
     "inverse-wishart-mean",
     "chi-square-neg-moment",
-    "rotation-invariance"
+    "rotation-invariance",
+    "pseudoinverse"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2164,7 +2194,7 @@
    ],
    "area": "gaussian-inverse",
    "kind": "identity",
-   "status": "stated",
+   "status": "proved",
    "informal": "Closed form $$\\frac{r(k-1)}{(k-r)(k-r-1)(k-r-3)}.$$",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{r\\times k}$ standard Gaussian",
@@ -2179,14 +2209,18 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.inverse_wishart_frobenius_moment",
-     "status": "stated"
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix",
+     "status": "proved",
+     "note": "E‖(GGᵀ)⁻¹‖_F² = r(k−1)/((k−r)(k−r−1)(k−r−3)); via the diagonal and off-diagonal second moments of the inverse Wishart matrix"
     }
    ],
    "depends_on": [
     "inverse-wishart-mean",
-    "chi-square-neg-moment"
+    "chi-square-neg-moment",
+    "rotation-invariance",
+    "block-law-indep",
+    "gaussian-full-rank-ae"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2216,7 +2250,7 @@
    ],
    "area": "gaussian-inverse",
    "kind": "bound",
-   "status": "stated",
+   "status": "scaffold",
    "informal": "$$\\mathbb{P}\\Big[\\|G^\\dagger\\| > \\frac{e\\sqrt{k}}{k-r+1}\\cdot t\\Big] \\le t^{-(k-r+1)}.$$",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{r\\times k}$ standard Gaussian with $2 \\le r \\le k$",
@@ -2234,9 +2268,10 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.pinv_spectral_tail",
-     "status": "stated"
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_lt_specNorm_pinvR_le",
+     "status": "scaffold",
+     "note": "HMT Prop A.3 / Chen–Dongarra; proved modulo the Wishart density scaffold"
     }
    ],
    "depends_on": [
@@ -2271,7 +2306,7 @@
    ],
    "area": "gaussian-inverse",
    "kind": "bound",
-   "status": "stated",
+   "status": "scaffold",
    "informal": "Expected spectral norm of the pseudoinverse.",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{r\\times k}$ standard Gaussian",
@@ -2286,10 +2321,10 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.pinv_spectral_expectation",
-     "status": "stated",
-     "note": "SKETCH_ACCEPTED; open child pinv_spectral_tail"
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_pinvR_gaussianMatrix_le",
+     "status": "scaffold",
+     "note": "E‖G†‖ ≤ e√k/(k−r), HMT Prop A.4; proved modulo the Wishart density scaffold"
     }
    ],
    "depends_on": [
@@ -2323,7 +2358,7 @@
    ],
    "area": "gaussian-inverse",
    "kind": "bound",
-   "status": "stated",
+   "status": "proved",
    "informal": "$$\\mathbb{P}\\Big[\\|G^\\dagger\\|_F^2 > \\frac{12rt}{k-r}\\Big] \\le 4\\,t^{-(k-r)/2}.$$",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{r\\times k}$ standard Gaussian",
@@ -2339,14 +2374,16 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.pinv_frobenius_tail",
-     "status": "stated"
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_lt_frobSq_pinvR_le",
+     "status": "proved",
+     "note": "HMT Thm A.6: P[‖G†‖_F² > 12rt/(k−r)] ≤ 4t^{−(k−r)/2}"
     }
    ],
    "depends_on": [
     "chi-square-neg-moment",
-    "inverse-wishart-mean"
+    "inverse-wishart-mean",
+    "pseudoinverse"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2376,7 +2413,7 @@
    ],
    "area": "gaussian-inverse",
    "kind": "bound",
-   "status": "stated",
+   "status": "scaffold",
    "informal": "For $1 \\le p \\le 18$: $$\\big(\\mathbb{E}\\|(GG^\\top)^{-1}\\|^p\\big)^{1/p} \\le \\frac{e^2(k+r)}{2(k-r)^2}.$$ Mission II goal.",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{r\\times k}$ standard Gaussian",
@@ -2392,14 +2429,10 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.inverse_wishart_spectral_moment",
-     "status": "stated"
-    },
-    {
-     "library": "lra",
-     "decl": "GaussianInverseSpectralMoment",
-     "status": "assumed"
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le",
+     "status": "scaffold",
+     "note": "(E‖(GGᵀ)⁻¹‖^p)^{1/p} ≤ e²(k+r)/(2(k−r)²), 1 ≤ p ≤ 18, Tropp–Webber (B.4); proved modulo the Wishart density scaffold"
     }
    ],
    "depends_on": [
@@ -2437,7 +2470,7 @@
    ],
    "area": "gaussian-extreme",
    "kind": "bound",
-   "status": "stated",
+   "status": "proved",
    "informal": "For $L$-Lipschitz $h$: $$\\mathbb{P}\\big[h(G) \\ge \\mathbb{E}h + Lt\\big] \\le e^{-t^2/2}.$$ The single most reused Gaussian fact; needed by Gordon, Chevet, $\\sigma_{\\min}$ tails and the spectral moment bounds.",
    "hypotheses": [
     "$G$ a standard Gaussian matrix",
@@ -2457,9 +2490,15 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.gaussian_concentration",
-     "status": "stated"
+     "library": "nlalib",
+     "decl": "NLAlib.gaussian_concentration",
+     "status": "proved",
+     "note": "HMT Prop 10.3 / Vershynin Prop 5.34 for gaussianMatrix with the Frobenius Lipschitz constant; vector form on the product Gaussian"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussian_concentration_pi",
+     "status": "proved"
     },
     {
      "library": "ai4slt",
@@ -2489,7 +2528,7 @@
     "foundation",
     "bottleneck"
    ],
-   "notes": "Blocks three open Mission III items and Mission II's goal. Candidate proofs: Pisier's smart-path interpolation (shortest), or Gaussian log-Sobolev + Herbst. Proved on Prove2me (sketch chain complete); being ported in round 3.",
+   "notes": "Proved via the log-Sobolev + Herbst route (ported from the Prove2me Gaussian series). Unblocks Gordon, Chevet, the σ_min tails and the spectral moments.",
    "updated_at": "2026-10-09"
   },
   {
@@ -2517,18 +2556,29 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.sMin_lipschitz",
+     "library": "nlalib",
+     "decl": "NLAlib.abs_sigmaMin_sub_sigmaMin_le_frobNorm",
+     "status": "proved",
+     "note": "σ_min (tall convention: inf over unit x of ‖Ax‖, Matrix/Spectral.lean) and the spectral norm are 1-Lipschitz in the Frobenius norm, over any finite index types"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_specNorm_sub_specNorm_le_frobNorm",
      "status": "proved"
     },
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.specNorm_lipschitz",
+     "library": "nlalib",
+     "decl": "NLAlib.sigmaMin",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lamMin",
      "status": "proved"
     }
    ],
    "depends_on": [
-    "weyl-mirsky"
+    "norms-frob-spec"
    ],
    "uses_defs": [
     "NLAlib.singularValues",
@@ -2558,7 +2608,7 @@
    ],
    "area": "gaussian-extreme",
    "kind": "bound",
-   "status": "stated",
+   "status": "proved",
    "informal": "For $G \\in \\mathbb{R}^{N\\times n}$: $$\\sqrt{N} - \\sqrt{n} \\le \\mathbb{E}\\,\\sigma_{\\min}(G) \\le \\mathbb{E}\\,\\sigma_{\\max}(G) \\le \\sqrt{N} + \\sqrt{n}.$$",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{N\\times n}$ standard Gaussian, $n \\ge 1$"
@@ -2572,9 +2622,20 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.gordon",
-     "status": "stated"
+     "library": "nlalib",
+     "decl": "NLAlib.gordon_extreme_singular_values",
+     "status": "proved",
+     "note": "Vershynin 2012 Thm 5.32: √N − √n ≤ E σ_min(G) ≤ E‖G‖ ≤ √N + √n, with integrability"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt",
+     "status": "proved"
     }
    ],
    "depends_on": [
@@ -2600,7 +2661,7 @@
     "foundation",
     "bottleneck"
    ],
-   "notes": "Needs the Gaussian comparison (Slepian/Gordon) inequality or the Davidson–Szarek route; hardest open item in the Gaussian series. Proved on Prove2me (sketch chain complete); being ported in round 3.",
+   "notes": "Done via Gordon's minimax inequality (lower bound) and Sudakov–Fernique with an ε-net (upper bound).",
    "updated_at": "2026-10-09"
   },
   {
@@ -2615,7 +2676,7 @@
    ],
    "area": "gaussian-extreme",
    "kind": "bound",
-   "status": "stated",
+   "status": "proved",
    "informal": "Expected spectral norm of a sandwiched Gaussian matrix.",
    "hypotheses": [
     "$S \\in \\mathbb{R}^{a\\times p}$ and $T \\in \\mathbb{R}^{m\\times b}$ fixed",
@@ -2630,13 +2691,20 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.chevet",
-     "status": "stated"
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_mul_gaussianMatrix_mul_le",
+     "status": "proved",
+     "note": "HMT Prop A.2: E‖SΓT‖ ≤ ‖S‖‖T‖_F + ‖S‖_F‖T‖"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_specNorm_mul_gaussianMatrix_mul_le",
+     "status": "proved"
     }
    ],
    "depends_on": [
-    "spectral-second-moment"
+    "spectral-second-moment",
+    "norm-lipschitz"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2666,7 +2734,7 @@
    ],
    "area": "gaussian-extreme",
    "kind": "bound",
-   "status": "stated",
+   "status": "proved",
    "informal": "Second-moment form of Chevet; consumed by tGN as GaussianSpectralMoment.",
    "hypotheses": [
     "$S \\in \\mathbb{R}^{a\\times p}$ and $T \\in \\mathbb{R}^{m\\times b}$ fixed",
@@ -2681,14 +2749,15 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.spectral_second_moment",
-     "status": "stated"
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le",
+     "status": "proved",
+     "note": "Tropp–Webber Lemma B.1: E‖SΓT‖² ≤ (‖S‖‖T‖_F + ‖S‖_F‖T‖)²"
     },
     {
-     "library": "lra",
-     "decl": "GaussianSpectralMoment",
-     "status": "assumed"
+     "library": "nlalib",
+     "decl": "NLAlib.integral_specNorm_sq_mul_gaussianMatrix_mul_le",
+     "status": "proved"
     }
    ],
    "depends_on": [
@@ -2724,7 +2793,7 @@
    ],
    "area": "gaussian-extreme",
    "kind": "bound",
-   "status": "stated",
+   "status": "proved",
    "informal": "$$\\mathbb{P}\\big[\\sigma_{\\min}(G) \\le \\sqrt{N} - \\sqrt{n} - u\\big] \\le e^{-u^2/2}.$$",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{N\\times n}$ standard Gaussian with $1 \\le n \\le N$",
@@ -2743,15 +2812,10 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.sMin_lower_tail",
-     "status": "stated",
-     "note": "SKETCH_ACCEPTED; open children gordon, gaussian_concentration"
-    },
-    {
-     "library": "lra",
-     "decl": "GordonConcentration",
-     "status": "assumed"
+     "library": "nlalib",
+     "decl": "NLAlib.measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix",
+     "status": "proved",
+     "note": "P[σ_min(G) ≤ √N − √n − u] ≤ e^{−u²/2}; the source's n ≤ N hypothesis was unused and is dropped"
     }
    ],
    "depends_on": [
@@ -2809,24 +2873,26 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.sMin_small_ball",
+     "library": "nlalib",
+     "decl": "NLAlib.measure_sigmaMin_le_le_gaussianMatrix",
+     "status": "proved",
+     "note": "P[σ_min(G) ≤ s] ≤ n(e n s²/(N−n+1))^{(N−n+1)/2} via distances of a column to the span of the others; the source's 0 ≤ s hypothesis was unused and is dropped"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_sq_dist_col_span_le_le_gaussianMatrix",
      "status": "proved"
     },
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.dist_col_span_small_ball",
+     "library": "nlalib",
+     "decl": "NLAlib.measure_sq_dist_colSpace_le_le_gaussianReal",
      "status": "proved"
-    },
-    {
-     "library": "lra",
-     "decl": "RowDistanceSmallBall",
-     "status": "assumed"
     }
    ],
    "depends_on": [
     "chi-square-lower-tail",
-    "block-law-indep"
+    "block-law-indep",
+    "norm-lipschitz"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2857,7 +2923,7 @@
    ],
    "area": "gaussian-extreme",
    "kind": "bound",
-   "status": "stated",
+   "status": "proved",
    "informal": "With probability at least $1 - 2e^{-t^2/2}$, $$\\sqrt{N} - \\sqrt{n} - t \\le \\sigma_{\\min}(G) \\le \\sigma_{\\max}(G) \\le \\sqrt{N} + \\sqrt{n} + t.$$ Mission III goal; the Gaussian subspace embedding in one line.",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{N\\times n}$ standard Gaussian, $n \\ge 1$",
@@ -2872,13 +2938,19 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.extreme_singular_values_deviation",
-     "status": "stated",
-     "note": "SKETCH_ACCEPTED; open children gordon, gaussian_concentration"
+     "library": "nlalib",
+     "decl": "NLAlib.one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix",
+     "status": "proved",
+     "note": "1 − 2e^{−t²/2} ≤ P[√N−√n−t ≤ σ_min(G) and ‖G‖ ≤ √N+√n+t]; Mission III goal, now unconditional"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix",
+     "status": "proved"
     }
    ],
    "depends_on": [
+    "smin-lower-tail",
     "gordon",
     "gaussian-concentration",
     "norm-lipschitz"
@@ -2901,7 +2973,7 @@
     "ose"
    ],
    "updated_at": "2026-10-09",
-   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
+   "notes": "Done. The Gaussian subspace embedding (gaussian-ose) is now one line from this plus rotation invariance."
   },
   {
    "id": "haar-orthogonal",
@@ -6825,7 +6897,7 @@
    ],
    "area": "gaussian-concentration-tools",
    "kind": "identity",
-   "status": "planned",
+   "status": "proved",
    "informal": "For $g \\sim N(0,I_n)$ and smooth $f$ of moderate growth, $$\\mathbb{E}[g_i f(g)] = \\mathbb{E}[\\partial_i f(g)].$$ One-dimensional and multivariate forms.",
    "hypotheses": [
     "$g \\sim N(0, I_n)$",
@@ -6842,10 +6914,20 @@
      "label": "§7"
     }
    ],
-   "formalizations": [],
-   "depends_on": [
-    "gaussian-matrix-def"
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_mul_eq_integral_deriv_gaussianReal",
+     "status": "proved",
+     "note": "one-dimensional Stein identity and the multivariate form E[U G(V)] = Σ Cov(U,V_j) E[∂_j G(V)]; ported from Prove2me"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_mul_eq_sum_covariance_mul_integral",
+     "status": "proved"
+    }
    ],
+   "depends_on": [],
    "uses_defs": [
     "NLAlib.gaussianMatrix"
    ],
@@ -6872,7 +6954,7 @@
    ],
    "area": "gaussian-concentration-tools",
    "kind": "lemma",
-   "status": "planned",
+   "status": "proved",
    "informal": "The semigroup $P_t f(x) = \\mathbb{E} f(e^{-t}x + \\sqrt{1-e^{-2t}}\\,g)$ leaves the Gaussian measure invariant, commutes with derivatives up to the factor $e^{-t}$, and the entropy of $P_t f$ is differentiable in $t$ with derivative given by the Dirichlet form.",
    "hypotheses": [
     "$f$ bounded below and smooth, one dimension"
@@ -6884,7 +6966,29 @@
      "label": "§5.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ornsteinUhlenbeck",
+     "status": "proved",
+     "note": "definition P_t h(x) = ∫ h(e^{-t}x + √(1−e^{-2t})y) dγ(y); invariance, commutation with the derivative, differentiability of the entropy"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_ornsteinUhlenbeck",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_ornsteinUhlenbeck",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_integral_ornsteinUhlenbeck_mul_log",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "gaussian-integration-by-parts"
    ],
@@ -6913,7 +7017,7 @@
    ],
    "area": "gaussian-concentration-tools",
    "kind": "theorem",
-   "status": "planned",
+   "status": "proved",
    "informal": "For the standard Gaussian measure $\\gamma_n$ and smooth $f$: $$\\operatorname{Ent}_{\\gamma_n}(f^2) \\le 2\\int |\\nabla f|^2\\,d\\gamma_n.$$ Proved in one dimension via the Ornstein–Uhlenbeck semigroup, then tensorised.",
    "hypotheses": [
     "$\\gamma_n$ standard Gaussian on $\\mathbb{R}^n$",
@@ -6929,7 +7033,24 @@
      "source": "bl76"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian",
+     "status": "proved",
+     "note": "multivariate LSI on the product Gaussian via the one-dimensional case (bounded-below, compact support, general) and tensorisation"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.entropy_le_half_integral_sq_deriv_div_gaussianReal",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "ornstein-uhlenbeck",
     "entropy-tensorization"
@@ -6958,7 +7079,7 @@
    ],
    "area": "gaussian-concentration-tools",
    "kind": "lemma",
-   "status": "planned",
+   "status": "proved",
    "informal": "For a product measure $\\mu = \\mu_1 \\otimes \\cdots \\otimes \\mu_n$: $$\\operatorname{Ent}_\\mu(f) \\le \\sum_i \\mathbb{E}_\\mu\\big[\\operatorname{Ent}_{\\mu_i}(f)\\big],$$ where the inner entropy is in the $i$-th coordinate.",
    "hypotheses": [
     "$\\mu$ a finite product of probability measures",
@@ -6971,7 +7092,14 @@
      "label": "Prop 5.6"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.entropy_pi_le_sum_integral_entropy_update",
+     "status": "proved",
+     "note": "not Gaussian-specific; belongs in Concentration/Scalar (follow-up)"
+    }
+   ],
    "depends_on": [],
    "uses_defs": [],
    "variants": [
@@ -6997,7 +7125,7 @@
    ],
    "area": "gaussian-concentration-tools",
    "kind": "theorem",
-   "status": "planned",
+   "status": "proved",
    "informal": "A log-Sobolev inequality with constant $c$ implies $\\mathbb{E}e^{\\lambda F} \\le e^{\\lambda\\mathbb{E}F + c\\lambda^2 L^2/2}$ for $L$-Lipschitz $F$, hence Gaussian tails $\\mathbb{P}[F \\ge \\mathbb{E}F + t] \\le e^{-t^2/(2cL^2)}$.",
    "hypotheses": [
     "$\\mu$ satisfies a log-Sobolev inequality with constant $c$",
@@ -7010,7 +7138,19 @@
      "label": "Thm 5.3"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_exp_mul_le_exp_of_entropy_le",
+     "status": "proved",
+     "note": "Herbst's argument from an entropy bound, plus the Lipschitz entropy bound for the Gaussian"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.entropy_exp_mul_le_gaussian_of_lipschitz",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "gaussian-log-sobolev"
    ],
@@ -7038,7 +7178,7 @@
    ],
    "area": "gaussian-concentration-tools",
    "kind": "theorem",
-   "status": "planned",
+   "status": "proved",
    "informal": "If $(X_i)$ and $(Y_i)$ are centred Gaussian vectors with $\\mathbb{E}(X_i - X_j)^2 \\le \\mathbb{E}(Y_i - Y_j)^2$ for all $i, j$, then for all $t$: $$\\mathbb{P}\\big[\\max_i X_i \\ge t\\big] \\le \\mathbb{P}\\big[\\max_i Y_i \\ge t\\big].$$",
    "hypotheses": [
     "$X, Y$ centred Gaussian vectors in $\\mathbb{R}^N$",
@@ -7054,7 +7194,14 @@
      "source": "gordon85"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.slepian_inequality",
+     "status": "proved",
+     "note": "Vershynin 2018 Thm 7.2.1 via the Gaussian interpolation principle integral_le_integral_of_covariance_hessian_nonneg"
+    }
+   ],
    "depends_on": [
     "gaussian-integration-by-parts"
    ],
@@ -7082,7 +7229,7 @@
    ],
    "area": "gaussian-concentration-tools",
    "kind": "theorem",
-   "status": "planned",
+   "status": "proved",
    "informal": "Under the Slepian increment condition, $\\mathbb{E}\\max_i X_i \\le \\mathbb{E}\\max_i Y_i$.",
    "hypotheses": [
     "$X, Y$ centred Gaussian vectors",
@@ -7095,9 +7242,15 @@
      "label": "Thm 7.2.11"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sudakov_fernique_inequality",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
-    "slepian"
+    "gaussian-integration-by-parts"
    ],
    "uses_defs": [],
    "variants": [
@@ -7124,7 +7277,7 @@
    ],
    "area": "gaussian-concentration-tools",
    "kind": "theorem",
-   "status": "planned",
+   "status": "proved",
    "informal": "For doubly indexed centred Gaussian processes $X_{ij}, Y_{ij}$ with $\\mathbb{E}(X_{ij}-X_{ik})^2 \\le \\mathbb{E}(Y_{ij}-Y_{ik})^2$ and $\\mathbb{E}(X_{ij}-X_{lk})^2 \\ge \\mathbb{E}(Y_{ij}-Y_{lk})^2$ for $i \\ne l$: $$\\mathbb{E}\\min_i\\max_j X_{ij} \\le \\mathbb{E}\\min_i\\max_j Y_{ij}.$$ The engine behind the lower bound $\\mathbb{E}\\,\\sigma_{\\min}(G) \\ge \\sqrt{N} - \\sqrt{n}$.",
    "hypotheses": [
     "$X, Y$ centred Gaussian processes indexed by $i, j$",
@@ -7140,7 +7293,18 @@
      "label": "Thm 7.2.?"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gordon_minimax_inequality",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_le_integral_of_covariance_hessian_nonneg",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "gaussian-integration-by-parts"
    ],
@@ -7169,7 +7333,7 @@
    ],
    "area": "gaussian-extreme",
    "kind": "identity",
-   "status": "planned",
+   "status": "proved",
    "informal": "For $\\chi^2_d$ and $q$ with $2q < d$: $\\mathbb{E}[(\\chi^2_d)^{-q}]$ in closed form via the Gamma function, with the $L^q$ bound $\\|(\\chi^2_d)^{-1}\\|_{L^q} \\le C/d$, and $\\mathbb{E}[(\\chi^2_d)^{-2}] = 1/((d-2)(d-4))$.",
    "hypotheses": [
     "$d \\ge 2q+1$"
@@ -7185,7 +7349,24 @@
      "label": "App. B"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_rpow_inv_sum_sq_gaussianReal",
+     "status": "proved",
+     "note": "E[(χ²_d)^{-q}] = Γ(d/2−q)/(2^q Γ(d/2)) for 0 ≤ q < d/2; HMT Lemma A.10 bound; E[(χ²_d)^{-2}] = 1/((d−2)(d−4)) as the case q = 2"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_inv_sum_sq_pow_two_gaussianReal",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "chi-square-lower-tail"
    ],
@@ -7213,7 +7394,7 @@
    ],
    "area": "concentration-scalar",
    "kind": "lemma",
-   "status": "planned",
+   "status": "proved",
    "informal": "If $\\mathbb{P}[X > t] \\le F(t)$ then $\\mathbb{E}X \\le a + \\int_a^\\infty F(t)\\,dt$; and $\\int_0^\\infty t^p e^{-ct}\\,dt$ bounds. Turns tail bounds into moment bounds.",
    "hypotheses": [
     "$X \\ge 0$ with $\\mathbb{P}[X > t] \\le F(t)$ for $t \\ge a$"
@@ -7225,7 +7406,19 @@
      "label": "Lem 1.2.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_le_of_tail_le_rpow",
+     "status": "proved",
+     "note": "integrability and E f ≤ C^{1/m} m/(m−1) from a polynomial tail bound; truncated Gamma-type integral bound"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lintegral_rpow_mul_exp_le",
+     "status": "proved"
+    }
+   ],
    "depends_on": [],
    "uses_defs": [],
    "variants": [],
@@ -7249,7 +7442,7 @@
    ],
    "area": "gaussian-inverse",
    "kind": "bound",
-   "status": "planned",
+   "status": "scaffold",
    "informal": "For $G \\in \\mathbb{R}^{r\\times k}$ Gaussian, a tail bound $\\mathbb{P}[\\lambda_{\\min}(GG^\\top) \\le s] \\le \\ldots$ obtained from the rank-one CDF and a density bound; feeds the pseudoinverse spectral tail.",
    "hypotheses": [
     "$G \\sim$ Gaussian $r \\times k$, $k \\ge r$"
@@ -7264,10 +7457,33 @@
      "source": "cd05"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le",
+     "status": "scaffold",
+     "note": "Tropp–Webber (B.7) proved modulo the density bound (B.5), which is the scaffold gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral: it needs the joint eigenvalue density of a real Wishart matrix (Vandermonde Jacobian), absent from Mathlib"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gammaRatio_le",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_one_sigmaMin_transpose_sq_le_eq",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "chi-square-lower-tail",
-    "gaussian-full-rank-ae"
+    "gaussian-full-rank-ae",
+    "tail-integral"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix"
@@ -7898,7 +8114,7 @@
    "license": "Apache-2.0",
    "ours": true,
    "repo_dir": "NLAlib",
-   "scope": "The library this atlas tracks. Layered modules Matrix → Concentration → Gaussian → Sketching → LowRank/Estimation/Krylov → Solvers. NLAlib/Concentration/Matrix/ is Tropp 2015 Ch. 3–8 (formerly the standalone TroppMatrixConcentration project, all Proved on Prove2me), reorganised by topic: Laplace, Series, Chernoff, Bernstein, Intrinsic, OperatorConvexity, Defs."
+   "scope": "The library this atlas tracks. Layered modules Matrix → Concentration → Gaussian → Sketching → LowRank/Estimation/Krylov → Solvers. NLAlib/Concentration/Matrix/ is Tropp 2015 Ch. 3–8 (formerly the standalone TroppMatrixConcentration project, all Proved on Prove2me), reorganised by topic: Laplace, Series, Chernoff, Bernstein, Intrinsic, OperatorConvexity, Defs. Gaussian/ holds the ported Gaussian Random Matrices series: Concentration/ (integration by parts, Ornstein–Uhlenbeck, log-Sobolev, Herbst), Comparison/ (Slepian, Sudakov–Fernique, Gordon minimax), Extreme/ (Lipschitz, Gordon, Chevet, spectral second moment, chi-square, small ball, deviation), InverseMoments/ (inverse Wishart, pseudoinverse tails), Moments/ (fourth moment, approximate multiplication)."
   },
   {
    "id": "mathlib",
@@ -7918,7 +8134,7 @@
    "mathlib": "0df444a360eaa60ab8c11dca51a86af692955474",
    "license": "Apache-2.0",
    "ours": true,
-   "scope": "Three-mission series in namespace GaussianMatrix on the shared definition bundle GaussianMatrix_basic. Mission I complete; II and III partly open."
+   "scope": "Three-mission series in namespace GaussianMatrix on Prove2me (73 accepted solutions). Fully ported into NLAlib/Gaussian/ on 2026-10-09; the one statement never proved there (the Wishart eigenvalue density bound) is the scaffold gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral. Kept for provenance."
   },
   {
    "id": "lra",

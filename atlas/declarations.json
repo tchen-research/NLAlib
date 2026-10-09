@@ -99,6 +99,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.Gamma_add_half_le_mul_sqrt {x : ℝ} (hx : 0 < x) : Real.Gamma (x + 1 / 2) ≤ Real.Gamma x * √x",
+  "name":
+  "NLAlib.Gamma_add_half_le_mul_sqrt",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  343,
+  "kind":
+  "theorem",
+  "doc":
+  "`Γ(x + 1/2) ≤ Γ(x) √x` for `x > 0` (log-convexity of `Γ`, Bohr–Mollerup).\nAtlas: `chi-square-neg-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.inv_chi_square_Lq_bound` (`icl_Gamma_add_half_le`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.HasOrthonormalCols.{u_1, u_3} {m : Type u_1} {q : Type u_3} [Fintype m] [DecidableEq q] (Q : Matrix m q ℝ) : Prop",
   "name":
   "NLAlib.HasOrthonormalCols",
@@ -729,6 +743,34 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.abs_add_mul_log_add_le (a δ : ℝ) (ha : 0 ≤ a) (hδ : 0 < δ) (hδ1 : δ ≤ 1) :\n  |(a + δ) * Real.log (a + δ)| ≤ |a * Real.log a| + a + 2",
+  "name":
+  "NLAlib.abs_add_mul_log_add_le",
+  "module":
+  "NLAlib.Gaussian.Concentration.LogSobolev",
+  "line":
+  28,
+  "kind":
+  "theorem",
+  "doc":
+  "`|(a + δ) log (a + δ)| ≤ |a log a| + a + 2` for `a ≥ 0` and `0 < δ ≤ 1`. Atlas:\n`gaussian-log-sobolev` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_logsobolev`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_apply_le_apply_self_add_apply_self.{u_1} {m : Type u_1} [Fintype m] [DecidableEq m] (M : Matrix m m ℝ)\n  (hM : M.PosSemidef) (i j : m) : |M i j| ≤ M i i + M j j",
+  "name":
+  "NLAlib.abs_apply_le_apply_self_add_apply_self",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "line":
+  65,
+  "kind":
+  "theorem",
+  "doc":
+  "An off-diagonal entry of a real positive semidefinite matrix is dominated by the diagonal:\n`|Mᵢⱼ| ≤ Mᵢᵢ + Mⱼⱼ`.\n\nHelper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the\nProve2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_offdiag`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.abs_dotProduct_mulVec_le_specNorm.{u_3} {d : Type u_3} [Fintype d] [DecidableEq d] (M : Matrix d d ℝ)\n  (x : d → ℝ) : |x ⬝ᵥ M.mulVec x| ≤ NLAlib.specNorm M * x ⬝ᵥ x",
   "name":
   "NLAlib.abs_dotProduct_mulVec_le_specNorm",
@@ -754,6 +796,118 @@
   "theorem",
   "doc":
   "Cauchy–Schwarz, absolute-value form: `|⟨A, B⟩_F| ≤ ‖A‖_F ‖B‖_F`. Atlas `norms-frob-spec`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_le_abs_add_mul_abs_of_abs_deriv_le (f : ℝ → ℝ) (hf : Differentiable ℝ f) (C : ℝ)\n  (hdf : ∀ (x : ℝ), |deriv f x| ≤ C) (z : ℝ) : |f z| ≤ |f 0| + C * |z|",
+  "name":
+  "NLAlib.abs_le_abs_add_mul_abs_of_abs_deriv_le",
+  "module":
+  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  "A function with derivative bounded by `C` grows at most linearly:\n`|f z| ≤ |f 0| + C |z|`. Atlas: `gaussian-integration-by-parts` (helper). Ported from Prove2me\nsolution `GaussianMatrix.gaussian_ibp_one_dim`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_mul_exp_le_exp_two_mul_add_one (u : ℝ) : |u * Real.exp u| ≤ Real.exp (2 * u) + 1",
+  "name":
+  "NLAlib.abs_mul_exp_le_exp_two_mul_add_one",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  79,
+  "kind":
+  "theorem",
+  "doc":
+  "`|u e^u| ≤ e^{2u} + 1`. Atlas: `gaussian-concentration` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_mul_log_le_sq_add_one (s : ℝ) (hs : 0 ≤ s) : |s * Real.log s| ≤ s ^ 2 + 1",
+  "name":
+  "NLAlib.abs_mul_log_le_sq_add_one",
+  "module":
+  "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "`|s log s| ≤ s² + 1` for `s ≥ 0`. Atlas: `gaussian-log-sobolev` (helper). Ported from\nProve2me solution `GaussianMatrix.gaussian_logsobolev_bounded_below`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_sigmaMin_sub_sigmaMin_le_frobNorm.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (A B : Matrix m n ℝ) : |NLAlib.sigmaMin A - NLAlib.sigmaMin B| ≤ NLAlib.frobNorm (A - B)",
+  "name":
+  "NLAlib.abs_sigmaMin_sub_sigmaMin_le_frobNorm",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  318,
+  "kind":
+  "theorem",
+  "doc":
+  "The smallest singular value is `1`-Lipschitz for the Frobenius norm:\n`|σ_min(A) − σ_min(B)| ≤ ‖A − B‖_F`. Weyl's perturbation inequality, Frobenius form\n(Vershynin 2012, proof of Cor. 5.35). Generalised from `Fin N × Fin n` to arbitrary finite index\ntypes. Ported from Prove2me solution `GaussianMatrix.sMin_lipschitz`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_specNorm_mul_of_mul_sub_le {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ)\n  (X Y : Fin p → Fin m → ℝ) :\n  |NLAlib.specNorm (S * Matrix.of X * T) - NLAlib.specNorm (S * Matrix.of Y * T)| ≤\n    NLAlib.specNorm S * NLAlib.specNorm T * NLAlib.frobNorm (Matrix.of X - Matrix.of Y)",
+  "name":
+  "NLAlib.abs_specNorm_mul_of_mul_sub_le",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  204,
+  "kind":
+  "theorem",
+  "doc":
+  "`G ↦ ‖S G T‖₂` is `‖S‖₂‖T‖₂`-Lipschitz for the Frobenius norm:\n`|‖S X T‖₂ - ‖S Y T‖₂| ≤ ‖S‖₂‖T‖₂ ‖X - Y‖_F`. Ported from Prove2me solution\n`GaussianMatrix.spectral_second_moment_bound` (helper `ssb_sandwich_lip`). Atlas:\n`norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_specNorm_sub_specNorm_le.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] (A B : Matrix m n ℝ) : |NLAlib.specNorm A - NLAlib.specNorm B| ≤ NLAlib.specNorm (A - B)",
+  "name":
+  "NLAlib.abs_specNorm_sub_specNorm_le",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  331,
+  "kind":
+  "theorem",
+  "doc":
+  "Reverse triangle inequality for the spectral norm: `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖₂`.\nPorted from Prove2me solution `GaussianMatrix.specNorm_lipschitz` (helper `specNorm_sub_le`).\nAtlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_specNorm_sub_specNorm_le_frobNorm.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] (A B : Matrix m n ℝ) :\n  |NLAlib.specNorm A - NLAlib.specNorm B| ≤ NLAlib.frobNorm (A - B)",
+  "name":
+  "NLAlib.abs_specNorm_sub_specNorm_le_frobNorm",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  338,
+  "kind":
+  "theorem",
+  "doc":
+  "The spectral norm is `1`-Lipschitz for the Frobenius norm: `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖_F`\n(Vershynin 2012, proof of Cor. 5.35). Generalised from `Fin N × Fin n` to arbitrary finite index\ntypes. Ported from Prove2me solution `GaussianMatrix.specNorm_lipschitz`.\nAtlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.ae_integrable_comp_update_pi.{u_1, u_2} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {Ω : Type u_2}\n  [MeasurableSpace Ω] (μ : ι → MeasureTheory.Measure Ω) [∀ (i : ι), MeasureTheory.IsProbabilityMeasure (μ i)] (i : ι)\n  {F : (ι → Ω) → ℝ} (hF : MeasureTheory.Integrable F (MeasureTheory.Measure.pi μ)) :\n  ∀ᵐ (x : ι → Ω) ∂MeasureTheory.Measure.pi μ, MeasureTheory.Integrable (fun t => F (Function.update x i t)) (μ i)",
+  "name":
+  "NLAlib.ae_integrable_comp_update_pi",
+  "module":
+  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "line":
+  149,
+  "kind":
+  "theorem",
+  "doc":
+  "For `F ∈ L¹(⊗ⱼ μⱼ)`, almost every one-coordinate section `t ↦ F(update x i t)` is\n`μᵢ`-integrable. Atlas: `entropy-tensorization` (helper). Ported from Prove2me solution\n`GaussianMatrix.entropy_tensorization`. "},
  {"sorry":
   false,
   "signature":
@@ -785,6 +939,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.ae_sum_sq_pos_pi_gaussianReal.{u_1} {ι : Type u_1} [Fintype ι] (hd : 1 ≤ Fintype.card ι) :\n  ∀ᵐ (x : ι → ℝ) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1, 0 < ∑ j, x j ^ 2",
+  "name":
+  "NLAlib.ae_sum_sq_pos_pi_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  82,
+  "kind":
+  "theorem",
+  "doc":
+  "A standard Gaussian vector of positive dimension is almost surely nonzero:\n`∑ⱼ Xⱼ² > 0` a.s. Atlas: `chi-square-neg-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.chi_square_neg_moment` (`cnm_sum_pos_ae`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.aemeasurable_of_map_eq_gaussianMatrix.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  {n t : ℕ} {X : Ω → Fin n → Fin t → ℝ} (hX : MeasureTheory.Measure.map X μ = NLAlib.gaussianMatrix n t) :\n  AEMeasurable X μ",
   "name":
   "NLAlib.aemeasurable_of_map_eq_gaussianMatrix",
@@ -796,6 +964,34 @@
   "theorem",
   "doc":
   "A random variable with law `gaussianMatrix n t` is a.e.-measurable. Atlas\n`gaussian-matrix-def` (helper for `gaussian-conditioning`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.bddBelow_range_rayleigh.{u_2} {n : Type u_2} [Fintype n] (M : Matrix n n ℝ) :\n  BddBelow (Set.range fun x => ↑x ⬝ᵥ M.mulVec ↑x)",
+  "name":
+  "NLAlib.bddBelow_range_rayleigh",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  209,
+  "kind":
+  "theorem",
+  "doc":
+  "Unit-sphere values of the Rayleigh quotient are bounded below (by `-∑ᵢⱼ |Mᵢⱼ|`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.bddBelow_range_sqrt_mulVec.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) :\n  BddBelow (Set.range fun x => √(A.mulVec ↑x ⬝ᵥ A.mulVec ↑x))",
+  "name":
+  "NLAlib.bddBelow_range_sqrt_mulVec",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  109,
+  "kind":
+  "theorem",
+  "doc":
+  "The set of values `√(‖Ax‖₂²)` on the sphere is bounded below by `0`. "},
  {"sorry":
   false,
   "signature":
@@ -967,6 +1163,62 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.continuous_frobNorm_of (p m : ℕ) : Continuous fun X => NLAlib.frobNorm (Matrix.of X)",
+  "name":
+  "NLAlib.continuous_frobNorm_of",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  129,
+  "kind":
+  "theorem",
+  "doc":
+  "`G ↦ ‖G‖_F` is continuous on `Fin p → Fin m → ℝ`. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_continuous_frobNorm`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.continuous_linForm {p m : ℕ} (c : Fin p → Fin m → ℝ) : Continuous (NLAlib.linForm c)",
+  "name":
+  "NLAlib.continuous_linForm",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  139,
+  "kind":
+  "theorem",
+  "doc":
+  "`G ↦ ⟨c, G⟩` is continuous. Ported from Prove2me solution `GaussianMatrix.gordon_upper`\n(helper `gu_continuous_lin`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.continuous_of_abs_sub_le_mul_frobNorm {p m : ℕ} (h : (Fin p → Fin m → ℝ) → ℝ) (L : ℝ)\n  (hLip : ∀ (X Y : Fin p → Fin m → ℝ), |h X - h Y| ≤ L * NLAlib.frobNorm (Matrix.of X - Matrix.of Y)) : Continuous h",
+  "name":
+  "NLAlib.continuous_of_abs_sub_le_mul_frobNorm",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  138,
+  "kind":
+  "theorem",
+  "doc":
+  "A function that is `L`-Lipschitz for the Frobenius norm is continuous. Ported from\nProve2me solution `GaussianMatrix.gordon_upper` (helper `gu_continuous_of_lip`). Atlas: helper of\n`gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.continuous_of_abs_sub_le_mul_sqrt_sum_sq.{u_1} {ι : Type u_1} [Fintype ι] (f : (ι → ℝ) → ℝ) (L : ℝ) (hL : 0 ≤ L)\n  (hLip : ∀ (x y : ι → ℝ), |f x - f y| ≤ L * √(∑ i, (x i - y i) ^ 2)) : Continuous f",
+  "name":
+  "NLAlib.continuous_of_abs_sub_le_mul_sqrt_sum_sq",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "A function that is `L`-Lipschitz for the Euclidean distance on `ι → ℝ` is continuous. Atlas:\n`gaussian-concentration` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.convexOn_relativeEntropy {d : ℕ} [NeZero d] :\n  ConvexOn ℝ {P | P.1.PosDef ∧ P.2.PosDef} fun P => NLAlib.relativeEntropy P.1 P.2",
   "name":
   "NLAlib.convexOn_relativeEntropy",
@@ -1009,6 +1261,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.covariance_rotation_eq.{u_1, u_2} {ι : Type u_1} {Ω : Type u_2} [Fintype ι] [MeasurableSpace Ω]\n  {P : MeasureTheory.Measure Ω} (X Y : ι → Ω → ℝ)\n  (hXY : ProbabilityTheory.HasGaussianLaw (fun ω => (fun t => X t ω, fun t => Y t ω)) P)\n  (hX0 : ∀ (t : ι), ∫ (ω : Ω), X t ω ∂P = 0) (hY0 : ∀ (t : ι), ∫ (ω : Ω), Y t ω ∂P = 0)\n  (hcross : ∀ (s t : ι), ∫ (ω : Ω), X s ω * Y t ω ∂P = 0) (θ : ℝ) (i j : ι) :\n  ProbabilityTheory.covariance (fun ω => -Real.sin θ * X i ω + Real.cos θ * Y i ω)\n      (fun ω => Real.cos θ * X j ω + Real.sin θ * Y j ω) P =\n    Real.sin θ * Real.cos θ * (∫ (ω : Ω), Y i ω * Y j ω ∂P - ∫ (ω : Ω), X i ω * X j ω ∂P)",
+  "name":
+  "NLAlib.covariance_rotation_eq",
+  "module":
+  "NLAlib.Gaussian.Comparison.Interpolation",
+  "line":
+  38,
+  "kind":
+  "theorem",
+  "doc":
+  "Covariance of the derivative process `Z'(θ) = -sin θ X + cos θ Y` with the interpolated\nprocess `Z(θ) = cos θ X + sin θ Y`, for jointly Gaussian centred `X, Y` with vanishing cross\nmoments: `Cov(Z'(θ)ᵢ, Z(θ)ⱼ) = sin θ cos θ (𝔼 YᵢYⱼ - 𝔼 XᵢXⱼ)`. Standard step of the\ninterpolation proofs (Vershynin 2018, proof of Thm 7.2.1). Atlas: helper of `slepian`,\n`sudakov-fernique`, `gordon-minimax`. Ported from Prove2me solution\n`GaussianMatrix.slepian_tail_comparison` (helper `sl_cov_DZ`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.cumulantSum.{u_1, u_2} {Ω : Type u_1} {d : Type u_2} [MeasurableSpace Ω] [Fintype d] [DecidableEq d] {N : ℕ}\n  (μ : MeasureTheory.Measure Ω) (X : Fin N → Ω → Matrix d d ℂ) (θ : ℝ) : Matrix d d ℂ",
   "name":
   "NLAlib.cumulantSum",
@@ -1034,6 +1300,20 @@
   "theorem",
   "doc":
   ""},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.det_ne_zero_of_rank_eq {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) (h : M.rank = n) : M.det ≠ 0",
+  "name":
+  "NLAlib.det_ne_zero_of_rank_eq",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "line":
+  186,
+  "kind":
+  "theorem",
+  "doc":
+  "A square real matrix of full rank `n` has nonzero determinant.\n\nHelper (linear algebra) for the inverse-Wishart computations. Atlas: `inverse-wishart-mean`\n(helper). Ported from the Prove2me solutions of the inverse Wishart series\n(`rri_det_ne_zero_of_rank`). "},
  {"sorry":
   false,
   "signature":
@@ -1079,6 +1359,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.dotProduct_transpose_mul_mulVec.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (A : Matrix m n ℝ) (x : n → ℝ) : x ⬝ᵥ (A.transpose * A).mulVec x = A.mulVec x ⬝ᵥ A.mulVec x",
+  "name":
+  "NLAlib.dotProduct_transpose_mul_mulVec",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  91,
+  "kind":
+  "theorem",
+  "doc":
+  "`x ⬝ (AᵀA) x = ‖Ax‖₂²`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.eigenvalues₀_eq_of_eq_mul_diagonal_mul {n : ℕ} {S W : Matrix (Fin n) (Fin n) ℝ} (hS : S.IsHermitian)\n  {μ : Fin n → ℝ} (hμ : Antitone μ) (hW : W.transpose * W = 1) (hSW : S = W * Matrix.diagonal μ * W.transpose)\n  (k : Fin n) : hS.eigenvalues₀ (Fin.cast ⋯ k) = μ k",
   "name":
   "NLAlib.eigenvalues₀_eq_of_eq_mul_diagonal_mul",
@@ -1093,6 +1387,90 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.entropy_exp_mul_le_gaussian_of_lipschitz.{u_1} {ι : Type u_1} [Fintype ι] (f : (ι → ℝ) → ℝ) (L : ℝ)\n  (hLip : ∀ (x y : ι → ℝ), |f x - f y| ≤ L * √(∑ i, (x i - y i) ^ 2)) (s : ℝ) :\n  (∫ (x : ι → ℝ), s * f x * Real.exp (s * f x) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) -\n      (∫ (x : ι → ℝ), Real.exp (s * f x) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) *\n        Real.log\n          (∫ (x : ι → ℝ), Real.exp (s * f x) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) ≤\n    s ^ 2 * L ^ 2 / 2 *\n      ∫ (x : ι → ℝ), Real.exp (s * f x) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.entropy_exp_mul_le_gaussian_of_lipschitz",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  363,
+  "kind":
+  "theorem",
+  "doc":
+  "**Entropy bound for Lipschitz functions** under the standard Gaussian: for `f`\n`L`-Lipschitz (Euclidean) and every real `s`,\n`∫ s f e^{s f} dγₙ - (∫ e^{s f} dγₙ) log ∫ e^{s f} dγₙ ≤ (s² L² / 2) ∫ e^{s f} dγₙ`.\nSource: Ledoux, *The Concentration of Measure Phenomenon*, (5.5) and proof of Thm 5.3;\nBoucheron–Lugosi–Massart 2013, proof of Thm 5.6. Atlas: `gaussian-concentration` (the\nlog-Sobolev input to `herbst`). Ported from Prove2me solution\n`GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.entropy_le_half_integral_sq_deriv_div_gaussianReal (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f) (δ C : ℝ) (hδ : 0 < δ)\n  (hlow : ∀ (x : ℝ), δ ≤ f x) (hup : ∀ (x : ℝ), f x ≤ C) (hdf : ∀ (x : ℝ), |deriv f x| ≤ C) :\n  ∫ (x : ℝ), f x * Real.log (f x) ∂ProbabilityTheory.gaussianReal 0 1 -\n      (∫ (x : ℝ), f x ∂ProbabilityTheory.gaussianReal 0 1) *\n        Real.log (∫ (x : ℝ), f x ∂ProbabilityTheory.gaussianReal 0 1) ≤\n    1 / 2 * ∫ (x : ℝ), deriv f x ^ 2 / f x ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.entropy_le_half_integral_sq_deriv_div_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
+  "line":
+  80,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gaussian log-Sobolev inequality for functions bounded below** (one dimension): for\n`f ∈ C¹` with `δ ≤ f ≤ C` (`δ > 0`) and `|f'| ≤ C`,\n`∫ f log f dγ - (∫ f dγ) log ∫ f dγ ≤ ½ ∫ f'²/f dγ`.\nSource: Bakry–Gentil–Ledoux 2014, Prop 5.5.1 (semigroup proof); Ledoux, *Concentration of\nMeasure*, §5.1. Atlas: `gaussian-log-sobolev`. Ported from Prove2me solution\n`GaussianMatrix.gaussian_logsobolev_bounded_below`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.entropy_pi_le_sum_integral_entropy_update.{u_1, u_2} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {Ω : Type u_2}\n  [MeasurableSpace Ω] (μ : ι → MeasureTheory.Measure Ω) [∀ (i : ι), MeasureTheory.IsProbabilityMeasure (μ i)]\n  (h : (ι → Ω) → ℝ) (hmeas : Measurable h) (hpos : ∀ (x : ι → Ω), 0 < h x)\n  (hint : MeasureTheory.Integrable h (MeasureTheory.Measure.pi μ))\n  (hlog : MeasureTheory.Integrable (fun x => h x * Real.log (h x)) (MeasureTheory.Measure.pi μ)) :\n  ∫ (x : ι → Ω), h x * Real.log (h x) ∂MeasureTheory.Measure.pi μ -\n      (∫ (x : ι → Ω), h x ∂MeasureTheory.Measure.pi μ) * Real.log (∫ (x : ι → Ω), h x ∂MeasureTheory.Measure.pi μ) ≤\n    ∑ i,\n      ∫ (x : ι → Ω),\n        ∫ (t : Ω), h (Function.update x i t) * Real.log (h (Function.update x i t)) ∂μ i -\n          (∫ (t : Ω), h (Function.update x i t) ∂μ i) *\n            Real.log (∫ (t : Ω), h (Function.update x i t) ∂μ i) ∂MeasureTheory.Measure.pi μ",
+  "name":
+  "NLAlib.entropy_pi_le_sum_integral_entropy_update",
+  "module":
+  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "line":
+  470,
+  "kind":
+  "theorem",
+  "doc":
+  "**Tensorization of entropy**: for a product probability measure `μ = ⊗ᵢ μᵢ` and a\nmeasurable `h > 0` with `h, h log h ∈ L¹(μ)`,\n`Ent_μ(h) ≤ ∑ᵢ ∫ Ent_{μᵢ}(h(update x i ·)) dμ(x)`, where\n`Ent_ν(F) = ∫ F log F dν - (∫ F dν) log ∫ F dν`.\nSource: Ledoux, *The Concentration of Measure Phenomenon*, Prop 5.6; Boucheron–Lugosi–Massart\n2013, Thm 4.10. Atlas: `entropy-tensorization`. Ported from Prove2me solution\n`GaussianMatrix.entropy_tensorization`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal (g : ℝ → ℝ) (hg : ContDiff ℝ 1 g)\n  (hg2 : MeasureTheory.Integrable (fun t => g t ^ 2) (ProbabilityTheory.gaussianReal 0 1))\n  (hglog : MeasureTheory.Integrable (fun t => g t ^ 2 * Real.log (g t ^ 2)) (ProbabilityTheory.gaussianReal 0 1))\n  (hdg : MeasureTheory.Integrable (fun t => deriv g t ^ 2) (ProbabilityTheory.gaussianReal 0 1)) :\n  ∫ (t : ℝ), g t ^ 2 * Real.log (g t ^ 2) ∂ProbabilityTheory.gaussianReal 0 1 -\n      (∫ (t : ℝ), g t ^ 2 ∂ProbabilityTheory.gaussianReal 0 1) *\n        Real.log (∫ (t : ℝ), g t ^ 2 ∂ProbabilityTheory.gaussianReal 0 1) ≤\n    2 * ∫ (t : ℝ), deriv g t ^ 2 ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
+  "line":
+  403,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gross's Gaussian logarithmic Sobolev inequality** in dimension one: for `g ∈ C¹` with\n`g², g² log g², g'² ∈ L¹(γ)`,\n`∫ g² log g² dγ - (∫ g² dγ) log ∫ g² dγ ≤ 2 ∫ g'² dγ`.\nSource: Gross 1975, Thm 5; Ledoux, *Concentration of Measure*, Thm 5.1 (`n = 1`). Atlas:\n`gaussian-log-sobolev`. Ported from Prove2me solution\n`GaussianMatrix.gaussian_logsobolev_one_dim`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal_of_hasCompactSupport (g : ℝ → ℝ) (hg : ContDiff ℝ 1 g)\n  (hgc : HasCompactSupport g) :\n  ∫ (t : ℝ), g t ^ 2 * Real.log (g t ^ 2) ∂ProbabilityTheory.gaussianReal 0 1 -\n      (∫ (t : ℝ), g t ^ 2 ∂ProbabilityTheory.gaussianReal 0 1) *\n        Real.log (∫ (t : ℝ), g t ^ 2 ∂ProbabilityTheory.gaussianReal 0 1) ≤\n    2 * ∫ (t : ℝ), deriv g t ^ 2 ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal_of_hasCompactSupport",
+  "module":
+  "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
+  "line":
+  283,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gaussian log-Sobolev inequality** for compactly supported `g ∈ C¹` (one dimension):\n`∫ g² log g² dγ - (∫ g² dγ) log ∫ g² dγ ≤ 2 ∫ g'² dγ`.\nSource: Gross 1975; Ledoux, *Concentration of Measure*, Thm 5.1 (`n = 1`). Atlas:\n`gaussian-log-sobolev`. Ported from Prove2me solution\n`GaussianMatrix.gaussian_logsobolev_one_dim_compact_support`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  (g : (ι → ℝ) → ℝ) (hg : ContDiff ℝ 1 g)\n  (hg2 :\n    MeasureTheory.Integrable (fun x => g x ^ 2) (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1))\n  (hglog :\n    MeasureTheory.Integrable (fun x => g x ^ 2 * Real.log (g x ^ 2))\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1))\n  (hdg :\n    MeasureTheory.Integrable (fun x => ∑ i, (fderiv ℝ g x) (Pi.single i 1) ^ 2)\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)) :\n  (∫ (x : ι → ℝ), g x ^ 2 * Real.log (g x ^ 2) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) -\n      (∫ (x : ι → ℝ), g x ^ 2 ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) *\n        Real.log (∫ (x : ι → ℝ), g x ^ 2 ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) ≤\n    2 *\n      ∫ (x : ι → ℝ),\n        ∑ i, (fderiv ℝ g x) (Pi.single i 1) ^ 2 ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian",
+  "module":
+  "NLAlib.Gaussian.Concentration.LogSobolev",
+  "line":
+  201,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gross's Gaussian logarithmic Sobolev inequality**: for the standard Gaussian measure\n`γₙ` on `ι → ℝ` and `g ∈ C¹` with `g², g² log g², |∇g|² ∈ L¹(γₙ)`,\n`∫ g² log g² dγₙ - (∫ g² dγₙ) log ∫ g² dγₙ ≤ 2 ∫ |∇g|² dγₙ`, where\n`|∇g(x)|² = ∑ i, fderiv ℝ g x (Pi.single i 1) ^ 2`.\nSource: Gross 1975, Thm 5; Ledoux, *The Concentration of Measure Phenomenon*, Thm 5.1;\nBoucheron–Lugosi–Massart 2013, Thm 5.4. Atlas: `gaussian-log-sobolev`. Ported from Prove2me\nsolution `GaussianMatrix.gaussian_logsobolev`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.error_decomp.{u_1, u_2, u_3, u_4, u_5} {m : Type u_1} {n : Type u_2} {q : Type u_3} {r : Type u_4} {s : Type u_5}\n  [Fintype m] [Fintype q] [Fintype r] [Fintype s] [DecidableEq q] [DecidableEq m] (Q : Matrix m q ℝ) (Qp : Matrix m r ℝ)\n  (Ψ : Matrix m s ℝ) (A : Matrix m n ℝ) (hQ : NLAlib.HasOrthonormalCols Q)\n  (hcomp : Q * Q.transpose + Qp * Qp.transpose = 1) (hG₁ : IsUnit ((Ψ.transpose * Q).transpose * (Ψ.transpose * Q))) :\n  A - NLAlib.sketchedOutput Q Ψ A =\n    NLAlib.residual Q A -\n      Q * (NLAlib.pinvL (Ψ.transpose * Q) * (Ψ.transpose * Qp) * (Qp.transpose * NLAlib.residual Q A))",
   "name":
   "NLAlib.error_decomp",
@@ -1104,6 +1482,34 @@
   "theorem",
   "doc":
   "Error decomposition in the proof of `lem:completion` (Chen–Persson):\n`A - Â = E - Q G₁† G₂ (Q⊥ᵀ E)`. Atlas `sketched-regression`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.exists_contDiff_abs_sub_le_of_lipschitz.{u_1} {ι : Type u_1} [Fintype ι] (f : (ι → ℝ) → ℝ) (L : ℝ)\n  (hLip : ∀ (x y : ι → ℝ), |f x - f y| ≤ L * √(∑ i, (x i - y i) ^ 2)) (ε : ℝ) (hε : 0 < ε) :\n  ∃ g,\n    (∀ (n : ℕ), ContDiff ℝ (↑n) g) ∧\n      (∀ (x y : ι → ℝ), |g x - g y| ≤ L * √(∑ i, (x i - y i) ^ 2)) ∧ ∀ (x : ι → ℝ), |g x - f x| ≤ ε",
+  "name":
+  "NLAlib.exists_contDiff_abs_sub_le_of_lipschitz",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  228,
+  "kind":
+  "theorem",
+  "doc":
+  "**Smooth approximation of Lipschitz functions**: an `L`-Lipschitz (Euclidean) function\n`f : (ι → ℝ) → ℝ` is within `ε` of a `C^∞` function that is again `L`-Lipschitz (mollify with a\nnormed bump of small support). Source: standard; Ledoux, *Concentration of Measure*, §5.1.\nAtlas: `gaussian-concentration` (helper). Ported from Prove2me solution\n`GaussianMatrix.lipschitz_smooth_approx`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.exists_iInf_sqrt_mulVec_le_of_sigmaMin_le.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [Nonempty n] (A : Matrix m n ℝ) (s : ℝ) (hs : NLAlib.sigmaMin A ≤ s) :\n  ∃ j, ⨅ x, √(A.mulVec ↑x ⬝ᵥ A.mulVec ↑x) ≤ √↑(Fintype.card n) * s",
+  "name":
+  "NLAlib.exists_iInf_sqrt_mulVec_le_of_sigmaMin_le",
+  "module":
+  "NLAlib.Gaussian.Extreme.SmallBall",
+  "line":
+  96,
+  "kind":
+  "theorem",
+  "doc":
+  "**Small `σ_min` forces a column close to the span of the others.** For `A : Matrix m n ℝ`\nwith `n` nonempty, if `σ_min(A) ≤ s` then for some column `j`,\n`inf { ‖A x‖₂ : x_j = 1 } ≤ √|n| · s`; the left side is the distance from column `j` to the\nspan of the other columns.\n\nDavidson–Szarek 2001, proof of Thm II.13; Rudelson–Vershynin 2008, Lemma 3.5 (the\n\"invertibility via distance\" step). Atlas: `smin-small-ball`. Generalised from\n`Fin N × Fin n` (with `1 ≤ n`) to arbitrary finite index types with `n` nonempty. Ported from\nProve2me solution `GaussianMatrix.sMin_le_imp_dist_le`. "},
  {"sorry":
   false,
   "signature":
@@ -2171,6 +2577,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.gammaRatio_le {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) :\n  2 ^ ((↑k - ↑r - 1) / 2) * Real.Gamma ((↑k + 1) / 2) / (Real.Gamma (↑r / 2) * Real.Gamma (↑k - ↑r + 1)) ≤\n    ((↑k + ↑r) / 2) ^ ((↑k - ↑r + 1) / 2) / (2 * Real.Gamma (↑k - ↑r + 1))",
+  "name":
+  "NLAlib.gammaRatio_le",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
+  "line":
+  407,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gamma-ratio estimate.** For `1 ≤ r ≤ k`,\n`2^{(k-r-1)/2} Γ((k+1)/2) / (Γ(r/2) Γ(k-r+1)) ≤ ((k+r)/2)^{(k-r+1)/2} / (2 Γ(k-r+1))`,\ni.e. the constant of the density bound (B.5) is at most the constant of (B.6).\n\nTropp–Webber 2023, (B.6). Atlas: `wishart-lambda-min-tail` (helper). Proof: iterated Gautschi\ninequality (log-convexity of `Γ`, Bohr–Mollerup) and AM–GM (`prod_range_add_le_pow`). Ported\nfrom Prove2me solution `GaussianMatrix.tw_gamma_ratio_bound`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.gaussianMatrix (p m : ℕ) : MeasureTheory.Measure (Fin p → Fin m → ℝ)",
   "name":
   "NLAlib.gaussianMatrix",
@@ -2241,6 +2661,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.gaussianMatrix_eq_map_curry (p m : ℕ) :\n  NLAlib.gaussianMatrix p m =\n    MeasureTheory.Measure.map (⇑(MeasurableEquiv.curry (Fin p) (Fin m) ℝ))\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.gaussianMatrix_eq_map_curry",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  474,
+  "kind":
+  "theorem",
+  "doc":
+  "The Gaussian matrix law is the image of the flat standard Gaussian product measure on\n`Fin p × Fin m → ℝ` under currying. Atlas: `gaussian-matrix-def` (helper for\n`gaussian-concentration`). Ported from Prove2me solution `GaussianMatrix.gaussian_concentration`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.gaussianMatrix_indepFun_block {n k r t : ℕ} (V₁ : Matrix (Fin n) (Fin k) ℝ) (V₂ : Matrix (Fin n) (Fin r) ℝ)\n  (hV₁ : V₁.transpose * V₁ = 1) (hV₂ : V₂.transpose * V₂ = 1) (hV₁₂ : V₁.transpose * V₂ = 0) :\n  ProbabilityTheory.IndepFun (fun G => Matrix.of.symm (V₁.transpose * Matrix.of G))\n    (fun G => Matrix.of.symm (V₂.transpose * Matrix.of G)) (NLAlib.gaussianMatrix n t)",
   "name":
   "NLAlib.gaussianMatrix_indepFun_block",
@@ -2255,6 +2689,34 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : ℝ) (ht : 1 ≤ t) :\n  (NLAlib.gaussianMatrix r k) {G | 12 * ↑r / (↑k - ↑r) * t < NLAlib.frobSq (NLAlib.pinvR (Matrix.of G))} ≤\n    ENNReal.ofReal (4 * t ^ (-((↑k - ↑r) / 2)))",
+  "name":
+  "NLAlib.gaussianMatrix_lt_frobSq_pinvR_le",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.FrobeniusMoments",
+  "line":
+  182,
+  "kind":
+  "theorem",
+  "doc":
+  "**Tail bound for the Frobenius norm of the Gaussian pseudoinverse.** For an `r × k`\nstandard Gaussian matrix `G` with `r + 4 ≤ k` and `t ≥ 1`,\n`P[‖G†‖_F² > 12 r t/(k-r)] ≤ 4 t^{-(k-r)/2}`, with `G† = pinvR G`.\n\nHMT 2011, Thm A.6 (used in Prop 10.4; HMT state it as `P[‖Ω₁†‖_F ≥ √(12k/p) t] ≤ 4 t^{-p}`\nwith `Ω₁` of size `k × (k+p)`, the same bound after `t ↦ √t`). Atlas: `pinv-frob-tail`.\nProof: each diagonal entry of `(G Gᵀ)⁻¹` is `1/χ²_{k-r+1}`\n(`gaussianMatrix_map_inv_self_mul_transpose_apply_self`), whose `L^{(k-r)/2}` norm is at most\n`3/(k-r+1)` (`integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt`, atlas\n`chi-square-neg-moment`); Minkowski's inequality bounds `‖tr (G Gᵀ)⁻¹‖_{L^q}` and Markov's\ninequality gives the tail. Ported from Prove2me solution `GaussianMatrix.pinv_frobenius_tail`. "},
+ {"sorry":
+  true,
+  "signature":
+  "NLAlib.gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :\n  (NLAlib.gaussianMatrix r k) {G | t < NLAlib.specNorm (NLAlib.pinvR (Matrix.of G))} ≤\n    ENNReal.ofReal\n      (1 / √(2 * Real.pi * (↑k - ↑r + 1)) * (Real.exp 1 * √↑k / (↑k - ↑r + 1)) ^ (↑k - ↑r + 1) * t ^ (-(↑k - ↑r + 1)))",
+  "name":
+  "NLAlib.gaussianMatrix_lt_specNorm_pinvR_le",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SpectralTail",
+  "line":
+  226,
+  "kind":
+  "theorem",
+  "doc":
+  "**Tail bound for the spectral norm of the Gaussian pseudoinverse.** For an `r × k`\nstandard Gaussian matrix `G` with `2 ≤ r ≤ k` and `t > 0`,\n`P[‖G†‖ > t] ≤ (2π(k-r+1))^{-1/2} (e√k/(k-r+1))^{k-r+1} t^{-(k-r+1)}`,\nwith `G† = pinvR G`.\n\nHMT 2011, Prop A.3; Chen–Dongarra 2005, Lemma 4.1. Atlas: `pinv-spectral-tail`. Proof:\n`‖G†‖² = ‖(G Gᵀ)⁻¹‖ = 1/σ_min(Gᵀ)²` (`specNorm_pinvR_sq`,\n`specNorm_inv_self_mul_transpose_eq`, atlas `pseudoinverse`), the `λ_min` lower tail\n(`gaussianMatrix_sigmaMin_transpose_sq_le_le`, atlas `wishart-lambda-min-tail`, which uses the\nscaffold (B.5)) and Stirling's formula. Ported from Prove2me solution\n`GaussianMatrix.pinv_spectral_tail`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.gaussianMatrix_map_block {n k t : ℕ} (V₁ : Matrix (Fin n) (Fin k) ℝ) (hV₁ : V₁.transpose * V₁ = 1) :\n  MeasureTheory.Measure.map (fun G => Matrix.of.symm (V₁.transpose * Matrix.of G)) (NLAlib.gaussianMatrix n t) =\n    NLAlib.gaussianMatrix k t",
   "name":
   "NLAlib.gaussianMatrix_map_block",
@@ -2266,6 +2728,20 @@
   "theorem",
   "doc":
   "**Law of a Gaussian block.** If `V₁` (`n × k`) has orthonormal columns and `G` is an\n`n × t` standard Gaussian matrix, then `V₁ᵀ G` is a `k × t` standard Gaussian matrix.\n\nHMT 2011 (Halko–Martinsson–Tropp), §10.2 (with `G = Ω` and `V₁` the leading right singular\nvectors: `Ω₁ = V₁ᵀ Ω` is standard Gaussian). Atlas: `block-law-indep`. Ported from the Prove2me\nworkspace, Gaussian Random Matrices series. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianMatrix_map_inv_self_mul_transpose_apply_self {r k : ℕ} (hrk : r ≤ k) (i : Fin r) :\n  MeasureTheory.Measure.map (fun G => (Matrix.of G * (Matrix.of G).transpose)⁻¹ i i) (NLAlib.gaussianMatrix r k) =\n    MeasureTheory.Measure.map (fun x => (∑ j, x j ^ 2)⁻¹)\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.gaussianMatrix_map_inv_self_mul_transpose_apply_self",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.DiagonalLaw",
+  "line":
+  125,
+  "kind":
+  "theorem",
+  "doc":
+  "**Law of a diagonal entry of the inverse Wishart matrix.** For an `r × k` standard Gaussian\nmatrix `G` with `r ≤ k` and any `i`, `(G Gᵀ)⁻¹ᵢᵢ` has the law of `1/χ²_{k-r+1}`, i.e. of\n`(∑ⱼ xⱼ²)⁻¹` for a standard Gaussian vector `x ∈ ℝ^{k-r+1}`.\n\nHMT 2011, proof of Prop A.5 / Tropp–Webber 2023, proof of Lemma B.2 (each diagonal entry of an\ninverse Wishart matrix is an inverse chi-square). Atlas: `pinv-frob-tail`,\n`inverse-wishart-frob-moment` (helper). Proof: Schur complement\n(`inv_self_mul_transpose_apply_self`), conditioning on the other rows, which have full rank\na.s. (`gaussianMatrix_ae_rank_eq`, atlas `gaussian-full-rank-ae`), and the residual law\n(`pi_gaussianReal_map_sq_dist_rowSpace`, atlas `block-law-indep`). Ported from Prove2me\nsolution `GaussianMatrix.inverse_wishart_diag_law`. "},
  {"sorry":
   false,
   "signature":
@@ -2297,6 +2773,48 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.gaussianMatrix_one_sigmaMin_transpose_sq_le_eq {k : ℕ} (hk : 1 ≤ k) (t : ℝ) (ht : 0 ≤ t) :\n  (NLAlib.gaussianMatrix 1 k) {G | NLAlib.sigmaMin (Matrix.of G).transpose ^ 2 ≤ t} =\n    ∫⁻ (x : ℝ) in Set.Ioc 0 t,\n      ENNReal.ofReal\n        (2 ^ ((↑k - 2) / 2) * Real.Gamma ((↑k + 1) / 2) / (Real.Gamma (1 / 2) * Real.Gamma ↑k) * x ^ ((↑k - 2) / 2) *\n          Real.exp (-x / 2))",
+  "name":
+  "NLAlib.gaussianMatrix_one_sigmaMin_transpose_sq_le_eq",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
+  "line":
+  225,
+  "kind":
+  "theorem",
+  "doc":
+  "**The smallest Wishart eigenvalue for `r = 1`.** For a `1 × k` standard Gaussian matrix\n`G` (`k ≥ 1`) and `t ≥ 0`, `σ_min(Gᵀ)² = ‖G‖² ∼ χ²_k`, and\n`P[σ_min(Gᵀ)² ≤ t] = ∫₀ᵗ c(1,k) x^{(k-2)/2} e^{-x/2} dx` with\n`c(1,k) = 2^{(k-2)/2} Γ((k+1)/2) / (Γ(1/2) Γ(k))` (`= 1/(2^{k/2} Γ(k/2))` by Legendre\nduplication): the `χ²_k` CDF written in the shape of Tropp–Webber 2023, (B.5).\n\nTropp–Webber 2023, (B.5) in the case `r = 1` (where it is an equality); Edelman 1988.\nAtlas: `wishart-lambda-min-tail` (sanity case). Proof: polar coordinates for the standard\nGaussian vector and the substitution `y = √x`. Ported from Prove2me solution\n`GaussianMatrix.wishart_lambda_min_cdf_rank_one`. "},
+ {"sorry":
+  true,
+  "signature":
+  "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :\n  (NLAlib.gaussianMatrix r k) {G | NLAlib.sigmaMin (Matrix.of G).transpose ^ 2 ≤ t} ≤\n    ENNReal.ofReal (1 / Real.Gamma (↑k - ↑r + 2) * (t * (↑k + ↑r) / 2) ^ ((↑k - ↑r + 1) / 2))",
+  "name":
+  "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
+  "line":
+  471,
+  "kind":
+  "theorem",
+  "doc":
+  "**Lower tail of the smallest Wishart eigenvalue.** For an `r × k` standard Gaussian matrix\n`G` with `1 ≤ r ≤ k` and `t > 0`,\n`P[λ_min(G Gᵀ) ≤ t] = P[σ_min(Gᵀ)² ≤ t] ≤ (1/Γ(k-r+2)) (t (k+r)/2)^{(k-r+1)/2}`.\n\nTropp–Webber 2023, (B.7); Chen–Dongarra 2005, Lemma 4.1. Atlas: `wishart-lambda-min-tail`.\nProof: the density bound (B.5)\n(`gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral`, a scaffold), the Gamma-ratio estimate\n(`gammaRatio_le`) and `∫₀ᵗ x^a e^{-x/2} dx ≤ t^{a+1}/(a+1)` (`lintegral_rpow_mul_exp_le`, atlas\n`tail-integral`). Ported from Prove2me solution `GaussianMatrix.wishart_lambda_min_tail`. "},
+ {"sorry":
+  true,
+  "signature":
+  "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :\n  (NLAlib.gaussianMatrix r k) {G | NLAlib.sigmaMin (Matrix.of G).transpose ^ 2 ≤ t} ≤\n    ∫⁻ (x : ℝ) in Set.Ioc 0 t,\n      ENNReal.ofReal\n        (2 ^ ((↑k - ↑r - 1) / 2) * Real.Gamma ((↑k + 1) / 2) / (Real.Gamma (↑r / 2) * Real.Gamma (↑k - ↑r + 1)) *\n            x ^ ((↑k - ↑r - 1) / 2) *\n          Real.exp (-x / 2))",
+  "name":
+  "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
+  "line":
+  312,
+  "kind":
+  "theorem",
+  "doc":
+  "**Density bound for the smallest Wishart eigenvalue** (Tropp–Webber 2023, (B.5); Edelman\n1988, Chen–Dongarra 2005). For an `r × k` standard Gaussian matrix `G` with `1 ≤ r ≤ k` and\n`t > 0`,\n`P[σ_min(Gᵀ)² ≤ t] ≤ ∫₀ᵗ c(r,k) x^{(k-r-1)/2} e^{-x/2} dx` with\n`c(r,k) = 2^{(k-r-1)/2} Γ((k+1)/2) / (Γ(r/2) Γ(k-r+1))`.\n\nSCAFFOLD: wishart-lambda-min-tail. This is the only statement of the Prove2me Gaussian series\nwithout a solution. Its proof needs the joint eigenvalue density of the real Wishart matrix\n`G Gᵀ` (or Edelman's bound on the marginal density of `λ_min`), i.e. a change of variables to\nthe eigen-decomposition with the Vandermonde Jacobian, which Mathlib does not provide. The case\n`r = 1` holds with equality (`gaussianMatrix_one_sigmaMin_transpose_sq_le_eq`). Statement\nidentical to Prove2me theorem `GaussianMatrix.wishart_lambda_min_cdf_density_bound`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.gaussianSeriesTail (dimension : ℕ) (v t : ℝ) : ℝ",
   "name":
   "NLAlib.gaussianSeriesTail",
@@ -2308,6 +2826,34 @@
   "def",
   "doc":
   "The Gaussian-series tail `d · exp (-t²/(2v))`, defined piecewise when `v = 0`. Tropp 2015, Thm\n4.1.1. Atlas: `matrix-gaussian-series`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.gaussian_concentration {p m : ℕ} (h : (Fin p → Fin m → ℝ) → ℝ) (L : ℝ) (hL : 0 < L)\n  (hLip : ∀ (X Y : Fin p → Fin m → ℝ), |h X - h Y| ≤ L * NLAlib.frobNorm (Matrix.of X - Matrix.of Y)) (t : ℝ)\n  (ht : 0 ≤ t) :\n  MeasureTheory.Integrable h (NLAlib.gaussianMatrix p m) ∧\n    (NLAlib.gaussianMatrix p m) {X | ∫ (Y : Fin p → Fin m → ℝ), h Y ∂NLAlib.gaussianMatrix p m + L * t ≤ h X} ≤\n      ENNReal.ofReal (Real.exp (-t ^ 2 / 2))",
+  "name":
+  "NLAlib.gaussian_concentration",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  495,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gaussian concentration for Lipschitz functions of a Gaussian matrix**: for\n`h` on `p × m` arrays that is `L`-Lipschitz in the Frobenius norm (`L > 0`) and `t ≥ 0`, `h` is\nintegrable under `gaussianMatrix p m` and\n`P{h(G) ≥ 𝔼 h(G) + L t} ≤ e^{-t²/2}`.\nSource: HMT 2011, Prop 10.3; Vershynin 2012, Prop 5.34. Atlas: `gaussian-concentration`.\nPorted from Prove2me solution `GaussianMatrix.gaussian_concentration`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.gaussian_concentration_pi.{u_1} {ι : Type u_1} [Fintype ι] (f : (ι → ℝ) → ℝ) (L : ℝ) (hL : 0 < L)\n  (hLip : ∀ (x y : ι → ℝ), |f x - f y| ≤ L * √(∑ i, (x i - y i) ^ 2)) (t : ℝ) (ht : 0 ≤ t) :\n  MeasureTheory.Integrable f (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) ∧\n    (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)\n        {x | (∫ (y : ι → ℝ), f y ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) + L * t ≤ f x} ≤\n      ENNReal.ofReal (Real.exp (-t ^ 2 / 2))",
+  "name":
+  "NLAlib.gaussian_concentration_pi",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  431,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gaussian concentration** for Lipschitz functions of a standard Gaussian vector: for `f`\n`L`-Lipschitz (Euclidean, `L > 0`) on `ι → ℝ` and `t ≥ 0`, `f` is `γₙ`-integrable and\n`γₙ{x | 𝔼 f + L t ≤ f x} ≤ e^{-t²/2}`.\nSource: Ledoux, *The Concentration of Measure Phenomenon*, Thm 5.3 / (2.35);\nBoucheron–Lugosi–Massart 2013, Thm 5.6; Vershynin 2012, Prop 5.34. Atlas:\n`gaussian-concentration`. Ported from Prove2me solution\n`GaussianMatrix.gaussian_concentration_vector`. "},
  {"sorry":
   false,
   "signature":
@@ -2381,6 +2927,34 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.gordon_extreme_singular_values {N n : ℕ} (hn : 1 ≤ n) :\n  MeasureTheory.Integrable (fun A => NLAlib.sigmaMin (Matrix.of A)) (NLAlib.gaussianMatrix N n) ∧\n    MeasureTheory.Integrable (fun A => NLAlib.specNorm (Matrix.of A)) (NLAlib.gaussianMatrix N n) ∧\n      √↑N - √↑n ≤ ∫ (A : Fin N → Fin n → ℝ), NLAlib.sigmaMin (Matrix.of A) ∂NLAlib.gaussianMatrix N n ∧\n        ∫ (A : Fin N → Fin n → ℝ), NLAlib.sigmaMin (Matrix.of A) ∂NLAlib.gaussianMatrix N n ≤\n            ∫ (A : Fin N → Fin n → ℝ), NLAlib.specNorm (Matrix.of A) ∂NLAlib.gaussianMatrix N n ∧\n          ∫ (A : Fin N → Fin n → ℝ), NLAlib.specNorm (Matrix.of A) ∂NLAlib.gaussianMatrix N n ≤ √↑N + √↑n",
+  "name":
+  "NLAlib.gordon_extreme_singular_values",
+  "module":
+  "NLAlib.Gaussian.Extreme.Gordon",
+  "line":
+  569,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gordon's theorem for Gaussian matrices.** For an `N × n` standard Gaussian matrix `G`\nwith `n ≥ 1`, `σ_min(G)` and `‖G‖₂` are integrable and\n`√N - √n ≤ 𝔼 σ_min(G) ≤ 𝔼 ‖G‖₂ ≤ √N + √n`. Source: Vershynin 2012, Thm 5.32; Gordon 1985;\nDavidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solution\n`GaussianMatrix.gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.gordon_minimax_inequality.{u_1, u_2, u_3, u_4} {U : Type u_1} {T : Type u_2} {Ω : Type u_3} {Ω' : Type u_4}\n  [Fintype U] [Fintype T] [MeasurableSpace Ω] [MeasurableSpace Ω'] {P : MeasureTheory.Measure Ω}\n  {Q : MeasureTheory.Measure Ω'} (X : U → T → Ω → ℝ) (Y : U → T → Ω' → ℝ)\n  (hX : ProbabilityTheory.HasGaussianLaw (fun ω p => X p.1 p.2 ω) P)\n  (hY : ProbabilityTheory.HasGaussianLaw (fun ω p => Y p.1 p.2 ω) Q)\n  (hX0 : ∀ (u : U) (t : T), ∫ (ω : Ω), X u t ω ∂P = 0) (hY0 : ∀ (u : U) (t : T), ∫ (ω : Ω'), Y u t ω ∂Q = 0)\n  (hsame : ∀ (u : U) (t s : T), ∫ (ω : Ω), (X u t ω - X u s ω) ^ 2 ∂P ≤ ∫ (ω : Ω'), (Y u t ω - Y u s ω) ^ 2 ∂Q)\n  (hdiff :\n    ∀ (u v : U) (t s : T), u ≠ v → ∫ (ω : Ω'), (Y u t ω - Y v s ω) ^ 2 ∂Q ≤ ∫ (ω : Ω), (X u t ω - X v s ω) ^ 2 ∂P) :\n  ∫ (ω : Ω), ⨅ u, ⨆ t, X u t ω ∂P ≤ ∫ (ω : Ω'), ⨅ u, ⨆ t, Y u t ω ∂Q",
+  "name":
+  "NLAlib.gordon_minimax_inequality",
+  "module":
+  "NLAlib.Gaussian.Comparison.GordonMinimax",
+  "line":
+  724,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gordon's minimax inequality** (expectation form). Let `X` (on `(Ω, P)`) and `Y` (on\n`(Ω', Q)`) be centred Gaussian processes indexed by `U × T` (finite) such that\n`𝔼 (X_{u,t} - X_{u,s})² ≤ 𝔼 (Y_{u,t} - Y_{u,s})²` for all `u, t, s` and\n`𝔼 (Y_{u,t} - Y_{v,s})² ≤ 𝔼 (X_{u,t} - X_{v,s})²` for `u ≠ v`. Then\n`𝔼 minᵤ maxₜ X_{u,t} ≤ 𝔼 minᵤ maxₜ Y_{u,t}`. No equal-variance assumption is needed in the\nexpectation form. Source: Gordon 1985; Vershynin 2018, Exercise 7.2.14. Atlas: `gordon-minimax`.\nPorted from Prove2me solution `GaussianMatrix.gordon_minimax`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.gram_transpose_mul_eq.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} {q : Type u_3} [Fintype m] [Fintype n]\n  (P : Matrix m n ℝ) (Q : Matrix m q ℝ) :\n  (P.transpose * Q).transpose * (P.transpose * Q) = Q.transpose * P * (Q.transpose * P).transpose",
   "name":
   "NLAlib.gram_transpose_mul_eq",
@@ -2392,6 +2966,90 @@
   "theorem",
   "doc":
   "`(PᵀQ)ᵀ(PᵀQ) = (QᵀP)(QᵀP)ᵀ`: the Gram matrix of `PᵀQ` is the outer Gram matrix of\n`QᵀP`. Atlas `projection-facts`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.hasDerivAt_gaussianPDFReal_zero (v : NNReal) (hv : v ≠ 0) (x : ℝ) :\n  HasDerivAt (ProbabilityTheory.gaussianPDFReal 0 v) (-(x / ↑v) * ProbabilityTheory.gaussianPDFReal 0 v x) x",
+  "name":
+  "NLAlib.hasDerivAt_gaussianPDFReal_zero",
+  "module":
+  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "line":
+  77,
+  "kind":
+  "theorem",
+  "doc":
+  "The derivative of the centred Gaussian density: `φ_v'(x) = -(x / v) φ_v(x)`.\nAtlas: `gaussian-integration-by-parts` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_integration_by_parts`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.hasDerivAt_integral_ornsteinUhlenbeck_mul_log (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f) (δ C : ℝ) (hδ : 0 < δ)\n  (hlow : ∀ (x : ℝ), δ ≤ f x) (hup : ∀ (x : ℝ), f x ≤ C) (hdf : ∀ (x : ℝ), |deriv f x| ≤ C) (t : ℝ) (ht : 0 < t) :\n  HasDerivAt\n    (fun s =>\n      ∫ (x : ℝ),\n        NLAlib.ornsteinUhlenbeck s f x * Real.log (NLAlib.ornsteinUhlenbeck s f x) ∂ProbabilityTheory.gaussianReal 0 1)\n    (-∫ (x : ℝ),\n        deriv (NLAlib.ornsteinUhlenbeck t f) x ^ 2 / NLAlib.ornsteinUhlenbeck t f x ∂ProbabilityTheory.gaussianReal 0 1)\n    t",
+  "name":
+  "NLAlib.hasDerivAt_integral_ornsteinUhlenbeck_mul_log",
+  "module":
+  "NLAlib.Gaussian.Concentration.OrnsteinUhlenbeckEntropy",
+  "line":
+  433,
+  "kind":
+  "theorem",
+  "doc":
+  "**Entropy dissipation** (de Bruijn's identity) for the Ornstein–Uhlenbeck semigroup: for\n`f ∈ C¹` with `δ ≤ f ≤ C` (`δ > 0`) and `|f'| ≤ C`, at every `t > 0`\n`d/dt ∫ P_t f log P_t f dγ = -∫ ((P_t f)')² / P_t f dγ`, `P_t = ornsteinUhlenbeck t`.\nSource: Bakry–Gentil–Ledoux 2014, §5.7; Ledoux, *Concentration of Measure*, §5.1. Atlas:\n`ornstein-uhlenbeck`. Ported from Prove2me solution `GaussianMatrix.ou_entropy_hasDerivAt`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.hasDerivAt_ornsteinUhlenbeck (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f) (C : ℝ) (hdf : ∀ (x : ℝ), |deriv f x| ≤ C)\n  (t x : ℝ) : HasDerivAt (NLAlib.ornsteinUhlenbeck t f) (Real.exp (-t) * NLAlib.ornsteinUhlenbeck t (deriv f) x) x",
+  "name":
+  "NLAlib.hasDerivAt_ornsteinUhlenbeck",
+  "module":
+  "NLAlib.Gaussian.Concentration.OrnsteinUhlenbeck",
+  "line":
+  103,
+  "kind":
+  "theorem",
+  "doc":
+  "**Commutation relation** of the Ornstein–Uhlenbeck semigroup: for `f ∈ C¹` with\n`|f'| ≤ C`, `(P_t f)'(x) = e^{-t} P_t f'(x)`. Source: Bakry–Gentil–Ledoux 2014, §2.7.1\n(`∇P_t = e^{-t} P_t ∇`). Atlas: `ornstein-uhlenbeck`. Ported from Prove2me solution\n`GaussianMatrix.ou_semigroup_commutation`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.hasGaussianLaw_id_gaussianMatrix (p m : ℕ) :\n  ProbabilityTheory.HasGaussianLaw (fun G => G) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.hasGaussianLaw_id_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  45,
+  "kind":
+  "theorem",
+  "doc":
+  "A standard Gaussian matrix has a Gaussian law (as a random element of\n`Fin p → Fin m → ℝ`). Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_hasGaussianLaw_id`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.hasGaussianLaw_id_pi_gaussianReal.{u_1} (κ : Type u_1) [Fintype κ] :\n  ProbabilityTheory.HasGaussianLaw (fun x => x) (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.hasGaussianLaw_id_pi_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  34,
+  "kind":
+  "theorem",
+  "doc":
+  "A vector of independent standard normals has a Gaussian law. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_hasGaussianLaw_pi`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.hasGaussianLaw_linForm_gaussianMatrix.{u_1} {ι : Type u_1} [Fintype ι] {p m : ℕ} (a : ι → Fin p → Fin m → ℝ) :\n  ProbabilityTheory.HasGaussianLaw (fun G t => NLAlib.linForm (a t) G) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.hasGaussianLaw_linForm_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  119,
+  "kind":
+  "theorem",
+  "doc":
+  "A finite family of linear forms `(⟨a t, G⟩)ₜ` of a standard Gaussian matrix is jointly\nGaussian. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_hasGaussianLaw_lin`). Atlas: helper of `gordon`. "},
  {"sorry":
   false,
   "signature":
@@ -2479,6 +3137,104 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.indepFun_mulVec_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.rank = n) :\n  ProbabilityTheory.IndepFun (fun g => H.mulVec g)\n    (fun g => g ⬝ᵥ g - H.mulVec g ⬝ᵥ (H * H.transpose)⁻¹.mulVec (H.mulVec g))\n    (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.indepFun_mulVec_sq_dist_rowSpace",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "line":
+  274,
+  "kind":
+  "theorem",
+  "doc":
+  "**Independence of Gaussian regression and residual.** Let `H` be a fixed `n × k` matrix of\nfull row rank and `g` a standard Gaussian vector in `ℝᵏ`. Then `H g` and the squared distance\n`‖g‖² - (H g)ᵀ (H Hᵀ)⁻¹ (H g)` from `g` to the row space of `H` are independent.\n\nHelper for Tropp–Webber 2023, Lemma B.2 (off-diagonal second moments of `(G Gᵀ)⁻¹`); the\nclassical independence of the least-squares fit and the residual sum of squares. Atlas:\n`inverse-wishart-frob-moment` (helper); the proof uses Gaussian independence from zero\ncovariance. Ported from Prove2me solution `GaussianMatrix.regression_residual_indep`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.indepFun_of_hasGaussianLaw_of_covariance_eq_zero.{u_1, u_2} {ι : Type u_1} {Ω : Type u_2} [Fintype ι]\n  [MeasurableSpace Ω] {P : MeasureTheory.Measure Ω} (U : Ω → ℝ) (W : ι → Ω → ℝ)\n  (hUW : ProbabilityTheory.HasGaussianLaw (fun ω => (U ω, fun j => W j ω)) P)\n  (hcov : ∀ (j : ι), ProbabilityTheory.covariance U (W j) P = 0) : ProbabilityTheory.IndepFun U (fun ω j => W j ω) P",
+  "name":
+  "NLAlib.indepFun_of_hasGaussianLaw_of_covariance_eq_zero",
+  "module":
+  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "line":
+  202,
+  "kind":
+  "theorem",
+  "doc":
+  "For a jointly Gaussian pair `(U, W)` with `U` real and `W` vector-valued, if `U` is\nuncorrelated with every coordinate of `W` then `U` and `W` are independent. Atlas:\n`gaussian-integration-by-parts` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_integration_by_parts`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.inner_toEuclideanLin_eq_sum {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (u : EuclideanSpace ℝ (Fin n))\n  (v : EuclideanSpace ℝ (Fin N)) :\n  inner ℝ v (((Matrix.toEuclideanLin ≪≫ₗ LinearMap.toContinuousLinearMap) A) u) = ∑ i, ∑ j, v.ofLp i * A i j * u.ofLp j",
+  "name":
+  "NLAlib.inner_toEuclideanLin_eq_sum",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  368,
+  "kind":
+  "theorem",
+  "doc":
+  "The bilinear form of a matrix in coordinates: `⟨v, A u⟩ = ∑ᵢⱼ vᵢ Aᵢⱼ uⱼ`.\nPorted from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_inner_matrix`).\nAtlas `norm-lipschitz` (helper). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_abs_gaussianReal : MeasureTheory.Integrable (fun y => |y|) (ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.integrable_abs_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "line":
+  36,
+  "kind":
+  "theorem",
+  "doc":
+  "`|y|` is integrable for the standard Gaussian. Atlas: `gaussian-integration-by-parts`\n(helper). Ported from Prove2me solution `GaussianMatrix.gaussian_ibp_one_dim`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm {p m : ℕ} (h : (Fin p → Fin m → ℝ) → ℝ) (L : ℝ)\n  (hL : 0 ≤ L) (hLip : ∀ (X Y : Fin p → Fin m → ℝ), |h X - h Y| ≤ L * NLAlib.frobNorm (Matrix.of X - Matrix.of Y)) :\n  MeasureTheory.Integrable h (NLAlib.gaussianMatrix p m) ∧\n    MeasureTheory.Integrable (fun X => h X ^ 2) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  158,
+  "kind":
+  "theorem",
+  "doc":
+  "A function of a Gaussian matrix that is `L`-Lipschitz for the Frobenius norm,\n`|h X - h Y| ≤ L ‖X - Y‖_F`, is integrable with integrable square under `gaussianMatrix p m`.\nPorted from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_integrable_of_lip`;\nidentical copies in `gordon_lower`, `gordon`, `chevet`, `spectral_second_moment`). Atlas:\n`norm-lipschitz` (integrability consequence). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_dotProduct_sq_pi_gaussianReal {k : ℕ} (w : Fin k → ℝ) :\n  MeasureTheory.Integrable (fun g => (w ⬝ᵥ g) ^ 2)\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) ∧\n    (∫ (g : Fin k → ℝ), (w ⬝ᵥ g) ^ 2 ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) = w ⬝ᵥ w",
+  "name":
+  "NLAlib.integrable_and_integral_dotProduct_sq_pi_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.OffDiagonal",
+  "line":
+  45,
+  "kind":
+  "theorem",
+  "doc":
+  "**Second moment of a linear form of a standard Gaussian vector.** For `w ∈ ℝᵏ` and `g` a\nstandard Gaussian vector, `(w ⬝ g)²` is integrable and `E[(w ⬝ g)²] = w ⬝ w`.\n\nHelper for Tropp–Webber 2023, Lemma B.2. Atlas: `inverse-wishart-frob-moment` (helper). Ported\nfrom the Prove2me solution `Sol_GaussianMatrix_inverse_wishart_offdiag_sq_moment`\n(`iwg_gauss_sq`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r + 4 ≤ k) :\n  MeasureTheory.Integrable (fun G => NLAlib.frobSq (Matrix.of G * (Matrix.of G).transpose)⁻¹)\n      (NLAlib.gaussianMatrix r k) ∧\n    ∫ (G : Fin r → Fin k → ℝ), NLAlib.frobSq (Matrix.of G * (Matrix.of G).transpose)⁻¹ ∂NLAlib.gaussianMatrix r k =\n      ↑r * (↑k - 1) / ((↑k - ↑r) * (↑k - ↑r - 1) * (↑k - ↑r - 3))",
+  "name":
+  "NLAlib.integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.FrobeniusMoments",
+  "line":
+  51,
+  "kind":
+  "theorem",
+  "doc":
+  "**Frobenius moment of the inverse Wishart matrix.** For an `r × k` standard Gaussian matrix\n`G` with `r + 4 ≤ k`, `‖(G Gᵀ)⁻¹‖_F²` is integrable and\n`E‖(G Gᵀ)⁻¹‖_F² = r(k-1)/((k-r)(k-r-1)(k-r-3))`.\n\nTropp–Webber 2023, proof of Lemma B.2 (second moments of the inverse Wishart matrix). Atlas:\n`inverse-wishart-frob-moment`. Proof: sum of the diagonal\n(`integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix`) and\noff-diagonal (`integrable_and_integral_inv_self_mul_transpose_apply_sq_gaussianMatrix`) second\nmoments, which use atlas `inverse-wishart-mean` and `chi-square-neg-moment`. Ported from\nProve2me solution `GaussianMatrix.inverse_wishart_frobenius_moment`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integrable_and_integral_frobSq_pinvR_gaussianMatrix {r k : ℕ} (hrk : r + 2 ≤ k) :\n  MeasureTheory.Integrable (fun G => NLAlib.frobSq (NLAlib.pinvR (Matrix.of G))) (NLAlib.gaussianMatrix r k) ∧\n    ∫ (G : Fin r → Fin k → ℝ), NLAlib.frobSq (NLAlib.pinvR (Matrix.of G)) ∂NLAlib.gaussianMatrix r k =\n      ↑r / (↑k - ↑r - 1)",
   "name":
   "NLAlib.integrable_and_integral_frobSq_pinvR_gaussianMatrix",
@@ -2493,6 +3249,62 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix {r k : ℕ} (hrk : r + 4 ≤ k) :\n  MeasureTheory.Integrable (fun G => NLAlib.frobSq (NLAlib.pinvR (Matrix.of G)) ^ 2) (NLAlib.gaussianMatrix r k) ∧\n    ∫ (G : Fin r → Fin k → ℝ), NLAlib.frobSq (NLAlib.pinvR (Matrix.of G)) ^ 2 ∂NLAlib.gaussianMatrix r k =\n      (↑r ^ 2 * (↑k - ↑r) - 2 * ↑r * (↑r - 1)) / ((↑k - ↑r) * (↑k - ↑r - 1) * (↑k - ↑r - 3))",
+  "name":
+  "NLAlib.integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.FrobeniusMoments",
+  "line":
+  98,
+  "kind":
+  "theorem",
+  "doc":
+  "**Fourth Frobenius moment of the Gaussian pseudoinverse.** For an `r × k` standard Gaussian\nmatrix `G` with `r + 4 ≤ k`, `‖G†‖_F⁴` is integrable and\n`E‖G†‖_F⁴ = (r²(k-r) - 2r(r-1))/((k-r)(k-r-1)(k-r-3))`, with `G† = pinvR G`.\n\nTropp–Webber 2023, Lemma B.2. Atlas: `pinv-frob-fourth-moment`. Proof: `‖G†‖_F² = tr (G Gᵀ)⁻¹`\n(`frobSq_pinvR_eq_trace_inv`, atlas `pseudoinverse`), so `‖G†‖_F⁴ = ∑ᵢⱼ Nᵢᵢ Nⱼⱼ`; the diagonal\nterms are `integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix` and the\nmixed ones\n`integrable_and_integral_inv_self_mul_transpose_apply_self_mul_apply_self_gaussianMatrix`\n(atlas `inverse-wishart-mean`, `chi-square-neg-moment`, `rotation-invariance`). Ported from\nProve2me solution `GaussianMatrix.pinv_frobenius_fourth_moment`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_inv_self_mul_transpose_apply_self_mul_apply_self_gaussianMatrix {r k : ℕ}\n  (hrk : r + 4 ≤ k) (i j : Fin r) (hij : i ≠ j) :\n  MeasureTheory.Integrable\n      (fun G => (Matrix.of G * (Matrix.of G).transpose)⁻¹ i i * (Matrix.of G * (Matrix.of G).transpose)⁻¹ j j)\n      (NLAlib.gaussianMatrix r k) ∧\n    ∫ (G : Fin r → Fin k → ℝ),\n        (Matrix.of G * (Matrix.of G).transpose)⁻¹ i i *\n          (Matrix.of G * (Matrix.of G).transpose)⁻¹ j j ∂NLAlib.gaussianMatrix r k =\n      (↑k - ↑r - 2) / ((↑k - ↑r) * (↑k - ↑r - 1) * (↑k - ↑r - 3))",
+  "name":
+  "NLAlib.integrable_and_integral_inv_self_mul_transpose_apply_self_mul_apply_self_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.OffDiagonal",
+  "line":
+  452,
+  "kind":
+  "theorem",
+  "doc":
+  "**Mixed diagonal moment of the inverse Wishart matrix.** For an `r × k` standard Gaussian\nmatrix `G` with `r + 4 ≤ k` and `i ≠ j`, `(G Gᵀ)⁻¹ᵢᵢ (G Gᵀ)⁻¹ⱼⱼ` is integrable and\n`E[(G Gᵀ)⁻¹ᵢᵢ (G Gᵀ)⁻¹ⱼⱼ] = (k-r-2)/((k-r)(k-r-1)(k-r-3))`.\n\nTropp–Webber 2023, proof of Lemma B.2. Atlas: `pinv-frob-fourth-moment` (helper). Proof: the\nrotation relation `integral_inv_self_mul_transpose_apply_self_sq_eq` with the diagonal and\noff-diagonal second moments. Ported from Prove2me solution\n`GaussianMatrix.inverse_wishart_diag_prod_moment`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix {r k : ℕ} (hrk : r + 4 ≤ k)\n  (i : Fin r) :\n  MeasureTheory.Integrable (fun G => (Matrix.of G * (Matrix.of G).transpose)⁻¹ i i ^ 2) (NLAlib.gaussianMatrix r k) ∧\n    ∫ (G : Fin r → Fin k → ℝ), (Matrix.of G * (Matrix.of G).transpose)⁻¹ i i ^ 2 ∂NLAlib.gaussianMatrix r k =\n      1 / ((↑k - ↑r - 1) * (↑k - ↑r - 3))",
+  "name":
+  "NLAlib.integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.DiagonalLaw",
+  "line":
+  229,
+  "kind":
+  "theorem",
+  "doc":
+  "**Second moment of a diagonal entry of the inverse Wishart matrix.** For an `r × k`\nstandard Gaussian matrix `G` with `r + 4 ≤ k` and any `i`, `(G Gᵀ)⁻¹ᵢᵢ²` is integrable and\n`E[(G Gᵀ)⁻¹ᵢᵢ²] = 1/((k-r-1)(k-r-3))`.\n\nTropp–Webber 2023, proof of Lemma B.2 (`E[1/χ⁴_d] = 1/((d-2)(d-4))` with `d = k-r+1`). Atlas:\n`inverse-wishart-frob-moment` (helper). Proof: Schur complement and conditioning on the other\nrows (atlas `gaussian-full-rank-ae`, `block-law-indep`) and the inverse chi-square second moment\n(`integrable_and_integral_inv_sum_sq_pow_two_gaussianReal`, atlas `chi-square-neg-moment`).\nPorted from Prove2me solution `GaussianMatrix.inverse_wishart_diag_sq_moment`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_inv_self_mul_transpose_apply_sq_gaussianMatrix {r k : ℕ} (hrk : r + 4 ≤ k) (i j : Fin r)\n  (hij : i ≠ j) :\n  MeasureTheory.Integrable (fun G => (Matrix.of G * (Matrix.of G).transpose)⁻¹ i j ^ 2) (NLAlib.gaussianMatrix r k) ∧\n    ∫ (G : Fin r → Fin k → ℝ), (Matrix.of G * (Matrix.of G).transpose)⁻¹ i j ^ 2 ∂NLAlib.gaussianMatrix r k =\n      1 / ((↑k - ↑r) * (↑k - ↑r - 1) * (↑k - ↑r - 3))",
+  "name":
+  "NLAlib.integrable_and_integral_inv_self_mul_transpose_apply_sq_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.OffDiagonal",
+  "line":
+  226,
+  "kind":
+  "theorem",
+  "doc":
+  "**Off-diagonal second moment of the inverse Wishart matrix.** For an `r × k` standard\nGaussian matrix `G` with `r + 4 ≤ k` and `i ≠ j`, `(G Gᵀ)⁻¹ᵢⱼ²` is integrable and\n`E[(G Gᵀ)⁻¹ᵢⱼ²] = 1/((k-r)(k-r-1)(k-r-3))`.\n\nTropp–Webber 2023, proof of Lemma B.2 (second moments of the inverse Wishart matrix). Atlas:\n`inverse-wishart-frob-moment` (helper). Proof: Schur complement\n(`inv_self_mul_transpose_apply_succAbove`) writes the entry as `-cₐ/Q`; given the other rows\n(full rank a.s., atlas `gaussian-full-rank-ae`) the coefficient `cₐ` and the residual `Q` are\nindependent (`indepFun_mulVec_sq_dist_rowSpace`), `Q ∼ χ²_{k-r+1}` (atlas `block-law-indep`,\n`chi-square-neg-moment`), and `E cₐ² = E (H Hᵀ)⁻¹ₐₐ` is the inverse-Wishart mean (atlas\n`inverse-wishart-mean`). Ported from Prove2me solution\n`GaussianMatrix.inverse_wishart_offdiag_sq_moment`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integrable_and_integral_inv_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r + 2 ≤ k) :\n  (∀ (i j : Fin r),\n      MeasureTheory.Integrable (fun G => (Matrix.of G * (Matrix.of G).transpose)⁻¹ i j) (NLAlib.gaussianMatrix r k)) ∧\n    ∀ (i j : Fin r),\n      ∫ (G : Fin r → Fin k → ℝ), (Matrix.of G * (Matrix.of G).transpose)⁻¹ i j ∂NLAlib.gaussianMatrix r k =\n        1 / (↑k - ↑r - 1) * 1 i j",
   "name":
   "NLAlib.integrable_and_integral_inv_self_mul_transpose_gaussianMatrix",
@@ -2504,6 +3316,20 @@
   "theorem",
   "doc":
   "**Mean of the inverse Wishart matrix.** If `G` is an `r × k` standard Gaussian matrix with\n`r + 2 ≤ k`, every entry of `(G Gᵀ)⁻¹` is integrable and `E (G Gᵀ)⁻¹ = (k - r - 1)⁻¹ I`\n(stated entrywise: `E[(G Gᵀ)⁻¹ᵢⱼ] = (k - r - 1)⁻¹ δᵢⱼ`).\n\nTropp–Webber 2023, Lemma B.2; HMT 2011, Prop A.5 (used in Prop 10.2). Atlas:\n`inverse-wishart-mean`. The source writes `E (G Gᵀ)⁻¹` as a matrix; here it is entrywise, which\navoids choosing a norm on matrices. Proof ported from the Prove2me solution\n`Sol_GaussianMatrix_inverse_wishart_mean`: off-diagonal entries vanish by sign-flip invariance\n(atlas `rotation-invariance`); a diagonal entry is the inverse squared residual of one row\nagainst the others (`inv_self_mul_transpose_apply_self`), which given the other rows (full rank\na.s., atlas `gaussian-full-rank-ae`) is `1/χ²_{k-r+1}` (`pi_gaussianReal_map_sq_dist_rowSpace`,\natlas `block-law-indep`; `integrable_and_integral_inv_sum_sq_gaussianReal`, atlas\n`inverse-chi-square-moment`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_inv_sq_dist_rowSpace_sq {n k : ℕ} (hnk : n + 5 ≤ k) (H : Matrix (Fin n) (Fin k) ℝ)\n  (hH : H.rank = n) :\n  MeasureTheory.Integrable (fun g => (g ⬝ᵥ g - H.mulVec g ⬝ᵥ (H * H.transpose)⁻¹.mulVec (H.mulVec g))⁻¹ ^ 2)\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) ∧\n    (∫ (g : Fin k → ℝ),\n        (g ⬝ᵥ g - H.mulVec g ⬝ᵥ (H * H.transpose)⁻¹.mulVec (H.mulVec g))⁻¹ ^\n          2 ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) =\n      1 / ((↑k - ↑n - 2) * (↑k - ↑n - 4))",
+  "name":
+  "NLAlib.integrable_and_integral_inv_sq_dist_rowSpace_sq",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.DiagonalLaw",
+  "line":
+  149,
+  "kind":
+  "theorem",
+  "doc":
+  "Squared inverse residual: `E[Q_H(g)^{-2}] = 1/((k-n-2)(k-n-4))` for a fixed full-rank `H`\nand a standard Gaussian vector `g ∈ ℝᵏ`, where `Q_H(g)` is the squared distance from `g` to the\nrow space of `H`.\n\nHelper for Tropp–Webber 2023, Lemma B.2. Atlas: `inverse-wishart-frob-moment` (helper). Ported\nfrom the Prove2me solution `Sol_GaussianMatrix_inverse_wishart_diag_sq_moment`\n(`iwd_resid_sq_moment`). "},
  {"sorry":
   false,
   "signature":
@@ -2532,6 +3358,244 @@
   "theorem",
   "doc":
   "**Inverse chi-square moment**, source form over `Fin d`: for `d ≥ 3`,\n`E[1/χ²_d] = 1/(d - 2)`.\n\nTropp–Webber 2023, Lemma B.2 (scalar step); HMT 2011, proof of Prop 10.2.\nAtlas: `inverse-chi-square-moment`. Ported from the Prove2me solution\n`Sol_GaussianMatrix_inv_chi_square_moment`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_inv_sum_sq_pow_two_gaussianReal {d : ℕ} (hd : 5 ≤ d) :\n  MeasureTheory.Integrable (fun x => (∑ j, x j ^ 2)⁻¹ ^ 2)\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) ∧\n    (∫ (x : Fin d → ℝ), (∑ j, x j ^ 2)⁻¹ ^ 2 ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) =\n      1 / ((↑d - 2) * (↑d - 4))",
+  "name":
+  "NLAlib.integrable_and_integral_inv_sum_sq_pow_two_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  478,
+  "kind":
+  "theorem",
+  "doc":
+  "**Second inverse moment of a chi-square variable.** For `d ≥ 5`, `(χ²_d)^{-2}` is integrable\nand `E[(χ²_d)^{-2}] = 1/((d-2)(d-4))`.\n\nUsed for the inverse-Wishart second moments (Tropp–Webber 2023, App. B; HMT 2011, Prop A.6 /\nLemma A.9). Atlas: `inverse-chi-square-moment`. The source proves it by a separate\nLaplace-transform computation (Prove2me solution `GaussianMatrix.inv_sq_chi_square_moment`);\nhere it is the case `q = 2` of `integrable_and_integral_rpow_inv_sum_sq_gaussianReal`, using\n`Γ(d/2) = (d/2 - 1)(d/2 - 2) Γ(d/2 - 2)`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_le_of_tail_le_rpow.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω)\n  [MeasureTheory.IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ) (hnn : 0 ≤ᵐ[μ] f) (C m : ℝ) (hC : 0 < C)\n  (hm : 1 < m) (htail : ∀ (t : ℝ), 0 < t → μ {x | t < f x} ≤ ENNReal.ofReal (C * t ^ (-m))) :\n  MeasureTheory.Integrable f μ ∧ ∫ (x : Ω), f x ∂μ ≤ C ^ (1 / m) * m / (m - 1)",
+  "name":
+  "NLAlib.integrable_and_integral_le_of_tail_le_rpow",
+  "module":
+  "NLAlib.Concentration.Scalar.TailIntegral",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "**Expectation from a polynomial tail.** If `f ≥ 0` a.e. on a probability space and\n`P(f > t) ≤ C t^{-m}` for all `t > 0`, with `C > 0` and `m > 1`, then `f` is integrable and\n`E f ≤ C^{1/m} · m / (m - 1)`.\n\nStandard layer-cake estimate (`E f = ∫₀^∞ P(f > t) dt`, bounded by `1` below `C^{1/m}` and by\nthe tail above), e.g. HMT 2011, proof of Thm 10.8 / Vershynin 2018, Lemma 1.2.1.\nAtlas: `tail-integral`. Ported from Prove2me solution\n`GaussianMatrix.integral_le_of_tail_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_rpow_inv_sum_sq_gaussianReal {d : ℕ} (q : ℝ) (hq : 0 ≤ q) (hqd : q < ↑d / 2) :\n  MeasureTheory.Integrable (fun x => (∑ j, x j ^ 2)⁻¹ ^ q)\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) ∧\n    (∫ (x : Fin d → ℝ), (∑ j, x j ^ 2)⁻¹ ^ q ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) =\n      Real.Gamma (↑d / 2 - q) / (2 ^ q * Real.Gamma (↑d / 2))",
+  "name":
+  "NLAlib.integrable_and_integral_rpow_inv_sum_sq_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  304,
+  "kind":
+  "theorem",
+  "doc":
+  "**Negative moments of a chi-square variable.** For `0 ≤ q < d/2`, `(χ²_d)^{-q}` is\nintegrable and `E[(χ²_d)^{-q}] = Γ(d/2 - q) / (2^q Γ(d/2))`.\n\nStandard Gamma-integral computation (e.g. HMT 2011, proof of Lemma A.10; Johnson–Kotz–\nBalakrishnan, ch. 18). Proof: Euler representation of `S^{-q}` and of `(1 + 2v)^{-d/2}`, Tonelli,\nand the Laplace transform of `χ²_d`. Atlas: `chi-square-neg-moment`. Ported from Prove2me\nsolution `GaussianMatrix.chi_square_neg_moment`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt {d : ℕ} (hd : 5 ≤ d) :\n  MeasureTheory.Integrable (fun x => (∑ j, x j ^ 2)⁻¹ ^ ((↑d - 1) / 2))\n      (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) ∧\n    (∫ (x : Fin d → ℝ),\n        (∑ j, x j ^ 2)⁻¹ ^ ((↑d - 1) / 2) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) <\n      (3 / ↑d) ^ ((↑d - 1) / 2)",
+  "name":
+  "NLAlib.integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  457,
+  "kind":
+  "theorem",
+  "doc":
+  "**`L^{(d-1)/2}` bound for the inverse chi-square.** For `d ≥ 5`,\n`(χ²_d)^{-(d-1)/2}` is integrable and `E[(χ²_d)^{-(d-1)/2}] < (3/d)^{(d-1)/2}`.\n\nHMT 2011, Lemma A.10 (the moment step of the pseudoinverse Frobenius tail bound): the negative\nmoment formula with `q = (d-1)/2`, then `Γ(1/2) = √π`, the duplication formula, log-convexity\nof `Γ` and Stirling. Atlas: `chi-square-neg-moment`. Ported from Prove2me solution\n`GaussianMatrix.inv_chi_square_Lq_bound`. "},
+ {"sorry":
+  true,
+  "signature":
+  "NLAlib.integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le {r k p : ℕ} (hp : 1 ≤ p)\n  (hp18 : p ≤ 18) (hrk : r + 2 * p ≤ k) :\n  MeasureTheory.Integrable (fun G => NLAlib.specNorm (Matrix.of G * (Matrix.of G).transpose)⁻¹ ^ p)\n      (NLAlib.gaussianMatrix r k) ∧\n    ∫ (G : Fin r → Fin k → ℝ),\n        NLAlib.specNorm (Matrix.of G * (Matrix.of G).transpose)⁻¹ ^ p ∂NLAlib.gaussianMatrix r k ≤\n      (Real.exp 1 ^ 2 * (↑k + ↑r) / (2 * (↑k - ↑r) ^ 2)) ^ p",
+  "name":
+  "NLAlib.integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SpectralTail",
+  "line":
+  336,
+  "kind":
+  "theorem",
+  "doc":
+  "**Spectral moments of the inverse Wishart matrix.** For an `r × k` standard Gaussian matrix\n`G` and integers `1 ≤ p ≤ 18` with `r + 2p ≤ k`, `‖(G Gᵀ)⁻¹‖^p` is integrable and\n`E‖(G Gᵀ)⁻¹‖^p ≤ (e² (k+r) / (2 (k-r)²))^p`, i.e.\n`(E‖(G Gᵀ)⁻¹‖^p)^{1/p} ≤ e² (k+r) / (2 (k-r)²)`.\n\nTropp–Webber 2023, Lemma B.4 (the restriction `p ≤ 18` comes from the numerical inequality\n(B.8), `one_add_div_mul_inv_Gamma_rpow_le`). Atlas: `inverse-wishart-spectral-moment`. Proof:\n`‖(G Gᵀ)⁻¹‖ = 1/σ_min(Gᵀ)²` (`specNorm_inv_self_mul_transpose_eq`, atlas `pseudoinverse`), the\n`λ_min` lower tail (`gaussianMatrix_sigmaMin_transpose_sq_le_le`, atlas\n`wishart-lambda-min-tail`, uses the scaffold (B.5)) and the layer-cake estimate\n`integrable_and_integral_le_of_tail_le_rpow` (atlas `tail-integral`). Ported from Prove2me\nsolution `GaussianMatrix.inverse_wishart_spectral_moment`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_specNorm_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)\n  (T : Matrix (Fin m) (Fin n) ℝ) :\n  MeasureTheory.Integrable (fun G => NLAlib.specNorm (S * Matrix.of G * T)) (NLAlib.gaussianMatrix p m) ∧\n    ∫ (G : Fin p → Fin m → ℝ), NLAlib.specNorm (S * Matrix.of G * T) ∂NLAlib.gaussianMatrix p m ≤\n      NLAlib.specNorm S * NLAlib.frobNorm T + NLAlib.frobNorm S * NLAlib.specNorm T",
+  "name":
+  "NLAlib.integrable_and_integral_specNorm_mul_gaussianMatrix_mul_le",
+  "module":
+  "NLAlib.Gaussian.Extreme.Chevet",
+  "line":
+  48,
+  "kind":
+  "theorem",
+  "doc":
+  "**Chevet's inequality, with integrability.** For `S : a × p`, `T : m × n` and a `p × m`\nstandard Gaussian matrix `Γ`, `‖S Γ T‖₂` is integrable and\n`𝔼 ‖S Γ T‖₂ ≤ ‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂`. Source: HMT 2011, Prop. A.2. Atlas: `chevet`. Ported\nfrom Prove2me solution `GaussianMatrix.chevet`. "},
+ {"sorry":
+  true,
+  "signature":
+  "NLAlib.integrable_and_integral_specNorm_pinvR_gaussianMatrix_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r + 1 ≤ k) :\n  MeasureTheory.Integrable (fun G => NLAlib.specNorm (NLAlib.pinvR (Matrix.of G))) (NLAlib.gaussianMatrix r k) ∧\n    ∫ (G : Fin r → Fin k → ℝ), NLAlib.specNorm (NLAlib.pinvR (Matrix.of G)) ∂NLAlib.gaussianMatrix r k ≤\n      Real.exp 1 * √↑k / (↑k - ↑r)",
+  "name":
+  "NLAlib.integrable_and_integral_specNorm_pinvR_gaussianMatrix_le",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SpectralTail",
+  "line":
+  272,
+  "kind":
+  "theorem",
+  "doc":
+  "**Expectation of the spectral norm of the Gaussian pseudoinverse.** For an `r × k`\nstandard Gaussian matrix `G` with `2 ≤ r` and `r + 1 ≤ k`, `‖G†‖` is integrable and\n`E‖G†‖ ≤ e√k/(k-r)`, with `G† = pinvR G`.\n\nHMT 2011, Prop A.4 (`E‖Ω₁†‖ ≤ e√(k+p)/p` with `Ω₁` of size `k × (k+p)`). Atlas:\n`pinv-spectral-expectation`. Proof: the tail bound `gaussianMatrix_lt_specNorm_pinvR_le` (atlas\n`pinv-spectral-tail`, uses the scaffold (B.5)) integrated by the layer-cake estimate\n`integrable_and_integral_le_of_tail_le_rpow` (atlas `tail-integral`). Ported from Prove2me\nsolution `GaussianMatrix.pinv_spectral_expectation`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)\n  (T : Matrix (Fin m) (Fin n) ℝ) :\n  MeasureTheory.Integrable (fun G => NLAlib.specNorm (S * Matrix.of G * T) ^ 2) (NLAlib.gaussianMatrix p m) ∧\n    ∫ (G : Fin p → Fin m → ℝ), NLAlib.specNorm (S * Matrix.of G * T) ^ 2 ∂NLAlib.gaussianMatrix p m ≤\n      (NLAlib.specNorm S * NLAlib.frobNorm T + NLAlib.frobNorm S * NLAlib.specNorm T) ^ 2",
+  "name":
+  "NLAlib.integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le",
+  "module":
+  "NLAlib.Gaussian.Extreme.SpectralSecondMoment",
+  "line":
+  648,
+  "kind":
+  "theorem",
+  "doc":
+  "**Second moment of a Gaussian sandwich, with integrability.** For `S : a × p`, `T : m × n`\nand a `p × m` standard Gaussian matrix `Γ`, `‖S Γ T‖₂²` is integrable and\n`𝔼 ‖S Γ T‖₂² ≤ (‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂)²`, i.e.\n`(𝔼 ‖S Γ T‖₂²)^{1/2} ≤ ‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂`. Source: Tropp–Webber 2023, Lemma B.1.\nAtlas: `spectral-second-moment`. Ported from Prove2me solution\n`GaussianMatrix.spectral_second_moment`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_comp_add_mul_of_abs_deriv_le (f : ℝ → ℝ) (hf : Differentiable ℝ f) (C : ℝ)\n  (hdf : ∀ (x : ℝ), |deriv f x| ≤ C) (c d : ℝ) :\n  MeasureTheory.Integrable (fun y => f (c + d * y)) (ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.integrable_comp_add_mul_of_abs_deriv_le",
+  "module":
+  "NLAlib.Gaussian.Concentration.OrnsteinUhlenbeck",
+  "line":
+  85,
+  "kind":
+  "theorem",
+  "doc":
+  "A `C¹`-function with bounded derivative composed with an affine map is `γ`-integrable.\nAtlas: `ornstein-uhlenbeck` (helper). Ported from Prove2me solution\n`GaussianMatrix.ou_semigroup_commutation`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_comp_of_abs_le_sum_abs.{u_1, u_2} {ι : Type u_1} {Ω : Type u_2} [Fintype ι] [MeasurableSpace Ω]\n  {P : MeasureTheory.Measure Ω} [MeasureTheory.IsFiniteMeasure P] (X : ι → Ω → ℝ)\n  (hXi : ∀ (t : ι), MeasureTheory.Integrable (X t) P) (g : (ι → ℝ) → ℝ) (hg : Measurable g)\n  (hXae : AEMeasurable (fun ω t => X t ω) P) (K : ℝ) (hb : ∀ (x : ι → ℝ), |g x| ≤ ∑ t, |x t| + K) :\n  MeasureTheory.Integrable (fun ω => g fun t => X t ω) P",
+  "name":
+  "NLAlib.integrable_comp_of_abs_le_sum_abs",
+  "module":
+  "NLAlib.Gaussian.Comparison.Interpolation",
+  "line":
+  101,
+  "kind":
+  "theorem",
+  "doc":
+  "A function of a random vector with integrable coordinates is integrable as soon as it is\nmeasurable and grows at most like `∑ₜ |xₜ| + K`. Atlas: helper of `sudakov-fernique`,\n`gordon-minimax`. Ported from Prove2me solutions `GaussianMatrix.sudakov_fernique`,\n`GaussianMatrix.gordon_minimax` (helper `integrable_of_abs_le`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_comp_update_pi.{u_1, u_2} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {Ω : Type u_2}\n  [MeasurableSpace Ω] (μ : ι → MeasureTheory.Measure Ω) [∀ (i : ι), MeasureTheory.IsProbabilityMeasure (μ i)] (i : ι)\n  {F : (ι → Ω) → ℝ} (hF : MeasureTheory.Integrable F (MeasureTheory.Measure.pi μ)) :\n  MeasureTheory.Integrable (fun p => F (Function.update p.1 i p.2)) ((MeasureTheory.Measure.pi μ).prod (μ i))",
+  "name":
+  "NLAlib.integrable_comp_update_pi",
+  "module":
+  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "line":
+  126,
+  "kind":
+  "theorem",
+  "doc":
+  "Integrability of `F ∘ update` on `(⊗ⱼ μⱼ) ⊗ μᵢ` for `F ∈ L¹(⊗ⱼ μⱼ)`.\nAtlas: `entropy-tensorization` (helper). Ported from Prove2me solution\n`GaussianMatrix.entropy_tensorization`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_const_mul_gaussianMatrix_entry_mul {p m : ℕ} (a c : Fin p) (b d : Fin m) (k : ℝ) :\n  MeasureTheory.Integrable (fun G => k * (G a b * G c d)) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.integrable_const_mul_gaussianMatrix_entry_mul",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "`k Gᵢⱼ Gₖₗ` is integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integrable_coord_mul`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_entry_mul_four_gaussianMatrix {p m : ℕ} (e1 e2 e3 e4 : Fin p × Fin m) :\n  MeasureTheory.Integrable (fun G => G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.integrable_entry_mul_four_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  151,
+  "kind":
+  "theorem",
+  "doc":
+  "A product of four entries of a Gaussian matrix is integrable. Atlas:\n`gaussian-frob-fourth-moment` (helper). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_exp_mul_abs_gaussianReal (a : ℝ) :\n  MeasureTheory.Integrable (fun y => Real.exp (a * |y|)) (ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.integrable_exp_mul_abs_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "`exp (a |y|)` is integrable for the standard Gaussian. Atlas: `gaussian-concentration` (helper).\nPorted from Prove2me solution `GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_exp_mul_gaussian_of_lipschitz.{u_1} {ι : Type u_1} [Fintype ι] (f : (ι → ℝ) → ℝ) (L : ℝ) (hL : 0 ≤ L)\n  (hLip : ∀ (x y : ι → ℝ), |f x - f y| ≤ L * √(∑ i, (x i - y i) ^ 2)) (s : ℝ) :\n  MeasureTheory.Integrable (fun x => Real.exp (s * f x))\n    (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.integrable_exp_mul_gaussian_of_lipschitz",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  119,
+  "kind":
+  "theorem",
+  "doc":
+  "Exponential integrability of Lipschitz functions under the standard Gaussian: for `f`\n`L`-Lipschitz (Euclidean), `e^{s f} ∈ L¹(γₙ)` for every `s`. Atlas: `gaussian-concentration`\n(helper). Ported from Prove2me solution `GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_exp_mul_sum_abs_gaussian.{u_1} {ι : Type u_1} [Fintype ι] (a : ℝ) :\n  MeasureTheory.Integrable (fun x => Real.exp (a * ∑ i, |x i|))\n    (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.integrable_exp_mul_sum_abs_gaussian",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  108,
+  "kind":
+  "theorem",
+  "doc":
+  "`exp (a ∑ |xᵢ|)` is integrable for the standard Gaussian product measure. Atlas:\n`gaussian-concentration` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_frobSq_gaussianMatrix (p m : ℕ) :\n  MeasureTheory.Integrable (fun X => NLAlib.frobSq (Matrix.of X)) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.integrable_frobSq_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  115,
+  "kind":
+  "theorem",
+  "doc":
+  "`‖G‖_F² = ∑ᵢⱼ Gᵢⱼ²` is integrable under the Gaussian matrix law. Ported from Prove2me\nsolution `GaussianMatrix.gordon_upper` (helper `gu_integrable_frobSq`). Atlas: helper of\n`gordon`. "},
  {"sorry":
   false,
   "signature":
@@ -2577,6 +3641,62 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integrable_gaussian_of_lipschitz.{u_1} {ι : Type u_1} [Fintype ι] (f : (ι → ℝ) → ℝ) (L : ℝ) (hL : 0 ≤ L)\n  (hLip : ∀ (x y : ι → ℝ), |f x - f y| ≤ L * √(∑ i, (x i - y i) ^ 2)) :\n  MeasureTheory.Integrable f (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.integrable_gaussian_of_lipschitz",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  142,
+  "kind":
+  "theorem",
+  "doc":
+  "Lipschitz functions (Euclidean) are integrable under the standard Gaussian. Atlas:\n`gaussian-concentration` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_iInf_of_fintype.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [Fintype ι] [Nonempty ι] (f : ι → Ω → ℝ)\n  (hf : ∀ (t : ι), MeasureTheory.Integrable (f t) μ) (hm : ∀ (t : ι), Measurable (f t)) :\n  MeasureTheory.Integrable (fun ω => ⨅ t, f t ω) μ",
+  "name":
+  "NLAlib.integrable_iInf_of_fintype",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  91,
+  "kind":
+  "theorem",
+  "doc":
+  "The pointwise minimum of finitely many (nonempty index) measurable integrable functions is\nintegrable. Ported from Prove2me solution `GaussianMatrix.gordon_lower` (helper\n`gl_integrable_iInf`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_iSup_of_fintype.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [Fintype ι] [Nonempty ι] (f : ι → Ω → ℝ)\n  (hf : ∀ (t : ι), MeasureTheory.Integrable (f t) μ) (hm : ∀ (t : ι), Measurable (f t)) :\n  MeasureTheory.Integrable (fun ω => ⨆ t, f t ω) μ",
+  "name":
+  "NLAlib.integrable_iSup_of_fintype",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  33,
+  "kind":
+  "theorem",
+  "doc":
+  "The pointwise maximum of finitely many (nonempty index) measurable integrable functions is\nintegrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integrable_iSup`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_integral_update_pi.{u_1, u_2} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {Ω : Type u_2}\n  [MeasurableSpace Ω] (μ : ι → MeasureTheory.Measure Ω) [∀ (i : ι), MeasureTheory.IsProbabilityMeasure (μ i)] (i : ι)\n  {F : (ι → Ω) → ℝ} (hF : MeasureTheory.Integrable F (MeasureTheory.Measure.pi μ)) :\n  MeasureTheory.Integrable (fun x => ∫ (t : Ω), F (Function.update x i t) ∂μ i) (MeasureTheory.Measure.pi μ)",
+  "name":
+  "NLAlib.integrable_integral_update_pi",
+  "module":
+  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "line":
+  157,
+  "kind":
+  "theorem",
+  "doc":
+  "For `F ∈ L¹(⊗ⱼ μⱼ)`, `x ↦ ∫ F(update x i t) dμᵢ(t)` is integrable. Atlas:\n`entropy-tensorization` (helper). Ported from Prove2me solution\n`GaussianMatrix.entropy_tensorization`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integrable_lambdaMax_and_lambdaMin.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω) {d : ℕ}\n  [NeZero d] (Y : Ω → Matrix (Fin d) (Fin d) ℂ) (hMeas : Measurable Y) (hHerm : ∀ᵐ (ω : Ω) ∂μ, (Y ω).IsHermitian)\n  (hInt : MeasureTheory.Integrable Y μ) :\n  MeasureTheory.Integrable (fun ω => NLAlib.lambdaMax (Y ω)) μ ∧\n    MeasureTheory.Integrable (fun ω => NLAlib.lambdaMin (Y ω)) μ",
   "name":
   "NLAlib.integrable_lambdaMax_and_lambdaMin",
@@ -2588,6 +3708,48 @@
   "theorem",
   "doc":
   "If a Hermitian random matrix is integrable, so are its largest and smallest eigenvalues.\n\nTropp 2015, regularity lemma for Proposition 3.2.2. Atlas: `matrix-laplace`. Ported from the\nProve2me mission *An Introduction to Matrix Concentration Inequalities, Ch 3*.\n\nAuxiliary; not a numbered result in the source. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_linForm_gaussianMatrix {p m : ℕ} (c : Fin p → Fin m → ℝ) :\n  MeasureTheory.Integrable (NLAlib.linForm c) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.integrable_linForm_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  131,
+  "kind":
+  "theorem",
+  "doc":
+  "`⟨c, G⟩` is integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integrable_lin`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_linear_mul_four_gaussianMatrix {p m : ℕ} (u v w z : Fin p × Fin m → ℝ) :\n  MeasureTheory.Integrable\n    (fun G => (((∑ e, u e * G e.1 e.2) * ∑ e, v e * G e.1 e.2) * ∑ e, w e * G e.1 e.2) * ∑ e, z e * G e.1 e.2)\n    (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.integrable_linear_mul_four_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  242,
+  "kind":
+  "theorem",
+  "doc":
+  "The product of four linear forms in a Gaussian matrix is integrable. Atlas:\n`gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.frobenius_fourth_moment` (`integrable_L4`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_linear_mul_two_gaussianMatrix {p m : ℕ} (u v : Fin p × Fin m → ℝ) :\n  MeasureTheory.Integrable (fun G => (∑ e, u e * G e.1 e.2) * ∑ e, v e * G e.1 e.2) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.integrable_linear_mul_two_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  231,
+  "kind":
+  "theorem",
+  "doc":
+  "The product of two linear forms in a Gaussian matrix is integrable. Atlas:\n`gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.frobenius_fourth_moment` (`integrable_L2`). "},
  {"sorry":
   false,
   "signature":
@@ -2633,6 +3795,62 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integrable_pow_gaussianReal (k : ℕ) :\n  MeasureTheory.Integrable (fun x => x ^ k) (ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.integrable_pow_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "Every monomial `x ↦ x^k` is integrable for the standard Gaussian. Atlas:\n`gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.frobenius_fourth_moment` (`gint`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_prod_entry_gaussianMatrix {p m : ℕ} (f : Fin p × Fin m → ℝ → ℝ)\n  (hf : ∀ (e : Fin p × Fin m), MeasureTheory.Integrable (f e) (ProbabilityTheory.gaussianReal 0 1)) :\n  MeasureTheory.Integrable (fun G => ∏ e, f e (G e.1 e.2)) (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.integrable_prod_entry_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  128,
+  "kind":
+  "theorem",
+  "doc":
+  "`G ↦ ∏ₑ f_e(G_e)` is integrable when every `f_e` is. Atlas: `gaussian-frob-fourth-moment`\n(helper). Ported from Prove2me solution `GaussianMatrix.frobenius_fourth_moment`\n(`integrable_prod_coord`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_sq_gaussianReal : MeasureTheory.Integrable (fun y => y ^ 2) (ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.integrable_sq_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "line":
+  41,
+  "kind":
+  "theorem",
+  "doc":
+  "`y²` is integrable for the standard Gaussian. Atlas: `gaussian-integration-by-parts`\n(helper). Ported from Prove2me solution `GaussianMatrix.gaussian_ibp_one_dim`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_comp_gaussianMatrix_entry_eq {p m : ℕ} (a : Fin p) (b : Fin m) (f : ℝ → ℝ) (hf : Measurable f) :\n  ∫ (G : Fin p → Fin m → ℝ), f (G a b) ∂NLAlib.gaussianMatrix p m = ∫ (x : ℝ), f x ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.integral_comp_gaussianMatrix_entry_eq",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "`𝔼 f(Gᵢⱼ) = ∫ f dN(0,1)` for measurable `f`. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_integral_comp_coord`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integral_coord_mul_coord.{u_1, u_2} {n : Type u_1} {Ω : Type u_2} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [DecidableEq n] {z : Ω → n → ℝ}\n  (hz : ∀ (i : n), MeasureTheory.MemLp (fun ω => z ω i) 2 μ)\n  (hind : ∀ (i j : n), i ≠ j → ProbabilityTheory.IndepFun (fun ω => z ω i) (fun ω => z ω j) μ)\n  (hmean : ∀ (i : n), ∫ (ω : Ω), z ω i ∂μ = 0) (hsq : ∀ (i : n), ∫ (ω : Ω), z ω i ^ 2 ∂μ = 1) (i j : n) :\n  ∫ (ω : Ω), z ω i * z ω j ∂μ = if i = j then 1 else 0",
   "name":
   "NLAlib.integral_coord_mul_coord",
@@ -2658,6 +3876,62 @@
   "theorem",
   "doc":
   "Fourth mixed moments of a vector with independent, centred coordinates of unit variance and\ncommon fourth moment `m₄`:\n`𝔼[z_i z_j z_k z_l] = δ_ij δ_kl + δ_ik δ_jl + δ_il δ_jk + (m₄ − 3) δ_ijkl`.\nAtlas: `hutchinson-variance` (helper). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_entry_mul_four_gaussianMatrix {p m : ℕ} (e1 e2 e3 e4 : Fin p × Fin m) :\n  ∫ (G : Fin p → Fin m → ℝ), G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2 ∂NLAlib.gaussianMatrix p m =\n    (((if e1 = e2 then 1 else 0) * if e3 = e4 then 1 else 0) + (if e1 = e3 then 1 else 0) * if e2 = e4 then 1 else 0) +\n      (if e1 = e4 then 1 else 0) * if e2 = e3 then 1 else 0",
+  "name":
+  "NLAlib.integral_entry_mul_four_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  168,
+  "kind":
+  "theorem",
+  "doc":
+  "**Isserlis (Wick) formula for four entries** of a standard Gaussian matrix:\n`E[G_{e₁} G_{e₂} G_{e₃} G_{e₄}] = δ₁₂δ₃₄ + δ₁₃δ₂₄ + δ₁₄δ₂₃`. Isserlis 1918.\nAtlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.frobenius_fourth_moment` (`isserlis_idx`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_exp_mul_le_exp_of_entropy_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω)\n  [MeasureTheory.IsProbabilityMeasure μ] (f : Ω → ℝ) (c : ℝ)\n  (hint : ∀ (s : ℝ), MeasureTheory.Integrable (fun ω => Real.exp (s * f ω)) μ)\n  (hent :\n    ∀ (s : ℝ),\n      0 < s →\n        ∫ (ω : Ω), s * f ω * Real.exp (s * f ω) ∂μ -\n            (∫ (ω : Ω), Real.exp (s * f ω) ∂μ) * Real.log (∫ (ω : Ω), Real.exp (s * f ω) ∂μ) ≤\n          c * s ^ 2 * ∫ (ω : Ω), Real.exp (s * f ω) ∂μ)\n  (s : ℝ) (hs : 0 ≤ s) : ∫ (ω : Ω), Real.exp (s * f ω) ∂μ ≤ Real.exp (s * ∫ (ω : Ω), f ω ∂μ + c * s ^ 2)",
+  "name":
+  "NLAlib.integral_exp_mul_le_exp_of_entropy_le",
+  "module":
+  "NLAlib.Gaussian.Concentration.Herbst",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "**Herbst's argument**: on a probability space, if `e^{s f}` is integrable for every `s` and\n`∫ s f e^{s f} - (∫ e^{s f}) log ∫ e^{s f} ≤ c s² ∫ e^{s f}` for every `s > 0` (an entropy\nbound, as given by a log-Sobolev inequality), then\n`∫ e^{s f} ≤ exp(s ∫ f + c s²)` for every `s ≥ 0`.\nSource: Ledoux, *The Concentration of Measure Phenomenon*, Thm 5.3 (Herbst's argument);\nBoucheron–Lugosi–Massart 2013, Prop 6.1. Atlas: `herbst`. Ported from Prove2me solution\n`GaussianMatrix.herbst_argument`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_exp_neg_mul_sq_gaussianReal_eq_rpow (u : ℝ) (hu : 0 < u) :\n  ∫ (y : ℝ), Real.exp (-((u - 1) / 2) * y ^ 2) ∂ProbabilityTheory.gaussianReal 0 1 = u ^ (-(1 / 2))",
+  "name":
+  "NLAlib.integral_exp_neg_mul_sq_gaussianReal_eq_rpow",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  "One-dimensional Gaussian integral: `E[exp(-((u-1)/2) Y²)] = u^{-1/2}` for `Y ∼ N(0,1)`\nand `u > 0`. Atlas: `chi-square-lower-tail` (helper). Ported from Prove2me solution\n`GaussianMatrix.chi_square_neg_moment` (`cnm_gauss_exp`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_exp_neg_mul_sum_sq_pi_gaussianReal.{u_1} {ι : Type u_1} [Fintype ι] (u : ℝ) (hu : 0 < u) :\n  (∫ (x : ι → ℝ),\n      Real.exp (-((u - 1) / 2) * ∑ j, x j ^ 2) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) =\n    u ^ (-(↑(Fintype.card ι) / 2))",
+  "name":
+  "NLAlib.integral_exp_neg_mul_sum_sq_pi_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  64,
+  "kind":
+  "theorem",
+  "doc":
+  "**Laplace transform of `χ²_d`.** For a standard Gaussian vector indexed by a finite type of\ncardinality `d` and `u > 0`, `E[exp(-((u-1)/2) ∑ⱼ Xⱼ²)] = u^{-d/2}`.\nAtlas: `chi-square-lower-tail` (helper). Ported from Prove2me solution\n`GaussianMatrix.chi_square_neg_moment` (`cnm_laplace`). "},
  {"sorry":
   false,
   "signature":
@@ -2689,6 +3963,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integral_frobSq_mul_gaussianMatrix_mul_sq {p m a n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)\n  (T : Matrix (Fin m) (Fin n) ℝ) :\n  ∫ (G : Fin p → Fin m → ℝ), NLAlib.frobSq (S * Matrix.of G * T) ^ 2 ∂NLAlib.gaussianMatrix p m =\n    (NLAlib.frobSq S * NLAlib.frobSq T) ^ 2 + 2 * NLAlib.frobSq (S.transpose * S) * NLAlib.frobSq (T * T.transpose)",
+  "name":
+  "NLAlib.integral_frobSq_mul_gaussianMatrix_mul_sq",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  360,
+  "kind":
+  "theorem",
+  "doc":
+  "**Fourth moment of a Gaussian sandwich.** For a standard Gaussian `p × m` matrix `G` and\nfixed `S : a × p`, `T : m × n`,\n`E ‖S G T‖_F⁴ = (‖S‖_F² ‖T‖_F²)² + 2 ‖SᵀS‖_F² ‖T Tᵀ‖_F²`.\n\nIsserlis formula applied to the entries `(S G T)_{ij} = ⟨S_i ⊗ T_j, G⟩`. Used for the variance of\nGaussian sketches (Tropp–Webber 2023, App. A; HMT 2011, Prop 10.1 second-moment companions).\nAtlas: `gaussian-frob-fourth-moment`. Ported from Prove2me solution\n`GaussianMatrix.frobenius_fourth_moment`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integral_frobSq_mul_gaussian_mul_of_indepFun.{u_1, u_2, u_3, u_4} {Ωs : Type u_1} [MeasurableSpace Ωs]\n  {μ : MeasureTheory.Measure Ωs} [MeasureTheory.IsProbabilityMeasure μ] {α : Type u_2} {ι : Type u_3} {κ : Type u_4}\n  [MeasurableSpace α] [Fintype ι] [Fintype κ] {p m : ℕ} {X : Ωs → α} {Y : Ωs → Fin p → Fin m → ℝ}\n  (hX : AEMeasurable X μ) (hY : MeasureTheory.Measure.map Y μ = NLAlib.gaussianMatrix p m)\n  (hXY : ProbabilityTheory.IndepFun X Y μ) (S : Matrix ι (Fin p) ℝ) {T : α → Matrix (Fin m) κ ℝ}\n  (hT : ∀ (i : Fin m) (j : κ), Measurable fun x => T x i j) :\n  ∫ (ω : Ωs), NLAlib.frobSq (S * Matrix.of (Y ω) * T (X ω)) ∂μ =\n    NLAlib.frobSq S * ∫ (ω : Ωs), NLAlib.frobSq (T (X ω)) ∂μ",
   "name":
   "NLAlib.integral_frobSq_mul_gaussian_mul_of_indepFun",
@@ -2700,6 +3988,20 @@
   "theorem",
   "doc":
   "**Sandwiched Gaussian second moment, conditioned.** If `Y` is a standard Gaussian\n`p × m` matrix independent of `X`, then `E ‖S Y T(X)‖_F² = ‖S‖_F² E ‖T(X)‖_F²`.\n\nNo integrability hypothesis: both integrands are nonnegative and the identity holds for the\nlower Lebesgue integrals (`lintegral_frobSq_mul_gaussian_mul_of_indepFun`); when the right side\nis not integrable both Bochner integrals are `0`. Integrability of the left side is\n`integrable_frobSq_mul_gaussian_mul_of_indepFun`.\nHMT 2011 Prop 10.1 with the tower property (proof of Thm 10.5). Atlas `gaussian-conditioning`.\nMeasurability of `T` is stated entrywise (`Matrix` carries no `MeasurableSpace` instance). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_frobSq_mul_gram_mul_transpose_sub {a b n t : ℕ} (ht : 1 ≤ t) (M : Matrix (Fin a) (Fin n) ℝ)\n  (N : Matrix (Fin b) (Fin n) ℝ) :\n  ∫ (Ω : Fin n → Fin t → ℝ),\n        NLAlib.frobSq\n          (M * (1 / ↑t) • (Matrix.of Ω * (Matrix.of Ω).transpose) * N.transpose -\n            M * N.transpose) ∂NLAlib.gaussianMatrix n t =\n      (NLAlib.frobSq M * NLAlib.frobSq N + NLAlib.frobSq (M * N.transpose)) / ↑t ∧\n    (NLAlib.frobSq M * NLAlib.frobSq N + NLAlib.frobSq (M * N.transpose)) / ↑t ≤\n      2 / ↑t * (NLAlib.frobSq M * NLAlib.frobSq N)",
+  "name":
+  "NLAlib.integral_frobSq_mul_gram_mul_transpose_sub",
+  "module":
+  "NLAlib.Gaussian.Moments.ApproxMultiplication",
+  "line":
+  132,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gaussian approximate matrix multiplication.** For `M : a × n`, `N : b × n` and a standard\nGaussian `n × t` matrix `Ω` (`t ≥ 1`), the sketched product `M (Ω Ωᵀ / t) Nᵀ` has mean squared\nerror `E ‖M (Ω Ωᵀ / t) Nᵀ − M Nᵀ‖_F² = (‖M‖_F² ‖N‖_F² + ‖M Nᵀ‖_F²) / t`, and this is at most\n`(2/t) ‖M‖_F² ‖N‖_F²`.\n\nDrineas–Kannan–Mahoney 2006 / Sarlós 2006 (approximate matrix multiplication); Gaussian case\nvia the Isserlis formula, e.g. Martinsson–Tropp 2020, §6.3 / Woodruff 2014, Lemma 2.2.\nAtlas: `gaussian-amm`. Ported from Prove2me solution `GaussianMatrix.approx_multiplication`. "},
  {"sorry":
   false,
   "signature":
@@ -2731,6 +4033,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integral_gaussianMatrix_entry_eq_zero {p m : ℕ} (a : Fin p) (b : Fin m) :\n  ∫ (G : Fin p → Fin m → ℝ), G a b ∂NLAlib.gaussianMatrix p m = 0",
+  "name":
+  "NLAlib.integral_gaussianMatrix_entry_eq_zero",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  77,
+  "kind":
+  "theorem",
+  "doc":
+  "`𝔼 Gᵢⱼ = 0`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integral_coord`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integral_gaussianMatrix_entry_mul {p m : ℕ} (a c : Fin p) (b d : Fin m) :\n  ∫ (G : Fin p → Fin m → ℝ), G a b * G c d ∂NLAlib.gaussianMatrix p m = if a = c ∧ b = d then 1 else 0",
   "name":
   "NLAlib.integral_gaussianMatrix_entry_mul",
@@ -2742,6 +4058,62 @@
   "theorem",
   "doc":
   "Second moments of the entries of a standard Gaussian matrix:\n`E[G_ab G_cd] = δ_ac δ_bd`. Atlas: `gaussian-matrix-def` (used for\n`gaussian-frob-second-moment`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_gaussianMatrix_entry_sq_eq_one {p m : ℕ} (a : Fin p) (b : Fin m) :\n  ∫ (G : Fin p → Fin m → ℝ), G a b ^ 2 ∂NLAlib.gaussianMatrix p m = 1",
+  "name":
+  "NLAlib.integral_gaussianMatrix_entry_sq_eq_one",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  84,
+  "kind":
+  "theorem",
+  "doc":
+  "`𝔼 Gᵢⱼ² = 1`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integral_coord_sq`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_integral_comp_add_mul_gaussianReal (h : ℝ → ℝ)\n  (hh : MeasureTheory.Integrable h (ProbabilityTheory.gaussianReal 0 1)) (a b : ℝ) (hab : a ^ 2 + b ^ 2 = 1) :\n  ∫ (x : ℝ), ∫ (y : ℝ), h (a * x + b * y) ∂ProbabilityTheory.gaussianReal 0 1 ∂ProbabilityTheory.gaussianReal 0 1 =\n    ∫ (x : ℝ), h x ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.integral_integral_comp_add_mul_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.OrnsteinUhlenbeck",
+  "line":
+  46,
+  "kind":
+  "theorem",
+  "doc":
+  "For `h ∈ L¹(γ)` and `a² + b² = 1`, `∫∫ h(a x + b y) dγ(y) dγ(x) = ∫ h dγ`.\nAtlas: `ornstein-uhlenbeck` (helper). Ported from Prove2me solution\n`GaussianMatrix.ou_semigroup_invariant`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_integral_update_pi.{u_1, u_2} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {Ω : Type u_2}\n  [MeasurableSpace Ω] (μ : ι → MeasureTheory.Measure Ω) [∀ (i : ι), MeasureTheory.IsProbabilityMeasure (μ i)] (i : ι)\n  {F : (ι → Ω) → ℝ} (hF : MeasureTheory.Integrable F (MeasureTheory.Measure.pi μ)) :\n  ∫ (x : ι → Ω), ∫ (t : Ω), F (Function.update x i t) ∂μ i ∂MeasureTheory.Measure.pi μ =\n    ∫ (x : ι → Ω), F x ∂MeasureTheory.Measure.pi μ",
+  "name":
+  "NLAlib.integral_integral_update_pi",
+  "module":
+  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "line":
+  134,
+  "kind":
+  "theorem",
+  "doc":
+  "Fubini for resampling one coordinate:\n`∫ (∫ F(update x i t) dμᵢ(t)) d(⊗ⱼ μⱼ)(x) = ∫ F d(⊗ⱼ μⱼ)`. Atlas: `entropy-tensorization`\n(helper). Ported from Prove2me solution `GaussianMatrix.entropy_tensorization`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_inv_self_mul_transpose_apply_self_sq_eq {r k : ℕ} (hrk : r + 4 ≤ k) (i j : Fin r) (hij : i ≠ j) :\n  ∫ (G : Fin r → Fin k → ℝ), (Matrix.of G * (Matrix.of G).transpose)⁻¹ i i ^ 2 ∂NLAlib.gaussianMatrix r k =\n    ∫ (G : Fin r → Fin k → ℝ),\n        (Matrix.of G * (Matrix.of G).transpose)⁻¹ i i *\n          (Matrix.of G * (Matrix.of G).transpose)⁻¹ j j ∂NLAlib.gaussianMatrix r k +\n      2 * ∫ (G : Fin r → Fin k → ℝ), (Matrix.of G * (Matrix.of G).transpose)⁻¹ i j ^ 2 ∂NLAlib.gaussianMatrix r k",
+  "name":
+  "NLAlib.integral_inv_self_mul_transpose_apply_self_sq_eq",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.OffDiagonal",
+  "line":
+  357,
+  "kind":
+  "theorem",
+  "doc":
+  "**Rotation relation for the inverse Wishart matrix.** For an `r × k` standard Gaussian\nmatrix `G` with `r + 4 ≤ k` and `i ≠ j`, with `N = (G Gᵀ)⁻¹`,\n`E[Nᵢᵢ²] = E[Nᵢᵢ Nⱼⱼ] + 2 E[Nᵢⱼ²]`.\n\nTropp–Webber 2023, proof of Lemma B.2 (orthogonal invariance of the inverse Wishart law).\nAtlas: `pinv-frob-fourth-moment` (helper). Proof: the law of `N` is invariant under\n`N ↦ U N Uᵀ` for orthogonal `U` (`gaussianMatrix_map_orthogonal`, atlas\n`rotation-invariance`); sign flips kill the mixed moments `E[Nₐₐ Nᵢⱼ]` and the 45° rotation in\nthe `(i, j)` plane gives the relation. Integrability from the diagonal second moment\n(`integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix`). Ported from\nProve2me solution `GaussianMatrix.inverse_wishart_rotation_relation`. "},
  {"sorry":
   false,
   "signature":
@@ -2773,6 +4145,160 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integral_le_integral_of_covariance_hessian_nonneg.{u_1, u_2} {ι : Type u_1} {Ω : Type u_2} [Fintype ι]\n  [MeasurableSpace Ω] {P : MeasureTheory.Measure Ω} (X Y : ι → Ω → ℝ)\n  (hXY : ProbabilityTheory.HasGaussianLaw (fun ω => (fun t => X t ω, fun t => Y t ω)) P)\n  (hX0 : ∀ (t : ι), ∫ (ω : Ω), X t ω ∂P = 0) (hY0 : ∀ (t : ι), ∫ (ω : Ω), Y t ω ∂P = 0)\n  (hcross : ∀ (s t : ι), ∫ (ω : Ω), X s ω * Y t ω ∂P = 0) (F : (ι → ℝ) → ℝ) (g : ι → (ι → ℝ) → ℝ)\n  (H : ι → ι → (ι → ℝ) → ℝ) (hF : ∀ (x : ι → ℝ), HasFDerivAt F (∑ i, g i x • ContinuousLinearMap.proj i) x)\n  (hg : ∀ (i : ι) (x : ι → ℝ), HasFDerivAt (g i) (∑ j, H i j x • ContinuousLinearMap.proj j) x)\n  (hHc : ∀ (i j : ι), Continuous (H i j)) (C : ℝ) (hgb : ∀ (i : ι) (x : ι → ℝ), |g i x| ≤ C)\n  (hHb : ∀ (i j : ι) (x : ι → ℝ), |H i j x| ≤ C) (K : ℝ) (hFb : ∀ (x : ι → ℝ), |F x| ≤ ∑ t, |x t| + K)\n  (hpos : ∀ (x : ι → ℝ), 0 ≤ ∑ i, ∑ j, (∫ (ω : Ω), Y i ω * Y j ω ∂P - ∫ (ω : Ω), X i ω * X j ω ∂P) * H i j x) :\n  ∫ (ω : Ω), F fun t => X t ω ∂P ≤ ∫ (ω : Ω), F fun t => Y t ω ∂P",
+  "name":
+  "NLAlib.integral_le_integral_of_covariance_hessian_nonneg",
+  "module":
+  "NLAlib.Gaussian.Comparison.GordonMinimax",
+  "line":
+  41,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gaussian interpolation** for a general smooth test function. Let `X, Y` be jointly Gaussian\ncentred vectors on one probability space with vanishing cross moments `𝔼 XₛYₜ = 0`, and let\n`F : ℝ^ι → ℝ` have gradient `g` and Hessian `H`, with `g, H` bounded, `H` continuous and\n`|F x| ≤ ∑ₜ |xₜ| + K`. If `∑ᵢⱼ (𝔼 YᵢYⱼ - 𝔼 XᵢXⱼ) Hᵢⱼ(x) ≥ 0` for all `x`, then\n`𝔼 F(X) ≤ 𝔼 F(Y)`. Source: Kahane 1986; Vershynin 2018, §7.2 (proof of Thm 7.2.1). Atlas: helper\nof `gordon-minimax`. Ported from Prove2me solution `GaussianMatrix.gordon_minimax` (helper\n`gmm_interp`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_le_integral_sq_div_add_div_two.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω)\n  [MeasureTheory.IsProbabilityMeasure μ] (X : Ω → ℝ) (hX : MeasureTheory.Integrable X μ)\n  (hX2 : MeasureTheory.Integrable (fun ω => X ω ^ 2) μ) (δ : ℝ) (hδ : 0 < δ) :\n  ∫ (ω : Ω), X ω ∂μ ≤ ((∫ (ω : Ω), X ω ^ 2 ∂μ) / δ + δ) / 2",
+  "name":
+  "NLAlib.integral_le_integral_sq_div_add_div_two",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  53,
+  "kind":
+  "theorem",
+  "doc":
+  "`𝔼 X ≤ (𝔼 X² / δ + δ) / 2` for every `δ > 0` (integrate `2δx ≤ x² + δ²`). Ported from\nProve2me solution `GaussianMatrix.gordon_upper` (helper `gu_integral_le_of_sq`). Atlas: helper of\n`gordon`, `chevet`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_le_of_integral_sq_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω)\n  [MeasureTheory.IsProbabilityMeasure μ] (X : Ω → ℝ) (hX : MeasureTheory.Integrable X μ)\n  (hX2 : MeasureTheory.Integrable (fun ω => X ω ^ 2) μ) (c : ℝ) (hc : 0 ≤ c) (h : ∫ (ω : Ω), X ω ^ 2 ∂μ ≤ c ^ 2) :\n  ∫ (ω : Ω), X ω ∂μ ≤ c",
+  "name":
+  "NLAlib.integral_le_of_integral_sq_le",
+  "module":
+  "NLAlib.Gaussian.Extreme.Lipschitz",
+  "line":
+  71,
+  "kind":
+  "theorem",
+  "doc":
+  "Jensen (Cauchy–Schwarz) in the form used for first moments: if `𝔼 X² ≤ c²` with `c ≥ 0`,\nthen `𝔼 X ≤ c`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integral_le_of_integral_sq_le`). Atlas: helper of `gordon`, `chevet`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_linForm_gaussianMatrix {p m : ℕ} (c : Fin p → Fin m → ℝ) :\n  ∫ (G : Fin p → Fin m → ℝ), NLAlib.linForm c G ∂NLAlib.gaussianMatrix p m = 0",
+  "name":
+  "NLAlib.integral_linForm_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  144,
+  "kind":
+  "theorem",
+  "doc":
+  "`𝔼⟨c, G⟩ = 0`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integral_lin`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_linForm_sq_gaussianMatrix {p m : ℕ} (c : Fin p → Fin m → ℝ) :\n  ∫ (G : Fin p → Fin m → ℝ), NLAlib.linForm c G ^ 2 ∂NLAlib.gaussianMatrix p m = ∑ i, ∑ j, c i j ^ 2",
+  "name":
+  "NLAlib.integral_linForm_sq_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  163,
+  "kind":
+  "theorem",
+  "doc":
+  "`𝔼⟨c, G⟩² = ∑ᵢⱼ cᵢⱼ²`. Ported from Prove2me solution `GaussianMatrix.gordon_upper`\n(helper `gu_integral_lin_sq`). Atlas: helper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_linear_mul_four_gaussianMatrix {p m : ℕ} (u v w z : Fin p × Fin m → ℝ) :\n  ∫ (G : Fin p → Fin m → ℝ),\n      (((∑ e, u e * G e.1 e.2) * ∑ e, v e * G e.1 e.2) * ∑ e, w e * G e.1 e.2) *\n        ∑ e, z e * G e.1 e.2 ∂NLAlib.gaussianMatrix p m =\n    (∑ e, u e * v e) * ∑ e, w e * z e + (∑ e, u e * w e) * ∑ e, v e * z e + (∑ e, u e * z e) * ∑ e, v e * w e",
+  "name":
+  "NLAlib.integral_linear_mul_four_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  273,
+  "kind":
+  "theorem",
+  "doc":
+  "**Isserlis (Wick) formula for linear forms**: for a standard Gaussian matrix `G`,\n`E[⟨u,G⟩⟨v,G⟩⟨w,G⟩⟨z,G⟩] = ⟨u,v⟩⟨w,z⟩ + ⟨u,w⟩⟨v,z⟩ + ⟨u,z⟩⟨v,w⟩`, where\n`⟨u,G⟩ = ∑ₑ uₑ G_e`. Isserlis 1918. Atlas: `gaussian-frob-fourth-moment` (helper). Ported from\nProve2me solution `GaussianMatrix.frobenius_fourth_moment` (`integral_L4`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_linear_mul_two_gaussianMatrix {p m : ℕ} (u v : Fin p × Fin m → ℝ) :\n  ∫ (G : Fin p → Fin m → ℝ), (∑ e, u e * G e.1 e.2) * ∑ e, v e * G e.1 e.2 ∂NLAlib.gaussianMatrix p m = ∑ e, u e * v e",
+  "name":
+  "NLAlib.integral_linear_mul_two_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  255,
+  "kind":
+  "theorem",
+  "doc":
+  "**Covariance of linear forms**: `E[⟨u,G⟩⟨v,G⟩] = ⟨u,v⟩` for a standard Gaussian matrix `G`.\nAtlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.frobenius_fourth_moment` (`integral_L2`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_mul_eq_integral_deriv_gaussianReal (h : ℝ → ℝ) (hh : Differentiable ℝ h) (C : ℝ)\n  (hdh : ∀ (x : ℝ), |deriv h x| ≤ C) :\n  ∫ (x : ℝ), x * h x ∂ProbabilityTheory.gaussianReal 0 1 = ∫ (x : ℝ), deriv h x ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.integral_mul_eq_integral_deriv_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "line":
+  93,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gaussian integration by parts** (Stein's identity) in dimension one: for `h`\ndifferentiable with `|h'| ≤ C`, `∫ x h(x) dγ(x) = ∫ h'(x) dγ(x)` with `γ = N(0,1)`.\nSource: Stein 1981, Lemma 1; Vershynin 2018, Lemma 7.2.3 (one-dimensional case). Atlas:\n`gaussian-integration-by-parts`. Ported from Prove2me solution\n`GaussianMatrix.gaussian_ibp_one_dim`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_mul_eq_mul_integral_deriv_gaussianReal (v : NNReal) (h h' : ℝ → ℝ)\n  (hh : ∀ (x : ℝ), HasDerivAt h (h' x) x) (hc : Continuous h') (M M' : ℝ) (hb : ∀ (x : ℝ), |h x| ≤ M)\n  (hb' : ∀ (x : ℝ), |h' x| ≤ M') :\n  ∫ (x : ℝ), x * h x ∂ProbabilityTheory.gaussianReal 0 v = ↑v * ∫ (x : ℝ), h' x ∂ProbabilityTheory.gaussianReal 0 v",
+  "name":
+  "NLAlib.integral_mul_eq_mul_integral_deriv_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "line":
+  145,
+  "kind":
+  "theorem",
+  "doc":
+  "Stein's identity for a centred Gaussian of variance `v`: for `h` bounded with bounded\ncontinuous derivative `h'`, `∫ x h(x) dN(0,v) = v ∫ h'(x) dN(0,v)` (both sides vanish when\n`v = 0`). Source: Stein 1981, Lemma 1. Atlas: `gaussian-integration-by-parts`. Ported from\nProve2me solution `GaussianMatrix.gaussian_integration_by_parts`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_mul_eq_sum_covariance_mul_integral.{u_1, u_2} {ι : Type u_1} {Ω : Type u_2} [Fintype ι]\n  [MeasurableSpace Ω] {P : MeasureTheory.Measure Ω} (U : Ω → ℝ) (V : ι → Ω → ℝ)\n  (hUV : ProbabilityTheory.HasGaussianLaw (fun ω => (U ω, fun j => V j ω)) P) (hU0 : ∫ (ω : Ω), U ω ∂P = 0)\n  (G : (ι → ℝ) → ℝ) (G' : ι → (ι → ℝ) → ℝ)\n  (hG : ∀ (x : ι → ℝ), HasFDerivAt G (∑ j, G' j x • ContinuousLinearMap.proj j) x) (hG'c : ∀ (j : ι), Continuous (G' j))\n  (C : ℝ) (hGb : ∀ (x : ι → ℝ), |G x| ≤ C) (hG'b : ∀ (j : ι) (x : ι → ℝ), |G' j x| ≤ C) :\n  ∫ (ω : Ω), U ω * G fun j => V j ω ∂P = ∑ j, ProbabilityTheory.covariance U (V j) P * ∫ (ω : Ω), G' j fun j => V j ω ∂P",
+  "name":
+  "NLAlib.integral_mul_eq_sum_covariance_mul_integral",
+  "module":
+  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "line":
+  220,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gaussian integration by parts** (multivariate Stein identity): for a jointly Gaussian\n`(U, V₁, …, V_n)` with `𝔼 U = 0` and `G : ℝⁿ → ℝ` bounded with bounded continuous partial\nderivatives `G' j = ∂ⱼG`,\n`𝔼[U G(V)] = ∑ⱼ Cov(U, Vⱼ) 𝔼[∂ⱼG(V)]`.\nSource: Vershynin 2018, Lemma 7.2.3; Talagrand, *Mean Field Models for Spin Glasses*, Lemma\n1.3.1. Proof: regress `V` on `U` (`V = c U + W` with `W ⫫ U`), apply the one-dimensional\nidentity in `U` and integrate over `W`. Atlas: `gaussian-integration-by-parts`. Ported from\nProve2me solution `GaussianMatrix.gaussian_integration_by_parts`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_mul_le_entropy_of_integral_exp_le_one.{u_1} {α : Type u_1} [MeasurableSpace α]\n  (ν : MeasureTheory.Measure α) [MeasureTheory.IsProbabilityMeasure ν] (Z U : α → ℝ) (hZ : ∀ (t : α), 0 < Z t)\n  (hZi : MeasureTheory.Integrable Z ν) (hZl : MeasureTheory.Integrable (fun t => Z t * Real.log (Z t)) ν)\n  (hZU : MeasureTheory.Integrable (fun t => Z t * U t) ν) (hU : MeasureTheory.Integrable (fun t => Real.exp (U t)) ν)\n  (hU1 : ∫ (t : α), Real.exp (U t) ∂ν ≤ 1) :\n  ∫ (t : α), Z t * U t ∂ν ≤ ∫ (t : α), Z t * Real.log (Z t) ∂ν - (∫ (t : α), Z t ∂ν) * Real.log (∫ (t : α), Z t ∂ν)",
+  "name":
+  "NLAlib.integral_mul_le_entropy_of_integral_exp_le_one",
+  "module":
+  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "line":
+  46,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gibbs variational inequality**: for `Z > 0` on a probability space and `U` with\n`∫ e^U ≤ 1`, `∫ Z U ≤ ∫ Z log Z - (∫ Z) log ∫ Z` (the duality formula for entropy).\nSource: Ledoux, *The Concentration of Measure Phenomenon*, (5.13); Boucheron–Lugosi–Massart\n2013, Cor 4.14. Atlas: `entropy-tensorization` (helper). Ported from Prove2me solution\n`GaussianMatrix.entropy_tensorization`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integral_of_indepFun.{u_1, u_2, u_3} {Ωs : Type u_1} [MeasurableSpace Ωs] {μ : MeasureTheory.Measure Ωs}\n  [MeasureTheory.IsProbabilityMeasure μ] {α : Type u_2} {β : Type u_3} [MeasurableSpace α] [MeasurableSpace β]\n  {X : Ωs → α} {Y : Ωs → β} (hX : AEMeasurable X μ) (hY : AEMeasurable Y μ) (hXY : ProbabilityTheory.IndepFun X Y μ)\n  {g : α → β → ℝ}\n  (hg :\n    MeasureTheory.Integrable (fun p => g p.1 p.2)\n      ((MeasureTheory.Measure.map X μ).prod (MeasureTheory.Measure.map Y μ))) :\n  ∫ (ω : Ωs), g (X ω) (Y ω) ∂μ =\n    ∫ (x : α), ∫ (y : β), g x y ∂MeasureTheory.Measure.map Y μ ∂MeasureTheory.Measure.map X μ",
   "name":
   "NLAlib.integral_of_indepFun",
@@ -2787,6 +4313,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integral_ornsteinUhlenbeck (h : ℝ → ℝ) (hh : MeasureTheory.Integrable h (ProbabilityTheory.gaussianReal 0 1))\n  (t : ℝ) (ht : 0 ≤ t) :\n  ∫ (x : ℝ), NLAlib.ornsteinUhlenbeck t h x ∂ProbabilityTheory.gaussianReal 0 1 =\n    ∫ (x : ℝ), h x ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.integral_ornsteinUhlenbeck",
+  "module":
+  "NLAlib.Gaussian.Concentration.OrnsteinUhlenbeck",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "**Invariance of the Gaussian measure** under the Ornstein–Uhlenbeck semigroup:\n`∫ P_t h dγ = ∫ h dγ` for `h ∈ L¹(γ)` and `t ≥ 0`. Source: Bakry–Gentil–Ledoux 2014, §2.7.1;\nLedoux, *Concentration of Measure*, §5.1. Atlas: `ornstein-uhlenbeck`. Ported from Prove2me\nsolution `GaussianMatrix.ou_semigroup_invariant`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integral_pinvR_block.{u_1} {Ωs : Type u_1} [MeasurableSpace Ωs] {μ : MeasureTheory.Measure Ωs} {n k t : ℕ}\n  {Ω : Ωs → Fin n → Fin t → ℝ} (hΩ : MeasureTheory.Measure.map Ω μ = NLAlib.gaussianMatrix n t)\n  (V₁ : Matrix (Fin n) (Fin k) ℝ) (hV₁ : V₁.transpose * V₁ = 1) (hkt : k + 2 ≤ t) :\n  ∫ (ω : Ωs), NLAlib.frobSq (NLAlib.pinvR (V₁.transpose * Matrix.of (Ω ω))) ∂μ = ↑k / (↑t - ↑k - 1)",
   "name":
   "NLAlib.integral_pinvR_block",
@@ -2798,6 +4338,48 @@
   "theorem",
   "doc":
   "`E‖(V₁ᵀΩ)†‖_F² = k/(t−k−1)` for an `n × t` standard Gaussian `Ω`, `V₁ᵀV₁ = 1`, `k + 2 ≤ t`.\nHMT 2011 Prop 10.2 and §10.2 (Chen–Persson `lem:invmom`). Atlas `rsvd-expected-error`\n(uses `gaussian-conditioning`, `pinv-frob-moment`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_pow_four_gaussianReal : ∫ (x : ℝ), x ^ 4 ∂ProbabilityTheory.gaussianReal 0 1 = 3",
+  "name":
+  "NLAlib.integral_pow_four_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "The fourth moment of a standard Gaussian: `E X⁴ = 3`. Atlas: `gaussian-frob-fourth-moment`\n(helper). Ported from Prove2me solution `GaussianMatrix.frobenius_fourth_moment` (`gm4`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_pow_three_gaussianReal : ∫ (x : ℝ), x ^ 3 ∂ProbabilityTheory.gaussianReal 0 1 = 0",
+  "name":
+  "NLAlib.integral_pow_three_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  57,
+  "kind":
+  "theorem",
+  "doc":
+  "The third moment of a standard Gaussian vanishes: `E X³ = 0` (symmetry). Atlas:\n`gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.frobenius_fourth_moment` (`gm3`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_prod_entry_gaussianMatrix {p m : ℕ} (f : Fin p × Fin m → ℝ → ℝ) :\n  ∫ (G : Fin p → Fin m → ℝ), ∏ e, f e (G e.1 e.2) ∂NLAlib.gaussianMatrix p m =\n    ∏ e, ∫ (x : ℝ), f e x ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.integral_prod_entry_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Moments.FourthMoment",
+  "line":
+  116,
+  "kind":
+  "theorem",
+  "doc":
+  "**Independence of the entries.** For functions `f_e : ℝ → ℝ` indexed by the entries,\n`E ∏ₑ f_e(G_e) = ∏ₑ E f_e(X)` with `X ∼ N(0,1)`. Atlas: `gaussian-frob-fourth-moment` (helper).\nPorted from Prove2me solution `GaussianMatrix.frobenius_fourth_moment` (`integral_prod_coord`). "},
  {"sorry":
   false,
   "signature":
@@ -2826,6 +4408,76 @@
   "theorem",
   "doc":
   "Second moment of Hutchinson's estimator: for a random vector with independent, centred\ncoordinates of unit variance and common fourth moment `m₄`,\n`𝔼[(zᵀ A z)²] = (tr A)² + ∑ᵢⱼ A_ij² + ∑ᵢⱼ A_ij A_ji + (m₄ − 3) ∑ᵢ A_ii²`.\nSource: Avron–Toledo (2011) [`at11`], proofs of Lem 5, 6; Hutchinson (1989) [`hutch89`].\nAtlas: `hutchinson-variance`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt {N n : ℕ} :\n  ∫ (A : Fin N → Fin n → ℝ), NLAlib.specNorm (Matrix.of A) ∂NLAlib.gaussianMatrix N n ≤ √↑N + √↑n",
+  "name":
+  "NLAlib.integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt",
+  "module":
+  "NLAlib.Gaussian.Extreme.Gordon",
+  "line":
+  204,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gordon's upper bound.** For an `N × n` standard Gaussian matrix,\n`𝔼 ‖G‖₂ ≤ √N + √n`. Source: Vershynin 2012, Thm 5.32 (upper half); Gordon 1985;\nDavidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_specNorm_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)\n  (T : Matrix (Fin m) (Fin n) ℝ) :\n  ∫ (G : Fin p → Fin m → ℝ), NLAlib.specNorm (S * Matrix.of G * T) ∂NLAlib.gaussianMatrix p m ≤\n    NLAlib.specNorm S * NLAlib.frobNorm T + NLAlib.frobNorm S * NLAlib.specNorm T",
+  "name":
+  "NLAlib.integral_specNorm_mul_gaussianMatrix_mul_le",
+  "module":
+  "NLAlib.Gaussian.Extreme.Chevet",
+  "line":
+  30,
+  "kind":
+  "theorem",
+  "doc":
+  "**Chevet's inequality** (expectation form). For `S : a × p`, `T : m × n` and a `p × m`\nstandard Gaussian matrix `Γ`, `𝔼 ‖S Γ T‖₂ ≤ ‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂`. Source: HMT 2011,\nProp. A.2; Chevet 1978; Gordon 1985. Deduced here from the second-moment bound (Tropp–Webber\n2023, Lemma B.1). Atlas: `chevet`. Ported from Prove2me solution\n`GaussianMatrix.chevet_expectation_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_specNorm_sq_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)\n  (T : Matrix (Fin m) (Fin n) ℝ) :\n  ∫ (G : Fin p → Fin m → ℝ), NLAlib.specNorm (S * Matrix.of G * T) ^ 2 ∂NLAlib.gaussianMatrix p m ≤\n    (NLAlib.specNorm S * NLAlib.frobNorm T + NLAlib.frobNorm S * NLAlib.specNorm T) ^ 2",
+  "name":
+  "NLAlib.integral_specNorm_sq_mul_gaussianMatrix_mul_le",
+  "module":
+  "NLAlib.Gaussian.Extreme.SpectralSecondMoment",
+  "line":
+  609,
+  "kind":
+  "theorem",
+  "doc":
+  "**Second moment of a Gaussian sandwich.** For `S : a × p`, `T : m × n` and a `p × m`\nstandard Gaussian matrix `Γ`, `𝔼 ‖S Γ T‖₂² ≤ (‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂)²`. Source: Tropp–Webber\n2023, Lemma B.1 (via Gordon's comparison); the first-moment version is Chevet's inequality (HMT\n2011, Prop. A.2). Atlas: `spectral-second-moment`. Ported from Prove2me solution\n`GaussianMatrix.spectral_second_moment_bound`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_sqrt_sum_sq_gaussianMatrix_entry_le {k m : ℕ} (σ : Fin k → Fin m) :\n  ∫ (H : Fin 1 → Fin m → ℝ), √(∑ j, H 0 (σ j) ^ 2) ∂NLAlib.gaussianMatrix 1 m ≤ √↑k",
+  "name":
+  "NLAlib.integral_sqrt_sum_sq_gaussianMatrix_entry_le",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  216,
+  "kind":
+  "theorem",
+  "doc":
+  "`𝔼 √(∑ⱼ H_{0,σ(j)}²) ≤ √k` for `k` coordinates of a Gaussian row (Jensen). Ported from\nProve2me solution `GaussianMatrix.gordon_upper` (helper `gu_integral_sqrt_sumsq_le`). Atlas:\nhelper of `gordon`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.integral_sub_sq_eq.{u_1, u_2} {ι : Type u_1} {Ω : Type u_2} [MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}\n  (X : ι → Ω → ℝ) (hXm : ∀ (t : ι), MeasureTheory.MemLp (X t) 2 P) (i j : ι) :\n  ∫ (ω : Ω), (X i ω - X j ω) ^ 2 ∂P =\n    ∫ (ω : Ω), X i ω * X i ω ∂P + ∫ (ω : Ω), X j ω * X j ω ∂P - ∫ (ω : Ω), X i ω * X j ω ∂P -\n      ∫ (ω : Ω), X j ω * X i ω ∂P",
+  "name":
+  "NLAlib.integral_sub_sq_eq",
+  "module":
+  "NLAlib.Gaussian.Comparison.Interpolation",
+  "line":
+  84,
+  "kind":
+  "theorem",
+  "doc":
+  "Expansion of the squared increment: `𝔼 (Xᵢ - Xⱼ)² = 𝔼 XᵢXᵢ + 𝔼 XⱼXⱼ - 𝔼 XᵢXⱼ - 𝔼 XⱼXᵢ` for\nsquare-integrable `X`. Atlas: helper of `slepian`, `sudakov-fernique`, `gordon-minimax`. Ported\nfrom Prove2me solution `GaussianMatrix.slepian_tail_comparison` (helper `sl_sq_sub`). "},
  {"sorry":
   false,
   "signature":
@@ -2980,6 +4632,34 @@
   "theorem",
   "doc":
   "**Diagonal entry of the inverse Gram matrix (Schur complement).** Let `G` have rows indexed by\n`Fin (n + 1)`, let `H` be `G` with row `i` removed and `g = G i`. If `H Hᵀ` is invertible, then\n`(G Gᵀ)⁻¹ᵢᵢ = (‖g‖² - (H g)ᵀ (H Hᵀ)⁻¹ (H g))⁻¹`, the inverse squared distance from `g` to the\nrow space of `H`.\n\nHelper for Tropp–Webber 2023, Lemma B.2 / HMT 2011, Prop A.5 (proof of `E (G Gᵀ)⁻¹`).\nAtlas: `inverse-wishart-mean` (helper). Proof ported from the Prove2me solution\n`Sol_GaussianMatrix_schur_diag_inv` (adjugate computation). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.inv_self_mul_transpose_apply_succAbove {n k : ℕ} (G : Matrix (Fin (n + 1)) (Fin k) ℝ) (i : Fin (n + 1))\n  (a : Fin n) (hH : (G.submatrix i.succAbove id * (G.submatrix i.succAbove id).transpose).det ≠ 0) :\n  (G * G.transpose)⁻¹ i (i.succAbove a) =\n    -(G.submatrix i.succAbove id * (G.submatrix i.succAbove id).transpose)⁻¹.mulVec\n          ((G.submatrix i.succAbove id).mulVec (G i)) a *\n      (G * G.transpose)⁻¹ i i",
+  "name":
+  "NLAlib.inv_self_mul_transpose_apply_succAbove",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "line":
+  88,
+  "kind":
+  "theorem",
+  "doc":
+  "**Off-diagonal entry of the inverse Gram matrix (Schur complement).** Let `G` have rows\nindexed by `Fin (n + 1)`, let `H` be `G` with row `i` removed and `g = G i`. If `H Hᵀ` is\ninvertible, then for every `a`, `(G Gᵀ)⁻¹ᵢ,ₛ₍ₐ₎ = -cₐ (G Gᵀ)⁻¹ᵢᵢ` with `s = i.succAbove` and\n`c = (H Hᵀ)⁻¹ H g` the least-squares coefficients of `g` on the rows of `H`.\n\nHelper for Tropp–Webber 2023, Lemma B.2 (second moments of the inverse Wishart matrix);\ncompanion of `inv_self_mul_transpose_apply_self`. Atlas: `inverse-wishart-frob-moment`\n(helper). Ported from Prove2me solution `GaussianMatrix.schur_offdiag_inv` (adjugate\ncomputation). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.isGaussian_gaussianMatrix (p m : ℕ) : ProbabilityTheory.IsGaussian (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.isGaussian_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  61,
+  "kind":
+  "instance",
+  "doc":
+  "The law of a standard Gaussian matrix is a Gaussian measure on `Fin p → Fin m → ℝ`.\nPorted from Prove2me solution `GaussianMatrix.spectral_second_moment_bound` (instance\n`ssb_isGaussian_gm`). "},
  {"sorry":
   false,
   "signature":
@@ -3235,6 +4915,48 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.lamMin.{u_2} {n : Type u_2} [Fintype n] (M : Matrix n n ℝ) : ℝ",
+  "name":
+  "NLAlib.lamMin",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  52,
+  "kind":
+  "def",
+  "doc":
+  "The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on\nthe unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.lamMin_eq_iInf_rayleigh.{u_2} {n : Type u_2} [Fintype n] (M : Matrix n n ℝ) :\n  NLAlib.lamMin M = ⨅ x, ↑x ⬝ᵥ M.mulVec ↑x / ↑x ⬝ᵥ ↑x",
+  "name":
+  "NLAlib.lamMin_eq_iInf_rayleigh",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  240,
+  "kind":
+  "theorem",
+  "doc":
+  "Rayleigh-quotient form: `λ_min(M) = inf_{x ≠ 0} xᵀMx / xᵀx` (both sides `0` when `n` is\nempty). Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.lamMin_le.{u_2} {n : Type u_2} [Fintype n] (M : Matrix n n ℝ) {x : n → ℝ} (hx : x ⬝ᵥ x = 1) :\n  NLAlib.lamMin M ≤ x ⬝ᵥ M.mulVec x",
+  "name":
+  "NLAlib.lamMin_le",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  235,
+  "kind":
+  "theorem",
+  "doc":
+  "`λ_min(M) ≤ xᵀ M x` for every unit vector `x`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.lambdaMax.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (A : Matrix d d ℂ) : ℝ",
   "name":
   "NLAlib.lambdaMax",
@@ -3291,6 +5013,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.le_sigmaMin.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [Nonempty n] (A : Matrix m n ℝ)\n  {c : ℝ} (h : ∀ (x : n → ℝ), x ⬝ᵥ x = 1 → c ≤ √(A.mulVec x ⬝ᵥ A.mulVec x)) : c ≤ NLAlib.sigmaMin A",
+  "name":
+  "NLAlib.le_sigmaMin",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  128,
+  "kind":
+  "theorem",
+  "doc":
+  "`c ≤ σ_min(A)` as soon as `c ≤ ‖Ax‖₂` for every unit vector `x` (index type nonempty).\nAtlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.lieb_concavity {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :\n  ConcaveOn ℝ {A | A.PosDef} fun A => NLAlib.traceExp (H + NLAlib.matrixLog A)",
   "name":
   "NLAlib.lieb_concavity",
@@ -3302,6 +5038,62 @@
   "theorem",
   "doc":
   "Lieb's concavity theorem: `A ↦ traceExp (H + matrixLog A)` is concave on positive definite\nmatrices for fixed Hermitian `H`.\n\nTropp 2015, Thm 8.1.1 (= Thm 3.4.1). Atlas: `operator-monotone-convex`. Ported from the Prove2me\nmission *An Introduction to Matrix Concentration Inequalities, Ch 8*. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.linForm {p m : ℕ} (c G : Fin p → Fin m → ℝ) : ℝ",
+  "name":
+  "NLAlib.linForm",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  101,
+  "kind":
+  "def",
+  "doc":
+  "The linear form `⟨c, G⟩ = ∑ᵢⱼ cᵢⱼ Gᵢⱼ` on arrays `Fin p → Fin m → ℝ` (the space carrying\n`gaussianMatrix p m`); equal to `frobInner (Matrix.of c) (Matrix.of G)` (`linForm_eq_frobInner`).\nPorted from Prove2me solution `GaussianMatrix.gordon_upper` (`guLin`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.linFormCLM.{u_1} {ι : Type u_1} {p m : ℕ} (a : ι → Fin p → Fin m → ℝ) : (Fin p → Fin m → ℝ) →L[ℝ] ι → ℝ",
+  "name":
+  "NLAlib.linFormCLM",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  111,
+  "kind":
+  "def",
+  "doc":
+  "A finite family of linear forms `(⟨a t, ·⟩)ₜ` as one continuous linear map into `ι → ℝ`.\nPorted from Prove2me solution `GaussianMatrix.gordon_upper` (`guLinCLM`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.linForm_eq_frobInner {p m : ℕ} (c G : Fin p → Fin m → ℝ) :\n  NLAlib.linForm c G = NLAlib.frobInner (Matrix.of c) (Matrix.of G)",
+  "name":
+  "NLAlib.linForm_eq_frobInner",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  107,
+  "kind":
+  "theorem",
+  "doc":
+  "Bridge to the Frobenius inner product. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.linForm_sub_linForm {p m : ℕ} (c d G : Fin p → Fin m → ℝ) :\n  NLAlib.linForm c G - NLAlib.linForm d G = NLAlib.linForm (c - d) G",
+  "name":
+  "NLAlib.linForm_sub_linForm",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  157,
+  "kind":
+  "theorem",
+  "doc":
+  "`⟨c, G⟩ - ⟨d, G⟩ = ⟨c - d, G⟩`. Ported from Prove2me solution `GaussianMatrix.gordon_upper`\n(helper `gu_lin_sub`). "},
  {"sorry":
   false,
   "signature":
@@ -3319,6 +5111,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.lintegral_ofReal_mul_rpow_mul_exp_Ioi {a r : ℝ} (ha : 0 < a) (hr : 0 < r) (c : ℝ) (hc : 0 ≤ c) :\n  ∫⁻ (t : ℝ) in Set.Ioi 0, ENNReal.ofReal (c * (t ^ (a - 1) * Real.exp (-(r * t)))) =\n    ENNReal.ofReal (c * ((1 / r) ^ a * Real.Gamma a))",
+  "name":
+  "NLAlib.lintegral_ofReal_mul_rpow_mul_exp_Ioi",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  162,
+  "kind":
+  "theorem",
+  "doc":
+  "**Euler's integral in `lintegral` form**: `∫₀^∞ c t^{a-1} e^{-rt} dt = c (1/r)^a Γ(a)` for\n`a, r > 0` and `c ≥ 0`. Atlas: `chi-square-neg-moment` (helper). Ported from Prove2me solution\n`GaussianMatrix.chi_square_neg_moment` (`cnm_gamma_lintegral`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.lintegral_of_indepFun.{u_1, u_2, u_3} {Ωs : Type u_1} [MeasurableSpace Ωs] {μ : MeasureTheory.Measure Ωs}\n  [MeasureTheory.IsProbabilityMeasure μ] {α : Type u_2} {β : Type u_3} [MeasurableSpace α] [MeasurableSpace β]\n  {X : Ωs → α} {Y : Ωs → β} (hX : AEMeasurable X μ) (hY : AEMeasurable Y μ) (hXY : ProbabilityTheory.IndepFun X Y μ)\n  {g : α → β → ENNReal}\n  (hg : AEMeasurable (Function.uncurry g) ((MeasureTheory.Measure.map X μ).prod (MeasureTheory.Measure.map Y μ))) :\n  ∫⁻ (ω : Ωs), g (X ω) (Y ω) ∂μ =\n    ∫⁻ (x : α), ∫⁻ (y : β), g x y ∂MeasureTheory.Measure.map Y μ ∂MeasureTheory.Measure.map X μ",
   "name":
   "NLAlib.lintegral_of_indepFun",
@@ -3330,6 +5136,34 @@
   "theorem",
   "doc":
   "**Fubini for independent random variables, `ℝ≥0∞` version.** If `X` and `Y` are independent,\n`E g(X, Y) = ∫ (∫ g(x, y) d(law Y)(y)) d(law X)(x)`. Only a.e.-measurability of `g` for the\nproduct of the laws is needed.\n\nStandard (e.g. Durrett, *Probability*, Thm 2.1.12 / Kallenberg Lemma 3.11). Atlas\n`gaussian-conditioning`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.lintegral_rpow_mul_exp_le {a : ℝ} (ha : -1 < a) {t : ℝ} (ht : 0 ≤ t) :\n  ∫⁻ (x : ℝ) in Set.Ioc 0 t, ENNReal.ofReal (x ^ a * Real.exp (-x / 2)) ≤ ENNReal.ofReal (t ^ (a + 1) / (a + 1))",
+  "name":
+  "NLAlib.lintegral_rpow_mul_exp_le",
+  "module":
+  "NLAlib.Concentration.Scalar.TailIntegral",
+  "line":
+  84,
+  "kind":
+  "theorem",
+  "doc":
+  "**Truncated Gamma integral bound.** For `a > -1` and `t ≥ 0`,\n`∫₀ᵗ x^a e^{-x/2} dx ≤ t^{a+1} / (a + 1)` (drop the exponential factor).\n\nElementary; used for the chi-square small-ball density bound (Davidson–Szarek 2001,\nVershynin 2012). Atlas: `tail-integral`. Ported from Prove2me solution\n`GaussianMatrix.integral_power_exp_le`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.map_add_mul_prod_gaussianReal (a b : ℝ) (hab : a ^ 2 + b ^ 2 = 1) :\n  MeasureTheory.Measure.map (fun p => a * p.1 + b * p.2)\n      ((ProbabilityTheory.gaussianReal 0 1).prod (ProbabilityTheory.gaussianReal 0 1)) =\n    ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.map_add_mul_prod_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Concentration.OrnsteinUhlenbeck",
+  "line":
+  29,
+  "kind":
+  "theorem",
+  "doc":
+  "The image of `γ ⊗ γ` under `(x, y) ↦ a x + b y` is `γ = N(0,1)` when `a² + b² = 1`.\nAtlas: `ornstein-uhlenbeck` (helper). Ported from Prove2me solution\n`GaussianMatrix.ou_semigroup_invariant`. "},
  {"sorry":
   false,
   "signature":
@@ -3669,6 +5503,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.measurable_inv_self_mul_transpose_apply {r k : ℕ} (i j : Fin r) :\n  Measurable fun G => (Matrix.of G * (Matrix.of G).transpose)⁻¹ i j",
+  "name":
+  "NLAlib.measurable_inv_self_mul_transpose_apply",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "line":
+  41,
+  "kind":
+  "theorem",
+  "doc":
+  "The entries of `(G Gᵀ)⁻¹` are measurable functions of `G` (with Mathlib's convention\n`A⁻¹ = 0` for singular `A`).\n\nHelper for the inverse-Wishart moment computations (Tropp–Webber 2023, App. B). Atlas:\n`inverse-wishart-mean` (helper). Ported from the Prove2me solutions of the inverse Wishart\nseries (`iwd_measurable_inv_entry`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.measurable_mul_entry_of.{u_1, u_2, u_3, u_4} {γ : Type u_1} [MeasurableSpace γ] {a : Type u_2} {b : Type u_3}\n  {c : Type u_4} [Fintype b] {f : γ → Matrix a b ℝ} {g : γ → Matrix b c ℝ}\n  (hf : ∀ (i : a) (j : b), Measurable fun z => f z i j) (hg : ∀ (i : b) (j : c), Measurable fun z => g z i j) (i : a)\n  (j : c) : Measurable fun z => (f z * g z) i j",
   "name":
   "NLAlib.measurable_mul_entry_of",
@@ -3711,6 +5559,34 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.measurable_specNorm_inv_self_mul_transpose {r k : ℕ} :\n  Measurable fun G => NLAlib.specNorm (Matrix.of G * (Matrix.of G).transpose)⁻¹",
+  "name":
+  "NLAlib.measurable_specNorm_inv_self_mul_transpose",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SpectralNorm",
+  "line":
+  226,
+  "kind":
+  "theorem",
+  "doc":
+  "`G ↦ ‖(G Gᵀ)⁻¹‖` is measurable on samples `G : Fin r → Fin k → ℝ`.\n\nHelper for Tropp–Webber 2023, Lemma B.4. Atlas: `inverse-wishart-spectral-moment` (helper).\nPorted from the Prove2me solution `Sol_GaussianMatrix_inverse_wishart_spectral_moment`\n(`iwsm_measurable_specNorm_inv_gram`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measurable_specNorm_pinvR {r k : ℕ} : Measurable fun G => NLAlib.specNorm (NLAlib.pinvR (Matrix.of G))",
+  "name":
+  "NLAlib.measurable_specNorm_pinvR",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SpectralNorm",
+  "line":
+  242,
+  "kind":
+  "theorem",
+  "doc":
+  "`G ↦ ‖G†‖` is measurable on samples `G : Fin r → Fin k → ℝ`, with `G† = pinvR G`.\n\nHelper for HMT 2011, Prop A.4. Atlas: `pinv-spectral-expectation` (helper). Ported from the\nProve2me solution `Sol_GaussianMatrix_pinv_spectral_expectation`\n(`measurable_specNorm_pinvR`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.measurePreserving_gaussianMatrix_entry {p m : ℕ} (a : Fin p) (b : Fin m) :\n  MeasureTheory.MeasurePreserving (fun G => G a b) (NLAlib.gaussianMatrix p m) (ProbabilityTheory.gaussianReal 0 1)",
   "name":
   "NLAlib.measurePreserving_gaussianMatrix_entry",
@@ -3722,6 +5598,62 @@
   "theorem",
   "doc":
   "Each entry of a standard Gaussian matrix is `N(0,1)`. Atlas: `gaussian-matrix-def`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measurePreserving_orthonormalBasis_repr_pi_gaussianReal.{u_1} {N : ℕ} {ι : Type u_1} [Fintype ι]\n  (b : OrthonormalBasis ι ℝ (EuclideanSpace ℝ (Fin N))) :\n  MeasureTheory.MeasurePreserving (fun g => (b.repr (WithLp.toLp 2 g)).ofLp)\n    (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)\n    (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.measurePreserving_orthonormalBasis_repr_pi_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.SmallBall",
+  "line":
+  127,
+  "kind":
+  "theorem",
+  "doc":
+  "**Rotation invariance in coordinates.** For an orthonormal basis `b` of `ℝᴺ` indexed by `ι`,\nthe coordinates `(⟪b i, g⟫)ᵢ` of a standard Gaussian vector `g` are i.i.d. standard Gaussian.\nAtlas: `smin-small-ball` (helper; an instance of `gaussian-rotation-invariance`). Ported from\nProve2me solution `GaussianMatrix.gaussian_dist_colspace_small_ball`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measurePreserving_updateCol_gaussianMatrix (N n : ℕ) (j : Fin n) :\n  MeasureTheory.MeasurePreserving (fun p i => Function.update (p.1 i) j (p.2 i))\n    ((NLAlib.gaussianMatrix N n).prod (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1))\n    (NLAlib.gaussianMatrix N n)",
+  "name":
+  "NLAlib.measurePreserving_updateCol_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.SmallBall",
+  "line":
+  297,
+  "kind":
+  "theorem",
+  "doc":
+  "**Resampling one column of a Gaussian matrix.** Replacing column `j` of a standard Gaussian\nmatrix by an independent standard Gaussian vector leaves its law unchanged.\nAtlas: `smin-small-ball` (helper). Ported from Prove2me solution\n`GaussianMatrix.dist_col_span_small_ball` (`measurePreserving_updateCol`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measurePreserving_update_pi.{u_1, u_2} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {Ω : Type u_2}\n  [MeasurableSpace Ω] (μ : ι → MeasureTheory.Measure Ω) [∀ (i : ι), MeasureTheory.IsProbabilityMeasure (μ i)] (i : ι) :\n  MeasureTheory.MeasurePreserving (fun p => Function.update p.1 i p.2) ((MeasureTheory.Measure.pi μ).prod (μ i))\n    (MeasureTheory.Measure.pi μ)",
+  "name":
+  "NLAlib.measurePreserving_update_pi",
+  "module":
+  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "line":
+  88,
+  "kind":
+  "theorem",
+  "doc":
+  "Resampling one coordinate preserves a product measure: `(x, t) ↦ update x i t` maps\n`(⊗ⱼ μⱼ) ⊗ μᵢ` to `⊗ⱼ μⱼ`. Atlas: `entropy-tensorization` (helper). Ported from Prove2me\nsolution `GaussianMatrix.entropy_tensorization`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measurePreserving_update_pi_gaussianReal {n : ℕ} (j : Fin n) :\n  MeasureTheory.MeasurePreserving (fun p => Function.update p.1 j p.2)\n    ((MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1).prod (ProbabilityTheory.gaussianReal 0 1))\n    (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)",
+  "name":
+  "NLAlib.measurePreserving_update_pi_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.SmallBall",
+  "line":
+  258,
+  "kind":
+  "theorem",
+  "doc":
+  "**Resampling one coordinate.** `(a, g) ↦ update a j g` pushes `γⁿ ⊗ γ` forward to `γⁿ`,\nwhere `γ = N(0,1)`. Atlas: `smin-small-ball` (helper). Ported from Prove2me solution\n`GaussianMatrix.dist_col_span_small_ball`. "},
  {"sorry":
   false,
   "signature":
@@ -3753,6 +5685,90 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.measure_sigmaMin_le_le_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) (hnN : n ≤ N) (s : ℝ)\n  (hsd : ↑n * s ^ 2 ≤ ↑N - ↑n + 1) :\n  (NLAlib.gaussianMatrix N n) {A | NLAlib.sigmaMin (Matrix.of A) ≤ s} ≤\n    ENNReal.ofReal (↑n * (Real.exp 1 * ↑n * s ^ 2 / (↑N - ↑n + 1)) ^ ((↑N - ↑n + 1) / 2))",
+  "name":
+  "NLAlib.measure_sigmaMin_le_le_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.SmallBall",
+  "line":
+  414,
+  "kind":
+  "theorem",
+  "doc":
+  "**Small-ball estimate for the smallest singular value of a Gaussian matrix.** For an\n`N × n` standard Gaussian matrix `A` with `1 ≤ n ≤ N` and `n s² ≤ N - n + 1`,\n`P(σ_min(A) ≤ s) ≤ n · (e n s² / (N - n + 1))^{(N - n + 1)/2}`. The source's hypothesis\n`0 ≤ s` is not needed and is dropped.\n\nDavidson–Szarek 2001, Thm II.13 (small-ball form); Vershynin 2012, §5.2 /\nRudelson–Vershynin 2009 (sharper `(C s √N)^{N-n+1}` form). Union bound over the columns of the\ncolumn-distance estimate. Atlas: `smin-small-ball`. Ported from Prove2me solution\n`GaussianMatrix.sMin_small_ball`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) (u : ℝ) (hu : 0 ≤ u) :\n  (NLAlib.gaussianMatrix N n) {A | NLAlib.sigmaMin (Matrix.of A) ≤ √↑N - √↑n - u} ≤\n    ENNReal.ofReal (Real.exp (-u ^ 2 / 2))",
+  "name":
+  "NLAlib.measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.Deviation",
+  "line":
+  34,
+  "kind":
+  "theorem",
+  "doc":
+  "**Lower tail of the smallest singular value.** For an `N × n` standard Gaussian matrix `G`\nwith `n ≥ 1` and `u ≥ 0`, `P(σ_min(G) ≤ √N − √n − u) ≤ e^{-u²/2}`.\n\nVershynin 2012, Cor. 5.35 (lower half); Davidson–Szarek 2001, Thm II.13.\nAtlas: `smin-lower-tail`. The source's hypothesis `n ≤ N` is not needed and is dropped\n(Gordon's lower bound `√N − √n ≤ 𝔼 σ_min` holds for all `N`). Ported from Prove2me solution\n`GaussianMatrix.sMin_lower_tail`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measure_sq_dist_colSpace_le_le_gaussianReal {N p d : ℕ} (B : Matrix (Fin N) (Fin p) ℝ) (hd : 1 ≤ d)\n  (hrank : B.rank + d ≤ N) (u : ℝ) (hu : 0 ≤ u) (hud : u ≤ ↑d) :\n  (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1)\n      {g | (⨅ c, √((g - B.mulVec c) ⬝ᵥ (g - B.mulVec c))) ^ 2 ≤ u} ≤\n    ENNReal.ofReal ((Real.exp 1 * u / ↑d) ^ (↑d / 2))",
+  "name":
+  "NLAlib.measure_sq_dist_colSpace_le_le_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.SmallBall",
+  "line":
+  151,
+  "kind":
+  "theorem",
+  "doc":
+  "**Small ball for the distance to a subspace.** Let `B : Matrix (Fin N) (Fin p) ℝ` have\n`rank B + d ≤ N` with `d ≥ 1`. For a standard Gaussian vector `g ∈ ℝᴺ` and `0 ≤ u ≤ d`,\n`P(dist(g, range B)² ≤ u) ≤ (e u / d)^{d/2}`, with `dist(g, range B) = inf_c ‖g - B c‖₂`.\n\nThe squared distance dominates the sum of squares of `d` coordinates of `g` in an orthonormal\nbasis of `(range B)ᗮ` (Bessel), which is `χ²_d` by rotation invariance; then the chi-square lower\ntail. Davidson–Szarek 2001, proof of Thm II.13; Vershynin 2012, §5.2.\nAtlas: `smin-small-ball` (step). Ported from Prove2me solution\n`GaussianMatrix.gaussian_dist_colspace_small_ball`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measure_sq_dist_col_span_le_le_gaussianMatrix {N n : ℕ} (hnN : n ≤ N) (j : Fin n) (u : ℝ) (hu : 0 ≤ u)\n  (hud : u ≤ ↑N - ↑n + 1) :\n  (NLAlib.gaussianMatrix N n) {A | (⨅ x, √((Matrix.of A).mulVec ↑x ⬝ᵥ (Matrix.of A).mulVec ↑x)) ^ 2 ≤ u} ≤\n    ENNReal.ofReal ((Real.exp 1 * u / (↑N - ↑n + 1)) ^ ((↑N - ↑n + 1) / 2))",
+  "name":
+  "NLAlib.measure_sq_dist_col_span_le_le_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.SmallBall",
+  "line":
+  367,
+  "kind":
+  "theorem",
+  "doc":
+  "**Small ball for the distance from a column to the span of the others.** For an `N × n`\nstandard Gaussian matrix `A` with `n ≤ N`, any column `j` and `0 ≤ u ≤ N - n + 1`,\n`P(dist(A_j, span{A_l : l ≠ j})² ≤ u) ≤ (e u / (N - n + 1))^{(N - n + 1)/2}`, the distance\nbeing written `inf { ‖A x‖₂ : x_j = 1 }`.\n\nCondition on the other columns (resample column `j`) and apply the subspace small-ball bound\nwith `d = N - n + 1`. Davidson–Szarek 2001, proof of Thm II.13; Vershynin 2012, §5.2.\nAtlas: `smin-small-ball` (step). Ported from Prove2me solution\n`GaussianMatrix.dist_col_span_small_ball`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix {N n : ℕ} (t : ℝ) (ht : 0 ≤ t) :\n  (NLAlib.gaussianMatrix N n) {A | √↑N + √↑n + t ≤ NLAlib.specNorm (Matrix.of A)} ≤\n    ENNReal.ofReal (Real.exp (-t ^ 2 / 2))",
+  "name":
+  "NLAlib.measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.Deviation",
+  "line":
+  66,
+  "kind":
+  "theorem",
+  "doc":
+  "**Upper tail of the spectral norm.** For an `N × n` standard Gaussian matrix `G` and\n`t ≥ 0`, `P(√N + √n + t ≤ ‖G‖₂) ≤ e^{-t²/2}`.\n\nVershynin 2012, Cor. 5.35 (upper half); Davidson–Szarek 2001, Thm II.13.\nAtlas: `extreme-singular-values-deviation` (one half). The source helper assumes `n ≥ 1`, which\nis not needed. Ported from Prove2me solution\n`GaussianMatrix.extreme_singular_values_deviation` (`esvd_specNorm_tail`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.measure_sum_sq_le_le_gaussianReal {d : ℕ} (hd : 1 ≤ d) (u : ℝ) (hu : 0 ≤ u) (hud : u ≤ ↑d) :\n  (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) {g | ∑ i, g i ^ 2 ≤ u} ≤\n    ENNReal.ofReal ((Real.exp 1 * u / ↑d) ^ (↑d / 2))",
+  "name":
+  "NLAlib.measure_sum_sq_le_le_gaussianReal",
+  "module":
+  "NLAlib.Gaussian.Extreme.ChiSquare",
+  "line":
+  124,
+  "kind":
+  "theorem",
+  "doc":
+  "**Chi-square lower tail.** For `d ≥ 1` and `0 ≤ u ≤ d`, a `χ²_d` variable satisfies\n`P(χ²_d ≤ u) ≤ (e u / d)^{d/2}`.\n\nChernoff bound with the optimal parameter `s = (d/u - 1)/2`; Davidson–Szarek 2001 / Vershynin\n2012 (small-ball step for `σ_min`); Laurent–Massart 2000 give the sharper form.\nAtlas: `chi-square-lower-tail`. Ported from Prove2me solution\n`GaussianMatrix.chi_square_lower_tail`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.memLp_gaussianMatrix_entry {p m : ℕ} (a : Fin p) (b : Fin m) (q : ENNReal) (hq : q ≠ ⊤) :\n  MeasureTheory.MemLp (fun G => G a b) q (NLAlib.gaussianMatrix p m)",
   "name":
   "NLAlib.memLp_gaussianMatrix_entry",
@@ -3764,6 +5780,20 @@
   "theorem",
   "doc":
   "Each entry of a standard Gaussian matrix has finite moments of every finite order.\nAtlas: `gaussian-matrix-def`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.memLp_linForm_gaussianMatrix {p m : ℕ} (c : Fin p → Fin m → ℝ) :\n  MeasureTheory.MemLp (NLAlib.linForm c) 2 (NLAlib.gaussianMatrix p m)",
+  "name":
+  "NLAlib.memLp_linForm_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.LinearForms",
+  "line":
+  206,
+  "kind":
+  "theorem",
+  "doc":
+  "`⟨c, G⟩ ∈ L²`. Ported from Prove2me solution\n`GaussianMatrix.spectral_second_moment_bound` (helper `ssb_memLp_lin`). Atlas: helper of\n`spectral-second-moment`. "},
  {"sorry":
   false,
   "signature":
@@ -3806,6 +5836,20 @@
   "theorem",
   "doc":
   "`‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, written with dot products. Atlas `norms-frob-spec`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.mulVec_dotProduct_mulVec_le_frobSq_mul.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (B : Matrix m n ℝ) (x : n → ℝ) : B.mulVec x ⬝ᵥ B.mulVec x ≤ NLAlib.frobSq B * x ⬝ᵥ x",
+  "name":
+  "NLAlib.mulVec_dotProduct_mulVec_le_frobSq_mul",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  84,
+  "kind":
+  "theorem",
+  "doc":
+  "Row-wise Cauchy–Schwarz, dot-product form: `‖Bx‖₂² ≤ ‖B‖_F² ‖x‖₂²`.\nAtlas `norm-lipschitz`. "},
  {"sorry":
   false,
   "signature":
@@ -3991,6 +6035,76 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.nonempty_unitSphere.{u_2} {n : Type u_2} [Fintype n] [Nonempty n] : Nonempty { x // x ⬝ᵥ x = 1 }",
+  "name":
+  "NLAlib.nonempty_unitSphere",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  103,
+  "kind":
+  "theorem",
+  "doc":
+  "The sphere is nonempty as soon as the index type is. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.norm_eq_sqrt_dotProduct.{u_2} {n : Type u_2} [Fintype n] (v : EuclideanSpace ℝ n) : ‖v‖ = √(v.ofLp ⬝ᵥ v.ofLp)",
+  "name":
+  "NLAlib.norm_eq_sqrt_dotProduct",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  355,
+  "kind":
+  "theorem",
+  "doc":
+  "`‖v‖ = √(v ⬝ v)` for a real Euclidean vector. Ported from Prove2me solution\n`GaussianMatrix.spectral_second_moment_bound` (helper `ssb_euclid_norm`).\nAtlas `norm-lipschitz` (helper). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.norm_eq_sqrt_sum_sq.{u_3} {κ : Type u_3} [Fintype κ] (u : EuclideanSpace ℝ κ) : ‖u‖ = √(∑ j, u.ofLp j ^ 2)",
+  "name":
+  "NLAlib.norm_eq_sqrt_sum_sq",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  349,
+  "kind":
+  "theorem",
+  "doc":
+  "`‖u‖ = √(∑ⱼ uⱼ²)` for a real Euclidean vector. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_norm_eq_sqrt`). Atlas `norm-lipschitz` (helper). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.one_add_div_mul_inv_Gamma_rpow_le {p x : ℕ} (hp : 1 ≤ p) (hp18 : p ≤ 18) (hx : 2 * p ≤ x) :\n  (1 + 2 * ↑p / (↑x + 1 - 2 * ↑p)) * (1 / Real.Gamma (↑x + 2)) ^ (2 * ↑p / (↑x + 1)) ≤ (Real.exp 1 / ↑x) ^ (2 * p)",
+  "name":
+  "NLAlib.one_add_div_mul_inv_Gamma_rpow_le",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SpectralTail",
+  "line":
+  74,
+  "kind":
+  "theorem",
+  "doc":
+  "**Numerical inequality for the inverse Wishart spectral moments.** For integers\n`1 ≤ p ≤ 18` and `x ≥ 2p`,\n`(1 + 2p/(x+1-2p)) · (1/Γ(x+2))^{2p/(x+1)} ≤ (e/x)^{2p}`.\n\nTropp–Webber 2023, (B.8) (the range `p ≤ 18` is where the integer check\n`(2p+1)^{2p+2} ≤ 46^{2p} ≤ (2π e²)^{2p}` holds). Atlas: `inverse-wishart-spectral-moment`\n(helper). Proof: Stirling's lower bound for `(x+1)!`, concavity of `log`, and the integer check.\nPorted from Prove2me solution `GaussianMatrix.tw_inverse_moment_numeric`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) (t : ℝ) (ht : 0 ≤ t) :\n  1 - ENNReal.ofReal (2 * Real.exp (-t ^ 2 / 2)) ≤\n    (NLAlib.gaussianMatrix N n)\n      {A | √↑N - √↑n - t ≤ NLAlib.sigmaMin (Matrix.of A) ∧ NLAlib.specNorm (Matrix.of A) ≤ √↑N + √↑n + t}",
+  "name":
+  "NLAlib.one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.Deviation",
+  "line":
+  89,
+  "kind":
+  "theorem",
+  "doc":
+  "**Deviation of the extreme singular values.** For an `N × n` standard Gaussian matrix `G`\nwith `n ≥ 1` and `t ≥ 0`, with probability at least `1 − 2e^{-t²/2}`,\n`√N − √n − t ≤ σ_min(G)` and `‖G‖₂ ≤ √N + √n + t`.\n\nVershynin 2012, Cor. 5.35; Davidson–Szarek 2001, Thm II.13. Union bound over the two tails.\nAtlas: `extreme-singular-values-deviation`. Ported from Prove2me solution\n`GaussianMatrix.extreme_singular_values_deviation`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.one_sub_mul_transpose_idem.{u_1, u_3} {m : Type u_1} {q : Type u_3} [Fintype m] [Fintype q] [DecidableEq m]\n  [DecidableEq q] {Q : Matrix m q ℝ} (hQ : NLAlib.HasOrthonormalCols Q) :\n  (1 - Q * Q.transpose) * (1 - Q * Q.transpose) = 1 - Q * Q.transpose",
   "name":
   "NLAlib.one_sub_mul_transpose_idem",
@@ -4019,6 +6133,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.one_sub_two_mul_mul_specNorm_le_iSup {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (ε : ℝ) (hε : 0 ≤ ε)\n  (I : Finset (EuclideanSpace ℝ (Fin n) × EuclideanSpace ℝ (Fin N))) (hI : ∀ t ∈ I, ‖t.2‖ = 1)\n  (hcov :\n    ∀ (u : EuclideanSpace ℝ (Fin n)) (v : EuclideanSpace ℝ (Fin N)),\n      ‖u‖ = 1 → ‖v‖ = 1 → ∃ t ∈ I, ‖u - t.1‖ ≤ ε ∧ ‖v - t.2‖ ≤ ε) :\n  (1 - 2 * ε) * NLAlib.specNorm A ≤ ⨆ t, ∑ i, ∑ j, (↑t).2.ofLp i * A i j * (↑t).1.ofLp j",
+  "name":
+  "NLAlib.one_sub_two_mul_mul_specNorm_le_iSup",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  381,
+  "kind":
+  "theorem",
+  "doc":
+  "Net argument for the spectral norm: if every pair of unit vectors `(u, v)` is `ε`-close to a\npair in the finite set `I` (whose second components are unit vectors), then\n`(1 - 2ε)‖A‖₂ ≤ max_{(u,v) ∈ I} ⟨v, A u⟩`. Standard (Vershynin 2012, Lemma 5.4 in this form).\nPorted from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_net_bound`).\nAtlas `norm-lipschitz` (helper of `gordon`, `spectral-second-moment`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.operatorConvexOn_neg_log : NLAlib.OperatorConvexOn (Set.Ioi 0) fun x => -Real.log x",
   "name":
   "NLAlib.operatorConvexOn_neg_log",
@@ -4044,6 +6172,20 @@
   "theorem",
   "doc":
   "Operator Jensen inequality: for `f` operator convex on `I` and `K₁ᴴ K₁ + K₂ᴴ K₂ = 1`, `f (K₁ᴴ A₁\nK₁ + K₂ᴴ A₂ K₂) ≼ K₁ᴴ f(A₁) K₁ + K₂ᴴ f(A₂) K₂`.\n\nTropp 2015, Thm 8.5.2. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An\nIntroduction to Matrix Concentration Inequalities, Ch 8*. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.ornsteinUhlenbeck (t : ℝ) (h : ℝ → ℝ) (x : ℝ) : ℝ",
+  "name":
+  "NLAlib.ornsteinUhlenbeck",
+  "module":
+  "NLAlib.Gaussian.Concentration.OrnsteinUhlenbeck",
+  "line":
+  64,
+  "kind":
+  "def",
+  "doc":
+  "The **Ornstein–Uhlenbeck semigroup** on the standard Gaussian line (Mehler's formula):\n`P_t h(x) = ∫ h(e^{-t} x + √(1 - e^{-2t}) y) dγ(y)`, `γ = N(0,1)`. Unfolds by `rfl` to the\nintegral written out in the Prove2me statements. Source: Bakry–Gentil–Ledoux 2014, (2.7.1).\nAtlas: `ornstein-uhlenbeck`. Ported from the Prove2me solutions\n`GaussianMatrix.ou_entropy_hasDerivAt` (`ouP`) and\n`GaussianMatrix.gaussian_logsobolev_bounded_below` (`ouSG`). "},
  {"sorry":
   false,
   "signature":
@@ -4257,6 +6399,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.posSemidef_inv_self_mul_transpose.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (G : Matrix m n ℝ) : (G * G.transpose)⁻¹.PosSemidef",
+  "name":
+  "NLAlib.posSemidef_inv_self_mul_transpose",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "`(G Gᵀ)⁻¹` is positive semidefinite for every real matrix `G`.\n\nHelper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the\nProve2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_inv`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.pow_mulVec_mem_krylovSpace.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) (b : n → ℝ)\n  {q i : ℕ} (hi : i < q) : (A ^ i).mulVec b ∈ NLAlib.krylovSpace A b q",
   "name":
   "NLAlib.pow_mulVec_mem_krylovSpace",
@@ -4268,6 +6424,20 @@
   "theorem",
   "doc":
   "The generators `A^i b` (`i < q`) lie in `K_q(A,b)`. Atlas: `krylov-subspace`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.prod_range_add_le_pow (r : ℝ) (hr : 0 ≤ r) (n : ℕ) :\n  ∏ i ∈ Finset.range (n + 1), (r + ↑i) ≤ ((2 * r + ↑n) / 2) ^ (n + 1)",
+  "name":
+  "NLAlib.prod_range_add_le_pow",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
+  "line":
+  374,
+  "kind":
+  "theorem",
+  "doc":
+  "**AM–GM for an arithmetic progression.** For `r ≥ 0`,\n`∏_{i=0}^{n} (r + i) ≤ ((2r + n)/2)^{n+1}` (pair `r + i` with `r + n - i`).\n\nHelper for Tropp–Webber 2023, (B.6). Atlas: `wishart-lambda-min-tail` (helper). Ported from\nthe Prove2me solution `Sol_GaussianMatrix_tw_gamma_ratio_bound` (`prod_range_add_le`). "},
  {"sorry":
   false,
   "signature":
@@ -4691,6 +6861,174 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.sigmaMin.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) : ℝ",
+  "name":
+  "NLAlib.sigmaMin",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  57,
+  "kind":
+  "def",
+  "doc":
+  "The smallest singular value of a tall matrix `A : Matrix m n ℝ`:\n`σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention\n`inf ∅ = 0`). For a wide matrix use `sigmaMin Aᵀ`. Same definition as the Prove2me\n`GaussianMatrix.sMin`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMinSq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) : ℝ",
+  "name":
+  "NLAlib.sigmaMinSq",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  64,
+  "kind":
+  "def",
+  "doc":
+  "The squared smallest singular value of a tall matrix, `σ_min(A)² = λ_min(AᵀA)`\n(`sigmaMinSq_eq_sigmaMin_sq`). For a wide matrix `G`, `sigmaMinSq Gᵀ = lamMin (G Gᵀ)`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMinSq_eq_sigmaMin_sq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) :\n  NLAlib.sigmaMinSq A = NLAlib.sigmaMin A ^ 2",
+  "name":
+  "NLAlib.sigmaMinSq_eq_sigmaMin_sq",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  201,
+  "kind":
+  "theorem",
+  "doc":
+  "`λ_min(AᵀA) = σ_min(A)²`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMinSq_nonneg.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) :\n  0 ≤ NLAlib.sigmaMinSq A",
+  "name":
+  "NLAlib.sigmaMinSq_nonneg",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  179,
+  "kind":
+  "theorem",
+  "doc":
+  "`λ_min(AᵀA) ≥ 0`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMin_eq_sqrt_sigmaMinSq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) :\n  NLAlib.sigmaMin A = √(NLAlib.sigmaMinSq A)",
+  "name":
+  "NLAlib.sigmaMin_eq_sqrt_sigmaMinSq",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  188,
+  "kind":
+  "theorem",
+  "doc":
+  "`σ_min(A) = √(λ_min(AᵀA))`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMin_le_sigmaMin_add_frobNorm.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (A B : Matrix m n ℝ) : NLAlib.sigmaMin A ≤ NLAlib.sigmaMin B + NLAlib.frobNorm (A - B)",
+  "name":
+  "NLAlib.sigmaMin_le_sigmaMin_add_frobNorm",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  292,
+  "kind":
+  "theorem",
+  "doc":
+  "One half of the Lipschitz bound: `σ_min(A) ≤ σ_min(B) + ‖A - B‖_F`.\nPorted from Prove2me solution `GaussianMatrix.sMin_lipschitz` (helper\n`sMin_le_sMin_add_frobNorm`). Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMin_le_specNorm.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] [Nonempty n] (A : Matrix m n ℝ) : NLAlib.sigmaMin A ≤ NLAlib.specNorm A",
+  "name":
+  "NLAlib.sigmaMin_le_specNorm",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  155,
+  "kind":
+  "theorem",
+  "doc":
+  "For a nonempty index type, the smallest singular value is at most the spectral norm.\nPorted from the Prove2me solution `GaussianMatrix.gordon` (helper `gordonSol_sMin_le_specNorm`).\nAtlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMin_le_sqrt_mulVec.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ)\n  {x : n → ℝ} (hx : x ⬝ᵥ x = 1) : NLAlib.sigmaMin A ≤ √(A.mulVec x ⬝ᵥ A.mulVec x)",
+  "name":
+  "NLAlib.sigmaMin_le_sqrt_mulVec",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  123,
+  "kind":
+  "theorem",
+  "doc":
+  "`σ_min(A) ≤ ‖Ax‖₂` for every unit vector `x`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMin_mul_sqrt_le.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ)\n  (x : n → ℝ) : NLAlib.sigmaMin A * √(x ⬝ᵥ x) ≤ √(A.mulVec x ⬝ᵥ A.mulVec x)",
+  "name":
+  "NLAlib.sigmaMin_mul_sqrt_le",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  135,
+  "kind":
+  "theorem",
+  "doc":
+  "`σ_min(A) ‖x‖₂ ≤ ‖Ax‖₂` for every vector `x`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMin_nonneg.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) :\n  0 ≤ NLAlib.sigmaMin A",
+  "name":
+  "NLAlib.sigmaMin_nonneg",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  117,
+  "kind":
+  "theorem",
+  "doc":
+  "`σ_min(A) ≥ 0`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMin_of_isEmpty.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype n] [Fintype m] [IsEmpty n]\n  (A : Matrix m n ℝ) : NLAlib.sigmaMin A = 0",
+  "name":
+  "NLAlib.sigmaMin_of_isEmpty",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  97,
+  "kind":
+  "theorem",
+  "doc":
+  "On an empty index type the unit sphere is empty and `σ_min = 0`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sigmaMin_transpose_sq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (G : Matrix m n ℝ) :\n  NLAlib.sigmaMin G.transpose ^ 2 = NLAlib.lamMin (G * G.transpose)",
+  "name":
+  "NLAlib.sigmaMin_transpose_sq",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  205,
+  "kind":
+  "theorem",
+  "doc":
+  "For a wide matrix `G`, `σ_min(Gᵀ)² = λ_min(G Gᵀ)`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.singularValues {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) : ℕ → ℝ",
   "name":
   "NLAlib.singularValues",
@@ -4999,6 +7337,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.slepian_inequality.{u_1, u_2, u_3} {ι : Type u_1} {Ω : Type u_2} {Ω' : Type u_3} [Fintype ι] [MeasurableSpace Ω]\n  [MeasurableSpace Ω'] {P : MeasureTheory.Measure Ω} {Q : MeasureTheory.Measure Ω'} (X : ι → Ω → ℝ) (Y : ι → Ω' → ℝ)\n  (hX : ProbabilityTheory.HasGaussianLaw (fun ω t => X t ω) P)\n  (hY : ProbabilityTheory.HasGaussianLaw (fun ω t => Y t ω) Q) (hX0 : ∀ (t : ι), ∫ (ω : Ω), X t ω ∂P = 0)\n  (hY0 : ∀ (t : ι), ∫ (ω : Ω'), Y t ω ∂Q = 0) (hvar : ∀ (t : ι), ∫ (ω : Ω), X t ω ^ 2 ∂P = ∫ (ω : Ω'), Y t ω ^ 2 ∂Q)\n  (hinc : ∀ (s t : ι), ∫ (ω : Ω), (X s ω - X t ω) ^ 2 ∂P ≤ ∫ (ω : Ω'), (Y s ω - Y t ω) ^ 2 ∂Q) (τ : ℝ) :\n  P {ω | τ < ⨆ t, X t ω} ≤ Q {ω | τ < ⨆ t, Y t ω}",
+  "name":
+  "NLAlib.slepian_inequality",
+  "module":
+  "NLAlib.Gaussian.Comparison.Slepian",
+  "line":
+  439,
+  "kind":
+  "theorem",
+  "doc":
+  "**Slepian's inequality.** Let `X` (on `(Ω, P)`) and `Y` (on `(Ω', Q)`) be centred Gaussian\nprocesses indexed by a finite set, with equal variances `𝔼 Xₜ² = 𝔼 Yₜ²` and dominated\nincrements `𝔼 (Xₛ - Xₜ)² ≤ 𝔼 (Yₛ - Yₜ)²`. Then for every `τ`,\n`P(τ < maxₜ Xₜ) ≤ Q(τ < maxₜ Yₜ)`.\nSource: Slepian 1962; Vershynin 2018, Thm 7.2.1. Atlas: `slepian`. Ported from Prove2me solution\n`GaussianMatrix.slepian_tail_comparison`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.specNorm.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]\n  (A : Matrix m n ℝ) : ℝ",
   "name":
   "NLAlib.specNorm",
@@ -5038,6 +7390,20 @@
   "theorem",
   "doc":
   "Bridge to Mathlib's ℓ₂ operator norm (`Matrix.Norms.L2Operator`). Atlas `norms-frob-spec`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.specNorm_inv_self_mul_transpose_eq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (A : Matrix m n ℝ) : NLAlib.specNorm (A * A.transpose)⁻¹ = 1 / NLAlib.sigmaMin A.transpose ^ 2",
+  "name":
+  "NLAlib.specNorm_inv_self_mul_transpose_eq",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SpectralNorm",
+  "line":
+  163,
+  "kind":
+  "theorem",
+  "doc":
+  "**Spectral norm of the inverse Gram matrix.** For every real matrix `A`,\n`‖(A Aᵀ)⁻¹‖ = 1 / σ_min(Aᵀ)²`, i.e. `λ_max((A Aᵀ)⁻¹) = 1 / λ_min(A Aᵀ)`. When `A Aᵀ` is\nsingular both sides are `0` (Mathlib's `M⁻¹ = 0` and `1 / 0 = 0`).\n\nHMT 2011, proof of Prop A.3; Tropp–Webber 2023, proof of Lemma B.4. Atlas:\n`pinv-spectral-tail`, `inverse-wishart-spectral-moment` (helper). Generalised from\n`Fin r × Fin k` to arbitrary finite index types. Ported from Prove2me solution\n`GaussianMatrix.specNorm_inv_gram_eq`. "},
  {"sorry":
   false,
   "signature":
@@ -5111,6 +7477,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.specNorm_pinvR_sq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] (A : Matrix m n ℝ) : NLAlib.specNorm (NLAlib.pinvR A) ^ 2 = NLAlib.specNorm (A * A.transpose)⁻¹",
+  "name":
+  "NLAlib.specNorm_pinvR_sq",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SpectralNorm",
+  "line":
+  207,
+  "kind":
+  "theorem",
+  "doc":
+  "**Spectral norm of the pseudoinverse.** For every real matrix `A`,\n`‖A†‖² = ‖(A Aᵀ)⁻¹‖` with `A† = pinvR A = Aᵀ (A Aᵀ)⁻¹` (`C*`-identity\n`‖A†‖² = ‖(A†)ᵀ A†‖` and `(A†)ᵀ A† = (A Aᵀ)⁻¹`; both sides `0` when `A Aᵀ` is singular).\n\nHMT 2011, proof of Prop A.3 / Prop 10.4. Atlas: `pseudoinverse`; helper for\n`pinv-spectral-tail`. Generalised from `Fin r × Fin k` to arbitrary finite index types.\nPorted from Prove2me solution `GaussianMatrix.specNorm_pinvR_sq`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.specNorm_sq_le_frobSq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] (A : Matrix m n ℝ) : NLAlib.specNorm A ^ 2 ≤ NLAlib.frobSq A",
   "name":
   "NLAlib.specNorm_sq_le_frobSq",
@@ -5167,6 +7547,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.specNorm_zero.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] :\n  NLAlib.specNorm 0 = 0",
+  "name":
+  "NLAlib.specNorm_zero",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  363,
+  "kind":
+  "theorem",
+  "doc":
+  "`‖0‖₂ = 0`. Atlas `norm-lipschitz` (helper). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.spectralNorm.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq n]\n  (A : Matrix m n ℂ) : ℝ",
   "name":
   "NLAlib.spectralNorm",
@@ -5206,6 +7600,20 @@
   "theorem",
   "doc":
   "`ε²/4 − ε³/6 > 0` for `0 < ε < 1`: the exponent of the Johnson–Lindenstrauss tail\n(Dasgupta–Gupta 2003, Lem 2.2) is positive. Helper for `jl-lemma`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sq_integral_le_integral_div_mul_integral.{u_1} {α : Type u_1} [MeasurableSpace α] (μ : MeasureTheory.Measure α)\n  [MeasureTheory.IsProbabilityMeasure μ] (a b : α → ℝ) (δ : ℝ) (hδ : 0 < δ) (hb : ∀ (x : α), δ ≤ b x)\n  (ha : MeasureTheory.Integrable a μ) (hbi : MeasureTheory.Integrable b μ)\n  (hab : MeasureTheory.Integrable (fun x => a x ^ 2 / b x) μ) :\n  (∫ (x : α), a x ∂μ) ^ 2 ≤ (∫ (x : α), a x ^ 2 / b x ∂μ) * ∫ (x : α), b x ∂μ",
+  "name":
+  "NLAlib.sq_integral_le_integral_div_mul_integral",
+  "module":
+  "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
+  "line":
+  44,
+  "kind":
+  "theorem",
+  "doc":
+  "Cauchy–Schwarz in the form `(∫ a)² ≤ (∫ a²/b) (∫ b)` for `b ≥ δ > 0` on a probability\nspace. Atlas: `gaussian-log-sobolev` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_logsobolev_bounded_below`. "},
  {"sorry":
   false,
   "signature":
@@ -5293,6 +7701,90 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.sqrt_dotProduct_add_le.{u_1} {m : Type u_1} [Fintype m] (u v : m → ℝ) :\n  √((u + v) ⬝ᵥ (u + v)) ≤ √(u ⬝ᵥ u) + √(v ⬝ᵥ v)",
+  "name":
+  "NLAlib.sqrt_dotProduct_add_le",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  77,
+  "kind":
+  "theorem",
+  "doc":
+  "Triangle inequality for the Euclidean length `√(v ⬝ v)`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sqrt_dotProduct_self_eq_norm.{u_1} {m : Type u_1} [Fintype m] (v : m → ℝ) : √(v ⬝ᵥ v) = ‖WithLp.toLp 2 v‖",
+  "name":
+  "NLAlib.sqrt_dotProduct_self_eq_norm",
+  "module":
+  "NLAlib.Matrix.Spectral",
+  "line":
+  70,
+  "kind":
+  "theorem",
+  "doc":
+  "`‖v‖₂ = √(v ⬝ v)` for the Euclidean norm of `WithLp.toLp 2 v`. Atlas `norm-lipschitz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sqrt_mulVec_smul_dotProduct.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ)\n  (c : ℝ) (x : n → ℝ) : √(A.mulVec (c • x) ⬝ᵥ A.mulVec (c • x)) = |c| * √(A.mulVec x ⬝ᵥ A.mulVec x)",
+  "name":
+  "NLAlib.sqrt_mulVec_smul_dotProduct",
+  "module":
+  "NLAlib.Gaussian.Extreme.SmallBall",
+  "line":
+  50,
+  "kind":
+  "theorem",
+  "doc":
+  "`‖A (c • x)‖₂ = |c| ‖A x‖₂` in the `√(v ⬝ v)` form. Atlas: `smin-small-ball` (helper).\nPorted from Prove2me solution `GaussianMatrix.sMin_le_imp_dist_le`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) :\n  √↑N - √↑n ≤ ∫ (A : Fin N → Fin n → ℝ), NLAlib.sigmaMin (Matrix.of A) ∂NLAlib.gaussianMatrix N n",
+  "name":
+  "NLAlib.sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix",
+  "module":
+  "NLAlib.Gaussian.Extreme.Gordon",
+  "line":
+  525,
+  "kind":
+  "theorem",
+  "doc":
+  "**Gordon's lower bound.** For an `N × n` standard Gaussian matrix with `n ≥ 1`,\n`√N - √n ≤ 𝔼 σ_min(G)` where `σ_min(G) = inf_{‖x‖₂ = 1} ‖G x‖₂` (`NLAlib.sigmaMin`). For `N ≤ n`\nthe left side is `≤ 0` and the bound is trivial. Source: Vershynin 2012, Thm 5.32 (lower half);\nGordon 1985; Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solution\n`GaussianMatrix.gordon_lower`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sqrt_sub_sqrt_le_integral_sqrt_sum_sq_sub {N n : ℕ} (hn : 1 ≤ n) (hnN : n ≤ N) :\n  √↑N - √↑n ≤\n    (∫ (x : Fin N → ℝ), √(∑ i, x i ^ 2) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) -\n      ∫ (x : Fin n → ℝ), √(∑ i, x i ^ 2) ∂MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.sqrt_sub_sqrt_le_integral_sqrt_sum_sq_sub",
+  "module":
+  "NLAlib.Gaussian.Comparison.ExpectationNormDiff",
+  "line":
+  427,
+  "kind":
+  "theorem",
+  "doc":
+  "For standard Gaussian vectors `g_N ∈ ℝ^N`, `g_n ∈ ℝ^n` with `1 ≤ n ≤ N`,\n`√N - √n ≤ 𝔼‖g_N‖₂ - 𝔼‖g_n‖₂`. Source: Vershynin 2012, proof of Thm 5.32 (Gordon's lower bound\n`𝔼 σ_min ≥ √N - √n` reduces to this comparison); Davidson–Szarek 2001, Thm II.13. Atlas: helper\nof `gordon`. Ported from Prove2me solution `GaussianMatrix.expectation_norm_gaussian_diff`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sqrt_sum_sq_le_sum_abs.{u_1} {ι : Type u_1} [Fintype ι] (x : ι → ℝ) : √(∑ i, x i ^ 2) ≤ ∑ i, |x i|",
+  "name":
+  "NLAlib.sqrt_sum_sq_le_sum_abs",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "`√(∑ xᵢ²) ≤ ∑ |xᵢ|`. Atlas: `gaussian-concentration` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.sub_mul_sq_le_sum_Ico_sq (σ : ℕ → ℝ) (hσ : Antitone σ) (hpos : ∀ (j : ℕ), 0 ≤ σ j) {k ℓ : ℕ} (hk : k ≤ ℓ) :\n  (↑ℓ - ↑k) * σ ℓ ^ 2 ≤ ∑ j ∈ Finset.Ico k ℓ, σ j ^ 2",
   "name":
   "NLAlib.sub_mul_sq_le_sum_Ico_sq",
@@ -5307,6 +7799,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.sudakov_fernique_inequality.{u_1, u_2, u_3} {ι : Type u_1} {Ω : Type u_2} {Ω' : Type u_3} [Fintype ι]\n  [MeasurableSpace Ω] [MeasurableSpace Ω'] {P : MeasureTheory.Measure Ω} {Q : MeasureTheory.Measure Ω'} (X : ι → Ω → ℝ)\n  (Y : ι → Ω' → ℝ) (hX : ProbabilityTheory.HasGaussianLaw (fun ω t => X t ω) P)\n  (hY : ProbabilityTheory.HasGaussianLaw (fun ω t => Y t ω) Q) (hX0 : ∀ (t : ι), ∫ (ω : Ω), X t ω ∂P = 0)\n  (hY0 : ∀ (t : ι), ∫ (ω : Ω'), Y t ω ∂Q = 0)\n  (hinc : ∀ (s t : ι), ∫ (ω : Ω), (X s ω - X t ω) ^ 2 ∂P ≤ ∫ (ω : Ω'), (Y s ω - Y t ω) ^ 2 ∂Q) :\n  ∫ (ω : Ω), ⨆ t, X t ω ∂P ≤ ∫ (ω : Ω'), ⨆ t, Y t ω ∂Q",
+  "name":
+  "NLAlib.sudakov_fernique_inequality",
+  "module":
+  "NLAlib.Gaussian.Comparison.SudakovFernique",
+  "line":
+  413,
+  "kind":
+  "theorem",
+  "doc":
+  "**Sudakov–Fernique inequality.** Let `X` (on `(Ω, P)`) and `Y` (on `(Ω', Q)`) be centred\nGaussian processes indexed by a finite set with dominated increments\n`𝔼 (Xₛ - Xₜ)² ≤ 𝔼 (Yₛ - Yₜ)²`. Then `𝔼 maxₜ Xₜ ≤ 𝔼 maxₜ Yₜ`.\nSource: Sudakov 1971, Fernique 1975; Vershynin 2018, Thm 7.2.11. Atlas: `sudakov-fernique`.\nPorted from Prove2me solution `GaussianMatrix.sudakov_fernique`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.sum_fourth_moment_contraction.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) (m₄ : ℝ) :\n  ∑ i,\n      ∑ j,\n        ∑ k,\n          ∑ l,\n            A i j * A k l *\n              (((((if i = j then 1 else 0) * if k = l then 1 else 0) +\n                    (if i = k then 1 else 0) * if j = l then 1 else 0) +\n                  (if i = l then 1 else 0) * if j = k then 1 else 0) +\n                (m₄ - 3) * (((if i = j then 1 else 0) * if i = k then 1 else 0) * if i = l then 1 else 0)) =\n    A.trace ^ 2 + ∑ i, ∑ j, A i j ^ 2 + ∑ i, ∑ j, A i j * A j i + (m₄ - 3) * ∑ i, A i i ^ 2",
   "name":
   "NLAlib.sum_fourth_moment_contraction",
@@ -5318,6 +7824,20 @@
   "theorem",
   "doc":
   "The index sum behind the Hutchinson variance:\n`∑ᵢⱼₖₗ A_ij A_kl (δ_ij δ_kl + δ_ik δ_jl + δ_il δ_jk + (m₄ − 3) δ_ijkl)\n  = (tr A)² + ∑ᵢⱼ A_ij² + ∑ᵢⱼ A_ij A_ji + (m₄ − 3) ∑ᵢ A_ii²`.\nAtlas: `hutchinson-variance` (helper). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sum_sq_fderiv_le_sq_of_lipschitz.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (g : (ι → ℝ) → ℝ)\n  (hg : Differentiable ℝ g) (L : ℝ) (hLip : ∀ (x y : ι → ℝ), |g x - g y| ≤ L * √(∑ i, (x i - y i) ^ 2)) (x : ι → ℝ) :\n  ∑ i, (fderiv ℝ g x) (Pi.single i 1) ^ 2 ≤ L ^ 2",
+  "name":
+  "NLAlib.sum_sq_fderiv_le_sq_of_lipschitz",
+  "module":
+  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "line":
+  173,
+  "kind":
+  "theorem",
+  "doc":
+  "The gradient of a differentiable `L`-Lipschitz (Euclidean) function on `ι → ℝ` has squared norm\nat most `L²`: `∑ᵢ (∂ᵢ g)² ≤ L²`. Atlas: `gaussian-concentration` (helper). Ported from Prove2me\nsolution `GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
  {"sorry":
   false,
   "signature":

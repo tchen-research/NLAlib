@@ -5,7 +5,9 @@ import Mathlib.Order.ConditionallyCompleteLattice.Finset
 /-!
 # Proposition 7.4.1 — Generalized matrix Laplace transform
 
-Lean name: `NLAlib.ch7_generalized_laplace`.
+Main declaration: `NLAlib.measure_lambdaMax_ge_le_integral_traceFunction_div`.
+
+Atlas: `intrinsic-dimension`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Proposition 7.4.1, printed p. 112.
 -/
@@ -14,7 +16,7 @@ open scoped Matrix.Norms.L2Operator ComplexOrder
 
 namespace NLAlib
 
-lemma ch7_generalized_laplace_traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
+private lemma traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
     traceFunction φ A = ∑ i, φ (hA.eigenvalues i) := by
   rw [traceFunction, hA.cfc_eq]
@@ -24,11 +26,11 @@ lemma ch7_generalized_laplace_traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
 
 /-- For Hermitian `B`, `ψ ≥ 0`, `ψ` monotone on `[0,∞)`, `0 ≤ t ≤ λmax B`:
 `ψ t ≤ tr ψ(B)`. -/
-lemma ch7_generalized_laplace_pointwise {d : ℕ} [NeZero d] (ψ : ℝ → ℝ)
+private lemma pointwise_bound {d : ℕ} [NeZero d] (ψ : ℝ → ℝ)
     (hNonneg : ∀ x, 0 ≤ ψ x) (hMono : MonotoneOn ψ (Set.Ici 0))
     (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) (t : ℝ) (ht : 0 ≤ t)
     (htB : t ≤ lambdaMax B) : ψ t ≤ traceFunction ψ B := by
-  rw [ch7_generalized_laplace_traceFunction_eq_sum ψ B hB]
+  rw [traceFunction_eq_sum ψ B hB]
   have hn : (Set.range hB.eigenvalues).Nonempty := Set.range_nonempty _
   have hf : (Set.range hB.eigenvalues).Finite := Set.finite_range _
   have hmax : lambdaMax B ∈ Set.range hB.eigenvalues := by
@@ -44,10 +46,18 @@ end NLAlib
 
 open NLAlib
 
-theorem NLAlib.ch7_generalized_laplace {Ω : Type*} [MeasurableSpace Ω]
+/-- Generalized matrix Laplace transform bound: for `ψ ≥ 0` nondecreasing on `[0, ∞)` and `ψ t > 0`,
+`P{λmax(Y) ≥ t} ≤ 𝔼 tr ψ(Y) / ψ t`.
+
+Tropp 2015, Prop. 7.4.1. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 7*.
+
+The measurability hypothesis is not used by the proof; it is kept to match the source's standing
+assumptions. -/
+theorem NLAlib.measure_lambdaMax_ge_le_integral_traceFunction_div {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} [NeZero d]
     (Y : Ω → Matrix (Fin d) (Fin d) ℂ) (ψ : ℝ → ℝ)
-    (hMeas : Measurable Y) (hHerm : ∀ᵐ ω ∂μ, (Y ω).IsHermitian)
+    (_hMeas : Measurable Y) (hHerm : ∀ᵐ ω ∂μ, (Y ω).IsHermitian)
     (hNonneg : ∀ x, 0 ≤ ψ x) (hMono : MonotoneOn ψ (Set.Ici 0))
     (hInt : Integrable (fun ω => traceFunction ψ (Y ω)) μ)
     (t : ℝ) (ht : 0 ≤ t) (hψt : 0 < ψ t) :
@@ -55,12 +65,12 @@ theorem NLAlib.ch7_generalized_laplace {Ω : Type*} [MeasurableSpace Ω]
       (∫ ω, traceFunction ψ (Y ω) ∂μ) / ψ t := by
   have hpos : ∀ᵐ ω ∂μ, (0 : ℝ) ≤ traceFunction ψ (Y ω) := by
     filter_upwards [hHerm] with ω hω
-    rw [ch7_generalized_laplace_traceFunction_eq_sum ψ _ hω]
+    rw [traceFunction_eq_sum ψ _ hω]
     exact Finset.sum_nonneg (fun j _ => hNonneg _)
   have hs : ∀ᵐ ω ∂μ, ω ∈ {ω | t ≤ lambdaMax (Y ω)} →
       ω ∈ {ω | ψ t ≤ traceFunction ψ (Y ω)} := by
     filter_upwards [hHerm] with ω hω h
-    exact ch7_generalized_laplace_pointwise ψ hNonneg hMono _ hω t ht h
+    exact pointwise_bound ψ hNonneg hMono _ hω t ht h
   have hsub : μ {ω | t ≤ lambdaMax (Y ω)} ≤ μ {ω | ψ t ≤ traceFunction ψ (Y ω)} :=
     measure_mono_ae hs
   have hreal : (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤

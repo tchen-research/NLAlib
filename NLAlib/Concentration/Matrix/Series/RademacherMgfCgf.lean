@@ -5,7 +5,9 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 /-!
 # Lemma 4.6.3 — Rademacher matrix mgf and cgf bounds
 
-Lean name: `NLAlib.ch4_rademacher_mgf_cgf`.
+Main declaration: `NLAlib.rademacher_matrix_mgf_cgf_le`.
+
+Atlas: `matrix-gaussian-series`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Lemma 4.6.3, printed p. 54.
 -/
@@ -13,16 +15,15 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 
 namespace NLAlib
-namespace Ch4Rad
 
 variable {d : ℕ}
 
-noncomputable def proj (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (i : Fin d) :
+private noncomputable def proj (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (i : Fin d) :
     Matrix (Fin d) (Fin d) ℂ :=
   (hA.eigenvectorUnitary : Matrix (Fin d) (Fin d) ℂ) * Matrix.single i i 1 *
     star (hA.eigenvectorUnitary : Matrix (Fin d) (Fin d) ℂ)
 
-lemma cfc_eq_sum (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (f : ℝ → ℝ) :
+private lemma cfc_eq_sum (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (f : ℝ → ℝ) :
     cfc f A = ∑ i, f (hA.eigenvalues i) • proj A hA i := by
   rw [hA.cfc_eq, Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply,
     ← Matrix.sum_single_eq_diagonal, Finset.mul_sum, Finset.sum_mul]
@@ -32,12 +33,12 @@ lemma cfc_eq_sum (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (f : ℝ 
     rw [Matrix.smul_single]; simp [Complex.real_smul]
   rw [this, proj, Matrix.mul_smul, Matrix.smul_mul]
 
-lemma matrixExp_smul_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
+private lemma matrixExp_smul_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
     matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
   rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
     ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
 
-lemma integral_eq {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+private lemma integral_eq {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : Ω → ℝ)
     (hs : ∀ t, Integrable (fun ω => Real.exp (t * s ω)) μ) :
     Integrable (fun ω => matrixExp (s ω • A)) μ ∧
@@ -55,36 +56,40 @@ lemma integral_eq {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
   rfl
 
 
-lemma smul_sq_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
+private lemma smul_sq_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
     c • A ^ 2 = cfc (fun x => c * x ^ 2) A := by
   rw [cfc_const_mul c (fun x : ℝ => x ^ 2) A, cfc_pow_id A 2 hA.isSelfAdjoint]
 
-lemma matrixExp_smul_sq_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
+private lemma matrixExp_smul_sq_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
     matrixExp (c • A ^ 2) = cfc (fun x => Real.exp (c * x ^ 2)) A := by
   rw [matrixExp_smul_eq (A ^ 2) (hA.pow 2) c,
     ← cfc_comp_pow (fun y => Real.exp (c * y)) 2 A (by fun_prop) hA.isSelfAdjoint]
 
-end Ch4Rad
 end NLAlib
 
 open NLAlib
 
-lemma Ch4Rad.integrable_twoPoint (f : ℝ → ℝ) :
+private lemma integrable_twoPoint (f : ℝ → ℝ) :
     Integrable f ((1 / 2 : ENNReal) • Measure.dirac (1 : ℝ) +
       (1 / 2 : ENNReal) • Measure.dirac (-1 : ℝ)) :=
   Integrable.add_measure (Integrable.smul_measure (integrable_dirac (by simp)) (by simp))
     (Integrable.smul_measure (integrable_dirac (by simp)) (by simp))
 
-theorem NLAlib.ch4_rademacher_mgf_cgf {Ω : Type*} [MeasurableSpace Ω]
+/-- For a Rademacher `g` and Hermitian `A`, `𝔼 matrixExp (θ g A) ≼ matrixExp (θ²/2 • A²)` and its
+logarithm is `≼ θ²/2 • A²`.
+
+Tropp 2015, Lemma 4.6.3. Atlas: `matrix-gaussian-series`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 4*. -/
+theorem NLAlib.rademacher_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} [NeZero d]
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
-    (g : Ω → ℝ) (hMeas : Measurable g) (hLaw : rademacherLaw μ g) (θ : ℝ) :
-    loewnerLE (∫ ω, matrixExp ((θ * g ω) • A) ∂μ) (matrixExp ((θ ^ 2 / 2) • A ^ 2)) ∧
-    loewnerLE (matrixLog (∫ ω, matrixExp ((θ * g ω) • A) ∂μ)) ((θ ^ 2 / 2) • A ^ 2) := by
+    (g : Ω → ℝ) (hMeas : Measurable g) (hLaw : IsRademacher μ g) (θ : ℝ) :
+    LoewnerLE (∫ ω, matrixExp ((θ * g ω) • A) ∂μ) (matrixExp ((θ ^ 2 / 2) • A ^ 2)) ∧
+    LoewnerLE (matrixLog (∫ ω, matrixExp ((θ * g ω) • A) ∂μ)) ((θ ^ 2 / 2) • A ^ 2) := by
   have hs : ∀ t, Integrable (fun ω => Real.exp (t * (θ * g ω))) μ := by
     intro t
-    have h1 := Ch4Rad.integrable_twoPoint (fun x => Real.exp (t * θ * x))
-    rw [rademacherLaw] at hLaw
+    have h1 := integrable_twoPoint (fun x => Real.exp (t * θ * x))
+    rw [IsRademacher] at hLaw
     rw [← hLaw] at h1
     have h2 := (integrable_map_measure (by fun_prop) hMeas.aemeasurable).mp h1
     simpa [Function.comp_def, mul_assoc] using h2
@@ -100,7 +105,7 @@ theorem NLAlib.ch4_rademacher_mgf_cgf {Ω : Type*} [MeasurableSpace Ω]
     · exact Integrable.smul_measure (integrable_dirac (by simp)) (by simp)
     · exact Integrable.smul_measure (integrable_dirac (by simp)) (by simp)
   have hint : (∫ ω, matrixExp ((θ * g ω) • A) ∂μ) = cfc (fun x => Real.cosh (θ * x)) A := by
-    rw [(Ch4Rad.integral_eq μ A hA (fun ω => θ * g ω) hs).2]
+    rw [(integral_eq μ A hA (fun ω => θ * g ω) hs).2]
     congr 1
     funext x
     rw [mgf_const_mul, hmgf]
@@ -109,9 +114,9 @@ theorem NLAlib.ch4_rademacher_mgf_cgf {Ω : Type*} [MeasurableSpace Ω]
     calc Real.cosh (θ * x) ≤ Real.exp ((θ * x) ^ 2 / 2) := Real.cosh_le_exp_half_sq _
       _ = Real.exp (θ ^ 2 / 2 * x ^ 2) := by congr 1; ring
   constructor
-  · rw [loewnerLE, ← Matrix.le_iff, hint, Ch4Rad.matrixExp_smul_sq_eq A hA]
+  · rw [LoewnerLE, ← Matrix.le_iff, hint, matrixExp_smul_sq_eq A hA]
     exact cfc_mono (fun x _ => hpt x)
-  · rw [loewnerLE, ← Matrix.le_iff, hint, Ch4Rad.smul_sq_eq A hA, matrixLog,
+  · rw [LoewnerLE, ← Matrix.le_iff, hint, smul_sq_eq A hA, matrixLog,
       ← cfc_comp' Real.log (fun x => Real.cosh (θ * x)) A
         (Real.continuousOn_log.mono (by
           rintro _ ⟨x, _, rfl⟩

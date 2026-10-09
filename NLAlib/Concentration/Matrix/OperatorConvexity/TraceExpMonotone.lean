@@ -5,7 +5,9 @@ import Mathlib.Tactic.Linarith
 /-!
 # Example 8.3.4 — Trace exponential is monotone
 
-Lean name: `NLAlib.ch8_trace_exp_monotone`.
+Main declaration: `NLAlib.traceExp_le_traceExp`.
+
+Atlas: `operator-monotone-convex`; `loewner-order` (trace monotonicity).
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Example 8.3.4, printed p. 125.
 -/
@@ -25,15 +27,20 @@ private theorem trace_mul_nonneg {d : ℕ} (A B : Matrix (Fin d) (Fin d) ℂ) (h
 open NLAlib
 set_option autoImplicit false
 
-theorem NLAlib.ch8_trace_exp_monotone {d : ℕ} [NeZero d]
+/-- The trace exponential is monotone: `A ≼ H` implies `traceExp A ≤ traceExp H` for Hermitian `A`,
+`H`.
+
+Tropp 2015, Example 8.3.4. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 8*. -/
+theorem NLAlib.traceExp_le_traceExp {d : ℕ} [NeZero d]
     (A H : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
-    (hAH : loewnerLE A H) :
+    (hAH : LoewnerLE A H) :
     traceExp A ≤ traceExp H := by
-  obtain ⟨hEA, hLA⟩ := ch3_cgf_exp_log A hA
-  obtain ⟨hEH, hLH⟩ := ch3_cgf_exp_log H hH
-  have he := ch8_entropy_nonnegative (matrixExp A) (matrixExp H) hEA hEH
+  obtain ⟨hEA, hLA⟩ := posDef_matrixExp_and_matrixLog_matrixExp A hA
+  obtain ⟨hEH, hLH⟩ := posDef_matrixExp_and_matrixLog_matrixExp H hH
+  have he := relativeEntropy_nonneg (matrixExp A) (matrixExp H) hEA hEH
   have hp := trace_mul_nonneg (matrixExp A) (H - A) hEA.posSemidef hAH
-  simp only [ch8_relativeEntropy, hLA, hLH, mul_sub, Matrix.trace_sub,
+  simp only [relativeEntropy, hLA, hLH, mul_sub, Matrix.trace_sub,
     Complex.sub_re] at he hp
   unfold traceExp
   linarith

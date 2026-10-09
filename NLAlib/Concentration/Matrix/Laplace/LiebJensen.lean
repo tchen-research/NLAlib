@@ -4,7 +4,9 @@ import Mathlib.Topology.Sequences
 /-!
 # Jensen inequality on a nonclosed convex domain
 
-Lean name: `NLAlib.ch3_lieb_jensen`.
+Main declaration: `NLAlib.ConcaveOn.le_map_integral_of_integral_mem`.
+
+Atlas: `matrix-laplace` (step of Corollary 3.4.2).
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Jensen inequality (2.2.2), printed p. 25, and its use in Corollary 3.4.2, printed p. 35. Auxiliary Banach-space formulation with explicit integrability, continuity, and mean-membership hypotheses.
 -/
@@ -13,8 +15,14 @@ set_option autoImplicit false
 open Set Filter
 open scoped Topology
 
-/-- Jensen's inequality on a possibly nonclosed convex domain, provided the mean belongs to it. -/
-theorem NLAlib.ch3_lieb_jensen {Ω E : Type*} [MeasurableSpace Ω]
+/-- Jensen's inequality `∫ g ∘ f ≤ g (∫ f)` for `g` concave and continuous on a possibly non-closed
+convex set `s`, provided the mean of `f` lies in `s`.
+
+Tropp 2015, eq. (2.2.2), as used in Corollary 3.4.2. Atlas: `matrix-laplace`. Ported from the
+Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 3*.
+
+Variant of Mathlib's `ConcaveOn.le_map_integral`, which needs `s` closed. -/
+theorem NLAlib.ConcaveOn.le_map_integral_of_integral_mem {Ω E : Type*} [MeasurableSpace Ω]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (s : Set E) (g : E → ℝ) (f : Ω → E)
     (hg : ConcaveOn ℝ s g) (hgc : ContinuousOn g s)

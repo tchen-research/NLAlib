@@ -20,8 +20,7 @@ Ported from the LRA project (Chen–Persson formalization, same Mathlib pin),
 
 ## Model
 
-As in `NLAlib/LowRank/RSVD.lean`, plus a second random sketch `Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ`
-(`Matrix m (Fin s) ℝ` over an arbitrary row type in `completion_reduction`).
+As in `NLAlib/LowRank/RSVD.lean`, plus a second random sketch `Ψ : Ωs → Matrix m (Fin s) ℝ`.
 `Â ω = sketchedOutput (Q ω) (Ψ ω) A = Q(ΨᵀQ)†ΨᵀA`. The paper's `q = rank(AΩ)` is a fixed
 natural number with the deterministic bound `q ≤ t` as a hypothesis (generic case `q = t`).
 
@@ -31,10 +30,11 @@ Every Gaussian fact enters as an explicit hypothesis on an expectation, in exact
 paper uses it after conditioning (`hinv`, `hG₂`, `hG₁m`, `hcond`, `hG`); "almost surely full
 rank" facts enter as `∀ᵐ ω ∂μ, IsUnit (…)`; integrability is explicit. Everything else is proved.
 
-## Deviation from the LRA source
+## Index types
 
-In `gn_main` and `gn_main_of_completion` the row index types are `Fin m`, `Fin n` (the LRA
-source allows arbitrary `Fintype` types), inherited from `NLAlib.rangeFinder_frobSq_le`.
+As in the LRA source, the row and block index types `m`, `n`, `r`, `r'` (and the completion's
+column type) are arbitrary `Fintype`s; `k`, `t`, `s`, `q` are natural numbers because they
+appear in the constants.
 
 Atlas: `gn-expected-error`.
 -/
@@ -68,9 +68,9 @@ Pythagoras, `‖Q⊥ᵀE‖_F = ‖E‖_F`) is proved in `SketchedRegression.lea
 Conclusion: `eq:completion`,
 `E‖A − Q(ΨᵀQ)†ΨᵀA‖_F² = (1 + q/(s−q−1)) ‖(I − QQᵀ)A‖_F²`.
 Atlas `gn-expected-error` (helper; uses `sketched-regression`, `orthonormal-completion`). -/
-theorem completion_reduction {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
-    [DecidableEq n] {q r s : ℕ} [IsProbabilityMeasure μ]
-    (Q : Matrix m (Fin q) ℝ) (Qp : Matrix m (Fin r) ℝ) (A : Matrix m n ℝ)
+theorem completion_reduction {m n r : Type*} [Fintype m] [Fintype n] [Fintype r]
+    [DecidableEq m] [DecidableEq r] {q s : ℕ} [IsProbabilityMeasure μ]
+    (Q : Matrix m (Fin q) ℝ) (Qp : Matrix m r ℝ) (A : Matrix m n ℝ)
     (hQ : HasOrthonormalCols Q) (hQp : HasOrthonormalCols Qp) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1)
     (hq : 1 ≤ q) (hqs : q + 2 ≤ s)
     (Ψ : Ωs → Matrix m (Fin s) ℝ)
@@ -88,12 +88,13 @@ theorem completion_reduction {m n : Type*} [Fintype m] [Fintype n] [DecidableEq 
     filter_upwards [hG₁] with ω h
     exact frobSq_error Q Qp (Ψ ω) A hQ hcomp h
   rw [integral_congr_ae hae, integral_add (integrable_const _) hGi, integral_const,
-    probReal_univ, one_smul, hG₂, hG₁m, frobSq_perp_mul_residual Q Qp A hQ hQp hcomp]
+    probReal_univ, one_smul, hG₂, hG₁m, frobSq_transpose_mul_residual Q Qp A hQ hQp hcomp]
   ring
 
 section Main
 
-variable {m n k r r' t s q : ℕ}
+variable {m n r r' : Type*} [Fintype m] [Fintype n] [Fintype r] [Fintype r'] [DecidableEq r]
+  [DecidableEq r'] {k t s q : ℕ}
 
 /-- **Generalized Nyström expected error** (Chen–Persson, Theorem `thm:GN`; Tropp–Webber 2023,
 Thm 5.1). Output `Â ω = sketchedOutput (Q ω) (Ψ ω) A = Q(ΨᵀQ)†ΨᵀA` with `Q ω = orth(AΩ ω)`
@@ -107,18 +108,16 @@ being `q = t`), `t ≥ k+2`, `s ≥ t+2`.
   Gaussian noise moment instead;
 * `hYi`, `hZi`: integrability of `‖(I − QQᵀ)A‖_F²` and `‖Σ₂Ω₂Ω₁†‖_F²`.
 Conclusion: `E‖A − Â‖_F² ≤ (1 + t/(s−t−1)) (1 + k/(t−k−1)) ‖A − ⟦A⟧ₖ‖_F²`.
-Deviation: row index types `Fin m`, `Fin n` (see the module docstring).
 Atlas `gn-expected-error` (uses `rsvd-expected-error`, `hmt-9-1-frobenius`). -/
 theorem gn_main [IsProbabilityMeasure μ]
-    {A : Matrix (Fin m) (Fin n) ℝ} {U₁ : Matrix (Fin m) (Fin k) ℝ}
-    {U₂ : Matrix (Fin m) (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
-    {V₂ : Matrix (Fin n) (Fin r') ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
-    {S₂ : Matrix (Fin r) (Fin r') ℝ}
+    {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ}
+    {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
+    {S₂ : Matrix r r' ℝ}
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t) (hts : t + 2 ≤ s) (hqt : q ≤ t)
-    (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (Q : Ωs → Matrix (Fin m) (Fin q) ℝ)
+    (Ω : Ωs → Matrix n (Fin t) ℝ) (Ψ : Ωs → Matrix m (Fin s) ℝ)
+    (Q : Ωs → Matrix m (Fin q) ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω)
     (hunit : ∀ᵐ ω ∂μ, IsUnit ((V₁ᵀ * Ω ω) * (V₁ᵀ * Ω ω)ᵀ))
@@ -134,7 +133,7 @@ theorem gn_main [IsProbabilityMeasure μ]
   have hstruct : ∀ᵐ ω ∂μ, frobSq (residual (Q ω) A)
       ≤ frobSq S₂ + frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) := by
     filter_upwards [hQo, hQr, hunit] with ω h1 h2 h3
-    exact rangeFinder_frobSq_le hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2
+    exact frobSq_residual_le_of_range_subset hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2
   have hYbound := rsvd_assembly_ae hstruct hinv hYi hZi
   -- the completion factor: `q/(s-q-1) ≤ t/(s-t-1)` since `q ≤ t < s - 1`
   have hts' : (t : ℝ) < s - 1 := by
@@ -159,20 +158,18 @@ identity after conditioning on `Ω` and the tower property:
   proof of `lem:completion` (`lem:moments` conditionally on `(Ω, G₁)`, `‖Q⊥ᵀE‖_F = ‖E‖_F`,
   `lem:invmom`) integrated over `Ω`.
 Other hypotheses as in `gn_main`.
-Deviation: row index types `Fin m`, `Fin n` (see the module docstring).
 Atlas `gn-expected-error` (uses `rsvd-expected-error`, `sketched-regression`,
 `orthonormal-completion`). -/
-theorem gn_main_of_completion [IsProbabilityMeasure μ]
-    {A : Matrix (Fin m) (Fin n) ℝ} {U₁ : Matrix (Fin m) (Fin k) ℝ}
-    {U₂ : Matrix (Fin m) (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
-    {V₂ : Matrix (Fin n) (Fin r') ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
-    {S₂ : Matrix (Fin r) (Fin r') ℝ}
+theorem gn_main_of_completion [IsProbabilityMeasure μ] [DecidableEq m]
+    {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ}
+    {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
+    {S₂ : Matrix r r' ℝ}
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t) (hts : t + 2 ≤ s) (hqt : q ≤ t)
-    (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (Q : Ωs → Matrix (Fin m) (Fin q) ℝ)
-    {rp : ℕ} (Qp : Ωs → Matrix (Fin m) (Fin rp) ℝ)
+    (Ω : Ωs → Matrix n (Fin t) ℝ) (Ψ : Ωs → Matrix m (Fin s) ℝ)
+    (Q : Ωs → Matrix m (Fin q) ℝ)
+    {rp : Type*} [Fintype rp] (Qp : Ωs → Matrix m rp ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω)
     (hcomp : ∀ᵐ ω ∂μ, Q ω * (Q ω)ᵀ + Qp ω * (Qp ω)ᵀ = 1)

@@ -4,18 +4,20 @@ import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 /-!
 # Equations 2.1.27–2.1.28 — Hermitian dilation identities
 
-Lean name: `NLAlib.dilation_identities`.
+Main declaration: `NLAlib.dilation_identities`.
+
+Atlas: `hermitian-dilation`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Definition 2.1.5 and equations (2.1.27–28), printed pp. 24–25.
 -/
 open scoped Matrix.Norms.L2Operator
 
-namespace NLAlib.DilationIdentities
+namespace NLAlib
 
 open Matrix
 
 /-- Upper bound for the L2 operator norm via a bound on vectors. -/
-lemma opNorm_le_of {p q : Type*} [Fintype p] [Fintype q] [DecidableEq q]
+private lemma opNorm_le_of {p q : Type*} [Fintype p] [Fintype q] [DecidableEq q]
     (M : Matrix p q ℂ) {c : ℝ} (hc : 0 ≤ c)
     (h : ∀ x : q → ℂ, ‖(WithLp.toLp 2 (M *ᵥ x) : EuclideanSpace ℂ p)‖ ≤
       c * ‖(WithLp.toLp 2 x : EuclideanSpace ℂ q)‖) : ‖M‖ ≤ c := by
@@ -23,29 +25,29 @@ lemma opNorm_le_of {p q : Type*} [Fintype p] [Fintype q] [DecidableEq q]
   refine ContinuousLinearMap.opNorm_le_bound _ hc fun x => ?_
   simpa [Matrix.toLpLin_apply] using h (WithLp.ofLp x)
 
-lemma norm_mulVec_le {p q : Type*} [Fintype p] [Fintype q] [DecidableEq q]
+private lemma norm_mulVec_le {p q : Type*} [Fintype p] [Fintype q] [DecidableEq q]
     (M : Matrix p q ℂ) (x : q → ℂ) :
     ‖(WithLp.toLp 2 (M *ᵥ x) : EuclideanSpace ℂ p)‖ ≤
       ‖M‖ * ‖(WithLp.toLp 2 x : EuclideanSpace ℂ q)‖ := by
   simpa using Matrix.l2_opNorm_mulVec M (WithLp.toLp 2 x)
 
-lemma norm_sq_elim {m n : Type*} [Fintype m] [Fintype n] (u : m → ℂ) (w : n → ℂ) :
+private lemma norm_sq_elim {m n : Type*} [Fintype m] [Fintype n] (u : m → ℂ) (w : n → ℂ) :
     ‖(WithLp.toLp 2 (Sum.elim u w) : EuclideanSpace ℂ (m ⊕ n))‖ ^ 2 =
       ‖(WithLp.toLp 2 u : EuclideanSpace ℂ m)‖ ^ 2 +
         ‖(WithLp.toLp 2 w : EuclideanSpace ℂ n)‖ ^ 2 := by
   simp [EuclideanSpace.norm_sq_eq, Fintype.sum_sum_type]
 
-lemma isHermitian {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) : (dilation A).IsHermitian := by
+private lemma isHermitian {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) : (dilation A).IsHermitian := by
   unfold dilation
   simp [Matrix.IsHermitian, Matrix.fromBlocks_conjTranspose]
 
-lemma sq_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
+private lemma sq_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
     (dilation A) ^ 2 = Matrix.fromBlocks (A * A.conjTranspose) 0 0
       (A.conjTranspose * A) := by
   unfold dilation
   simp [sq, Matrix.fromBlocks_multiply]
 
-lemma neg_mem_spectrum {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) {r : ℝ}
+private lemma neg_mem_spectrum {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) {r : ℝ}
     (hr : r ∈ spectrum ℝ (dilation A)) : -r ∈ spectrum ℝ (dilation A) := by
   set S : Matrix (Fin m ⊕ Fin n) (Fin m ⊕ Fin n) ℂ := Matrix.fromBlocks 1 0 0 (-1) with hS
   have hSS : S * S = 1 := by
@@ -60,7 +62,7 @@ lemma neg_mem_spectrum {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) {r : ℝ}
   rw [← h1, ← spectrum.neg_eq, Set.mem_neg, neg_neg]
   exact hr
 
-lemma lambdaMax_eq {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
+private lemma lambdaMax_eq {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
     lambdaMax (dilation A) = spectralNorm (dilation A) := by
   have hsa : IsSelfAdjoint (dilation A) := isHermitian A
   have hmem : ‖dilation A‖ ∈ spectrum ℝ (dilation A) := by
@@ -72,7 +74,7 @@ lemma lambdaMax_eq {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n)
   have := spectrum.norm_le_norm_of_mem hx
   exact (le_abs_self x).trans (by simpa using this)
 
-lemma spectralNorm_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
+private lemma spectralNorm_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
     spectralNorm (dilation A) = spectralNorm A := by
   unfold spectralNorm
   apply le_antisymm
@@ -106,10 +108,15 @@ lemma spectralNorm_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
       rw [← sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _), norm_sq_elim]; simp
     rwa [e1, e2] at h
 
-end NLAlib.DilationIdentities
+end NLAlib
 
 open NLAlib
 
+/-- The Hermitian dilation of `A` is Hermitian, squares to `fromBlocks (A Aᴴ) 0 0 (Aᴴ A)`, and has
+`λmax = ‖dilation A‖ = ‖A‖`.
+
+Tropp 2015, Def. 2.1.5 and eqs (2.1.27–28). Atlas: `hermitian-dilation`. Ported from the Prove2me
+mission *An Introduction to Matrix Concentration Inequalities, Ch 6*. -/
 theorem NLAlib.dilation_identities {m n : ℕ} [NeZero m] [NeZero n]
     (A : Matrix (Fin m) (Fin n) ℂ) :
     (dilation A).IsHermitian ∧
@@ -117,5 +124,5 @@ theorem NLAlib.dilation_identities {m n : ℕ} [NeZero m] [NeZero n]
       (A.conjTranspose * A) ∧
     lambdaMax (dilation A) = spectralNorm (dilation A) ∧
     spectralNorm (dilation A) = spectralNorm A :=
-  ⟨DilationIdentities.isHermitian A, DilationIdentities.sq_eq A,
-    DilationIdentities.lambdaMax_eq A, DilationIdentities.spectralNorm_eq A⟩
+  ⟨isHermitian A, sq_eq A,
+    lambdaMax_eq A, spectralNorm_eq A⟩

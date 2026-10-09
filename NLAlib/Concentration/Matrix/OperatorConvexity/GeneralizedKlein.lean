@@ -4,7 +4,9 @@ import Mathlib.Tactic.Ring
 /-!
 # Proposition 8.3.5 — Generalized Klein inequality
 
-Lean name: `NLAlib.ch8_generalized_klein`.
+Main declaration: `NLAlib.generalized_klein`.
+
+Atlas: `operator-monotone-convex`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Proposition 8.3.5, printed p. 126.
 -/
@@ -36,23 +38,30 @@ private theorem trace_pair {d : ℕ} (U V : Matrix (Fin d) (Fin d) ℂ) (a b : F
       apply Finset.sum_congr rfl
       intro k _
       simp [Complex.mul_re, Complex.mul_im, Complex.normSq_apply]
-      <;> ring
+      ring
 
 open NLAlib
 
-theorem NLAlib.ch8_generalized_klein {d N : ℕ} [NeZero d]
-    (I : Set ℝ) (hI : Convex ℝ I) (f g : Fin N → ℝ → ℝ)
+/-- Generalized Klein inequality: if `∑ i, f i a * g i h ≥ 0` on `I`, then `∑ i, tr (f i (A) g i (H))
+≥ 0` for Hermitian `A`, `H` with spectra in `I`.
+
+Tropp 2015, Prop. 8.3.5. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 8*.
+
+The convexity hypothesis on `I` is not used by the proof; it is kept to match the source. -/
+theorem NLAlib.generalized_klein {d N : ℕ} [NeZero d]
+    (I : Set ℝ) (_hI : Convex ℝ I) (f g : Fin N → ℝ → ℝ)
     (hfg : ∀ a ∈ I, ∀ h ∈ I, 0 ≤ ∑ i, f i a * g i h)
     (A H : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
     (hAI : spectrum ℝ A ⊆ I) (hHI : spectrum ℝ H ⊆ I) :
-    0 ≤ ∑ i, (Matrix.trace (ch8_matrixFunction (f i) A *
-      ch8_matrixFunction (g i) H)).re := by
+    0 ≤ ∑ i, (Matrix.trace (matrixFunction (f i) A *
+      matrixFunction (g i) H)).re := by
   have heq (i : Fin N) :
-      (trace (ch8_matrixFunction (f i) A * ch8_matrixFunction (g i) H)).re =
+      (trace (matrixFunction (f i) A * matrixFunction (g i) H)).re =
       ∑ j, ∑ k, f i (hA.eigenvalues j) * g i (hH.eigenvalues k) *
         Complex.normSq (((hA.eigenvectorUnitary : Matrix (Fin d) (Fin d) ℂ)ᴴ *
           (hH.eigenvectorUnitary : Matrix (Fin d) (Fin d) ℂ)) j k) := by
-    simp only [ch8_matrixFunction, hA.cfc_eq, hH.cfc_eq, Matrix.IsHermitian.cfc,
+    simp only [matrixFunction, hA.cfc_eq, hH.cfc_eq, Matrix.IsHermitian.cfc,
       Unitary.conjStarAlgAut_apply, Function.comp_def, Matrix.star_eq_conjTranspose]
     exact trace_pair _ _ _ _
   simp_rw [heq]

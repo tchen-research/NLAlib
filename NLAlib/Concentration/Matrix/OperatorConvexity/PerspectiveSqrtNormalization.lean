@@ -3,25 +3,34 @@ import NLAlib.Concentration.Matrix.Defs.Ch8Entropy
 /-!
 # Square-root and inverse-square-root identities for positive definite matrices
 
-Lean name: `NLAlib.ch8_perspective_sqrt_normalization`.
+Main declaration: `NLAlib.matrixFunction_sqrt_identities`.
+
+Atlas: `operator-monotone-convex` (step of Thm 8.6.2).
 
 Source: Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1, Definition 8.6.1 and proof of Theorem 8.6.2, printed pp. 134–135 (PDF pp. 140–141), positive-definite square-root normalization.
 -/
 open scoped Matrix.Norms.L2Operator ComplexOrder MatrixOrder
 open NLAlib
 
-theorem NLAlib.ch8_perspective_sqrt_normalization
+/-- For positive definite `A`, `S = √A` and `R = A^{-1/2}` (via `matrixFunction`) are Hermitian with
+`S S = A` and `R S = S R = 1`.
+
+Tropp 2015, Def. 8.6.1 and proof of Thm 8.6.2. Atlas: `operator-monotone-convex`. Ported from the
+Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 8*.
+
+Auxiliary; not a numbered result in the source. -/
+theorem NLAlib.matrixFunction_sqrt_identities
     {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     (A : Matrix ι ι ℂ) (hA : A.PosDef) :
-    let S := ch8_matrixFunction Real.sqrt A
-    let R := ch8_matrixFunction (fun x => (Real.sqrt x)⁻¹) A
+    let S := matrixFunction Real.sqrt A
+    let R := matrixFunction (fun x => (Real.sqrt x)⁻¹) A
     S.IsHermitian ∧ R.IsHermitian ∧ S * S = A ∧ R * S = 1 ∧ S * R = 1 := by
   have hcont (f : ℝ → ℝ) : ContinuousOn f (spectrum ℝ A) := by
     rw [hA.isHermitian.spectrum_real_eq_range_eigenvalues]
     exact (Set.finite_range _).continuousOn f
   have hpos (x : ℝ) (hx : x ∈ spectrum ℝ A) : 0 < x :=
     hA.isStrictlyPositive.spectrum_pos hx
-  dsimp only [ch8_matrixFunction]
+  dsimp only [matrixFunction]
   refine ⟨cfc_predicate _ A, cfc_predicate _ A, ?_, ?_, ?_⟩
   · rw [← cfc_mul _ _ A (hcont _) (hcont _)]
     calc

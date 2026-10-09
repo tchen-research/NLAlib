@@ -8,7 +8,9 @@ import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 /-!
 # Proposition 3.2.2 — Expectation bounds for eigenvalues
 
-Lean name: `NLAlib.ch3_laplace_expectations`.
+Main declaration: `NLAlib.integral_lambdaMax_le_and_le_integral_lambdaMin`.
+
+Atlas: `matrix-laplace`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Proposition 3.2.2, printed p. 33.
 -/
@@ -19,7 +21,7 @@ set_option autoImplicit false
 namespace NLAlib
 
 /-- Scalar Jensen step for an integrable majorant of an exponential. -/
-lemma ch3_expect_log_integral_majorant {Ω : Type*} [MeasurableSpace Ω]
+private lemma mul_integral_le_log_integral {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (f g : Ω → ℝ) (θ : ℝ)
     (hf : Integrable f μ) (hg : Integrable g μ)
     (hbound : ∀ᵐ ω ∂μ, Real.exp (θ * f ω) ≤ g ω) :
@@ -41,7 +43,12 @@ end NLAlib
 
 open NLAlib
 
-theorem NLAlib.ch3_laplace_expectations {Ω : Type*} [MeasurableSpace Ω]
+/-- Matrix Laplace transform expectation bounds: for `θ > 0`, `𝔼 λmax(Y) ≤ log 𝔼 traceExp (θ • Y) /
+θ`, and for `θ < 0`, `log 𝔼 traceExp (θ • Y) / θ ≤ 𝔼 λmin(Y)`.
+
+Tropp 2015, Prop. 3.2.2. Atlas: `matrix-laplace`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 3*. -/
+theorem NLAlib.integral_lambdaMax_le_and_le_integral_lambdaMin {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} [NeZero d]
     (Y : Ω → Matrix (Fin d) (Fin d) ℂ) (θ : ℝ)
     (hMeas : Measurable Y) (hHerm : ∀ᵐ ω ∂μ, (Y ω).IsHermitian)
@@ -54,17 +61,17 @@ theorem NLAlib.ch3_laplace_expectations {Ω : Type*} [MeasurableSpace Ω]
   have ht : Integrable (fun ω => traceExp (θ • Y ω)) μ := by
     exact Complex.reCLM.integrable_comp
       ((Matrix.traceLinearMap (Fin d) ℂ ℂ).toContinuousLinearMap.integrable_comp hExp)
-  obtain ⟨hmax, hmin⟩ := ch3_expect_extrema_integrable μ Y hMeas hHerm hInt
+  obtain ⟨hmax, hmin⟩ := integrable_lambdaMax_and_lambdaMin μ Y hMeas hHerm hInt
   constructor
   · intro hθ
     apply (le_div_iff₀ hθ).mpr
     rw [mul_comm]
-    apply ch3_expect_log_integral_majorant μ _ _ θ hmax ht
+    apply mul_integral_le_log_integral μ _ _ θ hmax ht
     filter_upwards [hHerm] with ω hω
-    exact (ch3_tail_spectral_comparison (Y ω) hω θ).2.1 hθ
+    exact (exp_mul_lambdaMax_lambdaMin_le_traceExp_smul (Y ω) hω θ).2.1 hθ
   · intro hθ
     apply (div_le_iff_of_neg hθ).mpr
     rw [mul_comm]
-    apply ch3_expect_log_integral_majorant μ _ _ θ hmin ht
+    apply mul_integral_le_log_integral μ _ _ θ hmin ht
     filter_upwards [hHerm] with ω hω
-    exact (ch3_tail_spectral_comparison (Y ω) hω θ).2.2 hθ
+    exact (exp_mul_lambdaMax_lambdaMin_le_traceExp_smul (Y ω) hω θ).2.2 hθ

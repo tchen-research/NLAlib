@@ -19,13 +19,18 @@ generalized Nyström error bounds.
 * `integral_frobSq_mul_gaussian_mul_of_indepFun`: `E ‖S Y T(X)‖_F² = ‖S‖_F² E ‖T(X)‖_F²` for a
   standard Gaussian `Y` independent of `X` (no integrability hypotheses: both sides are
   integrals of nonnegative functions and the identity holds in `ℝ≥0∞` first).
-* `rsvd_inverse_moment_factor`: `E ‖S₂ Ω₂ Ω₁†‖_F² = ‖S₂‖_F² E ‖Ω₁†‖_F²` (HMT 2011 Thm 10.5
-  proof, the step after Prop 10.1), and its transposed twin `completion_inverse_moment_factor`.
-* `integral_pinvR_frobSq_block`: `E ‖(V₁ᵀ Ω)†‖_F² = E_{G ~ N(0,1)^{k×t}} ‖G†‖_F²`.
+* `integral_frobSq_mul_block_mul_pinvR_block`: `E ‖S₂ Ω₂ Ω₁†‖_F² = ‖S₂‖_F² E ‖Ω₁†‖_F²`
+  (HMT 2011 Thm 10.5 proof, the step after Prop 10.1), and its transposed twin
+  `integral_frobSq_pinvL_block_mul_block_mul`.
+* `integral_frobSq_pinvR_block`: `E ‖(V₁ᵀ Ω)†‖_F² = E_{G ~ N(0,1)^{k×t}} ‖G†‖_F²`.
+
+Here a *block* of `Ω` is `Vᵀ Ω` for `V` with orthonormal columns (HMT 2011 §10.2:
+`Ω₁ = V₁ᵀ Ω`, `Ω₂ = V₂ᵀ Ω`).
 
 Atlas: `gaussian-conditioning`. No new Gaussian computation is done here; only independence,
-Fubini and the block law (`block-law-indep`) and the sandwiched second moment
-(`gaussian-moments`).
+Fubini, the block law (`block-law-indep`) and the sandwiched second moment
+(`gaussian-frob-second-moment`). The measurability helpers `measurable_frobSq_of_entries` and
+`measurable_pinvR_entry` are matrix facts that will move to `NLAlib.Matrix.Measurable`.
 -/
 
 noncomputable section
@@ -88,14 +93,6 @@ theorem measurable_frobSq_of_entries {γ ι κ : Type*} [MeasurableSpace γ] [Fi
   exact Finset.measurable_sum _ fun i _ => Finset.measurable_sum _ fun j _ =>
     (hf i j).mul (hf i j)
 
-/-- The block map `G ↦ Vᵀ G` (on the array view) is measurable. Atlas `gaussian-conditioning`
-(helper). -/
-theorem measurable_block {n k t : ℕ} (V : Matrix (Fin n) (Fin k) ℝ) :
-    Measurable fun G : Fin n → Fin t → ℝ => Matrix.of.symm (Vᵀ * Matrix.of G) := by
-  refine measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => ?_
-  simp only [Matrix.of_symm_apply, Matrix.mul_apply, Matrix.of_apply, Matrix.transpose_apply]
-  fun_prop
-
 /-- Every entry of `G ↦ pinvR G` (on the array view) is measurable. Atlas
 `gaussian-conditioning` (helper). -/
 theorem measurable_pinvR_entry {k t : ℕ} (i : Fin t) (j : Fin k) :
@@ -112,13 +109,6 @@ theorem measurable_pinvR_entry {k t : ℕ} (i : Fin t) (j : Fin k) :
   refine Finset.measurable_sum _ fun l _ => ?_
   have := hadj l j
   fun_prop
-
-omit [IsProbabilityMeasure μ] in
-/-- A random variable with law `gaussianMatrix n t` is a.e.-measurable. Atlas
-`gaussian-conditioning` (helper). -/
-theorem aemeasurable_of_map_eq_gaussianMatrix {n t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) : AEMeasurable Ω μ :=
-  AEMeasurable.of_map_ne_zero (by rw [hΩ]; exact IsProbabilityMeasure.ne_zero _)
 
 omit [IsProbabilityMeasure μ] in
 /-- If `Ω` has law `gaussianMatrix n t` and `V₁ᵀ V₁ = 1`, then `V₁ᵀ Ω` has law
@@ -168,8 +158,7 @@ theorem integrable_frobSq_mul_gaussianMatrix_mul {ι κ : Type*} [Fintype ι] [F
       (gaussianMatrix p m) := by
     simp_rw [frobSq_eq_sum_sq]
     refine integrable_finsetSum _ fun a _ => integrable_finsetSum _ fun b _ => ?_
-    exact ((memLp_id_gaussianReal' 2 (by simp)).comp_measurePreserving
-      (measurePreserving_gaussianMatrix_entry a b)).integrable_sq
+    exact (memLp_gaussianMatrix_entry a b 2 (by simp)).integrable_sq
   have hm : Measurable fun G : Fin p → Fin m → ℝ => frobSq (S * Matrix.of G * T) :=
     measurable_frobSq_of_entries fun i j => by
       simp only [Matrix.mul_apply, Matrix.of_apply]; fun_prop
@@ -266,7 +255,7 @@ theorem integrable_frobSq_mul_gaussian_mul_of_indepFun {α ι κ : Type*} [Measu
     (ae_of_all _ fun _ => mul_nonneg (frobSq_nonneg _) (frobSq_nonneg _))).1
     (hTi.const_mul (frobSq S)).hasFiniteIntegral
 
-/-! ### Randomized SVD and completion step -/
+/-! ### Inverse-moment factorisation (randomized SVD and completion step) -/
 
 /-- **RSVD inverse-moment factorisation.** If `Ω` is an `n × t` standard Gaussian matrix and
 `V₁`, `V₂` have orthonormal, mutually orthogonal columns, then
@@ -278,7 +267,8 @@ This is hypothesis `hinv` of `NLAlib.rsvd_truncated_main` modulo the inverse mom
 `integral_frobSq_mul_gaussian_mul_of_indepFun`). `Ω` is array-valued; for a `Matrix`-valued
 `Ω'` take `Ω := fun ω => Matrix.of.symm (Ω' ω)` (definitionally `Matrix.of (Ω ω) = Ω' ω`).
 Atlas `gaussian-conditioning`. -/
-theorem rsvd_inverse_moment_factor {n k r r' t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
+theorem integral_frobSq_mul_block_mul_pinvR_block {n k r r' t : ℕ}
+    {Ω : Ωs → Fin n → Fin t → ℝ}
     (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (V₂ : Matrix (Fin n) (Fin r') ℝ) (hV₁ : V₁ᵀ * V₁ = 1) (hV₂ : V₂ᵀ * V₂ = 1)
     (hV₁₂ : V₁ᵀ * V₂ = 0) (S₂ : Matrix (Fin r) (Fin r') ℝ) :
@@ -291,10 +281,11 @@ theorem rsvd_inverse_moment_factor {n k r r' t : ℕ} {Ω : Ωs → Fin n → Fi
     (map_block_eq_gaussianMatrix hΩ V₂ hV₂) (indepFun_block_of_map_eq hΩ V₁ V₂ hV₁ hV₂ hV₁₂)
     S₂ (T := fun x => pinvR (Matrix.of x)) measurable_pinvR_entry
 
-/-- Integrability companion of `rsvd_inverse_moment_factor` (hypothesis `hZi` of
-`NLAlib.rsvd_truncated_main`, given integrability of `‖(V₁ᵀΩ)†‖_F²`). HMT 2011 proof of
+/-- Integrability companion of `integral_frobSq_mul_block_mul_pinvR_block` (hypothesis `hZi`
+of `NLAlib.rsvd_truncated_main`, given integrability of `‖(V₁ᵀΩ)†‖_F²`). HMT 2011 proof of
 Thm 10.5. Atlas `gaussian-conditioning`. -/
-theorem integrable_rsvd_inverse_moment {n k r r' t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
+theorem integrable_frobSq_mul_block_mul_pinvR_block {n k r r' t : ℕ}
+    {Ω : Ωs → Fin n → Fin t → ℝ}
     (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (V₂ : Matrix (Fin n) (Fin r') ℝ) (hV₁ : V₁ᵀ * V₁ = 1) (hV₂ : V₂ᵀ * V₂ = 1)
     (hV₁₂ : V₁ᵀ * V₂ = 0) (S₂ : Matrix (Fin r) (Fin r') ℝ)
@@ -309,14 +300,14 @@ theorem integrable_rsvd_inverse_moment {n k r r' t : ℕ} {Ω : Ωs → Fin n �
     S₂ (T := fun x => pinvR (Matrix.of x)) measurable_pinvR_entry hi
 
 /-- **Completion-step inverse-moment factorisation** (transposed form of
-`rsvd_inverse_moment_factor`). If `Ψ` is an `m × s` standard Gaussian matrix and `Q`, `Qp` have
-orthonormal, mutually orthogonal columns, then for every fixed `B`
+`integral_frobSq_mul_block_mul_pinvR_block`). If `Ψ` is an `m × s` standard Gaussian matrix and
+`Q`, `Qp` have orthonormal, mutually orthogonal columns, then for every fixed `B`
 `E ‖(ΨᵀQ)† (ΨᵀQp) B‖_F² = E ‖(ΨᵀQ)†‖_F² · ‖B‖_F²`.
 
 Generalized Nyström / two-sided sketch analysis (hypothesis `hG₂` of `completion_reduction`);
 the conditioning argument of HMT 2011 Thm 10.5 applied to the transposed sketch. Here
 `(ΨᵀQ)† = pinvL (ΨᵀQ)`. Atlas `gaussian-conditioning`. -/
-theorem completion_inverse_moment_factor {m s q rp : ℕ} {ι : Type*} [Fintype ι]
+theorem integral_frobSq_pinvL_block_mul_block_mul {m s q rp : ℕ} {ι : Type*} [Fintype ι]
     {Ψ : Ωs → Fin m → Fin s → ℝ} (hΨ : μ.map Ψ = gaussianMatrix m s)
     (Q : Matrix (Fin m) (Fin q) ℝ) (Qp : Matrix (Fin m) (Fin rp) ℝ) (hQ : Qᵀ * Q = 1)
     (hQp : Qpᵀ * Qp = 1) (hQQp : Qᵀ * Qp = 0) (B : Matrix (Fin rp) ι ℝ) :
@@ -347,10 +338,10 @@ theorem completion_inverse_moment_factor {m s q rp : ℕ} {ι : Type*} [Fintype 
 omit [IsProbabilityMeasure μ] in
 /-- **Inverse moment of a Gaussian block.** If `Ω` is an `n × t` standard Gaussian matrix and
 `V₁ᵀ V₁ = 1`, then `E ‖(V₁ᵀΩ)†‖_F² = E_{G} ‖G†‖_F²` for `G` a `k × t` standard Gaussian matrix.
-Combined with `rsvd_inverse_moment_factor` and the inverse moment of a Gaussian matrix this
-closes hypothesis `hinv` of `NLAlib.rsvd_truncated_main`. HMT 2011 §10.2 (block law).
+Combined with `integral_frobSq_mul_block_mul_pinvR_block` and the inverse moment of a Gaussian
+matrix this closes hypothesis `hinv` of `NLAlib.rsvd_truncated_main`. HMT 2011 §10.2 (block law).
 Atlas `gaussian-conditioning`. -/
-theorem integral_pinvR_frobSq_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
+theorem integral_frobSq_pinvR_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
     (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (hV₁ : V₁ᵀ * V₁ = 1) :
     ∫ ω, frobSq (pinvR (V₁ᵀ * Matrix.of (Ω ω))) ∂μ =

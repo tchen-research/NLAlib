@@ -6,7 +6,9 @@ import Mathlib.Topology.Order.Compact
 /-!
 # Integrability of extreme eigenvalues
 
-Lean name: `NLAlib.ch3_expect_extrema_integrable`.
+Main declaration: `NLAlib.integrable_lambdaMax_and_lambdaMin`.
+
+Atlas: `matrix-laplace` (regularity lemma).
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Auxiliary regularity lemma for Proposition 3.2.2, printed p. 33; uses spectral norm relation (2.1.22), printed p. 24, and the standing regularity convention of Section 2.2.1, printed p. 25.
 -/
@@ -63,7 +65,13 @@ end NLAlib
 
 open NLAlib
 
-theorem NLAlib.ch3_expect_extrema_integrable {Ω : Type*} [MeasurableSpace Ω]
+/-- If a Hermitian random matrix is integrable, so are its largest and smallest eigenvalues.
+
+Tropp 2015, regularity lemma for Proposition 3.2.2. Atlas: `matrix-laplace`. Ported from the
+Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 3*.
+
+Auxiliary; not a numbered result in the source. -/
+theorem NLAlib.integrable_lambdaMax_and_lambdaMin {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) {d : ℕ} [NeZero d]
     (Y : Ω → Matrix (Fin d) (Fin d) ℂ)
     (hMeas : Measurable Y) (hHerm : ∀ᵐ ω ∂μ, (Y ω).IsHermitian)

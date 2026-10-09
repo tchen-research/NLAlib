@@ -1,7 +1,7 @@
 # Contributing
 
-The library grows by pull requests, one result per PR. This file is the contract: how code is
-laid out, how statements are written so they compose, and what CI checks.
+The library grows by pull requests, one result per PR. This file is the workflow; `docs/STANDARDS.md` is
+the style contract (names, files, statements, docstrings, metadata) that CI enforces.
 
 ## 1. Pick a target
 

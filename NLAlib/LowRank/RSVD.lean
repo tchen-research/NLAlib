@@ -17,21 +17,22 @@ Chen–Persson `prop:hmt-struct`) with the expectation-level arithmetic of
 Ported from the LRA project (Chen–Persson formalization, same Mathlib pin),
 `LRA/Theorems/RSVDandGN.lean`. The deterministic helpers of that file are already in NLAlib:
 LRA `frobSq_residual_le` is `NLAlib.frobSq_residual_le_frobSq_sub_mul`
-(`NLAlib/Matrix/Projections.lean`), and LRA `hmt_second_frob` / `hmt_second_residual` are
-`NLAlib.rangeFinder_frobSq_le` (whose conclusion `frobSq (residual Q A)` is by definition
-`frobSq (A − Q(QᵀA))`); LRA `hmt_third` is `NLAlib.rangeFinder_truncated_frobSq_le`.
+(`NLAlib/Matrix/Projections.lean`), LRA `hmt_second_frob` / `hmt_second_residual` are
+`NLAlib.frobSq_residual_le_of_range_subset` (whose conclusion `frobSq (residual Q A)` is by
+definition `frobSq (A − Q(QᵀA))`), and LRA `hmt_third` is
+`NLAlib.frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset`.
 
 ## Model
 
 * Probability space `{Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs}
   [IsProbabilityMeasure μ]`; expectations are Bochner integrals `∫ ω, · ∂μ`.
-* Random test matrix `Ω : Ωs → Matrix (Fin n) (Fin t) ℝ`.
+* Random test matrix `Ω : Ωs → Matrix n (Fin t) ℝ`.
 * `A` is fixed with the block SVD of `RangeFinder.lean`: `A = U₁ S₁ V₁ᵀ + U₂ S₂ V₂ᵀ`, so that
   the paper's `OPT² = ‖A − ⟦A⟧ₖ‖_F² = ‖Σ₂‖_F²` is `frobSq S₂`.
 * `Q ω = orth(A Ω ω)` enters only through `HasOrthonormalCols (Q ω)` and
   `range(AΩ) ⊆ range(Q)` (`Q ω * (Q ωᵀ * (A * Ω ω)) = A * Ω ω`), both almost surely.
   The paper's `q = rank(AΩ)` is a *random* number of columns; since the column index type
-  `Fin q` is fixed at the type level, `q` is a fixed natural number (generic case `q = t`).
+  `q` is fixed at the type level, it does not depend on `ω` (generic case `q = Fin t`).
 * `⟦C⟧ₖ` is any `Y` with `IsBestRankApprox k C Y` (Eckart–Young is not used).
 
 ## Trust boundary
@@ -40,12 +41,11 @@ Every Gaussian fact enters as an explicit hypothesis on an expectation, in exact
 paper uses it after conditioning (`hinv`); "almost surely full rank" enters as
 `∀ᵐ ω ∂μ, IsUnit (…)`; integrability is explicit. Everything else is proved.
 
-## Deviation from the LRA source
+## Index types
 
-The row index types are `Fin m`, `Fin n` (the LRA source allows arbitrary `Fintype` types),
-because `NLAlib.rangeFinder_frobSq_le` is stated over `Fin`; this is also the convention for
-statements involving a Gaussian law (CONTRIBUTING §3). The proofs do not use `Fin` and would
-generalise verbatim once `RangeFinder.lean` does.
+As in the LRA source, the row and block index types `m`, `n`, `r`, `r'` and the column type `q`
+of `Q` are arbitrary `Fintype`s; only `k` (the target rank) and `t` (the number of samples)
+are natural numbers, since they appear in the constant `k/(t−k−1)`.
 
 Atlas: `rsvd-expected-error`.
 -/
@@ -87,7 +87,8 @@ end Assembly
 section Main
 
 variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs}
-variable {m n k r r' t q : ℕ}
+variable {m n r r' q : Type*} [Fintype m] [Fintype n] [Fintype r] [Fintype r'] [Fintype q]
+  [DecidableEq r] [DecidableEq r'] [DecidableEq q] {k t : ℕ}
 
 /-- **Randomized SVD, truncated output** (Chen–Persson, Theorem `thm:RSVD` for Algorithm
 tRSVD, output `Q ⟦QᵀA⟧ₖ`; HMT 2011, Thm 10.5, Frobenius case).
@@ -100,18 +101,16 @@ Setting: `A = U₁S₁V₁ᵀ + U₂S₂V₂ᵀ` (block SVD, `OPT² = frobSq S�
   property, exactly the display in the proof of `thm:RSVD` (needs `t ≥ k+2`);
 * `hXi`, `hZi`: integrability.
 Conclusion: `E‖A − Q⟦QᵀA⟧ₖ‖_F² ≤ (1 + k/(t−k−1)) ‖A − ⟦A⟧ₖ‖_F²`.
-Deviation: row index types `Fin m`, `Fin n` (see the module docstring).
 Atlas `rsvd-expected-error`. -/
 theorem rsvd_truncated_main [IsProbabilityMeasure μ]
-    {A : Matrix (Fin m) (Fin n) ℝ} {U₁ : Matrix (Fin m) (Fin k) ℝ}
-    {U₂ : Matrix (Fin m) (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
-    {V₂ : Matrix (Fin n) (Fin r') ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
-    {S₂ : Matrix (Fin r) (Fin r') ℝ}
+    {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ}
+    {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
+    {S₂ : Matrix r r' ℝ}
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t)
-    (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Q : Ωs → Matrix (Fin m) (Fin q) ℝ)
-    (Y : Ωs → Matrix (Fin q) (Fin n) ℝ)
+    (Ω : Ωs → Matrix n (Fin t) ℝ) (Q : Ωs → Matrix m q ℝ)
+    (Y : Ωs → Matrix q n ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω)
     (hY : ∀ ω, IsBestRankApprox k ((Q ω)ᵀ * A) (Y ω))
@@ -124,29 +123,29 @@ theorem rsvd_truncated_main [IsProbabilityMeasure μ]
   have hX : ∀ᵐ ω ∂μ, frobSq (A - Q ω * Y ω)
       ≤ frobSq S₂ + frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) := by
     filter_upwards [hQo, hQr, hunit] with ω h1 h2 h3
-    exact rangeFinder_truncated_frobSq_le hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2 (hY ω)
+    exact frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2
+      (hY ω)
   exact rsvd_assembly_ae hX hinv hXi hZi
 
 /-- **Randomized SVD** (Chen–Persson, Theorem `thm:RSVD` for Algorithm RSVD, untruncated output
 `Q QᵀA`; HMT 2011, Thm 10.5, Frobenius case).
 
 Same hypotheses as `rsvd_truncated_main` except that no truncation `Y` is needed: the proof
-goes through the second inequality of `prop:hmt-struct` (`rangeFinder_frobSq_le`, i.e.
+goes through the second inequality of `prop:hmt-struct`
+(`frobSq_residual_le_of_range_subset`, i.e.
 `‖A − QQᵀA‖_F ≤ ‖A − QB‖_F` for every `B`, applied to `B = QᵀZ`), the untruncated analogue
 of the argument for `Q⟦QᵀA⟧ₖ`. (Equivalently, `frobSq (A − Q(QᵀA)) ≤ frobSq (A − QY)` for
-the truncated output, see `frobSq_rsvd_le_trsvd`.)
+the truncated output, see `frobSq_sub_mul_transpose_mul_le_frobSq_sub_mul`.)
 Conclusion: `E‖A − QQᵀA‖_F² ≤ (1 + k/(t−k−1)) ‖A − ⟦A⟧ₖ‖_F²`.
-Deviation: row index types `Fin m`, `Fin n` (see the module docstring).
 Atlas `rsvd-expected-error`. -/
 theorem rsvd_main [IsProbabilityMeasure μ]
-    {A : Matrix (Fin m) (Fin n) ℝ} {U₁ : Matrix (Fin m) (Fin k) ℝ}
-    {U₂ : Matrix (Fin m) (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
-    {V₂ : Matrix (Fin n) (Fin r') ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
-    {S₂ : Matrix (Fin r) (Fin r') ℝ}
+    {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ}
+    {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
+    {S₂ : Matrix r r' ℝ}
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t)
-    (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Q : Ωs → Matrix (Fin m) (Fin q) ℝ)
+    (Ω : Ωs → Matrix n (Fin t) ℝ) (Q : Ωs → Matrix m q ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω)
     (hunit : ∀ᵐ ω ∂μ, IsUnit ((V₁ᵀ * Ω ω) * (V₁ᵀ * Ω ω)ᵀ))
@@ -158,7 +157,7 @@ theorem rsvd_main [IsProbabilityMeasure μ]
   have hX : ∀ᵐ ω ∂μ, frobSq (A - Q ω * ((Q ω)ᵀ * A))
       ≤ frobSq S₂ + frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) := by
     filter_upwards [hQo, hQr, hunit] with ω h1 h2 h3
-    exact rangeFinder_frobSq_le hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2
+    exact frobSq_residual_le_of_range_subset hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2
   exact rsvd_assembly_ae hX hinv hXi hZi
 
 end Main
@@ -168,8 +167,8 @@ end Main
 `Y` (in particular `Y = ⟦QᵀA⟧ₖ`). A restatement of
 `NLAlib.frobSq_residual_le_frobSq_sub_mul` (LRA `frobSq_residual_le`) with the residual
 written out. Atlas `rsvd-expected-error`. -/
-theorem frobSq_rsvd_le_trsvd {m n q : Type*} [Fintype m] [Fintype n] [Fintype q]
-    [DecidableEq q] (A : Matrix m n ℝ) (Q : Matrix m q ℝ)
+theorem frobSq_sub_mul_transpose_mul_le_frobSq_sub_mul {m n q : Type*} [Fintype m] [Fintype n]
+    [Fintype q] [DecidableEq q] (A : Matrix m n ℝ) (Q : Matrix m q ℝ)
     (hQo : HasOrthonormalCols Q) (Y : Matrix q n ℝ) :
     frobSq (A - Q * (Qᵀ * A)) ≤ frobSq (A - Q * Y) :=
   frobSq_residual_le_frobSq_sub_mul hQo A Y

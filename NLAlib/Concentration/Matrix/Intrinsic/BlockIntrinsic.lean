@@ -5,21 +5,23 @@ import Mathlib.LinearAlgebra.Matrix.PosDef
 /-!
 # Equation 7.3.4 — Intrinsic dimension of variance blocks
 
-Lean name: `NLAlib.ch7_block_intrinsic`.
+Main declaration: `NLAlib.intrinsicDimension_fromBlocks`.
+
+Atlas: `intrinsic-dimension`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Equation (7.3.4) and preceding identity, printed p. 109; Section 7.7.3, printed p. 117.
 -/
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator ComplexOrder
 
-namespace NLAlib.Ch7BlockIntrinsic
+namespace NLAlib
 
 open Matrix
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- Compression by an isometry does not increase the L2 operator norm. -/
-lemma ch7bi_norm_compress_le {k : Type*} [Fintype k] [DecidableEq k]
+private lemma norm_compress_le {k : Type*} [Fintype k] [DecidableEq k]
     (E : Matrix k m ℂ) (hE : Eᴴ * E = 1) (M : Matrix k k ℂ) :
     ‖Eᴴ * M * E‖ ≤ ‖M‖ := by
   have hE1 : ‖E‖ ≤ 1 := by
@@ -36,7 +38,7 @@ lemma ch7bi_norm_compress_le {k : Type*} [Fintype k] [DecidableEq k]
     _ = ‖M‖ := by ring
 
 /-- The L2 operator norm of a block-diagonal matrix is the max of the block norms. -/
-lemma ch7bi_norm_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
+private lemma norm_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
     ‖fromBlocks P 0 0 Q‖ = max ‖P‖ ‖Q‖ := by
   apply le_antisymm
   · rw [cstar_norm_def]
@@ -63,14 +65,14 @@ lemma ch7bi_norm_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
     · calc _ ≤ (‖Q‖ * ‖x₂‖) ^ 2 := by gcongr
         _ ≤ _ := by rw [mul_pow]; gcongr
   · apply max_le
-    · have h := ch7bi_norm_compress_le (fromRows (1 : Matrix m m ℂ) (0 : Matrix n m ℂ))
+    · have h := norm_compress_le (fromRows (1 : Matrix m m ℂ) (0 : Matrix n m ℂ))
         (by ext i j; simp [mul_apply, Fintype.sum_sum_type, one_apply, eq_comm])
         (fromBlocks P 0 0 Q)
       have heq : P = (fromRows (1 : Matrix m m ℂ) (0 : Matrix n m ℂ))ᴴ * fromBlocks P 0 0 Q *
           (fromRows (1 : Matrix m m ℂ) (0 : Matrix n m ℂ)) := by
         ext i j; simp [mul_apply, Fintype.sum_sum_type, one_apply]
       exact (congrArg norm heq).trans_le h
-    · have h := ch7bi_norm_compress_le (fromRows (0 : Matrix m n ℂ) (1 : Matrix n n ℂ))
+    · have h := norm_compress_le (fromRows (0 : Matrix m n ℂ) (1 : Matrix n n ℂ))
         (by ext i j; simp [mul_apply, Fintype.sum_sum_type, one_apply, eq_comm])
         (fromBlocks P 0 0 Q)
       have heq : Q = (fromRows (0 : Matrix m n ℂ) (1 : Matrix n n ℂ))ᴴ * fromBlocks P 0 0 Q *
@@ -80,7 +82,7 @@ lemma ch7bi_norm_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
 
 omit [DecidableEq m] [DecidableEq n] in
 /-- A block-diagonal matrix with PSD blocks is PSD. -/
-lemma ch7bi_posSemidef_fromBlocks_diag {P : Matrix m m ℂ} {Q : Matrix n n ℂ}
+private lemma posSemidef_fromBlocks_diag {P : Matrix m m ℂ} {Q : Matrix n n ℂ}
     (hP : P.PosSemidef) (hQ : Q.PosSemidef) : (fromBlocks P 0 0 Q).PosSemidef := by
   refine PosSemidef.of_dotProduct_mulVec_nonneg
     (IsHermitian.fromBlocks hP.1 (by simp) hQ.1) fun x => ?_
@@ -93,17 +95,17 @@ lemma ch7bi_posSemidef_fromBlocks_diag {P : Matrix m m ℂ} {Q : Matrix n n ℂ}
   exact add_nonneg (hP.dotProduct_mulVec_nonneg _) (hQ.dotProduct_mulVec_nonneg _)
 
 omit [DecidableEq m] [DecidableEq n] in
-lemma ch7bi_trace_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
+private lemma trace_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
     trace (fromBlocks P 0 0 Q) = trace P + trace Q := by
   simp [trace, Fintype.sum_sum_type]
 
 omit [DecidableEq m] in
 /-- For PSD `A`, the real part of the trace is nonnegative. -/
-lemma ch7bi_trace_re_nonneg {A : Matrix m m ℂ} (hA : A.PosSemidef) : 0 ≤ (trace A).re :=
+private lemma trace_re_nonneg {A : Matrix m m ℂ} (hA : A.PosSemidef) : 0 ≤ (trace A).re :=
   (Complex.nonneg_iff.mp hA.trace_nonneg).1
 
 /-- The scalar inequalities behind the block bounds. -/
-lemma ch7bi_scalar {t₁ t₂ n₁ n₂ : ℝ} (ht₁ : 0 ≤ t₁) (ht₂ : 0 ≤ t₂) (hn₁ : 0 ≤ n₁) (hn₂ : 0 ≤ n₂)
+private lemma scalar {t₁ t₂ n₁ n₂ : ℝ} (ht₁ : 0 ≤ t₁) (ht₂ : 0 ≤ t₂) (hn₁ : 0 ≤ n₁) (hn₂ : 0 ≤ n₂)
     (h₁ : n₁ = 0 → t₁ = 0) (h₂ : n₂ = 0 → t₂ = 0) :
     min (t₁ / n₁) (t₂ / n₂) ≤ (t₁ + t₂) / max n₁ n₂ ∧
       (t₁ + t₂) / max n₁ n₂ ≤ t₁ / n₁ + t₂ / n₂ := by
@@ -125,11 +127,17 @@ lemma ch7bi_scalar {t₁ t₂ n₁ n₂ : ℝ} (ht₁ : 0 ≤ t₁) (ht₂ : 0 �
     · exact (min_le_right _ _).trans (le_add_of_nonneg_left (div_nonneg ht₁ hn₂))
     · gcongr
 
-end NLAlib.Ch7BlockIntrinsic
+end NLAlib
 
-open NLAlib NLAlib.Ch7BlockIntrinsic
+open NLAlib
 
-theorem NLAlib.ch7_block_intrinsic {m n : ℕ} [NeZero m] [NeZero n]
+/-- For positive semidefinite `V₁`, `V₂`, the block-diagonal `V = fromBlocks V₁ 0 0 V₂` is positive
+semidefinite, `‖V‖ = max ‖V₁‖ ‖V₂‖`, and `intdim V` lies between `min (intdim V₁) (intdim V₂)` and
+`intdim V₁ + intdim V₂`.
+
+Tropp 2015, eq. (7.3.4) and §7.7.3. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission
+*An Introduction to Matrix Concentration Inequalities, Ch 7*. -/
+theorem NLAlib.intrinsicDimension_fromBlocks {m n : ℕ} [NeZero m] [NeZero n]
     (V₁ : Matrix (Fin m) (Fin m) ℂ) (V₂ : Matrix (Fin n) (Fin n) ℂ)
     (hV₁ : V₁.PosSemidef) (hV₂ : V₂.PosSemidef) :
     let V := Matrix.fromBlocks V₁ 0 0 V₂
@@ -142,20 +150,20 @@ theorem NLAlib.ch7_block_intrinsic {m n : ℕ} [NeZero m] [NeZero n]
     intrinsicDimension V ≤ intrinsicDimension V₁ + intrinsicDimension V₂ := by
   intro V
   have hnorm : spectralNorm V = max (spectralNorm V₁) (spectralNorm V₂) :=
-    ch7bi_norm_fromBlocks_diag V₁ V₂
+    norm_fromBlocks_diag V₁ V₂
   have hdim : intrinsicDimension V =
       ((Matrix.trace V₁).re + (Matrix.trace V₂).re) /
         max (spectralNorm V₁) (spectralNorm V₂) := by
     unfold intrinsicDimension
-    rw [hnorm, show V = Matrix.fromBlocks V₁ 0 0 V₂ from rfl, ch7bi_trace_fromBlocks_diag,
+    rw [hnorm, show V = Matrix.fromBlocks V₁ 0 0 V₂ from rfl, trace_fromBlocks_diag,
       Complex.add_re]
   have hz : ∀ {k : ℕ} (A : Matrix (Fin k) (Fin k) ℂ), spectralNorm A = 0 →
       (Matrix.trace A).re = 0 := by
     intro k A h
     have : A = 0 := norm_eq_zero.mp h
     simp [this]
-  have hs := ch7bi_scalar (ch7bi_trace_re_nonneg hV₁) (ch7bi_trace_re_nonneg hV₂)
+  have hs := scalar (trace_re_nonneg hV₁) (trace_re_nonneg hV₂)
     (norm_nonneg V₁) (norm_nonneg V₂) (hz V₁) (hz V₂)
-  refine ⟨ch7bi_posSemidef_fromBlocks_diag hV₁ hV₂, hnorm, hdim, ?_, ?_⟩
+  refine ⟨posSemidef_fromBlocks_diag hV₁ hV₂, hnorm, hdim, ?_, ?_⟩
   · rw [hdim]; exact hs.1
   · rw [hdim]; exact hs.2

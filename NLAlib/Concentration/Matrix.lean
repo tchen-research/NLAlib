@@ -59,8 +59,18 @@ import NLAlib.Concentration.Matrix.Series.RademacherMgfCgf
 /-!
 # Matrix concentration inequalities
 
-Tropp, *An Introduction to Matrix Concentration Inequalities* (2015), Chapters 3–8: the matrix Laplace
-transform method (Laplace/), Gaussian and Rademacher series (Series/), matrix Chernoff (Chernoff/),
-matrix Bernstein (Bernstein/), intrinsic dimension (Intrinsic/), and Lieb's concavity theorem with the
-operator-convexity toolkit (OperatorConvexity/). Shared definitions in Defs/. Every theorem is proved.
+Tropp, *An Introduction to Matrix Concentration Inequalities* (2015), Chapters 3–8, ported from the
+Prove2me missions for those chapters. Every theorem is proved.
+
+| Directory | Contents | Atlas ids |
+|---|---|---|
+| `Defs/` | shared definitions (`spectralNorm`, `lambdaMax`, `matrixExp`, `LoewnerLE`, `dilation`, …) | `loewner-order`, `hermitian-dilation` |
+| `Laplace/` | matrix Laplace transform method, `master_bounds`, `trace_cgf_subadditivity` | `matrix-laplace` |
+| `Series/` | `hermitian_gaussian_series`, `matrix_gaussian_series` | `matrix-gaussian-series` |
+| `Chernoff/` | `matrix_chernoff` | `matrix-chernoff` |
+| `Bernstein/` | `hermitian_bernstein`, `matrix_bernstein`, dilation identities | `matrix-bernstein`, `hermitian-dilation` |
+| `Intrinsic/` | intrinsic-dimension Chernoff and Bernstein inequalities | `intrinsic-dimension` |
+| `OperatorConvexity/` | `lieb_concavity`, `operator_jensen`, `matrixLog_le_matrixLog`, … | `operator-monotone-convex`, `loewner-order` |
+
+`golden-thompson` is not realised here: Tropp's route goes through Lieb's concavity theorem.
 -/

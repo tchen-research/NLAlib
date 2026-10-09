@@ -7,7 +7,9 @@ import Mathlib.Tactic.Ring
 /-!
 # Relative entropy as a tensor perspective
 
-Lean name: `NLAlib.ch8_joint_tensor_representation`.
+Main declaration: `NLAlib.relativeEntropy_eq_jointTensorEval_sub_trace`.
+
+Atlas: `operator-monotone-convex` (step of Thm 8.1.4).
 
 Source: Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1, Sections 8.7–8.8, equation (8.8.1); uses the transpose required by complex vectorization conventions.
 -/
@@ -78,12 +80,12 @@ private theorem conj_diag_mul {n : Type*} [Fintype n] [DecidableEq n]
 open NLAlib
 private theorem perspective_diag {n : ℕ} (U : unitary (Matrix (Fin n) (Fin n) ℂ))
     (a h : Fin n → ℝ) (ha : ∀ i, 0 < a i) (hh : ∀ i, 0 < h i) :
-    ch8_perspective (fun x => -Real.log x)
+    matrixPerspective (fun x => -Real.log x)
       ((U : Matrix (Fin n) (Fin n) ℂ) * diagonal (fun i => (a i : ℂ)) * star (U : Matrix _ _ ℂ))
       ((U : Matrix (Fin n) (Fin n) ℂ) * diagonal (fun i => (h i : ℂ)) * star (U : Matrix _ _ ℂ)) =
     (U : Matrix (Fin n) (Fin n) ℂ) *
       diagonal (fun i => ((a i * (Real.log (a i) - Real.log (h i)) : ℝ) : ℂ)) * star (U : Matrix _ _ ℂ) := by
-  simp only [ch8_perspective, ch8_matrixFunction, cfc_diag_conj, conj_diag_mul]
+  simp only [matrixPerspective, matrixFunction, cfc_diag_conj, conj_diag_mul]
   congr 2
   apply congrArg diagonal
   funext i
@@ -133,7 +135,7 @@ private theorem conj_diag_sub {n : Type*} [Fintype n] [DecidableEq n]
 
 private theorem perspective_tensor_diag {d : ℕ} (U V : unitary (Matrix (Fin d) (Fin d) ℂ))
     (a h : Fin d → ℝ) (ha : ∀ i, 0 < a i) (hh : ∀ i, 0 < h i) :
-    ch8_perspective (fun x => -Real.log x)
+    matrixPerspective (fun x => -Real.log x)
       ((((U : Matrix _ _ ℂ) * diagonal (fun i => (a i : ℂ)) * star (U : Matrix _ _ ℂ)) ⊗ₖ 1).submatrix
         finProdFinEquiv.symm finProdFinEquiv.symm)
       ((1 ⊗ₖ ((V : Matrix _ _ ℂ) * diagonal (fun i => (h i : ℂ)) * star (V : Matrix _ _ ℂ))).submatrix
@@ -160,7 +162,7 @@ private theorem perspective_tensor_diag {d : ℕ} (U V : unitary (Matrix (Fin d)
 set_option backward.isDefEq.respectTransparency false in
 private theorem perspective_tensor {d : ℕ}
     (A B : Matrix (Fin d) (Fin d) ℂ) (hA : A.PosDef) (hB : B.PosDef) :
-    ch8_perspective (fun x => -Real.log x)
+    matrixPerspective (fun x => -Real.log x)
       ((A ⊗ₖ (1 : Matrix (Fin d) (Fin d) ℂ)).submatrix finProdFinEquiv.symm finProdFinEquiv.symm)
       (((1 : Matrix (Fin d) (Fin d) ℂ) ⊗ₖ B).submatrix finProdFinEquiv.symm finProdFinEquiv.symm) =
     (((A * matrixLog A) ⊗ₖ (1 : Matrix (Fin d) (Fin d) ℂ)) - (A ⊗ₖ matrixLog B)).submatrix
@@ -182,15 +184,15 @@ private theorem perspective_tensor {d : ℕ}
     exact conj_diag_mul hA.1.eigenvectorUnitary _ _
   simpa only [← ha, ← hb, ← hal, ← hlb, matrixLog] using he
 
-private lemma ch8_joint_tensor_contraction {d : ℕ} (A H : Matrix (Fin d) (Fin d) ℂ) :
-    ch8_joint_eval ((A ⊗ₖ H.transpose).submatrix finProdFinEquiv.symm finProdFinEquiv.symm) =
+private lemma jointTensor_contraction {d : ℕ} (A H : Matrix (Fin d) (Fin d) ℂ) :
+    jointTensorEval ((A ⊗ₖ H.transpose).submatrix finProdFinEquiv.symm finProdFinEquiv.symm) =
       (Matrix.trace (A * H)).re := by
-  unfold ch8_joint_eval
+  unfold jointTensorEval
   congr 1
   simp only [dotProduct, Matrix.mulVec, Matrix.submatrix_apply]
   rw [← Equiv.sum_comp finProdFinEquiv]
   simp only [finProdFinEquiv.symm_apply_apply, Fintype.sum_prod_type]
-  simp [ch8_joint_vec, Matrix.kroneckerMap, Matrix.trace, Matrix.mul_apply, Matrix.diag]
+  simp [jointTensorVec, Matrix.kroneckerMap, Matrix.trace, Matrix.mul_apply, Matrix.diag]
   apply Finset.sum_congr rfl
   intro i hi
   rw [← Equiv.sum_comp finProdFinEquiv]
@@ -203,17 +205,17 @@ private lemma ch8_joint_tensor_contraction {d : ℕ} (A H : Matrix (Fin d) (Fin 
 
 
 private theorem eval_sub {d : ℕ} (M N : Matrix (Fin (d*d)) (Fin (d*d)) ℂ) :
-    ch8_joint_eval (M - N) = ch8_joint_eval M - ch8_joint_eval N := by
-  simp [ch8_joint_eval, Matrix.sub_mulVec, dotProduct_sub, Complex.sub_re]
+    jointTensorEval (M - N) = jointTensorEval M - jointTensorEval N := by
+  simp [jointTensorEval, Matrix.sub_mulVec, dotProduct_sub, Complex.sub_re]
 
 private theorem finish {d : ℕ} [NeZero d]
     (A H : Matrix (Fin d) (Fin d) ℂ) (hA : A.PosDef) (hH : H.PosDef)
     (ht : matrixLog H.transpose = (matrixLog H).transpose) :
-    ch8_relativeEntropy A H =
-      ch8_joint_eval (ch8_perspective (fun x => -Real.log x)
-        (ch8_joint_left A) (ch8_joint_right H)) - (Matrix.trace (A - H)).re := by
+    relativeEntropy A H =
+      jointTensorEval (matrixPerspective (fun x => -Real.log x)
+        (jointTensorLeft A) (jointTensorRight H)) - (Matrix.trace (A - H)).re := by
   have he := perspective_tensor A H.transpose hA hH.transpose
-  unfold ch8_joint_left ch8_joint_right
+  unfold jointTensorLeft jointTensorRight
   rw [he, ht]
   have hsub :
       (((A * matrixLog A) ⊗ₖ (1 : Matrix (Fin d) (Fin d) ℂ)) - (A ⊗ₖ (matrixLog H).transpose)).submatrix
@@ -221,11 +223,11 @@ private theorem finish {d : ℕ} [NeZero d]
       (((A * matrixLog A) ⊗ₖ (1 : Matrix (Fin d) (Fin d) ℂ)).submatrix
         finProdFinEquiv.symm finProdFinEquiv.symm) -
       ((A ⊗ₖ (matrixLog H).transpose).submatrix finProdFinEquiv.symm finProdFinEquiv.symm) := rfl
-  rw [hsub, eval_sub, ch8_joint_tensor_contraction]
-  have hc := ch8_joint_tensor_contraction (A * matrixLog A) (1 : Matrix (Fin d) (Fin d) ℂ)
+  rw [hsub, eval_sub, jointTensor_contraction]
+  have hc := jointTensor_contraction (A * matrixLog A) (1 : Matrix (Fin d) (Fin d) ℂ)
   simp only [transpose_one, mul_one] at hc
   rw [hc]
-  simp [ch8_relativeEntropy, mul_sub, Matrix.trace_sub, Complex.sub_re]
+  simp [relativeEntropy, mul_sub, Matrix.trace_sub, Complex.sub_re]
 
 set_option maxHeartbeats 1000000 in
 private theorem cfc_transpose {d : ℕ} (H : Matrix (Fin d) (Fin d) ℂ)
@@ -247,9 +249,16 @@ private theorem cfc_transpose {d : ℕ} (H : Matrix (Fin d) (Fin d) ℂ)
   rw [hs, ht, cfc_diag_conj, cfc_diag_conj, ht]
 
 
-theorem NLAlib.ch8_joint_tensor_representation {d : ℕ} [NeZero d]
+/-- Matrix relative entropy as a tensor perspective: `D(A; H) = ⟨vec I, P_{-log}(A ⊗ I, I ⊗ Hᵀ) vec I⟩
+- tr (A - H)`.
+
+Tropp 2015, §8.7–8.8, eq. (8.8.1). Atlas: `operator-monotone-convex`. Ported from the Prove2me
+mission *An Introduction to Matrix Concentration Inequalities, Ch 8*.
+
+Uses `Hᵀ` in the right tensor factor, as required by the complex vectorization convention. -/
+theorem NLAlib.relativeEntropy_eq_jointTensorEval_sub_trace {d : ℕ} [NeZero d]
     (A H : Matrix (Fin d) (Fin d) ℂ) (hA : A.PosDef) (hH : H.PosDef) :
-    ch8_relativeEntropy A H =
-      ch8_joint_eval (ch8_perspective (fun x => -Real.log x)
-        (ch8_joint_left A) (ch8_joint_right H)) - (Matrix.trace (A - H)).re := by
+    relativeEntropy A H =
+      jointTensorEval (matrixPerspective (fun x => -Real.log x)
+        (jointTensorLeft A) (jointTensorRight H)) - (Matrix.trace (A - H)).re := by
   exact finish A H hA hH (cfc_transpose H hH.1 Real.log)

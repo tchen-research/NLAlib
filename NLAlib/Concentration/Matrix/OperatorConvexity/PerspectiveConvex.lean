@@ -6,7 +6,9 @@ import Mathlib.Tactic.Linarith
 /-!
 # Theorem 8.6.2 — Matrix perspective is jointly operator convex
 
-Lean name: `NLAlib.ch8_perspective_convex`.
+Main declaration: `NLAlib.matrixPerspective_jointly_operatorConvex`.
+
+Atlas: `operator-monotone-convex`.
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 8.6.2, printed pp. 134–135.
 -/
@@ -14,14 +16,19 @@ open scoped Matrix.Norms.L2Operator ComplexOrder MatrixOrder
 
 open NLAlib
 
-theorem NLAlib.ch8_perspective_convex {d : ℕ} [NeZero d]
-    (f : ℝ → ℝ) (hf : ch8_operatorConvexOn (Set.Ioi 0) f)
+/-- The matrix perspective of an operator convex function on `(0, ∞)` is jointly operator convex on
+pairs of positive definite matrices.
+
+Tropp 2015, Thm 8.6.2. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
+Introduction to Matrix Concentration Inequalities, Ch 8*. -/
+theorem NLAlib.matrixPerspective_jointly_operatorConvex {d : ℕ} [NeZero d]
+    (f : ℝ → ℝ) (hf : OperatorConvexOn (Set.Ioi 0) f)
     (A₁ A₂ H₁ H₂ : Matrix (Fin d) (Fin d) ℂ)
     (hA₁ : A₁.PosDef) (hA₂ : A₂.PosDef) (hH₁ : H₁.PosDef) (hH₂ : H₂.PosDef)
     (t : ℝ) (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1) :
-    loewnerLE
-      (ch8_perspective f (t • A₁ + (1 - t) • A₂) (t • H₁ + (1 - t) • H₂))
-      (t • ch8_perspective f A₁ H₁ + (1 - t) • ch8_perspective f A₂ H₂) := by
+    LoewnerLE
+      (matrixPerspective f (t • A₁ + (1 - t) • A₂) (t • H₁ + (1 - t) • H₂))
+      (t • matrixPerspective f A₁ H₁ + (1 - t) • matrixPerspective f A₂ H₂) := by
   have htbar : 0 ≤ 1 - t := sub_nonneg.mpr ht₁
   let A := t • A₁ + (1 - t) • A₂
   have hA : A.PosDef := by
@@ -29,15 +36,15 @@ theorem NLAlib.ch8_perspective_convex {d : ℕ} [NeZero d]
     · simpa [A, ht] using hA₂
     · exact (hA₁.smul (lt_of_le_of_ne ht₀ (Ne.symm ht))).add_posSemidef
         (hA₂.posSemidef.smul htbar)
-  let S := ch8_matrixFunction Real.sqrt A
-  let R := ch8_matrixFunction (fun x => (Real.sqrt x)⁻¹) A
-  let S₁ := ch8_matrixFunction Real.sqrt A₁
-  let R₁ := ch8_matrixFunction (fun x => (Real.sqrt x)⁻¹) A₁
-  let S₂ := ch8_matrixFunction Real.sqrt A₂
-  let R₂ := ch8_matrixFunction (fun x => (Real.sqrt x)⁻¹) A₂
-  obtain ⟨hS, hR, hSS, hRS, hSR⟩ := ch8_perspective_sqrt_normalization A hA
-  obtain ⟨hS₁, hR₁, hSS₁, hRS₁, hSR₁⟩ := ch8_perspective_sqrt_normalization A₁ hA₁
-  obtain ⟨hS₂, hR₂, hSS₂, hRS₂, hSR₂⟩ := ch8_perspective_sqrt_normalization A₂ hA₂
+  let S := matrixFunction Real.sqrt A
+  let R := matrixFunction (fun x => (Real.sqrt x)⁻¹) A
+  let S₁ := matrixFunction Real.sqrt A₁
+  let R₁ := matrixFunction (fun x => (Real.sqrt x)⁻¹) A₁
+  let S₂ := matrixFunction Real.sqrt A₂
+  let R₂ := matrixFunction (fun x => (Real.sqrt x)⁻¹) A₂
+  obtain ⟨hS, hR, hSS, hRS, hSR⟩ := matrixFunction_sqrt_identities A hA
+  obtain ⟨hS₁, hR₁, hSS₁, hRS₁, hSR₁⟩ := matrixFunction_sqrt_identities A₁ hA₁
+  obtain ⟨hS₂, hR₂, hSS₂, hRS₂, hSR₂⟩ := matrixFunction_sqrt_identities A₂ hA₂
   change S.IsHermitian at hS
   change R.IsHermitian at hR
   change S * S = A at hSS
@@ -94,7 +101,7 @@ theorem NLAlib.ch8_perspective_convex {d : ℕ} [NeZero d]
     simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul,
       Real.mul_self_sqrt ht₀, Real.mul_self_sqrt htbar, hn S₁ R₁ H₁ hSR₁ hRS₁,
       hn S₂ R₂ H₂ hSR₂ hRS₂, Matrix.mul_add, Matrix.add_mul]
-  have hj := ch8_operator_jensen (Set.Ioi 0) f hf B₁ B₂ hB₁.isHermitian hB₂.isHermitian
+  have hj := operator_jensen (Set.Ioi 0) f hf B₁ B₂ hB₁.isHermitian hB₂.isHermitian
     (fun x hx => hB₁.isStrictlyPositive.spectrum_pos hx)
     (fun x hx => hB₂.isStrictlyPositive.spectrum_pos hx) K₁ K₂ hK
   have hc := hj.mul_mul_conjTranspose_same S
@@ -108,11 +115,11 @@ theorem NLAlib.ch8_perspective_convex {d : ℕ} [NeZero d]
     calc
       _ = (S * R) * Sj * F * Sj * (R * S) := by noncomm_ring
       _ = _ := by rw [hSR, hRS]; simp
-  change loewnerLE (S * ch8_matrixFunction f (R * (t • H₁ + (1 - t) • H₂) * R) * S)
-    (t • (S₁ * ch8_matrixFunction f B₁ * S₁) +
-      (1 - t) • (S₂ * ch8_matrixFunction f B₂ * S₂))
-  simpa only [loewnerLE, Matrix.mul_add, Matrix.add_mul, hK₁, hK₂, K₁, K₂,
-    hsand t ht₀ S₁ (ch8_matrixFunction f B₁),
-    hsand (1 - t) htbar S₂ (ch8_matrixFunction f B₂)] using hc
+  change LoewnerLE (S * matrixFunction f (R * (t • H₁ + (1 - t) • H₂) * R) * S)
+    (t • (S₁ * matrixFunction f B₁ * S₁) +
+      (1 - t) • (S₂ * matrixFunction f B₂ * S₂))
+  simpa only [LoewnerLE, Matrix.mul_add, Matrix.add_mul, hK₁, hK₂, K₁, K₂,
+    hsand t ht₀ S₁ (matrixFunction f B₁),
+    hsand (1 - t) htbar S₂ (matrixFunction f B₂)] using hc
 
 

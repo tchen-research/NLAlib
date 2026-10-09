@@ -20,7 +20,10 @@ expected squared error `E‖x_k - xs‖²` after `k` i.i.d. randomized steps sta
 by first-step recursion, and `expErr_eq_sum_paths` identifies it with the explicit sum over all
 row sequences `ω : Fin k → m` weighted by `∏ j, prob A (ω j)`.
 
-Squared Euclidean norms are written `v ⬝ᵥ v`.
+Squared Euclidean norms are written `v ⬝ᵥ v`. The row identities `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`
+(`NLAlib.frobSq_eq_sum_dotProduct_self`), `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`
+(`NLAlib.mulVec_dotProduct_mulVec_eq_sum_sq`) and `v ⬝ v ≥ 0` (`NLAlib.dotProduct_self_nonneg`)
+are in `NLAlib.Matrix.Norms`.
 
 ## Main results
 
@@ -71,26 +74,6 @@ def run (A : Matrix m n ℝ) (b : m → ℝ) : (k : ℕ) → (Fin k → m) → (
   | 0, _, x => x
   | k + 1, ω, x => run A b k (Fin.tail ω) (step A b x (ω 0))
 
-/-- `0 ≤ v ⬝ᵥ v` for real vectors (Mathlib only has the `star` form).
-Atlas `randomized-kaczmarz` (helper). -/
-theorem dotProduct_self_nonneg (v : n → ℝ) : 0 ≤ v ⬝ᵥ v :=
-  Finset.sum_nonneg fun i _ => mul_self_nonneg (v i)
-
-/-- `‖A‖_F² = ∑ i, ‖A i‖²`. Atlas `norms-frob-spec`. -/
-theorem frobSq_eq_sum_rows (A : Matrix m n ℝ) : frobSq A = ∑ i, A i ⬝ᵥ A i := by
-  simp [frobSq, frobInner, dotProduct]
-
-/-- `‖A‖_F² = 0 ↔ A = 0`. Atlas `norms-frob-spec`. -/
-theorem frobSq_eq_zero_iff (A : Matrix m n ℝ) : frobSq A = 0 ↔ A = 0 := by
-  constructor
-  · intro h
-    rw [frobSq_eq_sum_rows, Finset.sum_eq_zero_iff_of_nonneg
-      (fun i _ => dotProduct_self_nonneg (A i))] at h
-    ext i j
-    have := dotProduct_self_eq_zero.mp (h i (Finset.mem_univ _))
-    simpa using congrFun this j
-  · rintro rfl; simp
-
 /-- Selection probabilities are nonnegative. Atlas `randomized-kaczmarz`. -/
 theorem prob_nonneg (A : Matrix m n ℝ) (i : m) : 0 ≤ prob A i :=
   div_nonneg (dotProduct_self_nonneg _) (frobSq_nonneg A)
@@ -99,13 +82,7 @@ theorem prob_nonneg (A : Matrix m n ℝ) (i : m) : 0 ≤ prob A i :=
 theorem sum_prob (A : Matrix m n ℝ) (hA : A ≠ 0) : ∑ i, prob A i = 1 := by
   have hF : frobSq A ≠ 0 := (frobSq_eq_zero_iff A).not.mpr hA
   unfold prob
-  rw [← Finset.sum_div, ← frobSq_eq_sum_rows, div_self hF]
-
-/-- `‖A v‖² = ∑ i, (A i ⬝ᵥ v)²`. Atlas `randomized-kaczmarz` (helper). -/
-theorem mulVec_dotProduct_self (A : Matrix m n ℝ) (v : n → ℝ) :
-    (A *ᵥ v) ⬝ᵥ (A *ᵥ v) = ∑ i, (A i ⬝ᵥ v) ^ 2 := by
-  simp only [dotProduct, sq]
-  rfl
+  rw [← Finset.sum_div, ← frobSq_eq_sum_dotProduct_self, div_self hF]
 
 omit [Fintype m] in
 /-- Error recursion of one Kaczmarz step when `A *ᵥ xs = b`:
@@ -146,7 +123,7 @@ theorem expected_sqErr_step_eq (A : Matrix m n ℝ) (b : m → ℝ) (xs x : n �
     ∑ i, prob A i * ((step A b x i - xs) ⬝ᵥ (step A b x i - xs)) =
       (x - xs) ⬝ᵥ (x - xs) - (A *ᵥ (x - xs)) ⬝ᵥ (A *ᵥ (x - xs)) / frobSq A := by
   simp_rw [sqErr_step A b xs x hxs, mul_sub, Finset.sum_sub_distrib, ← Finset.sum_mul,
-    sum_prob A hA, one_mul, mulVec_dotProduct_self, Finset.sum_div]
+    sum_prob A hA, one_mul, mulVec_dotProduct_mulVec_eq_sum_sq, Finset.sum_div]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [prob]

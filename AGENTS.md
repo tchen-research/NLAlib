@@ -1,6 +1,6 @@
 # Instructions for agents working in this repository
 
-Read `CONTRIBUTING.md` and `atlas/TARGETING.md` first.
+Read `docs/STANDARDS.md`, `CONTRIBUTING.md` and `atlas/TARGETING.md` first.
 
 ## Finding what exists
 

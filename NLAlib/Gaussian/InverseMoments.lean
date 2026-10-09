@@ -22,21 +22,24 @@ The key Gaussian input of the randomized SVD and generalized Nyström error boun
 for a standard Gaussian `r × k` matrix `G` with `r + 2 ≤ k`,
 `E (G Gᵀ)⁻¹ = (k - r - 1)⁻¹ I` and hence `E ‖G†‖_F² = r / (k - r - 1)`.
 
-* `NLAlib.inv_chi_square_moment`: `E[1/χ²_d] = 1/(d-2)` for `d ≥ 3`
-  (atlas `inverse-chi-square-moment`).
-* `NLAlib.schur_diag_inv`: a diagonal entry of `(G Gᵀ)⁻¹` is the inverse of the squared residual
-  of the corresponding row against the span of the other rows (Schur complement).
-* `NLAlib.gaussian_residual_law`: that squared residual, for a standard Gaussian row and fixed
-  rows of full rank `n`, is `χ²_{k-n}`.
-* `NLAlib.inverse_wishart_mean`: `E (G Gᵀ)⁻¹ = (k - r - 1)⁻¹ I`, entrywise, with integrability
-  (atlas `inverse-wishart-mean`); `inverse_wishart_mean_matrix` is the matrix form.
-* `NLAlib.pinv_frobenius_moment`: `E ‖G†‖_F² = r / (k - r - 1)` (atlas `pinv-frob-moment`).
+* `integrable_and_integral_inv_sum_sq_gaussianReal`: `E[1/χ²_d] = 1/(d-2)` for `d ≥ 3`
+  (atlas `inverse-chi-square-moment`; `…_fin` is the `Fin d` form).
+* `inv_self_mul_transpose_apply_self`: a diagonal entry of `(G Gᵀ)⁻¹` is the inverse of the
+  squared distance from the corresponding row to the span of the other rows (Schur complement).
+* `pi_gaussianReal_map_sq_dist_rowSpace`: that squared distance, for a standard Gaussian row
+  and fixed rows of full rank `n`, is `χ²_{k-n}`.
+* `integrable_and_integral_inv_self_mul_transpose_gaussianMatrix`:
+  `E (G Gᵀ)⁻¹ = (k - r - 1)⁻¹ I`, entrywise, with integrability (atlas `inverse-wishart-mean`);
+  `integral_inv_self_mul_transpose_gaussianMatrix` is the matrix form.
+* `integrable_and_integral_frobSq_pinvR_gaussianMatrix`: `E ‖G†‖_F² = r / (k - r - 1)`
+  (atlas `pinv-frob-moment`).
 
 Proof source: Prove2me workspace, Gaussian Random Matrices series; the proofs are ported with
 the workspace's `rotation_invariance`, `block_law`, `full_rank_ae` replaced by
 `NLAlib.gaussianMatrix_map_orthogonal`, `NLAlib.gaussianMatrix_map_block`,
-`NLAlib.gaussianMatrix_ae_rank_eq`. The chi-square moment is stated over an arbitrary finite index
-type (the source uses `Fin d`; `inv_chi_square_moment_fin` is the source form).
+`NLAlib.gaussianMatrix_ae_rank_eq`. The chi-square moment is stated over an arbitrary finite
+index type (the source uses `Fin d`). `frobSq_pinvR_eq_trace_inv` is a pseudoinverse identity
+that will move to `NLAlib.Matrix.Pseudoinverse`.
 -/
 
 noncomputable section
@@ -49,7 +52,7 @@ namespace NLAlib
 /-! ### The inverse chi-square moment -/
 
 /-- One-dimensional Gaussian integral: `E[exp(-((u-1)/2) Y²)] = u^{-1/2}` for `Y ~ N(0,1)`. -/
-private lemma icm_gauss_exp (u : ℝ) (hu : 0 < u) :
+private lemma integral_exp_neg_mul_sq_gaussianReal (u : ℝ) (hu : 0 < u) :
     ∫ y, Real.exp (-((u - 1) / 2) * y ^ 2) ∂(gaussianReal 0 1) = u ^ (-(1 / 2 : ℝ)) := by
   rw [integral_gaussianReal_eq_integral_smul (by norm_num)]
   simp only [gaussianPDFReal_def, smul_eq_mul, NNReal.coe_one, sub_zero, mul_one]
@@ -64,7 +67,8 @@ private lemma icm_gauss_exp (u : ℝ) (hu : 0 < u) :
   field_simp
 
 /-- Laplace transform of the chi-square sum: `E[exp(-((u-1)/2) ∑ Xⱼ²)] = u^{-d/2}`. -/
-private lemma icm_laplace {ι : Type*} [Fintype ι] (u : ℝ) (hu : 0 < u) :
+private lemma integral_exp_neg_mul_sum_sq_gaussianReal {ι : Type*} [Fintype ι] (u : ℝ)
+    (hu : 0 < u) :
     ∫ x : ι → ℝ, Real.exp (-((u - 1) / 2) * ∑ j, x j ^ 2)
       ∂(Measure.pi fun _ : ι => gaussianReal 0 1) = u ^ (-((Fintype.card ι : ℝ) / 2)) := by
   have h : ∀ x : ι → ℝ, Real.exp (-((u - 1) / 2) * ∑ j, x j ^ 2)
@@ -72,12 +76,12 @@ private lemma icm_laplace {ι : Type*} [Fintype ι] (u : ℝ) (hu : 0 < u) :
     intro x; rw [Finset.mul_sum, Real.exp_sum]
   simp_rw [h]
   rw [integral_fintype_prod_eq_prod (fun _ y => Real.exp (-((u - 1) / 2) * y ^ 2))]
-  simp only [icm_gauss_exp u hu, Finset.prod_const, Finset.card_univ]
+  simp only [integral_exp_neg_mul_sq_gaussianReal u hu, Finset.prod_const, Finset.card_univ]
   rw [← Real.rpow_natCast, ← Real.rpow_mul hu.le]
   congr 1; ring
 
 /-- `1/S = ∫_1^∞ exp(-((u-1)/2) S)/2 du` for `S > 0`. -/
-private lemma icm_inv_repr (S : ℝ) (hS : 0 < S) :
+private lemma integrableOn_and_integral_exp_eq_inv (S : ℝ) (hS : 0 < S) :
     IntegrableOn (fun u : ℝ => Real.exp (-((u - 1) / 2) * S) / 2) (Ioi 1) ∧
     ∫ u in Ioi 1, Real.exp (-((u - 1) / 2) * S) / 2 = S⁻¹ := by
   have h : ∀ u : ℝ, Real.exp (-((u - 1) / 2) * S) / 2
@@ -92,7 +96,7 @@ private lemma icm_inv_repr (S : ℝ) (hS : 0 < S) :
   rw [mul_one, show -rexp (-(S / 2)) / -(S / 2) * (rexp (S / 2) / 2)
     = (rexp (-(S / 2)) * rexp (S / 2)) / S by field_simp, he, one_div]
 
-private lemma icm_sum_pos_ae {ι : Type*} [Fintype ι] (hd : 1 ≤ Fintype.card ι) :
+private lemma ae_sum_sq_pos_gaussianReal {ι : Type*} [Fintype ι] (hd : 1 ≤ Fintype.card ι) :
     ∀ᵐ x ∂(Measure.pi fun _ : ι => gaussianReal 0 1), 0 < ∑ j, x j ^ 2 := by
   have : NullSingletonClass (gaussianReal 0 1) := nullSingletonClass_gaussianReal (by norm_num)
   obtain ⟨i₀⟩ : Nonempty ι := Fintype.card_pos_iff.mp (by omega)
@@ -107,7 +111,7 @@ private lemma icm_sum_pos_ae {ι : Type*} [Fintype ι] (hd : 1 ≤ Fintype.card 
   have h2 : 0 < x i₀ ^ 2 := by positivity
   linarith
 
-private lemma icm_lintegral {ι : Type*} [Fintype ι] (hd : 3 ≤ Fintype.card ι) :
+private lemma lintegral_inv_sum_sq_gaussianReal {ι : Type*} [Fintype ι] (hd : 3 ≤ Fintype.card ι) :
     ∫⁻ x, ENNReal.ofReal (∑ j, x j ^ 2)⁻¹ ∂(Measure.pi fun _ : ι => gaussianReal 0 1)
       = ENNReal.ofReal (1 / ((Fintype.card ι : ℝ) - 2)) := by
   set d := Fintype.card ι with hdd
@@ -118,8 +122,8 @@ private lemma icm_lintegral {ι : Type*} [Fintype ι] (hd : 3 ≤ Fintype.card �
   -- step 1: inner representation
   have step1 : ∀ᵐ x ∂μ, ENNReal.ofReal (∑ j, x j ^ 2)⁻¹
       = ∫⁻ u in Ioi 1, ENNReal.ofReal (K x u) := by
-    filter_upwards [icm_sum_pos_ae (ι := ι) (by omega)] with x hx
-    obtain ⟨hint, hval⟩ := icm_inv_repr _ hx
+    filter_upwards [ae_sum_sq_pos_gaussianReal (ι := ι) (by omega)] with x hx
+    obtain ⟨hint, hval⟩ := integrableOn_and_integral_exp_eq_inv _ hx
     rw [← hval, ofReal_integral_eq_lintegral_ofReal hint
       (Filter.Eventually.of_forall fun u => by positivity)]
   rw [lintegral_congr_ae step1]
@@ -145,7 +149,7 @@ private lemma icm_lintegral {ι : Type*} [Fintype ι] (hd : 3 ≤ Fintype.card �
       (Filter.Eventually.of_forall fun x => by positivity)]
     congr 1
     simp only [hK]
-    rw [integral_div, icm_laplace u hu0]
+    rw [integral_div, integral_exp_neg_mul_sum_sq_gaussianReal u hu0]
   rw [setLIntegral_congr_fun measurableSet_Ioi step2]
   -- step 3: the outer integral
   have hd3 : (3 : ℝ) ≤ d := by exact_mod_cast hd
@@ -169,9 +173,11 @@ private lemma icm_lintegral {ι : Type*} [Fintype ι] (hd : 3 ≤ Fintype.card �
 
 Tropp–Webber 2023, Lemma B.2 (scalar step); HMT 2011, proof of Prop 10.2 / Prop A.5
 (`E[1/χ²_d] = 1/(d-2)`). Atlas: `inverse-chi-square-moment`. The source states it for
-`ι = Fin d` (see `inv_chi_square_moment_fin`). Proof ported from the Prove2me solution
-`Sol_GaussianMatrix_inv_chi_square_moment` (Laplace-transform representation of `1/S`). -/
-theorem inv_chi_square_moment {ι : Type*} [Fintype ι] (hd : 3 ≤ Fintype.card ι) :
+`ι = Fin d` (see `integrable_and_integral_inv_sum_sq_gaussianReal_fin`). Proof ported from the
+Prove2me solution `Sol_GaussianMatrix_inv_chi_square_moment` (Laplace-transform representation
+of `1/S`). -/
+theorem integrable_and_integral_inv_sum_sq_gaussianReal {ι : Type*} [Fintype ι]
+    (hd : 3 ≤ Fintype.card ι) :
     Integrable (fun x : ι → ℝ => (∑ j, x j ^ 2)⁻¹)
         (Measure.pi fun _ : ι => gaussianReal 0 1) ∧
     ∫ x, (∑ j, x j ^ 2)⁻¹ ∂(Measure.pi fun _ : ι => gaussianReal 0 1)
@@ -185,10 +191,10 @@ theorem inv_chi_square_moment {ι : Type*} [Fintype ι] (hd : 3 ≤ Fintype.card
     have : (3 : ℝ) ≤ Fintype.card ι := by exact_mod_cast hd
     apply div_nonneg zero_le_one; linarith
   refine ⟨⟨hmeas.aestronglyMeasurable, ?_⟩, ?_⟩
-  · rw [hasFiniteIntegral_iff_ofReal hnn, icm_lintegral hd]
+  · rw [hasFiniteIntegral_iff_ofReal hnn, lintegral_inv_sum_sq_gaussianReal hd]
     exact ENNReal.ofReal_lt_top
-  · rw [integral_eq_lintegral_of_nonneg_ae hnn hmeas.aestronglyMeasurable, icm_lintegral hd,
-      ENNReal.toReal_ofReal hpos]
+  · rw [integral_eq_lintegral_of_nonneg_ae hnn hmeas.aestronglyMeasurable,
+      lintegral_inv_sum_sq_gaussianReal hd, ENNReal.toReal_ofReal hpos]
 
 /-- **Inverse chi-square moment**, source form over `Fin d`: for `d ≥ 3`,
 `E[1/χ²_d] = 1/(d - 2)`.
@@ -196,12 +202,12 @@ theorem inv_chi_square_moment {ι : Type*} [Fintype ι] (hd : 3 ≤ Fintype.card
 Tropp–Webber 2023, Lemma B.2 (scalar step); HMT 2011, proof of Prop 10.2.
 Atlas: `inverse-chi-square-moment`. Ported from the Prove2me solution
 `Sol_GaussianMatrix_inv_chi_square_moment`. -/
-theorem inv_chi_square_moment_fin {d : ℕ} (hd : 3 ≤ d) :
+theorem integrable_and_integral_inv_sum_sq_gaussianReal_fin {d : ℕ} (hd : 3 ≤ d) :
     Integrable (fun x : Fin d → ℝ => (∑ j, x j ^ 2)⁻¹)
         (Measure.pi fun _ : Fin d => gaussianReal 0 1) ∧
     ∫ x, (∑ j, x j ^ 2)⁻¹ ∂(Measure.pi fun _ : Fin d => gaussianReal 0 1)
       = 1 / ((d : ℝ) - 2) := by
-  simpa using inv_chi_square_moment (ι := Fin d) (by simpa using hd)
+  simpa using integrable_and_integral_inv_sum_sq_gaussianReal (ι := Fin d) (by simpa using hd)
 
 /-! ### Schur complement formula for a diagonal entry of `(G Gᵀ)⁻¹` -/
 
@@ -211,9 +217,10 @@ theorem inv_chi_square_moment_fin {d : ℕ} (hd : 3 ≤ d) :
 row space of `H`.
 
 Helper for Tropp–Webber 2023, Lemma B.2 / HMT 2011, Prop A.5 (proof of `E (G Gᵀ)⁻¹`).
-Atlas: `inverse-wishart-mean` (helper `schur_diag_inv`). Proof ported from the Prove2me solution
+Atlas: `inverse-wishart-mean` (helper). Proof ported from the Prove2me solution
 `Sol_GaussianMatrix_schur_diag_inv` (adjugate computation). -/
-theorem schur_diag_inv {n k : ℕ} (G : Matrix (Fin (n + 1)) (Fin k) ℝ) (i : Fin (n + 1))
+theorem inv_self_mul_transpose_apply_self {n k : ℕ} (G : Matrix (Fin (n + 1)) (Fin k) ℝ)
+    (i : Fin (n + 1))
     (hH : (G.submatrix i.succAbove id * (G.submatrix i.succAbove id)ᵀ).det ≠ 0) :
     (G * Gᵀ)⁻¹ i i =
       (G i ⬝ᵥ G i - (G.submatrix i.succAbove id *ᵥ G i) ⬝ᵥ
@@ -278,7 +285,8 @@ theorem schur_diag_inv {n k : ℕ} (G : Matrix (Fin (n + 1)) (Fin k) ℝ) (i : F
 
 /-- A standard Gaussian vector mapped by `Vᵀ`, with `V` having orthonormal columns, is a
 standard Gaussian vector (the case `t = 1` of `gaussianMatrix_map_block`, reshaped). -/
-private lemma rl_vec_law {m d : ℕ} (V : Matrix (Fin m) (Fin d) ℝ) (hV : Vᵀ * V = 1) :
+private lemma pi_gaussianReal_map_transpose_mulVec {m d : ℕ} (V : Matrix (Fin m) (Fin d) ℝ)
+    (hV : Vᵀ * V = 1) :
     Measure.map (fun g : Fin m → ℝ => Vᵀ *ᵥ g) (Measure.pi fun _ : Fin m => gaussianReal 0 1)
       = Measure.pi fun _ : Fin d => gaussianReal 0 1 := by
   have hι : ∀ p : ℕ, MeasurePreserving
@@ -303,7 +311,7 @@ private lemma rl_vec_law {m d : ℕ} (V : Matrix (Fin m) (Fin d) ℝ) (hV : Vᵀ
   rw [hfun, ← Measure.map_map (hev d).measurable (hFm.comp (hι m).measurable),
     ← Measure.map_map hFm (hι m).measurable, (hι m).map_eq, hB, (hev d).map_eq]
 
-private lemma rl_inner {k : ℕ} (x y : EuclideanSpace ℝ (Fin k)) :
+private lemma inner_eq_ofLp_dotProduct {k : ℕ} (x y : EuclideanSpace ℝ (Fin k)) :
     inner ℝ x y = x.ofLp ⬝ᵥ y.ofLp := by
   rw [EuclideanSpace.inner_eq_star_dotProduct, star_trivial, dotProduct_comm]
 
@@ -320,7 +328,8 @@ private lemma det_ne_zero_of_rank_eq {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) 
   simp only [Module.finrank_fin_fun] at h2
   omega
 
-private lemma rl_exists_V {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.rank = n) :
+private lemma exists_orthonormal_sq_dist_rowSpace_eq_sum_sq {n k : ℕ}
+    (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.rank = n) :
     ∃ V : Matrix (Fin k) (Fin (k - n)) ℝ, Vᵀ * V = 1 ∧ ∀ g : Fin k → ℝ,
       g ⬝ᵥ g - (H *ᵥ g) ⬝ᵥ ((H * Hᵀ)⁻¹ *ᵥ (H *ᵥ g)) = ∑ j, (Vᵀ *ᵥ g) j ^ 2 := by
   set E := EuclideanSpace ℝ (Fin k)
@@ -347,7 +356,7 @@ private lemma rl_exists_V {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.r
   refine ⟨V, ?_, ?_⟩
   · ext j j'
     have h1 : (Vᵀ * V) j j' = inner ℝ ((b j : K) : E) ((b j' : K) : E) := by
-      rw [rl_inner]; simp [hV, Matrix.mul_apply, dotProduct]
+      rw [inner_eq_ofLp_dotProduct]; simp [hV, Matrix.mul_apply, dotProduct]
     rw [h1, ← Submodule.coe_inner, orthonormal_iff_ite.mp b.orthonormal, Matrix.one_apply]
   · intro g
     set M := H * Hᵀ with hM
@@ -379,9 +388,9 @@ private lemma rl_exists_V {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.r
     rw [hq]
     simp_rw [hcoord]
     have hrr : inner ℝ rK rK = r ⬝ᵥ r := by
-      rw [Submodule.coe_inner, rl_inner]
+      rw [Submodule.coe_inner, inner_eq_ofLp_dotProduct]
     have hbj : ∀ j, inner ℝ (b j) rK = ((b j : K) : E).ofLp ⬝ᵥ r := by
-      intro j; rw [Submodule.coe_inner, rl_inner]
+      intro j; rw [Submodule.coe_inner, inner_eq_ofLp_dotProduct]
     rw [← hrr, ← hpars]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [real_inner_comm, hbj, sq]
@@ -392,15 +401,16 @@ private lemma rl_exists_V {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.r
 `X ~ N(0, I_{k-n})`).
 
 Helper for Tropp–Webber 2023, Lemma B.2 / HMT 2011, Prop A.5. Atlas: `inverse-wishart-mean`
-(helper `residual_law`). Proof ported from the Prove2me solution `Sol_GaussianMatrix_residual_law`
+(helper). Proof ported from the Prove2me solution `Sol_GaussianMatrix_residual_law`
 (orthonormal basis of `ker H` and the block law `gaussianMatrix_map_block`, atlas
 `block-law-indep`). -/
-theorem gaussian_residual_law {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.rank = n) :
+theorem pi_gaussianReal_map_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ)
+    (hH : H.rank = n) :
     Measure.map (fun g : Fin k → ℝ => g ⬝ᵥ g - (H *ᵥ g) ⬝ᵥ ((H * Hᵀ)⁻¹ *ᵥ (H *ᵥ g)))
         (Measure.pi fun _ : Fin k => gaussianReal 0 1)
       = Measure.map (fun x : Fin (k - n) → ℝ => ∑ j, x j ^ 2)
         (Measure.pi fun _ : Fin (k - n) => gaussianReal 0 1) := by
-  obtain ⟨V, hV, hq⟩ := rl_exists_V H hH
+  obtain ⟨V, hV, hq⟩ := exists_orthonormal_sq_dist_rowSpace_eq_sum_sq H hH
   have hfun : (fun g : Fin k → ℝ => g ⬝ᵥ g - (H *ᵥ g) ⬝ᵥ ((H * Hᵀ)⁻¹ *ᵥ (H *ᵥ g))) =
       (fun x : Fin (k - n) → ℝ => ∑ j, x j ^ 2) ∘ (fun g : Fin k → ℝ => Vᵀ *ᵥ g) := funext hq
   have hS : Measurable (fun x : Fin (k - n) → ℝ => ∑ j, x j ^ 2) := by fun_prop
@@ -408,11 +418,11 @@ theorem gaussian_residual_law {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ) (hH :
     refine measurable_pi_lambda _ fun a => ?_
     simp only [Matrix.mulVec, dotProduct]
     fun_prop
-  rw [hfun, ← Measure.map_map hS hVm, rl_vec_law V hV]
+  rw [hfun, ← Measure.map_map hS hVm, pi_gaussianReal_map_transpose_mulVec V hV]
 
 /-! ### Mean of the inverse Wishart matrix -/
 
-private lemma iwm_measurable_inv_entry {r k : ℕ} (i j : Fin r) :
+private lemma measurable_inv_self_mul_transpose_apply {r k : ℕ} (i j : Fin r) :
     Measurable (fun G : Fin r → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j) := by
   have hc : Continuous (fun G : Fin r → Fin k → ℝ => Matrix.of G * (Matrix.of G)ᵀ) :=
     Continuous.matrix_mul continuous_id (Continuous.matrix_transpose continuous_id)
@@ -420,13 +430,14 @@ private lemma iwm_measurable_inv_entry {r k : ℕ} (i j : Fin r) :
   simp only [Matrix.smul_apply, smul_eq_mul]
   exact (hc.matrix_det.measurable.inv).mul (hc.matrix_adjugate.matrix_elem i j).measurable
 
-private lemma iwm_psd_inv {r k : ℕ} (G : Fin r → Fin k → ℝ) :
+private lemma posSemidef_inv_self_mul_transpose {r k : ℕ} (G : Fin r → Fin k → ℝ) :
     ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹).PosSemidef := by
   have := Matrix.posSemidef_self_mul_conjTranspose (Matrix.of G)
   rw [Matrix.conjTranspose_eq_transpose_of_trivial] at this
   exact this.inv
 
-private lemma iwm_psd_offdiag {r : ℕ} (M : Matrix (Fin r) (Fin r) ℝ) (hM : M.PosSemidef)
+private lemma abs_apply_le_apply_self_add_apply_self {r : ℕ} (M : Matrix (Fin r) (Fin r) ℝ)
+    (hM : M.PosSemidef)
     (i j : Fin r) : |M i j| ≤ M i i + M j j := by
   have hs : M j i = M i j := by
     have := hM.isHermitian.apply i j
@@ -442,7 +453,7 @@ private lemma iwm_psd_offdiag {r : ℕ} (M : Matrix (Fin r) (Fin r) ℝ) (hM : M
     hs] at h1 h2
   rw [abs_le]; constructor <;> linarith
 
-private lemma iwm_offdiag_integral {r k : ℕ} (i j : Fin r) (hij : i ≠ j) :
+private lemma integral_inv_self_mul_transpose_apply_of_ne {r k : ℕ} (i j : Fin r) (hij : i ≠ j) :
     ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j ∂(gaussianMatrix r k) = 0 := by
   classical
   set D : Matrix (Fin r) (Fin r) ℝ := Matrix.diagonal fun a => if a = i then -1 else 1 with hD
@@ -473,11 +484,13 @@ private lemma iwm_offdiag_integral {r k : ℕ} (i j : Fin r) (hij : i ≠ j) :
         ∂(Measure.map (fun G => Matrix.of.symm (D * Matrix.of G *
           (1 : Matrix (Fin k) (Fin k) ℝ))) (gaussianMatrix r k)) := by
     rw [hrot]
-  rw [integral_map hmeas.aemeasurable (iwm_measurable_inv_entry i j).aestronglyMeasurable] at h1
+  rw [integral_map hmeas.aemeasurable
+    (measurable_inv_self_mul_transpose_apply i j).aestronglyMeasurable] at h1
   simp_rw [key, integral_neg] at h1
   linarith
 
-private lemma iwm_resid_moment {n k : ℕ} (hnk : n + 3 ≤ k) (H : Matrix (Fin n) (Fin k) ℝ)
+private lemma integrable_and_integral_inv_sq_dist_rowSpace {n k : ℕ} (hnk : n + 3 ≤ k)
+    (H : Matrix (Fin n) (Fin k) ℝ)
     (hH : H.rank = n) :
     Integrable (fun g : Fin k → ℝ => (g ⬝ᵥ g - (H *ᵥ g) ⬝ᵥ ((H * Hᵀ)⁻¹ *ᵥ (H *ᵥ g)))⁻¹)
         (Measure.pi fun _ : Fin k => gaussianReal 0 1) ∧
@@ -487,8 +500,8 @@ private lemma iwm_resid_moment {n k : ℕ} (hnk : n + 3 ≤ k) (H : Matrix (Fin 
       (fun g : Fin k → ℝ => g ⬝ᵥ g - (H *ᵥ g) ⬝ᵥ ((H * Hᵀ)⁻¹ *ᵥ (H *ᵥ g))) := by
     apply Continuous.measurable
     fun_prop
-  have hlaw := gaussian_residual_law H hH
-  obtain ⟨hint, hval⟩ := inv_chi_square_moment_fin (d := k - n) (by omega)
+  have hlaw := pi_gaussianReal_map_sq_dist_rowSpace H hH
+  obtain ⟨hint, hval⟩ := integrable_and_integral_inv_sum_sq_gaussianReal_fin (d := k - n) (by omega)
   have hφ : Measurable (fun s : ℝ => s⁻¹) := measurable_inv
   have hS : Measurable (fun x : Fin (k - n) → ℝ => ∑ j, x j ^ 2) := by fun_prop
   constructor
@@ -499,7 +512,8 @@ private lemma iwm_resid_moment {n k : ℕ} (hnk : n + 3 ≤ k) (H : Matrix (Fin 
       integral_map hS.aemeasurable hφ.aestronglyMeasurable, hval,
       Nat.cast_sub (by omega : n ≤ k)]
 
-private lemma iwm_diag {n k : ℕ} (hnk : n + 3 ≤ k) (i : Fin (n + 1)) :
+private lemma integrable_and_integral_inv_self_mul_transpose_apply_self {n k : ℕ}
+    (hnk : n + 3 ≤ k) (i : Fin (n + 1)) :
     Integrable (fun G : Fin (n + 1) → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i)
         (gaussianMatrix (n + 1) k) ∧
     ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i ∂(gaussianMatrix (n + 1) k)
@@ -508,13 +522,13 @@ private lemma iwm_diag {n k : ℕ} (hnk : n + 3 ≤ k) (i : Fin (n + 1)) :
   set ν : Measure (Fin n → Fin k → ℝ) := Measure.pi fun _ : Fin n => μ with hν
   set F : (Fin (n + 1) → Fin k → ℝ) → ℝ :=
     fun G => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i with hF
-  have hFm : Measurable F := iwm_measurable_inv_entry i i
+  have hFm : Measurable F := measurable_inv_self_mul_transpose_apply i i
   set e := MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => Fin k → ℝ) i with he
   have hmp : MeasurePreserving e (gaussianMatrix (n + 1) k) (μ.prod ν) :=
     measurePreserving_piFinSuccAbove (fun _ : Fin (n + 1) => μ) i
   set Φ : (Fin k → ℝ) × (Fin n → Fin k → ℝ) → ℝ := fun p => F (e.symm p) with hΦ
   have hΦm : Measurable Φ := hFm.comp e.symm.measurable
-  have hΦnn : ∀ p, 0 ≤ Φ p := fun p => (iwm_psd_inv _).diag_nonneg
+  have hΦnn : ∀ p, 0 ≤ Φ p := fun p => (posSemidef_inv_self_mul_transpose _).diag_nonneg
   -- on the full-rank event, the inner integrand is the inverse residual
   have hschur : ∀ H : Fin n → Fin k → ℝ, (Matrix.of H).rank = n → ∀ g : Fin k → ℝ,
       Φ (g, H) = (g ⬝ᵥ g - (Matrix.of H *ᵥ g) ⬝ᵥ
@@ -528,7 +542,7 @@ private lemma iwm_diag {n k : ℕ} (hnk : n + 3 ≤ k) (i : Fin (n + 1)) :
         ((Matrix.of G0).submatrix i.succAbove id)ᵀ).det ≠ 0 := by
       rw [hsub]
       exact det_ne_zero_of_rank_eq _ (by rw [Matrix.rank_self_mul_transpose, hH])
-    have := schur_diag_inv (Matrix.of G0) i hdet
+    have := inv_self_mul_transpose_apply_self (Matrix.of G0) i hdet
     rw [hsub, hrow] at this
     simp only [hΦ, hF, he, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
     exact this
@@ -540,7 +554,7 @@ private lemma iwm_diag {n k : ℕ} (hnk : n + 3 ≤ k) (i : Fin (n + 1)) :
       ∫ g, Φ (g, H) ∂μ = 1 / ((k : ℝ) - n - 2) := by
     filter_upwards [hrank] with H hH
     simp_rw [hschur H hH]
-    exact iwm_resid_moment hnk (Matrix.of H) hH
+    exact integrable_and_integral_inv_sq_dist_rowSpace hnk (Matrix.of H) hH
   have hint : Integrable Φ (μ.prod ν) := by
     rw [integrable_prod_iff' hΦm.aestronglyMeasurable]
     refine ⟨hinner.mono fun H h => h.1, ?_⟩
@@ -567,10 +581,11 @@ Tropp–Webber 2023, Lemma B.2; HMT 2011, Prop A.5 (used in Prop 10.2). Atlas:
 avoids choosing a norm on matrices. Proof ported from the Prove2me solution
 `Sol_GaussianMatrix_inverse_wishart_mean`: off-diagonal entries vanish by sign-flip invariance
 (atlas `rotation-invariance`); a diagonal entry is the inverse squared residual of one row
-against the others (`schur_diag_inv`), which given the other rows (full rank a.s., atlas
-`gaussian-full-rank-ae`) is `1/χ²_{k-r+1}` (`gaussian_residual_law`, atlas `block-law-indep`;
-`inv_chi_square_moment`, atlas `inverse-chi-square-moment`). -/
-theorem inverse_wishart_mean {r k : ℕ} (hrk : r + 2 ≤ k) :
+against the others (`inv_self_mul_transpose_apply_self`), which given the other rows (full rank
+a.s., atlas `gaussian-full-rank-ae`) is `1/χ²_{k-r+1}` (`pi_gaussianReal_map_sq_dist_rowSpace`,
+atlas `block-law-indep`; `integrable_and_integral_inv_sum_sq_gaussianReal`, atlas
+`inverse-chi-square-moment`). -/
+theorem integrable_and_integral_inv_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r + 2 ≤ k) :
     (∀ i j : Fin r, Integrable (fun G : Fin r → Fin k → ℝ =>
         (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j) (gaussianMatrix r k)) ∧
     ∀ i j : Fin r, ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j ∂(gaussianMatrix r k)
@@ -580,34 +595,37 @@ theorem inverse_wishart_mean {r k : ℕ} (hrk : r + 2 ≤ k) :
     intro i
     cases r with
     | zero => exact i.elim0
-    | succ n => exact (iwm_diag (by omega) i).1
+    | succ n => exact (integrable_and_integral_inv_self_mul_transpose_apply_self (by omega) i).1
   refine ⟨fun i j => ?_, fun i j => ?_⟩
   · refine Integrable.mono' ((hdiag i).add (hdiag j))
-      (iwm_measurable_inv_entry i j).aestronglyMeasurable
+      (measurable_inv_self_mul_transpose_apply i j).aestronglyMeasurable
       (Filter.Eventually.of_forall fun G => ?_)
     rw [Real.norm_eq_abs]
-    exact iwm_psd_offdiag _ (iwm_psd_inv G) i j
+    exact abs_apply_le_apply_self_add_apply_self _ (posSemidef_inv_self_mul_transpose G) i j
   · by_cases hij : i = j
     · subst hij
       cases r with
       | zero => exact i.elim0
       | succ n =>
-        rw [(iwm_diag (by omega) i).2, Matrix.one_apply_eq, mul_one]
+        rw [(integrable_and_integral_inv_self_mul_transpose_apply_self (by omega) i).2,
+          Matrix.one_apply_eq, mul_one]
         push_cast
         ring_nf
-    · rw [iwm_offdiag_integral i j hij, Matrix.one_apply_ne hij, mul_zero]
+    · rw [integral_inv_self_mul_transpose_apply_of_ne i j hij, Matrix.one_apply_ne hij, mul_zero]
 
 /-- **Mean of the inverse Wishart matrix, matrix form.** For an `r × k` standard Gaussian matrix
 `G` with `r + 2 ≤ k`, the matrix of entrywise expectations of `(G Gᵀ)⁻¹` is `(k - r - 1)⁻¹ • I`.
 
 Tropp–Webber 2023, Lemma B.2; HMT 2011, Prop A.5. Atlas: `inverse-wishart-mean`. Corollary of
-`inverse_wishart_mean` (entrywise integrability is its first component). -/
-theorem inverse_wishart_mean_matrix {r k : ℕ} (hrk : r + 2 ≤ k) :
+`integrable_and_integral_inv_self_mul_transpose_gaussianMatrix` (entrywise integrability is its
+first component). -/
+theorem integral_inv_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r + 2 ≤ k) :
     (Matrix.of fun i j : Fin r =>
         ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j ∂(gaussianMatrix r k))
       = (1 / ((k : ℝ) - r - 1)) • (1 : Matrix (Fin r) (Fin r) ℝ) := by
   ext i j
-  rw [Matrix.of_apply, (inverse_wishart_mean hrk).2 i j, Matrix.smul_apply, smul_eq_mul]
+  rw [Matrix.of_apply, (integrable_and_integral_inv_self_mul_transpose_gaussianMatrix hrk).2 i j,
+    Matrix.smul_apply, smul_eq_mul]
 
 /-! ### Frobenius moment of the pseudoinverse -/
 
@@ -634,12 +652,12 @@ matrix with `r + 2 ≤ k`, then `‖G†‖_F²` is integrable and `E ‖G†‖
 Tropp–Webber 2023, Lemma B.2; HMT 2011, Prop 10.2 (`E ‖Ω₁†‖_F² = k/(p-1)` with `Ω₁` of size
 `k × (k+p)`). Atlas: `pinv-frob-moment`. Proof ported from the Prove2me solution
 `Sol_GaussianMatrix_pinv_frobenius_moment`: `‖G†‖_F² = tr (G Gᵀ)⁻¹`
-(`frobSq_pinvR_eq_trace_inv`, atlas `pseudoinverse`) and `inverse_wishart_mean`
-(atlas `inverse-wishart-mean`). -/
-theorem pinv_frobenius_moment {r k : ℕ} (hrk : r + 2 ≤ k) :
+(`frobSq_pinvR_eq_trace_inv`, atlas `pseudoinverse`) and
+`integrable_and_integral_inv_self_mul_transpose_gaussianMatrix` (atlas `inverse-wishart-mean`). -/
+theorem integrable_and_integral_frobSq_pinvR_gaussianMatrix {r k : ℕ} (hrk : r + 2 ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => frobSq (pinvR (Matrix.of G))) (gaussianMatrix r k) ∧
     ∫ G, frobSq (pinvR (Matrix.of G)) ∂(gaussianMatrix r k) = (r : ℝ) / ((k : ℝ) - r - 1) := by
-  obtain ⟨hint, hval⟩ := inverse_wishart_mean hrk
+  obtain ⟨hint, hval⟩ := integrable_and_integral_inv_self_mul_transpose_gaussianMatrix hrk
   have hfun : (fun G : Fin r → Fin k → ℝ => frobSq (pinvR (Matrix.of G)))
       = fun G => ∑ i, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i := by
     funext G; rw [frobSq_pinvR_eq_trace_inv]; rfl

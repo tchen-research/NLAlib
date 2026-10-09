@@ -1,14 +1,26 @@
 import NLAlib.Concentration.Matrix.Defs.Ch8Entropy
 
 /-!
-# ch8_jensen_reflection_algebra
+# Hermitian unitary dilation of an isometry
 
-Lean name: `NLAlib.ch8_jensen_reflection_algebra`.
+Main declaration: `NLAlib.isometry_reflection_identities`.
+
+Atlas: `operator-monotone-convex` (step of the operator Jensen inequality).
+
+Source: Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1, proof of
+Theorem 8.5.2 (unitary dilation of an isometry), printed pp. 132–133.
 -/
 open scoped Matrix.Norms.L2Operator ComplexOrder
 open NLAlib
 
-theorem NLAlib.ch8_jensen_reflection_algebra
+/-- For an isometry `K`, the block matrix `U = fromBlocks (1 - K Kᴴ) K Kᴴ 0` is a Hermitian involution
+and the lower-right block of `U (fromBlocks A 0 0 B) U` is `Kᴴ A K`.
+
+Tropp 2015, proof of Thm 8.5.2 (unitary dilation). Atlas: `operator-monotone-convex`. Ported from
+the Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 8*.
+
+Auxiliary; not a numbered result in the source. -/
+theorem NLAlib.isometry_reflection_identities
     {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
     (K : Matrix ι κ ℂ) (hK : K.conjTranspose * K = 1)
     (A : Matrix ι ι ℂ) (B : Matrix κ κ ℂ) :

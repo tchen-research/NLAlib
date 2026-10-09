@@ -170,6 +170,13 @@
    "order": 22,
    "summary": "Sketch-and-solve, sketch-and-precondition, Kaczmarz and sketch-and-project. Mostly consumers of sketching and matrix facts; Kaczmarz is itself a clean foundation.",
    "priority": "later"
+  },
+  {
+   "id": "gaussian-concentration-tools",
+   "name": "Gaussian measure: log-Sobolev and comparison",
+   "parent": "gaussian",
+   "order": 23,
+   "summary": "The machinery behind Gaussian concentration and Gordon's theorem: integration by parts, the Ornstein–Uhlenbeck semigroup, log-Sobolev, Herbst, Slepian and Sudakov–Fernique."
   }
  ],
  "results": [
@@ -1026,14 +1033,14 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch3_cgf_exp_log",
+     "decl": "NLAlib.posDef_matrixExp_and_matrixLog_matrixExp",
      "status": "proved",
      "usage": "Pass a complex `A : Matrix (Fin d) (Fin d) ℂ` with `hA : A.IsHermitian`; gives `(matrixExp A).PosDef` and `matrixLog (matrixExp A) = A`."
     }
    ],
    "depends_on": [],
    "uses_defs": [
-    "NLAlib.loewnerLE",
+    "NLAlib.LoewnerLE",
     "NLAlib.matrixExp",
     "NLAlib.matrixLog",
     "NLAlib.lambdaMax",
@@ -1093,25 +1100,25 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch8_log_operator_monotone",
+     "decl": "NLAlib.matrixLog_le_matrixLog",
      "status": "proved",
      "usage": "Needs `[NeZero d]`; pass `hA : A.PosDef`, `hH : H.PosDef` and `hAH : loewnerLE A H` to get `loewnerLE (matrixLog A) (matrixLog H)`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch8_log_operator_concave",
+     "decl": "NLAlib.operatorConvexOn_neg_log",
      "status": "proved",
      "usage": "No arguments; gives `ch8_operatorConvexOn (Set.Ioi 0) (fun x => -Real.log x)` (log is operator concave), ready to feed to `ch8_operator_jensen` or `ch8_perspective_convex`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch8_operator_jensen",
+     "decl": "NLAlib.operator_jensen",
      "status": "proved",
      "usage": "Pass `hf : ch8_operatorConvexOn I f`, Hermitian `A₁`, `A₂` with `spectrum ℝ Aᵢ ⊆ I`, and `K₁`, `K₂` with `hK : K₁ᴴ * K₁ + K₂ᴴ * K₂ = 1`; gives `loewnerLE (f (K₁ᴴ A₁ K₁ + K₂ᴴ A₂ K₂)) (K₁ᴴ f(A₁) K₁ + K₂ᴴ f(A₂) K₂)` with `f` applied through `ch8_matrixFunction`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch8_perspective_convex",
+     "decl": "NLAlib.matrixPerspective_jointly_operatorConvex",
      "status": "proved",
      "usage": "Pass `hf : ch8_operatorConvexOn (Set.Ioi 0) f`, positive definite `A₁ A₂ H₁ H₂` and `0 ≤ t ≤ 1`; gives joint operator convexity of `ch8_perspective f` in `loewnerLE` along the segment."
     }
@@ -1120,7 +1127,7 @@
     "loewner-order"
    ],
    "uses_defs": [
-    "NLAlib.loewnerLE",
+    "NLAlib.LoewnerLE",
     "NLAlib.matrixLog",
     "NLAlib.matrixExp",
     "NLAlib.traceExp"
@@ -1218,7 +1225,7 @@
    ],
    "depends_on": [],
    "uses_defs": [
-    "NLAlib.loewnerLE"
+    "NLAlib.LoewnerLE"
    ],
    "variants": [],
    "mathlib_prereqs": [
@@ -1267,7 +1274,7 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.dilation_variance",
+     "decl": "NLAlib.hermitianSecondMoment_dilation_eq_rectSecondMoment",
      "status": "proved",
      "usage": "Pass a probability measure `μ` and measurable `Z` with `hL2 : MemLp Z 2 μ`; gives that `hermitianSecondMoment` of `dilation (Z − E Z)` equals `rectSecondMoment μ (Z − E Z)`."
     }
@@ -1924,14 +1931,14 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.inv_chi_square_moment",
+     "decl": "NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal",
      "status": "proved",
      "note": "over any finite index type with card ≥ 3",
      "usage": "Pass `hd : 3 ≤ Fintype.card ι`; gives integrability of `x ↦ (∑ j, x j ^ 2)⁻¹` under `Measure.pi (fun _ => gaussianReal 0 1)` and its integral `1 / (card ι - 2)`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.inv_chi_square_moment_fin",
+     "decl": "NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal_fin",
      "status": "proved",
      "usage": "Pass `hd : 3 ≤ d`; gives integrability and `∫ (∑ j, x j ^ 2)⁻¹ = 1 / (d - 2)` over `Fin d → ℝ` with the standard Gaussian product measure."
     },
@@ -1981,14 +1988,14 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.inverse_wishart_mean",
+     "decl": "NLAlib.integrable_and_integral_inv_self_mul_transpose_gaussianMatrix",
      "status": "proved",
      "note": "entrywise integrability and mean (1/(k−r−1))·I; proof via Schur complement of the other rows and the residual law",
      "usage": "Pass `hrk : r + 2 ≤ k`; gives, for all `i j`, integrability of `(G Gᵀ)⁻¹ i j` under `gaussianMatrix r k` and `∫ (G Gᵀ)⁻¹ i j = 1 / (k - r - 1) * (1 : Matrix) i j`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.inverse_wishart_mean_matrix",
+     "decl": "NLAlib.integral_inv_self_mul_transpose_gaussianMatrix",
      "status": "proved",
      "usage": "Pass `hrk : r + 2 ≤ k`; gives the matrix of entrywise expectations `Matrix.of (fun i j => ∫ (G Gᵀ)⁻¹ i j) = (1 / (k - r - 1)) • 1`."
     },
@@ -2055,7 +2062,7 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.pinv_frobenius_moment",
+     "decl": "NLAlib.integrable_and_integral_frobSq_pinvR_gaussianMatrix",
      "status": "proved",
      "note": "∫ frobSq (pinvR G) = r/(k−r−1) under gaussianMatrix r k, r+2 ≤ k",
      "usage": "Pass `hrk : r + 2 ≤ k`; gives integrability and `∫ G, frobSq (pinvR (Matrix.of G)) ∂gaussianMatrix r k = r / (k - r - 1)`, the last ingredient (with `rsvd_inverse_moment_factor` and `integral_pinvR_frobSq_block`) of `hinv`."
@@ -2127,7 +2134,9 @@
     }
    ],
    "depends_on": [
-    "inverse-wishart-mean"
+    "inverse-wishart-mean",
+    "chi-square-neg-moment",
+    "rotation-invariance"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2142,7 +2151,8 @@
    "difficulty": 3,
    "priority": "next",
    "tags": [],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "inverse-wishart-frob-moment",
@@ -2175,7 +2185,8 @@
     }
    ],
    "depends_on": [
-    "inverse-wishart-mean"
+    "inverse-wishart-mean",
+    "chi-square-neg-moment"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2190,7 +2201,8 @@
    "difficulty": 3,
    "priority": "next",
    "tags": [],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "pinv-spectral-tail",
@@ -2228,7 +2240,8 @@
     }
    ],
    "depends_on": [
-    "gaussian-matrix-def"
+    "wishart-lambda-min-tail",
+    "pseudoinverse"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2244,7 +2257,8 @@
    "difficulty": 4,
    "priority": "next",
    "tags": [],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "pinv-spectral-expectation",
@@ -2279,7 +2293,8 @@
     }
    ],
    "depends_on": [
-    "pinv-spectral-tail"
+    "pinv-spectral-tail",
+    "tail-integral"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2294,7 +2309,8 @@
    "difficulty": 3,
    "priority": "next",
    "tags": [],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "pinv-frob-tail",
@@ -2329,7 +2345,8 @@
     }
    ],
    "depends_on": [
-    "pinv-frob-moment"
+    "chi-square-neg-moment",
+    "inverse-wishart-mean"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2344,7 +2361,8 @@
    "difficulty": 4,
    "priority": "later",
    "tags": [],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "inverse-wishart-spectral-moment",
@@ -2385,8 +2403,9 @@
     }
    ],
    "depends_on": [
-    "pinv-spectral-tail",
-    "gaussian-concentration"
+    "wishart-lambda-min-tail",
+    "tail-integral",
+    "pseudoinverse"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2403,7 +2422,8 @@
    "tags": [
     "goal"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "gaussian-concentration",
@@ -2448,6 +2468,8 @@
     }
    ],
    "depends_on": [
+    "herbst",
+    "gaussian-log-sobolev",
     "gaussian-matrix-def"
    ],
    "uses_defs": [
@@ -2467,7 +2489,7 @@
     "foundation",
     "bottleneck"
    ],
-   "notes": "Blocks three open Mission III items and Mission II's goal. Candidate proofs: Pisier's smart-path interpolation (shortest), or Gaussian log-Sobolev + Herbst.",
+   "notes": "Blocks three open Mission III items and Mission II's goal. Candidate proofs: Pisier's smart-path interpolation (shortest), or Gaussian log-Sobolev + Herbst. Proved on Prove2me (sketch chain complete); being ported in round 3.",
    "updated_at": "2026-10-09"
   },
   {
@@ -2556,6 +2578,9 @@
     }
    ],
    "depends_on": [
+    "gordon-minimax",
+    "sudakov-fernique",
+    "norm-lipschitz",
     "gaussian-matrix-def"
    ],
    "uses_defs": [
@@ -2575,7 +2600,7 @@
     "foundation",
     "bottleneck"
    ],
-   "notes": "Needs the Gaussian comparison (Slepian/Gordon) inequality or the Davidson–Szarek route; hardest open item in the Gaussian series.",
+   "notes": "Needs the Gaussian comparison (Slepian/Gordon) inequality or the Davidson–Szarek route; hardest open item in the Gaussian series. Proved on Prove2me (sketch chain complete); being ported in round 3.",
    "updated_at": "2026-10-09"
   },
   {
@@ -2611,7 +2636,7 @@
     }
    ],
    "depends_on": [
-    "gordon"
+    "spectral-second-moment"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2627,7 +2652,8 @@
    "difficulty": 4,
    "priority": "next",
    "tags": [],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "spectral-second-moment",
@@ -2666,8 +2692,9 @@
     }
    ],
    "depends_on": [
-    "chevet",
-    "gaussian-concentration"
+    "slepian",
+    "norm-lipschitz",
+    "gaussian-matrix-def"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix",
@@ -2682,7 +2709,8 @@
    "difficulty": 3,
    "priority": "next",
    "tags": [],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "smin-lower-tail",
@@ -2744,7 +2772,8 @@
    "difficulty": 2,
    "priority": "next",
    "tags": [],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "smin-small-ball",
@@ -2871,7 +2900,8 @@
     "goal",
     "ose"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Proved on Prove2me (sketch chain complete); being ported in round 3."
   },
   {
    "id": "haar-orthogonal",
@@ -2995,7 +3025,7 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.rademacherLaw",
+     "decl": "NLAlib.IsRademacher",
      "status": "proved",
      "note": "law only",
      "usage": "`rademacherLaw μ r : Prop` says `r` is a ±1 Rademacher variable under `μ`; it is only a law predicate (no Khintchine inequality yet), used as the Rademacher branch of `hLaw` in `ch4_matrix_series` and `ch4_hermitian_series`."
@@ -3496,13 +3526,13 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch4_matrix_series",
+     "decl": "NLAlib.matrix_gaussian_series",
      "status": "proved",
      "usage": "Pass fixed `B : Fin N → Matrix (Fin m) (Fin n) ℂ` and independent measurable scalars `g` with `hLaw` (all standard Gaussian or all Rademacher); for `Z = ∑ g k • B k` with second moment `v`, gives `v = max ‖∑ B Bᴴ‖ ‖∑ Bᴴ B‖`, `E spectralNorm Z ≤ √(2 v log(m + n))` and the tail `gaussianSeriesTail (m + n) v t`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch4_hermitian_series",
+     "decl": "NLAlib.hermitian_gaussian_series",
      "status": "proved",
      "usage": "Pass Hermitian `A k` (`hA`) and independent measurable scalars `g` with `hLaw` (Gaussian or Rademacher); for `Y = ∑ g k • A k` gives `v = spectralNorm (∑ A k ^ 2)`, `E lambdaMax Y ≤ √(2 v log d)` and the tail `gaussianSeriesTail d v t`."
     }
@@ -3554,7 +3584,7 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch5_matrix_chernoff",
+     "decl": "NLAlib.matrix_chernoff",
      "status": "proved",
      "usage": "Pass independent, measurable, a.e.-Hermitian `X k` with `hBound : 0 ≤ lambdaMin (X k) ∧ lambdaMax (X k) ≤ L` a.e. and `hL : 0 ≤ L`; with `a`, `b` the extreme eigenvalues of `E ∑ X k`, gives expectation bounds for every `θ > 0`, the lower tail `chernoffLowerTail d a L ε` (`0 ≤ ε < 1`) and the upper tail `chernoffUpperTail d b L ε` (`0 ≤ ε`)."
     }
@@ -3671,13 +3701,13 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch7_intrinsic_chernoff",
+     "decl": "NLAlib.intrinsic_matrix_chernoff",
      "status": "proved",
      "usage": "Pass independent PSD `X k` with `lambdaMax (X k) ≤ L` a.e. (`0 < L`) and a nonzero `M` with `hMeanBound : loewnerLE (E ∑ X k) M`; with `r = intrinsicDimension M`, `a = lambdaMax M`, gives `E lambdaMax ≤ (e^θ − 1)/θ · a + (L/θ) log(2r)` for `θ > 0` and the tail `2 r exp((a/L)(ε − (1+ε) log(1+ε)))` for `ε ≥ L/a`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.ch7_intrinsic_bernstein",
+     "decl": "NLAlib.intrinsic_matrix_bernstein",
      "status": "proved",
      "usage": "Pass independent centred `S k` with `spectralNorm (S k) ≤ L` a.e. and variance proxies `V₁`, `V₂` (not both 0) with `loewnerLE (E Z Zᴴ) V₁` and `loewnerLE (E Zᴴ Z) V₂`; with `r = intrinsicDimension (fromBlocks V₁ 0 0 V₂)` and `v = max ‖V₁‖ ‖V₂‖`, gives `P[t ≤ spectralNorm Z] ≤ 4 r exp(−(t²/2)/(v + L t/3))` for `t ≥ √v + L/3`."
     }
@@ -3690,7 +3720,7 @@
     "NLAlib.intrinsicDimension",
     "NLAlib.lambdaMax",
     "NLAlib.spectralNorm",
-    "NLAlib.loewnerLE"
+    "NLAlib.LoewnerLE"
    ],
    "variants": [
     "matrix-chernoff",
@@ -3943,13 +3973,13 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.jl_lemma_le_of_log_le",
+     "decl": "NLAlib.jl_lemma_prob_le_of_log_le",
      "status": "scaffold",
      "usage": "Pass `0 < ε < 1`, `0 < δ` and `hk : (ε²/4 − ε³/6)⁻¹ * log(2N²/δ) ≤ k`; gives that the bad set of Gaussian sketches has measure at most `ENNReal.ofReal δ`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.jl_lemma_le_half",
+     "decl": "NLAlib.jl_lemma_prob_le_half",
      "status": "scaffold",
      "usage": "Pass `0 < ε < 1`, `hN : 2 ≤ N` and `hk : 48 * log N / ε² ≤ k`; gives that the bad set of Gaussian sketches has measure at most `ENNReal.ofReal (1/2)`."
     },
@@ -4075,7 +4105,7 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.isSubspaceEmbedding_iff_of_orthonormal",
+     "decl": "NLAlib.isSubspaceEmbedding_iff_of_hasOrthonormalCols",
      "status": "proved",
      "usage": "Pass `hU : Uᵀ * U = 1`; rewrites `IsSubspaceEmbedding S U ε` as `∀ x, (1 − ε) * x ⬝ᵥ x ≤ ‖(S * U) x‖² ∧ ‖(S * U) x‖² ≤ (1 + ε) * x ⬝ᵥ x` (squared norms written with `mulVec` and `⬝ᵥ`)."
     },
@@ -4087,7 +4117,7 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.isSubspaceEmbedding_of_specNorm_gram_sub_one_le",
+     "decl": "NLAlib.isSubspaceEmbedding_of_specNorm_transpose_mul_self_sub_one_le",
      "status": "proved",
      "usage": "Pass `hU : Uᵀ * U = 1` and `h : specNorm ((S * U)ᵀ * (S * U) - 1) ≤ ε`; gives `IsSubspaceEmbedding S U ε`."
     },
@@ -4582,20 +4612,20 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.rangeFinder_frobSq_le",
+     "decl": "NLAlib.frobSq_residual_le_of_range_subset",
      "status": "proved",
      "note": "HMT Thm 9.1, Frobenius form, slightly more general than the source (no diagonal S, no U₁ hypotheses); plus the truncated variant (Chen–Persson prop:hmt-struct)",
      "usage": "Pass the block split `hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ` with `U₂ᵀU₂ = 1`, `V₁ᵀV₁ = 1`, `V₂ᵀV₂ = 1`, `V₁ᵀV₂ = 0` (no diagonality, nothing on `U₁`), `hΩ₁ : Ω₁ = V₁ᵀ * Ω`, `hΩ₂ : Ω₂ = V₂ᵀ * Ω`, `hunit : IsUnit (Ω₁ * Ω₁ᵀ)`, `hQo : Qᵀ * Q = 1` and `hQ : Q * (Qᵀ * (A * Ω)) = A * Ω`; gives `frobSq (residual Q A) ≤ frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.rangeFinder_truncated_frobSq_le",
+     "decl": "NLAlib.frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset",
      "status": "proved",
      "usage": "Same hypotheses as `rangeFinder_frobSq_le` plus `hY : IsBestRankApprox k (Qᵀ * A) Y` (`k` = number of columns of `V₁`); gives `frobSq (A - Q * Y) ≤ frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_sub_rangeFinderZ",
+     "decl": "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
      "status": "proved",
      "usage": "Pass the block-SVD hypotheses (`hA`, `hU₂`, `hV₁`, `hV₂`, `hV`), `hΩ₁`, `hΩ₂` and `hunit : IsUnit (Ω₁ * Ω₁ᵀ)` (no `Q`); gives the exact identity `frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)`."
     },
@@ -4782,13 +4812,13 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.tail_bound",
+     "decl": "NLAlib.sq_le_four_div_mul_sum_Ico_sq",
      "status": "proved",
      "usage": "Pass an antitone nonnegative `σ : ℕ → ℝ` (e.g. `singularValues A`), `ht : 0 < t`, `hℓ : ℓ = (t + 1) / 2`, `hk : 4 * k ≤ t` and `hN : ℓ ≤ N`; gives `σ ℓ ^ 2 ≤ 4 / t * ∑ j ∈ Finset.Ico k N, σ j ^ 2`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.sq_le_avg_Ico",
+     "decl": "NLAlib.sq_le_sum_Ico_sq_div",
      "status": "proved",
      "usage": "Pass an antitone nonnegative `σ : ℕ → ℝ` and `hk : k < ℓ`; gives `σ ℓ ^ 2 ≤ (∑ j ∈ Finset.Ico k ℓ, σ j ^ 2) / (ℓ - k)`."
     },
@@ -4907,7 +4937,7 @@
     "loewner-order"
    ],
    "uses_defs": [
-    "NLAlib.loewnerLE",
+    "NLAlib.LoewnerLE",
     "NLAlib.pinvL",
     "NLAlib.specNorm",
     "NLAlib.residual"
@@ -4970,13 +5000,13 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_perp_mul_residual",
+     "decl": "NLAlib.frobSq_transpose_mul_residual",
      "status": "proved",
      "usage": "Pass `hQ : HasOrthonormalCols Q`, `hQp : HasOrthonormalCols Qp` and `hcomp : Q * Qᵀ + Qp * Qpᵀ = 1`; gives `frobSq (Qpᵀ * residual Q A) = frobSq (residual Q A)`."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.l2_opNorm_perp_mul_residual",
+     "decl": "NLAlib.specNorm_transpose_mul_residual",
      "status": "proved",
      "usage": "Pass `hQ : HasOrthonormalCols Q`, `hQp : HasOrthonormalCols Qp` and `hcomp : Q * Qᵀ + Qp * Qpᵀ = 1`; gives `specNorm (Qpᵀ * residual Q A) = specNorm (residual Q A)`."
     }
@@ -5545,7 +5575,7 @@
    "uses_defs": [
     "NLAlib.gaussianMatrix",
     "NLAlib.pinvL",
-    "NLAlib.loewnerLE",
+    "NLAlib.LoewnerLE",
     "NLAlib.singularValues"
    ],
    "variants": [
@@ -5593,7 +5623,7 @@
     "cauchy-interlacing"
    ],
    "uses_defs": [
-    "NLAlib.loewnerLE",
+    "NLAlib.LoewnerLE",
     "NLAlib.pinvL"
    ],
    "variants": [
@@ -6626,7 +6656,7 @@
    ],
    "uses_defs": [
     "NLAlib.lambdaMin",
-    "NLAlib.loewnerLE",
+    "NLAlib.LoewnerLE",
     "NLAlib.pinvL"
    ],
    "variants": [
@@ -6671,7 +6701,7 @@
     "cg-convergence"
    ],
    "uses_defs": [
-    "NLAlib.loewnerLE",
+    "NLAlib.LoewnerLE",
     "NLAlib.pinvL",
     "NLAlib.gaussianMatrix",
     "NLAlib.lambdaMax",
@@ -6734,19 +6764,19 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.rsvd_inverse_moment_factor",
+     "decl": "NLAlib.integral_frobSq_mul_block_mul_pinvR_block",
      "status": "proved",
      "usage": "Pass `hΩ : Measure.map Ω μ = gaussianMatrix n t` (array-valued `Ω`; for a matrix-valued `Ω'` instantiate `Ω := fun ω => Matrix.of.symm (Ω' ω)`) and `V₁`, `V₂` with `V₁ᵀV₁ = 1`, `V₂ᵀV₂ = 1`, `V₁ᵀV₂ = 0`; gives `∫ frobSq (S₂ * (V₂ᵀ Ω) * pinvR (V₁ᵀ Ω)) = frobSq S₂ * ∫ frobSq (pinvR (V₁ᵀ Ω))`, i.e. `hinv` of `rsvd_main` up to the inverse moment."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.completion_inverse_moment_factor",
+     "decl": "NLAlib.integral_frobSq_pinvL_block_mul_block_mul",
      "status": "proved",
      "usage": "Pass `hΨ : Measure.map Ψ μ = gaussianMatrix m s` and `Q`, `Qp` with `Qᵀ * Q = 1`, `Qpᵀ * Qp = 1`, `Qᵀ * Qp = 0`; gives `∫ frobSq (pinvL (Ψᵀ Q) * (Ψᵀ Qp) * B) = (∫ frobSq (pinvL (Ψᵀ Q))) * frobSq B` for every fixed `B` (hypothesis `hG₂` of `completion_reduction`)."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.integral_pinvR_frobSq_block",
+     "decl": "NLAlib.integral_frobSq_pinvR_block",
      "status": "proved",
      "usage": "Pass `hΩ : Measure.map Ω μ = gaussianMatrix n t` and `hV₁ : V₁ᵀ * V₁ = 1`; gives `∫ frobSq (pinvR (V₁ᵀ Ω)) ∂μ = ∫ G, frobSq (pinvR (Matrix.of G)) ∂gaussianMatrix k t`, ready for `pinv_frobenius_moment`."
     }
@@ -6783,6 +6813,476 @@
     "engine"
    ],
    "notes": "Done. Mathlib gaps noted: no MeasurableSpace instance on Matrix; no lemma pulling IndepFun back along a map with a given law.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-integration-by-parts",
+   "title": "Gaussian integration by parts",
+   "aliases": [
+    "Stein's identity",
+    "Gaussian IBP",
+    "Stein's lemma"
+   ],
+   "area": "gaussian-concentration-tools",
+   "kind": "identity",
+   "status": "planned",
+   "informal": "For $g \\sim N(0,I_n)$ and smooth $f$ of moderate growth, $$\\mathbb{E}[g_i f(g)] = \\mathbb{E}[\\partial_i f(g)].$$ One-dimensional and multivariate forms.",
+   "hypotheses": [
+    "$g \\sim N(0, I_n)$",
+    "$f$ differentiable with $f$, $\\nabla f$ of moderate growth"
+   ],
+   "conclusion": "$\\mathbb{E}[g_i f(g)] = \\mathbb{E}[\\partial_i f(g)]$",
+   "sources": [
+    {
+     "source": "ledoux01",
+     "label": "§5"
+    },
+    {
+     "source": "vershynin18",
+     "label": "§7"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "uses_defs": [
+    "NLAlib.gaussianMatrix"
+   ],
+   "variants": [
+    "ornstein-uhlenbeck"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of Prove2me gaussian_ibp_one_dim, gaussian_integration_by_parts.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "ornstein-uhlenbeck",
+   "title": "Ornstein–Uhlenbeck semigroup: invariance, commutation, entropy derivative",
+   "aliases": [
+    "OU semigroup",
+    "Mehler formula",
+    "heat semigroup for the Gaussian"
+   ],
+   "area": "gaussian-concentration-tools",
+   "kind": "lemma",
+   "status": "planned",
+   "informal": "The semigroup $P_t f(x) = \\mathbb{E} f(e^{-t}x + \\sqrt{1-e^{-2t}}\\,g)$ leaves the Gaussian measure invariant, commutes with derivatives up to the factor $e^{-t}$, and the entropy of $P_t f$ is differentiable in $t$ with derivative given by the Dirichlet form.",
+   "hypotheses": [
+    "$f$ bounded below and smooth, one dimension"
+   ],
+   "conclusion": "$\\frac{d}{dt}\\operatorname{Ent}_\\gamma(P_t f) = -\\int \\frac{|(P_t f)'|^2}{P_t f}\\,d\\gamma$",
+   "sources": [
+    {
+     "source": "ledoux01",
+     "label": "§5.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "gaussian-integration-by-parts"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "gaussian-log-sobolev"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of ou_semigroup_invariant, ou_semigroup_commutation, ou_entropy_hasDerivAt.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-log-sobolev",
+   "title": "Gaussian logarithmic Sobolev inequality",
+   "aliases": [
+    "log-Sobolev",
+    "LSI",
+    "Gross's inequality",
+    "Gaussian LSI"
+   ],
+   "area": "gaussian-concentration-tools",
+   "kind": "theorem",
+   "status": "planned",
+   "informal": "For the standard Gaussian measure $\\gamma_n$ and smooth $f$: $$\\operatorname{Ent}_{\\gamma_n}(f^2) \\le 2\\int |\\nabla f|^2\\,d\\gamma_n.$$ Proved in one dimension via the Ornstein–Uhlenbeck semigroup, then tensorised.",
+   "hypotheses": [
+    "$\\gamma_n$ standard Gaussian on $\\mathbb{R}^n$",
+    "$f$ smooth with $f^2$ and $|\\nabla f|^2$ integrable"
+   ],
+   "conclusion": "$\\operatorname{Ent}_{\\gamma_n}(f^2) \\le 2\\,\\mathbb{E}_{\\gamma_n}|\\nabla f|^2$",
+   "sources": [
+    {
+     "source": "ledoux01",
+     "label": "Thm 5.1"
+    },
+    {
+     "source": "bl76"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "ornstein-uhlenbeck",
+    "entropy-tensorization"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "gaussian-concentration",
+    "herbst"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of gaussian_logsobolev_bounded_below, _one_dim_compact_support, _one_dim, gaussian_logsobolev.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "entropy-tensorization",
+   "title": "Tensorisation of entropy",
+   "aliases": [
+    "subadditivity of entropy",
+    "tensorization"
+   ],
+   "area": "gaussian-concentration-tools",
+   "kind": "lemma",
+   "status": "planned",
+   "informal": "For a product measure $\\mu = \\mu_1 \\otimes \\cdots \\otimes \\mu_n$: $$\\operatorname{Ent}_\\mu(f) \\le \\sum_i \\mathbb{E}_\\mu\\big[\\operatorname{Ent}_{\\mu_i}(f)\\big],$$ where the inner entropy is in the $i$-th coordinate.",
+   "hypotheses": [
+    "$\\mu$ a finite product of probability measures",
+    "$f \\ge 0$ with $f\\log f$ integrable"
+   ],
+   "conclusion": "$\\operatorname{Ent}_\\mu(f) \\le \\sum_i \\mathbb{E}_\\mu \\operatorname{Ent}_{\\mu_i}(f)$",
+   "sources": [
+    {
+     "source": "ledoux01",
+     "label": "Prop 5.6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [],
+   "uses_defs": [],
+   "variants": [
+    "gaussian-log-sobolev"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of entropy_tensorization.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "herbst",
+   "title": "Herbst's argument",
+   "aliases": [
+    "Herbst argument",
+    "entropy method",
+    "log-Sobolev to concentration"
+   ],
+   "area": "gaussian-concentration-tools",
+   "kind": "theorem",
+   "status": "planned",
+   "informal": "A log-Sobolev inequality with constant $c$ implies $\\mathbb{E}e^{\\lambda F} \\le e^{\\lambda\\mathbb{E}F + c\\lambda^2 L^2/2}$ for $L$-Lipschitz $F$, hence Gaussian tails $\\mathbb{P}[F \\ge \\mathbb{E}F + t] \\le e^{-t^2/(2cL^2)}$.",
+   "hypotheses": [
+    "$\\mu$ satisfies a log-Sobolev inequality with constant $c$",
+    "$F$ $L$-Lipschitz (via the entropy bound for Lipschitz functions)"
+   ],
+   "conclusion": "$\\mathbb{P}[F \\ge \\mathbb{E}F + t] \\le \\exp(-t^2/(2cL^2))$",
+   "sources": [
+    {
+     "source": "ledoux01",
+     "label": "Thm 5.3"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "gaussian-log-sobolev"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "gaussian-concentration"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of herbst_argument, lipschitz_smooth_approx, gaussian_lipschitz_entropy_bound, gaussian_concentration_vector.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "slepian",
+   "title": "Slepian's tail comparison",
+   "aliases": [
+    "Slepian's inequality",
+    "Slepian lemma",
+    "Gaussian comparison"
+   ],
+   "area": "gaussian-concentration-tools",
+   "kind": "theorem",
+   "status": "planned",
+   "informal": "If $(X_i)$ and $(Y_i)$ are centred Gaussian vectors with $\\mathbb{E}(X_i - X_j)^2 \\le \\mathbb{E}(Y_i - Y_j)^2$ for all $i, j$, then for all $t$: $$\\mathbb{P}\\big[\\max_i X_i \\ge t\\big] \\le \\mathbb{P}\\big[\\max_i Y_i \\ge t\\big].$$",
+   "hypotheses": [
+    "$X, Y$ centred Gaussian vectors in $\\mathbb{R}^N$",
+    "$\\mathbb{E}(X_i-X_j)^2 \\le \\mathbb{E}(Y_i-Y_j)^2$ for all $i,j$"
+   ],
+   "conclusion": "$\\mathbb{P}[\\max_i X_i \\ge t] \\le \\mathbb{P}[\\max_i Y_i \\ge t]$ for every $t$",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 7.2.1"
+    },
+    {
+     "source": "gordon85"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "gaussian-integration-by-parts"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "sudakov-fernique",
+    "gordon-minimax"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of slepian_tail_comparison (via the smart-path interpolation).",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "sudakov-fernique",
+   "title": "Sudakov–Fernique inequality",
+   "aliases": [
+    "Sudakov–Fernique",
+    "expected maximum comparison"
+   ],
+   "area": "gaussian-concentration-tools",
+   "kind": "theorem",
+   "status": "planned",
+   "informal": "Under the Slepian increment condition, $\\mathbb{E}\\max_i X_i \\le \\mathbb{E}\\max_i Y_i$.",
+   "hypotheses": [
+    "$X, Y$ centred Gaussian vectors",
+    "$\\mathbb{E}(X_i-X_j)^2 \\le \\mathbb{E}(Y_i-Y_j)^2$ for all $i,j$"
+   ],
+   "conclusion": "$\\mathbb{E}\\max_i X_i \\le \\mathbb{E}\\max_i Y_i$",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 7.2.11"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "slepian"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "slepian",
+    "gordon-minimax"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of sudakov_fernique.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gordon-minimax",
+   "title": "Gordon's minimax comparison inequality",
+   "aliases": [
+    "Gordon's inequality",
+    "minimax comparison",
+    "Gordon's theorem (comparison form)"
+   ],
+   "area": "gaussian-concentration-tools",
+   "kind": "theorem",
+   "status": "planned",
+   "informal": "For doubly indexed centred Gaussian processes $X_{ij}, Y_{ij}$ with $\\mathbb{E}(X_{ij}-X_{ik})^2 \\le \\mathbb{E}(Y_{ij}-Y_{ik})^2$ and $\\mathbb{E}(X_{ij}-X_{lk})^2 \\ge \\mathbb{E}(Y_{ij}-Y_{lk})^2$ for $i \\ne l$: $$\\mathbb{E}\\min_i\\max_j X_{ij} \\le \\mathbb{E}\\min_i\\max_j Y_{ij}.$$ The engine behind the lower bound $\\mathbb{E}\\,\\sigma_{\\min}(G) \\ge \\sqrt{N} - \\sqrt{n}$.",
+   "hypotheses": [
+    "$X, Y$ centred Gaussian processes indexed by $i, j$",
+    "increment conditions within rows and across rows"
+   ],
+   "conclusion": "$\\mathbb{E}\\min_i\\max_j X_{ij} \\le \\mathbb{E}\\min_i\\max_j Y_{ij}$",
+   "sources": [
+    {
+     "source": "gordon85"
+    },
+    {
+     "source": "vershynin18",
+     "label": "Thm 7.2.?"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "gaussian-integration-by-parts"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "slepian",
+    "gordon"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of gordon_minimax, expectation_norm_gaussian_diff.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "chi-square-neg-moment",
+   "title": "Negative moments of chi-square",
+   "aliases": [
+    "inverse chi-square moments",
+    "negative moments of chi-square",
+    "inverse Gamma moments"
+   ],
+   "area": "gaussian-extreme",
+   "kind": "identity",
+   "status": "planned",
+   "informal": "For $\\chi^2_d$ and $q$ with $2q < d$: $\\mathbb{E}[(\\chi^2_d)^{-q}]$ in closed form via the Gamma function, with the $L^q$ bound $\\|(\\chi^2_d)^{-1}\\|_{L^q} \\le C/d$, and $\\mathbb{E}[(\\chi^2_d)^{-2}] = 1/((d-2)(d-4))$.",
+   "hypotheses": [
+    "$d \\ge 2q+1$"
+   ],
+   "conclusion": "$\\mathbb{E}[(\\chi^2_d)^{-q}] = \\frac{\\Gamma(d/2-q)}{2^q\\Gamma(d/2)}$",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop A.5"
+    },
+    {
+     "source": "tw23",
+     "label": "App. B"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chi-square-lower-tail"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "inverse-chi-square-moment"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of chi_square_neg_moment, inv_chi_square_Lq_bound, inv_sq_chi_square_moment.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "tail-integral",
+   "title": "Expectation from a tail bound (layer cake)",
+   "aliases": [
+    "layer-cake",
+    "integrated tail bound",
+    "expectation via tails"
+   ],
+   "area": "concentration-scalar",
+   "kind": "lemma",
+   "status": "planned",
+   "informal": "If $\\mathbb{P}[X > t] \\le F(t)$ then $\\mathbb{E}X \\le a + \\int_a^\\infty F(t)\\,dt$; and $\\int_0^\\infty t^p e^{-ct}\\,dt$ bounds. Turns tail bounds into moment bounds.",
+   "hypotheses": [
+    "$X \\ge 0$ with $\\mathbb{P}[X > t] \\le F(t)$ for $t \\ge a$"
+   ],
+   "conclusion": "$\\mathbb{E}X \\le a + \\int_a^\\infty F(t)\\,dt$",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Lem 1.2.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of integral_le_of_tail_bound, integral_power_exp_le.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "wishart-lambda-min-tail",
+   "title": "Tail of the smallest Wishart eigenvalue",
+   "aliases": [
+    "smallest Wishart eigenvalue",
+    "lambda_min tail",
+    "Wishart cdf bound"
+   ],
+   "area": "gaussian-inverse",
+   "kind": "bound",
+   "status": "planned",
+   "informal": "For $G \\in \\mathbb{R}^{r\\times k}$ Gaussian, a tail bound $\\mathbb{P}[\\lambda_{\\min}(GG^\\top) \\le s] \\le \\ldots$ obtained from the rank-one CDF and a density bound; feeds the pseudoinverse spectral tail.",
+   "hypotheses": [
+    "$G \\sim$ Gaussian $r \\times k$, $k \\ge r$"
+   ],
+   "conclusion": "$\\mathbb{P}[\\lambda_{\\min}(GG^\\top) \\le s] \\le C(r,k)\\,s^{(k-r+1)/2}$ (shape of the bound)",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "Lem B.3"
+    },
+    {
+     "source": "cd05"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chi-square-lower-tail",
+    "gaussian-full-rank-ae"
+   ],
+   "uses_defs": [
+    "NLAlib.gaussianMatrix"
+   ],
+   "variants": [
+    "pinv-spectral-tail"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "port"
+   ],
+   "notes": "Port of wishart_lambda_min_cdf_rank_one, wishart_lambda_min_cdf_density_bound (the one unproved step on Prove2me: scaffold), wishart_lambda_min_tail, tw_gamma_ratio_bound, tw_inverse_moment_numeric.",
    "updated_at": "2026-10-09"
   }
  ],
@@ -7352,6 +7852,40 @@
    "arxiv": "0803.0929",
    "doi": "10.1137/080734029",
    "role": "Spectral sparsification by leverage-score (effective resistance) sampling."
+  },
+  {
+   "id": "ledoux01",
+   "type": "book",
+   "title": "The concentration of measure phenomenon",
+   "authors": [
+    "M. Ledoux"
+   ],
+   "year": 2001,
+   "doi": "10.1090/surv/089",
+   "role": "Log-Sobolev, Herbst's argument, Gaussian concentration."
+  },
+  {
+   "id": "gordon85",
+   "type": "paper",
+   "title": "Some inequalities for Gaussian processes and applications",
+   "authors": [
+    "Y. Gordon"
+   ],
+   "year": 1985,
+   "doi": "10.1007/BF02759761",
+   "role": "Gordon's minimax comparison inequality; extreme singular values of Gaussian matrices."
+  },
+  {
+   "id": "bl76",
+   "type": "paper",
+   "title": "On extensions of the Brunn–Minkowski and Prékopa–Leindler theorems, including inequalities for log concave functions, and with an application to the diffusion equation",
+   "authors": [
+    "H. J. Brascamp",
+    "E. H. Lieb"
+   ],
+   "year": 1976,
+   "doi": "10.1016/0022-1236(76)90004-5",
+   "role": "Gaussian log-Sobolev via the semigroup route (standard reference alongside Gross 1975)."
   }
  ],
  "libraries": [

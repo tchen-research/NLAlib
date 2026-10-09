@@ -1,4 +1,5 @@
 import NLAlib.Sketching.Basic
+import NLAlib.Sketching.JL
 
 /-!
 # Sketching primitives

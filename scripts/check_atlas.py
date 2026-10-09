@@ -46,6 +46,27 @@ for r in atlas["results"]:
     st = {f["status"] for f in r["formalizations"]}
     if r["status"] == "proved" and "proved" not in st:
         errors.append(f"{r['id']}: status proved but no proved formalization listed")
+    if r["status"] == "scaffold" and not any(f["library"] in LOCAL and f["status"] == "scaffold" for f in r["formalizations"]):
+        errors.append(f"{r['id']}: status scaffold but no scaffold formalization in this repo listed")
+# cross-check with the audit's sorry list, if a build has produced one
+sorry_file = ROOT / ".lake/sorries.txt"
+if sorry_file.exists():
+    sorried = {l.strip() for l in sorry_file.read_text().splitlines() if l.strip()}
+    scaffold_decls = {f["decl"] for r in atlas["results"] for f in r["formalizations"]
+                      if f["library"] in LOCAL and f["status"] == "scaffold" and f.get("decl")}
+    proved_decls = {f["decl"] for r in atlas["results"] for f in r["formalizations"]
+                    if f["library"] in LOCAL and f["status"] == "proved" and f.get("decl")}
+    for d in sorried:
+        if d in proved_decls:
+            errors.append(f"{d} is listed as proved in the atlas but depends on sorry")
+    for d in scaffold_decls:
+        if d not in sorried:
+            errors.append(f"{d} is listed as scaffold in the atlas but no longer depends on sorry: promote it")
+    unlisted = [d for d in sorried if d not in scaffold_decls and d not in proved_decls]
+    if unlisted:
+        print("note: sorried declarations not catalogued in the atlas (add scaffold entries or they stay invisible):\n  " + "\n  ".join(sorted(unlisted)))
+else:
+    print("note: .lake/sorries.txt not found (run the audit) — skipping sorry cross-check")
 if errors:
     print("Atlas problems:\n  " + "\n  ".join(errors)); sys.exit(1)
 print(f"atlas OK: {len(atlas['results'])} results, {len(decls)} declarations scanned")

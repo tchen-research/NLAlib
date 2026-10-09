@@ -34,6 +34,7 @@ array, document id = slug) or on Prove2me later.
   `priority` (`now` / `next` / `later`).
 - **`results`** — one entry per statement or definition. Key fields:
   - `status`: `proved` (machine-checked and sorry-free in a listed library) ·
+    `scaffold` (stated in NLAlib with a `sorry` proof, or proved only modulo scaffold lemmas) ·
     `assumed` (consumed as an explicit hypothesis by a proved result) ·
     `stated` (formal statement exists, proof open; Prove2me `Open`) ·
     `planned` (chosen target, not yet stated) · `candidate` (identified, not committed).

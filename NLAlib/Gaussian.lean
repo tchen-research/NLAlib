@@ -1,4 +1,6 @@
 import NLAlib.Gaussian.Basic
+import NLAlib.Gaussian.Moments
+import NLAlib.Gaussian.Invariance
 
 /-!
 # Gaussian and random matrix facts

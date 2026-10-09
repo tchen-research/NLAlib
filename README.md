@@ -13,12 +13,11 @@ Progress map: **https://research.chen.pw/NLAlib/** (built from `atlas/atlas.json
 ```
 NLAlib/
   Matrix/         norms, projections, pseudoinverse, SVD, Eckart–Young, perturbation   (layer 0)
-  Concentration/  scalar bounds; Matrix.lean re-exports TroppMatrixConcentration      (layer 1)
+  Concentration/  scalar bounds; Matrix/ = Tropp 2015 Ch. 3–8 by topic                 (layer 1)
   Gaussian/       Gaussian matrices: invariance, moments, inverse moments, extremes    (layer 2)
   Sketching/      subspace embeddings, JL, leverage scores, AMM                        (layer 3)
   LowRank/ Estimation/ Krylov/                                                         (layer 4)
   Solvers/                                                                             (layer 5)
-TroppMatrixConcentration/   Tropp 2015 Ch. 3–8, unchanged module names (see docs/)
 atlas/                      the catalogue of results, sources, libraries and dependencies
 scripts/                    Audit.lean (axioms), check_layers.py, check_atlas.py, build_site.py
 ```

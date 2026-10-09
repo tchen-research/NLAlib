@@ -76,7 +76,7 @@ The statement is the product. A proof can be replaced; a statement that nobody c
   an expectation bound; an expectation identity is more reusable than an inequality.
 - Prefer two-sided statements split into two theorems (upper, lower) over one conjunction.
 
-**Naming.** One namespace per series (`GaussianMatrix`, `TroppMatrixConcentration`, next:
+**Naming.** One namespace, `NLAlib`, with one file per concept (formerly one namespace per series; old:
 `MatrixAnalysis`, `Sketching`, `Krylov`). Theorem names are snake_case and describe the
 mathematics, not the source (`pinv_frobenius_moment`, not `tw_lemma_b2`). The atlas id is the
 kebab-case version of the same words.
@@ -150,7 +150,7 @@ failing to build on v4.31–v4.33). Useful because it uses Mathlib's own notions
 | `HansonWright.hanson_wright_inequality_hdp_explicit_constant` (constant 1/(256e²)) | `hanson-wright` | High. Unlocks sub-Gaussian JL, trace-estimator tails, sub-Gaussian matrix norms. Single file of ~210 kB with its own `deterministicFrobeniusNorm` / `deterministicOperatorNorm` / `centeredQuadraticForm`, so budget for transport lemmas to Mathlib norms. |
 | `coveringNumber_euclideanBall_le` | `epsilon-net-norm` | Medium. Crude bound (1 + 2R/ε)^n, but exactly what the ε-net argument needs. |
 | `bernstein_sum_subExponential`, `hoeffding_sum_bounded` | `bernstein-scalar`, `hoeffding` | Medium. Check Mathlib first; Hoeffding's lemma in MGF form is already there. |
-| `MatrixBernstein.*` | `matrix-bernstein` | None. Ours is already proved in `TroppMatrixConcentration` with Tropp's constants. |
+| `MatrixBernstein.*` | `matrix-bernstein` | None. Ours is already proved in `NLAlib/Concentration/Matrix/` with Tropp's constants. |
 | Dudley, chaining, Gaussian functional tools | — | Not needed for current batches. |
 
 Caveats: single maintainer, no sorry-free statement in the README, `Experimental` modules in flux.

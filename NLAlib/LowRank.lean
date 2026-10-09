@@ -1,6 +1,7 @@
 import NLAlib.LowRank.Basic
 import NLAlib.LowRank.RangeFinder
 import NLAlib.LowRank.GeneralizedNystrom
+import NLAlib.LowRank.GaussianSketch
 import NLAlib.LowRank.RSVD
 import NLAlib.LowRank.Assembly
 import NLAlib.LowRank.SketchedRegression

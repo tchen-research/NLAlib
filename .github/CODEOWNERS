@@ -1,0 +1,12 @@
+# Area owners review PRs touching their directory. Basic.lean changes need two reviewers (see CONTRIBUTING).
+*                               @tchen-research
+/RandNLA/Matrix/                @tchen-research
+/RandNLA/Concentration/         @tchen-research
+/TroppMatrixConcentration/      @tchen-research
+/RandNLA/Gaussian/              @tchen-research
+/RandNLA/Sketching/             @tchen-research
+/RandNLA/LowRank/               @tchen-research
+/RandNLA/Estimation/            @tchen-research
+/RandNLA/Krylov/                @tchen-research
+/RandNLA/Solvers/               @tchen-research
+/atlas/                         @tchen-research

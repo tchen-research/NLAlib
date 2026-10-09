@@ -1,0 +1,28 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  build:
+    name: Build, audit, lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Lean library (with Mathlib cache)
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: "--wfail"
+          use-mathlib-cache: true
+          lint: false
+          test: false
+      - name: Axiom audit (no sorry, only the three standard axioms)
+        run: lake env lean scripts/Audit.lean
+      - name: Import-layer lint
+        run: python3 scripts/check_layers.py
+      - name: Atlas consistency
+        run: |
+          pip install --quiet jsonschema
+          python3 scripts/check_atlas.py
+      - name: Site builds
+        run: python3 scripts/build_site.py

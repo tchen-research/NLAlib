@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prove2.me/schemas/randnla-atlas-0.1.json",
+  "title": "RandNLA Atlas",
+  "description": "Normalized catalogue of the randomized numerical linear algebra results worth formalizing, what has been formalized where, and how results depend on one another. Four flat collections keyed by stable slug ids, so the same shape can live in a JSON file, a Prove2me mission series, or a shared document database with one collection per array.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "updated_at",
+    "areas",
+    "results",
+    "sources",
+    "libraries"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "areas": {
+      "type": "array",
+      "description": "Topic taxonomy. A tree: top-level areas have parent = null.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "parent",
+          "order"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "order": {
+            "type": "integer"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "now",
+              "next",
+              "later"
+            ],
+            "description": "Captain's targeting priority for the area as a whole."
+          }
+        }
+      }
+    },
+    "results": {
+      "type": "array",
+      "description": "One entry per mathematical statement or definition. The unit a solver claims, a captain targets, and the viewer colours.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "area",
+          "kind",
+          "status",
+          "sources",
+          "depends_on"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "area": {
+            "type": "string",
+            "description": "id of the most specific area"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "definition",
+              "lemma",
+              "theorem",
+              "algorithm",
+              "bound",
+              "identity",
+              "application"
+            ],
+            "description": "application = an end-to-end algorithm guarantee that consumes the foundations; shown in the atlas as a consumer, not a target."
+          },
+          "informal": {
+            "type": "string",
+            "description": "One-paragraph statement in plain mathematics (KaTeX allowed)."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "proved",
+              "stated",
+              "assumed",
+              "planned",
+              "candidate"
+            ],
+            "description": "proved: machine-checked and sorry-free somewhere listed in formalizations. stated: a formal statement exists and is open (Prove2me 'Open'). assumed: consumed as an explicit hypothesis / Prop by a downstream formalization but not itself proved. planned: chosen as a target, no formal statement yet. candidate: identified as worth doing, not committed."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "source"
+              ],
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "description": "id into sources[]"
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Theorem/section label in that source, e.g. 'Thm 10.5'."
+                }
+              }
+            }
+          },
+          "formalizations": {
+            "type": "array",
+            "description": "Where (if anywhere) this result exists in Lean. Empty for planned/candidate.",
+            "items": {
+              "type": "object",
+              "required": [
+                "library",
+                "status"
+              ],
+              "properties": {
+                "library": {
+                  "type": "string",
+                  "description": "id into libraries[]"
+                },
+                "decl": {
+                  "type": "string",
+                  "description": "Fully qualified Lean declaration name."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "proved",
+                    "stated",
+                    "assumed"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "prove2me_theorem_id": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "ids of results this one's proof consumes. Drives the dependency graph and the 'open leaves' frontier."
+          },
+          "mathlib_prereqs": {
+            "type": "array",
+            "description": "Mathlib declarations the formal statement or proof will lean on, and whether they exist today.",
+            "items": {
+              "type": "object",
+              "required": [
+                "decl",
+                "present"
+              ],
+              "properties": {
+                "decl": {
+                  "type": "string"
+                },
+                "present": {
+                  "type": "boolean"
+                },
+                "note": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "difficulty": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "1 = routine once prerequisites exist, 5 = research-level formalization effort."
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "now",
+              "next",
+              "later"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date"
+          },
+          "updated_by": {
+            "type": "string",
+            "description": "Opaque user id, never a display name."
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "title",
+          "authors",
+          "year"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "paper",
+              "book",
+              "survey",
+              "notes",
+              "repo",
+              "thesis"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "year": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "arxiv": {
+            "type": "string"
+          },
+          "doi": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "description": "Why this source matters for the atlas (e.g. 'primary reference', 'cleanest proof')."
+          }
+        }
+      }
+    },
+    "libraries": {
+      "type": "array",
+      "description": "Lean codebases where results live. Includes Mathlib itself.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lean": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Pinned toolchain, e.g. v4.33.1"
+          },
+          "mathlib": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Pinned Mathlib commit or tag"
+          },
+          "license": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ours": {
+            "type": "boolean",
+            "description": "Maintained by this project (true) or external (false)."
+          },
+          "scope": {
+            "type": "string"
+          },
+          "repo_dir": {
+            "type": "string",
+            "description": "For libraries in this repository: the source directory, used by scripts/check_atlas.py to verify declarations exist."
+          }
+        }
+      }
+    }
+  }
+}

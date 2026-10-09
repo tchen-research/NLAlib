@@ -1,0 +1,4671 @@
+{
+ "schema_version": "0.1",
+ "updated_at": "2026-10-09",
+ "areas": [
+  {
+   "id": "matrix",
+   "name": "Matrix analysis toolkit",
+   "parent": null,
+   "order": 0,
+   "summary": "Deterministic facts every RandNLA proof reaches for: SVD, best low-rank approximation, perturbation, projections, pseudoinverse, trace inequalities, the Loewner order.",
+   "priority": "now"
+  },
+  {
+   "id": "matrix-spectral",
+   "name": "SVD, eigenvalues and perturbation",
+   "parent": "matrix",
+   "order": 1,
+   "summary": ""
+  },
+  {
+   "id": "matrix-projections",
+   "name": "Projections, pseudoinverse and orthonormal bases",
+   "parent": "matrix",
+   "order": 2,
+   "summary": ""
+  },
+  {
+   "id": "matrix-trace",
+   "name": "Trace inequalities and the Loewner order",
+   "parent": "matrix",
+   "order": 3,
+   "summary": ""
+  },
+  {
+   "id": "gaussian",
+   "name": "Gaussian and random matrix facts",
+   "parent": null,
+   "order": 4,
+   "summary": "What a standard Gaussian matrix does: invariance, moments, inverse moments of the pseudoinverse, extreme singular values. The bottleneck for every Gaussian-sketch argument.",
+   "priority": "now"
+  },
+  {
+   "id": "gaussian-invariance",
+   "name": "Law, invariance and moment identities",
+   "parent": "gaussian",
+   "order": 5,
+   "summary": ""
+  },
+  {
+   "id": "gaussian-inverse",
+   "name": "Inverse moments of the pseudoinverse",
+   "parent": "gaussian",
+   "order": 6,
+   "summary": ""
+  },
+  {
+   "id": "gaussian-extreme",
+   "name": "Extreme singular values and concentration",
+   "parent": "gaussian",
+   "order": 7,
+   "summary": ""
+  },
+  {
+   "id": "gaussian-subgaussian",
+   "name": "Sub-Gaussian ensembles and nets",
+   "parent": "gaussian",
+   "order": 8,
+   "summary": ""
+  },
+  {
+   "id": "concentration",
+   "name": "Concentration inequalities",
+   "parent": null,
+   "order": 9,
+   "summary": "Scalar and matrix tail bounds. The matrix side is done (Tropp Ch. 3–8); the scalar side is scattered across Mathlib and external libraries.",
+   "priority": "next"
+  },
+  {
+   "id": "concentration-scalar",
+   "name": "Scalar concentration",
+   "parent": "concentration",
+   "order": 10,
+   "summary": ""
+  },
+  {
+   "id": "concentration-matrix",
+   "name": "Matrix concentration",
+   "parent": "concentration",
+   "order": 11,
+   "summary": ""
+  },
+  {
+   "id": "sketching",
+   "name": "Sketching primitives",
+   "parent": null,
+   "order": 12,
+   "summary": "Johnson–Lindenstrauss, subspace embeddings, approximate matrix multiplication, leverage-score sampling. The vocabulary in which randomized algorithms are analysed.",
+   "priority": "now"
+  },
+  {
+   "id": "sketching-jl",
+   "name": "Johnson–Lindenstrauss",
+   "parent": "sketching",
+   "order": 13,
+   "summary": ""
+  },
+  {
+   "id": "sketching-ose",
+   "name": "Subspace embeddings",
+   "parent": "sketching",
+   "order": 14,
+   "summary": ""
+  },
+  {
+   "id": "sketching-amm",
+   "name": "Approximate matrix multiplication",
+   "parent": "sketching",
+   "order": 15,
+   "summary": ""
+  },
+  {
+   "id": "sketching-sampling",
+   "name": "Leverage scores and importance sampling",
+   "parent": "sketching",
+   "order": 16,
+   "summary": ""
+  },
+  {
+   "id": "lra",
+   "name": "Low-rank approximation",
+   "parent": null,
+   "order": 17,
+   "summary": "Deterministic structural lemmas (projection error, truncation, power iteration, Nyström) and the randomized algorithm guarantees that consume them.",
+   "priority": "now"
+  },
+  {
+   "id": "lra-deterministic",
+   "name": "Deterministic structural lemmas",
+   "parent": "lra",
+   "order": 18,
+   "summary": ""
+  },
+  {
+   "id": "lra-randomized",
+   "name": "Randomized algorithm guarantees (consumers)",
+   "parent": "lra",
+   "order": 19,
+   "summary": ""
+  },
+  {
+   "id": "estimation",
+   "name": "Trace, diagonal and quadratic-form estimation",
+   "parent": null,
+   "order": 20,
+   "summary": "Hutchinson-type estimators, their variance and tails, spectral measures. Small statements with very high reuse.",
+   "priority": "now"
+  },
+  {
+   "id": "krylov",
+   "name": "Krylov and polynomial methods",
+   "parent": null,
+   "order": 21,
+   "summary": "Krylov subspaces, Lanczos, Gauss quadrature, Chebyshev bounds. Deterministic, but the backbone of the modern randomized low-rank and trace-estimation algorithms.",
+   "priority": "next"
+  },
+  {
+   "id": "solvers",
+   "name": "Randomized solvers (consumers)",
+   "parent": null,
+   "order": 22,
+   "summary": "Sketch-and-solve, sketch-and-precondition, Kaczmarz and sketch-and-project. Mostly consumers of sketching and matrix facts; Kaczmarz is itself a clean foundation.",
+   "priority": "later"
+  }
+ ],
+ "results": [
+  {
+   "id": "norms-frob-spec",
+   "title": "Frobenius and spectral norms: mixed inequalities",
+   "area": "matrix-spectral",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "‖AB‖_F ≤ ‖A‖‖B‖_F, ‖AB‖_F ≤ ‖A‖_F‖B‖, ‖A‖ ≤ ‖A‖_F ≤ √rank(A)·‖A‖, unitary invariance of both norms, ‖A‖_F² = tr(AᵀA) = Σσ_i².",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§5.6"
+    },
+    {
+     "source": "hmt11",
+     "label": "§2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm",
+     "status": "proved",
+     "note": "definitions frobInner/frobSq/frobNorm/specNorm with the bridge specNorm_eq_norm; mixed-norm inequalities still to prove"
+    },
+    {
+     "library": "lra",
+     "decl": "LRA.Basic",
+     "status": "proved",
+     "note": "proved ad hoc as needed; no consolidated API"
+    },
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.basic",
+     "status": "proved",
+     "note": "definition bundle GaussianMatrix_basic defines frobNorm and specNorm"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.frobeniusNorm",
+     "present": true
+    },
+    {
+     "decl": "Matrix.Norms.L2Operator",
+     "present": true,
+     "note": "scoped instance for the ℓ₂ operator norm"
+    },
+    {
+     "decl": "Matrix.frobeniusNorm_mul_le",
+     "present": false,
+     "note": "mixed-norm inequalities absent"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "api"
+   ],
+   "notes": "Two independent ad hoc definitions already exist (LRA and GaussianMatrix_basic). Consolidating into one Mathlib-style file is the first infrastructure job.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "svd",
+   "title": "Singular value decomposition of a matrix",
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Every A ∈ ℝ^{m×n} factors as A = UΣVᵀ with U, V orthogonal and Σ diagonal with σ₁ ≥ … ≥ σ_min(m,n) ≥ 0. Block form A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ split at rank k.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 2.6.3"
+    },
+    {
+     "source": "hmt11",
+     "label": "§2.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "LinearMap.singularValues",
+     "present": true,
+     "note": "singular values of a linear map exist (as a finsupp ℕ →₀ ℝ) but no matrix factorization"
+    },
+    {
+     "decl": "Matrix.IsHermitian.spectral_theorem",
+     "present": true,
+     "note": "eigenvector unitary for Hermitian matrices"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation"
+   ],
+   "notes": "Every LRA statement is phrased in terms of the block SVD. Building the factorization from Mathlib's Hermitian spectral theorem applied to AᵀA is the natural route.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "eckart-young",
+   "title": "Eckart–Young–Mirsky: best rank-k approximation",
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "min_{rank B ≤ k} ‖A − B‖ = σ_{k+1}(A) and min ‖A − B‖_F² = Σ_{i>k} σ_i², both attained by the truncated SVD ⟦A⟧_k.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.4.9.1"
+    },
+    {
+     "source": "mt20",
+     "label": "§2.3"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "svd",
+    "weyl-mirsky"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "LinearMap.singularValues",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "lra"
+   ],
+   "notes": "OPT in every low-rank bound. The LRA project currently takes 'IsBestRankApprox' as a hypothesis (rank_mul_le_of_isBestRankApprox).",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "weyl-mirsky",
+   "title": "Weyl and Mirsky perturbation bounds for singular values",
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "|σ_i(A+E) − σ_i(A)| ≤ ‖E‖ for every i, and (Σ_i (σ_i(A+E) − σ_i(A))²)^{1/2} ≤ ‖E‖_F.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Cor 7.3.5, Thm 7.4.9.1"
+    },
+    {
+     "source": "bhatia97",
+     "label": "III.2"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "svd",
+    "courant-fischer"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "perturbation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "courant-fischer",
+   "title": "Courant–Fischer min-max and Rayleigh quotients",
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "λ_k(A) = max_{dim S = k} min_{x ∈ S, ‖x‖=1} xᵀAx for Hermitian A; λ_max = sup of the Rayleigh quotient, λ_min = inf.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 4.2.6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "ContinuousLinearMap.rayleighQuotient",
+     "present": true,
+     "note": "sup/inf of the Rayleigh quotient equals the extreme eigenvalue"
+    },
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation"
+   ],
+   "notes": "The user's definitions lambdaMax/lambdaMin (Tropp) and lamMin (LRA) are both the Rayleigh form; the full min-max is what interlacing and Weyl need.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "cauchy-interlacing",
+   "title": "Cauchy interlacing for principal submatrices and compressions",
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If Q has k orthonormal columns then λ_{i+n−k}(A) ≤ λ_i(QᵀAQ) ≤ λ_i(A). Used for Nyström, Lanczos/Ritz values and column subset selection.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 4.3.17"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "courant-fischer"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "foundation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "rank-facts",
+   "title": "Rank: products, sums, and rank-k matrices",
+   "area": "matrix-spectral",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "rank(AB) ≤ min(rank A, rank B); rank(A+B) ≤ rank A + rank B; rank(QX) = rank X for Q with orthonormal columns.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.4"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "Matrix.rank_mul_le",
+     "status": "proved"
+    },
+    {
+     "library": "mathlib",
+     "decl": "Matrix.rank_add_le",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.rank",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "mathlib"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "pseudoinverse",
+   "title": "Moore–Penrose pseudoinverse and its identities",
+   "area": "matrix-projections",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "A† defined via the SVD; the four Penrose identities; A† = (AᵀA)⁻¹Aᵀ for full column rank, Aᵀ(AAᵀ)⁻¹ for full row rank; AA† is the orthogonal projector onto range(A); ‖A†‖ = 1/σ_min; ‖G†‖_F² = tr((GGᵀ)⁻¹).",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§7.3"
+    },
+    {
+     "source": "hmt11",
+     "label": "§A.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pinvL",
+     "status": "stated",
+     "note": "full-rank pinvL/pinvR with one-sided inverse identities; general Moore–Penrose still open"
+    },
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.basic",
+     "status": "stated",
+     "note": "pinv for full-row-rank G only"
+    },
+    {
+     "library": "lra",
+     "decl": "LRA.Basic.pinvL / pinvR",
+     "status": "stated",
+     "note": "full-rank special cases only"
+    }
+   ],
+   "depends_on": [
+    "svd"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.nonsing_inv",
+     "present": true,
+     "note": "Mathlib's ⁻¹ is total (0 on singular input)"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "api"
+   ],
+   "notes": "Already defined twice in incompatible ways. A single general definition with the Penrose identities is high-reuse infrastructure.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "projection-facts",
+   "title": "Orthogonal projectors and residuals",
+   "area": "matrix-projections",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "For Q with orthonormal columns: P = QQᵀ is an orthogonal projector; ‖A‖_F² = ‖PA‖_F² + ‖(I−P)A‖_F²; range(AΩ) ⊆ range(Q) ⇒ (I−P)AΩ = 0; monotonicity of projection error under range inclusion.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "§8–9"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.residual",
+     "status": "proved",
+     "note": "definitions HasOrthonormalCols/residual and transpose_mul_residual; Pythagoras and range-inclusion lemmas still to port from LRA"
+    },
+    {
+     "library": "lra",
+     "decl": "LRA.Deterministic.RangeFinder",
+     "status": "proved",
+     "note": "residual Q A := A − Q(QᵀA) and its basic properties"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Submodule.orthogonalProjection",
+     "present": true,
+     "note": "abstract version in inner product spaces"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "lra"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "orthonormal-completion",
+   "title": "Completing an orthonormal frame to an orthogonal matrix",
+   "area": "matrix-projections",
+   "kind": "lemma",
+   "status": "assumed",
+   "informal": "If Q ∈ ℝ^{m×q} has orthonormal columns there is Q⊥ ∈ ℝ^{m×(m−q)} with [Q Q⊥] orthogonal: QQᵀ + Q⊥Q⊥ᵀ = I and QᵀQ⊥ = 0.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§2.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "hcomp hypothesis in gn_main_of_completion",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Orthonormal.exists_orthonormalBasis_extension",
+     "present": true,
+     "note": "abstract version exists; needs a matrix-level statement"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "von-neumann-trace",
+   "title": "Von Neumann trace inequality and its rank-r corollary",
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "assumed",
+   "informal": "⟨X, E⟩_F ≤ Σ_i σ_i(X)σ_i(E). Corollary: if rank X ≤ r then ⟨X,E⟩_F ≤ ‖X‖_*‖E‖ ≤ √r‖X‖_F‖E‖.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.4.1.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "VonNeumannRankBound",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "svd"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "now",
+   "tags": [
+    "foundation"
+   ],
+   "notes": "Consumed by tGN_expected_error as the hypothesis hVN.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "loewner-order",
+   "title": "Loewner order and the continuous functional calculus on matrices",
+   "area": "matrix-trace",
+   "kind": "definition",
+   "status": "proved",
+   "informal": "A ≼ B iff B − A is PSD; monotonicity of trace and of conjugation; f(A) for Hermitian A via eigen-decomposition; sqrt, exp, log.",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "§2.1.5"
+    },
+    {
+     "source": "bhatia97",
+     "label": "V"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "Matrix.instPartialOrder",
+     "status": "proved",
+     "note": "scoped MatrixOrder"
+    },
+    {
+     "library": "mathlib",
+     "decl": "Matrix.IsHermitian.instContinuousFunctionalCalculus",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch3_cgf_exp_log",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "CFC.sqrt",
+     "present": true
+    },
+    {
+     "decl": "Matrix.PosSemidef",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "mathlib"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "operator-monotone-convex",
+   "title": "Operator monotone/concave log, operator Jensen, Lieb concavity",
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "log is operator monotone and operator concave; the operator Jensen inequality; A ↦ tr exp(H + log A) is concave on PD matrices (Lieb).",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "Ch. 8"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.lieb_concavity",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch8_log_operator_monotone",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch8_log_operator_concave",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch8_operator_jensen",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch8_perspective_convex",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "loewner-order"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "golden-thompson",
+   "title": "Golden–Thompson inequality",
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "tr exp(A + B) ≤ tr(exp(A) exp(B)) for Hermitian A, B. Not needed by Tropp's route (which uses Lieb) but cited constantly.",
+   "sources": [
+    {
+     "source": "bhatia97",
+     "label": "IX.3"
+    },
+    {
+     "source": "tropp15",
+     "label": "§3.4 remark"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "highdimprob",
+     "status": "proved",
+     "note": "README mentions a finite-dimensional route to Golden–Thompson; not verified here"
+    }
+   ],
+   "depends_on": [
+    "loewner-order"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "schur-complement",
+   "title": "Schur complements and block PSD criteria",
+   "area": "matrix-trace",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "[[A,B],[Bᵀ,C]] ≽ 0 iff A ≽ 0 and C − BᵀA†B ≽ 0 (A invertible case); used for Nyström and dilations.",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§7.7"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "Matrix.PosSemidef.fromBlocks₁₁",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.schur_complement",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "mathlib"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hermitian-dilation",
+   "title": "Hermitian dilation of a rectangular matrix",
+   "area": "matrix-trace",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "𝓗(B) = [[0,B],[Bᵀ,0]] is Hermitian with ‖𝓗(B)‖ = ‖B‖ and 𝓗(B)² = diag(BBᵀ, BᵀB).",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "§2.1.17"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.dilation_identities",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.dilation_variance",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-matrix-def",
+   "title": "Standard Gaussian matrix: law and basic properties",
+   "area": "gaussian-invariance",
+   "kind": "definition",
+   "status": "proved",
+   "informal": "G ∈ ℝ^{m×n} with i.i.d. N(0,1) entries as the product measure; Frobenius/spectral norms, σ_min, pseudoinverse on this space.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "§10.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix",
+     "status": "proved"
+    },
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.basic",
+     "status": "proved"
+    },
+    {
+     "library": "mathlib",
+     "decl": "ProbabilityTheory.stdGaussian",
+     "status": "proved",
+     "note": "standard Gaussian on a finite-dimensional inner product space"
+    },
+    {
+     "library": "mathlib",
+     "decl": "ProbabilityTheory.multivariateGaussian",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.gaussianReal",
+     "present": true
+    },
+    {
+     "decl": "MeasureTheory.Measure.pi",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "rotation-invariance",
+   "title": "Rotation invariance of the Gaussian matrix",
+   "area": "gaussian-invariance",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "UGV has the same law as G for fixed orthogonal U, V.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "§10.1"
+    },
+    {
+     "source": "tw23",
+     "label": "App. B"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.rotation_invariance",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "GaussianRotationInvariance",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.stdGaussian_map",
+     "present": true,
+     "note": "image of stdGaussian under a linear isometry equivalence"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "block-law-indep",
+   "title": "Blocks V₁ᵀΩ, V₂ᵀΩ are Gaussian and independent",
+   "area": "gaussian-invariance",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "For [V₁ V₂] with orthonormal columns and V₁ᵀV₂ = 0, V₁ᵀΩ is standard Gaussian and independent of V₂ᵀΩ. The engine behind every conditioning step.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "§10.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.block_law",
+     "status": "proved"
+    },
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.block_indep",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "rotation-invariance"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-frob-second-moment",
+   "title": "E‖SΓT‖_F² = ‖S‖_F²‖T‖_F²",
+   "area": "gaussian-invariance",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "Second Frobenius moment of a Gaussian matrix sandwiched between fixed matrices.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop 10.1"
+    },
+    {
+     "source": "tw23",
+     "label": "Lem B.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.frobenius_second_moment",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "GaussianFrobeniusMoment",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-frob-fourth-moment",
+   "title": "Fourth Frobenius moment of SΓT",
+   "area": "gaussian-invariance",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "E‖SΓT‖_F⁴ = (‖S‖_F²‖T‖_F²)² + 2‖SᵀS‖_F²‖TTᵀ‖_F².",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop A.8"
+    },
+    {
+     "source": "isserlis18"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.frobenius_fourth_moment",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "isserlis",
+   "title": "Isserlis / Wick formula for Gaussian moments",
+   "area": "gaussian-invariance",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "E[g_{i1}⋯g_{i2k}] = Σ over pairings of products of covariances. General engine for all polynomial moments (fourth moments, Hutchinson variance, AMM).",
+   "sources": [
+    {
+     "source": "isserlis18"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "foundation"
+   ],
+   "notes": "Special cases (fourth moments) are proved by hand; the general formula would remove the case-by-case work.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-amm",
+   "title": "Gaussian approximate matrix multiplication identity",
+   "area": "gaussian-invariance",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "For S = t^{-1/2}Ω: E‖MSSᵀNᵀ − MNᵀ‖_F² = (‖M‖_F²‖N‖_F² + ‖MNᵀ‖_F²)/t.",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "lem:amm"
+    },
+    {
+     "source": "cp25",
+     "label": "lem:amm"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.approx_multiplication",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "GaussianApproxMultiplication",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "gaussian-frob-fourth-moment"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done",
+    "amm"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-full-rank-ae",
+   "title": "A Gaussian matrix has full rank almost surely",
+   "area": "gaussian-invariance",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "For k ≤ t, {det(GGᵀ) = 0} is Lebesgue-null. Discharges every 'IsUnit' side condition in the LRA theorems.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop A.5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.full_rank_ae",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "chi-square-lower-tail",
+   "title": "Chi-square lower tail",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "P[χ²_d ≤ u] ≤ (e u / d)^{d/2} for u ≤ d.",
+   "sources": [
+    {
+     "source": "dg03",
+     "label": "Lem 2.2(a)"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.chi_square_lower_tail",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.gammaMeasure",
+     "present": true,
+     "note": "chi-square as a Gamma law"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "chi-square-upper-tail",
+   "title": "Chi-square upper tail (Laurent–Massart / Dasgupta–Gupta)",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "P[χ²_d ≥ (1+ε)d] ≤ exp(−(d/2)(ε − log(1+ε))) and P[χ²_d ≥ d + 2√(dx) + 2x] ≤ e^{−x}.",
+   "sources": [
+    {
+     "source": "dg03",
+     "label": "Lem 2.2(b)"
+    },
+    {
+     "source": "lm00",
+     "label": "Lem 1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.HasSubgaussianMGF",
+     "present": true,
+     "note": "the sub-exponential case is not in Mathlib"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "jl"
+   ],
+   "notes": "The missing half of the JL ingredient; the lower tail is already proved.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "inverse-chi-square-moment",
+   "title": "Inverse chi-square moment",
+   "area": "gaussian-inverse",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "E[1/χ²_d] = 1/(d−2) for d ≥ 3.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop A.5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.inv_chi_square_moment",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "chi-square-lower-tail"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "inverse-wishart-mean",
+   "title": "Mean of the inverse Wishart matrix",
+   "area": "gaussian-inverse",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "E(GGᵀ)⁻¹ = I_r/(k − r − 1) for G ∈ ℝ^{r×k}, k ≥ r + 2.",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "Lem B.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.inverse_wishart_mean",
+     "status": "proved",
+     "note": "SKETCH_ACCEPTED with all children ACCEPTED (schur_diag_inv, residual_law)"
+    }
+   ],
+   "depends_on": [
+    "rotation-invariance",
+    "inverse-chi-square-moment",
+    "block-law-indep"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "pinv-frob-moment",
+   "title": "E‖G†‖_F² = r/(k−r−1)",
+   "area": "gaussian-inverse",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "Second Frobenius moment of the pseudoinverse of an r×k Gaussian matrix.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop 10.2"
+    },
+    {
+     "source": "tw23",
+     "label": "Lem B.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.pinv_frobenius_moment",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "GaussianInverseFrobeniusMoment",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "inverse-wishart-mean",
+    "pseudoinverse"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "pinv-frob-fourth-moment",
+   "title": "Fourth Frobenius moment of G†",
+   "area": "gaussian-inverse",
+   "kind": "identity",
+   "status": "stated",
+   "informal": "E‖G†‖_F⁴ in closed form (second identity of Tropp–Webber Lemma B.2).",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "Lem B.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.pinv_frobenius_fourth_moment",
+     "status": "stated"
+    }
+   ],
+   "depends_on": [
+    "inverse-wishart-mean"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "inverse-wishart-frob-moment",
+   "title": "E‖(GGᵀ)⁻¹‖_F²",
+   "area": "gaussian-inverse",
+   "kind": "identity",
+   "status": "stated",
+   "informal": "Closed form r(k−1)/((k−r)(k−r−1)(k−r−3)).",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "Lem B.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.inverse_wishart_frobenius_moment",
+     "status": "stated"
+    }
+   ],
+   "depends_on": [
+    "inverse-wishart-mean"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "pinv-spectral-tail",
+   "title": "Tail bound for ‖G†‖ (Chen–Dongarra)",
+   "area": "gaussian-inverse",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "P[‖G†‖ > e√k/(k−r+1) · t] ≤ t^{−(k−r+1)}.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop A.3"
+    },
+    {
+     "source": "cd05"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.pinv_spectral_tail",
+     "status": "stated"
+    }
+   ],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "pinv-spectral-expectation",
+   "title": "E‖G†‖ ≤ e√k/(k−r)",
+   "area": "gaussian-inverse",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "Expected spectral norm of the pseudoinverse.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop 10.2, A.4"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.pinv_spectral_expectation",
+     "status": "stated",
+     "note": "SKETCH_ACCEPTED; open child pinv_spectral_tail"
+    }
+   ],
+   "depends_on": [
+    "pinv-spectral-tail"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "pinv-frob-tail",
+   "title": "Tail bound for ‖G†‖_F",
+   "area": "gaussian-inverse",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "P[‖G†‖_F² > 12rt/(k−r)] ≤ 4t^{−(k−r)/2}.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Thm A.6"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.pinv_frobenius_tail",
+     "status": "stated"
+    }
+   ],
+   "depends_on": [
+    "pinv-frob-moment"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "inverse-wishart-spectral-moment",
+   "title": "Spectral moments of (GGᵀ)⁻¹",
+   "area": "gaussian-inverse",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "(E‖(GGᵀ)⁻¹‖^p)^{1/p} ≤ e²(k+r)/(2(k−r)²) for 1 ≤ p ≤ 18. Mission II goal.",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "Lem B.3 (B.4)"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.inverse_wishart_spectral_moment",
+     "status": "stated"
+    },
+    {
+     "library": "lra",
+     "decl": "GaussianInverseSpectralMoment",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "pinv-spectral-tail",
+    "gaussian-concentration"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "goal"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-concentration",
+   "title": "Gaussian Lipschitz concentration",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "For L-Lipschitz h: P[h(G) ≥ E h + Lt] ≤ e^{−t²/2}. The single most reused Gaussian fact; needed by Gordon, Chevet, σ_min tails and the spectral moment bounds.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop 10.3"
+    },
+    {
+     "source": "vershynin12",
+     "label": "Prop 5.34"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.gaussian_concentration",
+     "status": "stated"
+    },
+    {
+     "library": "ai4slt",
+     "status": "proved",
+     "note": "proved there via Gaussian log-Sobolev; not on Mathlib's Gaussian API, would need transport"
+    }
+   ],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.IsGaussian",
+     "present": true
+    }
+   ],
+   "difficulty": 5,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "bottleneck"
+   ],
+   "notes": "Blocks three open Mission III items and Mission II's goal. Candidate proofs: Pisier's smart-path interpolation (shortest), or Gaussian log-Sobolev + Herbst.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "norm-lipschitz",
+   "title": "σ_min and ‖·‖ are 1-Lipschitz in the Frobenius norm",
+   "area": "gaussian-extreme",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "|σ_min(A) − σ_min(B)| ≤ ‖A − B‖ ≤ ‖A − B‖_F, same for the spectral norm.",
+   "sources": [
+    {
+     "source": "vershynin12",
+     "label": "§5.4"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.sMin_lipschitz",
+     "status": "proved"
+    },
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.specNorm_lipschitz",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "weyl-mirsky"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gordon",
+   "title": "Gordon's theorem: expected extreme singular values",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "√N − √n ≤ E σ_min(G) ≤ E σ_max(G) ≤ √N + √n for G ∈ ℝ^{N×n}.",
+   "sources": [
+    {
+     "source": "vershynin12",
+     "label": "Thm 5.32"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.gordon",
+     "status": "stated"
+    }
+   ],
+   "depends_on": [
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "bottleneck"
+   ],
+   "notes": "Needs the Gaussian comparison (Slepian/Gordon) inequality or the Davidson–Szarek route; hardest open item in the Gaussian series.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "chevet",
+   "title": "Chevet-type bound: E‖SΓT‖ ≤ ‖S‖‖T‖_F + ‖S‖_F‖T‖",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "Expected spectral norm of a sandwiched Gaussian matrix.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Prop 10.1, A.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.chevet",
+     "status": "stated"
+    }
+   ],
+   "depends_on": [
+    "gordon"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "spectral-second-moment",
+   "title": "(E‖SΓT‖²)^{1/2} ≤ ‖S‖‖T‖_F + ‖S‖_F‖T‖",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "Second-moment form of Chevet; consumed by tGN as GaussianSpectralMoment.",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "Lem B.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.spectral_second_moment",
+     "status": "stated"
+    },
+    {
+     "library": "lra",
+     "decl": "GaussianSpectralMoment",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "chevet",
+    "gaussian-concentration"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "smin-lower-tail",
+   "title": "Lower tail of σ_min (Davidson–Szarek)",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "P[σ_min(G) ≤ √N − √n − u] ≤ e^{−u²/2}.",
+   "sources": [
+    {
+     "source": "ds01",
+     "label": "Thm II.13"
+    },
+    {
+     "source": "vershynin12",
+     "label": "Cor 5.35"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.sMin_lower_tail",
+     "status": "stated",
+     "note": "SKETCH_ACCEPTED; open children gordon, gaussian_concentration"
+    },
+    {
+     "library": "lra",
+     "decl": "GordonConcentration",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "gordon",
+    "gaussian-concentration",
+    "norm-lipschitz"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "smin-small-ball",
+   "title": "Small-ball bound for σ_min",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "P[σ_min(G) ≤ s] ≤ n(e n s²/(N−n+1))^{(N−n+1)/2} for N×n Gaussian G.",
+   "sources": [
+    {
+     "source": "rv08",
+     "label": "Lem 3.5"
+    },
+    {
+     "source": "dg03"
+    },
+    {
+     "source": "cp25",
+     "label": "lem:et-smallball"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.sMin_small_ball",
+     "status": "proved"
+    },
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.dist_col_span_small_ball",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "RowDistanceSmallBall",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "chi-square-lower-tail",
+    "block-law-indep"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "extreme-singular-values-deviation",
+   "title": "Two-sided deviation of extreme singular values",
+   "area": "gaussian-extreme",
+   "kind": "bound",
+   "status": "stated",
+   "informal": "√N − √n − t ≤ σ_min(G) ≤ σ_max(G) ≤ √N + √n + t with probability ≥ 1 − 2e^{−t²/2}. Mission III goal; the Gaussian subspace embedding in one line.",
+   "sources": [
+    {
+     "source": "vershynin12",
+     "label": "Cor 5.35"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.extreme_singular_values_deviation",
+     "status": "stated",
+     "note": "SKETCH_ACCEPTED; open children gordon, gaussian_concentration"
+    }
+   ],
+   "depends_on": [
+    "gordon",
+    "gaussian-concentration",
+    "norm-lipschitz"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "goal",
+    "ose"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "haar-orthogonal",
+   "title": "Haar-distributed orthogonal matrices from Gaussian QR",
+   "area": "gaussian-invariance",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "The Q factor of a Gaussian matrix is Haar on the Stiefel manifold; random orthonormal test matrices.",
+   "sources": [
+    {
+     "source": "mt20",
+     "label": "§8.4"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "rotation-invariance"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.orthogonalGroup",
+     "present": true
+    },
+    {
+     "decl": "MeasureTheory.Measure.haar",
+     "present": true
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "subgaussian-def",
+   "title": "Sub-Gaussian random variables (MGF form)",
+   "area": "gaussian-subgaussian",
+   "kind": "definition",
+   "status": "proved",
+   "informal": "X has sub-Gaussian MGF with parameter c: E e^{tX} ≤ e^{ct²/2}.",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "§2.5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "ProbabilityTheory.HasSubgaussianMGF",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "mathlib"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "rademacher-khintchine",
+   "title": "Rademacher vectors and the scalar Khintchine inequality",
+   "area": "gaussian-subgaussian",
+   "kind": "lemma",
+   "status": "candidate",
+   "informal": "Rademacher ±1 variables are sub-Gaussian with c = 1; E|Σ a_i ε_i|^p ≤ C_p^p ‖a‖^p. Needed for Rademacher sketches and Hutchinson variance.",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "§2.6"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.rademacherLaw",
+     "status": "proved",
+     "note": "law only"
+    }
+   ],
+   "depends_on": [
+    "subgaussian-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.HasSubgaussianMGF",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "epsilon-net-norm",
+   "title": "Operator norm via ε-nets and covering numbers of the sphere",
+   "area": "gaussian-subgaussian",
+   "kind": "lemma",
+   "status": "candidate",
+   "informal": "|𝒩(S^{n−1}, ε)| ≤ (1 + 2/ε)^n, and ‖A‖ ≤ (1−2ε)^{-1} max_{x∈𝒩} ‖Ax‖. The deterministic half of every sub-Gaussian random matrix bound.",
+   "sources": [
+    {
+     "source": "vershynin12",
+     "label": "Lem 5.2–5.4"
+    },
+    {
+     "source": "vershynin18",
+     "label": "§4.2, §4.4"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "highdimprob",
+     "decl": "HighDimProb.coveringNumber_euclideanBall_le",
+     "status": "proved",
+     "note": "volumetric covering bound only"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Metric.coveringNumber",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "subgaussian-matrix-norm",
+   "title": "Norm of a matrix with independent sub-Gaussian rows",
+   "area": "gaussian-subgaussian",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "√N − C√n − t ≤ σ_min(A) ≤ σ_max(A) ≤ √N + C√n + t w.p. ≥ 1 − 2e^{−ct²} for A ∈ ℝ^{N×n} with isotropic sub-Gaussian rows. Gives subspace embeddings for Rademacher and other dense sketches.",
+   "sources": [
+    {
+     "source": "vershynin12",
+     "label": "Thm 5.39"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "epsilon-net-norm",
+    "subgaussian-def",
+    "hanson-wright"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "ose"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "markov-chebyshev",
+   "title": "Markov and Chebyshev inequalities",
+   "area": "concentration-scalar",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "P[X ≥ t] ≤ E X / t; P[|X − EX| ≥ t] ≤ Var X / t².",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "§1.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "MeasureTheory.mul_meas_ge_le_lintegral₀",
+     "status": "proved"
+    },
+    {
+     "library": "mathlib",
+     "decl": "ProbabilityTheory.meas_ge_le_variance_div_sq",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "mathlib"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "subgaussian-sum-tail",
+   "title": "Chernoff bound for sums of independent sub-Gaussian variables",
+   "area": "concentration-scalar",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "P[Σ X_i ≥ t] ≤ exp(−t²/(2Σc_i)) for independent X_i with sub-Gaussian MGFs.",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 2.6.2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "ProbabilityTheory.HasSubgaussianMGF.measure_sum_range_ge_le_of_iIndepFun",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "subgaussian-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "mathlib"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hoeffding",
+   "title": "Hoeffding's lemma and inequality",
+   "area": "concentration-scalar",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "Bounded X ∈ [a,b] is sub-Gaussian with c = (b−a)²/4; tail for bounded independent sums.",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 2.2.6"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "highdimprob",
+     "decl": "HighDimProb.hoeffding_sum_bounded",
+     "status": "proved"
+    },
+    {
+     "library": "mathlib",
+     "decl": "ProbabilityTheory.HasSubgaussianMGF",
+     "status": "proved",
+     "note": "Hoeffding's lemma in MGF form"
+    }
+   ],
+   "depends_on": [
+    "subgaussian-sum-tail"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "bernstein-scalar",
+   "title": "Bernstein inequality (sub-exponential sums)",
+   "area": "concentration-scalar",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "Tail for sums of centered sub-exponential variables, with the variance/range crossover.",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 2.8.4"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "highdimprob",
+     "decl": "HighDimProb.bernstein_sum_subExponential",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.HasSubexponentialMGF",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hanson-wright",
+   "title": "Hanson–Wright inequality",
+   "area": "concentration-scalar",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "P[|xᵀAx − E xᵀAx| ≥ t] ≤ 2 exp(−c min(t²/(K⁴‖A‖_F²), t/(K²‖A‖))) for x with independent sub-Gaussian coordinates. The tail bound behind trace estimation and JL for sub-Gaussian sketches.",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 6.2.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "highdimprob",
+     "decl": "HighDimProb.HansonWright.hanson_wright_inequality_hdp_explicit_constant",
+     "status": "proved",
+     "note": "constant hansonWrightUniversalConstant = 1/(4·64·e²); hypotheses iIndepFun X μ and ∀ i, HasSubgaussianMGF (X i) K² μ; conclusion on |centeredQuadraticForm| with its own Frobenius/operator norm definitions. Port, do not depend (Lean v4.29.1 pin)."
+    }
+   ],
+   "depends_on": [
+    "subgaussian-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "estimation"
+   ],
+   "updated_at": "2026-10-09",
+   "notes": "HighDimProb has a complete proof in Mathlib's vocabulary. Porting it to the v4.33.1 pin plus transport lemmas to Matrix.frobeniusNorm and the L2 operator norm is the cheapest route to a Proved Hanson–Wright on Prove2me."
+  },
+  {
+   "id": "mcdiarmid",
+   "title": "McDiarmid's bounded-differences inequality",
+   "area": "concentration-scalar",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Concentration of functions with bounded coordinate-wise differences. Used for sampling-based sketches.",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 2.9.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "matrix-laplace",
+   "title": "Matrix Laplace transform method and master bounds",
+   "area": "concentration-matrix",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "E λ_max(Y) ≤ inf_θ θ^{-1} log tr exp(Σ log E e^{θX_k}) and the matching tail, for independent Hermitian summands.",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "Thm 3.6.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.master_bounds",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.trace_cgf_subadditivity",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "operator-monotone-convex",
+    "loewner-order"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "matrix-gaussian-series",
+   "title": "Matrix Gaussian and Rademacher series",
+   "area": "concentration-matrix",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "E‖Σ γ_k A_k‖ ≤ √(2σ² log(d₁+d₂)) with σ² = max(‖ΣA_kA_kᵀ‖, ‖ΣA_kᵀA_k‖).",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "Thm 4.1.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch4_matrix_series",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch4_hermitian_series",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "matrix-laplace"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "matrix-chernoff",
+   "title": "Matrix Chernoff inequality",
+   "area": "concentration-matrix",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "Upper and lower tails for λ_max, λ_min of a sum of independent PSD matrices bounded by L.",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "Thm 5.1.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch5_matrix_chernoff",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "matrix-laplace"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "matrix-bernstein",
+   "title": "Matrix Bernstein inequality",
+   "area": "concentration-matrix",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "Tail and expectation bounds for ‖ΣS_k‖ with ‖S_k‖ ≤ L and matrix variance v.",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "Thm 6.1.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.matrix_bernstein",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.hermitian_bernstein",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "matrix-laplace",
+    "hermitian-dilation"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "intrinsic-dimension",
+   "title": "Intrinsic-dimension Chernoff and Bernstein",
+   "area": "concentration-matrix",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "Replaces log d with log intdim(V).",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "Thm 7.2.1, 7.3.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch7_intrinsic_chernoff",
+     "status": "proved"
+    },
+    {
+     "library": "tropp-mc",
+     "decl": "TroppMatrixConcentration.ch7_intrinsic_bernstein",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "matrix-chernoff",
+    "matrix-bernstein"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "matrix-chernoff-sampling",
+   "title": "Sampling lemma: sums of independent rank-one PSD samples",
+   "area": "concentration-matrix",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "If x_j are i.i.d. with E x_jxᵀ_j = I and ‖x_j‖² ≤ L a.s., then (1/k)Σ x_jx_jᵀ has eigenvalues in [1−ε, 1+ε] with probability ≥ 1 − 2d·exp(−kε²/(cL)). The one corollary of matrix Chernoff that every sampling-based embedding uses.",
+   "sources": [
+    {
+     "source": "tropp11",
+     "label": "Thm 2.2"
+    },
+    {
+     "source": "tropp15",
+     "label": "§5.2"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "matrix-chernoff"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "ose",
+    "sampling"
+   ],
+   "notes": "Matrix Chernoff is proved; this packaging is cheap and unlocks SRHT, leverage-score sampling and sparsification.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "matrix-freedman",
+   "title": "Matrix Freedman / martingale Bernstein",
+   "area": "concentration-matrix",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Martingale version of matrix Bernstein; used for adaptive sampling and streaming.",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "§6.5 notes"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "matrix-laplace"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.Martingale",
+     "present": true
+    }
+   ],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "noncommutative-khintchine",
+   "title": "Non-commutative Khintchine inequality",
+   "area": "concentration-matrix",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Moment form of the matrix series bound; sharper for subspace embeddings.",
+   "sources": [
+    {
+     "source": "tropp15",
+     "label": "§4.8 notes"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "matrix-gaussian-series"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "jl-distributional",
+   "title": "Distributional JL for a Gaussian sketch",
+   "area": "sketching-jl",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "For S = k^{-1/2}G: P[|‖Sx‖² − ‖x‖²| > ε‖x‖²] ≤ 2exp(−k(ε²/4 − ε³/6)).",
+   "sources": [
+    {
+     "source": "dg03",
+     "label": "Lem 2.2"
+    },
+    {
+     "source": "woodruff14",
+     "label": "§2.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chi-square-upper-tail",
+    "chi-square-lower-tail",
+    "rotation-invariance"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "jl"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "jl-lemma",
+   "title": "Johnson–Lindenstrauss lemma",
+   "area": "sketching-jl",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "n points embed into k = O(ε^{-2} log n) dimensions with all pairwise distances preserved to 1 ± ε; union bound over the distributional lemma.",
+   "sources": [
+    {
+     "source": "dg03",
+     "label": "Thm 2.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "jl-distributional"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "jl"
+   ],
+   "notes": "No Lean formalization found anywhere; a natural first flagship statement.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "jl-subgaussian",
+   "title": "Distributional JL for sub-Gaussian sketches",
+   "area": "sketching-jl",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Same conclusion for Rademacher and other sub-Gaussian entries, from Hanson–Wright.",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 5.3.1"
+    },
+    {
+     "source": "woodruff14",
+     "label": "§2.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "hanson-wright"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "jl"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "ose-def",
+   "title": "Subspace embedding: definition and equivalent forms",
+   "area": "sketching-ose",
+   "kind": "definition",
+   "status": "stated",
+   "informal": "S is an ε-subspace embedding for range(U) (U orthonormal) iff ‖SUx‖² ∈ (1±ε)‖x‖² for all x iff σ(SU) ⊂ [√(1−ε), √(1+ε)] iff ‖UᵀSᵀSU − I‖ ≤ ε. Oblivious vs. data-dependent variants.",
+   "sources": [
+    {
+     "source": "woodruff14",
+     "label": "§2.1"
+    },
+    {
+     "source": "mt20",
+     "label": "§8.7"
+    },
+    {
+     "source": "murray23",
+     "label": "§2"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSubspaceEmbedding",
+     "status": "proved",
+     "note": "definition only; equivalent singular-value form still to prove"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "norms-frob-spec"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "ose",
+    "api"
+   ],
+   "notes": "The vocabulary of modern RandNLA; every sketch result is stated against it.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-ose",
+   "title": "Gaussian matrices are oblivious subspace embeddings",
+   "area": "sketching-ose",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "k^{-1/2}G with k ≥ C(d + log(1/δ))/ε² is an ε-subspace embedding for any fixed d-dimensional subspace with probability 1 − δ.",
+   "sources": [
+    {
+     "source": "woodruff14",
+     "label": "Thm 2.3"
+    },
+    {
+     "source": "mt20",
+     "label": "§8.7"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "ose-def",
+    "extreme-singular-values-deviation",
+    "rotation-invariance"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "ose"
+   ],
+   "notes": "One line from the Mission III goal plus rotation invariance.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "srht-ose",
+   "title": "Subsampled randomized Hadamard transform is a subspace embedding",
+   "area": "sketching-ose",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "SRHT with k = O(ε^{-2}(d + log n) log d) rows is an ε-subspace embedding; proof = row flattening by random signs + matrix Chernoff sampling.",
+   "sources": [
+    {
+     "source": "tropp11",
+     "label": "Thm 1.1"
+    },
+    {
+     "source": "townsend-open",
+     "label": "TR-01"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "yang-srht",
+     "status": "proved",
+     "note": "a rerandomized variant with prescribed width k = O(r/ε²); not the classical statement"
+    }
+   ],
+   "depends_on": [
+    "ose-def",
+    "matrix-chernoff-sampling",
+    "leverage-scores"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.HadamardMatrix",
+     "present": true,
+     "note": "Hadamard matrices exist in Mathlib"
+    }
+   ],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "ose",
+    "sampling"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "sparse-ose",
+   "title": "Sparse oblivious subspace embeddings (CountSketch, OSNAP, SparseStack)",
+   "area": "sketching-ose",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "CountSketch with k = O(d²/ε²) rows is an OSE; OSNAP/SparseStack with O(d/ε²) rows and few nonzeros per column.",
+   "sources": [
+    {
+     "source": "cw13",
+     "label": "Thm 2.2"
+    },
+    {
+     "source": "nn13"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "heidary-sparsestack",
+     "status": "proved",
+     "note": "SparseStack main theorem verified in Lean per the abstract"
+    }
+   ],
+   "depends_on": [
+    "ose-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "ose"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "amm-sampling",
+   "title": "Approximate matrix multiplication by row sampling",
+   "area": "sketching-amm",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Sampling c column/row pairs with probabilities p_i ∝ ‖A_{:,i}‖‖B_{i,:}‖: E‖AB − CR‖_F² ≤ ‖A‖_F²‖B‖_F²/c.",
+   "sources": [
+    {
+     "source": "dkm06",
+     "label": "Thm 1"
+    },
+    {
+     "source": "dm16",
+     "label": "§4"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "markov-chebyshev"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "amm",
+    "sampling"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "amm-ose",
+   "title": "Approximate multiplication from a subspace embedding",
+   "area": "sketching-amm",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "If S satisfies the JL moment property then E‖AᵀSᵀSB − AᵀB‖_F² ≤ (ε²)‖A‖_F²‖B‖_F². The glue between embeddings and least squares.",
+   "sources": [
+    {
+     "source": "sarlos06",
+     "label": "Lem 6"
+    },
+    {
+     "source": "woodruff14",
+     "label": "Thm 2.8"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "ose-def",
+    "jl-distributional"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "amm"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "leverage-scores",
+   "title": "Leverage scores: definition and basic properties",
+   "area": "sketching-sampling",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "ℓ_i(A) = ‖U_{i,:}‖² = (AA†)_{ii}; Σℓ_i = rank A; 0 ≤ ℓ_i ≤ 1; invariant under change of basis of range(A).",
+   "sources": [
+    {
+     "source": "dm16",
+     "label": "§3"
+    },
+    {
+     "source": "mt20",
+     "label": "§9.6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "projection-facts",
+    "svd"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "sampling"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "leverage-sampling-ose",
+   "title": "Leverage-score row sampling is a subspace embedding",
+   "area": "sketching-sampling",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Sampling k = O(ε^{-2} d log(d/δ)) rows with p_i ∝ ℓ_i and rescaling gives an ε-subspace embedding w.p. 1 − δ. Same theorem gives spectral sparsification.",
+   "sources": [
+    {
+     "source": "dm16",
+     "label": "Thm 17"
+    },
+    {
+     "source": "ss11"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "leverage-scores",
+    "matrix-chernoff-sampling",
+    "ose-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "sampling",
+    "ose"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "volume-sampling",
+   "title": "Volume sampling and column subset selection",
+   "area": "sketching-sampling",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Sampling k columns with probability ∝ squared volume gives E‖A − π_S(A)‖_F² ≤ (k+1)‖A − ⟦A⟧_k‖_F².",
+   "sources": [
+    {
+     "source": "drvw06",
+     "label": "Thm 1.3"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "eckart-young"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "sampling"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hmt-9-1-frobenius",
+   "title": "Deterministic range-finder bound, Frobenius form",
+   "area": "lra-deterministic",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "If range(AΩ) ⊆ range(Q) and Ω₁ = V₁ᵀΩ has full row rank, ‖(I−QQᵀ)A‖_F² ≤ ‖Σ₂‖_F² + ‖Σ₂Ω₂Ω₁†‖_F².",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Thm 9.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "LRA.Deterministic.RangeFinder",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "projection-facts",
+    "pseudoinverse",
+    "svd"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "done",
+    "lra"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hmt-9-1-spectral",
+   "title": "Deterministic range-finder bound, spectral form",
+   "area": "lra-deterministic",
+   "kind": "bound",
+   "status": "assumed",
+   "informal": "Same hypotheses: ‖(I−QQᵀ)A‖² ≤ ‖Σ₂‖² + ‖Σ₂Ω₂Ω₁†‖².",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Thm 9.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "HMTSpectralBound",
+     "status": "assumed"
+    }
+   ],
+   "depends_on": [
+    "projection-facts",
+    "pseudoinverse",
+    "svd",
+    "weyl-mirsky"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "lra"
+   ],
+   "notes": "The Frobenius form is proved; the spectral form needs ‖[X Y]‖² ≤ ‖X‖² + ‖Y‖² style block norm lemmas.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "truncation-lemma",
+   "title": "Truncating a projected matrix",
+   "area": "lra-deterministic",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "‖A − Q⟦QᵀA⟧_k‖_F² ≤ ‖A − ⟦A⟧_k‖_F² + 2‖(I−QQᵀ)A‖_F²-type bounds, and the exact identity for the early-truncated variant.",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "§3"
+    },
+    {
+     "source": "cp25",
+     "label": "lem:truncation"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "LRA.Deterministic.PerturbedTruncation",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "LRA.Deterministic.EarlyTruncation",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "eckart-young",
+    "projection-facts"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "done",
+    "lra"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "sigma-tail-bound",
+   "title": "Tail of the singular value sequence",
+   "area": "lra-deterministic",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "σ_{ℓ+1}² ≤ (1/(ℓ−k))Σ_{i>k}σ_i², i.e. σ_{⌈t/2⌉+1}² ≤ (4/t)·OPT² for t ≥ 4k.",
+   "sources": [
+    {
+     "source": "cp25"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "RangeFinder.tail_bound",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "svd"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "done",
+    "lra"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "power-iteration-deterministic",
+   "title": "Power-iteration error amplification",
+   "area": "lra-deterministic",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "For Y = (AAᵀ)^q AΩ and Q = orth(Y): ‖(I−QQᵀ)A‖ ≤ ‖(I−QQᵀ)(AAᵀ)^qA‖^{1/(2q+1)}. Turns the RSVD bound into a bound with σ_{k+1}^{2q+1} decay.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Thm 9.2"
+    },
+    {
+     "source": "mt20",
+     "label": "§11.6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "projection-facts",
+    "svd"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "lra"
+   ],
+   "notes": "The deterministic half of subspace iteration; cheap once the SVD API exists.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "nystrom-structural",
+   "title": "Nyström approximation error for PSD matrices",
+   "area": "lra-deterministic",
+   "kind": "lemma",
+   "status": "candidate",
+   "informal": "For PSD A and any Ω: A ≽ A⟨Ω⟩ := AΩ(ΩᵀAΩ)†ΩᵀA ≽ 0, and A − A⟨Ω⟩ is the Schur complement; ‖A − A⟨Ω⟩‖ ≤ ‖(I−P)A^{1/2}‖² for P the projector onto range(A^{1/2}Ω). Foundation for Nyström, RPCholesky and Nyström preconditioning.",
+   "sources": [
+    {
+     "source": "tyuc17",
+     "label": "Lem A.1"
+    },
+    {
+     "source": "cetw23",
+     "label": "§2"
+    },
+    {
+     "source": "mt20",
+     "label": "§14"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "pseudoinverse",
+    "schur-complement",
+    "loewner-order"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "lra"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "sketched-regression",
+   "title": "Sketched regression residual identities",
+   "area": "lra-deterministic",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "For Q orthonormal, Ψ a left sketch: the generalized Nyström core satisfies X̂ = QᵀA + (ΨᵀQ)†ΨᵀA⊥, with ‖Q⊥ᵀE‖ = ‖E‖ for E in range(Q⊥).",
+   "sources": [
+    {
+     "source": "cp25"
+    },
+    {
+     "source": "tw23",
+     "label": "§5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "LRA.Deterministic.SketchedRegression",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "SpectralIsometry",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "pseudoinverse",
+    "projection-facts"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "done",
+    "lra"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "rsvd-expected-error",
+   "title": "Randomized SVD / range finder expected error",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "proved",
+   "informal": "E‖A − QQᵀA‖_F² ≤ (1 + k/(t−k−1))·‖A − ⟦A⟧_k‖_F² for a t-column Gaussian test matrix, t ≥ k+2.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Thm 10.5"
+    },
+    {
+     "source": "tw23",
+     "label": "Thm 3.1"
+    },
+    {
+     "source": "cp25",
+     "label": "thm:RSVD"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "rsvd_main",
+     "status": "proved",
+     "note": "conditional on hypothesis hinv (§2.1 of GAUSSIAN_REQUIREMENTS)"
+    },
+    {
+     "library": "lra",
+     "decl": "rsvd_truncated_main",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "hmt-9-1-frobenius",
+    "pinv-frob-moment",
+    "gaussian-frob-second-moment",
+    "block-law-indep",
+    "gaussian-full-rank-ae",
+    "truncation-lemma"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gn-expected-error",
+   "title": "Generalized Nyström expected error",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "proved",
+   "informal": "E‖A − AΩ(ΨᵀAΩ)†ΨᵀA‖_F² ≤ (1 + q/(s−q−1))(1 + k/(t−k−1))·OPT².",
+   "sources": [
+    {
+     "source": "tw23",
+     "label": "Thm 5.1"
+    },
+    {
+     "source": "nakatsukasa20"
+    },
+    {
+     "source": "cp25",
+     "label": "thm:GN"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "gn_main",
+     "status": "proved",
+     "note": "conditional on hcond"
+    },
+    {
+     "library": "lra",
+     "decl": "gn_main_of_completion",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "completion_reduction",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "rsvd-expected-error",
+    "sketched-regression",
+    "orthonormal-completion",
+    "pinv-frob-moment"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "tgn-expected-error",
+   "title": "Truncated generalized Nyström expected error",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "proved",
+   "informal": "Constant-factor expected Frobenius error for the truncated one-pass estimator with s ≥ 4t, t ≥ 4k.",
+   "sources": [
+    {
+     "source": "cp25",
+     "label": "thm:tGN"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "tGN_expected_error",
+     "status": "proved",
+     "note": "conditional on hcore, hresid, hVN"
+    }
+   ],
+   "depends_on": [
+    "gn-expected-error",
+    "von-neumann-trace",
+    "hmt-9-1-spectral",
+    "spectral-second-moment",
+    "inverse-wishart-spectral-moment",
+    "sigma-tail-bound"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "etrsvd",
+   "title": "Early-truncated RSVD",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "proved",
+   "informal": "Error of the early-truncated range finder via decoupled moments of w and χ and tail integrals of σ_min(Ω₁).",
+   "sources": [
+    {
+     "source": "cp25",
+     "label": "thm:etRSVD"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "etRSVD_main",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "etRSVD_main_from_tails",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "etRSVD_main_from_gaussian",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "rsvd-expected-error",
+    "gaussian-amm",
+    "smin-small-ball",
+    "smin-lower-tail",
+    "gaussian-frob-fourth-moment"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "etgn",
+   "title": "Early-truncated generalized Nyström",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "proved",
+   "informal": "Combines the early-truncated RSVD bound with the Gaussian completion step.",
+   "sources": [
+    {
+     "source": "cp25",
+     "label": "thm:etGN"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "lra",
+     "decl": "etGN_main",
+     "status": "proved"
+    },
+    {
+     "library": "lra",
+     "decl": "etGN_size",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "etrsvd",
+    "gn-expected-error"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "rsvd-tail",
+   "title": "Randomized SVD deviation bounds",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "High-probability versions of the RSVD bound with explicit failure probabilities.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Thm 10.7, 10.8"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "hmt-9-1-frobenius",
+    "pinv-frob-tail",
+    "pinv-spectral-tail",
+    "gaussian-concentration"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "subspace-iteration-expected",
+   "title": "Subspace iteration expected error",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "E‖A − QQᵀA‖ ≤ [(1 + √(k/(p−1)))σ_{k+1}^{2q+1} + (e√(k+p)/p)(Σ_{j>k}σ_j^{2(2q+1)})^{1/2}]^{1/(2q+1)}.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Thm 10.6, Cor 10.10"
+    },
+    {
+     "source": "mt20",
+     "label": "§11.6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "power-iteration-deterministic",
+    "rsvd-expected-error"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "nystrom-randomized",
+   "title": "Randomized Nyström expected error",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "E‖A − A⟨Ω⟩‖_* ≤ (1 + k/(t−k−1))‖A − ⟦A⟧_k‖_* for Gaussian Ω.",
+   "sources": [
+    {
+     "source": "tyuc17",
+     "label": "Thm 4.1"
+    },
+    {
+     "source": "tw23",
+     "label": "§6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "nystrom-structural",
+    "rsvd-expected-error"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "rpcholesky",
+   "title": "Randomly pivoted Cholesky error bound",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "After k ≥ (r/ε) + r log(1/(εη)) pivots, E tr(A − Â) ≤ (1+ε)·tr(A − ⟦A⟧_r) + η-type bound.",
+   "sources": [
+    {
+     "source": "cetw23",
+     "label": "Thm 3.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "nystrom-structural",
+    "cauchy-interlacing"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "block-krylov-lra",
+   "title": "Block Krylov low-rank approximation",
+   "area": "lra-randomized",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "Block Krylov with q = O(log(d/ε)/√ε) iterations gives (1+ε)σ_{k+1} spectral error; gap-independent.",
+   "sources": [
+    {
+     "source": "mm15",
+     "label": "Thm 1"
+    },
+    {
+     "source": "tw23",
+     "label": "§7"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-bounds",
+    "power-iteration-deterministic",
+    "rsvd-expected-error",
+    "krylov-subspace"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hutchinson-unbiased",
+   "title": "Hutchinson estimator is unbiased",
+   "area": "estimation",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "If E zzᵀ = I then E[zᵀAz] = tr A. Holds for Gaussian, Rademacher and any isotropic z.",
+   "sources": [
+    {
+     "source": "hutch89"
+    },
+    {
+     "source": "at11"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.covariance",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "estimation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hutchinson-variance",
+   "title": "Variance of Gaussian and Rademacher trace estimators",
+   "area": "estimation",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "Var[gᵀAg] = 2‖A‖_F² (Gaussian, symmetric A); Var[εᵀAε] = 2(‖A‖_F² − Σ_i A_ii²) (Rademacher).",
+   "sources": [
+    {
+     "source": "hutch89"
+    },
+    {
+     "source": "at11",
+     "label": "Lem 5, 6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "hutchinson-unbiased",
+    "isserlis",
+    "rademacher-khintchine"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "estimation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hutchinson-tail",
+   "title": "Tail bounds for trace estimators",
+   "area": "estimation",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "(ε,δ) sample complexity m = O(ε^{-2} log(1/δ)) for PSD A; Cortinovis–Kressner bounds for indefinite A via Hanson–Wright.",
+   "sources": [
+    {
+     "source": "at11",
+     "label": "Thm 5.2, 7.1"
+    },
+    {
+     "source": "ck21",
+     "label": "Thm 1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "hutchinson-variance",
+    "hanson-wright",
+    "chi-square-upper-tail"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "estimation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "diagonal-estimator",
+   "title": "Stochastic diagonal estimation",
+   "area": "estimation",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "E[z ⊙ Az] = diag(A) for isotropic z with independent entries; variance per coordinate.",
+   "sources": [
+    {
+     "source": "at11"
+    },
+    {
+     "source": "etw24",
+     "label": "§6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "hutchinson-unbiased",
+    "hutchinson-variance"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "estimation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "hutchpp",
+   "title": "Hutch++ error bound",
+   "area": "estimation",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "O(1/ε) matrix-vector products suffice for (1±ε) relative trace error on PSD A.",
+   "sources": [
+    {
+     "source": "mmmw21",
+     "label": "Thm 1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "rsvd-expected-error",
+    "hutchinson-variance",
+    "eckart-young"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "consumer",
+    "estimation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "xtrace-unbiased",
+   "title": "Exchangeability-based estimators are unbiased",
+   "area": "estimation",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "Leave-one-out low-rank corrections preserve unbiasedness by exchangeability of the test vectors.",
+   "sources": [
+    {
+     "source": "etw24",
+     "label": "§3"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "hutchinson-unbiased",
+    "rsvd-expected-error"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "estimation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "spectral-measure",
+   "title": "Spectral measure of a vector and moments uᵀf(A)u",
+   "area": "estimation",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "For Hermitian A and unit u, μ_u = Σ_i |⟨u, v_i⟩|² δ_{λ_i} satisfies uᵀf(A)u = ∫ f dμ_u; E_g[gᵀf(A)g] = tr f(A).",
+   "sources": [
+    {
+     "source": "ctu21",
+     "label": "§2"
+    },
+    {
+     "source": "gm10",
+     "label": "Ch. 3"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "loewner-order"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.cfc",
+     "present": true
+    },
+    {
+     "decl": "MeasureTheory.Measure.dirac",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "estimation",
+    "krylov"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "krylov-subspace",
+   "title": "Krylov subspaces and their polynomial characterization",
+   "area": "krylov",
+   "kind": "definition",
+   "status": "stated",
+   "informal": "K_q(A, b) = span{b, Ab, …, A^{q−1}b} = {p(A)b : deg p < q}; nesting, invariance, dimension ≤ q.",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "Ch. 4"
+    },
+    {
+     "source": "mt20",
+     "label": "§11.7"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovSpace",
+     "status": "proved",
+     "note": "definition only; polynomial characterisation still to prove"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.aeval",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "krylov"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "lanczos-recurrence",
+   "title": "Lanczos three-term recurrence and tridiagonalization",
+   "area": "krylov",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "In exact arithmetic the Lanczos vectors are orthonormal, span K_q(A,b), and satisfy AQ_q = Q_qT_q + β_q q_{q+1}e_qᵀ with T_q Jacobi (tridiagonal).",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "Ch. 4"
+    },
+    {
+     "source": "ctu21",
+     "label": "§2"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "krylov-subspace"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "krylov"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "lanczos-gauss-quadrature",
+   "title": "Lanczos quadrature is Gauss quadrature on the spectral measure",
+   "area": "krylov",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "e₁ᵀf(T_q)e₁ = ∫ f dμ̂ where μ̂ is the q-point Gauss quadrature rule for μ_b; exact for polynomials of degree ≤ 2q−1.",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "Ch. 6"
+    },
+    {
+     "source": "ctu21",
+     "label": "Thm 2.1"
+    },
+    {
+     "source": "ucs17"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "lanczos-recurrence",
+    "spectral-measure"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "krylov",
+    "estimation"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "chebyshev-bounds",
+   "title": "Chebyshev polynomial extremal bounds",
+   "area": "krylov",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "min_{deg p ≤ q, p(0)=1} max_{[a,b]} |p| = 1/T_q((b+a)/(b−a)); T_q(1+γ) ≥ (1+√(2γ))^q/2 growth outside [−1,1]. Drives CG, Lanczos and block Krylov rates.",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "App."
+    },
+    {
+     "source": "mm15",
+     "label": "Lem 4, 5"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T",
+     "present": true,
+     "note": "polynomials defined; extremal properties absent"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "krylov"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "cg-convergence",
+   "title": "Conjugate gradient κ-bound",
+   "area": "krylov",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "‖x_q − x‖_A ≤ 2((√κ−1)/(√κ+1))^q ‖x_0 − x‖_A.",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "Ch. 8"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-bounds",
+    "krylov-subspace"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "consumer",
+    "krylov"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "random-start-power",
+   "title": "Random-start power and Lanczos bounds",
+   "area": "krylov",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "With a Gaussian start, E[λ_max − λ̂_max]/λ_max ≤ C log(n)/q for the power method and ≤ C log²(n)/q² for Lanczos.",
+   "sources": [
+    {
+     "source": "kw92",
+     "label": "Thm 3.1, 4.2"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-bounds",
+    "gaussian-matrix-def",
+    "krylov-subspace"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "krylov"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "slq-error",
+   "title": "Stochastic Lanczos quadrature error bound",
+   "area": "krylov",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "tr f(A) estimated to within ε with m = O(ε^{-2}log(1/δ)) samples and q = O(√κ log(1/ε)) Lanczos steps for analytic f.",
+   "sources": [
+    {
+     "source": "ctu21",
+     "label": "Thm 1.1"
+    },
+    {
+     "source": "ucs17",
+     "label": "Thm 4.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "lanczos-gauss-quadrature",
+    "hutchinson-tail",
+    "chebyshev-bounds"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "consumer",
+    "krylov"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "sketch-and-solve-ls",
+   "title": "Sketch-and-solve least squares",
+   "area": "solvers",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "If S is an ε-subspace embedding for [A b] then ‖Ax̃ − b‖ ≤ (1+ε)/(1−ε) min_x ‖Ax − b‖; with the AMM property, (1+ε) with k = O(d/ε).",
+   "sources": [
+    {
+     "source": "sarlos06",
+     "label": "Thm 12"
+    },
+    {
+     "source": "woodruff14",
+     "label": "Thm 2.16"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "ose-def",
+    "amm-ose",
+    "pseudoinverse"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "sketch-and-precondition",
+   "title": "Sketch-and-precondition conditioning bound",
+   "area": "solvers",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "If SA = QR and S is an ε-embedding for range(A) then κ(AR⁻¹) ≤ √((1+ε)/(1−ε)).",
+   "sources": [
+    {
+     "source": "rt08"
+    },
+    {
+     "source": "mt20",
+     "label": "§10.5"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "ose-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "next",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "randomized-kaczmarz",
+   "title": "Randomized Kaczmarz converges linearly in expectation",
+   "area": "solvers",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Choosing row i with probability ‖a_i‖²/‖A‖_F²: E‖x_k − x*‖² ≤ (1 − 1/κ_F²)^k ‖x_0 − x*‖², κ_F = ‖A‖_F‖A†‖. A one-page proof with large downstream reuse.",
+   "sources": [
+    {
+     "source": "sv09",
+     "label": "Thm 2"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "projection-facts"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "solvers"
+   ],
+   "notes": "Best candidate for a first 'complete algorithm' theorem: needs only projections, σ_min, and expectation over a finite sample.",
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "sketch-and-project",
+   "title": "Sketch-and-project convergence",
+   "area": "solvers",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "E‖x_k − x*‖²_B ≤ (1 − λ_min(W))^k ‖x_0 − x*‖²_B with W = E[Z] the expected projector; recovers Kaczmarz, coordinate descent and block variants.",
+   "sources": [
+    {
+     "source": "gr15",
+     "label": "Thm 4.6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "randomized-kaczmarz",
+    "projection-facts",
+    "loewner-order"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "solvers"
+   ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "nystrom-pcg",
+   "title": "Nyström-preconditioned CG",
+   "area": "solvers",
+   "kind": "application",
+   "status": "candidate",
+   "informal": "Condition number of the Nyström-preconditioned system is O(1) once rank exceeds the effective dimension.",
+   "sources": [
+    {
+     "source": "mt20",
+     "label": "§17"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "nystrom-randomized",
+    "cg-convergence"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "consumer"
+   ],
+   "updated_at": "2026-10-09"
+  }
+ ],
+ "sources": [
+  {
+   "id": "hmt11",
+   "type": "survey",
+   "title": "Finding structure with randomness: probabilistic algorithms for constructing approximate matrix decompositions",
+   "authors": [
+    "N. Halko",
+    "P.-G. Martinsson",
+    "J. A. Tropp"
+   ],
+   "year": 2011,
+   "url": "https://arxiv.org/abs/0909.4061",
+   "arxiv": "0909.4061",
+   "doi": "10.1137/090771806",
+   "role": "Primary reference for the range finder, the deterministic error bounds (§9) and the Gaussian toolkit (§10, App. A)."
+  },
+  {
+   "id": "mt20",
+   "type": "survey",
+   "title": "Randomized numerical linear algebra: foundations and algorithms",
+   "authors": [
+    "P.-G. Martinsson",
+    "J. A. Tropp"
+   ],
+   "year": 2020,
+   "url": "https://arxiv.org/abs/2002.01387",
+   "arxiv": "2002.01387",
+   "doi": "10.1017/S0962492920000021",
+   "role": "Modern survey; its §§8–11 are the natural table of contents for a RandNLA library."
+  },
+  {
+   "id": "murray23",
+   "type": "survey",
+   "title": "Randomized numerical linear algebra: a perspective on the field with an eye to software",
+   "authors": [
+    "R. Murray",
+    "J. Demmel",
+    "M. W. Mahoney",
+    "N. B. Erichson",
+    "M. Melnichenko",
+    "O. A. Malik",
+    "L. Grigori",
+    "P. Luszczek",
+    "M. Dereziński",
+    "M. E. Lopes",
+    "T. Liang",
+    "H. Luo",
+    "J. Dongarra"
+   ],
+   "year": 2023,
+   "url": "https://arxiv.org/abs/2302.11474",
+   "arxiv": "2302.11474",
+   "role": "The RandLAPACK monograph. Its taxonomy of sketching operators and drivers is a checklist of what applied users will cite."
+  },
+  {
+   "id": "woodruff14",
+   "type": "survey",
+   "title": "Sketching as a tool for numerical linear algebra",
+   "authors": [
+    "D. P. Woodruff"
+   ],
+   "year": 2014,
+   "url": "https://arxiv.org/abs/1411.4357",
+   "arxiv": "1411.4357",
+   "doi": "10.1561/0400000060",
+   "role": "Theoretical-CS side: subspace embeddings, CountSketch, sketch-and-solve regression and low-rank."
+  },
+  {
+   "id": "tropp15",
+   "type": "book",
+   "title": "An introduction to matrix concentration inequalities",
+   "authors": [
+    "J. A. Tropp"
+   ],
+   "year": 2015,
+   "url": "https://arxiv.org/abs/1501.01571",
+   "arxiv": "1501.01571",
+   "doi": "10.1561/2200000048",
+   "role": "Fully formalized (Ch. 3–8) in TroppMatrixConcentrationLean."
+  },
+  {
+   "id": "tw23",
+   "type": "paper",
+   "title": "Randomized algorithms for low-rank matrix approximation: design, analysis, and applications",
+   "authors": [
+    "J. A. Tropp",
+    "R. J. Webber"
+   ],
+   "year": 2023,
+   "url": "https://arxiv.org/abs/2306.12418",
+   "arxiv": "2306.12418",
+   "role": "Clean modern proofs of RSVD, generalized Nyström and block Krylov; Appendix B is the Gaussian moment toolkit being formalized."
+  },
+  {
+   "id": "vershynin12",
+   "type": "survey",
+   "title": "Introduction to the non-asymptotic analysis of random matrices",
+   "authors": [
+    "R. Vershynin"
+   ],
+   "year": 2012,
+   "url": "https://arxiv.org/abs/1011.3027",
+   "arxiv": "1011.3027",
+   "role": "Sub-Gaussian random matrices, ε-nets, Gordon's theorem, Gaussian concentration (Thm 5.32, Cor 5.35)."
+  },
+  {
+   "id": "vershynin18",
+   "type": "book",
+   "title": "High-dimensional probability: an introduction with applications in data science",
+   "authors": [
+    "R. Vershynin"
+   ],
+   "year": 2018,
+   "url": "https://www.math.uci.edu/~rvershyn/papers/HDP-book/HDP-book.pdf",
+   "doi": "10.1017/9781108231596",
+   "role": "Mathlib's sub-Gaussian API already cites §2.5; the natural source for Hanson–Wright, nets and random matrix norms."
+  },
+  {
+   "id": "ds01",
+   "type": "paper",
+   "title": "Local operator theory, random matrices and Banach spaces",
+   "authors": [
+    "K. R. Davidson",
+    "S. J. Szarek"
+   ],
+   "year": 2001,
+   "url": "https://doi.org/10.1016/S1874-5849(01)80010-3",
+   "doi": "10.1016/S1874-5849(01)80010-3",
+   "role": "Gaussian extreme singular value tails (Thm II.13)."
+  },
+  {
+   "id": "rv08",
+   "type": "paper",
+   "title": "The Littlewood–Offord problem and invertibility of random matrices",
+   "authors": [
+    "M. Rudelson",
+    "R. Vershynin"
+   ],
+   "year": 2008,
+   "url": "https://arxiv.org/abs/math/0703503",
+   "arxiv": "math/0703503",
+   "role": "Small-ball bound for the smallest singular value via distances to row spans."
+  },
+  {
+   "id": "dg03",
+   "type": "paper",
+   "title": "An elementary proof of a theorem of Johnson and Lindenstrauss",
+   "authors": [
+    "S. Dasgupta",
+    "A. Gupta"
+   ],
+   "year": 2003,
+   "url": "https://doi.org/10.1002/rsa.10073",
+   "doi": "10.1002/rsa.10073",
+   "role": "Chi-square tail bounds and the shortest proof of JL."
+  },
+  {
+   "id": "isserlis18",
+   "type": "paper",
+   "title": "On a formula for the product-moment coefficient of any order of a normal frequency distribution in any number of variables",
+   "authors": [
+    "L. Isserlis"
+   ],
+   "year": 1918,
+   "url": "https://doi.org/10.1093/biomet/12.1-2.134",
+   "doi": "10.1093/biomet/12.1-2.134",
+   "role": "Wick / Isserlis formula for Gaussian moments."
+  },
+  {
+   "id": "cd05",
+   "type": "paper",
+   "title": "Condition numbers of Gaussian random matrices",
+   "authors": [
+    "Z. Chen",
+    "J. Dongarra"
+   ],
+   "year": 2005,
+   "url": "https://doi.org/10.1137/040616413",
+   "doi": "10.1137/040616413",
+   "role": "Tail bound for the pseudoinverse spectral norm."
+  },
+  {
+   "id": "tropp11",
+   "type": "paper",
+   "title": "Improved analysis of the subsampled randomized Hadamard transform",
+   "authors": [
+    "J. A. Tropp"
+   ],
+   "year": 2011,
+   "url": "https://arxiv.org/abs/1011.1595",
+   "arxiv": "1011.1595",
+   "doi": "10.1142/S1793536911000787",
+   "role": "SRHT subspace embedding via matrix Chernoff; the template for all sampling-based embeddings."
+  },
+  {
+   "id": "cw13",
+   "type": "paper",
+   "title": "Low rank approximation and regression in input sparsity time",
+   "authors": [
+    "K. L. Clarkson",
+    "D. P. Woodruff"
+   ],
+   "year": 2013,
+   "url": "https://arxiv.org/abs/1207.6365",
+   "arxiv": "1207.6365",
+   "doi": "10.1145/3019134",
+   "role": "CountSketch is a subspace embedding; sketch-and-solve in input-sparsity time."
+  },
+  {
+   "id": "nn13",
+   "type": "paper",
+   "title": "OSNAP: faster numerical linear algebra algorithms via sparser subspace embeddings",
+   "authors": [
+    "J. Nelson",
+    "H. L. Nguyen"
+   ],
+   "year": 2013,
+   "url": "https://arxiv.org/abs/1211.1002",
+   "arxiv": "1211.1002",
+   "role": "Sparse oblivious subspace embeddings; conjectured optimal parameters."
+  },
+  {
+   "id": "dkm06",
+   "type": "paper",
+   "title": "Fast Monte Carlo algorithms for matrices I: approximating matrix multiplication",
+   "authors": [
+    "P. Drineas",
+    "R. Kannan",
+    "M. W. Mahoney"
+   ],
+   "year": 2006,
+   "url": "https://doi.org/10.1137/S0097539704442684",
+   "doi": "10.1137/S0097539704442684",
+   "role": "Row/column sampling for approximate matrix multiplication."
+  },
+  {
+   "id": "dm16",
+   "type": "notes",
+   "title": "Lectures on randomized numerical linear algebra",
+   "authors": [
+    "P. Drineas",
+    "M. W. Mahoney"
+   ],
+   "year": 2018,
+   "url": "https://arxiv.org/abs/1712.08880",
+   "arxiv": "1712.08880",
+   "role": "Leverage scores, sampling-based least squares and low-rank; textbook-style proofs."
+  },
+  {
+   "id": "sarlos06",
+   "type": "paper",
+   "title": "Improved approximation algorithms for large matrices via random projections",
+   "authors": [
+    "T. Sarlós"
+   ],
+   "year": 2006,
+   "url": "https://doi.org/10.1109/FOCS.2006.37",
+   "doi": "10.1109/FOCS.2006.37",
+   "role": "Sketch-and-solve least squares from a subspace embedding plus approximate multiplication."
+  },
+  {
+   "id": "rt08",
+   "type": "paper",
+   "title": "A fast randomized algorithm for overdetermined linear least-squares regression",
+   "authors": [
+    "V. Rokhlin",
+    "M. Tygert"
+   ],
+   "year": 2008,
+   "url": "https://doi.org/10.1073/pnas.0804869105",
+   "doi": "10.1073/pnas.0804869105",
+   "role": "Sketch-and-precondition."
+  },
+  {
+   "id": "sv09",
+   "type": "paper",
+   "title": "A randomized Kaczmarz algorithm with exponential convergence",
+   "authors": [
+    "T. Strohmer",
+    "R. Vershynin"
+   ],
+   "year": 2009,
+   "url": "https://arxiv.org/abs/math/0702226",
+   "arxiv": "math/0702226",
+   "doi": "10.1007/s00041-008-9030-4",
+   "role": "Linear convergence in expectation; a one-page proof that is an ideal foundation stone."
+  },
+  {
+   "id": "gr15",
+   "type": "paper",
+   "title": "Randomized iterative methods for linear systems",
+   "authors": [
+    "R. M. Gower",
+    "P. Richtárik"
+   ],
+   "year": 2015,
+   "url": "https://arxiv.org/abs/1506.03296",
+   "arxiv": "1506.03296",
+   "doi": "10.1137/15M1025487",
+   "role": "Sketch-and-project framework unifying Kaczmarz, coordinate descent and block variants."
+  },
+  {
+   "id": "hutch89",
+   "type": "paper",
+   "title": "A stochastic estimator of the trace of the influence matrix for Laplacian smoothing splines",
+   "authors": [
+    "M. F. Hutchinson"
+   ],
+   "year": 1989,
+   "url": "https://doi.org/10.1080/03610918908812806",
+   "doi": "10.1080/03610918908812806",
+   "role": "Hutchinson's estimator and its Rademacher variance."
+  },
+  {
+   "id": "at11",
+   "type": "paper",
+   "title": "Randomized algorithms for estimating the trace of an implicit symmetric positive semi-definite matrix",
+   "authors": [
+    "H. Avron",
+    "S. Toledo"
+   ],
+   "year": 2011,
+   "url": "https://doi.org/10.1145/1944345.1944349",
+   "doi": "10.1145/1944345.1944349",
+   "role": "Variance and (ε,δ) sample-complexity bounds for Gaussian and Rademacher trace estimators."
+  },
+  {
+   "id": "ck21",
+   "type": "paper",
+   "title": "On randomized trace estimates for indefinite matrices with an application to determinants",
+   "authors": [
+    "A. Cortinovis",
+    "D. Kressner"
+   ],
+   "year": 2021,
+   "url": "https://arxiv.org/abs/2005.10009",
+   "arxiv": "2005.10009",
+   "doi": "10.1007/s10208-021-09525-9",
+   "role": "Sharp tail bounds for Gaussian and Rademacher trace estimators on indefinite matrices."
+  },
+  {
+   "id": "mmmw21",
+   "type": "paper",
+   "title": "Hutch++: optimal stochastic trace estimation",
+   "authors": [
+    "R. A. Meyer",
+    "C. Musco",
+    "C. Musco",
+    "D. P. Woodruff"
+   ],
+   "year": 2021,
+   "url": "https://arxiv.org/abs/2010.09649",
+   "arxiv": "2010.09649",
+   "doi": "10.1137/1.9781611976496.16",
+   "role": "Variance reduction via a low-rank sketch; consumer of RSVD and Hutchinson variance."
+  },
+  {
+   "id": "etw24",
+   "type": "paper",
+   "title": "XTrace: making the most of every sample in stochastic trace estimation",
+   "authors": [
+    "E. N. Epperly",
+    "J. A. Tropp",
+    "R. J. Webber"
+   ],
+   "year": 2024,
+   "url": "https://arxiv.org/abs/2301.07825",
+   "arxiv": "2301.07825",
+   "doi": "10.1137/23M1548323",
+   "role": "Exchangeability-based unbiased estimators."
+  },
+  {
+   "id": "ctu21",
+   "type": "paper",
+   "title": "Analysis of stochastic Lanczos quadrature for spectrum approximation",
+   "authors": [
+    "T. Chen",
+    "T. Trogdon",
+    "S. Ubaru"
+   ],
+   "year": 2021,
+   "url": "https://arxiv.org/abs/2105.06595",
+   "arxiv": "2105.06595",
+   "role": "SLQ as Gauss quadrature on the spectral measure; clean statements to formalize."
+  },
+  {
+   "id": "ucs17",
+   "type": "paper",
+   "title": "Fast estimation of tr(f(A)) via stochastic Lanczos quadrature",
+   "authors": [
+    "S. Ubaru",
+    "J. Chen",
+    "Y. Saad"
+   ],
+   "year": 2017,
+   "url": "https://doi.org/10.1137/16M1104974",
+   "doi": "10.1137/16M1104974",
+   "role": "Stochastic Lanczos quadrature."
+  },
+  {
+   "id": "cetw23",
+   "type": "paper",
+   "title": "Randomly pivoted Cholesky: practical approximation of a kernel matrix with few entry evaluations",
+   "authors": [
+    "Y. Chen",
+    "E. N. Epperly",
+    "J. A. Tropp",
+    "R. J. Webber"
+   ],
+   "year": 2023,
+   "url": "https://arxiv.org/abs/2207.06503",
+   "arxiv": "2207.06503",
+   "role": "RPCholesky error bound; consumer of the Nyström structural lemma."
+  },
+  {
+   "id": "mm15",
+   "type": "paper",
+   "title": "Randomized block Krylov methods for stronger and faster approximate singular value decomposition",
+   "authors": [
+    "C. Musco",
+    "C. Musco"
+   ],
+   "year": 2015,
+   "url": "https://arxiv.org/abs/1504.05477",
+   "arxiv": "1504.05477",
+   "role": "Block Krylov low-rank approximation via Chebyshev polynomial filters."
+  },
+  {
+   "id": "tyuc17",
+   "type": "paper",
+   "title": "Practical sketching algorithms for low-rank matrix approximation",
+   "authors": [
+    "J. A. Tropp",
+    "A. Yurtsever",
+    "M. Udell",
+    "V. Cevher"
+   ],
+   "year": 2017,
+   "url": "https://arxiv.org/abs/1609.00048",
+   "arxiv": "1609.00048",
+   "doi": "10.1137/17M1111590",
+   "role": "Single-pass sketches and the randomized Nyström bound."
+  },
+  {
+   "id": "nakatsukasa20",
+   "type": "paper",
+   "title": "Fast and stable randomized low-rank matrix approximation",
+   "authors": [
+    "Y. Nakatsukasa"
+   ],
+   "year": 2020,
+   "url": "https://arxiv.org/abs/2009.11392",
+   "arxiv": "2009.11392",
+   "role": "Generalized Nyström; analysis via subspace embeddings."
+  },
+  {
+   "id": "drvw06",
+   "type": "paper",
+   "title": "Matrix approximation and projective clustering via volume sampling",
+   "authors": [
+    "A. Deshpande",
+    "L. Rademacher",
+    "S. Vempala",
+    "G. Wang"
+   ],
+   "year": 2006,
+   "url": "https://doi.org/10.4086/toc.2006.v002a012",
+   "doi": "10.4086/toc.2006.v002a012",
+   "role": "Volume sampling gives (k+1)-approximation to the best rank-k error."
+  },
+  {
+   "id": "kw92",
+   "type": "paper",
+   "title": "Estimating the largest eigenvalue by the power and Lanczos algorithms with a random start",
+   "authors": [
+    "J. Kuczyński",
+    "H. Woźniakowski"
+   ],
+   "year": 1992,
+   "url": "https://doi.org/10.1137/0613066",
+   "doi": "10.1137/0613066",
+   "role": "Random-start power and Lanczos bounds."
+  },
+  {
+   "id": "gm10",
+   "type": "book",
+   "title": "Matrices, moments and quadrature with applications",
+   "authors": [
+    "G. H. Golub",
+    "G. Meurant"
+   ],
+   "year": 2010,
+   "doi": "10.1515/9781400833887",
+   "role": "Lanczos–Gauss quadrature correspondence."
+  },
+  {
+   "id": "hj13",
+   "type": "book",
+   "title": "Matrix analysis (2nd ed.)",
+   "authors": [
+    "R. A. Horn",
+    "C. R. Johnson"
+   ],
+   "year": 2013,
+   "doi": "10.1017/CBO9781139020411",
+   "role": "Standard citations for SVD, Weyl, Courant–Fischer, von Neumann (Thm 7.4.1.1)."
+  },
+  {
+   "id": "bhatia97",
+   "type": "book",
+   "title": "Matrix analysis",
+   "authors": [
+    "R. Bhatia"
+   ],
+   "year": 1997,
+   "doi": "10.1007/978-1-4612-0653-8",
+   "role": "Perturbation theory, operator monotone functions, Golden–Thompson."
+  },
+  {
+   "id": "cp25",
+   "type": "paper",
+   "title": "One- and two-pass algorithms for low-rank approximation",
+   "authors": [
+    "T. Chen",
+    "D. Persson"
+   ],
+   "year": 2025,
+   "role": "Source paper of the LRA formalization (RSVD, GN, tGN, early-truncated variants)."
+  },
+  {
+   "id": "townsend-open",
+   "type": "repo",
+   "title": "Open problems in numerical linear algebra",
+   "authors": [
+    "A. Townsend"
+   ],
+   "year": 2024,
+   "url": "https://github.com/ajt60gaibb/OpenProblemsInNLA",
+   "role": "Community problem list; TR-01 (SRHT) has a claimed Lean-verified solution."
+  },
+  {
+   "id": "lm00",
+   "type": "paper",
+   "title": "Adaptive estimation of a quadratic functional by model selection",
+   "authors": [
+    "B. Laurent",
+    "P. Massart"
+   ],
+   "year": 2000,
+   "url": "https://doi.org/10.1214/aos/1015957395",
+   "doi": "10.1214/aos/1015957395",
+   "role": "Chi-square upper tail (Lemma 1), the standard JL ingredient."
+  },
+  {
+   "id": "ss11",
+   "type": "paper",
+   "title": "Graph sparsification by effective resistances",
+   "authors": [
+    "D. A. Spielman",
+    "N. Srivastava"
+   ],
+   "year": 2011,
+   "url": "https://arxiv.org/abs/0803.0929",
+   "arxiv": "0803.0929",
+   "doi": "10.1137/080734029",
+   "role": "Spectral sparsification by leverage-score (effective resistance) sampling."
+  }
+ ],
+ "libraries": [
+  {
+   "id": "nlalib",
+   "name": "NLAlib (this repo)",
+   "url": "https://github.com/tchen-research/NLAlib",
+   "lean": "v4.33.1",
+   "mathlib": "0df444a360eaa60ab8c11dca51a86af692955474",
+   "license": "Apache-2.0",
+   "ours": true,
+   "repo_dir": "NLAlib",
+   "scope": "The library this atlas tracks. Layered modules Matrix → Concentration → Gaussian → Sketching → LowRank/Estimation/Krylov → Solvers; TroppMatrixConcentration re-exported under NLAlib.Concentration.Matrix."
+  },
+  {
+   "id": "mathlib",
+   "name": "Mathlib",
+   "url": "https://github.com/leanprover-community/mathlib4",
+   "lean": "v4.33.1",
+   "mathlib": "0df444a360eaa60ab8c11dca51a86af692955474",
+   "license": "Apache-2.0",
+   "ours": false,
+   "scope": "Upstream. Has stdGaussian / multivariateGaussian, HasSubgaussianMGF and the Chernoff-method sum bound, LinearMap.singularValues, the scoped Loewner order on matrices with CFC, Schur complements, matrix exponential, Gamma distribution. Lacks matrix SVD factorization, Eckart–Young, Weyl, Moore–Penrose, chi-square tails, any random matrix theory."
+  },
+  {
+   "id": "tropp-mc",
+   "name": "TroppMatrixConcentration (this repo)",
+   "url": "https://github.com/tchen-research/NLAlib/tree/main/TroppMatrixConcentration",
+   "lean": "v4.33.1",
+   "mathlib": "0df444a360eaa60ab8c11dca51a86af692955474",
+   "license": "Apache-2.0",
+   "ours": true,
+   "scope": "Tropp 2015 Ch. 3–8, 49 theorems, sorry-free, all Proved on Prove2me.",
+   "repo_dir": "TroppMatrixConcentration"
+  },
+  {
+   "id": "gaussian-facts",
+   "name": "Gaussian Random Matrices I–III (Prove2me)",
+   "url": "https://prove2.me/missions",
+   "lean": "v4.33.1",
+   "mathlib": "0df444a360eaa60ab8c11dca51a86af692955474",
+   "license": "Apache-2.0",
+   "ours": true,
+   "scope": "Three-mission series in namespace GaussianMatrix on the shared definition bundle GaussianMatrix_basic. Mission I complete; II and III partly open."
+  },
+  {
+   "id": "lra",
+   "name": "LRA (Chen–Persson formalization)",
+   "url": null,
+   "lean": "v4.33.1",
+   "mathlib": "0df444a360eaa60ab8c11dca51a86af692955474",
+   "license": null,
+   "ours": true,
+   "scope": "Local project (~/Documents/Papers/LRA-paper/formal). 253 theorems; RSVD, GN, tGN, etRSVD, etGN proved conditional on explicit Gaussian Props in LRA/Standard/Gaussian.lean."
+  },
+  {
+   "id": "highdimprob",
+   "name": "HighDimProb",
+   "url": "https://github.com/dududuguo/HighDimProb",
+   "lean": "v4.29.1",
+   "mathlib": "v4.29.1",
+   "license": "Apache-2.0",
+   "ours": false,
+   "scope": "External. Hoeffding, Bernstein, Hanson–Wright with explicit constant 1/(256e²) stated on Mathlib's HasSubgaussianMGF and iIndepFun, covering numbers, Dudley chaining, a Matrix Bernstein route, sample covariance. Pinned to Lean v4.29.1 and reported failing to build on v4.31–v4.33, so it cannot be a lake dependency of the Prove2me-pinned projects; treat as a proof quarry to port from."
+  },
+  {
+   "id": "ai4slt",
+   "name": "AI4SLT (empirical processes in Lean)",
+   "url": "https://arxiv.org/abs/2602.02285",
+   "lean": null,
+   "mathlib": null,
+   "license": null,
+   "ours": false,
+   "scope": "External, ~30k lines. Gaussian Lipschitz concentration via Gaussian log-Sobolev; Dudley entropy integral."
+  },
+  {
+   "id": "arlib",
+   "name": "arlib",
+   "url": "https://github.com/meelgroup/arlib",
+   "lean": "v4.33.0",
+   "mathlib": null,
+   "license": "Apache-2.0",
+   "ours": false,
+   "scope": "External, 305 modules. Finite probability, concentration, Markov chains, coresets. No linear algebra."
+  },
+  {
+   "id": "yang-srht",
+   "name": "OpenProblemsInNLA TR-01 companion (rerandomized SRHT)",
+   "url": "https://github.com/yuningyang19/OpenProblemsInNLA_TR-01",
+   "lean": "v4.33.0",
+   "mathlib": null,
+   "license": null,
+   "ours": false,
+   "scope": "External. Prescribed-width subspace embedding theorem for a rerandomized SRHT, with kernel replay."
+  },
+  {
+   "id": "heidary-sparsestack",
+   "name": "SparseStack OSE formalization",
+   "url": "https://arxiv.org/abs/2609.02978",
+   "lean": "v4.33.0",
+   "mathlib": "db584cd6d46c92f209a44c0f1c829460d327499d",
+   "license": null,
+   "ours": false,
+   "scope": "External. Fixed-matrix theorem that fully independent SparseStack is an optimal oblivious subspace embedding. Repository URL not given in the abstract."
+  },
+  {
+   "id": "krylov-fp",
+   "name": "Finite-precision Krylov examples",
+   "url": "https://arxiv.org/abs/2609.08066",
+   "lean": null,
+   "mathlib": null,
+   "license": null,
+   "ours": false,
+   "scope": "External. Exact rounding examples for CG/Lanczos; specific cases, not general theory."
+  }
+ ]
+}

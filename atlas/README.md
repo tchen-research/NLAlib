@@ -1,0 +1,71 @@
+# NLAlib Atlas
+
+A catalogue of the reusable theorems of randomized numerical linear algebra, which of them
+have been machine-checked in Lean 4 (and where), and how they depend on each other. The purpose
+is to pick *foundations*: statements other people's arguments will cite, not end-to-end
+algorithm guarantees. Algorithm guarantees appear only as `kind: "application"` consumers so
+the graph shows what each foundation unlocks.
+
+## Files
+
+| File | What |
+|---|---|
+| `atlas.json` | The data. Four flat collections keyed by slug ids: `areas`, `results`, `sources`, `libraries`. |
+| `schema.json` | JSON Schema (draft 2020-12) for `atlas.json`. Validate with `python3 -c "import json,jsonschema; jsonschema.validate(json.load(open('atlas.json')), json.load(open('schema.json')))"`. |
+| `viewer.template.html` | The visualizer with a `/*ATLAS_JSON*/` placeholder. |
+| `viewer.html` | Local build of the page (gitignored); `scripts/build_site.py` renders the deployed copy into `site/`. |
+
+Rebuild the page:
+
+```sh
+python3 - <<'PY'
+t = open('viewer.template.html').read()
+d = open('atlas.json').read().replace('</', '<\\/')
+open('viewer.html', 'w').write(t.replace('/*ATLAS_JSON*/', d))
+PY
+```
+
+## Data model
+
+Designed so the same shape can live in a file today and in a shared database (one collection per
+array, document id = slug) or on Prove2me later.
+
+- **`areas`** — topic tree. `parent: null` for the top level, `order` for display, optional
+  `priority` (`now` / `next` / `later`).
+- **`results`** — one entry per statement or definition. Key fields:
+  - `status`: `proved` (machine-checked and sorry-free in a listed library) ·
+    `assumed` (consumed as an explicit hypothesis by a proved result) ·
+    `stated` (formal statement exists, proof open; Prove2me `Open`) ·
+    `planned` (chosen target, not yet stated) · `candidate` (identified, not committed).
+    The status is the atlas's judgement of the statement *as written*; an external library proving a
+    variant is recorded under `formalizations` with its own status but does not promote the result.
+  - `formalizations[]`: `{library, decl, status, url?, prove2me_theorem_id?, note?}`.
+  - `depends_on[]`: ids whose proofs this one consumes. In-degree of this graph is the reuse score
+    the viewer ranks by.
+  - `mathlib_prereqs[]`: `{decl, present, note?}` — what Mathlib has or lacks for this statement.
+  - `sources[]`: `{source, label?}` into `sources`.
+  - `kind`: `definition | lemma | theorem | bound | identity | algorithm | application`.
+  - `difficulty` 1–5, `priority`, `tags`, `notes`, `updated_at`, `updated_by` (opaque id, never a name).
+- **`sources`** — papers, books, surveys, repos, with `role` saying why they matter.
+- **`libraries`** — Lean codebases, including Mathlib, with toolchain and Mathlib pins and `ours: bool`.
+
+### Mapping to Prove2me
+
+| Atlas | Prove2me |
+|---|---|
+| `result` with `status: stated` | theorem with `status: "Open"` |
+| `result` with `status: proved` | theorem with `status: "Proved"` (or a local sorry-free build) |
+| `depends_on` | the decomposition graph (`GET /theorems/:id/graph`), inverted |
+| `formalizations[].prove2me_theorem_id` | `theorem_id` |
+| top-level `area` | a mission series sharing a definition bundle and namespace |
+
+### Conventions for ids
+
+Lower-case kebab slugs, stable forever. Rename by adding a new id and leaving a `notes` pointer,
+never by editing an existing id, so links from other people's documents keep working.
+
+## Status today (2026-10-09)
+
+110 results · 40 proved · 12 stated · 3 assumed · 55 candidates.
+Proved work comes from three of our own libraries (Tropp Ch. 3–8, the Gaussian Random Matrices
+series on Prove2me, the LRA project) plus Mathlib and HighDimProb.

@@ -1,7 +1,7 @@
 import NLAlib
 open Lean Elab Command
 
-/-! Axiom audit. Every theorem in namespaces `NLAlib` and `TroppMatrixConcentration` may depend
+/-! Axiom audit. Every theorem in namespace `NLAlib` may depend
 only on `propext`, `Classical.choice`, `Quot.sound`, plus `sorryAx` for declared scaffolds.
 Fails on any other axiom. Writes the list of declarations that depend on `sorryAx` to
 `.lake/sorries.txt`; `scripts/check_atlas.py` checks that list against the atlas
@@ -10,7 +10,7 @@ be sorried). Run with `lake env lean scripts/Audit.lean` after `lake build`. -/
 run_cmd do
   let env ← getEnv
   let allowed : List Name := [``propext, ``Classical.choice, ``Quot.sound]
-  let roots : List Name := [`NLAlib, `TroppMatrixConcentration]
+  let roots : List Name := [`NLAlib]
   let mut n : Nat := 0
   let mut bad : Array (Name × Array Name) := #[]
   let mut sorried : Array Name := #[]

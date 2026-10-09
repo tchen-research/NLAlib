@@ -1,0 +1,35 @@
+# NLAlib: randomized numerical linear algebra in Lean 4
+
+Site: https://research.chen.pw/NLAlib/   Repo: https://github.com/tchen-research/NLAlib
+Lean v4.33.1, Mathlib pinned in lake-manifest.json. Namespace `NLAlib`.
+
+## Machine-readable files (same directory as this file)
+- atlas.json: catalogue of results (schema.json). Per result: id, title, aliases, informal
+  statement (KaTeX), hypotheses[], conclusion, status (proved | scaffold | stated | assumed |
+  planned | candidate), formalizations[] {library, decl, module, status, usage}, uses_defs[]
+  (definitions the statement is written with), depends_on[] (proof dependencies), variants[],
+  sources[] {source, label}, mathlib_prereqs[] {decl, present}.
+- declarations.json: every public Lean declaration (matrix concentration ones are under
+  NLAlib.Concentration.Matrix.*): name, kind, module, line, signature
+  (pretty-printed), doc, sorry (depends on sorryAx). Generated from the built library.
+
+## How to find a fact
+1. Search atlas.json aliases/title/informal for the mathematical name; read `formalizations`
+   for the Lean declaration and `usage` for how to apply it.
+2. Look the declaration up in declarations.json for its exact signature and module; import the
+   module (`import NLAlib.Matrix.SVD`).
+3. Statement conventions: real matrices `Matrix (Fin m) (Fin n) ℝ` when a Gaussian law is
+   involved, `[Fintype ι]` otherwise; norms `NLAlib.frobSq`/`frobNorm`/`specNorm`
+   (= Mathlib's ℓ₂ operator norm, bridge `specNorm_eq_norm`); orthonormal columns as
+   `Qᵀ * Q = 1` (`HasOrthonormalCols`); `residual Q A = A - Q * (Qᵀ * A)`; full-rank
+   pseudoinverses `pinvL G = (GᵀG)⁻¹Gᵀ`, `pinvR G = Gᵀ(GGᵀ)⁻¹` with `IsUnit` side conditions;
+   Gaussian matrices `gaussianMatrix p m : Measure (Fin p → Fin m → ℝ)` with `Matrix.of` as the
+   matrix view; expectations as Bochner integrals on an abstract probability space.
+4. Status `scaffold` means the statement exists with a `sorry`; you may use it, and the atlas
+   says what it waits on (`depends_on`).
+
+## Contributing a result
+See CONTRIBUTING.md in the repo: one result per PR, definitions in Basic.lean, docstring with
+source label and atlas id, update atlas.json (status, formalizations, depends_on, aliases,
+hypotheses, conclusion, uses_defs), run lake build, scripts/Audit.lean, scripts/ExtractDecls.lean,
+scripts/check_layers.py, scripts/check_atlas.py.

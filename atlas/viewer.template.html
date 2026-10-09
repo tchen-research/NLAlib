@@ -160,9 +160,20 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
 .tab-nav { display: flex; gap: 2px; margin-top: 26px; border-bottom: 1px solid var(--line); }
 .tab-nav button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 12px; cursor: pointer; color: var(--muted); font-weight: 600; }
 .tab-nav button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.decl { border-top: 1px solid var(--line); padding-block: 10px; display: grid; grid-template-columns: 1fr; gap: 4px; min-width: 0; }
+.decl .nm { font-family: var(--font-mono); font-size: 0.86rem; font-weight: 600; word-break: break-all; }
+.decl .sig { font-family: var(--font-mono); font-size: 0.78rem; white-space: pre-wrap; word-break: break-word; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; overflow-x: auto; }
+.decl .meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; color: var(--muted); align-items: center; }
+.decl .doc { font-size: 0.9rem; max-width: 80ch; }
+.sorrytag { color: var(--st-stated); font-weight: 700; }
+.alias { display: inline-block; font-size: 0.8rem; color: var(--muted); background: var(--accent-soft); border-radius: 4px; padding: 1px 6px; margin: 2px 4px 0 0; }
+.hyp { margin: 2px 0; }
+.usage { font-size: 0.86rem; color: var(--fg); background: var(--accent-soft); border-radius: 6px; padding: 4px 8px; margin-top: 4px; }
 .foot { margin-top: 40px; color: var(--muted); font-size: 0.85rem; max-width: 80ch; }
 kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--line-strong); border-radius: 3px; padding: 0 4px; }
 </style>
+<style>/*KATEX_CSS*/</style>
+<style>.katex { font-size: 1.02em; } .katex-display { margin: 0.6em 0; overflow-x: auto; overflow-y: hidden; } .informal .katex-display > .katex { text-align: left; }</style>
 
 <div class="wrap">
   <div class="eyebrow">NLAlib · randomized NLA foundations map</div>
@@ -187,6 +198,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     <button role="tab" aria-selected="false" data-tab="list">Table</button>
     <button role="tab" aria-selected="false" data-tab="sources">Sources</button>
     <button role="tab" aria-selected="false" data-tab="libs">Lean libraries</button>
+    <button role="tab" aria-selected="false" data-tab="decls">Declarations</button>
   </div>
 
   <div id="tab-map">
@@ -219,6 +231,11 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   <div id="tab-list" hidden><div class="tbl" style="margin-top:12px"><table id="ltable"></table></div></div>
   <div id="tab-sources" hidden><div class="tbl" style="margin-top:12px"><table id="stable"></table></div></div>
   <div id="tab-libs" hidden><div id="libs" class="cols" style="margin-top:12px"></div></div>
+  <div id="tab-decls" hidden>
+    <p class="note" style="margin-top:12px">Every public declaration in NLAlib, generated from the built library (<code>scripts/ExtractDecls.lean</code> → <code>atlas/declarations.json</code>). The search box above filters by name, module, signature and docstring. Agents can fetch the same index as JSON next to this page.</p>
+    <div class="controls" style="position:static;border:0;padding-top:4px"><div class="seg" id="dkind" role="group" aria-label="Kind"><button data-v="" aria-pressed="true">All kinds</button><button data-v="theorem">Theorems</button><button data-v="def">Definitions</button><button data-v="instance">Instances</button></div><label class="toggle"><input type="checkbox" id="dsorry"> Only sorry-dependent</label><span id="dcount" class="note"></span></div>
+    <div id="decls"></div>
+  </div>
 
   <div class="foot" id="foot"></div>
 </div>
@@ -226,10 +243,17 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
 <aside class="drawer" id="drawer" aria-label="Result detail"><button class="close" id="dclose">Close</button><div id="dbody"></div></aside>
 
 <script type="application/json" id="atlas-data">/*ATLAS_JSON*/</script>
+<script type="application/json" id="decls-data">/*DECLS_JSON*/</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js"></script>
 <script>
 (function () {
   const A = JSON.parse(document.getElementById('atlas-data').textContent);
+  let DECLS = []; try { DECLS = JSON.parse(document.getElementById('decls-data').textContent); } catch (e) { DECLS = []; }
+  const declByName = Object.fromEntries(DECLS.map(x => [x.name, x]));
+  const REPO = 'https://github.com/tchen-research/NLAlib/blob/main/';
+  const srcLink = x => x.module ? REPO + x.module.replace(/\./g, '/') + '.lean#L' + (x.line || 1) : null;
   const STATUS = [
     { id: 'proved', label: 'Proved', glyph: '✓', def: 'machine-checked, sorry-free, somewhere listed' },
     { id: 'scaffold', label: 'Scaffold', glyph: '◧', def: 'statement in NLAlib, proof still a sorry' },
@@ -258,12 +282,13 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     if (state.pri && r.priority !== state.pri) return false;
     if (state.hideapps && r.kind === 'application') return false;
     if (state.q) {
-      const h = [r.title, r.id, r.informal, r.tags.join(' '), r.notes || '', r.formalizations.map(f => f.decl || '').join(' '), r.mathlib_prereqs.map(m => m.decl).join(' ')].join(' ').toLowerCase();
+      const h = [r.title, r.id, r.informal, r.tags.join(' '), r.notes || '', (r.aliases || []).join(' '), (r.hypotheses || []).join(' '), r.conclusion || '', (r.uses_defs || []).join(' '), r.formalizations.map(f => (f.decl || '') + ' ' + (f.usage || '')).join(' '), r.mathlib_prereqs.map(m => m.decl).join(' ')].join(' ').toLowerCase();
       if (!h.includes(state.q)) return false;
     }
     return true;
   };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const typeset = el => { try { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false, strict: false }); } catch (e) {} };
 
   // ---------- tiles ----------
   function renderTiles() {
@@ -427,6 +452,19 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     if (!rows.length) el.innerHTML = '<p class="note">No Lean statements match the current filters.</p>';
   }
 
+  // ---------- declarations ----------
+  const dstate = { kind: '', sorry: false };
+  function renderDecls() {
+    const q = state.q;
+    let rows = DECLS.filter(x => (!dstate.kind || x.kind === dstate.kind) && (!dstate.sorry || x.sorry));
+    if (q) rows = rows.filter(x => [x.name, x.module, x.signature, x.doc].join(' ').toLowerCase().includes(q));
+    document.getElementById('dcount').textContent = `${rows.length} of ${DECLS.length} declarations`;
+    const el = document.getElementById('decls'); const shown = rows.slice(0, 300);
+    el.innerHTML = shown.map(x => `<div class="decl"><div class="nm">${esc(x.name)}</div><div class="meta"><span class="pill">${esc(x.kind)}</span><span>${esc(x.module)}</span>${x.sorry ? '<span class="sorrytag">depends on sorry</span>' : ''}${srcLink(x) ? `<a href="${srcLink(x)}" target="_blank" rel="noopener">source L${x.line}</a>` : ''}</div><div class="sig">${esc(x.signature)}</div>${x.doc ? `<div class="doc">${esc(x.doc.length > 400 ? x.doc.slice(0, 400) + '…' : x.doc)}</div>` : ''}</div>`).join('') + (rows.length > 300 ? `<p class="note">${rows.length - 300} more; narrow the search.</p>` : '');
+  }
+  document.querySelectorAll('#dkind button').forEach(b => b.onclick = () => { dstate.kind = b.dataset.v; document.querySelectorAll('#dkind button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderDecls(); });
+  document.getElementById('dsorry').onchange = e => { dstate.sorry = e.target.checked; renderDecls(); };
+
   // ---------- table ----------
   function renderTable() {
     const rows = A.results.filter(matches).sort((a, b) => indeg(b.id) - indeg(a.id) || a.title.localeCompare(b.title));
@@ -460,15 +498,20 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
       <div class="eyebrow">${esc(areaPath(r))}</div>
       <h3>${esc(r.title)}</h3>
       <div class="meta"><span class="pill s-${r.status}"><span class="dot"></span>${S.glyph} ${S.label}</span><span class="pill">${r.kind}</span>${r.priority ? `<span class="pill">priority: ${r.priority}</span>` : ''}${r.difficulty ? `<span class="pill" title="1 routine … 5 research-level">difficulty ${'●'.repeat(r.difficulty)}${'○'.repeat(5 - r.difficulty)}</span>` : ''}<span class="pill" title="results depending on this">used by ${indeg(r.id)}</span></div>
+      ${(r.aliases || []).length ? `<div style="margin-top:6px">${r.aliases.map(a => `<span class="alias">${esc(a)}</span>`).join('')}</div>` : ''}
       <section><p class="informal">${esc(r.informal)}</p></section>
+      ${(r.hypotheses || []).length || r.conclusion ? `<section><div class="eyebrow">Statement</div>${(r.hypotheses || []).length ? `<div class="note" style="margin-top:4px">Assume</div><ul>${r.hypotheses.map(h => `<li class="hyp">${esc(h)}</li>`).join('')}</ul>` : ''}${r.conclusion ? `<div class="note" style="margin-top:6px">Then</div><p class="hyp" style="padding-left:18px">${esc(r.conclusion)}</p>` : ''}</section>` : ''}
       ${r.notes ? `<section><div class="eyebrow">Notes</div><p class="note">${esc(r.notes)}</p></section>` : ''}
-      <section><div class="eyebrow">Lean</div>${r.formalizations.length ? '<ul>' + r.formalizations.map(f => `<li><span class="pill s-${f.status}" style="font-size:.7rem"><span class="dot"></span>${SG[f.status].glyph} ${SG[f.status].label}</span> ${libById[f.library].url ? `<a href="${esc(libById[f.library].url)}" target="_blank" rel="noopener">${esc(libById[f.library].name)}</a>` : esc(libById[f.library].name)}${f.decl ? `<br><code>${esc(f.decl)}</code>` : ''}${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}</li>`).join('') + '</ul>' : '<p class="note">No formal statement yet.</p>'}</section>
+      <section><div class="eyebrow">Lean</div>${r.formalizations.length ? '<ul>' + r.formalizations.map(f => `<li><span class="pill s-${f.status}" style="font-size:.7rem"><span class="dot"></span>${SG[f.status].glyph} ${SG[f.status].label}</span> ${libById[f.library].url ? `<a href="${esc(libById[f.library].url)}" target="_blank" rel="noopener">${esc(libById[f.library].name)}</a>` : esc(libById[f.library].name)}${f.decl ? `<br><code>${esc(f.decl)}</code>${declByName[f.decl] ? ` <span class="note">· ${esc(declByName[f.decl].module)}${declByName[f.decl].sorry ? ' · <span class="sorrytag">sorry</span>' : ''} · <a href="${srcLink(declByName[f.decl])}" target="_blank" rel="noopener">source</a></span><div class="decl" style="border:0;padding:4px 0 0"><div class="sig">${esc(declByName[f.decl].signature)}</div></div>` : ''}` : ''}${f.usage ? `<div class="usage">${esc(f.usage)}</div>` : ''}${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}</li>`).join('') + '</ul>' : '<p class="note">No formal statement yet.</p>'}</section>
+      ${(r.uses_defs || []).length ? `<section><div class="eyebrow">Stated with</div><p>${r.uses_defs.map(x => `<code>${esc(x)}</code>`).join(' ')}</p></section>` : ''}
+      ${(r.variants || []).length ? `<section><div class="eyebrow">Variants</div><ul>${r.variants.filter(v => byId[v]).map(v => `<li>${link(v)}</li>`).join('')}</ul></section>` : ''}
       ${r.mathlib_prereqs.length ? `<section><div class="eyebrow">Mathlib prerequisites</div><ul>${r.mathlib_prereqs.map(m => `<li><span class="${m.present ? 'yes' : 'no'}">${m.present ? '✓' : '✗'}</span> <code>${esc(m.decl)}</code>${m.note ? ` <span class="note">${esc(m.note)}</span>` : ''}</li>`).join('')}</ul></section>` : ''}
       <section><div class="eyebrow">Sources</div><ul>${r.sources.map(s => { const x = srcById[s.source]; return `<li>${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a>` : esc(x.title)}${s.label ? ` <span class="note">(${esc(s.label)})</span>` : ''} <span class="note">· ${esc(x.authors[0].split(' ').pop())}${x.authors.length > 1 ? ' et al.' : ''} ${x.year}</span></li>`; }).join('') || '<li class="note">none recorded</li>'}</ul></section>
       <section><div class="eyebrow">Depends on</div><ul>${r.depends_on.map(d => `<li>${link(d, linkStatus(d, id))}</li>`).join('') || '<li class="note">nothing in the atlas (a foundation)</li>'}</ul></section>
       <section><div class="eyebrow">Used by</div><ul>${(usedBy[id] || []).map(d => `<li>${link(d, linkStatus(id, d))}</li>`).join('') || '<li class="note">no atlas result depends on this yet</li>'}</ul></section>
       <section class="note">id <code>${r.id}</code> · tags: ${r.tags.join(', ') || 'none'} · updated ${r.updated_at}</section>`;
     document.querySelectorAll('#dbody button[data-id]').forEach(b => b.onclick = () => select(b.dataset.id));
+    typeset(document.getElementById('dbody'));
     dr.classList.add('open');
   }
   document.getElementById('dclose').onclick = () => select(state.sel);
@@ -477,10 +520,11 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   function renderAll() {
     renderTiles();
     const vis = A.results.filter(matches);
-    document.getElementById('count').textContent = `${vis.length} of ${A.results.length} results shown`;
+    const dq = state.q ? DECLS.filter(x => [x.name, x.module, x.signature, x.doc].join(' ').toLowerCase().includes(state.q)).length : 0;
+    document.getElementById('count').textContent = `${vis.length} of ${A.results.length} results shown` + (state.q ? ` · ${dq} declarations match (Declarations tab)` : '');
     rank('targets', vis.filter(r => r.priority === 'now' && r.status !== 'proved').sort((a, b) => indeg(b.id) - indeg(a.id) || a.title.localeCompare(b.title)).slice(0, 14));
     rank('reuse', [...vis].sort((a, b) => indeg(b.id) - indeg(a.id)).slice(0, 14));
-    renderAreas(); renderTable(); renderScaffold();
+    renderAreas(); renderTable(); renderScaffold(); renderDecls();
     if (!document.getElementById('tab-graph').hidden) renderGraph();
   }
   document.getElementById('q').addEventListener('input', e => { state.q = e.target.value.trim().toLowerCase(); renderAll(); });
@@ -488,7 +532,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   document.getElementById('hideapps').onchange = e => { state.hideapps = e.target.checked; renderAll(); };
   document.querySelectorAll('.tab-nav button').forEach(b => b.onclick = () => {
     document.querySelectorAll('.tab-nav button').forEach(x => x.setAttribute('aria-selected', x === b));
-    ['map', 'scaffold', 'graph', 'list', 'sources', 'libs'].forEach(t => document.getElementById('tab-' + t).hidden = t !== b.dataset.tab);
+    ['map', 'scaffold', 'graph', 'list', 'sources', 'libs', 'decls'].forEach(t => document.getElementById('tab-' + t).hidden = t !== b.dataset.tab);
     if (b.dataset.tab === 'graph') renderGraph();
   });
   document.addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') { if (!document.getElementById('tab-graph').hidden && document.activeElement.tagName !== 'INPUT') fitGraph(); } if (e.key === 'Escape' && state.sel) select(state.sel); });

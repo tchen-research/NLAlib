@@ -19,7 +19,7 @@ srcs = {s["id"] for s in atlas["sources"]}
 libs = {l["id"]: l for l in atlas["libraries"]}
 LOCAL = {l["id"] for l in atlas["libraries"] if l.get("repo_dir")}
 decls = set()
-for f in list(ROOT.glob("NLAlib/**/*.lean")) + list(ROOT.glob("TroppMatrixConcentration/**/*.lean")):
+for f in ROOT.glob("NLAlib/**/*.lean"):
     ns = []
     for line in f.read_text().splitlines():
         m = re.match(r"\s*namespace\s+([\w.]+)", line)
@@ -31,7 +31,16 @@ for f in list(ROOT.glob("NLAlib/**/*.lean")) + list(ROOT.glob("TroppMatrixConcen
             name = m.group(1)
             decls.add(".".join(ns + [name]) if ns else name)
             decls.add(name)
+index_file = ROOT / "atlas/declarations.json"
+if index_file.exists():
+    index = {x["name"]: x for x in json.load(open(index_file))}
+    decls |= set(index)   # exact names from the generated index take precedence
+    for x in index.values():
+        if x["sorry"]:
+            pass
 for r in atlas["results"]:
+    for v in r.get("variants", []):
+        if v not in ids: errors.append(f"{r['id']}: unknown variant {v}")
     if r["area"] not in areas: errors.append(f"{r['id']}: unknown area {r['area']}")
     for d in r["depends_on"]:
         if d not in ids: errors.append(f"{r['id']}: unknown dependency {d}")

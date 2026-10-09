@@ -1,6 +1,19 @@
 # Instructions for agents working in this repository
 
-Read `CONTRIBUTING.md` and `atlas/TARGETING.md` first. Then:
+Read `CONTRIBUTING.md` and `atlas/TARGETING.md` first.
+
+## Finding what exists
+
+- `atlas/declarations.json` (generated): every public declaration with `name`, `kind`, `module`,
+  `line`, `signature`, `doc`, `sorry`. Search it before proving anything:
+  `python3 -c "import json;[print(x['name'],'::',x['signature'].replace(chr(10),' ')) for x in json.load(open('atlas/declarations.json')) if 'pinv' in x['name']]"`.
+  Regenerate after a build with `lake env lean scripts/ExtractDecls.lean` (CI checks it is current).
+- `atlas/atlas.json`: results with `aliases`, `hypotheses`, `conclusion`, `uses_defs` (the
+  definitions a statement is written with), `formalizations[].usage` (how to apply the Lean
+  declaration), `depends_on`, `variants`. `docs/llms.txt` summarises the conventions.
+- Mathlib: `grep -rn "theorem name" .lake/packages/mathlib/Mathlib`, `exact?`, `apply?`.
+
+Then:
 
 1. **Check a single file** while iterating (fast): `lake env lean NLAlib/<Area>/<File>.lean`.
    Imports of other `NLAlib` modules need their `.olean`, so run `lake build NLAlib.<Area>.<Mod>`
@@ -21,7 +34,8 @@ Read `CONTRIBUTING.md` and `atlas/TARGETING.md` first. Then:
    `sorry` is allowed only in a named scaffold declaration (docstring `SCAFFOLD: <atlas id>`),
    catalogued in the atlas with `status: "scaffold"`; see CONTRIBUTING §3a.
 5. **Update the atlas** (`atlas/atlas.json`) in the same PR: status, formalization entry with the
-   full declaration name, new dependency edges. `scripts/check_atlas.py` verifies the declaration
-   exists.
+   full declaration name and a one-sentence `usage`, new dependency edges, and the search
+   metadata (`aliases`, `hypotheses`, `conclusion`, `uses_defs`, `variants`) for new results.
+   Then `lake env lean scripts/ExtractDecls.lean` and `python3 scripts/check_atlas.py`.
 6. **Style**: `noncomputable section`, `namespace NLAlib`, Mathlib naming conventions,
    docstrings citing the source label and atlas id, `autoImplicit` is off.

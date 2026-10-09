@@ -14,7 +14,7 @@ in `atlas/atlas.json` in your first PR (a one-line change is fine).
 | Layer | Directory | May import |
 |---|---|---|
 | 0 | `NLAlib/Matrix/` | Mathlib only |
-| 1 | `NLAlib/Concentration/`, `TroppMatrixConcentration/` | layer 0 |
+| 1 | `NLAlib/Concentration/` | layer 0 |
 | 2 | `NLAlib/Gaussian/` | layers 0–1 |
 | 3 | `NLAlib/Sketching/` | layers 0–2 |
 | 4 | `NLAlib/LowRank/`, `NLAlib/Estimation/`, `NLAlib/Krylov/` | layers 0–3 |
@@ -24,8 +24,9 @@ in `atlas/atlas.json` in your first PR (a one-line change is fine).
   usable). It is the area's public interface. Theorem files import it.
 - **One concept per file**, under about 500 lines. Name the file after the mathematics
   (`EckartYoung.lean`), not the source (`HornJohnson749.lean`).
-- **Namespace `NLAlib`** everywhere. `TroppMatrixConcentration` keeps its namespace; new code
-  in that directory is discouraged, put real-matrix specialisations in `NLAlib/Concentration/`.
+- **Namespace `NLAlib`** everywhere, including the matrix concentration files under
+  `NLAlib/Concentration/Matrix/` (ported from Tropp 2015; their theorem names keep a `chN_`
+  prefix for now).
 
 ## 3. Statement conventions
 
@@ -78,7 +79,10 @@ it, update every user in the same PR, and get two reviews. Deprecate rather than
 - `lake env lean scripts/Audit.lean` reports no axioms beyond `propext`, `Classical.choice`, `Quot.sound`; every `sorry` it lists is a catalogued scaffold.
 - `python3 scripts/check_layers.py` and `python3 scripts/check_atlas.py` pass.
 - `atlas/atlas.json` updated for every result touched: `status`, a `formalizations` entry with
-  `library: "nlalib"` and the full declaration name, new `depends_on` edges, `updated_at`.
+  `library: "nlalib"`, the full declaration name and a one-sentence `usage`, new `depends_on`
+  edges, `updated_at`; for a new result also `aliases`, `hypotheses`, `conclusion` (KaTeX),
+  `uses_defs` and `variants`, so the atlas stays searchable by people and agents.
+- `atlas/declarations.json` regenerated (`lake env lean scripts/ExtractDecls.lean`).
 - Read-back in the PR description: what the Lean statement says, written from the Lean alone.
 
 CI runs all of this on every PR. A green CI plus one reviewer merges a theorem; two reviewers for
@@ -93,6 +97,8 @@ copyright line in the file header.
 
 ## 7. Migrations in flight
 
+- The matrix concentration theorems still carry chapter-prefixed names (`ch3_…`, `ch8_…`);
+  renaming them after the mathematics is a pending api-change.
 - The LRA project (`One- and Two-Pass Algorithms for Low-Rank Approximation`) moves into
   `NLAlib/LowRank/` and `NLAlib/Gaussian/`, its Gaussian `Prop` hypotheses replaced by imports
   as the corresponding results land.

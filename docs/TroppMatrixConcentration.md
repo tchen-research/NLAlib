@@ -1,5 +1,10 @@
 # Matrix Concentration Inequalities in Lean 4
 
+> Provenance note (2026-10-09): this formalization now lives in `NLAlib/Concentration/Matrix/`
+> (Defs, Laplace, Series, Chernoff, Bernstein, Intrinsic, OperatorConvexity) under the `NLAlib`
+> namespace; declaration names below read `NLAlib.<name>`. The text that follows is the original
+> README of the standalone project, kept for the mission links and the results table.
+
 A Lean 4 / Mathlib formalization of the main results of Chapters 3–8 of
 
 > Joel A. Tropp, *An Introduction to Matrix Concentration Inequalities*,

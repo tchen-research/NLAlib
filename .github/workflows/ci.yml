@@ -18,6 +18,10 @@ jobs:
           test: false
       - name: Axiom audit (no sorry, only the three standard axioms)
         run: lake env lean scripts/Audit.lean
+      - name: Declaration index is current
+        run: |
+          lake env lean scripts/ExtractDecls.lean
+          git diff --exit-code -- atlas/declarations.json || (echo 'atlas/declarations.json is stale: run lake env lean scripts/ExtractDecls.lean and commit' && exit 1)
       - name: Import-layer lint
         run: python3 scripts/check_layers.py
       - name: Atlas consistency

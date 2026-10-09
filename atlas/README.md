@@ -12,17 +12,15 @@ the graph shows what each foundation unlocks.
 |---|---|
 | `atlas.json` | The data. Four flat collections keyed by slug ids: `areas`, `results`, `sources`, `libraries`. |
 | `schema.json` | JSON Schema (draft 2020-12) for `atlas.json`. Validate with `python3 -c "import json,jsonschema; jsonschema.validate(json.load(open('atlas.json')), json.load(open('schema.json')))"`. |
-| `viewer.template.html` | The visualizer with a `/*ATLAS_JSON*/` placeholder. |
+| `viewer.template.html` | The visualizer with `/*ATLAS_JSON*/` and `/*KATEX_CSS*/` placeholders. Statements are typeset with KaTeX (`$…$` inline, `$$…$$` display) when a result is opened. |
+| `vendor/katex.inline.css` | KaTeX 0.16.11 stylesheet with its woff2 fonts inlined as data URIs, so the page needs no external stylesheet (generated; MIT). |
 | `viewer.html` | Local build of the page (gitignored); `scripts/build_site.py` renders the deployed copy into `site/`. |
 
 Rebuild the page:
 
 ```sh
-python3 - <<'PY'
-t = open('viewer.template.html').read()
-d = open('atlas.json').read().replace('</', '<\\/')
-open('viewer.html', 'w').write(t.replace('/*ATLAS_JSON*/', d))
-PY
+python3 scripts/build_viewer.py   # atlas/viewer.html, the artifact mirror
+python3 scripts/build_site.py     # site/index.html, deployed to GitHub Pages
 ```
 
 ## Data model

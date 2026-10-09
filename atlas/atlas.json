@@ -193,15 +193,44 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.specNorm",
+     "decl": "NLAlib.frobSq_mul_le_specNorm_sq_mul_frobSq",
      "status": "proved",
-     "note": "definitions frobInner/frobSq/frobNorm/specNorm with the bridge specNorm_eq_norm; mixed-norm inequalities still to prove"
+     "note": "consolidated API in NLAlib/Matrix/Norms.lean: frobInner algebra, Pythagoras, Cauchy–Schwarz, triangle inequality, unitary invariance, mixed Frobenius/spectral inequalities, Frobenius submultiplicativity, specNorm ≤ frobNorm"
     },
     {
-     "library": "lra",
-     "decl": "LRA.Basic",
-     "status": "proved",
-     "note": "proved ad hoc as needed; no consolidated API"
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_mul_le_frobSq_mul_specNorm_sq",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_le_frobNorm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_mul_le",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobInner_le_frobNorm_mul_frobNorm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_mul_left_of_orthonormal",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_eq_sum_sq",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_eq_norm",
+     "status": "proved"
     },
     {
      "library": "gaussian-facts",
@@ -232,7 +261,7 @@
    "tags": [
     "api"
    ],
-   "notes": "Two independent ad hoc definitions already exist (LRA and GaussianMatrix_basic). Consolidating into one Mathlib-style file is the first infrastructure job.",
+   "notes": "Done. Mathlib lacks ‖A‖₂ ≤ ‖A‖_F for the L2 operator norm and a transpose version of l2_opNorm_conjTranspose; both proved here and are upstream candidates.",
    "updated_at": "2026-10-09"
   },
   {
@@ -240,7 +269,7 @@
    "title": "Singular value decomposition of a matrix",
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Every A ∈ ℝ^{m×n} factors as A = UΣVᵀ with U, V orthogonal and Σ diagonal with σ₁ ≥ … ≥ σ_min(m,n) ≥ 0. Block form A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ split at rank k.",
    "sources": [
     {
@@ -252,18 +281,48 @@
      "label": "§2.1"
     }
    ],
-   "formalizations": [],
-   "depends_on": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isSVD",
+     "status": "proved",
+     "note": "IsSVD A U V: Uᵀ U = 1, Vᵀ V = 1, A = U · rectDiag (singularValues A) · Vᵀ, where singularValues A : ℕ → ℝ is Mathlib's LinearMap.singularValues of toEuclideanLin A (zero-indexed, antitone, zero beyond the rank). Also uniqueness of σ, block split at k (IsSVD.eq_head_add_tail), AᵀA and AAᵀ diagonalisations, frobSq = Σσ², invariance under orthogonal factors and transpose."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSVD.eq_head_add_tail",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_eq_sum_sq_singularValues",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "orthonormal-completion",
+    "norms-frob-spec"
+   ],
    "mathlib_prereqs": [
     {
      "decl": "LinearMap.singularValues",
      "present": true,
-     "note": "singular values of a linear map exist (as a finsupp ℕ →₀ ℝ) but no matrix factorization"
+     "note": "used as the definition of the singular values"
     },
     {
-     "decl": "Matrix.IsHermitian.spectral_theorem",
+     "decl": "Orthonormal.exists_orthonormalBasis_extension_of_card_eq",
      "present": true,
-     "note": "eigenvector unitary for Hermitian matrices"
+     "note": "the completion step"
+    },
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀",
+     "present": true,
+     "note": "the sorted eigenvalues; note Matrix.IsHermitian.eigenvalues is NOT sorted"
     }
    ],
    "difficulty": 3,
@@ -271,7 +330,7 @@
    "tags": [
     "foundation"
    ],
-   "notes": "Every LRA statement is phrased in terms of the block SVD. Building the factorization from Mathlib's Hermitian spectral theorem applied to AᵀA is the natural route.",
+   "notes": "Done. Next lemma wanted: singularValues A 0 = specNorm A, which Weyl and Eckart–Young need.",
    "updated_at": "2026-10-09"
   },
   {
@@ -445,7 +504,7 @@
    "title": "Moore–Penrose pseudoinverse and its identities",
    "area": "matrix-projections",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "A† defined via the SVD; the four Penrose identities; A† = (AᵀA)⁻¹Aᵀ for full column rank, Aᵀ(AAᵀ)⁻¹ for full row rank; AA† is the orthogonal projector onto range(A); ‖A†‖ = 1/σ_min; ‖G†‖_F² = tr((GGᵀ)⁻¹).",
    "sources": [
     {
@@ -460,9 +519,44 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.pinvL",
-     "status": "stated",
-     "note": "full-rank pinvL/pinvR with one-sided inverse identities; general Moore–Penrose still open"
+     "decl": "NLAlib.pinvL_mul",
+     "status": "proved",
+     "note": "full-rank pseudoinverses pinvL/pinvR with the Penrose identities, projector properties and ‖G†‖_F² = tr (GGᵀ)⁻¹. The general Moore–Penrose definition (rank-deficient case) is still open; tracked as the remaining gap of this entry."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mul_pinvR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mul_pinvL_mul",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pinvL_mul_pinvL",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mul_pinvL_isSymm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mul_pinvL_isIdempotentElem",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_pinvR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pinvL_transpose",
+     "status": "proved"
     },
     {
      "library": "gaussian-facts",
@@ -477,9 +571,7 @@
      "note": "full-rank special cases only"
     }
    ],
-   "depends_on": [
-    "svd"
-   ],
+   "depends_on": [],
    "mathlib_prereqs": [
     {
      "decl": "Matrix.nonsing_inv",
@@ -493,7 +585,7 @@
     "foundation",
     "api"
    ],
-   "notes": "Already defined twice in incompatible ways. A single general definition with the Penrose identities is high-reuse infrastructure.",
+   "notes": "Full-rank case complete. Remaining gap: a general Moore–Penrose definition via the SVD with the four Penrose identities for rank-deficient G.",
    "updated_at": "2026-10-09"
   },
   {
@@ -512,18 +604,44 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.residual",
+     "decl": "NLAlib.frobSq_eq_frobSq_proj_add_residual",
      "status": "proved",
-     "note": "definitions HasOrthonormalCols/residual and transpose_mul_residual; Pythagoras and range-inclusion lemmas still to port from LRA"
+     "note": "projector identities, residual algebra, Pythagoras, contraction, range-inclusion monotonicity (HMT Prop 8.5, Frobenius), best-in-range lemma"
     },
     {
-     "library": "lra",
-     "decl": "LRA.Deterministic.RangeFinder",
-     "status": "proved",
-     "note": "residual Q A := A − Q(QᵀA) and its basic properties"
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_residual_le",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.residual_mul_eq_zero_of_range",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_residual_le_of_eq_mul",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_sub_mul_eq",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_sub_mul_le_of_isBestRankApprox",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.transpose_mul_residual",
+     "status": "proved"
     }
    ],
-   "depends_on": [],
+   "depends_on": [
+    "norms-frob-spec"
+   ],
    "mathlib_prereqs": [
     {
      "decl": "Submodule.orthogonalProjection",
@@ -537,14 +655,15 @@
     "foundation",
     "lra"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Done. Includes the monotonicity result with Q₁ arbitrary (stronger than HMT Prop 8.5 as asked)."
   },
   {
    "id": "orthonormal-completion",
    "title": "Completing an orthonormal frame to an orthogonal matrix",
    "area": "matrix-projections",
    "kind": "lemma",
-   "status": "assumed",
+   "status": "proved",
    "informal": "If Q ∈ ℝ^{m×q} has orthonormal columns there is Q⊥ ∈ ℝ^{m×(m−q)} with [Q Q⊥] orthogonal: QQᵀ + Q⊥Q⊥ᵀ = I and QᵀQ⊥ = 0.",
    "sources": [
     {
@@ -554,9 +673,21 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_orthogonal_completion",
+     "status": "proved",
+     "note": "matrix form: V with orthonormal columns along an embedding ι ↪ Fin n extends to an orthogonal W; lives in Gaussian/Invariance.lean, to move to Matrix/Projections"
+    },
+    {
      "library": "lra",
      "decl": "hcomp hypothesis in gn_main_of_completion",
      "status": "assumed"
+    },
+    {
+     "library": "mathlib",
+     "decl": "Orthonormal.exists_orthonormalBasis_extension_of_card_eq",
+     "status": "proved",
+     "note": "abstract form, used directly inside exists_isSVD"
     }
    ],
    "depends_on": [],
@@ -572,7 +703,8 @@
    "tags": [
     "foundation"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Mathlib's abstract completion suffices; the matrix wrapper exists_orthogonal_completion lives in Gaussian/Invariance.lean and should move to Matrix/Projections."
   },
   {
    "id": "von-neumann-trace",
@@ -884,6 +1016,12 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_map_orthogonal",
+     "status": "proved",
+     "note": "ported from the Prove2me solution; proof goes through Mathlib's stdGaussian_map"
+    },
+    {
      "library": "gaussian-facts",
      "decl": "GaussianMatrix.rotation_invariance",
      "status": "proved"
@@ -926,6 +1064,16 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_map_block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_indepFun_block",
+     "status": "proved"
+    },
+    {
      "library": "gaussian-facts",
      "decl": "GaussianMatrix.block_law",
      "status": "proved"
@@ -966,6 +1114,12 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_frobSq_mul_gaussianMatrix_mul",
+     "status": "proved",
+     "note": "more general than HMT Prop 10.1: arbitrary finite outer index types"
+    },
+    {
      "library": "gaussian-facts",
      "decl": "GaussianMatrix.frobenius_second_moment",
      "status": "proved"
@@ -977,7 +1131,8 @@
     }
    ],
    "depends_on": [
-    "gaussian-matrix-def"
+    "gaussian-matrix-def",
+    "norms-frob-spec"
    ],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -1101,6 +1256,22 @@
     }
    ],
    "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_ae_isUnit_mul_transpose",
+     "status": "proved",
+     "note": "via: a nonzero multivariate polynomial in the entries is a.s. nonzero (not in Mathlib)"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_ae_isUnit_transpose_mul",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_ae_rank_eq",
+     "status": "proved"
+    },
     {
      "library": "gaussian-facts",
      "decl": "GaussianMatrix.full_rank_ae",
@@ -2403,7 +2574,7 @@
    "title": "Distributional JL for a Gaussian sketch",
    "area": "sketching-jl",
    "kind": "bound",
-   "status": "candidate",
+   "status": "scaffold",
    "informal": "For S = k^{-1/2}G: P[|‖Sx‖² − ‖x‖²| > ε‖x‖²] ≤ 2exp(−k(ε²/4 − ε³/6)).",
    "sources": [
     {
@@ -2415,7 +2586,14 @@
      "label": "§2.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.jl_distributional",
+     "status": "scaffold",
+     "note": "SCAFFOLD: statement in place, proof deferred until the chi-square tails exist"
+    }
+   ],
    "depends_on": [
     "chi-square-upper-tail",
     "chi-square-lower-tail",
@@ -2435,7 +2613,7 @@
    "title": "Johnson–Lindenstrauss lemma",
    "area": "sketching-jl",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "scaffold",
    "informal": "n points embed into k = O(ε^{-2} log n) dimensions with all pairwise distances preserved to 1 ± ε; union bound over the distributional lemma.",
    "sources": [
     {
@@ -2443,7 +2621,29 @@
      "label": "Thm 2.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.jl_lemma",
+     "status": "scaffold",
+     "note": "union bound over ordered pairs (factor 2 vs N(N−1)/2); explicit constant 48 log N / ε² for failure probability ≤ 1/2; proved modulo the scaffold jl_distributional"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.jl_lemma_le_of_log_le",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.jl_lemma_le_half",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.jl_lemma_exists",
+     "status": "scaffold"
+    }
+   ],
    "depends_on": [
     "jl-distributional"
    ],
@@ -2454,7 +2654,7 @@
     "foundation",
     "jl"
    ],
-   "notes": "No Lean formalization found anywhere; a natural first flagship statement.",
+   "notes": "Proof complete on top of the distributional lemma; becomes proved automatically once jl_distributional is discharged.",
    "updated_at": "2026-10-09"
   },
   {
@@ -2491,7 +2691,7 @@
    "title": "Subspace embedding: definition and equivalent forms",
    "area": "sketching-ose",
    "kind": "definition",
-   "status": "stated",
+   "status": "proved",
    "informal": "S is an ε-subspace embedding for range(U) (U orthonormal) iff ‖SUx‖² ∈ (1±ε)‖x‖² for all x iff σ(SU) ⊂ [√(1−ε), √(1+ε)] iff ‖UᵀSᵀSU − I‖ ≤ ε. Oblivious vs. data-dependent variants.",
    "sources": [
     {
@@ -2512,7 +2712,27 @@
      "library": "nlalib",
      "decl": "NLAlib.IsSubspaceEmbedding",
      "status": "proved",
-     "note": "definition only; equivalent singular-value form still to prove"
+     "note": "definition, orthonormal-basis form, basis independence, monotonicity, and the Gram-form sufficient condition ‖(SU)ᵀSU − I‖ ≤ ε. Open: converse of the Gram form and the singular-value form (needs svd)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isSubspaceEmbedding_iff_of_orthonormal",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isSubspaceEmbedding_mul_right_iff",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isSubspaceEmbedding_of_specNorm_gram_sub_one_le",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSubspaceEmbedding.mono",
+     "status": "proved"
     }
    ],
    "depends_on": [
@@ -2803,6 +3023,22 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.rangeFinder_frobSq_le",
+     "status": "proved",
+     "note": "HMT Thm 9.1, Frobenius form, slightly more general than the source (no diagonal S, no U₁ hypotheses); plus the truncated variant (Chen–Persson prop:hmt-struct)"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rangeFinder_truncated_frobSq_le",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_sub_rangeFinderZ",
+     "status": "proved"
+    },
+    {
      "library": "lra",
      "decl": "LRA.Deterministic.RangeFinder",
      "status": "proved"
@@ -2811,7 +3047,7 @@
    "depends_on": [
     "projection-facts",
     "pseudoinverse",
-    "svd"
+    "norms-frob-spec"
    ],
    "mathlib_prereqs": [],
    "difficulty": 3,
@@ -2913,14 +3149,22 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.tail_bound",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sq_le_avg_Ico",
+     "status": "proved"
+    },
+    {
      "library": "lra",
      "decl": "RangeFinder.tail_bound",
      "status": "proved"
     }
    ],
-   "depends_on": [
-    "svd"
-   ],
+   "depends_on": [],
    "mathlib_prereqs": [],
    "difficulty": 1,
    "priority": "later",
@@ -3411,7 +3655,7 @@
    "title": "Hutchinson estimator is unbiased",
    "area": "estimation",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "If E zzᵀ = I then E[zᵀAz] = tr A. Holds for Gaussian, Rademacher and any isotropic z.",
    "sources": [
     {
@@ -3421,7 +3665,14 @@
      "source": "at11"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_quadForm_eq_trace",
+     "status": "proved",
+     "note": "pairwise independent, mean-zero, unit-variance coordinates on an abstract probability space"
+    }
+   ],
    "depends_on": [],
    "mathlib_prereqs": [
     {
@@ -3442,7 +3693,7 @@
    "title": "Variance of Gaussian and Rademacher trace estimators",
    "area": "estimation",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Var[gᵀAg] = 2‖A‖_F² (Gaussian, symmetric A); Var[εᵀAε] = 2(‖A‖_F² − Σ_i A_ii²) (Rademacher).",
    "sources": [
     {
@@ -3453,11 +3704,32 @@
      "label": "Lem 5, 6"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.variance_quadForm",
+     "status": "proved",
+     "note": "general fourth-moment variance identity for any A (no symmetry), symmetric specialisation 2(‖A‖_F² − ΣA_ii²) + (m₄−1)ΣA_ii², and the m₄ = 3 (Gaussian) and m₄ = 1 (Rademacher) corollaries; proof uses iIndepFun.integral_fun_prod_comp rather than Isserlis"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.variance_quadForm_of_isSymm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.variance_quadForm_of_isSymm_of_fourth_moment_eq_three",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.variance_quadForm_of_isSymm_of_fourth_moment_eq_one",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "hutchinson-unbiased",
-    "isserlis",
-    "rademacher-khintchine"
+    "norms-frob-spec"
    ],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -3466,7 +3738,8 @@
     "foundation",
     "estimation"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Corollaries assume only the fourth moment m₄, not the Gaussian or Rademacher law; connecting them to gaussianMatrix / a Rademacher law is a small follow-up."
   },
   {
    "id": "hutchinson-tail",
@@ -3627,7 +3900,7 @@
    "title": "Krylov subspaces and their polynomial characterization",
    "area": "krylov",
    "kind": "definition",
-   "status": "stated",
+   "status": "proved",
    "informal": "K_q(A, b) = span{b, Ab, …, A^{q−1}b} = {p(A)b : deg p < q}; nesting, invariance, dimension ≤ q.",
    "sources": [
     {
@@ -3642,9 +3915,29 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.krylovSpace",
+     "decl": "NLAlib.mem_krylovSpace_iff",
      "status": "proved",
-     "note": "definition only; polynomial characterisation still to prove"
+     "note": "polynomial characterisation, nesting, A-invariance into the next space, dimension bound"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mem_krylovSpace_iff_degree",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovSpace_mono",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mulVec_mem_krylovSpace_succ",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.finrank_krylovSpace_le",
+     "status": "proved"
     }
    ],
    "depends_on": [],
@@ -3910,7 +4203,7 @@
    "title": "Randomized Kaczmarz converges linearly in expectation",
    "area": "solvers",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Choosing row i with probability ‖a_i‖²/‖A‖_F²: E‖x_k − x*‖² ≤ (1 − 1/κ_F²)^k ‖x_0 − x*‖², κ_F = ‖A‖_F‖A†‖. A one-page proof with large downstream reuse.",
    "sources": [
     {
@@ -3918,9 +4211,17 @@
      "label": "Thm 2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.expErr_le",
+     "status": "proved",
+     "note": "Also sum_paths_le (explicit product-weighted sum over row sequences), expected_sqErr_step_le, expected_sqErr_step_eq. σ enters as the hypothesis ∀ v, σ²(v⬝v) ≤ (Av)⬝(Av), so any lower bound on σ_min works; no full-rank assumption."
+    }
+   ],
    "depends_on": [
-    "projection-facts"
+    "norms-frob-spec",
+    "courant-fischer"
    ],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -3929,7 +4230,7 @@
     "foundation",
     "solvers"
    ],
-   "notes": "Best candidate for a first 'complete algorithm' theorem: needs only projections, σ_min, and expectation over a finite sample.",
+   "notes": "Proved in full over arbitrary finite index types with finite weighted sums instead of measure theory. Deviation from Strohmer–Vershynin: σ is any constant with σ²‖v‖² ≤ ‖Av‖², which recovers 1 − κ(A)⁻² under full column rank.",
    "updated_at": "2026-10-09"
   },
   {

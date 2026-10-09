@@ -50,6 +50,22 @@ The statement is the product; a proof can be replaced, a statement nobody can ap
 - Docstring on every public declaration: the source and its label (`Horn–Johnson Thm 7.4.9.1`),
   the atlas id, and any deviation from the printed statement.
 
+## 3a. Scaffolds: where `sorry` is allowed
+
+A **scaffold** is a statement whose proof is deferred so that downstream results can be stated
+and proved against it now. Rules:
+
+- Every `sorry` lives in its own named declaration, never inline in a larger proof. Its docstring
+  starts with `SCAFFOLD: <atlas id>` and says why the proof is deferred.
+- The atlas entry has `status: "scaffold"` and a `formalizations` entry with
+  `library: "nlalib"`, the full declaration name and `status: "scaffold"`.
+- A theorem proved only modulo scaffold lemmas is itself recorded as `scaffold` (its axioms
+  include `sorryAx`). The audit lists every declaration that depends
+  on `sorry`; `scripts/check_atlas.py` fails if one of them is catalogued as proved, or if a
+  catalogued scaffold no longer depends on `sorry` (promote it).
+- Scaffolds are for lower-level facts that are genuinely planned (a Gaussian moment, Eckart–Young),
+  not for skipping the hard part of the result you are claiming.
+
 ## 4. Changing a definition
 
 A change to any `Basic.lean` or to an existing public definition is an **api-change** PR: label
@@ -59,7 +75,7 @@ it, update every user in the same PR, and get two reviews. Deprecate rather than
 ## 5. Pull request checklist
 
 - `lake build` passes with no new warnings.
-- `lake env lean scripts/Audit.lean` reports only `propext`, `Classical.choice`, `Quot.sound`.
+- `lake env lean scripts/Audit.lean` reports no axioms beyond `propext`, `Classical.choice`, `Quot.sound`; every `sorry` it lists is a catalogued scaffold.
 - `python3 scripts/check_layers.py` and `python3 scripts/check_atlas.py` pass.
 - `atlas/atlas.json` updated for every result touched: `status`, a `formalizations` entry with
   `library: "nlalib"` and the full declaration name, new `depends_on` edges, `updated_at`.

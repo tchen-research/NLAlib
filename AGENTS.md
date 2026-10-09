@@ -17,9 +17,9 @@ Read `CONTRIBUTING.md` and `atlas/TARGETING.md` first. Then:
 3. **Search before defining.** `grep -rn "theorem foo" .lake/packages/mathlib/Mathlib` and
    `exact?` / `apply?` / `rw?` in a scratch file. If Mathlib has it, use it; if an area
    `Basic.lean` has it, import it; otherwise prove a small lemma in your own file.
-4. **Never** leave `sorry`, add an `axiom`, use `native_decide`, or weaken a statement to make
-   it provable. If stuck, open the PR as draft with the `sorry` clearly marked and listed in the
-   description.
+4. **Never** add an `axiom`, use `native_decide`, or weaken a statement to make it provable.
+   `sorry` is allowed only in a named scaffold declaration (docstring `SCAFFOLD: <atlas id>`),
+   catalogued in the atlas with `status: "scaffold"`; see CONTRIBUTING §3a.
 5. **Update the atlas** (`atlas/atlas.json`) in the same PR: status, formalization entry with the
    full declaration name, new dependency edges. `scripts/check_atlas.py` verifies the declaration
    exists.

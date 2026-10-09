@@ -111,12 +111,13 @@
             "type": "string",
             "enum": [
               "proved",
+              "scaffold",
               "stated",
               "assumed",
               "planned",
               "candidate"
             ],
-            "description": "proved: machine-checked and sorry-free somewhere listed in formalizations. stated: a formal statement exists and is open (Prove2me 'Open'). assumed: consumed as an explicit hypothesis / Prop by a downstream formalization but not itself proved. planned: chosen as a target, no formal statement yet. candidate: identified as worth doing, not committed."
+            "description": "proved: machine-checked and sorry-free somewhere listed in formalizations. scaffold: the formal statement exists in this library with a `sorry` proof (or is proved only modulo named scaffold lemmas); the statement is usable by downstream proofs. stated: a formal statement exists elsewhere and is open. assumed: consumed as an explicit hypothesis / Prop by a downstream formalization but not itself proved. planned: chosen as a target, no formal statement yet. candidate: identified, not committed."
           },
           "sources": {
             "type": "array",
@@ -159,6 +160,7 @@
                   "type": "string",
                   "enum": [
                     "proved",
+                    "scaffold",
                     "stated",
                     "assumed"
                   ]
@@ -181,7 +183,7 @@
             "items": {
               "type": "string"
             },
-            "description": "ids of results this one's proof consumes. Drives the dependency graph and the 'open leaves' frontier."
+            "description": "ids of results this one's proof consumes. Drives the dependency graph. Link status is derived: proved when both ends are proved; scaffold when both ends have a Lean statement in this library (one of them not yet proved); pending otherwise."
           },
           "mathlib_prereqs": {
             "type": "array",

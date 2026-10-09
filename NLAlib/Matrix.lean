@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Norms
 import NLAlib.Matrix.Projections
 import NLAlib.Matrix.Pseudoinverse
+import NLAlib.Matrix.SVD
 
 /-!
 # Matrix analysis toolkit

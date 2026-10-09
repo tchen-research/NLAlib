@@ -36,9 +36,12 @@ button { font: inherit; color: inherit; }
 button:focus-visible, input:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* status tokens: color + glyph, never color alone */
-.s-proved { --sc: var(--st-proved); } .s-assumed { --sc: var(--st-assumed); } .s-stated { --sc: var(--st-stated); } .s-planned { --sc: var(--st-planned); } .s-candidate { --sc: var(--st-candidate); }
+.s-proved { --sc: var(--st-proved); } .s-scaffold { --sc: var(--st-stated); --hatch: repeating-linear-gradient(45deg, var(--sc) 0 2px, transparent 2px 5px); } .s-assumed { --sc: var(--st-assumed); } .s-stated { --sc: var(--st-stated); } .s-planned { --sc: var(--st-planned); } .s-candidate { --sc: var(--st-candidate); }
 .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--sc); border: 2px solid var(--sc); flex: none; }
 .s-candidate .dot { background: transparent; }
+.s-scaffold .dot { background: var(--hatch); }
+.stack .s-scaffold { background: var(--hatch); }
+.chip .gl { font-size: 0.75rem; color: var(--muted); }
 .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line-strong); font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
 .pill .dot { width: 8px; height: 8px; }
 
@@ -101,6 +104,8 @@ ol.rank .k { font-variant-numeric: tabular-nums; color: var(--muted); font-size:
 .graph-help { position: absolute; top: 8px; left: 10px; font-size: 0.78rem; color: var(--muted); background: var(--panel); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--line); }
 .gnode rect { fill: var(--panel); stroke: var(--sc); stroke-width: 1.5; }
 .gnode.s-candidate rect { stroke-dasharray: 3 2; }
+.gnode.s-scaffold rect { fill: url(#hatch); }
+.gnode.s-scaffold.hi rect { fill: var(--sc); }
 .gnode.hi rect { fill: var(--sc); }
 .gnode.hi text { fill: #fff; }
 .gnode.sel rect { stroke-width: 3; }
@@ -108,13 +113,29 @@ ol.rank .k { font-variant-numeric: tabular-nums; color: var(--muted); font-size:
 .gnode text { fill: var(--fg); font-family: var(--font-body); font-size: 11px; pointer-events: none; }
 .gnode .glyph { font-weight: 700; }
 .gedge { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
-.gedge.up { stroke: var(--accent); stroke-width: 2; }
-.gedge.down { stroke: var(--st-assumed); stroke-width: 2; }
+.gedge.e-proved { stroke: var(--st-proved); stroke-width: 1.8; }
+.gedge.e-scaffold { stroke: var(--st-stated); stroke-width: 1.6; stroke-dasharray: 6 3; }
+.gedge.e-pending { stroke: var(--line-strong); stroke-dasharray: 2 3; }
+.gedge.up { stroke: var(--accent); stroke-width: 2.4; }
+.gedge.down { stroke: var(--st-assumed); stroke-width: 2.4; }
 .gedge.fade { opacity: 0.12; }
 .glabel { fill: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
 .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
 .legend span { display: inline-flex; gap: 6px; align-items: center; }
-.legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid var(--line-strong); }
+.legend i { display: inline-block; width: 22px; height: 0; border-top: 2px solid var(--line-strong); }
+.legend i.l-proved { border-top-color: var(--st-proved); } .legend i.l-scaffold { border-top-style: dashed; border-top-color: var(--st-stated); } .legend i.l-pending { border-top-style: dotted; }
+.lk { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.lk i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--line-strong); }
+.scaf { border-top: 1px solid var(--line); padding-block: 10px; display: grid; grid-template-columns: minmax(200px, 1fr) 2fr; gap: 10px 16px; }
+@media (max-width: 760px) { .scaf { grid-template-columns: 1fr; } }
+.scaf .head { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.scaf .head .t { font-weight: 600; }
+.scaf .deps { display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; }
+.scaf .dep { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--panel); font-size: 0.85rem; cursor: pointer; max-width: 100%; }
+.scaf .dep .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scaf .meter { display: flex; height: 8px; gap: 2px; border-radius: 3px; overflow: hidden; max-width: 220px; }
+.scaf .meter span { min-width: 0; }
+.scaf .meter .m-proved { background: var(--st-proved); } .scaf .meter .m-scaffold { background: var(--hatch, var(--st-stated)); --sc: var(--st-stated); --hatch: repeating-linear-gradient(45deg, var(--st-stated) 0 2px, transparent 2px 5px); } .scaf .meter .m-pending { background: transparent; border: 1px solid var(--line-strong); }
 
 /* tables */
 table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
@@ -161,6 +182,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
 
   <div class="tab-nav" role="tablist">
     <button role="tab" aria-selected="true" data-tab="map">Area map</button>
+    <button role="tab" aria-selected="false" data-tab="scaffold">Scaffold</button>
     <button role="tab" aria-selected="false" data-tab="graph">Dependency graph</button>
     <button role="tab" aria-selected="false" data-tab="list">Table</button>
     <button role="tab" aria-selected="false" data-tab="sources">Sources</button>
@@ -183,9 +205,14 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     <div id="areas"></div>
   </div>
 
+  <div id="tab-scaffold" hidden>
+    <p class="note" style="margin-top:12px">Every result that has a Lean statement in NLAlib, with the links its proof rests on. A link is <span class="lk"><i class="l-proved"></i>proved</span> when both ends are proved, <span class="lk"><i class="l-scaffold"></i>scaffold</span> when both ends are stated in NLAlib but one is still a <code>sorry</code>, and <span class="lk"><i class="l-pending"></i>pending</span> when the dependency has no Lean statement yet.</p>
+    <div class="tiles" id="linktiles" style="margin-top:12px"></div>
+    <div id="scaffold"></div>
+  </div>
   <div id="tab-graph" hidden>
-    <p class="note" style="margin-top:12px">Left to right follows proof dependency: a result sits one column right of everything it consumes. Click a node to trace what it needs (blue) and what it unlocks (orange). Scroll to zoom, drag to pan.</p>
-    <div class="graph-wrap" style="margin-top:8px"><div class="graph-help">Fit: <kbd>F</kbd></div><svg id="g" role="img" aria-label="Dependency graph of RandNLA results"></svg></div>
+    <p class="note" style="margin-top:12px">Left to right follows proof dependency: a result sits one column right of everything it consumes. Solid green links are proved at both ends, dashed blue links join Lean statements where one end is still a scaffold, dotted links are pending. Click a node to trace what it needs (blue) and what it unlocks (orange). Scroll to zoom, drag to pan.</p>
+    <div class="graph-wrap" style="margin-top:8px"><div class="graph-help">Fit: <kbd>F</kbd></div><svg id="g" role="img" aria-label="Dependency graph of results"><defs><pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--panel)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--st-stated)" stroke-width="2"/></pattern></defs></svg></div>
     <div class="legend" id="glegend"></div>
   </div>
 
@@ -205,6 +232,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   const A = JSON.parse(document.getElementById('atlas-data').textContent);
   const STATUS = [
     { id: 'proved', label: 'Proved', glyph: '✓', def: 'machine-checked, sorry-free, somewhere listed' },
+    { id: 'scaffold', label: 'Scaffold', glyph: '◧', def: 'statement in NLAlib, proof still a sorry' },
     { id: 'assumed', label: 'Assumed', glyph: '!', def: 'used as an explicit hypothesis by a proved result' },
     { id: 'stated', label: 'Stated', glyph: '◐', def: 'formal statement exists, proof open' },
     { id: 'planned', label: 'Planned', glyph: '○', def: 'chosen target, not yet stated' },
@@ -217,6 +245,9 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   const libById = Object.fromEntries(A.libraries.map(l => [l.id, l]));
   const usedBy = {}; A.results.forEach(r => r.depends_on.forEach(d => { (usedBy[d] = usedBy[d] || []).push(r.id); }));
   const indeg = id => (usedBy[id] || []).length;
+  const inLean = r => r.status === 'proved' || r.status === 'scaffold';
+  const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; if (d.status === 'proved' && c.status === 'proved') return 'proved'; if (inLean(d) && inLean(c)) return 'scaffold'; return 'pending'; };
+  const LINK = { proved: 'proved', scaffold: 'scaffold', pending: 'pending' };
   const topArea = r => { let a = areaById[r.area]; while (a.parent) a = areaById[a.parent]; return a; };
   const areaPath = r => { const p = []; let a = areaById[r.area]; while (a) { p.unshift(a.name); a = a.parent ? areaById[a.parent] : null; } return p.join(' › '); };
 
@@ -292,7 +323,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     b.className = 'chip s-' + r.status + (r.kind === 'application' ? ' app' : '') + (state.sel === r.id ? ' sel' : '');
     b.dataset.id = r.id;
     b.title = `${SG[r.status].label} · ${r.kind} · ${areaPath(r)}`;
-    b.innerHTML = `<span class="dot"></span><span class="t">${esc(r.title)}</span>${indeg(r.id) >= 2 ? `<span class="re">×${indeg(r.id)}</span>` : ''}${r.priority === 'now' && r.status !== 'proved' ? '<span class="pri">NOW</span>' : ''}`;
+    b.innerHTML = `<span class="dot"></span><span class="gl">${SG[r.status].glyph}</span><span class="t">${esc(r.title)}</span>${indeg(r.id) >= 2 ? `<span class="re">×${indeg(r.id)}</span>` : ''}${r.priority === 'now' && r.status !== 'proved' ? '<span class="pri">NOW</span>' : ''}`;
     b.onclick = () => select(r.id);
     return b;
   }
@@ -324,7 +355,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     return nb.reduce((s, d) => s + pos[d], 0) / nb.length;
   }
   function renderGraph() {
-    const svg = d3.select('#g'); svg.selectAll('*').remove();
+    const svg = d3.select('#g'); svg.selectAll('*:not(defs)').remove();
     const nodes = A.results.filter(matches);
     const ids = new Set(nodes.map(n => n.id));
     const lay = layout(nodes); layoutCache = lay;
@@ -332,7 +363,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     const edges = [];
     nodes.forEach(n => n.depends_on.forEach(d => { if (ids.has(d)) edges.push({ s: d, t: n.id }); }));
     const P = lay.pos;
-    gRoot.selectAll('path.gedge').data(edges).enter().append('path').attr('class', 'gedge').attr('data-s', e => e.s).attr('data-t', e => e.t)
+    gRoot.selectAll('path.gedge').data(edges).enter().append('path').attr('class', e => 'gedge e-' + linkStatus(e.s, e.t)).attr('data-s', e => e.s).attr('data-t', e => e.t)
       .attr('d', e => { const a = P[e.s], b = P[e.t]; const x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2; const m = (x1 + x2) / 2; return `M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`; });
     const gn = gRoot.selectAll('g.gnode').data(nodes).enter().append('g').attr('class', n => 'gnode s-' + n.status).attr('data-id', n => n.id)
       .attr('transform', n => `translate(${P[n.id].x},${P[n.id].y})`).style('cursor', 'pointer').on('click', (ev, n) => select(n.id));
@@ -348,7 +379,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     svg.call(zoomBehavior);
     fitGraph();
     applySelectionToGraph();
-    document.getElementById('glegend').innerHTML = STATUS.map(s => `<span class="s-${s.id}"><span class="dot"></span>${s.glyph} ${s.label}</span>`).join('') + '<span><i style="border-color:var(--accent)"></i>needs</span><span><i style="border-color:var(--st-assumed)"></i>unlocks</span><span>Border weight = reuse</span>';
+    document.getElementById('glegend').innerHTML = STATUS.map(s => `<span class="s-${s.id}"><span class="dot"></span>${s.glyph} ${s.label}</span>`).join('') + '<span><i class="l-proved"></i>link proved</span><span><i class="l-scaffold"></i>link scaffold</span><span><i class="l-pending"></i>link pending</span><span><i style="border-color:var(--accent)"></i>needs (selected)</span><span><i style="border-color:var(--st-assumed)"></i>unlocks (selected)</span><span>Border weight = reuse</span>';
   }
   function fitGraph() {
     if (!layoutCache || !svgSel) return;
@@ -365,7 +396,35 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     const sel = state.sel;
     const up = sel ? ancestors(sel) : new Set(), down = sel ? descendants(sel) : new Set();
     gRoot.selectAll('g.gnode').attr('class', function (n) { let c = 'gnode s-' + n.status; if (!sel) return c; if (n.id === sel) c += ' sel hi'; else if (up.has(n.id) || down.has(n.id)) c += ' hi'; else c += ' fade'; return c; });
-    gRoot.selectAll('path.gedge').attr('class', function (e) { if (!sel) return 'gedge'; const inUp = (up.has(e.t) || e.t === sel) && (up.has(e.s)); const inUpDirect = e.t === sel && up.has(e.s); const inDown = (e.s === sel || down.has(e.s)) && down.has(e.t); if (inUp || inUpDirect) return 'gedge up'; if (inDown) return 'gedge down'; return 'gedge fade'; });
+    gRoot.selectAll('path.gedge').attr('class', function (e) { const base = 'gedge e-' + linkStatus(e.s, e.t); if (!sel) return base; const inUp = (up.has(e.t) || e.t === sel) && (up.has(e.s)); const inUpDirect = e.t === sel && up.has(e.s); const inDown = (e.s === sel || down.has(e.s)) && down.has(e.t); if (inUp || inUpDirect) return base + ' up'; if (inDown) return base + ' down'; return base + ' fade'; });
+  }
+
+  // ---------- scaffold tab ----------
+  function renderScaffold() {
+    const rows = A.results.filter(r => inLean(r) && matches(r));
+    const allLinks = []; rows.forEach(r => r.depends_on.forEach(d => allLinks.push(linkStatus(d, r.id))));
+    const lc = { proved: 0, scaffold: 0, pending: 0 }; allLinks.forEach(s => lc[s]++);
+    document.getElementById('linktiles').innerHTML = [
+      ['proved', 'Links proved', 'both ends machine-checked'], ['scaffold', 'Links scaffolded', 'both ends stated in NLAlib, one still sorry'], ['pending', 'Links pending', 'dependency has no Lean statement yet']
+    ].map(([k, l, d]) => `<div class="tile" style="cursor:default"><div class="n">${lc[k]}</div><div class="lbl"><i class="l-${k}" style="display:inline-block;width:22px;border-top:2px solid var(--line-strong);${k === 'proved' ? 'border-top-color:var(--st-proved)' : k === 'scaffold' ? 'border-top-style:dashed;border-top-color:var(--st-stated)' : 'border-top-style:dotted'}"></i>${l}</div><div class="def">${d}</div></div>`).join('')
+      + `<div class="tile" style="cursor:default"><div class="n">${rows.length}</div><div class="lbl">Lean statements</div><div class="def">${rows.filter(r => r.status === 'proved').length} proved · ${rows.filter(r => r.status === 'scaffold').length} scaffold</div></div>`;
+    const el = document.getElementById('scaffold'); el.innerHTML = '';
+    const tops = A.areas.filter(a => !a.parent);
+    tops.forEach(top => {
+      const rs = rows.filter(r => topArea(r).id === top.id).sort((a, b) => (a.status === 'scaffold' ? 0 : 1) - (b.status === 'scaffold' ? 0 : 1) || indeg(b.id) - indeg(a.id));
+      if (!rs.length) return;
+      const h = document.createElement('h2'); h.textContent = top.name; el.appendChild(h);
+      rs.forEach(r => {
+        const deps = r.depends_on.map(d => ({ id: d, ls: linkStatus(d, r.id) }));
+        const c = { proved: 0, scaffold: 0, pending: 0 }; deps.forEach(x => c[x.ls]++);
+        const div = document.createElement('div'); div.className = 'scaf';
+        div.innerHTML = `<div class="head"><span class="pill s-${r.status}" style="align-self:flex-start"><span class="dot"></span>${SG[r.status].glyph} ${SG[r.status].label}</span><button class="linkbtn t" data-id="${r.id}">${esc(r.title)}</button><span class="note">${r.formalizations.filter(f => f.library === 'nlalib' && f.decl).map(f => `<code>${esc(f.decl)}</code>`).join(' ') || ''}</span>${deps.length ? `<div class="meter">${['proved', 'scaffold', 'pending'].filter(k => c[k]).map(k => `<span class="m-${k}" style="flex:${c[k]}" title="${c[k]} ${k}"></span>`).join('')}</div><span class="note">${deps.length} links: ${c.proved} proved · ${c.scaffold} scaffold · ${c.pending} pending</span>` : '<span class="note">no dependencies in the atlas (a foundation)</span>'}</div>
+          <div class="deps">${deps.map(x => `<button class="dep s-${byId[x.id].status}" data-id="${x.id}" title="${SG[byId[x.id].status].label}; link ${x.ls}"><span class="dot"></span><span class="t">${esc(byId[x.id].title)}</span><span class="lk"><i class="l-${x.ls}"></i>${x.ls}</span></button>`).join('')}</div>`;
+        el.appendChild(div);
+      });
+    });
+    el.querySelectorAll('button[data-id]').forEach(b => b.onclick = () => select(b.dataset.id));
+    if (!rows.length) el.innerHTML = '<p class="note">No Lean statements match the current filters.</p>';
   }
 
   // ---------- table ----------
@@ -396,7 +455,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     const dr = document.getElementById('drawer');
     if (!state.sel) { dr.classList.remove('open'); return; }
     const r = byId[id]; const S = SG[r.status];
-    const link = x => `<button class="linkbtn" data-id="${x}">${esc(byId[x].title)}</button> <span class="pill s-${byId[x].status}" style="font-size:.7rem"><span class="dot"></span>${SG[byId[x].status].glyph}</span>`;
+    const link = (x, ls) => `<button class="linkbtn" data-id="${x}">${esc(byId[x].title)}</button> <span class="pill s-${byId[x].status}" style="font-size:.7rem"><span class="dot"></span>${SG[byId[x].status].glyph} ${SG[byId[x].status].label}</span>${ls ? ` <span class="lk"><i class="l-${ls}"></i>link ${ls}</span>` : ''}`;
     document.getElementById('dbody').innerHTML = `
       <div class="eyebrow">${esc(areaPath(r))}</div>
       <h3>${esc(r.title)}</h3>
@@ -406,8 +465,8 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
       <section><div class="eyebrow">Lean</div>${r.formalizations.length ? '<ul>' + r.formalizations.map(f => `<li><span class="pill s-${f.status}" style="font-size:.7rem"><span class="dot"></span>${SG[f.status].glyph} ${SG[f.status].label}</span> ${libById[f.library].url ? `<a href="${esc(libById[f.library].url)}" target="_blank" rel="noopener">${esc(libById[f.library].name)}</a>` : esc(libById[f.library].name)}${f.decl ? `<br><code>${esc(f.decl)}</code>` : ''}${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}</li>`).join('') + '</ul>' : '<p class="note">No formal statement yet.</p>'}</section>
       ${r.mathlib_prereqs.length ? `<section><div class="eyebrow">Mathlib prerequisites</div><ul>${r.mathlib_prereqs.map(m => `<li><span class="${m.present ? 'yes' : 'no'}">${m.present ? '✓' : '✗'}</span> <code>${esc(m.decl)}</code>${m.note ? ` <span class="note">${esc(m.note)}</span>` : ''}</li>`).join('')}</ul></section>` : ''}
       <section><div class="eyebrow">Sources</div><ul>${r.sources.map(s => { const x = srcById[s.source]; return `<li>${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a>` : esc(x.title)}${s.label ? ` <span class="note">(${esc(s.label)})</span>` : ''} <span class="note">· ${esc(x.authors[0].split(' ').pop())}${x.authors.length > 1 ? ' et al.' : ''} ${x.year}</span></li>`; }).join('') || '<li class="note">none recorded</li>'}</ul></section>
-      <section><div class="eyebrow">Depends on</div><ul>${r.depends_on.map(d => `<li>${link(d)}</li>`).join('') || '<li class="note">nothing in the atlas (a foundation)</li>'}</ul></section>
-      <section><div class="eyebrow">Used by</div><ul>${(usedBy[id] || []).map(d => `<li>${link(d)}</li>`).join('') || '<li class="note">no atlas result depends on this yet</li>'}</ul></section>
+      <section><div class="eyebrow">Depends on</div><ul>${r.depends_on.map(d => `<li>${link(d, linkStatus(d, id))}</li>`).join('') || '<li class="note">nothing in the atlas (a foundation)</li>'}</ul></section>
+      <section><div class="eyebrow">Used by</div><ul>${(usedBy[id] || []).map(d => `<li>${link(d, linkStatus(id, d))}</li>`).join('') || '<li class="note">no atlas result depends on this yet</li>'}</ul></section>
       <section class="note">id <code>${r.id}</code> · tags: ${r.tags.join(', ') || 'none'} · updated ${r.updated_at}</section>`;
     document.querySelectorAll('#dbody button[data-id]').forEach(b => b.onclick = () => select(b.dataset.id));
     dr.classList.add('open');
@@ -421,7 +480,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     document.getElementById('count').textContent = `${vis.length} of ${A.results.length} results shown`;
     rank('targets', vis.filter(r => r.priority === 'now' && r.status !== 'proved').sort((a, b) => indeg(b.id) - indeg(a.id) || a.title.localeCompare(b.title)).slice(0, 14));
     rank('reuse', [...vis].sort((a, b) => indeg(b.id) - indeg(a.id)).slice(0, 14));
-    renderAreas(); renderTable();
+    renderAreas(); renderTable(); renderScaffold();
     if (!document.getElementById('tab-graph').hidden) renderGraph();
   }
   document.getElementById('q').addEventListener('input', e => { state.q = e.target.value.trim().toLowerCase(); renderAll(); });
@@ -429,12 +488,12 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   document.getElementById('hideapps').onchange = e => { state.hideapps = e.target.checked; renderAll(); };
   document.querySelectorAll('.tab-nav button').forEach(b => b.onclick = () => {
     document.querySelectorAll('.tab-nav button').forEach(x => x.setAttribute('aria-selected', x === b));
-    ['map', 'graph', 'list', 'sources', 'libs'].forEach(t => document.getElementById('tab-' + t).hidden = t !== b.dataset.tab);
+    ['map', 'scaffold', 'graph', 'list', 'sources', 'libs'].forEach(t => document.getElementById('tab-' + t).hidden = t !== b.dataset.tab);
     if (b.dataset.tab === 'graph') renderGraph();
   });
   document.addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') { if (!document.getElementById('tab-graph').hidden && document.activeElement.tagName !== 'INPUT') fitGraph(); } if (e.key === 'Escape' && state.sel) select(state.sel); });
   renderSources(); renderLibs();
-  document.getElementById('foot').innerHTML = `Data: <code>atlas/atlas.json</code> (schema 0.1, updated ${A.updated_at}). ${A.results.length} results, ${A.sources.length} sources, ${A.libraries.length} Lean libraries. Status is the atlas's judgement of the statement as written: an external library proving a variant is recorded under “Lean” but does not change the status. Reuse counts are in-degrees of the atlas dependency graph, so they reflect the arguments catalogued here, not the literature.`;
+  document.getElementById('foot').innerHTML = `Data: <code>atlas/atlas.json</code> (schema 0.1, updated ${A.updated_at}). ${A.results.length} results, ${A.sources.length} sources, ${A.libraries.length} Lean libraries. Status is the atlas's judgement of the statement as written: an external library proving a variant is recorded under “Lean” but does not change the status. Reuse counts are in-degrees of the atlas dependency graph, so they reflect the arguments catalogued here, not the literature. Link status is derived from the two endpoints: proved when both are proved, scaffold when both have Lean statements in NLAlib, pending otherwise.`;
   renderAll();
   const h = (location.hash || '').slice(1); if (h && byId[h]) select(h);
 })();

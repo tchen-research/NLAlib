@@ -1,4 +1,5 @@
-import NLAlib.Concentration.Matrix.Defs.Ch4ScalarLaws
+import NLAlib.Concentration.Matrix.Defs.ScalarLaws
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Defs.Dilation
 import NLAlib.Concentration.Matrix.Laplace.MasterBounds
 import NLAlib.Concentration.Matrix.Series.GaussianMgfCgf
@@ -26,37 +27,20 @@ set_option autoImplicit false
 
 namespace NLAlib
 
-/-- Real spectral values of a matrix are bounded in absolute value by the operator norm. -/
-private lemma abs_le_norm {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) {x : ℝ}
-    (hx : x ∈ spectrum ℝ B) : |x| ≤ ‖B‖ := by
-  have h : algebraMap ℝ ℂ x ∈ spectrum ℂ B := (spectrum.algebraMap_mem_iff ℂ).mpr hx
-  have := spectrum.norm_le_norm_of_mem h
-  simpa using this
-
-private lemma traceExp_eq_sum {d : ℕ} [NeZero d]
-    (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ : ℝ) :
-    traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i) := by
-  rw [traceExp, matrixExp, ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))]
-  rw [← cfc_comp_const_mul θ Real.exp A (by fun_prop) hA.isSelfAdjoint, hA.cfc_eq]
-  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
-  simp
-  simp only [← Complex.ofReal_mul, ← Complex.ofReal_exp, Complex.ofReal_re]
-
 private lemma traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian)
     {c : ℝ} (hc : 0 ≤ c) : traceExp (c • B) ≤ d * Real.exp (c * ‖B‖) := by
-  rw [traceExp_eq_sum B hB c]
+  rw [traceExp_smul_eq_sum B hB c]
   calc ∑ i, Real.exp (c * hB.eigenvalues i) ≤ ∑ _i : Fin d, Real.exp (c * ‖B‖) := by
         apply Finset.sum_le_sum
         intro i _
         apply Real.exp_le_exp.mpr
         apply mul_le_mul_of_nonneg_left _ hc
-        exact (le_abs_self _).trans (abs_le_norm B (hB.eigenvalues_mem_spectrum_real i))
+        exact (le_abs_self _).trans (abs_le_norm_of_mem_spectrum B (hB.eigenvalues_mem_spectrum_real i))
     _ = d * Real.exp (c * ‖B‖) := by simp
 
 private lemma traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
     0 < traceExp H := by
-  have h := traceExp_eq_sum H hH 1
+  have h := traceExp_smul_eq_sum H hH 1
   rw [one_smul] at h
   rw [h]
   exact Finset.sum_pos (fun i _ => Real.exp_pos _) Finset.univ_nonempty
@@ -71,7 +55,7 @@ private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) 
     rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos x)]
     apply Real.exp_le_exp.mpr
     calc x ≤ |x| := le_abs_self x
-      _ ≤ ‖s • A‖ := abs_le_norm _ hx
+      _ ≤ ‖s • A‖ := abs_le_norm_of_mem_spectrum _ hx
       _ = |s| * ‖A‖ := by rw [norm_smul, Real.norm_eq_abs]
   rcases le_total 0 s with hs | hs
   · rw [abs_of_nonneg hs] at h1

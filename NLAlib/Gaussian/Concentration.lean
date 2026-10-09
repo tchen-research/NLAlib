@@ -2,9 +2,7 @@ import NLAlib.Gaussian.Concentration.IntegrationByParts
 import NLAlib.Gaussian.Concentration.OrnsteinUhlenbeck
 import NLAlib.Gaussian.Concentration.OrnsteinUhlenbeckEntropy
 import NLAlib.Gaussian.Concentration.LogSobolevOneDim
-import NLAlib.Gaussian.Concentration.EntropyTensorization
 import NLAlib.Gaussian.Concentration.LogSobolev
-import NLAlib.Gaussian.Concentration.Herbst
 import NLAlib.Gaussian.Concentration.LipschitzConcentration
 
 /-!
@@ -21,8 +19,10 @@ Files (atlas ids):
 * `OrnsteinUhlenbeck`, `OrnsteinUhlenbeckEntropy` (`ornstein-uhlenbeck`): `ornsteinUhlenbeck`,
   invariance of `γ`, commutation `(P_t f)' = e^{-t} P_t f'`, entropy dissipation;
 * `LogSobolevOneDim`, `LogSobolev` (`gaussian-log-sobolev`): `Ent(g²) ≤ 2 ∫ |∇g|²`;
-* `EntropyTensorization` (`entropy-tensorization`): `Ent_μ(h) ≤ ∑ᵢ 𝔼 Ent_{μᵢ}(h)`;
-* `Herbst` (`herbst`): entropy bound ⇒ sub-Gaussian moment generating function;
 * `LipschitzConcentration` (`gaussian-concentration`): `gaussian_concentration_pi` on
   `Measure.pi fun _ => gaussianReal 0 1` and `gaussian_concentration` on `gaussianMatrix p m`.
+
+The two steps that are not Gaussian-specific live in layer 1: tensorization of entropy
+(`entropy-tensorization`, `NLAlib.Concentration.Scalar.EntropyTensorization`) and Herbst's
+argument (`herbst`, `NLAlib.Concentration.Scalar.Herbst`).
 -/

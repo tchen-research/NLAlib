@@ -1,4 +1,4 @@
-import NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic
+import NLAlib.Concentration.Matrix.Defs.IntrinsicDimension
 import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
 import Mathlib.Order.ConditionallyCompleteLattice.Finset
 

@@ -168,7 +168,8 @@ theorem integral_le_integral_of_covariance_hessian_nonneg {ι Ω : Type*} [Finty
     have hIBP : ∀ i, ∫ ω, D θ ω i * g i (Z θ ω) ∂P
         = ∑ j, (Real.sin θ * Real.cos θ * Δ i j) * ∫ ω, H i j (Z θ ω) ∂P := by
       intro i
-      have h := integral_mul_eq_sum_covariance_mul_integral (fun ω => D θ ω i) (fun j ω => Z θ ω j) (hUV i)
+      have h := integral_mul_eq_sum_covariance_mul_integral (fun ω => D θ ω i)
+        (fun j ω => Z θ ω j) (hUV i)
         (hU0 i) (g i) (H i) (fun x => hg i x) (fun j => hHc i j) C (hgb i) (hHb i)
       refine h.trans (Finset.sum_congr rfl fun j _ => ?_)
       congr 1
@@ -829,7 +830,8 @@ theorem gordon_minimax_inequality {U T Ω Ω' : Type*} [Fintype U] [Fintype T] [
       linarith [gmmg_le_one β a x]
     have hHb : ∀ (a b : U × T) (x : U × T → ℝ), |gmmH β a b x| ≤ 1 + 4 * β := fun a b x => by
       linarith [gmmH_abs_le hβ a b x]
-    have hc := integral_le_integral_of_covariance_hessian_nonneg (P := μ) (fun (a : U × T) (p : (U × T → ℝ) × (U × T → ℝ)) => p.1 a)
+    have hc := integral_le_integral_of_covariance_hessian_nonneg (P := μ)
+      (fun (a : U × T) (p : (U × T → ℝ) × (U × T → ℝ)) => p.1 a)
       (fun (a : U × T) (p : (U × T → ℝ) × (U × T → ℝ)) => p.2 a) hlaw hX0' hY0'
       hcross (gmmF β) (gmmg β) (gmmH β) (gmmF_hasFDerivAt hβ.ne') (gmmg_hasFDerivAt β)
       (gmmH_continuous β) (1 + 4 * β) hgb hHb _ (gmmF_abs_le hβ)

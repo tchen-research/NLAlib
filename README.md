@@ -12,12 +12,16 @@ Progress map: **https://research.chen.pw/NLAlib/** (built from `atlas/atlas.json
 
 ```
 NLAlib/
-  Matrix/         norms, projections, pseudoinverse, SVD, Eckart–Young, perturbation   (layer 0)
-  Concentration/  scalar bounds; Matrix/ = Tropp 2015 Ch. 3–8 by topic                 (layer 1)
-  Gaussian/       Gaussian matrices: invariance, moments, inverse moments, extremes    (layer 2)
-  Sketching/      subspace embeddings, JL, leverage scores, AMM                        (layer 3)
-  LowRank/ Estimation/ Krylov/                                                         (layer 4)
-  Solvers/                                                                             (layer 5)
+  ForMathlib/     general facts headed upstream                                        (layer −1)
+  Matrix/         norms, projections, pseudoinverse, SVD, spectral, measurability      (layer 0)
+  Concentration/  Scalar/ tail integrals, entropy; Matrix/ = Tropp 2015 Ch. 3–8        (layer 1)
+  Gaussian/       Basic, Invariance, Moments/, Conditioning, Concentration/ (log-Sobolev,
+                  Herbst), Comparison/ (Slepian, Gordon), Extreme/ (singular values,
+                  chi-square, small ball), InverseMoments/ (Wishart, pseudoinverse)     (layer 2)
+  Sketching/      subspace embeddings, JL                                              (layer 3)
+  LowRank/ Estimation/ Krylov/   range finder, RSVD, generalized Nyström; Hutchinson;
+                                 Krylov spaces                                          (layer 4)
+  Solvers/        randomized Kaczmarz                                                   (layer 5)
 atlas/                      the catalogue of results, sources, libraries and dependencies
 scripts/                    Audit.lean (axioms), check_layers.py, check_atlas.py, build_site.py
 ```

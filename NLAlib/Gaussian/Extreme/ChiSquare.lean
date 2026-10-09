@@ -1,6 +1,7 @@
 import Mathlib.Probability.Distributions.Gaussian.Real
 import Mathlib.Probability.Moments.Basic
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
 import Mathlib.Analysis.SpecialFunctions.Stirling
@@ -22,13 +23,13 @@ For `X` a standard Gaussian vector in `ℝ^d`, `‖X‖² ∼ χ²_d`. This file
   HMT 2011, Lemma A.10);
 * `integrable_and_integral_inv_sum_sq_pow_two_gaussianReal`: `E[(χ²_d)^{-2}] = 1/((d-2)(d-4))`
   for `d ≥ 5` (atlas `inverse-chi-square-moment`);
+* `integrable_and_integral_inv_sum_sq_gaussianReal`: the first inverse moment
+  `E[1/χ²_d] = 1/(d-2)` for `d ≥ 3` (atlas `inverse-chi-square-moment`; `…_fin` is the `Fin d`
+  form);
 
 and the general-purpose helpers `integral_exp_neg_mul_sum_sq_pi_gaussianReal` (Laplace
 transform of `χ²_d`), `ae_sum_sq_pos_pi_gaussianReal`, `lintegral_ofReal_mul_rpow_mul_exp_Ioi`
 (Euler's integral in `lintegral` form) and `Gamma_add_half_le_mul_sqrt`.
-
-The first inverse moment `E[1/χ²_d] = 1/(d-2)` is
-`NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal` (`Gaussian/InverseMoments.lean`).
 
 Proof source: Prove2me workspace, Gaussian Random Matrices series (solutions
 `chi_square_lower_tail`, `chi_square_neg_moment`, `inv_chi_square_Lq_bound`); the second inverse
@@ -508,5 +509,122 @@ theorem integrable_and_integral_inv_sum_sq_pow_two_gaussianReal {d : ℕ} (hd : 
   have h3 : (0 : ℝ) < (d : ℝ) / 2 - 1 := by linarith
   rw [div_eq_div_iff (by positivity) (mul_ne_zero h1 h2)]
   ring
+
+/-! ### The first inverse moment -/
+
+/-- `1/S = ∫_1^∞ exp(-((u-1)/2) S)/2 du` for `S > 0`. -/
+private lemma integrableOn_and_integral_exp_eq_inv (S : ℝ) (hS : 0 < S) :
+    IntegrableOn (fun u : ℝ => Real.exp (-((u - 1) / 2) * S) / 2) (Ioi 1) ∧
+    ∫ u in Ioi 1, Real.exp (-((u - 1) / 2) * S) / 2 = S⁻¹ := by
+  have h : ∀ u : ℝ, Real.exp (-((u - 1) / 2) * S) / 2
+      = Real.exp ((-(S / 2)) * u) * (Real.exp (S / 2) / 2) := by
+    intro u; rw [mul_div_assoc', ← Real.exp_add]; congr 2; ring
+  simp_rw [h]
+  have hneg : -(S / 2) < 0 := by linarith
+  refine ⟨(integrableOn_exp_mul_Ioi hneg 1).mul_const _, ?_⟩
+  rw [integral_mul_const, integral_exp_mul_Ioi hneg]
+  have he : rexp (-(S / 2)) * rexp (S / 2) = 1 := by rw [← Real.exp_add]; simp
+  have hS0 : S ≠ 0 := hS.ne'
+  rw [mul_one, show -rexp (-(S / 2)) / -(S / 2) * (rexp (S / 2) / 2)
+    = (rexp (-(S / 2)) * rexp (S / 2)) / S by field_simp, he, one_div]
+
+private lemma lintegral_inv_sum_sq_gaussianReal {ι : Type*} [Fintype ι]
+    (hd : 3 ≤ Fintype.card ι) :
+    ∫⁻ x, ENNReal.ofReal (∑ j, x j ^ 2)⁻¹ ∂(Measure.pi fun _ : ι => gaussianReal 0 1)
+      = ENNReal.ofReal (1 / ((Fintype.card ι : ℝ) - 2)) := by
+  set d := Fintype.card ι with hdd
+  set μ := Measure.pi fun _ : ι => gaussianReal 0 1 with hμ
+  set K : (ι → ℝ) → ℝ → ℝ := fun x u => Real.exp (-((u - 1) / 2) * ∑ j, x j ^ 2) / 2 with hK
+  have hK_cont : Continuous (Function.uncurry K) := by
+    simp only [hK]; fun_prop
+  -- step 1: inner representation
+  have step1 : ∀ᵐ x ∂μ, ENNReal.ofReal (∑ j, x j ^ 2)⁻¹
+      = ∫⁻ u in Ioi 1, ENNReal.ofReal (K x u) := by
+    filter_upwards [ae_sum_sq_pos_pi_gaussianReal (ι := ι) (by omega)] with x hx
+    obtain ⟨hint, hval⟩ := integrableOn_and_integral_exp_eq_inv _ hx
+    rw [← hval, ofReal_integral_eq_lintegral_ofReal hint
+      (Filter.Eventually.of_forall fun u => by positivity)]
+  rw [lintegral_congr_ae step1]
+  rw [lintegral_lintegral_swap (hK_cont.measurable.ennreal_ofReal.aemeasurable)]
+  -- step 2: inner integral over x
+  have step2 : ∀ u ∈ Ioi (1 : ℝ), ∫⁻ x, ENNReal.ofReal (K x u) ∂μ
+      = ENNReal.ofReal (u ^ (-((d : ℝ) / 2)) / 2) := by
+    intro u hu
+    have hu0 : (0 : ℝ) < u := lt_trans one_pos hu
+    have hmeas : Measurable fun x => K x u :=
+      (hK_cont.comp (Continuous.prodMk_left u)).measurable
+    have hint : Integrable (fun x => K x u) μ := by
+      refine (integrable_const (1 / 2 : ℝ)).mono' hmeas.aestronglyMeasurable
+        (Filter.Eventually.of_forall fun x => ?_)
+      rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
+      have hS : 0 ≤ ∑ j, x j ^ 2 := Finset.sum_nonneg fun j _ => sq_nonneg _
+      have : -((u - 1) / 2) * ∑ j, x j ^ 2 ≤ 0 := by
+        have : 0 ≤ (u - 1) / 2 := by have := hu.out; linarith
+        nlinarith
+      have := Real.exp_le_one_iff.mpr this
+      simp only [hK]; linarith
+    rw [← ofReal_integral_eq_lintegral_ofReal hint
+      (Filter.Eventually.of_forall fun x => by positivity)]
+    congr 1
+    simp only [hK]
+    rw [integral_div, integral_exp_neg_mul_sum_sq_pi_gaussianReal u hu0]
+  rw [setLIntegral_congr_fun measurableSet_Ioi step2]
+  -- step 3: the outer integral
+  have hd3 : (3 : ℝ) ≤ d := by exact_mod_cast hd
+  have ha : -((d : ℝ) / 2) < -1 := by linarith
+  have hint3 : IntegrableOn (fun u : ℝ => u ^ (-((d : ℝ) / 2)) / 2) (Ioi 1) :=
+    (integrableOn_Ioi_rpow_of_lt ha one_pos).div_const _
+  rw [← ofReal_integral_eq_lintegral_ofReal hint3]
+  · congr 1
+    rw [integral_div, integral_Ioi_rpow_of_lt ha one_pos, Real.one_rpow]
+    have : (d : ℝ) - 2 ≠ 0 := by linarith
+    have : -((d : ℝ) / 2) + 1 ≠ 0 := by linarith
+    have : (2 : ℝ) - d ≠ 0 := by linarith
+    field_simp
+    linear_combination inv_mul_cancel₀ this
+  · filter_upwards [ae_restrict_mem measurableSet_Ioi] with u hu
+    have hu0 : (0 : ℝ) < u := lt_trans one_pos hu
+    positivity
+
+/-- **Inverse chi-square moment.** If `X` is a standard Gaussian vector indexed by a finite type
+`ι` with `d = |ι| ≥ 3`, then `1/‖X‖²` is integrable and `E[1/‖X‖²] = E[1/χ²_d] = 1/(d - 2)`.
+
+Tropp–Webber 2023, Lemma B.2 (scalar step); HMT 2011, proof of Prop 10.2 / Prop A.5
+(`E[1/χ²_d] = 1/(d-2)`). Atlas: `inverse-chi-square-moment`. The source states it for
+`ι = Fin d` (see `integrable_and_integral_inv_sum_sq_gaussianReal_fin`). Proof ported from the
+Prove2me solution `Sol_GaussianMatrix_inv_chi_square_moment` (Laplace-transform representation
+of `1/S`); moved here from `NLAlib.Gaussian.InverseMoments`. -/
+theorem integrable_and_integral_inv_sum_sq_gaussianReal {ι : Type*} [Fintype ι]
+    (hd : 3 ≤ Fintype.card ι) :
+    Integrable (fun x : ι → ℝ => (∑ j, x j ^ 2)⁻¹)
+        (Measure.pi fun _ : ι => gaussianReal 0 1) ∧
+    ∫ x, (∑ j, x j ^ 2)⁻¹ ∂(Measure.pi fun _ : ι => gaussianReal 0 1)
+      = 1 / ((Fintype.card ι : ℝ) - 2) := by
+  have hnn : 0 ≤ᵐ[Measure.pi fun _ : ι => gaussianReal 0 1]
+      (fun x : ι → ℝ => (∑ j, x j ^ 2)⁻¹) :=
+    Filter.Eventually.of_forall fun x =>
+      inv_nonneg.mpr (Finset.sum_nonneg fun j _ => sq_nonneg _)
+  have hmeas : Measurable (fun x : ι → ℝ => (∑ j, x j ^ 2)⁻¹) := by fun_prop
+  have hpos : (0 : ℝ) ≤ 1 / ((Fintype.card ι : ℝ) - 2) := by
+    have : (3 : ℝ) ≤ Fintype.card ι := by exact_mod_cast hd
+    apply div_nonneg zero_le_one; linarith
+  refine ⟨⟨hmeas.aestronglyMeasurable, ?_⟩, ?_⟩
+  · rw [hasFiniteIntegral_iff_ofReal hnn, lintegral_inv_sum_sq_gaussianReal hd]
+    exact ENNReal.ofReal_lt_top
+  · rw [integral_eq_lintegral_of_nonneg_ae hnn hmeas.aestronglyMeasurable,
+      lintegral_inv_sum_sq_gaussianReal hd, ENNReal.toReal_ofReal hpos]
+
+/-- **Inverse chi-square moment**, source form over `Fin d`: for `d ≥ 3`,
+`E[1/χ²_d] = 1/(d - 2)`.
+
+Tropp–Webber 2023, Lemma B.2 (scalar step); HMT 2011, proof of Prop 10.2.
+Atlas: `inverse-chi-square-moment`. Ported from the Prove2me solution
+`Sol_GaussianMatrix_inv_chi_square_moment`. -/
+theorem integrable_and_integral_inv_sum_sq_gaussianReal_fin {d : ℕ} (hd : 3 ≤ d) :
+    Integrable (fun x : Fin d → ℝ => (∑ j, x j ^ 2)⁻¹)
+        (Measure.pi fun _ : Fin d => gaussianReal 0 1) ∧
+    ∫ x, (∑ j, x j ^ 2)⁻¹ ∂(Measure.pi fun _ : Fin d => gaussianReal 0 1)
+      = 1 / ((d : ℝ) - 2) := by
+  simpa using integrable_and_integral_inv_sum_sq_gaussianReal (ι := Fin d) (by simpa using hd)
 
 end NLAlib

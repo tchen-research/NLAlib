@@ -1,4 +1,5 @@
-import NLAlib.Concentration.Matrix.Defs.Ch4ScalarLaws
+import NLAlib.Concentration.Matrix.Defs.ScalarLaws
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Defs.Dilation
 
 /-!
@@ -32,11 +33,6 @@ private lemma cfc_eq_sum (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (
     rw [Matrix.smul_single]; simp [Complex.real_smul]
   rw [this, proj, Matrix.mul_smul, Matrix.smul_mul]
 
-private lemma matrixExp_smul_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
-    matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
-  rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
-    ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
-
 private lemma integral_eq {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : Ω → ℝ)
     (hs : ∀ t, Integrable (fun ω => Real.exp (t * s ω)) μ) :
@@ -45,7 +41,7 @@ private lemma integral_eq {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
   have h : (fun ω => matrixExp (s ω • A)) =
       fun ω => ∑ i, Real.exp (hA.eigenvalues i * s ω) • proj A hA i := by
     funext ω
-    rw [matrixExp_smul_eq A hA, cfc_eq_sum A hA]
+    rw [matrixExp_smul_eq_cfc A hA, cfc_eq_sum A hA]
     simp only [mul_comm]
   rw [h]
   refine ⟨integrable_finsetSum _ (fun i _ => (hs _).smul_const _), ?_⟩
@@ -54,14 +50,13 @@ private lemma integral_eq {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
   rw [integral_smul_const]
   rfl
 
-
 private lemma smul_sq_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
     c • A ^ 2 = cfc (fun x => c * x ^ 2) A := by
   rw [cfc_const_mul c (fun x : ℝ => x ^ 2) A, cfc_pow_id A 2 hA.isSelfAdjoint]
 
 private lemma matrixExp_smul_sq_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
     matrixExp (c • A ^ 2) = cfc (fun x => Real.exp (c * x ^ 2)) A := by
-  rw [matrixExp_smul_eq (A ^ 2) (hA.pow 2) c,
+  rw [matrixExp_smul_eq_cfc (A ^ 2) (hA.pow 2) c,
     ← cfc_comp_pow (fun y => Real.exp (c * y)) 2 A (by fun_prop) hA.isSelfAdjoint]
 
 end NLAlib

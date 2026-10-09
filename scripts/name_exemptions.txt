@@ -7,3 +7,10 @@ NLAlib.aemeasurable_of_map_eq_gaussianMatrix    # basic API of the definition
 NLAlib.measurable_block                         # basic API of the definition
 NLAlib.memLp_gaussianMatrix_entry               # basic API of the definition
 NLAlib.quadForm_eq_sum                          # unfolding lemma
+NLAlib.gaussianMatrix_eq_map_curry              # basic API of the definition
+NLAlib.hasGaussianLaw_id_pi_gaussianReal        # basic API of the definition
+NLAlib.hasGaussianLaw_id_gaussianMatrix         # basic API of the definition
+NLAlib.integral_comp_gaussianMatrix_entry_eq    # basic API of the definition
+NLAlib.integral_gaussianMatrix_entry_eq_zero    # basic API of the definition
+NLAlib.integral_gaussianMatrix_entry_sq_eq_one  # basic API of the definition
+NLAlib.integrable_const_mul_gaussianMatrix_entry_mul# basic API of the definition

@@ -112,7 +112,8 @@ private theorem sfp_hasFDerivAt [Nonempty ι] [DecidableEq ι] (β : ℝ) (i : �
   ring
 
 
-private theorem sfF_ge_max [Nonempty ι] {β : ℝ} (hβ : 0 < β) (x : ι → ℝ) : (⨆ t, x t) ≤ sfF β x := by
+private theorem sfF_ge_max [Nonempty ι] {β : ℝ} (hβ : 0 < β) (x : ι → ℝ) :
+    (⨆ t, x t) ≤ sfF β x := by
   obtain ⟨t0, ht0⟩ := exists_eq_ciSup_of_finite (f := x)
   rw [← ht0, sfF, le_div_iff₀ hβ]
   have h1 : Real.exp (β * x t0) ≤ sfS β x :=
@@ -157,7 +158,8 @@ end Softmax
 
 section Core
 
-private theorem sf_quad_nonneg {ι : Type*} [Fintype ι] [DecidableEq ι] (p : ι → ℝ) (hs : ∑ i, p i = 1)
+private theorem sf_quad_nonneg {ι : Type*} [Fintype ι] [DecidableEq ι] (p : ι → ℝ)
+    (hs : ∑ i, p i = 1)
     (hp : ∀ i, 0 ≤ p i) (Δ : ι → ι → ℝ) (h : ∀ i j, 0 ≤ Δ i i + Δ j j - Δ i j - Δ j i) :
     0 ≤ ∑ i, ∑ j, Δ i j * ((if i = j then p i else 0) - p i * p j) := by
   have e1 : ∀ i, ∑ j, Δ i j * ((if i = j then p i else 0) - p i * p j)
@@ -190,11 +192,13 @@ private theorem sfF_continuous {ι : Type*} [Fintype ι] [Nonempty ι] {β : ℝ
     Continuous (sfF (ι := ι) β) :=
   continuous_iff_continuousAt.2 fun x => (sfF_hasFDerivAt β hβ x).continuousAt
 
-private theorem sfp_continuous {ι : Type*} [Fintype ι] [Nonempty ι] [DecidableEq ι] (β : ℝ) (i : ι) :
+private theorem sfp_continuous {ι : Type*} [Fintype ι] [Nonempty ι] [DecidableEq ι] (β : ℝ)
+    (i : ι) :
     Continuous (sfp (ι := ι) β i) :=
   continuous_iff_continuousAt.2 fun x => (sfp_hasFDerivAt β i x).continuousAt
 
-private theorem sfH_continuous {ι : Type*} [Fintype ι] [Nonempty ι] [DecidableEq ι] (β : ℝ) (i j : ι) :
+private theorem sfH_continuous {ι : Type*} [Fintype ι] [Nonempty ι] [DecidableEq ι] (β : ℝ)
+    (i j : ι) :
     Continuous (sfH (ι := ι) β i j) := by
   unfold sfH
   by_cases h : i = j
@@ -344,7 +348,8 @@ private theorem sf_softmax_compare (X Y : ι → Ω → ℝ)
     have hIBP : ∀ i, ∫ ω, D θ ω i * sfp β i (Z θ ω) ∂P
         = ∑ j, (Real.sin θ * Real.cos θ * Δ i j) * ∫ ω, sfH β i j (Z θ ω) ∂P := by
       intro i
-      have h := integral_mul_eq_sum_covariance_mul_integral (fun ω => D θ ω i) (fun j ω => Z θ ω j) (hUV i)
+      have h := integral_mul_eq_sum_covariance_mul_integral (fun ω => D θ ω i)
+        (fun j ω => Z θ ω j) (hUV i)
         (hU0 i) (sfp β i) (sfH β i) (fun x => sfp_hasFDerivAt β i x)
         (fun j => sfH_continuous β i j) (1 + 2 * β)
         (fun x => by
@@ -415,7 +420,8 @@ Gaussian processes indexed by a finite set with dominated increments
 `𝔼 (Xₛ - Xₜ)² ≤ 𝔼 (Yₛ - Yₜ)²`. Then `𝔼 maxₜ Xₜ ≤ 𝔼 maxₜ Yₜ`.
 Source: Sudakov 1971, Fernique 1975; Vershynin 2018, Thm 7.2.11. Atlas: `sudakov-fernique`.
 Ported from Prove2me solution `GaussianMatrix.sudakov_fernique`. -/
-theorem sudakov_fernique_inequality {ι Ω Ω' : Type*} [Fintype ι] [MeasurableSpace Ω] [MeasurableSpace Ω']
+theorem sudakov_fernique_inequality {ι Ω Ω' : Type*} [Fintype ι] [MeasurableSpace Ω]
+    [MeasurableSpace Ω']
     {P : Measure Ω} {Q : Measure Ω'} (X : ι → Ω → ℝ) (Y : ι → Ω' → ℝ)
     (hX : HasGaussianLaw (fun ω t => X t ω) P) (hY : HasGaussianLaw (fun ω t => Y t ω) Q)
     (hX0 : ∀ t, ∫ ω, X t ω ∂P = 0) (hY0 : ∀ t, ∫ ω, Y t ω ∂Q = 0)
@@ -465,7 +471,8 @@ theorem sudakov_fernique_inequality {ι Ω Ω' : Type*} [Fintype ι] [Measurable
     exact hinc s t
   have hXi : ∀ t, Integrable (X t) P := fun t => (hX.eval t).integrable
   have hYi : ∀ t, Integrable (Y t) Q := fun t => (hY.eval t).integrable
-  have hsup : Measurable (fun x : ι → ℝ => ⨆ t, x t) := Measurable.iSup fun t => measurable_pi_apply t
+  have hsup : Measurable (fun x : ι → ℝ => ⨆ t, x t) :=
+    Measurable.iSup fun t => measurable_pi_apply t
   have hIX : Integrable (fun ω => ⨆ t, X t ω) P :=
     integrable_comp_of_abs_le_sum_abs X hXi _ hsup hX.aemeasurable 0
       (fun x => by rw [add_zero]; exact abs_iSup_le_sum x)

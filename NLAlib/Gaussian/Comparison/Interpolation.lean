@@ -1,6 +1,7 @@
 import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
 import Mathlib.Probability.Moments.Covariance
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import NLAlib.ForMathlib.MeasureTheory.Integral
 
 /-!
 # Gaussian interpolation: second-moment bookkeeping
@@ -11,9 +12,10 @@ Small facts shared by the interpolation proofs of the Gaussian comparison inequa
 process is `Z'(θ) = -sin θ X + cos θ Y`, and
 
 * `covariance_rotation_eq`: `Cov(Z'(θ)ᵢ, Z(θ)ⱼ) = sin θ cos θ (𝔼 YᵢYⱼ - 𝔼 XᵢXⱼ)`;
-* `integral_sub_sq_eq`: `𝔼 (Xᵢ - Xⱼ)² = 𝔼 XᵢXᵢ + 𝔼 XⱼXⱼ - 𝔼 XᵢXⱼ - 𝔼 XⱼXᵢ`;
-* `integrable_comp_of_abs_le_sum_abs`: `g(X)` is integrable when `|g x| ≤ ∑ₜ |xₜ| + K` and the
-  coordinates of `X` are integrable.
+* `integral_sub_sq_eq`: `𝔼 (Xᵢ - Xⱼ)² = 𝔼 XᵢXᵢ + 𝔼 XⱼXⱼ - 𝔼 XᵢXⱼ - 𝔼 XⱼXᵢ`.
+
+The integrability criterion `integrable_comp_of_abs_le_sum_abs` (`g(X)` is integrable when
+`|g x| ≤ ∑ₜ |xₜ| + K`) is in `NLAlib.ForMathlib.MeasureTheory.Integral`.
 
 Gaussian integration by parts itself is `NLAlib.integral_mul_eq_sum_covariance_mul_integral`
 (`NLAlib.Gaussian.Concentration.IntegrationByParts`).
@@ -97,20 +99,5 @@ theorem integral_sub_sq_eq (X : ι → Ω → ℝ) (hXm : ∀ t, MemLp (X t) 2 P
     integral_add i1 i2]
 
 end Interp
-
-/-- A function of a random vector with integrable coordinates is integrable as soon as it is
-measurable and grows at most like `∑ₜ |xₜ| + K`. Atlas: helper of `sudakov-fernique`,
-`gordon-minimax`. Ported from Prove2me solutions `GaussianMatrix.sudakov_fernique`,
-`GaussianMatrix.gordon_minimax` (helper `integrable_of_abs_le`). -/
-theorem integrable_comp_of_abs_le_sum_abs {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω]
-    {P : Measure Ω} [IsFiniteMeasure P] (X : ι → Ω → ℝ) (hXi : ∀ t, Integrable (X t) P)
-    (g : (ι → ℝ) → ℝ) (hg : Measurable g) (hXae : AEMeasurable (fun ω t => X t ω) P) (K : ℝ)
-    (hb : ∀ x, |g x| ≤ ∑ t, |x t| + K) :
-    Integrable (fun ω => g (fun t => X t ω)) P := by
-  refine Integrable.mono' ((integrable_finsetSum Finset.univ fun t _ => (hXi t).abs).add
-    (integrable_const K)) (hg.comp_aemeasurable hXae).aestronglyMeasurable
-    (ae_of_all _ fun ω => ?_)
-  rw [Real.norm_eq_abs]
-  simpa using hb (fun t => X t ω)
 
 end NLAlib

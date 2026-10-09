@@ -1,4 +1,4 @@
-import NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic
+import NLAlib.Concentration.Matrix.Defs.IntrinsicDimension
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.LinearAlgebra.Matrix.PosDef
 

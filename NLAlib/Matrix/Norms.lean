@@ -20,10 +20,10 @@ The two norms every NLAlib statement is written in.
 * Products: `⟨PX, QY⟩_F = ⟨X, PᵀQY⟩_F`, invariance under multiplication by matrices with
   orthonormal columns (stated with the raw hypothesis `Qᵀ * Q = 1`, which is
   `NLAlib.HasOrthonormalCols Q` by definition).
-* Rows: `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`, `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, `v ⬝ v ≥ 0`.
+* Rows: `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`, `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, `‖Av‖² = vᵀ(AᵀA)v`, `v ⬝ v ≥ 0`.
 * Spectral norm: transpose, submultiplicativity, `‖I‖₂ ≤ 1`, `‖P‖₂ ≤ 1` and `‖PᵀX‖₂ = ‖X‖₂` on
   `range P` for orthonormal columns, the mixed inequalities `‖AB‖_F ≤ ‖A‖₂ ‖B‖_F`,
-  `‖AB‖_F ≤ ‖A‖_F ‖B‖₂`, and `‖A‖₂ ≤ ‖A‖_F`.
+  `‖AB‖_F ≤ ‖A‖_F ‖B‖₂`, `‖A‖₂ ≤ ‖A‖_F`, and the quadratic-form bound `|xᵀMx| ≤ ‖M‖₂ ‖x‖²`.
 
 The Frobenius algebra is ported from the LRA project (`LRA/Basic.lean`,
 `LRA/Deterministic/RangeFinder.lean`, Chen–Persson formalization), namespace renamed.
@@ -247,6 +247,11 @@ theorem mulVec_dotProduct_mulVec_eq_sum_sq [Fintype m] (A : Matrix m n ℝ) (v :
   simp only [dotProduct, sq]
   rfl
 
+/-- `‖Ax‖² = xᵀ (AᵀA) x`. Helper for the Gram forms of `ose-def`; atlas `norms-frob-spec`. -/
+theorem mulVec_dotProduct_mulVec_self (A : Matrix m n ℝ) (x : n → ℝ) :
+    (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) := by
+  rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec x Aᵀ, Matrix.vecMul_transpose]
+
 /-! ### Cauchy–Schwarz and the triangle inequality -/
 
 /-- Cauchy–Schwarz for the Frobenius inner product: `⟨A, B⟩_F ≤ ‖A‖_F ‖B‖_F`.
@@ -466,6 +471,24 @@ theorem frobNorm_mul_le (A : Matrix m n ℝ) (B : Matrix n p ℝ) :
     frobNorm (A * B) ≤ frobNorm A * frobNorm B :=
   (frobNorm_mul_le_specNorm_mul_frobNorm A B).trans
     (mul_le_mul_of_nonneg_right (specNorm_le_frobNorm A) (frobNorm_nonneg B))
+
+/-- Quadratic-form bound by the spectral norm: `|xᵀ M x| ≤ ‖M‖₂ ‖x‖²`. Helper for the Gram form
+of `ose-def`; atlas `norms-frob-spec`. -/
+theorem abs_dotProduct_mulVec_le_specNorm (M : Matrix n n ℝ) (x : n → ℝ) :
+    |x ⬝ᵥ (M *ᵥ x)| ≤ specNorm M * (x ⬝ᵥ x) := by
+  rw [specNorm_eq_norm]
+  have h := M.l2_opNorm_mulVec (WithLp.toLp 2 x)
+  have hx : ‖WithLp.toLp 2 x‖ ^ 2 = x ⬝ᵥ x := by
+    rw [EuclideanSpace.real_norm_sq_eq]; simp [dotProduct, sq]
+  have hcs :=
+    abs_real_inner_le_norm (WithLp.toLp 2 x) ((EuclideanSpace.equiv n ℝ).symm (M *ᵥ x))
+  have hi : inner ℝ (WithLp.toLp 2 x) ((EuclideanSpace.equiv n ℝ).symm (M *ᵥ x)) =
+      x ⬝ᵥ (M *ᵥ x) := by
+    simp [EuclideanSpace.inner_eq_star_dotProduct, dotProduct_comm]
+  rw [hi] at hcs
+  calc |x ⬝ᵥ (M *ᵥ x)| ≤ _ := hcs
+    _ ≤ ‖WithLp.toLp 2 x‖ * (‖M‖ * ‖WithLp.toLp 2 x‖) := by gcongr
+    _ = ‖M‖ * (x ⬝ᵥ x) := by rw [← hx]; ring
 
 end Spectral
 

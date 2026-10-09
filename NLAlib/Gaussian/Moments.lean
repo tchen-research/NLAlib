@@ -39,11 +39,6 @@ namespace NLAlib
 
 /-! ### The sandwiched second moment -/
 
-private lemma integrable_coord_mul {p m : ℕ} (a c : Fin p) (b d : Fin m) (k : ℝ) :
-    Integrable (fun G : Fin p → Fin m → ℝ => k * (G a b * G c d)) (gaussianMatrix p m) :=
-  ((memLp_gaussianMatrix_entry a b 2 (by simp)).integrable_mul
-    (memLp_gaussianMatrix_entry c d 2 (by simp))).const_mul k
-
 private lemma frobSq_expand {ι κ : Type*} [Fintype ι] [Fintype κ] {p m : ℕ}
     (S : Matrix ι (Fin p) ℝ) (T : Matrix (Fin m) κ ℝ) (G : Fin p → Fin m → ℝ) :
     frobSq (S * Matrix.of G * T) = ∑ i, ∑ j, ∑ k, ∑ c, ∑ b, ∑ d,
@@ -67,7 +62,8 @@ private lemma integral_quadratic {ι κ : Type*} [Fintype ι] [Fintype κ] {p m 
   have hI : ∀ (k c : Fin p) (b : Fin m) (f : Fin m → ℝ),
       Integrable (fun G : Fin p → Fin m → ℝ => ∑ d, f d * (G k b * G c d))
         (gaussianMatrix p m) :=
-    fun k c b f => integrable_finsetSum _ fun d _ => integrable_coord_mul k c b d _
+    fun k c b f => integrable_finsetSum _ fun d _ =>
+      integrable_const_mul_gaussianMatrix_entry_mul k c b d _
   rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
     integrable_finsetSum _ fun k _ => integrable_finsetSum _ fun c _ =>
     integrable_finsetSum _ fun b _ => hI k c b _]
@@ -83,12 +79,12 @@ private lemma integral_quadratic {ι κ : Type*} [Fintype ι] [Fintype κ] {p m 
   rw [Finset.sum_eq_single k]
   · rw [integral_finsetSum _ fun b _ => hI k k b _]
     refine Finset.sum_congr rfl fun b _ => ?_
-    rw [integral_finsetSum _ fun d _ => integrable_coord_mul k k b d _]
+    rw [integral_finsetSum _ fun d _ => integrable_const_mul_gaussianMatrix_entry_mul k k b d _]
     simp [integral_const_mul, integral_gaussianMatrix_entry_mul]
   · intro c _ hck
     rw [integral_finsetSum _ fun b _ => hI k c b _]
     refine Finset.sum_eq_zero fun b _ => ?_
-    rw [integral_finsetSum _ fun d _ => integrable_coord_mul k c b d _]
+    rw [integral_finsetSum _ fun d _ => integrable_const_mul_gaussianMatrix_entry_mul k c b d _]
     refine Finset.sum_eq_zero fun d _ => ?_
     simp [integral_const_mul, integral_gaussianMatrix_entry_mul, Ne.symm hck]
   · simp

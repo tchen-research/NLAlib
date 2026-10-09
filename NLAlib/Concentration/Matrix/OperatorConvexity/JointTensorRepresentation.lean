@@ -1,4 +1,4 @@
-import NLAlib.Concentration.Matrix.Defs.Ch8JointTensor
+import NLAlib.Concentration.Matrix.Defs.JointTensor
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Pi
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
 import Mathlib.Tactic.FieldSimp

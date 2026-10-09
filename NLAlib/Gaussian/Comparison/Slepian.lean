@@ -283,7 +283,8 @@ private theorem sl_compare (X Y : ι → Ω → ℝ)
     have hIBP : ∀ i, ∫ ω, D θ ω i * slG φ φ' i (Z θ ω) ∂P
         = ∑ j, (Real.sin θ * Real.cos θ * Δ i j) * ∫ ω, slH φ φ' φ'' i j (Z θ ω) ∂P := by
       intro i
-      have h := integral_mul_eq_sum_covariance_mul_integral (fun ω => D θ ω i) (fun j ω => Z θ ω j) (hUV i)
+      have h := integral_mul_eq_sum_covariance_mul_integral (fun ω => D θ ω i)
+        (fun j ω => Z θ ω j) (hUV i)
         (hU0 i) (slG φ φ' i) (slH φ φ' φ'' i) (fun x => slG_hasFDerivAt φ φ' φ'' hφ hφ' i x)
         (fun j => hHc i j) K
         (fun x => (slG_abs_le h0 h1 hC1 i x).trans hKC)
@@ -339,7 +340,8 @@ end Compare
 
 section Cutoff
 
-private theorem sl_deriv_zero_of_const {f : ℝ → ℝ} {c x : ℝ} {U : Set ℝ} (hU : IsOpen U) (hx : x ∈ U)
+private theorem sl_deriv_zero_of_const {f : ℝ → ℝ} {c x : ℝ} {U : Set ℝ} (hU : IsOpen U)
+    (hx : x ∈ U)
     (hf : ∀ y ∈ U, f y = c) : deriv f x = 0 ∧ deriv (deriv f) x = 0 := by
   have h1 : ∀ y ∈ U, deriv f y = 0 := fun y hy => by
     have : f =ᶠ[nhds y] fun _ => c := Filter.eventually_of_mem (hU.mem_nhds hy) hf

@@ -1,4 +1,5 @@
 import NLAlib.Concentration.Matrix.Defs.Probability
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Defs.Dilation
 import NLAlib.Concentration.Matrix.Bernstein.HermitianBernstein
 import NLAlib.Concentration.Matrix.Bernstein.DilationIdentities
@@ -28,17 +29,6 @@ namespace NLAlib
 
 open NLAlib
 
-/-- The Hermitian dilation is real-linear. -/
-private noncomputable def dilLin (m n : Type*) :
-    Matrix m n ℂ →ₗ[ℝ] Matrix (m ⊕ n) (m ⊕ n) ℂ where
-  toFun := dilation
-  map_add' X Y := by
-    simp [dilation, Matrix.fromBlocks_add, Matrix.conjTranspose_add]
-  map_smul' c X := by
-    simp [dilation, Matrix.fromBlocks_smul, Matrix.conjTranspose_smul]
-
-private lemma dilLin_apply {m n : Type*} (X : Matrix m n ℂ) : dilLin m n X = dilation X := rfl
-
 /-- The conjugate transpose is real-linear. -/
 private noncomputable def ctLin (m n : Type*) : Matrix m n ℂ →ₗ[ℝ] Matrix n m ℂ where
   toFun := Matrix.conjTranspose
@@ -49,39 +39,10 @@ private noncomputable def ctLin (m n : Type*) : Matrix m n ℂ →ₗ[ℝ] Matri
 private noncomputable def phiLin (m n : ℕ) :
     Matrix (Fin m) (Fin n) ℂ →ₗ[ℝ] Matrix (Fin (m + n)) (Fin (m + n)) ℂ :=
   (Matrix.reindexLinearEquiv ℝ ℂ finSumFinEquiv finSumFinEquiv).toLinearMap ∘ₗ
-    dilLin (Fin m) (Fin n)
+    dilationLinearMap (Fin m) (Fin n)
 
 private lemma phiLin_apply {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
     phiLin m n A = Matrix.reindex finSumFinEquiv finSumFinEquiv (dilation A) := rfl
-
-/-- Reindexing as a `⋆`-algebra equivalence over `ℂ`. -/
-private noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) :
-    Matrix ι ι ℂ ≃⋆ₐ[ℂ] Matrix κ κ ℂ :=
-  { Matrix.reindexAlgEquiv ℂ ℂ e with
-    map_star' := by intro A; rfl
-    map_smul' := by intro r A; rfl }
-
-private lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
-    ‖Matrix.reindex e e A‖ = ‖A‖ :=
-  StarAlgEquiv.norm_map (reindexStarC e) A
-
-private lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
-    lambdaMax (Matrix.reindex e e A) = lambdaMax A := by
-  have h := AlgEquiv.spectrum_eq (Matrix.reindexAlgEquiv ℝ ℂ e) A
-  rw [Matrix.coe_reindexAlgEquiv] at h
-  unfold lambdaMax
-  rw [h]
-
-private lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (X : Ω → Matrix ι ι ℂ) :
-    ∫ ω, Matrix.reindex e e (X ω) ∂μ = Matrix.reindex e e (∫ ω, X ω ∂μ) := by
-  let L : Matrix ι ι ℂ ≃L[ℝ] Matrix κ κ ℂ :=
-    (Matrix.reindexLinearEquiv ℝ ℂ e e).toContinuousLinearEquiv
-  exact L.integral_comp_comm X
 
 private lemma measurable_phiLin (m n : ℕ) : Measurable (phiLin m n) :=
   (phiLin m n).continuous_of_finiteDimensional.measurable

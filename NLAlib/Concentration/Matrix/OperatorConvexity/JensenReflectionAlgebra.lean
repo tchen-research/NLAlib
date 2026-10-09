@@ -1,4 +1,4 @@
-import NLAlib.Concentration.Matrix.Defs.Ch8Entropy
+import NLAlib.Concentration.Matrix.Defs.RelativeEntropy
 
 /-!
 # Hermitian unitary dilation of an isometry

@@ -1,4 +1,5 @@
-import NLAlib.Concentration.Matrix.Defs.Ch5ChernoffFunctions
+import NLAlib.Concentration.Matrix.Defs.ChernoffFunctions
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Laplace.LiebIntegralPosDef
 import NLAlib.Concentration.Matrix.Laplace.CgfExpLog
 import NLAlib.Concentration.Matrix.OperatorConvexity.LogOperatorMonotone
@@ -48,12 +49,6 @@ private lemma spec_mem {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHerm
     rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
   exact ⟨hB.1.trans (csInf_le hfin.bddBelow hx), (le_csSup hfin.bddAbove hx).trans hB.2⟩
 
-private lemma matrixExp_smul_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
-    matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
-  rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp
-    (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
-    ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
-
 private lemma affine_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
     (1 : Matrix (Fin d) (Fin d) ℂ) + c • A = cfc (fun x : ℝ => 1 + c * x) A := by
   rw [cfc_const_add 1 (fun x : ℝ => c * x) A (by fun_prop) hA.isSelfAdjoint,
@@ -62,7 +57,7 @@ private lemma affine_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHer
 private lemma pointwise {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L θ : ℝ)
     (hL : 0 ≤ L) (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) :
     matrixExp (θ • A) ≤ 1 + chernoffCgfCoefficient L θ • A := by
-  rw [matrixExp_smul_eq A hA, affine_eq A hA]
+  rw [matrixExp_smul_eq_cfc A hA, affine_eq A hA]
   refine cfc_mono (fun x hx => ?_) (by fun_prop) (by fun_prop)
   have := spec_mem A hA L hB x hx
   exact scalar_bound L θ x hL this.1 this.2
@@ -77,7 +72,7 @@ private lemma norm_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA 
 private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
     (L θ : ℝ) (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) :
     ‖matrixExp (θ • A)‖ ≤ Real.exp (|θ| * L) := by
-  rw [matrixExp_smul_eq A hA]
+  rw [matrixExp_smul_eq_cfc A hA]
   apply norm_cfc_le (Real.exp_pos _).le
   intro x hx
   have := spec_mem A hA L hB x hx

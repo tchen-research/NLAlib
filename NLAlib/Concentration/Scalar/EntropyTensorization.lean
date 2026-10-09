@@ -1,6 +1,6 @@
 import Mathlib.MeasureTheory.Integral.Marginal
-import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import NLAlib.ForMathlib.MeasureTheory.Integral
 
 /-!
 # Tensorization of entropy
@@ -14,10 +14,11 @@ For a product probability measure `μ = ⊗ᵢ μᵢ` and a positive `h ∈ L¹(
 marginals `E_S h` (`lmarginal` over the coordinates in `S`) and bounds each step with the Gibbs
 variational inequality `integral_mul_le_entropy_of_integral_exp_le_one`.
 
-Also the one-coordinate Fubini lemmas for `Measure.pi` (`measurePreserving_update_pi`,
-`integral_integral_update_pi`, …) used by the multivariate log-Sobolev inequality.
+The one-coordinate Fubini lemmas for `Measure.pi` it uses (`measurePreserving_update_pi`,
+`integral_integral_update_pi`, …) are in `NLAlib.ForMathlib.MeasureTheory.Integral`. Nothing
+here is Gaussian; the consumer is the multivariate Gaussian log-Sobolev inequality
+(`NLAlib.Gaussian.Concentration.LogSobolev`).
 
-Nothing here is Gaussian; the file lives in `Gaussian/Concentration` with its only consumer.
 Source: Ledoux, *The Concentration of Measure Phenomenon*, Prop 5.6; Boucheron–Lugosi–Massart
 2013, Thm 4.10. Atlas: `entropy-tensorization`.
 -/
@@ -78,93 +79,12 @@ theorem integral_mul_le_entropy_of_integral_exp_le_one {α : Type*} [MeasurableS
   rw [e1] at h
   nlinarith
 
-/-! ### Resampling one coordinate of a product measure -/
-
 section Product
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι] {Ω : Type*} [MeasurableSpace Ω]
-  (μ : ι → Measure Ω) [∀ i, IsProbabilityMeasure (μ i)]
-
-/-- Resampling one coordinate preserves a product measure: `(x, t) ↦ update x i t` maps
-`(⊗ⱼ μⱼ) ⊗ μᵢ` to `⊗ⱼ μⱼ`. Atlas: `entropy-tensorization` (helper). Ported from Prove2me
-solution `GaussianMatrix.entropy_tensorization`. -/
-theorem measurePreserving_update_pi (i : ι) :
-    MeasurePreserving (fun p : (ι → Ω) × Ω => Function.update p.1 i p.2)
-      ((Measure.pi μ).prod (μ i)) (Measure.pi μ) := by
-  refine ⟨measurable_update', ?_⟩
-  refine (Measure.pi_eq fun s hs => ?_).symm
-  rw [Measure.map_apply measurable_update' (MeasurableSet.univ_pi hs)]
-  have hpre : (fun p : (ι → Ω) × Ω => Function.update p.1 i p.2) ⁻¹' Set.univ.pi s
-      = Set.univ.pi (Function.update s i Set.univ) ×ˢ s i := by
-    ext ⟨x, t⟩
-    simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_prod]
-    constructor
-    · intro h
-      refine ⟨fun j => ?_, by simpa using h i⟩
-      by_cases hj : j = i
-      · subst hj; simp
-      · have := h j
-        rw [Function.update_of_ne hj] at this
-        rw [Function.update_of_ne hj]; exact this
-    · rintro ⟨h1, h2⟩ j
-      by_cases hj : j = i
-      · subst hj; simpa using h2
-      · have := h1 j
-        rw [Function.update_of_ne hj] at this
-        rw [Function.update_of_ne hj]; exact this
-  rw [hpre, Measure.prod_prod, Measure.pi_pi]
-  have : (fun j => μ j (Function.update s i Set.univ j))
-      = Function.update (fun j => μ j (s j)) i 1 := by
-    ext1 j
-    by_cases hj : j = i
-    · subst hj; simp
-    · simp [Function.update_of_ne hj]
-  rw [this, Finset.prod_update_of_mem (Finset.mem_univ i), one_mul,
-    ← Finset.mul_prod_erase Finset.univ (fun j => μ j (s j)) (Finset.mem_univ i), mul_comm,
-    Finset.sdiff_singleton_eq_erase]
-
-/-- Integrability of `F ∘ update` on `(⊗ⱼ μⱼ) ⊗ μᵢ` for `F ∈ L¹(⊗ⱼ μⱼ)`.
-Atlas: `entropy-tensorization` (helper). Ported from Prove2me solution
-`GaussianMatrix.entropy_tensorization`. -/
-theorem integrable_comp_update_pi (i : ι) {F : (ι → Ω) → ℝ} (hF : Integrable F (Measure.pi μ)) :
-    Integrable (fun p : (ι → Ω) × Ω => F (Function.update p.1 i p.2))
-      ((Measure.pi μ).prod (μ i)) :=
-  ((measurePreserving_update_pi μ i).integrable_comp hF.aestronglyMeasurable).2 hF
-
-/-- Fubini for resampling one coordinate:
-`∫ (∫ F(update x i t) dμᵢ(t)) d(⊗ⱼ μⱼ)(x) = ∫ F d(⊗ⱼ μⱼ)`. Atlas: `entropy-tensorization`
-(helper). Ported from Prove2me solution `GaussianMatrix.entropy_tensorization`. -/
-theorem integral_integral_update_pi (i : ι) {F : (ι → Ω) → ℝ}
-    (hF : Integrable F (Measure.pi μ)) :
-    ∫ x, ∫ t, F (Function.update x i t) ∂(μ i) ∂(Measure.pi μ) = ∫ x, F x ∂(Measure.pi μ) := by
-  have hmp := measurePreserving_update_pi μ i
-  rw [← integral_prod _ (integrable_comp_update_pi μ i hF)]
-  calc ∫ p, F (Function.update p.1 i p.2) ∂((Measure.pi μ).prod (μ i))
-      = ∫ x, F x ∂(Measure.map (fun p : (ι → Ω) × Ω => Function.update p.1 i p.2)
-          ((Measure.pi μ).prod (μ i))) :=
-        (integral_map hmp.measurable.aemeasurable
-          (by rw [hmp.map_eq]; exact hF.aestronglyMeasurable)).symm
-    _ = ∫ x, F x ∂(Measure.pi μ) := by rw [hmp.map_eq]
-
-/-- For `F ∈ L¹(⊗ⱼ μⱼ)`, almost every one-coordinate section `t ↦ F(update x i t)` is
-`μᵢ`-integrable. Atlas: `entropy-tensorization` (helper). Ported from Prove2me solution
-`GaussianMatrix.entropy_tensorization`. -/
-theorem ae_integrable_comp_update_pi (i : ι) {F : (ι → Ω) → ℝ}
-    (hF : Integrable F (Measure.pi μ)) :
-    ∀ᵐ x ∂(Measure.pi μ), Integrable (fun t => F (Function.update x i t)) (μ i) :=
-  (integrable_comp_update_pi μ i hF).prod_right_ae
-
-/-- For `F ∈ L¹(⊗ⱼ μⱼ)`, `x ↦ ∫ F(update x i t) dμᵢ(t)` is integrable. Atlas:
-`entropy-tensorization` (helper). Ported from Prove2me solution
-`GaussianMatrix.entropy_tensorization`. -/
-theorem integrable_integral_update_pi (i : ι) {F : (ι → Ω) → ℝ}
-    (hF : Integrable F (Measure.pi μ)) :
-    Integrable (fun x => ∫ t, F (Function.update x i t) ∂(μ i)) (Measure.pi μ) :=
-  (integrable_comp_update_pi μ i hF).integral_prod_left
+  {μ : ι → Measure Ω} [∀ i, IsProbabilityMeasure (μ i)]
 
 /-! ### Partial marginals and the telescoping bound -/
-
-variable {μ}
 
 /-- A function independent of the coordinates in `S` is fixed by `lmarginal S`. -/
 private lemma lmarginal_of_indep (S : Finset ι) (F : (ι → Ω) → ℝ≥0∞)

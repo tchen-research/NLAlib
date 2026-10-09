@@ -1,4 +1,6 @@
 import NLAlib.Gaussian.Concentration.OrnsteinUhlenbeckEntropy
+import NLAlib.ForMathlib.Analysis.Real
+import NLAlib.ForMathlib.MeasureTheory.Integral
 import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 /-!
@@ -25,55 +27,6 @@ open MeasureTheory ProbabilityTheory
 open Filter Topology Set
 
 namespace NLAlib
-
-/-! ### Elementary inequalities -/
-
-/-- `|s log s| ≤ s² + 1` for `s ≥ 0`. Atlas: `gaussian-log-sobolev` (helper). Ported from
-Prove2me solution `GaussianMatrix.gaussian_logsobolev_bounded_below`. -/
-theorem abs_mul_log_le_sq_add_one (s : ℝ) (hs : 0 ≤ s) : |s * Real.log s| ≤ s ^ 2 + 1 := by
-  rcases hs.eq_or_lt with h | hs'
-  · subst h; simp
-  rcases le_or_gt s 1 with h1 | h1
-  · have := Real.abs_log_mul_self_lt s hs' h1
-    rw [mul_comm]; nlinarith [sq_nonneg s]
-  · have hl : 0 ≤ Real.log s := Real.log_nonneg h1.le
-    have hl2 : Real.log s ≤ s - 1 := Real.log_le_sub_one_of_pos hs'
-    rw [abs_of_nonneg (mul_nonneg hs hl)]
-    nlinarith
-
-/-- Cauchy–Schwarz in the form `(∫ a)² ≤ (∫ a²/b) (∫ b)` for `b ≥ δ > 0` on a probability
-space. Atlas: `gaussian-log-sobolev` (helper). Ported from Prove2me solution
-`GaussianMatrix.gaussian_logsobolev_bounded_below`. -/
-theorem sq_integral_le_integral_div_mul_integral {α : Type*} [MeasurableSpace α] (μ : Measure α)
-    [IsProbabilityMeasure μ] (a b : α → ℝ) (δ : ℝ) (hδ : 0 < δ) (hb : ∀ x, δ ≤ b x)
-    (ha : Integrable a μ) (hbi : Integrable b μ) (hab : Integrable (fun x => a x ^ 2 / b x) μ) :
-    (∫ x, a x ∂μ) ^ 2 ≤ (∫ x, a x ^ 2 / b x ∂μ) * (∫ x, b x ∂μ) := by
-  set A := ∫ x, a x ∂μ
-  set B := ∫ x, b x ∂μ
-  set Q := ∫ x, a x ^ 2 / b x ∂μ
-  have hB : δ ≤ B := by
-    have := integral_mono (integrable_const δ) hbi hb
-    simpa using this
-  have hBpos : 0 < B := lt_of_lt_of_le hδ hB
-  set l := A / B
-  have hpt : ∀ x, (a x - l * b x) ^ 2 / b x = a x ^ 2 / b x - 2 * l * a x + l ^ 2 * b x := by
-    intro x
-    have : b x ≠ 0 := (lt_of_lt_of_le hδ (hb x)).ne'
-    field_simp
-    ring
-  have hnonneg : 0 ≤ ∫ x, (a x - l * b x) ^ 2 / b x ∂μ := by
-    refine integral_nonneg (fun x => div_nonneg (sq_nonneg _) (hδ.le.trans (hb x)))
-  have hcalc : ∫ x, (a x - l * b x) ^ 2 / b x ∂μ = Q - 2 * l * A + l ^ 2 * B := by
-    simp_rw [hpt]
-    have h1 : Integrable (fun x => a x ^ 2 / b x - 2 * l * a x) μ := hab.sub (ha.const_mul _)
-    have h2 : Integrable (fun x => l ^ 2 * b x) μ := hbi.const_mul _
-    have h3 : Integrable (fun x => 2 * l * a x) μ := ha.const_mul _
-    rw [integral_add h1 h2, integral_sub hab h3, integral_const_mul, integral_const_mul]
-  rw [hcalc] at hnonneg
-  have : Q - 2 * l * A + l ^ 2 * B = Q - A ^ 2 / B := by
-    simp only [l]; field_simp; ring
-  rw [this, sub_nonneg, div_le_iff₀ hBpos] at hnonneg
-  exact hnonneg
 
 /-! ### Functions bounded below -/
 

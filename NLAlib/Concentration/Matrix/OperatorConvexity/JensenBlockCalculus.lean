@@ -1,4 +1,4 @@
-import NLAlib.Concentration.Matrix.Defs.Ch8Entropy
+import NLAlib.Concentration.Matrix.Defs.RelativeEntropy
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Pi
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
 import Mathlib.LinearAlgebra.Matrix.SchurComplement

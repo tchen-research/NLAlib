@@ -15,6 +15,7 @@ import NLAlib.Matrix.Norms
 
 ## Contents
 
+* Isometry: `‖Qx‖² = ‖x‖²` for `Q` with orthonormal columns.
 * The orthogonal projector `P = QQᵀ`: symmetry, idempotence, `Qᵀ(I − P) = 0`.
 * The residual: `residual Q A = (I − QQᵀ) A`, orthogonality to `range Q`, Pythagoras
   `‖A‖_F² = ‖QQᵀA‖_F² + ‖(I − QQᵀ)A‖_F²`, `‖(I − QQᵀ)A‖_F ≤ ‖A‖_F`, `‖QᵀA‖_F ≤ ‖A‖_F`.
@@ -53,6 +54,12 @@ def residual (Q : Matrix m q ℝ) (A : Matrix m n ℝ) : Matrix m n ℝ := A - Q
 /-- `Y` is a best rank-`k` Frobenius approximation of `C`. -/
 def IsBestRankApprox (k : ℕ) (C Y : Matrix m n ℝ) : Prop :=
   Y.rank ≤ k ∧ ∀ Z : Matrix m n ℝ, Z.rank ≤ k → frobSq (C - Y) ≤ frobSq (C - Z)
+
+/-- If `U` has orthonormal columns (`Uᵀ U = 1`) then `‖Ux‖² = ‖x‖²`. Helper for `ose-def`;
+atlas `projection-facts`. -/
+theorem mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols [DecidableEq q] {U : Matrix m q ℝ}
+    (hU : HasOrthonormalCols U) (x : q → ℝ) : (U *ᵥ x) ⬝ᵥ (U *ᵥ x) = x ⬝ᵥ x := by
+  rw [mulVec_dotProduct_mulVec_self, show Uᵀ * U = 1 from hU, Matrix.one_mulVec]
 
 /-! ### The orthogonal projector `QQᵀ` -/
 

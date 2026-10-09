@@ -16,6 +16,8 @@ import Mathlib.Data.Matrix.ColumnRowPartitioned
 
 * `NLAlib.gaussianMatrix_map_orthogonal`: for orthogonal `U`, `V`, the law of `U G V` is the law
   of `G` (HMT 2011 §10.1, atlas `rotation-invariance`).
+* `NLAlib.measurePreserving_orthonormalBasis_repr_pi_gaussianReal`: the coordinates of a
+  standard Gaussian vector in an orthonormal basis are i.i.d. standard Gaussian.
 * `NLAlib.gaussianMatrix_map_block`: for `V₁` with orthonormal columns, `V₁ᵀ G` is a standard
   Gaussian matrix (HMT 2011 §10.2, atlas `block-law-indep`).
 * `NLAlib.gaussianMatrix_indepFun_block`: if moreover `V₂` has orthonormal columns and
@@ -54,13 +56,8 @@ private def flatEquiv (p m : ℕ) :
 /-- The Gaussian matrix law, flattened, is the standard Gaussian on `EuclideanSpace`. -/
 private lemma map_flat_gaussianMatrix (p m : ℕ) :
     (gaussianMatrix p m).map (flat p m) = stdGaussian (EuclideanSpace ℝ (Fin p × Fin m)) := by
-  have h1 : gaussianMatrix p m =
-      (Measure.pi fun _ : Fin p × Fin m => gaussianReal 0 1).map
-        (MeasurableEquiv.curry (Fin p) (Fin m) ℝ) := by
-    have := Measure.infinitePi_map_curry (fun (_ : Fin p) (_ : Fin m) => gaussianReal 0 1)
-    simp only [Measure.infinitePi_eq_pi] at this
-    rw [this]; rfl
-  rw [h1, Measure.map_map (measurable_flat p m) (MeasurableEquiv.measurable _)]
+  rw [gaussianMatrix_eq_map_curry,
+    Measure.map_map (measurable_flat p m) (MeasurableEquiv.measurable _)]
   have h2 : flat p m ∘ (MeasurableEquiv.curry (Fin p) (Fin m) ℝ) = WithLp.toLp 2 := by
     funext x; rfl
   rw [h2, map_pi_eq_stdGaussian]
@@ -158,6 +155,32 @@ theorem gaussianMatrix_map_orthogonal {p m : ℕ} (U : Matrix (Fin p) (Fin p) �
   have hfe : ⇑(flatEquiv p m) = flat p m := rfl
   rw [← hfe] at key
   exact (flatEquiv p m).map_measurableEquiv_injective key
+
+/-! ### Rotation invariance of a standard Gaussian vector -/
+
+/-- **Rotation invariance in coordinates.** For an orthonormal basis `b` of `ℝᴺ` indexed by `ι`,
+the coordinates `(⟪b i, g⟫)ᵢ` of a standard Gaussian vector `g` are i.i.d. standard Gaussian.
+Atlas: `smin-small-ball` (helper; an instance of `gaussian-rotation-invariance`). Ported from
+Prove2me solution `GaussianMatrix.gaussian_dist_colspace_small_ball`. -/
+theorem measurePreserving_orthonormalBasis_repr_pi_gaussianReal {N : ℕ} {ι : Type*}
+    [Fintype ι] (b : OrthonormalBasis ι ℝ (EuclideanSpace ℝ (Fin N))) :
+    MeasurePreserving (fun g : Fin N → ℝ => WithLp.ofLp (b.repr (WithLp.toLp 2 g)))
+      (Measure.pi fun _ : Fin N => gaussianReal 0 1)
+      (Measure.pi fun _ : ι => gaussianReal 0 1) := by
+  have hm1 : Measurable (fun g : Fin N → ℝ => WithLp.toLp 2 g) := by fun_prop
+  have hm2 : Measurable (fun x : EuclideanSpace ℝ (Fin N) => b.repr x) :=
+    b.repr.continuous.measurable
+  have hm3 : Measurable (fun y : EuclideanSpace ℝ ι => WithLp.ofLp y) := by fun_prop
+  refine ⟨hm3.comp (hm2.comp hm1), ?_⟩
+  have h := map_pi_eq_stdGaussian (ι := Fin N)
+  have h' := map_pi_eq_stdGaussian (ι := ι)
+  have hfun : (fun g : Fin N → ℝ => WithLp.ofLp (b.repr (WithLp.toLp 2 g)))
+      = (fun y : EuclideanSpace ℝ ι => WithLp.ofLp y) ∘ ((fun x => b.repr x) ∘
+          (fun g : Fin N → ℝ => WithLp.toLp 2 g)) := rfl
+  rw [hfun, ← Measure.map_map hm3 (hm2.comp hm1), ← Measure.map_map hm2 hm1, h]
+  rw [show (fun x : EuclideanSpace ℝ (Fin N) => b.repr x) = ⇑b.repr from rfl, stdGaussian_map,
+    ← h', Measure.map_map hm3 (by fun_prop)]
+  exact Measure.map_id
 
 /-! ### Orthogonal completion and coordinate restriction -/
 

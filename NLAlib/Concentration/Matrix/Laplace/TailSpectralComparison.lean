@@ -1,4 +1,5 @@
 import NLAlib.Concentration.Matrix.Defs.Spectral
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import Mathlib.Order.ConditionallyCompleteLattice.Finset
 
 /-!
@@ -13,16 +14,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 open scoped Matrix.Norms.L2Operator
 set_option autoImplicit false
 namespace NLAlib
-
-private lemma traceExp_smul_eq_sum {d : ℕ} [NeZero d]
-    (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ : ℝ) :
-    traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i) := by
-  rw [traceExp, matrixExp, ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))]
-  rw [← cfc_comp_const_mul θ Real.exp A (by fun_prop) hA.isSelfAdjoint, hA.cfc_eq]
-  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
-  simp
-  simp only [← Complex.ofReal_mul, ← Complex.ofReal_exp, Complex.ofReal_re]
 
 end NLAlib
 

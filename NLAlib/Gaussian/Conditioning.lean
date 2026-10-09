@@ -3,6 +3,7 @@ import NLAlib.Gaussian.Invariance
 import NLAlib.Gaussian.Moments
 import NLAlib.Matrix.Norms
 import NLAlib.Matrix.Pseudoinverse
+import NLAlib.Matrix.Measurable
 import Mathlib.Probability.Independence.Basic
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.Topology.Instances.Matrix
@@ -30,7 +31,7 @@ Here a *block* of `Ω` is `Vᵀ Ω` for `V` with orthonormal columns (HMT 2011 �
 Atlas: `gaussian-conditioning`. No new Gaussian computation is done here; only independence,
 Fubini, the block law (`block-law-indep`) and the sandwiched second moment
 (`gaussian-frob-second-moment`). The measurability helpers `measurable_frobSq_of_entries` and
-`measurable_pinvR_entry` are matrix facts that will move to `NLAlib.Matrix.Measurable`.
+`measurable_pinvR_entry` are in `NLAlib.Matrix.Measurable`.
 -/
 
 noncomputable section
@@ -82,33 +83,7 @@ theorem integral_of_indepFun {α β : Type*} [MeasurableSpace α] [MeasurableSpa
     _ = ∫ p : α × β, g p.1 p.2 ∂((μ.map X).prod (μ.map Y)) := by rw [h]
     _ = _ := integral_prod _ hg
 
-/-! ### Measurability helpers -/
-
-/-- `frobSq` of a matrix-valued map with measurable entries is measurable. Atlas
-`gaussian-conditioning` (helper). -/
-theorem measurable_frobSq_of_entries {γ ι κ : Type*} [MeasurableSpace γ] [Fintype ι]
-    [Fintype κ] {f : γ → Matrix ι κ ℝ} (hf : ∀ i j, Measurable fun z => f z i j) :
-    Measurable fun z => frobSq (f z) := by
-  unfold frobSq frobInner
-  exact Finset.measurable_sum _ fun i _ => Finset.measurable_sum _ fun j _ =>
-    (hf i j).mul (hf i j)
-
-/-- Every entry of `G ↦ pinvR G` (on the array view) is measurable. Atlas
-`gaussian-conditioning` (helper). -/
-theorem measurable_pinvR_entry {k t : ℕ} (i : Fin t) (j : Fin k) :
-    Measurable fun G : Fin k → Fin t → ℝ => pinvR (Matrix.of G) i j := by
-  have hc : Continuous fun G : Fin k → Fin t → ℝ => Matrix.of G * (Matrix.of G)ᵀ :=
-    continuous_id.matrix_mul continuous_id.matrix_transpose
-  have hdet : Measurable fun G : Fin k → Fin t → ℝ => (Matrix.of G * (Matrix.of G)ᵀ).det :=
-    hc.matrix_det.measurable
-  have hadj : ∀ a b, Measurable fun G : Fin k → Fin t → ℝ =>
-      (Matrix.of G * (Matrix.of G)ᵀ).adjugate a b := fun a b =>
-    (hc.matrix_adjugate.matrix_elem a b).measurable
-  simp only [pinvR, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, Matrix.inv_def,
-    Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul]
-  refine Finset.measurable_sum _ fun l _ => ?_
-  have := hadj l j
-  fun_prop
+/-! ### Gaussian blocks -/
 
 omit [IsProbabilityMeasure μ] in
 /-- If `Ω` has law `gaussianMatrix n t` and `V₁ᵀ V₁ = 1`, then `V₁ᵀ Ω` has law

@@ -2,9 +2,11 @@
 Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_schur_offdiag_inv`, `Sol_GaussianMatrix_regression_residual_indep`).
 -/
-import NLAlib.Gaussian.InverseMoments
+import NLAlib.Gaussian.Invariance
+import NLAlib.Matrix.Gram
 import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
 import Mathlib.Probability.Moments.Covariance
+import Mathlib.LinearAlgebra.Matrix.Adjugate
 
 /-!
 # Schur complements of the Gram matrix and Gaussian regression
@@ -12,17 +14,19 @@ import Mathlib.Probability.Moments.Covariance
 Deterministic and Gaussian facts about one row `g` of a matrix against the remaining rows `H`,
 used to compute second moments of the inverse Wishart matrix `(G Gᵀ)⁻¹`.
 
-* `measurable_inv_self_mul_transpose_apply`: the entries of `(G Gᵀ)⁻¹` are measurable in `G`.
-* `det_ne_zero_of_rank_eq`: a full-rank square matrix has nonzero determinant.
-* `posSemidef_inv_self_mul_transpose`, `abs_apply_le_apply_self_add_apply_self`:
-  `(G Gᵀ)⁻¹` is positive semidefinite, so its off-diagonal entries are dominated by the
-  diagonal ones.
 * `inv_self_mul_transpose_apply_succAbove`: an off-diagonal entry in row `i` of `(G Gᵀ)⁻¹` is
   `-cₐ (G Gᵀ)⁻¹ᵢᵢ`, where `c = (H Hᵀ)⁻¹ H g` are the regression coefficients of row `g = Gᵢ` on
-  the other rows `H` (Schur complement; companion of `inv_self_mul_transpose_apply_self`).
+  the other rows `H` (Schur complement; companion of `inv_self_mul_transpose_apply_self` in
+  `InverseMoments/Residual.lean`).
+* `exists_orthonormal_ker_sq_dist_rowSpace`: an orthonormal basis `V` of `ker H` writes the
+  squared residual of `g` against the rows of `H` as `‖Vᵀ g‖²`.
 * `indepFun_mulVec_sq_dist_rowSpace`: for a standard Gaussian vector `g` and a fixed full-rank
   `H`, the projection data `H g` and the squared residual `‖g‖² - (H g)ᵀ (H Hᵀ)⁻¹ (H g)` are
   independent.
+
+The Gram-matrix facts used here (`det_ne_zero_of_rank_eq`, `posSemidef_inv_self_mul_transpose`,
+`abs_apply_le_apply_self_add_apply_self`) are in `NLAlib.Matrix.Gram`, the measurability of the
+entries of `(G Gᵀ)⁻¹` in `NLAlib.Matrix.Measurable`.
 
 Atlas: `inverse-wishart-frob-moment` and `pinv-frob-fourth-moment` (helpers). Proof source:
 Prove2me workspace, Gaussian Random Matrices series (`schur_offdiag_inv`,
@@ -35,53 +39,6 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix
 
 namespace NLAlib
-
-/-! ### Measurability and positivity of the inverse Gram matrix -/
-
-/-- The entries of `(G Gᵀ)⁻¹` are measurable functions of `G` (with Mathlib's convention
-`A⁻¹ = 0` for singular `A`).
-
-Helper for the inverse-Wishart moment computations (Tropp–Webber 2023, App. B). Atlas:
-`inverse-wishart-mean` (helper). Ported from the Prove2me solutions of the inverse Wishart
-series (`iwd_measurable_inv_entry`). -/
-theorem measurable_inv_self_mul_transpose_apply {r k : ℕ} (i j : Fin r) :
-    Measurable (fun G : Fin r → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j) := by
-  have hc : Continuous (fun G : Fin r → Fin k → ℝ => Matrix.of G * (Matrix.of G)ᵀ) :=
-    Continuous.matrix_mul continuous_id (Continuous.matrix_transpose continuous_id)
-  simp_rw [Matrix.inv_def, Ring.inverse_eq_inv']
-  simp only [Matrix.smul_apply, smul_eq_mul]
-  exact (hc.matrix_det.measurable.inv).mul (hc.matrix_adjugate.matrix_elem i j).measurable
-
-/-- `(G Gᵀ)⁻¹` is positive semidefinite for every real matrix `G`.
-
-Helper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the
-Prove2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_inv`). -/
-theorem posSemidef_inv_self_mul_transpose {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
-    (G : Matrix m n ℝ) : ((G * Gᵀ)⁻¹).PosSemidef := by
-  have := Matrix.posSemidef_self_mul_conjTranspose G
-  rw [Matrix.conjTranspose_eq_transpose_of_trivial] at this
-  exact this.inv
-
-/-- An off-diagonal entry of a real positive semidefinite matrix is dominated by the diagonal:
-`|Mᵢⱼ| ≤ Mᵢᵢ + Mⱼⱼ`.
-
-Helper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the
-Prove2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_offdiag`). -/
-theorem abs_apply_le_apply_self_add_apply_self {m : Type*} [Fintype m] [DecidableEq m]
-    (M : Matrix m m ℝ) (hM : M.PosSemidef) (i j : m) : |M i j| ≤ M i i + M j j := by
-  have hs : M j i = M i j := by
-    have := hM.isHermitian.apply i j
-    simpa using this
-  by_cases hij : i = j
-  · subst hij
-    have := hM.diag_nonneg (i := i)
-    rw [abs_of_nonneg this]; linarith
-  have h1 := hM.dotProduct_mulVec_nonneg (Pi.single i 1 + Pi.single j 1)
-  have h2 := hM.dotProduct_mulVec_nonneg (Pi.single i 1 - Pi.single j 1)
-  simp [Matrix.mulVec_add, Matrix.mulVec_sub, add_dotProduct, dotProduct_add,
-    sub_dotProduct, dotProduct_sub, Matrix.mulVec_single, single_dotProduct,
-    hs] at h1 h2
-  rw [abs_le]; constructor <;> linarith
 
 /-! ### Off-diagonal Schur complement -/
 
@@ -177,32 +134,23 @@ theorem inv_self_mul_transpose_apply_succAbove {n k : ℕ} (G : Matrix (Fin (n +
     field_simp
     linarith
 
-/-! ### Independence of the regression and the residual -/
+/-! ### The residual in a basis of the kernel; independence from the regression -/
 
-private lemma inner_eq_ofLp_dotProduct' {k : ℕ} (x y : EuclideanSpace ℝ (Fin k)) :
+private lemma inner_eq_ofLp_dotProduct {k : ℕ} (x y : EuclideanSpace ℝ (Fin k)) :
     inner ℝ x y = x.ofLp ⬝ᵥ y.ofLp := by
   rw [EuclideanSpace.inner_eq_star_dotProduct, star_trivial, dotProduct_comm]
 
-/-- A square real matrix of full rank `n` has nonzero determinant.
+/-- **Residual in an orthonormal basis of the kernel.** For `H` of full row rank `n`, an
+orthonormal basis `V` (`k × (k - n)`, `Vᵀ V = 1`) of `ker H` writes the squared distance from `g`
+to the row space of `H` as `‖g‖² - (H g)ᵀ (H Hᵀ)⁻¹ (H g) = ‖Vᵀ g‖²`; the columns of `V` are
+killed by `H`.
 
-Helper (linear algebra) for the inverse-Wishart computations. Atlas: `inverse-wishart-mean`
-(helper). Ported from the Prove2me solutions of the inverse Wishart series
-(`rri_det_ne_zero_of_rank`). -/
-theorem det_ne_zero_of_rank_eq {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) (h : M.rank = n) :
-    M.det ≠ 0 := by
-  intro hdet
-  obtain ⟨v, hv, hMv⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr hdet
-  have hker : v ∈ LinearMap.ker M.mulVecLin := by simpa using hMv
-  have h1 : 0 < Module.finrank ℝ (LinearMap.ker M.mulVecLin) :=
-    Module.finrank_pos_iff_exists_ne_zero.mpr ⟨⟨v, hker⟩, by simpa using hv⟩
-  have h2 := LinearMap.finrank_range_add_finrank_ker M.mulVecLin
-  rw [Matrix.rank] at h
-  simp only [Module.finrank_fin_fun] at h2
-  omega
-
-/-- An orthonormal basis `V` of `ker H` (for `H` of full row rank `n`) writes the squared
-distance from `g` to the row space of `H` as `‖Vᵀ g‖²`; the columns of `V` are killed by `H`. -/
-private lemma exists_orthonormal_ker_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ)
+Helper for Tropp–Webber 2023, Lemma B.2 / HMT 2011, Prop A.5 (law of the residual of a Gaussian
+row and its independence from the regression). Atlas: `inverse-wishart-mean` (helper). Ported
+from the Prove2me solutions `Sol_GaussianMatrix_residual_law` and
+`GaussianMatrix.regression_residual_indep` (the two copies merged, keeping the stronger
+statement). -/
+theorem exists_orthonormal_ker_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ)
     (hH : H.rank = n) :
     ∃ V : Matrix (Fin k) (Fin (k - n)) ℝ, Vᵀ * V = 1 ∧
       (∀ j : Fin (k - n), H *ᵥ (fun l => V l j) = 0) ∧ ∀ g : Fin k → ℝ,
@@ -231,13 +179,13 @@ private lemma exists_orthonormal_ker_sq_dist_rowSpace {n k : ℕ} (H : Matrix (F
   refine ⟨V, ?_, fun j => hbK j, ?_⟩
   · ext j j'
     have h1 : (Vᵀ * V) j j' = inner ℝ ((b j : K) : E) ((b j' : K) : E) := by
-      rw [inner_eq_ofLp_dotProduct']; simp [hV, Matrix.mul_apply, dotProduct]
+      rw [inner_eq_ofLp_dotProduct]; simp [hV, Matrix.mul_apply, dotProduct]
     rw [h1, ← Submodule.coe_inner, orthonormal_iff_ite.mp b.orthonormal, Matrix.one_apply]
   · intro g
     set M := H * Hᵀ with hM
     have hdet : IsUnit M.det := by
       refine isUnit_iff_ne_zero.mpr (det_ne_zero_of_rank_eq _ ?_)
-      rw [hM, Matrix.rank_self_mul_transpose, hH]
+      rw [hM, Matrix.rank_self_mul_transpose, hH, Fintype.card_fin]
     set c := M⁻¹ *ᵥ (H *ᵥ g) with hc
     set p := Hᵀ *ᵥ c with hp
     set r := g - p with hr
@@ -263,9 +211,9 @@ private lemma exists_orthonormal_ker_sq_dist_rowSpace {n k : ℕ} (H : Matrix (F
     rw [hq]
     simp_rw [hcoord]
     have hrr : inner ℝ rK rK = r ⬝ᵥ r := by
-      rw [Submodule.coe_inner, inner_eq_ofLp_dotProduct']
+      rw [Submodule.coe_inner, inner_eq_ofLp_dotProduct]
     have hbj : ∀ j, inner ℝ (b j) rK = ((b j : K) : E).ofLp ⬝ᵥ r := by
-      intro j; rw [Submodule.coe_inner, inner_eq_ofLp_dotProduct']
+      intro j; rw [Submodule.coe_inner, inner_eq_ofLp_dotProduct]
     rw [← hrr, ← hpars]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [real_inner_comm, hbj, sq]
@@ -306,16 +254,16 @@ theorem indepFun_mulVec_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) (Fin k)
     have h1 := covariance_map_fun (μ := P) (X := fun x : E => ⟪hrow a, x⟫)
       (Y := fun x : E => ⟪vcol j, x⟫) (by fun_prop) (by fun_prop) hm.aemeasurable
     rw [← h1, hP, map_pi_eq_stdGaussian, ← covarianceBilin_apply_eq_cov IsGaussian.memLp_two_id,
-      covarianceBilin_stdGaussian, innerSL_apply_apply, inner_eq_ofLp_dotProduct']
+      covarianceBilin_stdGaussian, innerSL_apply_apply, inner_eq_ofLp_dotProduct]
     have := congrFun (hHV j) a
     simpa [hhrow, hvcol, Matrix.mulVec, dotProduct] using this
   have hind := hpair.indepFun_of_covariance_eval hcov
   have h1 : (fun g : Fin k → ℝ => fun a => ⟪hrow a, WithLp.toLp 2 g⟫) = fun g => H *ᵥ g := by
     funext g a
-    rw [inner_eq_ofLp_dotProduct']; rfl
+    rw [inner_eq_ofLp_dotProduct]; rfl
   have h2 : (fun g : Fin k → ℝ => fun j => ⟪vcol j, WithLp.toLp 2 g⟫) = fun g => Vᵀ *ᵥ g := by
     funext g j
-    rw [inner_eq_ofLp_dotProduct']; rfl
+    rw [inner_eq_ofLp_dotProduct]; rfl
   rw [h1, h2] at hind
   have hS : Measurable (fun y : Fin (k - n) → ℝ => ∑ j, y j ^ 2) := by fun_prop
   have := hind.comp measurable_id hS

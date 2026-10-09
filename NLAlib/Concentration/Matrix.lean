@@ -7,13 +7,14 @@ import NLAlib.Concentration.Matrix.Bernstein.MatrixBernstein
 import NLAlib.Concentration.Matrix.Bernstein.VarianceAdditivity
 import NLAlib.Concentration.Matrix.Chernoff.ChernoffMgfCgf
 import NLAlib.Concentration.Matrix.Chernoff.MatrixChernoff
-import NLAlib.Concentration.Matrix.Defs.Ch4ScalarLaws
-import NLAlib.Concentration.Matrix.Defs.Ch5ChernoffFunctions
-import NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic
-import NLAlib.Concentration.Matrix.Defs.Ch8Entropy
-import NLAlib.Concentration.Matrix.Defs.Ch8JointTensor
+import NLAlib.Concentration.Matrix.Defs.Calculus
+import NLAlib.Concentration.Matrix.Defs.ChernoffFunctions
 import NLAlib.Concentration.Matrix.Defs.Dilation
+import NLAlib.Concentration.Matrix.Defs.IntrinsicDimension
+import NLAlib.Concentration.Matrix.Defs.JointTensor
 import NLAlib.Concentration.Matrix.Defs.Probability
+import NLAlib.Concentration.Matrix.Defs.RelativeEntropy
+import NLAlib.Concentration.Matrix.Defs.ScalarLaws
 import NLAlib.Concentration.Matrix.Defs.Spectral
 import NLAlib.Concentration.Matrix.Intrinsic.BlockIntrinsic
 import NLAlib.Concentration.Matrix.Intrinsic.GeneralizedLaplace
@@ -71,6 +72,13 @@ Prove2me missions for those chapters. Every theorem is proved.
 | `Bernstein/` | `hermitian_bernstein`, `matrix_bernstein`, dilation identities | `matrix-bernstein`, `hermitian-dilation` |
 | `Intrinsic/` | intrinsic-dimension Chernoff and Bernstein inequalities | `intrinsic-dimension` |
 | `OperatorConvexity/` | `lieb_concavity`, `operator_jensen`, `matrixLog_le_matrixLog`, … | `operator-monotone-convex`, `loewner-order` |
+
+`Defs/` modules: `Spectral` (spectral vocabulary, Loewner order), `Dilation`, `Probability` (Borel
+instance, variance statistics, `cumulantSum`, `bernsteinTail`), `ScalarLaws` (Gaussian and
+Rademacher laws, `gaussianSeriesTail`), `ChernoffFunctions`, `IntrinsicDimension`,
+`RelativeEntropy` (matrix functions, relative entropy, operator convexity, perspective),
+`JointTensor`, and `Calculus` (shared lemmas: spectral calculus of `matrixExp`/`traceExp`,
+reindexing, dilation and block-diagonal integrals).
 
 `golden-thompson` is not realised here: Tropp's route goes through Lieb's concavity theorem.
 -/

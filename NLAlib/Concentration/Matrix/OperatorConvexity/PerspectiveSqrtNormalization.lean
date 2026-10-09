@@ -1,4 +1,4 @@
-import NLAlib.Concentration.Matrix.Defs.Ch8Entropy
+import NLAlib.Concentration.Matrix.Defs.RelativeEntropy
 
 /-!
 # Square-root and inverse-square-root identities for positive definite matrices

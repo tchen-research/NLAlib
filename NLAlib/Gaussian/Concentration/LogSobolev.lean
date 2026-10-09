@@ -1,5 +1,6 @@
 import NLAlib.Gaussian.Concentration.LogSobolevOneDim
-import NLAlib.Gaussian.Concentration.EntropyTensorization
+import NLAlib.Concentration.Scalar.EntropyTensorization
+import NLAlib.ForMathlib.Analysis.Real
 import Mathlib.Analysis.Calculus.Deriv.Pi
 
 /-!
@@ -24,41 +25,6 @@ noncomputable section
 open MeasureTheory ProbabilityTheory
 
 namespace NLAlib
-
-/-- `|(a + δ) log (a + δ)| ≤ |a log a| + a + 2` for `a ≥ 0` and `0 < δ ≤ 1`. Atlas:
-`gaussian-log-sobolev` (helper). Ported from Prove2me solution
-`GaussianMatrix.gaussian_logsobolev`. -/
-theorem abs_add_mul_log_add_le (a δ : ℝ) (ha : 0 ≤ a) (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
-    |(a + δ) * Real.log (a + δ)| ≤ |a * Real.log a| + a + 2 := by
-  set b := a + δ with hb
-  have hbpos : 0 < b := by positivity
-  -- convexity: a log a ≥ a log b + a - b
-  have hconv : a * Real.log b + a - b ≤ a * Real.log a := by
-    rcases ha.eq_or_lt with h0 | hpos
-    · subst h0; simp; linarith
-    · have h1 := Real.one_sub_inv_le_log_of_pos (div_pos hpos hbpos)
-      rw [Real.log_div hpos.ne' hbpos.ne', inv_div] at h1
-      have h2 : a * (1 - b / a) ≤ a * (Real.log a - Real.log b) :=
-        mul_le_mul_of_nonneg_left h1 ha
-      rw [mul_sub, mul_div_cancel₀ _ hpos.ne'] at h2
-      linarith
-  rcases le_or_gt 1 b with hb1 | hb1
-  · have hlog0 : 0 ≤ Real.log b := Real.log_nonneg hb1
-    have hlogb : Real.log b ≤ b - 1 := Real.log_le_sub_one_of_pos hbpos
-    rw [abs_of_nonneg (mul_nonneg hbpos.le hlog0)]
-    have : b * Real.log b ≤ a * Real.log a + δ * (Real.log b + 1) := by
-      have : b * Real.log b = a * Real.log b + δ * Real.log b := by rw [hb]; ring
-      linarith
-    have h3 : δ * (Real.log b + 1) ≤ Real.log b + 1 := by nlinarith
-    have h4 := le_abs_self (a * Real.log a)
-    linarith
-  · have hlog0 : Real.log b ≤ 0 := Real.log_nonpos hbpos.le hb1.le
-    have hl := Real.one_sub_inv_le_log_of_pos hbpos
-    have : b * (1 - b⁻¹) ≤ b * Real.log b := mul_le_mul_of_nonneg_left hl hbpos.le
-    rw [mul_sub, mul_inv_cancel₀ hbpos.ne', mul_one] at this
-    rw [abs_of_nonpos (mul_nonpos_of_nonneg_of_nonpos hbpos.le hlog0)]
-    have := abs_nonneg (a * Real.log a)
-    linarith
 
 /-- One-dimensional step: the `i`-th local entropy of `g ^ 2 + δ` is bounded by the
 `i`-th partial energy, whenever the relevant sections are integrable. -/

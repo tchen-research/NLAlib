@@ -40,10 +40,17 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
 - One concept per file, under about 500 lines, `UpperCamelCase.lean`, with a module docstring
   `/-! # Title … -/` that says what the file provides and names the atlas ids it realises.
 - Layers (a module imports only its own layer and lower; `scripts/check_layers.py`):
-  0 `Matrix` · 1 `Concentration` · 2 `Gaussian` · 3 `Sketching` · 4 `LowRank`, `Estimation`,
-  `Krylov` · 5 `Solvers`.
-- `Basic.lean` in an area holds definitions, their `@[simp]` unfolding lemmas, and nothing
-  else. Theorems go in topic files (`Estimation/Hutchinson.lean`, `Krylov/Polynomial.lean`).
+  −1 `ForMathlib` · 0 `Matrix` · 1 `Concentration` · 2 `Gaussian` · 3 `Sketching` · 4 `LowRank`,
+  `Estimation`, `Krylov` · 5 `Solvers`.
+- `NLAlib/ForMathlib/` holds general facts that are not about NLAlib's objects and are candidates
+  for upstreaming (real inequalities, integrability of finite suprema, measure-preserving
+  coordinate updates, `det ≠ 0` from full rank). Files are named after the Mathlib directory they
+  would land in (`ForMathlib/Analysis/Real.lean`, `ForMathlib/MeasureTheory/Integral.lean`).
+- `Basic.lean` in an area holds definitions, their `@[simp]` unfolding lemmas, and the
+  definition's immediate API (for `gaussianMatrix`: the law of an entry, its first two moments,
+  flattening, measurability, the `IsGaussian` instance), and nothing else. Theorems go in topic
+  files (`Estimation/Hutchinson.lean`, `Krylov/Polynomial.lean`). `scripts/name_exemptions.txt`
+  lists the API lemmas allowed in a `Basic.lean`.
 - Helpers go where they belong, not where they were first needed: a Frobenius inequality goes in
   `Matrix/Norms.lean`, a projector identity in `Matrix/Projections.lean`, a measurability fact
   about matrices in `Matrix/Measurable.lean`. A local `Aux` namespace with copies of library
@@ -67,7 +74,9 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   random matrices as functions, laws as `μ.map X = …`, expectations as Bochner integrals.
   Prefer statements without integrability hypotheses (prove the `lintegral` form, then convert);
   measurability of matrix-valued maps is stated entrywise (`∀ i j, Measurable fun x => T x i j`)
-  because Mathlib has no `MeasurableSpace (Matrix m n ℝ)`.
+  because Mathlib has no `MeasurableSpace (Matrix m n ℝ)`. (One deliberate exception: the matrix
+  concentration files declare a global Borel instance on `Matrix m n ℂ`, inherited from the Tropp
+  port and documented in `Concentration/Matrix/Defs/Probability.lean`.)
 - Constants explicit, never `∃ C`. Degenerate cases match the source. Two-sided bounds are two
   theorems. General form first, corollaries after.
 - Every hypothesis explicit; no `axiom`, no `native_decide`; `sorry` only in a named scaffold

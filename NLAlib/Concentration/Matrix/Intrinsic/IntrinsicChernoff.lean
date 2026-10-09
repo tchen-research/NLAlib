@@ -1,5 +1,6 @@
-import NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic
-import NLAlib.Concentration.Matrix.Defs.Ch5ChernoffFunctions
+import NLAlib.Concentration.Matrix.Defs.IntrinsicDimension
+import NLAlib.Concentration.Matrix.Defs.Calculus
+import NLAlib.Concentration.Matrix.Defs.ChernoffFunctions
 import NLAlib.Concentration.Matrix.Intrinsic.GeneralizedLaplace
 import NLAlib.Concentration.Matrix.Intrinsic.IntrinsicDimension
 import NLAlib.Concentration.Matrix.Chernoff.ChernoffMgfCgf
@@ -35,23 +36,6 @@ private lemma traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
   rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
   simp
 
-private lemma traceExp_eq_sum {d : ℕ} [NeZero d]
-    (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ : ℝ) :
-    traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i) := by
-  rw [traceExp, matrixExp,
-    ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))]
-  rw [← cfc_comp_const_mul θ Real.exp A (by fun_prop) hA.isSelfAdjoint, hA.cfc_eq]
-  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
-  simp
-  simp only [← Complex.ofReal_mul, ← Complex.ofReal_exp, Complex.ofReal_re]
-
-private lemma abs_le_norm {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) {x : ℝ}
-    (hx : x ∈ spectrum ℝ B) : |x| ≤ ‖B‖ := by
-  have h : algebraMap ℝ ℂ x ∈ spectrum ℂ B := (spectrum.algebraMap_mem_iff ℂ).mpr hx
-  have := spectrum.norm_le_norm_of_mem h
-  simpa using this
-
 private lemma lambdaMax_mem {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hB : B.IsHermitian) : ∃ i, hB.eigenvalues i = lambdaMax B := by
   have hn : (Set.range hB.eigenvalues).Nonempty := Set.range_nonempty _
@@ -73,7 +57,7 @@ private lemma lambdaMax_eq_norm {d : ℕ} [NeZero d] (P : Matrix (Fin d) (Fin d)
   apply le_antisymm
   · obtain ⟨i, hi⟩ := lambdaMax_mem P hA
     rw [← hi]
-    exact (le_abs_self _).trans (abs_le_norm P (hA.eigenvalues_mem_spectrum_real i))
+    exact (le_abs_self _).trans (abs_le_norm_of_mem_spectrum P (hA.eigenvalues_mem_spectrum_real i))
   · have hbdd : BddAbove (spectrum ℝ P) := by
       rw [hA.spectrum_real_eq_range_eigenvalues]; exact (Set.finite_range _).bddAbove
     rcases CStarAlgebra.norm_or_neg_norm_mem_spectrum (hA : IsSelfAdjoint P) with h | h
@@ -112,7 +96,7 @@ private lemma W_facts {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     0 ≤ traceExp (c • B) - d ∧ Real.exp (c * lambdaMax B) - 1 ≤ traceExp (c • B) - d := by
   have hA := hP.isHermitian
   have e : traceExp (c • B) - d = ∑ i, (Real.exp (c * hA.eigenvalues i) - 1) := by
-    rw [traceExp_eq_sum B hA c, Finset.sum_sub_distrib]; simp
+    rw [traceExp_smul_eq_sum B hA c, Finset.sum_sub_distrib]; simp
   have hnn : ∀ i, 0 ≤ Real.exp (c * hA.eigenvalues i) - 1 := fun i => by
     have := Real.one_le_exp (mul_nonneg hc (hP.eigenvalues_nonneg i)); linarith
   rw [e]
@@ -125,7 +109,7 @@ private lemma traceFunction_psi {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d)
     (hP : B.PosSemidef) {c : ℝ} (hc : 0 ≤ c) :
     traceFunction (fun x => max 0 (Real.exp (c * x) - 1)) B = traceExp (c • B) - d := by
   have hA := hP.isHermitian
-  rw [traceFunction_eq_sum _ B hA, traceExp_eq_sum B hA c]
+  rw [traceFunction_eq_sum _ B hA, traceExp_smul_eq_sum B hA c]
   rw [Finset.sum_congr rfl (fun i _ => max_eq_right
     (sub_nonneg.2 (Real.one_le_exp (mul_nonneg hc (hP.eigenvalues_nonneg i)))))]
   rw [Finset.sum_sub_distrib]; simp
@@ -133,7 +117,7 @@ private lemma traceFunction_psi {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d)
 private lemma traceFunction_expm1 {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hA : B.IsHermitian) (c : ℝ) :
     traceFunction (fun x => Real.exp (c * x) - 1) B = traceExp (c • B) - d := by
-  rw [traceFunction_eq_sum _ B hA, traceExp_eq_sum B hA c, Finset.sum_sub_distrib]
+  rw [traceFunction_eq_sum _ B hA, traceExp_smul_eq_sum B hA c, Finset.sum_sub_distrib]
   simp
 
 private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
@@ -145,7 +129,7 @@ private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
   rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos x)]
   apply Real.exp_le_exp.mpr
   calc x ≤ |x| := le_abs_self x
-    _ ≤ ‖s • A‖ := abs_le_norm _ hx
+    _ ≤ ‖s • A‖ := abs_le_norm_of_mem_spectrum _ hx
     _ = |s| * ‖A‖ := by rw [norm_smul, Real.norm_eq_abs]
 
 private lemma expm1_convex (g : ℝ) :
@@ -260,14 +244,14 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
       have hnn : 0 ≤ traceExp (θ' • Y ω) := by
         have := (W_facts _ h1 hθ'.le).1; have : (0:ℝ) ≤ d := by positivity
         linarith
-      rw [Real.norm_eq_abs, abs_of_nonneg hnn, traceExp_eq_sum _ h1.isHermitian]
+      rw [Real.norm_eq_abs, abs_of_nonneg hnn, traceExp_smul_eq_sum _ h1.isHermitian]
       calc ∑ i, Real.exp (θ' * h1.isHermitian.eigenvalues i)
           ≤ ∑ _i : Fin d, Real.exp (θ' * (N * L)) := by
             apply Finset.sum_le_sum
             intro i _
             apply Real.exp_le_exp.mpr
             apply mul_le_mul_of_nonneg_left _ hθ'.le
-            exact ((le_abs_self _).trans (abs_le_norm _
+            exact ((le_abs_self _).trans (abs_le_norm_of_mem_spectrum _
               (h1.isHermitian.eigenvalues_mem_spectrum_real i))).trans h2
         _ = d * Real.exp (θ' * (N * L)) := by simp
     have hWInt : Integrable (fun ω => traceExp (θ' • Y ω) - d) μ :=

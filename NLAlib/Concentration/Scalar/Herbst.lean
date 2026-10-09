@@ -11,7 +11,9 @@ moment generating function of `f` is sub-Gaussian:
 Proof: `G(s) = log 𝔼 e^{s f} - s 𝔼 f - c s²` vanishes to first order at `0` and the entropy bound
 says exactly that `G(s)/s` is nonincreasing on `(0, ∞)`.
 
-Nothing here is Gaussian; the file lives in `Gaussian/Concentration` with its only consumer.
+Nothing here is Gaussian; the consumer is the Gaussian concentration inequality for Lipschitz
+functions (`NLAlib.Gaussian.Concentration.LipschitzConcentration`).
+
 Source: Ledoux, *The Concentration of Measure Phenomenon*, Thm 5.3 (Herbst's argument);
 Boucheron–Lugosi–Massart 2013, Thm 6.1 / Prop 6.1. Atlas: `herbst`.
 -/

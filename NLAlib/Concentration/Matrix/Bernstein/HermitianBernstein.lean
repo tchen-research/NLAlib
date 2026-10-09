@@ -1,4 +1,5 @@
 import NLAlib.Concentration.Matrix.Defs.Probability
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Defs.Dilation
 import NLAlib.Concentration.Matrix.Laplace.MasterBounds
 import NLAlib.Concentration.Matrix.Bernstein.BernsteinMgfCgf
@@ -25,54 +26,23 @@ set_option autoImplicit false
 
 namespace NLAlib
 
-/-- Real spectral values of a matrix are bounded in absolute value by the operator norm. -/
-private lemma abs_le_norm {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) {x : ℝ}
-    (hx : x ∈ spectrum ℝ B) : |x| ≤ ‖B‖ := by
-  have h : algebraMap ℝ ℂ x ∈ spectrum ℂ B := (spectrum.algebraMap_mem_iff ℂ).mpr hx
-  have := spectrum.norm_le_norm_of_mem h
-  simpa using this
-
-private lemma traceExp_eq_sum {d : ℕ} [NeZero d]
-    (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ : ℝ) :
-    traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i) := by
-  rw [traceExp, matrixExp,
-    ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))]
-  rw [← cfc_comp_const_mul θ Real.exp A (by fun_prop) hA.isSelfAdjoint, hA.cfc_eq]
-  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
-  simp
-  simp only [← Complex.ofReal_mul, ← Complex.ofReal_exp, Complex.ofReal_re]
-
 private lemma traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian)
     {c : ℝ} (hc : 0 ≤ c) : traceExp (c • B) ≤ d * Real.exp (c * ‖B‖) := by
-  rw [traceExp_eq_sum B hB c]
+  rw [traceExp_smul_eq_sum B hB c]
   calc ∑ i, Real.exp (c * hB.eigenvalues i) ≤ ∑ _i : Fin d, Real.exp (c * ‖B‖) := by
         apply Finset.sum_le_sum
         intro i _
         apply Real.exp_le_exp.mpr
         apply mul_le_mul_of_nonneg_left _ hc
-        exact (le_abs_self _).trans (abs_le_norm B (hB.eigenvalues_mem_spectrum_real i))
+        exact (le_abs_self _).trans (abs_le_norm_of_mem_spectrum B (hB.eigenvalues_mem_spectrum_real i))
     _ = d * Real.exp (c * ‖B‖) := by simp
 
 private lemma traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
     0 < traceExp H := by
-  have h := traceExp_eq_sum H hH 1
+  have h := traceExp_smul_eq_sum H hH 1
   rw [one_smul] at h
   rw [h]
   exact Finset.sum_pos (fun i _ => Real.exp_pos _) Finset.univ_nonempty
-
-private lemma spec_le {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {L : ℝ}
-    (hb : lambdaMax A ≤ L) : ∀ x ∈ spectrum ℝ A, x ≤ L := by
-  intro x hx
-  have hfin : (spectrum ℝ A).Finite := by
-    rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
-  exact (le_csSup hfin.bddAbove hx).trans hb
-
-private lemma matrixExp_smul_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
-    matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
-  rw [matrixExp,
-    ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
-    ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
 
 /-- Scalar optimization for the expectation bound. -/
 private lemma scalar_expect {x a b L : ℝ} (hL : 0 < L) (ha : 0 ≤ a) (hb : 0 ≤ b)
@@ -249,7 +219,7 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
       have hle : (∑ k, X k ω) ≤ 0 := by
         apply Finset.sum_nonpos
         intro k _
-        have := le_algebraMap_of_spectrum_le (spec_le _ (hω k).1 (hω k).2)
+        have := le_algebraMap_of_spectrum_le (le_of_mem_spectrum_of_lambdaMax_le _ (hω k).1 (hω k).2)
           (hω k).1.isSelfAdjoint
         simpa using this
       have hYH : (∑ k, X k ω).IsHermitian := isSelfAdjoint_sum _ (fun k _ => (hω k).1)
@@ -291,11 +261,11 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
         ((hEcont θ).comp_aestronglyMeasurable (hMeas k).aestronglyMeasurable)
         (Real.exp (θ * L)) ?_
       filter_upwards [hHerm k, hBound k] with ω hH hB
-      rw [matrixExp_smul_eq _ hH]
+      rw [matrixExp_smul_eq_cfc _ hH]
       apply norm_cfc_le (Real.exp_pos _).le
       intro x hx
       rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-      exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left (spec_le _ hH hB x hx) hθ.le)
+      exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left (le_of_mem_spectrum_of_lambdaMax_le _ hH hB x hx) hθ.le)
     have hcgf : ∀ θ : ℝ, 0 < θ → θ < 3 / L →
         traceExp (cumulantSum μ X θ) ≤
           d * Real.exp ((θ ^ 2 / 2) / (1 - θ * L / 3) * v) := by

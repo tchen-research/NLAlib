@@ -1,7 +1,7 @@
 import NLAlib.LowRank.RSVD
 import NLAlib.LowRank.GeneralizedNystrom
 import NLAlib.Gaussian.Conditioning
-import NLAlib.Gaussian.InverseMoments
+import NLAlib.Gaussian.InverseMoments.Mean
 import NLAlib.Matrix.Measurable
 
 /-!
@@ -19,7 +19,7 @@ Gaussian expectation hypothesis remains:
 A random matrix `Ω : Ωs → Matrix (Fin n) (Fin t) ℝ` is standard Gaussian when its array view
 has law `gaussianMatrix n t`: `μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t`.
 The Gaussian inputs come from `NLAlib/Gaussian/Conditioning.lean` (block law, independence,
-tower property), `NLAlib/Gaussian/InverseMoments.lean` (`E‖G†‖_F² = r/(k−r−1)`) and
+tower property), `NLAlib/Gaussian/InverseMoments/Mean.lean` (`E‖G†‖_F² = r/(k−r−1)`) and
 `NLAlib/Gaussian/Moments.lean` (full rank a.s.).
 
 Remaining hypotheses are those about the user's choice of `Q = orth(AΩ)` (a.s. orthonormal

@@ -7,6 +7,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 import NLAlib.Gaussian.Basic
 import NLAlib.Matrix.Spectral
 import NLAlib.Concentration.Scalar.TailIntegral
+import NLAlib.Gaussian.Extreme.ChiSquare
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.MeasureTheory.Integral.Gamma
 import Mathlib.MeasureTheory.Integral.Pi
@@ -332,24 +333,6 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral {r k : ℕ} (hr : 1
 
 /-! ### The Gamma-ratio estimate -/
 
-/-- Squared Gautschi inequality `Γ(z + 1/2)² ≤ z Γ(z)²`, from log-convexity of `Γ`. -/
-private lemma Gamma_add_half_sq_le {z : ℝ} (hz : 0 < z) :
-    Real.Gamma (z + 1 / 2) ^ 2 ≤ z * Real.Gamma z ^ 2 := by
-  have h := Real.Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma (s := z) (t := z + 1)
-    (a := 1 / 2) (b := 1 / 2) hz (by linarith) (by norm_num) (by norm_num) (by norm_num)
-  have he : (1 / 2 : ℝ) * z + 1 / 2 * (z + 1) = z + 1 / 2 := by ring
-  rw [he] at h
-  have hg := Real.Gamma_pos_of_pos hz
-  have hg1 := Real.Gamma_pos_of_pos (show 0 < z + 1 by linarith)
-  have h0 : 0 ≤ Real.Gamma (z + 1 / 2) := (Real.Gamma_pos_of_pos (by linarith)).le
-  calc Real.Gamma (z + 1 / 2) ^ 2
-      ≤ (Real.Gamma z ^ (1 / 2 : ℝ) * Real.Gamma (z + 1) ^ (1 / 2 : ℝ)) ^ 2 :=
-        pow_le_pow_left₀ h0 h 2
-    _ = Real.Gamma z * Real.Gamma (z + 1) := by
-        rw [mul_pow, ← Real.sqrt_eq_rpow, ← Real.sqrt_eq_rpow, Real.sq_sqrt hg.le,
-          Real.sq_sqrt hg1.le]
-    _ = z * Real.Gamma z ^ 2 := by rw [Real.Gamma_add_one hz.ne']; ring
-
 /-- Iterated Gautschi: `Γ((r+n)/2)² ≤ Γ(r/2)² ∏_{i<n} (r+i)/2`. -/
 private lemma Gamma_half_sq_le_mul_prod {r : ℕ} (hr : 1 ≤ r) (n : ℕ) :
     Real.Gamma (((r : ℝ) + n) / 2) ^ 2
@@ -359,7 +342,14 @@ private lemma Gamma_half_sq_le_mul_prod {r : ℕ} (hr : 1 ≤ r) (n : ℕ) :
   | succ n ih =>
     have hrpos : (0 : ℝ) < r := by exact_mod_cast hr
     have hz : (0 : ℝ) < ((r : ℝ) + n) / 2 := by positivity
-    have hg := Gamma_add_half_sq_le hz
+    have hg : Real.Gamma (((r : ℝ) + n) / 2 + 1 / 2) ^ 2
+        ≤ ((r : ℝ) + n) / 2 * Real.Gamma (((r : ℝ) + n) / 2) ^ 2 := by
+      have h0 : 0 ≤ Real.Gamma (((r : ℝ) + n) / 2 + 1 / 2) :=
+        (Real.Gamma_pos_of_pos (by linarith)).le
+      calc Real.Gamma (((r : ℝ) + n) / 2 + 1 / 2) ^ 2
+          ≤ (Real.Gamma (((r : ℝ) + n) / 2) * √(((r : ℝ) + n) / 2)) ^ 2 :=
+            pow_le_pow_left₀ h0 (Gamma_add_half_le_mul_sqrt hz) 2
+        _ = _ := by rw [mul_pow, Real.sq_sqrt hz.le]; ring
     have he : ((r : ℝ) + n) / 2 + 1 / 2 = ((r : ℝ) + ((n + 1 : ℕ) : ℝ)) / 2 := by
       push_cast; ring
     rw [he] at hg

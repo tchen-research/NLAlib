@@ -1,4 +1,5 @@
-import NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic
+import NLAlib.Concentration.Matrix.Defs.IntrinsicDimension
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Intrinsic.IntrinsicHermitianBernstein
 import NLAlib.Concentration.Matrix.Bernstein.DilationIdentities
 import NLAlib.Concentration.Matrix.Intrinsic.BlockIntrinsic
@@ -29,47 +30,6 @@ namespace NLAlib
 
 open NLAlib Matrix
 
-/-- The Hermitian dilation is real-linear. -/
-private noncomputable def dilLin (m n : Type*) :
-    Matrix m n ℂ →ₗ[ℝ] Matrix (m ⊕ n) (m ⊕ n) ℂ where
-  toFun := dilation
-  map_add' X Y := by
-    simp [dilation, Matrix.fromBlocks_add, Matrix.conjTranspose_add]
-  map_smul' c X := by
-    simp [dilation, Matrix.fromBlocks_smul, Matrix.conjTranspose_smul]
-
-/-- Reindexing as a `⋆`-algebra equivalence over `ℂ`. -/
-private noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) :
-    Matrix ι ι ℂ ≃⋆ₐ[ℂ] Matrix κ κ ℂ :=
-  { Matrix.reindexAlgEquiv ℂ ℂ e with
-    map_star' := by intro A; rfl
-    map_smul' := by intro r A; rfl }
-
-/-- Reindexing preserves the L2 operator norm. -/
-private lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
-    ‖Matrix.reindex e e A‖ = ‖A‖ :=
-  StarAlgEquiv.norm_map (reindexStarC e) A
-
-/-- Reindexing preserves the real spectrum, hence `lambdaMax`. -/
-private lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
-    lambdaMax (Matrix.reindex e e A) = lambdaMax A := by
-  have h := AlgEquiv.spectrum_eq (Matrix.reindexAlgEquiv ℝ ℂ e) A
-  rw [Matrix.coe_reindexAlgEquiv] at h
-  unfold lambdaMax
-  rw [h]
-
-/-- The Bochner integral commutes with reindexing. -/
-private lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (X : Ω → Matrix ι ι ℂ) :
-    ∫ ω, Matrix.reindex e e (X ω) ∂μ = Matrix.reindex e e (∫ ω, X ω ∂μ) := by
-  let L : Matrix ι ι ℂ ≃L[ℝ] Matrix κ κ ℂ :=
-    (Matrix.reindexLinearEquiv ℝ ℂ e e).toContinuousLinearEquiv
-  exact L.integral_comp_comm X
-
 /-- Reindexing preserves the trace. -/
 private lemma trace_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
@@ -85,37 +45,6 @@ private lemma intrinsicDimension_reindex {ι κ : Type*} [Fintype ι] [Fintype �
   rw [trace_reindex, norm_reindex]
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-
-/-- The square of the dilation is block diagonal. -/
-private lemma dilation_sq (X : Matrix m n ℂ) :
-    dilation X ^ 2 = fromBlocks (X * Xᴴ) 0 0 (Xᴴ * X) := by
-  simp [dilation, sq, fromBlocks_multiply]
-
-/-- Upper-left block inclusion as a continuous linear map. -/
-private noncomputable def incl₁ : Matrix m m ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
-  LinearMap.toContinuousLinearMap
-    { toFun := fun P => fromBlocks P 0 0 0
-      map_add' := fun P P' => by rw [fromBlocks_add]; simp
-      map_smul' := fun c P => by rw [fromBlocks_smul]; simp }
-
-/-- Lower-right block inclusion as a continuous linear map. -/
-private noncomputable def incl₂ : Matrix n n ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
-  LinearMap.toContinuousLinearMap
-    { toFun := fun Q => fromBlocks 0 0 0 Q
-      map_add' := fun Q Q' => by rw [fromBlocks_add]; simp
-      map_smul' := fun c Q => by rw [fromBlocks_smul]; simp }
-
-private lemma integral_fromBlocks_diag {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    (P : Ω → Matrix m m ℂ) (Q : Ω → Matrix n n ℂ) (hP : Integrable P μ) (hQ : Integrable Q μ) :
-    ∫ ω, fromBlocks (P ω) 0 0 (Q ω) ∂μ = fromBlocks (∫ ω, P ω ∂μ) 0 0 (∫ ω, Q ω ∂μ) := by
-  have hsplit : ∀ (A : Matrix m m ℂ) (B : Matrix n n ℂ),
-      fromBlocks A 0 0 B = incl₁ (n := n) A + incl₂ (m := m) B := by
-    intro A B
-    simp only [incl₁, incl₂, LinearMap.coe_toContinuousLinearMap', LinearMap.coe_mk, AddHom.coe_mk]
-    rw [fromBlocks_add]; simp
-  simp_rw [hsplit]
-  rw [integral_add ((incl₁ (n := n)).integrable_comp hP) ((incl₂ (m := m)).integrable_comp hQ),
-    ContinuousLinearMap.integral_comp_comm _ hP, ContinuousLinearMap.integral_comp_comm _ hQ]
 
 omit [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] in
 private lemma fromBlocks_diag_sub (A A' : Matrix m m ℂ) (B B' : Matrix n n ℂ) :
@@ -139,7 +68,7 @@ private noncomputable def Φ (p q : ℕ) :
     Matrix (Fin p) (Fin q) ℂ →L[ℝ] Matrix (Fin (p + q)) (Fin (p + q)) ℂ :=
   LinearMap.toContinuousLinearMap
     ((Matrix.reindexLinearEquiv ℝ ℂ finSumFinEquiv finSumFinEquiv).toLinearMap ∘ₗ
-      dilLin (Fin p) (Fin q))
+      dilationLinearMap (Fin p) (Fin q))
 
 private lemma Φ_apply {p q : ℕ} (A : Matrix (Fin p) (Fin q) ℂ) :
     Φ p q A = Matrix.reindex finSumFinEquiv finSumFinEquiv (dilation A) := rfl

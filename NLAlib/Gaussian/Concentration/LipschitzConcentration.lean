@@ -1,7 +1,8 @@
 import NLAlib.Gaussian.Basic
 import NLAlib.Matrix.Norms
 import NLAlib.Gaussian.Concentration.LogSobolev
-import NLAlib.Gaussian.Concentration.Herbst
+import NLAlib.Concentration.Scalar.Herbst
+import NLAlib.ForMathlib.Analysis.Real
 import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import Mathlib.Probability.ProductMeasure
@@ -34,16 +35,6 @@ namespace NLAlib
 
 /-! ### Euclidean Lipschitz functions on `ι → ℝ` -/
 
-/-- `√(∑ xᵢ²) ≤ ∑ |xᵢ|`. Atlas: `gaussian-concentration` (helper). Ported from Prove2me solution
-`GaussianMatrix.gaussian_lipschitz_entropy_bound`. -/
-theorem sqrt_sum_sq_le_sum_abs {ι : Type*} [Fintype ι] (x : ι → ℝ) :
-    Real.sqrt (∑ i, x i ^ 2) ≤ ∑ i, |x i| := by
-  have h0 : 0 ≤ ∑ i, |x i| := Finset.sum_nonneg fun i _ => abs_nonneg _
-  rw [Real.sqrt_le_left h0]
-  have : ∑ i, x i ^ 2 = ∑ i, |x i| ^ 2 := by simp [sq_abs]
-  rw [this]
-  exact Finset.sum_sq_le_sq_sum_of_nonneg fun i _ => abs_nonneg _
-
 private lemma sqrt_sum_sq_sub_le_card_mul_dist {ι : Type*} [Fintype ι] (x y : ι → ℝ) :
     Real.sqrt (∑ i, (x i - y i) ^ 2) ≤ Fintype.card ι * dist x y := by
   refine (sqrt_sum_sq_le_sum_abs (fun i => x i - y i)).trans ?_
@@ -75,21 +66,6 @@ private lemma abs_sub_le_abs_mul_sqrt_sum_sq {ι : Type*} [Fintype ι] (f : (ι 
     (hLip : ∀ x y, |f x - f y| ≤ L * Real.sqrt (∑ i, (x i - y i) ^ 2)) :
     ∀ x y, |f x - f y| ≤ |L| * Real.sqrt (∑ i, (x i - y i) ^ 2) := fun x y =>
   (hLip x y).trans (mul_le_mul_of_nonneg_right (le_abs_self L) (Real.sqrt_nonneg _))
-
-/-- `|u e^u| ≤ e^{2u} + 1`. Atlas: `gaussian-concentration` (helper). Ported from Prove2me solution
-`GaussianMatrix.gaussian_lipschitz_entropy_bound`. -/
-theorem abs_mul_exp_le_exp_two_mul_add_one (u : ℝ) : |u * Real.exp u| ≤ Real.exp (2 * u) + 1 := by
-  have e2 : Real.exp (2 * u) = Real.exp u * Real.exp u := by rw [← Real.exp_add]; ring_nf
-  have hpos := Real.exp_pos u
-  rcases le_total 0 u with h | h
-  · rw [abs_of_nonneg (mul_nonneg h hpos.le), e2]
-    have := Real.add_one_le_exp u
-    nlinarith
-  · rw [abs_of_nonpos (by nlinarith)]
-    have := Real.add_one_le_exp (-u)
-    have e : Real.exp (-u) * Real.exp u = 1 := by rw [← Real.exp_add]; simp
-    have := mul_le_mul_of_nonneg_right this hpos.le
-    nlinarith [Real.exp_pos (2 * u)]
 
 /-- `exp (a |y|)` is integrable for the standard Gaussian. Atlas: `gaussian-concentration` (helper).
 Ported from Prove2me solution `GaussianMatrix.gaussian_lipschitz_entropy_bound`. -/
@@ -470,17 +446,6 @@ theorem gaussian_concentration_pi {ι : Type*} [Fintype ι] (f : (ι → ℝ) �
           rw [h3]; ring
   rw [← ofReal_measureReal]
   exact ENNReal.ofReal_le_ofReal hbound
-
-/-- The Gaussian matrix law is the image of the flat standard Gaussian product measure on
-`Fin p × Fin m → ℝ` under currying. Atlas: `gaussian-matrix-def` (helper for
-`gaussian-concentration`). Ported from Prove2me solution `GaussianMatrix.gaussian_concentration`. -/
-theorem gaussianMatrix_eq_map_curry (p m : ℕ) :
-    gaussianMatrix p m =
-      (Measure.pi fun _ : Fin p × Fin m => gaussianReal 0 1).map
-        (MeasurableEquiv.curry (Fin p) (Fin m) ℝ) := by
-  have := Measure.infinitePi_map_curry (fun (_ : Fin p) (_ : Fin m) => gaussianReal 0 1)
-  simp only [Measure.infinitePi_eq_pi] at this
-  rw [gaussianMatrix, this]
 
 /-- The Frobenius distance of two curried arrays is the Euclidean distance of the flat arrays. -/
 private lemma frobNorm_curry_sub {p m : ℕ} (x y : Fin p × Fin m → ℝ) :

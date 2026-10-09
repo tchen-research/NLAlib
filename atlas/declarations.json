@@ -105,7 +105,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  343,
+  344,
   "kind":
   "theorem",
   "doc":
@@ -119,7 +119,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  47,
+  48,
   "kind":
   "def",
   "doc":
@@ -133,7 +133,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  53,
+  54,
   "kind":
   "def",
   "doc":
@@ -145,7 +145,7 @@
   "name":
   "NLAlib.IsRademacher",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch4ScalarLaws",
+  "NLAlib.Concentration.Matrix.Defs.ScalarLaws",
   "line":
   24,
   "kind":
@@ -161,7 +161,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  227,
+  228,
   "kind":
   "inductive",
   "doc":
@@ -175,7 +175,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  400,
+  401,
   "kind":
   "theorem",
   "doc":
@@ -189,7 +189,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  227,
+  228,
   "kind":
   "def",
   "doc":
@@ -203,7 +203,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  237,
+  238,
   "kind":
   "theorem",
   "doc":
@@ -217,7 +217,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  431,
+  432,
   "kind":
   "theorem",
   "doc":
@@ -231,7 +231,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  230,
+  231,
   "kind":
   "constructor",
   "doc":
@@ -245,7 +245,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  346,
+  347,
   "kind":
   "theorem",
   "doc":
@@ -259,7 +259,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  338,
+  339,
   "kind":
   "theorem",
   "doc":
@@ -273,7 +273,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  342,
+  343,
   "kind":
   "theorem",
   "doc":
@@ -287,7 +287,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  384,
+  385,
   "kind":
   "theorem",
   "doc":
@@ -301,7 +301,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  227,
+  228,
   "kind":
   "def",
   "doc":
@@ -315,7 +315,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  360,
+  361,
   "kind":
   "theorem",
   "doc":
@@ -329,7 +329,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  351,
+  352,
   "kind":
   "theorem",
   "doc":
@@ -343,7 +343,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  233,
+  234,
   "kind":
   "theorem",
   "doc":
@@ -357,7 +357,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  356,
+  357,
   "kind":
   "theorem",
   "doc":
@@ -371,7 +371,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  235,
+  236,
   "kind":
   "theorem",
   "doc":
@@ -385,7 +385,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  368,
+  369,
   "kind":
   "theorem",
   "doc":
@@ -397,7 +397,7 @@
   "name":
   "NLAlib.IsStandardGaussian",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch4ScalarLaws",
+  "NLAlib.Concentration.Matrix.Defs.ScalarLaws",
   "line":
   19,
   "kind":
@@ -427,7 +427,7 @@
   "module":
   "NLAlib.Sketching.SubspaceEmbedding",
   "line":
-  89,
+  77,
   "kind":
   "theorem",
   "doc":
@@ -441,7 +441,7 @@
   "module":
   "NLAlib.Sketching.SubspaceEmbedding",
   "line":
-  60,
+  48,
   "kind":
   "theorem",
   "doc":
@@ -455,7 +455,7 @@
   "module":
   "NLAlib.Sketching.SubspaceEmbedding",
   "line":
-  69,
+  57,
   "kind":
   "theorem",
   "doc":
@@ -719,7 +719,7 @@
   "name":
   "NLAlib.OperatorConvexOn",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch8Entropy",
+  "NLAlib.Concentration.Matrix.Defs.RelativeEntropy",
   "line":
   30,
   "kind":
@@ -747,9 +747,9 @@
   "name":
   "NLAlib.abs_add_mul_log_add_le",
   "module":
-  "NLAlib.Gaussian.Concentration.LogSobolev",
+  "NLAlib.ForMathlib.Analysis.Real",
   "line":
-  28,
+  45,
   "kind":
   "theorem",
   "doc":
@@ -761,27 +761,27 @@
   "name":
   "NLAlib.abs_apply_le_apply_self_add_apply_self",
   "module":
-  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "NLAlib.Matrix.Gram",
   "line":
-  65,
+  56,
   "kind":
   "theorem",
   "doc":
-  "An off-diagonal entry of a real positive semidefinite matrix is dominated by the diagonal:\n`|Mᵢⱼ| ≤ Mᵢᵢ + Mⱼⱼ`.\n\nHelper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the\nProve2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_offdiag`). "},
+  "An entry of a real positive semidefinite matrix is dominated by the diagonal:\n`|Mᵢⱼ| ≤ Mᵢᵢ + Mⱼⱼ`.\n\nHelper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the\nProve2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_offdiag`). "},
  {"sorry":
   false,
   "signature":
-  "NLAlib.abs_dotProduct_mulVec_le_specNorm.{u_3} {d : Type u_3} [Fintype d] [DecidableEq d] (M : Matrix d d ℝ)\n  (x : d → ℝ) : |x ⬝ᵥ M.mulVec x| ≤ NLAlib.specNorm M * x ⬝ᵥ x",
+  "NLAlib.abs_dotProduct_mulVec_le_specNorm.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (M : Matrix n n ℝ)\n  (x : n → ℝ) : |x ⬝ᵥ M.mulVec x| ≤ NLAlib.specNorm M * x ⬝ᵥ x",
   "name":
   "NLAlib.abs_dotProduct_mulVec_le_specNorm",
   "module":
-  "NLAlib.Sketching.SubspaceEmbedding",
+  "NLAlib.Matrix.Norms",
   "line":
-  99,
+  475,
   "kind":
   "theorem",
   "doc":
-  "Quadratic-form bound by the spectral norm: `|xᵀ M x| ≤ ‖M‖₂ ‖x‖²`. Helper for the Gram form\nof `ose-def`. "},
+  "Quadratic-form bound by the spectral norm: `|xᵀ M x| ≤ ‖M‖₂ ‖x‖²`. Helper for the Gram form\nof `ose-def`; atlas `norms-frob-spec`. "},
  {"sorry":
   false,
   "signature":
@@ -791,7 +791,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  278,
+  283,
   "kind":
   "theorem",
   "doc":
@@ -803,9 +803,9 @@
   "name":
   "NLAlib.abs_le_abs_add_mul_abs_of_abs_deriv_le",
   "module":
-  "NLAlib.Gaussian.Concentration.IntegrationByParts",
+  "NLAlib.ForMathlib.Analysis.Calculus.MeanValue",
   "line":
-  47,
+  14,
   "kind":
   "theorem",
   "doc":
@@ -813,17 +813,31 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.abs_le_norm_of_mem_spectrum.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] [Nonempty d] (B : Matrix d d ℂ)\n  {x : ℝ} (hx : x ∈ spectrum ℝ B) : |x| ≤ ‖B‖",
+  "name":
+  "NLAlib.abs_le_norm_of_mem_spectrum",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "A real spectral value of a square complex matrix is bounded in absolute value by its ℓ₂\noperator norm. Tropp 2015, §2.1. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.abs_mul_exp_le_exp_two_mul_add_one (u : ℝ) : |u * Real.exp u| ≤ Real.exp (2 * u) + 1",
   "name":
   "NLAlib.abs_mul_exp_le_exp_two_mul_add_one",
   "module":
-  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "NLAlib.ForMathlib.Analysis.Real",
   "line":
-  79,
+  80,
   "kind":
   "theorem",
   "doc":
-  "`|u e^u| ≤ e^{2u} + 1`. Atlas: `gaussian-concentration` (helper). Ported from Prove2me solution\n`GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
+  "`|u e^u| ≤ e^{2u} + 1`. Atlas: `gaussian-concentration` (helper). Ported from Prove2me\nsolution `GaussianMatrix.gaussian_lipschitz_entropy_bound`. "},
  {"sorry":
   false,
   "signature":
@@ -831,9 +845,9 @@
   "name":
   "NLAlib.abs_mul_log_le_sq_add_one",
   "module":
-  "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
+  "NLAlib.ForMathlib.Analysis.Real",
   "line":
-  31,
+  32,
   "kind":
   "theorem",
   "doc":
@@ -847,7 +861,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  318,
+  324,
   "kind":
   "theorem",
   "doc":
@@ -861,7 +875,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.Lipschitz",
   "line":
-  204,
+  205,
   "kind":
   "theorem",
   "doc":
@@ -875,7 +889,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  331,
+  337,
   "kind":
   "theorem",
   "doc":
@@ -889,7 +903,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  338,
+  344,
   "kind":
   "theorem",
   "doc":
@@ -901,9 +915,9 @@
   "name":
   "NLAlib.ae_integrable_comp_update_pi",
   "module":
-  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "NLAlib.ForMathlib.MeasureTheory.Integral",
   "line":
-  149,
+  95,
   "kind":
   "theorem",
   "doc":
@@ -931,7 +945,7 @@
   "module":
   "NLAlib.Gaussian.Moments",
   "line":
-  188,
+  184,
   "kind":
   "theorem",
   "doc":
@@ -945,7 +959,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  82,
+  83,
   "kind":
   "theorem",
   "doc":
@@ -959,7 +973,7 @@
   "module":
   "NLAlib.Gaussian.Basic",
   "line":
-  149,
+  216,
   "kind":
   "theorem",
   "doc":
@@ -973,7 +987,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  209,
+  215,
   "kind":
   "theorem",
   "doc":
@@ -987,7 +1001,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  109,
+  115,
   "kind":
   "theorem",
   "doc":
@@ -1001,7 +1015,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Defs.Probability",
   "line":
-  51,
+  64,
   "kind":
   "def",
   "doc":
@@ -1015,7 +1029,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Bernstein.BernsteinMgfCgf",
   "line":
-  140,
+  129,
   "kind":
   "theorem",
   "doc":
@@ -1029,7 +1043,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  291,
+  298,
   "kind":
   "theorem",
   "doc":
@@ -1041,7 +1055,7 @@
   "name":
   "NLAlib.chernoffCgfCoefficient",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch5ChernoffFunctions",
+  "NLAlib.Concentration.Matrix.Defs.ChernoffFunctions",
   "line":
   17,
   "kind":
@@ -1055,7 +1069,7 @@
   "name":
   "NLAlib.chernoffLowerTail",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch5ChernoffFunctions",
+  "NLAlib.Concentration.Matrix.Defs.ChernoffFunctions",
   "line":
   22,
   "kind":
@@ -1069,7 +1083,7 @@
   "name":
   "NLAlib.chernoffUpperTail",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch5ChernoffFunctions",
+  "NLAlib.Concentration.Matrix.Defs.ChernoffFunctions",
   "line":
   29,
   "kind":
@@ -1085,7 +1099,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Chernoff.ChernoffMgfCgf",
   "line":
-  126,
+  121,
   "kind":
   "theorem",
   "doc":
@@ -1183,7 +1197,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  139,
+  73,
   "kind":
   "theorem",
   "doc":
@@ -1211,7 +1225,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  55,
+  46,
   "kind":
   "theorem",
   "doc":
@@ -1267,7 +1281,7 @@
   "module":
   "NLAlib.Gaussian.Comparison.Interpolation",
   "line":
-  38,
+  40,
   "kind":
   "theorem",
   "doc":
@@ -1281,7 +1295,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Defs.Probability",
   "line":
-  44,
+  57,
   "kind":
   "def",
   "doc":
@@ -1303,17 +1317,17 @@
  {"sorry":
   false,
   "signature":
-  "NLAlib.det_ne_zero_of_rank_eq {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) (h : M.rank = n) : M.det ≠ 0",
+  "NLAlib.det_ne_zero_of_rank_eq.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (M : Matrix n n ℝ)\n  (h : M.rank = Fintype.card n) : M.det ≠ 0",
   "name":
   "NLAlib.det_ne_zero_of_rank_eq",
   "module":
-  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "NLAlib.Matrix.Gram",
   "line":
-  186,
+  29,
   "kind":
   "theorem",
   "doc":
-  "A square real matrix of full rank `n` has nonzero determinant.\n\nHelper (linear algebra) for the inverse-Wishart computations. Atlas: `inverse-wishart-mean`\n(helper). Ported from the Prove2me solutions of the inverse Wishart series\n(`rri_det_ne_zero_of_rank`). "},
+  "A square real matrix of full rank has nonzero determinant.\n\nHelper (linear algebra) for the inverse-Wishart computations. Atlas: `inverse-wishart-mean`\n(helper). Generalised from `Fin n` to an arbitrary finite index type. Ported from the Prove2me\nsolutions of the inverse Wishart series (`rri_det_ne_zero_of_rank`). "},
  {"sorry":
   false,
   "signature":
@@ -1331,17 +1345,59 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.dilationLinearMap.{u_1, u_2} (m : Type u_1) (n : Type u_2) : Matrix m n ℂ →ₗ[ℝ] Matrix (m ⊕ n) (m ⊕ n) ℂ",
+  "name":
+  "NLAlib.dilationLinearMap",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  114,
+  "kind":
+  "def",
+  "doc":
+  "The Hermitian dilation as a real-linear map. Tropp 2015, Def. 2.1.5. Atlas:\n`hermitian-dilation`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.dilationLinearMap_apply.{u_1, u_2} {m : Type u_1} {n : Type u_2} (X : Matrix m n ℂ) :\n  (NLAlib.dilationLinearMap m n) X = NLAlib.dilation X",
+  "name":
+  "NLAlib.dilationLinearMap_apply",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  123,
+  "kind":
+  "theorem",
+  "doc":
+  "`dilationLinearMap` applies `dilation`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.dilation_identities {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :\n  (NLAlib.dilation A).IsHermitian ∧\n    NLAlib.dilation A ^ 2 = Matrix.fromBlocks (A * A.conjTranspose) 0 0 (A.conjTranspose * A) ∧\n      NLAlib.lambdaMax (NLAlib.dilation A) = NLAlib.spectralNorm (NLAlib.dilation A) ∧\n        NLAlib.spectralNorm (NLAlib.dilation A) = NLAlib.spectralNorm A",
   "name":
   "NLAlib.dilation_identities",
   "module":
   "NLAlib.Concentration.Matrix.Bernstein.DilationIdentities",
   "line":
-  115,
+  110,
   "kind":
   "theorem",
   "doc":
   "The Hermitian dilation of `A` is Hermitian, squares to `fromBlocks (A Aᴴ) 0 0 (Aᴴ A)`, and has\n`λmax = ‖dilation A‖ = ‖A‖`.\n\nTropp 2015, Def. 2.1.5 and eqs (2.1.27–28). Atlas: `hermitian-dilation`. Ported from the Prove2me\nmission *An Introduction to Matrix Concentration Inequalities, Ch 6*. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.dilation_sq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]\n  (X : Matrix m n ℂ) : NLAlib.dilation X ^ 2 = Matrix.fromBlocks (X * X.conjTranspose) 0 0 (X.conjTranspose * X)",
+  "name":
+  "NLAlib.dilation_sq",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  130,
+  "kind":
+  "theorem",
+  "doc":
+  "The square of the Hermitian dilation is block diagonal: `(dilation X)² =\nfromBlocks (X Xᴴ) 0 0 (Xᴴ X)`. Tropp 2015, eq. (2.1.28). Atlas: `hermitian-dilation`. "},
  {"sorry":
   false,
   "signature":
@@ -1365,7 +1421,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  91,
+  97,
   "kind":
   "theorem",
   "doc":
@@ -1379,7 +1435,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  461,
+  462,
   "kind":
   "theorem",
   "doc":
@@ -1393,7 +1449,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  363,
+  339,
   "kind":
   "theorem",
   "doc":
@@ -1407,7 +1463,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
   "line":
-  80,
+  33,
   "kind":
   "theorem",
   "doc":
@@ -1419,9 +1475,9 @@
   "name":
   "NLAlib.entropy_pi_le_sum_integral_entropy_update",
   "module":
-  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "NLAlib.Concentration.Scalar.EntropyTensorization",
   "line":
-  470,
+  390,
   "kind":
   "theorem",
   "doc":
@@ -1435,7 +1491,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
   "line":
-  403,
+  356,
   "kind":
   "theorem",
   "doc":
@@ -1449,7 +1505,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
   "line":
-  283,
+  236,
   "kind":
   "theorem",
   "doc":
@@ -1463,7 +1519,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LogSobolev",
   "line":
-  201,
+  167,
   "kind":
   "theorem",
   "doc":
@@ -1491,7 +1547,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  228,
+  204,
   "kind":
   "theorem",
   "doc":
@@ -1503,9 +1559,9 @@
   "name":
   "NLAlib.exists_iInf_sqrt_mulVec_le_of_sigmaMin_le",
   "module":
-  "NLAlib.Gaussian.Extreme.SmallBall",
+  "NLAlib.Matrix.Spectral",
   "line":
-  96,
+  521,
   "kind":
   "theorem",
   "doc":
@@ -1519,7 +1575,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  239,
+  240,
   "kind":
   "theorem",
   "doc":
@@ -1533,7 +1589,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  299,
+  306,
   "kind":
   "theorem",
   "doc":
@@ -1547,11 +1603,25 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  332,
+  339,
   "kind":
   "theorem",
   "doc":
   "**Orthonormal complement.** A matrix `Q` with orthonormal columns has a complement `Qp` with\northonormal columns and `QQᵀ + QpQpᵀ = I` (here `Qp` has `k − q` columns). From\n`exists_orthogonal_completion`. Atlas `orthonormal-completion`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.exists_orthonormal_ker_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.rank = n) :\n  ∃ V,\n    V.transpose * V = 1 ∧\n      (∀ (j : Fin (k - n)), (H.mulVec fun l => V l j) = 0) ∧\n        ∀ (g : Fin k → ℝ),\n          g ⬝ᵥ g - H.mulVec g ⬝ᵥ (H * H.transpose)⁻¹.mulVec (H.mulVec g) = ∑ j, V.transpose.mulVec g j ^ 2",
+  "name":
+  "NLAlib.exists_orthonormal_ker_sq_dist_rowSpace",
+  "module":
+  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "line":
+  143,
+  "kind":
+  "theorem",
+  "doc":
+  "**Residual in an orthonormal basis of the kernel.** For `H` of full row rank `n`, an\northonormal basis `V` (`k × (k - n)`, `Vᵀ V = 1`) of `ker H` writes the squared distance from `g`\nto the row space of `H` as `‖g‖² - (H g)ᵀ (H Hᵀ)⁻¹ (H g) = ‖Vᵀ g‖²`; the columns of `V` are\nkilled by `H`.\n\nHelper for Tropp–Webber 2023, Lemma B.2 / HMT 2011, Prop A.5 (law of the residual of a Gaussian\nrow and its independence from the regression). Atlas: `inverse-wishart-mean` (helper). Ported\nfrom the Prove2me solutions `Sol_GaussianMatrix_residual_law` and\n`GaussianMatrix.regression_residual_indep` (the two copies merged, keeping the stronger\nstatement). "},
  {"sorry":
   false,
   "signature":
@@ -1561,7 +1631,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Laplace.TailSpectralComparison",
   "line":
-  31,
+  22,
   "kind":
   "theorem",
   "doc":
@@ -1659,7 +1729,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  252,
+  257,
   "kind":
   "theorem",
   "doc":
@@ -1673,7 +1743,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  315,
+  320,
   "kind":
   "theorem",
   "doc":
@@ -1687,7 +1757,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  301,
+  306,
   "kind":
   "theorem",
   "doc":
@@ -1701,7 +1771,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  307,
+  312,
   "kind":
   "theorem",
   "doc":
@@ -1715,7 +1785,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  113,
+  120,
   "kind":
   "theorem",
   "doc":
@@ -1869,7 +1939,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  288,
+  293,
   "kind":
   "theorem",
   "doc":
@@ -1897,7 +1967,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  464,
+  469,
   "kind":
   "theorem",
   "doc":
@@ -1911,7 +1981,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  387,
+  392,
   "kind":
   "theorem",
   "doc":
@@ -1925,7 +1995,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  378,
+  383,
   "kind":
   "theorem",
   "doc":
@@ -1995,7 +2065,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  295,
+  300,
   "kind":
   "theorem",
   "doc":
@@ -2079,7 +2149,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  150,
+  157,
   "kind":
   "theorem",
   "doc":
@@ -2093,7 +2163,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  158,
+  165,
   "kind":
   "theorem",
   "doc":
@@ -2135,7 +2205,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  445,
+  446,
   "kind":
   "theorem",
   "doc":
@@ -2177,7 +2247,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  457,
+  462,
   "kind":
   "theorem",
   "doc":
@@ -2191,7 +2261,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  369,
+  374,
   "kind":
   "theorem",
   "doc":
@@ -2205,7 +2275,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  358,
+  363,
   "kind":
   "theorem",
   "doc":
@@ -2219,7 +2289,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  322,
+  327,
   "kind":
   "theorem",
   "doc":
@@ -2233,7 +2303,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  327,
+  332,
   "kind":
   "theorem",
   "doc":
@@ -2275,7 +2345,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  151,
+  152,
   "kind":
   "theorem",
   "doc":
@@ -2289,7 +2359,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  139,
+  140,
   "kind":
   "theorem",
   "doc":
@@ -2301,9 +2371,9 @@
   "name":
   "NLAlib.frobSq_pinvR_eq_trace_inv",
   "module":
-  "NLAlib.Gaussian.InverseMoments",
+  "NLAlib.Matrix.Pseudoinverse",
   "line":
-  632,
+  164,
   "kind":
   "theorem",
   "doc":
@@ -2317,7 +2387,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  183,
+  190,
   "kind":
   "theorem",
   "doc":
@@ -2331,7 +2401,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  165,
+  172,
   "kind":
   "theorem",
   "doc":
@@ -2345,7 +2415,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  171,
+  178,
   "kind":
   "theorem",
   "doc":
@@ -2359,7 +2429,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  202,
+  209,
   "kind":
   "theorem",
   "doc":
@@ -2373,7 +2443,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  210,
+  217,
   "kind":
   "theorem",
   "doc":
@@ -2443,7 +2513,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  190,
+  197,
   "kind":
   "theorem",
   "doc":
@@ -2457,7 +2527,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  223,
+  230,
   "kind":
   "theorem",
   "doc":
@@ -2541,7 +2611,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  177,
+  184,
   "kind":
   "theorem",
   "doc":
@@ -2577,13 +2647,69 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.fromBlocks₁₁CLM.{u_1, u_2} {m : Type u_1} (n : Type u_2) [Fintype m] :\n  Matrix m m ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ",
+  "name":
+  "NLAlib.fromBlocks₁₁CLM",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  137,
+  "kind":
+  "def",
+  "doc":
+  "The upper-left block inclusion `P ↦ fromBlocks P 0 0 0` as a continuous linear map. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.fromBlocks₁₁CLM_apply.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] (P : Matrix m m ℂ) :\n  (NLAlib.fromBlocks₁₁CLM n) P = Matrix.fromBlocks P 0 0 0",
+  "name":
+  "NLAlib.fromBlocks₁₁CLM_apply",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  153,
+  "kind":
+  "theorem",
+  "doc":
+  "`fromBlocks₁₁CLM` puts its argument in the upper-left block. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.fromBlocks₂₂CLM.{u_1, u_2} (m : Type u_1) {n : Type u_2} [Fintype n] :\n  Matrix n n ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ",
+  "name":
+  "NLAlib.fromBlocks₂₂CLM",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  145,
+  "kind":
+  "def",
+  "doc":
+  "The lower-right block inclusion `Q ↦ fromBlocks 0 0 0 Q` as a continuous linear map. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.fromBlocks₂₂CLM_apply.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype n] (Q : Matrix n n ℂ) :\n  (NLAlib.fromBlocks₂₂CLM m) Q = Matrix.fromBlocks 0 0 0 Q",
+  "name":
+  "NLAlib.fromBlocks₂₂CLM_apply",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  159,
+  "kind":
+  "theorem",
+  "doc":
+  "`fromBlocks₂₂CLM` puts its argument in the lower-right block. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.gammaRatio_le {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) :\n  2 ^ ((↑k - ↑r - 1) / 2) * Real.Gamma ((↑k + 1) / 2) / (Real.Gamma (↑r / 2) * Real.Gamma (↑k - ↑r + 1)) ≤\n    ((↑k + ↑r) / 2) ^ ((↑k - ↑r + 1) / 2) / (2 * Real.Gamma (↑k - ↑r + 1))",
   "name":
   "NLAlib.gammaRatio_le",
   "module":
   "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
   "line":
-  407,
+  397,
   "kind":
   "theorem",
   "doc":
@@ -2597,7 +2723,7 @@
   "module":
   "NLAlib.Gaussian.Basic",
   "line":
-  32,
+  39,
   "kind":
   "def",
   "doc":
@@ -2611,7 +2737,7 @@
   "module":
   "NLAlib.Gaussian.Moments",
   "line":
-  223,
+  219,
   "kind":
   "theorem",
   "doc":
@@ -2625,7 +2751,7 @@
   "module":
   "NLAlib.Gaussian.Moments",
   "line":
-  255,
+  251,
   "kind":
   "theorem",
   "doc":
@@ -2639,7 +2765,7 @@
   "module":
   "NLAlib.Gaussian.Moments",
   "line":
-  277,
+  273,
   "kind":
   "theorem",
   "doc":
@@ -2653,7 +2779,7 @@
   "module":
   "NLAlib.Gaussian.Moments",
   "line":
-  298,
+  294,
   "kind":
   "theorem",
   "doc":
@@ -2665,13 +2791,13 @@
   "name":
   "NLAlib.gaussianMatrix_eq_map_curry",
   "module":
-  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "NLAlib.Gaussian.Basic",
   "line":
-  474,
+  168,
   "kind":
   "theorem",
   "doc":
-  "The Gaussian matrix law is the image of the flat standard Gaussian product measure on\n`Fin p × Fin m → ℝ` under currying. Atlas: `gaussian-matrix-def` (helper for\n`gaussian-concentration`). Ported from Prove2me solution `GaussianMatrix.gaussian_concentration`. "},
+  "A standard Gaussian matrix is the currying of i.i.d. standard Gaussians indexed by\n`Fin p × Fin m` (the converse of `gaussianMatrix_map_uncurry`). Atlas: `gaussian-matrix-def`. "},
  {"sorry":
   false,
   "signature":
@@ -2681,7 +2807,7 @@
   "module":
   "NLAlib.Gaussian.Invariance",
   "line":
-  213,
+  236,
   "kind":
   "theorem",
   "doc":
@@ -2723,7 +2849,7 @@
   "module":
   "NLAlib.Gaussian.Invariance",
   "line":
-  182,
+  205,
   "kind":
   "theorem",
   "doc":
@@ -2737,7 +2863,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.DiagonalLaw",
   "line":
-  125,
+  128,
   "kind":
   "theorem",
   "doc":
@@ -2751,7 +2877,7 @@
   "module":
   "NLAlib.Gaussian.Invariance",
   "line":
-  129,
+  126,
   "kind":
   "theorem",
   "doc":
@@ -2765,7 +2891,7 @@
   "module":
   "NLAlib.Gaussian.Basic",
   "line":
-  129,
+  150,
   "kind":
   "theorem",
   "doc":
@@ -2779,7 +2905,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
   "line":
-  225,
+  226,
   "kind":
   "theorem",
   "doc":
@@ -2793,7 +2919,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
   "line":
-  471,
+  461,
   "kind":
   "theorem",
   "doc":
@@ -2807,7 +2933,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
   "line":
-  312,
+  313,
   "kind":
   "theorem",
   "doc":
@@ -2819,7 +2945,7 @@
   "name":
   "NLAlib.gaussianSeriesTail",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch4ScalarLaws",
+  "NLAlib.Concentration.Matrix.Defs.ScalarLaws",
   "line":
   30,
   "kind":
@@ -2835,7 +2961,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  495,
+  460,
   "kind":
   "theorem",
   "doc":
@@ -2849,7 +2975,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  431,
+  407,
   "kind":
   "theorem",
   "doc":
@@ -2863,7 +2989,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Series.GaussianMgfCgf",
   "line":
-  71,
+  66,
   "kind":
   "theorem",
   "doc":
@@ -2933,7 +3059,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.Gordon",
   "line":
-  569,
+  591,
   "kind":
   "theorem",
   "doc":
@@ -2947,7 +3073,7 @@
   "module":
   "NLAlib.Gaussian.Comparison.GordonMinimax",
   "line":
-  724,
+  725,
   "kind":
   "theorem",
   "doc":
@@ -2961,7 +3087,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  242,
+  249,
   "kind":
   "theorem",
   "doc":
@@ -2975,7 +3101,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.IntegrationByParts",
   "line":
-  77,
+  65,
   "kind":
   "theorem",
   "doc":
@@ -3015,13 +3141,13 @@
   "name":
   "NLAlib.hasGaussianLaw_id_gaussianMatrix",
   "module":
-  "NLAlib.Gaussian.Extreme.LinearForms",
+  "NLAlib.Gaussian.Basic",
   "line":
-  45,
+  191,
   "kind":
   "theorem",
   "doc":
-  "A standard Gaussian matrix has a Gaussian law (as a random element of\n`Fin p → Fin m → ℝ`). Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_hasGaussianLaw_id`). Atlas: helper of `gordon`. "},
+  "A standard Gaussian matrix has a Gaussian law (as a random element of\n`Fin p → Fin m → ℝ`). Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_hasGaussianLaw_id`). Atlas: `gaussian-matrix-def`. "},
  {"sorry":
   false,
   "signature":
@@ -3029,13 +3155,13 @@
   "name":
   "NLAlib.hasGaussianLaw_id_pi_gaussianReal",
   "module":
-  "NLAlib.Gaussian.Extreme.LinearForms",
+  "NLAlib.Gaussian.Basic",
   "line":
-  34,
+  180,
   "kind":
   "theorem",
   "doc":
-  "A vector of independent standard normals has a Gaussian law. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_hasGaussianLaw_pi`). Atlas: helper of `gordon`. "},
+  "A vector of independent standard normals has a Gaussian law. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_hasGaussianLaw_pi`). Atlas: `gaussian-matrix-def`. "},
  {"sorry":
   false,
   "signature":
@@ -3045,7 +3171,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  119,
+  53,
   "kind":
   "theorem",
   "doc":
@@ -3059,7 +3185,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Defs.Probability",
   "line":
-  39,
+  52,
   "kind":
   "def",
   "doc":
@@ -3087,7 +3213,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Bernstein.DilationVariance",
   "line":
-  120,
+  90,
   "kind":
   "theorem",
   "doc":
@@ -3101,7 +3227,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Bernstein.HermitianBernstein",
   "line":
-  181,
+  151,
   "kind":
   "theorem",
   "doc":
@@ -3115,7 +3241,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Series.HermitianSeries",
   "line":
-  229,
+  213,
   "kind":
   "theorem",
   "doc":
@@ -3129,7 +3255,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  124,
+  99,
   "kind":
   "theorem",
   "doc":
@@ -3143,7 +3269,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.SchurComplement",
   "line":
-  274,
+  222,
   "kind":
   "theorem",
   "doc":
@@ -3157,7 +3283,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.IntegrationByParts",
   "line":
-  202,
+  190,
   "kind":
   "theorem",
   "doc":
@@ -3171,7 +3297,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  368,
+  374,
   "kind":
   "theorem",
   "doc":
@@ -3213,7 +3339,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.OffDiagonal",
   "line":
-  45,
+  46,
   "kind":
   "theorem",
   "doc":
@@ -3239,9 +3365,9 @@
   "name":
   "NLAlib.integrable_and_integral_frobSq_pinvR_gaussianMatrix",
   "module":
-  "NLAlib.Gaussian.InverseMoments",
+  "NLAlib.Gaussian.InverseMoments.Mean",
   "line":
-  648,
+  225,
   "kind":
   "theorem",
   "doc":
@@ -3269,7 +3395,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.OffDiagonal",
   "line":
-  452,
+  455,
   "kind":
   "theorem",
   "doc":
@@ -3283,7 +3409,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.DiagonalLaw",
   "line":
-  229,
+  232,
   "kind":
   "theorem",
   "doc":
@@ -3297,7 +3423,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.OffDiagonal",
   "line":
-  226,
+  228,
   "kind":
   "theorem",
   "doc":
@@ -3309,9 +3435,9 @@
   "name":
   "NLAlib.integrable_and_integral_inv_self_mul_transpose_gaussianMatrix",
   "module":
-  "NLAlib.Gaussian.InverseMoments",
+  "NLAlib.Gaussian.InverseMoments.Mean",
   "line":
-  575,
+  164,
   "kind":
   "theorem",
   "doc":
@@ -3325,7 +3451,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.DiagonalLaw",
   "line":
-  149,
+  152,
   "kind":
   "theorem",
   "doc":
@@ -3337,13 +3463,13 @@
   "name":
   "NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal",
   "module":
-  "NLAlib.Gaussian.InverseMoments",
+  "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  171,
+  589,
   "kind":
   "theorem",
   "doc":
-  "**Inverse chi-square moment.** If `X` is a standard Gaussian vector indexed by a finite type\n`ι` with `d = |ι| ≥ 3`, then `1/‖X‖²` is integrable and `E[1/‖X‖²] = E[1/χ²_d] = 1/(d - 2)`.\n\nTropp–Webber 2023, Lemma B.2 (scalar step); HMT 2011, proof of Prop 10.2 / Prop A.5\n(`E[1/χ²_d] = 1/(d-2)`). Atlas: `inverse-chi-square-moment`. The source states it for\n`ι = Fin d` (see `integrable_and_integral_inv_sum_sq_gaussianReal_fin`). Proof ported from the\nProve2me solution `Sol_GaussianMatrix_inv_chi_square_moment` (Laplace-transform representation\nof `1/S`). "},
+  "**Inverse chi-square moment.** If `X` is a standard Gaussian vector indexed by a finite type\n`ι` with `d = |ι| ≥ 3`, then `1/‖X‖²` is integrable and `E[1/‖X‖²] = E[1/χ²_d] = 1/(d - 2)`.\n\nTropp–Webber 2023, Lemma B.2 (scalar step); HMT 2011, proof of Prop 10.2 / Prop A.5\n(`E[1/χ²_d] = 1/(d-2)`). Atlas: `inverse-chi-square-moment`. The source states it for\n`ι = Fin d` (see `integrable_and_integral_inv_sum_sq_gaussianReal_fin`). Proof ported from the\nProve2me solution `Sol_GaussianMatrix_inv_chi_square_moment` (Laplace-transform representation\nof `1/S`); moved here from `NLAlib.Gaussian.InverseMoments`. "},
  {"sorry":
   false,
   "signature":
@@ -3351,9 +3477,9 @@
   "name":
   "NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal_fin",
   "module":
-  "NLAlib.Gaussian.InverseMoments",
+  "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  199,
+  617,
   "kind":
   "theorem",
   "doc":
@@ -3367,7 +3493,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  478,
+  479,
   "kind":
   "theorem",
   "doc":
@@ -3395,7 +3521,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  304,
+  305,
   "kind":
   "theorem",
   "doc":
@@ -3409,7 +3535,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  457,
+  458,
   "kind":
   "theorem",
   "doc":
@@ -3465,7 +3591,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.SpectralSecondMoment",
   "line":
-  648,
+  661,
   "kind":
   "theorem",
   "doc":
@@ -3491,9 +3617,9 @@
   "name":
   "NLAlib.integrable_comp_of_abs_le_sum_abs",
   "module":
-  "NLAlib.Gaussian.Comparison.Interpolation",
+  "NLAlib.ForMathlib.MeasureTheory.Integral",
   "line":
-  101,
+  149,
   "kind":
   "theorem",
   "doc":
@@ -3505,9 +3631,9 @@
   "name":
   "NLAlib.integrable_comp_update_pi",
   "module":
-  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "NLAlib.ForMathlib.MeasureTheory.Integral",
   "line":
-  126,
+  72,
   "kind":
   "theorem",
   "doc":
@@ -3519,13 +3645,13 @@
   "name":
   "NLAlib.integrable_const_mul_gaussianMatrix_entry_mul",
   "module":
-  "NLAlib.Gaussian.Extreme.LinearForms",
+  "NLAlib.Gaussian.Basic",
   "line":
-  94,
+  91,
   "kind":
   "theorem",
   "doc":
-  "`k Gᵢⱼ Gₖₗ` is integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integrable_coord_mul`). Atlas: helper of `gordon`. "},
+  "`k Gᵢⱼ Gₖₗ` is integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper`\n(helper `gu_integrable_coord_mul`). Atlas: `gaussian-matrix-def`. "},
  {"sorry":
   false,
   "signature":
@@ -3549,7 +3675,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  94,
+  70,
   "kind":
   "theorem",
   "doc":
@@ -3563,7 +3689,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  119,
+  95,
   "kind":
   "theorem",
   "doc":
@@ -3577,7 +3703,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  108,
+  84,
   "kind":
   "theorem",
   "doc":
@@ -3605,7 +3731,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  284,
+  259,
   "kind":
   "theorem",
   "doc":
@@ -3619,7 +3745,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  150,
+  125,
   "kind":
   "theorem",
   "doc":
@@ -3633,7 +3759,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  234,
+  209,
   "kind":
   "theorem",
   "doc":
@@ -3647,7 +3773,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  142,
+  118,
   "kind":
   "theorem",
   "doc":
@@ -3687,9 +3813,9 @@
   "name":
   "NLAlib.integrable_integral_update_pi",
   "module":
-  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "NLAlib.ForMathlib.MeasureTheory.Integral",
   "line":
-  157,
+  103,
   "kind":
   "theorem",
   "doc":
@@ -3717,7 +3843,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  131,
+  65,
   "kind":
   "theorem",
   "doc":
@@ -3841,13 +3967,13 @@
   "name":
   "NLAlib.integral_comp_gaussianMatrix_entry_eq",
   "module":
-  "NLAlib.Gaussian.Extreme.LinearForms",
+  "NLAlib.Gaussian.Basic",
   "line":
-  68,
+  65,
   "kind":
   "theorem",
   "doc":
-  "`𝔼 f(Gᵢⱼ) = ∫ f dN(0,1)` for measurable `f`. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_integral_comp_coord`). Atlas: helper of `gordon`. "},
+  "`𝔼 f(Gᵢⱼ) = ∫ f dN(0,1)` for measurable `f`. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_integral_comp_coord`). Atlas: `gaussian-matrix-def`. "},
  {"sorry":
   false,
   "signature":
@@ -3897,9 +4023,9 @@
   "name":
   "NLAlib.integral_exp_mul_le_exp_of_entropy_le",
   "module":
-  "NLAlib.Gaussian.Concentration.Herbst",
+  "NLAlib.Concentration.Scalar.Herbst",
   "line":
-  25,
+  27,
   "kind":
   "theorem",
   "doc":
@@ -3913,7 +4039,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  47,
+  48,
   "kind":
   "theorem",
   "doc":
@@ -3927,7 +4053,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  64,
+  65,
   "kind":
   "theorem",
   "doc":
@@ -3941,7 +4067,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  260,
+  235,
   "kind":
   "theorem",
   "doc":
@@ -3955,7 +4081,7 @@
   "module":
   "NLAlib.Gaussian.Moments",
   "line":
-  96,
+  92,
   "kind":
   "theorem",
   "doc":
@@ -3983,7 +4109,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  200,
+  175,
   "kind":
   "theorem",
   "doc":
@@ -4011,7 +4137,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  302,
+  277,
   "kind":
   "theorem",
   "doc":
@@ -4025,7 +4151,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  339,
+  314,
   "kind":
   "theorem",
   "doc":
@@ -4033,17 +4159,31 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integral_fromBlocks_diag.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {Ω : Type u_3} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω) (P : Ω → Matrix m m ℂ)\n  (Q : Ω → Matrix n n ℂ) (hP : MeasureTheory.Integrable P μ) (hQ : MeasureTheory.Integrable Q μ) :\n  ∫ (ω : Ω), Matrix.fromBlocks (P ω) 0 0 (Q ω) ∂μ = Matrix.fromBlocks (∫ (ω : Ω), P ω ∂μ) 0 0 (∫ (ω : Ω), Q ω ∂μ)",
+  "name":
+  "NLAlib.integral_fromBlocks_diag",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  164,
+  "kind":
+  "theorem",
+  "doc":
+  "The Bochner integral of a random block-diagonal matrix is block diagonal with the integrated\nblocks. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integral_gaussianMatrix_entry_eq_zero {p m : ℕ} (a : Fin p) (b : Fin m) :\n  ∫ (G : Fin p → Fin m → ℝ), G a b ∂NLAlib.gaussianMatrix p m = 0",
   "name":
   "NLAlib.integral_gaussianMatrix_entry_eq_zero",
   "module":
-  "NLAlib.Gaussian.Extreme.LinearForms",
+  "NLAlib.Gaussian.Basic",
   "line":
-  77,
+  74,
   "kind":
   "theorem",
   "doc":
-  "`𝔼 Gᵢⱼ = 0`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integral_coord`). Atlas: helper of `gordon`. "},
+  "`𝔼 Gᵢⱼ = 0`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integral_coord`). Atlas: `gaussian-matrix-def`. "},
  {"sorry":
   false,
   "signature":
@@ -4053,7 +4193,7 @@
   "module":
   "NLAlib.Gaussian.Basic",
   "line":
-  78,
+  99,
   "kind":
   "theorem",
   "doc":
@@ -4065,13 +4205,13 @@
   "name":
   "NLAlib.integral_gaussianMatrix_entry_sq_eq_one",
   "module":
-  "NLAlib.Gaussian.Extreme.LinearForms",
+  "NLAlib.Gaussian.Basic",
   "line":
-  84,
+  81,
   "kind":
   "theorem",
   "doc":
-  "`𝔼 Gᵢⱼ² = 1`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integral_coord_sq`). Atlas: helper of `gordon`. "},
+  "`𝔼 Gᵢⱼ² = 1`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper\n`gu_integral_coord_sq`). Atlas: `gaussian-matrix-def`. "},
  {"sorry":
   false,
   "signature":
@@ -4093,9 +4233,9 @@
   "name":
   "NLAlib.integral_integral_update_pi",
   "module":
-  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "NLAlib.ForMathlib.MeasureTheory.Integral",
   "line":
-  134,
+  80,
   "kind":
   "theorem",
   "doc":
@@ -4109,7 +4249,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.OffDiagonal",
   "line":
-  357,
+  360,
   "kind":
   "theorem",
   "doc":
@@ -4121,9 +4261,9 @@
   "name":
   "NLAlib.integral_inv_self_mul_transpose_gaussianMatrix",
   "module":
-  "NLAlib.Gaussian.InverseMoments",
+  "NLAlib.Gaussian.InverseMoments.Mean",
   "line":
-  616,
+  209,
   "kind":
   "theorem",
   "doc":
@@ -4193,7 +4333,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  144,
+  78,
   "kind":
   "theorem",
   "doc":
@@ -4207,7 +4347,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  163,
+  97,
   "kind":
   "theorem",
   "doc":
@@ -4249,7 +4389,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.IntegrationByParts",
   "line":
-  93,
+  81,
   "kind":
   "theorem",
   "doc":
@@ -4263,7 +4403,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.IntegrationByParts",
   "line":
-  145,
+  133,
   "kind":
   "theorem",
   "doc":
@@ -4277,7 +4417,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.IntegrationByParts",
   "line":
-  220,
+  208,
   "kind":
   "theorem",
   "doc":
@@ -4289,9 +4429,9 @@
   "name":
   "NLAlib.integral_mul_le_entropy_of_integral_exp_le_one",
   "module":
-  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "NLAlib.Concentration.Scalar.EntropyTensorization",
   "line":
-  46,
+  47,
   "kind":
   "theorem",
   "doc":
@@ -4305,7 +4445,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  66,
+  67,
   "kind":
   "theorem",
   "doc":
@@ -4411,13 +4551,27 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.integral_reindex.{u_1, u_2, u_3} {ι : Type u_1} {κ : Type u_2} [Fintype ι] [Fintype κ] [DecidableEq ι]\n  [DecidableEq κ] {Ω : Type u_3} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω) (e : ι ≃ κ) (X : Ω → Matrix ι ι ℂ) :\n  ∫ (ω : Ω), (Matrix.reindex e e) (X ω) ∂μ = (Matrix.reindex e e) (∫ (ω : Ω), X ω ∂μ)",
+  "name":
+  "NLAlib.integral_reindex",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  100,
+  "kind":
+  "theorem",
+  "doc":
+  "The Bochner integral of a random square matrix commutes with reindexing. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt {N n : ℕ} :\n  ∫ (A : Fin N → Fin n → ℝ), NLAlib.specNorm (Matrix.of A) ∂NLAlib.gaussianMatrix N n ≤ √↑N + √↑n",
   "name":
   "NLAlib.integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt",
   "module":
   "NLAlib.Gaussian.Extreme.Gordon",
   "line":
-  204,
+  215,
   "kind":
   "theorem",
   "doc":
@@ -4445,7 +4599,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.SpectralSecondMoment",
   "line":
-  609,
+  622,
   "kind":
   "theorem",
   "doc":
@@ -4459,7 +4613,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  216,
+  146,
   "kind":
   "theorem",
   "doc":
@@ -4473,7 +4627,7 @@
   "module":
   "NLAlib.Gaussian.Comparison.Interpolation",
   "line":
-  84,
+  86,
   "kind":
   "theorem",
   "doc":
@@ -4527,7 +4681,7 @@
   "name":
   "NLAlib.intrinsicDimension",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic",
+  "NLAlib.Concentration.Matrix.Defs.IntrinsicDimension",
   "line":
   21,
   "kind":
@@ -4571,7 +4725,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Intrinsic.IntrinsicHermitianBernstein",
   "line":
-  132,
+  110,
   "kind":
   "theorem",
   "doc":
@@ -4585,7 +4739,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Intrinsic.IntrinsicBernstein",
   "line":
-  151,
+  80,
   "kind":
   "theorem",
   "doc":
@@ -4603,7 +4757,7 @@
   "kind":
   "theorem",
   "doc":
-  "Intrinsic-dimension matrix Bernstein expectation bound: there is an absolute constant `C` with `𝔼\n‖Z‖ ≤ C (√(v log (1 + r)) + L log (1 + r))`, where `r` is the intrinsic dimension of the variance\nproxy.\n\nTropp 2015, Cor. 7.3.2, eq. (7.3.3). Atlas: `intrinsic-dimension`. Ported from the Prove2me\nmission *An Introduction to Matrix Concentration Inequalities, Ch 7*.\n\nThe constant is existential, as in the source (\"Const\"). "},
+  "Intrinsic-dimension matrix Bernstein expectation bound: there is an absolute constant `C` with `𝔼\n‖Z‖ ≤ C (√(v log (1 + r)) + L log (1 + r))`, where `r` is the intrinsic dimension of the variance\nproxy.\n\nTropp 2015, Cor. 7.3.2, eq. (7.3.3). Atlas: `intrinsic-dimension`. Ported from the Prove2me\nmission *An Introduction to Matrix Concentration Inequalities, Ch 7*.\n\nThe constant is existential, as in the source (\"Const\"). OPEN ITEM (atlas `intrinsic-dimension`):\nthis `∃ C` is a deliberate exception to STANDARDS §3 (\"constants explicit, never `∃ C`\"); the\nexplicit constant from the proof is still to be extracted and stated. "},
  {"sorry":
   false,
   "signature":
@@ -4613,7 +4767,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Intrinsic.IntrinsicChernoff",
   "line":
-  179,
+  163,
   "kind":
   "theorem",
   "doc":
@@ -4625,9 +4779,9 @@
   "name":
   "NLAlib.inv_self_mul_transpose_apply_self",
   "module":
-  "NLAlib.Gaussian.InverseMoments",
+  "NLAlib.Gaussian.InverseMoments.Residual",
   "line":
-  214,
+  32,
   "kind":
   "theorem",
   "doc":
@@ -4641,7 +4795,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.SchurComplement",
   "line":
-  88,
+  45,
   "kind":
   "theorem",
   "doc":
@@ -4653,13 +4807,13 @@
   "name":
   "NLAlib.isGaussian_gaussianMatrix",
   "module":
-  "NLAlib.Gaussian.Extreme.LinearForms",
+  "NLAlib.Gaussian.Basic",
   "line":
-  61,
+  207,
   "kind":
   "instance",
   "doc":
-  "The law of a standard Gaussian matrix is a Gaussian measure on `Fin p → Fin m → ℝ`.\nPorted from Prove2me solution `GaussianMatrix.spectral_second_moment_bound` (instance\n`ssb_isGaussian_gm`). "},
+  "The law of a standard Gaussian matrix is a Gaussian measure on `Fin p → Fin m → ℝ`.\nPorted from Prove2me solution `GaussianMatrix.spectral_second_moment_bound` (instance\n`ssb_isGaussian_gm`). Atlas: `gaussian-matrix-def`. "},
  {"sorry":
   false,
   "signature":
@@ -4697,7 +4851,7 @@
   "module":
   "NLAlib.Gaussian.Basic",
   "line":
-  37,
+  44,
   "kind":
   "instance",
   "doc":
@@ -4711,7 +4865,7 @@
   "module":
   "NLAlib.Sketching.SubspaceEmbedding",
   "line":
-  47,
+  35,
   "kind":
   "theorem",
   "doc":
@@ -4725,7 +4879,7 @@
   "module":
   "NLAlib.Sketching.SubspaceEmbedding",
   "line":
-  79,
+  67,
   "kind":
   "theorem",
   "doc":
@@ -4739,7 +4893,7 @@
   "module":
   "NLAlib.Sketching.SubspaceEmbedding",
   "line":
-  117,
+  87,
   "kind":
   "theorem",
   "doc":
@@ -4835,7 +4989,7 @@
   "name":
   "NLAlib.jointTensorEval",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch8JointTensor",
+  "NLAlib.Concentration.Matrix.Defs.JointTensor",
   "line":
   35,
   "kind":
@@ -4849,7 +5003,7 @@
   "name":
   "NLAlib.jointTensorLeft",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch8JointTensor",
+  "NLAlib.Concentration.Matrix.Defs.JointTensor",
   "line":
   19,
   "kind":
@@ -4863,7 +5017,7 @@
   "name":
   "NLAlib.jointTensorRight",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch8JointTensor",
+  "NLAlib.Concentration.Matrix.Defs.JointTensor",
   "line":
   25,
   "kind":
@@ -4877,7 +5031,7 @@
   "name":
   "NLAlib.jointTensorVec",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch8JointTensor",
+  "NLAlib.Concentration.Matrix.Defs.JointTensor",
   "line":
   31,
   "kind":
@@ -4921,7 +5075,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  52,
+  58,
   "kind":
   "def",
   "doc":
@@ -4935,7 +5089,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  240,
+  246,
   "kind":
   "theorem",
   "doc":
@@ -4949,7 +5103,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  235,
+  241,
   "kind":
   "theorem",
   "doc":
@@ -4985,6 +5139,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.lambdaMax_reindex.{u_1, u_2} {ι : Type u_1} {κ : Type u_2} [Fintype ι] [Fintype κ] [DecidableEq ι]\n  [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) : NLAlib.lambdaMax ((Matrix.reindex e e) A) = NLAlib.lambdaMax A",
+  "name":
+  "NLAlib.lambdaMax_reindex",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  92,
+  "kind":
+  "theorem",
+  "doc":
+  "Reindexing preserves the real spectrum, hence `lambdaMax`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.lambdaMin.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (A : Matrix d d ℂ) : ℝ",
   "name":
   "NLAlib.lambdaMin",
@@ -5013,13 +5181,27 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.le_of_mem_spectrum_of_lambdaMax_le.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (A : Matrix d d ℂ)\n  (hA : A.IsHermitian) {L : ℝ} (hb : NLAlib.lambdaMax A ≤ L) (x : ℝ) : x ∈ spectrum ℝ A → x ≤ L",
+  "name":
+  "NLAlib.le_of_mem_spectrum_of_lambdaMax_le",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  59,
+  "kind":
+  "theorem",
+  "doc":
+  "For Hermitian `A` with `lambdaMax A ≤ L`, every real spectral value of `A` is at most `L`.\nTropp 2015, §2.1. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.le_sigmaMin.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [Nonempty n] (A : Matrix m n ℝ)\n  {c : ℝ} (h : ∀ (x : n → ℝ), x ⬝ᵥ x = 1 → c ≤ √(A.mulVec x ⬝ᵥ A.mulVec x)) : c ≤ NLAlib.sigmaMin A",
   "name":
   "NLAlib.le_sigmaMin",
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  128,
+  134,
   "kind":
   "theorem",
   "doc":
@@ -5047,7 +5229,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  101,
+  35,
   "kind":
   "def",
   "doc":
@@ -5061,7 +5243,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  111,
+  45,
   "kind":
   "def",
   "doc":
@@ -5075,7 +5257,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  107,
+  41,
   "kind":
   "theorem",
   "doc":
@@ -5089,7 +5271,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  157,
+  91,
   "kind":
   "theorem",
   "doc":
@@ -5103,7 +5285,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  173,
+  148,
   "kind":
   "theorem",
   "doc":
@@ -5117,7 +5299,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  162,
+  163,
   "kind":
   "theorem",
   "doc":
@@ -5131,7 +5313,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  47,
+  48,
   "kind":
   "theorem",
   "doc":
@@ -5173,7 +5355,7 @@
   "module":
   "NLAlib.Gaussian.Conditioning",
   "line":
-  114,
+  89,
   "kind":
   "theorem",
   "doc":
@@ -5187,7 +5369,7 @@
   "module":
   "NLAlib.Gaussian.Invariance",
   "line":
-  164,
+  187,
   "kind":
   "theorem",
   "doc":
@@ -5215,7 +5397,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Defs.Probability",
   "line":
-  28,
+  41,
   "kind":
   "instance",
   "doc":
@@ -5251,11 +5433,25 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.matrixExp_smul_eq_cfc.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (A : Matrix d d ℂ) (hA : A.IsHermitian)\n  (s : ℝ) : NLAlib.matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A",
+  "name":
+  "NLAlib.matrixExp_smul_eq_cfc",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "For Hermitian `A`, `matrixExp (s • A)` is the functional calculus of `x ↦ exp (s x)` at `A`.\nTropp 2015, §2.1.11. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.matrixFunction.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (f : ℝ → ℝ) (A : Matrix d d ℂ) : Matrix d d ℂ",
   "name":
   "NLAlib.matrixFunction",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch8Entropy",
+  "NLAlib.Concentration.Matrix.Defs.RelativeEntropy",
   "line":
   19,
   "kind":
@@ -5359,7 +5555,7 @@
   "kind":
   "instance",
   "doc":
-  "The Borel σ-algebra on complex matrices (for the norm topology), used to state measurability of\nrandom matrices. "},
+  "The Borel σ-algebra on complex matrices (for the norm topology), used to state measurability of\nrandom matrices.\n\nThis global instance is a deliberate exception to STANDARDS §3, which states measurability of\nmatrix-valued maps entrywise because Mathlib has no `MeasurableSpace (Matrix m n ℂ)`. The matrix\nconcentration development (ported from the Tropp 2015 Prove2me missions) treats random matrices as\n`Measurable` maps into a normed space and integrates them as Bochner integrals in the operator\nnorm; every statement in `NLAlib/Concentration/Matrix/` that mentions `Measurable`, `iIndepFun` or\n`Integrable` for a matrix-valued map elaborates through this instance, so removing it would mean\nrestating the whole development. Mathlib declares no competing instance (`Matrix` is a\nnon-reducible `def`, so the product σ-algebra on `m → n → ℂ` is not found), hence no diamond. It\ncould be made `scoped`: checked 2026-10-09, wrapping it in `namespace MatrixBorel` as a `scoped\ninstance` and adding `open scoped NLAlib.MatrixBorel` to the 35 modules under\n`Concentration/Matrix/` that import this one (directly or not) builds cleanly, at the price of\nevery downstream user opening the scope to state the hypotheses of the public theorems. "},
  {"sorry":
   false,
   "signature":
@@ -5367,7 +5563,7 @@
   "name":
   "NLAlib.matrixPerspective",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch8Entropy",
+  "NLAlib.Concentration.Matrix.Defs.RelativeEntropy",
   "line":
   40,
   "kind":
@@ -5411,7 +5607,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Bernstein.MatrixBernstein",
   "line":
-  117,
+  78,
   "kind":
   "theorem",
   "doc":
@@ -5425,7 +5621,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Chernoff.MatrixChernoff",
   "line":
-  136,
+  121,
   "kind":
   "theorem",
   "doc":
@@ -5439,7 +5635,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Series.MatrixSeries",
   "line":
-  143,
+  101,
   "kind":
   "theorem",
   "doc":
@@ -5453,7 +5649,7 @@
   "module":
   "NLAlib.Gaussian.Basic",
   "line":
-  156,
+  223,
   "kind":
   "theorem",
   "doc":
@@ -5461,13 +5657,13 @@
  {"sorry":
   false,
   "signature":
-  "NLAlib.measurable_frobSq_of_entries.{u_2, u_3, u_4} {γ : Type u_2} {ι : Type u_3} {κ : Type u_4} [MeasurableSpace γ]\n  [Fintype ι] [Fintype κ] {f : γ → Matrix ι κ ℝ} (hf : ∀ (i : ι) (j : κ), Measurable fun z => f z i j) :\n  Measurable fun z => NLAlib.frobSq (f z)",
+  "NLAlib.measurable_frobSq_of_entries.{u_1, u_2, u_3} {γ : Type u_1} [MeasurableSpace γ] {ι : Type u_2} {κ : Type u_3}\n  [Fintype ι] [Fintype κ] {f : γ → Matrix ι κ ℝ} (hf : ∀ (i : ι) (j : κ), Measurable fun z => f z i j) :\n  Measurable fun z => NLAlib.frobSq (f z)",
   "name":
   "NLAlib.measurable_frobSq_of_entries",
   "module":
-  "NLAlib.Gaussian.Conditioning",
+  "NLAlib.Matrix.Measurable",
   "line":
-  87,
+  81,
   "kind":
   "theorem",
   "doc":
@@ -5481,7 +5677,7 @@
   "module":
   "NLAlib.Matrix.Measurable",
   "line":
-  60,
+  66,
   "kind":
   "theorem",
   "doc":
@@ -5503,17 +5699,17 @@
  {"sorry":
   false,
   "signature":
-  "NLAlib.measurable_inv_self_mul_transpose_apply {r k : ℕ} (i j : Fin r) :\n  Measurable fun G => (Matrix.of G * (Matrix.of G).transpose)⁻¹ i j",
+  "NLAlib.measurable_inv_self_mul_transpose_apply.{u_2, u_3} {r : Type u_2} {k : Type u_3} [Fintype r] [Fintype k]\n  [DecidableEq r] (i j : r) : Measurable fun G => (Matrix.of G * (Matrix.of G).transpose)⁻¹ i j",
   "name":
   "NLAlib.measurable_inv_self_mul_transpose_apply",
   "module":
-  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "NLAlib.Matrix.Measurable",
   "line":
-  41,
+  109,
   "kind":
   "theorem",
   "doc":
-  "The entries of `(G Gᵀ)⁻¹` are measurable functions of `G` (with Mathlib's convention\n`A⁻¹ = 0` for singular `A`).\n\nHelper for the inverse-Wishart moment computations (Tropp–Webber 2023, App. B). Atlas:\n`inverse-wishart-mean` (helper). Ported from the Prove2me solutions of the inverse Wishart\nseries (`iwd_measurable_inv_entry`). "},
+  "The entries of `(G Gᵀ)⁻¹` are measurable functions of `G` (with Mathlib's convention\n`A⁻¹ = 0` for singular `A`).\n\nHelper for the inverse-Wishart moment computations (Tropp–Webber 2023, App. B). Atlas:\n`inverse-wishart-mean` (helper). Generalised from `Fin r × Fin k` to finite index types. Ported\nfrom the Prove2me solutions of the inverse Wishart series (`iwd_measurable_inv_entry`). "},
  {"sorry":
   false,
   "signature":
@@ -5523,7 +5719,7 @@
   "module":
   "NLAlib.Matrix.Measurable",
   "line":
-  32,
+  38,
   "kind":
   "theorem",
   "doc":
@@ -5537,7 +5733,7 @@
   "module":
   "NLAlib.Matrix.Measurable",
   "line":
-  41,
+  47,
   "kind":
   "theorem",
   "doc":
@@ -5545,45 +5741,45 @@
  {"sorry":
   false,
   "signature":
-  "NLAlib.measurable_pinvR_entry {k t : ℕ} (i : Fin t) (j : Fin k) : Measurable fun G => NLAlib.pinvR (Matrix.of G) i j",
+  "NLAlib.measurable_pinvR_entry.{u_2, u_3} {k : Type u_2} {t : Type u_3} [Fintype k] [Fintype t] [DecidableEq k] (i : t)\n  (j : k) : Measurable fun G => NLAlib.pinvR (Matrix.of G) i j",
   "name":
   "NLAlib.measurable_pinvR_entry",
   "module":
-  "NLAlib.Gaussian.Conditioning",
+  "NLAlib.Matrix.Measurable",
   "line":
-  96,
+  92,
   "kind":
   "theorem",
   "doc":
-  "Every entry of `G ↦ pinvR G` (on the array view) is measurable. Atlas\n`gaussian-conditioning` (helper). "},
+  "Every entry of `G ↦ pinvR G` (on the array view) is measurable. Atlas\n`gaussian-conditioning` (helper). Generalised from `Fin k × Fin t` to finite index types. "},
  {"sorry":
   false,
   "signature":
-  "NLAlib.measurable_specNorm_inv_self_mul_transpose {r k : ℕ} :\n  Measurable fun G => NLAlib.specNorm (Matrix.of G * (Matrix.of G).transpose)⁻¹",
+  "NLAlib.measurable_specNorm_inv_self_mul_transpose.{u_2, u_3} {r : Type u_2} {k : Type u_3} [Fintype r] [Fintype k]\n  [DecidableEq r] : Measurable fun G => NLAlib.specNorm (Matrix.of G * (Matrix.of G).transpose)⁻¹",
   "name":
   "NLAlib.measurable_specNorm_inv_self_mul_transpose",
   "module":
-  "NLAlib.Gaussian.InverseMoments.SpectralNorm",
+  "NLAlib.Matrix.Measurable",
   "line":
-  226,
+  125,
   "kind":
   "theorem",
   "doc":
-  "`G ↦ ‖(G Gᵀ)⁻¹‖` is measurable on samples `G : Fin r → Fin k → ℝ`.\n\nHelper for Tropp–Webber 2023, Lemma B.4. Atlas: `inverse-wishart-spectral-moment` (helper).\nPorted from the Prove2me solution `Sol_GaussianMatrix_inverse_wishart_spectral_moment`\n(`iwsm_measurable_specNorm_inv_gram`). "},
+  "`G ↦ ‖(G Gᵀ)⁻¹‖₂` is measurable on arrays `G : r → k → ℝ`.\n\nHelper for Tropp–Webber 2023, Lemma B.4. Atlas: `inverse-wishart-spectral-moment` (helper).\nGeneralised from `Fin r × Fin k` to finite index types. Ported from the Prove2me solution\n`Sol_GaussianMatrix_inverse_wishart_spectral_moment` (`iwsm_measurable_specNorm_inv_gram`). "},
  {"sorry":
   false,
   "signature":
-  "NLAlib.measurable_specNorm_pinvR {r k : ℕ} : Measurable fun G => NLAlib.specNorm (NLAlib.pinvR (Matrix.of G))",
+  "NLAlib.measurable_specNorm_pinvR.{u_2, u_3} {r : Type u_2} {k : Type u_3} [Fintype r] [Fintype k] [DecidableEq r]\n  [DecidableEq k] : Measurable fun G => NLAlib.specNorm (NLAlib.pinvR (Matrix.of G))",
   "name":
   "NLAlib.measurable_specNorm_pinvR",
   "module":
-  "NLAlib.Gaussian.InverseMoments.SpectralNorm",
+  "NLAlib.Matrix.Measurable",
   "line":
-  242,
+  143,
   "kind":
   "theorem",
   "doc":
-  "`G ↦ ‖G†‖` is measurable on samples `G : Fin r → Fin k → ℝ`, with `G† = pinvR G`.\n\nHelper for HMT 2011, Prop A.4. Atlas: `pinv-spectral-expectation` (helper). Ported from the\nProve2me solution `Sol_GaussianMatrix_pinv_spectral_expectation`\n(`measurable_specNorm_pinvR`). "},
+  "`G ↦ ‖G†‖₂` is measurable on arrays `G : r → k → ℝ`, with `G† = pinvR G`.\n\nHelper for HMT 2011, Prop A.4. Atlas: `pinv-spectral-expectation` (helper). Generalised from\n`Fin r × Fin k` to finite index types. Ported from the Prove2me solution\n`Sol_GaussianMatrix_pinv_spectral_expectation` (`measurable_specNorm_pinvR`). "},
  {"sorry":
   false,
   "signature":
@@ -5593,7 +5789,7 @@
   "module":
   "NLAlib.Gaussian.Basic",
   "line":
-  44,
+  51,
   "kind":
   "theorem",
   "doc":
@@ -5605,9 +5801,9 @@
   "name":
   "NLAlib.measurePreserving_orthonormalBasis_repr_pi_gaussianReal",
   "module":
-  "NLAlib.Gaussian.Extreme.SmallBall",
+  "NLAlib.Gaussian.Invariance",
   "line":
-  127,
+  161,
   "kind":
   "theorem",
   "doc":
@@ -5621,7 +5817,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.SmallBall",
   "line":
-  297,
+  196,
   "kind":
   "theorem",
   "doc":
@@ -5633,9 +5829,9 @@
   "name":
   "NLAlib.measurePreserving_update_pi",
   "module":
-  "NLAlib.Gaussian.Concentration.EntropyTensorization",
+  "NLAlib.ForMathlib.MeasureTheory.Integral",
   "line":
-  88,
+  34,
   "kind":
   "theorem",
   "doc":
@@ -5649,7 +5845,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.SmallBall",
   "line":
-  258,
+  157,
   "kind":
   "theorem",
   "doc":
@@ -5691,7 +5887,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.SmallBall",
   "line":
-  414,
+  313,
   "kind":
   "theorem",
   "doc":
@@ -5719,7 +5915,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.SmallBall",
   "line":
-  151,
+  50,
   "kind":
   "theorem",
   "doc":
@@ -5733,7 +5929,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.SmallBall",
   "line":
-  367,
+  266,
   "kind":
   "theorem",
   "doc":
@@ -5761,7 +5957,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.ChiSquare",
   "line":
-  124,
+  125,
   "kind":
   "theorem",
   "doc":
@@ -5775,7 +5971,7 @@
   "module":
   "NLAlib.Gaussian.Basic",
   "line":
-  51,
+  58,
   "kind":
   "theorem",
   "doc":
@@ -5789,7 +5985,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.LinearForms",
   "line":
-  206,
+  137,
   "kind":
   "theorem",
   "doc":
@@ -5845,7 +6041,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  84,
+  90,
   "kind":
   "theorem",
   "doc":
@@ -5853,31 +6049,31 @@
  {"sorry":
   false,
   "signature":
-  "NLAlib.mulVec_dotProduct_mulVec_self.{u_5, u_6} {p : Type u_5} {q : Type u_6} [Fintype p] [Fintype q] (A : Matrix p q ℝ)\n  (x : q → ℝ) : A.mulVec x ⬝ᵥ A.mulVec x = x ⬝ᵥ (A.transpose * A).mulVec x",
+  "NLAlib.mulVec_dotProduct_mulVec_self.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ)\n  (x : n → ℝ) : A.mulVec x ⬝ᵥ A.mulVec x = x ⬝ᵥ (A.transpose * A).mulVec x",
   "name":
   "NLAlib.mulVec_dotProduct_mulVec_self",
   "module":
-  "NLAlib.Sketching.SubspaceEmbedding",
+  "NLAlib.Matrix.Norms",
   "line":
-  36,
+  250,
   "kind":
   "theorem",
   "doc":
-  "`‖Ax‖² = xᵀ (AᵀA) x`. Helper for the Gram forms of `ose-def`. "},
+  "`‖Ax‖² = xᵀ (AᵀA) x`. Helper for the Gram forms of `ose-def`; atlas `norms-frob-spec`. "},
  {"sorry":
   false,
   "signature":
-  "NLAlib.mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols.{u_2, u_3} {m : Type u_2} {d : Type u_3} [Fintype m]\n  [Fintype d] [DecidableEq d] {U : Matrix m d ℝ} (hU : NLAlib.HasOrthonormalCols U) (x : d → ℝ) :\n  U.mulVec x ⬝ᵥ U.mulVec x = x ⬝ᵥ x",
+  "NLAlib.mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols.{u_1, u_3} {m : Type u_1} {q : Type u_3} [Fintype m]\n  [Fintype q] [DecidableEq q] {U : Matrix m q ℝ} (hU : NLAlib.HasOrthonormalCols U) (x : q → ℝ) :\n  U.mulVec x ⬝ᵥ U.mulVec x = x ⬝ᵥ x",
   "name":
   "NLAlib.mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols",
   "module":
-  "NLAlib.Sketching.SubspaceEmbedding",
+  "NLAlib.Matrix.Projections",
   "line":
-  42,
+  58,
   "kind":
   "theorem",
   "doc":
-  "If `U` has orthonormal columns (`Uᵀ U = 1`) then `‖Ux‖² = ‖x‖²`. Helper for `ose-def`. "},
+  "If `U` has orthonormal columns (`Uᵀ U = 1`) then `‖Ux‖² = ‖x‖²`. Helper for `ose-def`;\natlas `projection-facts`. "},
  {"sorry":
   false,
   "signature":
@@ -5915,7 +6111,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  104,
+  105,
   "kind":
   "theorem",
   "doc":
@@ -5929,7 +6125,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  97,
+  98,
   "kind":
   "theorem",
   "doc":
@@ -5943,7 +6139,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  71,
+  72,
   "kind":
   "theorem",
   "doc":
@@ -5957,7 +6153,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  49,
+  50,
   "kind":
   "theorem",
   "doc":
@@ -5971,7 +6167,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  131,
+  132,
   "kind":
   "theorem",
   "doc":
@@ -5985,7 +6181,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  83,
+  84,
   "kind":
   "theorem",
   "doc":
@@ -5999,7 +6195,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  101,
+  108,
   "kind":
   "theorem",
   "doc":
@@ -6013,7 +6209,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  64,
+  71,
   "kind":
   "theorem",
   "doc":
@@ -6027,7 +6223,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  60,
+  67,
   "kind":
   "theorem",
   "doc":
@@ -6041,7 +6237,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  103,
+  109,
   "kind":
   "theorem",
   "doc":
@@ -6055,7 +6251,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  355,
+  361,
   "kind":
   "theorem",
   "doc":
@@ -6069,11 +6265,25 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  349,
+  355,
   "kind":
   "theorem",
   "doc":
   "`‖u‖ = √(∑ⱼ uⱼ²)` for a real Euclidean vector. Ported from Prove2me solution\n`GaussianMatrix.gordon_upper` (helper `gu_norm_eq_sqrt`). Atlas `norm-lipschitz` (helper). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.norm_reindex.{u_1, u_2} {ι : Type u_1} {κ : Type u_2} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]\n  (e : ι ≃ κ) (A : Matrix ι ι ℂ) : ‖(Matrix.reindex e e) A‖ = ‖A‖",
+  "name":
+  "NLAlib.norm_reindex",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  88,
+  "kind":
+  "theorem",
+  "doc":
+  "Reindexing preserves the ℓ₂ operator norm. "},
  {"sorry":
   false,
   "signature":
@@ -6111,7 +6321,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  71,
+  78,
   "kind":
   "theorem",
   "doc":
@@ -6125,7 +6335,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  84,
+  91,
   "kind":
   "theorem",
   "doc":
@@ -6139,7 +6349,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  381,
+  387,
   "kind":
   "theorem",
   "doc":
@@ -6193,9 +6403,9 @@
   "name":
   "NLAlib.pi_gaussianReal_map_sq_dist_rowSpace",
   "module":
-  "NLAlib.Gaussian.InverseMoments",
+  "NLAlib.Gaussian.InverseMoments.Residual",
   "line":
-  398,
+  133,
   "kind":
   "theorem",
   "doc":
@@ -6209,7 +6419,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  38,
+  39,
   "kind":
   "def",
   "doc":
@@ -6237,7 +6447,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  44,
+  45,
   "kind":
   "theorem",
   "doc":
@@ -6251,7 +6461,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  125,
+  126,
   "kind":
   "theorem",
   "doc":
@@ -6265,7 +6475,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  77,
+  78,
   "kind":
   "theorem",
   "doc":
@@ -6279,7 +6489,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  56,
+  57,
   "kind":
   "theorem",
   "doc":
@@ -6293,7 +6503,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  41,
+  42,
   "kind":
   "def",
   "doc":
@@ -6305,7 +6515,7 @@
   "name":
   "NLAlib.pinvR.congr_simp",
   "module":
-  "NLAlib.Gaussian.Conditioning",
+  "NLAlib.Gaussian.InverseMoments.FrobeniusMoments",
   "line":
   0,
   "kind":
@@ -6321,7 +6531,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  118,
+  119,
   "kind":
   "theorem",
   "doc":
@@ -6335,7 +6545,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  111,
+  112,
   "kind":
   "theorem",
   "doc":
@@ -6349,7 +6559,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  89,
+  90,
   "kind":
   "theorem",
   "doc":
@@ -6363,7 +6573,7 @@
   "module":
   "NLAlib.Matrix.Pseudoinverse",
   "line":
-  63,
+  64,
   "kind":
   "theorem",
   "doc":
@@ -6403,9 +6613,9 @@
   "name":
   "NLAlib.posSemidef_inv_self_mul_transpose",
   "module":
-  "NLAlib.Gaussian.InverseMoments.SchurComplement",
+  "NLAlib.Matrix.Gram",
   "line":
-  55,
+  46,
   "kind":
   "theorem",
   "doc":
@@ -6433,7 +6643,7 @@
   "module":
   "NLAlib.Gaussian.InverseMoments.LambdaMinTail",
   "line":
-  374,
+  364,
   "kind":
   "theorem",
   "doc":
@@ -6503,7 +6713,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Series.RademacherMgfCgf",
   "line":
-  78,
+  73,
   "kind":
   "theorem",
   "doc":
@@ -6531,7 +6741,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  160,
+  161,
   "kind":
   "def",
   "doc":
@@ -6545,7 +6755,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  207,
+  208,
   "kind":
   "theorem",
   "doc":
@@ -6559,7 +6769,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  165,
+  166,
   "kind":
   "theorem",
   "doc":
@@ -6573,7 +6783,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  200,
+  201,
   "kind":
   "theorem",
   "doc":
@@ -6587,7 +6797,7 @@
   "module":
   "NLAlib.Concentration.Matrix.Defs.Probability",
   "line":
-  31,
+  44,
   "kind":
   "def",
   "doc":
@@ -6609,11 +6819,25 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.reindexStarAlgEquiv.{u_1, u_2} {ι : Type u_1} {κ : Type u_2} [Fintype ι] [Fintype κ] [DecidableEq ι]\n  [DecidableEq κ] (e : ι ≃ κ) : Matrix ι ι ℂ ≃⋆ₐ[ℂ] Matrix κ κ ℂ",
+  "name":
+  "NLAlib.reindexStarAlgEquiv",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  82,
+  "kind":
+  "def",
+  "doc":
+  "`Matrix.reindex e e` as a `⋆`-algebra equivalence of square complex matrices over `ℂ`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.relativeEntropy.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (A H : Matrix d d ℂ) : ℝ",
   "name":
   "NLAlib.relativeEntropy",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch8Entropy",
+  "NLAlib.Concentration.Matrix.Defs.RelativeEntropy",
   "line":
   24,
   "kind":
@@ -6657,7 +6881,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  50,
+  51,
   "kind":
   "def",
   "doc":
@@ -6671,7 +6895,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  261,
+  268,
   "kind":
   "theorem",
   "doc":
@@ -6685,7 +6909,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  95,
+  102,
   "kind":
   "theorem",
   "doc":
@@ -6699,7 +6923,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  134,
+  141,
   "kind":
   "theorem",
   "doc":
@@ -6713,7 +6937,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  140,
+  147,
   "kind":
   "theorem",
   "doc":
@@ -6727,7 +6951,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  128,
+  135,
   "kind":
   "theorem",
   "doc":
@@ -6741,7 +6965,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  121,
+  128,
   "kind":
   "theorem",
   "doc":
@@ -6867,7 +7091,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  57,
+  63,
   "kind":
   "def",
   "doc":
@@ -6881,7 +7105,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  64,
+  70,
   "kind":
   "def",
   "doc":
@@ -6895,7 +7119,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  201,
+  207,
   "kind":
   "theorem",
   "doc":
@@ -6909,7 +7133,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  179,
+  185,
   "kind":
   "theorem",
   "doc":
@@ -6923,7 +7147,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  188,
+  194,
   "kind":
   "theorem",
   "doc":
@@ -6937,7 +7161,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  292,
+  298,
   "kind":
   "theorem",
   "doc":
@@ -6951,7 +7175,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  155,
+  161,
   "kind":
   "theorem",
   "doc":
@@ -6965,7 +7189,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  123,
+  129,
   "kind":
   "theorem",
   "doc":
@@ -6979,7 +7203,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  135,
+  141,
   "kind":
   "theorem",
   "doc":
@@ -6993,7 +7217,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  117,
+  123,
   "kind":
   "theorem",
   "doc":
@@ -7007,7 +7231,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  97,
+  103,
   "kind":
   "theorem",
   "doc":
@@ -7021,7 +7245,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  205,
+  211,
   "kind":
   "theorem",
   "doc":
@@ -7077,7 +7301,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  485,
+  486,
   "kind":
   "theorem",
   "doc":
@@ -7147,7 +7371,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  545,
+  546,
   "kind":
   "theorem",
   "doc":
@@ -7189,7 +7413,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  529,
+  530,
   "kind":
   "theorem",
   "doc":
@@ -7217,7 +7441,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  518,
+  519,
   "kind":
   "theorem",
   "doc":
@@ -7343,7 +7567,7 @@
   "module":
   "NLAlib.Gaussian.Comparison.Slepian",
   "line":
-  439,
+  441,
   "kind":
   "theorem",
   "doc":
@@ -7397,9 +7621,9 @@
   "name":
   "NLAlib.specNorm_inv_self_mul_transpose_eq",
   "module":
-  "NLAlib.Gaussian.InverseMoments.SpectralNorm",
+  "NLAlib.Matrix.Spectral",
   "line":
-  163,
+  673,
   "kind":
   "theorem",
   "doc":
@@ -7413,7 +7637,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  439,
+  444,
   "kind":
   "theorem",
   "doc":
@@ -7427,7 +7651,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  402,
+  407,
   "kind":
   "theorem",
   "doc":
@@ -7441,7 +7665,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  344,
+  349,
   "kind":
   "theorem",
   "doc":
@@ -7469,7 +7693,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  396,
+  401,
   "kind":
   "theorem",
   "doc":
@@ -7481,9 +7705,9 @@
   "name":
   "NLAlib.specNorm_pinvR_sq",
   "module":
-  "NLAlib.Gaussian.InverseMoments.SpectralNorm",
+  "NLAlib.Matrix.Spectral",
   "line":
-  207,
+  717,
   "kind":
   "theorem",
   "doc":
@@ -7497,7 +7721,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  452,
+  457,
   "kind":
   "theorem",
   "doc":
@@ -7511,7 +7735,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  339,
+  344,
   "kind":
   "theorem",
   "doc":
@@ -7525,7 +7749,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  414,
+  419,
   "kind":
   "theorem",
   "doc":
@@ -7553,7 +7777,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  363,
+  369,
   "kind":
   "theorem",
   "doc":
@@ -7607,9 +7831,9 @@
   "name":
   "NLAlib.sq_integral_le_integral_div_mul_integral",
   "module":
-  "NLAlib.Gaussian.Concentration.LogSobolevOneDim",
+  "NLAlib.ForMathlib.MeasureTheory.Integral",
   "line":
-  44,
+  115,
   "kind":
   "theorem",
   "doc":
@@ -7707,7 +7931,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  77,
+  83,
   "kind":
   "theorem",
   "doc":
@@ -7721,7 +7945,7 @@
   "module":
   "NLAlib.Matrix.Spectral",
   "line":
-  70,
+  76,
   "kind":
   "theorem",
   "doc":
@@ -7733,9 +7957,9 @@
   "name":
   "NLAlib.sqrt_mulVec_smul_dotProduct",
   "module":
-  "NLAlib.Gaussian.Extreme.SmallBall",
+  "NLAlib.Matrix.Spectral",
   "line":
-  50,
+  476,
   "kind":
   "theorem",
   "doc":
@@ -7749,7 +7973,7 @@
   "module":
   "NLAlib.Gaussian.Extreme.Gordon",
   "line":
-  525,
+  547,
   "kind":
   "theorem",
   "doc":
@@ -7763,7 +7987,7 @@
   "module":
   "NLAlib.Gaussian.Comparison.ExpectationNormDiff",
   "line":
-  427,
+  429,
   "kind":
   "theorem",
   "doc":
@@ -7775,9 +7999,9 @@
   "name":
   "NLAlib.sqrt_sum_sq_le_sum_abs",
   "module":
-  "NLAlib.Gaussian.Concentration.LipschitzConcentration",
+  "NLAlib.ForMathlib.Analysis.Real",
   "line":
-  37,
+  22,
   "kind":
   "theorem",
   "doc":
@@ -7805,7 +8029,7 @@
   "module":
   "NLAlib.Gaussian.Comparison.SudakovFernique",
   "line":
-  413,
+  418,
   "kind":
   "theorem",
   "doc":
@@ -7833,7 +8057,7 @@
   "module":
   "NLAlib.Gaussian.Concentration.LipschitzConcentration",
   "line":
-  173,
+  149,
   "kind":
   "theorem",
   "doc":
@@ -7847,7 +8071,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  431,
+  436,
   "kind":
   "theorem",
   "doc":
@@ -7861,7 +8085,7 @@
   "module":
   "NLAlib.Matrix.Norms",
   "line":
-  349,
+  354,
   "kind":
   "theorem",
   "doc":
@@ -7911,11 +8135,25 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.traceExp_smul_eq_sum.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (A : Matrix d d ℂ) (hA : A.IsHermitian)\n  (θ : ℝ) : NLAlib.traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i)",
+  "name":
+  "NLAlib.traceExp_smul_eq_sum",
+  "module":
+  "NLAlib.Concentration.Matrix.Defs.Calculus",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  "For Hermitian `A`, `traceExp (θ • A) = ∑ i, exp (θ λᵢ)` over the eigenvalues of `A`. Tropp\n2015, §3.1. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.traceFunction.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (φ : ℝ → ℝ) (A : Matrix d d ℂ) : ℝ",
   "name":
   "NLAlib.traceFunction",
   "module":
-  "NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic",
+  "NLAlib.Concentration.Matrix.Defs.IntrinsicDimension",
   "line":
   25,
   "kind":
@@ -7973,7 +8211,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  235,
+  242,
   "kind":
   "theorem",
   "doc":
@@ -7987,7 +8225,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  249,
+  256,
   "kind":
   "theorem",
   "doc":
@@ -8001,7 +8239,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  78,
+  85,
   "kind":
   "theorem",
   "doc":
@@ -8015,7 +8253,7 @@
   "module":
   "NLAlib.Matrix.Projections",
   "line":
-  107,
+  114,
   "kind":
   "theorem",
   "doc":
@@ -8043,7 +8281,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  216,
+  217,
   "kind":
   "theorem",
   "doc":
@@ -8057,7 +8295,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  169,
+  170,
   "kind":
   "theorem",
   "doc":
@@ -8071,7 +8309,7 @@
   "module":
   "NLAlib.Matrix.SVD",
   "line":
-  180,
+  181,
   "kind":
   "theorem",
   "doc":

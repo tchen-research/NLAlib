@@ -1,5 +1,7 @@
 import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
 import Mathlib.Probability.Independence.Integration
+import Mathlib.Probability.ProductMeasure
 import Mathlib.Probability.Moments.Variance
 import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.Data.Matrix.Mul
@@ -14,8 +16,13 @@ the Gaussian Random Matrices series and of the LRA project, so results port with
 The file holds the definition and its unfolding-level API:
 
 * `measurePreserving_gaussianMatrix_entry`, `memLp_gaussianMatrix_entry`: each entry is `N(0,1)`;
-* `integral_gaussianMatrix_entry_mul`: `E[G_ab G_cd] = δ_ac δ_bd`;
-* `gaussianMatrix_map_uncurry`: flattening gives the product measure on `Fin p × Fin m → ℝ`;
+* `integral_comp_gaussianMatrix_entry_eq`, `integral_gaussianMatrix_entry_eq_zero`,
+  `integral_gaussianMatrix_entry_sq_eq_one`, `integral_gaussianMatrix_entry_mul`:
+  `E f(G_ab) = ∫ f dN(0,1)`, `E G_ab = 0`, `E G_ab² = 1`, `E[G_ab G_cd] = δ_ac δ_bd`;
+* `gaussianMatrix_map_uncurry`, `gaussianMatrix_eq_map_curry`: flattening gives the product
+  measure on `Fin p × Fin m → ℝ`, and conversely;
+* `hasGaussianLaw_id_pi_gaussianReal`, `hasGaussianLaw_id_gaussianMatrix` and the instance
+  `isGaussian_gaussianMatrix`: the law is a Gaussian measure;
 * `aemeasurable_of_map_eq_gaussianMatrix`, `measurable_block`: measurability of a random
   variable with this law and of the block map `G ↦ Vᵀ G`.
 
@@ -55,25 +62,39 @@ theorem memLp_gaussianMatrix_entry {p m : ℕ} (a : Fin p) (b : Fin m) (q : ENNR
   (memLp_id_gaussianReal' q hq).comp_measurePreserving
     (measurePreserving_gaussianMatrix_entry a b)
 
-private lemma integral_comp_gaussianMatrix_entry {p m : ℕ} (a : Fin p) (b : Fin m)
-    (f : ℝ → ℝ) (hf : Measurable f) :
+/-- `𝔼 f(Gᵢⱼ) = ∫ f dN(0,1)` for measurable `f`. Ported from Prove2me solution
+`GaussianMatrix.gordon_upper` (helper `gu_integral_comp_coord`). Atlas: `gaussian-matrix-def`. -/
+theorem integral_comp_gaussianMatrix_entry_eq {p m : ℕ} (a : Fin p) (b : Fin m) (f : ℝ → ℝ)
+    (hf : Measurable f) :
     ∫ G, f (G a b) ∂(gaussianMatrix p m) = ∫ x, f x ∂(gaussianReal 0 1) := by
   rw [← (measurePreserving_gaussianMatrix_entry a b).map_eq, integral_map]
   · exact (measurePreserving_gaussianMatrix_entry a b).measurable.aemeasurable
   · exact hf.aestronglyMeasurable
 
-private lemma integral_gaussianMatrix_entry {p m : ℕ} (a : Fin p) (b : Fin m) :
+/-- `𝔼 Gᵢⱼ = 0`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
+`gu_integral_coord`). Atlas: `gaussian-matrix-def`. -/
+theorem integral_gaussianMatrix_entry_eq_zero {p m : ℕ} (a : Fin p) (b : Fin m) :
     ∫ G, G a b ∂(gaussianMatrix p m) = 0 := by
-  have := integral_comp_gaussianMatrix_entry a b (fun x => x) measurable_id
+  have := integral_comp_gaussianMatrix_entry_eq a b (fun x => x) measurable_id
   simpa [integral_id_gaussianReal] using this
 
-private lemma integral_gaussianMatrix_entry_sq {p m : ℕ} (a : Fin p) (b : Fin m) :
+/-- `𝔼 Gᵢⱼ² = 1`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
+`gu_integral_coord_sq`). Atlas: `gaussian-matrix-def`. -/
+theorem integral_gaussianMatrix_entry_sq_eq_one {p m : ℕ} (a : Fin p) (b : Fin m) :
     ∫ G, G a b ^ 2 ∂(gaussianMatrix p m) = 1 := by
-  rw [integral_comp_gaussianMatrix_entry a b (fun x => x ^ 2) (by fun_prop)]
+  rw [integral_comp_gaussianMatrix_entry_eq a b (fun x => x ^ 2) (by fun_prop)]
   have h := variance_eq_sub (memLp_id_gaussianReal' (μ := 0) (v := 1) 2 (by simp))
   rw [variance_id_gaussianReal] at h
   simp [integral_id_gaussianReal] at h
   exact h.symm
+
+/-- `k Gᵢⱼ Gₖₗ` is integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper`
+(helper `gu_integrable_coord_mul`). Atlas: `gaussian-matrix-def`. -/
+theorem integrable_const_mul_gaussianMatrix_entry_mul {p m : ℕ} (a c : Fin p) (b d : Fin m)
+    (k : ℝ) :
+    Integrable (fun G : Fin p → Fin m → ℝ => k * (G a b * G c d)) (gaussianMatrix p m) :=
+  ((memLp_gaussianMatrix_entry a b 2 (by simp)).integrable_mul
+    (memLp_gaussianMatrix_entry c d 2 (by simp))).const_mul k
 
 /-- Second moments of the entries of a standard Gaussian matrix:
 `E[G_ab G_cd] = δ_ac δ_bd`. Atlas: `gaussian-matrix-def` (used for
@@ -84,7 +105,7 @@ theorem integral_gaussianMatrix_entry_mul {p m : ℕ} (a c : Fin p) (b d : Fin m
   · subst hac
     by_cases hbd : b = d
     · subst hbd
-      simpa [← pow_two] using integral_gaussianMatrix_entry_sq a b
+      simpa [← pow_two] using integral_gaussianMatrix_entry_sq_eq_one a b
     · simp only [hbd, and_false, if_false]
       have hrow := measurePreserving_eval
         (fun _ : Fin p => Measure.pi fun _ : Fin m => gaussianReal (0 : ℝ) 1) a
@@ -121,7 +142,7 @@ theorem integral_gaussianMatrix_entry_mul {p m : ℕ} (a c : Fin p) (b d : Fin m
         have : Measurable (fun ω : Fin p → Fin m → ℝ => ω c d) := by fun_prop
         exact this.aestronglyMeasurable)
     simp only [Function.comp_def] at this
-    rw [this, integral_gaussianMatrix_entry]
+    rw [this, integral_gaussianMatrix_entry_eq_zero]
     simp
 
 /-! ### Flattening -/
@@ -143,6 +164,52 @@ theorem gaussianMatrix_map_uncurry (p m : ℕ) :
   rw [hpre, gaussianMatrix, Measure.pi_pi]
   simp_rw [Measure.pi_pi]
   rw [Fintype.prod_prod_type]
+
+/-- A standard Gaussian matrix is the currying of i.i.d. standard Gaussians indexed by
+`Fin p × Fin m` (the converse of `gaussianMatrix_map_uncurry`). Atlas: `gaussian-matrix-def`. -/
+theorem gaussianMatrix_eq_map_curry (p m : ℕ) :
+    gaussianMatrix p m =
+      (Measure.pi fun _ : Fin p × Fin m => gaussianReal 0 1).map
+        (MeasurableEquiv.curry (Fin p) (Fin m) ℝ) := by
+  have := Measure.infinitePi_map_curry (fun (_ : Fin p) (_ : Fin m) => gaussianReal 0 1)
+  simp only [Measure.infinitePi_eq_pi] at this
+  rw [gaussianMatrix, this]
+
+/-! ### Gaussian law -/
+
+/-- A vector of independent standard normals has a Gaussian law. Ported from Prove2me solution
+`GaussianMatrix.gordon_upper` (helper `gu_hasGaussianLaw_pi`). Atlas: `gaussian-matrix-def`. -/
+theorem hasGaussianLaw_id_pi_gaussianReal (κ : Type*) [Fintype κ] :
+    HasGaussianLaw (fun x : κ → ℝ => x) (Measure.pi fun _ : κ => gaussianReal 0 1) := by
+  have h := iIndepFun.hasGaussianLaw (P := Measure.pi fun _ : κ => gaussianReal 0 1)
+    (X := fun k (x : κ → ℝ) => x k) (fun k => ⟨by
+      have := (measurePreserving_eval (fun _ : κ => gaussianReal (0 : ℝ) 1) k).map_eq
+      rw [this]; infer_instance⟩)
+    (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
+  exact h
+
+/-- A standard Gaussian matrix has a Gaussian law (as a random element of
+`Fin p → Fin m → ℝ`). Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
+`gu_hasGaussianLaw_id`). Atlas: `gaussian-matrix-def`. -/
+theorem hasGaussianLaw_id_gaussianMatrix (p m : ℕ) :
+    HasGaussianLaw (fun G : Fin p → Fin m → ℝ => G) (gaussianMatrix p m) := by
+  have h := iIndepFun.hasGaussianLaw (P := gaussianMatrix p m)
+    (X := fun i (G : Fin p → Fin m → ℝ) => G i) (fun i => ⟨by
+      have := (measurePreserving_eval
+        (fun _ : Fin p => Measure.pi fun _ : Fin m => gaussianReal (0 : ℝ) 1) i).map_eq
+      unfold gaussianMatrix
+      rw [this]
+      have := (hasGaussianLaw_id_pi_gaussianReal (Fin m)).isGaussian_map
+      rwa [Measure.map_id'] at this⟩)
+    (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
+  exact h
+
+/-- The law of a standard Gaussian matrix is a Gaussian measure on `Fin p → Fin m → ℝ`.
+Ported from Prove2me solution `GaussianMatrix.spectral_second_moment_bound` (instance
+`ssb_isGaussian_gm`). Atlas: `gaussian-matrix-def`. -/
+instance isGaussian_gaussianMatrix (p m : ℕ) : IsGaussian (gaussianMatrix p m) := by
+  have := (hasGaussianLaw_id_gaussianMatrix p m).isGaussian_map
+  rwa [Measure.map_id'] at this
 
 /-! ### Measurability -/
 

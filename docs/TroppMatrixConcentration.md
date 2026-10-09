@@ -40,6 +40,21 @@ All declarations live in the namespace `TroppMatrixConcentration`. The main defi
 - `hermitianSecondMoment`, `rectSecondMoment` (matrix variance statistics), `cumulantSum`, and the tail expressions `bernsteinTail`, `gaussianSeriesTail`, `chernoffLowerTail`, `chernoffUpperTail`.
 - `dilation` (the Hermitian dilation of a rectangular matrix), `IsStandardGaussian`, `IsRademacher`, `intrinsicDimension`, `traceFunction`, and the Chapter 8 notions `matrixFunction`, `relativeEntropy` (matrix relative entropy), `OperatorConvexOn` (operator convexity), and `matrixPerspective`.
 
+In NLAlib these live in `NLAlib/Concentration/Matrix/Defs/` (renamed 2026-10-09 from the
+chapter-numbered files; map in `docs/renames/2026-10-09-housekeeping-H1.json`):
+
+| Module | Contents |
+|---|---|
+| `NLAlib.Concentration.Matrix.Defs.Spectral` | `spectralNorm`, `lambdaMax`, `lambdaMin`, `matrixExp`, `matrixLog`, `traceExp`, `LoewnerLE` |
+| `NLAlib.Concentration.Matrix.Defs.Dilation` | `dilation` |
+| `NLAlib.Concentration.Matrix.Defs.Probability` | Borel instance on `Matrix m n ℂ`, `rectSecondMoment`, `hermitianSecondMoment`, `cumulantSum`, `bernsteinTail` |
+| `NLAlib.Concentration.Matrix.Defs.ScalarLaws` (was `Ch4ScalarLaws`) | `IsStandardGaussian`, `IsRademacher`, `gaussianSeriesTail` |
+| `NLAlib.Concentration.Matrix.Defs.ChernoffFunctions` (was `Ch5ChernoffFunctions`) | `chernoffCgfCoefficient`, `chernoffLowerTail`, `chernoffUpperTail` |
+| `NLAlib.Concentration.Matrix.Defs.IntrinsicDimension` (was `Ch7Intrinsic`) | `intrinsicDimension`, `traceFunction` |
+| `NLAlib.Concentration.Matrix.Defs.RelativeEntropy` (was `Ch8Entropy`) | `matrixFunction`, `relativeEntropy`, `OperatorConvexOn`, `matrixPerspective` |
+| `NLAlib.Concentration.Matrix.Defs.JointTensor` (was `Ch8JointTensor`) | `jointTensorLeft`, `jointTensorRight`, `jointTensorVec`, `jointTensorEval` |
+| `NLAlib.Concentration.Matrix.Defs.Calculus` | shared lemmas: `matrixExp_smul_eq_cfc`, `traceExp_smul_eq_sum`, `abs_le_norm_of_mem_spectrum`, reindexing (`reindexStarAlgEquiv`, `norm_reindex`, `lambdaMax_reindex`, `integral_reindex`), `dilationLinearMap`, `dilation_sq`, `integral_fromBlocks_diag` |
+
 Random matrices are measurable functions into `Matrix (Fin d) (Fin d) ℂ` with the Borel σ-algebra, expectations are Bochner integrals for the operator norm, and the usual Lean conventions apply (real division by zero is zero, so the tail expressions are defined piecewise to match the source exactly in the degenerate cases).
 
 ## Results

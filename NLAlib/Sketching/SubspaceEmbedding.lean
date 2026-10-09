@@ -1,4 +1,3 @@
-import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import NLAlib.Matrix.Norms
 import NLAlib.Matrix.Projections
@@ -18,9 +17,9 @@ Facts about `NLAlib.IsSubspaceEmbedding S U ε` (Woodruff 2014 §2.1; Martinsson
   `‖(SU)ᵀ(SU) − I‖₂ ≤ ε ⇒` embedding, for orthonormal `U`.
 
 The converse of the Gram form and the singular-value form `σ(SU) ⊂ [√(1−ε), √(1+ε)]` are still
-to do. The helpers `mulVec_dotProduct_mulVec_self`,
-`mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols` and `abs_dotProduct_mulVec_le_specNorm`
-are matrix facts that belong in `NLAlib.Matrix.Norms`.
+to do. The matrix facts used here (`mulVec_dotProduct_mulVec_self`,
+`abs_dotProduct_mulVec_le_specNorm`, `mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`) are
+in `NLAlib.Matrix.Norms` and `NLAlib.Matrix.Projections`.
 
 Atlas: `ose-def`.
 -/
@@ -32,17 +31,6 @@ open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 
 variable {k m d e : Type*} [Fintype k] [Fintype m] [Fintype d] [Fintype e]
-
-/-- `‖Ax‖² = xᵀ (AᵀA) x`. Helper for the Gram forms of `ose-def`. -/
-theorem mulVec_dotProduct_mulVec_self {p q : Type*} [Fintype p] [Fintype q]
-    (A : Matrix p q ℝ) (x : q → ℝ) :
-    (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) := by
-  rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec x Aᵀ, Matrix.vecMul_transpose]
-
-/-- If `U` has orthonormal columns (`Uᵀ U = 1`) then `‖Ux‖² = ‖x‖²`. Helper for `ose-def`. -/
-theorem mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols [DecidableEq d] {U : Matrix m d ℝ}
-    (hU : HasOrthonormalCols U) (x : d → ℝ) : (U *ᵥ x) ⬝ᵥ (U *ᵥ x) = x ⬝ᵥ x := by
-  rw [mulVec_dotProduct_mulVec_self, show Uᵀ * U = 1 from hU, Matrix.one_mulVec]
 
 /-- Orthonormal form of a subspace embedding (Woodruff 2014 §2.1; Martinsson–Tropp 2020 §8.7):
 for `U` with orthonormal columns, `S` is an `ε`-subspace embedding for `range U` iff
@@ -95,24 +83,6 @@ theorem IsSubspaceEmbedding.mono {S : Matrix k m ℝ} {U : Matrix m d ℝ} {ε �
   have hn : 0 ≤ (U *ᵥ x) ⬝ᵥ (U *ᵥ x) := Finset.sum_nonneg fun i _ => mul_self_nonneg _
   obtain ⟨h₁, h₂⟩ := h x
   constructor <;> nlinarith
-
-/-- Quadratic-form bound by the spectral norm: `|xᵀ M x| ≤ ‖M‖₂ ‖x‖²`. Helper for the Gram form
-of `ose-def`. -/
-theorem abs_dotProduct_mulVec_le_specNorm [DecidableEq d] (M : Matrix d d ℝ) (x : d → ℝ) :
-    |x ⬝ᵥ (M *ᵥ x)| ≤ specNorm M * (x ⬝ᵥ x) := by
-  rw [specNorm_eq_norm]
-  have h := M.l2_opNorm_mulVec (WithLp.toLp 2 x)
-  have hx : ‖WithLp.toLp 2 x‖ ^ 2 = x ⬝ᵥ x := by
-    rw [EuclideanSpace.real_norm_sq_eq]; simp [dotProduct, sq]
-  have hcs :=
-    abs_real_inner_le_norm (WithLp.toLp 2 x) ((EuclideanSpace.equiv d ℝ).symm (M *ᵥ x))
-  have hi : inner ℝ (WithLp.toLp 2 x) ((EuclideanSpace.equiv d ℝ).symm (M *ᵥ x)) =
-      x ⬝ᵥ (M *ᵥ x) := by
-    simp [EuclideanSpace.inner_eq_star_dotProduct, dotProduct_comm]
-  rw [hi] at hcs
-  calc |x ⬝ᵥ (M *ᵥ x)| ≤ _ := hcs
-    _ ≤ ‖WithLp.toLp 2 x‖ * (‖M‖ * ‖WithLp.toLp 2 x‖) := by gcongr
-    _ = ‖M‖ * (x ⬝ᵥ x) := by rw [← hx]; ring
 
 /-- Gram form of a subspace embedding (Woodruff 2014 §2.1; Martinsson–Tropp 2020 §8.7), the
 direction used in practice: for `U` with orthonormal columns, `‖(SU)ᵀ(SU) − I‖₂ ≤ ε` implies

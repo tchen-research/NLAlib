@@ -5,6 +5,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_inverse_wishart_diag_prod_moment`).
 -/
 import NLAlib.Gaussian.InverseMoments.DiagonalLaw
+import NLAlib.Gaussian.InverseMoments.Mean
 
 /-!
 # Second moments of the inverse Wishart matrix
@@ -112,7 +113,7 @@ private lemma integrable_and_integral_coeff_sq_mul_inv_sq_dist_rowSpace_sq {n k 
   set N := (H * Hᵀ)⁻¹ with hN
   have hdet : IsUnit (H * Hᵀ).det := by
     refine isUnit_iff_ne_zero.mpr (det_ne_zero_of_rank_eq _ ?_)
-    rw [Matrix.rank_self_mul_transpose, hH]
+    rw [Matrix.rank_self_mul_transpose, hH, Fintype.card_fin]
   have hind := indepFun_mulVec_sq_dist_rowSpace H hH
   set X : (Fin k → ℝ) → (Fin n → ℝ) := fun g => H *ᵥ g with hX
   set Y : (Fin k → ℝ) → ℝ := fun g => g ⬝ᵥ g - (H *ᵥ g) ⬝ᵥ (N *ᵥ (H *ᵥ g)) with hY
@@ -183,7 +184,8 @@ private lemma integrable_and_integral_inv_self_mul_transpose_apply_succAbove_sq 
     have hdet : ((Matrix.of G0).submatrix i.succAbove id *
         ((Matrix.of G0).submatrix i.succAbove id)ᵀ).det ≠ 0 := by
       rw [hsub]
-      exact det_ne_zero_of_rank_eq _ (by rw [Matrix.rank_self_mul_transpose, hH])
+      exact det_ne_zero_of_rank_eq _
+        (by rw [Matrix.rank_self_mul_transpose, hH, Fintype.card_fin])
     have h1 := inv_self_mul_transpose_apply_self (Matrix.of G0) i hdet
     have h2 := inv_self_mul_transpose_apply_succAbove (Matrix.of G0) i a hdet
     rw [hsub, hrow] at h1 h2
@@ -278,7 +280,8 @@ private lemma planeRotation_transpose_mul {r : ℕ} (i j : Fin r) (hij : i ≠ j
   simp only [Matrix.transpose_apply]
   have hc := inv_sqrt_two_mul_self
   have hji : j ≠ i := Ne.symm hij
-  by_cases hai : a = i <;> by_cases haj : a = j <;> by_cases hbi : b = i <;> by_cases hbj : b = j <;>
+  by_cases hai : a = i <;> by_cases haj : a = j <;>
+    by_cases hbi : b = i <;> by_cases hbj : b = j <;>
     simp_all [planeRotation, Pi.single_apply, Finset.sum_add_distrib, Finset.sum_sub_distrib,
       Matrix.one_apply, mul_add, add_mul, sub_mul, mul_sub, eq_comm] <;>
     linarith

@@ -5,7 +5,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_inverse_wishart_spectral_moment`).
 -/
 import NLAlib.Gaussian.InverseMoments.LambdaMinTail
-import NLAlib.Gaussian.InverseMoments.SpectralNorm
+import NLAlib.Matrix.Measurable
 import Mathlib.Analysis.SpecialFunctions.Stirling
 import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Analysis.Real.Pi.Bounds
@@ -300,7 +300,7 @@ theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le {r k : ℕ} (hr
   have hp1 : p ≤ 1 := by rw [hp_def, div_le_one (by linarith)]; exact hsq1
   set C : ℝ := p * q ^ m with hC_def
   have hC : 0 < C := mul_pos hp0 (Real.rpow_pos_of_pos hq0 _)
-  have hmeas := measurable_specNorm_pinvR (r := r) (k := k)
+  have hmeas := measurable_specNorm_pinvR (r := Fin r) (k := Fin k)
   have hnn : 0 ≤ᵐ[gaussianMatrix r k] fun G : Fin r → Fin k → ℝ =>
       specNorm (pinvR (Matrix.of G)) :=
     Filter.Eventually.of_forall fun G => specNorm_nonneg _
@@ -370,7 +370,7 @@ theorem integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatr
   set f : (Fin r → Fin k → ℝ) → ℝ :=
     fun G => specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p with hf_def
   have hmeas : Measurable f :=
-    (measurable_specNorm_inv_self_mul_transpose (r := r) (k := k)).pow_const p
+    (measurable_specNorm_inv_self_mul_transpose (r := Fin r) (k := Fin k)).pow_const p
   have hnn : 0 ≤ᵐ[gaussianMatrix r k] f :=
     Filter.Eventually.of_forall fun G => pow_nonneg (specNorm_nonneg _) p
   set e : ℝ := ((k : ℝ) - r + 1) / 2 with he_def

@@ -160,7 +160,8 @@ theorem continuous_of_abs_sub_le_mul_frobNorm {p m : ℕ} (h : (Fin p → Fin m 
 Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_integrable_of_lip`;
 identical copies in `gordon_lower`, `gordon`, `chevet`, `spectral_second_moment`). Atlas:
 `norm-lipschitz` (integrability consequence). -/
-theorem integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm {p m : ℕ} (h : (Fin p → Fin m → ℝ) → ℝ) (L : ℝ) (hL : 0 ≤ L)
+theorem integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm {p m : ℕ}
+    (h : (Fin p → Fin m → ℝ) → ℝ) (L : ℝ) (hL : 0 ≤ L)
     (hLip : ∀ X Y, |h X - h Y| ≤ L * frobNorm (Matrix.of X - Matrix.of Y)) :
     Integrable h (gaussianMatrix p m) ∧
       Integrable (fun X => h X ^ 2) (gaussianMatrix p m) := by

@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Spectral
-import NLAlib.Gaussian.Basic
+import NLAlib.Gaussian.Invariance
 import NLAlib.Gaussian.Extreme.ChiSquare
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
@@ -27,10 +27,10 @@ The argument (Davidson–Szarek 2001, Thm II.13; Vershynin 2012, §5.2 / Rudelso
 
 and `measure_sigmaMin_le_le_gaussianMatrix` is the union bound over the columns.
 
-Helpers of general use: `measurePreserving_orthonormalBasis_repr_pi_gaussianReal` (coordinates
-of a standard Gaussian vector in an orthonormal basis are i.i.d. standard Gaussian),
-`measurePreserving_update_pi_gaussianReal` and `measurePreserving_updateCol_gaussianMatrix`
-(resampling a coordinate / a column).
+Helpers of general use: `measurePreserving_update_pi_gaussianReal` and
+`measurePreserving_updateCol_gaussianMatrix` (resampling a coordinate / a column). The
+deterministic step lives in `NLAlib.Matrix.Spectral` and the rotation invariance in coordinates,
+`measurePreserving_orthonormalBasis_repr_pi_gaussianReal`, in `NLAlib.Gaussian.Invariance`.
 
 Atlas: `smin-small-ball`. Proofs ported from the Prove2me Gaussian series (solutions
 `sMin_le_imp_dist_le`, `gaussian_dist_colspace_small_ball`, `dist_col_span_small_ball`,
@@ -45,108 +45,7 @@ open scoped Matrix RealInnerProductSpace
 
 namespace NLAlib
 
-/-! ### Deterministic step -/
-
-/-- `‖A (c • x)‖₂ = |c| ‖A x‖₂` in the `√(v ⬝ v)` form. Atlas: `smin-small-ball` (helper).
-Ported from Prove2me solution `GaussianMatrix.sMin_le_imp_dist_le`. -/
-theorem sqrt_mulVec_smul_dotProduct {m n : Type*} [Fintype m] [Fintype n] (A : Matrix m n ℝ)
-    (c : ℝ) (x : n → ℝ) :
-    Real.sqrt ((A *ᵥ (c • x)) ⬝ᵥ (A *ᵥ (c • x))) = |c| * Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x)) := by
-  rw [Matrix.mulVec_smul, dotProduct_smul, smul_dotProduct, smul_eq_mul, smul_eq_mul,
-    ← mul_assoc, Real.sqrt_mul (mul_self_nonneg c), Real.sqrt_mul_self_eq_abs]
-
-/-- For a unit vector `x`, some column `j` satisfies `inf { ‖A y‖₂ : y_j = 1 } ≤ √n ‖A x‖₂`
-(take `j` maximising `|x_j|`, so `|x_j| ≥ 1/√n`, and `y = x / x_j`). -/
-private lemma exists_iInf_sqrt_mulVec_le_of_dotProduct_self_eq_one {m n : Type*} [Fintype m]
-    [Fintype n] [Nonempty n] (A : Matrix m n ℝ) (x : n → ℝ) (hx : x ⬝ᵥ x = 1) :
-    ∃ j : n, (⨅ y : {y : n → ℝ // y j = 1}, Real.sqrt ((A *ᵥ y.1) ⬝ᵥ (A *ᵥ y.1)))
-      ≤ Real.sqrt (Fintype.card n) * Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x)) := by
-  obtain ⟨j, -, hj⟩ := Finset.exists_max_image Finset.univ (fun i => |x i|) Finset.univ_nonempty
-  refine ⟨j, ?_⟩
-  -- `1 ≤ n * x_j²`
-  have hsum : (1 : ℝ) ≤ Fintype.card n * x j ^ 2 := by
-    have h1 : x ⬝ᵥ x = ∑ i, x i ^ 2 := by simp [dotProduct, sq]
-    have h2 : ∑ i, x i ^ 2 ≤ ∑ _i : n, x j ^ 2 := by
-      refine Finset.sum_le_sum fun i _ => ?_
-      have := hj i (Finset.mem_univ _)
-      rw [← sq_abs (x i), ← sq_abs (x j)]
-      exact pow_le_pow_left₀ (abs_nonneg _) this 2
-    rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at h2
-    linarith
-  have hxj : x j ≠ 0 := by
-    intro h; rw [h] at hsum; norm_num at hsum
-  have hxa : 0 < |x j| := abs_pos.2 hxj
-  -- `1 ≤ √n |x_j|`
-  have hsq : 1 ≤ Real.sqrt (Fintype.card n) * |x j| := by
-    rw [← Real.sqrt_sq_eq_abs, ← Real.sqrt_mul (Nat.cast_nonneg _)]
-    exact Real.one_le_sqrt.2 hsum
-  set y : n → ℝ := (x j)⁻¹ • x with hy
-  have hyj : y j = 1 := by simp [hy, hxj]
-  have hbdd : BddBelow (Set.range fun y : {y : n → ℝ // y j = 1} =>
-      Real.sqrt ((A *ᵥ y.1) ⬝ᵥ (A *ᵥ y.1))) :=
-    ⟨0, by rintro _ ⟨y, rfl⟩; exact Real.sqrt_nonneg _⟩
-  refine (ciInf_le hbdd ⟨y, hyj⟩).trans ?_
-  show Real.sqrt ((A *ᵥ y) ⬝ᵥ (A *ᵥ y)) ≤ _
-  rw [hy, sqrt_mulVec_smul_dotProduct, abs_inv]
-  set F := Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x))
-  have hF : 0 ≤ F := Real.sqrt_nonneg _
-  rw [inv_mul_le_iff₀ hxa]
-  nlinarith
-
-/-- **Small `σ_min` forces a column close to the span of the others.** For `A : Matrix m n ℝ`
-with `n` nonempty, if `σ_min(A) ≤ s` then for some column `j`,
-`inf { ‖A x‖₂ : x_j = 1 } ≤ √|n| · s`; the left side is the distance from column `j` to the
-span of the other columns.
-
-Davidson–Szarek 2001, proof of Thm II.13; Rudelson–Vershynin 2008, Lemma 3.5 (the
-"invertibility via distance" step). Atlas: `smin-small-ball`. Generalised from
-`Fin N × Fin n` (with `1 ≤ n`) to arbitrary finite index types with `n` nonempty. Ported from
-Prove2me solution `GaussianMatrix.sMin_le_imp_dist_le`. -/
-theorem exists_iInf_sqrt_mulVec_le_of_sigmaMin_le {m n : Type*} [Fintype m] [Fintype n]
-    [Nonempty n] (A : Matrix m n ℝ) (s : ℝ) (hs : sigmaMin A ≤ s) :
-    ∃ j : n, (⨅ x : {x : n → ℝ // x j = 1}, Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)))
-      ≤ Real.sqrt (Fintype.card n) * s := by
-  set D : n → ℝ := fun j =>
-    ⨅ x : {x : n → ℝ // x j = 1}, Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)) with hD
-  obtain ⟨j₀, -, hj₀⟩ := Finset.exists_min_image Finset.univ D Finset.univ_nonempty
-  refine ⟨j₀, ?_⟩
-  have hn0 : 0 < Real.sqrt (Fintype.card n) :=
-    Real.sqrt_pos.2 (by exact_mod_cast Fintype.card_pos)
-  -- `D j₀ / √n ≤ σ_min(A)`
-  have hlow : D j₀ / Real.sqrt (Fintype.card n) ≤ sigmaMin A := by
-    refine le_sigmaMin A fun x hx => ?_
-    obtain ⟨j, hj⟩ := exists_iInf_sqrt_mulVec_le_of_dotProduct_self_eq_one A x hx
-    rw [div_le_iff₀ hn0]
-    calc D j₀ ≤ D j := hj₀ j (Finset.mem_univ _)
-      _ ≤ _ := by rw [mul_comm]; exact hj
-  have := (div_le_iff₀ hn0).1 (hlow.trans hs)
-  linarith
-
 /-! ### Distance from a Gaussian vector to a fixed subspace -/
-
-/-- **Rotation invariance in coordinates.** For an orthonormal basis `b` of `ℝᴺ` indexed by `ι`,
-the coordinates `(⟪b i, g⟫)ᵢ` of a standard Gaussian vector `g` are i.i.d. standard Gaussian.
-Atlas: `smin-small-ball` (helper; an instance of `gaussian-rotation-invariance`). Ported from
-Prove2me solution `GaussianMatrix.gaussian_dist_colspace_small_ball`. -/
-theorem measurePreserving_orthonormalBasis_repr_pi_gaussianReal {N : ℕ} {ι : Type*} [Fintype ι]
-    (b : OrthonormalBasis ι ℝ (EuclideanSpace ℝ (Fin N))) :
-    MeasurePreserving (fun g : Fin N → ℝ => WithLp.ofLp (b.repr (WithLp.toLp 2 g)))
-      (Measure.pi fun _ : Fin N => gaussianReal 0 1)
-      (Measure.pi fun _ : ι => gaussianReal 0 1) := by
-  have hm1 : Measurable (fun g : Fin N → ℝ => WithLp.toLp 2 g) := by fun_prop
-  have hm2 : Measurable (fun x : EuclideanSpace ℝ (Fin N) => b.repr x) :=
-    b.repr.continuous.measurable
-  have hm3 : Measurable (fun y : EuclideanSpace ℝ ι => WithLp.ofLp y) := by fun_prop
-  refine ⟨hm3.comp (hm2.comp hm1), ?_⟩
-  have h := map_pi_eq_stdGaussian (ι := Fin N)
-  have h' := map_pi_eq_stdGaussian (ι := ι)
-  have hfun : (fun g : Fin N → ℝ => WithLp.ofLp (b.repr (WithLp.toLp 2 g)))
-      = (fun y : EuclideanSpace ℝ ι => WithLp.ofLp y) ∘ ((fun x => b.repr x) ∘
-          (fun g : Fin N → ℝ => WithLp.toLp 2 g)) := rfl
-  rw [hfun, ← Measure.map_map hm3 (hm2.comp hm1), ← Measure.map_map hm2 hm1, h]
-  rw [show (fun x : EuclideanSpace ℝ (Fin N) => b.repr x) = ⇑b.repr from rfl, stdGaussian_map,
-    ← h', Measure.map_map hm3 (by fun_prop)]
-  exact Measure.map_id
 
 /-- **Small ball for the distance to a subspace.** Let `B : Matrix (Fin N) (Fin p) ℝ` have
 `rank B + d ≤ N` with `d ≥ 1`. For a standard Gaussian vector `g ∈ ℝᴺ` and `0 ≤ u ≤ d`,

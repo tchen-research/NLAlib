@@ -14,9 +14,10 @@ linear forms of a standard Gaussian matrix `G`:
 * `hasGaussianLaw_linForm_gaussianMatrix`: any finite family `(⟨a t, G⟩)ₜ` is jointly Gaussian;
 * `integral_linForm_gaussianMatrix`, `integral_linForm_sq_gaussianMatrix`: `𝔼⟨c, G⟩ = 0`,
   `𝔼⟨c, G⟩² = ∑ᵢⱼ cᵢⱼ²`;
-* entrywise facts: `hasGaussianLaw_id_gaussianMatrix` (and the instance
-  `isGaussian_gaussianMatrix`), `𝔼 Gᵢⱼ = 0`, `𝔼 Gᵢⱼ² = 1`, and
-  `𝔼 √(∑ⱼ H_{0,σ(j)}²) ≤ √k` (`integral_sqrt_sum_sq_gaussianMatrix_entry_le`).
+* `𝔼 √(∑ⱼ H_{0,σ(j)}²) ≤ √k` (`integral_sqrt_sum_sq_gaussianMatrix_entry_le`).
+
+The entrywise facts (`hasGaussianLaw_id_gaussianMatrix`, the instance
+`isGaussian_gaussianMatrix`, `𝔼 Gᵢⱼ = 0`, `𝔼 Gᵢⱼ² = 1`) live in `NLAlib.Gaussian.Basic`.
 
 Ported from the Prove2me solutions `GaussianMatrix.gordon_upper`, `GaussianMatrix.gordon_lower`
 and `GaussianMatrix.spectral_second_moment_bound` (identical helper sections, deduplicated).
@@ -30,73 +31,6 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix
 
 namespace NLAlib
-
-/-- A vector of independent standard normals has a Gaussian law. Ported from Prove2me solution
-`GaussianMatrix.gordon_upper` (helper `gu_hasGaussianLaw_pi`). Atlas: helper of `gordon`. -/
-theorem hasGaussianLaw_id_pi_gaussianReal (κ : Type*) [Fintype κ] :
-    HasGaussianLaw (fun x : κ → ℝ => x) (Measure.pi fun _ : κ => gaussianReal 0 1) := by
-  have h := iIndepFun.hasGaussianLaw (P := Measure.pi fun _ : κ => gaussianReal 0 1)
-    (X := fun k (x : κ → ℝ) => x k) (fun k => ⟨by
-      have := (measurePreserving_eval (fun _ : κ => gaussianReal (0 : ℝ) 1) k).map_eq
-      rw [this]; infer_instance⟩)
-    (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
-  exact h
-
-/-- A standard Gaussian matrix has a Gaussian law (as a random element of
-`Fin p → Fin m → ℝ`). Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
-`gu_hasGaussianLaw_id`). Atlas: helper of `gordon`. -/
-theorem hasGaussianLaw_id_gaussianMatrix (p m : ℕ) :
-    HasGaussianLaw (fun G : Fin p → Fin m → ℝ => G) (gaussianMatrix p m) := by
-  have h := iIndepFun.hasGaussianLaw (P := gaussianMatrix p m)
-    (X := fun i (G : Fin p → Fin m → ℝ) => G i) (fun i => ⟨by
-      have := (measurePreserving_eval
-        (fun _ : Fin p => Measure.pi fun _ : Fin m => gaussianReal (0 : ℝ) 1) i).map_eq
-      unfold gaussianMatrix
-      rw [this]
-      have := (hasGaussianLaw_id_pi_gaussianReal (Fin m)).isGaussian_map
-      rwa [Measure.map_id'] at this⟩)
-    (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
-  exact h
-
-/-- The law of a standard Gaussian matrix is a Gaussian measure on `Fin p → Fin m → ℝ`.
-Ported from Prove2me solution `GaussianMatrix.spectral_second_moment_bound` (instance
-`ssb_isGaussian_gm`). -/
-instance isGaussian_gaussianMatrix (p m : ℕ) : IsGaussian (gaussianMatrix p m) := by
-  have := (hasGaussianLaw_id_gaussianMatrix p m).isGaussian_map
-  rwa [Measure.map_id'] at this
-
-/-- `𝔼 f(Gᵢⱼ) = ∫ f dN(0,1)` for measurable `f`. Ported from Prove2me solution
-`GaussianMatrix.gordon_upper` (helper `gu_integral_comp_coord`). Atlas: helper of `gordon`. -/
-theorem integral_comp_gaussianMatrix_entry_eq {p m : ℕ} (a : Fin p) (b : Fin m) (f : ℝ → ℝ)
-    (hf : Measurable f) :
-    ∫ G, f (G a b) ∂(gaussianMatrix p m) = ∫ x, f x ∂(gaussianReal 0 1) := by
-  rw [← (measurePreserving_gaussianMatrix_entry a b).map_eq, integral_map]
-  · exact (measurePreserving_gaussianMatrix_entry a b).measurable.aemeasurable
-  · exact hf.aestronglyMeasurable
-
-/-- `𝔼 Gᵢⱼ = 0`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
-`gu_integral_coord`). Atlas: helper of `gordon`. -/
-theorem integral_gaussianMatrix_entry_eq_zero {p m : ℕ} (a : Fin p) (b : Fin m) :
-    ∫ G, G a b ∂(gaussianMatrix p m) = 0 := by
-  have := integral_comp_gaussianMatrix_entry_eq a b (fun x => x) measurable_id
-  simpa [integral_id_gaussianReal] using this
-
-/-- `𝔼 Gᵢⱼ² = 1`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
-`gu_integral_coord_sq`). Atlas: helper of `gordon`. -/
-theorem integral_gaussianMatrix_entry_sq_eq_one {p m : ℕ} (a : Fin p) (b : Fin m) :
-    ∫ G, G a b ^ 2 ∂(gaussianMatrix p m) = 1 := by
-  rw [integral_comp_gaussianMatrix_entry_eq a b (fun x => x ^ 2) (by fun_prop)]
-  have h := variance_eq_sub (memLp_id_gaussianReal' (μ := 0) (v := 1) 2 (by simp))
-  rw [variance_id_gaussianReal] at h
-  simp [integral_id_gaussianReal] at h
-  exact h.symm
-
-/-- `k Gᵢⱼ Gₖₗ` is integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
-`gu_integrable_coord_mul`). Atlas: helper of `gordon`. -/
-theorem integrable_const_mul_gaussianMatrix_entry_mul {p m : ℕ} (a c : Fin p) (b d : Fin m) (k : ℝ) :
-    Integrable (fun G : Fin p → Fin m → ℝ => k * (G a b * G c d)) (gaussianMatrix p m) :=
-  ((memLp_gaussianMatrix_entry a b 2 (by simp)).integrable_mul (memLp_gaussianMatrix_entry c d 2 (by simp))).const_mul k
-
 
 /-- The linear form `⟨c, G⟩ = ∑ᵢⱼ cᵢⱼ Gᵢⱼ` on arrays `Fin p → Fin m → ℝ` (the space carrying
 `gaussianMatrix p m`); equal to `frobInner (Matrix.of c) (Matrix.of G)` (`linForm_eq_frobInner`).
@@ -119,14 +53,14 @@ noncomputable def linFormCLM {ι : Type*} {p m : ℕ} (a : ι → Fin p → Fin 
 /-- A finite family of linear forms `(⟨a t, G⟩)ₜ` of a standard Gaussian matrix is jointly
 Gaussian. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
 `gu_hasGaussianLaw_lin`). Atlas: helper of `gordon`. -/
-theorem hasGaussianLaw_linForm_gaussianMatrix {ι : Type*} [Fintype ι] {p m : ℕ} (a : ι → Fin p → Fin m → ℝ) :
+theorem hasGaussianLaw_linForm_gaussianMatrix {ι : Type*} [Fintype ι] {p m : ℕ}
+    (a : ι → Fin p → Fin m → ℝ) :
     HasGaussianLaw (fun G t => linForm (a t) G) (gaussianMatrix p m) := by
   have h := (hasGaussianLaw_id_gaussianMatrix p m).map_fun (linFormCLM a)
   have e : (fun G t => linForm (a t) G) = fun G => linFormCLM a G := by
     funext G t
     simp [linFormCLM, linForm]
   rw [e]; exact h
-
 
 /-- `⟨c, G⟩` is integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
 `gu_integrable_lin`). Atlas: helper of `gordon`. -/
@@ -200,9 +134,6 @@ theorem integral_linForm_sq_gaussianMatrix {p m : ℕ} (c : Fin p → Fin m → 
     rw [integral_const_mul, integral_gaussianMatrix_entry_mul]; simp [Ne.symm hk]
   · simp
 
-
-
-
 /-- `⟨c, G⟩ ∈ L²`. Ported from Prove2me solution
 `GaussianMatrix.spectral_second_moment_bound` (helper `ssb_memLp_lin`). Atlas: helper of
 `spectral-second-moment`. -/
@@ -211,7 +142,6 @@ theorem memLp_linForm_gaussianMatrix {p m : ℕ} (c : Fin p → Fin m → ℝ) :
   unfold linForm
   exact memLp_finsetSum _ fun i _ => memLp_finsetSum _ fun j _ =>
     (memLp_gaussianMatrix_entry i j 2 (by simp)).const_mul _
-
 
 /-- `𝔼 √(∑ⱼ H_{0,σ(j)}²) ≤ √k` for `k` coordinates of a Gaussian row (Jensen). Ported from
 Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_integral_sqrt_sumsq_le`). Atlas:
@@ -240,8 +170,8 @@ theorem integral_sqrt_sum_sq_gaussianMatrix_entry_le {k m : ℕ} (σ : Fin k →
   refine integral_le_of_integral_sq_le _ _ hS hS2 _ (Real.sqrt_nonneg _) (le_of_eq ?_)
   rw [Real.sq_sqrt (Nat.cast_nonneg k)]
   simp_rw [Real.sq_sqrt (hQ0 _)]
-  rw [integral_finsetSum _ fun j _ => (memLp_gaussianMatrix_entry 0 (σ j) 2 (by simp)).integrable_sq]
+  rw [integral_finsetSum _ fun j _ =>
+    (memLp_gaussianMatrix_entry 0 (σ j) 2 (by simp)).integrable_sq]
   simp [integral_gaussianMatrix_entry_sq_eq_one]
-
 
 end NLAlib

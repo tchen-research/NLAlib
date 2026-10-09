@@ -1,4 +1,5 @@
-import NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic
+import NLAlib.Concentration.Matrix.Defs.IntrinsicDimension
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Bernstein.IndependentSumSecondMoment
 import NLAlib.Concentration.Matrix.Bernstein.BernsteinMgfCgf
 import NLAlib.Concentration.Matrix.Laplace.TraceCgfSubadditivity
@@ -38,33 +39,10 @@ private lemma traceFunction_eq_sum (φ : ℝ → ℝ)
   rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
   simp
 
-private lemma traceExp_eq_sum (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ : ℝ) :
-    traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i) := by
-  rw [traceExp, matrixExp,
-    ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))]
-  rw [← cfc_comp_const_mul θ Real.exp A (by fun_prop) hA.isSelfAdjoint, hA.cfc_eq]
-  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
-  simp
-  simp only [← Complex.ofReal_mul, ← Complex.ofReal_exp, Complex.ofReal_re]
-
 private lemma trace_re_eq_sum (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
     (Matrix.trace A).re = ∑ i, hA.eigenvalues i := by
   rw [hA.trace_eq_sum_eigenvalues]
   simp
-
-private lemma spec_le (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {L : ℝ}
-    (hb : lambdaMax A ≤ L) : ∀ x ∈ spectrum ℝ A, x ≤ L := by
-  intro x hx
-  have hfin : (spectrum ℝ A).Finite := by
-    rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
-  exact (le_csSup hfin.bddAbove hx).trans hb
-
-private lemma matrixExp_smul_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
-    matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
-  rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp
-    (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
-    ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
 
 private lemma trace_re_nonneg {A : Matrix (Fin d) (Fin d) ℂ} (hA : A.PosSemidef) :
     0 ≤ (Matrix.trace A).re :=
@@ -76,7 +54,7 @@ private lemma lambdaMax_zero [NeZero d] : lambdaMax (0 : Matrix (Fin d) (Fin d) 
 private lemma neg_posSemidef (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
     (hb : lambdaMax A ≤ 0) : (-A).PosSemidef := by
   have h1 : cfc (fun x : ℝ => x) A ≤ cfc (fun _ : ℝ => (0 : ℝ)) A :=
-    cfc_mono (fun x hx => spec_le A hA hb x hx)
+    cfc_mono (fun x hx => le_of_mem_spectrum_of_lambdaMax_le A hA hb x hx)
   rw [cfc_id' ℝ A hA.isSelfAdjoint, cfc_const_zero] at h1
   simpa using Matrix.le_iff.mp h1
 
@@ -119,11 +97,11 @@ private lemma exp_integrable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
   refine Integrable.of_bound (hEcont.comp_aestronglyMeasurable hMeas.aestronglyMeasurable)
     (Real.exp (θ * L)) ?_
   filter_upwards [hHerm, hBound] with ω hH hB
-  rw [matrixExp_smul_eq _ hH]
+  rw [matrixExp_smul_eq_cfc _ hH]
   apply norm_cfc_le (Real.exp_pos _).le
   intro x hx
   rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-  exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left (spec_le _ hH hB x hx) hθ)
+  exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left (le_of_mem_spectrum_of_lambdaMax_le _ hH hB x hx) hθ)
 
 end NLAlib
 
@@ -275,7 +253,7 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     have hψeq : ∀ᵐ ω ∂μ, traceFunction ψ (Y ω) =
         traceExp (θ • Y ω) - θ * (Matrix.trace (Y ω)).re - d := by
       filter_upwards [hYHerm] with ω hH
-      rw [traceFunction_eq_sum ψ _ hH, traceExp_eq_sum _ hH θ, trace_re_eq_sum _ hH]
+      rw [traceFunction_eq_sum ψ _ hH, traceExp_smul_eq_sum _ hH θ, trace_re_eq_sum _ hH]
       simp only [hψdef, Finset.sum_sub_distrib, Finset.mul_sum, Finset.sum_const,
         Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, mul_one]
     have hψint : Integrable (fun ω => traceFunction ψ (Y ω)) μ :=
@@ -329,7 +307,7 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
       nlinarith [this, hab]
     have hID := traceFunction_le_intrinsicDimension_mul (fun x => Real.exp (g * x) - 1) hconv (by simp) V hVpsd
     have hφeq : traceFunction (fun x => Real.exp (g * x) - 1) V = traceExp (g • V) - d := by
-      rw [traceFunction_eq_sum _ _ hVpsd.isHermitian, traceExp_eq_sum _ hVpsd.isHermitian g]
+      rw [traceFunction_eq_sum _ _ hVpsd.isHermitian, traceExp_smul_eq_sum _ hVpsd.isHermitian g]
       simp only [Finset.sum_sub_distrib, Finset.sum_const,
         Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, mul_one]
     have hnum : ∫ ω, traceFunction ψ (Y ω) ∂μ ≤ intrinsicDimension V * Real.exp (g * v) := by

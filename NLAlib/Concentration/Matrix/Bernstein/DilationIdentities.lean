@@ -1,4 +1,5 @@
 import NLAlib.Concentration.Matrix.Defs.Dilation
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 
 /-!
@@ -40,12 +41,6 @@ private lemma norm_sq_elim {m n : Type*} [Fintype m] [Fintype n] (u : m → ℂ)
 private lemma isHermitian {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) : (dilation A).IsHermitian := by
   unfold dilation
   simp [Matrix.IsHermitian, Matrix.fromBlocks_conjTranspose]
-
-private lemma sq_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
-    (dilation A) ^ 2 = Matrix.fromBlocks (A * A.conjTranspose) 0 0
-      (A.conjTranspose * A) := by
-  unfold dilation
-  simp [sq, Matrix.fromBlocks_multiply]
 
 private lemma neg_mem_spectrum {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) {r : ℝ}
     (hr : r ∈ spectrum ℝ (dilation A)) : -r ∈ spectrum ℝ (dilation A) := by
@@ -124,5 +119,5 @@ theorem NLAlib.dilation_identities {m n : ℕ} [NeZero m] [NeZero n]
       (A.conjTranspose * A) ∧
     lambdaMax (dilation A) = spectralNorm (dilation A) ∧
     spectralNorm (dilation A) = spectralNorm A :=
-  ⟨isHermitian A, sq_eq A,
+  ⟨isHermitian A, dilation_sq A,
     lambdaMax_eq A, spectralNorm_eq A⟩

@@ -1,0 +1,7 @@
+{
+  "NLAlib.Concentration.Matrix.Defs.Ch4ScalarLaws": "NLAlib.Concentration.Matrix.Defs.ScalarLaws",
+  "NLAlib.Concentration.Matrix.Defs.Ch5ChernoffFunctions": "NLAlib.Concentration.Matrix.Defs.ChernoffFunctions",
+  "NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic": "NLAlib.Concentration.Matrix.Defs.IntrinsicDimension",
+  "NLAlib.Concentration.Matrix.Defs.Ch8Entropy": "NLAlib.Concentration.Matrix.Defs.RelativeEntropy",
+  "NLAlib.Concentration.Matrix.Defs.Ch8JointTensor": "NLAlib.Concentration.Matrix.Defs.JointTensor"
+}

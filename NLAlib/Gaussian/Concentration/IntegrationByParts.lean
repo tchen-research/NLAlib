@@ -3,7 +3,7 @@ import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
 import Mathlib.Probability.Moments.Covariance
 import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.Analysis.Calculus.MeanValue
+import NLAlib.ForMathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Gaussian integration by parts
@@ -18,9 +18,9 @@ vectors:
 * `integral_mul_eq_sum_covariance_mul_integral`: `𝔼[U G(V)] = ∑ⱼ Cov(U, Vⱼ) 𝔼[∂ⱼG(V)]` for a
   jointly Gaussian `(U, V)` with `U` centred.
 
-Also the integrability facts `integrable_abs_gaussianReal`, `integrable_sq_gaussianReal` and the
-linear-growth bound `abs_le_abs_add_mul_abs_of_abs_deriv_le` used throughout
-`NLAlib.Gaussian.Concentration`.
+Also the integrability facts `integrable_abs_gaussianReal`, `integrable_sq_gaussianReal` used
+throughout `NLAlib.Gaussian.Concentration` (the linear-growth bound
+`abs_le_abs_add_mul_abs_of_abs_deriv_le` is in `NLAlib.ForMathlib.Analysis.Calculus.MeanValue`).
 
 Atlas: `gaussian-integration-by-parts`.
 -/
@@ -43,18 +43,6 @@ theorem integrable_abs_gaussianReal : Integrable (fun y : ℝ => |y|) (gaussianR
 theorem integrable_sq_gaussianReal : Integrable (fun y : ℝ => y ^ 2) (gaussianReal 0 1) := by
   have := (memLp_id_gaussianReal (μ := 0) (v := 1) 2).integrable_norm_pow (by norm_num)
   simpa using this
-
-/-- A function with derivative bounded by `C` grows at most linearly:
-`|f z| ≤ |f 0| + C |z|`. Atlas: `gaussian-integration-by-parts` (helper). Ported from Prove2me
-solution `GaussianMatrix.gaussian_ibp_one_dim`. -/
-theorem abs_le_abs_add_mul_abs_of_abs_deriv_le (f : ℝ → ℝ) (hf : Differentiable ℝ f) (C : ℝ)
-    (hdf : ∀ x, |deriv f x| ≤ C) (z : ℝ) : |f z| ≤ |f 0| + C * |z| := by
-  have := Convex.norm_image_sub_le_of_norm_deriv_le (f := f) (s := Set.univ) (C := C)
-    (fun x _ => hf x) (fun x _ => by simpa using hdf x) convex_univ (Set.mem_univ 0)
-    (Set.mem_univ z)
-  simp only [Real.norm_eq_abs, sub_zero] at this
-  have h2 := abs_sub_abs_le_abs_sub (f z) (f 0)
-  linarith
 
 private lemma integrable_gaussianReal_iff (g : ℝ → ℝ) :
     Integrable g (gaussianReal 0 1) ↔ Integrable (fun x => gaussianPDFReal 0 1 x * g x) := by

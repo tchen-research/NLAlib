@@ -152,7 +152,8 @@ theorem sq_singularValues_eq_eigenvalues₀ (A : Matrix (Fin m) (Fin n) ℝ)
     singularValues A k ^ 2 = hAA.eigenvalues₀ (Fin.cast (Fintype.card_fin n).symm k) := by
   rw [sq_singularValues_eq_eigenvalues_adjoint_comp_self, Matrix.IsHermitian.eigenvalues₀]
   apply eigenvalues_congr
-  rw [← Matrix.toEuclideanLin_conjTranspose_eq_adjoint, Matrix.conjTranspose_eq_transpose_of_trivial,
+  rw [← Matrix.toEuclideanLin_conjTranspose_eq_adjoint,
+    Matrix.conjTranspose_eq_transpose_of_trivial,
     Matrix.toEuclideanLin, Matrix.toLpLin_mul_same]
 
 /-! ### Rectangular diagonal matrices -/

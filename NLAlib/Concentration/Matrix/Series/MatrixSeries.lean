@@ -1,4 +1,5 @@
-import NLAlib.Concentration.Matrix.Defs.Ch4ScalarLaws
+import NLAlib.Concentration.Matrix.Defs.ScalarLaws
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Defs.Dilation
 import NLAlib.Concentration.Matrix.Series.HermitianSeries
 import NLAlib.Concentration.Matrix.Bernstein.DilationIdentities
@@ -24,49 +25,6 @@ open scoped Matrix.Norms.L2Operator
 namespace NLAlib
 
 open NLAlib
-
-/-- The Hermitian dilation is real-linear. -/
-private noncomputable def dilLin (m n : Type*) :
-    Matrix m n ℂ →ₗ[ℝ] Matrix (m ⊕ n) (m ⊕ n) ℂ where
-  toFun := dilation
-  map_add' X Y := by
-    simp [dilation, Matrix.fromBlocks_add, Matrix.conjTranspose_add]
-  map_smul' c X := by
-    simp [dilation, Matrix.fromBlocks_smul, Matrix.conjTranspose_smul]
-
-private lemma dilLin_apply {m n : Type*} (X : Matrix m n ℂ) : dilLin m n X = dilation X := rfl
-
-/-- Reindexing as a `⋆`-algebra equivalence over `ℂ`. -/
-private noncomputable def reindexStarC {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) :
-    Matrix ι ι ℂ ≃⋆ₐ[ℂ] Matrix κ κ ℂ :=
-  { Matrix.reindexAlgEquiv ℂ ℂ e with
-    map_star' := by intro A; rfl
-    map_smul' := by intro r A; rfl }
-
-/-- Reindexing preserves the L2 operator norm. -/
-private lemma norm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
-    ‖Matrix.reindex e e A‖ = ‖A‖ :=
-  StarAlgEquiv.norm_map (reindexStarC e) A
-
-/-- Reindexing preserves the real spectrum, hence `lambdaMax`. -/
-private lemma lambdaMax_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
-    lambdaMax (Matrix.reindex e e A) = lambdaMax A := by
-  have h := AlgEquiv.spectrum_eq (Matrix.reindexAlgEquiv ℝ ℂ e) A
-  rw [Matrix.coe_reindexAlgEquiv] at h
-  unfold lambdaMax
-  rw [h]
-
-/-- The Bochner integral commutes with reindexing. -/
-private lemma integral_reindex {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (X : Ω → Matrix ι ι ℂ) :
-    ∫ ω, Matrix.reindex e e (X ω) ∂μ = Matrix.reindex e e (∫ ω, X ω ∂μ) := by
-  let L : Matrix ι ι ℂ ≃L[ℝ] Matrix κ κ ℂ :=
-    (Matrix.reindexLinearEquiv ℝ ℂ e e).toContinuousLinearEquiv
-  exact L.integral_comp_comm X
 
 /-- Second moments of the scalar coefficients. -/
 private lemma scalar_package {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
@@ -208,8 +166,8 @@ theorem NLAlib.matrix_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     (dilation_identities (B k)).1.submatrix _
   have hY : ∀ ω, ∑ k, g k ω • A k = Matrix.reindex e e (dilation (Z ω)) := by
     intro ω
-    rw [← Matrix.coe_reindexLinearEquiv ℝ ℂ e e, ← dilLin_apply]
-    simp only [Z, map_sum, map_smul, A, dilLin_apply, Matrix.coe_reindexLinearEquiv]
+    rw [← Matrix.coe_reindexLinearEquiv ℝ ℂ e e, ← dilationLinearMap_apply]
+    simp only [Z, map_sum, map_smul, A, dilationLinearMap_apply, Matrix.coe_reindexLinearEquiv]
   have hlam : ∀ ω, lambdaMax (∑ k, g k ω • A k) = spectralNorm (Z ω) := by
     intro ω
     rw [hY ω, lambdaMax_reindex]

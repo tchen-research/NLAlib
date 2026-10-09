@@ -1,4 +1,5 @@
 import NLAlib.Concentration.Matrix.Defs.Probability
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Defs.Dilation
 import NLAlib.Concentration.Matrix.Laplace.LiebIntegralPosDef
 import NLAlib.Concentration.Matrix.Laplace.CgfExpLog
@@ -101,18 +102,6 @@ private lemma scalar_bound {L θ x : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3) (hx
 
 variable {d : ℕ}
 
-private lemma spec_le (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {L : ℝ}
-    (hb : lambdaMax A ≤ L) : ∀ x ∈ spectrum ℝ A, x ≤ L := by
-  intro x hx
-  have hfin : (spectrum ℝ A).Finite := by
-    rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
-  exact (le_csSup hfin.bddAbove hx).trans hb
-
-private lemma matrixExp_smul_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (s : ℝ) :
-    matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A := by
-  rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp (hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))),
-    ← cfc_comp_const_mul s Real.exp A (by fun_prop) hA.isSelfAdjoint]
-
 private lemma quad_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ c : ℝ) :
     1 + θ • A + c • A ^ 2 = cfc (fun x => 1 + θ * x + c * x ^ 2) A := by
   have e1 := cfc_add A (fun x => 1 + θ * x) (fun x => c * x ^ 2)
@@ -123,7 +112,7 @@ private lemma quad_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ 
 private lemma exp_le_quad (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {θ c : ℝ}
     (hb : ∀ x ∈ spectrum ℝ A, Real.exp (θ * x) ≤ 1 + θ * x + c * x ^ 2) :
     matrixExp (θ • A) ≤ 1 + θ • A + c • A ^ 2 := by
-  rw [matrixExp_smul_eq A hA θ, quad_eq A hA θ c]
+  rw [matrixExp_smul_eq_cfc A hA θ, quad_eq A hA θ c]
   exact cfc_mono hb
 
 private lemma one_add_le_exp (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) :
@@ -173,11 +162,11 @@ theorem NLAlib.bernstein_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     refine Integrable.of_bound (hEcont.comp_aestronglyMeasurable hMeas.aestronglyMeasurable)
       (Real.exp (θ * L)) ?_
     filter_upwards [hHerm, hBound] with ω hH hB
-    rw [matrixExp_smul_eq _ hH]
+    rw [matrixExp_smul_eq_cfc _ hH]
     apply norm_cfc_le (Real.exp_pos _).le
     intro x hx
     rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-    exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left (spec_le _ hH hB x hx) hθ.le)
+    exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left (le_of_mem_spectrum_of_lambdaMax_le _ hH hB x hx) hθ.le)
   have hXθ : Integrable (fun ω => θ • X ω) μ := hXint.smul θ
   have hX2c : Integrable (fun ω => c • X ω ^ 2) μ := hX2int.smul c
   have hlin : Integrable (fun ω => (1 : Matrix (Fin d) (Fin d) ℂ) + θ • X ω) μ :=
@@ -186,7 +175,7 @@ theorem NLAlib.bernstein_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     hlin.add hX2c
   have hpt : ∀ᵐ ω ∂μ, matrixExp (θ • X ω) ≤ 1 + θ • X ω + c • X ω ^ 2 := by
     filter_upwards [hHerm, hBound] with ω hH hB
-    exact exp_le_quad _ hH (fun x hx => scalar_bound hθ hθL' (spec_le _ hH hB x hx))
+    exact exp_le_quad _ hH (fun x hx => scalar_bound hθ hθL' (le_of_mem_spectrum_of_lambdaMax_le _ hH hB x hx))
   have hI1 : ∫ ω, matrixExp (θ • X ω) ∂μ ≤ 1 + c • ∫ ω, X ω ^ 2 ∂μ := by
     have h := integral_mono_ae hEint hQint hpt
     rw [integral_add hlin hX2c, integral_add (integrable_const 1) hXθ,

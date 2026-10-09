@@ -1,4 +1,5 @@
 import NLAlib.Concentration.Matrix.Defs.Probability
+import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Defs.Dilation
 import Mathlib.Analysis.Convex.Function
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
@@ -23,11 +24,6 @@ namespace NLAlib
 open Matrix
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-
-/-- The square of the dilation is block diagonal. -/
-private lemma dilation_sq (X : Matrix m n ℂ) :
-    dilation X ^ 2 = fromBlocks (X * Xᴴ) 0 0 (Xᴴ * X) := by
-  simp [dilation, sq, fromBlocks_multiply]
 
 /-- Compression by an isometry does not increase the L2 operator norm. -/
 private lemma norm_compress_le {k : Type*} [Fintype k] [DecidableEq k]
@@ -86,32 +82,6 @@ private lemma norm_fromBlocks_diag (P : Matrix m m ℂ) (Q : Matrix n n ℂ) :
       have heq : Q = (fromRows (0 : Matrix m n ℂ) (1 : Matrix n n ℂ))ᴴ * fromBlocks P 0 0 Q * (fromRows (0 : Matrix m n ℂ) (1 : Matrix n n ℂ)) := by
         ext i j; simp [mul_apply, Fintype.sum_sum_type, one_apply]
       exact (congrArg norm heq).trans_le h
-
-/-- Upper-left block inclusion as a continuous linear map. -/
-private noncomputable def incl₁ : Matrix m m ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
-  LinearMap.toContinuousLinearMap
-    { toFun := fun P => fromBlocks P 0 0 0
-      map_add' := fun P P' => by rw [fromBlocks_add]; simp
-      map_smul' := fun c P => by rw [fromBlocks_smul]; simp }
-
-/-- Lower-right block inclusion as a continuous linear map. -/
-private noncomputable def incl₂ : Matrix n n ℂ →L[ℂ] Matrix (m ⊕ n) (m ⊕ n) ℂ :=
-  LinearMap.toContinuousLinearMap
-    { toFun := fun Q => fromBlocks 0 0 0 Q
-      map_add' := fun Q Q' => by rw [fromBlocks_add]; simp
-      map_smul' := fun c Q => by rw [fromBlocks_smul]; simp }
-
-private lemma integral_fromBlocks_diag {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    (P : Ω → Matrix m m ℂ) (Q : Ω → Matrix n n ℂ) (hP : Integrable P μ) (hQ : Integrable Q μ) :
-    ∫ ω, fromBlocks (P ω) 0 0 (Q ω) ∂μ = fromBlocks (∫ ω, P ω ∂μ) 0 0 (∫ ω, Q ω ∂μ) := by
-  have hsplit : ∀ (A : Matrix m m ℂ) (B : Matrix n n ℂ),
-      fromBlocks A 0 0 B = incl₁ (n := n) A + incl₂ (m := m) B := by
-    intro A B
-    simp only [incl₁, incl₂, LinearMap.coe_toContinuousLinearMap', LinearMap.coe_mk, AddHom.coe_mk]
-    rw [fromBlocks_add]; simp
-  simp_rw [hsplit]
-  rw [integral_add ((incl₁ (n := n)).integrable_comp hP) ((incl₂ (m := m)).integrable_comp hQ),
-    ContinuousLinearMap.integral_comp_comm _ hP, ContinuousLinearMap.integral_comp_comm _ hQ]
 
 end NLAlib
 

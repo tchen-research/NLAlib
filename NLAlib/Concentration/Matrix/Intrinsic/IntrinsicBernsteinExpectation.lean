@@ -1,4 +1,4 @@
-import NLAlib.Concentration.Matrix.Defs.Ch7Intrinsic
+import NLAlib.Concentration.Matrix.Defs.IntrinsicDimension
 import NLAlib.Concentration.Matrix.Intrinsic.IntrinsicBernstein
 import Mathlib.MeasureTheory.Integral.Layercake
 import Mathlib.MeasureTheory.Integral.ExpDecay
@@ -175,7 +175,9 @@ proxy.
 Tropp 2015, Cor. 7.3.2, eq. (7.3.3). Atlas: `intrinsic-dimension`. Ported from the Prove2me
 mission *An Introduction to Matrix Concentration Inequalities, Ch 7*.
 
-The constant is existential, as in the source ("Const"). -/
+The constant is existential, as in the source ("Const"). OPEN ITEM (atlas `intrinsic-dimension`):
+this `∃ C` is a deliberate exception to STANDARDS §3 ("constants explicit, never `∃ C`"); the
+explicit constant from the proof is still to be extracted and stated. -/
 theorem NLAlib.intrinsic_matrix_bernstein_expectation :
     ∃ C : ℝ, 0 < C ∧
     ∀ {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]

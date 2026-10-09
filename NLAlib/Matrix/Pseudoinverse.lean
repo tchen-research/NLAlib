@@ -22,7 +22,8 @@ Proved here for the full-rank cases (HMT 2011 §A.2, Horn–Johnson §7.3):
 * `pinvL_transpose`, `pinvR_transpose`: `(G⁺)ᵀ = (Gᵀ)⁺`, with left and right swapped;
 * the Penrose identities `G G⁺ G = G`, `G⁺ G G⁺ = G⁺` for both `pinvL` and `pinvR`;
 * `G G⁺` (resp. `G⁺ G`) is symmetric and idempotent, i.e. an orthogonal projector;
-* `frobSq_pinvR : ‖G†‖_F² = tr (G Gᵀ)⁻¹` and its column-rank twin `frobSq_pinvL`.
+* `frobSq_pinvR : ‖G†‖_F² = tr (G Gᵀ)⁻¹` and its column-rank twin `frobSq_pinvL`;
+  `frobSq_pinvR_eq_trace_inv` is the unconditional form (both sides `0` when `G Gᵀ` is singular).
 
 Atlas: `pseudoinverse`.
 -/
@@ -159,5 +160,21 @@ theorem frobSq_pinvL [DecidableEq n] {G : Matrix m n ℝ} (h : IsUnit (Gᵀ * G)
   rw [frobInner_eq_trace, Matrix.transpose_mul, Matrix.transpose_transpose, hsymm,
     Matrix.trace_mul_comm, Matrix.mul_assoc, ← Matrix.mul_assoc Gᵀ, Matrix.mul_nonsing_inv _ hd,
     Matrix.mul_one]
+
+/-- `‖G†‖_F² = tr (G Gᵀ)⁻¹` for every real matrix `G`, with `G† = pinvR G`: the unconditional
+form of `frobSq_pinvR` (if `G Gᵀ` is singular both sides are `0`, by Mathlib's convention
+`A⁻¹ = 0`).
+
+HMT 2011 §A.2 (proof of Prop 10.1). Atlas `pseudoinverse`. Ported from the Prove2me solution
+`Sol_GaussianMatrix_pinv_frobenius_moment` (`frobSq_pinvR_eq_trace_inv`). -/
+theorem frobSq_pinvR_eq_trace_inv [DecidableEq m] (G : Matrix m n ℝ) :
+    frobSq (pinvR G) = ((G * Gᵀ)⁻¹).trace := by
+  by_cases h : IsUnit (G * Gᵀ)
+  · exact frobSq_pinvR h
+  · have h0 : (G * Gᵀ)⁻¹ = 0 :=
+      Matrix.nonsing_inv_apply_not_isUnit _ (by rwa [← Matrix.isUnit_iff_isUnit_det])
+    have hp : pinvR G = 0 := by simp [pinvR, h0]
+    rw [h0, hp, Matrix.trace_zero, frobSq_eq_sum_sq]
+    simp
 
 end NLAlib

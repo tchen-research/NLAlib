@@ -134,7 +134,8 @@ private theorem enJ_pos (k : ℕ) : 0 < enJ k := by
 private theorem enJ_rec (k : ℕ) : enJ (k + 2) = (k + 1) * enJ k := by
   rw [enJ_eq, enJ_eq]
   push_cast
-  have hG : Real.Gamma (((k : ℝ) + 2 + 1) / 2) = ((k : ℝ) + 1) / 2 * Real.Gamma (((k : ℝ) + 1) / 2) := by
+  have hG : Real.Gamma (((k : ℝ) + 2 + 1) / 2)
+      = ((k : ℝ) + 1) / 2 * Real.Gamma (((k : ℝ) + 1) / 2) := by
     rw [show ((k : ℝ) + 2 + 1) / 2 = ((k : ℝ) + 1) / 2 + 1 by ring]
     exact Real.Gamma_add_one (by positivity)
   have hp : (1 / 2 : ℝ) ^ (-((k : ℝ) + 2 + 1) / 2)
@@ -329,7 +330,8 @@ private theorem en_sqrt_mul_ge {m : ℝ} (hm : 1 ≤ m) :
   linarith
 
 /-- One step: if `0 < a ≤ √(B m)` and `a · b = m` then `b - a ≥ √(m+1) - √m`. -/
-private theorem en_step {m a b : ℝ} (hm : 1 ≤ m) (ha : 0 < a) (hab : a * b = m) (hB : a ^ 2 ≤ enB m) :
+private theorem en_step {m a b : ℝ} (hm : 1 ≤ m) (ha : 0 < a) (hab : a * b = m)
+    (hB : a ^ 2 ≤ enB m) :
     Real.sqrt (m + 1) - Real.sqrt m ≤ b - a := by
   have hm0 : 0 < m := by linarith
   have hb : b = m / a := by field_simp; linarith

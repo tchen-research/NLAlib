@@ -2,7 +2,9 @@
 Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_inverse_wishart_diag_law`, `Sol_GaussianMatrix_inverse_wishart_diag_sq_moment`).
 -/
-import NLAlib.Gaussian.InverseMoments.SchurComplement
+import NLAlib.Gaussian.InverseMoments.Residual
+import NLAlib.Gaussian.Moments
+import NLAlib.Matrix.Measurable
 import NLAlib.Gaussian.Extreme.ChiSquare
 
 /-!
@@ -68,7 +70,8 @@ private lemma inv_self_mul_transpose_insertNth_apply_self {n k : ℕ} (i : Fin (
   have hdet : ((Matrix.of G0).submatrix i.succAbove id *
       ((Matrix.of G0).submatrix i.succAbove id)ᵀ).det ≠ 0 := by
     rw [hsub]
-    exact det_ne_zero_of_rank_eq _ (by rw [Matrix.rank_self_mul_transpose, hH])
+    exact det_ne_zero_of_rank_eq _
+      (by rw [Matrix.rank_self_mul_transpose, hH, Fintype.card_fin])
   have := inv_self_mul_transpose_apply_self (Matrix.of G0) i hdet
   rw [hsub, hrow] at this
   exact this

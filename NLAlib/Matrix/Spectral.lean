@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.DotProduct
 import NLAlib.Matrix.Norms
+import NLAlib.Matrix.Pseudoinverse
 
 /-!
 # Extreme eigenvalues and singular values
@@ -28,6 +29,11 @@ real convention `inf ∅ = 0` makes all three equal to `0`.
   bound `(1 - 2ε)‖A‖₂ ≤ max_{(u,v) ∈ I} ⟨v, A u⟩` for an `ε`-net `I` of pairs of unit vectors
   (`one_sub_two_mul_mul_specNorm_le_iSup`), used by the Gaussian comparison proofs of
   `NLAlib.Gaussian.Extreme`.
+* Column distances (atlas `smin-small-ball`): if `σ_min(A) ≤ s` then some column is within
+  `√n · s` of the span of the others (`exists_iInf_sqrt_mulVec_le_of_sigmaMin_le`).
+* The inverse Gram matrix (atlas `pinv-spectral-tail`, `pseudoinverse`):
+  `‖(A Aᵀ)⁻¹‖₂ = 1 / σ_min(Aᵀ)²` (`specNorm_inv_self_mul_transpose_eq`) and
+  `‖A†‖₂² = ‖(A Aᵀ)⁻¹‖₂` (`specNorm_pinvR_sq`).
 
 The definition of `sigmaMin` and the Lipschitz proofs are ported from the Prove2me Gaussian
 series (`GaussianMatrix.sMin`, solutions `GaussianMatrix.sMin_lipschitz` and
@@ -36,7 +42,7 @@ series (`GaussianMatrix.sMin`, solutions `GaussianMatrix.sMin_lipschitz` and
 Follow-up: the identification of `sigmaMin` with `NLAlib.singularValues` (the
 `min m n`-th singular value when `n ≤ m`) is not proved here.
 
-Atlas: `norm-lipschitz`.
+Atlas: `norm-lipschitz`; helpers of `smin-small-ball`, `pinv-spectral-tail`, `pseudoinverse`.
 -/
 
 noncomputable section
@@ -368,8 +374,8 @@ open scoped RealInnerProductSpace in
 /-- The bilinear form of a matrix in coordinates: `⟨v, A u⟩ = ∑ᵢⱼ vᵢ Aᵢⱼ uⱼ`.
 Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_inner_matrix`).
 Atlas `norm-lipschitz` (helper). -/
-theorem inner_toEuclideanLin_eq_sum {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (u : EuclideanSpace ℝ (Fin n))
-    (v : EuclideanSpace ℝ (Fin N)) :
+theorem inner_toEuclideanLin_eq_sum {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ)
+    (u : EuclideanSpace ℝ (Fin n)) (v : EuclideanSpace ℝ (Fin N)) :
     ⟪v, (Matrix.toEuclideanLin.trans LinearMap.toContinuousLinearMap) A u⟫
       = ∑ i, ∑ j, v i * A i j * u j := by
   simp [PiLp.inner_apply, Matrix.toEuclideanLin, Matrix.mulVec, dotProduct]
@@ -383,8 +389,8 @@ pair in the finite set `I` (whose second components are unit vectors), then
 `(1 - 2ε)‖A‖₂ ≤ max_{(u,v) ∈ I} ⟨v, A u⟩`. Standard (Vershynin 2012, Lemma 5.4 in this form).
 Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_net_bound`).
 Atlas `norm-lipschitz` (helper of `gordon`, `spectral-second-moment`). -/
-theorem one_sub_two_mul_mul_specNorm_le_iSup {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (ε : ℝ) (hε : 0 ≤ ε)
-    (I : Finset (EuclideanSpace ℝ (Fin n) × EuclideanSpace ℝ (Fin N)))
+theorem one_sub_two_mul_mul_specNorm_le_iSup {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (ε : ℝ)
+    (hε : 0 ≤ ε) (I : Finset (EuclideanSpace ℝ (Fin n) × EuclideanSpace ℝ (Fin N)))
     (hI : ∀ t ∈ I, ‖t.2‖ = 1)
     (hcov : ∀ (u : EuclideanSpace ℝ (Fin n)) (v : EuclideanSpace ℝ (Fin N)), ‖u‖ = 1 → ‖v‖ = 1 →
       ∃ t ∈ I, ‖u - t.1‖ ≤ ε ∧ ‖v - t.2‖ ≤ ε) :
@@ -464,5 +470,269 @@ theorem one_sub_two_mul_mul_specNorm_le_iSup {N n : ℕ} (A : Matrix (Fin N) (Fi
     simp only [mul_zero]
     rw [hS]
     simp only [hA', Real.iSup_const_zero, le_refl]
+
+/-! ### Small `σ_min` and column distances -/
+
+/-- `‖A (c • x)‖₂ = |c| ‖A x‖₂` in the `√(v ⬝ v)` form. Atlas: `smin-small-ball` (helper).
+Ported from Prove2me solution `GaussianMatrix.sMin_le_imp_dist_le`. -/
+theorem sqrt_mulVec_smul_dotProduct (A : Matrix m n ℝ) (c : ℝ) (x : n → ℝ) :
+    Real.sqrt ((A *ᵥ (c • x)) ⬝ᵥ (A *ᵥ (c • x))) = |c| * Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x)) := by
+  rw [Matrix.mulVec_smul, dotProduct_smul, smul_dotProduct, smul_eq_mul, smul_eq_mul,
+    ← mul_assoc, Real.sqrt_mul (mul_self_nonneg c), Real.sqrt_mul_self_eq_abs]
+
+/-- For a unit vector `x`, some column `j` satisfies `inf { ‖A y‖₂ : y_j = 1 } ≤ √n ‖A x‖₂`
+(take `j` maximising `|x_j|`, so `|x_j| ≥ 1/√n`, and `y = x / x_j`). -/
+private lemma exists_iInf_sqrt_mulVec_le_of_dotProduct_self_eq_one [Nonempty n]
+    (A : Matrix m n ℝ) (x : n → ℝ) (hx : x ⬝ᵥ x = 1) :
+    ∃ j : n, (⨅ y : {y : n → ℝ // y j = 1}, Real.sqrt ((A *ᵥ y.1) ⬝ᵥ (A *ᵥ y.1)))
+      ≤ Real.sqrt (Fintype.card n) * Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x)) := by
+  obtain ⟨j, -, hj⟩ := Finset.exists_max_image Finset.univ (fun i => |x i|) Finset.univ_nonempty
+  refine ⟨j, ?_⟩
+  -- `1 ≤ n * x_j²`
+  have hsum : (1 : ℝ) ≤ Fintype.card n * x j ^ 2 := by
+    have h1 : x ⬝ᵥ x = ∑ i, x i ^ 2 := by simp [dotProduct, sq]
+    have h2 : ∑ i, x i ^ 2 ≤ ∑ _i : n, x j ^ 2 := by
+      refine Finset.sum_le_sum fun i _ => ?_
+      have := hj i (Finset.mem_univ _)
+      rw [← sq_abs (x i), ← sq_abs (x j)]
+      exact pow_le_pow_left₀ (abs_nonneg _) this 2
+    rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at h2
+    linarith
+  have hxj : x j ≠ 0 := by
+    intro h; rw [h] at hsum; norm_num at hsum
+  have hxa : 0 < |x j| := abs_pos.2 hxj
+  -- `1 ≤ √n |x_j|`
+  have hsq : 1 ≤ Real.sqrt (Fintype.card n) * |x j| := by
+    rw [← Real.sqrt_sq_eq_abs, ← Real.sqrt_mul (Nat.cast_nonneg _)]
+    exact Real.one_le_sqrt.2 hsum
+  set y : n → ℝ := (x j)⁻¹ • x with hy
+  have hyj : y j = 1 := by simp [hy, hxj]
+  have hbdd : BddBelow (Set.range fun y : {y : n → ℝ // y j = 1} =>
+      Real.sqrt ((A *ᵥ y.1) ⬝ᵥ (A *ᵥ y.1))) :=
+    ⟨0, by rintro _ ⟨y, rfl⟩; exact Real.sqrt_nonneg _⟩
+  refine (ciInf_le hbdd ⟨y, hyj⟩).trans ?_
+  show Real.sqrt ((A *ᵥ y) ⬝ᵥ (A *ᵥ y)) ≤ _
+  rw [hy, sqrt_mulVec_smul_dotProduct, abs_inv]
+  set F := Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x))
+  have hF : 0 ≤ F := Real.sqrt_nonneg _
+  rw [inv_mul_le_iff₀ hxa]
+  nlinarith
+
+/-- **Small `σ_min` forces a column close to the span of the others.** For `A : Matrix m n ℝ`
+with `n` nonempty, if `σ_min(A) ≤ s` then for some column `j`,
+`inf { ‖A x‖₂ : x_j = 1 } ≤ √|n| · s`; the left side is the distance from column `j` to the
+span of the other columns.
+
+Davidson–Szarek 2001, proof of Thm II.13; Rudelson–Vershynin 2008, Lemma 3.5 (the
+"invertibility via distance" step). Atlas: `smin-small-ball`. Generalised from
+`Fin N × Fin n` (with `1 ≤ n`) to arbitrary finite index types with `n` nonempty. Ported from
+Prove2me solution `GaussianMatrix.sMin_le_imp_dist_le`. -/
+theorem exists_iInf_sqrt_mulVec_le_of_sigmaMin_le [Nonempty n] (A : Matrix m n ℝ) (s : ℝ)
+    (hs : sigmaMin A ≤ s) :
+    ∃ j : n, (⨅ x : {x : n → ℝ // x j = 1}, Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)))
+      ≤ Real.sqrt (Fintype.card n) * s := by
+  set D : n → ℝ := fun j =>
+    ⨅ x : {x : n → ℝ // x j = 1}, Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)) with hD
+  obtain ⟨j₀, -, hj₀⟩ := Finset.exists_min_image Finset.univ D Finset.univ_nonempty
+  refine ⟨j₀, ?_⟩
+  have hn0 : 0 < Real.sqrt (Fintype.card n) :=
+    Real.sqrt_pos.2 (by exact_mod_cast Fintype.card_pos)
+  -- `D j₀ / √n ≤ σ_min(A)`
+  have hlow : D j₀ / Real.sqrt (Fintype.card n) ≤ sigmaMin A := by
+    refine le_sigmaMin A fun x hx => ?_
+    obtain ⟨j, hj⟩ := exists_iInf_sqrt_mulVec_le_of_dotProduct_self_eq_one A x hx
+    rw [div_le_iff₀ hn0]
+    calc D j₀ ≤ D j := hj₀ j (Finset.mem_univ _)
+      _ ≤ _ := by rw [mul_comm]; exact hj
+  have := (div_le_iff₀ hn0).1 (hlow.trans hs)
+  linarith
+
+/-! ### The inverse Gram matrix and the pseudoinverse -/
+
+section InverseGram
+
+/-- Cauchy–Schwarz for the dot product. -/
+private lemma dotProduct_le_sqrt_mul_sqrt (v w : m → ℝ) :
+    v ⬝ᵥ w ≤ Real.sqrt (v ⬝ᵥ v) * Real.sqrt (w ⬝ᵥ w) := by
+  rw [← Real.sqrt_mul (dotProduct_self_nonneg v)]
+  refine le_trans (le_abs_self _) ?_
+  rw [← Real.sqrt_sq_eq_abs]
+  refine Real.sqrt_le_sqrt ?_
+  have h := Finset.sum_mul_sq_le_sq_mul_sq Finset.univ v w
+  simpa [dotProduct, sq] using h
+
+/-- `xᵀ (A Aᵀ) x = ‖Aᵀ x‖²`. -/
+private lemma dotProduct_mul_transpose_mulVec (A : Matrix m n ℝ) (x : m → ℝ) :
+    x ⬝ᵥ ((A * Aᵀ) *ᵥ x) = (Aᵀ *ᵥ x) ⬝ᵥ (Aᵀ *ᵥ x) := by
+  rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose]
+
+/-- Homogeneous form of the definition of `σ_min`: `σ_min(B)² ‖y‖² ≤ ‖B y‖²`. -/
+private lemma sigmaMin_sq_mul_le (B : Matrix m n ℝ) (y : n → ℝ) :
+    sigmaMin B ^ 2 * (y ⬝ᵥ y) ≤ (B *ᵥ y) ⬝ᵥ (B *ᵥ y) := by
+  have h := sigmaMin_mul_sqrt_le B y
+  have h0 : 0 ≤ sigmaMin B * Real.sqrt (y ⬝ᵥ y) :=
+    mul_nonneg (sigmaMin_nonneg B) (Real.sqrt_nonneg _)
+  have h2 := pow_le_pow_left₀ h0 h 2
+  rwa [mul_pow, Real.sq_sqrt (dotProduct_self_nonneg y),
+    Real.sq_sqrt (dotProduct_self_nonneg _)] at h2
+
+variable [DecidableEq m]
+
+/-- For an invertible Gram matrix and a unit vector `x`, `‖(AAᵀ)⁻¹‖ ≥ 1 / ‖Aᵀ x‖²`. -/
+private lemma one_div_le_norm_inv_self_mul_transpose (A : Matrix m n ℝ)
+    (hM : IsUnit (A * Aᵀ).det) (x : m → ℝ) (hx : x ⬝ᵥ x = 1) :
+    0 < (Aᵀ *ᵥ x) ⬝ᵥ (Aᵀ *ᵥ x) ∧ 1 / ((Aᵀ *ᵥ x) ⬝ᵥ (Aᵀ *ᵥ x)) ≤ ‖(A * Aᵀ)⁻¹‖ := by
+  set M := A * Aᵀ with hM_def
+  set q := (Aᵀ *ᵥ x) ⬝ᵥ (Aᵀ *ᵥ x) with hq_def
+  have hMinv : M * M⁻¹ = 1 := Matrix.mul_nonsing_inv M hM
+  have hq : 0 < q := by
+    rcases (dotProduct_self_nonneg (Aᵀ *ᵥ x)).lt_or_eq with h | h
+    · exact h
+    · exfalso
+      have h0 : Aᵀ *ᵥ x = 0 := dotProduct_self_eq_zero.1 h.symm
+      have h1 : M *ᵥ x = 0 := by rw [hM_def, ← Matrix.mulVec_mulVec, h0, Matrix.mulVec_zero]
+      have h2 : x = 0 := by
+        have : M⁻¹ *ᵥ (M *ᵥ x) = x := by
+          rw [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul M hM, Matrix.one_mulVec]
+        rw [← this, h1, Matrix.mulVec_zero]
+      rw [h2, dotProduct_zero] at hx
+      exact zero_ne_one hx
+  refine ⟨hq, ?_⟩
+  set w := M⁻¹ *ᵥ x with hw_def
+  have hMw : M *ᵥ w = x := by rw [hw_def, Matrix.mulVec_mulVec, hMinv, Matrix.one_mulVec]
+  have hsym : Mᵀ = M := by rw [hM_def, Matrix.transpose_mul, Matrix.transpose_transpose]
+  have hwMx : w ⬝ᵥ (M *ᵥ x) = 1 := by
+    rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hsym, hMw, hx]
+  have hxMx : x ⬝ᵥ (M *ᵥ x) = q := dotProduct_mul_transpose_mulVec A x
+  set c := 1 / q with hc_def
+  have hpsd : 0 ≤ (w - c • x) ⬝ᵥ (M *ᵥ (w - c • x)) := by
+    rw [hM_def, dotProduct_mul_transpose_mulVec]; exact dotProduct_self_nonneg _
+  have hexp : (w - c • x) ⬝ᵥ (M *ᵥ (w - c • x)) = w ⬝ᵥ x - 1 / q := by
+    rw [Matrix.mulVec_sub, Matrix.mulVec_smul, hMw, sub_dotProduct, dotProduct_sub,
+      dotProduct_sub, dotProduct_smul, smul_dotProduct, smul_dotProduct]
+    simp only [smul_eq_mul, hwMx, hxMx, hx, dotProduct_smul]
+    rw [hc_def]
+    field_simp
+    ring
+  have hwx : 1 / q ≤ w ⬝ᵥ x := by linarith
+  have hCS : w ⬝ᵥ x ≤ Real.sqrt (w ⬝ᵥ w) := by
+    have := dotProduct_le_sqrt_mul_sqrt w x
+    rwa [hx, Real.sqrt_one, mul_one] at this
+  have hop : Real.sqrt (w ⬝ᵥ w) ≤ ‖M⁻¹‖ := by
+    have h := Matrix.l2_opNorm_mulVec M⁻¹ (WithLp.toLp 2 x)
+    rw [norm_eq_sqrt_dotProduct, norm_eq_sqrt_dotProduct] at h
+    have h' : Real.sqrt (w ⬝ᵥ w) ≤ ‖M⁻¹‖ * Real.sqrt (x ⬝ᵥ x) := h
+    rwa [hx, Real.sqrt_one, mul_one] at h'
+  linarith
+
+/-- If `σ_min(Aᵀ) > 0` then `AAᵀ` is invertible and `‖(AAᵀ)⁻¹‖ ≤ 1/σ_min(Aᵀ)²`. -/
+private lemma isUnit_and_norm_inv_self_mul_transpose_le (A : Matrix m n ℝ)
+    (hs : 0 < sigmaMin Aᵀ) :
+    IsUnit (A * Aᵀ).det ∧ ‖(A * Aᵀ)⁻¹‖ ≤ 1 / sigmaMin Aᵀ ^ 2 := by
+  set M := A * Aᵀ with hM_def
+  set s := sigmaMin Aᵀ with hs_def
+  have hs2 : 0 < s ^ 2 := by positivity
+  have hlow : ∀ y : m → ℝ, s ^ 2 * (y ⬝ᵥ y) ≤ y ⬝ᵥ (M *ᵥ y) := fun y => by
+    rw [hM_def, dotProduct_mul_transpose_mulVec]; exact sigmaMin_sq_mul_le Aᵀ y
+  have hunit : IsUnit M.det := by
+    rw [isUnit_iff_ne_zero]
+    intro hdet
+    obtain ⟨v, hv0, hv⟩ := Matrix.exists_mulVec_eq_zero_iff.2 hdet
+    have h1 := hlow v
+    rw [hv, dotProduct_zero] at h1
+    have h2 : v ⬝ᵥ v = 0 := le_antisymm (by nlinarith [dotProduct_self_nonneg v])
+      (dotProduct_self_nonneg v)
+    exact hv0 (dotProduct_self_eq_zero.1 h2)
+  refine ⟨hunit, ?_⟩
+  have hMinv : M * M⁻¹ = 1 := Matrix.mul_nonsing_inv M hunit
+  rw [Matrix.l2_opNorm_def]
+  refine ContinuousLinearMap.opNorm_le_bound _ (by positivity) fun y => ?_
+  show ‖(Matrix.toEuclideanLin M⁻¹ y)‖ ≤ 1 / s ^ 2 * ‖y‖
+  rw [norm_eq_sqrt_dotProduct, norm_eq_sqrt_dotProduct]
+  have hT : (Matrix.toEuclideanLin M⁻¹ y).ofLp = M⁻¹ *ᵥ y.ofLp := rfl
+  rw [hT]
+  set w := M⁻¹ *ᵥ y.ofLp with hw_def
+  set yy := y.ofLp with hyy
+  have hMw : M *ᵥ w = yy := by rw [hw_def, Matrix.mulVec_mulVec, hMinv, Matrix.one_mulVec]
+  have h1 := hlow w
+  rw [hMw] at h1
+  have h2 := dotProduct_le_sqrt_mul_sqrt w yy
+  set a := Real.sqrt (w ⬝ᵥ w)
+  set b := Real.sqrt (yy ⬝ᵥ yy)
+  have ha : 0 ≤ a := Real.sqrt_nonneg _
+  have hb : 0 ≤ b := Real.sqrt_nonneg _
+  have haa : a ^ 2 = w ⬝ᵥ w := Real.sq_sqrt (dotProduct_self_nonneg _)
+  have h3 : s ^ 2 * a ^ 2 ≤ a * b := by rw [haa]; linarith
+  have h4 : s ^ 2 * a ≤ b := by
+    rcases ha.lt_or_eq with hapos | ha0
+    · nlinarith
+    · rw [← ha0, mul_zero]; exact hb
+  rw [div_mul_eq_mul_div, one_mul, le_div_iff₀ hs2]
+  linarith
+
+/-- **Spectral norm of the inverse Gram matrix.** For every real matrix `A`,
+`‖(A Aᵀ)⁻¹‖ = 1 / σ_min(Aᵀ)²`, i.e. `λ_max((A Aᵀ)⁻¹) = 1 / λ_min(A Aᵀ)`. When `A Aᵀ` is
+singular both sides are `0` (Mathlib's `M⁻¹ = 0` and `1 / 0 = 0`).
+
+HMT 2011, proof of Prop A.3; Tropp–Webber 2023, proof of Lemma B.4. Atlas:
+`pinv-spectral-tail`, `inverse-wishart-spectral-moment` (helper). Generalised from
+`Fin r × Fin k` to arbitrary finite index types. Ported from Prove2me solution
+`GaussianMatrix.specNorm_inv_gram_eq`. -/
+theorem specNorm_inv_self_mul_transpose_eq (A : Matrix m n ℝ) :
+    specNorm (A * Aᵀ)⁻¹ = 1 / sigmaMin Aᵀ ^ 2 := by
+  unfold specNorm
+  rcases isEmpty_or_nonempty m with hr | hr
+  · have h1 : (A * Aᵀ)⁻¹ = 0 := Subsingleton.elim _ _
+    rw [h1, sigmaMin_of_isEmpty, norm_zero]; simp
+  · by_cases hM : IsUnit (A * Aᵀ).det
+    · have hne := nonempty_unitSphere (n := m)
+      set N := ‖(A * Aᵀ)⁻¹‖ with hN_def
+      have x0 := hne.some
+      have hNpos : 0 < N := by
+        obtain ⟨hq, hle⟩ := one_div_le_norm_inv_self_mul_transpose A hM x0.1 x0.2
+        exact lt_of_lt_of_le (by positivity) hle
+      have hlow : 1 / Real.sqrt N ≤ sigmaMin Aᵀ := by
+        refine le_sigmaMin _ fun x hx => ?_
+        obtain ⟨hq, hle⟩ := one_div_le_norm_inv_self_mul_transpose A hM x hx
+        have h1 : 1 / N ≤ (Aᵀ *ᵥ x) ⬝ᵥ (Aᵀ *ᵥ x) := by
+          rw [div_le_iff₀ hNpos]; rw [div_le_iff₀ hq] at hle; linarith
+        have h2 := Real.sqrt_le_sqrt h1
+        rwa [Real.sqrt_div' _ hNpos.le, Real.sqrt_one] at h2
+      have hs : 0 < sigmaMin Aᵀ := lt_of_lt_of_le (by positivity) hlow
+      have hup := (isUnit_and_norm_inv_self_mul_transpose_le A hs).2
+      apply le_antisymm hup
+      have h1 : 1 / N ≤ sigmaMin Aᵀ ^ 2 := by
+        have := pow_le_pow_left₀ (by positivity) hlow 2
+        rwa [div_pow, one_pow, Real.sq_sqrt hNpos.le] at this
+      rw [div_le_iff₀ (by positivity)]
+      rw [div_le_iff₀ hNpos] at h1
+      linarith
+    · have h1 : (A * Aᵀ)⁻¹ = 0 := Matrix.nonsing_inv_apply_not_isUnit _ hM
+      have h2 : sigmaMin Aᵀ = 0 := by
+        rcases (sigmaMin_nonneg Aᵀ).lt_or_eq with h | h
+        · exact absurd (isUnit_and_norm_inv_self_mul_transpose_le A h).1 hM
+        · exact h.symm
+      rw [h1, h2, norm_zero]; simp
+
+/-- **Spectral norm of the pseudoinverse.** For every real matrix `A`,
+`‖A†‖² = ‖(A Aᵀ)⁻¹‖` with `A† = pinvR A = Aᵀ (A Aᵀ)⁻¹` (`C*`-identity
+`‖A†‖² = ‖(A†)ᵀ A†‖` and `(A†)ᵀ A† = (A Aᵀ)⁻¹`; both sides `0` when `A Aᵀ` is singular).
+
+HMT 2011, proof of Prop A.3 / Prop 10.4. Atlas: `pseudoinverse`; helper for
+`pinv-spectral-tail`. Generalised from `Fin r × Fin k` to arbitrary finite index types.
+Ported from Prove2me solution `GaussianMatrix.specNorm_pinvR_sq`. -/
+theorem specNorm_pinvR_sq [DecidableEq n] (A : Matrix m n ℝ) :
+    specNorm (pinvR A) ^ 2 = specNorm (A * Aᵀ)⁻¹ := by
+  unfold specNorm pinvR
+  have hsym : (A * Aᵀ)ᵀ = A * Aᵀ := by rw [Matrix.transpose_mul, Matrix.transpose_transpose]
+  have key : (Aᵀ * (A * Aᵀ)⁻¹)ᴴ * (Aᵀ * (A * Aᵀ)⁻¹) = (A * Aᵀ)⁻¹ := by
+    rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul,
+      Matrix.transpose_transpose, Matrix.transpose_nonsing_inv, hsym]
+    by_cases hM : IsUnit (A * Aᵀ).det
+    · rw [Matrix.mul_assoc, ← Matrix.mul_assoc A, Matrix.mul_nonsing_inv _ hM, Matrix.mul_one]
+    · rw [Matrix.nonsing_inv_apply_not_isUnit _ hM]; simp
+  rw [sq, ← Matrix.l2_opNorm_conjTranspose_mul_self, key]
+
+end InverseGram
 
 end NLAlib

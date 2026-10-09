@@ -69,7 +69,8 @@ private theorem ssb_memLp_X {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : ℝ) 
     MemLp (ssbX c d) 2 (ssbP p m) :=
   (ssb_memLp_fst c).add ((ssb_memLp_snd p m).const_mul d)
 
-private theorem ssb_continuous_X {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : ℝ) : Continuous (ssbX c d) := by
+private theorem ssb_continuous_X {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : ℝ) :
+    Continuous (ssbX c d) := by
   unfold ssbX linForm; fun_prop
 
 private theorem ssb_integral_X {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : ℝ) :
@@ -80,7 +81,8 @@ private theorem ssb_integral_X {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : �
   rw [integral_fun_fst (fun G => linForm c G), integral_fun_snd (fun x : ℝ => x)]
   simp [integral_linForm_gaussianMatrix, integral_id_gaussianReal]
 
-private theorem ssb_X_sub {p m : ℕ} (c c' : Fin p → Fin m → ℝ) (d d' : ℝ) (ω : (Fin p → Fin m → ℝ) × ℝ) :
+private theorem ssb_X_sub {p m : ℕ} (c c' : Fin p → Fin m → ℝ) (d d' : ℝ)
+    (ω : (Fin p → Fin m → ℝ) × ℝ) :
     ssbX c d ω - ssbX c' d' ω = ssbX (c - c') (d - d') ω := by
   unfold ssbX
   rw [← linForm_sub_linForm]; ring
@@ -161,8 +163,8 @@ private theorem ssb_gamma_jensen {ι : Type*} [Fintype ι] [Nonempty ι] (B d : 
       _ ≤ _ := integral_mono hlin hint hpt
 
 /-- Fubini + Jensen: `𝔼_G (maxₜ Bₜ(G))₊² ≤ 𝔼_{G,γ} (maxₜ Xₜ(G,γ))₊²`. -/
-private theorem ssb_fubini {ι : Type*} [Fintype ι] [Nonempty ι] {p m : ℕ} (c : ι → Fin p → Fin m → ℝ)
-    (d : ι → ℝ) :
+private theorem ssb_fubini {ι : Type*} [Fintype ι] [Nonempty ι] {p m : ℕ}
+    (c : ι → Fin p → Fin m → ℝ) (d : ι → ℝ) :
     ∫ G, max (⨆ t, linForm (c t) G) 0 ^ 2 ∂(gaussianMatrix p m)
       ≤ ∫ ω, max (⨆ t, ssbX (c t) (d t) ω) 0 ^ 2 ∂(ssbP p m) := by
   have hint := ssb_integrable_supsq (μ := ssbP p m) (fun t => ssbX (c t) (d t))
@@ -225,7 +227,8 @@ private theorem ssbN_nonneg {κ : Type*} [Fintype κ] (x : κ → ℝ) : 0 ≤ s
 private theorem ssbN_sq {κ : Type*} [Fintype κ] (x : κ → ℝ) : ∑ k, x k ^ 2 = ssbN x ^ 2 :=
   (Real.sq_sqrt (Finset.sum_nonneg fun _ _ => sq_nonneg _)).symm
 
-private theorem ssb_inner_le {κ : Type*} [Fintype κ] (x x' : κ → ℝ) : ∑ k, x k * x' k ≤ ssbN x * ssbN x' :=
+private theorem ssb_inner_le {κ : Type*} [Fintype κ] (x x' : κ → ℝ) :
+    ∑ k, x k * x' k ≤ ssbN x * ssbN x' :=
   Real.sum_mul_le_sqrt_mul_sqrt _ _ _
 
 /-- The coefficient comparison behind Tropp–Webber's covariance identity
@@ -270,7 +273,8 @@ private theorem ssb_append_sub_sq {p m : ℕ} (u u' : Fin p → ℝ) (w w' : Fin
 
 /-- Coefficients of the comparison process
 `Yₜ = ‖yₜ‖ ⟨g, xₜ⟩ + ‖xₜ‖ ⟨h, yₜ⟩`, realized on one Gaussian row `(g, h) ∈ ℝ^{p+m}`. -/
-private noncomputable def ssbYc {ι : Type*} {p m : ℕ} (x : ι → Fin p → ℝ) (y : ι → Fin m → ℝ) (t : ι) :
+private noncomputable def ssbYc {ι : Type*} {p m : ℕ} (x : ι → Fin p → ℝ) (y : ι → Fin m → ℝ)
+    (t : ι) :
     Fin 1 → Fin (p + m) → ℝ :=
   fun _ k => Fin.append (fun k => ssbN (y t) * x t k) (fun l => ssbN (x t) * y t l) k
 
@@ -308,18 +312,20 @@ private theorem ssb_main_cmp {ι : Type*} [Fintype ι] [Nonempty ι] {p m : ℕ}
     rw [ssb_append_sub_sq]
     exact ssb_coeff_cmp (x s) (x t) (y s) (y t)
   have hS := slepian_inequality (fun t => ssbX (c t) (d t)) (fun t => linForm (ssbYc x y t))
-    (ssb_hasGaussianLaw_X c d) (hasGaussianLaw_linForm_gaussianMatrix _) (fun t => ssb_integral_X _ _)
-    (fun t => integral_linForm_gaussianMatrix _) hvar hinc
+    (ssb_hasGaussianLaw_X c d) (hasGaussianLaw_linForm_gaussianMatrix _)
+    (fun t => ssb_integral_X _ _) (fun t => integral_linForm_gaussianMatrix _) hvar hinc
   refine ssb_layercake_sq _ _ _ _ (Measurable.iSup fun t => (ssb_continuous_X _ _).measurable)
     (Measurable.iSup fun t => (continuous_linForm _).measurable)
     (ssb_integrable_supsq _ (fun t => ssb_memLp_X _ _) fun t => (ssb_continuous_X _ _).measurable)
-    (ssb_integrable_supsq _ (fun t => memLp_linForm_gaussianMatrix _) fun t => (continuous_linForm _).measurable)
+    (ssb_integrable_supsq _ (fun t => memLp_linForm_gaussianMatrix _)
+      fun t => (continuous_linForm _).measurable)
     fun τ _ => hS τ
 
 
 /-! ### Deterministic matrix facts -/
 
-private theorem ssb_sandwich_entry {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ)
+private theorem ssb_sandwich_entry {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
+    (T : Matrix (Fin m) (Fin n) ℝ)
     (G : Fin p → Fin m → ℝ) (u : Fin a → ℝ) (v : Fin n → ℝ) :
     ∑ i, ∑ j, u i * (S * Matrix.of G * T) i j * v j
       = ∑ k, ∑ l, ((∑ i, u i * S i k) * (∑ j, T l j * v j)) * G k l := by
@@ -335,10 +341,12 @@ private theorem ssb_sandwich_entry {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) �
   ring
 
 open scoped Matrix.Norms.L2Operator in
-private theorem ssb_norm_vecMul_le {a p : ℕ} (S : Matrix (Fin a) (Fin p) ℝ) (u : EuclideanSpace ℝ (Fin a))
+private theorem ssb_norm_vecMul_le {a p : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
+    (u : EuclideanSpace ℝ (Fin a))
     (hu : ‖u‖ = 1) : Real.sqrt (∑ k, (∑ i, u i * S i k) ^ 2) ≤ specNorm S := by
   have h := Matrix.l2_opNorm_mulVec Sᵀ u
-  rw [hu, mul_one, ← Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.l2_opNorm_conjTranspose] at h
+  rw [hu, mul_one, ← Matrix.conjTranspose_eq_transpose_of_trivial,
+    Matrix.l2_opNorm_conjTranspose] at h
   refine le_of_eq_of_le ?_ h
   rw [EuclideanSpace.norm_eq]
   congr 1
@@ -346,7 +354,8 @@ private theorem ssb_norm_vecMul_le {a p : ℕ} (S : Matrix (Fin a) (Fin p) ℝ) 
   simp [Matrix.mulVec, dotProduct, Matrix.transpose_apply, mul_comm]
 
 open scoped Matrix.Norms.L2Operator in
-private theorem ssb_norm_mulVec_le {m n : ℕ} (T : Matrix (Fin m) (Fin n) ℝ) (v : EuclideanSpace ℝ (Fin n))
+private theorem ssb_norm_mulVec_le {m n : ℕ} (T : Matrix (Fin m) (Fin n) ℝ)
+    (v : EuclideanSpace ℝ (Fin n))
     (hv : ‖v‖ = 1) : Real.sqrt (∑ l, (∑ j, T l j * v j) ^ 2) ≤ specNorm T := by
   have h := Matrix.l2_opNorm_mulVec T v
   rw [hv, mul_one] at h
@@ -357,7 +366,8 @@ private theorem ssb_norm_mulVec_le {m n : ℕ} (T : Matrix (Fin m) (Fin n) ℝ) 
   simp [Matrix.mulVec, dotProduct]
 
 /-- `⟨x, g⟩ ≤ ‖S g‖` for `x = Sᵀ u`, `‖u‖ = 1`. -/
-private theorem ssb_vecMul_inner_le {a p : ℕ} (S : Matrix (Fin a) (Fin p) ℝ) (u : EuclideanSpace ℝ (Fin a))
+private theorem ssb_vecMul_inner_le {a p : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
+    (u : EuclideanSpace ℝ (Fin a))
     (hu : ‖u‖ = 1) (g : Fin p → ℝ) :
     ∑ k, (∑ i, u i * S i k) * g k ≤ Real.sqrt (∑ i, (∑ k, S i k * g k) ^ 2) := by
   have e : ∑ k, (∑ i, u i * S i k) * g k = ∑ i, u i * (∑ k, S i k * g k) := by
@@ -370,7 +380,8 @@ private theorem ssb_vecMul_inner_le {a p : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
   exact h
 
 /-- `⟨y, h⟩ ≤ ‖Tᵀ h‖` for `y = T v`, `‖v‖ = 1`. -/
-private theorem ssb_mulVec_inner_le {m n : ℕ} (T : Matrix (Fin m) (Fin n) ℝ) (v : EuclideanSpace ℝ (Fin n))
+private theorem ssb_mulVec_inner_le {m n : ℕ} (T : Matrix (Fin m) (Fin n) ℝ)
+    (v : EuclideanSpace ℝ (Fin n))
     (hv : ‖v‖ = 1) (h : Fin m → ℝ) :
     ∑ l, (∑ j, T l j * v j) * h l ≤ Real.sqrt (∑ j, (∑ l, T l j * h l) ^ 2) := by
   have e : ∑ l, (∑ j, T l j * v j) * h l = ∑ j, v j * (∑ l, T l j * h l) := by
@@ -529,7 +540,8 @@ private theorem ssb_Y_bound {ι : Type*} [Fintype ι] [Nonempty ι] {a p m n : �
 /-! ### Assembly -/
 
 /-- The bound at a fixed net scale `ε`: `(1 - 2ε)² 𝔼‖SGT‖² ≤ (‖S‖‖T‖_F + ‖S‖_F‖T‖)²`. -/
-private theorem ssb_scaled_bound {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ)
+private theorem ssb_scaled_bound {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
+    (T : Matrix (Fin m) (Fin n) ℝ)
     (ha : 0 < a) (hn : 0 < n) (ε : ℝ) (hε : 0 < ε) (hε2 : ε ≤ 1 / 2) :
     (1 - 2 * ε) ^ 2 * ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)
       ≤ (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 := by
@@ -568,7 +580,8 @@ private theorem ssb_scaled_bound {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ
   set y : I → Fin m → ℝ := fun t l => ∑ j, T l j * t.1.1 j with hy
   have hspec : Integrable (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T) ^ 2)
       (gaussianMatrix p m) :=
-    (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T))
+    (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
+      (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T))
       (specNorm S * specNorm T) (mul_nonneg (specNorm_nonneg S) (specNorm_nonneg T))
       (abs_specNorm_mul_of_mul_sub_le S T)).2
   have hL := ssb_integrable_supsq (μ := gaussianMatrix p m)

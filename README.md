@@ -18,7 +18,7 @@ This formalization was carried out on [Prove2me](https://prove2.me), a platform 
 - [Ch 7: Intrinsic Dimension](https://prove2.me/missions/An_Introduction_to_Matrix_Concentration_Inequalities_Ch_7%3A_Intrinsic_Dimension)
 - [Ch 8: Lieb’s Concavity](https://prove2.me/missions/An_Introduction_to_Matrix_Concentration_Inequalities_Ch_8%3A_Lieb%E2%80%99s_Concavity)
 
-The Lean statements and proofs were produced with large language models (Anthropic's Claude, driven through Claude Code), with me curating the targets and reviewing the results. The models worked from Tropp's text and translated its proofs; where a proof deviates from the printed argument, that is noted in the explanation attached to the corresponding Prove2me submission. Everything in this repository has been machine-checked by Lean 4 against Mathlib, both locally and by the Prove2me verifier, so the mathematical content does not rest on trusting the models.
+The Lean statements and proofs were produced with large language models (Anthropic's Claude, driven through Claude Code, and OpenAI's Codex), with me curating the targets and reviewing the results. The models worked from Tropp's text and translated its proofs; where a proof deviates from the printed argument, that is noted in the explanation attached to the corresponding Prove2me submission. Everything in this repository has been machine-checked by Lean 4 against Mathlib, both locally and by the Prove2me verifier, so the mathematical content does not rest on trusting the models.
 
 ## Layout
 

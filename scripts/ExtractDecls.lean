@@ -11,7 +11,7 @@ Run with `lake env lean scripts/ExtractDecls.lean` after `lake build`. -/
 def isAutoComponent (s : String) : Bool :=
   s.startsWith "_" ||
   ["match_", "proof_", "eq_"].any fun p =>
-    s.startsWith p && (s.drop p.length).length > 0 && (s.drop p.length).all Char.isDigit
+    s.startsWith p && !(s.drop p.length).isEmpty && (s.drop p.length).all Char.isDigit
 
 def kindOf : ConstantInfo → String
   | .thmInfo _ => "theorem"

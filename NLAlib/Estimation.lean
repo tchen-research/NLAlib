@@ -1,3 +1,5 @@
+import NLAlib.Estimation.HansonWright
+import NLAlib.Estimation.HutchinsonLaws
 import NLAlib.Estimation.Basic
 import NLAlib.Estimation.Hutchinson
 

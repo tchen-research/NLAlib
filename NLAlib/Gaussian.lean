@@ -1,5 +1,7 @@
 import NLAlib.Gaussian.Basic
 import NLAlib.Gaussian.Moments
+import NLAlib.Gaussian.InverseMoments
+import NLAlib.Gaussian.Conditioning
 import NLAlib.Gaussian.Invariance
 
 /-!

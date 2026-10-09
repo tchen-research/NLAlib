@@ -1378,14 +1378,23 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.inv_chi_square_moment",
+     "status": "proved",
+     "note": "over any finite index type with card ≥ 3"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inv_chi_square_moment_fin",
+     "status": "proved"
+    },
+    {
      "library": "gaussian-facts",
      "decl": "GaussianMatrix.inv_chi_square_moment",
      "status": "proved"
     }
    ],
-   "depends_on": [
-    "chi-square-lower-tail"
-   ],
+   "depends_on": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
    "priority": "later",
@@ -1409,6 +1418,17 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.inverse_wishart_mean",
+     "status": "proved",
+     "note": "entrywise integrability and mean (1/(k−r−1))·I; proof via Schur complement of the other rows and the residual law"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inverse_wishart_mean_matrix",
+     "status": "proved"
+    },
+    {
      "library": "gaussian-facts",
      "decl": "GaussianMatrix.inverse_wishart_mean",
      "status": "proved",
@@ -1417,8 +1437,9 @@
    ],
    "depends_on": [
     "rotation-invariance",
-    "inverse-chi-square-moment",
-    "block-law-indep"
+    "gaussian-full-rank-ae",
+    "block-law-indep",
+    "inverse-chi-square-moment"
    ],
    "mathlib_prereqs": [],
    "difficulty": 3,
@@ -1447,14 +1468,20 @@
    ],
    "formalizations": [
     {
-     "library": "gaussian-facts",
-     "decl": "GaussianMatrix.pinv_frobenius_moment",
+     "library": "nlalib",
+     "decl": "NLAlib.pinv_frobenius_moment",
+     "status": "proved",
+     "note": "∫ frobSq (pinvR G) = r/(k−r−1) under gaussianMatrix r k, r+2 ≤ k"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_pinvR_eq_trace_inv",
      "status": "proved"
     },
     {
-     "library": "lra",
-     "decl": "GaussianInverseFrobeniusMoment",
-     "status": "assumed"
+     "library": "gaussian-facts",
+     "decl": "GaussianMatrix.pinv_frobenius_moment",
+     "status": "proved"
     }
    ],
    "depends_on": [
@@ -3260,19 +3287,31 @@
    ],
    "formalizations": [
     {
-     "library": "lra",
-     "decl": "LRA.Deterministic.SketchedRegression",
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_error",
+     "status": "proved",
+     "note": "‖A − Â‖_F² = ‖(I−QQᵀ)A‖_F² + ‖G₁†G₂Q⊥ᵀE‖_F² with G₁ = ΨᵀQ, G₂ = ΨᵀQ⊥; plus sketchedCore/sketchedOutput/coreNoise, the core identity X̂ = QᵀA + coreNoise, ‖Q⊥ᵀE‖_F = ‖E‖_F and its spectral-norm version"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sketchedCore_eq_add_coreNoise",
      "status": "proved"
     },
     {
-     "library": "lra",
-     "decl": "SpectralIsometry",
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_perp_mul_residual",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.l2_opNorm_perp_mul_residual",
      "status": "proved"
     }
    ],
    "depends_on": [
     "pseudoinverse",
-    "projection-facts"
+    "projection-facts",
+    "norms-frob-spec"
    ],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -3306,24 +3345,29 @@
    ],
    "formalizations": [
     {
-     "library": "lra",
-     "decl": "rsvd_main",
+     "library": "nlalib",
+     "decl": "NLAlib.rsvd_main",
      "status": "proved",
-     "note": "conditional on hypothesis hinv (§2.1 of GAUSSIAN_REQUIREMENTS)"
+     "note": "ported from the LRA project; takes the Gaussian moment identity hinv (E‖S₂Ω₂Ω₁†‖_F² = k/(t−k−1)‖S₂‖_F²) and the a.s. structural facts as hypotheses, as the source does. The hypothesis-free Gaussian version follows from gaussian-conditioning + pinv-frob-moment (next step)."
     },
     {
-     "library": "lra",
-     "decl": "rsvd_truncated_main",
+     "library": "nlalib",
+     "decl": "NLAlib.rsvd_truncated_main",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Assembly.rsvd_explicit",
      "status": "proved"
     }
    ],
    "depends_on": [
     "hmt-9-1-frobenius",
+    "projection-facts",
+    "gaussian-conditioning",
     "pinv-frob-moment",
-    "gaussian-frob-second-moment",
     "block-law-indep",
-    "gaussian-full-rank-ae",
-    "truncation-lemma"
+    "gaussian-full-rank-ae"
    ],
    "mathlib_prereqs": [],
    "difficulty": 3,
@@ -3331,7 +3375,8 @@
    "tags": [
     "consumer"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Conditional form ported. Follow-up: instantiate with Ω of law gaussianMatrix n t via the conditioning lemma and pinv_frobenius_moment to get an unconditional statement; generalise RangeFinder.lean to Fintype rows to recover the source's generality."
   },
   {
    "id": "gn-expected-error",
@@ -3355,19 +3400,24 @@
    ],
    "formalizations": [
     {
-     "library": "lra",
-     "decl": "gn_main",
+     "library": "nlalib",
+     "decl": "NLAlib.gn_main",
      "status": "proved",
-     "note": "conditional on hcond"
+     "note": "Chen–Persson thm:GN / Tropp–Webber Thm 5.1; the completion lemma and both forms of the theorem, Gaussian facts as expectation hypotheses (hinv, hcond or hG). Row index types Fin m, Fin n (the source allows any Fintype)."
     },
     {
-     "library": "lra",
-     "decl": "gn_main_of_completion",
+     "library": "nlalib",
+     "decl": "NLAlib.gn_main_of_completion",
      "status": "proved"
     },
     {
-     "library": "lra",
-     "decl": "completion_reduction",
+     "library": "nlalib",
+     "decl": "NLAlib.completion_reduction",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Assembly.gn_explicit",
      "status": "proved"
     }
    ],
@@ -3375,7 +3425,9 @@
     "rsvd-expected-error",
     "sketched-regression",
     "orthonormal-completion",
-    "pinv-frob-moment"
+    "gaussian-conditioning",
+    "pinv-frob-moment",
+    "hmt-9-1-frobenius"
    ],
    "mathlib_prereqs": [],
    "difficulty": 3,
@@ -3383,7 +3435,8 @@
    "tags": [
     "consumer"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "Conditional form ported. The completion hypothesis hG is the conditioning lemma applied to Ψ with the blocks ΨᵀQ, ΨᵀQ⊥."
   },
   {
    "id": "tgn-expected-error",
@@ -4284,6 +4337,75 @@
    "tags": [
     "consumer"
    ],
+   "updated_at": "2026-10-09"
+  },
+  {
+   "id": "gaussian-conditioning",
+   "title": "Conditioning on an independent Gaussian block (tower property)",
+   "area": "gaussian-invariance",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "If Y is standard Gaussian and independent of X, then E‖S·Y·T(X)‖_F² = ‖S‖_F²·E‖T(X)‖_F². Applied to the blocks V₁ᵀΩ, V₂ᵀΩ it turns the second-moment identity and the pseudoinverse moment into the expectation hypotheses of the RSVD and generalized Nyström theorems.",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "proof of Thm 10.5"
+    },
+    {
+     "source": "tw23",
+     "label": "§3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_frobSq_mul_gaussian_mul_of_indepFun",
+     "status": "proved",
+     "note": "no integrability hypothesis (proved via lintegral); companions integral_of_indepFun / lintegral_of_indepFun (Fubini for independent variables), rsvd_inverse_moment_factor, completion_inverse_moment_factor, integral_pinvR_frobSq_block"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_of_indepFun",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rsvd_inverse_moment_factor",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.completion_inverse_moment_factor",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_pinvR_frobSq_block",
+     "status": "proved"
+    }
+   ],
+   "depends_on": [
+    "block-law-indep",
+    "gaussian-frob-second-moment",
+    "gaussian-matrix-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.indepFun_iff_map_prod_eq_prod_map_map",
+     "present": true
+    },
+    {
+     "decl": "MeasureTheory.integral_prod",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "engine"
+   ],
+   "notes": "Done. Mathlib gaps noted: no MeasurableSpace instance on Matrix; no lemma pulling IndepFun back along a map with a given law.",
    "updated_at": "2026-10-09"
   }
  ],

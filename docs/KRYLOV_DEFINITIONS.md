@@ -454,3 +454,43 @@ matvec query model (`MatvecAlg n α`: output, or a query `v` with an adaptive co
 `run`, `cost`), with realisation theorems "`∃ alg, cost alg = q ∧ ∀ A, run A alg = iterate`"; this is
 also the only setting in which matvec lower bounds can be stated; (3) arithmetic (flop) cost is
 out of scope and lives in atlas notes. Atlas: `matvec-query-model`.
+
+### 3.11 The graded layer: nested bases, Jacobi matrices, orthogonal polynomials (coordinator's addendum)
+
+Between "any orthonormal `Q` containing `K_q`" (§3.2–3.7) and the fixed process `arnoldiBasis`
+(§3.5) there is a layer the maintainer wants explicitly: a **graded** (nested) basis,
+
+```lean
+/-- `Q` is a graded orthonormal Krylov basis: column `i` spans the new direction of `K_{i+1}`. -/
+structure IsGradedKrylovBasis (A : Matrix n n ℝ) (b : n → ℝ) (Q : Matrix n (Fin q) ℝ) : Prop where
+  orth : HasOrthonormalCols Q
+  nested : ∀ i : Fin q, Submodule.span ℝ (Set.range fun j : Fin (i + 1) => Q.col ⟨j, _⟩) = krylovSpace A b (i + 1)
+```
+
+This is a *predicate*, not a process, and it is what the Jacobi-matrix material needs:
+- **Uniqueness up to signs**: two graded bases differ by a diagonal `±1` matrix
+  (`isGradedKrylovBasis_iff_exists_sign`), so every statement below is sign-invariant, and
+  `arnoldiBasis` (positive subdiagonal) is one representative. Needs `q ≤ krylovGrade A b`.
+- **Tridiagonality for symmetric `A`**: `T = Qᵀ A Q` is a Jacobi matrix (symmetric, tridiagonal,
+  nonzero off-diagonal below the grade). For general `A`, `H = Qᵀ A Q` is unreduced upper
+  Hessenberg. This is the content of `lanczos_apply_eq_zero_of_add_one_lt`, restated for any
+  graded basis.
+- **Three-term recurrence** `A q_j = β_{j} q_{j-1} + α_j q_j + β_{j+1} q_{j+1}` as the column form of
+  `A Q_q = Q_q T_q + β_q q_{q} e_qᵀ`; `lanczos-recurrence` lives here.
+- **Orthogonal polynomials**: the Lanczos polynomials `p_j` with `q_j = p_j(A) b` are the
+  orthonormal polynomials of the spectral measure `μ_b` (`Krylov/SpectralMeasure.lean`), `det(x − T_j)`
+  is the monic orthogonal polynomial of degree `j`, and `T` is the Jacobi matrix of `μ_b`
+  (recurrence coefficients `α_j, β_j`). Statement: `∫ p_i p_j dμ_b = δ_ij`.
+- **Jacobi-matrix identities**: eigenvalues of `T_q` are the Gauss nodes and the squared first
+  components of its eigenvectors are the Gauss weights (`lanczos-gauss-quadrature` restated through
+  `T`); Christoffel–Darboux; `e₁ᵀ (x − T)⁻¹ e₁` as the `q`-th convergent of the Stieltjes continued
+  fraction of `∫ dμ_b/(x − t)`; interlacing of eigenvalues of `T_q` and `T_{q+1}`; `T_q` is the
+  compression of `T_{q+1}` (leading principal submatrix), which is the identity the basis-free
+  interface cannot express and the reason this layer exists.
+
+Convention: theorems about `T`'s *structure* take `IsGradedKrylovBasis`; theorems about the
+*approximant* (`Q f(T) Qᵀ b`, Ritz values as a set, quadrature values) take only §3.2's interface,
+and the graded layer supplies the bridge "a graded basis is such a `Q`". Nested
+`Fin q`-indexing is fine here because `T_{q}` is the leading section of `T_{q+1}` by the nested
+condition, with no reference to how the basis was built. Atlas: `graded-krylov-basis-def`,
+`jacobi-matrix-identities`, `lanczos-orthogonal-polynomials`.

@@ -7260,7 +7260,8 @@
    "depends_on": [
     "krylov-subspace",
     "arnoldi-relation",
-    "krylov-grade"
+    "krylov-grade",
+    "graded-krylov-basis-def"
    ],
    "uses_defs": [
     "NLAlib.HasOrthonormalCols",
@@ -13742,7 +13743,8 @@
    "depends_on": [
     "krylov-eigenvector-angle",
     "courant-fischer",
-    "cauchy-interlacing"
+    "cauchy-interlacing",
+    "graded-krylov-basis-def"
    ],
    "mathlib_prereqs": [
     {
@@ -17004,6 +17006,149 @@
     "complexity"
    ],
    "notes": "Design (docs/KRYLOV_DEFINITIONS.md §3.10): runtime statements at the level randomized NLA uses them. Upper bounds are realisation theorems; this is also the only setting in which matvec lower bounds (Braverman–Hallman–Musco 2020, Simchowitz–El Alaoui–Recht 2018) can be stated. Arithmetic cost (flops) is deliberately out of scope: recorded as notes on entries, not formalised. Consumers: every Krylov predicate (cg-convergence, gmres-def, arnoldi-def) gets a realisation theorem; lower bounds are future candidates.",
+   "updated_at": "2026-10-10",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "graded-krylov-basis-def",
+   "title": "Graded (nested) Krylov basis: unique up to signs, tridiagonal compression",
+   "aliases": [
+    "nested Krylov basis",
+    "Lanczos basis as a predicate",
+    "unreduced Hessenberg"
+   ],
+   "area": "krylov-bases",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "$Q = [q_0,\\dots,q_{q-1}]$ is a graded Krylov basis for $(A,b)$ if it has orthonormal columns and $\\operatorname{span}(q_0,\\dots,q_i) = \\mathcal{K}_{i+1}(A,b)$ for every $i$. For $q \\le \\operatorname{grade}(A,b)$ it exists and is unique up to the sign of each column; $Q^\\top A Q$ is unreduced upper Hessenberg, and a Jacobi matrix (symmetric tridiagonal with positive-or-negative nonzero off-diagonal) when $A$ is symmetric. $Q_{q}$ is the leading block of $Q_{q+1}$ and $T_q$ the leading principal submatrix of $T_{q+1}$.",
+   "hypotheses": [
+    "$A \\in \\mathbb{R}^{n\\times n}$, $b \\in \\mathbb{R}^n$, $q \\le \\operatorname{grade}(A,b)$"
+   ],
+   "conclusion": "existence; uniqueness up to $Q \\mapsto Q D$ with $D$ diagonal $\\pm1$; $Q^\\top A Q$ unreduced Hessenberg, tridiagonal if $A = A^\\top$; nesting of $Q_q, T_q$ in $Q_{q+1}, T_{q+1}$",
+   "sources": [
+    {
+     "source": "saad11",
+     "label": "§6.3, §6.6"
+    },
+    {
+     "source": "greenbaum97",
+     "label": "§2.5"
+    }
+   ],
+   "depends_on": [
+    "krylov-subspace",
+    "krylov-grade",
+    "orthonormal-columns-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "InnerProductSpace.gramSchmidtNormed",
+     "present": true,
+     "note": "one construction; the predicate is what theorems take"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "definition",
+    "lanczos",
+    "arnoldi"
+   ],
+   "notes": "Design: docs/KRYLOV_DEFINITIONS.md §3.11. The predicate, not the process, is what Jacobi-matrix theorems take; `arnoldiBasis` (positive subdiagonal) is one representative, and NLAlib's current `lanczosMatrix` with `lanczos_apply_eq_zero_of_add_one_lt` is the existing proof of the Hessenberg/tridiagonal part. Consumers: lanczos-recurrence, jacobi-matrix-identities, lanczos-orthogonal-polynomials, kaniel-paige-saad, finite-precision Lanczos statements.",
+   "updated_at": "2026-10-10",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "lanczos-orthogonal-polynomials",
+   "title": "Lanczos polynomials are the orthonormal polynomials of the spectral measure; T is its Jacobi matrix",
+   "aliases": [
+    "Jacobi matrix of a measure",
+    "Stieltjes procedure",
+    "recurrence coefficients"
+   ],
+   "area": "krylov-bases",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A$ and a graded basis with $q_j = p_j(A)\\,b$, the $p_j$ are the orthonormal polynomials of the spectral measure $\\mu_b$ ($\\int p_i p_j\\,d\\mu_b = \\delta_{ij}$), $\\det(xI - T_j)$ is the monic orthogonal polynomial of degree $j$, and the entries $\\alpha_j = q_j^\\top A q_j$, $\\beta_{j+1} = \\|\\,(A - \\alpha_j) q_j - \\beta_j q_{j-1}\\|$ are the three-term recurrence coefficients of $\\mu_b$: $T$ is the Jacobi matrix of $\\mu_b$.",
+   "hypotheses": [
+    "$A$ symmetric, $\\|b\\| = 1$, graded basis $Q$ with $q \\le \\operatorname{grade}(A,b)$"
+   ],
+   "conclusion": "$\\int p_i p_j\\,d\\mu_b = \\delta_{ij}$, $p_{j+1}(x) = ((x - \\alpha_j)p_j(x) - \\beta_j p_{j-1}(x))/\\beta_{j+1}$, $\\det(xI - T_j) = \\beta_1\\cdots\\beta_j\\, p_j(x)$",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "Ch. 2–4"
+    },
+    {
+     "source": "greenbaum97",
+     "label": "§2.5"
+    }
+   ],
+   "depends_on": [
+    "graded-krylov-basis-def",
+    "spectral-measure",
+    "lanczos-recurrence"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "lanczos",
+    "orthogonal-polynomials",
+    "spectral-measure"
+   ],
+   "notes": "Prove. The bridge between the Krylov module and quadrature theory: Gauss quadrature exactness (`lanczos-gauss-quadrature`) and the SLQ bounds become statements about orthogonal polynomials of μ_b. Consumers: jacobi-matrix-identities, lanczos-quadrature-*-error, spectral density estimation.",
+   "updated_at": "2026-10-10",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "jacobi-matrix-identities",
+   "title": "Jacobi matrix identities: Gauss nodes and weights, Christoffel–Darboux, continued fraction, interlacing",
+   "aliases": [
+    "Gauss quadrature from T",
+    "Golub–Welsch",
+    "Stieltjes continued fraction",
+    "Ritz value interlacing"
+   ],
+   "area": "krylov-bases",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For the Jacobi matrix $T_q$ of a graded basis: the eigenvalues $\\theta_i$ of $T_q$ are the Gauss nodes of $\\mu_b$ and $w_i = (e_1^\\top v_i)^2$ the weights, so $e_1^\\top f(T_q) e_1 = \\sum_i w_i f(\\theta_i)$ (Golub–Welsch); the eigenvalues of $T_q$ and $T_{q+1}$ strictly interlace; $e_1^\\top (xI - T_q)^{-1} e_1$ is the $q$-th convergent of the Stieltjes continued fraction of $\\int d\\mu_b(t)/(x-t)$; Christoffel–Darboux $\\sum_{j<q} p_j(x)p_j(y) = \\beta_q\\,(p_q(x)p_{q-1}(y) - p_{q-1}(x)p_q(y))/(x-y)$.",
+   "hypotheses": [
+    "$A$ symmetric, graded basis with $q \\le \\operatorname{grade}(A,b)$, $T_q = Q_q^\\top A Q_q$"
+   ],
+   "conclusion": "Gauss nodes/weights from the eigen-decomposition of $T_q$; interlacing of $T_q, T_{q+1}$; continued-fraction and Christoffel–Darboux identities",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "Ch. 3, 6"
+    },
+    {
+     "source": "saad11",
+     "label": "§6.6"
+    }
+   ],
+   "depends_on": [
+    "graded-krylov-basis-def",
+    "lanczos-orthogonal-polynomials",
+    "lanczos-gauss-quadrature",
+    "cauchy-interlacing"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "lanczos",
+    "quadrature",
+    "jacobi-matrix"
+   ],
+   "notes": "Prove in pieces; each identity can be its own declaration under this id. Interlacing is Cauchy interlacing for the leading principal submatrix (`cauchy-interlacing`, proved), which is exactly why the nested (graded) basis is needed: the basis-free interface cannot state T_q ≤ T_{q+1}. Consumers: SLQ error analysis, Ritz value a priori bounds, spectral density / moment problems, Lanczos-based quadrature for log-det.",
    "updated_at": "2026-10-10",
    "formalizations": [],
    "uses_defs": [],

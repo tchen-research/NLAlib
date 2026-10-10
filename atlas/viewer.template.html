@@ -227,7 +227,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     <div id="scaffold"></div>
   </div>
   <div id="tab-graph" hidden>
-    <p class="note" style="margin-top:12px">Rows are the library's import layers, foundations at the top (0 Matrix and Polynomial) and solvers at the bottom (5); each box is one Lean module, and inside a box a result sits below the module-internal results it consumes. Solid green links are proved at both ends, dashed blue links join Lean statements where one end is still a scaffold, dotted links are pending. Click a node to highlight everything it depends on (above) and everything that depends on it (below); the rest fades. Scroll to zoom, drag to pan.</p>
+    <p class="note" style="margin-top:12px">Rows are the library's import layers, foundations at the top (0 Matrix and Polynomial) and solvers at the bottom (5); each box is one Lean module, and inside a box a result sits below the module-internal results it consumes. Solid green links are machine-checked implications (the consumer has a Lean proof and the dependency is stated or assumed); dotted links are not yet proved. Click a node to highlight everything it depends on (above) and everything that depends on it (below); the rest fades. Scroll to zoom, drag to pan.</p>
     <div class="graph-wrap" style="margin-top:8px"><div class="graph-help">Fit: <kbd>F</kbd></div><svg id="g" role="img" aria-label="Dependency graph of results"><defs><pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--panel)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--st-stated)" stroke-width="2"/></pattern></defs></svg></div>
     <div class="legend" id="glegend"></div>
   </div>

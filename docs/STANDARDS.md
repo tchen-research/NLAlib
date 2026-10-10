@@ -43,7 +43,10 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   −1 `ForMathlib` · 0 `Matrix`, `Polynomial` · 1 `Concentration`, `Krylov` · 2 `Gaussian` · 3 `Sketching` ·
   4 `LowRank`, `Estimation` · 5 `Solvers`. `Krylov` is the deterministic theory (Krylov spaces,
   Lanczos, CG, Gauss quadrature); randomized Krylov guarantees live with their consumers in
-  `LowRank` and `Estimation`.
+  `LowRank` and `Estimation`. Krylov methods are defined by predicates or compressions, never by
+  recurrences, and use two interfaces: "any orthonormal `Q` containing `K_q`" for approximant
+  theorems and `LanczosDecomp` / `ArnoldiDecomp` (graded basis, `T := QᵀAQ`) for theorems about the
+  structure of `T`. The conventions are `docs/KRYLOV_DEFINITIONS.md` §6 and §3.11–3.12.
 - `NLAlib/ForMathlib/` holds general facts that are not about NLAlib's objects and are candidates
   for upstreaming (real inequalities, integrability of finite suprema, measure-preserving
   coordinate updates, `det ≠ 0` from full rank). Files are named after the Mathlib directory they

@@ -1,6 +1,8 @@
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # Elementary real inequalities
@@ -11,10 +13,14 @@ objects; candidates for upstreaming to `Mathlib/Analysis/SpecialFunctions/`.
 * `sqrt_sum_sq_le_sum_abs`: `√(∑ xᵢ²) ≤ ∑ |xᵢ|`;
 * `abs_mul_log_le_sq_add_one`: `|s log s| ≤ s² + 1` for `s ≥ 0`;
 * `abs_add_mul_log_add_le`: `|(a + δ) log (a + δ)| ≤ |a log a| + a + 2` for `a ≥ 0`, `0 < δ ≤ 1`;
-* `abs_mul_exp_le_exp_two_mul_add_one`: `|u eᵘ| ≤ e^{2u} + 1`.
+* `abs_mul_exp_le_exp_two_mul_add_one`: `|u eᵘ| ≤ e^{2u} + 1`;
+* `log_one_add_le_sub_sq_div_two_add_pow_three_div_three`: `log(1 + ε) ≤ ε − ε²/2 + ε³/3` for
+  `ε ≥ 0`;
+* `log_one_sub_le_neg_sub_sq_div_two`: `log(1 − ε) ≤ −ε − ε²/2` for `0 ≤ ε < 1`.
 
 Used by the Gaussian concentration files (atlas `gaussian-log-sobolev`,
-`gaussian-concentration`).
+`gaussian-concentration`) and by the Johnson–Lindenstrauss tail (atlas `jl-distributional`,
+`chi-square-lower-tail`).
 -/
 
 namespace NLAlib
@@ -92,5 +98,47 @@ theorem abs_mul_exp_le_exp_two_mul_add_one (u : ℝ) :
     have e : Real.exp (-u) * Real.exp u = 1 := by rw [← Real.exp_add]; simp
     have := mul_le_mul_of_nonneg_right this hpos.le
     nlinarith [Real.exp_pos (2 * u)]
+
+/-- `log(1 + ε) ≤ ε − ε²/2 + ε³/3` for `ε ≥ 0` (the third Taylor polynomial of `log(1 + ·)` is
+an upper bound on `[0, ∞)`). Proof: the difference has derivative `ε³/(1 + ε) ≥ 0` and vanishes
+at `0`. Used in Dasgupta–Gupta 2003, proof of Lem 2.2. Atlas: `jl-distributional` (helper). -/
+theorem log_one_add_le_sub_sq_div_two_add_pow_three_div_three {ε : ℝ} (hε : 0 ≤ ε) :
+    Real.log (1 + ε) ≤ ε - ε ^ 2 / 2 + ε ^ 3 / 3 := by
+  let f : ℝ → ℝ := fun t => t - t ^ 2 / 2 + t ^ 3 / 3 - Real.log (1 + t)
+  have hderiv : ∀ t, 0 ≤ t → HasDerivAt f (1 - t + t ^ 2 - 1 / (1 + t)) t := by
+    intro t ht
+    have h1 : HasDerivAt (fun t : ℝ => 1 + t) 1 t := (hasDerivAt_id t).const_add 1
+    have hlog := h1.log (by linarith)
+    have hp : HasDerivAt (fun t : ℝ => t - t ^ 2 / 2 + t ^ 3 / 3) (1 - t + t ^ 2) t := by
+      have := (((hasDerivAt_id' t).sub ((hasDerivAt_pow 2 t).div_const 2)).add
+        ((hasDerivAt_pow 3 t).div_const 3))
+      exact this.congr_deriv (by norm_num)
+    exact hp.sub hlog
+  have hmono : MonotoneOn f (Set.Ici 0) := by
+    refine monotoneOn_of_deriv_nonneg (convex_Ici 0) ?_ ?_ ?_
+    · exact fun t ht => (hderiv t ht).continuousAt.continuousWithinAt
+    · intro t ht
+      rw [interior_Ici] at ht
+      exact (hderiv t (le_of_lt ht)).differentiableAt.differentiableWithinAt
+    · intro t ht
+      rw [interior_Ici] at ht
+      have ht0 : 0 < t := ht
+      rw [(hderiv t ht0.le).deriv]
+      have : 1 - t + t ^ 2 - 1 / (1 + t) = t ^ 3 / (1 + t) := by field_simp; ring
+      rw [this]; positivity
+  have := hmono (Set.mem_Ici.2 le_rfl) (Set.mem_Ici.2 hε) hε
+  simp [f] at this
+  linarith
+
+/-- `log(1 − ε) ≤ −ε − ε²/2` for `0 ≤ ε < 1`: the first two terms of the series
+`−log(1 − ε) = ∑ εⁿ/n` (all terms nonnegative). Used in Dasgupta–Gupta 2003, proof of Lem 2.2,
+and Laurent–Massart 2000, Lem 1. Atlas: `jl-distributional`, `chi-square-lower-tail`
+(helper). -/
+theorem log_one_sub_le_neg_sub_sq_div_two {ε : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε < 1) :
+    Real.log (1 - ε) ≤ -ε - ε ^ 2 / 2 := by
+  have h := Real.hasSum_pow_div_log_of_abs_lt_one (x := ε) (by rwa [abs_of_nonneg hε0])
+  have := sum_le_hasSum (Finset.range 2) (fun n _ => by positivity) h
+  simp [Finset.sum_range_succ] at this
+  linarith
 
 end NLAlib

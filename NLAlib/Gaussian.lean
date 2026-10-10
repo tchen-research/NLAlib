@@ -33,6 +33,7 @@ import NLAlib.Gaussian.Moments.FourthMoment
 import NLAlib.Gaussian.Comparison
 import NLAlib.Gaussian.Extreme
 import NLAlib.Gaussian.Invariance
+import NLAlib.Gaussian.LinearImage
 
 /-!
 # Gaussian and random matrix facts
@@ -40,11 +41,13 @@ import NLAlib.Gaussian.Invariance
 Layer 2: imports `NLAlib.Matrix` and `NLAlib.Concentration`.
 
 Files (atlas ids): `Basic` (`gaussian-matrix-def`), `Invariance` (`rotation-invariance`,
-`block-law-indep`), `Moments` (`gaussian-frob-second-moment`, `gaussian-full-rank-ae`),
+`block-law-indep`), `LinearImage` (laws of `Gᵀ`, `G U`, `G x`: `gaussian-matrix-mulVec-law`),
+`Moments` (`gaussian-frob-second-moment`, `gaussian-full-rank-ae`),
 `InverseMoments` (aggregator of `InverseMoments/`: `inverse-wishart-mean`, `pinv-frob-moment`,
 the inverse-Wishart second moments and the pseudoinverse tails), `Conditioning`
 (`gaussian-conditioning`), `Extreme` (aggregator of `Extreme/`, including `ChiSquare`:
-`chi-square-lower-tail`, `chi-square-neg-moment`, `inverse-chi-square-moment`).
+`chi-square-lower-tail`, `chi-square-upper-tail`, `chi-square-neg-moment`,
+`inverse-chi-square-moment`).
 
 `Moments/` (`gaussian-frob-fourth-moment`, `gaussian-amm`), `Comparison` (Slepian,
 Sudakov–Fernique, Gordon's minimax comparison), `Concentration` (`gaussian-concentration`).

@@ -339,6 +339,30 @@
      "decl": "NLAlib.specNorm_sq_eq_specNorm_transpose_mul_self",
      "usage": "Apply to any A, including empty shapes; rewrite ‖A‖² as ‖AᵀA‖.",
      "module": "NLAlib.Matrix.SpectralBounds"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_add_le",
+     "status": "proved",
+     "usage": "`specNorm (A + B) ≤ specNorm A + specNorm B`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_mul_transpose_self",
+     "status": "proved",
+     "usage": "`specNorm (A * Aᵀ) = specNorm A ^ 2`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_add_sq_le_of_mul_transpose_eq_zero",
+     "status": "proved",
+     "usage": "From `h : X * Yᵀ = 0`; gives `specNorm (X + Y)^2 ≤ specNorm X^2 + specNorm Y^2`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sub_mul_transpose_mul_le",
+     "status": "proved",
+     "usage": "From `hQ : Qᵀ * Q = 1`; gives `specNorm (A - Q * (Qᵀ * A)) ≤ specNorm A` (the residual is a contraction)."
     }
    ],
    "depends_on": [],
@@ -369,10 +393,11 @@
    "difficulty": 2,
    "priority": "now",
    "tags": [
-    "api"
+    "api",
+    "done"
    ],
    "notes": "The extension adds the advertised rank-based Frobenius upper bound, orthonormal spectral-norm invariance, and the Gram spectral-norm square identity.",
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "svd",
@@ -478,7 +503,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Both minima are attained by the truncated SVD $\\lbrack\\!\\lbrack A \\rbrack\\!\\rbrack_k$: $$\\min_{\\operatorname{rank} B \\le k} \\|A - B\\| = \\sigma_{k+1}(A), \\qquad \\min_{\\operatorname{rank} B \\le k} \\|A - B\\|_F^2 = \\sum_{i>k} \\sigma_i^2.$$",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$ with singular values $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge 0$",
@@ -495,7 +520,26 @@
      "label": "§2.3"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sub_truncatedSVD_eq",
+     "status": "proved",
+     "usage": "`specNorm (A - truncatedSVD A k) = singularValues A k` (attainment)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.singularValues_le_specNorm_sub_of_rank_le",
+     "status": "proved",
+     "usage": "From `hB : B.rank ≤ k`; gives `singularValues A k ≤ specNorm (A - B)` (lower bound)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeast_specNorm_sub_of_rank_le",
+     "status": "proved",
+     "usage": "`IsLeast {v | ∃ B, B.rank ≤ k ∧ v = specNorm (A - B)} (singularValues A k)`."
+    }
+   ],
    "depends_on": [
     "svd",
     "weyl-mirsky"
@@ -521,10 +565,11 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "lra"
+    "lra",
+    "done"
    ],
-   "notes": "The extension proves the Frobenius minimum, attained by its actual truncated SVD, for every target rank and shape. The spectral-norm minimum remains a separate open component; this combined entry is not promoted by the Frobenius proof.",
-   "updated_at": "2026-10-09"
+   "notes": "The extension proves the Frobenius minimum, attained by its actual truncated SVD, for every target rank and shape. The spectral-norm minimum remains a separate open component; this combined entry is not promoted by the Frobenius proof. Spectral form proved 2026-10-10 (lower bound via Weyl, attainment via the SVD); the Frobenius form is `eckart-young-frobenius`.",
+   "updated_at": "2026-10-10"
   },
   {
    "id": "weyl-mirsky",
@@ -538,7 +583,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For every $i$, $|\\sigma_i(A+E) - \\sigma_i(A)| \\le \\|E\\|$, and $$\\Big(\\sum_i \\big(\\sigma_i(A+E) - \\sigma_i(A)\\big)^2\\Big)^{1/2} \\le \\|E\\|_F.$$",
    "hypotheses": [
     "$A, E \\in \\mathbb{R}^{m\\times n}$"
@@ -554,10 +599,48 @@
      "label": "III.2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.singularValues_add_add_le",
+     "status": "proved",
+     "usage": "Weyl: `singularValues (A + B) (i + j) ≤ singularValues A i + singularValues B j`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_singularValues_add_sub_le_specNorm",
+     "status": "proved",
+     "usage": "`|singularValues (A + E) k - singularValues A k| ≤ specNorm E`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_sq_singularValues_add_sub_le_frobSq",
+     "status": "proved",
+     "usage": "Mirsky: `∑ k < min m n, (singularValues (A + E) k - singularValues A k)^2 ≤ frobSq E`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_add_le",
+     "status": "proved",
+     "usage": "Eigenvalue Weyl for Hermitian `A`, `B`: `λ_{i+j}(A + B) ≤ λ_i(A) + λ_j(B)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.singularValues_mul_le_specNorm_mul",
+     "status": "proved",
+     "usage": "`singularValues (B * A) k ≤ specNorm B * singularValues A k`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub",
+     "status": "proved",
+     "usage": "Loewner monotonicity of sorted eigenvalues: `(B - A).PosSemidef → λ_k(A) ≤ λ_k(B)`."
+    }
+   ],
    "depends_on": [
-    "svd",
-    "courant-fischer"
+    "courant-fischer",
+    "von-neumann-trace",
+    "svd"
    ],
    "uses_defs": [
     "NLAlib.singularValues",
@@ -572,9 +655,10 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "perturbation"
+    "perturbation",
+    "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "courant-fischer",
@@ -588,7 +672,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For Hermitian $A$, $$\\lambda_k(A) = \\max_{\\dim S = k}\\ \\min_{x \\in S,\\ \\|x\\|=1} x^\\top A x.$$ In particular $\\lambda_{\\max}$ is the sup of the Rayleigh quotient and $\\lambda_{\\min}$ the inf.",
    "hypotheses": [
     "$A$ Hermitian ($n\\times n$) with eigenvalues $\\lambda_1 \\ge \\dots \\ge \\lambda_n$",
@@ -601,12 +685,51 @@
      "label": "Thm 4.2.6"
     }
    ],
-   "formalizations": [],
-   "depends_on": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_le_of_forall_mem",
+     "status": "proved",
+     "usage": "From `hA : A.IsHermitian`, `hW : card n ≤ finrank W + k`, `hAW : ∀ x ∈ W, x ⬝ᵥ A *ᵥ x ≤ c * (x ⬝ᵥ x)`; gives `hA.eigenvalues₀ k ≤ c`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.le_eigenvalues₀_of_forall_mem",
+     "status": "proved",
+     "usage": "From `hS : k + 1 ≤ finrank S`, `hAS : ∀ x ∈ S, c * (x ⬝ᵥ x) ≤ x ⬝ᵥ A *ᵥ x`; gives `c ≤ hA.eigenvalues₀ k`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_submodule_eigenvalues₀_mul_le",
+     "status": "proved",
+     "usage": "Attaining subspace of dimension ≥ k+1 on which `λ_k ‖x‖² ≤ xᵀAx`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_submodule_le_eigenvalues₀_mul",
+     "status": "proved",
+     "usage": "Attaining subspace of codimension ≤ k on which `xᵀAx ≤ λ_k ‖x‖²`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.singularValues_le_of_forall_mem",
+     "status": "proved",
+     "usage": "Singular-value form: `‖Ax‖² ≤ c²‖x‖²` on a subspace of codimension ≤ k gives `singularValues A k ≤ c`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.le_singularValues_of_forall_mem",
+     "status": "proved",
+     "usage": "Singular-value form, lower bound."
+    }
+   ],
+   "depends_on": [
+    "polynomial-spectral-bound",
+    "svd"
+   ],
    "uses_defs": [
     "NLAlib.quadForm",
-    "NLAlib.lambdaMax",
-    "NLAlib.lambdaMin"
+    "NLAlib.singularValues"
    ],
    "variants": [
     "cauchy-interlacing"
@@ -625,10 +748,11 @@
    "difficulty": 3,
    "priority": "now",
    "tags": [
-    "foundation"
+    "foundation",
+    "done"
    ],
    "notes": "The user's definitions lambdaMax/lambdaMin (Tropp) and lamMin (LRA) are both the Rayleigh form; the full min-max is what interlacing and Weyl need.",
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "cauchy-interlacing",
@@ -641,7 +765,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "If $Q$ has $k$ orthonormal columns then $$\\lambda_{i+n-k}(A) \\le \\lambda_i(Q^\\top A Q) \\le \\lambda_i(A).$$ Used for Nyström, Lanczos/Ritz values and column subset selection.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ symmetric",
@@ -655,7 +779,20 @@
      "label": "Thm 4.3.17"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_compression_le",
+     "status": "proved",
+     "usage": "`λ_i(QᵀAQ) ≤ λ_i(A)` for `Qᵀ Q = 1` (index cast into the larger range)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_le_eigenvalues₀_compression",
+     "status": "proved",
+     "usage": "`λ_{i + (n - r)}(A) ≤ λ_i(QᵀAQ)` (Poincaré separation)."
+    }
+   ],
    "depends_on": [
     "courant-fischer"
    ],
@@ -670,9 +807,10 @@
    "difficulty": 3,
    "priority": "next",
    "tags": [
-    "foundation"
+    "foundation",
+    "done"
    ],
-   "updated_at": "2026-10-09",
+   "updated_at": "2026-10-10",
    "notes": "The compression form QᵀAQ is the Poincaré separation theorem (HJ13 Cor 4.3.37); verify the label."
   },
   {
@@ -991,6 +1129,18 @@
      "decl": "NLAlib.transpose_mul_residual",
      "status": "proved",
      "usage": "Pass `hQ : HasOrthonormalCols Q`; gives `Qᵀ * residual Q A = 0`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.singularValues_residual_le",
+     "status": "proved",
+     "usage": "`singularValues (residual Q A) k ≤ singularValues A k` for orthonormal `Q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_le_one_of_isSymm_of_isIdempotentElem",
+     "status": "proved",
+     "usage": "A symmetric idempotent has `specNorm ≤ 1`."
     }
    ],
    "depends_on": [
@@ -1014,9 +1164,10 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "lra"
+    "lra",
+    "done"
    ],
-   "updated_at": "2026-10-09",
+   "updated_at": "2026-10-10",
    "notes": "Done. Includes the monotonicity result with Q₁ arbitrary (stronger than HMT Prop 8.5 as asked)."
   },
   {
@@ -1068,6 +1219,12 @@
      "decl": "Orthonormal.exists_orthonormalBasis_extension_of_card_eq",
      "status": "proved",
      "note": "abstract form, used directly inside exists_isSVD"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.card_le_card_of_hasOrthonormalCols",
+     "status": "proved",
+     "usage": "`card r ≤ card n` when `Q : Matrix n r ℝ` has orthonormal columns."
     }
    ],
    "depends_on": [],
@@ -1085,9 +1242,10 @@
    "difficulty": 2,
    "priority": "now",
    "tags": [
-    "foundation"
+    "foundation",
+    "done"
    ],
-   "updated_at": "2026-10-09",
+   "updated_at": "2026-10-10",
    "notes": "Mathlib's abstract completion suffices; the matrix wrapper exists_orthogonal_completion lives in Gaussian/Invariance.lean and should move to Matrix/Projections."
   },
   {
@@ -1102,7 +1260,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "assumed",
+   "status": "proved",
    "informal": "$$\\langle X, E\\rangle_F \\le \\sum_i \\sigma_i(X)\\,\\sigma_i(E).$$ Corollary: if $\\operatorname{rank} X \\le r$ then $\\langle X, E\\rangle_F \\le \\|X\\|_*\\|E\\| \\le \\sqrt{r}\\,\\|X\\|_F\\|E\\|$.",
    "hypotheses": [
     "$X, E \\in \\mathbb{R}^{m\\times n}$ with singular values in decreasing order",
@@ -1120,10 +1278,17 @@
      "library": "lra",
      "decl": "VonNeumannRankBound",
      "status": "assumed"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobInner_le_sum_singularValues_mul",
+     "status": "proved",
+     "usage": "`frobInner X E ≤ ∑ k < min m n, singularValues X k * singularValues E k` (via Ky Fan and Abel summation)."
     }
    ],
    "depends_on": [
-    "svd"
+    "svd",
+    "eckart-young"
    ],
    "uses_defs": [
     "NLAlib.frobInner",
@@ -1136,10 +1301,11 @@
    "difficulty": 4,
    "priority": "now",
    "tags": [
-    "foundation"
+    "foundation",
+    "done"
    ],
    "notes": "Consumed by tGN_expected_error as the hypothesis hVN.",
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "loewner-order",
@@ -1501,6 +1667,12 @@
      "status": "proved",
      "usage": "Instance: gaussianMatrix p m is a Gaussian measure in Mathlib's sense (IsGaussian), with HasGaussianLaw for linear forms via linForm.",
      "note": "bridge to Mathlib's IsGaussian / HasGaussianLaw API (Gaussian/Extreme/LinearForms.lean)"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasSubgaussianMGF_id_gaussianReal",
+     "status": "proved",
+     "usage": "`HasSubgaussianMGF id v (gaussianReal 0 v)` for `v : ℝ≥0`."
     }
    ],
    "depends_on": [],
@@ -1523,7 +1695,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "rotation-invariance",
@@ -1999,6 +2171,24 @@
      "decl": "NLAlib.measure_sum_sq_le_le_gaussianReal",
      "status": "proved",
      "note": "P[χ²_d ≤ u] ≤ (eu/d)^{d/2} for 0 ≤ u ≤ d, over Fin d"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_sum_sq_le_one_sub_mul_le_gaussianReal",
+     "status": "proved",
+     "usage": "Sharp form: from `0 ≤ ε < 1`; gives `P(Σ gᵢ² ≤ (1-ε)d) ≤ ofReal (exp ((d/2)(ε + log(1-ε))))`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_sum_sq_le_sub_two_sqrt_mul_le_gaussianReal",
+     "status": "proved",
+     "usage": "Laurent–Massart form: from `1 ≤ d`, `0 ≤ x`; gives `P(Σ gᵢ² ≤ d - 2√(dx)) ≤ ofReal (exp (-x))`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_sum_sq_le_le_exp_mul_rpow",
+     "status": "proved",
+     "usage": "Raw Chernoff bound: `0 ≤ s → P.real(Σ gᵢ² ≤ u) ≤ e^{su}(1+2s)^{-d/2}`."
     }
    ],
    "depends_on": [
@@ -2022,7 +2212,7 @@
     "done"
    ],
    "updated_at": "2026-10-10",
-   "notes": "The proved bound (eu/d)^{d/2} drops the e^{−u/2} factor of Dasgupta–Gupta Lem 2.2(a) and is too weak for JL; the sharp form is a Round 6 target."
+   "notes": "The proved bound (eu/d)^{d/2} drops the e^{−u/2} factor of Dasgupta–Gupta Lem 2.2(a) and is too weak for JL; the sharp form is a Round 6 target. The sharp Dasgupta–Gupta and Laurent–Massart forms were added on 2026-10-10."
   },
   {
    "id": "chi-square-upper-tail",
@@ -2036,7 +2226,7 @@
    ],
    "area": "gaussian-extreme",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$\\mathbb{P}[\\chi^2_d \\ge (1+\\varepsilon)d] \\le \\exp\\big(-\\tfrac{d}{2}(\\varepsilon - \\log(1+\\varepsilon))\\big)$ and $$\\mathbb{P}\\big[\\chi^2_d \\ge d + 2\\sqrt{dx} + 2x\\big] \\le e^{-x}.$$",
    "hypotheses": [
     "$\\chi^2_d = \\|g\\|^2$ with $g \\in \\mathbb{R}^d$ standard Gaussian",
@@ -2053,7 +2243,26 @@
      "label": "Lem 1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_le_sum_sq_le_gaussianReal",
+     "status": "proved",
+     "usage": "From `hε : 0 ≤ ε`; gives `P((1+ε)d ≤ Σ gᵢ²) ≤ ofReal (exp (-(d/2)(ε - log(1+ε))))` (Dasgupta–Gupta Chernoff form)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_add_two_sqrt_mul_add_le_sum_sq_le_gaussianReal",
+     "status": "proved",
+     "usage": "Laurent–Massart form: from `hx : 0 ≤ x`; gives `P(d + 2√(dx) + 2x ≤ Σ gᵢ²) ≤ ofReal (exp (-x))`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_le_sum_sq_le_exp_mul_rpow",
+     "status": "proved",
+     "usage": "Raw Chernoff bound: `0 ≤ t < 1/2 → P.real(u ≤ Σ gᵢ²) ≤ e^{-tu}(1-2t)^{-d/2}`."
+    }
+   ],
    "depends_on": [
     "gaussian-matrix-def"
    ],
@@ -2072,10 +2281,11 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "jl"
+    "jl",
+    "done"
    ],
    "notes": "The missing half of the JL ingredient; the lower tail is already proved.",
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "inverse-chi-square-moment",
@@ -3278,14 +3488,14 @@
    ],
    "area": "gaussian-subgaussian",
    "kind": "lemma",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Rademacher $\\pm 1$ variables are sub-Gaussian with $c = 1$, and $\\mathbb{E}\\big|\\sum_i a_i\\varepsilon_i\\big|^p \\le C_p^p\\|a\\|^p$. Needed for Rademacher sketches and Hutchinson variance.",
    "hypotheses": [
     "$\\varepsilon_1, \\dots, \\varepsilon_n$ independent Rademacher ($\\pm 1$ with probability $1/2$ each)",
     "$a \\in \\mathbb{R}^n$ fixed",
     "$p \\ge 1$"
    ],
-   "conclusion": "each $\\varepsilon_i$ is sub-Gaussian with $c = 1$, and $\\mathbb{E}\\big|\\sum_i a_i\\varepsilon_i\\big|^p \\le C_p^p\\|a\\|^p$",
+   "conclusion": "$\\varepsilon_i$ is $1$-sub-Gaussian, $\\sum a_i\\varepsilon_i$ is $\\|a\\|^2$-sub-Gaussian, and $\\mathbb{E}|\\sum_i a_i\\varepsilon_i|^p \\le p\\,(2\\|a\\|^2)^{p/2}\\,\\Gamma(p/2)$ for every real $p > 0$",
    "sources": [
     {
      "source": "vershynin18",
@@ -3299,6 +3509,24 @@
      "status": "proved",
      "note": "law only",
      "usage": "`rademacherLaw μ r : Prop` says `r` is a ±1 Rademacher variable under `μ`; it is only a law predicate (no Khintchine inequality yet), used as the Rademacher branch of `hLaw` in `ch4_matrix_series` and `ch4_hermitian_series`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasSubgaussianMGF_of_isRademacher",
+     "status": "proved",
+     "usage": "`IsRademacher μ r → HasSubgaussianMGF r 1 μ`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_abs_rpow_sum_mul_rademacher_le",
+     "status": "proved",
+     "usage": "Khintchine with explicit constant: `𝔼|∑ aᵢ εᵢ|^p ≤ p (2 a⬝a)^{p/2} Γ(p/2)` for real `p > 0`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasSubgaussianMGF_sum_mul_rademacher",
+     "status": "proved",
+     "usage": "`∑ aᵢ εᵢ` is `(a ⬝ᵥ a)`-sub-Gaussian."
     }
    ],
    "depends_on": [
@@ -3316,8 +3544,11 @@
    ],
    "difficulty": 2,
    "priority": "next",
-   "tags": [],
-   "updated_at": "2026-10-09"
+   "tags": [
+    "done"
+   ],
+   "updated_at": "2026-10-10",
+   "notes": "Constant made explicit on 2026-10-10: p (2‖a‖²)^{p/2} Γ(p/2)."
   },
   {
    "id": "epsilon-net-norm",
@@ -3331,13 +3562,13 @@
    ],
    "area": "gaussian-subgaussian",
    "kind": "lemma",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$|\\mathcal{N}(S^{n-1}, \\varepsilon)| \\le (1 + 2/\\varepsilon)^n$, and $\\|A\\| \\le (1-2\\varepsilon)^{-1}\\max_{x\\in\\mathcal{N}}\\|Ax\\|$. The deterministic half of every sub-Gaussian random matrix bound.",
    "hypotheses": [
     "$\\mathcal{N}$ an $\\varepsilon$-net of $S^{n-1}$ with $0 < \\varepsilon < 1/2$",
     "$A \\in \\mathbb{R}^{N\\times n}$"
    ],
-   "conclusion": "$|\\mathcal{N}(S^{n-1}, \\varepsilon)| \\le (1 + 2/\\varepsilon)^n$ for a suitable net, and $\\|A\\| \\le (1-2\\varepsilon)^{-1}\\max_{x\\in\\mathcal{N}}\\|Ax\\|$",
+   "conclusion": "there is an $\\varepsilon$-net $\\mathcal N$ of the unit sphere with $|\\mathcal N| \\le (1+2/\\varepsilon)^n$, and $\\|A\\| \\le (1-\\varepsilon)^{-1}\\max_{x\\in\\mathcal N}\\|Ax\\|$ (bilinear and quadratic forms: $(1-2\\varepsilon)^{-1}$)",
    "sources": [
     {
      "source": "vershynin12",
@@ -3354,6 +3585,36 @@
      "decl": "HighDimProb.coveringNumber_euclideanBall_le",
      "status": "proved",
      "note": "volumetric covering bound only"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_finset_sphere_net",
+     "status": "proved",
+     "usage": "Sphere ε-net of unit vectors with `card ≤ (1 + 2/ε)^{card ι}` (volumetric argument)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_finset_net_specNorm_le",
+     "status": "proved",
+     "usage": "A net independent of `A`: `‖Ax‖ ≤ M` on the net gives `specNorm A ≤ M/(1-ε)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_le_div_of_net",
+     "status": "proved",
+     "usage": "Deterministic net lemma, operator form `(1-ε)⁻¹`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_le_div_of_net_bilinear",
+     "status": "proved",
+     "usage": "Bilinear form `(1-2ε)⁻¹`, `ε < 1/2`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_le_div_of_net_quadForm",
+     "status": "proved",
+     "usage": "Quadratic form for symmetric `B`, `(1-2ε)⁻¹`."
     }
    ],
    "depends_on": [],
@@ -3370,7 +3631,8 @@
    "difficulty": 2,
    "priority": "now",
    "tags": [
-    "foundation"
+    "foundation",
+    "done"
    ],
    "updated_at": "2026-10-10",
    "notes": "Standard form: ‖A‖ ≤ (1−ε)⁻¹ max_N ‖Ax‖ (Vershynin 2012 Lem 5.3(i)); the (1−2ε)⁻¹ form is for bilinear forms."
@@ -3701,10 +3963,11 @@
    "difficulty": 4,
    "priority": "later",
    "tags": [
-    "estimation"
+    "estimation",
+    "done"
    ],
-   "updated_at": "2026-10-09",
-   "notes": "The port uses the canonical NLAlib norms and quadratic form. Under an MGF proxy K² the sharper constant is 1/(256e²); converting a genuine ψ₂ bound incurs the explicit factor 81. No donor-library dependency remains."
+   "updated_at": "2026-10-10",
+   "notes": "The port uses the canonical NLAlib norms and quadratic form. Under an MGF proxy K² the sharper constant is 1/(256e²); converting a genuine ψ₂ bound incurs the explicit factor 81. No donor-library dependency remains. Public theorems generalised from `Fin n` to any `[Fintype ι]` on 2026-10-10."
   },
   {
    "id": "mcdiarmid",
@@ -4055,7 +4318,7 @@
    ],
    "area": "concentration-matrix",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "If the $x_j$ are i.i.d. with $\\mathbb{E}\\,x_jx_j^\\top = I$ and $\\|x_j\\|^2 \\le L$ a.s., then $\\frac{1}{k}\\sum_j x_jx_j^\\top$ has eigenvalues in $[1-\\varepsilon, 1+\\varepsilon]$ with probability at least $1 - 2d\\exp(-k\\varepsilon^2/(cL))$. The one corollary of matrix Chernoff that every sampling-based embedding uses.",
    "hypotheses": [
     "$x_1, \\dots, x_k \\in \\mathbb{R}^d$ i.i.d.",
@@ -4063,7 +4326,7 @@
     "$\\|x_j\\|^2 \\le L$ almost surely",
     "$0 < \\varepsilon < 1$"
    ],
-   "conclusion": "with probability at least $1 - 2d\\exp(-k\\varepsilon^2/(cL))$, every eigenvalue of $\\frac{1}{k}\\sum_j x_jx_j^\\top$ lies in $[1-\\varepsilon, 1+\\varepsilon]$",
+   "conclusion": "$\\mathbb{P}\\big[\\lambda_{\\min}\\big(\\tfrac1N\\sum_k M_k\\big) \\le 1-\\varepsilon\\big] \\le d\\,e^{-\\varepsilon^2 N/(2L)}$ and $\\mathbb{P}\\big[\\lambda_{\\max}\\big(\\tfrac1N\\sum_k M_k\\big) \\ge 1+\\varepsilon\\big] \\le d\\,e^{-\\varepsilon^2 N/(3L)}$ for $0 \\le \\varepsilon \\le 1$",
    "sources": [
     {
      "source": "tropp11",
@@ -4074,7 +4337,26 @@
      "label": "§5.2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrix_chernoff_sampling",
+     "status": "proved",
+     "usage": "Isotropic i.i.d. PSD summands with `λ_max ≤ L`: `P(λ_min(N⁻¹ΣM_k) ≤ 1-ε) ≤ d e^{-ε²N/(2L)}` and `P(λ_max ≥ 1+ε) ≤ d e^{-ε²N/(3L)}` for `0 ≤ ε ≤ 1`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrix_chernoff_sampling_lower",
+     "status": "proved",
+     "usage": "Lower tail only."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrix_chernoff_sampling_upper",
+     "status": "proved",
+     "usage": "Upper tail only."
+    }
+   ],
    "depends_on": [
     "matrix-chernoff"
    ],
@@ -4092,10 +4374,11 @@
    "tags": [
     "foundation",
     "ose",
-    "sampling"
+    "sampling",
+    "done"
    ],
-   "notes": "Matrix Chernoff is proved; this packaging is cheap and unlocks SRHT, leverage-score sampling and sparsification.",
-   "updated_at": "2026-10-09"
+   "notes": "Matrix Chernoff is proved; this packaging is cheap and unlocks SRHT, leverage-score sampling and sparsification. Constants made explicit (2 and 3) on 2026-10-10.",
+   "updated_at": "2026-10-10"
   },
   {
    "id": "matrix-freedman",
@@ -4198,7 +4481,7 @@
    ],
    "area": "sketching-jl",
    "kind": "bound",
-   "status": "scaffold",
+   "status": "proved",
    "informal": "For $S = k^{-1/2}G$: $$\\mathbb{P}\\big[\\big|\\|Sx\\|^2 - \\|x\\|^2\\big| > \\varepsilon\\|x\\|^2\\big] \\le 2\\exp\\big(-k(\\varepsilon^2/4 - \\varepsilon^3/6)\\big).$$",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{k\\times n}$ standard Gaussian and $S = k^{-1/2}G$",
@@ -4220,15 +4503,15 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.jl_distributional",
-     "status": "scaffold",
+     "status": "proved",
      "note": "SCAFFOLD: statement in place, proof deferred until the chi-square tails exist",
      "usage": "Scaffold (proof is `sorry`): for fixed `x : Fin n → ℝ` and `hε0 : 0 < ε`, `hε1 : ε < 1`, gives `gaussianMatrix k n {G | |‖k^{-1/2} G x‖² − ‖x‖²| > ε ‖x‖²} ≤ ENNReal.ofReal (2 exp(−k(ε²/4 − ε³/6)))`; usable downstream, but anything built on it inherits the sorry."
     }
    ],
    "depends_on": [
+    "gaussian-matrix-mulvec-law",
     "chi-square-upper-tail",
-    "chi-square-lower-tail",
-    "rotation-invariance"
+    "chi-square-lower-tail"
    ],
    "uses_defs": [
     "NLAlib.gaussianMatrix"
@@ -4242,9 +4525,11 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "jl"
+    "jl",
+    "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10",
+   "notes": "Proved 2026-10-10 from the sharp chi-square tails, the law of Gx and two elementary log inequalities."
   },
   {
    "id": "jl-lemma",
@@ -4258,7 +4543,7 @@
    ],
    "area": "sketching-jl",
    "kind": "theorem",
-   "status": "scaffold",
+   "status": "proved",
    "informal": "$n$ points embed into $k = O(\\varepsilon^{-2}\\log n)$ dimensions with all pairwise distances preserved to within $1 \\pm \\varepsilon$; union bound over the distributional lemma.",
    "hypotheses": [
     "points $p_1, \\dots, p_N \\in \\mathbb{R}^n$ with $N \\ge 2$",
@@ -4276,26 +4561,26 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.jl_lemma",
-     "status": "scaffold",
+     "status": "proved",
      "note": "union bound over ordered pairs (factor 2 vs N(N−1)/2); explicit constant 48 log N / ε² for failure probability ≤ 1/2; proved modulo the scaffold jl_distributional",
      "usage": "For points `p : Fin N → Fin n → ℝ` and `0 < ε < 1`; bounds the `gaussianMatrix k n`-measure of sketches distorting some pair `i ≠ j` by more than `1 ± ε` by `ENNReal.ofReal (N² · 2 exp(−k(ε²/4 − ε³/6)))` (rests on the `jl_distributional` scaffold)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.jl_lemma_prob_le_of_log_le",
-     "status": "scaffold",
+     "status": "proved",
      "usage": "Pass `0 < ε < 1`, `0 < δ` and `hk : (ε²/4 − ε³/6)⁻¹ * log(2N²/δ) ≤ k`; gives that the bad set of Gaussian sketches has measure at most `ENNReal.ofReal δ`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.jl_lemma_prob_le_half",
-     "status": "scaffold",
+     "status": "proved",
      "usage": "Pass `0 < ε < 1`, `hN : 2 ≤ N` and `hk : 48 * log N / ε² ≤ k`; gives that the bad set of Gaussian sketches has measure at most `ENNReal.ofReal (1/2)`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.jl_lemma_exists",
-     "status": "scaffold",
+     "status": "proved",
      "usage": "Pass `0 < ε < 1`, `hN : 2 ≤ N` and `hk : 48 * log N / ε² ≤ k`; gives `∃ S` with `(1 − ε)‖p i − p j‖² ≤ ‖S (p i − p j)‖² ≤ (1 + ε)‖p i − p j‖²` for all `i j` (inherits the `jl_distributional` sorry)."
     }
    ],
@@ -4314,10 +4599,11 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "jl"
+    "jl",
+    "done"
    ],
-   "notes": "Proof complete on top of the distributional lemma; becomes proved automatically once jl_distributional is discharged.",
-   "updated_at": "2026-10-09"
+   "notes": "Proof complete on top of the distributional lemma; becomes proved automatically once jl_distributional is discharged. All four declarations sorry-free since 2026-10-10.",
+   "updated_at": "2026-10-10"
   },
   {
    "id": "jl-subgaussian",
@@ -4495,14 +4781,14 @@
    ],
    "area": "sketching-ose",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$k^{-1/2}G$ with $k \\ge C(d + \\log(1/\\delta))/\\varepsilon^2$ is an $\\varepsilon$-subspace embedding for any fixed $d$-dimensional subspace with probability $1 - \\delta$.",
    "hypotheses": [
     "$G \\in \\mathbb{R}^{k\\times m}$ standard Gaussian and $S = k^{-1/2}G$",
     "$U \\in \\mathbb{R}^{m\\times d}$ fixed with orthonormal columns",
     "$k \\ge C(d + \\log(1/\\delta))/\\varepsilon^2$"
    ],
-   "conclusion": "with probability at least $1 - \\delta$, $S$ is an $\\varepsilon$-subspace embedding for $\\operatorname{range}(U)$",
+   "conclusion": "for $k \\ge 18(d + 2\\log(2/\\delta))/\\varepsilon^2$, $k^{-1/2}G$ is an $\\varepsilon$-subspace embedding for a fixed $d$-dimensional subspace with probability at least $1-\\delta$",
    "sources": [
     {
      "source": "woodruff14",
@@ -4513,7 +4799,20 @@
      "label": "§8.7"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix",
+     "status": "proved",
+     "usage": "`k ≥ 18 (d + 2 log(2/δ)) / ε²` gives `1 - δ ≤ P(k^{-1/2} G is an ε-subspace embedding for range U)`; `d = 0` covered."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isSubspaceEmbedding_of_forall_sqrt_le",
+     "status": "proved",
+     "usage": "Deterministic criterion: `(1-a)‖x‖ ≤ ‖SUx‖ ≤ (1+a)‖x‖` with `3a ≤ ε ≤ 1`."
+    }
+   ],
    "depends_on": [
     "ose-def",
     "extreme-singular-values-deviation",
@@ -4535,10 +4834,11 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "ose"
+    "ose",
+    "done"
    ],
-   "notes": "One line from the Mission III goal plus rotation invariance.",
-   "updated_at": "2026-10-09"
+   "notes": "One line from the Mission III goal plus rotation invariance. Constant made explicit (18) on 2026-10-10.",
+   "updated_at": "2026-10-10"
   },
   {
    "id": "srht-ose",
@@ -4726,7 +5026,7 @@
    ],
    "area": "sketching-amm",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "If $S$ satisfies the JL moment property then $$\\mathbb{E}\\|A^\\top S^\\top SB - A^\\top B\\|_F^2 \\le \\varepsilon^2\\|A\\|_F^2\\|B\\|_F^2.$$ The glue between embeddings and least squares.",
    "hypotheses": [
     "$S$ satisfies the JL moment property with parameter $\\varepsilon$",
@@ -4743,10 +5043,15 @@
      "label": "Thm 2.8"
     }
    ],
-   "formalizations": [],
-   "depends_on": [
-    "gaussian-amm"
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lintegral_frobSq_transpose_mul_sketch_sub_le",
+     "status": "proved",
+     "usage": "From the JL second-moment property `𝔼(‖Sx‖² - ‖x‖²)² ≤ ε²‖x‖⁴`: `𝔼‖AᵀSᵀSB - AᵀB‖_F² ≤ ε² ‖A‖_F² ‖B‖_F²` (lintegral form, constant 1)."
+    }
    ],
+   "depends_on": [],
    "uses_defs": [
     "NLAlib.frobSq"
    ],
@@ -4758,7 +5063,8 @@
    "difficulty": 3,
    "priority": "next",
    "tags": [
-    "amm"
+    "amm",
+    "done"
    ],
    "updated_at": "2026-10-10"
   },
@@ -4774,7 +5080,7 @@
    ],
    "area": "sketching-sampling",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$\\ell_i(A) = \\|U_{i,:}\\|^2 = (AA^\\dagger)_{ii}$; $\\sum_i \\ell_i = \\operatorname{rank} A$; $0 \\le \\ell_i \\le 1$; invariant under change of basis of $\\operatorname{range}(A)$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times d}$",
@@ -4791,14 +5097,44 @@
      "label": "§9.6"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.leverageScore",
+     "status": "proved",
+     "usage": "`leverageScore A i = (A * A⁺) i i`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.leverageScore_nonneg",
+     "status": "proved",
+     "usage": "`0 ≤ ℓᵢ`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.leverageScore_le_one",
+     "status": "proved",
+     "usage": "`ℓᵢ ≤ 1`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_leverageScore_eq_rank",
+     "status": "proved",
+     "usage": "`∑ i, leverageScore A i = A.rank`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.leverageScore_eq_sum_sq_of_hasOrthonormalCols",
+     "status": "proved",
+     "usage": "`ℓᵢ = ∑ j, U i j ^ 2` for any orthonormal basis `U` of `range A`."
+    }
+   ],
    "depends_on": [
-    "projection-facts",
-    "svd"
+    "pseudoinverse",
+    "projection-facts"
    ],
    "uses_defs": [
-    "NLAlib.HasOrthonormalCols",
-    "NLAlib.pinvL"
+    "NLAlib.leverageScore"
    ],
    "variants": [
     "leverage-sampling-ose"
@@ -4808,9 +5144,10 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "sampling"
+    "sampling",
+    "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "leverage-sampling-ose",
@@ -4999,7 +5336,7 @@
    ],
    "area": "lra-deterministic",
    "kind": "bound",
-   "status": "assumed",
+   "status": "proved",
    "informal": "Under the same hypotheses: $$\\|(I-QQ^\\top)A\\|^2 \\le \\|\\Sigma_2\\|^2 + \\|\\Sigma_2\\Omega_2\\Omega_1^\\dagger\\|^2.$$",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$ with block SVD $A = U_1\\Sigma_1V_1^\\top + U_2\\Sigma_2V_2^\\top$",
@@ -5019,7 +5356,20 @@
     {
      "library": "lra",
      "decl": "HMTSpectralBound",
-     "status": "assumed"
+     "status": "assumed",
+     "note": "over-hypothesised external statement"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_residual_sq_le_of_range_subset",
+     "status": "proved",
+     "usage": "Same hypotheses as `frobSq_residual_le_of_range_subset`; gives `specNorm (residual Q A)^2 ≤ specNorm Σ₂^2 + specNorm (Σ₂ Ω₂ Ω₁†)^2`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_residual_le_of_range_subset",
+     "status": "proved",
+     "usage": "Unsquared form `≤ specNorm Σ₂ + specNorm (Σ₂ Ω₂ Ω₁†)`."
     }
    ],
    "depends_on": [
@@ -5041,9 +5391,10 @@
    "difficulty": 3,
    "priority": "now",
    "tags": [
-    "lra"
+    "lra",
+    "done"
    ],
-   "notes": "The Frobenius form is proved; the spectral form needs ‖[X Y]‖² ≤ ‖X‖² + ‖Y‖² style block norm lemmas.",
+   "notes": "The Frobenius form is proved; the spectral form needs ‖[X Y]‖² ≤ ‖X‖² + ‖Y‖² style block norm lemmas. Proved 2026-10-10 in NLAlib with the Frobenius form's hypotheses; the LRA declaration had unused premises.",
    "updated_at": "2026-10-10"
   },
   {
@@ -5184,7 +5535,7 @@
    ],
    "area": "lra-deterministic",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $Y = (AA^\\top)^qA\\Omega$ and $Q = \\operatorname{orth}(Y)$: $$\\|(I-QQ^\\top)A\\| \\le \\|(I-QQ^\\top)(AA^\\top)^qA\\|^{1/(2q+1)}.$$ Turns the RSVD bound into a bound with $\\sigma_{k+1}^{2q+1}$ decay.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$, $\\Omega \\in \\mathbb{R}^{n\\times t}$, $q \\ge 0$",
@@ -5201,10 +5552,30 @@
      "label": "§11.6"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_mul_pow_le_specNorm_mul_gram_pow_mul",
+     "status": "proved",
+     "usage": "HMT Prop 8.6: `specNorm (P * A)^(2q+1) ≤ specNorm (P * (A*Aᵀ)^q * A)` for symmetric idempotent `P`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_residual_pow_le",
+     "status": "proved",
+     "usage": "HMT Thm 9.2 in power form for any orthonormal `Q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_residual_le_rpow",
+     "status": "proved",
+     "usage": "`specNorm (residual Q A) ≤ specNorm (residual Q ((A*Aᵀ)^q*A))^(1/(2q+1))`."
+    }
+   ],
    "depends_on": [
     "projection-facts",
-    "svd"
+    "polynomial-spectral-bound",
+    "norms-frob-spec"
    ],
    "uses_defs": [
     "NLAlib.specNorm",
@@ -5220,10 +5591,11 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "lra"
+    "lra",
+    "done"
    ],
-   "notes": "The deterministic half of subspace iteration; cheap once the SVD API exists.",
-   "updated_at": "2026-10-09"
+   "notes": "The deterministic half of subspace iteration; cheap once the SVD API exists. Holds for any orthogonal projector; the hypothesis Q = orth((AAᵀ)^qAΩ) is not needed.",
+   "updated_at": "2026-10-10"
   },
   {
    "id": "nystrom-structural",
@@ -5237,7 +5609,7 @@
    ],
    "area": "lra-deterministic",
    "kind": "lemma",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For PSD $A$ and any $\\Omega$: $A \\succeq A\\langle\\Omega\\rangle := A\\Omega(\\Omega^\\top A\\Omega)^\\dagger\\Omega^\\top A \\succeq 0$, and $A - A\\langle\\Omega\\rangle$ is the Schur complement. Moreover $\\|A - A\\langle\\Omega\\rangle\\| \\le \\|(I-P)A^{1/2}\\|^2$ for $P$ the projector onto $\\operatorname{range}(A^{1/2}\\Omega)$. Foundation for Nyström, RPCholesky and Nyström preconditioning.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ PSD",
@@ -5260,17 +5632,43 @@
      "label": "§14"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sub_nystrom_eq_of_eq_transpose_mul",
+     "status": "proved",
+     "usage": "Exact identity: `A = Fᵀ F → A - nystrom A Ω = ((1 - Y Y⁺) F)ᵀ ((1 - Y Y⁺) F)` with `Y = F Ω`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posSemidef_sub_nystrom",
+     "status": "proved",
+     "usage": "For PSD `A`: `(A - nystrom A Ω).PosSemidef`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posSemidef_nystrom",
+     "status": "proved",
+     "usage": "For PSD `A`: `(nystrom A Ω).PosSemidef`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.trace_sub_nystrom_eq_of_eq_transpose_mul",
+     "status": "proved",
+     "usage": "`trace (A - nystrom A Ω) = frobSq ((1 - YY⁺) F)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sub_nystrom_eq_of_eq_transpose_mul",
+     "status": "proved",
+     "usage": "`specNorm (A - nystrom A Ω) = specNorm ((1 - YY⁺) F)^2` (equality)."
+    }
+   ],
    "depends_on": [
-    "pseudoinverse",
-    "schur-complement",
-    "loewner-order"
+    "pseudoinverse"
    ],
    "uses_defs": [
-    "NLAlib.LoewnerLE",
-    "NLAlib.pinvL",
-    "NLAlib.specNorm",
-    "NLAlib.residual"
+    "NLAlib.nystrom"
    ],
    "variants": [
     "nystrom-randomized",
@@ -5281,9 +5679,11 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "lra"
+    "lra",
+    "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10",
+   "notes": "Proved 2026-10-10 via a Gram factor and the Moore–Penrose projector, no matrix square root; the Schur-complement clause is not formalised."
   },
   {
    "id": "sketched-regression",
@@ -5913,7 +6313,8 @@
     "power-iteration-deterministic",
     "hmt-9-1-spectral",
     "chevet",
-    "pinv-spectral-expectation"
+    "pinv-spectral-expectation",
+    "rsvd-spectral-expected"
    ],
    "uses_defs": [
     "NLAlib.specNorm",
@@ -5947,7 +6348,7 @@
    ],
    "area": "lra-randomized",
    "kind": "application",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For Gaussian $\\Omega$: $$\\mathbb{E}\\|A - A\\langle\\Omega\\rangle\\|_* \\le \\Big(1 + \\frac{k}{t-k-1}\\Big)\\|A - \\lbrack\\!\\lbrack A \\rbrack\\!\\rbrack_k\\|_*.$$",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ PSD",
@@ -5964,7 +6365,15 @@
      "label": "§6"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_trace_sub_nystrom_le",
+     "status": "proved",
+     "usage": "With `A = Fᵀ F`, Gaussian `Ω` with `t ≥ k + 2` columns: `𝔼 trace (A - nystrom A Ω) ≤ (1 + k/(t-k-1)) * bestRankFrobSq k F`.",
+     "note": "right side stated with bestRankFrobSq k F rather than the nuclear norm of A − ⟦A⟧_k"
+    }
+   ],
    "depends_on": [
     "nystrom-structural",
     "rsvd-expected-error"
@@ -5984,9 +6393,10 @@
    "difficulty": 3,
    "priority": "next",
    "tags": [
-    "consumer"
+    "consumer",
+    "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "rpcholesky",
@@ -6309,14 +6719,14 @@
    ],
    "area": "estimation",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$(\\varepsilon,\\delta)$ sample complexity $m = O(\\varepsilon^{-2}\\log(1/\\delta))$ for PSD $A$; Cortinovis–Kressner bounds for indefinite $A$ via Hanson–Wright.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ symmetric (PSD for the Avron–Toledo bound)",
     "$m$ i.i.d. Gaussian or Rademacher test vectors",
     "$0 < \\varepsilon, \\delta < 1$"
    ],
-   "conclusion": "$m = O(\\varepsilon^{-2}\\log(1/\\delta))$ samples give $|\\operatorname{tr}_m(A) - \\operatorname{tr}A| \\le \\varepsilon\\operatorname{tr}A$ with probability at least $1 - \\delta$ for PSD $A$; for indefinite $A$ the Cortinovis–Kressner bound holds with $\\|A\\|_F$ in place of $\\operatorname{tr}A$",
+   "conclusion": "$\\mathbb{P}\\big[|\\hat{\\operatorname{tr}} - \\operatorname{tr}A| \\ge t\\big] \\le 2\\exp\\Big(-\\tfrac{1}{256e^2}\\min\\Big(\\tfrac{m t^2}{\\|A\\|_F^2}, \\tfrac{m t}{\\|A\\|}\\Big)\\Big)$; for $A \\succeq 0$, $m \\ge 256e^2\\varepsilon^{-2}\\log(2/\\delta)$ samples give relative error $\\varepsilon$ with probability $1-\\delta$",
    "sources": [
     {
      "source": "at11",
@@ -6327,16 +6737,40 @@
      "label": "Thm 1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_le_abs_hutchinsonEstimate_sub_trace_le_of_standardGaussian",
+     "status": "proved",
+     "usage": "`P(|est - tr A| ≥ t) ≤ 2 exp(-(1/(256e²)) min(m t²/‖A‖_F², m t/‖A‖))` for `m` standard Gaussian samples."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_le_abs_hutchinsonEstimate_sub_trace_le_of_rademacher",
+     "status": "proved",
+     "usage": "Same for Rademacher samples."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_le_abs_hutchinsonEstimate_sub_trace_le_mul_trace_of_standardGaussian",
+     "status": "proved",
+     "usage": "PSD `A`: `P(|est - tr A| ≥ ε tr A) ≤ 2 exp(-m ε²/(256e²))` for `0 < ε ≤ 1`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_le_abs_hutchinsonEstimate_sub_trace_le_of_le_card",
+     "status": "proved",
+     "usage": "`m ≥ 256e² ε⁻² log(2/δ)` gives probability `≤ δ`."
+    }
+   ],
    "depends_on": [
-    "hutchinson-variance",
     "hanson-wright",
-    "chi-square-upper-tail"
+    "hutchinson-unbiased",
+    "rademacher-khintchine"
    ],
    "uses_defs": [
-    "NLAlib.quadForm",
-    "NLAlib.frobNorm",
-    "NLAlib.specNorm"
+    "NLAlib.hutchinsonEstimate",
+    "NLAlib.quadForm"
    ],
    "variants": [
     "hutchinson-variance",
@@ -6347,9 +6781,11 @@
    "difficulty": 3,
    "priority": "next",
    "tags": [
-    "estimation"
+    "estimation",
+    "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10",
+   "notes": "Explicit constant 1/(256e²) inherited from the Hanson–Wright proof; sharper constants (Cortinovis–Kressner) remain a target."
   },
   {
    "id": "diagonal-estimator",
@@ -6362,7 +6798,7 @@
    ],
    "area": "estimation",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$\\mathbb{E}[z \\odot Az] = \\operatorname{diag}(A)$ for isotropic $z$ with independent entries; variance per coordinate.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$",
@@ -6378,7 +6814,32 @@
      "label": "§6"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_mul_mulVec_apply_eq",
+     "status": "proved",
+     "usage": "`𝔼[zᵢ (A z)ᵢ] = A i i` for isotropic `z`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.variance_mul_mulVec_apply",
+     "status": "proved",
+     "usage": "`Var = ∑ⱼ A i j² + (m₄ - 2) A i i²`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_and_variance_mul_mulVec_apply_of_standardGaussian",
+     "status": "proved",
+     "usage": "Gaussian: variance `∑ⱼ A i j² + A i i²`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_and_variance_mul_mulVec_apply_of_rademacher",
+     "status": "proved",
+     "usage": "Rademacher: variance `∑ⱼ A i j² - A i i²`."
+    }
+   ],
    "depends_on": [
     "hutchinson-unbiased",
     "hutchinson-variance"
@@ -6394,9 +6855,10 @@
    "difficulty": 2,
    "priority": "next",
    "tags": [
-    "estimation"
+    "estimation",
+    "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "hutchpp",
@@ -6460,7 +6922,7 @@
    ],
    "area": "estimation",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Leave-one-out low-rank corrections preserve unbiasedness by exchangeability of the test vectors.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$",
@@ -6473,14 +6935,19 @@
      "label": "§3"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_xtraceEstimate_eq_trace",
+     "status": "proved",
+     "usage": "Leave-one-out estimator is unbiased when `Sᵢ ⊥ ωᵢ`."
+    }
+   ],
    "depends_on": [
     "hutchinson-unbiased"
    ],
    "uses_defs": [
-    "NLAlib.quadForm",
-    "NLAlib.residual",
-    "NLAlib.HasOrthonormalCols"
+    "NLAlib.xtraceEstimate"
    ],
    "variants": [
     "hutchinson-unbiased",
@@ -6490,7 +6957,8 @@
    "difficulty": 3,
    "priority": "later",
    "tags": [
-    "estimation"
+    "estimation",
+    "done"
    ],
    "updated_at": "2026-10-10"
   },
@@ -6506,7 +6974,7 @@
    ],
    "area": "krylov",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For Hermitian $A$ and unit $u$, $\\mu_u = \\sum_i |\\langle u, v_i\\rangle|^2\\delta_{\\lambda_i}$ satisfies $u^\\top f(A)u = \\int f\\,d\\mu_u$, and $\\mathbb{E}_g[g^\\top f(A)g] = \\operatorname{tr}f(A)$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ symmetric with eigenpairs $(\\lambda_i, v_i)$",
@@ -6523,11 +6991,44 @@
      "label": "Ch. 3"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.spectralMeasure",
+     "status": "proved",
+     "usage": "`spectralMeasure hA v = ∑ i, ofReal ((uᵢ ⬝ᵥ v)^2) • dirac λᵢ`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_spectralMeasure",
+     "status": "proved",
+     "usage": "`∫ f ∂(spectralMeasure hA v) = v ⬝ᵥ (cfc f A *ᵥ v)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_eval_spectralMeasure",
+     "status": "proved",
+     "usage": "Polynomial form `∫ p.eval = v ⬝ᵥ (aeval A p *ᵥ v)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_pow_spectralMeasure",
+     "status": "proved",
+     "usage": "Moments `∫ x^k = v ⬝ᵥ (A^k *ᵥ v)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_integral_spectralMeasure_eq_trace",
+     "status": "proved",
+     "usage": "`𝔼_z ∫ f ∂μ_z = trace (cfc f A)` for isotropic `z`."
+    }
+   ],
    "depends_on": [
-    "loewner-order"
+    "polynomial-spectral-bound",
+    "hutchinson-unbiased"
    ],
    "uses_defs": [
+    "NLAlib.spectralMeasure",
     "NLAlib.quadForm"
    ],
    "variants": [
@@ -6548,7 +7049,8 @@
    "tags": [
     "foundation",
     "estimation",
-    "krylov"
+    "krylov",
+    "done"
    ],
    "updated_at": "2026-10-10",
    "notes": "Lives in the Krylov area (layer 1); the Lean definition should not depend on Estimation/Basic, so `quadForm` or the spectral measure itself belongs in Matrix or Krylov/Basic."
@@ -6663,13 +7165,39 @@
      "label": "§2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lanczosMatrix",
+     "status": "proved",
+     "usage": "`lanczosMatrix A b q`: Gram–Schmidt of `b, Ab, …, A^{q-1}b`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.range_lanczosMatrix",
+     "status": "proved",
+     "usage": "`range (lanczosMatrix A b q) = krylovSpace A b q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasOrthonormalCols_lanczosMatrix",
+     "status": "proved",
+     "usage": "Orthonormal columns when the Krylov vectors are linearly independent."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lanczos_apply_eq_zero_of_add_one_lt",
+     "status": "proved",
+     "usage": "`QᵀAQ` is upper Hessenberg; with `lanczos_apply_eq_zero_of_add_one_lt'` tridiagonal for symmetric `A`."
+    }
+   ],
    "depends_on": [
     "krylov-subspace"
    ],
    "uses_defs": [
-    "NLAlib.krylovSpace",
-    "NLAlib.HasOrthonormalCols"
+    "NLAlib.lanczosBasis",
+    "NLAlib.lanczosMatrix",
+    "NLAlib.krylovSpace"
    ],
    "variants": [
     "lanczos-gauss-quadrature",
@@ -6682,7 +7210,8 @@
     "foundation",
     "krylov"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10",
+   "notes": "Orthonormality, span and tridiagonality are proved (2026-10-10); the explicit identity AQ_q = Q_qT_q + β_q q_{q+1} e_qᵀ is not yet stated, so the status stays open."
   },
   {
    "id": "lanczos-gauss-quadrature",
@@ -6696,7 +7225,7 @@
    ],
    "area": "krylov",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$e_1^\\top f(T_q)e_1 = \\int f\\,d\\hat{\\mu}$, where $\\hat{\\mu}$ is the $q$-point Gauss quadrature rule for $\\mu_b$; exact for polynomials of degree at most $2q-1$.",
    "hypotheses": [
     "$A$ symmetric and $b$ a unit vector with spectral measure $\\mu_b$",
@@ -6716,7 +7245,26 @@
      "source": "ucs17"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_mulVec_eq_of_krylovSpace_le",
+     "status": "proved",
+     "usage": "Exactness: for symmetric `A`, orthonormal `Q` with `krylovSpace A b q ≤ range Q`, `0 < q`, and `p.natDegree ≤ 2q - 1`: `b ⬝ᵥ p(A) b = (Qᵀb) ⬝ᵥ p(QᵀAQ) (Qᵀb)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le",
+     "status": "proved",
+     "usage": "Error: `|bᵀ f(A) b - (Qᵀb)ᵀ f(QᵀAQ)(Qᵀb)| ≤ 2E ‖b‖²` when `|f - p| ≤ E` on an interval containing the spectrum."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_mulVec_eq_lanczos",
+     "status": "proved",
+     "usage": "The Lanczos instance `Q = lanczosMatrix`."
+    }
+   ],
    "depends_on": [
     "krylov-subspace",
     "spectral-measure"
@@ -6735,7 +7283,8 @@
    "priority": "next",
    "tags": [
     "krylov",
-    "estimation"
+    "estimation",
+    "done"
    ],
    "updated_at": "2026-10-10",
    "notes": "Exactness up to degree 2q−1 holds for any orthonormal basis of a space containing K_q; the Lanczos recurrence is only needed to identify the nodes as Ritz values."
@@ -6751,7 +7300,7 @@
    ],
    "area": "krylov",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$$\\|x_q - x\\|_A \\le 2\\Big(\\frac{\\sqrt{\\kappa}-1}{\\sqrt{\\kappa}+1}\\Big)^q\\|x_0 - x\\|_A.$$",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ symmetric positive definite with $\\kappa = \\lambda_{\\max}/\\lambda_{\\min}$",
@@ -6764,12 +7313,40 @@
      "label": "Ch. 8"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsCGIterate",
+     "status": "proved",
+     "usage": "CG iterate defined variationally: the minimiser of `½xᵀAx - cᵀx` over `x₀ + krylovSpace A (c - A x₀) q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCGIterate",
+     "status": "proved",
+     "usage": "Existence for `A.PosDef` (algebraic, no compactness)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_sub_le_of_isCGIterate",
+     "status": "proved",
+     "usage": "κ-bound: for `0 < a < b` containing the spectrum, `‖x_q - x⋆‖²_A ≤ (2((√b-√a)/(√b+√a))^q)² ‖x₀ - x⋆‖²_A`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_sub_le_of_isCGIterate_of_poly",
+     "status": "proved",
+     "usage": "General polynomial form: any `p` with `deg p ≤ q`, `p(0) = 1`, `|p| ≤ M` on the spectrum gives `‖x_q - x⋆‖²_A ≤ M² ‖x₀ - x⋆‖²_A`."
+    }
+   ],
    "depends_on": [
     "krylov-subspace",
-    "chebyshev-minimax"
+    "chebyshev-minimax",
+    "polynomial-spectral-bound"
    ],
    "uses_defs": [
+    "NLAlib.IsCGIterate",
+    "NLAlib.cgObjective",
     "NLAlib.krylovSpace",
     "NLAlib.quadForm"
    ],
@@ -6782,9 +7359,11 @@
    "priority": "next",
    "tags": [
     "consumer",
-    "krylov"
+    "krylov",
+    "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-10",
+   "notes": "Stated in squared A-norms; the algorithmic (Hestenes–Stiefel recurrence) identification of the iterate is not formalised."
   },
   {
    "id": "random-start-power",
@@ -6864,13 +7443,28 @@
      "label": "Thm 4.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_slqEstimate_inv_sub_hutchinsonEstimate_le",
+     "status": "proved",
+     "usage": "Case `f = 1/x`: `|SLQ - Hutchinson(A⁻¹)| ≤ 2 (2/a) ρ^{2q} tr_m(I)` with `ρ = (√b-√a)/(√b+√a)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_le_abs_slqEstimate_inv_sub_trace_le_of_standardGaussian",
+     "status": "proved",
+     "usage": "Case `f = 1/x`: `P(|SLQ - tr A⁻¹| ≥ t + 2E(n+s))` bounded by two Hanson–Wright tails."
+    }
+   ],
    "depends_on": [
     "lanczos-gauss-quadrature",
     "hutchinson-tail",
-    "bernstein-ellipse-approx"
+    "bernstein-ellipse-approx",
+    "inverse-polynomial-approx"
    ],
    "uses_defs": [
+    "NLAlib.slqEstimate",
     "NLAlib.krylovSpace",
     "NLAlib.quadForm"
    ],
@@ -6885,7 +7479,8 @@
     "consumer",
     "krylov"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-10",
+   "notes": "The case f = 1/x (tr A⁻¹) is proved 2026-10-10 from the Chebyshev 1/x approximation; general analytic f waits on bernstein-ellipse-approx."
   },
   {
    "id": "sketch-and-solve-ls",
@@ -7063,50 +7658,55 @@
   },
   {
    "id": "sketch-and-project",
-   "title": "Sketch-and-project convergence",
+   "title": "Sketch-and-project convergence (Gower–Richtárik)",
    "aliases": [
-    "sketch-and-project",
+    "sketch and project",
     "Gower–Richtárik",
-    "randomized iterative methods",
-    "randomized coordinate descent",
-    "block Kaczmarz"
+    "randomized projection methods",
+    "generalised Kaczmarz"
    ],
    "area": "solvers",
-   "kind": "theorem",
-   "status": "candidate",
-   "informal": "With $W = \\mathbb{E}[Z]$ the expected projector, $$\\mathbb{E}\\|x_k - x^*\\|_B^2 \\le \\big(1 - \\lambda_{\\min}(W)\\big)^k\\|x_0 - x^*\\|_B^2.$$ Recovers Kaczmarz, coordinate descent and block variants.",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "The iteration $x_{k+1} = x_k - A^\\top S(S^\\top AA^\\top S)^+S^\\top(Ax_k - b)$ with random $S$ satisfies $\\mathbb{E}\\|x_k - x^\\star\\|^2 \\le (1-\\lambda)^k\\|x_0 - x^\\star\\|^2$, $\\lambda = \\lambda_{\\min}(\\mathbb{E}Z)$ on $\\operatorname{range}A^\\top$. Generalises randomized Kaczmarz ($B = I$).",
    "hypotheses": [
-    "a consistent system $Ax^* = b$ and a norm-defining $B \\succ 0$",
-    "a random sketch inducing the $B$-orthogonal projector $Z$, with $W = \\mathbb{E}[Z]$"
+    "$Ax = b$ consistent, $S$ random with $\\mathbb{E}Z \\succeq \\lambda I$ on $\\operatorname{range}A^\\top$"
    ],
-   "conclusion": "$\\mathbb{E}\\|x_k - x^*\\|_B^2 \\le \\big(1 - \\lambda_{\\min}(W)\\big)^k\\|x_0 - x^*\\|_B^2$",
+   "conclusion": "$\\mathbb{E}\\|x_k - x^\\star\\|^2 \\le (1-\\lambda)^k\\|x_0 - x^\\star\\|^2$",
    "sources": [
     {
      "source": "gr15",
      "label": "Thm 4.6"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.SketchProject.expErr_le",
+     "status": "proved",
+     "usage": "`(1-λ)^k ‖x - x⋆‖²` for the `B = I` case."
+    }
+   ],
    "depends_on": [
-    "randomized-kaczmarz",
-    "projection-facts",
-    "loewner-order"
+    "pseudoinverse"
    ],
    "uses_defs": [
-    "NLAlib.lambdaMin",
-    "NLAlib.LoewnerLE",
-    "NLAlib.pinvL"
+    "NLAlib.SketchProject.step",
+    "NLAlib.SketchProject.expErr",
+    "NLAlib.moorePenroseInverse"
    ],
    "variants": [
     "randomized-kaczmarz"
    ],
    "mathlib_prereqs": [],
-   "difficulty": 3,
+   "difficulty": 2,
    "priority": "next",
    "tags": [
-    "solvers"
+    "solvers",
+    "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10",
+   "notes": "Only the B = I (Euclidean) case is formalised."
   },
   {
    "id": "nystrom-pcg",
@@ -10217,7 +10817,7 @@
    ],
    "area": "matrix-trace",
    "kind": "lemma",
-   "status": "planned",
+   "status": "proved",
    "informal": "If $\\operatorname{rank}X \\le r$ then $\\langle X, E\\rangle_F \\le \\sqrt{r}\\,\\|X\\|_F\\,\\|E\\|$. The only form of von Neumann's inequality the truncated Nyström argument uses; provable from the Moore–Penrose projector without the full trace inequality.",
    "hypotheses": [
     "$X, E \\in \\mathbb{R}^{m\\times n}$ with $\\operatorname{rank}X \\le r$"
@@ -10229,10 +10829,18 @@
      "label": "Thm 7.4.1.1 (corollary)"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le",
+     "status": "proved",
+     "usage": "From `hX : X.rank ≤ r`; gives `frobInner X E ≤ √r * frobNorm X * specNorm E`; discharges the LRA hypothesis `hVN`."
+    }
+   ],
    "depends_on": [
     "pseudoinverse",
-    "norms-frob-spec"
+    "norms-frob-spec",
+    "projection-facts"
    ],
    "uses_defs": [
     "NLAlib.frobInner",
@@ -10248,7 +10856,607 @@
    "priority": "now",
    "tags": [
     "foundation",
-    "lra"
+    "lra",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "gaussian-matrix-mulvec-law",
+   "title": "Law of G x for a Gaussian matrix and a fixed vector",
+   "aliases": [
+    "law of Gx",
+    "Gaussian matrix times a vector",
+    "Gx is Gaussian with variance ‖x‖²",
+    "gaussianMatrix_map_mulVec"
+   ],
+   "area": "gaussian-invariance",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "For $G \\in \\mathbb{R}^{k\\times n}$ standard Gaussian and fixed $x$, $Gx \\sim N(0, \\|x\\|^2 I_k)$; in particular each coordinate is $\\|x\\|^2$-sub-Gaussian. Also $G^\\top$ and $GU$ ($U^\\top U = I$) are standard Gaussian.",
+   "hypotheses": [
+    "$G \\in \\mathbb{R}^{k\\times n}$ standard Gaussian",
+    "$x \\in \\mathbb{R}^n$ fixed"
+   ],
+   "conclusion": "$Gx \\sim N(0, \\|x\\|^2 I_k)$; for $\\|x\\| = 1$ the law is the standard Gaussian on $\\mathbb{R}^k$",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "§3.3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_map_mulVec",
+     "status": "proved",
+     "usage": "`(gaussianMatrix k n).map (fun G => of G *ᵥ x) = Measure.pi fun _ => gaussianReal 0 (x ⬝ᵥ x).toNNReal`, any `x`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_map_mulVec_of_dotProduct_self_eq_one",
+     "status": "proved",
+     "usage": "From `hx : x ⬝ᵥ x = 1`; the image law is `Measure.pi fun _ => gaussianReal 0 1`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasSubgaussianMGF_mulVec_apply_gaussianMatrix",
+     "status": "proved",
+     "usage": "`HasSubgaussianMGF (fun G => (of G *ᵥ x) i) (x ⬝ᵥ x).toNNReal (gaussianMatrix k n)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_map_transpose",
+     "status": "proved",
+     "usage": "`(gaussianMatrix p m).map transpose = gaussianMatrix m p`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianMatrix_map_mul_right",
+     "status": "proved",
+     "usage": "From `hU : Uᵀ * U = 1`; `(gaussianMatrix k m).map (· * U) = gaussianMatrix k d`."
+    }
+   ],
+   "depends_on": [
+    "rotation-invariance",
+    "block-law-indep"
+   ],
+   "uses_defs": [
+    "NLAlib.gaussianMatrix"
+   ],
+   "variants": [
+    "jl-distributional",
+    "gaussian-ose"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "gaussian",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "polynomial-spectral-bound",
+   "title": "Polynomial calculus of a symmetric matrix: ‖p(A)v‖ ≤ max|p(λᵢ)| ‖v‖",
+   "aliases": [
+    "spectral bound for p(A)",
+    "polynomial of a symmetric matrix",
+    "‖p(A)‖ ≤ max |p(λ)|",
+    "spectral calculus",
+    "eigen-expansion of p(A)v"
+   ],
+   "area": "matrix-spectral",
+   "kind": "lemma",
+   "status": "proved",
+   "informal": "For symmetric $A = U\\Lambda U^\\top$, $p(A) = U p(\\Lambda) U^\\top$, so $\\|p(A)\\| \\le \\max_i |p(\\lambda_i)|$, $\\|p(A)v\\|^2 \\le M^2\\|v\\|^2$ and $\\|p(A)v\\|_A^2 \\le M^2\\|v\\|_A^2$ whenever $|p| \\le M$ on the spectrum. The one lemma every Krylov rate reduces to.",
+   "hypotheses": [
+    "$A \\in \\mathbb{R}^{n\\times n}$ symmetric with eigenpairs $(\\lambda_i, u_i)$",
+    "$p \\in \\mathbb{R}[x]$ with $|p(\\lambda_i)| \\le M$ for all $i$"
+   ],
+   "conclusion": "$p(A)v = \\sum_i p(\\lambda_i)\\langle u_i, v\\rangle u_i$, $\\|p(A)\\| \\le M$, $\\|p(A)v\\|^2 \\le M^2\\|v\\|^2$, and for $A \\succeq 0$, $v^\\top A\\,p(A)^2 v \\le M^2\\, v^\\top A v$",
+   "sources": [
+    {
+     "source": "greenbaum97",
+     "label": "Ch. 2"
+    },
+    {
+     "source": "tb97",
+     "label": "Lect. 38"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_aeval_le",
+     "status": "proved",
+     "usage": "From `hA : A.IsHermitian`, `hM : 0 ≤ M`, `h : ∀ i, |p.eval (hA.eigenvalues i)| ≤ M`; gives `specNorm (aeval A p) ≤ M`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_mulVec_self_le",
+     "status": "proved",
+     "usage": "From `hspec : ∀ i, eigenvalues i ∈ S`, `hp : ∀ x ∈ S, |p.eval x| ≤ M`; gives `‖p(A)v‖² ≤ M² ‖v‖²` (dot-product form)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_aeval_mulVec_le",
+     "status": "proved",
+     "usage": "Energy-norm form: `quadForm A (aeval A p *ᵥ v) ≤ M² * quadForm A v` for `S ⊆ Ici 0`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.aeval_mulVec_eq_sum",
+     "status": "proved",
+     "usage": "`aeval A p *ᵥ v = ∑ i, (p.eval λᵢ * (uᵢ ⬝ᵥ v)) • uᵢ`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_mulVec_eq_sum",
+     "status": "proved",
+     "usage": "`v ⬝ᵥ (aeval A p *ᵥ v) = ∑ i, p.eval λᵢ * (uᵢ ⬝ᵥ v)^2` (the spectral-measure identity)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_eq_sum_eigenvalues",
+     "status": "proved",
+     "usage": "`quadForm A v = ∑ i, λᵢ * (uᵢ ⬝ᵥ v)^2`."
+    }
+   ],
+   "depends_on": [],
+   "uses_defs": [
+    "NLAlib.quadForm",
+    "NLAlib.specNorm"
+   ],
+   "variants": [
+    "cg-convergence",
+    "courant-fischer",
+    "spectral-measure"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "krylov",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "subgaussian-max",
+   "title": "Sub-Gaussian moments, tails and maximal inequality",
+   "aliases": [
+    "sub-Gaussian maximal inequality",
+    "expected maximum of sub-Gaussian variables",
+    "E max ≤ √(2c log N)",
+    "sub-Gaussian absolute moments"
+   ],
+   "area": "concentration-scalar",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "If each $X_i$ has sub-Gaussian MGF with proxy $c$ (no independence needed) then $\\mathbb{E}\\max_{i \\le N} X_i \\le \\sqrt{2c\\log N}$, $\\mathbb{E}\\max|X_i| \\le \\sqrt{2c\\log 2N}$, $\\mathbb{P}(|X| > t) \\le 2e^{-t^2/2c}$ and $\\mathbb{E}|X|^p \\le p(2c)^{p/2}\\Gamma(p/2)$.",
+   "hypotheses": [
+    "$X_1, \\dots, X_N$ with $\\mathbb{E}e^{sX_i} \\le e^{cs^2/2}$ for all $s$ (Mathlib `HasSubgaussianMGF`)"
+   ],
+   "conclusion": "$\\mathbb{E}\\max_i X_i \\le \\sqrt{2c\\log N}$, $\\mathbb{E}\\max_i|X_i| \\le \\sqrt{2c\\log(2N)}$; $\\mathbb{P}(|X| > t) \\le 2e^{-t^2/(2c)}$; $\\mathbb{E}|X|^p \\le p\\,(2c)^{p/2}\\,\\Gamma(p/2)$",
+   "sources": [
+    {
+     "source": "blm13",
+     "label": "§2.5"
+    },
+    {
+     "source": "vershynin18",
+     "label": "§2.5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_iSup_le_sqrt_of_hasSubgaussianMGF",
+     "status": "proved",
+     "usage": "`𝔼 (⨆ i, X i) ≤ √(2 c log N)`; integrability included."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_iSup_abs_le_sqrt_of_hasSubgaussianMGF",
+     "status": "proved",
+     "usage": "`𝔼 (⨆ i, |X i|) ≤ √(2 c log (2N))`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_lt_abs_le_of_hasSubgaussianMGF",
+     "status": "proved",
+     "usage": "`μ {t < |X|} ≤ 2 exp (-t²/(2c))`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_abs_rpow_le_of_hasSubgaussianMGF",
+     "status": "proved",
+     "usage": "`𝔼 |X|^p ≤ p (2c)^{p/2} Γ(p/2)` for real `p > 0`, no integrability hypothesis."
+    }
+   ],
+   "depends_on": [
+    "subgaussian-def"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "subgaussian-spec-norm",
+    "epsilon-net-norm"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "concentration",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "subgaussian-spec-norm",
+   "title": "Spectral norm of a matrix with sub-Gaussian bilinear marginals",
+   "aliases": [
+    "sub-Gaussian spectral norm tail",
+    "operator norm via nets and sub-Gaussian marginals",
+    "‖A‖ ≤ C√(m+n) with high probability"
+   ],
+   "area": "gaussian-subgaussian",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "If every $u^\\top A x$ with unit $u, x$ is $c$-sub-Gaussian then $\\mathbb{P}\\big[\\|A\\| > 2(\\sqrt{2\\log 9\\,(m+n)\\,c} + \\sqrt{c}\\,t)\\big] \\le e^{-t^2/2}$. Net argument with the $(1-2\\varepsilon)^{-1}$ bilinear lemma at $\\varepsilon = 1/4$.",
+   "hypotheses": [
+    "$A \\in \\mathbb{R}^{m\\times n}$ random with $u^\\top A x$ $c$-sub-Gaussian for all unit $u, x$",
+    "$t \\ge 0$"
+   ],
+   "conclusion": "$\\mathbb{P}\\big[2(\\sqrt{2\\log 9\\,(m+n)\\,c} + \\sqrt{c}\\,t) < \\|A\\|\\big] \\le e^{-t^2/2}$",
+   "sources": [
+    {
+     "source": "vershynin18",
+     "label": "Thm 4.4.5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_lt_specNorm_le_of_hasSubgaussianMGF",
+     "status": "proved",
+     "usage": "Strict event `2(√(2 log 9 (m+n) c) + √c t) < specNorm A`; `c = 0` handled; any `[Fintype]` indices; no independence assumed."
+    }
+   ],
+   "depends_on": [
+    "epsilon-net-norm",
+    "subgaussian-max",
+    "subgaussian-def"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "subgaussian-matrix-norm"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "concentration",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "rsvd-spectral-expected",
+   "title": "Randomized SVD expected spectral error (HMT Thm 10.6)",
+   "aliases": [
+    "HMT Theorem 10.6",
+    "spectral-norm RSVD bound",
+    "E‖A − QQᵀA‖ bound",
+    "range finder spectral expectation"
+   ],
+   "area": "lra-randomized",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "$$\\mathbb{E}\\|A - QQ^\\top A\\| \\le \\Big(1 + \\sqrt{\\tfrac{k}{p-1}}\\Big)\\sigma_{k+1} + \\frac{e\\sqrt{k+p}}{p}\\Big(\\sum_{j>k}\\sigma_j^2\\Big)^{1/2}$$ for a Gaussian test matrix with $k+p$ columns, $k, p \\ge 2$.",
+   "hypotheses": [
+    "$A \\in \\mathbb{R}^{m\\times n}$, target rank $k \\ge 2$, oversampling $p \\ge 2$",
+    "$\\Omega \\in \\mathbb{R}^{n\\times(k+p)}$ standard Gaussian and $Q$ an orthonormal basis of $\\operatorname{range}(A\\Omega)$"
+   ],
+   "conclusion": "$\\mathbb{E}\\|A - QQ^\\top A\\| \\le \\big(1 + \\sqrt{k/(p-1)}\\big)\\sigma_{k+1} + \\dfrac{e\\sqrt{k+p}}{p}\\Big(\\sum_{j>k}\\sigma_j^2\\Big)^{1/2}$",
+   "sources": [
+    {
+     "source": "hmt11",
+     "label": "Thm 10.6"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_specNorm_residual_gaussianRangeFrame_le",
+     "status": "proved",
+     "usage": "The statement above for `gaussianRangeFrame`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_specNorm_residual_le_singularValues_of_gaussian",
+     "status": "proved",
+     "usage": "Singular-value form, `k ≤ n`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_specNorm_residual_le_of_gaussian",
+     "status": "proved",
+     "usage": "Block form `(1+√(k/(p-1)))‖Σ₂‖ + (e√(k+p)/p)‖Σ₂‖_F` for any a.s.-orthonormal `Q` whose range a.s. contains `range (AΩ)`; no measurability of `Q` needed."
+    }
+   ],
+   "depends_on": [
+    "hmt-9-1-spectral",
+    "chevet",
+    "pinv-spectral-expectation",
+    "pinv-frob-moment",
+    "gaussian-conditioning",
+    "gaussian-full-rank-ae"
+   ],
+   "uses_defs": [
+    "NLAlib.specNorm",
+    "NLAlib.residual",
+    "NLAlib.gaussianMatrix",
+    "NLAlib.singularValues"
+   ],
+   "variants": [
+    "rsvd-expected-error",
+    "subspace-iteration-expected",
+    "block-krylov-lra"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "lra",
+    "consumer",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "ritz-value-bounds",
+   "title": "Ritz values approximate the largest eigenvalue (gap-free Lanczos bound)",
+   "aliases": [
+    "Ritz value bounds",
+    "Lanczos eigenvalue approximation",
+    "Kaniel–Paige–Saad bound",
+    "largest Ritz value lower bound"
+   ],
+   "area": "krylov",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "The largest Ritz value of $Q^\\top AQ$ over $\\mathcal K_q(A,b)$ is within $\\varepsilon\\lambda_1 + \\lambda_1\\big(\\tfrac{2}{(1+\\sqrt{2\\gamma})^{q-1}}\\big)^2\\tfrac{\\|b\\|^2}{\\langle u_1,b\\rangle^2}$ of $\\lambda_1$, $\\gamma = \\varepsilon/(1-\\varepsilon)$: the gap-free form via the Chebyshev amplifier.",
+   "hypotheses": [
+    "$A \\succeq 0$ symmetric with top eigenpair $(\\lambda_1, u_1)$, $\\langle u_1, b\\rangle \\ne 0$",
+    "$0 < \\varepsilon < 1$, $q \\ge 1$, $Q$ orthonormal with $\\mathcal K_q(A,b) \\subseteq \\operatorname{range} Q$"
+   ],
+   "conclusion": "some Ritz value $\\theta$ of $Q^\\top AQ$ satisfies $\\lambda_1 - \\theta \\le \\varepsilon\\lambda_1 + \\lambda_1\\Big(\\dfrac{2}{(1+\\sqrt{2\\gamma})^{q-1}}\\Big)^2\\dfrac{\\|b\\|^2}{\\langle u_1, b\\rangle^2}$",
+   "sources": [
+    {
+     "source": "saad11",
+     "label": "Thm 6.4"
+    },
+    {
+     "source": "mm15",
+     "label": "Lem. 4"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_eigenvalues_transpose_mul_mul_ge",
+     "status": "proved",
+     "usage": "The bound above for some eigenvalue of `QᵀAQ`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_mem_krylovSpace_sub_rayleigh_le",
+     "status": "proved",
+     "usage": "The underlying Rayleigh-quotient witness in `krylovSpace`."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-amplifier",
+    "polynomial-spectral-bound",
+    "krylov-subspace"
+   ],
+   "uses_defs": [
+    "NLAlib.krylovSpace",
+    "NLAlib.chebyshevAmplifier"
+   ],
+   "variants": [
+    "random-start-power"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "krylov",
+    "done"
+   ],
+   "updated_at": "2026-10-10",
+   "notes": "Gap-dependent Kaniel–Paige–Saad form not yet stated."
+  },
+  {
+   "id": "hutchpp-unbiased",
+   "title": "Hutch++ is unbiased",
+   "aliases": [
+    "Hutch++ unbiasedness",
+    "variance-reduced trace estimator mean",
+    "Hutch++ expectation"
+   ],
+   "area": "estimation",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "$\\operatorname{tr}(Q^\\top AQ) + \\hat{\\operatorname{tr}}\\big((I-QQ^\\top)A(I-QQ^\\top)\\big)$ has expectation $\\operatorname{tr}A$ for any orthonormal $Q$, including a random $Q(S)$ independent of the Hutchinson probes.",
+   "hypotheses": [
+    "$A \\in \\mathbb{R}^{n\\times n}$, $Q$ orthonormal (fixed, or $Q(S)$ with $S$ independent of the probes $G$)",
+    "probes with isotropic second moments"
+   ],
+   "conclusion": "$\\mathbb{E}\\big[\\operatorname{tr}(Q^\\top AQ) + \\hat{\\operatorname{tr}}_G((I-QQ^\\top)A(I-QQ^\\top))\\big] = \\operatorname{tr}A$",
+   "sources": [
+    {
+     "source": "mmmw21",
+     "label": "§3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_hutchPlusPlusEstimate_eq_trace",
+     "status": "proved",
+     "usage": "Fixed `Q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_hutchPlusPlusEstimate_comp_eq_trace",
+     "status": "proved",
+     "usage": "Random `Q(S)` with `S ⊥ G`; product-measure integrability assumed explicitly."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.trace_eq_trace_transpose_mul_mul_add",
+     "status": "proved",
+     "usage": "Trace split `tr A = tr (QᵀAQ) + tr ((1-QQᵀ)A(1-QQᵀ))`."
+    }
+   ],
+   "depends_on": [
+    "hutchinson-unbiased",
+    "gaussian-conditioning"
+   ],
+   "uses_defs": [
+    "NLAlib.hutchPlusPlusEstimate",
+    "NLAlib.hutchinsonEstimate"
+   ],
+   "variants": [
+    "hutchpp",
+    "xtrace-unbiased"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "estimation",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "kaczmarz-inconsistent",
+   "title": "Randomized Kaczmarz on inconsistent systems",
+   "aliases": [
+    "Kaczmarz with noise",
+    "Needell 2010",
+    "inconsistent Kaczmarz convergence horizon"
+   ],
+   "area": "solvers",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "For $b = Ax^\\star + e$, $\\mathbb{E}\\|x_k - \\hat x\\|^2 \\le \\rho^k\\|x_0-\\hat x\\|^2 + \\sum_{j<k}\\rho^j\\,\\|b - A\\hat x\\|^2/\\|A\\|_F^2$ for any $\\hat x$, hence a convergence horizon $\\|e\\|^2/\\sigma^2$.",
+   "hypotheses": [
+    "$A$ with $\\sigma^2\\|v\\|^2 \\le \\|Av\\|^2$ on $\\operatorname{range}A^\\top$, rows sampled $\\propto \\|a_i\\|^2$",
+    "$b = A\\hat x + e$ possibly inconsistent"
+   ],
+   "conclusion": "$\\mathbb{E}\\|x_k - \\hat x\\|^2 \\le \\rho^k\\|x_0 - \\hat x\\|^2 + \\|e\\|^2/\\sigma^2$ with $\\rho = 1 - \\sigma^2/\\|A\\|_F^2$",
+   "sources": [
+    {
+     "source": "needell10",
+     "label": "Thm 2.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.expErr_le_add",
+     "status": "proved",
+     "usage": "`ρ^k ‖x - x̂‖² + (∑_{j<k} ρ^j) ‖b - A x̂‖²/‖A‖_F²` for any `x̂`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.expErr_le_add_div_sq",
+     "status": "proved",
+     "usage": "The `+ ‖e‖²/σ²` horizon form."
+    }
+   ],
+   "depends_on": [
+    "randomized-kaczmarz"
+   ],
+   "uses_defs": [
+    "NLAlib.Kaczmarz.expErr"
+   ],
+   "variants": [
+    "randomized-kaczmarz"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "solvers",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "kaczmarz-rank-deficient",
+   "title": "Randomized Kaczmarz on rank-deficient systems converges to the least-norm solution",
+   "aliases": [
+    "Kaczmarz least-norm solution",
+    "rank-deficient Kaczmarz",
+    "Kaczmarz to A⁺b"
+   ],
+   "area": "solvers",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "Started at $x_0 = 0$, the iterates stay in $\\operatorname{range}A^\\top$ and $\\mathbb{E}\\|x_k - A^+b\\|^2 \\le (1 - 1/(\\|A^+\\|^2\\|A\\|_F^2))^k\\|A^+b\\|^2$, with no rank assumption.",
+   "hypotheses": [
+    "$Ax = b$ consistent, rows sampled $\\propto \\|a_i\\|^2$, $x_0 = 0$"
+   ],
+   "conclusion": "$\\mathbb{E}\\|x_k - A^+b\\|^2 \\le \\big(1 - \\|A^+\\|^{-2}\\|A\\|_F^{-2}\\big)^k\\|A^+b\\|^2$",
+   "sources": [
+    {
+     "source": "zf13",
+     "label": "§2"
+    },
+    {
+     "source": "sv09"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.expErr_zero_le_moorePenroseInverse",
+     "status": "proved",
+     "usage": "Convergence to `A⁺ b` from `x₀ = 0`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.expErr_le_of_sub_mem_range",
+     "status": "proved",
+     "usage": "The rate needs `hσ` only on `range Aᵀ`."
+    }
+   ],
+   "depends_on": [
+    "randomized-kaczmarz",
+    "pseudoinverse"
+   ],
+   "uses_defs": [
+    "NLAlib.Kaczmarz.expErr",
+    "NLAlib.moorePenroseInverse"
+   ],
+   "variants": [
+    "randomized-kaczmarz"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "solvers",
+    "done"
    ],
    "updated_at": "2026-10-10"
   }

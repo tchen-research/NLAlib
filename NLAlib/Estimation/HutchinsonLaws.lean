@@ -1,6 +1,7 @@
 import NLAlib.Estimation.Hutchinson
 import NLAlib.Gaussian.Moments.FourthMoment
 import NLAlib.Concentration.Matrix.Defs.ScalarLaws
+import NLAlib.Concentration.Scalar.Rademacher
 
 /-!
 # Hutchinson identities for concrete Gaussian and Rademacher laws
@@ -8,7 +9,8 @@ import NLAlib.Concentration.Matrix.Defs.ScalarLaws
 These endpoints derive the coordinate moments and integrability from the actual scalar laws.
 No second- or fourth-moment assumptions are needed by the law-based trace and variance
 theorems. The canonical product Gaussian and one-column Gaussian-matrix corollaries also
-discharge independence. Atlas: `hutchinson-unbiased`, `hutchinson-variance`.
+discharge independence. The concrete law `rademacherMeasure` is
+`NLAlib.Concentration.Scalar.Rademacher`. Atlas: `hutchinson-unbiased`, `hutchinson-variance`.
 
 The general isotropic endpoint uses only measurable coordinates and the identity of
 their second cross moments. Its diagonal moments derive square and product integrability;
@@ -275,20 +277,6 @@ theorem variance_quadForm_pi_gaussianReal {A : Matrix n n ℝ} (hA : A.IsSymm) :
 end ProductGaussian
 
 section ProductRademacher
-
-/-- The concrete Rademacher probability measure, assigning mass one half to each of
-`1` and `-1`. This is exactly the law used by `IsRademacher`.
-Atlas `hutchinson-unbiased`, `hutchinson-variance`. -/
-def rademacherMeasure : Measure ℝ :=
-  (1 / 2 : ENNReal) • Measure.dirac (1 : ℝ) +
-    (1 / 2 : ENNReal) • Measure.dirac (-1 : ℝ)
-
-/-- The Rademacher measure has total mass one.
-Atlas `hutchinson-variance` (concrete law). -/
-instance isProbabilityMeasure_rademacherMeasure : IsProbabilityMeasure rademacherMeasure := by
-  constructor
-  norm_num [rademacherMeasure]
-  simpa only [one_div] using ENNReal.add_halves 1
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

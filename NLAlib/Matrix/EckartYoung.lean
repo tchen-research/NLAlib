@@ -1,13 +1,17 @@
 import NLAlib.Matrix.MoorePenrose
 import NLAlib.Matrix.Projections
+import NLAlib.Matrix.SpectralBounds
 import Mathlib.LinearAlgebra.Trace
 import Mathlib.Order.Interval.Finset.Fin
 import Mathlib.Tactic
 
 /-!
-# Frobenius Eckart–Young theorem
+# Eckart–Young theorem
 
-The proof compares an arbitrary rank-bounded competitor with its actual
+Frobenius form (`bestRankFrobSq_eq_singularValueTailSq`, `isBestRankApprox_truncatedSVD`) and
+the spectral attainment `specNorm_sub_truncatedSVD_eq` (`‖A − A_k‖₂ = σ_k`).
+
+The Frobenius proof compares an arbitrary rank-bounded competitor with its actual
 Moore–Penrose column-space projector. In singular-vector coordinates the
 projector has diagonal weights in `[0,1]` with total mass equal to its rank.
 The finite weighted top-k inequality then gives the optimal singular-value tail.
@@ -64,7 +68,12 @@ private theorem card_fin_head {m k : ℕ} (hk : k < m) :
     rfl
   rw [he, Fin.card_Iio]
 
-private theorem weighted_sum_le_head {m k : ℕ} (a w : Fin m → ℝ)
+/-- **Weighted top-`k` inequality.** For nonnegative non-increasing `a` and weights
+`0 ≤ wᵢ ≤ 1` with total mass at most `k`, `∑ᵢ aᵢ wᵢ ≤ ∑_{i<k} aᵢ`. The finite core of
+Eckart–Young and of Ky Fan's maximum principle (Horn–Johnson 2013, proof of Thm 7.4.9;
+Bhatia 1997, Lemma III.1.1 / Ky Fan). Audit G0 A2 (made public for the von Neumann trace
+inequality); atlas `eckart-young`, `von-neumann-trace`. -/
+theorem sum_mul_le_sum_ite_lt_of_antitone {m k : ℕ} (a w : Fin m → ℝ)
     (ha0 : ∀ i, 0 ≤ a i) (ha : Antitone a)
     (hw0 : ∀ i, 0 ≤ w i) (hw1 : ∀ i, w i ≤ 1)
     (hbudget : ∑ i, w i ≤ (k : ℝ)) :
@@ -187,7 +196,7 @@ theorem singularValueTailSq_le_frobSq_sub_of_rank_le {m n : ℕ}
   have hcaptured_le : frobSq (P * A) ≤
       ∑ i : Fin m, if (i : ℕ) < k then singularValues A i ^ 2 else 0 := by
     rw [hcaptured]
-    apply weighted_sum_le_head
+    apply sum_mul_le_sum_ite_lt_of_antitone
     · intro i; exact sq_nonneg _
     · intro i j hij
       exact pow_le_pow_left₀ (singularValues_nonneg A j) (singularValues_antitone A hij) 2
@@ -346,5 +355,60 @@ theorem frobSq_sub_truncatedSVD_eq_bestRankFrobSq {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedSVD A k) = bestRankFrobSq k A := by
   rw [frobSq_sub_truncatedSVD_eq_singularValueTailSq, bestRankFrobSq_eq_singularValueTailSq]
+
+/-! ### Spectral-norm attainment -/
+
+/-- **Spectral Eckart–Young, attainment for a given SVD.** The spectral error of truncating an
+SVD after `k` terms is the `(k+1)`-st singular value (zero-indexed `σ_k`):
+`‖A − U Σ_{<k} Vᵀ‖₂ = σ_k(A)`. All shapes and cutoffs are allowed (`σ_k = 0` for
+`k ≥ min m n`). Horn–Johnson 2013, Thm 7.4.9.1 (spectral case); HMT 2011, eq. (2.3);
+audit G0 C3; atlas `eckart-young`. -/
+theorem IsSVD.specNorm_sub_truncatedMatrix {m n : ℕ} {A : Matrix (Fin m) (Fin n) ℝ}
+    {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ}
+    (h : IsSVD A U V) (k : ℕ) :
+    specNorm (A - h.truncatedMatrix k) = singularValues A k := by
+  set τ : ℕ → ℝ := fun i => if i < k then 0 else singularValues A i with hτ
+  let T : Matrix (Fin m) (Fin n) ℝ := rectDiag τ
+  have hsplit : A = h.truncatedMatrix k + U * T * Vᵀ := h.eq_head_add_tail k
+  have he : A - h.truncatedMatrix k = U * T * Vᵀ := by
+    calc
+      _ = (h.truncatedMatrix k + U * T * Vᵀ) - h.truncatedMatrix k :=
+        congrArg (fun M => M - h.truncatedMatrix k) hsplit
+      _ = _ := by abel
+  rw [he, specNorm_mul_transpose_right_of_hasOrthonormalCols h.transpose_mul_right,
+    specNorm_mul_left_of_hasOrthonormalCols h.transpose_mul_left]
+  have hσk := singularValues_nonneg A k
+  have hsq : specNorm T ^ 2 = singularValues A k ^ 2 := by
+    rw [specNorm_sq_eq_specNorm_transpose_mul_self, transpose_rectDiag_mul_rectDiag,
+      specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
+    apply le_antisymm
+    · refine (pi_norm_le_iff_of_nonneg (sq_nonneg _)).2 fun j => ?_
+      rw [Real.norm_eq_abs]
+      split_ifs with hj
+      · rw [abs_of_nonneg (sq_nonneg _)]
+        simp only [hτ]
+        split_ifs with hjk
+        · simpa using sq_nonneg (singularValues A k)
+        · exact pow_le_pow_left₀ (singularValues_nonneg A j)
+            (singularValues_antitone A (not_lt.1 hjk)) 2
+      · simpa using sq_nonneg (singularValues A k)
+    · by_cases hk : k < min m n
+      · have hkm : k < m := lt_of_lt_of_le hk (min_le_left m n)
+        have hkn : k < n := lt_of_lt_of_le hk (min_le_right m n)
+        have h0 := norm_le_pi_norm (fun j : Fin n => if (j : ℕ) < m then τ j ^ 2 else 0)
+          ⟨k, hkn⟩
+        simp only [hkm, if_true, hτ, lt_irrefl, if_false, Real.norm_eq_abs] at h0
+        rwa [abs_of_nonneg (sq_nonneg _)] at h0
+      · rw [singularValues_eq_zero_of_min_le A (not_lt.1 hk)]
+        simp
+  exact (sq_eq_sq₀ (specNorm_nonneg T) hσk).1 hsq
+
+/-- **Spectral Eckart–Young, attainment.** `‖A − truncatedSVD A k‖₂ = σ_k(A)` (zero-indexed;
+`0` when `k ≥ min m n`). Horn–Johnson 2013, Thm 7.4.9.1 (spectral case); HMT 2011, eq. (2.3);
+audit G0 C3; atlas `eckart-young`. -/
+theorem specNorm_sub_truncatedSVD_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+    specNorm (A - truncatedSVD A k) = singularValues A k := by
+  unfold truncatedSVD
+  exact (exists_isSVD A).choose_spec.choose_spec.specNorm_sub_truncatedMatrix k
 
 end NLAlib

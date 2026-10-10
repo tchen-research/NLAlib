@@ -12,12 +12,14 @@ import NLAlib.Concentration.HansonWright.UniversalBound
 import NLAlib.Concentration.OrliczMGF
 import NLAlib.Matrix.QuadForm
 import NLAlib.Matrix.Norms
+import NLAlib.Matrix.FiniteIndexTransport
 
 /-!
 # Hanson–Wright in NLAlib's matrix vocabulary
 
 The complete independent-coordinate MGF proof is split into focused leaves.
-This module transports it to `quadForm`, `frobNorm`, and `specNorm`, then
+This module transports it to `quadForm`, `frobNorm`, and `specNorm`, relabels an arbitrary
+finite index type `ι` through `Fintype.equivFin ι` (the leaf proof is over `Fin n`), then
 uses the proved Orlicz-to-MGF bridge for the centered ψ₂ formulation.
 Atlas: `hanson-wright`. Vershynin 2018, Theorem 6.2.1.
 -/
@@ -56,14 +58,7 @@ private theorem hw_centeredQuadraticForm_eq {Ω : Type*} [MeasurableSpace Ω]
   unfold HansonWrightProof.centeredQuadraticForm HansonWrightProof.randomQuadraticForm
   simp_rw [hw_quadraticForm_eq_quadForm]
 
-/-- **Hanson–Wright, MGF form.** Independent coordinates with sub-Gaussian
-variance proxy `K²` satisfy the quadratic-form tail bound with the explicit
-constant `1/(256 exp(1)²)`. The matrix is arbitrary, and zero matrix/dimension
-cases use Lean's total real division convention. The MGF assumption also implies
-coordinate centering; no quadratic-form MGF certificate is assumed.
-Vershynin 2018, Theorem 6.2.1; atlas `hanson-wright`.
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae. -/
-theorem hanson_wright_mgf {Ω : Type*} [MeasurableSpace Ω]
+private theorem hanson_wright_mgf_fin {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (X : Fin n → Ω → ℝ) (K : ℝ) (hK : 0 < K)
     (hind : iIndepFun X μ)
@@ -83,15 +78,54 @@ theorem hanson_wright_mgf {Ω : Type*} [MeasurableSpace Ω]
   simpa only [HansonWrightProof.hansonWrightUniversalConstant,
     show (4 : ℝ) * (64 * exp 1 ^ 2) = 256 * exp 1 ^ 2 by ring] using h
 
+/-- Relabelling the coordinates by an equivalence does not change the quadratic form.
+Atlas `hanson-wright` (index transport). -/
+theorem quadForm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ] (A : Matrix ι ι ℝ) (e : ι ≃ κ)
+    (z : ι → ℝ) : quadForm (A.reindex e e) (fun k => z (e.symm k)) = quadForm A z := by
+  rw [quadForm_eq_sum, quadForm_eq_sum]
+  simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
+  rw [e.symm.sum_comp (fun i => ∑ k, A i (e.symm k) * (z i * z (e.symm k)))]
+  exact Finset.sum_congr rfl fun i _ =>
+    e.symm.sum_comp (fun j => A i j * (z i * z j))
+
+/-- **Hanson–Wright, MGF form.** Independent coordinates with sub-Gaussian
+variance proxy `K²` satisfy the quadratic-form tail bound with the explicit
+constant `1/(256 exp(1)²)`. The matrix is arbitrary, and zero matrix/dimension
+cases use Lean's total real division convention. The MGF assumption also implies
+coordinate centering; no quadratic-form MGF certificate is assumed.
+Vershynin 2018, Theorem 6.2.1; atlas `hanson-wright`. Deviation: none in the statement;
+the index type is an arbitrary `[Fintype ι]` (the ported leaf proof is over `Fin n` and is
+transported through `Fintype.equivFin ι`).
+Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae. -/
+theorem hanson_wright_mgf {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} [IsProbabilityMeasure μ] {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι ℝ) (X : ι → Ω → ℝ) (K : ℝ) (hK : 0 < K)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (t : ℝ) (ht : 0 ≤ t) :
+    (μ {ω | t ≤ |quadForm A (fun i => X i ω) -
+      ∫ ω', quadForm A (fun i => X i ω') ∂μ|}).toReal ≤
+      2 * exp (-(1 / (256 * exp 1 ^ 2)) *
+        min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2)) (t / (K ^ 2 * specNorm A))) := by
+  let e := Fintype.equivFin ι
+  have h := hanson_wright_mgf_fin (A.reindex e e) (fun k => X (e.symm k)) K hK
+    (hind.precomp e.symm.injective) (fun k => hmgf (e.symm k)) t ht
+  have hq : ∀ ω, quadForm (A.reindex e e) (fun k => X (e.symm k) ω) =
+      quadForm A (fun i => X i ω) := fun ω => quadForm_reindex A e (fun i => X i ω)
+  simp only [hq, frobNorm_reindex, specNorm_reindex] at h
+  exact h
+
 /-- **Hanson–Wright, exponential-square/ψ₂ form.** Independent centered
 coordinates with nonnegative expectations `E exp((Xᵢ/K)²) ≤ 2` satisfy the
 quadratic-form tail bound with explicit constant `1/(20736 exp(1)²)`.
 The already-proved Orlicz-to-MGF bridge gives variance proxy `9K²`; the bound
 therefore uses the common original ψ₂ scale with a conservative constant.
-Vershynin 2018, Theorem 6.2.1; atlas `hanson-wright`. -/
+Vershynin 2018, Theorem 6.2.1; atlas `hanson-wright`. Deviation: the constant
+`1/(20736 e²)` is explicit (Vershynin's `c` is unspecified); the index type is an arbitrary
+`[Fintype ι]`. -/
 theorem hanson_wright_of_lintegral_exp_sq_le_two {Ω : Type*} [MeasurableSpace Ω]
-    {μ : Measure Ω} [IsProbabilityMeasure μ] {n : ℕ}
-    (A : Matrix (Fin n) (Fin n) ℝ) (X : Fin n → Ω → ℝ) (K : ℝ) (hK : 0 < K)
+    {μ : Measure Ω} [IsProbabilityMeasure μ] {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι ℝ) (X : ι → Ω → ℝ) (K : ℝ) (hK : 0 < K)
     (hind : iIndepFun X μ) (hX : ∀ i, AEMeasurable (X i) μ)
     (hmean : ∀ i, ∫ ω, X i ω ∂μ = 0)
     (hpsi : ∀ i, ∫⁻ ω, ENNReal.ofReal (exp ((X i ω / K) ^ 2)) ∂μ ≤ 2)

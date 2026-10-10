@@ -1,6 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import NLAlib.Gaussian.Basic
+import NLAlib.Gaussian.LinearImage
+import NLAlib.Gaussian.Extreme.ChiSquare
+import NLAlib.ForMathlib.Analysis.Real
 import NLAlib.Sketching.Basic
 
 /-!
@@ -9,8 +12,10 @@ import NLAlib.Sketching.Basic
 `S = k^{-1/2} G` with `G` a `k × n` standard Gaussian matrix (`NLAlib.gaussianMatrix k n`,
 matrix view `Matrix.of G`). Squared norms are written `v ⬝ᵥ v`.
 
-* `jl_distributional` (SCAFFOLD): for fixed `x`,
-  `P[|‖Sx‖² − ‖x‖²| > ε‖x‖²] ≤ 2 exp(−k(ε²/4 − ε³/6))` (Dasgupta–Gupta 2003, Lem 2.2).
+* `jl_distributional`: for fixed `x`,
+  `P[|‖Sx‖² − ‖x‖²| > ε‖x‖²] ≤ 2 exp(−k(ε²/4 − ε³/6))` (Dasgupta–Gupta 2003, Lem 2.2), from the
+  law of `G x` (`gaussianMatrix_map_mulVec_of_dotProduct_self_eq_one`) and the sharp chi-square
+  tails (`measure_le_sum_sq_le_gaussianReal`, `measure_sum_sq_le_one_sub_mul_le_gaussianReal`).
 * `jl_lemma`: union bound over all ordered pairs of a finite family `p : Fin N → Fin n → ℝ`,
   failure probability `≤ N² · 2 exp(−k(ε²/4 − ε³/6))` (Dasgupta–Gupta 2003, Thm 2.1).
 * `jl_lemma_prob_le_of_log_le`: failure probability `≤ δ` once
@@ -32,22 +37,112 @@ open scoped Matrix
 
 namespace NLAlib
 
-/-- SCAFFOLD: jl-distributional.
-
-Distributional Johnson–Lindenstrauss lemma for the Gaussian sketch (Dasgupta–Gupta 2003,
-Lem 2.2; Woodruff 2014 §2.1): for `S = k^{-1/2} G` with `G` standard Gaussian `k × n`, any fixed
-`x : ℝⁿ` and `0 < ε < 1`,
+/-- **Distributional Johnson–Lindenstrauss lemma** for the Gaussian sketch: for
+`S = k^{-1/2} G` with `G` standard Gaussian `k × n`, any fixed `x : ℝⁿ` and `0 < ε < 1`,
 `P[|‖Sx‖² − ‖x‖²| > ε‖x‖²] ≤ 2 exp(−k(ε²/4 − ε³/6))`.
 
-Deferred: the proof needs rotation invariance of the Gaussian matrix (`‖Gx‖² / ‖x‖²` is
-`χ²_k`) and the two Chernoff tails of the chi-square law (atlas `rotation-invariance`,
-`chi-square-upper-tail`, `chi-square-lower-tail`), none of which is yet in the library. -/
+Dasgupta–Gupta 2003, Lem 2.2 (stated there for the projection of a random unit vector; the
+Gaussian-sketch form is Woodruff 2014 §2.1). Atlas: `jl-distributional`; uses
+`gaussian-matrix-mulVec-law`, `chi-square-upper-tail`, `chi-square-lower-tail`.
+
+Proof: with `u = x/‖x‖`, `‖Sx‖² = (‖x‖²/k) ‖Gu‖²` and `Gu` is a standard Gaussian vector, so the
+event lies in `{χ²_k ≥ (1+ε)k} ∪ {χ²_k ≤ (1−ε)k}`. The Chernoff tails and
+`log(1+ε) ≤ ε − ε²/2 + ε³/3`, `log(1−ε) ≤ −ε − ε²/2` bound each part by `exp(−k(ε²/4 − ε³/6))`.
+Degenerate cases: for `x = 0` the event is empty; for `k = 0` the bound is `2`. -/
 theorem jl_distributional (k n : ℕ) (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
     gaussianMatrix k n {G |
       |((1 / Real.sqrt k) • Matrix.of G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x
         - x ⬝ᵥ x| > ε * (x ⬝ᵥ x)}
       ≤ ENNReal.ofReal (2 * Real.exp (-(k : ℝ) * (ε ^ 2 / 4 - ε ^ 3 / 6))) := by
-  sorry
+  rcases Nat.eq_zero_or_pos k with rfl | hk
+  · refine prob_le_one.trans ?_
+    rw [← ENNReal.ofReal_one]
+    apply ENNReal.ofReal_le_ofReal
+    simp only [CharP.cast_eq_zero, neg_zero, zero_mul, Real.exp_zero]
+    norm_num
+  by_cases hx0 : x ⬝ᵥ x = 0
+  · have hx : x = 0 := dotProduct_self_eq_zero.mp hx0
+    subst hx
+    simp
+  have hkpos : (0 : ℝ) < k := by exact_mod_cast hk
+  have hpos : 0 < x ⬝ᵥ x := lt_of_le_of_ne (dotProduct_self_star_nonneg x) (Ne.symm hx0)
+  set r := Real.sqrt (x ⬝ᵥ x) with hr_def
+  have hr : 0 < r := Real.sqrt_pos.2 hpos
+  set u := r⁻¹ • x with hu_def
+  have hu : u ⬝ᵥ u = 1 := by
+    rw [hu_def, smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul, ← mul_assoc,
+      ← sq, inv_pow, hr_def, Real.sq_sqrt hpos.le, inv_mul_cancel₀ hx0]
+  have hxu : x = r • u := by rw [hu_def, smul_smul, mul_inv_cancel₀ hr.ne', one_smul]
+  -- `‖Sx‖² = (‖x‖² / k) ‖G u‖²`
+  have hid : ∀ G : Fin k → Fin n → ℝ,
+      ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x
+        = (x ⬝ᵥ x) / k * ∑ i, (Matrix.of G *ᵥ u) i ^ 2 := by
+    intro G
+    have hsq : (1 / Real.sqrt k) ^ 2 = 1 / k := by
+      rw [div_pow, Real.sq_sqrt hkpos.le, one_pow]
+    have hr2 : r ^ 2 = x ⬝ᵥ x := Real.sq_sqrt hpos.le
+    conv_lhs => rw [hxu]
+    rw [Matrix.smul_mulVec, Matrix.mulVec_smul, smul_smul, smul_dotProduct, dotProduct_smul,
+      smul_eq_mul, smul_eq_mul, ← mul_assoc, ← sq, mul_pow, hsq, hr2]
+    simp only [dotProduct, ← sq]
+    ring
+  set f : (Fin k → Fin n → ℝ) → (Fin k → ℝ) := fun G => Matrix.of G *ᵥ u with hf_def
+  have hf : Measurable f := by
+    refine measurable_pi_lambda _ fun i => ?_
+    simp only [hf_def, Matrix.mulVec, dotProduct, Matrix.of_apply]
+    fun_prop
+  set B₁ : Set (Fin k → ℝ) := {y | (1 + ε) * k ≤ ∑ i, y i ^ 2} with hB₁_def
+  set B₂ : Set (Fin k → ℝ) := {y | ∑ i, y i ^ 2 ≤ (1 - ε) * k} with hB₂_def
+  have hB₁ : MeasurableSet B₁ := measurableSet_le measurable_const (by fun_prop)
+  have hB₂ : MeasurableSet B₂ := measurableSet_le (by fun_prop) measurable_const
+  have hsub : {G : Fin k → Fin n → ℝ |
+      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x
+        - x ⬝ᵥ x| > ε * (x ⬝ᵥ x)} ⊆ f ⁻¹' (B₁ ∪ B₂) := by
+    intro G hG
+    simp only [Set.mem_ofPred_eq, hid] at hG
+    set s := ∑ i, (Matrix.of G *ᵥ u) i ^ 2 with hs_def
+    simp only [Set.mem_preimage, Set.mem_union, hB₁_def, hB₂_def, Set.mem_ofPred_eq, hf_def,
+      ← hs_def]
+    by_contra hcon
+    push Not at hcon
+    obtain ⟨h1, h2⟩ := hcon
+    have habs : |s - k| < ε * k := by rw [abs_lt]; constructor <;> linarith
+    have heq : (x ⬝ᵥ x) / k * s - x ⬝ᵥ x = (x ⬝ᵥ x) / k * (s - k) := by
+      field_simp
+    rw [heq, abs_mul, abs_of_pos (by positivity : 0 < (x ⬝ᵥ x) / k)] at hG
+    have : (x ⬝ᵥ x) / k * |s - k| < (x ⬝ᵥ x) / k * (ε * k) :=
+      mul_lt_mul_of_pos_left habs (by positivity)
+    have h3 : (x ⬝ᵥ x) / k * (ε * k) = ε * (x ⬝ᵥ x) := by field_simp
+    linarith
+  set c := ε ^ 2 / 4 - ε ^ 3 / 6 with hc_def
+  have hlaw := gaussianMatrix_map_mulVec_of_dotProduct_self_eq_one (k := k) u hu
+  have h₁ : (Measure.pi fun _ : Fin k => gaussianReal 0 1) B₁
+      ≤ ENNReal.ofReal (Real.exp (-(k : ℝ) * c)) := by
+    refine (measure_le_sum_sq_le_gaussianReal hε0.le).trans
+      (ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 ?_))
+    have hlog := log_one_add_le_sub_sq_div_two_add_pow_three_div_three hε0.le
+    have : (k : ℝ) / 2 * (2 * c) ≤ (k : ℝ) / 2 * (ε - Real.log (1 + ε)) :=
+      mul_le_mul_of_nonneg_left (by rw [hc_def]; linarith) (by positivity)
+    linarith
+  have h₂ : (Measure.pi fun _ : Fin k => gaussianReal 0 1) B₂
+      ≤ ENNReal.ofReal (Real.exp (-(k : ℝ) * c)) := by
+    refine (measure_sum_sq_le_one_sub_mul_le_gaussianReal hε0.le hε1).trans
+      (ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 ?_))
+    have hlog := log_one_sub_le_neg_sub_sq_div_two hε0.le hε1
+    have hε3 : 0 ≤ ε ^ 3 := by positivity
+    have hc : c ≤ ε ^ 2 / 4 := by rw [hc_def]; linarith
+    have : (k : ℝ) / 2 * (ε + Real.log (1 - ε)) ≤ (k : ℝ) / 2 * (-(ε ^ 2 / 2)) :=
+      mul_le_mul_of_nonneg_left (by linarith) (by positivity)
+    nlinarith
+  calc _ ≤ gaussianMatrix k n (f ⁻¹' (B₁ ∪ B₂)) := measure_mono hsub
+    _ = (Measure.pi fun _ : Fin k => gaussianReal 0 1) (B₁ ∪ B₂) := by
+        rw [← Measure.map_apply hf (hB₁.union hB₂), hf_def, hlaw]
+    _ ≤ (Measure.pi fun _ : Fin k => gaussianReal 0 1) B₁
+          + (Measure.pi fun _ : Fin k => gaussianReal 0 1) B₂ := measure_union_le _ _
+    _ ≤ ENNReal.ofReal (Real.exp (-(k : ℝ) * c)) + ENNReal.ofReal (Real.exp (-(k : ℝ) * c)) :=
+        add_le_add h₁ h₂
+    _ = ENNReal.ofReal (2 * Real.exp (-(k : ℝ) * c)) := by
+        rw [← ENNReal.ofReal_add (Real.exp_pos _).le (Real.exp_pos _).le, two_mul]
 
 /-- Johnson–Lindenstrauss lemma, union-bound form (Dasgupta–Gupta 2003, Thm 2.1): for a finite
 family `p : Fin N → ℝⁿ`, the probability that the Gaussian sketch `S = k^{-1/2} G` distorts some

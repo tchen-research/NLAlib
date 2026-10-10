@@ -4,6 +4,9 @@ import NLAlib.Sketching.SingularValueEmbedding
 import NLAlib.Sketching.Basic
 import NLAlib.Sketching.SubspaceEmbedding
 import NLAlib.Sketching.JL
+import NLAlib.Sketching.Leverage
+import NLAlib.Sketching.GaussianEmbedding
+import NLAlib.Sketching.ApproxMultiplication
 
 /-!
 # Sketching primitives
@@ -11,8 +14,8 @@ import NLAlib.Sketching.JL
 Layer 3: imports `NLAlib.Matrix`, `NLAlib.Concentration`, `NLAlib.Gaussian`.
 
 Files (atlas ids): `Basic` (`IsSubspaceEmbedding`), `SubspaceEmbedding` (`ose-def`), `JL`
-(`jl-distributional`, `jl-lemma`).
+(`jl-distributional`, `jl-lemma`), `Leverage` (`leverage-scores`), `GaussianEmbedding`
+(`gaussian-ose`), `ApproxMultiplication` (`amm-ose`).
 
-Planned: `GaussianOSE` (`gaussian-ose`), `Leverage` (`leverage-scores`,
-`leverage-sampling-ose`), `AMM` (`amm-ose`, `amm-sampling`).
+Planned: `leverage-sampling-ose`, `amm-sampling`.
 -/

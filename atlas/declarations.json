@@ -4600,9 +4600,9 @@
   "kind":
   "def",
   "doc":
-  "`x` is a GMRES iterate: `x − x₀ ∈ K_q(A, r₀)` (`r₀ = c − A x₀`) and `x` minimises\n`‖c − A y‖²` over `x₀ + K_q(A, r₀)`. MINRES is this predicate for symmetric `A`.\nSource: Saad–Schultz (1986) [`ss86`], §2; Saad (2003) [`saad03`], §6.5;\nKRYLOV_DEFINITIONS §3.3.\natlas: gmres-def ",
+  "`x` is a GMRES iterate: `x − x₀ ∈ K_q(A, r₀)` (`r₀ = c − A x₀`) and `x` minimises\n`‖c − A y‖²` over `x₀ + K_q(A, r₀)`. MINRES is this predicate for symmetric `A`.\nSource: Saad–Schultz (1986) [`ss86`], §2; Saad (2003) [`saad03`], §6.5;\nKRYLOV_DEFINITIONS §3.3.\natlas: gmres-def (partial) ",
   "atlas_partial":
-  [],
+  ["gmres-def"],
   "atlas":
   ["gmres-def"]},
  {"uses":
@@ -6314,6 +6314,48 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.Kaczmarz.expErr_le_add_div_sq_of_sub_mem_range.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (A : Matrix m n ℝ) (b : m → ℝ) (xh : n → ℝ) {σ : ℝ} (hσ0 : 0 < σ)\n  (hσ : ∀ v ∈ A.transpose.mulVecLin.range, σ ^ 2 * v ⬝ᵥ v ≤ A.mulVec v ⬝ᵥ A.mulVec v) (x : n → ℝ)\n  (hx : x - xh ∈ A.transpose.mulVecLin.range) (k : ℕ) :\n  NLAlib.Kaczmarz.expErr A b xh x k ≤\n    (1 - σ ^ 2 / NLAlib.frobSq A) ^ k * (x - xh) ⬝ᵥ (x - xh) + (b - A.mulVec xh) ⬝ᵥ (b - A.mulVec xh) / σ ^ 2",
+  "name":
+  "NLAlib.Kaczmarz.expErr_le_add_div_sq_of_sub_mem_range",
+  "module":
+  "NLAlib.Solvers.KaczmarzRowSpace",
+  "line":
+  166,
+  "kind":
+  "theorem",
+  "doc":
+  "The row-space inconsistent Kaczmarz bound has noise horizon\n`‖b-A*xh‖²/σ²` when `σ>0`. No full-column-rank assumption is required.\nNeedell 2010, Theorem 2.1; Zouzias–Freris 2013, equation (5).\natlas: kaczmarz-inconsistent ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["kaczmarz-inconsistent"]},
+ {"uses":
+  ["NLAlib.Kaczmarz.expErr",
+   "NLAlib.frobSq"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.Kaczmarz.expErr_le_add_of_sub_mem_range.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (A : Matrix m n ℝ) (b : m → ℝ) (xh : n → ℝ) (σ : ℝ)\n  (hσ : ∀ v ∈ A.transpose.mulVecLin.range, σ ^ 2 * v ⬝ᵥ v ≤ A.mulVec v ⬝ᵥ A.mulVec v) (x : n → ℝ)\n  (hx : x - xh ∈ A.transpose.mulVecLin.range) (k : ℕ) :\n  NLAlib.Kaczmarz.expErr A b xh x k ≤\n    (1 - σ ^ 2 / NLAlib.frobSq A) ^ k * (x - xh) ⬝ᵥ (x - xh) +\n      (∑ j ∈ Finset.range k, (1 - σ ^ 2 / NLAlib.frobSq A) ^ j) *\n        ((b - A.mulVec xh) ⬝ᵥ (b - A.mulVec xh) / NLAlib.frobSq A)",
+  "name":
+  "NLAlib.Kaczmarz.expErr_le_add_of_sub_mem_range",
+  "module":
+  "NLAlib.Solvers.KaczmarzRowSpace",
+  "line":
+  122,
+  "kind":
+  "theorem",
+  "doc":
+  "Inconsistent randomized Kaczmarz obeys the exact geometric-noise bound\nwhen the initial error lies in the row space and the lower singular bound holds\nonly there. The reference point is arbitrary, and no rank assumption is needed.\nNeedell 2010, Theorem 2.1; Zouzias–Freris 2013, equation (5).\natlas: kaczmarz-inconsistent ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["kaczmarz-inconsistent"]},
+ {"uses":
+  ["NLAlib.Kaczmarz.expErr",
+   "NLAlib.frobSq"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.Kaczmarz.expErr_le_of_sub_mem_range.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (A : Matrix m n ℝ) (b : m → ℝ) (xs : n → ℝ) (hxs : A.mulVec xs = b) (σ : ℝ)\n  (hσ : ∀ v ∈ A.transpose.mulVecLin.range, σ ^ 2 * v ⬝ᵥ v ≤ A.mulVec v ⬝ᵥ A.mulVec v) (x : n → ℝ)\n  (hx : x - xs ∈ A.transpose.mulVecLin.range) (k : ℕ) :\n  NLAlib.Kaczmarz.expErr A b xs x k ≤ (1 - σ ^ 2 / NLAlib.frobSq A) ^ k * (x - xs) ⬝ᵥ (x - xs)",
   "name":
   "NLAlib.Kaczmarz.expErr_le_of_sub_mem_range",
@@ -6461,6 +6503,28 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.Kaczmarz.prob",
+   "NLAlib.Kaczmarz.step",
+   "NLAlib.frobSq"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.Kaczmarz.expected_sqErr_step_le_add_of_sub_mem_range.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] (A : Matrix m n ℝ) (b : m → ℝ) (xh x : n → ℝ) (σ : ℝ)\n  (hσ : ∀ v ∈ A.transpose.mulVecLin.range, σ ^ 2 * v ⬝ᵥ v ≤ A.mulVec v ⬝ᵥ A.mulVec v)\n  (hx : x - xh ∈ A.transpose.mulVecLin.range) :\n  ∑ i, NLAlib.Kaczmarz.prob A i * (NLAlib.Kaczmarz.step A b x i - xh) ⬝ᵥ (NLAlib.Kaczmarz.step A b x i - xh) ≤\n    (1 - σ ^ 2 / NLAlib.frobSq A) * (x - xh) ⬝ᵥ (x - xh) + (b - A.mulVec xh) ⬝ᵥ (b - A.mulVec xh) / NLAlib.frobSq A",
+  "name":
+  "NLAlib.Kaczmarz.expected_sqErr_step_le_add_of_sub_mem_range",
+  "module":
+  "NLAlib.Solvers.KaczmarzRowSpace",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "One inconsistent-system Kaczmarz step contracts a row-space error, with\nadditive noise `‖b-A*xh‖²/‖A‖F²`. The lower singular bound is needed only on\nthe row space. Needell 2010, proof of Theorem 2.1;\natlas `kaczmarz-inconsistent` (one-step helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.moorePenroseInverse",
    "NLAlib.specNorm"],
   "sorry":
@@ -6537,6 +6601,26 @@
   "theorem",
   "doc":
   "The contraction factor is nonnegative when `n` is nonempty: `σ² ≤ ‖A‖_F²`.\nAtlas `randomized-kaczmarz`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobSq"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.Kaczmarz.rate_nonneg_of_lower_bound_on_range.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (A : Matrix m n ℝ) (σ : ℝ)\n  (hσ : ∀ v ∈ A.transpose.mulVecLin.range, σ ^ 2 * v ⬝ᵥ v ≤ A.mulVec v ⬝ᵥ A.mulVec v) : 0 ≤ 1 - σ ^ 2 / NLAlib.frobSq A",
+  "name":
+  "NLAlib.Kaczmarz.rate_nonneg_of_lower_bound_on_range",
+  "module":
+  "NLAlib.Solvers.KaczmarzRowSpace",
+  "line":
+  45,
+  "kind":
+  "theorem",
+  "doc":
+  "A lower singular bound on the row space makes the Kaczmarz contraction\nfactor nonnegative, including a zero matrix and empty index types.\nZouzias–Freris 2013, equation (5); atlas `kaczmarz-inconsistent` (rate helper). ",
   "atlas_partial":
   [],
   "atlas":
@@ -6658,6 +6742,26 @@
   "theorem",
   "doc":
   "Kaczmarz steps keep the error in the row space: if `A xs = b` and `x − xs ∈ range Aᵀ`, then\n`step A b x i − xs ∈ range Aᵀ`. Atlas: `kaczmarz-rank-deficient` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.Kaczmarz.step"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.Kaczmarz.step_sub_mem_range_of_sub_mem_range.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (A : Matrix m n ℝ) (b : m → ℝ) (xh x : n → ℝ) (hx : x - xh ∈ A.transpose.mulVecLin.range) (i : m) :\n  NLAlib.Kaczmarz.step A b x i - xh ∈ A.transpose.mulVecLin.range",
+  "name":
+  "NLAlib.Kaczmarz.step_sub_mem_range_of_sub_mem_range",
+  "module":
+  "NLAlib.Solvers.KaczmarzRowSpace",
+  "line":
+  29,
+  "kind":
+  "theorem",
+  "doc":
+  "An arbitrary affine Kaczmarz update preserves row-space error membership.\nNo consistency assumption on the right-hand side or reference point is needed.\nNeedell 2010, proof of Theorem 2.1; atlas `kaczmarz-inconsistent` (invariant helper). ",
   "atlas_partial":
   [],
   "atlas":
@@ -7614,6 +7718,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.SketchProject.expectedProjector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.SketchProject.dotProduct_expectedProjector_mulVec_le.{u_1, u_2, u_3, u_4} {m : Type u_1} {n : Type u_2}\n  {s : Type u_3} {J : Type u_4} [Fintype m] [Fintype n] [Fintype s] [Fintype J] (A : Matrix m n ℝ) (p : J → ℝ)\n  (hp : ∀ (j : J), 0 ≤ p j) (hp1 : ∑ j, p j = 1) (S : J → Matrix m s ℝ) (v : n → ℝ) :\n  v ⬝ᵥ (NLAlib.SketchProject.expectedProjector A p S).mulVec v ≤ v ⬝ᵥ v",
+  "name":
+  "NLAlib.SketchProject.dotProduct_expectedProjector_mulVec_le",
+  "module":
+  "NLAlib.Solvers.SketchProject",
+  "line":
+  107,
+  "kind":
+  "theorem",
+  "doc":
+  "A convex combination of sketch row-space projectors is a contraction in\nthe quadratic-form sense: `vᵀ W v ≤ ‖v‖²`. Gower–Richtárik 2015, equation (4.1);\natlas `sketch-and-project` (expected-projector helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.moorePenroseInverse"],
   "sorry":
   false,
@@ -7686,11 +7810,32 @@
   "module":
   "NLAlib.Solvers.SketchProject",
   "line":
-  107,
+  121,
   "kind":
   "theorem",
   "doc":
   "**Sketch-and-project converges linearly in expectation.** Let `A xs = b`, `pⱼ ≥ 0`,\n`∑ pⱼ = 1`, and `λ ‖v‖² ≤ vᵀ W v` for all `v`, with `W = ∑ⱼ pⱼ (SⱼᵀA)⁺(SⱼᵀA)`. Then after `k`\nsteps with i.i.d. sketches, `E‖x_k − xs‖² ≤ (1 − λ)^k ‖x₀ − xs‖²`.\nSource: Gower–Richtárik (2015) [`gr15`], Thm 4.6 (`B = I`; the sharp `λ` is\n`λ_min⁺(W)`). Atlas: `sketch-and-project`; uses `pseudoinverse`. Deviation: finite sketch\ndistribution; expectation modelled by first-step recursion.\natlas: sketch-and-project ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["sketch-and-project"]},
+ {"uses":
+  ["NLAlib.SketchProject.expErr",
+   "NLAlib.SketchProject.expectedProjector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.SketchProject.expErr_le_of_sub_mem_range.{u_1, u_2, u_3, u_4} {m : Type u_1} {n : Type u_2} {s : Type u_3}\n  {J : Type u_4} [Fintype m] [Fintype n] [Fintype s] [Fintype J] (A : Matrix m n ℝ) (b : m → ℝ) (p : J → ℝ)\n  (hp : ∀ (j : J), 0 ≤ p j) (hp1 : ∑ j, p j = 1) (S : J → Matrix m s ℝ) {xs : n → ℝ} (hxs : A.mulVec xs = b) {lam : ℝ}\n  (hlam :\n    ∀ v ∈ A.transpose.mulVecLin.range, lam * v ⬝ᵥ v ≤ v ⬝ᵥ (NLAlib.SketchProject.expectedProjector A p S).mulVec v)\n  (x : n → ℝ) (hx : x - xs ∈ A.transpose.mulVecLin.range) (k : ℕ) :\n  NLAlib.SketchProject.expErr A b p S xs x k ≤ (1 - lam) ^ k * (x - xs) ⬝ᵥ (x - xs)",
+  "name":
+  "NLAlib.SketchProject.expErr_le_of_sub_mem_range",
+  "module":
+  "NLAlib.Solvers.SketchProject",
+  "line":
+  194,
+  "kind":
+  "theorem",
+  "doc":
+  "**Sketch-and-project contraction on the row space.** For a consistent system,\nan initial error in `range Aᵀ`, and a lower bound `λ‖v‖² ≤ vᵀ W v` only on that\nrow space, the finite iid sketch distribution satisfies\n`E‖x_k-xs‖² ≤ (1-λ)^k ‖x₀-xs‖²`. No full-column-rank assumption is required.\nGower–Richtárik 2015, Theorem 4.6, Euclidean case `B = I`;\natlas `sketch-and-project`. Deviation: a finite sketch distribution, with expectation\ngiven by the exact first-step recursion. The initial-error membership is essential.\natlas: sketch-and-project ",
   "atlas_partial":
   [],
   "atlas":
@@ -7756,6 +7901,26 @@
   [],
   "atlas":
   ["sketch-and-project"]},
+ {"uses":
+  ["NLAlib.SketchProject.step"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.SketchProject.step_sub_mem_range.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} {s : Type u_3} [Fintype m]\n  [Fintype n] [Fintype s] (A : Matrix m n ℝ) (b : m → ℝ) (S : Matrix m s ℝ) (xs x : n → ℝ)\n  (hx : x - xs ∈ A.transpose.mulVecLin.range) : NLAlib.SketchProject.step A b S x - xs ∈ A.transpose.mulVecLin.range",
+  "name":
+  "NLAlib.SketchProject.step_sub_mem_range",
+  "module":
+  "NLAlib.Solvers.SketchProject",
+  "line":
+  169,
+  "kind":
+  "theorem",
+  "doc":
+  "A sketch-and-project update preserves membership of the error in `range Aᵀ`,\neven for an arbitrary reference point and an inconsistent right-hand side.\nThe correction belongs to the row space because the Moore–Penrose inverse of `SᵀA`\nhas range contained in `range Aᵀ`. Gower–Richtárik 2015, eq. (2.3);\natlas `sketch-and-project` (invariant-space helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.SketchProject.step",
    "NLAlib.moorePenroseInverse"],
@@ -9372,6 +9537,28 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.krylovGrade",
+   "NLAlib.krylovSpace"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.aeval_mulVec_eq_and_charpoly_is_unique_minimiser.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {k : Type u_2} [Fintype k] [DecidableEq k] {A : Matrix n n ℝ} {Q : Matrix n k ℝ} (hQ : NLAlib.HasOrthonormalCols Q)\n  (b : n → ℝ) {q : ℕ} (hK : NLAlib.krylovSpace A b q ≤ Q.mulVecLin.range) :\n  (∀ (p : Polynomial ℝ),\n      p.degree < ↑q →\n        Q.mulVec (((Polynomial.aeval (Q.transpose * A * Q)) p).mulVec (Q.transpose.mulVec b)) =\n          ((Polynomial.aeval A) p).mulVec b) ∧\n    (∀ (p : Polynomial ℝ),\n        p.degree ≤ ↑q →\n          Q.transpose.mulVec (((Polynomial.aeval A) p).mulVec b) =\n            ((Polynomial.aeval (Q.transpose * A * Q)) p).mulVec (Q.transpose.mulVec b)) ∧\n      (Q.mulVecLin.range = NLAlib.krylovSpace A b q →\n        q ≤ NLAlib.krylovGrade A b →\n          (Q.transpose * A * Q).charpoly.Monic ∧\n            (Q.transpose * A * Q).charpoly.degree = ↑q ∧\n              (∀ x ∈ NLAlib.krylovSpace A b q,\n                  x ⬝ᵥ ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b = 0) ∧\n                ∀ (p : Polynomial ℝ),\n                  p.Monic →\n                    p.degree = ↑q →\n                      ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ⬝ᵥ\n                            ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ≤\n                          ((Polynomial.aeval A) p).mulVec b ⬝ᵥ ((Polynomial.aeval A) p).mulVec b ∧\n                        (((Polynomial.aeval A) p).mulVec b ⬝ᵥ ((Polynomial.aeval A) p).mulVec b =\n                            ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ⬝ᵥ\n                              ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ↔\n                          p = (Q.transpose * A * Q).charpoly))",
+  "name":
+  "NLAlib.aeval_mulVec_eq_and_charpoly_is_unique_minimiser",
+  "module":
+  "NLAlib.Krylov.CharacteristicPolynomial",
+  "line":
+  128,
+  "kind":
+  "theorem",
+  "doc":
+  "Polynomial exactness and the unique monic least-residual characterisation of the Krylov\ncompression. The first two identities need only `K_q ⊆ range Q`; minimality and uniqueness\napply when `Q` spans `K_q` and `q` is at most the grade. The characteristic residual is\northogonal to `K_q`. Source: the manuscript's section `rt:compression`, following\n(rt:power-exact); Saad (1992), Lemma 3.1. Deviation: arbitrary\nfinite column labels, squared dot-product norms, and also `q = 0`; no symmetry assumption.\natlas: krylov-polynomial-exactness ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["krylov-polynomial-exactness"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -10326,7 +10513,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  193,
+  194,
   "kind":
   "def",
   "doc":
@@ -10347,7 +10534,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  211,
+  212,
   "kind":
   "theorem",
   "doc":
@@ -10696,6 +10883,166 @@
   "theorem",
   "doc":
   "`completion_reduction_gaussian` together with integrability of the error\n`‖A − Q(ΨᵀQ)†ΨᵀA‖_F²`. Chen–Persson, Lemma `lem:completion`. Atlas `gn-expected-error`\n(uses `gaussian-conditioning`, `pinv-frob-moment`, `sketched-regression`). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.complexEigenvectorCoordinates.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) : EuclideanSpace ℂ n →ₗ[ℂ] Fin (Fintype.card n) → ℂ",
+  "name":
+  "NLAlib.complexEigenvectorCoordinates",
+  "module":
+  "NLAlib.Matrix.ComplexRayleigh",
+  "line":
+  26,
+  "kind":
+  "def",
+  "doc":
+  "Complex-linear coordinates in the sorted orthonormal eigenbasis of a\nHermitian matrix. The basis is the one underlying Mathlib's `eigenvalues₀` and\n`eigenvectorBasis`; empty finite index types are included. Source: the Hermitian\nspectral theorem, Horn–Johnson 2013, §4.2; supports `courant-fischer`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.complexEigenvectorCoordinates"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.complexEigenvectorCoordinates.congr_simp.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A A✝ : Matrix n n ℂ}\n  (e_A : A = A✝) (hA : A.IsHermitian) : NLAlib.complexEigenvectorCoordinates hA = NLAlib.complexEigenvectorCoordinates ⋯",
+  "name":
+  "NLAlib.complexEigenvectorCoordinates.congr_simp",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalPrinciple",
+  "line":
+  0,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.complexUnitQuadFormValues.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℂ)\n  (S : Submodule ℂ (EuclideanSpace ℂ n)) : Set ℝ",
+  "name":
+  "NLAlib.complexUnitQuadFormValues",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  28,
+  "kind":
+  "def",
+  "doc":
+  "Real quadratic values on the Euclidean unit vectors of a complex subspace.\nToolkit §2; Horn–Johnson Theorem 4.2.6; helper for atlas `courant-fischer`.\nThe unit condition uses the Euclidean norm and contains no zero-vector quotient. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.complex_eigenvalues₀_le_of_forall_mem.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) (k : Fin (Fintype.card n)) (W : Submodule ℂ (EuclideanSpace ℂ n))\n  (hW : Fintype.card n ≤ Module.finrank ℂ ↥W + ↑k) {c : ℝ}\n  (hAW : ∀ x ∈ W, (inner ℂ x ((Matrix.toEuclideanLin A) x)).re ≤ c * ‖x‖ ^ 2) : hA.eigenvalues₀ k ≤ c",
+  "name":
+  "NLAlib.complex_eigenvalues₀_le_of_forall_mem",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalPrinciple",
+  "line":
+  117,
+  "kind":
+  "theorem",
+  "doc":
+  "The complex Hermitian min–max threshold: an upper quadratic bound on a\nsubspace of codimension at most `k` bounds the `k`-th largest eigenvalue.\nHorn–Johnson Theorem 4.2.6; toolkit §2; helpers for `courant-fischer`.\nDimensions are over ℂ and the ordered quadratic value is its real part. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.complexUnitQuadFormValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.complex_eigenvalues₀_variational_extrema.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) (k : Fin (Fintype.card n)) :\n  IsGreatest {c | ∃ S, Module.finrank ℂ ↥S = ↑k + 1 ∧ IsLeast (NLAlib.complexUnitQuadFormValues A S) c}\n      (hA.eigenvalues₀ k) ∧\n    IsLeast {c | ∃ S, Module.finrank ℂ ↥S = Fintype.card n - ↑k ∧ IsGreatest (NLAlib.complexUnitQuadFormValues A S) c}\n      (hA.eigenvalues₀ k)",
+  "name":
+  "NLAlib.complex_eigenvalues₀_variational_extrema",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  209,
+  "kind":
+  "theorem",
+  "doc":
+  "Both complex Hermitian Courant–Fischer formulas have attained inner and\nouter extrema, with complex subspace dimensions exactly `k+1` and `card n-k`.\nThe quadratic values are real parts of Euclidean inner products on unit vectors.\nNo eigenvalue simplicity or sign assumption is required.\nHorn–Johnson Theorem 4.2.6; toolkit §2 (complex Hermitian case).\natlas: courant-fischer ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["courant-fischer"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.complex_exists_submodule_finrank_eq_eigenvalues₀_mul_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (k : Fin (Fintype.card n)) :\n  ∃ S,\n    Module.finrank ℂ ↥S = ↑k + 1 ∧ ∀ x ∈ S, hA.eigenvalues₀ k * ‖x‖ ^ 2 ≤ (inner ℂ x ((Matrix.toEuclideanLin A) x)).re",
+  "name":
+  "NLAlib.complex_exists_submodule_finrank_eq_eigenvalues₀_mul_le",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalPrinciple",
+  "line":
+  145,
+  "kind":
+  "theorem",
+  "doc":
+  "Exact-dimensional attaining spectral head for complex Hermitian matrices.\nHorn–Johnson Theorem 4.2.6; toolkit §2; helper for `courant-fischer`.\nThe subspace has complex dimension `k+1`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.complex_exists_submodule_finrank_eq_re_inner_le_eigenvalues₀_mul.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (k : Fin (Fintype.card n)) :\n  ∃ S,\n    Module.finrank ℂ ↥S = Fintype.card n - ↑k ∧\n      ∀ x ∈ S, (inner ℂ x ((Matrix.toEuclideanLin A) x)).re ≤ hA.eigenvalues₀ k * ‖x‖ ^ 2",
+  "name":
+  "NLAlib.complex_exists_submodule_finrank_eq_re_inner_le_eigenvalues₀_mul",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalPrinciple",
+  "line":
+  162,
+  "kind":
+  "theorem",
+  "doc":
+  "Exact-dimensional attaining spectral tail for complex Hermitian matrices.\nHorn–Johnson Theorem 4.2.6; toolkit §2; helper for `courant-fischer`.\nThe subspace has complex dimension `card n-k`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.complex_le_eigenvalues₀_of_forall_mem.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) (k : Fin (Fintype.card n)) (S : Submodule ℂ (EuclideanSpace ℂ n))\n  (hS : ↑k + 1 ≤ Module.finrank ℂ ↥S) {c : ℝ}\n  (hAS : ∀ x ∈ S, c * ‖x‖ ^ 2 ≤ (inner ℂ x ((Matrix.toEuclideanLin A) x)).re) : c ≤ hA.eigenvalues₀ k",
+  "name":
+  "NLAlib.complex_le_eigenvalues₀_of_forall_mem",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalPrinciple",
+  "line":
+  132,
+  "kind":
+  "theorem",
+  "doc":
+  "The complex Hermitian max–min threshold on a subspace of dimension at\nleast `k+1`. Horn–Johnson Theorem 4.2.6; toolkit §2; helper for `courant-fischer`.\nNo positivity condition on the eigenvalue or threshold is needed. ",
   "atlas_partial":
   [],
   "atlas":
@@ -11657,6 +12004,48 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.dotProduct_aeval_charpoly_mulVec_eq_zero_of_mem_range.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {k : Type u_2} [Fintype k] [DecidableEq k] {A : Matrix n n ℝ} {Q : Matrix n k ℝ} (hQ : NLAlib.HasOrthonormalCols Q)\n  (b : n → ℝ) (hK : NLAlib.krylovSpace A b (Fintype.card k) ≤ Q.mulVecLin.range) {x : n → ℝ}\n  (hx : x ∈ Q.mulVecLin.range) : x ⬝ᵥ ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b = 0",
+  "name":
+  "NLAlib.dotProduct_aeval_charpoly_mulVec_eq_zero_of_mem_range",
+  "module":
+  "NLAlib.Krylov.CharacteristicPolynomial",
+  "line":
+  43,
+  "kind":
+  "theorem",
+  "doc":
+  "The compression's characteristic residual is orthogonal to its range, hence to the\nKrylov space it contains. Source: the manuscript's monic least-residual argument following\n(rt:power-exact). No symmetry assumption is used.\natlas: krylov-polynomial-exactness (partial) ",
+  "atlas_partial":
+  ["krylov-polynomial-exactness"],
+  "atlas":
+  ["krylov-polynomial-exactness"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.krylovSpace"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.dotProduct_aeval_charpoly_mulVec_self_le.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {k : Type u_2}\n  [Fintype k] [DecidableEq k] {A : Matrix n n ℝ} {Q : Matrix n k ℝ} (hQ : NLAlib.HasOrthonormalCols Q) (b : n → ℝ)\n  (hK : NLAlib.krylovSpace A b (Fintype.card k) ≤ Q.mulVecLin.range) {p : Polynomial ℝ} (hp : p.Monic)\n  (hpdeg : p.degree = ↑(Fintype.card k)) :\n  ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ⬝ᵥ\n      ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ≤\n    ((Polynomial.aeval A) p).mulVec b ⬝ᵥ ((Polynomial.aeval A) p).mulVec b",
+  "name":
+  "NLAlib.dotProduct_aeval_charpoly_mulVec_self_le",
+  "module":
+  "NLAlib.Krylov.CharacteristicPolynomial",
+  "line":
+  86,
+  "kind":
+  "theorem",
+  "doc":
+  "The characteristic polynomial of a Krylov compression minimises `‖p(A)b‖²` among monic\npolynomials of its degree. Source: the manuscript's monic least-residual argument following\n(rt:power-exact). The containing-space hypothesis suffices for minimality; `A` is arbitrary.\natlas: krylov-polynomial-exactness (partial) ",
+  "atlas_partial":
+  ["krylov-polynomial-exactness"],
+  "atlas":
+  ["krylov-polynomial-exactness"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.krylovSpace"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {k : Type u_2} [Fintype k] [DecidableEq k] {A : Matrix n n ℝ} (hA : A.IsSymm) {Q : Matrix n k ℝ}\n  (hQ : NLAlib.HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ} (hK : NLAlib.krylovSpace A b q ≤ Q.mulVecLin.range)\n  {p : Polynomial ℝ} (hp : p.degree < 2 * ↑q) :\n  b ⬝ᵥ ((Polynomial.aeval A) p).mulVec b =\n    Q.transpose.mulVec b ⬝ᵥ ((Polynomial.aeval (Q.transpose * A * Q)) p).mulVec (Q.transpose.mulVec b)",
   "name":
   "NLAlib.dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul",
@@ -11713,6 +12102,49 @@
   [],
   "atlas":
   ["polynomial-spectral-bound"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.krylovSpace"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.dotProduct_aeval_mulVec_self_eq_charpoly_add.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {k : Type u_2}\n  [Fintype k] [DecidableEq k] {A : Matrix n n ℝ} {Q : Matrix n k ℝ} (hQ : NLAlib.HasOrthonormalCols Q) (b : n → ℝ)\n  (hK : NLAlib.krylovSpace A b (Fintype.card k) ≤ Q.mulVecLin.range) {p : Polynomial ℝ} (hp : p.Monic)\n  (hpdeg : p.degree = ↑(Fintype.card k)) :\n  ((Polynomial.aeval A) p).mulVec b ⬝ᵥ ((Polynomial.aeval A) p).mulVec b =\n    ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ⬝ᵥ\n        ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b +\n      ((Polynomial.aeval A) (p - (Q.transpose * A * Q).charpoly)).mulVec b ⬝ᵥ\n        ((Polynomial.aeval A) (p - (Q.transpose * A * Q).charpoly)).mulVec b",
+  "name":
+  "NLAlib.dotProduct_aeval_mulVec_self_eq_charpoly_add",
+  "module":
+  "NLAlib.Krylov.CharacteristicPolynomial",
+  "line":
+  57,
+  "kind":
+  "theorem",
+  "doc":
+  "A monic competitor of degree `card k` splits orthogonally into the characteristic residual\nand a residual of smaller degree. Source: the manuscript's monic least-residual argument\nfollowing (rt:power-exact). Squared norms are explicit dot products; `A` is arbitrary real.\natlas: krylov-polynomial-exactness (partial) ",
+  "atlas_partial":
+  ["krylov-polynomial-exactness"],
+  "atlas":
+  ["krylov-polynomial-exactness"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.krylovGrade",
+   "NLAlib.krylovSpace"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.dotProduct_aeval_mulVec_self_eq_charpoly_iff.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {k : Type u_2}\n  [Fintype k] [DecidableEq k] {A : Matrix n n ℝ} {Q : Matrix n k ℝ} (hQ : NLAlib.HasOrthonormalCols Q) (b : n → ℝ)\n  (hK : NLAlib.krylovSpace A b (Fintype.card k) ≤ Q.mulVecLin.range) (hq : Fintype.card k ≤ NLAlib.krylovGrade A b)\n  {p : Polynomial ℝ} (hp : p.Monic) (hpdeg : p.degree = ↑(Fintype.card k)) :\n  ((Polynomial.aeval A) p).mulVec b ⬝ᵥ ((Polynomial.aeval A) p).mulVec b =\n      ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ⬝ᵥ\n        ((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b ↔\n    p = (Q.transpose * A * Q).charpoly",
+  "name":
+  "NLAlib.dotProduct_aeval_mulVec_self_eq_charpoly_iff",
+  "module":
+  "NLAlib.Krylov.CharacteristicPolynomial",
+  "line":
+  100,
+  "kind":
+  "theorem",
+  "doc":
+  "The compression's characteristic polynomial is the unique monic minimiser below or at\nthe grade. Equality of squared residual norms forces equality of polynomials.\nSource: the manuscript's monic least-residual argument following (rt:power-exact), with\nindependence of the first `card k` Krylov powers. Generic finite labels and real scalars;\nno symmetry hypothesis is required.\natlas: krylov-polynomial-exactness (partial) ",
+  "atlas_partial":
+  ["krylov-polynomial-exactness"],
+  "atlas":
+  ["krylov-polynomial-exactness"]},
  {"uses":
   [],
   "sorry":
@@ -11968,7 +12400,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  241,
+  242,
   "kind":
   "theorem",
   "doc":
@@ -11988,7 +12420,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  87,
+  88,
   "kind":
   "theorem",
   "doc":
@@ -12008,7 +12440,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  157,
+  158,
   "kind":
   "theorem",
   "doc":
@@ -13349,6 +13781,26 @@
   "atlas":
   ["graded-krylov-basis-def"]},
  {"uses":
+  ["NLAlib.complexUnitQuadFormValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isLeast_isGreatest_complexUnitQuadFormValues.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A : Matrix n n ℂ) (S : Submodule ℂ (EuclideanSpace ℂ n)) (hS : 0 < Module.finrank ℂ ↥S) :\n  (∃ c, IsLeast (NLAlib.complexUnitQuadFormValues A S) c) ∧ ∃ c, IsGreatest (NLAlib.complexUnitQuadFormValues A S) c",
+  "name":
+  "NLAlib.exists_isLeast_isGreatest_complexUnitQuadFormValues",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  102,
+  "kind":
+  "theorem",
+  "doc":
+  "Every positive-dimensional complex subspace has attained minimum and\nmaximum real quadratic values on its Euclidean unit vectors. No Hermitian or\ndefiniteness hypothesis is needed for this compactness statement.\nToolkit §2; Horn–Johnson Theorem 4.2.6; helper for atlas `courant-fischer`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.IsMoorePenroseInverse"],
   "sorry":
   false,
@@ -13832,6 +14284,46 @@
   "atlas":
   ["courant-fischer"]},
  {"uses":
+  ["NLAlib.complexUnitQuadFormValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_submodule_finrank_eq_isGreatest_complexUnitQuadFormValues.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (k : Fin (Fintype.card n)) :\n  ∃ S, Module.finrank ℂ ↥S = Fintype.card n - ↑k ∧ IsGreatest (NLAlib.complexUnitQuadFormValues A S) (hA.eigenvalues₀ k)",
+  "name":
+  "NLAlib.exists_submodule_finrank_eq_isGreatest_complexUnitQuadFormValues",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  156,
+  "kind":
+  "theorem",
+  "doc":
+  "A complex spectral tail of dimension exactly `card n-k` attains its\nmaximum real unit-vector quadratic value at the `k`-th decreasing eigenvalue.\nHorn–Johnson Theorem 4.2.6; toolkit §2; helper for atlas `courant-fischer`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.complexUnitQuadFormValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_submodule_finrank_eq_isLeast_complexUnitQuadFormValues.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (k : Fin (Fintype.card n)) :\n  ∃ S, Module.finrank ℂ ↥S = ↑k + 1 ∧ IsLeast (NLAlib.complexUnitQuadFormValues A S) (hA.eigenvalues₀ k)",
+  "name":
+  "NLAlib.exists_submodule_finrank_eq_isLeast_complexUnitQuadFormValues",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  136,
+  "kind":
+  "theorem",
+  "doc":
+  "A complex spectral head of dimension exactly `k+1` attains its minimum\nreal unit-vector quadratic value at the `k`-th decreasing eigenvalue.\nHorn–Johnson Theorem 4.2.6; toolkit §2; helper for atlas `courant-fischer`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -14117,9 +14609,9 @@
   "kind":
   "theorem",
   "doc":
-  "**Dimension of a Krylov space.** `dim K_q(A,b) = min q ν(A,b)`.\nSource: Saad (2003) [`saad03`], Prop 6.3. Atlas: `krylov-grade` (partial: dimension).\natlas: krylov-grade ",
+  "**Dimension of a Krylov space.** `dim K_q(A,b) = min q ν(A,b)`.\nSource: Saad (2003) [`saad03`], Prop 6.3. Atlas: `krylov-grade` (partial: dimension).\natlas: krylov-grade (partial) ",
   "atlas_partial":
-  [],
+  ["krylov-grade"],
   "atlas":
   ["krylov-grade"]},
  {"uses":
@@ -19565,19 +20057,39 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.integrable_and_integral_le_of_tail_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω)\n  [MeasureTheory.IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ) (hnn : 0 ≤ᵐ[μ] f) {a : ℝ} (ha : 0 ≤ a)\n  (F : ℝ → ℝ) (hF : MeasureTheory.IntegrableOn F (Set.Ioi a) MeasureTheory.volume)\n  (hFnn : 0 ≤ᵐ[MeasureTheory.volume.restrict (Set.Ioi a)] F)\n  (htail : ∀ (t : ℝ), a < t → μ {x | t < f x} ≤ ENNReal.ofReal (F t)) :\n  MeasureTheory.Integrable f μ ∧ ∫ (x : Ω), f x ∂μ ≤ a + ∫ (t : ℝ) in Set.Ioi a, F t",
+  "name":
+  "NLAlib.integrable_and_integral_le_of_tail_le",
+  "module":
+  "NLAlib.Concentration.Scalar.TailIntegral",
+  "line":
+  52,
+  "kind":
+  "theorem",
+  "doc":
+  "**Expectation from a general integrable tail envelope.** A nonnegative random variable\nwhose upper tail is bounded by a nonnegative integrable `F` above `a ≥ 0` is integrable,\nand `E f ≤ a + ∫ₐ^∞ F(t) dt`. Integrability is derived, rather than assumed for `f`.\n\nStandard layer-cake estimate; Vershynin 2018, Lemma 1.2.1; HMT 2011, proof of\nThm 10.8. The nonnegative integral version `lintegral_le_of_tail_le` also covers\ninfinite tail envelopes.\natlas: tail-integral ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["tail-integral"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.integrable_and_integral_le_of_tail_le_rpow.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω)\n  [MeasureTheory.IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ) (hnn : 0 ≤ᵐ[μ] f) (C m : ℝ) (hC : 0 < C)\n  (hm : 1 < m) (htail : ∀ (t : ℝ), 0 < t → μ {x | t < f x} ≤ ENNReal.ofReal (C * t ^ (-m))) :\n  MeasureTheory.Integrable f μ ∧ ∫ (x : Ω), f x ∂μ ≤ C ^ (1 / m) * m / (m - 1)",
   "name":
   "NLAlib.integrable_and_integral_le_of_tail_le_rpow",
   "module":
   "NLAlib.Concentration.Scalar.TailIntegral",
   "line":
-  24,
+  75,
   "kind":
   "theorem",
   "doc":
-  "**Expectation from a polynomial tail.** If `f ≥ 0` a.e. on a probability space and\n`P(f > t) ≤ C t^{-m}` for all `t > 0`, with `C > 0` and `m > 1`, then `f` is integrable and\n`E f ≤ C^{1/m} · m / (m - 1)`.\n\nStandard layer-cake estimate (`E f = ∫₀^∞ P(f > t) dt`, bounded by `1` below `C^{1/m}` and by\nthe tail above), e.g. HMT 2011, proof of Thm 10.8 / Vershynin 2018, Lemma 1.2.1.\nAtlas: `tail-integral`. Ported from Prove2me solution\n`GaussianMatrix.integral_le_of_tail_bound`.\natlas: tail-integral ",
+  "**Expectation from a polynomial tail.** If `f ≥ 0` a.e. on a probability space and\n`P(f > t) ≤ C t^{-m}` for all `t > 0`, with `C > 0` and `m > 1`, then `f` is integrable and\n`E f ≤ C^{1/m} · m / (m - 1)`.\n\nStandard layer-cake estimate (`E f = ∫₀^∞ P(f > t) dt`, bounded by `1` below `C^{1/m}` and by\nthe tail above), e.g. HMT 2011, proof of Thm 10.8 / Vershynin 2018, Lemma 1.2.1.\nAtlas: `tail-integral`. Ported from Prove2me solution\n`GaussianMatrix.integral_le_of_tail_bound`.\natlas: tail-integral (partial) ",
   "atlas_partial":
-  [],
+  ["tail-integral"],
   "atlas":
   ["tail-integral"]},
  {"uses":
@@ -19933,9 +20445,9 @@
   "kind":
   "theorem",
   "doc":
-  "**Randomized Nyström, expected trace error** (Gittens–Mahoney 2016, Thm 3 / §3;\nTropp–Webber 2023, Thm 5.1 specialised to Nyström; Martinsson–Tropp 2020, §19.2): if\n`A = FᵀF` and `Ω` is an `n × t` standard Gaussian matrix with `t ≥ k + 2`, then\n`tr(A − A⟨Ω⟩)` is integrable and\n`E tr(A − A⟨Ω⟩) ≤ (1 + k/(t−k−1)) · ‖F − ⟦F⟧ₖ‖_F²`.\n\nProof: `tr(A − A⟨Ω⟩) = ‖(I − P)F‖_F²` (`trace_sub_nystrom_eq_of_eq_transpose_mul`); a.s.\nthe Gaussian range frame `Q` of `FΩ` has `min(rank F, t) = rank(FΩ)` columns, so `QQᵀ = P`;\nthen the Gaussian RSVD bound for `F`\n(`integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq`).\n\nDeviation: the right side is `bestRankFrobSq k F`; for `A = FᵀF` this equals\n`∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*` (the atlas form), an identification not formalized here.\nIndex types are `Fin` (Gaussian law convention). Atlas `nystrom-randomized` (uses\n`nystrom-structural`, `rsvd-expected-error`, `leverage-scores`).\natlas: nystrom-randomized ",
+  "**Randomized Nyström, expected trace error** (Gittens–Mahoney 2016, Thm 3 / §3;\nTropp–Webber 2023, Thm 5.1 specialised to Nyström; Martinsson–Tropp 2020, §19.2): if\n`A = FᵀF` and `Ω` is an `n × t` standard Gaussian matrix with `t ≥ k + 2`, then\n`tr(A − A⟨Ω⟩)` is integrable and\n`E tr(A − A⟨Ω⟩) ≤ (1 + k/(t−k−1)) · ‖F − ⟦F⟧ₖ‖_F²`.\n\nProof: `tr(A − A⟨Ω⟩) = ‖(I − P)F‖_F²` (`trace_sub_nystrom_eq_of_eq_transpose_mul`); a.s.\nthe Gaussian range frame `Q` of `FΩ` has `min(rank F, t) = rank(FΩ)` columns, so `QQᵀ = P`;\nthen the Gaussian RSVD bound for `F`\n(`integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq`).\n\nDeviation: the right side is `bestRankFrobSq k F`; for `A = FᵀF` this equals\n`∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*` (the atlas form), an identification not formalized here.\nIndex types are `Fin` (Gaussian law convention). Atlas `nystrom-randomized` (uses\n`nystrom-structural`, `rsvd-expected-error`, `leverage-scores`).\natlas: nystrom-randomized (partial) ",
   "atlas_partial":
-  [],
+  ["nystrom-randomized"],
   "atlas":
   ["nystrom-randomized"]},
  {"uses":
@@ -23161,6 +23673,50 @@
   ["randomized-kaczmarz"]},
  {"uses":
   ["NLAlib.Kaczmarz.run",
+   "NLAlib.frobSq",
+   "NLAlib.kaczmarzRowPathPMF"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_sqErr_kaczmarz_le_add_div_sq_of_sub_mem_range.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] [MeasurableSpace m] [MeasurableSingletonClass m] (A : Matrix m n ℝ) (hA : A ≠ 0)\n  (b : m → ℝ) (xh : n → ℝ) {σ : ℝ} (hσ0 : 0 < σ)\n  (hσ : ∀ v ∈ A.transpose.mulVecLin.range, σ ^ 2 * v ⬝ᵥ v ≤ A.mulVec v ⬝ᵥ A.mulVec v) (x : n → ℝ)\n  (hx : x - xh ∈ A.transpose.mulVecLin.range) (k : ℕ) :\n  ∫ (ω : Fin k → m),\n      (NLAlib.Kaczmarz.run A b k ω x - xh) ⬝ᵥ\n        (NLAlib.Kaczmarz.run A b k ω x - xh) ∂(NLAlib.kaczmarzRowPathPMF A hA k).toMeasure ≤\n    (1 - σ ^ 2 / NLAlib.frobSq A) ^ k * (x - xh) ⬝ᵥ (x - xh) + (b - A.mulVec xh) ⬝ᵥ (b - A.mulVec xh) / σ ^ 2",
+  "name":
+  "NLAlib.integral_sqErr_kaczmarz_le_add_div_sq_of_sub_mem_range",
+  "module":
+  "NLAlib.Solvers.KaczmarzRowSpace",
+  "line":
+  225,
+  "kind":
+  "theorem",
+  "doc":
+  "The row-space horizon bound holds for the actual iid row-path probability\nexpectation, with an arbitrary reference point, `σ>0`, and no rank assumption.\nNeedell 2010, Theorem 2.1; Zouzias–Freris 2013, equation (5).\natlas: kaczmarz-inconsistent ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["kaczmarz-inconsistent"]},
+ {"uses":
+  ["NLAlib.Kaczmarz.run",
+   "NLAlib.frobSq",
+   "NLAlib.kaczmarzRowPathPMF"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_sqErr_kaczmarz_le_add_of_sub_mem_range.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [MeasurableSpace m] [MeasurableSingletonClass m] (A : Matrix m n ℝ) (hA : A ≠ 0) (b : m → ℝ)\n  (xh : n → ℝ) (σ : ℝ) (hσ : ∀ v ∈ A.transpose.mulVecLin.range, σ ^ 2 * v ⬝ᵥ v ≤ A.mulVec v ⬝ᵥ A.mulVec v) (x : n → ℝ)\n  (hx : x - xh ∈ A.transpose.mulVecLin.range) (k : ℕ) :\n  ∫ (ω : Fin k → m),\n      (NLAlib.Kaczmarz.run A b k ω x - xh) ⬝ᵥ\n        (NLAlib.Kaczmarz.run A b k ω x - xh) ∂(NLAlib.kaczmarzRowPathPMF A hA k).toMeasure ≤\n    (1 - σ ^ 2 / NLAlib.frobSq A) ^ k * (x - xh) ⬝ᵥ (x - xh) +\n      (∑ j ∈ Finset.range k, (1 - σ ^ 2 / NLAlib.frobSq A) ^ j) *\n        ((b - A.mulVec xh) ⬝ᵥ (b - A.mulVec xh) / NLAlib.frobSq A)",
+  "name":
+  "NLAlib.integral_sqErr_kaczmarz_le_add_of_sub_mem_range",
+  "module":
+  "NLAlib.Solvers.KaczmarzRowSpace",
+  "line":
+  205,
+  "kind":
+  "theorem",
+  "doc":
+  "The exact row-space geometric-noise bound holds for the actual iid row-path\nprobability expectation of inconsistent Kaczmarz. Nonzero input makes the row\nweights a probability distribution. Needell 2010, Theorem 2.1;\nZouzias–Freris 2013, equation (5).\natlas: kaczmarz-inconsistent ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["kaczmarz-inconsistent"]},
+ {"uses":
+  ["NLAlib.Kaczmarz.run",
    "NLAlib.frobConditionNumber",
    "NLAlib.kaczmarzRowPathPMF"],
   "sorry":
@@ -23344,9 +23900,9 @@
   "kind":
   "theorem",
   "doc":
-  "**XTrace is unbiased.** Let `W` be the test matrix with columns `ωᵢ`, and for each `i` let\n`Qᵢ = Qf i (Sᵢ)` with `Qf i s` orthonormal for every `s`, where the leave-one-out statistic `Sᵢ`\n(in XTrace, `Ω₋ᵢ`) is independent of `ωᵢ`, and each `ωᵢ` has isotropic second moments. If each\nterm is integrable for the product of the laws of `Sᵢ` and `ωᵢ`, then `𝔼[XTrace] = tr A`.\nSource: Epperly–Tropp–Webber (2024) [`etw24`], §2.1 (unbiasedness of the exchangeable estimator).\nAtlas: `xtrace-unbiased`; uses `hutchinson-unbiased`, `gaussian-conditioning`.\nDeviation: abstract leave-one-out statistics `Sᵢ`; integrability is a hypothesis; the\n`rsvd-expected-error` dependency of the atlas entry is not needed.\natlas: xtrace-unbiased ",
+  "**XTrace is unbiased.** Let `W` be the test matrix with columns `ωᵢ`, and for each `i` let\n`Qᵢ = Qf i (Sᵢ)` with `Qf i s` orthonormal for every `s`, where the leave-one-out statistic `Sᵢ`\n(in XTrace, `Ω₋ᵢ`) is independent of `ωᵢ`, and each `ωᵢ` has isotropic second moments. If each\nterm is integrable for the product of the laws of `Sᵢ` and `ωᵢ`, then `𝔼[XTrace] = tr A`.\nSource: Epperly–Tropp–Webber (2024) [`etw24`], §2.1 (unbiasedness of the exchangeable estimator).\nAtlas: `xtrace-unbiased`; uses `hutchinson-unbiased`, `gaussian-conditioning`.\nDeviation: abstract leave-one-out statistics `Sᵢ`; integrability is a hypothesis; the\n`rsvd-expected-error` dependency of the atlas entry is not needed.\natlas: xtrace-unbiased (partial) ",
   "atlas_partial":
-  [],
+  ["xtrace-unbiased"],
   "atlas":
   ["xtrace-unbiased"]},
  {"uses":
@@ -24406,6 +24962,46 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.complexUnitQuadFormValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isGreatest_complexUnitQuadFormValues_top.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) (hn : 0 < Fintype.card n) :\n  IsGreatest (NLAlib.complexUnitQuadFormValues A ⊤) (hA.eigenvalues₀ ⟨0, hn⟩)",
+  "name":
+  "NLAlib.isGreatest_complexUnitQuadFormValues_top",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  226,
+  "kind":
+  "theorem",
+  "doc":
+  "The largest complex Hermitian eigenvalue is the attained maximum of\nreal quadratic values on Euclidean unit vectors. Positive dimension is required\nonly to form the first eigenvalue index.\nHorn–Johnson Theorem 4.2.6; toolkit §2 (complex Hermitian case).\natlas: courant-fischer (partial) ",
+  "atlas_partial":
+  ["courant-fischer"],
+  "atlas":
+  ["courant-fischer"]},
+ {"uses":
+  ["NLAlib.complexUnitQuadFormValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isGreatest_eigenvalues₀_min_complexUnitQuadFormValues.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (k : Fin (Fintype.card n)) :\n  IsGreatest {c | ∃ S, Module.finrank ℂ ↥S = ↑k + 1 ∧ IsLeast (NLAlib.complexUnitQuadFormValues A S) c}\n    (hA.eigenvalues₀ k)",
+  "name":
+  "NLAlib.isGreatest_eigenvalues₀_min_complexUnitQuadFormValues",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  178,
+  "kind":
+  "theorem",
+  "doc":
+  "The complex Hermitian Courant–Fischer max–min formula is attained on\nsubspaces of complex dimension exactly `k+1`. Each inner minimum is attained\non Euclidean unit vectors, and the outer maximum is attained by a spectral head.\nHorn–Johnson Theorem 4.2.6; toolkit §2 (complex Hermitian case).\natlas: courant-fischer (partial) ",
+  "atlas_partial":
+  ["courant-fischer"],
+  "atlas":
+  ["courant-fischer"]},
+ {"uses":
   ["NLAlib.matrixLog"],
   "sorry":
   false,
@@ -24547,6 +25143,46 @@
   [],
   "atlas":
   ["chebyshev-monic-minimal"]},
+ {"uses":
+  ["NLAlib.complexUnitQuadFormValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isLeast_complexUnitQuadFormValues_top.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) (hn : 0 < Fintype.card n) :\n  IsLeast (NLAlib.complexUnitQuadFormValues A ⊤) (hA.eigenvalues₀ ⟨Fintype.card n - 1, ⋯⟩)",
+  "name":
+  "NLAlib.isLeast_complexUnitQuadFormValues_top",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  240,
+  "kind":
+  "theorem",
+  "doc":
+  "The smallest complex Hermitian eigenvalue is the attained minimum of\nreal quadratic values on Euclidean unit vectors. Empty dimension is excluded\nbecause it has no final eigenvalue index.\nHorn–Johnson Theorem 4.2.6; toolkit §2 (complex Hermitian case).\natlas: courant-fischer (partial) ",
+  "atlas_partial":
+  ["courant-fischer"],
+  "atlas":
+  ["courant-fischer"]},
+ {"uses":
+  ["NLAlib.complexUnitQuadFormValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isLeast_eigenvalues₀_max_complexUnitQuadFormValues.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (k : Fin (Fintype.card n)) :\n  IsLeast {c | ∃ S, Module.finrank ℂ ↥S = Fintype.card n - ↑k ∧ IsGreatest (NLAlib.complexUnitQuadFormValues A S) c}\n    (hA.eigenvalues₀ k)",
+  "name":
+  "NLAlib.isLeast_eigenvalues₀_max_complexUnitQuadFormValues",
+  "module":
+  "NLAlib.Matrix.ComplexVariationalExtrema",
+  "line":
+  193,
+  "kind":
+  "theorem",
+  "doc":
+  "The complex Hermitian Courant–Fischer min–max formula is attained on\nsubspaces of complex dimension exactly `card n-k`. Each inner maximum is\nattained on Euclidean unit vectors, and the outer minimum is attained by a spectral tail.\nHorn–Johnson Theorem 4.2.6; toolkit §2 (complex Hermitian case).\natlas: courant-fischer (partial) ",
+  "atlas_partial":
+  ["courant-fischer"],
+  "atlas":
+  ["courant-fischer"]},
  {"uses":
   ["NLAlib.singularValues",
    "NLAlib.specNorm"],
@@ -25365,9 +26001,9 @@
   "kind":
   "def",
   "doc":
-  "The grade of `b` with respect to `A`: `ν(A, b) = dim span {Aⁱ b : i ∈ ℕ}`, equivalently the\ndegree of the monic polynomial `μ_{A,b}` of least degree with `μ_{A,b}(A) b = 0`.\nSource: Saad (2003) [`saad03`], Def. before Prop 6.1; Liesen–Strakoš (2013) [`ls13`], §2.2.\nDeviation: real scalars only (the atlas entry allows any field).\natlas: krylov-grade ",
+  "The grade of `b` with respect to `A`: `ν(A, b) = dim span {Aⁱ b : i ∈ ℕ}`, equivalently the\ndegree of the monic polynomial `μ_{A,b}` of least degree with `μ_{A,b}(A) b = 0`.\nSource: Saad (2003) [`saad03`], Def. before Prop 6.1; Liesen–Strakoš (2013) [`ls13`], §2.2.\nDeviation: real scalars only (the atlas entry allows any field).\natlas: krylov-grade (partial) ",
   "atlas_partial":
-  [],
+  ["krylov-grade"],
   "atlas":
   ["krylov-grade"]},
  {"uses":
@@ -26301,6 +26937,26 @@
   "atlas":
   ["amm-ose"]},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.lintegral_le_of_tail_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω)\n  [MeasureTheory.IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ) (hnn : 0 ≤ᵐ[μ] f) {a : ℝ} (ha : 0 ≤ a)\n  (F : ℝ → ℝ) (htail : ∀ (t : ℝ), a < t → μ {x | t < f x} ≤ ENNReal.ofReal (F t)) :\n  ∫⁻ (x : Ω), ENNReal.ofReal (f x) ∂μ ≤ ENNReal.ofReal a + ∫⁻ (t : ℝ) in Set.Ioi a, ENNReal.ofReal (F t)",
+  "name":
+  "NLAlib.lintegral_le_of_tail_le",
+  "module":
+  "NLAlib.Concentration.Scalar.TailIntegral",
+  "line":
+  29,
+  "kind":
+  "theorem",
+  "doc":
+  "**Expectation from a general tail envelope, nonnegative integral form.** If `f ≥ 0`\na.e. on a probability space, `a ≥ 0`, and `P(f > t) ≤ F(t)` for `t > a`, then\n`E f ≤ a + ∫ₐ^∞ F(t) dt`. No finiteness or measurability assumption on the envelope\nis needed for this extended nonnegative integral inequality.\n\nStandard layer-cake estimate; Vershynin 2018, Lemma 1.2.1; HMT 2011, proof of\nThm 10.8. Uses Mathlib's `lintegral_eq_lintegral_meas_lt`.\natlas: tail-integral ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["tail-integral"]},
+ {"uses":
   ["NLAlib.gaussianMatrix"],
   "sorry":
   false,
@@ -26411,13 +27067,13 @@
   "module":
   "NLAlib.Concentration.Scalar.TailIntegral",
   "line":
-  85,
+  118,
   "kind":
   "theorem",
   "doc":
-  "**Truncated Gamma integral bound.** For `a > -1` and `t ≥ 0`,\n`∫₀ᵗ x^a e^{-x/2} dx ≤ t^{a+1} / (a + 1)` (drop the exponential factor).\n\nElementary; used for the chi-square small-ball density bound (Davidson–Szarek 2001,\nVershynin 2012). Atlas: `tail-integral`. Ported from Prove2me solution\n`GaussianMatrix.integral_power_exp_le`.\natlas: tail-integral ",
+  "**Truncated Gamma integral bound.** For `a > -1` and `t ≥ 0`,\n`∫₀ᵗ x^a e^{-x/2} dx ≤ t^{a+1} / (a + 1)` (drop the exponential factor).\n\nElementary; used for the chi-square small-ball density bound (Davidson–Szarek 2001,\nVershynin 2012). Atlas: `tail-integral`. Ported from Prove2me solution\n`GaussianMatrix.integral_power_exp_le`.\natlas: tail-integral (partial) ",
   "atlas_partial":
-  [],
+  ["tail-integral"],
   "atlas":
   ["tail-integral"]},
  {"uses":
@@ -28255,6 +28911,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.measure_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF.{u_1, u_2} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {ι : Type u_2} [Fintype ι] [DecidableEq ι]\n  [Nonempty ι] (Y : ι → Ω → ℝ) (K : ℝ) (hK : 0 < K) (hind : ProbabilityTheory.iIndepFun Y μ)\n  (hmgf : ∀ (i : ι), ProbabilityTheory.HasSubgaussianMGF (Y i) ⟨K ^ 2, ⋯⟩ μ)\n  (hsq : ∀ (i : ι), ∫ (ω : Ω), Y i ω ^ 2 ∂μ = 1) {u : ℝ} (hu : 0 ≤ u) :\n  (μ {ω | u ≤ |∑ i, Y i ω ^ 2 - ↑(Fintype.card ι)|}).toReal ≤\n    2 * Real.exp (-(1 / (256 * Real.exp 1 ^ 2)) * min (u ^ 2 / (↑(Fintype.card ι) * K ^ 4)) (u / K ^ 2))",
+  "name":
+  "NLAlib.measure_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF",
+  "module":
+  "NLAlib.Concentration.SquaredProjections",
+  "line":
+  23,
+  "kind":
+  "theorem",
+  "doc":
+  "**Squared projection concentration.** Independent random variables with MGF\nproxy `K²` and unit second moments satisfy the explicit Hanson–Wright tail for\n`|∑ Yᵢ² - card ι|`. Integrability follows from the MGF assumptions. The family\nis nonempty so the identity matrix has spectral norm one.\n\nSource: operator re-derivation Lemma `pg:squares`, specializing the proved\n`hanson_wright_mgf`; supports atlas `jl-subgaussian` and\n`subgaussian-matrix-norm`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.measure_le_sum_sq_le_gaussianReal {d : ℕ} {ε : ℝ} (hε : 0 ≤ ε) :\n  (MeasureTheory.Measure.pi fun x => ProbabilityTheory.gaussianReal 0 1) {g | (1 + ε) * ↑d ≤ ∑ i, g i ^ 2} ≤\n    ENNReal.ofReal (Real.exp (-(↑d / 2) * (ε - Real.log (1 + ε))))",
   "name":
   "NLAlib.measure_le_sum_sq_le_gaussianReal",
@@ -28290,6 +28966,46 @@
   [],
   "atlas":
   ["subgaussian-max"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_isotropic_rows.{u_1, u_2, u_3} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] (A : m → Ω → n → ℝ) (K : ℝ) (hK : 1 ≤ K) (hind : ProbabilityTheory.iIndepFun A μ)\n  (hmgf : ∀ (i : m) (u : n → ℝ), ProbabilityTheory.HasSubgaussianMGF (fun ω => A i ω ⬝ᵥ u) ⟨K ^ 2 * u ⬝ᵥ u, ⋯⟩ μ)\n  (hiso : ∀ (i : m) (u : n → ℝ), ∫ (ω : Ω), (A i ω ⬝ᵥ u) ^ 2 ∂μ = u ⬝ᵥ u) (x : n → ℝ) {ε : ℝ} (hε0 : 0 < ε)\n  (hε1 : ε < 1) :\n  (μ\n        {ω |\n          |((1 / √↑(Fintype.card m)) • Matrix.of fun i => A i ω).mulVec x ⬝ᵥ\n                  ((1 / √↑(Fintype.card m)) • Matrix.of fun i => A i ω).mulVec x -\n                x ⬝ᵥ x| >\n            ε * x ⬝ᵥ x}).toReal ≤\n    2 * Real.exp (-(↑(Fintype.card m) * ε ^ 2 / (256 * Real.exp 1 ^ 2 * K ^ 4)))",
+  "name":
+  "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_isotropic_rows",
+  "module":
+  "NLAlib.Sketching.SubGaussianJL",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "Independent isotropic rows with directional MGF proxy `K²` give distributional\nJL with the exact constant `1/(256 exp(1)²)`. Coordinates within a row may be dependent.\nThe sketch is `(card m)^(-1/2) A`; all finite row and column types are allowed.\nFor a zero vector the strict failure event is empty; for zero rows the totalized\nnormalization is zero and the numerical bound is the trivial bound `2`.\nSource: operator re-derivation Theorem `pg:jl` (independent-row extension),\nusing Lemma `pg:squares`. The independent-entry hypotheses are discharged separately.\natlas: jl-subgaussian (partial) ",
+  "atlas_partial":
+  ["jl-subgaussian"],
+  "atlas":
+  ["jl-subgaussian"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_subgaussian_entries.{u_1, u_2, u_3} {Ω : Type u_1}\n  [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {m : Type u_2} {n : Type u_3}\n  [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] (A : m → Ω → n → ℝ) (K : ℝ) (hK : 1 ≤ K)\n  (hind : ProbabilityTheory.iIndepFun (fun e ω => A e.1 ω e.2) μ)\n  (hmgf : ∀ (i : m) (j : n), ProbabilityTheory.HasSubgaussianMGF (fun ω => A i ω j) ⟨K ^ 2, ⋯⟩ μ)\n  (hmean : ∀ (i : m) (j : n), ∫ (ω : Ω), A i ω j ∂μ = 0) (hsq : ∀ (i : m) (j : n), ∫ (ω : Ω), A i ω j ^ 2 ∂μ = 1)\n  (x : n → ℝ) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :\n  (μ\n        {ω |\n          |((1 / √↑(Fintype.card m)) • Matrix.of fun i => A i ω).mulVec x ⬝ᵥ\n                  ((1 / √↑(Fintype.card m)) • Matrix.of fun i => A i ω).mulVec x -\n                x ⬝ᵥ x| >\n            ε * x ⬝ᵥ x}).toReal ≤\n    2 * Real.exp (-(↑(Fintype.card m) * ε ^ 2 / (256 * Real.exp 1 ^ 2 * K ^ 4)))",
+  "name":
+  "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_subgaussian_entries",
+  "module":
+  "NLAlib.Sketching.SubGaussianJL",
+  "line":
+  125,
+  "kind":
+  "theorem",
+  "doc":
+  "Mutually independent centered unit-second-moment entries give distributional\nJL with MGF proxy `K²` and the explicit constant `1/(256 exp(1)²)`.\nRow independence, directional proxies and isotropy are derived from the entry\nassumptions. Identical entry distributions are not required. All finite index types,\nzero vectors and the trivial zero-row numerical extension are included.\nSource: operator re-derivation Theorem `pg:jl` and Lemma `pg:linear-proxy`;\nthe source states positive row count, while this theorem additionally totalizes zero rows.\natlas: jl-subgaussian ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["jl-subgaussian"]},
  {"uses":
   ["NLAlib.specNorm"],
   "sorry":
@@ -31131,7 +31847,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  223,
+  224,
   "kind":
   "theorem",
   "doc":
@@ -31238,11 +31954,11 @@
   "kind":
   "theorem",
   "doc":
-  "**Error bound for a polynomial method, weighted norm.** For symmetric `A` with spectrum in\n`S`, a weight `g ≥ 0` on `S` and `|1 − x s(x)| ≤ M` on `S`,\n`‖x − x⋆‖²_{g(A)} ≤ M² ‖x₀ − x⋆‖²_{g(A)}`. Source: Saad (2003) [`saad03`], §12.1;\nGreenbaum (1997) [`greenbaum97`], §2.1. ",
+  "**Error bound for a polynomial method, weighted norm.** For symmetric `A` with spectrum in\n`S`, a weight `g ≥ 0` on `S` and `|1 − x s(x)| ≤ M` on `S`,\n`‖x − x⋆‖²_{g(A)} ≤ M² ‖x₀ − x⋆‖²_{g(A)}`. Source: Saad (2003) [`saad03`], §12.1;\nGreenbaum (1997) [`greenbaum97`], §2.1.\natlas: polynomial-method-def ",
   "atlas_partial":
   [],
   "atlas":
-  []},
+  ["polynomial-method-def"]},
  {"uses":
   ["NLAlib.quadForm"],
   "sorry":
@@ -31275,7 +31991,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  140,
+  141,
   "kind":
   "theorem",
   "doc":
@@ -31296,7 +32012,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  170,
+  171,
   "kind":
   "theorem",
   "doc":
@@ -31793,6 +32509,26 @@
   "theorem",
   "doc":
   "The raw generalized Nyström output agrees with the normalized-frame\noutput whenever the supplied frame has the exact sketch rank and the second\nsketch is injective on that frame. No full rank of the raw first sketch is\nassumed. Source: Tropp–Webber 2023, Section 5; atlas `gn-expected-error`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.complexEigenvectorCoordinates"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.re_inner_euclideanLin_eq_sum.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) (x : EuclideanSpace ℂ n) :\n  (inner ℂ x ((Matrix.toEuclideanLin A) x)).re =\n    ∑ j, hA.eigenvalues₀ j * ‖(NLAlib.complexEigenvectorCoordinates hA) x j‖ ^ 2",
+  "name":
+  "NLAlib.re_inner_euclideanLin_eq_sum",
+  "module":
+  "NLAlib.Matrix.ComplexRayleigh",
+  "line":
+  36,
+  "kind":
+  "theorem",
+  "doc":
+  "The real Hermitian quadratic form is the eigenvalue-weighted sum of squared\nnorms of its sorted complex coordinates. No real-vector restriction is imposed.\nSource: the Hermitian spectral theorem, Horn–Johnson 2013, Theorem 4.2.6;\nsupports `courant-fischer`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -32316,7 +33052,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  100,
+  101,
   "kind":
   "def",
   "doc":
@@ -32356,7 +33092,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  113,
+  114,
   "kind":
   "theorem",
   "doc":
@@ -32376,7 +33112,7 @@
   "module":
   "NLAlib.Krylov.PolynomialMethods",
   "line":
-  126,
+  127,
   "kind":
   "theorem",
   "doc":
@@ -36051,6 +36787,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.complexEigenvectorCoordinates"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_norm_sq_complexEigenvectorCoordinates.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) (x : EuclideanSpace ℂ n) : ∑ j, ‖(NLAlib.complexEigenvectorCoordinates hA) x j‖ ^ 2 = ‖x‖ ^ 2",
+  "name":
+  "NLAlib.sum_norm_sq_complexEigenvectorCoordinates",
+  "module":
+  "NLAlib.Matrix.ComplexRayleigh",
+  "line":
+  56,
+  "kind":
+  "theorem",
+  "doc":
+  "Parseval's identity for the sorted complex eigenbasis, including the empty\nspace: the sum of squared coordinate norms is the Euclidean norm squared.\nSource: orthonormal coordinates, Horn–Johnson 2013, §4.2;\nsupports `courant-fischer`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -37553,6 +38309,27 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.krylovSpace"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.transpose_mulVec_aeval_charpoly_mulVec_eq_zero.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {k : Type u_2} [Fintype k] [DecidableEq k] {A : Matrix n n ℝ} {Q : Matrix n k ℝ} (hQ : NLAlib.HasOrthonormalCols Q)\n  (b : n → ℝ) (hK : NLAlib.krylovSpace A b (Fintype.card k) ≤ Q.mulVecLin.range) :\n  Q.transpose.mulVec (((Polynomial.aeval A) (Q.transpose * A * Q).charpoly).mulVec b) = 0",
+  "name":
+  "NLAlib.transpose_mulVec_aeval_charpoly_mulVec_eq_zero",
+  "module":
+  "NLAlib.Krylov.CharacteristicPolynomial",
+  "line":
+  30,
+  "kind":
+  "theorem",
+  "doc":
+  "The compression's characteristic residual has zero coordinates in `Q`.\nSource: the manuscript's monic least-residual argument following (rt:power-exact), using\ncompressed polynomial exactness and Cayley–Hamilton. This allows arbitrary real `A` and any\northonormal `Q` containing `K_(card k)`.\natlas: krylov-polynomial-exactness (partial) ",
+  "atlas_partial":
+  ["krylov-polynomial-exactness"],
+  "atlas":
+  ["krylov-polynomial-exactness"]},
  {"uses":
   ["NLAlib.HasOrthonormalCols",
    "NLAlib.krylovSpace"],

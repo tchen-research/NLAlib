@@ -17,5 +17,6 @@ import NLAlib.Concentration.ScalarBernstein
 import NLAlib.Concentration.Scalar
 import NLAlib.Concentration.Matrix
 import NLAlib.Concentration.HansonWright
+import NLAlib.Concentration.SquaredProjections
 
 /-! # Concentration inequalities. Layer 1: imports `NLAlib.Matrix` only. -/

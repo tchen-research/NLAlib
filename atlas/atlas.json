@@ -783,12 +783,12 @@
    "area": "matrix-spectral",
    "kind": "theorem",
    "status": "proved",
-   "informal": "For Hermitian $A$, $$\\lambda_k(A) = \\max_{\\dim S = k}\\ \\min_{x \\in S,\\ \\|x\\|=1} x^\\top A x.$$ In particular $\\lambda_{\\max}$ is the sup of the Rayleigh quotient and $\\lambda_{\\min}$ the inf.",
+   "informal": "For Hermitian $A\\in\\mathbb C^{n\\times n}$, $\\lambda_k(A)=\\max_{\\dim_{\\mathbb C}S=k}\\min_{x\\in S,\\|x\\|=1}\\operatorname{Re}(x^*Ax)=\\min_{\\dim_{\\mathbb C}S=n-k+1}\\max_{x\\in S,\\|x\\|=1}\\operatorname{Re}(x^*Ax)$. In particular the extreme eigenvalues are the extrema of the Hermitian Rayleigh quotient; the real symmetric specialization uses $x^\\top Ax$.",
    "hypotheses": [
-    "$A$ Hermitian ($n\\times n$) with eigenvalues $\\lambda_1 \\ge \\dots \\ge \\lambda_n$",
-    "$1 \\le k \\le n$"
+    "$A\\in\\mathbb C^{n\\times n}$ Hermitian with $\\lambda_1\\ge\\cdots\\ge\\lambda_n$",
+    "$1\\le k\\le n$; dimensions are over $\\mathbb C$ (or over $\\mathbb R$ for the existing real specialization)"
    ],
-   "conclusion": "$\\lambda_k(A) = \\max_{\\dim S = k}\\ \\min_{x \\in S,\\ \\|x\\|=1} x^\\top A x$; in particular $\\lambda_{\\max} = \\sup_{\\|x\\|=1} x^\\top Ax$ and $\\lambda_{\\min} = \\inf_{\\|x\\|=1} x^\\top Ax$",
+   "conclusion": "$\\lambda_k(A)=\\max_{\\dim S=k}\\min_{\\|x\\|=1,x\\in S}\\operatorname{Re}(x^*Ax)=\\min_{\\dim S=n-k+1}\\max_{\\|x\\|=1,x\\in S}\\operatorname{Re}(x^*Ax)$, with attained inner and outer extrema; $\\lambda_{\\max}$ and $\\lambda_{\\min}$ are the attained extrema of the Rayleigh quotient.",
    "sources": [
     {
      "source": "hj13",
@@ -796,6 +796,45 @@
     }
    ],
    "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGreatest_eigenvalues₀_min_complexUnitQuadFormValues",
+     "module": "NLAlib.Matrix.ComplexVariationalExtrema",
+     "status": "proved",
+     "partial": true,
+     "usage": "Complex Hermitian max–min form on subspaces of dimension exactly k+1, with attained inner minima and outer maximum."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeast_eigenvalues₀_max_complexUnitQuadFormValues",
+     "module": "NLAlib.Matrix.ComplexVariationalExtrema",
+     "status": "proved",
+     "partial": true,
+     "usage": "Complex Hermitian min–max form on subspaces of dimension exactly card n−k, with attained inner maxima and outer minimum."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.complex_eigenvalues₀_variational_extrema",
+     "module": "NLAlib.Matrix.ComplexVariationalExtrema",
+     "status": "proved",
+     "usage": "Pass a complex Hermitian matrix and a valid zero-based sorted eigenvalue index k; obtains both attained variational extrema with complex dimensions k+1 and card n−k."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGreatest_complexUnitQuadFormValues_top",
+     "module": "NLAlib.Matrix.ComplexVariationalExtrema",
+     "status": "proved",
+     "partial": true,
+     "usage": "For positive dimension, the first sorted complex Hermitian eigenvalue is the attained maximum of the real unit quadratic form."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeast_complexUnitQuadFormValues_top",
+     "module": "NLAlib.Matrix.ComplexVariationalExtrema",
+     "status": "proved",
+     "partial": true,
+     "usage": "For positive dimension, the final sorted complex Hermitian eigenvalue is the attained minimum of the real unit quadratic form."
+    },
     {
      "library": "nlalib",
      "decl": "NLAlib.eigenvalues₀_le_of_forall_mem",
@@ -844,6 +883,7 @@
     "svd"
    ],
    "uses_defs": [
+    "NLAlib.complexUnitQuadFormValues",
     "NLAlib.singularValues"
    ],
    "variants": [
@@ -866,7 +906,7 @@
     "foundation",
     "done"
    ],
-   "notes": "The user's definitions lambdaMax/lambdaMin (Tropp) and lamMin (LRA) are both the Rayleigh form; the full min-max is what interlacing and Weyl need.",
+   "notes": "The existing real threshold/witness APIs are retained. The complex Hermitian interface uses real parts of complex Euclidean inner products, exact complex subspace dimensions, and both attained variational halves. Lean sorted eigenvalue indices are zero-based, so natural-language index k corresponds to Lean index k-1. Negative and repeated eigenvalues are included; empty matrices have no valid eigenvalue index.",
    "updated_at": "2026-10-10"
   },
   {
@@ -3653,10 +3693,10 @@
    "area": "gaussian-subgaussian",
    "kind": "lemma",
    "status": "proved",
-   "informal": "$|\\mathcal{N}(S^{n-1}, \\varepsilon)| \\le (1 + 2/\\varepsilon)^n$, and $\\|A\\| \\le (1-2\\varepsilon)^{-1}\\max_{x\\in\\mathcal{N}}\\|Ax\\|$. The deterministic half of every sub-Gaussian random matrix bound.",
+   "informal": "$|\\mathcal{N}(S^{n-1}, \\varepsilon)| \\le (1 + 2/\\varepsilon)^n$, and $\\|A\\| \\le (1-\\varepsilon)^{-1}\\max_{x\\in\\mathcal{N}}\\|Ax\\|$. The deterministic half of every sub-Gaussian random matrix bound.",
    "hypotheses": [
-    "$\\mathcal{N}$ an $\\varepsilon$-net of $S^{n-1}$ with $0 < \\varepsilon < 1/2$",
-    "$A \\in \\mathbb{R}^{N\\times n}$"
+    "$\\mathcal N$ a finite $\\varepsilon$-net of the unit sphere, consisting of unit vectors, with $0<\\varepsilon<1/2$",
+    "$A\\in\\mathbb R^{N\\times n}$; the formal empty-dimensional cases use bounds on all net points instead of an undefined empty maximum"
    ],
    "conclusion": "there is an $\\varepsilon$-net $\\mathcal N$ of the unit sphere with $|\\mathcal N| \\le (1+2/\\varepsilon)^n$, and $\\|A\\| \\le (1-\\varepsilon)^{-1}\\max_{x\\in\\mathcal N}\\|Ax\\|$ (bilinear and quadratic forms: $(1-2\\varepsilon)^{-1}$)",
    "sources": [
@@ -4260,13 +4300,14 @@
    "area": "concentration-matrix",
    "kind": "bound",
    "status": "proved",
-   "informal": "Replaces $\\log d$ with $\\log\\operatorname{intdim}(V)$.",
+   "informal": "Nonzero PSD variance or mean envelopes give intrinsic-dimension Bernstein tails and intrinsic Chernoff expectation/upper-tail bounds, with the explicit thresholds below.",
    "hypotheses": [
-    "independent random matrices as in matrix Chernoff or Bernstein",
-    "a semidefinite upper bound $V$ on $\\mathbb{E}Y$ (Chernoff) or on the matrix variance (Bernstein)",
-    "$\\operatorname{intdim}(V) = \\operatorname{tr}V/\\|V\\|$"
+    "Independent measurable centred rectangular summands bounded by $L\\ge0$ (Bernstein), or independent PSD summands with $\\lambda_{\\max}(X_k)\\le L$ and $L>0$ (Chernoff)",
+    "Bernstein: $V_1,V_2$ dominate $\\mathbb E ZZ^*$ and $\\mathbb E Z^*Z$ in Loewner order, and are not both zero; $V=\\operatorname{diag}(V_1,V_2)$, $v=\\max(\\|V_1\\|,\\|V_2\\|)$",
+    "Chernoff: a nonzero PSD $M\\succeq\\mathbb E Y$; $a=\\lambda_{\\max}(M)>0$",
+    "$r=\\operatorname{tr}(V)/\\|V\\|$ for Bernstein and $r=\\operatorname{tr}(M)/\\|M\\|$ for Chernoff"
    ],
-   "conclusion": "the matrix Chernoff and Bernstein bounds hold with the ambient dimension replaced by $\\operatorname{intdim}(V)$, e.g. $\\mathbb{P}[\\|Z\\| \\ge t] \\le 4\\operatorname{intdim}(V)\\exp\\Big(\\frac{-t^2/2}{v + Lt/3}\\Big)$ for $t \\ge \\sqrt{v} + L/3$",
+   "conclusion": "Bernstein: $\\mathbb P(\\|Z\\|\\ge t)\\le4r\\exp[-(t^2/2)/(v+Lt/3)]$ for $t\\ge\\sqrt v+L/3$. Chernoff: $\\mathbb E\\lambda_{\\max}(Y)\\le((e^\\theta-1)a+L\\log(2r))/\\theta$ for $\\theta>0$, and $\\mathbb P(\\lambda_{\\max}(Y)\\ge(1+\\varepsilon)a)\\le2r\\exp[(a/L)(\\varepsilon-(1+\\varepsilon)\\log(1+\\varepsilon))]$ for $\\varepsilon\\ge L/a$.",
    "sources": [
     {
      "source": "tropp15",
@@ -4321,7 +4362,8 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-10",
+   "notes": "The intrinsic-dimension bounds require nonzero dominating envelopes. Use the ambient Bernstein/Chernoff theorems for zero envelopes; in particular an inclusive threshold at zero is not assigned a zero failure probability."
   },
   {
    "id": "matrix-chernoff-sampling",
@@ -4343,7 +4385,7 @@
     "$\\|x_j\\|^2 \\le L$ almost surely",
     "$0 < \\varepsilon < 1$"
    ],
-   "conclusion": "$\\mathbb{P}\\big[\\lambda_{\\min}\\big(\\tfrac1N\\sum_k M_k\\big) \\le 1-\\varepsilon\\big] \\le d\\,e^{-\\varepsilon^2 N/(2L)}$ and $\\mathbb{P}\\big[\\lambda_{\\max}\\big(\\tfrac1N\\sum_k M_k\\big) \\ge 1+\\varepsilon\\big] \\le d\\,e^{-\\varepsilon^2 N/(3L)}$ for $0 \\le \\varepsilon \\le 1$",
+   "conclusion": "$\\mathbb{P}\\big[\\lambda_{\\min}\\big(\\tfrac1N\\sum_k M_k\\big) \\le 1-\\varepsilon\\big] \\le d\\,e^{-\\varepsilon^2 N/(2L)}$ and $\\mathbb{P}\\big[\\lambda_{\\max}\\big(\\tfrac1N\\sum_k M_k\\big) \\ge 1+\\varepsilon\\big] \\le d\\,e^{-\\varepsilon^2 N/(3L)}$ with the lower tail for $0 \\le \\varepsilon < 1$ and the upper tail for $0 \\le \\varepsilon \\le 1$",
    "sources": [
     {
      "source": "tropp11",
@@ -4637,14 +4679,14 @@
    ],
    "area": "sketching-jl",
    "kind": "bound",
-   "status": "candidate",
-   "informal": "Same conclusion for Rademacher and other sub-Gaussian entries, from Hanson–Wright.",
+   "status": "proved",
+   "informal": "Independent centred unit-second-moment entries with common MGF proxy $K^2$, $K\\ge1$, give $\\mathbb P(|\\|Sx\\|^2-\\|x\\|^2|>\\varepsilon\\|x\\|^2)\\le2\\exp[-k\\varepsilon^2/(256e^2K^4)]$, $S=k^{-1/2}A$.",
    "hypotheses": [
-    "$A \\in \\mathbb{R}^{k\\times n}$ with independent, centred, unit-variance sub-Gaussian entries and $S = k^{-1/2}A$",
-    "$x \\in \\mathbb{R}^n$ fixed",
-    "$0 < \\varepsilon < 1$"
+    "$A\\in\\mathbb R^{k\\times n}$ with mutually independent centred entries and $\\mathbb E A_{ij}^2=1$",
+    "Every entry has finite exponential moments with $\\mathbb E e^{\\theta A_{ij}}\\le e^{K^2\\theta^2/2}$ for all real $\\theta$; $K\\ge1$",
+    "$S=k^{-1/2}A$, a fixed $x\\in\\mathbb R^n$, and $0<\\varepsilon<1$"
    ],
-   "conclusion": "$\\mathbb{P}\\big[\\big|\\|Sx\\|^2 - \\|x\\|^2\\big| > \\varepsilon\\|x\\|^2\\big] \\le 2\\exp(-ck\\varepsilon^2)$",
+   "conclusion": "$\\mathbb P(|\\|Sx\\|^2-\\|x\\|^2|>\\varepsilon\\|x\\|^2)\\le2\\exp[-k\\varepsilon^2/(256e^2K^4)]$.",
    "sources": [
     {
      "source": "vershynin18",
@@ -4655,7 +4697,23 @@
      "label": "§2.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_isotropic_rows",
+     "module": "NLAlib.Sketching.SubGaussianJL",
+     "status": "proved",
+     "partial": true,
+     "usage": "Independent isotropic rows with common directional MGF proxy K² preserve a fixed squared norm with failure at most 2 exp(−k ε²/(256 e² K⁴))."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_subgaussian_entries",
+     "module": "NLAlib.Sketching.SubGaussianJL",
+     "status": "proved",
+     "usage": "Mutually independent centred unit-second-moment entries with MGF proxy K², K≥1, give normalized distributional JL with the explicit 1/(256 e² K⁴) constant; row independence and isotropy are derived."
+    }
+   ],
    "depends_on": [
     "hanson-wright"
    ],
@@ -4671,7 +4729,8 @@
    "tags": [
     "jl"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-10",
+   "notes": "The common scale may always be enlarged to at least one. Row independence, directional MGF proxies and unit directional second moments are derived from entry independence and moments; no quadratic-form certificate is assumed. A more general independent-isotropic-row interface is also available. Zero vectors have an empty failure event; the totalized zero-row extension satisfies the numerical bound2. The MGF scale is distinct from an exponential-square Orlicz scale."
   },
   {
    "id": "ose-def",
@@ -6410,7 +6469,7 @@
    ],
    "area": "lra-randomized",
    "kind": "application",
-   "status": "proved",
+   "status": "candidate",
    "informal": "For Gaussian $\\Omega$: $$\\mathbb{E}\\|A - A\\langle\\Omega\\rangle\\|_* \\le \\Big(1 + \\frac{k}{t-k-1}\\Big)\\|A - \\lbrack\\!\\lbrack A \\rbrack\\!\\rbrack_k\\|_*.$$",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ PSD",
@@ -6433,6 +6492,7 @@
      "decl": "NLAlib.integrable_and_integral_trace_sub_nystrom_le",
      "module": "NLAlib.LowRank.Nystrom",
      "status": "proved",
+     "partial": true,
      "usage": "With `A = Fᵀ F`, Gaussian `Ω` with `t ≥ k + 2` columns: `𝔼 trace (A - nystrom A Ω) ≤ (1 + k/(t-k-1)) * bestRankFrobSq k F`.",
      "note": "right side stated with bestRankFrobSq k F rather than the nuclear norm of A − ⟦A⟧_k"
     }
@@ -6458,7 +6518,8 @@
     "consumer",
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-10",
+   "notes": "The proved factor formulation bounds trace(A-nystrom(A,Omega)) by (1+k/(t-k-1)) bestRankFrobSq(k,F) for A=F^T F. The advertised nuclear-norm statement still needs identification of both the PSD trace error and the factor optimum with their spectral/nuclear expressions; existing proof coverage is partial."
   },
   {
    "id": "rpcholesky",
@@ -6986,7 +7047,7 @@
   },
   {
    "id": "xtrace-unbiased",
-   "title": "Exchangeability-based estimators are unbiased",
+   "title": "Iid leave-one-out trace estimators are unbiased",
    "aliases": [
     "XTrace",
     "XNysTrace",
@@ -6996,11 +7057,11 @@
    ],
    "area": "estimation",
    "kind": "identity",
-   "status": "proved",
-   "informal": "Leave-one-out low-rank corrections preserve unbiasedness by exchangeability of the test vectors.",
+   "status": "candidate",
+   "informal": "Iid isotropic probes and measurable leave-one-out low-rank corrections give unbiased trace estimates; averaging preserves unbiasedness.",
    "hypotheses": [
-    "$A \\in \\mathbb{R}^{n\\times n}$",
-    "exchangeable test vectors $\\omega_1, \\dots, \\omega_m$ with $\\mathbb{E}\\,\\omega_i\\omega_i^\\top = I$"
+    "$A\\in\\mathbb R^{n\\times n}$ and a nonempty finite iid family of isotropic probes $\\omega_i$, $\\mathbb E\\omega_i\\omega_i^\\top=I$",
+    "$Q_i$ is a measurable function of all probes except $\\omega_i$, with orthonormal columns"
    ],
    "conclusion": "each leave-one-out low-rank-corrected estimate $\\hat{t}_i$ satisfies $\\mathbb{E}\\,\\hat{t}_i = \\operatorname{tr}A$, hence so does the average $\\frac{1}{m}\\sum_i \\hat{t}_i$",
    "sources": [
@@ -7015,6 +7076,7 @@
      "decl": "NLAlib.integral_xtraceEstimate_eq_trace",
      "module": "NLAlib.Estimation.Unbiased",
      "status": "proved",
+     "partial": true,
      "usage": "Leave-one-out estimator is unbiased when `Sᵢ ⊥ ωᵢ`."
     }
    ],
@@ -7037,7 +7099,8 @@
     "estimation",
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-10",
+   "notes": "The existing theorem uses abstract measurable leave-one-out statistics with explicit held-out independence and product-law integrability. Exchangeability alone is insufficient. Its conditional proof is preserved and marked partial for the iid construction: the independence and integrability discharge remain to be supplied, without redoing the Fubini/unbiasedness core."
   },
   {
    "id": "spectral-measure",
@@ -7825,7 +7888,10 @@
    "status": "proved",
    "informal": "The iteration $x_{k+1} = x_k - A^\\top S(S^\\top AA^\\top S)^+S^\\top(Ax_k - b)$ with random $S$ satisfies $\\mathbb{E}\\|x_k - x^\\star\\|^2 \\le (1-\\lambda)^k\\|x_0 - x^\\star\\|^2$, $\\lambda = \\lambda_{\\min}(\\mathbb{E}Z)$ on $\\operatorname{range}A^\\top$. Generalises randomized Kaczmarz ($B = I$).",
    "hypotheses": [
-    "$Ax = b$ consistent, $S$ random with $\\mathbb{E}Z \\succeq \\lambda I$ on $\\operatorname{range}A^\\top$"
+    "$Ax^\\star=b$ is consistent; the Euclidean case $B=I$",
+    "Sketches $S_j$ are sampled iid from a finite family with probabilities $p_j\\ge0$, $\\sum_jp_j=1$",
+    "$W=\\sum_j p_j(S_j^\\top A)^+(S_j^\\top A)$ and $\\lambda\\|v\\|^2\\le v^\\top Wv$ for $v\\in\\operatorname{range}A^\\top$",
+    "$x_0-x^\\star\\in\\operatorname{range}A^\\top$"
    ],
    "conclusion": "$\\mathbb{E}\\|x_k - x^\\star\\|^2 \\le (1-\\lambda)^k\\|x_0 - x^\\star\\|^2$",
    "sources": [
@@ -7858,7 +7924,14 @@
      "decl": "NLAlib.SketchProject.expErr_le",
      "module": "NLAlib.Solvers.SketchProject",
      "status": "proved",
-     "usage": "`(1-λ)^k ‖x - x⋆‖²` for the `B = I` case."
+     "usage": "Retained all-space coercivity version for finite iid sketches; the row-space version supplies the intended rank-deficient coverage."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.SketchProject.expErr_le_of_sub_mem_range",
+     "module": "NLAlib.Solvers.SketchProject",
+     "status": "proved",
+     "usage": "Finite iid sketches contract error in range(Aᵀ) at rate (1−λ)^k, assuming coercivity only on that row space and explicit initial-error membership."
     }
    ],
    "depends_on": [
@@ -7879,7 +7952,7 @@
     "done"
    ],
    "updated_at": "2026-10-10",
-   "notes": "Only the B = I (Euclidean) case is formalised."
+   "notes": "The row-space contraction is formalized with the essential initial-error membership; no full-column-rank assumption is needed. The expectation is the exact finite iid recursion. The previous all-space coercivity API remains available."
   },
   {
    "id": "nystrom-pcg",
@@ -8694,9 +8767,11 @@
    "status": "proved",
    "informal": "If $\\mathbb{P}[X > t] \\le F(t)$ then $\\mathbb{E}X \\le a + \\int_a^\\infty F(t)\\,dt$; and $\\int_0^\\infty t^p e^{-ct}\\,dt$ bounds. Turns tail bounds into moment bounds.",
    "hypotheses": [
-    "$X \\ge 0$ with $\\mathbb{P}[X > t] \\le F(t)$ for $t \\ge a$"
+    "$X$ measurable and nonnegative almost surely on a probability space; $a\\ge0$",
+    "$\\mathbb P(X>t)\\le F(t)$ for $t>a$",
+    "For the finite Bochner bound: $F$ is nonnegative almost everywhere and integrable on $(a,\\infty)$"
    ],
-   "conclusion": "$\\mathbb{E}X \\le a + \\int_a^\\infty F(t)\\,dt$",
+   "conclusion": "$\\int X\\,d\\mu\\le a+\\int_a^\\infty F(t)\\,dt$ in the extended nonnegative integral sense; an integrable nonnegative envelope also proves integrability of $X$ and the same Bochner expectation bound.",
    "sources": [
     {
      "source": "vershynin18",
@@ -8706,16 +8781,32 @@
    "formalizations": [
     {
      "library": "nlalib",
+     "decl": "NLAlib.lintegral_le_of_tail_le",
+     "module": "NLAlib.Concentration.Scalar.TailIntegral",
+     "status": "proved",
+     "usage": "Pass a measurable nonnegative random variable, a nonnegative cutoff a, and an upper tail envelope; obtains the extended expectation bound even for an infinite envelope integral."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_le_of_tail_le",
+     "module": "NLAlib.Concentration.Scalar.TailIntegral",
+     "status": "proved",
+     "usage": "A nonnegative integrable tail envelope above a≥0 derives integrability of f and E f≤a+∫ₐ∞F without assuming f integrable."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.integrable_and_integral_le_of_tail_le_rpow",
      "module": "NLAlib.Concentration.Scalar.TailIntegral",
      "status": "proved",
+     "partial": true,
      "note": "integrability and E f ≤ C^{1/m} m/(m−1) from a polynomial tail bound; truncated Gamma-type integral bound"
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.lintegral_rpow_mul_exp_le",
      "module": "NLAlib.Concentration.Scalar.TailIntegral",
-     "status": "proved"
+     "status": "proved",
+     "partial": true
     }
    ],
    "depends_on": [],
@@ -8728,7 +8819,7 @@
     "foundation",
     "port"
    ],
-   "notes": "Port of integral_le_of_tail_bound, integral_power_exp_le.",
+   "notes": "General tail-envelope comparison is formalized; polynomial-tail and truncated Gamma estimates remain available as specializations.",
    "updated_at": "2026-10-10"
   },
   {
@@ -10130,12 +10221,12 @@
    "area": "polynomial-chebyshev",
    "kind": "theorem",
    "status": "proved",
-   "informal": "If $\\deg p \\le q$ and $|p| \\le 1$ on $[-1,1]$ then $|p(x)| \\le |T_q(x)|$ for $|x| \\ge 1$, likewise for every derivative at $x \\ge 1$, and the leading coefficient of $p$ is at most $2^{q-1}$. Mathlib has the one-sided derivative form; the absolute-value form is ours.",
+   "informal": "If $\\deg p \\le q$ and $|p| \\le 1$ on $[-1,1]$ then $|p(x)| \\le |T_q(x)|$ for $|x| \\ge 1$, likewise for every derivative at $x \\ge 1$, and the leading coefficient of $p$ is at most $2^{q-1}$ for $q\\ge1$, and at most $1$ for $q=0$. Mathlib has the one-sided derivative form; the absolute-value form is ours.",
    "hypotheses": [
     "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le q$",
     "$|p(x)| \\le M$ for $x \\in [-1,1]$"
    ],
-   "conclusion": "$|p(x)| \\le M\\,|T_q(x)|$ for $|x| \\ge 1$; $p^{(k)}(x) \\le M\\,T_q^{(k)}(x)$ for $x \\ge 1$; the coefficient of $x^q$ in $p$ is at most $M 2^{q-1}$",
+   "conclusion": "$|p(x)| \\le M\\,|T_q(x)|$ for $|x| \\ge 1$; $p^{(k)}(x) \\le M\\,T_q^{(k)}(x)$ for $x \\ge 1$; the coefficient of $x^q$ in $p$ is at most $M 2^{q-1}$ for $q\\ge1$ and at most $M$ for $q=0$",
    "sources": [
     {
      "source": "rivlin90",
@@ -10593,12 +10684,13 @@
    "area": "polynomial-approximation",
    "kind": "bound",
    "status": "proved",
-   "informal": "If $\\deg p \\le q$ then $\\max_{[-1,1]}|p'| \\le q^2\\max_{[-1,1]}|p|$ (sharp for $T_q$); on $[a,b]$ the constant is $2q^2/(b-a)$. Not to be confused with Markov's probability inequality.",
+   "informal": "If $\\deg p \\le q$ then $\\max_{[-1,1]}|p'| \\le q^2\\max_{[-1,1]}|p|$ (sharp for $T_q$); on $[a,b]$ with $a<b$ the constant is $2q^2/(b-a)$. Not to be confused with Markov's probability inequality.",
    "hypotheses": [
     "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le q$",
-    "$|p(x)| \\le M$ for $x \\in [-1,1]$"
+    "$|p(x)| \\le M$ for $x \\in [-1,1]$",
+    "For the interval variant, $a<b$"
    ],
-   "conclusion": "$|p'(x)| \\le q^2 M$ for all $x \\in [-1,1]$; on $[a,b]$, $|p'(x)| \\le \\tfrac{2q^2}{b-a}\\max_{[a,b]}|p|$",
+   "conclusion": "$|p'(x)| \\le q^2 M$ for all $x \\in [-1,1]$; on $[a,b]$ with $a<b$, $|p'(x)| \\le \\tfrac{2q^2}{b-a}\\max_{[a,b]}|p|$",
    "sources": [
     {
      "source": "rivlin90",
@@ -11221,7 +11313,8 @@
    "informal": "For symmetric $A = U\\Lambda U^\\top$, $p(A) = U p(\\Lambda) U^\\top$, so $\\|p(A)\\| \\le \\max_i |p(\\lambda_i)|$, $\\|p(A)v\\|^2 \\le M^2\\|v\\|^2$ and $\\|p(A)v\\|_A^2 \\le M^2\\|v\\|_A^2$ whenever $|p| \\le M$ on the spectrum. The one lemma every Krylov rate reduces to.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ symmetric with eigenpairs $(\\lambda_i, u_i)$",
-    "$p \\in \\mathbb{R}[x]$ with $|p(\\lambda_i)| \\le M$ for all $i$"
+    "$p \\in \\mathbb{R}[x]$ with $|p(\\lambda_i)| \\le M$ for all $i$",
+    "$M\\ge0$ for the operator-norm bound (including the empty index type)"
    ],
    "conclusion": "$p(A)v = \\sum_i p(\\lambda_i)\\langle u_i, v\\rangle u_i$, $\\|p(A)\\| \\le M$, $\\|p(A)v\\|^2 \\le M^2\\|v\\|^2$, and for $A \\succeq 0$, $v^\\top A\\,p(A)^2 v \\le M^2\\, v^\\top A v$",
    "sources": [
@@ -11302,7 +11395,7 @@
     "krylov",
     "done"
    ],
-   "updated_at": "2026-10-11"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "subgaussian-max",
@@ -11318,7 +11411,7 @@
    "status": "proved",
    "informal": "If each $X_i$ has sub-Gaussian MGF with proxy $c$ (no independence needed) then $\\mathbb{E}\\max_{i \\le N} X_i \\le \\sqrt{2c\\log N}$, $\\mathbb{E}\\max|X_i| \\le \\sqrt{2c\\log 2N}$, $\\mathbb{P}(|X| > t) \\le 2e^{-t^2/2c}$ and $\\mathbb{E}|X|^p \\le p(2c)^{p/2}\\Gamma(p/2)$.",
    "hypotheses": [
-    "$X_1, \\dots, X_N$ with $\\mathbb{E}e^{sX_i} \\le e^{cs^2/2}$ for all $s$ (Mathlib `HasSubgaussianMGF`)"
+    "A nonempty finite family $X_1,\\ldots,X_N$, $N\\ge1$, with $\\mathbb E e^{sX_i}\\le e^{cs^2/2}$ for all $s$, $c\\ge0$ (Mathlib `HasSubgaussianMGF`)"
    ],
    "conclusion": "$\\mathbb{E}\\max_i X_i \\le \\sqrt{2c\\log N}$, $\\mathbb{E}\\max_i|X_i| \\le \\sqrt{2c\\log(2N)}$; $\\mathbb{P}(|X| > t) \\le 2e^{-t^2/(2c)}$; $\\mathbb{E}|X|^p \\le p\\,(2c)^{p/2}\\,\\Gamma(p/2)$",
    "sources": [
@@ -11664,8 +11757,10 @@
    "status": "proved",
    "informal": "For $b = Ax^\\star + e$, $\\mathbb{E}\\|x_k - \\hat x\\|^2 \\le \\rho^k\\|x_0-\\hat x\\|^2 + \\sum_{j<k}\\rho^j\\,\\|b - A\\hat x\\|^2/\\|A\\|_F^2$ for any $\\hat x$, hence a convergence horizon $\\|e\\|^2/\\sigma^2$.",
    "hypotheses": [
-    "$A$ with $\\sigma^2\\|v\\|^2 \\le \\|Av\\|^2$ on $\\operatorname{range}A^\\top$, rows sampled $\\propto \\|a_i\\|^2$",
-    "$b = A\\hat x + e$ possibly inconsistent"
+    "For every $v\\in\\operatorname{range}A^\\top$, $\\sigma^2\\|v\\|^2\\le\\|Av\\|^2$; rows sampled iid with probabilities proportional to their squared norms",
+    "$b=A\\hat x+e$ with arbitrary reference point $\\hat x$ and possibly inconsistent right-hand side",
+    "$x_0-\\hat x\\in\\operatorname{range}A^\\top$; $\\sigma>0$ for the horizon bound",
+    "The actual row-path probability law requires $A\\ne0$; the finite expectation recursion also handles $A=0$"
    ],
    "conclusion": "$\\mathbb{E}\\|x_k - \\hat x\\|^2 \\le \\rho^k\\|x_0 - \\hat x\\|^2 + \\|e\\|^2/\\sigma^2$ with $\\rho = 1 - \\sigma^2/\\|A\\|_F^2$",
    "sources": [
@@ -11688,6 +11783,34 @@
      "module": "NLAlib.Solvers.KaczmarzExtensions",
      "status": "proved",
      "usage": "The `+ ‖e‖²/σ²` horizon form."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.expErr_le_add_of_sub_mem_range",
+     "module": "NLAlib.Solvers.KaczmarzRowSpace",
+     "status": "proved",
+     "usage": "For an arbitrary right-hand side and reference point, row-space coercivity plus initial-error membership gives the exact geometric-sum noise bound for the expectation recursion."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.expErr_le_add_div_sq_of_sub_mem_range",
+     "module": "NLAlib.Solvers.KaczmarzRowSpace",
+     "status": "proved",
+     "usage": "The row-space inconsistent Kaczmarz recursion has noise horizon ‖b−A x̂‖²/σ² for σ>0, with the exact geometric rate."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_sqErr_kaczmarz_le_add_of_sub_mem_range",
+     "module": "NLAlib.Solvers.KaczmarzRowSpace",
+     "status": "proved",
+     "usage": "For A≠0, the actual iid row-path probability expectation satisfies the row-space geometric-sum noise bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_sqErr_kaczmarz_le_add_div_sq_of_sub_mem_range",
+     "module": "NLAlib.Solvers.KaczmarzRowSpace",
+     "status": "proved",
+     "usage": "For A≠0 and σ>0, the actual iid row-path probability expectation satisfies the row-space convergence-horizon bound."
     }
    ],
    "depends_on": [
@@ -11695,7 +11818,9 @@
    ],
    "uses_defs": [
     "NLAlib.Kaczmarz.expErr",
-    "NLAlib.frobSq"
+    "NLAlib.Kaczmarz.run",
+    "NLAlib.frobSq",
+    "NLAlib.kaczmarzRowPathPMF"
    ],
    "variants": [
     "randomized-kaczmarz"
@@ -11707,7 +11832,8 @@
     "solvers",
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-10",
+   "notes": "Row-space versions include the essential initial-error membership and preserve both the finite geometric-sum bound and the noise horizon. Full-column-rank is not required; the previous all-space APIs remain available."
   },
   {
    "id": "kaczmarz-rank-deficient",
@@ -12407,7 +12533,7 @@
    ],
    "area": "krylov-bases",
    "kind": "theorem",
-   "status": "proved",
+   "status": "candidate",
    "informal": "Let $\\nu = \\nu(A,b)$ be the degree of the monic polynomial $\\mu_{A,b}$ of least degree with $\\mu_{A,b}(A)b = 0$ (the *grade* of $b$). Then $\\dim\\mathcal K_q(A,b) = \\min(q,\\nu)$, $\\mathcal K_q = \\mathcal K_\\nu$ for $q \\ge \\nu$, $\\mathcal K_\\nu$ is $A$-invariant, and if $A$ is invertible then $A^{-1}b \\in \\mathcal K_\\nu(A,b)$.",
    "hypotheses": [
     "$K$ a field (primary instances $\\mathbb R$, $\\mathbb C$), $A \\in K^{n\\times n}$ over a `Fintype` index, $b \\in K^n$, $q \\in \\mathbb N$",
@@ -12460,14 +12586,15 @@
     "krylov",
     "definition-adjacent"
    ],
-   "notes": "Consumers: gmres-def (finite termination), arnoldi-relation (breakdown iff h_{q+1,q} = 0 iff q = ν), lanczos-recurrence (the non-breakdown hypothesis `LinearIndependent ℝ (fun i => A^i b)` of `hasOrthonormalCols_lanczosMatrix` is exactly q ≤ ν), krylov-polynomial-exactness, gmres-any-convergence-curve, cg-convergence (finite termination). Prerequisite API change: generalise `NLAlib.krylovSpace` from ℝ to a field (or `RCLike 𝕜`) so the complex GMRES / field-of-values entries can use it; the real statements stay as the ℝ instance. Prove.",
-   "updated_at": "2026-10-11",
+   "notes": "Consumers: gmres-def (finite termination), arnoldi-relation (breakdown iff h_{q+1,q} = 0 iff q = ν), lanczos-recurrence (the non-breakdown hypothesis `LinearIndependent ℝ (fun i => A^i b)` of `hasOrthonormalCols_lanczosMatrix` is exactly q ≤ ν), krylov-polynomial-exactness, gmres-any-convergence-curve, cg-convergence (finite termination). Prerequisite API change: generalise `NLAlib.krylovSpace` from ℝ to a field (or `RCLike 𝕜`) so the complex GMRES / field-of-values entries can use it; the real statements stay as the ℝ instance. Prove. Scope audit: current declarations use real scalars and define grade through dependence of powers. Real dimension, invariance, saturation and inverse membership are proved. The advertised general-field vector-relative minimal polynomial and its divisibility bridge remain open; existing declarations are marked partial for this full item.",
+   "updated_at": "2026-10-10",
    "formalizations": [
     {
      "library": "nlalib",
      "decl": "NLAlib.krylovGrade",
      "module": "NLAlib.Krylov.Grade",
-     "status": "proved"
+     "status": "proved",
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -12494,7 +12621,8 @@
      "library": "nlalib",
      "decl": "NLAlib.finrank_krylovSpace",
      "module": "NLAlib.Krylov.Grade",
-     "status": "proved"
+     "status": "proved",
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -12548,9 +12676,10 @@
    "informal": "The Arnoldi basis $Q_q = [q_1,\\dots,q_q]$ is the Gram–Schmidt orthonormalisation of $b, Ab, \\dots, A^{q-1}b$; $H_q = Q_q^\\top A Q_q \\in \\mathbb R^{q\\times q}$ and $\\underline H_q = Q_{q+1}^\\top A Q_q \\in \\mathbb R^{(q+1)\\times q}$. A matrix is upper Hessenberg if $h_{ij} = 0$ for $i > j+1$. Characterisations: $Q_q$ has orthonormal columns spanning $\\mathcal K_q(A,b)$ when $q \\le \\nu$, $H_q$ and $\\underline H_q$ are upper Hessenberg, $h_{j+1,j} = \\|(I - Q_jQ_j^\\top)Aq_j\\| \\ge 0$ with equality iff $j \\ge \\nu$, and the basis is unique up to signs (implicit-Q uniqueness: positive subdiagonal fixes it).",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$ (no symmetry), $b \\in \\mathbb R^n$, $q \\in \\mathbb N$",
-    "for orthonormality and the Hessenberg sign/uniqueness statements: $q+1 \\le \\nu(A,b)$ (no breakdown)"
+    "for orthonormality and the Hessenberg sign/uniqueness statements: $q+1 \\le \\nu(A,b)$ (no breakdown)",
+    "The uniqueness comparison basis $\\tilde Q$ is a graded Krylov basis: its first $j$ columns span $\\mathcal K_j(A,b)$ for each $j$"
    ],
-   "conclusion": "$Q_q^\\top Q_q = I$, $\\operatorname{range}Q_q = \\mathcal K_q(A,b)$, $H_q$ and $\\underline H_q$ upper Hessenberg with $h_{j+1,j} > 0$ for $j < \\nu$; any $\\tilde Q$ with orthonormal columns, $\\tilde Q e_1 = b/\\|b\\|$ and $\\tilde Q^\\top A\\tilde Q$ upper Hessenberg with positive subdiagonal equals $Q_q$",
+   "conclusion": "$Q_q^\\top Q_q = I$, $\\operatorname{range}Q_q = \\mathcal K_q(A,b)$, $H_q$ and $\\underline H_q$ upper Hessenberg with $h_{j+1,j} > 0$ for $j < \\nu$; any graded Krylov basis $\\tilde Q$ with orthonormal columns, $\\tilde Q e_1 = b/\\|b\\|$ and $\\tilde Q^\\top A\\tilde Q$ upper Hessenberg with positive subdiagonal equals $Q_q$",
    "sources": [
     {
      "source": "saad03",
@@ -12594,7 +12723,7 @@
     "definition"
    ],
    "notes": "NLAlib's `lanczosMatrix A b q` is already the Arnoldi basis for every real A: `lanczos_apply_eq_zero_of_add_one_lt` proves QᵀAQ is upper Hessenberg without symmetry. So this entry is mostly naming (`arnoldiMatrix := lanczosMatrix`, `hessenberg A b q := Qᵀ A Q`, the extended (q+1)×q matrix) plus the positive-subdiagonal and uniqueness characterisations. Consumers: arnoldi-relation, fom-def, arnoldi-fa-error, lanczos-recurrence, gmres-def (the least-squares form ‖βe₁ − H̲_q y‖). Prove. Implement as the canonical witness `arnoldiDecomp A b q (h : q ≤ krylovGrade A b) : ArnoldiDecomp A b q` of the bundled decomposition in graded-krylov-basis-def; H is the structure's compression, not a separate definition.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-10",
    "variants": [
     "lanczos-recurrence"
    ],
@@ -12831,7 +12960,7 @@
    ],
    "area": "krylov-bases",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "If $Q$ has orthonormal columns with $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$ and $H = Q^\\top AQ$, then $p(A)b = Q\\,p(H)\\,Q^\\top b$ for every $p$ with $\\deg p < q$, and $Q^\\top p(A)b = p(H)Q^\\top b$ for $\\deg p \\le q$. If moreover $\\operatorname{range}Q = \\mathcal K_q(A,b)$ with $q \\le \\nu$, the characteristic polynomial $\\chi_H$ is the unique monic $p$ of degree $q$ minimising $\\|p(A)b\\|$.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$ arbitrary, $b \\in \\mathbb R^n$, $q \\ge 1$",
@@ -12873,9 +13002,56 @@
     "foundation",
     "krylov"
    ],
-   "notes": "The power form `Q (QᵀAQ)^j Qᵀ b = A^j b` (j < q, any real A) is already proved as `NLAlib.mulVec_pow_transpose_mul_mul_mulVec_eq` (helper of lanczos-gauss-quadrature); this entry packages the polynomial form, the degree-q projected identity and the monic-minimality (Arnoldi/Lanczos eigenvalue) characterisation as public statements. Consumers: lanczos-fa-error, arnoldi-fa-error, fom-def (the FOM iterate is x₀ + Q H⁻¹ Qᵀ r₀), lanczos-gauss-quadrature (could be refactored onto it). Prove. Round 8: exactness Q p(T) Qᵀ b = p(A) b (deg p < q) and Qᵀ p(A) b = p(T) Qᵀ b (deg p ≤ q) are proved for any A; the clause that the characteristic polynomial of H minimises ‖p(A) b‖ over monic p is open.",
-   "updated_at": "2026-10-11",
+   "notes": "Both polynomial exactness identities are reused from FunctionApprox. The CharacteristicPolynomial module completes the advertised bundle: for an exact orthonormal Krylov range and q<=grade, card columns=q is derived, the compression characteristic polynomial is monic of degree q, its residual is orthogonal to Kq, it minimizes the squared residual norm among monic degree-q polynomials, and equality holds exactly for that polynomial. The matrix may be nonsymmetric; arbitrary finite index types and q=0 are included.",
+   "updated_at": "2026-10-10",
    "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.transpose_mulVec_aeval_charpoly_mulVec_eq_zero",
+     "module": "NLAlib.Krylov.CharacteristicPolynomial",
+     "status": "proved",
+     "partial": true,
+     "usage": "Cayley–Hamilton and compressed polynomial exactness make the characteristic residual's Q coordinates zero."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_charpoly_mulVec_eq_zero_of_mem_range",
+     "module": "NLAlib.Krylov.CharacteristicPolynomial",
+     "status": "proved",
+     "partial": true,
+     "usage": "The compression characteristic residual is orthogonal to range Q, including the contained Krylov space."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_mulVec_self_eq_charpoly_add",
+     "module": "NLAlib.Krylov.CharacteristicPolynomial",
+     "status": "proved",
+     "partial": true,
+     "usage": "Monic residuals split by Pythagoras into the compression characteristic residual and a smaller-degree residual."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_charpoly_mulVec_self_le",
+     "module": "NLAlib.Krylov.CharacteristicPolynomial",
+     "status": "proved",
+     "partial": true,
+     "usage": "The compression characteristic polynomial minimizes the squared residual norm among monic polynomials of degree card(columns Q)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_mulVec_self_eq_charpoly_iff",
+     "module": "NLAlib.Krylov.CharacteristicPolynomial",
+     "status": "proved",
+     "partial": true,
+     "usage": "If card(columns Q)≤grade, norm equality with the characteristic polynomial holds exactly when the competing monic polynomial equals it."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.aeval_mulVec_eq_and_charpoly_is_unique_minimiser",
+     "module": "NLAlib.Krylov.CharacteristicPolynomial",
+     "status": "proved",
+     "usage": "Bundles both Krylov polynomial exactness identities and, for an exact Krylov range with q≤grade, the monic degree-q compression characteristic polynomial's orthogonality, least residual norm, and unique minimizer."
+    },
     {
      "library": "nlalib",
      "decl": "NLAlib.mulVec_aeval_transpose_mul_mul_mulVec_eq",
@@ -12901,6 +13077,7 @@
    "uses_defs": [
     "NLAlib.HasOrthonormalCols",
     "NLAlib.krylovFunApprox",
+    "NLAlib.krylovGrade",
     "NLAlib.krylovSpace"
    ],
    "variants": []
@@ -13126,7 +13303,7 @@
    ],
    "area": "krylov-linear-systems",
    "kind": "definition",
-   "status": "proved",
+   "status": "candidate",
    "informal": "$x_k$ is a GMRES iterate if $x_k \\in x_0 + \\mathcal K_k(A,r_0)$ and $\\|b - Ax_k\\|_2 \\le \\|b - Ax\\|_2$ for all $x \\in x_0 + \\mathcal K_k(A,r_0)$. Characterisations: an iterate exists for every $A$; the residual $r_k$ is unique and $x_k$ is unique if $A$ is invertible; $r_k \\perp A\\mathcal K_k(A,r_0)$ (Petrov–Galerkin); $\\|r_k\\| = \\min_{p\\in\\mathcal P_k^0}\\|p(A)r_0\\|$; $\\|r_{k+1}\\| \\le \\|r_k\\|$; with Arnoldi, $\\|r_k\\| = \\min_y\\|\\,\\|r_0\\|e_1 - \\underline H_k y\\|$; if $A$ is invertible, $r_\\nu = 0$ at the grade $\\nu = \\nu(A,r_0)$. For symmetric $A$ this is MINRES.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$, $b, x_0 \\in \\mathbb R^n$, $r_0 = b - Ax_0$, $k \\in \\mathbb N$ (complex form: $\\mathbb C^{n\\times n}$ with the Hermitian inner product)"
@@ -13181,14 +13358,15 @@
     "definition",
     "gmres"
    ],
-   "notes": "Mirror `NLAlib.IsCGIterate` (variational definition, existence by projection, no algorithm). Real primary statement: for real A, b, x₀ the real GMRES residual equals the complex one (for real r₀, replacing a complex p by its real-coefficient part never increases ‖p(A)r₀‖), so complex-spectrum bounds (gmres-diagonalizable, gmres-bgt, crouzeix-palencia) apply to the real definition. Consumers: gmres-diagonalizable, gmres-elman, gmres-bgt, minres-bound, gmres-any-convergence-curve, restarted GMRES(m) (Elman per cycle), sketched GMRES (Nakatsukasa–Tropp 2024: minimise ‖S(b − AQy)‖ over a Krylov basis; a sketch-and-solve consumer with `sketch-and-solve-ls`). The Arnoldi least-squares clause can be split off if arnoldi-relation lags. Prove. Round 8: the predicate, existence (via orthonormal-basis-matrix), residual orthogonality r ⟂ A K_q, uniqueness, polynomial form, monotonicity in q and finite termination at the grade are proved; the Arnoldi least-squares clause ‖r_k‖ = min_y ‖‖r₀‖e₁ − H̲_k y‖ is open (needs the Arnoldi relation).",
-   "updated_at": "2026-10-11",
+   "notes": "Mirror `NLAlib.IsCGIterate` (variational definition, existence by projection, no algorithm). Real primary statement: for real A, b, x₀ the real GMRES residual equals the complex one (for real r₀, replacing a complex p by its real-coefficient part never increases ‖p(A)r₀‖), so complex-spectrum bounds (gmres-diagonalizable, gmres-bgt, crouzeix-palencia) apply to the real definition. Consumers: gmres-diagonalizable, gmres-elman, gmres-bgt, minres-bound, gmres-any-convergence-curve, restarted GMRES(m) (Elman per cycle), sketched GMRES (Nakatsukasa–Tropp 2024: minimise ‖S(b − AQy)‖ over a Krylov basis; a sketch-and-solve consumer with `sketch-and-solve-ls`). The Arnoldi least-squares clause can be split off if arnoldi-relation lags. Prove. Round 8: the predicate, existence (via orthonormal-basis-matrix), residual orthogonality r ⟂ A K_q, uniqueness, polynomial form, monotonicity in q and finite termination at the grade are proved; the Arnoldi least-squares clause ‖r_k‖ = min_y ‖‖r₀‖e₁ − H̲_k y‖ is open (needs the Arnoldi relation). Scope audit: the real variational and polynomial-residual theory is checked. The stated complex form and reduced Arnoldi least-squares clause are not covered by the current declarations, so their full bundle is recorded as candidate with proved partial formalizations.",
+   "updated_at": "2026-10-10",
    "formalizations": [
     {
      "library": "nlalib",
      "decl": "NLAlib.IsGMRESIterate",
      "module": "NLAlib.Krylov.GMRES",
-     "status": "proved"
+     "status": "proved",
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -17873,11 +18051,12 @@
    "area": "krylov-bases",
    "kind": "theorem",
    "status": "proved",
-   "informal": "For symmetric $A$ and a graded basis with $q_j = p_j(A)\\,b$, the $p_j$ are the orthonormal polynomials of the spectral measure $\\mu_b$ ($\\int p_i p_j\\,d\\mu_b = \\delta_{ij}$), $\\det(xI - T_j)$ is the monic orthogonal polynomial of degree $j$, and the entries $\\alpha_j = q_j^\\top A q_j$, $\\beta_{j+1} = \\|\\,(A - \\alpha_j) q_j - \\beta_j q_{j-1}\\|$ are the three-term recurrence coefficients of $\\mu_b$: $T$ is the Jacobi matrix of $\\mu_b$.",
+   "informal": "For symmetric $A$ and an arbitrary graded orthonormal basis $q_j=p_j(A)b$, the polynomials are orthonormal for the spectral measure, and the compressed matrix is their Jacobi matrix. Its coefficients $\\alpha_j=q_j^\\top A q_j$ and signed $\\beta_{j+1}=q_{j+1}^\\top A q_j$ give the three-term recurrence; $|\\beta_{j+1}|$ is the norm of the next residual. The characteristic polynomial obeys $\\chi_jp_0=(\\prod_{i=1}^j\\beta_i)p_j$.",
    "hypotheses": [
-    "$A$ symmetric, $\\|b\\| = 1$, graded basis $Q$ with $q \\le \\operatorname{grade}(A,b)$"
+    "$A$ symmetric, $\\|b\\|=1$, and a graded orthonormal basis of length $q\\le\\operatorname{grade}(A,b)$",
+    "For the recurrence $j+1<q$; for the characteristic-polynomial identity $j<q$. Arbitrary column signs are allowed, so $p_0=\\pm1$"
    ],
-   "conclusion": "$\\int p_i p_j\\,d\\mu_b = \\delta_{ij}$, $p_{j+1}(x) = ((x - \\alpha_j)p_j(x) - \\beta_j p_{j-1}(x))/\\beta_{j+1}$, $\\det(xI - T_j) = \\beta_1\\cdots\\beta_j\\, p_j(x)$",
+   "conclusion": "$\\int p_i p_j\\,d\\mu_b=\\delta_{ij}$; $Xp_j=\\beta_jp_{j-1}+\\alpha_jp_j+\\beta_{j+1}p_{j+1}$, with the previous term zero at $j=0$; $\\det(xI-T_j)p_0=(\\prod_{i=1}^j\\beta_i)p_j(x)$. The positive canonical orientation with $q_0=b$ has $p_0=1$ and positive subdiagonal.",
    "sources": [
     {
      "source": "gm10",
@@ -17901,8 +18080,8 @@
     "orthogonal-polynomials",
     "spectral-measure"
    ],
-   "notes": "Prove. The bridge between the Krylov module and quadrature theory: Gauss quadrature exactness (`lanczos-gauss-quadrature`) and the SLQ bounds become statements about orthogonal polynomials of μ_b. Consumers: jacobi-matrix-identities, lanczos-quadrature-*-error, spectral density estimation. Round 8: orthonormality, the polynomial three-term recurrence and det(x − T_j) = β₁⋯β_j p_j(x)·p₀ are proved (the atlas form assumes ‖b‖ = 1, i.e. p₀ = 1).",
-   "updated_at": "2026-10-11",
+   "notes": "The characteristic-polynomial identity includes p0 for arbitrary graded bases. Unit norm of b alone does not force p0=1. Signed recurrence coefficients specialize to residual norms for the canonical positive orientation; the formal API uses the signed version.",
+   "updated_at": "2026-10-10",
    "formalizations": [
     {
      "library": "nlalib",
@@ -18058,10 +18237,12 @@
    "area": "krylov-linear-systems",
    "kind": "theorem",
    "status": "proved",
-   "informal": "If $x$ minimises any $E$ over $x_0 + \\mathcal{K}_q(A, r_0)$ then for every $p$ with $\\deg p \\le q$, $p(0)=1$: $E(x) \\le E(x^\\star + p(A)(x_0 - x^\\star))$ (and the residual form $F(c - Ax) \\le F(p(A) r_0)$). For symmetric $A$ and a weight $g \\ge 0$ on the spectrum, $\\|x - x^\\star\\|_{g(A)}^2 \\le \\max_i |p(\\lambda_i)|^2\\, \\|x_0 - x^\\star\\|_{g(A)}^2$: CG is $g = X$, MINRES is $g = X^2$, error-minimising methods $g = 1$.",
+   "informal": "If $x$ minimises any $E$ over $x_0 + \\mathcal{K}_q(A, r_0)$ then for every $p$ with $\\deg p \\le q$, $p(0)=1$: $E(x) \\le E(x^\\star + p(A)(x_0 - x^\\star))$ (and the residual form $F(c - Ax) \\le F(p(A) r_0)$). When the minimized objective is $E(y)=\\|y-x^\\star\\|_{g(A)}^2$, for symmetric $A$ and a weight $g \\ge 0$ on the spectrum, $\\|x - x^\\star\\|_{g(A)}^2 \\le \\max_i |p(\\lambda_i)|^2\\, \\|x_0 - x^\\star\\|_{g(A)}^2$: CG is $g = X$, MINRES is $g = X^2$, error-minimising methods $g = 1$.",
    "hypotheses": [
-    "$x - x_0 \\in \\mathcal{K}_q(A, r_0)$ and $E(x) \\le E(x_0 + y)$ for all $y \\in \\mathcal{K}_q$",
-    "$p$ with $\\deg p \\le q$, $p(0) = 1$; for the weighted form $A$ symmetric, $g \\ge 0$ on $\\sigma(A)$, $|p| \\le M$ on $\\sigma(A)$"
+    "$Ax^\\star=c$ and $r_0=c-Ax_0$ (for the error comparison)",
+    "$x-x_0\\in\\mathcal K_q(A,r_0)$ and $E(x)\\le E(x_0+y)$ for all $y\\in\\mathcal K_q$",
+    "$\\deg p\\le q$ and $p(0)=1$",
+    "For the weighted conclusion specifically: $E(y)=\\|y-x^\\star\\|_{g(A)}^2$, $A$ symmetric, $g\\ge0$ on the spectrum and $|p|\\le M$ there"
    ],
    "conclusion": "$E(x) \\le E(x^\\star + p(A)(x_0 - x^\\star))$; $\\|x - x^\\star\\|_{g(A)}^2 \\le M^2 \\|x_0 - x^\\star\\|_{g(A)}^2$",
    "sources": [
@@ -18087,7 +18268,7 @@
     "class-theorem"
    ],
    "notes": "Design: KRYLOV_DEFINITIONS §3.2. Proved once, instantiated by cg-convergence, minres-bound, gmres-def, preconditioned-cg, cgls-lsqr-bound.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-10",
    "formalizations": [
     {
      "library": "nlalib",
@@ -18179,7 +18360,10 @@
    "kind": "definition",
    "status": "proved",
    "informal": "A polynomial method is $x = x_0 + s(A)\\, r_0$ for an iteration polynomial $s$; its residual polynomial is $p = 1 - X s$, the error is $p(A)(x_0 - x^\\star)$ and the residual $p(A) r_0$, and $x - x_0 \\in \\mathcal{K}_{\\deg s + 1}$. Richardson and Chebyshev iteration are instances with explicit $s$.",
-   "hypotheses": [],
+   "hypotheses": [
+    "$r_0=c-Ax_0$ and $p=1-Xs$; the error identity requires $Ax^\\star=c$",
+    "For the weighted spectral bound: $A$ symmetric and the polynomial weight $g\\ge0$ on the spectrum"
+   ],
    "conclusion": "$x - x^\\star = p(A)(x_0 - x^\\star)$, $c - Ax = p(A) r_0$, $\\|x - x^\\star\\|_{g(A)}^2 \\le \\max_{\\sigma(A)} |p|^2\\, \\|x_0 - x^\\star\\|_{g(A)}^2$",
    "sources": [
     {
@@ -18189,6 +18373,7 @@
    ],
    "depends_on": [
     "krylov-subspace",
+    "polynomial-spectral-bound",
     "residual-polynomial"
    ],
    "mathlib_prereqs": [],
@@ -18199,7 +18384,7 @@
     "krylov"
    ],
    "notes": "Design: KRYLOV_DEFINITIONS §3.6 (`polyIterate`). Consumers: richardson-iteration, chebyshev-iteration, polynomial-filter-range-finder.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-10",
    "formalizations": [
     {
      "library": "nlalib",
@@ -18218,10 +18403,18 @@
      "decl": "NLAlib.polyIterate_sub",
      "module": "NLAlib.Krylov.PolynomialMethods",
      "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_polyIterate_sub_le",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "usage": "For symmetric A, Ax⋆=c and a nonnegative polynomial weight on the spectrum, the polynomial iterate's weighted error is bounded by the residual polynomial's squared spectral envelope."
     }
    ],
    "uses_defs": [
-    "NLAlib.polyIterate"
+    "NLAlib.polyIterate",
+    "NLAlib.quadForm"
    ],
    "variants": []
   },

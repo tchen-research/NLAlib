@@ -12,6 +12,7 @@ import NLAlib.Krylov.Lanczos
 import NLAlib.Krylov.Jacobi
 import NLAlib.Krylov.JacobiFraction
 import NLAlib.Krylov.FunctionApprox
+import NLAlib.Krylov.CharacteristicPolynomial
 import NLAlib.Krylov.GMRES
 import NLAlib.Krylov.Ritz
 import NLAlib.Krylov.Block
@@ -36,4 +37,6 @@ Files (atlas ids): `Basic` (`krylovSpace`), `Polynomial` (`krylov-subspace`), `G
 `lanczos-fa-interpolation`), `GMRES` (`gmres-def`, `minres-bound`), `Ritz` (`ritz-value-bounds`,
 `krylov-eigenvector-angle`, `kaniel-paige-saad`), `Block` (`block-krylov-subspace`,
 `subspace-iteration-def`), `Preconditioned` (`preconditioned-cg`, `cgls-lsqr-bound`).
+`CharacteristicPolynomial` completes polynomial exactness with the compression's unique
+monic least-residual polynomial, using both exactness identities from `FunctionApprox`.
 -/

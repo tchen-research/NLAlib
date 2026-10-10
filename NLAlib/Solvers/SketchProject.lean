@@ -104,6 +104,20 @@ theorem expected_sqErr_step_eq (A : Matrix m n ℝ) (b : m → ℝ) (p : J → �
     Finset.sum_sub_distrib, ← Finset.sum_mul, hp1, one_mul, expectedProjector,
     Matrix.sum_mulVec, dotProduct_sum, Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul]
 
+/-- A convex combination of sketch row-space projectors is a contraction in
+the quadratic-form sense: `vᵀ W v ≤ ‖v‖²`. Gower–Richtárik 2015, equation (4.1);
+atlas `sketch-and-project` (expected-projector helper). -/
+theorem dotProduct_expectedProjector_mulVec_le (A : Matrix m n ℝ)
+    (p : J → ℝ) (hp : ∀ j, 0 ≤ p j) (hp1 : ∑ j, p j = 1)
+    (S : J → Matrix m s ℝ) (v : n → ℝ) :
+    v ⬝ᵥ (expectedProjector A p S *ᵥ v) ≤ v ⬝ᵥ v := by
+  simp only [expectedProjector, Matrix.sum_mulVec, dotProduct_sum, Matrix.smul_mulVec,
+    dotProduct_smul, smul_eq_mul]
+  calc ∑ j, p j * (v ⬝ᵥ ((moorePenroseInverse ((S j)ᵀ * A) * ((S j)ᵀ * A)) *ᵥ v))
+      ≤ ∑ j, p j * (v ⬝ᵥ v) := Finset.sum_le_sum fun j _ =>
+        mul_le_mul_of_nonneg_left (dotProduct_mulVec_le_dotProduct_self _ v) (hp j)
+    _ = v ⬝ᵥ v := by rw [← Finset.sum_mul, hp1, one_mul]
+
 /-- **Sketch-and-project converges linearly in expectation.** Let `A xs = b`, `pⱼ ≥ 0`,
 `∑ pⱼ = 1`, and `λ ‖v‖² ≤ vᵀ W v` for all `v`, with `W = ∑ⱼ pⱼ (SⱼᵀA)⁺(SⱼᵀA)`. Then after `k`
 steps with i.i.d. sketches, `E‖x_k − xs‖² ≤ (1 − λ)^k ‖x₀ − xs‖²`.
@@ -117,13 +131,7 @@ theorem expErr_le (A : Matrix m n ℝ) (b : m → ℝ) (p : J → ℝ) (hp : ∀
     (k : ℕ) :
     expErr A b p S xs x k ≤ (1 - lam) ^ k * ((x - xs) ⬝ᵥ (x - xs)) := by
   classical
-  have hW : ∀ v : n → ℝ, v ⬝ᵥ (expectedProjector A p S *ᵥ v) ≤ v ⬝ᵥ v := fun v => by
-    simp only [expectedProjector, Matrix.sum_mulVec, dotProduct_sum, Matrix.smul_mulVec,
-      dotProduct_smul, smul_eq_mul]
-    calc ∑ j, p j * (v ⬝ᵥ ((moorePenroseInverse ((S j)ᵀ * A) * ((S j)ᵀ * A)) *ᵥ v))
-        ≤ ∑ j, p j * (v ⬝ᵥ v) := Finset.sum_le_sum fun j _ =>
-          mul_le_mul_of_nonneg_left (dotProduct_mulVec_le_dotProduct_self _ v) (hp j)
-      _ = v ⬝ᵥ v := by rw [← Finset.sum_mul, hp1, one_mul]
+  have hW := dotProduct_expectedProjector_mulVec_le A p hp hp1 S
   have hstep : ∀ x : n → ℝ, ∑ j, p j * ((step A b (S j) x - xs) ⬝ᵥ (step A b (S j) x - xs)) ≤
       (1 - lam) * ((x - xs) ⬝ᵥ (x - xs)) := fun x => by
     rw [expected_sqErr_step_eq A b p hp1 S hxs x]
@@ -156,6 +164,84 @@ theorem expErr_le (A : Matrix m n ℝ) (b : m → ℝ) (p : J → ℝ) (hp : ∀
           rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun j _ => by ring
       _ ≤ (1 - lam) ^ k * ((1 - lam) * ((x - xs) ⬝ᵥ (x - xs))) :=
           mul_le_mul_of_nonneg_left (hstep x) (pow_nonneg hρ k)
+      _ = (1 - lam) ^ (k + 1) * ((x - xs) ⬝ᵥ (x - xs)) := by ring
+
+/-- A sketch-and-project update preserves membership of the error in `range Aᵀ`,
+even for an arbitrary reference point and an inconsistent right-hand side.
+The correction belongs to the row space because the Moore–Penrose inverse of `SᵀA`
+has range contained in `range Aᵀ`. Gower–Richtárik 2015, eq. (2.3);
+atlas `sketch-and-project` (invariant-space helper). -/
+theorem step_sub_mem_range (A : Matrix m n ℝ) (b : m → ℝ) (S : Matrix m s ℝ)
+    (xs x : n → ℝ) (hx : x - xs ∈ LinearMap.range Aᵀ.mulVecLin) :
+    step A b S x - xs ∈ LinearMap.range Aᵀ.mulVecLin := by
+  let B := moorePenroseInverse (Sᵀ * A)
+  have hB : B = Aᵀ * (S * (Bᵀ * B)) := by
+    have hsym : (B * (Sᵀ * A))ᵀ = B * (Sᵀ * A) :=
+      moorePenroseInverse_mul_isSymm (Sᵀ * A)
+    calc B = B * (Sᵀ * A) * B :=
+          (moorePenroseInverse_mul_moorePenroseInverse (Sᵀ * A)).symm
+      _ = (B * (Sᵀ * A))ᵀ * B := by rw [hsym]
+      _ = Aᵀ * (S * (Bᵀ * B)) := by
+          rw [Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose]
+          simp only [Matrix.mul_assoc]
+  have hstep : step A b S x - xs = (x - xs) - B *ᵥ (Sᵀ *ᵥ (A *ᵥ x - b)) := by
+    dsimp [step, B]
+    abel
+  rw [hstep]
+  refine Submodule.sub_mem _ hx ⟨(S * (Bᵀ * B)) *ᵥ (Sᵀ *ᵥ (A *ᵥ x - b)), ?_⟩
+  rw [Matrix.mulVecLin_apply, Matrix.mulVec_mulVec, ← hB]
+
+/-- **Sketch-and-project contraction on the row space.** For a consistent system,
+an initial error in `range Aᵀ`, and a lower bound `λ‖v‖² ≤ vᵀ W v` only on that
+row space, the finite iid sketch distribution satisfies
+`E‖x_k-xs‖² ≤ (1-λ)^k ‖x₀-xs‖²`. No full-column-rank assumption is required.
+Gower–Richtárik 2015, Theorem 4.6, Euclidean case `B = I`;
+atlas `sketch-and-project`. Deviation: a finite sketch distribution, with expectation
+given by the exact first-step recursion. The initial-error membership is essential.
+atlas: sketch-and-project -/
+theorem expErr_le_of_sub_mem_range (A : Matrix m n ℝ) (b : m → ℝ)
+    (p : J → ℝ) (hp : ∀ j, 0 ≤ p j) (hp1 : ∑ j, p j = 1)
+    (S : J → Matrix m s ℝ) {xs : n → ℝ} (hxs : A *ᵥ xs = b) {lam : ℝ}
+    (hlam : ∀ v ∈ LinearMap.range Aᵀ.mulVecLin,
+      lam * (v ⬝ᵥ v) ≤ v ⬝ᵥ (expectedProjector A p S *ᵥ v))
+    (x : n → ℝ) (hx : x - xs ∈ LinearMap.range Aᵀ.mulVecLin) (k : ℕ) :
+    expErr A b p S xs x k ≤ (1 - lam) ^ k * ((x - xs) ⬝ᵥ (x - xs)) := by
+  classical
+  have hW := dotProduct_expectedProjector_mulVec_le A p hp hp1 S
+  have hsol : ∀ k, expErr A b p S xs xs k = 0 := by
+    intro k
+    induction k with
+    | zero => simp [expErr]
+    | succ k ih => simp [expErr, step, hxs, ih]
+  induction k generalizing x with
+  | zero => simp [expErr]
+  | succ k ih =>
+    by_cases hx0 : x = xs
+    · subst x
+      simp [hsol]
+    have hpos : 0 < (x - xs) ⬝ᵥ (x - xs) :=
+      lt_of_le_of_ne (dotProduct_self_nonneg _) (Ne.symm fun h =>
+        hx0 (sub_eq_zero.mp (dotProduct_self_eq_zero.mp h)))
+    have hlam1 : lam ≤ 1 :=
+      le_of_mul_le_mul_right (by simpa only [one_mul] using (hlam _ hx).trans (hW _)) hpos
+    have hρ : 0 ≤ 1 - lam := sub_nonneg.mpr hlam1
+    have hstep : ∑ j, p j * ((step A b (S j) x - xs) ⬝ᵥ (step A b (S j) x - xs)) ≤
+        (1 - lam) * ((x - xs) ⬝ᵥ (x - xs)) := by
+      rw [expected_sqErr_step_eq A b p hp1 S hxs x]
+      have := hlam _ hx
+      linarith
+    show ∑ j, p j * expErr A b p S xs (step A b (S j) x) k ≤ _
+    calc ∑ j, p j * expErr A b p S xs (step A b (S j) x) k
+        ≤ ∑ j, p j * ((1 - lam) ^ k *
+            ((step A b (S j) x - xs) ⬝ᵥ (step A b (S j) x - xs))) :=
+          Finset.sum_le_sum fun j _ => mul_le_mul_of_nonneg_left
+            (ih _ (step_sub_mem_range A b (S j) xs x hx)) (hp j)
+      _ = (1 - lam) ^ k * ∑ j, p j *
+          ((step A b (S j) x - xs) ⬝ᵥ (step A b (S j) x - xs)) := by
+          rw [Finset.mul_sum]
+          exact Finset.sum_congr rfl fun j _ => by ring
+      _ ≤ (1 - lam) ^ k * ((1 - lam) * ((x - xs) ⬝ᵥ (x - xs))) :=
+          mul_le_mul_of_nonneg_left hstep (pow_nonneg hρ k)
       _ = (1 - lam) ^ (k + 1) * ((x - xs) ⬝ᵥ (x - xs)) := by ring
 
 end SketchProject

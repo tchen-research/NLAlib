@@ -1,6 +1,9 @@
 import NLAlib.Matrix.CoordinateUpdates
 import NLAlib.Matrix.CoordinatePinching
 import NLAlib.Matrix.CourantFischer
+import NLAlib.Matrix.ComplexRayleigh
+import NLAlib.Matrix.ComplexVariationalPrinciple
+import NLAlib.Matrix.ComplexVariationalExtrema
 import NLAlib.Matrix.EckartYoung
 import NLAlib.Matrix.FiniteIndexTransport
 import NLAlib.Matrix.GramCutoffCalculus
@@ -51,6 +54,8 @@ import probability.
   attainment `‖A − A_k‖₂ = σ_k`;
 * `CourantFischer`: min-max for eigenvalues and singular values, attaining subspaces, Loewner
   monotonicity, eigenvalue Weyl inequality, Cauchy/Poincaré interlacing;
+* `ComplexRayleigh`, `ComplexVariationalPrinciple`, `ComplexVariationalExtrema`: complex
+  Hermitian min-max with exact complex dimensions and attained inner and outer extrema;
 * `Weyl`: `σ_{i+j}(A+B) ≤ σ_i(A) + σ_j(B)`, `|σ_k(A+E) − σ_k(A)| ≤ ‖E‖₂`, Mirsky, products,
   and the spectral Eckart–Young theorem;
 * `VonNeumann`: the von Neumann trace inequality and its rank corollary;

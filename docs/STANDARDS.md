@@ -83,6 +83,10 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   theorems. General form first, corollaries after.
 - Every hypothesis explicit; no `axiom`, no `native_decide`; `sorry` only in a named scaffold
   (docstring `SCAFFOLD: <atlas id>`, catalogued).
+- Scaffolding well-known theorems is encouraged, not merely tolerated: a confidently stated
+  textbook or published result may enter as a scaffold (or as an explicit hypothesis, atlas
+  `assumed`) so that the tree below it can be built now. The statement must be checked with the
+  same care as a proved one, since a wrong assumption propagates to every consumer.
 
 ## 4. Docstrings
 

@@ -221,7 +221,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   </div>
 
   <div id="tab-scaffold" hidden>
-    <p class="note" style="margin-top:12px">Every result that has a Lean statement in NLAlib, with the links its proof rests on. A link is <span class="lk"><i class="l-proved"></i>proved</span> when both ends are proved, and <span class="lk"><i class="l-pending"></i>not yet</span> otherwise.</p>
+    <p class="note" style="margin-top:12px">Every result that has a Lean statement in NLAlib, with the links its proof rests on. A link is <span class="lk"><i class="l-proved"></i>proved</span> when the consumer's Lean proof is complete modulo its named dependencies and the dependency is stated in NLAlib or taken as an explicit hypothesis; a proved link into a result that is itself still a <code>sorry</code> is therefore possible, and so is a <span class="lk"><i class="l-pending"></i>not yet</span> link between two proved results whose connection is only in the literature.</p>
     <div class="tiles" id="linktiles" style="margin-top:12px"></div>
     <div id="scaffold"></div>
   </div>
@@ -273,7 +273,13 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   const usedBy = {}; A.results.forEach(r => r.depends_on.forEach(d => { (usedBy[d] = usedBy[d] || []).push(r.id); }));
   const indeg = id => (usedBy[id] || []).length;
   const inLean = r => r.status === 'proved' || r.status === 'scaffold';
-  const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; return (d.status === 'proved' && c.status === 'proved') ? 'proved' : 'pending'; };
+  // A link dep → consumer is proved when the consumer has a Lean proof in NLAlib that is not itself a
+  // literal scaffold (a `sorry` inherited from a dependency is fine: the implication is checked) and
+  // the dependency is either stated in NLAlib or taken as an explicit hypothesis (status assumed).
+  const DECL_DOC = {}; DECLS.forEach(d => DECL_DOC[d.name] = d.doc || '');
+  const isLiteralScaffold = decl => (DECL_DOC[decl] || '').trimStart().startsWith('SCAFFOLD');
+  const hasFormalProof = r => r.status === 'proved' || (r.formalizations || []).some(f => f.library === 'nlalib' && f.decl && (f.status === 'proved' || f.status === 'scaffold') && !isLiteralScaffold(f.decl));
+  const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; return (hasFormalProof(c) && (inLean(d) || d.status === 'assumed')) ? 'proved' : 'pending'; };
   const LINK = { proved: 'proved', scaffold: 'scaffold', pending: 'pending' };
   const topArea = r => { let a = areaById[r.area]; while (a.parent) a = areaById[a.parent]; return a; };
   const areaPath = r => { const p = []; let a = areaById[r.area]; while (a) { p.unshift(a.name); a = a.parent ? areaById[a.parent] : null; } return p.join(' › '); };
@@ -431,7 +437,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     svg.call(zoomBehavior);
     fitGraph();
     applySelectionToGraph();
-    document.getElementById('glegend').innerHTML = STATUS.map(s => `<span class="s-${s.id}"><span class="dot"></span>${s.glyph} ${s.label}</span>`).join('') + '<span><i class="l-proved"></i>link proved (both ends proved)</span><span><i class="l-pending"></i>link not yet proved</span><span><i style="border-top-width:3px;border-top-color:var(--fg)"></i>thick = linked to the selected node</span><span>Border weight = reuse</span><span><i style="border-color:var(--line-strong);border-style:solid"></i>box = Lean module; rows = import layers</span>';
+    document.getElementById('glegend').innerHTML = STATUS.map(s => `<span class="s-${s.id}"><span class="dot"></span>${s.glyph} ${s.label}</span>`).join('') + '<span><i class="l-proved"></i>link proved (the implication is machine-checked)</span><span><i class="l-pending"></i>link not yet proved</span><span><i style="border-top-width:3px;border-top-color:var(--fg)"></i>thick = linked to the selected node</span><span>Border weight = reuse</span><span><i style="border-color:var(--line-strong);border-style:solid"></i>box = Lean module; rows = import layers</span>';
   }
   function fitGraph() {
     if (!layoutCache || !svgSel) return;
@@ -457,7 +463,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     const allLinks = []; rows.forEach(r => r.depends_on.forEach(d => allLinks.push(linkStatus(d, r.id))));
     const lc = { proved: 0, pending: 0 }; allLinks.forEach(s => lc[s]++);
     document.getElementById('linktiles').innerHTML = [
-      ['proved', 'Links proved', 'both ends machine-checked'], ['pending', 'Links not yet proved', 'at least one end is not proved']
+      ['proved', 'Links proved', 'the implication is machine-checked'], ['pending', 'Links not yet proved', 'no Lean proof of the consumer from this dependency']
     ].map(([k, l, d]) => `<div class="tile" style="cursor:default"><div class="n">${lc[k]}</div><div class="lbl"><i class="l-${k}" style="display:inline-block;width:22px;border-top:2px solid var(--line-strong);${k === 'proved' ? 'border-top-color:var(--st-proved)' : 'border-top-style:dotted'}"></i>${l}</div><div class="def">${d}</div></div>`).join('')
       + `<div class="tile" style="cursor:default"><div class="n">${rows.length}</div><div class="lbl">Lean statements</div><div class="def">${rows.filter(r => r.status === 'proved').length} proved · ${rows.filter(r => r.status === 'scaffold').length} scaffold</div></div>`;
     const el = document.getElementById('scaffold'); el.innerHTML = '';
@@ -564,7 +570,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   });
   document.addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') { if (!document.getElementById('tab-graph').hidden && document.activeElement.tagName !== 'INPUT') fitGraph(); } if (e.key === 'Escape' && state.sel) select(state.sel); });
   renderSources(); renderLibs();
-  document.getElementById('foot').innerHTML = `Data: <code>atlas/atlas.json</code> (schema 0.1, updated ${A.updated_at}). ${A.results.length} results, ${A.sources.length} sources, ${A.libraries.length} Lean libraries. Status is the atlas's judgement of the statement as written: an external library proving a variant is recorded under “Lean” but does not change the status. Reuse counts are in-degrees of the atlas dependency graph, so they reflect the arguments catalogued here, not the literature. A link is proved when both of its endpoints are proved, and not yet otherwise.`;
+  document.getElementById('foot').innerHTML = `Data: <code>atlas/atlas.json</code> (schema 0.1, updated ${A.updated_at}). ${A.results.length} results, ${A.sources.length} sources, ${A.libraries.length} Lean libraries. Status is the atlas's judgement of the statement as written: an external library proving a variant is recorded under “Lean” but does not change the status. Reuse counts are in-degrees of the atlas dependency graph, so they reflect the arguments catalogued here, not the literature. A link is proved when the consumer has a Lean proof in NLAlib (complete modulo named scaffolds) and the dependency is stated in NLAlib or assumed as a hypothesis; it says the implication is checked, not that either endpoint is.`;
   renderAll();
   const h = (location.hash || '').slice(1); if (h && byId[h]) select(h);
 })();

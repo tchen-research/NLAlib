@@ -121,31 +121,19 @@ atlas: inverse-polynomial-approx -/
 theorem exists_degree_lt_abs_eval_sub_inv_le {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) :
     ∃ p : ℝ[X], p.degree < q ∧ ∀ x ∈ Set.Icc a b,
       |p.eval x - 1 / x| ≤ (2 / a) * ((√b - √a) / (√b + √a)) ^ q := by
-  set r := chebyshevResidual a b q with hr
-  have hr0 : r.eval 0 = 1 := eval_chebyshevResidual_zero ha hab
-  have hdvd : X ∣ r - 1 := by
-    rw [X_dvd_iff, coeff_zero_eq_eval_zero, eval_sub, hr0, eval_one, sub_self]
-  obtain ⟨s, hs⟩ := hdvd
-  refine ⟨-s, ?_, fun x hx => ?_⟩
-  · rw [degree_neg]
-    rcases eq_or_ne s 0 with h0 | h0
-    · rw [h0, degree_zero]; exact WithBot.bot_lt_coe _
-    · have hdeg : (r - 1).degree ≤ q :=
-        (degree_sub_le _ _).trans (max_le (degree_chebyshevResidual_le a b q)
-          (degree_one_le.trans (by exact_mod_cast Nat.zero_le q)))
-      rw [hs, mul_comm, degree_mul_X] at hdeg
-      rw [degree_eq_natDegree h0] at hdeg ⊢
-      have : s.natDegree + 1 ≤ q := by exact_mod_cast hdeg
-      exact_mod_cast (by omega : s.natDegree < q)
-  · have hxpos : 0 < x := lt_of_lt_of_le ha hx.1
-    have hev : r.eval x - 1 = x * s.eval x := by
-      rw [← eval_one (x := x), ← eval_sub, hs, eval_mul, eval_X]
-    have hval : (-s).eval x - 1 / x = -(r.eval x / x) := by
-      rw [eval_neg]; field_simp; linarith
-    rw [hval, abs_neg, abs_div, abs_of_pos hxpos]
-    have hbound := abs_eval_chebyshevResidual_le_two_mul_pow q ha hab hx
-    calc |r.eval x| / x ≤ |r.eval x| / a := div_le_div_of_nonneg_left (abs_nonneg _) ha hx.1
-      _ ≤ (2 * ((√b - √a) / (√b + √a)) ^ q) / a := div_le_div_of_nonneg_right hbound ha.le
-      _ = (2 / a) * ((√b - √a) / (√b + √a)) ^ q := by ring
+  set r := chebyshevResidual a b q
+  obtain ⟨s, hs, hrs⟩ := exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one
+    (degree_chebyshevResidual_le a b q) (eval_chebyshevResidual_zero ha hab)
+  refine ⟨s, hs, fun x hx => ?_⟩
+  have hxpos : 0 < x := lt_of_lt_of_le ha hx.1
+  have hev : 1 - r.eval x = x * s.eval x := by
+    rw [← eval_one (x := x), ← eval_sub, hrs, eval_mul, eval_X]
+  have hval : s.eval x - 1 / x = -(r.eval x / x) := by
+    field_simp; linarith
+  rw [hval, abs_neg, abs_div, abs_of_pos hxpos]
+  have hbound := abs_eval_chebyshevResidual_le_two_mul_pow q ha hab hx
+  calc |r.eval x| / x ≤ |r.eval x| / a := div_le_div_of_nonneg_left (abs_nonneg _) ha hx.1
+    _ ≤ (2 * ((√b - √a) / (√b + √a)) ^ q) / a := div_le_div_of_nonneg_right hbound ha.le
+    _ = (2 / a) * ((√b - √a) / (√b + √a)) ^ q := by ring
 
 end NLAlib

@@ -7206,7 +7206,7 @@
    ],
    "area": "krylov",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "In exact arithmetic the Lanczos vectors are orthonormal, span $\\mathcal{K}_q(A,b)$, and satisfy $$AQ_q = Q_qT_q + \\beta_q\\,q_{q+1}e_q^\\top$$ with $T_q$ Jacobi (tridiagonal).",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ symmetric and $b \\ne 0$",
@@ -7226,35 +7226,39 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.lanczosMatrix",
-     "module": "NLAlib.Krylov.Lanczos",
-     "status": "proved",
-     "partial": true,
-     "usage": "`lanczosMatrix A b q`: Gram–Schmidt of `b, Ab, …, A^{q-1}b`."
+     "decl": "NLAlib.LanczosDecomp",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.range_lanczosMatrix",
-     "module": "NLAlib.Krylov.Lanczos",
-     "status": "proved",
-     "partial": true,
-     "usage": "`range (lanczosMatrix A b q) = krylovSpace A b q`."
+     "decl": "NLAlib.LanczosDecomp.T",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.hasOrthonormalCols_lanczosMatrix",
-     "module": "NLAlib.Krylov.Lanczos",
-     "status": "proved",
-     "partial": true,
-     "usage": "Orthonormal columns when the Krylov vectors are linearly independent."
+     "decl": "NLAlib.LanczosDecomp.T_apply_eq_zero_of_one_lt_dist",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.lanczos_apply_eq_zero_of_add_one_lt",
+     "decl": "NLAlib.arnoldiHessenberg_apply_eq_zero_of_add_one_lt_of_isSymm",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.mulVec_vec_eq",
      "module": "NLAlib.Krylov.Lanczos",
-     "status": "proved",
-     "partial": true,
-     "usage": "`QᵀAQ` is upper Hessenberg; with `lanczos_apply_eq_zero_of_add_one_lt'` tridiagonal for symmetric `A`."
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.mul_restrict_Q_eq_add_beta_smul",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved"
     }
    ],
    "depends_on": [
@@ -7264,9 +7268,14 @@
     "graded-krylov-basis-def"
    ],
    "uses_defs": [
-    "NLAlib.HasOrthonormalCols",
-    "NLAlib.krylovSpace",
-    "NLAlib.lanczosMatrix"
+    "NLAlib.ArnoldiDecomp.Q",
+    "NLAlib.ArnoldiDecomp.restrict",
+    "NLAlib.LanczosDecomp",
+    "NLAlib.LanczosDecomp.T",
+    "NLAlib.LanczosDecomp.alpha",
+    "NLAlib.LanczosDecomp.beta",
+    "NLAlib.LanczosDecomp.vec",
+    "NLAlib.arnoldiHessenberg"
    ],
    "variants": [
     "lanczos-gauss-quadrature",
@@ -7279,7 +7288,7 @@
     "foundation",
     "krylov"
    ],
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "notes": "Orthonormality, span and tridiagonality are proved (2026-10-10); the explicit identity AQ_q = Q_qT_q + β_q q_{q+1} e_qᵀ is not yet stated, so the status stays open."
   },
   {
@@ -7317,10 +7326,22 @@
    "formalizations": [
     {
      "library": "nlalib",
+     "decl": "NLAlib.dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul",
+     "module": "NLAlib.Krylov.GaussQuadrature",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.dotProduct_aeval_mulVec_eq_of_krylovSpace_le",
      "module": "NLAlib.Krylov.GaussQuadrature",
      "status": "proved",
      "usage": "Exactness: for symmetric `A`, orthonormal `Q` with `krylovSpace A b q ≤ range Q`, `0 < q`, and `p.natDegree ≤ 2q - 1`: `b ⬝ᵥ p(A) b = (Qᵀb) ⬝ᵥ p(QᵀAQ) (Qᵀb)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_dotProduct_cfc_mulVec_sub_le_of_degree_lt_two_mul",
+     "module": "NLAlib.Krylov.GaussQuadrature",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -7331,10 +7352,22 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.dotProduct_aeval_mulVec_eq_lanczos",
-     "module": "NLAlib.Krylov.Lanczos",
+     "decl": "NLAlib.LanczosDecomp.dotProduct_cfc_T_mulVec_eq_sum",
+     "module": "NLAlib.Krylov.Jacobi",
      "status": "proved",
-     "usage": "The Lanczos instance `Q = lanczosMatrix`."
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq_sum",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved"
     }
    ],
    "depends_on": [
@@ -7342,9 +7375,11 @@
     "spectral-measure"
    ],
    "uses_defs": [
+    "NLAlib.ArnoldiDecomp.Q",
     "NLAlib.HasOrthonormalCols",
-    "NLAlib.krylovSpace",
-    "NLAlib.lanczosMatrix"
+    "NLAlib.LanczosDecomp",
+    "NLAlib.LanczosDecomp.T",
+    "NLAlib.krylovSpace"
    ],
    "variants": [
     "lanczos-recurrence",
@@ -7359,7 +7394,7 @@
     "estimation",
     "done"
    ],
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "notes": "Exactness up to degree 2q−1 holds for any orthonormal basis of a space containing K_q; the Lanczos recurrence is only needed to identify the nodes as Ritz values."
   },
   {
@@ -7426,7 +7461,8 @@
     "krylov-subspace",
     "chebyshev-minimax",
     "polynomial-spectral-bound",
-    "residual-polynomial"
+    "residual-polynomial",
+    "affine-krylov-minimiser"
    ],
    "uses_defs": [
     "NLAlib.IsCGIterate",
@@ -11202,6 +11238,12 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.quadForm_aeval_aeval_mulVec_le",
+     "module": "NLAlib.Matrix.PolynomialCalculus",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.quadForm_aeval_mulVec_le",
      "module": "NLAlib.Matrix.PolynomialCalculus",
      "status": "proved",
@@ -11226,7 +11268,7 @@
     "krylov",
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-11"
   },
   {
    "id": "subgaussian-max",
@@ -12331,7 +12373,7 @@
    ],
    "area": "krylov-bases",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Let $\\nu = \\nu(A,b)$ be the degree of the monic polynomial $\\mu_{A,b}$ of least degree with $\\mu_{A,b}(A)b = 0$ (the *grade* of $b$). Then $\\dim\\mathcal K_q(A,b) = \\min(q,\\nu)$, $\\mathcal K_q = \\mathcal K_\\nu$ for $q \\ge \\nu$, $\\mathcal K_\\nu$ is $A$-invariant, and if $A$ is invertible then $A^{-1}b \\in \\mathcal K_\\nu(A,b)$.",
    "hypotheses": [
     "$K$ a field (primary instances $\\mathbb R$, $\\mathbb C$), $A \\in K^{n\\times n}$ over a `Fintype` index, $b \\in K^n$, $q \\in \\mathbb N$",
@@ -12385,9 +12427,74 @@
     "definition-adjacent"
    ],
    "notes": "Consumers: gmres-def (finite termination), arnoldi-relation (breakdown iff h_{q+1,q} = 0 iff q = ν), lanczos-recurrence (the non-breakdown hypothesis `LinearIndependent ℝ (fun i => A^i b)` of `hasOrthonormalCols_lanczosMatrix` is exactly q ≤ ν), krylov-polynomial-exactness, gmres-any-convergence-curve, cg-convergence (finite termination). Prerequisite API change: generalise `NLAlib.krylovSpace` from ℝ to a field (or `RCLike 𝕜`) so the complex GMRES / field-of-values entries can use it; the real statements stay as the ℝ instance. Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovGrade",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mulVec_mem_krylovSpace_krylovGrade",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovSpace_eq_of_krylovGrade_le",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.linearIndependent_pow_mulVec_iff_le_krylovGrade",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.finrank_krylovSpace",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovGrade_le_natDegree_minpoly",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovGrade_le_card",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovGrade_eq_zero_iff",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sub_mem_krylovSpace_krylovGrade",
+     "module": "NLAlib.Krylov.Grade",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.krylovGrade",
+    "NLAlib.krylovSpace"
+   ],
    "variants": []
   },
   {
@@ -12403,7 +12510,7 @@
    ],
    "area": "krylov-bases",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "The Arnoldi basis $Q_q = [q_1,\\dots,q_q]$ is the Gram–Schmidt orthonormalisation of $b, Ab, \\dots, A^{q-1}b$; $H_q = Q_q^\\top A Q_q \\in \\mathbb R^{q\\times q}$ and $\\underline H_q = Q_{q+1}^\\top A Q_q \\in \\mathbb R^{(q+1)\\times q}$. A matrix is upper Hessenberg if $h_{ij} = 0$ for $i > j+1$. Characterisations: $Q_q$ has orthonormal columns spanning $\\mathcal K_q(A,b)$ when $q \\le \\nu$, $H_q$ and $\\underline H_q$ are upper Hessenberg, $h_{j+1,j} = \\|(I - Q_jQ_j^\\top)Aq_j\\| \\ge 0$ with equality iff $j \\ge \\nu$, and the basis is unique up to signs (implicit-Q uniqueness: positive subdiagonal fixes it).",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$ (no symmetry), $b \\in \\mathbb R^n$, $q \\in \\mathbb N$",
@@ -12453,12 +12560,109 @@
     "definition"
    ],
    "notes": "NLAlib's `lanczosMatrix A b q` is already the Arnoldi basis for every real A: `lanczos_apply_eq_zero_of_add_one_lt` proves QᵀAQ is upper Hessenberg without symmetry. So this entry is mostly naming (`arnoldiMatrix := lanczosMatrix`, `hessenberg A b q := Qᵀ A Q`, the extended (q+1)×q matrix) plus the positive-subdiagonal and uniqueness characterisations. Consumers: arnoldi-relation, fom-def, arnoldi-fa-error, lanczos-recurrence, gmres-def (the least-squares form ‖βe₁ − H̲_q y‖). Prove. Implement as the canonical witness `arnoldiDecomp A b q (h : q ≤ krylovGrade A b) : ArnoldiDecomp A b q` of the bundled decomposition in graded-krylov-basis-def; H is the structure's compression, not a separate definition.",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "variants": [
     "lanczos-recurrence"
    ],
-   "formalizations": [],
-   "uses_defs": []
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.H",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.H_apply_eq_zero_of_add_one_lt",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.H_succ_apply_ne_zero",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.Q_eq_of_pos",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.arnoldiMatrix",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.arnoldiHessenberg",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.range_arnoldiMatrix",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasOrthonormalCols_arnoldiMatrix",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.arnoldiHessenberg_apply_eq_zero_of_add_one_lt",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.arnoldiDecomp",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.arnoldiDecomp_H_subdiag_pos",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.Q_eq_arnoldiMatrix",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.ArnoldiDecomp",
+    "NLAlib.ArnoldiDecomp.H",
+    "NLAlib.ArnoldiDecomp.Q",
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.arnoldiDecomp",
+    "NLAlib.arnoldiHessenberg",
+    "NLAlib.arnoldiMatrix",
+    "NLAlib.krylovGrade",
+    "NLAlib.krylovSpace"
+   ]
   },
   {
    "id": "arnoldi-relation",
@@ -12472,7 +12676,7 @@
    ],
    "area": "krylov-bases",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "With the Arnoldi basis, $$AQ_q = Q_{q+1}\\underline H_q = Q_qH_q + h_{q+1,q}\\,q_{q+1}e_q^\\top,$$ and $Q_q^\\top AQ_q = H_q$. Arnoldi breaks down at step $q$ ($h_{q+1,q} = 0$) iff $q = \\nu(A,b)$, in which case $AQ_q = Q_qH_q$ and $\\mathcal K_q$ is $A$-invariant. For symmetric $A$, $H_q = T_q$ is the symmetric tridiagonal Jacobi matrix and the relation is the Lanczos three-term recurrence $Aq_j = \\beta_{j-1}q_{j-1} + \\alpha_jq_j + \\beta_jq_{j+1}$.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$, $b \\ne 0$, $1 \\le q$",
@@ -12514,13 +12718,72 @@
     "foundation",
     "krylov"
    ],
-   "notes": "Closes the open half of the existing candidate `lanczos-recurrence` (whose notes say the identity AQ_q = Q_qT_q + β_q q_{q+1}e_qᵀ is not yet stated); that entry should gain `depends_on: arnoldi-relation`. Column j of the identity is A q_j ∈ K_{j+1} = span(q_1..q_{j+1}) expanded in the orthonormal basis, so the proof is short given `range_lanczosMatrix` and the Hessenberg lemma. Consumers: lanczos-recurrence, fom-def, gmres-def (least-squares form), krylov-polynomial-exactness, arnoldi-fa-error, Lanczos-based SLQ (`slq-error`) when written with the recurrence. Prove.",
-   "updated_at": "2026-10-10",
+   "notes": "Closes the open half of the existing candidate `lanczos-recurrence` (whose notes say the identity AQ_q = Q_qT_q + β_q q_{q+1}e_qᵀ is not yet stated); that entry should gain `depends_on: arnoldi-relation`. Column j of the identity is A q_j ∈ K_{j+1} = span(q_1..q_{j+1}) expanded in the orthonormal basis, so the proof is short given `range_lanczosMatrix` and the Hessenberg lemma. Consumers: lanczos-recurrence, fom-def, gmres-def (least-squares form), krylov-polynomial-exactness, arnoldi-fa-error, Lanczos-based SLQ (`slq-error`) when written with the recurrence. Prove. Round 8: A Q_q = Q_{q+1} H̲_q and A Q_q = Q_q H_q + h_{q+1,q} q_{q+1} e_qᵀ are proved for every ArnoldiDecomp of order q+1, with A Q = Q H ↔ grade = q.",
+   "updated_at": "2026-10-11",
    "variants": [
     "lanczos-recurrence"
    ],
-   "formalizations": [],
-   "uses_defs": []
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.mulVec_col_eq_sum",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.mul_restrict_Q_eq_mul",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.mul_restrict_Q_eq_add_vecMulVec",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.mul_restrict_Q_eq_add_smul",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.mul_Q_eq_of_krylovGrade_le",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.mul_Q_eq_mul_H_iff",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.mulVec_vec_eq",
+     "module": "NLAlib.Krylov.Lanczos",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.ArnoldiDecomp",
+    "NLAlib.ArnoldiDecomp.H",
+    "NLAlib.ArnoldiDecomp.Q",
+    "NLAlib.ArnoldiDecomp.restrict",
+    "NLAlib.LanczosDecomp",
+    "NLAlib.LanczosDecomp.alpha",
+    "NLAlib.LanczosDecomp.beta",
+    "NLAlib.LanczosDecomp.vec",
+    "NLAlib.krylovGrade"
+   ]
   },
   {
    "id": "krylov-polynomial-exactness",
@@ -12576,10 +12839,36 @@
     "foundation",
     "krylov"
    ],
-   "notes": "The power form `Q (QᵀAQ)^j Qᵀ b = A^j b` (j < q, any real A) is already proved as `NLAlib.mulVec_pow_transpose_mul_mul_mulVec_eq` (helper of lanczos-gauss-quadrature); this entry packages the polynomial form, the degree-q projected identity and the monic-minimality (Arnoldi/Lanczos eigenvalue) characterisation as public statements. Consumers: lanczos-fa-error, arnoldi-fa-error, fom-def (the FOM iterate is x₀ + Q H⁻¹ Qᵀ r₀), lanczos-gauss-quadrature (could be refactored onto it). Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "The power form `Q (QᵀAQ)^j Qᵀ b = A^j b` (j < q, any real A) is already proved as `NLAlib.mulVec_pow_transpose_mul_mul_mulVec_eq` (helper of lanczos-gauss-quadrature); this entry packages the polynomial form, the degree-q projected identity and the monic-minimality (Arnoldi/Lanczos eigenvalue) characterisation as public statements. Consumers: lanczos-fa-error, arnoldi-fa-error, fom-def (the FOM iterate is x₀ + Q H⁻¹ Qᵀ r₀), lanczos-gauss-quadrature (could be refactored onto it). Prove. Round 8: exactness Q p(T) Qᵀ b = p(A) b (deg p < q) and Qᵀ p(A) b = p(T) Qᵀ b (deg p ≤ q) are proved for any A; the clause that the characteristic polynomial of H minimises ‖p(A) b‖ over monic p is open.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mulVec_aeval_transpose_mul_mul_mulVec_eq",
+     "module": "NLAlib.Krylov.FunctionApprox",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.transpose_mulVec_aeval_mulVec_eq",
+     "module": "NLAlib.Krylov.FunctionApprox",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovFunApprox_eval_eq_aeval",
+     "module": "NLAlib.Krylov.FunctionApprox",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.krylovFunApprox",
+    "NLAlib.krylovSpace"
+   ],
    "variants": []
   },
   {
@@ -12593,7 +12882,7 @@
    ],
    "area": "krylov-bases",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $A \\in \\mathbb R^{n\\times n}$ and $\\Omega \\in \\mathbb R^{n\\times s}$, $\\mathcal K_q(A,\\Omega) = \\operatorname{range}[\\Omega, A\\Omega, \\dots, A^{q-1}\\Omega] = \\sum_{j=1}^s \\mathcal K_q(A,\\omega_j) = \\{\\sum_{i<q}A^i\\Omega C_i : C_i \\in \\mathbb R^{s\\times s'}\\}$. It contains $\\operatorname{range}(p(A)\\Omega)$ for every scalar polynomial $p$ with $\\deg p < q$, is nested in $q$, satisfies $A\\mathcal K_q \\subseteq \\mathcal K_{q+1}$, and has dimension at most $qs$. The rectangular form used for low-rank approximation is $\\mathcal K_q(AA^\\top, A\\Omega) \\ni \\varphi(AA^\\top)A\\Omega$ for $\\deg\\varphi < q$.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$, $\\Omega \\in \\mathbb R^{n\\times s}$, $q \\in \\mathbb N$ (rectangular case: $A \\in \\mathbb R^{m\\times n}$ and the space $\\mathcal K_q(AA^\\top, A\\Omega)$)"
@@ -12635,9 +12924,61 @@
     "low-rank"
    ],
    "notes": "Define as `⨆ j, krylovSpace A (fun r => Ω r j) q` so every single-vector lemma transfers. Consumers: polynomial-filter-range-finder, block-krylov-lra (Musco–Musco Thm 1), subspace-iteration-expected (q = 1 slice), randomized block Krylov trace estimation (Krylov-aware Hutch++). Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.blockKrylovSpace",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovSpace_col_le_blockKrylovSpace",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.blockKrylovSpace_eq_iSup",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mem_blockKrylovSpace_iff",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.range_aeval_mul_le_blockKrylovSpace",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.blockKrylovSpace_mono",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mulVec_mem_blockKrylovSpace_succ",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.finrank_blockKrylovSpace_le",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.blockKrylovSpace",
+    "NLAlib.krylovSpace"
+   ],
    "variants": []
   },
   {
@@ -12695,10 +13036,48 @@
     "krylov",
     "definition"
    ],
-   "notes": "The affine-Krylov ↔ residual-polynomial step is currently a private lemma inside `NLAlib/Krylov/CG.lean` (`exists_degree_lt_one_sub_eq_X_mul`); making it public removes duplication. The value ε_k([a,b]) is the existing `isLeast_chebyshev_minimax`. Consumers (highest in-degree of this group): gmres-def, gmres-diagonalizable, gmres-elman, gmres-bgt, crouzeix-palencia (GMRES corollary), minres-bound, chebyshev-iteration, richardson-iteration, fom-def, cg-convergence (refactor). Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "The affine-Krylov ↔ residual-polynomial step is currently a private lemma inside `NLAlib/Krylov/CG.lean` (`exists_degree_lt_one_sub_eq_X_mul`); making it public removes duplication. The value ε_k([a,b]) is the existing `isLeast_chebyshev_minimax`. Consumers (highest in-degree of this group): gmres-def, gmres-diagonalizable, gmres-elman, gmres-bgt, crouzeix-palencia (GMRES corollary), minres-bound, chebyshev-iteration, richardson-iteration, fom-def, cg-convergence (refactor). Prove. Round 8: the residual-polynomial algebra (deg p ≤ q, p(0) = 1 ↔ p = 1 − X s) and the Krylov correspondence x − x₀ ∈ K_q ↔ c − A x = p(A) r₀ are proved; the ε_k(S) clauses (antitone in k, monotone in S, attained) are open.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_sub_mulVec_eq_aeval_mulVec_of_sub_mem_krylovSpace",
+     "module": "NLAlib.Krylov.Minimiser",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_mem_krylovSpace_sub_mulVec_eq_aeval_mulVec",
+     "module": "NLAlib.Krylov.Minimiser",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_sub_eq_aeval_mulVec_of_sub_mem_krylovSpace",
+     "module": "NLAlib.Krylov.Minimiser",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_mem_krylovSpace_add_sub_eq_aeval_mulVec",
+     "module": "NLAlib.Krylov.Minimiser",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sub_mem_krylovSpace_iff_exists_sub_mulVec_eq",
+     "module": "NLAlib.Krylov.Minimiser",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.krylovSpace"
+   ],
    "variants": []
   },
   {
@@ -12713,7 +13092,7 @@
    ],
    "area": "krylov-linear-systems",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$x_k$ is a GMRES iterate if $x_k \\in x_0 + \\mathcal K_k(A,r_0)$ and $\\|b - Ax_k\\|_2 \\le \\|b - Ax\\|_2$ for all $x \\in x_0 + \\mathcal K_k(A,r_0)$. Characterisations: an iterate exists for every $A$; the residual $r_k$ is unique and $x_k$ is unique if $A$ is invertible; $r_k \\perp A\\mathcal K_k(A,r_0)$ (Petrov–Galerkin); $\\|r_k\\| = \\min_{p\\in\\mathcal P_k^0}\\|p(A)r_0\\|$; $\\|r_{k+1}\\| \\le \\|r_k\\|$; with Arnoldi, $\\|r_k\\| = \\min_y\\|\\,\\|r_0\\|e_1 - \\underline H_k y\\|$; if $A$ is invertible, $r_\\nu = 0$ at the grade $\\nu = \\nu(A,r_0)$. For symmetric $A$ this is MINRES.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$, $b, x_0 \\in \\mathbb R^n$, $r_0 = b - Ax_0$, $k \\in \\mathbb N$ (complex form: $\\mathbb C^{n\\times n}$ with the Hermitian inner product)"
@@ -12740,7 +13119,9 @@
     "residual-polynomial",
     "krylov-grade",
     "projection-facts",
-    "arnoldi-relation"
+    "arnoldi-relation",
+    "affine-krylov-minimiser",
+    "orthonormal-basis-matrix"
    ],
    "mathlib_prereqs": [
     {
@@ -12766,10 +13147,84 @@
     "definition",
     "gmres"
    ],
-   "notes": "Mirror `NLAlib.IsCGIterate` (variational definition, existence by projection, no algorithm). Real primary statement: for real A, b, x₀ the real GMRES residual equals the complex one (for real r₀, replacing a complex p by its real-coefficient part never increases ‖p(A)r₀‖), so complex-spectrum bounds (gmres-diagonalizable, gmres-bgt, crouzeix-palencia) apply to the real definition. Consumers: gmres-diagonalizable, gmres-elman, gmres-bgt, minres-bound, gmres-any-convergence-curve, restarted GMRES(m) (Elman per cycle), sketched GMRES (Nakatsukasa–Tropp 2024: minimise ‖S(b − AQy)‖ over a Krylov basis; a sketch-and-solve consumer with `sketch-and-solve-ls`). The Arnoldi least-squares clause can be split off if arnoldi-relation lags. Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Mirror `NLAlib.IsCGIterate` (variational definition, existence by projection, no algorithm). Real primary statement: for real A, b, x₀ the real GMRES residual equals the complex one (for real r₀, replacing a complex p by its real-coefficient part never increases ‖p(A)r₀‖), so complex-spectrum bounds (gmres-diagonalizable, gmres-bgt, crouzeix-palencia) apply to the real definition. Consumers: gmres-diagonalizable, gmres-elman, gmres-bgt, minres-bound, gmres-any-convergence-curve, restarted GMRES(m) (Elman per cycle), sketched GMRES (Nakatsukasa–Tropp 2024: minimise ‖S(b − AQy)‖ over a Krylov basis; a sketch-and-solve consumer with `sketch-and-solve-ls`). The Arnoldi least-squares clause can be split off if arnoldi-relation lags. Prove. Round 8: the predicate, existence (via orthonormal-basis-matrix), residual orthogonality r ⟂ A K_q, uniqueness, polynomial form, monotonicity in q and finite termination at the grade are proved; the Arnoldi least-squares clause ‖r_k‖ = min_y ‖‖r₀‖e₁ − H̲_k y‖ is open (needs the Arnoldi relation).",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGMRESIterate_iff_forall_dotProduct_eq_zero",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isGMRESIterate",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.sub_mulVec_eq",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.eq_of_isUnit",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.exists_sub_mulVec_eq_aeval",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.le_aeval",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.isLeast_dotProduct_aeval",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.le_of_le",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.sub_mulVec_eq_zero_of_krylovGrade_le",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsGMRESIterate",
+    "NLAlib.krylovGrade",
+    "NLAlib.krylovSpace"
+   ],
    "variants": []
   },
   {
@@ -12835,10 +13290,21 @@
     "gmres",
     "bound"
    ],
-   "notes": "Over real p the min–max over a conjugation-closed spectrum equals the complex one, so the real statement loses nothing. For symmetric A this is the general clause of minres-bound and can reuse `specNorm_aeval_le`. The worst-case sharpness for normal A (max over ‖r₀‖=1 of ‖r_k‖ equals ε_k(σ(A)); Greenbaum–Gurvits 1994) is a later, harder (4) variant: assume if needed. Consumers: minres-bound, gmres-bgt (comparison), sketched GMRES analyses, Krylov solvers inside randomized preconditioning of nonsymmetric systems. Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Over real p the min–max over a conjugation-closed spectrum equals the complex one, so the real statement loses nothing. For symmetric A this is the general clause of minres-bound and can reuse `specNorm_aeval_le`. The worst-case sharpness for normal A (max over ‖r₀‖=1 of ‖r_k‖ equals ε_k(σ(A)); Greenbaum–Gurvits 1994) is a later, harder (4) variant: assume if needed. Consumers: minres-bound, gmres-bgt (comparison), sketched GMRES analyses, Krylov solvers inside randomized preconditioning of nonsymmetric systems. Prove. Round 8: the real form A = V diag(d) W with V W = 1, ‖r_q‖² ≤ (‖V‖‖W‖ M)² ‖r₀‖², is proved; the complex-diagonalisable form is open.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.dotProduct_le_of_eq_mul_diagonal_mul",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsGMRESIterate",
+    "NLAlib.specNorm"
+   ],
    "variants": []
   },
   {
@@ -12932,7 +13398,8 @@
     "residual-polynomial",
     "polynomial-spectral-bound",
     "two-interval-minimax",
-    "chebyshev-minimax"
+    "chebyshev-minimax",
+    "affine-krylov-minimiser"
    ],
    "mathlib_prereqs": [
     {
@@ -12948,10 +13415,27 @@
     "bound",
     "real"
    ],
-   "notes": "Each clause is polynomial-spectral-bound applied to the GMRES polynomial characterisation plus a polynomial from two-interval-minimax or chebyshev-minimax. Consumers: preconditioned MINRES for saddle-point / KKT systems, LSMR (MINRES on the normal equations) inside sketch-and-precondition least squares, regularised indefinite solves in randomized Newton methods. Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Each clause is polynomial-spectral-bound applied to the GMRES polynomial characterisation plus a polynomial from two-interval-minimax or chebyshev-minimax. Consumers: preconditioned MINRES for saddle-point / KKT systems, LSMR (MINRES on the normal equations) inside sketch-and-precondition least squares, regularised indefinite solves in randomized Newton methods. Prove. Round 8: the spectral min–max bound ‖r_q‖² ≤ max_i |p(λ_i)|² ‖r₀‖² for symmetric A and the definite Chebyshev rate are proved; the two-interval indefinite bound waits on two-interval-minimax.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.dotProduct_le_sq_mul_of_isHermitian",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.dotProduct_le_of_eigenvalues_mem_Icc",
+     "module": "NLAlib.Krylov.GMRES",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsGMRESIterate"
+   ],
    "variants": []
   },
   {
@@ -13040,7 +13524,8 @@
    "depends_on": [
     "residual-polynomial",
     "chebyshev-minimax",
-    "polynomial-spectral-bound"
+    "polynomial-spectral-bound",
+    "polynomial-method-def"
    ],
    "mathlib_prereqs": [
     {
@@ -13057,10 +13542,35 @@
     "polynomial-method",
     "real"
    ],
-   "notes": "The identity is an induction on the coupled recurrences (the ρ_k bookkeeping is the work). Preconditioned form: replace A by P⁻¹A with aP ≼ A ≼ bP. Consumers: LSRN (Meng–Saunders–Mahoney 2014) runs Chebyshev semi-iteration on the sketch-preconditioned normal equations; polynomial preconditioning and Chebyshev filtering in subspace iteration; the kernel polynomial method for spectral densities (same recurrence). Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "The identity is an induction on the coupled recurrences (the ρ_k bookkeeping is the work). Preconditioned form: replace A by P⁻¹A with aP ≼ A ≼ bP. Consumers: LSRN (Meng–Saunders–Mahoney 2014) runs Chebyshev semi-iteration on the sketch-preconditioned normal equations; polynomial preconditioning and Chebyshev filtering in subspace iteration; the kernel polynomial method for spectral densities (same recurrence). Prove. Round 8: defined via polyIterate with the Chebyshev residual, A-norm and residual bounds 2ρ^q proved; the three-term recurrence (Saad Alg. 12.1) is open.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.chebyshevIterate",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_chebyshevIterate_sub_le",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_self_sub_mulVec_chebyshevIterate_le",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.chebyshevIterate",
+    "NLAlib.quadForm"
+   ],
    "variants": []
   },
   {
@@ -13094,7 +13604,8 @@
    ],
    "depends_on": [
     "residual-polynomial",
-    "polynomial-spectral-bound"
+    "polynomial-spectral-bound",
+    "polynomial-method-def"
    ],
    "mathlib_prereqs": [
     {
@@ -13115,10 +13626,42 @@
     "polynomial-method",
     "real"
    ],
-   "notes": "The symmetrisation P^{-1/2}AP^{-1/2} with spectrum in [a,b] reduces it to polynomial-spectral-bound with p(t) = (1 − ωt)^k. Consumers: iterative sketching for least squares (Pilanci–Wainwright iterative Hessian sketch; Epperly 2024 'fast and forward stable' iterative sketching with P = (SA)ᵀ(SA), A ↦ AᵀA, a = (1+ε)^{-2}, b = (1−ε)^{-2} from `ose-def`), sketch-and-project viewed as preconditioned Richardson, damped Newton–sketch. Momentum (heavy-ball) acceleration is a later variant. Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "The symmetrisation P^{-1/2}AP^{-1/2} with spectrum in [a,b] reduces it to polynomial-spectral-bound with p(t) = (1 − ωt)^k. Consumers: iterative sketching for least squares (Pilanci–Wainwright iterative Hessian sketch; Epperly 2024 'fast and forward stable' iterative sketching with P = (SA)ᵀ(SA), A ↦ AᵀA, a = (1+ε)^{-2}, b = (1−ε)^{-2} from `ose-def`), sketch-and-project viewed as preconditioned Richardson, damped Newton–sketch. Momentum (heavy-ball) acceleration is a later variant. Prove. Round 8: unpreconditioned form proved (weight g, optimal ω = 2/(a+b), rate (b−a)/(b+a)); preconditioned form open.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.richardsonIterate",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_richardsonIterate_sub_le",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_self_sub_mulVec_richardsonIterate_le",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_richardsonIterate_sub_le_of_optimal",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.quadForm",
+    "NLAlib.richardsonIterate"
+   ],
    "variants": []
   },
   {
@@ -13134,7 +13677,7 @@
    ],
    "area": "krylov-linear-systems",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $A \\in \\mathbb R^{m\\times n}$ of full column rank with singular values in $[\\sigma_{lo},\\sigma_{hi}]$, the iterate $x_k$ minimising $\\|b - Ax\\|$ over $x_0 + \\mathcal K_k(A^\\top A, A^\\top(b - Ax_0))$ (CGLS/LSQR in exact arithmetic) satisfies $$\\|A(x_k - x_\\star)\\| \\le 2\\Big(\\frac{\\sigma_{hi}-\\sigma_{lo}}{\\sigma_{hi}+\\sigma_{lo}}\\Big)^k\\|A(x_0 - x_\\star)\\|,$$ $x_\\star = \\arg\\min\\|b - Ax\\|$, and $\\|b - Ax_k\\|^2 = \\|b - Ax_\\star\\|^2 + \\|A(x_k - x_\\star)\\|^2$. With a right preconditioner $R$ the same holds with the singular values of $AR^{-1}$.",
    "hypotheses": [
     "$A \\in \\mathbb R^{m\\times n}$ with $\\operatorname{rank}A = n$, all singular values in $[\\sigma_{lo},\\sigma_{hi}]$, $0 < \\sigma_{lo} \\le \\sigma_{hi}$",
@@ -13153,7 +13696,8 @@
    "depends_on": [
     "cg-convergence",
     "svd",
-    "projection-facts"
+    "projection-facts",
+    "affine-krylov-minimiser"
    ],
    "mathlib_prereqs": [
     {
@@ -13171,9 +13715,45 @@
     "real"
    ],
    "notes": "A direct instance of `quadForm_sub_le_of_isCGIterate(_of_le)` with A ↦ AᵀA, c = Aᵀb, a = σ_lo², b = σ_hi² (√ of the eigenvalue ratio is the singular value ratio). This is the Krylov solver of Blendenpik / LSRN / sketch-and-precondition: with R from a QR of SA and S an ε-embedding, κ(AR⁻¹) ≤ (1+ε)/(1−ε), so O(log(1/δ)) iterations suffice; the existing candidate `sketch-and-precondition` becomes an end-to-end result once this is in. Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsCGLSIterate",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isCGLSIterate_iff_isCGIterate",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_sub_mulVec_self_eq_add",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_mulVec_sub_le_of_isCGLSIterate",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_sub_mulVec_le_of_isCGLSIterate",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsCGIterate",
+    "NLAlib.IsCGLSIterate"
+   ],
    "variants": []
   },
   {
@@ -13188,7 +13768,7 @@
    ],
    "area": "krylov-linear-systems",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $A, P \\succ 0$ with $aP \\preceq A \\preceq bP$, the PCG iterate (minimiser of $\\|x - x_\\star\\|_A$ over $x_0 + \\mathcal K_k(P^{-1}A, P^{-1}r_0)$) satisfies $$\\|x_k - x_\\star\\|_A \\le 2\\Big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\Big)^k\\|x_0 - x_\\star\\|_A.$$ Equivalently CG applied to $L^{-1}AL^{-\\top}$ for any factorisation $P = LL^\\top$, with $\\mathcal K_k(P^{-1}A, P^{-1}r_0) = L^{-\\top}\\mathcal K_k(L^{-1}AL^{-\\top}, L^{-1}r_0)$.",
    "hypotheses": [
     "$A, P \\in \\mathbb R^{n\\times n}$ symmetric positive definite, $0 < a < b$ (or $\\le$), $aP \\preceq A \\preceq bP$",
@@ -13207,7 +13787,8 @@
    ],
    "depends_on": [
     "cg-convergence",
-    "krylov-subspace"
+    "krylov-subspace",
+    "affine-krylov-minimiser"
    ],
    "mathlib_prereqs": [
     {
@@ -13234,9 +13815,41 @@
     "real"
    ],
    "notes": "The Loewner-sandwich hypothesis is how randomized preconditioners are certified, so stating it that way avoids a generalised-eigenvalue API. Consumers: `nystrom-pcg` (Frangella–Tropp–Udell: (A + μI) vs Nyström preconditioner, a and b from the Nyström error), randomly pivoted Cholesky preconditioning, sketch-and-precondition when solved by CG on normal equations (with cgls-lsqr-bound). Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovSpace_mul_mulVec_eq_map",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsPCGIterate",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isPCGIterate_iff_isCGIterate",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_sub_le_of_isPCGIterate",
+     "module": "NLAlib.Krylov.Preconditioned",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsCGIterate",
+    "NLAlib.IsPCGIterate",
+    "NLAlib.krylovSpace",
+    "NLAlib.quadForm"
+   ],
    "variants": []
   },
   {
@@ -13539,7 +14152,7 @@
    ],
    "area": "krylov-matrix-functions",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For symmetric $A$ with spectrum in $[\\lambda_{lo},\\lambda_{hi}]$, $Q$ with orthonormal columns and $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$, and $T = Q^\\top AQ$, $$\\|f(A)b - Q\\,f(T)\\,Q^\\top b\\| \\le 2\\|b\\|\\min_{\\deg p < q}\\ \\max_{x\\in[\\lambda_{lo},\\lambda_{hi}]}|f(x) - p(x)|$$ for every $f : \\mathbb R \\to \\mathbb R$ ($f(A)$ by the spectral calculus). For Lanczos, $Q^\\top b = \\|b\\|e_1$, giving $\\|b\\|\\,Q_qf(T_q)e_1$.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$ symmetric with every eigenvalue in $[\\lambda_{lo},\\lambda_{hi}]$",
@@ -13584,9 +14197,27 @@
     "real"
    ],
    "notes": "Proof: f(A)b − Qf(T)Qᵀb = (f − p)(A)b − Q(f − p)(T)Qᵀb by exactness, each term ≤ E‖b‖ since Ritz values lie in [λ_lo, λ_hi] (`eigenvalues_transpose_mul_mul_mem_Icc` already proved) and ‖Q‖ ≤ 1. The vector analogue of the proved quadrature error `abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le`. Combine with `inverse-polynomial-approx` (f = 1/x), `bernstein-ellipse-approx` (analytic f), and T2's exp / x^{−1/2} / sign approximations. Consumers: Krylov-aware trace estimation of f(A) (Chen–Hallman 2023), sampling N(0, A) via A^{1/2}b, matrix-exponential actions in randomized network centrality, block Lanczos for tr f(A) in `slq-error`-type results. Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_cfc_mulVec_sub_krylovFunApprox_self_le",
+     "module": "NLAlib.Krylov.FunctionApprox",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_cfc_inv_mulVec_sub_krylovFunApprox_self_le",
+     "module": "NLAlib.Krylov.FunctionApprox",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.krylovFunApprox",
+    "NLAlib.krylovSpace"
+   ],
    "variants": []
   },
   {
@@ -13662,7 +14293,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For symmetric $A$ with eigenvalues $\\lambda_1 > \\lambda_2 \\ge \\dots \\ge \\lambda_n$, $\\lambda_2 > \\lambda_n$, unit eigenvector $u_1$, and $\\langle u_1,b\\rangle \\ne 0$, the vector $x = T_{q-1}\\big(\\tfrac{2A - (\\lambda_2+\\lambda_n)I}{\\lambda_2-\\lambda_n}\\big)b \\in \\mathcal K_q(A,b)$ satisfies $$\\tan\\angle(u_1,x) \\le \\frac{\\tan\\angle(u_1,b)}{T_{q-1}(1+2\\gamma)},\\qquad \\gamma = \\frac{\\lambda_1-\\lambda_2}{\\lambda_2-\\lambda_n},$$ where $\\tan\\angle(u,x) = \\|(I - uu^\\top)x\\|/|\\langle u,x\\rangle|$; and $T_{q-1}(1+2\\gamma) \\ge \\tfrac12(1+2\\gamma+2\\sqrt{\\gamma+\\gamma^2})^{q-1}$.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$ symmetric with eigenpairs $(\\lambda_i,u_i)$, $\\lambda_1 > \\lambda_2 > \\lambda_n$, $\\|u_1\\| = 1$",
@@ -13707,9 +14338,32 @@
     "real"
    ],
    "notes": "The gap-dependent counterpart of the proved gap-free `ritz-value-bounds` (which uses the Chebyshev amplifier and pays ε λ_1). The general form for u_i with the factor κ_i = ∏_{j<i}(λ_j − λ_n)/(λ_j − λ_i) and T_{q−i}(1+2γ_i) is a later variant. Consumers: kaniel-paige-saad, `random-start-power` (Kuczyński–Woźniakowski gap-dependent rate with a Gaussian start, where tan²∠(u_1, g) is controlled by `chi-square-*`), the gap-dependent block Krylov/subspace-iteration bounds (`block-krylov-lra`, `subspace-iteration-expected`), Davis–Kahan-type eigenvector guarantees for PCA. Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanSqAngle_aeval_mulVec_le",
+     "module": "NLAlib.Krylov.Ritz",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_mem_krylovSpace_tanSqAngle_le",
+     "module": "NLAlib.Krylov.Ritz",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_mem_krylovSpace_tanSqAngle_le_two_div_pow",
+     "module": "NLAlib.Krylov.Ritz",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.krylovSpace",
+    "NLAlib.tanSqAngle"
+   ],
    "variants": []
   },
   {
@@ -13724,7 +14378,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Under the hypotheses of krylov-eigenvector-angle, the largest Ritz value $\\theta_1 = \\lambda_{\\max}(Q^\\top AQ)$ for any $Q$ with orthonormal columns and $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$ satisfies $$0 \\le \\lambda_1 - \\theta_1 \\le (\\lambda_1 - \\lambda_n)\\Big(\\frac{\\tan\\angle(u_1,b)}{T_{q-1}(1+2\\gamma)}\\Big)^2,\\qquad \\gamma = \\frac{\\lambda_1-\\lambda_2}{\\lambda_2-\\lambda_n}.$$",
    "hypotheses": [
     "as in krylov-eigenvector-angle",
@@ -13761,13 +14415,38 @@
     "bound",
     "real"
    ],
-   "notes": "Proof: θ_1 ≥ Rayleigh quotient of the x from krylov-eigenvector-angle (Courant–Fischer on QᵀAQ), and λ_1 − xᵀAx/xᵀx ≤ (λ_1 − λ_n) sin²∠(u_1,x) ≤ (λ_1 − λ_n) tan²∠; θ_1 ≤ λ_1 by interlacing. The existing `ritz-value-bounds` cites saad11 Thm 6.4 but proves the gap-free variant; this entry is the statement that label refers to. General i-th Ritz value form (with κ_i) later. Consumers: `random-start-power` (Lanczos clause), block-krylov-lra (per-vector gap-dependent bounds), spectral-norm estimation by Lanczos with a random start. Prove.",
-   "updated_at": "2026-10-10",
+   "notes": "Proof: θ_1 ≥ Rayleigh quotient of the x from krylov-eigenvector-angle (Courant–Fischer on QᵀAQ), and λ_1 − xᵀAx/xᵀx ≤ (λ_1 − λ_n) sin²∠(u_1,x) ≤ (λ_1 − λ_n) tan²∠; θ_1 ≤ λ_1 by interlacing. The existing `ritz-value-bounds` cites saad11 Thm 6.4 but proves the gap-free variant; this entry is the statement that label refers to. General i-th Ritz value form (with κ_i) later. Consumers: `random-start-power` (Lanczos clause), block-krylov-lra (per-vector gap-dependent bounds), spectral-norm estimation by Lanczos with a random start. Prove. Round 8: proved for the largest Ritz value with any enclosure [a, c] of the remaining eigenvalues (Saad's statement is a = λ_n, c = λ₂), squared tangents, Krylov dimension q+1 with T_q; the i-th Ritz value form is open.",
+   "updated_at": "2026-10-11",
    "variants": [
     "ritz-value-bounds"
    ],
-   "formalizations": [],
-   "uses_defs": []
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues_transpose_mul_mul_le",
+     "module": "NLAlib.Krylov.Ritz",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues_sub_eigenvalues_transpose_mul_mul_le_of_poly",
+     "module": "NLAlib.Krylov.Ritz",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues_sub_eigenvalues_transpose_mul_mul_le",
+     "module": "NLAlib.Krylov.Ritz",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.krylovSpace",
+    "NLAlib.tanSqAngle"
+   ]
   },
   {
    "id": "polynomial-filter-range-finder",
@@ -16900,7 +17579,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "The $k$-th subspace iterate from a starting block $\\Omega \\in \\mathbb{R}^{n \\times s}$ is the subspace $\\mathcal{S}_k = \\operatorname{range}(A^k \\Omega)$; any orthonormal $Q_k$ with $\\operatorname{range} Q_k = \\mathcal{S}_k$ is a basis the algorithm may carry, and the Ritz pairs are those of $Q_k^\\top A Q_k$. Orthonormalisation does not change $\\mathcal{S}_k$, and $\\mathcal{S}_k \\subseteq \\mathcal{K}_{k+1}(A, \\Omega)$ (block Krylov with the fixed polynomial $x^k$).",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$, $\\Omega \\in \\mathbb{R}^{n \\times s}$, $k \\in \\mathbb{N}$"
@@ -16928,9 +17607,51 @@
     "subspace-iteration"
    ],
    "notes": "Design: the iterate is a subspace, every basis is a witness (docs/KRYLOV_DEFINITIONS.md §3.9). NLAlib already states the HMT power scheme on range((AAᵀ)^q A Ω) in LowRank/PowerIteration.lean; this entry names the object. Consumers: subspace-iteration-convergence, random-start-power, block-krylov-lra (comparison lemma S_k ≤ K_{k+1}).",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.subspaceIterate",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.subspaceIterate_succ",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.range_mul_eq_subspaceIterate_succ",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.subspaceIterate_le_blockKrylovSpace",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.subspaceIterate_mul_of_isUnit",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.transpose_mul_mul_eq_of_range_le",
+     "module": "NLAlib.Krylov.Block",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.blockKrylovSpace",
+    "NLAlib.subspaceIterate"
+   ],
    "variants": []
   },
   {
@@ -16970,8 +17691,8 @@
     "subspace-iteration",
     "eigenvalues"
    ],
-   "notes": "Prove. Consumers: random-start-power (with the Gaussian a.s. invertibility of U_sᵀΩ and the tan θ₀ moment bounds), gap-dependent block Krylov comparison (mm15 §4), rsvd-spectral-expected with power iteration. Saad states the theorem for general diagonalisable A; the symmetric form suffices here.",
-   "updated_at": "2026-10-10",
+   "notes": "Prove. Consumers: random-start-power (with the Gaussian a.s. invertibility of U_sᵀΩ and the tan θ₀ moment bounds), gap-dependent block Krylov comparison (mm15 §4), rsvd-spectral-expected with power iteration. Saad states the theorem for general diagonalisable A; the symmetric form suffices here. K-D (round 8) lists the inputs: principal angles via ‖U_⊥ᵀ Q (U_sᵀ Q)⁻¹‖, basis independence (transpose_mul_mul_eq_of_range_le, proved), the split A^k Ω = U_s Λ_s^k U_sᵀ Ω + U_⊥ Λ_⊥^k U_⊥ᵀ Ω, and ‖Λ_⊥^k X Λ_s^{−k}‖ ≤ (λ_{s+1}/λ_s)^k ‖X‖; Davis–Kahan is not needed in the symmetric case.",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -17022,7 +17743,7 @@
    ],
    "area": "krylov-bases",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$Q = [q_0,\\dots,q_{q-1}]$ is a graded Krylov basis for $(A,b)$ if it has orthonormal columns and $\\operatorname{span}(q_0,\\dots,q_i) = \\mathcal{K}_{i+1}(A,b)$ for every $i$. For $q \\le \\operatorname{grade}(A,b)$ it exists and is unique up to the sign of each column; $Q^\\top A Q$ is unreduced upper Hessenberg, and a Jacobi matrix (symmetric tridiagonal with positive-or-negative nonzero off-diagonal) when $A$ is symmetric. $Q_{q}$ is the leading block of $Q_{q+1}$ and $T_q$ the leading principal submatrix of $T_{q+1}$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$, $b \\in \\mathbb{R}^n$, $q \\le \\operatorname{grade}(A,b)$"
@@ -17058,9 +17779,53 @@
     "arnoldi"
    ],
    "notes": "Design: docs/KRYLOV_DEFINITIONS.md §3.11. The predicate, not the process, is what Jacobi-matrix theorems take; `arnoldiBasis` (positive subdiagonal) is one representative, and NLAlib's current `lanczosMatrix` with `lanczos_apply_eq_zero_of_add_one_lt` is the existing proof of the Hessenberg/tridiagonal part. Consumers: lanczos-recurrence, jacobi-matrix-identities, lanczos-orthogonal-polynomials, kaniel-paige-saad, finite-precision Lanczos statements. API (docs/KRYLOV_DEFINITIONS.md §3.12): bundle as `ArnoldiDecomp A b q` = {Q, graded} with `H := Qᵀ A Q` a definition, `LanczosDecomp` the symmetric abbreviation with `T := H`, `restrict` for nesting, `exists_sign` for uniqueness, and `arnoldiDecomp` (today's `lanczosMatrix`) as the canonical witness.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGradedKrylovBasis",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.H_restrict",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.exists_sign",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.T_apply_eq_zero_of_one_lt_dist",
+     "module": "NLAlib.Krylov.Arnoldi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isGradedKrylovBasis_iff",
+     "module": "NLAlib.Krylov.ArnoldiProcess",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.ArnoldiDecomp",
+    "NLAlib.ArnoldiDecomp.H",
+    "NLAlib.ArnoldiDecomp.Q",
+    "NLAlib.ArnoldiDecomp.restrict",
+    "NLAlib.IsGradedKrylovBasis",
+    "NLAlib.LanczosDecomp",
+    "NLAlib.LanczosDecomp.T",
+    "NLAlib.krylovGrade"
+   ],
    "variants": []
   },
   {
@@ -17073,7 +17838,7 @@
    ],
    "area": "krylov-bases",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For symmetric $A$ and a graded basis with $q_j = p_j(A)\\,b$, the $p_j$ are the orthonormal polynomials of the spectral measure $\\mu_b$ ($\\int p_i p_j\\,d\\mu_b = \\delta_{ij}$), $\\det(xI - T_j)$ is the monic orthogonal polynomial of degree $j$, and the entries $\\alpha_j = q_j^\\top A q_j$, $\\beta_{j+1} = \\|\\,(A - \\alpha_j) q_j - \\beta_j q_{j-1}\\|$ are the three-term recurrence coefficients of $\\mu_b$: $T$ is the Jacobi matrix of $\\mu_b$.",
    "hypotheses": [
     "$A$ symmetric, $\\|b\\| = 1$, graded basis $Q$ with $q \\le \\operatorname{grade}(A,b)$"
@@ -17102,10 +17867,45 @@
     "orthogonal-polynomials",
     "spectral-measure"
    ],
-   "notes": "Prove. The bridge between the Krylov module and quadrature theory: Gauss quadrature exactness (`lanczos-gauss-quadrature`) and the SLQ bounds become statements about orthogonal polynomials of μ_b. Consumers: jacobi-matrix-identities, lanczos-quadrature-*-error, spectral density estimation.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Prove. The bridge between the Krylov module and quadrature theory: Gauss quadrature exactness (`lanczos-gauss-quadrature`) and the SLQ bounds become statements about orthogonal polynomials of μ_b. Consumers: jacobi-matrix-identities, lanczos-quadrature-*-error, spectral density estimation. Round 8: orthonormality, the polynomial three-term recurrence and det(x − T_j) = β₁⋯β_j p_j(x)·p₀ are proved (the atlas form assumes ‖b‖ = 1, i.e. p₀ = 1).",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.integral_poly_mul_poly",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.X_mul_poly",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.integral_eval_charpoly_mul_eq_zero",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.charpoly_restrict_T_mul_poly_zero",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.ArnoldiDecomp.restrict",
+    "NLAlib.LanczosDecomp",
+    "NLAlib.LanczosDecomp.T",
+    "NLAlib.LanczosDecomp.alpha",
+    "NLAlib.LanczosDecomp.beta",
+    "NLAlib.LanczosDecomp.poly",
+    "NLAlib.spectralMeasure"
+   ],
    "variants": []
   },
   {
@@ -17149,10 +17949,367 @@
     "quadrature",
     "jacobi-matrix"
    ],
-   "notes": "Prove in pieces; each identity can be its own declaration under this id. Interlacing is Cauchy interlacing for the leading principal submatrix (`cauchy-interlacing`, proved), which is exactly why the nested (graded) basis is needed: the basis-free interface cannot state T_q ≤ T_{q+1}. Consumers: SLQ error analysis, Ritz value a priori bounds, spectral density / moment problems, Lanczos-based quadrature for log-det.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Prove in pieces; each identity can be its own declaration under this id. Interlacing is Cauchy interlacing for the leading principal submatrix (`cauchy-interlacing`, proved), which is exactly why the nested (graded) basis is needed: the basis-free interface cannot state T_q ≤ T_{q+1}. Consumers: SLQ error analysis, Ritz value a priori bounds, spectral density / moment problems, Lanczos-based quadrature for log-det. Round 8: Christoffel–Darboux, Golub–Welsch (nodes/weights from the eigendecomposition of T), the (0,0) continued fraction for real x above the spectrum, and non-strict interlacing of T_q in T_{q+1} are proved; strict interlacing and complex x are open.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.sub_mul_sum_eval_poly_mul",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.eigenvalues₀_restrict_T_le",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.eigenvalues₀_le_eigenvalues₀_restrict_T",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.cfc_T_apply_zero_zero",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.dotProduct_cfc_T_mulVec_eq_sum",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq_sum",
+     "module": "NLAlib.Krylov.Jacobi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LanczosDecomp.inv_smul_one_sub_T_apply_zero_zero",
+     "module": "NLAlib.Krylov.JacobiFraction",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.ArnoldiDecomp.Q",
+    "NLAlib.ArnoldiDecomp.restrict",
+    "NLAlib.LanczosDecomp",
+    "NLAlib.LanczosDecomp.T",
+    "NLAlib.LanczosDecomp.alpha",
+    "NLAlib.LanczosDecomp.beta",
+    "NLAlib.LanczosDecomp.poly",
+    "NLAlib.jacobiFraction"
+   ],
+   "variants": []
+  },
+  {
+   "id": "affine-krylov-minimiser",
+   "title": "A Krylov minimiser beats every residual polynomial (class theorem)",
+   "aliases": [
+    "Krylov optimality principle",
+    "polynomial bound for minimal-residual and minimal-error methods"
+   ],
+   "area": "krylov-linear-systems",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "If $x$ minimises any $E$ over $x_0 + \\mathcal{K}_q(A, r_0)$ then for every $p$ with $\\deg p \\le q$, $p(0)=1$: $E(x) \\le E(x^\\star + p(A)(x_0 - x^\\star))$ (and the residual form $F(c - Ax) \\le F(p(A) r_0)$). For symmetric $A$ and a weight $g \\ge 0$ on the spectrum, $\\|x - x^\\star\\|_{g(A)}^2 \\le \\max_i |p(\\lambda_i)|^2\\, \\|x_0 - x^\\star\\|_{g(A)}^2$: CG is $g = X$, MINRES is $g = X^2$, error-minimising methods $g = 1$.",
+   "hypotheses": [
+    "$x - x_0 \\in \\mathcal{K}_q(A, r_0)$ and $E(x) \\le E(x_0 + y)$ for all $y \\in \\mathcal{K}_q$",
+    "$p$ with $\\deg p \\le q$, $p(0) = 1$; for the weighted form $A$ symmetric, $g \\ge 0$ on $\\sigma(A)$, $|p| \\le M$ on $\\sigma(A)$"
+   ],
+   "conclusion": "$E(x) \\le E(x^\\star + p(A)(x_0 - x^\\star))$; $\\|x - x^\\star\\|_{g(A)}^2 \\le M^2 \\|x_0 - x^\\star\\|_{g(A)}^2$",
+   "sources": [
+    {
+     "source": "saad11",
+     "label": "Thm 6.29 (proof)"
+    },
+    {
+     "source": "greenbaum97",
+     "label": "§3.1–3.2"
+    }
+   ],
+   "depends_on": [
+    "residual-polynomial",
+    "polynomial-spectral-bound",
+    "krylov-subspace"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "krylov",
+    "class-theorem"
+   ],
+   "notes": "Design: KRYLOV_DEFINITIONS §3.2. Proved once, instantiated by cg-convergence, minres-bound, gmres-def, preconditioned-cg, cgls-lsqr-bound.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsAffineMinimiser.le_aeval",
+     "module": "NLAlib.Krylov.Minimiser",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsAffineMinimiser.le_aeval_residual",
+     "module": "NLAlib.Krylov.Minimiser",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_sub_le_of_isAffineMinimiser",
+     "module": "NLAlib.Krylov.Minimiser",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsAffineMinimiser",
+    "NLAlib.krylovSpace",
+    "NLAlib.quadForm"
+   ],
+   "variants": []
+  },
+  {
+   "id": "cg-finite-termination",
+   "title": "CG terminates in at most grade(A, r₀) ≤ n steps",
+   "aliases": [
+    "finite termination of CG",
+    "CG is a direct method in exact arithmetic"
+   ],
+   "area": "krylov-linear-systems",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "For SPD $A$ and $A x^\\star = c$, every CG iterate of index $q \\ge \\operatorname{grade}(A, r_0)$ equals $x^\\star$; in particular $q \\ge n$ suffices.",
+   "hypotheses": [
+    "$A$ positive definite, $A x^\\star = c$, $q \\ge \\operatorname{grade}(A, c - A x_0)$"
+   ],
+   "conclusion": "$x_q = x^\\star$",
+   "sources": [
+    {
+     "source": "tb97",
+     "label": "Thm 38.1"
+    },
+    {
+     "source": "saad11",
+     "label": "§6.7"
+    }
+   ],
+   "depends_on": [
+    "krylov-grade",
+    "cg-convergence"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "next",
+   "tags": [
+    "krylov",
+    "cg"
+   ],
+   "notes": "Exact-arithmetic statement; the finite-precision behaviour is a separate (future) entry.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eq_of_isCGIterate_of_krylovGrade_le",
+     "module": "NLAlib.Krylov.CG",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsCGIterate",
+    "NLAlib.krylovGrade"
+   ],
+   "variants": []
+  },
+  {
+   "id": "polynomial-method-def",
+   "title": "Polynomial (fixed-polynomial) iterative method",
+   "aliases": [
+    "polynomial iteration",
+    "semi-iterative method",
+    "iteration polynomial"
+   ],
+   "area": "krylov-linear-systems",
+   "kind": "definition",
+   "status": "proved",
+   "informal": "A polynomial method is $x = x_0 + s(A)\\, r_0$ for an iteration polynomial $s$; its residual polynomial is $p = 1 - X s$, the error is $p(A)(x_0 - x^\\star)$ and the residual $p(A) r_0$, and $x - x_0 \\in \\mathcal{K}_{\\deg s + 1}$. Richardson and Chebyshev iteration are instances with explicit $s$.",
+   "hypotheses": [],
+   "conclusion": "$x - x^\\star = p(A)(x_0 - x^\\star)$, $c - Ax = p(A) r_0$, $\\|x - x^\\star\\|_{g(A)}^2 \\le \\max_{\\sigma(A)} |p|^2\\, \\|x_0 - x^\\star\\|_{g(A)}^2$",
+   "sources": [
+    {
+     "source": "saad11",
+     "label": "§12.1"
+    }
+   ],
+   "depends_on": [
+    "krylov-subspace",
+    "residual-polynomial"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "next",
+   "tags": [
+    "definition",
+    "krylov"
+   ],
+   "notes": "Design: KRYLOV_DEFINITIONS §3.6 (`polyIterate`). Consumers: richardson-iteration, chebyshev-iteration, polynomial-filter-range-finder.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.polyIterate",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sub_mulVec_polyIterate",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.polyIterate_sub",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.polyIterate"
+   ],
+   "variants": []
+  },
+  {
+   "id": "lanczos-fa-interpolation",
+   "title": "Lanczos-FA interpolates f at the Ritz values",
+   "aliases": [
+    "Krylov approximation of f(A)b as interpolation",
+    "Saad 1992 Thm 3.3"
+   ],
+   "area": "krylov-matrix-functions",
+   "kind": "identity",
+   "status": "proved",
+   "informal": "For symmetric $A$ and $Q$ with orthonormal columns, at most $q$ of them, with $\\mathcal{K}_q(A,b) \\subseteq \\operatorname{range} Q$: $Q f(Q^\\top A Q) Q^\\top b = p(A)\\, b$ where $p$ is the polynomial interpolant of $f$ at the eigenvalues of $Q^\\top A Q$ (the Ritz values). Consequently the approximant depends only on $\\operatorname{range} Q$.",
+   "hypotheses": [
+    "$A$ symmetric, $Q^\\top Q = I$, $\\mathcal{K}_q(A,b) \\le \\operatorname{range} Q$, $\\#\\text{cols}(Q) \\le q$"
+   ],
+   "conclusion": "$Q f(T) Q^\\top b = p(A) b$ with $p$ interpolating $f$ on $\\sigma(T)$",
+   "sources": [
+    {
+     "source": "saad92",
+     "label": "Thm 3.3"
+    },
+    {
+     "source": "saad11",
+     "label": "§6.6"
+    }
+   ],
+   "depends_on": [
+    "krylov-polynomial-exactness",
+    "krylov-subspace"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Lagrange.interpolate",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "lanczos",
+    "matrix-functions"
+   ],
+   "notes": "Design: KRYLOV_DEFINITIONS §3.9 face 2. Lagrange rather than Hermite interpolation (the Lagrange form holds whenever f and p agree on the spectrum of T; distinct Ritz values when q ≤ grade).",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovFunApprox_eq_aeval_of_forall_eval_eq",
+     "module": "NLAlib.Krylov.FunctionApprox",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.krylovFunApprox_eq_aeval_interpolate",
+     "module": "NLAlib.Krylov.FunctionApprox",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.krylovFunApprox",
+    "NLAlib.krylovSpace"
+   ],
+   "variants": []
+  },
+  {
+   "id": "orthonormal-basis-matrix",
+   "title": "Every subspace has an orthonormal basis matrix",
+   "aliases": [
+    "orthonormal basis as a matrix",
+    "Q with range S"
+   ],
+   "area": "matrix-projections",
+   "kind": "definition",
+   "status": "proved",
+   "informal": "For a subspace $S \\le \\mathbb{R}^m$ there is $Q \\in \\mathbb{R}^{m \\times \\dim S}$ with $Q^\\top Q = I$ and $\\operatorname{range} Q = S$; used to give every Krylov or block Krylov space an orthonormal basis with no hypothesis.",
+   "hypotheses": [],
+   "conclusion": "$Q^\\top Q = I$, $\\operatorname{range} Q = S$",
+   "sources": [],
+   "depends_on": [
+    "orthonormal-columns-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "stdOrthonormalBasis",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "next",
+   "tags": [
+    "definition",
+    "projections"
+   ],
+   "notes": "Design: KRYLOV_DEFINITIONS §3.1 (`orthonormalBasisMatrix S`). Consumers: gmres-def (existence), block-krylov-subspace, subspace-iteration-def.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.orthonormalBasisMatrix",
+     "module": "NLAlib.Matrix.Projections",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasOrthonormalCols_orthonormalBasisMatrix",
+     "module": "NLAlib.Matrix.Projections",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.range_orthonormalBasisMatrix",
+     "module": "NLAlib.Matrix.Projections",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.orthonormalBasisMatrix"
+   ],
    "variants": []
   }
  ],

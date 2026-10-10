@@ -1,0 +1,11 @@
+{
+  "NLAlib.krylovVectors": "NLAlib.krylovSeq",
+  "NLAlib.lanczosBasis": "NLAlib.arnoldiBasis",
+  "NLAlib.lanczosMatrix": "NLAlib.arnoldiMatrix",
+  "NLAlib.range_lanczosMatrix": "NLAlib.range_arnoldiMatrix",
+  "NLAlib.hasOrthonormalCols_lanczosMatrix": "NLAlib.hasOrthonormalCols_arnoldiMatrix",
+  "NLAlib.lanczos_apply_eq_zero_of_add_one_lt": "NLAlib.arnoldiHessenberg_apply_eq_zero_of_add_one_lt",
+  "NLAlib.lanczos_apply_eq_zero_of_add_one_lt'": "NLAlib.arnoldiHessenberg_apply_eq_zero_of_add_one_lt_of_isSymm",
+  "NLAlib.transpose_lanczosMatrix_mulVec_apply_eq_zero": "NLAlib.transpose_arnoldiMatrix_mulVec_apply_eq_zero",
+  "NLAlib.dotProduct_aeval_mulVec_eq_lanczos": "NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq"
+}

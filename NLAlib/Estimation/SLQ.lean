@@ -11,7 +11,7 @@ basis of (a space containing) the Krylov space `K_q(A, g_k)` (`NLAlib.slqEstimat
 
 * `NLAlib.abs_slqEstimate_sub_hutchinsonEstimate_le`: deterministic quadrature error,
   `|SLQ − tr_m f(A)| ≤ 2E · (1/m) ∑ₖ ‖g_k‖²` when `|f − p| ≤ E` on the spectral interval for some
-  `p` of degree `≤ 2q − 1`.
+  `p` of degree `< 2q` (`…_of_degree_lt_two_mul`; the `natDegree ≤ 2q − 1` form is kept).
 * `NLAlib.abs_slqEstimate_inv_sub_hutchinsonEstimate_le`: the same for `f(x) = 1/x` with the
   proved Chebyshev rate `E = (2/a)((√b − √a)/(√b + √a))^{2q}` on `[a, b]`.
 * `NLAlib.measure_le_abs_slqEstimate_inv_sub_trace_le_of_standardGaussian`: with Gaussian test
@@ -52,16 +52,16 @@ theorem hutchinsonEstimate_one [DecidableEq n] (G : n → κ → ℝ) :
   simp [hutchinsonEstimate, quadForm]
 
 /-- **SLQ quadrature error, deterministic.** If `A` is symmetric with spectrum in `[a, c]`,
-each `Q_k` has orthonormal columns with `K_q(A, g_k) ⊆ range Q_k` (`q ≥ 1`), and
-`|f − p| ≤ E` on `[a, c]` for a polynomial `p` of degree at most `2q − 1`, then
-`|SLQ − tr_m f(A)| ≤ 2E · tr_m(I)`, where `tr_m` is the Hutchinson estimator with the same
-test vectors and `tr_m(I) = (1/m) ∑ₖ ‖g_k‖²`.
+each `Q_k` has orthonormal columns with `K_q(A, g_k) ⊆ range Q_k`, and `|f − p| ≤ E` on `[a, c]`
+for a polynomial `p` of degree `< 2q`, then `|SLQ − tr_m f(A)| ≤ 2E · tr_m(I)`, where `tr_m` is
+the Hutchinson estimator with the same test vectors and `tr_m(I) = (1/m) ∑ₖ ‖g_k‖²`.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], proof of Thm 4.1 (Lemma 4.2). Atlas: `slq-error`;
 uses `lanczos-gauss-quadrature`. -/
-theorem abs_slqEstimate_sub_hutchinsonEstimate_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    {Q : κ → Matrix n r ℝ} (hQ : ∀ k, HasOrthonormalCols (Q k)) (G : n → κ → ℝ) {q : ℕ}
-    (hq : 0 < q) (hK : ∀ k, krylovSpace A (fun i => G i k) q ≤ LinearMap.range (Q k).mulVecLin)
-    {f : ℝ → ℝ} {p : Polynomial ℝ} (hp : p.natDegree ≤ 2 * q - 1) {a c E : ℝ}
+theorem abs_slqEstimate_sub_hutchinsonEstimate_le_of_degree_lt_two_mul {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) {Q : κ → Matrix n r ℝ} (hQ : ∀ k, HasOrthonormalCols (Q k))
+    (G : n → κ → ℝ) {q : ℕ}
+    (hK : ∀ k, krylovSpace A (fun i => G i k) q ≤ LinearMap.range (Q k).mulVecLin)
+    {f : ℝ → ℝ} {p : Polynomial ℝ} (hp : p.degree < 2 * q) {a c E : ℝ}
     (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c)
     (hfp : ∀ x ∈ Set.Icc a c, |f x - p.eval x| ≤ E) :
     |slqEstimate A f Q G - hutchinsonEstimate (cfc f A) G| ≤
@@ -72,7 +72,26 @@ theorem abs_slqEstimate_sub_hutchinsonEstimate_le {A : Matrix n n ℝ} (hA : A.I
   refine div_le_div_of_nonneg_right ((Finset.abs_sum_le_sum_abs _ _).trans
     (Finset.sum_le_sum fun k _ => ?_)) (Nat.cast_nonneg _)
   rw [abs_sub_comm]
-  exact abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le hA (hQ k) _ hq (hK k) hp hspec hfp
+  exact abs_dotProduct_cfc_mulVec_sub_le_of_degree_lt_two_mul hA (hQ k) _ (hK k) hp hspec hfp
+
+/-- **SLQ quadrature error, deterministic** (`natDegree` form, `q ≥ 1`): the form of
+`abs_slqEstimate_sub_hutchinsonEstimate_le_of_degree_lt_two_mul` with `natDegree p ≤ 2q − 1`.
+If `A` is symmetric with spectrum in `[a, c]`, each `Q_k` has orthonormal columns with
+`K_q(A, g_k) ⊆ range Q_k`, and `|f − p| ≤ E` on `[a, c]`, then
+`|SLQ − tr_m f(A)| ≤ 2E · tr_m(I)`.
+Source: Ubaru–Chen–Saad (2017) [`ucs17`], proof of Thm 4.1 (Lemma 4.2). Atlas: `slq-error`;
+uses `lanczos-gauss-quadrature`. -/
+theorem abs_slqEstimate_sub_hutchinsonEstimate_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    {Q : κ → Matrix n r ℝ} (hQ : ∀ k, HasOrthonormalCols (Q k)) (G : n → κ → ℝ) {q : ℕ}
+    (hq : 0 < q) (hK : ∀ k, krylovSpace A (fun i => G i k) q ≤ LinearMap.range (Q k).mulVecLin)
+    {f : ℝ → ℝ} {p : Polynomial ℝ} (hp : p.natDegree ≤ 2 * q - 1) {a c E : ℝ}
+    (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c)
+    (hfp : ∀ x ∈ Set.Icc a c, |f x - p.eval x| ≤ E) :
+    |slqEstimate A f Q G - hutchinsonEstimate (cfc f A) G| ≤
+      2 * E * hutchinsonEstimate (1 : Matrix n n ℝ) G := by
+  refine abs_slqEstimate_sub_hutchinsonEstimate_le_of_degree_lt_two_mul hA hQ G hK ?_ hspec hfp
+  refine (Polynomial.degree_le_natDegree).trans_lt ?_
+  exact_mod_cast (show p.natDegree < 2 * q by omega)
 
 /-- **SLQ quadrature error for `f(x) = 1/x`.** If `A` is symmetric with spectrum in `[a, b]`,
 `0 < a < b`, each `Q_k` has orthonormal columns with `K_q(A, g_k) ⊆ range Q_k` (`q ≥ 1`), then
@@ -122,7 +141,8 @@ theorem measure_le_abs_slqEstimate_inv_sub_trace_le_of_standardGaussian [Nonempt
     (hK : ∀ ω k, krylovSpace A (fun i => G ω i k) q ≤ LinearMap.range (Q ω k).mulVecLin)
     {t s : ℝ} (ht : 0 ≤ t) (hs : 0 ≤ s) :
     (μ {ω | t + 2 * ((2 / a) * ((√b - √a) / (√b + √a)) ^ (2 * q)) * (Fintype.card n + s) ≤
-        |slqEstimate A (fun x : ℝ => 1 / x) (Q ω) (G ω) - (cfc (fun x : ℝ => 1 / x) A).trace|}).toReal ≤
+        |slqEstimate A (fun x : ℝ => 1 / x) (Q ω) (G ω) -
+          (cfc (fun x : ℝ => 1 / x) A).trace|}).toReal ≤
       2 * exp (-(1 / (256 * exp 1 ^ 2)) *
           min (Fintype.card κ * t ^ 2 / frobNorm (cfc (fun x : ℝ => 1 / x) A) ^ 2)
             (Fintype.card κ * t / specNorm (cfc (fun x : ℝ => 1 / x) A))) +

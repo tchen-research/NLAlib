@@ -12,6 +12,7 @@ Facts about `NLAlib.krylovSpace A b q = span {b, A b, …, A^(q−1) b}`:
 
 * `mem_krylovSpace_iff_degree`, `mem_krylovSpace_iff`: `K_q(A,b) = {p(A) b : deg p < q}`;
 * `pow_mulVec_mem_krylovSpace`, `self_mem_krylovSpace_succ`: the generators lie in it;
+* `krylovSpace_zero`, `krylovSpace_succ`: `K_0 = 0` and `K_{q+1} = K_q ⊔ span {A^q b}`;
 * `krylovSpace_mono`: monotonicity in `q`;
 * `mulVec_mem_krylovSpace_succ`: `A K_q ⊆ K_{q+1}`;
 * `finrank_krylovSpace_le`: `dim K_q ≤ q`.
@@ -78,6 +79,27 @@ theorem mem_krylovSpace_iff (A : Matrix n n ℝ) (b : n → ℝ) {q : ℕ} (hq :
     simp only [Polynomial.degree_zero, Polynomial.natDegree_zero, hq, iff_true]
     exact WithBot.bot_lt_coe q
   · exact (Polynomial.natDegree_lt_iff_degree_lt hp0).symm
+
+/-- The zeroth Krylov space is trivial: `K_0(A,b) = 0`. Atlas: `krylov-subspace`. -/
+@[simp] theorem krylovSpace_zero (A : Matrix n n ℝ) (b : n → ℝ) : krylovSpace A b 0 = ⊥ := by
+  rw [krylovSpace, Set.range_eq_empty, Submodule.span_empty]
+
+/-- One Krylov step adds one generator: `K_{q+1}(A,b) = K_q(A,b) ⊔ span {A^q b}`.
+Source: [`gm10`], Ch. 4. Atlas: `krylov-subspace`. -/
+theorem krylovSpace_succ (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
+    krylovSpace A b (q + 1) = krylovSpace A b q ⊔ Submodule.span ℝ {(A ^ q) *ᵥ b} := by
+  rw [krylovSpace, krylovSpace, ← Submodule.span_union]
+  congr 1
+  ext x
+  simp only [Set.mem_range, Set.mem_union, Set.mem_singleton_iff]
+  constructor
+  · rintro ⟨i, rfl⟩
+    rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+    · exact Or.inl ⟨j, rfl⟩
+    · exact Or.inr rfl
+  · rintro (⟨i, rfl⟩ | rfl)
+    · exact ⟨i.castSucc, rfl⟩
+    · exact ⟨Fin.last q, rfl⟩
 
 /-- Krylov spaces are nested: `q ≤ q' → K_q(A,b) ≤ K_{q'}(A,b)`. Source: [`gm10`], Ch. 4.
 Atlas: `krylov-subspace`.

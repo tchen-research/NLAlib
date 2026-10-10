@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Mul
 import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.LinearAlgebra.Matrix.Hermitian
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import NLAlib.Matrix.Norms
 
@@ -27,6 +28,13 @@ import NLAlib.Matrix.Norms
   rows and extends to an orthogonal matrix (`exists_orthogonal_completion`) or, with the
   complementary block, to `QQᵀ + Q⊥Q⊥ᵀ = I` (`exists_orthonormal_complement`); for such a
   completion `QᵀQ⊥ = 0` and `(I − QQᵀ)A = Q⊥Q⊥ᵀ(I − QQᵀ)A`.
+* Vectors and compressions: `QQᵀx = x` on `range Q`, `‖Qᵀx‖² ≤ ‖x‖²` (equality on `range Q`),
+  `Q'Q'ᵀQ = Q` under range inclusion, `QQᵀ = Q'Q'ᵀ` for equal ranges, and symmetry of the
+  compression `QᵀAQ` of a symmetric `A` (`isSymm_transpose_mul_mul`,
+  `isHermitian_transpose_mul_mul`).
+* `orthonormalBasisMatrix S`: a canonical matrix with orthonormal columns and range `S`, for any
+  subspace `S ⊆ ℝᵐ` (columns indexed by `Fin (finrank S)`), so every Krylov space has an
+  orthonormal basis with no hypothesis.
 
 Proofs ported from the LRA project (`LRA/Basic.lean`, `LRA/Deterministic/RangeFinder.lean`,
 Chen–Persson formalization), namespace renamed and statements generalised from `Fin` to
@@ -373,5 +381,154 @@ theorem exists_orthonormal_complement {k q : ℕ} (Q : Matrix (Fin k) (Fin q) �
     simp only [Matrix.transpose_apply]
     rw [← hWQ a j, ← hWQ b j]
     rfl
+
+/-! ### Projected matrices and vectors in a range -/
+
+omit [Fintype m] in
+/-- If `Q` has orthonormal columns and `x ∈ range Q`, then `Q Qᵀ x = x`: the projector `QQᵀ`
+fixes its range. Atlas `projection-facts` (moved from `NLAlib.Krylov.GaussQuadrature`). -/
+theorem mulVec_transpose_mulVec_of_mem_range [Fintype m] [DecidableEq q] {Q : Matrix m q ℝ}
+    (hQ : HasOrthonormalCols Q) {x : m → ℝ} (hx : x ∈ LinearMap.range Q.mulVecLin) :
+    Q *ᵥ (Qᵀ *ᵥ x) = x := by
+  obtain ⟨y, rfl⟩ := hx
+  have h : Qᵀ *ᵥ (Q *ᵥ y) = y := by
+    rw [Matrix.mulVec_mulVec, show Qᵀ * Q = 1 from hQ, Matrix.one_mulVec]
+  simp only [Matrix.mulVecLin_apply, h]
+
+omit [Fintype q] in
+/-- The compression `Qᵀ A Q` of a symmetric `A` is symmetric (any `Q`).
+Atlas `projection-facts` (moved from `NLAlib.Krylov.GaussQuadrature`). -/
+theorem isSymm_transpose_mul_mul {A : Matrix m m ℝ} (hA : A.IsSymm) (Q : Matrix m q ℝ) :
+    (Qᵀ * A * Q).IsSymm := by
+  rw [Matrix.IsSymm, Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose,
+    hA.eq, Matrix.mul_assoc]
+
+omit [Fintype q] in
+/-- The compression `Qᵀ A Q` of a real symmetric (Hermitian) `A` is Hermitian (any `Q`); the
+`IsHermitian` form of `isSymm_transpose_mul_mul`, which is what `hB.eigenvalues` and `cfc` need.
+Atlas `projection-facts`. -/
+theorem isHermitian_transpose_mul_mul {A : Matrix m m ℝ} (hA : A.IsHermitian)
+    (Q : Matrix m q ℝ) : (Qᵀ * A * Q).IsHermitian := by
+  have hAs : A.IsSymm := by
+    rw [Matrix.IsSymm, ← Matrix.conjTranspose_eq_transpose_of_trivial]; exact hA
+  rw [Matrix.IsHermitian, Matrix.conjTranspose_eq_transpose_of_trivial]
+  exact isSymm_transpose_mul_mul hAs Q
+
+/-- `Qᵀ` is a contraction for `Q` with orthonormal columns: `‖Qᵀ x‖² ≤ ‖x‖²` (Bessel).
+Atlas `projection-facts`. -/
+theorem transpose_mulVec_dotProduct_self_le [DecidableEq q] {Q : Matrix m q ℝ}
+    (hQ : HasOrthonormalCols Q) (x : m → ℝ) : (Qᵀ *ᵥ x) ⬝ᵥ (Qᵀ *ᵥ x) ≤ x ⬝ᵥ x := by
+  set p := Q *ᵥ (Qᵀ *ᵥ x)
+  have hpp : p ⬝ᵥ p = (Qᵀ *ᵥ x) ⬝ᵥ (Qᵀ *ᵥ x) :=
+    mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ _
+  have hcross : p ⬝ᵥ (x - p) = 0 := by
+    have h1 : Qᵀ *ᵥ p = Qᵀ *ᵥ x := by
+      simp only [p]
+      rw [Matrix.mulVec_mulVec, show Qᵀ * Q = 1 from hQ, Matrix.one_mulVec]
+    rw [show p ⬝ᵥ (x - p) = (Qᵀ *ᵥ x) ⬝ᵥ (Qᵀ *ᵥ (x - p)) by
+      rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose], Matrix.mulVec_sub, h1, sub_self,
+      dotProduct_zero]
+  have hx : x ⬝ᵥ x = p ⬝ᵥ p + (x - p) ⬝ᵥ (x - p) := by
+    have : x = p + (x - p) := by abel
+    conv_lhs => rw [this]
+    rw [add_dotProduct, dotProduct_add, dotProduct_add, hcross, dotProduct_comm (x - p) p,
+      hcross]
+    ring
+  rw [hx, hpp]
+  have h0 : 0 ≤ (x - p) ⬝ᵥ (x - p) := Finset.sum_nonneg fun i _ => mul_self_nonneg _
+  linarith
+
+omit [Fintype m] in
+/-- For `x ∈ range Q` and `Q` with orthonormal columns, `‖Qᵀ x‖² = ‖x‖²`.
+Atlas `projection-facts`. -/
+theorem transpose_mulVec_dotProduct_self_of_mem_range [Fintype m] [DecidableEq q]
+    {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q) {x : m → ℝ}
+    (hx : x ∈ LinearMap.range Q.mulVecLin) : (Qᵀ *ᵥ x) ⬝ᵥ (Qᵀ *ᵥ x) = x ⬝ᵥ x := by
+  rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose,
+    mulVec_transpose_mulVec_of_mem_range hQ hx]
+
+omit [Fintype m] in
+/-- Range inclusion as a matrix identity: if `range Q ⊆ range Q'` and `Q'` has orthonormal
+columns, then `Q' Q'ᵀ Q = Q`. Atlas `projection-facts`. -/
+theorem mul_transpose_mul_eq_of_range_le [Fintype m] [DecidableEq q] {q' : Type*} [Fintype q']
+    {Q : Matrix m q' ℝ} {Q' : Matrix m q ℝ} (hQ' : HasOrthonormalCols Q')
+    (h : LinearMap.range Q.mulVecLin ≤ LinearMap.range Q'.mulVecLin) : Q' * (Q'ᵀ * Q) = Q := by
+  rw [Matrix.ext_iff_mulVec]
+  intro v
+  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
+  exact mulVec_transpose_mulVec_of_mem_range hQ' (h ⟨v, rfl⟩)
+
+omit [Fintype m] in
+/-- The orthogonal projector depends only on the range: if `Q`, `Q'` have orthonormal columns
+and the same range, then `QQᵀ = Q'Q'ᵀ`. Atlas `projection-facts`. -/
+theorem mul_transpose_eq_of_range_eq [Fintype m] [DecidableEq q] {q' : Type*} [Fintype q']
+    [DecidableEq q'] {Q : Matrix m q ℝ} {Q' : Matrix m q' ℝ} (hQ : HasOrthonormalCols Q)
+    (hQ' : HasOrthonormalCols Q')
+    (h : LinearMap.range Q.mulVecLin = LinearMap.range Q'.mulVecLin) : Q * Qᵀ = Q' * Q'ᵀ := by
+  have h1 : Q' * (Q'ᵀ * Q) = Q := mul_transpose_mul_eq_of_range_le hQ' h.le
+  have h2 : Q * (Qᵀ * Q') = Q' := mul_transpose_mul_eq_of_range_le hQ h.ge
+  have e1 : Q * Qᵀ = Q' * Q'ᵀ * (Q * Qᵀ) := by
+    rw [← Matrix.mul_assoc, Matrix.mul_assoc Q', h1]
+  calc Q * Qᵀ = (Q * Qᵀ)ᵀ := (mul_transpose_symm Q).symm
+    _ = (Q' * Q'ᵀ * (Q * Qᵀ))ᵀ := by rw [← e1]
+    _ = Q * (Qᵀ * Q') * Q'ᵀ := by
+      simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
+    _ = Q' * Q'ᵀ := by rw [h2]
+
+/-! ### An orthonormal basis matrix for any subspace -/
+
+omit [Fintype m] in
+/-- `S` transported to `EuclideanSpace` (internal). -/
+private def toEuclideanSubmodule (S : Submodule ℝ (m → ℝ)) :
+    Submodule ℝ (EuclideanSpace ℝ m) :=
+  S.map (WithLp.linearEquiv 2 ℝ (m → ℝ)).symm.toLinearMap
+
+omit [Fintype m] in
+private lemma finrank_toEuclideanSubmodule (S : Submodule ℝ (m → ℝ)) :
+    Module.finrank ℝ (toEuclideanSubmodule S) = Module.finrank ℝ S :=
+  LinearEquiv.finrank_map_eq _ _
+
+/-- Mathlib's `stdOrthonormalBasis` of `S`, reindexed by `Fin (finrank S)` (internal). -/
+private def euclideanBasis (S : Submodule ℝ (m → ℝ)) :
+    OrthonormalBasis (Fin (Module.finrank ℝ S)) ℝ (toEuclideanSubmodule S) :=
+  (stdOrthonormalBasis ℝ (toEuclideanSubmodule S)).reindex
+    (finCongr (finrank_toEuclideanSubmodule S))
+
+/-- A canonical matrix whose columns form an orthonormal basis of the subspace `S ⊆ ℝᵐ`, indexed
+by `Fin (finrank S)`; built from Mathlib's `stdOrthonormalBasis`. It gives every Krylov space (and
+any other subspace) an orthonormal basis with no hypothesis. Source: `docs/KRYLOV_DEFINITIONS.md`
+§3.1 (basis interface). Atlas `orthonormal-columns-def` (helper).
+atlas: orthonormal-basis-matrix -/
+def orthonormalBasisMatrix (S : Submodule ℝ (m → ℝ)) : Matrix m (Fin (Module.finrank ℝ S)) ℝ :=
+  Matrix.of fun i j => (euclideanBasis S j : EuclideanSpace ℝ m).ofLp i
+
+/-- `orthonormalBasisMatrix S` has orthonormal columns. Atlas `orthonormal-columns-def`
+(helper).
+atlas: orthonormal-basis-matrix -/
+theorem hasOrthonormalCols_orthonormalBasisMatrix (S : Submodule ℝ (m → ℝ)) :
+    HasOrthonormalCols (orthonormalBasisMatrix S) := by
+  ext j k
+  have h := (euclideanBasis S).orthonormal
+  rw [orthonormal_iff_ite] at h
+  have := h j k
+  rw [Submodule.coe_inner, EuclideanSpace.inner_eq_star_dotProduct] at this
+  simp only [Matrix.mul_apply, Matrix.transpose_apply, orthonormalBasisMatrix, Matrix.of_apply,
+    Matrix.one_apply]
+  rw [← this]
+  simp [dotProduct, mul_comm]
+
+/-- The columns of `orthonormalBasisMatrix S` span `S`: `range Q = S`. Atlas
+`orthonormal-columns-def` (helper).
+atlas: orthonormal-basis-matrix -/
+theorem range_orthonormalBasisMatrix (S : Submodule ℝ (m → ℝ)) :
+    LinearMap.range (orthonormalBasisMatrix S).mulVecLin = S := by
+  rw [Matrix.range_mulVecLin]
+  have hcols : Set.range (orthonormalBasisMatrix S).col =
+      ⇑((WithLp.linearEquiv 2 ℝ (m → ℝ)).toLinearMap ∘ₗ (toEuclideanSubmodule S).subtype) ''
+        Set.range (euclideanBasis S) := by
+    rw [← Set.range_comp]; rfl
+  rw [hcols, ← Submodule.map_span, ← (euclideanBasis S).coe_toBasis, Module.Basis.span_eq,
+    Submodule.map_comp, Submodule.map_subtype_top, toEuclideanSubmodule, ← Submodule.map_comp]
+  simp
 
 end NLAlib

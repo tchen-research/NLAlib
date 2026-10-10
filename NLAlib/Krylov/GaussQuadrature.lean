@@ -6,25 +6,33 @@ import NLAlib.Matrix.Projections
 # Gauss (Lanczos) quadrature: exactness and error
 
 Let `A` be symmetric, `b` a vector and `Q` a matrix with orthonormal columns whose range contains
-the Krylov space `K_q(A, b)`, `q ≥ 1`. With the projected matrix `B = Qᵀ A Q` and `c = Qᵀ b`,
-the "Lanczos quadrature" `cᵀ p(B) c` reproduces `bᵀ p(A) b` exactly for every polynomial of degree
-at most `2q − 1`. This is the exactness of the `q`-node Gauss quadrature rule for the spectral
+the Krylov space `K_q(A, b)`. With the projected matrix `B = Qᵀ A Q` and `c = Qᵀ b`, the
+"Lanczos quadrature" `cᵀ p(B) c` reproduces `bᵀ p(A) b` exactly for every polynomial of degree
+`< 2q`. This is the exactness of the `q`-node Gauss quadrature rule for the spectral
 measure `μ_b` (`NLAlib.spectralMeasure`): when `Q` is the Lanczos basis, `B` is the Jacobi matrix
 `T_q` and `c = ‖b‖ e₁`.
 
 ## Main results
 
-* `NLAlib.dotProduct_aeval_mulVec_eq_of_krylovSpace_le`: exactness for `deg p ≤ 2q − 1`.
-* `NLAlib.dotProduct_cfc_mulVec_eq_sum_eigenvalues_le` and friends: Rayleigh bounds and the
-  fact that the eigenvalues of `Qᵀ A Q` stay in any interval containing those of `A`.
-* `NLAlib.abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le`: the quadrature error
+* `NLAlib.dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul`: exactness for `deg p < 2q` (any
+  `q`); `NLAlib.dotProduct_aeval_mulVec_eq_of_krylovSpace_le` is the `natDegree ≤ 2q − 1` form.
+* `NLAlib.mul_dotProduct_le_dotProduct_mulVec_of_eigenvalues`,
+  `NLAlib.dotProduct_mulVec_le_mul_dotProduct_of_eigenvalues` (Rayleigh bounds) and
+  `NLAlib.eigenvalues_transpose_mul_mul_mem_Icc`: the eigenvalues of `Qᵀ A Q` stay in any
+  interval containing those of `A`.
+* `NLAlib.abs_dotProduct_cfc_mulVec_sub_le_of_degree_lt_two_mul`: the quadrature error
   `|bᵀ f(A) b − cᵀ f(B) c| ≤ 2 E ‖b‖²` when `|f − p| ≤ E` on an interval containing the spectrum
-  of `A`, for some `p` of degree at most `2q − 1`.
+  of `A`, for some `p` of degree `< 2q` (`…_of_krylovSpace_le`: the `natDegree ≤ 2q − 1` form).
 
 Source: Golub–Meurant (2010) [`gm10`], Ch. 6–7 (Thm 6.6 exactness of Gauss quadrature);
 Chen–Trogdon–Ubaru (2021) [`ctu21`], Thm 2.1. Atlas: `lanczos-gauss-quadrature`.
 Deviation from the printed statements: any orthonormal `Q` with `K_q(A,b) ⊆ range Q` is
 allowed, so neither tridiagonality nor the Lanczos recurrence is used.
+
+The projection helpers `mulVec_transpose_mulVec_of_mem_range` and `isSymm_transpose_mul_mul`
+live in `NLAlib.Matrix.Projections`. The Rayleigh bounds below need the eigen-expansion of
+`NLAlib.Matrix.PolynomialCalculus` and belong there (moving them into `Projections` would make
+that widely imported file depend on the spectral calculus).
 -/
 
 noncomputable section
@@ -37,30 +45,12 @@ namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 variable {k : Type*} [Fintype k] [DecidableEq k]
 
-omit [DecidableEq n] in
-/-- If `Q` has orthonormal columns and `x ∈ range Q`, then `Q Qᵀ x = x`.
-Atlas: `lanczos-gauss-quadrature` (helper; belongs in `NLAlib.Matrix.Projections`). -/
-theorem mulVec_transpose_mulVec_of_mem_range {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
-    {x : n → ℝ} (hx : x ∈ LinearMap.range Q.mulVecLin) : Q *ᵥ (Qᵀ *ᵥ x) = x := by
-  obtain ⟨y, rfl⟩ := hx
-  have h : Qᵀ *ᵥ (Q *ᵥ y) = y := by
-    rw [Matrix.mulVec_mulVec, show Qᵀ * Q = 1 from hQ, Matrix.one_mulVec]
-  simp only [Matrix.mulVecLin_apply, h]
-
 /-- For a symmetric `M`, `v ⬝ (Mⁱ N) v = (Mⁱ v) ⬝ (N v)`. -/
 private lemma dotProduct_pow_mul_mulVec {M : Matrix n n ℝ} (hM : M.IsSymm)
     (N : Matrix n n ℝ) (i : ℕ) (v : n → ℝ) :
     v ⬝ᵥ ((M ^ i * N) *ᵥ v) = (M ^ i *ᵥ v) ⬝ᵥ (N *ᵥ v) := by
   rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose,
     (hM.pow i).eq]
-
-omit [DecidableEq n] [Fintype k] [DecidableEq k] in
-/-- The projected matrix `Qᵀ A Q` of a symmetric `A` is symmetric.
-Atlas: `lanczos-gauss-quadrature` (helper). -/
-theorem isSymm_transpose_mul_mul {A : Matrix n n ℝ} (hA : A.IsSymm) (Q : Matrix n k ℝ) :
-    (Qᵀ * A * Q).IsSymm := by
-  rw [IsSymm, Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose, hA.eq,
-    Matrix.mul_assoc]
 
 /-- Lifting the projected powers: if `K_q(A,b) ⊆ range Q` then `Q (QᵀAQ)ʲ Qᵀ b = Aʲ b` for
 `j < q`. Atlas: `lanczos-gauss-quadrature` (helper). -/
@@ -80,10 +70,10 @@ theorem mulVec_pow_transpose_mul_mul_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix 
     rw [hstep]
     exact mulVec_transpose_mulVec_of_mem_range hQ (hK (pow_mulVec_mem_krylovSpace A b hj))
 
-/-- Exactness on monomials `X^m`, `m ≤ 2q − 1`. -/
+/-- Exactness on monomials `X^m`, `m < 2q`. -/
 private lemma dotProduct_pow_mulVec_eq {A : Matrix n n ℝ} (hA : A.IsSymm) {Q : Matrix n k ℝ}
-    (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ} (hq : 0 < q)
-    (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {m : ℕ} (hm : m ≤ 2 * q - 1) :
+    (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
+    (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {m : ℕ} (hm : m < 2 * q) :
     b ⬝ᵥ (A ^ m *ᵥ b) = (Qᵀ *ᵥ b) ⬝ᵥ ((Qᵀ * A * Q) ^ m *ᵥ (Qᵀ *ᵥ b)) := by
   set B := Qᵀ * A * Q with hBdef
   set c := Qᵀ *ᵥ b
@@ -114,14 +104,40 @@ private lemma dotProduct_pow_mulVec_eq {A : Matrix n n ℝ} (hA : A.IsSymm) {Q :
   · obtain rfl : m = (q - 1) + 1 + (q - 1) := by omega
     exact hsplit1 _ _ (by omega) (by omega)
 
-/-- **Gauss (Lanczos) quadrature is exact for degree `≤ 2q − 1`.** If `A` is symmetric,
-`Q` has orthonormal columns, `q ≥ 1` and `K_q(A,b) ⊆ range Q`, then for every polynomial `p`
-with `natDegree p ≤ 2q − 1`, `bᵀ p(A) b = (Qᵀb)ᵀ p(QᵀAQ) (Qᵀb)`.
+/-- **Gauss (Lanczos) quadrature is exact for degree `< 2q`.** If `A` is symmetric, `Q` has
+orthonormal columns and `K_q(A,b) ⊆ range Q`, then for every polynomial `p` with
+`deg p < 2q`, `bᵀ p(A) b = (Qᵀb)ᵀ p(QᵀAQ) (Qᵀb)`. Valid for every `q` (at `q = 0`, `p = 0`).
 Source: Golub–Meurant (2010) [`gm10`], Thm 6.6 and §7.1; Chen–Trogdon–Ubaru (2021) [`ctu21`],
-Thm 2.1. Atlas: `lanczos-gauss-quadrature`.
+Thm 2.1.
 Deviation: any orthonormal `Q` whose range contains `K_q(A,b)`; with the Lanczos basis,
-`Qᵀb = ‖b‖e₁` and the right side is `‖b‖² (p(T_q))₁₁`. The hypothesis `0 < q` is needed (at
-`q = 0` the degree bound is `≤ 0` in ℕ and the claim fails unless `b ∈ range Q`).
+`Qᵀb = ‖b‖e₁` and the right side is `‖b‖² (p(T_q))₁₁`.
+atlas: lanczos-gauss-quadrature -/
+theorem dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul {A : Matrix n n ℝ} (hA : A.IsSymm)
+    {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
+    (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {p : Polynomial ℝ}
+    (hp : p.degree < 2 * q) :
+    b ⬝ᵥ (Polynomial.aeval A p *ᵥ b) =
+      (Qᵀ *ᵥ b) ⬝ᵥ (Polynomial.aeval (Qᵀ * A * Q) p *ᵥ (Qᵀ *ᵥ b)) := by
+  rcases eq_or_ne p 0 with rfl | hp0
+  · simp
+  have hnat : p.natDegree < 2 * q := by
+    have := (Polynomial.natDegree_lt_iff_degree_lt hp0).2 (by exact_mod_cast hp)
+    exact this
+  rw [Polynomial.aeval_eq_sum_range, Polynomial.aeval_eq_sum_range, Matrix.sum_mulVec,
+    Matrix.sum_mulVec, dotProduct_sum, dotProduct_sum]
+  refine Finset.sum_congr rfl fun m hm => ?_
+  rw [Matrix.smul_mulVec, Matrix.smul_mulVec, dotProduct_smul, dotProduct_smul,
+    dotProduct_pow_mulVec_eq hA hQ b hK
+      (lt_of_le_of_lt (Nat.lt_succ_iff.1 (Finset.mem_range.1 hm)) hnat)]
+
+/-- **Gauss (Lanczos) quadrature is exact for degree `≤ 2q − 1`** (`natDegree` form, `q ≥ 1`).
+The form of `dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul` with the truncated bound
+`natDegree p ≤ 2q − 1`, kept for existing callers.
+Source: Golub–Meurant (2010) [`gm10`], Thm 6.6 and §7.1; Chen–Trogdon–Ubaru (2021) [`ctu21`],
+Thm 2.1.
+Deviation: any orthonormal `Q` whose range contains `K_q(A,b)`. The hypothesis `0 < q` is
+needed here (at `q = 0` the bound `≤ 0` in ℕ admits constants and the claim fails unless
+`b ∈ range Q`); the degree form needs no such hypothesis.
 atlas: lanczos-gauss-quadrature -/
 theorem dotProduct_aeval_mulVec_eq_of_krylovSpace_le {A : Matrix n n ℝ} (hA : A.IsSymm)
     {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ} (hq : 0 < q)
@@ -129,19 +145,16 @@ theorem dotProduct_aeval_mulVec_eq_of_krylovSpace_le {A : Matrix n n ℝ} (hA : 
     (hp : p.natDegree ≤ 2 * q - 1) :
     b ⬝ᵥ (Polynomial.aeval A p *ᵥ b) =
       (Qᵀ *ᵥ b) ⬝ᵥ (Polynomial.aeval (Qᵀ * A * Q) p *ᵥ (Qᵀ *ᵥ b)) := by
-  rw [Polynomial.aeval_eq_sum_range, Polynomial.aeval_eq_sum_range, Matrix.sum_mulVec,
-    Matrix.sum_mulVec, dotProduct_sum, dotProduct_sum]
-  refine Finset.sum_congr rfl fun m hm => ?_
-  rw [Matrix.smul_mulVec, Matrix.smul_mulVec, dotProduct_smul, dotProduct_smul,
-    dotProduct_pow_mulVec_eq hA hQ b hq hK
-      ((Nat.lt_succ_iff.1 (Finset.mem_range.1 hm)).trans hp)]
+  refine dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul hA hQ b hK ?_
+  refine (Polynomial.degree_le_natDegree).trans_lt ?_
+  exact_mod_cast (show p.natDegree < 2 * q by omega)
 
 /-! ### Rayleigh bounds and the quadrature error -/
 
 /-- Rayleigh bounds from an eigenvalue enclosure: if every eigenvalue of the symmetric `A` lies
 in `[a, c]`, then `a ‖x‖² ≤ xᵀ A x ≤ c ‖x‖²`. Lower half.
 Source: Horn–Johnson (2013), Thm 4.2.2 (Rayleigh–Ritz). Atlas: `lanczos-gauss-quadrature`
-(helper; belongs in `NLAlib.Matrix`). -/
+(helper; belongs in `NLAlib.Matrix.PolynomialCalculus`). -/
 theorem mul_dotProduct_le_dotProduct_mulVec_of_eigenvalues {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {a : ℝ} (ha : ∀ i, a ≤ hA.eigenvalues i) (x : n → ℝ) :
     a * (x ⬝ᵥ x) ≤ x ⬝ᵥ (A *ᵥ x) := by
@@ -225,14 +238,55 @@ private lemma abs_dotProduct_cfc_sub_aeval_le {A : Matrix n n ℝ} (hA : A.IsHer
   exact mul_le_mul_of_nonneg_right (hfp i) (sq_nonneg _)
 
 /-- **Error of Gauss (Lanczos) quadrature.** Let `A` be symmetric with spectrum in `[a, c]`, `Q`
-with orthonormal columns, `q ≥ 1`, `K_q(A,b) ⊆ range Q`, and `p` a polynomial of degree at most
-`2q − 1` with `|f − p| ≤ E` on `[a, c]`. Then
-`|bᵀ f(A) b − (Qᵀb)ᵀ f(QᵀAQ) (Qᵀb)| ≤ 2 E ‖b‖²`.
+with orthonormal columns, `K_q(A,b) ⊆ range Q`, and `p` a polynomial of degree `< 2q` with
+`|f − p| ≤ E` on `[a, c]`. Then `|bᵀ f(A) b − (Qᵀb)ᵀ f(QᵀAQ) (Qᵀb)| ≤ 2 E ‖b‖²`. Valid for
+every `q`.
 Source: Golub–Meurant (2010) [`gm10`], §6.2 (error of Gauss quadrature via best approximation);
 Chen–Trogdon–Ubaru (2021) [`ctu21`], Lem. 2.2; Ubaru–Chen–Saad (2017) [`ucs17`], proof of Thm 4.1.
-Atlas: `lanczos-gauss-quadrature`.
 Deviation: stated with an arbitrary approximant `p` (the source takes the best uniform
 approximation, `E = E_{2q−1}(f)`); any orthonormal `Q` with `K_q ⊆ range Q`.
+atlas: lanczos-gauss-quadrature -/
+theorem abs_dotProduct_cfc_mulVec_sub_le_of_degree_lt_two_mul {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
+    (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {f : ℝ → ℝ}
+    {p : Polynomial ℝ} (hp : p.degree < 2 * q) {a c E : ℝ}
+    (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c)
+    (hfp : ∀ x ∈ Set.Icc a c, |f x - p.eval x| ≤ E) :
+    |b ⬝ᵥ (cfc f A *ᵥ b) - (Qᵀ *ᵥ b) ⬝ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b))| ≤
+      2 * E * (b ⬝ᵥ b) := by
+  have hAs : A.IsSymm := by
+    rw [IsSymm, ← conjTranspose_eq_transpose_of_trivial]; exact hA
+  have hB : (Qᵀ * A * Q).IsHermitian := isHermitian_transpose_mul_mul hA Q
+  have hexact := dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul hAs hQ b hK hp
+  have h1 := abs_dotProduct_cfc_sub_aeval_le hA (fun i => hfp _ (hspec i)) b
+  have h2 := abs_dotProduct_cfc_sub_aeval_le hB
+    (fun j => hfp _ (eigenvalues_transpose_mul_mul_mem_Icc hA hQ hB hspec j)) (Qᵀ *ᵥ b)
+  have hcc : (Qᵀ *ᵥ b) ⬝ᵥ (Qᵀ *ᵥ b) ≤ b ⬝ᵥ b := transpose_mulVec_dotProduct_self_le hQ b
+  have h2' : |(Qᵀ *ᵥ b) ⬝ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b)) -
+      (Qᵀ *ᵥ b) ⬝ᵥ (Polynomial.aeval (Qᵀ * A * Q) p *ᵥ (Qᵀ *ᵥ b))| ≤ E * (b ⬝ᵥ b) := by
+    rcases le_or_gt 0 E with hE0 | hE0
+    · exact h2.trans (mul_le_mul_of_nonneg_left hcc hE0)
+    · have hbb0 : 0 ≤ b ⬝ᵥ b := Finset.sum_nonneg fun i _ => mul_self_nonneg _
+      have hbb : b ⬝ᵥ b = 0 :=
+        le_antisymm (by nlinarith [(abs_nonneg _).trans h1]) hbb0
+      obtain rfl : b = 0 := dotProduct_self_eq_zero.1 hbb
+      simp
+  have : b ⬝ᵥ (cfc f A *ᵥ b) - (Qᵀ *ᵥ b) ⬝ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b)) =
+      (b ⬝ᵥ (cfc f A *ᵥ b) - b ⬝ᵥ (Polynomial.aeval A p *ᵥ b)) -
+        ((Qᵀ *ᵥ b) ⬝ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b)) -
+          (Qᵀ *ᵥ b) ⬝ᵥ (Polynomial.aeval (Qᵀ * A * Q) p *ᵥ (Qᵀ *ᵥ b))) := by
+    rw [hexact]; ring
+  rw [this]
+  refine (abs_sub _ _).trans ?_
+  linarith
+
+/-- **Error of Gauss (Lanczos) quadrature** (`natDegree` form, `q ≥ 1`): the form of
+`abs_dotProduct_cfc_mulVec_sub_le_of_degree_lt_two_mul` with `natDegree p ≤ 2q − 1`, kept for
+existing callers. `|bᵀ f(A) b − (Qᵀb)ᵀ f(QᵀAQ) (Qᵀb)| ≤ 2 E ‖b‖²` when `|f − p| ≤ E` on an
+interval `[a, c]` containing the spectrum of the symmetric `A`.
+Source: Golub–Meurant (2010) [`gm10`], §6.2; Chen–Trogdon–Ubaru (2021) [`ctu21`], Lem. 2.2;
+Ubaru–Chen–Saad (2017) [`ucs17`], proof of Thm 4.1.
+Deviation: an arbitrary approximant `p`; any orthonormal `Q` with `K_q ⊆ range Q`.
 atlas: lanczos-gauss-quadrature -/
 theorem abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
@@ -242,28 +296,8 @@ theorem abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le {A : Matrix n n ℝ}
     (hfp : ∀ x ∈ Set.Icc a c, |f x - p.eval x| ≤ E) :
     |b ⬝ᵥ (cfc f A *ᵥ b) - (Qᵀ *ᵥ b) ⬝ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b))| ≤
       2 * E * (b ⬝ᵥ b) := by
-  have hAs : A.IsSymm := by
-    rw [IsSymm, ← conjTranspose_eq_transpose_of_trivial]; exact hA
-  have hB : (Qᵀ * A * Q).IsHermitian := by
-    rw [IsHermitian, conjTranspose_eq_transpose_of_trivial]
-    exact isSymm_transpose_mul_mul hAs Q
-  have hexact := dotProduct_aeval_mulVec_eq_of_krylovSpace_le hAs hQ b hq hK hp
-  have hbmem : b ∈ LinearMap.range Q.mulVecLin :=
-    hK (by simpa using pow_mulVec_mem_krylovSpace A b hq)
-  have hcc : (Qᵀ *ᵥ b) ⬝ᵥ (Qᵀ *ᵥ b) = b ⬝ᵥ b := by
-    rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose,
-      mulVec_transpose_mulVec_of_mem_range hQ hbmem]
-  have h1 := abs_dotProduct_cfc_sub_aeval_le hA (fun i => hfp _ (hspec i)) b
-  have h2 := abs_dotProduct_cfc_sub_aeval_le hB
-    (fun j => hfp _ (eigenvalues_transpose_mul_mul_mem_Icc hA hQ hB hspec j)) (Qᵀ *ᵥ b)
-  rw [hcc] at h2
-  have : b ⬝ᵥ (cfc f A *ᵥ b) - (Qᵀ *ᵥ b) ⬝ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b)) =
-      (b ⬝ᵥ (cfc f A *ᵥ b) - b ⬝ᵥ (Polynomial.aeval A p *ᵥ b)) -
-        ((Qᵀ *ᵥ b) ⬝ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b)) -
-          (Qᵀ *ᵥ b) ⬝ᵥ (Polynomial.aeval (Qᵀ * A * Q) p *ᵥ (Qᵀ *ᵥ b))) := by
-    rw [hexact]; ring
-  rw [this]
-  refine (abs_sub _ _).trans ?_
-  linarith
+  refine abs_dotProduct_cfc_mulVec_sub_le_of_degree_lt_two_mul hA hQ b hK ?_ hspec hfp
+  refine (Polynomial.degree_le_natDegree).trans_lt ?_
+  exact_mod_cast (show p.natDegree < 2 * q by omega)
 
 end NLAlib

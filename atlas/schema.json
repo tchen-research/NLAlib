@@ -60,6 +60,20 @@
               "later"
             ],
             "description": "Captain's targeting priority for the area as a whole."
+          },
+          "module": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Lean module directory that realises this top-level area (e.g. NLAlib/Matrix); null for sub-areas."
+          },
+          "layer": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Import layer of the realising module (0 Matrix/Polynomial, 1 Concentration, 2 Gaussian, 3 Sketching, 4 LowRank/Estimation/Krylov, 5 Solvers); null for sub-areas."
           }
         }
       }

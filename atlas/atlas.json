@@ -8,7 +8,9 @@
    "parent": null,
    "order": 0,
    "summary": "Deterministic facts every RandNLA proof reaches for: SVD, best low-rank approximation, perturbation, projections, pseudoinverse, trace inequalities, the Loewner order.",
-   "priority": "now"
+   "priority": "now",
+   "module": "NLAlib/Matrix",
+   "layer": 0
   },
   {
    "id": "matrix-spectral",
@@ -37,7 +39,9 @@
    "parent": null,
    "order": 4,
    "summary": "What a standard Gaussian matrix does: invariance, moments, inverse moments of the pseudoinverse, extreme singular values. The bottleneck for every Gaussian-sketch argument.",
-   "priority": "now"
+   "priority": "now",
+   "module": "NLAlib/Gaussian",
+   "layer": 2
   },
   {
    "id": "gaussian-invariance",
@@ -73,7 +77,9 @@
    "parent": null,
    "order": 9,
    "summary": "Scalar and matrix tail bounds. The matrix side is done (Tropp Ch. 3–8); the scalar side is scattered across Mathlib and external libraries.",
-   "priority": "next"
+   "priority": "next",
+   "module": "NLAlib/Concentration",
+   "layer": 1
   },
   {
    "id": "concentration-scalar",
@@ -95,7 +101,9 @@
    "parent": null,
    "order": 12,
    "summary": "Johnson–Lindenstrauss, subspace embeddings, approximate matrix multiplication, leverage-score sampling. The vocabulary in which randomized algorithms are analysed.",
-   "priority": "now"
+   "priority": "now",
+   "module": "NLAlib/Sketching",
+   "layer": 3
   },
   {
    "id": "sketching-jl",
@@ -131,7 +139,9 @@
    "parent": null,
    "order": 17,
    "summary": "Deterministic structural lemmas (projection error, truncation, power iteration, Nyström) and the randomized algorithm guarantees that consume them.",
-   "priority": "now"
+   "priority": "now",
+   "module": "NLAlib/LowRank",
+   "layer": 4
   },
   {
    "id": "lra-deterministic",
@@ -153,7 +163,9 @@
    "parent": null,
    "order": 20,
    "summary": "Hutchinson-type estimators, their variance and tails, spectral measures. Small statements with very high reuse.",
-   "priority": "now"
+   "priority": "now",
+   "module": "NLAlib/Estimation",
+   "layer": 4
   },
   {
    "id": "krylov",
@@ -161,7 +173,9 @@
    "parent": null,
    "order": 24,
    "summary": "Krylov subspaces, Lanczos, Gauss quadrature. Deterministic, but the backbone of the modern randomized low-rank and trace-estimation algorithms; rates come from the polynomial area.",
-   "priority": "next"
+   "priority": "next",
+   "module": "NLAlib/Krylov",
+   "layer": 4
   },
   {
    "id": "solvers",
@@ -169,7 +183,9 @@
    "parent": null,
    "order": 25,
    "summary": "Sketch-and-solve, sketch-and-precondition, Kaczmarz and sketch-and-project. Mostly consumers of sketching and matrix facts; Kaczmarz is itself a clean foundation.",
-   "priority": "later"
+   "priority": "later",
+   "module": "NLAlib/Solvers",
+   "layer": 5
   },
   {
    "id": "gaussian-concentration-tools",
@@ -184,7 +200,9 @@
    "parent": null,
    "order": 21,
    "summary": "Chebyshev polynomials and their extremal properties, Markov-type derivative bounds, interpolation. Layer 0, no matrices: the deterministic polynomial facts that Krylov, Lanczos, CG and block Krylov rates reduce to.",
-   "priority": "now"
+   "priority": "now",
+   "module": "NLAlib/Polynomial",
+   "layer": 0
   },
   {
    "id": "polynomial-chebyshev",

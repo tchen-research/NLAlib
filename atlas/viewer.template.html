@@ -100,8 +100,11 @@ ol.rank .k { font-variant-numeric: tabular-nums; color: var(--muted); font-size:
 
 /* graph */
 .graph-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; position: relative; }
-.graph-wrap svg { display: block; width: 100%; height: 620px; cursor: grab; }
+.graph-wrap svg { display: block; width: 100%; height: 720px; cursor: grab; }
 .graph-help { position: absolute; top: 8px; left: 10px; font-size: 0.78rem; color: var(--muted); background: var(--panel); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--line); }
+.lane rect { fill: var(--bg); stroke: var(--line-strong); stroke-width: 1; }
+.lane text { font-size: 12px; font-weight: 700; fill: var(--fg); letter-spacing: 0.02em; }
+.lane text .mod { font-weight: 400; fill: var(--muted); font-family: var(--font-mono, ui-monospace, monospace); }
 .gnode rect { fill: var(--panel); stroke: var(--sc); stroke-width: 1.5; }
 .gnode.s-candidate rect { stroke-dasharray: 3 2; }
 .gnode.s-scaffold rect { fill: url(#hatch); }
@@ -223,7 +226,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     <div id="scaffold"></div>
   </div>
   <div id="tab-graph" hidden>
-    <p class="note" style="margin-top:12px">Left to right follows proof dependency: a result sits one column right of everything it consumes. Solid green links are proved at both ends, dashed blue links join Lean statements where one end is still a scaffold, dotted links are pending. Click a node to trace what it needs (blue) and what it unlocks (orange). Scroll to zoom, drag to pan.</p>
+    <p class="note" style="margin-top:12px">Columns are the library's import layers (0 Matrix and Polynomial … 5 Solvers) and each box is one Lean module; inside a box a result sits right of the module-internal results it consumes. Solid green links are proved at both ends, dashed blue links join Lean statements where one end is still a scaffold, dotted links are pending. Click a node to trace what it needs (blue) and what it unlocks (orange). Scroll to zoom, drag to pan.</p>
     <div class="graph-wrap" style="margin-top:8px"><div class="graph-help">Fit: <kbd>F</kbd></div><svg id="g" role="img" aria-label="Dependency graph of results"><defs><pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--panel)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--st-stated)" stroke-width="2"/></pattern></defs></svg></div>
     <div class="legend" id="glegend"></div>
   </div>
@@ -355,24 +358,40 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
 
   // ---------- graph ----------
   let zoomBehavior, gRoot, svgSel, layoutCache = null;
+  const BOX_PAD_TOP = 28, BOX_PAD_X = 10, BOX_PAD_BOTTOM = 10, BOX_GAP = 18, COL_GAP = 44;
+  // Columns are the library's import layers (0 Matrix/Polynomial … 5 Solvers); each top-level
+  // area (= Lean module) is a box in its layer's column; inside a box, nodes are placed by their
+  // dependency depth *within the module* so edges still read left to right.
   function layout(nodes) {
     const ids = new Set(nodes.map(n => n.id));
-    const lvl = {}; const seen = new Set();
-    const L = id => { if (lvl[id] != null) return lvl[id]; if (seen.has(id)) return 0; seen.add(id);
-      const deps = byId[id].depends_on.filter(d => ids.has(d)); lvl[id] = deps.length ? 1 + Math.max(...deps.map(L)) : 0; return lvl[id]; };
-    nodes.forEach(n => L(n.id));
-    const cols = {}; nodes.forEach(n => (cols[lvl[n.id]] = cols[lvl[n.id]] || []).push(n));
-    const K = Object.keys(cols).map(Number).sort((a, b) => a - b);
-    const pos = {};
-    K.forEach(k => cols[k].sort((a, b) => topArea(a).order - topArea(b).order || a.title.localeCompare(b.title)).forEach((n, i) => pos[n.id] = i));
-    for (let sweep = 0; sweep < 3; sweep++) {
-      K.forEach(k => { if (k === 0) return; cols[k].sort((a, b) => bary(a, pos, ids, 'up') - bary(b, pos, ids, 'up')).forEach((n, i) => pos[n.id] = i); });
-      [...K].reverse().forEach(k => { cols[k].sort((a, b) => bary(a, pos, ids, 'down') - bary(b, pos, ids, 'down')).forEach((n, i) => pos[n.id] = i); });
-    }
-    const W = 172, H = 30, CW = 230, RH = 34;
-    const out = {};
-    K.forEach(k => cols[k].forEach(n => { out[n.id] = { x: k * CW, y: pos[n.id] * RH, w: W, h: H }; }));
-    return { pos: out, levels: K.length, W, H, CW, RH };
+    const W = 156, H = 30, CW = 190, RH = 34;
+    const areas = A.areas.filter(a => !a.parent).sort((a, b) => (a.layer ?? 0) - (b.layer ?? 0) || a.order - b.order).filter(a => nodes.some(n => topArea(n).id === a.id));
+    const boxOf = {}; nodes.forEach(n => boxOf[n.id] = topArea(n).id);
+    // local depth inside the module
+    const ld = {}; const seen = new Set();
+    const D = id => { if (ld[id] != null) return ld[id]; if (seen.has(id)) return 0; seen.add(id);
+      const deps = byId[id].depends_on.filter(d => ids.has(d) && boxOf[d] === boxOf[id]); ld[id] = deps.length ? 1 + Math.max(...deps.map(D)) : 0; return ld[id]; };
+    nodes.forEach(n => D(n.id));
+    const groups = {}; nodes.forEach(n => { const key = boxOf[n.id] + '|' + ld[n.id]; (groups[key] = groups[key] || []).push(n); });
+    const boxes = {}; areas.forEach(a => {
+      const mine = nodes.filter(n => boxOf[n.id] === a.id); const cols = Math.max(...mine.map(n => ld[n.id])) + 1;
+      const rows = Math.max(...Array.from({ length: cols }, (_, k) => (groups[a.id + '|' + k] || []).length));
+      boxes[a.id] = { id: a.id, name: a.name, module: a.module || '', layer: a.layer ?? 0, cols, rows, width: 2 * BOX_PAD_X + (cols - 1) * CW + W, height: BOX_PAD_TOP + rows * RH + BOX_PAD_BOTTOM };
+    });
+    // layer columns: stack the boxes of a layer vertically
+    const layers = [...new Set(areas.map(a => a.layer ?? 0))].sort((a, b) => a - b);
+    const colX = {}, colW = {}; let x = 0;
+    layers.forEach(l => { const bs = areas.filter(a => (a.layer ?? 0) === l).map(a => boxes[a.id]); colW[l] = Math.max(...bs.map(b => b.width)); colX[l] = x; let y = 0; bs.forEach(b => { b.left = x; b.top = y; b.width = colW[l]; y += b.height + BOX_GAP; }); x += colW[l] + COL_GAP; });
+    const width = x - COL_GAP, height = Math.max(...Object.values(boxes).map(b => b.top + b.height));
+    // rows inside each (box, local-depth) column, ordered by neighbour barycentre
+    const row = {}; const out = {};
+    const place = () => nodes.forEach(n => { const b = boxes[boxOf[n.id]]; out[n.id] = { x: b.left + BOX_PAD_X + ld[n.id] * CW, y: b.top + BOX_PAD_TOP + row[n.id] * RH, w: W, h: H }; });
+    const reorder = cmp => Object.values(groups).forEach(g => g.sort(cmp).forEach((n, i) => row[n.id] = i));
+    reorder((a, b) => a.title.localeCompare(b.title)); place();
+    const yc = id => out[id].y;
+    const nbY = n => { const nb = [...n.depends_on.filter(d => ids.has(d)), ...(usedBy[n.id] || []).filter(d => ids.has(d))]; return nb.length ? nb.reduce((s, d) => s + yc(d), 0) / nb.length : yc(n.id); };
+    for (let sweep = 0; sweep < 4; sweep++) { reorder((a, b) => nbY(a) - nbY(b)); place(); }
+    return { pos: out, boxes: Object.values(boxes), layers, colX, colW, width, height, W, H, CW, RH };
   }
   function bary(n, pos, ids, dir) {
     const nb = dir === 'up' ? n.depends_on.filter(d => ids.has(d)) : (usedBy[n.id] || []).filter(d => ids.has(d));
@@ -385,6 +404,9 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     const ids = new Set(nodes.map(n => n.id));
     const lay = layout(nodes); layoutCache = lay;
     gRoot = svg.append('g');
+    const gb = gRoot.append('g').selectAll('g.lane').data(lay.boxes).enter().append('g').attr('class', 'lane');
+    gb.append('rect').attr('x', b => b.left).attr('y', b => b.top).attr('width', b => b.width).attr('height', b => b.height).attr('rx', 8);
+    gb.append('text').attr('x', b => b.left + BOX_PAD_X).attr('y', b => b.top + 18).text(b => b.name).append('tspan').attr('class', 'mod').text(b => b.module ? '  ' + b.module + '/' : '');
     const edges = [];
     nodes.forEach(n => n.depends_on.forEach(d => { if (ids.has(d)) edges.push({ s: d, t: n.id }); }));
     const P = lay.pos;
@@ -395,21 +417,21 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     gn.append('rect').attr('width', lay.W).attr('height', lay.H).attr('rx', 5).attr('stroke-width', n => 1 + Math.min(3, indeg(n.id) / 3));
     gn.append('title').text(n => `${n.title}\n${SG[n.status].label} · ${n.kind} · used by ${indeg(n.id)}`);
     gn.append('text').attr('class', 'glyph').attr('x', 8).attr('y', 19).text(n => SG[n.status].glyph);
-    gn.append('text').attr('x', 22).attr('y', 19).text(n => n.title.length > 26 ? n.title.slice(0, 25) + '…' : n.title);
+    gn.append('text').attr('x', 22).attr('y', 19).text(n => n.title.length > 23 ? n.title.slice(0, 22) + '…' : n.title);
     // level labels
     const lab = gRoot.append('g');
-    for (let k = 0; k < lay.levels; k++) lab.append('text').attr('class', 'glabel').attr('x', k * lay.CW).attr('y', -12).text(k === 0 ? 'foundations' : 'depth ' + k);
+    lay.layers.forEach(l => lab.append('text').attr('class', 'glabel').attr('x', lay.colX[l]).attr('y', -12).text('layer ' + l));
     svgSel = svg;
     zoomBehavior = d3.zoom().scaleExtent([0.2, 2.5]).on('zoom', ev => gRoot.attr('transform', ev.transform));
     svg.call(zoomBehavior);
     fitGraph();
     applySelectionToGraph();
-    document.getElementById('glegend').innerHTML = STATUS.map(s => `<span class="s-${s.id}"><span class="dot"></span>${s.glyph} ${s.label}</span>`).join('') + '<span><i class="l-proved"></i>link proved</span><span><i class="l-scaffold"></i>link scaffold</span><span><i class="l-pending"></i>link pending</span><span><i style="border-color:var(--accent)"></i>needs (selected)</span><span><i style="border-color:var(--st-assumed)"></i>unlocks (selected)</span><span>Border weight = reuse</span>';
+    document.getElementById('glegend').innerHTML = STATUS.map(s => `<span class="s-${s.id}"><span class="dot"></span>${s.glyph} ${s.label}</span>`).join('') + '<span><i class="l-proved"></i>link proved</span><span><i class="l-scaffold"></i>link scaffold</span><span><i class="l-pending"></i>link pending</span><span><i style="border-color:var(--accent)"></i>needs (selected)</span><span><i style="border-color:var(--st-assumed)"></i>unlocks (selected)</span><span>Border weight = reuse</span><span><i style="border-color:var(--line-strong);border-style:solid"></i>box = Lean module; columns = import layers</span>';
   }
   function fitGraph() {
     if (!layoutCache || !svgSel) return;
     const P = Object.values(layoutCache.pos); if (!P.length) return;
-    const maxX = Math.max(...P.map(p => p.x + p.w)) + 20, maxY = Math.max(...P.map(p => p.y + p.h)) + 20;
+    const maxX = layoutCache.width + 20, maxY = layoutCache.height + 20;
     const box = svgSel.node().getBoundingClientRect();
     const k = Math.min(1, (box.width - 20) / maxX, (box.height - 20) / (maxY + 24));
     svgSel.call(zoomBehavior.transform, d3.zoomIdentity.translate(10, 24 * k + 10).scale(k));

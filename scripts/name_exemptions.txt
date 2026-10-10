@@ -14,3 +14,7 @@ NLAlib.integral_comp_gaussianMatrix_entry_eq    # basic API of the definition
 NLAlib.integral_gaussianMatrix_entry_eq_zero    # basic API of the definition
 NLAlib.integral_gaussianMatrix_entry_sq_eq_one  # basic API of the definition
 NLAlib.integrable_const_mul_gaussianMatrix_entry_mul# basic API of the definition
+NLAlib.eval_chebyshevResidual                   # unfolding lemma (Polynomial/Basic)
+NLAlib.eval_chebyshevAmplifier                  # unfolding lemma (Polynomial/Basic)
+NLAlib.chebyshevZero_mem_Icc                    # basic API of the definition
+NLAlib.chebyshevZero_injective                  # basic API of the definition

@@ -13,7 +13,7 @@ in `atlas/atlas.json` in your first PR (a one-line change is fine).
 
 | Layer | Directory | May import |
 |---|---|---|
-| 0 | `NLAlib/Matrix/` | Mathlib only |
+| 0 | `NLAlib/Matrix/`, `NLAlib/Polynomial/` | Mathlib, `ForMathlib` |
 | 1 | `NLAlib/Concentration/` | layer 0 |
 | 2 | `NLAlib/Gaussian/` | layers 0–1 |
 | 3 | `NLAlib/Sketching/` | layers 0–2 |

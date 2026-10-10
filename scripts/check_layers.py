@@ -2,13 +2,13 @@
 """Import-layer lint. Fails if a NLAlib module imports a module from a higher layer.
 
 Layers (a module may import its own layer and lower):
-  -1 ForMathlib     0 Matrix          1 Concentration      2 Gaussian
+  -1 ForMathlib     0 Matrix, Polynomial   1 Concentration      2 Gaussian
   3 Sketching       4 LowRank, Estimation, Krylov      5 Solvers
 Anything outside NLAlib (Mathlib, Std) is layer -1.
 """
 import pathlib, re, sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-LAYER = {"ForMathlib": -1, "Matrix": 0, "Concentration": 1, "Gaussian": 2, "Sketching": 3,
+LAYER = {"ForMathlib": -1, "Matrix": 0, "Polynomial": 0, "Concentration": 1, "Gaussian": 2, "Sketching": 3,
          "LowRank": 4, "Estimation": 4, "Krylov": 4, "Solvers": 5}
 def layer(mod):
     parts = mod.split(".")

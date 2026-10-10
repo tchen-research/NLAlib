@@ -1,5 +1,6 @@
 import NLAlib.ForMathlib
 import NLAlib.Matrix
+import NLAlib.Polynomial
 import NLAlib.Concentration
 import NLAlib.Gaussian
 import NLAlib.Sketching

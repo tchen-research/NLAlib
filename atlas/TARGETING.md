@@ -39,7 +39,7 @@ Do **not** target, unless it is a mission capstone that a captain has asked for:
 | A. Matrix API | `norms-frob-spec`, `svd`, `eckart-young`, `weyl-mirsky`, `courant-fischer`, `pseudoinverse`, `orthonormal-completion`, `von-neumann-trace`, `hmt-9-1-spectral` | Used by everything downstream; three of them are currently hypotheses of the LRA theorems. |
 | B. Gaussian closure | `gaussian-concentration`, `gordon`, then the six `stated` items they unblock | Finishes the Gaussian series; makes the LRA theorems unconditional. |
 | C. Sketching | `ose-def`, `chi-square-upper-tail`, `jl-distributional`, `jl-lemma`, `gaussian-ose`, `matrix-chernoff-sampling`, `leverage-scores`, `leverage-sampling-ose` | The vocabulary of modern RandNLA; no Lean formalization of JL exists anywhere. |
-| D. Estimation and Krylov basics | `hutchinson-unbiased`, `hutchinson-variance`, `spectral-measure`, `krylov-subspace`, `lanczos-recurrence`, `chebyshev-bounds` | Small deterministic facts with high reuse in trace estimation and Lanczos analysis. |
+| D. Estimation and Krylov basics | `hutchinson-unbiased`, `hutchinson-variance`, `spectral-measure`, `krylov-subspace`, `lanczos-recurrence`, `chebyshev-minimax`, `chebyshev-growth` | Small deterministic facts with high reuse in trace estimation and Lanczos analysis. |
 | E. First complete algorithm | `randomized-kaczmarz` | One-page proof from projections and σ_min; a model for how consumers should look. |
 
 ## 2. How to state a result so it can be reused

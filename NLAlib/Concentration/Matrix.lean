@@ -40,6 +40,7 @@ import NLAlib.Concentration.Matrix.Laplace.TraceCgfSubadditivity
 import NLAlib.Concentration.Matrix.OperatorConvexity.EntropyJointConvex
 import NLAlib.Concentration.Matrix.OperatorConvexity.EntropyNonnegative
 import NLAlib.Concentration.Matrix.OperatorConvexity.GeneralizedKlein
+import NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson
 import NLAlib.Concentration.Matrix.OperatorConvexity.JensenBlockCalculus
 import NLAlib.Concentration.Matrix.OperatorConvexity.JensenIsometricCompression
 import NLAlib.Concentration.Matrix.OperatorConvexity.JensenReflectionAlgebra
@@ -51,6 +52,7 @@ import NLAlib.Concentration.Matrix.OperatorConvexity.OperatorJensen
 import NLAlib.Concentration.Matrix.OperatorConvexity.PerspectiveConvex
 import NLAlib.Concentration.Matrix.OperatorConvexity.PerspectiveSqrtNormalization
 import NLAlib.Concentration.Matrix.OperatorConvexity.TraceExpMonotone
+import NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus
 import NLAlib.Concentration.Matrix.OperatorConvexity.VariationalTraceExp
 import NLAlib.Concentration.Matrix.OperatorConvexity.VariationalTrace
 import NLAlib.Concentration.Matrix.Series.GaussianMgfCgf
@@ -73,7 +75,7 @@ Prove2me missions for those chapters. Every theorem is proved.
 | `Sampling` | `matrix_chernoff_sampling` (explicit-constant tails for averages with `𝔼 Mₖ = I`) | `matrix-chernoff-sampling` |
 | `Bernstein/` | `hermitian_bernstein`, `matrix_bernstein`, dilation identities | `matrix-bernstein`, `hermitian-dilation` |
 | `Intrinsic/` | intrinsic-dimension Chernoff and Bernstein inequalities | `intrinsic-dimension` |
-| `OperatorConvexity/` | `lieb_concavity`, `operator_jensen`, `matrixLog_le_matrixLog`, … | `operator-monotone-convex`, `loewner-order` |
+| `OperatorConvexity/` | `lieb_concavity`, `operator_jensen`, `matrixLog_le_matrixLog`, `golden_thompson`, unitary calculus | `operator-monotone-convex`, `loewner-order`, `golden-thompson` |
 
 `Defs/` modules: `Spectral` (spectral vocabulary, Loewner order), `Dilation`, `Probability` (Borel
 instance, variance statistics, `cumulantSum`, `bernsteinTail`), `ScalarLaws` (Gaussian and
@@ -82,5 +84,6 @@ Rademacher laws, `gaussianSeriesTail`), `ChernoffFunctions`, `IntrinsicDimension
 `JointTensor`, and `Calculus` (shared lemmas: spectral calculus of `matrixExp`/`traceExp`,
 reindexing, dilation and block-diagonal integrals).
 
-`golden-thompson` is not realised here: Tropp's route goes through Lieb's concavity theorem.
+`golden_thompson` derives the complex Hermitian trace inequality from Lieb concavity by
+finite coordinate pinching. Its arbitrary finite index interface includes empty matrices.
 -/

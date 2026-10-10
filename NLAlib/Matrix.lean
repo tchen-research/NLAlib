@@ -1,4 +1,5 @@
 import NLAlib.Matrix.CoordinateUpdates
+import NLAlib.Matrix.CoordinatePinching
 import NLAlib.Matrix.CourantFischer
 import NLAlib.Matrix.EckartYoung
 import NLAlib.Matrix.FiniteIndexTransport
@@ -54,6 +55,7 @@ import probability.
   and the spectral Eckart–Young theorem;
 * `VonNeumann`: the von Neumann trace inequality and its rank corollary;
 * `PolynomialCalculus`: `p(A) = U diag(p(λ)) Uᵀ` and the polynomial spectral bounds;
+* `CoordinatePinching`: finite sign-reflection averaging and its diagonal endpoint;
 * `RankNorm`, `FiniteIndexTransport`: rank-based norm bounds and arbitrary finite-index APIs;
 * `Gram`: `det ≠ 0` from full rank, positivity of `(G Gᵀ)⁻¹` and the entry bound
   `|Mᵢⱼ| ≤ Mᵢᵢ + Mⱼⱼ` for positive semidefinite `M`;

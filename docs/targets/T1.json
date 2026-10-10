@@ -1,0 +1,1667 @@
+{
+  "areas": [
+    {
+      "id": "krylov-bases",
+      "name": "Krylov bases: grade, Arnoldi and Lanczos relations",
+      "title": "Krylov bases: grade, Arnoldi and Lanczos relations",
+      "parent": "krylov",
+      "order": 27,
+      "summary": "Dimension of Krylov spaces, the Arnoldi relation and its Hessenberg matrix, exactness of Krylov projection on polynomials, block Krylov spaces."
+    },
+    {
+      "id": "krylov-linear-systems",
+      "name": "Polynomial methods for linear systems",
+      "title": "Polynomial methods for linear systems",
+      "parent": "krylov",
+      "order": 28,
+      "summary": "Residual polynomials; GMRES, MINRES, FOM, preconditioned CG, CGLS/LSQR, Chebyshev iteration and Richardson, with their spectral convergence bounds."
+    },
+    {
+      "id": "krylov-nonnormal",
+      "name": "Field of values and non-normal GMRES theory",
+      "title": "Field of values and non-normal GMRES theory",
+      "parent": "krylov",
+      "order": 29,
+      "summary": "Numerical range, Crouzeix–Palencia, the Elman / Beckermann–Goreinov–Tyrtyshnikov bounds and the Greenbaum–Pták–Strakoš caution."
+    },
+    {
+      "id": "krylov-matrix-functions",
+      "name": "Krylov approximation of f(A)b",
+      "title": "Krylov approximation of f(A)b",
+      "parent": "krylov",
+      "order": 30,
+      "summary": "Lanczos-FA and Arnoldi-FA: the Krylov approximation of a matrix function times a vector is within twice (Hermitian) or 2(1+√2) times (general) the best polynomial approximation error."
+    },
+    {
+      "id": "krylov-eigenvalues",
+      "name": "Ritz values and eigenvector angles",
+      "title": "Ritz values and eigenvector angles",
+      "parent": "krylov",
+      "order": 31,
+      "summary": "Gap-dependent Kaniel–Paige–Saad theory: the angle between an eigenvector and the Krylov space, and the Ritz value error."
+    }
+  ],
+  "results": [
+    {
+      "id": "krylov-grade",
+      "title": "Grade of a vector: dimension and invariance of Krylov spaces",
+      "aliases": [
+        "grade of a vector",
+        "minimal polynomial of b with respect to A",
+        "Krylov space dimension",
+        "finite termination",
+        "Saad Prop 6.2"
+      ],
+      "area": "krylov-bases",
+      "kind": "theorem",
+      "status": "candidate",
+      "informal": "Let $\\nu = \\nu(A,b)$ be the degree of the monic polynomial $\\mu_{A,b}$ of least degree with $\\mu_{A,b}(A)b = 0$ (the *grade* of $b$). Then $\\dim\\mathcal K_q(A,b) = \\min(q,\\nu)$, $\\mathcal K_q = \\mathcal K_\\nu$ for $q \\ge \\nu$, $\\mathcal K_\\nu$ is $A$-invariant, and if $A$ is invertible then $A^{-1}b \\in \\mathcal K_\\nu(A,b)$.",
+      "hypotheses": [
+        "$K$ a field (primary instances $\\mathbb R$, $\\mathbb C$), $A \\in K^{n\\times n}$ over a `Fintype` index, $b \\in K^n$, $q \\in \\mathbb N$",
+        "$\\mu_{A,b}$ the monic generator of the ideal $\\{p \\in K[x] : p(A)b = 0\\}$, $\\nu = \\deg\\mu_{A,b}$ (so $\\nu \\le \\deg \\mu_A \\le n$; $\\nu = 0$ iff $b = 0$)"
+      ],
+      "conclusion": "$\\dim\\mathcal K_q(A,b) = \\min(q,\\nu)$; the vectors $b, Ab, \\dots, A^{q-1}b$ are linearly independent iff $q \\le \\nu$; $A\\,\\mathcal K_\\nu \\subseteq \\mathcal K_\\nu$ and $\\mathcal K_q = \\mathcal K_\\nu$ for all $q \\ge \\nu$; $\\mu_{A,b} \\mid \\mu_A$; if $A$ is invertible, $A^{-1}b \\in \\mathcal K_\\nu(A,b)$",
+      "sources": [
+        {
+          "source": "saad03",
+          "label": "Props 6.1–6.3"
+        },
+        {
+          "source": "ls13",
+          "label": "§2.2"
+        }
+      ],
+      "depends_on": [
+        "krylov-subspace"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Module.AEval'",
+          "present": true,
+          "note": "Turns $(K^n, A)$ into a $K[X]$-module; $\\mathcal K_\\infty(A,b)$ is the cyclic submodule $K[X]\\cdot b$, and $\\mu_{A,b}$ is a generator of its annihilator."
+        },
+        {
+          "decl": "Polynomial.annIdealGenerator",
+          "present": true,
+          "note": "Monic generator of the annihilating ideal of an element of an algebra (the matrix minimal polynomial); there is no vector-relative version."
+        },
+        {
+          "decl": "minpoly",
+          "present": true
+        },
+        {
+          "decl": "Matrix.aeval_self_charpoly",
+          "present": true,
+          "note": "Cayley–Hamilton; gives $\\nu \\le n$."
+        },
+        {
+          "decl": "local minimal polynomial of a vector",
+          "present": false,
+          "note": "Mathlib has no `minpoly` of a vector relative to an endomorphism; define it as the monic generator of `Submodule.annihilator` in `Module.AEval'`."
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "foundation",
+        "krylov",
+        "definition-adjacent"
+      ],
+      "notes": "Consumers: gmres-def (finite termination), arnoldi-relation (breakdown iff h_{q+1,q} = 0 iff q = ν), lanczos-recurrence (the non-breakdown hypothesis `LinearIndependent ℝ (fun i => A^i b)` of `hasOrthonormalCols_lanczosMatrix` is exactly q ≤ ν), krylov-polynomial-exactness, gmres-any-convergence-curve, cg-convergence (finite termination). Prerequisite API change: generalise `NLAlib.krylovSpace` from ℝ to a field (or `RCLike 𝕜`) so the complex GMRES / field-of-values entries can use it; the real statements stay as the ℝ instance. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "arnoldi-def",
+      "title": "Arnoldi basis and Hessenberg matrices",
+      "aliases": [
+        "Arnoldi process",
+        "Arnoldi basis",
+        "upper Hessenberg matrix",
+        "H_q",
+        "extended Hessenberg matrix",
+        "arnoldiMatrix"
+      ],
+      "area": "krylov-bases",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "The Arnoldi basis $Q_q = [q_1,\\dots,q_q]$ is the Gram–Schmidt orthonormalisation of $b, Ab, \\dots, A^{q-1}b$; $H_q = Q_q^\\top A Q_q \\in \\mathbb R^{q\\times q}$ and $\\underline H_q = Q_{q+1}^\\top A Q_q \\in \\mathbb R^{(q+1)\\times q}$. A matrix is upper Hessenberg if $h_{ij} = 0$ for $i > j+1$. Characterisations: $Q_q$ has orthonormal columns spanning $\\mathcal K_q(A,b)$ when $q \\le \\nu$, $H_q$ and $\\underline H_q$ are upper Hessenberg, $h_{j+1,j} = \\|(I - Q_jQ_j^\\top)Aq_j\\| \\ge 0$ with equality iff $j \\ge \\nu$, and the basis is unique up to signs (implicit-Q uniqueness: positive subdiagonal fixes it).",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$ (no symmetry), $b \\in \\mathbb R^n$, $q \\in \\mathbb N$",
+        "for orthonormality and the Hessenberg sign/uniqueness statements: $q+1 \\le \\nu(A,b)$ (no breakdown)"
+      ],
+      "conclusion": "$Q_q^\\top Q_q = I$, $\\operatorname{range}Q_q = \\mathcal K_q(A,b)$, $H_q$ and $\\underline H_q$ upper Hessenberg with $h_{j+1,j} > 0$ for $j < \\nu$; any $\\tilde Q$ with orthonormal columns, $\\tilde Q e_1 = b/\\|b\\|$ and $\\tilde Q^\\top A\\tilde Q$ upper Hessenberg with positive subdiagonal equals $Q_q$",
+      "sources": [
+        {
+          "source": "saad03",
+          "label": "§6.3, Alg. 6.1, Prop. 6.4"
+        },
+        {
+          "source": "tb97",
+          "label": "Lect. 33"
+        }
+      ],
+      "depends_on": [
+        "krylov-subspace",
+        "orthonormal-columns-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "InnerProductSpace.gramSchmidtNormed",
+          "present": true,
+          "note": "Already used by `NLAlib.lanczosBasis`."
+        },
+        {
+          "decl": "InnerProductSpace.gramSchmidtNormed_orthonormal",
+          "present": true
+        },
+        {
+          "decl": "InnerProductSpace.span_gramSchmidtNormed",
+          "present": true
+        },
+        {
+          "decl": "Matrix.IsUpperHessenberg",
+          "present": false,
+          "note": "No Hessenberg predicate in Mathlib (grep for Hessenberg finds nothing)."
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "krylov",
+        "definition"
+      ],
+      "notes": "NLAlib's `lanczosMatrix A b q` is already the Arnoldi basis for every real A: `lanczos_apply_eq_zero_of_add_one_lt` proves QᵀAQ is upper Hessenberg without symmetry. So this entry is mostly naming (`arnoldiMatrix := lanczosMatrix`, `hessenberg A b q := Qᵀ A Q`, the extended (q+1)×q matrix) plus the positive-subdiagonal and uniqueness characterisations. Consumers: arnoldi-relation, fom-def, arnoldi-fa-error, lanczos-recurrence, gmres-def (the least-squares form ‖βe₁ − H̲_q y‖). Prove.",
+      "updated_at": "2026-10-10",
+      "variants": [
+        "lanczos-recurrence"
+      ]
+    },
+    {
+      "id": "arnoldi-relation",
+      "title": "Arnoldi relation AQ_q = Q_qH_q + h_{q+1,q} q_{q+1} e_qᵀ",
+      "aliases": [
+        "Arnoldi relation",
+        "Arnoldi decomposition",
+        "AV_m = V_{m+1} H̄_m",
+        "Arnoldi breakdown",
+        "Saad Prop 6.5"
+      ],
+      "area": "krylov-bases",
+      "kind": "identity",
+      "status": "candidate",
+      "informal": "With the Arnoldi basis, $$AQ_q = Q_{q+1}\\underline H_q = Q_qH_q + h_{q+1,q}\\,q_{q+1}e_q^\\top,$$ and $Q_q^\\top AQ_q = H_q$. Arnoldi breaks down at step $q$ ($h_{q+1,q} = 0$) iff $q = \\nu(A,b)$, in which case $AQ_q = Q_qH_q$ and $\\mathcal K_q$ is $A$-invariant. For symmetric $A$, $H_q = T_q$ is the symmetric tridiagonal Jacobi matrix and the relation is the Lanczos three-term recurrence $Aq_j = \\beta_{j-1}q_{j-1} + \\alpha_jq_j + \\beta_jq_{j+1}$.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$, $b \\ne 0$, $1 \\le q$",
+        "$q + 1 \\le \\nu(A,b)$ for the extended form (so $q_{q+1}$ exists); $q \\le \\nu$ and $h_{q+1,q} := 0$ otherwise"
+      ],
+      "conclusion": "$AQ_q = Q_qH_q + h_{q+1,q}q_{q+1}e_q^\\top = Q_{q+1}\\underline H_q$; $h_{q+1,q} = 0 \\iff q = \\nu(A,b)$; for $A = A^\\top$: $H_q$ is symmetric tridiagonal and $Aq_j = \\beta_{j-1}q_{j-1} + \\alpha_jq_j + \\beta_jq_{j+1}$ with $\\beta_j = h_{j+1,j}$",
+      "sources": [
+        {
+          "source": "saad03",
+          "label": "Props 6.5–6.6"
+        },
+        {
+          "source": "tb97",
+          "label": "Lect. 33, Lect. 36"
+        },
+        {
+          "source": "gm10",
+          "label": "Thm 4.2"
+        }
+      ],
+      "depends_on": [
+        "arnoldi-def",
+        "krylov-grade"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "InnerProductSpace.span_gramSchmidtNormed",
+          "present": true
+        },
+        {
+          "decl": "Submodule.starProjection_eq_self_iff",
+          "present": true,
+          "note": "Q Qᵀ x = x for x in the span; NLAlib already has the matrix form `mulVec_transpose_mulVec_of_mem_range`."
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "krylov"
+      ],
+      "notes": "Closes the open half of the existing candidate `lanczos-recurrence` (whose notes say the identity AQ_q = Q_qT_q + β_q q_{q+1}e_qᵀ is not yet stated); that entry should gain `depends_on: arnoldi-relation`. Column j of the identity is A q_j ∈ K_{j+1} = span(q_1..q_{j+1}) expanded in the orthonormal basis, so the proof is short given `range_lanczosMatrix` and the Hessenberg lemma. Consumers: lanczos-recurrence, fom-def, gmres-def (least-squares form), krylov-polynomial-exactness, arnoldi-fa-error, Lanczos-based SLQ (`slq-error`) when written with the recurrence. Prove.",
+      "updated_at": "2026-10-10",
+      "variants": [
+        "lanczos-recurrence"
+      ]
+    },
+    {
+      "id": "krylov-polynomial-exactness",
+      "title": "Krylov projection is exact on low-degree polynomials; the Ritz polynomial minimises ‖p(A)b‖",
+      "aliases": [
+        "Saad Lemma 3.1",
+        "p(A)b = Q p(H) Qᵀ b",
+        "Arnoldi approximation problem",
+        "Trefethen–Bau Thm 34.1",
+        "characteristic polynomial of H_q minimises"
+      ],
+      "area": "krylov-bases",
+      "kind": "identity",
+      "status": "candidate",
+      "informal": "If $Q$ has orthonormal columns with $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$ and $H = Q^\\top AQ$, then $p(A)b = Q\\,p(H)\\,Q^\\top b$ for every $p$ with $\\deg p < q$, and $Q^\\top p(A)b = p(H)Q^\\top b$ for $\\deg p \\le q$. If moreover $\\operatorname{range}Q = \\mathcal K_q(A,b)$ with $q \\le \\nu$, the characteristic polynomial $\\chi_H$ is the unique monic $p$ of degree $q$ minimising $\\|p(A)b\\|$.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$ arbitrary, $b \\in \\mathbb R^n$, $q \\ge 1$",
+        "$Q \\in \\mathbb R^{n\\times k}$ with $Q^\\top Q = I$ and $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$; $H = Q^\\top AQ$",
+        "for the minimality clause: $\\operatorname{range}Q = \\mathcal K_q(A,b)$ and $q \\le \\nu(A,b)$"
+      ],
+      "conclusion": "$p(A)b = Q\\,p(H)\\,Q^\\top b$ for $\\deg p < q$; $Q^\\top p(A)b = p(H)\\,Q^\\top b$ for $\\deg p \\le q$; $\\|\\chi_H(A)b\\| = \\min\\{\\|p(A)b\\| : p \\text{ monic}, \\deg p = q\\}$ with $\\chi_H(A)b \\perp \\mathcal K_q$",
+      "sources": [
+        {
+          "source": "saad92",
+          "label": "Lemma 3.1"
+        },
+        {
+          "source": "tb97",
+          "label": "Thm 34.1"
+        }
+      ],
+      "depends_on": [
+        "krylov-subspace",
+        "orthonormal-columns-def",
+        "projection-facts",
+        "krylov-grade"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.aeval_self_charpoly",
+          "present": true,
+          "note": "Cayley–Hamilton for H gives χ_H(H) = 0, hence Qᵀχ_H(A)b = 0."
+        },
+        {
+          "decl": "Submodule.norm_eq_iInf_iff_real_inner_eq_zero",
+          "present": true,
+          "note": "Minimiser over the affine set {A^q b + K_q} iff orthogonal to K_q."
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "foundation",
+        "krylov"
+      ],
+      "notes": "The power form `Q (QᵀAQ)^j Qᵀ b = A^j b` (j < q, any real A) is already proved as `NLAlib.mulVec_pow_transpose_mul_mul_mulVec_eq` (helper of lanczos-gauss-quadrature); this entry packages the polynomial form, the degree-q projected identity and the monic-minimality (Arnoldi/Lanczos eigenvalue) characterisation as public statements. Consumers: lanczos-fa-error, arnoldi-fa-error, fom-def (the FOM iterate is x₀ + Q H⁻¹ Qᵀ r₀), lanczos-gauss-quadrature (could be refactored onto it). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "block-krylov-subspace",
+      "title": "Block Krylov subspaces and their matrix-polynomial characterisation",
+      "aliases": [
+        "block Krylov space",
+        "K_q(A, Ω)",
+        "block Krylov iteration",
+        "randomized block Krylov"
+      ],
+      "area": "krylov-bases",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "For $A \\in \\mathbb R^{n\\times n}$ and $\\Omega \\in \\mathbb R^{n\\times s}$, $\\mathcal K_q(A,\\Omega) = \\operatorname{range}[\\Omega, A\\Omega, \\dots, A^{q-1}\\Omega] = \\sum_{j=1}^s \\mathcal K_q(A,\\omega_j) = \\{\\sum_{i<q}A^i\\Omega C_i : C_i \\in \\mathbb R^{s\\times s'}\\}$. It contains $\\operatorname{range}(p(A)\\Omega)$ for every scalar polynomial $p$ with $\\deg p < q$, is nested in $q$, satisfies $A\\mathcal K_q \\subseteq \\mathcal K_{q+1}$, and has dimension at most $qs$. The rectangular form used for low-rank approximation is $\\mathcal K_q(AA^\\top, A\\Omega) \\ni \\varphi(AA^\\top)A\\Omega$ for $\\deg\\varphi < q$.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$, $\\Omega \\in \\mathbb R^{n\\times s}$, $q \\in \\mathbb N$ (rectangular case: $A \\in \\mathbb R^{m\\times n}$ and the space $\\mathcal K_q(AA^\\top, A\\Omega)$)"
+      ],
+      "conclusion": "$\\mathcal K_q(A,\\Omega) = \\sum_j \\mathcal K_q(A,\\Omega e_j)$; $\\operatorname{range}(p(A)\\Omega) \\subseteq \\mathcal K_q(A,\\Omega)$ for $\\deg p < q$; $\\mathcal K_q \\subseteq \\mathcal K_{q+1}$, $A\\mathcal K_q \\subseteq \\mathcal K_{q+1}$, $\\dim\\mathcal K_q \\le qs$",
+      "sources": [
+        {
+          "source": "mm15",
+          "label": "Alg. 2"
+        },
+        {
+          "source": "tw23",
+          "label": "§7"
+        },
+        {
+          "source": "saad11",
+          "label": "§6.3"
+        }
+      ],
+      "depends_on": [
+        "krylov-subspace"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Submodule.span",
+          "present": true
+        },
+        {
+          "decl": "Matrix.range_mulVecLin",
+          "present": true
+        }
+      ],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "foundation",
+        "krylov",
+        "definition",
+        "low-rank"
+      ],
+      "notes": "Define as `⨆ j, krylovSpace A (fun r => Ω r j) q` so every single-vector lemma transfers. Consumers: polynomial-filter-range-finder, block-krylov-lra (Musco–Musco Thm 1), subspace-iteration-expected (q = 1 slice), randomized block Krylov trace estimation (Krylov-aware Hutch++). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "residual-polynomial",
+      "title": "Residual polynomials and the min–max quantity ε_k(S)",
+      "aliases": [
+        "residual polynomial",
+        "P_k^0",
+        "polynomials with p(0) = 1",
+        "ideal GMRES quantity",
+        "min-max polynomial",
+        "polynomial Krylov method"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "$\\mathcal P_k^0 = \\{p \\in \\mathbb R[x] : \\deg p \\le k,\\ p(0) = 1\\}$ and, for $S \\subseteq \\mathbb C$, $\\varepsilon_k(S) = \\inf_{p\\in\\mathcal P_k^0}\\sup_{z\\in S}|p(z)|$. Characterisation: $x \\in x_0 + \\mathcal K_k(A, r_0)$ iff $b - Ax = p(A)r_0$ for some $p \\in \\mathcal P_k^0$ (and then $x - x_\\star = p(A)(x_0 - x_\\star)$ when $Ax_\\star = b$). $\\varepsilon_k$ is antitone in $k$, monotone in $S$, attained for finite or compact $S$, and $\\varepsilon_k([a,b]) = 1/T_k\\big(\\tfrac{b+a}{b-a}\\big)$ for $0<a<b$.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$, $b, x_0 \\in \\mathbb R^n$, $r_0 = b - Ax_0$, $k \\in \\mathbb N$",
+        "$S \\subseteq \\mathbb C$ (or $\\subseteq \\mathbb R$)"
+      ],
+      "conclusion": "$x - x_0 \\in \\mathcal K_k(A,r_0) \\iff \\exists p \\in \\mathcal P_k^0,\\ b - Ax = p(A)r_0$; $\\varepsilon_{k+1}(S) \\le \\varepsilon_k(S)$; $S \\subseteq S' \\Rightarrow \\varepsilon_k(S) \\le \\varepsilon_k(S')$; the infimum is a minimum for finite $S$; $\\varepsilon_k([a,b]) = 1/T_k(\\frac{b+a}{b-a})$",
+      "sources": [
+        {
+          "source": "saad03",
+          "label": "§6.11"
+        },
+        {
+          "source": "tb97",
+          "label": "Lect. 35"
+        },
+        {
+          "source": "greenbaum97",
+          "label": "Ch. 3"
+        }
+      ],
+      "depends_on": [
+        "krylov-subspace",
+        "chebyshev-minimax"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.eval",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.aeval",
+          "present": true
+        }
+      ],
+      "difficulty": 1,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "krylov",
+        "definition"
+      ],
+      "notes": "The affine-Krylov ↔ residual-polynomial step is currently a private lemma inside `NLAlib/Krylov/CG.lean` (`exists_degree_lt_one_sub_eq_X_mul`); making it public removes duplication. The value ε_k([a,b]) is the existing `isLeast_chebyshev_minimax`. Consumers (highest in-degree of this group): gmres-def, gmres-diagonalizable, gmres-elman, gmres-bgt, crouzeix-palencia (GMRES corollary), minres-bound, chebyshev-iteration, richardson-iteration, fom-def, cg-convergence (refactor). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "gmres-def",
+      "title": "GMRES iterate: residual minimisation over the Krylov space",
+      "aliases": [
+        "GMRES",
+        "generalized minimal residual",
+        "MINRES iterate",
+        "IsGMRESIterate",
+        "minimal residual method"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "$x_k$ is a GMRES iterate if $x_k \\in x_0 + \\mathcal K_k(A,r_0)$ and $\\|b - Ax_k\\|_2 \\le \\|b - Ax\\|_2$ for all $x \\in x_0 + \\mathcal K_k(A,r_0)$. Characterisations: an iterate exists for every $A$; the residual $r_k$ is unique and $x_k$ is unique if $A$ is invertible; $r_k \\perp A\\mathcal K_k(A,r_0)$ (Petrov–Galerkin); $\\|r_k\\| = \\min_{p\\in\\mathcal P_k^0}\\|p(A)r_0\\|$; $\\|r_{k+1}\\| \\le \\|r_k\\|$; with Arnoldi, $\\|r_k\\| = \\min_y\\|\\,\\|r_0\\|e_1 - \\underline H_k y\\|$; if $A$ is invertible, $r_\\nu = 0$ at the grade $\\nu = \\nu(A,r_0)$. For symmetric $A$ this is MINRES.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$, $b, x_0 \\in \\mathbb R^n$, $r_0 = b - Ax_0$, $k \\in \\mathbb N$ (complex form: $\\mathbb C^{n\\times n}$ with the Hermitian inner product)"
+      ],
+      "conclusion": "existence; uniqueness of $r_k$ (and of $x_k$ if $A$ invertible); $r_k \\perp A\\mathcal K_k$; $\\|r_k\\| = \\min_{p\\in\\mathcal P_k^0}\\|p(A)r_0\\|$; $\\|r_{k+1}\\| \\le \\|r_k\\|$; $\\|r_k\\| = \\min_y\\|\\,\\|r_0\\|e_1 - \\underline H_ky\\|$; $A$ invertible $\\Rightarrow r_{\\nu(A,r_0)} = 0$",
+      "sources": [
+        {
+          "source": "ss86",
+          "label": "§2–3"
+        },
+        {
+          "source": "saad03",
+          "label": "§6.5"
+        },
+        {
+          "source": "tb97",
+          "label": "Lect. 35"
+        },
+        {
+          "source": "ps75"
+        }
+      ],
+      "depends_on": [
+        "residual-polynomial",
+        "krylov-grade",
+        "projection-facts",
+        "arnoldi-relation"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Submodule.exists_norm_eq_iInf_of_complete_subspace",
+          "present": true,
+          "note": "Existence of the minimiser (Hilbert projection) applied to the finite-dimensional subspace A·K_k."
+        },
+        {
+          "decl": "Submodule.norm_eq_iInf_iff_real_inner_eq_zero",
+          "present": true,
+          "note": "Petrov–Galerkin characterisation r_k ⟂ A K_k."
+        },
+        {
+          "decl": "Submodule.starProjection_minimal",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "krylov",
+        "definition",
+        "gmres"
+      ],
+      "notes": "Mirror `NLAlib.IsCGIterate` (variational definition, existence by projection, no algorithm). Real primary statement: for real A, b, x₀ the real GMRES residual equals the complex one (for real r₀, replacing a complex p by its real-coefficient part never increases ‖p(A)r₀‖), so complex-spectrum bounds (gmres-diagonalizable, gmres-bgt, crouzeix-palencia) apply to the real definition. Consumers: gmres-diagonalizable, gmres-elman, gmres-bgt, minres-bound, gmres-any-convergence-curve, restarted GMRES(m) (Elman per cycle), sketched GMRES (Nakatsukasa–Tropp 2024: minimise ‖S(b − AQy)‖ over a Krylov basis; a sketch-and-solve consumer with `sketch-and-solve-ls`). The Arnoldi least-squares clause can be split off if arnoldi-relation lags. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "gmres-diagonalizable",
+      "title": "GMRES bound for diagonalisable A: ‖r_k‖ ≤ κ(V) ε_k(Λ) ‖r_0‖",
+      "aliases": [
+        "GMRES eigenvalue bound",
+        "Saad–Schultz bound",
+        "κ(V) bound",
+        "Trefethen–Bau Thm 35.2",
+        "Saad Prop 6.32",
+        "GMRES normal matrices"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $A = V\\Lambda V^{-1}$ with $\\Lambda = \\operatorname{diag}(\\lambda_i)$, then the GMRES residual satisfies $$\\frac{\\|r_k\\|}{\\|r_0\\|} \\le \\min_{p\\in\\mathcal P_k^0}\\|p(A)\\| \\le \\kappa_2(V)\\min_{p\\in\\mathcal P_k^0}\\max_i|p(\\lambda_i)|.$$ For normal $A$ ($V$ unitary) the factor is $1$, and the bound is then sharp in the worst case over $r_0$ (Greenbaum–Gurvits, Joubert).",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$ and $V \\in \\mathbb C^{n\\times n}$ invertible, $\\lambda \\in \\mathbb C^n$ with $A = V\\operatorname{diag}(\\lambda)V^{-1}$ over $\\mathbb C$",
+        "$x_k$ a GMRES iterate (gmres-def)"
+      ],
+      "conclusion": "$\\|r_k\\| \\le \\|V\\|_2\\|V^{-1}\\|_2\\,\\max_i|p(\\lambda_i)|\\,\\|r_0\\|$ for every real $p \\in \\mathcal P_k^0$; for $A$ normal, $\\|r_k\\| \\le \\max_i|p(\\lambda_i)|\\,\\|r_0\\|$",
+      "sources": [
+        {
+          "source": "ss86",
+          "label": "§3.4"
+        },
+        {
+          "source": "saad03",
+          "label": "Prop. 6.32"
+        },
+        {
+          "source": "tb97",
+          "label": "Thm 35.2"
+        },
+        {
+          "source": "gg94"
+        }
+      ],
+      "depends_on": [
+        "gmres-def",
+        "residual-polynomial"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.l2_opNorm_mul",
+          "present": true
+        },
+        {
+          "decl": "Matrix.l2_opNorm_mulVec",
+          "present": true
+        },
+        {
+          "decl": "Matrix.IsDiagonalizable",
+          "present": false,
+          "note": "No matrix diagonalisability predicate; state with an explicit V and diagonal Λ."
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "gmres",
+        "bound"
+      ],
+      "notes": "Over real p the min–max over a conjugation-closed spectrum equals the complex one, so the real statement loses nothing. For symmetric A this is the general clause of minres-bound and can reuse `specNorm_aeval_le`. The worst-case sharpness for normal A (max over ‖r₀‖=1 of ‖r_k‖ equals ε_k(σ(A)); Greenbaum–Gurvits 1994) is a later, harder (4) variant: assume if needed. Consumers: minres-bound, gmres-bgt (comparison), sketched GMRES analyses, Krylov solvers inside randomized preconditioning of nonsymmetric systems. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "gmres-elman",
+      "title": "Elman bound: GMRES for positive-real A",
+      "aliases": [
+        "Elman bound",
+        "Elman estimate",
+        "Eisenstat–Elman–Schultz",
+        "positive real GMRES",
+        "restarted GMRES convergence"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If the symmetric part $M = (A + A^\\top)/2$ is positive definite, then $$\\|r_k\\| \\le \\Big(1 - \\frac{\\lambda_{\\min}(M)^2}{\\|A\\|_2^2}\\Big)^{k/2}\\|r_0\\|.$$ The same bound holds for restarted GMRES($m$) after $k$ total steps, since each cycle contracts by the per-step factor.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$ with $M = \\tfrac12(A + A^\\top) \\succ 0$, $\\alpha = \\lambda_{\\min}(M) > 0$, $\\beta = \\|A\\|_2$",
+        "$x_k$ a GMRES iterate from $x_0$"
+      ],
+      "conclusion": "$\\|r_k\\| \\le (1 - \\alpha^2/\\beta^2)^{k/2}\\|r_0\\|$; for GMRES($m$) restarted every $m$ steps, $\\|r^{(j)}\\| \\le (1 - \\alpha^2/\\beta^2)^{jm/2}\\|r_0\\|$ after $j$ cycles",
+      "sources": [
+        {
+          "source": "ees83",
+          "label": "Thm 3.3"
+        },
+        {
+          "source": "saad03",
+          "label": "§6.11.4"
+        }
+      ],
+      "depends_on": [
+        "gmres-def",
+        "residual-polynomial",
+        "courant-fischer",
+        "matrix-norms-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.IsHermitian.eigenvalues",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "gmres",
+        "bound",
+        "real"
+      ],
+      "notes": "Proof: ‖(I − ωA)r‖² ≤ (1 − 2ωα + ω²β²)‖r‖², take ω = α/β², and p(z) = (1 − ωz)^k ∈ P_k^0. Entirely real; no field of values needed (the complex form with dist(0, W(A)) in place of α is a variant under field-of-values-def). Consumers: restarted GMRES, gmres-bgt (it is the bound BGT sharpen), preconditioned nonsymmetric solves where the preconditioned operator is positive real. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "minres-bound",
+      "title": "MINRES bounds: spectral min–max and two indefinite intervals",
+      "aliases": [
+        "MINRES convergence",
+        "MINRES indefinite bound",
+        "symmetric indefinite Krylov",
+        "Paige–Saunders MINRES"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For symmetric invertible $A$, the minimal-residual (MINRES = GMRES) iterate satisfies $\\|r_k\\| \\le \\min_{p\\in\\mathcal P_k^0}\\max_i|p(\\lambda_i)|\\,\\|r_0\\|$. If the spectrum lies in $[a,b]\\cup[c,d]$ with $a<b<0<c<d$ and $b-a = d-c$, then $$\\|r_{2k}\\| \\le 2\\Big(\\frac{\\sqrt{|ad|}-\\sqrt{|bc|}}{\\sqrt{|ad|}+\\sqrt{|bc|}}\\Big)^k\\|r_0\\|,$$ in particular $2\\big(\\frac{\\kappa-1}{\\kappa+1}\\big)^k$ for $[-d,-c]\\cup[c,d]$, $\\kappa = d/c$; for $A \\succ 0$ with spectrum in $[a,b]$, $\\|r_k\\| \\le 2\\big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^k\\|r_0\\|$.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$ symmetric and invertible, $x_k$ a GMRES iterate (gmres-def)",
+        "for the interval clauses: every eigenvalue in $[a,b]\\cup[c,d]$, $a<b<0<c<d$, $d - c = b - a$ (resp. in $[a,b]$, $0<a<b$)"
+      ],
+      "conclusion": "$\\|r_k\\| \\le \\max_i|p(\\lambda_i)|\\,\\|r_0\\|$ for every $p \\in \\mathcal P_k^0$; $\\|r_{2k}\\| \\le 2\\big(\\frac{\\sqrt{|ad|}-\\sqrt{|bc|}}{\\sqrt{|ad|}+\\sqrt{|bc|}}\\big)^k\\|r_0\\|$; definite case $\\|r_k\\| \\le 2\\big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^k\\|r_0\\|$",
+      "sources": [
+        {
+          "source": "greenbaum97",
+          "label": "§3.1"
+        },
+        {
+          "source": "ps75"
+        },
+        {
+          "source": "ls13",
+          "label": "§5.6"
+        }
+      ],
+      "depends_on": [
+        "gmres-def",
+        "residual-polynomial",
+        "polynomial-spectral-bound",
+        "two-interval-minimax",
+        "chebyshev-minimax"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.IsHermitian.eigenvalues",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "minres",
+        "bound",
+        "real"
+      ],
+      "notes": "Each clause is polynomial-spectral-bound applied to the GMRES polynomial characterisation plus a polynomial from two-interval-minimax or chebyshev-minimax. Consumers: preconditioned MINRES for saddle-point / KKT systems, LSMR (MINRES on the normal equations) inside sketch-and-precondition least squares, regularised indefinite solves in randomized Newton methods. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "fom-def",
+      "title": "FOM (Arnoldi Galerkin) iterate and its residual formula",
+      "aliases": [
+        "full orthogonalization method",
+        "FOM",
+        "Arnoldi method for linear systems",
+        "Galerkin Krylov iterate",
+        "Lanczos-FA for 1/x"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "$x_k^F$ is a FOM iterate if $x_k^F \\in x_0 + \\mathcal K_k(A,r_0)$ and $b - Ax_k^F \\perp \\mathcal K_k(A,r_0)$. It exists and is unique iff $H_k$ is invertible, and then $x_k^F = x_0 + \\|r_0\\|Q_kH_k^{-1}e_1$ and $r_k^F = -h_{k+1,k}\\,(e_k^\\top H_k^{-1}e_1)\\|r_0\\|\\,q_{k+1}$. For symmetric positive definite $A$ the FOM iterate is the CG iterate.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$, $b, x_0$, $r_0 = b - Ax_0 \\ne 0$, $1 \\le k \\le \\nu(A,r_0)$, Arnoldi data $Q_k, H_k, h_{k+1,k}, q_{k+1}$"
+      ],
+      "conclusion": "a FOM iterate exists uniquely iff $\\det H_k \\ne 0$; then $x_k^F = x_0 + \\|r_0\\|Q_kH_k^{-1}e_1$, $\\|r_k^F\\| = h_{k+1,k}\\,|e_k^\\top H_k^{-1}e_1|\\,\\|r_0\\|$; if $A$ is symmetric positive definite, $x_k^F$ satisfies `IsCGIterate A b x₀ k`",
+      "sources": [
+        {
+          "source": "saad03",
+          "label": "§6.4.1"
+        },
+        {
+          "source": "saad92",
+          "label": "§3"
+        }
+      ],
+      "depends_on": [
+        "arnoldi-relation",
+        "krylov-polynomial-exactness",
+        "residual-polynomial"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.nonsing_inv_mul",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "later",
+      "tags": [
+        "krylov",
+        "fom",
+        "definition"
+      ],
+      "notes": "FOM is the Arnoldi approximation of f(A)b for f(z) = 1/z, so it ties the f(A)b entries to linear solves. Later variant (identity, difficulty 3): the Brown / Cullum–Greenbaum peak–plateau relation ‖r_k^F‖ = ‖r_k^G‖ / √(1 − (‖r_k^G‖/‖r_{k−1}^G‖)²), with FOM undefined exactly when GMRES stagnates (Saad 2003 §6.5.7). Consumers: lanczos-fa-error for 1/x, sketched FOM, the identification of CG as Galerkin (cg-convergence). Prove.",
+      "updated_at": "2026-10-10",
+      "variants": [
+        "cg-convergence",
+        "lanczos-fa-error"
+      ]
+    },
+    {
+      "id": "chebyshev-iteration",
+      "title": "Chebyshev semi-iterative method: residual polynomial and rate",
+      "aliases": [
+        "Chebyshev iteration",
+        "Chebyshev semi-iterative method",
+        "Golub–Varga",
+        "Chebyshev acceleration",
+        "second-order Richardson"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "theorem",
+      "status": "candidate",
+      "informal": "For $A$ symmetric with spectrum in $[a,b]$, $0<a<b$, let $\\theta = \\tfrac{b+a}2$, $\\delta = \\tfrac{b-a}2$, $\\sigma = \\theta/\\delta$, $\\rho_0 = 1/\\sigma$, $\\rho_k = 1/(2\\sigma - \\rho_{k-1})$, $d_0 = r_0/\\theta$, $d_k = \\rho_k\\rho_{k-1}d_{k-1} + \\tfrac{2\\rho_k}{\\delta}r_k$, $x_{k+1} = x_k + d_k$. Then $r_k = R_k(A)r_0$ with $R_k(t) = T_k\\big(\\tfrac{\\theta - t}{\\delta}\\big)/T_k(\\sigma)$ (NLAlib `chebyshevResidual a b k`), so $$\\|r_k\\| \\le \\frac{\\|r_0\\|}{T_k(\\sigma)} \\le 2\\Big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\Big)^k\\|r_0\\|,$$ and the same for the error in the $A$-norm. No inner products are needed.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$ symmetric with all eigenvalues in $[a,b]$, $0<a<b$",
+        "$x_0$ arbitrary and $x_k$ produced by the recurrence above (Saad Alg. 12.1)"
+      ],
+      "conclusion": "$b - Ax_k = R_k(A)(b - Ax_0)$ with $R_k = $ `chebyshevResidual a b k`; $\\|r_k\\| \\le 2\\big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^k\\|r_0\\|$ and $\\|x_k - x_\\star\\|_A \\le 2\\big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^k\\|x_0 - x_\\star\\|_A$",
+      "sources": [
+        {
+          "source": "saad03",
+          "label": "§12.3, Alg. 12.1"
+        },
+        {
+          "source": "gv61"
+        }
+      ],
+      "depends_on": [
+        "residual-polynomial",
+        "chebyshev-minimax",
+        "polynomial-spectral-bound"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.Chebyshev.T_add_two",
+          "present": true,
+          "note": "The three-term recurrence of T_k drives the identity r_k = R_k(A) r_0."
+        }
+      ],
+      "difficulty": 3,
+      "priority": "later",
+      "tags": [
+        "krylov",
+        "chebyshev",
+        "polynomial-method",
+        "real"
+      ],
+      "notes": "The identity is an induction on the coupled recurrences (the ρ_k bookkeeping is the work). Preconditioned form: replace A by P⁻¹A with aP ≼ A ≼ bP. Consumers: LSRN (Meng–Saunders–Mahoney 2014) runs Chebyshev semi-iteration on the sketch-preconditioned normal equations; polynomial preconditioning and Chebyshev filtering in subspace iteration; the kernel polynomial method for spectral densities (same recurrence). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "richardson-iteration",
+      "title": "Preconditioned Richardson iteration: error contraction",
+      "aliases": [
+        "Richardson iteration",
+        "stationary iteration",
+        "damped Richardson",
+        "iterative sketching",
+        "iterative Hessian sketch (deterministic step)"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For $A, P$ symmetric positive definite with $aP \\preceq A \\preceq bP$ and step $\\omega > 0$, the iteration $x_{k+1} = x_k + \\omega P^{-1}(c - Ax_k)$ has $x_k - x_\\star = (I - \\omega P^{-1}A)^k(x_0 - x_\\star)$ and $$\\|x_k - x_\\star\\|_A \\le \\rho(\\omega)^k\\|x_0 - x_\\star\\|_A,\\qquad \\rho(\\omega) = \\max(|1-\\omega a|, |1-\\omega b|),$$ also in the $P$-norm; $\\omega = 2/(a+b)$ gives $\\rho = \\frac{b-a}{b+a}$. $P = I$ is plain Richardson.",
+      "hypotheses": [
+        "$A, P \\in \\mathbb R^{n\\times n}$ symmetric positive definite, $0 < a \\le b$, $aP \\preceq A \\preceq bP$ (Loewner)",
+        "$Ax_\\star = c$, $\\omega > 0$, $x_{k+1} = x_k + \\omega P^{-1}(c - Ax_k)$"
+      ],
+      "conclusion": "$x_k - x_\\star = (I - \\omega P^{-1}A)^k(x_0 - x_\\star)$; $\\|x_k - x_\\star\\|_A \\le \\max(|1-\\omega a|,|1-\\omega b|)^k\\|x_0 - x_\\star\\|_A$ (same in $\\|\\cdot\\|_P$); with $\\omega = \\frac2{a+b}$ the factor is $\\frac{b-a}{b+a}$",
+      "sources": [
+        {
+          "source": "greenbaum97",
+          "label": "§2.1"
+        },
+        {
+          "source": "saad03",
+          "label": "§4.2"
+        }
+      ],
+      "depends_on": [
+        "residual-polynomial",
+        "polynomial-spectral-bound"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.PosDef",
+          "present": true
+        },
+        {
+          "decl": "CFC.sqrt",
+          "present": true,
+          "note": "P^{1/2} to symmetrise P^{-1}A; or use LDL.lower_conj_diag for P = LLᵀ."
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "stationary",
+        "polynomial-method",
+        "real"
+      ],
+      "notes": "The symmetrisation P^{-1/2}AP^{-1/2} with spectrum in [a,b] reduces it to polynomial-spectral-bound with p(t) = (1 − ωt)^k. Consumers: iterative sketching for least squares (Pilanci–Wainwright iterative Hessian sketch; Epperly 2024 'fast and forward stable' iterative sketching with P = (SA)ᵀ(SA), A ↦ AᵀA, a = (1+ε)^{-2}, b = (1−ε)^{-2} from `ose-def`), sketch-and-project viewed as preconditioned Richardson, damped Newton–sketch. Momentum (heavy-ball) acceleration is a later variant. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "cgls-lsqr-bound",
+      "title": "CGLS / LSQR convergence: κ(A)-rate for least squares",
+      "aliases": [
+        "LSQR convergence",
+        "CGLS",
+        "CGNR",
+        "CG on the normal equations",
+        "Krylov least squares",
+        "sketch-and-precondition iteration count"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For $A \\in \\mathbb R^{m\\times n}$ of full column rank with singular values in $[\\sigma_{lo},\\sigma_{hi}]$, the iterate $x_k$ minimising $\\|b - Ax\\|$ over $x_0 + \\mathcal K_k(A^\\top A, A^\\top(b - Ax_0))$ (CGLS/LSQR in exact arithmetic) satisfies $$\\|A(x_k - x_\\star)\\| \\le 2\\Big(\\frac{\\sigma_{hi}-\\sigma_{lo}}{\\sigma_{hi}+\\sigma_{lo}}\\Big)^k\\|A(x_0 - x_\\star)\\|,$$ $x_\\star = \\arg\\min\\|b - Ax\\|$, and $\\|b - Ax_k\\|^2 = \\|b - Ax_\\star\\|^2 + \\|A(x_k - x_\\star)\\|^2$. With a right preconditioner $R$ the same holds with the singular values of $AR^{-1}$.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{m\\times n}$ with $\\operatorname{rank}A = n$, all singular values in $[\\sigma_{lo},\\sigma_{hi}]$, $0 < \\sigma_{lo} \\le \\sigma_{hi}$",
+        "$x_k$ = `IsCGIterate (AᵀA) (Aᵀb) x₀ k`, equivalently the minimiser of $\\|b - Ax\\|$ over $x_0 + \\mathcal K_k(A^\\top A, A^\\top(b - Ax_0))$"
+      ],
+      "conclusion": "$\\|A(x_k - x_\\star)\\| \\le 2\\big(\\frac{\\sigma_{hi}-\\sigma_{lo}}{\\sigma_{hi}+\\sigma_{lo}}\\big)^k\\|A(x_0 - x_\\star)\\|$ and $\\|b - Ax_k\\|^2 = \\|b - Ax_\\star\\|^2 + \\|A(x_k - x_\\star)\\|^2$",
+      "sources": [
+        {
+          "source": "saad03",
+          "label": "§8.3"
+        },
+        {
+          "source": "ps82"
+        }
+      ],
+      "depends_on": [
+        "cg-convergence",
+        "svd",
+        "projection-facts"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.PosDef",
+          "present": true,
+          "note": "AᵀA ≻ 0 from full column rank."
+        }
+      ],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "least-squares",
+        "bound",
+        "real"
+      ],
+      "notes": "A direct instance of `quadForm_sub_le_of_isCGIterate(_of_le)` with A ↦ AᵀA, c = Aᵀb, a = σ_lo², b = σ_hi² (√ of the eigenvalue ratio is the singular value ratio). This is the Krylov solver of Blendenpik / LSRN / sketch-and-precondition: with R from a QR of SA and S an ε-embedding, κ(AR⁻¹) ≤ (1+ε)/(1−ε), so O(log(1/δ)) iterations suffice; the existing candidate `sketch-and-precondition` becomes an end-to-end result once this is in. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "preconditioned-cg",
+      "title": "Preconditioned CG bound under a Loewner sandwich aP ≼ A ≼ bP",
+      "aliases": [
+        "PCG",
+        "preconditioned conjugate gradient",
+        "split preconditioning",
+        "relative condition number",
+        "Nyström PCG (deterministic step)"
+      ],
+      "area": "krylov-linear-systems",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For $A, P \\succ 0$ with $aP \\preceq A \\preceq bP$, the PCG iterate (minimiser of $\\|x - x_\\star\\|_A$ over $x_0 + \\mathcal K_k(P^{-1}A, P^{-1}r_0)$) satisfies $$\\|x_k - x_\\star\\|_A \\le 2\\Big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\Big)^k\\|x_0 - x_\\star\\|_A.$$ Equivalently CG applied to $L^{-1}AL^{-\\top}$ for any factorisation $P = LL^\\top$, with $\\mathcal K_k(P^{-1}A, P^{-1}r_0) = L^{-\\top}\\mathcal K_k(L^{-1}AL^{-\\top}, L^{-1}r_0)$.",
+      "hypotheses": [
+        "$A, P \\in \\mathbb R^{n\\times n}$ symmetric positive definite, $0 < a < b$ (or $\\le$), $aP \\preceq A \\preceq bP$",
+        "$Ax_\\star = c$; $x_k$ minimises `cgObjective A c` over $x_0 + \\mathcal K_k(P^{-1}A, P^{-1}(c - Ax_0))$"
+      ],
+      "conclusion": "$\\|x_k - x_\\star\\|_A \\le 2\\big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^k\\|x_0 - x_\\star\\|_A$; the PCG Krylov space is the image under $L^{-\\top}$ of the CG Krylov space of $L^{-1}AL^{-\\top}$",
+      "sources": [
+        {
+          "source": "saad03",
+          "label": "§9.2"
+        },
+        {
+          "source": "greenbaum97",
+          "label": "Ch. 8"
+        }
+      ],
+      "depends_on": [
+        "cg-convergence",
+        "krylov-subspace"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "LDL.lower_conj_diag",
+          "present": true,
+          "note": "LDLᵀ factorisation of a positive definite matrix gives P = LLᵀ after absorbing √D."
+        },
+        {
+          "decl": "CFC.sqrt",
+          "present": true,
+          "note": "Alternative symmetric factor P^{1/2}."
+        },
+        {
+          "decl": "Matrix.PosDef",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "krylov",
+        "preconditioning",
+        "bound",
+        "real"
+      ],
+      "notes": "The Loewner-sandwich hypothesis is how randomized preconditioners are certified, so stating it that way avoids a generalised-eigenvalue API. Consumers: `nystrom-pcg` (Frangella–Tropp–Udell: (A + μI) vs Nyström preconditioner, a and b from the Nyström error), randomly pivoted Cholesky preconditioning, sketch-and-precondition when solved by CG on normal equations (with cgls-lsqr-bound). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "two-interval-minimax",
+      "title": "Residual polynomial small on two intervals of equal length",
+      "aliases": [
+        "two-interval Chebyshev",
+        "indefinite Chebyshev bound",
+        "MINRES polynomial",
+        "quadratic substitution"
+      ],
+      "area": "polynomial-approximation",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For $a<b<0<c<d$ with $d - c = b - a$ and $k \\in \\mathbb N$, $p(x) = R_k\\big(x^2 - (b+c)x\\big)$, with $R_k$ the shifted Chebyshev residual on $[\\,|bc|, |ad|\\,]$, has $\\deg p \\le 2k$, $p(0) = 1$ and $$\\max_{x\\in[a,b]\\cup[c,d]}|p(x)| \\le 2\\Big(\\frac{\\sqrt{|ad|}-\\sqrt{|bc|}}{\\sqrt{|ad|}+\\sqrt{|bc|}}\\Big)^k.$$ The map $x \\mapsto x^2 - (b+c)x$ sends both intervals onto $[\\,|bc|, |ad|\\,]$ and $0 \\mapsto 0$. For $[-d,-c]\\cup[c,d]$ the bound is $2\\big(\\frac{d-c}{d+c}\\big)^k$.",
+      "hypotheses": [
+        "$a < b < 0 < c < d$ with $d - c = b - a$, $k \\in \\mathbb N$"
+      ],
+      "conclusion": "$\\exists p \\in \\mathbb R[x]$, $\\deg p \\le 2k$, $p(0) = 1$, $|p(x)| \\le 2\\big(\\frac{\\sqrt{|ad|}-\\sqrt{|bc|}}{\\sqrt{|ad|}+\\sqrt{|bc|}}\\big)^k$ for all $x \\in [a,b]\\cup[c,d]$",
+      "sources": [
+        {
+          "source": "greenbaum97",
+          "label": "§3.1"
+        },
+        {
+          "source": "ls13",
+          "label": "§5.6"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-minimax",
+        "chebyshev-growth"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.comp",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.T",
+          "present": true
+        }
+      ],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "polynomial",
+        "chebyshev",
+        "indefinite"
+      ],
+      "notes": "Direct from `abs_eval_chebyshevResidual_le_two_mul_pow` with interval [|bc|, |ad|] composed with the quadratic (check: (d−b)(d−c) − bc = |ad| uses d − c = b − a). Optimality (it is the min–max value for equal-length intervals) is a later, harder variant. Belongs to the polynomial layer; group T2 may also list indefinite approximation, deduplicate on merge. Consumers: minres-bound, indefinite Lanczos-FA bounds, spectrum-slicing filters. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "field-of-values-def",
+      "title": "Field of values (numerical range) and its basic properties",
+      "aliases": [
+        "numerical range",
+        "field of values",
+        "W(A)",
+        "Toeplitz–Hausdorff",
+        "numerical radius"
+      ],
+      "area": "krylov-nonnormal",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "$W(A) = \\{x^*Ax : x \\in \\mathbb C^n, \\|x\\| = 1\\}$ for $A \\in \\mathbb C^{n\\times n}$ (for real $A$, of its complexification). Properties: compact; contains every eigenvalue; $W(A) \\subseteq \\{|z| \\le \\|A\\|_2\\}$; $W(\\alpha A + \\beta I) = \\alpha W(A) + \\beta$; $W(U^*AU) = W(A)$ for unitary $U$; $W(Q^*AQ) \\subseteq W(A)$ for $Q$ with orthonormal columns (compressions, Arnoldi $H_q$); $\\operatorname{Re}W(A) = [\\lambda_{\\min}(M), \\lambda_{\\max}(M)]$, $M = \\tfrac12(A + A^*)$; convex (Toeplitz–Hausdorff); $W(A) = \\operatorname{conv}\\sigma(A)$ for normal $A$.",
+      "hypotheses": [
+        "$A \\in \\mathbb C^{n\\times n}$ over a `Fintype` index (real $A$ via `A.map Complex.ofReal`)"
+      ],
+      "conclusion": "$W(A)$ is compact and convex, $\\sigma(A) \\subseteq W(A) \\subseteq \\bar B(0,\\|A\\|_2)$, $W(Q^*AQ) \\subseteq W(A)$ for $Q^*Q = I$, $\\operatorname{Re}W(A) = [\\lambda_{\\min}(M),\\lambda_{\\max}(M)]$, and $W(A) = \\operatorname{conv}\\sigma(A)$ if $A$ is normal",
+      "sources": [
+        {
+          "source": "hj91",
+          "label": "Ch. 1"
+        },
+        {
+          "source": "greenbaum97",
+          "label": "§3.2"
+        }
+      ],
+      "depends_on": [
+        "courant-fischer"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "numericalRange",
+          "present": false,
+          "note": "Mathlib has no numerical range / field of values (grep for numericalRange, fieldOfValues, numericalRadius finds nothing)."
+        },
+        {
+          "decl": "IsCompact.image",
+          "present": true
+        },
+        {
+          "decl": "IsStarNormal",
+          "present": true
+        },
+        {
+          "decl": "Matrix.IsHermitian.spectral_theorem",
+          "present": true
+        },
+        {
+          "decl": "convexHull",
+          "present": true
+        }
+      ],
+      "difficulty": 3,
+      "priority": "next",
+      "tags": [
+        "foundation",
+        "krylov",
+        "definition",
+        "complex",
+        "non-normal"
+      ],
+      "notes": "Intrinsically complex. Everything except convexity is difficulty 1–2; Toeplitz–Hausdorff convexity (reduce to 2×2) is the difficulty-3 piece and is not needed by the assumed consumers, so it can land last. Consumers: crouzeix-palencia, gmres-bgt, arnoldi-fa-error, the complex form of gmres-elman (dist(0, W(A)) in place of λ_min(M)), pseudospectral/numerical-range arguments in non-normal randomized NLA (e.g. sketched Arnoldi eigen-solvers). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "crouzeix-palencia",
+      "title": "Crouzeix–Palencia: W(A) is a (1+√2)-spectral set",
+      "aliases": [
+        "Crouzeix's conjecture",
+        "Crouzeix–Palencia",
+        "numerical range is a K-spectral set",
+        "1 + √2 bound"
+      ],
+      "area": "krylov-nonnormal",
+      "kind": "theorem",
+      "status": "candidate",
+      "informal": "For every $A \\in \\mathbb C^{n\\times n}$ and every polynomial $p$, $$\\|p(A)\\|_2 \\le (1+\\sqrt2)\\max_{z\\in W(A)}|p(z)|.$$ Consequently the GMRES residual satisfies $\\|r_k\\| \\le (1+\\sqrt2)\\,\\varepsilon_k(W(A))\\,\\|r_0\\|$. (Crouzeix conjectures the constant 2.)",
+      "hypotheses": [
+        "$A \\in \\mathbb C^{n\\times n}$, $p \\in \\mathbb C[x]$"
+      ],
+      "conclusion": "$\\|p(A)\\|_2 \\le (1+\\sqrt2)\\sup_{z\\in W(A)}|p(z)|$; hence $\\|r_k\\| \\le (1+\\sqrt2)\\min_{p\\in\\mathcal P_k^0}\\max_{W(A)}|p|\\,\\|r_0\\|$ for GMRES",
+      "sources": [
+        {
+          "source": "cp17",
+          "label": "main theorem"
+        },
+        {
+          "source": "greenbaum97",
+          "label": "§3.2"
+        }
+      ],
+      "depends_on": [
+        "field-of-values-def",
+        "gmres-def",
+        "residual-polynomial"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Complex.norm_le_of_forall_mem_frontier_norm_le",
+          "present": true,
+          "note": "Maximum modulus; part of any proof via the Cauchy transform on ∂W(A)."
+        },
+        {
+          "decl": "Matrix.l2_opNorm_mul",
+          "present": true
+        }
+      ],
+      "difficulty": 5,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "non-normal",
+        "complex",
+        "assume"
+      ],
+      "notes": "Assume (status `assumed` once a consumer is formalised): the statement is short, polynomial-only (no holomorphic functional calculus needed) and certain; the proof (Cauchy-transform / double-layer potential on the boundary of a convex set) is research-level to formalise. Stating it for polynomials sidesteps Mathlib's lack of a functional calculus for non-normal matrices. Consumers: arnoldi-fa-error, the GMRES field-of-values bound above, non-normal Krylov f(A)b and trace-of-f(A) estimators for nonsymmetric A.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "gmres-bgt",
+      "title": "Beckermann–Goreinov–Tyrtyshnikov sharpening of the Elman bound",
+      "aliases": [
+        "BGT bound",
+        "Beckermann–Goreinov–Tyrtyshnikov",
+        "improved Elman estimate",
+        "field of values GMRES bound"
+      ],
+      "area": "krylov-nonnormal",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $0 \\notin W(A)$ and $\\beta \\in [0,\\pi/2)$ is defined by $\\cos\\beta = \\operatorname{dist}(0,W(A))/\\|A\\|_2$, then GMRES satisfies $$\\|r_k\\| \\le \\big(2 + \\tfrac{2}{\\sqrt3}\\big)(2 + \\gamma_\\beta)\\,\\gamma_\\beta^k\\,\\|r_0\\|,\\qquad \\gamma_\\beta = 2\\sin\\Big(\\frac{\\beta}{4 - 2\\beta/\\pi}\\Big) < \\sin\\beta,$$ improving Elman's $\\|r_k\\| \\le \\sin^k\\beta\\,\\|r_0\\|$ in rate.",
+      "hypotheses": [
+        "$A \\in \\mathbb C^{n\\times n}$ (or real, via complexification) with $0 \\notin W(A)$",
+        "$\\cos\\beta = \\operatorname{dist}(0,W(A))/\\|A\\|_2$, $\\beta \\in [0,\\pi/2)$; $x_k$ a GMRES iterate"
+      ],
+      "conclusion": "$\\|r_k\\| \\le (2 + 2/\\sqrt3)(2 + \\gamma_\\beta)\\gamma_\\beta^k\\|r_0\\|$ with $\\gamma_\\beta = 2\\sin\\big(\\beta/(4 - 2\\beta/\\pi)\\big)$",
+      "sources": [
+        {
+          "source": "bgt06",
+          "label": "main theorem"
+        }
+      ],
+      "depends_on": [
+        "gmres-def",
+        "field-of-values-def",
+        "residual-polynomial",
+        "gmres-elman"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "numericalRange",
+          "present": false,
+          "note": "See field-of-values-def."
+        }
+      ],
+      "difficulty": 4,
+      "priority": "later",
+      "tags": [
+        "krylov",
+        "gmres",
+        "non-normal",
+        "assume"
+      ],
+      "notes": "Assume. The constant 2 + 2/√3 comes from a lens-shaped (lenticular) von Neumann-type inequality of Beckermann–Crouzeix, not from Crouzeix–Palencia; proving it needs that inequality and a Faber-polynomial construction. Real A: the real GMRES residual equals the complex one (see gmres-def notes). Consumers: non-normal preconditioned solves whose field of values is controlled (e.g. sketch-preconditioned nonsymmetric systems), comparison with gmres-elman.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "gmres-any-convergence-curve",
+      "title": "Greenbaum–Pták–Strakoš: any nonincreasing GMRES curve is possible",
+      "aliases": [
+        "GPS theorem",
+        "any convergence curve is possible",
+        "GMRES and eigenvalues",
+        "Greenbaum–Pták–Strakoš"
+      ],
+      "area": "krylov-nonnormal",
+      "kind": "theorem",
+      "status": "candidate",
+      "informal": "Given $f(0) \\ge f(1) \\ge \\dots \\ge f(n-1) > 0$ and any nonzero $\\lambda_1,\\dots,\\lambda_n \\in \\mathbb C$, there are $A \\in \\mathbb C^{n\\times n}$ with eigenvalues $\\lambda_1,\\dots,\\lambda_n$ and $b$ such that GMRES from $x_0 = 0$ has $\\|r_k\\| = f(k)$ for $k = 0,\\dots,n-1$. Eigenvalues alone say nothing about GMRES for non-normal $A$.",
+      "hypotheses": [
+        "$n \\ge 1$, $f : \\{0,\\dots,n-1\\} \\to (0,\\infty)$ nonincreasing, $\\lambda \\in (\\mathbb C\\setminus\\{0\\})^n$"
+      ],
+      "conclusion": "$\\exists A \\in \\mathbb C^{n\\times n}, b \\in \\mathbb C^n$: $\\operatorname{charpoly}A = \\prod_i(x - \\lambda_i)$ and the GMRES residuals with $x_0 = 0$ satisfy $\\|r_k\\| = f(k)$, $0 \\le k \\le n-1$",
+      "sources": [
+        {
+          "source": "gps96",
+          "label": "main theorem"
+        },
+        {
+          "source": "ls13",
+          "label": "§5.7"
+        }
+      ],
+      "depends_on": [
+        "gmres-def",
+        "krylov-grade"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.charpoly",
+          "present": true
+        },
+        {
+          "decl": "Matrix.companion",
+          "present": false,
+          "note": "No companion-matrix API; the construction uses A = W C W⁻¹ with C a companion matrix and W built from an orthonormal basis."
+        }
+      ],
+      "difficulty": 3,
+      "priority": "later",
+      "tags": [
+        "krylov",
+        "gmres",
+        "non-normal",
+        "caution",
+        "complex"
+      ],
+      "notes": "A caution, not a tool: it explains why gmres-diagonalizable needs κ(V) and why field-of-values bounds exist. The construction is explicit (Arioli–Pták–Strakoš 1998 parametrisation), so it is provable at difficulty 3 once complex GMRES exists. No downstream consumers; include for the record. Prove (later).",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "lanczos-fa-error",
+      "title": "Lanczos-FA error: ‖f(A)b − Q f(T) Qᵀb‖ ≤ 2‖b‖ min_p ‖f − p‖",
+      "aliases": [
+        "Lanczos-FA",
+        "Lanczos matrix function approximation",
+        "Krylov f(A)b bound",
+        "Druskin–Knizhnerman",
+        "2 times best approximation"
+      ],
+      "area": "krylov-matrix-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For symmetric $A$ with spectrum in $[\\lambda_{lo},\\lambda_{hi}]$, $Q$ with orthonormal columns and $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$, and $T = Q^\\top AQ$, $$\\|f(A)b - Q\\,f(T)\\,Q^\\top b\\| \\le 2\\|b\\|\\min_{\\deg p < q}\\ \\max_{x\\in[\\lambda_{lo},\\lambda_{hi}]}|f(x) - p(x)|$$ for every $f : \\mathbb R \\to \\mathbb R$ ($f(A)$ by the spectral calculus). For Lanczos, $Q^\\top b = \\|b\\|e_1$, giving $\\|b\\|\\,Q_qf(T_q)e_1$.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$ symmetric with every eigenvalue in $[\\lambda_{lo},\\lambda_{hi}]$",
+        "$Q \\in \\mathbb R^{n\\times k}$, $Q^\\top Q = I$, $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$, $q \\ge 1$, $T = Q^\\top AQ$",
+        "$f : \\mathbb R \\to \\mathbb R$, $p$ with $\\deg p < q$ and $|f - p| \\le E$ on $[\\lambda_{lo},\\lambda_{hi}]$"
+      ],
+      "conclusion": "$\\|\\operatorname{cfc}(f, A)\\,b - Q\\operatorname{cfc}(f, T)\\,Q^\\top b\\| \\le 2E\\|b\\|$",
+      "sources": [
+        {
+          "source": "dk89"
+        },
+        {
+          "source": "higham08",
+          "label": "§13.2"
+        },
+        {
+          "source": "saad92",
+          "label": "Lemma 3.1"
+        }
+      ],
+      "depends_on": [
+        "krylov-polynomial-exactness",
+        "polynomial-spectral-bound",
+        "cauchy-interlacing"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.IsHermitian.cfc_eq",
+          "present": true
+        },
+        {
+          "decl": "cfc",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "krylov",
+        "matrix-function",
+        "bound",
+        "real"
+      ],
+      "notes": "Proof: f(A)b − Qf(T)Qᵀb = (f − p)(A)b − Q(f − p)(T)Qᵀb by exactness, each term ≤ E‖b‖ since Ritz values lie in [λ_lo, λ_hi] (`eigenvalues_transpose_mul_mul_mem_Icc` already proved) and ‖Q‖ ≤ 1. The vector analogue of the proved quadrature error `abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le`. Combine with `inverse-polynomial-approx` (f = 1/x), `bernstein-ellipse-approx` (analytic f), and T2's exp / x^{−1/2} / sign approximations. Consumers: Krylov-aware trace estimation of f(A) (Chen–Hallman 2023), sampling N(0, A) via A^{1/2}b, matrix-exponential actions in randomized network centrality, block Lanczos for tr f(A) in `slq-error`-type results. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "arnoldi-fa-error",
+      "title": "Arnoldi-FA error via the field of values: 2(1+√2) times best approximation on W(A)",
+      "aliases": [
+        "Arnoldi-FA",
+        "Arnoldi matrix function approximation",
+        "non-normal f(A)b",
+        "Beckermann–Reichel"
+      ],
+      "area": "krylov-matrix-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For any $A \\in \\mathbb C^{n\\times n}$, $Q$ with orthonormal columns and $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$, $H = Q^*AQ$, and polynomials $g$ (any degree) and $p$ with $\\deg p < q$ and $|g - p| \\le E$ on $W(A)$: $$\\|g(A)b - Q\\,g(H)\\,Q^*b\\| \\le 2(1+\\sqrt2)\\,E\\,\\|b\\|.$$ By density this extends to $f$ holomorphic near $W(A)$ once a holomorphic functional calculus is available.",
+      "hypotheses": [
+        "$A \\in \\mathbb C^{n\\times n}$, $b \\in \\mathbb C^n$, $Q^*Q = I$, $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$, $H = Q^*AQ$",
+        "$g, p \\in \\mathbb C[x]$, $\\deg p < q$, $\\sup_{z\\in W(A)}|g(z) - p(z)| \\le E$"
+      ],
+      "conclusion": "$\\|g(A)b - Q\\,g(H)\\,Q^*b\\| \\le 2(1+\\sqrt2)E\\|b\\|$",
+      "sources": [
+        {
+          "source": "br09",
+          "label": "§2"
+        },
+        {
+          "source": "higham08",
+          "label": "§13.2"
+        },
+        {
+          "source": "cp17"
+        }
+      ],
+      "depends_on": [
+        "krylov-polynomial-exactness",
+        "crouzeix-palencia",
+        "field-of-values-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "holomorphic functional calculus for non-normal matrices",
+          "present": false,
+          "note": "Mathlib's `cfc` needs IsStarNormal over ℂ; no Riesz–Dunford calculus for general matrices, hence the polynomial-g formulation."
+        },
+        {
+          "decl": "NormedSpace.exp",
+          "present": true,
+          "note": "The matrix exponential is available, so f = exp can be reached by truncating its series."
+        }
+      ],
+      "difficulty": 3,
+      "priority": "later",
+      "tags": [
+        "krylov",
+        "matrix-function",
+        "non-normal",
+        "complex"
+      ],
+      "notes": "Uses W(H) ⊆ W(A) (compression) and crouzeix-palencia for both A and H. Requires the complex Krylov space (see krylov-grade notes). With Crouzeix's conjectured constant 2 the factor would be 4. Consumers: exponential integrators and non-symmetric network-centrality / trace estimators. Prove modulo the assumed crouzeix-palencia.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "krylov-eigenvector-angle",
+      "title": "Angle between the top eigenvector and the Krylov space (Chebyshev bound)",
+      "aliases": [
+        "Kaniel–Paige–Saad eigenvector bound",
+        "distance of an eigenvector to K_q",
+        "tan θ(u_1, K_q)",
+        "Saad Lemma 6.2"
+      ],
+      "area": "krylov-eigenvalues",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For symmetric $A$ with eigenvalues $\\lambda_1 > \\lambda_2 \\ge \\dots \\ge \\lambda_n$, $\\lambda_2 > \\lambda_n$, unit eigenvector $u_1$, and $\\langle u_1,b\\rangle \\ne 0$, the vector $x = T_{q-1}\\big(\\tfrac{2A - (\\lambda_2+\\lambda_n)I}{\\lambda_2-\\lambda_n}\\big)b \\in \\mathcal K_q(A,b)$ satisfies $$\\tan\\angle(u_1,x) \\le \\frac{\\tan\\angle(u_1,b)}{T_{q-1}(1+2\\gamma)},\\qquad \\gamma = \\frac{\\lambda_1-\\lambda_2}{\\lambda_2-\\lambda_n},$$ where $\\tan\\angle(u,x) = \\|(I - uu^\\top)x\\|/|\\langle u,x\\rangle|$; and $T_{q-1}(1+2\\gamma) \\ge \\tfrac12(1+2\\gamma+2\\sqrt{\\gamma+\\gamma^2})^{q-1}$.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{n\\times n}$ symmetric with eigenpairs $(\\lambda_i,u_i)$, $\\lambda_1 > \\lambda_2 > \\lambda_n$, $\\|u_1\\| = 1$",
+        "$b \\in \\mathbb R^n$ with $\\langle u_1,b\\rangle \\ne 0$, $q \\ge 1$"
+      ],
+      "conclusion": "$\\exists x \\in \\mathcal K_q(A,b)$ with $\\langle u_1,x\\rangle \\ne 0$ and $\\|(I - u_1u_1^\\top)x\\|/|\\langle u_1,x\\rangle| \\le \\dfrac{\\|(I - u_1u_1^\\top)b\\|/|\\langle u_1,b\\rangle|}{T_{q-1}(1+2\\gamma)}$",
+      "sources": [
+        {
+          "source": "saad11",
+          "label": "§6.6.1"
+        },
+        {
+          "source": "saad03",
+          "label": "§6.11"
+        }
+      ],
+      "depends_on": [
+        "krylov-subspace",
+        "polynomial-spectral-bound",
+        "chebyshev-growth"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.Chebyshev.T_real_cosh",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.abs_eval_T_real_le_one",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.one_le_eval_T_real",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "krylov",
+        "eigenvalue",
+        "bound",
+        "real"
+      ],
+      "notes": "The gap-dependent counterpart of the proved gap-free `ritz-value-bounds` (which uses the Chebyshev amplifier and pays ε λ_1). The general form for u_i with the factor κ_i = ∏_{j<i}(λ_j − λ_n)/(λ_j − λ_i) and T_{q−i}(1+2γ_i) is a later variant. Consumers: kaniel-paige-saad, `random-start-power` (Kuczyński–Woźniakowski gap-dependent rate with a Gaussian start, where tan²∠(u_1, g) is controlled by `chi-square-*`), the gap-dependent block Krylov/subspace-iteration bounds (`block-krylov-lra`, `subspace-iteration-expected`), Davis–Kahan-type eigenvector guarantees for PCA. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "kaniel-paige-saad",
+      "title": "Kaniel–Paige–Saad bound for the largest Ritz value",
+      "aliases": [
+        "Kaniel–Paige–Saad",
+        "KPS bound",
+        "Lanczos eigenvalue convergence",
+        "Saad Thm 6.4",
+        "Ritz value Chebyshev bound"
+      ],
+      "area": "krylov-eigenvalues",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "Under the hypotheses of krylov-eigenvector-angle, the largest Ritz value $\\theta_1 = \\lambda_{\\max}(Q^\\top AQ)$ for any $Q$ with orthonormal columns and $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$ satisfies $$0 \\le \\lambda_1 - \\theta_1 \\le (\\lambda_1 - \\lambda_n)\\Big(\\frac{\\tan\\angle(u_1,b)}{T_{q-1}(1+2\\gamma)}\\Big)^2,\\qquad \\gamma = \\frac{\\lambda_1-\\lambda_2}{\\lambda_2-\\lambda_n}.$$",
+      "hypotheses": [
+        "as in krylov-eigenvector-angle",
+        "$Q \\in \\mathbb R^{n\\times k}$ with $Q^\\top Q = I$ and $\\mathcal K_q(A,b) \\subseteq \\operatorname{range}Q$; $\\theta_1$ the largest eigenvalue of $Q^\\top AQ$"
+      ],
+      "conclusion": "$0 \\le \\lambda_1 - \\theta_1 \\le (\\lambda_1 - \\lambda_n)\\,\\tan^2\\angle(u_1,b)\\,/\\,T_{q-1}(1+2\\gamma)^2$",
+      "sources": [
+        {
+          "source": "saad11",
+          "label": "Thm 6.4"
+        },
+        {
+          "source": "gm10",
+          "label": "Ch. 4"
+        }
+      ],
+      "depends_on": [
+        "krylov-eigenvector-angle",
+        "courant-fischer",
+        "cauchy-interlacing"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Matrix.IsHermitian.eigenvalues",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "eigenvalue",
+        "bound",
+        "real"
+      ],
+      "notes": "Proof: θ_1 ≥ Rayleigh quotient of the x from krylov-eigenvector-angle (Courant–Fischer on QᵀAQ), and λ_1 − xᵀAx/xᵀx ≤ (λ_1 − λ_n) sin²∠(u_1,x) ≤ (λ_1 − λ_n) tan²∠; θ_1 ≤ λ_1 by interlacing. The existing `ritz-value-bounds` cites saad11 Thm 6.4 but proves the gap-free variant; this entry is the statement that label refers to. General i-th Ritz value form (with κ_i) later. Consumers: `random-start-power` (Lanczos clause), block-krylov-lra (per-vector gap-dependent bounds), spectral-norm estimation by Lanczos with a random start. Prove.",
+      "updated_at": "2026-10-10",
+      "variants": [
+        "ritz-value-bounds"
+      ]
+    },
+    {
+      "id": "polynomial-filter-range-finder",
+      "title": "Polynomial-filtered range finder: HMT Thm 9.1 with test matrix φ(AᵀA)Ω",
+      "aliases": [
+        "block Krylov deterministic step",
+        "Musco–Musco deterministic step",
+        "polynomial filter range finder",
+        "filtered subspace iteration bound",
+        "HMT Thm 9.1 with polynomial"
+      ],
+      "area": "lra-deterministic",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "Let $A = U_1\\Sigma_1V_1^\\top + U_2\\Sigma_2V_2^\\top$ be a block SVD ($[V_1\\ V_2]$ orthogonal, $\\Sigma_1 \\in \\mathbb R^{k\\times k}$), $\\Omega_i = V_i^\\top\\Omega$, and $\\varphi$ a real polynomial with $\\varphi(\\sigma_j^2) \\ne 0$ for $j \\le k$. If $Q$ has orthonormal columns with $\\operatorname{range}(\\varphi(AA^\\top)A\\Omega) \\subseteq \\operatorname{range}Q$ and $\\Omega_1$ has full row rank, then $$\\|(I - QQ^\\top)A\\|^2 \\le \\|\\Sigma_2\\|^2 + \\|\\Sigma_2\\,\\varphi(\\Sigma_2^\\top\\Sigma_2)\\,\\Omega_2\\Omega_1^\\dagger\\,\\varphi(\\Sigma_1^2)^{-1}\\|^2,$$ and the same in the Frobenius norm. Hence $\\|(I-QQ^\\top)A\\|^2 \\le \\sigma_{k+1}^2 + \\big(\\max_{j>k}\\sigma_j|\\varphi(\\sigma_j^2)|\\,/\\,\\min_{j\\le k}|\\varphi(\\sigma_j^2)|\\big)^2\\|\\Omega_2\\|^2\\|\\Omega_1^\\dagger\\|^2$. Since $\\varphi(AA^\\top)A\\Omega \\in \\mathcal K_q(AA^\\top, A\\Omega)$ for $\\deg\\varphi < q$, this holds for the block Krylov basis with every such $\\varphi$ simultaneously.",
+      "hypotheses": [
+        "$A \\in \\mathbb R^{m\\times n}$ with block SVD at index $k$ as in `hmt-9-1-spectral`, $[V_1\\ V_2]$ square orthogonal",
+        "$\\Omega \\in \\mathbb R^{n\\times s}$, $\\Omega_1 = V_1^\\top\\Omega$ full row rank, $\\Omega_2 = V_2^\\top\\Omega$",
+        "$\\varphi \\in \\mathbb R[x]$ with $\\varphi(\\Sigma_1^2)$ invertible",
+        "$Q^\\top Q = I$, $\\operatorname{range}(\\varphi(AA^\\top)A\\Omega) \\subseteq \\operatorname{range}Q$"
+      ],
+      "conclusion": "$\\|(I - QQ^\\top)A\\|_\\xi^2 \\le \\|\\Sigma_2\\|_\\xi^2 + \\|\\Sigma_2\\varphi(\\Sigma_2^\\top\\Sigma_2)\\Omega_2\\Omega_1^\\dagger\\varphi(\\Sigma_1^2)^{-1}\\|_\\xi^2$ for $\\xi \\in \\{2, F\\}$",
+      "sources": [
+        {
+          "source": "hmt11",
+          "label": "Thm 9.1, §9.2"
+        },
+        {
+          "source": "mm15",
+          "label": "§4"
+        },
+        {
+          "source": "tw23",
+          "label": "§7"
+        }
+      ],
+      "depends_on": [
+        "hmt-9-1-spectral",
+        "hmt-9-1-frobenius",
+        "block-krylov-subspace",
+        "pseudoinverse",
+        "svd"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.aeval",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "low-rank",
+        "krylov",
+        "deterministic",
+        "bound",
+        "real"
+      ],
+      "notes": "Proof: Aφ(AᵀA) = φ(AAᵀ)A, so Y = AΩ̃ with Ω̃ = φ(AᵀA)Ω, Ω̃₁ = φ(Σ₁²)Ω₁, Ω̃₂ = φ(Σ₂ᵀΣ₂)Ω₂ and Ω̃₁† = Ω₁†φ(Σ₁²)⁻¹; then apply the proved HMT 9.1 (both norms). φ(x) = x^q recovers the power-scheme bound; φ = shifted Chebyshev amplifier (`chebyshev-amplifier` in x²) gives the √γ-accelerated gap-dependent block Krylov rate. Consumers: `block-krylov-lra` (Musco–Musco Thm 1, whose gap-free spectral clause additionally needs the per-vector Rayleigh–Ritz argument), `subspace-iteration-expected`, randomized block Krylov trace estimation. Prove.",
+      "updated_at": "2026-10-10",
+      "variants": [
+        "power-iteration-deterministic"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "saad03",
+      "type": "book",
+      "title": "Iterative Methods for Sparse Linear Systems, 2nd edition",
+      "authors": [
+        "Yousef Saad"
+      ],
+      "year": 2003,
+      "role": "Primary reference for Arnoldi, FOM, GMRES, CGNR, PCG, Chebyshev iteration and the Krylov convergence theory (Ch. 6, 8, 9, 12)."
+    },
+    {
+      "id": "ss86",
+      "type": "paper",
+      "title": "GMRES: a generalized minimal residual algorithm for solving nonsymmetric linear systems",
+      "authors": [
+        "Yousef Saad",
+        "Martin H. Schultz"
+      ],
+      "year": 1986,
+      "role": "Original GMRES paper; eigenvalue/κ(V) convergence bound."
+    },
+    {
+      "id": "ees83",
+      "type": "paper",
+      "title": "Variational iterative methods for nonsymmetric systems of linear equations",
+      "authors": [
+        "Stanley C. Eisenstat",
+        "Howard C. Elman",
+        "Martin H. Schultz"
+      ],
+      "year": 1983,
+      "role": "Elman bound for positive-real matrices."
+    },
+    {
+      "id": "bgt06",
+      "type": "paper",
+      "title": "Some remarks on the Elman estimate for GMRES",
+      "authors": [
+        "Bernhard Beckermann",
+        "Sergei A. Goreinov",
+        "Eugene E. Tyrtyshnikov"
+      ],
+      "year": 2006,
+      "role": "Field-of-values GMRES bound with the improved rate γ_β."
+    },
+    {
+      "id": "cp17",
+      "type": "paper",
+      "title": "The numerical range is a (1+√2)-spectral set",
+      "authors": [
+        "Michel Crouzeix",
+        "César Palencia"
+      ],
+      "year": 2017,
+      "role": "Best known constant in Crouzeix's conjecture; assumed."
+    },
+    {
+      "id": "gps96",
+      "type": "paper",
+      "title": "Any nonincreasing convergence curve is possible for GMRES",
+      "authors": [
+        "Anne Greenbaum",
+        "Vlastimil Pták",
+        "Zdeněk Strakoš"
+      ],
+      "year": 1996,
+      "role": "Caution: eigenvalues do not determine GMRES convergence for non-normal matrices."
+    },
+    {
+      "id": "gg94",
+      "type": "paper",
+      "title": "Max-min properties of matrix factor norms",
+      "authors": [
+        "Anne Greenbaum",
+        "Leonid Gurvits"
+      ],
+      "year": 1994,
+      "role": "Worst-case GMRES equals ideal GMRES for normal matrices (sharpness of the normal bound)."
+    },
+    {
+      "id": "ls13",
+      "type": "book",
+      "title": "Krylov Subspace Methods: Principles and Analysis",
+      "authors": [
+        "Jörg Liesen",
+        "Zdeněk Strakoš"
+      ],
+      "year": 2013,
+      "role": "Modern treatment of grade, Arnoldi/Lanczos, MINRES and GMRES convergence."
+    },
+    {
+      "id": "higham08",
+      "type": "book",
+      "title": "Functions of Matrices: Theory and Computation",
+      "authors": [
+        "Nicholas J. Higham"
+      ],
+      "year": 2008,
+      "role": "Krylov approximation of f(A)b (Ch. 13)."
+    },
+    {
+      "id": "saad92",
+      "type": "paper",
+      "title": "Analysis of some Krylov subspace approximations to the matrix exponential operator",
+      "authors": [
+        "Yousef Saad"
+      ],
+      "year": 1992,
+      "role": "Exactness lemma p(A)v = V p(H) e_1 and Krylov f(A)b analysis."
+    },
+    {
+      "id": "dk89",
+      "type": "paper",
+      "title": "Two polynomial methods of calculating functions of symmetric matrices",
+      "authors": [
+        "Vladimir L. Druskin",
+        "Leonid A. Knizhnerman"
+      ],
+      "year": 1989,
+      "role": "Lanczos-FA error within twice the best uniform polynomial approximation."
+    },
+    {
+      "id": "br09",
+      "type": "paper",
+      "title": "Error estimates and evaluation of matrix functions via the Faber transform",
+      "authors": [
+        "Bernhard Beckermann",
+        "Lothar Reichel"
+      ],
+      "year": 2009,
+      "role": "Arnoldi-FA error bounds over the field of values."
+    },
+    {
+      "id": "ps75",
+      "type": "paper",
+      "title": "Solution of sparse indefinite systems of linear equations",
+      "authors": [
+        "Christopher C. Paige",
+        "Michael A. Saunders"
+      ],
+      "year": 1975,
+      "role": "MINRES (and SYMMLQ)."
+    },
+    {
+      "id": "ps82",
+      "type": "paper",
+      "title": "LSQR: an algorithm for sparse linear equations and sparse least squares",
+      "authors": [
+        "Christopher C. Paige",
+        "Michael A. Saunders"
+      ],
+      "year": 1982,
+      "role": "LSQR, the Krylov solver used by sketch-and-precondition least squares."
+    },
+    {
+      "id": "gv61",
+      "type": "paper",
+      "title": "Chebyshev semi-iterative methods, successive overrelaxation iterative methods, and second order Richardson iterative methods",
+      "authors": [
+        "Gene H. Golub",
+        "Richard S. Varga"
+      ],
+      "year": 1961,
+      "role": "Chebyshev semi-iterative method."
+    },
+    {
+      "id": "hj91",
+      "type": "book",
+      "title": "Topics in Matrix Analysis",
+      "authors": [
+        "Roger A. Horn",
+        "Charles R. Johnson"
+      ],
+      "year": 1991,
+      "role": "Field of values (Ch. 1): Toeplitz–Hausdorff and basic properties."
+    }
+  ]
+}

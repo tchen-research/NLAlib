@@ -12422,7 +12422,8 @@
    ],
    "depends_on": [
     "krylov-subspace",
-    "orthonormal-columns-def"
+    "orthonormal-columns-def",
+    "graded-krylov-basis-def"
    ],
    "mathlib_prereqs": [
     {
@@ -12451,7 +12452,7 @@
     "krylov",
     "definition"
    ],
-   "notes": "NLAlib's `lanczosMatrix A b q` is already the Arnoldi basis for every real A: `lanczos_apply_eq_zero_of_add_one_lt` proves QᵀAQ is upper Hessenberg without symmetry. So this entry is mostly naming (`arnoldiMatrix := lanczosMatrix`, `hessenberg A b q := Qᵀ A Q`, the extended (q+1)×q matrix) plus the positive-subdiagonal and uniqueness characterisations. Consumers: arnoldi-relation, fom-def, arnoldi-fa-error, lanczos-recurrence, gmres-def (the least-squares form ‖βe₁ − H̲_q y‖). Prove.",
+   "notes": "NLAlib's `lanczosMatrix A b q` is already the Arnoldi basis for every real A: `lanczos_apply_eq_zero_of_add_one_lt` proves QᵀAQ is upper Hessenberg without symmetry. So this entry is mostly naming (`arnoldiMatrix := lanczosMatrix`, `hessenberg A b q := Qᵀ A Q`, the extended (q+1)×q matrix) plus the positive-subdiagonal and uniqueness characterisations. Consumers: arnoldi-relation, fom-def, arnoldi-fa-error, lanczos-recurrence, gmres-def (the least-squares form ‖βe₁ − H̲_q y‖). Prove. Implement as the canonical witness `arnoldiDecomp A b q (h : q ≤ krylovGrade A b) : ArnoldiDecomp A b q` of the bundled decomposition in graded-krylov-basis-def; H is the structure's compression, not a separate definition.",
    "updated_at": "2026-10-10",
    "variants": [
     "lanczos-recurrence"
@@ -17056,7 +17057,7 @@
     "lanczos",
     "arnoldi"
    ],
-   "notes": "Design: docs/KRYLOV_DEFINITIONS.md §3.11. The predicate, not the process, is what Jacobi-matrix theorems take; `arnoldiBasis` (positive subdiagonal) is one representative, and NLAlib's current `lanczosMatrix` with `lanczos_apply_eq_zero_of_add_one_lt` is the existing proof of the Hessenberg/tridiagonal part. Consumers: lanczos-recurrence, jacobi-matrix-identities, lanczos-orthogonal-polynomials, kaniel-paige-saad, finite-precision Lanczos statements.",
+   "notes": "Design: docs/KRYLOV_DEFINITIONS.md §3.11. The predicate, not the process, is what Jacobi-matrix theorems take; `arnoldiBasis` (positive subdiagonal) is one representative, and NLAlib's current `lanczosMatrix` with `lanczos_apply_eq_zero_of_add_one_lt` is the existing proof of the Hessenberg/tridiagonal part. Consumers: lanczos-recurrence, jacobi-matrix-identities, lanczos-orthogonal-polynomials, kaniel-paige-saad, finite-precision Lanczos statements. API (docs/KRYLOV_DEFINITIONS.md §3.12): bundle as `ArnoldiDecomp A b q` = {Q, graded} with `H := Qᵀ A Q` a definition, `LanczosDecomp` the symmetric abbreviation with `T := H`, `restrict` for nesting, `exists_sign` for uniqueness, and `arnoldiDecomp` (today's `lanczosMatrix`) as the canonical witness.",
    "updated_at": "2026-10-10",
    "formalizations": [],
    "uses_defs": [],

@@ -494,3 +494,26 @@ and the graded layer supplies the bridge "a graded basis is such a `Q`". Nested
 `Fin q`-indexing is fine here because `T_{q}` is the leading section of `T_{q+1}` by the nested
 condition, with no reference to how the basis was built. Atlas: `graded-krylov-basis-def`,
 `jacobi-matrix-identities`, `lanczos-orthogonal-polynomials`.
+
+### 3.12 The bundled decomposition (maintainer's proposal, adopted)
+
+The graded layer is packaged as a structure, so that `T = QᵀAQ` is a definition, never a hypothesis:
+
+```lean
+structure ArnoldiDecomp (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) where
+  Q : Matrix n (Fin q) ℝ
+  graded : IsGradedKrylovBasis A b Q
+def ArnoldiDecomp.H (D : ArnoldiDecomp A b q) : Matrix (Fin q) (Fin q) ℝ := D.Qᵀ * A * D.Q
+abbrev LanczosDecomp A b q := ArnoldiDecomp A b q      -- symmetric `A`; `D.T := D.H`
+def ArnoldiDecomp.restrict (D : ArnoldiDecomp A b q) (h : q' ≤ q) : ArnoldiDecomp A b q'
+theorem ArnoldiDecomp.H_restrict : (D.restrict h).H = D.H.submatrix (Fin.castLE h) (Fin.castLE h)
+theorem ArnoldiDecomp.exists_sign (D D' : ArnoldiDecomp A b q) : ∃ s : Fin q → ℤˣ, D'.Q = D.Q * diagonal (fun i => (s i : ℝ))
+def arnoldiDecomp (A) (b) (q) (h : q ≤ krylovGrade A b) : ArnoldiDecomp A b q   -- today's `lanczosMatrix`, positive subdiagonal
+```
+
+Structure theorems (Hessenberg/tridiagonal, the relation `A Q_q = Q_q H_q + h q_{q+1} e_qᵀ` via
+`restrict`, Jacobi identities, orthogonal polynomials, recurrence coefficients `β_j > 0` for the
+canonical witness) take `D : LanczosDecomp A b q`. Approximant theorems (§3.7) keep the loose
+"orthonormal `Q ⊇ K_q`" interface and are specialised to `D.Q`, so block and sketched variants
+reuse them. Existence needs `q ≤ krylovGrade A b`; the ℕ-indexed `arnoldiBasis` (§3.5) remains
+the unbounded process for anyone who needs "zero after breakdown".

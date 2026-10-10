@@ -27,7 +27,7 @@ import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 
 A focused leaf of the transported independent-coordinate proof.
 Shared helper declarations live in `NLAlib.HansonWrightProof`; the canonical
-public bounds are in `NLAlib.Estimation.HansonWright`.
+public bounds are in `NLAlib.Concentration.HansonWright`.
 Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
 -/
 

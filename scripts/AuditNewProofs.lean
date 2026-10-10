@@ -24,7 +24,7 @@ run_cmd do
     `NLAlib.Concentration.HansonWright.VectorProductComparison,
     `NLAlib.Concentration.OrliczMGF,
     `NLAlib.Concentration.ScalarBernstein,
-    `NLAlib.Estimation.HansonWright,
+    `NLAlib.Concentration.HansonWright,
     `NLAlib.Estimation.HutchinsonLaws,
     `NLAlib.ForMathlib.Analysis.Calculus.CompactTestSupport,
     `NLAlib.ForMathlib.Analysis.DerivativeLimit,

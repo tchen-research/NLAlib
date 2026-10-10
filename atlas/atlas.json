@@ -1554,11 +1554,13 @@
    "aliases": [
     "Golden–Thompson inequality",
     "trace exponential inequality",
-    "tr e^{A+B} ≤ tr e^A e^B"
+    "tr e^{A+B} ≤ tr e^A e^B",
+    "finite pinching",
+    "positive-definite Golden–Thompson"
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For Hermitian $A, B$: $$\\operatorname{tr}\\exp(A + B) \\le \\operatorname{tr}\\big(\\exp(A)\\exp(B)\\big).$$ Not needed by Tropp's route (which uses Lieb) but cited constantly.",
    "hypotheses": [
     "$A, B \\in \\mathbb{C}^{d\\times d}$ Hermitian"
@@ -1576,13 +1578,41 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.golden_thompson",
+     "module": "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+     "status": "proved",
+     "usage": "Pass Hermitian H,K; gives traceExp(H+K) ≤ re(trace(matrixExp H * matrixExp K)) over any finite index type, including empty matrices."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golden_thompson_trace",
+     "module": "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+     "status": "proved",
+     "usage": "Pass Hermitian H,K; gives trace(matrixExp(H+K)) ≤ trace(matrixExp H * matrixExp K) in ComplexOrder, including equality of imaginary parts."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.traceExp_add_matrixLog_le",
+     "module": "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+     "status": "proved",
+     "usage": "Pass Hermitian H and positive-definite X; gives traceExp(H+matrixLog X) ≤ re(trace(matrixExp H * X)) over any finite index type."
+    },
+    {
      "library": "highdimprob",
      "status": "proved",
      "note": "README mentions a finite-dimensional route to Golden–Thompson; not verified here"
     }
    ],
-   "depends_on": [],
-   "uses_defs": [],
+   "depends_on": [
+    "operator-monotone-convex",
+    "matrix-calculus-def"
+   ],
+   "uses_defs": [
+    "NLAlib.matrixExp",
+    "NLAlib.matrixLog",
+    "NLAlib.traceExp"
+   ],
    "variants": [
     "operator-monotone-convex"
    ],
@@ -1598,8 +1628,12 @@
    ],
    "difficulty": 4,
    "priority": "later",
-   "tags": [],
-   "updated_at": "2026-10-10"
+   "tags": [
+    "foundation",
+    "done"
+   ],
+   "updated_at": "2026-10-10",
+   "notes": "Proved for complex Hermitian matrices over arbitrary finite index types, including empty matrices, by Lieb concavity and finitely many coordinate reflections. Both ordered real traces and the direct complex-trace statement are available, as is the equivalent positive-definite traceExp(H + matrixLog X) bound. No commutation, positivity of H or K, or limiting hypothesis is imposed."
   },
   {
    "id": "hermitian-dilation",

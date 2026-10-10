@@ -10118,6 +10118,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.cfc_diagonal_real.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (f : ℝ → ℝ) (x : ι → ℝ) :\n  cfc f (Matrix.diagonal fun i => ↑(x i)) = Matrix.diagonal fun i => ↑(f (x i))",
+  "name":
+  "NLAlib.cfc_diagonal_real",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  228,
+  "kind":
+  "theorem",
+  "doc":
+  "Real functional calculus acts entrywise on a real diagonal matrix.\nArbitrary real functions are allowed because the diagonal spectrum is finite.\nSource: the private `cfc_diag` proof in `JointTensorRepresentation`, via Mathlib's\ndiagonal algebra homomorphism and Pi CFC; Tropp 2015, §2.1.11;\natlas `golden-thompson`, `operator-monotone-convex` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.cfc_eq_aeval_interpolate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ} (hA : A.IsHermitian)\n  (f : ℝ → ℝ) : cfc f A = (Polynomial.aeval A) ((Lagrange.interpolate (Finset.image hA.eigenvalues Finset.univ) id) f)",
   "name":
   "NLAlib.cfc_eq_aeval_interpolate",
@@ -10149,6 +10169,26 @@
   "theorem",
   "doc":
   "A matrix function of a symmetric `A` equals the polynomial calculus of any polynomial that\nagrees with `f` at the eigenvalues: `f(A) = p(A)` when `p(λᵢ) = f(λᵢ)` for all `i`.\nStandard (Higham 2008 [`higham08`], Def. 1.4 and Thm 1.12). Atlas: `lanczos-fa-error` (helper;\nbelongs in `NLAlib.Matrix.PolynomialCalculus`). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.cfc_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ))) (f : ℝ → ℝ)\n  (A : Matrix ι ι ℂ) (hA : A.IsHermitian) : cfc f (↑U * A * (↑U).conjTranspose) = ↑U * cfc f A * (↑U).conjTranspose",
+  "name":
+  "NLAlib.cfc_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  46,
+  "kind":
+  "theorem",
+  "doc":
+  "Every real function on a Hermitian matrix's finite spectrum commutes with\nunitary conjugation. No global continuity premise is needed. Source: Mathlib's\nCFC transport and Tropp 2015, Theorem 8.5.2; atlas `golden-thompson`,\n`operator-monotone-convex` (helper). ",
   "atlas_partial":
   [],
   "atlas":
@@ -10661,6 +10701,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.coordinateReflection"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.conjTranspose_coordinateReflection.{u_1} {ι : Type u_1} [DecidableEq ι] (k : ι) :\n  (NLAlib.coordinateReflection k).conjTranspose = NLAlib.coordinateReflection k",
+  "name":
+  "NLAlib.conjTranspose_coordinateReflection",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  28,
+  "kind":
+  "theorem",
+  "doc":
+  "A coordinate reflection is self-adjoint.\nBhatia 1997, IX.3; atlas `golden-thompson` (pinching helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -10936,6 +10996,247 @@
   "theorem",
   "doc":
   "Matrix relative entropy is jointly convex on pairs of positive definite matrices.\n\nTropp 2015, Thm 8.1.4. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An\nIntroduction to Matrix Concentration Inequalities, Ch 8*. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinch.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (k : ι) (X : Matrix ι ι ℂ) : Matrix ι ι ℂ",
+  "name":
+  "NLAlib.coordinatePinch",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  54,
+  "kind":
+  "def",
+  "doc":
+  "Midpoint averaging with a coordinate sign reflection.\nBhatia 1997, IX.3; atlas `golden-thompson` (pinching helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinatePinch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinch.congr_simp.{u_1} {ι : Type u_1} [Fintype ι] {inst✝ : DecidableEq ι} [DecidableEq ι] (k k✝ : ι)\n  (e_k : k = k✝) (X X✝ : Matrix ι ι ℂ) (e_X : X = X✝) (a✝ a✝¹ : ι) :\n  a✝ = a✝¹ → ∀ (a a✝² : ι), a = a✝² → NLAlib.coordinatePinch k X a✝ a = NLAlib.coordinatePinch k✝ X✝ a✝¹ a✝²",
+  "name":
+  "NLAlib.coordinatePinch.congr_simp",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+  "line":
+  0,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinatePinch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinch_apply.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (k : ι) (X : Matrix ι ι ℂ) (i j : ι) :\n  NLAlib.coordinatePinch k X i j = if i = j ∨ i ≠ k ∧ j ≠ k then X i j else 0",
+  "name":
+  "NLAlib.coordinatePinch_apply",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  60,
+  "kind":
+  "theorem",
+  "doc":
+  "A coordinate pinch keeps the diagonal and the untouched block, and kills\nthe other entries in its row and column. Bhatia 1997, IX.3;\natlas `golden-thompson` (entrywise pinching formula). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinched.{u_1} {ι : Type u_1} [DecidableEq ι] (s : Finset ι) (X : Matrix ι ι ℂ) : Matrix ι ι ℂ",
+  "name":
+  "NLAlib.coordinatePinched",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  74,
+  "kind":
+  "def",
+  "doc":
+  "The explicit matrix obtained by pinching the coordinates in `s`.\nBhatia 1997, IX.3; atlas `golden-thompson` (finite pinching). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinatePinched"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinched.congr_simp.{u_1} {ι : Type u_1} {inst✝ : DecidableEq ι} [DecidableEq ι] (s s✝ : Finset ι)\n  (e_s : s = s✝) (X X✝ : Matrix ι ι ℂ) (e_X : X = X✝) (a✝ a✝¹ : ι) :\n  a✝ = a✝¹ → ∀ (a a✝² : ι), a = a✝² → NLAlib.coordinatePinched s X a✝ a = NLAlib.coordinatePinched s✝ X✝ a✝¹ a✝²",
+  "name":
+  "NLAlib.coordinatePinched.congr_simp",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+  "line":
+  0,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinatePinched"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinched_apply_self.{u_1} {ι : Type u_1} [DecidableEq ι] (s : Finset ι) (X : Matrix ι ι ℂ) (i : ι) :\n  NLAlib.coordinatePinched s X i i = X i i",
+  "name":
+  "NLAlib.coordinatePinched_apply_self",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  109,
+  "kind":
+  "theorem",
+  "doc":
+  "Pinching any coordinates preserves every diagonal entry.\nBhatia 1997, IX.3; atlas `golden-thompson` (finite pinching helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinatePinched"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinched_empty.{u_1} {ι : Type u_1} [DecidableEq ι] (X : Matrix ι ι ℂ) :\n  NLAlib.coordinatePinched ∅ X = X",
+  "name":
+  "NLAlib.coordinatePinched_empty",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  80,
+  "kind":
+  "theorem",
+  "doc":
+  "Pinching no coordinates leaves a matrix unchanged.\nBhatia 1997, IX.3; atlas `golden-thompson` (finite pinching helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinatePinch",
+   "NLAlib.coordinatePinched"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinched_insert.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (s : Finset ι) (k : ι)\n  (X : Matrix ι ι ℂ) : NLAlib.coordinatePinched (insert k s) X = NLAlib.coordinatePinch k (NLAlib.coordinatePinched s X)",
+  "name":
+  "NLAlib.coordinatePinched_insert",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  87,
+  "kind":
+  "theorem",
+  "doc":
+  "Adding a coordinate to the pinched set is exactly one more midpoint pinch.\nBhatia 1997, IX.3; atlas `golden-thompson` (finite pinching induction). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinatePinched"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinatePinched_univ.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (X : Matrix ι ι ℂ) :\n  NLAlib.coordinatePinched Finset.univ X = Matrix.diagonal fun i => X i i",
+  "name":
+  "NLAlib.coordinatePinched_univ",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  99,
+  "kind":
+  "theorem",
+  "doc":
+  "Pinching every coordinate leaves the original diagonal.\nBhatia 1997, IX.3; atlas `golden-thompson` (finite pinching endpoint). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinateReflection.{u_1} {ι : Type u_1} [DecidableEq ι] (k : ι) : Matrix ι ι ℂ",
+  "name":
+  "NLAlib.coordinateReflection",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  22,
+  "kind":
+  "def",
+  "doc":
+  "The diagonal unitary that changes the sign of coordinate `k`.\nBhatia 1997, IX.3; atlas `golden-thompson` (coordinate reflection). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinateReflection"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinateReflection_mul_diagonal_mul.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (k : ι) (a : ι → ℂ) :\n  NLAlib.coordinateReflection k * Matrix.diagonal a * NLAlib.coordinateReflection k = Matrix.diagonal a",
+  "name":
+  "NLAlib.coordinateReflection_mul_diagonal_mul",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  45,
+  "kind":
+  "theorem",
+  "doc":
+  "A coordinate reflection fixes every diagonal matrix by conjugation.\nBhatia 1997, IX.3; atlas `golden-thompson` (pinching helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.coordinateReflection"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.coordinateReflection_mul_self.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (k : ι) :\n  NLAlib.coordinateReflection k * NLAlib.coordinateReflection k = 1",
+  "name":
+  "NLAlib.coordinateReflection_mul_self",
+  "module":
+  "NLAlib.Matrix.CoordinatePinching",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "A coordinate reflection squares to the identity.\nBhatia 1997, IX.3; atlas `golden-thompson` (pinching helper). ",
   "atlas_partial":
   [],
   "atlas":
@@ -16966,6 +17267,68 @@
   [],
   "atlas":
   ["gn-expected-error"]},
+ {"uses":
+  ["NLAlib.matrixExp",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.golden_thompson.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (H K : Matrix ι ι ℂ) (hH : H.IsHermitian)\n  (hK : K.IsHermitian) : NLAlib.traceExp (H + K) ≤ (NLAlib.matrixExp H * NLAlib.matrixExp K).trace.re",
+  "name":
+  "NLAlib.golden_thompson",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+  "line":
+  140,
+  "kind":
+  "theorem",
+  "doc":
+  "Golden–Thompson: `tr exp(H + K) ≤ tr(exp H · exp K)` for complex Hermitian\nmatrices with any finite index type, including the empty matrix. The ordered\nscalar traces are represented by their real parts. Source: Bhatia 1997, IX.3;\nfinite pinching proof in operator derivations §7.\natlas: golden-thompson ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["golden-thompson"]},
+ {"uses":
+  ["NLAlib.matrixExp",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.golden_thompson_fin {d : ℕ} [NeZero d] (H K : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian)\n  (hK : K.IsHermitian) : NLAlib.traceExp (H + K) ≤ (NLAlib.matrixExp H * NLAlib.matrixExp K).trace.re",
+  "name":
+  "NLAlib.golden_thompson_fin",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+  "line":
+  131,
+  "kind":
+  "theorem",
+  "doc":
+  "Golden–Thompson for two complex Hermitian matrices on a nonempty `Fin` index.\nSource: Bhatia 1997, IX.3; operator derivations §7. Atlas `golden-thompson`\n(finite-dimensional helper for the arbitrary-index theorem). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.golden_thompson_trace.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (H K : Matrix ι ι ℂ) (hH : H.IsHermitian)\n  (hK : K.IsHermitian) : (NLAlib.matrixExp (H + K)).trace ≤ (NLAlib.matrixExp H * NLAlib.matrixExp K).trace",
+  "name":
+  "NLAlib.golden_thompson_trace",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+  "line":
+  173,
+  "kind":
+  "theorem",
+  "doc":
+  "Golden–Thompson stated directly with the complex traces. Both traces are\nreal; `ComplexOrder` compares their real values and retains equality of their\nimaginary parts. Source: Bhatia 1997, IX.3; operator derivations §7.\natlas: golden-thompson ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["golden-thompson"]},
  {"uses":
   ["NLAlib.gaussianMatrix",
    "NLAlib.sigmaMin",
@@ -24129,6 +24492,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.isHermitian_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (A : Matrix ι ι ℂ) (hA : A.IsHermitian) : (↑U * A * (↑U).conjTranspose).IsHermitian",
+  "name":
+  "NLAlib.isHermitian_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  33,
+  "kind":
+  "theorem",
+  "doc":
+  "Unitary conjugation preserves Hermitian matrices. Source: unitary functional\ncalculus, Tropp 2015, §2.1; atlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.isLeast_chebyshev_minimax {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) :\n  IsLeast {M | ∃ p, p.degree ≤ ↑q ∧ Polynomial.eval 0 p = 1 ∧ ∀ x ∈ Set.Icc a b, |Polynomial.eval x p| ≤ M}\n    (1 / Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑q))",
   "name":
   "NLAlib.isLeast_chebyshev_minimax",
@@ -26267,6 +26650,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.matrixExp_reflection_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (R A : Matrix ι ι ℂ)\n  (hR : R.conjTranspose = R) (hR2 : R * R = 1) : NLAlib.matrixExp (R * A * R) = R * NLAlib.matrixExp A * R",
+  "name":
+  "NLAlib.matrixExp_reflection_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  185,
+  "kind":
+  "theorem",
+  "doc":
+  "Matrix exponentials commute with conjugation by a self-adjoint involution.\nSource: reflection pinching, Tropp 2015, Theorem 8.5.2;\natlas `golden-thompson`, `operator-monotone-convex` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.matrixExp_reindex.{u_1, u_2} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {κ : Type u_2} [Fintype κ]\n  [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :\n  NLAlib.matrixExp ((Matrix.reindex e e) A) = (Matrix.reindex e e) (NLAlib.matrixExp A)",
+  "name":
+  "NLAlib.matrixExp_reindex",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  267,
+  "kind":
+  "theorem",
+  "doc":
+  "Equivalent finite labels commute with the matrix exponential, with no\nHermitian premise. Source: continuous algebra-isomorphism transport of the\nexponential; atlas `golden-thompson` (finite-index transport helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixExp"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.matrixExp_smul_eq_cfc.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (A : Matrix d d ℂ) (hA : A.IsHermitian)\n  (s : ℝ) : NLAlib.matrixExp (s • A) = cfc (fun x => Real.exp (s * x)) A",
   "name":
   "NLAlib.matrixExp_smul_eq_cfc",
@@ -26278,6 +26701,26 @@
   "theorem",
   "doc":
   "For Hermitian `A`, `matrixExp (s • A)` is the functional calculus of `x ↦ exp (s x)` at `A`.\nTropp 2015, §2.1.11. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.matrixExp_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (A : Matrix ι ι ℂ) : NLAlib.matrixExp (↑U * A * (↑U).conjTranspose) = ↑U * NLAlib.matrixExp A * (↑U).conjTranspose",
+  "name":
+  "NLAlib.matrixExp_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  76,
+  "kind":
+  "theorem",
+  "doc":
+  "Matrix exponentials commute with unitary conjugation, even without a\nHermitian premise. Source: continuous ring-homomorphism transport of the\nexponential, Tropp 2015, §2.1.11; atlas `golden-thompson` (helper). ",
   "atlas_partial":
   [],
   "atlas":
@@ -26423,6 +26866,46 @@
   [],
   "atlas":
   ["operator-monotone-convex"]},
+ {"uses":
+  ["NLAlib.matrixLog"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.matrixLog_reflection_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (R A : Matrix ι ι ℂ)\n  (hR : R.conjTranspose = R) (hR2 : R * R = 1) (hA : A.IsHermitian) :\n  NLAlib.matrixLog (R * A * R) = R * NLAlib.matrixLog A * R",
+  "name":
+  "NLAlib.matrixLog_reflection_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  176,
+  "kind":
+  "theorem",
+  "doc":
+  "Matrix logarithms commute with conjugation by a self-adjoint involution.\nSource: reflection pinching, Tropp 2015, Theorem 8.5.2;\natlas `golden-thompson`, `operator-monotone-convex` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixLog"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.matrixLog_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (A : Matrix ι ι ℂ) (hA : A.IsHermitian) :\n  NLAlib.matrixLog (↑U * A * (↑U).conjTranspose) = ↑U * NLAlib.matrixLog A * (↑U).conjTranspose",
+  "name":
+  "NLAlib.matrixLog_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  67,
+  "kind":
+  "theorem",
+  "doc":
+  "Matrix logarithms commute with unitary conjugation of Hermitian matrices.\nSource: real logarithm functional calculus, Tropp 2015, §2.1.12;\natlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -30218,6 +30701,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.posDef_reflection_conj_iff.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (R A : Matrix ι ι ℂ)\n  (hR : R.conjTranspose = R) (hR2 : R * R = 1) : (R * A * R).PosDef ↔ A.PosDef",
+  "name":
+  "NLAlib.posDef_reflection_conj_iff",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  203,
+  "kind":
+  "theorem",
+  "doc":
+  "Positive definiteness is preserved and reflected by a self-adjoint involution.\nSource: invertible quadratic-form congruence, Tropp 2015, §2.1.5;\natlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.posDef_unitary_conj_iff.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (A : Matrix ι ι ℂ) : (↑U * A * (↑U).conjTranspose).PosDef ↔ A.PosDef",
+  "name":
+  "NLAlib.posDef_unitary_conj_iff",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  111,
+  "kind":
+  "theorem",
+  "doc":
+  "Unitary conjugation preserves and reflects positive definiteness.\nSource: invertible congruence of Hermitian quadratic forms, Tropp 2015, §2.1.5;\natlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.posSemidef_inv_self_mul_transpose.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (G : Matrix m n ℝ) : (G * G.transpose)⁻¹.PosSemidef",
   "name":
   "NLAlib.posSemidef_inv_self_mul_transpose",
@@ -30309,6 +30832,26 @@
   "theorem",
   "doc":
   "`A − A⟨Ω⟩` is positive semidefinite when `A = FᵀF`, i.e. `A⟨Ω⟩ ⪯ A`.\nGittens–Mahoney 2016, Lemma 1; Martinsson–Tropp 2020, §14. Atlas `nystrom-structural`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.posSemidef_unitary_conj_iff.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (A : Matrix ι ι ℂ) : (↑U * A * (↑U).conjTranspose).PosSemidef ↔ A.PosSemidef",
+  "name":
+  "NLAlib.posSemidef_unitary_conj_iff",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  104,
+  "kind":
+  "theorem",
+  "doc":
+  "Unitary conjugation preserves and reflects positive semidefiniteness.\nSource: invertible congruence of Hermitian quadratic forms, Tropp 2015, §2.1.5;\natlas `golden-thompson` (helper). ",
   "atlas_partial":
   [],
   "atlas":
@@ -31250,6 +31793,26 @@
   "theorem",
   "doc":
   "The raw generalized Nyström output agrees with the normalized-frame\noutput whenever the supplied frame has the exact sketch rank and the second\nsketch is injective on that frame. No full rank of the raw first sketch is\nassumed. Source: Tropp–Webber 2023, Section 5; atlas `gn-expected-error`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.re_trace_matrixExp_mul_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  (U : ↥(unitary (Matrix ι ι ℂ))) (H A : Matrix ι ι ℂ) :\n  (NLAlib.matrixExp (↑U * H * (↑U).conjTranspose) * (↑U * A * (↑U).conjTranspose)).trace.re =\n    (NLAlib.matrixExp H * A).trace.re",
+  "name":
+  "NLAlib.re_trace_matrixExp_mul_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  147,
+  "kind":
+  "theorem",
+  "doc":
+  "The real part of the trace pairing of a matrix exponential and another\nmatrix is invariant under simultaneous unitary conjugation. Source: operator\nderivations §7; atlas `golden-thompson` (helper). ",
   "atlas_partial":
   [],
   "atlas":
@@ -34626,6 +35189,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.spectrum_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (A : Matrix ι ι ℂ) : spectrum ℝ (↑U * A * (↑U).conjTranspose) = spectrum ℝ A",
+  "name":
+  "NLAlib.spectrum_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  40,
+  "kind":
+  "theorem",
+  "doc":
+  "Unitary conjugation preserves the real spectrum. Source: the conjugation\nstar-algebra automorphism; Tropp 2015, §2.1; atlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.sq_div_four_sub_pow_three_div_six_pos {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) : 0 < ε ^ 2 / 4 - ε ^ 3 / 6",
   "name":
   "NLAlib.sq_div_four_sub_pow_three_div_six_pos",
@@ -36133,6 +36716,135 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.matrixExp",
+   "NLAlib.matrixLog",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExp_add_matrixLog_diagonal_le {d : ℕ} [NeZero d] (h : Fin d → ℝ) (X : Matrix (Fin d) (Fin d) ℂ)\n  (hX : X.PosDef) :\n  NLAlib.traceExp ((Matrix.diagonal fun i => ↑(h i)) + NLAlib.matrixLog X) ≤\n    (NLAlib.matrixExp (Matrix.diagonal fun i => ↑(h i)) * X).trace.re",
+  "name":
+  "NLAlib.traceExp_add_matrixLog_diagonal_le",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+  "line":
+  103,
+  "kind":
+  "theorem",
+  "doc":
+  "In an eigenbasis of the Hermitian parameter, finite midpoint pinching bounds\nthe Lieb trace function by its diagonal trace pairing. Source: Bhatia 1997,\nIX.3; operator derivations §7. Atlas `golden-thompson` (diagonal helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixExp",
+   "NLAlib.matrixLog",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExp_add_matrixLog_le.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (H X : Matrix ι ι ℂ)\n  (hH : H.IsHermitian) (hX : X.PosDef) : NLAlib.traceExp (H + NLAlib.matrixLog X) ≤ (NLAlib.matrixExp H * X).trace.re",
+  "name":
+  "NLAlib.traceExp_add_matrixLog_le",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+  "line":
+  190,
+  "kind":
+  "theorem",
+  "doc":
+  "The positive-definite form of Golden–Thompson on arbitrary finite index\ntypes: `tr exp(H + log X) ≤ tr(exp H · X)`. Only `H` is Hermitian and `X` is\npositive definite; empty matrices are included. Source: Bhatia 1997, IX.3;\noperator derivations §7 (equivalent variant).\natlas: golden-thompson ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["golden-thompson"]},
+ {"uses":
+  ["NLAlib.matrixExp",
+   "NLAlib.matrixLog",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExp_add_matrixLog_le_fin {d : ℕ} [NeZero d] (H X : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian)\n  (hX : X.PosDef) : NLAlib.traceExp (H + NLAlib.matrixLog X) ≤ (NLAlib.matrixExp H * X).trace.re",
+  "name":
+  "NLAlib.traceExp_add_matrixLog_le_fin",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.GoldenThompson",
+  "line":
+  114,
+  "kind":
+  "theorem",
+  "doc":
+  "The positive-definite form of Golden–Thompson: the Lieb trace function is at\nmost the trace pairing with `exp H`. Source: Bhatia 1997, IX.3; finite pinching\nproof in operator derivations §7. Atlas `golden-thompson` (equivalent variant). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixLog",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExp_add_matrixLog_reflection_conj_of_conj_eq.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  (R H A : Matrix ι ι ℂ) (hR : R.conjTranspose = R) (hR2 : R * R = 1) (hA : A.IsHermitian) (hH : R * H * R = H) :\n  NLAlib.traceExp (H + NLAlib.matrixLog (R * A * R)) = NLAlib.traceExp (H + NLAlib.matrixLog A)",
+  "name":
+  "NLAlib.traceExp_add_matrixLog_reflection_conj_of_conj_eq",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  212,
+  "kind":
+  "theorem",
+  "doc":
+  "A reflection fixing the Lieb parameter preserves its trace function.\nSource: the midpoint pinching argument in operator derivations §7;\natlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixLog",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExp_add_matrixLog_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  (U : ↥(unitary (Matrix ι ι ℂ))) (H A : Matrix ι ι ℂ) (hA : A.IsHermitian) :\n  NLAlib.traceExp (↑U * H * (↑U).conjTranspose + NLAlib.matrixLog (↑U * A * (↑U).conjTranspose)) =\n    NLAlib.traceExp (H + NLAlib.matrixLog A)",
+  "name":
+  "NLAlib.traceExp_add_matrixLog_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  118,
+  "kind":
+  "theorem",
+  "doc":
+  "Simultaneous unitary conjugation leaves the Lieb trace function unchanged.\nOnly the logarithm's input needs to be Hermitian. Source: eigenbasis transport\nin the operator derivations §7; atlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixLog",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExp_add_matrixLog_unitary_conj_of_conj_eq.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  (U : ↥(unitary (Matrix ι ι ℂ))) (H A : Matrix ι ι ℂ) (hA : A.IsHermitian) (hH : ↑U * H * (↑U).conjTranspose = H) :\n  NLAlib.traceExp (H + NLAlib.matrixLog (↑U * A * (↑U).conjTranspose)) = NLAlib.traceExp (H + NLAlib.matrixLog A)",
+  "name":
+  "NLAlib.traceExp_add_matrixLog_unitary_conj_of_conj_eq",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  157,
+  "kind":
+  "theorem",
+  "doc":
+  "The Lieb trace function is invariant under a unitary conjugation that fixes\nits Hermitian parameter. Only the logarithm's input needs a Hermitian premise for\nthis identity. Source: midpoint pinching, operator derivations §7;\natlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.LoewnerLE",
    "NLAlib.traceExp"],
   "sorry":
@@ -36158,6 +36870,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.traceExp_reflection_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (R A : Matrix ι ι ℂ)\n  (hR : R.conjTranspose = R) (hR2 : R * R = 1) : NLAlib.traceExp (R * A * R) = NLAlib.traceExp A",
+  "name":
+  "NLAlib.traceExp_reflection_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  194,
+  "kind":
+  "theorem",
+  "doc":
+  "The trace exponential is invariant under a self-adjoint involution.\nSource: trace cyclicity and reflection pinching, operator derivations §7;\natlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExp_reindex.{u_1, u_2} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {κ : Type u_2} [Fintype κ] [DecidableEq κ]\n  (e : ι ≃ κ) (A : Matrix ι ι ℂ) : NLAlib.traceExp ((Matrix.reindex e e) A) = NLAlib.traceExp A",
+  "name":
+  "NLAlib.traceExp_reindex",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  280,
+  "kind":
+  "theorem",
+  "doc":
+  "Equivalent finite labels preserve the trace exponential, with no Hermitian\npremise. Source: exponential transport and invariance of the diagonal sum;\natlas `golden-thompson` (finite-index transport helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.traceExp_smul_eq_sum.{u_1} {d : Type u_1} [Fintype d] [DecidableEq d] (A : Matrix d d ℂ) (hA : A.IsHermitian)\n  (θ : ℝ) : NLAlib.traceExp (θ • A) = ∑ i, Real.exp (θ * hA.eigenvalues i)",
   "name":
   "NLAlib.traceExp_smul_eq_sum",
@@ -36169,6 +36921,26 @@
   "theorem",
   "doc":
   "For Hermitian `A`, `traceExp (θ • A) = ∑ i, exp (θ λᵢ)` over the eigenvalues of `A`. Tropp\n2015, §3.1. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExp_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (A : Matrix ι ι ℂ) : NLAlib.traceExp (↑U * A * (↑U).conjTranspose) = NLAlib.traceExp A",
+  "name":
+  "NLAlib.traceExp_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  96,
+  "kind":
+  "theorem",
+  "doc":
+  "The real trace exponential is unchanged by unitary conjugation, for every\ncomplex square matrix. Source: exponential covariance and trace cyclicity,\nTropp 2015, §3.1; atlas `golden-thompson` (helper). ",
   "atlas_partial":
   [],
   "atlas":
@@ -36419,6 +37191,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.matrixExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_matrixExp_mul_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (H A : Matrix ι ι ℂ) :\n  (NLAlib.matrixExp (↑U * H * (↑U).conjTranspose) * (↑U * A * (↑U).conjTranspose)).trace =\n    (NLAlib.matrixExp H * A).trace",
+  "name":
+  "NLAlib.trace_matrixExp_mul_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  132,
+  "kind":
+  "theorem",
+  "doc":
+  "The complex trace pairing of a matrix exponential and another matrix is\nunchanged by simultaneous unitary conjugation. No Hermitian premises are needed.\nSource: exponential covariance and trace cyclicity, operator derivations §7;\natlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -36600,6 +37392,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_reindex.{u_1, u_2} {ι : Type u_1} [Fintype ι] {κ : Type u_2} [Fintype κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :\n  ((Matrix.reindex e e) A).trace = A.trace",
+  "name":
+  "NLAlib.trace_reindex",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  259,
+  "kind":
+  "theorem",
+  "doc":
+  "Equivalent finite labels preserve the complex trace. Source: the private\n`trace_reindex` helper in `IntrinsicBernstein`, by reindexing the diagonal sum;\natlas `golden-thompson` (finite-index transport helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.rowSelector"],
   "sorry":
   false,
@@ -36641,6 +37453,26 @@
   [],
   "atlas":
   ["nystrom-structural"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_unitary_conj.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(unitary (Matrix ι ι ℂ)))\n  (A : Matrix ι ι ℂ) : (↑U * A * (↑U).conjTranspose).trace = A.trace",
+  "name":
+  "NLAlib.trace_unitary_conj",
+  "module":
+  "NLAlib.Concentration.Matrix.OperatorConvexity.UnitaryCalculus",
+  "line":
+  89,
+  "kind":
+  "theorem",
+  "doc":
+  "The complex trace is unchanged by unitary conjugation. Source: cyclicity\nof trace, Tropp 2015, §2.1; atlas `golden-thompson` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":

@@ -1,7 +1,8 @@
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import NLAlib.Krylov.Polynomial
+import NLAlib.Krylov.Grade
+import NLAlib.Krylov.Minimiser
 import NLAlib.Matrix.PolynomialCalculus
 import NLAlib.Polynomial.Approximation
 
@@ -12,14 +13,20 @@ For a symmetric positive (semi)definite `A`, the `q`-th conjugate-gradient itera
 started at `x₀` is the minimiser of the quadratic `φ(x) = ½ xᵀ A x − cᵀ x` over the affine Krylov
 space `x₀ + K_q(A, r₀)`, `r₀ = c − A x₀`; equivalently it minimises the `A`-norm error
 `‖x − x⋆‖_A` there. This file works with that variational characterisation (`IsCGIterate`); the
-Hestenes–Stiefel recurrence that computes it is not formalised here.
+Hestenes–Stiefel recurrence that computes it is not formalised here. `IsCGIterate` is the
+instance `IsAffineMinimiser (cgObjective A c) x₀ K_q` of the generic minimiser of
+`NLAlib.Krylov.Minimiser`, and its bounds are corollaries of the class theorem
+`quadForm_sub_le_of_isAffineMinimiser` with weight `g = X`.
 
 ## Main results
 
-* `NLAlib.cgObjective`, `NLAlib.IsCGIterate`: the objective and the iterate predicate.
+* `NLAlib.cgObjective`, `NLAlib.IsCGIterate`: the objective and the iterate predicate;
+  `NLAlib.isCGIterate_iff` unfolds it, `NLAlib.isCGIterate_iff_isAffineMinimiser_quadForm_sub`
+  identifies it with `A`-norm error minimisation.
 * `NLAlib.cgObjective_add`, `NLAlib.cgObjective_eq_add_quadForm_sub`: `φ(z) = φ(x⋆) + ½‖z − x⋆‖_A²`.
 * `NLAlib.isCGIterate_of_forall_dotProduct_eq_zero`: Galerkin orthogonality implies minimality.
 * `NLAlib.exists_isCGIterate`: existence for positive definite `A`.
+* `NLAlib.eq_of_isCGIterate_of_krylovGrade_le`: finite termination at the grade of `r₀`.
 * `NLAlib.quadForm_sub_le_of_isCGIterate_of_poly`: the polynomial bound
   `‖x_q − x⋆‖_A² ≤ (max_i |p(λᵢ)|)² ‖x₀ − x⋆‖_A²` for every `p` with `deg p ≤ q`, `p(0) = 1`.
 * `NLAlib.quadForm_sub_le_of_isCGIterate`: the condition-number bound
@@ -27,7 +34,8 @@ Hestenes–Stiefel recurrence that computes it is not formalised here.
   and `NLAlib.quadForm_sub_le_of_isCGIterate_of_le` for `0 < a ≤ b`.
 
 Source: Trefethen–Bau (1997) [`tb97`], Lecture 38 (Thms 38.1, 38.3, 38.5); Golub–Meurant (2010)
-[`gm10`], Ch. 8; Saad (2003), Thm 6.29. Atlas: `cg-convergence`.
+[`gm10`], Ch. 8; Saad (2003), Thm 6.29. Atlas: `cg-convergence`; finite termination uses
+`krylov-grade`, the bounds use `residual-polynomial` through `NLAlib.Krylov.Minimiser`.
 -/
 
 noncomputable section
@@ -46,13 +54,21 @@ atlas: cg-convergence -/
 def cgObjective (A : Matrix n n ℝ) (c x : n → ℝ) : ℝ := quadForm A x / 2 - c ⬝ᵥ x
 
 /-- `x` is a `q`-th conjugate-gradient iterate for `A x = c` from `x₀`: `x − x₀` lies in
-`K_q(A, c − A x₀)` and `x` minimises `cgObjective A c` over `x₀ + K_q(A, c − A x₀)`.
+`K_q(A, c − A x₀)` and `x` minimises `cgObjective A c` over `x₀ + K_q(A, c − A x₀)`, i.e.
+`IsAffineMinimiser (cgObjective A c) x₀ (krylovSpace A (c − A x₀) q) x`.
 Source: Trefethen–Bau (1997) [`tb97`], Thm 38.2 (variational form). Atlas: `cg-convergence`.
 Deviation: a predicate rather than the output of the Hestenes–Stiefel recurrence.
 atlas: cg-convergence -/
 def IsCGIterate (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
-  x - x₀ ∈ krylovSpace A (c - A *ᵥ x₀) q ∧
-    ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) q, cgObjective A c x ≤ cgObjective A c (x₀ + y)
+  IsAffineMinimiser (cgObjective A c) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x
+
+/-- Unfolding `IsCGIterate`: `x − x₀ ∈ K_q` and `φ(x) ≤ φ(x₀ + y)` for every `y ∈ K_q`.
+Source: Trefethen–Bau (1997) [`tb97`], Thm 38.2. -/
+theorem isCGIterate_iff {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} {x : n → ℝ} :
+    IsCGIterate A c x₀ q x ↔
+      x - x₀ ∈ krylovSpace A (c - A *ᵥ x₀) q ∧
+        ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) q, cgObjective A c x ≤ cgObjective A c (x₀ + y) :=
+  Iff.rfl
 
 omit [DecidableEq n] in
 /-- For a real symmetric matrix, `uᵀ A d = dᵀ A u`. -/
@@ -85,12 +101,17 @@ theorem cgObjective_eq_add_quadForm_sub {A : Matrix n n ℝ} (hA : A.IsHermitian
   rw [add_sub_cancel, hxs, sub_self, dotProduct_zero, add_zero] at h
   exact h
 
-/-- A positive semidefinite (eigenvalues `≥ 0`) symmetric matrix has `xᵀ A x ≥ 0`.
-Atlas: `cg-convergence` (helper). -/
-theorem quadForm_nonneg_of_eigenvalues_nonneg {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    (hpsd : ∀ i, 0 ≤ hA.eigenvalues i) (x : n → ℝ) : 0 ≤ quadForm A x := by
-  rw [quadForm_eq_sum_eigenvalues hA]
-  exact Finset.sum_nonneg fun i _ => mul_nonneg (hpsd i) (sq_nonneg _)
+/-- **CG minimises the `A`-norm error.** For symmetric `A` with `A x⋆ = c`, `x` is a `q`-th CG
+iterate iff it minimises `‖· − x⋆‖_A² = quadForm A (· − x⋆)` over `x₀ + K_q(A, r₀)`.
+Source: Trefethen–Bau (1997) [`tb97`], Thm 38.2. -/
+theorem isCGIterate_iff_isAffineMinimiser_quadForm_sub {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    {c x₀ xs x : n → ℝ} (hxs : A *ᵥ xs = c) {q : ℕ} :
+    IsCGIterate A c x₀ q x ↔
+      IsAffineMinimiser (fun y => quadForm A (y - xs)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x := by
+  rw [isCGIterate_iff, IsAffineMinimiser]
+  refine and_congr_right fun _ => forall₂_congr fun y _ => ?_
+  rw [cgObjective_eq_add_quadForm_sub hA hxs x, cgObjective_eq_add_quadForm_sub hA hxs (x₀ + y)]
+  constructor <;> intro h <;> linarith
 
 /-- **Galerkin orthogonality implies the CG minimality.** For symmetric positive semidefinite
 `A`, if `x − x₀ ∈ K_q` and the residual `c − A x` is orthogonal to `K_q`, then `x` is a `q`-th CG
@@ -163,57 +184,23 @@ theorem exists_isCGIterate {A : Matrix n n ℝ} (hA : A.PosDef) (c x₀ : n → 
     simp only [r₀, dotProduct_sub]
     ring
 
-/-- Writing `1 − p = X s` for `p(0) = 1`, `deg p ≤ q`: then `deg s < q`. -/
-private lemma exists_degree_lt_one_sub_eq_X_mul {p : ℝ[X]} {q : ℕ} (hp : p.degree ≤ q)
-    (hp0 : p.eval 0 = 1) : ∃ s : ℝ[X], s.degree < q ∧ 1 - p = X * s := by
-  have hdvd : X ∣ 1 - p := by
-    rw [X_dvd_iff, coeff_zero_eq_eval_zero, eval_sub, hp0, eval_one, sub_self]
-  obtain ⟨s, hs⟩ := hdvd
-  refine ⟨s, ?_, hs⟩
-  rcases eq_or_ne s 0 with h0 | h0
-  · rw [h0, degree_zero]; exact WithBot.bot_lt_coe _
-  · have hdeg : (1 - p).degree ≤ q :=
-      (degree_sub_le _ _).trans (max_le (degree_one_le.trans (by exact_mod_cast Nat.zero_le q)) hp)
-    rw [hs, mul_comm, degree_mul_X] at hdeg
-    rw [degree_eq_natDegree h0] at hdeg ⊢
-    have : s.natDegree + 1 ≤ q := by exact_mod_cast hdeg
-    exact_mod_cast (by omega : s.natDegree < q)
-
 /-- **CG error bound, polynomial form.** Let `A` be symmetric positive semidefinite,
 `A x⋆ = c`, and `x` a `q`-th CG iterate from `x₀`. For every polynomial `p` with `deg p ≤ q`,
 `p(0) = 1` and `|p(λᵢ)| ≤ M` at every eigenvalue,
 `‖x − x⋆‖_A² ≤ M² ‖x₀ − x⋆‖_A²` (with `‖v‖_A² = quadForm A v`).
 Source: Trefethen–Bau (1997) [`tb97`], Thm 38.3 (and the inequality (38.10)); Saad (2003),
-Thm 6.29. Atlas: `cg-convergence`; uses `polynomial-spectral-bound`, `krylov-subspace`.
+Thm 6.29. Atlas: `cg-convergence`; uses `polynomial-spectral-bound`, `krylov-subspace`,
+`residual-polynomial` (the case `g = X` of `quadForm_sub_le_of_isAffineMinimiser`).
 atlas: cg-convergence -/
 theorem quadForm_sub_le_of_isCGIterate_of_poly {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (hpsd : ∀ i, 0 ≤ hA.eigenvalues i) {c x₀ xs x : n → ℝ} (hxs : A *ᵥ xs = c) {q : ℕ}
     (hx : IsCGIterate A c x₀ q x) {p : ℝ[X]} (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) {M : ℝ}
     (hM : ∀ i, |p.eval (hA.eigenvalues i)| ≤ M) :
     quadForm A (x - xs) ≤ M ^ 2 * quadForm A (x₀ - xs) := by
-  obtain ⟨s, hs, hps⟩ := exists_degree_lt_one_sub_eq_X_mul hp hp0
-  set r₀ := c - A *ᵥ x₀
-  set y := aeval A s *ᵥ r₀
-  have hy : y ∈ krylovSpace A r₀ q := (mem_krylovSpace_iff_degree A r₀ q y).2 ⟨s, hs, rfl⟩
-  have hr₀ : r₀ = A *ᵥ (xs - x₀) := by simp only [r₀, Matrix.mulVec_sub, hxs]
-  have hpoly : x₀ + y - xs = aeval A p *ᵥ (x₀ - xs) := by
-    have hp' : p = 1 - X * s := by rw [← hps]; ring
-    have hcomm : aeval A (X * s) = aeval A s * A := by
-      rw [mul_comm, map_mul, aeval_X]
-    rw [hp', map_sub, map_one, Matrix.sub_mulVec, Matrix.one_mulVec, hcomm,
-      ← Matrix.mulVec_mulVec, show y = aeval A s *ᵥ (A *ᵥ (xs - x₀)) by rw [← hr₀]]
-    rw [show xs - x₀ = -(x₀ - xs) by abel, Matrix.mulVec_neg, Matrix.mulVec_neg]
-    abel
-  have hmin := hx.2 y hy
-  rw [cgObjective_eq_add_quadForm_sub hA hxs x,
-    cgObjective_eq_add_quadForm_sub hA hxs (x₀ + y)] at hmin
-  have hle : quadForm A (x - xs) ≤ quadForm A (x₀ + y - xs) := by linarith
-  rw [hpoly] at hle
-  refine hle.trans ?_
-  refine quadForm_aeval_mulVec_le hA (S := Set.range hA.eigenvalues) ?_ (fun i => ⟨i, rfl⟩)
-    ?_ (x₀ - xs)
-  · rintro _ ⟨i, rfl⟩; exact hpsd i
-  · rintro _ ⟨i, rfl⟩; exact hM i
+  have hx' := (isCGIterate_iff_isAffineMinimiser_quadForm_sub hA hxs).1 hx
+  have h := quadForm_sub_le_of_isAffineMinimiser hA (g := X) (by simpa using hpsd) hxs
+    (by simpa only [aeval_X] using hx') hp hp0 hM
+  simpa only [aeval_X] using h
 
 /-- **CG convergence, condition-number form.** Let `A` be symmetric with every eigenvalue in
 `[a, b]`, `0 < a < b`, `A x⋆ = c`, and `x` a `q`-th CG iterate from `x₀`. Then
@@ -247,7 +234,7 @@ theorem quadForm_sub_le_of_isCGIterate_of_le {A : Matrix n n ℝ} (hA : A.IsHerm
   · -- `K_0 = 0`, so `x = x₀`
     have hx0 : x = x₀ := by
       have h := hx.1
-      rw [krylovSpace, Set.range_eq_empty, Submodule.span_empty, Submodule.mem_bot] at h
+      rw [krylovSpace_zero, Submodule.mem_bot] at h
       exact sub_eq_zero.1 h
     subst hx0
     nlinarith
@@ -262,5 +249,25 @@ theorem quadForm_sub_le_of_isCGIterate_of_le {A : Matrix n n ℝ} (hA : A.IsHerm
         simp [hi, ha.ne'])
     simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_mul] at h
     exact h.trans (by positivity)
+
+/-- **Finite termination of CG.** For positive definite `A` with `A x⋆ = c`, once `q` reaches the
+grade `ν(A, r₀)` of the initial residual, every `q`-th CG iterate is the solution `x⋆`. The
+proof: `x⋆ − x₀ ∈ K_ν(A, r₀)` (`sub_mem_krylovSpace_krylovGrade`), so the `A`-norm error of the
+minimiser is `0`. Source: Saad (2003) [`saad03`], Prop 6.3 and §6.7; Trefethen–Bau (1997)
+[`tb97`], Thm 38.1 (CG converges in at most `n` steps). Uses atlas `krylov-grade`.
+atlas: cg-finite-termination -/
+theorem eq_of_isCGIterate_of_krylovGrade_le {A : Matrix n n ℝ} (hA : A.PosDef)
+    {c x₀ xs x : n → ℝ} (hxs : A *ᵥ xs = c) {q : ℕ}
+    (hq : krylovGrade A (c - A *ᵥ x₀) ≤ q) (hx : IsCGIterate A c x₀ q x) : x = xs := by
+  have hx' := (isCGIterate_iff_isAffineMinimiser_quadForm_sub hA.isHermitian hxs).1 hx
+  have hmem : xs - x₀ ∈ krylovSpace A (c - A *ᵥ x₀) q := by
+    rw [krylovSpace_eq_of_krylovGrade_le _ _ hq]
+    exact sub_mem_krylovSpace_krylovGrade hA.isUnit hxs x₀
+  have h := hx'.le_of_sub_mem hmem
+  simp only [sub_self, quadForm_zero_right] at h
+  by_contra hne
+  have hpos := hA.dotProduct_mulVec_pos (x := x - xs) (sub_ne_zero.2 hne)
+  simp only [star_trivial] at hpos
+  exact absurd h (not_le.2 hpos)
 
 end NLAlib

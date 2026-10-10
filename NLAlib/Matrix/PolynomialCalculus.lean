@@ -12,10 +12,13 @@ with `U = hA.eigenvectorUnitary` and `λ = hA.eigenvalues`) and a real polynomia
 * `aeval_mulVec_eq_sum`: `p(A) v = ∑ᵢ p(λᵢ) ⟨uᵢ, v⟩ uᵢ`;
 * `dotProduct_aeval_mulVec_eq_sum`: `vᵀ p(A) v = ∑ᵢ p(λᵢ) ⟨uᵢ, v⟩²` (the spectral-measure
   identity);
+* `quadForm_nonneg_of_eigenvalues_nonneg`: `xᵀ A x ≥ 0` when every eigenvalue is `≥ 0`;
 * `specNorm_aeval_le`: `‖p(A)‖₂ ≤ M` when `|p(λᵢ)| ≤ M` for every eigenvalue;
 * `dotProduct_aeval_mulVec_self_le`: `‖p(A) v‖² ≤ M² ‖v‖²` when `|p| ≤ M` on a set containing
   the spectrum;
-* `quadForm_aeval_mulVec_le`: the energy-norm form `‖p(A) v‖_A² ≤ M² ‖v‖_A²` for positive
+* `quadForm_aeval_aeval_mulVec_le`: the weighted form `‖p(A) v‖²_{g(A)} ≤ M² ‖v‖²_{g(A)}` for a
+  weight polynomial `g ≥ 0` on the spectrum, and its case `g = X`,
+  `quadForm_aeval_mulVec_le`: the energy-norm form `‖p(A) v‖_A² ≤ M² ‖v‖_A²` for positive
   semidefinite `A` (spectrum in `S ⊆ [0, ∞)`).
 
 Mathlib's isometric `norm_cfc_le` needs a complex C⋆-algebra and does not apply to real
@@ -187,6 +190,13 @@ theorem quadForm_aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (
   simp only [eval_mul, eval_X]
   ring
 
+/-- A symmetric matrix with nonnegative eigenvalues has `xᵀ A x ≥ 0`. Moved from
+`Krylov/CG.lean` (atlas `cg-convergence`, helper). -/
+theorem quadForm_nonneg_of_eigenvalues_nonneg {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    (hpsd : ∀ i, 0 ≤ hA.eigenvalues i) (x : n → ℝ) : 0 ≤ quadForm A x := by
+  rw [quadForm_eq_sum_eigenvalues hA]
+  exact Finset.sum_nonneg fun i _ => mul_nonneg (hpsd i) (sq_nonneg _)
+
 /-- **Polynomial spectral-norm bound.** For real symmetric `A`, if `|p(λᵢ)| ≤ M` at every
 eigenvalue then `‖p(A)‖₂ ≤ M`. Standard (Golub–Van Loan, 4th ed., §11.3.4, used for the CG
 bound); audit G0 C5; atlas `polynomial-spectral-bound`. The hypothesis `0 ≤ M` covers the empty
@@ -214,25 +224,60 @@ theorem dotProduct_aeval_mulVec_self_le {A : Matrix n n ℝ} (hA : A.IsHermitian
   exact sq_le_sq' (by linarith [neg_abs_le (p.eval (hA.eigenvalues i))])
     ((le_abs_self _).trans h)
 
+/-- `(p(A)v)ᵀ g(A) (p(A)v) = ∑ᵢ g(λᵢ) p(λᵢ)² ⟨uᵢ, v⟩²` for real symmetric `A` and polynomials
+`p`, `g`. Atlas `polynomial-spectral-bound` (helper). -/
+theorem quadForm_aeval_aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    (g p : ℝ[X]) (v : n → ℝ) :
+    quadForm (aeval A g) (aeval A p *ᵥ v) =
+      ∑ i, g.eval (hA.eigenvalues i) * p.eval (hA.eigenvalues i) ^ 2 *
+        (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2 := by
+  have hP : quadForm (aeval A g) (aeval A p *ᵥ v) = v ⬝ᵥ (aeval A (p * g * p) *ᵥ v) := by
+    rw [quadForm, map_mul, map_mul, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
+      Matrix.dotProduct_mulVec v (aeval A p), ← Matrix.mulVec_transpose, transpose_aeval hA p]
+  rw [hP, dotProduct_aeval_mulVec_eq_sum hA]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  simp only [eval_mul]
+  ring
+
+/-- **Polynomial bound, weighted form.** If every eigenvalue of the real symmetric `A` lies in
+`S`, the weight polynomial `g` is nonnegative on `S` and `|p| ≤ M` on `S`, then
+`(p(A)v)ᵀ g(A) (p(A)v) ≤ M² vᵀ g(A) v`, i.e. `‖p(A) v‖_{g(A)} ≤ M ‖v‖_{g(A)}`. The weights
+`g = X` (energy norm, CG), `g = X²` (residual norm, MINRES) and `g = 1` (error norm) are the
+cases used by Krylov methods. Source: Greenbaum (1997) [`greenbaum97`], §3.1; Saad (2003),
+Thm 6.29 (case `g = X`). Generalises `quadForm_aeval_mulVec_le` (KRYLOV_DEFINITIONS §3.2).
+atlas: polynomial-spectral-bound -/
+theorem quadForm_aeval_aeval_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {g p : ℝ[X]}
+    {S : Set ℝ} {M : ℝ} (hspec : ∀ i, hA.eigenvalues i ∈ S) (hg : ∀ x ∈ S, 0 ≤ g.eval x)
+    (hp : ∀ x ∈ S, |p.eval x| ≤ M) (v : n → ℝ) :
+    quadForm (aeval A g) (aeval A p *ᵥ v) ≤ M ^ 2 * quadForm (aeval A g) v := by
+  have hv : quadForm (aeval A g) v = quadForm (aeval A g) (aeval A (1 : ℝ[X]) *ᵥ v) := by
+    rw [map_one, Matrix.one_mulVec]
+  rw [hv, quadForm_aeval_aeval_mulVec_eq_sum hA, quadForm_aeval_aeval_mulVec_eq_sum hA,
+    Finset.mul_sum]
+  refine Finset.sum_le_sum fun i _ => ?_
+  have hgi : 0 ≤ g.eval (hA.eigenvalues i) := hg _ (hspec i)
+  have h := hp _ (hspec i)
+  have hsq : p.eval (hA.eigenvalues i) ^ 2 ≤ M ^ 2 :=
+    sq_le_sq' (by linarith [neg_abs_le (p.eval (hA.eigenvalues i))]) ((le_abs_self _).trans h)
+  have hc := sq_nonneg (⇑(hA.eigenvectorBasis i) ⬝ᵥ v)
+  simp only [eval_one, one_pow, mul_one]
+  calc g.eval (hA.eigenvalues i) * p.eval (hA.eigenvalues i) ^ 2 *
+        (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2
+      ≤ g.eval (hA.eigenvalues i) * M ^ 2 * (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2 := by gcongr
+    _ = M ^ 2 * (g.eval (hA.eigenvalues i) * (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2) := by ring
+
 /-- **Polynomial bound, energy form.** If every eigenvalue of the real symmetric `A` lies in
 `S ⊆ [0, ∞)` (so `A` is positive semidefinite) and `|p| ≤ M` on `S`, then
 `(p(A)v)ᵀ A (p(A)v) ≤ M² vᵀ A v`, i.e. `‖p(A) v‖_A ≤ M ‖v‖_A`. This is the form used for the
 CG error (Greenbaum 1997, §3.1; Saad 2003, Thm 6.29); audit G3 C1;
-atlas `polynomial-spectral-bound`.
+atlas `polynomial-spectral-bound`. The case `g = X` of `quadForm_aeval_aeval_mulVec_le`.
 atlas: polynomial-spectral-bound -/
 theorem quadForm_aeval_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {p : ℝ[X]}
     {S : Set ℝ} {M : ℝ} (hS : S ⊆ Set.Ici 0) (hspec : ∀ i, hA.eigenvalues i ∈ S)
     (hp : ∀ x ∈ S, |p.eval x| ≤ M) (v : n → ℝ) :
     quadForm A (aeval A p *ᵥ v) ≤ M ^ 2 * quadForm A v := by
-  rw [quadForm_aeval_mulVec_eq_sum hA, quadForm_eq_sum_eigenvalues hA, Finset.mul_sum]
-  refine Finset.sum_le_sum fun i _ => ?_
-  have hlam : 0 ≤ hA.eigenvalues i := hS (hspec i)
-  have h := hp _ (hspec i)
-  have hsq : p.eval (hA.eigenvalues i) ^ 2 ≤ M ^ 2 :=
-    sq_le_sq' (by linarith [neg_abs_le (p.eval (hA.eigenvalues i))]) ((le_abs_self _).trans h)
-  have hc := sq_nonneg (⇑(hA.eigenvectorBasis i) ⬝ᵥ v)
-  calc hA.eigenvalues i * p.eval (hA.eigenvalues i) ^ 2 * (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2
-      ≤ hA.eigenvalues i * M ^ 2 * (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2 := by gcongr
-    _ = M ^ 2 * (hA.eigenvalues i * (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2) := by ring
+  have h := quadForm_aeval_aeval_mulVec_le hA (g := X) hspec
+    (fun x hx => by simpa using hS hx) hp v
+  rwa [aeval_X] at h
 
 end NLAlib

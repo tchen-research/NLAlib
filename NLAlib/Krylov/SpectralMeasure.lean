@@ -19,7 +19,8 @@ functional calculus (every function is continuous on the finite spectrum).
 * `NLAlib.spectralMeasure`, `NLAlib.integral_spectralMeasure`: `∫ f dμ_v = vᵀ f(A) v`.
 * `NLAlib.integral_eval_spectralMeasure`, `NLAlib.integral_pow_spectralMeasure`:
   polynomial and moment forms, `∫ p dμ_v = vᵀ p(A) v`, `∫ xᵏ dμ_v = vᵀ Aᵏ v`.
-* `NLAlib.spectralMeasure_univ`: total mass `‖v‖²`; `NLAlib.spectralMeasure_compl_range_eigenvalues`:
+* `NLAlib.spectralMeasure_univ`: total mass `‖v‖²`;
+  `NLAlib.spectralMeasure_compl_range_eigenvalues`:
   the measure lives on the eigenvalues.
 
 The Hutchinson clause `𝔼_g[gᵀ f(A) g] = tr f(A)` of the atlas entry is `hutchinson-unbiased`

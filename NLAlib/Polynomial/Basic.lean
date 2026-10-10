@@ -20,7 +20,13 @@ are Mathlib's `Polynomial.Chebyshev.T ℝ n` and `Polynomial.Chebyshev.U ℝ n`.
   interpolation nodes (atlas `chebyshev-interpolation-error`; theorems in
   `NLAlib.Polynomial.Interpolation`).
 
-Atlas: `chebyshev-minimax`, `chebyshev-amplifier`, `chebyshev-interpolation-error` (definitions).
+* `exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one`,
+  `degree_le_and_eval_zero_eq_one_iff`: the residual-polynomial factorisation `1 − p = X s`,
+  `deg s < q`, for `deg p ≤ q`, `p(0) = 1` (atlas `residual-polynomial`; the Krylov side is in
+  `NLAlib.Krylov.Minimiser`).
+
+Atlas: `chebyshev-minimax`, `chebyshev-amplifier`, `chebyshev-interpolation-error` (definitions),
+`residual-polynomial` (the polynomial algebra).
 -/
 
 noncomputable section
@@ -91,5 +97,46 @@ theorem chebyshevZero_injective (q : ℕ) : Function.Injective (chebyshevZero q)
   have h := (Finset.range q).nodup_map_iff_injOn.mp (Chebyshev.roots_T_real_nodup q)
   exact Fin.ext (h (Finset.mem_coe.mpr (Finset.mem_range.mpr i.2))
     (Finset.mem_coe.mpr (Finset.mem_range.mpr j.2)) hij)
+
+/-! ### Residual polynomials -/
+
+/-- **Residual-polynomial factorisation.** If `deg p ≤ q` and `p(0) = 1`, then `1 − p = X s` for
+some `s` with `deg s < q`. This is the algebra behind every residual-polynomial Krylov argument:
+`x₀ + s(A) r₀ ∈ x₀ + K_q` has error `p(A)(x₀ − x⋆)`. Source: Saad (2003) [`saad03`], §6.11
+(the set `P_q^0`); Trefethen–Bau (1997) [`tb97`], Lect. 35. Promoted from the private CG lemma
+`exists_degree_lt_one_sub_eq_X_mul` (atlas `residual-polynomial`, helper). -/
+theorem exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one {p : ℝ[X]} {q : ℕ}
+    (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) : ∃ s : ℝ[X], s.degree < q ∧ 1 - p = X * s := by
+  have hdvd : X ∣ 1 - p := by
+    rw [X_dvd_iff, coeff_zero_eq_eval_zero, eval_sub, hp0, eval_one, sub_self]
+  obtain ⟨s, hs⟩ := hdvd
+  refine ⟨s, ?_, hs⟩
+  rcases eq_or_ne s 0 with h0 | h0
+  · rw [h0, degree_zero]; exact WithBot.bot_lt_coe _
+  · have hdeg : (1 - p).degree ≤ q :=
+      (degree_sub_le _ _).trans (max_le (degree_one_le.trans (by exact_mod_cast Nat.zero_le q)) hp)
+    rw [hs, mul_comm, degree_mul_X] at hdeg
+    rw [degree_eq_natDegree h0] at hdeg ⊢
+    have : s.natDegree + 1 ≤ q := by exact_mod_cast hdeg
+    exact_mod_cast (by omega : s.natDegree < q)
+
+/-- **Residual polynomials of degree `≤ q`** are exactly the `1 − X s` with `deg s < q`:
+`deg p ≤ q ∧ p(0) = 1 ↔ ∃ s, deg s < q ∧ p = 1 − X s`. Source: Saad (2003) [`saad03`], §6.11
+(atlas `residual-polynomial`, helper). -/
+theorem degree_le_and_eval_zero_eq_one_iff {p : ℝ[X]} {q : ℕ} :
+    p.degree ≤ q ∧ p.eval 0 = 1 ↔ ∃ s : ℝ[X], s.degree < q ∧ p = 1 - X * s := by
+  constructor
+  · rintro ⟨hp, hp0⟩
+    obtain ⟨s, hs, h⟩ := exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one hp hp0
+    exact ⟨s, hs, by rw [← h]; ring⟩
+  · rintro ⟨s, hs, rfl⟩
+    refine ⟨(degree_sub_le _ _).trans (max_le ?_ ?_), by simp⟩
+    · exact degree_one_le.trans (by exact_mod_cast Nat.zero_le q)
+    · rw [mul_comm]
+      rcases eq_or_ne s 0 with h0 | h0
+      · simp [h0]
+      · rw [degree_mul_X, degree_eq_natDegree h0] at *
+        have : s.natDegree < q := by exact_mod_cast hs
+        exact_mod_cast (by omega : s.natDegree + 1 ≤ q)
 
 end NLAlib

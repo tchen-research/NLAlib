@@ -2,6 +2,9 @@ import Mathlib.Probability.Moments.SubGaussian
 import NLAlib.Concentration.Scalar.TailIntegral
 import NLAlib.Concentration.Scalar.EntropyTensorization
 import NLAlib.Concentration.Scalar.Herbst
+import NLAlib.Concentration.Scalar.Rademacher
+import NLAlib.Concentration.Scalar.SubGaussian
+import NLAlib.Concentration.Scalar.Net
 
 /-!
 # Scalar concentration
@@ -16,5 +19,11 @@ Files (atlas ids):
 * `EntropyTensorization` (`entropy-tensorization`): `Ent_μ(h) ≤ ∑ᵢ 𝔼 Ent_{μᵢ}(h)` for a product
   probability measure, and the Gibbs variational inequality;
 * `Herbst` (`herbst`): an entropy bound `Ent(e^{s f}) ≤ c s² 𝔼 e^{s f}` gives a sub-Gaussian
-  moment generating function.
+  moment generating function;
+* `Rademacher` (`rademacher-khintchine`): `rademacherMeasure`, and a Rademacher variable is
+  `1`-sub-Gaussian;
+* `SubGaussian` (`rademacher-khintchine`, `subgaussian-max`): sub-Gaussian absolute moments,
+  Khintchine with an explicit constant, the maximal inequality, promoted sub-Gaussian API;
+* `Net` (`epsilon-net-norm`, `subgaussian-spec-norm`): ε-nets of the sphere and the spectral
+  norm.
 -/

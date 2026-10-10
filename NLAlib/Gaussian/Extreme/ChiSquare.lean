@@ -8,14 +8,24 @@ import Mathlib.Analysis.SpecialFunctions.Stirling
 import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.MeasureTheory.Integral.Prod
+import NLAlib.ForMathlib.Analysis.Real
 
 /-!
-# Chi-square lower tail and negative moments
+# Chi-square tails and negative moments
 
 For `X` a standard Gaussian vector in `ℝ^d`, `‖X‖² ∼ χ²_d`. This file provides
 
 * `measure_sum_sq_le_le_gaussianReal`: the lower tail
   `P(χ²_d ≤ u) ≤ (e u / d)^{d/2}` for `0 ≤ u ≤ d` (atlas `chi-square-lower-tail`);
+* `measureReal_sum_sq_le_le_exp_mul_rpow`, `measureReal_le_sum_sq_le_exp_mul_rpow`: the Chernoff
+  bounds `P(χ²_d ≤ u) ≤ e^{su}(1+2s)^{-d/2}` (`s ≥ 0`) and `P(χ²_d ≥ u) ≤ e^{-tu}(1−2t)^{-d/2}`
+  (`0 ≤ t < 1/2`) (atlas `chi-square-lower-tail`, `chi-square-upper-tail`);
+* `measure_sum_sq_le_one_sub_mul_le_gaussianReal`, `measure_le_sum_sq_le_gaussianReal`: the
+  sharp Dasgupta–Gupta forms `P(χ²_d ≤ (1−ε)d) ≤ exp((d/2)(ε + log(1−ε)))` and
+  `P(χ²_d ≥ (1+ε)d) ≤ exp(−(d/2)(ε − log(1+ε)))`;
+* `measure_sum_sq_le_sub_two_sqrt_mul_le_gaussianReal`,
+  `measure_add_two_sqrt_mul_add_le_sum_sq_le_gaussianReal`: the Laurent–Massart forms
+  `P(χ²_d ≤ d − 2√(dx)) ≤ e^{-x}` and `P(χ²_d ≥ d + 2√(dx) + 2x) ≤ e^{-x}`;
 * `integrable_and_integral_rpow_inv_sum_sq_gaussianReal`: the negative moments
   `E[(χ²_d)^{-q}] = Γ(d/2 - q) / (2^q Γ(d/2))` for `0 ≤ q < d/2` (atlas `chi-square-neg-moment`);
 * `integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt`: the `L^q` bound
@@ -98,9 +108,11 @@ theorem ae_sum_sq_pos_pi_gaussianReal {ι : Type*} [Fintype ι] (hd : 1 ≤ Fint
 
 /-! ### Lower tail -/
 
-/-- Chernoff bound for the lower tail of `χ²_d`:
-`P(χ²_d ≤ u) ≤ e^{s u} (1 + 2s)^{-d/2}` for `s ≥ 0`. -/
-private lemma measureReal_sum_sq_le_le_exp_mul {d : ℕ} (u s : ℝ) (hs : 0 ≤ s) :
+/-- **Chernoff bound for the lower tail of `χ²_d`**: `P(χ²_d ≤ u) ≤ e^{s u} (1 + 2s)^{-d/2}` for
+every `u` and `s ≥ 0`. Chernoff's method with the Laplace transform
+`integral_exp_neg_mul_sum_sq_pi_gaussianReal`; Laurent–Massart 2000, proof of Lem 1;
+Dasgupta–Gupta 2003, proof of Lem 2.2(a). Atlas: `chi-square-lower-tail`. -/
+theorem measureReal_sum_sq_le_le_exp_mul_rpow {d : ℕ} (u s : ℝ) (hs : 0 ≤ s) :
     (Measure.pi fun _ : Fin d => gaussianReal 0 1).real {g | ∑ i, g i ^ 2 ≤ u}
       ≤ Real.exp (s * u) * (1 + 2 * s) ^ (-((d : ℝ) / 2)) := by
   set μ := Measure.pi fun _ : Fin d => gaussianReal 0 1
@@ -146,7 +158,7 @@ theorem measure_sum_sq_le_le_gaussianReal {d : ℕ} (hd : 1 ≤ d) (u : ℝ) (hu
     have hs : 0 ≤ s := by rw [hs_def]; linarith
     have h1 : 1 + 2 * s = (d:ℝ) / u := by rw [hs_def]; ring
     have hsu : s * u = ((d:ℝ) - u) / 2 := by rw [hs_def]; field_simp
-    have hch := measureReal_sum_sq_le_le_exp_mul (d := d) u s hs
+    have hch := measureReal_sum_sq_le_le_exp_mul_rpow (d := d) u s hs
     rw [h1, hsu, Real.rpow_neg (by positivity), ← Real.inv_rpow (by positivity), inv_div] at hch
     have hrhs : (Real.exp 1 * u / d) ^ ((d : ℝ) / 2)
         = Real.exp ((d:ℝ) / 2) * (u / d) ^ ((d:ℝ) / 2) := by
@@ -157,6 +169,162 @@ theorem measure_sum_sq_le_le_gaussianReal {d : ℕ} (hd : 1 ≤ d) (u : ℝ) (hu
     rw [hrhs]
     refine mul_le_mul_of_nonneg_right ?_ (by positivity)
     exact Real.exp_le_exp.mpr (by linarith)
+
+/-! ### Sharp Chernoff tails (Dasgupta–Gupta and Laurent–Massart forms) -/
+
+/-- **Sharp lower tail of `χ²_d`** (Chernoff form): for `0 ≤ ε < 1`,
+`P(χ²_d ≤ (1 − ε) d) ≤ exp((d/2)(ε + log(1 − ε)))`.
+
+Dasgupta–Gupta 2003, proof of Lem 2.2(a) (the Chernoff computation; Lem 2.2 itself is stated for
+the projection of a random unit vector), with the parameter `s = ε / (2(1 − ε))` in
+`measureReal_sum_sq_le_le_exp_mul_rpow`. Atlas: `chi-square-lower-tail` (sharp variant). -/
+theorem measure_sum_sq_le_one_sub_mul_le_gaussianReal {d : ℕ} {ε : ℝ} (hε0 : 0 ≤ ε)
+    (hε1 : ε < 1) :
+    (Measure.pi fun _ : Fin d => gaussianReal 0 1) {g | ∑ i, g i ^ 2 ≤ (1 - ε) * d}
+      ≤ ENNReal.ofReal (Real.exp (((d : ℝ) / 2) * (ε + Real.log (1 - ε)))) := by
+  have h1ε : 0 < 1 - ε := by linarith
+  set s := ε / (2 * (1 - ε)) with hs_def
+  have hs : 0 ≤ s := by positivity
+  have h2 : 1 + 2 * s = (1 - ε)⁻¹ := by rw [hs_def]; field_simp; ring
+  rw [← ofReal_measureReal]
+  apply ENNReal.ofReal_le_ofReal
+  refine (measureReal_sum_sq_le_le_exp_mul_rpow ((1 - ε) * d) s hs).trans (le_of_eq ?_)
+  rw [h2, Real.inv_rpow h1ε.le, ← Real.rpow_neg h1ε.le, neg_neg, Real.rpow_def_of_pos h1ε,
+    ← Real.exp_add]
+  congr 1
+  rw [hs_def]
+  field_simp
+
+/-- **Chernoff bound for the upper tail of `χ²_d`**: `P(χ²_d ≥ u) ≤ e^{-t u} (1 − 2t)^{-d/2}`
+for every `u` and `0 ≤ t < 1/2`. Chernoff's method (Mathlib `measure_ge_le_exp_mul_mgf`) with the
+Laplace transform `integral_exp_neg_mul_sum_sq_pi_gaussianReal` at `1 − 2t`; Laurent–Massart 2000,
+proof of Lem 1. Atlas: `chi-square-upper-tail`. -/
+theorem measureReal_le_sum_sq_le_exp_mul_rpow {d : ℕ} (u t : ℝ) (ht0 : 0 ≤ t)
+    (ht1 : t < 1 / 2) :
+    (Measure.pi fun _ : Fin d => gaussianReal 0 1).real {g | u ≤ ∑ i, g i ^ 2}
+      ≤ Real.exp (-t * u) * (1 - 2 * t) ^ (-((d : ℝ) / 2)) := by
+  set μ := Measure.pi fun _ : Fin d => gaussianReal 0 1
+  have hlap := integral_exp_neg_mul_sum_sq_pi_gaussianReal (ι := Fin d) (1 - 2 * t)
+    (by linarith)
+  rw [show -((1 - 2 * t - 1) / 2) = t by ring, Fintype.card_fin] at hlap
+  have hint : Integrable (fun g : Fin d → ℝ => Real.exp (t * ∑ i, g i ^ 2)) μ :=
+    Integrable.of_integral_ne_zero (by
+      rw [hlap]; exact (Real.rpow_pos_of_pos (by linarith) _).ne')
+  have h := measure_ge_le_exp_mul_mgf (X := fun g : Fin d → ℝ => ∑ i, g i ^ 2) (μ := μ) u ht0
+    hint
+  have hmgf : mgf (fun g : Fin d → ℝ => ∑ i, g i ^ 2) μ t
+      = (1 - 2 * t) ^ (-((d : ℝ) / 2)) := hlap
+  rwa [hmgf] at h
+
+/-- **Upper tail of `χ²_d`** (Chernoff form): for `ε ≥ 0`,
+`P(χ²_d ≥ (1 + ε) d) ≤ exp(−(d/2)(ε − log(1 + ε)))`.
+
+Dasgupta–Gupta 2003, proof of Lem 2.2(b) (the Chernoff computation), with
+`t = ε / (2(1 + ε))` in `measureReal_le_sum_sq_le_exp_mul_rpow`. Atlas:
+`chi-square-upper-tail`. -/
+theorem measure_le_sum_sq_le_gaussianReal {d : ℕ} {ε : ℝ} (hε : 0 ≤ ε) :
+    (Measure.pi fun _ : Fin d => gaussianReal 0 1) {g | (1 + ε) * d ≤ ∑ i, g i ^ 2}
+      ≤ ENNReal.ofReal (Real.exp (-((d : ℝ) / 2) * (ε - Real.log (1 + ε)))) := by
+  have h1ε : 0 < 1 + ε := by linarith
+  set t := ε / (2 * (1 + ε)) with ht_def
+  have ht0 : 0 ≤ t := by positivity
+  have ht1 : t < 1 / 2 := by
+    rw [ht_def, div_lt_iff₀ (by positivity)]; linarith
+  have h2 : 1 - 2 * t = (1 + ε)⁻¹ := by rw [ht_def]; field_simp; ring
+  rw [← ofReal_measureReal]
+  apply ENNReal.ofReal_le_ofReal
+  refine (measureReal_le_sum_sq_le_exp_mul_rpow ((1 + ε) * d) t ht0 ht1).trans (le_of_eq ?_)
+  rw [h2, Real.inv_rpow h1ε.le, ← Real.rpow_neg h1ε.le, neg_neg, Real.rpow_def_of_pos h1ε,
+    ← Real.exp_add]
+  congr 1
+  rw [ht_def]
+  field_simp
+  ring
+
+/-- `√(d x) = d √(x / d)` for `d > 0`, `x ≥ 0`. -/
+private lemma sqrt_mul_eq_mul_sqrt_div {d x : ℝ} (hd : 0 < d) :
+    Real.sqrt (d * x) = d * Real.sqrt (x / d) := by
+  rw [show d * x = d ^ 2 * (x / d) by field_simp, Real.sqrt_mul (by positivity),
+    Real.sqrt_sq hd.le]
+
+/-- **Laurent–Massart upper tail of `χ²_d`**: for `x ≥ 0`,
+`P(χ²_d ≥ d + 2√(d x) + 2x) ≤ e^{-x}`.
+
+Laurent–Massart 2000, Lem 1 (first inequality, with all weights `aᵢ = 1`). Proof: the Chernoff
+form `measure_le_sum_sq_le_gaussianReal` at `ε = 2a + 2a²`, `a = √(x/d)`, and
+`log(1 + 2a + 2a²) ≤ 2a`. The case `d = 0` is direct. Atlas: `chi-square-upper-tail`. -/
+theorem measure_add_two_sqrt_mul_add_le_sum_sq_le_gaussianReal {d : ℕ} {x : ℝ} (hx : 0 ≤ x) :
+    (Measure.pi fun _ : Fin d => gaussianReal 0 1)
+        {g | d + 2 * Real.sqrt (d * x) + 2 * x ≤ ∑ i, g i ^ 2}
+      ≤ ENNReal.ofReal (Real.exp (-x)) := by
+  rcases Nat.eq_zero_or_pos d with rfl | hd
+  · rcases hx.eq_or_lt with rfl | hx0
+    · simp
+    · have : {g : Fin 0 → ℝ | ((0 : ℕ) : ℝ) + 2 * Real.sqrt (((0 : ℕ) : ℝ) * x) + 2 * x
+          ≤ ∑ i, g i ^ 2} = ∅ := by
+        ext g; simp; linarith
+      rw [this, measure_empty]; exact zero_le
+  have hd0 : (0 : ℝ) < d := by exact_mod_cast hd
+  set a := Real.sqrt (x / d) with ha_def
+  have ha0 : 0 ≤ a := Real.sqrt_nonneg _
+  have ha2 : a ^ 2 = x / d := Real.sq_sqrt (by positivity)
+  have hset : {g : Fin d → ℝ | d + 2 * Real.sqrt (d * x) + 2 * x ≤ ∑ i, g i ^ 2}
+      = {g | (1 + (2 * a + 2 * a ^ 2)) * d ≤ ∑ i, g i ^ 2} := by
+    have : (d : ℝ) + 2 * Real.sqrt (d * x) + 2 * x = (1 + (2 * a + 2 * a ^ 2)) * d := by
+      rw [sqrt_mul_eq_mul_sqrt_div hd0, ← ha_def, ha2]; field_simp; ring
+    rw [this]
+  rw [hset]
+  refine (measure_le_sum_sq_le_gaussianReal (by positivity)).trans
+    (ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 ?_))
+  have hlog : Real.log (1 + (2 * a + 2 * a ^ 2)) ≤ 2 * a := by
+    rw [Real.log_le_iff_le_exp (by positivity)]
+    have := Real.quadratic_le_exp_of_nonneg (by positivity : 0 ≤ 2 * a)
+    nlinarith
+  have hx' : x = a ^ 2 * d := by rw [ha2]; field_simp
+  rw [hx']
+  nlinarith
+
+/-- **Laurent–Massart lower tail of `χ²_d`**: for `d ≥ 1` and `x ≥ 0`,
+`P(χ²_d ≤ d − 2√(d x)) ≤ e^{-x}`.
+
+Laurent–Massart 2000, Lem 1 (second inequality, with all weights `aᵢ = 1`). Proof: with
+`u = 2√(x/d)`, the event is `χ²_d ≤ (1 − u) d`; for `u ≥ 1` it is null (`χ²_d > 0` a.s.), and for
+`u < 1` use `measure_sum_sq_le_one_sub_mul_le_gaussianReal` and `log(1 − u) ≤ −u − u²/2`.
+The hypothesis `1 ≤ d` is needed: for `d = 0` the event is everything. Atlas:
+`chi-square-lower-tail`. -/
+theorem measure_sum_sq_le_sub_two_sqrt_mul_le_gaussianReal {d : ℕ} (hd : 1 ≤ d) {x : ℝ}
+    (hx : 0 ≤ x) :
+    (Measure.pi fun _ : Fin d => gaussianReal 0 1)
+        {g | ∑ i, g i ^ 2 ≤ d - 2 * Real.sqrt (d * x)}
+      ≤ ENNReal.ofReal (Real.exp (-x)) := by
+  have hd0 : (0 : ℝ) < d := by exact_mod_cast hd
+  set u := 2 * Real.sqrt (x / d) with hu_def
+  have hu0 : 0 ≤ u := by positivity
+  have hu2 : u ^ 2 = 4 * (x / d) := by
+    rw [hu_def, mul_pow, Real.sq_sqrt (by positivity)]; norm_num
+  have hset : {g : Fin d → ℝ | ∑ i, g i ^ 2 ≤ d - 2 * Real.sqrt (d * x)}
+      = {g | ∑ i, g i ^ 2 ≤ (1 - u) * d} := by
+    have : (d : ℝ) - 2 * Real.sqrt (d * x) = (1 - u) * d := by
+      rw [sqrt_mul_eq_mul_sqrt_div hd0, hu_def]; ring
+    rw [this]
+  rw [hset]
+  rcases lt_or_ge u 1 with hu1 | hu1
+  · refine (measure_sum_sq_le_one_sub_mul_le_gaussianReal hu0 hu1).trans
+      (ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 ?_))
+    have hlog := log_one_sub_le_neg_sub_sq_div_two hu0 hu1
+    have hx' : x = u ^ 2 * d / 4 := by rw [hu2]; field_simp
+    rw [hx']
+    have : (d : ℝ) / 2 * (u + Real.log (1 - u)) ≤ (d : ℝ) / 2 * (-(u ^ 2 / 2)) :=
+      mul_le_mul_of_nonneg_left (by linarith) (by positivity)
+    linarith
+  · have hnull : (Measure.pi fun _ : Fin d => gaussianReal 0 1)
+        {g : Fin d → ℝ | ∑ i, g i ^ 2 ≤ (1 - u) * d} = 0 := by
+      refine measure_eq_zero_iff_ae_notMem.mpr
+        ((ae_sum_sq_pos_pi_gaussianReal (ι := Fin d) (by simpa using hd)).mono
+          fun g hg hmem => ?_)
+      have : (1 - u) * (d : ℝ) ≤ 0 := mul_nonpos_of_nonpos_of_nonneg (by linarith) hd0.le
+      exact (not_le.mpr hg) ((show ∑ i, g i ^ 2 ≤ (1 - u) * d from hmem).trans this)
+    rw [hnull]; exact zero_le
 
 /-! ### Negative moments -/
 

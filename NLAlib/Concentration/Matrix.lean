@@ -7,6 +7,7 @@ import NLAlib.Concentration.Matrix.Bernstein.MatrixBernstein
 import NLAlib.Concentration.Matrix.Bernstein.VarianceAdditivity
 import NLAlib.Concentration.Matrix.Chernoff.ChernoffMgfCgf
 import NLAlib.Concentration.Matrix.Chernoff.MatrixChernoff
+import NLAlib.Concentration.Matrix.Sampling
 import NLAlib.Concentration.Matrix.Defs.Calculus
 import NLAlib.Concentration.Matrix.Defs.ChernoffFunctions
 import NLAlib.Concentration.Matrix.Defs.Dilation
@@ -69,6 +70,7 @@ Prove2me missions for those chapters. Every theorem is proved.
 | `Laplace/` | matrix Laplace transform method, `master_bounds`, `trace_cgf_subadditivity` | `matrix-laplace` |
 | `Series/` | `hermitian_gaussian_series`, `matrix_gaussian_series` | `matrix-gaussian-series` |
 | `Chernoff/` | `matrix_chernoff` | `matrix-chernoff` |
+| `Sampling` | `matrix_chernoff_sampling` (explicit-constant tails for averages with `𝔼 Mₖ = I`) | `matrix-chernoff-sampling` |
 | `Bernstein/` | `hermitian_bernstein`, `matrix_bernstein`, dilation identities | `matrix-bernstein`, `hermitian-dilation` |
 | `Intrinsic/` | intrinsic-dimension Chernoff and Bernstein inequalities | `intrinsic-dimension` |
 | `OperatorConvexity/` | `lieb_concavity`, `operator_jensen`, `matrixLog_le_matrixLog`, … | `operator-monotone-convex`, `loewner-order` |

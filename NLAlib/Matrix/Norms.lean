@@ -24,6 +24,9 @@ The two norms every NLAlib statement is written in.
 * Spectral norm: transpose, submultiplicativity, `‖I‖₂ ≤ 1`, `‖P‖₂ ≤ 1` and `‖PᵀX‖₂ = ‖X‖₂` on
   `range P` for orthonormal columns, the mixed inequalities `‖AB‖_F ≤ ‖A‖₂ ‖B‖_F`,
   `‖AB‖_F ≤ ‖A‖_F ‖B‖₂`, `‖A‖₂ ≤ ‖A‖_F`, and the quadratic-form bound `|xᵀMx| ≤ ‖M‖₂ ‖x‖²`.
+* Spectral-norm helpers (audit G0 C1): the triangle inequality, `‖AAᵀ‖₂ = ‖A‖₂²`,
+  `‖P‖₂ ≤ 1` for orthogonal projectors, `‖(I − QQᵀ)A‖₂ ≤ ‖A‖₂`, and the block bound
+  `‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²` when `XYᵀ = 0` (or `XᵀY = 0`).
 
 The Frobenius algebra is ported from the LRA project (`LRA/Basic.lean`,
 `LRA/Deterministic/RangeFinder.lean`, Chen–Persson formalization), namespace renamed.
@@ -489,6 +492,93 @@ theorem abs_dotProduct_mulVec_le_specNorm (M : Matrix n n ℝ) (x : n → ℝ) :
   calc |x ⬝ᵥ (M *ᵥ x)| ≤ _ := hcs
     _ ≤ ‖WithLp.toLp 2 x‖ * (‖M‖ * ‖WithLp.toLp 2 x‖) := by gcongr
     _ = ‖M‖ * (x ⬝ᵥ x) := by rw [← hx]; ring
+
+/-- Triangle inequality for the spectral norm: `‖A + B‖₂ ≤ ‖A‖₂ + ‖B‖₂`. Standard
+(Golub–Van Loan, 4th ed., §2.3); audit G0 C1; atlas `norms-frob-spec`. -/
+theorem specNorm_add_le (A B : Matrix m n ℝ) : specNorm (A + B) ≤ specNorm A + specNorm B :=
+  norm_add_le A B
+
+/-- `‖-A‖₂ = ‖A‖₂`. Atlas `norms-frob-spec`. -/
+theorem specNorm_neg (A : Matrix m n ℝ) : specNorm (-A) = specNorm A := norm_neg A
+
+/-- `‖A - B‖₂ = ‖B - A‖₂`. Atlas `norms-frob-spec`. -/
+theorem specNorm_sub_comm (A B : Matrix m n ℝ) : specNorm (A - B) = specNorm (B - A) :=
+  norm_sub_rev A B
+
+/-- Triangle inequality for a difference: `‖A - B‖₂ ≤ ‖A‖₂ + ‖B‖₂`. Atlas `norms-frob-spec`. -/
+theorem specNorm_sub_le (A B : Matrix m n ℝ) : specNorm (A - B) ≤ specNorm A + specNorm B :=
+  norm_sub_le A B
+
+/-- `‖AAᵀ‖₂ = ‖A‖₂²`, written for the row Gram matrix (the column form `‖AᵀA‖₂ = ‖A‖₂²` is
+`specNorm_sq_eq_specNorm_transpose_mul_self` in `NLAlib.Matrix.SpectralBounds`). Standard
+(the C*-identity); atlas `norms-frob-spec`. -/
+theorem specNorm_mul_transpose_self (A : Matrix m n ℝ) :
+    specNorm (A * Aᵀ) = specNorm A ^ 2 := by
+  have h := Matrix.l2_opNorm_conjTranspose_mul_self Aᵀ
+  rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] at h
+  rw [specNorm_eq_norm, h, sq, ← specNorm_eq_norm, specNorm_transpose]
+
+/-- An orthogonal projector (symmetric idempotent `P`) has spectral norm at most `1`
+(it is `0` or `1`). Proof: `‖P‖₂ = ‖PᵀP‖₂ = ‖P‖₂²`. Standard (Golub–Van Loan, 4th ed., §2.5.1);
+audit G0 C1; atlas `norms-frob-spec`, `projection-facts`. -/
+theorem specNorm_le_one_of_isSymm_of_isIdempotentElem {P : Matrix n n ℝ} (hs : P.IsSymm)
+    (hp : IsIdempotentElem P) : specNorm P ≤ 1 := by
+  have h := Matrix.l2_opNorm_conjTranspose_mul_self P
+  rw [Matrix.conjTranspose_eq_transpose_of_trivial, hs.eq, show P * P = P from hp] at h
+  rw [specNorm_eq_norm]
+  have h0 := norm_nonneg P
+  by_contra hlt
+  rw [not_le] at hlt
+  nlinarith
+
+/-- The residual `A − Q(QᵀA) = (I − QQᵀ)A` (`NLAlib.residual Q A`, which unfolds to this
+expression) has spectral norm at most `‖A‖₂` when `QᵀQ = I` (`NLAlib.HasOrthonormalCols Q`
+unfolded). Stated without `residual` because `NLAlib.Matrix.Projections` imports this file.
+Standard (HMT 2011, §8.4); audit G0 C1 (`specNorm_residual_le`); atlas `projection-facts`. -/
+theorem specNorm_sub_mul_transpose_mul_le [DecidableEq p] {Q : Matrix m p ℝ} (hQ : Qᵀ * Q = 1)
+    (A : Matrix m n ℝ) : specNorm (A - Q * (Qᵀ * A)) ≤ specNorm A := by
+  set P : Matrix m m ℝ := 1 - Q * Qᵀ with hP
+  have hs : P.IsSymm := by
+    simp [hP, Matrix.IsSymm, Matrix.transpose_sub, Matrix.transpose_mul]
+  have hp : IsIdempotentElem P := by
+    change P * P = P
+    have hQQ : Q * Qᵀ * (Q * Qᵀ) = Q * Qᵀ := by
+      rw [Matrix.mul_assoc, ← Matrix.mul_assoc Qᵀ, hQ, Matrix.one_mul]
+    rw [hP, Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one,
+      Matrix.one_mul, hQQ]
+    abel
+  have hPA : A - Q * (Qᵀ * A) = P * A := by
+    rw [hP, Matrix.sub_mul, Matrix.one_mul, Matrix.mul_assoc]
+  rw [hPA]
+  calc specNorm (P * A) ≤ specNorm P * specNorm A := specNorm_mul_le P A
+    _ ≤ 1 * specNorm A :=
+      mul_le_mul_of_nonneg_right (specNorm_le_one_of_isSymm_of_isIdempotentElem hs hp)
+        (specNorm_nonneg A)
+    _ = specNorm A := one_mul _
+
+/-- Block bound for row-orthogonal summands: if `XYᵀ = 0` then
+`‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²`, because `(X + Y)(X + Y)ᵀ = XXᵀ + YYᵀ`. Standard (used in HMT 2011,
+proof of Thm 9.1); audit G0 C1; atlas `norms-frob-spec`. -/
+theorem specNorm_add_sq_le_of_mul_transpose_eq_zero {X Y : Matrix m n ℝ} (h : X * Yᵀ = 0) :
+    specNorm (X + Y) ^ 2 ≤ specNorm X ^ 2 + specNorm Y ^ 2 := by
+  have h' : Y * Xᵀ = 0 := by
+    rw [← Matrix.transpose_transpose (Y * Xᵀ), Matrix.transpose_mul, Matrix.transpose_transpose,
+      h, Matrix.transpose_zero]
+  have hG : (X + Y) * (X + Y)ᵀ = X * Xᵀ + Y * Yᵀ := by
+    rw [Matrix.transpose_add, Matrix.add_mul, Matrix.mul_add, Matrix.mul_add, h, h']
+    abel
+  rw [← specNorm_mul_transpose_self, ← specNorm_mul_transpose_self,
+    ← specNorm_mul_transpose_self, hG]
+  exact specNorm_add_le _ _
+
+/-- Block bound for column-orthogonal summands: if `XᵀY = 0` then
+`‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²` (transpose of `specNorm_add_sq_le_of_mul_transpose_eq_zero`).
+Standard; audit G0 C1; atlas `norms-frob-spec`. -/
+theorem specNorm_add_sq_le_of_transpose_mul_eq_zero {X Y : Matrix m n ℝ} (h : Xᵀ * Y = 0) :
+    specNorm (X + Y) ^ 2 ≤ specNorm X ^ 2 + specNorm Y ^ 2 := by
+  have h' : Xᵀ * Yᵀᵀ = 0 := by rw [Matrix.transpose_transpose]; exact h
+  have := specNorm_add_sq_le_of_mul_transpose_eq_zero h'
+  rwa [← Matrix.transpose_add, specNorm_transpose, specNorm_transpose, specNorm_transpose] at this
 
 end Spectral
 

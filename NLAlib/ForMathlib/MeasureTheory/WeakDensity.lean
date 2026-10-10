@@ -199,7 +199,8 @@ theorem exists_antitoneOn_ae_eq_of_integral_deriv_mul_nonneg
 nonnegative density on an open half-line. The proof establishes absolute continuity,
 constructs the Radon--Nikodym density, and then derives its antitone representative
 from normalized smooth convolution. Source: operator rederivations, Section 5;
-atlas wishart-lambda-min-tail (helper). -/
+atlas wishart-lambda-min-tail (helper).
+atlas: weak-derivative-antitone-density -/
 theorem exists_antitoneOn_withDensity_eq_of_weak_deriv_nonneg
     (μ : Measure ℝ) [μ.Regular] (ℓ : ℝ)
     (hweak : ∀ ψ : ℝ → ℝ, ContDiff ℝ ∞ ψ → HasCompactSupport ψ →

@@ -89,21 +89,25 @@ theorem mul_transpose_eq_mul_moorePenroseInverse [DecidableEq m] [DecidableEq q]
 /-- The **leverage score** of row `i` of `A`: `ℓᵢ(A) = (A A⁺)ᵢᵢ`, the `i`-th diagonal entry of
 the orthogonal projector onto `range A`. Defined for every real matrix (any rank, empty
 shapes). Drineas–Mahoney–Muthukrishnan–Woodruff 2012, Def. 1; Woodruff 2014, Def. 2.12.
-Atlas `leverage-scores`. -/
+Atlas `leverage-scores`.
+atlas: leverage-scores -/
 def leverageScore (A : Matrix m n ℝ) (i : m) : ℝ := (A * moorePenroseInverse A) i i
 
-/-- `0 ≤ ℓᵢ(A)`. Woodruff 2014, §2.4; atlas `leverage-scores`. -/
+/-- `0 ≤ ℓᵢ(A)`. Woodruff 2014, §2.4; atlas `leverage-scores`.
+atlas: leverage-scores -/
 theorem leverageScore_nonneg (A : Matrix m n ℝ) (i : m) : 0 ≤ leverageScore A i :=
   (diag_mem_Icc_of_isSymm_of_isIdempotentElem _ (mul_moorePenroseInverse_isSymm A).eq
     (mul_moorePenroseInverse_isIdempotentElem A) i).1
 
-/-- `ℓᵢ(A) ≤ 1`. Woodruff 2014, §2.4; atlas `leverage-scores`. -/
+/-- `ℓᵢ(A) ≤ 1`. Woodruff 2014, §2.4; atlas `leverage-scores`.
+atlas: leverage-scores -/
 theorem leverageScore_le_one (A : Matrix m n ℝ) (i : m) : leverageScore A i ≤ 1 :=
   (diag_mem_Icc_of_isSymm_of_isIdempotentElem _ (mul_moorePenroseInverse_isSymm A).eq
     (mul_moorePenroseInverse_isIdempotentElem A) i).2
 
 /-- The leverage scores sum to the rank: `∑ᵢ ℓᵢ(A) = rank A`. Woodruff 2014, §2.4
-(for full column rank, `∑ᵢ ℓᵢ = d`); atlas `leverage-scores`. -/
+(for full column rank, `∑ᵢ ℓᵢ = d`); atlas `leverage-scores`.
+atlas: leverage-scores -/
 theorem sum_leverageScore_eq_rank [DecidableEq m] (A : Matrix m n ℝ) :
     ∑ i, leverageScore A i = (A.rank : ℝ) := by
   rw [← trace_mul_moorePenroseInverse A]
@@ -115,7 +119,8 @@ and `U` has at most `rank A` columns), then `ℓᵢ(A) = ∑ⱼ Uᵢⱼ² = ‖U
 does not mention `U`, the row norms do not depend on the choice of basis.
 Drineas–Mahoney–Muthukrishnan–Woodruff 2012, Def. 1 and the remark after it; Woodruff 2014,
 Def. 2.12. Atlas `leverage-scores`. Deviation: "orthonormal basis of `range A`" is spelled as the
-two hypotheses `hUA`, `hr` (together with orthonormality they force `range U = range A`). -/
+two hypotheses `hUA`, `hr` (together with orthonormality they force `range U = range A`).
+atlas: leverage-scores -/
 theorem leverageScore_eq_sum_sq_of_hasOrthonormalCols [DecidableEq m] [DecidableEq q]
     {A : Matrix m n ℝ} {U : Matrix m q ℝ} (hU : HasOrthonormalCols U)
     (hUA : U * (Uᵀ * A) = A) (hr : Fintype.card q ≤ A.rank) (i : m) :

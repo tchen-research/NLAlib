@@ -136,7 +136,8 @@ error `E ‖M (Ω Ωᵀ / t) Nᵀ − M Nᵀ‖_F² = (‖M‖_F² ‖N‖_F² +
 
 Drineas–Kannan–Mahoney 2006 / Sarlós 2006 (approximate matrix multiplication); Gaussian case
 via the Isserlis formula, e.g. Martinsson–Tropp 2020, §6.3 / Woodruff 2014, Lemma 2.2.
-Atlas: `gaussian-amm`. Ported from Prove2me solution `GaussianMatrix.approx_multiplication`. -/
+Atlas: `gaussian-amm`. Ported from Prove2me solution `GaussianMatrix.approx_multiplication`.
+atlas: gaussian-amm -/
 theorem integral_frobSq_mul_gram_mul_transpose_sub {a b n t : ℕ} (ht : 1 ≤ t)
     (M : Matrix (Fin a) (Fin n) ℝ) (N : Matrix (Fin b) (Fin n) ℝ) :
     ∫ Ω, frobSq (M * ((1 / (t : ℝ)) • (Matrix.of Ω * (Matrix.of Ω)ᵀ)) * Nᵀ - M * Nᵀ)

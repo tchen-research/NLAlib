@@ -144,7 +144,8 @@ open CourantFischer
 most `c` on a subspace `W` of codimension at most `k` (`card n ≤ dim W + k`), then the `k`-th
 largest eigenvalue satisfies `λ_k ≤ c`. Horn–Johnson 2013, Thm 4.2.6 (HJ order eigenvalues
 increasingly and from `1`; here `eigenvalues₀` is decreasing and zero-indexed). Audit G0 A1;
-atlas `courant-fischer`. No sign condition on `c` is needed. -/
+atlas `courant-fischer`. No sign condition on `c` is needed.
+atlas: courant-fischer -/
 theorem eigenvalues₀_le_of_forall_mem {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (k : Fin (Fintype.card n)) (W : Submodule ℝ (n → ℝ))
     (hW : Fintype.card n ≤ finrank ℝ W + k) {c : ℝ}
@@ -158,7 +159,8 @@ theorem eigenvalues₀_le_of_forall_mem {A : Matrix n n ℝ} (hA : A.IsHermitian
 
 /-- **Courant–Fischer, max-min half.** For real symmetric `A`, if the Rayleigh quotient is at
 least `c` on a subspace `S` of dimension at least `k + 1`, then `c ≤ λ_k`. Horn–Johnson 2013,
-Thm 4.2.6 (decreasing, zero-indexed convention). Audit G0 A1; atlas `courant-fischer`. -/
+Thm 4.2.6 (decreasing, zero-indexed convention). Audit G0 A1; atlas `courant-fischer`.
+atlas: courant-fischer -/
 theorem le_eigenvalues₀_of_forall_mem {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (k : Fin (Fintype.card n)) (S : Submodule ℝ (n → ℝ))
     (hS : (k : ℕ) + 1 ≤ finrank ℝ S) {c : ℝ}
@@ -173,7 +175,8 @@ theorem le_eigenvalues₀_of_forall_mem {A : Matrix n n ℝ} (hA : A.IsHermitian
 /-- **Courant–Fischer, attaining subspace for the max-min half**: there is a subspace of
 dimension at least `k + 1` (the span of the top `k + 1` eigenvectors) on which
 `λ_k xᵀx ≤ xᵀAx`. Horn–Johnson 2013, proof of Thm 4.2.6. Audit G0 C6; atlas `courant-fischer`.
-Deviation: the dimension is stated as a lower bound. -/
+Deviation: the dimension is stated as a lower bound.
+atlas: courant-fischer -/
 theorem exists_submodule_eigenvalues₀_mul_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (k : Fin (Fintype.card n)) :
     ∃ S : Submodule ℝ (n → ℝ), (k : ℕ) + 1 ≤ finrank ℝ S ∧
@@ -185,7 +188,8 @@ theorem exists_submodule_eigenvalues₀_mul_le {A : Matrix n n ℝ} (hA : A.IsHe
 
 /-- **Courant–Fischer, attaining subspace for the min-max half**: there is a subspace of
 codimension at most `k` (the span of the eigenvectors `k, k+1, …`) on which `xᵀAx ≤ λ_k xᵀx`.
-Horn–Johnson 2013, proof of Thm 4.2.6. Audit G0 C6; atlas `courant-fischer`. -/
+Horn–Johnson 2013, proof of Thm 4.2.6. Audit G0 C6; atlas `courant-fischer`.
+atlas: courant-fischer -/
 theorem exists_submodule_le_eigenvalues₀_mul {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (k : Fin (Fintype.card n)) :
     ∃ W : Submodule ℝ (n → ℝ), Fintype.card n ≤ finrank ℝ W + k ∧
@@ -211,7 +215,8 @@ theorem card_le_finrank_inf_add {W₁ W₂ : Submodule ℝ (n → ℝ)} {a b : �
 
 /-- **Loewner monotonicity of eigenvalues.** If `B − A` is positive semidefinite then
 `λ_k(A) ≤ λ_k(B)` for every `k`. Horn–Johnson 2013, Cor 4.3.12. Audit G0 B7;
-atlas `courant-fischer`. -/
+atlas `courant-fischer`.
+atlas: weyl-mirsky -/
 theorem eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub {A B : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) (h : (B - A).PosSemidef)
     (k : Fin (Fintype.card n)) : hA.eigenvalues₀ k ≤ hB.eigenvalues₀ k := by
@@ -224,7 +229,8 @@ theorem eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub {A B : Matrix n n ℝ
 /-- **Weyl's inequality for eigenvalues.** For real symmetric `A`, `B`,
 `λ_{i+j}(A + B) ≤ λ_i(A) + λ_j(B)` whenever `i + j < card n`. Horn–Johnson 2013, Thm 4.3.1
 (stated there increasingly; this is the decreasing, zero-indexed form). Audit G0 B7;
-atlas `courant-fischer`, `weyl-mirsky`. -/
+atlas `courant-fischer`, `weyl-mirsky`.
+atlas: weyl-mirsky -/
 theorem eigenvalues₀_add_le {A B : Matrix n n ℝ} (hA : A.IsHermitian) (hB : B.IsHermitian)
     (hAB : (A + B).IsHermitian) (i j : Fin (Fintype.card n))
     (hij : (i : ℕ) + j < Fintype.card n) :
@@ -242,7 +248,8 @@ theorem eigenvalues₀_add_le {A B : Matrix n n ℝ} (hA : A.IsHermitian) (hB : 
 
 omit [DecidableEq n] in
 /-- A real matrix with orthonormal columns has at most as many columns as rows (general finite
-index types). Helper for interlacing; atlas `orthonormal-completion`. -/
+index types). Helper for interlacing; atlas `orthonormal-completion`.
+atlas: orthonormal-completion -/
 theorem card_le_card_of_hasOrthonormalCols {r : Type*} [Fintype r] [DecidableEq r]
     {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q) : Fintype.card r ≤ Fintype.card n := by
   have hinj : Function.Injective Q.mulVecLin := by
@@ -280,7 +287,8 @@ with orthonormal columns, the eigenvalues of the compression `B = QᵀAQ` satisf
 `λ_i(B) ≤ λ_i(A)`. Horn–Johnson 2013, Cor 4.3.37 (Poincaré separation theorem, label to verify; the
 bordered / principal-submatrix case is Thm 4.3.17). Audit G0 B8; atlas `cauchy-interlacing`.
 Deviation from the audit statement: the index of `λ(A)` is `Fin.castLE` of `i`, so no side
-condition `i < card n` is needed (`card r ≤ card n` is `card_le_card_of_hasOrthonormalCols`). -/
+condition `i < card n` is needed (`card r ≤ card n` is `card_le_card_of_hasOrthonormalCols`).
+atlas: cauchy-interlacing -/
 theorem eigenvalues₀_compression_le {r : Type*} [Fintype r] [DecidableEq r] {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q)
     (hB : (Qᵀ * A * Q).IsHermitian) (i : Fin (Fintype.card r)) :
@@ -297,7 +305,8 @@ theorem eigenvalues₀_compression_le {r : Type*} [Fintype r] [DecidableEq r] {A
 /-- **Cauchy interlacing / Poincaré separation, lower bound.** For real symmetric `A` and
 `Q : n × r` with orthonormal columns, `λ_{i + (card n − card r)}(A) ≤ λ_i(QᵀAQ)`.
 Horn–Johnson 2013, Cor 4.3.37 (label to verify). Audit G0 B8; atlas `cauchy-interlacing`.
-The index bound is discharged inside the statement from `card r ≤ card n`. -/
+The index bound is discharged inside the statement from `card r ≤ card n`.
+atlas: cauchy-interlacing -/
 theorem eigenvalues₀_le_eigenvalues₀_compression {r : Type*} [Fintype r] [DecidableEq r]
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q)
     (hB : (Qᵀ * A * Q).IsHermitian) (i : Fin (Fintype.card r)) :
@@ -331,7 +340,8 @@ private theorem sq_singularValues_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ
 /-- **Courant–Fischer for singular values, min-max half.** If `‖Ax‖² ≤ c² ‖x‖²` on a subspace
 `W ⊆ ℝⁿ` of codimension at most `k`, then `σ_k(A) ≤ c` (zero-indexed). Horn–Johnson 2013,
 §7.3 (Thm 7.3.8, label to verify). Audit G0 B1; atlas `courant-fischer`. The hypothesis
-`0 ≤ c` covers `k ≥ n`, where `σ_k = 0`. -/
+`0 ≤ c` covers `k ≥ n`, where `σ_k = 0`.
+atlas: courant-fischer -/
 theorem singularValues_le_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ)
     (W : Submodule ℝ (Fin n → ℝ)) (hW : n ≤ finrank ℝ W + k) {c : ℝ} (hc : 0 ≤ c)
     (hAW : ∀ x ∈ W, (A *ᵥ x) ⬝ᵥ (A *ᵥ x) ≤ c ^ 2 * (x ⬝ᵥ x)) :
@@ -347,7 +357,8 @@ theorem singularValues_le_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) 
 
 /-- **Courant–Fischer for singular values, max-min half.** If `c² ‖x‖² ≤ ‖Ax‖²` on a subspace
 of dimension at least `k + 1`, then `c ≤ σ_k(A)`. Horn–Johnson 2013, §7.3. Audit G0 B1;
-atlas `courant-fischer`. -/
+atlas `courant-fischer`.
+atlas: courant-fischer -/
 theorem le_singularValues_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ)
     (S : Submodule ℝ (Fin n → ℝ)) (hS : k + 1 ≤ finrank ℝ S) {c : ℝ}
     (hAS : ∀ x ∈ S, c ^ 2 * (x ⬝ᵥ x) ≤ (A *ᵥ x) ⬝ᵥ (A *ᵥ x)) :

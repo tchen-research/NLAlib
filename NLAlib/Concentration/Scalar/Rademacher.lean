@@ -23,7 +23,8 @@ namespace NLAlib
 
 /-- The concrete Rademacher probability measure, assigning mass one half to each of
 `1` and `-1`. This is exactly the law used by `IsRademacher`.
-Atlas `hutchinson-unbiased`, `hutchinson-variance`. -/
+Atlas `hutchinson-unbiased`, `hutchinson-variance`.
+atlas: scalar-laws-def -/
 def rademacherMeasure : Measure ℝ :=
   (1 / 2 : ENNReal) • Measure.dirac (1 : ℝ) +
     (1 / 2 : ENNReal) • Measure.dirac (-1 : ℝ)
@@ -72,7 +73,8 @@ theorem hasSubgaussianMGF_id_rademacherMeasure : HasSubgaussianMGF id 1 rademach
 `𝔼 e^{t r} ≤ e^{t²/2}` for every real `t`. No measurability hypothesis is needed: the law
 being a probability measure forces `r` to be a.e. measurable.
 Vershynin 2018, Example 2.5.8(ii); audit G1 C5. Atlas `rademacher-khintchine`
-(sub-Gaussian half). -/
+(sub-Gaussian half).
+atlas: rademacher-khintchine -/
 theorem hasSubgaussianMGF_of_isRademacher {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     [IsProbabilityMeasure μ] {r : Ω → ℝ} (hr : IsRademacher μ r) :
     HasSubgaussianMGF r 1 μ := by

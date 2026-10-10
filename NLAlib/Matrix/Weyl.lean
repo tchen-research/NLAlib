@@ -51,7 +51,8 @@ private theorem le_of_sqrt_le_mul_sqrt {u : Fin m → ℝ} {x : Fin n → ℝ} {
 
 /-- **Weyl's inequality for singular values.** `σ_{i+j}(A + B) ≤ σ_i(A) + σ_j(B)` for real
 `m × n` matrices (zero-indexed). Horn–Johnson 2013, §7.3 (Cor 7.3.5, label to verify); Bhatia
-1997, Thm III.2.1 (Hermitian eigenvalue form). Audit G0 B2; atlas `weyl-mirsky`. -/
+1997, Thm III.2.1 (Hermitian eigenvalue form). Audit G0 B2; atlas `weyl-mirsky`.
+atlas: weyl-mirsky -/
 theorem singularValues_add_add_le (A B : Matrix (Fin m) (Fin n) ℝ) (i j : ℕ) :
     singularValues (A + B) (i + j) ≤ singularValues A i + singularValues B j := by
   obtain ⟨W₁, h₁, hA⟩ := exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul A i
@@ -84,7 +85,8 @@ theorem singularValues_le_singularValues_add_add_specNorm (A E : Matrix (Fin m) 
   rwa [add_neg_cancel_right, specNorm_neg] at h
 
 /-- **Weyl perturbation bound.** `|σ_k(A + E) − σ_k(A)| ≤ ‖E‖₂` for every `k`. Horn–Johnson
-2013, §7.3 (Cor 7.3.5, label to verify); Bhatia 1997, §III.2. Audit G0 B3; atlas `weyl-mirsky`. -/
+2013, §7.3 (Cor 7.3.5, label to verify); Bhatia 1997, §III.2. Audit G0 B3; atlas `weyl-mirsky`.
+atlas: weyl-mirsky -/
 theorem abs_singularValues_add_sub_le_specNorm (A E : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     |singularValues (A + E) k - singularValues A k| ≤ specNorm E := by
   have h1 := singularValues_add_le_add_specNorm A E k
@@ -93,7 +95,8 @@ theorem abs_singularValues_add_sub_le_specNorm (A E : Matrix (Fin m) (Fin n) ℝ
 
 /-- **Left multiplication.** `σ_k(BA) ≤ ‖B‖₂ σ_k(A)`. Horn–Johnson 2013, §7.3; Bhatia 1997,
 §III.6 (the special case `i = 0` of `σ_{i+j}(BA) ≤ σ_i(B) σ_j(A)`). Audit G0 B6;
-atlas `weyl-mirsky` (new corollary `singularValues_mul_le`). -/
+atlas `weyl-mirsky` (new corollary `singularValues_mul_le`).
+atlas: weyl-mirsky -/
 theorem singularValues_mul_le_specNorm_mul (B : Matrix (Fin p) (Fin m) ℝ)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     singularValues (B * A) k ≤ specNorm B * singularValues A k := by
@@ -122,7 +125,8 @@ theorem singularValues_mul_le_mul_specNorm (A : Matrix (Fin m) (Fin n) ℝ)
 
 /-- **Projection does not increase singular values.** For `Q` with orthonormal columns,
 `σ_k((I − QQᵀ)A) ≤ σ_k(A)`. HMT 2011, §8.4 (used in Prop 8.6 and Thm 9.2). Audit G0 B6;
-atlas `weyl-mirsky`, `projection-facts`. -/
+atlas `weyl-mirsky`, `projection-facts`.
+atlas: projection-facts -/
 theorem singularValues_residual_le {q : Type*} [Fintype q] [DecidableEq q]
     {Q : Matrix (Fin m) q ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix (Fin m) (Fin n) ℝ)
     (k : ℕ) : singularValues (residual Q A) k ≤ singularValues A k := by
@@ -139,7 +143,8 @@ theorem singularValues_residual_le {q : Type*} [Fintype q] [DecidableEq q]
 
 /-- **Spectral Eckart–Young, lower bound.** Every competitor of rank at most `k` has spectral
 error at least `σ_k(A)` (zero-indexed): `σ_k(A) ≤ ‖A − B‖₂`. Horn–Johnson 2013, Thm 7.4.9.1
-(spectral case); HMT 2011, eq. (2.3). Audit G0 B5; atlas `eckart-young`. -/
+(spectral case); HMT 2011, eq. (2.3). Audit G0 B5; atlas `eckart-young`.
+atlas: eckart-young -/
 theorem singularValues_le_specNorm_sub_of_rank_le (A B : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
     (hB : B.rank ≤ k) : singularValues A k ≤ specNorm (A - B) := by
   have h := singularValues_add_add_le (A - B) B 0 k
@@ -148,7 +153,8 @@ theorem singularValues_le_specNorm_sub_of_rank_le (A B : Matrix (Fin m) (Fin n) 
 
 /-- **Spectral Eckart–Young theorem.** `σ_k(A)` is the least spectral error of a rank-`≤ k`
 approximation, attained by `truncatedSVD A k`. Horn–Johnson 2013, Thm 7.4.9.1; HMT 2011,
-eq. (2.3). Audit G0 B5 + C3; atlas `eckart-young`. -/
+eq. (2.3). Audit G0 B5 + C3; atlas `eckart-young`.
+atlas: eckart-young -/
 theorem isLeast_specNorm_sub_of_rank_le (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     IsLeast {v : ℝ | ∃ B : Matrix (Fin m) (Fin n) ℝ, B.rank ≤ k ∧ v = specNorm (A - B)}
       (singularValues A k) := by
@@ -162,7 +168,8 @@ theorem isLeast_specNorm_sub_of_rank_le (A : Matrix (Fin m) (Fin n) ℝ) (k : �
 `‖E‖_F² = ‖A + E‖_F² − 2⟨A + E, A⟩_F + ‖A‖_F²` and bound the inner product by the von Neumann
 trace inequality. Mirsky 1960 (Q. J. Math. 11); Horn–Johnson 2013, §7.4.9 (label to verify);
 Bhatia 1997, §IV.3 (unitarily invariant form). Audit G0 B4;
-atlas `weyl-mirsky`. -/
+atlas `weyl-mirsky`.
+atlas: weyl-mirsky -/
 theorem sum_sq_singularValues_add_sub_le_frobSq (A E : Matrix (Fin m) (Fin n) ℝ) :
     ∑ k ∈ Finset.range (min m n), (singularValues (A + E) k - singularValues A k) ^ 2 ≤
       frobSq E := by

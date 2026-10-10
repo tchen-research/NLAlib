@@ -45,7 +45,8 @@ private theorem measurable_minSq {r k : ℕ} :
 converge almost surely to the exact smallest squared Gaussian singular
 value and four times that value. Source: Gaussian full rank, polynomial
 simple spectrum, and inverse-power first-order limits;
-atlas `wishart-lambda-min-tail` (unshifted approximation helper). -/
+atlas `wishart-lambda-min-tail` (unshifted approximation helper).
+atlas: gaussian-hard-edge-weak-inequality -/
 theorem ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) :
     ∀ᵐ G ∂(gaussianMatrix r k),
@@ -245,7 +246,8 @@ private theorem hasDerivAt_unshifted_cutoff_update
 finite unshifted inverse-power probes and ordinary dominated convergence.
 Source: the unshifted finite-operator refinement; atlas
 `wishart-lambda-min-tail`. The cutoff Stein fields are globally differentiable,
-including singular inputs, and only value/gradient-energy limits are used. -/
+including singular inputs, and only value/gradient-energy limits are used.
+atlas: gaussian-hard-edge-weak-inequality -/
 theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
@@ -396,7 +398,8 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
 hard-edge weak inequality by the unshifted finite-probe route.
 Source: the user's finite operator refinement and scalar-law transport;
 atlas `wishart-lambda-min-tail`. This proof uses no regularization limit,
-Laplacian limit, or one-sided Fatou argument. -/
+Laplacian limit, or one-sided Fatou argument.
+atlas: gaussian-hard-edge-weak-inequality -/
 theorem integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)

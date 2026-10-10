@@ -22,7 +22,8 @@ namespace NLAlib
 variable {k m d : Type*} [Fintype k] [Fintype m] [Fintype d]
 
 /-- `S` is an `ε`-subspace embedding for `range U`: `(1 - ε)‖Ux‖² ≤ ‖SUx‖² ≤ (1 + ε)‖Ux‖²` for
-every `x`. Woodruff 2014 §2.1; Martinsson–Tropp 2020 §8.7. Atlas: `ose-def`. -/
+every `x`. Woodruff 2014 §2.1; Martinsson–Tropp 2020 §8.7. Atlas: `ose-def`.
+atlas: ose-def -/
 def IsSubspaceEmbedding (S : Matrix k m ℝ) (U : Matrix m d ℝ) (ε : ℝ) : Prop :=
   ∀ x : d → ℝ,
     (1 - ε) * ((U *ᵥ x) ⬝ᵥ (U *ᵥ x)) ≤ (S *ᵥ (U *ᵥ x)) ⬝ᵥ (S *ᵥ (U *ᵥ x)) ∧

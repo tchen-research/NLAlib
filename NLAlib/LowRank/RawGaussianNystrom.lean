@@ -161,7 +161,8 @@ theorem sketchedOutput_eq_of_projector_eq
 If both Gaussian sketches have at least `rank A` columns, the actual raw Moore–Penrose
 formula equals `A` almost surely. Independence between the sketches is unnecessary in
 this exact recovery branch. Zero-rank inputs and empty dimensions are included.
-Tropp–Webber 2023, §5; atlas `gn-expected-error`. -/
+Tropp–Webber 2023, §5; atlas `gn-expected-error`.
+atlas: gn-expected-error -/
 theorem ae_rawGeneralizedNystrom_eq_self_of_rank_le
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {m n t s : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
@@ -291,7 +292,8 @@ the actual raw Moore–Penrose output has integrable squared Frobenius error at 
 `(1+q/(s-q-1))(1+k/(t-k-1)) OPT²`, where `q=min(rank A,t)` and `OPT²` is the
 infimum over every rank-at-most-`k` approximant. It requires only `t≥k+2` and `s≥q+2`;
 no spectral decomposition, frame, rank, moment or completion certificate is supplied.
-Tropp–Webber 2023, Theorem 5.1; atlas `gn-expected-error`. -/
+Tropp–Webber 2023, Theorem 5.1; atlas `gn-expected-error`.
+atlas: gn-expected-error -/
 theorem integrable_and_integral_frobSq_rawGeneralizedNystrom_le_bestRankFrobSq
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {m n k t s : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)

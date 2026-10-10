@@ -24,7 +24,8 @@ namespace NLAlib
 variable {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]
 
 /-- A Gram matrix regularized by a scalar multiple of the identity.
-Source: resolvent operator proof; atlas `wishart-lambda-min-tail` (helper). -/
+Source: resolvent operator proof; atlas `wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-def -/
 def regularizedGram (ε : ℝ) (G : Matrix ι κ ℝ) : Matrix ι ι ℝ := G * Gᵀ + ε • 1
 
 omit [DecidableEq κ] in
@@ -70,13 +71,15 @@ theorem hasDerivAt_regularizedGram_first (G E : Matrix ι κ ℝ) (t : ℝ) :
 
 /-- The explicit second derivative along one Gram direction after
 composition with the resolvent approximation. Source: Gram chain rule;
-atlas `wishart-lambda-min-tail` (helper). -/
+atlas `wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-def -/
 def gramSoftMinSecond (n : ℕ) (ε : ℝ) (G E : Matrix ι κ ℝ) : ℝ :=
   inversePowerSoftMinSecond n (regularizedGram ε G) (E * Gᵀ + G * Eᵀ) +
     inversePowerSoftMinFirst n (regularizedGram ε G) ((2 : ℝ) • (E * Eᵀ))
 
 /-- The coordinate gradient of the resolvent regularized Gram functional.
-Source: operator tail proof; atlas `wishart-lambda-min-tail` (helper). -/
+Source: operator tail proof; atlas `wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-def -/
 def gramSoftMinGradient (n : ℕ) (ε : ℝ) (G : Matrix ι κ ℝ) : Matrix ι κ ℝ :=
   (2 : ℝ) • (inversePowerSoftMinWeight n (regularizedGram ε G) * G)
 
@@ -336,7 +339,8 @@ theorem sum_deriv_deriv_inversePowerSoftMin_regularizedGram_single_le [Nonempty 
   exact sum_gramSoftMinSecond_single_le n hn hε G
 
 /-- The coordinate Laplacian represented by the explicit Gram Hessian.
-Source: operator tail proof; atlas `wishart-lambda-min-tail` (helper). -/
+Source: operator tail proof; atlas `wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-def -/
 def gramSoftMinLaplacian (n : ℕ) (ε : ℝ) (G : Matrix ι κ ℝ) : ℝ :=
   ∑ i, ∑ j, gramSoftMinSecond n ε G (Matrix.single i j 1)
 

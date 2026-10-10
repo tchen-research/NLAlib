@@ -84,7 +84,8 @@ Deviations from the printed statement: the hypotheses are those of the Frobenius
 `V₁ᵀV₁ = I`, `V₂ᵀV₂ = I`, `V₁ᵀV₂ = 0`; no diagonality, no conditions on `U₁`, no completeness;
 `Σ₁` need not be invertible); `P_Y` is `QQᵀ` for any orthonormal `Q` with
 `range(AΩ) ⊆ range(Q)`; index types other than the rank `Fin k` are arbitrary `Fintype`s.
-Atlas `hmt-9-1-spectral` (assumed → proved). -/
+Atlas `hmt-9-1-spectral` (assumed → proved).
+atlas: hmt-9-1-spectral -/
 theorem specNorm_residual_sq_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}
     {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}
     {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}
@@ -124,7 +125,8 @@ theorem specNorm_residual_sq_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Mat
 /-- **Range-finder bound, unsquared spectral form**: under the hypotheses of
 `specNorm_residual_sq_le_of_range_subset`, `‖(I − QQᵀ)A‖ ≤ ‖Σ₂‖ + ‖Σ₂Ω₂Ω₁†‖`
 (from `√(a² + b²) ≤ a + b`). This is the form used in HMT 2011, proof of Thm 10.6.
-Atlas `hmt-9-1-spectral`. -/
+Atlas `hmt-9-1-spectral`.
+atlas: hmt-9-1-spectral -/
 theorem specNorm_residual_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}
     {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}
     {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}
@@ -279,7 +281,8 @@ measurability of `Q` is required (the left side is `0` if not integrable, and th
 nonnegative); `n`, `k`, `p`, `r`, `r'` are `Fin` sizes (Gaussian law convention).
 Atlas `rsvd-spectral-expected` (new; uses `hmt-9-1-spectral`, `chevet`,
 `pinv-spectral-expectation`, `pinv-frob-moment`, `gaussian-conditioning`,
-`gaussian-full-rank-ae`). -/
+`gaussian-full-rank-ae`).
+atlas: rsvd-spectral-expected -/
 theorem integral_specNorm_residual_le_of_gaussian
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {m' q' : Type*} [Fintype m'] [DecidableEq m'] [Fintype q'] [DecidableEq q']
@@ -410,7 +413,8 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
 (zero-indexed: `singularValues A k`, `singularValueTailSq A k`).
 Deviations: `Q` is any a.s. orthonormal frame containing `range(AΩ)` (HMT: `Q = orth(AΩ)`),
 no measurability of `Q` required; `k ≤ n` is assumed (for `k > n` the error is `0` a.s.).
-Atlas `rsvd-spectral-expected`. -/
+Atlas `rsvd-spectral-expected`.
+atlas: rsvd-spectral-expected -/
 theorem integral_specNorm_residual_le_singularValues_of_gaussian
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {q' : Type*} [Fintype q'] [DecidableEq q'] {m n k p : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
@@ -429,7 +433,8 @@ theorem integral_specNorm_residual_le_singularValues_of_gaussian
 /-- **Expected spectral error of the Gaussian range finder** (HMT 2011, Thm 10.6) for the
 constructed measurable range frame `gaussianRangeFrame A (k + p)` of `AΩ`: no frame
 hypothesis remains. `E‖(I − QQᵀ)A‖ ≤ (1 + √(k/(p−1)))σ_{k+1} + (e√(k+p)/p)(Σ_{j>k} σ_j²)^{1/2}`
-for `k, p ≥ 2`, `k ≤ n`. Atlas `rsvd-spectral-expected` (audit G2 B2 statement). -/
+for `k, p ≥ 2`, `k ≤ n`. Atlas `rsvd-spectral-expected` (audit G2 B2 statement).
+atlas: rsvd-spectral-expected -/
 theorem integral_specNorm_residual_gaussianRangeFrame_le
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {m n k p : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hk : 2 ≤ k) (hp : 2 ≤ p) (hkn : k ≤ n)

@@ -255,7 +255,8 @@ theorem hasDerivAt_integral_ornsteinUhlenbeck_mul_log_of_polynomial_growth
 term, is minus the Fisher information on the positive polynomial-growth
 domain. Gaussian invariance makes the normalization term constant in
 time. Source: Bakry--Gentil--Ledoux 2014, §5.7; Ledoux, §5.1.
-Atlas: `ornstein-uhlenbeck`. -/
+Atlas: `ornstein-uhlenbeck`.
+atlas: ornstein-uhlenbeck -/
 theorem hasDerivAt_entropy_ornsteinUhlenbeck_of_polynomial_growth
     (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f) (δ C : ℝ) (d : ℕ)
     (hδ : 0 < δ) (hlow : ∀ x, δ ≤ f x)

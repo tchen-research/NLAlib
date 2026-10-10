@@ -87,7 +87,8 @@ private lemma finite_tensorization {Ω : Type*} [MeasurableSpace Ω]
 independent Hermitian random matrices.
 
 Tropp 2015, Lemma 3.5.1. Atlas: `matrix-laplace`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 3*. -/
+Introduction to Matrix Concentration Inequalities, Ch 3*.
+atlas: matrix-laplace -/
 theorem NLAlib.trace_cgf_subadditivity {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (θ : ℝ)

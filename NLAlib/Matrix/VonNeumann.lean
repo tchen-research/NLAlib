@@ -27,7 +27,8 @@ variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 It follows from Horn–Johnson 2013, Thm 7.4.1.1 (von Neumann) and Cauchy–Schwarz over the top
 `r` singular values; this is the `VonNeumannRankBound` hypothesis of the Chen–Persson LRA
 formalization. Audit G0 C4; atlas `von-neumann-trace` (rank corollary). Deviation: arbitrary
-finite index types, no full-rank or nonemptiness condition. -/
+finite index types, no full-rank or nonemptiness condition.
+atlas: von-neumann-rank-bound -/
 theorem frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le {r : ℕ} (X E : Matrix m n ℝ)
     (hX : X.rank ≤ r) : frobInner X E ≤ Real.sqrt r * frobNorm X * specNorm E := by
   set P : Matrix m m ℝ := X * moorePenroseInverse X with hPdef
@@ -245,7 +246,8 @@ private theorem sum_range_diagSeq_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ
 `Re tr(X E*) = frobInner X E`); Mirsky 1975. Proof: Ky Fan's maximum principle for the diagonal
 of `UᵀEV` (through the weighted top-`k` inequality `sum_mul_le_sum_ite_lt_of_antitone`) and
 Abel summation over `σ(X)`; no Birkhoff theorem is needed. Audit G0 A2;
-atlas `von-neumann-trace`. -/
+atlas `von-neumann-trace`.
+atlas: von-neumann-trace -/
 theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (Fin n) ℝ) :
     frobInner X E ≤ ∑ k ∈ Finset.range (min m n), singularValues X k * singularValues E k := by
   obtain ⟨U, V, h⟩ := exists_isSVD X

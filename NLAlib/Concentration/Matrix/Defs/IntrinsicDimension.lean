@@ -18,12 +18,14 @@ open scoped Matrix.Norms.L2Operator ComplexOrder
 noncomputable section
 namespace NLAlib
 
-/-- The intrinsic dimension `tr A / ‖A‖`. Tropp 2015, Def. 7.1.1. Atlas: `intrinsic-dimension`. -/
+/-- The intrinsic dimension `tr A / ‖A‖`. Tropp 2015, Def. 7.1.1. Atlas: `intrinsic-dimension`.
+atlas: intrinsic-dimension -/
 def intrinsicDimension {d : Type*} [Fintype d] [DecidableEq d]
     (A : Matrix d d ℂ) : ℝ := (Matrix.trace A).re / spectralNorm A
 
 /-- The trace function `re (tr φ(A))`, with `φ(A)` from the continuous functional calculus. Tropp
-2015, §7.4. -/
+2015, §7.4.
+atlas: intrinsic-dimension -/
 def traceFunction {d : Type*} [Fintype d] [DecidableEq d]
     (φ : ℝ → ℝ) (A : Matrix d d ℂ) : ℝ := (Matrix.trace (cfc φ A)).re
 

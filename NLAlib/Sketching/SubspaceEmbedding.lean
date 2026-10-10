@@ -36,7 +36,8 @@ variable {k m d e : Type*} [Fintype k] [Fintype m] [Fintype d] [Fintype e]
 for `U` with orthonormal columns, `S` is an `ε`-subspace embedding for `range U` iff
 `(1 - ε)‖x‖² ≤ ‖SUx‖² ≤ (1 + ε)‖x‖²` for every coefficient vector `x`.
 
-Atlas: `ose-def`. -/
+Atlas: `ose-def`.
+atlas: ose-def -/
 theorem isSubspaceEmbedding_iff_of_hasOrthonormalCols [DecidableEq d] {S : Matrix k m ℝ}
     {U : Matrix m d ℝ} (hU : HasOrthonormalCols U) {ε : ℝ} :
     IsSubspaceEmbedding S U ε ↔ ∀ x : d → ℝ,
@@ -68,7 +69,8 @@ theorem IsSubspaceEmbedding.of_mul_right [DecidableEq d] {S : Matrix k m ℝ} {U
 embedding for `range U` iff it is one for `range (U C)`. The property depends on the subspace
 only.
 
-Atlas: `ose-def`. -/
+Atlas: `ose-def`.
+atlas: ose-def -/
 theorem isSubspaceEmbedding_mul_right_iff [DecidableEq d] {S : Matrix k m ℝ} {U : Matrix m d ℝ}
     {ε : ℝ} {C : Matrix d d ℝ} (hC : IsUnit C.det) :
     IsSubspaceEmbedding S (U * C) ε ↔ IsSubspaceEmbedding S U ε :=
@@ -76,7 +78,8 @@ theorem isSubspaceEmbedding_mul_right_iff [DecidableEq d] {S : Matrix k m ℝ} {
 
 /-- Monotonicity in the distortion: an `ε`-embedding is an `ε'`-embedding for `ε ≤ ε'`.
 
-Atlas: `ose-def`. -/
+Atlas: `ose-def`.
+atlas: ose-def -/
 theorem IsSubspaceEmbedding.mono {S : Matrix k m ℝ} {U : Matrix m d ℝ} {ε ε' : ℝ}
     (h : IsSubspaceEmbedding S U ε) (hεε' : ε ≤ ε') : IsSubspaceEmbedding S U ε' := by
   intro x
@@ -89,7 +92,8 @@ direction used in practice: for `U` with orthonormal columns, `‖(SU)ᵀ(SU) �
 that `S` is an `ε`-subspace embedding for `range U`. (The converse also holds; not yet
 formalized.)
 
-Atlas: `ose-def`. -/
+Atlas: `ose-def`.
+atlas: ose-def -/
 theorem isSubspaceEmbedding_of_specNorm_transpose_mul_self_sub_one_le [DecidableEq d]
     {S : Matrix k m ℝ} {U : Matrix m d ℝ} (hU : HasOrthonormalCols U) {ε : ℝ}
     (h : specNorm ((S * U)ᵀ * (S * U) - 1) ≤ ε) : IsSubspaceEmbedding S U ε := by

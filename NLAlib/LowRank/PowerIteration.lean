@@ -94,7 +94,8 @@ theorem dotProduct_mulVec_pow_le_dotProduct_pow_mulVec {M : Matrix m m ℝ} (hM 
 /-- **HMT 2011, Prop 8.6** (the power-iteration inequality). For an orthogonal projector `P`
 (`Pᵀ = P`, `P² = P`), any real `A` and `q ≥ 0`, `‖PA‖^{2q+1} ≤ ‖P(AAᵀ)^q A‖`.
 Deviation: none (HMT state it for any orthogonal projector and any `A`; `q = 0` is equality).
-Atlas `power-iteration-deterministic` (core lemma; audit G2 A2). -/
+Atlas `power-iteration-deterministic` (core lemma; audit G2 A2).
+atlas: power-iteration-deterministic -/
 theorem specNorm_mul_pow_le_specNorm_mul_gram_pow_mul (P : Matrix m m ℝ) (hPs : Pᵀ = P)
     (hPi : IsIdempotentElem P) (A : Matrix m n ℝ) (q : ℕ) :
     specNorm (P * A) ^ (2 * q + 1) ≤ specNorm (P * (A * Aᵀ) ^ q * A) := by
@@ -154,7 +155,8 @@ theorem specNorm_mul_pow_le_specNorm_mul_gram_pow_mul (P : Matrix m m ℝ) (hPs 
 /-- **Deterministic power-iteration bound** (HMT 2011, Thm 9.2, power form): for `Q` with
 orthonormal columns and `q ≥ 0`, `‖(I − QQᵀ)A‖^{2q+1} ≤ ‖(I − QQᵀ)(AAᵀ)^q A‖`.
 Deviation: the source takes `Q = orth((AAᵀ)^q AΩ)`; the inequality holds for every `Q` with
-orthonormal columns, so that hypothesis is dropped. Atlas `power-iteration-deterministic`. -/
+orthonormal columns, so that hypothesis is dropped. Atlas `power-iteration-deterministic`.
+atlas: power-iteration-deterministic -/
 theorem specNorm_residual_pow_le {q' : Type*} [Fintype q'] [DecidableEq q']
     {Q : Matrix m q' ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) (q : ℕ) :
     specNorm (residual Q A) ^ (2 * q + 1) ≤ specNorm (residual Q ((A * Aᵀ) ^ q * A)) := by
@@ -167,7 +169,8 @@ theorem specNorm_residual_pow_le {q' : Type*} [Fintype q'] [DecidableEq q']
 /-- **Deterministic power-iteration bound** (HMT 2011, Thm 9.2, as printed):
 `‖(I − QQᵀ)A‖ ≤ ‖(I − QQᵀ)(AAᵀ)^q A‖^{1/(2q+1)}` for any `Q` with orthonormal columns.
 Deviation: no `Q = orth((AAᵀ)^q AΩ)` hypothesis (see `specNorm_residual_pow_le`).
-Atlas `power-iteration-deterministic`. -/
+Atlas `power-iteration-deterministic`.
+atlas: power-iteration-deterministic -/
 theorem specNorm_residual_le_rpow {q' : Type*} [Fintype q'] [DecidableEq q']
     {Q : Matrix m q' ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) (q : ℕ) :
     specNorm (residual Q A) ≤

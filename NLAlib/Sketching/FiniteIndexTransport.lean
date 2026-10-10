@@ -44,7 +44,8 @@ theorem specNorm_gram_sub_one_le_iff_singularValues_sq_fintype
 /-- Complete OSE singular-value criterion on arbitrary finite indices.
 For `0 ≤ ε ≤ 1`, every domain singular value of the normalized `S U` lies in
 `[√(1−ε), √(1+ε)]` precisely when `S` embeds the frame's subspace.
-Atlas `ose-def`, `svd`; the list uses explicit `Fin(card)` normalization. -/
+Atlas `ose-def`, `svd`; the list uses explicit `Fin(card)` normalization.
+atlas: ose-def -/
 theorem isSubspaceEmbedding_iff_singularValues_fintype
     {S : Matrix p m ℝ} {U : Matrix m n ℝ} (hU : HasOrthonormalCols U)
     {ε : ℝ} (hε : 0 ≤ ε) (hε1 : ε ≤ 1) :

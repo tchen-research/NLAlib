@@ -91,16 +91,22 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
 ## 4. Docstrings
 
 Every public declaration has one. First sentence: what it says in words. Then the source and
-label (`HMT 2011, Thm 9.1`; `Tropp 2015, Thm 6.1.1`), the atlas id, and any deviation from the
-printed statement (generalisation, different constant, side condition). For a ported proof, the
-origin (`ported from Prove2me solution GaussianMatrix.full_rank_ae`).
+label (`HMT 2011, Thm 9.1`; `Tropp 2015, Thm 6.1.1`) and any deviation from the printed statement
+(generalisation, different constant, side condition). For a ported proof, the origin (`ported from
+Prove2me solution GaussianMatrix.full_rank_ae`). A declaration that is the formal statement of an
+atlas result ends with the tag line `atlas: <id>` (comma-separated ids if several; `<id> (partial)`
+when the declaration covers only part of the statement); a helper names the id in prose only. The
+tag is machine-read: it is what links the declaration to the atlas.
 
 ## 5. Metadata
 
-Every PR that adds or renames a result updates `atlas/atlas.json` (status, `formalizations` with
-`decl` and `usage`, `depends_on`, and for new results `aliases`, `hypotheses`, `conclusion`,
-`uses_defs`, `variants`) and regenerates `atlas/declarations.json`
-(`lake env lean scripts/ExtractDecls.lean`). Renames ship a map in `docs/renames/<date>-<topic>.json`
+The Lean side of `atlas/atlas.json` is generated: `scripts/ExtractDecls.lean` indexes every public
+declaration (signature, docstring, `sorry` dependence, `atlas:` tags, NLAlib definitions in the
+statement) and `scripts/sync_atlas.py` rewrites each result's `formalizations`, `status` and
+`uses_defs` from that index. A PR that adds a result writes the human side by hand (title,
+`informal`, `hypotheses`, `conclusion`, `sources`, `depends_on`, `aliases`, `variants`), tags the
+declarations, and runs the two scripts. Statements that exist in Mathlib are not atlas results; a
+consumer cites them under `mathlib_prereqs`. Renames ship a map in `docs/renames/<date>-<topic>.json`
 (`{"old.name": "new.name"}`) so the atlas and any external reference can be updated mechanically.
 
 ## 6. Checks before a PR
@@ -108,7 +114,8 @@ Every PR that adds or renames a result updates `atlas/atlas.json` (status, `form
 ```
 lake build
 lake env lean scripts/Audit.lean          # axioms; sorries must be catalogued scaffolds
-lake env lean scripts/ExtractDecls.lean   # declaration index
+lake env lean scripts/ExtractDecls.lean   # declaration index (+ atlas/external.json)
+python3 scripts/sync_atlas.py             # Lean side of atlas.json from the `atlas:` tags
 python3 scripts/check_layers.py
 python3 scripts/check_names.py            # naming and Basic.lean rules
 python3 scripts/check_atlas.py

@@ -72,7 +72,8 @@ theorem ae_gaussian_projection_reproduces_of_width_le
 measurable orthonormal frame covering `range(AΩ)`, the squared error is
 integrable and bounded by `(1+k/(t-k-1)) OPT_k²(A)`. Its index type is any
 finite type, and all target ranks/zero shapes are included.
-HMT 2011, Theorem 10.5; atlas `rsvd-expected-error`. -/
+HMT 2011, Theorem 10.5; atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 theorem integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian
     {Ω q : Type*} [MeasurableSpace Ω] [Fintype q] [DecidableEq q]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {m n k t : ℕ}
@@ -107,13 +108,15 @@ theorem integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian
 
 /-- Standard postprocessed rank-`k` RSVD output. The small-matrix truncated
 SVD is the proved minimizer; no best-approximation predicate is assumed.
-HMT 2011, §9.2; atlas `rsvd-expected-error`. -/
+HMT 2011, §9.2; atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 def truncatedRsvdOutput {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) : Matrix (Fin m) (Fin n) ℝ :=
   Q * truncatedSVD (Qᵀ * A) k
 
 /-- Standard postprocessed RSVD has rank at most the target rank, for all
-input and frame dimensions. HMT 2011, §9.2; atlas `rsvd-expected-error`. -/
+input and frame dimensions. HMT 2011, §9.2; atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 theorem rank_truncatedRsvdOutput_le {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) : (truncatedRsvdOutput Q A k).rank ≤ k :=
   (Matrix.rank_mul_le_right Q (truncatedSVD (Qᵀ * A) k)).trans
@@ -134,7 +137,8 @@ theorem frobSq_truncatedRsvdOutput_eq {m n q : ℕ}
 squared error at most the actual global optimum plus projection error.
 HMT 2011, §9.2; atlas `truncation-lemma` (ordinary projected component).
 This uses arbitrary finite indices, including empty types, and all target ranks.
-The full-matrix optimum is attained by the proved Eckart–Young theorem. -/
+The full-matrix optimum is attained by the proved Eckart–Young theorem.
+atlas: truncation-lemma-projected -/
 theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual
     {m n q : Type*} [Fintype m] [Fintype n] [Fintype q] [DecidableEq q]
     {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {Y : Matrix q n ℝ} {k : ℕ}
@@ -150,7 +154,8 @@ theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual
 
 /-- The two-residual ordinary projected-truncation bound for a compressed
 Frobenius minimizer, on arbitrary finite indices. HMT 2011, §9.2;
-atlas `truncation-lemma` (ordinary projected component). -/
+atlas `truncation-lemma` (ordinary projected component).
+atlas: truncation-lemma-projected -/
 theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_two_mul_frobSq_residual
     {m n q : Type*} [Fintype m] [Fintype n] [Fintype q] [DecidableEq q]
     {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {Y : Matrix q n ℝ} {k : ℕ}
@@ -163,7 +168,8 @@ theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_two_mul_frobSq_res
 actual rank-`k` optimum plus squared projection error. The small truncated SVD
 is the proved minimizer, so no best-approximation certificate is assumed.
 HMT 2011, §9.2; atlas `truncation-lemma` (ordinary projected component).
-Frobenius contraction gives coefficient `1` on the projection error. -/
+Frobenius contraction gives coefficient `1` on the projection error.
+atlas: truncation-lemma-projected -/
 theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_frobSq_residual
     {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
@@ -175,7 +181,8 @@ theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_frobSq_residual
 /-- The standard two-residual ordinary projected-truncation bound for the
 literal truncated-SVD output. HMT 2011, §9.2; atlas `truncation-lemma`
 (ordinary projected component). This follows from the stronger coefficient-one
-bound and includes all target ranks and empty shapes. -/
+bound and includes all target ranks and empty shapes.
+atlas: truncation-lemma-projected -/
 theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_two_mul_frobSq_residual
     {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
@@ -222,7 +229,8 @@ theorem integrable_frobSq_truncatedRsvdOutput_of_measurable_frame
 /-- **Standard rank-`k` postprocessed Gaussian RSVD, actual relative optimum.**
 The constructed small truncated SVD gives integrable error and the HMT
 `(1+k/(t-k-1)) OPT_k²(A)` bound for every target rank and zero shape.
-HMT 2011, Theorem 10.5; atlas `rsvd-expected-error`. -/
+HMT 2011, Theorem 10.5; atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 theorem integrable_and_integral_frobSq_truncatedRsvdOutput_le_bestRankFrobSq_gaussian
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {m n q k t : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hkt : k + 2 ≤ t)
@@ -265,7 +273,8 @@ entrywise measurable exact-range frame has `min(rank A,t)` columns and is
 constructed from the Gaussian sketch, so no frame, rank or moment certificates
 are assumed. Its squared projection error is integrable and satisfies the HMT
 `(1+k/(t-k-1)) OPT_k²(A)` bound. Every target rank and empty shape is covered.
-HMT 2011, Theorem 10.5; atlas `rsvd-expected-error`. -/
+HMT 2011, Theorem 10.5; atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 theorem integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {m n k t : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hkt : k + 2 ≤ t)
@@ -286,7 +295,8 @@ needs no supplied frame or best-approximation certificate. The actual scalar
 squared output error is integrable and satisfies the same HMT relative bound,
 including zero rank and oversized target ranks. The output has rank at most
 `k` by `rank_truncatedRsvdOutput_le`.
-HMT 2011, Theorem 10.5 and §9.2; atlas `rsvd-expected-error`. -/
+HMT 2011, Theorem 10.5 and §9.2; atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 theorem integrable_and_integral_frobSq_truncatedRsvdOutput_gaussianRangeFrame_le_bestRankFrobSq
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {m n k t : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hkt : k + 2 ≤ t)

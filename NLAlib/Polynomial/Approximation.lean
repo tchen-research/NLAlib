@@ -27,7 +27,8 @@ namespace NLAlib
 /-! ### The Chebyshev amplifier -/
 
 /-- The amplifier has degree at most `q`.
-Source: Musco–Musco (2015) [`mm15`], Lem. 4. Atlas: `chebyshev-amplifier`. -/
+Source: Musco–Musco (2015) [`mm15`], Lem. 4. Atlas: `chebyshev-amplifier`.
+atlas: chebyshev-amplifier -/
 theorem degree_chebyshevAmplifier_le (α γ : ℝ) (q : ℕ) :
     (chebyshevAmplifier α γ q).degree ≤ q := by
   rw [chebyshevAmplifier_def, C_mul']
@@ -40,7 +41,8 @@ theorem degree_chebyshevAmplifier_le (α γ : ℝ) (q : ℕ) :
   exact_mod_cast this
 
 /-- The amplifier equals `1` at `α(1 + γ)`.
-Source: Musco–Musco (2015) [`mm15`], Lem. 4. Atlas: `chebyshev-amplifier`. -/
+Source: Musco–Musco (2015) [`mm15`], Lem. 4. Atlas: `chebyshev-amplifier`.
+atlas: chebyshev-amplifier -/
 theorem eval_chebyshevAmplifier_self {α γ : ℝ} (q : ℕ) (hα : 0 < α) (hγ : 0 ≤ γ) :
     (chebyshevAmplifier α γ q).eval (α * (1 + γ)) = 1 := by
   rw [eval_chebyshevAmplifier, mul_div_cancel_left₀ _ hα.ne']
@@ -48,7 +50,8 @@ theorem eval_chebyshevAmplifier_self {α γ : ℝ} (q : ℕ) (hα : 0 < α) (hγ
 
 /-- Beyond `α(1 + γ)` the amplifier is at least `1`: `α(1 + γ) ≤ x → 1 ≤ p(x)`.
 Source: Musco–Musco (2015) [`mm15`], Lem. 4 (monotonicity of `T_q` on `[1, ∞)`). Atlas:
-`chebyshev-amplifier`. -/
+`chebyshev-amplifier`.
+atlas: chebyshev-amplifier -/
 theorem one_le_eval_chebyshevAmplifier {α γ x : ℝ} (q : ℕ) (hα : 0 < α) (hγ : 0 ≤ γ)
     (hx : α * (1 + γ) ≤ x) : 1 ≤ (chebyshevAmplifier α γ q).eval x := by
   rw [eval_chebyshevAmplifier]
@@ -61,7 +64,8 @@ theorem one_le_eval_chebyshevAmplifier {α γ x : ℝ} (q : ℕ) (hα : 0 < α) 
 
 /-- On `[−α, α]` the amplifier is exponentially small: `|p(x)| ≤ 2/(1 + √(2γ))^q`.
 Source: Musco–Musco (2015) [`mm15`], Lem. 4; Lem. 5 is the case `γ = ε`. Atlas:
-`chebyshev-amplifier`. -/
+`chebyshev-amplifier`.
+atlas: chebyshev-amplifier -/
 theorem abs_eval_chebyshevAmplifier_le {α γ x : ℝ} (q : ℕ) (hα : 0 < α) (hγ : 0 ≤ γ)
     (hx : x ∈ Set.Icc (-α) α) :
     |(chebyshevAmplifier α γ q).eval x| ≤ 2 / (1 + √(2 * γ)) ^ q := by
@@ -82,7 +86,8 @@ theorem abs_eval_chebyshevAmplifier_le {α γ x : ℝ} (q : ℕ) (hα : 0 < α) 
 /-- For `0 < a < b` the reciprocal `1/T_q((b + a)/(b − a))` is at most
 `2((√b − √a)/(√b + √a))^q`.
 Source: Golub–Meurant (2010) [`gm10`], Ch. 8; Saad (2003), §6.11.3. Atlas: `chebyshev-minimax`
-(κ-form). -/
+(κ-form).
+atlas: chebyshev-minimax -/
 theorem inv_eval_T_real_le_two_mul_pow {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) :
     1 / (T ℝ q).eval ((b + a) / (b - a)) ≤ 2 * ((√b - √a) / (√b + √a)) ^ q := by
   have hlow := sqrt_add_div_sqrt_sub_pow_div_two_le_eval_T_real ha hab q
@@ -98,7 +103,8 @@ theorem inv_eval_T_real_le_two_mul_pow {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab :
 /-- κ-form of the Chebyshev residual bound: for `0 < a < b` and `x ∈ [a, b]`,
 `|chebyshevResidual a b q (x)| ≤ 2((√b − √a)/(√b + √a))^q`.
 Source: Golub–Meurant (2010) [`gm10`], Ch. 8; Trefethen–Bau (1997), Thm 38.5. Atlas:
-`chebyshev-minimax` (κ-form). -/
+`chebyshev-minimax` (κ-form).
+atlas: chebyshev-minimax -/
 theorem abs_eval_chebyshevResidual_le_two_mul_pow {a b x : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b)
     (hx : x ∈ Set.Icc a b) :
     |(chebyshevResidual a b q).eval x| ≤ 2 * ((√b - √a) / (√b + √a)) ^ q :=
@@ -110,7 +116,8 @@ theorem abs_eval_chebyshevResidual_le_two_mul_pow {a b x : ℝ} (q : ℕ) (ha : 
 degree `< q` with `|p(x) − 1/x| ≤ (2/a)((√b − √a)/(√b + √a))^q` on `[a, b]`. The polynomial is
 `p = (1 − r)/X` for the Chebyshev residual `r = chebyshevResidual a b q`.
 Source: Golub–Meurant (2010) [`gm10`], Ch. 8 (the CG error bound). Atlas:
-`inverse-polynomial-approx`. -/
+`inverse-polynomial-approx`.
+atlas: inverse-polynomial-approx -/
 theorem exists_degree_lt_abs_eval_sub_inv_le {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) :
     ∃ p : ℝ[X], p.degree < q ∧ ∀ x ∈ Set.Icc a b,
       |p.eval x - 1 / x| ≤ (2 / a) * ((√b - √a) / (√b + √a)) ^ q := by

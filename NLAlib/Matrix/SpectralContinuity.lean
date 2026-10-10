@@ -26,7 +26,8 @@ theorem continuous_frobNorm_array {ι κ : Type*} [Fintype ι] [Fintype κ] :
 
 /-- The smallest singular value is continuous on finite matrix arrays.
 Source: the Frobenius Lipschitz bound; atlas norm-lipschitz and
-wishart-lambda-min-tail (cutoff helper). -/
+wishart-lambda-min-tail (cutoff helper).
+atlas: norm-lipschitz -/
 theorem continuous_sigmaMin_array {ι κ : Type*} [Fintype ι] [Fintype κ] :
     Continuous (fun G : ι → κ → ℝ => sigmaMin (Matrix.of G)) := by
   apply continuous_iff_continuousAt.mpr
@@ -47,7 +48,8 @@ theorem continuous_sigmaMin_array {ι κ : Type*} [Fintype ι] [Fintype κ] :
 
 /-- The squared smallest singular value of a transposed finite array is continuous.
 Source: transpose continuity and the Frobenius Lipschitz bound;
-atlas wishart-lambda-min-tail (cutoff helper). -/
+atlas wishart-lambda-min-tail (cutoff helper).
+atlas: norm-lipschitz -/
 theorem continuous_sigmaMin_transpose_sq_array {ι κ : Type*} [Fintype ι] [Fintype κ] :
     Continuous (fun G : ι → κ → ℝ => sigmaMin (Matrix.of G)ᵀ ^ 2) := by
   have ht : Continuous (fun G : ι → κ → ℝ => fun j i => G i j) :=

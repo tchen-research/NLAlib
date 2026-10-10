@@ -34,21 +34,24 @@ variable {m n s J : Type*} [Fintype m] [Fintype n] [Fintype s] [Fintype J]
 
 /-- One sketch-and-project step with sketch `S`: the Euclidean projection of `x` onto
 `{y | Sᵀ A y = Sᵀ b}`, written `x − (SᵀA)⁺ Sᵀ (A x − b)`. Source: Gower–Richtárik (2015)
-[`gr15`], eq. (2.2)–(2.3) with `B = I`. Atlas: `sketch-and-project`. -/
+[`gr15`], eq. (2.2)–(2.3) with `B = I`. Atlas: `sketch-and-project`.
+atlas: sketch-and-project -/
 def step (A : Matrix m n ℝ) (b : m → ℝ) (S : Matrix m s ℝ) (x : n → ℝ) : n → ℝ :=
   x - moorePenroseInverse (Sᵀ * A) *ᵥ (Sᵀ *ᵥ (A *ᵥ x - b))
 
 /-- Expected squared error after `k` sketch-and-project steps from `x`, sketches `S j` drawn
 i.i.d. with probabilities `p j`, by first-step recursion:
 `expErr 0 x = ‖x − xs‖²`, `expErr (k+1) x = ∑ⱼ pⱼ expErr k (step A b (S j) x)`.
-Atlas: `sketch-and-project`. -/
+Atlas: `sketch-and-project`.
+atlas: sketch-and-project -/
 def expErr (A : Matrix m n ℝ) (b : m → ℝ) (p : J → ℝ) (S : J → Matrix m s ℝ) (xs : n → ℝ) :
     (n → ℝ) → ℕ → ℝ
   | x, 0 => (x - xs) ⬝ᵥ (x - xs)
   | x, k + 1 => ∑ j, p j * expErr A b p S xs (step A b (S j) x) k
 
 /-- The expected projector `W = ∑ⱼ pⱼ (SⱼᵀA)⁺(SⱼᵀA)`. Source: Gower–Richtárik (2015) [`gr15`],
-eq. (4.1) (`E[Z]` with `B = I`). Atlas: `sketch-and-project`. -/
+eq. (4.1) (`E[Z]` with `B = I`). Atlas: `sketch-and-project`.
+atlas: sketch-and-project -/
 def expectedProjector (A : Matrix m n ℝ) (p : J → ℝ) (S : J → Matrix m s ℝ) : Matrix n n ℝ :=
   ∑ j, p j • (moorePenroseInverse ((S j)ᵀ * A) * ((S j)ᵀ * A))
 
@@ -106,7 +109,8 @@ theorem expected_sqErr_step_eq (A : Matrix m n ℝ) (b : m → ℝ) (p : J → �
 steps with i.i.d. sketches, `E‖x_k − xs‖² ≤ (1 − λ)^k ‖x₀ − xs‖²`.
 Source: Gower–Richtárik (2015) [`gr15`], Thm 4.6 (`B = I`; the sharp `λ` is
 `λ_min⁺(W)`). Atlas: `sketch-and-project`; uses `pseudoinverse`. Deviation: finite sketch
-distribution; expectation modelled by first-step recursion. -/
+distribution; expectation modelled by first-step recursion.
+atlas: sketch-and-project -/
 theorem expErr_le (A : Matrix m n ℝ) (b : m → ℝ) (p : J → ℝ) (hp : ∀ j, 0 ≤ p j)
     (hp1 : ∑ j, p j = 1) (S : J → Matrix m s ℝ) {xs : n → ℝ} (hxs : A *ᵥ xs = b) {lam : ℝ}
     (hlam : ∀ v : n → ℝ, lam * (v ⬝ᵥ v) ≤ v ⬝ᵥ (expectedProjector A p S *ᵥ v)) (x : n → ℝ)

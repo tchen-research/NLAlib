@@ -33,7 +33,8 @@ definition; atlas `wishart-lambda-min-tail` (helper). -/
 omit [Fintype κ] [DecidableEq κ] in
 /-- Products of positive semidefinite trace powers dominate the trace
 power of their product. Source: nonnegative eigenvalue cross terms;
-atlas `wishart-lambda-min-tail` (finite defect helper). -/
+atlas `wishart-lambda-min-tail` (finite defect helper).
+atlas: inverse-power-gram-laplacian -/
 theorem trace_pow_le_trace_pow_mul_trace_pow {R : Matrix ι ι ℝ}
     (hR : R.PosSemidef) (a b : ℕ) :
     Matrix.trace (R ^ (a + b)) ≤ Matrix.trace (R ^ a) * Matrix.trace (R ^ b) := by
@@ -72,7 +73,8 @@ theorem trace_inv_gram_pow_succ_mul_gram (G : Matrix ι κ ℝ)
 /-- The exact finite unshifted Gram Laplacian consists of its sharp
 dimension term minus two nonnegative trace-product defects. Source: the
 user's finite inverse-power refinement; atlas `wishart-lambda-min-tail` (helper).
-The sum over `a < n` is the source's sum over exponents `1, ..., n`. -/
+The sum over `a < n` is the source's sum over exponents `1, ..., n`.
+atlas: inverse-power-gram-laplacian -/
 theorem gramSoftMinLaplacian_unshifted_eq [Nonempty ι]
     (n : ℕ) (G : Matrix ι κ ℝ) (hpd : (G * Gᵀ).PosDef) :
     let R := (G * Gᵀ)⁻¹
@@ -126,7 +128,8 @@ theorem gramSoftMinLaplacian_unshifted_eq [Nonempty ι]
 /-- Every finite positive inverse power has the sharp hard-edge Gram
 Laplacian upper bound, without an eigenvalue-separation condition.
 Source: the user's finite trace-product defects; atlas
-`wishart-lambda-min-tail` (helper). -/
+`wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-laplacian -/
 theorem gramSoftMinLaplacian_unshifted_le [Nonempty ι] (n : ℕ) (hn : 0 < n)
     (G : Matrix ι κ ℝ) (hpd : (G * Gᵀ).PosDef)
     (hgap : 0 ≤ (Fintype.card κ : ℝ) - Fintype.card ι + 1) :
@@ -187,7 +190,8 @@ theorem inversePowerSoftMin_coefficient_eq_pow [Nonempty ι] (n : ℕ) (hn : 0 <
 omit [DecidableEq κ] in
 /-- The unshifted Gram gradient has exact Euler contraction twice the
 inverse-power minimum. Source: the user's finite operator refinement;
-atlas `wishart-lambda-min-tail` (helper). -/
+atlas `wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-euler -/
 theorem frobInner_gramSoftMinGradient_unshifted_eq [Nonempty ι]
     (n : ℕ) (G : Matrix ι κ ℝ) (hpd : (G * Gᵀ).PosDef) :
     frobInner G (gramSoftMinGradient n 0 G) = 2 * inversePowerSoftMin n (G * Gᵀ) := by
@@ -204,7 +208,8 @@ theorem frobInner_gramSoftMinGradient_unshifted_eq [Nonempty ι]
 omit [DecidableEq κ] in
 /-- The unshifted Gram gradient energy has an exact inverse trace-power
 formula. Source: the user's finite operator refinement; atlas
-`wishart-lambda-min-tail` (helper). -/
+`wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-gradient-energy -/
 theorem frobSq_gramSoftMinGradient_unshifted_eq (n : ℕ)
     (G : Matrix ι κ ℝ) (hpd : (G * Gᵀ).PosDef) :
     let R := (G * Gᵀ)⁻¹
@@ -430,7 +435,8 @@ theorem inversePowerSoftMin_gram_nonneg (n : ℕ) (G : Matrix ι κ ℝ) :
 omit [DecidableEq κ] in
 /-- The exact unshifted Euler identity holds globally, including singular
 Grams where both sides vanish. Source: finite operator refinement;
-atlas `wishart-lambda-min-tail` (helper). -/
+atlas `wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-euler -/
 theorem frobInner_gramSoftMinGradient_unshifted_eq_of_pos [Nonempty ι]
     (n : ℕ) (hn : 0 < n) (G : Matrix ι κ ℝ) :
     frobInner G (gramSoftMinGradient n 0 G) = 2 * inversePowerSoftMin n (G * Gᵀ) := by
@@ -442,7 +448,8 @@ theorem frobInner_gramSoftMinGradient_unshifted_eq_of_pos [Nonempty ι]
 omit [DecidableEq κ] in
 /-- The unshifted gradient energy bound holds globally, including singular
 Grams where both sides vanish. Source: finite operator refinement;
-atlas `wishart-lambda-min-tail` (helper). -/
+atlas `wishart-lambda-min-tail` (helper).
+atlas: inverse-power-gram-gradient-energy -/
 theorem frobSq_gramSoftMinGradient_unshifted_le_of_pos [Nonempty ι]
     (n : ℕ) (hn : 0 < n) (G : Matrix ι κ ℝ) :
     frobSq (gramSoftMinGradient n 0 G) ≤ 4 * inversePowerSoftMin n (G * Gᵀ) := by

@@ -202,7 +202,8 @@ theorem hasSubgaussianMGF_of_lintegral_exp_sq_le_two {Ω : Type*} [MeasurableSpa
 /-- **Orlicz absolute-exponential bound implies a centered local MGF bound.** If `K>0`,
 `EX=0` and the nonnegative expectation of `exp(|X|/K)` is at most two, then `X` and
 every tilt in `|t|≤1/(2K)` are integrable, and `E exp(tX)≤exp(16K²t²)` there.
-Vershynin 2018, Proposition 2.7.1; atlas `bernstein-scalar` (Orlicz-to-local-MGF bridge). -/
+Vershynin 2018, Proposition 2.7.1; atlas `bernstein-scalar` (Orlicz-to-local-MGF bridge).
+atlas: bernstein-scalar -/
 theorem integrable_and_local_mgf_le_of_lintegral_exp_abs_le_two {Ω : Type*}
     [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ] {X : Ω → ℝ}
     (hX : AEMeasurable X μ) (K : ℝ) (hK : 0 < K)

@@ -24,7 +24,8 @@ namespace NLAlib
 is Gaussian integrable. The Hessian is bounded only where the scalar test
 is active; no inverse moment or global Hessian-integrability premise is
 assumed. Source: positive cutoff bounds and Gaussian polynomial moments;
-atlas `wishart-lambda-min-tail` (unshifted Stein helper). -/
+atlas `wishart-lambda-min-tail` (unshifted Stein helper).
+atlas: gram-cutoff-vector-field -/
 theorem integrable_test_unshiftedGramVectorFieldDerivative_single_gaussianMatrix
     {r k : ℕ} (hr : 0 < r) (n : ℕ) (hn : 0 < n)
     (ψ : ℝ → ℝ) (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)

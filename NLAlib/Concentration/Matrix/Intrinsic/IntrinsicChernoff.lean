@@ -165,7 +165,8 @@ open NLAlib
 replaced by `2 intdim M`.
 
 Tropp 2015, Thm 7.2.1. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 7*. -/
+Introduction to Matrix Concentration Inequalities, Ch 7*.
+atlas: intrinsic-dimension -/
 theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ)

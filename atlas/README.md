@@ -39,10 +39,19 @@ array, document id = slug) or on Prove2me later.
     `planned` (chosen target, not yet stated) · `candidate` (identified, not committed).
     The status is the atlas's judgement of the statement *as written*; an external library proving a
     variant is recorded under `formalizations` with its own status but does not promote the result.
-  - `formalizations[]`: `{library, decl, status, url?, prove2me_theorem_id?, note?}`.
+  - `formalizations[]`: `{library, decl, module?, status, usage?, note?}`. **Generated for
+    `library: nlalib`**: a declaration whose docstring ends with the tag line `atlas: <id>` is a
+    formalization of that result (`atlas: <id> (partial)` lists it with `partial: true` without
+    promoting the result), and `scripts/sync_atlas.py` rewrites these entries, the result's
+    `status` and its `uses_defs` from `atlas/declarations.json` (`usage`/`note` are kept by
+    declaration name). Entries for other libraries are hand-written. A statement that Mathlib
+    already has is not a result of this atlas; consumers cite it under `mathlib_prereqs`.
+  - `uses_defs[]`: generated; the NLAlib definitions occurring in the Lean statements.
   - `depends_on[]`: ids whose proofs this one consumes. In-degree of this graph is the reuse score
     the viewer ranks by.
   - `mathlib_prereqs[]`: `{decl, present, note?}` — what Mathlib has or lacks for this statement.
+    `scripts/ExtractDecls.lean` writes the signatures of the cited Mathlib declarations to
+    `atlas/external.json`, so the viewer shows their Lean statements too.
   - `sources[]`: `{source, label?}` into `sources`.
   - `kind`: `definition | lemma | theorem | bound | identity | algorithm | application`.
   - `difficulty` 1–5, `priority`, `tags`, `notes`, `updated_at`, `updated_by` (opaque id, never a name).

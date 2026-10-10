@@ -63,7 +63,8 @@ theorem dotProduct_cfc_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (
 Source: Golub–Meurant (2010) [`gm10`], Ch. 7 (the measure `α(λ)` of the Riemann–Stieltjes
 integral); Ubaru–Chen–Saad (2017) [`ucs17`], §2. Atlas: `spectral-measure`.
 Deviation: indexed by Mathlib's eigenvalue enumeration, so repeated eigenvalues give repeated
-atoms (the measure is the same). -/
+atoms (the measure is the same).
+atlas: spectral-measure -/
 def spectralMeasure {A : Matrix n n ℝ} (hA : A.IsHermitian) (v : n → ℝ) : Measure ℝ :=
   ∑ i, ENNReal.ofReal (((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v) ^ 2) •
     Measure.dirac (hA.eigenvalues i)
@@ -94,7 +95,8 @@ theorem spectralMeasure_compl_range_eigenvalues {A : Matrix n n ℝ} (hA : A.IsH
 `f : ℝ → ℝ`, `∫ f dμ_v = vᵀ f(A) v` with `f(A) = cfc f A`.
 Source: Golub–Meurant (2010) [`gm10`], Ch. 7, eq. (7.1)–(7.2); Ubaru–Chen–Saad (2017)
 [`ucs17`], eq. (2). Atlas: `spectral-measure`.
-Deviation: no continuity or measurability of `f` needed (the measure is atomic). -/
+Deviation: no continuity or measurability of `f` needed (the measure is atomic).
+atlas: spectral-measure -/
 theorem integral_spectralMeasure {A : Matrix n n ℝ} (hA : A.IsHermitian) (v : n → ℝ)
     (f : ℝ → ℝ) : ∫ x, f x ∂spectralMeasure hA v = v ⬝ᵥ (cfc f A *ᵥ v) := by
   rw [dotProduct_cfc_mulVec_eq_sum hA f v, spectralMeasure,
@@ -105,14 +107,16 @@ theorem integral_spectralMeasure {A : Matrix n n ℝ} (hA : A.IsHermitian) (v : 
     mul_comm]
 
 /-- Polynomial form: `∫ p dμ_v = vᵀ p(A) v` for every real polynomial `p`.
-Source: Golub–Meurant (2010) [`gm10`], Ch. 7. Atlas: `spectral-measure`. -/
+Source: Golub–Meurant (2010) [`gm10`], Ch. 7. Atlas: `spectral-measure`.
+atlas: spectral-measure -/
 theorem integral_eval_spectralMeasure {A : Matrix n n ℝ} (hA : A.IsHermitian) (v : n → ℝ)
     (p : Polynomial ℝ) :
     ∫ x, p.eval x ∂spectralMeasure hA v = v ⬝ᵥ (Polynomial.aeval A p *ᵥ v) := by
   rw [integral_spectralMeasure hA v, cfc_polynomial p A hA.isSelfAdjoint]
 
 /-- Moment form: `∫ xᵏ dμ_v = vᵀ Aᵏ v`. Source: Golub–Meurant (2010) [`gm10`], Ch. 7
-(the moments of the spectral measure). Atlas: `spectral-measure`. -/
+(the moments of the spectral measure). Atlas: `spectral-measure`.
+atlas: spectral-measure -/
 theorem integral_pow_spectralMeasure {A : Matrix n n ℝ} (hA : A.IsHermitian) (v : n → ℝ)
     (k : ℕ) : ∫ x, x ^ k ∂spectralMeasure hA v = v ⬝ᵥ ((A ^ k) *ᵥ v) := by
   simpa using integral_eval_spectralMeasure hA v (Polynomial.X ^ k)

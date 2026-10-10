@@ -60,7 +60,8 @@ theorem exists_measurable_extension_of_antitoneOn_Ioi
 with a nonnegative antitone measurable factor. No density premise is assumed.
 The original finite measure may have an atom at zero, which is removed by the
 explicit restriction to the positive half-line.
-Source: operator rederivations, Section 5; atlas wishart-lambda-min-tail (helper). -/
+Source: operator rederivations, Section 5; atlas wishart-lambda-min-tail (helper).
+atlas: gamma-weighted-antitone-density -/
 theorem exists_gamma_weighted_antitone_density_of_weak_inequality
     (μ : Measure ℝ) [IsFiniteMeasure μ] (m : ℝ)
     (hweak : ∀ ψ : ℝ → ℝ, ContDiff ℝ ∞ ψ → HasCompactSupport ψ →

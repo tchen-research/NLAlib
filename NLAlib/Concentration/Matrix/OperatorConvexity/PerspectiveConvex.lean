@@ -20,7 +20,8 @@ open NLAlib
 pairs of positive definite matrices.
 
 Tropp 2015, Thm 8.6.2. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 8*. -/
+Introduction to Matrix Concentration Inequalities, Ch 8*.
+atlas: operator-monotone-convex -/
 theorem NLAlib.matrixPerspective_jointly_operatorConvex {d : ℕ} [NeZero d]
     (f : ℝ → ℝ) (hf : OperatorConvexOn (Set.Ioi 0) f)
     (A₁ A₂ H₁ H₂ : Matrix (Fin d) (Fin d) ℂ)

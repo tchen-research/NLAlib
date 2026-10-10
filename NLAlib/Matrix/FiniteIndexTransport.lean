@@ -85,7 +85,8 @@ theorem IsBestRankApprox.reindex {k : ℕ} {A B : Matrix m n ℝ}
 
 /-- An actual Frobenius best rank-at-most-`k` approximation exists for every
 finite rectangular real matrix, including empty indices and every target rank.
-Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
+Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
+atlas: eckart-young-frobenius -/
 theorem exists_isBestRankApprox (A : Matrix m n ℝ) (k : ℕ) :
     ∃ B : Matrix m n ℝ, IsBestRankApprox k A B := by
   let em := Fintype.equivFin m
@@ -146,7 +147,8 @@ theorem frobSq_le_rank_mul_specNorm_sq_fintype [DecidableEq m] [DecidableEq n]
   simpa only [frobSq_reindex, Matrix.rank_reindex, specNorm_reindex] using h
 
 /-- The Frobenius norm is at most the spectral norm times square root of
-rank on arbitrary finite indices. Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
+rank on arbitrary finite indices. Horn–Johnson §5.6; atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem frobNorm_le_sqrt_rank_mul_specNorm_fintype [DecidableEq m] [DecidableEq n]
     (A : Matrix m n ℝ) :
     frobNorm A ≤ Real.sqrt (A.rank : ℝ) * specNorm A := by
@@ -172,7 +174,8 @@ theorem singularValues_reindex_zero_eq_specNorm [DecidableEq m] [DecidableEq n]
 
 /-- The Moore–Penrose norm on general indices is zero at rank zero and the
 reciprocal of the last positive singular value otherwise. Horn–Johnson §7.3;
-atlas `pseudoinverse`. The list uses explicit `Fin(card)` normalization. -/
+atlas `pseudoinverse`. The list uses explicit `Fin(card)` normalization.
+atlas: pseudoinverse -/
 theorem specNorm_moorePenroseInverse_eq_fintype [DecidableEq m] [DecidableEq n]
     (A : Matrix m n ℝ) :
     specNorm (moorePenroseInverse A) = if A.rank = 0 then 0 else
@@ -183,7 +186,8 @@ theorem specNorm_moorePenroseInverse_eq_fintype [DecidableEq m] [DecidableEq n]
 
 /-- Frobenius Eckart–Young identifies the genuine optimal error on arbitrary
 finite indices with the singular-value tail of the explicit `Fin(card)`
-normalization. Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
+normalization. Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
+atlas: eckart-young-frobenius -/
 theorem bestRankFrobSq_eq_singularValueTailSq_reindex (A : Matrix m n ℝ) (k : ℕ) :
     bestRankFrobSq k A =
       singularValueTailSq (A.reindex (Fintype.equivFin m) (Fintype.equivFin n)) k := by

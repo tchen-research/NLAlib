@@ -236,7 +236,8 @@ Source: Rivlin, *Chebyshev Polynomials* (2nd ed., 1990), §2.7 (Schur's lemma); 
 `√(1 − x²) ≥ sin(π/(2q)) ≥ 1/q`; for `x ≥ cos(π/(2q))` by Lagrange interpolation at the zeros
 `ξ_k` of `T_q`, where all partial nodal products are nonnegative and the weights satisfy
 `|r(ξ_k)| / |T_q'(ξ_k)| ≤ M/q`, so `|r(x)| ≤ (M/q) T_q'(x) ≤ q M`; the case `x ≤ −cos(π/(2q))` by
-reflection. Atlas: auxiliary for `markov-brothers` and `bernstein-polynomial-inequality`. -/
+reflection. Atlas: auxiliary for `markov-brothers` and `bernstein-polynomial-inequality`.
+atlas: schur-polynomial-inequality -/
 theorem abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le {q : ℕ} {r : ℝ[X]} {M x : ℝ}
     (hq : 0 < q) (hr : r.degree < q)
     (hM : ∀ y ∈ Set.Icc (-1 : ℝ) 1, √(1 - y ^ 2) * |r.eval y| ≤ M)
@@ -349,7 +350,8 @@ Proof (algebraic form of the trigonometric argument): with `a = x = cos θ₀`, 
 odd part of `θ ↦ p(cos(θ₀ + θ))` is `sin θ · r(cos θ)` for a polynomial `r` of degree `< q` (built
 from Hasse derivatives of `p`), `√(1 − y²) |r(y)| ≤ M` on `[−1, 1]`, and `r(1) = −b p'(x)`; Schur's
 inequality `abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le` at `y = 1` gives
-`b |p'(x)| ≤ q M`. -/
+`b |p'(x)| ≤ q M`.
+atlas: bernstein-polynomial-inequality -/
 theorem abs_eval_derivative_le_div_sqrt_of_forall_abs_eval_le {q : ℕ} {p : ℝ[X]} {M x : ℝ}
     (hp : p.degree ≤ q) (hM : ∀ y ∈ Set.Icc (-1 : ℝ) 1, |p.eval y| ≤ M) (hx : |x| < 1) :
     |(derivative p).eval x| ≤ q * M / √(1 - x ^ 2) := by
@@ -411,7 +413,8 @@ Cheney, *Introduction to Approximation Theory*, Ch. 3. Atlas: `markov-brothers`.
 Proof: Bernstein's inequality `abs_eval_derivative_le_div_sqrt_of_forall_abs_eval_le` gives
 `√(1 − y²) |p'(y)| ≤ q M` on `[−1, 1]`, and Schur's inequality
 `abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le` applied to `p'` (degree `< q`) gives
-`|p'(x)| ≤ q · q M`. The equality case (`p = ±M T_q`, `x = ±1`) is not formalised. -/
+`|p'(x)| ≤ q · q M`. The equality case (`p = ±M T_q`, `x = ±1`) is not formalised.
+atlas: markov-brothers -/
 theorem abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le {q : ℕ} {p : ℝ[X]} {M x : ℝ}
     (hp : p.degree ≤ q) (hM : ∀ y ∈ Set.Icc (-1 : ℝ) 1, |p.eval y| ≤ M)
     (hx : x ∈ Set.Icc (-1 : ℝ) 1) :
@@ -444,7 +447,8 @@ theorem abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le {q : ℕ} {p : ℝ[X
 `[a, b]` (`a < b`), then `|p'(x)| ≤ 2 q² / (b − a) · M` for all `x ∈ [a, b]`.
 
 Source: A. A. Markov (1889); Rivlin, *Chebyshev Polynomials* (2nd ed., 1990), §2.7 (affine
-rescaling of `abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le`). Atlas: `markov-brothers`. -/
+rescaling of `abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le`). Atlas: `markov-brothers`.
+atlas: markov-brothers -/
 theorem abs_eval_derivative_le_two_mul_sq_div_mul_of_forall_abs_eval_le {q : ℕ} {p : ℝ[X]}
     {a b M x : ℝ} (hab : a < b) (hp : p.degree ≤ q)
     (hM : ∀ y ∈ Set.Icc a b, |p.eval y| ≤ M) (hx : x ∈ Set.Icc a b) :

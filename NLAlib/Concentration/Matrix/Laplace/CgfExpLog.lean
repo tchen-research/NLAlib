@@ -17,7 +17,8 @@ open NLAlib
 A).PosDef ∧ matrixLog (matrixExp A) = A`.
 
 Tropp 2015, §2.1.11–12, eq. (2.1.17). Atlas: `loewner-order`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 3*. -/
+Introduction to Matrix Concentration Inequalities, Ch 3*.
+atlas: matrix-calculus-def -/
 theorem NLAlib.posDef_matrixExp_and_matrixLog_matrixExp {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ)
     (hA : A.IsHermitian) :
     (matrixExp A).PosDef ∧ matrixLog (matrixExp A) = A := by

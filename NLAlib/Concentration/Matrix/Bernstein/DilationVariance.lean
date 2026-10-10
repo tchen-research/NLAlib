@@ -94,7 +94,8 @@ Tropp 2015, §2.2.8, eq. (2.2.10). Atlas: `hermitian-dilation`. Ported from the 
 *An Introduction to Matrix Concentration Inequalities, Ch 6*.
 
 The measurability hypothesis is not used by the proof; it is kept to match the source's standing
-assumptions. -/
+assumptions.
+atlas: hermitian-dilation -/
 theorem NLAlib.hermitianSecondMoment_dilation_eq_rectSecondMoment {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n : ℕ} [NeZero m] [NeZero n]
     (Z : Ω → Matrix (Fin m) (Fin n) ℂ) (_hMeas : Measurable Z)

@@ -48,7 +48,8 @@ variable {n t r : Type*} [Fintype n] [Fintype t] [Fintype r]
 
 /-- The **Nyström approximation** `A⟨Ω⟩ = AΩ (ΩᵀAΩ)⁺ ΩᵀA`, with the Moore–Penrose inverse of
 the core `ΩᵀAΩ`. Martinsson–Tropp 2020, eq. (14.4); Tropp–Webber 2023, §2.
-Atlas `nystrom-structural`. -/
+Atlas `nystrom-structural`.
+atlas: nystrom-structural -/
 def nystrom (A : Matrix n n ℝ) (Ω : Matrix n t ℝ) : Matrix n n ℝ :=
   A * Ω * moorePenroseInverse (Ωᵀ * A * Ω) * (Ωᵀ * A)
 
@@ -78,7 +79,8 @@ theorem nystrom_eq_of_eq_transpose_mul {F : Matrix r n ℝ} {A : Matrix n n ℝ}
 /-- **Nyström structural identity** (exact form): if `A = FᵀF` then
 `A − A⟨Ω⟩ = ((I − P)F)ᵀ((I − P)F)` with `P = (FΩ)(FΩ)⁺`. Gittens–Mahoney 2016, Lemma 1;
 Tropp–Webber 2023, §2. Atlas `nystrom-structural`. Deviation: stated for any Gram factor `F`
-(the source uses `F = A^{1/2}`); it is an identity, not only the bound of the source. -/
+(the source uses `F = A^{1/2}`); it is an identity, not only the bound of the source.
+atlas: nystrom-structural -/
 theorem sub_nystrom_eq_of_eq_transpose_mul [DecidableEq r] {F : Matrix r n ℝ}
     {A : Matrix n n ℝ} (hA : A = Fᵀ * F) (Ω : Matrix n t ℝ) :
     A - nystrom A Ω =
@@ -120,14 +122,16 @@ theorem posSemidef_nystrom_of_eq_transpose_mul {F : Matrix r n ℝ} {A : Matrix 
   exact Matrix.posSemidef_conjTranspose_mul_self _
 
 /-- `tr(A − A⟨Ω⟩) = ‖(I − P)F‖_F²` for `A = FᵀF`, `P = (FΩ)(FΩ)⁺`. Gittens–Mahoney 2016,
-Lemma 1; Tropp–Webber 2023, §2. Atlas `nystrom-structural`. -/
+Lemma 1; Tropp–Webber 2023, §2. Atlas `nystrom-structural`.
+atlas: nystrom-structural -/
 theorem trace_sub_nystrom_eq_of_eq_transpose_mul [DecidableEq r] {F : Matrix r n ℝ}
     {A : Matrix n n ℝ} (hA : A = Fᵀ * F) (Ω : Matrix n t ℝ) :
     (A - nystrom A Ω).trace = frobSq ((1 - F * Ω * moorePenroseInverse (F * Ω)) * F) := by
   rw [sub_nystrom_eq_of_eq_transpose_mul hA Ω, frobSq, frobInner_eq_trace]
 
 /-- `‖A − A⟨Ω⟩‖₂ = ‖(I − P)F‖₂²` for `A = FᵀF`, `P = (FΩ)(FΩ)⁺`. Gittens–Mahoney 2016, Lemma 1
-(stated there as `≤` with `F = A^{1/2}`). Atlas `nystrom-structural`. Deviation: equality. -/
+(stated there as `≤` with `F = A^{1/2}`). Atlas `nystrom-structural`. Deviation: equality.
+atlas: nystrom-structural -/
 theorem specNorm_sub_nystrom_eq_of_eq_transpose_mul [DecidableEq n] [DecidableEq r]
     {F : Matrix r n ℝ} {A : Matrix n n ℝ} (hA : A = Fᵀ * F) (Ω : Matrix n t ℝ) :
     specNorm (A - nystrom A Ω) =
@@ -143,7 +147,8 @@ theorem exists_eq_transpose_mul_of_posSemidef [DecidableEq n] {A : Matrix n n �
   exact ⟨F, by rw [hF, Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]⟩
 
 /-- **Nyström, lower Loewner bound**: for `A` positive semidefinite and any `Ω`, `0 ⪯ A⟨Ω⟩`.
-Gittens–Mahoney 2016, Lemma 1; Martinsson–Tropp 2020, §14. Atlas `nystrom-structural`. -/
+Gittens–Mahoney 2016, Lemma 1; Martinsson–Tropp 2020, §14. Atlas `nystrom-structural`.
+atlas: nystrom-structural -/
 theorem posSemidef_nystrom [DecidableEq n] {A : Matrix n n ℝ} (hA : A.PosSemidef)
     (Ω : Matrix n t ℝ) : (nystrom A Ω).PosSemidef := by
   obtain ⟨F, hF⟩ := exists_eq_transpose_mul_of_posSemidef hA
@@ -151,7 +156,8 @@ theorem posSemidef_nystrom [DecidableEq n] {A : Matrix n n ℝ} (hA : A.PosSemid
 
 /-- **Nyström, upper Loewner bound**: for `A` positive semidefinite and any `Ω`, `A⟨Ω⟩ ⪯ A`,
 i.e. `A − A⟨Ω⟩` is positive semidefinite. Gittens–Mahoney 2016, Lemma 1; Martinsson–Tropp
-2020, §14. Atlas `nystrom-structural`. -/
+2020, §14. Atlas `nystrom-structural`.
+atlas: nystrom-structural -/
 theorem posSemidef_sub_nystrom [DecidableEq n] {A : Matrix n n ℝ} (hA : A.PosSemidef)
     (Ω : Matrix n t ℝ) : (A - nystrom A Ω).PosSemidef := by
   obtain ⟨F, hF⟩ := exists_eq_transpose_mul_of_posSemidef hA
@@ -187,7 +193,8 @@ then the Gaussian RSVD bound for `F`
 Deviation: the right side is `bestRankFrobSq k F`; for `A = FᵀF` this equals
 `∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*` (the atlas form), an identification not formalized here.
 Index types are `Fin` (Gaussian law convention). Atlas `nystrom-randomized` (uses
-`nystrom-structural`, `rsvd-expected-error`, `leverage-scores`). -/
+`nystrom-structural`, `rsvd-expected-error`, `leverage-scores`).
+atlas: nystrom-randomized -/
 theorem integrable_and_integral_trace_sub_nystrom_le {n r k t : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {F : Matrix (Fin r) (Fin n) ℝ} (hA : A = Fᵀ * F)
     (hkt : k + 2 ≤ t) (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)

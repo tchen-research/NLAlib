@@ -111,7 +111,8 @@ open NLAlib
 `λmax = ‖dilation A‖ = ‖A‖`.
 
 Tropp 2015, Def. 2.1.5 and eqs (2.1.27–28). Atlas: `hermitian-dilation`. Ported from the Prove2me
-mission *An Introduction to Matrix Concentration Inequalities, Ch 6*. -/
+mission *An Introduction to Matrix Concentration Inequalities, Ch 6*.
+atlas: hermitian-dilation -/
 theorem NLAlib.dilation_identities {m n : ℕ} [NeZero m] [NeZero n]
     (A : Matrix (Fin m) (Fin n) ℂ) :
     (dilation A).IsHermitian ∧

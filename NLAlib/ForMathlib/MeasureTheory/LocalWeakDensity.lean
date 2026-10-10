@@ -74,7 +74,8 @@ theorem exists_antitoneOn_ae_eq_of_locally_antitoneOn_ae_eq
 /-- The weak derivative sign gives a genuine antitone density when the measure is
 only Radon after restriction to smaller half-lines. This includes weights with
 infinite mass near the excluded boundary. Source: operator rederivations, Section 5;
-atlas wishart-lambda-min-tail (helper). -/
+atlas wishart-lambda-min-tail (helper).
+atlas: weak-derivative-antitone-density -/
 theorem exists_antitoneOn_withDensity_eq_of_locally_regular_weak_deriv_nonneg
     (μ : Measure ℝ) (ℓ : ℝ) [SigmaFinite (μ.restrict (Ioi ℓ))]
     (hloc : ∀ a : ℝ, ℓ < a → (μ.restrict (Ioi a)).Regular)

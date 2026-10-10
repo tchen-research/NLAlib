@@ -81,7 +81,8 @@ open NLAlib
 ≤ 4 r exp (-(t²/2)/(v + L t/3))` with `r` the intrinsic dimension of `fromBlocks V₁ 0 0 V₂`.
 
 Tropp 2015, Thm 7.3.1. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 7*. -/
+Introduction to Matrix Concentration Inequalities, Ch 7*.
+atlas: intrinsic-dimension -/
 theorem NLAlib.intrinsic_matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
     (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) (L : ℝ) (hL : 0 ≤ L)

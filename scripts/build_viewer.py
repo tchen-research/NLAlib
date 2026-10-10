@@ -7,6 +7,8 @@ data = (ROOT / "atlas/atlas.json").read_text().replace("</", "<\\/")
 katex_css = (ROOT / "atlas/vendor/katex.inline.css").read_text()
 decls_path = ROOT / "atlas/declarations.json"
 decls = decls_path.read_text().replace("</", "<\\/") if decls_path.exists() else "[]"
+ext_path = ROOT / "atlas/external.json"
+ext = ext_path.read_text().replace("</", "<\\/") if ext_path.exists() else "[]"
 out = ROOT / "atlas/viewer.html"
-out.write_text(tpl.replace("/*ATLAS_JSON*/", data).replace("/*KATEX_CSS*/", katex_css).replace("/*DECLS_JSON*/", decls))
+out.write_text(tpl.replace("/*ATLAS_JSON*/", data).replace("/*KATEX_CSS*/", katex_css).replace("/*DECLS_JSON*/", decls).replace("/*EXTERNAL_JSON*/", ext))
 print(f"built {out} ({out.stat().st_size} bytes)")

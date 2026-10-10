@@ -44,7 +44,8 @@ theorem inv_specNorm_pinvL_sq_mul_dotProduct_le [DecidableEq m] [DecidableEq n]
 
 /-- The Frobenius condition number formed with the general Moore–Penrose
 inverse. The zero matrix has value zero under this total definition.
-Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`. -/
+Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`.
+atlas: kaczmarz-def -/
 def frobConditionNumber [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) : ℝ :=
   frobNorm A * specNorm (moorePenroseInverse A)
 
@@ -66,7 +67,8 @@ theorem expErr_le_frobConditionNumber [DecidableEq m] [DecidableEq n]
 
 /-- The exact distribution of an independent sequence of row choices.
 Nonzero input is essential: otherwise the squared-row weights all vanish.
-Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`. -/
+Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`.
+atlas: kaczmarz-def -/
 def kaczmarzRowPathPMF (A : Matrix m n ℝ) (hA : A ≠ 0) (k : ℕ) : PMF (Fin k → m) := by
   classical
   refine PMF.ofFintype (fun ω => ENNReal.ofReal (∏ j, Kaczmarz.prob A (ω j))) ?_
@@ -80,7 +82,8 @@ def kaczmarzRowPathPMF (A : Matrix m n ℝ) (hA : A ≠ 0) (k : ℕ) : PMF (Fin 
 
 /-- The real weighted recurrence is the probability expectation of the
 actual row-by-row iterates, including zero steps.
-Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`. -/
+Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`.
+atlas: randomized-kaczmarz -/
 theorem integral_sqErr_kaczmarzRowPathPMF [MeasurableSpace m] [MeasurableSingletonClass m]
     (A : Matrix m n ℝ) (hA : A ≠ 0) (b : m → ℝ) (xs x : n → ℝ) (k : ℕ) :
     (∫ ω : Fin k → m,
@@ -98,7 +101,8 @@ theorem integral_sqErr_kaczmarzRowPathPMF [MeasurableSpace m] [MeasurableSinglet
 /-- Full-column-rank randomized Kaczmarz converges in the actual probability
 expectation with rate `1-κ_F⁻²`, using the general Moore–Penrose inverse.
 All probability and lower-singular-bound assumptions are discharged.
-Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`. -/
+Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`.
+atlas: randomized-kaczmarz -/
 theorem integral_sqErr_kaczmarz_le_frobConditionNumber
     [DecidableEq m] [DecidableEq n] [MeasurableSpace m] [MeasurableSingletonClass m]
     (A : Matrix m n ℝ) (hA0 : A ≠ 0) (hA : IsUnit (Aᵀ * A))

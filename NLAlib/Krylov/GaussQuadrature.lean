@@ -121,7 +121,8 @@ Source: Golub–Meurant (2010) [`gm10`], Thm 6.6 and §7.1; Chen–Trogdon–Uba
 Thm 2.1. Atlas: `lanczos-gauss-quadrature`.
 Deviation: any orthonormal `Q` whose range contains `K_q(A,b)`; with the Lanczos basis,
 `Qᵀb = ‖b‖e₁` and the right side is `‖b‖² (p(T_q))₁₁`. The hypothesis `0 < q` is needed (at
-`q = 0` the degree bound is `≤ 0` in ℕ and the claim fails unless `b ∈ range Q`). -/
+`q = 0` the degree bound is `≤ 0` in ℕ and the claim fails unless `b ∈ range Q`).
+atlas: lanczos-gauss-quadrature -/
 theorem dotProduct_aeval_mulVec_eq_of_krylovSpace_le {A : Matrix n n ℝ} (hA : A.IsSymm)
     {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ} (hq : 0 < q)
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {p : Polynomial ℝ}
@@ -231,7 +232,8 @@ Source: Golub–Meurant (2010) [`gm10`], §6.2 (error of Gauss quadrature via be
 Chen–Trogdon–Ubaru (2021) [`ctu21`], Lem. 2.2; Ubaru–Chen–Saad (2017) [`ucs17`], proof of Thm 4.1.
 Atlas: `lanczos-gauss-quadrature`.
 Deviation: stated with an arbitrary approximant `p` (the source takes the best uniform
-approximation, `E = E_{2q−1}(f)`); any orthonormal `Q` with `K_q ⊆ range Q`. -/
+approximation, `E = E_{2q−1}(f)`); any orthonormal `Q` with `K_q ⊆ range Q`.
+atlas: lanczos-gauss-quadrature -/
 theorem abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
     (hq : 0 < q) (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {f : ℝ → ℝ}

@@ -20,7 +20,8 @@ set_option autoImplicit false
 matrices for fixed Hermitian `H`.
 
 Tropp 2015, Thm 8.1.1 (= Thm 3.4.1). Atlas: `operator-monotone-convex`. Ported from the Prove2me
-mission *An Introduction to Matrix Concentration Inequalities, Ch 8*. -/
+mission *An Introduction to Matrix Concentration Inequalities, Ch 8*.
+atlas: operator-monotone-convex -/
 theorem NLAlib.lieb_concavity {d : ℕ} [NeZero d]
     (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
     ConcaveOn ℝ {A : Matrix (Fin d) (Fin d) ℂ | A.PosDef}

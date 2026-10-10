@@ -31,7 +31,8 @@ namespace NLAlib
 standard Gaussian matrix `Γ`, `𝔼 ‖S Γ T‖₂ ≤ ‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂`. Source: HMT 2011,
 Prop. A.2; Chevet 1978; Gordon 1985. Deduced here from the second-moment bound (Tropp–Webber
 2023, Lemma B.1). Atlas: `chevet`. Ported from Prove2me solution
-`GaussianMatrix.chevet_expectation_bound`. -/
+`GaussianMatrix.chevet_expectation_bound`.
+atlas: chevet -/
 theorem integral_specNorm_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
     (T : Matrix (Fin m) (Fin n) ℝ) :
     ∫ G, specNorm (S * Matrix.of G * T) ∂(gaussianMatrix p m)
@@ -48,7 +49,8 @@ theorem integral_specNorm_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix 
 /-- **Chevet's inequality, with integrability.** For `S : a × p`, `T : m × n` and a `p × m`
 standard Gaussian matrix `Γ`, `‖S Γ T‖₂` is integrable and
 `𝔼 ‖S Γ T‖₂ ≤ ‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂`. Source: HMT 2011, Prop. A.2. Atlas: `chevet`. Ported
-from Prove2me solution `GaussianMatrix.chevet`. -/
+from Prove2me solution `GaussianMatrix.chevet`.
+atlas: chevet -/
 theorem integrable_and_integral_specNorm_mul_gaussianMatrix_mul_le {a p m n : ℕ}
     (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ) :
     Integrable (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T))

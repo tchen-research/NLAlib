@@ -37,7 +37,8 @@ with `n ≥ 1` and `u ≥ 0`, `P(σ_min(G) ≤ √N − √n − u) ≤ e^{-u²/
 Vershynin 2012, Cor. 5.35 (lower half); Davidson–Szarek 2001, Thm II.13.
 Atlas: `smin-lower-tail`. The source's hypothesis `n ≤ N` is not needed and is dropped
 (Gordon's lower bound `√N − √n ≤ 𝔼 σ_min` holds for all `N`). Ported from Prove2me solution
-`GaussianMatrix.sMin_lower_tail`. -/
+`GaussianMatrix.sMin_lower_tail`.
+atlas: smin-lower-tail -/
 theorem measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) (u : ℝ)
     (hu : 0 ≤ u) :
     (gaussianMatrix N n) {A | sigmaMin (Matrix.of A) ≤ Real.sqrt N - Real.sqrt n - u}
@@ -69,7 +70,8 @@ theorem measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix {N n : ℕ} (hn 
 Vershynin 2012, Cor. 5.35 (upper half); Davidson–Szarek 2001, Thm II.13.
 Atlas: `extreme-singular-values-deviation` (one half). The source helper assumes `n ≥ 1`, which
 is not needed. Ported from Prove2me solution
-`GaussianMatrix.extreme_singular_values_deviation` (`esvd_specNorm_tail`). -/
+`GaussianMatrix.extreme_singular_values_deviation` (`esvd_specNorm_tail`).
+atlas: extreme-singular-values-deviation -/
 theorem measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix {N n : ℕ} (t : ℝ)
     (ht : 0 ≤ t) :
     (gaussianMatrix N n) {A | Real.sqrt N + Real.sqrt n + t ≤ specNorm (Matrix.of A)}
@@ -92,7 +94,8 @@ with `n ≥ 1` and `t ≥ 0`, with probability at least `1 − 2e^{-t²/2}`,
 
 Vershynin 2012, Cor. 5.35; Davidson–Szarek 2001, Thm II.13. Union bound over the two tails.
 Atlas: `extreme-singular-values-deviation`. Ported from Prove2me solution
-`GaussianMatrix.extreme_singular_values_deviation`. -/
+`GaussianMatrix.extreme_singular_values_deviation`.
+atlas: extreme-singular-values-deviation -/
 theorem one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n)
     (t : ℝ) (ht : 0 ≤ t) :
     1 - ENNReal.ofReal (2 * Real.exp (-t ^ 2 / 2))

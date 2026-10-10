@@ -101,7 +101,8 @@ Setting: `A = U₁S₁V₁ᵀ + U₂S₂V₂ᵀ` (block SVD, `OPT² = frobSq S�
   property, exactly the display in the proof of `thm:RSVD` (needs `t ≥ k+2`);
 * `hXi`, `hZi`: integrability.
 Conclusion: `E‖A − Q⟦QᵀA⟧ₖ‖_F² ≤ (1 + k/(t−k−1)) ‖A − ⟦A⟧ₖ‖_F²`.
-Atlas `rsvd-expected-error`. -/
+Atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 theorem rsvd_truncated_main [IsProbabilityMeasure μ]
     {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ}
     {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
@@ -137,7 +138,8 @@ goes through the second inequality of `prop:hmt-struct`
 of the argument for `Q⟦QᵀA⟧ₖ`. (Equivalently, `frobSq (A − Q(QᵀA)) ≤ frobSq (A − QY)` for
 the truncated output, see `frobSq_sub_mul_transpose_mul_le_frobSq_sub_mul`.)
 Conclusion: `E‖A − QQᵀA‖_F² ≤ (1 + k/(t−k−1)) ‖A − ⟦A⟧ₖ‖_F²`.
-Atlas `rsvd-expected-error`. -/
+Atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 theorem rsvd_main [IsProbabilityMeasure μ]
     {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ}
     {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}

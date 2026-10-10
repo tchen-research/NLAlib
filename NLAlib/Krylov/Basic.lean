@@ -20,7 +20,8 @@ namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The Krylov subspace `K_q(A, b) = span {A^i b : i < q}`. Source: Golub–Meurant (2010)
-[`gm10`], Ch. 4. Atlas: `krylov-subspace`. -/
+[`gm10`], Ch. 4. Atlas: `krylov-subspace`.
+atlas: krylov-subspace -/
 def krylovSpace (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) : Submodule ℝ (n → ℝ) :=
   Submodule.span ℝ (Set.range fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b)
 

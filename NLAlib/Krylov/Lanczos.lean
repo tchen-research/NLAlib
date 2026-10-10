@@ -48,7 +48,8 @@ Source: Golub–Meurant (2010) [`gm10`], §4.1. Atlas: `lanczos-recurrence`. -/
 def lanczosBasis (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) (i : Fin q) : n → ℝ :=
   (gramSchmidtNormed ℝ (krylovVectors A b q) i).ofLp
 
-/-- The matrix `Q_q` whose columns are the Lanczos basis vectors. Atlas: `lanczos-recurrence`. -/
+/-- The matrix `Q_q` whose columns are the Lanczos basis vectors. Atlas: `lanczos-recurrence`.
+atlas: lanczos-recurrence (partial) -/
 def lanczosMatrix (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) : Matrix n (Fin q) ℝ :=
   Matrix.of fun r i => lanczosBasis A b q i r
 
@@ -72,7 +73,8 @@ theorem transpose_mul_mul_apply {k : Type*} (Q : Matrix n k ℝ) (A : Matrix n n
 
 /-- **The Lanczos basis spans the Krylov space**: `range Q_q = K_q(A, b)`, with no
 non-breakdown hypothesis. Source: Golub–Meurant (2010) [`gm10`], Thm 4.2.
-Atlas: `lanczos-recurrence`; uses `krylov-subspace`. -/
+Atlas: `lanczos-recurrence`; uses `krylov-subspace`.
+atlas: lanczos-recurrence (partial) -/
 theorem range_lanczosMatrix (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
     LinearMap.range (lanczosMatrix A b q).mulVecLin = krylovSpace A b q := by
   rw [Matrix.range_mulVecLin]
@@ -88,7 +90,8 @@ theorem range_lanczosMatrix (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
 
 /-- **The Lanczos basis is orthonormal** when the Krylov vectors `b, …, A^{q−1} b` are linearly
 independent (no breakdown; equivalently `dim K_q(A, b) = q`): `Q_qᵀ Q_q = I`.
-Source: Golub–Meurant (2010) [`gm10`], Thm 4.2. Atlas: `lanczos-recurrence`. -/
+Source: Golub–Meurant (2010) [`gm10`], Thm 4.2. Atlas: `lanczos-recurrence`.
+atlas: lanczos-recurrence (partial) -/
 theorem hasOrthonormalCols_lanczosMatrix {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
     (h : LinearIndependent ℝ fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b) :
     HasOrthonormalCols (lanczosMatrix A b q) := by
@@ -127,7 +130,8 @@ private lemma inner_gramSchmidt_toLp_mulVec_eq_zero (A : Matrix n n ℝ) (b : n 
 /-- **The projected matrix is upper Hessenberg**: `(Q_qᵀ A Q_q)_ij = 0` for `i > j + 1`, for
 every matrix `A` (no symmetry, no non-breakdown hypothesis). Source: Golub–Meurant (2010)
 [`gm10`], §4.1; Trefethen–Bau (1997) [`tb97`], Lecture 33 (Arnoldi). Atlas:
-`lanczos-recurrence`. -/
+`lanczos-recurrence`.
+atlas: lanczos-recurrence (partial) -/
 theorem lanczos_apply_eq_zero_of_add_one_lt (A : Matrix n n ℝ) (b : n → ℝ) {q : ℕ}
     {i j : Fin q} (hij : (j : ℕ) + 1 < i) :
     ((lanczosMatrix A b q)ᵀ * A * lanczosMatrix A b q) i j = 0 := by
@@ -171,7 +175,8 @@ theorem transpose_lanczosMatrix_mulVec_apply_eq_zero (A : Matrix n n ℝ) (b : n
 `b, …, A^{q−1} b` and `q ≥ 1`, every polynomial `p` of degree at most `2q − 1` satisfies
 `bᵀ p(A) b = (Q_qᵀ b)ᵀ p(T_q) (Q_qᵀ b)` with `T_q = Q_qᵀ A Q_q` tridiagonal.
 Source: Golub–Meurant (2010) [`gm10`], Thm 6.6 and §7.1. Atlas: `lanczos-gauss-quadrature`;
-uses `lanczos-recurrence`. -/
+uses `lanczos-recurrence`.
+atlas: lanczos-gauss-quadrature -/
 theorem dotProduct_aeval_mulVec_eq_lanczos {A : Matrix n n ℝ} (hA : A.IsSymm) {b : n → ℝ}
     {q : ℕ} (hq : 0 < q) (h : LinearIndependent ℝ fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b)
     {p : Polynomial ℝ} (hp : p.natDegree ≤ 2 * q - 1) :

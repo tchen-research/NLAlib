@@ -55,8 +55,13 @@ The statement is the product; a proof can be replaced, a statement nobody can ap
 - Constants explicit, never `∃ C`. Degenerate cases match the source (Mathlib's real division by
   zero is zero; write tail expressions piecewise where the source has a side condition).
 - Give the general form, then corollaries. Two-sided results as two theorems.
-- Docstring on every public declaration: the source and its label (`Horn–Johnson Thm 7.4.9.1`),
-  the atlas id, and any deviation from the printed statement.
+- Docstring on every public declaration: the source and its label (`Horn–Johnson Thm 7.4.9.1`)
+  and any deviation from the printed statement. A declaration that *is* the formal statement of
+  an atlas result ends its docstring with a tag line `atlas: <id>` (several ids comma-separated;
+  `atlas: <id> (partial)` for a declaration that covers only part of the statement, which is
+  listed but does not make the result proved); helpers mention the id in prose but carry no tag. The tag is what puts the declaration in the
+  atlas: `scripts/sync_atlas.py` rewrites each result's `formalizations`, its status and its
+  `uses_defs` from the tags, so the Lean side of `atlas/atlas.json` is never edited by hand.
 
 ## 3a. Scaffolds: where `sorry` is allowed
 
@@ -65,8 +70,8 @@ and proved against it now. Rules:
 
 - Every `sorry` lives in its own named declaration, never inline in a larger proof. Its docstring
   starts with `SCAFFOLD: <atlas id>` and says why the proof is deferred.
-- The atlas entry has `status: "scaffold"` and a `formalizations` entry with
-  `library: "nlalib"`, the full declaration name and `status: "scaffold"`.
+- The `SCAFFOLD: <atlas id>` docstring doubles as the atlas tag: after a sync the result has
+  `status: "scaffold"` and a `formalizations` entry for the declaration with `status: "scaffold"`.
 - A theorem proved only modulo scaffold lemmas is itself recorded as `scaffold` (its axioms
   include `sorryAx`). The audit lists every declaration that depends
   on `sorry`; `scripts/check_atlas.py` fails if one of them is catalogued as proved, or if a
@@ -85,11 +90,13 @@ it, update every user in the same PR, and get two reviews. Deprecate rather than
 - `lake build` passes with no new warnings.
 - `lake env lean scripts/Audit.lean` reports no axioms beyond `propext`, `Classical.choice`, `Quot.sound`; every `sorry` it lists is a catalogued scaffold.
 - `python3 scripts/check_layers.py` and `python3 scripts/check_atlas.py` pass.
-- `atlas/atlas.json` updated for every result touched: `status`, a `formalizations` entry with
-  `library: "nlalib"`, the full declaration name and a one-sentence `usage`, new `depends_on`
-  edges, `updated_at`; for a new result also `aliases`, `hypotheses`, `conclusion` (KaTeX),
-  `uses_defs` and `variants`, so the atlas stays searchable by people and agents.
-- `atlas/declarations.json` regenerated (`lake env lean scripts/ExtractDecls.lean`).
+- Every theorem that formalizes an atlas result carries its `atlas: <id>` tag, and
+  `atlas/declarations.json` and `atlas/atlas.json` are regenerated
+  (`lake env lean scripts/ExtractDecls.lean && python3 scripts/sync_atlas.py`). For a new result
+  the hand-written entry (title, `informal`, `hypotheses`, `conclusion` in KaTeX, `sources`,
+  `depends_on`, `aliases`, `variants`) is added to `atlas/atlas.json` first; the sync fills in
+  the rest. Results whose statement is already in Mathlib are not atlas entries: cite the Mathlib
+  declaration in the consumer's `mathlib_prereqs` instead.
 - Read-back in the PR description: what the Lean statement says, written from the Lean alone.
 
 CI runs all of this on every PR. A green CI plus one reviewer merges a theorem; two reviewers for

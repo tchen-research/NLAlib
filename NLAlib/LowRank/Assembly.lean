@@ -83,7 +83,8 @@ theorem rsvd_assembly [IsProbabilityMeasure μ] {X Zsq : Ω → ℝ} {OPTsq c : 
     _ = (1 + c) * OPTsq := by ring
 
 /-- Chen–Persson, Theorem `thm:RSVD` (HMT 2011, Thm 10.5, Frobenius case), expectation level,
-with the paper's constant `c = k/(t−k−1)`. Atlas `rsvd-expected-error`. -/
+with the paper's constant `c = k/(t−k−1)`. Atlas `rsvd-expected-error`.
+atlas: rsvd-expected-error -/
 theorem rsvd_explicit [IsProbabilityMeasure μ] {X Zsq : Ω → ℝ} {OPTsq k t : ℝ}
     (hX : ∀ ω, X ω ≤ OPTsq + Zsq ω) (hZ : ∫ ω, Zsq ω ∂μ = k / (t - k - 1) * OPTsq)
     (hXi : Integrable X μ) (hZi : Integrable Zsq μ) :
@@ -119,7 +120,8 @@ Hypotheses: `hc` (`lem:completion`'s factor with `q = rank(AΩ) ≤ t`), `hcond`
 (`lem:completion` + tower property), `hstruct` (`prop:hmt-struct` for
 `Y = ‖(I−QQᵀ)A‖_F²`), `hZ` (`lem:moments` + `lem:invmom`, as in the proof of `thm:RSVD`).
 The hypothesis `hk` is not used by the arithmetic; it is kept for fidelity.
-Atlas `gn-expected-error` (uses `rsvd-expected-error`). -/
+Atlas `gn-expected-error` (uses `rsvd-expected-error`).
+atlas: gn-expected-error -/
 theorem gn_explicit [IsProbabilityMeasure μ] {X Y cfac Zsq : Ω → ℝ} {k t s OPTsq : ℝ}
     (hk : 0 ≤ k) (hkt : k + 2 ≤ t) (hts : t + 2 ≤ s)
     (hY : 0 ≤ Y) (hc : ∀ ω, cfac ω ≤ 1 + t / (s - t - 1))

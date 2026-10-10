@@ -102,7 +102,8 @@ Atlas: `interpolation-remainder` (lemma).
 Deviation: stated with `q + 2` zeros and the `(q + 1)`-st derivative (so the conclusion is in the
 open interval without a side condition); only continuity of `f^{(k)}`, `1 ≤ k ≤ q`, on `(a, b)`
 is assumed — no differentiability, because `iteratedDeriv` is Mathlib's global derivative and
-Rolle (`exists_deriv_eq_zero`) needs only continuity. -/
+Rolle (`exists_deriv_eq_zero`) needs only continuity.
+atlas: interpolation-remainder -/
 theorem exists_iteratedDeriv_eq_zero_of_strictMono {f : ℝ → ℝ} {a b : ℝ} {q : ℕ}
     {v : Fin (q + 2) → ℝ} (hv : StrictMono v) (hva : ∀ i, v i ∈ Icc a b)
     (hf : ContinuousOn f (Icc a b))
@@ -118,7 +119,8 @@ theorem exists_iteratedDeriv_eq_zero_of_strictMono {f : ℝ → ℝ} {a b : ℝ}
 /-- **Generalised Rolle theorem**, finset form: if `f` vanishes on a set of `q + 2` points of
 `[a, b]` (hypotheses as in `exists_iteratedDeriv_eq_zero_of_strictMono`), then `f^{(q+1)}`
 vanishes somewhere in `(a, b)`.
-Source: Süli–Mayers, proof of Thm 6.2. Atlas: `interpolation-remainder` (lemma). -/
+Source: Süli–Mayers, proof of Thm 6.2. Atlas: `interpolation-remainder` (lemma).
+atlas: interpolation-remainder -/
 theorem exists_iteratedDeriv_eq_zero_of_card {f : ℝ → ℝ} {a b : ℝ} {q : ℕ} {s : Finset ℝ}
     (hs : s.card = q + 2) (hsab : ∀ x ∈ s, x ∈ Icc a b)
     (hf : ContinuousOn f (Icc a b))
@@ -137,7 +139,8 @@ Source: Süli–Mayers, *An Introduction to Numerical Analysis*, Thm 6.2; Atkins
 Thm 3.2; Cheney, *Introduction to Approximation Theory*, Ch. 3. Atlas:
 `interpolation-remainder`.
 Deviation: `ξ` is in the open interval `(a, b)` (stronger than `[a, b]`), at the cost of the
-hypothesis `a < b` (used only when `x` is a node). -/
+hypothesis `a < b` (used only when `x` is a node).
+atlas: interpolation-remainder -/
 theorem exists_sub_eval_interpolate_eq {f : ℝ → ℝ} {a b x : ℝ} {q : ℕ} {v : Fin (q + 1) → ℝ}
     (hab : a < b) (hv : Function.Injective v) (hva : ∀ i, v i ∈ Icc a b) (hx : x ∈ Icc a b)
     (hf : ContinuousOn f (Icc a b))
@@ -207,7 +210,8 @@ theorem exists_sub_eval_interpolate_eq {f : ℝ → ℝ} {a b x : ℝ} {q : ℕ}
 Source: Trefethen, *Approximation Theory and Approximation Practice*, Ch. 2–3; Rivlin,
 *Chebyshev Polynomials*, §1.2.
 Atlas: `chebyshev-interpolation-error` (lemma).
-Deviation: no `0 < q` hypothesis is needed (`q − 1` is truncated subtraction). -/
+Deviation: no `0 < q` hypothesis is needed (`q − 1` is truncated subtraction).
+atlas: chebyshev-interpolation-error -/
 theorem nodal_chebyshevZero (q : ℕ) :
     Lagrange.nodal Finset.univ (chebyshevZero q) = C (1 / 2 ^ (q - 1)) * Chebyshev.T ℝ q := by
   classical
@@ -231,7 +235,8 @@ theorem nodal_chebyshevZero (q : ℕ) :
   rfl
 
 /-- The Chebyshev zeros are roots of `T_q`.
-Atlas: `chebyshev-interpolation-error` (API). -/
+Atlas: `chebyshev-interpolation-error` (API).
+atlas: chebyshev-interpolation-error -/
 theorem eval_T_real_chebyshevZero (q : ℕ) (k : Fin q) :
     (Chebyshev.T ℝ q).eval (chebyshevZero q k) = 0 := by
   classical
@@ -242,7 +247,8 @@ theorem eval_T_real_chebyshevZero (q : ℕ) (k : Fin q) :
 
 /-- On `[−1, 1]` the nodal polynomial of the `q` Chebyshev zeros is at most `1/2^(q−1)` in
 modulus. Source: Trefethen, ATAP, Ch. 3; Cheney, Ch. 3. Atlas: `chebyshev-interpolation-error`
-(lemma). Deviation: no `0 < q` hypothesis. -/
+(lemma). Deviation: no `0 < q` hypothesis.
+atlas: chebyshev-interpolation-error -/
 theorem abs_eval_nodal_chebyshevZero_le (q : ℕ) {x : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) :
     |(Lagrange.nodal Finset.univ (chebyshevZero q)).eval x| ≤ 1 / 2 ^ (q - 1) := by
   rw [nodal_chebyshevZero, eval_mul, eval_C, abs_mul, abs_of_pos (by positivity)]
@@ -257,7 +263,8 @@ Source: Süli–Mayers, Ch. 8 (Chebyshev nodes); Trefethen, *Approximation Theor
 Approximation Practice*, Ch. 11; Cheney, Ch. 3.
 Atlas: `chebyshev-interpolation-error`; uses `interpolation-remainder`.
 Deviation: the derivative bound is assumed only on the open interval `(−1, 1)` (weaker than
-on `[−1, 1]`). -/
+on `[−1, 1]`).
+atlas: chebyshev-interpolation-error -/
 theorem abs_sub_eval_interpolate_chebyshevZero_le {f : ℝ → ℝ} {q : ℕ} {M : ℝ}
     (hf : ContinuousOn f (Icc (-1) 1))
     (hf' : ∀ k ≤ q, DifferentiableOn ℝ (iteratedDeriv k f) (Ioo (-1) 1))

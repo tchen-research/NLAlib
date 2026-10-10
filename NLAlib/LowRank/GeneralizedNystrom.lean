@@ -67,7 +67,8 @@ Everything else in the paper's proof (`ΨᵀA = G₁QᵀA + G₂Q⊥ᵀE`, `X̂ 
 Pythagoras, `‖Q⊥ᵀE‖_F = ‖E‖_F`) is proved in `SketchedRegression.lean` and used here.
 Conclusion: `eq:completion`,
 `E‖A − Q(ΨᵀQ)†ΨᵀA‖_F² = (1 + q/(s−q−1)) ‖(I − QQᵀ)A‖_F²`.
-Atlas `gn-expected-error` (helper; uses `sketched-regression`, `orthonormal-completion`). -/
+Atlas `gn-expected-error` (helper; uses `sketched-regression`, `orthonormal-completion`).
+atlas: gn-expected-error -/
 theorem completion_reduction {m n r : Type*} [Fintype m] [Fintype n] [Fintype r]
     [DecidableEq m] [DecidableEq r] {q s : ℕ} [IsProbabilityMeasure μ]
     (Q : Matrix m (Fin q) ℝ) (Qp : Matrix m r ℝ) (A : Matrix m n ℝ)
@@ -108,7 +109,8 @@ being `q = t`), `t ≥ k+2`, `s ≥ t+2`.
   Gaussian noise moment instead;
 * `hYi`, `hZi`: integrability of `‖(I − QQᵀ)A‖_F²` and `‖Σ₂Ω₂Ω₁†‖_F²`.
 Conclusion: `E‖A − Â‖_F² ≤ (1 + t/(s−t−1)) (1 + k/(t−k−1)) ‖A − ⟦A⟧ₖ‖_F²`.
-Atlas `gn-expected-error` (uses `rsvd-expected-error`, `hmt-9-1-frobenius`). -/
+Atlas `gn-expected-error` (uses `rsvd-expected-error`, `hmt-9-1-frobenius`).
+atlas: gn-expected-error -/
 theorem gn_main [IsProbabilityMeasure μ]
     {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ}
     {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}
@@ -159,7 +161,8 @@ identity after conditioning on `Ω` and the tower property:
   `lem:invmom`) integrated over `Ω`.
 Other hypotheses as in `gn_main`.
 Atlas `gn-expected-error` (uses `rsvd-expected-error`, `sketched-regression`,
-`orthonormal-completion`). -/
+`orthonormal-completion`).
+atlas: gn-expected-error -/
 theorem gn_main_of_completion [IsProbabilityMeasure μ] [DecidableEq m]
     {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ}
     {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ}

@@ -25,7 +25,8 @@ open scoped ENNReal
 namespace NLAlib
 
 /-- A smooth bounded value truncation. Source: the elementary sine/sinc
-identities in Mathlib. Atlas: `gaussian-log-sobolev` (approximation helper). -/
+identities in Mathlib. Atlas: `gaussian-log-sobolev` (approximation helper).
+atlas: gaussian-log-sobolev -/
 def sineTruncation (c y : ℝ) : ℝ := c * Real.sin (c⁻¹ * y)
 
 /-- The sine truncation is a sinc multiplier, including at zero. Source:
@@ -212,7 +213,8 @@ theorem integrable_sq_mul_log_sq_of_logSobolev_bound
 /-- Square and gradient-energy integrability imply entropy integrability
 under the whole finite product standard Gaussian law. Source: Gross 1975,
 Thm. 5, via the bounded-test closure proved above.
-Atlas: `gaussian-log-sobolev`. -/
+Atlas: `gaussian-log-sobolev`.
+atlas: gaussian-log-sobolev -/
 theorem integrable_sq_mul_log_sq_gaussian {ι : Type*} [Fintype ι] [DecidableEq ι]
     (f : (ι → ℝ) → ℝ) (hf : ContDiff ℝ 1 f)
     (hf2 : Integrable (fun x => f x ^ 2) (Measure.pi fun _ : ι => gaussianReal 0 1))
@@ -227,7 +229,8 @@ theorem integrable_sq_mul_log_sq_gaussian {ι : Type*} [Fintype ι] [DecidableEq
 /-- Gaussian logarithmic Sobolev inequality with the intended square and
 gradient-energy assumptions only; entropy integrability is proved rather
 than assumed. Source: Gross 1975, Thm. 5; Ledoux, Thm. 5.1.
-Atlas: `gaussian-log-sobolev`. Constant `2`, including empty dimensions. -/
+Atlas: `gaussian-log-sobolev`. Constant `2`, including empty dimensions.
+atlas: gaussian-log-sobolev -/
 theorem entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian_of_integrable
     {ι : Type*} [Fintype ι] [DecidableEq ι] (f : (ι → ℝ) → ℝ) (hf : ContDiff ℝ 1 f)
     (hf2 : Integrable (fun x => f x ^ 2) (Measure.pi fun _ : ι => gaussianReal 0 1))
@@ -259,7 +262,8 @@ theorem integrable_sq_mul_log_sq_gaussianReal (f : ℝ → ℝ) (hf : ContDiff �
 
 /-- One-dimensional Gaussian LSI with no entropy-integrability premise.
 Source: Gross 1975, Thm. 5; Ledoux, Thm. 5.1.
-Atlas: `gaussian-log-sobolev`. Constant `2`. -/
+Atlas: `gaussian-log-sobolev`. Constant `2`.
+atlas: gaussian-log-sobolev -/
 theorem entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal_of_integrable
     (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f)
     (hf2 : Integrable (fun x => f x ^ 2) (gaussianReal 0 1))

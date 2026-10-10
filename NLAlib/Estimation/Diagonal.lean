@@ -27,7 +27,8 @@ namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The row selector: row `i` of `A`, all other rows zero. Its quadratic form is
-`zᵢ (A z)ᵢ`. Atlas: `diagonal-estimator` (helper). -/
+`zᵢ (A z)ᵢ`. Atlas: `diagonal-estimator` (helper).
+atlas: trace-estimators-def -/
 def rowSelector (A : Matrix n n ℝ) (i : n) : Matrix n n ℝ :=
   Matrix.of fun k j => if k = i then A i j else 0
 
@@ -70,7 +71,8 @@ variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasu
 pairwise independent, centred and of unit second moment, then `𝔼[zᵢ (A z)ᵢ] = A_ii`.
 Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2 (eq. (2.1)). Atlas: `diagonal-estimator`;
 uses `hutchinson-unbiased`. Deviation: any isotropic vector with pairwise independent
-coordinates (the source uses Rademacher or Gaussian vectors). -/
+coordinates (the source uses Rademacher or Gaussian vectors).
+atlas: diagonal-estimator -/
 theorem integral_mul_mulVec_apply_eq (A : Matrix n n ℝ) {z : Ω → n → ℝ}
     (hz : ∀ i, MemLp (fun ω => z ω i) 2 μ)
     (hind : ∀ i j, i ≠ j → IndepFun (fun ω => z ω i) (fun ω => z ω j) μ)
@@ -84,7 +86,8 @@ centred, of unit variance and common fourth moment `m₄`, then
 `Var[zᵢ (A z)ᵢ] = ∑ⱼ A_ij² + (m₄ − 2) A_ii²`.
 Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2; derived from the Hutchinson variance
 identity (Avron–Toledo 2011 [`at11`], Lem. 5–6) for the row selector. Atlas:
-`diagonal-estimator`; uses `hutchinson-variance`. -/
+`diagonal-estimator`; uses `hutchinson-variance`.
+atlas: diagonal-estimator -/
 theorem variance_mul_mulVec_apply (A : Matrix n n ℝ) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
@@ -97,7 +100,8 @@ theorem variance_mul_mulVec_apply (A : Matrix n n ℝ) {z : Ω → n → ℝ}
 
 /-- Diagonal estimator with independent standard Gaussian coordinates: unbiased, with
 variance `∑ⱼ A_ij² + A_ii²`. Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2.
-Atlas: `diagonal-estimator`. -/
+Atlas: `diagonal-estimator`.
+atlas: diagonal-estimator -/
 theorem integral_and_variance_mul_mulVec_apply_of_standardGaussian (A : Matrix n n ℝ) {z : Ω → n → ℝ}
     (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hlaw : ∀ i, IsStandardGaussian μ (fun ω => z ω i)) (i : n) :
@@ -113,7 +117,8 @@ theorem integral_and_variance_mul_mulVec_apply_of_standardGaussian (A : Matrix n
 
 /-- Diagonal estimator with independent Rademacher coordinates: unbiased, with variance
 `∑ⱼ A_ij² − A_ii² = ∑_{j ≠ i} A_ij²`. Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2.
-Atlas: `diagonal-estimator`. -/
+Atlas: `diagonal-estimator`.
+atlas: diagonal-estimator -/
 theorem integral_and_variance_mul_mulVec_apply_of_rademacher (A : Matrix n n ℝ) {z : Ω → n → ℝ}
     (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hlaw : ∀ i, IsRademacher μ (fun ω => z ω i)) (i : n) :

@@ -19,7 +19,8 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n]
 
-/-- The quadratic form `zᵀ A z`. Atlas: `hutchinson-unbiased`, `hutchinson-variance`. -/
+/-- The quadratic form `zᵀ A z`. Atlas: `hutchinson-unbiased`, `hutchinson-variance`.
+atlas: quadform-def -/
 def quadForm (A : Matrix n n ℝ) (z : n → ℝ) : ℝ := z ⬝ᵥ (A *ᵥ z)
 
 /-- `0ᵀ A 0 = 0` (`@[simp]`). Atlas: `hutchinson-unbiased` (helper). -/

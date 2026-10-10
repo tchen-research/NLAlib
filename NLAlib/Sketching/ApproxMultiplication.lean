@@ -211,7 +211,8 @@ then for fixed `A ∈ ℝ^{n×d₁}`, `B ∈ ℝ^{n×d₂}`,
 Woodruff 2014, Thm 2.8 (the `ℓ = 2` case of the `(ε, δ, ℓ)`-JL moment property; Kane–Nelson
 2014); Sarlós 2006, Lem 6. Atlas `amm-ose`. Deviations: stated with lower Lebesgue integrals
 (no integrability hypothesis); the hypothesis is the second-moment property itself, not a tail
-bound; constant `1`. -/
+bound; constant `1`.
+atlas: amm-ose -/
 theorem lintegral_frobSq_transpose_mul_sketch_sub_le {d₁ d₂ : Type*} [Fintype d₁]
     [Fintype d₂] (S : Ωs → Matrix k n ℝ) (hS : ∀ i j, Measurable fun ω => S ω i j) {ε : ℝ}
     (hε : 0 ≤ ε)

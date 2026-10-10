@@ -127,7 +127,8 @@ independent centered real coordinates with positive scales satisfying
 `E exp(|Xᵢ|/Kᵢ)≤2`, and any positive `B` dominating those scales,
 `P(|ΣXᵢ|≥t)≤2exp(-min(t²/ΣKᵢ²,t/B)/64)` for `t≥0`.
 The family may be empty; all moment and exponential-integrability conditions are derived.
-Vershynin 2018, Theorem 2.8.4; atlas `bernstein-scalar`. -/
+Vershynin 2018, Theorem 2.8.4; atlas `bernstein-scalar`.
+atlas: bernstein-scalar -/
 theorem bernstein_sum_of_lintegral_exp_abs_le_two
     {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω] {μ : Measure Ω}
     [IsProbabilityMeasure μ] (X : ι → Ω → ℝ) (K : ι → ℝ)
@@ -160,7 +161,8 @@ theorem bernstein_sum_of_lintegral_exp_abs_le_two
 /-- Uniform-scale scalar Bernstein bound from genuine `ψ₁` exponential moments:
 `P(|ΣXᵢ|≥t)≤2exp(-min(t²/(N K²),t/K)/64)` for independent centered coordinates.
 The bound also covers the empty family. Vershynin 2018, Theorem 2.8.4;
-atlas `bernstein-scalar` (common-scale corollary). -/
+atlas `bernstein-scalar` (common-scale corollary).
+atlas: bernstein-scalar -/
 theorem bernstein_sum_of_lintegral_exp_abs_le_two_uniform
     {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω] {μ : Measure Ω}
     [IsProbabilityMeasure μ] (X : ι → Ω → ℝ) (K : ℝ)

@@ -34,7 +34,8 @@ namespace NLAlib
 /-- **Deterministic embedding criterion.** If `U` has orthonormal columns and every
 `‖SUx‖` lies between `(1 − a)‖x‖` and `(1 + a)‖x‖`, with `0 ≤ a`, `3a ≤ ε ≤ 1`, then `S` is an
 `ε`-subspace embedding for `range U` (since `(1 − a)² ≥ 1 − ε` and `(1 + a)² ≤ 1 + ε`).
-Woodruff 2014, proof of Thm 2.3; atlas `gaussian-ose` (helper; uses `ose-def`). -/
+Woodruff 2014, proof of Thm 2.3; atlas `gaussian-ose` (helper; uses `ose-def`).
+atlas: gaussian-ose -/
 theorem isSubspaceEmbedding_of_forall_sqrt_le {k m d : Type*} [Fintype k] [Fintype m]
     [Fintype d] [DecidableEq d] {S : Matrix k m ℝ} {U : Matrix m d ℝ}
     (hU : HasOrthonormalCols U) {ε a : ℝ} (hε : ε ≤ 1) (ha : 0 ≤ a) (haε : 3 * a ≤ ε)
@@ -67,7 +68,8 @@ Woodruff 2014, Thm 2.3 (stated there with unspecified constants); Martinsson–T
 §9.3. Atlas `gaussian-ose` (uses `ose-def`, `extreme-singular-values-deviation`,
 `rotation-invariance`). Deviations: explicit constant `18` and `2 log(2/δ)` in place of the
 atlas's `C` and `log(1/δ)`; the probability is an outer-measure lower bound (no measurability of
-the embedding event is claimed); `d = 0` holds trivially. -/
+the embedding event is claimed); `d = 0` holds trivially.
+atlas: gaussian-ose -/
 theorem one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix {k m d : ℕ}
     (U : Matrix (Fin m) (Fin d) ℝ) (hU : HasOrthonormalCols U) {ε δ : ℝ}
     (hε0 : 0 < ε) (hε1 : ε ≤ 1) (hδ0 : 0 < δ) (hδ1 : δ ≤ 1)

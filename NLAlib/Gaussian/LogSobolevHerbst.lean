@@ -24,7 +24,8 @@ namespace NLAlib
 /-- A probability measure satisfies the Euclidean logarithmic Sobolev inequality with
 constant `c` if `Ent(g²)≤2c∫|∇g|²` for every `C¹` test function whose displayed integrals
 are finite. The gradient is the standard coordinate Dirichlet form.
-Ledoux 2001, Theorem 5.1; atlas `herbst` (general LSI premise). -/
+Ledoux 2001, Theorem 5.1; atlas `herbst` (general LSI premise).
+atlas: gaussian-log-sobolev -/
 structure HasEuclideanLogSobolev {ι : Type*} [Fintype ι] [DecidableEq ι]
     (μ : Measure (ι → ℝ)) (c : ℝ) : Prop where
   constant_nonneg : 0 ≤ c
@@ -447,7 +448,8 @@ theorem integrable_of_logSobolev_of_lipschitz
 Euclidean LSI with constant `c`, every `L`-Lipschitz real observable is integrable and its
 centered MGF is sub-Gaussian with variance proxy `cL²`. No smoothness, finite-moment or
 exponential-integrability assumption is imposed on the observable.
-Ledoux 2001, Theorem 5.3; atlas `herbst`. -/
+Ledoux 2001, Theorem 5.3; atlas `herbst`.
+atlas: herbst -/
 theorem integrable_and_hasSubgaussianMGF_of_logSobolev
     {ι : Type*} [Fintype ι] [DecidableEq ι] {μ : Measure (ι → ℝ)}
     [IsProbabilityMeasure μ] {c : ℝ} (hLSI : HasEuclideanLogSobolev μ c)
@@ -521,7 +523,8 @@ theorem integrable_and_hasSubgaussianMGF_of_logSobolev
 /-- General LSI gives the one-sided Herbst concentration inequality
 `P(f≥Ef+t)≤exp(-t²/(2cL²))` for every nonnegative threshold. Observable integrability
 and all exponential moments are proved by the preceding theorem.
-Ledoux 2001, Theorem 5.3; atlas `herbst`. -/
+Ledoux 2001, Theorem 5.3; atlas `herbst`.
+atlas: herbst -/
 theorem measure_ge_le_of_logSobolev
     {ι : Type*} [Fintype ι] [DecidableEq ι] {μ : Measure (ι → ℝ)}
     [IsProbabilityMeasure μ] {c : ℝ} (hLSI : HasEuclideanLogSobolev μ c)
@@ -543,7 +546,8 @@ theorem measure_ge_le_of_logSobolev
 /-- The product standard Gaussian measure satisfies the genuine Euclidean LSI premise
 with constant one. This bridge uses the already proved Dirichlet inequality; the generic
 Herbst proof above does not use Gaussian exponential-integrability facts.
-Gross 1975; Ledoux 2001, Theorem 5.1; atlas `gaussian-log-sobolev`, `herbst`. -/
+Gross 1975; Ledoux 2001, Theorem 5.1; atlas `gaussian-log-sobolev`, `herbst`.
+atlas: herbst -/
 theorem hasEuclideanLogSobolev_pi_gaussianReal {ι : Type*} [Fintype ι] [DecidableEq ι] :
     HasEuclideanLogSobolev (Measure.pi fun _ : ι => gaussianReal 0 1) 1 := by
   refine ⟨by norm_num, ?_⟩

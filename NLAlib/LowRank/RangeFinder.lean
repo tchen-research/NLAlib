@@ -64,7 +64,8 @@ theorem mul_eq_mul_add_mul_of_eq_add {A : Matrix m n ℝ} {U₁ : Matrix m (Fin 
 omit [Fintype q] [DecidableEq q] in
 /-- The rank-`≤ k` competitor `Z = AΩΩ₁†V₁ᵀ` satisfies `A − Z = U₂Σ₂V₂ᵀ − U₂Σ₂Ω₂Ω₁†V₁ᵀ`
 and hence `‖A − Z‖_F² = ‖Σ₂‖_F² + ‖Σ₂Ω₂Ω₁†‖_F²` (HMT 2011, proof of Thm 9.1; Chen–Persson,
-proof of `prop:hmt-struct`). Atlas `hmt-9-1-frobenius`. -/
+proof of `prop:hmt-struct`). Atlas `hmt-9-1-frobenius`.
+atlas: hmt-9-1-frobenius -/
 theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}
     {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}
     {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}
@@ -108,7 +109,8 @@ Deviations from the printed statement: the SVD is a block decomposition with onl
 hypotheses the proof uses (`U₂ᵀU₂ = I`, `V₁ᵀV₁ = I`, `V₂ᵀV₂ = I`, `V₁ᵀV₂ = 0`; no diagonality,
 no conditions on `U₁`); `P_Y` is `QQᵀ` for any orthonormal `Q` with `range(AΩ) ⊆ range(Q)`
 (HMT take `range Q = range(AΩ)`); index types are arbitrary `Fintype`s. Atlas
-`hmt-9-1-frobenius`. -/
+`hmt-9-1-frobenius`.
+atlas: hmt-9-1-frobenius -/
 theorem frobSq_residual_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}
     {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}
     {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}
@@ -129,7 +131,8 @@ theorem frobSq_residual_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Matrix m
 LRA `hmt_third`): under the hypotheses of `frobSq_residual_le_of_range_subset`, for any best
 rank-`k` approximation `Y` of `QᵀA`, `‖A − QY‖_F² ≤ ‖Σ₂‖_F² + ‖Σ₂Ω₂Ω₁†‖_F²`. Here `k` is the
 number of columns of `V₁`. Deviation: index types other than `Fin k` are arbitrary `Fintype`s.
-Atlas `hmt-9-1-frobenius` (truncated variant). -/
+Atlas `hmt-9-1-frobenius` (truncated variant).
+atlas: hmt-9-1-frobenius -/
 theorem frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset {A : Matrix m n ℝ}
     {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ}
     {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}
@@ -172,7 +175,8 @@ theorem sub_mul_sq_le_sum_Ico_sq (σ : ℕ → ℝ) (hσ : Antitone σ) (hpos : 
   rwa [Finset.sum_const, Nat.card_Ico, nsmul_eq_mul, Nat.cast_sub hk] at h1
 
 /-- `σ_{ℓ+1}² ≤ (ℓ − k)⁻¹ ∑_{j=k+1}^{ℓ} σ_j²` for `k < ℓ` (Chen–Persson `eq:tGN-tail`, first
-inequality). Atlas `sigma-tail-bound`. -/
+inequality). Atlas `sigma-tail-bound`.
+atlas: sigma-tail-bound -/
 theorem sq_le_sum_Ico_sq_div (σ : ℕ → ℝ) (hσ : Antitone σ) (hpos : ∀ j, 0 ≤ σ j) {k ℓ : ℕ}
     (hk : k < ℓ) : σ ℓ ^ 2 ≤ (∑ j ∈ Finset.Ico k ℓ, σ j ^ 2) / ((ℓ : ℝ) - k) := by
   have hpos' : (0 : ℝ) < (ℓ : ℝ) - k := by
@@ -185,7 +189,8 @@ theorem sq_le_sum_Ico_sq_div (σ : ℕ → ℝ) (hσ : Antitone σ) (hpos : ∀ 
 `tail_bound`): for a nonincreasing nonnegative `σ`, `ℓ = ⌈t/2⌉ = (t + 1)/2`, `4k ≤ t`, `0 < t`
 and `ℓ ≤ N`, `σ_{ℓ+1}² ≤ (4/t) ∑_{j=k+1}^{N} σ_j²`. With `N = min(m, n)` and `σ` the singular
 values the right-hand sum is `‖A − ⟦A⟧ₖ‖_F²` (see
-`sq_singularValues_le_four_div_mul_sum_Ico_sq`). Atlas `sigma-tail-bound`. -/
+`sq_singularValues_le_four_div_mul_sum_Ico_sq`). Atlas `sigma-tail-bound`.
+atlas: sigma-tail-bound -/
 theorem sq_le_four_div_mul_sum_Ico_sq (σ : ℕ → ℝ) (hσ : Antitone σ) (hpos : ∀ j, 0 ≤ σ j)
     {k ℓ t N : ℕ} (ht : 0 < t) (hℓ : ℓ = (t + 1) / 2) (hk : 4 * k ≤ t) (hN : ℓ ≤ N) :
     σ ℓ ^ 2 ≤ (4 / t) * ∑ j ∈ Finset.Ico k N, σ j ^ 2 := by

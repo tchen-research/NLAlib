@@ -22,7 +22,8 @@ namespace NLAlib
 
 /-- Gaussian integration by parts for an unbounded differentiable function whose
 value, coordinate product, and derivative are integrable. Source: Stein 1981,
-Lemma 1; atlas gaussian-integration-by-parts (operator hard-edge helper). -/
+Lemma 1; atlas gaussian-integration-by-parts (operator hard-edge helper).
+atlas: gaussian-integration-by-parts -/
 theorem integral_mul_eq_integral_deriv_gaussianReal_of_integrable
     (h : ℝ → ℝ) (hh : Differentiable ℝ h)
     (hhi : Integrable h (gaussianReal 0 1))
@@ -60,7 +61,8 @@ theorem integral_mul_eq_integral_deriv_gaussianReal_of_integrable
 
 /-- Coordinate Stein identity on a finite product of standard Gaussian laws.
 Source: scalar Gaussian integration by parts and one-coordinate resampling;
-atlas gaussian-integration-by-parts and wishart-lambda-min-tail. -/
+atlas gaussian-integration-by-parts and wishart-lambda-min-tail.
+atlas: gaussian-integration-by-parts -/
 theorem integral_coordinate_mul_eq_integral_gaussian_of_hasDerivAt_update
     {ι : Type*} [Fintype ι] [DecidableEq ι] (f : (ι → ℝ) → ℝ)
     (df : (ι → ℝ) → ℝ) (i : ι)
@@ -116,7 +118,8 @@ theorem integral_coordinate_mul_eq_integral_gaussian_of_hasDerivAt_update
 
 /-- The coordinate Stein identity written using the Fréchet derivative of a
 differentiable function. Source: scalar Gaussian integration by parts and
-coordinate resampling; atlas gaussian-integration-by-parts. -/
+coordinate resampling; atlas gaussian-integration-by-parts.
+atlas: gaussian-integration-by-parts -/
 theorem integral_coordinate_mul_eq_integral_fderiv_gaussian
     {ι : Type*} [Fintype ι] [DecidableEq ι] (f : (ι → ℝ) → ℝ)
     (hf : Differentiable ℝ f) (i : ι)

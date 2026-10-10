@@ -145,7 +145,8 @@ private theorem frobSq_projection_residual_le {m n : Type*}
 
 /-- The squared singular-value tail after deleting the first `k` singular
 values. Padding includes rectangular null directions and zero dimensions.
-Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
+Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
+atlas: best-rank-approx-def -/
 def singularValueTailSq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) : ℝ :=
   ∑ i : Fin m, if k ≤ (i : ℕ) then singularValues A i ^ 2 else 0
 
@@ -231,7 +232,8 @@ private theorem card_fin_head_le (m k : ℕ) :
 
 /-- Truncate a given real SVD after its first `k` singular values. The index
 may exceed either matrix dimension; in that case padding handles the cutoff.
-Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
+Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
+atlas: best-rank-approx-def -/
 def IsSVD.truncatedMatrix {m n : ℕ} {A : Matrix (Fin m) (Fin n) ℝ}
     {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ}
     (_h : IsSVD A U V) (k : ℕ) : Matrix (Fin m) (Fin n) ℝ :=
@@ -302,12 +304,14 @@ theorem IsSVD.isBestRankApprox_truncatedMatrix {m n : ℕ} {A : Matrix (Fin m) (
 
 /-- A concrete rank-`k` truncated SVD, using an SVD chosen from the proved
 existence theorem. No best-approximation assumption enters the definition.
-Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
+Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
+atlas: best-rank-approx-def -/
 def truncatedSVD {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     Matrix (Fin m) (Fin n) ℝ := (exists_isSVD A).choose_spec.choose_spec.truncatedMatrix k
 
 /-- The constructed truncated SVD is a best rank-at-most-`k` approximation.
-Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
+Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
+atlas: eckart-young-frobenius -/
 theorem isBestRankApprox_truncatedSVD {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     IsBestRankApprox k A (truncatedSVD A k) := by
   unfold truncatedSVD
@@ -323,14 +327,16 @@ theorem frobSq_sub_truncatedSVD_eq_singularValueTailSq {m n : ℕ}
 
 /-- The actual rank-constrained optimal squared Frobenius error, as an
 infimum over all feasible matrices. Eckart–Young proves it is attained.
-Atlas `eckart-young`; intended for relative RSVD/GN error statements. -/
+Atlas `eckart-young`; intended for relative RSVD/GN error statements.
+atlas: best-rank-approx-def -/
 def bestRankFrobSq {m n : Type*} [Fintype m] [Fintype n]
     (k : ℕ) (A : Matrix m n ℝ) : ℝ :=
   sInf {v : ℝ | ∃ B : Matrix m n ℝ, B.rank ≤ k ∧ v = frobSq (A - B)}
 
 /-- The genuine optimal rank-`k` squared Frobenius error equals the spectral
 tail. All ranks, rectangular shapes and zero dimensions are included.
-Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
+Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
+atlas: eckart-young-frobenius -/
 theorem bestRankFrobSq_eq_singularValueTailSq {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     bestRankFrobSq k A = singularValueTailSq A k := by
@@ -350,7 +356,8 @@ theorem bestRankFrobSq_eq_singularValueTailSq {m n : ℕ}
     exact singularValueTailSq_le_frobSq_sub_of_rank_le A B k hB
 
 /-- The explicit truncated SVD attains the actual rank-constrained optimum.
-Atlas `eckart-young`; a direct bridge to relative best-rank error bounds. -/
+Atlas `eckart-young`; a direct bridge to relative best-rank error bounds.
+atlas: eckart-young-frobenius -/
 theorem frobSq_sub_truncatedSVD_eq_bestRankFrobSq {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedSVD A k) = bestRankFrobSq k A := by
@@ -405,7 +412,8 @@ theorem IsSVD.specNorm_sub_truncatedMatrix {m n : ℕ} {A : Matrix (Fin m) (Fin 
 
 /-- **Spectral Eckart–Young, attainment.** `‖A − truncatedSVD A k‖₂ = σ_k(A)` (zero-indexed;
 `0` when `k ≥ min m n`). Horn–Johnson 2013, Thm 7.4.9.1 (spectral case); HMT 2011, eq. (2.3);
-audit G0 C3; atlas `eckart-young`. -/
+audit G0 C3; atlas `eckart-young`.
+atlas: eckart-young -/
 theorem specNorm_sub_truncatedSVD_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     specNorm (A - truncatedSVD A k) = singularValues A k := by
   unfold truncatedSVD

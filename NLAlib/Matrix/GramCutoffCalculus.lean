@@ -34,7 +34,8 @@ theorem sigmaMin_transpose_eq_zero_of_not_posDef_gram (G : Matrix ι κ ℝ)
 on every matrix, including the rank-deficient domain. The singular case is proved
 by local vanishing, not by differentiating the total inverse there.
 Source: the user's unshifted cutoff operator route;
-atlas wishart-lambda-min-tail (Stein calculus helper). -/
+atlas wishart-lambda-min-tail (Stein calculus helper).
+atlas: gram-cutoff-vector-field -/
 theorem hasDerivAt_test_mul_unshiftedGramGradient_single [Nonempty ι]
     (n : ℕ) (hn : 0 < n) (ψ : ℝ → ℝ) (hψ : ContDiff ℝ ∞ ψ)
     (hψc : HasCompactSupport ψ) (hψs : tsupport ψ ⊆ Ioi 0)
@@ -118,7 +119,8 @@ theorem abs_inversePowerSoftMinSecond_le_cutoff [Nonempty ι]
 /-- On an active positive cutoff, a second coordinate Gram derivative grows at
 most linearly in Gaussian Frobenius size. Positive cutoff alone forces the Gram
 matrix to be positive definite. Source: the unshifted operator cutoff argument;
-atlas wishart-lambda-min-tail (Stein domination helper). -/
+atlas wishart-lambda-min-tail (Stein domination helper).
+atlas: gram-cutoff-vector-field -/
 theorem abs_gramSoftMinSecond_unshifted_single_le_cutoff [Nonempty ι]
     (n : ℕ) (hn : 0 < n) (G : Matrix ι κ ℝ) (i : ι) (j : κ)
     (a b : ℝ) (ha : 0 < a) (hlow : a ≤ inversePowerSoftMin n (G * Gᵀ))

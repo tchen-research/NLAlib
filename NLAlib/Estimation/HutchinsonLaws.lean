@@ -128,7 +128,8 @@ Hutchinson unbiasedness for every real square matrix. The diagonal second moment
 force square integrability, so the cross moments and quadratic form are genuine
 integrals. Independence and zero means are unnecessary; arbitrary measures and empty
 index types are included. Source: Hutchinson 1989; Avron–Toledo 2011, §2;
-atlas `hutchinson-unbiased` (general second-moment form). -/
+atlas `hutchinson-unbiased` (general second-moment form).
+atlas: hutchinson-unbiased -/
 theorem integrable_and_integral_quadForm_eq_trace_of_second_moments [DecidableEq n]
     (A : Matrix n n ℝ) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
@@ -156,7 +157,8 @@ theorem integrable_and_integral_quadForm_eq_trace_of_second_moments [DecidableEq
 
 /-- Hutchinson unbiasedness for mutually independent standard Gaussian coordinates.
 All moment conditions follow from the laws. Avron–Toledo 2011, Lemma 5;
-atlas `hutchinson-unbiased`. -/
+atlas `hutchinson-unbiased`.
+atlas: hutchinson-unbiased -/
 theorem integral_quadForm_eq_trace_of_standardGaussian (A : Matrix n n ℝ)
     {z : Ω → n → ℝ} (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
@@ -169,7 +171,8 @@ theorem integral_quadForm_eq_trace_of_standardGaussian (A : Matrix n n ℝ)
 
 /-- Hutchinson unbiasedness for mutually independent Rademacher coordinates.
 All moment conditions follow from the laws. Hutchinson 1989; Avron–Toledo 2011, Lemma 6;
-atlas `hutchinson-unbiased`. -/
+atlas `hutchinson-unbiased`.
+atlas: hutchinson-unbiased -/
 theorem integral_quadForm_eq_trace_of_rademacher (A : Matrix n n ℝ)
     {z : Ω → n → ℝ} (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
@@ -194,7 +197,8 @@ theorem variance_quadForm_of_standardGaussian [DecidableEq n] (A : Matrix n n �
     (fun i => (hf i).2.2.1) (fun i => (hf i).2.2.2.1) (fun i => (hf i).2.2.2.2)
 
 /-- Symmetric Gaussian Hutchinson variance from actual coordinate laws:
-`Var(zᵀAz) = 2‖A‖F²`. Avron–Toledo 2011, Lemma 5; atlas `hutchinson-variance`. -/
+`Var(zᵀAz) = 2‖A‖F²`. Avron–Toledo 2011, Lemma 5; atlas `hutchinson-variance`.
+atlas: hutchinson-variance -/
 theorem variance_quadForm_of_isSymm_of_standardGaussian [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.IsSymm) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
@@ -208,7 +212,8 @@ theorem variance_quadForm_of_isSymm_of_standardGaussian [DecidableEq n]
 
 /-- Symmetric Rademacher Hutchinson variance from actual coordinate laws:
 `Var(zᵀAz) = 2(‖A‖F² − ∑ Aᵢᵢ²)`. Hutchinson 1989; Avron–Toledo 2011, Lemma 6;
-atlas `hutchinson-variance`. -/
+atlas `hutchinson-variance`.
+atlas: hutchinson-variance -/
 theorem variance_quadForm_of_isSymm_of_rademacher [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.IsSymm) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
@@ -223,7 +228,8 @@ theorem variance_quadForm_of_isSymm_of_rademacher [DecidableEq n]
 /-- Complete symmetric Gaussian Hutchinson specialization: independence and the actual
 coordinate laws imply unbiasedness and variance `2‖A‖F²`, with no measurability, moment or
 integrability side assumptions. Avron–Toledo 2011, Lemma 5;
-atlas `hutchinson-unbiased`, `hutchinson-variance`. -/
+atlas `hutchinson-unbiased`, `hutchinson-variance`.
+atlas: hutchinson-unbiased, hutchinson-variance -/
 theorem hutchinson_of_standardGaussian [DecidableEq n] {A : Matrix n n ℝ} (hA : A.IsSymm)
     {z : Ω → n → ℝ} (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hlaw : ∀ i, IsStandardGaussian μ (fun ω => z ω i)) :
@@ -236,7 +242,8 @@ theorem hutchinson_of_standardGaussian [DecidableEq n] {A : Matrix n n ℝ} (hA 
 /-- Complete symmetric Rademacher Hutchinson specialization: independence and the actual
 coordinate laws imply unbiasedness and variance `2(‖A‖F²−∑ Aᵢᵢ²)`, with no measurability,
 moment or integrability side assumptions. Hutchinson 1989; Avron–Toledo 2011, Lemma 6;
-atlas `hutchinson-unbiased`, `hutchinson-variance`. -/
+atlas `hutchinson-unbiased`, `hutchinson-variance`.
+atlas: hutchinson-unbiased, hutchinson-variance -/
 theorem hutchinson_of_rademacher [DecidableEq n] {A : Matrix n n ℝ} (hA : A.IsSymm)
     {z : Ω → n → ℝ} (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hlaw : ∀ i, IsRademacher μ (fun ω => z ω i)) :
@@ -327,7 +334,8 @@ theorem integral_quadForm_gaussianMatrix_column (A : Matrix (Fin n) (Fin n) ℝ)
   exact (measurePreserving_gaussianMatrix_entry i 0).map_eq
 
 /-- Symmetric Hutchinson variance for the column of an actual standard Gaussian matrix.
-Avron–Toledo 2011, Lemma 5; atlas `hutchinson-variance`. -/
+Avron–Toledo 2011, Lemma 5; atlas `hutchinson-variance`.
+atlas: hutchinson-variance -/
 theorem variance_quadForm_gaussianMatrix_column {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.IsSymm) :
     Var[fun G => quadForm A (fun i => G i 0); gaussianMatrix n 1] = 2 * frobSq A := by

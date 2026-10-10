@@ -443,7 +443,8 @@ processes indexed by a finite set, with equal variances `𝔼 Xₜ² = 𝔼 Yₜ
 increments `𝔼 (Xₛ - Xₜ)² ≤ 𝔼 (Yₛ - Yₜ)²`. Then for every `τ`,
 `P(τ < maxₜ Xₜ) ≤ Q(τ < maxₜ Yₜ)`.
 Source: Slepian 1962; Vershynin 2018, Thm 7.2.1. Atlas: `slepian`. Ported from Prove2me solution
-`GaussianMatrix.slepian_tail_comparison`. -/
+`GaussianMatrix.slepian_tail_comparison`.
+atlas: slepian -/
 theorem slepian_inequality {ι Ω Ω' : Type*} [Fintype ι] [MeasurableSpace Ω]
     [MeasurableSpace Ω'] {P : Measure Ω} {Q : Measure Ω'} (X : ι → Ω → ℝ) (Y : ι → Ω' → ℝ)
     (hX : HasGaussianLaw (fun ω t => X t ω) P) (hY : HasGaussianLaw (fun ω t => Y t ω) Q)

@@ -22,7 +22,8 @@ namespace NLAlib
 
 /-- The spectral norm of a real symmetric matrix is the supremum norm of
 its eigenvalue list. Source: Mathlib's spectral theorem and unitary norm
-invariance. Atlas: `inverse-wishart-spectral-moment` (helper). -/
+invariance. Atlas: `inverse-wishart-spectral-moment` (helper).
+atlas: quadratic-probe-spectral-detection -/
 theorem specNorm_eq_norm_eigenvalues {ι : Type*} [Fintype ι] [DecidableEq ι]
     {A : Matrix ι ι ℝ} (hA : A.IsHermitian) : specNorm A = ‖hA.eigenvalues‖ := by
   unfold specNorm
@@ -49,7 +50,8 @@ theorem specNorm_le_trace_of_posSemidef {ι : Type*} [Fintype ι] [DecidableEq �
 
 /-- A positive semidefinite real matrix has a unit eigenvector with
 eigenvalue equal to its spectral norm. Source: finite-dimensional spectral
-theorem. Atlas: `inverse-wishart-spectral-moment` (helper). -/
+theorem. Atlas: `inverse-wishart-spectral-moment` (helper).
+atlas: quadratic-probe-spectral-detection -/
 theorem exists_unit_mulVec_eq_specNorm_smul {ι : Type*} [Fintype ι] [DecidableEq ι]
     [Nonempty ι] {A : Matrix ι ι ℝ} (hA : A.PosSemidef) :
     ∃ v : ι → ℝ, v ⬝ᵥ v = 1 ∧ A *ᵥ v = specNorm A • v := by
@@ -70,7 +72,8 @@ theorem exists_unit_mulVec_eq_specNorm_smul {ι : Type*} [Fintype ι] [Decidable
 /-- The quadratic form of a positive semidefinite matrix dominates a
 unit rank-one probe scaled by its spectral norm. Source: direct
 quadratic-probe proof; expand positivity at `z - (v ⋅ z) v` for a top
-eigenvector. Atlas: `inverse-wishart-spectral-moment` (helper). -/
+eigenvector. Atlas: `inverse-wishart-spectral-moment` (helper).
+atlas: quadratic-probe-spectral-detection -/
 theorem exists_unit_specNorm_mul_dotProduct_sq_le {ι : Type*} [Fintype ι]
     [DecidableEq ι] [Nonempty ι] {A : Matrix ι ι ℝ} (hA : A.PosSemidef) :
     ∃ v : ι → ℝ, v ⬝ᵥ v = 1 ∧

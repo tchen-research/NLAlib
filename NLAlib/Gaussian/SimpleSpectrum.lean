@@ -48,7 +48,8 @@ private lemma eval_resultant_charpoly_self_mul_transpose (r k : ℕ)
 
 /-- A wide Gaussian Gram matrix has separable characteristic polynomial
 almost surely. Source: nonzero resultant polynomial and Gaussian polynomial
-zero sets; atlas `gaussian-simple-spectrum`. Includes the empty row dimension. -/
+zero sets; atlas `gaussian-simple-spectrum`. Includes the empty row dimension.
+atlas: gaussian-simple-spectrum -/
 theorem ae_charpoly_separable_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r ≤ k) :
     ∀ᵐ G ∂(gaussianMatrix r k), (Matrix.of G * (Matrix.of G)ᵀ).charpoly.Separable := by
   classical
@@ -111,7 +112,8 @@ theorem ae_charpoly_separable_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk
 
 /-- The eigenvalues of a wide Gaussian Gram matrix are pairwise distinct
 almost surely. Source: separable characteristic polynomial and the finite
-spectral theorem; atlas `gaussian-simple-spectrum`. No density formula is used. -/
+spectral theorem; atlas `gaussian-simple-spectrum`. No density formula is used.
+atlas: gaussian-simple-spectrum -/
 theorem ae_injective_eigenvalues_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r ≤ k) :
     ∀ᵐ G ∂(gaussianMatrix r k), Function.Injective
       ((Matrix.posSemidef_self_mul_conjTranspose (Matrix.of G)).isHermitian.eigenvalues) := by

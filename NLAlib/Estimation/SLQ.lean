@@ -38,7 +38,8 @@ variable {r : Type*} [Fintype r] [DecidableEq r]
 `(1/m) ∑ₖ (Q_kᵀ g_k)ᵀ f(Q_kᵀ A Q_k) (Q_kᵀ g_k)` with test vectors `g_k = G(·, k)` and bases
 `Q_k`. With the Lanczos basis, `Q_kᵀ g_k = ‖g_k‖ e₁` and the summand is `‖g_k‖² f(T_k)₁₁`.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], eq. (5). Atlas: `slq-error`.
-Deviation: any bases `Q_k` (the error theorems require `K_q(A, g_k) ⊆ range Q_k`). -/
+Deviation: any bases `Q_k` (the error theorems require `K_q(A, g_k) ⊆ range Q_k`).
+atlas: trace-estimators-def -/
 def slqEstimate (A : Matrix n n ℝ) (f : ℝ → ℝ) (Q : κ → Matrix n r ℝ) (G : n → κ → ℝ) : ℝ :=
   (∑ k, ((Q k)ᵀ *ᵥ fun i => G i k) ⬝ᵥ
     (cfc f ((Q k)ᵀ * A * Q k) *ᵥ ((Q k)ᵀ *ᵥ fun i => G i k))) / Fintype.card κ
@@ -78,7 +79,8 @@ theorem abs_slqEstimate_sub_hutchinsonEstimate_le {A : Matrix n n ℝ} (hA : A.I
 `|SLQ(1/x) − tr_m(f(A))| ≤ 2 (2/a) ((√b − √a)/(√b + √a))^{2q} · tr_m(I)` with `f(A) = cfc (1/x) A`
 (`= A⁻¹`). Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 and §4.2 (inverse); the rate is the
 CG/Chebyshev rate of `inverse-polynomial-approx`. Atlas: `slq-error`; uses
-`lanczos-gauss-quadrature`, `inverse-polynomial-approx`. -/
+`lanczos-gauss-quadrature`, `inverse-polynomial-approx`.
+atlas: slq-error (partial) -/
 theorem abs_slqEstimate_inv_sub_hutchinsonEstimate_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {a b : ℝ} (ha : 0 < a) (hab : a < b) (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a b)
     {Q : κ → Matrix n r ℝ} (hQ : ∀ k, HasOrthonormalCols (Q k)) (G : n → κ → ℝ) {q : ℕ}
@@ -108,7 +110,8 @@ vectors), and `Q(ω)_k` orthonormal with `K_q(A, g_k) ⊆ range Q(ω)_k`, `q ≥
   + 2exp(−c min(m s²/n, m s))`, where `f(A) = cfc (1/x) A = A⁻¹`.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 (with Hanson–Wright in place of their
 Rademacher tail; constants differ). Atlas: `slq-error` (case `f = 1/x`); uses
-`lanczos-gauss-quadrature`, `hutchinson-tail`, `inverse-polynomial-approx`. -/
+`lanczos-gauss-quadrature`, `hutchinson-tail`, `inverse-polynomial-approx`.
+atlas: slq-error (partial) -/
 theorem measure_le_abs_slqEstimate_inv_sub_trace_le_of_standardGaussian [Nonempty n]
     [Nonempty κ] [DecidableEq κ] {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     [IsProbabilityMeasure μ] {A : Matrix n n ℝ} (hA : A.IsHermitian) {a b : ℝ} (ha : 0 < a)

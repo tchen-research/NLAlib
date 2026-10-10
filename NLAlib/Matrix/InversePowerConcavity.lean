@@ -63,7 +63,8 @@ theorem trace_mul_diagonal_pow_mul_mul_diagonal_pow (B : Matrix ι ι ℝ)
 
 /-- The quadratic kernel arising as the second derivative of an inverse
 trace power. Source: finite noncommutative power rule; atlas
-`wishart-lambda-min-tail` (operator calculus helper). -/
+`wishart-lambda-min-tail` (operator calculus helper).
+atlas: inverse-power-gram-def -/
 def inversePowerHessianKernel (R B : Matrix ι ι ℝ) (n : ℕ) : ℝ :=
   ∑ i ∈ Finset.range (n + 1),
     Matrix.trace (R ^ (n - i + 1) * B * R ^ (i + 1) * B)
@@ -154,18 +155,21 @@ theorem trace_pow_pos_of_posDef [Nonempty ι] {R : Matrix ι ι ℝ}
 
 /-- Resolvent approximation to the smallest eigenvalue: the negative
 `n`th root of the inverse-power trace. Source: operator tail proof; atlas
-`wishart-lambda-min-tail` (operator calculus helper). -/
+`wishart-lambda-min-tail` (operator calculus helper).
+atlas: inverse-power-gram-def -/
 def inversePowerSoftMin (n : ℕ) (A : Matrix ι ι ℝ) : ℝ :=
   Matrix.trace (A⁻¹ ^ n) ^ (-(n : ℝ)⁻¹)
 
 /-- First directional derivative of the resolvent approximation. Source:
-operator tail proof; atlas `wishart-lambda-min-tail` (operator calculus helper). -/
+operator tail proof; atlas `wishart-lambda-min-tail` (operator calculus helper).
+atlas: inverse-power-gram-def -/
 def inversePowerSoftMinFirst (n : ℕ) (A B : Matrix ι ι ℝ) : ℝ :=
   Matrix.trace (A⁻¹ ^ n) ^ (-(n : ℝ)⁻¹ - 1) * Matrix.trace (A⁻¹ ^ (n + 1) * B)
 
 /-- Positive semidefinite gradient weight for the resolvent approximation.
 Source: operator tail proof; atlas `wishart-lambda-min-tail` (operator
-calculus helper). -/
+calculus helper).
+atlas: inverse-power-gram-def -/
 def inversePowerSoftMinWeight (n : ℕ) (A : Matrix ι ι ℝ) : Matrix ι ι ℝ :=
   Matrix.trace (A⁻¹ ^ n) ^ (-(n : ℝ)⁻¹ - 1) • A⁻¹ ^ (n + 1)
 
@@ -227,7 +231,8 @@ theorem trace_inversePowerSoftMinWeight_le_one [Nonempty ι] (n : ℕ) (hn : 0 <
   exact (mul_le_mul_of_nonneg_left hnext (Real.rpow_nonneg hT.le _)).trans_eq heq
 
 /-- Second directional derivative of the resolvent approximation. Source:
-operator tail proof; atlas `wishart-lambda-min-tail` (operator calculus helper). -/
+operator tail proof; atlas `wishart-lambda-min-tail` (operator calculus helper).
+atlas: inverse-power-gram-def -/
 def inversePowerSoftMinSecond (n : ℕ) (A B : Matrix ι ι ℝ) : ℝ :=
   ((n : ℝ) + 1) * Matrix.trace (A⁻¹ ^ n) ^ (-(n : ℝ)⁻¹ - 2) *
       Matrix.trace (A⁻¹ ^ (n + 1) * B) ^ 2 -

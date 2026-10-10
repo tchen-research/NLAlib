@@ -40,8 +40,10 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
 - One concept per file, under about 500 lines, `UpperCamelCase.lean`, with a module docstring
   `/-! # Title … -/` that says what the file provides and names the atlas ids it realises.
 - Layers (a module imports only its own layer and lower; `scripts/check_layers.py`):
-  −1 `ForMathlib` · 0 `Matrix`, `Polynomial` · 1 `Concentration` · 2 `Gaussian` · 3 `Sketching` · 4 `LowRank`,
-  `Estimation`, `Krylov` · 5 `Solvers`.
+  −1 `ForMathlib` · 0 `Matrix`, `Polynomial` · 1 `Concentration`, `Krylov` · 2 `Gaussian` · 3 `Sketching` ·
+  4 `LowRank`, `Estimation` · 5 `Solvers`. `Krylov` is the deterministic theory (Krylov spaces,
+  Lanczos, CG, Gauss quadrature); randomized Krylov guarantees live with their consumers in
+  `LowRank` and `Estimation`.
 - `NLAlib/ForMathlib/` holds general facts that are not about NLAlib's objects and are candidates
   for upstreaming (real inequalities, integrability of finite suprema, measure-preserving
   coordinate updates, `det ≠ 0` from full rank). Files are named after the Mathlib directory they
@@ -81,6 +83,10 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   theorems. General form first, corollaries after.
 - Every hypothesis explicit; no `axiom`, no `native_decide`; `sorry` only in a named scaffold
   (docstring `SCAFFOLD: <atlas id>`, catalogued).
+- Scaffolding well-known theorems is encouraged, not merely tolerated: a confidently stated
+  textbook or published result may enter as a scaffold (or as an explicit hypothesis, atlas
+  `assumed`) so that the tree below it can be built now. The statement must be checked with the
+  same care as a proved one, since a wrong assumption propagates to every consumer.
 
 ## 4. Docstrings
 

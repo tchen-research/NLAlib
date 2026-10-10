@@ -14,10 +14,10 @@ in `atlas/atlas.json` in your first PR (a one-line change is fine).
 | Layer | Directory | May import |
 |---|---|---|
 | 0 | `NLAlib/Matrix/`, `NLAlib/Polynomial/` | Mathlib, `ForMathlib` |
-| 1 | `NLAlib/Concentration/` | layer 0 |
+| 1 | `NLAlib/Concentration/`, `NLAlib/Krylov/` | layer 0 |
 | 2 | `NLAlib/Gaussian/` | layers 0–1 |
 | 3 | `NLAlib/Sketching/` | layers 0–2 |
-| 4 | `NLAlib/LowRank/`, `NLAlib/Estimation/`, `NLAlib/Krylov/` | layers 0–3 |
+| 4 | `NLAlib/LowRank/`, `NLAlib/Estimation/` | layers 0–3 |
 | 5 | `NLAlib/Solvers/` | everything |
 
 - **`Basic.lean` in each area holds definitions only** (plus the trivial lemmas that make them
@@ -42,9 +42,16 @@ The statement is the product; a proof can be replaced, a statement nobody can ap
 - Order and functional calculus: `open scoped MatrixOrder`, `Matrix.PosSemidef`, `cfc`.
 - Prefer Mathlib's definition. If you must define your own, ship the bridge lemma to Mathlib's
   notion in the same file.
-- Every hypothesis explicit. No `axiom`, no `sorry`, no `native_decide`. A cited fact you do not
-  prove enters as a named hypothesis of your theorem, never as a global assumption; record it in
-  the atlas as `status: assumed`.
+- Every hypothesis explicit. No `axiom`, no `native_decide`. A cited fact you do not prove enters
+  either as a named hypothesis of your theorem (atlas `status: assumed`) or as a named scaffold
+  declaration with a `sorry` body and docstring `SCAFFOLD: <atlas id>` (atlas `status: scaffold`);
+  never as a global assumption or an inline `sorry`.
+- **Assuming is encouraged.** When we are confident of a theorem's statement (a textbook result,
+  a published theorem with a clean formulation), scaffold or assume it and build downstream. The
+  point of the atlas is to fill in the tree below an open node, not to block on the node. The
+  accepted risk: if an assumed statement turns out wrong, every consumer below it is revisited;
+  the dependency graph is what makes that propagation tractable. Spend the care on getting the
+  *statement* right (source, label, degenerate cases, constants), not on avoiding the `sorry`.
 - Constants explicit, never `∃ C`. Degenerate cases match the source (Mathlib's real division by
   zero is zero; write tail expressions piecewise where the source has a side condition).
 - Give the general form, then corollaries. Two-sided results as two theorems.

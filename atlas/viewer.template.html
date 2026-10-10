@@ -100,30 +100,33 @@ ol.rank .k { font-variant-numeric: tabular-nums; color: var(--muted); font-size:
 
 /* graph */
 .graph-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; position: relative; }
-.graph-wrap svg { display: block; width: 100%; height: 620px; cursor: grab; }
+.graph-wrap svg { display: block; width: 100%; height: 720px; cursor: grab; }
 .graph-help { position: absolute; top: 8px; left: 10px; font-size: 0.78rem; color: var(--muted); background: var(--panel); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--line); }
+.lane rect { fill: var(--bg); stroke: var(--line-strong); stroke-width: 1; }
+.lane text { font-size: 12px; font-weight: 700; fill: var(--fg); letter-spacing: 0.02em; }
+.lane text .mod { font-weight: 400; fill: var(--muted); font-family: var(--font-mono, ui-monospace, monospace); }
 .gnode rect { fill: var(--panel); stroke: var(--sc); stroke-width: 1.5; }
 .gnode.s-candidate rect { stroke-dasharray: 3 2; }
 .gnode.s-scaffold rect { fill: url(#hatch); }
 .gnode.s-scaffold.hi rect { fill: var(--sc); }
 .gnode.hi rect { fill: var(--sc); }
 .gnode.hi text { fill: #fff; }
-.gnode.sel rect { stroke-width: 3; }
-.gnode.fade { opacity: 0.18; }
+.gnode.sel rect { stroke: var(--fg); stroke-width: 4; fill: var(--fg); }
+.gnode.sel text { fill: var(--bg); font-weight: 700; }
+.gnode.fade { opacity: 0.14; }
 .gnode text { fill: var(--fg); font-family: var(--font-body); font-size: 11px; pointer-events: none; }
 .gnode .glyph { font-weight: 700; }
 .gedge { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
 .gedge.e-proved { stroke: var(--st-proved); stroke-width: 1.8; }
-.gedge.e-scaffold { stroke: var(--st-stated); stroke-width: 1.6; stroke-dasharray: 6 3; }
-.gedge.e-pending { stroke: var(--line-strong); stroke-dasharray: 2 3; }
-.gedge.up { stroke: var(--accent); stroke-width: 2.4; }
-.gedge.down { stroke: var(--st-assumed); stroke-width: 2.4; }
-.gedge.fade { opacity: 0.12; }
+.gedge.e-pending { stroke: var(--line-strong); stroke-dasharray: 2 3; stroke-width: 1.4; }
+.gedge.up, .gedge.down { stroke-width: 3.2; opacity: 1; }
+.gedge.e-pending.up, .gedge.e-pending.down { stroke: var(--fg); stroke-dasharray: 3 3; }
+.gedge.fade { opacity: 0.07; }
 .glabel { fill: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
 .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
 .legend span { display: inline-flex; gap: 6px; align-items: center; }
 .legend i { display: inline-block; width: 22px; height: 0; border-top: 2px solid var(--line-strong); }
-.legend i.l-proved { border-top-color: var(--st-proved); } .legend i.l-scaffold { border-top-style: dashed; border-top-color: var(--st-stated); } .legend i.l-pending { border-top-style: dotted; }
+.legend i.l-proved { border-top-color: var(--st-proved); } .legend i.l-pending { border-top-style: dotted; }
 .lk { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
 .lk i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--line-strong); }
 .scaf { border-top: 1px solid var(--line); padding-block: 10px; display: grid; grid-template-columns: minmax(200px, 1fr) 2fr; gap: 10px 16px; }
@@ -218,12 +221,12 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   </div>
 
   <div id="tab-scaffold" hidden>
-    <p class="note" style="margin-top:12px">Every result that has a Lean statement in NLAlib, with the links its proof rests on. A link is <span class="lk"><i class="l-proved"></i>proved</span> when both ends are proved, <span class="lk"><i class="l-scaffold"></i>scaffold</span> when both ends are stated in NLAlib but one is still a <code>sorry</code>, and <span class="lk"><i class="l-pending"></i>pending</span> when the dependency has no Lean statement yet.</p>
+    <p class="note" style="margin-top:12px">Every result that has a Lean statement in NLAlib, with the links its proof rests on. A link is <span class="lk"><i class="l-proved"></i>proved</span> when the consumer's Lean proof is complete modulo its named dependencies and the dependency is stated in NLAlib or taken as an explicit hypothesis; a proved link into a result that is itself still a <code>sorry</code> is therefore possible, and so is a <span class="lk"><i class="l-pending"></i>not yet</span> link between two proved results whose connection is only in the literature.</p>
     <div class="tiles" id="linktiles" style="margin-top:12px"></div>
     <div id="scaffold"></div>
   </div>
   <div id="tab-graph" hidden>
-    <p class="note" style="margin-top:12px">Left to right follows proof dependency: a result sits one column right of everything it consumes. Solid green links are proved at both ends, dashed blue links join Lean statements where one end is still a scaffold, dotted links are pending. Click a node to trace what it needs (blue) and what it unlocks (orange). Scroll to zoom, drag to pan.</p>
+    <p class="note" style="margin-top:12px">Rows are the library's import layers, foundations at the top (0 Matrix and Polynomial) and solvers at the bottom (5); each box is one Lean module, and inside a box a result sits below the module-internal results it consumes. Solid green links are proved at both ends, dashed blue links join Lean statements where one end is still a scaffold, dotted links are pending. Click a node to highlight everything it depends on (above) and everything that depends on it (below); the rest fades. Scroll to zoom, drag to pan.</p>
     <div class="graph-wrap" style="margin-top:8px"><div class="graph-help">Fit: <kbd>F</kbd></div><svg id="g" role="img" aria-label="Dependency graph of results"><defs><pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--panel)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--st-stated)" stroke-width="2"/></pattern></defs></svg></div>
     <div class="legend" id="glegend"></div>
   </div>
@@ -270,7 +273,13 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   const usedBy = {}; A.results.forEach(r => r.depends_on.forEach(d => { (usedBy[d] = usedBy[d] || []).push(r.id); }));
   const indeg = id => (usedBy[id] || []).length;
   const inLean = r => r.status === 'proved' || r.status === 'scaffold';
-  const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; if (d.status === 'proved' && c.status === 'proved') return 'proved'; if (inLean(d) && inLean(c)) return 'scaffold'; return 'pending'; };
+  // A link dep → consumer is proved when the consumer has a Lean proof in NLAlib that is not itself a
+  // literal scaffold (a `sorry` inherited from a dependency is fine: the implication is checked) and
+  // the dependency is either stated in NLAlib or taken as an explicit hypothesis (status assumed).
+  const DECL_DOC = {}; DECLS.forEach(d => DECL_DOC[d.name] = d.doc || '');
+  const isLiteralScaffold = decl => (DECL_DOC[decl] || '').trimStart().startsWith('SCAFFOLD');
+  const hasFormalProof = r => r.status === 'proved' || (r.formalizations || []).some(f => f.library === 'nlalib' && f.decl && (f.status === 'proved' || f.status === 'scaffold') && !isLiteralScaffold(f.decl));
+  const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; return (hasFormalProof(c) && (inLean(d) || d.status === 'assumed')) ? 'proved' : 'pending'; };
   const LINK = { proved: 'proved', scaffold: 'scaffold', pending: 'pending' };
   const topArea = r => { let a = areaById[r.area]; while (a.parent) a = areaById[a.parent]; return a; };
   const areaPath = r => { const p = []; let a = areaById[r.area]; while (a) { p.unshift(a.name); a = a.parent ? areaById[a.parent] : null; } return p.join(' › '); };
@@ -355,24 +364,45 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
 
   // ---------- graph ----------
   let zoomBehavior, gRoot, svgSel, layoutCache = null;
+  const BOX_PAD_TOP = 30, BOX_PAD_X = 12, BOX_PAD_BOTTOM = 12, BOX_GAP = 26, ROW_GAP = 70, MAX_COLS = 8;
+  // Vertical flow. Rows are the library's import layers (0 Matrix/Polynomial at the top … 5 Solvers
+  // at the bottom); each top-level area (= Lean module) is a box placed side by side within its
+  // layer's row; inside a box, results sit below the module-internal results they consume (local
+  // dependency depth = sub-row), wrapping to at most MAX_COLS per line.
   function layout(nodes) {
     const ids = new Set(nodes.map(n => n.id));
-    const lvl = {}; const seen = new Set();
-    const L = id => { if (lvl[id] != null) return lvl[id]; if (seen.has(id)) return 0; seen.add(id);
-      const deps = byId[id].depends_on.filter(d => ids.has(d)); lvl[id] = deps.length ? 1 + Math.max(...deps.map(L)) : 0; return lvl[id]; };
-    nodes.forEach(n => L(n.id));
-    const cols = {}; nodes.forEach(n => (cols[lvl[n.id]] = cols[lvl[n.id]] || []).push(n));
-    const K = Object.keys(cols).map(Number).sort((a, b) => a - b);
-    const pos = {};
-    K.forEach(k => cols[k].sort((a, b) => topArea(a).order - topArea(b).order || a.title.localeCompare(b.title)).forEach((n, i) => pos[n.id] = i));
-    for (let sweep = 0; sweep < 3; sweep++) {
-      K.forEach(k => { if (k === 0) return; cols[k].sort((a, b) => bary(a, pos, ids, 'up') - bary(b, pos, ids, 'up')).forEach((n, i) => pos[n.id] = i); });
-      [...K].reverse().forEach(k => { cols[k].sort((a, b) => bary(a, pos, ids, 'down') - bary(b, pos, ids, 'down')).forEach((n, i) => pos[n.id] = i); });
-    }
-    const W = 172, H = 30, CW = 230, RH = 34;
+    const W = 156, H = 30, CW = 170, RH = 38;
+    const areas = A.areas.filter(a => !a.parent).sort((a, b) => (a.layer ?? 0) - (b.layer ?? 0) || a.order - b.order).filter(a => nodes.some(n => topArea(n).id === a.id));
+    const boxOf = {}; nodes.forEach(n => boxOf[n.id] = topArea(n).id);
+    const ld = {}; const seen = new Set();
+    const D = id => { if (ld[id] != null) return ld[id]; if (seen.has(id)) return 0; seen.add(id);
+      const deps = byId[id].depends_on.filter(d => ids.has(d) && boxOf[d] === boxOf[id]); ld[id] = deps.length ? 1 + Math.max(...deps.map(D)) : 0; return ld[id]; };
+    nodes.forEach(n => D(n.id));
+    const groups = {}; nodes.forEach(n => { const key = boxOf[n.id] + '|' + ld[n.id]; (groups[key] = groups[key] || []).push(n); });
+    const boxes = {}; areas.forEach(a => {
+      const mine = nodes.filter(n => boxOf[n.id] === a.id); const levels = Math.max(...mine.map(n => ld[n.id])) + 1;
+      const sizes = Array.from({ length: levels }, (_, k) => (groups[a.id + '|' + k] || []).length);
+      const cols = Math.min(MAX_COLS, Math.max(...sizes));
+      const levelRows = sizes.map(s => Math.max(1, Math.ceil(s / cols)));
+      const levelTop = []; let r = 0; levelRows.forEach(lr => { levelTop.push(r); r += lr; });
+      boxes[a.id] = { id: a.id, name: a.name, module: a.module || '', layer: a.layer ?? 0, cols, levelTop, rows: r, width: 2 * BOX_PAD_X + (cols - 1) * CW + W, height: BOX_PAD_TOP + r * RH + BOX_PAD_BOTTOM };
+    });
+    // layer rows: boxes of a layer side by side, centred on the widest row
+    const layers = [...new Set(areas.map(a => a.layer ?? 0))].sort((a, b) => a - b);
+    const rowY = {}, rowH = {}, rowW = {}; let y = 0;
+    layers.forEach(l => { const bs = areas.filter(a => (a.layer ?? 0) === l).map(a => boxes[a.id]); rowW[l] = bs.reduce((s, b) => s + b.width, 0) + BOX_GAP * (bs.length - 1); rowH[l] = Math.max(...bs.map(b => b.height)); rowY[l] = y; y += rowH[l] + ROW_GAP; });
+    const width = Math.max(...Object.values(rowW)), height = y - ROW_GAP;
+    layers.forEach(l => { const bs = areas.filter(a => (a.layer ?? 0) === l).map(a => boxes[a.id]); let x = (width - rowW[l]) / 2; bs.forEach(b => { b.left = x; b.top = rowY[l]; b.height = rowH[l]; x += b.width + BOX_GAP; }); });
+    // positions inside each box: level sub-rows, barycentre order, row-major wrap
     const out = {};
-    K.forEach(k => cols[k].forEach(n => { out[n.id] = { x: k * CW, y: pos[n.id] * RH, w: W, h: H }; }));
-    return { pos: out, levels: K.length, W, H, CW, RH };
+    const place = () => Object.entries(groups).forEach(([key, g]) => { const b = boxes[key.split('|')[0]]; const k = +key.split('|')[1];
+      g.forEach((n, i) => { const c = i % b.cols, rr = Math.floor(i / b.cols); out[n.id] = { x: b.left + BOX_PAD_X + c * CW, y: b.top + BOX_PAD_TOP + (b.levelTop[k] + rr) * RH, w: W, h: H }; }); });
+    const reorder = cmp => Object.values(groups).forEach(g => g.sort(cmp));
+    reorder((a, b) => a.title.localeCompare(b.title)); place();
+    const xc = id => out[id].x + out[id].w / 2;
+    const nbX = n => { const nb = [...n.depends_on.filter(d => ids.has(d)), ...(usedBy[n.id] || []).filter(d => ids.has(d))]; return nb.length ? nb.reduce((s, d) => s + xc(d), 0) / nb.length : xc(n.id); };
+    for (let sweep = 0; sweep < 4; sweep++) { reorder((a, b) => nbX(a) - nbX(b)); place(); }
+    return { pos: out, boxes: Object.values(boxes), layers, rowY, width, height, W, H, CW, RH };
   }
   function bary(n, pos, ids, dir) {
     const nb = dir === 'up' ? n.depends_on.filter(d => ids.has(d)) : (usedBy[n.id] || []).filter(d => ids.has(d));
@@ -385,34 +415,37 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     const ids = new Set(nodes.map(n => n.id));
     const lay = layout(nodes); layoutCache = lay;
     gRoot = svg.append('g');
+    const gb = gRoot.append('g').selectAll('g.lane').data(lay.boxes).enter().append('g').attr('class', 'lane');
+    gb.append('rect').attr('x', b => b.left).attr('y', b => b.top).attr('width', b => b.width).attr('height', b => b.height).attr('rx', 8);
+    gb.append('text').attr('x', b => b.left + BOX_PAD_X).attr('y', b => b.top + 18).text(b => b.name).append('tspan').attr('class', 'mod').text(b => b.module ? '  ' + b.module + '/' : '');
     const edges = [];
     nodes.forEach(n => n.depends_on.forEach(d => { if (ids.has(d)) edges.push({ s: d, t: n.id }); }));
     const P = lay.pos;
     gRoot.selectAll('path.gedge').data(edges).enter().append('path').attr('class', e => 'gedge e-' + linkStatus(e.s, e.t)).attr('data-s', e => e.s).attr('data-t', e => e.t)
-      .attr('d', e => { const a = P[e.s], b = P[e.t]; const x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2; const m = (x1 + x2) / 2; return `M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`; });
+      .attr('d', e => { const a = P[e.s], b = P[e.t]; const x1 = a.x + a.w / 2, y1 = a.y + a.h, x2 = b.x + b.w / 2, y2 = b.y; const m = (y1 + y2) / 2; return `M${x1},${y1} C${x1},${m} ${x2},${m} ${x2},${y2}`; });
     const gn = gRoot.selectAll('g.gnode').data(nodes).enter().append('g').attr('class', n => 'gnode s-' + n.status).attr('data-id', n => n.id)
       .attr('transform', n => `translate(${P[n.id].x},${P[n.id].y})`).style('cursor', 'pointer').on('click', (ev, n) => select(n.id));
     gn.append('rect').attr('width', lay.W).attr('height', lay.H).attr('rx', 5).attr('stroke-width', n => 1 + Math.min(3, indeg(n.id) / 3));
     gn.append('title').text(n => `${n.title}\n${SG[n.status].label} · ${n.kind} · used by ${indeg(n.id)}`);
     gn.append('text').attr('class', 'glyph').attr('x', 8).attr('y', 19).text(n => SG[n.status].glyph);
-    gn.append('text').attr('x', 22).attr('y', 19).text(n => n.title.length > 26 ? n.title.slice(0, 25) + '…' : n.title);
+    gn.append('text').attr('x', 22).attr('y', 19).text(n => n.title.length > 23 ? n.title.slice(0, 22) + '…' : n.title);
     // level labels
     const lab = gRoot.append('g');
-    for (let k = 0; k < lay.levels; k++) lab.append('text').attr('class', 'glabel').attr('x', k * lay.CW).attr('y', -12).text(k === 0 ? 'foundations' : 'depth ' + k);
+    lay.layers.forEach(l => lab.append('text').attr('class', 'glabel').attr('x', -12).attr('y', lay.rowY[l] + 14).attr('text-anchor', 'end').text('layer ' + l));
     svgSel = svg;
     zoomBehavior = d3.zoom().scaleExtent([0.2, 2.5]).on('zoom', ev => gRoot.attr('transform', ev.transform));
     svg.call(zoomBehavior);
     fitGraph();
     applySelectionToGraph();
-    document.getElementById('glegend').innerHTML = STATUS.map(s => `<span class="s-${s.id}"><span class="dot"></span>${s.glyph} ${s.label}</span>`).join('') + '<span><i class="l-proved"></i>link proved</span><span><i class="l-scaffold"></i>link scaffold</span><span><i class="l-pending"></i>link pending</span><span><i style="border-color:var(--accent)"></i>needs (selected)</span><span><i style="border-color:var(--st-assumed)"></i>unlocks (selected)</span><span>Border weight = reuse</span>';
+    document.getElementById('glegend').innerHTML = STATUS.map(s => `<span class="s-${s.id}"><span class="dot"></span>${s.glyph} ${s.label}</span>`).join('') + '<span><i class="l-proved"></i>link proved (the implication is machine-checked)</span><span><i class="l-pending"></i>link not yet proved</span><span><i style="border-top-width:3px;border-top-color:var(--fg)"></i>thick = linked to the selected node</span><span>Border weight = reuse</span><span><i style="border-color:var(--line-strong);border-style:solid"></i>box = Lean module; rows = import layers</span>';
   }
   function fitGraph() {
     if (!layoutCache || !svgSel) return;
     const P = Object.values(layoutCache.pos); if (!P.length) return;
-    const maxX = Math.max(...P.map(p => p.x + p.w)) + 20, maxY = Math.max(...P.map(p => p.y + p.h)) + 20;
+    const maxX = layoutCache.width + 90, maxY = layoutCache.height + 20;
     const box = svgSel.node().getBoundingClientRect();
-    const k = Math.min(1, (box.width - 20) / maxX, (box.height - 20) / (maxY + 24));
-    svgSel.call(zoomBehavior.transform, d3.zoomIdentity.translate(10, 24 * k + 10).scale(k));
+    const k = Math.min(1, (box.width - 20) / maxX, (box.height - 20) / maxY);
+    svgSel.call(zoomBehavior.transform, d3.zoomIdentity.translate(80 * k + 10, 10).scale(k));
   }
   function ancestors(id, acc = new Set()) { byId[id].depends_on.forEach(d => { if (!acc.has(d)) { acc.add(d); ancestors(d, acc); } }); return acc; }
   function descendants(id, acc = new Set()) { (usedBy[id] || []).forEach(d => { if (!acc.has(d)) { acc.add(d); descendants(d, acc); } }); return acc; }
@@ -428,10 +461,10 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   function renderScaffold() {
     const rows = A.results.filter(r => inLean(r) && matches(r));
     const allLinks = []; rows.forEach(r => r.depends_on.forEach(d => allLinks.push(linkStatus(d, r.id))));
-    const lc = { proved: 0, scaffold: 0, pending: 0 }; allLinks.forEach(s => lc[s]++);
+    const lc = { proved: 0, pending: 0 }; allLinks.forEach(s => lc[s]++);
     document.getElementById('linktiles').innerHTML = [
-      ['proved', 'Links proved', 'both ends machine-checked'], ['scaffold', 'Links scaffolded', 'both ends stated in NLAlib, one still sorry'], ['pending', 'Links pending', 'dependency has no Lean statement yet']
-    ].map(([k, l, d]) => `<div class="tile" style="cursor:default"><div class="n">${lc[k]}</div><div class="lbl"><i class="l-${k}" style="display:inline-block;width:22px;border-top:2px solid var(--line-strong);${k === 'proved' ? 'border-top-color:var(--st-proved)' : k === 'scaffold' ? 'border-top-style:dashed;border-top-color:var(--st-stated)' : 'border-top-style:dotted'}"></i>${l}</div><div class="def">${d}</div></div>`).join('')
+      ['proved', 'Links proved', 'the implication is machine-checked'], ['pending', 'Links not yet proved', 'no Lean proof of the consumer from this dependency']
+    ].map(([k, l, d]) => `<div class="tile" style="cursor:default"><div class="n">${lc[k]}</div><div class="lbl"><i class="l-${k}" style="display:inline-block;width:22px;border-top:2px solid var(--line-strong);${k === 'proved' ? 'border-top-color:var(--st-proved)' : 'border-top-style:dotted'}"></i>${l}</div><div class="def">${d}</div></div>`).join('')
       + `<div class="tile" style="cursor:default"><div class="n">${rows.length}</div><div class="lbl">Lean statements</div><div class="def">${rows.filter(r => r.status === 'proved').length} proved · ${rows.filter(r => r.status === 'scaffold').length} scaffold</div></div>`;
     const el = document.getElementById('scaffold'); el.innerHTML = '';
     const tops = A.areas.filter(a => !a.parent);
@@ -537,7 +570,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   });
   document.addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') { if (!document.getElementById('tab-graph').hidden && document.activeElement.tagName !== 'INPUT') fitGraph(); } if (e.key === 'Escape' && state.sel) select(state.sel); });
   renderSources(); renderLibs();
-  document.getElementById('foot').innerHTML = `Data: <code>atlas/atlas.json</code> (schema 0.1, updated ${A.updated_at}). ${A.results.length} results, ${A.sources.length} sources, ${A.libraries.length} Lean libraries. Status is the atlas's judgement of the statement as written: an external library proving a variant is recorded under “Lean” but does not change the status. Reuse counts are in-degrees of the atlas dependency graph, so they reflect the arguments catalogued here, not the literature. Link status is derived from the two endpoints: proved when both are proved, scaffold when both have Lean statements in NLAlib, pending otherwise.`;
+  document.getElementById('foot').innerHTML = `Data: <code>atlas/atlas.json</code> (schema 0.1, updated ${A.updated_at}). ${A.results.length} results, ${A.sources.length} sources, ${A.libraries.length} Lean libraries. Status is the atlas's judgement of the statement as written: an external library proving a variant is recorded under “Lean” but does not change the status. Reuse counts are in-degrees of the atlas dependency graph, so they reflect the arguments catalogued here, not the literature. A link is proved when the consumer has a Lean proof in NLAlib (complete modulo named scaffolds) and the dependency is stated in NLAlib or assumed as a hypothesis; it says the implication is checked, not that either endpoint is.`;
   renderAll();
   const h = (location.hash || '').slice(1); if (h && byId[h]) select(h);
 })();

@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Symmetric
 import Mathlib.Probability.Independence.Integration
 import Mathlib.Probability.Moments.Variance
 import Mathlib.MeasureTheory.Function.L2Space
-import NLAlib.Estimation.Basic
+import NLAlib.Matrix.QuadForm
 import NLAlib.Matrix.Norms
 
 /-!

@@ -4,11 +4,11 @@ import Mathlib.Data.Matrix.Mul
 /-!
 # Quadratic forms
 
-`NLAlib.quadForm A z = zᵀ A z`, the estimator of Hutchinson's trace estimator (and of the
-diagonal and quadratic-form estimators built from it), with its expansion as a double sum.
-The theorems about it are in `NLAlib.Estimation.Hutchinson`.
+`NLAlib.quadForm A z = zᵀ A z` with its expansion as a double sum. Layer 0: used by the Krylov
+layer (spectral measure, CG energy norm) and by the estimators in `NLAlib.Estimation.Hutchinson`.
 
-Atlas: `hutchinson-unbiased`, `hutchinson-variance` (definition used in their statements).
+Atlas: `hutchinson-unbiased`, `hutchinson-variance`, `spectral-measure` (definition used in their
+statements).
 -/
 
 noncomputable section

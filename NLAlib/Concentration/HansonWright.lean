@@ -10,7 +10,7 @@ vocabulary definitions are supplied locally; there is no HighDimProb dependency.
 -/
 import NLAlib.Concentration.HansonWright.UniversalBound
 import NLAlib.Concentration.OrliczMGF
-import NLAlib.Estimation.Basic
+import NLAlib.Matrix.QuadForm
 import NLAlib.Matrix.Norms
 
 /-!

@@ -8209,7 +8209,7 @@
   "name":
   "NLAlib.hanson_wright_mgf",
   "module":
-  "NLAlib.Estimation.HansonWright",
+  "NLAlib.Concentration.HansonWright",
   "line":
   59,
   "kind":
@@ -8223,7 +8223,7 @@
   "name":
   "NLAlib.hanson_wright_of_lintegral_exp_sq_le_two",
   "module":
-  "NLAlib.Estimation.HansonWright",
+  "NLAlib.Concentration.HansonWright",
   "line":
   86,
   "kind":
@@ -15027,7 +15027,7 @@
   "name":
   "NLAlib.quadForm",
   "module":
-  "NLAlib.Estimation.Basic",
+  "NLAlib.Matrix.QuadForm",
   "line":
   22,
   "kind":
@@ -15041,7 +15041,7 @@
   "name":
   "NLAlib.quadForm_eq_sum",
   "module":
-  "NLAlib.Estimation.Basic",
+  "NLAlib.Matrix.QuadForm",
   "line":
   29,
   "kind":
@@ -15069,7 +15069,7 @@
   "name":
   "NLAlib.quadForm_zero_right",
   "module":
-  "NLAlib.Estimation.Basic",
+  "NLAlib.Matrix.QuadForm",
   "line":
   25,
   "kind":

@@ -29,6 +29,7 @@ import NLAlib.Matrix.Projections
 import NLAlib.Matrix.Pseudoinverse
 import NLAlib.Matrix.SVD
 import NLAlib.Matrix.Spectral
+import NLAlib.Matrix.QuadForm
 
 /-!
 # Matrix analysis toolkit

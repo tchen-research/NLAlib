@@ -3403,6 +3403,188 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.abs_eval_U_real_le {x : ℝ} (hx : |x| ≤ 1) (q : ℕ) : |Polynomial.eval x (Polynomial.Chebyshev.U ℝ ↑q)| ≤ ↑q + 1",
+  "name":
+  "NLAlib.abs_eval_U_real_le",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  131,
+  "kind":
+  "theorem",
+  "doc":
+  "The Chebyshev polynomial of the second kind is bounded by `q + 1` on `[-1, 1]`:\n`|x| ≤ 1 → |U_q(x)| ≤ q + 1`.\nSource: Rivlin (1990), §1.5. Atlas: `chebyshev-second-kind`. Proof: `T_{q+1}' = (q + 1) U_q`\nand Mathlib's `abs_iterate_derivative_T_real_le` with one derivative. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_chebyshevAmplifier_le {α γ x : ℝ} (q : ℕ) (hα : 0 < α) (hγ : 0 ≤ γ) (hx : x ∈ Set.Icc (-α) α) :\n  |Polynomial.eval x (NLAlib.chebyshevAmplifier α γ q)| ≤ 2 / (1 + √(2 * γ)) ^ q",
+  "name":
+  "NLAlib.abs_eval_chebyshevAmplifier_le",
+  "module":
+  "NLAlib.Polynomial.Approximation",
+  "line":
+  62,
+  "kind":
+  "theorem",
+  "doc":
+  "On `[−α, α]` the amplifier is exponentially small: `|p(x)| ≤ 2/(1 + √(2γ))^q`.\nSource: Musco–Musco (2015) [`mm15`], Lem. 4; Lem. 5 is the case `γ = ε`. Atlas:\n`chebyshev-amplifier`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_chebyshevResidual_le {a b x : ℝ} {q : ℕ} (ha : 0 < a) (hab : a < b) (hx : x ∈ Set.Icc a b) :\n  |Polynomial.eval x (NLAlib.chebyshevResidual a b q)| ≤\n    1 / Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑q)",
+  "name":
+  "NLAlib.abs_eval_chebyshevResidual_le",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  130,
+  "kind":
+  "theorem",
+  "doc":
+  "On `[a, b]` with `0 < a < b`, the residual polynomial is at most\n`1 / T_q((b + a)/(b − a))` in modulus.\nSource: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_chebyshevResidual_le_two_mul_pow {a b x : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) (hx : x ∈ Set.Icc a b) :\n  |Polynomial.eval x (NLAlib.chebyshevResidual a b q)| ≤ 2 * ((√b - √a) / (√b + √a)) ^ q",
+  "name":
+  "NLAlib.abs_eval_chebyshevResidual_le_two_mul_pow",
+  "module":
+  "NLAlib.Polynomial.Approximation",
+  "line":
+  98,
+  "kind":
+  "theorem",
+  "doc":
+  "κ-form of the Chebyshev residual bound: for `0 < a < b` and `x ∈ [a, b]`,\n`|chebyshevResidual a b q (x)| ≤ 2((√b − √a)/(√b + √a))^q`.\nSource: Golub–Meurant (2010) [`gm10`], Ch. 8; Trefethen–Bau (1997), Thm 38.5. Atlas:\n`chebyshev-minimax` (κ-form). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_derivative_T_real_le {x : ℝ} (hx : |x| ≤ 1) (q : ℕ) :\n  |Polynomial.eval x (Polynomial.derivative (Polynomial.Chebyshev.T ℝ ↑q))| ≤ ↑q ^ 2",
+  "name":
+  "NLAlib.abs_eval_derivative_T_real_le",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  146,
+  "kind":
+  "theorem",
+  "doc":
+  "The derivative of `T_q` is bounded by `q²` on `[-1, 1]`: `|x| ≤ 1 → |T_q'(x)| ≤ q²`.\nSource: Rivlin (1990), §1.5 (the case `p = T_q` of Markov's inequality). Atlas:\n`chebyshev-second-kind`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_derivative_le_div_sqrt_of_forall_abs_eval_le {q : ℕ} {p : Polynomial ℝ} {M x : ℝ} (hp : p.degree ≤ ↑q)\n  (hM : ∀ y ∈ Set.Icc (-1) 1, |Polynomial.eval y p| ≤ M) (hx : |x| < 1) :\n  |Polynomial.eval x (Polynomial.derivative p)| ≤ ↑q * M / √(1 - x ^ 2)",
+  "name":
+  "NLAlib.abs_eval_derivative_le_div_sqrt_of_forall_abs_eval_le",
+  "module":
+  "NLAlib.Polynomial.Markov",
+  "line":
+  343,
+  "kind":
+  "theorem",
+  "doc":
+  "**Bernstein's inequality** for algebraic polynomials. If `p` has degree at most `q` and\n`|p| ≤ M` on `[−1, 1]`, then `|p'(x)| ≤ q M / √(1 − x²)` for `|x| < 1`.\n\nSource: Bernstein (1912); Rivlin, *Chebyshev Polynomials* (2nd ed., 1990), §2.7; Cheney,\n*Introduction to Approximation Theory*, Ch. 3. Atlas: `bernstein-polynomial-inequality`.\nProof (algebraic form of the trigonometric argument): with `a = x = cos θ₀`, `b = √(1 − x²)`, the\nodd part of `θ ↦ p(cos(θ₀ + θ))` is `sin θ · r(cos θ)` for a polynomial `r` of degree `< q` (built\nfrom Hasse derivatives of `p`), `√(1 − y²) |r(y)| ≤ M` on `[−1, 1]`, and `r(1) = −b p'(x)`; Schur's\ninequality `abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le` at `y = 1` gives\n`b |p'(x)| ≤ q M`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le {q : ℕ} {p : Polynomial ℝ} {M x : ℝ} (hp : p.degree ≤ ↑q)\n  (hM : ∀ y ∈ Set.Icc (-1) 1, |Polynomial.eval y p| ≤ M) (hx : x ∈ Set.Icc (-1) 1) :\n  |Polynomial.eval x (Polynomial.derivative p)| ≤ ↑q ^ 2 * M",
+  "name":
+  "NLAlib.abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le",
+  "module":
+  "NLAlib.Polynomial.Markov",
+  "line":
+  406,
+  "kind":
+  "theorem",
+  "doc":
+  "**Markov brothers' inequality** (the first Markov inequality, sharp constant). If `p` has\ndegree at most `q` and `|p| ≤ M` on `[−1, 1]`, then `|p'(x)| ≤ q² M` for all `x ∈ [−1, 1]`.\n\nSource: A. A. Markov (1889); Rivlin, *Chebyshev Polynomials* (2nd ed., 1990), Thm 2.24 / §2.7;\nCheney, *Introduction to Approximation Theory*, Ch. 3. Atlas: `markov-brothers`.\nProof: Bernstein's inequality `abs_eval_derivative_le_div_sqrt_of_forall_abs_eval_le` gives\n`√(1 − y²) |p'(y)| ≤ q M` on `[−1, 1]`, and Schur's inequality\n`abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le` applied to `p'` (degree `< q`) gives\n`|p'(x)| ≤ q · q M`. The equality case (`p = ±M T_q`, `x = ±1`) is not formalised. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_derivative_le_two_mul_sq_div_mul_of_forall_abs_eval_le {q : ℕ} {p : Polynomial ℝ} {a b M x : ℝ}\n  (hab : a < b) (hp : p.degree ≤ ↑q) (hM : ∀ y ∈ Set.Icc a b, |Polynomial.eval y p| ≤ M) (hx : x ∈ Set.Icc a b) :\n  |Polynomial.eval x (Polynomial.derivative p)| ≤ 2 * ↑q ^ 2 / (b - a) * M",
+  "name":
+  "NLAlib.abs_eval_derivative_le_two_mul_sq_div_mul_of_forall_abs_eval_le",
+  "module":
+  "NLAlib.Polynomial.Markov",
+  "line":
+  443,
+  "kind":
+  "theorem",
+  "doc":
+  "**Markov brothers' inequality on an interval.** If `p` has degree at most `q` and `|p| ≤ M` on\n`[a, b]` (`a < b`), then `|p'(x)| ≤ 2 q² / (b − a) · M` for all `x ∈ [a, b]`.\n\nSource: A. A. Markov (1889); Rivlin, *Chebyshev Polynomials* (2nd ed., 1990), §2.7 (affine\nrescaling of `abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le`). Atlas: `markov-brothers`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_inv_two_pow_mul_T_le {q : ℕ} {x : ℝ} (hx : x ∈ Set.Icc (-1) 1) :\n  |Polynomial.eval x (Polynomial.C (1 / 2 ^ (q - 1)) * Polynomial.Chebyshev.T ℝ ↑q)| ≤ 1 / 2 ^ (q - 1)",
+  "name":
+  "NLAlib.abs_eval_inv_two_pow_mul_T_le",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  214,
+  "kind":
+  "theorem",
+  "doc":
+  "The scaled Chebyshev polynomial `2^(1−q) T_q` is at most `1 / 2^(q−1)` in modulus on\n`[−1, 1]`.\nSource: Rivlin (1990), Cor. 2.1.1; Atlas: `chebyshev-monic-minimal`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_le_abs_eval_T_real_of_forall_abs_le_one {q : ℕ} {P : Polynomial ℝ} {x : ℝ} (hP : P.degree ≤ ↑q)\n  (hb : ∀ x ∈ Set.Icc (-1) 1, |Polynomial.eval x P| ≤ 1) (hx : 1 ≤ |x|) :\n  |Polynomial.eval x P| ≤ |Polynomial.eval x (Polynomial.Chebyshev.T ℝ ↑q)|",
+  "name":
+  "NLAlib.abs_eval_le_abs_eval_T_real_of_forall_abs_le_one",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  43,
+  "kind":
+  "theorem",
+  "doc":
+  "Chebyshev's extremal growth bound: if `P` has degree at most `q` and `|P| ≤ 1` on `[−1, 1]`,\nthen `|P(x)| ≤ |T_q(x)|` for every `|x| ≥ 1`.\nSource: Rivlin, *Chebyshev Polynomials* (1990), Thm 2.20 (case `k = 0`); Mathlib\n`Polynomial.Chebyshev.eval_iterate_derivative_le_of_forall_abs_le_one` covers `x ≥ 1`;\nAtlas: `chebyshev-extremal`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_le_mul_abs_eval_T_real_of_forall_abs_le {q : ℕ} {P : Polynomial ℝ} {M x : ℝ} (hP : P.degree ≤ ↑q)\n  (hb : ∀ x ∈ Set.Icc (-1) 1, |Polynomial.eval x P| ≤ M) (hx : 1 ≤ |x|) :\n  |Polynomial.eval x P| ≤ M * |Polynomial.eval x (Polynomial.Chebyshev.T ℝ ↑q)|",
+  "name":
+  "NLAlib.abs_eval_le_mul_abs_eval_T_real_of_forall_abs_le",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "Scaled form of Chebyshev's extremal growth bound: if `P` has degree at most `q` and\n`|P| ≤ M` on `[−1, 1]`, then `|P(x)| ≤ M |T_q(x)|` for every `|x| ≥ 1`. No sign condition on `M`\n(for `M ≤ 0` the hypothesis forces `P = 0`).\nSource: Rivlin, *Chebyshev Polynomials* (1990), Thm 2.20 (case `k = 0`);\nAtlas: `chebyshev-extremal`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le {q : ℕ} {r : Polynomial ℝ} {M x : ℝ} (hq : 0 < q)\n  (hr : r.degree < ↑q) (hM : ∀ y ∈ Set.Icc (-1) 1, √(1 - y ^ 2) * |Polynomial.eval y r| ≤ M) (hx : x ∈ Set.Icc (-1) 1) :\n  |Polynomial.eval x r| ≤ ↑q * M",
+  "name":
+  "NLAlib.abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le",
+  "module":
+  "NLAlib.Polynomial.Markov",
+  "line":
+  231,
+  "kind":
+  "theorem",
+  "doc":
+  "**Schur's inequality.** If `r` has degree `< q` and `√(1 − y²) |r(y)| ≤ M` on `[−1, 1]`, then\n`|r(x)| ≤ q M` on `[−1, 1]`.\n\nSource: Rivlin, *Chebyshev Polynomials* (2nd ed., 1990), §2.7 (Schur's lemma); Cheney,\n*Introduction to Approximation Theory*, Ch. 3. Proof: for `|x| ≤ cos(π/(2q))` directly from\n`√(1 − x²) ≥ sin(π/(2q)) ≥ 1/q`; for `x ≥ cos(π/(2q))` by Lagrange interpolation at the zeros\n`ξ_k` of `T_q`, where all partial nodal products are nonnegative and the weights satisfy\n`|r(ξ_k)| / |T_q'(ξ_k)| ≤ M/q`, so `|r(x)| ≤ (M/q) T_q'(x) ≤ q M`; the case `x ≤ −cos(π/(2q))` by\nreflection. Atlas: auxiliary for `markov-brothers` and `bernstein-polynomial-inequality`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.abs_eval_nodal_chebyshevZero_le (q : ℕ) {x : ℝ} (hx : x ∈ Set.Icc (-1) 1) :\n  |Polynomial.eval x (Lagrange.nodal Finset.univ (NLAlib.chebyshevZero q))| ≤ 1 / 2 ^ (q - 1)",
+  "name":
+  "NLAlib.abs_eval_nodal_chebyshevZero_le",
+  "module":
+  "NLAlib.Polynomial.Interpolation",
+  "line":
+  243,
+  "kind":
+  "theorem",
+  "doc":
+  "On `[−1, 1]` the nodal polynomial of the `q` Chebyshev zeros is at most `1/2^(q−1)` in\nmodulus. Source: Trefethen, ATAP, Ch. 3; Cheney, Ch. 3. Atlas: `chebyshev-interpolation-error`\n(lemma). Deviation: no `0 < q` hypothesis. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.abs_frobInner_gramSoftMinGradient_le.{u_1, u_2} {ι : Type u_1} {κ : Type u_2} [Fintype ι] [Fintype κ]\n  [DecidableEq ι] [Nonempty ι] (n : ℕ) (hn : 0 < n) {ε : ℝ} (hε : 0 < ε) (G : Matrix ι κ ℝ) :\n  |NLAlib.frobInner G (NLAlib.gramSoftMinGradient n ε G)| ≤ 2 * NLAlib.frobSq G",
   "name":
   "NLAlib.abs_frobInner_gramSoftMinGradient_le",
@@ -3739,6 +3921,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.abs_sub_eval_interpolate_chebyshevZero_le {f : ℝ → ℝ} {q : ℕ} {M : ℝ} (hf : ContinuousOn f (Set.Icc (-1) 1))\n  (hf' : ∀ k ≤ q, DifferentiableOn ℝ (iteratedDeriv k f) (Set.Ioo (-1) 1))\n  (hM : ∀ ξ ∈ Set.Ioo (-1) 1, |iteratedDeriv (q + 1) f ξ| ≤ M) (x : ℝ) :\n  x ∈ Set.Icc (-1) 1 →\n    |f x -\n          Polynomial.eval x\n            ((Lagrange.interpolate Finset.univ (NLAlib.chebyshevZero (q + 1))) (f ∘ NLAlib.chebyshevZero (q + 1)))| ≤\n      M / (2 ^ q * ↑(q + 1).factorial)",
+  "name":
+  "NLAlib.abs_sub_eval_interpolate_chebyshevZero_le",
+  "module":
+  "NLAlib.Polynomial.Interpolation",
+  "line":
+  252,
+  "kind":
+  "theorem",
+  "doc":
+  "**Chebyshev interpolation error.** Let `f` be continuous on `[−1, 1]` with\n`f, f', …, f^{(q)}` differentiable on `(−1, 1)` and `|f^{(q+1)}| ≤ M` on `(−1, 1)`. The polynomial\ninterpolating `f` at the `q + 1` zeros of `T_{q+1}` satisfies\n`|f x − L(x)| ≤ M / (2^q (q + 1)!)` for every `x ∈ [−1, 1]`.\nSource: Süli–Mayers, Ch. 8 (Chebyshev nodes); Trefethen, *Approximation Theory and\nApproximation Practice*, Ch. 11; Cheney, Ch. 3.\nAtlas: `chebyshev-interpolation-error`; uses `interpolation-remainder`.\nDeviation: the derivative bound is assumed only on the open interval `(−1, 1)` (weaker than\non `[−1, 1]`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.abs_trace_pow_mul_mul_pow_mul_le.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (R B : Matrix ι ι ℝ)\n  (p q : ℕ) : |(R ^ p * B * R ^ q * B).trace| ≤ NLAlib.specNorm R ^ (p + q) * NLAlib.frobSq B",
   "name":
   "NLAlib.abs_trace_pow_mul_mul_pow_mul_le",
@@ -3750,6 +3946,20 @@
   "theorem",
   "doc":
   "A trace power-product with two copies of the same direction is bounded by\nspectral powers times the squared Frobenius direction size. Source: Frobenius\nCauchy--Schwarz; atlas wishart-lambda-min-tail (Hessian growth helper). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.add_div_sub_add_sqrt_sq_sub_one_eq {a b : ℝ} (ha : 0 < a) (hab : a < b) :\n  (b + a) / (b - a) + √(((b + a) / (b - a)) ^ 2 - 1) = (√b + √a) / (√b - √a)",
+  "name":
+  "NLAlib.add_div_sub_add_sqrt_sq_sub_one_eq",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  92,
+  "kind":
+  "theorem",
+  "doc":
+  "The identity behind the condition-number form of the Chebyshev growth bound: for\n`0 < a < b`, `(b + a)/(b − a) + √(((b + a)/(b − a))² − 1) = (√b + √a)/(√b − √a)`.\nSource: Golub–Meurant (2010) [`gm10`], Ch. 8; Saad, *Iterative Methods for Sparse Linear\nSystems* (2003), §6.11.3. Atlas: `chebyshev-growth`. "},
  {"sorry":
   false,
   "signature":
@@ -4285,6 +4495,104 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.chebyshevAmplifier (α γ : ℝ) (q : ℕ) : Polynomial ℝ",
+  "name":
+  "NLAlib.chebyshevAmplifier",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  41,
+  "kind":
+  "def",
+  "doc":
+  "The gap-amplifying polynomial `chebyshevAmplifier α γ q = T_q(X/α) / T_q(1 + γ)`: equal to\n`1` at `α(1 + γ)`, increasing beyond it, and exponentially small on `[−α, α]`.\nSource: Musco–Musco (2015) [`mm15`], Lem. 4–5; Atlas: `chebyshev-amplifier`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevAmplifier_def (α γ : ℝ) (q : ℕ) :\n  NLAlib.chebyshevAmplifier α γ q =\n    Polynomial.C (1 / Polynomial.eval (1 + γ) (Polynomial.Chebyshev.T ℝ ↑q)) *\n      (Polynomial.Chebyshev.T ℝ ↑q).comp (Polynomial.C (1 / α) * Polynomial.X)",
+  "name":
+  "NLAlib.chebyshevAmplifier_def",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  59,
+  "kind":
+  "theorem",
+  "doc":
+  ""},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevResidual (a b : ℝ) (q : ℕ) : Polynomial ℝ",
+  "name":
+  "NLAlib.chebyshevResidual",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  32,
+  "kind":
+  "def",
+  "doc":
+  "The shifted, scaled Chebyshev polynomial normalised to `1` at `0`:\n`chebyshevResidual a b q = T_q((b + a − 2 X)/(b − a)) / T_q((b + a)/(b − a))`. For `0 < a < b`\nit has the smallest maximum modulus on `[a, b]` among polynomials of degree at most `q` with\nvalue `1` at `0` (the residual polynomial of Chebyshev iteration and the model for CG).\nSource: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevResidual_def (a b : ℝ) (q : ℕ) :\n  NLAlib.chebyshevResidual a b q =\n    Polynomial.C (1 / Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑q)) *\n      (Polynomial.Chebyshev.T ℝ ↑q).comp (Polynomial.C ((b + a) / (b - a)) - Polynomial.C (2 / (b - a)) * Polynomial.X)",
+  "name":
+  "NLAlib.chebyshevResidual_def",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  ""},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevZero (q : ℕ) (k : Fin q) : ℝ",
+  "name":
+  "NLAlib.chebyshevZero",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  52,
+  "kind":
+  "def",
+  "doc":
+  "The Chebyshev zeros `chebyshevZero q k = cos((2k + 1)π/(2q))`, `k < q`: the `q` roots of\n`T_q`, in decreasing order. Source: Trefethen (2019) [`trefethen19`], Ch. 2 (\"Chebyshev points\nof the first kind\"); Mathlib `Polynomial.Chebyshev.roots_T_real`.\nAtlas: `chebyshev-interpolation-error`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevZero_injective (q : ℕ) : Function.Injective (NLAlib.chebyshevZero q)",
+  "name":
+  "NLAlib.chebyshevZero_injective",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  84,
+  "kind":
+  "theorem",
+  "doc":
+  "The Chebyshev zeros are distinct (from Mathlib's `roots_T_real_nodup`).\nAtlas: `chebyshev-interpolation-error`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevZero_mem_Icc (q : ℕ) (k : Fin q) : NLAlib.chebyshevZero q k ∈ Set.Icc (-1) 1",
+  "name":
+  "NLAlib.chebyshevZero_mem_Icc",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  80,
+  "kind":
+  "theorem",
+  "doc":
+  "The Chebyshev zeros lie in `[−1, 1]`. Atlas: `chebyshev-interpolation-error`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.chernoffCgfCoefficient (L θ : ℝ) : ℝ",
   "name":
   "NLAlib.chernoffCgfCoefficient",
@@ -4677,6 +4985,48 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.degree_C_mul_le.{u_1} {R : Type u_1} [Semiring R] (c : R) (P : Polynomial R) :\n  (Polynomial.C c * P).degree ≤ P.degree",
+  "name":
+  "NLAlib.degree_C_mul_le",
+  "module":
+  "NLAlib.ForMathlib.Algebra.Polynomial",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "Multiplying by a constant does not raise the degree. (Mathlib has `natDegree_C_mul_le`.) "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.degree_chebyshevAmplifier_le (α γ : ℝ) (q : ℕ) : (NLAlib.chebyshevAmplifier α γ q).degree ≤ ↑q",
+  "name":
+  "NLAlib.degree_chebyshevAmplifier_le",
+  "module":
+  "NLAlib.Polynomial.Approximation",
+  "line":
+  29,
+  "kind":
+  "theorem",
+  "doc":
+  "The amplifier has degree at most `q`.\nSource: Musco–Musco (2015) [`mm15`], Lem. 4. Atlas: `chebyshev-amplifier`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.degree_chebyshevResidual_le (a b : ℝ) (q : ℕ) : (NLAlib.chebyshevResidual a b q).degree ≤ ↑q",
+  "name":
+  "NLAlib.degree_chebyshevResidual_le",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  114,
+  "kind":
+  "theorem",
+  "doc":
+  "The residual polynomial `chebyshevResidual a b q` has degree at most `q`.\nSource: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.deriv_deriv_inversePowerSoftMin_regularizedGram_eq.{u_1, u_2} {ι : Type u_1} {κ : Type u_2} [Fintype ι]\n  [Fintype κ] [DecidableEq ι] [Nonempty ι] (n : ℕ) (hn : 0 < n) {ε : ℝ} (hε : 0 < ε) (G E : Matrix ι κ ℝ) :\n  deriv (fun t => deriv (fun x => NLAlib.inversePowerSoftMin n (NLAlib.regularizedGram ε (G + x • E))) t) 0 =\n    NLAlib.gramSoftMinSecond n ε G E",
   "name":
   "NLAlib.deriv_deriv_inversePowerSoftMin_regularizedGram_eq",
@@ -4999,6 +5349,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.eq_zero_of_forall_abs_eval_le_of_nonpos {P : Polynomial ℝ} {M : ℝ} (hM : M ≤ 0)\n  (hP : ∀ x ∈ Set.Icc (-1) 1, |Polynomial.eval x P| ≤ M) : P = 0",
+  "name":
+  "NLAlib.eq_zero_of_forall_abs_eval_le_of_nonpos",
+  "module":
+  "NLAlib.ForMathlib.Algebra.Polynomial",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "A real polynomial bounded by `M ≤ 0` on `[−1, 1]` is zero. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.error_decomp.{u_1, u_2, u_3, u_4, u_5} {m : Type u_1} {n : Type u_2} {q : Type u_3} {r : Type u_4} {s : Type u_5}\n  [Fintype m] [Fintype q] [Fintype r] [Fintype s] [DecidableEq q] [DecidableEq m] (Q : Matrix m q ℝ) (Qp : Matrix m r ℝ)\n  (Ψ : Matrix m s ℝ) (A : Matrix m n ℝ) (hQ : NLAlib.HasOrthonormalCols Q)\n  (hcomp : Q * Q.transpose + Qp * Qp.transpose = 1) (hG₁ : IsUnit ((Ψ.transpose * Q).transpose * (Ψ.transpose * Q))) :\n  A - NLAlib.sketchedOutput Q Ψ A =\n    NLAlib.residual Q A -\n      Q * (NLAlib.pinvL (Ψ.transpose * Q) * (Ψ.transpose * Qp) * (Qp.transpose * NLAlib.residual Q A))",
   "name":
   "NLAlib.error_decomp",
@@ -5010,6 +5374,132 @@
   "theorem",
   "doc":
   "Error decomposition in the proof of `lem:completion` (Chen–Persson):\n`A - Â = E - Q G₁† G₂ (Q⊥ᵀ E)`. Atlas `sketched-regression`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_T_real_chebyshevZero (q : ℕ) (k : Fin q) :\n  Polynomial.eval (NLAlib.chebyshevZero q k) (Polynomial.Chebyshev.T ℝ ↑q) = 0",
+  "name":
+  "NLAlib.eval_T_real_chebyshevZero",
+  "module":
+  "NLAlib.Polynomial.Interpolation",
+  "line":
+  233,
+  "kind":
+  "theorem",
+  "doc":
+  "The Chebyshev zeros are roots of `T_q`.\nAtlas: `chebyshev-interpolation-error` (API). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_T_real_eq_of_one_le {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :\n  Polynomial.eval x (Polynomial.Chebyshev.T ℝ ↑q) = ((x + √(x ^ 2 - 1)) ^ q + (x - √(x ^ 2 - 1)) ^ q) / 2",
+  "name":
+  "NLAlib.eval_T_real_eq_of_one_le",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "Closed form of `T_q` on `[1, ∞)`: for `1 ≤ x`,\n`T_q(x) = ((x + √(x² − 1))^q + (x − √(x² − 1))^q)/2`.\nSource: Rivlin, *Chebyshev Polynomials* (1990), Eq. (1.49); Musco–Musco (2015) [`mm15`], proof\nof Lem. 4. Atlas: `chebyshev-growth`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_T_real_le_pow {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :\n  Polynomial.eval x (Polynomial.Chebyshev.T ℝ ↑q) ≤ (x + √(x ^ 2 - 1)) ^ q",
+  "name":
+  "NLAlib.eval_T_real_le_pow",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "Upper bound on the growth of `T_q` on `[1, ∞)`: for `1 ≤ x`, `T_q(x) ≤ (x + √(x² − 1))^q`.\nSource: Rivlin (1990), §1.5. Atlas: `chebyshev-growth`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_chebyshevAmplifier (α γ : ℝ) (q : ℕ) (x : ℝ) :\n  Polynomial.eval x (NLAlib.chebyshevAmplifier α γ q) =\n    Polynomial.eval (x / α) (Polynomial.Chebyshev.T ℝ ↑q) / Polynomial.eval (1 + γ) (Polynomial.Chebyshev.T ℝ ↑q)",
+  "name":
+  "NLAlib.eval_chebyshevAmplifier",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  72,
+  "kind":
+  "theorem",
+  "doc":
+  "`chebyshevAmplifier α γ q` at `x` is `T_q(x/α) / T_q(1 + γ)`.\nSource: Musco–Musco (2015) [`mm15`], Lem. 4. Atlas: `chebyshev-amplifier`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_chebyshevAmplifier_self {α γ : ℝ} (q : ℕ) (hα : 0 < α) (hγ : 0 ≤ γ) :\n  Polynomial.eval (α * (1 + γ)) (NLAlib.chebyshevAmplifier α γ q) = 1",
+  "name":
+  "NLAlib.eval_chebyshevAmplifier_self",
+  "module":
+  "NLAlib.Polynomial.Approximation",
+  "line":
+  42,
+  "kind":
+  "theorem",
+  "doc":
+  "The amplifier equals `1` at `α(1 + γ)`.\nSource: Musco–Musco (2015) [`mm15`], Lem. 4. Atlas: `chebyshev-amplifier`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_chebyshevResidual (a b : ℝ) (q : ℕ) (x : ℝ) :\n  Polynomial.eval x (NLAlib.chebyshevResidual a b q) =\n    Polynomial.eval ((b + a) / (b - a) - 2 / (b - a) * x) (Polynomial.Chebyshev.T ℝ ↑q) /\n      Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑q)",
+  "name":
+  "NLAlib.eval_chebyshevResidual",
+  "module":
+  "NLAlib.Polynomial.Basic",
+  "line":
+  63,
+  "kind":
+  "theorem",
+  "doc":
+  "`chebyshevResidual a b q` at `x` is `T_q((b + a − 2x)/(b − a)) / T_q((b + a)/(b − a))`.\nAtlas: `chebyshev-minimax`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_chebyshevResidual_zero {a b : ℝ} {q : ℕ} (ha : 0 < a) (hab : a < b) :\n  Polynomial.eval 0 (NLAlib.chebyshevResidual a b q) = 1",
+  "name":
+  "NLAlib.eval_chebyshevResidual_zero",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  105,
+  "kind":
+  "theorem",
+  "doc":
+  "The residual polynomial `chebyshevResidual a b q` has value `1` at `0`.\nSource: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_derivative_T_real_one (q : ℕ) :\n  Polynomial.eval 1 (Polynomial.derivative (Polynomial.Chebyshev.T ℝ ↑q)) = ↑q ^ 2",
+  "name":
+  "NLAlib.eval_derivative_T_real_one",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  124,
+  "kind":
+  "theorem",
+  "doc":
+  "The derivative of `T_q` at `1` is `q²`.\nSource: Rivlin (1990), §1.5; Mathlib `T_derivative_eq_U` and `U_eval_one`. Atlas:\n`chebyshev-second-kind`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.eval_iterate_derivative_natDegree (p : Polynomial ℝ) (x : ℝ) :\n  Polynomial.eval x ((⇑Polynomial.derivative)^[p.natDegree] p) = ↑p.natDegree.factorial * p.leadingCoeff",
+  "name":
+  "NLAlib.eval_iterate_derivative_natDegree",
+  "module":
+  "NLAlib.ForMathlib.Algebra.Polynomial",
+  "line":
+  40,
+  "kind":
+  "theorem",
+  "doc":
+  "The `n`-th derivative of a polynomial of degree `n` is the constant `n! · leadingCoeff`. "},
  {"sorry":
   false,
   "signature":
@@ -5125,6 +5615,20 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.exists_degree_lt_abs_eval_sub_inv_le {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) :\n  ∃ p, p.degree < ↑q ∧ ∀ x ∈ Set.Icc a b, |Polynomial.eval x p - 1 / x| ≤ 2 / a * ((√b - √a) / (√b + √a)) ^ q",
+  "name":
+  "NLAlib.exists_degree_lt_abs_eval_sub_inv_le",
+  "module":
+  "NLAlib.Polynomial.Approximation",
+  "line":
+  109,
+  "kind":
+  "theorem",
+  "doc":
+  "Polynomial approximation of `1/x` on `[a, b]`: for `0 < a < b` there is a polynomial `p` of\ndegree `< q` with `|p(x) − 1/x| ≤ (2/a)((√b − √a)/(√b + √a))^q` on `[a, b]`. The polynomial is\n`p = (1 − r)/X` for the Chebyshev residual `r = chebyshevResidual a b q`.\nSource: Golub–Meurant (2010) [`gm10`], Ch. 8 (the CG error bound). Atlas:\n`inverse-polynomial-approx`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.exists_gamma_weighted_antitone_density_of_weak_inequality (μ : MeasureTheory.Measure ℝ)\n  [MeasureTheory.IsFiniteMeasure μ] (m : ℝ)\n  (hweak :\n    ∀ (ψ : ℝ → ℝ),\n      ContDiff ℝ (↑⊤) ψ →\n        HasCompactSupport ψ →\n          tsupport ψ ⊆ Set.Ioi 0 →\n            (∀ (x : ℝ), 0 ≤ ψ x) → 0 ≤ ∫ (x : ℝ) in Set.Ioi 0, 4 * x * deriv ψ x + 2 * (m - x) * ψ x ∂μ) :\n  ∃ h,\n    Measurable h ∧\n      AntitoneOn h (Set.Ioi 0) ∧\n        (∀ x ∈ Set.Ioi 0, 0 ≤ h x) ∧\n          μ.restrict (Set.Ioi 0) =\n            (MeasureTheory.volume.restrict (Set.Ioi 0)).withDensity fun x =>\n              ENNReal.ofReal (x ^ (m / 2 - 1) * Real.exp (-x / 2) * h x)",
   "name":
   "NLAlib.exists_gamma_weighted_antitone_density_of_weak_inequality",
@@ -5206,6 +5710,34 @@
   "theorem",
   "doc":
   "**Singular value decomposition** (Horn–Johnson 2013, Thm 2.6.3; HMT 2011, §2.1): every real\n`m × n` matrix is `A = U Σ Vᵀ` with `U`, `V` orthogonal and `Σ = rectDiag (singularValues A)`,\nthe singular values being nonnegative and non-increasing (`singularValues_nonneg`,\n`singularValues_antitone`). Atlas `svd`.\n\nProof: `V` is an orthonormal eigenbasis of `AᵀA` (Mathlib's spectral theorem, sorted), the\nvectors `A vⱼ / σⱼ` with `σⱼ ≠ 0` are orthonormal and are completed to an orthonormal basis of\n`ℝᵐ` (atlas `orthonormal-completion`) giving `U`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.exists_iteratedDeriv_eq_zero_of_card {f : ℝ → ℝ} {a b : ℝ} {q : ℕ} {s : Finset ℝ} (hs : s.card = q + 2)\n  (hsab : ∀ x ∈ s, x ∈ Set.Icc a b) (hf : ContinuousOn f (Set.Icc a b))\n  (hf' : ∀ k < q, ContinuousOn (iteratedDeriv (k + 1) f) (Set.Ioo a b)) (hz : ∀ x ∈ s, f x = 0) :\n  ∃ ξ ∈ Set.Ioo a b, iteratedDeriv (q + 1) f ξ = 0",
+  "name":
+  "NLAlib.exists_iteratedDeriv_eq_zero_of_card",
+  "module":
+  "NLAlib.Polynomial.Interpolation",
+  "line":
+  118,
+  "kind":
+  "theorem",
+  "doc":
+  "**Generalised Rolle theorem**, finset form: if `f` vanishes on a set of `q + 2` points of\n`[a, b]` (hypotheses as in `exists_iteratedDeriv_eq_zero_of_strictMono`), then `f^{(q+1)}`\nvanishes somewhere in `(a, b)`.\nSource: Süli–Mayers, proof of Thm 6.2. Atlas: `interpolation-remainder` (lemma). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.exists_iteratedDeriv_eq_zero_of_strictMono {f : ℝ → ℝ} {a b : ℝ} {q : ℕ} {v : Fin (q + 2) → ℝ}\n  (hv : StrictMono v) (hva : ∀ (i : Fin (q + 2)), v i ∈ Set.Icc a b) (hf : ContinuousOn f (Set.Icc a b))\n  (hf' : ∀ k < q, ContinuousOn (iteratedDeriv (k + 1) f) (Set.Ioo a b)) (hz : ∀ (i : Fin (q + 2)), f (v i) = 0) :\n  ∃ ξ ∈ Set.Ioo a b, iteratedDeriv (q + 1) f ξ = 0",
+  "name":
+  "NLAlib.exists_iteratedDeriv_eq_zero_of_strictMono",
+  "module":
+  "NLAlib.Polynomial.Interpolation",
+  "line":
+  96,
+  "kind":
+  "theorem",
+  "doc":
+  "**Generalised Rolle theorem.** If `f` vanishes at `q + 2` points `v 0 < ⋯ < v (q+1)` of\n`[a, b]`, `f` is continuous on `[a, b]` and the derivatives `f', …, f^{(q)}` are continuous on\n`(a, b)`, then `f^{(q+1)}(ξ) = 0` for some `ξ ∈ (a, b)`.\nSource: Süli–Mayers, *An Introduction to Numerical Analysis*, proof of Thm 6.2; Atkinson,\n*An Introduction to Numerical Analysis* (2nd ed.), proof of Thm 3.2.\nAtlas: `interpolation-remainder` (lemma).\nDeviation: stated with `q + 2` zeros and the `(q + 1)`-st derivative (so the conclusion is in the\nopen interval without a side condition); only continuity of `f^{(k)}`, `1 ≤ k ≤ q`, on `(a, b)`\nis assumed — no differentiability, because `iteratedDeriv` is Mathlib's global derivative and\nRolle (`exists_deriv_eq_zero`) needs only continuity. "},
  {"sorry":
   false,
   "signature":
@@ -5346,6 +5878,20 @@
   "theorem",
   "doc":
   "Whenever `t≤rank A`, a deterministic right sketch can select `t` independent\nvectors in the range of `A`. Atlas `gn-expected-error` (Gaussian rank witness). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.exists_sub_eval_interpolate_eq {f : ℝ → ℝ} {a b x : ℝ} {q : ℕ} {v : Fin (q + 1) → ℝ} (hab : a < b)\n  (hv : Function.Injective v) (hva : ∀ (i : Fin (q + 1)), v i ∈ Set.Icc a b) (hx : x ∈ Set.Icc a b)\n  (hf : ContinuousOn f (Set.Icc a b)) (hf' : ∀ k ≤ q, DifferentiableOn ℝ (iteratedDeriv k f) (Set.Ioo a b)) :\n  ∃ ξ ∈ Set.Ioo a b,\n    f x - Polynomial.eval x ((Lagrange.interpolate Finset.univ v) (f ∘ v)) =\n      iteratedDeriv (q + 1) f ξ / ↑(q + 1).factorial * Polynomial.eval x (Lagrange.nodal Finset.univ v)",
+  "name":
+  "NLAlib.exists_sub_eval_interpolate_eq",
+  "module":
+  "NLAlib.Polynomial.Interpolation",
+  "line":
+  131,
+  "kind":
+  "theorem",
+  "doc":
+  "**Interpolation remainder formula.** Let `v : Fin (q + 1) → ℝ` be distinct nodes in\n`[a, b]`, `f` continuous on `[a, b]` with `f, f', …, f^{(q)}` differentiable on `(a, b)`, and\n`x ∈ [a, b]`. Then for the interpolating polynomial `L = Lagrange.interpolate univ v (f ∘ v)`\nand the nodal polynomial `ω = ∏ (X − v i)` there is `ξ ∈ (a, b)` with\n`f x − L(x) = f^{(q+1)}(ξ) / (q + 1)! · ω(x)`.\nSource: Süli–Mayers, *An Introduction to Numerical Analysis*, Thm 6.2; Atkinson (2nd ed.),\nThm 3.2; Cheney, *Introduction to Approximation Theory*, Ch. 3. Atlas:\n`interpolation-remainder`.\nDeviation: `ξ` is in the open interval `(a, b)` (stronger than `[a, b]`), at the cost of the\nhypothesis `a < b` (used only when `x` is a node). "},
  {"sorry":
   false,
   "signature":
@@ -10949,6 +11495,34 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.inv_eval_T_real_le_of_forall_abs_eval_le {a b M : ℝ} {q : ℕ} {p : Polynomial ℝ} (ha : 0 < a) (hab : a < b)\n  (hp : p.degree ≤ ↑q) (hp0 : Polynomial.eval 0 p = 1) (hb : ∀ x ∈ Set.Icc a b, |Polynomial.eval x p| ≤ M) :\n  1 / Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑q) ≤ M",
+  "name":
+  "NLAlib.inv_eval_T_real_le_of_forall_abs_eval_le",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  149,
+  "kind":
+  "theorem",
+  "doc":
+  "The minimax lower bound: if `p` has degree at most `q`, `p(0) = 1` and `|p| ≤ M` on `[a, b]`\nwith `0 < a < b`, then `M ≥ 1 / T_q((b + a)/(b − a))`.\nSource: Golub–Meurant (2010) [`gm10`], App.; Trefethen–Bau (1997), Thm 38.5 (there in the\ncondition-number form); Atlas: `chebyshev-minimax`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.inv_eval_T_real_le_two_mul_pow {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) :\n  1 / Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑q) ≤ 2 * ((√b - √a) / (√b + √a)) ^ q",
+  "name":
+  "NLAlib.inv_eval_T_real_le_two_mul_pow",
+  "module":
+  "NLAlib.Polynomial.Approximation",
+  "line":
+  82,
+  "kind":
+  "theorem",
+  "doc":
+  "For `0 < a < b` the reciprocal `1/T_q((b + a)/(b − a))` is at most\n`2((√b − √a)/(√b + √a))^q`.\nSource: Golub–Meurant (2010) [`gm10`], Ch. 8; Saad (2003), §6.11.3. Atlas: `chebyshev-minimax`\n(κ-form). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.inv_gram_eq_zero_of_not_posDef.{u_1, u_2} {ι : Type u_1} {κ : Type u_2} [Fintype ι] [Fintype κ] [DecidableEq ι]\n  (G : Matrix ι κ ℝ) (hnot : ¬(G * G.transpose).PosDef) : (G * G.transpose)⁻¹ = 0",
   "name":
   "NLAlib.inv_gram_eq_zero_of_not_posDef",
@@ -11016,6 +11590,20 @@
   "theorem",
   "doc":
   "An invertible column Gram matrix gives the lower singular bound required\nby the Kaczmarz recurrence, using the actual norm of the full-rank left inverse.\nSource: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.inv_two_pow_le_of_monic_of_forall_abs_eval_le {q : ℕ} {p : Polynomial ℝ} {M : ℝ} (hp : p.Monic)\n  (hdeg : p.natDegree = q) (hb : ∀ x ∈ Set.Icc (-1) 1, |Polynomial.eval x p| ≤ M) : 1 / 2 ^ (q - 1) ≤ M",
+  "name":
+  "NLAlib.inv_two_pow_le_of_monic_of_forall_abs_eval_le",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  222,
+  "kind":
+  "theorem",
+  "doc":
+  "Monic minimality of Chebyshev polynomials: a monic real polynomial of degree `q` has modulus\nat least `1 / 2^(q−1)` somewhere on `[−1, 1]`, i.e. any bound `M` for `|p|` on `[−1, 1]`\nsatisfies `1 / 2^(q−1) ≤ M`.\nSource: Trefethen (2013), Thm 2.2 / Rivlin (1990), Cor. 2.1.1; Mathlib\n`Polynomial.Chebyshev.leadingCoeff_le_of_forall_abs_le_one` applied to `p / M`;\nAtlas: `chebyshev-monic-minimal`. Deviation: no hypothesis `0 < q` (for `q = 0`, `p = 1` and\nthe bound reads `1 ≤ M`, since `0 - 1 = 0` in `ℕ`). "},
  {"sorry":
   false,
   "signature":
@@ -11369,6 +11957,34 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.isLeast_chebyshev_minimax {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) :\n  IsLeast {M | ∃ p, p.degree ≤ ↑q ∧ Polynomial.eval 0 p = 1 ∧ ∀ x ∈ Set.Icc a b, |Polynomial.eval x p| ≤ M}\n    (1 / Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑q))",
+  "name":
+  "NLAlib.isLeast_chebyshev_minimax",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  188,
+  "kind":
+  "theorem",
+  "doc":
+  "The Chebyshev minimax theorem on `[a, b]`, `0 < a < b`: the least possible bound `M` for\n`|p|` on `[a, b]` over polynomials `p` of degree at most `q` with `p(0) = 1` is\n`1 / T_q((b + a)/(b − a))`, attained by `chebyshevResidual a b q`.\nSource: Golub–Meurant (2010) [`gm10`], App.; Trefethen–Bau (1997), Thm 38.5;\nAtlas: `chebyshev-minimax`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.isLeast_chebyshev_monic_minimax (q : ℕ) :\n  IsLeast {M | ∃ p, p.Monic ∧ p.natDegree = q ∧ ∀ x ∈ Set.Icc (-1) 1, |Polynomial.eval x p| ≤ M} (1 / 2 ^ (q - 1))",
+  "name":
+  "NLAlib.isLeast_chebyshev_monic_minimax",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  248,
+  "kind":
+  "theorem",
+  "doc":
+  "The monic Chebyshev minimax theorem: over monic real polynomials of degree `q`, the least\npossible bound for `|p|` on `[−1, 1]` is `1 / 2^(q−1)`, attained by `2^(1−q) T_q`.\nSource: Trefethen (2013), Thm 2.2 / Rivlin (1990), Cor. 2.1.1; Atlas: `chebyshev-monic-minimal`.\nDeviation: stated for all `q`, including `q = 0` (where the value is `1`). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.isMoorePenroseInverse.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) :\n  NLAlib.IsMoorePenroseInverse A (NLAlib.moorePenroseInverse A)",
   "name":
   "NLAlib.isMoorePenroseInverse",
@@ -11548,6 +12164,20 @@
   "theorem",
   "doc":
   "For an isometry `K`, the block matrix `U = fromBlocks (1 - K Kᴴ) K Kᴴ 0` is a Hermitian involution\nand the lower-right block of `U (fromBlocks A 0 0 B) U` is `Kᴴ A K`.\n\nTropp 2015, proof of Thm 8.5.2 (unitary dilation). Atlas: `operator-monotone-convex`. Ported from\nthe Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 8*.\n\nAuxiliary; not a numbered result in the source. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.iteratedDeriv_sub_eval_eqOn {f : ℝ → ℝ} {U : Set ℝ} (hU : IsOpen U) (p : Polynomial ℝ) {n : ℕ}\n  (hf : ∀ k < n, DifferentiableOn ℝ (iteratedDeriv k f) U) (k : ℕ) :\n  k ≤ n →\n    Set.EqOn (iteratedDeriv k fun t => f t - Polynomial.eval t p)\n      (fun t => iteratedDeriv k f t - Polynomial.eval t ((⇑Polynomial.derivative)^[k] p)) U",
+  "name":
+  "NLAlib.iteratedDeriv_sub_eval_eqOn",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Calculus.IteratedDeriv",
+  "line":
+  17,
+  "kind":
+  "theorem",
+  "doc":
+  "On an open set `U` where `f, f', …, f^{(n−1)}` are differentiable, the `k`-th derivative\n(`k ≤ n`) of `f − p` for a polynomial `p` is `f^{(k)} − p^{(k)}`. "},
  {"sorry":
   true,
   "signature":
@@ -13203,6 +13833,34 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.monic_inv_two_pow_mul_T (q : ℕ) : (Polynomial.C (1 / 2 ^ (q - 1)) * Polynomial.Chebyshev.T ℝ ↑q).Monic",
+  "name":
+  "NLAlib.monic_inv_two_pow_mul_T",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  202,
+  "kind":
+  "theorem",
+  "doc":
+  "The scaled Chebyshev polynomial `2^(1−q) T_q` is monic (for `q = 0` it is `1`).\nSource: Trefethen, *Approximation Theory and Approximation Practice* (2013), Thm 2.2 / Rivlin\n(1990), Cor. 2.1.1; Atlas: `chebyshev-monic-minimal`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.monotoneOn_eval_T_real (q : ℕ) :\n  MonotoneOn (fun x => Polynomial.eval x (Polynomial.Chebyshev.T ℝ ↑q)) (Set.Ici 1)",
+  "name":
+  "NLAlib.monotoneOn_eval_T_real",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "`T_q` is monotone on `[1, ∞)`.\nSource: Rivlin (1990), §1.5 (from `T_q(cosh θ) = cosh(qθ)`). Atlas: `chebyshev-growth`. "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.moorePenroseInverse.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (A : Matrix m n ℝ) :\n  Matrix n m ℝ",
   "name":
   "NLAlib.moorePenroseInverse",
@@ -13693,6 +14351,34 @@
  {"sorry":
   false,
   "signature":
+  "NLAlib.natDegree_inv_two_pow_mul_T (q : ℕ) :\n  (Polynomial.C (1 / 2 ^ (q - 1)) * Polynomial.Chebyshev.T ℝ ↑q).natDegree = q",
+  "name":
+  "NLAlib.natDegree_inv_two_pow_mul_T",
+  "module":
+  "NLAlib.Polynomial.Minimax",
+  "line":
+  209,
+  "kind":
+  "theorem",
+  "doc":
+  "The scaled Chebyshev polynomial `2^(1−q) T_q` has degree `q`.\nSource: Rivlin (1990), Cor. 2.1.1; Atlas: `chebyshev-monic-minimal`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.nodal_chebyshevZero (q : ℕ) :\n  Lagrange.nodal Finset.univ (NLAlib.chebyshevZero q) = Polynomial.C (1 / 2 ^ (q - 1)) * Polynomial.Chebyshev.T ℝ ↑q",
+  "name":
+  "NLAlib.nodal_chebyshevZero",
+  "module":
+  "NLAlib.Polynomial.Interpolation",
+  "line":
+  205,
+  "kind":
+  "theorem",
+  "doc":
+  "The nodal polynomial of the `q` Chebyshev zeros is the monic Chebyshev polynomial:\n`∏ₖ (X − cos((2k + 1)π/(2q))) = T_q / 2^(q−1)` (both sides are `1` when `q = 0`).\nSource: Trefethen, *Approximation Theory and Approximation Practice*, Ch. 2–3; Rivlin,\n*Chebyshev Polynomials*, §1.2.\nAtlas: `chebyshev-interpolation-error` (lemma).\nDeviation: no `0 < q` hypothesis is needed (`q − 1` is truncated subtraction). "},
+ {"sorry":
+  false,
+  "signature":
   "NLAlib.nonempty_unitSphere.{u_2} {n : Type u_2} [Fintype n] [Nonempty n] : Nonempty { x // x ⬝ᵥ x = 1 }",
   "name":
   "NLAlib.nonempty_unitSphere",
@@ -13858,6 +14544,34 @@
   "theorem",
   "doc":
   "**Numerical inequality for the inverse Wishart spectral moments.** For integers\n`1 ≤ p ≤ 18` and `x ≥ 2p`,\n`(1 + 2p/(x+1-2p)) · (1/Γ(x+2))^{2p/(x+1)} ≤ (e/x)^{2p}`.\n\nTropp–Webber 2023, (B.8) (the range `p ≤ 18` is where the integer check\n`(2p+1)^{2p+2} ≤ 46^{2p} ≤ (2π e²)^{2p}` holds). Atlas: `inverse-wishart-spectral-moment`\n(helper). Proof: Stirling's lower bound for `(x+1)!`, concavity of `log`, and the integer check.\nPorted from Prove2me solution `GaussianMatrix.tw_inverse_moment_numeric`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.one_add_sqrt_two_mul_pow_div_two_le_eval_T_real {γ : ℝ} (hγ : 0 ≤ γ) (q : ℕ) :\n  (1 + √(2 * γ)) ^ q / 2 ≤ Polynomial.eval (1 + γ) (Polynomial.Chebyshev.T ℝ ↑q)",
+  "name":
+  "NLAlib.one_add_sqrt_two_mul_pow_div_two_le_eval_T_real",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  82,
+  "kind":
+  "theorem",
+  "doc":
+  "Gap form of the Chebyshev growth bound: for `0 ≤ γ`, `(1 + √(2γ))^q / 2 ≤ T_q(1 + γ)`.\nSource: Musco–Musco (2015) [`mm15`], proof of Lem. 4. Atlas: `chebyshev-growth`. "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.one_le_eval_chebyshevAmplifier {α γ x : ℝ} (q : ℕ) (hα : 0 < α) (hγ : 0 ≤ γ) (hx : α * (1 + γ) ≤ x) :\n  1 ≤ Polynomial.eval x (NLAlib.chebyshevAmplifier α γ q)",
+  "name":
+  "NLAlib.one_le_eval_chebyshevAmplifier",
+  "module":
+  "NLAlib.Polynomial.Approximation",
+  "line":
+  49,
+  "kind":
+  "theorem",
+  "doc":
+  "Beyond `α(1 + γ)` the amplifier is at least `1`: `α(1 + γ) ≤ x → 1 ≤ p(x)`.\nSource: Musco–Musco (2015) [`mm15`], Lem. 4 (monotonicity of `T_q` on `[1, ∞)`). Atlas:\n`chebyshev-amplifier`. "},
  {"sorry":
   false,
   "signature":
@@ -14264,6 +14978,20 @@
   "theorem",
   "doc":
   "`(G Gᵀ)⁻¹` is positive semidefinite for every real matrix `G`.\n\nHelper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the\nProve2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_inv`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.pow_div_two_le_eval_T_real {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :\n  (x + √(x ^ 2 - 1)) ^ q / 2 ≤ Polynomial.eval x (Polynomial.Chebyshev.T ℝ ↑q)",
+  "name":
+  "NLAlib.pow_div_two_le_eval_T_real",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  43,
+  "kind":
+  "theorem",
+  "doc":
+  "Lower bound on the growth of `T_q` on `[1, ∞)`: for `1 ≤ x`,\n`(x + √(x² − 1))^q / 2 ≤ T_q(x)`.\nSource: Musco–Musco (2015) [`mm15`], proof of Lem. 4; Rivlin (1990), §1.5. Atlas:\n`chebyshev-growth`. "},
  {"sorry":
   false,
   "signature":
@@ -16266,6 +16994,20 @@
   "theorem",
   "doc":
   "The singular-value tail bound for the singular values of a matrix:\n`σ_{ℓ+1}(A)² ≤ (4/t) ∑_{j=k+1}^{N} σ_j(A)²` for `ℓ = (t + 1)/2`, `4k ≤ t`, `0 < t`, `ℓ ≤ N`\n(Chen–Persson, `eq:tGN-tail`). `sq_le_four_div_mul_sum_Ico_sq` applied to `singularValues A`.\nAtlas `sigma-tail-bound` (uses `svd`). "},
+ {"sorry":
+  false,
+  "signature":
+  "NLAlib.sqrt_add_div_sqrt_sub_pow_div_two_le_eval_T_real {a b : ℝ} (ha : 0 < a) (hab : a < b) (q : ℕ) :\n  ((√b + √a) / (√b - √a)) ^ q / 2 ≤ Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑q)",
+  "name":
+  "NLAlib.sqrt_add_div_sqrt_sub_pow_div_two_le_eval_T_real",
+  "module":
+  "NLAlib.Polynomial.Chebyshev",
+  "line":
+  113,
+  "kind":
+  "theorem",
+  "doc":
+  "Condition-number form of the Chebyshev growth bound: for `0 < a < b`,\n`((√b + √a)/(√b − √a))^q / 2 ≤ T_q((b + a)/(b − a))`.\nSource: Golub–Meurant (2010) [`gm10`], Ch. 8; Saad (2003), §6.11.3. Atlas: `chebyshev-growth`. "},
  {"sorry":
   false,
   "signature":

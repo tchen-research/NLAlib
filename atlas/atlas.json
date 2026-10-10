@@ -1,6 +1,6 @@
 {
  "schema_version": "0.2",
- "updated_at": "2026-10-09",
+ "updated_at": "2026-10-10",
  "areas": [
   {
    "id": "matrix",
@@ -159,15 +159,15 @@
    "id": "krylov",
    "name": "Krylov and polynomial methods",
    "parent": null,
-   "order": 21,
-   "summary": "Krylov subspaces, Lanczos, Gauss quadrature, Chebyshev bounds. Deterministic, but the backbone of the modern randomized low-rank and trace-estimation algorithms.",
+   "order": 24,
+   "summary": "Krylov subspaces, Lanczos, Gauss quadrature. Deterministic, but the backbone of the modern randomized low-rank and trace-estimation algorithms; rates come from the polynomial area.",
    "priority": "next"
   },
   {
    "id": "solvers",
    "name": "Randomized solvers (consumers)",
    "parent": null,
-   "order": 22,
+   "order": 25,
    "summary": "Sketch-and-solve, sketch-and-precondition, Kaczmarz and sketch-and-project. Mostly consumers of sketching and matrix facts; Kaczmarz is itself a clean foundation.",
    "priority": "later"
   },
@@ -175,8 +175,30 @@
    "id": "gaussian-concentration-tools",
    "name": "Gaussian measure: log-Sobolev and comparison",
    "parent": "gaussian",
-   "order": 23,
+   "order": 26,
    "summary": "The machinery behind Gaussian concentration and Gordon's theorem: integration by parts, the Ornstein–Uhlenbeck semigroup, log-Sobolev, Herbst, Slepian and Sudakov–Fernique."
+  },
+  {
+   "id": "polynomial",
+   "name": "Polynomial approximation",
+   "parent": null,
+   "order": 21,
+   "summary": "Chebyshev polynomials and their extremal properties, Markov-type derivative bounds, interpolation. Layer 0, no matrices: the deterministic polynomial facts that Krylov, Lanczos, CG and block Krylov rates reduce to.",
+   "priority": "now"
+  },
+  {
+   "id": "polynomial-chebyshev",
+   "name": "Chebyshev polynomials",
+   "parent": "polynomial",
+   "order": 22,
+   "summary": "Growth outside [-1,1], second kind, extremal and minimax properties, monic minimality."
+  },
+  {
+   "id": "polynomial-approximation",
+   "name": "Approximation, derivatives, interpolation",
+   "parent": "polynomial",
+   "order": 23,
+   "summary": "Gap-amplifying polynomials, approximation of 1/x, Markov and Bernstein inequalities, Lagrange remainder and Chebyshev interpolation."
   }
  ],
  "results": [
@@ -6022,10 +6044,10 @@
    ],
    "formalizations": [],
    "depends_on": [
-    "chebyshev-bounds",
     "power-iteration-deterministic",
     "rsvd-expected-error",
-    "krylov-subspace"
+    "krylov-subspace",
+    "chebyshev-amplifier"
    ],
    "uses_defs": [
     "NLAlib.krylovSpace",
@@ -6043,7 +6065,7 @@
    "tags": [
     "consumer"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "hutchinson-unbiased",
@@ -6695,55 +6717,6 @@
    "updated_at": "2026-10-09"
   },
   {
-   "id": "chebyshev-bounds",
-   "title": "Chebyshev polynomial extremal bounds",
-   "aliases": [
-    "Chebyshev polynomials",
-    "Chebyshev minimax property",
-    "Chebyshev extremal bound",
-    "polynomial acceleration bound"
-   ],
-   "area": "krylov",
-   "kind": "bound",
-   "status": "candidate",
-   "informal": "$$\\min_{\\deg p \\le q,\\ p(0)=1}\\ \\max_{[a,b]}|p| = \\frac{1}{T_q\\big(\\frac{b+a}{b-a}\\big)},$$ with growth $T_q(1+\\gamma) \\ge (1+\\sqrt{2\\gamma})^q/2$ outside $[-1,1]$. Drives CG, Lanczos and block Krylov rates.",
-   "hypotheses": [
-    "$0 < a < b$",
-    "$q \\in \\mathbb{N}$ and $T_q$ the degree-$q$ Chebyshev polynomial"
-   ],
-   "conclusion": "$\\min_{\\deg p \\le q,\\ p(0)=1}\\ \\max_{[a,b]}|p| = \\frac{1}{T_q\\big(\\frac{b+a}{b-a}\\big)}$ and $T_q(1+\\gamma) \\ge (1+\\sqrt{2\\gamma})^q/2$ for $\\gamma > 0$",
-   "sources": [
-    {
-     "source": "gm10",
-     "label": "App."
-    },
-    {
-     "source": "mm15",
-     "label": "Lem 4, 5"
-    }
-   ],
-   "formalizations": [],
-   "depends_on": [],
-   "uses_defs": [],
-   "variants": [
-    "cg-convergence"
-   ],
-   "mathlib_prereqs": [
-    {
-     "decl": "Polynomial.Chebyshev.T",
-     "present": true,
-     "note": "polynomials defined; extremal properties absent"
-    }
-   ],
-   "difficulty": 3,
-   "priority": "now",
-   "tags": [
-    "foundation",
-    "krylov"
-   ],
-   "updated_at": "2026-10-09"
-  },
-  {
    "id": "cg-convergence",
    "title": "Conjugate gradient κ-bound",
    "aliases": [
@@ -6769,8 +6742,8 @@
    ],
    "formalizations": [],
    "depends_on": [
-    "chebyshev-bounds",
-    "krylov-subspace"
+    "krylov-subspace",
+    "chebyshev-minimax"
    ],
    "uses_defs": [
     "NLAlib.krylovSpace",
@@ -6778,7 +6751,7 @@
    ],
    "variants": [
     "nystrom-pcg",
-    "chebyshev-bounds"
+    "chebyshev-minimax"
    ],
    "mathlib_prereqs": [],
    "difficulty": 3,
@@ -6787,7 +6760,7 @@
     "consumer",
     "krylov"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "random-start-power",
@@ -6816,9 +6789,10 @@
    ],
    "formalizations": [],
    "depends_on": [
-    "chebyshev-bounds",
     "gaussian-matrix-def",
-    "krylov-subspace"
+    "krylov-subspace",
+    "chebyshev-growth",
+    "chebyshev-amplifier"
    ],
    "uses_defs": [
     "NLAlib.krylovSpace",
@@ -6835,7 +6809,7 @@
    "tags": [
     "krylov"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "slq-error",
@@ -6870,7 +6844,7 @@
    "depends_on": [
     "lanczos-gauss-quadrature",
     "hutchinson-tail",
-    "chebyshev-bounds"
+    "bernstein-ellipse-approx"
    ],
    "uses_defs": [
     "NLAlib.krylovSpace",
@@ -6887,7 +6861,7 @@
     "consumer",
     "krylov"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "sketch-and-solve-ls",
@@ -9062,6 +9036,1152 @@
      "usage": "Pass the same generic finite-index compressed-minimizer conditions; obtain the coefficient-two ordinary projected truncation bound."
     }
    ]
+  },
+  {
+   "id": "chebyshev-polynomials",
+   "title": "Chebyshev polynomials: trigonometric form, bound on [−1,1], roots and extrema",
+   "aliases": [
+    "Chebyshev polynomials",
+    "T_q",
+    "Chebyshev polynomial of the first kind",
+    "cos(q arccos x)",
+    "Chebyshev nodes",
+    "Chebyshev zeros"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "definition",
+   "status": "proved",
+   "informal": "$T_q(\\cos\\theta) = \\cos(q\\theta)$ and $T_q(\\cosh\\theta) = \\cosh(q\\theta)$; $|T_q| \\le 1$ on $[-1,1]$ with $T_q \\ge 1$ beyond; zeros $\\cos\\frac{(2k+1)\\pi}{2q}$ and extrema $\\cos\\frac{k\\pi}{q}$. All in Mathlib.",
+   "hypotheses": [
+    "$q \\in \\mathbb{N}$ and $T_q$ the degree-$q$ Chebyshev polynomial, $T_0 = 1$, $T_1 = x$, $T_{q+1} = 2xT_q - T_{q-1}$"
+   ],
+   "conclusion": "$T_q(\\cos\\theta) = \\cos(q\\theta)$, $T_q(\\cosh\\theta) = \\cosh(q\\theta)$, $|T_q(x)| \\le 1$ for $|x| \\le 1$, $T_q(x) \\ge 1$ for $x \\ge 1$, $T_q$ has the $q$ simple zeros $\\cos\\frac{(2k+1)\\pi}{2q}$ and leading coefficient $2^{q-1}$",
+   "sources": [
+    {
+     "source": "rivlin90",
+     "label": "Ch. 1"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ch. 3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.T_real_cos",
+     "status": "proved",
+     "usage": "`(T ℝ n).eval (cos θ) = cos (n * θ)`; index `n : ℤ`."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.T_real_cosh",
+     "status": "proved",
+     "usage": "`(T ℝ n).eval (cosh θ) = cosh (n * θ)`, the form used outside `[-1,1]`."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.abs_eval_T_real_le_one",
+     "status": "proved",
+     "usage": "From `hx : |x| ≤ 1`; gives `|(T ℝ n).eval x| ≤ 1`."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.one_le_eval_T_real",
+     "status": "proved",
+     "usage": "From `hx : 1 ≤ x`; gives `1 ≤ (T ℝ n).eval x`."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.roots_T_real",
+     "status": "proved",
+     "usage": "`(T ℝ n).roots` as the multiset of `cos ((2k+1)π/(2n))`, `k < n`."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.leadingCoeff_T",
+     "status": "proved",
+     "usage": "Leading coefficient `2^(n-1)` (needs `IsDomain`, `NeZero 2`)."
+    }
+   ],
+   "depends_on": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cos",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cosh",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.abs_eval_T_real_le_one",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.roots_T_real",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.leadingCoeff_T",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "mathlib",
+    "foundation",
+    "polynomial"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "chebyshev-growth",
+   "title": "Chebyshev growth outside [−1,1]",
+   "aliases": [
+    "Chebyshev polynomial growth",
+    "T_q(1+γ) lower bound",
+    "closed form of T_q beyond 1",
+    "(1+√(2γ))^q/2 bound",
+    "Chebyshev acceleration rate"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "For $x \\ge 1$, $T_q(x) = \\tfrac12\\big[(x+\\sqrt{x^2-1})^q + (x-\\sqrt{x^2-1})^q\\big] \\ge \\tfrac12 (x+\\sqrt{x^2-1})^q$, so $T_q(1+\\gamma) \\ge \\tfrac12(1+\\sqrt{2\\gamma})^q$ and $T_q\\big(\\tfrac{b+a}{b-a}\\big) \\ge \\tfrac12\\big(\\tfrac{\\sqrt b+\\sqrt a}{\\sqrt b-\\sqrt a}\\big)^q$. The source of every $\\sqrt{\\kappa}$ and $1/\\sqrt{\\gamma}$ rate.",
+   "hypotheses": [
+    "$q \\in \\mathbb{N}$",
+    "$x \\ge 1$, or $\\gamma \\ge 0$, or $0 < a < b$"
+   ],
+   "conclusion": "$T_q(x) = \\tfrac12\\big[(x+\\sqrt{x^2-1})^q + (x-\\sqrt{x^2-1})^q\\big]$; $T_q$ is increasing on $[1,\\infty)$; $T_q(1+\\gamma) \\ge \\tfrac12(1+\\sqrt{2\\gamma})^q$; $T_q\\big(\\tfrac{b+a}{b-a}\\big) \\ge \\tfrac12\\big(\\tfrac{\\sqrt b+\\sqrt a}{\\sqrt b-\\sqrt a}\\big)^q$",
+   "sources": [
+    {
+     "source": "mm15",
+     "label": "proof of Lem. 4"
+    },
+    {
+     "source": "gm10",
+     "label": "App."
+    },
+    {
+     "source": "tb97",
+     "label": "Lect. 38"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eval_T_real_eq_of_one_le",
+     "status": "proved",
+     "usage": "Pass `hx : 1 ≤ x` and `q`; rewrites `(T ℝ q).eval x = ((x + √(x^2-1))^q + (x - √(x^2-1))^q)/2`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pow_div_two_le_eval_T_real",
+     "status": "proved",
+     "usage": "Pass `hx : 1 ≤ x` and `q`; gives `(x + √(x^2-1))^q / 2 ≤ (T ℝ q).eval x`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eval_T_real_le_pow",
+     "status": "proved",
+     "usage": "Pass `hx : 1 ≤ x` and `q`; gives `(T ℝ q).eval x ≤ (x + √(x^2-1))^q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.monotoneOn_eval_T_real",
+     "status": "proved",
+     "usage": "`MonotoneOn (fun x => (T ℝ q).eval x) (Set.Ici 1)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.one_add_sqrt_two_mul_pow_div_two_le_eval_T_real",
+     "status": "proved",
+     "usage": "Pass `hγ : 0 ≤ γ` and `q`; gives `(1 + √(2γ))^q / 2 ≤ (T ℝ q).eval (1 + γ)` (Musco–Musco form)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_add_div_sqrt_sub_pow_div_two_le_eval_T_real",
+     "status": "proved",
+     "usage": "Pass `ha : 0 < a`, `hab : a < b`, `q`; gives `((√b + √a)/(√b - √a))^q / 2 ≤ (T ℝ q).eval ((b + a)/(b - a))` (condition-number form)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.add_div_sub_add_sqrt_sq_sub_one_eq",
+     "status": "proved",
+     "usage": "The identity `(b+a)/(b-a) + √(((b+a)/(b-a))^2 - 1) = (√b + √a)/(√b - √a)` for `0 < a < b`."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-polynomials"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "chebyshev-minimax",
+    "chebyshev-amplifier"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cosh",
+     "present": true
+    },
+    {
+     "decl": "Real.cosh_log",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "polynomial",
+    "krylov",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "chebyshev-second-kind",
+   "title": "Chebyshev polynomials of the second kind and the derivative of T",
+   "aliases": [
+    "Chebyshev polynomials of the second kind",
+    "U_q",
+    "T_q' = q U_{q-1}",
+    "|U_q| ≤ q+1",
+    "derivative of Chebyshev polynomial"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "$U_q(\\cos\\theta)\\sin\\theta = \\sin((q+1)\\theta)$, $T_q' = qU_{q-1}$, hence $|U_q| \\le q+1$ and $|T_q'| \\le q^2$ on $[-1,1]$ (the equality case of Markov).",
+   "hypotheses": [
+    "$q \\in \\mathbb{N}$ and $|x| \\le 1$"
+   ],
+   "conclusion": "$T_q'(x) = q\\,U_{q-1}(x)$, $|U_q(x)| \\le q+1$ and $|T_q'(x)| \\le q^2$ for $|x| \\le 1$, with $T_q'(1) = q^2$",
+   "sources": [
+    {
+     "source": "rivlin90",
+     "label": "§1.2, §2.7"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.T_derivative_eq_U",
+     "status": "proved",
+     "usage": "`derivative (T R n) = n * U R (n - 1)`."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.U_real_cos",
+     "status": "proved",
+     "usage": "`(U ℝ n).eval (cos θ) * sin θ = sin ((n + 1) * θ)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_U_real_le",
+     "status": "proved",
+     "usage": "Pass `hx : |x| ≤ 1` and `q`; gives `|(U ℝ q).eval x| ≤ q + 1`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_derivative_T_real_le",
+     "status": "proved",
+     "usage": "Pass `hx : |x| ≤ 1` and `q`; gives `|(derivative (T ℝ q)).eval x| ≤ q^2`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eval_derivative_T_real_one",
+     "status": "proved",
+     "usage": "`(derivative (T ℝ q)).eval 1 = q^2`."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-polynomials"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "markov-brothers"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.U",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.T_derivative_eq_U",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.U_real_cos",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.abs_iterate_derivative_T_real_le",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "chebyshev-extremal",
+   "title": "Chebyshev extremal property: bounded polynomials are dominated by T_q outside [−1,1]",
+   "aliases": [
+    "Chebyshev extremal property",
+    "Chebyshev maximizes outside the interval",
+    "largest leading coefficient",
+    "Chebyshev dominates bounded polynomials",
+    "T_q is extremal"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "If $\\deg p \\le q$ and $|p| \\le 1$ on $[-1,1]$ then $|p(x)| \\le |T_q(x)|$ for $|x| \\ge 1$, likewise for every derivative at $x \\ge 1$, and the leading coefficient of $p$ is at most $2^{q-1}$. Mathlib has the one-sided derivative form; the absolute-value form is ours.",
+   "hypotheses": [
+    "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le q$",
+    "$|p(x)| \\le M$ for $x \\in [-1,1]$"
+   ],
+   "conclusion": "$|p(x)| \\le M\\,|T_q(x)|$ for $|x| \\ge 1$; $p^{(k)}(x) \\le M\\,T_q^{(k)}(x)$ for $x \\ge 1$; the coefficient of $x^q$ in $p$ is at most $M 2^{q-1}$",
+   "sources": [
+    {
+     "source": "rivlin90",
+     "label": "Thm 2.1, §2.7"
+    },
+    {
+     "source": "cheney66",
+     "label": "Ch. 3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.eval_iterate_derivative_le_of_forall_abs_le_one",
+     "status": "proved",
+     "usage": "From `hx : 1 ≤ x`, `hPdeg : P.degree ≤ n`, `hPbnd : ∀ x ∈ Icc (-1) 1, |P.eval x| ≤ 1`; gives `(derivative^[k] P).eval x ≤ (derivative^[k] (T ℝ n)).eval x`. Take `k = 0` for the value."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Polynomial.Chebyshev.leadingCoeff_le_of_forall_abs_le_one",
+     "status": "proved",
+     "usage": "Same hypotheses; gives `P.coeff n ≤ 2 ^ (n - 1)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_le_abs_eval_T_real_of_forall_abs_le_one",
+     "status": "proved",
+     "usage": "From `hP : P.degree ≤ q`, `hb : ∀ x ∈ Icc (-1) 1, |P.eval x| ≤ 1`, `hx : 1 ≤ |x|`; gives `|P.eval x| ≤ |(T ℝ q).eval x|`.",
+     "note": "two-sided in x; Mathlib covers x ≥ 1 only"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_le_mul_abs_eval_T_real_of_forall_abs_le",
+     "status": "proved",
+     "usage": "Same with bound `M` (any sign): gives `|P.eval x| ≤ M * |(T ℝ q).eval x|`."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-polynomials"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "chebyshev-minimax",
+    "chebyshev-monic-minimal"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.eval_iterate_derivative_le_of_forall_abs_le_one",
+     "present": true,
+     "note": "one-sided, x ≥ 1, every derivative"
+    },
+    {
+     "decl": "Polynomial.Chebyshev.leadingCoeff_le_of_forall_abs_le_one",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "polynomial",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "chebyshev-minimax",
+   "title": "Chebyshev minimax: the smallest polynomial on [a,b] with p(0) = 1",
+   "aliases": [
+    "Chebyshev minimax property",
+    "minimax polynomial with p(0)=1",
+    "residual polynomial bound",
+    "polynomial acceleration bound",
+    "CG polynomial",
+    "shifted Chebyshev polynomial",
+    "Chebyshev iteration rate"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "$$\\min_{\\deg p \\le q,\\ p(0)=1}\\ \\max_{[a,b]}|p| = \\frac{1}{T_q\\big(\\frac{b+a}{b-a}\\big)} \\le 2\\Big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\Big)^q,$$ attained by the shifted Chebyshev polynomial. Drives CG, Chebyshev iteration, Lanczos and block Krylov rates.",
+   "hypotheses": [
+    "$0 < a < b$ and $q \\in \\mathbb{N}$",
+    "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le q$ and $p(0) = 1$"
+   ],
+   "conclusion": "$\\max_{x\\in[a,b]}|p(x)| \\ge 1/T_q\\big(\\tfrac{b+a}{b-a}\\big)$, with equality for $p^\\star(x) = T_q\\big(\\tfrac{b+a-2x}{b-a}\\big)/T_q\\big(\\tfrac{b+a}{b-a}\\big)$, and $1/T_q\\big(\\tfrac{b+a}{b-a}\\big) \\le 2\\big(\\tfrac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^q$",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "App."
+    },
+    {
+     "source": "tb97",
+     "label": "Thm 38.5"
+    },
+    {
+     "source": "mm15",
+     "label": "Lem. 4, 5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inv_eval_T_real_le_of_forall_abs_eval_le",
+     "status": "proved",
+     "usage": "From `ha : 0 < a`, `hab : a < b`, `hp : p.degree ≤ q`, `hp0 : p.eval 0 = 1`, `hb : ∀ x ∈ Icc a b, |p.eval x| ≤ M`; gives `1 / (T ℝ q).eval ((b + a)/(b - a)) ≤ M`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeast_chebyshev_minimax",
+     "status": "proved",
+     "usage": "Pass `q`, `ha`, `hab`; gives `IsLeast {M | ∃ p, p.degree ≤ q ∧ p.eval 0 = 1 ∧ ∀ x ∈ Icc a b, |p.eval x| ≤ M} (1 / (T ℝ q).eval ((b+a)/(b-a)))`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_chebyshevResidual_le",
+     "status": "proved",
+     "usage": "From `ha`, `hab`, `hx : x ∈ Icc a b`; gives `|(chebyshevResidual a b q).eval x| ≤ 1 / (T ℝ q).eval ((b+a)/(b-a))`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_chebyshevResidual_le_two_mul_pow",
+     "status": "proved",
+     "usage": "From `q`, `ha`, `hab`, `hx : x ∈ Icc a b`; gives `|(chebyshevResidual a b q).eval x| ≤ 2 * ((√b - √a)/(√b + √a))^q` (the CG rate)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inv_eval_T_real_le_two_mul_pow",
+     "status": "proved",
+     "usage": "`1 / (T ℝ q).eval ((b+a)/(b-a)) ≤ 2 * ((√b - √a)/(√b + √a))^q` for `0 < a < b`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eval_chebyshevResidual_zero",
+     "status": "proved",
+     "usage": "From `ha`, `hab`; gives `(chebyshevResidual a b q).eval 0 = 1`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.degree_chebyshevResidual_le",
+     "status": "proved",
+     "usage": "`(chebyshevResidual a b q).degree ≤ q`, no hypotheses."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-extremal",
+    "chebyshev-growth"
+   ],
+   "uses_defs": [
+    "NLAlib.chebyshevResidual"
+   ],
+   "variants": [
+    "cg-convergence",
+    "inverse-polynomial-approx",
+    "chebyshev-amplifier"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.eval_iterate_derivative_le_of_forall_abs_le_one",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "polynomial",
+    "krylov",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "chebyshev-monic-minimal",
+   "title": "Monic Chebyshev polynomial has the smallest sup norm",
+   "aliases": [
+    "monic minimality",
+    "2^{1-q} T_q is the smallest monic polynomial",
+    "minimal monic polynomial on [-1,1]",
+    "Chebyshev nodal polynomial"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "Every monic $p$ of degree $q \\ge 1$ has $\\max_{[-1,1]}|p| \\ge 2^{1-q}$, attained by $2^{1-q}T_q$. The reason Chebyshev nodes are the right interpolation points.",
+   "hypotheses": [
+    "$p \\in \\mathbb{R}[x]$ monic of degree $q \\ge 1$"
+   ],
+   "conclusion": "$\\max_{x\\in[-1,1]}|p(x)| \\ge 2^{1-q}$, with equality for $p = 2^{1-q}T_q$",
+   "sources": [
+    {
+     "source": "rivlin90",
+     "label": "Thm 2.1"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 16.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inv_two_pow_le_of_monic_of_forall_abs_eval_le",
+     "status": "proved",
+     "usage": "From `hp : p.Monic`, `hdeg : p.natDegree = q`, `hb : ∀ x ∈ Icc (-1) 1, |p.eval x| ≤ M`; gives `1 / 2^(q-1) ≤ M` (also for `q = 0`)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeast_chebyshev_monic_minimax",
+     "status": "proved",
+     "usage": "`IsLeast {M | ∃ p, p.Monic ∧ p.natDegree = q ∧ ∀ x ∈ Icc (-1) 1, |p.eval x| ≤ M} (1 / 2^(q-1))`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.monic_inv_two_pow_mul_T",
+     "status": "proved",
+     "usage": "`(C (1 / 2^(q-1)) * T ℝ q).Monic`; with `natDegree_inv_two_pow_mul_T` and `abs_eval_inv_two_pow_mul_T_le` the attaining polynomial."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-extremal"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "chebyshev-interpolation-error"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.leadingCoeff_le_of_forall_abs_le_one",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "chebyshev-amplifier",
+   "title": "Gap-amplifying Chebyshev polynomial",
+   "aliases": [
+    "gap amplifying polynomial",
+    "Musco–Musco Lemma 4",
+    "Musco–Musco Lemma 5",
+    "block Krylov polynomial",
+    "Chebyshev filter",
+    "gap-independent polynomial"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "$p(x) = T_q(x/\\alpha)/T_q(1+\\gamma)$ has $p(\\alpha(1+\\gamma)) = 1$, $p \\ge 1$ beyond, and $|p| \\le 2(1+\\sqrt{2\\gamma})^{-q}$ on $[-\\alpha,\\alpha]$: degree $O(\\log(1/\\varepsilon)/\\sqrt\\gamma)$ separates a gap $\\gamma$ (gap-independent version: $\\gamma = \\varepsilon$).",
+   "hypotheses": [
+    "$\\alpha > 0$, $\\gamma \\ge 0$, $q \\in \\mathbb{N}$",
+    "$p(x) = T_q(x/\\alpha)/T_q(1+\\gamma)$"
+   ],
+   "conclusion": "$\\deg p \\le q$, $p(\\alpha(1+\\gamma)) = 1$, $p(x) \\ge 1$ for $x \\ge \\alpha(1+\\gamma)$, and $|p(x)| \\le 2/(1+\\sqrt{2\\gamma})^q$ for $|x| \\le \\alpha$",
+   "sources": [
+    {
+     "source": "mm15",
+     "label": "Lem. 4, 5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_chebyshevAmplifier_le",
+     "status": "proved",
+     "usage": "Pass `q`, `hα : 0 < α`, `hγ : 0 ≤ γ`, `hx : x ∈ Icc (-α) α`; gives `|(chebyshevAmplifier α γ q).eval x| ≤ 2 / (1 + √(2γ))^q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.one_le_eval_chebyshevAmplifier",
+     "status": "proved",
+     "usage": "Pass `q`, `hα`, `hγ`, `hx : α * (1 + γ) ≤ x`; gives `1 ≤ (chebyshevAmplifier α γ q).eval x`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eval_chebyshevAmplifier_self",
+     "status": "proved",
+     "usage": "Pass `q`, `hα`, `hγ`; gives `(chebyshevAmplifier α γ q).eval (α * (1 + γ)) = 1`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.degree_chebyshevAmplifier_le",
+     "status": "proved",
+     "usage": "`(chebyshevAmplifier α γ q).degree ≤ q`."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-growth",
+    "chebyshev-polynomials"
+   ],
+   "uses_defs": [
+    "NLAlib.chebyshevAmplifier"
+   ],
+   "variants": [
+    "block-krylov-lra",
+    "random-start-power"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "krylov",
+    "lra",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "inverse-polynomial-approx",
+   "title": "Polynomial approximation of 1/x on [a,b]",
+   "aliases": [
+    "approximating 1/x",
+    "polynomial approximation of the inverse",
+    "CG error polynomial",
+    "Lanczos solve rate",
+    "√κ rate for 1/x"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "There is $p$ of degree $< q$ with $|p(x) - 1/x| \\le \\tfrac{2}{a}\\big(\\tfrac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^q$ on $[a,b]$: the polynomial behind the CG and Lanczos-solve $\\sqrt\\kappa$ rates.",
+   "hypotheses": [
+    "$0 < a < b$ and $q \\in \\mathbb{N}$"
+   ],
+   "conclusion": "$\\exists p$ with $\\deg p < q$ and $|p(x) - 1/x| \\le \\tfrac{2}{a}\\big(\\tfrac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^q$ for all $x \\in [a,b]$",
+   "sources": [
+    {
+     "source": "gm10",
+     "label": "Ch. 8"
+    },
+    {
+     "source": "tb97",
+     "label": "Thm 38.5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_degree_lt_abs_eval_sub_inv_le",
+     "status": "proved",
+     "usage": "Pass `q`, `ha : 0 < a`, `hab : a < b`; gives `∃ p : ℝ[X], p.degree < q ∧ ∀ x ∈ Icc a b, |p.eval x - 1/x| ≤ (2/a) * ((√b - √a)/(√b + √a))^q`."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-minimax",
+    "chebyshev-growth"
+   ],
+   "uses_defs": [
+    "NLAlib.chebyshevResidual"
+   ],
+   "variants": [
+    "cg-convergence",
+    "slq-error"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "krylov",
+    "solvers",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "markov-brothers",
+   "title": "Markov brothers' inequality",
+   "aliases": [
+    "Markov inequality for polynomials",
+    "A. A. Markov inequality",
+    "derivative bound for bounded polynomials",
+    "|p'| ≤ q² max|p|"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "If $\\deg p \\le q$ then $\\max_{[-1,1]}|p'| \\le q^2\\max_{[-1,1]}|p|$ (sharp for $T_q$); on $[a,b]$ the constant is $2q^2/(b-a)$. Not to be confused with Markov's probability inequality.",
+   "hypotheses": [
+    "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le q$",
+    "$|p(x)| \\le M$ for $x \\in [-1,1]$"
+   ],
+   "conclusion": "$|p'(x)| \\le q^2 M$ for all $x \\in [-1,1]$; on $[a,b]$, $|p'(x)| \\le \\tfrac{2q^2}{b-a}\\max_{[a,b]}|p|$",
+   "sources": [
+    {
+     "source": "rivlin90",
+     "label": "Thm 2.24 (§2.7)"
+    },
+    {
+     "source": "cheney66",
+     "label": "Ch. 3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le",
+     "status": "proved",
+     "usage": "From `hp : p.degree ≤ q`, `hb : ∀ y ∈ Icc (-1) 1, |p.eval y| ≤ M`, `hx : x ∈ Icc (-1) 1`; gives `|(derivative p).eval x| ≤ q^2 * M`.",
+     "note": "sharp constant; equality case not formalised"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_derivative_le_two_mul_sq_div_mul_of_forall_abs_eval_le",
+     "status": "proved",
+     "usage": "Interval form: from `hab : a < b`, `hp`, `hb : ∀ y ∈ Icc a b, |p.eval y| ≤ M`, `hx : x ∈ Icc a b`; gives `|(derivative p).eval x| ≤ 2 * q^2 / (b - a) * M`."
+    }
+   ],
+   "depends_on": [
+    "bernstein-polynomial-inequality",
+    "schur-polynomial-inequality"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "bernstein-polynomial-inequality",
+    "chebyshev-extremal"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.abs_iterate_derivative_T_real_le",
+     "present": true,
+     "note": "the T_q case only"
+    }
+   ],
+   "difficulty": 4,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "bernstein-polynomial-inequality",
+   "title": "Bernstein's inequality for polynomials",
+   "aliases": [
+    "Bernstein inequality",
+    "|p'(x)| ≤ q max|p|/√(1−x²)",
+    "interior derivative bound"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "If $\\deg p \\le q$ and $|p| \\le M$ on $[-1,1]$ then $|p'(x)| \\le qM/\\sqrt{1-x^2}$ for $|x| < 1$. The interior half of the Markov brothers' inequality.",
+   "hypotheses": [
+    "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le q$",
+    "$|p(x)| \\le M$ for $x \\in [-1,1]$ and $|x| < 1$"
+   ],
+   "conclusion": "$|p'(x)| \\le \\dfrac{q\\,M}{\\sqrt{1-x^2}}$",
+   "sources": [
+    {
+     "source": "rivlin90",
+     "label": "Thm 2.23 (§2.7)"
+    },
+    {
+     "source": "cheney66",
+     "label": "Ch. 3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_derivative_le_div_sqrt_of_forall_abs_eval_le",
+     "status": "proved",
+     "usage": "From `hp : p.degree ≤ q`, `hb : ∀ y ∈ Icc (-1) 1, |p.eval y| ≤ M`, `hx : |x| < 1`; gives `|(derivative p).eval x| ≤ q * M / √(1 - x^2)`.",
+     "note": "proved algebraically via a Hasse-derivative odd part, no trigonometric polynomials"
+    }
+   ],
+   "depends_on": [
+    "schur-polynomial-inequality"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "markov-brothers"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "lagrange-interpolation",
+   "title": "Lagrange interpolation: existence, uniqueness, basis",
+   "aliases": [
+    "Lagrange interpolation",
+    "interpolating polynomial",
+    "Lagrange basis",
+    "nodal polynomial",
+    "uniqueness of interpolation"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "definition",
+   "status": "proved",
+   "informal": "Through $q+1$ distinct nodes there is exactly one polynomial of degree $\\le q$ with prescribed values, $L = \\sum_i f(x_i)\\ell_i$ with $\\ell_i = \\prod_{j\\ne i}\\frac{x-x_j}{x_i-x_j}$. All in Mathlib.",
+   "hypotheses": [
+    "nodes $x_0,\\dots,x_q$ distinct and values $f_0,\\dots,f_q$"
+   ],
+   "conclusion": "$L = \\sum_i f_i\\ell_i$ is the unique polynomial of degree $\\le q$ with $L(x_i) = f_i$; the nodal polynomial is $\\omega(x) = \\prod_i (x - x_i)$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ch. 5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "mathlib",
+     "decl": "Lagrange.interpolate",
+     "status": "proved",
+     "usage": "`interpolate s v r : F[X]`, the polynomial of degree `< #s` with value `r i` at node `v i`."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Lagrange.eval_interpolate_at_node",
+     "status": "proved",
+     "usage": "From `hvs : Set.InjOn v s`, `hi : i ∈ s`; gives `(interpolate s v r).eval (v i) = r i`."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Lagrange.eq_interpolate",
+     "status": "proved",
+     "usage": "Uniqueness: a polynomial of degree `< #s` equals the interpolant of its own values."
+    },
+    {
+     "library": "mathlib",
+     "decl": "Lagrange.nodal",
+     "status": "proved",
+     "usage": "`nodal s v = ∏ i ∈ s, (X - C (v i))`."
+    }
+   ],
+   "depends_on": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Lagrange.interpolate",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.eval_interpolate_at_node",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.eq_interpolate",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.nodal",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "mathlib",
+    "polynomial"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "interpolation-remainder",
+   "title": "Lagrange interpolation remainder",
+   "aliases": [
+    "interpolation error formula",
+    "Cauchy remainder",
+    "f − L f = f^{(q+1)}(ξ) ω(x)/(q+1)!",
+    "generalised Rolle"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "For $f \\in C^{q+1}[a,b]$ and distinct nodes, $f(x) - L(x) = \\frac{f^{(q+1)}(\\xi)}{(q+1)!}\\prod_i (x-x_i)$ for some $\\xi \\in [a,b]$. Proved by generalised Rolle.",
+   "hypotheses": [
+    "$f$ is $(q+1)$ times differentiable on $[a,b]$",
+    "nodes $x_0,\\dots,x_q \\in [a,b]$ distinct, $L$ the interpolant, $x \\in [a,b]$"
+   ],
+   "conclusion": "$\\exists\\,\\xi \\in [a,b]$: $f(x) - L(x) = \\dfrac{f^{(q+1)}(\\xi)}{(q+1)!}\\prod_{i=0}^{q}(x - x_i)$",
+   "sources": [
+    {
+     "source": "cheney66",
+     "label": "Ch. 3"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ch. 5"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_sub_eval_interpolate_eq",
+     "status": "proved",
+     "usage": "From `hab : a < b`, nodes `v : Fin (q+1) → ℝ` injective with values in `Icc a b`, `hx : x ∈ Icc a b`, `hf : ContinuousOn f (Icc a b)`, `hf' : ∀ k ≤ q, DifferentiableOn ℝ (iteratedDeriv k f) (Ioo a b)`; gives `∃ ξ ∈ Ioo a b, f x - (Lagrange.interpolate univ v (f ∘ v)).eval x = iteratedDeriv (q+1) f ξ / (q+1)! * (Lagrange.nodal univ v).eval x`.",
+     "note": "ξ in the open interval; derivatives are the global `iteratedDeriv`"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_iteratedDeriv_eq_zero_of_strictMono",
+     "status": "proved",
+     "usage": "Generalised Rolle: `q + 2` zeros of `f` at strictly increasing `v : Fin (q+2) → ℝ` in `Icc a b`, `f` continuous on `Icc a b`, `f^{(k)}` continuous on `Ioo a b` for `1 ≤ k ≤ q`; gives `∃ ξ ∈ Ioo a b, iteratedDeriv (q+1) f ξ = 0`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_iteratedDeriv_eq_zero_of_card",
+     "status": "proved",
+     "usage": "Generalised Rolle with the zeros given as a `Finset` of card `q + 2`."
+    }
+   ],
+   "depends_on": [
+    "lagrange-interpolation"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "chebyshev-interpolation-error"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "exists_deriv_eq_zero",
+     "present": true,
+     "note": "Rolle"
+    },
+    {
+     "decl": "Lagrange.nodal",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "chebyshev-interpolation-error",
+   "title": "Chebyshev interpolation error",
+   "aliases": [
+    "Chebyshev interpolation",
+    "interpolation at Chebyshev zeros",
+    "nodal polynomial of Chebyshev zeros",
+    "error ≤ M/(2^q (q+1)!)"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "Interpolating at the zeros of $T_{q+1}$ makes the nodal polynomial $2^{-q}T_{q+1}$, so $|f - L| \\le \\frac{\\max|f^{(q+1)}|}{2^q (q+1)!}$ on $[-1,1]$.",
+   "hypotheses": [
+    "$f$ is $(q+1)$ times differentiable on $[-1,1]$ with $|f^{(q+1)}| \\le M$",
+    "$L$ the interpolant at the $q+1$ zeros of $T_{q+1}$"
+   ],
+   "conclusion": "$\\prod_{k=0}^{q}(x - \\cos\\tfrac{(2k+1)\\pi}{2(q+1)}) = 2^{-q}T_{q+1}(x)$ and $|f(x) - L(x)| \\le \\dfrac{M}{2^q (q+1)!}$ for $x \\in [-1,1]$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ch. 5, 16"
+    },
+    {
+     "source": "cheney66",
+     "label": "Ch. 3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_sub_eval_interpolate_chebyshevZero_le",
+     "status": "proved",
+     "usage": "From `hf : ContinuousOn f (Icc (-1) 1)`, `hf' : ∀ k ≤ q, DifferentiableOn ℝ (iteratedDeriv k f) (Ioo (-1) 1)`, `hM : ∀ ξ ∈ Ioo (-1) 1, |iteratedDeriv (q+1) f ξ| ≤ M`; gives `∀ x ∈ Icc (-1) 1, |f x - (Lagrange.interpolate univ (chebyshevZero (q+1)) (f ∘ chebyshevZero (q+1))).eval x| ≤ M / (2^q * (q+1)!)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.nodal_chebyshevZero",
+     "status": "proved",
+     "usage": "`Lagrange.nodal univ (chebyshevZero q) = C (1 / 2^(q-1)) * T ℝ q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_nodal_chebyshevZero_le",
+     "status": "proved",
+     "usage": "From `hx : x ∈ Icc (-1) 1`; gives `|(Lagrange.nodal univ (chebyshevZero q)).eval x| ≤ 1 / 2^(q-1)`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eval_T_real_chebyshevZero",
+     "status": "proved",
+     "usage": "`(T ℝ q).eval (chebyshevZero q k) = 0`."
+    }
+   ],
+   "depends_on": [
+    "interpolation-remainder",
+    "chebyshev-polynomials"
+   ],
+   "uses_defs": [
+    "NLAlib.chebyshevZero"
+   ],
+   "variants": [
+    "chebyshev-monic-minimal"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.roots_T_real",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "bernstein-ellipse-approx",
+   "title": "Polynomial approximation of analytic functions (Bernstein ellipse)",
+   "aliases": [
+    "Bernstein ellipse",
+    "geometric convergence of Chebyshev approximation",
+    "analytic function approximation rate",
+    "Chebyshev series decay"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "If $f$ is analytic in the Bernstein ellipse $E_\\rho$ with $|f| \\le M$ there, then $\\min_{\\deg p \\le q}\\max_{[-1,1]}|f - p| \\le \\frac{2M\\rho^{-q}}{\\rho - 1}$. What the SLQ and Lanczos-FA analyses cite for $\\log$, $\\exp$, $x^{-1/2}$.",
+   "hypotheses": [
+    "$f$ analytic on the Bernstein ellipse $E_\\rho$ ($\\rho > 1$) with $|f| \\le M$ there"
+   ],
+   "conclusion": "$\\min_{\\deg p \\le q}\\ \\max_{x\\in[-1,1]}|f(x) - p(x)| \\le \\dfrac{2M\\rho^{-q}}{\\rho - 1}$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 8.2"
+    },
+    {
+     "source": "ucs17",
+     "label": "Thm 4.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-polynomials"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "slq-error",
+    "inverse-polynomial-approx"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "polynomial",
+    "krylov"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "schur-polynomial-inequality",
+   "title": "Schur's inequality for polynomials of degree below q",
+   "aliases": [
+    "Schur inequality",
+    "√(1−x²)|r(x)| ≤ M implies |r| ≤ qM",
+    "weighted bound to uniform bound"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "proved",
+   "informal": "If $\\deg r < q$ and $\\sqrt{1-x^2}\\,|r(x)| \\le M$ on $[-1,1]$ then $|r| \\le qM$ on $[-1,1]$. The step that turns Bernstein's interior bound into Markov's uniform bound.",
+   "hypotheses": [
+    "$q \\ge 1$ and $r \\in \\mathbb{R}[x]$ with $\\deg r < q$",
+    "$\\sqrt{1-y^2}\\,|r(y)| \\le M$ for $y \\in [-1,1]$"
+   ],
+   "conclusion": "$|r(x)| \\le q\\,M$ for all $x \\in [-1,1]$",
+   "sources": [
+    {
+     "source": "rivlin90",
+     "label": "§2.7"
+    },
+    {
+     "source": "cheney66",
+     "label": "Ch. 3"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le",
+     "status": "proved",
+     "usage": "From `hq : 0 < q`, `hr : r.degree < q`, `hb : ∀ y ∈ Icc (-1) 1, √(1 - y^2) * |r.eval y| ≤ M`, `hx : x ∈ Icc (-1) 1`; gives `|r.eval x| ≤ q * M`."
+    }
+   ],
+   "depends_on": [
+    "chebyshev-polynomials",
+    "lagrange-interpolation",
+    "chebyshev-second-kind"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "markov-brothers",
+    "bernstein-polynomial-inequality"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Real.mul_le_sin",
+     "present": true,
+     "note": "Jordan's inequality"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "polynomial",
+    "done"
+   ],
+   "updated_at": "2026-10-10"
   }
  ],
  "sources": [
@@ -9674,6 +10794,49 @@
    ],
    "year": 2026,
    "role": "Local analytic derivations and source correspondence in Re-derivations/operator_rederivations.tex, with the later unshifted finite operator refinement. Lean proofs use Gaussian quadratic probes, Schur complements, scalar Gamma moments, a finite inverse-power Gram Laplacian, cutoff coordinate Stein, ordinary first-order dominated convergence, and a proved one-dimensional weighted monotone-density bridge."
+  },
+  {
+   "id": "trefethen19",
+   "type": "book",
+   "title": "Approximation Theory and Approximation Practice, Extended Edition",
+   "authors": [
+    "L. N. Trefethen"
+   ],
+   "year": 2019,
+   "doi": "10.1137/1.9781611975949",
+   "role": "Chebyshev interpolation and best approximation; interpolation remainder; Chebyshev nodes."
+  },
+  {
+   "id": "tb97",
+   "type": "book",
+   "title": "Numerical Linear Algebra",
+   "authors": [
+    "L. N. Trefethen",
+    "D. Bau"
+   ],
+   "year": 1997,
+   "doi": "10.1137/1.9780898719574",
+   "role": "The Chebyshev minimax argument behind the CG κ-bound (Lecture 38)."
+  },
+  {
+   "id": "rivlin90",
+   "type": "book",
+   "title": "Chebyshev Polynomials: From Approximation Theory to Algebra and Number Theory",
+   "authors": [
+    "T. J. Rivlin"
+   ],
+   "year": 1990,
+   "role": "Extremal properties of Chebyshev polynomials; Markov and Bernstein inequalities (§2.7)."
+  },
+  {
+   "id": "cheney66",
+   "type": "book",
+   "title": "Introduction to Approximation Theory",
+   "authors": [
+    "E. W. Cheney"
+   ],
+   "year": 1966,
+   "role": "Markov brothers' and Bernstein inequalities; Lagrange interpolation error (Ch. 3)."
   }
  ],
  "libraries": [

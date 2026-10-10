@@ -40,7 +40,7 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
 - One concept per file, under about 500 lines, `UpperCamelCase.lean`, with a module docstring
   `/-! # Title … -/` that says what the file provides and names the atlas ids it realises.
 - Layers (a module imports only its own layer and lower; `scripts/check_layers.py`):
-  −1 `ForMathlib` · 0 `Matrix` · 1 `Concentration` · 2 `Gaussian` · 3 `Sketching` · 4 `LowRank`,
+  −1 `ForMathlib` · 0 `Matrix`, `Polynomial` · 1 `Concentration` · 2 `Gaussian` · 3 `Sketching` · 4 `LowRank`,
   `Estimation`, `Krylov` · 5 `Solvers`.
 - `NLAlib/ForMathlib/` holds general facts that are not about NLAlib's objects and are candidates
   for upstreaming (real inequalities, integrability of finite suprema, measure-preserving

@@ -14,6 +14,7 @@ Progress map: **https://research.chen.pw/NLAlib/** (built from `atlas/atlas.json
 NLAlib/
   ForMathlib/     general facts headed upstream                                        (layer −1)
   Matrix/         norms, projections, pseudoinverse, SVD, spectral, measurability      (layer 0)
+  Polynomial/     Chebyshev growth and minimax, Markov, interpolation                  (layer 0)
   Concentration/  Scalar/ tail integrals, entropy; Matrix/ = Tropp 2015 Ch. 3–8        (layer 1)
   Gaussian/       Basic, Invariance, Moments/, Conditioning, Concentration/ (log-Sobolev,
                   Herbst), Comparison/ (Slepian, Gordon), Extreme/ (singular values,

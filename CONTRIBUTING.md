@@ -14,10 +14,10 @@ in `atlas/atlas.json` in your first PR (a one-line change is fine).
 | Layer | Directory | May import |
 |---|---|---|
 | 0 | `NLAlib/Matrix/`, `NLAlib/Polynomial/` | Mathlib, `ForMathlib` |
-| 1 | `NLAlib/Concentration/` | layer 0 |
+| 1 | `NLAlib/Concentration/`, `NLAlib/Krylov/` | layer 0 |
 | 2 | `NLAlib/Gaussian/` | layers 0–1 |
 | 3 | `NLAlib/Sketching/` | layers 0–2 |
-| 4 | `NLAlib/LowRank/`, `NLAlib/Estimation/`, `NLAlib/Krylov/` | layers 0–3 |
+| 4 | `NLAlib/LowRank/`, `NLAlib/Estimation/` | layers 0–3 |
 | 5 | `NLAlib/Solvers/` | everything |
 
 - **`Basic.lean` in each area holds definitions only** (plus the trivial lemmas that make them

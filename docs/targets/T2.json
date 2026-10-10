@@ -1,0 +1,1452 @@
+{
+  "areas": [
+    {
+      "id": "polynomial-series",
+      "name": "Chebyshev series and analytic approximation",
+      "title": "Chebyshev series and analytic approximation",
+      "parent": "polynomial",
+      "order": 27,
+      "summary": "Chebyshev coefficients, Bernstein ellipses, aliasing, and the ATAP convergence theorems (3.1, 4.1–4.2, 7.1–7.2, 8.1–8.2)."
+    },
+    {
+      "id": "polynomial-best",
+      "name": "Best approximation, Jackson and Lebesgue constants",
+      "title": "Best approximation, Jackson and Lebesgue constants",
+      "parent": "polynomial",
+      "order": 28,
+      "summary": "E_n(f), equioscillation and de la Vallée Poussin, Jackson's theorem, Lebesgue constants of interpolation."
+    },
+    {
+      "id": "polynomial-functions",
+      "name": "Approximating specific functions, with lower bounds",
+      "title": "Approximating specific functions, with lower bounds",
+      "parent": "polynomial",
+      "order": 29,
+      "summary": "x^s, e^{-x}, x^{-1/2}, log x, sign(x) with explicit degrees, and the matching degree lower bounds (1/x, e^{-x}, sign)."
+    }
+  ],
+  "results": [
+    {
+      "id": "chebyshev-coefficients-def",
+      "title": "Chebyshev coefficients and Chebyshev truncation",
+      "aliases": [
+        "Chebyshev series",
+        "Chebyshev expansion",
+        "Chebyshev coefficients",
+        "Chebyshev projection",
+        "Chebyshev truncation",
+        "a_k(f)",
+        "f_n"
+      ],
+      "area": "polynomial-series",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "For $f$ continuous on $[-1,1]$, $a_k(f) = \\tfrac{2}{\\pi}\\int_0^\\pi f(\\cos\\theta)\\cos(k\\theta)\\,d\\theta$ for $k \\ge 1$ (with $\\tfrac{1}{\\pi}$ for $k=0$) and the Chebyshev truncation is $f_n = \\sum_{k \\le n} a_k(f)\\,T_k$. Characterised by the weighted inner product $\\int f T_k (1-x^2)^{-1/2}$, exact on polynomials, and bounded by $2\\max_{[-1,1]}|f|$.",
+      "hypotheses": [
+        "$f : \\mathbb{R} \\to \\mathbb{R}$ continuous on $[-1,1]$",
+        "$k, n \\in \\mathbb{N}$"
+      ],
+      "conclusion": "$a_k(f) = \\tfrac{2}{\\pi}\\int_{-1}^{1} f(x)T_k(x)(1-x^2)^{-1/2}\\,dx$ for $k \\ge 1$ ($\\tfrac{1}{\\pi}$ for $k = 0$); $f \\mapsto a_k(f)$ is linear; $a_k(T_m) = \\delta_{km}$; if $\\deg p \\le n$ then $a_k(p) = 0$ for $k > n$ and $p_n = \\sum_{k \\le n} a_k(p)\\,T_k = p$; $|a_0(f)| \\le \\max_{[-1,1]}|f|$ and $|a_k(f)| \\le 2\\max_{[-1,1]}|f|$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Ch. 3 (Thm 3.1 coefficient formula)"
+        }
+      ],
+      "depends_on": [],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.Chebyshev.measureT",
+          "present": true,
+          "note": "Lebesgue measure with density (1-x^2)^{-1/2} on (-1,1]"
+        },
+        {
+          "decl": "Polynomial.Chebyshev.integral_measureT",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.integral_measureT_eq_integral_cos",
+          "present": true,
+          "note": "the change of variables x = cos θ"
+        },
+        {
+          "decl": "Polynomial.Chebyshev.integrable_measureT",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.integral_eval_T_real_mul_eval_T_real_measureT_of_ne",
+          "present": true,
+          "note": "orthogonality"
+        },
+        {
+          "decl": "Polynomial.Chebyshev.integral_eval_T_real_mul_self_measureT_zero",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.integral_T_real_mul_self_measureT_of_ne_zero",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.chebyshevTsequence",
+          "present": true,
+          "note": "T_0..T_{n-1} as a polynomial sequence"
+        },
+        {
+          "decl": "Polynomial.Sequence.span_degreeLT",
+          "present": true,
+          "note": "T_0..T_{n-1} span degreeLT n"
+        },
+        {
+          "decl": "Polynomial.Chebyshev.chebyshevCoeff",
+          "present": false,
+          "note": "no Chebyshev-coefficient functional or truncation operator; the Orthogonality file lists bundling T_k into a HilbertBasis of L^2(measureT) as TODO"
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "definition",
+        "chebyshev",
+        "series"
+      ],
+      "notes": "Suggested Lean: `chebCoeff (f : ℝ → ℝ) (k : ℕ) : ℝ` defined by the θ-integral (no weight singularity), `chebTrunc f n : ℝ[X] := ∑ k ∈ range (n+1), C (chebCoeff f k) * T ℝ k`; the measureT form, exactness on polynomials and the bounds are the characterisation lemmas. Consumers: every entry in polynomial-series (Thms 3.1, 4.2, 7.1, 8.1), Chebyshev interpolation and KPM, slq-error via chebyshev-approx-analytic. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "bernstein-ellipse-def",
+      "title": "Bernstein ellipse",
+      "aliases": [
+        "Bernstein ellipse",
+        "E_rho",
+        "Joukowski map",
+        "ellipse with foci ±1",
+        "region of analyticity",
+        "Bernstein ellipse on [a,b]"
+      ],
+      "area": "polynomial-series",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "For $\\rho > 1$, $E_\\rho = \\{z \\in \\mathbb{C} : |z-1| + |z+1| < \\rho + \\rho^{-1}\\}$, the open region bounded by the ellipse with foci $\\pm 1$ and semi-axis sum $\\rho$; equivalently the Joukowski image $\\{(w + w^{-1})/2 : \\rho^{-1} < |w| < \\rho\\}$. On $[a,b]$ one uses its affine image with foci $a, b$.",
+      "hypotheses": [
+        "$\\rho > 1$",
+        "for the interval version: $a < b$ and $\\varphi(t) = \\tfrac{(b-a)t + (b+a)}{2}$"
+      ],
+      "conclusion": "$E_\\rho$ is open, increasing in $\\rho$ and contains $[-1,1]$; $E_\\rho = J(\\{\\rho^{-1} < |w| < \\rho\\})$ with $J(w) = (w + w^{-1})/2$; every $z \\in \\overline{E_\\rho}$ has $|z| \\le \\tfrac{\\rho+\\rho^{-1}}{2}$ and $\\operatorname{Re} z \\ge -\\tfrac{\\rho+\\rho^{-1}}{2}$; $|T_n(z)| \\le \\tfrac{\\rho^n + \\rho^{-n}}{2}$ on $\\overline{E_\\rho}$; every $z \\in \\varphi(\\overline{E_\\rho})$ has $\\operatorname{Re} z \\ge \\tfrac{(b+a) - (b-a)(\\rho+\\rho^{-1})/2}{2}$ and $|z| \\le \\tfrac{|b+a| + (b-a)(\\rho+\\rho^{-1})/2}{2}$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Ch. 8"
+        }
+      ],
+      "depends_on": [],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.Chebyshev.T_complex_cos",
+          "present": true,
+          "note": "T_n(cos θ) = cos(nθ) for complex θ gives T_n(J(w)) = (w^n + w^{-n})/2"
+        },
+        {
+          "decl": "Complex.cos",
+          "present": true
+        },
+        {
+          "decl": "NLAlib.bernsteinEllipse",
+          "present": false,
+          "note": "no Joukowski map or Bernstein ellipse in Mathlib"
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "definition",
+        "chebyshev",
+        "analytic"
+      ],
+      "notes": "Consumers: chebyshev-coeff-analytic-decay, chebyshev-approx-analytic, the existing candidate bernstein-ellipse-approx (whose hypothesis is phrased with E_ρ), bernstein-walsh-ellipse, slit-plane-analytic-approx, lanczos-quadrature-analytic-error, and T1's Krylov f(A)b and GMRES bounds for analytic f. Prove (elementary complex geometry).",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "minimax-error-def",
+      "title": "Best uniform approximation error E_n(f; [a,b])",
+      "aliases": [
+        "minimax error",
+        "best approximation",
+        "best uniform approximation",
+        "E_n(f)",
+        "distance to P_n",
+        "degree of approximation",
+        "delta_k (Musco–Musco–Sidford)"
+      ],
+      "area": "polynomial-best",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "$E_n(f;[a,b]) = \\inf\\{E : \\exists p,\\ \\deg p \\le n,\\ |f - p| \\le E \\text{ on } [a,b]\\}$, written as an `sInf` in the `IsLeast` style of `isLeast_chebyshev_minimax`. For continuous $f$ the infimum is attained, decreases to $0$ (Weierstrass), and is invariant under affine change of variable.",
+      "hypotheses": [
+        "$a < b$ and $n \\in \\mathbb{N}$",
+        "$f$ continuous on $[a,b]$ (for attainment and convergence)"
+      ],
+      "conclusion": "there is $p^*$ with $\\deg p^* \\le n$ and $\\max_{[a,b]}|f - p^*| = E_n(f)$; $E_{n+1}(f) \\le E_n(f) \\le \\max_{[a,b]}|f|$ and $E_n(f) \\to 0$; $E_n(f + p) = E_n(f)$ for $\\deg p \\le n$, $E_n(cf) = |c|\\,E_n(f)$, $E_n(f+g) \\le E_n(f) + E_n(g)$; $E_n(f;[a,b]) = E_n(f\\circ\\varphi;[-1,1])$ for the affine bijection $\\varphi : [-1,1] \\to [a,b]$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Ch. 10"
+        },
+        {
+          "source": "cheney66",
+          "label": "Ch. 1 (existence of best approximations)"
+        }
+      ],
+      "depends_on": [],
+      "mathlib_prereqs": [
+        {
+          "decl": "exists_polynomial_near_of_continuousOn",
+          "present": true,
+          "note": "Weierstrass, ε-form: gives E_n(f) → 0"
+        },
+        {
+          "decl": "polynomialFunctions_closure_eq_top",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.degreeLT",
+          "present": true
+        },
+        {
+          "decl": "IsCompact.exists_isMinOn",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.bestApprox",
+          "present": false,
+          "note": "no best-approximation existence from a finite-dimensional subspace of C[a,b] and no E_n"
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "definition",
+        "best-approximation"
+      ],
+      "notes": "Convention: theorems keep the existential form `∃ p, p.degree ≤ n ∧ ∀ x ∈ Icc a b, |f x - p.eval x| ≤ E` that NLAlib already uses; E_n is for statements whose sharp form needs the infimum (Lebesgue, equioscillation, de la Vallée Poussin) and for Lanczos-FA bounds stated with δ_k (Musco–Musco–Sidford 2018, T1). Consumers: de-la-vallee-poussin, equioscillation, lebesgue-constant-def, jackson-lipschitz, chebyshev-approx-differentiable. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "lebesgue-constant-def",
+      "title": "Lebesgue function and constant of polynomial interpolation",
+      "aliases": [
+        "Lebesgue constant",
+        "Lebesgue function",
+        "Lambda_n",
+        "norm of the interpolation operator",
+        "near-best interpolation",
+        "ATAP Theorem 15.1"
+      ],
+      "area": "polynomial-best",
+      "kind": "definition",
+      "status": "candidate",
+      "informal": "For distinct nodes $x_0,\\dots,x_n \\in [a,b]$ with Lagrange basis $\\ell_j$, $\\lambda(x) = \\sum_j |\\ell_j(x)|$ and $\\Lambda = \\max_{[a,b]}\\lambda$. $\\Lambda$ is the operator norm of interpolation on $C[a,b]$, and interpolation is near-best: $\\|f - p\\| \\le (1+\\Lambda)E_n(f)$ (ATAP Thm 15.1).",
+      "hypotheses": [
+        "$a < b$, nodes $v : \\mathrm{Fin}(n+1) \\to [a,b]$ injective, $\\ell_j$ = `Lagrange.basis`",
+        "$f$ continuous on $[a,b]$ and $p$ its interpolant (`Lagrange.interpolate`) at $v$"
+      ],
+      "conclusion": "$\\Lambda \\ge 1$; $|p(x)| \\le \\lambda(x)\\max_j |f(v_j)|$, with equality for some $f$ with $\\max|f| = 1$, so $\\Lambda$ is the operator norm of interpolation; $\\max_{[a,b]}|f - p| \\le (1 + \\Lambda)\\,E_n(f;[a,b])$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 15.1"
+        }
+      ],
+      "depends_on": [
+        "minimax-error-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Lagrange.basis",
+          "present": true
+        },
+        {
+          "decl": "Lagrange.interpolate",
+          "present": true
+        },
+        {
+          "decl": "Lagrange.sum_basis",
+          "present": true,
+          "note": "Σ ℓ_j = 1 gives Λ ≥ 1"
+        },
+        {
+          "decl": "Lagrange.eq_interpolate",
+          "present": true,
+          "note": "interpolation reproduces polynomials of degree ≤ n"
+        },
+        {
+          "decl": "Lagrange.lebesgueConstant",
+          "present": false,
+          "note": "no Lebesgue function or constant"
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "definition",
+        "interpolation",
+        "best-approximation"
+      ],
+      "notes": "Consumers: lebesgue-constant-chebyshev; converts any E_n bound (jackson-lipschitz, chebyshev-approx-analytic) into a bound for a computable interpolant, e.g. at NLAlib's `chebyshevZero` nodes (Chebyshev interpolation of f in spectral-sum estimators, Han–Malioutov–Avron–Shin 2017; KPM). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "chebyshev-series-convergence",
+      "title": "Convergence of Chebyshev series (ATAP Thm 3.1)",
+      "aliases": [
+        "ATAP Theorem 3.1",
+        "Chebyshev series convergence",
+        "uniform convergence of the Chebyshev expansion",
+        "absolutely summable Chebyshev coefficients",
+        "truncation error = tail sum"
+      ],
+      "area": "polynomial-series",
+      "kind": "theorem",
+      "status": "candidate",
+      "informal": "If $f$ is Lipschitz on $[-1,1]$ then $\\sum_k |a_k| < \\infty$ and $f = \\sum_k a_k T_k$ absolutely and uniformly. The working half: whenever $f$ is continuous and $\\sum |a_k| < \\infty$, $\\max_{[-1,1]}|f - f_n| \\le \\sum_{k>n}|a_k|$.",
+      "hypotheses": [
+        "$f$ continuous on $[-1,1]$ with Chebyshev coefficients $a_k$",
+        "(a) $\\sum_k |a_k| < \\infty$, or (b) $f$ Lipschitz on $[-1,1]$"
+      ],
+      "conclusion": "under (a), $f(x) = \\sum_{k \\ge 0} a_k T_k(x)$ for every $x \\in [-1,1]$ and $\\max_{[-1,1]}|f - f_n| \\le \\sum_{k > n}|a_k|$; (b) implies (a), and the Chebyshev series representation is unique",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 3.1"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-coefficients-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "has_pointwise_sum_fourier_series_of_summable",
+          "present": true,
+          "note": "for g(θ) = f(cos θ) on AddCircle (2π), whose Fourier coefficients are a_|k|/2"
+        },
+        {
+          "decl": "fourierCoeff",
+          "present": true
+        },
+        {
+          "decl": "tsum_sq_fourierCoeff",
+          "present": true,
+          "note": "Parseval; the route to (b) via Bernstein's absolute-convergence theorem"
+        },
+        {
+          "decl": "Polynomial.Chebyshev.T_real_cos",
+          "present": true
+        },
+        {
+          "decl": "AddCircle.bernstein_absolute_convergence",
+          "present": false,
+          "note": "Bernstein's theorem (Hölder exponent > 1/2 ⇒ absolutely convergent Fourier series) is absent"
+        }
+      ],
+      "difficulty": 3,
+      "priority": "next",
+      "tags": [
+        "chebyshev",
+        "series",
+        "convergence"
+      ],
+      "notes": "Prove (a) (difficulty 3): it is the bridge every rate theorem uses (7.2, 8.2, aliasing). Part (b) is difficulty 4 and has no RandNLA consumer that 7.1/8.1 do not already cover (they give summability directly); assume or leave for later. Consumers: chebyshev-aliasing, chebyshev-approx-differentiable, chebyshev-approx-analytic.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "chebyshev-aliasing",
+      "title": "Aliasing of Chebyshev polynomials and interpolant coefficients (ATAP Thms 4.1–4.2)",
+      "aliases": [
+        "aliasing",
+        "aliasing formula",
+        "Chebyshev interpolant coefficients",
+        "ATAP Theorem 4.1",
+        "ATAP Theorem 4.2",
+        "interpolation error at most twice the truncation tail"
+      ],
+      "area": "polynomial-series",
+      "kind": "identity",
+      "status": "candidate",
+      "informal": "On the Chebyshev grid $x_j = \\cos(j\\pi/n)$, $T_m$, $T_{2n\\pm m}$, $T_{4n\\pm m}, \\dots$ take the same values; hence the interpolant $p_n$ has coefficients $c_k = a_k + \\sum_{\\ell \\ge 1}(a_{2\\ell n + k} + a_{2\\ell n - k})$ and $\\max|f - p_n| \\le 2\\sum_{k>n}|a_k|$.",
+      "hypotheses": [
+        "$n \\ge 1$, $0 \\le m \\le n$, grid $x_j = \\cos(j\\pi/n)$, $0 \\le j \\le n$ (Mathlib `Polynomial.Chebyshev.node n j`)",
+        "for the coefficient formula: $f$ continuous on $[-1,1]$ with $\\sum_k |a_k| < \\infty$, $p_n$ its interpolant in the grid with Chebyshev coefficients $c_k$"
+      ],
+      "conclusion": "$T_m(x_j) = T_{2\\ell n + m}(x_j) = T_{2\\ell n - m}(x_j)$ for all $\\ell \\ge 1$ and all $j$; $c_0 = a_0 + a_{2n} + a_{4n} + \\cdots$, $c_n = a_n + a_{3n} + a_{5n} + \\cdots$, and $c_k = a_k + \\sum_{\\ell \\ge 1}(a_{2\\ell n + k} + a_{2\\ell n - k})$ for $1 \\le k \\le n-1$; consequently $\\max_{[-1,1]}|f - p_n| \\le 2\\sum_{k > n}|a_k|$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 4.1"
+        },
+        {
+          "source": "trefethen19",
+          "label": "Thm 4.2"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-coefficients-def",
+        "chebyshev-series-convergence"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.Chebyshev.node",
+          "present": true,
+          "note": "cos(iπ/n): exactly ATAP's Chebyshev points"
+        },
+        {
+          "decl": "Polynomial.Chebyshev.eval_T_real_node",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.T_real_cos",
+          "present": true
+        },
+        {
+          "decl": "Lagrange.interpolate",
+          "present": true
+        },
+        {
+          "decl": "Lagrange.eq_interpolate",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.integral_eq_sumZeroes",
+          "present": true,
+          "note": "Chebyshev–Gauss quadrature at the zeros of T_n: the first-kind relative of the aliasing identity"
+        }
+      ],
+      "difficulty": 3,
+      "priority": "next",
+      "tags": [
+        "chebyshev",
+        "interpolation",
+        "series"
+      ],
+      "notes": "Thm 4.1 alone is difficulty 1 (T_k(cos(jπ/n)) = cos(kjπ/n)). ATAP states 4.2 for Lipschitz f; the summable hypothesis is what consumers have and avoids 3.1(b). First-kind variant at NLAlib's `chebyshevZero` (zeros of T_{n+1}): T_{2(n+1)-m} = -T_m there, and the same factor-2 bound holds. Consumers: the interpolant halves of chebyshev-approx-differentiable (4V) and chebyshev-approx-analytic (4M); Chebyshev-interpolation estimators of tr f(A). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "chebyshev-coeff-bv-decay",
+      "title": "Chebyshev coefficients of differentiable functions (ATAP Thm 7.1)",
+      "aliases": [
+        "ATAP Theorem 7.1",
+        "algebraic decay of Chebyshev coefficients",
+        "bounded variation",
+        "nu-times differentiable",
+        "integration by parts bound"
+      ],
+      "area": "polynomial-series",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $f, \\dots, f^{(\\nu-1)}$ are absolutely continuous on $[-1,1]$ and $f^{(\\nu)}$ has total variation $V$, then $|a_k| \\le \\dfrac{2V}{\\pi k(k-1)\\cdots(k-\\nu)}$ for $k \\ge \\nu+1$.",
+      "hypotheses": [
+        "$\\nu \\in \\mathbb{N}$",
+        "$f, f', \\dots, f^{(\\nu-1)}$ absolutely continuous on $[-1,1]$",
+        "$f^{(\\nu)}$ of bounded variation on $[-1,1]$ with total variation $V$"
+      ],
+      "conclusion": "$|a_k(f)| \\le \\dfrac{2V}{\\pi\\,k(k-1)\\cdots(k-\\nu)}$ for every $k \\ge \\nu + 1$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 7.1"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-coefficients-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "AbsolutelyContinuousOnInterval",
+          "present": true
+        },
+        {
+          "decl": "AbsolutelyContinuousOnInterval.integral_mul_deriv_eq_deriv_mul",
+          "present": true,
+          "note": "integration by parts for AC functions"
+        },
+        {
+          "decl": "BoundedVariationOn",
+          "present": true
+        },
+        {
+          "decl": "eVariationOn",
+          "present": true
+        },
+        {
+          "decl": "MeasureTheory.stieltjesIntegral_of_boundedVariation",
+          "present": false,
+          "note": "Riemann–Stieltjes integration against a BV function (the last integration by parts) is absent"
+        }
+      ],
+      "difficulty": 4,
+      "priority": "next",
+      "tags": [
+        "chebyshev",
+        "series",
+        "smoothness"
+      ],
+      "notes": "Assume the BV form (statement certain); prove first the corollary with f^{(ν+1)} continuous and V = ∫|f^{(ν+1)}|, which needs only AC integration by parts (difficulty 3). Consumers: chebyshev-approx-differentiable; trace estimation of non-analytic spectral sums (Schatten-p norms, |x|^p), smoothed counting functions in spectral density estimation.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "chebyshev-approx-differentiable",
+      "title": "Convergence of Chebyshev approximations for differentiable functions (ATAP Thm 7.2)",
+      "aliases": [
+        "ATAP Theorem 7.2",
+        "algebraic convergence rate",
+        "Chebyshev projection error for C^nu functions",
+        "Chebyshev interpolation error for C^nu functions"
+      ],
+      "area": "polynomial-series",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "Under Thm 7.1's hypotheses with $\\nu \\ge 1$ and $n > \\nu$: $\\|f - f_n\\| \\le \\dfrac{2V}{\\pi\\nu(n-\\nu)^\\nu}$ and $\\|f - p_n\\| \\le \\dfrac{4V}{\\pi\\nu(n-\\nu)^\\nu}$.",
+      "hypotheses": [
+        "$\\nu \\ge 1$ and $n > \\nu$",
+        "$f, \\dots, f^{(\\nu-1)}$ absolutely continuous on $[-1,1]$ and $f^{(\\nu)}$ of total variation $V$",
+        "$f_n$ the Chebyshev truncation and $p_n$ the interpolant in the $(n+1)$-point Chebyshev grid"
+      ],
+      "conclusion": "$\\max_{[-1,1]}|f - f_n| \\le \\dfrac{2V}{\\pi\\nu(n-\\nu)^{\\nu}}$ and $\\max_{[-1,1]}|f - p_n| \\le \\dfrac{4V}{\\pi\\nu(n-\\nu)^{\\nu}}$; in particular $E_n(f) \\le \\dfrac{2V}{\\pi\\nu(n-\\nu)^{\\nu}}$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 7.2"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-coeff-bv-decay",
+        "chebyshev-series-convergence",
+        "chebyshev-aliasing",
+        "minimax-error-def"
+      ],
+      "mathlib_prereqs": [],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "chebyshev",
+        "series",
+        "smoothness",
+        "rate"
+      ],
+      "notes": "Given 7.1: sum the coefficient bound (Σ_{k>n} (k-ν)^{-ν-1} ≤ 1/(ν(n-ν)^ν)) and use 3.1(a), plus aliasing for the interpolant. Consumers: SLQ/Hutch++ for non-analytic f, spectral density with smooth kernels. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "chebyshev-coeff-analytic-decay",
+      "title": "Chebyshev coefficients of analytic functions (ATAP Thm 8.1)",
+      "aliases": [
+        "ATAP Theorem 8.1",
+        "geometric decay of Chebyshev coefficients",
+        "Bernstein ellipse coefficient bound",
+        "rho^{-k} decay"
+      ],
+      "area": "polynomial-series",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $f$ extends analytically to the open Bernstein ellipse $E_\\rho$ with $|f| \\le M$ there, then $|a_0| \\le M$ and $|a_k| \\le 2M\\rho^{-k}$ for $k \\ge 1$.",
+      "hypotheses": [
+        "$\\rho > 1$ and $M \\ge 0$",
+        "$F : \\mathbb{C} \\to \\mathbb{C}$ complex-differentiable on the open Bernstein ellipse $E_\\rho$ with $|F(z)| \\le M$ for $z \\in E_\\rho$",
+        "$F(x) = f(x)$ for $x \\in [-1,1]$, and $a_k$ the Chebyshev coefficients of $f$"
+      ],
+      "conclusion": "$|a_0(f)| \\le M$ and $|a_k(f)| \\le 2M\\rho^{-k}$ for all $k \\ge 1$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 8.1"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-coefficients-def",
+        "bernstein-ellipse-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Complex.circleIntegral_eq_of_differentiable_on_annulus_off_countable",
+          "present": true,
+          "note": "Cauchy–Goursat on an annulus: moves the contour from |w| = 1 to |w| = r < ρ"
+        },
+        {
+          "decl": "Complex.circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable",
+          "present": true
+        },
+        {
+          "decl": "circleIntegral",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.T_complex_cos",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.integral_measureT_eq_integral_cos",
+          "present": true
+        }
+      ],
+      "difficulty": 3,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "chebyshev",
+        "analytic",
+        "rate"
+      ],
+      "notes": "Proof: with J(w) = (w + w^{-1})/2, a_k = (1/(πi)) ∮_{|w|=1} F(J(w)) w^{-k-1} dw; F∘J is holomorphic on ρ^{-1} < |w| < ρ, so the integral equals the one over |w| = r for any 1 < r < ρ, which is at most 2M r^{-k}; let r ↑ ρ. Consumers: chebyshev-approx-analytic, hence bernstein-ellipse-approx, slq-error (general analytic f, ucs17 Thm 4.1), slit-plane-analytic-approx, lanczos-quadrature-analytic-error. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "chebyshev-approx-analytic",
+      "title": "Convergence of Chebyshev approximations for analytic functions (ATAP Thm 8.2)",
+      "aliases": [
+        "ATAP Theorem 8.2",
+        "geometric convergence",
+        "Bernstein ellipse rate",
+        "rho^{-n} rate",
+        "Chebyshev projection and interpolant error for analytic f"
+      ],
+      "area": "polynomial-series",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "Under Thm 8.1's hypotheses, $\\|f - f_n\\| \\le \\dfrac{2M\\rho^{-n}}{\\rho - 1}$ and $\\|f - p_n\\| \\le \\dfrac{4M\\rho^{-n}}{\\rho - 1}$ for every $n \\ge 0$; the best-approximation corollary $E_n(f) \\le \\dfrac{2M\\rho^{-n}}{\\rho-1}$ is the existing candidate `bernstein-ellipse-approx`.",
+      "hypotheses": [
+        "$\\rho > 1$ and $M \\ge 0$",
+        "$F : \\mathbb{C} \\to \\mathbb{C}$ complex-differentiable on the open Bernstein ellipse $E_\\rho$ with $|F(z)| \\le M$ for $z \\in E_\\rho$",
+        "$F(x) = f(x)$ for $x \\in [-1,1]$, and $a_k$ the Chebyshev coefficients of $f$",
+        "$n \\in \\mathbb{N}$, $f_n$ the Chebyshev truncation and $p_n$ the interpolant in the $(n+1)$-point Chebyshev grid"
+      ],
+      "conclusion": "$\\max_{[-1,1]}|f - f_n| \\le \\dfrac{2M\\rho^{-n}}{\\rho - 1}$ and $\\max_{[-1,1]}|f - p_n| \\le \\dfrac{4M\\rho^{-n}}{\\rho - 1}$; transplanted to $[a,b]$: if $f \\circ \\varphi$ satisfies the hypotheses then some $p$ with $\\deg p \\le n$ has $|f(x) - p(x)| \\le \\tfrac{2M\\rho^{-n}}{\\rho - 1}$ for $x \\in [a,b]$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 8.2"
+        },
+        {
+          "source": "ucs17",
+          "label": "Thm 4.1 (consumer)"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-coeff-analytic-decay",
+        "chebyshev-series-convergence",
+        "chebyshev-aliasing",
+        "bernstein-ellipse-def"
+      ],
+      "mathlib_prereqs": [],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "chebyshev",
+        "analytic",
+        "rate"
+      ],
+      "notes": "The truncation half needs only 8.1 and 3.1(a) (sum a geometric tail); the interpolant half needs aliasing. Suggest adding the edge bernstein-ellipse-approx → chebyshev-approx-analytic in atlas.json (the existing candidate is this theorem's E_n corollary). Consumers: bernstein-ellipse-approx, slq-error (general analytic f), lanczos-quadrature-analytic-error, slit-plane-analytic-approx, T1's Krylov f(A)b bound (Saad 1992 Thm 3.3 composed with this). Prove.",
+      "updated_at": "2026-10-10",
+      "variants": [
+        "bernstein-ellipse-approx"
+      ]
+    },
+    {
+      "id": "equioscillation",
+      "title": "Chebyshev equioscillation theorem (ATAP Thm 10.1)",
+      "aliases": [
+        "Chebyshev alternation theorem",
+        "equioscillation",
+        "alternation",
+        "characterisation of best approximation",
+        "uniqueness of best approximation",
+        "ATAP Theorem 10.1",
+        "Remez"
+      ],
+      "area": "polynomial-best",
+      "kind": "theorem",
+      "status": "candidate",
+      "informal": "A continuous real $f$ on $[a,b]$ has a unique best approximation $p^* \\in \\mathcal{P}_n$, and $p$ with $\\deg p \\le n$ is $p^*$ iff $f - p$ equioscillates at $n+2$ points: $a \\le x_0 < \\cdots < x_{n+1} \\le b$ with $f(x_i) - p(x_i) = \\sigma(-1)^i\\max_{[a,b]}|f - p|$.",
+      "hypotheses": [
+        "$a < b$, $n \\in \\mathbb{N}$, $f$ continuous on $[a,b]$",
+        "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le n$"
+      ],
+      "conclusion": "$\\max_{[a,b]}|f - p| = E_n(f;[a,b])$ if and only if there are $a \\le x_0 < \\cdots < x_{n+1} \\le b$ and $\\sigma \\in \\{\\pm 1\\}$ with $f(x_i) - p(x_i) = \\sigma(-1)^i\\max_{[a,b]}|f - p|$ for all $i$; the best approximation is unique",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 10.1"
+        },
+        {
+          "source": "cheney66",
+          "label": "Ch. 3 (alternation theorem)"
+        }
+      ],
+      "depends_on": [
+        "minimax-error-def",
+        "de-la-vallee-poussin"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "intermediate_value_Icc",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.card_roots'",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.isExtrOn_T_real",
+          "present": true,
+          "note": "the extremal points of T_n: the model alternation set"
+        },
+        {
+          "decl": "Polynomial.equioscillation",
+          "present": false,
+          "note": "no alternation theorem"
+        }
+      ],
+      "difficulty": 4,
+      "priority": "later",
+      "tags": [
+        "best-approximation",
+        "optimality"
+      ],
+      "notes": "The 'if' direction is de-la-vallee-poussin with equal values; the 'only if' direction (perturbation argument) and uniqueness are the work. Consumers: optimality statements (chebyshev-monic-minimal and chebyshev-minimax are instances), Remez, sharp lower bounds for sign/exp. Assume if a consumer needs it; de la Vallée Poussin covers the lower-bound use.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "de-la-vallee-poussin",
+      "title": "De la Vallée Poussin lower bound for best approximation",
+      "aliases": [
+        "de la Vallée Poussin theorem",
+        "alternation lower bound",
+        "lower bound on E_n",
+        "sign-alternation certificate"
+      ],
+      "area": "polynomial-best",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $f - p$ ($\\deg p \\le n$) takes nonzero values of alternating sign at $n+2$ points of $[a,b]$, every polynomial of degree $\\le n$ has error at least $\\min_i |f(x_i) - p(x_i)|$ at one of those points, so $E_n(f) \\ge \\min_i|f(x_i) - p(x_i)|$.",
+      "hypotheses": [
+        "$n \\in \\mathbb{N}$ and $a \\le x_0 < x_1 < \\cdots < x_{n+1} \\le b$",
+        "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le n$ and $(f(x_i) - p(x_i))(f(x_{i+1}) - p(x_{i+1})) < 0$ for $0 \\le i \\le n$"
+      ],
+      "conclusion": "for every $q \\in \\mathbb{R}[x]$ with $\\deg q \\le n$, $\\max_{0 \\le i \\le n+1}|f(x_i) - q(x_i)| \\ge \\min_{0 \\le i \\le n+1}|f(x_i) - p(x_i)|$; hence $E_n(f;[a,b]) \\ge \\min_i|f(x_i) - p(x_i)|$",
+      "sources": [
+        {
+          "source": "cheney66",
+          "label": "Ch. 3 (de La Vallée Poussin)"
+        },
+        {
+          "source": "trefethen19",
+          "label": "Ch. 10"
+        }
+      ],
+      "depends_on": [
+        "minimax-error-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "intermediate_value_Icc",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.card_roots'",
+          "present": true
+        },
+        {
+          "decl": "Lagrange.eq_zero_of_degree_lt_of_eval_finset_eq_zero",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "best-approximation",
+        "lower-bound"
+      ],
+      "notes": "Proof: if q beat the minimum at every x_i, q - p would have the sign of f - p at the n+2 points, hence n+1 roots, hence q = p: contradiction. The discrete form needs no continuity of f. Consumers: equioscillation; explicit lower-bound certificates for approximating sign, exp and 1/x; generalises the lower half of chebyshev-minimax. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "lebesgue-constant-chebyshev",
+      "title": "Lebesgue constant of Chebyshev interpolation (ATAP Thm 15.2)",
+      "aliases": [
+        "ATAP Theorem 15.2",
+        "Lebesgue constant of Chebyshev points",
+        "(2/pi) log n",
+        "stability of Chebyshev interpolation"
+      ],
+      "area": "polynomial-best",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For interpolation in the $n+1$ Chebyshev points $\\cos(j\\pi/n)$, $\\Lambda_n \\le \\tfrac{2}{\\pi}\\log(n+1) + 1$; with Thm 15.1, $\\|f - p_n\\| \\le (2 + \\tfrac{2}{\\pi}\\log(n+1))E_n(f)$.",
+      "hypotheses": [
+        "$n \\ge 1$; nodes $x_j = \\cos(j\\pi/n)$, $0 \\le j \\le n$ (Mathlib `Polynomial.Chebyshev.node`)"
+      ],
+      "conclusion": "$\\Lambda_n = \\max_{x \\in [-1,1]}\\sum_{j=0}^{n}|\\ell_j(x)| \\le \\tfrac{2}{\\pi}\\log(n+1) + 1$; hence $\\max_{[-1,1]}|f - p_n| \\le \\big(2 + \\tfrac{2}{\\pi}\\log(n+1)\\big)E_n(f)$ for continuous $f$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 15.2"
+        }
+      ],
+      "depends_on": [
+        "lebesgue-constant-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.Chebyshev.node",
+          "present": true
+        },
+        {
+          "decl": "Lagrange.basis",
+          "present": true
+        },
+        {
+          "decl": "Lagrange.nodalWeight",
+          "present": true
+        }
+      ],
+      "difficulty": 4,
+      "priority": "later",
+      "tags": [
+        "interpolation",
+        "chebyshev"
+      ],
+      "notes": "The first-kind analogue (zeros of T_{n+1}, NLAlib `chebyshevZero`) has a bound of the same form (Rivlin); pin the printed label before stating it. Consumers: near-best Chebyshev interpolation (turns jackson-lipschitz / chebyshev-approx-analytic E_n bounds into interpolant bounds with a log factor), KPM practice. Assume; low priority for RandNLA.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "jackson-lipschitz",
+      "title": "Jackson's theorem for Lipschitz functions",
+      "aliases": [
+        "Jackson's theorem",
+        "Jackson III",
+        "Jackson–Favard constant pi/2",
+        "degree of approximation of Lipschitz functions",
+        "quantitative Weierstrass"
+      ],
+      "area": "polynomial-best",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $f$ is $\\lambda$-Lipschitz on $[-1,1]$ then $E_n(f) \\le \\dfrac{\\pi\\lambda}{2(n+1)}$; on $[a,b]$, $E_n(f) \\le \\dfrac{\\pi\\lambda(b-a)}{4(n+1)}$.",
+      "hypotheses": [
+        "$a < b$ and $n \\in \\mathbb{N}$",
+        "$|f(x) - f(y)| \\le \\lambda|x - y|$ for $x, y \\in [a,b]$"
+      ],
+      "conclusion": "$\\exists p$ with $\\deg p \\le n$ and $|f(x) - p(x)| \\le \\dfrac{\\pi\\lambda(b-a)}{4(n+1)}$ for all $x \\in [a,b]$ (on $[-1,1]$: $\\tfrac{\\pi\\lambda}{2(n+1)}$)",
+      "sources": [
+        {
+          "source": "cheney66",
+          "label": "Ch. 4 §6, Jackson's Theorem III"
+        }
+      ],
+      "depends_on": [
+        "minimax-error-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "LipschitzOnWith",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.T_real_cos",
+          "present": true
+        },
+        {
+          "decl": "bernsteinApproximation_uniform",
+          "present": true,
+          "note": "Weierstrass via Bernstein polynomials: no rate"
+        },
+        {
+          "decl": "Polynomial.jackson",
+          "present": false,
+          "note": "no Jackson kernel and no quantitative Weierstrass theorem"
+        }
+      ],
+      "difficulty": 4,
+      "priority": "next",
+      "tags": [
+        "best-approximation",
+        "rate",
+        "jackson"
+      ],
+      "notes": "Sharp constant π/2 (Favard); check the printed constant when stating. Assume the sharp form so that the spectral-density consumers can be built; a proof with a worse explicit constant via the Jackson kernel is an acceptable first formalization (state it as a separate corollary-strength lemma). Higher-order Jackson (Cheney Thm V, f^{(k)} Lipschitz) is a later variant. Consumers: lanczos-quadrature-lipschitz-error (Wasserstein-1 spectral density, ctu21, bkm22), KPM, SLQ for non-smooth f.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "bernstein-walsh-ellipse",
+      "title": "Bernstein's growth lemma on the Bernstein ellipse",
+      "aliases": [
+        "Bernstein's lemma",
+        "Bernstein–Walsh inequality",
+        "polynomial growth off [-1,1]",
+        "|p(z)| <= M rho^n"
+      ],
+      "area": "polynomial-chebyshev",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $\\deg p \\le n$ and $|p| \\le M$ on $[-1,1]$ then $|p(z)| \\le M\\rho^n$ on the closed Bernstein ellipse $\\overline{E_\\rho}$: the complex counterpart of `chebyshev-extremal`.",
+      "hypotheses": [
+        "$\\rho > 1$ and $n \\in \\mathbb{N}$",
+        "$p \\in \\mathbb{C}[x]$ with $\\deg p \\le n$ and $|p(x)| \\le M$ for $x \\in [-1,1]$"
+      ],
+      "conclusion": "$|p(z)| \\le M\\rho^n$ for every $z \\in \\overline{E_\\rho}$; equivalently $|p(J(w))| \\le M|w|^n$ for $|w| \\ge 1$, $J(w) = (w + w^{-1})/2$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Ch. 8 (proof of Thm 8.3)"
+        },
+        {
+          "source": "rivlin90",
+          "label": "Ch. 2"
+        }
+      ],
+      "depends_on": [
+        "bernstein-ellipse-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Complex.norm_le_of_forall_mem_frontier_norm_le",
+          "present": true,
+          "note": "maximum modulus on the closed unit disc"
+        },
+        {
+          "decl": "Polynomial.Chebyshev.T_complex_cos",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "chebyshev",
+        "analytic",
+        "growth"
+      ],
+      "notes": "Proof: h(u) = u^n p(J(u)) is a polynomial in u of degree ≤ 2n with |h| ≤ M on |u| = 1, so |h| ≤ M on the closed disc; evaluate at u = 1/w. Classical (Bernstein 1912); pin a printed label. Consumers: converse of 8.2 (ATAP Thm 8.3, lower bounds for analytic approximation), GMRES and Krylov bounds with complex spectra (T1), stability of Chebyshev recurrences in floating point (Musco–Musco–Sidford 2018). Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "lanczos-quadrature-analytic-error",
+      "title": "Lanczos (Gauss) quadrature error for analytic f",
+      "aliases": [
+        "Gauss quadrature error, analytic f",
+        "SLQ per-vector error",
+        "Gauss–Lanczos rho^{-2q} rate",
+        "quadratic form b^T f(A) b by Lanczos"
+      ],
+      "area": "krylov",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $A$ is symmetric with spectrum in $[a,c]$ and $f\\circ\\varphi$ extends analytically to $E_\\rho$ with $|\\cdot| \\le M$, then $q$ Lanczos steps give $\\big|b^\\top f(A)b - (Q^\\top b)^\\top f(Q^\\top A Q)\\,Q^\\top b\\big| \\le \\dfrac{4M\\rho^{1-2q}}{\\rho - 1}\\|b\\|^2$.",
+      "hypotheses": [
+        "$A \\in \\mathbb{R}^{n\\times n}$ symmetric with all eigenvalues in $[a,c]$, $a < c$, and $\\varphi(t) = \\tfrac{(c-a)t + (c+a)}{2}$",
+        "$q \\ge 1$, $Q$ with orthonormal columns and $\\mathcal{K}_q(A,b) \\subseteq \\operatorname{range} Q$",
+        "$\\rho > 1$; $F$ complex-differentiable on $E_\\rho$ with $|F| \\le M$ there and $F(t) = f(\\varphi(t))$ for $t \\in [-1,1]$"
+      ],
+      "conclusion": "$\\big|b^\\top f(A)b - (Q^\\top b)^\\top f(Q^\\top A Q)(Q^\\top b)\\big| \\le \\dfrac{4M\\rho^{1-2q}}{\\rho - 1}\\,b^\\top b$",
+      "sources": [
+        {
+          "source": "ucs17",
+          "label": "proof of Thm 4.1"
+        },
+        {
+          "source": "trefethen19",
+          "label": "Ch. 19"
+        },
+        {
+          "source": "gm10",
+          "label": "Ch. 6"
+        }
+      ],
+      "depends_on": [
+        "lanczos-gauss-quadrature",
+        "chebyshev-approx-analytic",
+        "bernstein-ellipse-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "cfc",
+          "present": true
+        }
+      ],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "quadrature",
+        "analytic",
+        "bridge"
+      ],
+      "notes": "One line once chebyshev-approx-analytic exists: NLAlib `abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le` with p the transplanted Chebyshev truncation of degree 2q-1 and E = 2Mρ^{1-2q}/(ρ-1). Consumers: slq-error for general analytic f (log-determinant, tr exp(-tA), tr A^{-1/2}); suggest adding the edge slq-error → lanczos-quadrature-analytic-error. ATAP Ch. 19's (64/15)Mρ^{-2q}/(ρ²-1) is for the Legendre weight and is not directly comparable. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "lanczos-quadrature-lipschitz-error",
+      "title": "Lanczos (Gauss) quadrature error for Lipschitz f (Wasserstein form)",
+      "aliases": [
+        "spectral density estimation",
+        "Wasserstein-1 error of Lanczos quadrature",
+        "SLQ spectrum approximation",
+        "moment matching in W1",
+        "kernel polynomial method"
+      ],
+      "area": "krylov",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For $L$-Lipschitz $f$ on $[a,c]$, $\\big|b^\\top f(A)b - (Q^\\top b)^\\top f(Q^\\top AQ)\\,Q^\\top b\\big| \\le \\dfrac{\\pi L(c-a)}{4q}\\|b\\|^2$; for unit $b$ this says $W_1(\\mu_b, \\hat\\mu_q) \\le \\tfrac{\\pi(c-a)}{4q}$ between the spectral measure and its $q$-point Gauss rule.",
+      "hypotheses": [
+        "$A \\in \\mathbb{R}^{n\\times n}$ symmetric with all eigenvalues in $[a,c]$, $a < c$, and $\\varphi(t) = \\tfrac{(c-a)t + (c+a)}{2}$",
+        "$q \\ge 1$, $Q$ with orthonormal columns and $\\mathcal{K}_q(A,b) \\subseteq \\operatorname{range} Q$",
+        "$f$ is $L$-Lipschitz on $[a,c]$"
+      ],
+      "conclusion": "$\\big|b^\\top f(A)b - (Q^\\top b)^\\top f(Q^\\top A Q)(Q^\\top b)\\big| \\le \\dfrac{\\pi L(c-a)}{4q}\\,b^\\top b$",
+      "sources": [
+        {
+          "source": "ctu21",
+          "label": "§4 (Wasserstein bound)"
+        },
+        {
+          "source": "bkm22",
+          "label": "§3 (Jackson + moment matching)"
+        }
+      ],
+      "depends_on": [
+        "lanczos-gauss-quadrature",
+        "jackson-lipschitz"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "LipschitzOnWith",
+          "present": true
+        },
+        {
+          "decl": "MeasureTheory.wasserstein",
+          "present": false,
+          "note": "no Wasserstein distance or Kantorovich–Rubinstein duality; stated with test functions"
+        }
+      ],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "krylov",
+        "quadrature",
+        "spectral-density",
+        "bridge"
+      ],
+      "notes": "Derivation: Jackson with n = 2q-1 on [a,c] gives E ≤ πL(c-a)/(8q); the NLAlib Lanczos lemma doubles it. Consumers: spectral density estimation by SLQ (ctu21) and by moment matching (bkm22), eigenvalue counts with Lipschitz-smoothed indicators. Prove once jackson-lipschitz is assumed.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "monomial-chebyshev-approx",
+      "title": "Low-degree approximation of x^s (Sachdeva–Vishnoi Thm 3.3)",
+      "aliases": [
+        "monomial approximation",
+        "x^s with degree sqrt(s)",
+        "Newman–Rivlin",
+        "random-walk Chebyshev expansion",
+        "square-root degree reduction"
+      ],
+      "area": "polynomial-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "$x^s = \\sum_{j=0}^{s} 2^{-s}\\binom{s}{j}T_{|s-2j|}(x)$; keeping the terms with $|s - 2j| \\le d$ gives $p_{s,d}$ of degree $\\le d$ with $\\max_{[-1,1]}|x^s - p_{s,d}| \\le 2e^{-d^2/(2s)}$, so degree $\\sqrt{2s\\log(2/\\varepsilon)}$ suffices for error $\\varepsilon$.",
+      "hypotheses": [
+        "integers $s \\ge 1$ and $d \\ge 0$"
+      ],
+      "conclusion": "$x^s = \\sum_{j=0}^{s} 2^{-s}\\binom{s}{j}\\,T_{|s-2j|}(x)$ as polynomials, and $p_{s,d} = \\sum_{j\\,:\\,|s-2j| \\le d} 2^{-s}\\binom{s}{j}\\,T_{|s-2j|}$ has $\\deg p_{s,d} \\le d$ and $|x^s - p_{s,d}(x)| \\le 2e^{-d^2/(2s)}$ for $x \\in [-1,1]$",
+      "sources": [
+        {
+          "source": "sv14",
+          "label": "Thm 3.3"
+        }
+      ],
+      "depends_on": [],
+      "mathlib_prereqs": [
+        {
+          "decl": "Polynomial.Chebyshev.T_mul_T",
+          "present": true,
+          "note": "2 T_m T_k = T_{m+k} + T_{m-k}; with m = 1 gives x T_k = (T_{k+1} + T_{k-1})/2"
+        },
+        {
+          "decl": "Polynomial.Chebyshev.T_neg",
+          "present": true
+        },
+        {
+          "decl": "Polynomial.Chebyshev.abs_eval_T_real_le_one",
+          "present": true
+        },
+        {
+          "decl": "Real.cosh_le_exp_half_sq",
+          "present": true,
+          "note": "Chernoff bound for the binomial tail"
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "foundation",
+        "chebyshev",
+        "approximation",
+        "power-method"
+      ],
+      "notes": "The binomial tail Σ_{|s-2j|>d} 2^{-s} C(s,j) ≤ 2e^{-d²/(2s)} is proved from Σ_j C(s,j) e^{λ(s-2j)} = (2 cosh λ)^s and `Real.cosh_le_exp_half_sq`, without probability (Polynomial is layer 0 and cannot import Concentration). Consumers: exp-polynomial-approx; the 'Lanczos with q steps matches power iteration with q² steps' comparison behind random-start-power (kw92) and block Krylov vs subspace iteration (mm15); polynomial approximation of matrix powers. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "exp-polynomial-approx",
+      "title": "Polynomial approximation of e^{-x} on [0,b] (Sachdeva–Vishnoi Thm 4.1)",
+      "aliases": [
+        "exponential approximation",
+        "e^{-tx}",
+        "heat kernel",
+        "matrix exponential by polynomials",
+        "sqrt(b) degree"
+      ],
+      "area": "polynomial-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For $b > 0$ and $0 < \\delta \\le 1$, with $t = \\lceil\\max(e^2 b/2, \\log(2/\\delta))\\rceil$ and $d = \\lceil\\sqrt{2t\\log(4/\\delta)}\\rceil$, some $p$ of degree $\\le d$ has $|e^{-x} - p(x)| \\le \\delta$ on $[0,b]$: degree $O\\big(\\sqrt{\\max(b, \\log(1/\\delta))\\log(1/\\delta)}\\big)$ with the constants shown. For $e^{-\\tau x}$ on $[0,\\beta]$ take $b = \\tau\\beta$.",
+      "hypotheses": [
+        "$b > 0$ and $0 < \\delta \\le 1$",
+        "$t = \\lceil\\max(e^2 b/2,\\ \\log(2/\\delta))\\rceil$ and $d = \\lceil\\sqrt{2t\\log(4/\\delta)}\\rceil$"
+      ],
+      "conclusion": "$\\exists p \\in \\mathbb{R}[x]$ with $\\deg p \\le d$ and $|e^{-x} - p(x)| \\le \\delta$ for all $x \\in [0,b]$",
+      "sources": [
+        {
+          "source": "sv14",
+          "label": "Thm 4.1"
+        }
+      ],
+      "depends_on": [
+        "monomial-chebyshev-approx"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Real.exp_bound",
+          "present": true,
+          "note": "Taylor remainder only for |x| ≤ 1; the Poisson tail Σ_{i≥t}(b/2)^i/i! ≤ e^{b/2}(eb/(2t))^t must be proved"
+        },
+        {
+          "decl": "Real.add_one_le_exp",
+          "present": true
+        }
+      ],
+      "difficulty": 2,
+      "priority": "next",
+      "tags": [
+        "approximation",
+        "exponential"
+      ],
+      "notes": "Constants derived here following the SV proof (SV state the degree with O(·)): write e^{-x} = e^{-b/2}e^{-(b/2)y}, y = 2x/b - 1; truncate the Taylor series at t terms (tail ≤ (eb/(2t))^t ≤ e^{-t} ≤ δ/2); replace each y^i, 1 ≤ i < t, by p_{i,d} at total cost ≤ 2e^{-d²/(2t)} ≤ δ/2. Consumers: tr exp(-τA) (heat-kernel trace, Estrada index) by SLQ / Hutch++, exp(-τA)b by Lanczos (Musco–Musco–Sidford 2018), matrix multiplicative weights; optimality in exp-approx-lower-bound. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "exp-approx-lower-bound",
+      "title": "Degree lower bound for approximating e^{-x} on [0,b]",
+      "aliases": [
+        "sqrt(b) lower bound",
+        "optimality of Sachdeva–Vishnoi",
+        "Markov-inequality lower bound"
+      ],
+      "area": "polynomial-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $\\deg p \\le q$ and $|p - e^{-x}| \\le \\delta \\le 1/8$ on $[0,b]$ with $b \\ge 1$, then $q^2 \\ge \\dfrac{(1 - e^{-1} - 2\\delta)\\,b}{2(1+\\delta)}$; in particular $q \\ge \\sqrt{b/6}$.",
+      "hypotheses": [
+        "$b \\ge 1$ and $0 \\le \\delta \\le 1/8$",
+        "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le q$ and $|p(x) - e^{-x}| \\le \\delta$ for $x \\in [0,b]$"
+      ],
+      "conclusion": "$q^2 \\ge \\dfrac{(1 - e^{-1} - 2\\delta)\\,b}{2(1 + \\delta)}$, hence $q \\ge \\sqrt{b/6}$",
+      "sources": [
+        {
+          "source": "sv14",
+          "label": "§5 (lower bounds via Markov's inequality)"
+        }
+      ],
+      "depends_on": [
+        "markov-brothers"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "exists_deriv_eq_slope",
+          "present": true,
+          "note": "mean value theorem on [0,1]"
+        }
+      ],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "lower-bound",
+        "exponential"
+      ],
+      "notes": "Constants derived here: the MVT on [0,1] gives |p'(ξ)| ≥ 1 - e^{-1} - 2δ; Markov on [0,b] (NLAlib `abs_eval_derivative_le_two_mul_sq_div_mul_of_forall_abs_eval_le`) gives |p'(ξ)| ≤ 2q²(1+δ)/b. Shows the √b in exp-polynomial-approx is optimal. Consumers: optimality claims for Lanczos/Chebyshev exp(A)b and heat-trace estimation. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "slit-plane-analytic-approx",
+      "title": "Approximation on [a,b] of functions analytic in the right half-plane (x^{-1/2}, log x, x^alpha)",
+      "aliases": [
+        "inverse square root approximation",
+        "x^{-1/2}",
+        "log approximation",
+        "log-determinant polynomial",
+        "matrix square root",
+        "fractional power x^alpha",
+        "sqrt(kappa) log(1/eps) degree"
+      ],
+      "area": "polynomial-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For $0 < a < b$, $\\rho_0 = \\tfrac{\\sqrt b + \\sqrt a}{\\sqrt b - \\sqrt a}$ and $1 < r < \\rho_0$, the transplanted ellipse $\\varphi(E_r)$ lies in $\\{\\operatorname{Re} z \\ge m_r\\}$ with $m_r = \\tfrac{(b+a) - (b-a)(r + r^{-1})/2}{2} > 0$. So any $F$ analytic on $\\operatorname{Re} z > 0$ with $|F| \\le M$ there is approximated on $[a,b]$ to within $\\tfrac{2Mr^{-n}}{r-1}$ by degree $n$; $M = \\max(m_r^\\alpha, R_r^\\alpha)$ for $x^\\alpha$ and $\\max(|\\log m_r|, |\\log R_r|) + \\pi/2$ for $\\log x$.",
+      "hypotheses": [
+        "$0 < a < b$, $\\rho_0 = \\tfrac{\\sqrt b + \\sqrt a}{\\sqrt b - \\sqrt a}$, $1 < r < \\rho_0$, $n \\in \\mathbb{N}$",
+        "$m_r = \\tfrac{(b+a) - (b-a)(r + r^{-1})/2}{2}$ and $R_r = \\tfrac{(b+a) + (b-a)(r + r^{-1})/2}{2}$",
+        "$F$ complex-differentiable on $\\{\\operatorname{Re} z > 0\\}$, real on $[a,b]$, with $|F(z)| \\le M$ whenever $\\operatorname{Re} z \\ge m_r$ and $|z| \\le R_r$"
+      ],
+      "conclusion": "$m_r > 0$ and $\\exists p$ with $\\deg p \\le n$ and $|F(x) - p(x)| \\le \\dfrac{2Mr^{-n}}{r - 1}$ for $x \\in [a,b]$; for $F(z) = z^{\\alpha}$ ($\\alpha \\in \\mathbb{R}$) one may take $M = \\max(m_r^{\\alpha}, R_r^{\\alpha})$, for $F = \\operatorname{Log}$, $M = \\max(|\\log m_r|, |\\log R_r|) + \\pi/2$",
+      "sources": [
+        {
+          "source": "trefethen19",
+          "label": "Thm 8.2 (transplanted to [a,b])"
+        },
+        {
+          "source": "ucs17",
+          "label": "Thm 4.1 (consumer: log-determinant)"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-approx-analytic",
+        "bernstein-ellipse-def"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Complex.slitPlane",
+          "present": true
+        },
+        {
+          "decl": "Complex.differentiableAt_log",
+          "present": true
+        },
+        {
+          "decl": "DifferentiableAt.cpow_const",
+          "present": true
+        },
+        {
+          "decl": "NLAlib.add_div_sub_add_sqrt_sq_sub_one_eq",
+          "present": true,
+          "note": "NLAlib, not Mathlib: (b+a)/(b-a) + √(((b+a)/(b-a))² - 1) = (√b+√a)/(√b-√a), the same ρ₀"
+        }
+      ],
+      "difficulty": 2,
+      "priority": "now",
+      "tags": [
+        "approximation",
+        "analytic",
+        "logdet",
+        "inverse-sqrt"
+      ],
+      "notes": "r ↑ ρ₀ trades constant for rate; degree O(√κ log(κ/ε)) for x^{-1/2} and log. For 1/x it is weaker than NLAlib's inverse-polynomial-approx (variant). Consumers: slq-error with f = log (log-determinant, ucs17) and f = x^{-1/2}; Krylov methods for A^{-1/2}b (Gaussian sampling, whitening); sign-polynomial-approx; T1's Krylov f(A)b bounds for Stieltjes-type f. Prove.",
+      "updated_at": "2026-10-10",
+      "variants": [
+        "inverse-polynomial-approx"
+      ]
+    },
+    {
+      "id": "sign-polynomial-approx",
+      "title": "Polynomial approximation of sign(x) away from 0",
+      "aliases": [
+        "sign function",
+        "step function",
+        "spectral projector polynomial",
+        "gap-dependent polynomial",
+        "principal component projection",
+        "Eremenko–Yuditskii",
+        "1/gamma degree"
+      ],
+      "area": "polynomial-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "For $0 < \\gamma < 1$ and $1 < r < \\tfrac{1+\\gamma}{1-\\gamma}$ there is an odd $p(x) = x\\,q(x^2)$ of degree $\\le 2n+1$ with $|\\operatorname{sgn} x - p(x)| \\le \\tfrac{2m_r^{-1/2}r^{-n}}{r-1}$ for $\\gamma \\le |x| \\le 1$ (the $x^{-1/2}$ bound on $[\\gamma^2, 1]$). With $r = 1 + \\gamma$ the bound is $\\tfrac{4}{\\sqrt3\\,\\gamma^2}(1+\\gamma)^{-n}$: degree $O(\\gamma^{-1}\\log(1/(\\gamma\\varepsilon)))$. The step $\\mathbf{1}[x \\ge c]$ is $(1 + \\operatorname{sgn}(x - c))/2$.",
+      "hypotheses": [
+        "$0 < \\gamma < 1$, $n \\in \\mathbb{N}$, $1 < r < \\tfrac{1+\\gamma}{1-\\gamma}$",
+        "$m_r = \\tfrac{(1+\\gamma^2) - (1-\\gamma^2)(r + r^{-1})/2}{2}$"
+      ],
+      "conclusion": "$\\exists q$ with $\\deg q \\le n$ such that $p(x) = x\\,q(x^2)$ satisfies $|\\operatorname{sgn}(x) - p(x)| \\le \\dfrac{2\\,m_r^{-1/2}\\,r^{-n}}{r - 1}$ for $\\gamma \\le |x| \\le 1$; for $r = 1+\\gamma$, $m_r = \\gamma^2(3+\\gamma)/4$ and the bound is at most $\\dfrac{4}{\\sqrt3\\,\\gamma^2}(1+\\gamma)^{-n}$",
+      "sources": [
+        {
+          "source": "ey07",
+          "label": "Thm 1 (sharp asymptotic rate)"
+        },
+        {
+          "source": "fmms16",
+          "label": "consumer: principal component projection"
+        }
+      ],
+      "depends_on": [
+        "slit-plane-analytic-approx"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "Real.sign",
+          "present": true
+        }
+      ],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "approximation",
+        "sign",
+        "spectral-projector",
+        "gap"
+      ],
+      "notes": "As r ↑ (1+γ)/(1-γ) the base per degree-2 step tends to (1-γ)/(1+γ), the exponential base of Eremenko–Yuditskii's sharp asymptotics (EY07 Thm 1; pin its exact constant before adding it as an assumed variant). A variant with |p| ≤ 1 on all of [-1,1] (needed for stable projector polynomials; Gilyén–Su–Low–Wiebe 2019) is later. Consumers: spectral projectors and principal component projection/regression (fmms16), eigenvalue counting in an interval (spectral density), gap-dependent block Krylov. Lower bound: sign-approx-lower-bound. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "sign-approx-lower-bound",
+      "title": "Degree lower bound for approximating sign(x) with a gap",
+      "aliases": [
+        "1/gamma lower bound",
+        "Bernstein-inequality lower bound",
+        "optimality of sign approximation"
+      ],
+      "area": "polynomial-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $\\deg p \\le q$, $|p| \\le M$ on $[-1,1]$ and $|p - \\operatorname{sgn}| \\le \\varepsilon < 1$ on $\\gamma \\le |x| \\le 1$, then $qM \\ge \\dfrac{(1-\\varepsilon)\\sqrt{1-\\gamma^2}}{\\gamma}$.",
+      "hypotheses": [
+        "$0 < \\gamma < 1$ and $0 \\le \\varepsilon < 1$",
+        "$p \\in \\mathbb{R}[x]$ with $\\deg p \\le q$ and $|p(x)| \\le M$ for $x \\in [-1,1]$",
+        "$|p(x) - \\operatorname{sgn}(x)| \\le \\varepsilon$ for $\\gamma \\le |x| \\le 1$"
+      ],
+      "conclusion": "$q\\,M \\ge \\dfrac{(1 - \\varepsilon)\\sqrt{1 - \\gamma^2}}{\\gamma}$",
+      "sources": [
+        {
+          "source": "rivlin90",
+          "label": "Thm 2.23 (Bernstein's inequality, the tool)"
+        },
+        {
+          "source": "ey07",
+          "label": "Thm 1 (sharp order)"
+        }
+      ],
+      "depends_on": [
+        "bernstein-polynomial-inequality"
+      ],
+      "mathlib_prereqs": [
+        {
+          "decl": "exists_deriv_eq_slope",
+          "present": true,
+          "note": "mean value theorem on [-γ, γ]"
+        }
+      ],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "lower-bound",
+        "sign"
+      ],
+      "notes": "Derivation: the MVT on [-γ,γ] gives ξ with p'(ξ) ≥ (1-ε)/γ; Bernstein (NLAlib `abs_eval_derivative_le_div_sqrt_of_forall_abs_eval_le`) gives |p'(ξ)| ≤ qM/√(1-γ²). Shows the 1/γ order in sign-polynomial-approx is optimal. Consumers: optimality of gap-dependent Krylov and projector rates. Prove.",
+      "updated_at": "2026-10-10"
+    },
+    {
+      "id": "inverse-approx-lower-bound",
+      "title": "Lower bound for polynomial approximation of 1/x on [a,b]",
+      "aliases": [
+        "sqrt(kappa) lower bound",
+        "optimality of the CG rate",
+        "sharpness of inverse-polynomial-approx"
+      ],
+      "area": "polynomial-functions",
+      "kind": "bound",
+      "status": "candidate",
+      "informal": "If $\\deg p < q$ and $|p(x) - 1/x| \\le \\varepsilon$ on $[a,b]$, then $\\varepsilon \\ge \\tfrac{1}{b}\\big(\\tfrac{\\sqrt b - \\sqrt a}{\\sqrt b + \\sqrt a}\\big)^q$; `inverse-polynomial-approx` is sharp up to the factor $2b/a$.",
+      "hypotheses": [
+        "$0 < a < b$ and $q \\in \\mathbb{N}$",
+        "$p \\in \\mathbb{R}[x]$ with $\\deg p < q$ and $|p(x) - 1/x| \\le \\varepsilon$ for $x \\in [a,b]$"
+      ],
+      "conclusion": "$\\varepsilon \\ge \\dfrac{1}{b\\,T_q\\big(\\tfrac{b+a}{b-a}\\big)} \\ge \\dfrac{1}{b}\\Big(\\dfrac{\\sqrt b - \\sqrt a}{\\sqrt b + \\sqrt a}\\Big)^{q}$",
+      "sources": [
+        {
+          "source": "gm10",
+          "label": "App."
+        },
+        {
+          "source": "tb97",
+          "label": "Thm 38.5"
+        }
+      ],
+      "depends_on": [
+        "chebyshev-minimax",
+        "chebyshev-growth"
+      ],
+      "mathlib_prereqs": [],
+      "difficulty": 1,
+      "priority": "next",
+      "tags": [
+        "lower-bound",
+        "inverse",
+        "cg"
+      ],
+      "notes": "Proof: r = 1 - x p has degree ≤ q, r(0) = 1 and |r| ≤ bε on [a,b]; apply NLAlib `inv_eval_T_real_le_of_forall_abs_eval_le`, then `eval_T_real_le_pow` with `add_div_sub_add_sqrt_sq_sub_one_eq`. Consumers: optimality of the √κ rates of CG, Chebyshev iteration and Lanczos solves; lower bounds on iteration counts in sketch-and-precondition. Prove.",
+      "updated_at": "2026-10-10",
+      "variants": [
+        "inverse-polynomial-approx"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "sv14",
+      "type": "survey",
+      "title": "Faster Algorithms via Approximation Theory",
+      "authors": [
+        "Sushant Sachdeva",
+        "Nisheeth K. Vishnoi"
+      ],
+      "year": 2014,
+      "role": "Foundations and Trends in TCS monograph: x^s with degree √s (Thm 3.3), e^{-x} on [0,b] (Thm 4.1), lower bounds via Markov's inequality (§5)."
+    },
+    {
+      "id": "ey07",
+      "type": "paper",
+      "title": "Uniform approximation of sgn(x) by polynomials and entire functions",
+      "authors": [
+        "Alexandre Eremenko",
+        "Peter Yuditskii"
+      ],
+      "year": 2007,
+      "role": "Sharp asymptotics of the best polynomial approximation of sign on [-1,-γ]∪[γ,1] (J. Anal. Math. 101)."
+    },
+    {
+      "id": "fmms16",
+      "type": "paper",
+      "title": "Principal component projection without principal component analysis",
+      "authors": [
+        "Roy Frostig",
+        "Cameron Musco",
+        "Christopher Musco",
+        "Aaron Sidford"
+      ],
+      "year": 2016,
+      "role": "Consumer: spectral projection via polynomial approximation of the step function (ICML 2016)."
+    },
+    {
+      "id": "bkm22",
+      "type": "paper",
+      "title": "Sublinear time spectral density estimation",
+      "authors": [
+        "Vladimir Braverman",
+        "Aditya Krishnan",
+        "Christopher Musco"
+      ],
+      "year": 2022,
+      "role": "Consumer: Wasserstein-1 spectral density estimation by moment matching and Jackson's theorem (STOC 2022)."
+    }
+  ]
+}

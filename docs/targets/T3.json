@@ -1,0 +1,1726 @@
+{
+ "areas": [
+  {
+   "id": "matrix-majorization",
+   "name": "Majorization, Ky Fan and unitarily invariant norms",
+   "title": "Majorization, Ky Fan and unitarily invariant norms",
+   "parent": "matrix",
+   "order": 27,
+   "summary": "Majorization of spectra, Ky Fan / Schatten / unitarily invariant norms, and the eigenvalue and singular-value inequalities stated with them (Ky Fan, Schur–Horn, Lidskii, Horn)."
+  },
+  {
+   "id": "matrix-subspace-perturbation",
+   "name": "Subspace angles and sin θ theorems",
+   "title": "Subspace angles and sin θ theorems",
+   "parent": "matrix",
+   "order": 28,
+   "summary": "Canonical angles between subspaces and the Davis–Kahan / Wedin perturbation bounds for eigen- and singular subspaces."
+  },
+  {
+   "id": "matrix-conditioning",
+   "name": "Inverses, conditioning and factorizations",
+   "title": "Inverses, conditioning and factorizations",
+   "parent": "matrix",
+   "order": 29,
+   "summary": "Neumann series and inverse perturbation, condition numbers, forward-error bounds for linear systems and least squares, Cholesky and QR as existence-and-uniqueness statements."
+  }
+ ],
+ "results": [
+  {
+   "id": "majorization-def",
+   "title": "Majorization and weak majorization of real vectors",
+   "aliases": [
+    "majorization",
+    "x ≺ y",
+    "weak majorization",
+    "submajorization",
+    "Hardy–Littlewood–Pólya",
+    "Karamata inequality",
+    "Schur-convexity",
+    "doubly stochastic characterisation"
+   ],
+   "area": "matrix-majorization",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "For $x,y\\in\\mathbb R^n$ write $s_k(x)=\\sum_{i\\le k}x_i^\\downarrow$ for the sum of the $k$ largest entries. $x\\prec_w y$ (weak majorization) iff $s_k(x)\\le s_k(y)$ for $k=1,\\dots,n$; $x\\prec y$ iff moreover $s_n(x)=s_n(y)$. Characterisations: $x\\prec y$ iff $x=Dy$ for a doubly stochastic $D$ iff $x\\in\\operatorname{conv}\\{Py: P \\text{ a permutation}\\}$ (Hardy–Littlewood–Pólya); $x\\prec y$ iff $\\sum_i\\varphi(x_i)\\le\\sum_i\\varphi(y_i)$ for every convex $\\varphi$; $x\\prec_w y$ iff the same holds for every increasing convex $\\varphi$.",
+   "hypotheses": [
+    "$x, y \\in \\mathbb{R}^n$ (index type `Fin n`, or any `Fintype` index)",
+    "For the function characterisations: $\\varphi:\\mathbb R\\to\\mathbb R$ convex (increasing and convex for $\\prec_w$)"
+   ],
+   "conclusion": "$x\\prec y \\iff \\exists D \\text{ doubly stochastic},\\ x = Dy \\iff \\forall\\varphi \\text{ convex},\\ \\sum_i\\varphi(x_i)\\le\\sum_i\\varphi(y_i)$; and $x\\prec_w y\\iff\\forall\\varphi$ increasing convex, $\\sum_i\\varphi(x_i)\\le\\sum_i\\varphi(y_i)$",
+   "sources": [
+    {
+     "source": "mo11",
+     "label": "Def 1.A.1, 1.A.2; Thm 2.B.2 (HLP); Prop 4.B.1–4.B.2"
+    },
+    {
+     "source": "bhatia97",
+     "label": "§II.1–II.3"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "doublyStochastic",
+     "present": true,
+     "note": "Submonoid of doubly stochastic matrices (Mathlib.Analysis.Convex.DoublyStochasticMatrix)."
+    },
+    {
+     "decl": "doublyStochastic_eq_convexHull_permMatrix",
+     "present": true,
+     "note": "Birkhoff's theorem; turns the doubly-stochastic form into the convex-hull form."
+    },
+    {
+     "decl": "Majorization (any spelling)",
+     "present": false,
+     "note": "Mathlib/Analysis/Convex/Birkhoff.lean lists the HLP characterisation as a TODO; no definition exists."
+    },
+    {
+     "decl": "ConvexOn.map_sum_le",
+     "present": true,
+     "note": "Jensen, for the (⇒) direction of the convex-function form."
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "foundation",
+    "definition",
+    "majorization"
+   ],
+   "notes": "Lean design: avoid sorting by defining the top-k sum as a maximum over k-subsets, s_k(x) = sup over Finset.powersetCard k univ of ∑_{i∈S} x_i; this is index-type agnostic and matches how Ky Fan sums are proved. Consumers: schur-horn, lidskii, unitarily-invariant-norm-def (Fan dominance), horn-product-inequality, schatten-norms-def; downstream the Wasserstein-type spectrum comparisons used for spectral density (slq-error). Recommendation: prove the definition, the doubly-stochastic (⇐) direction and the convex-function (⇒) direction (difficulty 2); the (⇒) HLP direction is the hard part (difficulty 3–4) and can be assumed if a consumer needs it first. Labels in mo11 to verify against the printed edition.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "ky-fan-maximum-principle",
+   "title": "Ky Fan maximum principle for eigenvalue and singular-value sums",
+   "aliases": [
+    "Ky Fan maximum principle",
+    "Ky Fan's theorem",
+    "trace maximisation over Stiefel manifold",
+    "sum of top-k eigenvalues as max trace",
+    "Fan 1949"
+   ],
+   "area": "matrix-majorization",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$ with eigenvalues $\\lambda_1\\ge\\dots\\ge\\lambda_n$ and $0\\le k\\le n$: $$\\sum_{i=1}^k\\lambda_i(A)=\\max\\{\\operatorname{tr}(Q^\\top AQ): Q\\in\\mathbb R^{n\\times k},\\ Q^\\top Q=I_k\\},$$ attained at any $k$ orthonormal top eigenvectors (dually, the bottom $k$ sum is the minimum). For $A\\in\\mathbb R^{m\\times n}$: $\\sum_{i\\le k}\\sigma_i(A)=\\max\\{\\operatorname{tr}(U^\\top AV): U^\\top U=V^\\top V=I_k\\}$. Corollary: $\\sum_{i\\le k}\\lambda_i(A+B)\\le\\sum_{i\\le k}\\lambda_i(A)+\\sum_{i\\le k}\\lambda_i(B)$, i.e. $\\lambda(A+B)\\prec\\lambda(A)+\\lambda(B)$, and $\\sigma(A+B)\\prec_w\\sigma(A)+\\sigma(B)$.",
+   "hypotheses": [
+    "$A=A^\\top\\in\\mathbb R^{n\\times n}$, eigenvalues in decreasing order (`eigenvalues₀`)",
+    "$Q\\in\\mathbb R^{n\\times k}$ with orthonormal columns",
+    "Singular-value form: $A\\in\\mathbb R^{m\\times n}$, $U\\in\\mathbb R^{m\\times k}$, $V\\in\\mathbb R^{n\\times k}$ with orthonormal columns, $k\\le\\min(m,n)$"
+   ],
+   "conclusion": "$\\operatorname{tr}(Q^\\top AQ)\\le\\sum_{i\\le k}\\lambda_i(A)$ with equality for top eigenvectors; $\\operatorname{tr}(U^\\top AV)\\le\\sum_{i\\le k}\\sigma_i(A)$ with equality for top singular vectors",
+   "sources": [
+    {
+     "source": "fan49",
+     "label": "Thm 1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 4.3.39"
+    },
+    {
+     "source": "hj91",
+     "label": "Thm 3.4.1"
+    }
+   ],
+   "depends_on": [
+    "cauchy-interlacing",
+    "courant-fischer",
+    "von-neumann-trace",
+    "svd",
+    "orthonormal-columns-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀",
+     "present": true,
+     "note": "Sorted (antitone) eigenvalues."
+    },
+    {
+     "decl": "Matrix.IsHermitian.trace_eq_sum_eigenvalues",
+     "present": true
+    },
+    {
+     "decl": "LinearMap.singularValues",
+     "present": true,
+     "note": "NLAlib.singularValues is bridged to it."
+    },
+    {
+     "decl": "Ky Fan maximum principle",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "eigenvalues",
+    "singular-values",
+    "majorization"
+   ],
+   "notes": "Proof route with what NLAlib already has: tr(QᵀAQ) = ∑ᵢ λᵢ(QᵀAQ) ≤ ∑_{i≤k} λᵢ(A) by the compression half of Cauchy interlacing (NLAlib.eigenvalues₀_compression_le), equality at eigenvectors; the singular-value form is von Neumann (NLAlib.frobInner_le_sum_singularValues_mul) applied to ⟨A, UVᵀ⟩, since UVᵀ has k unit singular values. Consumers: ky-fan-norms-def (triangle inequality), schur-horn (Schur half is immediate: take Q = coordinate vectors), lidskii, eigenvalue sums in PCA/subspace objectives, block-krylov-lra (MM15's per-vector and Ky Fan error guarantees), nystrom-randomized and hutchpp (trace of the top-k part). Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "ky-fan-norms-def",
+   "title": "Ky Fan k-norms and the nuclear norm",
+   "aliases": [
+    "Ky Fan norm",
+    "Ky Fan k-norm",
+    "nuclear norm",
+    "trace norm",
+    "Schatten-1 norm",
+    "‖A‖_*",
+    "nuclear–spectral duality"
+   ],
+   "area": "matrix-majorization",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "$\\|A\\|_{(k)}=\\sum_{i\\le k}\\sigma_i(A)$ and $\\|A\\|_*=\\sum_i\\sigma_i(A)=\\|A\\|_{(\\min(m,n))}$. Characterisations: each $\\|\\cdot\\|_{(k)}$ is a norm on $\\mathbb R^{m\\times n}$, invariant under $A\\mapsto UAV$ for orthogonal $U,V$ and under transpose; $\\|A\\|_{(1)}=\\|A\\|$; $\\|A\\|_*=\\max\\{\\langle A,B\\rangle_F:\\|B\\|\\le1\\}$ (duality with the spectral norm); $\\|A\\|_*=\\operatorname{tr}A$ for $A\\succeq0$; $\\|A\\|\\le\\|A\\|_*\\le\\operatorname{rank}(A)\\|A\\|$ and $\\|A\\|_F\\le\\|A\\|_*\\le\\sqrt{\\operatorname{rank}A}\\,\\|A\\|_F$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times n}$ (`Fin` indices, as for `NLAlib.singularValues`)",
+    "$1\\le k\\le\\min(m,n)$"
+   ],
+   "conclusion": "$\\|\\cdot\\|_{(k)}$ and $\\|\\cdot\\|_*$ are orthogonally invariant norms with $\\|A\\|_{(1)}=\\|A\\|$, $\\|A\\|_*=\\max_{\\|B\\|\\le1}\\langle A,B\\rangle_F$, $\\|A\\|_*=\\operatorname{tr}A$ for $A\\succeq0$, and the stated comparisons with $\\|A\\|$, $\\|A\\|_F$",
+   "sources": [
+    {
+     "source": "hj91",
+     "label": "Thm 3.4.1, Cor 3.4.4"
+    },
+    {
+     "source": "bhatia97",
+     "label": "§IV.2"
+    }
+   ],
+   "depends_on": [
+    "ky-fan-maximum-principle",
+    "von-neumann-trace",
+    "svd",
+    "norms-frob-spec",
+    "svd-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "LinearMap.singularValues",
+     "present": true
+    },
+    {
+     "decl": "Matrix nuclear / trace norm",
+     "present": false,
+     "note": "No trace-class or Schatten norm on matrices in Mathlib."
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "foundation",
+    "definition",
+    "norms"
+   ],
+   "notes": "TARGETING.md §3 already lists the nuclear norm as part of the wanted MatrixAnalysis_basic bundle; nystrom-randomized states its error in the nuclear norm and von-neumann-trace's corollary is phrased with ‖X‖_*. Consumers: nystrom-randomized, hutchpp, von-neumann-rank-bound, unitarily-invariant-norm-def (Fan dominance), lidskii (UI-norm corollary), schatten-norms-def. Recommendation: prove (triangle inequality from the max principle; duality from von Neumann + SVD).",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "schatten-norms-def",
+   "title": "Schatten p-norms and the matrix Hölder inequality",
+   "aliases": [
+    "Schatten norm",
+    "Schatten p-norm",
+    "S_p norm",
+    "matrix Hölder inequality",
+    "trace Hölder"
+   ],
+   "area": "matrix-majorization",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "$\\|A\\|_{S_p}=\\big(\\sum_i\\sigma_i(A)^p\\big)^{1/p}$ for $1\\le p<\\infty$, $\\|A\\|_{S_\\infty}=\\sigma_1(A)$. Characterisations: $S_1$ nuclear, $S_2$ Frobenius, $S_\\infty$ spectral; each is an orthogonally invariant norm; Hölder $|\\langle A,B\\rangle_F|\\le\\|A\\|_{S_p}\\|B\\|_{S_q}$ for $1/p+1/q=1$, and $\\|AB\\|_{S_r}\\le\\|A\\|_{S_p}\\|B\\|_{S_q}$ for $1/r=1/p+1/q$; monotonicity $\\|A\\|_{S_q}\\le\\|A\\|_{S_p}$ for $p\\le q$ and $\\|A\\|_{S_p}\\le\\operatorname{rank}(A)^{1/p-1/q}\\|A\\|_{S_q}$.",
+   "hypotheses": [
+    "$A,B$ real matrices of compatible sizes (`Fin` indices)",
+    "$1\\le p,q,r\\le\\infty$ with the stated conjugacy relations"
+   ],
+   "conclusion": "$|\\langle A,B\\rangle_F|\\le\\|A\\|_{S_p}\\|B\\|_{S_q}$; $\\|AB\\|_{S_r}\\le\\|A\\|_{S_p}\\|B\\|_{S_q}$; $\\|\\cdot\\|_{S_p}$ is a norm; the monotonicity and rank comparisons",
+   "sources": [
+    {
+     "source": "bhatia97",
+     "label": "§IV.2 (Schatten norms, Hölder)"
+    },
+    {
+     "source": "hj91",
+     "label": "§3.3–3.4"
+    }
+   ],
+   "depends_on": [
+    "von-neumann-trace",
+    "ky-fan-norms-def",
+    "majorization-def",
+    "unitarily-invariant-norm-def",
+    "horn-product-inequality"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Real.inner_le_Lp_mul_Lq",
+     "present": true,
+     "note": "Hölder for finite sequences; with von Neumann gives the trace Hölder inequality directly."
+    },
+    {
+     "decl": "Schatten norms on matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "definition",
+    "norms"
+   ],
+   "notes": "Split when formalising: the trace Hölder inequality |⟨A,B⟩| ≤ ‖A‖_p‖B‖_q needs only von-neumann-trace + Real.inner_le_Lp_mul_Lq (difficulty 2, prove); the triangle inequality for general p needs the symmetric-gauge theory of unitarily-invariant-norm-def; the product Hölder needs horn-product-inequality. Consumers: Schatten-norm low-rank approximation bounds (tw23), trace-estimator variance in terms of ‖A‖_{S_2}, ‖A‖_{S_4} (hutchinson-variance), sketching for Schatten-norm estimation. Recommendation: prove Hölder now-ish, assume the norm property via Fan dominance.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "unitarily-invariant-norm-def",
+   "title": "Unitarily invariant norms: von Neumann's gauge characterisation and Fan dominance",
+   "aliases": [
+    "unitarily invariant norm",
+    "orthogonally invariant norm",
+    "symmetric gauge function",
+    "von Neumann's theorem on norms",
+    "Fan dominance theorem"
+   ],
+   "area": "matrix-majorization",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "A norm on $\\mathbb R^{m\\times n}$ is orthogonally (unitarily) invariant if $\\|UAV\\|=\\|A\\|$ for all orthogonal $U,V$. (von Neumann) These are exactly $\\|A\\|=\\Phi(\\sigma(A))$ for a symmetric gauge function $\\Phi$ on $\\mathbb R^{\\min(m,n)}$, i.e. a norm invariant under permutations and sign changes. (Fan dominance) $\\|A\\|\\le\\|B\\|$ for every orthogonally invariant norm iff $\\|A\\|_{(k)}\\le\\|B\\|_{(k)}$ for every $k$, i.e. iff $\\sigma(A)\\prec_w\\sigma(B)$.",
+   "hypotheses": [
+    "$\\|\\cdot\\|$ a norm on $\\mathbb R^{m\\times n}$ with $\\|UAV\\|=\\|A\\|$ for orthogonal $U\\in O(m)$, $V\\in O(n)$",
+    "For Fan dominance: $A,B\\in\\mathbb R^{m\\times n}$"
+   ],
+   "conclusion": "$\\|A\\|=\\Phi(\\sigma_1(A),\\dots,\\sigma_{\\min(m,n)}(A))$ with $\\Phi$ a symmetric gauge function, and conversely every symmetric gauge function defines such a norm; $\\big(\\forall\\,\\|\\cdot\\|\\ \\text{UI}:\\ \\|A\\|\\le\\|B\\|\\big)\\iff\\forall k,\\ \\|A\\|_{(k)}\\le\\|B\\|_{(k)}$",
+   "sources": [
+    {
+     "source": "bhatia97",
+     "label": "Thm IV.2.1 (von Neumann), Thm IV.2.2 (Fan dominance)"
+    },
+    {
+     "source": "hj13",
+     "label": "§7.4.7–7.4.8"
+    }
+   ],
+   "depends_on": [
+    "ky-fan-norms-def",
+    "majorization-def",
+    "svd",
+    "von-neumann-trace"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Unitarily invariant norms",
+     "present": false
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "definition",
+    "norms",
+    "majorization"
+   ],
+   "notes": "Most randomized-NLA statements need only the spectral, Frobenius and nuclear norms, so this is a later foundation; it is what makes 'in every unitarily invariant norm' versions of eckart-young, weyl-mirsky (Mirsky 1960), davis-kahan-sin-theta and wedin-sin-theta one-line corollaries of a Ky Fan statement. Also absorbs the pinching inequality ‖∑ PᵢAPᵢ‖ ≤ ‖A‖ (Bhatia §IV.2, not proposed separately). Recommendation: prove the definition and the (⇒) direction of Fan dominance (trivial); assume the (⇐) direction (it needs the HLP direction of majorization-def).",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "schur-horn",
+   "title": "Schur–Horn: the diagonal is majorized by the spectrum",
+   "aliases": [
+    "Schur–Horn theorem",
+    "Schur's majorization theorem",
+    "Horn's converse",
+    "diagonal majorized by eigenvalues",
+    "Peierls inequality (diagonal form)"
+   ],
+   "area": "matrix-majorization",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$: $(A_{11},\\dots,A_{nn})\\prec\\lambda(A)$ (Schur), so $\\sum_{i\\in S}A_{ii}\\le\\sum_{i\\le|S|}\\lambda_i(A)$ for every index set $S$ and $\\sum_i\\varphi(A_{ii})\\le\\operatorname{tr}\\varphi(A)$ for convex $\\varphi$. Conversely (Horn) for every $d\\prec\\lambda$ there is a symmetric matrix with diagonal $d$ and spectrum $\\lambda$ (a rotation of $\\operatorname{diag}(\\lambda)$).",
+   "hypotheses": [
+    "$A=A^\\top\\in\\mathbb R^{n\\times n}$",
+    "Horn half: $d,\\lambda\\in\\mathbb R^n$ with $d\\prec\\lambda$"
+   ],
+   "conclusion": "$\\operatorname{diag}(A)\\prec\\lambda(A)$; and every $d\\prec\\lambda$ is $\\operatorname{diag}(Q\\operatorname{diag}(\\lambda)Q^\\top)$ for some orthogonal $Q$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 4.3.45 (Schur), Thm 4.3.48 (Horn)"
+    },
+    {
+     "source": "mo11",
+     "label": "9.B.1, 9.B.2"
+    }
+   ],
+   "depends_on": [
+    "majorization-def",
+    "ky-fan-maximum-principle"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀",
+     "present": true
+    },
+    {
+     "decl": "Schur–Horn",
+     "present": false,
+     "note": "Mathlib's Analysis/InnerProductSpace/Spectrum.lean cites Schur–Horn only as motivation for its decreasing-order convention."
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "majorization",
+    "eigenvalues"
+   ],
+   "notes": "Schur's half is difficulty 2 (Ky Fan with Q = coordinate vectors, then majorization-def's convex-function form); Horn's converse is difficulty 4. Consumers: diagonal-estimator and trace estimation (∑A_ii² ≤ ∑λ_i², diagonal vs spectrum comparisons), rpcholesky (diagonal pivots against the spectrum, tr of Schur complements), leverage-scores (0 ≤ ℓ_i ≤ 1, ∑ℓ_i = rank is Schur for a projector), volume-sampling. Recommendation: prove Schur, assume Horn.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "lidskii",
+   "title": "Lidskii–Wielandt: λ(A+B) − λ(A) ≺ λ(B), and Mirsky in every unitarily invariant norm",
+   "aliases": [
+    "Lidskii's theorem",
+    "Lidskii–Wielandt inequality",
+    "Wielandt minimax",
+    "Mirsky's theorem (unitarily invariant)",
+    "spectral variation in the nuclear norm"
+   ],
+   "area": "matrix-majorization",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A,B\\in\\mathbb R^{n\\times n}$ and every index set $J$ with $|J|=k$: $$\\sum_{j\\in J}\\lambda_j(A+B)\\le\\sum_{j\\in J}\\lambda_j(A)+\\sum_{i\\le k}\\lambda_i(B),$$ i.e. $\\lambda(A+B)-\\lambda(A)\\prec\\lambda(B)$. For singular values, $|\\sigma(A+E)-\\sigma(A)|\\prec_w\\sigma(E)$; hence $\\|\\operatorname{diag}(\\sigma(A+E)-\\sigma(A))\\|\\le\\|E\\|$ in every unitarily invariant norm, in particular $\\sum_i|\\lambda_i(A+E)-\\lambda_i(A)|\\le\\|E\\|_*$.",
+   "hypotheses": [
+    "$A=A^\\top$, $B=B^\\top\\in\\mathbb R^{n\\times n}$, eigenvalues decreasing",
+    "Singular-value form: $A,E\\in\\mathbb R^{m\\times n}$"
+   ],
+   "conclusion": "$\\lambda(A+B)-\\lambda(A)\\prec\\lambda(B)$ and $|\\sigma(A+E)-\\sigma(A)|\\prec_w\\sigma(E)$; $\\sum_i|\\lambda_i(A+E)-\\lambda_i(A)|\\le\\|E\\|_*$",
+   "sources": [
+    {
+     "source": "bhatia97",
+     "label": "Thm III.4.1 (Lidskii), Thm IV.3.4 (Mirsky)"
+    },
+    {
+     "source": "mo11",
+     "label": "9.G"
+    }
+   ],
+   "depends_on": [
+    "majorization-def",
+    "ky-fan-maximum-principle",
+    "courant-fischer",
+    "hermitian-dilation",
+    "ky-fan-norms-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Lidskii / Wielandt minimax",
+     "present": false
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "perturbation",
+    "eigenvalues",
+    "majorization"
+   ],
+   "notes": "NLAlib's weyl-mirsky already has the spectral (Weyl) and Frobenius (Mirsky) cases for singular values; Lidskii is the general-index-set statement behind all unitarily invariant cases. The nuclear-norm corollary gives the 1-Wasserstein bound between empirical spectral distributions, W₁ ≤ ‖A − B‖_*/n, used in spectral-density estimation (slq-error / ctu21-type analyses). Recommendation: assume (statement is textbook-certain; Wielandt's minimax proof is long).",
+   "variants": [
+    "weyl-mirsky",
+    "eigenvalue-perturbation-symmetric"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "horn-product-inequality",
+   "title": "Horn's product inequality and weak majorization of σ(AB)",
+   "aliases": [
+    "Horn's inequality",
+    "Gelfand–Naimark–Horn",
+    "log-majorization of singular values of a product",
+    "Weyl majorant theorem",
+    "σ(AB) ≺_w σ(A)σ(B)"
+   ],
+   "area": "matrix-majorization",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "For $A\\in\\mathbb R^{m\\times p}$, $B\\in\\mathbb R^{p\\times n}$ and every $k$: $\\prod_{i\\le k}\\sigma_i(AB)\\le\\prod_{i\\le k}\\sigma_i(A)\\sigma_i(B)$ (Horn). Consequently (Weyl's majorant theorem) $\\sum_{i\\le k}\\sigma_i(AB)^s\\le\\sum_{i\\le k}\\sigma_i(A)^s\\sigma_i(B)^s$ for every $s>0$; in particular $\\|AB\\|_{(k)}\\le\\sum_{i\\le k}\\sigma_i(A)\\sigma_i(B)$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times p}$, $B\\in\\mathbb R^{p\\times n}$ (`Fin` indices)",
+    "$1\\le k\\le\\min(m,p,n)$, $s>0$"
+   ],
+   "conclusion": "$\\prod_{i\\le k}\\sigma_i(AB)\\le\\prod_{i\\le k}\\sigma_i(A)\\sigma_i(B)$ and $\\sum_{i\\le k}\\sigma_i(AB)^s\\le\\sum_{i\\le k}\\big(\\sigma_i(A)\\sigma_i(B)\\big)^s$",
+   "sources": [
+    {
+     "source": "hj91",
+     "label": "Thm 3.3.4 (Horn), Thm 3.3.14 (weak majorization)"
+    },
+    {
+     "source": "mo11",
+     "label": "9.H.1"
+    }
+   ],
+   "depends_on": [
+    "majorization-def",
+    "svd",
+    "courant-fischer"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ExteriorAlgebra / exteriorPower",
+     "present": true,
+     "note": "Exterior powers exist, but compound matrices and σ(Λᵏ A) = products of σᵢ do not."
+    },
+    {
+     "decl": "Horn's inequality",
+     "present": false
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "singular-values",
+    "majorization"
+   ],
+   "notes": "The standard proof applies the k = 1 case to compound matrices; the additive corollary needs the log-majorization ⇒ weak majorization lemma (majorization-def with φ = exp). Consumers: schatten-norms-def (product Hölder), Schatten/nuclear-norm bounds of products in low-rank approximation (e.g. ‖Σ₂Ω₂Ω₁†‖_* in HMT-type nuclear bounds, nystrom-randomized), rsvd-tail. Recommendation: assume.",
+   "variants": [
+    "weyl-product-singular-values"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "eigenvalue-perturbation-symmetric",
+   "title": "Weyl and Hoffman–Wielandt perturbation bounds for symmetric eigenvalues",
+   "aliases": [
+    "Weyl's inequality (eigenvalues)",
+    "Hoffman–Wielandt inequality",
+    "eigenvalue perturbation",
+    "von Neumann trace inequality for symmetric matrices",
+    "tr(AB) ≤ Σ λᵢ(A)λᵢ(B)",
+    "Richter's inequality"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A,E\\in\\mathbb R^{n\\times n}$ with decreasing eigenvalues: (Weyl) $\\lambda_i(A)+\\lambda_n(E)\\le\\lambda_i(A+E)\\le\\lambda_i(A)+\\lambda_1(E)$, hence $|\\lambda_i(A+E)-\\lambda_i(A)|\\le\\|E\\|$; (trace inequality) $\\operatorname{tr}(AB)\\le\\sum_i\\lambda_i(A)\\lambda_i(B)$ for symmetric $A,B$; (Hoffman–Wielandt) $$\\sum_i\\big(\\lambda_i(A+E)-\\lambda_i(A)\\big)^2\\le\\|E\\|_F^2.$$",
+   "hypotheses": [
+    "$A=A^\\top$, $E=E^\\top\\in\\mathbb R^{n\\times n}$ (any `Fintype` index, eigenvalues via `eigenvalues₀`)"
+   ],
+   "conclusion": "$\\lambda_i(A)+\\lambda_{\\min}(E)\\le\\lambda_i(A+E)\\le\\lambda_i(A)+\\lambda_{\\max}(E)$; $|\\lambda_i(A+E)-\\lambda_i(A)|\\le\\|E\\|$; $\\operatorname{tr}(AB)\\le\\sum_i\\lambda_i(A)\\lambda_i(B)$; $\\sum_i(\\lambda_i(A+E)-\\lambda_i(A))^2\\le\\|E\\|_F^2$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 4.3.1, Cor 4.3.15 (Weyl); Cor 6.3.8 (Hoffman–Wielandt)"
+    },
+    {
+     "source": "bhatia97",
+     "label": "Cor III.2.6, Thm VI.4.1"
+    }
+   ],
+   "depends_on": [
+    "courant-fischer",
+    "von-neumann-trace",
+    "svd"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀",
+     "present": true
+    },
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀_antitone",
+     "present": true
+    },
+    {
+     "decl": "Matrix.IsHermitian.trace_eq_sum_eigenvalues",
+     "present": true
+    },
+    {
+     "decl": "Eigenvalue perturbation bounds",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "perturbation",
+    "eigenvalues"
+   ],
+   "notes": "weyl-mirsky covers singular values only; the symmetric-eigenvalue versions (which keep signs) are missing although NLAlib.eigenvalues₀_add_le (Weyl i+j) and eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub (Loewner monotonicity) are there. Proof: Weyl from those two; the trace inequality by shifting A, B to PSD (eigenvalues = singular values) and von Neumann; Hoffman–Wielandt by expanding ‖(A+E) − A‖_F² and the trace inequality. Consumers: davis-kahan-sin-theta (population-gap corollary), slq-error and spectral-density bounds (W₂ distance between spectra ≤ ‖E‖_F/√n), ritz-value-bounds, nystrom-structural/nystrom-randomized eigenvalue statements, matrix-chernoff-sampling consequences, sketch-and-precondition (eigenvalues of AᵀSᵀSA). Recommendation: prove.",
+   "variants": [
+    "weyl-mirsky",
+    "lidskii"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "weyl-product-singular-values",
+   "title": "Weyl's multiplicative inequality σ_{i+j−1}(AB) ≤ σ_i(A)σ_j(B)",
+   "aliases": [
+    "Weyl product inequality",
+    "singular values of a product",
+    "σ_{i+j-1}(AB)",
+    "Fan's product inequality"
+   ],
+   "area": "matrix-spectral",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "For $A\\in\\mathbb R^{m\\times p}$, $B\\in\\mathbb R^{p\\times n}$ and $i,j\\ge1$: $\\sigma_{i+j-1}(AB)\\le\\sigma_i(A)\\sigma_j(B)$. In NLAlib's 0-indexed convention: `singularValues (A * B) (i + j) ≤ singularValues A i * singularValues B j`. The case $j=1$ is $\\sigma_i(AB)\\le\\sigma_i(A)\\|B\\|$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times p}$, $B\\in\\mathbb R^{p\\times n}$ (`Fin` indices)",
+    "$i,j\\ge1$ (1-indexed)"
+   ],
+   "conclusion": "$\\sigma_{i+j-1}(AB)\\le\\sigma_i(A)\\,\\sigma_j(B)$",
+   "sources": [
+    {
+     "source": "hj91",
+     "label": "Thm 3.3.16(d)"
+    }
+   ],
+   "depends_on": [
+    "eckart-young",
+    "weyl-mirsky",
+    "svd"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "LinearMap.singularValues",
+     "present": true
+    },
+    {
+     "decl": "Matrix.rank_mul_le",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "singular-values",
+    "perturbation"
+   ],
+   "notes": "Additive companion NLAlib.singularValues_add_add_le already exists; the multiplicative one does not (only singularValues_mul_le_mul_specNorm / specNorm_mul). Proof: AB − [A_{i−1}B + (A − A_{i−1})B_{j−1}] = (A − A_{i−1})(B − B_{j−1}) with the bracket of rank ≤ i+j−2, then NLAlib.singularValues_le_specNorm_sub_of_rank_le. Consumers: rsvd-tail and hmt-9-1-type tail singular-value bounds (σⱼ(Σ₂Ω₂Ω₁†)), power-iteration-deterministic ((AAᵀ)^qA), sigma-tail-bound refinements, horn-product-inequality's k = 1 step. Recommendation: prove.",
+   "variants": [
+    "horn-product-inequality"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "eigenvalue-residual-bounds",
+   "title": "Residual bounds for approximate eigenpairs (Krylov–Bogoliubov, Kato–Temple, one-vector sin θ)",
+   "aliases": [
+    "Rayleigh quotient residual bound",
+    "Kato–Temple inequality",
+    "Krylov–Bogoliubov bound",
+    "Weinstein bound",
+    "quadratic accuracy of the Rayleigh quotient",
+    "Rayleigh quotient gradient"
+   ],
+   "area": "matrix-spectral",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "$A$ symmetric, $\\|x\\|=1$, $\\rho=x^\\top Ax$, $r=Ax-\\rho x$. (a) For every $\\mu\\in\\mathbb R$ some eigenvalue $\\lambda$ satisfies $|\\lambda-\\mu|\\le\\|Ax-\\mu x\\|$; $\\|r\\|=\\min_\\mu\\|Ax-\\mu x\\|$. (b) (Kato–Temple) if $\\delta>0$ and $\\lambda$ is the only eigenvalue in $(\\rho-\\delta,\\rho+\\delta)$ then $|\\lambda-\\rho|\\le\\|r\\|^2/\\delta$. (c) If $\\delta=\\min\\{|\\lambda'-\\rho|:\\lambda'\\in\\sigma(A)\\setminus\\{\\lambda\\}\\}>0$ and $P_\\lambda$ is the orthogonal projector onto the $\\lambda$-eigenspace, $\\|(I-P_\\lambda)x\\|\\le\\|r\\|/\\delta$. Also $\\nabla_x\\frac{x^\\top Ax}{x^\\top x}=\\frac{2(Ax-\\rho(x)x)}{x^\\top x}$.",
+   "hypotheses": [
+    "$A=A^\\top\\in\\mathbb R^{n\\times n}$, $x\\in\\mathbb R^n$ with $x^\\top x=1$",
+    "(b): $\\delta>0$, $\\sigma(A)\\cap(\\rho-\\delta,\\rho+\\delta)=\\{\\lambda\\}$",
+    "(c): $\\delta=\\operatorname{dist}(\\rho,\\sigma(A)\\setminus\\{\\lambda\\})>0$"
+   ],
+   "conclusion": "(a) $\\min_{\\lambda\\in\\sigma(A)}|\\lambda-\\mu|\\le\\|Ax-\\mu x\\|$; (b) $|\\lambda-\\rho|\\le\\|r\\|^2/\\delta$; (c) $\\|(I-P_\\lambda)x\\|\\le\\|r\\|/\\delta$",
+   "sources": [
+    {
+     "source": "parlett98",
+     "label": "Thm 4.5.1 (residual), §10.6 (Kato–Temple), §11.7 (sin θ)"
+    },
+    {
+     "source": "saad11",
+     "label": "§3.2"
+    }
+   ],
+   "depends_on": [
+    "polynomial-spectral-bound",
+    "quadform-def",
+    "courant-fischer"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ContinuousLinearMap.rayleighQuotient",
+     "present": true
+    },
+    {
+     "decl": "LinearMap.IsSymmetric.hasStrictFDerivAt_reApplyInnerSelf",
+     "present": true,
+     "note": "Gradient of x ↦ ⟪Tx, x⟫; the Rayleigh-quotient gradient follows."
+    },
+    {
+     "decl": "IsSelfAdjoint.hasEigenvector_of_isMaxOn",
+     "present": true,
+     "note": "Stationary points of the Rayleigh quotient are eigenvectors."
+    },
+    {
+     "decl": "Residual / Kato–Temple bounds",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "eigenvalues",
+    "krylov"
+   ],
+   "notes": "Labels in parlett98 to verify. All three parts are a few lines from the spectral expansion x = ∑cᵢuᵢ (NLAlib.quadForm_eq_sum_eigenvalues, sum_sq_eigenvectorBasis_dotProduct). Consumers: ritz-value-bounds and Lanczos analysis (Ritz residual ‖r‖ = β_k|e_kᵀs|, needs lanczos-recurrence), random-start-power, power-method stopping criteria, T1's Kaniel–Paige–Saad bounds, LOBPCG/subspace-iteration stopping rules. Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "kronecker-spectral",
+   "title": "Spectrum, singular values and norms of Kronecker products",
+   "aliases": [
+    "Kronecker product SVD",
+    "singular values of A ⊗ B",
+    "Kronecker sum eigenvalues",
+    "vec trick",
+    "‖A ⊗ B‖ = ‖A‖‖B‖"
+   ],
+   "area": "matrix-spectral",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "If $A=U_A\\Sigma_AV_A^\\top$ and $B=U_B\\Sigma_BV_B^\\top$ then $A\\otimes B=(U_A\\otimes U_B)(\\Sigma_A\\otimes\\Sigma_B)(V_A\\otimes V_B)^\\top$, so the singular values of $A\\otimes B$ are $\\{\\sigma_i(A)\\sigma_j(B)\\}$; hence $\\|A\\otimes B\\|=\\|A\\|\\|B\\|$, $\\|A\\otimes B\\|_F=\\|A\\|_F\\|B\\|_F$, $\\operatorname{rank}(A\\otimes B)=\\operatorname{rank}A\\cdot\\operatorname{rank}B$, $(A\\otimes B)^\\dagger=A^\\dagger\\otimes B^\\dagger$. For symmetric $A,B$ the eigenvalues of $A\\otimes B$ are $\\lambda_i(A)\\lambda_j(B)$ and those of $A\\otimes I+I\\otimes B$ are $\\lambda_i(A)+\\lambda_j(B)$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times n}$, $B\\in\\mathbb R^{p\\times q}$ (any `Fintype` indices; product index types)",
+    "Eigenvalue statements: $A=A^\\top$, $B=B^\\top$"
+   ],
+   "conclusion": "$\\sigma(A\\otimes B)=\\{\\sigma_i(A)\\sigma_j(B)\\}$ as multisets; $\\|A\\otimes B\\|=\\|A\\|\\|B\\|$; $\\|A\\otimes B\\|_F=\\|A\\|_F\\|B\\|_F$; $\\operatorname{rank}(A\\otimes B)=\\operatorname{rank}A\\operatorname{rank}B$; $(A\\otimes B)^\\dagger=A^\\dagger\\otimes B^\\dagger$",
+   "sources": [
+    {
+     "source": "hj91",
+     "label": "Thm 4.2.12 (eigenvalues), Thm 4.2.15 (SVD)"
+    },
+    {
+     "source": "vl00",
+     "label": "§2"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "pseudoinverse",
+    "norms-frob-spec",
+    "orthonormal-columns-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.mul_kronecker_mul",
+     "present": true
+    },
+    {
+     "decl": "Matrix.inv_kronecker",
+     "present": true
+    },
+    {
+     "decl": "Matrix.det_kronecker",
+     "present": true
+    },
+    {
+     "decl": "Matrix.trace_kronecker",
+     "present": true
+    },
+    {
+     "decl": "Matrix.conjTranspose_kronecker",
+     "present": true
+    },
+    {
+     "decl": "Matrix.PosSemidef.kronecker",
+     "present": true
+    },
+    {
+     "decl": "Matrix.vec",
+     "present": true,
+     "note": "Column-stacking vectorisation (Mathlib.LinearAlgebra.Matrix.Vec)."
+    },
+    {
+     "decl": "Matrix.kronecker_mulVec_vec",
+     "present": true,
+     "note": "The vec trick vec(AXBᵀ) = (B ⊗ A) vec X."
+    },
+    {
+     "decl": "Matrix.vec_dotProduct_vec",
+     "present": true
+    },
+    {
+     "decl": "Singular values / norms / rank of a Kronecker product",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "kronecker",
+    "singular-values"
+   ],
+   "notes": "Mathlib already has the algebra of ⊗ₖ and vec (cite it, do not re-prove); the spectral/norm facts are the gap. Consumers: Kronecker/Khatri–Rao and tensor sketches (TensorSketch, Kronecker JL; not yet in the atlas), Kronecker-structured least squares, gaussian-frob-second-moment / gaussian-amm restated through vec and Kronecker covariance, Hutchinson with Kronecker-structured probes. Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "principal-angles-def",
+   "title": "Canonical (principal) angles between subspaces and sin Θ",
+   "aliases": [
+    "principal angles",
+    "canonical angles",
+    "sin Θ",
+    "subspace distance",
+    "‖P − P̂‖",
+    "tan Θ",
+    "Jordan angles"
+   ],
+   "area": "matrix-subspace-perturbation",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "For $Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with orthonormal columns, the canonical angles $0\\le\\theta_1\\le\\dots\\le\\theta_k\\le\\pi/2$ are defined by $\\cos\\theta_i=\\sigma_i(Q^\\top\\hat Q)$ (so $\\|\\sin\\Theta\\|=\\sin\\theta_k=\\sqrt{1-\\sigma_k(Q^\\top\\hat Q)^2}$), and $\\sin\\Theta(Q,\\hat Q)=\\operatorname{diag}(\\sin\\theta_i)$. Characterisations, with $Q_\\perp$ an orthonormal complement of $Q$: $\\|\\sin\\Theta\\|=\\|Q_\\perp^\\top\\hat Q\\|=\\|(I-QQ^\\top)\\hat Q\\|=\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|$; $\\|\\sin\\Theta\\|_F^2=k-\\|Q^\\top\\hat Q\\|_F^2=\\tfrac12\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|_F^2$; $\\Theta$ depends only on the ranges, is symmetric in $(Q,\\hat Q)$; if $\\theta_k<\\pi/2$, $\\|\\tan\\Theta\\|=\\|(Q_\\perp^\\top\\hat Q)(Q^\\top\\hat Q)^{-1}\\|$.",
+   "hypotheses": [
+    "$Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with $Q^\\top Q=\\hat Q^\\top\\hat Q=I_k$",
+    "$Q_\\perp\\in\\mathbb R^{n\\times(n-k)}$ with $[Q\\ Q_\\perp]$ orthogonal"
+   ],
+   "conclusion": "$\\|\\sin\\Theta\\|=\\|Q_\\perp^\\top\\hat Q\\|=\\|(I-QQ^\\top)\\hat Q\\|=\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|$, $\\|\\sin\\Theta\\|_F^2=k-\\|Q^\\top\\hat Q\\|_F^2=\\tfrac12\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|_F^2$, and the invariance/symmetry properties",
+   "sources": [
+    {
+     "source": "ss90",
+     "label": "§I.5 (Def I.5.3, Thm I.5.5)"
+    },
+    {
+     "source": "gvl13",
+     "label": "§2.5.3 (Thm 2.5.1), §6.4.3"
+    },
+    {
+     "source": "bhatia97",
+     "label": "§VII.1"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "orthonormal-completion",
+    "projection-facts",
+    "orthonormal-columns-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Submodule.starProjection",
+     "present": true,
+     "note": "Orthogonal projections onto submodules exist; angles between subspaces do not."
+    },
+    {
+     "decl": "LinearMap.singularValues",
+     "present": true
+    },
+    {
+     "decl": "Principal angles",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "definition",
+    "subspaces"
+   ],
+   "notes": "State with matrices (HasOrthonormalCols) rather than submodules, as every consumer manipulates frames; give the submodule-level invariance as a lemma. Define the angles through NLAlib.singularValues (Qᵀ Q̂) on Fin k indices and expose ‖sin Θ‖ as specNorm (residual Q Q̂) so the projections API applies directly. Consumers: davis-kahan-sin-theta, wedin-sin-theta, pseudoinverse-perturbation (projector part), subspace-iteration-expected and block-krylov-lra (gap-dependent tan Θ forms), random-start-power (tan θ of the start vector), hmt-9-1-spectral (Ω₂Ω₁† is a tan Θ), leverage-score approximation from approximate bases. Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "sylvester-separation-bound",
+   "title": "Separation bound for the Sylvester operator X ↦ LX − XM",
+   "aliases": [
+    "Sylvester equation bound",
+    "sep(L, M)",
+    "Davis–Kahan sin θ lemma",
+    "spectral separation",
+    "AX − XB = Y"
+   ],
+   "area": "matrix-subspace-perturbation",
+   "kind": "lemma",
+   "status": "candidate",
+   "informal": "Let $L\\in\\mathbb R^{p\\times p}$, $M\\in\\mathbb R^{q\\times q}$ be symmetric and $X\\in\\mathbb R^{p\\times q}$. (a) If $|\\lambda_i(L)-\\lambda_j(M)|\\ge\\delta>0$ for all $i,j$ then $\\|LX-XM\\|_F\\ge\\delta\\|X\\|_F$. (b) If the eigenvalues of $M$ lie in $[a,b]$ and those of $L$ lie outside $(a-\\delta,b+\\delta)$, $\\delta>0$, then $\\|LX-XM\\|\\ge\\delta\\|X\\|$ (spectral norm; also Frobenius). The one-sided case $\\lambda_{\\max}(L)\\le\\alpha-\\delta$, $\\lambda_{\\min}(M)\\ge\\alpha$ is the one used for top-$k$ subspaces.",
+   "hypotheses": [
+    "$L=L^\\top\\in\\mathbb R^{p\\times p}$, $M=M^\\top\\in\\mathbb R^{q\\times q}$, $X\\in\\mathbb R^{p\\times q}$, $\\delta>0$",
+    "(a) $\\min_{i,j}|\\lambda_i(L)-\\lambda_j(M)|\\ge\\delta$",
+    "(b) $\\sigma(M)\\subseteq[a,b]$ and $\\sigma(L)\\cap(a-\\delta,b+\\delta)=\\emptyset$"
+   ],
+   "conclusion": "(a) $\\delta\\|X\\|_F\\le\\|LX-XM\\|_F$; (b) $\\delta\\|X\\|\\le\\|LX-XM\\|$ and $\\delta\\|X\\|_F\\le\\|LX-XM\\|_F$",
+   "sources": [
+    {
+     "source": "bhatia97",
+     "label": "§VII.2"
+    },
+    {
+     "source": "dk70",
+     "label": "§5–6"
+    },
+    {
+     "source": "ss90",
+     "label": "§V.3"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "courant-fischer",
+    "quadform-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.spectral_theorem",
+     "present": true
+    },
+    {
+     "decl": "Sylvester separation",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "subspaces",
+    "perturbation"
+   ],
+   "notes": "Engine of both sin θ theorems; keeping it separate lets Davis–Kahan and Wedin share it. (a) is entrywise after diagonalising L and M (difficulty 2). (b) in the spectral norm needs the interval/one-sided structure (with arbitrary interlaced spectra the best constant is π/2, Bhatia–Davis–McIntosh; do not state that). The one-sided case follows from a shift and a positivity argument. Labels in bhatia97 §VII.2 to verify. Consumers: davis-kahan-sin-theta, wedin-sin-theta, eigenvalue-residual-bounds (k = 1 case). Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "davis-kahan-sin-theta",
+   "title": "Davis–Kahan sin Θ theorem for invariant subspaces of symmetric matrices",
+   "aliases": [
+    "Davis–Kahan",
+    "sin theta theorem",
+    "sin Θ theorem",
+    "eigenspace perturbation",
+    "Yu–Wang–Samworth variant",
+    "eigenvector perturbation"
+   ],
+   "area": "matrix-subspace-perturbation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "$A,\\hat A=A+E\\in\\mathbb R^{n\\times n}$ symmetric. $Q_1\\in\\mathbb R^{n\\times k}$ orthonormal with $AQ_1=Q_1\\Lambda_1$; $[\\hat Q_1\\ \\hat Q_2]$ orthogonal with $\\hat A\\hat Q_i=\\hat Q_i\\hat\\Lambda_i$. If $\\sigma(\\Lambda_1)\\subseteq[a,b]$ and $\\sigma(\\hat\\Lambda_2)\\cap(a-\\delta,b+\\delta)=\\emptyset$ with $\\delta>0$, then $$\\|\\sin\\Theta(Q_1,\\hat Q_1)\\|=\\|\\hat Q_2^\\top Q_1\\|\\le\\frac{\\|\\hat Q_2^\\top EQ_1\\|}{\\delta}\\le\\frac{\\|EQ_1\\|}{\\delta}\\le\\frac{\\|E\\|}{\\delta},$$ and the same with Frobenius norms. Top-$k$ corollary: with $Q_1,\\hat Q_1$ top-$k$ eigenvectors, $\\|\\sin\\Theta\\|\\le\\|E\\|/(\\lambda_k(A)-\\lambda_{k+1}(\\hat A))$ when the denominator is positive. Population-gap form (Yu–Wang–Samworth): if $g=\\lambda_k(A)-\\lambda_{k+1}(A)>0$ then $\\|\\sin\\Theta\\|_F\\le2\\min(\\sqrt k\\|E\\|,\\|E\\|_F)/g$ and $\\|\\sin\\Theta\\|\\le2\\|E\\|/g$.",
+   "hypotheses": [
+    "$A=A^\\top$, $E=E^\\top\\in\\mathbb R^{n\\times n}$, $\\hat A=A+E$",
+    "$Q_1\\in\\mathbb R^{n\\times k}$ orthonormal, $AQ_1=Q_1\\Lambda_1$; $[\\hat Q_1\\ \\hat Q_2]$ orthogonal, $\\hat A\\hat Q_2=\\hat Q_2\\hat\\Lambda_2$",
+    "$\\delta>0$, $\\sigma(\\Lambda_1)\\subseteq[a,b]$, $\\sigma(\\hat\\Lambda_2)\\cap(a-\\delta,b+\\delta)=\\emptyset$",
+    "Population-gap form: $Q_1,\\hat Q_1$ top-$k$ eigenvectors, $\\lambda_k(A)>\\lambda_{k+1}(A)$"
+   ],
+   "conclusion": "$\\|\\sin\\Theta(Q_1,\\hat Q_1)\\|\\le\\|\\hat Q_2^\\top EQ_1\\|/\\delta\\le\\|E\\|/\\delta$ (also in $\\|\\cdot\\|_F$); $\\|\\sin\\Theta\\|_F\\le2\\min(\\sqrt k\\|E\\|,\\|E\\|_F)/(\\lambda_k-\\lambda_{k+1})$",
+   "sources": [
+    {
+     "source": "dk70",
+     "label": "sin θ theorem (§6)"
+    },
+    {
+     "source": "bhatia97",
+     "label": "Thm VII.3.1"
+    },
+    {
+     "source": "ss90",
+     "label": "Thm V.3.6"
+    },
+    {
+     "source": "ywss15",
+     "label": "Thm 1"
+    }
+   ],
+   "depends_on": [
+    "sylvester-separation-bound",
+    "principal-angles-def",
+    "eigenvalue-perturbation-symmetric"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Davis–Kahan",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "perturbation",
+    "subspaces"
+   ],
+   "notes": "Proof: Q̂₂ᵀ(ÂQ₁ − Q₁Λ₁) = Λ̂₂(Q̂₂ᵀQ₁) − (Q̂₂ᵀQ₁)Λ₁ and ÂQ₁ − Q₁Λ₁ = EQ₁, then sylvester-separation-bound. The population-gap form: if ‖E‖ ≥ g/2 the bound is trivial (sin ≤ 1), otherwise Weyl (eigenvalue-perturbation-symmetric) gives λ_k(A) − λ_{k+1}(Â) ≥ g/2. Consumers: wedin-sin-theta; gap-dependent analyses of subspace-iteration-expected and block-krylov-lra; randomized PCA / spectral clustering from sketches; Nyström eigenvector accuracy (nystrom-randomized follow-ups); leverage scores of approximate eigenspaces (leverage-scores); random-start-power's gap form. Recommendation: prove.",
+   "variants": [
+    "wedin-sin-theta"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "wedin-sin-theta",
+   "title": "Wedin's sin Θ theorem for singular subspaces",
+   "aliases": [
+    "Wedin's theorem",
+    "Wedin sin theta",
+    "singular subspace perturbation",
+    "singular vector perturbation",
+    "Stewart–Sun Thm V.4.4"
+   ],
+   "area": "matrix-subspace-perturbation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "$A,\\hat A=A+E\\in\\mathbb R^{m\\times n}$; $U_1,V_1$ and $\\hat U_1,\\hat V_1$ the top-$k$ left/right singular vectors of $A$ and $\\hat A$, $\\hat\\Sigma_1=\\operatorname{diag}(\\hat\\sigma_1,\\dots,\\hat\\sigma_k)$. With residuals $R=A\\hat V_1-\\hat U_1\\hat\\Sigma_1=-E\\hat V_1$ and $S=A^\\top\\hat U_1-\\hat V_1\\hat\\Sigma_1=-E^\\top\\hat U_1$, if $\\delta:=\\sigma_k(\\hat A)-\\sigma_{k+1}(A)>0$ then $$\\max\\{\\|\\sin\\Theta(U_1,\\hat U_1)\\|,\\|\\sin\\Theta(V_1,\\hat V_1)\\|\\}\\le\\frac{\\max\\{\\|R\\|,\\|S\\|\\}}{\\delta}\\le\\frac{\\|E\\|}{\\delta},$$ $$\\sqrt{\\|\\sin\\Theta(U_1,\\hat U_1)\\|_F^2+\\|\\sin\\Theta(V_1,\\hat V_1)\\|_F^2}\\le\\frac{\\sqrt{\\|R\\|_F^2+\\|S\\|_F^2}}{\\delta}.$$ Population-gap form: if $g=\\sigma_k(A)-\\sigma_{k+1}(A)>0$ then both $\\|\\sin\\Theta\\|\\le2\\|E\\|/g$.",
+   "hypotheses": [
+    "$A,E\\in\\mathbb R^{m\\times n}$ (`Fin` indices), $\\hat A=A+E$, $1\\le k\\le\\min(m,n)$",
+    "$U_1,V_1$ (resp. $\\hat U_1,\\hat V_1$) orthonormal top-$k$ singular vectors of $A$ (resp. $\\hat A$)",
+    "$\\delta=\\sigma_k(\\hat A)-\\sigma_{k+1}(A)>0$"
+   ],
+   "conclusion": "$\\max(\\|\\sin\\Theta_U\\|,\\|\\sin\\Theta_V\\|)\\le\\max(\\|E\\hat V_1\\|,\\|E^\\top\\hat U_1\\|)/\\delta$ and $(\\|\\sin\\Theta_U\\|_F^2+\\|\\sin\\Theta_V\\|_F^2)^{1/2}\\le(\\|E\\hat V_1\\|_F^2+\\|E^\\top\\hat U_1\\|_F^2)^{1/2}/\\delta$",
+   "sources": [
+    {
+     "source": "wedin72",
+     "label": "§3"
+    },
+    {
+     "source": "ss90",
+     "label": "Thm V.4.4"
+    }
+   ],
+   "depends_on": [
+    "sylvester-separation-bound",
+    "principal-angles-def",
+    "davis-kahan-sin-theta",
+    "hermitian-dilation",
+    "weyl-mirsky",
+    "svd"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Wedin's theorem",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "perturbation",
+    "subspaces",
+    "singular-values"
+   ],
+   "notes": "Two routes: Wedin's direct proof with two coupled Sylvester bounds, or Davis–Kahan on the Hermitian dilation [[0, A], [Aᵀ, 0]] (whose eigenvectors are (u, ±v)/√2). NLAlib's hermitian-dilation is complex (NLAlib.dilation); a real dilation lemma is a small add-on. Population-gap corollary via NLAlib.singularValues_le_singularValues_add_add_specNorm (Weyl). Consumers: singular-vector accuracy of RSVD and sketched SVD, randomized low-rank approximation of singular subspaces (rsvd-tail follow-ups), matrix completion and spectral initialisation, leverage-score estimation from an approximate SVD (leverage-sampling-ose with approximate scores), sketched PCA. Recommendation: prove.",
+   "variants": [
+    "davis-kahan-sin-theta"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "pseudoinverse-perturbation",
+   "title": "Wedin's perturbation bounds for the pseudoinverse and range projectors",
+   "aliases": [
+    "Wedin's pseudoinverse bound",
+    "perturbation of the Moore–Penrose inverse",
+    "‖B† − A†‖",
+    "pseudoinverse continuity under equal rank",
+    "projector perturbation"
+   ],
+   "area": "matrix-projections",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "$A,B=A+E\\in\\mathbb R^{m\\times n}$. Identity: $$B^\\dagger-A^\\dagger=-B^\\dagger EA^\\dagger+B^\\dagger B^{\\dagger\\top}E^\\top(I-AA^\\dagger)+(I-B^\\dagger B)E^\\top A^{\\dagger\\top}A^\\dagger.$$ Bounds: if $\\operatorname{rank}A=\\operatorname{rank}B$ then $\\|B^\\dagger-A^\\dagger\\|\\le\\mu\\|A^\\dagger\\|\\|B^\\dagger\\|\\|E\\|$ with $\\mu=\\tfrac{1+\\sqrt5}{2}$ (and $\\|B^\\dagger-A^\\dagger\\|_F\\le\\sqrt2\\|A^\\dagger\\|\\|B^\\dagger\\|\\|E\\|_F$); without the rank condition, $\\|B^\\dagger-A^\\dagger\\|\\le\\mu\\max(\\|A^\\dagger\\|^2,\\|B^\\dagger\\|^2)\\|E\\|$. If $\\operatorname{rank}A=\\operatorname{rank}B$ and $\\|A^\\dagger\\|\\|E\\|<1$: $\\|B^\\dagger\\|\\le\\frac{\\|A^\\dagger\\|}{1-\\|A^\\dagger\\|\\|E\\|}$, and $\\|AA^\\dagger-BB^\\dagger\\|\\le\\min(\\|A^\\dagger\\|,\\|B^\\dagger\\|)\\|E\\|$.",
+   "hypotheses": [
+    "$A,E\\in\\mathbb R^{m\\times n}$, $B=A+E$ (any `Fintype` indices; `moorePenroseInverse`)",
+    "Equal-rank forms: $\\operatorname{rank}A=\\operatorname{rank}B$",
+    "Inverse-norm form: $\\|A^\\dagger\\|\\|E\\|<1$"
+   ],
+   "conclusion": "the three-term identity; $\\|B^\\dagger-A^\\dagger\\|\\le\\tfrac{1+\\sqrt5}{2}\\|A^\\dagger\\|\\|B^\\dagger\\|\\|E\\|$ (equal rank); $\\|AA^\\dagger-BB^\\dagger\\|\\le\\min(\\|A^\\dagger\\|,\\|B^\\dagger\\|)\\|E\\|$ (equal rank)",
+   "sources": [
+    {
+     "source": "wedin73",
+     "label": "Thm 4.1"
+    },
+    {
+     "source": "ss90",
+     "label": "Thm III.3.8 (bounds), §III.3 (identity)"
+    }
+   ],
+   "depends_on": [
+    "pseudoinverse",
+    "projection-facts",
+    "weyl-mirsky",
+    "principal-angles-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix pseudoinverse",
+     "present": false,
+     "note": "Mathlib has no Moore–Penrose inverse; NLAlib's moorePenroseInverse is the definition to use."
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "perturbation",
+    "pseudoinverse"
+   ],
+   "notes": "The identity is pure algebra from the four Penrose identities (NLAlib.IsMoorePenroseInverse). The simple constant μ = 3 is an immediate corollary (each term ≤ ‖B†‖‖E‖‖A†‖); the sharp (1+√5)/2 needs Wedin's orthogonality argument (difficulty 3–4). Labels and the μ table (3 for a general unitarily invariant norm, (1+√5)/2 spectral, √2 Frobenius) to verify against Stewart–Sun III.3.8 / Wedin 1973 before stating. Consumers: least-squares-perturbation, sketch-and-solve-ls and sketched-regression (stability of (SA)†), generalized Nyström stability (nakatsukasa20), sketch-and-precondition stability. Recommendation: prove the identity and μ = 3 form; assume the sharp constant if a consumer needs it.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "generalized-schur-complement-psd",
+   "title": "Generalized Schur complement criterion for positive semidefinite block matrices",
+   "aliases": [
+    "Albert's theorem",
+    "generalized Schur complement",
+    "Schur complement with pseudoinverse",
+    "block PSD criterion",
+    "Schur complement variational characterisation"
+   ],
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $M=\\begin{pmatrix}A&B\\\\B^\\top&C\\end{pmatrix}$ with $A\\in\\mathbb R^{p\\times p}$: $$M\\succeq0\\iff A\\succeq0,\\ (I-AA^\\dagger)B=0,\\ C-B^\\top A^\\dagger B\\succeq0.$$ When $M\\succeq0$, the Schur complement $M/A=C-B^\\top A^\\dagger B$ satisfies $x^\\top(M/A)x=\\min_{y}\\begin{pmatrix}y\\\\x\\end{pmatrix}^\\top M\\begin{pmatrix}y\\\\x\\end{pmatrix}$ (attained at $y=-A^\\dagger Bx$), and $0\\preceq M/A\\preceq C$.",
+   "hypotheses": [
+    "$A=A^\\top\\in\\mathbb R^{p\\times p}$, $B\\in\\mathbb R^{p\\times q}$, $C=C^\\top\\in\\mathbb R^{q\\times q}$ (any `Fintype` indices, `Matrix.fromBlocks`)",
+    "$A^\\dagger$ the Moore–Penrose inverse; no invertibility assumed"
+   ],
+   "conclusion": "$\\mathrm{fromBlocks}(A,B,B^\\top,C)\\succeq0\\iff A\\succeq0\\wedge(I-AA^\\dagger)B=0\\wedge C-B^\\top A^\\dagger B\\succeq0$; and the variational identity for $x^\\top(M/A)x$",
+   "sources": [
+    {
+     "source": "albert69",
+     "label": "Thm 1"
+    },
+    {
+     "source": "hj13",
+     "label": "§7.7"
+    }
+   ],
+   "depends_on": [
+    "pseudoinverse",
+    "projection-facts"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.PosDef.fromBlocks₁₁",
+     "present": true,
+     "note": "Same criterion but requires A PosDef and [Invertible A]."
+    },
+    {
+     "decl": "Matrix.PosDef.fromBlocks₂₂",
+     "present": true
+    },
+    {
+     "decl": "Matrix.schur_complement_eq₁₁",
+     "present": true,
+     "note": "Quadratic-form completion identity for invertible A."
+    },
+    {
+     "decl": "Matrix.det_fromBlocks₁₁",
+     "present": true
+    },
+    {
+     "decl": "Generalized (singular-pivot) Schur complement",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "loewner",
+    "schur-complement"
+   ],
+   "notes": "Gap with Mathlib: Mathlib's PosDef.fromBlocks₁₁ needs an invertible pivot; Nyström and Cholesky-type arguments have singular pivots (ΩᵀAΩ need not be invertible). Consumers: nystrom-structural (its 'A − A⟨Ω⟩ is the Schur complement' clause is recorded as not formalised), rpcholesky (the residual after k pivots is a Schur complement, hence PSD with trace decreasing), cholesky-decomposition (recursive step), nystrom-pcg, column subset selection / volume-sampling (Schur complements and determinants), Gaussian conditioning with singular covariance. Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "loewner-heinz-real",
+   "title": "Löwner–Heinz and inverse antitonicity for real symmetric matrices",
+   "aliases": [
+    "Löwner–Heinz inequality",
+    "Loewner–Heinz",
+    "operator monotonicity of t^r",
+    "A ⪯ B ⇒ A^{1/2} ⪯ B^{1/2}",
+    "A ⪯ B ⇒ B⁻¹ ⪯ A⁻¹",
+    "operator concavity of t^r"
+   ],
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For real symmetric $0\\preceq A\\preceq B$ and $r\\in[0,1]$: $A^r\\preceq B^r$ (in particular $A^{1/2}\\preceq B^{1/2}$), and $A\\mapsto A^r$ is operator concave on PSD matrices. If $0\\prec A\\preceq B$ then $B^{-1}\\preceq A^{-1}$ and $\\log A\\preceq\\log B$. ($A\\preceq B\\not\\Rightarrow A^2\\preceq B^2$; the range $r\\in[0,1]$ is sharp.)",
+   "hypotheses": [
+    "$A,B\\in\\mathbb R^{n\\times n}$ symmetric, $0\\preceq A\\preceq B$ in `MatrixOrder` (Mathlib's Loewner order on real matrices)",
+    "$0\\le r\\le1$; for the inverse and log statements $A\\succ0$",
+    "Powers via Mathlib's `cfc` on real symmetric matrices"
+   ],
+   "conclusion": "$A^r\\preceq B^r$; $B^{-1}\\preceq A^{-1}$; $\\log A\\preceq\\log B$; $X\\mapsto X^r$ operator concave on $\\{X\\succeq0\\}$",
+   "sources": [
+    {
+     "source": "bhatia97",
+     "label": "Thm V.1.9 (Löwner–Heinz), Prop V.1.6 (inverse)"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "CFC.rpow_le_rpow",
+     "present": true,
+     "note": "Löwner–Heinz for p ∈ [0,1], but in (complex) C*-algebras; Matrix n n ℂ is one only under the scoped instance Matrix.instCStarAlgebra. Real matrices are not a CStarAlgebra."
+    },
+    {
+     "decl": "CFC.sqrt_le_sqrt",
+     "present": true
+    },
+    {
+     "decl": "CFC.concaveOn_rpow",
+     "present": true
+    },
+    {
+     "decl": "CFC.log_le_log",
+     "present": true
+    },
+    {
+     "decl": "CStarAlgebra.inv_le_inv",
+     "present": true
+    },
+    {
+     "decl": "CStarAlgebra.ringInverse_le_ringInverse",
+     "present": true
+    },
+    {
+     "decl": "Matrix.IsHermitian.cfc_eq",
+     "present": true,
+     "note": "Real CFC on Hermitian matrices over any RCLike field, including ℝ."
+    },
+    {
+     "decl": "Matrix.PosSemidef.conjTranspose_mul_mul_same",
+     "present": true,
+     "note": "Congruence preserves the order."
+    },
+    {
+     "decl": "Real-matrix transport of the CFC order results",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "loewner",
+    "operator-monotone"
+   ],
+   "notes": "Mathlib has the full statement only for C*-algebras over ℂ; NLAlib's Matrix layer works with real matrices and `open scoped MatrixOrder`. The target is a transport: complexify with Matrix.map (algebraMap ℝ ℂ) (a star-algebra embedding that commutes with cfc and reflects ⪯), apply CFC.rpow_le_rpow / CStarAlgebra.inv_le_inv / CFC.log_le_log, and come back. Also note NLAlib.matrixLog_le_matrixLog and operatorConvexOn_neg_log (complex, Concentration layer) duplicate CFC.log_le_log / CFC.concaveOn_log; future work should cite Mathlib. Consumers: nystrom-structural and nystrom-pcg (A^{1/2} and inverse comparisons), sketch-and-precondition and ose-def ((1−ε)AᵀA ⪯ AᵀSᵀSA ⪯ (1+ε)AᵀA ⇒ inverse sandwich), leverage-scores (ridge leverage monotonicity), matrix-chernoff-sampling consequences, cg-convergence with preconditioners. Recommendation: prove.",
+   "variants": [
+    "operator-monotone-convex"
+   ],
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "condition-number-def",
+   "title": "Condition number κ(A) = ‖A‖‖A†‖ and its characterisations",
+   "aliases": [
+    "condition number",
+    "κ(A)",
+    "spectral condition number",
+    "distance to singularity",
+    "Gastinel–Kahan theorem",
+    "Eckart–Young–Gastinel–Kahan"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "$\\kappa(A)=\\|A\\|\\,\\|A^\\dagger\\|$ for $A\\in\\mathbb R^{m\\times n}$ (with the total conventions $\\kappa(0)=0$); for $\\operatorname{rank}A=r\\ge1$, $\\kappa(A)=\\sigma_1(A)/\\sigma_r(A)$, and $\\kappa(A)=\\sigma_{\\max}/\\sigma_{\\min}$ for full column rank. Characterisations: $\\kappa(A)\\ge1$ for $A\\ne0$; $\\kappa(cA)=\\kappa(A)$ for $c\\ne0$; $\\kappa(A^\\top)=\\kappa(A)$; $\\kappa(A^\\top A)=\\kappa(A)^2$; $\\kappa(QA)=\\kappa(A)$ for $Q$ with orthonormal columns; $\\kappa=\\lambda_{\\max}/\\lambda_{\\min}$ for $A\\succ0$; for square invertible $A$, $\\min\\{\\|E\\|:A+E\\ \\text{singular}\\}=1/\\|A^{-1}\\|$, i.e. $1/\\kappa(A)$ is the relative distance to singularity.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times n}$ (`Fin` indices for the singular-value forms)",
+    "Distance to singularity: $A$ square and invertible"
+   ],
+   "conclusion": "$\\kappa(A)=\\sigma_1(A)/\\sigma_{\\operatorname{rank}A}(A)$, the listed invariances, and $\\min\\{\\|E\\|/\\|A\\|: A+E \\text{ singular}\\}=1/\\kappa(A)$",
+   "sources": [
+    {
+     "source": "gvl13",
+     "label": "§2.6.2"
+    },
+    {
+     "source": "higham02",
+     "label": "Thm 6.5 (distance to singularity)"
+    }
+   ],
+   "depends_on": [
+    "pseudoinverse",
+    "svd",
+    "eckart-young",
+    "norms-frob-spec"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix condition number",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "definition",
+    "conditioning"
+   ],
+   "notes": "NLAlib has NLAlib.frobConditionNumber (‖A‖_F‖A†‖, Kaczmarz) but no spectral κ; cg-convergence and Gaussian condition-number results state κ ad hoc. Define with the general moorePenroseInverse so it is total. Consumers: cg-convergence, sketch-and-precondition (κ(AR⁻¹) ≤ √((1+ε)/(1−ε))), nystrom-pcg, randomized-kaczmarz (relation κ_F ≤ √rank κ), linear-system-perturbation, least-squares-perturbation, pinv-spectral-tail (condition numbers of Gaussian matrices, cd05). Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "inverse-perturbation",
+   "title": "Neumann series and perturbation of the inverse with explicit constants",
+   "aliases": [
+    "Neumann series",
+    "Banach lemma",
+    "perturbation of the inverse",
+    "‖(A+E)⁻¹ − A⁻¹‖",
+    "inverse continuity bound"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "If $\\|F\\|<1$ then $I-F$ is invertible, $(I-F)^{-1}=\\sum_{k\\ge0}F^k$, $\\|(I-F)^{-1}\\|\\le\\frac1{1-\\|F\\|}$ and $\\|(I-F)^{-1}-I\\|\\le\\frac{\\|F\\|}{1-\\|F\\|}$. For invertible $A$ and $\\|A^{-1}E\\|<1$: $A+E$ is invertible, $$\\|(A+E)^{-1}\\|\\le\\frac{\\|A^{-1}\\|}{1-\\|A^{-1}E\\|},\\qquad\\|(A+E)^{-1}-A^{-1}\\|\\le\\frac{\\|A^{-1}\\|^2\\|E\\|}{1-\\|A^{-1}E\\|},$$ and $\\|(A+E)^{-1}-A^{-1}\\|_F\\le\\frac{\\|A^{-1}\\|^2\\|E\\|_F}{1-\\|A^{-1}E\\|}$.",
+   "hypotheses": [
+    "$A,E,F\\in\\mathbb R^{n\\times n}$ (any `Fintype` index), spectral norm `specNorm`",
+    "$\\|F\\|<1$; $A$ invertible and $\\|A^{-1}E\\|<1$ (implied by $\\|A^{-1}\\|\\|E\\|<1$)"
+   ],
+   "conclusion": "$(I-F)^{-1}=\\sum_k F^k$ with $\\|(I-F)^{-1}\\|\\le(1-\\|F\\|)^{-1}$; $\\|(A+E)^{-1}\\|\\le\\|A^{-1}\\|/(1-\\|A^{-1}E\\|)$; $\\|(A+E)^{-1}-A^{-1}\\|\\le\\|A^{-1}\\|^2\\|E\\|/(1-\\|A^{-1}E\\|)$",
+   "sources": [
+    {
+     "source": "gvl13",
+     "label": "Lemma 2.3.3, Thm 2.3.4"
+    },
+    {
+     "source": "ss90",
+     "label": "§III.2"
+    }
+   ],
+   "depends_on": [
+    "norms-frob-spec",
+    "matrix-norms-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "NormedRing.inverse_one_sub",
+     "present": true
+    },
+    {
+     "decl": "Units.oneSub",
+     "present": true
+    },
+    {
+     "decl": "tsum_geometric_le_of_norm_lt_one",
+     "present": true,
+     "note": "‖∑ xⁿ‖ ≤ ‖1‖ − 1 + (1 − ‖x‖)⁻¹; with ‖1‖ = 1 under the L2 operator norm this is the Neumann bound."
+    },
+    {
+     "decl": "NormedRing.inverse_add_norm_diff_first_order",
+     "present": true,
+     "note": "Only an asymptotic O(‖t‖) statement, no explicit constant."
+    },
+    {
+     "decl": "Matrix.nonsing_inv_eq_ringInverse",
+     "present": true,
+     "note": "Bridges Matrix ⁻¹ and Ring.inverse."
+    },
+    {
+     "decl": "Explicit matrix inverse-perturbation bound",
+     "present": false
+    }
+   ],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "conditioning",
+    "perturbation"
+   ],
+   "notes": "A thin but much-cited wrapper: Mathlib has the abstract Neumann series in normed rings but no explicit, matrix-specialised perturbation bound in NLAlib's specNorm spelling. Proof: (A+E)⁻¹ − A⁻¹ = −(A+E)⁻¹EA⁻¹ plus the Neumann norm bound. Consumers: linear-system-perturbation, pseudoinverse-perturbation (square case), sketch-and-precondition, nystrom-pcg (regularised inverses (Â + μI)⁻¹), iterative refinement / sketch-and-iterate, T1 resolvent bounds. Recommendation: prove (quick win).",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "linear-system-perturbation",
+   "title": "Normwise forward-error bounds for linear systems",
+   "aliases": [
+    "linear system sensitivity",
+    "relative error bound κ(A)",
+    "perturbation of Ax = b",
+    "residual-based error bound",
+    "forward error"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Let $A$ be invertible, $Ax=b\\ne0$, and $(A+\\Delta A)(x+\\Delta x)=b+\\Delta b$ with $\\kappa(A)\\frac{\\|\\Delta A\\|}{\\|A\\|}<1$. Then $$\\frac{\\|\\Delta x\\|}{\\|x\\|}\\le\\frac{\\kappa(A)}{1-\\kappa(A)\\frac{\\|\\Delta A\\|}{\\|A\\|}}\\Big(\\frac{\\|\\Delta A\\|}{\\|A\\|}+\\frac{\\|\\Delta b\\|}{\\|b\\|}\\Big).$$ A posteriori: for any $\\hat x$, $\\frac{\\|x-\\hat x\\|}{\\|x\\|}\\le\\kappa(A)\\frac{\\|b-A\\hat x\\|}{\\|b\\|}$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ invertible, $b\\ne0$, $Ax=b$",
+    "$\\kappa(A)\\|\\Delta A\\|/\\|A\\|<1$, $(A+\\Delta A)(x+\\Delta x)=b+\\Delta b$"
+   ],
+   "conclusion": "$\\|\\Delta x\\|/\\|x\\|\\le\\frac{\\kappa}{1-\\kappa\\|\\Delta A\\|/\\|A\\|}(\\|\\Delta A\\|/\\|A\\|+\\|\\Delta b\\|/\\|b\\|)$ and $\\|x-\\hat x\\|/\\|x\\|\\le\\kappa\\|b-A\\hat x\\|/\\|b\\|$",
+   "sources": [
+    {
+     "source": "higham02",
+     "label": "Thm 7.2"
+    },
+    {
+     "source": "gvl13",
+     "label": "Thm 2.6.2"
+    }
+   ],
+   "depends_on": [
+    "inverse-perturbation",
+    "condition-number-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Linear-system perturbation bounds",
+     "present": false
+    }
+   ],
+   "difficulty": 1,
+   "priority": "next",
+   "tags": [
+    "conditioning",
+    "perturbation"
+   ],
+   "notes": "Consumers: cg-convergence and nystrom-pcg (turning residual stopping criteria into error guarantees), sketch-and-precondition, randomized-kaczmarz / sketch-and-project error-vs-residual statements, iterative refinement with sketched preconditioners. Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "least-squares-perturbation",
+   "title": "Wedin's perturbation bound for full-rank least squares",
+   "aliases": [
+    "least squares sensitivity",
+    "κ² tan θ bound",
+    "Wedin least squares bound",
+    "Higham Thm 20.1",
+    "LS forward error"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "$A\\in\\mathbb R^{m\\times n}$ of full column rank, $x=\\arg\\min\\|Ax-b\\|$ with $x\\ne0$, $r=b-Ax$. Let $\\|\\Delta A\\|\\le\\varepsilon\\|A\\|$, $\\|\\Delta b\\|\\le\\varepsilon\\|b\\|$, $\\kappa(A)\\varepsilon<1$, $y=\\arg\\min\\|(A+\\Delta A)y-(b+\\Delta b)\\|$, $s=(b+\\Delta b)-(A+\\Delta A)y$. Then $$\\frac{\\|x-y\\|}{\\|x\\|}\\le\\frac{\\kappa\\varepsilon}{1-\\kappa\\varepsilon}\\Big(2+(\\kappa+1)\\frac{\\|r\\|}{\\|A\\|\\|x\\|}\\Big),\\qquad\\frac{\\|r-s\\|}{\\|b\\|}\\le(1+2\\kappa)\\varepsilon.$$ First-order form: $\\frac{\\|x-y\\|}{\\|x\\|}\\le\\varepsilon\\big(\\frac{2\\kappa}{\\cos\\theta}+\\kappa^2\\tan\\theta\\big)+O(\\varepsilon^2)$, $\\sin\\theta=\\|r\\|/\\|b\\|$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times n}$, $\\operatorname{rank}A=n$, $b\\in\\mathbb R^m$ with $A^\\top b\\ne0$",
+    "$\\|\\Delta A\\|\\le\\varepsilon\\|A\\|$, $\\|\\Delta b\\|\\le\\varepsilon\\|b\\|$, $\\kappa(A)\\varepsilon<1$"
+   ],
+   "conclusion": "$\\frac{\\|x-y\\|}{\\|x\\|}\\le\\frac{\\kappa\\varepsilon}{1-\\kappa\\varepsilon}\\big(2+(\\kappa+1)\\frac{\\|r\\|}{\\|A\\|\\|x\\|}\\big)$ and $\\frac{\\|r-s\\|}{\\|b\\|}\\le(1+2\\kappa)\\varepsilon$",
+   "sources": [
+    {
+     "source": "higham02",
+     "label": "Thm 20.1"
+    },
+    {
+     "source": "wedin73",
+     "label": "§5"
+    },
+    {
+     "source": "gvl13",
+     "label": "Thm 5.3.1 (first-order form)"
+    }
+   ],
+   "depends_on": [
+    "pseudoinverse-perturbation",
+    "condition-number-def",
+    "pseudoinverse",
+    "projection-facts"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Least-squares perturbation bounds",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "conditioning",
+    "perturbation",
+    "least-squares"
+   ],
+   "notes": "State the non-asymptotic Higham/Wedin form (explicit constants), mention the GVL first-order κ² tan θ form as the corollary people quote. Consumers: sketch-and-solve-ls (forward error of the sketched solution, not just the residual), sketched-regression, iterative sketching / Blendenpik-LSRN stability analyses, randomized-kaczmarz on inconsistent systems (kaczmarz-inconsistent). Recommendation: assume until pseudoinverse-perturbation is proved, then prove.",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "cholesky-decomposition",
+   "title": "Cholesky factorisation: existence and uniqueness",
+   "aliases": [
+    "Cholesky decomposition",
+    "A = LLᵀ",
+    "Cholesky factor",
+    "LDLᵀ",
+    "semidefinite Cholesky",
+    "partial Cholesky"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Every real symmetric positive definite $A\\in\\mathbb R^{n\\times n}$ has a unique factorisation $A=LL^\\top$ with $L$ lower triangular and $L_{ii}>0$; $L_{11}=\\sqrt{A_{11}}$ and the trailing block of $L$ is the Cholesky factor of the Schur complement $A_{22}-A_{21}A_{11}^{-1}A_{12}$; $\\det A=\\prod_iL_{ii}^2$. Every PSD $A$ has $A=LL^\\top$ with $L$ lower triangular and $L_{ii}\\ge0$ (not unique in general).",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ symmetric positive definite (index `Fin n`, or a linearly ordered `Fintype`)",
+    "Semidefinite form: $A\\succeq0$"
+   ],
+   "conclusion": "$\\exists!\\,L$ lower triangular with positive diagonal and $A=LL^\\top$; for $A\\succeq0$, $\\exists L$ lower triangular with nonnegative diagonal and $A=LL^\\top$",
+   "sources": [
+    {
+     "source": "tb97",
+     "label": "Thm 23.1"
+    },
+    {
+     "source": "higham02",
+     "label": "Thm 10.1"
+    },
+    {
+     "source": "gvl13",
+     "label": "Thm 4.2.7"
+    }
+   ],
+   "depends_on": [
+    "generalized-schur-complement-psd"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "LDL.lower_conj_diag",
+     "present": true,
+     "note": "S = L D Lᴴ for PosDef S (Mathlib.Analysis.Matrix.LDL)."
+    },
+    {
+     "decl": "LDL.lowerInv_triangular",
+     "present": true
+    },
+    {
+     "decl": "Matrix.PosDef.fromBlocks₁₁",
+     "present": true
+    },
+    {
+     "decl": "Lower-triangularity of LDL.lower; Cholesky existence/uniqueness",
+     "present": false,
+     "note": "Lower-triangularity of LDL.lower is an explicit TODO in Mathlib's LDL file."
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "factorization",
+    "conditioning"
+   ],
+   "notes": "Route: Mathlib's LDL gives S = L D Lᵀ with L⁻¹ lower triangular; finishing Mathlib's TODO (L lower triangular) and setting L·D^{1/2} gives existence; uniqueness by the usual triangular argument. Consumers: rpcholesky (partial pivoted Cholesky equals Nyström; residual is a Schur complement), nystrom-pcg (Cholesky of the core matrix), sketch-and-precondition (R = chol((SA)ᵀSA)ᵀ), qr-decomposition (R from AᵀA), Gaussian sampling N(0,Σ) = L z. Recommendation: prove (the TODO is a natural upstream contribution to Mathlib).",
+   "updated_at": "2026-10-10"
+  },
+  {
+   "id": "qr-decomposition",
+   "title": "QR factorisation: existence and uniqueness",
+   "aliases": [
+    "QR decomposition",
+    "thin QR",
+    "A = QR",
+    "Gram–Schmidt factorisation",
+    "orth(A)",
+    "R factor"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Every $A\\in\\mathbb R^{m\\times n}$ with $m\\ge n$ factors as $A=QR$ with $Q\\in\\mathbb R^{m\\times n}$, $Q^\\top Q=I_n$, and $R$ upper triangular with $R_{ii}\\ge0$ (thin QR; a full QR has $Q$ orthogonal $m\\times m$). If $\\operatorname{rank}A=n$ then $R_{ii}>0$, the pair $(Q,R)$ is unique, $R^\\top R=A^\\top A$ (so $R^\\top$ is the Cholesky factor of $A^\\top A$), $QQ^\\top$ is the orthogonal projector onto $\\operatorname{range}A$, $\\sigma_i(R)=\\sigma_i(A)$ and $\\kappa(R)=\\kappa(A)$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times n}$, $m\\ge n$ (`Fin` indices)",
+    "Uniqueness: $\\operatorname{rank}A=n$ and $R_{ii}>0$"
+   ],
+   "conclusion": "$\\exists Q,R$: $A=QR$, $Q^\\top Q=I$, $R$ upper triangular with $R_{ii}\\ge0$; unique with $R_{ii}>0$ under full column rank, and then $R^\\top R=A^\\top A$, $QQ^\\top=AA^\\dagger$, $\\sigma(R)=\\sigma(A)$",
+   "sources": [
+    {
+     "source": "tb97",
+     "label": "Thm 7.1 (existence), Thm 7.2 (uniqueness)"
+    },
+    {
+     "source": "gvl13",
+     "label": "Thm 5.2.1, Thm 5.2.3"
+    }
+   ],
+   "depends_on": [
+    "cholesky-decomposition",
+    "orthonormal-columns-def",
+    "projection-facts",
+    "orthonormal-completion",
+    "pseudoinverse"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "InnerProductSpace.gramSchmidt",
+     "present": true
+    },
+    {
+     "decl": "InnerProductSpace.gramSchmidt_triangular",
+     "present": true
+    },
+    {
+     "decl": "InnerProductSpace.gramSchmidtOrthonormalBasis",
+     "present": true
+    },
+    {
+     "decl": "InnerProductSpace.gramSchmidtOrthonormalBasis_inv_triangular",
+     "present": true
+    },
+    {
+     "decl": "Matrix QR factorisation",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "factorization",
+    "orthonormal-bases"
+   ],
+   "notes": "Consumers: sketch-and-precondition (SA = QR, then κ(AR⁻¹)), haar-orthogonal (the Q factor of a Gaussian matrix with R_ii > 0 is Haar; needs uniqueness), rsvd-expected-error / hmt-9-1-spectral (Q = orth(Y); NLAlib currently uses polarFrame instead), leverage-scores (ℓᵢ = ‖Q_{i,:}‖²), block-krylov-lra. Recommendation: prove.",
+   "updated_at": "2026-10-10"
+  }
+ ],
+ "sources": [
+  {
+   "id": "ss90",
+   "type": "book",
+   "title": "Matrix Perturbation Theory",
+   "authors": [
+    "G. W. Stewart",
+    "J.-G. Sun"
+   ],
+   "year": 1990,
+   "role": "Canonical angles (Ch. I §5), pseudoinverse perturbation (Ch. III §3), sin Θ and Wedin theorems (Ch. V)."
+  },
+  {
+   "id": "gvl13",
+   "type": "book",
+   "title": "Matrix Computations (4th ed.)",
+   "authors": [
+    "G. H. Golub",
+    "C. F. Van Loan"
+   ],
+   "year": 2013,
+   "role": "Neumann-series inverse perturbation (§2.3.4), condition numbers and linear-system sensitivity (§2.6), subspace distance (§2.5.3), Cholesky (§4.2), QR (§5.2), least-squares sensitivity (§5.3)."
+  },
+  {
+   "id": "higham02",
+   "type": "book",
+   "title": "Accuracy and Stability of Numerical Algorithms (2nd ed.)",
+   "authors": [
+    "N. J. Higham"
+   ],
+   "year": 2002,
+   "doi": "10.1137/1.9780898718027",
+   "role": "Normwise perturbation theory for linear systems (Ch. 7) and least squares (Thm 20.1, Wedin's bound with explicit constants); Cholesky (Thm 10.1); distance to singularity (Ch. 6)."
+  },
+  {
+   "id": "hj91",
+   "type": "book",
+   "title": "Topics in Matrix Analysis",
+   "authors": [
+    "R. A. Horn",
+    "C. R. Johnson"
+   ],
+   "year": 1991,
+   "doi": "10.1017/CBO9780511840371",
+   "role": "Singular-value inequalities for sums and products (Ch. 3: Weyl, Horn, Ky Fan), Kronecker products (Ch. 4)."
+  },
+  {
+   "id": "mo11",
+   "type": "book",
+   "title": "Inequalities: Theory of Majorization and Its Applications (2nd ed.)",
+   "authors": [
+    "A. W. Marshall",
+    "I. Olkin",
+    "B. C. Arnold"
+   ],
+   "year": 2011,
+   "doi": "10.1007/978-0-387-68276-1",
+   "role": "Definitions and characterisations of (weak) majorization, Schur-convexity, Schur–Horn (Ch. 9)."
+  },
+  {
+   "id": "dk70",
+   "type": "paper",
+   "title": "The rotation of eigenvectors by a perturbation. III",
+   "authors": [
+    "C. Davis",
+    "W. M. Kahan"
+   ],
+   "year": 1970,
+   "doi": "10.1137/0707001",
+   "role": "The sin θ and tan θ theorems for invariant subspaces of Hermitian matrices."
+  },
+  {
+   "id": "wedin72",
+   "type": "paper",
+   "title": "Perturbation bounds in connection with singular value decomposition",
+   "authors": [
+    "P.-Å. Wedin"
+   ],
+   "year": 1972,
+   "doi": "10.1007/BF01932678",
+   "role": "sin θ theorem for singular subspaces (Wedin's theorem)."
+  },
+  {
+   "id": "wedin73",
+   "type": "paper",
+   "title": "Perturbation theory for pseudo-inverses",
+   "authors": [
+    "P.-Å. Wedin"
+   ],
+   "year": 1973,
+   "role": "Decomposition of B† − A† and the bound ‖B† − A†‖ ≤ μ‖A†‖‖B†‖‖E‖ with sharp μ (BIT 13, 217–232)."
+  },
+  {
+   "id": "ywss15",
+   "type": "paper",
+   "title": "A useful variant of the Davis–Kahan theorem for statisticians",
+   "authors": [
+    "Y. Yu",
+    "T. Wang",
+    "R. J. Samworth"
+   ],
+   "year": 2015,
+   "doi": "10.1093/biomet/asv008",
+   "role": "Davis–Kahan with only the population eigengap in the denominator (Thm 1); the form most often cited downstream."
+  },
+  {
+   "id": "albert69",
+   "type": "paper",
+   "title": "Conditions for positive and nonnegative definiteness in terms of pseudoinverses",
+   "authors": [
+    "A. Albert"
+   ],
+   "year": 1969,
+   "doi": "10.1137/0117041",
+   "role": "Generalized Schur complement criterion for positive semidefinite block matrices with a singular pivot block."
+  },
+  {
+   "id": "parlett98",
+   "type": "book",
+   "title": "The Symmetric Eigenvalue Problem",
+   "authors": [
+    "B. N. Parlett"
+   ],
+   "year": 1998,
+   "doi": "10.1137/1.9781611971163",
+   "role": "Residual bounds for approximate eigenpairs: Krylov–Bogoliubov/Weinstein, Kato–Temple, and the one-vector sin θ bound."
+  },
+  {
+   "id": "fan49",
+   "type": "paper",
+   "title": "On a theorem of Weyl concerning eigenvalues of linear transformations I",
+   "authors": [
+    "K. Fan"
+   ],
+   "year": 1949,
+   "doi": "10.1073/pnas.35.11.652",
+   "role": "Ky Fan's maximum principle: sums of the k largest eigenvalues as a maximum of traces over k-frames."
+  },
+  {
+   "id": "vl00",
+   "type": "paper",
+   "title": "The ubiquitous Kronecker product",
+   "authors": [
+    "C. F. Van Loan"
+   ],
+   "year": 2000,
+   "doi": "10.1016/S0377-0427(00)00393-9",
+   "role": "Survey of Kronecker-product identities: SVD, eigenvalues, vec, Kronecker-structured least squares."
+  }
+ ]
+}

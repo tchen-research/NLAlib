@@ -44,7 +44,10 @@ theorem integrable_sq_gaussianReal : Integrable (fun y : ℝ => y ^ 2) (gaussian
   have := (memLp_id_gaussianReal (μ := 0) (v := 1) 2).integrable_norm_pow (by norm_num)
   simpa using this
 
-private lemma integrable_gaussianReal_iff (g : ℝ → ℝ) :
+/-- Integrability under the standard Gaussian is equivalent to Lebesgue
+integrability after multiplication by its scalar density. Source: the Gaussian
+density formula; atlas gaussian-integration-by-parts (helper). -/
+theorem integrable_gaussianReal_iff (g : ℝ → ℝ) :
     Integrable g (gaussianReal 0 1) ↔ Integrable (fun x => gaussianPDFReal 0 1 x * g x) := by
   rw [gaussianReal_of_var_ne_zero _ one_ne_zero,
     integrable_withDensity_iff_integrable_smul' (measurable_gaussianPDF _ _)

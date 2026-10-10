@@ -51,3 +51,10 @@ should read [AGENTS.md](AGENTS.md).
 ## License
 
 Apache License 2.0, see [LICENSE](LICENSE).
+
+## Completed proof coverage
+
+The [coverage guide](docs/coverage-fixes.md) records the completed Gaussian inverse
+proofs, Gram converse, general Moore–Penrose inverse, distributional concentration
+and estimator results, and actual-optimum low-rank bounds. It includes the precise
+domains, source provenance, catalogue corrections and verification commands.

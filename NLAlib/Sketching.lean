@@ -1,3 +1,6 @@
+import NLAlib.Sketching.FiniteIndexTransport
+import NLAlib.Sketching.Gram
+import NLAlib.Sketching.SingularValueEmbedding
 import NLAlib.Sketching.Basic
 import NLAlib.Sketching.SubspaceEmbedding
 import NLAlib.Sketching.JL

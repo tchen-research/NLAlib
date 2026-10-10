@@ -2,9 +2,11 @@
 Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_wishart_lambda_min_cdf_rank_one`, `Sol_GaussianMatrix_tw_gamma_ratio_bound`,
 `Sol_GaussianMatrix_wishart_lambda_min_tail`; theorem
-`Thm_GaussianMatrix_wishart_lambda_min_cdf_density_bound`, which has no solution).
+`Thm_GaussianMatrix_wishart_lambda_min_cdf_density_bound`, whose density proof is replaced by the operator route below).
 -/
 import NLAlib.Gaussian.Basic
+import NLAlib.Gaussian.PositiveMoments
+import NLAlib.Gaussian.InverseMoments.OperatorHardEdge
 import NLAlib.Matrix.Spectral
 import NLAlib.Concentration.Scalar.TailIntegral
 import NLAlib.Gaussian.Extreme.ChiSquare
@@ -26,8 +28,8 @@ Edelman 1988; Chen–Dongarra 2005)
 
 * `gaussianMatrix_one_sigmaMin_transpose_sq_le_eq`: for `r = 1`, `σ_min(Gᵀ)² = ‖g‖² ∼ χ²_k`,
   and its CDF is the `χ²_k` density integral, written in the shape of (B.5);
-* `gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral` (**scaffold**): the density bound
-  (B.5) for general `r`, the only unproved statement of the series;
+* `gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral`: the integrated density bound
+  (B.5) for general `r`, proved by operator calculus and scalar weak density;
 * `gammaRatio_le`: the Gamma-function estimate (B.6) behind the simplification of (B.5);
 * `gaussianMatrix_sigmaMin_transpose_sq_le_le`: the tail bound (B.7)
   (atlas `wishart-lambda-min-tail`).
@@ -45,84 +47,6 @@ open scoped Matrix
 namespace NLAlib
 
 /-! ### The rank-one case: the `χ²_k` law -/
-
-/-- The product of `m` standard Gaussians has density `∏ᵢ φ(xᵢ)` w.r.t. Lebesgue measure. -/
-private lemma pi_gaussianReal_eq_withDensity (m : ℕ) :
-    Measure.pi (fun _ : Fin m => gaussianReal 0 1)
-      = volume.withDensity
-          (fun x : Fin m → ℝ => ENNReal.ofReal (∏ i, gaussianPDFReal 0 1 (x i))) := by
-  refine Measure.pi_eq (μ := fun _ : Fin m => gaussianReal 0 1) fun s hs => ?_
-  have hS : MeasurableSet (Set.univ.pi s) := MeasurableSet.univ_pi hs
-  rw [withDensity_apply _ hS, ← lintegral_indicator hS]
-  have hind : ∀ x : Fin m → ℝ,
-      (Set.univ.pi s).indicator (fun x => ENNReal.ofReal (∏ i, gaussianPDFReal 0 1 (x i))) x
-        = ENNReal.ofReal (∏ i, (s i).indicator (gaussianPDFReal 0 1) (x i)) := by
-    intro x
-    by_cases hx : x ∈ Set.univ.pi s
-    · rw [Set.indicator_of_mem hx]
-      congr 1
-      refine Finset.prod_congr rfl fun i _ => ?_
-      rw [Set.indicator_of_mem (hx i (Set.mem_univ i))]
-    · rw [Set.indicator_of_notMem hx]
-      simp only [Set.mem_pi, Set.mem_univ, true_implies, not_forall] at hx
-      obtain ⟨i, hi⟩ := hx
-      rw [Finset.prod_eq_zero (Finset.mem_univ i) (Set.indicator_of_notMem hi _)]
-      simp
-  simp_rw [hind]
-  have hint : Integrable (fun x : Fin m → ℝ => ∏ i, (s i).indicator (gaussianPDFReal 0 1) (x i))
-      volume := by
-    rw [volume_pi]
-    exact Integrable.fintype_prod (f := fun i => (s i).indicator (gaussianPDFReal 0 1))
-      (fun i => (integrable_gaussianPDFReal 0 1).indicator (hs i))
-  rw [← ofReal_integral_eq_lintegral_ofReal hint
-    (ae_of_all _ fun x => Finset.prod_nonneg fun i _ =>
-      Set.indicator_nonneg (fun y _ => gaussianPDFReal_nonneg 0 1 y) _)]
-  rw [integral_fintype_prod_volume_eq_prod, ENNReal.ofReal_prod_of_nonneg
-    (fun i _ => integral_nonneg fun y =>
-      Set.indicator_nonneg (fun y _ => gaussianPDFReal_nonneg 0 1 y) _)]
-  refine Finset.prod_congr rfl fun i _ => ?_
-  rw [gaussianReal_apply_eq_integral 0 one_ne_zero, integral_indicator (hs i)]
-
-private lemma prod_gaussianPDFReal {m : ℕ} (x : Fin m → ℝ) :
-    ∏ i, gaussianPDFReal 0 1 (x i)
-      = (Real.sqrt (2 * π))⁻¹ ^ m * Real.exp (-(∑ i, x i ^ 2) / 2) := by
-  simp only [gaussianPDFReal, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ,
-    Fintype.card_fin, ← Real.exp_sum]
-  congr 2
-  · simp
-  · simp only [sub_zero, NNReal.coe_one, mul_one, neg_div]
-    rw [Finset.sum_neg_distrib, Finset.sum_div]
-
-private lemma sum_sq_ofLp {m : ℕ} (y : EuclideanSpace ℝ (Fin m)) :
-    ∑ i, (WithLp.ofLp y) i ^ 2 = ‖y‖ ^ 2 := by
-  rw [EuclideanSpace.norm_eq, Real.sq_sqrt (Finset.sum_nonneg fun _ _ => sq_nonneg _)]
-  simp [Real.norm_eq_abs, sq_abs]
-
-/-- Polar coordinates for a radial function of a standard Gaussian vector. -/
-private lemma integral_radial_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m) (φ : ℝ → ℝ) :
-    ∫ x, φ (Real.sqrt (∑ i, x i ^ 2)) ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1)
-      = m * (volume : Measure (EuclideanSpace ℝ (Fin m))).real (Metric.ball 0 1)
-        * ((Real.sqrt (2 * π))⁻¹ ^ m
-          * ∫ y in Ioi (0 : ℝ), y ^ (m - 1) * (Real.exp (-y ^ 2 / 2) * φ y)) := by
-  rw [pi_gaussianReal_eq_withDensity, integral_withDensity_eq_integral_toReal_smul (by fun_prop)
-    (ae_of_all _ fun _ => ENNReal.ofReal_lt_top)]
-  simp_rw [ENNReal.toReal_ofReal (Finset.prod_nonneg fun i _ => gaussianPDFReal_nonneg 0 1 _),
-    smul_eq_mul, prod_gaussianPDFReal]
-  rw [← (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin m)).integral_comp']
-  simp only [MeasurableEquiv.toLp_symm_apply]
-  simp_rw [sum_sq_ofLp, Real.sqrt_sq (norm_nonneg _)]
-  have : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
-  have : Nontrivial (EuclideanSpace ℝ (Fin m)) := inferInstance
-  have := integral_fun_norm_addHaar (volume : Measure (EuclideanSpace ℝ (Fin m)))
-    (fun r => (Real.sqrt (2 * π))⁻¹ ^ m * Real.exp (-r ^ 2 / 2) * φ r)
-  rw [this, finrank_euclideanSpace_fin, nsmul_eq_mul, smul_eq_mul]
-  simp_rw [smul_eq_mul]
-  have e : ∀ y : ℝ, y ^ (m - 1) * ((Real.sqrt (2 * π))⁻¹ ^ m * Real.exp (-y ^ 2 / 2) * φ y)
-      = (Real.sqrt (2 * π))⁻¹ ^ m * (y ^ (m - 1) * (Real.exp (-y ^ 2 / 2) * φ y)) := fun y => by
-    ring
-  simp_rw [e]
-  rw [integral_const_mul]
-  ring
 
 /-- `∫₀^∞ y^k e^{-y²/2} dy = (1/2)^{-(k+1)/2} (1/2) Γ((k+1)/2)`. -/
 private lemma integral_pow_mul_exp_neg_sq_div_two (k : ℕ) :
@@ -308,7 +232,7 @@ theorem gaussianMatrix_one_sigmaMin_transpose_sq_le_eq {k : ℕ} (hk : 1 ≤ k) 
     _ = (K * J) * c * I := by ring
     _ = c * I := by rw [← h1']; ring
 
-/-! ### The density bound (scaffold) -/
+/-! ### The operator density bound -/
 
 /-- **Density bound for the smallest Wishart eigenvalue** (Tropp–Webber 2023, (B.5); Edelman
 1988, Chen–Dongarra 2005). For an `r × k` standard Gaussian matrix `G` with `1 ≤ r ≤ k` and
@@ -316,12 +240,11 @@ theorem gaussianMatrix_one_sigmaMin_transpose_sq_le_eq {k : ℕ} (hk : 1 ≤ k) 
 `P[σ_min(Gᵀ)² ≤ t] ≤ ∫₀ᵗ c(r,k) x^{(k-r-1)/2} e^{-x/2} dx` with
 `c(r,k) = 2^{(k-r-1)/2} Γ((k+1)/2) / (Γ(r/2) Γ(k-r+1))`.
 
-SCAFFOLD: wishart-lambda-min-tail. This is the only statement of the Prove2me Gaussian series
-without a solution. Its proof needs the joint eigenvalue density of the real Wishart matrix
-`G Gᵀ` (or Edelman's bound on the marginal density of `λ_min`), i.e. a change of variables to
-the eigen-decomposition with the Vandermonde Jacobian, which Mathlib does not provide. The case
-`r = 1` holds with equality (`gaussianMatrix_one_sigmaMin_transpose_sq_le_eq`). Statement
-identical to Prove2me theorem `GaussianMatrix.wishart_lambda_min_cdf_density_bound`. -/
+Atlas: `wishart-lambda-min-tail`. Proof: Gaussian operator calculus gives a scalar
+weak inequality; the scalar weighted-density theorem and quadratic-probe Mellin
+endpoint recover the exact coefficient. No joint Wishart eigenvalue density or
+Vandermonde Jacobian is used. The rank-one case holds with equality. The statement
+is identical to the Prove2me density-bound theorem. -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral {r k : ℕ} (hr : 1 ≤ r)
     (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :
     (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
@@ -329,7 +252,7 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral {r k : ℕ} (hr : 1
           (2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2)
               / (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))
             * x ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-x / 2)) := by
-  sorry
+  exact gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_operator hr hrk t ht
 
 /-! ### The Gamma-ratio estimate -/
 
@@ -464,7 +387,7 @@ theorem gammaRatio_le {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) :
 
 Tropp–Webber 2023, (B.7); Chen–Dongarra 2005, Lemma 4.1. Atlas: `wishart-lambda-min-tail`.
 Proof: the density bound (B.5)
-(`gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral`, a scaffold), the Gamma-ratio estimate
+(`gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral`, proved here), the Gamma-ratio estimate
 (`gammaRatio_le`) and `∫₀ᵗ x^a e^{-x/2} dx ≤ t^{a+1}/(a+1)` (`lintegral_rpow_mul_exp_le`, atlas
 `tail-integral`). Ported from Prove2me solution `GaussianMatrix.wishart_lambda_min_tail`. -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ)

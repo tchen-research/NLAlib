@@ -5,6 +5,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_inverse_wishart_spectral_moment`).
 -/
 import NLAlib.Gaussian.InverseMoments.LambdaMinTail
+import NLAlib.Gaussian.InverseMoments.SpectralProbe
 import NLAlib.Matrix.Measurable
 import Mathlib.Analysis.SpecialFunctions.Stirling
 import Mathlib.Analysis.Complex.ExponentialBounds
@@ -27,9 +28,9 @@ For an `r × k` standard Gaussian matrix `G` with pseudoinverse `G† = pinvR G 
 * `one_add_div_mul_inv_Gamma_rpow_le`: the numerical inequality (B.8) of Tropp–Webber 2023
   behind the last bound.
 
-All three probabilistic statements rest on the lower tail of `λ_min(G Gᵀ)`
-(`gaussianMatrix_sigmaMin_transpose_sq_le_le`, atlas `wishart-lambda-min-tail`), hence on the
-scaffold `gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral` (Tropp–Webber (B.5)).
+The two moment statements use the direct Gaussian quadratic-probe route and
+are independent of the smallest-eigenvalue density. The tail statement uses
+`gaussianMatrix_sigmaMin_transpose_sq_le_le`, atlas `wishart-lambda-min-tail`.
 
 Proof source: Prove2me workspace, Gaussian Random Matrices series; the workspace's
 `integral_le_of_tail_bound` is `NLAlib.integrable_and_integral_le_of_tail_le_rpow`.
@@ -232,7 +233,7 @@ HMT 2011, Prop A.3; Chen–Dongarra 2005, Lemma 4.1. Atlas: `pinv-spectral-tail`
 `‖G†‖² = ‖(G Gᵀ)⁻¹‖ = 1/σ_min(Gᵀ)²` (`specNorm_pinvR_sq`,
 `specNorm_inv_self_mul_transpose_eq`, atlas `pseudoinverse`), the `λ_min` lower tail
 (`gaussianMatrix_sigmaMin_transpose_sq_le_le`, atlas `wishart-lambda-min-tail`, which uses the
-scaffold (B.5)) and Stirling's formula. Ported from Prove2me solution
+proved operator bound (B.5)) and Stirling's formula. Ported from Prove2me solution
 `GaussianMatrix.pinv_spectral_tail`. -/
 theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r ≤ k) (t : ℝ)
     (ht : 0 < t) :
@@ -274,57 +275,28 @@ standard Gaussian matrix `G` with `2 ≤ r` and `r + 1 ≤ k`, `‖G†‖` is i
 `E‖G†‖ ≤ e√k/(k-r)`, with `G† = pinvR G`.
 
 HMT 2011, Prop A.4 (`E‖Ω₁†‖ ≤ e√(k+p)/p` with `Ω₁` of size `k × (k+p)`). Atlas:
-`pinv-spectral-expectation`. Proof: the tail bound `gaussianMatrix_lt_specNorm_pinvR_le` (atlas
-`pinv-spectral-tail`, uses the scaffold (B.5)) integrated by the layer-cake estimate
-`integrable_and_integral_le_of_tail_le_rpow` (atlas `tail-integral`). Ported from Prove2me
-solution `GaussianMatrix.pinv_spectral_expectation`. -/
+`pinv-spectral-expectation`. Proof: Gaussian quadratic probes, Schur residual laws,
+scalar Gamma estimates, and positive moment comparison. The sharper expectation
+bound with k+r-1 is proved in SpectralProbe and implies the source constant.
+This proof has no density or spectral-tail dependency. -/
 theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le {r k : ℕ} (hr : 2 ≤ r)
     (hrk : r + 1 ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => specNorm (pinvR (Matrix.of G))) (gaussianMatrix r k) ∧
     ∫ G, specNorm (pinvR (Matrix.of G)) ∂(gaussianMatrix r k)
       ≤ Real.exp 1 * Real.sqrt k / ((k : ℝ) - r) := by
-  have hrk' : r ≤ k := by omega
-  have hkR : (r : ℝ) + 1 ≤ k := by exact_mod_cast hrk
-  have hrR : (2 : ℝ) ≤ r := by exact_mod_cast hr
-  set m : ℝ := (k : ℝ) - r + 1 with hm_def
-  have hm2 : 2 ≤ m := by rw [hm_def]; linarith
-  have hm0 : 0 < m := by linarith
-  have hk0 : 0 < Real.sqrt k := Real.sqrt_pos.2 (by linarith)
-  set p : ℝ := 1 / Real.sqrt (2 * Real.pi * m) with hp_def
-  set q : ℝ := Real.exp 1 * Real.sqrt k / m with hq_def
-  have hq0 : 0 < q := div_pos (mul_pos (Real.exp_pos 1) hk0) hm0
-  have hsq1 : 1 ≤ Real.sqrt (2 * Real.pi * m) := by
-    rw [Real.one_le_sqrt]
-    nlinarith [Real.pi_gt_three]
-  have hp0 : 0 < p := by rw [hp_def]; exact div_pos one_pos (by linarith)
-  have hp1 : p ≤ 1 := by rw [hp_def, div_le_one (by linarith)]; exact hsq1
-  set C : ℝ := p * q ^ m with hC_def
-  have hC : 0 < C := mul_pos hp0 (Real.rpow_pos_of_pos hq0 _)
-  have hmeas := measurable_specNorm_pinvR (r := Fin r) (k := Fin k)
-  have hnn : 0 ≤ᵐ[gaussianMatrix r k] fun G : Fin r → Fin k → ℝ =>
-      specNorm (pinvR (Matrix.of G)) :=
-    Filter.Eventually.of_forall fun G => specNorm_nonneg _
-  have htail : ∀ t : ℝ, 0 < t → (gaussianMatrix r k) {G | t < specNorm (pinvR (Matrix.of G))}
-      ≤ ENNReal.ofReal (C * t ^ (-m)) := fun t ht =>
-    gaussianMatrix_lt_specNorm_pinvR_le hr hrk' t ht
-  obtain ⟨hI, hle⟩ := integrable_and_integral_le_of_tail_le_rpow (gaussianMatrix r k)
-    (fun G : Fin r → Fin k → ℝ => specNorm (pinvR (Matrix.of G))) hmeas.aemeasurable hnn
-    C m hC (by linarith) htail
-  refine ⟨hI, hle.trans ?_⟩
-  have hCm : C ^ (1 / m) = p ^ (1 / m) * q := by
-    rw [hC_def, Real.mul_rpow hp0.le (Real.rpow_nonneg hq0.le _), one_div,
-      Real.rpow_rpow_inv hq0.le hm0.ne']
-  have hpm : p ^ (1 / m) ≤ 1 := Real.rpow_le_one hp0.le hp1 (by positivity)
-  have hm1 : m - 1 = (k : ℝ) - r := by rw [hm_def]; ring
-  have hkr : 0 < (k : ℝ) - r := by linarith
-  rw [hCm, hm1]
-  have hE : 0 ≤ Real.exp 1 * Real.sqrt k := (mul_pos (Real.exp_pos 1) hk0).le
-  calc p ^ (1 / m) * q * m / ((k : ℝ) - r)
-      = p ^ (1 / m) * (Real.exp 1 * Real.sqrt k / ((k : ℝ) - r)) := by
-        rw [hq_def]; field_simp
-    _ ≤ 1 * (Real.exp 1 * Real.sqrt k / ((k : ℝ) - r)) :=
-        mul_le_mul_of_nonneg_right hpm (div_nonneg hE hkr.le)
-    _ = Real.exp 1 * Real.sqrt k / ((k : ℝ) - r) := one_mul _
+  have hr1 : 1 ≤ r := by omega
+  have hrk' : r < k := by omega
+  obtain ⟨hint, hbound⟩ :=
+    integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_sharp hr1 hrk'
+  refine ⟨hint, hbound.trans ?_⟩
+  have hgap : (0 : ℝ) < (k : ℝ) - r := sub_pos.mpr (by exact_mod_cast hrk')
+  have hcast : (r : ℝ) < k := by exact_mod_cast hrk'
+  have hsqrt : Real.sqrt (((k : ℝ) + r - 1) / 2) ≤ Real.sqrt k :=
+    Real.sqrt_le_sqrt (by linarith)
+  calc Real.exp 1 / ((k : ℝ) - r) * Real.sqrt (((k : ℝ) + r - 1) / 2)
+      ≤ Real.exp 1 / ((k : ℝ) - r) * Real.sqrt k :=
+        mul_le_mul_of_nonneg_left hsqrt (by positivity)
+    _ = Real.exp 1 * Real.sqrt k / ((k : ℝ) - r) := by ring
 
 /-! ### Spectral moments of the inverse Wishart matrix -/
 
@@ -333,18 +305,16 @@ private lemma specNorm_of_isEmpty {m : Type*} [Fintype m] [DecidableEq m] [IsEmp
     (A : Matrix m m ℝ) : specNorm A = 0 := by
   rw [specNorm, Subsingleton.elim A 0, norm_zero]
 
+set_option linter.unusedVariables false in
 /-- **Spectral moments of the inverse Wishart matrix.** For an `r × k` standard Gaussian matrix
 `G` and integers `1 ≤ p ≤ 18` with `r + 2p ≤ k`, `‖(G Gᵀ)⁻¹‖^p` is integrable and
 `E‖(G Gᵀ)⁻¹‖^p ≤ (e² (k+r) / (2 (k-r)²))^p`, i.e.
 `(E‖(G Gᵀ)⁻¹‖^p)^{1/p} ≤ e² (k+r) / (2 (k-r)²)`.
 
-Tropp–Webber 2023, Lemma B.4 (the restriction `p ≤ 18` comes from the numerical inequality
-(B.8), `one_add_div_mul_inv_Gamma_rpow_le`). Atlas: `inverse-wishart-spectral-moment`. Proof:
-`‖(G Gᵀ)⁻¹‖ = 1/σ_min(Gᵀ)²` (`specNorm_inv_self_mul_transpose_eq`, atlas `pseudoinverse`), the
-`λ_min` lower tail (`gaussianMatrix_sigmaMin_transpose_sq_le_le`, atlas
-`wishart-lambda-min-tail`, uses the scaffold (B.5)) and the layer-cake estimate
-`integrable_and_integral_le_of_tail_le_rpow` (atlas `tail-integral`). Ported from Prove2me
-solution `GaussianMatrix.inverse_wishart_spectral_moment`. -/
+Tropp–Webber 2023, Appendix B, (B.4). Atlas: `inverse-wishart-spectral-moment`.
+Proof: the direct operator quadratic-probe real moment bound, scalar Gamma estimates,
+and moment monotonicity. The source's p ≤ 18 condition is retained in this
+corollary; the stronger real-power theorem in SpectralProbe does not need it. -/
 theorem integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le
     {r k p : ℕ} (hp : 1 ≤ p) (hp18 : p ≤ 18) (hrk : r + 2 * p ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p)
@@ -353,103 +323,38 @@ theorem integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatr
       ≤ (Real.exp 1 ^ 2 * ((k : ℝ) + r) / (2 * ((k : ℝ) - r) ^ 2)) ^ p := by
   rcases Nat.eq_zero_or_pos r with hr0 | hr1
   · subst hr0
-    have hf : (fun G : Fin 0 → Fin k → ℝ => specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p)
-        = fun _ => 0 := by
+    have hf : (fun G : Fin 0 → Fin k → ℝ =>
+        specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p) = fun _ => 0 := by
       funext G
       rw [specNorm_of_isEmpty, zero_pow (by omega)]
     rw [hf]
     refine ⟨integrable_zero _ _ _, ?_⟩
     rw [integral_zero]
     positivity
-  have hpR : (1 : ℝ) ≤ p := by exact_mod_cast hp
-  have hrk' : r ≤ k := by omega
-  have hkr : 2 * (p : ℝ) ≤ (k : ℝ) - r := by
-    have : ((r + 2 * p : ℕ) : ℝ) ≤ k := by exact_mod_cast hrk
-    push_cast at this; linarith
-  have hr1R : (1 : ℝ) ≤ r := by exact_mod_cast hr1
-  set f : (Fin r → Fin k → ℝ) → ℝ :=
-    fun G => specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p with hf_def
-  have hmeas : Measurable f :=
-    (measurable_specNorm_inv_self_mul_transpose (r := Fin r) (k := Fin k)).pow_const p
-  have hnn : 0 ≤ᵐ[gaussianMatrix r k] f :=
-    Filter.Eventually.of_forall fun G => pow_nonneg (specNorm_nonneg _) p
-  set e : ℝ := ((k : ℝ) - r + 1) / 2 with he_def
-  set B : ℝ := ((k : ℝ) + r) / 2 with hB_def
-  have hB0 : 0 < B := by rw [hB_def]; positivity
-  have hG0 : 0 < Real.Gamma ((k : ℝ) - r + 2) := Real.Gamma_pos_of_pos (by linarith)
-  set C : ℝ := (1 / Real.Gamma ((k : ℝ) - r + 2)) * B ^ e with hC_def
-  have hC : 0 < C := by rw [hC_def]; positivity
-  set m : ℝ := ((k : ℝ) - r + 1) / (2 * p) with hm_def
-  have hp0 : (0 : ℝ) < p := by linarith
-  have hm : 1 < m := by
-    rw [hm_def, one_lt_div (by positivity)]; linarith
-  have htail : ∀ τ : ℝ, 0 < τ → (gaussianMatrix r k) {G | τ < f G}
-      ≤ ENNReal.ofReal (C * τ ^ (-m)) := by
-    intro τ hτ
-    have hsub : {G | τ < f G} ⊆ {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ τ ^ (-(p : ℝ)⁻¹)} := by
-      intro G hG
-      simp only [Set.mem_ofPred_eq, hf_def] at hG ⊢
-      rw [specNorm_inv_self_mul_transpose_eq] at hG
-      set s2 := sigmaMin (Matrix.of G)ᵀ ^ 2
-      have hs2 : 0 < s2 := by
-        rcases (sq_nonneg (sigmaMin (Matrix.of G)ᵀ)).lt_or_eq with h | h
-        · exact h
-        · exfalso
-          have : s2 = 0 := h.symm
-          rw [this, div_zero, zero_pow (by omega)] at hG
-          linarith
-      have hlt : τ ^ (p : ℝ)⁻¹ < 1 / s2 := by
-        by_contra hcon
-        rw [not_lt] at hcon
-        have h1 : (1 / s2) ^ p ≤ (τ ^ (p : ℝ)⁻¹) ^ p :=
-          pow_le_pow_left₀ (by positivity) hcon p
-        rw [Real.rpow_inv_natCast_pow hτ.le (by omega)] at h1
-        linarith
-      have hτp : 0 < τ ^ (p : ℝ)⁻¹ := Real.rpow_pos_of_pos hτ _
-      rw [Real.rpow_neg hτ.le]
-      rw [lt_div_iff₀ hs2] at hlt
-      have h2 : s2 ≤ 1 / τ ^ (p : ℝ)⁻¹ := by rw [le_div_iff₀ hτp]; linarith
-      rwa [one_div] at h2
-    refine (measure_mono hsub).trans
-      ((gaussianMatrix_sigmaMin_transpose_sq_le_le hr1 hrk' _
-        (Real.rpow_pos_of_pos hτ _)).trans ?_)
-    apply ENNReal.ofReal_le_ofReal
-    apply le_of_eq
-    rw [mul_div_assoc, ← hB_def, Real.mul_rpow (Real.rpow_pos_of_pos hτ _).le hB0.le,
-      ← Real.rpow_mul hτ.le]
-    have hexp : -(p : ℝ)⁻¹ * e = -m := by rw [he_def, hm_def]; field_simp
-    rw [hexp, hC_def]
-    ring
-  obtain ⟨hI, hle⟩ := integrable_and_integral_le_of_tail_le_rpow (gaussianMatrix r k) f
-    hmeas.aemeasurable hnn C m hC hm htail
-  refine ⟨hI, hle.trans ?_⟩
-  have hx : ((k - r : ℕ) : ℝ) = (k : ℝ) - r := Nat.cast_sub hrk'
-  have hB8 := one_add_div_mul_inv_Gamma_rpow_le hp hp18 (show 2 * p ≤ k - r by omega)
-  rw [hx] at hB8
-  have hd : (k : ℝ) - r + 1 ≠ 0 := by linarith
-  have hd2 : (k : ℝ) - r + 1 - 2 * p ≠ 0 := by linarith
-  have h1m : 1 / m = 2 * p / ((k : ℝ) - r + 1) := by rw [hm_def, one_div_div]
-  have hCm : C ^ (1 / m)
-      = (1 / Real.Gamma ((k : ℝ) - r + 2)) ^ (2 * (p : ℝ) / ((k : ℝ) - r + 1)) * B ^ p := by
-    rw [hC_def, Real.mul_rpow (by positivity) (by positivity), ← Real.rpow_mul hB0.le, h1m]
-    congr 1
-    rw [show e * (2 * (p : ℝ) / ((k : ℝ) - r + 1)) = ((p : ℕ) : ℝ) by
-      rw [he_def]; field_simp, Real.rpow_natCast]
-  have hmm : m / (m - 1) = 1 + 2 * (p : ℝ) / ((k : ℝ) - r + 1 - 2 * p) := by
-    have hm1 : m - 1 ≠ 0 := by linarith
-    rw [hm_def]
-    field_simp
-    ring
-  calc C ^ (1 / m) * m / (m - 1)
-      = ((1 + 2 * (p : ℝ) / ((k : ℝ) - r + 1 - 2 * p))
-          * (1 / Real.Gamma ((k : ℝ) - r + 2)) ^ (2 * (p : ℝ) / ((k : ℝ) - r + 1))) * B ^ p := by
-        rw [mul_div_assoc, hmm, hCm]; ring
-    _ ≤ (Real.exp 1 / ((k : ℝ) - r)) ^ (2 * p) * B ^ p :=
-        mul_le_mul_of_nonneg_right hB8 (by positivity)
-    _ = (Real.exp 1 ^ 2 * ((k : ℝ) + r) / (2 * ((k : ℝ) - r) ^ 2)) ^ p := by
-        rw [pow_mul, ← mul_pow, hB_def]
-        congr 1
-        have : (k : ℝ) - r ≠ 0 := by linarith
-        field_simp
+  have hr : 1 ≤ r := by omega
+  have hrk' : r < k := by omega
+  have hpR : (0 : ℝ) < p := by exact_mod_cast (show 0 < p by omega)
+  have hgap : 2 * (p : ℝ) ≤ (k : ℝ) - r := by
+    have h : ((r + 2 * p : ℕ) : ℝ) ≤ k := by exact_mod_cast hrk
+    push_cast at h
+    linarith
+  obtain ⟨hint, hbound⟩ :=
+    integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp
+      hr hrk' (p := (p : ℝ)) hpR (by linarith)
+  simp_rw [Real.rpow_natCast] at hint hbound
+  refine ⟨hint, hbound.trans ?_⟩
+  have hrR : (1 : ℝ) ≤ r := by exact_mod_cast hr
+  have hkR : (r : ℝ) < k := by exact_mod_cast hrk'
+  have hC : 0 ≤ Real.exp 1 ^ 2 * ((k : ℝ) + r - 1) /
+      (2 * ((k : ℝ) - r) ^ 2) := by
+    apply div_nonneg
+    · exact mul_nonneg (sq_nonneg _) (by linarith)
+    · positivity
+  have hle : Real.exp 1 ^ 2 * ((k : ℝ) + r - 1) /
+      (2 * ((k : ℝ) - r) ^ 2) ≤
+      Real.exp 1 ^ 2 * ((k : ℝ) + r) / (2 * ((k : ℝ) - r) ^ 2) := by
+    apply div_le_div_of_nonneg_right _ (by positivity)
+    exact mul_le_mul_of_nonneg_left (by linarith) (sq_nonneg _)
+  exact pow_le_pow_left₀ hC hle p
 
 end NLAlib

@@ -672,7 +672,8 @@
    "tags": [
     "foundation"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-09",
+   "notes": "The compression form QᵀAQ is the Poincaré separation theorem (HJ13 Cor 4.3.37); verify the label."
   },
   {
    "id": "rank-facts",
@@ -2020,7 +2021,8 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10",
+   "notes": "The proved bound (eu/d)^{d/2} drops the e^{−u/2} factor of Dasgupta–Gupta Lem 2.2(a) and is too weak for JL; the sharp form is a Round 6 target."
   },
   {
    "id": "chi-square-upper-tail",
@@ -3362,7 +3364,7 @@
    "mathlib_prereqs": [
     {
      "decl": "Metric.coveringNumber",
-     "present": false
+     "present": true
     }
    ],
    "difficulty": 2,
@@ -3370,7 +3372,8 @@
    "tags": [
     "foundation"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10",
+   "notes": "Standard form: ‖A‖ ≤ (1−ε)⁻¹ max_N ‖Ax‖ (Vershynin 2012 Lem 5.3(i)); the (1−2ε)⁻¹ form is for bilinear forms."
   },
   {
    "id": "subgaussian-matrix-norm",
@@ -4742,8 +4745,7 @@
    ],
    "formalizations": [],
    "depends_on": [
-    "ose-def",
-    "jl-distributional"
+    "gaussian-amm"
    ],
    "uses_defs": [
     "NLAlib.frobSq"
@@ -4758,7 +4760,7 @@
    "tags": [
     "amm"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "leverage-scores",
@@ -5023,8 +5025,7 @@
    "depends_on": [
     "projection-facts",
     "pseudoinverse",
-    "svd",
-    "weyl-mirsky"
+    "norms-frob-spec"
    ],
    "uses_defs": [
     "NLAlib.specNorm",
@@ -5043,7 +5044,7 @@
     "lra"
    ],
    "notes": "The Frobenius form is proved; the spectral form needs ‖[X Y]‖² ≤ ‖X‖² + ‖Y‖² style block norm lemmas.",
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "truncation-lemma",
@@ -5639,12 +5640,13 @@
    "area": "lra-randomized",
    "kind": "application",
    "status": "assumed",
-   "informal": "Constant-factor expected Frobenius error for the truncated one-pass estimator with $s \\ge 4t$ and $t \\ge 4k$.",
+   "informal": "Truncated generalized Nyström with sketch sizes $t \\ge 6k/\\varepsilon$, $s \\ge 12500t/\\varepsilon$ attains $(1+\\varepsilon)$ times the optimal rank-$k$ Frobenius error in expectation. Formalized in the LRA project conditional on the von Neumann rank corollary and two inner lemmas (core and residual).",
    "hypotheses": [
-    "$\\Omega \\in \\mathbb{R}^{n\\times t}$ and $\\Psi \\in \\mathbb{R}^{m\\times s}$ independent standard Gaussian",
-    "$t \\ge 4k$ and $s \\ge 4t$"
+    "$A \\in \\mathbb{R}^{m\\times n}$, target rank $1 \\le k \\le \\min(m,n)$, $0 < \\varepsilon \\le 1$",
+    "$t \\ge 6k/\\varepsilon$ and $s \\ge 12500\\,t/\\varepsilon$ (generic case $\\operatorname{rank}A \\ge t$)",
+    "$\\Omega \\in \\mathbb{R}^{n\\times t}$, $\\Psi \\in \\mathbb{R}^{s\\times m}$ independent standard Gaussian; $\\hat A_k$ the truncated generalized Nyström approximation"
    ],
-   "conclusion": "$\\mathbb{E}\\|A - \\hat{A}_k\\|_F^2 \\le C\\cdot\\|A - \\lbrack\\!\\lbrack A \\rbrack\\!\\rbrack_k\\|_F^2$ for an absolute constant $C$, where $\\hat{A}_k$ is the rank-$k$ truncated generalized Nyström output",
+   "conclusion": "$\\mathbb{E}\\|A - \\hat A_k\\|_F^2 \\le (1+\\varepsilon)\\,\\|A - \\llbracket A\\rrbracket_k\\|_F^2$",
    "sources": [
     {
      "source": "cp25",
@@ -5661,7 +5663,7 @@
    ],
    "depends_on": [
     "gn-expected-error",
-    "von-neumann-trace",
+    "von-neumann-rank-bound",
     "hmt-9-1-spectral",
     "spectral-second-moment",
     "inverse-wishart-spectral-moment",
@@ -5687,8 +5689,8 @@
    "tags": [
     "consumer"
    ],
-   "updated_at": "2026-10-09",
-   "notes": "The historical external theorem is conditional on hcore, hresid and hVN. An unconditional exact-constant local tGN theorem is outside this change; completing the inverse spectral prerequisites alone does not discharge all remaining hypotheses."
+   "updated_at": "2026-10-10",
+   "notes": "Previously catalogued with the inner-lemma sizes t ≥ 4k, s ≥ 4t and an unnamed constant C; corrected 2026-10-10 to the cited theorem (LRA tGN_expected_error, generic case; tGN_rank_deficient covers rank A < t). The LRA proof is conditional on hcore, hresid and hVN; hVN is `von-neumann-rank-bound`."
   },
   {
    "id": "etrsvd",
@@ -5909,7 +5911,9 @@
    "formalizations": [],
    "depends_on": [
     "power-iteration-deterministic",
-    "rsvd-expected-error"
+    "hmt-9-1-spectral",
+    "chevet",
+    "pinv-spectral-expectation"
    ],
    "uses_defs": [
     "NLAlib.specNorm",
@@ -5929,7 +5933,7 @@
    "tags": [
     "consumer"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "nystrom-randomized",
@@ -6422,7 +6426,8 @@
    "depends_on": [
     "rsvd-expected-error",
     "hutchinson-variance",
-    "eckart-young"
+    "eckart-young",
+    "hutchinson-unbiased"
    ],
    "uses_defs": [
     "NLAlib.quadForm",
@@ -6441,7 +6446,7 @@
     "consumer",
     "estimation"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "xtrace-unbiased",
@@ -6470,8 +6475,7 @@
    ],
    "formalizations": [],
    "depends_on": [
-    "hutchinson-unbiased",
-    "rsvd-expected-error"
+    "hutchinson-unbiased"
    ],
    "uses_defs": [
     "NLAlib.quadForm",
@@ -6488,7 +6492,7 @@
    "tags": [
     "estimation"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "spectral-measure",
@@ -6714,7 +6718,7 @@
    ],
    "formalizations": [],
    "depends_on": [
-    "lanczos-recurrence",
+    "krylov-subspace",
     "spectral-measure"
    ],
    "uses_defs": [
@@ -6733,7 +6737,8 @@
     "krylov",
     "estimation"
    ],
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10",
+   "notes": "Exactness up to degree 2q−1 holds for any orthonormal basis of a space containing K_q; the Lanczos recurrence is only needed to identify the nodes as Ritz values."
   },
   {
    "id": "cg-convergence",
@@ -6745,7 +6750,7 @@
     "energy-norm convergence of CG"
    ],
    "area": "krylov",
-   "kind": "application",
+   "kind": "theorem",
    "status": "candidate",
    "informal": "$$\\|x_q - x\\|_A \\le 2\\Big(\\frac{\\sqrt{\\kappa}-1}{\\sqrt{\\kappa}+1}\\Big)^q\\|x_0 - x\\|_A.$$",
    "hypotheses": [
@@ -7033,8 +7038,8 @@
    ],
    "depends_on": [
     "norms-frob-spec",
-    "courant-fischer",
-    "pseudoinverse"
+    "pseudoinverse",
+    "norm-lipschitz"
    ],
    "uses_defs": [
     "NLAlib.Kaczmarz.run",
@@ -7054,7 +7059,7 @@
     "solvers"
    ],
    "notes": "The advertised contraction needs full column rank for arbitrary starting point and solution. The extension derives the singular lower bound from the actual pseudoinverse norm and realizes the weighted recurrence as an actual probability expectation.",
-   "updated_at": "2026-10-09"
+   "updated_at": "2026-10-10"
   },
   {
    "id": "sketch-and-project",
@@ -10201,6 +10206,51 @@
     "done"
    ],
    "updated_at": "2026-10-10"
+  },
+  {
+   "id": "von-neumann-rank-bound",
+   "title": "Von Neumann rank corollary: ⟨X,E⟩ ≤ √r ‖X‖_F ‖E‖ for rank X ≤ r",
+   "aliases": [
+    "von Neumann rank bound",
+    "trace inner product rank bound",
+    "hVN"
+   ],
+   "area": "matrix-trace",
+   "kind": "lemma",
+   "status": "planned",
+   "informal": "If $\\operatorname{rank}X \\le r$ then $\\langle X, E\\rangle_F \\le \\sqrt{r}\\,\\|X\\|_F\\,\\|E\\|$. The only form of von Neumann's inequality the truncated Nyström argument uses; provable from the Moore–Penrose projector without the full trace inequality.",
+   "hypotheses": [
+    "$X, E \\in \\mathbb{R}^{m\\times n}$ with $\\operatorname{rank}X \\le r$"
+   ],
+   "conclusion": "$\\langle X, E\\rangle_F \\le \\sqrt{r}\\,\\|X\\|_F\\,\\|E\\|$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.4.1.1 (corollary)"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "pseudoinverse",
+    "norms-frob-spec"
+   ],
+   "uses_defs": [
+    "NLAlib.frobInner",
+    "NLAlib.frobNorm",
+    "NLAlib.specNorm"
+   ],
+   "variants": [
+    "von-neumann-trace",
+    "tgn-expected-error"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "lra"
+   ],
+   "updated_at": "2026-10-10"
   }
  ],
  "sources": [
@@ -10856,6 +10906,121 @@
    ],
    "year": 1966,
    "role": "Markov brothers' and Bernstein inequalities; Lagrange interpolation error (Ch. 3)."
+  },
+  {
+   "id": "blm13",
+   "type": "book",
+   "title": "Concentration Inequalities: A Nonasymptotic Theory of Independence",
+   "authors": [
+    "S. Boucheron",
+    "G. Lugosi",
+    "P. Massart"
+   ],
+   "year": 2013,
+   "doi": "10.1093/acprof:oso/9780199535255.001.0001",
+   "role": "McDiarmid, entropy method, sub-Gaussian maximal inequalities."
+  },
+  {
+   "id": "buchholz01",
+   "type": "paper",
+   "title": "Operator Khintchine inequality in non-commutative probability",
+   "authors": [
+    "A. Buchholz"
+   ],
+   "year": 2001,
+   "doi": "10.1007/PL00004457",
+   "role": "Non-commutative Khintchine with the sharp constant (2p−1)!!."
+  },
+  {
+   "id": "tropp11-freedman",
+   "type": "paper",
+   "title": "Freedman's inequality for matrix martingales",
+   "authors": [
+    "J. A. Tropp"
+   ],
+   "year": 2011,
+   "doi": "10.1214/ECP.v16-1624",
+   "role": "Matrix Freedman inequality."
+  },
+  {
+   "id": "tropp12",
+   "type": "paper",
+   "title": "User-friendly tail bounds for sums of random matrices",
+   "authors": [
+    "J. A. Tropp"
+   ],
+   "year": 2012,
+   "doi": "10.1007/s10208-011-9099-z",
+   "role": "Matrix Chernoff, Bernstein and Azuma in the form the sampling arguments cite."
+  },
+  {
+   "id": "mcdiarmid89",
+   "type": "paper",
+   "title": "On the method of bounded differences",
+   "authors": [
+    "C. McDiarmid"
+   ],
+   "year": 1989,
+   "doi": "10.1017/CBO9781107359949.008",
+   "role": "McDiarmid's bounded-differences inequality."
+  },
+  {
+   "id": "needell10",
+   "type": "paper",
+   "title": "Randomized Kaczmarz solver for noisy linear systems",
+   "authors": [
+    "D. Needell"
+   ],
+   "year": 2010,
+   "doi": "10.1007/s10543-010-0265-5",
+   "role": "Kaczmarz on inconsistent systems."
+  },
+  {
+   "id": "zf13",
+   "type": "paper",
+   "title": "Randomized extended Kaczmarz for solving least squares",
+   "authors": [
+    "A. Zouzias",
+    "N. M. Freris"
+   ],
+   "year": 2013,
+   "doi": "10.1137/120889897",
+   "role": "Kaczmarz for rank-deficient and least-squares systems."
+  },
+  {
+   "id": "ftu23",
+   "type": "paper",
+   "title": "Randomized Nyström preconditioning",
+   "authors": [
+    "Z. Frangella",
+    "J. A. Tropp",
+    "M. Udell"
+   ],
+   "year": 2023,
+   "doi": "10.1137/21M1466244",
+   "role": "Nyström PCG: condition-number bound and iteration count."
+  },
+  {
+   "id": "greenbaum97",
+   "type": "book",
+   "title": "Iterative Methods for Solving Linear Systems",
+   "authors": [
+    "A. Greenbaum"
+   ],
+   "year": 1997,
+   "doi": "10.1137/1.9781611970937",
+   "role": "CG, MINRES and Lanczos convergence theory."
+  },
+  {
+   "id": "saad11",
+   "type": "book",
+   "title": "Numerical Methods for Large Eigenvalue Problems, Revised Edition",
+   "authors": [
+    "Y. Saad"
+   ],
+   "year": 2011,
+   "doi": "10.1137/1.9781611970739",
+   "role": "Lanczos, Ritz values, Krylov eigenvalue bounds."
   }
  ],
  "libraries": [

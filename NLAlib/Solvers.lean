@@ -1,3 +1,4 @@
+import NLAlib.Solvers.KaczmarzProbability
 import NLAlib.Solvers.Basic
 import NLAlib.Solvers.Kaczmarz
 

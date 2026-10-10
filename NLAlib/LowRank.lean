@@ -1,3 +1,7 @@
+import NLAlib.LowRank.GaussianNystrom
+import NLAlib.LowRank.OptimalError
+import NLAlib.LowRank.RawGaussianNystrom
+import NLAlib.LowRank.RawNystromBridge
 import NLAlib.LowRank.Basic
 import NLAlib.LowRank.RangeFinder
 import NLAlib.LowRank.GeneralizedNystrom

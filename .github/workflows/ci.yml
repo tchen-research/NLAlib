@@ -17,6 +17,10 @@ jobs:
           test: false
       - name: Axiom audit (no sorry, only the three standard axioms)
         run: lake env lean scripts/Audit.lean
+      - name: Completed Gaussian statements and new proof helpers
+        run: |
+          lake env lean -DautoImplicit=false scripts/AuditGaussianInverse.lean
+          lake env lean -DautoImplicit=false scripts/AuditNewProofs.lean
       - name: Declaration index is current
         run: |
           lake env lean scripts/ExtractDecls.lean

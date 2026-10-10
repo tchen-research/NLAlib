@@ -44,7 +44,8 @@ private lemma abs_eval_le_eval_T_real_of_one_le {q : ℕ} {P : ℝ[X]} {x : ℝ}
 then `|P(x)| ≤ |T_q(x)|` for every `|x| ≥ 1`.
 Source: Rivlin, *Chebyshev Polynomials* (1990), Thm 2.20 (case `k = 0`); Mathlib
 `Polynomial.Chebyshev.eval_iterate_derivative_le_of_forall_abs_le_one` covers `x ≥ 1`;
-Atlas: `chebyshev-extremal`. -/
+Atlas: `chebyshev-extremal`.
+atlas: chebyshev-extremal -/
 theorem abs_eval_le_abs_eval_T_real_of_forall_abs_le_one {q : ℕ} {P : ℝ[X]} {x : ℝ}
     (hP : P.degree ≤ q) (hb : ∀ x ∈ Set.Icc (-1 : ℝ) 1, |P.eval x| ≤ 1) (hx : 1 ≤ |x|) :
     |P.eval x| ≤ |(T ℝ q).eval x| := by
@@ -74,7 +75,8 @@ theorem abs_eval_le_abs_eval_T_real_of_forall_abs_le_one {q : ℕ} {P : ℝ[X]} 
 `|P| ≤ M` on `[−1, 1]`, then `|P(x)| ≤ M |T_q(x)|` for every `|x| ≥ 1`. No sign condition on `M`
 (for `M ≤ 0` the hypothesis forces `P = 0`).
 Source: Rivlin, *Chebyshev Polynomials* (1990), Thm 2.20 (case `k = 0`);
-Atlas: `chebyshev-extremal`. -/
+Atlas: `chebyshev-extremal`.
+atlas: chebyshev-extremal -/
 theorem abs_eval_le_mul_abs_eval_T_real_of_forall_abs_le {q : ℕ} {P : ℝ[X]} {M x : ℝ}
     (hP : P.degree ≤ q) (hb : ∀ x ∈ Set.Icc (-1 : ℝ) 1, |P.eval x| ≤ M) (hx : 1 ≤ |x|) :
     |P.eval x| ≤ M * |(T ℝ q).eval x| := by
@@ -103,7 +105,8 @@ private lemma one_le_eval_T_real_div_sub {a b : ℝ} {q : ℕ} (ha : 0 < a) (hab
   one_le_eval_T_real _ (one_le_div_sub ha.le hab)
 
 /-- The residual polynomial `chebyshevResidual a b q` has value `1` at `0`.
-Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`. -/
+Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`.
+atlas: chebyshev-minimax -/
 theorem eval_chebyshevResidual_zero {a b : ℝ} {q : ℕ} (ha : 0 < a) (hab : a < b) :
     (chebyshevResidual a b q).eval 0 = 1 := by
   have h := one_le_eval_T_real_div_sub (q := q) ha hab
@@ -112,7 +115,8 @@ theorem eval_chebyshevResidual_zero {a b : ℝ} {q : ℕ} (ha : 0 < a) (hab : a 
   field_simp
 
 /-- The residual polynomial `chebyshevResidual a b q` has degree at most `q`.
-Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`. -/
+Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`.
+atlas: chebyshev-minimax -/
 theorem degree_chebyshevResidual_le (a b : ℝ) (q : ℕ) :
     (chebyshevResidual a b q).degree ≤ q := by
   rw [chebyshevResidual_def]
@@ -129,7 +133,8 @@ theorem degree_chebyshevResidual_le (a b : ℝ) (q : ℕ) :
 
 /-- On `[a, b]` with `0 < a < b`, the residual polynomial is at most
 `1 / T_q((b + a)/(b − a))` in modulus.
-Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`. -/
+Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`.
+atlas: chebyshev-minimax -/
 theorem abs_eval_chebyshevResidual_le {a b x : ℝ} {q : ℕ} (ha : 0 < a) (hab : a < b)
     (hx : x ∈ Set.Icc a b) :
     |(chebyshevResidual a b q).eval x| ≤ 1 / (T ℝ q).eval ((b + a) / (b - a)) := by
@@ -149,7 +154,8 @@ theorem abs_eval_chebyshevResidual_le {a b x : ℝ} {q : ℕ} (ha : 0 < a) (hab 
 /-- The minimax lower bound: if `p` has degree at most `q`, `p(0) = 1` and `|p| ≤ M` on `[a, b]`
 with `0 < a < b`, then `M ≥ 1 / T_q((b + a)/(b − a))`.
 Source: Golub–Meurant (2010) [`gm10`], App.; Trefethen–Bau (1997), Thm 38.5 (there in the
-condition-number form); Atlas: `chebyshev-minimax`. -/
+condition-number form); Atlas: `chebyshev-minimax`.
+atlas: chebyshev-minimax -/
 theorem inv_eval_T_real_le_of_forall_abs_eval_le {a b M : ℝ} {q : ℕ} {p : ℝ[X]} (ha : 0 < a)
     (hab : a < b) (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1)
     (hb : ∀ x ∈ Set.Icc a b, |p.eval x| ≤ M) :
@@ -189,7 +195,8 @@ theorem inv_eval_T_real_le_of_forall_abs_eval_le {a b M : ℝ} {q : ℕ} {p : �
 `|p|` on `[a, b]` over polynomials `p` of degree at most `q` with `p(0) = 1` is
 `1 / T_q((b + a)/(b − a))`, attained by `chebyshevResidual a b q`.
 Source: Golub–Meurant (2010) [`gm10`], App.; Trefethen–Bau (1997), Thm 38.5;
-Atlas: `chebyshev-minimax`. -/
+Atlas: `chebyshev-minimax`.
+atlas: chebyshev-minimax -/
 theorem isLeast_chebyshev_minimax {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < b) :
     IsLeast {M | ∃ p : ℝ[X], p.degree ≤ q ∧ p.eval 0 = 1 ∧ ∀ x ∈ Set.Icc a b, |p.eval x| ≤ M}
       (1 / (T ℝ q).eval ((b + a) / (b - a))) :=
@@ -201,7 +208,8 @@ theorem isLeast_chebyshev_minimax {a b : ℝ} (q : ℕ) (ha : 0 < a) (hab : a < 
 
 /-- The scaled Chebyshev polynomial `2^(1−q) T_q` is monic (for `q = 0` it is `1`).
 Source: Trefethen, *Approximation Theory and Approximation Practice* (2013), Thm 2.2 / Rivlin
-(1990), Cor. 2.1.1; Atlas: `chebyshev-monic-minimal`. -/
+(1990), Cor. 2.1.1; Atlas: `chebyshev-monic-minimal`.
+atlas: chebyshev-monic-minimal -/
 theorem monic_inv_two_pow_mul_T (q : ℕ) : (C (1 / 2 ^ (q - 1) : ℝ) * T ℝ q).Monic := by
   rw [Monic, leadingCoeff_mul, leadingCoeff_C, leadingCoeff_T, Int.natAbs_natCast]
   field_simp
@@ -225,7 +233,8 @@ satisfies `1 / 2^(q−1) ≤ M`.
 Source: Trefethen (2013), Thm 2.2 / Rivlin (1990), Cor. 2.1.1; Mathlib
 `Polynomial.Chebyshev.leadingCoeff_le_of_forall_abs_le_one` applied to `p / M`;
 Atlas: `chebyshev-monic-minimal`. Deviation: no hypothesis `0 < q` (for `q = 0`, `p = 1` and
-the bound reads `1 ≤ M`, since `0 - 1 = 0` in `ℕ`). -/
+the bound reads `1 ≤ M`, since `0 - 1 = 0` in `ℕ`).
+atlas: chebyshev-monic-minimal -/
 theorem inv_two_pow_le_of_monic_of_forall_abs_eval_le {q : ℕ} {p : ℝ[X]} {M : ℝ} (hp : p.Monic)
     (hdeg : p.natDegree = q) (hb : ∀ x ∈ Set.Icc (-1 : ℝ) 1, |p.eval x| ≤ M) :
     1 / 2 ^ (q - 1) ≤ M := by
@@ -248,7 +257,8 @@ theorem inv_two_pow_le_of_monic_of_forall_abs_eval_le {q : ℕ} {p : ℝ[X]} {M 
 /-- The monic Chebyshev minimax theorem: over monic real polynomials of degree `q`, the least
 possible bound for `|p|` on `[−1, 1]` is `1 / 2^(q−1)`, attained by `2^(1−q) T_q`.
 Source: Trefethen (2013), Thm 2.2 / Rivlin (1990), Cor. 2.1.1; Atlas: `chebyshev-monic-minimal`.
-Deviation: stated for all `q`, including `q = 0` (where the value is `1`). -/
+Deviation: stated for all `q`, including `q = 0` (where the value is `1`).
+atlas: chebyshev-monic-minimal -/
 theorem isLeast_chebyshev_monic_minimax (q : ℕ) :
     IsLeast {M | ∃ p : ℝ[X], p.Monic ∧ p.natDegree = q ∧
       ∀ x ∈ Set.Icc (-1 : ℝ) 1, |p.eval x| ≤ M} (1 / 2 ^ (q - 1)) :=

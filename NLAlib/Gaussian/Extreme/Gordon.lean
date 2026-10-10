@@ -215,7 +215,8 @@ private theorem gu_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
 /-- **Gordon's upper bound.** For an `N × n` standard Gaussian matrix,
 `𝔼 ‖G‖₂ ≤ √N + √n`. Source: Vershynin 2012, Thm 5.32 (upper half); Gordon 1985;
 Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solution
-`GaussianMatrix.gordon_upper`. -/
+`GaussianMatrix.gordon_upper`.
+atlas: gordon -/
 theorem integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt {N n : ℕ} :
     ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n) ≤ Real.sqrt N + Real.sqrt n := by
   have hs : 0 ≤ Real.sqrt N + Real.sqrt n := add_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
@@ -548,7 +549,8 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
 `√N - √n ≤ 𝔼 σ_min(G)` where `σ_min(G) = inf_{‖x‖₂ = 1} ‖G x‖₂` (`NLAlib.sigmaMin`). For `N ≤ n`
 the left side is `≤ 0` and the bound is trivial. Source: Vershynin 2012, Thm 5.32 (lower half);
 Gordon 1985; Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solution
-`GaussianMatrix.gordon_lower`. -/
+`GaussianMatrix.gordon_lower`.
+atlas: gordon -/
 theorem sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) :
     Real.sqrt N - Real.sqrt n ≤ ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n) := by
   have hpos : 0 ≤ ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n) :=
@@ -592,7 +594,8 @@ theorem sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix {N n : ℕ} (hn : 1 �
 with `n ≥ 1`, `σ_min(G)` and `‖G‖₂` are integrable and
 `√N - √n ≤ 𝔼 σ_min(G) ≤ 𝔼 ‖G‖₂ ≤ √N + √n`. Source: Vershynin 2012, Thm 5.32; Gordon 1985;
 Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solution
-`GaussianMatrix.gordon`. -/
+`GaussianMatrix.gordon`.
+atlas: gordon -/
 theorem gordon_extreme_singular_values {N n : ℕ} (hn : 1 ≤ n) :
     Integrable (fun A : Fin N → Fin n → ℝ => sigmaMin (Matrix.of A)) (gaussianMatrix N n) ∧
     Integrable (fun A : Fin N → Fin n → ℝ => specNorm (Matrix.of A)) (gaussianMatrix N n) ∧

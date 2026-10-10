@@ -50,12 +50,14 @@ variable {n κ : Type*} [Fintype n] [DecidableEq n] [Fintype κ] [DecidableEq κ
 
 /-- The `m`-sample Hutchinson estimator `(1/m) ∑ₖ zₖᵀ A zₖ`, with the samples `zₖ = Z(·, k)` the
 columns of `Z : n → κ → ℝ` and `m = |κ|`. Source: Hutchinson (1989) [`hutch89`];
-Avron–Toledo (2011) [`at11`], §2. Atlas: `hutchinson-tail`, `hutchinson-unbiased`. -/
+Avron–Toledo (2011) [`at11`], §2. Atlas: `hutchinson-tail`, `hutchinson-unbiased`.
+atlas: trace-estimators-def -/
 def hutchinsonEstimate (A : Matrix n n ℝ) (Z : n → κ → ℝ) : ℝ :=
   (∑ k, quadForm A (fun i => Z i k)) / Fintype.card κ
 
 /-- The block-diagonal matrix `(1/m) diag(A, …, A)` on `n × κ` whose quadratic form at
-`vec(Z)` is the Hutchinson estimator. Atlas: `hutchinson-tail` (helper). -/
+`vec(Z)` is the Hutchinson estimator. Atlas: `hutchinson-tail` (helper).
+atlas: trace-estimators-def -/
 def hutchinsonBlock (κ : Type*) [Fintype κ] [DecidableEq κ] (A : Matrix n n ℝ) :
     Matrix (n × κ) (n × κ) ℝ :=
   (Fintype.card κ : ℝ)⁻¹ • Matrix.blockDiagonal (fun _ : κ => A)
@@ -226,7 +228,8 @@ independent standard Gaussians, then for `m = |κ| ≥ 1` and `t ≥ 0`,
 `P(|tr_m(A) − tr A| ≥ t) ≤ 2 exp(−(1/(256e²)) min(m t²/‖A‖_F², m t/‖A‖))`.
 Source: Avron–Toledo (2011) [`at11`], Thm 5.2; Cortinovis–Kressner (2021) [`ck21`], Thm 1.
 Atlas: `hutchinson-tail`; uses `hanson-wright`, `hutchinson-unbiased`. Deviation: constant
-`1/(256 e²)` (CK21: `P ≤ 2exp(−m t²/(4‖A‖_F² + 4t‖A‖))`); any matrix `A`. -/
+`1/(256 e²)` (CK21: `P ≤ 2exp(−m t²/(4‖A‖_F² + 4t‖A‖))`); any matrix `A`.
+atlas: hutchinson-tail -/
 theorem measure_le_abs_hutchinsonEstimate_sub_trace_le_of_standardGaussian [Nonempty κ]
     (A : Matrix n n ℝ) {Z : Ω → n → κ → ℝ}
     (hind : iIndepFun (fun (e : n × κ) ω => Z ω e.1 e.2) μ)
@@ -247,7 +250,8 @@ independent Rademacher signs, then for `m = |κ| ≥ 1` and `t ≥ 0`,
 `P(|tr_m(A) − tr A| ≥ t) ≤ 2 exp(−(1/(256e²)) min(m t²/‖A‖_F², m t/‖A‖))`.
 Source: Avron–Toledo (2011) [`at11`], Thm 5.2 (Rademacher case); Cortinovis–Kressner (2021)
 [`ck21`], Thm 3. Atlas: `hutchinson-tail`; uses `hanson-wright`, `hutchinson-unbiased`,
-`rademacher-khintchine`. Deviation: constant `1/(256 e²)`; any matrix `A`. -/
+`rademacher-khintchine`. Deviation: constant `1/(256 e²)`; any matrix `A`.
+atlas: hutchinson-tail -/
 theorem measure_le_abs_hutchinsonEstimate_sub_trace_le_of_rademacher [Nonempty κ]
     (A : Matrix n n ℝ) {Z : Ω → n → κ → ℝ}
     (hind : iIndepFun (fun (e : n × κ) ω => Z ω e.1 e.2) μ)
@@ -335,7 +339,8 @@ semidefinite `A` with `tr A > 0`, `0 < ε ≤ 1`, and `m = |κ|` independent sta
 vectors, `P(|tr_m(A) − tr A| ≥ ε tr A) ≤ 2 exp(−m ε²/(256 e²))`.
 Source: Cortinovis–Kressner (2021) [`ck21`], Cor. 1 (constant differs); Meyer–Musco–Musco–Woodruff
 (2021) [`mmmw21`], Lem. 2. Atlas: `hutchinson-tail`; uses `hanson-wright`,
-`hutchinson-unbiased`. Deviation: constant `1/(256 e²)`. -/
+`hutchinson-unbiased`. Deviation: constant `1/(256 e²)`.
+atlas: hutchinson-tail -/
 theorem measure_le_abs_hutchinsonEstimate_sub_trace_le_mul_trace_of_standardGaussian [Nonempty κ]
     {A : Matrix n n ℝ} (hA : A.PosSemidef) (htr : 0 < A.trace) {Z : Ω → n → κ → ℝ}
     (hind : iIndepFun (fun (e : n × κ) ω => Z ω e.1 e.2) μ)
@@ -359,7 +364,8 @@ with `tr A > 0`, `0 < ε ≤ 1`, `0 < δ`, and `m ≥ 256 e² ε⁻² log(2/δ)`
 `P(|tr_m(A) − tr A| ≥ ε tr A) ≤ δ`.
 Source: Cortinovis–Kressner (2021) [`ck21`], Cor. 1 (`m ≥ 8ε⁻² log(2/δ)` with sharp constants);
 Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], Lem. 2. Atlas: `hutchinson-tail`.
-Deviation: constant `256 e²`. -/
+Deviation: constant `256 e²`.
+atlas: hutchinson-tail -/
 theorem measure_le_abs_hutchinsonEstimate_sub_trace_le_of_le_card [Nonempty κ]
     {A : Matrix n n ℝ} (hA : A.PosSemidef) (htr : 0 < A.trace) {Z : Ω → n → κ → ℝ}
     (hind : iIndepFun (fun (e : n × κ) ω => Z ω e.1 e.2) μ)

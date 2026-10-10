@@ -110,7 +110,8 @@ Source: Needell (2010) [`needell10`], Thm 2.1 (stated for norms, with `xh` the l
 solution); Zouzias–Freris (2013) [`zf13`], eq. (5) (squared form).
 Atlas: `kaczmarz-inconsistent`; uses `randomized-kaczmarz`.
 Deviation: any reference point `xh` (no least-squares or consistency assumption); the geometric
-sum is kept exact. -/
+sum is kept exact.
+atlas: kaczmarz-inconsistent -/
 theorem expErr_le_add (A : Matrix m n ℝ) (b : m → ℝ) (xh : n → ℝ) (σ : ℝ)
     (hσ : ∀ v : n → ℝ, σ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v)) (x : n → ℝ) (k : ℕ) :
     expErr A b xh x k ≤ (1 - σ ^ 2 / frobSq A) ^ k * ((x - xh) ⬝ᵥ (x - xh)) +
@@ -164,7 +165,8 @@ theorem expErr_le_add (A : Matrix m n ℝ) (b : m → ℝ) (xh : n → ℝ) (σ 
 `σ²‖v‖² ≤ ‖Av‖²` for all `v`, then for any `xh`,
 `E‖x_k − xh‖² ≤ (1 − σ²/‖A‖_F²)^k ‖x₀ − xh‖² + ‖b − A xh‖²/σ²`.
 Source: Needell (2010) [`needell10`], Thm 2.1 (squared form, `R = ‖A‖_F²/σ²`);
-Zouzias–Freris (2013) [`zf13`], Thm 2. Atlas: `kaczmarz-inconsistent`. -/
+Zouzias–Freris (2013) [`zf13`], Thm 2. Atlas: `kaczmarz-inconsistent`.
+atlas: kaczmarz-inconsistent -/
 theorem expErr_le_add_div_sq (A : Matrix m n ℝ) (b : m → ℝ) (xh : n → ℝ) {σ : ℝ} (hσ0 : 0 < σ)
     (hσ : ∀ v : n → ℝ, σ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v)) (x : n → ℝ) (k : ℕ) :
     expErr A b xh x k ≤ (1 - σ ^ 2 / frobSq A) ^ k * ((x - xh) ⬝ᵥ (x - xh)) +
@@ -220,7 +222,8 @@ error `x − xs` lies in the row space `range Aᵀ`, and `σ²‖v‖² ≤ ‖A
 space, then `E‖x_k − xs‖² ≤ (1 − σ²/‖A‖_F²)^k ‖x − xs‖²`.
 Source: Strohmer–Vershynin (2009) [`sv09`], Thm 2 in the form of Zouzias–Freris (2013) [`zf13`],
 Thm 2 (`σ = σ_min⁺(A)`, the smallest nonzero singular value).
-Atlas: `kaczmarz-rank-deficient`; uses `randomized-kaczmarz`. -/
+Atlas: `kaczmarz-rank-deficient`; uses `randomized-kaczmarz`.
+atlas: kaczmarz-rank-deficient -/
 theorem expErr_le_of_sub_mem_range [DecidableEq m] (A : Matrix m n ℝ) (b : m → ℝ)
     (xs : n → ℝ) (hxs : A *ᵥ xs = b) (σ : ℝ)
     (hσ : ∀ v ∈ LinearMap.range Aᵀ.mulVecLin, σ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v))
@@ -306,7 +309,8 @@ theorem inv_specNorm_moorePenroseInverse_sq_mul_le [DecidableEq m] [DecidableEq 
 (`b ∈ range A`) started at `x₀ = 0`,
 `E‖x_k − A⁺b‖² ≤ (1 − ‖A⁺‖⁻²/‖A‖_F²)^k ‖A⁺b‖²`, with no rank assumption.
 Source: Zouzias–Freris (2013) [`zf13`], Thm 2 (`b ∈ range A`, `x₀ = 0`);
-Needell–Tropp (2014), §1. Atlas: `kaczmarz-rank-deficient`; uses `pseudoinverse`. -/
+Needell–Tropp (2014), §1. Atlas: `kaczmarz-rank-deficient`; uses `pseudoinverse`.
+atlas: kaczmarz-rank-deficient -/
 theorem expErr_zero_le_moorePenroseInverse [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ)
     (b : m → ℝ) (hb : ∃ y, A *ᵥ y = b) (k : ℕ) :
     expErr A b (moorePenroseInverse A *ᵥ b) 0 k ≤

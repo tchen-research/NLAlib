@@ -66,14 +66,16 @@ theorem integral_integral_comp_add_mul_gaussianReal (h : ℝ → ℝ)
 integral written out in the Prove2me statements. Source: Bakry–Gentil–Ledoux 2014, (2.7.1).
 Atlas: `ornstein-uhlenbeck`. Ported from the Prove2me solutions
 `GaussianMatrix.ou_entropy_hasDerivAt` (`ouP`) and
-`GaussianMatrix.gaussian_logsobolev_bounded_below` (`ouSG`). -/
+`GaussianMatrix.gaussian_logsobolev_bounded_below` (`ouSG`).
+atlas: ornstein-uhlenbeck -/
 def ornsteinUhlenbeck (t : ℝ) (h : ℝ → ℝ) (x : ℝ) : ℝ :=
   ∫ y, h (Real.exp (-t) * x + Real.sqrt (1 - Real.exp (-(2 * t))) * y) ∂(gaussianReal 0 1)
 
 /-- **Invariance of the Gaussian measure** under the Ornstein–Uhlenbeck semigroup:
 `∫ P_t h dγ = ∫ h dγ` for `h ∈ L¹(γ)` and `t ≥ 0`. Source: Bakry–Gentil–Ledoux 2014, §2.7.1;
 Ledoux, *Concentration of Measure*, §5.1. Atlas: `ornstein-uhlenbeck`. Ported from Prove2me
-solution `GaussianMatrix.ou_semigroup_invariant`. -/
+solution `GaussianMatrix.ou_semigroup_invariant`.
+atlas: ornstein-uhlenbeck -/
 theorem integral_ornsteinUhlenbeck (h : ℝ → ℝ) (hh : Integrable h (gaussianReal 0 1)) (t : ℝ)
     (ht : 0 ≤ t) :
     ∫ x, ornsteinUhlenbeck t h x ∂(gaussianReal 0 1) = ∫ x, h x ∂(gaussianReal 0 1) := by
@@ -103,7 +105,8 @@ theorem integrable_comp_add_mul_of_abs_deriv_le (f : ℝ → ℝ) (hf : Differen
 /-- **Commutation relation** of the Ornstein–Uhlenbeck semigroup: for `f ∈ C¹` with
 `|f'| ≤ C`, `(P_t f)'(x) = e^{-t} P_t f'(x)`. Source: Bakry–Gentil–Ledoux 2014, §2.7.1
 (`∇P_t = e^{-t} P_t ∇`). Atlas: `ornstein-uhlenbeck`. Ported from Prove2me solution
-`GaussianMatrix.ou_semigroup_commutation`. -/
+`GaussianMatrix.ou_semigroup_commutation`.
+atlas: ornstein-uhlenbeck -/
 theorem hasDerivAt_ornsteinUhlenbeck (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f) (C : ℝ)
     (hdf : ∀ x, |deriv f x| ≤ C) (t x : ℝ) :
     HasDerivAt (ornsteinUhlenbeck t f) (Real.exp (-t) * ornsteinUhlenbeck t (deriv f) x) x := by

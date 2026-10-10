@@ -58,7 +58,8 @@ variable {r : Type*} [Fintype r] [DecidableEq r]
 /-- **Trace split by an orthonormal basis.** If `QᵀQ = I` then
 `tr A = tr(QᵀAQ) + tr((I − QQᵀ) A (I − QQᵀ))`. Source: Meyer–Musco–Musco–Woodruff (2021)
 [`mmmw21`], eq. (3); Epperly–Tropp–Webber (2024) [`etw24`], eq. (1.4). Atlas: `hutchpp-unbiased`
-(helper). -/
+(helper).
+atlas: hutchpp-unbiased -/
 theorem trace_eq_trace_transpose_mul_mul_add {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q)
     (A : Matrix n n ℝ) :
     A.trace = (Qᵀ * A * Q).trace + ((1 - Q * Qᵀ) * A * (1 - Q * Qᵀ)).trace := by
@@ -97,7 +98,8 @@ theorem integral_hutchinsonEstimate_eq_trace [DecidableEq n] [Nonempty κ] (A : 
 /-- The Hutch++ estimator with deflation basis `Q` and Hutchinson test matrix `Z`:
 `tr(QᵀAQ) + tr_m((I − QQᵀ)A(I − QQᵀ))`. Source: Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`],
 Alg. 1. Atlas: `hutchpp`, `hutchpp-unbiased`. Deviation: `Q` is any matrix (the algorithm uses
-an orthonormal basis of `A S`). -/
+an orthonormal basis of `A S`).
+atlas: trace-estimators-def -/
 def hutchPlusPlusEstimate (A : Matrix n n ℝ) (Q : Matrix n r ℝ) (Z : n → κ → ℝ) : ℝ :=
   (Qᵀ * A * Q).trace + hutchinsonEstimate ((1 - Q * Qᵀ) * A * (1 - Q * Qᵀ)) Z
 
@@ -105,7 +107,8 @@ omit [DecidableEq κ] in
 /-- **Hutch++ is unbiased for a fixed deflation basis.** If `QᵀQ = I` and the columns of the
 random test matrix have isotropic second moments, then `𝔼[Hutch++] = tr A`. Source:
 Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], proof of Thm 1 (unbiasedness, conditional on
-`S`). Atlas: `hutchpp-unbiased`; uses `hutchinson-unbiased`. -/
+`S`). Atlas: `hutchpp-unbiased`; uses `hutchinson-unbiased`.
+atlas: hutchpp-unbiased -/
 theorem integral_hutchPlusPlusEstimate_eq_trace [Nonempty κ] [IsProbabilityMeasure μ]
     (A : Matrix n n ℝ) {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q)
     {Z : Ω → n → κ → ℝ} (hmeas : ∀ i k, AEMeasurable (fun ω => Z ω i k) μ)
@@ -156,7 +159,8 @@ with isotropic columns. If the estimator is integrable for the product of the la
 Source: Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], Thm 1 (unbiasedness part).
 Atlas: `hutchpp-unbiased`; uses `hutchinson-unbiased`, `gaussian-conditioning`.
 Deviation: the integrability of the estimator is a hypothesis (it holds for Gaussian `G`,
-bounded `A`); `S` lives in an arbitrary measurable space. -/
+bounded `A`); `S` lives in an arbitrary measurable space.
+atlas: hutchpp-unbiased -/
 theorem integral_hutchPlusPlusEstimate_comp_eq_trace [Nonempty κ] {α : Type*}
     [MeasurableSpace α] (A : Matrix n n ℝ) {r : Type*} [Fintype r] [DecidableEq r]
     {Q : α → Matrix n r ℝ} (hQ : ∀ s, HasOrthonormalCols (Q s)) {S : Ω → α}
@@ -187,7 +191,8 @@ term is integrable for the product of the laws of `Sᵢ` and `ωᵢ`, then `𝔼
 Source: Epperly–Tropp–Webber (2024) [`etw24`], §2.1 (unbiasedness of the exchangeable estimator).
 Atlas: `xtrace-unbiased`; uses `hutchinson-unbiased`, `gaussian-conditioning`.
 Deviation: abstract leave-one-out statistics `Sᵢ`; integrability is a hypothesis; the
-`rsvd-expected-error` dependency of the atlas entry is not needed. -/
+`rsvd-expected-error` dependency of the atlas entry is not needed.
+atlas: xtrace-unbiased -/
 theorem integral_xtraceEstimate_eq_trace [Nonempty κ] (A : Matrix n n ℝ) {r : Type*}
     [Fintype r] [DecidableEq r] {α : κ → Type*} [∀ i, MeasurableSpace (α i)]
     {Qf : ∀ i, α i → Matrix n r ℝ} (hQ : ∀ i s, HasOrthonormalCols (Qf i s))
@@ -236,7 +241,8 @@ end Random
 square-integrable, pairwise independent, centred, unit-variance coordinates, and any
 `f : ℝ → ℝ`, `𝔼_z[∫ f dμ_z] = 𝔼_z[zᵀ f(A) z] = tr f(A)`.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], §2–3 (the SLQ estimand). Atlas: `spectral-measure`
-(expectation clause, layer 4); uses `hutchinson-unbiased`. -/
+(expectation clause, layer 4); uses `hutchinson-unbiased`.
+atlas: spectral-measure -/
 theorem integral_integral_spectralMeasure_eq_trace {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (f : ℝ → ℝ) {z : Ω → n → ℝ} (hz : ∀ i, MemLp (fun ω => z ω i) 2 μ)

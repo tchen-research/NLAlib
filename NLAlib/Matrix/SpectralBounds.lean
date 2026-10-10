@@ -55,7 +55,8 @@ theorem sigmaMin_le_sigmaMin_add_specNorm (A B : Matrix m n ℝ) :
     linarith
 
 /-- The smallest singular value is `1`-Lipschitz for the spectral norm:
-`|σ_min(A) − σ_min(B)| ≤ ‖A − B‖₂`. Atlas: `norm-lipschitz`. -/
+`|σ_min(A) − σ_min(B)| ≤ ‖A − B‖₂`. Atlas: `norm-lipschitz`.
+atlas: norm-lipschitz -/
 theorem abs_sigmaMin_sub_sigmaMin_le_specNorm (A B : Matrix m n ℝ) :
     |sigmaMin A - sigmaMin B| ≤ specNorm (A - B) := by
   rw [abs_le]
@@ -67,7 +68,8 @@ theorem abs_sigmaMin_sub_sigmaMin_le_specNorm (A B : Matrix m n ℝ) :
   constructor <;> linarith
 
 /-- Multiplication by an orthonormal frame preserves the spectral norm.
-Atlas: `norms-frob-spec`, `svd`. -/
+Atlas: `norms-frob-spec`, `svd`.
+atlas: norms-frob-spec -/
 theorem specNorm_mul_left_of_hasOrthonormalCols {p : Type*} [Fintype p]
     [DecidableEq p] {P : Matrix m n ℝ} (hP : Pᵀ * P = 1) (A : Matrix n p ℝ) :
     specNorm (P * A) = specNorm A := by
@@ -77,7 +79,8 @@ theorem specNorm_mul_left_of_hasOrthonormalCols {p : Type*} [Fintype p]
   simpa only [← Matrix.mul_assoc, hP, Matrix.one_mul] using h.symm
 
 /-- Right multiplication by the transpose of an orthonormal frame preserves
-the spectral norm. Atlas: `norms-frob-spec`, `svd`. -/
+the spectral norm. Atlas: `norms-frob-spec`, `svd`.
+atlas: norms-frob-spec -/
 theorem specNorm_mul_transpose_right_of_hasOrthonormalCols {p : Type*}
     [Fintype p] [DecidableEq p] {P : Matrix m n ℝ} (hP : Pᵀ * P = 1)
     (A : Matrix p n ℝ) : specNorm (A * Pᵀ) = specNorm A := by
@@ -85,7 +88,8 @@ theorem specNorm_mul_transpose_right_of_hasOrthonormalCols {p : Type*}
     specNorm_mul_left_of_hasOrthonormalCols hP, specNorm_transpose]
 
 /-- The spectral norm squared is the norm of the Gram matrix, including
-empty dimensions. Atlas: `norms-frob-spec`, `svd`. -/
+empty dimensions. Atlas: `norms-frob-spec`, `svd`.
+atlas: norms-frob-spec -/
 theorem specNorm_sq_eq_specNorm_transpose_mul_self (A : Matrix m n ℝ) :
     specNorm A ^ 2 = specNorm (Aᵀ * A) := by
   unfold specNorm
@@ -98,7 +102,8 @@ namespace NLAlib
 
 /-- The largest sorted singular value equals the spectral norm. The padded
 singular-value convention also covers matrices with zero rows or columns.
-Atlas: `svd`, `norms-frob-spec`. -/
+Atlas: `svd`, `norms-frob-spec`.
+atlas: norm-lipschitz -/
 theorem singularValues_zero_eq_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
     singularValues A 0 = specNorm A := by
   by_cases hn : n = 0
@@ -166,7 +171,8 @@ theorem IsSVD.mulVec_dotProduct_mulVec_eq_sum {m n : ℕ}
 in the list indexed by the domain dimension. For wide matrices this list
 includes kernel zeros; for tall matrices it is the usual smallest singular
 value. Atlas: `svd`, `norm-lipschitz`. The empty-domain value is handled by
-the existing theorem `sigmaMin_of_isEmpty`. -/
+the existing theorem `sigmaMin_of_isEmpty`.
+atlas: norm-lipschitz -/
 theorem sigmaMin_eq_singularValues_last {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (hn : 0 < n) :
     sigmaMin A = singularValues A (n - 1) := by
@@ -214,7 +220,8 @@ theorem sigmaMin_eq_singularValues_last {m n : ℕ}
 
 /-- Positivity of the variational smallest singular value is exactly full
 column rank when there is at least one column. Atlas: `svd`,
-`randomized-kaczmarz`, `norm-lipschitz`. -/
+`randomized-kaczmarz`, `norm-lipschitz`.
+atlas: norm-lipschitz -/
 theorem sigmaMin_pos_iff_rank_eq_width {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (hn : 0 < n) :
     0 < sigmaMin A ↔ A.rank = n := by

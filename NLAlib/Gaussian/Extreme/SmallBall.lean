@@ -55,7 +55,8 @@ The squared distance dominates the sum of squares of `d` coordinates of `g` in a
 basis of `(range B)ᗮ` (Bessel), which is `χ²_d` by rotation invariance; then the chi-square lower
 tail. Davidson–Szarek 2001, proof of Thm II.13; Vershynin 2012, §5.2.
 Atlas: `smin-small-ball` (step). Ported from Prove2me solution
-`GaussianMatrix.gaussian_dist_colspace_small_ball`. -/
+`GaussianMatrix.gaussian_dist_colspace_small_ball`.
+atlas: smin-small-ball -/
 theorem measure_sq_dist_colSpace_le_le_gaussianReal {N p d : ℕ} (B : Matrix (Fin N) (Fin p) ℝ)
     (hd : 1 ≤ d) (hrank : B.rank + d ≤ N) (u : ℝ) (hu : 0 ≤ u) (hud : u ≤ d) :
     (Measure.pi fun _ : Fin N => gaussianReal 0 1)
@@ -271,7 +272,8 @@ being written `inf { ‖A x‖₂ : x_j = 1 }`.
 Condition on the other columns (resample column `j`) and apply the subspace small-ball bound
 with `d = N - n + 1`. Davidson–Szarek 2001, proof of Thm II.13; Vershynin 2012, §5.2.
 Atlas: `smin-small-ball` (step). Ported from Prove2me solution
-`GaussianMatrix.dist_col_span_small_ball`. -/
+`GaussianMatrix.dist_col_span_small_ball`.
+atlas: smin-small-ball -/
 theorem measure_sq_dist_col_span_le_le_gaussianMatrix {N n : ℕ} (hnN : n ≤ N) (j : Fin n)
     (u : ℝ) (hu : 0 ≤ u) (hud : u ≤ (N : ℝ) - n + 1) :
     (gaussianMatrix N n) {A | (⨅ x : {x : Fin n → ℝ // x j = 1},
@@ -318,7 +320,8 @@ theorem measure_sq_dist_col_span_le_le_gaussianMatrix {N n : ℕ} (hnN : n ≤ N
 Davidson–Szarek 2001, Thm II.13 (small-ball form); Vershynin 2012, §5.2 /
 Rudelson–Vershynin 2009 (sharper `(C s √N)^{N-n+1}` form). Union bound over the columns of the
 column-distance estimate. Atlas: `smin-small-ball`. Ported from Prove2me solution
-`GaussianMatrix.sMin_small_ball`. -/
+`GaussianMatrix.sMin_small_ball`.
+atlas: smin-small-ball -/
 theorem measure_sigmaMin_le_le_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) (hnN : n ≤ N) (s : ℝ)
     (hsd : n * s ^ 2 ≤ (N : ℝ) - n + 1) :
     (gaussianMatrix N n) {A | sigmaMin (Matrix.of A) ≤ s}

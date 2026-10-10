@@ -33,9 +33,11 @@ Then:
 4. **Never** add an `axiom`, use `native_decide`, or weaken a statement to make it provable.
    `sorry` is allowed only in a named scaffold declaration (docstring `SCAFFOLD: <atlas id>`),
    catalogued in the atlas with `status: "scaffold"`; see CONTRIBUTING §3a.
-5. **Update the atlas** (`atlas/atlas.json`) in the same PR: status, formalization entry with the
-   full declaration name and a one-sentence `usage`, new dependency edges, and the search
-   metadata (`aliases`, `hypotheses`, `conclusion`, `uses_defs`, `variants`) for new results.
-   Then `lake env lean scripts/ExtractDecls.lean` and `python3 scripts/check_atlas.py`.
+5. **Tag and sync the atlas** in the same PR: the declaration that formalizes a result ends its
+   docstring with `atlas: <id>`; for a new result write the hand side of the `atlas/atlas.json`
+   entry (title, `informal`, `hypotheses`, `conclusion`, `sources`, `depends_on`, `aliases`,
+   `variants`). Then `lake env lean scripts/ExtractDecls.lean && python3 scripts/sync_atlas.py`
+   (fills `formalizations`, `status`, `uses_defs` from the tags) and `python3 scripts/check_atlas.py`.
+   A `usage` sentence on a formalization is hand-written and survives the sync.
 6. **Style**: `noncomputable section`, `namespace NLAlib`, Mathlib naming conventions,
    docstrings citing the source label and atlas id, `autoImplicit` is off.

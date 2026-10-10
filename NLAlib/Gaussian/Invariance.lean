@@ -130,7 +130,8 @@ matrix.
 HMT 2011 (Halko–Martinsson–Tropp), §10.1 (rotational invariance of the standard Gaussian
 matrix). Atlas: `rotation-invariance`. The law is the pushforward of
 `gaussianMatrix p m` (a measure on `Fin p → Fin m → ℝ`), so the map is written with
-`Matrix.of.symm`. Ported from the Prove2me workspace, Gaussian Random Matrices series. -/
+`Matrix.of.symm`. Ported from the Prove2me workspace, Gaussian Random Matrices series.
+atlas: rotation-invariance -/
 theorem gaussianMatrix_map_orthogonal {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ)
     (V : Matrix (Fin m) (Fin m) ℝ) (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1) :
     Measure.map (fun G : Fin p → Fin m → ℝ => Matrix.of.symm (U * Matrix.of G * V))
@@ -207,7 +208,8 @@ theorem map_comp_injective_pi {ι κ β : Type*} [Fintype ι] [Fintype κ] [Meas
 
 HMT 2011 (Halko–Martinsson–Tropp), §10.2 (with `G = Ω` and `V₁` the leading right singular
 vectors: `Ω₁ = V₁ᵀ Ω` is standard Gaussian). Atlas: `block-law-indep`. Ported from the Prove2me
-workspace, Gaussian Random Matrices series. -/
+workspace, Gaussian Random Matrices series.
+atlas: block-law-indep -/
 theorem gaussianMatrix_map_block {n k t : ℕ} (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (hV₁ : V₁ᵀ * V₁ = 1) :
     Measure.map (fun G : Fin n → Fin t → ℝ => Matrix.of.symm (V₁ᵀ * Matrix.of G))
@@ -239,7 +241,8 @@ columns and `V₁ᵀ V₂ = 0`, and `G` is an `n × t` standard Gaussian matrix,
 
 HMT 2011 (Halko–Martinsson–Tropp), §10.2 (`Ω₁ = V₁ᵀ Ω` and `Ω₂ = V₂ᵀ Ω` are independent).
 Atlas: `block-law-indep`. Ported from the Prove2me workspace, Gaussian Random Matrices
-series. -/
+series.
+atlas: block-law-indep -/
 theorem gaussianMatrix_indepFun_block {n k r t : ℕ} (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (V₂ : Matrix (Fin n) (Fin r) ℝ) (hV₁ : V₁ᵀ * V₁ = 1) (hV₂ : V₂ᵀ * V₂ = 1)
     (hV₁₂ : V₁ᵀ * V₂ = 0) :

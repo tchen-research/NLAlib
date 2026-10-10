@@ -21,7 +21,8 @@ namespace NLAlib
 
 /-- The operator weak inequality suffices for the exact integrated Edelman
 bound. Source: Gaussian operator differentiation, scalar weighted density,
-and Mellin endpoint rederivations; atlas wishart-lambda-min-tail. -/
+and Mellin endpoint rederivations; atlas wishart-lambda-min-tail.
+atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k)
     (hweak : ∀ ψ : ℝ → ℝ, ContDiff ℝ ∞ ψ → HasCompactSupport ψ →
@@ -47,7 +48,8 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality
 /-- The exact integrated Edelman bound follows from Gaussian operator
 differentiation and the scalar Mellin endpoint. Source: operator hard-edge
 rederivation, with no joint eigenvalue density; atlas wishart-lambda-min-tail.
-The positive threshold hypothesis matches the published statement. -/
+The positive threshold hypothesis matches the published statement.
+atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_operator
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ) (_ht : 0 < t) :
     (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t} ≤

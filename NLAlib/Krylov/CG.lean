@@ -41,13 +41,15 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The conjugate-gradient objective `φ(x) = ½ xᵀ A x − cᵀ x`. Its minimiser over `ℝⁿ` (for
 positive definite `A`) solves `A x = c`. Source: Trefethen–Bau (1997) [`tb97`], eq. (38.6).
-Atlas: `cg-convergence`. -/
+Atlas: `cg-convergence`.
+atlas: cg-convergence -/
 def cgObjective (A : Matrix n n ℝ) (c x : n → ℝ) : ℝ := quadForm A x / 2 - c ⬝ᵥ x
 
 /-- `x` is a `q`-th conjugate-gradient iterate for `A x = c` from `x₀`: `x − x₀` lies in
 `K_q(A, c − A x₀)` and `x` minimises `cgObjective A c` over `x₀ + K_q(A, c − A x₀)`.
 Source: Trefethen–Bau (1997) [`tb97`], Thm 38.2 (variational form). Atlas: `cg-convergence`.
-Deviation: a predicate rather than the output of the Hestenes–Stiefel recurrence. -/
+Deviation: a predicate rather than the output of the Hestenes–Stiefel recurrence.
+atlas: cg-convergence -/
 def IsCGIterate (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
   x - x₀ ∈ krylovSpace A (c - A *ᵥ x₀) q ∧
     ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) q, cgObjective A c x ≤ cgObjective A c (x₀ + y)
@@ -113,7 +115,8 @@ theorem isCGIterate_of_forall_dotProduct_eq_zero {A : Matrix n n ℝ} (hA : A.Is
 is a `q`-th CG iterate. It is the Galerkin solution: the bilinear form `(y, z) ↦ zᵀ A y` on `K_q`
 is nondegenerate, hence `y ↦ (z ↦ zᵀ A y)` is a bijection `K_q → K_q*`.
 Source: Trefethen–Bau (1997) [`tb97`], Thm 38.2 (uniqueness and existence of the minimiser).
-Atlas: `cg-convergence`. -/
+Atlas: `cg-convergence`.
+atlas: cg-convergence -/
 theorem exists_isCGIterate {A : Matrix n n ℝ} (hA : A.PosDef) (c x₀ : n → ℝ) (q : ℕ) :
     ∃ x, IsCGIterate A c x₀ q x := by
   have hH : A.IsHermitian := hA.isHermitian
@@ -181,7 +184,8 @@ private lemma exists_degree_lt_one_sub_eq_X_mul {p : ℝ[X]} {q : ℕ} (hp : p.d
 `p(0) = 1` and `|p(λᵢ)| ≤ M` at every eigenvalue,
 `‖x − x⋆‖_A² ≤ M² ‖x₀ − x⋆‖_A²` (with `‖v‖_A² = quadForm A v`).
 Source: Trefethen–Bau (1997) [`tb97`], Thm 38.3 (and the inequality (38.10)); Saad (2003),
-Thm 6.29. Atlas: `cg-convergence`; uses `polynomial-spectral-bound`, `krylov-subspace`. -/
+Thm 6.29. Atlas: `cg-convergence`; uses `polynomial-spectral-bound`, `krylov-subspace`.
+atlas: cg-convergence -/
 theorem quadForm_sub_le_of_isCGIterate_of_poly {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (hpsd : ∀ i, 0 ≤ hA.eigenvalues i) {c x₀ xs x : n → ℝ} (hxs : A *ᵥ xs = c) {q : ℕ}
     (hx : IsCGIterate A c x₀ q x) {p : ℝ[X]} (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) {M : ℝ}
@@ -217,7 +221,8 @@ theorem quadForm_sub_le_of_isCGIterate_of_poly {A : Matrix n n ℝ} (hA : A.IsHe
 `(√b − √a)/(√b + √a) = (√κ − 1)/(√κ + 1)`.
 Source: Trefethen–Bau (1997) [`tb97`], Thm 38.5; Golub–Meurant (2010) [`gm10`], Ch. 8.
 Atlas: `cg-convergence`; uses `chebyshev-minimax`, `polynomial-spectral-bound`,
-`krylov-subspace`. Deviation: squared `A`-norms (the source states the unsquared form). -/
+`krylov-subspace`. Deviation: squared `A`-norms (the source states the unsquared form).
+atlas: cg-convergence -/
 theorem quadForm_sub_le_of_isCGIterate {A : Matrix n n ℝ} (hA : A.IsHermitian) {a b : ℝ}
     (ha : 0 < a) (hab : a < b) (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a b)
     {c x₀ xs x : n → ℝ} (hxs : A *ᵥ xs = c) {q : ℕ} (hx : IsCGIterate A c x₀ q x) :

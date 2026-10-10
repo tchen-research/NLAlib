@@ -18,7 +18,8 @@ set_option autoImplicit false
 definite `A`, `H`.
 
 Tropp 2015, Prop. 8.4.4. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 8*. -/
+Introduction to Matrix Concentration Inequalities, Ch 8*.
+atlas: operator-monotone-convex -/
 theorem NLAlib.matrixLog_le_matrixLog {d : ℕ} [NeZero d]
     (A H : Matrix (Fin d) (Fin d) ℂ) (hA : A.PosDef) (hH : H.PosDef)
     (hAH : LoewnerLE A H) :

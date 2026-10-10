@@ -173,7 +173,8 @@ avoids choosing a norm on matrices. Proof ported from the Prove2me solution
 against the others (`inv_self_mul_transpose_apply_self`), which given the other rows (full rank
 a.s., atlas `gaussian-full-rank-ae`) is `1/χ²_{k-r+1}` (`pi_gaussianReal_map_sq_dist_rowSpace`,
 atlas `block-law-indep`; `integrable_and_integral_inv_sum_sq_gaussianReal`, atlas
-`inverse-chi-square-moment`). -/
+`inverse-chi-square-moment`).
+atlas: inverse-wishart-mean -/
 theorem integrable_and_integral_inv_self_mul_transpose_gaussianMatrix {r k : ℕ}
     (hrk : r + 2 ≤ k) :
     (∀ i j : Fin r, Integrable (fun G : Fin r → Fin k → ℝ =>
@@ -211,7 +212,8 @@ theorem integrable_and_integral_inv_self_mul_transpose_gaussianMatrix {r k : ℕ
 
 Tropp–Webber 2023, Lemma B.2; HMT 2011, Prop A.5. Atlas: `inverse-wishart-mean`. Corollary of
 `integrable_and_integral_inv_self_mul_transpose_gaussianMatrix` (entrywise integrability is its
-first component). -/
+first component).
+atlas: inverse-wishart-mean -/
 theorem integral_inv_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r + 2 ≤ k) :
     (Matrix.of fun i j : Fin r =>
         ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j ∂(gaussianMatrix r k))
@@ -230,7 +232,8 @@ Tropp–Webber 2023, Lemma B.2; HMT 2011, Prop 10.2 (`E ‖Ω₁†‖_F² = k/(
 `k × (k+p)`). Atlas: `pinv-frob-moment`. Proof ported from the Prove2me solution
 `Sol_GaussianMatrix_pinv_frobenius_moment`: `‖G†‖_F² = tr (G Gᵀ)⁻¹`
 (`frobSq_pinvR_eq_trace_inv`, atlas `pseudoinverse`) and
-`integrable_and_integral_inv_self_mul_transpose_gaussianMatrix` (atlas `inverse-wishart-mean`). -/
+`integrable_and_integral_inv_self_mul_transpose_gaussianMatrix` (atlas `inverse-wishart-mean`).
+atlas: pinv-frob-moment -/
 theorem integrable_and_integral_frobSq_pinvR_gaussianMatrix {r k : ℕ} (hrk : r + 2 ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => frobSq (pinvR (Matrix.of G)))
       (gaussianMatrix r k) ∧

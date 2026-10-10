@@ -45,13 +45,16 @@ variable {m n q : Type*} [Fintype m] [Fintype n] [Fintype q]
 
 /-! ### Definitions -/
 
-/-- `Q` has orthonormal columns: `Qᵀ Q = I`. -/
+/-- `Q` has orthonormal columns: `Qᵀ Q = I`.
+atlas: orthonormal-columns-def -/
 def HasOrthonormalCols [DecidableEq q] (Q : Matrix m q ℝ) : Prop := Qᵀ * Q = 1
 
-/-- Residual of `A` after projecting onto the column space of `Q`: `(I − QQᵀ) A`. -/
+/-- Residual of `A` after projecting onto the column space of `Q`: `(I − QQᵀ) A`.
+atlas: residual-def -/
 def residual (Q : Matrix m q ℝ) (A : Matrix m n ℝ) : Matrix m n ℝ := A - Q * (Qᵀ * A)
 
-/-- `Y` is a best rank-`k` Frobenius approximation of `C`. -/
+/-- `Y` is a best rank-`k` Frobenius approximation of `C`.
+atlas: best-rank-approx-def -/
 def IsBestRankApprox (k : ℕ) (C Y : Matrix m n ℝ) : Prop :=
   Y.rank ≤ k ∧ ∀ Z : Matrix m n ℝ, Z.rank ≤ k → frobSq (C - Y) ≤ frobSq (C - Z)
 
@@ -111,7 +114,8 @@ theorem mul_transpose_mul_add_residual (Q : Matrix m q ℝ) (A : Matrix m n ℝ)
   rw [residual]; abel
 
 omit [Fintype n] in
-/-- The residual is orthogonal to `range Q`: `Qᵀ (I − QQᵀ) A = 0`. Atlas `projection-facts`. -/
+/-- The residual is orthogonal to `range Q`: `Qᵀ (I − QQᵀ) A = 0`. Atlas `projection-facts`.
+atlas: projection-facts -/
 theorem transpose_mul_residual [DecidableEq q] {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q)
     (A : Matrix m n ℝ) : Qᵀ * residual Q A = 0 := by
   unfold residual HasOrthonormalCols at *
@@ -146,7 +150,8 @@ theorem residual_mul (Q : Matrix m q ℝ) (A : Matrix m n ℝ) {p : Type*} [Fint
 
 /-- If `range(AΩ) ⊆ range(Q)`, written `Q (Qᵀ (AΩ)) = AΩ`, then `(I − QQᵀ) A Ω = 0`.
 This is how `Q = orth(AΩ)` enters the range-finder analysis (HMT 2011, proof of Thm 9.1).
-No orthonormality is needed. Atlas `projection-facts`. -/
+No orthonormality is needed. Atlas `projection-facts`.
+atlas: projection-facts -/
 theorem residual_mul_eq_zero_of_range {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {p : Type*}
     [Fintype p] {Ω : Matrix n p ℝ} (h : Q * (Qᵀ * (A * Ω)) = A * Ω) :
     residual Q A * Ω = 0 := by
@@ -155,7 +160,8 @@ theorem residual_mul_eq_zero_of_range {Q : Matrix m q ℝ} {A : Matrix m n ℝ} 
 /-! ### Pythagoras and contraction -/
 
 /-- Pythagoras for the projector: `‖A‖_F² = ‖Q(QᵀA)‖_F² + ‖(I − QQᵀ)A‖_F²`.
-Atlas `projection-facts`. -/
+Atlas `projection-facts`.
+atlas: projection-facts -/
 theorem frobSq_eq_frobSq_proj_add_residual [DecidableEq q] {Q : Matrix m q ℝ}
     (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) :
     frobSq A = frobSq (Q * (Qᵀ * A)) + frobSq (residual Q A) := by
@@ -175,7 +181,8 @@ theorem frobSq_residual_eq_sub [DecidableEq q] {Q : Matrix m q ℝ}
     frobSq (residual Q A) = frobSq A - frobSq (Qᵀ * A) := by
   rw [frobSq_eq_frobSq_transpose_mul_add_residual hQ A]; ring
 
-/-- The residual contracts: `‖(I − QQᵀ)A‖_F² ≤ ‖A‖_F²`. Atlas `projection-facts`. -/
+/-- The residual contracts: `‖(I − QQᵀ)A‖_F² ≤ ‖A‖_F²`. Atlas `projection-facts`.
+atlas: projection-facts -/
 theorem frobSq_residual_le [DecidableEq q] {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q)
     (A : Matrix m n ℝ) : frobSq (residual Q A) ≤ frobSq A := by
   rw [frobSq_eq_frobSq_proj_add_residual hQ A]
@@ -196,7 +203,8 @@ theorem frobSq_proj_le [DecidableEq q] {Q : Matrix m q ℝ} (hQ : HasOrthonormal
 
 /-- Pythagoras in `range Q`: for every `B`,
 `‖A − QB‖_F² = ‖(I − QQᵀ)A‖_F² + ‖QᵀA − B‖_F²` (proof of HMT 2011, Thm 9.1; LRA
-`pythagoras_range`). Atlas `projection-facts`. -/
+`pythagoras_range`). Atlas `projection-facts`.
+atlas: projection-facts -/
 theorem frobSq_sub_mul_eq [DecidableEq q] {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q)
     (A : Matrix m n ℝ) (B : Matrix q n ℝ) :
     frobSq (A - Q * B) = frobSq (residual Q A) + frobSq (Qᵀ * A - B) := by
@@ -217,7 +225,8 @@ theorem frobSq_residual_le_frobSq_sub_mul [DecidableEq q] {Q : Matrix m q ℝ}
 /-- Monotonicity of the residual under range inclusion (HMT 2011, Prop. 8.5, Frobenius case):
 if `range Q₁ ⊆ range Q₂`, written `Q₁ = Q₂ C`, then `‖(I − Q₂Q₂ᵀ)A‖_F² ≤ ‖(I − Q₁Q₁ᵀ)A‖_F²`.
 Deviation: only `Q₂` needs orthonormal columns; `Q₁` is arbitrary (with `residual` defined
-by the formula `A − Q₁Q₁ᵀA`). Atlas `projection-facts`. -/
+by the formula `A − Q₁Q₁ᵀA`). Atlas `projection-facts`.
+atlas: projection-facts -/
 theorem frobSq_residual_le_of_eq_mul [DecidableEq q] {q₁ : Type*} [Fintype q₁]
     {Q₁ : Matrix m q₁ ℝ} {Q₂ : Matrix m q ℝ} (hQ₂ : HasOrthonormalCols Q₂)
     {C : Matrix q q₁ ℝ} (hC : Q₁ = Q₂ * C) (A : Matrix m n ℝ) :
@@ -228,7 +237,8 @@ theorem frobSq_residual_le_of_eq_mul [DecidableEq q] {q₁ : Type*} [Fintype q�
   exact frobSq_residual_le_frobSq_sub_mul hQ₂ A _
 
 /-- `Q ⟦QᵀA⟧ₖ` is a best rank-`k` Frobenius approximation of `A` among matrices `QB` with
-`rank B ≤ k` (HMT 2011, proof of Thm 9.1; LRA `best_in_range`). Atlas `projection-facts`. -/
+`rank B ≤ k` (HMT 2011, proof of Thm 9.1; LRA `best_in_range`). Atlas `projection-facts`.
+atlas: projection-facts -/
 theorem frobSq_sub_mul_le_of_isBestRankApprox [DecidableEq q] {k : ℕ} {Q : Matrix m q ℝ}
     (hQ : HasOrthonormalCols Q) {A : Matrix m n ℝ} {Y : Matrix q n ℝ}
     (hY : IsBestRankApprox k (Qᵀ * A) Y) (B : Matrix q n ℝ) (hB : B.rank ≤ k) :
@@ -306,7 +316,8 @@ theorem card_le_of_transpose_mul_self_eq_one {k : ℕ} {ι : Type*} [Fintype ι]
 /-- **Orthogonal completion.** A real matrix `V` with orthonormal columns indexed by `ι`, placed
 in the columns `e '' ι` of `Fin k`, extends to an orthogonal `k × k` matrix `W`.
 Helper for HMT 2011 §10.2. Ported from the Prove2me workspace (Gaussian Random Matrices
-series). Atlas `orthonormal-completion`. -/
+series). Atlas `orthonormal-completion`.
+atlas: orthonormal-completion -/
 theorem exists_orthogonal_completion {k : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
     (V : Matrix (Fin k) ι ℝ) (hV : Vᵀ * V = 1) (e : ι ↪ Fin k) :
     ∃ W : Matrix (Fin k) (Fin k) ℝ, Wᵀ * W = 1 ∧ ∀ i j, W i (e j) = V i j := by
@@ -338,7 +349,8 @@ theorem exists_orthogonal_completion {k : ℕ} {ι : Type*} [Fintype ι] [Decida
 
 /-- **Orthonormal complement.** A matrix `Q` with orthonormal columns has a complement `Qp` with
 orthonormal columns and `QQᵀ + QpQpᵀ = I` (here `Qp` has `k − q` columns). From
-`exists_orthogonal_completion`. Atlas `orthonormal-completion`. -/
+`exists_orthogonal_completion`. Atlas `orthonormal-completion`.
+atlas: orthonormal-completion -/
 theorem exists_orthonormal_complement {k q : ℕ} (Q : Matrix (Fin k) (Fin q) ℝ)
     (hQ : HasOrthonormalCols Q) :
     ∃ r : ℕ, ∃ Qp : Matrix (Fin k) (Fin r) ℝ,

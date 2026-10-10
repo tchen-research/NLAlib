@@ -100,7 +100,8 @@ private theorem section_growth {f : (ι → ℝ) → ℝ}
 of polynomial growth, with polynomial-growth partial derivatives.
 All moments and integrability needed for Fubini and the derivative identity
 are proved. Source: Vershynin 2018, Lemma 7.2.3;
-atlas `gaussian-integration-by-parts`. -/
+atlas `gaussian-integration-by-parts`.
+atlas: gaussian-integration-by-parts -/
 theorem integral_coord_mul_eq_integral_fderiv_pi_gaussianReal
     (f : (ι → ℝ) → ℝ) (hf : ContDiff ℝ 1 f)
     (C D : ℝ) (d e : ℕ)

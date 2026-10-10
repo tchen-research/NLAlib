@@ -156,7 +156,8 @@ duplication): the `χ²_k` CDF written in the shape of Tropp–Webber 2023, (B.5
 Tropp–Webber 2023, (B.5) in the case `r = 1` (where it is an equality); Edelman 1988.
 Atlas: `wishart-lambda-min-tail` (sanity case). Proof: polar coordinates for the standard
 Gaussian vector and the substitution `y = √x`. Ported from Prove2me solution
-`GaussianMatrix.wishart_lambda_min_cdf_rank_one`. -/
+`GaussianMatrix.wishart_lambda_min_cdf_rank_one`.
+atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_one_sigmaMin_transpose_sq_le_eq {k : ℕ} (hk : 1 ≤ k) (t : ℝ)
     (ht : 0 ≤ t) :
     (gaussianMatrix 1 k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
@@ -244,7 +245,8 @@ Atlas: `wishart-lambda-min-tail`. Proof: Gaussian operator calculus gives a scal
 weak inequality; the scalar weighted-density theorem and quadratic-probe Mellin
 endpoint recover the exact coefficient. No joint Wishart eigenvalue density or
 Vandermonde Jacobian is used. The rank-one case holds with equality. The statement
-is identical to the Prove2me density-bound theorem. -/
+is identical to the Prove2me density-bound theorem.
+atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral {r k : ℕ} (hr : 1 ≤ r)
     (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :
     (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
@@ -323,7 +325,8 @@ i.e. the constant of the density bound (B.5) is at most the constant of (B.6).
 
 Tropp–Webber 2023, (B.6). Atlas: `wishart-lambda-min-tail` (helper). Proof: iterated Gautschi
 inequality (log-convexity of `Γ`, Bohr–Mollerup) and AM–GM (`prod_range_add_le_pow`). Ported
-from Prove2me solution `GaussianMatrix.tw_gamma_ratio_bound`. -/
+from Prove2me solution `GaussianMatrix.tw_gamma_ratio_bound`.
+atlas: wishart-lambda-min-tail -/
 theorem gammaRatio_le {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) :
     2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2)
         / (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))
@@ -389,7 +392,8 @@ Tropp–Webber 2023, (B.7); Chen–Dongarra 2005, Lemma 4.1. Atlas: `wishart-lam
 Proof: the density bound (B.5)
 (`gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral`, proved here), the Gamma-ratio estimate
 (`gammaRatio_le`) and `∫₀ᵗ x^a e^{-x/2} dx ≤ t^{a+1}/(a+1)` (`lintegral_rpow_mul_exp_le`, atlas
-`tail-integral`). Ported from Prove2me solution `GaussianMatrix.wishart_lambda_min_tail`. -/
+`tail-integral`). Ported from Prove2me solution `GaussianMatrix.wishart_lambda_min_tail`.
+atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ)
     (ht : 0 < t) :
     (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}

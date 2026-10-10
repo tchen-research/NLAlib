@@ -22,7 +22,8 @@ namespace NLAlib
 
 /-- The endpoint inverse spectral moment has the sharp arithmetic-progression
 constant. Source: operator rederivations, quadratic-probe and Gamma estimates;
-atlas inverse-wishart-spectral-moment. -/
+atlas inverse-wishart-spectral-moment.
+atlas: inverse-wishart-spectral-moment-real-sharp -/
 theorem integrable_and_integral_half_gap_rpow_specNorm_inv_gaussianMatrix_le
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r < k) :
     Integrable (fun G : Fin r → Fin k → ℝ =>
@@ -66,7 +67,8 @@ theorem integrable_and_integral_half_gap_rpow_specNorm_inv_gaussianMatrix_le
 /-- Every positive real inverse spectral moment up to half the oversampling gap
 is integrable and bounded by the sharp k+r-1 constant. Source: quadratic-probe
 operator proof and positive moment comparison; atlas inverse-wishart-spectral-moment.
-This allows powers below one and removes the source restriction p ≤ 18. -/
+This allows powers below one and removes the source restriction p ≤ 18.
+atlas: inverse-wishart-spectral-moment-real-sharp -/
 theorem integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r < k) {p : ℝ} (hp : 0 < p)
     (hpq : p ≤ ((k : ℝ) - r) / 2) :
@@ -90,7 +92,8 @@ theorem integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp
 
 /-- The rooted inverse spectral moment bound for arbitrary positive real powers.
 Source: quadratic-probe operator proof; atlas inverse-wishart-spectral-moment.
-The rooted quantity is not described as a norm when p is below one. -/
+The rooted quantity is not described as a norm when p is below one.
+atlas: inverse-wishart-spectral-moment-real-sharp -/
 theorem integral_rpow_specNorm_inv_gaussianMatrix_rpow_inv_le_sharp
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r < k) {p : ℝ} (hp : 0 < p)
     (hpq : p ≤ ((k : ℝ) - r) / 2) :
@@ -117,7 +120,8 @@ theorem integral_rpow_specNorm_inv_gaussianMatrix_rpow_inv_le_sharp
 
 /-- The expected pseudoinverse spectral norm has the sharpened k+r-1 constant.
 Source: operator rederivations and the half-power inverse spectral moment;
-atlas pinv-spectral-expectation. This also includes the one-row case. -/
+atlas pinv-spectral-expectation. This also includes the one-row case.
+atlas: pinv-spectral-expectation-sharp -/
 theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_sharp
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r < k) :
     Integrable (fun G : Fin r → Fin k → ℝ => specNorm (pinvR (Matrix.of G)))

@@ -122,7 +122,8 @@ theorem exists_unit_abs_quadForm_eq_specNorm [Nonempty n] {B : Matrix n n ℝ} (
 (`M ≥ 0`), then `‖A‖₂ ≤ M/(1-ε)`. The net points need not be unit vectors. `hM0` is needed:
 for an empty index type `N` may be empty and `M` negative.
 Vershynin 2012, Lem 5.3 (i); Vershynin 2018, Ex 4.4.3; audit G1 C8. Atlas `epsilon-net-norm`
-(deterministic half). -/
+(deterministic half).
+atlas: epsilon-net-norm -/
 theorem specNorm_le_div_of_net (A : Matrix m n ℝ) (N : Finset (n → ℝ)) {ε M : ℝ}
     (hε0 : 0 ≤ ε) (hε1 : ε < 1) (hM0 : 0 ≤ M)
     (hN : ∀ y : n → ℝ, y ⬝ᵥ y = 1 → ∃ x ∈ N, (x - y) ⬝ᵥ (x - y) ≤ ε ^ 2)
@@ -154,7 +155,8 @@ theorem specNorm_le_div_of_net (A : Matrix m n ℝ) (N : Finset (n → ℝ)) {ε
 spheres of `ℝⁿ` and `ℝᵐ`, the points of `N'` being unit vectors, `0 ≤ ε < 1/2`, and `yᵀ A x ≤ M` for all
 `x ∈ N`, `y ∈ N'` (`M ≥ 0`), then `‖A‖₂ ≤ M/(1-2ε)`.
 Vershynin 2012, Lem 5.4 (bilinear form); Vershynin 2018, Ex 4.4.3 (b); audit G1 C8.
-Atlas `epsilon-net-norm` (deterministic half). -/
+Atlas `epsilon-net-norm` (deterministic half).
+atlas: epsilon-net-norm -/
 theorem specNorm_le_div_of_net_bilinear (A : Matrix m n ℝ) (N : Finset (n → ℝ))
     (N' : Finset (m → ℝ)) {ε M : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε < 1 / 2) (hM0 : 0 ≤ M)
     (hN'unit : ∀ y ∈ N', y ⬝ᵥ y = 1)
@@ -208,7 +210,8 @@ theorem specNorm_le_div_of_net_bilinear (A : Matrix m n ℝ) (N : Finset (n → 
 `N` is an `ε`-net of the unit sphere made of unit vectors, `0 ≤ ε < 1/2`, and
 `|xᵀ B x| ≤ M` for every `x ∈ N`, then `‖B‖₂ ≤ M/(1-2ε)`.
 Vershynin 2012, Lem 5.4; Vershynin 2018, Ex 4.4.3 (c); audit G1 C8. Atlas `epsilon-net-norm`
-(deterministic half). -/
+(deterministic half).
+atlas: epsilon-net-norm -/
 theorem specNorm_le_div_of_net_quadForm {B : Matrix n n ℝ} (hB : B.IsSymm)
     (N : Finset (n → ℝ)) {ε M : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε < 1 / 2) (hM0 : 0 ≤ M)
     (hNunit : ∀ x ∈ N, x ⬝ᵥ x = 1)
@@ -289,7 +292,8 @@ private theorem card_le_of_separated {ι : Type*} [Fintype ι] [Nonempty ι]
 empty and `N = ∅`. Proof: a maximal `ε`-separated subset of the sphere is an `ε`-net, and the
 volumetric packing bound caps the size of every separated subset.
 Vershynin 2012, Lem 5.2; Vershynin 2018, Cor 4.2.13; audit G1 A1. Atlas `epsilon-net-norm`
-(covering half). Deviation: index type any `[Fintype ι]` (audit: `Fin n`). -/
+(covering half). Deviation: index type any `[Fintype ι]` (audit: `Fin n`).
+atlas: epsilon-net-norm -/
 theorem exists_finset_sphere_net (ι : Type*) [Fintype ι] {ε : ℝ} (hε : 0 < ε) :
     ∃ N : Finset (ι → ℝ), (∀ x ∈ N, x ⬝ᵥ x = 1) ∧
       (N.card : ℝ) ≤ (1 + 2 / ε) ^ Fintype.card ι ∧
@@ -361,7 +365,8 @@ and every `M ≥ 0`, `‖Ax‖₂ ≤ M` on `N` implies `‖A‖₂ ≤ M/(1-ε)
 Vershynin 2012, Lem 5.2–5.3; Vershynin 2018, Cor 4.2.13 and Ex 4.4.3; audit G1 B1.
 Atlas `epsilon-net-norm`. Deviation: the atlas states `(1-2ε)⁻¹`; the standard (and stronger)
 operator form `(1-ε)⁻¹` is used here, the `(1-2ε)⁻¹` forms being
-`specNorm_le_div_of_net_bilinear` and `specNorm_le_div_of_net_quadForm`. -/
+`specNorm_le_div_of_net_bilinear` and `specNorm_le_div_of_net_quadForm`.
+atlas: epsilon-net-norm -/
 theorem exists_finset_net_specNorm_le (n : Type*) [Fintype n] [DecidableEq n] {ε : ℝ}
     (hε0 : 0 < ε) (hε1 : ε < 1) :
     ∃ N : Finset (n → ℝ), (∀ x ∈ N, x ⬝ᵥ x = 1) ∧
@@ -379,7 +384,8 @@ assumed), then for `t ≥ 0`,
 The inequality is strict: with `≤` the statement fails for `c = 0`.
 Vershynin 2018, Thm 4.4.5 (with explicit constants: 1/4-nets of size `9ⁿ`, `9ᵐ`, the bilinear
 net lemma and a union bound); audit G1 B2. Atlas `subgaussian-spec-norm` (new). No
-measurability hypothesis is needed (outer measure). -/
+measurability hypothesis is needed (outer measure).
+atlas: subgaussian-spec-norm -/
 theorem measure_lt_specNorm_le_of_hasSubgaussianMGF {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] (A : Ω → Matrix m n ℝ) (c : ℝ≥0)

@@ -42,7 +42,8 @@ theorem integrable_gaussianReal_of_polynomial_growth
 
 /-- Stein's identity for differentiable functions whose values and derivatives
 have polynomial growth. All integrability premises are derived from the growth
-bounds. Source: Stein's identity; atlas `gaussian-integration-by-parts`. -/
+bounds. Source: Stein's identity; atlas `gaussian-integration-by-parts`.
+atlas: gaussian-integration-by-parts -/
 theorem integral_mul_eq_integral_deriv_gaussianReal_of_polynomial_growth
     (f : ℝ → ℝ) (hf : Differentiable ℝ f)
     (C D : ℝ) (d e : ℕ)
@@ -72,7 +73,8 @@ theorem integral_mul_eq_integral_deriv_gaussianReal_of_polynomial_growth
 /-- The Gaussian derivative operator is formally adjoint to multiplication
 minus differentiation: `⟨Df,g⟩γ = ⟨f,(M-D)g⟩γ`. All four pairings are genuinely
 integrable. Source: Gaussian operator integration by parts;
-atlas `gaussian-integration-by-parts`. -/
+atlas `gaussian-integration-by-parts`.
+atlas: gaussian-integration-by-parts -/
 theorem integral_deriv_mul_eq_integral_mul_mul_sub_deriv_gaussianReal
     (f g : ℝ → ℝ) (hf : Differentiable ℝ f) (hg : Differentiable ℝ g)
     (hfg : Integrable (fun x => f x * g x) (gaussianReal 0 1))

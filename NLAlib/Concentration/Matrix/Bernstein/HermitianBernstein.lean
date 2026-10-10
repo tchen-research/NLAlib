@@ -153,7 +153,8 @@ matrices with `λmax ≤ L`, `𝔼 λmax(Y) ≤ √(2 v log d) + L log d / 3` an
 bernsteinTail d v L t`.
 
 Tropp 2015, Thm 6.6.1. Atlas: `matrix-bernstein`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 6*. -/
+Introduction to Matrix Concentration Inequalities, Ch 6*.
+atlas: matrix-bernstein -/
 theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 ≤ L)

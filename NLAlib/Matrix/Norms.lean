@@ -44,19 +44,24 @@ variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
 
 /-! ### Definitions -/
 
-/-- Frobenius inner product `⟨A, B⟩_F = ∑ᵢⱼ Aᵢⱼ Bᵢⱼ`. -/
+/-- Frobenius inner product `⟨A, B⟩_F = ∑ᵢⱼ Aᵢⱼ Bᵢⱼ`.
+atlas: matrix-norms-def -/
 def frobInner (A B : Matrix m n ℝ) : ℝ := ∑ i, ∑ j, A i j * B i j
 
-/-- Squared Frobenius norm `‖A‖_F²`. -/
+/-- Squared Frobenius norm `‖A‖_F²`.
+atlas: matrix-norms-def -/
 def frobSq (A : Matrix m n ℝ) : ℝ := frobInner A A
 
-/-- Frobenius norm `‖A‖_F`. -/
+/-- Frobenius norm `‖A‖_F`.
+atlas: matrix-norms-def -/
 def frobNorm (A : Matrix m n ℝ) : ℝ := Real.sqrt (frobSq A)
 
-/-- Spectral norm `‖A‖₂`, the largest singular value: Mathlib's ℓ₂ operator norm. -/
+/-- Spectral norm `‖A‖₂`, the largest singular value: Mathlib's ℓ₂ operator norm.
+atlas: matrix-norms-def -/
 def specNorm [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) : ℝ := ‖A‖
 
-/-- Bridge to Mathlib's ℓ₂ operator norm (`Matrix.Norms.L2Operator`). Atlas `norms-frob-spec`. -/
+/-- Bridge to Mathlib's ℓ₂ operator norm (`Matrix.Norms.L2Operator`). Atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem specNorm_eq_norm [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) :
     specNorm A = ‖A‖ := rfl
 
@@ -136,7 +141,8 @@ theorem frobInner_transpose (A B : Matrix m n ℝ) : frobInner Aᵀ Bᵀ = frobI
 
 /-! ### Squared Frobenius norm and Frobenius norm -/
 
-/-- `‖A‖_F² = ∑ᵢⱼ Aᵢⱼ²`. Atlas `norms-frob-spec`. -/
+/-- `‖A‖_F² = ∑ᵢⱼ Aᵢⱼ²`. Atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem frobSq_eq_sum_sq (A : Matrix m n ℝ) : frobSq A = ∑ i, ∑ j, A i j ^ 2 := by
   unfold frobSq frobInner; simp_rw [sq]
 
@@ -258,7 +264,8 @@ theorem mulVec_dotProduct_mulVec_self (A : Matrix m n ℝ) (x : n → ℝ) :
 /-! ### Cauchy–Schwarz and the triangle inequality -/
 
 /-- Cauchy–Schwarz for the Frobenius inner product: `⟨A, B⟩_F ≤ ‖A‖_F ‖B‖_F`.
-Standard; atlas `norms-frob-spec`. -/
+Standard; atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem frobInner_le_frobNorm_mul_frobNorm (A B : Matrix m n ℝ) :
     frobInner A B ≤ frobNorm A * frobNorm B := by
   -- Discriminant argument: `0 ≤ ‖tA - B‖_F²` for `t = ⟨A, B⟩_F / ‖A‖_F²`.
@@ -327,7 +334,8 @@ theorem frobInner_mul_left_of_orthonormal [DecidableEq p] {Q : Matrix m p ℝ}
     frobInner (Q * X) (Q * Y) = frobInner X Y := by
   rw [frobInner_mul_mul, hQ, Matrix.one_mul]
 
-/-- Unitary invariance, left: `‖Q X‖_F² = ‖X‖_F²` when `QᵀQ = I`. Atlas `norms-frob-spec`. -/
+/-- Unitary invariance, left: `‖Q X‖_F² = ‖X‖_F²` when `QᵀQ = I`. Atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem frobSq_mul_left_of_orthonormal [DecidableEq p] {Q : Matrix m p ℝ}
     (hQ : Qᵀ * Q = 1) (X : Matrix p n ℝ) : frobSq (Q * X) = frobSq X :=
   frobInner_mul_left_of_orthonormal hQ X X
@@ -349,7 +357,8 @@ theorem specNorm_transpose (A : Matrix m n ℝ) : specNorm Aᵀ = specNorm A := 
   unfold specNorm
   rw [← Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.l2_opNorm_conjTranspose]
 
-/-- Submultiplicativity `‖AB‖₂ ≤ ‖A‖₂ ‖B‖₂`. Standard; atlas `norms-frob-spec`. -/
+/-- Submultiplicativity `‖AB‖₂ ≤ ‖A‖₂ ‖B‖₂`. Standard; atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem specNorm_mul_le [DecidableEq p] (A : Matrix m n ℝ) (B : Matrix n p ℝ) :
     specNorm (A * B) ≤ specNorm A * specNorm B :=
   Matrix.l2_opNorm_mul A B
@@ -364,7 +373,8 @@ theorem sum_sq_mulVec_le_specNorm_sq (A : Matrix m n ℝ) (x : n → ℝ) :
   simpa [specNorm] using h2
 
 /-- Mixed inequality `‖AB‖_F² ≤ ‖A‖₂² ‖B‖_F²` (apply the operator bound to each column of `B`).
-Standard (e.g. Golub–Van Loan, 4th ed., §2.3); atlas `norms-frob-spec`. -/
+Standard (e.g. Golub–Van Loan, 4th ed., §2.3); atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem frobSq_mul_le_specNorm_sq_mul_frobSq (A : Matrix m n ℝ) (B : Matrix n p ℝ) :
     frobSq (A * B) ≤ specNorm A ^ 2 * frobSq B := by
   rw [frobSq_eq_sum_sq, frobSq_eq_sum_sq, Finset.sum_comm,
@@ -375,7 +385,8 @@ theorem frobSq_mul_le_specNorm_sq_mul_frobSq (A : Matrix m n ℝ) (B : Matrix n 
 
 omit [DecidableEq m] in
 /-- Mixed inequality `‖AB‖_F² ≤ ‖A‖_F² ‖B‖₂²` (transpose of the previous one).
-Standard (e.g. Golub–Van Loan, 4th ed., §2.3); atlas `norms-frob-spec`. -/
+Standard (e.g. Golub–Van Loan, 4th ed., §2.3); atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem frobSq_mul_le_frobSq_mul_specNorm_sq [DecidableEq p] (A : Matrix m n ℝ)
     (B : Matrix n p ℝ) :
     frobSq (A * B) ≤ frobSq A * specNorm B ^ 2 := by
@@ -444,7 +455,8 @@ theorem sum_sq_mulVec_le_frobSq (A : Matrix m n ℝ) (x : n → ℝ) :
   refine Finset.sum_le_sum fun i _ => ?_
   simpa [Matrix.mulVec, dotProduct] using Finset.sum_mul_sq_le_sq_mul_sq Finset.univ (A i) x
 
-/-- `‖A‖₂ ≤ ‖A‖_F`. Standard (Golub–Van Loan, 4th ed., eq. (2.3.7)); atlas `norms-frob-spec`. -/
+/-- `‖A‖₂ ≤ ‖A‖_F`. Standard (Golub–Van Loan, 4th ed., eq. (2.3.7)); atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem specNorm_le_frobNorm (A : Matrix m n ℝ) : specNorm A ≤ frobNorm A := by
   unfold specNorm
   rw [Matrix.l2_opNorm_def]
@@ -494,7 +506,8 @@ theorem abs_dotProduct_mulVec_le_specNorm (M : Matrix n n ℝ) (x : n → ℝ) :
     _ = ‖M‖ * (x ⬝ᵥ x) := by rw [← hx]; ring
 
 /-- Triangle inequality for the spectral norm: `‖A + B‖₂ ≤ ‖A‖₂ + ‖B‖₂`. Standard
-(Golub–Van Loan, 4th ed., §2.3); audit G0 C1; atlas `norms-frob-spec`. -/
+(Golub–Van Loan, 4th ed., §2.3); audit G0 C1; atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem specNorm_add_le (A B : Matrix m n ℝ) : specNorm (A + B) ≤ specNorm A + specNorm B :=
   norm_add_le A B
 
@@ -511,7 +524,8 @@ theorem specNorm_sub_le (A B : Matrix m n ℝ) : specNorm (A - B) ≤ specNorm A
 
 /-- `‖AAᵀ‖₂ = ‖A‖₂²`, written for the row Gram matrix (the column form `‖AᵀA‖₂ = ‖A‖₂²` is
 `specNorm_sq_eq_specNorm_transpose_mul_self` in `NLAlib.Matrix.SpectralBounds`). Standard
-(the C*-identity); atlas `norms-frob-spec`. -/
+(the C*-identity); atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem specNorm_mul_transpose_self (A : Matrix m n ℝ) :
     specNorm (A * Aᵀ) = specNorm A ^ 2 := by
   have h := Matrix.l2_opNorm_conjTranspose_mul_self Aᵀ
@@ -520,7 +534,8 @@ theorem specNorm_mul_transpose_self (A : Matrix m n ℝ) :
 
 /-- An orthogonal projector (symmetric idempotent `P`) has spectral norm at most `1`
 (it is `0` or `1`). Proof: `‖P‖₂ = ‖PᵀP‖₂ = ‖P‖₂²`. Standard (Golub–Van Loan, 4th ed., §2.5.1);
-audit G0 C1; atlas `norms-frob-spec`, `projection-facts`. -/
+audit G0 C1; atlas `norms-frob-spec`, `projection-facts`.
+atlas: projection-facts -/
 theorem specNorm_le_one_of_isSymm_of_isIdempotentElem {P : Matrix n n ℝ} (hs : P.IsSymm)
     (hp : IsIdempotentElem P) : specNorm P ≤ 1 := by
   have h := Matrix.l2_opNorm_conjTranspose_mul_self P
@@ -534,7 +549,8 @@ theorem specNorm_le_one_of_isSymm_of_isIdempotentElem {P : Matrix n n ℝ} (hs :
 /-- The residual `A − Q(QᵀA) = (I − QQᵀ)A` (`NLAlib.residual Q A`, which unfolds to this
 expression) has spectral norm at most `‖A‖₂` when `QᵀQ = I` (`NLAlib.HasOrthonormalCols Q`
 unfolded). Stated without `residual` because `NLAlib.Matrix.Projections` imports this file.
-Standard (HMT 2011, §8.4); audit G0 C1 (`specNorm_residual_le`); atlas `projection-facts`. -/
+Standard (HMT 2011, §8.4); audit G0 C1 (`specNorm_residual_le`); atlas `projection-facts`.
+atlas: norms-frob-spec -/
 theorem specNorm_sub_mul_transpose_mul_le [DecidableEq p] {Q : Matrix m p ℝ} (hQ : Qᵀ * Q = 1)
     (A : Matrix m n ℝ) : specNorm (A - Q * (Qᵀ * A)) ≤ specNorm A := by
   set P : Matrix m m ℝ := 1 - Q * Qᵀ with hP
@@ -558,7 +574,8 @@ theorem specNorm_sub_mul_transpose_mul_le [DecidableEq p] {Q : Matrix m p ℝ} (
 
 /-- Block bound for row-orthogonal summands: if `XYᵀ = 0` then
 `‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²`, because `(X + Y)(X + Y)ᵀ = XXᵀ + YYᵀ`. Standard (used in HMT 2011,
-proof of Thm 9.1); audit G0 C1; atlas `norms-frob-spec`. -/
+proof of Thm 9.1); audit G0 C1; atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
 theorem specNorm_add_sq_le_of_mul_transpose_eq_zero {X Y : Matrix m n ℝ} (h : X * Yᵀ = 0) :
     specNorm (X + Y) ^ 2 ≤ specNorm X ^ 2 + specNorm Y ^ 2 := by
   have h' : Y * Xᵀ = 0 := by

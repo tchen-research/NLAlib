@@ -31,7 +31,8 @@ namespace NLAlib
 /-- Closed form of `T_q` on `[1, ∞)`: for `1 ≤ x`,
 `T_q(x) = ((x + √(x² − 1))^q + (x − √(x² − 1))^q)/2`.
 Source: Rivlin, *Chebyshev Polynomials* (1990), Eq. (1.49); Musco–Musco (2015) [`mm15`], proof
-of Lem. 4. Atlas: `chebyshev-growth`. -/
+of Lem. 4. Atlas: `chebyshev-growth`.
+atlas: chebyshev-growth -/
 theorem eval_T_real_eq_of_one_le {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :
     (T ℝ q).eval x = ((x + √(x ^ 2 - 1)) ^ q + (x - √(x ^ 2 - 1)) ^ q) / 2 := by
   have hs : 0 < x + √(x ^ 2 - 1) := by positivity
@@ -43,7 +44,8 @@ theorem eval_T_real_eq_of_one_le {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :
 /-- Lower bound on the growth of `T_q` on `[1, ∞)`: for `1 ≤ x`,
 `(x + √(x² − 1))^q / 2 ≤ T_q(x)`.
 Source: Musco–Musco (2015) [`mm15`], proof of Lem. 4; Rivlin (1990), §1.5. Atlas:
-`chebyshev-growth`. -/
+`chebyshev-growth`.
+atlas: chebyshev-growth -/
 theorem pow_div_two_le_eval_T_real {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :
     (x + √(x ^ 2 - 1)) ^ q / 2 ≤ (T ℝ q).eval x := by
   rw [eval_T_real_eq_of_one_le hx]
@@ -53,7 +55,8 @@ theorem pow_div_two_le_eval_T_real {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :
   linarith
 
 /-- Upper bound on the growth of `T_q` on `[1, ∞)`: for `1 ≤ x`, `T_q(x) ≤ (x + √(x² − 1))^q`.
-Source: Rivlin (1990), §1.5. Atlas: `chebyshev-growth`. -/
+Source: Rivlin (1990), §1.5. Atlas: `chebyshev-growth`.
+atlas: chebyshev-growth -/
 theorem eval_T_real_le_pow {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :
     (T ℝ q).eval x ≤ (x + √(x ^ 2 - 1)) ^ q := by
   rw [eval_T_real_eq_of_one_le hx]
@@ -66,7 +69,8 @@ theorem eval_T_real_le_pow {x : ℝ} (hx : 1 ≤ x) (q : ℕ) :
   linarith
 
 /-- `T_q` is monotone on `[1, ∞)`.
-Source: Rivlin (1990), §1.5 (from `T_q(cosh θ) = cosh(qθ)`). Atlas: `chebyshev-growth`. -/
+Source: Rivlin (1990), §1.5 (from `T_q(cosh θ) = cosh(qθ)`). Atlas: `chebyshev-growth`.
+atlas: chebyshev-growth -/
 theorem monotoneOn_eval_T_real (q : ℕ) :
     MonotoneOn (fun x => (T ℝ q).eval x) (Set.Ici 1) := by
   intro x hx y hy hxy
@@ -80,7 +84,8 @@ theorem monotoneOn_eval_T_real (q : ℕ) :
     (abs_nonneg _)
 
 /-- Gap form of the Chebyshev growth bound: for `0 ≤ γ`, `(1 + √(2γ))^q / 2 ≤ T_q(1 + γ)`.
-Source: Musco–Musco (2015) [`mm15`], proof of Lem. 4. Atlas: `chebyshev-growth`. -/
+Source: Musco–Musco (2015) [`mm15`], proof of Lem. 4. Atlas: `chebyshev-growth`.
+atlas: chebyshev-growth -/
 theorem one_add_sqrt_two_mul_pow_div_two_le_eval_T_real {γ : ℝ} (hγ : 0 ≤ γ) (q : ℕ) :
     (1 + √(2 * γ)) ^ q / 2 ≤ (T ℝ q).eval (1 + γ) := by
   refine le_trans ?_ (pow_div_two_le_eval_T_real (by linarith) q)
@@ -92,7 +97,8 @@ theorem one_add_sqrt_two_mul_pow_div_two_le_eval_T_real {γ : ℝ} (hγ : 0 ≤ 
 /-- The identity behind the condition-number form of the Chebyshev growth bound: for
 `0 < a < b`, `(b + a)/(b − a) + √(((b + a)/(b − a))² − 1) = (√b + √a)/(√b − √a)`.
 Source: Golub–Meurant (2010) [`gm10`], Ch. 8; Saad, *Iterative Methods for Sparse Linear
-Systems* (2003), §6.11.3. Atlas: `chebyshev-growth`. -/
+Systems* (2003), §6.11.3. Atlas: `chebyshev-growth`.
+atlas: chebyshev-growth -/
 theorem add_div_sub_add_sqrt_sq_sub_one_eq {a b : ℝ} (ha : 0 < a) (hab : a < b) :
     (b + a) / (b - a) + √(((b + a) / (b - a)) ^ 2 - 1) = (√b + √a) / (√b - √a) := by
   have key : ∀ s t : ℝ, 0 < s → s < t →
@@ -112,7 +118,8 @@ theorem add_div_sub_add_sqrt_sq_sub_one_eq {a b : ℝ} (ha : 0 < a) (hab : a < b
 
 /-- Condition-number form of the Chebyshev growth bound: for `0 < a < b`,
 `((√b + √a)/(√b − √a))^q / 2 ≤ T_q((b + a)/(b − a))`.
-Source: Golub–Meurant (2010) [`gm10`], Ch. 8; Saad (2003), §6.11.3. Atlas: `chebyshev-growth`. -/
+Source: Golub–Meurant (2010) [`gm10`], Ch. 8; Saad (2003), §6.11.3. Atlas: `chebyshev-growth`.
+atlas: chebyshev-growth -/
 theorem sqrt_add_div_sqrt_sub_pow_div_two_le_eval_T_real {a b : ℝ} (ha : 0 < a) (hab : a < b)
     (q : ℕ) :
     ((√b + √a) / (√b - √a)) ^ q / 2 ≤ (T ℝ q).eval ((b + a) / (b - a)) := by
@@ -123,7 +130,8 @@ theorem sqrt_add_div_sqrt_sub_pow_div_two_le_eval_T_real {a b : ℝ} (ha : 0 < a
 
 /-- The derivative of `T_q` at `1` is `q²`.
 Source: Rivlin (1990), §1.5; Mathlib `T_derivative_eq_U` and `U_eval_one`. Atlas:
-`chebyshev-second-kind`. -/
+`chebyshev-second-kind`.
+atlas: chebyshev-second-kind -/
 theorem eval_derivative_T_real_one (q : ℕ) : (derivative (T ℝ q)).eval 1 = (q : ℝ) ^ 2 := by
   rw [T_derivative_eq_U, eval_mul, U_eval_one]
   simp; ring
@@ -131,7 +139,8 @@ theorem eval_derivative_T_real_one (q : ℕ) : (derivative (T ℝ q)).eval 1 = (
 /-- The Chebyshev polynomial of the second kind is bounded by `q + 1` on `[-1, 1]`:
 `|x| ≤ 1 → |U_q(x)| ≤ q + 1`.
 Source: Rivlin (1990), §1.5. Atlas: `chebyshev-second-kind`. Proof: `T_{q+1}' = (q + 1) U_q`
-and Mathlib's `abs_iterate_derivative_T_real_le` with one derivative. -/
+and Mathlib's `abs_iterate_derivative_T_real_le` with one derivative.
+atlas: chebyshev-second-kind -/
 theorem abs_eval_U_real_le {x : ℝ} (hx : |x| ≤ 1) (q : ℕ) :
     |(U ℝ q).eval x| ≤ q + 1 := by
   have h := abs_iterate_derivative_T_real_le ((q : ℤ) + 1) 1 hx
@@ -145,7 +154,8 @@ theorem abs_eval_U_real_le {x : ℝ} (hx : |x| ≤ 1) (q : ℕ) :
 
 /-- The derivative of `T_q` is bounded by `q²` on `[-1, 1]`: `|x| ≤ 1 → |T_q'(x)| ≤ q²`.
 Source: Rivlin (1990), §1.5 (the case `p = T_q` of Markov's inequality). Atlas:
-`chebyshev-second-kind`. -/
+`chebyshev-second-kind`.
+atlas: chebyshev-second-kind -/
 theorem abs_eval_derivative_T_real_le {x : ℝ} (hx : |x| ≤ 1) (q : ℕ) :
     |(derivative (T ℝ q)).eval x| ≤ (q : ℝ) ^ 2 := by
   have h := abs_iterate_derivative_T_real_le (q : ℤ) 1 hx

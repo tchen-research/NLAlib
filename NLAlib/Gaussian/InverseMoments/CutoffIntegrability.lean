@@ -20,7 +20,8 @@ namespace NLAlib
 
 /-- A cut off unshifted Gram coordinate vector field is Gaussian integrable.
 Source: bounded tests and the global gradient energy bound;
-atlas wishart-lambda-min-tail (unshifted Stein helper). -/
+atlas wishart-lambda-min-tail (unshifted Stein helper).
+atlas: gram-cutoff-vector-field -/
 theorem integrable_test_mul_unshiftedGramGradient_single_gaussianMatrix
     {r k : ℕ} (hr : 0 < r) (n : ℕ) (hn : 0 < n)
     (ψ : ℝ → ℝ) (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
@@ -59,7 +60,8 @@ theorem integrable_test_mul_unshiftedGramGradient_single_gaussianMatrix
 
 /-- The coordinate times a cut off unshifted Gram vector field is Gaussian
 integrable, as required by scalar Stein. Source: finite Frobenius coordinate
-bounds and Gaussian polynomial moments; atlas wishart-lambda-min-tail (helper). -/
+bounds and Gaussian polynomial moments; atlas wishart-lambda-min-tail (helper).
+atlas: gram-cutoff-vector-field -/
 theorem integrable_coordinate_mul_test_mul_unshiftedGramGradient_single_gaussianMatrix
     {r k : ℕ} (hr : 0 < r) (n : ℕ) (hn : 0 < n)
     (ψ : ℝ → ℝ) (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)

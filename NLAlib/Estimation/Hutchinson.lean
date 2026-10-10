@@ -112,7 +112,8 @@ square-integrable, pairwise independent, centred and have unit second moment, th
 Source: Hutchinson (1989) [`hutch89`]; Avron–Toledo (2011) [`at11`].
 Atlas: `hutchinson-unbiased`.
 Deviation: stated for any isotropic vector with pairwise independent coordinates (only
-`𝔼[z_i z_j] = δ_ij` is used); the source states it for Rademacher `z`. -/
+`𝔼[z_i z_j] = δ_ij` is used); the source states it for Rademacher `z`.
+atlas: hutchinson-unbiased -/
 theorem integral_quadForm_eq_trace [IsProbabilityMeasure μ] (A : Matrix n n ℝ)
     {z : Ω → n → ℝ} (hz : ∀ i, MemLp (fun ω => z ω i) 2 μ)
     (hind : ∀ i j, i ≠ j → IndepFun (fun ω => z ω i) (fun ω => z ω j) μ)
@@ -291,7 +292,8 @@ independent, centred, of unit variance and common fourth moment `m₄ = 𝔼[z_i
 Source: Hutchinson (1989) [`hutch89`] (Rademacher case); Avron–Toledo (2011) [`at11`],
 Lem 5 (Gaussian), Lem 6 (Rademacher). Atlas: `hutchinson-variance`.
 Deviation: no symmetry of `A` assumed; general fourth moment `m₄` (`m₄ = 1` Rademacher,
-`m₄ = 3` Gaussian). -/
+`m₄ = 3` Gaussian).
+atlas: hutchinson-variance -/
 theorem variance_quadForm [DecidableEq n] (A : Matrix n n ℝ) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
@@ -324,7 +326,8 @@ theorem variance_quadForm [DecidableEq n] (A : Matrix n n ℝ) {z : Ω → n →
 /-- **Variance of Hutchinson's estimator, symmetric `A`.**
 `Var[zᵀ A z] = 2‖A‖_F² + (m₄ − 3) ∑ᵢ A_ii² = 2(‖A‖_F² − ∑ᵢ A_ii²) + (m₄ − 1) ∑ᵢ A_ii²`.
 Source: Avron–Toledo (2011) [`at11`], Lem 5, 6; Hutchinson (1989) [`hutch89`].
-Atlas: `hutchinson-variance`. -/
+Atlas: `hutchinson-variance`.
+atlas: hutchinson-variance -/
 theorem variance_quadForm_of_isSymm [DecidableEq n] {A : Matrix n n ℝ} (hA : A.IsSymm)
     {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
@@ -345,7 +348,8 @@ theorem variance_quadForm_of_isSymm [DecidableEq n] {A : Matrix n n ℝ} (hA : A
 /-- Hutchinson variance for symmetric `A` and Gaussian-like coordinates (`m₄ = 3`):
 `Var[zᵀ A z] = 2‖A‖_F²`. Source: Avron–Toledo (2011) [`at11`], Lem 5.
 Deviation: only `m₄ = 3` is assumed of the coordinates, not Gaussianity.
-Atlas: `hutchinson-variance`. -/
+Atlas: `hutchinson-variance`.
+atlas: hutchinson-variance -/
 theorem variance_quadForm_of_isSymm_of_fourth_moment_eq_three [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.IsSymm) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
@@ -361,7 +365,8 @@ theorem variance_quadForm_of_isSymm_of_fourth_moment_eq_three [DecidableEq n]
 `Var[zᵀ A z] = 2(‖A‖_F² − ∑ᵢ A_ii²)`. Source: Hutchinson (1989) [`hutch89`];
 Avron–Toledo (2011) [`at11`], Lem 6.
 Deviation: only `m₄ = 1` is assumed of the coordinates, not the Rademacher law.
-Atlas: `hutchinson-variance`. -/
+Atlas: `hutchinson-variance`.
+atlas: hutchinson-variance -/
 theorem variance_quadForm_of_isSymm_of_fourth_moment_eq_one [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.IsSymm) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)

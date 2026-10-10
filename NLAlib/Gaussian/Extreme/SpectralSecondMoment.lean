@@ -623,7 +623,8 @@ private theorem ssb_scaled_bound {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ
 standard Gaussian matrix `Γ`, `𝔼 ‖S Γ T‖₂² ≤ (‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂)²`. Source: Tropp–Webber
 2023, Lemma B.1 (via Gordon's comparison); the first-moment version is Chevet's inequality (HMT
 2011, Prop. A.2). Atlas: `spectral-second-moment`. Ported from Prove2me solution
-`GaussianMatrix.spectral_second_moment_bound`. -/
+`GaussianMatrix.spectral_second_moment_bound`.
+atlas: spectral-second-moment -/
 theorem integral_specNorm_sq_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
     (T : Matrix (Fin m) (Fin n) ℝ) :
     ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)
@@ -663,7 +664,8 @@ and a `p × m` standard Gaussian matrix `Γ`, `‖S Γ T‖₂²` is integrable 
 `𝔼 ‖S Γ T‖₂² ≤ (‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂)²`, i.e.
 `(𝔼 ‖S Γ T‖₂²)^{1/2} ≤ ‖S‖₂ ‖T‖_F + ‖S‖_F ‖T‖₂`. Source: Tropp–Webber 2023, Lemma B.1.
 Atlas: `spectral-second-moment`. Ported from Prove2me solution
-`GaussianMatrix.spectral_second_moment`. -/
+`GaussianMatrix.spectral_second_moment`.
+atlas: spectral-second-moment -/
 theorem integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le {a p m n : ℕ}
     (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ) :
     Integrable (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T) ^ 2)

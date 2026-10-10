@@ -138,7 +138,8 @@ theorem gaussianMatrix_ae_rank_mul_eq_min {m n t : ℕ} (A : Matrix (Fin m) (Fin
 
 /-- The Gaussian sketch rank identity transported to an arbitrary probability space
 through the actual array law. No rank or moment certificate is assumed.
-HMT 2011, Proposition A.5; atlas `gn-expected-error`. -/
+HMT 2011, Proposition A.5; atlas `gn-expected-error`.
+atlas: gn-expected-error -/
 theorem ae_rank_mul_gaussian_eq_min {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     {m n t : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (G : Ω → Fin n → Fin t → ℝ)
     (hG : μ.map G = gaussianMatrix n t) :
@@ -249,7 +250,8 @@ theorem exists_measurable_gaussian_range_frame {m n : ℕ}
 /-- A fixed choice of the constructed measurable Gaussian range frame. It is an
 orthonormal exact-range frame almost surely and has `min(rank A,t)` columns.
 No claim of joint measurability as the fixed input matrix `A` varies is needed.
-HMT 2011, §10.2; atlas `rsvd-expected-error`, `gn-expected-error`. -/
+HMT 2011, §10.2; atlas `rsvd-expected-error`, `gn-expected-error`.
+atlas: gn-expected-error -/
 def gaussianRangeFrame {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (t : ℕ) :
     (Fin n → Fin t → ℝ) → Matrix (Fin m) (Fin (min A.rank t)) ℝ :=
   (exists_measurable_gaussian_range_frame A t).choose

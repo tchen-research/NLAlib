@@ -30,6 +30,9 @@ Lean v4.33.1, Mathlib pinned in lake-manifest.json. Namespace `NLAlib`.
 
 ## Contributing a result
 See CONTRIBUTING.md in the repo: one result per PR, definitions in Basic.lean, docstring with
-source label and atlas id, update atlas.json (status, formalizations, depends_on, aliases,
-hypotheses, conclusion, uses_defs), run lake build, scripts/Audit.lean, scripts/ExtractDecls.lean,
-scripts/check_layers.py, scripts/check_atlas.py.
+source label ending in the tag line `atlas: <id>` (that tag is what links a declaration to the
+atlas), hand-written atlas.json fields for a new result (title, informal, hypotheses, conclusion,
+sources, depends_on, aliases), then lake build, scripts/Audit.lean, scripts/ExtractDecls.lean,
+scripts/sync_atlas.py (fills formalizations, status, uses_defs from the tags),
+scripts/check_layers.py, scripts/check_atlas.py. Statements already in Mathlib are not atlas
+results; cite them under mathlib_prereqs.

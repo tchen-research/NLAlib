@@ -85,7 +85,8 @@ theorem hasDerivAt_gaussianPDFReal_zero (v : NNReal) (hv : v ≠ 0) (x : ℝ) :
 differentiable with `|h'| ≤ C`, `∫ x h(x) dγ(x) = ∫ h'(x) dγ(x)` with `γ = N(0,1)`.
 Source: Stein 1981, Lemma 1; Vershynin 2018, Lemma 7.2.3 (one-dimensional case). Atlas:
 `gaussian-integration-by-parts`. Ported from Prove2me solution
-`GaussianMatrix.gaussian_ibp_one_dim`. -/
+`GaussianMatrix.gaussian_ibp_one_dim`.
+atlas: gaussian-integration-by-parts -/
 theorem integral_mul_eq_integral_deriv_gaussianReal (h : ℝ → ℝ) (hh : Differentiable ℝ h)
     (C : ℝ) (hdh : ∀ x, |deriv h x| ≤ C) :
     ∫ x, x * h x ∂(gaussianReal 0 1) = ∫ x, deriv h x ∂(gaussianReal 0 1) := by
@@ -215,7 +216,8 @@ derivatives `G' j = ∂ⱼG`,
 Source: Vershynin 2018, Lemma 7.2.3; Talagrand, *Mean Field Models for Spin Glasses*, Lemma
 1.3.1. Proof: regress `V` on `U` (`V = c U + W` with `W ⫫ U`), apply the one-dimensional
 identity in `U` and integrate over `W`. Atlas: `gaussian-integration-by-parts`. Ported from
-Prove2me solution `GaussianMatrix.gaussian_integration_by_parts`. -/
+Prove2me solution `GaussianMatrix.gaussian_integration_by_parts`.
+atlas: gaussian-integration-by-parts -/
 theorem integral_mul_eq_sum_covariance_mul_integral {ι Ω : Type*} [Fintype ι]
     [MeasurableSpace Ω] {P : Measure Ω} (U : Ω → ℝ) (V : ι → Ω → ℝ)
     (hUV : HasGaussianLaw (fun ω => (U ω, fun j => V j ω)) P) (hU0 : ∫ ω, U ω ∂P = 0)

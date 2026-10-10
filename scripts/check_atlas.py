@@ -78,4 +78,9 @@ else:
     print("note: .lake/sorries.txt not found (run the audit) — skipping sorry cross-check")
 if errors:
     print("Atlas problems:\n  " + "\n  ".join(errors)); sys.exit(1)
-print(f"atlas OK: {len(atlas['results'])} results, {len(decls)} declarations scanned")
+# the Lean side of every result must agree with the `atlas:` tags in the sources
+import subprocess
+sync = subprocess.run([sys.executable, str(ROOT / "scripts/sync_atlas.py"), "--check"], capture_output=True, text=True)
+if sync.returncode != 0:
+    print(sync.stdout.strip()); sys.exit(1)
+print(f"atlas OK: {len(atlas['results'])} results, {len(decls)} declarations scanned; {sync.stdout.strip()}")

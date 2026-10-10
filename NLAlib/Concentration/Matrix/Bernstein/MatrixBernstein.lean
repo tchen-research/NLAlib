@@ -80,7 +80,8 @@ n` matrices with `‖S k‖ ≤ L`, `𝔼 ‖Z‖ ≤ √(2 v log (m + n)) + L l
 bernsteinTail (m + n) v L t`.
 
 Tropp 2015, Thm 6.1.1. Atlas: `matrix-bernstein`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 6*. -/
+Introduction to Matrix Concentration Inequalities, Ch 6*.
+atlas: matrix-bernstein -/
 theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
     (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) (L : ℝ) (hL : 0 ≤ L)

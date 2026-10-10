@@ -171,6 +171,7 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
 .sorrytag { color: var(--st-stated); font-weight: 700; }
 .alias { display: inline-block; font-size: 0.8rem; color: var(--muted); background: var(--accent-soft); border-radius: 4px; padding: 1px 6px; margin: 2px 4px 0 0; }
 .hyp { margin: 2px 0; }
+ul.forms { list-style: none; padding-left: 0; } ul.forms > li { margin-bottom: 8px; }
 .usage { font-size: 0.86rem; color: var(--fg); background: var(--accent-soft); border-radius: 6px; padding: 4px 8px; margin-top: 4px; }
 .foot { margin-top: 40px; color: var(--muted); font-size: 0.85rem; max-width: 80ch; }
 kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--line-strong); border-radius: 3px; padding: 0 4px; }
@@ -247,6 +248,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
 
 <script type="application/json" id="atlas-data">/*ATLAS_JSON*/</script>
 <script type="application/json" id="decls-data">/*DECLS_JSON*/</script>
+<script type="application/json" id="external-data">/*EXTERNAL_JSON*/</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js"></script>
@@ -254,9 +256,13 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
 (function () {
   const A = JSON.parse(document.getElementById('atlas-data').textContent);
   let DECLS = []; try { DECLS = JSON.parse(document.getElementById('decls-data').textContent); } catch (e) { DECLS = []; }
-  const declByName = Object.fromEntries(DECLS.map(x => [x.name, x]));
+  let EXTERNAL = []; try { EXTERNAL = JSON.parse(document.getElementById('external-data').textContent); } catch (e) { EXTERNAL = []; }
+  // NLAlib declarations and the external (Mathlib, …) declarations the atlas cites, by name
+  const declByName = Object.fromEntries(DECLS.concat(EXTERNAL).map(x => [x.name, x]));
   const REPO = 'https://github.com/tchen-research/NLAlib/blob/main/';
-  const srcLink = x => x.module ? REPO + x.module.replace(/\./g, '/') + '.lean#L' + (x.line || 1) : null;
+  const srcLink = x => x.library && x.library !== 'nlalib' ? (x.library === 'mathlib' ? 'https://leanprover-community.github.io/mathlib4_docs/find/?pattern=' + encodeURIComponent(x.name) + '#doc' : null) : (x.module ? REPO + x.module.replace(/\./g, '/') + '.lean#L' + (x.line || 1) : null);
+  // Lean statement block for a declaration name, if the index knows it
+  const sigBlock = (name, extra) => { const x = declByName[name]; if (!x) return ''; const sl = srcLink(x); return `<div class="decl" style="border:0;padding:2px 0 0"><div class="meta"><span>${esc(x.module)}</span>${x.sorry ? '<span class="sorrytag">depends on sorry</span>' : ''}${sl ? `<a href="${sl}" target="_blank" rel="noopener">${x.library && x.library !== 'nlalib' ? 'docs' : 'source'}</a>` : ''}${extra || ''}</div><div class="sig">${esc(x.signature)}</div></div>`; };
   const STATUS = [
     { id: 'proved', label: 'Proved', glyph: '✓', def: 'machine-checked, sorry-free, somewhere listed' },
     { id: 'scaffold', label: 'Scaffold', glyph: '◧', def: 'statement in NLAlib, proof still a sorry' },
@@ -277,6 +283,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   // literal scaffold (a `sorry` inherited from a dependency is fine: the implication is checked) and
   // the dependency is either stated in NLAlib or taken as an explicit hypothesis (status assumed).
   const DECL_DOC = {}; DECLS.forEach(d => DECL_DOC[d.name] = d.doc || '');
+  const defNode = {}; A.results.filter(r => r.kind === 'definition').forEach(r => r.formalizations.forEach(f => { if (f.library === 'nlalib' && f.decl && declByName[f.decl] && declByName[f.decl].kind !== 'theorem' && !defNode[f.decl]) defNode[f.decl] = r.id; }));
   const isLiteralScaffold = decl => (DECL_DOC[decl] || '').trimStart().startsWith('SCAFFOLD');
   const hasFormalProof = r => r.status === 'proved' || (r.formalizations || []).some(f => f.library === 'nlalib' && f.decl && (f.status === 'proved' || f.status === 'scaffold') && !isLiteralScaffold(f.decl));
   const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; return (hasFormalProof(c) && (inLean(d) || d.status === 'assumed')) ? 'proved' : 'pending'; };
@@ -493,7 +500,8 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     if (q) rows = rows.filter(x => [x.name, x.module, x.signature, x.doc].join(' ').toLowerCase().includes(q));
     document.getElementById('dcount').textContent = `${rows.length} of ${DECLS.length} declarations`;
     const el = document.getElementById('decls'); const shown = rows.slice(0, 300);
-    el.innerHTML = shown.map(x => `<div class="decl"><div class="nm">${esc(x.name)}</div><div class="meta"><span class="pill">${esc(x.kind)}</span><span>${esc(x.module)}</span>${x.sorry ? '<span class="sorrytag">depends on sorry</span>' : ''}${srcLink(x) ? `<a href="${srcLink(x)}" target="_blank" rel="noopener">source L${x.line}</a>` : ''}</div><div class="sig">${esc(x.signature)}</div>${x.doc ? `<div class="doc">${esc(x.doc.length > 400 ? x.doc.slice(0, 400) + '…' : x.doc)}</div>` : ''}</div>`).join('') + (rows.length > 300 ? `<p class="note">${rows.length - 300} more; narrow the search.</p>` : '');
+    el.innerHTML = shown.map(x => `<div class="decl"><div class="nm">${esc(x.name)}</div><div class="meta"><span class="pill">${esc(x.kind)}</span><span>${esc(x.module)}</span>${x.sorry ? '<span class="sorrytag">depends on sorry</span>' : ''}${srcLink(x) ? `<a href="${srcLink(x)}" target="_blank" rel="noopener">source L${x.line}</a>` : ''}${(x.atlas || []).filter(i => byId[i]).map(i => `<button class="linkbtn" data-id="${i}" title="atlas result">⌂ ${esc(byId[i].title)}</button>`).join('')}</div><div class="sig">${esc(x.signature)}</div>${x.doc ? `<div class="doc">${esc(x.doc.length > 400 ? x.doc.slice(0, 400) + '…' : x.doc)}</div>` : ''}</div>`).join('') + (rows.length > 300 ? `<p class="note">${rows.length - 300} more; narrow the search.</p>` : '');
+    el.querySelectorAll('button[data-id]').forEach(b => b.onclick = () => { if (state.sel !== b.dataset.id) select(b.dataset.id); });
   }
   document.querySelectorAll('#dkind button').forEach(b => b.onclick = () => { dstate.kind = b.dataset.v; document.querySelectorAll('#dkind button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderDecls(); });
   document.getElementById('dsorry').onchange = e => { dstate.sorry = e.target.checked; renderDecls(); };
@@ -534,11 +542,11 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
       ${(r.aliases || []).length ? `<div style="margin-top:6px">${r.aliases.map(a => `<span class="alias">${esc(a)}</span>`).join('')}</div>` : ''}
       <section><p class="informal">${esc(r.informal)}</p></section>
       ${(r.hypotheses || []).length || r.conclusion ? `<section><div class="eyebrow">Statement</div>${(r.hypotheses || []).length ? `<div class="note" style="margin-top:4px">Assume</div><ul>${r.hypotheses.map(h => `<li class="hyp">${esc(h)}</li>`).join('')}</ul>` : ''}${r.conclusion ? `<div class="note" style="margin-top:6px">Then</div><p class="hyp" style="padding-left:18px">${esc(r.conclusion)}</p>` : ''}</section>` : ''}
+      <section><div class="eyebrow">In Lean</div>${r.formalizations.length ? '<ul class="forms">' + r.formalizations.map(f => `<li><span class="pill s-${f.status}" style="font-size:.7rem"><span class="dot"></span>${SG[f.status].glyph} ${SG[f.status].label}</span> ${f.library !== 'nlalib' ? (libById[f.library].url ? `<a href="${esc(libById[f.library].url)}" target="_blank" rel="noopener">${esc(libById[f.library].name)}</a>` : esc(libById[f.library].name)) : ''}${f.partial ? ' <span class="pill" title="covers only part of the statement; does not make the result proved">partial</span>' : ''}${f.decl ? ` <code>${esc(f.decl)}</code>${sigBlock(f.decl)}` : ''}${f.usage ? `<div class="usage">${esc(f.usage)}</div>` : ''}${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}</li>`).join('') + '</ul>' : '<p class="note">No formal statement yet.</p>'}</section>
       ${r.notes ? `<section><div class="eyebrow">Notes</div><p class="note">${esc(r.notes)}</p></section>` : ''}
-      <section><div class="eyebrow">Lean</div>${r.formalizations.length ? '<ul>' + r.formalizations.map(f => `<li><span class="pill s-${f.status}" style="font-size:.7rem"><span class="dot"></span>${SG[f.status].glyph} ${SG[f.status].label}</span> ${libById[f.library].url ? `<a href="${esc(libById[f.library].url)}" target="_blank" rel="noopener">${esc(libById[f.library].name)}</a>` : esc(libById[f.library].name)}${f.decl ? `<br><code>${esc(f.decl)}</code>${declByName[f.decl] ? ` <span class="note">· ${esc(declByName[f.decl].module)}${declByName[f.decl].sorry ? ' · <span class="sorrytag">sorry</span>' : ''} · <a href="${srcLink(declByName[f.decl])}" target="_blank" rel="noopener">source</a></span><div class="decl" style="border:0;padding:4px 0 0"><div class="sig">${esc(declByName[f.decl].signature)}</div></div>` : ''}` : ''}${f.usage ? `<div class="usage">${esc(f.usage)}</div>` : ''}${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}</li>`).join('') + '</ul>' : '<p class="note">No formal statement yet.</p>'}</section>
-      ${(r.uses_defs || []).length ? `<section><div class="eyebrow">Stated with</div><p>${r.uses_defs.map(x => `<code>${esc(x)}</code>`).join(' ')}</p></section>` : ''}
+      ${(r.uses_defs || []).length ? `<section><div class="eyebrow">Stated with</div><p class="note" style="margin-bottom:4px">NLAlib definitions in the Lean statement (computed from the sources).</p><p>${r.uses_defs.map(x => defNode[x] && defNode[x] !== r.id ? `<button class="linkbtn" data-id="${defNode[x]}" title="${esc(byId[defNode[x]].title)}"><code>${esc(x)}</code></button>` : `<code title="${esc((declByName[x] || {}).signature || '')}">${esc(x)}</code>`).join(' ')}</p></section>` : ''}
       ${(r.variants || []).length ? `<section><div class="eyebrow">Variants</div><ul>${r.variants.filter(v => byId[v]).map(v => `<li>${link(v)}</li>`).join('')}</ul></section>` : ''}
-      ${r.mathlib_prereqs.length ? `<section><div class="eyebrow">Mathlib prerequisites</div><ul>${r.mathlib_prereqs.map(m => `<li><span class="${m.present ? 'yes' : 'no'}">${m.present ? '✓' : '✗'}</span> <code>${esc(m.decl)}</code>${m.note ? ` <span class="note">${esc(m.note)}</span>` : ''}</li>`).join('')}</ul></section>` : ''}
+      ${r.mathlib_prereqs.length ? `<section><div class="eyebrow">From Mathlib</div><ul class="forms">${r.mathlib_prereqs.map(m => `<li><span class="${m.present ? 'yes' : 'no'}">${m.present ? '✓' : '✗'}</span> <code>${esc(m.decl)}</code>${m.note ? ` <span class="note">${esc(m.note)}</span>` : ''}${sigBlock(m.decl)}</li>`).join('')}</ul></section>` : ''}
       <section><div class="eyebrow">Sources</div><ul>${r.sources.map(s => { const x = srcById[s.source]; return `<li>${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a>` : esc(x.title)}${s.label ? ` <span class="note">(${esc(s.label)})</span>` : ''} <span class="note">· ${esc(x.authors[0].split(' ').pop())}${x.authors.length > 1 ? ' et al.' : ''} ${x.year}</span></li>`; }).join('') || '<li class="note">none recorded</li>'}</ul></section>
       <section><div class="eyebrow">Depends on</div><ul>${r.depends_on.map(d => `<li>${link(d, linkStatus(d, id))}</li>`).join('') || '<li class="note">nothing in the atlas (a foundation)</li>'}</ul></section>
       <section><div class="eyebrow">Used by</div><ul>${(usedBy[id] || []).map(d => `<li>${link(d, linkStatus(id, d))}</li>`).join('') || '<li class="note">no atlas result depends on this yet</li>'}</ul></section>

@@ -196,6 +196,10 @@
                 "module": {
                   "type": "string",
                   "description": "Lean module (import path), e.g. NLAlib.Matrix.SVD. Filled from declarations.json when absent."
+                },
+                "partial": {
+                  "type": "boolean",
+                  "description": "The declaration formalizes only part of the statement; listed, but does not promote the result's status."
                 }
               }
             }

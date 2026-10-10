@@ -44,7 +44,8 @@ centred vectors on one probability space with vanishing cross moments `𝔼 Xₛ
 `|F x| ≤ ∑ₜ |xₜ| + K`. If `∑ᵢⱼ (𝔼 YᵢYⱼ - 𝔼 XᵢXⱼ) Hᵢⱼ(x) ≥ 0` for all `x`, then
 `𝔼 F(X) ≤ 𝔼 F(Y)`. Source: Kahane 1986; Vershynin 2018, §7.2 (proof of Thm 7.2.1). Atlas: helper
 of `gordon-minimax`. Ported from Prove2me solution `GaussianMatrix.gordon_minimax` (helper
-`gmm_interp`). -/
+`gmm_interp`).
+atlas: gordon-minimax -/
 theorem integral_le_integral_of_covariance_hessian_nonneg {ι Ω : Type*} [Fintype ι]
     [MeasurableSpace Ω] {P : Measure Ω}
     (X Y : ι → Ω → ℝ)
@@ -728,7 +729,8 @@ section Main
 `𝔼 (Y_{u,t} - Y_{v,s})² ≤ 𝔼 (X_{u,t} - X_{v,s})²` for `u ≠ v`. Then
 `𝔼 minᵤ maxₜ X_{u,t} ≤ 𝔼 minᵤ maxₜ Y_{u,t}`. No equal-variance assumption is needed in the
 expectation form. Source: Gordon 1985; Vershynin 2018, Exercise 7.2.14. Atlas: `gordon-minimax`.
-Ported from Prove2me solution `GaussianMatrix.gordon_minimax`. -/
+Ported from Prove2me solution `GaussianMatrix.gordon_minimax`.
+atlas: gordon-minimax -/
 theorem gordon_minimax_inequality {U T Ω Ω' : Type*} [Fintype U] [Fintype T] [MeasurableSpace Ω]
     [MeasurableSpace Ω'] {P : Measure Ω} {Q : Measure Ω'}
     (X : U → T → Ω → ℝ) (Y : U → T → Ω' → ℝ)

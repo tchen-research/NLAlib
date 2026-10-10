@@ -234,7 +234,8 @@ HMT 2011, Prop A.3; Chen–Dongarra 2005, Lemma 4.1. Atlas: `pinv-spectral-tail`
 `specNorm_inv_self_mul_transpose_eq`, atlas `pseudoinverse`), the `λ_min` lower tail
 (`gaussianMatrix_sigmaMin_transpose_sq_le_le`, atlas `wishart-lambda-min-tail`, which uses the
 proved operator bound (B.5)) and Stirling's formula. Ported from Prove2me solution
-`GaussianMatrix.pinv_spectral_tail`. -/
+`GaussianMatrix.pinv_spectral_tail`.
+atlas: pinv-spectral-tail -/
 theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r ≤ k) (t : ℝ)
     (ht : 0 < t) :
     (gaussianMatrix r k) {G | t < specNorm (pinvR (Matrix.of G))}
@@ -278,7 +279,8 @@ HMT 2011, Prop A.4 (`E‖Ω₁†‖ ≤ e√(k+p)/p` with `Ω₁` of size `k ×
 `pinv-spectral-expectation`. Proof: Gaussian quadratic probes, Schur residual laws,
 scalar Gamma estimates, and positive moment comparison. The sharper expectation
 bound with k+r-1 is proved in SpectralProbe and implies the source constant.
-This proof has no density or spectral-tail dependency. -/
+This proof has no density or spectral-tail dependency.
+atlas: pinv-spectral-expectation -/
 theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le {r k : ℕ} (hr : 2 ≤ r)
     (hrk : r + 1 ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => specNorm (pinvR (Matrix.of G))) (gaussianMatrix r k) ∧
@@ -314,7 +316,8 @@ set_option linter.unusedVariables false in
 Tropp–Webber 2023, Appendix B, (B.4). Atlas: `inverse-wishart-spectral-moment`.
 Proof: the direct operator quadratic-probe real moment bound, scalar Gamma estimates,
 and moment monotonicity. The source's p ≤ 18 condition is retained in this
-corollary; the stronger real-power theorem in SpectralProbe does not need it. -/
+corollary; the stronger real-power theorem in SpectralProbe does not need it.
+atlas: inverse-wishart-spectral-moment -/
 theorem integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le
     {r k p : ℕ} (hp : 1 ≤ p) (hp18 : p ≤ 18) (hrk : r + 2 * p ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p)

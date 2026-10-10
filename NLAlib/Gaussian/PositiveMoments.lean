@@ -74,7 +74,8 @@ private lemma sum_sq_ofLp {m : ℕ} (y : EuclideanSpace ℝ (Fin m)) :
 
 /-- Polar coordinates for a scalar radial test of a standard Gaussian vector.
 Source: Gaussian polar integration; atlas `gaussian-positive-moments`.
-This is only a scalar Gaussian identity, with no matrix eigenvalue density. -/
+This is only a scalar Gaussian identity, with no matrix eigenvalue density.
+atlas: gaussian-positive-moments -/
 theorem integral_radial_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m) (φ : ℝ → ℝ) :
     ∫ x, φ (Real.sqrt (∑ i, x i ^ 2)) ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1)
       = m * (volume : Measure (EuclideanSpace ℝ (Fin m))).real (Metric.ball 0 1)
@@ -118,7 +119,8 @@ private lemma integral_rpow_mul_exp_neg_sq_div_two (s : ℝ) (hs : -1 < s) :
   ring
 
 /-- Every nonnegative real power of the squared Gaussian radius is integrable.
-Source: Gaussian finite moments; atlas `gaussian-positive-moments`. -/
+Source: Gaussian finite moments; atlas `gaussian-positive-moments`.
+atlas: gaussian-positive-moments -/
 theorem integrable_rpow_sum_sq_pi_gaussianReal (m : ℕ) (q : ℝ) (hq : 0 ≤ q) :
     Integrable (fun x : Fin m → ℝ => (∑ i, x i ^ 2) ^ q)
       (Measure.pi fun _ : Fin m => gaussianReal 0 1) := by
@@ -143,7 +145,8 @@ theorem integrable_rpow_sum_sq_pi_gaussianReal (m : ℕ) (q : ℝ) (hq : 0 ≤ q
 
 /-- Exact positive real moments of the squared Gaussian radius.
 Source: scalar Gaussian radial integration; atlas `gaussian-positive-moments`.
-This identity is the radial input to the operator inverse-Wishart probe bound. -/
+This identity is the radial input to the operator inverse-Wishart probe bound.
+atlas: gaussian-positive-moments -/
 theorem integral_rpow_sum_sq_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m)
     (q : ℝ) (hq : 0 ≤ q) :
     ∫ x : Fin m → ℝ, (∑ i, x i ^ 2) ^ q
@@ -205,7 +208,8 @@ theorem integral_rpow_sum_sq_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m)
 
 /-- The absolute scalar Gaussian moment at every nonnegative real order.
 Source: scalar Gaussian Gamma integral; atlas `gaussian-positive-moments`.
-This supplies the normalization of the operator quadratic probe. -/
+This supplies the normalization of the operator quadratic probe.
+atlas: gaussian-positive-moments -/
 theorem integral_abs_rpow_gaussianReal (q : ℝ) (hq : 0 ≤ q) :
     (∫ z : ℝ, |z| ^ (2 * q) ∂(gaussianReal 0 1))
       = 2 ^ q * Real.Gamma (q + 1 / 2) / Real.sqrt Real.pi := by

@@ -51,25 +51,29 @@ variable {m n : Type*} [Fintype m] [Fintype n]
 
 /-- One Kaczmarz step on row `i`: the orthogonal projection of `x` onto the hyperplane
 `{y | A i ⬝ᵥ y = b i}`. For a zero row the step is the identity (real division by zero is `0`).
-Strohmer–Vershynin 2009, Algorithm (eq. (2)); atlas `randomized-kaczmarz`. -/
+Strohmer–Vershynin 2009, Algorithm (eq. (2)); atlas `randomized-kaczmarz`.
+atlas: kaczmarz-def -/
 def step (A : Matrix m n ℝ) (b : m → ℝ) (x : n → ℝ) (i : m) : n → ℝ :=
   x + ((b i - A i ⬝ᵥ x) / (A i ⬝ᵥ A i)) • A i
 
 /-- Row-selection probability `‖A i‖² / ‖A‖_F²` of randomized Kaczmarz.
-Strohmer–Vershynin 2009, Algorithm; atlas `randomized-kaczmarz`. -/
+Strohmer–Vershynin 2009, Algorithm; atlas `randomized-kaczmarz`.
+atlas: kaczmarz-def -/
 def prob (A : Matrix m n ℝ) (i : m) : ℝ :=
   (A i ⬝ᵥ A i) / frobSq A
 
 /-- Expected squared error `E‖x_k - xs‖²` after `k` randomized Kaczmarz steps started at `x`,
 rows drawn i.i.d. with probabilities `prob A`. Defined by first-step recursion:
 `expErr 0 x = ‖x - xs‖²`, `expErr (k+1) x = ∑ i, prob A i * expErr k (step A b x i)`.
-See `expErr_eq_sum_paths` for the path-sum form. Atlas `randomized-kaczmarz`. -/
+See `expErr_eq_sum_paths` for the path-sum form. Atlas `randomized-kaczmarz`.
+atlas: kaczmarz-def -/
 def expErr (A : Matrix m n ℝ) (b : m → ℝ) (xs : n → ℝ) : (n → ℝ) → ℕ → ℝ
   | x, 0 => (x - xs) ⬝ᵥ (x - xs)
   | x, k + 1 => ∑ i, prob A i * expErr A b xs (step A b x i) k
 
 /-- The iterate after applying the steps with rows `ω 0, ω 1, …, ω (k-1)` in that order,
-starting from `x`. Atlas `randomized-kaczmarz`. -/
+starting from `x`. Atlas `randomized-kaczmarz`.
+atlas: kaczmarz-def -/
 def run (A : Matrix m n ℝ) (b : m → ℝ) : (k : ℕ) → (Fin k → m) → (n → ℝ) → (n → ℝ)
   | 0, _, x => x
   | k + 1, ω, x => run A b k (Fin.tail ω) (step A b x (ω 0))
@@ -181,7 +185,8 @@ i.i.d. with probability `‖A i‖² / ‖A‖_F²`,
 `E‖x_k - xs‖² ≤ (1 - σ² / ‖A‖_F²)^k ‖x₀ - xs‖²`.
 Deviations from the printed statement: SV09 take `A` of full column rank and `σ = ‖A⁻¹‖⁻¹`
 (rate `1 - κ(A)⁻²`); here `σ` is any constant satisfying `hσ` (the sharp choice is
-`σ_min(A)`, atlas `courant-fischer`), and no rank or nonzero-row assumption is needed. -/
+`σ_min(A)`, atlas `courant-fischer`), and no rank or nonzero-row assumption is needed.
+atlas: randomized-kaczmarz -/
 theorem expErr_le (A : Matrix m n ℝ) (b : m → ℝ) (xs : n → ℝ) (hxs : A *ᵥ xs = b) (σ : ℝ)
     (hσ : ∀ v : n → ℝ, σ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v)) (x : n → ℝ) (k : ℕ) :
     expErr A b xs x k ≤ (1 - σ ^ 2 / frobSq A) ^ k * ((x - xs) ⬝ᵥ (x - xs)) := by

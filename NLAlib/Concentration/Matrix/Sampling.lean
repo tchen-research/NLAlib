@@ -183,7 +183,8 @@ Hermitian `d × d` matrices with `0 ≤ λmin(Mₖ)`, `λmax(Mₖ) ≤ L` and `�
 `0 ≤ ε < 1`, `P(λmin(N⁻¹ ∑ₖ Mₖ) ≤ 1 - ε) ≤ d e^{-ε² N/(2L)}`.
 Tropp 2015, Thm 5.1.1 with Tropp 2012, Rem 5.3; Tropp 2011, Thm 2.2; audit G1 C4.
 Atlas `matrix-chernoff-sampling`. Deviation: the atlas's unspecified constant is the explicit
-`2`; the index `Fin N` is inherited from `matrix_chernoff`. -/
+`2`; the index `Fin N` is inherited from `matrix_chernoff`.
+atlas: matrix-chernoff-sampling -/
 theorem matrix_chernoff_sampling_lower (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ}
     [NeZero d] (hN : 0 < N) (M : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 < L)
     (hMeas : ∀ k, Measurable (M k)) (hIndep : iIndepFun M μ)
@@ -214,7 +215,8 @@ theorem matrix_chernoff_sampling_lower (μ : Measure Ω) [IsProbabilityMeasure �
 `P(λmax(N⁻¹ ∑ₖ Mₖ) ≥ 1 + ε) ≤ d e^{-ε² N/(3L)}`.
 Tropp 2015, Thm 5.1.1 with Tropp 2012, Rem 5.3; Tropp 2011, Thm 2.2; audit G1 C4.
 Atlas `matrix-chernoff-sampling`. Deviation: the atlas's unspecified constant is the explicit
-`3` (valid for `ε ≤ 1`); the index `Fin N` is inherited from `matrix_chernoff`. -/
+`3` (valid for `ε ≤ 1`); the index `Fin N` is inherited from `matrix_chernoff`.
+atlas: matrix-chernoff-sampling -/
 theorem matrix_chernoff_sampling_upper (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ}
     [NeZero d] (hN : 0 < N) (M : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 < L)
     (hMeas : ∀ k, Measurable (M k)) (hIndep : iIndepFun M μ)
@@ -244,7 +246,8 @@ theorem matrix_chernoff_sampling_upper (μ : Measure Ω) [IsProbabilityMeasure �
 `P(λmin(N⁻¹∑Mₖ) ≤ 1 - ε) ≤ d e^{-ε²N/(2L)}` and `P(λmax(N⁻¹∑Mₖ) ≥ 1 + ε) ≤ d e^{-ε²N/(3L)}`.
 Tropp 2015, Thm 5.1.1 with Tropp 2012, Rem 5.3; Tropp 2011, Thm 2.2.
 Atlas `matrix-chernoff-sampling`. Deviation: explicit constants `2` and `3`; `Fin N` index
-inherited from `matrix_chernoff`. -/
+inherited from `matrix_chernoff`.
+atlas: matrix-chernoff-sampling -/
 theorem matrix_chernoff_sampling (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ}
     [NeZero d] (hN : 0 < N) (M : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 < L)
     (hMeas : ∀ k, Measurable (M k)) (hIndep : iIndepFun M μ)

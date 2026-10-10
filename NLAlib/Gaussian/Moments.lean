@@ -95,7 +95,8 @@ private lemma integral_quadratic {ι κ : Type*} [Fintype ι] [Fintype κ] {p m 
 HMT 2011 (Halko–Martinsson–Tropp), Prop 10.1, first identity (`E‖SGT‖_F² = ‖S‖_F² ‖T‖_F²`).
 Atlas: `gaussian-frob-second-moment`. The outer dimensions are arbitrary finite index types
 (the source and the Prove2me statement use `Fin a`, `Fin n`). Ported from the Prove2me
-workspace, Gaussian Random Matrices series. -/
+workspace, Gaussian Random Matrices series.
+atlas: gaussian-frob-second-moment -/
 theorem integral_frobSq_mul_gaussianMatrix_mul {ι κ : Type*} [Fintype ι] [Fintype κ]
     {p m : ℕ} (S : Matrix ι (Fin p) ℝ) (T : Matrix (Fin m) κ ℝ) :
     ∫ G, frobSq (S * Matrix.of G * T) ∂(gaussianMatrix p m) = frobSq S * frobSq T := by
@@ -253,7 +254,8 @@ standard Gaussian matrix, then `G Gᵀ` is invertible almost surely.
 
 HMT 2011 (Halko–Martinsson–Tropp), Prop A.5 / §10.2 (`Ω₁` has full row rank with probability
 one). Atlas: `gaussian-full-rank-ae`. Ported from the Prove2me workspace, Gaussian Random
-Matrices series. -/
+Matrices series.
+atlas: gaussian-full-rank-ae -/
 theorem gaussianMatrix_ae_isUnit_mul_transpose {k t : ℕ} (h : k ≤ t) :
     ∀ᵐ G ∂(gaussianMatrix k t), IsUnit (Matrix.of G * (Matrix.of G)ᵀ) := by
   have hP : (Matrix.mvPolynomialX (Fin k) (Fin t) ℝ *
@@ -274,7 +276,8 @@ theorem gaussianMatrix_ae_isUnit_mul_transpose {k t : ℕ} (h : k ≤ t) :
 standard Gaussian matrix, then `Gᵀ G` is invertible almost surely.
 
 HMT 2011 (Halko–Martinsson–Tropp), Prop A.5 (transposed form). Atlas: `gaussian-full-rank-ae`.
-Ported from the Prove2me workspace, Gaussian Random Matrices series. -/
+Ported from the Prove2me workspace, Gaussian Random Matrices series.
+atlas: gaussian-full-rank-ae -/
 theorem gaussianMatrix_ae_isUnit_transpose_mul {k t : ℕ} (h : t ≤ k) :
     ∀ᵐ G ∂(gaussianMatrix k t), IsUnit ((Matrix.of G)ᵀ * Matrix.of G) := by
   have hP : ((Matrix.mvPolynomialX (Fin k) (Fin t) ℝ)ᵀ *
@@ -295,7 +298,8 @@ theorem gaussianMatrix_ae_isUnit_transpose_mul {k t : ℕ} (h : t ≤ k) :
 `min p m` almost surely.
 
 HMT 2011 (Halko–Martinsson–Tropp), Prop A.5 / §10.2. Atlas: `gaussian-full-rank-ae`. Ported
-from the Prove2me workspace, Gaussian Random Matrices series. -/
+from the Prove2me workspace, Gaussian Random Matrices series.
+atlas: gaussian-full-rank-ae -/
 theorem gaussianMatrix_ae_rank_eq (p m : ℕ) :
     ∀ᵐ G ∂(gaussianMatrix p m), (Matrix.of G).rank = min p m := by
   rcases le_total p m with h | h

@@ -28,7 +28,8 @@ namespace NLAlib
 Standard layer-cake estimate (`E f = ∫₀^∞ P(f > t) dt`, bounded by `1` below `C^{1/m}` and by
 the tail above), e.g. HMT 2011, proof of Thm 10.8 / Vershynin 2018, Lemma 1.2.1.
 Atlas: `tail-integral`. Ported from Prove2me solution
-`GaussianMatrix.integral_le_of_tail_bound`. -/
+`GaussianMatrix.integral_le_of_tail_bound`.
+atlas: tail-integral -/
 theorem integrable_and_integral_le_of_tail_le_rpow {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ)
     (hnn : 0 ≤ᵐ[μ] f) (C m : ℝ) (hC : 0 < C) (hm : 1 < m)
@@ -86,7 +87,8 @@ theorem integrable_and_integral_le_of_tail_le_rpow {Ω : Type*} [MeasurableSpace
 
 Elementary; used for the chi-square small-ball density bound (Davidson–Szarek 2001,
 Vershynin 2012). Atlas: `tail-integral`. Ported from Prove2me solution
-`GaussianMatrix.integral_power_exp_le`. -/
+`GaussianMatrix.integral_power_exp_le`.
+atlas: tail-integral -/
 theorem lintegral_rpow_mul_exp_le {a : ℝ} (ha : -1 < a) {t : ℝ} (ht : 0 ≤ t) :
     ∫⁻ x in Ioc 0 t, ENNReal.ofReal (x ^ a * Real.exp (-x / 2))
       ≤ ENNReal.ofReal (t ^ (a + 1) / (a + 1)) := by

@@ -311,7 +311,8 @@ theorem ofReal_rpow_specNorm_mul_gaussian_moment_le_lintegral {r : ℕ} (hr : 1 
 Source: `Re-derivations/inverse-moment-analysis.md`, equation (5); atlas
 `inverse-wishart-spectral-moment`, `pinv-spectral-expectation`.
 The proof uses scalar Schur residual moments and an operator detector, and proves
-integrability without a Wishart eigenvalue density. -/
+integrability without a Wishart eigenvalue density.
+atlas: gaussian-inverse-spectral-probe-moment -/
 theorem integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMatrix_le
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (q : ℝ) (hq : 0 < q)
     (hqd : q < ((k : ℝ) - r + 1) / 2) :

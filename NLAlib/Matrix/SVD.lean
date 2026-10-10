@@ -58,7 +58,8 @@ variable {m n : ℕ}
 /-- The singular values `σ₀ ≥ σ₁ ≥ ⋯ ≥ 0` of a real matrix, zero-indexed, padded with zeros:
 `σ k = √(λ_k(AᵀA))` for `k < n` and `σ k = 0` for `k ≥ n`. Defined as Mathlib's
 `LinearMap.singularValues` of `Matrix.toEuclideanLin A`. Atlas `svd`
-(Horn–Johnson 2013, §2.6; HMT 2011, §2.1). Deviation: zero-indexed, indexed by `ℕ`. -/
+(Horn–Johnson 2013, §2.6; HMT 2011, §2.1). Deviation: zero-indexed, indexed by `ℕ`.
+atlas: svd-def -/
 def singularValues (A : Matrix (Fin m) (Fin n) ℝ) : ℕ → ℝ :=
   fun k => (Matrix.toEuclideanLin A).singularValues k
 
@@ -159,7 +160,8 @@ theorem sq_singularValues_eq_eigenvalues₀ (A : Matrix (Fin m) (Fin n) ℝ)
 /-! ### Rectangular diagonal matrices -/
 
 /-- The `m × n` rectangular diagonal matrix with diagonal `σ 0, σ 1, …, σ (min m n - 1)`.
-Atlas `svd`. -/
+Atlas `svd`.
+atlas: svd-def -/
 def rectDiag (σ : ℕ → ℝ) : Matrix (Fin m) (Fin n) ℝ :=
   Matrix.of fun i j => if (i : ℕ) = j then σ i else 0
 
@@ -227,7 +229,8 @@ theorem transpose_mul_self_of_orthonormalBasis {k : ℕ}
 
 /-- `IsSVD A U V`: `U`, `V` are orthogonal and `A = U Σ Vᵀ` with `Σ = rectDiag (singularValues A)`
 (Horn–Johnson 2013, Thm 2.6.3; HMT 2011, §2.1). The `k`-th columns of `U` and `V` are the
-left/right singular vectors for `σ_k`. Atlas `svd`. -/
+left/right singular vectors for `σ_k`. Atlas `svd`.
+atlas: svd-def -/
 structure IsSVD (A : Matrix (Fin m) (Fin n) ℝ) (U : Matrix (Fin m) (Fin m) ℝ)
     (V : Matrix (Fin n) (Fin n) ℝ) : Prop where
   /-- `U` is orthogonal. -/
@@ -244,7 +247,8 @@ the singular values being nonnegative and non-increasing (`singularValues_nonneg
 
 Proof: `V` is an orthonormal eigenbasis of `AᵀA` (Mathlib's spectral theorem, sorted), the
 vectors `A vⱼ / σⱼ` with `σⱼ ≠ 0` are orthonormal and are completed to an orthonormal basis of
-`ℝᵐ` (atlas `orthonormal-completion`) giving `U`. -/
+`ℝᵐ` (atlas `orthonormal-completion`) giving `U`.
+atlas: svd -/
 theorem exists_isSVD (A : Matrix (Fin m) (Fin n) ℝ) : ∃ U V, IsSVD A U V := by
   have hn : finrank ℝ (EuclideanSpace ℝ (Fin n)) = n := finrank_euclideanSpace_fin
   have hT := (Matrix.toEuclideanLin A).isSymmetric_adjoint_comp_self
@@ -430,7 +434,8 @@ theorem apply (h : IsSVD A U V) (i : Fin m) (j : Fin n) :
     · intro l _; rw [if_neg (fun (e : (l : ℕ) = k) => hk (e ▸ l.isLt)), mul_zero]
 
 /-- Block SVD split at index `k` (HMT 2011, §2.1, `A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ`): the head
-`U Σ_{<k} Vᵀ` (the truncated SVD) plus the tail `U Σ_{≥k} Vᵀ`. Atlas `svd`. -/
+`U Σ_{<k} Vᵀ` (the truncated SVD) plus the tail `U Σ_{≥k} Vᵀ`. Atlas `svd`.
+atlas: svd -/
 theorem eq_head_add_tail (h : IsSVD A U V) (k : ℕ) :
     A = U * (rectDiag (fun i => if i < k then singularValues A i else 0) :
         Matrix (Fin m) (Fin n) ℝ) * Vᵀ +
@@ -444,7 +449,8 @@ theorem eq_head_add_tail (h : IsSVD A U V) (k : ℕ) :
 end IsSVD
 
 /-- `‖A‖_F² = ∑_{k < min m n} σ_k²` (Horn–Johnson 2013, §2.6 / 5.6; HMT 2011, §2.1).
-Atlas `svd`. -/
+Atlas `svd`.
+atlas: svd -/
 theorem frobSq_eq_sum_sq_singularValues (A : Matrix (Fin m) (Fin n) ℝ) :
     frobSq A = ∑ k ∈ Finset.range (min m n), singularValues A k ^ 2 := by
   obtain ⟨U, V, h⟩ := exists_isSVD A
@@ -485,7 +491,8 @@ theorem eigenvalues₀_eq_of_eq_mul_diagonal_mul {S W : Matrix (Fin n) (Fin n) �
 
 /-- **Uniqueness of singular values** (Horn–Johnson 2013, Thm 2.6.3): if `A = U Σ_τ Vᵀ` with
 `U`, `V` orthogonal and `τ` nonnegative and non-increasing, then `τ k = σ_k(A)` for every
-`k < min m n`. Atlas `svd`. -/
+`k < min m n`. Atlas `svd`.
+atlas: svd -/
 theorem singularValues_eq_of_eq_mul_rectDiag_mul {A : Matrix (Fin m) (Fin n) ℝ}
     {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ} {τ : ℕ → ℝ}
     (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1) (hτ0 : ∀ k, 0 ≤ τ k) (hτ : Antitone τ)

@@ -40,7 +40,8 @@ Then there is a nonzero `y ∈ K_q(A, b)` with
 `λ₁ ‖y‖² − yᵀAy ≤ (ε λ₁ + λ₁ (2/(1 + √(2γ))^{q−1})² ‖b‖²/c₁²) ‖y‖²`, `γ = ε/(1 − ε)`.
 Source: Musco–Musco (2015) [`mm15`], Lem. 4–5 and proof of Thm 1 (single-vector case).
 Atlas: `ritz-value-bounds`; uses `chebyshev-amplifier`, `polynomial-spectral-bound`,
-`krylov-subspace`. -/
+`krylov-subspace`.
+atlas: ritz-value-bounds -/
 theorem exists_mem_krylovSpace_sub_rayleigh_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (hpsd : ∀ i, 0 ≤ hA.eigenvalues i) {i₁ : n} (htop : ∀ i, hA.eigenvalues i ≤ hA.eigenvalues i₁)
     {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) (b : n → ℝ) {q : ℕ} (hq : 0 < q)
@@ -155,7 +156,8 @@ theorem dotProduct_mulVec_le_of_mem_range {A : Matrix n n ℝ} {Q : Matrix n k �
 `λ₁ − θ_j ≤ ε λ₁ + λ₁ (2/(1 + √(2γ))^{q−1})² ‖b‖²/(u_{i₁} ⬝ b)²`, `γ = ε/(1 − ε)`.
 Source: Musco–Musco (2015) [`mm15`], Thm 1 (single-vector, gap-free); Kuczyński–Woźniakowski
 (1992) [`kw92`] for the random-start analysis. Atlas: `ritz-value-bounds`; uses
-`chebyshev-amplifier`, `polynomial-spectral-bound`, `krylov-subspace`. -/
+`chebyshev-amplifier`, `polynomial-spectral-bound`, `krylov-subspace`.
+atlas: ritz-value-bounds -/
 theorem exists_eigenvalues_transpose_mul_mul_ge {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (hpsd : ∀ i, 0 ≤ hA.eigenvalues i) {i₁ : n} (htop : ∀ i, hA.eigenvalues i ≤ hA.eigenvalues i₁)
     {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) (b : n → ℝ) {q : ℕ} (hq : 0 < q)

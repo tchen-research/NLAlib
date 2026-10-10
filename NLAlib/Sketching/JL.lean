@@ -48,7 +48,8 @@ Gaussian-sketch form is Woodruff 2014 §2.1). Atlas: `jl-distributional`; uses
 Proof: with `u = x/‖x‖`, `‖Sx‖² = (‖x‖²/k) ‖Gu‖²` and `Gu` is a standard Gaussian vector, so the
 event lies in `{χ²_k ≥ (1+ε)k} ∪ {χ²_k ≤ (1−ε)k}`. The Chernoff tails and
 `log(1+ε) ≤ ε − ε²/2 + ε³/3`, `log(1−ε) ≤ −ε − ε²/2` bound each part by `exp(−k(ε²/4 − ε³/6))`.
-Degenerate cases: for `x = 0` the event is empty; for `k = 0` the bound is `2`. -/
+Degenerate cases: for `x = 0` the event is empty; for `k = 0` the bound is `2`.
+atlas: jl-distributional -/
 theorem jl_distributional (k n : ℕ) (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
     gaussianMatrix k n {G |
       |((1 / Real.sqrt k) • Matrix.of G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x
@@ -153,7 +154,8 @@ Deviation: the union is taken over all `N²` ordered pairs (not the `N(N−1)/2`
 which costs a constant factor `2` in the bound. No measurability hypothesis is needed (the union
 bound holds for the outer measure).
 
-Atlas: `jl-lemma`; uses `jl-distributional`. -/
+Atlas: `jl-lemma`; uses `jl-distributional`.
+atlas: jl-lemma -/
 theorem jl_lemma (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
     gaussianMatrix k n {G | ∃ i j, i ≠ j ∧
       |((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
@@ -225,7 +227,8 @@ Deviation: Dasgupta–Gupta take `k ≥ 4 (ε²/2 − ε³/3)⁻¹ log N`, aimin
 `1/N`; we state the general-`δ` form with the constant coming from the ordered-pair union bound
 in `jl_lemma`.
 
-Atlas: `jl-lemma`; uses `jl-distributional`. -/
+Atlas: `jl-lemma`; uses `jl-distributional`.
+atlas: jl-lemma -/
 theorem jl_lemma_prob_le_of_log_le (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε δ : ℝ} (hε0 : 0 < ε)
     (hε1 : ε < 1) (hδ : 0 < δ)
     (hk : (ε ^ 2 / 4 - ε ^ 3 / 6)⁻¹ * Real.log (2 * (N : ℝ) ^ 2 / δ) ≤ k) :
@@ -246,7 +249,8 @@ Deviation: the explicit constant `48` (from `(ε²/4 − ε³/6)⁻¹ ≤ 12/ε�
 `log(4N²) ≤ 4 log N` for `N ≥ 2`) is not optimised; Dasgupta–Gupta's constant is `4·(1/2 − ε/3)⁻¹`
 at failure probability `1 − 1/N`.
 
-Atlas: `jl-lemma`; uses `jl-distributional`. -/
+Atlas: `jl-lemma`; uses `jl-distributional`.
+atlas: jl-lemma -/
 theorem jl_lemma_prob_le_half (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε)
     (hε1 : ε < 1) (hN : 2 ≤ N) (hk : 48 * Real.log N / ε ^ 2 ≤ k) :
     gaussianMatrix k n {G | ∃ i j, i ≠ j ∧
@@ -287,7 +291,8 @@ theorem jl_lemma_prob_le_half (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : 
 2003, Thm 2.1): any `N ≥ 2` points of `ℝⁿ` admit a linear map `S : ℝⁿ → ℝᵏ` with
 `k ≥ 48 log N / ε²` that preserves every pairwise squared distance to within `1 ± ε`.
 
-Atlas: `jl-lemma`; uses `jl-distributional`. -/
+Atlas: `jl-lemma`; uses `jl-distributional`.
+atlas: jl-lemma -/
 theorem jl_lemma_exists (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε)
     (hε1 : ε < 1) (hN : 2 ≤ N) (hk : 48 * Real.log N / ε ^ 2 ≤ k) :
     ∃ S : Matrix (Fin k) (Fin n) ℝ, ∀ i j,

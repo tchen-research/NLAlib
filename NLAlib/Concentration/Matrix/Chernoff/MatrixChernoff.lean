@@ -126,7 +126,8 @@ Tropp 2015, Thm 5.1.1, eqs (5.1.1–6). Atlas: `matrix-chernoff`. Ported from th
 *An Introduction to Matrix Concentration Inequalities, Ch 5*.
 
 The expectation bounds are stated for every `θ > 0` before optimisation; degenerate `L = 0`
-follows the piecewise tail definitions. -/
+follows the piecewise tail definitions.
+atlas: matrix-chernoff -/
 theorem NLAlib.matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 ≤ L)

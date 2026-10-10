@@ -54,7 +54,8 @@ private lemma integral_Ioi_two_mul_exp_mul_rpow {c p : ℝ} (hc : 0 < c) (hp : 0
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
 
 /-- Two-sided sub-Gaussian tail: `P(t < |X|) ≤ 2 e^{-t²/(2c)}` for `t ≥ 0`.
-Vershynin 2018, Prop 2.5.2 (i); atlas `rademacher-khintchine` (tail step). -/
+Vershynin 2018, Prop 2.5.2 (i); atlas `rademacher-khintchine` (tail step).
+atlas: subgaussian-max -/
 theorem measure_lt_abs_le_of_hasSubgaussianMGF [IsProbabilityMeasure μ] {X : Ω → ℝ} {c : ℝ≥0}
     (h : HasSubgaussianMGF X c μ) {t : ℝ} (ht : 0 ≤ t) :
     μ {ω | t < |X ω|} ≤ ENNReal.ofReal (2 * exp (-t ^ 2 / (2 * c))) := by
@@ -80,7 +81,8 @@ every real `p > 0`, `𝔼|X|^p ≤ p (2c)^{p/2} Γ(p/2)`. No integrability hypot
 bound shows `|X|^p` is integrable; the Bochner integral is used). For `c = 0` both sides vanish.
 Vershynin 2018, Prop 2.5.2, proof of (i) ⇒ (ii) (layer-cake formula and the Gamma integral);
 audit G1 C6. Atlas `rademacher-khintchine` (moment step); the atlas's unspecified `C_p` is
-replaced by this explicit constant. -/
+replaced by this explicit constant.
+atlas: subgaussian-max -/
 theorem integral_abs_rpow_le_of_hasSubgaussianMGF [IsProbabilityMeasure μ] {X : Ω → ℝ}
     {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) {p : ℝ} (hp : 0 < p) :
     ∫ ω, |X ω| ^ p ∂μ ≤ p * (2 * c) ^ (p / 2) * Gamma (p / 2) := by
@@ -149,7 +151,8 @@ alias hasSubgaussianMGF_finset_sum_mul_of_iIndepFun :=
 
 /-- A Rademacher series `∑ᵢ aᵢ εᵢ` with independent Rademacher signs is sub-Gaussian with
 proxy `a ⬝ᵥ a = ∑ᵢ aᵢ²`. Vershynin 2018, Prop 2.6.1 with Example 2.5.8(ii);
-atlas `rademacher-khintchine` (sub-Gaussian step). -/
+atlas `rademacher-khintchine` (sub-Gaussian step).
+atlas: rademacher-khintchine -/
 theorem hasSubgaussianMGF_sum_mul_rademacher {ι : Type*} [Fintype ι] [IsProbabilityMeasure μ]
     (a : ι → ℝ) (ε : ι → Ω → ℝ) (hind : iIndepFun ε μ) (hlaw : ∀ i, IsRademacher μ (ε i)) :
     HasSubgaussianMGF (fun ω => ∑ i, a i * ε i ω) ⟨a ⬝ᵥ a, by
@@ -166,7 +169,8 @@ real `p > 0`, `𝔼|∑ᵢ aᵢ εᵢ|^p ≤ p (2 ‖a‖²)^{p/2} Γ(p/2)`, i.e
 with `C_p = (p Γ(p/2))^{1/p} √2`. Vershynin 2018, Thm 2.6.3 / Ex 2.6.5 with the moment
 constant of Prop 2.5.2; audit G1 C6. Atlas `rademacher-khintchine` (upper half). Deviation:
 the atlas's unspecified `C_p` is replaced by this explicit constant; index type any
-`[Fintype ι]`. -/
+`[Fintype ι]`.
+atlas: rademacher-khintchine -/
 theorem integral_abs_rpow_sum_mul_rademacher_le {ι : Type*} [Fintype ι]
     [IsProbabilityMeasure μ] (a : ι → ℝ) (ε : ι → Ω → ℝ) (hind : iIndepFun ε μ)
     (hlaw : ∀ i, IsRademacher μ (ε i)) {p : ℝ} (hp : 0 < p) :
@@ -318,7 +322,8 @@ private lemma le_sqrt_of_forall_le_div_add {x L c : ℝ} (hL : 0 ≤ L) (hc : 0 
 /-- **Sub-Gaussian maximal inequality, optimised form**: `𝔼 maxᵢ Xᵢ ≤ √(2 c log N)` for
 `N = card ι ≥ 1` sub-Gaussian variables with proxy `c` (no independence needed).
 Boucheron–Lugosi–Massart 2013, Thm 2.5; Vershynin 2018, Ex 2.5.10; audit G1 C7.
-Atlas `subgaussian-max`. -/
+Atlas `subgaussian-max`.
+atlas: subgaussian-max -/
 theorem integral_iSup_le_sqrt_of_hasSubgaussianMGF [IsProbabilityMeasure μ] {ι : Type*}
     [Fintype ι] [Nonempty ι] (X : ι → Ω → ℝ) (c : ℝ≥0) (h : ∀ i, HasSubgaussianMGF (X i) c μ) :
     ∫ ω, ⨆ i, X i ω ∂μ ≤ √(2 * c * log (Fintype.card ι)) :=
@@ -327,7 +332,8 @@ theorem integral_iSup_le_sqrt_of_hasSubgaussianMGF [IsProbabilityMeasure μ] {ι
 
 /-- **Sub-Gaussian maximal inequality, absolute values, optimised form**:
 `𝔼 maxᵢ |Xᵢ| ≤ √(2 c log (2N))`. Boucheron–Lugosi–Massart 2013, Thm 2.5; Vershynin 2018,
-Ex 2.5.10; audit G1 C7. Atlas `subgaussian-max`. -/
+Ex 2.5.10; audit G1 C7. Atlas `subgaussian-max`.
+atlas: subgaussian-max -/
 theorem integral_iSup_abs_le_sqrt_of_hasSubgaussianMGF [IsProbabilityMeasure μ] {ι : Type*}
     [Fintype ι] [Nonempty ι] (X : ι → Ω → ℝ) (c : ℝ≥0) (h : ∀ i, HasSubgaussianMGF (X i) c μ) :
     ∫ ω, ⨆ i, |X i ω| ∂μ ≤ √(2 * c * log (2 * Fintype.card ι)) :=

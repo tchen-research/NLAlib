@@ -37,7 +37,8 @@ open scoped Matrix
 namespace NLAlib
 
 /-- Law of a `p × m` matrix with independent standard Gaussian entries. Atlas:
-`gaussian-matrix-def`. -/
+`gaussian-matrix-def`.
+atlas: gaussian-matrix-def -/
 def gaussianMatrix (p m : ℕ) : Measure (Fin p → Fin m → ℝ) :=
   Measure.pi fun _ => Measure.pi fun _ => gaussianReal 0 1
 
@@ -206,7 +207,8 @@ theorem hasGaussianLaw_id_gaussianMatrix (p m : ℕ) :
 
 /-- The law of a standard Gaussian matrix is a Gaussian measure on `Fin p → Fin m → ℝ`.
 Ported from Prove2me solution `GaussianMatrix.spectral_second_moment_bound` (instance
-`ssb_isGaussian_gm`). Atlas: `gaussian-matrix-def`. -/
+`ssb_isGaussian_gm`). Atlas: `gaussian-matrix-def`.
+atlas: gaussian-matrix-def -/
 instance isGaussian_gaussianMatrix (p m : ℕ) : IsGaussian (gaussianMatrix p m) := by
   have := (hasGaussianLaw_id_gaussianMatrix p m).isGaussian_map
   rwa [Measure.map_id'] at this

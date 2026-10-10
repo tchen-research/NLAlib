@@ -67,7 +67,8 @@ theorem measure_ge_le_of_measure_gt_le {Ω Ω' : Type*} [MeasurableSpace Ω]
 /-- **Slepian's nonstrict tail comparison.** For finite centred Gaussian vectors with
 equal coordinate variances and dominated increments, `P(max X ≥ τ) ≤ Q(max Y ≥ τ)`.
 Degenerate Gaussian laws are included. Slepian 1962; Vershynin 2018, Theorem 7.2.1;
-atlas `slepian`. -/
+atlas `slepian`.
+atlas: slepian -/
 theorem slepian_inequality_ge {ι Ω Ω' : Type*} [Fintype ι] [MeasurableSpace Ω]
     [MeasurableSpace Ω'] {P : Measure Ω} {Q : Measure Ω'}
     (X : ι → Ω → ℝ) (Y : ι → Ω' → ℝ)

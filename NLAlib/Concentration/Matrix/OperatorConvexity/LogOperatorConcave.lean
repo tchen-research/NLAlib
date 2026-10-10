@@ -17,7 +17,8 @@ set_option autoImplicit false
 /-- The logarithm is operator concave on `(0, ∞)`, i.e. `-log` is operator convex there.
 
 Tropp 2015, Prop. 8.4.8. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 8*. -/
+Introduction to Matrix Concentration Inequalities, Ch 8*.
+atlas: operator-monotone-convex -/
 theorem NLAlib.operatorConvexOn_neg_log :
     OperatorConvexOn (Set.Ioi 0) (fun x => -Real.log x) := by
   refine ⟨convex_Ioi 0, ?_⟩

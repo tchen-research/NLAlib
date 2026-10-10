@@ -419,7 +419,8 @@ section Main
 Gaussian processes indexed by a finite set with dominated increments
 `𝔼 (Xₛ - Xₜ)² ≤ 𝔼 (Yₛ - Yₜ)²`. Then `𝔼 maxₜ Xₜ ≤ 𝔼 maxₜ Yₜ`.
 Source: Sudakov 1971, Fernique 1975; Vershynin 2018, Thm 7.2.11. Atlas: `sudakov-fernique`.
-Ported from Prove2me solution `GaussianMatrix.sudakov_fernique`. -/
+Ported from Prove2me solution `GaussianMatrix.sudakov_fernique`.
+atlas: sudakov-fernique -/
 theorem sudakov_fernique_inequality {ι Ω Ω' : Type*} [Fintype ι] [MeasurableSpace Ω]
     [MeasurableSpace Ω']
     {P : Measure Ω} {Q : Measure Ω'} (X : ι → Ω → ℝ) (Y : ι → Ω' → ℝ)

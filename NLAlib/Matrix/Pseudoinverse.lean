@@ -36,17 +36,23 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n]
 
-/-- Left pseudoinverse `(Gᵀ G)⁻¹ Gᵀ`. -/
+/-- Left pseudoinverse `(Gᵀ G)⁻¹ Gᵀ`.
+atlas: pseudoinverse -/
 def pinvL [DecidableEq n] (G : Matrix m n ℝ) : Matrix n m ℝ := (Gᵀ * G)⁻¹ * Gᵀ
 
-/-- Right pseudoinverse `Gᵀ (G Gᵀ)⁻¹`. -/
+/-- Right pseudoinverse `Gᵀ (G Gᵀ)⁻¹`.
+atlas: pseudoinverse -/
 def pinvR [DecidableEq m] (G : Matrix m n ℝ) : Matrix n m ℝ := Gᵀ * (G * Gᵀ)⁻¹
 
+/-- The left pseudoinverse is a left inverse when `Gᵀ G` is invertible: `G⁺ G = 1`.
+atlas: pseudoinverse -/
 theorem pinvL_mul [DecidableEq n] {G : Matrix m n ℝ} (h : IsUnit (Gᵀ * G)) :
     pinvL G * G = 1 := by
   unfold pinvL
   rw [Matrix.mul_assoc, Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det _).mp h)]
 
+/-- The right pseudoinverse is a right inverse when `G Gᵀ` is invertible: `G G⁺ = 1`.
+atlas: pseudoinverse -/
 theorem mul_pinvR [DecidableEq m] {G : Matrix m n ℝ} (h : IsUnit (G * Gᵀ)) :
     G * pinvR G = 1 := by
   unfold pinvR
@@ -55,7 +61,8 @@ theorem mul_pinvR [DecidableEq m] {G : Matrix m n ℝ} (h : IsUnit (G * Gᵀ)) :
 /-! ### Transposes -/
 
 /-- `((GᵀG)⁻¹Gᵀ)ᵀ = G(GᵀG)⁻¹`, i.e. `(pinvL G)ᵀ = pinvR Gᵀ`. Holds unconditionally (both sides
-are `G (GᵀG)⁻¹` with Mathlib's total inverse). HMT 2011 §A.2; atlas `pseudoinverse`. -/
+are `G (GᵀG)⁻¹` with Mathlib's total inverse). HMT 2011 §A.2; atlas `pseudoinverse`.
+atlas: pseudoinverse -/
 theorem pinvL_transpose [DecidableEq n] (G : Matrix m n ℝ) : (pinvL G)ᵀ = pinvR Gᵀ := by
   unfold pinvL pinvR
   rw [Matrix.transpose_mul, Matrix.transpose_nonsing_inv, Matrix.transpose_mul,
@@ -70,13 +77,15 @@ theorem pinvR_transpose [DecidableEq m] (G : Matrix m n ℝ) : (pinvR G)ᵀ = pi
 /-! ### Penrose identities -/
 
 /-- Penrose identity `G G⁺ G = G` for the left pseudoinverse (full column rank).
-Horn–Johnson §7.3; atlas `pseudoinverse`. -/
+Horn–Johnson §7.3; atlas `pseudoinverse`.
+atlas: pseudoinverse -/
 theorem mul_pinvL_mul [DecidableEq n] {G : Matrix m n ℝ} (h : IsUnit (Gᵀ * G)) :
     G * pinvL G * G = G := by
   rw [Matrix.mul_assoc, pinvL_mul h, Matrix.mul_one]
 
 /-- Penrose identity `G⁺ G G⁺ = G⁺` for the left pseudoinverse (full column rank).
-Horn–Johnson §7.3; atlas `pseudoinverse`. -/
+Horn–Johnson §7.3; atlas `pseudoinverse`.
+atlas: pseudoinverse -/
 theorem pinvL_mul_pinvL [DecidableEq n] {G : Matrix m n ℝ} (h : IsUnit (Gᵀ * G)) :
     pinvL G * G * pinvL G = pinvL G := by
   rw [pinvL_mul h, Matrix.one_mul]
@@ -96,14 +105,16 @@ theorem pinvR_mul_pinvR [DecidableEq m] {G : Matrix m n ℝ} (h : IsUnit (G * G�
 /-! ### Orthogonal projectors `G G⁺` and `G⁺ G` -/
 
 /-- `G (GᵀG)⁻¹ Gᵀ` is symmetric (unconditionally). Penrose identity `(GG⁺)ᵀ = GG⁺`;
-HMT 2011 §A.2; atlas `pseudoinverse`. -/
+HMT 2011 §A.2; atlas `pseudoinverse`.
+atlas: pseudoinverse -/
 theorem mul_pinvL_isSymm [DecidableEq n] (G : Matrix m n ℝ) : (G * pinvL G).IsSymm := by
   unfold Matrix.IsSymm pinvL
   rw [Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_nonsing_inv,
     Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
 
 /-- `G (GᵀG)⁻¹ Gᵀ` is idempotent when `GᵀG` is invertible, so it is the orthogonal projector
-onto `range G`. HMT 2011 §A.2; atlas `pseudoinverse`. -/
+onto `range G`. HMT 2011 §A.2; atlas `pseudoinverse`.
+atlas: pseudoinverse -/
 theorem mul_pinvL_isIdempotentElem [DecidableEq n] {G : Matrix m n ℝ} (h : IsUnit (Gᵀ * G)) :
     IsIdempotentElem (G * pinvL G) := by
   unfold IsIdempotentElem
@@ -139,7 +150,8 @@ theorem mul_pinvR_isSymm [DecidableEq m] {G : Matrix m n ℝ} (h : IsUnit (G * G
 
 /-- `‖G†‖_F² = tr (G Gᵀ)⁻¹` for `G` of full row rank (`IsUnit (G Gᵀ)`), with `G† = pinvR G`.
 The identity behind the Gaussian inverse-moment results (HMT 2011 §A.2, proof of Prop 10.1).
-Atlas `pseudoinverse`. -/
+Atlas `pseudoinverse`.
+atlas: pseudoinverse -/
 theorem frobSq_pinvR [DecidableEq m] {G : Matrix m n ℝ} (h : IsUnit (G * Gᵀ)) :
     frobSq (pinvR G) = ((G * Gᵀ)⁻¹).trace := by
   have hd := (Matrix.isUnit_iff_isUnit_det _).mp h
@@ -166,7 +178,8 @@ form of `frobSq_pinvR` (if `G Gᵀ` is singular both sides are `0`, by Mathlib's
 `A⁻¹ = 0`).
 
 HMT 2011 §A.2 (proof of Prop 10.1). Atlas `pseudoinverse`. Ported from the Prove2me solution
-`Sol_GaussianMatrix_pinv_frobenius_moment` (`frobSq_pinvR_eq_trace_inv`). -/
+`Sol_GaussianMatrix_pinv_frobenius_moment` (`frobSq_pinvR_eq_trace_inv`).
+atlas: pinv-frob-moment -/
 theorem frobSq_pinvR_eq_trace_inv [DecidableEq m] (G : Matrix m n ℝ) :
     frobSq (pinvR G) = ((G * Gᵀ)⁻¹).trace := by
   by_cases h : IsUnit (G * Gᵀ)

@@ -57,7 +57,8 @@ Tropp–Webber 2023, proof of Lemma B.2 (second moments of the inverse Wishart m
 (`integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix`) and
 off-diagonal (`integrable_and_integral_inv_self_mul_transpose_apply_sq_gaussianMatrix`) second
 moments, which use atlas `inverse-wishart-mean` and `chi-square-neg-moment`. Ported from
-Prove2me solution `GaussianMatrix.inverse_wishart_frobenius_moment`. -/
+Prove2me solution `GaussianMatrix.inverse_wishart_frobenius_moment`.
+atlas: inverse-wishart-frob-moment -/
 theorem integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix {r k : ℕ}
     (hrk : r + 4 ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => frobSq (Matrix.of G * (Matrix.of G)ᵀ)⁻¹)
@@ -105,7 +106,8 @@ terms are `integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussian
 mixed ones
 `integrable_and_integral_inv_self_mul_transpose_apply_self_mul_apply_self_gaussianMatrix`
 (atlas `inverse-wishart-mean`, `chi-square-neg-moment`, `rotation-invariance`). Ported from
-Prove2me solution `GaussianMatrix.pinv_frobenius_fourth_moment`. -/
+Prove2me solution `GaussianMatrix.pinv_frobenius_fourth_moment`.
+atlas: pinv-frob-fourth-moment -/
 theorem integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix {r k : ℕ} (hrk : r + 4 ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => frobSq (pinvR (Matrix.of G)) ^ 2)
       (gaussianMatrix r k) ∧
@@ -189,7 +191,8 @@ Proof: each diagonal entry of `(G Gᵀ)⁻¹` is `1/χ²_{k-r+1}`
 (`gaussianMatrix_map_inv_self_mul_transpose_apply_self`), whose `L^{(k-r)/2}` norm is at most
 `3/(k-r+1)` (`integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt`, atlas
 `chi-square-neg-moment`); Minkowski's inequality bounds `‖tr (G Gᵀ)⁻¹‖_{L^q}` and Markov's
-inequality gives the tail. Ported from Prove2me solution `GaussianMatrix.pinv_frobenius_tail`. -/
+inequality gives the tail. Ported from Prove2me solution `GaussianMatrix.pinv_frobenius_tail`.
+atlas: pinv-frob-tail -/
 theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : ℝ) (ht : 1 ≤ t) :
     (gaussianMatrix r k) {G | 12 * (r : ℝ) / ((k : ℝ) - r) * t < frobSq (pinvR (Matrix.of G))}
       ≤ ENNReal.ofReal (4 * t ^ (-(((k : ℝ) - r) / 2))) := by

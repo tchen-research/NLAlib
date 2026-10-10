@@ -106,7 +106,8 @@ Tropp 2015, Thm 4.1.1. Atlas: `matrix-gaussian-series`. Ported from the Prove2me
 Introduction to Matrix Concentration Inequalities, Ch 4*.
 
 Gaussian and Rademacher coefficients are covered by one statement through the disjunctive law
-hypothesis. -/
+hypothesis.
+atlas: matrix-gaussian-series -/
 theorem NLAlib.matrix_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
     (B : Fin N → Matrix (Fin m) (Fin n) ℂ)

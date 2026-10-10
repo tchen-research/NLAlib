@@ -56,19 +56,22 @@ variable {m n : Type*} [Fintype m] [Fintype n]
 /-! ### Definitions -/
 
 /-- The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on
-the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty). -/
+the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty).
+atlas: norm-lipschitz, svd-def -/
 def lamMin (M : Matrix n n ℝ) : ℝ :=
   ⨅ x : {x : n → ℝ // x ⬝ᵥ x = 1}, x.1 ⬝ᵥ M *ᵥ x.1
 
 /-- The smallest singular value of a tall matrix `A : Matrix m n ℝ`:
 `σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention
 `inf ∅ = 0`). For a wide matrix use `sigmaMin Aᵀ`. Same definition as the Prove2me
-`GaussianMatrix.sMin`. -/
+`GaussianMatrix.sMin`.
+atlas: norm-lipschitz, svd-def -/
 def sigmaMin (A : Matrix m n ℝ) : ℝ :=
   ⨅ x : {x : n → ℝ // x ⬝ᵥ x = 1}, Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1))
 
 /-- The squared smallest singular value of a tall matrix, `σ_min(A)² = λ_min(AᵀA)`
-(`sigmaMinSq_eq_sigmaMin_sq`). For a wide matrix `G`, `sigmaMinSq Gᵀ = lamMin (G Gᵀ)`. -/
+(`sigmaMinSq_eq_sigmaMin_sq`). For a wide matrix `G`, `sigmaMinSq Gᵀ = lamMin (G Gᵀ)`.
+atlas: svd-def -/
 def sigmaMinSq (A : Matrix m n ℝ) : ℝ := lamMin (Aᵀ * A)
 
 /-! ### Basic facts -/
@@ -324,7 +327,8 @@ theorem sigmaMin_le_sigmaMin_add_frobNorm (A B : Matrix m n ℝ) :
 /-- The smallest singular value is `1`-Lipschitz for the Frobenius norm:
 `|σ_min(A) − σ_min(B)| ≤ ‖A − B‖_F`. Weyl's perturbation inequality, Frobenius form
 (Vershynin 2012, proof of Cor. 5.35). Generalised from `Fin N × Fin n` to arbitrary finite index
-types. Ported from Prove2me solution `GaussianMatrix.sMin_lipschitz`. Atlas `norm-lipschitz`. -/
+types. Ported from Prove2me solution `GaussianMatrix.sMin_lipschitz`. Atlas `norm-lipschitz`.
+atlas: norm-lipschitz -/
 theorem abs_sigmaMin_sub_sigmaMin_le_frobNorm (A B : Matrix m n ℝ) :
     |sigmaMin A - sigmaMin B| ≤ frobNorm (A - B) := by
   rw [abs_le]
@@ -344,7 +348,8 @@ theorem abs_specNorm_sub_specNorm_le [DecidableEq m] [DecidableEq n] (A B : Matr
 /-- The spectral norm is `1`-Lipschitz for the Frobenius norm: `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖_F`
 (Vershynin 2012, proof of Cor. 5.35). Generalised from `Fin N × Fin n` to arbitrary finite index
 types. Ported from Prove2me solution `GaussianMatrix.specNorm_lipschitz`.
-Atlas `norm-lipschitz`. -/
+Atlas `norm-lipschitz`.
+atlas: norm-lipschitz -/
 theorem abs_specNorm_sub_specNorm_le_frobNorm [DecidableEq m] [DecidableEq n]
     (A B : Matrix m n ℝ) : |specNorm A - specNorm B| ≤ frobNorm (A - B) :=
   (abs_specNorm_sub_specNorm_le A B).trans (specNorm_le_frobNorm (A - B))
@@ -677,7 +682,8 @@ singular both sides are `0` (Mathlib's `M⁻¹ = 0` and `1 / 0 = 0`).
 HMT 2011, proof of Prop A.3; Tropp–Webber 2023, proof of Lemma B.4. Atlas:
 `pinv-spectral-tail`, `inverse-wishart-spectral-moment` (helper). Generalised from
 `Fin r × Fin k` to arbitrary finite index types. Ported from Prove2me solution
-`GaussianMatrix.specNorm_inv_gram_eq`. -/
+`GaussianMatrix.specNorm_inv_gram_eq`.
+atlas: pseudoinverse -/
 theorem specNorm_inv_self_mul_transpose_eq (A : Matrix m n ℝ) :
     specNorm (A * Aᵀ)⁻¹ = 1 / sigmaMin Aᵀ ^ 2 := by
   unfold specNorm
@@ -720,7 +726,8 @@ theorem specNorm_inv_self_mul_transpose_eq (A : Matrix m n ℝ) :
 
 HMT 2011, proof of Prop A.3 / Prop 10.4. Atlas: `pseudoinverse`; helper for
 `pinv-spectral-tail`. Generalised from `Fin r × Fin k` to arbitrary finite index types.
-Ported from Prove2me solution `GaussianMatrix.specNorm_pinvR_sq`. -/
+Ported from Prove2me solution `GaussianMatrix.specNorm_pinvR_sq`.
+atlas: pseudoinverse -/
 theorem specNorm_pinvR_sq [DecidableEq n] (A : Matrix m n ℝ) :
     specNorm (pinvR A) ^ 2 = specNorm (A * Aᵀ)⁻¹ := by
   unfold specNorm pinvR

@@ -125,7 +125,8 @@ Deviation: `n`, `k`, `r`, `r'`, `t` are `Fin` (the Gaussian law of `Ω` and the 
 `Gaussian/Conditioning.lean` live on `Fin`); the row type `m` and the column type `q` of `Q`
 are arbitrary.
 Atlas `rsvd-expected-error` (uses `gaussian-conditioning`, `pinv-frob-moment`,
-`gaussian-full-rank-ae`, `hmt-9-1-frobenius`). -/
+`gaussian-full-rank-ae`, `hmt-9-1-frobenius`).
+atlas: rsvd-expected-error -/
 theorem rsvd_main_gaussian
     {A : Matrix m (Fin n) ℝ} {U₁ : Matrix m (Fin k) ℝ}
     {U₂ : Matrix m (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
@@ -150,7 +151,8 @@ Algorithm tRSVD, output `Q⟦QᵀA⟧ₖ`; HMT 2011, Thm 10.5): as `rsvd_main_ga
 `Y ω` any best rank-`k` approximation of `Q ωᵀ A`:
 `E‖A − Q⟦QᵀA⟧ₖ‖_F² ≤ (1 + k/(t−k−1)) ‖A − ⟦A⟧ₖ‖_F²`. No Gaussian or integrability hypothesis
 remains. Atlas `rsvd-expected-error` (uses `gaussian-conditioning`, `pinv-frob-moment`,
-`gaussian-full-rank-ae`, `hmt-9-1-frobenius`). -/
+`gaussian-full-rank-ae`, `hmt-9-1-frobenius`).
+atlas: rsvd-expected-error -/
 theorem rsvd_truncated_main_gaussian
     {A : Matrix m (Fin n) ℝ} {U₁ : Matrix m (Fin k) ℝ}
     {U₂ : Matrix m (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}
@@ -246,7 +248,8 @@ of Thm 5.1). Fixed `Q` (orthonormal columns, `q ≥ 1`), an orthogonal completio
 `completion_reduction` with `hG₁`, `hG₂`, `hG₁m`, `hGi` discharged; no hypothesis remains.
 Deviation from `completion_reduction`: the row type is `Fin m` (Gaussian law convention).
 Atlas `gn-expected-error` (uses `gaussian-conditioning`, `pinv-frob-moment`,
-`gaussian-full-rank-ae`, `sketched-regression`). -/
+`gaussian-full-rank-ae`, `sketched-regression`).
+atlas: gn-expected-error -/
 theorem completion_reduction_gaussian [IsProbabilityMeasure μ] {m s q r : ℕ}
     {n : Type*} [Fintype n] [DecidableEq n]
     (Q : Matrix (Fin m) (Fin q) ℝ) (Qp : Matrix (Fin m) (Fin r) ℝ) (A : Matrix (Fin m) n ℝ)
@@ -316,7 +319,8 @@ Deviations: index types are `Fin` (the laws of `Ω` and `Ψ` live on `Fin n → 
 (`hQ`, `hQf`), needed to apply Fubini.
 Atlas `gn-expected-error` (uses `rsvd-expected-error`, `gaussian-conditioning`,
 `pinv-frob-moment`, `gaussian-full-rank-ae`, `sketched-regression`,
-`orthonormal-completion`, `hmt-9-1-frobenius`). -/
+`orthonormal-completion`, `hmt-9-1-frobenius`).
+atlas: gn-expected-error -/
 theorem gn_main_gaussian
     {A : Matrix (Fin m) (Fin n) ℝ} {U₁ : Matrix (Fin m) (Fin k) ℝ}
     {U₂ : Matrix (Fin m) (Fin r) ℝ} {V₁ : Matrix (Fin n) (Fin k) ℝ}

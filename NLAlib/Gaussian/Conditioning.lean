@@ -68,7 +68,8 @@ theorem lintegral_of_indepFun {α β : Type*} [MeasurableSpace α] [MeasurableSp
 independent and `(x, y) ↦ g x y` is integrable for the product of the laws, then
 `E g(X, Y) = ∫ (∫ g(x, y) d(law Y)(y)) d(law X)(x)`.
 
-Standard (e.g. Durrett, *Probability*, Thm 2.1.12). Atlas `gaussian-conditioning`. -/
+Standard (e.g. Durrett, *Probability*, Thm 2.1.12). Atlas `gaussian-conditioning`.
+atlas: gaussian-conditioning -/
 theorem integral_of_indepFun {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
     {X : Ωs → α} {Y : Ωs → β} (hX : AEMeasurable X μ) (hY : AEMeasurable Y μ)
     (hXY : IndepFun X Y μ) {g : α → β → ℝ}
@@ -180,7 +181,8 @@ lower Lebesgue integrals (`lintegral_frobSq_mul_gaussian_mul_of_indepFun`); when
 is not integrable both Bochner integrals are `0`. Integrability of the left side is
 `integrable_frobSq_mul_gaussian_mul_of_indepFun`.
 HMT 2011 Prop 10.1 with the tower property (proof of Thm 10.5). Atlas `gaussian-conditioning`.
-Measurability of `T` is stated entrywise (`Matrix` carries no `MeasurableSpace` instance). -/
+Measurability of `T` is stated entrywise (`Matrix` carries no `MeasurableSpace` instance).
+atlas: gaussian-conditioning -/
 theorem integral_frobSq_mul_gaussian_mul_of_indepFun {α ι κ : Type*} [MeasurableSpace α]
     [Fintype ι] [Fintype κ] {p m : ℕ} {X : Ωs → α} {Y : Ωs → Fin p → Fin m → ℝ}
     (hX : AEMeasurable X μ) (hY : μ.map Y = gaussianMatrix p m) (hXY : IndepFun X Y μ)
@@ -241,7 +243,8 @@ This is hypothesis `hinv` of `NLAlib.rsvd_truncated_main` modulo the inverse mom
 `E ‖Ω₁†‖_F² = k/(t−k−1)`. No integrability hypothesis is needed (see
 `integral_frobSq_mul_gaussian_mul_of_indepFun`). `Ω` is array-valued; for a `Matrix`-valued
 `Ω'` take `Ω := fun ω => Matrix.of.symm (Ω' ω)` (definitionally `Matrix.of (Ω ω) = Ω' ω`).
-Atlas `gaussian-conditioning`. -/
+Atlas `gaussian-conditioning`.
+atlas: gaussian-conditioning -/
 theorem integral_frobSq_mul_block_mul_pinvR_block {n k r r' t : ℕ}
     {Ω : Ωs → Fin n → Fin t → ℝ}
     (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
@@ -281,7 +284,8 @@ theorem integrable_frobSq_mul_block_mul_pinvR_block {n k r r' t : ℕ}
 
 Generalized Nyström / two-sided sketch analysis (hypothesis `hG₂` of `completion_reduction`);
 the conditioning argument of HMT 2011 Thm 10.5 applied to the transposed sketch. Here
-`(ΨᵀQ)† = pinvL (ΨᵀQ)`. Atlas `gaussian-conditioning`. -/
+`(ΨᵀQ)† = pinvL (ΨᵀQ)`. Atlas `gaussian-conditioning`.
+atlas: gaussian-conditioning -/
 theorem integral_frobSq_pinvL_block_mul_block_mul {m s q rp : ℕ} {ι : Type*} [Fintype ι]
     {Ψ : Ωs → Fin m → Fin s → ℝ} (hΨ : μ.map Ψ = gaussianMatrix m s)
     (Q : Matrix (Fin m) (Fin q) ℝ) (Qp : Matrix (Fin m) (Fin rp) ℝ) (hQ : Qᵀ * Q = 1)
@@ -315,7 +319,8 @@ omit [IsProbabilityMeasure μ] in
 `V₁ᵀ V₁ = 1`, then `E ‖(V₁ᵀΩ)†‖_F² = E_{G} ‖G†‖_F²` for `G` a `k × t` standard Gaussian matrix.
 Combined with `integral_frobSq_mul_block_mul_pinvR_block` and the inverse moment of a Gaussian
 matrix this closes hypothesis `hinv` of `NLAlib.rsvd_truncated_main`. HMT 2011 §10.2 (block law).
-Atlas `gaussian-conditioning`. -/
+Atlas `gaussian-conditioning`.
+atlas: gaussian-conditioning -/
 theorem integral_frobSq_pinvR_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
     (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (hV₁ : V₁ᵀ * V₁ = 1) :

@@ -168,7 +168,8 @@ private lemma prod_mom_cnt4 (e1 e2 e3 e4 : Fin p × Fin m) :
 /-- **Isserlis (Wick) formula for four entries** of a standard Gaussian matrix:
 `E[G_{e₁} G_{e₂} G_{e₃} G_{e₄}] = δ₁₂δ₃₄ + δ₁₃δ₂₄ + δ₁₄δ₂₃`. Isserlis 1918.
 Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
-`GaussianMatrix.frobenius_fourth_moment` (`isserlis_idx`). -/
+`GaussianMatrix.frobenius_fourth_moment` (`isserlis_idx`).
+atlas: gaussian-frob-fourth-moment -/
 theorem integral_entry_mul_four_gaussianMatrix (e1 e2 e3 e4 : Fin p × Fin m) :
     ∫ G, G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2 ∂(gaussianMatrix p m)
       = (if e1 = e2 then 1 else 0) * (if e3 = e4 then 1 else 0)
@@ -273,7 +274,8 @@ theorem integral_linear_mul_two_gaussianMatrix (u v : Fin p × Fin m → ℝ) :
 /-- **Isserlis (Wick) formula for linear forms**: for a standard Gaussian matrix `G`,
 `E[⟨u,G⟩⟨v,G⟩⟨w,G⟩⟨z,G⟩] = ⟨u,v⟩⟨w,z⟩ + ⟨u,w⟩⟨v,z⟩ + ⟨u,z⟩⟨v,w⟩`, where
 `⟨u,G⟩ = ∑ₑ uₑ G_e`. Isserlis 1918. Atlas: `gaussian-frob-fourth-moment` (helper). Ported from
-Prove2me solution `GaussianMatrix.frobenius_fourth_moment` (`integral_L4`). -/
+Prove2me solution `GaussianMatrix.frobenius_fourth_moment` (`integral_L4`).
+atlas: gaussian-frob-fourth-moment -/
 theorem integral_linear_mul_four_gaussianMatrix (u v w z : Fin p × Fin m → ℝ) :
     ∫ G, (∑ e, u e * G e.1 e.2) * (∑ e, v e * G e.1 e.2) * (∑ e, w e * G e.1 e.2) *
         (∑ e, z e * G e.1 e.2) ∂(gaussianMatrix p m)
@@ -364,7 +366,8 @@ fixed `S : a × p`, `T : m × n`,
 Isserlis formula applied to the entries `(S G T)_{ij} = ⟨S_i ⊗ T_j, G⟩`. Used for the variance of
 Gaussian sketches (Tropp–Webber 2023, App. A; HMT 2011, Prop 10.1 second-moment companions).
 Atlas: `gaussian-frob-fourth-moment`. Ported from Prove2me solution
-`GaussianMatrix.frobenius_fourth_moment`. -/
+`GaussianMatrix.frobenius_fourth_moment`.
+atlas: gaussian-frob-fourth-moment -/
 theorem integral_frobSq_mul_gaussianMatrix_mul_sq (S : Matrix (Fin a) (Fin p) ℝ)
     (T : Matrix (Fin m) (Fin n) ℝ) :
     ∫ G, frobSq (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)

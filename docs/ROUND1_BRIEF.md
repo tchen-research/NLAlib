@@ -7,7 +7,9 @@ first. Then the files named in your task.
 ## Hard rules
 - Work ONLY in the files your task names. Do not edit other files (several agents work in parallel).
   Helper lemmas you need go in your own file; note in your report which ones belong in `Basic.lean`.
-- Do not edit `atlas/atlas.json` (the coordinator does it from your report).
+- Do not edit `atlas/atlas.json`. The declaration that formalizes an atlas result ends its
+  docstring with the tag line `atlas: <id>` (ids comma-separated if it realises several); the
+  coordinator regenerates the atlas from the tags. Helpers get no tag.
 - Do not run a full `lake build`. Check single files with
   `cd /home/tyler/Documents/prove2me/lean && lake env lean NLAlib/<Area>/<File>.lean`
   (10–30 s per run; importing Mathlib is the cost). If a file you wrote imports another file you
@@ -22,8 +24,9 @@ first. Then the files named in your task.
   `residual`, `IsBestRankApprox` from `NLAlib.Matrix.Projections`, `pinvL/pinvR` from
   `NLAlib.Matrix.Pseudoinverse`, `gaussianMatrix` from `NLAlib.Gaussian.Basic`. Import the
   specific Mathlib files you need; `import Mathlib` is acceptable if you cannot find them quickly.
-- Docstring on every public declaration: the source and label (e.g. "HMT 2011, Thm 9.1") and the
-  atlas id. State deviations from the printed statement.
+- Docstring on every public declaration: the source and label (e.g. "HMT 2011, Thm 9.1"), and
+  the `atlas: <id>` tag line when the declaration is the formal statement of that result. State
+  deviations from the printed statement.
 - Mathlib search: `grep -rn "theorem name" .lake/packages/mathlib/Mathlib`, and `exact?`,
   `apply?`, `rw?`, `simp?` in a scratch file under `/tmp`.
 - Finish within your budget: a smaller set of fully proved, cleanly stated results beats a large

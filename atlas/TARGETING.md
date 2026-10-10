@@ -115,13 +115,13 @@ library. If a faithful definition exists, use it and record it in `mathlib_prere
 6. Prove it, or reduce it: for difficulty ≥ 4, state the result with the missing pieces as named
    hypotheses (`status: assumed`) and open issues for each piece, so the main statement lands
    early and the frontier is visible.
-7. In the same PR update `atlas/atlas.json`:
+7. End the theorem's docstring with the tag line `atlas: gordon` and run
+   `lake env lean scripts/ExtractDecls.lean && python3 scripts/sync_atlas.py`; the sync writes
    ```json
    "status": "proved",
-   "formalizations": [{"library": "nlalib", "decl": "NLAlib.gordon", "status": "proved"}],
-   "updated_at": "YYYY-MM-DD"
+   "formalizations": [{"library": "nlalib", "decl": "NLAlib.gordon", "module": "…", "status": "proved"}]
    ```
-   CI validates it and redeploys the map on merge.
+   into `atlas/atlas.json` from the tag. CI validates it and redeploys the map on merge.
 8. Add new `depends_on` edges you discovered while proving. The reuse ranking is only as good as
    the edges.
 

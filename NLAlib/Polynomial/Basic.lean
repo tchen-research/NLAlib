@@ -33,14 +33,16 @@ namespace NLAlib
 `chebyshevResidual a b q = T_q((b + a − 2 X)/(b − a)) / T_q((b + a)/(b − a))`. For `0 < a < b`
 it has the smallest maximum modulus on `[a, b]` among polynomials of degree at most `q` with
 value `1` at `0` (the residual polynomial of Chebyshev iteration and the model for CG).
-Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`. -/
+Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`.
+atlas: inverse-polynomial-approx -/
 def chebyshevResidual (a b : ℝ) (q : ℕ) : ℝ[X] :=
   C (1 / (Chebyshev.T ℝ q).eval ((b + a) / (b - a))) *
     (Chebyshev.T ℝ q).comp (C ((b + a) / (b - a)) - C (2 / (b - a)) * X)
 
 /-- The gap-amplifying polynomial `chebyshevAmplifier α γ q = T_q(X/α) / T_q(1 + γ)`: equal to
 `1` at `α(1 + γ)`, increasing beyond it, and exponentially small on `[−α, α]`.
-Source: Musco–Musco (2015) [`mm15`], Lem. 4–5; Atlas: `chebyshev-amplifier`. -/
+Source: Musco–Musco (2015) [`mm15`], Lem. 4–5; Atlas: `chebyshev-amplifier`.
+atlas: chebyshev-amplifier -/
 def chebyshevAmplifier (α γ : ℝ) (q : ℕ) : ℝ[X] :=
   C (1 / (Chebyshev.T ℝ q).eval (1 + γ)) * (Chebyshev.T ℝ q).comp (C (1 / α) * X)
 
@@ -52,7 +54,8 @@ def chebyshevAmplifier (α γ : ℝ) (q : ℕ) : ℝ[X] :=
 /-- The Chebyshev zeros `chebyshevZero q k = cos((2k + 1)π/(2q))`, `k < q`: the `q` roots of
 `T_q`, in decreasing order. Source: Trefethen (2019) [`trefethen19`], Ch. 2 ("Chebyshev points
 of the first kind"); Mathlib `Polynomial.Chebyshev.roots_T_real`.
-Atlas: `chebyshev-interpolation-error`. -/
+Atlas: `chebyshev-interpolation-error`.
+atlas: chebyshev-interpolation-error -/
 def chebyshevZero (q : ℕ) (k : Fin q) : ℝ :=
   Real.cos ((2 * ((k : ℕ) : ℝ) + 1) * Real.pi / (2 * q))
 

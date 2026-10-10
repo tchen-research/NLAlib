@@ -393,7 +393,8 @@ measurable `h > 0` with `h, h log h ∈ L¹(μ)`,
 `Ent_ν(F) = ∫ F log F dν - (∫ F dν) log ∫ F dν`.
 Source: Ledoux, *The Concentration of Measure Phenomenon*, Prop 5.6; Boucheron–Lugosi–Massart
 2013, Thm 4.10. Atlas: `entropy-tensorization`. Ported from Prove2me solution
-`GaussianMatrix.entropy_tensorization`. -/
+`GaussianMatrix.entropy_tensorization`.
+atlas: entropy-tensorization -/
 theorem entropy_pi_le_sum_integral_entropy_update {ι : Type*} [Fintype ι] [DecidableEq ι]
     {Ω : Type*} [MeasurableSpace Ω] (μ : ι → Measure Ω) [∀ i, IsProbabilityMeasure (μ i)]
     (h : (ι → Ω) → ℝ) (hmeas : Measurable h) (hpos : ∀ x, 0 < h x)

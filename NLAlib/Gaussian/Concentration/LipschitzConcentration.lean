@@ -342,7 +342,8 @@ private lemma entropy_exp_mul_le_of_contDiff {ι : Type*} [Fintype ι] [Decidabl
 Source: Ledoux, *The Concentration of Measure Phenomenon*, (5.5) and proof of Thm 5.3;
 Boucheron–Lugosi–Massart 2013, proof of Thm 5.6. Atlas: `gaussian-concentration` (the
 log-Sobolev input to `herbst`). Ported from Prove2me solution
-`GaussianMatrix.gaussian_lipschitz_entropy_bound`. -/
+`GaussianMatrix.gaussian_lipschitz_entropy_bound`.
+atlas: herbst -/
 theorem entropy_exp_mul_le_gaussian_of_lipschitz {ι : Type*} [Fintype ι] (f : (ι → ℝ) → ℝ)
     (L : ℝ) (hLip : ∀ x y, |f x - f y| ≤ L * Real.sqrt (∑ i, (x i - y i) ^ 2)) (s : ℝ) :
     ∫ x, s * f x * Real.exp (s * f x) ∂(Measure.pi fun _ : ι => gaussianReal 0 1)
@@ -410,7 +411,8 @@ theorem entropy_exp_mul_le_gaussian_of_lipschitz {ι : Type*} [Fintype ι] (f : 
 Source: Ledoux, *The Concentration of Measure Phenomenon*, Thm 5.3 / (2.35);
 Boucheron–Lugosi–Massart 2013, Thm 5.6; Vershynin 2012, Prop 5.34. Atlas:
 `gaussian-concentration`. Ported from Prove2me solution
-`GaussianMatrix.gaussian_concentration_vector`. -/
+`GaussianMatrix.gaussian_concentration_vector`.
+atlas: gaussian-concentration -/
 theorem gaussian_concentration_pi {ι : Type*} [Fintype ι] (f : (ι → ℝ) → ℝ) (L : ℝ)
     (hL : 0 < L) (hLip : ∀ x y, |f x - f y| ≤ L * Real.sqrt (∑ i, (x i - y i) ^ 2))
     (t : ℝ) (ht : 0 ≤ t) :
@@ -462,7 +464,8 @@ private lemma frobNorm_curry_sub {p m : ℕ} (x y : Fin p × Fin m → ℝ) :
 integrable under `gaussianMatrix p m` and
 `P{h(G) ≥ 𝔼 h(G) + L t} ≤ e^{-t²/2}`.
 Source: HMT 2011, Prop 10.3; Vershynin 2012, Prop 5.34. Atlas: `gaussian-concentration`.
-Ported from Prove2me solution `GaussianMatrix.gaussian_concentration`. -/
+Ported from Prove2me solution `GaussianMatrix.gaussian_concentration`.
+atlas: gaussian-concentration -/
 theorem gaussian_concentration {p m : ℕ} (h : (Fin p → Fin m → ℝ) → ℝ) (L : ℝ) (hL : 0 < L)
     (hLip : ∀ X Y, |h X - h Y| ≤ L * frobNorm (Matrix.of X - Matrix.of Y)) (t : ℝ)
     (ht : 0 ≤ t) :

@@ -174,7 +174,8 @@ Integrability of `f`, of conditional-mean entropy integrands, and of local
 entropies is derived, so this is an actual expectation bound with zeros
 allowed. Source: Ledoux, Prop. 5.6; Boucheron--Lugosi--Massart 2013,
 Thm. 4.10, obtained from NLAlib's positive theorem by conditional Jensen
-and dominated convergence. Atlas: `entropy-tensorization`. -/
+and dominated convergence. Atlas: `entropy-tensorization`.
+atlas: entropy-tensorization -/
 theorem entropy_pi_le_sum_integral_entropy_update_of_nonneg
     (f : (ι → Ω) → ℝ) (hfm : Measurable f) (hf : ∀ x, 0 ≤ f x)
     (hlog : Integrable (fun x => f x * Real.log (f x)) (Measure.pi μ)) :

@@ -73,7 +73,8 @@ theorem isUnit_rowGram_of_frame_factorization
 
 /-- The actual raw generalized Nyström estimator, using a general
 Moore–Penrose inverse. Rank-deficient sketches are included.
-Source: Tropp–Webber 2023, Section 5. Atlas: `gn-expected-error`. -/
+Source: Tropp–Webber 2023, Section 5. Atlas: `gn-expected-error`.
+atlas: gn-expected-error -/
 def rawGeneralizedNystrom {m n t s : Type*}
     [Fintype m] [Fintype n] [Fintype t] [Fintype s]
     (A : Matrix m n ℝ) (Y : Matrix m t ℝ) (Ψ : Matrix m s ℝ) : Matrix m n ℝ :=

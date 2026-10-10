@@ -107,7 +107,8 @@ theorem transpose_eigenvectorUnitary_mulVec_apply {A : Matrix n n ℝ} (hA : A.I
 
 /-- **Polynomial calculus, vector form.** `p(A) v = ∑ᵢ p(λᵢ) ⟨uᵢ, v⟩ uᵢ` for real symmetric `A`
 with orthonormal eigenvectors `uᵢ = hA.eigenvectorBasis i`. Standard (Saad 2003, §6.11);
-audit G3 C1; atlas `polynomial-spectral-bound`. -/
+audit G3 C1; atlas `polynomial-spectral-bound`.
+atlas: polynomial-spectral-bound -/
 theorem aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (p : ℝ[X]) (v : n → ℝ) :
     aeval A p *ᵥ v =
       ∑ i, (p.eval (hA.eigenvalues i) * (⇑(hA.eigenvectorBasis i) ⬝ᵥ v)) •
@@ -134,7 +135,8 @@ theorem sum_sq_eigenvectorBasis_dotProduct {A : Matrix n n ℝ} (hA : A.IsHermit
 
 /-- **Spectral-measure identity.** `vᵀ p(A) v = ∑ᵢ p(λᵢ) ⟨uᵢ, v⟩²` for real symmetric `A`.
 Standard (Golub–Meurant 2010, §7.1); audit G3 C1/C2; atlas `polynomial-spectral-bound`,
-`spectral-measure`. -/
+`spectral-measure`.
+atlas: polynomial-spectral-bound -/
 theorem dotProduct_aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (p : ℝ[X])
     (v : n → ℝ) :
     v ⬝ᵥ (aeval A p *ᵥ v) =
@@ -145,7 +147,8 @@ theorem dotProduct_aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian)
   ring
 
 /-- The quadratic form in the eigenbasis: `vᵀ A v = ∑ᵢ λᵢ ⟨uᵢ, v⟩²`. Standard;
-atlas `polynomial-spectral-bound`, `spectral-measure`. -/
+atlas `polynomial-spectral-bound`, `spectral-measure`.
+atlas: polynomial-spectral-bound -/
 theorem quadForm_eq_sum_eigenvalues {A : Matrix n n ℝ} (hA : A.IsHermitian) (v : n → ℝ) :
     quadForm A v = ∑ i, hA.eigenvalues i * (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2 := by
   have h := dotProduct_aeval_mulVec_eq_sum hA X v
@@ -187,7 +190,8 @@ theorem quadForm_aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (
 /-- **Polynomial spectral-norm bound.** For real symmetric `A`, if `|p(λᵢ)| ≤ M` at every
 eigenvalue then `‖p(A)‖₂ ≤ M`. Standard (Golub–Van Loan, 4th ed., §11.3.4, used for the CG
 bound); audit G0 C5; atlas `polynomial-spectral-bound`. The hypothesis `0 ≤ M` covers the empty
-index type. -/
+index type.
+atlas: polynomial-spectral-bound -/
 theorem specNorm_aeval_le {A : Matrix n n ℝ} (hA : A.IsHermitian) (p : ℝ[X]) {M : ℝ}
     (hM : 0 ≤ M) (h : ∀ i, |p.eval (hA.eigenvalues i)| ≤ M) : specNorm (aeval A p) ≤ M := by
   have hU := transpose_eigenvectorUnitary_mul_self hA
@@ -197,7 +201,8 @@ theorem specNorm_aeval_le {A : Matrix n n ℝ} (hA : A.IsHermitian) (p : ℝ[X])
 
 /-- **Polynomial bound, vector form.** If every eigenvalue of the real symmetric `A` lies in `S`
 and `|p| ≤ M` on `S`, then `‖p(A) v‖² ≤ M² ‖v‖²`. Standard (Saad 2003, §6.11); audit G3 C1;
-atlas `polynomial-spectral-bound`. -/
+atlas `polynomial-spectral-bound`.
+atlas: polynomial-spectral-bound -/
 theorem dotProduct_aeval_mulVec_self_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {p : ℝ[X]}
     {S : Set ℝ} {M : ℝ} (hspec : ∀ i, hA.eigenvalues i ∈ S) (hp : ∀ x ∈ S, |p.eval x| ≤ M)
     (v : n → ℝ) :
@@ -213,7 +218,8 @@ theorem dotProduct_aeval_mulVec_self_le {A : Matrix n n ℝ} (hA : A.IsHermitian
 `S ⊆ [0, ∞)` (so `A` is positive semidefinite) and `|p| ≤ M` on `S`, then
 `(p(A)v)ᵀ A (p(A)v) ≤ M² vᵀ A v`, i.e. `‖p(A) v‖_A ≤ M ‖v‖_A`. This is the form used for the
 CG error (Greenbaum 1997, §3.1; Saad 2003, Thm 6.29); audit G3 C1;
-atlas `polynomial-spectral-bound`. -/
+atlas `polynomial-spectral-bound`.
+atlas: polynomial-spectral-bound -/
 theorem quadForm_aeval_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {p : ℝ[X]}
     {S : Set ℝ} {M : ℝ} (hS : S ⊆ Set.Ici 0) (hspec : ∀ i, hA.eigenvalues i ∈ S)
     (hp : ∀ x ∈ S, |p.eval x| ≤ M) (v : n → ℝ) :

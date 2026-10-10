@@ -28,7 +28,8 @@ theorem singularValues_le_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) 
 
 /-- The squared Frobenius norm is the sum of the squares of precisely the
 positive singular values. Zero singular values contribute nothing.
-Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`. -/
+Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`.
+atlas: norms-frob-spec -/
 theorem frobSq_eq_sum_rank_singularValues_sq {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) :
     frobSq A = ∑ k ∈ Finset.range A.rank, singularValues A k ^ 2 := by

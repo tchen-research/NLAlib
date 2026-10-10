@@ -30,7 +30,8 @@ bound, as given by a log-Sobolev inequality), then
 `∫ e^{s f} ≤ exp(s ∫ f + c s²)` for every `s ≥ 0`.
 Source: Ledoux, *The Concentration of Measure Phenomenon*, Thm 5.3 (Herbst's argument);
 Boucheron–Lugosi–Massart 2013, Prop 6.1. Atlas: `herbst`. Ported from Prove2me solution
-`GaussianMatrix.herbst_argument`. -/
+`GaussianMatrix.herbst_argument`.
+atlas: herbst -/
 theorem integral_exp_mul_le_exp_of_entropy_le {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     [IsProbabilityMeasure μ] (f : Ω → ℝ) (c : ℝ)
     (hint : ∀ s : ℝ, Integrable (fun ω => Real.exp (s * f ω)) μ)

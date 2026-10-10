@@ -96,7 +96,8 @@ coordinate centering; no quadratic-form MGF certificate is assumed.
 Vershynin 2018, Theorem 6.2.1; atlas `hanson-wright`. Deviation: none in the statement;
 the index type is an arbitrary `[Fintype ι]` (the ported leaf proof is over `Fin n` and is
 transported through `Fintype.equivFin ι`).
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae. -/
+Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+atlas: hanson-wright -/
 theorem hanson_wright_mgf {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℝ) (X : ι → Ω → ℝ) (K : ℝ) (hK : 0 < K)
@@ -122,7 +123,8 @@ The already-proved Orlicz-to-MGF bridge gives variance proxy `9K²`; the bound
 therefore uses the common original ψ₂ scale with a conservative constant.
 Vershynin 2018, Theorem 6.2.1; atlas `hanson-wright`. Deviation: the constant
 `1/(20736 e²)` is explicit (Vershynin's `c` is unspecified); the index type is an arbitrary
-`[Fintype ι]`. -/
+`[Fintype ι]`.
+atlas: hanson-wright -/
 theorem hanson_wright_of_lintegral_exp_sq_le_two {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℝ) (X : ι → Ω → ℝ) (K : ℝ) (hK : 0 < K)

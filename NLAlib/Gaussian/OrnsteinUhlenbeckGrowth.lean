@@ -131,7 +131,8 @@ theorem measurable_ornsteinUhlenbeck_joint {f : ℝ → ℝ} (hf : Measurable f)
 /-- Spatial commutation for C1 functions with polynomially bounded values
 and derivatives. Source: Bakry--Gentil--Ledoux, §2.7.1. The proof extends
 NLAlib's bounded-derivative argument with Gaussian polynomial dominators.
-Atlas: `ornstein-uhlenbeck`. -/
+Atlas: `ornstein-uhlenbeck`.
+atlas: ornstein-uhlenbeck -/
 theorem hasDerivAt_ornsteinUhlenbeck_of_polynomial_growth
     (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f) (C : ℝ) (d : ℕ)
     (hValue : ∀ z, |f z| ≤ C * (1 + |z|) ^ d)
@@ -246,7 +247,8 @@ theorem continuousAt_ornsteinUhlenbeck_time_of_polynomial_growth {f : ℝ → �
 /-- Fisher integrand of the Mehler operator, written using its explicit
 commutation relation. The next bridge identifies it with the actual
 spatial derivative on the polynomial-growth domain.
-Source: Bakry--Gentil--Ledoux, §5.7. Atlas: `ornstein-uhlenbeck`. -/
+Source: Bakry--Gentil--Ledoux, §5.7. Atlas: `ornstein-uhlenbeck`.
+atlas: ornstein-uhlenbeck -/
 def ornsteinUhlenbeckFisherIntegrand (t : ℝ) (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   (Real.exp (-t) * ornsteinUhlenbeck t (deriv f) x) ^ 2 / ornsteinUhlenbeck t f x
 

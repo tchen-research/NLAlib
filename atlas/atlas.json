@@ -24527,6 +24527,16 @@
    "year": 2000,
    "doi": "10.1016/S0377-0427(00)00393-9",
    "role": "Survey of Kronecker-product identities: SVD, eigenvalues, vec, Kronecker-structured least squares."
+  },
+  {
+   "id": "gautschi04",
+   "type": "book",
+   "title": "Orthogonal Polynomials: Computation and Approximation",
+   "authors": [
+    "Walter Gautschi"
+   ],
+   "year": 2004,
+   "role": "Orthogonal polynomials, three-term recurrences, Gauss quadrature, Jacobi matrices, Stieltjes/Lanczos procedures: the theory behind Lanczos quadrature and SLQ."
   }
  ],
  "libraries": [

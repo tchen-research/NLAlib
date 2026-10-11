@@ -84,8 +84,11 @@ private lemma gFun_nonneg (u : ℝ) : 0 ≤ gFun u := by
     have := hmono (Set.mem_Ici.mpr le_rfl) (Set.mem_Ici.mpr hu) hu
     linarith
 
-/-- The scalar Bernstein mgf bound: for `x ≤ L`, `e^{θx} ≤ 1 + θx + c x²`. -/
-private lemma scalar_bound {L θ x : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3) (hx : x ≤ L) :
+/-- The scalar one-sided Bernstein exponential bound, permitting arbitrarily negative
+`x ≤ L`: `exp(θx) ≤ 1+θx+((θ²/2)/(1-θL/3))x²`.
+Source: Tropp 2015, Lemma 6.6.2; scalar Taylor comparison in operator rederivations
+`eq:scalarbernstein`. Reused by `matrix-bernstein` and `matrix-freedman` (partial). -/
+theorem exp_mul_le_one_add_mul_add_sq_mul_of_le {L θ x : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3) (hx : x ≤ L) :
     Real.exp (θ * x) ≤ 1 + θ * x + (θ ^ 2 / 2) / (1 - θ * L / 3) * x ^ 2 := by
   have hux : θ * x ≤ θ * L := mul_le_mul_of_nonneg_left hx hθ.le
   have hpos : 0 < 1 - θ * L / 3 := by linarith
@@ -100,22 +103,35 @@ private lemma scalar_bound {L θ x : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3) (hx
     ring
   linarith
 
-variable {d : ℕ}
+variable {d : Type*} [Fintype d] [DecidableEq d]
 
-private lemma quad_eq (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (θ c : ℝ) :
+/-- Real functional calculus evaluates the actual affine-quadratic polynomial at any
+finite Hermitian matrix.
+Source: scalar polynomial functional calculus, Tropp 2015, Section 2.1.11;
+reused by `matrix-bernstein` and `matrix-freedman` (partial). -/
+theorem one_add_smul_add_smul_sq_eq_cfc (A : Matrix d d ℂ) (hA : A.IsHermitian) (θ c : ℝ) :
     1 + θ • A + c • A ^ 2 = cfc (fun x => 1 + θ * x + c * x ^ 2) A := by
   have e1 := cfc_add A (fun x => 1 + θ * x) (fun x => c * x ^ 2)
   have e2 := cfc_const_add 1 (fun x => θ * x) A
   rw [e1, e2, cfc_const_mul_id θ A, cfc_const_mul c (fun x : ℝ => x ^ 2) A,
     cfc_pow_id A 2 hA.isSelfAdjoint, map_one]
 
-private lemma exp_le_quad (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) {θ c : ℝ}
+/-- A scalar exponential-versus-quadratic comparison on the actual spectrum transfers
+to Loewner order for a finite Hermitian matrix.
+Source: scalar functional calculus monotonicity, Tropp 2015, Lemma 6.6.2;
+reused by `matrix-bernstein` and `matrix-freedman` (partial). -/
+theorem matrixExp_smul_le_one_add_smul_add_smul_sq_of_spectrum_le
+    (A : Matrix d d ℂ) (hA : A.IsHermitian) {θ c : ℝ}
     (hb : ∀ x ∈ spectrum ℝ A, Real.exp (θ * x) ≤ 1 + θ * x + c * x ^ 2) :
     matrixExp (θ • A) ≤ 1 + θ • A + c • A ^ 2 := by
-  rw [matrixExp_smul_eq_cfc A hA θ, quad_eq A hA θ c]
+  rw [matrixExp_smul_eq_cfc A hA θ, one_add_smul_add_smul_sq_eq_cfc A hA θ c]
   exact cfc_mono hb
 
-private lemma one_add_le_exp (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) :
+/-- The scalar tangent inequality `1+x ≤ exp x` transfers to every finite Hermitian
+matrix as `I+B ≤ exp B`, without a lower or upper spectral bound.
+Source: `Real.add_one_le_exp` and scalar functional calculus, Tropp 2015, Section 2.1.11;
+reused by `matrix-bernstein` and `matrix-freedman` (partial). -/
+theorem one_add_le_matrixExp_of_isHermitian (B : Matrix d d ℂ) (hB : B.IsHermitian) :
     1 + B ≤ matrixExp B := by
   have e1 : 1 + B = cfc (fun x : ℝ => 1 + x) B := by
     rw [cfc_const_add (1 : ℝ) (fun x : ℝ => x) B, cfc_id' ℝ B hB.isSelfAdjoint, map_one]
@@ -175,7 +191,9 @@ theorem NLAlib.bernstein_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     hlin.add hX2c
   have hpt : ∀ᵐ ω ∂μ, matrixExp (θ • X ω) ≤ 1 + θ • X ω + c • X ω ^ 2 := by
     filter_upwards [hHerm, hBound] with ω hH hB
-    exact exp_le_quad _ hH (fun x hx => scalar_bound hθ hθL' (le_of_mem_spectrum_of_lambdaMax_le _ hH hB x hx))
+    exact matrixExp_smul_le_one_add_smul_add_smul_sq_of_spectrum_le _ hH
+      (fun x hx => exp_mul_le_one_add_mul_add_sq_mul_of_le hθ hθL'
+        (le_of_mem_spectrum_of_lambdaMax_le _ hH hB x hx))
   have hI1 : ∫ ω, matrixExp (θ • X ω) ∂μ ≤ 1 + c • ∫ ω, X ω ^ 2 ∂μ := by
     have h := integral_mono_ae hEint hQint hpt
     rw [integral_add hlin hX2c, integral_add (integrable_const 1) hXθ,
@@ -192,7 +210,7 @@ theorem NLAlib.bernstein_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
   have hSH : S.IsHermitian := (Matrix.nonneg_iff_posSemidef.mp hS).isHermitian
   have hBH : (c • S).IsHermitian := hSH.smul (isSelfAdjoint_iff.mpr (star_trivial c))
   have h1 : ∫ ω, matrixExp (θ • X ω) ∂μ ≤ matrixExp (c • S) :=
-    hI1.trans (one_add_le_exp _ hBH)
+    hI1.trans (one_add_le_matrixExp_of_isHermitian _ hBH)
   refine ⟨Matrix.le_iff.mp h1, ?_⟩
   have hMPD : (∫ ω, matrixExp (θ • X ω) ∂μ).PosDef := by
     apply posDef_integral_of_ae_posDef μ _ hEint

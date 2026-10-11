@@ -20,7 +20,11 @@ set_option autoImplicit false
 
 namespace NLAlib
 
-private lemma continuousOn_traceExp_add_matrixLog {d : ℕ} [NeZero d]
+/-- The Lieb trace function is continuous on the actual positive-definite cone.
+Source: Tropp 2015, Corollary 3.4.2; operator rederivations `eq:condlieb`.
+Reusable regularity for atlas `matrix-laplace` and `matrix-freedman`; promoted unchanged
+from the proof-local helper of probabilistic Lieb. -/
+theorem continuousOn_traceExp_add_matrixLog {d : ℕ} [NeZero d]
     (H : Matrix (Fin d) (Fin d) ℂ) :
     ContinuousOn (fun A => traceExp (H + matrixLog A))
       {A : Matrix (Fin d) (Fin d) ℂ | A.PosDef} := by

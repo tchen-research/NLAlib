@@ -487,6 +487,50 @@
   "sorry":
   false,
   "signature":
+  "MeasureTheory.condExp.{u_5, u_6} {α : Type u_5} {E : Type u_6} (m : MeasurableSpace α) {m₀ : MeasurableSpace α}\n  [NormedAddCommGroup E] [NormedSpace ℝ E] (μ : MeasureTheory.Measure α) (f : α → E) : α → E",
+  "name":
+  "MeasureTheory.condExp",
+  "module":
+  "Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic",
+  "line":
+  95,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "Conditional expectation of a function, with notation `μ[f | m]`.\n\nIt is defined as 0 if any one of the following conditions is true:\n- `m` is not a sub-σ-algebra of `m₀`,\n- `μ` is not σ-finite with respect to `m`,\n- `f` is not integrable. \n\n[Wikidata Q772232](https://www.wikidata.org/wiki/Q772232)",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.Supermartingale.{u_1, u_2, u_3} {Ω : Type u_1} {E : Type u_2} {ι : Type u_3} [Preorder ι]\n  {m0 : MeasurableSpace Ω} [NormedAddCommGroup E] [NormedSpace ℝ E] [LE E] (f : ι → Ω → E)\n  (ℱ : MeasureTheory.Filtration ι m0) (μ : MeasureTheory.Measure Ω) : Prop",
+  "name":
+  "MeasureTheory.Supermartingale",
+  "module":
+  "Mathlib.Probability.Martingale.Basic",
+  "line":
+  56,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "A family of integrable functions `f : ι → Ω → E` is a supermartingale with respect to a\nfiltration `ℱ` if `f` is strongly adapted with respect to `ℱ` and for all `i ≤ j`,\n`μ[f j | ℱ.le i] ≤ᵐ[μ] f i`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "MeasureTheory.mul_meas_ge_le_lintegral₀.{u_1} {α : Type u_1} {mα : MeasurableSpace α} {μ : MeasureTheory.Measure α}\n  {f : α → ENNReal} (hf : AEMeasurable f μ) (ε : ENNReal) : ε * μ {x | ε ≤ f x} ≤ ∫⁻ (a : α), f a ∂μ",
   "name":
   "MeasureTheory.mul_meas_ge_le_lintegral₀",
@@ -1939,6 +1983,72 @@
   "sorry":
   false,
   "signature":
+  "has_pointwise_sum_fourier_series_of_summable {T : ℝ} [hT : Fact (0 < T)] {f : C(AddCircle T, ℂ)}\n  (h : Summable (fourierCoeff ⇑f)) (x : AddCircle T) : HasSum (fun i => fourierCoeff (⇑f) i • (fourier i) x) (f x)",
+  "name":
+  "has_pointwise_sum_fourier_series_of_summable",
+  "module":
+  "Mathlib.Analysis.Fourier.AddCircle",
+  "line":
+  502,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "If the sequence of Fourier coefficients of `f` is summable, then the Fourier series of `f`\nconverges everywhere pointwise to `f`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "fourierCoeff.{u_1} {T : ℝ} [hT : Fact (0 < T)] {E : Type u_1} [NormedAddCommGroup E] [NormedSpace ℂ E]\n  (f : AddCircle T → E) (n : ℤ) : E",
+  "name":
+  "fourierCoeff",
+  "module":
+  "Mathlib.Analysis.Fourier.AddCircle",
+  "line":
+  296,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "The `n`-th Fourier coefficient of a function `AddCircle T → E`, for `E` a complete normed\n`ℂ`-vector space, defined as the integral over `AddCircle T` of `fourier (-n) t • f t`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "tsum_sq_fourierCoeff {T : ℝ} [hT : Fact (0 < T)] (f : ↥(MeasureTheory.Lp ℂ 2 AddCircle.haarAddCircle)) :\n  ∑' (i : ℤ), ‖fourierCoeff (↑↑f) i‖ ^ 2 = ∫ (t : AddCircle T), ‖↑↑f t‖ ^ 2 ∂AddCircle.haarAddCircle",
+  "name":
+  "tsum_sq_fourierCoeff",
+  "module":
+  "Mathlib.Analysis.Fourier.AddCircle",
+  "line":
+  453,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Polynomial.Chebyshev.node (n i : ℕ) : ℝ",
   "name":
   "Polynomial.Chebyshev.node",
@@ -2484,6 +2594,28 @@
   [],
   "atlas":
   ["chebyshev-growth"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Real.sign (r : ℝ) : ℝ",
+  "name":
+  "Real.sign",
+  "module":
+  "Mathlib.Data.Real.Sign",
+  "line":
+  32,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "The sign function that maps negative real numbers to -1, positive numbers to 1, and 0\notherwise. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":

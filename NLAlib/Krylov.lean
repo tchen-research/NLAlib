@@ -1,3 +1,8 @@
+import NLAlib.Krylov.AnalyticQuadrature
+import NLAlib.Krylov.ComplexBlock
+import NLAlib.Krylov.ExponentialQuadrature
+import NLAlib.Krylov.LipschitzQuadrature
+import NLAlib.Krylov.MeasurableRitz
 import NLAlib.Krylov.Basic
 import NLAlib.Krylov.Polynomial
 import NLAlib.Krylov.Grade

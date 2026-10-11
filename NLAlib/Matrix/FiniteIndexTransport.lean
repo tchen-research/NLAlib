@@ -194,4 +194,15 @@ theorem bestRankFrobSq_eq_singularValueTailSq_reindex (A : Matrix m n ℝ) (k : 
   rw [← bestRankFrobSq_reindex A k (Fintype.equivFin m) (Fintype.equivFin n),
     bestRankFrobSq_eq_singularValueTailSq]
 
+omit [Fintype n] [Fintype q] in
+/-- Relabelling rows and columns preserves orthonormal columns, including
+empty index types. Source: Horn–Johnson, §5.6, permutation of Gram coordinates;
+supports `ose-def` and finite-index sparse sampling. -/
+theorem HasOrthonormalCols.reindex [DecidableEq n] [DecidableEq q]
+    {U : Matrix m n ℝ} (hU : HasOrthonormalCols U) (em : m ≃ p) (en : n ≃ q) :
+    HasOrthonormalCols (U.reindex em en) := by
+  change (U.reindex em en)ᵀ * (U.reindex em en) = 1
+  simp only [Matrix.reindex_apply, Matrix.transpose_submatrix, Matrix.submatrix_mul_equiv]
+  rw [hU, Matrix.submatrix_one_equiv]
+
 end NLAlib

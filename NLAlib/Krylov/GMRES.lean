@@ -48,7 +48,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 `‖c − A y‖²` over `x₀ + K_q(A, r₀)`. MINRES is this predicate for symmetric `A`.
 Source: Saad–Schultz (1986) [`ss86`], §2; Saad (2003) [`saad03`], §6.5;
 KRYLOV_DEFINITIONS §3.3.
-atlas: gmres-def -/
+atlas: gmres-def (partial) -/
 def IsGMRESIterate (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
   IsAffineMinimiser (fun y => (c - A *ᵥ y) ⬝ᵥ (c - A *ᵥ y)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x
 

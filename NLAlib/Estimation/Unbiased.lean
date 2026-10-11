@@ -192,7 +192,7 @@ Source: Epperly–Tropp–Webber (2024) [`etw24`], §2.1 (unbiasedness of the ex
 Atlas: `xtrace-unbiased`; uses `hutchinson-unbiased`, `gaussian-conditioning`.
 Deviation: abstract leave-one-out statistics `Sᵢ`; integrability is a hypothesis; the
 `rsvd-expected-error` dependency of the atlas entry is not needed.
-atlas: xtrace-unbiased -/
+atlas: xtrace-unbiased (partial) -/
 theorem integral_xtraceEstimate_eq_trace [Nonempty κ] (A : Matrix n n ℝ) {r : Type*}
     [Fintype r] [DecidableEq r] {α : κ → Type*} [∀ i, MeasurableSpace (α i)]
     {Qf : ∀ i, α i → Matrix n r ℝ} (hQ : ∀ i s, HasOrthonormalCols (Qf i s))

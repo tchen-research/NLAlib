@@ -68,4 +68,21 @@ theorem isSubspaceEmbedding_iff_singularValues_fintype
   have hus := Real.sqrt_nonneg (1 + ε)
   constructor <;> rintro ⟨h1, h2⟩ <;> constructor <;> nlinarith
 
+/-- Relabelling sketch rows, ambient coordinates, and frame coefficients
+preserves the library embedding property. Source: permutation invariance of
+the Gram criterion; supports `ose-def` and finite-index sparse sampling. -/
+theorem isSubspaceEmbedding_reindex_iff
+    {ρ ι κ : Type*} [Fintype ρ] [Fintype ι] [Fintype κ] [DecidableEq κ]
+    {S : Matrix p m ℝ} {U : Matrix m n ℝ} (hU : HasOrthonormalCols U)
+    (ep : p ≃ ρ) (em : m ≃ ι) (en : n ≃ κ) {ε : ℝ} (hε : 0 ≤ ε) :
+    IsSubspaceEmbedding (S.reindex ep em) (U.reindex em en) ε ↔
+      IsSubspaceEmbedding S U ε := by
+  classical
+  rw [isSubspaceEmbedding_iff_specNorm_transpose_mul_self_sub_one_le
+      (hU.reindex em en) hε,
+    isSubspaceEmbedding_iff_specNorm_transpose_mul_self_sub_one_le hU hε]
+  have hprod : S.reindex ep em * U.reindex em en = (S * U).reindex ep en := by
+    simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv]
+  rw [hprod, transpose_mul_self_sub_one_reindex, specNorm_reindex]
+
 end NLAlib

@@ -16,8 +16,9 @@ Facts about `NLAlib.IsSubspaceEmbedding S U ε` (Woodruff 2014 §2.1; Martinsson
 * `isSubspaceEmbedding_of_specNorm_transpose_mul_self_sub_one_le`: the Gram form
   `‖(SU)ᵀ(SU) − I‖₂ ≤ ε ⇒` embedding, for orthonormal `U`.
 
-The converse of the Gram form and the singular-value form `σ(SU) ⊂ [√(1−ε), √(1+ε)]` are still
-to do. The matrix facts used here (`mulVec_dotProduct_mulVec_self`,
+The converse of the Gram form is in `NLAlib.Sketching.Gram`; the singular-value
+form is in `NLAlib.Sketching.SingularValueEmbedding` and its finite-index transport.
+The matrix facts used here (`mulVec_dotProduct_mulVec_self`,
 `abs_dotProduct_mulVec_le_specNorm`, `mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`) are
 in `NLAlib.Matrix.Norms` and `NLAlib.Matrix.Projections`.
 
@@ -89,8 +90,8 @@ theorem IsSubspaceEmbedding.mono {S : Matrix k m ℝ} {U : Matrix m d ℝ} {ε �
 
 /-- Gram form of a subspace embedding (Woodruff 2014 §2.1; Martinsson–Tropp 2020 §8.7), the
 direction used in practice: for `U` with orthonormal columns, `‖(SU)ᵀ(SU) − I‖₂ ≤ ε` implies
-that `S` is an `ε`-subspace embedding for `range U`. (The converse also holds; not yet
-formalized.)
+that `S` is an `ε`-subspace embedding for `range U`. The converse is proved in
+`NLAlib.Sketching.Gram`.
 
 Atlas: `ose-def`.
 atlas: ose-def -/

@@ -2,6 +2,7 @@ import NLAlib.Estimation.Hutchinson
 import NLAlib.Gaussian.Moments.FourthMoment
 import NLAlib.Concentration.Matrix.Defs.ScalarLaws
 import NLAlib.Concentration.Scalar.Rademacher
+import NLAlib.Concentration.RademacherQuadraticMoments
 
 /-!
 # Hutchinson identities for concrete Gaussian and Rademacher laws
@@ -286,18 +287,6 @@ end ProductGaussian
 section ProductRademacher
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-
-omit [DecidableEq n] in
-/-- The canonical product of Rademacher laws gives an unbiased Hutchinson estimator.
-All coordinate laws and independence hypotheses are discharged. Hutchinson 1989;
-atlas `hutchinson-unbiased`. -/
-theorem integral_quadForm_pi_rademacherMeasure (A : Matrix n n ℝ) :
-    ∫ z, quadForm A z ∂(Measure.pi fun _ : n => rademacherMeasure) = A.trace := by
-  apply integral_quadForm_eq_trace_of_rademacher A
-    (fun i => (measurable_pi_apply i).aemeasurable)
-    (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
-  intro i
-  exact (measurePreserving_eval (fun _ : n => rademacherMeasure) i).map_eq
 
 /-- Symmetric Hutchinson variance under the concrete product Rademacher law.
 Hutchinson 1989; Avron–Toledo 2011, Lemma 6; atlas `hutchinson-variance`. -/

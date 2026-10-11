@@ -311,8 +311,12 @@ section Relative
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
 
 omit [DecidableEq κ] in
-/-- The Hanson–Wright exponent at `t = ε tr A` is at least `m ε²` for PSD `A`, `0 < ε ≤ 1`. -/
-private lemma min_ge_of_posSemidef [Nonempty κ] {A : Matrix n n ℝ} (hA : A.PosSemidef)
+/-- The Hanson–Wright exponent at `t = ε tr A` is at least `m ε²` for positive semidefinite
+`A` with positive trace and `0 < ε ≤ 1`.
+Source: Cortinovis–Kressner (2021), proof of Corollary 1; helper for `hutchinson-tail`
+and the relative-error stochastic Lanczos quadrature bound `slq-error`. -/
+theorem mul_sq_le_min_hutchinson_exponent_of_posSemidef [Nonempty κ]
+    {A : Matrix n n ℝ} (hA : A.PosSemidef)
     (htr : 0 < A.trace) {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
     Fintype.card κ * ε ^ 2 ≤ min (Fintype.card κ * (ε * A.trace) ^ 2 / frobNorm A ^ 2)
       (Fintype.card κ * (ε * A.trace) / specNorm A) := by
@@ -351,7 +355,7 @@ theorem measure_le_abs_hutchinsonEstimate_sub_trace_le_mul_trace_of_standardGaus
   refine (measure_le_abs_hutchinsonEstimate_sub_trace_le_of_standardGaussian A hind hlaw
     (ε * A.trace) (by positivity)).trans ?_
   gcongr 2 * exp ?_
-  have h := min_ge_of_posSemidef (κ := κ) hA htr hε hε1
+  have h := mul_sq_le_min_hutchinson_exponent_of_posSemidef (κ := κ) hA htr hε hε1
   have hc : (0 : ℝ) ≤ 1 / (256 * exp 1 ^ 2) := by positivity
   have := mul_le_mul_of_nonneg_left h hc
   rw [neg_mul, neg_le_neg_iff]

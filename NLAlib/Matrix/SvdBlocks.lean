@@ -14,7 +14,10 @@ noncomputable section
 open scoped Matrix BigOperators
 namespace NLAlib
 
-private theorem singularValueTailSq_eq_sum_width {m n : ℕ}
+/-- The padded squared singular-value tail has the same value when summed over
+the input width as over its height. Source: HMT (2011), §2.1 and Theorem 10.5;
+used by volume-sampling Frobenius error. Empty matrix dimensions are included. -/
+theorem singularValueTailSq_eq_sum_width {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     singularValueTailSq A k =
       ∑ i : Fin n, if k ≤ (i : ℕ) then singularValues A i ^ 2 else 0 := by

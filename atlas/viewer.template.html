@@ -172,6 +172,17 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
 .alias { display: inline-block; font-size: 0.8rem; color: var(--muted); background: var(--accent-soft); border-radius: 4px; padding: 1px 6px; margin: 2px 4px 0 0; }
 .hyp { margin: 2px 0; }
 ul.forms { list-style: none; padding-left: 0; } ul.forms > li { margin-bottom: 8px; }
+.cov { display: flex; height: 10px; gap: 1px; border-radius: 3px; overflow: hidden; margin: 8px 0 4px; }
+.cov span { display: block; }
+.c-nlalib { background: var(--st-proved); } .c-partial { background: var(--st-planned); } .c-mathlib { background: var(--st-stated); } .c-candidate { background: var(--st-candidate); } .c-out-of-scope { background: var(--line-strong); }
+.bookcard h3 { margin-bottom: 2px; } .bookcard .big { font-size: 1.6rem; font-family: var(--font-display); line-height: 1.1; }
+.bookcard .chs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.bookcard .chs button { font-size: 0.74rem; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--fg); cursor: pointer; }
+.bookcard .chs button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.bookcard.sel { outline: 2px solid var(--fg); }
+.bpill { display: inline-flex; align-items: center; gap: 5px; padding: 1px 7px; border-radius: 999px; font-size: 0.76rem; font-weight: 600; border: 1px solid var(--line-strong); white-space: nowrap; }
+.bpill i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+#btable td.stm { max-width: 46ch; } #btable td.lbl { white-space: nowrap; font-weight: 600; }
 .usage { font-size: 0.86rem; color: var(--fg); background: var(--accent-soft); border-radius: 6px; padding: 4px 8px; margin-top: 4px; }
 .foot { margin-top: 40px; color: var(--muted); font-size: 0.85rem; max-width: 80ch; }
 kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--line-strong); border-radius: 3px; padding: 0 4px; }
@@ -200,6 +211,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     <button role="tab" aria-selected="false" data-tab="scaffold">Scaffold</button>
     <button role="tab" aria-selected="false" data-tab="graph">Dependency graph</button>
     <button role="tab" aria-selected="false" data-tab="list">Table</button>
+    <button role="tab" aria-selected="false" data-tab="books">Books</button>
     <button role="tab" aria-selected="false" data-tab="sources">Sources</button>
     <button role="tab" aria-selected="false" data-tab="libs">Lean libraries</button>
     <button role="tab" aria-selected="false" data-tab="decls">Declarations</button>
@@ -233,6 +245,12 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   </div>
 
   <div id="tab-list" hidden><div class="tbl" style="margin-top:12px"><table id="ltable"></table></div></div>
+  <div id="tab-books" hidden>
+    <p class="note" style="margin-top:12px">Coverage of textbooks, statement by statement: every numbered theorem, corollary, lemma, definition and named exercise of the book, with what NLAlib has for it. Indexes live in <code>docs/coverage/</code> and are validated by <code>scripts/coverage.py</code>. "Covered" counts statements in NLAlib (fully or partially) or in Mathlib; candidates are the queue; out-of-scope rows carry a reason.</p>
+    <div id="bookcards" class="cols" style="margin-top:12px"></div>
+    <div id="bookctl" class="controls" style="margin-top:14px"></div>
+    <div class="tbl" style="margin-top:8px"><table id="btable"></table></div>
+  </div>
   <div id="tab-sources" hidden><div class="tbl" style="margin-top:12px"><table id="stable"></table></div></div>
   <div id="tab-libs" hidden><div id="libs" class="cols" style="margin-top:12px"></div></div>
   <div id="tab-decls" hidden>
@@ -249,6 +267,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
 <script type="application/json" id="atlas-data">/*ATLAS_JSON*/</script>
 <script type="application/json" id="decls-data">/*DECLS_JSON*/</script>
 <script type="application/json" id="external-data">/*EXTERNAL_JSON*/</script>
+<script type="application/json" id="coverage-data">/*COVERAGE_JSON*/</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js"></script>
@@ -282,6 +301,9 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   // A link dep → consumer is proved when the consumer has a Lean proof in NLAlib that is not itself a
   // literal scaffold (a `sorry` inherited from a dependency is fine: the implication is checked) and
   // the dependency is either stated in NLAlib or taken as an explicit hypothesis (status assumed).
+  let COVERAGE = {}; try { COVERAGE = JSON.parse(document.getElementById('coverage-data').textContent); } catch (e) { COVERAGE = {}; }
+  const COV_ST = [['nlalib', 'in NLAlib', '✓'], ['partial', 'partial', '◐'], ['mathlib', 'in Mathlib', 'M'], ['candidate', 'candidate', '○'], ['out-of-scope', 'out of scope', '–']];
+  const bstate = { book: Object.keys(COVERAGE).sort((a, b) => COVERAGE[b].items.length - COVERAGE[a].items.length)[0] || null, status: new Set(), chapter: null };
   const DECL_DOC = {}; DECLS.forEach(d => DECL_DOC[d.name] = d.doc || '');
   const defNode = {}; A.results.filter(r => r.kind === 'definition').forEach(r => r.formalizations.forEach(f => { if (f.library === 'nlalib' && f.decl && declByName[f.decl] && declByName[f.decl].kind !== 'theorem' && !defNode[f.decl]) defNode[f.decl] = r.id; }));
   const isLiteralScaffold = decl => (DECL_DOC[decl] || '').trimStart().startsWith('SCAFFOLD');
@@ -518,8 +540,41 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     const cnt = {}; A.results.forEach(r => r.sources.forEach(s => cnt[s.source] = (cnt[s.source] || 0) + 1));
     const rows = [...A.sources].sort((a, b) => (cnt[b.id] || 0) - (cnt[a.id] || 0) || a.year - b.year);
     document.getElementById('stable').innerHTML = `<thead><tr><th>Source</th><th>Year</th><th>Type</th><th>Why it matters</th><th style="text-align:right">Cited by</th></tr></thead><tbody>` +
-      rows.map(s => `<tr><td>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title)}<div class="note">${esc(s.authors.join(', '))}${s.arxiv ? ` · arXiv:${esc(s.arxiv)}` : ''}</div></td><td class="n">${s.year}</td><td>${s.type}</td><td class="note">${esc(s.role)}</td><td class="n">${cnt[s.id] || 0}</td></tr>`).join('') + '</tbody>';
+      rows.map(s => `<tr><td>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title)}<div class="note">${esc(s.authors.join(', '))}${s.arxiv ? ` · arXiv:${esc(s.arxiv)}` : ''}</div>${COVERAGE[s.id] ? (() => { const c = covCount(COVERAGE[s.id].items), n = COVERAGE[s.id].items.length; return `${covBar(c, n)}<div class="note">book coverage: ${c.nlalib + c.partial + c.mathlib} of ${n - c['out-of-scope']} in-scope statements · <button class="linkbtn" data-book="${s.id}">Books tab</button></div>`; })() : ''}</td><td class="n">${s.year}</td><td>${s.type}</td><td class="note">${esc(s.role)}</td><td class="n">${cnt[s.id] || 0}</td></tr>`).join('') + '</tbody>';
+    document.querySelectorAll('#stable button[data-book]').forEach(b => b.onclick = () => { bstate.book = b.dataset.book; bstate.chapter = null; showTab('books'); });
   }
+  // ---------- books (coverage) ----------
+  const covCount = items => { const c = {}; COV_ST.forEach(([k]) => c[k] = 0); items.forEach(it => c[it.status] = (c[it.status] || 0) + 1); return c; };
+  const covBar = (c, n) => `<div class="cov" title="${COV_ST.map(([k, l]) => `${l} ${c[k]}`).join(' · ')}">${COV_ST.filter(([k]) => c[k]).map(([k]) => `<span class="c-${k}" style="flex:${c[k]}"></span>`).join('')}</div>`;
+  function renderBooks() {
+    const cards = document.getElementById('bookcards'); if (!cards) return;
+    const books = Object.keys(COVERAGE);
+    cards.innerHTML = books.map(src => {
+      const idx = COVERAGE[src], S = srcById[src] || { title: src, authors: [], year: '' }, c = covCount(idx.items), n = idx.items.length;
+      const inScope = n - c['out-of-scope'], covered = c.nlalib + c.partial + c.mathlib;
+      const chs = {}; idx.items.forEach(it => { const ch = String(it.chapter).split('.')[0]; (chs[ch] = chs[ch] || []).push(it); });
+      return `<div class="card bookcard${bstate.book === src ? ' sel' : ''}" data-book="${src}"><h3>${esc(S.title)}</h3><div class="sub">${esc((S.authors || []).join(', '))} ${S.year || ''} · <code>${src}</code></div>
+        <div class="big">${covered} / ${inScope} <span class="note" style="font-size:.85rem">in-scope statements covered (${inScope ? Math.round(100 * covered / inScope) : 0}%)</span></div>
+        ${covBar(c, n)}<div class="note">${COV_ST.map(([k, l, g]) => `<span class="bpill"><i class="c-${k}"></i>${g} ${l} ${c[k]}</span>`).join(' ')} · ${n} statements</div>
+        ${idx.edition_note ? `<p class="note" style="margin-top:6px">${esc(idx.edition_note)}</p>` : ''}
+        <div class="chs">${Object.keys(chs).sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).map(ch => { const cc = covCount(chs[ch]); return `<button data-ch="${ch}" aria-pressed="${bstate.book === src && bstate.chapter === ch}" title="${COV_ST.map(([k, l]) => `${l} ${cc[k]}`).join(' · ')}">ch ${ch} · ${cc.nlalib + cc.partial + cc.mathlib}/${chs[ch].length - cc['out-of-scope']}</button>`; }).join('')}</div></div>`;
+    }).join('') || '<p class="note">No coverage indexes yet.</p>';
+    cards.querySelectorAll('.bookcard').forEach(card => card.onclick = e => { const b = e.target.closest('button[data-ch]'); if (b) { const ch = b.dataset.ch; bstate.chapter = (bstate.book === card.dataset.book && bstate.chapter === ch) ? null : ch; } else if (bstate.book === card.dataset.book) return; else bstate.chapter = null; bstate.book = card.dataset.book; renderBooks(); });
+    const ctl = document.getElementById('bookctl');
+    ctl.innerHTML = COV_ST.map(([k, l, g]) => `<button class="bpill" data-st="${k}" aria-pressed="${bstate.status.has(k)}" style="cursor:pointer;background:${bstate.status.has(k) ? 'var(--fg)' : 'var(--panel)'};color:${bstate.status.has(k) ? 'var(--bg)' : 'var(--fg)'}"><i class="c-${k}"></i>${g} ${l}</button>`).join('') + `<span class="note" id="bcount"></span>`;
+    ctl.querySelectorAll('button[data-st]').forEach(b => b.onclick = () => { bstate.status.has(b.dataset.st) ? bstate.status.delete(b.dataset.st) : bstate.status.add(b.dataset.st); renderBooks(); });
+    const tbl = document.getElementById('btable'); if (!bstate.book) { tbl.innerHTML = ''; return; }
+    let rows = COVERAGE[bstate.book].items;
+    if (bstate.chapter) rows = rows.filter(it => String(it.chapter).split('.')[0] === bstate.chapter);
+    if (bstate.status.size) rows = rows.filter(it => bstate.status.has(it.status));
+    if (state.q) rows = rows.filter(it => [it.label, it.name || '', it.statement, it.note || '', (it.atlas || []).join(' '), (it.decls || []).join(' ')].join(' ').toLowerCase().includes(state.q));
+    document.getElementById('bcount').textContent = `${rows.length} statements${bstate.chapter ? ` in chapter ${bstate.chapter}` : ''} of ${srcById[bstate.book] ? srcById[bstate.book].title : bstate.book}`;
+    const G = Object.fromEntries(COV_ST.map(([k, l, g]) => [k, [l, g]]));
+    tbl.innerHTML = `<thead><tr><th>label</th><th>statement</th><th>status</th><th>atlas / Lean</th><th>note</th></tr></thead><tbody>` + rows.map(it => `<tr><td class="lbl">${esc(it.label)}<div class="note" style="font-weight:400">p. ${it.page || '?'}</div></td><td class="stm">${it.name ? `<b>${esc(it.name)}.</b> ` : ''}${esc(it.statement)}</td><td><span class="bpill"><i class="c-${it.status}"></i>${G[it.status][1]} ${G[it.status][0]}</span></td><td>${(it.atlas || []).filter(i => byId[i]).map(i => `<button class="linkbtn" data-id="${i}">${esc(byId[i].title)}</button>`).join('<br>')}${(it.decls || []).slice(0, 2).map(d => `<div><code style="font-size:.74rem">${esc(d)}</code></div>`).join('')}</td><td class="note">${esc(it.note || '')}</td></tr>`).join('') + '</tbody>';
+    tbl.querySelectorAll('button[data-id]').forEach(b => b.onclick = () => select(b.dataset.id));
+    typeset(tbl);
+  }
+
   function renderLibs() {
     const cnt = {}; A.results.forEach(r => r.formalizations.forEach(f => cnt[f.library] = (cnt[f.library] || 0) + 1));
     document.getElementById('libs').innerHTML = A.libraries.map(l => `<div class="card"><h3>${l.url ? `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.name)}</a>` : esc(l.name)}</h3><div class="sub">${l.ours ? 'This project' : 'External'}${l.lean ? ` · Lean ${esc(l.lean)}` : ''}${l.license ? ` · ${esc(l.license)}` : ''} · ${cnt[l.id] || 0} atlas results</div><p class="note">${esc(l.scope)}</p>${l.mathlib ? `<p class="note" style="margin-top:6px">Mathlib <code>${esc(l.mathlib.slice(0, 12))}</code></p>` : ''}</div>`).join('');
@@ -566,14 +621,17 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
     rank('targets', vis.filter(r => r.priority === 'now' && r.status !== 'proved').sort((a, b) => indeg(b.id) - indeg(a.id) || a.title.localeCompare(b.title)).slice(0, 14));
     rank('reuse', [...vis].sort((a, b) => indeg(b.id) - indeg(a.id)).slice(0, 14));
     renderAreas(); renderTable(); renderScaffold(); renderDecls();
+    if (!document.getElementById('tab-books').hidden) renderBooks();
     if (!document.getElementById('tab-graph').hidden) renderGraph();
   }
   document.getElementById('q').addEventListener('input', e => { state.q = e.target.value.trim().toLowerCase(); renderAll(); });
   document.querySelectorAll('#pri button').forEach(b => b.onclick = () => { state.pri = b.dataset.v; document.querySelectorAll('#pri button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderAll(); });
   document.getElementById('hideapps').onchange = e => { state.hideapps = e.target.checked; renderAll(); };
+  function showTab(name) { const b = document.querySelector(`.tab-nav button[data-tab="${name}"]`); if (b) b.onclick(); }
   document.querySelectorAll('.tab-nav button').forEach(b => b.onclick = () => {
     document.querySelectorAll('.tab-nav button').forEach(x => x.setAttribute('aria-selected', x === b));
-    ['map', 'scaffold', 'graph', 'list', 'sources', 'libs', 'decls'].forEach(t => document.getElementById('tab-' + t).hidden = t !== b.dataset.tab);
+    ['map', 'scaffold', 'graph', 'list', 'books', 'sources', 'libs', 'decls'].forEach(t => document.getElementById('tab-' + t).hidden = t !== b.dataset.tab);
+    if (b.dataset.tab === 'books') renderBooks();
     if (b.dataset.tab === 'graph') renderGraph();
   });
   document.addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') { if (!document.getElementById('tab-graph').hidden && document.activeElement.tagName !== 'INPUT') fitGraph(); } if (e.key === 'Escape' && state.sel) select(state.sel); });

@@ -312,6 +312,14 @@
    "title": "Factorizations and direct algorithms",
    "parent": "matrix",
    "order": 7
+  },
+  {
+   "id": "krylov-orthogonal-polynomials",
+   "name": "Orthogonal polynomials, Jacobi matrices and Gauss-type quadrature",
+   "title": "Orthogonal polynomials, Jacobi matrices and Gauss-type quadrature",
+   "parent": "krylov",
+   "order": 32,
+   "summary": "Orthogonal polynomials of a measure (general and spectral), zeros and interlacing, Christoffel numbers, Gauss, Radau and Lobatto rules and their remainders, kernel polynomials and modifications, moments and the modified Chebyshev algorithm (Gautschi 2004)."
   }
  ],
  "results": [
@@ -624,7 +632,7 @@
    "sources": [
     {
      "source": "hj13",
-     "label": "Thm 7.4.9.1"
+     "label": "§7.4.2; eq. (7.4.9.2)"
     },
     {
      "source": "mt20",
@@ -680,7 +688,7 @@
     "done"
    ],
    "notes": "The extension proves the Frobenius minimum, attained by its actual truncated SVD, for every target rank and shape. The spectral-norm minimum remains a separate open component; this combined entry is not promoted by the Frobenius proof. Spectral form proved 2026-10-10 (lower bound via Weyl, attainment via the SVD); the Frobenius form is `eckart-young-frobenius`.",
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-11"
   },
   {
    "id": "weyl-mirsky",
@@ -703,7 +711,7 @@
    "sources": [
     {
      "source": "hj13",
-     "label": "Cor 7.3.5, Thm 7.4.9.1"
+     "label": "Cor 7.3.5; Thm 7.4.9.1 (spectral and Frobenius instances)"
     },
     {
      "source": "bhatia97",
@@ -775,7 +783,7 @@
     "perturbation",
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-11"
   },
   {
    "id": "courant-fischer",
@@ -938,7 +946,7 @@
    "sources": [
     {
      "source": "hj13",
-     "label": "Thm 4.3.17"
+     "label": "Thm 4.3.17; Cor 4.3.37 (Poincaré separation, the form proved), Thm 4.3.28"
     }
    ],
    "formalizations": [
@@ -973,7 +981,7 @@
     "foundation",
     "done"
    ],
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "notes": "The compression form QᵀAQ is the Poincaré separation theorem (HJ13 Cor 4.3.37); verify the label."
   },
   {
@@ -999,7 +1007,7 @@
    "sources": [
     {
      "source": "hj13",
-     "label": "§7.3"
+     "label": "Problem 7.3.P7"
     },
     {
      "source": "hmt11",
@@ -1204,7 +1212,7 @@
     "api"
    ],
    "notes": "The extension closes the general rank-deficient case. Ordinary total inverse formulas are distinct from the Moore–Penrose inverse when a Gram matrix is singular.",
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-11"
   },
   {
    "id": "projection-facts",
@@ -1351,7 +1359,7 @@
    "sources": [
     {
      "source": "hj13",
-     "label": "§2.1"
+     "label": "§0.6.5"
     }
    ],
    "formalizations": [
@@ -1407,7 +1415,7 @@
     "foundation",
     "done"
    ],
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "notes": "Mathlib's abstract completion suffices; the matrix wrapper exists_orthogonal_completion lives in Gaussian/Invariance.lean and should move to Matrix/Projections."
   },
   {
@@ -7966,7 +7974,11 @@
     },
     {
      "source": "gm10",
-     "label": "Ch. 3"
+     "label": "Ch. 7, eq. (7.1)"
+    },
+    {
+     "source": "gautschi04",
+     "label": "§3.1.7, eq. (3.1.143)"
     }
    ],
    "formalizations": [
@@ -8034,7 +8046,7 @@
     "krylov",
     "done"
    ],
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "notes": "Lives in the Krylov area (layer 1); the Lean definition should not depend on Estimation/Basic, so `quadForm` or the spectral measure itself belongs in Matrix or Krylov/Basic."
   },
   {
@@ -8263,6 +8275,10 @@
     },
     {
      "source": "ucs17"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 3.1, eq. (3.1.8)"
     }
    ],
    "formalizations": [
@@ -10957,7 +10973,7 @@
    "sources": [
     {
      "source": "hj13",
-     "label": "Thm 7.4.9.1 (Frobenius part)"
+     "label": "§7.4.2 (Frobenius form)"
     }
    ],
    "depends_on": [
@@ -11012,7 +11028,7 @@
      "usage": "Apply over arbitrary finite indices; identify the actual optimum with the singular-value tail of the explicit Fin(card) normalization."
     }
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-11"
   },
   {
    "id": "truncation-lemma-projected",
@@ -11576,7 +11592,7 @@
     },
     {
      "source": "trefethen19",
-     "label": "Thm 16.1"
+     "label": "Ex 10.11(b)"
     }
    ],
    "formalizations": [
@@ -11621,7 +11637,7 @@
     "polynomial",
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-11"
   },
   {
    "id": "chebyshev-amplifier",
@@ -11944,7 +11960,7 @@
     },
     {
      "source": "trefethen19",
-     "label": "Ch. 5"
+     "label": "Thm 11.1 (contour-integral form; the Rolle/derivative form is not stated in ATAP)"
     }
    ],
    "formalizations": [
@@ -12005,7 +12021,7 @@
     "polynomial",
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-11"
   },
   {
    "id": "chebyshev-interpolation-error",
@@ -12028,7 +12044,7 @@
    "sources": [
     {
      "source": "trefethen19",
-     "label": "Ch. 5, 16"
+     "label": "Ex 2.4, 3.12, 4.1 (Chebyshev points and nodal identity; the 2^{-n}/(n+1)! bound itself is not stated in ATAP)"
     },
     {
      "source": "cheney66",
@@ -12113,7 +12129,7 @@
     "polynomial",
     "done"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-11"
   },
   {
    "id": "bernstein-ellipse-approx",
@@ -16579,10 +16595,20 @@
     "interpolation",
     "series"
    ],
-   "notes": "Thm 4.1 alone is difficulty 1 (T_k(cos(jπ/n)) = cos(kjπ/n)). ATAP states 4.2 for Lipschitz f; the summable hypothesis is what consumers have and avoids 3.1(b). First-kind variant at NLAlib's `chebyshevZero` (zeros of T_{n+1}): T_{2(n+1)-m} = -T_m there, and the same factor-2 bound holds. Consumers: the interpolant halves of chebyshev-approx-differentiable (4V) and chebyshev-approx-analytic (4M); Chebyshev-interpolation estimators of tr f(A). Prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Thm 4.1 alone is difficulty 1 (T_k(cos(jπ/n)) = cos(kjπ/n)). ATAP states 4.2 for Lipschitz f; the summable hypothesis is what consumers have and avoids 3.1(b). First-kind variant at NLAlib's `chebyshevZero` (zeros of T_{n+1}): T_{2(n+1)-m} = -T_m there, and the same factor-2 bound holds. Consumers: the interpolant halves of chebyshev-approx-differentiable (4V) and chebyshev-approx-analytic (4M); Chebyshev-interpolation estimators of tr f(A). Prove. Coverage audit: Thm 4.1 (aliasing) is proved in NLAlib (`eval_T_node_eq_eval_T_alias`); Thm 4.2 only for analytic f.",
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eval_T_node_eq_eval_T_alias",
+     "module": "NLAlib.Polynomial.ChebyshevAliasing",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.chebyshevAliasIndex"
+   ],
    "variants": []
   },
   {
@@ -16996,7 +17022,7 @@
     },
     {
      "source": "trefethen19",
-     "label": "Ch. 10"
+     "label": "Ex 10.3"
     }
    ],
    "depends_on": [
@@ -17023,7 +17049,7 @@
     "lower-bound"
    ],
    "notes": "Proof: if q beat the minimum at every x_i, q - p would have the sign of f - p at the n+2 points, hence n+1 roots, hence q = p: contradiction. The discrete form needs no continuity of f. Consumers: equioscillation; explicit lower-bound certificates for approximating sign, exp and 1/x; generalises the lower half of chebyshev-minimax. Prove.",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -17169,7 +17195,7 @@
    "sources": [
     {
      "source": "trefethen19",
-     "label": "Ch. 8 (proof of Thm 8.3)"
+     "label": "Ex 8.6"
     },
     {
      "source": "rivlin90",
@@ -17198,7 +17224,7 @@
     "growth"
    ],
    "notes": "Proof: h(u) = u^n p(J(u)) is a polynomial in u of degree ≤ 2n with |h| ≤ M on |u| = 1, so |h| ≤ M on the closed disc; evaluate at u = 1/w. Classical (Bernstein 1912); pin a printed label. Consumers: converse of 8.2 (ATAP Thm 8.3, lower bounds for analytic approximation), GMRES and Krylov bounds with complex spectra (T1), stability of Chebyshev recurrences in floating point (Musco–Musco–Sidford 2018). Prove.",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -17228,7 +17254,7 @@
     },
     {
      "source": "trefethen19",
-     "label": "Ch. 19"
+     "label": "cf. Thm 19.3 (different measure and constant)"
     },
     {
      "source": "gm10",
@@ -17783,6 +17809,10 @@
     {
      "source": "bhatia97",
      "label": "§II.1–II.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 4.3.41, Def 4.3.43, Thm 4.3.49, Lem 4.3.51"
     }
    ],
    "depends_on": [],
@@ -17816,7 +17846,7 @@
     "majorization"
    ],
    "notes": "Lean design: avoid sorting by defining the top-k sum as a maximum over k-subsets, s_k(x) = sup over Finset.powersetCard k univ of ∑_{i∈S} x_i; this is index-type agnostic and matches how Ky Fan sums are proved. Consumers: schur-horn, lidskii, unitarily-invariant-norm-def (Fan dominance), horn-product-inequality, schatten-norms-def; downstream the Wasserstein-type spectrum comparisons used for spectral density (slq-error). Recommendation: prove the definition, the doubly-stochastic (⇐) direction and the convex-function (⇒) direction (difficulty 2); the (⇒) HLP direction is the hard part (difficulty 3–4) and can be assumed if a consumer needs it first. Labels in mo11 to verify against the printed edition.",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -17848,7 +17878,7 @@
     },
     {
      "source": "hj13",
-     "label": "Cor 4.3.39"
+     "label": "Cor 4.3.39; Cor 4.3.34"
     },
     {
      "source": "hj91",
@@ -17891,7 +17921,7 @@
     "majorization"
    ],
    "notes": "Proof route with what NLAlib already has: tr(QᵀAQ) = ∑ᵢ λᵢ(QᵀAQ) ≤ ∑_{i≤k} λᵢ(A) by the compression half of Cauchy interlacing (NLAlib.eigenvalues₀_compression_le), equality at eigenvectors; the singular-value form is von Neumann (NLAlib.frobInner_le_sum_singularValues_mul) applied to ⟨A, UVᵀ⟩, since UVᵀ has k unit singular values. Consumers: ky-fan-norms-def (triangle inequality), schur-horn (Schur half is immediate: take Q = coordinate vectors), lidskii, eigenvalue sums in PCA/subspace objectives, block-krylov-lra (MM15's per-vector and Ky Fan error guarantees), nystrom-randomized and hutchpp (trace of the top-k part). Recommendation: prove.",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -17925,6 +17955,10 @@
     {
      "source": "bhatia97",
      "label": "§IV.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.4.1.4, Cor 7.4.1.3(b), Def 5.6.38, Thm 5.6.42"
     }
    ],
    "depends_on": [
@@ -17953,7 +17987,7 @@
     "norms"
    ],
    "notes": "TARGETING.md §3 already lists the nuclear norm as part of the wanted MatrixAnalysis_basic bundle; nystrom-randomized states its error in the nuclear norm and von-neumann-trace's corollary is phrased with ‖X‖_*. Consumers: nystrom-randomized, hutchpp, von-neumann-rank-bound, unitarily-invariant-norm-def (Fan dominance), lidskii (UI-norm corollary), schatten-norms-def. Recommendation: prove (triangle inequality from the max principle; duality from von Neumann + SVD).",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -18043,7 +18077,7 @@
     },
     {
      "source": "hj13",
-     "label": "§7.4.7–7.4.8"
+     "label": "§7.4.7–7.4.8; Def 7.4.7.1, Thm 7.4.7.2, Thm 7.4.8.4"
     }
    ],
    "depends_on": [
@@ -18066,7 +18100,7 @@
     "majorization"
    ],
    "notes": "Most randomized-NLA statements need only the spectral, Frobenius and nuclear norms, so this is a later foundation; it is what makes 'in every unitarily invariant norm' versions of eckart-young, weyl-mirsky (Mirsky 1960), davis-kahan-sin-theta and wedin-sin-theta one-line corollaries of a Ky Fan statement. Also absorbs the pinching inequality ‖∑ PᵢAPᵢ‖ ≤ ‖A‖ (Bhatia §IV.2, not proposed separately). Recommendation: prove the definition and the (⇒) direction of Fan dominance (trivial); assume the (⇐) direction (it needs the HLP direction of majorization-def).",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -18154,6 +18188,10 @@
     {
      "source": "mo11",
      "label": "9.G"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 4.3.47, Thm 7.4.9.1, Cor 7.4.9.3"
     }
    ],
    "depends_on": [
@@ -18181,7 +18219,7 @@
     "weyl-mirsky",
     "eigenvalue-perturbation-symmetric"
    ],
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": []
   },
@@ -18266,7 +18304,7 @@
    "sources": [
     {
      "source": "hj13",
-     "label": "Thm 4.3.1, Cor 4.3.15 (Weyl); Cor 6.3.8 (Hoffman–Wielandt)"
+     "label": "Thm 4.3.1, Cor 4.3.15 (Weyl); Cor 6.3.8 (Hoffman–Wielandt); Thm 4.3.53"
     },
     {
      "source": "bhatia97",
@@ -18308,7 +18346,7 @@
     "weyl-mirsky",
     "lidskii"
    ],
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": []
   },
@@ -18394,6 +18432,10 @@
     {
      "source": "saad11",
      "label": "§3.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 6.3.14"
     }
    ],
    "depends_on": [
@@ -18428,7 +18470,7 @@
     "krylov"
    ],
    "notes": "Labels in parlett98 to verify. All three parts are a few lines from the spectral expansion x = ∑cᵢuᵢ (NLAlib.quadForm_eq_sum_eigenvalues, sum_sq_eigenvectorBasis_dotProduct). Consumers: ritz-value-bounds and Lanczos analysis (Ritz residual ‖r‖ = β_k|e_kᵀs|, needs lanczos-recurrence), random-start-power, power-method stopping criteria, T1's Kaniel–Paige–Saad bounds, LOBPCG/subspace-iteration stopping rules. Recommendation: prove.",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -19037,7 +19079,7 @@
     },
     {
      "source": "hj13",
-     "label": "§7.7"
+     "label": "cf. Thm 7.7.7, 7.7.9 (Albert's pseudoinverse criterion is not stated in HJ)"
     }
    ],
    "depends_on": [
@@ -19135,6 +19177,10 @@
     {
      "source": "bhatia97",
      "label": "Thm V.1.9 (Löwner–Heinz), Prop V.1.6 (inverse)"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.7.4(a,b)"
     }
    ],
    "depends_on": [],
@@ -19190,7 +19236,7 @@
    "variants": [
     "operator-monotone-convex"
    ],
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [],
    "uses_defs": []
   },
@@ -20332,6 +20378,10 @@
     {
      "source": "greenbaum97",
      "label": "§2.5"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.29, Thm 1.31"
     }
    ],
    "depends_on": [
@@ -20348,7 +20398,7 @@
     "spectral-measure"
    ],
    "notes": "The characteristic-polynomial identity includes p0 for arbitrary graded bases. Unit norm of b alone does not force p0=1. Signed recurrence coefficients specialize to residual norms for the canonical positive orientation; the formal API uses the signed version.",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "formalizations": [
     {
      "library": "nlalib",
@@ -20417,6 +20467,10 @@
     {
      "source": "saad11",
      "label": "§6.6"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.20, Thm 1.32, Def 1.33, Thm 3.1"
     }
    ],
    "depends_on": [
@@ -20963,7 +21017,7 @@
     },
     {
      "source": "hj13",
-     "label": "Cor. 3.5.5"
+     "label": "Cor 3.5.6"
     }
    ],
    "formalizations": [
@@ -22996,6 +23050,10 @@
     {
      "source": "gm10",
      "label": "§4.1"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg. 3.3"
     }
    ],
    "formalizations": [
@@ -23398,6 +23456,4812 @@
    ],
    "notes": "Local statement; needs an explicit neighbourhood and constants to be NLAlib-style.",
    "updated_at": "2026-10-11"
+  },
+  {
+   "id": "orthogonal-polynomials-measure-def",
+   "title": "Monic orthogonal polynomials of a measure on ℝ: existence, uniqueness, finite case",
+   "aliases": [
+    "orthogonal polynomials",
+    "monic orthogonal polynomials",
+    "Gram–Schmidt on monomials",
+    "π_k(·; dλ)",
+    "discrete orthogonal polynomials"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "For a finite positive Borel measure $\\mu$ on $\\mathbb R$ with finite moments, $(p,q)_\\mu=\\int pq\\,d\\mu$ is positive definite on $\\mathcal P_n$ iff $\\mu$ has at least $n+1$ support points; then Gram–Schmidt on $1,t,\\dots,t^n$ gives the unique monic $\\pi_0,\\dots,\\pi_n$ with $\\deg\\pi_k=k$ and $(\\pi_k,\\pi_l)_\\mu=0$ ($k\\ne l$), $\\|\\pi_k\\|_\\mu>0$. If $\\mu$ has exactly $N$ support points there are exactly $N$ of them and the Gram–Schmidt $\\pi_N$ is the node polynomial (norm $0$). For $\\mu=\\mu_b$ they are $\\det(xI-T_k)$.",
+   "hypotheses": [
+    "$\\mu$ a finite positive measure on $\\mathbb R$ with $\\int|t|^k\\,d\\mu<\\infty$ for all $k$ (e.g. compact support)",
+    "$n\\in\\mathbb N$ with $\\#\\operatorname{supp}\\mu\\ge n+1$"
+   ],
+   "conclusion": "There exist unique monic $\\pi_0,\\dots,\\pi_n\\in\\mathbb R[X]$, $\\deg\\pi_k=k$, $\\int\\pi_k\\pi_l\\,d\\mu=0$ for $k\\ne l$ and $\\int\\pi_k^2\\,d\\mu>0$; any $p$ with $\\deg p\\le n$ orthogonal to all of them is $0$; for $\\#\\operatorname{supp}\\mu=N$ the inner product is not positive definite on $\\mathcal P_N$; for $\\mu=\\mu_b$, $\\pi_k=\\det(xI-T_k)$ for $k\\le\\operatorname{grade}(A,b)$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Def 1.1"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Def 1.3"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Lem 1.4"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.6"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.7"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.8"
+    }
+   ],
+   "depends_on": [
+    "spectral-measure",
+    "lanczos-orthogonal-polynomials",
+    "krylov-grade"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "InnerProductSpace.gramSchmidt",
+     "present": true,
+     "note": "abstract Gram–Schmidt; needs the inner product on ℝ[X] (or degreeLT) induced by μ"
+    },
+    {
+     "decl": "Polynomial.Sequence.span_degreeLE",
+     "present": true,
+     "note": "exact-degree families span P_n"
+    },
+    {
+     "decl": "orthogonal polynomials of a measure",
+     "present": false,
+     "note": "Mathlib only has specific families (Chebyshev T orthogonal for measureT)"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "orthogonal-polynomials",
+    "definition",
+    "foundation"
+   ],
+   "notes": "Lets every statement of Gautschi Ch. 1 be made for a general measure (Chebyshev `measureT`, limiting spectral densities) instead of only for $\\mu_b$; the bridge lemma $\\pi_k(\\cdot;\\mu_b)=\\det(xI-T_k)$ connects to `lanczos-orthogonal-polynomials`. Consumers: all candidates below stated for general $\\mu$, spectral density estimation, KPM. Prove (Gram–Schmidt + `Polynomial.Sequence`).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "hankel-moment-positivity",
+   "title": "Hankel moment matrices: positivity criterion and determinantal formulas",
+   "aliases": [
+    "Hankel determinant",
+    "moment matrix",
+    "Δ_n",
+    "Krylov Gram matrix"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "With $M_n=[\\mu_{i+j}]_{i,j<n}$ and $\\Delta_n=\\det M_n$: $(\\cdot,\\cdot)_\\mu$ is positive definite on $\\mathcal P_{n-1}$ iff $M_n\\succ0$ iff $\\Delta_1,\\dots,\\Delta_n>0$. For $\\mu_b$, $M_n=K_n^\\top K_n$ with $K_n=[b,Ab,\\dots,A^{n-1}b]$, so $M_n\\succ0$ iff $n\\le\\operatorname{grade}(A,b)$. Moreover $\\pi_k$ is $\\Delta_k^{-1}$ times the Hankel determinant with last row $(1,t,\\dots,t^k)$, $\\alpha_k=\\Delta'_{k+1}/\\Delta_{k+1}-\\Delta'_k/\\Delta_k$, $\\beta_k=\\Delta_{k+1}\\Delta_{k-1}/\\Delta_k^2$.",
+   "hypotheses": [
+    "$\\mu$ a positive measure with finite moments $\\mu_r=\\int t^r\\,d\\mu$",
+    "$\\Delta'_k$ the Hankel determinant of order $k+1$ with its penultimate column and last row deleted"
+   ],
+   "conclusion": "$\\int p^2\\,d\\mu=c^\\top M_{d+1}c$ for $p=\\sum c_kt^k$; positive definiteness on $\\mathcal P_d$ iff $\\Delta_1,\\dots,\\Delta_{d+1}>0$; determinantal formulas for $\\pi_k$, $\\alpha_k$, $\\beta_k$; $M_n(\\mu_b)=K_n^\\top K_n$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.2"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 2.1"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 2.2"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomials-measure-def",
+    "krylov-grade",
+    "sylvester-inertia"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.PosDef",
+     "present": true
+    },
+    {
+     "decl": "Sylvester's criterion (PosDef iff leading minors positive)",
+     "present": false,
+     "note": "not in Mathlib; NLAlib `card_eigenvalues_lt_eq_card_sign_changes` (sylvester-inertia) is the route"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "moments",
+    "hankel"
+   ],
+   "notes": "Consumers: grade characterisation via moment matrices, moment-based spectral density estimation (and its ill-conditioning), `formal-orthogonal-polynomials`. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "orthogonal-polynomial-zeros",
+   "title": "Zeros of orthogonal polynomials: simple, interior, strictly interlacing, one per gap; Gauss weights positive",
+   "aliases": [
+    "Ritz values are simple",
+    "strict interlacing of Ritz values",
+    "unreduced Jacobi matrix has simple eigenvalues",
+    "positive Gauss weights",
+    "at most one Ritz value per spectral gap",
+    "ATAP Exercise 17.4",
+    "zeros of orthogonal polynomials",
+    "Gauss nodes are distinct",
+    "Ritz values are distinct"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A$, $b$ with grade $\\nu$ and the Lanczos $T_q$ ($1\\le q\\le\\nu$): the eigenvalues of $T_q$ (zeros of $\\pi_q(\\cdot;\\mu_b)$) are simple; for $q<\\nu$ they lie in the open interval $(\\min\\operatorname{supp}\\mu_b,\\max\\operatorname{supp}\\mu_b)$; for $q<\\nu$ the eigenvalues of $T_q$ strictly interlace those of $T_{q+1}$; an open interval containing no point of $\\operatorname{supp}\\mu_b$ contains at most one eigenvalue of $T_q$; every Gauss weight $(e_1^\\top u_i)^2$ is strictly positive. Same statements for $\\pi_n(\\cdot;\\mu)$ of a general measure with $>n$ support points.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{N\\times N}$ symmetric, $b\\ne0$, $\\nu=\\operatorname{grade}(A,b)$, $\\mu_b=\\sum_i (u_i^\\top b)^2\\delta_{\\lambda_i}$ the spectral measure of symmetric $A$ and $b$ (`NLAlib.spectralMeasure`)",
+    "$T_q$ the Jacobi matrix of a Lanczos decomposition of size $q\\le\\nu$ (positive off-diagonal)"
+   ],
+   "conclusion": "$\\theta_1(T_q)>\\dots>\\theta_q(T_q)$; $q<\\nu\\Rightarrow\\theta_i(T_q)\\in(\\min\\operatorname{supp}\\mu_b,\\max\\operatorname{supp}\\mu_b)$ and $\\theta_{i+1}(T_{q+1})<\\theta_i(T_q)<\\theta_i(T_{q+1})$; $\\#\\{i:\\theta_i(T_q)\\in(c,d)\\}\\le1$ if $(c,d)\\cap\\operatorname{supp}\\mu_b=\\emptyset$; $(e_1^\\top u_i)^2>0$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.19"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.20"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.21"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.46"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ex 17.4"
+    }
+   ],
+   "depends_on": [
+    "lanczos-orthogonal-polynomials",
+    "jacobi-matrix-identities",
+    "cauchy-interlacing",
+    "krylov-grade",
+    "lanczos-gauss-quadrature"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.rootMultiplicity",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "orthogonal-polynomials",
+    "ritz-values",
+    "jacobi-matrix",
+    "quadrature",
+    "gauss-quadrature",
+    "lanczos"
+   ],
+   "notes": "NLAlib has non-strict interlacing and nodes in the closed spectral interval; this closes the gap noted in `jacobi-matrix-identities` (strict interlacing open). Route: an eigenvector of an unreduced tridiagonal matrix has nonzero first component (it is $\\tilde\\pi(\\theta)$, Thm 1.31), giving simplicity and positive weights; the confluent Christoffel–Darboux inequality gives strict interlacing; orthogonality of $\\pi_q$ against $\\pi_q/((t-\\tau_i)(t-\\tau_j))$ gives one zero per gap. Consumers: `lanczos-fa-interpolation` (distinct Ritz values), `ritz-value-bounds`, `slq-error` (positive weights), `cg-finite-termination`. Prove. [also proposed from trefethen19]",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gauss-christoffel-numbers",
+   "title": "Jacobi eigenvectors, Christoffel numbers and discrete orthogonality",
+   "aliases": [
+    "Christoffel numbers",
+    "Christoffel function",
+    "eigenvectors of the Jacobi matrix",
+    "discrete orthogonality",
+    "Gauss weights from orthonormal polynomials"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $\\mu_b$ and $q\\le\\nu$ with orthonormal Lanczos polynomials $p_0,\\dots,p_{q-1}$: $T_q\\,\\mathbf p(\\theta_i)=\\theta_i\\,\\mathbf p(\\theta_i)$ with $\\mathbf p=(p_0,\\dots,p_{q-1})^\\top$, so $u_i=\\pm\\mathbf p(\\theta_i)/\\|\\mathbf p(\\theta_i)\\|$ and the Gauss weight is $\\|b\\|^2(e_1^\\top u_i)^2=1/\\sum_{k<q}p_k(\\theta_i)^2$; the first $q$ orthonormal polynomials are orthonormal for the Gauss rule: $\\sum_iw_ip_k(\\theta_i)p_l(\\theta_i)=\\delta_{kl}$.",
+   "hypotheses": [
+    "$A$ symmetric, $\\mu_b=\\sum_i (u_i^\\top b)^2\\delta_{\\lambda_i}$ the spectral measure of symmetric $A$ and $b$ (`NLAlib.spectralMeasure`)",
+    "Lanczos decomposition of size $q\\le\\operatorname{grade}(A,b)$ with eigenpairs $(\\theta_i,u_i)$ of $T_q$"
+   ],
+   "conclusion": "$T_q\\mathbf p(\\theta_i)=\\theta_i\\mathbf p(\\theta_i)$; $w_i=\\|b\\|^2(e_1^\\top u_i)^2=\\big(\\sum_{k<q}p_k(\\theta_i)^2\\big)^{-1}$; $\\sum_iw_ip_k(\\theta_i)p_l(\\theta_i)=\\delta_{kl}$ for $k,l<q$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.31"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Cor to Thm 1.31"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.22"
+    }
+   ],
+   "depends_on": [
+    "lanczos-orthogonal-polynomials",
+    "jacobi-matrix-identities",
+    "lanczos-gauss-quadrature"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "orthogonal-polynomials",
+    "quadrature",
+    "jacobi-matrix"
+   ],
+   "notes": "Eigenvalue half of Thm 1.31 is in NLAlib (`integral_eval_charpoly_mul_eq_zero`); this adds the eigenvector and weight formulas. Consumers: `orthogonal-polynomial-zeros` (positive weights), `gauss-radau-lobatto`, SLQ weight analysis, Ritz-vector first components in Lanczos-FA error formulas. Prove (difficulty 2: evaluate `X_mul_poly` at a zero of $\\det(xI-T_q)$).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "quadrature-exactness-characterisation",
+   "title": "Quadrature rules: degree of exactness, characterisation, uniqueness of the Gauss rule as moment matching",
+   "aliases": [
+    "degree of exactness",
+    "interpolatory quadrature",
+    "Gauss rule is unique",
+    "moment matching",
+    "n-point rule exact to degree 2n−1"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "An $n$-point rule $Q(f)=\\sum_\\nu\\lambda_\\nu f(\\tau_\\nu)$ (distinct nodes) has degree of exactness $d$ if $Q(p)=\\int p\\,d\\mu$ for $\\deg p\\le d$. For $0\\le k\\le n$: degree $\\ge n-1+k$ iff $Q$ is interpolatory ($\\lambda_\\nu=\\int\\ell_\\nu\\,d\\mu$) and $\\omega_n=\\prod(t-\\tau_\\nu)$ is orthogonal to $\\mathcal P_{k-1}$. For positive $\\mu$ with $>n$ support points the degree is at most $2n-1$, attained only by the Gauss rule ($\\omega_n=\\pi_n$); equivalently the unique $n$-atom positive measure matching $\\int t^k\\,d\\mu$ for $k<2n$ is the Gauss rule. For $\\mu_b$: the Lanczos rule $(\\theta_i,\\|b\\|^2(e_1^\\top u_i)^2)$ is the unique $q$-atom measure with moments $b^\\top A^kb$, $k<2q$.",
+   "hypotheses": [
+    "$\\mu$ a positive measure with finite moments (for the uniqueness clause, more than $n$ support points)",
+    "nodes $\\tau_1,\\dots,\\tau_n$ distinct, weights $\\lambda_\\nu\\in\\mathbb R$ (positive for the moment-matching clause)"
+   ],
+   "conclusion": "exactness to degree $n-1+k$ $\\iff$ interpolatory and $\\omega_n\\perp_\\mu\\mathcal P_{k-1}$; no rule is exact to degree $2n$; exactness to degree $2n-1$ $\\iff$ $(\\tau,\\lambda)$ is the Gauss rule; $\\sum_\\nu a_\\nu\\delta_{t_\\nu}$ with $a_\\nu>0$ matching $2n$ moments $\\Rightarrow$ it is the Gauss rule.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Def 1.44"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.45"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 3.56"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomials-measure-def",
+    "lanczos-gauss-quadrature",
+    "jacobi-matrix-identities"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Lagrange.interpolate",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.basis",
+     "present": true
+    },
+    {
+     "decl": "MeasureTheory.Measure.dirac",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "quadrature",
+    "orthogonal-polynomials",
+    "moments"
+   ],
+   "notes": "Gives NLAlib a definition of a quadrature rule and makes 'the' Gauss rule unique, so the Lanczos rule can be characterised intrinsically (moment matching) rather than by construction. Consumers: `lanczos-gauss-quadrature`, `lanczos-quadrature-lipschitz-error` (Wasserstein argument via moment matching), SLQ spectral-density comparisons with KPM, `gauss-radau-lobatto`. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gauss-quadrature-derivative-remainder",
+   "title": "Gauss quadrature remainder in derivative form (Markov); sign-definite Lanczos quadrature errors",
+   "aliases": [
+    "Markov's theorem on Gauss quadrature",
+    "Gauss remainder f^(2n)(ξ)/(2n)!",
+    "Hermite interpolation",
+    "Gauss quadrature gives lower bounds"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "The $n$-point Gauss sum equals $\\int H_{2n-1}f\\,d\\mu$, the integral of the Hermite interpolant of $f,f'$ at the nodes; hence for $f\\in C^{2n}[a,b]$ ($[a,b]\\supseteq\\operatorname{supp}\\mu$), $\\int f\\,d\\mu-\\sum\\lambda_\\nu f(\\tau_\\nu)=\\frac{f^{(2n)}(\\xi)}{(2n)!}\\int\\pi_n^2\\,d\\mu$. Matrix form: $b^\\top f(A)b-\\|b\\|^2e_1^\\top f(T_q)e_1=\\frac{f^{(2q)}(\\xi)}{(2q)!}\\|\\chi_q(A)b\\|^2$ with $\\chi_q=\\det(xI-T_q)$, so the Lanczos value is a lower bound whenever $f^{(2q)}\\ge0$ on the spectral interval (e.g. $f=1/x,\\,x^{-2}$ on $(0,\\infty)$; an upper bound for $\\log$).",
+   "hypotheses": [
+    "$A$ symmetric with spectrum in $[a,c]$, $\\mu_b=\\sum_i (u_i^\\top b)^2\\delta_{\\lambda_i}$ the spectral measure of symmetric $A$ and $b$ (`NLAlib.spectralMeasure`)",
+    "Lanczos decomposition of size $q\\le\\operatorname{grade}(A,b)$, $T_q$, $\\chi_q=\\det(xI-T_q)$",
+    "$f\\in C^{2q}[a,c]$"
+   ],
+   "conclusion": "$\\exists\\xi\\in(a,c)$: $b^\\top f(A)b-\\|b\\|^2e_1^\\top f(T_q)e_1=\\frac{f^{(2q)}(\\xi)}{(2q)!}\\int\\chi_q^2\\,d\\mu_b$; Gauss sum $=\\int H_{2q-1}f\\,d\\mu_b$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.48"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Cor to Thm 1.48"
+    }
+   ],
+   "depends_on": [
+    "lanczos-gauss-quadrature",
+    "interpolation-remainder",
+    "lanczos-orthogonal-polynomials",
+    "orthogonal-polynomial-zeros"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Hermite (osculatory) interpolation",
+     "present": false,
+     "note": "neither Mathlib nor NLAlib; NLAlib has the Lagrange remainder `exists_sub_eval_interpolate_eq` (distinct nodes) to be extended to doubled nodes"
+    },
+    {
+     "decl": "iteratedDeriv",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "quadrature",
+    "error-bound",
+    "lanczos"
+   ],
+   "notes": "Complements NLAlib's approximation-based error bounds with the classical sign-definite remainder. Consumers: CG error estimation ($\\|x-x_k\\|_A^2=r_0^\\top A^{-1}r_0-\\dots$ lower bounds, Ex 3.46), `diagonal-estimator` / trace-of-inverse bounds (Ex 3.47), log-determinant bounds in SLQ (`slq-error`), `gauss-radau-lobatto`. Needs Hermite interpolation remainder (difficulty 3). Prove; could be assumed first (statement certain).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gauss-radau-lobatto",
+   "title": "Gauss–Radau and Gauss–Lobatto rules via bordered Jacobi matrices; two-sided bounds for bᵀf(A)b",
+   "aliases": [
+    "Gauss–Radau",
+    "Gauss–Lobatto",
+    "Jacobi–Radau matrix",
+    "Golub–Meurant bounds",
+    "two-sided quadrature bounds",
+    "CG error bounds",
+    "bounds on diagonal of inverse"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Radau: bordering $T_q$ by $\\beta_qe_q$ with corner $\\alpha^R=a-\\beta_q^2\\chi_{q-1}(a)/\\chi_q(a)$ gives $\\hat T_{q+1}$ with eigenvalue $a$ whose Golub–Welsch rule is exact to degree $2q$ and has remainder $\\frac{f^{(2q+1)}(\\xi)}{(2q+1)!}\\int(t-a)\\chi_q^2(\\cdot;\\mu_b^a)\\,d\\mu_b$; so if $f^{(2q+1)}$ has constant sign on $[a,c]$ the Radau values at $a$ and at $c$ bracket $b^\\top f(A)b$. Lobatto: a bordered $(q+2)\\times(q+2)$ matrix with eigenvalues $a,c$ (corner and coupling from a $2\\times2$ system) is exact to degree $2q+1$ with remainder of sign $-\\operatorname{sgn}f^{(2q+2)}$. Applications: two-sided bounds for $\\|x-x_k\\|_2^2=r^\\top A^{-2}r$, $\\|x-x_k\\|_A^2=r^\\top A^{-1}r$ and $(A^{-1})_{ii}$; Lobatto discrete orthogonality (Thm 1.23); the Chebyshev Gauss–Lobatto rule (Ex 1.50).",
+   "hypotheses": [
+    "$A$ symmetric with spectrum in $[a,c]$ ($a$, $c$ not necessarily eigenvalues), $\\mu_b=\\sum_i (u_i^\\top b)^2\\delta_{\\lambda_i}$ the spectral measure of symmetric $A$ and $b$ (`NLAlib.spectralMeasure`)",
+    "Lanczos decomposition of size $q+1\\le\\operatorname{grade}(A,b)$",
+    "$f\\in C^{2q+2}[a,c]$"
+   ],
+   "conclusion": "Radau and Lobatto rules from the bordered matrices are exact to degrees $2q$, $2q+1$; remainders have the stated derivative forms; for $f^{(2q+1)}>0$ (resp. $f^{(2q+2)}>0$) on $[a,c]$ the left Radau value is an upper bound, the right Radau a lower bound, and Lobatto an upper bound (signs flip with the derivative).",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.23"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Example 1.50"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 3.2"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 3.3"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 3.6"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 3.7"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Example 3.46"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Example 3.47"
+    }
+   ],
+   "depends_on": [
+    "gauss-quadrature-derivative-remainder",
+    "quadrature-exactness-characterisation",
+    "jacobi-matrix-identities",
+    "lanczos-gauss-quadrature"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.integral_eq_sumZeroes",
+     "present": true,
+     "note": "Gauss–Chebyshev; the Lobatto–Chebyshev analogue is absent"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "quadrature",
+    "error-bound",
+    "lanczos",
+    "golub-meurant"
+   ],
+   "notes": "Consumers: `diagonal-estimator` (deterministic bounds on $(A^{-1})_{ii}$), CG stopping criteria and error estimation (`cg-convergence`), log-determinant / trace bounds in SLQ (`slq-error`), Bai–Golub bounds. Source also: Golub–Meurant (2010) Ch. 6–7. Prove after `gauss-quadrature-derivative-remainder`.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "kernel-polynomials-christoffel",
+   "title": "Kernel polynomials: orthogonal polynomials of (t−z)dμ, the qd/LR step on the Jacobi matrix, and the CG direction polynomials",
+   "aliases": [
+    "kernel polynomials",
+    "Christoffel's theorem (linear factor)",
+    "qd algorithm",
+    "LR step",
+    "modification by a linear factor",
+    "CG search-direction polynomials",
+    "T = LDLᵀ"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $\\pi_k(z)\\ne0$ for all $k$, $\\hat\\pi_n(t;z)=\\big(\\pi_{n+1}(t)-\\tfrac{\\pi_{n+1}(z)}{\\pi_n(z)}\\pi_n(t)\\big)/(t-z)$ are the monic orthogonal polynomials of $(t-z)\\,d\\mu$; with $q_k=-\\pi_{k+1}(z)/\\pi_k(z)$ and $e_k$ from $\\alpha_k=z+q_k+e_{k-1}$, $\\beta_k=e_{k-1}q_{k-1}$, their coefficients are $\\hat\\alpha_k=z+q_k+e_k$, $\\hat\\beta_k=q_ke_{k-1}$. Matrix form: $J_n-zI=LU$ (bidiagonal, no pivoting) and $UL+zI$ is the Jacobi matrix of $(t-z)\\,d\\mu$. For real $z$ outside the support (and positive $\\mu$) all quantities are well defined. For SPD $A$, $z=0$, $\\mu=\\mu_{r_0}$: these are the CG search-direction polynomials ($A$-conjugacy is orthogonality for $t\\,d\\mu$) and $T_k=LDL^\\top$ carries the CG coefficients.",
+   "hypotheses": [
+    "$\\mu$ positive (or quasi-definite) with recurrence coefficients $\\alpha_k,\\beta_k$",
+    "$z\\in\\mathbb C$ with $\\pi_k(z)\\ne0$ for all relevant $k$ (automatic for real $z$ outside the support interval)"
+   ],
+   "conclusion": "$\\hat\\pi_n(\\cdot;z)=\\pi_n(\\cdot;(t-z)d\\mu)$; $\\hat\\pi_n(z;z)\\ne0$; $\\hat\\alpha_k=z+q_k+e_k$, $\\hat\\beta_k=q_ke_{k-1}$, equivalently $J((t-z)d\\mu)=UL+zI$ where $J(\\mu)-zI=LU$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Lem 1.53"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Def 1.54"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.55"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Lem 1.56"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.57"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.5"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomials-measure-def",
+    "lanczos-orthogonal-polynomials",
+    "cg-recurrence"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_succ_row_zero",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "orthogonal-polynomials",
+    "cg",
+    "jacobi-matrix"
+   ],
+   "notes": "The orthogonal-polynomial content of the CG–Lanczos equivalence. Consumers: `cg-recurrence` (Hestenes–Stiefel coefficients from $T_k=LDL^\\top$), `cg-convergence`, `preconditioned-cg`, shifted systems. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "formal-orthogonal-polynomials",
+   "title": "Quasi-definite measures and formal orthogonal polynomials",
+   "aliases": [
+    "quasi-definite",
+    "formal orthogonality",
+    "non-Hermitian Lanczos polynomials"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "A real or complex measure (moment functional) is quasi-definite if all Hankel determinants are nonzero; then and only then there is a unique sequence of monic formal orthogonal polynomials, and they satisfy a three-term recurrence with $\\beta_k\\ne0$.",
+   "hypotheses": [
+    "a linear functional $L$ on $\\mathbb C[X]$ (moments $\\mu_r=L(t^r)$)"
+   ],
+   "conclusion": "monic formal orthogonal polynomials exist and are unique iff $\\Delta_n\\ne0$ for all $n$; they satisfy $\\pi_{k+1}=(t-\\alpha_k)\\pi_k-\\beta_k\\pi_{k-1}$ with $\\beta_k\\ne0$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Def 1.51"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.52"
+    }
+   ],
+   "depends_on": [
+    "hankel-moment-positivity",
+    "orthogonal-polynomials-measure-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "nonsymmetric-lanczos"
+   ],
+   "notes": "Consumer: two-sided (nonsymmetric) Lanczos and BiCG breakdown theory (no atlas entry yet). Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "jacobi-fraction-second-kind",
+   "title": "Jacobi continued fraction: numerator polynomials, second-kind polynomials, partial fractions, Markov's theorem",
+   "aliases": [
+    "polynomials of the second kind",
+    "associated polynomials",
+    "numerator polynomials",
+    "Stieltjes transform",
+    "Markov's theorem",
+    "Padé approximant of the Stieltjes transform"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "With $F(z)=\\int d\\mu(t)/(z-t)$: the convergents are $\\sigma_n/\\pi_n$ where $\\sigma_n(z)=\\int\\frac{\\pi_n(z)-\\pi_n(t)}{z-t}d\\mu(t)=\\beta_0\\pi^{[1]}_{n-1}(z)$, the numerator polynomials $\\pi^{[s]}_k$ obey the recurrence with coefficients shifted by $s$; $\\sigma_n/\\pi_n=\\sum_\\nu\\lambda^G_\\nu/(z-\\tau^G_\\nu)$ (Gauss weights $\\lambda^G_\\nu=\\sigma_n(\\tau_\\nu)/\\pi_n'(\\tau_\\nu)$) and $F-\\sigma_n/\\pi_n=O(z^{-2n-1})$; for compact support $\\sigma_n/\\pi_n\\to F$ off $[a,b]$ (Markov). Matrix form: $e_1^\\top(zI-T_q)^{-1}e_1=\\sum_iw_i/(z-\\theta_i)$ for all complex $z$ off the spectrum of $T_q$.",
+   "hypotheses": [
+    "$\\mu$ positive with compact support $[a,b]$ (Markov clause) or $\\mu_b=\\sum_i (u_i^\\top b)^2\\delta_{\\lambda_i}$ the spectral measure of symmetric $A$ and $b$ (`NLAlib.spectralMeasure`)",
+    "$z\\in\\mathbb C\\setminus[a,b]$"
+   ],
+   "conclusion": "$\\sigma_n(z)=\\int\\frac{\\pi_n(z)-\\pi_n(t)}{z-t}d\\mu$; $\\frac{\\sigma_n}{\\pi_n}=\\sum_\\nu\\frac{\\lambda^G_\\nu}{z-\\tau^G_\\nu}$; $\\lambda^G_\\nu=\\frac{\\sigma_n(\\tau_\\nu)}{\\pi_n'(\\tau_\\nu)}$; $\\lim_n\\sigma_n/\\pi_n=F$ locally uniformly off $[a,b]$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Def 1.35"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.36"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Def 1.38"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.39"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.41"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.47"
+    }
+   ],
+   "depends_on": [
+    "jacobi-matrix-identities",
+    "orthogonal-polynomials-measure-def",
+    "lanczos-gauss-quadrature"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "GenContFract.convs",
+     "present": true,
+     "note": "generic continued-fraction convergents; NLAlib uses its own `jacobiFraction`"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "continued-fraction",
+    "stieltjes-transform"
+   ],
+   "notes": "Extends NLAlib's real-$x$ continued-fraction identity to complex $z$ (listed open in `jacobi-matrix-identities`). Consumers: resolvent quadratic forms $b^\\top(zI-A)^{-1}b$, spectral density via the Stieltjes transform / Stieltjes–Perron, `rational-gauss-quadrature`. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "symmetric-measure-even-odd-reduction",
+   "title": "Symmetric measures: parity of orthogonal polynomials and reduction to t² (Lanczos on the augmented matrix vs AᵀA)",
+   "aliases": [
+    "symmetric measure",
+    "even/odd orthogonal polynomials",
+    "α_k = 0",
+    "augmented matrix Lanczos",
+    "Golub–Kahan as Lanczos"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $\\mu$ is symmetric about $0$ then $\\alpha_k=0$ and $\\pi_k(-t)=(-1)^k\\pi_k(t)$; writing $\\pi_{2k}(t)=\\pi^+_k(t^2)$, $\\pi_{2k+1}(t)=t\\pi^-_k(t^2)$, $\\pi^+_k$ and $\\pi^-_k$ are the monic orthogonal polynomials of the push-forwards of $\\mu$ and $t^2\\mu$ under $t\\mapsto t^2$. Matrix form: for $M=\\begin{bmatrix}0&B\\\\B^\\top&0\\end{bmatrix}$ and start $(u,0)$, $\\mu$ is symmetric, and the even/odd Lanczos polynomials are those of the spectral measures of $(BB^\\top,u)$ and $(B^\\top B,B^\\top u)$.",
+   "hypotheses": [
+    "$\\mu$ a positive measure invariant under $t\\mapsto-t$ (e.g. the spectral measure of the augmented matrix and $(u,0)$)"
+   ],
+   "conclusion": "$\\alpha_k(\\mu)=0$; $\\pi_k(-t)=(-1)^k\\pi_k(t)$; $\\pi_{2k}(t)=\\pi_k(t^2;s_*\\mu)$, $\\pi_{2k+1}(t)=t\\,\\pi_k(t^2;s_*(t^2\\mu))$ with $s(t)=t^2$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Def 1.16"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.17"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.18"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomials-measure-def",
+    "golub-kahan-bidiagonalization",
+    "lanczos-orthogonal-polynomials"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "MeasureTheory.Measure.map",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "golub-kahan",
+    "symmetry"
+   ],
+   "notes": "Consumers: `golub-kahan-bidiagonalization` (bidiagonal $B_k$ from Lanczos on the augmented matrix), `cgls-lsqr-bound`, singular-value quadrature $u^\\top f(BB^\\top)u$. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "recurrence-coefficient-bounds",
+   "title": "Bounds on the recurrence coefficients of a compactly supported measure",
+   "aliases": [
+    "bounds on Lanczos coefficients",
+    "a < α_k < b",
+    "β_k ≤ max(a², b²)"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "If $\\operatorname{supp}\\mu\\subseteq[a,b]$ (with more than $k+1$ points) then $a<\\alpha_k<b$ and $0<\\beta_k\\le\\max(a^2,b^2)$. Matrix form: the Lanczos coefficients satisfy $\\lambda_{\\min}(A)\\le\\alpha_j\\le\\lambda_{\\max}(A)$ and $0<\\beta_j\\le\\|A\\|_2$ below the grade.",
+   "hypotheses": [
+    "$\\mu$ positive with support in $[a,b]$; $k$ below the number of support points minus one"
+   ],
+   "conclusion": "$a<\\alpha_k(\\mu)<b$, $0<\\beta_k(\\mu)\\le\\max(a^2,b^2)$; for Lanczos: $\\alpha_j\\in[\\lambda_{\\min},\\lambda_{\\max}]$, $0<\\beta_j\\le\\|A\\|_2$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.28"
+    }
+   ],
+   "depends_on": [
+    "lanczos-recurrence",
+    "orthogonal-polynomials-measure-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "lanczos",
+    "bound"
+   ],
+   "notes": "Positivity of $\\beta_j$ is already proved (`LanczosDecomp.beta_arnoldiDecomp_pos`). Consumers: a-priori bounds on $T_q$ (finite-precision Lanczos analysis, `ritz-value-bounds`). Prove (routine).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "monic-orthogonal-recurrence",
+   "title": "Monic recurrence for det(xI − T_j), norm products, monic and confluent Christoffel–Darboux",
+   "aliases": [
+    "monic three-term recurrence",
+    "‖π_n‖² = β_0⋯β_n",
+    "confluent Christoffel–Darboux",
+    "continued-fraction denominators",
+    "Sturm sequence of T"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $\\chi_j=\\det(xI-T_j)$ ($\\chi_0=1$, $\\chi_{-1}=0$): $\\chi_{j+1}=(x-\\alpha_j)\\chi_j-\\beta_j^2\\chi_{j-1}$; $\\int\\chi_j^2\\,d\\mu_b=\\|b\\|^2\\beta_1^2\\cdots\\beta_j^2$, $\\alpha_j=\\int t\\chi_j^2\\,d\\mu_b/\\int\\chi_j^2\\,d\\mu_b$, $\\beta_j^2=\\int\\chi_j^2/\\int\\chi_{j-1}^2$; monic Christoffel–Darboux $\\sum_{k\\le n}\\big(\\prod_{i=k+1}^n\\beta_i^2\\big)\\chi_k(x)\\chi_k(y)=\\frac{\\chi_{n+1}(x)\\chi_n(y)-\\chi_n(x)\\chi_{n+1}(y)}{x-y}$ and the confluent form $\\sum_{k<m}p_k(x)^2=\\beta_m(p_m'(x)p_{m-1}(x)-p_{m-1}'(x)p_m(x))>0$; $\\chi_k$ are the denominators $B_k$ of the Jacobi continued fraction.",
+   "hypotheses": [
+    "$A$ symmetric, $\\mu_b=\\sum_i (u_i^\\top b)^2\\delta_{\\lambda_i}$ the spectral measure of symmetric $A$ and $b$ (`NLAlib.spectralMeasure`)",
+    "Lanczos decomposition of size $q\\le\\operatorname{grade}(A,b)$ with coefficients $\\alpha_j,\\beta_j$ (NLAlib indexing, $\\beta_j=t_{j,j-1}$)"
+   ],
+   "conclusion": "the three-term monic recurrence, the norm and quotient formulas, the monic and confluent Christoffel–Darboux identities, and $B_k=\\chi_k$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.27"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.32"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Cor to Thm 1.32"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.34"
+    }
+   ],
+   "depends_on": [
+    "lanczos-orthogonal-polynomials",
+    "jacobi-matrix-identities",
+    "sylvester-inertia"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_succ_row_zero",
+     "present": true,
+     "note": "Laplace expansion for the leading-minor recurrence"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "orthogonal-polynomials",
+    "jacobi-matrix",
+    "christoffel-darboux"
+   ],
+   "notes": "Closes the 'partial' gaps on Thms 1.27, 1.32, Cor 1.32 and 1.34. Consumers: `gauss-quadrature-derivative-remainder` (the constant $\\int\\chi_q^2$), `orthogonal-polynomial-zeros` (confluent CD gives strict interlacing), Sturm counts (`sylvester-inertia`: the leading minors of $T-xI$ are $\\pm\\chi_j$), CG error formulas. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "recurrence-coefficient-continuity",
+   "title": "Continuity of recurrence coefficients and Gauss rules under convergence of moments",
+   "aliases": [
+    "convergence of discretisations",
+    "Stieltjes procedure on discretised measures",
+    "continuity of Gauss rules"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If measures $\\mu_N$ and $\\mu$ on $[a,b]$ satisfy $\\int p\\,d\\mu_N\\to\\int p\\,d\\mu$ for every polynomial and $\\mu$ has more than $n$ support points, then $\\alpha_k(\\mu_N)\\to\\alpha_k(\\mu)$, $\\beta_k(\\mu_N)\\to\\beta_k(\\mu)$ for $k<n$, $\\pi_n(\\cdot;\\mu_N)\\to\\pi_n(\\cdot;\\mu)$ uniformly on $[a,b]$, and the $n$-point Gauss nodes and weights converge.",
+   "hypotheses": [
+    "$\\mu_N,\\mu$ positive measures supported in a fixed compact $[a,b]$",
+    "moment convergence $\\int t^k\\,d\\mu_N\\to\\int t^k\\,d\\mu$ for all $k$",
+    "$\\#\\operatorname{supp}\\mu>n$"
+   ],
+   "conclusion": "$\\alpha_k(\\mu_N)\\to\\alpha_k(\\mu)$, $\\beta_k(\\mu_N)\\to\\beta_k(\\mu)$ ($k<n$); $\\sup_{[a,b]}|\\pi_n(\\cdot;\\mu_N)-\\pi_n(\\cdot;\\mu)|\\to0$; Gauss nodes and weights converge.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 2.32"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Cor to Thm 2.32"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomials-measure-def",
+    "quadrature-exactness-characterisation"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "continuity",
+    "spectral-density"
+   ],
+   "notes": "Consumers: spectral-density estimation (averaged/limiting spectral measures, SLQ vs KPM), stability of Lanczos coefficients under perturbation of the moments. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gauss-remainder-contour-kernel",
+   "title": "Contour-integral representation of the Gauss remainder for analytic integrands",
+   "aliases": [
+    "remainder kernel K_n = ρ_n/π_n",
+    "Gauss quadrature error for analytic functions",
+    "Cauchy integral of orthogonal polynomials"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $\\mu$ supported in $[a,b]$ and $f$ analytic on a domain containing $[a,b]$, $R_n^G(f)=\\frac1{2\\pi i}\\oint_\\Gamma K_n(z)f(z)\\,dz$ with $K_n=\\rho_n/\\pi_n$, $\\rho_n(z)=\\int\\pi_n(t)\\,d\\mu(t)/(z-t)$, for any contour $\\Gamma$ in the domain encircling $[a,b]$; hence $|R_n^G(f)|\\le\\frac{\\ell(\\Gamma)}{2\\pi}\\max_\\Gamma|K_n|\\max_\\Gamma|f|$.",
+   "hypotheses": [
+    "$\\mu$ positive with support in $[a,b]$",
+    "$f$ holomorphic on an open set containing a closed contour $\\Gamma$ that winds once around $[a,b]$"
+   ],
+   "conclusion": "$R_n^G(f)=\\frac1{2\\pi i}\\oint_\\Gamma\\frac{\\rho_n(z)}{\\pi_n(z)}f(z)\\,dz$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 2.48"
+    }
+   ],
+   "depends_on": [
+    "lanczos-quadrature-analytic-error",
+    "jacobi-fraction-second-kind",
+    "orthogonal-polynomial-zeros"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "circleIntegral",
+     "present": true,
+     "note": "Cauchy integral formula machinery for circles; general contours/ellipses need more"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "quadrature",
+    "error-bound",
+    "analytic"
+   ],
+   "notes": "Alternative to the Chebyshev/Bernstein-ellipse route used by `lanczos-quadrature-analytic-error`; gives sharper, measure-dependent constants. Consumer: `slq-error`. Prove or assume.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "recurrence-coefficient-moment-sensitivity",
+   "title": "Derivatives of recurrence coefficients with respect to (modified) moments",
+   "aliases": [
+    "sensitivity of Jacobi matrix to moments",
+    "condition of the moment map K_n",
+    "Gautschi's ψ polynomials"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For modified moments $m_k=\\int p_k\\,d\\mu$ ($p_k$ a basis of $\\mathcal P_{2n-1}$, $c_k[q]$ the coordinates of $q$): $\\partial_{m_k}\\int q\\,d\\mu=c_k[q]+\\int\\partial_{m_k}q\\,d\\mu$, and $\\partial\\alpha_j/\\partial m_k=c_k[\\tilde\\psi_{2j+1}]$, $\\partial\\beta_j/\\partial m_k=c_k[\\tilde\\psi_{2j}]$ with $\\tilde\\psi_{2j}=\\beta_j(\\tilde\\pi_j^2-\\tilde\\pi_{j-1}^2)$, $\\tilde\\psi_{2j+1}=\\sqrt{\\beta_{j+1}}\\tilde\\pi_j\\tilde\\pi_{j+1}-\\sqrt{\\beta_j}\\tilde\\pi_{j-1}\\tilde\\pi_j$; the condition number of $m\\mapsto(\\alpha,\\beta)$ is the norm of $[c_k[\\tilde\\psi_l]]$.",
+   "hypotheses": [
+    "$\\mu$ positive with more than $n$ support points",
+    "$p_0,\\dots,p_{2n-1}$ a basis of $\\mathcal P_{2n-1}$"
+   ],
+   "conclusion": "explicit Jacobian of $(m_0,\\dots,m_{2n-1})\\mapsto(\\alpha_0,\\dots,\\alpha_{n-1},\\beta_0,\\dots,\\beta_{n-1})$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Lem 2.21"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 2.22"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Cor 1 to Thm 2.22"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Cor 2 to Thm 2.22"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Cor 3 to Thm 2.22"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomials-measure-def",
+    "condition-number-of-map-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "fderiv",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "perturbation",
+    "moments"
+   ],
+   "notes": "Consumers: perturbation of Lanczos coefficients under perturbed spectral measures (finite-precision Lanczos, noisy moments in KPM/SLQ). Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "condition-number-of-map-def",
+   "title": "Absolute and relative condition numbers of a differentiable map",
+   "aliases": [
+    "condition number of a function",
+    "relative condition matrix",
+    "mollified condition number"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "For $f:\\mathbb R^m\\to\\mathbb R^n$ Fréchet differentiable at $x$: $\\operatorname{cond}_{abs}f(x)=\\|Df(x)\\|$; componentwise relative condition matrix $C_{\\nu\\mu}=x_\\mu\\partial_\\mu f_\\nu(x)/f_\\nu(x)$ and $\\operatorname{cond}_{rel}f(x)=\\|C(x)\\|$; scalar cases $|f'(x)|$ and $|xf'(x)/f(x)|$.",
+   "hypotheses": [
+    "$f$ Fréchet differentiable at $x$; nonzero components for the relative version"
+   ],
+   "conclusion": "definitions, with $\\operatorname{cond}_{rel}$ of $x\\mapsto Ax$ bounded by $\\kappa(A)$-type quantities.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Def 2.3"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Def 2.4"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Def 2.5"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Def 2.6"
+    }
+   ],
+   "depends_on": [
+    "condition-number-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "fderiv",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "conditioning",
+    "definition"
+   ],
+   "notes": "NLAlib has only the matrix condition number. Consumers: `recurrence-coefficient-moment-sensitivity`, perturbation statements in matrix-conditioning. Prove (definitions).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "modified-chebyshev-algorithm",
+   "title": "Modified Chebyshev algorithm: Jacobi matrix from modified moments",
+   "aliases": [
+    "Chebyshev algorithm",
+    "mixed moments",
+    "moments to recurrence coefficients",
+    "Wheeler's algorithm"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "Given monic $p_k$ with $p_{k+1}=(t-a_k)p_k-b_kp_{k-1}$ and modified moments $m_k=\\int p_k\\,d\\mu$ ($k<2n$), the mixed moments $\\sigma_{kl}=\\int\\pi_kp_l\\,d\\mu$ satisfy $\\sigma_{-1,l}=0$, $\\sigma_{0,l}=m_l$, $\\sigma_{kl}=\\sigma_{k-1,l+1}-(\\alpha_{k-1}-a_l)\\sigma_{k-1,l}-\\beta_{k-1}\\sigma_{k-2,l}+b_l\\sigma_{k-1,l-1}$, and $\\alpha_0=a_0+m_1/m_0$, $\\alpha_k=a_k-\\sigma_{k-1,k}/\\sigma_{k-1,k-1}+\\sigma_{k,k+1}/\\sigma_{kk}$, $\\beta_k=\\sigma_{kk}/\\sigma_{k-1,k-1}$, $\\beta_0=m_0$.",
+   "hypotheses": [
+    "$\\mu$ positive with more than $n$ support points",
+    "$p_k$ monic with a known three-term recurrence ($a_k\\in\\mathbb R$, $b_k\\ge0$)"
+   ],
+   "conclusion": "the recursion returns exactly $\\alpha_k(\\mu),\\beta_k(\\mu)$ for $k<n$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.1"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomials-measure-def",
+    "monic-orthogonal-recurrence"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "moments",
+    "kpm"
+   ],
+   "notes": "Consumers: KPM-to-Gauss-quadrature spectral density methods (Chebyshev moments from Hutchinson probes, `trace-estimators-def`), comparison of SLQ and KPM. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "clenshaw-recurrence",
+   "title": "Clenshaw's algorithm for sums of three-term-recurrence sequences",
+   "aliases": [
+    "Clenshaw recurrence",
+    "Chebyshev series evaluation",
+    "backward recurrence"
+   ],
+   "area": "polynomial-series",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "If $y_{k+1}=(t-a_k)y_k-b_ky_{k-1}$ and $u_{n+1}=u_{n+2}=0$, $u_k=c_k+(t-a_k)u_{k+1}-b_{k+1}u_{k+2}$, then $\\sum_{k\\le n}c_ky_k=u_0y_0+u_1(y_1-(t-a_0)y_0)$; for Chebyshev, $\\sum_{k\\le n}c_kT_k(t)$ from $u_k=c_k+2tu_{k+1}-u_{k+2}$. Matrix version: $\\sum c_kT_k(A)b$ with $n$ matrix–vector products.",
+   "hypotheses": [
+    "sequences $y_k$ (scalars, polynomials or vectors $T_k(A)b$) satisfying the recurrence"
+   ],
+   "conclusion": "$\\sum_{k\\le n}c_ky_k=u_0y_0+u_1(y_1-(t-a_0)y_0)$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.2"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.3"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "polynomial",
+    "chebyshev",
+    "algorithm"
+   ],
+   "notes": "Consumers: Chebyshev-filter and KPM evaluations of $p(A)b$, `chebyshev-coefficients-def`. Prove (routine induction).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "christoffel-uvarov-modification",
+   "title": "Christoffel and Uvarov theorems: orthogonal polynomials of rationally modified measures",
+   "aliases": [
+    "Christoffel's theorem",
+    "Uvarov's theorem",
+    "modification algorithms",
+    "rational modification of a measure"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For $d\\hat\\mu=(u/v)\\,d\\mu$ with $u,v$ coprime real polynomials with simple zeros, not vanishing on the support, $u\\hat\\pi_n$ is (up to a constant) the determinant with first row $\\pi_{n-m},\\dots,\\pi_{n+\\ell}$ ($\\ell=\\deg u$, $m=\\deg v\\le n$), rows of values $\\pi_j(u_i)$ at the zeros of $u$ and rows of Cauchy integrals $\\rho_j(v_i)$ at the zeros of $v$; a bordered variant holds for $m>n$. Special cases give the linear/quadratic factor and divisor algorithms, e.g. $\\hat\\pi_n=\\pi_n+s_n\\pi_{n-1}+t_n\\pi_{n-2}$ for a quadratic divisor.",
+   "hypotheses": [
+    "$\\mu$ positive with support $[a,b]$",
+    "$u,v$ coprime with simple zeros outside $[a,b]$, $u/v>0$ on $[a,b]$"
+   ],
+   "conclusion": "determinantal formulas for $u\\,\\pi_n(\\cdot;\\hat\\mu)$; recurrence coefficients of $\\hat\\mu$ computable from those of $\\mu$ and $\\rho_k$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 2.52"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Thm 2.53"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Lem 2.54"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Lem 2.55"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.6"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.7"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.8"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.9"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.10"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Alg 2.11"
+    }
+   ],
+   "depends_on": [
+    "kernel-polynomials-christoffel",
+    "jacobi-fraction-second-kind"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "orthogonal-polynomials",
+    "modification"
+   ],
+   "notes": "Consumers: spectral measures modified by resolvents ($(t-z)^{-1}d\\mu_b$: shifted systems, rational Krylov), Gauss rules for $f(t)/(t-z)$. Assume or prove the linear cases first.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "discrete-measure-jacobi-matrix",
+   "title": "Finitely supported measures as spectral measures; their Jacobi matrix is the Lanczos matrix (inverse eigenvalue problem)",
+   "aliases": [
+    "discrete measure",
+    "Stieltjes procedure",
+    "Lanczos for discrete measures",
+    "extended Jacobi matrix",
+    "inverse eigenvalue problem",
+    "Gauss rule is the spectral measure of (T_q, e_1)",
+    "dual orthogonality"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For distinct nodes $t_1,\\dots,t_N$ and weights $w_\\nu>0$, $\\sum_\\nu w_\\nu\\delta_{t_\\nu}$ is the spectral measure of $(\\operatorname{diag}(t),\\sqrt w)$; Lanczos from $\\sqrt w$ runs to step $N$ and yields an orthogonal $Q$ with $Q^\\top\\operatorname{diag}(t)Q=J_N$, $Q^\\top\\sqrt w=\\sqrt{\\beta_0}e_1$ (the bordered form), where $J_N$ is the Jacobi matrix of the measure; the Stieltjes procedure on $(t,w)$ returns the same coefficients; dual orthogonality $\\sum_{k<N}p_k(t_r)p_k(t_s)=\\delta_{rs}/w_r$. Conversely the $q$-point Gauss rule of $\\mu_b$ is the spectral measure of $(T_q,\\|b\\|e_1)$.",
+   "hypotheses": [
+    "distinct $t_\\nu\\in\\mathbb R$, $w_\\nu>0$; or $A$ symmetric, $\\mu_b=\\sum_i (u_i^\\top b)^2\\delta_{\\lambda_i}$ the spectral measure of symmetric $A$ and $b$ (`NLAlib.spectralMeasure`), $q\\le\\operatorname{grade}(A,b)$"
+   ],
+   "conclusion": "$\\sum_\\nu w_\\nu\\delta_{t_\\nu}=\\mu_{\\sqrt w}(\\operatorname{diag}t)$; grade $=N$; $Q^\\top\\operatorname{diag}(t)Q=T_N$, $Q^\\top\\sqrt w=\\|\\sqrt w\\|e_1$; $QQ^\\top=I$ gives dual orthogonality; $\\mu_{\\|b\\|e_1}(T_q)=\\sum_iw_i\\delta_{\\theta_i}$.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 1.9"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Sec 2.2.3.1"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Sec 2.2.3.2"
+    },
+    {
+     "source": "gautschi04",
+     "label": "Cor to Thm 3.1"
+    }
+   ],
+   "depends_on": [
+    "spectral-measure",
+    "lanczos-orthogonal-polynomials",
+    "lanczos-recurrence-algorithm",
+    "jacobi-matrix-identities",
+    "krylov-grade"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "MeasureTheory.Measure.dirac",
+     "present": true
+    },
+    {
+     "decl": "Matrix.diagonal",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "spectral-measure",
+    "jacobi-matrix",
+    "quadrature",
+    "bridge"
+   ],
+   "notes": "The bridge that lets every NLAlib spectral-measure theorem be read as a theorem about arbitrary finitely supported measures (and vice versa), and names the 'Lanczos measure' $\\hat\\mu=\\mu_{e_1}(T_q)$ used in SLQ analyses. Consumers: `slq-error`, `lanczos-quadrature-lipschitz-error` (Wasserstein distance between $\\mu_b$ and $\\hat\\mu$), `lanczos-gauss-quadrature`, `orthogonal-polynomials-measure-def` (discrete case). Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "rational-gauss-quadrature",
+   "title": "Rational Gauss quadrature with prescribed poles",
+   "aliases": [
+    "rational Gauss rule",
+    "quadrature exact for rational functions",
+    "Gautschi rational quadrature"
+   ],
+   "area": "krylov-orthogonal-polynomials",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Let $\\omega_m(t)=\\prod_\\mu(1+\\zeta_\\mu t)^{s_\\mu}$ (degree $m\\le2n$, no zeros on $[a,b]$). If $\\mu/\\omega_m$ has an $n$-point Gauss rule $(\\tau_\\nu,\\lambda_\\nu^G)$ with nodes in $[a,b]$, then nodes $\\tau_\\nu$ with weights $\\lambda^G_\\nu\\omega_m(\\tau_\\nu)$ integrate exactly the span of $(1+\\zeta_\\mu t)^{-s}$ ($s\\le s_\\mu$) and $\\mathcal P_{2n-1-m}$; conversely.",
+   "hypotheses": [
+    "$\\mu$ positive on $[a,b]$; $\\zeta_\\mu\\ne0$ with $1+\\zeta_\\mu t\\ne0$ on $[a,b]$; $m\\le2n$"
+   ],
+   "conclusion": "$\\int f\\,d\\mu=\\sum_\\nu\\lambda^G_\\nu\\omega_m(\\tau_\\nu)f(\\tau_\\nu)$ for all $f\\in\\mathcal Q_m\\oplus\\mathcal P_{2n-1-m}$, and conversely.",
+   "sources": [
+    {
+     "source": "gautschi04",
+     "label": "Thm 3.25"
+    }
+   ],
+   "depends_on": [
+    "quadrature-exactness-characterisation",
+    "jacobi-fraction-second-kind"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "quadrature",
+    "rational"
+   ],
+   "notes": "Consumers: rational Krylov / pole-based quadrature for $b^\\top f(A)b$ with $f$ having nearby poles (resolvents, Cauchy–Stieltjes functions). Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "schur-triangularization",
+   "title": "Schur triangularization, real Schur form and Schur's inequality",
+   "aliases": [
+    "Schur decomposition",
+    "Schur form",
+    "real Schur form",
+    "quasitriangular form",
+    "Schur's inequality",
+    "departure from normality",
+    "generalized Schur (QZ) form",
+    "almost diagonalization"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Every $A\\in\\mathbb C^{n\\times n}$ is $A=UTU^*$ with $U$ unitary and $T$ upper triangular, the eigenvalues on the diagonal in any prescribed order; a real $A$ is $A=QTQ^\\top$ with $Q$ real orthogonal and $T$ real upper quasitriangular ($1\\times1$ and $2\\times2$ blocks $\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}$ for conjugate pairs), and $T$ can be taken triangular when all eigenvalues are real. Consequences: Schur's inequality $\\sum_i|\\lambda_i|^2=\\|A\\|_F^2-\\|N\\|_F^2\\le\\|A\\|_F^2$ ($N$ the strictly upper part, equality iff $A$ normal); matrices with distinct eigenvalues are dense; for every $\\varepsilon>0$ some similarity makes $A$ triangular with off-diagonal entries at most $\\varepsilon$. Pencil version (QZ): $A=VT_AW^*$, $B=VT_BW^*$ simultaneously.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ (real Schur form) or $A\\in\\mathbb C^{n\\times n}$ (complex Schur form)",
+    "prescribed ordering of the eigenvalues for the complex form"
+   ],
+   "conclusion": "$\\exists$ orthogonal $Q$ (unitary $U$), quasitriangular (triangular) $T$: $A=QTQ^\\top$; $\\sum|\\lambda_i|^2\\le\\|A\\|_F^2$ with equality iff $A$ is normal",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 2.3.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Ex 2.3.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.3.4"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.7.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.7.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.6.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.6.2"
+    }
+   ],
+   "depends_on": [
+    "qr-decomposition",
+    "norms-frob-spec",
+    "orthonormal-completion"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Module.End.exists_eigenvalue",
+     "present": true
+    },
+    {
+     "decl": "Module.End.iSup_maxGenEigenspace_eq_top",
+     "present": true,
+     "note": "generalized eigenspaces span (abstract triangularizability); no unitary Schur form"
+    },
+    {
+     "decl": "Matrix.IsHermitian.spectral_theorem",
+     "present": true,
+     "note": "Hermitian special case only"
+    },
+    {
+     "decl": "Matrix.schurTriangulation",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "schur",
+    "nonnormal",
+    "eigenvalues"
+   ],
+   "notes": "Consumers: qr-algorithm-convergence (limit is the Schur form), normal-matrices (normal ⇔ triangular Schur factor diagonal), matrix-power-convergence (ρ(A)<1 ⇒ Aᵏ→0 via the ε-triangular form), gmres-diagonalizable / krylov-nonnormal (Henrici departure from normality, field-of-values-def), Krylov f(A)b error bounds for nonnormal A. Prove: deflation by a unit eigenvector plus orthonormal-completion, induction on n; the real form needs one real invariant 2-plane per conjugate pair. QZ (Thm 2.6.1–2.6.2) is a later variant.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "normal-matrices",
+   "title": "Normal matrices: spectral theorem, real normal form, Fuglede–Putnam",
+   "aliases": [
+    "normal matrix",
+    "AA* = A*A",
+    "unitarily diagonalizable",
+    "spectral theorem for normal matrices",
+    "real normal form",
+    "Fuglede–Putnam"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "$A$ is normal ($AA^*=A^*A$) iff it is unitarily diagonalizable iff $\\|A\\|_F^2=\\sum|\\lambda_i|^2$ iff it has an orthonormal eigenbasis; block triangular normal matrices are block diagonal; two normal matrices are unitarily similar iff they have the same eigenvalues. A real normal matrix is real orthogonally similar to a direct sum of $1\\times1$ blocks and $2\\times2$ blocks $\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}$ (skew-symmetric and orthogonal matrices as special cases). Fuglede–Putnam: for normal $A,B$, $AX=XB\\iff A^*X=XB^*$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$ with $AA^*=A^*A$ (or real with $AA^\\top=A^\\top A$)"
+   ],
+   "conclusion": "$A=U\\operatorname{diag}(\\lambda)U^*$ with $U$ unitary; real case $A=Q(\\bigoplus_i B_i)Q^\\top$, $B_i\\in\\{[\\mu],\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}\\}$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 2.5.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 2.5.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.4"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 2.5.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.8"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.15"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.16"
+    }
+   ],
+   "depends_on": [
+    "schur-triangularization",
+    "norms-frob-spec"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "IsStarNormal",
+     "present": true,
+     "note": "normality in a star algebra"
+    },
+    {
+     "decl": "Matrix.IsHermitian.spectral_theorem",
+     "present": true,
+     "note": "Hermitian case"
+    },
+    {
+     "decl": "normal-matrix spectral theorem",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "normal",
+    "spectral-theorem"
+   ],
+   "notes": "Consumers: gmres-diagonalizable (κ(V)=1 for normal A), field-of-values-def (W(A)=conv σ(A) for normal A), crouzeix-palencia (normal sanity case), polynomial-spectral-bound generalised to normal A (‖p(A)‖=max|p(λ)|). Prove from schur-triangularization: a normal triangular matrix is diagonal (Lem 2.5.2).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "diagonalizable-def",
+   "title": "Diagonalizable matrices and eigenvector bases",
+   "aliases": [
+    "diagonalisable",
+    "nondefective",
+    "defective",
+    "eigenvector basis",
+    "A = VΛV⁻¹",
+    "distinct eigenvalues ⇒ diagonalizable"
+   ],
+   "area": "matrix-spectral",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "$A$ is diagonalizable if $A=V\\Lambda V^{-1}$ with $\\Lambda$ diagonal, equivalently it has $n$ linearly independent eigenvectors, equivalently every eigenvalue has equal geometric and algebraic multiplicity (nondefective). $n$ distinct eigenvalues suffice; a direct sum is diagonalizable iff each summand is; two diagonalizations differ by an invertible block-diagonal factor on the eigenspaces. Geometric multiplicity $\\ge k$ forces $\\lambda$ into the spectrum of every principal submatrix of order $\\ge n-k+1$, hence algebraic multiplicity $\\ge k$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$ (or real $A$ with a complex eigenvector matrix)"
+   ],
+   "conclusion": "$\\exists V$ invertible, $\\Lambda$ diagonal with $A=V\\Lambda V^{-1}$ ⇔ $n$ independent eigenvectors ⇔ nondefective; distinct eigenvalues ⇒ diagonalizable",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 1.3.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 1.3.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.27"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 1.4.4"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.4.10"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Module.End.eigenvectors_linearIndependent",
+     "present": true
+    },
+    {
+     "decl": "Module.End.IsSemisimple",
+     "present": true,
+     "note": "abstract analogue (diagonalizable over ℂ)"
+    },
+    {
+     "decl": "Module.End.isSemisimple_of_squarefree_aeval_eq_zero",
+     "present": true
+    },
+    {
+     "decl": "Matrix.IsDiagonalizable",
+     "present": false,
+     "note": "no matrix predicate"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "eigenvalues",
+    "diagonalization",
+    "definition"
+   ],
+   "notes": "Consumers: gmres-diagonalizable (whose Mathlib note asks for exactly this predicate; currently stated with an explicit V), krylov-nonnormal bounds with κ(V), power-iteration for nonsymmetric A, matrix functions f(A)=V f(Λ)V⁻¹. Mostly a wrapper around Mathlib's semisimplicity; prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "simultaneous-diagonalization",
+   "title": "Commuting families: common eigenvectors and simultaneous diagonalization / triangularization",
+   "aliases": [
+    "simultaneously diagonalizable",
+    "commuting matrices share an eigenvector",
+    "simultaneous triangularization",
+    "eigenvalues of commuting sums",
+    "invariant subspace"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "A commuting family has a common eigenvector (Lem 1.3.19) and is simultaneously unitarily upper triangularizable; a family of diagonalizable (normal) matrices commutes iff it is simultaneously (unitarily) diagonalizable, with any eigenvalue order for one member; real diagonalizable matrices with real eigenvalues need only a real similarity. For commuting $A,B$ the eigenvalues of $A+B$ and $AB$ are $\\alpha_i+\\beta_i$ and $\\alpha_i\\beta_i$ for suitable orderings. Simultaneous triangularization by similarity is equivalent to unitary simultaneous triangularization.",
+   "hypotheses": [
+    "$\\mathcal F\\subseteq\\mathbb C^{n\\times n}$ a commuting family",
+    "for diagonalization: every member diagonalizable (normal for the unitary version)"
+   ],
+   "conclusion": "$\\exists S$ (unitary $U$) with $S^{-1}AS$ diagonal (triangular) for all $A\\in\\mathcal F$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 1.3.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.12"
+    },
+    {
+     "source": "hj13",
+     "label": "Obs 1.3.18"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 1.3.19"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 1.3.20"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.21"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 1.3.30"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.3.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.8.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 2.4.8.5"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.8.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.5"
+    }
+   ],
+   "depends_on": [
+    "diagonalizable-def",
+    "schur-triangularization",
+    "normal-matrices"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "LinearMap.IsSymmetric.directSum_isInternal_of_pairwise_commute",
+     "present": true,
+     "note": "commuting symmetric case"
+    },
+    {
+     "decl": "Module.End.iSup_iInf_maxGenEigenspace_eq_top_of_forall_mapsTo",
+     "present": true,
+     "note": "simultaneous generalized eigenspaces"
+    },
+    {
+     "decl": "simultaneous diagonalization of commuting diagonalizable matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "commuting",
+    "diagonalization"
+   ],
+   "notes": "Consumers: matrix functions of commuting symmetric matrices (Loewner-order arguments, operator-monotone-convex), Kronecker sums (kronecker-spectral eigenvalues of A⊗I+I⊗B), preconditioned iterations with commuting preconditioners. The commuting symmetric real case is in Mathlib and should be cited, not reproved.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "real-similarity-descent",
+   "title": "Real matrices similar (unitarily similar) over ℂ are similar (orthogonally similar) over ℝ",
+   "aliases": [
+    "real similarity",
+    "complex to real similarity",
+    "unitarily similar real matrices are orthogonally similar"
+   ],
+   "area": "matrix",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If real families $\\{A_\\alpha\\}$, $\\{B_\\alpha\\}$ satisfy $A_\\alpha=SB_\\alpha S^{-1}$ for one complex nonsingular $S$, then some real nonsingular $T$ does the same (because some $C+\\tau D$ is nonsingular when $S=C+iD$); if the common similarity is unitary, a real orthogonal one exists.",
+   "hypotheses": [
+    "$A_\\alpha,B_\\alpha\\in\\mathbb R^{n\\times n}$",
+    "$S\\in\\mathbb C^{n\\times n}$ nonsingular (resp. unitary) with $A_\\alpha=SB_\\alpha S^{-1}$ for all $\\alpha$"
+   ],
+   "conclusion": "$\\exists T\\in\\mathbb R^{n\\times n}$ nonsingular (resp. real orthogonal $Q$) with $A_\\alpha=TB_\\alpha T^{-1}$ ($=QB_\\alpha Q^\\top$) for all $\\alpha$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Lem 1.3.28"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.29"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.21"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.eq_zero_of_infinite_isRoot",
+     "present": true,
+     "note": "finitely many roots of det(C+tD)"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "real-complex",
+    "similarity"
+   ],
+   "notes": "Consumer: NLAlib's complex-embedding transfers (NLAlib.Matrix.ComplexEmbedding, complex volume sampling, complex Cholesky) when a statement proved over ℂ must be brought back to real orthogonal factors. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "left-right-eigenvectors",
+   "title": "Left and right eigenvectors: biorthogonality and nonunitary deflation",
+   "aliases": [
+    "left eigenvector",
+    "biorthogonality",
+    "y*x ≠ 0 for a simple eigenvalue",
+    "eigenvalue condition number",
+    "spectral projector of a simple eigenvalue"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $Ax=\\lambda x$ and $y^*A=\\mu y^*$ with $\\lambda\\ne\\mu$ then $y^*x=0$. If $y^*x\\ne0$ for the same $\\lambda$ then $A=S([\\lambda]\\oplus B)S^{-1}$ with $S=[x\\ S_1]$ and $S^{-*}e_1=y/(x^*y)$ (and conversely). A simple eigenvalue has $y^*x\\ne0$; for geometric multiplicity one, simplicity is equivalent to $y^*x\\ne0$, and $\\operatorname{adj}(\\lambda I-A)=\\gamma xy^*$, $\\gamma\\ne0$. Similarities map right eigenvectors by $S$ and left ones by $S^{-*}$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$",
+    "$Ax=\\lambda x$, $y^*A=\\mu y^*$, $x,y\\ne0$"
+   ],
+   "conclusion": "$\\lambda\\ne\\mu\\Rightarrow y^*x=0$; $\\lambda$ simple $\\Rightarrow y^*x\\ne0$ and $A\\sim[\\lambda]\\oplus B$ with spectral projector $xy^*/(y^*x)$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 1.4.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Obs 1.4.6a"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.4.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.4.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 1.4.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.4.12"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.11.1"
+    }
+   ],
+   "depends_on": [
+    "diagonalizable-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.adjugate",
+     "present": true
+    },
+    {
+     "decl": "Module.End.HasEigenvector",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "eigenvectors",
+    "nonnormal",
+    "perturbation"
+   ],
+   "notes": "Consumers: eigenvalue condition numbers 1/|y*x| and first-order perturbation of simple eigenvalues (HJ ch. 6, part 2 of this index), deflation in power-iteration for nonsymmetric A, oblique spectral projectors in Krylov f(A)b analysis. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "rank-one-eigenvalue-update",
+   "title": "Brauer's theorem: eigenvalues of a rank-one update along an eigenvector",
+   "aliases": [
+    "Brauer's theorem",
+    "Wielandt deflation",
+    "Hotelling deflation",
+    "eigenvalues of A + x v*"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $Ax=\\lambda x$, $x\\ne0$, and the eigenvalues of $A$ are $\\lambda,\\lambda_2,\\dots,\\lambda_n$, then for every $v$ the eigenvalues of $A+xv^*$ are $\\lambda+v^*x,\\lambda_2,\\dots,\\lambda_n$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$",
+    "$Ax=\\lambda x$, $x\\ne0$",
+    "$v\\in\\mathbb C^n$"
+   ],
+   "conclusion": "$p_{A+xv^*}(t)=p_A(t)\\,\\dfrac{t-\\lambda-v^*x}{t-\\lambda}$, i.e. $\\sigma(A+xv^*)=\\{\\lambda+v^*x,\\lambda_2,\\dots,\\lambda_n\\}$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Ex 1.2.8"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.10.1"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_add_replicateCol_mul_replicateRow",
+     "present": true,
+     "note": "matrix determinant lemma"
+    },
+    {
+     "decl": "Matrix.charpoly",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "deflation",
+    "rank-one",
+    "eigenvalues"
+   ],
+   "notes": "Consumers: deflation steps in power-iteration and subspace-iteration-convergence for the next eigenvalue, PageRank-type damping (eigenvalues of αP+(1−α)ev*), rank-one modifications in Lanczos restarts. Prove via the charpoly computation of Ex 1.2.8.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "sylvester-equation",
+   "title": "Sylvester equation AX − XB = C: unique solvability iff disjoint spectra, and spectral block diagonalization",
+   "aliases": [
+    "Sylvester's theorem",
+    "Sylvester equation",
+    "AX − XB = C",
+    "Lyapunov-type equation",
+    "block diagonalization by spectral separation",
+    "intertwining relation"
+   ],
+   "area": "matrix-subspace-perturbation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For $A\\in\\mathbb C^{n\\times n}$, $B\\in\\mathbb C^{m\\times m}$ the map $X\\mapsto AX-XB$ is invertible iff $\\sigma(A)\\cap\\sigma(B)=\\emptyset$ (real data give real solutions); $AX=XB$ implies $g(A)X=Xg(B)$ for all polynomials $g$. Consequences: if $AB=CA$ with block-diagonal $B,C$ whose off-diagonal block spectra are disjoint then $A$ is block diagonal; matrices commuting with $S(A_1\\oplus\\cdots\\oplus A_d)S^{-1}$ (disjoint spectra) are $S(B_1\\oplus\\cdots\\oplus B_d)S^{-1}$; every $A$ is similar to $T_{11}\\oplus\\cdots\\oplus T_{dd}$ with each $T_{ii}$ triangular with a single eigenvalue.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{p\\times p}$, $B\\in\\mathbb R^{q\\times q}$ (or complex)",
+    "$\\sigma(A)\\cap\\sigma(B)=\\emptyset$"
+   ],
+   "conclusion": "$\\forall C\\ \\exists!X:\\ AX-XB=C$; in particular $AX=XB\\Rightarrow X=0$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.7.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 2.4.4.0"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.4.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 2.4.4.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 2.4.4.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.6.1"
+    }
+   ],
+   "depends_on": [
+    "schur-triangularization"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.aeval_self_charpoly",
+     "present": true
+    },
+    {
+     "decl": "IsCoprime",
+     "present": true,
+     "note": "coprimality of the characteristic polynomials gives the Bézout argument"
+    },
+    {
+     "decl": "Sylvester-equation solvability",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "sylvester",
+    "invariant-subspaces",
+    "perturbation"
+   ],
+   "notes": "Consumers: sylvester-separation-bound (its quantitative symmetric form; this is the qualitative general statement), davis-kahan-sin-theta and wedin-sin-theta (both reduce to a Sylvester equation), spectral projectors and invariant-subspace perturbation for nonsymmetric matrices, block diagonalization used in Krylov f(A)b analysis. Prove via Cayley–Hamilton: p_B(A) is invertible when the spectra are disjoint, which inverts X ↦ AX − XB.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "matrix-power-convergence",
+   "title": "Convergent and power-bounded matrices: Aᵏ → 0 iff ρ(A) < 1",
+   "aliases": [
+    "convergent matrix",
+    "spectral radius criterion",
+    "power-bounded matrix",
+    "stationary iteration convergence",
+    "Neumann series convergence iff ρ<1"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "$A^k\\to0$ iff $\\rho(A)<1$; then $\\sum_kA^k=(I-A)^{-1}$. $\\sup_k\\|A^k\\|<\\infty$ iff $\\rho(A)\\le1$ and every eigenvalue of modulus one is semisimple. Quantitatively, for every $\\varepsilon>0$ there is $C_\\varepsilon$ with $\\|A^k\\|\\le C_\\varepsilon(\\rho(A)+\\varepsilon)^k$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ (spectral radius over $\\mathbb C$)"
+   ],
+   "conclusion": "$\\lim_{k\\to\\infty}A^k=0\\iff\\rho(A)<1$; power bounded $\\iff\\rho(A)\\le1$ and unimodular eigenvalues semisimple",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 3.2.5.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 5.6.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 5.6.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 5.6.12"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 5.6.13"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 5.6.15"
+    }
+   ],
+   "depends_on": [
+    "inverse-perturbation",
+    "schur-triangularization"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "spectralRadius",
+     "present": true
+    },
+    {
+     "decl": "spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius",
+     "present": true,
+     "note": "Gelfand's formula gives the ρ<1 direction quickly"
+    },
+    {
+     "decl": "Aᵏ → 0 ↔ ρ(A) < 1 for matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "spectral-radius",
+    "iterative-methods"
+   ],
+   "notes": "Consumers: richardson-iteration and chebyshev-iteration (stationary/polynomial methods converge iff ρ of the iteration matrix < 1), Jacobi/Gauss–Seidel style splittings, expected-error recursions of randomized-kaczmarz and sketch-and-project (E[e_{k+1}] = (I − P̄) E[e_k]), inverse-perturbation (Neumann series beyond the ‖F‖<1 criterion). The convergent part follows from Gelfand's formula in Mathlib; the power-bounded part needs Jordan structure: state it, assume if needed. Also Thm 5.6.12, Cor 5.6.13 (HJ ch. 5 form).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "cs-decomposition",
+   "title": "CS decomposition of a partitioned unitary matrix and canonical form of an oblique projection",
+   "aliases": [
+    "CS decomposition",
+    "cosine–sine decomposition",
+    "canonical angles via CSD",
+    "complementary blocks of a unitary have equal rank",
+    "oblique projector canonical form",
+    "‖P‖ = 1/cos θ"
+   ],
+   "area": "matrix-subspace-perturbation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $U=\\begin{pmatrix}U_{11}&U_{12}\\\\U_{21}&U_{22}\\end{pmatrix}$ is unitary (real orthogonal) with $U_{11}\\in\\mathbb C^{p\\times p}$, $p\\le q$, there are unitaries $V_1,W_1\\in\\mathbb C^{p\\times p}$, $V_2,W_2\\in\\mathbb C^{q\\times q}$ with $(V_1\\oplus W_1)U(V_2\\oplus W_2)=\\begin{pmatrix}C&S&0\\\\-S&C&0\\\\0&0&I_{q-p}\\end{pmatrix}$, $C=\\operatorname{diag}(\\sigma_i(U_{11}))$, $S=(I-C^2)^{1/2}$. In particular $\\operatorname{rank}U_{12}=\\operatorname{rank}U_{21}$ and $\\operatorname{rank}U_{22}=\\operatorname{rank}U_{11}+n-2p$. An idempotent $P$ with singular values $\\sigma_1\\ge\\dots\\ge\\sigma_g>1$ is unitarily similar to $\\bigoplus_i\\begin{pmatrix}1&(\\sigma_i^2-1)^{1/2}\\\\0&0\\end{pmatrix}\\oplus I\\oplus0$, so $\\|P\\|=1/\\cos\\theta_{\\max}$ between its range and the orthogonal complement of its null space.",
+   "hypotheses": [
+    "$U\\in\\mathbb R^{n\\times n}$ orthogonal, partitioned with $U_{11}\\in\\mathbb R^{p\\times p}$, $p\\le n-p$",
+    "for the projection form: $P^2=P$"
+   ],
+   "conclusion": "block-orthogonal $V,W$ with $V^\\top UW$ in CS form; $\\operatorname{rank}U_{12}=\\operatorname{rank}U_{21}$; for idempotent $P$, $\\|P\\|=\\sigma_1(P)$ is the secant of the largest principal angle",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Lem 2.1.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.7.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 3.4.3.3"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "qr-decomposition",
+    "principal-angles-def",
+    "orthonormal-columns-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.unitaryGroup",
+     "present": true
+    },
+    {
+     "decl": "CS decomposition",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "cs-decomposition",
+    "principal-angles",
+    "projectors"
+   ],
+   "notes": "Consumers: principal-angles-def (CSD is the canonical form behind sin Θ/cos Θ; several of its lemmas are currently scaffolds: sinThetaMax_comm, sinThetaMax_eq_sin_principalAngles), davis-kahan-sin-theta, wedin-sin-theta, oblique projectors in Nyström / generalized Nyström and sketch-and-solve-ls analyses (‖P‖ = ‖I − P‖ = 1/cos θ), subspace-iteration-convergence. Prove from svd + qr-decomposition as in HJ's proof.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "cauchy-binet",
+   "title": "Cauchy–Binet formula and multiplicativity of compound matrices",
+   "aliases": [
+    "Cauchy–Binet",
+    "Binet–Cauchy",
+    "compound matrices",
+    "det(AᵀA) = Σ det(A_S)²",
+    "volume sampling normaliser"
+   ],
+   "area": "matrix",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $A\\in\\mathbb F^{m\\times k}$, $B\\in\\mathbb F^{k\\times n}$ and index sets $|\\alpha|=|\\beta|=r$: $\\det(AB)[\\alpha,\\beta]=\\sum_{|\\gamma|=r}\\det A[\\alpha,\\gamma]\\det B[\\gamma,\\beta]$; equivalently the $r$-th compound is multiplicative, $C_r(AB)=C_r(A)C_r(B)$. Special case: $\\det(A^\\top A)=\\sum_{|S|=k}\\det(A_{S,:})^2$ for $A\\in\\mathbb R^{m\\times k}$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times k}$, $B\\in\\mathbb R^{k\\times n}$",
+    "$\\alpha\\subseteq[m]$, $\\beta\\subseteq[n]$ with $|\\alpha|=|\\beta|=r$"
+   ],
+   "conclusion": "$\\det(AB)[\\alpha,\\beta]=\\sum_{\\gamma\\subseteq[k],|\\gamma|=r}\\det A[\\alpha,\\gamma]\\det B[\\gamma,\\beta]$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.8.1"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.8.7"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_mul",
+     "present": true
+    },
+    {
+     "decl": "Matrix.det_apply",
+     "present": true
+    },
+    {
+     "decl": "Cauchy–Binet",
+     "present": false,
+     "note": "absent from Mathlib"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "determinants",
+    "volume-sampling"
+   ],
+   "notes": "Consumers: volume sampling and DPP normalisers (NLAlib.LowRank.VolumeSampling, complex volume sampling: Σ_S det(A_S A_Sᵀ) = e_k(σ²) currently reached through principal-minor sums of a Gram matrix), leverage-score / projection-DPP identities, the k = rank case of Gram determinants. Prove (standard multilinearity argument) and upstream to Mathlib if possible.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "rank-inequalities",
+   "title": "Rank inequalities (Sylvester, Frobenius, subadditivity) and solvability of linear systems",
+   "aliases": [
+    "Sylvester rank inequality",
+    "Frobenius rank inequality",
+    "rank subadditivity",
+    "Rouché–Capelli",
+    "rank(AB) ≥ rank A + rank B − n"
+   ],
+   "area": "matrix",
+   "kind": "lemma",
+   "status": "candidate",
+   "informal": "$\\operatorname{rank}(A+B)\\le\\operatorname{rank}A+\\operatorname{rank}B$; $\\operatorname{rank}A+\\operatorname{rank}B-k\\le\\operatorname{rank}AB\\le\\min(\\operatorname{rank}A,\\operatorname{rank}B)$ for $A\\in\\mathbb F^{m\\times k}$, $B\\in\\mathbb F^{k\\times n}$ (Sylvester); $\\operatorname{rank}AB+\\operatorname{rank}BC\\le\\operatorname{rank}B+\\operatorname{rank}ABC$ (Frobenius). $Ax=b$ is solvable iff $\\operatorname{rank}[A\\ b]=\\operatorname{rank}A$, and the solution set is $x_0+\\ker A$.",
+   "hypotheses": [
+    "conformable real matrices $A,B,C$"
+   ],
+   "conclusion": "Sylvester, Frobenius and subadditivity inequalities for matrix rank; Rouché–Capelli criterion",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.4.2"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.4.5"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.rank_mul_le",
+     "present": true
+    },
+    {
+     "decl": "Matrix.rank_add_rank_le_card_of_mul_eq_zero",
+     "present": true
+    },
+    {
+     "decl": "LinearMap.rank_add_le",
+     "present": true,
+     "note": "linear-map form; no Matrix.rank_add_le"
+    },
+    {
+     "decl": "Sylvester/Frobenius rank inequalities for matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 1,
+   "priority": "next",
+   "tags": [
+    "rank"
+   ],
+   "notes": "Consumers: sketch rank arguments (ae_rank_mul_gaussian_eq_min, gaussian-sketch range finder: rank(AΩ) ≥ rank A + rank Ω − n), Nyström rank bookkeeping, kaczmarz-rank-deficient (consistency b ∈ range A), sketch-and-solve-ls. Prove; small.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "complementary-nullities",
+   "title": "Law of complementary nullities and Jacobi's identity for minors of the inverse",
+   "aliases": [
+    "complementary nullities",
+    "Gustafson's law",
+    "Jacobi identity for minors",
+    "minors of the inverse",
+    "rank of off-diagonal blocks of A⁻¹",
+    "Schur complement rank additivity"
+   ],
+   "area": "matrix",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For nonsingular $A$ and index sets $\\alpha,\\beta$: $\\operatorname{nullity}A[\\alpha,\\beta]=\\operatorname{nullity}A^{-1}[\\beta^c,\\alpha^c]$; $\\det A^{-1}[\\alpha^c,\\beta^c]=(-1)^{p(\\alpha,\\beta)}\\det A[\\beta,\\alpha]/\\det A$. For a $2\\times2$ block matrix with nonsingular $A_{11}$, $\\operatorname{rank}A=\\operatorname{rank}A_{11}+\\operatorname{rank}(A_{22}-A_{21}A_{11}^{-1}A_{12})$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ nonsingular",
+    "$\\alpha,\\beta\\subseteq[n]$"
+   ],
+   "conclusion": "$\\operatorname{nullity}A[\\alpha,\\beta]=\\operatorname{nullity}A^{-1}[\\beta^c,\\alpha^c]$ and Jacobi's minor identity",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.7.5"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.7.6"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.8.4"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_fromBlocks₁₁",
+     "present": true
+    },
+    {
+     "decl": "Matrix.invOf_fromBlocks₁₁_eq",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "inverse",
+    "rank-structure"
+   ],
+   "notes": "Consumers: rank structure of inverses (off-diagonal low rank of inverses of banded/tridiagonal matrices; hierarchical-matrix sketching), Schur-complement rank additivity used by partial-cholesky / randomly pivoted Cholesky residual rank arguments. Low priority.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "structured-matrices-def",
+   "title": "Toeplitz, Hankel and Cauchy matrices",
+   "aliases": [
+    "Toeplitz matrix",
+    "Hankel matrix",
+    "Cauchy matrix",
+    "Hilbert matrix",
+    "Cauchy determinant"
+   ],
+   "area": "matrix",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "Toeplitz: $a_{ij}=t_{j-i}$; Hankel: $a_{ij}=h_{i+j}$; Cauchy: $a_{ij}=1/(x_i+y_j)$ with $\\det=\\prod_{i<j}(x_j-x_i)(y_j-y_i)/\\prod_{i,j}(x_i+y_j)$ (Hilbert matrix as a special case). Circulants (in Mathlib) are the Toeplitz matrices that commute with the cyclic shift.",
+   "hypotheses": [
+    "index type $\\mathrm{Fin}\\,n$",
+    "Cauchy: $x_i+y_j\\ne0$"
+   ],
+   "conclusion": "definitions with the Cauchy determinant formula",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.9.7"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.9.8"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.9.12"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.circulant",
+     "present": true
+    },
+    {
+     "decl": "Matrix.vandermonde",
+     "present": true
+    },
+    {
+     "decl": "Toeplitz/Hankel/Cauchy matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "structured-matrices"
+   ],
+   "notes": "Consumers: Toeplitz and partial-circulant JL sketches, moment (Hankel) matrices in Lanczos / Gauss quadrature (lanczos-gauss-quadrature, jacobi-matrix-identities), ill-conditioning examples (Hilbert, Cauchy) for condition-number-def. Low priority.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "determinant-derivative",
+   "title": "Jacobi's formula: derivative of the determinant",
+   "aliases": [
+    "Jacobi's formula",
+    "d det A = tr(adj A dA)",
+    "derivative of log det",
+    "derivative of the characteristic polynomial"
+   ],
+   "area": "matrix-trace",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "If $t\\mapsto A(t)$ is differentiable then $\\frac{d}{dt}\\det A(t)=\\operatorname{tr}(\\operatorname{adj}A(t)\\,A'(t))$, so $\\frac{d}{dt}\\log\\det A(t)=\\operatorname{tr}(A(t)^{-1}A'(t))$ when $\\det A(t)>0$. The derivative of $p_A(t)$ is the sum of the principal $(n-1)$-minors of $tI-A$.",
+   "hypotheses": [
+    "$A:\\mathbb R\\to\\mathbb R^{n\\times n}$ differentiable at $t$"
+   ],
+   "conclusion": "$(\\det A)'(t)=\\operatorname{tr}(\\operatorname{adj}A(t)A'(t))$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.8.10"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.adjugate",
+     "present": true
+    },
+    {
+     "decl": "Matrix.det_apply",
+     "present": true
+    },
+    {
+     "decl": "HasDerivAt for Matrix.det",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "determinant",
+    "calculus",
+    "log-det"
+   ],
+   "notes": "Consumers: log-determinant estimation (SLQ for tr log A = log det A, slq-error), Gaussian-process likelihood gradients via Hutchinson (hutchinson-variance), concavity of log det (operator-monotone-convex family), NLAlib.hasDerivAt_matrix_inv companions. Prove (multilinearity in the columns).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "companion-matrix",
+   "title": "Companion matrices, nonderogatory matrices and cyclic vectors",
+   "aliases": [
+    "companion matrix",
+    "nonderogatory",
+    "cyclic vector",
+    "minimal polynomial = characteristic polynomial",
+    "Frobenius companion form"
+   ],
+   "area": "krylov-bases",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "The companion matrix $C_p$ of a monic $p$ has $p$ as both minimal and characteristic polynomial. For $A\\in\\mathbb F^{n\\times n}$: $\\deg q_A=n$ ⇔ $q_A=p_A$ ⇔ $A$ nonderogatory (every eigenvalue geometrically simple) ⇔ $A$ is similar to $C_{p_A}$ ⇔ some $b$ has Krylov grade $n$; then every matrix commuting with $A$ is a polynomial in $A$.",
+   "hypotheses": [
+    "$p$ monic of degree $n$",
+    "$A\\in\\mathbb R^{n\\times n}$"
+   ],
+   "conclusion": "$\\operatorname{minpoly}(C_p)=\\operatorname{charpoly}(C_p)=p$; $A$ nonderogatory ⇔ $A\\sim C_{p_A}$ ⇔ $\\exists b$: $\\operatorname{grade}(A,b)=n$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 3.2.4.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 3.2.4.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 3.3.13"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 3.3.14"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 3.3.15"
+    }
+   ],
+   "depends_on": [
+    "krylov-grade",
+    "krylov-subspace"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "minpoly",
+     "present": true
+    },
+    {
+     "decl": "Matrix.charpoly",
+     "present": true
+    },
+    {
+     "decl": "companion matrix",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "krylov",
+    "minimal-polynomial"
+   ],
+   "notes": "Consumers: krylov-grade (grade ≤ deg q_A with equality for a cyclic vector; the Krylov matrix K satisfies AK = K C), arnoldi-relation (Hessenberg form of A in a Krylov basis is similar to a companion matrix), gmres-any-convergence-curve (construction uses companion matrices). Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "lu-row-inclusion",
+   "title": "LU factorization of possibly singular matrices: row and column inclusion",
+   "aliases": [
+    "row inclusion property",
+    "LU of singular matrices",
+    "rank-deficient LU"
+   ],
+   "area": "matrix-factorizations",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "$A$ has an LU factorization with nonsingular $L$ iff for each $i<n$ the row $A[i+1,1{:}i]$ is a combination of the rows of $A[1{:}i,1{:}i]$ (row inclusion); dually for nonsingular $U$ and column inclusion. If $\\operatorname{rank}A=k$ and the leading $j\\times j$ blocks are nonsingular for $j\\le k$, $A=LU$ with either factor unit triangular.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$, possibly singular"
+   ],
+   "conclusion": "$\\exists L$ unit lower, $U$ upper with $A=LU$ ⇔ row inclusion; leading blocks nonsingular up to the rank ⇒ LU exists",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 3.5.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 3.5.4"
+    }
+   ],
+   "depends_on": [
+    "lu-decomposition",
+    "lu-algorithm"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.rank",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "lu",
+    "rank-deficient"
+   ],
+   "notes": "Consumers: partial-cholesky and randomly pivoted Cholesky on rank-deficient PSD matrices (the LDLᵀ analogue), CUR / skeleton decompositions (A = C U⁺ R from a nonsingular leading block). Low priority; NLAlib's lu-decomposition covers the nonsingular case.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "eigenvalue-order-and-counting",
+   "title": "Eigenvalues of −A, strict subspace tests and eigenvalue counts",
+   "aliases": [
+    "eigenvalue reversal",
+    "λ_k(−A) = −λ_{n−k+1}(A)",
+    "positivity on a subspace counts eigenvalues"
+   ],
+   "area": "matrix-spectral",
+   "kind": "lemma",
+   "status": "candidate",
+   "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$ with decreasing eigenvalues $\\lambda_0\\ge\\dots\\ge\\lambda_{n-1}$ (`eigenvalues₀`): $\\lambda_k(-A)=-\\lambda_{n-1-k}(A)$. If $x^\\top Ax>c\\|x\\|^2$ for all nonzero $x$ in a subspace of dimension $k+1$, then $\\lambda_k(A)>c$ (strict form of the existing non-strict test); consequently a $k$-dimensional subspace on which $x^\\top Ax\\ge0$ (resp. $>0$ off $0$) forces at least $k$ nonnegative (resp. positive) eigenvalues.",
+   "hypotheses": [
+    "$A=A^\\top\\in\\mathbb R^{n\\times n}$",
+    "$S\\le\\mathbb R^n$ a subspace with $\\dim S=k+1$",
+    "strict test: $x^\\top Ax>c\\,x^\\top x$ for all $x\\in S\\setminus\\{0\\}$"
+   ],
+   "conclusion": "$\\lambda_k(-A)=-\\lambda_{n-1-k}(A)$; $\\lambda_k(A)>c$; $\\#\\{i:\\lambda_i(A)\\ge0\\}\\ge k$ (resp. $>0$)",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Obs 4.2.5"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 4.2.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 4.2.12"
+    }
+   ],
+   "depends_on": [
+    "courant-fischer",
+    "sylvester-inertia"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀",
+     "present": true,
+     "note": "Sorted eigenvalues."
+    },
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀_antitone",
+     "present": true
+    },
+    {
+     "decl": "eigenvalues of −A in sorted order",
+     "present": false
+    }
+   ],
+   "difficulty": 1,
+   "priority": "next",
+   "tags": [
+    "foundation",
+    "eigenvalues"
+   ],
+   "notes": "Bookkeeping lemmas that let every upper Weyl/Courant–Fischer bound be turned into the matching lower bound by negation (Thm 4.3.1 (4.3.2b), Cor 4.3.15 lower half), and the strict variant needed for strict interlacing and inertia arguments (`sylvester-inertia`). Prove (routine from the existing variational lemmas `le_eigenvalues₀_of_forall_mem`, `eigenvalues₀_le_of_forall_mem`; strictness via compactness of the unit sphere).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "low-rank-update-interlacing",
+   "title": "Interlacing for low-rank and definite updates of a symmetric matrix",
+   "aliases": [
+    "rank-one update interlacing",
+    "rank-r perturbation interlacing",
+    "Weyl's inertia corollaries"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Let $A,B\\in\\mathbb R^{n\\times n}$ be symmetric (increasing order $\\lambda_1\\le\\dots\\le\\lambda_n$). If $B$ has $\\pi$ positive and $\\nu$ negative eigenvalues then $\\lambda_i(A+B)\\le\\lambda_{i+\\pi}(A)$ and $\\lambda_{i-\\nu}(A)\\le\\lambda_i(A+B)$. In particular if $\\operatorname{rank}B=r$ then $\\lambda_{i-r}(A)\\le\\lambda_i(A+B)\\le\\lambda_{i+r}(A)$, and for $z\\in\\mathbb R^n$: $\\lambda_i(A)\\le\\lambda_i(A+zz^\\top)\\le\\lambda_{i+1}(A)$ and $\\lambda_{i-1}(A)\\le\\lambda_i(A-zz^\\top)\\le\\lambda_i(A)$.",
+   "hypotheses": [
+    "$A=A^\\top$, $B=B^\\top\\in\\mathbb R^{n\\times n}$",
+    "$\\pi=\\#\\{\\lambda_j(B)>0\\}$, $\\nu=\\#\\{\\lambda_j(B)<0\\}$ (or $\\operatorname{rank}B=r$)",
+    "indices in range"
+   ],
+   "conclusion": "$\\lambda_{i-\\nu}(A)\\le\\lambda_i(A+B)\\le\\lambda_{i+\\pi}(A)$; rank-one interlacing for $A\\pm zz^\\top$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Cor 4.3.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 4.3.5"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 4.3.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 4.3.9"
+    }
+   ],
+   "depends_on": [
+    "weyl-mirsky",
+    "courant-fischer",
+    "cauchy-interlacing",
+    "sylvester-inertia",
+    "eigenvalue-order-and-counting"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀",
+     "present": true
+    },
+    {
+     "decl": "Weyl inequalities",
+     "present": false,
+     "note": "NLAlib has `eigenvalues₀_add_le`."
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "eigenvalues",
+    "interlacing"
+   ],
+   "notes": "Consumers: Nyström and low-rank-plus-residual analyses ($A-\\hat A$ has rank $\\le n-k$ perturbation structure), `partial-cholesky-nystrom` (each pivot step is a rank-one downdate), deflation in `subspace-iteration-convergence`, and eigenvalue counting in `sylvester-inertia`. Prove: each statement is `eigenvalues₀_add_le` with the $j$ index set to the number of nonzero eigenvalues of $B$ (whose $j$-th sorted eigenvalue is then $\\le0$).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "interlacing-converse",
+   "title": "Converse of interlacing: bordered and rank-one realisations",
+   "aliases": [
+    "inverse eigenvalue problem for bordered matrices",
+    "arrowhead realisation"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If real numbers satisfy $\\mu_1\\le\\lambda_1\\le\\mu_2\\le\\dots\\le\\lambda_n\\le\\mu_{n+1}$, there are $a\\in\\mathbb R$ and $y\\in\\mathbb R^n$ such that $\\begin{bmatrix}\\Lambda&y\\\\y^\\top&a\\end{bmatrix}$ with $\\Lambda=\\operatorname{diag}(\\lambda)$ has eigenvalues $\\mu_1,\\dots,\\mu_{n+1}$. If $\\lambda_1\\le\\mu_1\\le\\lambda_2\\le\\dots\\le\\lambda_n\\le\\mu_n$, there is $z\\in\\mathbb R^n$ with $\\operatorname{spec}(\\Lambda+zz^\\top)=\\{\\mu_i\\}$.",
+   "hypotheses": [
+    "interlacing real sequences as stated"
+   ],
+   "conclusion": "existence of $a,y$ (resp. $z$) realising the prescribed spectrum",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 4.3.21"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 4.3.26"
+    }
+   ],
+   "depends_on": [
+    "cauchy-interlacing",
+    "low-rank-update-interlacing"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_fromBlocks₁₁",
+     "present": true,
+     "note": "Bordered determinant / secular equation."
+    },
+    {
+     "decl": "Matrix.det_add_replicateCol_mul_replicateRow",
+     "present": true,
+     "note": "Matrix determinant lemma for the rank-one case."
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "eigenvalues",
+    "interlacing"
+   ],
+   "notes": "Consumers: constructing Jacobi matrices with prescribed Ritz values (lower-bound instances for Lanczos/`kaniel-paige-saad`, `jacobi-matrix-identities`). Assume is acceptable; proof via the secular equation.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "real-part-eigenvalue-majorization",
+   "title": "Eigenvalues of the Hermitian part majorize the real parts of the eigenvalues",
+   "aliases": [
+    "Ky Fan real-part majorization",
+    "Bendixson bound"
+   ],
+   "area": "matrix-majorization",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For $A\\in\\mathbb C^{n\\times n}$ with eigenvalues $z_i$ and Hermitian part $H(A)=(A+A^*)/2$, the vector $\\lambda(H(A))$ majorizes $(\\operatorname{Re}z_i)$; conversely every such pair $x\\succ\\operatorname{Re}z$ is realised by some $A$. Corollary (Bendixson): $\\lambda_{\\min}(H(A))\\le\\operatorname{Re}z_i\\le\\lambda_{\\max}(H(A))$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$"
+   ],
+   "conclusion": "$\\lambda(H(A))\\succ\\operatorname{Re}\\lambda(A)$, and the converse realisation",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 4.3.50"
+    }
+   ],
+   "depends_on": [
+    "majorization-def",
+    "schur-horn",
+    "field-of-values-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues",
+     "present": true
+    },
+    {
+     "decl": "Schur unitary triangularization",
+     "present": false,
+     "note": "Not in Mathlib (hj13-part1 candidate `schur-triangularization`)."
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "majorization",
+    "nonnormal"
+   ],
+   "notes": "Consumers: `field-of-values-def` (Re W(A) = [λmin(H), λmax(H)]), `gmres-elman` (positive-real matrices have Re λ > 0). Prove the forward direction via Schur triangularisation + Schur (Thm 4.3.45); the converse may be assumed.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "haynsworth-inertia-additivity",
+   "title": "Haynsworth inertia additivity of the Schur complement",
+   "aliases": [
+    "Haynsworth theorem",
+    "inertia of a block matrix"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $M=\\begin{bmatrix}A&B\\\\B^\\top&C\\end{bmatrix}$ with $A$ invertible and $S=C-B^\\top A^{-1}B$: $i_+(M)=i_+(A)+i_+(S)$, $i_-(M)=i_-(A)+i_-(S)$, $i_0(M)=i_0(S)$. In particular $M\\succ0$ iff $A\\succ0$ and $S\\succ0$.",
+   "hypotheses": [
+    "$M$ real symmetric in block form",
+    "$A$ invertible"
+   ],
+   "conclusion": "inertia additivity $i(M)=i(A)+i(S)$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Ex 4.5.P21"
+    }
+   ],
+   "depends_on": [
+    "sylvester-inertia",
+    "generalized-schur-complement-psd"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.PosDef.fromBlocks₁₁",
+     "present": true,
+     "note": "PD case only."
+    },
+    {
+     "decl": "Matrix.det_fromBlocks₁₁",
+     "present": true
+    },
+    {
+     "decl": "QuadraticForm.sigPos_of_equiv_weightedSumSquares",
+     "present": true,
+     "note": "Sylvester uniqueness used for the congruence $M\\cong A\\oplus S$."
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "inertia",
+    "schur-complement"
+   ],
+   "notes": "Consumers: block LDLᵀ inertia counts (generalises the scalar-pivot `card_eigenvalues_lt_eq_card_neg_of_eq_mul_diagonal_mul` in `sylvester-inertia`), saddle-point/KKT systems, `partial-cholesky-nystrom`. Prove from the block congruence $M=L(A\\oplus S)L^\\top$ and `inertiaPos_transpose_mul_mul`.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "ostrowski-congruence-eigenvalues",
+   "title": "Ostrowski's theorem: eigenvalues under congruence",
+   "aliases": [
+    "Ostrowski congruence theorem",
+    "quantitative Sylvester law"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$ and $S\\in\\mathbb R^{n\\times n}$ with singular values $\\sigma_1\\ge\\dots\\ge\\sigma_n$, for each $k$ there is $\\theta_k\\in[\\sigma_n^2,\\sigma_1^2]$ with $\\lambda_k(SAS^\\top)=\\theta_k\\lambda_k(A)$ (same ordering). Hence $\\sigma_n^2\\lambda_k(A)\\le\\lambda_k(SAS^\\top)\\le\\sigma_1^2\\lambda_k(A)$ for $\\lambda_k(A)\\ge0$ (reversed for $\\lambda_k(A)<0$), and $SAS^\\top$ has no more positive (negative) eigenvalues than $A$.",
+   "hypotheses": [
+    "$A=A^\\top\\in\\mathbb R^{n\\times n}$",
+    "$S\\in\\mathbb R^{n\\times n}$ (nonsingular for $\\theta_k>0$)"
+   ],
+   "conclusion": "$\\lambda_k(SAS^\\top)=\\theta_k\\lambda_k(A)$ with $\\sigma_n(S)^2\\le\\theta_k\\le\\sigma_1(S)^2$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 4.5.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 4.5.11"
+    }
+   ],
+   "depends_on": [
+    "courant-fischer",
+    "sylvester-inertia",
+    "svd",
+    "weyl-mirsky"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.eigenvalues₀",
+     "present": true
+    },
+    {
+     "decl": "Ostrowski's theorem",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "eigenvalues",
+    "congruence",
+    "preconditioning"
+   ],
+   "notes": "Consumers: eigenvalues of preconditioned or sketched Gram matrices $S A S^\\top$ (`sketch-and-precondition`, `preconditioned-cg`, `nystrom-pcg`), quantitative inertia. Prove via Courant–Fischer: $x^\\top SAS^\\top x=y^\\top Ay$ with $y=S^\\top x$ and $\\sigma_n^2\\|x\\|^2\\le\\|y\\|^2\\le\\sigma_1^2\\|x\\|^2$.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "simultaneous-diagonalization-congruence",
+   "title": "Simultaneous diagonalisation of a definite pair by congruence",
+   "aliases": [
+    "generalized symmetric eigenproblem",
+    "definite pencil diagonalization"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $A\\in\\mathbb R^{n\\times n}$ is symmetric positive definite and $B$ symmetric, there is a nonsingular $S$ with $A=SS^\\top$ and $B=S\\Lambda S^\\top$, $\\Lambda$ real diagonal whose entries are the eigenvalues of $A^{-1}B$ (and $\\Lambda$ has the inertia of $B$). Consequently $A^{-1}B$ (and $AB$) is diagonalisable with real eigenvalues, nonnegative if $B\\succeq0$. More generally (Thm 4.5.17) for invertible symmetric $A$, $A,B$ are simultaneously congruent to real diagonals iff $A^{-1}B$ is diagonalisable with real spectrum. A PSD–PSD version holds with $A=S(I_r\\oplus0)S^\\top$.",
+   "hypotheses": [
+    "$A\\succ0$ (or $A,B\\succeq0$ for the semidefinite form)",
+    "$B=B^\\top$"
+   ],
+   "conclusion": "$A=SS^\\top$, $B=S\\Lambda S^\\top$ with $\\Lambda=\\operatorname{diag}(\\lambda(A^{-1}B))$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 4.5.17"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.6.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.6.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.6.4"
+    }
+   ],
+   "depends_on": [
+    "cholesky-decomposition",
+    "svd",
+    "sylvester-inertia",
+    "matrix-calculus-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.spectral_theorem",
+     "present": true,
+     "note": "Applied to $L^{-1}BL^{-\\top}$."
+    },
+    {
+     "decl": "CFC.sqrt",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "eigenvalues",
+    "congruence",
+    "preconditioning"
+   ],
+   "notes": "Consumers: spectrum of the preconditioned operator $P^{-1}A$ in `preconditioned-cg` and `nystrom-pcg`, generalized eigenproblems, Loewner-sandwich arguments (`loewner-relative-spectrum`). Prove: Cholesky $A=LL^\\top$, then diagonalise $L^{-1}BL^{-\\top}$.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gershgorin-diagonal-dominance",
+   "title": "Geršgorin refinements and diagonal dominance",
+   "aliases": [
+    "Gershgorin circle theorem (counting form)",
+    "diagonally dominant implies positive definite",
+    "Taussky theorem"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Let $R_i=\\sum_{j\\ne i}|a_{ij}|$, $C_j=\\sum_{i\\ne j}|a_{ij}|$. (i) A union of $k$ Geršgorin discs disjoint from the remaining $n-k$ contains exactly $k$ eigenvalues; the column discs work too. (ii) $\\rho(A)\\le\\min\\{\\max_i\\sum_j|a_{ij}|,\\max_j\\sum_i|a_{ij}|\\}$, and with positive weights $\\rho(A)\\le\\max_ip_i^{-1}\\sum_jp_j|a_{ij}|$. (iii) If $A$ is strictly diagonally dominant ($|a_{ii}|>R_i$) with positive diagonal, every eigenvalue has positive real part; if moreover $A$ is symmetric it is positive definite. (iv) Taussky: an irreducibly diagonally dominant matrix is nonsingular (and PD if symmetric with positive diagonal).",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$ (real symmetric for the PD conclusions)"
+   ],
+   "conclusion": "eigenvalue counts in isolated disc unions; row/column-sum spectral radius bounds; diagonal dominance ⇒ Re λ > 0 / PD",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 6.1.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 6.1.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 6.1.5"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 6.1.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 6.1.8"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 6.1.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 6.1.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 6.1.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.2.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 6.2.25"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 6.2.26"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 6.2.27"
+    }
+   ],
+   "depends_on": [
+    "matrix-calculus-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "eigenvalue_mem_ball",
+     "present": true,
+     "note": "Inclusion part of Geršgorin."
+    },
+    {
+     "decl": "det_ne_zero_of_sum_row_lt_diag",
+     "present": true,
+     "note": "Lévy–Desplanques."
+    },
+    {
+     "decl": "spectrum.spectralRadius_le_nnnorm",
+     "present": true,
+     "note": "With `Matrix.linfty_opNorm_def` gives (ii)."
+    },
+    {
+     "decl": "Matrix.IsIrreducible",
+     "present": true,
+     "note": "Defined for nonnegative matrices; irreducibility of a general matrix via its pattern is not in Mathlib."
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "eigenvalues",
+    "diagonal-dominance"
+   ],
+   "notes": "Consumers: positive definiteness of diagonally dominant matrices (graph Laplacians plus shifts, kernel matrices with a nugget, preconditioners), spectral-radius bounds for Jacobi-type iterations (`richardson-iteration`), eigenvalue localisation for nearly diagonal matrices (diagonal estimation, `diagonal-estimator`). Do (ii)–(iii) first (difficulty 1–2); the counting part needs continuity of eigenvalues (assume or prove via the argument principle); Taussky later.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "bauer-fike",
+   "title": "Bauer–Fike theorem and residual bounds for diagonalisable matrices",
+   "aliases": [
+    "Bauer–Fike",
+    "eigenvalue perturbation for diagonalizable matrices",
+    "normal residual bound"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Let $A=V\\Lambda V^{-1}$ be diagonalisable and $E$ arbitrary. Every eigenvalue $\\hat\\lambda$ of $A+E$ satisfies $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\kappa(V)\\,|||E|||$ for any matrix norm induced by an absolute vector norm (e.g. $\\|\\cdot\\|_1,\\|\\cdot\\|_2,\\|\\cdot\\|_\\infty$), with $\\kappa(V)=|||V|||\\,|||V^{-1}|||$. If $A$ is normal, $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\|E\\|_2$. Residual form: for $\\hat x\\ne0$ and $r=A\\hat x-\\hat\\lambda\\hat x$, $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\kappa(V)\\|r\\|/\\|\\hat x\\|$ (and $\\le\\|r\\|_2/\\|\\hat x\\|_2$ for normal $A$).",
+   "hypotheses": [
+    "$A=V\\Lambda V^{-1}\\in\\mathbb C^{n\\times n}$, $\\Lambda$ diagonal",
+    "$E\\in\\mathbb C^{n\\times n}$",
+    "norm induced by an absolute vector norm"
+   ],
+   "conclusion": "$\\operatorname{dist}(\\hat\\lambda,\\sigma(A))\\le\\kappa(V)|||E|||$; residual analogue",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Obs 6.3.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 6.3.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 6.3.4"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 6.3.14"
+    }
+   ],
+   "depends_on": [
+    "condition-number-def",
+    "inverse-perturbation",
+    "eigenvalue-residual-bounds"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.l2_opNorm_mul",
+     "present": true
+    },
+    {
+     "decl": "Bauer–Fike",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "eigenvalues",
+    "perturbation",
+    "nonnormal"
+   ],
+   "notes": "Consumers: `gmres-diagonalizable` (the $\\kappa(V)$ factor), `eigenvalue-residual-bounds` (normal case generalises its part (a)), eigenvalue sensitivity in `qr-algorithm-convergence`. Prove: if $\\hat\\lambda\\notin\\sigma(A)$ then $I+(\\Lambda-\\hat\\lambda)^{-1}V^{-1}EV$ is singular, so $1\\le\\|(\\Lambda-\\hat\\lambda)^{-1}\\|\\kappa(V)\\|E\\|$; spectral-norm case first (difficulty 2).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "hoffman-wielandt-normal",
+   "title": "Hoffman–Wielandt inequality for normal matrices",
+   "aliases": [
+    "Hoffman–Wielandt (normal)",
+    "Frobenius eigenvalue matching"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $A$ and $A+E$ are normal with eigenvalues $\\lambda_i$ and $\\hat\\lambda_i$, there is a permutation $\\sigma$ with $\\sum_i|\\hat\\lambda_{\\sigma(i)}-\\lambda_i|^2\\le\\|E\\|_F^2$.",
+   "hypotheses": [
+    "$A,A+E\\in\\mathbb C^{n\\times n}$ normal"
+   ],
+   "conclusion": "$\\min_\\sigma\\sum_i|\\hat\\lambda_{\\sigma(i)}-\\lambda_i|^2\\le\\|E\\|_F^2$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 6.3.5"
+    }
+   ],
+   "depends_on": [
+    "eigenvalue-perturbation-symmetric",
+    "majorization-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "doublyStochastic_eq_convexHull_permMatrix",
+     "present": true,
+     "note": "Birkhoff, the key step."
+    },
+    {
+     "decl": "ConvexOn.exists_ge_of_mem_convexHull",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "eigenvalues",
+    "perturbation"
+   ],
+   "notes": "The symmetric case is already in candidate `eigenvalue-perturbation-symmetric` (Cor 6.3.8); this entry is the normal-matrix generality. Proof: unitary diagonalisations turn $\\|E\\|_F^2$ into a linear function of the doubly stochastic matrix $[|u_{ij}|^2]$, minimised at a permutation (Birkhoff).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "simple-eigenvalue-perturbation",
+   "title": "First-order perturbation of a simple eigenvalue",
+   "aliases": [
+    "eigenvalue derivative",
+    "Hellmann–Feynman",
+    "eigenvalue condition number"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Let $\\lambda$ be a simple eigenvalue of $A$ with right and left eigenvectors $x,y$. Then $y^*x\\ne0$, $A$ is similar to $\\lambda\\oplus A_1$ with $\\lambda\\notin\\sigma(A_1)$, and for every $E$ there is a unique eigenvalue $\\lambda(t)$ of $A+tE$ near $\\lambda$ for small $|t|$, continuous and differentiable at $0$ with $\\lambda'(0)=y^*Ex/y^*x$. For symmetric $A$ with unit eigenvector $x$: $\\lambda'(0)=x^\\top Ex$.",
+   "hypotheses": [
+    "$\\lambda$ an algebraically simple eigenvalue of $A\\in\\mathbb C^{n\\times n}$",
+    "$Ax=\\lambda x$, $y^*A=\\lambda y^*$"
+   ],
+   "conclusion": "$\\lambda'(0)=y^*Ex/(y^*x)$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Lem 6.3.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 6.3.12"
+    }
+   ],
+   "depends_on": [
+    "matrix-calculus-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "continuity of a simple eigenvalue",
+     "present": false,
+     "note": "Not packaged in Mathlib for matrix eigenvalues."
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "eigenvalues",
+    "perturbation",
+    "calculus"
+   ],
+   "notes": "Consumers: derivative of $\\lambda_{\\max}$ (matrix calculus for spectral functions), eigenvalue condition numbers $1/|y^*x|$, sensitivity of Ritz values. Assume is acceptable.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "sylvester-criterion",
+   "title": "Sylvester's criterion for positive (semi)definiteness",
+   "aliases": [
+    "leading principal minors test",
+    "principal minors criterion"
+   ],
+   "area": "matrix-factorizations",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$: $A\\succ0$ iff all leading principal minors $\\det A_{[1..k]}$ are positive (equivalently all trailing ones); $A\\succeq0$ iff all principal minors (not just leading) are nonnegative; if the first $n-1$ leading minors are positive and $\\det A\\ge0$ then $A\\succeq0$. Also: $A\\succeq0$ iff the nonzero coefficients of its characteristic polynomial strictly alternate in sign.",
+   "hypotheses": [
+    "$A=A^\\top\\in\\mathbb R^{n\\times n}$"
+   ],
+   "conclusion": "$A\\succ0\\iff\\det A_{[1..k]}>0\\ \\forall k$; $A\\succeq0\\iff$ all principal minors $\\ge0$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.2.5"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.2.4"
+    }
+   ],
+   "depends_on": [
+    "cholesky-decomposition",
+    "lu-decomposition",
+    "cholesky-algorithm",
+    "cauchy-interlacing"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.PosDef.det_pos",
+     "present": true
+    },
+    {
+     "decl": "Matrix.PosSemidef.det_nonneg",
+     "present": true
+    },
+    {
+     "decl": "Matrix.PosDef.submatrix",
+     "present": true
+    },
+    {
+     "decl": "Sylvester's criterion",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "positive-definite",
+    "determinants"
+   ],
+   "notes": "Consumers: existence of LU/Cholesky without pivoting for SPD matrices (`lu-decomposition`, `cholesky-algorithm`), positivity of pivots in `rpcholesky` and `partial-cholesky-nystrom`, principal-minor arguments in `volume-sampling`. Prove the PD case by induction with `posDef_iff_pivotSchur` and `det_eq_mul_det_pivotSchur`; PSD case via $A+\\varepsilon I$.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "psd-hermitian-part",
+   "title": "Matrices with positive (semi)definite Hermitian part",
+   "aliases": [
+    "positive real matrices",
+    "Ostrowski–Taussky inequality",
+    "Fan's determinant inequality"
+   ],
+   "area": "krylov-nonnormal",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Let $A=H+iK$ with $H,K$ Hermitian. If $H\\succeq0$ then $\\ker A\\subseteq\\ker H$, $\\operatorname{rank}H\\le\\operatorname{rank}A$, and $A$ has the row/column inclusion property when the ranks agree (always when $H\\succ0$). If $H\\succ0$: $\\det H\\le|\\det A|$ (Ostrowski–Taussky, equality iff $K=0$), $\\det H+|\\det K|\\le|\\det A|$ for $n\\ge2$, and $(\\det H)^{2/n}+|\\det K|^{2/n}\\le|\\det A|^{2/n}$ (Fan).",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$, $H=(A+A^*)/2$, $K=(A-A^*)/(2i)$",
+    "$H\\succeq0$ (resp. $H\\succ0$)"
+   ],
+   "conclusion": "null-space/rank relations; determinant lower bounds for $|\\det A|$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Lem 7.1.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Obs 7.1.12"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.1.13"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.19"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.24"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.27"
+    }
+   ],
+   "depends_on": [
+    "field-of-values-def",
+    "simultaneous-diagonalization-congruence"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "realPart_add_I_smul_imaginaryPart",
+     "present": true,
+     "note": "Toeplitz decomposition."
+    },
+    {
+     "decl": "Matrix.PosDef.det_pos",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "nonnormal",
+    "determinants"
+   ],
+   "notes": "Consumers: positive-real (accretive) matrices in `gmres-elman` and `gmres-bgt`, field-of-values arguments. Low priority; the rank/null-space facts are routine, the determinant inequalities follow from simultaneous diagonalisation of $(H,K)$.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "singular-value-interlacing",
+   "title": "Interlacing of singular values under row or column deletion",
+   "aliases": [
+    "singular value interlacing",
+    "submatrix singular values"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $\\hat A$ is obtained from $A\\in\\mathbb R^{m\\times n}$ by deleting one row or one column, then with $q=\\min(m,n)$ and $\\hat\\sigma_q:=0$ when the deletion lowers the smaller dimension: $\\sigma_1(A)\\ge\\hat\\sigma_1\\ge\\sigma_2(A)\\ge\\hat\\sigma_2\\ge\\dots\\ge\\sigma_q(A)\\ge\\hat\\sigma_q$. Iterating: for a $p\\times r$ submatrix $A_{IJ}$, $\\sigma_{i+(m-p)+(n-r)}(A)\\le\\sigma_i(A_{IJ})\\le\\sigma_i(A)$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times n}$",
+    "$\\hat A$: one row or column deleted (or a general submatrix)"
+   ],
+   "conclusion": "interlacing of $\\sigma(A)$ and $\\sigma(\\hat A)$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Cor 7.3.6"
+    }
+   ],
+   "depends_on": [
+    "cauchy-interlacing",
+    "svd",
+    "weyl-mirsky"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "LinearMap.singularValues",
+     "present": true,
+     "note": "NLAlib.singularValues is bridged to it."
+    },
+    {
+     "decl": "singular value interlacing",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "singular-values",
+    "interlacing"
+   ],
+   "notes": "Consumers: column subset selection and CUR (`volume-sampling`, `interpolative-decomposition`, `rank-revealing-qr`: $\\sigma_i(A_{:,S})\\le\\sigma_i(A)$), sketch-and-solve with row sampling (`leverage-sampling-ose`), Nyström blocks. Prove: $\\hat A^\\top\\hat A$ (column deletion) is a principal submatrix of $A^\\top A$, or $\\hat A^\\top\\hat A=A^\\top A-aa^\\top$ (row deletion); apply `cauchy-interlacing` / `low-rank-update-interlacing` and `sq_singularValues_eq_eigenvalues₀`.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gram-equality-isometry",
+   "title": "Equal Gram matrices differ by an isometry",
+   "aliases": [
+    "A^T A = B^T B iff B = V A",
+    "unitary freedom of square roots"
+   ],
+   "area": "matrix-projections",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For $A\\in\\mathbb R^{p\\times n}$ and $B\\in\\mathbb R^{q\\times n}$ with $p\\le q$: $A^\\top A=B^\\top B$ iff $B=VA$ for some $V\\in\\mathbb R^{q\\times p}$ with orthonormal columns.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{p\\times n}$, $B\\in\\mathbb R^{q\\times n}$, $p\\le q$"
+   ],
+   "conclusion": "$A^\\top A=B^\\top B\\iff\\exists V,\\ V^\\top V=I_p,\\ B=VA$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.3.11"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "orthonormal-completion",
+    "orthonormal-columns-def",
+    "polar-decomposition"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.rank_conjTranspose_mul_self",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "factorizations",
+    "isometry"
+   ],
+   "notes": "Consumers: uniqueness of Gram/Cholesky-type factors up to rotation (`nystrom-structural`, `exists_eq_transpose_mul_of_posSemidef` users), sketch equivalences where only $A^\\top S^\\top SA$ matters, `polar-decomposition` uniqueness. Prove via SVD of $A$ and $B$.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "polar-decomposition",
+   "title": "Polar decomposition: existence and uniqueness",
+   "aliases": [
+    "polar factorization",
+    "A = U (AᵀA)^{1/2}"
+   ],
+   "area": "matrix-factorizations",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Every $A\\in\\mathbb R^{m\\times n}$ with $m\\ge n$ factors as $A=UQ$ with $Q=(A^\\top A)^{1/2}\\succeq0$ uniquely determined and $U\\in\\mathbb R^{m\\times n}$ with orthonormal columns, unique iff $\\operatorname{rank}A=n$ (then $U=A(A^\\top A)^{-1/2}$); for $m\\le n$, $A=PU$ with $P=(AA^\\top)^{1/2}$; for square $A$, $A=PU=UQ$ with $U$ orthogonal. $U$ is the nearest matrix with orthonormal columns to $A$ in every unitarily invariant norm.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times n}$"
+   ],
+   "conclusion": "$A=UQ$, $Q=(A^\\top A)^{1/2}$, $U^\\top U=I$; uniqueness under full rank",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.3.1"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "orthonormal-columns-def",
+    "matrix-calculus-def",
+    "orthonormal-completion"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "CFC.sqrt",
+     "present": true,
+     "note": "Matrix square root via the continuous functional calculus."
+    },
+    {
+     "decl": "CFC.sqrt_unique",
+     "present": true
+    },
+    {
+     "decl": "polar decomposition of matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "factorizations",
+    "orthogonalization"
+   ],
+   "notes": "NLAlib already has the full-column-rank real case as `polarFrame` (`hasOrthonormalCols_polarFrame`, `polarFrame_mul_transpose_mul_eq`); this entry adds the rank-deficient and square cases and uniqueness. Consumers: `orthogonal-procrustes`, `principal-angles-def` (polar factor of $Q^\\top\\hat Q$), orthonormalisation of sketches in `rsvd-expected-error`/`subspace-iteration-def`, `haar-orthogonal`. Prove from the SVD.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "orthogonal-procrustes",
+   "title": "Orthogonal Procrustes and nearest scaled orthogonal matrix",
+   "aliases": [
+    "Procrustes problem",
+    "two-sided rotation",
+    "equality in von Neumann"
+   ],
+   "area": "matrix-projections",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For $A,B\\in\\mathbb R^{m\\times n}$: $\\min_{U\\in O(m)}\\|A-UB\\|_F^2=\\|A\\|_F^2-2\\sum_i\\sigma_i(AB^\\top)+\\|B\\|_F^2$, attained at the orthogonal polar factor of $AB^\\top$; $\\min_{U,T\\text{ orth.}}\\|A-UBT\\|_F^2=\\sum_i(\\sigma_i(A)-\\sigma_i(B))^2$; the best $cU$ approximation of square $A$ is $(\\tfrac1n\\operatorname{tr}P)U_0$ for $A=PU_0$. Equality $\\|A-B\\|_F^2=\\sum_i(\\sigma_i(A)-\\sigma_i(B))^2$ holds iff $\\operatorname{tr}AB^\\top=\\sum\\sigma_i(A)\\sigma_i(B)$, and then $AB^\\top,B^\\top A\\succeq0$.",
+   "hypotheses": [
+    "$A,B\\in\\mathbb R^{m\\times n}$"
+   ],
+   "conclusion": "closed-form minima and minimisers of the Procrustes problems; equality case of von Neumann/Mirsky",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§7.4.4"
+    },
+    {
+     "source": "hj13",
+     "label": "§7.4.5"
+    },
+    {
+     "source": "hj13",
+     "label": "§7.4.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.4.1.5"
+    }
+   ],
+   "depends_on": [
+    "polar-decomposition",
+    "von-neumann-trace",
+    "weyl-mirsky",
+    "ky-fan-norms-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "orthogonal Procrustes",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "optimization",
+    "orthogonal-matrices"
+   ],
+   "notes": "Consumers: aligning subspace bases before comparing them (`principal-angles-def`, `davis-kahan-sin-theta`, `wedin-sin-theta` applications), comparing sketches up to rotation. Prove from von Neumann (`frobInner_le_sum_singularValues_mul`) plus attainment at the polar factor.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "kantorovich-inequality",
+   "title": "Kantorovich and Wielandt inequalities",
+   "aliases": [
+    "Kantorovich inequality",
+    "Wielandt inequality",
+    "angle bound for positive definite forms"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Let $A\\in\\mathbb R^{n\\times n}$ be symmetric positive definite with extreme eigenvalues $\\lambda_{\\min},\\lambda_{\\max}$ and $\\kappa=\\lambda_{\\max}/\\lambda_{\\min}$. Kantorovich: $(x^\\top Ax)(x^\\top A^{-1}x)\\le\\frac{(\\lambda_{\\min}+\\lambda_{\\max})^2}{4\\lambda_{\\min}\\lambda_{\\max}}\\|x\\|^4=\\tfrac14(\\kappa^{1/2}+\\kappa^{-1/2})^2\\|x\\|^4$. Wielandt: for orthogonal $x,y$, $(x^\\top Ay)^2\\le\\big(\\frac{\\lambda_{\\max}-\\lambda_{\\min}}{\\lambda_{\\max}+\\lambda_{\\min}}\\big)^2(x^\\top Ax)(y^\\top Ay)$. The two inequalities are equivalent.",
+   "hypotheses": [
+    "$A=A^\\top\\succ0$",
+    "$x,y\\in\\mathbb R^n$, $x^\\top y=0$ for Wielandt"
+   ],
+   "conclusion": "the two displayed inequalities",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§7.4.12"
+    }
+   ],
+   "depends_on": [
+    "condition-number-def",
+    "matrix-calculus-def",
+    "cauchy-interlacing"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.PosDef.inv",
+     "present": true
+    },
+    {
+     "decl": "Kantorovich inequality",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "inequalities",
+    "conditioning",
+    "iterative-methods"
+   ],
+   "notes": "Consumers: steepest-descent rate $\\big(\\frac{\\kappa-1}{\\kappa+1}\\big)^2$ (contrast with `cg-convergence`), Wielandt angle bounds for preconditioned or sketched inner products (`sketch-and-precondition`, `ose-def`: angle distortion), randomized Kaczmarz/coordinate descent variants. Prove Kantorovich from $(\\lambda_{\\max}I-A)(A-\\lambda_{\\min}I)A^{-1}\\succeq0$ as in the book; Wielandt from Kantorovich on a $2\\times2$ compression.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "psd-cone-self-dual",
+   "title": "Self-duality of the PSD cone (Fejér–Moutard)",
+   "aliases": [
+    "Fejér trace theorem",
+    "tr(AB) ≥ 0 for PSD A, B",
+    "PSD cone is self-dual"
+   ],
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "A symmetric $A\\in\\mathbb R^{n\\times n}$ is positive semidefinite iff $\\operatorname{tr}(AB)=\\sum_{ij}a_{ij}b_{ij}\\ge0$ for every positive semidefinite $B$. In particular $\\operatorname{tr}(AB)\\ge0$ for $A,B\\succeq0$, with equality iff $AB=0$; and $\\operatorname{tr}(AB)\\le\\operatorname{tr}(AC)$ when $A\\succeq0$ and $B\\preceq C$.",
+   "hypotheses": [
+    "$A=A^\\top\\in\\mathbb R^{n\\times n}$ (complex Hermitian analogue)"
+   ],
+   "conclusion": "$A\\succeq0\\iff\\forall B\\succeq0,\\ \\operatorname{tr}(AB)\\ge0$; $\\operatorname{tr}(AB)=0\\iff AB=0$ for PSD $A,B$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.5.4"
+    }
+   ],
+   "depends_on": [
+    "matrix-calculus-def",
+    "quadform-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.PosSemidef.hadamard",
+     "present": true,
+     "note": "Schur product theorem; $\\operatorname{tr}(AB^\\top)=\\mathbf 1^\\top(A\\circ B)\\mathbf 1$."
+    },
+    {
+     "decl": "CFC.sqrt",
+     "present": true,
+     "note": "For $\\operatorname{tr}(AB)=\\|A^{1/2}B^{1/2}\\|_F^2$."
+    },
+    {
+     "decl": "self-duality of the PSD cone",
+     "present": false
+    }
+   ],
+   "difficulty": 1,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "trace",
+    "loewner-order"
+   ],
+   "notes": "Consumers: ubiquitous trace manipulations — matrix Laplace/Chernoff bounds (`matrix-laplace`, `matrix-chernoff`), variance formulas in `hutchinson-variance`, monotonicity $\\operatorname{tr}(AB)\\le\\operatorname{tr}(AC)$ in Nyström and Hutch++ proofs, `generalized-schur-complement-psd`. Prove: forward via $\\operatorname{tr}(AB)=\\operatorname{tr}(B^{1/2}AB^{1/2})$; converse with $B=xx^\\top$.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "schur-product-inequalities",
+   "title": "Schur (Hadamard) product inequalities",
+   "aliases": [
+    "Hadamard product of PSD matrices",
+    "Oppenheim inequality",
+    "Hadamard exponential",
+    "Schur product theorem refinements"
+   ],
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For PSD $A,B\\in\\mathbb R^{n\\times n}$: if $A\\succ0$ and $B$ has positive diagonal then $A\\circ B\\succ0$; Hadamard powers $A^{\\circ k}$ and $[f(a_{ij})]$ for $f$ with nonnegative Taylor coefficients (radius $>\\max|a_{ij}|$) are PSD, $[e^{a_{ij}}]\\succeq0$ (PD iff no two rows of $A$ coincide); Oppenheim: $\\det(A\\circ B)\\ge\\max\\{\\det A\\prod b_{ii},\\det B\\prod a_{ii}\\}$; for $A,B\\succ0$: $A^{-1}\\circ B^{-1}\\succeq(A\\circ B)^{-1}$, $A\\circ A^{-1}\\succeq I$, and $\\lambda_{\\min}(A\\circ B)\\ge\\max\\{\\lambda_{\\min}(AB),\\lambda_{\\min}(AB^\\top)\\}$; Hadamard products preserve the dominance $x^*Ax\\ge|x^*Bx|$.",
+   "hypotheses": [
+    "$A,B\\in\\mathbb R^{n\\times n}$ PSD (PD where stated)"
+   ],
+   "conclusion": "the listed Loewner, determinant and eigenvalue inequalities for $A\\circ B$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.5.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.5.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.7.14"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.7.17"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.7.18"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.16"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 7.8.15"
+    }
+   ],
+   "depends_on": [
+    "psd-cone-self-dual",
+    "psd-block-contraction",
+    "hadamard-fischer-inequalities",
+    "kronecker-spectral"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.PosSemidef.hadamard",
+     "present": true,
+     "note": "Schur product theorem (PSD)."
+    },
+    {
+     "decl": "Matrix.PosDef.hadamard",
+     "present": true,
+     "note": "Schur product theorem (PD)."
+    },
+    {
+     "decl": "Matrix.PosSemidef.kronecker",
+     "present": true,
+     "note": "$A\\circ B$ is a principal submatrix of $A\\otimes B$."
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "hadamard-product",
+    "kernels"
+   ],
+   "notes": "Consumers: positive definiteness of kernel matrices built entrywise (Gaussian/exponential kernels for Nyström, `rpcholesky` on kernel matrices), Rademacher/diagonal estimator variance terms involving $A\\circ A$ (`diagonal-estimator`, `hutchinson-variance`), Oppenheim for determinantal sampling. Low priority; assume where convenient.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "log-det-concavity",
+   "title": "Concavity of log det, Minkowski determinant inequality and convexity of tr A⁻¹",
+   "aliases": [
+    "log-det concavity",
+    "Minkowski determinant inequality",
+    "Ky Fan determinant concavity",
+    "trace of inverse convex"
+   ],
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "On symmetric positive definite matrices: $A\\mapsto\\log\\det A$ is strictly concave, i.e. $\\det(\\alpha A+(1-\\alpha)B)\\ge(\\det A)^\\alpha(\\det B)^{1-\\alpha}$ for $0<\\alpha<1$ with equality iff $A=B$; $A\\mapsto(\\det A)^{1/n}$ is concave (Minkowski: $(\\det(A+B))^{1/n}\\ge(\\det A)^{1/n}+(\\det B)^{1/n}$, equality iff $A=cB$); and $A\\mapsto\\operatorname{tr}A^{-1}$ is strictly convex.",
+   "hypotheses": [
+    "$A,B\\in\\mathbb R^{n\\times n}$ symmetric positive definite",
+    "$0<\\alpha<1$"
+   ],
+   "conclusion": "the three concavity/convexity statements with equality cases",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.6.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.6.8"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.6.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.21"
+    }
+   ],
+   "depends_on": [
+    "operator-monotone-convex",
+    "simultaneous-diagonalization-congruence",
+    "matrix-calculus-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.IsHermitian.det_eq_prod_eigenvalues",
+     "present": true
+    },
+    {
+     "decl": "ConcaveOn",
+     "present": true
+    },
+    {
+     "decl": "Real.inner_le_Lp_mul_Lq",
+     "present": true,
+     "note": "Hölder, for the Minkowski step."
+    },
+    {
+     "decl": "concavity of log det",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "determinants",
+    "convexity"
+   ],
+   "notes": "Consumers: log-determinant estimation by SLQ (`slq-error`: concavity gives Jensen bounds), `volume-sampling` and determinantal sampling, D-/A-optimal design objectives, Jensen steps for inverse Wishart traces (`inverse-wishart-mean`: convexity of $\\operatorname{tr}A^{-1}$). Prove by simultaneous diagonalisation reducing to scalar AM–GM / convexity of $1/x$; NLAlib’s operator concavity of log (`operator-monotone-convex`) gives log det concavity directly via $\\log\\det=\\operatorname{tr}\\log$.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "loewner-relative-spectrum",
+   "title": "Loewner order versus the spectrum of A⁻¹B, and monotone spectral functions",
+   "aliases": [
+    "Loewner sandwich",
+    "relative eigenvalues",
+    "det monotone in Loewner order"
+   ],
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Let $A\\in\\mathbb R^{n\\times n}$ be symmetric positive definite and $B$ symmetric. Then $aA\\preceq B\\preceq bA$ iff every eigenvalue of $A^{-1}B$ lies in $[a,b]$; for $B\\succeq0$, $A\\succeq B$ iff $\\rho(A^{-1}B)\\le1$ iff $B=A^{1/2}XA^{1/2}$ with $0\\preceq X\\preceq I$, and $A^2\\succeq B^2$ iff $\\|A^{-1}B\\|\\le1$. If $A\\succeq B\\succeq0$: $\\det A\\ge\\det B$, $\\operatorname{tr}A\\ge\\operatorname{tr}B$ with equality iff $A=B$, $\\lambda_i(A)\\ge\\lambda_i(B)$, and $B^{-1}\\succeq A^{-1}$, $A^{1/2}\\succeq B^{1/2}$ when defined.",
+   "hypotheses": [
+    "$A=A^\\top\\succ0$",
+    "$B=B^\\top$ (PSD where stated)"
+   ],
+   "conclusion": "equivalence of the Loewner sandwich with the relative spectrum; monotonicity of det, trace, eigenvalues, inverse and square root",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.7.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.7.4"
+    }
+   ],
+   "depends_on": [
+    "simultaneous-diagonalization-congruence",
+    "loewner-heinz-real",
+    "weyl-mirsky",
+    "matrix-calculus-def",
+    "psd-cone-self-dual"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "CStarAlgebra.inv_le_inv_iff",
+     "present": true,
+     "note": "Inverse antitone in C*-algebras (complex matrices)."
+    },
+    {
+     "decl": "CFC.sqrt_le_sqrt",
+     "present": true
+    },
+    {
+     "decl": "Matrix.IsHermitian.det_eq_prod_eigenvalues",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "foundation",
+    "loewner-order",
+    "preconditioning"
+   ],
+   "notes": "Consumers: `preconditioned-cg` (hypothesis $aP\\preceq A\\preceq bP$ ⇔ $\\sigma(P^{-1}A)\\subseteq[a,b]$, giving the condition number $b/a$), `nystrom-pcg`, `ose-def` (subspace embedding as a Loewner sandwich of Gram matrices), `sketch-and-precondition`; determinant monotonicity for `volume-sampling`. Prove via `simultaneous-diagonalization-congruence` or directly with $A^{-1/2}BA^{-1/2}$; eigenvalue and trace parts are already in NLAlib.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "psd-block-contraction",
+   "title": "PSD block matrices: contractions, Schur complements and inverse principal submatrices",
+   "aliases": [
+    "block PSD criterion via contractions",
+    "Cauchy–Schwarz for PSD blocks",
+    "[[I, X],[Xᵀ, I]] ⪰ 0 iff ‖X‖ ≤ 1"
+   ],
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For $X\\in\\mathbb R^{p\\times q}$: $\\begin{bmatrix}I&X\\\\X^\\top&I\\end{bmatrix}\\succeq0$ ($\\succ0$) iff $\\|X\\|\\le1$ ($<1$). For $H=\\begin{bmatrix}A&B\\\\B^\\top&C\\end{bmatrix}$ with $A,C\\succeq0$, TFAE: $H\\succeq0$; $(x^\\top Ax)(y^\\top Cy)\\ge(x^\\top By)^2$ for all $x,y$; $x^\\top Ax+y^\\top Cy\\ge2|x^\\top By|$; $B=A^{1/2}XC^{1/2}$ with $\\|X\\|\\le1$; if $A,C\\succ0$ also $\\rho(B^\\top A^{-1}BC^{-1})\\le1$ (strict versions characterise $H\\succ0$, equivalently $A\\succ0$ and $C-B^\\top A^{-1}B\\succ0$). For $A,B\\succeq0$: $A\\succeq B$ iff $\\begin{bmatrix}A&B\\\\B&A\\end{bmatrix}\\succeq0$. For $H\\succ0$ and an index set $\\alpha$: $(H^{-1})_{\\alpha\\alpha}\\succeq(H_{\\alpha\\alpha})^{-1}$; $\\begin{bmatrix}A&X\\\\X^\\top&X^\\top A^{-1}X\\end{bmatrix}\\succeq0$ for $A\\succ0$.",
+   "hypotheses": [
+    "real symmetric block matrices",
+    "$A,C\\succeq0$ (or $\\succ0$ where stated)"
+   ],
+   "conclusion": "the listed equivalences and Loewner inequalities",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Lem 7.7.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.7.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 7.7.8"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.7.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.7.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.7.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.7.12"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.7.13"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.7.15"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.7.16"
+    }
+   ],
+   "depends_on": [
+    "generalized-schur-complement-psd",
+    "matrix-calculus-def",
+    "norms-frob-spec",
+    "pseudoinverse",
+    "loewner-relative-spectrum"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.PosDef.fromBlocks₁₁",
+     "present": true,
+     "note": "PD block ⇔ $A\\succ0$ and Schur complement $\\succ0$ (Thm 7.7.7 (a)⇔(b))."
+    },
+    {
+     "decl": "CFC.sqrt",
+     "present": true
+    },
+    {
+     "decl": "contraction form of block positivity",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "loewner-order",
+    "schur-complement",
+    "block-matrices"
+   ],
+   "notes": "Consumers: Cauchy–Schwarz for PSD bilinear forms in approximate-matrix-multiplication and subspace-embedding proofs (`amm-ose`, `ose-def`), Nyström error via Schur complements (`nystrom-structural`, `generalized-schur-complement-psd`), inverse-diagonal lower bounds $(A^{-1})_{ii}\\ge1/a_{ii}$ for diagonal estimation of $A^{-1}$ (`diagonal-estimator`), Hermitian dilation arguments. Prove from `posSemidef_fromBlocks_iff` (currently assumed) and the square root.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "hadamard-fischer-inequalities",
+   "title": "Hadamard, Fischer, Koteljanskiĭ and Szász determinant inequalities",
+   "aliases": [
+    "Hadamard inequality",
+    "Fischer inequality",
+    "Koteljanskii inequality",
+    "Szasz inequality",
+    "|det B| ≤ ∏‖b_i‖"
+   ],
+   "area": "matrix-trace",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric positive definite $A\\in\\mathbb R^{n\\times n}$: $\\det A\\le\\prod_ia_{ii}$ with equality iff $A$ is diagonal (Hadamard), hence $|\\det B|\\le\\prod_j\\|b_j\\|_2$ for any square $B$ with columns $b_j$ (equality iff orthogonal columns or a zero column); $\\det\\begin{bmatrix}A_{11}&A_{12}\\\\A_{21}&A_{22}\\end{bmatrix}\\le\\det A_{11}\\det A_{22}$ (Fischer); $\\det A_{\\alpha\\cup\\beta}\\det A_{\\alpha\\cap\\beta}\\le\\det A_\\alpha\\det A_\\beta$ (Koteljanskiĭ); and the normalised products $P_k^{1/\\binom{n-1}{k-1}}$ of $k\\times k$ principal minors decrease in $k$ (Szász).",
+   "hypotheses": [
+    "$A=A^\\top\\succ0$ (PSD by continuity)",
+    "$\\alpha,\\beta\\subseteq\\{1,\\dots,n\\}$"
+   ],
+   "conclusion": "the listed determinant inequalities with equality cases",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 7.8.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.5"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 7.8.8"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 7.8.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 7.8.15"
+    }
+   ],
+   "depends_on": [
+    "cholesky-decomposition",
+    "generalized-schur-complement-psd",
+    "qr-decomposition",
+    "sylvester-criterion"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_fromBlocks₁₁",
+     "present": true,
+     "note": "Schur-complement determinant formula."
+    },
+    {
+     "decl": "LinearMap.normDet_eq_prod_singularValues",
+     "present": true
+    },
+    {
+     "decl": "Hadamard inequality",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "determinants",
+    "positive-definite"
+   ],
+   "notes": "Consumers: `volume-sampling` and column subset selection (Gram determinants bounded by products of column norms; NLAlib already has the base-times-height identity `det_gram_fromCols_eq_mul_frobSq_sub_projector`), `rpcholesky` / `partial-cholesky-nystrom` (determinants of pivot blocks), determinant bounds for random matrices. Prove Hadamard from Cholesky ($\\det A=\\prod L_{ii}^2$, `IsCholesky.det_eq_prod_sq`, with $L_{ii}^2\\le a_{ii}$) or QR ($|\\det B|=\\prod|R_{ii}|\\le\\prod\\|b_j\\|$); Fischer from the Schur complement $A_{22}-A_{21}A_{11}^{-1}A_{12}\\preceq A_{22}$; Koteljanskiĭ and Szász later.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-projection-lebesgue-constant",
+   "title": "Lebesgue constant of Chebyshev truncation and near-best projection (ATAP Thms 15.1, 15.3, 16.1)",
+   "aliases": [
+    "ATAP Theorem 15.3",
+    "ATAP Theorem 16.1",
+    "Dirichlet kernel L1 norm",
+    "near-best Chebyshev projection",
+    "Lebesgue constant of Chebyshev series"
+   ],
+   "area": "polynomial-best",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "The degree-$n$ Chebyshev truncation $f\\mapsto f_n$ is a linear projection of $C[-1,1]$ onto $\\mathcal P_n$ whose norm is the Dirichlet-kernel integral $\\Lambda_n=\\frac1{2\\pi}\\int_{-\\pi}^{\\pi}\\left|\\frac{\\sin((n+\\frac12)t)}{\\sin(t/2)}\\right|dt\\le\\frac4{\\pi^2}\\log(n+1)+3$. With the general near-best lemma $\\|f-Lf\\|\\le(1+\\|L\\|)E_n(f)$ this gives $\\|f-f_n\\|\\le(4+\\frac4{\\pi^2}\\log(n+1))E_n(f)$.",
+   "hypotheses": [
+    "$f$ continuous on $[-1,1]$, $n\\ge1$",
+    "$f_n=\\sum_{k\\le n}a_k(f)T_k$ the Chebyshev truncation (chebyshev-coefficients-def)",
+    "for the lemma: $L$ linear on $C[-1,1]$ with $Lp=p$ for $\\deg p\\le n$ and $\\|Lf\\|_\\infty\\le\\Lambda\\|f\\|_\\infty$"
+   ],
+   "conclusion": "$\\|f-Lf\\|_\\infty\\le(1+\\Lambda)E_n(f)$; $\\max_{[-1,1]}|f_n|\\le\\Lambda_n\\max_{[-1,1]}|f|$ with $\\Lambda_n\\le\\frac4{\\pi^2}\\log(n+1)+3$; hence $\\|f-f_n\\|_\\infty\\le\\big(4+\\frac4{\\pi^2}\\log(n+1)\\big)E_n(f)$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 15.1"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 15.3"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 16.1"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "minimax-error-def",
+    "lebesgue-constant-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cos",
+     "present": true
+    },
+    {
+     "decl": "intervalIntegral.integral_comp_mul_deriv",
+     "present": true,
+     "note": "cosine substitution turning the truncation into a Dirichlet-kernel convolution"
+    },
+    {
+     "decl": "dirichletKernel",
+     "present": false,
+     "note": "Mathlib has Fourier series but no L1 bound on the Dirichlet kernel"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "chebyshev",
+    "near-best",
+    "lebesgue-constant"
+   ],
+   "notes": "Consumers: Chebyshev-truncation estimators of tr f(A) and spectral densities (KPM, Chebyshev-moment Hutchinson), which use $f_n$ rather than an interpolant; turns any $E_n$ bound (jackson-lipschitz, bernstein-ellipse-approx, exp-polynomial-approx) into a bound for the explicit truncation at a $\\log n$ cost. The interpolation half of Thm 16.1 is already in lebesgue-constant-chebyshev. Prove the lemma; the explicit $\\log$ bound can be proved (elementary estimate of the Dirichlet kernel with a weaker constant such as $\\frac4{\\pi^2}\\log n+3$) or assumed with the printed constant.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "lebesgue-constant-lower-bound",
+   "title": "Lower bounds on Lebesgue constants; exponential growth for equispaced nodes (ATAP Thm 15.2)",
+   "aliases": [
+    "ATAP Theorem 15.2 (15.7), (15.9)",
+    "Erdős–Brutman lower bound",
+    "Faber",
+    "equispaced Lebesgue constant",
+    "Runge phenomenon"
+   ],
+   "area": "polynomial-best",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "For any $n+1$ distinct nodes in $[-1,1]$ the interpolation Lebesgue constant satisfies $\\Lambda_n\\ge\\frac2\\pi\\log(n+1)+0.52125\\ldots$, and for equispaced nodes $\\Lambda_n>2^{n-2}/n^2$ ($n\\ge1$).",
+   "hypotheses": [
+    "$x_0<\\dots<x_n$ distinct in $[-1,1]$; $\\Lambda_n$ as in lebesgue-constant-def"
+   ],
+   "conclusion": "$\\Lambda_n\\ge\\frac2\\pi\\big(\\log(n+1)+\\gamma+\\log\\frac4\\pi\\big)$; for $x_j=-1+2j/n$, $\\Lambda_n>2^{n-2}/n^2$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 15.2"
+    }
+   ],
+   "depends_on": [
+    "lebesgue-constant-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Lagrange.basis",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.nodal",
+     "present": true
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "interpolation",
+    "lower-bound"
+   ],
+   "notes": "Consumers: optimality of the $\\log n$ factor in lebesgue-constant-chebyshev / chebyshev-projection-lebesgue-constant, and a formal warning against equispaced interpolation. The equispaced bound is elementary (evaluate $\\ell_0$ near the end); the sharp Erdős–Brutman constant should be assumed (a weaker $c\\log n$ lower bound is provable). Low priority.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "bernstein-converse",
+   "title": "Geometric approximability implies analyticity in a Bernstein ellipse (ATAP Thm 8.3, Bernstein's theorem)",
+   "aliases": [
+    "ATAP Theorem 8.3",
+    "Bernstein's theorem",
+    "converse of Theorem 8.2",
+    "maximal convergence"
+   ],
+   "area": "polynomial-series",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If polynomials $q_n\\in\\mathcal P_n$ satisfy $\\|f-q_n\\|_{[-1,1]}\\le C\\rho^{-n}$ for all $n$ (or only $\\limsup\\|f-q_n\\|^{1/n}\\le\\rho^{-1}$), then $f$ extends to a holomorphic function on the open Bernstein ellipse $E_\\rho$.",
+   "hypotheses": [
+    "$\\rho>1$, $C>0$",
+    "$f:[-1,1]\\to\\mathbb R$; $q_n$ real polynomials with $\\deg q_n\\le n$ and $\\max_{[-1,1]}|f-q_n|\\le C\\rho^{-n}$"
+   ],
+   "conclusion": "there is $F$ holomorphic on $E_\\rho$ (NLAlib `openBernsteinEllipse`) with $F(x)=f(x)$ on $[-1,1]$; $q_n\\to F$ locally uniformly on $E_\\rho$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 8.3"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ex 8.11"
+    }
+   ],
+   "depends_on": [
+    "bernstein-walsh-ellipse",
+    "bernstein-ellipse-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "TendstoLocallyUniformlyOn.differentiableOn",
+     "present": true,
+     "note": "uniform limits of holomorphic functions are holomorphic"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "analytic",
+    "bernstein-ellipse",
+    "lower-bound"
+   ],
+   "notes": "Consumers: shows the $\\rho^{-n}$ rates of bernstein-ellipse-approx / chebyshev-approx-analytic and of Lanczos f(A)b bounds cannot be improved in the exponent for a given singularity, a lower-bound tool for Krylov matrix-function analyses. Proof: telescoping series $q_0+\\sum(q_n-q_{n-1})$ with bernstein-walsh-ellipse on each difference. Prove once bernstein-walsh-ellipse exists.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "hermite-integral-formula",
+   "title": "Hermite contour-integral formula for polynomial interpolation (ATAP Thm 11.1)",
+   "aliases": [
+    "ATAP Theorem 11.1",
+    "Hermite integral formula",
+    "contour integral interpolation error"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $f$ holomorphic on a region containing distinct nodes $x_0,\\dots,x_n$ and a positively oriented contour $\\Gamma$ around them, with node polynomial $\\ell$, the interpolant is $p(x)=\\frac1{2\\pi i}\\oint_\\Gamma\\frac{f(t)(\\ell(t)-\\ell(x))}{\\ell(t)(t-x)}dt$ and, for $x$ inside $\\Gamma$, $f(x)-p(x)=\\frac{\\ell(x)}{2\\pi i}\\oint_\\Gamma\\frac{f(t)}{\\ell(t)(t-x)}dt$.",
+   "hypotheses": [
+    "$f$ complex-differentiable on a neighbourhood of the closed disc $\\overline{D(c,R)}$",
+    "distinct nodes $x_j$ and the point $x$ in the open disc $D(c,R)$ (state with circle contours first)"
+   ],
+   "conclusion": "$f(x)-p(x)=\\dfrac{\\ell(x)}{2\\pi i}\\oint_{|t-c|=R}\\dfrac{f(t)}{\\ell(t)(t-x)}dt$ where $p$ = `Lagrange.interpolate` of $f$ at the nodes and $\\ell$ = `Lagrange.nodal`",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 11.1"
+    }
+   ],
+   "depends_on": [
+    "interpolation-remainder"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Complex.two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.nodal",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.interpolate",
+     "present": true
+    },
+    {
+     "decl": "contour integrals over general curves",
+     "present": false,
+     "note": "Mathlib's Cauchy formula is for circles; state for circles"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "interpolation",
+    "complex-analysis"
+   ],
+   "notes": "Consumers: contour-integral error bounds for interpolation of analytic functions in arbitrary nodes (Ritz-value interpolation in Lanczos-FA, rational Krylov analyses), and the analytic counterpart of interpolation-remainder. This is the only interpolation-error formula ATAP itself states. Prove (residue calculus on a circle).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-barycentric-weights",
+   "title": "Node polynomial and barycentric weights of the Chebyshev points (ATAP Thm 5.2, Ex 4.1)",
+   "aliases": [
+    "ATAP Theorem 5.2",
+    "Salzer weights",
+    "barycentric formula in Chebyshev points",
+    "Chebyshev node polynomial"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For the $n+1$ Chebyshev points $x_j=\\cos(j\\pi/n)$ the node polynomial is $2^{-n}(T_{n+1}-T_{n-1})$, and the barycentric weights $\\lambda_j=1/\\prod_{k\\ne j}(x_j-x_k)$ are $\\frac{2^{n-1}}{n}(-1)^j$, halved for $j=0,n$; hence the interpolant is $\\sum_j{}'\\frac{(-1)^jf_j}{x-x_j}/\\sum_j{}'\\frac{(-1)^j}{x-x_j}$.",
+   "hypotheses": [
+    "$n\\ge1$; nodes `Polynomial.Chebyshev.node n j`, $0\\le j\\le n$"
+   ],
+   "conclusion": "`Lagrange.nodal` of the grid $=2^{-n}(T_{n+1}-T_{n-1})$; `Lagrange.nodalWeight` at $j$ equals $\\frac{2^{n-1}}{n}(-1)^j\\delta_j$ with $\\delta_0=\\delta_n=\\frac12$, $\\delta_j=1$ otherwise",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 5.2"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ex 4.1"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-interpolation-error"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Lagrange.nodalWeight",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.eval_interpolate_not_at_node'",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.node",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.zero_lt_prod_node_sub_node",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "interpolation"
+   ],
+   "notes": "Consumers: explicit formulas for the canonical Chebyshev interpolant used by chebyshev-approx-analytic (its interpolant is `Lagrange.interpolate` on Mathlib nodes), and the Lebesgue-constant proof of lebesgue-constant-chebyshev, which bounds $\\sum|\\ell_j|$ via these weights. Mathlib's Extremal.lean already computes the related product $\\prod_{k\\ne j}(x_j-x_k)$ sign. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gauss-quadrature-general-measure",
+   "title": "Gauss quadrature for a general measure: positivity and exactness to degree 2n+1 (ATAP Thm 19.1)",
+   "aliases": [
+    "ATAP Theorem 19.1",
+    "Gauss quadrature exactness",
+    "interpolatory quadrature",
+    "Gauss–Jacobi theorem"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For a finite positive measure $\\mu$ on $[a,b]$ with infinite support, the $(n+1)$-point interpolatory rule at the zeros of the degree-$(n+1)$ orthogonal polynomial has positive weights $w_k=\\int\\ell_k\\,d\\mu$ summing to $\\mu([a,b])$ and integrates every polynomial of degree $\\le2n+1$ exactly; any interpolatory rule is exact on $\\mathcal P_n$.",
+   "hypotheses": [
+    "$\\mu$ finite Borel measure on $[a,b]$ with infinite support (or with at least $n+1$ points for the discrete version)",
+    "nodes $x_0,\\dots,x_n$ the zeros of the orthogonal polynomial $p_{n+1}$ (orthogonal-polynomial-zeros)",
+    "$w_k=\\int\\ell_k\\,d\\mu$"
+   ],
+   "conclusion": "$w_k>0$, $\\sum_kw_k=\\mu([a,b])$, and $\\sum_kw_kp(x_k)=\\int p\\,d\\mu$ for every real polynomial with $\\deg p\\le2n+1$; for arbitrary distinct nodes, exactness holds for $\\deg p\\le n$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.1"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomial-zeros",
+    "lanczos-gauss-quadrature"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.integral_eq_sumZeroes",
+     "present": true,
+     "note": "Gauss–Chebyshev case (Chebyshev weight) only"
+    },
+    {
+     "decl": "Lagrange.interpolate",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.modByMonic_add_div",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "gauss-quadrature",
+    "orthogonal-polynomials",
+    "slq"
+   ],
+   "notes": "Consumers: unifies NLAlib's discrete-measure Gauss rule (lanczos-gauss-quadrature) and Mathlib's Gauss–Chebyshev rule; needed for SLQ / spectral-density analyses that compare with a continuous limiting density, and for gauss-clenshaw-curtis-quadrature-error. The ATAP statement is for Lebesgue measure (Legendre points); state for general $\\mu$. Prove (division by $p_{n+1}$).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-integral-formula",
+   "title": "Integral of a Chebyshev series (ATAP Thm 19.2)",
+   "aliases": [
+    "ATAP Theorem 19.2",
+    "integral of T_k",
+    "Clenshaw–Curtis in coefficient space"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "$\\int_{-1}^1T_k(x)\\,dx=\\frac2{1-k^2}$ for even $k$ and $0$ for odd $k$; hence $\\int_{-1}^1\\sum_{k\\le n}c_kT_k=\\sum_{k\\text{ even}}\\frac{2c_k}{1-k^2}$.",
+   "hypotheses": [
+    "$k\\in\\mathbb N$; $c_0,\\dots,c_n\\in\\mathbb R$"
+   ],
+   "conclusion": "$\\int_{-1}^{1}T_k=\\dfrac{1+(-1)^k}{1-k^2}$ for $k\\ne1$ and $0$ for $k=1$; linearity gives the series formula",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.2"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cos",
+     "present": true
+    },
+    {
+     "decl": "intervalIntegral.integral_comp_mul_deriv",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "quadrature"
+   ],
+   "notes": "Consumers: Clenshaw–Curtis quadrature (gauss-clenshaw-curtis-quadrature-error), integrals of Chebyshev expansions in KPM spectral-density estimation, $|T_k|$ integral bounds. Routine; prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gauss-clenshaw-curtis-quadrature-error",
+   "title": "Error bounds for Clenshaw–Curtis and Gauss quadrature (ATAP Thms 19.3–19.5)",
+   "aliases": [
+    "ATAP Theorems 19.3, 19.4, 19.5",
+    "Clenshaw–Curtis convergence",
+    "Gauss quadrature error",
+    "Stieltjes convergence of Gauss quadrature"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "For $f$ analytic and bounded by $M$ in $E_\\rho$, $(n+1)$-point Clenshaw–Curtis ($n\\ge2$) and Gauss ($n\\ge1$) on $[-1,1]$ have errors $\\le\\frac{64}{15}\\frac{M\\rho^{1-n}}{\\rho^2-1}$ and $\\le\\frac{64}{15}\\frac{M\\rho^{-2n}}{\\rho^2-1}$. Both converge for every continuous $f$; if $f^{(\\nu)}$ has variation $V$, Clenshaw–Curtis error $\\le\\frac{32}{15}\\frac{V}{\\pi\\nu(n-\\nu)^\\nu}$ and Gauss $\\le\\frac{32}{15}\\frac{V}{\\pi\\nu(n-2\\nu-1)^{2\\nu+1}}$, the latter also for Clenshaw–Curtis when $n$ is large (Thm 19.5).",
+   "hypotheses": [
+    "$I=\\int_{-1}^1f$, $I_n$ the $(n+1)$-point rule",
+    "analytic case: $f$ holomorphic on `openBernsteinEllipse ρ`, $|f|\\le M$",
+    "differentiable case: $f,\\dots,f^{(\\nu-1)}$ absolutely continuous, $f^{(\\nu)}$ of variation $V$, $\\nu\\ge1$"
+   ],
+   "conclusion": "the displayed inequalities (19.7)–(19.10), and $I_n\\to I$ for every continuous $f$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.3"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.4"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.5"
+    }
+   ],
+   "depends_on": [
+    "gauss-quadrature-general-measure",
+    "chebyshev-integral-formula",
+    "chebyshev-coeff-analytic-decay",
+    "chebyshev-coeff-bv-decay",
+    "chebyshev-aliasing"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.integral_eq_sumZeroes",
+     "present": true,
+     "note": "Gauss–Chebyshev exactness"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "quadrature",
+    "chebyshev"
+   ],
+   "notes": "NLAlib analogues: lanczos-quadrature-analytic-error (Gauss rule of a spectral measure, constant $4M\\rho^{1-2q}/(\\rho-1)$ per unit mass) and lanczos-quadrature-lipschitz-error. The ATAP constants come from Thm 8.1 and $|\\int T_k|$; the Gauss part generalises to any measure with mass $\\mu([a,b])$ and would sharpen the SLQ constant. Thm 19.5 is proved only by reference and should be assumed. Low priority for RandNLA.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "colleague-matrix",
+   "title": "Roots of a Chebyshev series are colleague-matrix eigenvalues (ATAP Thm 18.1)",
+   "aliases": [
+    "ATAP Theorem 18.1",
+    "colleague matrix",
+    "comrade matrix",
+    "Chebyshev companion matrix",
+    "Good 1961"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $p=\\sum_{k=0}^na_kT_k$ with $a_n\\ne0$, $\\det(xI-C)=p(x)/(2^{n-1}a_n)$ for the colleague matrix $C$ (tridiagonal with $\\frac12$ off the diagonal, first-row entry $1$, last row corrected by $-a_k/(2a_n)$); so its eigenvalues are the roots of $p$ with multiplicity.",
+   "hypotheses": [
+    "$n\\ge1$, $a_n\\ne0$; $C\\in\\mathbb R^{n\\times n}$ as in ATAP (18.1)"
+   ],
+   "conclusion": "$\\operatorname{charpoly}C=\\dfrac{1}{2^{n-1}a_n}\\sum_{k=0}^na_kT_k$; in particular the eigenvalues of $C$ are the roots of $p$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 18.1"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.charpoly",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.T_add_two",
+     "present": true
+    },
+    {
+     "decl": "Matrix.companion",
+     "present": false,
+     "note": "No companion-matrix API in Mathlib; expand the determinant directly"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "eigenvalues",
+    "rootfinding"
+   ],
+   "notes": "Consumers: Chebyshev-basis rootfinding (locating extrema of filter polynomials), and the template for comrade/Jacobi matrices whose eigenvalues are Gauss nodes (lanczos-gauss-quadrature). Prove by cofactor expansion along the last row with the three-term recurrence. Low priority.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-series-abs-sign",
+   "title": "Chebyshev series of |x| and sign(x) (ATAP Ex 3.6, Bernstein 1914)",
+   "aliases": [
+    "ATAP Exercise 3.6",
+    "Chebyshev expansion of |x|",
+    "Chebyshev expansion of sign",
+    "square wave"
+   ],
+   "area": "polynomial-functions",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "$|x|=\\frac2\\pi+\\frac4\\pi\\sum_{j\\ge1}\\frac{(-1)^{j+1}}{4j^2-1}T_{2j}(x)$ uniformly on $[-1,1]$, so the degree-$2m$ truncation has error $\\le\\frac{2}{\\pi(2m+1)}$; and $\\operatorname{sign}(x)=\\frac4\\pi\\sum_{j\\ge0}\\frac{(-1)^j}{2j+1}T_{2j+1}(x)$ (convergence away from $0$).",
+   "hypotheses": [
+    "$x\\in[-1,1]$"
+   ],
+   "conclusion": "the Chebyshev coefficients of $|x|$ are $a_0=2/\\pi$, $a_{2j}=\\frac{4}{\\pi}\\frac{(-1)^{j+1}}{4j^2-1}$, $a_{2j+1}=0$; $\\max_{[-1,1]}\\big||x|-\\sum_{k\\le 2m}a_kT_k\\big|\\le\\sum_{j>m}|a_{2j}|=\\frac{2}{\\pi(2m+1)}$; the coefficients of sign are $\\frac4\\pi\\frac{(-1)^j}{2j+1}$ at $k=2j+1$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 3.6"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "chebyshev-series-convergence"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cos",
+     "present": true
+    },
+    {
+     "decl": "hasSum_one_div_nat_pow_mul_fourier",
+     "present": true,
+     "note": "Fourier series machinery"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "sign-function",
+    "explicit-expansion"
+   ],
+   "notes": "Consumers: sign-polynomial-approx and sign-approx-lower-bound (explicit $O(1/n)$ uniform approximation of $|x|$, the classical starting point for approximating sign and spectral projectors), abs-best-approx-asymptotics (upper half). The extracted ATAP text prints the sign coefficient as $(-1)^{k-1}$; use $(-1)^{(k-1)/2}$. Prove (cosine series of $|\\cos\\theta|$).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-series-exp-bessel",
+   "title": "Chebyshev series of e^{ax}: modified Bessel coefficients (ATAP Ex 3.15)",
+   "aliases": [
+    "ATAP Exercise 3.15",
+    "Jacobi–Anger for e^{a cos θ}",
+    "e^{ax} = I_0(a) + 2 sum I_k(a) T_k(x)"
+   ],
+   "area": "polynomial-functions",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "$e^{ax}=I_0(a)+2\\sum_{k\\ge1}I_k(a)T_k(x)$ uniformly on $[-1,1]$ with $I_k(a)=\\frac1\\pi\\int_0^\\pi e^{a\\cos\\theta}\\cos k\\theta\\,d\\theta$, and $0\\le I_k(a)\\le\\frac{(a/2)^k}{k!}e^{a^2/4}$ for $a\\ge0$; truncation at degree $n$ has error $\\le2\\sum_{k>n}|I_k(a)|$.",
+   "hypotheses": [
+    "$a\\in\\mathbb R$, $x\\in[-1,1]$"
+   ],
+   "conclusion": "the Chebyshev coefficients of $e^{ax}$ are $2I_k(a)$ ($I_0(a)$ for $k=0$), with the stated bound on $I_k$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 3.15"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "chebyshev-series-convergence"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Real.besselI",
+     "present": false,
+     "note": "not in Mathlib; define by the integral above"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "exponential",
+    "explicit-expansion"
+   ],
+   "notes": "Consumers: exp-polynomial-approx (sharper constants and the Chebyshev-truncation form used for $e^{-tA}$ in Krylov and trace estimation), exp-approx-lower-bound. Define $I_k$ by its integral; the Bessel bound follows from the power series. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "fejer-chebyshev-means",
+   "title": "Fejér: Cesàro means of Chebyshev series converge uniformly (ATAP Ex 6.6)",
+   "aliases": [
+    "ATAP Exercise 6.6",
+    "Fejér's theorem",
+    "Cesàro means",
+    "Fejér kernel",
+    "Jackson damping (KPM)"
+   ],
+   "area": "polynomial-series",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For every $f\\in C[-1,1]$ the Cesàro means $S_n=\\frac1{n+1}\\sum_{m=0}^nf_m$ of its Chebyshev truncations converge uniformly to $f$; $S_n=\\sum_{k\\le n}(1-\\frac{k}{n+1})a_kT_k$ is a positive operator ($f\\ge0\\Rightarrow S_nf\\ge0$) of norm $1$.",
+   "hypotheses": [
+    "$f$ continuous on $[-1,1]$"
+   ],
+   "conclusion": "$S_nf\\to f$ uniformly on $[-1,1]$; $\\|S_nf\\|_\\infty\\le\\|f\\|_\\infty$ and $S_nf\\ge0$ when $f\\ge0$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 6.6"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "fejerKernel",
+     "present": false,
+     "note": "Mathlib has Fourier series on AddCircle but no Fejér-mean convergence theorem"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "kernel-polynomial-method",
+    "positivity"
+   ],
+   "notes": "Consumers: kernel polynomial method / Chebyshev-moment spectral-density estimation, where damping (Fejér or Jackson kernel) makes the approximant positive and the estimated density a probability measure; positivity-preserving polynomial approximation in trace estimation. Prove via the Fejér kernel on the circle.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "best-approximant-interpolates",
+   "title": "Every best uniform approximant interpolates f at n+1 points (ATAP Ex 10.12)",
+   "aliases": [
+    "ATAP Exercise 10.12",
+    "best approximation is an interpolant"
+   ],
+   "area": "polynomial-best",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $p^*$ is the best approximation of degree $\\le n$ to real $f\\in C[-1,1]$, there are $n+1$ distinct points $-1<x_0<\\dots<x_n<1$ with $p^*(x_j)=f(x_j)$.",
+   "hypotheses": [
+    "$f$ continuous and real on $[-1,1]$",
+    "$p^*$ attains $E_n(f)$ (minimax-error-def)"
+   ],
+   "conclusion": "$\\exists\\,x_0<\\cdots<x_n$ in $(-1,1)$ with $f(x_j)=p^*(x_j)$; hence $p^*$ = `Lagrange.interpolate` of $f$ at these points",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 10.12"
+    }
+   ],
+   "depends_on": [
+    "equioscillation",
+    "minimax-error-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "intermediate_value_Icc",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "best-approximation"
+   ],
+   "notes": "Consumers: links best approximation to interpolation (lets Lebesgue-constant and interpolation-remainder bounds apply to $p^*$); Marcinkiewicz-type constructions. Immediate from equioscillation by the intermediate value theorem. Prove after equioscillation.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "rational-equioscillation",
+   "title": "Rational best approximation: existence, uniqueness and equioscillation (ATAP Thm 24.1, Ex 24.5)",
+   "aliases": [
+    "ATAP Theorem 24.1",
+    "Achieser's theorem",
+    "rational Chebyshev alternation",
+    "rational de la Vallée Poussin",
+    "defect"
+   ],
+   "area": "polynomial-best",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "A real $f\\in C[-1,1]$ has a unique best real approximation $r^*\\in R_{mn}$ (type $(m,n)$), and real $r\\in R_{mn}$ is $r^*$ iff $f-r$ equioscillates at $\\ge m+n+2-d$ points, $d=\\min(m-\\mu,n-\\nu)$ the defect of $r$ of exact type $(\\mu,\\nu)$; if $f-r$ alternates in sign at $m+n+2-d$ points with $|f-r|\\ge\\varepsilon$ there, then $\\|f-r^*\\|\\ge\\varepsilon$.",
+   "hypotheses": [
+    "$f$ real continuous on $[-1,1]$; $m,n\\ge0$",
+    "$R_{mn}=\\{p/q:\\deg p\\le m,\\deg q\\le n,\\ q\\ne0\\text{ on }[-1,1]\\}$"
+   ],
+   "conclusion": "existence and uniqueness of $r^*$; characterisation by $m+n+2-d$ alternation points; the de la Vallée Poussin lower bound",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 24.1"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ex 24.5"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Def 23 (rational functions of type (m,n))"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Def 24 (defect)"
+    }
+   ],
+   "depends_on": [
+    "equioscillation",
+    "de-la-vallee-poussin"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "RatFunc",
+     "present": true,
+     "note": "rational functions exist but no approximation theory"
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "rational-approximation",
+    "best-approximation"
+   ],
+   "notes": "Consumers: Zolotarev's optimal rational approximation of sign (spectral projectors, polar decomposition, rational Krylov filters) and the de la Vallée Poussin lower bound used to certify rational rates. Not needed by the current polynomial/Krylov foundations; assume if a rational consumer appears.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "abs-best-approx-asymptotics",
+   "title": "Best approximation of |x|: Bernstein's constant and Newman–Stahl rational rate (ATAP Thm 25.1)",
+   "aliases": [
+    "ATAP Theorem 25.1",
+    "Bernstein's constant 0.2801",
+    "Varga–Carpenter",
+    "Stahl's theorem",
+    "Newman's approximation of |x|"
+   ],
+   "area": "polynomial-functions",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "$E_{n,0}(|x|;[-1,1])\\sim\\beta/n$ with $\\beta=0.2801\\ldots$ and $E_{n,n}(|x|)\\sim8e^{-\\pi\\sqrt n}$.",
+   "hypotheses": [
+    "best uniform approximation errors on $[-1,1]$ by polynomials of degree $\\le n$, resp. type $(n,n)$ rationals"
+   ],
+   "conclusion": "$nE_{n,0}(|x|)\\to\\beta$ and $E_{n,n}(|x|)e^{\\pi\\sqrt n}\\to8$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 25.1"
+    }
+   ],
+   "depends_on": [
+    "minimax-error-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "sign-function",
+    "lower-bound",
+    "asymptotics"
+   ],
+   "notes": "Consumers: sign-approx-lower-bound / sign-polynomial-approx (the polynomial rate for $|x|$ is $\\Theta(1/n)$, so gap-free sign approximation cannot beat $1/n$; a non-asymptotic $E_{n,0}(|x|)\\ge c/n$ is the useful part and follows from Bernstein-type arguments). Assume the asymptotics; prove only a non-asymptotic lower bound if a consumer needs it.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "exp-rational-halfline",
+   "title": "Rational approximation of e^{x} on (−∞,0]: geometric rates (ATAP Thm 25.2)",
+   "aliases": [
+    "ATAP Theorem 25.2",
+    "Cody–Meinardus–Varga",
+    "Schönhage 1/3",
+    "Halphen's constant 9.28903",
+    "Gonchar–Rakhmanov",
+    "Aptekarev"
+   ],
+   "area": "polynomial-functions",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Best type-$(0,n)$ approximation of $e^x$ on $(-\\infty,0]$ has $E_{0n}^{1/n}\\to\\frac13$, and best type-$(n,n)$ has $E_{nn}\\sim2H^{n+1/2}$ with $H=1/9.28902549\\ldots$; polynomials do not converge at all on the half-line.",
+   "hypotheses": [
+    "uniform best approximation on $(-\\infty,0]$"
+   ],
+   "conclusion": "$\\lim_nE_{0n}^{1/n}=1/3$; $E_{nn}/(2H^{n+1/2})\\to1$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 25.2"
+    }
+   ],
+   "depends_on": [
+    "exp-polynomial-approx"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "exponential",
+    "rational-approximation",
+    "asymptotics"
+   ],
+   "notes": "Consumers: rational Krylov / shift-invert approximation of $e^{-tA}b$ for PSD $A$ (the Sachdeva–Vishnoi rational section, Laplacian solvers), where a non-asymptotic $3^{-n}$-type upper bound would be the usable form. Assume; low priority.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
   }
  ],
  "sources": [
@@ -24527,6 +29391,16 @@
    "year": 2000,
    "doi": "10.1016/S0377-0427(00)00393-9",
    "role": "Survey of Kronecker-product identities: SVD, eigenvalues, vec, Kronecker-structured least squares."
+  },
+  {
+   "id": "gautschi04",
+   "type": "book",
+   "title": "Orthogonal Polynomials: Computation and Approximation",
+   "authors": [
+    "Walter Gautschi"
+   ],
+   "year": 2004,
+   "role": "Orthogonal polynomials, three-term recurrences, Gauss quadrature, Jacobi matrices, Stieltjes/Lanczos procedures: the theory behind Lanczos quadrature and SLQ."
   }
  ],
  "libraries": [

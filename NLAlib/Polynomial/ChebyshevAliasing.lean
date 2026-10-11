@@ -29,7 +29,8 @@ theorem chebyshevAliasIndex_le {N : ℕ} (hN : 0 < N) (k : ℕ) : chebyshevAlias
 
 /-- The high-frequency and folded Chebyshev polynomials have equal values at every
 canonical extrema node.
-Source: Trefethen, ATAP, Theorem 4.1 (`chebyshev-approx-analytic`, helper). -/
+Source: Trefethen, ATAP, Theorem 4.1 (`chebyshev-approx-analytic`, helper).
+atlas: chebyshev-aliasing (partial) -/
 theorem eval_T_node_eq_eval_T_alias {N : ℕ} (hN : 0 < N) (k j : ℕ) :
     (T ℝ (k : ℤ)).eval (node N j) =
       (T ℝ (chebyshevAliasIndex N k : ℤ)).eval (node N j) := by

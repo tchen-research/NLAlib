@@ -1,0 +1,1859 @@
+{
+ "source": "gautschi04",
+ "edition_note": "Walter Gautschi, Orthogonal Polynomials: Computation and Approximation, Oxford University Press (Numerical Mathematics and Scientific Computation), 2004; text extracted with pdftotext -layout, pages are the printed page numbers. Theorems, lemmas, definitions and examples share one counter per chapter (e.g. 1.10–1.15 are examples), so gaps in theorem numbers are examples; corollaries are unnumbered ('Corollary to Theorem 1.31', 'Corollary 1 to Theorem 2.22'). The book has no exercises. Examples (labelled 'Example n.m', not 'Ex', which this project reserves for exercises) are indexed only when they state a named classical result (1.49, 1.50, 3.46, 3.47); numbered Algorithms are indexed (kind 'algorithm'), and three unnumbered passages central to NLAlib are indexed by section (Sec 2.2.3.1 Stieltjes procedure, Sec 2.2.3.2 Lanczos-type algorithm, Sec 3.1.7 matrix functionals as integrals). Chapter 1 = basic theory, 2 = computational methods, 3 = applications. NLAlib's orthogonal-polynomial theory is stated for the spectral measure μ_b of a symmetric matrix (finitely supported), so results for general measures are at best 'partial'.",
+ "items": [
+  {
+   "label": "Def 1.1",
+   "kind": "definition",
+   "chapter": "1.1",
+   "name": "Positive definite inner product",
+   "statement": "The inner product $(u,v)=\\int uv\\,d\\lambda$ of a positive measure with finite moments is positive definite on $\\mathcal P$ (resp. $\\mathcal P_d$) if $\\Vert u\\Vert >0$ for every nonzero polynomial (of degree $\\le d$).",
+   "status": "candidate",
+   "atlas": [
+    "orthogonal-polynomials-measure-def"
+   ],
+   "decls": [],
+   "note": "General measures: see candidate `orthogonal-polynomials-measure-def`. For $\\mu_b$ the inner product is positive definite on $\\mathcal P_d$ iff $d<$ grade, cf. `NLAlib.eq_zero_of_aeval_mulVec_eq_zero`."
+  },
+  {
+   "label": "Thm 1.2",
+   "kind": "theorem",
+   "chapter": "1.1",
+   "page": 2,
+   "name": "Hankel criterion",
+   "statement": "The inner product is positive definite on $\\mathcal P_d$ iff the Hankel moment determinants $\\Delta_n=\\det[\\mu_{i+j}]_{i,j<n}$ are positive for $n=1,\\dots,d+1$ (and on $\\mathcal P$ iff all are positive).",
+   "status": "candidate",
+   "atlas": [
+    "hankel-moment-positivity"
+   ],
+   "decls": [],
+   "note": "Neither Mathlib nor NLAlib has Hankel moment matrices."
+  },
+  {
+   "label": "Def 1.3",
+   "kind": "definition",
+   "chapter": "1.1",
+   "page": 2,
+   "name": "Monic orthogonal polynomials",
+   "statement": "Monic real polynomials $\\pi_k$ of degree $k$ with $(\\pi_k,\\pi_l)=0$ for $k\\ne l$ and $\\Vert \\pi_k\\Vert >0$; normalising gives the orthonormal polynomials $\\tilde\\pi_k$.",
+   "status": "partial",
+   "atlas": [
+    "lanczos-orthogonal-polynomials"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.poly",
+    "NLAlib.LanczosDecomp.integral_poly_mul_poly",
+    "NLAlib.LanczosDecomp.integral_eval_charpoly_mul_eq_zero"
+   ],
+   "note": "Orthonormal Lanczos polynomials and the monic $\\det(xI-T_q)$ of the spectral measure $\\mu_b$ only; no definition for a general measure."
+  },
+  {
+   "label": "Lem 1.4",
+   "kind": "lemma",
+   "chapter": "1.1",
+   "page": 2,
+   "name": null,
+   "statement": "If $p\\in\\mathcal P_n$ is orthogonal to the monic orthogonal polynomials $\\pi_0,\\dots,\\pi_n$, then $p=0$.",
+   "status": "candidate",
+   "atlas": [
+    "orthogonal-polynomials-measure-def"
+   ],
+   "decls": [],
+   "note": "Trivial once orthogonal polynomials of a measure are defined; part of `orthogonal-polynomials-measure-def`."
+  },
+  {
+   "label": "Lem 1.5",
+   "kind": "lemma",
+   "chapter": "1.1",
+   "page": 2,
+   "name": null,
+   "statement": "Monic orthogonal polynomials $\\pi_0,\\dots,\\pi_n$ are linearly independent and form a basis of $\\mathcal P_n$, with coefficients $c_k=(p,\\pi_k)/(\\pi_k,\\pi_k)$.",
+   "status": "mathlib",
+   "atlas": [],
+   "decls": [
+    "Mathlib:Polynomial.Sequence.linearIndependent",
+    "Mathlib:Polynomial.Sequence.span_degreeLE"
+   ],
+   "note": "The basis property holds for any polynomials of exact degrees $0..n$ with unit leading coefficient (Mathlib `Polynomial.Sequence`); the coefficient formula is then orthogonality."
+  },
+  {
+   "label": "Thm 1.6",
+   "kind": "theorem",
+   "chapter": "1.1",
+   "page": 3,
+   "name": "Existence and uniqueness",
+   "statement": "If the inner product is positive definite on $\\mathcal P$ there is a unique infinite sequence of monic orthogonal polynomials (Gram–Schmidt applied to $1,t,t^2,\\dots$).",
+   "status": "candidate",
+   "atlas": [
+    "orthogonal-polynomials-measure-def"
+   ],
+   "decls": [],
+   "note": "NLAlib's measures are finitely supported, so only the finite analogue (Thm 1.7) is there; Mathlib has abstract `InnerProductSpace.gramSchmidt` but no polynomial/measure version."
+  },
+  {
+   "label": "Thm 1.7",
+   "kind": "theorem",
+   "chapter": "1.1",
+   "page": 3,
+   "name": "Finitely many orthogonal polynomials",
+   "statement": "If the inner product is positive definite on $\\mathcal P_d$ but on no larger $\\mathcal P_n$, there are exactly $d+1$ orthogonal polynomials $\\pi_0,\\dots,\\pi_d$; the next Gram–Schmidt polynomial has norm zero.",
+   "status": "partial",
+   "atlas": [
+    "krylov-grade",
+    "lanczos-orthogonal-polynomials",
+    "arnoldi-relation"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.integral_poly_mul_poly",
+    "NLAlib.ArnoldiDecomp.mul_Q_eq_mul_H_iff",
+    "NLAlib.eq_zero_of_aeval_mulVec_eq_zero",
+    "NLAlib.lanczosBeta_eq_zero_iff"
+   ],
+   "note": "Spectral-measure analogue only: Lanczos polynomials exist up to the grade $\\nu(A,b)$ ($= d+1$) and the recursion breaks down exactly there ($\\beta_\\nu=0$, `lanczosBeta_eq_zero_iff` is a scaffold). General measures missing."
+  },
+  {
+   "label": "Thm 1.8",
+   "kind": "theorem",
+   "chapter": "1.1",
+   "page": 4,
+   "name": null,
+   "statement": "If only the moments $\\mu_0,\\dots,\\mu_{r_0}$ exist, there are exactly $\\lfloor r_0/2\\rfloor+1$ orthogonal polynomials.",
+   "status": "candidate",
+   "atlas": [
+    "orthogonal-polynomials-measure-def"
+   ],
+   "decls": [],
+   "note": "Low priority; folded into `orthogonal-polynomials-measure-def` (measures with finitely many moments)."
+  },
+  {
+   "label": "Thm 1.9",
+   "kind": "theorem",
+   "chapter": "1.1",
+   "page": 4,
+   "name": "Dual orthogonality",
+   "statement": "For an $N$-point discrete measure with nodes $t_r$ and weights $w_r$, the orthogonal polynomials also satisfy $\\sum_{k<N}\\pi_k(t_r)\\pi_k(t_s)/\\Vert \\pi_k\\Vert ^2=\\delta_{rs}/w_r$ (the orthogonal matrix $[\\pi_s(t_r)\\sqrt{w_r}/\\Vert \\pi_s\\Vert ]$ also has orthonormal rows).",
+   "status": "candidate",
+   "atlas": [
+    "discrete-measure-jacobi-matrix"
+   ],
+   "decls": [],
+   "note": "For $\\mu_b$ at full grade this is $QQ^\\top=I$ for the square Lanczos basis; not stated."
+  },
+  {
+   "label": "Def 1.16",
+   "kind": "definition",
+   "chapter": "1.2",
+   "page": 6,
+   "name": "Symmetric measure",
+   "statement": "A measure is symmetric if its support interval is $[-a,a]$ and its weight is even (discrete case: nodes and weights symmetric about $0$).",
+   "status": "candidate",
+   "atlas": [
+    "symmetric-measure-even-odd-reduction"
+   ],
+   "decls": [],
+   "note": "Candidate `symmetric-measure-even-odd-reduction`."
+  },
+  {
+   "label": "Thm 1.17",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 6,
+   "name": null,
+   "statement": "For a symmetric measure, $\\pi_k(-t)=(-1)^k\\pi_k(t)$: orthogonal polynomials of even/odd degree are even/odd.",
+   "status": "candidate",
+   "atlas": [
+    "symmetric-measure-even-odd-reduction"
+   ],
+   "decls": [],
+   "note": "Consumer: Lanczos on $\\begin{bmatrix}0&A\\\\A^\\top&0\\end{bmatrix}$ ($\\alpha_k=0$), Golub–Kahan."
+  },
+  {
+   "label": "Thm 1.18",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 7,
+   "name": "Even/odd reduction",
+   "statement": "For a symmetric $w$ on $[-a,a]$, writing $\\pi_{2k}(t)=\\pi_k^+(t^2)$, $\\pi_{2k+1}(t)=t\\pi_k^-(t^2)$, the $\\pi_k^\\pm$ are the monic orthogonal polynomials of $t^{\\mp1/2}w(t^{1/2})\\,dt$ on $[0,a^2]$.",
+   "status": "candidate",
+   "atlas": [
+    "symmetric-measure-even-odd-reduction"
+   ],
+   "decls": [],
+   "note": "The orthogonal-polynomial form of 'Lanczos on the augmented matrix = Lanczos on $A^\\top A$'."
+  },
+  {
+   "label": "Thm 1.19",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 7,
+   "name": "Zeros real, simple, interior",
+   "statement": "All zeros of $\\pi_n$ ($n\\ge1$) are real, simple, and lie in the open support interval of $d\\lambda$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities",
+    "lanczos-orthogonal-polynomials"
+   ],
+   "decls": [
+    "NLAlib.eigenvalues_transpose_mul_mul_mem_Icc",
+    "NLAlib.LanczosDecomp.integral_eval_charpoly_mul_eq_zero"
+   ],
+   "note": "NLAlib: the zeros of $\\pi_q=\\det(xI-T_q)$ are eigenvalues of a symmetric matrix, hence real, and lie in the closed spectral interval. Simplicity and strict interiority (for $q<$ grade) are missing."
+  },
+  {
+   "label": "Thm 1.20",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 7,
+   "name": "Interlacing of zeros",
+   "statement": "The zeros of $\\pi_{n+1}$ strictly interlace those of $\\pi_n$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities",
+    "cauchy-interlacing"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.eigenvalues₀_restrict_T_le",
+    "NLAlib.LanczosDecomp.eigenvalues₀_le_eigenvalues₀_restrict_T"
+   ],
+   "note": "Non-strict interlacing of the eigenvalues of $T_{q-1}$ in those of $T_q$ (Cauchy) is proved; strict interlacing is missing (atlas notes it open)."
+  },
+  {
+   "label": "Thm 1.21",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 7,
+   "name": "At most one zero per gap",
+   "statement": "In any open interval where $d\\lambda$ has no mass, $\\pi_n$ has at most one zero.",
+   "status": "candidate",
+   "atlas": [
+    "orthogonal-polynomial-zeros"
+   ],
+   "decls": [],
+   "note": "Matrix form: at most one Ritz value between two consecutive eigenvalues carrying weight."
+  },
+  {
+   "label": "Thm 1.22",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 8,
+   "name": "Discrete orthogonality (Gauss)",
+   "statement": "The first $n$ orthogonal polynomials are orthogonal for the $n$-point Gauss rule: $\\sum_\\nu\\lambda_\\nu^G\\pi_k(\\tau_\\nu^G)\\pi_l(\\tau_\\nu^G)=\\delta_{kl}\\Vert \\pi_k\\Vert ^2$, $k,l<n$.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-christoffel-numbers"
+   ],
+   "decls": [],
+   "note": "Immediate from `LanczosDecomp.dotProduct_aeval_mulVec_eq_sum` and `LanczosDecomp.integral_poly_mul_poly` for $\\mu_b$, but not stated."
+  },
+  {
+   "label": "Thm 1.23",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 8,
+   "name": "Discrete orthogonality (Gauss–Lobatto)",
+   "statement": "On a finite interval $[a,b]$, $\\pi_0,\\dots,\\pi_{n+1}$ are orthogonal for the $(n+2)$-point Gauss–Lobatto rule, except that the squared norm of $\\pi_{n+1}$ is off by the constant $\\gamma_n=\\int\\pi_n^2(\\cdot;d\\lambda_{a,b})\\,d\\lambda_{a,b}$.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-radau-lobatto"
+   ],
+   "decls": [],
+   "note": "Part of `gauss-radau-lobatto`."
+  },
+  {
+   "label": "Thm 1.24",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 8,
+   "name": "L² extremal property",
+   "statement": "Among monic polynomials of degree $n$, $\\pi_n$ uniquely minimises $\\int\\pi^2\\,d\\lambda$.",
+   "status": "partial",
+   "atlas": [
+    "krylov-polynomial-exactness"
+   ],
+   "decls": [
+    "NLAlib.dotProduct_aeval_charpoly_mulVec_self_le",
+    "NLAlib.dotProduct_aeval_mulVec_self_eq_charpoly_iff",
+    "NLAlib.integral_eval_mul_eval_spectralMeasure"
+   ],
+   "note": "For $\\mu_b$ and $n\\le$ grade: $\\det(xI-T_n)$ uniquely minimises $\\Vert p(A)b\\Vert ^2=\\int p^2\\,d\\mu_b$ over monic $p$ of degree $n$. NLAlib states it only for the spectral measure $\\mu_b$ of a symmetric matrix and a vector (finitely supported; every finitely supported positive measure is one, via $A=\\operatorname{diag}(t)$, $b=\\sqrt w$); the statement for a general positive measure on $\\mathbb R$ with finite moments is missing."
+  },
+  {
+   "label": "Thm 1.25",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 9,
+   "name": "Lᵖ extremal polynomial",
+   "statement": "For $1<p<\\infty$ the monic polynomial of degree $n$ minimising $\\int\\vert \\pi\\vert ^p\\,d\\lambda$ exists and is unique.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "$L^p$ ($p\\ne2$) extremal polynomials (feeding Gauss–Turán theory); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 1.26",
+   "kind": "theorem",
+   "chapter": "1.2",
+   "page": 10,
+   "name": "Zeros of s-orthogonal polynomials",
+   "statement": "The zeros of the $s$-orthogonal polynomials $\\pi_{n,s}$ are real, simple, interior, and those of $\\pi_{n+1,s}$ interlace those of $\\pi_{n,s}$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Power ($s$-)orthogonality for Gauss–Turán rules; no consumer."
+  },
+  {
+   "label": "Thm 1.27",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 10,
+   "name": "Three-term recurrence (monic)",
+   "statement": "Monic orthogonal polynomials satisfy $\\pi_{k+1}=(t-\\alpha_k)\\pi_k-\\beta_k\\pi_{k-1}$ with $\\alpha_k=(t\\pi_k,\\pi_k)/(\\pi_k,\\pi_k)$ and $\\beta_k=(\\pi_k,\\pi_k)/(\\pi_{k-1},\\pi_{k-1})$, over the whole index range.",
+   "status": "partial",
+   "atlas": [
+    "lanczos-orthogonal-polynomials",
+    "lanczos-recurrence"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.X_mul_poly",
+    "NLAlib.LanczosDecomp.charpoly_restrict_T_mul_poly_zero",
+    "NLAlib.det_smul_one_sub_jacobiMatrix",
+    "NLAlib.integral_eval_mul_eval_spectralMeasure"
+   ],
+   "note": "Orthonormal recurrence for $\\mu_b$ with $\\alpha_j=q_j^\\top Aq_j$, plus $\\det(xI-T_j)\\propto p_j$; the monic recurrence and the quotient formulas for $\\alpha_k,\\beta_k$ are not stated. NLAlib states it only for the spectral measure $\\mu_b$ of a symmetric matrix and a vector (finitely supported; every finitely supported positive measure is one, via $A=\\operatorname{diag}(t)$, $b=\\sqrt w$); the statement for a general positive measure on $\\mathbb R$ with finite moments is missing."
+  },
+  {
+   "label": "Thm 1.28",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 12,
+   "name": "Bounds on recurrence coefficients",
+   "statement": "If the support interval $[a,b]$ is finite then $a<\\alpha_k<b$ and $0<\\beta_k\\le\\max(a^2,b^2)$.",
+   "status": "partial",
+   "atlas": [
+    "lanczos-recurrence"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.beta_arnoldiDecomp_pos",
+    "NLAlib.lanczosBeta_pos"
+   ],
+   "note": "Positivity of the off-diagonal Lanczos coefficients below the grade is proved; the bounds on $\\alpha_k$ and the upper bound on $\\beta_k$ are not stated."
+  },
+  {
+   "label": "Thm 1.29",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 12,
+   "name": "Three-term recurrence (orthonormal)",
+   "statement": "Orthonormal polynomials satisfy $\\sqrt{\\beta_{k+1}}\\tilde\\pi_{k+1}=(t-\\alpha_k)\\tilde\\pi_k-\\sqrt{\\beta_k}\\tilde\\pi_{k-1}$, $\\tilde\\pi_{-1}=0$, $\\tilde\\pi_0=\\beta_0^{-1/2}$.",
+   "status": "partial",
+   "atlas": [
+    "lanczos-orthogonal-polynomials"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.X_mul_poly",
+    "NLAlib.LanczosDecomp.integral_poly_mul_poly"
+   ],
+   "note": "NLAlib states it only for the spectral measure $\\mu_b$ of a symmetric matrix and a vector (finitely supported; every finitely supported positive measure is one, via $A=\\operatorname{diag}(t)$, $b=\\sqrt w$); the statement for a general positive measure on $\\mathbb R$ with finite moments is missing."
+  },
+  {
+   "label": "Def 1.30",
+   "kind": "definition",
+   "chapter": "1.3",
+   "page": 13,
+   "name": "Jacobi matrix",
+   "statement": "The Jacobi matrix of $d\\lambda$ is the symmetric tridiagonal matrix with diagonal $\\alpha_k$ and off-diagonal $\\sqrt{\\beta_k}$; $J_n(d\\lambda)$ is its leading $n\\times n$ block, so that $t\\tilde\\pi(t)=J_n\\tilde\\pi(t)+\\sqrt{\\beta_n}\\tilde\\pi_n(t)e_n$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities",
+    "lanczos-orthogonal-polynomials"
+   ],
+   "decls": [
+    "NLAlib.jacobiMatrix",
+    "NLAlib.LanczosDecomp.T_eq_jacobiMatrix",
+    "NLAlib.LanczosDecomp.X_mul_poly"
+   ],
+   "note": "The tridiagonal matrix of given coefficients and its identification with $T_q$ for $\\mu_b$ exist; the Jacobi matrix of a general measure does not."
+  },
+  {
+   "label": "Thm 1.31",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 13,
+   "name": "Zeros are Jacobi eigenvalues",
+   "statement": "The zeros of $\\pi_n$ are the eigenvalues of $J_n(d\\lambda)$, with eigenvectors $\\tilde\\pi(\\tau_\\nu)=[\\tilde\\pi_0(\\tau_\\nu),\\dots,\\tilde\\pi_{n-1}(\\tau_\\nu)]^\\top$.",
+   "status": "partial",
+   "atlas": [
+    "lanczos-orthogonal-polynomials"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.integral_eval_charpoly_mul_eq_zero",
+    "NLAlib.LanczosDecomp.charpoly_restrict_T_mul_poly_zero"
+   ],
+   "note": "For $\\mu_b$, $\\det(xI-T_q)$ is the monic orthogonal polynomial (so its zeros are the eigenvalues of $T_q$); the eigenvector formula is missing. NLAlib states it only for the spectral measure $\\mu_b$ of a symmetric matrix and a vector (finitely supported; every finitely supported positive measure is one, via $A=\\operatorname{diag}(t)$, $b=\\sqrt w$); the statement for a general positive measure on $\\mathbb R$ with finite moments is missing."
+  },
+  {
+   "label": "Cor to Thm 1.31",
+   "kind": "corollary",
+   "chapter": "1.3",
+   "page": 14,
+   "name": "Christoffel numbers",
+   "statement": "If $v_\\nu$ is the unit eigenvector of $J_n$ for $\\tau_\\nu$, then $\\beta_0v_{\\nu,1}^2=1/\\sum_{k<n}\\tilde\\pi_k(\\tau_\\nu)^2$.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-christoffel-numbers"
+   ],
+   "decls": [],
+   "note": "Candidate `gauss-christoffel-numbers`."
+  },
+  {
+   "label": "Thm 1.32",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 14,
+   "name": "Christoffel–Darboux formula",
+   "statement": "$\\sum_{k\\le n}\\tilde\\pi_k(x)\\tilde\\pi_k(t)=\\sqrt{\\beta_{n+1}}\\,[\\tilde\\pi_{n+1}(x)\\tilde\\pi_n(t)-\\tilde\\pi_n(x)\\tilde\\pi_{n+1}(t)]/(x-t)$, and the confluent form $\\sum_{k\\le n}\\tilde\\pi_k(t)^2=\\sqrt{\\beta_{n+1}}[\\tilde\\pi_{n+1}'\\tilde\\pi_n-\\tilde\\pi_n'\\tilde\\pi_{n+1}](t)$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.sub_mul_sum_eval_poly_mul"
+   ],
+   "note": "The first identity (multiplied out by $x-t$) is proved for the Lanczos polynomials of $\\mu_b$; the confluent form is missing. NLAlib states it only for the spectral measure $\\mu_b$ of a symmetric matrix and a vector (finitely supported; every finitely supported positive measure is one, via $A=\\operatorname{diag}(t)$, $b=\\sqrt w$); the statement for a general positive measure on $\\mathbb R$ with finite moments is missing."
+  },
+  {
+   "label": "Cor to Thm 1.32",
+   "kind": "corollary",
+   "chapter": "1.3",
+   "page": 14,
+   "name": "Christoffel–Darboux (monic)",
+   "statement": "$\\sum_{k\\le n}\\beta_n\\cdots\\beta_{k+1}\\pi_k(x)\\pi_k(t)=[\\pi_{n+1}(x)\\pi_n(t)-\\pi_n(x)\\pi_{n+1}(t)]/(x-t)$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.sub_mul_sum_eval_poly_mul"
+   ],
+   "note": "Only the orthonormal form is stated; the monic rescaling (using $\\Vert \\pi_k\\Vert ^2=\\beta_0\\cdots\\beta_k$) is not."
+  },
+  {
+   "label": "Def 1.33",
+   "kind": "definition",
+   "chapter": "1.3",
+   "page": 15,
+   "name": "Jacobi continued fraction",
+   "statement": "The Jacobi continued fraction of $d\\lambda$ is $\\frac{\\beta_0}{t-\\alpha_0-}\\frac{\\beta_1}{t-\\alpha_1-}\\cdots$, with $n$th convergent $A_n/B_n$; $A_k,B_k$ obey the three-term recurrence with starts $A_0=0,A_1=\\beta_0$ and $B_{-1}=0,B_0=1$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.jacobiFraction",
+    "NLAlib.LanczosDecomp.inv_smul_one_sub_T_apply_zero_zero"
+   ],
+   "note": "The finite convergents are defined as nested fractions (`jacobiFraction`) and identified with $e_1^\\top(xI-T_q)^{-1}e_1$ for real $x$ above the spectrum; numerator/denominator sequences and the infinite fraction are not (Mathlib `GenContFract` has the generic machinery)."
+  },
+  {
+   "label": "Thm 1.34",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 16,
+   "name": null,
+   "statement": "The denominators $B_k$ of the Jacobi continued fraction are the monic orthogonal polynomials $\\pi_k$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities",
+    "lanczos-orthogonal-polynomials"
+   ],
+   "decls": [
+    "NLAlib.det_smul_one_sub_jacobiMatrix",
+    "NLAlib.inv_apply_zero_zero",
+    "NLAlib.LanczosDecomp.integral_eval_charpoly_mul_eq_zero"
+   ],
+   "note": "Equivalent matrix facts (the convergent is $\\det$ of the trailing block over $\\det(xI-T_q)$, the latter the monic orthogonal polynomial) are proved for $\\mu_b$; $B_k$ is not defined."
+  },
+  {
+   "label": "Def 1.35",
+   "kind": "definition",
+   "chapter": "1.3",
+   "page": 16,
+   "name": "First numerator polynomials",
+   "statement": "The first numerator polynomial is $\\pi_k^{[1]}=\\beta_0^{-1}A_{k+1}$, monic of degree $k$ and independent of $\\beta_0$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.inv_apply_zero_zero",
+    "NLAlib.submatrix_succ_jacobiMatrix"
+   ],
+   "note": "Appears implicitly as $\\det(xI-J')$ of the trailing block (Cramer's rule); no definition."
+  },
+  {
+   "label": "Thm 1.36",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 16,
+   "name": null,
+   "statement": "The numerator polynomials satisfy the three-term recurrence with shifted coefficients $\\alpha_{k+1},\\beta_{k+1}$ and starts $\\pi_{-1}^{[1]}=0$, $\\pi_0^{[1]}=1$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.submatrix_succ_jacobiMatrix",
+    "NLAlib.det_smul_one_sub_jacobiMatrix"
+   ],
+   "note": "Matrix form only: the trailing principal block is the Jacobi matrix of the shifted coefficients."
+  },
+  {
+   "label": "Def 1.38",
+   "kind": "definition",
+   "chapter": "1.3",
+   "page": 16,
+   "name": "Numerator polynomials of order s",
+   "statement": "$\\pi_k^{[s]}$ is the solution of the three-term recurrence with coefficients shifted by $s$, starting from $0,1$.",
+   "status": "candidate",
+   "atlas": [
+    "jacobi-fraction-second-kind"
+   ],
+   "decls": [],
+   "note": "Candidate `jacobi-fraction-second-kind` (low priority)."
+  },
+  {
+   "label": "Thm 1.39",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 17,
+   "name": "Polynomials of the second kind",
+   "statement": "The numerators $\\sigma_n=\\beta_0\\pi_{n-1}^{[1]}$ of the convergents satisfy $\\sigma_n(z)=\\int(\\pi_n(z)-\\pi_n(t))/(z-t)\\,d\\lambda(t)$.",
+   "status": "candidate",
+   "atlas": [
+    "jacobi-fraction-second-kind"
+   ],
+   "decls": [],
+   "note": "Candidate `jacobi-fraction-second-kind`."
+  },
+  {
+   "label": "Def 1.40",
+   "kind": "definition",
+   "chapter": "1.3",
+   "page": 19,
+   "name": "Determinate moment problem",
+   "statement": "The moment problem is determined if $d\\lambda$ is the only measure with its moments, indeterminate otherwise.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Determinacy matters only for unbounded support; every measure NLAlib uses is finitely supported (and compactly supported measures are always determined)."
+  },
+  {
+   "label": "Thm 1.41",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 19,
+   "name": "Markov's theorem",
+   "statement": "If the moment problem is determined, $\\sigma_n(z)/\\pi_n(z)\\to F(z)=\\int d\\lambda(t)/(z-t)$ for $z\\notin[a,b]$.",
+   "status": "candidate",
+   "atlas": [
+    "jacobi-fraction-second-kind"
+   ],
+   "decls": [],
+   "note": "Compact-support case only would be needed; for $\\mu_b$ the convergent is exact at the grade. Candidate `jacobi-fraction-second-kind`, priority later."
+  },
+  {
+   "label": "Def 1.42",
+   "kind": "definition",
+   "chapter": "1.3",
+   "page": 19,
+   "name": "Minimal solution",
+   "statement": "A solution $f_n$ of $y_{k+1}=(z-\\alpha_k)y_k-\\beta_ky_{k-1}$ is minimal if $f_n/y_n\\to0$ for every linearly independent solution $y_n$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Minimal solutions of difference equations (Pincherle theory) serve the computation of Cauchy integrals; no NLA consumer."
+  },
+  {
+   "label": "Thm 1.43",
+   "kind": "theorem",
+   "chapter": "1.3",
+   "page": 19,
+   "name": null,
+   "statement": "Under determinacy, the Cauchy integrals $\\rho_n(z)=\\int\\pi_n(t)\\,d\\lambda(t)/(z-t)$ (with $\\rho_{-1}=1$) form a minimal solution of the recurrence for $z\\notin[a,b]$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Minimal-solution machinery; no NLA consumer."
+  },
+  {
+   "label": "Cor to Thm 1.43",
+   "kind": "corollary",
+   "chapter": "1.3",
+   "page": 20,
+   "name": null,
+   "statement": "Ratios $\\rho_n/\\rho_{n-1}$ equal the tails $\\frac{\\beta_n}{z-\\alpha_n-}\\frac{\\beta_{n+1}}{z-\\alpha_{n+1}-}\\cdots$ of the Jacobi continued fraction (Pincherle).",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Pincherle's theorem for minimal solutions; no NLA consumer."
+  },
+  {
+   "label": "Def 1.44",
+   "kind": "definition",
+   "chapter": "1.4",
+   "page": 20,
+   "name": "Degree of exactness",
+   "statement": "An $n$-point rule has degree of exactness $d$ if it integrates every polynomial of degree $\\le d$ exactly (precise degree if not $d+1$); degree $n-1$ means interpolatory.",
+   "status": "candidate",
+   "atlas": [
+    "quadrature-exactness-characterisation"
+   ],
+   "decls": [],
+   "note": "NLAlib states exactness of the Lanczos rule but has no quadrature-rule or degree-of-exactness definition. Candidate `quadrature-exactness-characterisation`."
+  },
+  {
+   "label": "Thm 1.45",
+   "kind": "theorem",
+   "chapter": "1.4",
+   "page": 21,
+   "name": "Exactness characterisation",
+   "statement": "For $0\\le k\\le n$, an $n$-point rule has degree of exactness $n-1+k$ iff it is interpolatory and its node polynomial $\\omega_n=\\prod(t-\\tau_\\nu)$ is orthogonal to $\\mathcal P_{k-1}$; for positive $d\\lambda$, $k=n$ is maximal and forces $\\omega_n=\\pi_n$ (Gauss).",
+   "status": "candidate",
+   "atlas": [
+    "quadrature-exactness-characterisation"
+   ],
+   "decls": [],
+   "note": "Candidate `quadrature-exactness-characterisation` (would make 'the' Gauss rule unique)."
+  },
+  {
+   "label": "Thm 1.46",
+   "kind": "theorem",
+   "chapter": "1.4",
+   "page": 23,
+   "name": "Gauss nodes and weights",
+   "statement": "Gauss nodes are distinct and lie in the open support interval, and Gauss weights are positive.",
+   "status": "partial",
+   "atlas": [
+    "lanczos-gauss-quadrature",
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.eigenvalues_transpose_mul_mul_mem_Icc",
+    "NLAlib.LanczosDecomp.sum_sq_eigenvectorBasis_T_apply_zero",
+    "NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq_sum"
+   ],
+   "note": "For $\\mu_b$: nodes (eigenvalues of $T_q$) lie in the closed spectral interval and the weights $(u_i)_1^2\\ge0$ sum to one; distinctness, strict interiority and strict positivity are missing."
+  },
+  {
+   "label": "Thm 1.47",
+   "kind": "theorem",
+   "chapter": "1.4",
+   "page": 23,
+   "name": "Weights as partial-fraction coefficients",
+   "statement": "$\\sigma_n(z)/\\pi_n(z)=\\sum_\\nu\\lambda_\\nu^G/(z-\\tau_\\nu^G)$; hence $\\lambda_\\nu^G=\\sigma_n(\\tau_\\nu^G)/\\pi_n'(\\tau_\\nu^G)$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.inv_smul_one_sub_T_apply_zero_zero",
+    "NLAlib.LanczosDecomp.cfc_T_apply_zero_zero"
+   ],
+   "note": "For $\\mu_b$ and real $x$ above the spectrum, the convergent equals $e_1^\\top(xI-T_q)^{-1}e_1$, which Golub–Welsch writes as $\\sum_i(u_i)_1^2/(x-\\theta_i)$; the combined statement and the derivative formula for the weights are not stated."
+  },
+  {
+   "label": "Thm 1.48",
+   "kind": "theorem",
+   "chapter": "1.4",
+   "page": 23,
+   "name": "Markov: Gauss = integral of Hermite interpolant",
+   "statement": "The $n$-point Gauss sum equals $\\int p_{2n-1}(f;t)\\,d\\lambda(t)$, where $p_{2n-1}$ is the Hermite interpolant of $f$ and $f'$ at the Gauss nodes.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-quadrature-derivative-remainder"
+   ],
+   "decls": [],
+   "note": "Needs Hermite interpolation (absent from NLAlib and Mathlib). Candidate `gauss-quadrature-derivative-remainder`."
+  },
+  {
+   "label": "Cor to Thm 1.48",
+   "kind": "corollary",
+   "chapter": "1.4",
+   "page": 24,
+   "name": "Gauss remainder",
+   "statement": "If $f\\in C^{2n}[a,b]$, the Gauss remainder is $R_n^G(f)=\\frac{f^{(2n)}(\\tau)}{(2n)!}\\int\\pi_n^2\\,d\\lambda$ for some $\\tau\\in(a,b)$.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-quadrature-derivative-remainder"
+   ],
+   "decls": [],
+   "note": "NLAlib bounds the Lanczos-quadrature error through polynomial approximation only; the derivative form (sign-definite errors) is missing. Candidate `gauss-quadrature-derivative-remainder`."
+  },
+  {
+   "label": "Example 1.49",
+   "kind": "example",
+   "chapter": "1.4",
+   "page": 25,
+   "name": "Gauss–Chebyshev quadrature",
+   "statement": "For the Chebyshev weight $(1-t^2)^{-1/2}$ the $n$-point Gauss rule has nodes $\\cos((2\\nu-1)\\pi/2n)$ and equal weights $\\pi/n$.",
+   "status": "mathlib",
+   "atlas": [],
+   "decls": [
+    "Mathlib:Polynomial.Chebyshev.integral_eq_sumZeroes",
+    "Mathlib:Polynomial.Chebyshev.roots_T_real"
+   ],
+   "note": "Mathlib proves exactness for $\\deg P<2n$ with respect to `Polynomial.Chebyshev.measureT`."
+  },
+  {
+   "label": "Example 1.50",
+   "kind": "example",
+   "chapter": "1.4",
+   "page": 26,
+   "name": "Gauss–Lobatto–Chebyshev quadrature",
+   "statement": "For the Chebyshev weight the $(n+2)$-point Gauss–Lobatto rule has interior nodes $\\cos(\\nu\\pi/(n+1))$ with weight $\\pi/(n+1)$ and end-point weights $\\pi/(2n+2)$.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-radau-lobatto"
+   ],
+   "decls": [],
+   "note": "Low priority, with `gauss-radau-lobatto`; related to NLAlib's Chebyshev extrema grid (`interpolate_eval_T_node_eq_T_alias`)."
+  },
+  {
+   "label": "Def 1.51",
+   "kind": "definition",
+   "chapter": "1.6",
+   "page": 36,
+   "name": "Quasi-definite measure; formal orthogonality",
+   "statement": "A real or complex measure is quasi-definite if all Hankel determinants are nonzero; monic polynomials are formally orthogonal if they are mutually orthogonal with nonzero (not necessarily positive) 'norms'.",
+   "status": "candidate",
+   "atlas": [
+    "formal-orthogonal-polynomials"
+   ],
+   "decls": [],
+   "note": "Candidate `formal-orthogonal-polynomials` (nonsymmetric Lanczos/BiCG theory), priority later."
+  },
+  {
+   "label": "Thm 1.52",
+   "kind": "theorem",
+   "chapter": "1.6",
+   "page": 36,
+   "name": null,
+   "statement": "A unique system of monic formal orthogonal polynomials exists iff the measure is quasi-definite.",
+   "status": "candidate",
+   "atlas": [
+    "formal-orthogonal-polynomials"
+   ],
+   "decls": [],
+   "note": "Candidate `formal-orthogonal-polynomials`."
+  },
+  {
+   "label": "Lem 1.53",
+   "kind": "lemma",
+   "chapter": "1.6",
+   "page": 36,
+   "name": "qd quantities",
+   "statement": "For quasi-definite $d\\lambda$ and $z$ with $\\pi_n(z)\\ne0$, the relations $\\alpha_k=z+q_k+e_{k-1}$, $\\beta_k=e_{k-1}q_{k-1}$ determine $q_0,e_0,q_1,\\dots$ uniquely with $q_n=-\\pi_{n+1}(z)/\\pi_n(z)$ (and a terminating variant if $\\pi_{d+1}(z)=0$).",
+   "status": "candidate",
+   "atlas": [
+    "kernel-polynomials-christoffel"
+   ],
+   "decls": [],
+   "note": "Equivalent to the LU/LDLᵀ factorisation of $J_n-zI$. Candidate `kernel-polynomials-christoffel`."
+  },
+  {
+   "label": "Def 1.54",
+   "kind": "definition",
+   "chapter": "1.6",
+   "page": 37,
+   "name": "Kernel polynomials",
+   "statement": "$\\hat\\pi_n(t;z)=\\big(\\pi_{n+1}(t)-\\frac{\\pi_{n+1}(z)}{\\pi_n(z)}\\pi_n(t)\\big)/(t-z)$, a monic polynomial of degree $n$.",
+   "status": "candidate",
+   "atlas": [
+    "kernel-polynomials-christoffel"
+   ],
+   "decls": [],
+   "note": "At $z=0$ these are the CG residual polynomials (up to normalisation). Candidate `kernel-polynomials-christoffel`."
+  },
+  {
+   "label": "Thm 1.55",
+   "kind": "theorem",
+   "chapter": "1.6",
+   "page": 37,
+   "name": "Christoffel modification by a linear factor",
+   "statement": "If $\\pi_k(z)\\ne0$ for all $k$, the kernel polynomials are the monic (formal) orthogonal polynomials of $(t-z)\\,d\\lambda(t)$, which is again quasi-definite.",
+   "status": "candidate",
+   "atlas": [
+    "kernel-polynomials-christoffel"
+   ],
+   "decls": [],
+   "note": "Candidate `kernel-polynomials-christoffel`."
+  },
+  {
+   "label": "Lem 1.56",
+   "kind": "lemma",
+   "chapter": "1.6",
+   "page": 38,
+   "name": null,
+   "statement": "For a positive definite inner product and $\\pi_n(z)\\ne0$, $\\hat\\pi_n(z;z)\\ne0$ for all $n$ (real $z$ via $\\pi_n'\\pi_{n+1}-\\pi_{n+1}'\\pi_n>0$; complex $z$ via an imaginary-part recursion).",
+   "status": "candidate",
+   "atlas": [
+    "kernel-polynomials-christoffel"
+   ],
+   "decls": [],
+   "note": "Candidate `kernel-polynomials-christoffel`."
+  },
+  {
+   "label": "Thm 1.57",
+   "kind": "theorem",
+   "chapter": "1.6",
+   "page": 39,
+   "name": "Recurrence of kernel polynomials (qd)",
+   "statement": "The recurrence coefficients of the kernel polynomials are $\\hat\\alpha_k=z+q_k+e_k$, $\\hat\\beta_k=q_ke_{k-1}$ (the rhombus rules of the qd algorithm).",
+   "status": "candidate",
+   "atlas": [
+    "kernel-polynomials-christoffel"
+   ],
+   "decls": [],
+   "note": "Matrix form: if $J-zI=LU$ then $UL+zI$ is the Jacobi matrix of $(t-z)d\\lambda$. Candidate `kernel-polynomials-christoffel`."
+  },
+  {
+   "label": "Def 1.58",
+   "kind": "definition",
+   "chapter": "1.7",
+   "page": 41,
+   "name": "Sobolev orthogonal polynomials",
+   "statement": "Monic polynomials orthogonal with respect to a Sobolev inner product $\\sum_\\sigma(u^{(\\sigma)},v^{(\\sigma)})_{d\\lambda_\\sigma}$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 1.59",
+   "kind": "theorem",
+   "chapter": "1.7",
+   "page": 41,
+   "name": null,
+   "statement": "A positive definite Sobolev inner product has a unique infinite sequence of monic Sobolev orthogonal polynomials.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 1.60",
+   "kind": "theorem",
+   "chapter": "1.7",
+   "page": 41,
+   "name": null,
+   "statement": "The monic Sobolev orthogonal polynomial of degree $n$ uniquely minimises the Sobolev norm over monic polynomials of degree $n$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Def 1.61",
+   "kind": "definition",
+   "chapter": "1.7",
+   "page": 41,
+   "name": null,
+   "statement": "A Sobolev inner product is symmetric if every measure in it is symmetric.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 1.62",
+   "kind": "theorem",
+   "chapter": "1.7",
+   "page": 41,
+   "name": null,
+   "statement": "For a symmetric Sobolev inner product, $\\pi_k(-t;S)=(-1)^k\\pi_k(t;S)$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 1.63",
+   "kind": "theorem",
+   "chapter": "1.7",
+   "page": 42,
+   "name": null,
+   "statement": "Monic polynomials generated by the full (Hessenberg) recurrence $\\pi_{k+1}=t\\pi_k-\\sum_j\\beta_j^k\\pi_{k-j}$ are Sobolev-orthogonal iff $\\beta_j^k=(t\\pi_k,\\pi_{k-j})_S/(\\pi_{k-j},\\pi_{k-j})_S$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 1.64",
+   "kind": "theorem",
+   "chapter": "1.7",
+   "page": 42,
+   "name": null,
+   "statement": "For a symmetric Sobolev inner product the even-offset coefficients $\\beta_{2r}^k$ vanish.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 1.65",
+   "kind": "theorem",
+   "chapter": "1.7",
+   "page": 42,
+   "name": null,
+   "statement": "The zeros of the Sobolev orthogonal polynomial $\\pi_n(\\cdot;S)$ are the eigenvalues of the $n\\times n$ Hessenberg matrix of recurrence coefficients, with left eigenvectors $\\pi(\\tau_\\nu)^\\top$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 1.66",
+   "kind": "theorem",
+   "chapter": "1.8",
+   "page": 44,
+   "name": "Gautschi–Landau–Milovanović",
+   "statement": "Under $\\mathrm{Re}\\int_0^\\pi w(e^{i\\theta})d\\theta\\ne0$, unique monic polynomials orthogonal on the upper unit semicircle exist and equal $p_n-i\\theta_{n-1}p_{n-1}$ in terms of the ordinary orthogonal polynomials $p_n$ of $w$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Orthogonality on the semicircle (complex non-Hermitian inner product); complex-analytic, no NLA consumer."
+  },
+  {
+   "label": "Thm 1.68",
+   "kind": "theorem",
+   "chapter": "1.8",
+   "page": 45,
+   "name": null,
+   "statement": "The semicircle orthogonal polynomials satisfy a three-term recurrence $\\pi_{k+1}=(z-i\\alpha_k)\\pi_k-\\beta_k\\pi_{k-1}$ with explicit coefficients in terms of $\\theta_k$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Orthogonality on the semicircle (complex non-Hermitian inner product); complex-analytic, no NLA consumer."
+  },
+  {
+   "label": "Thm 1.69",
+   "kind": "theorem",
+   "chapter": "1.8",
+   "page": 46,
+   "name": null,
+   "statement": "If $w$ is even with $w(0)>0$ then $\\mu_0=\\pi w(0)$ and the semicircle orthogonal polynomials exist uniquely.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Orthogonality on the semicircle (complex non-Hermitian inner product); complex-analytic, no NLA consumer."
+  },
+  {
+   "label": "Thm 1.71",
+   "kind": "theorem",
+   "chapter": "1.8",
+   "page": 48,
+   "name": null,
+   "statement": "The zeros of the semicircle orthogonal polynomial $\\pi_n(\\cdot;w)$ are the eigenvalues of the associated complex tridiagonal matrix $J_n(w)$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Orthogonality on the semicircle (complex non-Hermitian inner product); complex-analytic, no NLA consumer."
+  },
+  {
+   "label": "Thm 2.1",
+   "kind": "theorem",
+   "chapter": "2.1",
+   "page": 53,
+   "name": "Determinantal formula",
+   "statement": "$\\pi_k(t)$ equals the Hankel determinant $\\Delta_{k+1}$ with last row replaced by $(1,t,\\dots,t^k)$, divided by $\\Delta_k$; in particular its $t^{k-1}$ coefficient is $-\\Delta_k'/\\Delta_k$.",
+   "status": "candidate",
+   "atlas": [
+    "hankel-moment-positivity"
+   ],
+   "decls": [],
+   "note": "Candidate `hankel-moment-positivity`, priority later."
+  },
+  {
+   "label": "Thm 2.2",
+   "kind": "theorem",
+   "chapter": "2.1",
+   "page": 54,
+   "name": "Recurrence coefficients from moments",
+   "statement": "$\\alpha_k=\\Delta_{k+1}'/\\Delta_{k+1}-\\Delta_k'/\\Delta_k$ and $\\beta_k=\\Delta_{k+1}\\Delta_{k-1}/\\Delta_k^2$.",
+   "status": "candidate",
+   "atlas": [
+    "hankel-moment-positivity"
+   ],
+   "decls": [],
+   "note": "Candidate `hankel-moment-positivity`."
+  },
+  {
+   "label": "Def 2.3",
+   "kind": "definition",
+   "chapter": "2.1",
+   "page": 55,
+   "name": "Absolute condition number (scalar)",
+   "statement": "For $f:\\mathbb R\\to\\mathbb R$ differentiable at $x$, $(\\mathrm{cond}_{abs}f)(x)=\\vert f'(x)\\vert $.",
+   "status": "candidate",
+   "atlas": [
+    "condition-number-of-map-def"
+   ],
+   "decls": [],
+   "note": "Candidate `condition-number-of-map-def` (later); NLAlib has only the matrix condition number `condition-number-def`."
+  },
+  {
+   "label": "Def 2.4",
+   "kind": "definition",
+   "chapter": "2.1",
+   "page": 55,
+   "name": "Relative condition number (scalar)",
+   "statement": "For $x\\ne0$, $f(x)\\ne0$: $(\\mathrm{cond}_{rel}f)(x)=\\vert xf'(x)/f(x)\\vert $ (with a mollified variant switching to absolute errors for small quantities).",
+   "status": "candidate",
+   "atlas": [
+    "condition-number-of-map-def"
+   ],
+   "decls": [],
+   "note": "Candidate `condition-number-of-map-def`."
+  },
+  {
+   "label": "Def 2.5",
+   "kind": "definition",
+   "chapter": "2.1",
+   "page": 56,
+   "name": "Absolute condition number (vector)",
+   "statement": "For $f:\\mathbb R^m\\to\\mathbb R^n$ Fréchet differentiable at $x$, $(\\mathrm{cond}_{abs}f)(x)=\\Vert \\partial f(x)/\\partial x\\Vert $ in a chosen matrix norm.",
+   "status": "candidate",
+   "atlas": [
+    "condition-number-of-map-def"
+   ],
+   "decls": [],
+   "note": "Candidate `condition-number-of-map-def`."
+  },
+  {
+   "label": "Def 2.6",
+   "kind": "definition",
+   "chapter": "2.1",
+   "page": 57,
+   "name": "Relative condition matrix",
+   "statement": "With $c_{\\nu\\mu}=x_\\mu(\\partial f_\\nu/\\partial x_\\mu)/f_\\nu$, the relative condition number is $\\Vert C(x)\\Vert $ (componentwise relative sensitivities).",
+   "status": "candidate",
+   "atlas": [
+    "condition-number-of-map-def"
+   ],
+   "decls": [],
+   "note": "Candidate `condition-number-of-map-def`."
+  },
+  {
+   "label": "Thm 2.11",
+   "kind": "theorem",
+   "chapter": "2.1",
+   "page": 60,
+   "name": "Ill-conditioning of moments → Gauss rule",
+   "statement": "For a measure on $\\mathbb R_+$, the absolute condition number of the map from $\\mu_0,\\dots,\\mu_{2n-1}$ to the Gauss nodes and weights is at least $\\min(1,1/\\max\\lambda_\\nu)\\,\\pi_n(-1)^2/\\min_\\nu(1+\\tau_\\nu)\\pi_n'(\\tau_\\nu)^2$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Numerical condition estimates for specific moment maps (confluent Vandermonde / Hermite-basis norms); NLAlib works in exact arithmetic and no randomized-NLA result cites them."
+  },
+  {
+   "label": "Thm 2.13",
+   "kind": "theorem",
+   "chapter": "2.1",
+   "page": 62,
+   "name": null,
+   "statement": "The mollified relative condition number of the moment-to-Gauss-rule map is $\\Vert C(\\mu)\\Vert $ with entries built from $T^{-1}$ (inverse confluent Vandermonde matrix) and the moments.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Numerical condition estimates for specific moment maps (confluent Vandermonde / Hermite-basis norms); NLAlib works in exact arithmetic and no randomized-NLA result cites them."
+  },
+  {
+   "label": "Thm 2.17",
+   "kind": "theorem",
+   "chapter": "2.1",
+   "page": 65,
+   "name": null,
+   "statement": "In the Frobenius norm, the absolute condition number of the map from normalised modified moments to the Gauss rule is $(\\int g_n\\,d\\ell)^{1/2}$ with $g_n=\\sum_\\nu[h_\\nu^2+\\lambda_\\nu^{-2}k_\\nu^2]$ built from the Hermite basis at the Gauss nodes.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Numerical condition estimates for specific moment maps (confluent Vandermonde / Hermite-basis norms); NLAlib works in exact arithmetic and no randomized-NLA result cites them."
+  },
+  {
+   "label": "Thm 2.19",
+   "kind": "theorem",
+   "chapter": "2.1",
+   "page": 68,
+   "name": null,
+   "statement": "The relative condition number of the modified-moment-to-Gauss-rule map is the norm of an explicit matrix $C(\\tilde m)$ formed from the Hermite-basis coefficients.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Numerical condition estimates for specific moment maps (confluent Vandermonde / Hermite-basis norms); NLAlib works in exact arithmetic and no randomized-NLA result cites them."
+  },
+  {
+   "label": "Lem 2.21",
+   "kind": "lemma",
+   "chapter": "2.1",
+   "page": 71,
+   "name": null,
+   "statement": "If $q\\in\\mathcal P_{2n-1}$ depends smoothly on the modified moments, $\\partial_{m_k}\\int q\\,d\\lambda=c_k[q]+\\int\\partial_{m_k}q\\,d\\lambda$, where $c_k[q]$ is the $k$th coefficient of $q$ in the basis $p_j$.",
+   "status": "candidate",
+   "atlas": [
+    "recurrence-coefficient-moment-sensitivity"
+   ],
+   "decls": [],
+   "note": "Candidate `recurrence-coefficient-moment-sensitivity` (later)."
+  },
+  {
+   "label": "Thm 2.22",
+   "kind": "theorem",
+   "chapter": "2.1",
+   "page": 71,
+   "name": "Derivatives of recurrence coefficients",
+   "statement": "$\\partial\\alpha_j/\\partial m_k=c_k[\\tilde\\psi_{2j+1}]$ and $\\partial\\beta_j/\\partial m_k=c_k[\\tilde\\psi_{2j}]$ with $\\tilde\\psi_{2j}=\\beta_j(\\tilde\\pi_j^2-\\tilde\\pi_{j-1}^2)$, $\\tilde\\psi_{2j+1}=\\sqrt{\\beta_{j+1}}\\tilde\\pi_j\\tilde\\pi_{j+1}-\\sqrt{\\beta_j}\\tilde\\pi_{j-1}\\tilde\\pi_j$.",
+   "status": "candidate",
+   "atlas": [
+    "recurrence-coefficient-moment-sensitivity"
+   ],
+   "decls": [],
+   "note": "Candidate `recurrence-coefficient-moment-sensitivity`."
+  },
+  {
+   "label": "Cor 1 to Thm 2.22",
+   "kind": "corollary",
+   "chapter": "2.1",
+   "page": 73,
+   "name": null,
+   "statement": "The absolute condition number of the map from modified moments to recurrence coefficients is $\\Vert \\tilde\\Psi\\Vert $ with $\\tilde\\Psi_{lk}=c_k[\\tilde\\psi_l]$ (explicit in the $\\infty$- and Frobenius norms).",
+   "status": "candidate",
+   "atlas": [
+    "recurrence-coefficient-moment-sensitivity"
+   ],
+   "decls": [],
+   "note": "Candidate `recurrence-coefficient-moment-sensitivity`."
+  },
+  {
+   "label": "Cor 2 to Thm 2.22",
+   "kind": "corollary",
+   "chapter": "2.1",
+   "page": 74,
+   "name": null,
+   "statement": "The mollified relative condition number of that map is $\\Vert C(m)\\Vert $ with entries $m(m_k)\\vert c_k[\\tilde\\psi]\\vert /m(\\alpha_j)$ resp. $/m(\\beta_j)$.",
+   "status": "candidate",
+   "atlas": [
+    "recurrence-coefficient-moment-sensitivity"
+   ],
+   "decls": [],
+   "note": "Candidate `recurrence-coefficient-moment-sensitivity`."
+  },
+  {
+   "label": "Cor 3 to Thm 2.22",
+   "kind": "corollary",
+   "chapter": "2.1",
+   "page": 74,
+   "name": null,
+   "statement": "The same condition number in terms of monic polynomials: $\\tilde\\psi_l=\\psi_l$ with $\\psi_{2j}=(\\pi_j^2-\\beta_j\\pi_{j-1}^2)/(\\beta_0\\cdots\\beta_{j-1})$ and $\\psi_{2j+1}=(\\pi_j\\pi_{j+1}-\\beta_j\\pi_{j-1}\\pi_j)/(\\beta_0\\cdots\\beta_j)$.",
+   "status": "candidate",
+   "atlas": [
+    "recurrence-coefficient-moment-sensitivity"
+   ],
+   "decls": [],
+   "note": "Candidate `recurrence-coefficient-moment-sensitivity`."
+  },
+  {
+   "label": "Alg 2.1",
+   "kind": "algorithm",
+   "chapter": "2.1",
+   "page": 77,
+   "name": "Modified Chebyshev algorithm",
+   "statement": "From $2n$ modified moments $m_k=\\int p_k\\,d\\lambda$ (with $p_k$ satisfying a known three-term recurrence) the mixed moments $\\sigma_{kl}=\\int\\pi_kp_l\\,d\\lambda$ obey a recursion that yields $\\alpha_k,\\beta_k$ for $k<n$.",
+   "status": "candidate",
+   "atlas": [
+    "modified-chebyshev-algorithm"
+   ],
+   "decls": [],
+   "note": "Candidate `modified-chebyshev-algorithm` (moments → Jacobi matrix, as in KPM-to-Gauss spectral density methods)."
+  },
+  {
+   "label": "Alg 2.2",
+   "kind": "algorithm",
+   "chapter": "2.1",
+   "page": 79,
+   "name": "Clenshaw's algorithm",
+   "statement": "A finite sum $\\sum_{j\\le n}c_jy_j$ of solutions of a three-term recurrence is evaluated by a backward recurrence $u_k=c_k+(t-a_k)u_{k+1}-b_{k+1}u_{k+2}$.",
+   "status": "candidate",
+   "atlas": [
+    "clenshaw-recurrence"
+   ],
+   "decls": [],
+   "note": "Candidate `clenshaw-recurrence` (later)."
+  },
+  {
+   "label": "Alg 2.3",
+   "kind": "algorithm",
+   "chapter": "2.1",
+   "page": 80,
+   "name": "Clenshaw for Chebyshev expansions",
+   "statement": "Specialisation of Clenshaw's algorithm to $\\sum c_jT_j(t)$.",
+   "status": "candidate",
+   "atlas": [
+    "clenshaw-recurrence"
+   ],
+   "decls": [],
+   "note": "Candidate `clenshaw-recurrence`."
+  },
+  {
+   "label": "Alg 2.4",
+   "kind": "algorithm",
+   "chapter": "2.1",
+   "page": 81,
+   "name": "Conversion algorithm",
+   "statement": "Converts an expansion in one family of monic orthogonal polynomials into an expansion in another, given both recurrences.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Numerical basis-conversion procedure; no consumer."
+  },
+  {
+   "label": "Thm 2.32",
+   "kind": "theorem",
+   "chapter": "2.2",
+   "page": 91,
+   "name": "Convergence of discretisations",
+   "statement": "If discrete measures $d\\lambda_N$ on $[-1,1]$ satisfy $(p,q)_{d\\lambda_N}\\to(p,q)_{d\\lambda}$ for all polynomials, then $\\alpha_{k,N}\\to\\alpha_k$, $\\beta_{k,N}\\to\\beta_k$ and $\\pi_n(\\cdot;d\\lambda_N)\\to\\pi_n(\\cdot;d\\lambda)$ uniformly on $[-1,1]$.",
+   "status": "candidate",
+   "atlas": [
+    "recurrence-coefficient-continuity"
+   ],
+   "decls": [],
+   "note": "Candidate `recurrence-coefficient-continuity` (later)."
+  },
+  {
+   "label": "Cor to Thm 2.32",
+   "kind": "corollary",
+   "chapter": "2.2",
+   "page": 92,
+   "name": null,
+   "statement": "Under the same hypotheses the zeros of $\\pi_{n,N}$ converge to those of $\\pi_n$, and $\\pi_{m,N}(\\tau_{\\nu,N})\\to\\pi_m(\\tau_\\nu)$.",
+   "status": "candidate",
+   "atlas": [
+    "recurrence-coefficient-continuity"
+   ],
+   "decls": [],
+   "note": "Candidate `recurrence-coefficient-continuity`."
+  },
+  {
+   "label": "Sec 2.2.3.1",
+   "kind": "algorithm",
+   "chapter": "2.2",
+   "page": 95,
+   "name": "Stieltjes procedure",
+   "statement": "For a discrete measure, alternate $\\alpha_k=(t\\pi_k,\\pi_k)/(\\pi_k,\\pi_k)$, $\\beta_k=(\\pi_k,\\pi_k)/(\\pi_{k-1},\\pi_{k-1})$ with the recurrence $\\pi_{k+1}=(t-\\alpha_k)\\pi_k-\\beta_k\\pi_{k-1}$ evaluated at the nodes.",
+   "status": "partial",
+   "atlas": [
+    "lanczos-recurrence-algorithm",
+    "lanczos-orthogonal-polynomials"
+   ],
+   "decls": [
+    "NLAlib.lanczosStep",
+    "NLAlib.lanczosAlpha_eq_alpha",
+    "NLAlib.LanczosDecomp.X_mul_poly"
+   ],
+   "note": "Unnumbered (indexed for its role). NLAlib has the matrix form (Lanczos on $(A,b)$ = Stieltjes on $\\mu_b$), with the recursion-to-Arnoldi link a scaffold; the measure-side procedure on nodes and weights is not stated."
+  },
+  {
+   "label": "Sec 2.2.3.2",
+   "kind": "algorithm",
+   "chapter": "2.2",
+   "page": 97,
+   "name": "Lanczos-type algorithm for discrete measures",
+   "statement": "With $D_t=\\operatorname{diag}(t_\\nu)$ and $\\sqrt w$, an orthogonal $Q_1$ transforms $\\begin{bmatrix}1&\\sqrt w^\\top\\\\\\sqrt w&D_t\\end{bmatrix}$ into $\\begin{bmatrix}1&\\sqrt{\\beta_0}e_1^\\top\\\\\\sqrt{\\beta_0}e_1&J_N(d\\lambda_N)\\end{bmatrix}$; Lanczos (stably: Gragg–Harrod rotations) computes it.",
+   "status": "partial",
+   "atlas": [
+    "lanczos-orthogonal-polynomials",
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.T_eq_jacobiMatrix",
+    "NLAlib.LanczosDecomp.integral_poly_mul_poly",
+    "NLAlib.spectralMeasure"
+   ],
+   "note": "Unnumbered (indexed for its role). Lanczos on $(D_t,\\sqrt w)$ gives $T_N=J_N(\\mu_{\\sqrt w})$ in NLAlib's setting; the bordered-matrix form and the identification of $\\mu$ with the given discrete measure are not stated. Candidate `discrete-measure-jacobi-matrix`."
+  },
+  {
+   "label": "Thm 2.48",
+   "kind": "theorem",
+   "chapter": "2.3",
+   "page": 116,
+   "name": "Contour-integral Gauss remainder",
+   "statement": "For $f$ analytic on a domain containing $[a,b]$, $R_n^G(f)=\\frac1{2\\pi i}\\oint_\\Gamma K_n(z)f(z)\\,dz$ with kernel $K_n=\\rho_n/\\pi_n$, $\\rho_n(z)=\\int\\pi_n(t)\\,d\\lambda(t)/(z-t)$.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-remainder-contour-kernel"
+   ],
+   "decls": [],
+   "note": "NLAlib bounds the analytic Gauss error via Chebyshev/Bernstein-ellipse approximation (`lanczos-quadrature-analytic-error`), not via this kernel. Candidate `gauss-remainder-contour-kernel` (later)."
+  },
+  {
+   "label": "Thm 2.52",
+   "kind": "theorem",
+   "chapter": "2.4",
+   "page": 122,
+   "name": "Uvarov (generalised Christoffel), m ≤ n",
+   "statement": "For $d\\hat\\lambda=(u/v)\\,d\\lambda$ with $u,v$ coprime with simple zeros, $\\deg v=m\\le n$, $u\\,\\pi_n(\\cdot;d\\hat\\lambda)$ is a determinant in $\\pi_{n-m},\\dots,\\pi_{n+\\ell}$ and their values at zeros of $u$ and Cauchy integrals $\\rho_k$ at zeros of $v$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Candidate `christoffel-uvarov-modification` (later). The case $m=0$ is Christoffel's theorem."
+  },
+  {
+   "label": "Thm 2.53",
+   "kind": "theorem",
+   "chapter": "2.4",
+   "page": 123,
+   "name": "Uvarov, m > n",
+   "statement": "The analogous determinantal formula for $u\\,\\pi_n(\\cdot;d\\hat\\lambda)$ when $\\deg v=m>n$, with a block of powers of the zeros of $v$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Candidate `christoffel-uvarov-modification`."
+  },
+  {
+   "label": "Alg 2.5",
+   "kind": "algorithm",
+   "chapter": "2.4",
+   "page": 125,
+   "name": "Modification by a linear factor",
+   "statement": "Recurrence coefficients of $(t-z)\\,d\\lambda$ from those of $d\\lambda$: $r_{k+1}=z-\\alpha_{k+1}-\\beta_{k+1}/r_k$, $\\hat\\alpha_k=\\alpha_{k+1}+r_{k+1}-r_k$, $\\hat\\beta_k=\\beta_kr_k/r_{k-1}$, $\\hat\\beta_0=-r_0\\beta_0$.",
+   "status": "candidate",
+   "atlas": [
+    "kernel-polynomials-christoffel"
+   ],
+   "decls": [],
+   "note": "Algorithmic form of Thm 1.55/1.57; candidate `kernel-polynomials-christoffel`."
+  },
+  {
+   "label": "Alg 2.6",
+   "kind": "algorithm",
+   "chapter": "2.4",
+   "page": 127,
+   "name": "Modification by a quadratic factor",
+   "statement": "Recurrence coefficients of $((t-x)^2+y^2)\\,d\\lambda$ from those of $d\\lambda$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Numerical modification algorithm for quadratic factors or rational divisors; grouped in candidate `christoffel-uvarov-modification` (later)."
+  },
+  {
+   "label": "Alg 2.7",
+   "kind": "algorithm",
+   "chapter": "2.4",
+   "page": 127,
+   "name": "Simplified symmetric quadratic factor",
+   "statement": "Recurrence coefficients of $(t^2+y^2)\\,d\\lambda$ for symmetric $d\\lambda$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Numerical modification algorithm for quadratic factors or rational divisors; grouped in candidate `christoffel-uvarov-modification` (later)."
+  },
+  {
+   "label": "Alg 2.8",
+   "kind": "algorithm",
+   "chapter": "2.4",
+   "page": 129,
+   "name": "Modification by a linear divisor",
+   "statement": "Recurrence coefficients of $d\\lambda/(t-z)$ via Cauchy integrals $\\rho_k(z)$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Numerical modification algorithm for quadratic factors or rational divisors; grouped in candidate `christoffel-uvarov-modification` (later)."
+  },
+  {
+   "label": "Lem 2.54",
+   "kind": "lemma",
+   "chapter": "2.4",
+   "page": 130,
+   "name": null,
+   "statement": "For $d\\hat\\lambda=d\\lambda/((t-x)^2+y^2)$, $\\hat\\pi_n=\\pi_n+s_n\\pi_{n-1}+t_n\\pi_{n-2}$ with $s_n,t_n$ explicit in the real and imaginary parts of $r_k=\\rho_{k+1}(z)/\\rho_k(z)$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Candidate `christoffel-uvarov-modification`."
+  },
+  {
+   "label": "Alg 2.9",
+   "kind": "algorithm",
+   "chapter": "2.4",
+   "page": 131,
+   "name": "Modification by a quadratic divisor",
+   "statement": "Recurrence coefficients of $d\\lambda/((t-x)^2+y^2)$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Numerical modification algorithm for quadratic factors or rational divisors; grouped in candidate `christoffel-uvarov-modification` (later)."
+  },
+  {
+   "label": "Alg 2.10",
+   "kind": "algorithm",
+   "chapter": "2.4",
+   "page": 132,
+   "name": "Simplified symmetric quadratic divisor",
+   "statement": "Recurrence coefficients of $d\\lambda/(t^2+y^2)$ for symmetric $d\\lambda$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Numerical modification algorithm for quadratic factors or rational divisors; grouped in candidate `christoffel-uvarov-modification` (later)."
+  },
+  {
+   "label": "Lem 2.55",
+   "kind": "lemma",
+   "chapter": "2.4",
+   "page": 132,
+   "name": null,
+   "statement": "For the special quadratic divisor $d\\lambda/(t^2-x^2)$, $\\hat\\pi_n=\\pi_n+s_n\\pi_{n-1}+t_n\\pi_{n-2}$ with $s_n,t_n$ explicit in $r_k^\\pm$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Candidate `christoffel-uvarov-modification`."
+  },
+  {
+   "label": "Alg 2.11",
+   "kind": "algorithm",
+   "chapter": "2.4",
+   "page": 133,
+   "name": "Special quadratic divisor",
+   "statement": "Recurrence coefficients of $d\\lambda/(t^2-x^2)$ from those of $d\\lambda$.",
+   "status": "candidate",
+   "atlas": [
+    "christoffel-uvarov-modification"
+   ],
+   "decls": [],
+   "note": "Numerical modification algorithm for quadratic factors or rational divisors; grouped in candidate `christoffel-uvarov-modification` (later)."
+  },
+  {
+   "label": "Thm 3.1",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 153,
+   "name": "Golub–Welsch",
+   "statement": "The $n$-point Gauss nodes are the eigenvalues of $J_n(d\\lambda)$ and the weights are $\\beta_0v_{\\nu,1}^2$ (squared first eigenvector components); hence the Gauss sum is $\\beta_0e_1^\\top f(J_n)e_1$.",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities",
+    "lanczos-gauss-quadrature"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.cfc_T_apply_zero_zero",
+    "NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq_sum",
+    "NLAlib.LanczosDecomp.dotProduct_cfc_T_mulVec_eq_sum",
+    "NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq"
+   ],
+   "note": "Proved in full for $\\mu_b$ (eigenpairs of $T_q$ give a rule exact to degree $2q-1$; the sum is $\\Vert b\\Vert ^2e_1^\\top f(T_q)e_1$). NLAlib states it only for the spectral measure $\\mu_b$ of a symmetric matrix and a vector (finitely supported; every finitely supported positive measure is one, via $A=\\operatorname{diag}(t)$, $b=\\sqrt w$); the statement for a general positive measure on $\\mathbb R$ with finite moments is missing."
+  },
+  {
+   "label": "Cor to Thm 3.1",
+   "kind": "corollary",
+   "chapter": "3.1",
+   "page": 154,
+   "name": "Extended Jacobi matrix",
+   "statement": "There is an orthogonal $Q$ with $\\begin{bmatrix}1&0\\\\0&Q^\\top\\end{bmatrix}\\begin{bmatrix}1&\\sqrt{\\lambda^G}^\\top\\\\\\sqrt{\\lambda^G}&D_\\tau\\end{bmatrix}\\begin{bmatrix}1&0\\\\0&Q\\end{bmatrix}=\\begin{bmatrix}1&\\sqrt{\\beta_0}e_1^\\top\\\\\\sqrt{\\beta_0}e_1&J_n\\end{bmatrix}$ ($Q=V^\\top$).",
+   "status": "partial",
+   "atlas": [
+    "jacobi-matrix-identities"
+   ],
+   "decls": [
+    "NLAlib.LanczosDecomp.cfc_T_apply_zero_zero",
+    "NLAlib.LanczosDecomp.sum_sq_eigenvectorBasis_T_apply_zero"
+   ],
+   "note": "The eigendecomposition of $T_q$ with first components $\\sqrt{w_i}$ is there; the bordered-matrix (inverse eigenvalue) statement is not. Candidate `discrete-measure-jacobi-matrix`."
+  },
+  {
+   "label": "Thm 3.2",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 155,
+   "name": "Gauss–Radau via Jacobi–Radau matrix",
+   "statement": "Bordering $J_n$ with $\\sqrt{\\beta_n}e_n$ and the corner $\\alpha_n^R=a-\\beta_n\\pi_{n-1}(a)/\\pi_n(a)$ gives a matrix whose eigenvalues are the Gauss–Radau nodes (including $a$) and whose squared first eigenvector components times $\\beta_0$ are the weights.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-radau-lobatto"
+   ],
+   "decls": [],
+   "note": "Candidate `gauss-radau-lobatto`."
+  },
+  {
+   "label": "Thm 3.3",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 157,
+   "name": "Sign of the Radau remainder",
+   "statement": "On a finite support $[a,b]$ with $f\\in C^{2n+1}$ and $f^{(2n+1)}$ of constant sign, the left and right Gauss–Radau remainders have opposite, determined signs: one rule gives a lower and the other an upper bound.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-radau-lobatto"
+   ],
+   "decls": [],
+   "note": "Candidate `gauss-radau-lobatto`."
+  },
+  {
+   "label": "Thm 3.6",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 159,
+   "name": "Gauss–Lobatto via Jacobi–Lobatto matrix",
+   "statement": "Bordering $J_{n+1}$ with $\\sqrt{\\beta_{n+1}^L}e_{n+1}$ and corner $\\alpha_{n+1}^L$, where $(\\alpha^L,\\beta^L)$ solve a $2\\times2$ system in $\\pi_n,\\pi_{n+1}$ at $a,b$, gives the Gauss–Lobatto nodes (with $a,b$) and weights by Golub–Welsch.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-radau-lobatto"
+   ],
+   "decls": [],
+   "note": "Candidate `gauss-radau-lobatto`."
+  },
+  {
+   "label": "Thm 3.7",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 161,
+   "name": "Sign of the Lobatto remainder",
+   "statement": "If $f\\in C^{2n+2}[a,b]$ and $f^{(2n+2)}>0$ there, the Gauss–Lobatto remainder is negative (reversed for the opposite sign).",
+   "status": "candidate",
+   "atlas": [
+    "gauss-radau-lobatto"
+   ],
+   "decls": [],
+   "note": "Candidate `gauss-radau-lobatto`."
+  },
+  {
+   "label": "Thm 3.9",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 163,
+   "name": "Generalised Gauss–Radau",
+   "statement": "The interior nodes/weights of the Gauss–Radau rule with an $r$-fold end point $a$ are the Gauss nodes of $(t-a)^r d\\lambda$ with weights divided by $(\\tau_\\nu-a)^r$; all positive.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Multiple end-point quadrature for ODE/spline applications; no consumer."
+  },
+  {
+   "label": "Thm 3.12",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 164,
+   "name": "Generalised Gauss–Lobatto",
+   "statement": "The interior nodes/weights of the Gauss–Lobatto rule with $r$-fold end points are the Gauss nodes of $[(t-a)(b-t)]^rd\\lambda$ with weights divided by $[(\\tau-a)(b-\\tau)]^r$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Multiple end-point quadrature; no consumer."
+  },
+  {
+   "label": "Thm 3.15",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 166,
+   "name": "Stieltjes polynomial",
+   "statement": "For a positive measure, the Stieltjes polynomial of degree $n+1$ (orthogonal to $\\mathcal P_n$ against $\\pi_n\\,d\\lambda$) exists uniquely.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Gauss–Kronrod extension theory; no randomized-NLA consumer."
+  },
+  {
+   "label": "Lem 3.17",
+   "kind": "lemma",
+   "chapter": "3.1",
+   "page": 169,
+   "name": "Laurie's Kronrod matrix lemma",
+   "statement": "In the Jacobi–Kronrod matrix, the trailing block $J_n^*$ has the same eigenvalues as $J_n(d\\lambda)$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Gauss–Kronrod construction; no consumer."
+  },
+  {
+   "label": "Thm 3.20",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 174,
+   "name": null,
+   "statement": "For a symmetric measure, Gauss–Turán nodes are symmetric and the weights satisfy $\\lambda_{n+1-\\nu}^{(\\sigma)}=(-1)^\\sigma\\lambda_\\nu^{(\\sigma)}$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Gauss–Turán (derivative) quadrature; no consumer."
+  },
+  {
+   "label": "Thm 3.25",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 181,
+   "name": "Rational Gauss quadrature",
+   "statement": "If $d\\lambda/\\omega_m$, $\\omega_m=\\prod(1+\\zeta_\\mu t)^{s_\\mu}$, has an $n$-point Gauss rule with nodes in $[a,b]$, then the same nodes with weights $\\lambda_\\nu^G\\omega_m(\\tau_\\nu)$ integrate exactly the $2n$-dimensional space of rational functions with the prescribed poles plus $\\mathcal P_{2n-1-m}$; and conversely.",
+   "status": "candidate",
+   "atlas": [
+    "rational-gauss-quadrature"
+   ],
+   "decls": [],
+   "note": "Candidate `rational-gauss-quadrature` (later; consumer: rational Krylov methods for $f(A)b$)."
+  },
+  {
+   "label": "Thm 3.39",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 197,
+   "name": "Rational Gauss–Radau",
+   "statement": "If $d\\lambda/\\omega_m$ admits a polynomial Gauss–Radau rule, rescaling its weights by $\\omega_m$ at the nodes gives a rule exact on the corresponding space of rational functions with prescribed poles.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Rational variants of Radau/Lobatto/Kronrod/Turán rules; no consumer beyond `rational-gauss-quadrature`."
+  },
+  {
+   "label": "Thm 3.40",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 198,
+   "name": "Rational Gauss–Lobatto",
+   "statement": "If $d\\lambda/\\omega_m$ admits a polynomial Gauss–Lobatto rule, rescaling its weights by $\\omega_m$ at the nodes gives a rule exact on the corresponding space of rational functions with prescribed poles.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Rational variants of Radau/Lobatto/Kronrod/Turán rules; no consumer beyond `rational-gauss-quadrature`."
+  },
+  {
+   "label": "Thm 3.41",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 199,
+   "name": "Rational Gauss–Kronrod",
+   "statement": "If $d\\lambda/\\omega_m$ admits a polynomial Gauss–Kronrod rule, rescaling its weights by $\\omega_m$ at the nodes gives a rule exact on the corresponding space of rational functions with prescribed poles.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Rational variants of Radau/Lobatto/Kronrod/Turán rules; no consumer beyond `rational-gauss-quadrature`."
+  },
+  {
+   "label": "Thm 3.43",
+   "kind": "theorem",
+   "chapter": "3.1",
+   "page": 200,
+   "name": "Rational Gauss–Turán",
+   "statement": "If $d\\lambda/\\omega_m$ admits a polynomial Gauss–Turán rule, rescaling its weights by $\\omega_m$ at the nodes gives a rule exact on the corresponding space of rational functions with prescribed poles.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Rational variants of Radau/Lobatto/Kronrod/Turán rules; no consumer beyond `rational-gauss-quadrature`."
+  },
+  {
+   "label": "Alg 3.1",
+   "kind": "algorithm",
+   "chapter": "3.1",
+   "page": 209,
+   "name": "Stieltjes procedure on several intervals",
+   "statement": "Discretise a measure supported on several intervals by Gauss rules on each piece and run the Stieltjes procedure on the union.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Discretisation procedure for multi-interval weights; no consumer."
+  },
+  {
+   "label": "Alg 3.2",
+   "kind": "algorithm",
+   "chapter": "3.1",
+   "page": 210,
+   "name": "Modified moments on several intervals",
+   "statement": "Compute the first $2n$ Chebyshev modified moments of a multi-interval measure.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Numerical procedure; no consumer."
+  },
+  {
+   "label": "Sec 3.1.7",
+   "kind": "observation",
+   "chapter": "3.1",
+   "page": 211,
+   "name": "Matrix functionals as integrals",
+   "statement": "For symmetric $A$ with eigenpairs $(\\lambda_k,v_k)$ and $u=\\sum\\rho_kv_k$, $u^\\top f(A)u=\\sum\\rho_k^2f(\\lambda_k)=\\int f\\,d\\rho_N$, a discrete measure on the spectrum; $u^\\top f(A)v$ follows by polarisation.",
+   "status": "nlalib",
+   "atlas": [
+    "spectral-measure"
+   ],
+   "decls": [
+    "NLAlib.spectralMeasure",
+    "NLAlib.integral_spectralMeasure",
+    "NLAlib.dotProduct_cfc_mulVec_eq_sum"
+   ],
+   "note": "Unnumbered, eq. (3.1.143) (indexed for its role). Polarisation is not stated separately."
+  },
+  {
+   "label": "Alg 3.3",
+   "kind": "algorithm",
+   "chapter": "3.1",
+   "page": 212,
+   "name": "Lanczos algorithm",
+   "statement": "$\\alpha_j=h_j^\\top Ah_j$, $\\tilde h_{j+1}=(A-\\alpha_j)h_j-\\gamma_jh_{j-1}$, $\\gamma_{j+1}=\\Vert \\tilde h_{j+1}\\Vert $; the Lanczos vectors are orthonormal, span the Krylov spaces, and $h_j=p_j(A)h_0$ with $p_j$ the orthonormal polynomials of the spectral measure of $h_0$ ($\\gamma_j=\\sqrt{\\beta_j}$).",
+   "status": "nlalib",
+   "atlas": [
+    "lanczos-recurrence-algorithm",
+    "lanczos-orthogonal-polynomials"
+   ],
+   "decls": [
+    "NLAlib.lanczosStep",
+    "NLAlib.lanczosRecurrence",
+    "NLAlib.lanczosRecurrence_eq_arnoldiBasis",
+    "NLAlib.lanczosBeta_add_two_smul",
+    "NLAlib.LanczosDecomp.vec_eq_aeval_poly",
+    "NLAlib.LanczosDecomp.integral_poly_mul_poly"
+   ],
+   "note": "The recursion-equals-Arnoldi link `lanczosRecurrence_eq_arnoldiBasis` is a scaffold (assumed); the polynomial and orthonormality facts are proved."
+  },
+  {
+   "label": "Example 3.46",
+   "kind": "example",
+   "chapter": "3.1",
+   "page": 214,
+   "name": "Error bounds for linear systems",
+   "statement": "For SPD $A$ and residual $r=b-Ax^*$, $\\Vert x-x^*\\Vert ^2=r^\\top A^{-2}r$ and $\\Vert x-x^*\\Vert _A^2=r^\\top A^{-1}r$ are integrals against the spectral measure of $r$; Gauss gives lower bounds, left Radau and Lobatto upper bounds, right Radau a lower bound.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-radau-lobatto"
+   ],
+   "decls": [],
+   "note": "Candidate `gauss-radau-lobatto` (with `gauss-quadrature-derivative-remainder`)."
+  },
+  {
+   "label": "Example 3.47",
+   "kind": "example",
+   "chapter": "3.1",
+   "page": 215,
+   "name": "Diagonal of the inverse",
+   "statement": "For SPD $A$, $(A^{-1})_{ii}=e_i^\\top A^{-1}e_i$ is bounded below by $e_1^\\top J_n^{-1}e_1$ from Lanczos started at $e_i$, and two-sided by Radau/Lobatto rules; with $n=2$ the bound is explicit in the entries of $A$.",
+   "status": "candidate",
+   "atlas": [
+    "gauss-radau-lobatto"
+   ],
+   "decls": [],
+   "note": "Candidate `gauss-radau-lobatto`; consumer `diagonal-estimator`."
+  },
+  {
+   "label": "Alg 3.4",
+   "kind": "algorithm",
+   "chapter": "3.2",
+   "page": 218,
+   "name": "Polynomial least squares",
+   "statement": "Least-squares polynomial approximation on a discrete point set via the discrete orthogonal polynomials and Clenshaw evaluation.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Discrete least-squares data fitting; NLAlib's least squares is matrix least squares."
+  },
+  {
+   "label": "Alg 3.5",
+   "kind": "algorithm",
+   "chapter": "3.2",
+   "page": 226,
+   "name": "Sobolev least squares",
+   "statement": "Least-squares approximation in a discrete Sobolev norm via Sobolev orthogonal polynomials.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Sobolev inner products (no shift property); no randomized-NLA consumer."
+  },
+  {
+   "label": "Thm 3.54",
+   "kind": "theorem",
+   "chapter": "3.3",
+   "page": 228,
+   "name": null,
+   "statement": "A step-function approximation on $\\mathbb R_+$ with $n$ knots matching the first $2n$ moments of $f$ exists uniquely iff $-tf'(t)\\,dt$ has an $n$-point Gauss rule with positive nodes; the knots are the Gauss nodes.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Moment-preserving spline approximation (physics application); no NLA consumer."
+  },
+  {
+   "label": "Thm 3.56",
+   "kind": "theorem",
+   "chapter": "3.3",
+   "page": 231,
+   "name": "Moment-matching Dirac approximation",
+   "statement": "For $f\\ge0$ with $2n$ moments, the $n$-atom measure $\\sum a_\\nu\\delta_{t_\\nu}$ matching the first $2n$ moments of $f\\,dt$ is unique and is the $n$-point Gauss rule of $f\\,dt$.",
+   "status": "candidate",
+   "atlas": [
+    "quadrature-exactness-characterisation"
+   ],
+   "decls": [],
+   "note": "Uniqueness of the moment-matching $n$-atom measure (Lanczos quadrature as moment matching). Candidate `quadrature-exactness-characterisation`."
+  },
+  {
+   "label": "Thm 3.57",
+   "kind": "theorem",
+   "chapter": "3.3",
+   "page": 232,
+   "name": null,
+   "statement": "Spline approximation of degree $m$ with $n$ knots matching $2n$ moments exists uniquely iff $\\frac{(-1)^{m+1}}{m!}t^{m+1}f^{(m+1)}(t)\\,dt$ admits an $n$-point Gauss rule with positive nodes.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Moment-preserving spline approximation (physics application); no NLA consumer."
+  },
+  {
+   "label": "Thm 3.58",
+   "kind": "theorem",
+   "chapter": "3.3",
+   "page": 233,
+   "name": null,
+   "statement": "The error of the moment-preserving spline at $t$ equals the Gauss remainder of the truncated power $s^{-(m+1)}(s-t)_+^m$ for the measure of Theorem 3.57.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Moment-preserving spline approximation (physics application); no NLA consumer."
+  },
+  {
+   "label": "Thm 3.61",
+   "kind": "theorem",
+   "chapter": "3.3",
+   "page": 238,
+   "name": null,
+   "statement": "On $[0,1]$, moment-preserving spline Problem I has a unique solution iff $\\frac{(-1)^{m+1}}{m!}f^{(m+1)}dt$ admits a generalised Gauss–Lobatto rule with interior nodes in $(0,1)$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Moment-preserving spline approximation (physics application); no NLA consumer."
+  },
+  {
+   "label": "Thm 3.62",
+   "kind": "theorem",
+   "chapter": "3.3",
+   "page": 239,
+   "name": null,
+   "statement": "On $[0,1]$, Problem II has a unique solution iff that measure admits a generalised Gauss–Radau rule with interior nodes in $(0,1)$.",
+   "status": "out-of-scope",
+   "atlas": [],
+   "decls": [],
+   "note": "Moment-preserving spline approximation (physics application); no NLA consumer."
+  }
+ ]
+}

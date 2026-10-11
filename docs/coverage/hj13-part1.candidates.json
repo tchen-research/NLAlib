@@ -1,0 +1,1111 @@
+{
+ "results": [
+  {
+   "id": "schur-triangularization",
+   "title": "Schur triangularization, real Schur form and Schur's inequality",
+   "aliases": [
+    "Schur decomposition",
+    "Schur form",
+    "real Schur form",
+    "quasitriangular form",
+    "Schur's inequality",
+    "departure from normality",
+    "generalized Schur (QZ) form",
+    "almost diagonalization"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Every $A\\in\\mathbb C^{n\\times n}$ is $A=UTU^*$ with $U$ unitary and $T$ upper triangular, the eigenvalues on the diagonal in any prescribed order; a real $A$ is $A=QTQ^\\top$ with $Q$ real orthogonal and $T$ real upper quasitriangular ($1\\times1$ and $2\\times2$ blocks $\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}$ for conjugate pairs), and $T$ can be taken triangular when all eigenvalues are real. Consequences: Schur's inequality $\\sum_i|\\lambda_i|^2=\\|A\\|_F^2-\\|N\\|_F^2\\le\\|A\\|_F^2$ ($N$ the strictly upper part, equality iff $A$ normal); matrices with distinct eigenvalues are dense; for every $\\varepsilon>0$ some similarity makes $A$ triangular with off-diagonal entries at most $\\varepsilon$. Pencil version (QZ): $A=VT_AW^*$, $B=VT_BW^*$ simultaneously.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ (real Schur form) or $A\\in\\mathbb C^{n\\times n}$ (complex Schur form)",
+    "prescribed ordering of the eigenvalues for the complex form"
+   ],
+   "conclusion": "$\\exists$ orthogonal $Q$ (unitary $U$), quasitriangular (triangular) $T$: $A=QTQ^\\top$; $\\sum|\\lambda_i|^2\\le\\|A\\|_F^2$ with equality iff $A$ is normal",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 2.3.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Ex 2.3.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.3.4"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.7.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.7.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.6.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.6.2"
+    }
+   ],
+   "depends_on": [
+    "qr-decomposition",
+    "norms-frob-spec",
+    "orthonormal-completion"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Module.End.exists_eigenvalue",
+     "present": true
+    },
+    {
+     "decl": "Module.End.iSup_maxGenEigenspace_eq_top",
+     "present": true,
+     "note": "generalized eigenspaces span (abstract triangularizability); no unitary Schur form"
+    },
+    {
+     "decl": "Matrix.IsHermitian.spectral_theorem",
+     "present": true,
+     "note": "Hermitian special case only"
+    },
+    {
+     "decl": "Matrix.schurTriangulation",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "schur",
+    "nonnormal",
+    "eigenvalues"
+   ],
+   "notes": "Consumers: qr-algorithm-convergence (limit is the Schur form), normal-matrices (normal ⇔ triangular Schur factor diagonal), matrix-power-convergence (ρ(A)<1 ⇒ Aᵏ→0 via the ε-triangular form), gmres-diagonalizable / krylov-nonnormal (Henrici departure from normality, field-of-values-def), Krylov f(A)b error bounds for nonnormal A. Prove: deflation by a unit eigenvector plus orthonormal-completion, induction on n; the real form needs one real invariant 2-plane per conjugate pair. QZ (Thm 2.6.1–2.6.2) is a later variant.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "normal-matrices",
+   "title": "Normal matrices: spectral theorem, real normal form, Fuglede–Putnam",
+   "aliases": [
+    "normal matrix",
+    "AA* = A*A",
+    "unitarily diagonalizable",
+    "spectral theorem for normal matrices",
+    "real normal form",
+    "Fuglede–Putnam"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "$A$ is normal ($AA^*=A^*A$) iff it is unitarily diagonalizable iff $\\|A\\|_F^2=\\sum|\\lambda_i|^2$ iff it has an orthonormal eigenbasis; block triangular normal matrices are block diagonal; two normal matrices are unitarily similar iff they have the same eigenvalues. A real normal matrix is real orthogonally similar to a direct sum of $1\\times1$ blocks and $2\\times2$ blocks $\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}$ (skew-symmetric and orthogonal matrices as special cases). Fuglede–Putnam: for normal $A,B$, $AX=XB\\iff A^*X=XB^*$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$ with $AA^*=A^*A$ (or real with $AA^\\top=A^\\top A$)"
+   ],
+   "conclusion": "$A=U\\operatorname{diag}(\\lambda)U^*$ with $U$ unitary; real case $A=Q(\\bigoplus_i B_i)Q^\\top$, $B_i\\in\\{[\\mu],\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}\\}$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 2.5.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 2.5.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.4"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 2.5.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.8"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.15"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.16"
+    }
+   ],
+   "depends_on": [
+    "schur-triangularization",
+    "norms-frob-spec"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "IsStarNormal",
+     "present": true,
+     "note": "normality in a star algebra"
+    },
+    {
+     "decl": "Matrix.IsHermitian.spectral_theorem",
+     "present": true,
+     "note": "Hermitian case"
+    },
+    {
+     "decl": "normal-matrix spectral theorem",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "normal",
+    "spectral-theorem"
+   ],
+   "notes": "Consumers: gmres-diagonalizable (κ(V)=1 for normal A), field-of-values-def (W(A)=conv σ(A) for normal A), crouzeix-palencia (normal sanity case), polynomial-spectral-bound generalised to normal A (‖p(A)‖=max|p(λ)|). Prove from schur-triangularization: a normal triangular matrix is diagonal (Lem 2.5.2).",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "diagonalizable-def",
+   "title": "Diagonalizable matrices and eigenvector bases",
+   "aliases": [
+    "diagonalisable",
+    "nondefective",
+    "defective",
+    "eigenvector basis",
+    "A = VΛV⁻¹",
+    "distinct eigenvalues ⇒ diagonalizable"
+   ],
+   "area": "matrix-spectral",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "$A$ is diagonalizable if $A=V\\Lambda V^{-1}$ with $\\Lambda$ diagonal, equivalently it has $n$ linearly independent eigenvectors, equivalently every eigenvalue has equal geometric and algebraic multiplicity (nondefective). $n$ distinct eigenvalues suffice; a direct sum is diagonalizable iff each summand is; two diagonalizations differ by an invertible block-diagonal factor on the eigenspaces. Geometric multiplicity $\\ge k$ forces $\\lambda$ into the spectrum of every principal submatrix of order $\\ge n-k+1$, hence algebraic multiplicity $\\ge k$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$ (or real $A$ with a complex eigenvector matrix)"
+   ],
+   "conclusion": "$\\exists V$ invertible, $\\Lambda$ diagonal with $A=V\\Lambda V^{-1}$ ⇔ $n$ independent eigenvectors ⇔ nondefective; distinct eigenvalues ⇒ diagonalizable",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 1.3.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 1.3.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.27"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 1.4.4"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.4.10"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Module.End.eigenvectors_linearIndependent",
+     "present": true
+    },
+    {
+     "decl": "Module.End.IsSemisimple",
+     "present": true,
+     "note": "abstract analogue (diagonalizable over ℂ)"
+    },
+    {
+     "decl": "Module.End.isSemisimple_of_squarefree_aeval_eq_zero",
+     "present": true
+    },
+    {
+     "decl": "Matrix.IsDiagonalizable",
+     "present": false,
+     "note": "no matrix predicate"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "eigenvalues",
+    "diagonalization",
+    "definition"
+   ],
+   "notes": "Consumers: gmres-diagonalizable (whose Mathlib note asks for exactly this predicate; currently stated with an explicit V), krylov-nonnormal bounds with κ(V), power-iteration for nonsymmetric A, matrix functions f(A)=V f(Λ)V⁻¹. Mostly a wrapper around Mathlib's semisimplicity; prove.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "simultaneous-diagonalization",
+   "title": "Commuting families: common eigenvectors and simultaneous diagonalization / triangularization",
+   "aliases": [
+    "simultaneously diagonalizable",
+    "commuting matrices share an eigenvector",
+    "simultaneous triangularization",
+    "eigenvalues of commuting sums",
+    "invariant subspace"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "A commuting family has a common eigenvector (Lem 1.3.19) and is simultaneously unitarily upper triangularizable; a family of diagonalizable (normal) matrices commutes iff it is simultaneously (unitarily) diagonalizable, with any eigenvalue order for one member; real diagonalizable matrices with real eigenvalues need only a real similarity. For commuting $A,B$ the eigenvalues of $A+B$ and $AB$ are $\\alpha_i+\\beta_i$ and $\\alpha_i\\beta_i$ for suitable orderings. Simultaneous triangularization by similarity is equivalent to unitary simultaneous triangularization.",
+   "hypotheses": [
+    "$\\mathcal F\\subseteq\\mathbb C^{n\\times n}$ a commuting family",
+    "for diagonalization: every member diagonalizable (normal for the unitary version)"
+   ],
+   "conclusion": "$\\exists S$ (unitary $U$) with $S^{-1}AS$ diagonal (triangular) for all $A\\in\\mathcal F$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 1.3.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.12"
+    },
+    {
+     "source": "hj13",
+     "label": "Obs 1.3.18"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 1.3.19"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 1.3.20"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.21"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 1.3.30"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.3.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.8.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 2.4.8.5"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.8.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.5"
+    }
+   ],
+   "depends_on": [
+    "diagonalizable-def",
+    "schur-triangularization",
+    "normal-matrices"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "LinearMap.IsSymmetric.directSum_isInternal_of_pairwise_commute",
+     "present": true,
+     "note": "commuting symmetric case"
+    },
+    {
+     "decl": "Module.End.iSup_iInf_maxGenEigenspace_eq_top_of_forall_mapsTo",
+     "present": true,
+     "note": "simultaneous generalized eigenspaces"
+    },
+    {
+     "decl": "simultaneous diagonalization of commuting diagonalizable matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "commuting",
+    "diagonalization"
+   ],
+   "notes": "Consumers: matrix functions of commuting symmetric matrices (Loewner-order arguments, operator-monotone-convex), Kronecker sums (kronecker-spectral eigenvalues of A⊗I+I⊗B), preconditioned iterations with commuting preconditioners. The commuting symmetric real case is in Mathlib and should be cited, not reproved.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "real-similarity-descent",
+   "title": "Real matrices similar (unitarily similar) over ℂ are similar (orthogonally similar) over ℝ",
+   "aliases": [
+    "real similarity",
+    "complex to real similarity",
+    "unitarily similar real matrices are orthogonally similar"
+   ],
+   "area": "matrix",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If real families $\\{A_\\alpha\\}$, $\\{B_\\alpha\\}$ satisfy $A_\\alpha=SB_\\alpha S^{-1}$ for one complex nonsingular $S$, then some real nonsingular $T$ does the same (because some $C+\\tau D$ is nonsingular when $S=C+iD$); if the common similarity is unitary, a real orthogonal one exists.",
+   "hypotheses": [
+    "$A_\\alpha,B_\\alpha\\in\\mathbb R^{n\\times n}$",
+    "$S\\in\\mathbb C^{n\\times n}$ nonsingular (resp. unitary) with $A_\\alpha=SB_\\alpha S^{-1}$ for all $\\alpha$"
+   ],
+   "conclusion": "$\\exists T\\in\\mathbb R^{n\\times n}$ nonsingular (resp. real orthogonal $Q$) with $A_\\alpha=TB_\\alpha T^{-1}$ ($=QB_\\alpha Q^\\top$) for all $\\alpha$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Lem 1.3.28"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.3.29"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.5.21"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.eq_zero_of_infinite_isRoot",
+     "present": true,
+     "note": "finitely many roots of det(C+tD)"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "real-complex",
+    "similarity"
+   ],
+   "notes": "Consumer: NLAlib's complex-embedding transfers (NLAlib.Matrix.ComplexEmbedding, complex volume sampling, complex Cholesky) when a statement proved over ℂ must be brought back to real orthogonal factors. Prove.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "left-right-eigenvectors",
+   "title": "Left and right eigenvectors: biorthogonality and nonunitary deflation",
+   "aliases": [
+    "left eigenvector",
+    "biorthogonality",
+    "y*x ≠ 0 for a simple eigenvalue",
+    "eigenvalue condition number",
+    "spectral projector of a simple eigenvalue"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $Ax=\\lambda x$ and $y^*A=\\mu y^*$ with $\\lambda\\ne\\mu$ then $y^*x=0$. If $y^*x\\ne0$ for the same $\\lambda$ then $A=S([\\lambda]\\oplus B)S^{-1}$ with $S=[x\\ S_1]$ and $S^{-*}e_1=y/(x^*y)$ (and conversely). A simple eigenvalue has $y^*x\\ne0$; for geometric multiplicity one, simplicity is equivalent to $y^*x\\ne0$, and $\\operatorname{adj}(\\lambda I-A)=\\gamma xy^*$, $\\gamma\\ne0$. Similarities map right eigenvectors by $S$ and left ones by $S^{-*}$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$",
+    "$Ax=\\lambda x$, $y^*A=\\mu y^*$, $x,y\\ne0$"
+   ],
+   "conclusion": "$\\lambda\\ne\\mu\\Rightarrow y^*x=0$; $\\lambda$ simple $\\Rightarrow y^*x\\ne0$ and $A\\sim[\\lambda]\\oplus B$ with spectral projector $xy^*/(y^*x)$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 1.4.6"
+    },
+    {
+     "source": "hj13",
+     "label": "Obs 1.4.6a"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.4.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.4.9"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 1.4.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 1.4.12"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.11.1"
+    }
+   ],
+   "depends_on": [
+    "diagonalizable-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.adjugate",
+     "present": true
+    },
+    {
+     "decl": "Module.End.HasEigenvector",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "eigenvectors",
+    "nonnormal",
+    "perturbation"
+   ],
+   "notes": "Consumers: eigenvalue condition numbers 1/|y*x| and first-order perturbation of simple eigenvalues (HJ ch. 6, part 2 of this index), deflation in power-iteration for nonsymmetric A, oblique spectral projectors in Krylov f(A)b analysis. Prove.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "rank-one-eigenvalue-update",
+   "title": "Brauer's theorem: eigenvalues of a rank-one update along an eigenvector",
+   "aliases": [
+    "Brauer's theorem",
+    "Wielandt deflation",
+    "Hotelling deflation",
+    "eigenvalues of A + x v*"
+   ],
+   "area": "matrix-spectral",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $Ax=\\lambda x$, $x\\ne0$, and the eigenvalues of $A$ are $\\lambda,\\lambda_2,\\dots,\\lambda_n$, then for every $v$ the eigenvalues of $A+xv^*$ are $\\lambda+v^*x,\\lambda_2,\\dots,\\lambda_n$.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$",
+    "$Ax=\\lambda x$, $x\\ne0$",
+    "$v\\in\\mathbb C^n$"
+   ],
+   "conclusion": "$p_{A+xv^*}(t)=p_A(t)\\,\\dfrac{t-\\lambda-v^*x}{t-\\lambda}$, i.e. $\\sigma(A+xv^*)=\\{\\lambda+v^*x,\\lambda_2,\\dots,\\lambda_n\\}$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Ex 1.2.8"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.10.1"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_add_replicateCol_mul_replicateRow",
+     "present": true,
+     "note": "matrix determinant lemma"
+    },
+    {
+     "decl": "Matrix.charpoly",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "deflation",
+    "rank-one",
+    "eigenvalues"
+   ],
+   "notes": "Consumers: deflation steps in power-iteration and subspace-iteration-convergence for the next eigenvalue, PageRank-type damping (eigenvalues of αP+(1−α)ev*), rank-one modifications in Lanczos restarts. Prove via the charpoly computation of Ex 1.2.8.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "sylvester-equation",
+   "title": "Sylvester equation AX − XB = C: unique solvability iff disjoint spectra, and spectral block diagonalization",
+   "aliases": [
+    "Sylvester's theorem",
+    "Sylvester equation",
+    "AX − XB = C",
+    "Lyapunov-type equation",
+    "block diagonalization by spectral separation",
+    "intertwining relation"
+   ],
+   "area": "matrix-subspace-perturbation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For $A\\in\\mathbb C^{n\\times n}$, $B\\in\\mathbb C^{m\\times m}$ the map $X\\mapsto AX-XB$ is invertible iff $\\sigma(A)\\cap\\sigma(B)=\\emptyset$ (real data give real solutions); $AX=XB$ implies $g(A)X=Xg(B)$ for all polynomials $g$. Consequences: if $AB=CA$ with block-diagonal $B,C$ whose off-diagonal block spectra are disjoint then $A$ is block diagonal; matrices commuting with $S(A_1\\oplus\\cdots\\oplus A_d)S^{-1}$ (disjoint spectra) are $S(B_1\\oplus\\cdots\\oplus B_d)S^{-1}$; every $A$ is similar to $T_{11}\\oplus\\cdots\\oplus T_{dd}$ with each $T_{ii}$ triangular with a single eigenvalue.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{p\\times p}$, $B\\in\\mathbb R^{q\\times q}$ (or complex)",
+    "$\\sigma(A)\\cap\\sigma(B)=\\emptyset$"
+   ],
+   "conclusion": "$\\forall C\\ \\exists!X:\\ AX-XB=C$; in particular $AX=XB\\Rightarrow X=0$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.7.7"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 2.4.4.0"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.4.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 2.4.4.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 2.4.4.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.4.6.1"
+    }
+   ],
+   "depends_on": [
+    "schur-triangularization"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.aeval_self_charpoly",
+     "present": true
+    },
+    {
+     "decl": "IsCoprime",
+     "present": true,
+     "note": "coprimality of the characteristic polynomials gives the Bézout argument"
+    },
+    {
+     "decl": "Sylvester-equation solvability",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "sylvester",
+    "invariant-subspaces",
+    "perturbation"
+   ],
+   "notes": "Consumers: sylvester-separation-bound (its quantitative symmetric form; this is the qualitative general statement), davis-kahan-sin-theta and wedin-sin-theta (both reduce to a Sylvester equation), spectral projectors and invariant-subspace perturbation for nonsymmetric matrices, block diagonalization used in Krylov f(A)b analysis. Prove via Cayley–Hamilton: p_B(A) is invertible when the spectra are disjoint, which inverts X ↦ AX − XB.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "matrix-power-convergence",
+   "title": "Convergent and power-bounded matrices: Aᵏ → 0 iff ρ(A) < 1",
+   "aliases": [
+    "convergent matrix",
+    "spectral radius criterion",
+    "power-bounded matrix",
+    "stationary iteration convergence",
+    "Neumann series convergence iff ρ<1"
+   ],
+   "area": "matrix-conditioning",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "$A^k\\to0$ iff $\\rho(A)<1$; then $\\sum_kA^k=(I-A)^{-1}$. $\\sup_k\\|A^k\\|<\\infty$ iff $\\rho(A)\\le1$ and every eigenvalue of modulus one is semisimple. Quantitatively, for every $\\varepsilon>0$ there is $C_\\varepsilon$ with $\\|A^k\\|\\le C_\\varepsilon(\\rho(A)+\\varepsilon)^k$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ (spectral radius over $\\mathbb C$)"
+   ],
+   "conclusion": "$\\lim_{k\\to\\infty}A^k=0\\iff\\rho(A)<1$; power bounded $\\iff\\rho(A)\\le1$ and unimodular eigenvalues semisimple",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 3.2.5.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 5.6.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Lem 5.6.11"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 5.6.12"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 5.6.13"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 5.6.15"
+    }
+   ],
+   "depends_on": [
+    "inverse-perturbation",
+    "schur-triangularization"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "spectralRadius",
+     "present": true
+    },
+    {
+     "decl": "spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius",
+     "present": true,
+     "note": "Gelfand's formula gives the ρ<1 direction quickly"
+    },
+    {
+     "decl": "Aᵏ → 0 ↔ ρ(A) < 1 for matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "now",
+   "tags": [
+    "spectral-radius",
+    "iterative-methods"
+   ],
+   "notes": "Consumers: richardson-iteration and chebyshev-iteration (stationary/polynomial methods converge iff ρ of the iteration matrix < 1), Jacobi/Gauss–Seidel style splittings, expected-error recursions of randomized-kaczmarz and sketch-and-project (E[e_{k+1}] = (I − P̄) E[e_k]), inverse-perturbation (Neumann series beyond the ‖F‖<1 criterion). The convergent part follows from Gelfand's formula in Mathlib; the power-bounded part needs Jordan structure: state it, assume if needed. Also Thm 5.6.12, Cor 5.6.13 (HJ ch. 5 form).",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "cs-decomposition",
+   "title": "CS decomposition of a partitioned unitary matrix and canonical form of an oblique projection",
+   "aliases": [
+    "CS decomposition",
+    "cosine–sine decomposition",
+    "canonical angles via CSD",
+    "complementary blocks of a unitary have equal rank",
+    "oblique projector canonical form",
+    "‖P‖ = 1/cos θ"
+   ],
+   "area": "matrix-subspace-perturbation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $U=\\begin{pmatrix}U_{11}&U_{12}\\\\U_{21}&U_{22}\\end{pmatrix}$ is unitary (real orthogonal) with $U_{11}\\in\\mathbb C^{p\\times p}$, $p\\le q$, there are unitaries $V_1,W_1\\in\\mathbb C^{p\\times p}$, $V_2,W_2\\in\\mathbb C^{q\\times q}$ with $(V_1\\oplus W_1)U(V_2\\oplus W_2)=\\begin{pmatrix}C&S&0\\\\-S&C&0\\\\0&0&I_{q-p}\\end{pmatrix}$, $C=\\operatorname{diag}(\\sigma_i(U_{11}))$, $S=(I-C^2)^{1/2}$. In particular $\\operatorname{rank}U_{12}=\\operatorname{rank}U_{21}$ and $\\operatorname{rank}U_{22}=\\operatorname{rank}U_{11}+n-2p$. An idempotent $P$ with singular values $\\sigma_1\\ge\\dots\\ge\\sigma_g>1$ is unitarily similar to $\\bigoplus_i\\begin{pmatrix}1&(\\sigma_i^2-1)^{1/2}\\\\0&0\\end{pmatrix}\\oplus I\\oplus0$, so $\\|P\\|=1/\\cos\\theta_{\\max}$ between its range and the orthogonal complement of its null space.",
+   "hypotheses": [
+    "$U\\in\\mathbb R^{n\\times n}$ orthogonal, partitioned with $U_{11}\\in\\mathbb R^{p\\times p}$, $p\\le n-p$",
+    "for the projection form: $P^2=P$"
+   ],
+   "conclusion": "block-orthogonal $V,W$ with $V^\\top UW$ in CS form; $\\operatorname{rank}U_{12}=\\operatorname{rank}U_{21}$; for idempotent $P$, $\\|P\\|=\\sigma_1(P)$ is the secant of the largest principal angle",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Lem 2.1.10"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 2.7.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 3.4.3.3"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "qr-decomposition",
+    "principal-angles-def",
+    "orthonormal-columns-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.unitaryGroup",
+     "present": true
+    },
+    {
+     "decl": "CS decomposition",
+     "present": false
+    }
+   ],
+   "difficulty": 3,
+   "priority": "now",
+   "tags": [
+    "cs-decomposition",
+    "principal-angles",
+    "projectors"
+   ],
+   "notes": "Consumers: principal-angles-def (CSD is the canonical form behind sin Θ/cos Θ; several of its lemmas are currently scaffolds: sinThetaMax_comm, sinThetaMax_eq_sin_principalAngles), davis-kahan-sin-theta, wedin-sin-theta, oblique projectors in Nyström / generalized Nyström and sketch-and-solve-ls analyses (‖P‖ = ‖I − P‖ = 1/cos θ), subspace-iteration-convergence. Prove from svd + qr-decomposition as in HJ's proof.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "cauchy-binet",
+   "title": "Cauchy–Binet formula and multiplicativity of compound matrices",
+   "aliases": [
+    "Cauchy–Binet",
+    "Binet–Cauchy",
+    "compound matrices",
+    "det(AᵀA) = Σ det(A_S)²",
+    "volume sampling normaliser"
+   ],
+   "area": "matrix",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $A\\in\\mathbb F^{m\\times k}$, $B\\in\\mathbb F^{k\\times n}$ and index sets $|\\alpha|=|\\beta|=r$: $\\det(AB)[\\alpha,\\beta]=\\sum_{|\\gamma|=r}\\det A[\\alpha,\\gamma]\\det B[\\gamma,\\beta]$; equivalently the $r$-th compound is multiplicative, $C_r(AB)=C_r(A)C_r(B)$. Special case: $\\det(A^\\top A)=\\sum_{|S|=k}\\det(A_{S,:})^2$ for $A\\in\\mathbb R^{m\\times k}$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{m\\times k}$, $B\\in\\mathbb R^{k\\times n}$",
+    "$\\alpha\\subseteq[m]$, $\\beta\\subseteq[n]$ with $|\\alpha|=|\\beta|=r$"
+   ],
+   "conclusion": "$\\det(AB)[\\alpha,\\beta]=\\sum_{\\gamma\\subseteq[k],|\\gamma|=r}\\det A[\\alpha,\\gamma]\\det B[\\gamma,\\beta]$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.8.1"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.8.7"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_mul",
+     "present": true
+    },
+    {
+     "decl": "Matrix.det_apply",
+     "present": true
+    },
+    {
+     "decl": "Cauchy–Binet",
+     "present": false,
+     "note": "absent from Mathlib"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "determinants",
+    "volume-sampling"
+   ],
+   "notes": "Consumers: volume sampling and DPP normalisers (NLAlib.LowRank.VolumeSampling, complex volume sampling: Σ_S det(A_S A_Sᵀ) = e_k(σ²) currently reached through principal-minor sums of a Gram matrix), leverage-score / projection-DPP identities, the k = rank case of Gram determinants. Prove (standard multilinearity argument) and upstream to Mathlib if possible.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "rank-inequalities",
+   "title": "Rank inequalities (Sylvester, Frobenius, subadditivity) and solvability of linear systems",
+   "aliases": [
+    "Sylvester rank inequality",
+    "Frobenius rank inequality",
+    "rank subadditivity",
+    "Rouché–Capelli",
+    "rank(AB) ≥ rank A + rank B − n"
+   ],
+   "area": "matrix",
+   "kind": "lemma",
+   "status": "candidate",
+   "informal": "$\\operatorname{rank}(A+B)\\le\\operatorname{rank}A+\\operatorname{rank}B$; $\\operatorname{rank}A+\\operatorname{rank}B-k\\le\\operatorname{rank}AB\\le\\min(\\operatorname{rank}A,\\operatorname{rank}B)$ for $A\\in\\mathbb F^{m\\times k}$, $B\\in\\mathbb F^{k\\times n}$ (Sylvester); $\\operatorname{rank}AB+\\operatorname{rank}BC\\le\\operatorname{rank}B+\\operatorname{rank}ABC$ (Frobenius). $Ax=b$ is solvable iff $\\operatorname{rank}[A\\ b]=\\operatorname{rank}A$, and the solution set is $x_0+\\ker A$.",
+   "hypotheses": [
+    "conformable real matrices $A,B,C$"
+   ],
+   "conclusion": "Sylvester, Frobenius and subadditivity inequalities for matrix rank; Rouché–Capelli criterion",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.4.2"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.4.5"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.rank_mul_le",
+     "present": true
+    },
+    {
+     "decl": "Matrix.rank_add_rank_le_card_of_mul_eq_zero",
+     "present": true
+    },
+    {
+     "decl": "LinearMap.rank_add_le",
+     "present": true,
+     "note": "linear-map form; no Matrix.rank_add_le"
+    },
+    {
+     "decl": "Sylvester/Frobenius rank inequalities for matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 1,
+   "priority": "next",
+   "tags": [
+    "rank"
+   ],
+   "notes": "Consumers: sketch rank arguments (ae_rank_mul_gaussian_eq_min, gaussian-sketch range finder: rank(AΩ) ≥ rank A + rank Ω − n), Nyström rank bookkeeping, kaczmarz-rank-deficient (consistency b ∈ range A), sketch-and-solve-ls. Prove; small.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "complementary-nullities",
+   "title": "Law of complementary nullities and Jacobi's identity for minors of the inverse",
+   "aliases": [
+    "complementary nullities",
+    "Gustafson's law",
+    "Jacobi identity for minors",
+    "minors of the inverse",
+    "rank of off-diagonal blocks of A⁻¹",
+    "Schur complement rank additivity"
+   ],
+   "area": "matrix",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For nonsingular $A$ and index sets $\\alpha,\\beta$: $\\operatorname{nullity}A[\\alpha,\\beta]=\\operatorname{nullity}A^{-1}[\\beta^c,\\alpha^c]$; $\\det A^{-1}[\\alpha^c,\\beta^c]=(-1)^{p(\\alpha,\\beta)}\\det A[\\beta,\\alpha]/\\det A$. For a $2\\times2$ block matrix with nonsingular $A_{11}$, $\\operatorname{rank}A=\\operatorname{rank}A_{11}+\\operatorname{rank}(A_{22}-A_{21}A_{11}^{-1}A_{12})$.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ nonsingular",
+    "$\\alpha,\\beta\\subseteq[n]$"
+   ],
+   "conclusion": "$\\operatorname{nullity}A[\\alpha,\\beta]=\\operatorname{nullity}A^{-1}[\\beta^c,\\alpha^c]$ and Jacobi's minor identity",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.7.5"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.7.6"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.8.4"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.det_fromBlocks₁₁",
+     "present": true
+    },
+    {
+     "decl": "Matrix.invOf_fromBlocks₁₁_eq",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "inverse",
+    "rank-structure"
+   ],
+   "notes": "Consumers: rank structure of inverses (off-diagonal low rank of inverses of banded/tridiagonal matrices; hierarchical-matrix sketching), Schur-complement rank additivity used by partial-cholesky / randomly pivoted Cholesky residual rank arguments. Low priority.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "structured-matrices-def",
+   "title": "Toeplitz, Hankel and Cauchy matrices",
+   "aliases": [
+    "Toeplitz matrix",
+    "Hankel matrix",
+    "Cauchy matrix",
+    "Hilbert matrix",
+    "Cauchy determinant"
+   ],
+   "area": "matrix",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "Toeplitz: $a_{ij}=t_{j-i}$; Hankel: $a_{ij}=h_{i+j}$; Cauchy: $a_{ij}=1/(x_i+y_j)$ with $\\det=\\prod_{i<j}(x_j-x_i)(y_j-y_i)/\\prod_{i,j}(x_i+y_j)$ (Hilbert matrix as a special case). Circulants (in Mathlib) are the Toeplitz matrices that commute with the cyclic shift.",
+   "hypotheses": [
+    "index type $\\mathrm{Fin}\\,n$",
+    "Cauchy: $x_i+y_j\\ne0$"
+   ],
+   "conclusion": "definitions with the Cauchy determinant formula",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.9.7"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.9.8"
+    },
+    {
+     "source": "hj13",
+     "label": "§0.9.12"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.circulant",
+     "present": true
+    },
+    {
+     "decl": "Matrix.vandermonde",
+     "present": true
+    },
+    {
+     "decl": "Toeplitz/Hankel/Cauchy matrices",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "structured-matrices"
+   ],
+   "notes": "Consumers: Toeplitz and partial-circulant JL sketches, moment (Hankel) matrices in Lanczos / Gauss quadrature (lanczos-gauss-quadrature, jacobi-matrix-identities), ill-conditioning examples (Hilbert, Cauchy) for condition-number-def. Low priority.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "determinant-derivative",
+   "title": "Jacobi's formula: derivative of the determinant",
+   "aliases": [
+    "Jacobi's formula",
+    "d det A = tr(adj A dA)",
+    "derivative of log det",
+    "derivative of the characteristic polynomial"
+   ],
+   "area": "matrix-trace",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "If $t\\mapsto A(t)$ is differentiable then $\\frac{d}{dt}\\det A(t)=\\operatorname{tr}(\\operatorname{adj}A(t)\\,A'(t))$, so $\\frac{d}{dt}\\log\\det A(t)=\\operatorname{tr}(A(t)^{-1}A'(t))$ when $\\det A(t)>0$. The derivative of $p_A(t)$ is the sum of the principal $(n-1)$-minors of $tI-A$.",
+   "hypotheses": [
+    "$A:\\mathbb R\\to\\mathbb R^{n\\times n}$ differentiable at $t$"
+   ],
+   "conclusion": "$(\\det A)'(t)=\\operatorname{tr}(\\operatorname{adj}A(t)A'(t))$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "§0.8.10"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.adjugate",
+     "present": true
+    },
+    {
+     "decl": "Matrix.det_apply",
+     "present": true
+    },
+    {
+     "decl": "HasDerivAt for Matrix.det",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "determinant",
+    "calculus",
+    "log-det"
+   ],
+   "notes": "Consumers: log-determinant estimation (SLQ for tr log A = log det A, slq-error), Gaussian-process likelihood gradients via Hutchinson (hutchinson-variance), concavity of log det (operator-monotone-convex family), NLAlib.hasDerivAt_matrix_inv companions. Prove (multilinearity in the columns).",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "companion-matrix",
+   "title": "Companion matrices, nonderogatory matrices and cyclic vectors",
+   "aliases": [
+    "companion matrix",
+    "nonderogatory",
+    "cyclic vector",
+    "minimal polynomial = characteristic polynomial",
+    "Frobenius companion form"
+   ],
+   "area": "krylov-bases",
+   "kind": "definition",
+   "status": "candidate",
+   "informal": "The companion matrix $C_p$ of a monic $p$ has $p$ as both minimal and characteristic polynomial. For $A\\in\\mathbb F^{n\\times n}$: $\\deg q_A=n$ ⇔ $q_A=p_A$ ⇔ $A$ nonderogatory (every eigenvalue geometrically simple) ⇔ $A$ is similar to $C_{p_A}$ ⇔ some $b$ has Krylov grade $n$; then every matrix commuting with $A$ is a polynomial in $A$.",
+   "hypotheses": [
+    "$p$ monic of degree $n$",
+    "$A\\in\\mathbb R^{n\\times n}$"
+   ],
+   "conclusion": "$\\operatorname{minpoly}(C_p)=\\operatorname{charpoly}(C_p)=p$; $A$ nonderogatory ⇔ $A\\sim C_{p_A}$ ⇔ $\\exists b$: $\\operatorname{grade}(A,b)=n$",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Def 3.2.4.1"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 3.2.4.2"
+    },
+    {
+     "source": "hj13",
+     "label": "Def 3.3.13"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 3.3.14"
+    },
+    {
+     "source": "hj13",
+     "label": "Thm 3.3.15"
+    }
+   ],
+   "depends_on": [
+    "krylov-grade",
+    "krylov-subspace"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "minpoly",
+     "present": true
+    },
+    {
+     "decl": "Matrix.charpoly",
+     "present": true
+    },
+    {
+     "decl": "companion matrix",
+     "present": false
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "krylov",
+    "minimal-polynomial"
+   ],
+   "notes": "Consumers: krylov-grade (grade ≤ deg q_A with equality for a cyclic vector; the Krylov matrix K satisfies AK = K C), arnoldi-relation (Hessenberg form of A in a Krylov basis is similar to a companion matrix), gmres-any-convergence-curve (construction uses companion matrices). Prove.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "lu-row-inclusion",
+   "title": "LU factorization of possibly singular matrices: row and column inclusion",
+   "aliases": [
+    "row inclusion property",
+    "LU of singular matrices",
+    "rank-deficient LU"
+   ],
+   "area": "matrix-factorizations",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "$A$ has an LU factorization with nonsingular $L$ iff for each $i<n$ the row $A[i+1,1{:}i]$ is a combination of the rows of $A[1{:}i,1{:}i]$ (row inclusion); dually for nonsingular $U$ and column inclusion. If $\\operatorname{rank}A=k$ and the leading $j\\times j$ blocks are nonsingular for $j\\le k$, $A=LU$ with either factor unit triangular.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$, possibly singular"
+   ],
+   "conclusion": "$\\exists L$ unit lower, $U$ upper with $A=LU$ ⇔ row inclusion; leading blocks nonsingular up to the rank ⇒ LU exists",
+   "sources": [
+    {
+     "source": "hj13",
+     "label": "Thm 3.5.3"
+    },
+    {
+     "source": "hj13",
+     "label": "Cor 3.5.4"
+    }
+   ],
+   "depends_on": [
+    "lu-decomposition",
+    "lu-algorithm"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.rank",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "lu",
+    "rank-deficient"
+   ],
+   "notes": "Consumers: partial-cholesky and randomly pivoted Cholesky on rank-deficient PSD matrices (the LDLᵀ analogue), CUR / skeleton decompositions (A = C U⁺ R from a nonsingular leading block). Low priority; NLAlib's lu-decomposition covers the nonsingular case.",
+   "updated_at": "2026-10-11"
+  }
+ ],
+ "sources": []
+}

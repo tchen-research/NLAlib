@@ -7896,7 +7896,7 @@
   "kind":
   "theorem",
   "doc":
-  "**Uniqueness of the LU factorization** of an invertible matrix. Proof: `L'⁻¹ L = U' U⁻¹` is\nunit lower and upper triangular, hence the identity. Golub–Van Loan 2013, Thm 3.2.1;\nHorn–Johnson 2013, Cor. 3.5.5; Trefethen–Bau 1997, Lect. 20.\natlas: lu-decomposition ",
+  "**Uniqueness of the LU factorization** of an invertible matrix. Proof: `L'⁻¹ L = U' U⁻¹` is\nunit lower and upper triangular, hence the identity. Golub–Van Loan 2013, Thm 3.2.1;\nHorn–Johnson 2013, Cor. 3.5.6; Trefethen–Bau 1997, Lect. 20.\natlas: lu-decomposition ",
   "atlas_partial":
   [],
   "atlas":
@@ -59650,7 +59650,7 @@
   "module":
   "NLAlib.Polynomial.ChebyshevAliasing",
   "line":
-  85,
+  86,
   "kind":
   "theorem",
   "doc":
@@ -64470,7 +64470,7 @@
   "module":
   "NLAlib.Polynomial.ChebyshevAliasing",
   "line":
-  67,
+  68,
   "kind":
   "theorem",
   "doc":
@@ -72396,11 +72396,11 @@
   "kind":
   "theorem",
   "doc":
-  "The high-frequency and folded Chebyshev polynomials have equal values at every\ncanonical extrema node.\nSource: Trefethen, ATAP, Theorem 4.1 (`chebyshev-approx-analytic`, helper). ",
+  "The high-frequency and folded Chebyshev polynomials have equal values at every\ncanonical extrema node.\nSource: Trefethen, ATAP, Theorem 4.1 (`chebyshev-approx-analytic`, helper).\natlas: chebyshev-aliasing (partial) ",
   "atlas_partial":
-  [],
+  ["chebyshev-aliasing"],
   "atlas":
-  []},
+  ["chebyshev-aliasing"]},
  {"uses":
   [],
   "sorry":
@@ -73460,7 +73460,7 @@
   "kind":
   "theorem",
   "doc":
-  "**Existence of LU for invertible matrices**: an invertible `A` has an LU factorization iff\nall its leading principal minors are nonzero (and it is then unique, `IsLU.unique`).\nTrefethen–Bau 1997, Lect. 20; Golub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.5.\natlas: lu-decomposition ",
+  "**Existence of LU for invertible matrices**: an invertible `A` has an LU factorization iff\nall its leading principal minors are nonzero (and it is then unique, `IsLU.unique`).\nTrefethen–Bau 1997, Lect. 20; Golub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.6.\natlas: lu-decomposition ",
   "atlas_partial":
   [],
   "atlas":
@@ -73481,7 +73481,7 @@
   "kind":
   "theorem",
   "doc":
-  "**Existence of LU** when the leading principal minors of orders `1, …, n − 1` are nonzero (no\ncondition on `det A` itself); witnessed by `lu A` (`isLU_lu_of_forall_det_ne_zero`).\nGolub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.5.\natlas: lu-decomposition ",
+  "**Existence of LU** when the leading principal minors of orders `1, …, n − 1` are nonzero (no\ncondition on `det A` itself); witnessed by `lu A` (`isLU_lu_of_forall_det_ne_zero`).\nGolub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.6.\natlas: lu-decomposition ",
   "atlas_partial":
   [],
   "atlas":
@@ -91345,7 +91345,7 @@
   "module":
   "NLAlib.Polynomial.ChebyshevAliasing",
   "line":
-  72,
+  73,
   "kind":
   "theorem",
   "doc":
@@ -109820,7 +109820,7 @@
   "kind":
   "theorem",
   "doc":
-  "The rank is the number of nonzero singular values (Horn–Johnson 2013, §2.6.1).\nAtlas `svd`. ",
+  "The rank is the number of nonzero singular values (Horn–Johnson 2013, Thm 2.6.3).\nAtlas `svd`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -113739,7 +113739,7 @@
   "kind":
   "theorem",
   "doc":
-  "The nonzero singular values are exactly the first `rank A` ones\n(Horn–Johnson 2013, Thm 2.6.3 / §2.6.1). Atlas `svd`. ",
+  "The nonzero singular values are exactly the first `rank A` ones\n(Horn–Johnson 2013, Thm 2.6.3). Atlas `svd`. ",
   "atlas_partial":
   [],
   "atlas":

@@ -194,7 +194,7 @@ Deviation: the right side is `bestRankFrobSq k F`; for `A = FᵀF` this equals
 `∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*` (the atlas form), an identification not formalized here.
 Index types are `Fin` (Gaussian law convention). Atlas `nystrom-randomized` (uses
 `nystrom-structural`, `rsvd-expected-error`, `leverage-scores`).
-atlas: nystrom-randomized -/
+atlas: nystrom-randomized (partial) -/
 theorem integrable_and_integral_trace_sub_nystrom_le {n r k t : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {F : Matrix (Fin r) (Fin n) ℝ} (hA : A = Fᵀ * F)
     (hkt : k + 2 ≤ t) (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)

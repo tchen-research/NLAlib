@@ -42,7 +42,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 degree of the monic polynomial `μ_{A,b}` of least degree with `μ_{A,b}(A) b = 0`.
 Source: Saad (2003) [`saad03`], Def. before Prop 6.1; Liesen–Strakoš (2013) [`ls13`], §2.2.
 Deviation: real scalars only (the atlas entry allows any field).
-atlas: krylov-grade -/
+atlas: krylov-grade (partial) -/
 def krylovGrade (A : Matrix n n ℝ) (b : n → ℝ) : ℕ :=
   Module.finrank ℝ (Submodule.span ℝ (Set.range fun i : ℕ => (A ^ i) *ᵥ b))
 
@@ -198,7 +198,7 @@ theorem linearIndependent_pow_mulVec_iff_le_krylovGrade {q : ℕ} :
 
 /-- **Dimension of a Krylov space.** `dim K_q(A,b) = min q ν(A,b)`.
 Source: Saad (2003) [`saad03`], Prop 6.3. Atlas: `krylov-grade` (partial: dimension).
-atlas: krylov-grade -/
+atlas: krylov-grade (partial) -/
 theorem finrank_krylovSpace (q : ℕ) :
     Module.finrank ℝ (krylovSpace A b q) = min q (krylovGrade A b) := by
   have hle : ∀ q ≤ krylovGrade A b, Module.finrank ℝ (krylovSpace A b q) = q := fun q hq => by

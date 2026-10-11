@@ -1,0 +1,7 @@
+{
+  "NLAlib.SparseFock.HeavyBandsConcrete.l2_opNorm_transpose_real": "NLAlib.SparseFock.HeavyBandsConcrete.norm_transpose_real",
+  "NLAlib.l2_opNorm_add_sq_le_of_mul_conjTranspose_eq_zero": "NLAlib.norm_add_sq_le_of_mul_conjTranspose_eq_zero",
+  "NLAlib.l2_opNorm_le_one_of_isHermitian_of_isIdempotentElem": "NLAlib.norm_le_one_of_isHermitian_of_isIdempotentElem",
+  "NLAlib.l2_opNorm_mul_conjTranspose_right_of_conjTranspose_mul_eq_one": "NLAlib.norm_mul_conjTranspose_right_of_conjTranspose_mul_eq_one",
+  "NLAlib.l2_opNorm_mul_left_of_conjTranspose_mul_eq_one": "NLAlib.norm_mul_left_of_conjTranspose_mul_eq_one"
+}

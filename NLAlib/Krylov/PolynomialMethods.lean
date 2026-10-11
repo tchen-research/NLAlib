@@ -75,7 +75,8 @@ theorem polyIterate_sub_mem_krylovSpace (A : Matrix n n ℝ) (c x₀ : n → ℝ
 /-- **Error bound for a polynomial method, weighted norm.** For symmetric `A` with spectrum in
 `S`, a weight `g ≥ 0` on `S` and `|1 − x s(x)| ≤ M` on `S`,
 `‖x − x⋆‖²_{g(A)} ≤ M² ‖x₀ − x⋆‖²_{g(A)}`. Source: Saad (2003) [`saad03`], §12.1;
-Greenbaum (1997) [`greenbaum97`], §2.1. -/
+Greenbaum (1997) [`greenbaum97`], §2.1.
+atlas: polynomial-method-def -/
 theorem quadForm_polyIterate_sub_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {g s : ℝ[X]}
     {S : Set ℝ} {M : ℝ} (hspec : ∀ i, hA.eigenvalues i ∈ S) (hg : ∀ x ∈ S, 0 ≤ g.eval x)
     (hM : ∀ x ∈ S, |(1 - X * s).eval x| ≤ M) {c xs : n → ℝ} (hxs : A *ᵥ xs = c)

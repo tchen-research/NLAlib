@@ -1,3 +1,8 @@
+import NLAlib.Estimation.SLQAnalytic
+import NLAlib.Estimation.SLQAnalyticSteps
+import NLAlib.Estimation.SLQLipschitz
+import NLAlib.Estimation.SLQPositiveLowerBound
+import NLAlib.Estimation.SLQRademacher
 import NLAlib.Estimation.HutchinsonLaws
 import NLAlib.Estimation.Hutchinson
 import NLAlib.Estimation.HutchinsonTail

@@ -2219,7 +2219,47 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.GolubKahanState.casesOn.{u, u_3, u_4} {m : Type u_3} {n : Type u_4}\n  {motive : NLAlib.GolubKahanState m n → Sort u} (t : NLAlib.GolubKahanState m n)\n  (mk : (u : m → ℝ) → (v : n → ℝ) → (α β : ℝ) → motive { u := u, v := v, α := α, β := β }) : motive t",
+  "NLAlib.GolubKahanState.alpha.{u_3, u_4} {m : Type u_3} {n : Type u_4} (self : NLAlib.GolubKahanState m n) : ℝ",
+  "name":
+  "NLAlib.GolubKahanState.alpha",
+  "module":
+  "NLAlib.Krylov.Bidiagonalization",
+  "line":
+  224,
+  "kind":
+  "def",
+  "doc":
+  "The diagonal entry `α_j` of `B`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GolubKahanState"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.GolubKahanState.beta.{u_3, u_4} {m : Type u_3} {n : Type u_4} (self : NLAlib.GolubKahanState m n) : ℝ",
+  "name":
+  "NLAlib.GolubKahanState.beta",
+  "module":
+  "NLAlib.Krylov.Bidiagonalization",
+  "line":
+  226,
+  "kind":
+  "def",
+  "doc":
+  "The subdiagonal entry `β_j` of `B` (`β₁ = ‖b‖`). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GolubKahanState"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.GolubKahanState.casesOn.{u, u_3, u_4} {m : Type u_3} {n : Type u_4}\n  {motive : NLAlib.GolubKahanState m n → Sort u} (t : NLAlib.GolubKahanState m n)\n  (mk : (u : m → ℝ) → (v : n → ℝ) → (alpha beta : ℝ) → motive { u := u, v := v, alpha := alpha, beta := beta }) :\n  motive t",
   "name":
   "NLAlib.GolubKahanState.casesOn",
   "module":
@@ -2259,7 +2299,7 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.GolubKahanState.mk.{u_3, u_4} {m : Type u_3} {n : Type u_4} (u : m → ℝ) (v : n → ℝ) (α β : ℝ) :\n  NLAlib.GolubKahanState m n",
+  "NLAlib.GolubKahanState.mk.{u_3, u_4} {m : Type u_3} {n : Type u_4} (u : m → ℝ) (v : n → ℝ) (alpha beta : ℝ) :\n  NLAlib.GolubKahanState m n",
   "name":
   "NLAlib.GolubKahanState.mk",
   "module":
@@ -2279,7 +2319,7 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.GolubKahanState.mk.inj.{u_3, u_4} {m : Type u_3} {n : Type u_4} {u : m → ℝ} {v : n → ℝ} {α β : ℝ} {u✝ : m → ℝ}\n  {v✝ : n → ℝ} {α✝ β✝ : ℝ} :\n  { u := u, v := v, α := α, β := β } = { u := u✝, v := v✝, α := α✝, β := β✝ } → u = u✝ ∧ v = v✝ ∧ α = α✝ ∧ β = β✝",
+  "NLAlib.GolubKahanState.mk.inj.{u_3, u_4} {m : Type u_3} {n : Type u_4} {u : m → ℝ} {v : n → ℝ} {alpha beta : ℝ}\n  {u✝ : m → ℝ} {v✝ : n → ℝ} {alpha✝ beta✝ : ℝ} :\n  { u := u, v := v, alpha := alpha, beta := beta } = { u := u✝, v := v✝, alpha := alpha✝, beta := beta✝ } →\n    u = u✝ ∧ v = v✝ ∧ alpha = alpha✝ ∧ beta = beta✝",
   "name":
   "NLAlib.GolubKahanState.mk.inj",
   "module":
@@ -2299,7 +2339,7 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.GolubKahanState.mk.injEq.{u_3, u_4} {m : Type u_3} {n : Type u_4} (u : m → ℝ) (v : n → ℝ) (α β : ℝ) (u✝ : m → ℝ)\n  (v✝ : n → ℝ) (α✝ β✝ : ℝ) :\n  ({ u := u, v := v, α := α, β := β } = { u := u✝, v := v✝, α := α✝, β := β✝ }) = (u = u✝ ∧ v = v✝ ∧ α = α✝ ∧ β = β✝)",
+  "NLAlib.GolubKahanState.mk.injEq.{u_3, u_4} {m : Type u_3} {n : Type u_4} (u : m → ℝ) (v : n → ℝ) (alpha beta : ℝ)\n  (u✝ : m → ℝ) (v✝ : n → ℝ) (alpha✝ beta✝ : ℝ) :\n  ({ u := u, v := v, alpha := alpha, beta := beta } = { u := u✝, v := v✝, alpha := alpha✝, beta := beta✝ }) =\n    (u = u✝ ∧ v = v✝ ∧ alpha = alpha✝ ∧ beta = beta✝)",
   "name":
   "NLAlib.GolubKahanState.mk.injEq",
   "module":
@@ -2319,7 +2359,7 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.GolubKahanState.mk.noConfusion.{u, u_3, u_4} {m : Type u_3} {n : Type u_4} {P : Sort u} {u : m → ℝ} {v : n → ℝ}\n  {α β : ℝ} {u' : m → ℝ} {v' : n → ℝ} {α' β' : ℝ}\n  (eq : { u := u, v := v, α := α, β := β } = { u := u', v := v', α := α', β := β' })\n  (k : u ≍ u' → v ≍ v' → α = α' → β = β' → P) : P",
+  "NLAlib.GolubKahanState.mk.noConfusion.{u, u_3, u_4} {m : Type u_3} {n : Type u_4} {P : Sort u} {u : m → ℝ} {v : n → ℝ}\n  {alpha beta : ℝ} {u' : m → ℝ} {v' : n → ℝ} {alpha' beta' : ℝ}\n  (eq : { u := u, v := v, alpha := alpha, beta := beta } = { u := u', v := v', alpha := alpha', beta := beta' })\n  (k : u ≍ u' → v ≍ v' → alpha = alpha' → beta = beta' → P) : P",
   "name":
   "NLAlib.GolubKahanState.mk.noConfusion",
   "module":
@@ -2339,7 +2379,7 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.GolubKahanState.mk.sizeOf_spec.{u_3, u_4} {m : Type u_3} {n : Type u_4} [SizeOf m] [SizeOf n] (u : m → ℝ)\n  (v : n → ℝ) (α β : ℝ) : sizeOf { u := u, v := v, α := α, β := β } = 1 + sizeOf α + sizeOf β",
+  "NLAlib.GolubKahanState.mk.sizeOf_spec.{u_3, u_4} {m : Type u_3} {n : Type u_4} [SizeOf m] [SizeOf n] (u : m → ℝ)\n  (v : n → ℝ) (alpha beta : ℝ) :\n  sizeOf { u := u, v := v, alpha := alpha, beta := beta } = 1 + sizeOf alpha + sizeOf beta",
   "name":
   "NLAlib.GolubKahanState.mk.sizeOf_spec",
   "module":
@@ -2400,7 +2440,7 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.GolubKahanState.recOn.{u, u_3, u_4} {m : Type u_3} {n : Type u_4} {motive : NLAlib.GolubKahanState m n → Sort u}\n  (t : NLAlib.GolubKahanState m n)\n  (mk : (u : m → ℝ) → (v : n → ℝ) → (α β : ℝ) → motive { u := u, v := v, α := α, β := β }) : motive t",
+  "NLAlib.GolubKahanState.recOn.{u, u_3, u_4} {m : Type u_3} {n : Type u_4} {motive : NLAlib.GolubKahanState m n → Sort u}\n  (t : NLAlib.GolubKahanState m n)\n  (mk : (u : m → ℝ) → (v : n → ℝ) → (alpha beta : ℝ) → motive { u := u, v := v, alpha := alpha, beta := beta }) :\n  motive t",
   "name":
   "NLAlib.GolubKahanState.recOn",
   "module":
@@ -2451,46 +2491,6 @@
   "def",
   "doc":
   "The right vector `v_j`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.GolubKahanState"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.GolubKahanState.α.{u_3, u_4} {m : Type u_3} {n : Type u_4} (self : NLAlib.GolubKahanState m n) : ℝ",
-  "name":
-  "NLAlib.GolubKahanState.α",
-  "module":
-  "NLAlib.Krylov.Bidiagonalization",
-  "line":
-  224,
-  "kind":
-  "def",
-  "doc":
-  "The diagonal entry `α_j` of `B`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.GolubKahanState"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.GolubKahanState.β.{u_3, u_4} {m : Type u_3} {n : Type u_4} (self : NLAlib.GolubKahanState m n) : ℝ",
-  "name":
-  "NLAlib.GolubKahanState.β",
-  "module":
-  "NLAlib.Krylov.Bidiagonalization",
-  "line":
-  226,
-  "kind":
-  "def",
-  "doc":
-  "The subdiagonal entry `β_j` of `B` (`β₁ = ‖b‖`). ",
   "atlas_partial":
   [],
   "atlas":
@@ -17576,16 +17576,16 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.GolubKahanState.u",
+  ["NLAlib.GolubKahanState.alpha",
+   "NLAlib.GolubKahanState.beta",
+   "NLAlib.GolubKahanState.u",
    "NLAlib.GolubKahanState.v",
-   "NLAlib.GolubKahanState.α",
-   "NLAlib.GolubKahanState.β",
    "NLAlib.GolubKahanSucceeds",
    "NLAlib.golubKahanRecurrence"],
   "sorry":
   true,
   "signature":
-  "NLAlib.dotProduct_golubKahan_eq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [DecidableEq m] [Fintype n]\n  [DecidableEq n] {A : Matrix m n ℝ} {b : m → ℝ} {k : ℕ} (h : NLAlib.GolubKahanSucceeds A b k) :\n  (∀ j ≤ k,\n      (NLAlib.golubKahanRecurrence A b j).u ⬝ᵥ A.mulVec (NLAlib.golubKahanRecurrence A b j).v =\n        (NLAlib.golubKahanRecurrence A b j).α) ∧\n    ∀ j < k,\n      (NLAlib.golubKahanRecurrence A b (j + 1)).u ⬝ᵥ A.mulVec (NLAlib.golubKahanRecurrence A b j).v =\n        (NLAlib.golubKahanRecurrence A b (j + 1)).β",
+  "NLAlib.dotProduct_golubKahan_eq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [DecidableEq m] [Fintype n]\n  [DecidableEq n] {A : Matrix m n ℝ} {b : m → ℝ} {k : ℕ} (h : NLAlib.GolubKahanSucceeds A b k) :\n  (∀ j ≤ k,\n      (NLAlib.golubKahanRecurrence A b j).u ⬝ᵥ A.mulVec (NLAlib.golubKahanRecurrence A b j).v =\n        (NLAlib.golubKahanRecurrence A b j).alpha) ∧\n    ∀ j < k,\n      (NLAlib.golubKahanRecurrence A b (j + 1)).u ⬝ᵥ A.mulVec (NLAlib.golubKahanRecurrence A b j).v =\n        (NLAlib.golubKahanRecurrence A b (j + 1)).beta",
   "name":
   "NLAlib.dotProduct_golubKahan_eq",
   "module":

@@ -221,9 +221,9 @@ structure GolubKahanState (m n : Type*) where
   /-- The right vector `v_j`. -/
   v : n → ℝ
   /-- The diagonal entry `α_j` of `B`. -/
-  α : ℝ
+  alpha : ℝ
   /-- The subdiagonal entry `β_j` of `B` (`β₁ = ‖b‖`). -/
-  β : ℝ
+  beta : ℝ
 
 omit [DecidableEq m] [DecidableEq n] in
 /-- The first state: `β₁ = ‖b‖`, `u₁ = b/β₁`, `α₁ = ‖Aᵀu₁‖`, `v₁ = Aᵀu₁/α₁` (junk `0` on
@@ -241,7 +241,7 @@ omit [DecidableEq m] [DecidableEq n] in
 norms (junk `0` on breakdown). Source: Golub–Van Loan (2013) [`gvl13`], Alg. 10.4.1. Helper for
 `golub-kahan-bidiagonalization`. -/
 def golubKahanStep (A : Matrix m n ℝ) (s : GolubKahanState m n) : GolubKahanState m n :=
-  let p := A *ᵥ s.v - s.α • s.u
+  let p := A *ᵥ s.v - s.alpha • s.u
   let β := √(p ⬝ᵥ p)
   let u := β⁻¹ • p
   let r := Aᵀ *ᵥ u - β • s.v
@@ -261,7 +261,7 @@ omit [DecidableEq m] [DecidableEq n] in
 Source: Golub–Van Loan (2013) [`gvl13`], §10.4.1.
 atlas: golub-kahan-recurrence -/
 def GolubKahanSucceeds (A : Matrix m n ℝ) (b : m → ℝ) (k : ℕ) : Prop :=
-  ∀ j ≤ k, (golubKahanRecurrence A b j).α ≠ 0 ∧ (golubKahanRecurrence A b j).β ≠ 0
+  ∀ j ≤ k, (golubKahanRecurrence A b j).alpha ≠ 0 ∧ (golubKahanRecurrence A b j).beta ≠ 0
 
 omit [DecidableEq m] [DecidableEq n] in
 /-- The first `q` left vectors as a matrix `[u₁ … u_q]`. Helper for
@@ -321,9 +321,9 @@ atlas: golub-kahan-recurrence -/
 theorem dotProduct_golubKahan_eq {A : Matrix m n ℝ} {b : m → ℝ} {k : ℕ}
     (h : GolubKahanSucceeds A b k) :
     (∀ j ≤ k, (golubKahanRecurrence A b j).u ⬝ᵥ (A *ᵥ (golubKahanRecurrence A b j).v) =
-      (golubKahanRecurrence A b j).α) ∧
+      (golubKahanRecurrence A b j).alpha) ∧
     (∀ j < k, (golubKahanRecurrence A b (j + 1)).u ⬝ᵥ (A *ᵥ (golubKahanRecurrence A b j).v) =
-      (golubKahanRecurrence A b (j + 1)).β) := by
+      (golubKahanRecurrence A b (j + 1)).beta) := by
   sorry
 
 end NLAlib

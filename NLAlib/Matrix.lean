@@ -4,6 +4,14 @@ import NLAlib.Matrix.PSDDuality
 import NLAlib.Matrix.SylvesterQualitative
 import NLAlib.Matrix.EigenvectorPairing
 import NLAlib.Matrix.DeterminantDerivative
+import NLAlib.Matrix.MapConditioning
+import NLAlib.Matrix.RankOneEigenvalue
+import NLAlib.Matrix.PolarDecomposition
+import NLAlib.Matrix.NearestPolar
+import NLAlib.Matrix.PolarToolkit
+import NLAlib.Matrix.EigenvalueOrder
+import NLAlib.Matrix.LowRankInterlacing
+import NLAlib.Matrix.NormalSpectral
 import NLAlib.Matrix.WedinFiniteIndex
 import NLAlib.Matrix.LeastSquaresCoordinateBounds
 import NLAlib.Matrix.LeastSquaresPurePerturbation

@@ -1147,6 +1147,28 @@
   "sorry":
   false,
   "signature":
+  "Polynomial.annIdealGenerator.{u_1, u_2} (𝕜 : Type u_1) {A : Type u_2} [Field 𝕜] [Ring A] [Algebra 𝕜 A] (a : A) :\n  Polynomial 𝕜",
+  "name":
+  "Polynomial.annIdealGenerator",
+  "module":
+  "Mathlib.LinearAlgebra.AnnihilatingPolynomial",
+  "line":
+  72,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "`annIdealGenerator 𝕜 a` is the monic generator of `annIdeal 𝕜 a`\nif one exists, otherwise `0`.\n\nSince `𝕜[X]` is a principal ideal domain there is a polynomial `g` such that\n`span 𝕜 {g} = annIdeal a`. This picks some generator.\nWe prefer the monic generator of the ideal. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "minpoly.{u_1, u_2} (A : Type u_1) {B : Type u_2} [CommRing A] [Ring B] [Algebra A B] (x : B) : Polynomial A",
   "name":
   "minpoly",
@@ -3677,6 +3699,94 @@
   "sorry":
   false,
   "signature":
+  "HasFDerivAt.comp.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {E : Type u_2} [NormedAddCommGroup E]\n  [NormedSpace 𝕜 E] {F : Type u_3} [NormedAddCommGroup F] [NormedSpace 𝕜 F] {G : Type u_4} [NormedAddCommGroup G]\n  [NormedSpace 𝕜 G] {f : E → F} {f' : E →L[𝕜] F} (x : E) {g : F → G} {g' : F →L[𝕜] G} (hg : HasFDerivAt g g' (f x))\n  (hf : HasFDerivAt f f' x) : HasFDerivAt (g ∘ f) (g' ∘SL f') x",
+  "name":
+  "HasFDerivAt.comp",
+  "module":
+  "Mathlib.Analysis.Calculus.FDeriv.Comp",
+  "line":
+  103,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The chain rule. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "ContinuousLinearMap.fderiv.{u_1, u_2, u_3} {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {E : Type u_2} [AddCommGroup E]\n  [_root_.Module 𝕜 E] [TopologicalSpace E] {F : Type u_3} [AddCommGroup F] [_root_.Module 𝕜 F] [TopologicalSpace F]\n  (f : E →L[𝕜] F) {x : E} [ContinuousAdd E] [ContinuousSMul 𝕜 E] [ContinuousAdd F] [ContinuousSMul 𝕜 F] [T2Space F] :\n  fderiv 𝕜 (⇑f) x = f",
+  "name":
+  "ContinuousLinearMap.fderiv",
+  "module":
+  "Mathlib.Analysis.Calculus.FDeriv.Linear",
+  "line":
+  78,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.toEuclideanLin.{u_3, u_7, u_8} {𝕜 : Type u_3} [RCLike 𝕜] {m : Type u_7} {n : Type u_8} [Fintype n]\n  [DecidableEq n] : Matrix m n 𝕜 ≃ₗ[𝕜] EuclideanSpace 𝕜 n →ₗ[𝕜] EuclideanSpace 𝕜 m",
+  "name":
+  "Matrix.toEuclideanLin",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.PiL2",
+  "line":
+  1242,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "A shorthand for `Matrix.toLpLin 2 2`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "norm_deriv_eq_norm_fderiv.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜] {F : Type v} [NormedAddCommGroup F]\n  [NormedSpace 𝕜 F] {f : 𝕜 → F} {x : 𝕜} : ‖deriv f x‖ = ‖fderiv 𝕜 f x‖",
+  "name":
+  "norm_deriv_eq_norm_fderiv",
+  "module":
+  "Mathlib.Analysis.Calculus.Deriv.Basic",
+  "line":
+  470,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.diagonal.{v, u_3} {n : Type u_3} {α : Type v} [DecidableEq n] [Zero α] (d : n → α) : Matrix n n α",
   "name":
   "Matrix.diagonal",
@@ -3699,6 +3809,160 @@
   "sorry":
   false,
   "signature":
+  "Module.End.exists_eigenvalue.{u_1, u_2} {K : Type u_1} {V : Type u_2} [Field K] [AddCommGroup V] [_root_.Module K V]\n  [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : Module.End K V) : ∃ c, f.HasEigenvalue c",
+  "name":
+  "Module.End.exists_eigenvalue",
+  "module":
+  "Mathlib.LinearAlgebra.Eigenspace.Triangularizable",
+  "line":
+  61,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "In finite dimensions, over an algebraically closed field, every linear endomorphism has an\neigenvalue. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.End.iSup_maxGenEigenspace_eq_top.{u_1, u_2} {K : Type u_1} {V : Type u_2} [Field K] [AddCommGroup V]\n  [_root_.Module K V] [IsAlgClosed K] [FiniteDimensional K V] (f : Module.End K V) : ⨆ μ, f.maxGenEigenspace μ = ⊤",
+  "name":
+  "Module.End.iSup_maxGenEigenspace_eq_top",
+  "module":
+  "Mathlib.LinearAlgebra.Eigenspace.Triangularizable",
+  "line":
+  73,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "In finite dimensions, over an algebraically closed field, the generalized eigenspaces of any\nlinear endomorphism span the whole space. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "LinearMap.IsSymmetric.directSum_isInternal_of_commute.{u_1, u_2} {𝕜 : Type u_1} {E : Type u_2} [RCLike 𝕜]\n  [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {A B : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] (hA : A.IsSymmetric)\n  (hB : B.IsSymmetric) (hAB : Commute A B) :\n  DirectSum.IsInternal fun i => Module.End.eigenspace A i.2 ⊓ Module.End.eigenspace B i.1",
+  "name":
+  "LinearMap.IsSymmetric.directSum_isInternal_of_commute",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.JointEigenspace",
+  "line":
+  107,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "Given a commuting pair of symmetric linear operators on a finite-dimensional inner product\nspace, the space decomposes as an internal direct sum of simultaneous eigenspaces of these\noperators. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "LinearMap.IsSymmetric.orthogonalFamily_eigenspace_inf_eigenspace.{u_1, u_2} {𝕜 : Type u_1} {E : Type u_2} [RCLike 𝕜]\n  [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {A B : E →ₗ[𝕜] E} (hA : A.IsSymmetric) (hB : B.IsSymmetric) :\n  OrthogonalFamily 𝕜 (fun i => ↥(Module.End.eigenspace A i.2 ⊓ Module.End.eigenspace B i.1)) fun i =>\n    (Module.End.eigenspace A i.2 ⊓ Module.End.eigenspace B i.1).subtypeₗᵢ",
+  "name":
+  "LinearMap.IsSymmetric.orthogonalFamily_eigenspace_inf_eigenspace",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.JointEigenspace",
+  "line":
+  59,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The joint eigenspaces of a pair of symmetric operators form an\n`OrthogonalFamily`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Commute.realPart_imaginaryPart.{u_1} {A : Type u_1} [NonUnitalNonAssocRing A] [StarRing A] [_root_.Module ℂ A]\n  [IsScalarTower ℂ A A] [SMulCommClass ℂ A A] [StarModule ℂ A] (x : A) [IsStarNormal x] :\n  Commute ↑(realPart x) ↑(imaginaryPart x)",
+  "name":
+  "Commute.realPart_imaginaryPart",
+  "module":
+  "Mathlib.LinearAlgebra.Complex.Module",
+  "line":
+  592,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "DirectSum.IsInternal.subordinateOrthonormalBasis.{u_7, u_8, u_9} {ι : Type u_7} {𝕜 : Type u_8} [RCLike 𝕜] {E : Type u_9}\n  [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [Fintype ι] [FiniteDimensional 𝕜 E] {n : ℕ}\n  (hn : Module.finrank 𝕜 E = n) [DecidableEq ι] {V : ι → Submodule 𝕜 E} (hV : DirectSum.IsInternal V)\n  (hV' : OrthogonalFamily 𝕜 (fun i => ↥(V i)) fun i => (V i).subtypeₗᵢ) : OrthonormalBasis (Fin n) 𝕜 E",
+  "name":
+  "DirectSum.IsInternal.subordinateOrthonormalBasis",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.PiL2",
+  "line":
+  1107,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "An `n`-dimensional `InnerProductSpace` equipped with a decomposition as an internal direct\nsum has an orthonormal basis indexed by `Fin n` and subordinate to that direct sum. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "SemiconjBy.star_right.{u_2} {A : Type u_2} [NonUnitalCStarAlgebra A] {a b x : A} (ha : IsStarNormal a)\n  (hb : IsStarNormal b) (h : SemiconjBy x a b) : SemiconjBy x (star a) (star b)",
+  "name":
+  "SemiconjBy.star_right",
+  "module":
+  "Mathlib.Analysis.CStarAlgebra.Fuglede",
+  "line":
+  101,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "**Fuglede–Putnam–Rosenblum**: If `a` and `b` are normal elements in a C⋆-algebra `A` which\nare interwined by `x`, then `star a` and `star b` are also intertwined by `x`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Module.End.eigenvectors_linearIndependent.{v, w} {R : Type v} {M : Type w} [CommRing R] [AddCommGroup M]\n  [_root_.Module R M] [IsDomain R] [Module.IsTorsionFree R M] (f : Module.End R M) (μs : Set R) (xs : ↑μs → M)\n  (h_eigenvec : ∀ (μ : ↑μs), f.HasEigenvector (↑μ) (xs μ)) : LinearIndependent (ι := ↑μs) R xs",
   "name":
   "Module.End.eigenvectors_linearIndependent",
@@ -3712,6 +3976,94 @@
   "theorem",
   "doc":
   "Eigenvectors corresponding to distinct eigenvalues of a linear operator are linearly\nindependent. (Lemma 5.11 of [axler2024])\n\nWe use the eigenvalues as indexing set to ensure that there is only one eigenvector for each\neigenvalue in the image of `xs`.\nSee `Module.End.eigenvectors_linearIndependent'` for an indexed variant. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.End.IsSemisimple.{u_1, u_2} {R : Type u_1} {M : Type u_2} [CommRing R] [AddCommGroup M] [_root_.Module R M]\n  (f : Module.End R M) : Prop",
+  "name":
+  "Module.End.IsSemisimple",
+  "module":
+  "Mathlib.LinearAlgebra.Semisimple",
+  "line":
+  53,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "A linear endomorphism of an `R`-module `M` is called *semisimple* if the induced `R[X]`-module\nstructure on `M` is semisimple. This is equivalent to saying that every `f`-invariant `R`-submodule\nof `M` has an `f`-invariant complement: see `Module.End.isSemisimple_iff`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.End.isSemisimple_of_squarefree_aeval_eq_zero.{u_2, u_3} {M : Type u_2} [AddCommGroup M] {K : Type u_3} [Field K]\n  [_root_.Module K M] {f : Module.End K M} {p : Polynomial K} (hp : Squarefree p) (hpf : (Polynomial.aeval f) p = 0) :\n  f.IsSemisimple",
+  "name":
+  "Module.End.isSemisimple_of_squarefree_aeval_eq_zero",
+  "module":
+  "Mathlib.LinearAlgebra.Semisimple",
+  "line":
+  218,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "LinearMap.IsSymmetric.directSum_isInternal_of_pairwise_commute.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2}\n  {n : Type u_3} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {T : n → Module.End 𝕜 E}\n  [FiniteDimensional 𝕜 E] [DecidableEq (n → 𝕜)] (hT : ∀ (i : n), LinearMap.IsSymmetric (T i))\n  (hC : Pairwise (Function.onFun Commute T)) : DirectSum.IsInternal fun α => ⨅ j, (T j).eigenspace (α j)",
+  "name":
+  "LinearMap.IsSymmetric.directSum_isInternal_of_pairwise_commute",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.JointEigenspace",
+  "line":
+  134,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "In finite dimensions, given a commuting family of symmetric linear operators, the inner\nproduct space on which they act decomposes as an internal direct sum of joint eigenspaces. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.End.iSup_iInf_maxGenEigenspace_eq_top_of_forall_mapsTo.{u_1, u_3, u_4} {ι : Type u_1} {K : Type u_3}\n  {M : Type u_4} [Field K] [AddCommGroup M] [_root_.Module K M] [FiniteDimensional K M] (f : ι → Module.End K M)\n  (h : ∀ (i j : ι) (φ : K), Set.MapsTo ⇑(f i) ↑((f j).maxGenEigenspace φ) ↑((f j).maxGenEigenspace φ))\n  (h' : ∀ (i : ι), ⨆ μ, (f i).maxGenEigenspace μ = ⊤) : ⨆ χ, ⨅ i, (f i).maxGenEigenspace (χ i) = ⊤",
+  "name":
+  "Module.End.iSup_iInf_maxGenEigenspace_eq_top_of_forall_mapsTo",
+  "module":
+  "Mathlib.LinearAlgebra.Eigenspace.Pi",
+  "line":
+  145,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "Given a family of endomorphisms `i ↦ f i` which are compatible in the sense that every maximal\ngeneralised eigenspace of `f i` is invariant w.r.t. `f j`, if each `f i` is triangularizable, the\nfamily is simultaneously triangularizable. ",
   "atlas_partial":
   [],
   "atlas":
@@ -3985,6 +4337,72 @@
   "sorry":
   false,
   "signature":
+  "LinearMap.finrank_range_add_finrank_ker.{u, v, v'} {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V]\n  [_root_.Module K V] {V₂ : Type v'} [AddCommGroup V₂] [_root_.Module K V₂] [FiniteDimensional K V] (f : V →ₗ[K] V₂) :\n  Module.finrank K ↥f.range + Module.finrank K ↥f.ker = Module.finrank K V",
+  "name":
+  "LinearMap.finrank_range_add_finrank_ker",
+  "module":
+  "Mathlib.LinearAlgebra.FiniteDimensional.Lemmas",
+  "line":
+  171,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "rank-nullity theorem : the dimensions of the kernel and the range of a linear map add up to\nthe dimension of the source space. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Submodule.eq_of_le_of_finrank_eq.{u, v} {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V] [_root_.Module K V]\n  {S₁ S₂ : Submodule K V} [FiniteDimensional K ↥S₂] (hle : S₁ ≤ S₂) (hd : Module.finrank K ↥S₁ = Module.finrank K ↥S₂) :\n  S₁ = S₂",
+  "name":
+  "Submodule.eq_of_le_of_finrank_eq",
+  "module":
+  "Mathlib.LinearAlgebra.FiniteDimensional.Basic",
+  "line":
+  259,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "If a submodule is contained in a finite-dimensional\nsubmodule with the same dimension, they are equal. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.rank_eq_finrank_span_cols.{um, un, uR} {m : Type um} {n : Type un} {R : Type uR} [Fintype n] [CommSemiring R]\n  (A : Matrix m n R) : A.rank = Module.finrank R ↥(Submodule.span R (Set.range A.col))",
+  "name":
+  "Matrix.rank_eq_finrank_span_cols",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Rank",
+  "line":
+  397,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The rank of a matrix is the rank of the space spanned by its columns. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.invOf_fromBlocks₁₁_eq.{u_2, u_3, u_4} {m : Type u_2} {n : Type u_3} {α : Type u_4} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] [CommRing α] (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α)\n  (D : Matrix n n α) [Invertible A] [Invertible (D - C * ⅟A * B)] [Invertible (Matrix.fromBlocks A B C D)] :\n  ⅟(Matrix.fromBlocks A B C D) =\n    Matrix.fromBlocks (⅟A + ⅟A * B * ⅟(D - C * ⅟A * B) * C * ⅟A) (-(⅟A * B * ⅟(D - C * ⅟A * B)))\n      (-(⅟(D - C * ⅟A * B) * C * ⅟A)) ⅟(D - C * ⅟A * B)",
   "name":
   "Matrix.invOf_fromBlocks₁₁_eq",
@@ -4029,6 +4447,116 @@
   "sorry":
   false,
   "signature":
+  "ContinuousMultilinearMap.hasFDerivAt.{v, u_1, u_2, u_3} {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {F : Type v}\n  [NormedAddCommGroup F] [NormedSpace 𝕜 F] {ι : Type u_2} {E : ι → Type u_3} [(i : ι) → NormedAddCommGroup (E i)]\n  [(i : ι) → NormedSpace 𝕜 (E i)] [Fintype ι] (f : ContinuousMultilinearMap 𝕜 E F) (x : (i : ι) → E i) [DecidableEq ι] :\n  HasFDerivAt (⇑f) (f.linearDeriv x) x",
+  "name":
+  "ContinuousMultilinearMap.hasFDerivAt",
+  "module":
+  "Mathlib.Analysis.Calculus.FDeriv.Analytic",
+  "line":
+  633,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "ContinuousMultilinearMap.linearDeriv_apply.{u, v, w₁, w₂} {R : Type u} {ι : Type v} {M₁ : ι → Type w₁} {M₂ : Type w₂}\n  [Semiring R] [(i : ι) → AddCommMonoid (M₁ i)] [AddCommMonoid M₂] [(i : ι) → _root_.Module R (M₁ i)]\n  [_root_.Module R M₂] [(i : ι) → TopologicalSpace (M₁ i)] [TopologicalSpace M₂] (f : ContinuousMultilinearMap R M₁ M₂)\n  [ContinuousAdd M₂] [DecidableEq ι] [Fintype ι] (x y : (i : ι) → M₁ i) :\n  (f.linearDeriv x) y = ∑ i, f (Function.update x i (y i))",
+  "name":
+  "ContinuousMultilinearMap.linearDeriv_apply",
+  "module":
+  "Mathlib.Topology.Algebra.Module.Multilinear.Basic",
+  "line":
+  392,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.cramer_eq_adjugate_mulVec.{v, w} {n : Type v} {α : Type w} [DecidableEq n] [Fintype n] [CommRing α]\n  (A : Matrix n n α) (b : n → α) : A.cramer b = A.adjugate.mulVec b",
+  "name":
+  "Matrix.cramer_eq_adjugate_mulVec",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Adjugate",
+  "line":
+  243,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "Since the map `b ↦ cramer A b` is linear in `b`, it must be multiplication by some matrix. This\nmatrix is `A.adjugate`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.adjugate_fin_succ_eq_det_submatrix.{w} {α : Type w} [CommRing α] {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) α)\n  (i j : Fin n.succ) : A.adjugate i j = (-1) ^ (↑j + ↑i) * (A.submatrix j.succAbove i.succAbove).det",
+  "name":
+  "Matrix.adjugate_fin_succ_eq_det_submatrix",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Adjugate",
+  "line":
+  367,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "HasDerivAt.log {f : ℝ → ℝ} {x f' : ℝ} (hf : HasDerivAt f f' x) (hx : f x ≠ 0) :\n  HasDerivAt (fun y => Real.log (f y)) (f' / f x) x",
+  "name":
+  "HasDerivAt.log",
+  "module":
+  "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+  "line":
+  112,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.rank.{um, un, uR} {m : Type um} {n : Type un} {R : Type uR} [Fintype n] [CommSemiring R] (A : Matrix m n R) : ℕ",
   "name":
   "Matrix.rank",
@@ -4042,6 +4570,94 @@
   "def",
   "doc":
   "The rank of a matrix is the rank of its image. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Submodule.finrank_sup_add_finrank_inf_eq.{u, v} {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V]\n  [_root_.Module K V] (s t : Submodule K V) [FiniteDimensional K ↥s] [FiniteDimensional K ↥t] :\n  Module.finrank K ↥(s ⊔ t) + Module.finrank K ↥(s ⊓ t) = Module.finrank K ↥s + Module.finrank K ↥t",
+  "name":
+  "Submodule.finrank_sup_add_finrank_inf_eq",
+  "module":
+  "Mathlib.LinearAlgebra.FiniteDimensional.Lemmas",
+  "line":
+  52,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The sum of the dimensions of s + t and s ∩ t is the sum of the dimensions of s and t ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.finrank_pos_iff_exists_ne_zero.{u_1, u_2} {R : Type u_1} {M : Type u_2} [Ring R] [AddCommGroup M]\n  [_root_.Module R M] [StrongRankCondition R] [Module.Finite R M] [IsDomain R] [Module.IsTorsionFree R M] :\n  0 < Module.finrank R M ↔ ∃ x, x ≠ 0",
+  "name":
+  "Module.finrank_pos_iff_exists_ne_zero",
+  "module":
+  "Mathlib.LinearAlgebra.Dimension.Finite",
+  "line":
+  382,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "A finite rank torsion-free module has positive `finrank` iff it has a nonzero element. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.rank_vecMulVec_le.{um, un, uR} {m : Type um} {n : Type un} {R : Type uR} [Fintype n] [CommSemiring R]\n  [StrongRankCondition R] (w : m → R) (v : n → R) : (Matrix.vecMulVec w v).rank ≤ 1",
+  "name":
+  "Matrix.rank_vecMulVec_le",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Rank",
+  "line":
+  199,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.rank_smul_of_mem_nonZeroDivisors.{um, un, u_1} {m : Type um} {n : Type un} [Fintype n] {R : Type u_1}\n  [CommRing R] {c : R} (B : Matrix m n R) (hc : c ∈ nonZeroDivisors R) : (c • B).rank = B.rank",
+  "name":
+  "Matrix.rank_smul_of_mem_nonZeroDivisors",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Rank",
+  "line":
+  227,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
   "atlas_partial":
   [],
   "atlas":
@@ -4249,6 +4865,72 @@
   "sorry":
   false,
   "signature":
+  "CFC.sqrt_nonneg.{u_1} {A : Type u_1} [PartialOrder A] [NonUnitalRing A] [TopologicalSpace A] [StarRing A]\n  [_root_.Module ℝ A] [SMulCommClass ℝ A A] [IsScalarTower ℝ A A] [StarOrderedRing A]\n  [NonUnitalContinuousFunctionalCalculus ℝ A IsSelfAdjoint] [NonnegSpectrumClass ℝ A] (a : A) : 0 ≤ CFC.sqrt a",
+  "name":
+  "CFC.sqrt_nonneg",
+  "module":
+  "Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic",
+  "line":
+  238,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "CFC.sqrt_mul_sqrt_self.{u_1} {A : Type u_1} [PartialOrder A] [NonUnitalRing A] [TopologicalSpace A] [StarRing A]\n  [_root_.Module ℝ A] [SMulCommClass ℝ A A] [IsScalarTower ℝ A A] [StarOrderedRing A]\n  [NonUnitalContinuousFunctionalCalculus ℝ A IsSelfAdjoint] [NonnegSpectrumClass ℝ A] [IsSemitopologicalRing A]\n  [T2Space A] (a : A) (ha : 0 ≤ a := by cfc_tac) : CFC.sqrt a * CFC.sqrt a = a",
+  "name":
+  "CFC.sqrt_mul_sqrt_self",
+  "module":
+  "Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic",
+  "line":
+  265,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.rank_transpose_mul_self.{um, un, uR} {m : Type um} {n : Type un} {R : Type uR} [Fintype n] [Fintype m] [Field R]\n  [LinearOrder R] [IsStrictOrderedRing R] (A : Matrix m n R) : (A.transpose * A).rank = A.rank",
+  "name":
+  "Matrix.rank_transpose_mul_self",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Rank",
+  "line":
+  544,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.PosDef.inv.{u_2, u_5} {n : Type u_2} [Fintype n] {K : Type u_5} [Field K] [PartialOrder K] [StarRing K]\n  [DecidableEq n] {M : Matrix n n K} (hM : M.PosDef) : M⁻¹.PosDef",
   "name":
   "Matrix.PosDef.inv",
@@ -4284,6 +4966,72 @@
   "theorem",
   "doc":
   "[**Schur product theorem**][schur1911] (positive semidefinite version): the Hadamard (entrywise)\nproduct of positive semidefinite matrices is positive semidefinite. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.trace_conjTranspose_mul_self_eq_zero_iff.{u_1, u_2, u_5} {m : Type u_1} {n : Type u_2} [Fintype n] [Fintype m]\n  {R : Type u_5} [PartialOrder R] [NonUnitalRing R] [StarRing R] [StarOrderedRing R] [NoZeroDivisors R]\n  {A : Matrix m n R} : (A.conjTranspose * A).trace = 0 ↔ A = 0",
+  "name":
+  "Matrix.trace_conjTranspose_mul_self_eq_zero_iff",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.PosDef",
+  "line":
+  375,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.posSemidef_vecMulVec_self_star.{u_2, u_3} {n : Type u_2} {R : Type u_3} [Ring R] [PartialOrder R] [StarRing R]\n  [Finite n] [StarOrderedRing R] (a : n → R) : (Matrix.vecMulVec a (star a)).PosSemidef",
+  "name":
+  "Matrix.posSemidef_vecMulVec_self_star",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.PosDef",
+  "line":
+  411,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The matrix `vecMulVec a (star a)` is always positive semi-definite. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosSemidef.of_dotProduct_mulVec_nonneg.{u_2, u_3} {n : Type u_2} {R : Type u_3} [Ring R] [PartialOrder R]\n  [StarRing R] [Fintype n] {M : Matrix n n R} (hM1 : M.IsHermitian) (hM2 : ∀ (x : n → R), 0 ≤ star x ⬝ᵥ M.mulVec x) :\n  M.PosSemidef",
+  "name":
+  "Matrix.PosSemidef.of_dotProduct_mulVec_nonneg",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.PosDef",
+  "line":
+  308,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
   "atlas_partial":
   [],
   "atlas":

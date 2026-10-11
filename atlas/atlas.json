@@ -26601,16 +26601,20 @@
    "aliases": [
     "condition number of a function",
     "relative condition matrix",
-    "mollified condition number"
+    "mollified condition number",
+    "normwise relative conditioning",
+    "componentwise relative conditioning",
+    "diagonal-scaled Jacobian"
    ],
    "area": "matrix-conditioning",
    "kind": "definition",
-   "status": "planned",
-   "informal": "For $f:\\mathbb R^m\\to\\mathbb R^n$ Fréchet differentiable at $x$: $\\operatorname{cond}_{abs}f(x)=\\|Df(x)\\|$; componentwise relative condition matrix $C_{\\nu\\mu}=x_\\mu\\partial_\\mu f_\\nu(x)/f_\\nu(x)$ and $\\operatorname{cond}_{rel}f(x)=\\|C(x)\\|$; scalar cases $|f'(x)|$ and $|xf'(x)/f(x)|$.",
+   "status": "proved",
+   "informal": "For $f:\\mathbb R^m\\to\\mathbb R^n$ Fréchet differentiable at $x$: $\\operatorname{cond}_{abs}f(x)=\\|Df(x)\\|$. With nonzero input/output coordinates, componentwise relative conditioning is $\\|D_{f(x)}^{-1}Df(x)D_x\\|$, with entries $C_{\\nu\\mu}=x_\\mu\\partial_\\mu f_\\nu(x)/f_\\nu(x)$. Normwise relative conditioning is $\\|Df(x)\\|\\|x\\|/\\|f(x)\\|$ for nonzero input/output norms. Scalar formulas are $|f'(x)|$ and $|xf'(x)/f(x)|$. For an invertible linear map, only the normwise relative quantity is bounded by $\\kappa(A)$; the componentwise relative quantity has the separate bound $\\|D_{f(x)}^{-1}\\|\\|Df(x)\\|\\|D_x\\|$.",
    "hypotheses": [
-    "$f$ Fréchet differentiable at $x$; nonzero components for the relative version"
+    "$f$ Fréchet differentiable at $x$; Euclidean norms for the matrix coordinate formulas",
+    "nonzero input/output coordinates for componentwise relative interpretation; nonzero input/output norms for normwise relative interpretation"
    ],
-   "conclusion": "definitions, with $\\operatorname{cond}_{rel}$ of $x\\mapsto Ax$ bounded by $\\kappa(A)$-type quantities.",
+   "conclusion": "absolute, normwise relative and componentwise relative condition definitions, scalar formulas, the normwise linear-map bound by $\\kappa(A)$, and the componentwise diagonal-scaling bound",
    "sources": [
     {
      "source": "gautschi04",
@@ -26630,11 +26634,28 @@
     }
    ],
    "depends_on": [
-    "condition-number-def"
+    "condition-number-def",
+    "norms-frob-spec"
    ],
    "mathlib_prereqs": [
     {
      "decl": "fderiv",
+     "present": true
+    },
+    {
+     "decl": "HasFDerivAt.comp",
+     "present": true
+    },
+    {
+     "decl": "ContinuousLinearMap.fderiv",
+     "present": true
+    },
+    {
+     "decl": "Matrix.toEuclideanLin",
+     "present": true
+    },
+    {
+     "decl": "norm_deriv_eq_norm_fderiv",
      "present": true
     }
    ],
@@ -26644,10 +26665,131 @@
     "conditioning",
     "definition"
    ],
-   "notes": "NLAlib has only the matrix condition number. Consumers: `recurrence-coefficient-moment-sensitivity`, perturbation statements in matrix-conditioning. Prove (definitions).",
+   "notes": "NLAlib has only the matrix condition number. Consumers: `recurrence-coefficient-moment-sensitivity`, perturbation statements in matrix-conditioning. Prove (definitions). Statement correction (frontier derivations, psd:map-condition): distinguish relative perturbation metrics. An orthogonal Hadamard 2x2 matrix has kappa=1, but at x=(1,1+epsilon) its second coordinate-relative derivative row is (-1/epsilon,(1+epsilon)/epsilon), unbounded as epsilon decreases to zero. A matrix-condition-number bound alone therefore cannot control the componentwise Euclidean metric.",
    "updated_at": "2026-10-12",
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapAbsCondition",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the norm of the Fréchet derivative for absolute local conditioning."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapNormRelativeCondition",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the derivative norm times input norm divided by output norm for normwise relative conditioning at nonzero input and output."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapAbsCondition_eq_abs_deriv",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite the absolute condition number of a scalar real map as the absolute value of its derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapNormRelativeCondition_eq_abs_mul_deriv_div",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite scalar normwise relative conditioning as the absolute logarithmic derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_euclideanJacobian",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite the spectral norm of the Euclidean Jacobian as the absolute condition number."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.componentRelativeConditionMatrix",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the diagonal-scaled Jacobian for componentwise relative coordinate perturbations at nonzero input/output coordinates."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapComponentRelativeCondition",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the spectral norm of the relative condition matrix for Euclidean componentwise relative conditioning."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasFDerivAt_componentRelativeMap",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply at a differentiable point to identify the derivative of the scaled local coordinate-relative map."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapComponentRelativeCondition_eq_mapAbsCondition",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "At a differentiable point, rewrite componentwise relative conditioning as absolute conditioning of the scaled local map."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.componentRelativeConditionMatrix_apply",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Compute a relative condition matrix entry as input coordinate times the partial derivative divided by the output coordinate."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapComponentRelativeCondition_le_diagonal_scaling",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Bound coordinate-relative conditioning by the two diagonal scaling norms times the absolute condition number."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapAbsCondition_toEuclideanCLM",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite absolute conditioning of a matrix Euclidean action as the matrix spectral norm."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mapNormRelativeCondition_toEuclideanCLM_le_conditionNumber",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to an invertible real matrix to bound normwise relative local sensitivity of its Euclidean action by its matrix condition number."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.map_conditioning_characterizations",
+     "module": "NLAlib.Matrix.MapConditioning",
+     "status": "proved",
+     "usage": "Apply to a differentiable Euclidean map to obtain the derivative-norm and coordinate-relative formulas, scalar formulas, and both valid metric-specific bounds."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.componentRelativeConditionMatrix",
+    "NLAlib.componentRelativeMap",
+    "NLAlib.conditionNumber",
+    "NLAlib.euclideanJacobian",
+    "NLAlib.mapAbsCondition",
+    "NLAlib.mapComponentRelativeCondition",
+    "NLAlib.mapNormRelativeCondition",
+    "NLAlib.specNorm"
+   ],
    "variants": []
   },
   {
@@ -27074,8 +27216,8 @@
     }
    ],
    "depends_on": [
-    "schur-triangularization",
-    "norms-frob-spec"
+    "norms-frob-spec",
+    "schur-triangularization"
    ],
    "mathlib_prereqs": [
     {
@@ -27091,6 +27233,26 @@
     {
      "decl": "normal-matrix spectral theorem",
      "present": false
+    },
+    {
+     "decl": "LinearMap.IsSymmetric.directSum_isInternal_of_commute",
+     "present": true
+    },
+    {
+     "decl": "LinearMap.IsSymmetric.orthogonalFamily_eigenspace_inf_eigenspace",
+     "present": true
+    },
+    {
+     "decl": "Commute.realPart_imaginaryPart",
+     "present": true
+    },
+    {
+     "decl": "DirectSum.IsInternal.subordinateOrthonormalBasis",
+     "present": true
+    },
+    {
+     "decl": "SemiconjBy.star_right",
+     "present": true
     }
    ],
    "difficulty": 2,
@@ -27101,7 +27263,40 @@
    ],
    "notes": "Consumers: gmres-diagonalizable (κ(V)=1 for normal A), field-of-values-def (W(A)=conv σ(A) for normal A), crouzeix-palencia (normal sanity case), polynomial-spectral-bound generalised to normal A (‖p(A)‖=max|p(λ)|). Prove from schur-triangularization: a normal triangular matrix is diagonal (Lem 2.5.2).",
    "updated_at": "2026-10-12",
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_orthonormalBasis_eigenvectors_of_normal",
+     "module": "NLAlib.Matrix.NormalSpectral",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass A*Aᴴ=Aᴴ*A to obtain an orthonormal eigenbasis and its complex eigenvalue list."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_unitary_diagonalization_of_normal",
+     "module": "NLAlib.Matrix.NormalSpectral",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass A*Aᴴ=Aᴴ*A to obtain U in the unitary group and d with A=U*diagonal d*Uᴴ."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mul_conjTranspose_eq_conjTranspose_mul_of_unitary_diagonalization",
+     "module": "NLAlib.Matrix.NormalSpectral",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass a unitary U, diagonal d and the diagonalization identity to recover normality."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normal_iff_exists_unitary_diagonalization",
+     "module": "NLAlib.Matrix.NormalSpectral",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite normality of a complex square matrix as existence of a unitary diagonalization."
+    }
+   ],
    "uses_defs": [],
    "variants": []
   },
@@ -27468,7 +27663,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "planned",
+   "status": "proved",
    "informal": "If $Ax=\\lambda x$, $x\\ne0$, and the eigenvalues of $A$ are $\\lambda,\\lambda_2,\\dots,\\lambda_n$, then for every $v$ the eigenvalues of $A+xv^*$ are $\\lambda+v^*x,\\lambda_2,\\dots,\\lambda_n$.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$",
@@ -27507,7 +27702,15 @@
    ],
    "notes": "Consumers: deflation steps in power-iteration and subspace-iteration-convergence for the next eigenvalue, PageRank-type damping (eigenvalues of αP+(1−α)ev*), rank-one modifications in Lanczos restarts. Prove via the charpoly computation of Ex 1.2.8.",
    "updated_at": "2026-10-12",
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_charpoly_factor_add_vecMulVec",
+     "module": "NLAlib.Matrix.RankOneEigenvalue",
+     "status": "proved",
+     "usage": "Apply with a nonzero eigenvector and a left row to obtain a shared characteristic-polynomial factor that replaces exactly one occurrence of its eigenvalue, taking the row to be star v for a complex adjoint update."
+    }
+   ],
    "uses_defs": [],
    "variants": []
   },
@@ -28309,7 +28512,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "lemma",
-   "status": "planned",
+   "status": "proved",
    "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$ with decreasing eigenvalues $\\lambda_0\\ge\\dots\\ge\\lambda_{n-1}$ (`eigenvalues₀`): $\\lambda_k(-A)=-\\lambda_{n-1-k}(A)$. If $x^\\top Ax>c\\|x\\|^2$ for all nonzero $x$ in a subspace of dimension $k+1$, then $\\lambda_k(A)>c$ (strict form of the existing non-strict test); consequently a $k$-dimensional subspace on which $x^\\top Ax\\ge0$ (resp. $>0$ off $0$) forces at least $k$ nonnegative (resp. positive) eigenvalues.",
    "hypotheses": [
     "$A=A^\\top\\in\\mathbb R^{n\\times n}$",
@@ -28332,8 +28535,7 @@
     }
    ],
    "depends_on": [
-    "courant-fischer",
-    "sylvester-inertia"
+    "courant-fischer"
    ],
    "mathlib_prereqs": [
     {
@@ -28346,8 +28548,12 @@
      "present": true
     },
     {
-     "decl": "eigenvalues of −A in sorted order",
-     "present": false
+     "decl": "Submodule.finrank_sup_add_finrank_inf_eq",
+     "present": true
+    },
+    {
+     "decl": "Module.finrank_pos_iff_exists_ne_zero",
+     "present": true
     }
    ],
    "difficulty": 1,
@@ -28358,8 +28564,58 @@
    ],
    "notes": "Bookkeeping lemmas that let every upper Weyl/Courant–Fischer bound be turned into the matching lower bound by negation (Thm 4.3.1 (4.3.2b), Cor 4.3.15 lower half), and the strict variant needed for strict interlacing and inertia arguments (`sylvester-inertia`). Prove (routine from the existing variational lemmas `le_eigenvalues₀_of_forall_mem`, `eigenvalues₀_le_of_forall_mem`; strictness via compactness of the unit sphere).",
    "updated_at": "2026-10-12",
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_neg",
+     "module": "NLAlib.Matrix.EigenvalueOrder",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite a sorted eigenvalue of the negated matrix as minus the reversed sorted eigenvalue."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lt_eigenvalues₀_of_forall_mem",
+     "module": "NLAlib.Matrix.EigenvalueOrder",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use a strict Rayleigh lower bound on a subspace of dimension at least k+1 to conclude a strict lower bound on lambda_k."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_lt_of_forall_mem",
+     "module": "NLAlib.Matrix.EigenvalueOrder",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use a strict Rayleigh upper bound on a subspace of codimension at most k to conclude a strict upper bound on lambda_k."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.finrank_le_card_eigenvalues₀_nonneg",
+     "module": "NLAlib.Matrix.EigenvalueOrder",
+     "status": "proved",
+     "partial": true,
+     "usage": "Bound a nonnegative subspace dimension by the number of nonnegative sorted eigenvalues."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.finrank_le_card_eigenvalues₀_pos",
+     "module": "NLAlib.Matrix.EigenvalueOrder",
+     "status": "proved",
+     "partial": true,
+     "usage": "Bound a positive subspace dimension by the number of strictly positive sorted eigenvalues."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalue_order_and_counting",
+     "module": "NLAlib.Matrix.EigenvalueOrder",
+     "status": "proved",
+     "usage": "Apply to a real symmetric matrix for sorted negation, strict lower subspace tests, and nonnegative/positive eigenvalue-count bounds."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.quadForm"
+   ],
    "variants": []
   },
   {
@@ -28372,7 +28628,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "planned",
+   "status": "proved",
    "informal": "Let $A,B\\in\\mathbb R^{n\\times n}$ be symmetric (increasing order $\\lambda_1\\le\\dots\\le\\lambda_n$). If $B$ has $\\pi$ positive and $\\nu$ negative eigenvalues then $\\lambda_i(A+B)\\le\\lambda_{i+\\pi}(A)$ and $\\lambda_{i-\\nu}(A)\\le\\lambda_i(A+B)$. In particular if $\\operatorname{rank}B=r$ then $\\lambda_{i-r}(A)\\le\\lambda_i(A+B)\\le\\lambda_{i+r}(A)$, and for $z\\in\\mathbb R^n$: $\\lambda_i(A)\\le\\lambda_i(A+zz^\\top)\\le\\lambda_{i+1}(A)$ and $\\lambda_{i-1}(A)\\le\\lambda_i(A-zz^\\top)\\le\\lambda_i(A)$.",
    "hypotheses": [
     "$A=A^\\top$, $B=B^\\top\\in\\mathbb R^{n\\times n}$",
@@ -28399,11 +28655,9 @@
     }
    ],
    "depends_on": [
-    "weyl-mirsky",
     "courant-fischer",
-    "cauchy-interlacing",
-    "sylvester-inertia",
-    "eigenvalue-order-and-counting"
+    "eigenvalue-order-and-counting",
+    "weyl-mirsky"
    ],
    "mathlib_prereqs": [
     {
@@ -28411,9 +28665,16 @@
      "present": true
     },
     {
-     "decl": "Weyl inequalities",
-     "present": false,
-     "note": "NLAlib has `eigenvalues₀_add_le`."
+     "decl": "Matrix.rank_vecMulVec_le",
+     "present": true
+    },
+    {
+     "decl": "LinearMap.finrank_range_add_finrank_ker",
+     "present": true
+    },
+    {
+     "decl": "Matrix.rank_smul_of_mem_nonZeroDivisors",
+     "present": true
     }
    ],
    "difficulty": 2,
@@ -28425,7 +28686,63 @@
    ],
    "notes": "Consumers: Nyström and low-rank-plus-residual analyses ($A-\\hat A$ has rank $\\le n-k$ perturbation structure), `partial-cholesky-nystrom` (each pivot step is a rank-one downdate), deflation in `subspace-iteration-convergence`, and eigenvalue counting in `sylvester-inertia`. Prove: each statement is `eigenvalues₀_add_le` with the $j$ index set to the number of nonzero eigenvalues of $B$ (whose $j$-th sorted eigenvalue is then $\\le0$).",
    "updated_at": "2026-10-12",
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_add_le_of_card_pos",
+     "module": "NLAlib.Matrix.LowRankInterlacing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Bound lambda_(i+positiveCount)(A+B) above by lambda_i(A), using the exact positive spectrum count of B."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_le_add_of_card_neg",
+     "module": "NLAlib.Matrix.LowRankInterlacing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Bound lambda_(i+negativeCount)(A) below lambda_i(A+B), using the exact negative spectrum count of B."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_add_le_of_rank_le",
+     "module": "NLAlib.Matrix.LowRankInterlacing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use a rank bound on the update to obtain the decreasing-order upper index shift."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_le_add_of_rank_le",
+     "module": "NLAlib.Matrix.LowRankInterlacing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use a rank bound on the update to obtain the matching decreasing-order lower index shift."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_rank_one_add_interlacing",
+     "module": "NLAlib.Matrix.LowRankInterlacing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to a real symmetric A and a vector z for monotonicity and one-step interlacing of A+zz^T."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalues₀_rank_one_sub_interlacing",
+     "module": "NLAlib.Matrix.LowRankInterlacing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to a real symmetric A and a vector z for monotonicity and one-step interlacing of A-zz^T."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eigenvalue_low_rank_interlacing",
+     "module": "NLAlib.Matrix.LowRankInterlacing",
+     "status": "proved",
+     "usage": "Apply to two real symmetric matrices for the exact sign-count shifts, two rank-r shifts, and both rank-one interlacing forms."
+    }
+   ],
    "uses_defs": [],
    "variants": []
   },
@@ -29221,12 +29538,12 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "planned",
-   "informal": "Every $A\\in\\mathbb R^{m\\times n}$ with $m\\ge n$ factors as $A=UQ$ with $Q=(A^\\top A)^{1/2}\\succeq0$ uniquely determined and $U\\in\\mathbb R^{m\\times n}$ with orthonormal columns, unique iff $\\operatorname{rank}A=n$ (then $U=A(A^\\top A)^{-1/2}$); for $m\\le n$, $A=PU$ with $P=(AA^\\top)^{1/2}$; for square $A$, $A=PU=UQ$ with $U$ orthogonal. $U$ is the nearest matrix with orthonormal columns to $A$ in every unitarily invariant norm.",
+   "status": "proved",
+   "informal": "Every real $m\\times n$ matrix with $m\\ge n$ has $A=UQ$, $Q=(A^\\top A)^{1/2}\\succeq0$ and $U^\\top U=I_n$, at arbitrary rank. The positive factor is unique; the polar isometry is unique iff $\\operatorname{rank}A=n$, when $U=A(A^\\top A)^{-1/2}$. For $m\\le n$, $A=PU$ with $P=(AA^\\top)^{1/2}$ and a coisometry $UU^\\top=I_m$, unique iff $\\operatorname{rank}A=m$. In the square case one orthogonal $U$ gives $A=PU=UQ$. Every tall polar isometry and every wide polar coisometry is a nearest such factor to $A$ in every orthogonally invariant norm on its real matrix space.",
    "hypotheses": [
-    "$A\\in\\mathbb R^{m\\times n}$"
+    "$A\\in\\mathbb R^{m\\times n}$; $m\\ge n$ for the isometry version and $m\\le n$ for the coisometry version"
    ],
-   "conclusion": "$A=UQ$, $Q=(A^\\top A)^{1/2}$, $U^\\top U=I$; uniqueness under full rank",
+   "conclusion": "tall $A=U(A^\\top A)^{1/2}$ with $U^\\top U=I_n$, wide $A=(AA^\\top)^{1/2}U$ with $UU^\\top=I_m$, exact full-rank uniqueness conditions and nearest factors in every invariant norm",
    "sources": [
     {
      "source": "hj13",
@@ -29234,10 +29551,13 @@
     }
    ],
    "depends_on": [
-    "svd",
-    "orthonormal-columns-def",
+    "gram-equality-isometry",
+    "lidskii",
     "matrix-calculus-def",
-    "orthonormal-completion"
+    "orthonormal-columns-def",
+    "pseudoinverse",
+    "svd",
+    "unitarily-invariant-norm-def"
    ],
    "mathlib_prereqs": [
     {
@@ -29250,8 +29570,16 @@
      "present": true
     },
     {
-     "decl": "polar decomposition of matrices",
-     "present": false
+     "decl": "CFC.sqrt_nonneg",
+     "present": true
+    },
+    {
+     "decl": "CFC.sqrt_mul_sqrt_self",
+     "present": true
+    },
+    {
+     "decl": "Matrix.rank_transpose_mul_self",
+     "present": true
     }
    ],
    "difficulty": 2,
@@ -29260,10 +29588,111 @@
     "factorizations",
     "orthogonalization"
    ],
-   "notes": "NLAlib already has the full-column-rank real case as `polarFrame` (`hasOrthonormalCols_polarFrame`, `polarFrame_mul_transpose_mul_eq`); this entry adds the rank-deficient and square cases and uniqueness. Consumers: `orthogonal-procrustes`, `principal-angles-def` (polar factor of $Q^\\top\\hat Q$), orthonormalisation of sketches in `rsvd-expected-error`/`subspace-iteration-def`, `haar-orthogonal`. Prove from the SVD.",
+   "notes": "The full-column-rank polarFrame API is supplemented by arbitrary-rank tall isometries and wide coisometries, positive-factor uniqueness, exact rank conditions for factor uniqueness, a common square orthogonal factor, and minimization in every invariant norm. The existence proof uses equal-Gram isometry; minimization uses SVD and full Mirsky. Statement clarification: orthonormal columns are the tall formulation and orthonormal rows are the wide formulation, including all empty-dimensional cases.",
    "updated_at": "2026-10-12",
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.invariantNorm_sub_polar_le_sub_isometry_fin",
+     "module": "NLAlib.Matrix.NearestPolar",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to finite numerical matrix dimensions to compare a tall polar isometry against every competing isometry in the specified invariant norm."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.invariantNorm_sub_polar_le_sub_isometry",
+     "module": "NLAlib.Matrix.NearestPolar",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to any tall polar isometry and any competing isometry to prove minimal distance in every invariant norm on arbitrary finite indices."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.invariantNorm_sub_polar_le_sub_coisometry",
+     "module": "NLAlib.Matrix.NearestPolar",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to any wide polar coisometry and competing coisometry to prove minimal distance in every invariant norm."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isometry_mul_sqrt_gram_eq",
+     "module": "NLAlib.Matrix.PolarDecomposition",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply with at least as many rows as columns to obtain an isometry multiplying the positive Gram square root to A, at any rank."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eq_sqrt_gram_of_isometry_mul_eq",
+     "module": "NLAlib.Matrix.PolarDecomposition",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to any isometry times PSD factorization to identify the positive factor with the column-Gram square root."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_sqrt_rowGram_mul_coisometry_eq",
+     "module": "NLAlib.Matrix.PolarDecomposition",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to a wide matrix to obtain a coisometry multiplied on the left by the row-Gram square root."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eq_polarFrame_of_isometry_mul_sqrt_gram_eq",
+     "module": "NLAlib.Matrix.PolarDecomposition",
+     "status": "proved",
+     "partial": true,
+     "usage": "At full column rank, identify every polar isometry with A times the inverse Gram square root."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_ne_isometry_mul_sqrt_gram_eq_of_rank_lt",
+     "module": "NLAlib.Matrix.PolarDecomposition",
+     "status": "proved",
+     "partial": true,
+     "usage": "Given a rank-deficient matrix and one polar isometry, obtain a distinct polar isometry factoring the same positive Gram square root."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.polar_isometry_unique_iff_rank_eq_card",
+     "module": "NLAlib.Matrix.PolarDecomposition",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite uniqueness among polar isometries as full column rank, including zero-dimensional columns."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_rowGram_mul_eq_of_isometry_mul_sqrt_gram_eq",
+     "module": "NLAlib.Matrix.PolarDecomposition",
+     "status": "proved",
+     "partial": true,
+     "usage": "For square A, show that the same orthogonal U works in both left and right polar factorizations."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.polar_coisometry_unique_iff_rank_eq_card",
+     "module": "NLAlib.Matrix.PolarDecomposition",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite uniqueness among wide polar coisometries as full row rank."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.polar_decomposition_properties",
+     "module": "NLAlib.Matrix.PolarToolkit",
+     "status": "proved",
+     "usage": "Apply to A for all tall and wide factorization clauses, exact rank uniqueness conditions, every-invariant-norm nearest-isometry assertions, PSD factor uniqueness and same square orthogonal factor on both sides."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.OrthogonallyInvariantNorm",
+    "NLAlib.OrthogonallyInvariantNorm.seminorm",
+    "NLAlib.polarFrame"
+   ],
    "variants": []
   },
   {

@@ -5949,7 +5949,7 @@
   "name":
   "NLAlib.HasOrthonormalCols.congr_simp",
   "module":
-  "NLAlib.Matrix.Stiefel",
+  "NLAlib.Matrix.NearestPolar",
   "line":
   0,
   "kind":
@@ -13435,6 +13435,26 @@
   "def",
   "doc":
   "Restrict a fixed-shape invariant matrix norm to its thin rectangular\ndiagonal. The permutation/sign symmetries are implemented by actual matrices. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.OrthogonallyInvariantNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.OrthogonallyInvariantNorm.transpose.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] (ν : NLAlib.OrthogonallyInvariantNorm m n) : NLAlib.OrthogonallyInvariantNorm n m",
+  "name":
+  "NLAlib.OrthogonallyInvariantNorm.transpose",
+  "module":
+  "NLAlib.Matrix.NearestPolar",
+  "line":
+  174,
+  "kind":
+  "def",
+  "doc":
+  "Transposition transports an invariant norm to the transposed matrix\nspace. Horn–Johnson §7.4; supports the wide polar minimization theorem. ",
   "atlas_partial":
   [],
   "atlas":
@@ -65840,6 +65860,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.card_eigenvalues₀_pos_neg.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {B : Matrix n n ℝ}\n  (hB : B.IsHermitian) : {i | 0 < ⋯.eigenvalues₀ i}.card = {i | hB.eigenvalues₀ i < 0}.card",
+  "name":
+  "NLAlib.card_eigenvalues₀_pos_neg",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  42,
+  "kind":
+  "theorem",
+  "doc":
+  "Positive eigenvalues of a negated symmetric matrix are counted by\nnegative eigenvalues of the original matrix. Horn--Johnson (2013),\nObservation 4.2.5; helper for `low-rank-update-interlacing`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.card_filter_fin_lt {m k : ℕ} (hk : k ≤ m) : {i | ↑i < k}.card = k",
   "name":
   "NLAlib.card_filter_fin_lt",
@@ -66577,6 +66617,26 @@
   "theorem",
   "doc":
   "**A zero residual freezes the state**: if `r = 0` then `cgStep A s = (x, 0, 0)` (`α = 0`\nand `β = 0/0 = 0`). Atlas: `cg-recurrence` (totality). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.charpoly_add_vecMulVec_mul_X_sub_C.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2} [Field K]\n  [Infinite K] {A : Matrix n n K} {x : n → K} {μ : K} (hx : x ≠ 0) (hAx : A.mulVec x = μ • x) (y : n → K) :\n  (Polynomial.X - Polynomial.C μ) * (A + Matrix.vecMulVec x y).charpoly =\n    (Polynomial.X - Polynomial.C (μ + y ⬝ᵥ x)) * A.charpoly",
+  "name":
+  "NLAlib.charpoly_add_vecMulVec_mul_X_sub_C",
+  "module":
+  "NLAlib.Matrix.RankOneEigenvalue",
+  "line":
+  83,
+  "kind":
+  "theorem",
+  "doc":
+  "The rank-one eigenvalue update satisfies a polynomial cross-product\nidentity, including every value of the polynomial variable. Source:\nHorn–Johnson (2013), Theorem 2.4.10.1; the infinite-field proof extends the\ndeterminant-lemma computation across the finite old spectrum. ",
   "atlas_partial":
   [],
   "atlas":
@@ -71354,6 +71414,66 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.componentRelativeConditionMatrix.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) : Matrix n m ℝ",
+  "name":
+  "NLAlib.componentRelativeConditionMatrix",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  104,
+  "kind":
+  "def",
+  "doc":
+  "The componentwise relative condition matrix scales input coordinates by\n`x` and output coordinates by the reciprocal of `f x`. Gautschi (2004),\nDefinition 2.4. The relative metric assumes nonzero coordinates.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  ["NLAlib.componentRelativeConditionMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.componentRelativeConditionMatrix_apply.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) (i : n)\n  (j : m) :\n  NLAlib.componentRelativeConditionMatrix f x i j =\n    x.ofLp j * ((fderiv ℝ f x) (EuclideanSpace.single j 1)).ofLp i / (f x).ofLp i",
+  "name":
+  "NLAlib.componentRelativeConditionMatrix_apply",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  172,
+  "kind":
+  "theorem",
+  "doc":
+  "Relative condition entries are input coordinate times the partial\nderivative divided by the output coordinate. Gautschi (2004), Definition 2.4.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.componentRelativeMap.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) :\n  EuclideanSpace ℝ m → EuclideanSpace ℝ n",
+  "name":
+  "NLAlib.componentRelativeMap",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  122,
+  "kind":
+  "def",
+  "doc":
+  "The local componentwise relative perturbation map measures changes in\ninput and output coordinates relative to the base point. Gautschi (2004),\nDefinition 2.4; supports `condition-number-of-map-def`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.complementaryEigenframe"],
   "sorry":
   false,
@@ -71568,7 +71688,7 @@
   "name":
   "NLAlib.conditionNumber.congr_simp",
   "module":
-  "NLAlib.Matrix.LeastSquaresToolkit",
+  "NLAlib.Matrix.LinearSystemPerturbation",
   "line":
   0,
   "kind":
@@ -73706,6 +73826,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.det_add_vecMulVec.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2} [Field K]\n  {M : Matrix n n K} (hM : IsUnit M.det) (u v : n → K) :\n  (M + Matrix.vecMulVec u v).det = M.det * (1 + v ⬝ᵥ M⁻¹.mulVec u)",
+  "name":
+  "NLAlib.det_add_vecMulVec",
+  "module":
+  "NLAlib.Matrix.RankOneEigenvalue",
+  "line":
+  23,
+  "kind":
+  "theorem",
+  "doc":
+  "The determinant lemma in outer-product notation. Source: Horn–Johnson\n(2013), §0.8.5; this is Mathlib's matrix determinant lemma specialized to\none-column updates. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.borderedMatrix"],
   "sorry":
   false,
@@ -75428,7 +75568,7 @@
   "name":
   "NLAlib.eigenvaluePrefix.congr_simp",
   "module":
-  "NLAlib.Matrix.EigenvalueVariation",
+  "NLAlib.Matrix.KyFanSums",
   "line":
   0,
   "kind":
@@ -75579,6 +75719,46 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalue_low_rank_interlacing.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A B : Matrix n n ℝ}\n  (hA : A.IsHermitian) (hB : B.IsHermitian) :\n  (∀ (i : Fin (Fintype.card n)) (hi : ↑i + {j | 0 < hB.eigenvalues₀ j}.card < Fintype.card n),\n      ⋯.eigenvalues₀ ⟨↑i + {j | 0 < hB.eigenvalues₀ j}.card, hi⟩ ≤ hA.eigenvalues₀ i) ∧\n    (∀ (i : Fin (Fintype.card n)) (hi : ↑i + {j | hB.eigenvalues₀ j < 0}.card < Fintype.card n),\n        hA.eigenvalues₀ ⟨↑i + {j | hB.eigenvalues₀ j < 0}.card, hi⟩ ≤ ⋯.eigenvalues₀ i) ∧\n      (∀ (r : ℕ),\n          B.rank ≤ r →\n            ∀ (i : Fin (Fintype.card n)) (hi : ↑i + r < Fintype.card n),\n              ⋯.eigenvalues₀ ⟨↑i + r, hi⟩ ≤ hA.eigenvalues₀ i ∧ hA.eigenvalues₀ ⟨↑i + r, hi⟩ ≤ ⋯.eigenvalues₀ i) ∧\n        (∀ (z : n → ℝ) (i : Fin (Fintype.card n)),\n            hA.eigenvalues₀ i ≤ ⋯.eigenvalues₀ i ∧\n              ∀ (hi : ↑i + 1 < Fintype.card n), ⋯.eigenvalues₀ ⟨↑i + 1, hi⟩ ≤ hA.eigenvalues₀ i) ∧\n          ∀ (z : n → ℝ) (i : Fin (Fintype.card n)),\n            ⋯.eigenvalues₀ i ≤ hA.eigenvalues₀ i ∧\n              ∀ (hi : ↑i + 1 < Fintype.card n), hA.eigenvalues₀ ⟨↑i + 1, hi⟩ ≤ ⋯.eigenvalues₀ i",
+  "name":
+  "NLAlib.eigenvalue_low_rank_interlacing",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  154,
+  "kind":
+  "theorem",
+  "doc":
+  "Symmetric updates obey both inertia-count shifts, both rank shifts,\nand both PSD rank-one interlacing forms, with decreasing zero-based indices.\nHorn--Johnson (2013), Corollaries 4.3.3, 4.3.5, 4.3.7, 4.3.9.\natlas: low-rank-update-interlacing ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["low-rank-update-interlacing"]},
+ {"uses":
+  ["NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalue_order_and_counting.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) :\n  (∀ (k : Fin (Fintype.card n)), ⋯.eigenvalues₀ k = -hA.eigenvalues₀ k.rev) ∧\n    (∀ (k : Fin (Fintype.card n)) (S : Submodule ℝ (n → ℝ)) (c : ℝ),\n        ↑k + 1 ≤ Module.finrank ℝ ↥S → (∀ x ∈ S, x ≠ 0 → c * x ⬝ᵥ x < NLAlib.quadForm A x) → c < hA.eigenvalues₀ k) ∧\n      (∀ (S : Submodule ℝ (n → ℝ)),\n          (∀ x ∈ S, 0 ≤ NLAlib.quadForm A x) → Module.finrank ℝ ↥S ≤ {i | 0 ≤ hA.eigenvalues₀ i}.card) ∧\n        ∀ (S : Submodule ℝ (n → ℝ)),\n          (∀ x ∈ S, x ≠ 0 → 0 < NLAlib.quadForm A x) → Module.finrank ℝ ↥S ≤ {i | 0 < hA.eigenvalues₀ i}.card",
+  "name":
+  "NLAlib.eigenvalue_order_and_counting",
+  "module":
+  "NLAlib.Matrix.EigenvalueOrder",
+  "line":
+  137,
+  "kind":
+  "theorem",
+  "doc":
+  "Negation, strict subspace testing, and nonnegative/positive eigenvalue\ncounts hold for the actual sorted spectral list. Horn--Johnson (2013),\nObservation 4.2.5, Theorem 4.2.10, Corollary 4.2.12.\natlas: eigenvalue-order-and-counting ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["eigenvalue-order-and-counting"]},
  {"uses":
   ["NLAlib.frobSq",
    "NLAlib.specNorm"],
@@ -75811,6 +75991,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.eigenvalues₀_add_le_of_card_pos.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A B : Matrix n n ℝ}\n  (hA : A.IsHermitian) (hB : B.IsHermitian) (i : Fin (Fintype.card n))\n  (hi : ↑i + {j | 0 < hB.eigenvalues₀ j}.card < Fintype.card n) :\n  ⋯.eigenvalues₀ ⟨↑i + {j | 0 < hB.eigenvalues₀ j}.card, hi⟩ ≤ hA.eigenvalues₀ i",
+  "name":
+  "NLAlib.eigenvalues₀_add_le_of_card_pos",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  59,
+  "kind":
+  "theorem",
+  "doc":
+  "An update with `π` positive eigenvalues shifts the upper bound by\nexactly `π` places in decreasing order. Horn--Johnson (2013), Corollary 4.3.3.\natlas: low-rank-update-interlacing (partial) ",
+  "atlas_partial":
+  ["low-rank-update-interlacing"],
+  "atlas":
+  ["low-rank-update-interlacing"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalues₀_add_le_of_rank_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A B : Matrix n n ℝ}\n  (hA : A.IsHermitian) (hB : B.IsHermitian) {r : ℕ} (hBr : B.rank ≤ r) (i : Fin (Fintype.card n))\n  (hi : ↑i + r < Fintype.card n) : ⋯.eigenvalues₀ ⟨↑i + r, hi⟩ ≤ hA.eigenvalues₀ i",
+  "name":
+  "NLAlib.eigenvalues₀_add_le_of_rank_le",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  89,
+  "kind":
+  "theorem",
+  "doc":
+  "A symmetric update of rank at most `r` shifts the upper eigenvalue\nbound by at most `r` indices. Horn--Johnson (2013), Corollary 4.3.5.\natlas: low-rank-update-interlacing (partial) ",
+  "atlas_partial":
+  ["low-rank-update-interlacing"],
+  "atlas":
+  ["low-rank-update-interlacing"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.eigenvalues₀_cfc_of_antitone.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (f : ℝ → ℝ) {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (hf : Antitone fun i => f (hA.eigenvalues₀ i)) (i : Fin (Fintype.card n)) :\n  ⋯.eigenvalues₀ i = f (hA.eigenvalues₀ i)",
   "name":
   "NLAlib.eigenvalues₀_cfc_of_antitone",
@@ -75907,6 +76127,46 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalues₀_le_add_of_card_neg.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A B : Matrix n n ℝ}\n  (hA : A.IsHermitian) (hB : B.IsHermitian) (i : Fin (Fintype.card n))\n  (hi : ↑i + {j | hB.eigenvalues₀ j < 0}.card < Fintype.card n) :\n  hA.eigenvalues₀ ⟨↑i + {j | hB.eigenvalues₀ j < 0}.card, hi⟩ ≤ ⋯.eigenvalues₀ i",
+  "name":
+  "NLAlib.eigenvalues₀_le_add_of_card_neg",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  74,
+  "kind":
+  "theorem",
+  "doc":
+  "An update with `ν` negative eigenvalues gives the matching lower\nbound, shifted by `ν` places in decreasing order.\nHorn--Johnson (2013), Corollary 4.3.3.\natlas: low-rank-update-interlacing (partial) ",
+  "atlas_partial":
+  ["low-rank-update-interlacing"],
+  "atlas":
+  ["low-rank-update-interlacing"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalues₀_le_add_of_rank_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A B : Matrix n n ℝ}\n  (hA : A.IsHermitian) (hB : B.IsHermitian) {r : ℕ} (hBr : B.rank ≤ r) (i : Fin (Fintype.card n))\n  (hi : ↑i + r < Fintype.card n) : hA.eigenvalues₀ ⟨↑i + r, hi⟩ ≤ ⋯.eigenvalues₀ i",
+  "name":
+  "NLAlib.eigenvalues₀_le_add_of_rank_le",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  108,
+  "kind":
+  "theorem",
+  "doc":
+  "A rank-`r` symmetric update has the matching lower eigenvalue bound.\nHorn--Johnson (2013), Corollary 4.3.5.\natlas: low-rank-update-interlacing (partial) ",
+  "atlas_partial":
+  ["low-rank-update-interlacing"],
+  "atlas":
+  ["low-rank-update-interlacing"]},
+ {"uses":
   ["NLAlib.HasOrthonormalCols"],
   "sorry":
   false,
@@ -75971,6 +76231,66 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.eigenvalues₀_le_zero_of_card_pos_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {B : Matrix n n ℝ}\n  (hB : B.IsHermitian) (j : Fin (Fintype.card n)) (hj : {i | 0 < hB.eigenvalues₀ i}.card ≤ ↑j) : hB.eigenvalues₀ j ≤ 0",
+  "name":
+  "NLAlib.eigenvalues₀_le_zero_of_card_pos_le",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  20,
+  "kind":
+  "theorem",
+  "doc":
+  "Once the index is at least the number of positive eigenvalues, the\nsorted eigenvalue is nonpositive. Horn--Johnson (2013), Corollary 4.3.3;\nhelper for `low-rank-update-interlacing`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalues₀_lt_of_forall_mem.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (k : Fin (Fintype.card n)) (W : Submodule ℝ (n → ℝ))\n  (hW : Fintype.card n ≤ Module.finrank ℝ ↥W + ↑k) {c : ℝ} (hAW : ∀ x ∈ W, x ≠ 0 → NLAlib.quadForm A x < c * x ⬝ᵥ x) :\n  hA.eigenvalues₀ k < c",
+  "name":
+  "NLAlib.eigenvalues₀_lt_of_forall_mem",
+  "module":
+  "NLAlib.Matrix.EigenvalueOrder",
+  "line":
+  79,
+  "kind":
+  "theorem",
+  "doc":
+  "A strict upper Rayleigh bound on a subspace of codimension at most\n`k` implies a strict bound for the `k`-th largest eigenvalue.\nHorn--Johnson (2013), Theorem 4.2.10.\natlas: eigenvalue-order-and-counting (partial) ",
+  "atlas_partial":
+  ["eigenvalue-order-and-counting"],
+  "atlas":
+  ["eigenvalue-order-and-counting"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalues₀_neg.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ} (hA : A.IsHermitian)\n  (k : Fin (Fintype.card n)) : ⋯.eigenvalues₀ k = -hA.eigenvalues₀ k.rev",
+  "name":
+  "NLAlib.eigenvalues₀_neg",
+  "module":
+  "NLAlib.Matrix.EigenvalueOrder",
+  "line":
+  21,
+  "kind":
+  "theorem",
+  "doc":
+  "Negation reverses and negates sorted eigenvalues, including repeated\neigenvalues. Horn--Johnson (2013), Observation 4.2.5.\natlas: eigenvalue-order-and-counting (partial) ",
+  "atlas_partial":
+  ["eigenvalue-order-and-counting"],
+  "atlas":
+  ["eigenvalue-order-and-counting"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.eigenvalues₀_nonneg_of_posSemidef.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.PosSemidef) (i : Fin (Fintype.card n)) : 0 ≤ ⋯.eigenvalues₀ i",
   "name":
   "NLAlib.eigenvalues₀_nonneg_of_posSemidef",
@@ -76006,6 +76326,46 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalues₀_rank_one_add_interlacing.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (z : n → ℝ) (i : Fin (Fintype.card n)) :\n  hA.eigenvalues₀ i ≤ ⋯.eigenvalues₀ i ∧\n    ∀ (hi : ↑i + 1 < Fintype.card n), ⋯.eigenvalues₀ ⟨↑i + 1, hi⟩ ≤ hA.eigenvalues₀ i",
+  "name":
+  "NLAlib.eigenvalues₀_rank_one_add_interlacing",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  124,
+  "kind":
+  "theorem",
+  "doc":
+  "A PSD rank-one update has one-step decreasing-order interlacing.\nHorn--Johnson (2013), Corollary 4.3.7.\natlas: low-rank-update-interlacing (partial) ",
+  "atlas_partial":
+  ["low-rank-update-interlacing"],
+  "atlas":
+  ["low-rank-update-interlacing"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eigenvalues₀_rank_one_sub_interlacing.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (z : n → ℝ) (i : Fin (Fintype.card n)) :\n  ⋯.eigenvalues₀ i ≤ hA.eigenvalues₀ i ∧\n    ∀ (hi : ↑i + 1 < Fintype.card n), hA.eigenvalues₀ ⟨↑i + 1, hi⟩ ≤ ⋯.eigenvalues₀ i",
+  "name":
+  "NLAlib.eigenvalues₀_rank_one_sub_interlacing",
+  "module":
+  "NLAlib.Matrix.LowRankInterlacing",
+  "line":
+  141,
+  "kind":
+  "theorem",
+  "doc":
+  "A PSD rank-one downdate has the corresponding reversed one-step\ninterlacing. Horn--Johnson (2013), Corollary 4.3.9.\natlas: low-rank-update-interlacing (partial) ",
+  "atlas_partial":
+  ["low-rank-update-interlacing"],
+  "atlas":
+  ["low-rank-update-interlacing"]},
  {"uses":
   ["NLAlib.realDilation",
    "NLAlib.realDilationSpectrum"],
@@ -76593,6 +76953,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.polarFrame"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eq_polarFrame_of_isometry_mul_sqrt_gram_eq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq n] {A U : Matrix m n ℝ} (hRank : A.rank = Fintype.card n) (hA : U * CFC.sqrt (A.transpose * A) = A) :\n  U = NLAlib.polarFrame A",
+  "name":
+  "NLAlib.eq_polarFrame_of_isometry_mul_sqrt_gram_eq",
+  "module":
+  "NLAlib.Matrix.PolarDecomposition",
+  "line":
+  67,
+  "kind":
+  "theorem",
+  "doc":
+  "At full column rank a polar isometry equals the explicit inverse-square-\nroot formula and hence is unique. Horn–Johnson 2013, Theorem 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
   ["NLAlib.sortedEigenframe"],
   "sorry":
   false,
@@ -76612,6 +76992,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eq_sqrt_gram_of_isometry_mul_eq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq n]\n  {A U : Matrix m n ℝ} {Q : Matrix n n ℝ} (hU : NLAlib.HasOrthonormalCols U) (hQ : Q.PosSemidef) (hA : U * Q = A) :\n  Q = CFC.sqrt (A.transpose * A)",
+  "name":
+  "NLAlib.eq_sqrt_gram_of_isometry_mul_eq",
+  "module":
+  "NLAlib.Matrix.PolarDecomposition",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "The positive factor in any polar isometry factorization is the unique\npositive square root of the column Gram matrix. Horn–Johnson 2013, Thm 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
  {"uses":
   [],
   "sorry":
@@ -76816,6 +77216,66 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.euclideanJacobian.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [DecidableEq m]\n  (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) : Matrix n m ℝ",
+  "name":
+  "NLAlib.euclideanJacobian",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  67,
+  "kind":
+  "def",
+  "doc":
+  "The Jacobian in the standard orthonormal Euclidean bases, using\nMathlib's matrix/linear-map equivalence. Gautschi (2004), Definitions 2.3--2.6;\nsupports `condition-number-of-map-def`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.euclideanJacobian"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.euclideanJacobian.congr_simp.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] {inst✝ : DecidableEq m}\n  [DecidableEq m] (f f✝ : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (e_f : f = f✝) (x x✝ : EuclideanSpace ℝ m)\n  (e_x : x = x✝) (a✝ a✝¹ : n) :\n  a✝ = a✝¹ → ∀ (a a✝² : m), a = a✝² → NLAlib.euclideanJacobian f x a✝ a = NLAlib.euclideanJacobian f✝ x✝ a✝¹ a✝²",
+  "name":
+  "NLAlib.euclideanJacobian.congr_simp",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  0,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.euclideanJacobian"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.euclideanJacobian_apply.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n] [DecidableEq m]\n  (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) (i : n) (j : m) :\n  NLAlib.euclideanJacobian f x i j = ((fderiv ℝ f x) (EuclideanSpace.single j 1)).ofLp i",
+  "name":
+  "NLAlib.euclideanJacobian_apply",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  83,
+  "kind":
+  "theorem",
+  "doc":
+  "Jacobian entries are the coordinate directional derivatives.\nGautschi (2004), Definitions 2.3--2.6;\nsupports `condition-number-of-map-def`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.chebyshevAliasIndex"],
   "sorry":
   false,
@@ -76915,6 +77375,26 @@
   [],
   "atlas":
   ["chebyshev-growth"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eval_charpoly_add_vecMulVec_mul_sub.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2}\n  [Field K] {A : Matrix n n K} {x : n → K} {μ : K} (hx : x ≠ 0) (hAx : A.mulVec x = μ • x) (y : n → K) {z : K}\n  (hz : Polynomial.eval z A.charpoly ≠ 0) :\n  (z - μ) * Polynomial.eval z (A + Matrix.vecMulVec x y).charpoly = (z - μ - y ⬝ᵥ x) * Polynomial.eval z A.charpoly",
+  "name":
+  "NLAlib.eval_charpoly_add_vecMulVec_mul_sub",
+  "module":
+  "NLAlib.Matrix.RankOneEigenvalue",
+  "line":
+  46,
+  "kind":
+  "theorem",
+  "doc":
+  "Away from the old spectrum, the characteristic-polynomial shift follows\nfrom the determinant lemma and the inverse action on the eigenvector.\nSource: Horn–Johnson (2013), Theorem 2.4.10.1. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.chebyshevAmplifier"],
   "sorry":
@@ -77396,6 +77876,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_charpoly_factor_add_vecMulVec.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2}\n  [Field K] [Infinite K] {A : Matrix n n K} {x : n → K} {μ : K} (hx : x ≠ 0) (hAx : A.mulVec x = μ • x) (y : n → K) :\n  ∃ q,\n    A.charpoly = (Polynomial.X - Polynomial.C μ) * q ∧\n      (A + Matrix.vecMulVec x y).charpoly = (Polynomial.X - Polynomial.C (μ + y ⬝ᵥ x)) * q",
+  "name":
+  "NLAlib.exists_charpoly_factor_add_vecMulVec",
+  "module":
+  "NLAlib.Matrix.RankOneEigenvalue",
+  "line":
+  100,
+  "kind":
+  "theorem",
+  "doc":
+  "A rank-one update along a nonzero right eigenvector replaces exactly one\noccurrence of the eigenvalue: the unchanged polynomial factor is shared by\nthe old and updated characteristic polynomials. Source: Horn–Johnson (2013),\nExercise 1.2.8 and Theorem 2.4.10.1. Over the complex field take `y = star v`\nfor the update `x v*`. Repeated eigenvalues and zero shifts are included;\nthe quotient is polynomial division, with no pointwise division at `μ`.\natlas: rank-one-eigenvalue-update ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["rank-one-eigenvalue-update"]},
  {"uses":
   [],
   "sorry":
@@ -78361,6 +78861,26 @@
   "atlas":
   ["gram-equality-isometry"]},
  {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isometry_mul_sqrt_gram_eq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq n]\n  [DecidableEq m] (A : Matrix m n ℝ) (hCard : Fintype.card n ≤ Fintype.card m) :\n  ∃ U, NLAlib.HasOrthonormalCols U ∧ U * CFC.sqrt (A.transpose * A) = A",
+  "name":
+  "NLAlib.exists_isometry_mul_sqrt_gram_eq",
+  "module":
+  "NLAlib.Matrix.PolarDecomposition",
+  "line":
+  21,
+  "kind":
+  "theorem",
+  "doc":
+  "Every real matrix with at least as many rows as columns has a polar\nisometry, without a full-rank assumption. Empty spaces are included.\nHorn–Johnson 2013, Theorem 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -78626,6 +79146,46 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_ne_isometry_mul_sqrt_gram_eq_of_rank_lt.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq n] {A U : Matrix m n ℝ} (hU : NLAlib.HasOrthonormalCols U) (hA : U * CFC.sqrt (A.transpose * A) = A)\n  (hRank : A.rank < Fintype.card n) : ∃ V, NLAlib.HasOrthonormalCols V ∧ V * CFC.sqrt (A.transpose * A) = A ∧ V ≠ U",
+  "name":
+  "NLAlib.exists_ne_isometry_mul_sqrt_gram_eq_of_rank_lt",
+  "module":
+  "NLAlib.Matrix.PolarDecomposition",
+  "line":
+  86,
+  "kind":
+  "theorem",
+  "doc":
+  "Rank deficiency gives a second polar isometry: reflect the orthogonal\ncomplement of the positive factor's range. Horn–Johnson 2013, Thm 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_ne_zero_mem_inf_of_card_lt_finrank_add.{u_1} {n : Type u_1} [Fintype n] (S W : Submodule ℝ (n → ℝ))\n  (h : Fintype.card n < Module.finrank ℝ ↥S + Module.finrank ℝ ↥W) : ∃ x ∈ S, x ∈ W ∧ x ≠ 0",
+  "name":
+  "NLAlib.exists_ne_zero_mem_inf_of_card_lt_finrank_add",
+  "module":
+  "NLAlib.Matrix.EigenvalueOrder",
+  "line":
+  45,
+  "kind":
+  "theorem",
+  "doc":
+  "Subspaces whose dimensions sum to more than the ambient dimension\nhave a common nonzero vector. Dimension formula; helper for the strict\nsubspace tests in `eigenvalue-order-and-counting`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -78873,6 +79433,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_orthonormalBasis_eigenvectors_of_normal.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A * A.conjTranspose = A.conjTranspose * A) :\n  ∃ b d, ∀ (j : n), A.mulVec (b j).ofLp = d j • (b j).ofLp",
+  "name":
+  "NLAlib.exists_orthonormalBasis_eigenvectors_of_normal",
+  "module":
+  "NLAlib.Matrix.NormalSpectral",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "Every complex normal matrix has an orthonormal eigenbasis. Source:\nHorn–Johnson (2013), Theorem 2.5.3; the proof uses joint eigenspaces of the\nHermitian real and imaginary parts and includes an empty index type.\natlas: normal-matrices (partial) ",
+  "atlas_partial":
+  ["normal-matrices"],
+  "atlas":
+  ["normal-matrices"]},
  {"uses":
   ["NLAlib.HasOrthonormalCols"],
   "sorry":
@@ -79504,6 +80084,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_sqrt_rowGram_mul_coisometry_eq.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq n] [DecidableEq m] (A : Matrix m n ℝ) (hCard : Fintype.card m ≤ Fintype.card n) :\n  ∃ U, U * U.transpose = 1 ∧ CFC.sqrt (A * A.transpose) * U = A",
+  "name":
+  "NLAlib.exists_sqrt_rowGram_mul_coisometry_eq",
+  "module":
+  "NLAlib.Matrix.PolarDecomposition",
+  "line":
+  50,
+  "kind":
+  "theorem",
+  "doc":
+  "A wide real matrix has a coisometry on the right of its row-Gram square\nroot. Orthonormal rows are the dimensionally correct wide formulation.\nHorn–Johnson 2013, Theorem 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
   ["NLAlib.krylovSpace"],
   "sorry":
   false,
@@ -80033,6 +80633,26 @@
   [],
   "atlas":
   ["quadratic-probe-spectral-detection"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_unitary_diagonalization_of_normal.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A * A.conjTranspose = A.conjTranspose * A) : ∃ U d, A = ↑U * Matrix.diagonal d * (↑U).conjTranspose",
+  "name":
+  "NLAlib.exists_unitary_diagonalization_of_normal",
+  "module":
+  "NLAlib.Matrix.NormalSpectral",
+  "line":
+  75,
+  "kind":
+  "theorem",
+  "doc":
+  "Every complex normal matrix is unitarily diagonalizable. Source:\nHorn–Johnson (2013), Theorem 2.5.3; the unitary and eigenvalue list are\nconstructed from the orthonormal joint eigenbasis, including empty matrices.\natlas: normal-matrices (partial) ",
+  "atlas_partial":
+  ["normal-matrices"],
+  "atlas":
+  ["normal-matrices"]},
  {"uses":
   [],
   "sorry":
@@ -80640,6 +81260,46 @@
   [],
   "atlas":
   ["krylov-subspace"]},
+ {"uses":
+  ["NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.finrank_le_card_eigenvalues₀_nonneg.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (S : Submodule ℝ (n → ℝ)) (hAS : ∀ x ∈ S, 0 ≤ NLAlib.quadForm A x) :\n  Module.finrank ℝ ↥S ≤ {i | 0 ≤ hA.eigenvalues₀ i}.card",
+  "name":
+  "NLAlib.finrank_le_card_eigenvalues₀_nonneg",
+  "module":
+  "NLAlib.Matrix.EigenvalueOrder",
+  "line":
+  99,
+  "kind":
+  "theorem",
+  "doc":
+  "A nonnegative subspace forces at least its dimension many nonnegative\neigenvalues. Horn--Johnson (2013), Corollary 4.2.12.\natlas: eigenvalue-order-and-counting (partial) ",
+  "atlas_partial":
+  ["eigenvalue-order-and-counting"],
+  "atlas":
+  ["eigenvalue-order-and-counting"]},
+ {"uses":
+  ["NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.finrank_le_card_eigenvalues₀_pos.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (S : Submodule ℝ (n → ℝ)) (hAS : ∀ x ∈ S, x ≠ 0 → 0 < NLAlib.quadForm A x) :\n  Module.finrank ℝ ↥S ≤ {i | 0 < hA.eigenvalues₀ i}.card",
+  "name":
+  "NLAlib.finrank_le_card_eigenvalues₀_pos",
+  "module":
+  "NLAlib.Matrix.EigenvalueOrder",
+  "line":
+  118,
+  "kind":
+  "theorem",
+  "doc":
+  "A positive subspace forces at least its dimension many positive\neigenvalues. Horn--Johnson (2013), Corollary 4.2.12.\natlas: eigenvalue-order-and-counting (partial) ",
+  "atlas_partial":
+  ["eigenvalue-order-and-counting"],
+  "atlas":
+  ["eigenvalue-order-and-counting"]},
  {"uses":
   [],
   "sorry":
@@ -88549,6 +89209,27 @@
   "atlas":
   ["herbst"]},
  {"uses":
+  ["NLAlib.componentRelativeConditionMatrix",
+   "NLAlib.componentRelativeMap"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasFDerivAt_componentRelativeMap.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {f : EuclideanSpace ℝ m → EuclideanSpace ℝ n} {x : EuclideanSpace ℝ m} (hf : DifferentiableAt ℝ f x) :\n  HasFDerivAt (NLAlib.componentRelativeMap f x)\n    ((Matrix.toEuclideanLin ≪≫ₗ LinearMap.toContinuousLinearMap) (NLAlib.componentRelativeConditionMatrix f x)) 0",
+  "name":
+  "NLAlib.hasFDerivAt_componentRelativeMap",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  131,
+  "kind":
+  "theorem",
+  "doc":
+  "The derivative of the scaled relative perturbation map is represented\nby the componentwise relative condition matrix. Gautschi (2004), Definition\n2.4; frontier derivations `psd:map-condition`.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -88836,6 +89517,27 @@
   "theorem",
   "doc":
   "Full-column-rank normalized Gram–Schmidt has orthonormal columns.\nSource: operator re-derivation `sh:gaussian-qr`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.rectDiag"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasOrthonormalCols_rectDiag_one {m n : ℕ} (hCard : n ≤ m) :\n  NLAlib.HasOrthonormalCols (NLAlib.rectDiag fun x => 1)",
+  "name":
+  "NLAlib.hasOrthonormalCols_rectDiag_one",
+  "module":
+  "NLAlib.Matrix.NearestPolar",
+  "line":
+  18,
+  "kind":
+  "theorem",
+  "doc":
+  "The rectangular diagonal of ones is a coordinate isometry in a tall shape.\nHorn–Johnson 2013, Theorem 7.3.1; polar-decomposition helper. ",
   "atlas_partial":
   [],
   "atlas":
@@ -98985,6 +99687,71 @@
   ["lidskii"]},
  {"uses":
   ["NLAlib.OrthogonallyInvariantNorm",
+   "NLAlib.OrthogonallyInvariantNorm.seminorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.invariantNorm_sub_polar_le_sub_coisometry.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] (ν : NLAlib.OrthogonallyInvariantNorm m n) (A U V : Matrix m n ℝ)\n  (hCard : Fintype.card m ≤ Fintype.card n) (hU : U * U.transpose = 1) (hA : CFC.sqrt (A * A.transpose) * U = A)\n  (hV : V * V.transpose = 1) : ν.seminorm (A - U) ≤ ν.seminorm (A - V)",
+  "name":
+  "NLAlib.invariantNorm_sub_polar_le_sub_coisometry",
+  "module":
+  "NLAlib.Matrix.NearestPolar",
+  "line":
+  199,
+  "kind":
+  "theorem",
+  "doc":
+  "Every wide polar coisometry is a nearest coisometry in every invariant\nnorm on arbitrary finite real matrix indices. Horn–Johnson 2013, Thm 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.OrthogonallyInvariantNorm",
+   "NLAlib.OrthogonallyInvariantNorm.seminorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.invariantNorm_sub_polar_le_sub_isometry.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] (ν : NLAlib.OrthogonallyInvariantNorm m n) (A U V : Matrix m n ℝ)\n  (hCard : Fintype.card n ≤ Fintype.card m) (hU : NLAlib.HasOrthonormalCols U) (hA : U * CFC.sqrt (A.transpose * A) = A)\n  (hV : NLAlib.HasOrthonormalCols V) : ν.seminorm (A - U) ≤ ν.seminorm (A - V)",
+  "name":
+  "NLAlib.invariantNorm_sub_polar_le_sub_isometry",
+  "module":
+  "NLAlib.Matrix.NearestPolar",
+  "line":
+  143,
+  "kind":
+  "theorem",
+  "doc":
+  "Every polar isometry is a nearest isometry in every invariant norm on\narbitrary finite real matrix indices. Horn–Johnson 2013, Theorem 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.OrthogonallyInvariantNorm",
+   "NLAlib.OrthogonallyInvariantNorm.seminorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.invariantNorm_sub_polar_le_sub_isometry_fin {m n : ℕ} (ν : NLAlib.OrthogonallyInvariantNorm (Fin m) (Fin n))\n  (A U V : Matrix (Fin m) (Fin n) ℝ) (hCard : n ≤ m) (hU : NLAlib.HasOrthonormalCols U)\n  (hA : U * CFC.sqrt (A.transpose * A) = A) (hV : NLAlib.HasOrthonormalCols V) : ν.seminorm (A - U) ≤ ν.seminorm (A - V)",
+  "name":
+  "NLAlib.invariantNorm_sub_polar_le_sub_isometry_fin",
+  "module":
+  "NLAlib.Matrix.NearestPolar",
+  "line":
+  105,
+  "kind":
+  "theorem",
+  "doc":
+  "Every polar isometry minimizes the distance to a tall real matrix in\nevery orthogonally invariant norm, including empty and deficient-rank shapes.\nHorn–Johnson 2013, Theorem 7.3.1; uses the full rectangular Mirsky inequality.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
+  ["NLAlib.OrthogonallyInvariantNorm",
    "NLAlib.OrthogonallyInvariantNorm.seminorm",
    "NLAlib.OrthogonallyInvariantNorm.toSymmetricGauge",
    "NLAlib.SymmetricGauge",
@@ -101334,6 +102101,26 @@
   "theorem",
   "doc":
   "Each sign coordinate has the existing exact Rademacher law.\nSource: operator re-derivation `sh:srht`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isRoot_charpoly_of_mulVec_eq_smul.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2} [Field K]\n  {A : Matrix n n K} {x : n → K} {μ : K} (hx : x ≠ 0) (hAx : A.mulVec x = μ • x) : A.charpoly.IsRoot μ",
+  "name":
+  "NLAlib.isRoot_charpoly_of_mulVec_eq_smul",
+  "module":
+  "NLAlib.Matrix.RankOneEigenvalue",
+  "line":
+  35,
+  "kind":
+  "theorem",
+  "doc":
+  "A nonzero eigenvector forces its eigenvalue to be a characteristic root.\nSource: Horn–Johnson (2013), Definition 1.4.6; includes no diagonalizability\nassumption. ",
   "atlas_partial":
   [],
   "atlas":
@@ -106359,6 +107146,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.lt_eigenvalues₀_of_forall_mem.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (k : Fin (Fintype.card n)) (S : Submodule ℝ (n → ℝ)) (hS : ↑k + 1 ≤ Module.finrank ℝ ↥S) {c : ℝ}\n  (hAS : ∀ x ∈ S, x ≠ 0 → c * x ⬝ᵥ x < NLAlib.quadForm A x) : c < hA.eigenvalues₀ k",
+  "name":
+  "NLAlib.lt_eigenvalues₀_of_forall_mem",
+  "module":
+  "NLAlib.Matrix.EigenvalueOrder",
+  "line":
+  59,
+  "kind":
+  "theorem",
+  "doc":
+  "A strict lower Rayleigh bound on a subspace of dimension at least\n`k+1` implies a strict bound for the `k`-th largest eigenvalue.\nHorn--Johnson (2013), Theorem 4.2.10.\natlas: eigenvalue-order-and-counting (partial) ",
+  "atlas_partial":
+  ["eigenvalue-order-and-counting"],
+  "atlas":
+  ["eigenvalue-order-and-counting"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -106735,6 +107542,212 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.mapAbsCondition.{u_1, u_2} {E : Type u_1} {F : Type u_2} [NormedAddCommGroup E] [NormedSpace ℝ E]\n  [NormedAddCommGroup F] [NormedSpace ℝ F] (f : E → F) (x : E) : ℝ",
+  "name":
+  "NLAlib.mapAbsCondition",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  29,
+  "kind":
+  "def",
+  "doc":
+  "The absolute condition number is the operator norm of the Fréchet\nderivative. Gautschi (2004), Definition 2.3. Mathlib's total derivative is\nzero outside the differentiable branch.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  ["NLAlib.mapAbsCondition"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapAbsCondition_eq_abs_deriv (f : ℝ → ℝ) (x : ℝ) : NLAlib.mapAbsCondition f x = |deriv f x|",
+  "name":
+  "NLAlib.mapAbsCondition_eq_abs_deriv",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  48,
+  "kind":
+  "theorem",
+  "doc":
+  "In one dimension absolute conditioning is the absolute scalar\nderivative. Gautschi (2004), Definition 2.5.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  ["NLAlib.mapAbsCondition"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapAbsCondition_eq_norm_of_hasFDerivAt.{u_1, u_2} {E : Type u_1} {F : Type u_2} [NormedAddCommGroup E]\n  [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F] {f : E → F} {x : E} {L : E →L[ℝ] F}\n  (hf : HasFDerivAt f L x) : NLAlib.mapAbsCondition f x = ‖L‖",
+  "name":
+  "NLAlib.mapAbsCondition_eq_norm_of_hasFDerivAt",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  42,
+  "kind":
+  "theorem",
+  "doc":
+  "A specified Fréchet derivative computes the absolute condition number.\nGautschi (2004), Definition 2.3; supports `condition-number-of-map-def`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.mapAbsCondition",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapAbsCondition_toEuclideanCLM.{u_4} {n : Type u_4} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ)\n  (x : EuclideanSpace ℝ n) : NLAlib.mapAbsCondition (⇑(Matrix.toEuclideanCLM A)) x = NLAlib.specNorm A",
+  "name":
+  "NLAlib.mapAbsCondition_toEuclideanCLM",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  202,
+  "kind":
+  "theorem",
+  "doc":
+  "The absolute condition number of a matrix's Euclidean action is its\nspectral norm. Gautschi (2004), Definitions 2.3--2.4.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapComponentRelativeCondition.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) : ℝ",
+  "name":
+  "NLAlib.mapComponentRelativeCondition",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  113,
+  "kind":
+  "def",
+  "doc":
+  "The Euclidean componentwise relative condition number is the spectral\nnorm of the relative condition matrix. Gautschi (2004), Definition 2.4.\nIts relative perturbation interpretation requires every input and output\ncoordinate to be nonzero; the formula itself is total.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  ["NLAlib.componentRelativeMap",
+   "NLAlib.mapAbsCondition",
+   "NLAlib.mapComponentRelativeCondition"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapComponentRelativeCondition_eq_mapAbsCondition.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] {f : EuclideanSpace ℝ m → EuclideanSpace ℝ n} {x : EuclideanSpace ℝ m}\n  (hf : DifferentiableAt ℝ f x) :\n  NLAlib.mapComponentRelativeCondition f x = NLAlib.mapAbsCondition (NLAlib.componentRelativeMap f x) 0",
+  "name":
+  "NLAlib.mapComponentRelativeCondition_eq_mapAbsCondition",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  161,
+  "kind":
+  "theorem",
+  "doc":
+  "Componentwise relative conditioning is absolute conditioning of the\nscaled local map. Gautschi (2004), Definition 2.4;\nfrontier derivations `psd:map-condition`.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  ["NLAlib.mapAbsCondition",
+   "NLAlib.mapComponentRelativeCondition",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapComponentRelativeCondition_le_diagonal_scaling.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) :\n  NLAlib.mapComponentRelativeCondition f x ≤\n    NLAlib.specNorm (Matrix.diagonal fun i => ((f x).ofLp i)⁻¹) * NLAlib.mapAbsCondition f x *\n      NLAlib.specNorm (Matrix.diagonal fun j => x.ofLp j)",
+  "name":
+  "NLAlib.mapComponentRelativeCondition_le_diagonal_scaling",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  184,
+  "kind":
+  "theorem",
+  "doc":
+  "Componentwise relative conditioning has the direct diagonal scaling\nbound, including empty input/output dimensions. Gautschi (2004), Definition\n2.4; frontier derivations `psd:map-condition`. This metric need not be\nbounded by the matrix condition number alone.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapNormRelativeCondition.{u_1, u_2} {E : Type u_1} {F : Type u_2} [NormedAddCommGroup E] [NormedSpace ℝ E]\n  [NormedAddCommGroup F] [NormedSpace ℝ F] (f : E → F) (x : E) : ℝ",
+  "name":
+  "NLAlib.mapNormRelativeCondition",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  35,
+  "kind":
+  "def",
+  "doc":
+  "The normwise relative condition number scales absolute conditioning by\nthe ratio of the input and output norms. Gautschi (2004), Definition 2.4;\ninterpreted as relative conditioning when both norms are nonzero.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  ["NLAlib.mapNormRelativeCondition"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapNormRelativeCondition_eq_abs_mul_deriv_div (f : ℝ → ℝ) (x : ℝ) :\n  NLAlib.mapNormRelativeCondition f x = |x * deriv f x / f x|",
+  "name":
+  "NLAlib.mapNormRelativeCondition_eq_abs_mul_deriv_div",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "In one dimension relative conditioning is the absolute logarithmic\nderivative, with the usual nonzero input/output interpretation.\nGautschi (2004), Definition 2.6.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  ["NLAlib.conditionNumber",
+   "NLAlib.mapNormRelativeCondition"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mapNormRelativeCondition_toEuclideanCLM_le_conditionNumber.{u_4} {n : Type u_4} [Fintype n] [DecidableEq n]\n  (A : Matrix n n ℝ) (hA : IsUnit A) (x : EuclideanSpace ℝ n) :\n  NLAlib.mapNormRelativeCondition (⇑(Matrix.toEuclideanCLM A)) x ≤ NLAlib.conditionNumber A",
+  "name":
+  "NLAlib.mapNormRelativeCondition_toEuclideanCLM_le_conditionNumber",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  210,
+  "kind":
+  "theorem",
+  "doc":
+  "Normwise relative conditioning of an invertible linear map is bounded\nby its matrix condition number. Gautschi (2004), Definitions 2.3--2.4;\nfrontier derivations `psd:map-condition`.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.map_add_mul_prod_gaussianReal (a b : ℝ) (hab : a ^ 2 + b ^ 2 = 1) :\n  MeasureTheory.Measure.map (fun p => a * p.1 + b * p.2)\n      ((ProbabilityTheory.gaussianReal 0 1).prod (ProbabilityTheory.gaussianReal 0 1)) =\n    ProbabilityTheory.gaussianReal 0 1",
   "name":
   "NLAlib.map_add_mul_prod_gaussianReal",
@@ -106790,6 +107803,33 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.componentRelativeConditionMatrix",
+   "NLAlib.componentRelativeMap",
+   "NLAlib.conditionNumber",
+   "NLAlib.euclideanJacobian",
+   "NLAlib.mapAbsCondition",
+   "NLAlib.mapComponentRelativeCondition",
+   "NLAlib.mapNormRelativeCondition",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.map_conditioning_characterizations.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] {f : EuclideanSpace ℝ m → EuclideanSpace ℝ n} {x : EuclideanSpace ℝ m}\n  (hf : DifferentiableAt ℝ f x) :\n  NLAlib.specNorm (NLAlib.euclideanJacobian f x) = ‖fderiv ℝ f x‖ ∧\n    (∀ (i : n) (j : m),\n        NLAlib.componentRelativeConditionMatrix f x i j =\n          x.ofLp j * ((fderiv ℝ f x) (EuclideanSpace.single j 1)).ofLp i / (f x).ofLp i) ∧\n      NLAlib.mapComponentRelativeCondition f x = NLAlib.mapAbsCondition (NLAlib.componentRelativeMap f x) 0 ∧\n        NLAlib.mapComponentRelativeCondition f x ≤\n            NLAlib.specNorm (Matrix.diagonal fun i => ((f x).ofLp i)⁻¹) * NLAlib.mapAbsCondition f x *\n              NLAlib.specNorm (Matrix.diagonal fun j => x.ofLp j) ∧\n          (∀ (g : ℝ → ℝ) (y : ℝ),\n              NLAlib.mapAbsCondition g y = |deriv g y| ∧ NLAlib.mapNormRelativeCondition g y = |y * deriv g y / g y|) ∧\n            ∀ (A : Matrix n n ℝ),\n              IsUnit A →\n                ∀ (y : EuclideanSpace ℝ n),\n                  NLAlib.mapNormRelativeCondition (⇑(Matrix.toEuclideanCLM A)) y ≤ NLAlib.conditionNumber A",
+  "name":
+  "NLAlib.map_conditioning_characterizations",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  237,
+  "kind":
+  "theorem",
+  "doc":
+  "The map-conditioning contract combines derivative norms, coordinate\nrelative derivatives, scalar formulas, and the valid bounds for both\nrelative perturbation metrics. Gautschi (2004), Definitions 2.3--2.6;\nfrontier derivations `psd:map-condition`. The matrix-condition-number bound\napplies to the normwise relative metric; the coordinate metric has the\ndisplayed separate diagonal scaling bound.\natlas: condition-number-of-map-def ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["condition-number-of-map-def"]},
  {"uses":
   [],
   "sorry":
@@ -113062,6 +114102,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.mul_conjTranspose_eq_conjTranspose_mul_of_unitary_diagonalization.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A : Matrix n n ℂ} (U : ↥(Matrix.unitaryGroup n ℂ)) (d : n → ℂ)\n  (hA : A = ↑U * Matrix.diagonal d * (↑U).conjTranspose) : A * A.conjTranspose = A.conjTranspose * A",
+  "name":
+  "NLAlib.mul_conjTranspose_eq_conjTranspose_mul_of_unitary_diagonalization",
+  "module":
+  "NLAlib.Matrix.NormalSpectral",
+  "line":
+  101,
+  "kind":
+  "theorem",
+  "doc":
+  "A unitary diagonalization implies normality. Source: Horn–Johnson\n(2013), Theorem 2.5.3; diagonal entries may be arbitrary complex numbers.\natlas: normal-matrices (partial) ",
+  "atlas_partial":
+  ["normal-matrices"],
+  "atlas":
+  ["normal-matrices"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.mul_conjTranspose_mul_inv_gram_eq_one_of_rank_eq_card.{u_1, u_2} {k : Type u_1} {t : Type u_2} [Fintype k]\n  [Fintype t] [DecidableEq k] (B : Matrix k t ℂ) (hB : B.rank = Fintype.card k) :\n  B * (B.conjTranspose * (B * B.conjTranspose)⁻¹) = 1",
   "name":
   "NLAlib.mul_conjTranspose_mul_inv_gram_eq_one_of_rank_eq_card",
@@ -115520,6 +116580,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.normal_iff_exists_unitary_diagonalization.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℂ) :\n  A * A.conjTranspose = A.conjTranspose * A ↔ ∃ U d, A = ↑U * Matrix.diagonal d * (↑U).conjTranspose",
+  "name":
+  "NLAlib.normal_iff_exists_unitary_diagonalization",
+  "module":
+  "NLAlib.Matrix.NormalSpectral",
+  "line":
+  122,
+  "kind":
+  "theorem",
+  "doc":
+  "A complex matrix is normal exactly when it is unitarily diagonalizable.\nSource: Horn–Johnson (2013), Theorem 2.5.3.\natlas: normal-matrices (partial) ",
+  "atlas_partial":
+  ["normal-matrices"],
+  "atlas":
+  ["normal-matrices"]},
  {"uses":
   [],
   "sorry":
@@ -118000,6 +119080,69 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.polar_coisometry_unique_iff_rank_eq_card.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] {A U : Matrix m n ℝ} (hU : U * U.transpose = 1) (hA : CFC.sqrt (A * A.transpose) * U = A) :\n  (∀ (V : Matrix m n ℝ), V * V.transpose = 1 → CFC.sqrt (A * A.transpose) * V = A → V = U) ↔ A.rank = Fintype.card m",
+  "name":
+  "NLAlib.polar_coisometry_unique_iff_rank_eq_card",
+  "module":
+  "NLAlib.Matrix.PolarDecomposition",
+  "line":
+  186,
+  "kind":
+  "theorem",
+  "doc":
+  "Coisometry uniqueness in the wide formulation holds exactly at full row\nrank. Horn–Johnson 2013, Theorem 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.OrthogonallyInvariantNorm",
+   "NLAlib.OrthogonallyInvariantNorm.seminorm",
+   "NLAlib.polarFrame"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.polar_decomposition_properties.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] (A : Matrix m n ℝ) :\n  (Fintype.card n ≤ Fintype.card m →\n      ∃ U,\n        NLAlib.HasOrthonormalCols U ∧\n          U * CFC.sqrt (A.transpose * A) = A ∧\n            ((∀ (V : Matrix m n ℝ), NLAlib.HasOrthonormalCols V → V * CFC.sqrt (A.transpose * A) = A → V = U) ↔\n                A.rank = Fintype.card n) ∧\n              (A.rank = Fintype.card n → U = NLAlib.polarFrame A) ∧\n                ∀ (ν : NLAlib.OrthogonallyInvariantNorm m n) (V : Matrix m n ℝ),\n                  NLAlib.HasOrthonormalCols V → ν.seminorm (A - U) ≤ ν.seminorm (A - V)) ∧\n    (Fintype.card m ≤ Fintype.card n →\n        ∃ U,\n          U * U.transpose = 1 ∧\n            CFC.sqrt (A * A.transpose) * U = A ∧\n              ((∀ (V : Matrix m n ℝ), V * V.transpose = 1 → CFC.sqrt (A * A.transpose) * V = A → V = U) ↔\n                  A.rank = Fintype.card m) ∧\n                ∀ (ν : NLAlib.OrthogonallyInvariantNorm m n) (V : Matrix m n ℝ),\n                  V * V.transpose = 1 → ν.seminorm (A - U) ≤ ν.seminorm (A - V)) ∧\n      (∀ (U : Matrix m n ℝ) (Q : Matrix n n ℝ),\n          NLAlib.HasOrthonormalCols U → Q.PosSemidef → U * Q = A → Q = CFC.sqrt (A.transpose * A)) ∧\n        ∀ (B : Matrix n n ℝ),\n          ∃ U, NLAlib.HasOrthonormalCols U ∧ U * CFC.sqrt (B.transpose * B) = B ∧ CFC.sqrt (B * B.transpose) * U = B",
+  "name":
+  "NLAlib.polar_decomposition_properties",
+  "module":
+  "NLAlib.Matrix.PolarToolkit",
+  "line":
+  15,
+  "kind":
+  "theorem",
+  "doc":
+  "All real polar-decomposition clauses, including arbitrary rank, empty\nindices, wide coisometries, exact uniqueness conditions and minimization in\nevery invariant norm. Horn–Johnson 2013, Theorem 7.3.1; source re-derivation\n§`alg:polar`. A minimizer's uniqueness for every norm is not asserted.\natlas: polar-decomposition ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["polar-decomposition"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.polar_isometry_unique_iff_rank_eq_card.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq n] {A U : Matrix m n ℝ} (hU : NLAlib.HasOrthonormalCols U) (hA : U * CFC.sqrt (A.transpose * A) = A) :\n  (∀ (V : Matrix m n ℝ), NLAlib.HasOrthonormalCols V → V * CFC.sqrt (A.transpose * A) = A → V = U) ↔\n    A.rank = Fintype.card n",
+  "name":
+  "NLAlib.polar_isometry_unique_iff_rank_eq_card",
+  "module":
+  "NLAlib.Matrix.PolarDecomposition",
+  "line":
+  138,
+  "kind":
+  "theorem",
+  "doc":
+  "Among polar isometries, uniqueness holds exactly at full column rank,\nincluding the empty column space. Horn–Johnson 2013, Theorem 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
  {"uses":
   [],
   "sorry":
@@ -127131,6 +128274,27 @@
   "atlas":
   ["qr-decomposition"]},
  {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.singularValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.singularValues_eq_one_of_hasOrthonormalCols {m n : ℕ} {U : Matrix (Fin m) (Fin n) ℝ}\n  (hU : NLAlib.HasOrthonormalCols U) (hCard : n ≤ m) {k : ℕ} (hk : k < n) : NLAlib.singularValues U k = 1",
+  "name":
+  "NLAlib.singularValues_eq_one_of_hasOrthonormalCols",
+  "module":
+  "NLAlib.Matrix.NearestPolar",
+  "line":
+  29,
+  "kind":
+  "theorem",
+  "doc":
+  "A real isometry has singular value one at every thin index, including\nthe zero-dimensional case as an empty assertion. Horn–Johnson §7.3.1. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.singularValues"],
   "sorry":
   false,
@@ -128633,6 +129797,28 @@
   [],
   "atlas":
   ["quadratic-probe-spectral-detection"]},
+ {"uses":
+  ["NLAlib.euclideanJacobian",
+   "NLAlib.mapAbsCondition",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.specNorm_euclideanJacobian.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) :\n  NLAlib.specNorm (NLAlib.euclideanJacobian f x) = NLAlib.mapAbsCondition f x",
+  "name":
+  "NLAlib.specNorm_euclideanJacobian",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "The spectral norm of the Euclidean Jacobian is absolute conditioning.\nGautschi (2004), Definition 2.3.\natlas: condition-number-of-map-def (partial) ",
+  "atlas_partial":
+  ["condition-number-of-map-def"],
+  "atlas":
+  ["condition-number-of-map-def"]},
  {"uses":
   ["NLAlib.singularValues",
    "NLAlib.specNorm"],
@@ -132005,6 +133191,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sqrt_rowGram_mul_eq_of_isometry_mul_sqrt_gram_eq.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n]\n  {A U : Matrix n n ℝ} (hU : NLAlib.HasOrthonormalCols U) (hA : U * CFC.sqrt (A.transpose * A) = A) :\n  CFC.sqrt (A * A.transpose) * U = A",
+  "name":
+  "NLAlib.sqrt_rowGram_mul_eq_of_isometry_mul_sqrt_gram_eq",
+  "module":
+  "NLAlib.Matrix.PolarDecomposition",
+  "line":
+  155,
+  "kind":
+  "theorem",
+  "doc":
+  "In the square case the same orthogonal factor works on both sides of the\ntwo Gram square roots, even at zero rank. Horn–Johnson 2013, Theorem 7.3.1.\natlas: polar-decomposition (partial) ",
+  "atlas_partial":
+  ["polar-decomposition"],
+  "atlas":
+  ["polar-decomposition"]},
  {"uses":
   ["NLAlib.gramSchmidtCol",
    "NLAlib.gramSchmidtResidual"],
@@ -137041,6 +138247,26 @@
   "theorem",
   "doc":
   "The matrix projector is precisely Mathlib's genuine Hilbert projection.\nSource: `sa:volume`, actual projector bridge. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.euclideanJacobian"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.toEuclideanLin_euclideanJacobian.{u_3, u_4} {m : Type u_3} {n : Type u_4} [Fintype m] [DecidableEq m]\n  (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) :\n  Matrix.toEuclideanLin (NLAlib.euclideanJacobian f x) = ↑(fderiv ℝ f x)",
+  "name":
+  "NLAlib.toEuclideanLin_euclideanJacobian",
+  "module":
+  "NLAlib.Matrix.MapConditioning",
+  "line":
+  75,
+  "kind":
+  "theorem",
+  "doc":
+  "The Euclidean Jacobian represents exactly the Fréchet derivative.\nGautschi (2004), Definition 2.3; supports `condition-number-of-map-def`. ",
   "atlas_partial":
   [],
   "atlas":

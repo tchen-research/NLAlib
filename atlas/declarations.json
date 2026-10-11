@@ -64299,6 +64299,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.aeval_intertwines.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {K : Type u_3} [Field K] {A : Matrix m m K} {B : Matrix n n K} {X : Matrix m n K} (hX : A * X = X * B)\n  (p : Polynomial K) : (Polynomial.aeval A) p * X = X * (Polynomial.aeval B) p",
+  "name":
+  "NLAlib.aeval_intertwines",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  76,
+  "kind":
+  "theorem",
+  "doc":
+  "Polynomial functional calculus preserves every rectangular intertwining\nrelation. Source: Horn–Johnson (2013), Lemma 2.4.4.0; this applies the existing\npolynomial-intertwining API over an arbitrary field.\natlas: sylvester-equation (partial) ",
+  "atlas_partial":
+  ["sylvester-equation"],
+  "atlas":
+  ["sylvester-equation"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.aeval_map_ofReal.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (A : Matrix ι ι ℝ) (p : Polynomial ℝ) :\n  ((Polynomial.aeval A) p).map Complex.ofReal = (Polynomial.aeval (A.map Complex.ofReal)) p",
   "name":
   "NLAlib.aeval_map_ofReal",
@@ -74793,6 +74813,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.dotProduct_eq_zero_of_left_right_eigenvalues_ne.{u_2, u_3} {n : Type u_2} [Fintype n] {K : Type u_3} [Field K]\n  {A : Matrix n n K} {x y : n → K} {α μ : K} (hx : A.mulVec x = α • x) (hy : Matrix.vecMul y A = μ • y) (hαμ : α ≠ μ) :\n  y ⬝ᵥ x = 0",
+  "name":
+  "NLAlib.dotProduct_eq_zero_of_left_right_eigenvalues_ne",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  "Left and right eigenvectors at different eigenvalues are biorthogonal.\nSource: Horn–Johnson (2013), Observation 1.4.6a; `y` denotes the left row,\nwhich may be `star y₀` for a complex column eigenvector `y₀`.\natlas: left-right-eigenvectors (partial) ",
+  "atlas_partial":
+  ["left-right-eigenvectors"],
+  "atlas":
+  ["left-right-eigenvectors"]},
+ {"uses":
   ["NLAlib.moorePenroseInverse"],
   "sorry":
   false,
@@ -76697,6 +76737,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.eq_zero_of_mul_eq_mul_of_disjoint_spectrum.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] {K : Type u_3} [Field K] [IsAlgClosed K] {A : Matrix m m K} {B : Matrix n n K}\n  (hdisj : Disjoint (spectrum K A) (spectrum K B)) {X : Matrix m n K} (hX : A * X = X * B) : X = 0",
+  "name":
+  "NLAlib.eq_zero_of_mul_eq_mul_of_disjoint_spectrum",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  150,
+  "kind":
+  "theorem",
+  "doc":
+  "An off-diagonal block intertwiner vanishes for disjoint block spectra.\nSource: Horn–Johnson (2013), Corollary 2.4.4.2; the row and column blocks may\nhave different sizes.\natlas: sylvester-equation (partial) ",
+  "atlas_partial":
+  ["sylvester-equation"],
+  "atlas":
+  ["sylvester-equation"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eq_zero_of_mul_eq_mul_of_isCoprime_charpoly.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] {K : Type u_3} [Field K] {A : Matrix m m K} {B : Matrix n n K}\n  (hcop : IsCoprime A.charpoly B.charpoly) {X : Matrix m n K} (hX : A * X = X * B) : X = 0",
+  "name":
+  "NLAlib.eq_zero_of_mul_eq_mul_of_isCoprime_charpoly",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  33,
+  "kind":
+  "theorem",
+  "doc":
+  "Coprime characteristic polynomials annihilate every rectangular intertwiner.\nSource: Horn–Johnson (2013), Lemma 2.4.4.0 and Theorem 2.4.4.1, using Bézout\nand Cayley–Hamilton instead of a triangular basis.\natlas: sylvester-equation (partial) ",
+  "atlas_partial":
+  ["sylvester-equation"],
+  "atlas":
+  ["sylvester-equation"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.equivalent_toQuadraticForm'_transpose_mul_mul.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ)\n  {X : Matrix n n ℝ} (hX : IsUnit X) : QuadraticMap.Equivalent (X.transpose * A * X).toQuadraticForm' A.toQuadraticForm'",
   "name":
   "NLAlib.equivalent_toQuadraticForm'_transpose_mul_mul",
@@ -77156,6 +77236,46 @@
   ["qr-decomposition"],
   "atlas":
   ["qr-decomposition"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.existsUnique_sylvester_of_disjoint_spectrum.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] {K : Type u_3} [Field K] [IsAlgClosed K] (A : Matrix m m K) (B : Matrix n n K)\n  (hdisj : Disjoint (spectrum K A) (spectrum K B)) (C : Matrix m n K) : ∃! X, A * X - X * B = C",
+  "name":
+  "NLAlib.existsUnique_sylvester_of_disjoint_spectrum",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  140,
+  "kind":
+  "theorem",
+  "doc":
+  "Disjoint spectra give exactly one solution for each Sylvester right-hand\nside. Source: Horn–Johnson (2013), Theorem 2.4.4.1; indices may be empty.\natlas: sylvester-equation (partial) ",
+  "atlas_partial":
+  ["sylvester-equation"],
+  "atlas":
+  ["sylvester-equation"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.existsUnique_sylvester_of_isCoprime_charpoly.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {K : Type u_3} [Field K] (A : Matrix m m K) (B : Matrix n n K)\n  (hcop : IsCoprime A.charpoly B.charpoly) (C : Matrix m n K) : ∃! X, A * X - X * B = C",
+  "name":
+  "NLAlib.existsUnique_sylvester_of_isCoprime_charpoly",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  65,
+  "kind":
+  "theorem",
+  "doc":
+  "Every right-hand side has exactly one solution to the Sylvester equation\nwhen the characteristic polynomials are coprime. Source: Horn–Johnson (2013),\nTheorem 2.4.4.1; real fields and empty shapes are included directly.\natlas: sylvester-equation (partial) ",
+  "atlas_partial":
+  ["sylvester-equation"],
+  "atlas":
+  ["sylvester-equation"]},
  {"uses":
   [],
   "sorry":
@@ -78221,6 +78341,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isometry_mul_eq_of_gram_eq.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} {p : Type u_3} [Fintype m]\n  [Fintype n] [Fintype p] [DecidableEq m] [DecidableEq n] [DecidableEq p] (A : Matrix m n ℝ) (B : Matrix p n ℝ)\n  (hCard : Fintype.card m ≤ Fintype.card p) (hGram : A.transpose * A = B.transpose * B) :\n  ∃ V, NLAlib.HasOrthonormalCols V ∧ V * A = B",
+  "name":
+  "NLAlib.exists_isometry_mul_eq_of_gram_eq",
+  "module":
+  "NLAlib.Matrix.RectangularGramIsometry",
+  "line":
+  18,
+  "kind":
+  "theorem",
+  "doc":
+  "Equal real Gram matrices admit a rectangular isometry from the smaller\nambient row space to the larger one, including empty and deficient-rank cases.\nHorn–Johnson 2013, Theorem 7.3.11; frontier derivations, §`alg:gram-isometry`.\natlas: gram-equality-isometry ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["gram-equality-isometry"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -78465,6 +78605,26 @@
   [],
   "atlas":
   ["krylov-eigenvector-angle"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_mulVec_eq_smul_of_mem_spectrum.{u_2, u_3} {n : Type u_2} [Fintype n] [DecidableEq n] {K : Type u_3}\n  [Field K] {A : Matrix n n K} {μ : K} (hμ : μ ∈ spectrum K A) : ∃ x, x ≠ 0 ∧ A.mulVec x = μ • x",
+  "name":
+  "NLAlib.exists_mulVec_eq_smul_of_mem_spectrum",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  23,
+  "kind":
+  "theorem",
+  "doc":
+  "Every spectral point of a matrix has a nonzero right eigenvector.\nSource: Horn–Johnson (2013), Definition 1.4.6; follows from the determinant\ncriterion and applies over an arbitrary field. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -79874,6 +80034,26 @@
   "atlas":
   ["quadratic-probe-spectral-detection"]},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_vecMul_eq_smul_of_mem_spectrum.{u_2, u_3} {n : Type u_2} [Fintype n] [DecidableEq n] {K : Type u_3}\n  [Field K] {A : Matrix n n K} {μ : K} (hμ : μ ∈ spectrum K A) : ∃ y, y ≠ 0 ∧ Matrix.vecMul y A = μ • y",
+  "name":
+  "NLAlib.exists_vecMul_eq_smul_of_mem_spectrum",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  36,
+  "kind":
+  "theorem",
+  "doc":
+  "Every spectral point also has a nonzero left eigenvector.\nSource: Horn–Johnson (2013), Definition 1.4.6; transpose preserves the\ncharacteristic polynomial, so no normality is required. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.Kaczmarz.expErr",
    "NLAlib.frobConditionNumber"],
   "sorry":
@@ -80460,6 +80640,26 @@
   [],
   "atlas":
   ["krylov-subspace"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.finrank_map_add_finrank_inf_ker.{u_1, u_2, u_3} {K : Type u_1} {E : Type u_2} {F : Type u_3} [Field K]\n  [AddCommGroup E] [_root_.Module K E] [AddCommGroup F] [_root_.Module K F] [FiniteDimensional K E] (f : E →ₗ[K] F)\n  (S : Submodule K E) : Module.finrank K ↥(Submodule.map f S) + Module.finrank K ↥(S ⊓ f.ker) = Module.finrank K ↥S",
+  "name":
+  "NLAlib.finrank_map_add_finrank_inf_ker",
+  "module":
+  "NLAlib.Matrix.RankInequalities",
+  "line":
+  20,
+  "kind":
+  "theorem",
+  "doc":
+  "Rank-nullity on a subspace says that the image dimension plus the\ndimension lost in the kernel is the original dimension. Horn–Johnson §0.4.2;\nhelper for `rank-inequalities`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -87299,6 +87499,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.gram_eq_iff_exists_isometry_mul_eq.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} {p : Type u_3} [Fintype m]\n  [Fintype n] [Fintype p] [DecidableEq m] [DecidableEq n] [DecidableEq p] (A : Matrix m n ℝ) (B : Matrix p n ℝ)\n  (hCard : Fintype.card m ≤ Fintype.card p) :\n  A.transpose * A = B.transpose * B ↔ ∃ V, NLAlib.HasOrthonormalCols V ∧ V * A = B",
+  "name":
+  "NLAlib.gram_eq_iff_exists_isometry_mul_eq",
+  "module":
+  "NLAlib.Matrix.RectangularGramIsometry",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "A rectangular isometry transporting one matrix to another preserves its\nGram matrix. Together with the existence theorem this gives both directions.\nHorn–Johnson 2013, Theorem 7.3.11; frontier derivations, §`alg:gram-isometry`.\natlas: gram-equality-isometry ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["gram-equality-isometry"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.gram_orthogonal_diagonalization.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {P : Matrix n n ℝ}\n  (hP : NLAlib.HasOrthonormalCols P) (d : n → ℝ) :\n  (P * Matrix.diagonal d * P.transpose).transpose * (P * Matrix.diagonal d * P.transpose) =\n    (P * Matrix.diagonal fun i => d i ^ 2) * P.transpose",
   "name":
   "NLAlib.gram_orthogonal_diagonalization",
@@ -87511,6 +87731,66 @@
   [],
   "atlas":
   ["hanson-wright"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasDerivAt_det.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : ℝ → Matrix n n ℝ} {H : Matrix n n ℝ} {t : ℝ}\n  (hA : HasDerivAt A H t) : HasDerivAt (fun s => (A s).det) ((A t).adjugate * H).trace t",
+  "name":
+  "NLAlib.hasDerivAt_det",
+  "module":
+  "NLAlib.Matrix.DeterminantDerivative",
+  "line":
+  41,
+  "kind":
+  "theorem",
+  "doc":
+  "Jacobi's formula for a differentiable matrix path applies at every matrix,\nincluding singular matrices and empty indices. Horn–Johnson 2013, §0.8.10.\natlas: determinant-derivative ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["determinant-derivative"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasDerivAt_det_smul_one_sub.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) (t : ℝ) :\n  HasDerivAt (fun s => (s • 1 - A).det) (t • 1 - A).adjugate.trace t",
+  "name":
+  "NLAlib.hasDerivAt_det_smul_one_sub",
+  "module":
+  "NLAlib.Matrix.DeterminantDerivative",
+  "line":
+  66,
+  "kind":
+  "theorem",
+  "doc":
+  "The derivative of `det(t I - A)` is the trace of its adjugate, including\nthe empty matrix. Horn–Johnson 2013, §0.8.10.\natlas: determinant-derivative ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["determinant-derivative"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasDerivAt_det_smul_one_sub_sum_principal_minors {k : ℕ} (A : Matrix (Fin (k + 1)) (Fin (k + 1)) ℝ) (t : ℝ) :\n  HasDerivAt (fun s => (s • 1 - A).det) (∑ i, ((t • 1 - A).submatrix i.succAbove i.succAbove).det) t",
+  "name":
+  "NLAlib.hasDerivAt_det_smul_one_sub_sum_principal_minors",
+  "module":
+  "NLAlib.Matrix.DeterminantDerivative",
+  "line":
+  76,
+  "kind":
+  "theorem",
+  "doc":
+  "On `Fin (n+1)`, the characteristic determinant derivative is the sum of\nthe principal minors obtained by deleting one index. At size one these are\nthe empty determinants; size zero is covered by the adjugate trace theorem.\nHorn–Johnson 2013, §0.8.10.\natlas: determinant-derivative ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["determinant-derivative"]},
  {"uses":
   [],
   "sorry":
@@ -87844,6 +88124,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasDerivAt_log_det.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : ℝ → Matrix n n ℝ} {H : Matrix n n ℝ}\n  {t : ℝ} (hA : HasDerivAt A H t) (hDet : 0 < (A t).det) :\n  HasDerivAt (fun s => Real.log (A s).det) ((A t)⁻¹ * H).trace t",
+  "name":
+  "NLAlib.hasDerivAt_log_det",
+  "module":
+  "NLAlib.Matrix.DeterminantDerivative",
+  "line":
+  53,
+  "kind":
+  "theorem",
+  "doc":
+  "The logarithmic determinant derivative is the inverse trace pairing when\nthe determinant is positive. Horn–Johnson 2013, §0.8.10. The proof only needs\nnonzero determinant for the derivative of the real logarithm.\natlas: determinant-derivative ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["determinant-derivative"]},
  {"uses":
   [],
   "sorry":
@@ -99406,6 +99706,26 @@
   "theorem",
   "doc":
   "Orthogonal square matrices form a compact set on arbitrary finite index\ntypes, by transporting the already proved finite orthogonal-group compactness. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isCoprime_charpoly_iff_disjoint_spectrum.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] {K : Type u_3} [Field K] [IsAlgClosed K] (A : Matrix m m K) (B : Matrix n n K) :\n  IsCoprime A.charpoly B.charpoly ↔ Disjoint (spectrum K A) (spectrum K B)",
+  "name":
+  "NLAlib.isCoprime_charpoly_iff_disjoint_spectrum",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  85,
+  "kind":
+  "theorem",
+  "doc":
+  "Over an algebraically closed field, spectral disjointness is exactly\ncoprimality of characteristic polynomials. Source: Horn–Johnson (2013),\nTheorem 2.4.4.1; empty spectra cause no exception. ",
   "atlas_partial":
   [],
   "atlas":
@@ -112276,6 +112596,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.mulVec_eigenvector_of_intertwines.{u_2, u_3} {n : Type u_2} [Fintype n] {K : Type u_3} [Field K]\n  {A B S : Matrix n n K} {x : n → K} {μ : K} (hS : A * S = S * B) (hx : B.mulVec x = μ • x) :\n  A.mulVec (S.mulVec x) = μ • S.mulVec x",
+  "name":
+  "NLAlib.mulVec_eigenvector_of_intertwines",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  118,
+  "kind":
+  "theorem",
+  "doc":
+  "Similarity transports a right eigenvector by the similarity matrix.\nSource: Horn–Johnson (2013), Theorem 2.4.11.1.\natlas: left-right-eigenvectors (partial) ",
+  "atlas_partial":
+  ["left-right-eigenvectors"],
+  "atlas":
+  ["left-right-eigenvectors"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mulVec_eq_iff_sub_mem_ker.{u_1, u_4, u_5} {K : Type u_1} [Field K] {m : Type u_4} {n : Type u_5} [Fintype n]\n  (A : Matrix m n K) (b : m → K) (x₀ : n → K) (h₀ : A.mulVec x₀ = b) (x : n → K) :\n  A.mulVec x = b ↔ x - x₀ ∈ A.mulVecLin.ker",
+  "name":
+  "NLAlib.mulVec_eq_iff_sub_mem_ker",
+  "module":
+  "NLAlib.Matrix.RankInequalities",
+  "line":
+  74,
+  "kind":
+  "theorem",
+  "doc":
+  "Once one solution is given, all solutions differ from it by a vector\nin the matrix kernel. Horn–Johnson 2013, §0.4.5.\natlas: rank-inequalities ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["rank-inequalities"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.mulVec_eq_sum_smul_col.{u_1, u_2} {n : Type u_1} {k : Type u_2} [Fintype k] (Q : Matrix n k ℝ) (v : k → ℝ) :\n  Q.mulVec v = ∑ j, v j • Q.col j",
   "name":
   "NLAlib.mulVec_eq_sum_smul_col",
@@ -113068,6 +113428,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mul_normalized_vecMulVec_eq_smul.{u_2, u_3} {n : Type u_2} [Fintype n] {K : Type u_3} [Field K]\n  {A : Matrix n n K} {x y : n → K} {μ : K} (hx : A.mulVec x = μ • x) (hy : Matrix.vecMul y A = μ • y) :\n  A * (y ⬝ᵥ x)⁻¹ • Matrix.vecMulVec x y = μ • (y ⬝ᵥ x)⁻¹ • Matrix.vecMulVec x y ∧\n    (y ⬝ᵥ x)⁻¹ • Matrix.vecMulVec x y * A = μ • (y ⬝ᵥ x)⁻¹ • Matrix.vecMulVec x y",
+  "name":
+  "NLAlib.mul_normalized_vecMulVec_eq_smul",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  99,
+  "kind":
+  "theorem",
+  "doc":
+  "The paired rank-one projector commutes with the matrix and both products\nequal the eigenvalue times that projector. Source: Horn–Johnson (2013),\nTheorem 1.4.7; without simplicity it splits off one invariant line.\natlas: left-right-eigenvectors (partial) ",
+  "atlas_partial":
+  ["left-right-eigenvectors"],
+  "atlas":
+  ["left-right-eigenvectors"]},
+ {"uses":
   ["NLAlib.pinvL"],
   "sorry":
   false,
@@ -113732,6 +114112,26 @@
   "theorem",
   "doc":
   "`QQᵀ` is symmetric. Atlas `projection-facts`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mul_vecMulVec_eq_vecMulVec_mul.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  {K : Type u_3} [Field K] {A : Matrix m m K} {B : Matrix n n K} {x : m → K} {y : n → K} {μ : K}\n  (hx : A.mulVec x = μ • x) (hy : Matrix.vecMul y B = μ • y) : A * Matrix.vecMulVec x y = Matrix.vecMulVec x y * B",
+  "name":
+  "NLAlib.mul_vecMulVec_eq_vecMulVec_mul",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "A common eigenvalue produces a rank-one rectangular intertwiner.\nSource: Horn–Johnson (2013), Theorem 2.4.4.1, converse Sylvester obstruction. ",
   "atlas_partial":
   [],
   "atlas":
@@ -115261,6 +115661,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.normalized_vecMulVec_mul_self.{u_2, u_3} {n : Type u_2} [Fintype n] {K : Type u_3} [Field K] {x y : n → K}\n  (hpair : y ⬝ᵥ x ≠ 0) :\n  (y ⬝ᵥ x)⁻¹ • Matrix.vecMulVec x y * (y ⬝ᵥ x)⁻¹ • Matrix.vecMulVec x y = (y ⬝ᵥ x)⁻¹ • Matrix.vecMulVec x y",
+  "name":
+  "NLAlib.normalized_vecMulVec_mul_self",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  85,
+  "kind":
+  "theorem",
+  "doc":
+  "The normalized outer product of paired left and right eigenvectors is\nidempotent. Source: Horn–Johnson (2013), Theorem 1.4.7; nonzero pairing is\nthe exact side condition, without a simplicity assumption.\natlas: left-right-eigenvectors (partial) ",
+  "atlas_partial":
+  ["left-right-eigenvectors"],
+  "atlas":
+  ["left-right-eigenvectors"]},
  {"uses":
   ["NLAlib.complexVolumeSamplingWeight"],
   "sorry":
@@ -118049,6 +118469,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.posSemidef_iff_trace_mul_nonneg.{u_1, u_2} {n : Type u_1} {𝕜 : Type u_2} [Fintype n] [DecidableEq n] [RCLike 𝕜]\n  {A : Matrix n n 𝕜} (hA : A.IsHermitian) : A.PosSemidef ↔ ∀ (B : Matrix n n 𝕜), B.PosSemidef → 0 ≤ (A * B).trace",
+  "name":
+  "NLAlib.posSemidef_iff_trace_mul_nonneg",
+  "module":
+  "NLAlib.Matrix.PSDDuality",
+  "line":
+  80,
+  "kind":
+  "theorem",
+  "doc":
+  "A Hermitian matrix is PSD precisely when its trace pairing with every\nPSD matrix is nonnegative. Horn--Johnson (2013), Theorem 7.5.4.\natlas: psd-cone-self-dual (partial) ",
+  "atlas_partial":
+  ["psd-cone-self-dual"],
+  "atlas":
+  ["psd-cone-self-dual"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.posSemidef_inv_self_mul_transpose.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] (G : Matrix m n ℝ) : (G * G.transpose)⁻¹.PosSemidef",
   "name":
   "NLAlib.posSemidef_inv_self_mul_transpose",
@@ -119306,6 +119746,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.psd_trace_pairing_characterizations.{u_1, u_2} {n : Type u_1} {𝕜 : Type u_2} [Fintype n] [DecidableEq n]\n  [RCLike 𝕜] {A : Matrix n n 𝕜} (hA : A.IsHermitian) :\n  (A.PosSemidef ↔ ∀ (B : Matrix n n 𝕜), B.PosSemidef → 0 ≤ (A * B).trace) ∧\n    (∀ (B : Matrix n n 𝕜), A.PosSemidef → B.PosSemidef → ((A * B).trace = 0 ↔ A * B = 0)) ∧\n      ∀ (B C : Matrix n n 𝕜), A.PosSemidef → B ≤ C → (A * B).trace ≤ (A * C).trace",
+  "name":
+  "NLAlib.psd_trace_pairing_characterizations",
+  "module":
+  "NLAlib.Matrix.PSDDuality",
+  "line":
+  101,
+  "kind":
+  "theorem",
+  "doc":
+  "The PSD cone is self-dual under the trace pairing; the pairing vanishes\nexactly on zero products and is monotone in either PSD argument.\nHorn--Johnson (2013), Theorem 7.5.4.\natlas: psd-cone-self-dual ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["psd-cone-self-dual"]},
  {"uses":
   ["NLAlib.frobNorm",
    "NLAlib.moorePenroseInverse",
@@ -120663,6 +121123,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rank_add_rank_sub_card_le_rank_mul.{u_1, u_4, u_5, u_6} {K : Type u_1} [Field K] {m : Type u_4} {n : Type u_5}\n  {p : Type u_6} [Fintype n] [Fintype p] (A : Matrix m n K) (B : Matrix n p K) :\n  A.rank + B.rank - Fintype.card n ≤ (A * B).rank",
+  "name":
+  "NLAlib.rank_add_rank_sub_card_le_rank_mul",
+  "module":
+  "NLAlib.Matrix.RankInequalities",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "Sylvester's rank inequality with natural-number subtraction, including\nempty indices. Horn–Johnson 2013, §0.4.2.\natlas: rank-inequalities ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["rank-inequalities"]},
+ {"uses":
   ["NLAlib.choleskyHistoryWeight",
    "NLAlib.choleskyResidualHistory"],
   "sorry":
@@ -120929,6 +121409,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.rank_fromCols_eq_iff_exists_mulVec_eq.{u_1, u_4, u_5} {K : Type u_1} [Field K] {m : Type u_4} {n : Type u_5}\n  [Fintype n] [Fintype m] (A : Matrix m n K) (b : m → K) :\n  (A.fromCols fun i x => b i).rank = A.rank ↔ ∃ x, A.mulVec x = b",
+  "name":
+  "NLAlib.rank_fromCols_eq_iff_exists_mulVec_eq",
+  "module":
+  "NLAlib.Matrix.RankInequalities",
+  "line":
+  92,
+  "kind":
+  "theorem",
+  "doc":
+  "Adjoining a column does not increase rank exactly when that column lies\nin the original column space. This is the Rouché–Capelli solvability criterion,\nwith arbitrary finite indices and all zero-dimensional cases.\nHorn–Johnson 2013, §0.4.5.\natlas: rank-inequalities ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["rank-inequalities"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.rank_gram_pow_mul {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (q : ℕ) : ((A * A.transpose) ^ q * A).rank = A.rank",
   "name":
   "NLAlib.rank_gram_pow_mul",
@@ -121025,6 +121525,46 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rank_mul_add_rank_mul_le_rank_add_rank_mul_mul.{u_1, u_4, u_5, u_6, u_7} {K : Type u_1} [Field K] {m : Type u_4}\n  {n : Type u_5} {p : Type u_6} {q : Type u_7} [Fintype n] [Fintype p] [Fintype q] (A : Matrix m n K) (B : Matrix n p K)\n  (C : Matrix p q K) : (A * B).rank + (B * C).rank ≤ B.rank + (A * B * C).rank",
+  "name":
+  "NLAlib.rank_mul_add_rank_mul_le_rank_add_rank_mul_mul",
+  "module":
+  "NLAlib.Matrix.RankInequalities",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "Frobenius's rank inequality for three conformable matrices over a field,\nincluding empty indices. Horn–Johnson 2013, §0.4.2.\natlas: rank-inequalities ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["rank-inequalities"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rank_mul_bounds.{u_1, u_4, u_5, u_6} {K : Type u_1} [Field K] {m : Type u_4} {n : Type u_5} {p : Type u_6}\n  [Fintype n] [Fintype p] (A : Matrix m n K) (B : Matrix n p K) :\n  A.rank + B.rank - Fintype.card n ≤ (A * B).rank ∧ (A * B).rank ≤ min A.rank B.rank",
+  "name":
+  "NLAlib.rank_mul_bounds",
+  "module":
+  "NLAlib.Matrix.RankInequalities",
+  "line":
+  83,
+  "kind":
+  "theorem",
+  "doc":
+  "The full rank bounds for a product, including the Sylvester lower bound,\nhold over arbitrary fields and finite middle/column indices. Horn–Johnson\n2013, §0.4.2.\natlas: rank-inequalities ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["rank-inequalities"]},
+ {"uses":
   ["NLAlib.moorePenroseInverse"],
   "sorry":
   false,
@@ -121108,6 +121648,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rank_sum_le_sum_rank.{u_1, u_4, u_5} {K : Type u_1} [Field K] {m : Type u_4} {n : Type u_5} [Fintype n]\n  [Fintype m] (A B : Matrix m n K) : (A + B).rank ≤ A.rank + B.rank",
+  "name":
+  "NLAlib.rank_sum_le_sum_rank",
+  "module":
+  "NLAlib.Matrix.RankInequalities",
+  "line":
+  150,
+  "kind":
+  "theorem",
+  "doc":
+  "Rank subadditivity for finite matrices, packaged with the rank-inequality\nbundle. Horn–Johnson 2013, §0.4.2; uses the existing library rank API.\natlas: rank-inequalities ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["rank-inequalities"]},
  {"uses":
   ["NLAlib.truncatedRsvdOutput"],
   "sorry":
@@ -127434,6 +127994,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.solution_set_eq_add_ker.{u_1, u_4, u_5} {K : Type u_1} [Field K] {m : Type u_4} {n : Type u_5} [Fintype n]\n  (A : Matrix m n K) (b : m → K) (x₀ : n → K) (h₀ : A.mulVec x₀ = b) :\n  {x | A.mulVec x = b} = {x | ∃ z ∈ A.mulVecLin.ker, x = x₀ + z}",
+  "name":
+  "NLAlib.solution_set_eq_add_ker",
+  "module":
+  "NLAlib.Matrix.RankInequalities",
+  "line":
+  134,
+  "kind":
+  "theorem",
+  "doc":
+  "The affine solution set is the translate of the kernel through any one\nsolution. Horn–Johnson 2013, §0.4.5.\natlas: rank-inequalities ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["rank-inequalities"]},
  {"uses":
   [],
   "sorry":
@@ -133782,6 +134362,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.sum_det_updateRow_eq_trace_adjugate_mul.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A H : Matrix n n ℝ) :\n  ∑ i, (A.updateRow i (H i)).det = (A.adjugate * H).trace",
+  "name":
+  "NLAlib.sum_det_updateRow_eq_trace_adjugate_mul",
+  "module":
+  "NLAlib.Matrix.DeterminantDerivative",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "The sum of determinants obtained by replacing one row is the adjugate\ntrace pairing. Horn–Johnson 2013, §0.8.10; determinant-derivative helper. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.sum_eigenvalues_eq_sum_sorted.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (f : ℝ → ℝ) : ∑ i, f (hA.eigenvalues i) = ∑ i, f (hA.eigenvalues₀ i)",
   "name":
   "NLAlib.sum_eigenvalues_eq_sum_sorted",
@@ -135528,6 +136128,86 @@
   ["matrix-freedman"],
   "atlas":
   ["matrix-freedman"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sylvesterLinearMap.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] {K : Type u_3} [Field K]\n  (A : Matrix m m K) (B : Matrix n n K) : Matrix m n K →ₗ[K] Matrix m n K",
+  "name":
+  "NLAlib.sylvesterLinearMap",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  25,
+  "kind":
+  "def",
+  "doc":
+  "The rectangular Sylvester operator. Source: Horn–Johnson (2013),\nTheorem 2.4.4.1; the definition includes zero-dimensional matrix spaces. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.sylvesterLinearMap"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sylvesterLinearMap_bijective_iff_disjoint_spectrum.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {K : Type u_3} [Field K] [IsAlgClosed K] (A : Matrix m m K)\n  (B : Matrix n n K) : Function.Bijective ⇑(NLAlib.sylvesterLinearMap A B) ↔ Disjoint (spectrum K A) (spectrum K B)",
+  "name":
+  "NLAlib.sylvesterLinearMap_bijective_iff_disjoint_spectrum",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  129,
+  "kind":
+  "theorem",
+  "doc":
+  "The Sylvester operator is invertible exactly for disjoint spectra.\nSource: Horn–Johnson (2013), Theorem 2.4.4.1; formulated as bijectivity to\navoid choosing an inverse and valid in dimension zero.\natlas: sylvester-equation (partial) ",
+  "atlas_partial":
+  ["sylvester-equation"],
+  "atlas":
+  ["sylvester-equation"]},
+ {"uses":
+  ["NLAlib.sylvesterLinearMap"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sylvesterLinearMap_bijective_of_isCoprime_charpoly.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {K : Type u_3} [Field K] (A : Matrix m m K) (B : Matrix n n K)\n  (hcop : IsCoprime A.charpoly B.charpoly) : Function.Bijective ⇑(NLAlib.sylvesterLinearMap A B)",
+  "name":
+  "NLAlib.sylvesterLinearMap_bijective_of_isCoprime_charpoly",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  51,
+  "kind":
+  "theorem",
+  "doc":
+  "The Sylvester operator is bijective for coprime characteristic polynomials.\nSource: Horn–Johnson (2013), Theorem 2.4.4.1; finite dimensionality converts\nthe Bézout kernel computation into surjectivity.\natlas: sylvester-equation (partial) ",
+  "atlas_partial":
+  ["sylvester-equation"],
+  "atlas":
+  ["sylvester-equation"]},
+ {"uses":
+  ["NLAlib.sylvesterLinearMap"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sylvesterLinearMap_injective_iff_disjoint_spectrum.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {K : Type u_3} [Field K] [IsAlgClosed K] (A : Matrix m m K)\n  (B : Matrix n n K) : Function.Injective ⇑(NLAlib.sylvesterLinearMap A B) ↔ Disjoint (spectrum K A) (spectrum K B)",
+  "name":
+  "NLAlib.sylvesterLinearMap_injective_iff_disjoint_spectrum",
+  "module":
+  "NLAlib.Matrix.SylvesterQualitative",
+  "line":
+  104,
+  "kind":
+  "theorem",
+  "doc":
+  "The Sylvester operator is injective exactly when the spectra are disjoint.\nSource: Horn–Johnson (2013), Theorem 2.4.4.1; a common eigenvalue supplies a\nnonzero outer-product kernel element, while Bézout proves the converse.\natlas: sylvester-equation (partial) ",
+  "atlas_partial":
+  ["sylvester-equation"],
+  "atlas":
+  ["sylvester-equation"]},
  {"uses":
   [],
   "sorry":
@@ -137748,6 +138428,66 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.trace_mul_eq_sum_mul_star.{u_1, u_2} {n : Type u_1} {𝕜 : Type u_2} [Fintype n] [RCLike 𝕜] {A B : Matrix n n 𝕜}\n  (hB : B.IsHermitian) : (A * B).trace = ∑ i, ∑ j, A i j * star (B i j)",
+  "name":
+  "NLAlib.trace_mul_eq_sum_mul_star",
+  "module":
+  "NLAlib.Matrix.PSDDuality",
+  "line":
+  22,
+  "kind":
+  "theorem",
+  "doc":
+  "For a Hermitian second argument, the trace pairing is the entrywise\nHermitian pairing. Horn--Johnson (2013), Theorem 7.5.4;\nhelper for `psd-cone-self-dual`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_mul_eq_trace_sqrt_conjTranspose_mul.{u_1, u_2} {n : Type u_1} {𝕜 : Type u_2} [Fintype n] [DecidableEq n]\n  [RCLike 𝕜] {A B : Matrix n n 𝕜} (hA : A.PosSemidef) (hB : B.PosSemidef) :\n  (A * B).trace = ((CFC.sqrt A * CFC.sqrt B).conjTranspose * (CFC.sqrt A * CFC.sqrt B)).trace",
+  "name":
+  "NLAlib.trace_mul_eq_trace_sqrt_conjTranspose_mul",
+  "module":
+  "NLAlib.Matrix.PSDDuality",
+  "line":
+  34,
+  "kind":
+  "theorem",
+  "doc":
+  "The trace pairing of two PSD matrices is the trace of a Gram matrix\nformed from their square roots. Horn--Johnson (2013), Theorem 7.5.4;\nhelper for `psd-cone-self-dual`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_mul_eq_zero_iff_of_posSemidef.{u_1, u_2} {n : Type u_1} {𝕜 : Type u_2} [Fintype n] [DecidableEq n]\n  [RCLike 𝕜] {A B : Matrix n n 𝕜} (hA : A.PosSemidef) (hB : B.PosSemidef) : (A * B).trace = 0 ↔ A * B = 0",
+  "name":
+  "NLAlib.trace_mul_eq_zero_iff_of_posSemidef",
+  "module":
+  "NLAlib.Matrix.PSDDuality",
+  "line":
+  63,
+  "kind":
+  "theorem",
+  "doc":
+  "For PSD matrices the trace pairing vanishes exactly when their product\nvanishes. Horn--Johnson (2013), Theorem 7.5.4.\natlas: psd-cone-self-dual (partial) ",
+  "atlas_partial":
+  ["psd-cone-self-dual"],
+  "atlas":
+  ["psd-cone-self-dual"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.trace_mul_gram_direction.{u_1, u_2} {ι : Type u_1} {κ : Type u_2} [Fintype ι] [Fintype κ] [DecidableEq ι]\n  [DecidableEq κ] (X : Matrix ι ι ℝ) (hX : X.transpose = X) (G : Matrix ι κ ℝ) (i : ι) (j : κ) :\n  have E := Matrix.single i j 1;\n  (X * (E * G.transpose + G * E.transpose)).trace = 2 * (X * G) i j",
   "name":
   "NLAlib.trace_mul_gram_direction",
@@ -137804,6 +138544,26 @@
   "atlas":
   ["eigenvalue-perturbation-symmetric"]},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_mul_le_trace_mul_of_posSemidef.{u_1, u_2} {n : Type u_1} {𝕜 : Type u_2} [Fintype n] [DecidableEq n]\n  [RCLike 𝕜] {A B C : Matrix n n 𝕜} (hA : A.PosSemidef) (hBC : B ≤ C) : (A * B).trace ≤ (A * C).trace",
+  "name":
+  "NLAlib.trace_mul_le_trace_mul_of_posSemidef",
+  "module":
+  "NLAlib.Matrix.PSDDuality",
+  "line":
+  93,
+  "kind":
+  "theorem",
+  "doc":
+  "Multiplication in the trace pairing by a PSD matrix preserves Loewner\norder. Horn--Johnson (2013), Theorem 7.5.4.\natlas: psd-cone-self-dual (partial) ",
+  "atlas_partial":
+  ["psd-cone-self-dual"],
+  "atlas":
+  ["psd-cone-self-dual"]},
+ {"uses":
   ["NLAlib.moorePenroseInverse"],
   "sorry":
   false,
@@ -137823,6 +138583,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_mul_nonneg_of_posSemidef.{u_1, u_2} {n : Type u_1} {𝕜 : Type u_2} [Fintype n] [DecidableEq n] [RCLike 𝕜]\n  {A B : Matrix n n 𝕜} (hA : A.PosSemidef) (hB : B.PosSemidef) : 0 ≤ (A * B).trace",
+  "name":
+  "NLAlib.trace_mul_nonneg_of_posSemidef",
+  "module":
+  "NLAlib.Matrix.PSDDuality",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "The trace of the product of PSD matrices is nonnegative, and therefore\nreal for complex matrices. Horn--Johnson (2013), Theorem 7.5.4.\natlas: psd-cone-self-dual (partial) ",
+  "atlas_partial":
+  ["psd-cone-self-dual"],
+  "atlas":
+  ["psd-cone-self-dual"]},
  {"uses":
   [],
   "sorry":
@@ -139632,6 +140412,46 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.vecMulVec_ne_zero.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} {K : Type u_3} [Field K] {x : m → K} {y : n → K}\n  (hx : x ≠ 0) (hy : y ≠ 0) : Matrix.vecMulVec x y ≠ 0",
+  "name":
+  "NLAlib.vecMulVec_ne_zero",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  62,
+  "kind":
+  "theorem",
+  "doc":
+  "A nonzero right column and nonzero left row give a nonzero outer product.\nSource: Horn–Johnson (2013), §1.4; the assertion includes rectangular shapes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.vecMul_eigenvector_of_intertwines.{u_2, u_3} {n : Type u_2} [Fintype n] {K : Type u_3} [Field K]\n  {A B S : Matrix n n K} {y : n → K} {μ : K} (hS : S * A = B * S) (hy : Matrix.vecMul y B = μ • y) :\n  Matrix.vecMul (Matrix.vecMul y S) A = μ • Matrix.vecMul y S",
+  "name":
+  "NLAlib.vecMul_eigenvector_of_intertwines",
+  "module":
+  "NLAlib.Matrix.EigenvectorPairing",
+  "line":
+  127,
+  "kind":
+  "theorem",
+  "doc":
+  "Similarity transports a left row eigenvector by right multiplication\nwith the inverse similarity matrix. Source: Horn–Johnson (2013),\nTheorem 2.4.11.1; for complex columns this is inverse conjugate transpose.\natlas: left-right-eigenvectors (partial) ",
+  "atlas_partial":
+  ["left-right-eigenvectors"],
+  "atlas":
+  ["left-right-eigenvectors"]},
  {"uses":
   [],
   "sorry":

@@ -1,3 +1,9 @@
+import NLAlib.Matrix.RectangularGramIsometry
+import NLAlib.Matrix.RankInequalities
+import NLAlib.Matrix.PSDDuality
+import NLAlib.Matrix.SylvesterQualitative
+import NLAlib.Matrix.EigenvectorPairing
+import NLAlib.Matrix.DeterminantDerivative
 import NLAlib.Matrix.WedinFiniteIndex
 import NLAlib.Matrix.LeastSquaresCoordinateBounds
 import NLAlib.Matrix.LeastSquaresPurePerturbation

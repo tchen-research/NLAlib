@@ -1,6 +1,6 @@
 {
  "schema_version": "0.2",
- "updated_at": "2026-10-11",
+ "updated_at": "2026-10-12",
  "areas": [
   {
    "id": "matrix",
@@ -25417,7 +25417,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For $A \\in \\mathbb{R}^{m\\times n}$ and $k$, there is a permutation $\\Pi$ with $A\\Pi = Q \\begin{pmatrix} R_{11} & R_{12} \\\\ 0 & R_{22}\\end{pmatrix}$, $R_{11} \\in \\mathbb{R}^{k\\times k}$, such that $\\sigma_i(R_{11}) \\ge \\sigma_i(A)/\\sqrt{1 + f^2 k(n-k)}$, $\\sigma_j(R_{22}) \\le \\sigma_{k+j}(A)\\sqrt{1 + f^2 k (n-k)}$ and $|(R_{11}^{-1}R_{12})_{ij}| \\le f$ for any $f \\ge 1$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$, $1 \\le k < \\min(m,n)$, $f \\ge 1$"
@@ -25448,7 +25448,7 @@
     "assume"
    ],
    "notes": "Assume (Gu–Eisenstat 1996, Thm 3.2; add source). Consumers: interpolative-decomposition, CUR, randomized ID.",
-   "updated_at": "2026-10-11"
+   "updated_at": "2026-10-12"
   },
   {
    "id": "golub-kahan-recurrence",
@@ -26605,7 +26605,7 @@
    ],
    "area": "matrix-conditioning",
    "kind": "definition",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For $f:\\mathbb R^m\\to\\mathbb R^n$ Fréchet differentiable at $x$: $\\operatorname{cond}_{abs}f(x)=\\|Df(x)\\|$; componentwise relative condition matrix $C_{\\nu\\mu}=x_\\mu\\partial_\\mu f_\\nu(x)/f_\\nu(x)$ and $\\operatorname{cond}_{rel}f(x)=\\|C(x)\\|$; scalar cases $|f'(x)|$ and $|xf'(x)/f(x)|$.",
    "hypotheses": [
     "$f$ Fréchet differentiable at $x$; nonzero components for the relative version"
@@ -26645,7 +26645,7 @@
     "definition"
    ],
    "notes": "NLAlib has only the matrix condition number. Consumers: `recurrence-coefficient-moment-sensitivity`, perturbation statements in matrix-conditioning. Prove (definitions).",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -26945,7 +26945,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Every $A\\in\\mathbb C^{n\\times n}$ is $A=UTU^*$ with $U$ unitary and $T$ upper triangular, the eigenvalues on the diagonal in any prescribed order; a real $A$ is $A=QTQ^\\top$ with $Q$ real orthogonal and $T$ real upper quasitriangular ($1\\times1$ and $2\\times2$ blocks $\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}$ for conjugate pairs), and $T$ can be taken triangular when all eigenvalues are real. Consequences: Schur's inequality $\\sum_i|\\lambda_i|^2=\\|A\\|_F^2-\\|N\\|_F^2\\le\\|A\\|_F^2$ ($N$ the strictly upper part, equality iff $A$ normal); matrices with distinct eigenvalues are dense; for every $\\varepsilon>0$ some similarity makes $A$ triangular with off-diagonal entries at most $\\varepsilon$. Pencil version (QZ): $A=VT_AW^*$, $B=VT_BW^*$ simultaneously.",
    "hypotheses": [
     "$A\\in\\mathbb R^{n\\times n}$ (real Schur form) or $A\\in\\mathbb C^{n\\times n}$ (complex Schur form)",
@@ -27015,7 +27015,7 @@
     "eigenvalues"
    ],
    "notes": "Consumers: qr-algorithm-convergence (limit is the Schur form), normal-matrices (normal ⇔ triangular Schur factor diagonal), matrix-power-convergence (ρ(A)<1 ⇒ Aᵏ→0 via the ε-triangular form), gmres-diagonalizable / krylov-nonnormal (Henrici departure from normality, field-of-values-def), Krylov f(A)b error bounds for nonnormal A. Prove: deflation by a unit eigenvector plus orthonormal-completion, induction on n; the real form needs one real invariant 2-plane per conjugate pair. QZ (Thm 2.6.1–2.6.2) is a later variant.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27033,7 +27033,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "$A$ is normal ($AA^*=A^*A$) iff it is unitarily diagonalizable iff $\\|A\\|_F^2=\\sum|\\lambda_i|^2$ iff it has an orthonormal eigenbasis; block triangular normal matrices are block diagonal; two normal matrices are unitarily similar iff they have the same eigenvalues. A real normal matrix is real orthogonally similar to a direct sum of $1\\times1$ blocks and $2\\times2$ blocks $\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}$ (skew-symmetric and orthogonal matrices as special cases). Fuglede–Putnam: for normal $A,B$, $AX=XB\\iff A^*X=XB^*$.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$ with $AA^*=A^*A$ (or real with $AA^\\top=A^\\top A$)"
@@ -27100,7 +27100,7 @@
     "spectral-theorem"
    ],
    "notes": "Consumers: gmres-diagonalizable (κ(V)=1 for normal A), field-of-values-def (W(A)=conv σ(A) for normal A), crouzeix-palencia (normal sanity case), polynomial-spectral-bound generalised to normal A (‖p(A)‖=max|p(λ)|). Prove from schur-triangularization: a normal triangular matrix is diagonal (Lem 2.5.2).",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27118,7 +27118,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "definition",
-   "status": "candidate",
+   "status": "planned",
    "informal": "$A$ is diagonalizable if $A=V\\Lambda V^{-1}$ with $\\Lambda$ diagonal, equivalently it has $n$ linearly independent eigenvectors, equivalently every eigenvalue has equal geometric and algebraic multiplicity (nondefective). $n$ distinct eigenvalues suffice; a direct sum is diagonalizable iff each summand is; two diagonalizations differ by an invertible block-diagonal factor on the eigenspaces. Geometric multiplicity $\\ge k$ forces $\\lambda$ into the spectrum of every principal submatrix of order $\\ge n-k+1$, hence algebraic multiplicity $\\ge k$.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$ (or real $A$ with a complex eigenvector matrix)"
@@ -27183,7 +27183,7 @@
     "definition"
    ],
    "notes": "Consumers: gmres-diagonalizable (whose Mathlib note asks for exactly this predicate; currently stated with an explicit V), krylov-nonnormal bounds with κ(V), power-iteration for nonsymmetric A, matrix functions f(A)=V f(Λ)V⁻¹. Mostly a wrapper around Mathlib's semisimplicity; prove.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27200,7 +27200,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "A commuting family has a common eigenvector (Lem 1.3.19) and is simultaneously unitarily upper triangularizable; a family of diagonalizable (normal) matrices commutes iff it is simultaneously (unitarily) diagonalizable, with any eigenvalue order for one member; real diagonalizable matrices with real eigenvalues need only a real similarity. For commuting $A,B$ the eigenvalues of $A+B$ and $AB$ are $\\alpha_i+\\beta_i$ and $\\alpha_i\\beta_i$ for suitable orderings. Simultaneous triangularization by similarity is equivalent to unitary simultaneous triangularization.",
    "hypotheses": [
     "$\\mathcal F\\subseteq\\mathbb C^{n\\times n}$ a commuting family",
@@ -27285,7 +27285,7 @@
     "diagonalization"
    ],
    "notes": "Consumers: matrix functions of commuting symmetric matrices (Loewner-order arguments, operator-monotone-convex), Kronecker sums (kronecker-spectral eigenvalues of A⊗I+I⊗B), preconditioned iterations with commuting preconditioners. The commuting symmetric real case is in Mathlib and should be cited, not reproved.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27300,7 +27300,7 @@
    ],
    "area": "matrix",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "If real families $\\{A_\\alpha\\}$, $\\{B_\\alpha\\}$ satisfy $A_\\alpha=SB_\\alpha S^{-1}$ for one complex nonsingular $S$, then some real nonsingular $T$ does the same (because some $C+\\tau D$ is nonsingular when $S=C+iD$); if the common similarity is unitary, a real orthogonal one exists.",
    "hypotheses": [
     "$A_\\alpha,B_\\alpha\\in\\mathbb R^{n\\times n}$",
@@ -27336,7 +27336,7 @@
     "similarity"
    ],
    "notes": "Consumer: NLAlib's complex-embedding transfers (NLAlib.Matrix.ComplexEmbedding, complex volume sampling, complex Cholesky) when a statement proved over ℂ must be brought back to real orthogonal factors. Prove.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27353,7 +27353,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "If $Ax=\\lambda x$ and $y^*A=\\mu y^*$ with $\\lambda\\ne\\mu$ then $y^*x=0$. If $y^*x\\ne0$ for the same $\\lambda$ then $A=S([\\lambda]\\oplus B)S^{-1}$ with $S=[x\\ S_1]$ and $S^{-*}e_1=y/(x^*y)$ (and conversely). A simple eigenvalue has $y^*x\\ne0$; for geometric multiplicity one, simplicity is equivalent to $y^*x\\ne0$, and $\\operatorname{adj}(\\lambda I-A)=\\gamma xy^*$, $\\gamma\\ne0$. Similarities map right eigenvectors by $S$ and left ones by $S^{-*}$.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$",
@@ -27411,8 +27411,49 @@
     "perturbation"
    ],
    "notes": "Consumers: eigenvalue condition numbers 1/|y*x| and first-order perturbation of simple eigenvalues (HJ ch. 6, part 2 of this index), deflation in power-iteration for nonsymmetric A, oblique spectral projectors in Krylov f(A)b analysis. Prove.",
-   "updated_at": "2026-10-11",
-   "formalizations": [],
+   "updated_at": "2026-10-12",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_eq_zero_of_left_right_eigenvalues_ne",
+     "module": "NLAlib.Matrix.EigenvectorPairing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to left and right eigenvectors with distinct eigenvalues to obtain zero pairing."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalized_vecMulVec_mul_self",
+     "module": "NLAlib.Matrix.EigenvectorPairing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply with a nonzero left-right pairing to prove the normalized outer product is idempotent."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mul_normalized_vecMulVec_eq_smul",
+     "module": "NLAlib.Matrix.EigenvectorPairing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to paired eigenvectors at one eigenvalue to compute both products with their normalized outer-product projector."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mulVec_eigenvector_of_intertwines",
+     "module": "NLAlib.Matrix.EigenvectorPairing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to A S = S B and a right eigenvector of B to transport its eigenvector equation through S."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.vecMul_eigenvector_of_intertwines",
+     "module": "NLAlib.Matrix.EigenvectorPairing",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to S A = B S and a left row eigenvector of B to transport its eigenvector equation through right multiplication by S."
+    }
+   ],
    "uses_defs": [],
    "variants": []
   },
@@ -27427,7 +27468,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "If $Ax=\\lambda x$, $x\\ne0$, and the eigenvalues of $A$ are $\\lambda,\\lambda_2,\\dots,\\lambda_n$, then for every $v$ the eigenvalues of $A+xv^*$ are $\\lambda+v^*x,\\lambda_2,\\dots,\\lambda_n$.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$",
@@ -27465,7 +27506,7 @@
     "eigenvalues"
    ],
    "notes": "Consumers: deflation steps in power-iteration and subspace-iteration-convergence for the next eigenvalue, PageRank-type damping (eigenvalues of αP+(1−α)ev*), rank-one modifications in Lanczos restarts. Prove via the charpoly computation of Ex 1.2.8.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27483,7 +27524,7 @@
    ],
    "area": "matrix-subspace-perturbation",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For $A\\in\\mathbb C^{n\\times n}$, $B\\in\\mathbb C^{m\\times m}$ the map $X\\mapsto AX-XB$ is invertible iff $\\sigma(A)\\cap\\sigma(B)=\\emptyset$ (real data give real solutions); $AX=XB$ implies $g(A)X=Xg(B)$ for all polynomials $g$. Consequences: if $AB=CA$ with block-diagonal $B,C$ whose off-diagonal block spectra are disjoint then $A$ is block diagonal; matrices commuting with $S(A_1\\oplus\\cdots\\oplus A_d)S^{-1}$ (disjoint spectra) are $S(B_1\\oplus\\cdots\\oplus B_d)S^{-1}$; every $A$ is similar to $T_{11}\\oplus\\cdots\\oplus T_{dd}$ with each $T_{ii}$ triangular with a single eigenvalue.",
    "hypotheses": [
     "$A\\in\\mathbb R^{p\\times p}$, $B\\in\\mathbb R^{q\\times q}$ (or complex)",
@@ -27517,6 +27558,7 @@
     }
    ],
    "depends_on": [
+    "left-right-eigenvectors",
     "schur-triangularization"
    ],
    "mathlib_prereqs": [
@@ -27542,9 +27584,76 @@
     "perturbation"
    ],
    "notes": "Consumers: sylvester-separation-bound (its quantitative symmetric form; this is the qualitative general statement), davis-kahan-sin-theta and wedin-sin-theta (both reduce to a Sylvester equation), spectral projectors and invariant-subspace perturbation for nonsymmetric matrices, block diagonalization used in Krylov f(A)b analysis. Prove via Cayley–Hamilton: p_B(A) is invertible when the spectra are disjoint, which inverts X ↦ AX − XB.",
-   "updated_at": "2026-10-11",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-12",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eq_zero_of_mul_eq_mul_of_isCoprime_charpoly",
+     "module": "NLAlib.Matrix.SylvesterQualitative",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to A X = X B with coprime characteristic polynomials to prove X = 0 over any field."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sylvesterLinearMap_bijective_of_isCoprime_charpoly",
+     "module": "NLAlib.Matrix.SylvesterQualitative",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply with coprime characteristic polynomials to obtain bijectivity of X mapped to A X - X B."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_sylvester_of_isCoprime_charpoly",
+     "module": "NLAlib.Matrix.SylvesterQualitative",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply with coprime characteristic polynomials and a rectangular right-hand side to obtain its unique Sylvester solution."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.aeval_intertwines",
+     "module": "NLAlib.Matrix.SylvesterQualitative",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply with A X = X B and a polynomial to transport polynomial functional calculus across the same rectangular matrix."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sylvesterLinearMap_injective_iff_disjoint_spectrum",
+     "module": "NLAlib.Matrix.SylvesterQualitative",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite injectivity of the Sylvester operator as disjointness of spectra over an algebraically closed field."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sylvesterLinearMap_bijective_iff_disjoint_spectrum",
+     "module": "NLAlib.Matrix.SylvesterQualitative",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite bijectivity of the Sylvester operator as disjointness of spectra over an algebraically closed field."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_sylvester_of_disjoint_spectrum",
+     "module": "NLAlib.Matrix.SylvesterQualitative",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply with disjoint spectra and a rectangular right-hand side to obtain its unique Sylvester solution over an algebraically closed field."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eq_zero_of_mul_eq_mul_of_disjoint_spectrum",
+     "module": "NLAlib.Matrix.SylvesterQualitative",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply spectral disjointness to an off-diagonal intertwining equation to show its rectangular block vanishes."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.sylvesterLinearMap"
+   ],
    "variants": []
   },
   {
@@ -27559,7 +27668,7 @@
    ],
    "area": "matrix-conditioning",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "$A^k\\to0$ iff $\\rho(A)<1$; then $\\sum_kA^k=(I-A)^{-1}$. $\\sup_k\\|A^k\\|<\\infty$ iff $\\rho(A)\\le1$ and every eigenvalue of modulus one is semisimple. Quantitatively, for every $\\varepsilon>0$ there is $C_\\varepsilon$ with $\\|A^k\\|\\le C_\\varepsilon(\\rho(A)+\\varepsilon)^k$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{n\\times n}$ (spectral radius over $\\mathbb C$)"
@@ -27617,7 +27726,7 @@
     "iterative-methods"
    ],
    "notes": "Consumers: richardson-iteration and chebyshev-iteration (stationary/polynomial methods converge iff ρ of the iteration matrix < 1), Jacobi/Gauss–Seidel style splittings, expected-error recursions of randomized-kaczmarz and sketch-and-project (E[e_{k+1}] = (I − P̄) E[e_k]), inverse-perturbation (Neumann series beyond the ‖F‖<1 criterion). The convergent part follows from Gelfand's formula in Mathlib; the power-bounded part needs Jordan structure: state it, assume if needed. Also Thm 5.6.12, Cor 5.6.13 (HJ ch. 5 form).",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27635,7 +27744,7 @@
    ],
    "area": "matrix-subspace-perturbation",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "If $U=\\begin{pmatrix}U_{11}&U_{12}\\\\U_{21}&U_{22}\\end{pmatrix}$ is unitary (real orthogonal) with $U_{11}\\in\\mathbb C^{p\\times p}$, $p\\le q$, there are unitaries $V_1,W_1\\in\\mathbb C^{p\\times p}$, $V_2,W_2\\in\\mathbb C^{q\\times q}$ with $(V_1\\oplus W_1)U(V_2\\oplus W_2)=\\begin{pmatrix}C&S&0\\\\-S&C&0\\\\0&0&I_{q-p}\\end{pmatrix}$, $C=\\operatorname{diag}(\\sigma_i(U_{11}))$, $S=(I-C^2)^{1/2}$. In particular $\\operatorname{rank}U_{12}=\\operatorname{rank}U_{21}$ and $\\operatorname{rank}U_{22}=\\operatorname{rank}U_{11}+n-2p$. An idempotent $P$ with singular values $\\sigma_1\\ge\\dots\\ge\\sigma_g>1$ is unitarily similar to $\\bigoplus_i\\begin{pmatrix}1&(\\sigma_i^2-1)^{1/2}\\\\0&0\\end{pmatrix}\\oplus I\\oplus0$, so $\\|P\\|=1/\\cos\\theta_{\\max}$ between its range and the orthogonal complement of its null space.",
    "hypotheses": [
     "$U\\in\\mathbb R^{n\\times n}$ orthogonal, partitioned with $U_{11}\\in\\mathbb R^{p\\times p}$, $p\\le n-p$",
@@ -27680,7 +27789,7 @@
     "projectors"
    ],
    "notes": "Consumers: principal-angles-def (CSD is the canonical form behind sin Θ/cos Θ; several of its lemmas are currently scaffolds: sinThetaMax_comm, sinThetaMax_eq_sin_principalAngles), davis-kahan-sin-theta, wedin-sin-theta, oblique projectors in Nyström / generalized Nyström and sketch-and-solve-ls analyses (‖P‖ = ‖I − P‖ = 1/cos θ), subspace-iteration-convergence. Prove from svd + qr-decomposition as in HJ's proof.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27697,7 +27806,7 @@
    ],
    "area": "matrix",
    "kind": "identity",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For $A\\in\\mathbb F^{m\\times k}$, $B\\in\\mathbb F^{k\\times n}$ and index sets $|\\alpha|=|\\beta|=r$: $\\det(AB)[\\alpha,\\beta]=\\sum_{|\\gamma|=r}\\det A[\\alpha,\\gamma]\\det B[\\gamma,\\beta]$; equivalently the $r$-th compound is multiplicative, $C_r(AB)=C_r(A)C_r(B)$. Special case: $\\det(A^\\top A)=\\sum_{|S|=k}\\det(A_{S,:})^2$ for $A\\in\\mathbb R^{m\\times k}$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times k}$, $B\\in\\mathbb R^{k\\times n}$",
@@ -27737,7 +27846,7 @@
     "volume-sampling"
    ],
    "notes": "Consumers: volume sampling and DPP normalisers (NLAlib.LowRank.VolumeSampling, complex volume sampling: Σ_S det(A_S A_Sᵀ) = e_k(σ²) currently reached through principal-minor sums of a Gram matrix), leverage-score / projection-DPP identities, the k = rank case of Gram determinants. Prove (standard multilinearity argument) and upstream to Mathlib if possible.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27754,7 +27863,7 @@
    ],
    "area": "matrix",
    "kind": "lemma",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$\\operatorname{rank}(A+B)\\le\\operatorname{rank}A+\\operatorname{rank}B$; $\\operatorname{rank}A+\\operatorname{rank}B-k\\le\\operatorname{rank}AB\\le\\min(\\operatorname{rank}A,\\operatorname{rank}B)$ for $A\\in\\mathbb F^{m\\times k}$, $B\\in\\mathbb F^{k\\times n}$ (Sylvester); $\\operatorname{rank}AB+\\operatorname{rank}BC\\le\\operatorname{rank}B+\\operatorname{rank}ABC$ (Frobenius). $Ax=b$ is solvable iff $\\operatorname{rank}[A\\ b]=\\operatorname{rank}A$, and the solution set is $x_0+\\ker A$.",
    "hypotheses": [
     "conformable real matrices $A,B,C$"
@@ -27786,8 +27895,16 @@
      "note": "linear-map form; no Matrix.rank_add_le"
     },
     {
-     "decl": "Sylvester/Frobenius rank inequalities for matrices",
-     "present": false
+     "decl": "LinearMap.finrank_range_add_finrank_ker",
+     "present": true
+    },
+    {
+     "decl": "Submodule.eq_of_le_of_finrank_eq",
+     "present": true
+    },
+    {
+     "decl": "Matrix.rank_eq_finrank_span_cols",
+     "present": true
     }
    ],
    "difficulty": 1,
@@ -27796,8 +27913,58 @@
     "rank"
    ],
    "notes": "Consumers: sketch rank arguments (ae_rank_mul_gaussian_eq_min, gaussian-sketch range finder: rank(AΩ) ≥ rank A + rank Ω − n), Nyström rank bookkeeping, kaczmarz-rank-deficient (consistency b ∈ range A), sketch-and-solve-ls. Prove; small.",
-   "updated_at": "2026-10-11",
-   "formalizations": [],
+   "updated_at": "2026-10-12",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rank_add_rank_sub_card_le_rank_mul",
+     "module": "NLAlib.Matrix.RankInequalities",
+     "status": "proved",
+     "usage": "Apply to conformable matrices to obtain the Sylvester lower rank bound, with natural-number subtraction."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rank_mul_add_rank_mul_le_rank_add_rank_mul_mul",
+     "module": "NLAlib.Matrix.RankInequalities",
+     "status": "proved",
+     "usage": "Apply to any conformable A,B,C to obtain the Frobenius rank inequality."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mulVec_eq_iff_sub_mem_ker",
+     "module": "NLAlib.Matrix.RankInequalities",
+     "status": "proved",
+     "usage": "Rewrite the equation A x = b using a given solution x0 as membership of x - x0 in the kernel."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rank_mul_bounds",
+     "module": "NLAlib.Matrix.RankInequalities",
+     "status": "proved",
+     "usage": "Apply to obtain Sylvester lower and min-rank upper bounds for a product."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rank_fromCols_eq_iff_exists_mulVec_eq",
+     "module": "NLAlib.Matrix.RankInequalities",
+     "status": "proved",
+     "usage": "Rewrite the augmented-column rank equality as solvability of A x = b."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.solution_set_eq_add_ker",
+     "module": "NLAlib.Matrix.RankInequalities",
+     "status": "proved",
+     "usage": "Apply with one solution x0 to identify every solution as x0 plus a kernel vector."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rank_sum_le_sum_rank",
+     "module": "NLAlib.Matrix.RankInequalities",
+     "status": "proved",
+     "usage": "Apply to bound the rank of A+B by rank A + rank B."
+    }
+   ],
    "uses_defs": [],
    "variants": []
   },
@@ -27814,7 +27981,7 @@
    ],
    "area": "matrix",
    "kind": "identity",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For nonsingular $A$ and index sets $\\alpha,\\beta$: $\\operatorname{nullity}A[\\alpha,\\beta]=\\operatorname{nullity}A^{-1}[\\beta^c,\\alpha^c]$; $\\det A^{-1}[\\alpha^c,\\beta^c]=(-1)^{p(\\alpha,\\beta)}\\det A[\\beta,\\alpha]/\\det A$. For a $2\\times2$ block matrix with nonsingular $A_{11}$, $\\operatorname{rank}A=\\operatorname{rank}A_{11}+\\operatorname{rank}(A_{22}-A_{21}A_{11}^{-1}A_{12})$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{n\\times n}$ nonsingular",
@@ -27853,7 +28020,7 @@
     "rank-structure"
    ],
    "notes": "Consumers: rank structure of inverses (off-diagonal low rank of inverses of banded/tridiagonal matrices; hierarchical-matrix sketching), Schur-complement rank additivity used by partial-cholesky / randomly pivoted Cholesky residual rank arguments. Low priority.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27870,7 +28037,7 @@
    ],
    "area": "matrix",
    "kind": "definition",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Toeplitz: $a_{ij}=t_{j-i}$; Hankel: $a_{ij}=h_{i+j}$; Cauchy: $a_{ij}=1/(x_i+y_j)$ with $\\det=\\prod_{i<j}(x_j-x_i)(y_j-y_i)/\\prod_{i,j}(x_i+y_j)$ (Hilbert matrix as a special case). Circulants (in Mathlib) are the Toeplitz matrices that commute with the cyclic shift.",
    "hypotheses": [
     "index type $\\mathrm{Fin}\\,n$",
@@ -27912,7 +28079,7 @@
     "structured-matrices"
    ],
    "notes": "Consumers: Toeplitz and partial-circulant JL sketches, moment (Hankel) matrices in Lanczos / Gauss quadrature (lanczos-gauss-quadrature, jacobi-matrix-identities), ill-conditioning examples (Hilbert, Cauchy) for condition-number-def. Low priority.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -27928,7 +28095,7 @@
    ],
    "area": "matrix-trace",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "If $t\\mapsto A(t)$ is differentiable then $\\frac{d}{dt}\\det A(t)=\\operatorname{tr}(\\operatorname{adj}A(t)\\,A'(t))$, so $\\frac{d}{dt}\\log\\det A(t)=\\operatorname{tr}(A(t)^{-1}A'(t))$ when $\\det A(t)>0$. The derivative of $p_A(t)$ is the sum of the principal $(n-1)$-minors of $tI-A$.",
    "hypotheses": [
     "$A:\\mathbb R\\to\\mathbb R^{n\\times n}$ differentiable at $t$"
@@ -27951,8 +28118,24 @@
      "present": true
     },
     {
-     "decl": "HasDerivAt for Matrix.det",
-     "present": false
+     "decl": "ContinuousMultilinearMap.hasFDerivAt",
+     "present": true
+    },
+    {
+     "decl": "ContinuousMultilinearMap.linearDeriv_apply",
+     "present": true
+    },
+    {
+     "decl": "Matrix.cramer_eq_adjugate_mulVec",
+     "present": true
+    },
+    {
+     "decl": "Matrix.adjugate_fin_succ_eq_det_submatrix",
+     "present": true
+    },
+    {
+     "decl": "HasDerivAt.log",
+     "present": true
     }
    ],
    "difficulty": 2,
@@ -27963,8 +28146,37 @@
     "log-det"
    ],
    "notes": "Consumers: log-determinant estimation (SLQ for tr log A = log det A, slq-error), Gaussian-process likelihood gradients via Hutchinson (hutchinson-variance), concavity of log det (operator-monotone-convex family), NLAlib.hasDerivAt_matrix_inv companions. Prove (multilinearity in the columns).",
-   "updated_at": "2026-10-11",
-   "formalizations": [],
+   "updated_at": "2026-10-12",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_det",
+     "module": "NLAlib.Matrix.DeterminantDerivative",
+     "status": "proved",
+     "usage": "Apply to a differentiable real matrix path, at any matrix including singular or empty inputs, to obtain the adjugate trace derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_log_det",
+     "module": "NLAlib.Matrix.DeterminantDerivative",
+     "status": "proved",
+     "usage": "Apply with positive determinant to obtain the inverse trace derivative of the real logarithmic determinant."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_det_smul_one_sub",
+     "module": "NLAlib.Matrix.DeterminantDerivative",
+     "status": "proved",
+     "usage": "Apply at any real t to differentiate det(t I - A), including size zero."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_det_smul_one_sub_sum_principal_minors",
+     "module": "NLAlib.Matrix.DeterminantDerivative",
+     "status": "proved",
+     "usage": "Apply for a positive-size Fin-indexed matrix to express the characteristic determinant derivative as the sum of principal codimension-one minors."
+    }
+   ],
    "uses_defs": [],
    "variants": []
   },
@@ -28049,7 +28261,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "$A$ has an LU factorization with nonsingular $L$ iff for each $i<n$ the row $A[i+1,1{:}i]$ is a combination of the rows of $A[1{:}i,1{:}i]$ (row inclusion); dually for nonsingular $U$ and column inclusion. If $\\operatorname{rank}A=k$ and the leading $j\\times j$ blocks are nonsingular for $j\\le k$, $A=LU$ with either factor unit triangular.",
    "hypotheses": [
     "$A\\in\\mathbb R^{n\\times n}$, possibly singular"
@@ -28082,7 +28294,7 @@
     "rank-deficient"
    ],
    "notes": "Consumers: partial-cholesky and randomly pivoted Cholesky on rank-deficient PSD matrices (the LDLᵀ analogue), CUR / skeleton decompositions (A = C U⁺ R from a nonsingular leading block). Low priority; NLAlib's lu-decomposition covers the nonsingular case.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28097,7 +28309,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "lemma",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$ with decreasing eigenvalues $\\lambda_0\\ge\\dots\\ge\\lambda_{n-1}$ (`eigenvalues₀`): $\\lambda_k(-A)=-\\lambda_{n-1-k}(A)$. If $x^\\top Ax>c\\|x\\|^2$ for all nonzero $x$ in a subspace of dimension $k+1$, then $\\lambda_k(A)>c$ (strict form of the existing non-strict test); consequently a $k$-dimensional subspace on which $x^\\top Ax\\ge0$ (resp. $>0$ off $0$) forces at least $k$ nonnegative (resp. positive) eigenvalues.",
    "hypotheses": [
     "$A=A^\\top\\in\\mathbb R^{n\\times n}$",
@@ -28145,7 +28357,7 @@
     "eigenvalues"
    ],
    "notes": "Bookkeeping lemmas that let every upper Weyl/Courant–Fischer bound be turned into the matching lower bound by negation (Thm 4.3.1 (4.3.2b), Cor 4.3.15 lower half), and the strict variant needed for strict interlacing and inertia arguments (`sylvester-inertia`). Prove (routine from the existing variational lemmas `le_eigenvalues₀_of_forall_mem`, `eigenvalues₀_le_of_forall_mem`; strictness via compactness of the unit sphere).",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28160,7 +28372,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Let $A,B\\in\\mathbb R^{n\\times n}$ be symmetric (increasing order $\\lambda_1\\le\\dots\\le\\lambda_n$). If $B$ has $\\pi$ positive and $\\nu$ negative eigenvalues then $\\lambda_i(A+B)\\le\\lambda_{i+\\pi}(A)$ and $\\lambda_{i-\\nu}(A)\\le\\lambda_i(A+B)$. In particular if $\\operatorname{rank}B=r$ then $\\lambda_{i-r}(A)\\le\\lambda_i(A+B)\\le\\lambda_{i+r}(A)$, and for $z\\in\\mathbb R^n$: $\\lambda_i(A)\\le\\lambda_i(A+zz^\\top)\\le\\lambda_{i+1}(A)$ and $\\lambda_{i-1}(A)\\le\\lambda_i(A-zz^\\top)\\le\\lambda_i(A)$.",
    "hypotheses": [
     "$A=A^\\top$, $B=B^\\top\\in\\mathbb R^{n\\times n}$",
@@ -28212,7 +28424,7 @@
     "interlacing"
    ],
    "notes": "Consumers: Nyström and low-rank-plus-residual analyses ($A-\\hat A$ has rank $\\le n-k$ perturbation structure), `partial-cholesky-nystrom` (each pivot step is a rank-one downdate), deflation in `subspace-iteration-convergence`, and eigenvalue counting in `sylvester-inertia`. Prove: each statement is `eigenvalues₀_add_le` with the $j$ index set to the number of nonzero eigenvalues of $B$ (whose $j$-th sorted eigenvalue is then $\\le0$).",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28226,7 +28438,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "If real numbers satisfy $\\mu_1\\le\\lambda_1\\le\\mu_2\\le\\dots\\le\\lambda_n\\le\\mu_{n+1}$, there are $a\\in\\mathbb R$ and $y\\in\\mathbb R^n$ such that $\\begin{bmatrix}\\Lambda&y\\\\y^\\top&a\\end{bmatrix}$ with $\\Lambda=\\operatorname{diag}(\\lambda)$ has eigenvalues $\\mu_1,\\dots,\\mu_{n+1}$. If $\\lambda_1\\le\\mu_1\\le\\lambda_2\\le\\dots\\le\\lambda_n\\le\\mu_n$, there is $z\\in\\mathbb R^n$ with $\\operatorname{spec}(\\Lambda+zz^\\top)=\\{\\mu_i\\}$.",
    "hypotheses": [
     "interlacing real sequences as stated"
@@ -28265,7 +28477,7 @@
     "interlacing"
    ],
    "notes": "Consumers: constructing Jacobi matrices with prescribed Ritz values (lower-bound instances for Lanczos/`kaniel-paige-saad`, `jacobi-matrix-identities`). Assume is acceptable; proof via the secular equation.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28279,7 +28491,7 @@
    ],
    "area": "matrix-majorization",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For $A\\in\\mathbb C^{n\\times n}$ with eigenvalues $z_i$ and Hermitian part $H(A)=(A+A^*)/2$, the vector $\\lambda(H(A))$ majorizes $(\\operatorname{Re}z_i)$; conversely every such pair $x\\succ\\operatorname{Re}z$ is realised by some $A$. Corollary (Bendixson): $\\lambda_{\\min}(H(A))\\le\\operatorname{Re}z_i\\le\\lambda_{\\max}(H(A))$.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$"
@@ -28314,7 +28526,7 @@
     "nonnormal"
    ],
    "notes": "Consumers: `field-of-values-def` (Re W(A) = [λmin(H), λmax(H)]), `gmres-elman` (positive-real matrices have Re λ > 0). Prove the forward direction via Schur triangularisation + Schur (Thm 4.3.45); the converse may be assumed.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28328,7 +28540,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For symmetric $M=\\begin{bmatrix}A&B\\\\B^\\top&C\\end{bmatrix}$ with $A$ invertible and $S=C-B^\\top A^{-1}B$: $i_+(M)=i_+(A)+i_+(S)$, $i_-(M)=i_-(A)+i_-(S)$, $i_0(M)=i_0(S)$. In particular $M\\succ0$ iff $A\\succ0$ and $S\\succ0$.",
    "hypotheses": [
     "$M$ real symmetric in block form",
@@ -28368,7 +28580,7 @@
     "schur-complement"
    ],
    "notes": "Consumers: block LDLᵀ inertia counts (generalises the scalar-pivot `card_eigenvalues_lt_eq_card_neg_of_eq_mul_diagonal_mul` in `sylvester-inertia`), saddle-point/KKT systems, `partial-cholesky-nystrom`. Prove from the block congruence $M=L(A\\oplus S)L^\\top$ and `inertiaPos_transpose_mul_mul`.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28382,7 +28594,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$ and $S\\in\\mathbb R^{n\\times n}$ with singular values $\\sigma_1\\ge\\dots\\ge\\sigma_n$, for each $k$ there is $\\theta_k\\in[\\sigma_n^2,\\sigma_1^2]$ with $\\lambda_k(SAS^\\top)=\\theta_k\\lambda_k(A)$ (same ordering). Hence $\\sigma_n^2\\lambda_k(A)\\le\\lambda_k(SAS^\\top)\\le\\sigma_1^2\\lambda_k(A)$ for $\\lambda_k(A)\\ge0$ (reversed for $\\lambda_k(A)<0$), and $SAS^\\top$ has no more positive (negative) eigenvalues than $A$.",
    "hypotheses": [
     "$A=A^\\top\\in\\mathbb R^{n\\times n}$",
@@ -28423,7 +28635,7 @@
     "preconditioning"
    ],
    "notes": "Consumers: eigenvalues of preconditioned or sketched Gram matrices $S A S^\\top$ (`sketch-and-precondition`, `preconditioned-cg`, `nystrom-pcg`), quantitative inertia. Prove via Courant–Fischer: $x^\\top SAS^\\top x=y^\\top Ay$ with $y=S^\\top x$ and $\\sigma_n^2\\|x\\|^2\\le\\|y\\|^2\\le\\sigma_1^2\\|x\\|^2$.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28437,7 +28649,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "If $A\\in\\mathbb R^{n\\times n}$ is symmetric positive definite and $B$ symmetric, there is a nonsingular $S$ with $A=SS^\\top$ and $B=S\\Lambda S^\\top$, $\\Lambda$ real diagonal whose entries are the eigenvalues of $A^{-1}B$ (and $\\Lambda$ has the inertia of $B$). Consequently $A^{-1}B$ (and $AB$) is diagonalisable with real eigenvalues, nonnegative if $B\\succeq0$. More generally (Thm 4.5.17) for invertible symmetric $A$, $A,B$ are simultaneously congruent to real diagonals iff $A^{-1}B$ is diagonalisable with real spectrum. A PSD–PSD version holds with $A=S(I_r\\oplus0)S^\\top$.",
    "hypotheses": [
     "$A\\succ0$ (or $A,B\\succeq0$ for the semidefinite form)",
@@ -28487,7 +28699,7 @@
     "preconditioning"
    ],
    "notes": "Consumers: spectrum of the preconditioned operator $P^{-1}A$ in `preconditioned-cg` and `nystrom-pcg`, generalized eigenproblems, Loewner-sandwich arguments (`loewner-relative-spectrum`). Prove: Cholesky $A=LL^\\top$, then diagonalise $L^{-1}BL^{-\\top}$.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28502,7 +28714,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Let $R_i=\\sum_{j\\ne i}|a_{ij}|$, $C_j=\\sum_{i\\ne j}|a_{ij}|$. (i) A union of $k$ Geršgorin discs disjoint from the remaining $n-k$ contains exactly $k$ eigenvalues; the column discs work too. (ii) $\\rho(A)\\le\\min\\{\\max_i\\sum_j|a_{ij}|,\\max_j\\sum_i|a_{ij}|\\}$, and with positive weights $\\rho(A)\\le\\max_ip_i^{-1}\\sum_jp_j|a_{ij}|$. (iii) If $A$ is strictly diagonally dominant ($|a_{ii}|>R_i$) with positive diagonal, every eigenvalue has positive real part; if moreover $A$ is symmetric it is positive definite. (iv) Taussky: an irreducibly diagonally dominant matrix is nonsingular (and PD if symmetric with positive diagonal).",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$ (real symmetric for the PD conclusions)"
@@ -28590,7 +28802,7 @@
     "diagonal-dominance"
    ],
    "notes": "Consumers: positive definiteness of diagonally dominant matrices (graph Laplacians plus shifts, kernel matrices with a nugget, preconditioners), spectral-radius bounds for Jacobi-type iterations (`richardson-iteration`), eigenvalue localisation for nearly diagonal matrices (diagonal estimation, `diagonal-estimator`). Do (ii)–(iii) first (difficulty 1–2); the counting part needs continuity of eigenvalues (assume or prove via the argument principle); Taussky later.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28605,7 +28817,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Let $A=V\\Lambda V^{-1}$ be diagonalisable and $E$ arbitrary. Every eigenvalue $\\hat\\lambda$ of $A+E$ satisfies $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\kappa(V)\\,|||E|||$ for any matrix norm induced by an absolute vector norm (e.g. $\\|\\cdot\\|_1,\\|\\cdot\\|_2,\\|\\cdot\\|_\\infty$), with $\\kappa(V)=|||V|||\\,|||V^{-1}|||$. If $A$ is normal, $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\|E\\|_2$. Residual form: for $\\hat x\\ne0$ and $r=A\\hat x-\\hat\\lambda\\hat x$, $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\kappa(V)\\|r\\|/\\|\\hat x\\|$ (and $\\le\\|r\\|_2/\\|\\hat x\\|_2$ for normal $A$).",
    "hypotheses": [
     "$A=V\\Lambda V^{-1}\\in\\mathbb C^{n\\times n}$, $\\Lambda$ diagonal",
@@ -28654,7 +28866,7 @@
     "nonnormal"
    ],
    "notes": "Consumers: `gmres-diagonalizable` (the $\\kappa(V)$ factor), `eigenvalue-residual-bounds` (normal case generalises its part (a)), eigenvalue sensitivity in `qr-algorithm-convergence`. Prove: if $\\hat\\lambda\\notin\\sigma(A)$ then $I+(\\Lambda-\\hat\\lambda)^{-1}V^{-1}EV$ is singular, so $1\\le\\|(\\Lambda-\\hat\\lambda)^{-1}\\|\\kappa(V)\\|E\\|$; spectral-norm case first (difficulty 2).",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28668,7 +28880,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "If $A$ and $A+E$ are normal with eigenvalues $\\lambda_i$ and $\\hat\\lambda_i$, there is a permutation $\\sigma$ with $\\sum_i|\\hat\\lambda_{\\sigma(i)}-\\lambda_i|^2\\le\\|E\\|_F^2$.",
    "hypotheses": [
     "$A,A+E\\in\\mathbb C^{n\\times n}$ normal"
@@ -28702,7 +28914,7 @@
     "perturbation"
    ],
    "notes": "The symmetric case is already in candidate `eigenvalue-perturbation-symmetric` (Cor 6.3.8); this entry is the normal-matrix generality. Proof: unitary diagonalisations turn $\\|E\\|_F^2$ into a linear function of the doubly stochastic matrix $[|u_{ij}|^2]$, minimised at a permutation (Birkhoff).",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28717,7 +28929,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Let $\\lambda$ be a simple eigenvalue of $A$ with right and left eigenvectors $x,y$. Then $y^*x\\ne0$, $A$ is similar to $\\lambda\\oplus A_1$ with $\\lambda\\notin\\sigma(A_1)$, and for every $E$ there is a unique eigenvalue $\\lambda(t)$ of $A+tE$ near $\\lambda$ for small $|t|$, continuous and differentiable at $0$ with $\\lambda'(0)=y^*Ex/y^*x$. For symmetric $A$ with unit eigenvector $x$: $\\lambda'(0)=x^\\top Ex$.",
    "hypotheses": [
     "$\\lambda$ an algebraically simple eigenvalue of $A\\in\\mathbb C^{n\\times n}$",
@@ -28752,7 +28964,7 @@
     "calculus"
    ],
    "notes": "Consumers: derivative of $\\lambda_{\\max}$ (matrix calculus for spectral functions), eigenvalue condition numbers $1/|y^*x|$, sensitivity of Ritz values. Assume is acceptable.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28766,7 +28978,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$: $A\\succ0$ iff all leading principal minors $\\det A_{[1..k]}$ are positive (equivalently all trailing ones); $A\\succeq0$ iff all principal minors (not just leading) are nonnegative; if the first $n-1$ leading minors are positive and $\\det A\\ge0$ then $A\\succeq0$. Also: $A\\succeq0$ iff the nonzero coefficients of its characteristic polynomial strictly alternate in sign.",
    "hypotheses": [
     "$A=A^\\top\\in\\mathbb R^{n\\times n}$"
@@ -28813,7 +29025,7 @@
     "determinants"
    ],
    "notes": "Consumers: existence of LU/Cholesky without pivoting for SPD matrices (`lu-decomposition`, `cholesky-algorithm`), positivity of pivots in `rpcholesky` and `partial-cholesky-nystrom`, principal-minor arguments in `volume-sampling`. Prove the PD case by induction with `posDef_iff_pivotSchur` and `det_eq_mul_det_pivotSchur`; PSD case via $A+\\varepsilon I$.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28897,7 +29109,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "If $\\hat A$ is obtained from $A\\in\\mathbb R^{m\\times n}$ by deleting one row or one column, then with $q=\\min(m,n)$ and $\\hat\\sigma_q:=0$ when the deletion lowers the smaller dimension: $\\sigma_1(A)\\ge\\hat\\sigma_1\\ge\\sigma_2(A)\\ge\\hat\\sigma_2\\ge\\dots\\ge\\sigma_q(A)\\ge\\hat\\sigma_q$. Iterating: for a $p\\times r$ submatrix $A_{IJ}$, $\\sigma_{i+(m-p)+(n-r)}(A)\\le\\sigma_i(A_{IJ})\\le\\sigma_i(A)$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$",
@@ -28934,7 +29146,7 @@
     "interlacing"
    ],
    "notes": "Consumers: column subset selection and CUR (`volume-sampling`, `interpolative-decomposition`, `rank-revealing-qr`: $\\sigma_i(A_{:,S})\\le\\sigma_i(A)$), sketch-and-solve with row sampling (`leverage-sampling-ose`), Nyström blocks. Prove: $\\hat A^\\top\\hat A$ (column deletion) is a principal submatrix of $A^\\top A$, or $\\hat A^\\top\\hat A=A^\\top A-aa^\\top$ (row deletion); apply `cauchy-interlacing` / `low-rank-update-interlacing` and `sq_singularValues_eq_eigenvalues₀`.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -28948,7 +29160,7 @@
    ],
    "area": "matrix-projections",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $A\\in\\mathbb R^{p\\times n}$ and $B\\in\\mathbb R^{q\\times n}$ with $p\\le q$: $A^\\top A=B^\\top B$ iff $B=VA$ for some $V\\in\\mathbb R^{q\\times p}$ with orthonormal columns.",
    "hypotheses": [
     "$A\\in\\mathbb R^{p\\times n}$, $B\\in\\mathbb R^{q\\times n}$, $p\\le q$"
@@ -28961,10 +29173,9 @@
     }
    ],
    "depends_on": [
-    "svd",
-    "orthonormal-completion",
     "orthonormal-columns-def",
-    "polar-decomposition"
+    "orthonormal-completion",
+    "qr-decomposition"
    ],
    "mathlib_prereqs": [
     {
@@ -28979,9 +29190,26 @@
     "isometry"
    ],
    "notes": "Consumers: uniqueness of Gram/Cholesky-type factors up to rotation (`nystrom-structural`, `exists_eq_transpose_mul_of_posSemidef` users), sketch equivalences where only $A^\\top S^\\top SA$ matters, `polar-decomposition` uniqueness. Prove via SVD of $A$ and $B$.",
-   "updated_at": "2026-10-11",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-12",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isometry_mul_eq_of_gram_eq",
+     "module": "NLAlib.Matrix.RectangularGramIsometry",
+     "status": "proved",
+     "usage": "Apply with a cardinality bound and equality of Gram matrices to obtain V with orthonormal columns and V A = B."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gram_eq_iff_exists_isometry_mul_eq",
+     "module": "NLAlib.Matrix.RectangularGramIsometry",
+     "status": "proved",
+     "usage": "Rewrite equality of Gram matrices as existence of a rectangular isometry when the destination row cardinality is at least the source cardinality."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols"
+   ],
    "variants": []
   },
   {
@@ -28993,7 +29221,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Every $A\\in\\mathbb R^{m\\times n}$ with $m\\ge n$ factors as $A=UQ$ with $Q=(A^\\top A)^{1/2}\\succeq0$ uniquely determined and $U\\in\\mathbb R^{m\\times n}$ with orthonormal columns, unique iff $\\operatorname{rank}A=n$ (then $U=A(A^\\top A)^{-1/2}$); for $m\\le n$, $A=PU$ with $P=(AA^\\top)^{1/2}$; for square $A$, $A=PU=UQ$ with $U$ orthogonal. $U$ is the nearest matrix with orthonormal columns to $A$ in every unitarily invariant norm.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$"
@@ -29033,7 +29261,7 @@
     "orthogonalization"
    ],
    "notes": "NLAlib already has the full-column-rank real case as `polarFrame` (`hasOrthonormalCols_polarFrame`, `polarFrame_mul_transpose_mul_eq`); this entry adds the rank-deficient and square cases and uniqueness. Consumers: `orthogonal-procrustes`, `principal-angles-def` (polar factor of $Q^\\top\\hat Q$), orthonormalisation of sketches in `rsvd-expected-error`/`subspace-iteration-def`, `haar-orthogonal`. Prove from the SVD.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -29048,7 +29276,7 @@
    ],
    "area": "matrix-projections",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For $A,B\\in\\mathbb R^{m\\times n}$: $\\min_{U\\in O(m)}\\|A-UB\\|_F^2=\\|A\\|_F^2-2\\sum_i\\sigma_i(AB^\\top)+\\|B\\|_F^2$, attained at the orthogonal polar factor of $AB^\\top$; $\\min_{U,T\\text{ orth.}}\\|A-UBT\\|_F^2=\\sum_i(\\sigma_i(A)-\\sigma_i(B))^2$; the best $cU$ approximation of square $A$ is $(\\tfrac1n\\operatorname{tr}P)U_0$ for $A=PU_0$. Equality $\\|A-B\\|_F^2=\\sum_i(\\sigma_i(A)-\\sigma_i(B))^2$ holds iff $\\operatorname{tr}AB^\\top=\\sum\\sigma_i(A)\\sigma_i(B)$, and then $AB^\\top,B^\\top A\\succeq0$.",
    "hypotheses": [
     "$A,B\\in\\mathbb R^{m\\times n}$"
@@ -29091,7 +29319,7 @@
     "orthogonal-matrices"
    ],
    "notes": "Consumers: aligning subspace bases before comparing them (`principal-angles-def`, `davis-kahan-sin-theta`, `wedin-sin-theta` applications), comparing sketches up to rotation. Prove from von Neumann (`frobInner_le_sum_singularValues_mul`) plus attainment at the polar factor.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -29106,7 +29334,7 @@
    ],
    "area": "matrix-conditioning",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Let $A\\in\\mathbb R^{n\\times n}$ be symmetric positive definite with extreme eigenvalues $\\lambda_{\\min},\\lambda_{\\max}$ and $\\kappa=\\lambda_{\\max}/\\lambda_{\\min}$. Kantorovich: $(x^\\top Ax)(x^\\top A^{-1}x)\\le\\frac{(\\lambda_{\\min}+\\lambda_{\\max})^2}{4\\lambda_{\\min}\\lambda_{\\max}}\\|x\\|^4=\\tfrac14(\\kappa^{1/2}+\\kappa^{-1/2})^2\\|x\\|^4$. Wielandt: for orthogonal $x,y$, $(x^\\top Ay)^2\\le\\big(\\frac{\\lambda_{\\max}-\\lambda_{\\min}}{\\lambda_{\\max}+\\lambda_{\\min}}\\big)^2(x^\\top Ax)(y^\\top Ay)$. The two inequalities are equivalent.",
    "hypotheses": [
     "$A=A^\\top\\succ0$",
@@ -29142,7 +29370,7 @@
     "iterative-methods"
    ],
    "notes": "Consumers: steepest-descent rate $\\big(\\frac{\\kappa-1}{\\kappa+1}\\big)^2$ (contrast with `cg-convergence`), Wielandt angle bounds for preconditioned or sketched inner products (`sketch-and-precondition`, `ose-def`: angle distortion), randomized Kaczmarz/coordinate descent variants. Prove Kantorovich from $(\\lambda_{\\max}I-A)(A-\\lambda_{\\min}I)A^{-1}\\succeq0$ as in the book; Wielandt from Kantorovich on a $2\\times2$ compression.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -29157,7 +29385,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "A symmetric $A\\in\\mathbb R^{n\\times n}$ is positive semidefinite iff $\\operatorname{tr}(AB)=\\sum_{ij}a_{ij}b_{ij}\\ge0$ for every positive semidefinite $B$. In particular $\\operatorname{tr}(AB)\\ge0$ for $A,B\\succeq0$, with equality iff $AB=0$; and $\\operatorname{tr}(AB)\\le\\operatorname{tr}(AC)$ when $A\\succeq0$ and $B\\preceq C$.",
    "hypotheses": [
     "$A=A^\\top\\in\\mathbb R^{n\\times n}$ (complex Hermitian analogue)"
@@ -29185,8 +29413,20 @@
      "note": "For $\\operatorname{tr}(AB)=\\|A^{1/2}B^{1/2}\\|_F^2$."
     },
     {
-     "decl": "self-duality of the PSD cone",
-     "present": false
+     "decl": "CFC.sqrt_mul_sqrt_self",
+     "present": true
+    },
+    {
+     "decl": "Matrix.trace_conjTranspose_mul_self_eq_zero_iff",
+     "present": true
+    },
+    {
+     "decl": "Matrix.posSemidef_vecMulVec_self_star",
+     "present": true
+    },
+    {
+     "decl": "Matrix.PosSemidef.of_dotProduct_mulVec_nonneg",
+     "present": true
     }
    ],
    "difficulty": 1,
@@ -29197,8 +29437,48 @@
     "loewner-order"
    ],
    "notes": "Consumers: ubiquitous trace manipulations — matrix Laplace/Chernoff bounds (`matrix-laplace`, `matrix-chernoff`), variance formulas in `hutchinson-variance`, monotonicity $\\operatorname{tr}(AB)\\le\\operatorname{tr}(AC)$ in Nyström and Hutch++ proofs, `generalized-schur-complement-psd`. Prove: forward via $\\operatorname{tr}(AB)=\\operatorname{tr}(B^{1/2}AB^{1/2})$; converse with $B=xx^\\top$.",
-   "updated_at": "2026-10-11",
-   "formalizations": [],
+   "updated_at": "2026-10-12",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.trace_mul_nonneg_of_posSemidef",
+     "module": "NLAlib.Matrix.PSDDuality",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to two PSD matrices to get their nonnegative real or complex trace pairing."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.trace_mul_eq_zero_iff_of_posSemidef",
+     "module": "NLAlib.Matrix.PSDDuality",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite zero trace pairing of PSD matrices as vanishing of their product."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posSemidef_iff_trace_mul_nonneg",
+     "module": "NLAlib.Matrix.PSDDuality",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite PSD membership of a Hermitian matrix as nonnegative trace pairing with every PSD matrix."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.trace_mul_le_trace_mul_of_posSemidef",
+     "module": "NLAlib.Matrix.PSDDuality",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply with a PSD multiplier and a Loewner comparison to compare product traces."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.psd_trace_pairing_characterizations",
+     "module": "NLAlib.Matrix.PSDDuality",
+     "status": "proved",
+     "usage": "Apply to a Hermitian matrix to obtain trace-pairing self-duality, the zero-product equality case for PSD arguments, and Loewner monotonicity."
+    }
+   ],
    "uses_defs": [],
    "variants": []
   },
@@ -29213,7 +29493,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For PSD $A,B\\in\\mathbb R^{n\\times n}$: if $A\\succ0$ and $B$ has positive diagonal then $A\\circ B\\succ0$; Hadamard powers $A^{\\circ k}$ and $[f(a_{ij})]$ for $f$ with nonnegative Taylor coefficients (radius $>\\max|a_{ij}|$) are PSD, $[e^{a_{ij}}]\\succeq0$ (PD iff no two rows of $A$ coincide); Oppenheim: $\\det(A\\circ B)\\ge\\max\\{\\det A\\prod b_{ii},\\det B\\prod a_{ii}\\}$; for $A,B\\succ0$: $A^{-1}\\circ B^{-1}\\succeq(A\\circ B)^{-1}$, $A\\circ A^{-1}\\succeq I$, and $\\lambda_{\\min}(A\\circ B)\\ge\\max\\{\\lambda_{\\min}(AB),\\lambda_{\\min}(AB^\\top)\\}$; Hadamard products preserve the dominance $x^*Ax\\ge|x^*Bx|$.",
    "hypotheses": [
     "$A,B\\in\\mathbb R^{n\\times n}$ PSD (PD where stated)"
@@ -29279,7 +29559,7 @@
     "kernels"
    ],
    "notes": "Consumers: positive definiteness of kernel matrices built entrywise (Gaussian/exponential kernels for Nyström, `rpcholesky` on kernel matrices), Rademacher/diagonal estimator variance terms involving $A\\circ A$ (`diagonal-estimator`, `hutchinson-variance`), Oppenheim for determinantal sampling. Low priority; assume where convenient.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -29295,7 +29575,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "On symmetric positive definite matrices: $A\\mapsto\\log\\det A$ is strictly concave, i.e. $\\det(\\alpha A+(1-\\alpha)B)\\ge(\\det A)^\\alpha(\\det B)^{1-\\alpha}$ for $0<\\alpha<1$ with equality iff $A=B$; $A\\mapsto(\\det A)^{1/n}$ is concave (Minkowski: $(\\det(A+B))^{1/n}\\ge(\\det A)^{1/n}+(\\det B)^{1/n}$, equality iff $A=cB$); and $A\\mapsto\\operatorname{tr}A^{-1}$ is strictly convex.",
    "hypotheses": [
     "$A,B\\in\\mathbb R^{n\\times n}$ symmetric positive definite",
@@ -29351,7 +29631,7 @@
     "convexity"
    ],
    "notes": "Consumers: log-determinant estimation by SLQ (`slq-error`: concavity gives Jensen bounds), `volume-sampling` and determinantal sampling, D-/A-optimal design objectives, Jensen steps for inverse Wishart traces (`inverse-wishart-mean`: convexity of $\\operatorname{tr}A^{-1}$). Prove by simultaneous diagonalisation reducing to scalar AM–GM / convexity of $1/x$; NLAlib’s operator concavity of log (`operator-monotone-convex`) gives log det concavity directly via $\\log\\det=\\operatorname{tr}\\log$.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -29366,7 +29646,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "Let $A\\in\\mathbb R^{n\\times n}$ be symmetric positive definite and $B$ symmetric. Then $aA\\preceq B\\preceq bA$ iff every eigenvalue of $A^{-1}B$ lies in $[a,b]$; for $B\\succeq0$, $A\\succeq B$ iff $\\rho(A^{-1}B)\\le1$ iff $B=A^{1/2}XA^{1/2}$ with $0\\preceq X\\preceq I$, and $A^2\\succeq B^2$ iff $\\|A^{-1}B\\|\\le1$. If $A\\succeq B\\succeq0$: $\\det A\\ge\\det B$, $\\operatorname{tr}A\\ge\\operatorname{tr}B$ with equality iff $A=B$, $\\lambda_i(A)\\ge\\lambda_i(B)$, and $B^{-1}\\succeq A^{-1}$, $A^{1/2}\\succeq B^{1/2}$ when defined.",
    "hypotheses": [
     "$A=A^\\top\\succ0$",
@@ -29413,7 +29693,7 @@
     "preconditioning"
    ],
    "notes": "Consumers: `preconditioned-cg` (hypothesis $aP\\preceq A\\preceq bP$ ⇔ $\\sigma(P^{-1}A)\\subseteq[a,b]$, giving the condition number $b/a$), `nystrom-pcg`, `ose-def` (subspace embedding as a Loewner sandwich of Gram matrices), `sketch-and-precondition`; determinant monotonicity for `volume-sampling`. Prove via `simultaneous-diagonalization-congruence` or directly with $A^{-1/2}BA^{-1/2}$; eigenvalue and trace parts are already in NLAlib.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -29428,7 +29708,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For $X\\in\\mathbb R^{p\\times q}$: $\\begin{bmatrix}I&X\\\\X^\\top&I\\end{bmatrix}\\succeq0$ ($\\succ0$) iff $\\|X\\|\\le1$ ($<1$). For $H=\\begin{bmatrix}A&B\\\\B^\\top&C\\end{bmatrix}$ with $A,C\\succeq0$, TFAE: $H\\succeq0$; $(x^\\top Ax)(y^\\top Cy)\\ge(x^\\top By)^2$ for all $x,y$; $x^\\top Ax+y^\\top Cy\\ge2|x^\\top By|$; $B=A^{1/2}XC^{1/2}$ with $\\|X\\|\\le1$; if $A,C\\succ0$ also $\\rho(B^\\top A^{-1}BC^{-1})\\le1$ (strict versions characterise $H\\succ0$, equivalently $A\\succ0$ and $C-B^\\top A^{-1}B\\succ0$). For $A,B\\succeq0$: $A\\succeq B$ iff $\\begin{bmatrix}A&B\\\\B&A\\end{bmatrix}\\succeq0$. For $H\\succ0$ and an index set $\\alpha$: $(H^{-1})_{\\alpha\\alpha}\\succeq(H_{\\alpha\\alpha})^{-1}$; $\\begin{bmatrix}A&X\\\\X^\\top&X^\\top A^{-1}X\\end{bmatrix}\\succeq0$ for $A\\succ0$.",
    "hypotheses": [
     "real symmetric block matrices",
@@ -29507,7 +29787,7 @@
     "block-matrices"
    ],
    "notes": "Consumers: Cauchy–Schwarz for PSD bilinear forms in approximate-matrix-multiplication and subspace-embedding proofs (`amm-ose`, `ose-def`), Nyström error via Schur complements (`nystrom-structural`, `generalized-schur-complement-psd`), inverse-diagonal lower bounds $(A^{-1})_{ii}\\ge1/a_{ii}$ for diagonal estimation of $A^{-1}$ (`diagonal-estimator`), Hermitian dilation arguments. Prove from `posSemidef_fromBlocks_iff` (currently assumed) and the square root.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []
@@ -29524,7 +29804,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "planned",
    "informal": "For symmetric positive definite $A\\in\\mathbb R^{n\\times n}$: $\\det A\\le\\prod_ia_{ii}$ with equality iff $A$ is diagonal (Hadamard), hence $|\\det B|\\le\\prod_j\\|b_j\\|_2$ for any square $B$ with columns $b_j$ (equality iff orthogonal columns or a zero column); $\\det\\begin{bmatrix}A_{11}&A_{12}\\\\A_{21}&A_{22}\\end{bmatrix}\\le\\det A_{11}\\det A_{22}$ (Fischer); $\\det A_{\\alpha\\cup\\beta}\\det A_{\\alpha\\cap\\beta}\\le\\det A_\\alpha\\det A_\\beta$ (Koteljanskiĭ); and the normalised products $P_k^{1/\\binom{n-1}{k-1}}$ of $k\\times k$ principal minors decrease in $k$ (Szász).",
    "hypotheses": [
     "$A=A^\\top\\succ0$ (PSD by continuity)",
@@ -29589,7 +29869,7 @@
     "positive-definite"
    ],
    "notes": "Consumers: `volume-sampling` and column subset selection (Gram determinants bounded by products of column norms; NLAlib already has the base-times-height identity `det_gram_fromCols_eq_mul_frobSq_sub_projector`), `rpcholesky` / `partial-cholesky-nystrom` (determinants of pivot blocks), determinant bounds for random matrices. Prove Hadamard from Cholesky ($\\det A=\\prod L_{ii}^2$, `IsCholesky.det_eq_prod_sq`, with $L_{ii}^2\\le a_{ii}$) or QR ($|\\det B|=\\prod|R_{ii}|\\le\\prod\\|b_j\\|$); Fischer from the Schur complement $A_{22}-A_{21}A_{11}^{-1}A_{12}\\preceq A_{22}$; Koteljanskiĭ and Szász later.",
-   "updated_at": "2026-10-11",
+   "updated_at": "2026-10-12",
    "formalizations": [],
    "uses_defs": [],
    "variants": []

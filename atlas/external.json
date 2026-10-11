@@ -2621,6 +2621,50 @@
   "sorry":
   false,
   "signature":
+  "doublyStochastic.{u_3, u_4} (R : Type u_3) (n : Type u_4) [Fintype n] [DecidableEq n] [Semiring R] [PartialOrder R]\n  [IsOrderedRing R] : Submonoid (Matrix n n R)",
+  "name":
+  "doublyStochastic",
+  "module":
+  "Mathlib.Analysis.Convex.DoublyStochasticMatrix",
+  "line":
+  38,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "A square matrix is doubly stochastic iff all entries are nonnegative, and left or right\nmultiplication by the vector of all 1s gives the vector of all 1s.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "doublyStochastic_eq_convexHull_permMatrix.{u_1, u_2} {R : Type u_1} {n : Type u_2} [Fintype n] [DecidableEq n] [Field R]\n  [LinearOrder R] [IsStrictOrderedRing R] :\n  ↑(doublyStochastic R n) = (convexHull R) {x | ∃ σ, Equiv.Perm.permMatrix R σ = x}",
+  "name":
+  "doublyStochastic_eq_convexHull_permMatrix",
+  "module":
+  "Mathlib.Analysis.Convex.Birkhoff",
+  "line":
+  160,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "**Birkhoff's theorem**\nThe set of doubly stochastic matrices is the convex hull of the permutation matrices.  Note\n`exists_eq_sum_perm_of_mem_doublyStochastic` gives a convex weighting of each permutation matrix\ndirectly.  To show `doublyStochastic n` is convex, use `convex_doublyStochastic`.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "ConvexOn.map_sum_le.{u_1, u_2, u_4, u_5} {𝕜 : Type u_1} {E : Type u_2} {β : Type u_4} {ι : Type u_5} [Field 𝕜]\n  [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [AddCommGroup E] [AddCommGroup β] [PartialOrder β] [IsOrderedAddMonoid β]\n  [_root_.Module 𝕜 E] [_root_.Module 𝕜 β] [IsStrictOrderedModule 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜}\n  {p : ι → E} (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : ∑ i ∈ t, w i = 1) (hmem : ∀ i ∈ t, p i ∈ s) :\n  f (∑ i ∈ t, w i • p i) ≤ ∑ i ∈ t, w i • f (p i)",
   "name":
   "ConvexOn.map_sum_le",

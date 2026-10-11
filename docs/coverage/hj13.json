@@ -1952,11 +1952,12 @@
     "qr-decomposition"
    ],
    "decls": [
+    "NLAlib.qr_decomposition",
     "NLAlib.exists_isQR",
     "NLAlib.IsQR.eq_of_diag_pos",
     "NLAlib.exists_isFullQR"
    ],
-   "note": "real matrices"
+   "note": "Real matrices, arbitrary finite row indices and ordered finite column indices; thin and full factors share the same nonnegative triangular corner, with positive-diagonal uniqueness at full column rank."
   },
   {
    "label": "Thm 2.1.18",
@@ -3755,9 +3756,11 @@
     "eigenvalue-perturbation-symmetric"
    ],
    "decls": [
-    "NLAlib.eigenvalues₀_add_le"
+    "NLAlib.eigenvalues₀_add_le",
+    "NLAlib.eigenvalues₀_add_le_add_eigenvalues₀_zero",
+    "NLAlib.add_eigenvalues₀_last_le_eigenvalues₀_add"
    ],
-   "note": "`eigenvalues₀_add_le` is (4.3.2a) for real symmetric matrices in decreasing order; (4.3.2b) (by negation) and the equality cases are not stated."
+   "note": "Real symmetric upper Weyl inequality and both extreme-eigenvalue bounds are proved. The general lower Weyl inequality and common-eigenvector equality characterizations are not stated."
   },
   {
    "label": "Cor 4.3.3",
@@ -3839,9 +3842,10 @@
     "weyl-mirsky"
    ],
    "decls": [
-    "NLAlib.eigenvalues₀_add_le"
+    "NLAlib.eigenvalues₀_add_le_add_eigenvalues₀_zero",
+    "NLAlib.add_eigenvalues₀_last_le_eigenvalues₀_add"
    ],
-   "note": "Upper bound is the $j=0$ case of `eigenvalues₀_add_le`; the lower bound and equality cases are not stated (atlas candidate `eigenvalue-perturbation-symmetric`)."
+   "note": "Both signed extreme-eigenvalue bounds are proved for real symmetric matrices; the common-eigenvector equality characterizations are not stated."
   },
   {
    "label": "Thm 4.3.17",
@@ -3908,13 +3912,16 @@
    "chapter": "4.3",
    "page": 247,
    "statement": "The trace of an $m\\times m$ principal submatrix lies between the sums of the $m$ smallest and $m$ largest eigenvalues; equality forces a block-diagonal splitting.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "ky-fan-maximum-principle",
     "schur-horn"
    ],
-   "decls": [],
-   "note": "Coordinate-subspace case of the Ky Fan principle; existing atlas candidates."
+   "decls": [
+    "NLAlib.trace_compression_le_eigenvaluePrefix",
+    "NLAlib.sum_bottom_eigenvalues_le_trace_compression"
+   ],
+   "note": "Both trace bounds hold for every real orthonormal compression, including coordinate compressions. Equality forcing a block-diagonal splitting is not stated."
   },
   {
    "label": "Cor 4.3.37",
@@ -3940,12 +3947,16 @@
    "page": 248,
    "name": "Ky Fan maximum principle",
    "statement": "Ky Fan: $\\sum_{i\\le m}\\lambda_i(A)=\\min\\{\\operatorname{tr}V^*AV:V^*V=I_m\\}$ and the top-$m$ sum is the corresponding maximum, attained at eigenvectors.",
-   "status": "candidate",
+   "status": "nlalib",
    "atlas": [
     "ky-fan-maximum-principle"
    ],
-   "decls": [],
-   "note": "Existing atlas candidate (cites this label)."
+   "decls": [
+    "NLAlib.ky_fan_toolkit_properties",
+    "NLAlib.exists_trace_compression_eq_eigenvaluePrefix",
+    "NLAlib.exists_trace_compression_eq_bottom_eigenvalues"
+   ],
+   "note": "Both real symmetric compression extrema and attaining eigenvector frames are proved, including empty and full prefixes."
   },
   {
    "label": "Def 4.3.41",
@@ -3954,12 +3965,16 @@
    "page": 249,
    "name": "Majorization",
    "statement": "$x\\in\\mathbb R^n$ majorizes $y$ if every partial sum of the $k$ largest entries of $x$ dominates that of $y$, with equality of total sums.",
-   "status": "candidate",
+   "status": "nlalib",
    "atlas": [
     "majorization-def"
    ],
-   "decls": [],
-   "note": ""
+   "decls": [
+    "NLAlib.Majorized",
+    "NLAlib.WeaklyMajorized",
+    "NLAlib.sumLargest"
+   ],
+   "note": "Real finite vectors, including empty vectors; Majorized y x means that x majorizes y. Prefix sums use the actual descending rearrangement."
   },
   {
    "label": "Def 4.3.43",
@@ -3967,12 +3982,16 @@
    "chapter": "4.3",
    "page": 249,
    "statement": "The nonincreasing and nondecreasing rearrangements $z^\\downarrow$, $z^\\uparrow$ of a real vector.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "majorization-def"
    ],
-   "decls": [],
-   "note": "Mathlib has sorting of finite lists/tuples (`Tuple.sort`) but not the vector rearrangement API used here."
+   "decls": [
+    "NLAlib.sortingEquiv",
+    "NLAlib.sortedVector",
+    "NLAlib.sortedVector_antitone"
+   ],
+   "note": "The decreasing rearrangement and its ordering/permutation API are implemented. A separately named increasing rearrangement is not provided."
   },
   {
    "label": "Thm 4.3.45",
@@ -3981,12 +4000,15 @@
    "page": 249,
    "name": "Schur's majorization theorem",
    "statement": "Schur: the eigenvalue vector of a Hermitian matrix majorizes its diagonal; equality at step $k<n$ forces a permutation-similar direct sum.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "schur-horn"
    ],
-   "decls": [],
-   "note": ""
+   "decls": [
+    "NLAlib.majorized_diagonal_eigenvalues",
+    "NLAlib.majorized_diagonal_and_orthogonal_converse_and_sum_convex_le_trace_cfc"
+   ],
+   "note": "Real symmetric diagonal majorization and every subset bound are proved. Equality at a proper prefix forcing a permutation-similar direct sum is not stated."
   },
   {
    "label": "Thm 4.3.47",
@@ -3995,13 +4017,17 @@
    "page": 250,
    "name": "Fan and Lidskii majorization",
    "statement": "For Hermitian $A,B$: (Fan) $\\lambda^\\downarrow(A)+\\lambda^\\downarrow(B)$ majorizes $\\lambda(A+B)$; (Lidskii) $\\lambda(A+B)$ majorizes $\\lambda^\\downarrow(A)+\\lambda^\\uparrow(B)$.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "lidskii",
     "ky-fan-maximum-principle"
    ],
-   "decls": [],
-   "note": ""
+   "decls": [
+    "NLAlib.majorized_eigenvalues₀_add",
+    "NLAlib.majorized_eigenvalues₀_add_sub",
+    "NLAlib.sum_eigenvalues₀_add_le_sum_add_eigenvaluePrefix"
+   ],
+   "note": "Fan majorization and Lidskii signed-difference/indexed-increment majorization are proved for real symmetric matrices. The displayed reverse-ordered lower-sum formulation is not separately stated or bridged to these declarations."
   },
   {
    "label": "Thm 4.3.48",
@@ -4010,12 +4036,15 @@
    "page": 251,
    "name": "Horn converse to Schur",
    "statement": "Horn: if $x$ majorizes $y$ there is a real orthogonal $Q$ with $\\operatorname{diag}(Q^T\\operatorname{diag}(x)Q)=y$.",
-   "status": "candidate",
+   "status": "nlalib",
    "atlas": [
     "schur-horn"
    ],
-   "decls": [],
-   "note": ""
+   "decls": [
+    "NLAlib.exists_orthogonal_diagonal_eq_of_majorized",
+    "NLAlib.majorized_iff_exists_orthogonal_diagonal_eq"
+   ],
+   "note": "Full real orthogonal converse, including signed/repeated spectra and dimension zero. The conjugation convention Q diag(x) Qᵀ is equivalent by transposing the orthogonal witness."
   },
   {
    "label": "Thm 4.3.49",
@@ -4024,12 +4053,15 @@
    "page": 253,
    "name": "Hardy–Littlewood–Pólya / Rado",
    "statement": "TFAE: $x$ majorizes $y$; $y=Sx$ for a doubly stochastic $S$; $y$ is a convex combination of permutations of $x$.",
-   "status": "candidate",
+   "status": "nlalib",
    "atlas": [
     "majorization-def"
    ],
-   "decls": [],
-   "note": "Birkhoff step is Mathlib `doublyStochastic_eq_convexHull_permMatrix`."
+   "decls": [
+    "NLAlib.majorized_iff_exists_doublyStochastic",
+    "NLAlib.majorized_iff_mem_convexHull_permutations"
+   ],
+   "note": "All equivalences are proved for arbitrary finite real vectors, including ties and empty vectors; the proof reuses Mathlib’s Birkhoff theorem."
   },
   {
    "label": "Thm 4.3.50",
@@ -4050,12 +4082,16 @@
    "chapter": "4.3",
    "page": 255,
    "statement": "If $x$ majorizes $y$ then $\\sum w_i^\\downarrow x_i^\\uparrow\\le\\sum w_i^\\downarrow y_i\\le\\sum w_i^\\downarrow x_i^\\downarrow$, with equality conditions via partial sums.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "majorization-def"
    ],
-   "decls": [],
-   "note": "Rearrangement-type characterisation; fold into the majorization entry."
+   "decls": [
+    "NLAlib.sum_mul_le_sum_sortedVector_mul",
+    "NLAlib.Majorized.sum_sortedVector_mul_le",
+    "NLAlib.sum_mul_le_of_prefix_le_of_sum_eq"
+   ],
+   "note": "Rearrangement and majorization weighted upper bounds are proved. The reverse-ordered lower bound and equality characterization via partial sums are not stated."
   },
   {
    "label": "Thm 4.3.53",
@@ -4064,12 +4100,14 @@
    "page": 255,
    "name": "Eigenvalue trace inequality",
    "statement": "For Hermitian $A,B$: $\\sum\\lambda_i^\\downarrow(A)\\lambda_i^\\uparrow(B)\\le\\operatorname{tr}AB\\le\\sum\\lambda_i^\\downarrow(A)\\lambda_i^\\downarrow(B)$; equality forces commuting and simultaneous ordered diagonalisation.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "eigenvalue-perturbation-symmetric"
    ],
-   "decls": [],
-   "note": "Existing candidate states the upper bound; NLAlib has the singular-value (von Neumann) analogue and the overlap identity `re_trace_pow_mul_pow_eq_sum_overlap`, not this eigenvalue form."
+   "decls": [
+    "NLAlib.trace_mul_le_sum_eigenvalues₀_mul"
+   ],
+   "note": "The signed, decreasing-eigenvalue upper trace bound is proved for real symmetric matrices. The reverse-ordered lower bound and equality/commuting/ordered-diagonalization characterizations are not stated."
   },
   {
    "label": "Lem 4.4.2",
@@ -4969,12 +5007,16 @@
    "chapter": "5.4",
    "page": 332,
    "statement": "A norm on $\\mathbb F^n$ is monotone if $|x|\\le|y|$ entrywise implies $\\|x\\|\\le\\|y\\|$, and absolute if $\\|x\\|=\\||x|\\|$.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "unitarily-invariant-norm-def"
    ],
-   "decls": [],
-   "note": "Needed to define symmetric gauge functions (Def 7.4.7.1); fold into the existing candidate."
+   "decls": [
+    "NLAlib.SymmetricGauge",
+    "NLAlib.SymmetricGauge.value_abs",
+    "NLAlib.SymmetricGauge.value_le_of_nonneg_of_le"
+   ],
+   "note": "Real symmetric gauges have the absolute and monotone properties. Generic absolute/monotone norm predicates are not defined; permutation invariance is an additional hypothesis here."
   },
   {
    "label": "Thm 5.4.19",
@@ -5116,12 +5158,15 @@
    "chapter": "5.5",
    "page": 339,
    "statement": "An absolute norm on $\\mathbb R^n$ or $\\mathbb C^n$ is monotone.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "unitarily-invariant-norm-def"
    ],
-   "decls": [],
-   "note": "Used to show a unitarily invariant norm is monotone on diagonal matrices (argument after Thm 7.4.9.1)."
+   "decls": [
+    "NLAlib.SymmetricGauge.value_le_of_nonneg_of_le",
+    "NLAlib.SymmetricGauge.value_abs"
+   ],
+   "note": "Proved for real symmetric gauges. The theorem for an arbitrary absolute norm, without permutation invariance, is not stated."
   },
   {
    "label": "Def 5.6.1",
@@ -5421,12 +5466,15 @@
    "chapter": "5.6",
    "page": 358,
    "statement": "Dual of a norm on $M_n$: $\\|A\\|^D=\\max_{\\|B\\|=1}\\operatorname{Re}\\operatorname{tr}B^*A$.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "ky-fan-norms-def"
    ],
-   "decls": [],
-   "note": "Needed for nuclear/spectral duality; fold into the Ky Fan norms entry."
+   "decls": [
+    "NLAlib.isGreatest_nuclearNorm_frobInner",
+    "NLAlib.isGreatest_schattenNormExtended_frobInner"
+   ],
+   "note": "Concrete attained spectral/nuclear and Schatten dual formulas over unit balls are proved. A generic arbitrary-norm dual definition and its unit-sphere formulation are not provided."
   },
   {
    "label": "Thm 5.6.39",
@@ -5469,12 +5517,16 @@
    "chapter": "5.6",
    "page": 361,
    "statement": "If an absolute norm induces $|||\\cdot|||$ then $|||\\cdot|||^D$ is a matrix norm and $|||\\Lambda|||^D=\\sum|\\lambda_i|$ on diagonals (so the dual of the spectral norm is the trace norm).",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "ky-fan-norms-def"
    ],
-   "decls": [],
-   "note": "Only the spectral/trace-norm duality is wanted (already in the Ky Fan norms entry)."
+   "decls": [
+    "NLAlib.isGreatest_nuclearNorm_frobInner",
+    "NLAlib.nuclearSeminorm",
+    "NLAlib.nuclearNorm_eq_zero_iff"
+   ],
+   "note": "Spectral/nuclear duality and the nuclear norm axioms are proved for real matrices. The arbitrary absolute inducing norm case and its general diagonal formula are not stated."
   },
   {
    "label": "Thm 5.7.8",
@@ -5615,12 +5667,11 @@
     "linear-system-perturbation"
    ],
    "decls": [
-    "NLAlib.conditionNumber",
-    "NLAlib.specNorm_inv_add_sub_inv_le_of_mul_lt_one",
-    "NLAlib.sqrt_dotProduct_div_le_conditionNumber_mul_of_mulVec_add",
-    "NLAlib.sqrt_dotProduct_sub_div_le_conditionNumber_mul"
+    "NLAlib.condition_number_characterizations",
+    "NLAlib.neumann_and_inverse_perturbation",
+    "NLAlib.linear_system_perturbation"
    ],
-   "note": "Unnumbered section (no numbered statements); NLAlib proves the spectral-norm versions."
+   "note": "Unnumbered section: the real spectral-norm condition-number, inverse perturbation, simultaneous-data forward-error and a-posteriori residual versions are proved, using actual matrix inverses and Euclidean actions."
   },
   {
    "label": "Thm 6.1.1",
@@ -6074,12 +6125,15 @@
    "page": 407,
    "name": "Hoffman–Wielandt theorem",
    "statement": "Hoffman–Wielandt: for normal $A$ and $A+E$ there is a matching permutation with $\\sum_i|\\hat\\lambda_{\\sigma(i)}-\\lambda_i|^2\\le\\|E\\|_F^2$.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "eigenvalue-perturbation-symmetric"
    ],
-   "decls": [],
-   "note": "Normal-matrix form: candidate `hoffman-wielandt-normal`; the symmetric form is the existing atlas candidate."
+   "decls": [
+    "NLAlib.sum_sq_eigenvalues₀_sub_le_frobSq_sub",
+    "NLAlib.sum_sq_eigenvalues₀_add_sub_le_frobSq"
+   ],
+   "note": "The real symmetric case is proved with ordered eigenvalues. General normal matrices with complex spectra and a matching permutation remain in candidate hoffman-wielandt-normal."
   },
   {
    "label": "Cor 6.3.8",
@@ -6087,12 +6141,15 @@
    "chapter": "6.3",
    "page": 407,
    "statement": "For Hermitian $A$ and normal $A+E$, with eigenvalues ordered increasingly (by real part), $\\sum_i|\\hat\\lambda_i-\\lambda_i|^2\\le\\|E\\|_F^2$.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "eigenvalue-perturbation-symmetric"
    ],
-   "decls": [],
-   "note": "Existing atlas candidate (cites this label). NLAlib has the singular-value analogue `sum_sq_singularValues_add_sub_le_frobSq`."
+   "decls": [
+    "NLAlib.sum_sq_eigenvalues₀_sub_le_frobSq_sub",
+    "NLAlib.sum_sq_eigenvalues₀_add_sub_le_frobSq"
+   ],
+   "note": "Both matrices are required to be real symmetric. The printed result allows the perturbed matrix to be normal without being Hermitian, with complex eigenvalues ordered by real part."
   },
   {
    "label": "Lem 6.3.10",
@@ -6126,12 +6183,15 @@
    "chapter": "6.3",
    "page": 411,
    "statement": "Residual bounds: for diagonalizable $A$ and any $\\hat x\\ne0,\\hat\\lambda$, some eigenvalue satisfies $|\\hat\\lambda-\\lambda|\\le\\kappa(S)\\|r\\|/\\|\\hat x\\|$; for normal $A$, $|\\hat\\lambda-\\lambda|\\le\\|r\\|_2/\\|\\hat x\\|_2$.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "eigenvalue-residual-bounds"
    ],
-   "decls": [],
-   "note": "Normal case extends the existing symmetric candidate; the diagonalizable case goes in candidate `bauer-fike`."
+   "decls": [
+    "NLAlib.exists_eigenvalue_abs_sub_le_residual",
+    "NLAlib.eigenvalue_residual_bounds"
+   ],
+   "note": "Residual inclusion is proved for a real symmetric matrix, real shift and unit vector. General normal/complex matrices, the diagonalizable condition-number factor, and a separately stated nonzero-vector quotient form are absent."
   },
   {
    "label": "Thm 6.4.1",
@@ -6354,16 +6414,17 @@
    "chapter": "7.1",
    "page": 432,
    "statement": "PSD matrices have the row and column inclusion property; a zero diagonal entry forces its whole row and column to vanish.",
-   "status": "partial",
+   "status": "nlalib",
    "atlas": [
     "generalized-schur-complement-psd"
    ],
    "decls": [
+    "NLAlib.one_sub_mul_moorePenroseInverse_mul_eq_zero_of_fromBlocks_posSemidef",
+    "NLAlib.transpose_mulVec_eq_zero_of_fromBlocks_posSemidef",
     "NLAlib.apply_eq_zero_of_posSemidef_of_apply_self_eq_zero",
-    "NLAlib.apply_eq_zero_of_complex_posSemidef_of_diag_eq_zero",
-    "NLAlib.posSemidef_fromBlocks_iff"
+    "NLAlib.apply_eq_zero_of_complex_posSemidef_of_diag_eq_zero"
    ],
-   "note": "Zero-diagonal case proved (real and complex); the block inclusion $(I-AA^\\dagger)B=0$ is inside `posSemidef_fromBlocks_iff`, which is currently assumed (sorry)."
+   "note": "Real block inclusion is proved as (I − AA†)B = 0, with the equivalent kernel-annihilation form, for arbitrary finite block splits. Zero-diagonal row/column vanishing is proved for real and complex matrices."
   },
   {
    "label": "Lem 7.1.11",
@@ -6515,9 +6576,10 @@
     "NLAlib.exists_eq_mul_transpose_of_posSemidef",
     "Mathlib:Matrix.posSemidef_conjTranspose_mul_self",
     "Mathlib:Matrix.rank_conjTranspose_mul_self",
+    "Mathlib:Matrix.ker_mulVecLin_conjTranspose_mul_self",
     "Mathlib:Matrix.PosDef.conjTranspose_mul_self"
    ],
-   "note": "Factorisation (real) in NLAlib, converse and rank in Mathlib; the null-space equality is not stated."
+   "note": "Real factorization existence is proved in NLAlib; Gram positivity, rank and kernel equalities, and injectivity implying positive definiteness are in Mathlib. The full positive-definite iff full-column-rank assertion for an arbitrary rectangular Gram factor is not packaged as a declaration here."
   },
   {
    "label": "Cor 7.2.8",
@@ -6548,12 +6610,13 @@
     "cholesky-algorithm"
    ],
    "decls": [
+    "NLAlib.cholesky_decomposition",
     "NLAlib.exists_isCholesky_iff_posDef",
+    "NLAlib.IsCholesky.posDef",
     "NLAlib.IsCholesky.unique",
-    "NLAlib.eq_cholesky_mul_transpose_of_posSemidef",
-    "NLAlib.exists_eq_mul_transpose_of_posSemidef"
+    "NLAlib.eq_cholesky_mul_transpose_of_posSemidef"
    ],
-   "note": "Real case (the book notes $L$ can be taken real for real $A$)."
+   "note": "Real case: PSD lower-triangular nonnegative-diagonal existence and PD positive-diagonal uniqueness, including empty dimensions and singular zero pivots."
   },
   {
    "label": "Thm 7.2.10",
@@ -6728,9 +6791,11 @@
     "ky-fan-norms-def"
    ],
    "decls": [
-    "NLAlib.sum_sq_singularValues_add_sub_le_frobSq"
+    "NLAlib.sum_sq_singularValues_add_sub_le_frobSq",
+    "NLAlib.trace_twoSided_compression_le_kyFanNorm_fintype",
+    "NLAlib.exists_trace_twoSided_compression_eq_kyFanNorm_fintype"
    ],
-   "note": "(a) is NLAlib Mirsky; (b) (nuclear norm as a max over unitaries) is in the Ky Fan norms candidate."
+   "note": "Mirsky and the attained two-sided orthonormal-frame trace maximum are proved for real matrices. The single-unitary maximum formulation is not separately stated."
   },
   {
    "label": "Thm 7.4.1.4",
@@ -6738,12 +6803,15 @@
    "chapter": "7.4",
    "page": 460,
    "statement": "$\\operatorname{Re}\\operatorname{tr}A\\le\\sum_i\\sigma_i(A)$, with equality iff the leading $q\\times q$ block is PSD and all other entries vanish.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "ky-fan-norms-def"
    ],
-   "decls": [],
-   "note": "Trace bounded by nuclear norm; equality case is extra."
+   "decls": [
+    "NLAlib.trace_twoSided_compression_le_kyFanNorm_fintype",
+    "NLAlib.nuclearNorm_eq_trace_of_posSemidef"
+   ],
+   "note": "The real trace bound and PSD implying trace/nuclear-norm equality are proved. The converse equality characterization, including the rectangular leading block and vanishing remainder, is not stated."
   },
   {
    "label": "Cor 7.4.1.5",
@@ -6841,12 +6909,15 @@
    "page": 464,
    "name": "Symmetric gauge function",
    "statement": "A symmetric gauge function is an absolute vector norm on $\\mathbb C^q$ invariant under permutations.",
-   "status": "candidate",
+   "status": "nlalib",
    "atlas": [
     "unitarily-invariant-norm-def"
    ],
-   "decls": [],
-   "note": ""
+   "decls": [
+    "NLAlib.SymmetricGauge",
+    "NLAlib.SymmetricGauge.value_abs"
+   ],
+   "note": "Real symmetric gauges are genuine separating seminorms, absolute and invariant under coordinate permutations."
   },
   {
    "label": "Thm 7.4.7.2",
@@ -6855,12 +6926,17 @@
    "page": 464,
    "name": "von Neumann's gauge theorem",
    "statement": "Unitarily invariant norms on $M_{m,n}$ correspond bijectively to symmetric gauge functions via $\\|A\\|=g(\\sigma(A))$.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "unitarily-invariant-norm-def"
    ],
-   "decls": [],
-   "note": ""
+   "decls": [
+    "NLAlib.SymmetricGauge.toOrthogonallyInvariantNorm",
+    "NLAlib.OrthogonallyInvariantNorm.exists_symmetricGauge_representation",
+    "NLAlib.OrthogonallyInvariantNorm.value_toSymmetricGauge",
+    "NLAlib.SymmetricGauge.toOrthogonallyInvariantNorm_apply"
+   ],
+   "note": "Both construction directions and the singular-value representation are proved for real rectangular matrices. Uniqueness of the representing gauge, or inverse laws establishing the stated bijection, are not provided."
   },
   {
    "label": "Thm 7.4.8.4",
@@ -6869,13 +6945,16 @@
    "page": 467,
    "name": "Fan dominance theorem",
    "statement": "Fan dominance: $\\|A\\|\\le\\|B\\|$ for every unitarily invariant norm iff $\\|A\\|_{[k]}\\le\\|B\\|_{[k]}$ for every Ky Fan $k$-norm.",
-   "status": "candidate",
+   "status": "nlalib",
    "atlas": [
     "unitarily-invariant-norm-def",
     "ky-fan-norms-def"
    ],
-   "decls": [],
-   "note": ""
+   "decls": [
+    "NLAlib.forall_invariantNorm_le_iff_weaklyMajorized",
+    "NLAlib.sumLargest_singularValueVector_eq_kyFanNorm"
+   ],
+   "note": "Both directions hold for genuine orthogonally invariant norms on arbitrary finite real rectangular shapes; the singular-prefix sums are explicitly identified with Ky Fan norms."
   },
   {
    "label": "Thm 7.4.9.1",
@@ -6890,11 +6969,12 @@
     "lidskii"
    ],
    "decls": [
-    "NLAlib.abs_singularValues_add_sub_le_specNorm",
-    "NLAlib.sum_sq_singularValues_add_sub_le_frobSq",
-    "NLAlib.isLeast_specNorm_sub_of_rank_le"
+    "NLAlib.invariantNorm_rectangularDiagonal_singularValues_add_sub_le",
+    "NLAlib.isLeast_specNorm_sub_of_rank_le",
+    "NLAlib.isBestRankApprox_truncatedSVD",
+    "NLAlib.frobSq_sub_truncatedSVD_eq_singularValueTailSq"
    ],
-   "note": "Spectral and Frobenius instances proved; the all-unitarily-invariant-norm statement is in candidate `lidskii`."
+   "note": "The perturbation inequality is proved for every real orthogonally invariant norm on the actual rectangular shape. Best rank-k/truncated-SVD approximation is stated for spectral and Frobenius norms; the all-invariant-norm minimization conclusion is not stated."
   },
   {
    "label": "Cor 7.4.9.3",
@@ -6903,13 +6983,18 @@
    "page": 468,
    "name": "Mirsky's theorem",
    "statement": "Mirsky: for Hermitian $A,B$ and any unitarily invariant norm, $\\|\\operatorname{diag}\\lambda^\\downarrow(A)-\\operatorname{diag}\\lambda^\\downarrow(B)\\|\\le\\|A-B\\|$.",
-   "status": "candidate",
+   "status": "partial",
    "atlas": [
     "lidskii",
     "eigenvalue-perturbation-symmetric"
    ],
-   "decls": [],
-   "note": ""
+   "decls": [
+    "NLAlib.abs_eigenvalues₀_sub_le_specNorm_sub",
+    "NLAlib.sum_sq_eigenvalues₀_sub_le_frobSq_sub",
+    "NLAlib.sum_abs_eigenvalues₀_add_sub_le_nuclearNorm",
+    "NLAlib.majorized_eigenvalues₀_add_sub"
+   ],
+   "note": "Signed-eigenvalue spectral, Frobenius and nuclear bounds and underlying Lidskii majorization are proved for real symmetric matrices. A theorem for every invariant norm of signed eigenvalue differences is not stated; the existing all-norm theorem treats singular-value differences."
   },
   {
    "label": "Thm 7.4.10.1",
@@ -7216,13 +7301,15 @@
     "weyl-mirsky"
    ],
    "decls": [
+    "NLAlib.inv_le_inv_of_posDef",
+    "NLAlib.cfc_rpow_le_cfc_rpow",
     "NLAlib.eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub",
     "NLAlib.complex_eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub",
     "NLAlib.re_trace_le_re_trace_of_le",
     "Mathlib:CStarAlgebra.inv_le_inv_iff",
     "Mathlib:CFC.sqrt_le_sqrt"
    ],
-   "note": "(a),(b) in Mathlib for C*-algebras (real-matrix form is atlas candidate `loewner-heinz-real`); (c),(d) in NLAlib without the trace equality case; (e) determinant monotonicity missing (candidate `loewner-relative-spectrum`)."
+   "note": "Inverse order and real CFC square-root order are proved, as are the eigenvalue and trace inequalities. The trace equality characterization and determinant monotonicity remain unstated here (candidate loewner-relative-spectrum)."
   },
   {
    "label": "Lem 7.7.6",
@@ -7276,7 +7363,7 @@
     "generalized-schur-complement-psd"
    ],
    "decls": [],
-   "note": "Candidate `psd-block-contraction`. The pseudoinverse Schur-complement form is the scaffold `generalized-schur-complement-psd`."
+   "note": "The contraction factorization is candidate psd-block-contraction. The related pseudoinverse Schur-complement criterion is now proved as NLAlib.generalized_schur_complement, but it does not state this square-root/contraction formulation."
   },
   {
    "label": "Cor 7.7.10",

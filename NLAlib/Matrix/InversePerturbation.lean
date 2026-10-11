@@ -1,6 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Normed
 import NLAlib.Matrix.RankNorm
 import NLAlib.Matrix.Weyl
+import NLAlib.Matrix.PseudoinverseSpectralPerturbation
 
 /-!
 # Perturbation of the inverse and of the Moore–Penrose inverse
@@ -17,7 +18,7 @@ norm `specNorm` (and the Frobenius norm `frobNorm` where the bound is the same).
 * Wedin's identity (Wedin 1973; Stewart–Sun 1990, §III.3) for `B = A + E` at every rank:
   `B⁺ - A⁺ = -B⁺ E A⁺ + B⁺ B⁺ᵀ Eᵀ (I - A A⁺) + (I - B⁺ B) Eᵀ A⁺ᵀ A⁺`, proved from the four Penrose
   identities; the resulting bound `‖B⁺ - A⁺‖₂ ≤ (‖B⁺‖‖A⁺‖ + ‖B⁺‖² + ‖A⁺‖²) ‖E‖₂`, hence the
-  constant `3` form; and, as scaffolds, the sharp constant `(1 + √5)/2` (Stewart–Sun Thm III.3.8),
+  constant `3` form; and the sharp constant `(1 + √5)/2` (Stewart–Sun Thm III.3.8),
   in the general and the equal-rank form, and the projector bound. The equal-rank inverse-norm
   bound `‖B⁺‖₂ ≤ ‖A⁺‖₂ / (1 - ‖A⁺‖₂‖E‖₂)` is proved from Weyl's inequality.
 
@@ -156,7 +157,7 @@ theorem specNorm_inv_add_le {A E : Matrix n n ℝ} (hA : IsUnit A)
 /-- Perturbation of the inverse in the spectral norm: for invertible `A` and `‖A⁻¹E‖₂ < 1`,
 `‖(A + E)⁻¹ - A⁻¹‖₂ ≤ ‖A⁻¹‖₂² ‖E‖₂ / (1 - ‖A⁻¹E‖₂)`. Golub–Van Loan 2013, Thm 2.3.4;
 Stewart–Sun 1990, Thm III.2.5.
-atlas: inverse-perturbation -/
+atlas: inverse-perturbation (partial) -/
 theorem specNorm_inv_add_sub_inv_le {A E : Matrix n n ℝ} (hA : IsUnit A)
     (hE : specNorm (A⁻¹ * E) < 1) :
     specNorm ((A + E)⁻¹ - A⁻¹) ≤
@@ -177,7 +178,7 @@ theorem specNorm_inv_add_sub_inv_le {A E : Matrix n n ℝ} (hA : IsUnit A)
 /-- Perturbation of the inverse in the Frobenius norm: for invertible `A` and `‖A⁻¹E‖₂ < 1`,
 `‖(A + E)⁻¹ - A⁻¹‖_F ≤ ‖A⁻¹‖₂² ‖E‖_F / (1 - ‖A⁻¹E‖₂)`. Golub–Van Loan 2013, Thm 2.3.4 (the
 proof is norm-agnostic once `‖XYZ‖_F ≤ ‖X‖₂‖Y‖_F‖Z‖₂`); Stewart–Sun 1990, §III.2.
-atlas: inverse-perturbation -/
+atlas: inverse-perturbation (partial) -/
 theorem frobNorm_inv_add_sub_inv_le {A E : Matrix n n ℝ} (hA : IsUnit A)
     (hE : specNorm (A⁻¹ * E) < 1) :
     frobNorm ((A + E)⁻¹ - A⁻¹) ≤
@@ -205,7 +206,7 @@ theorem specNorm_inv_mul_lt_one {A E : Matrix n n ℝ}
 /-- Perturbation of the inverse under `‖A⁻¹‖₂ ‖E‖₂ < 1` (the form usually quoted):
 `A + E` is invertible and `‖(A + E)⁻¹ - A⁻¹‖₂ ≤ ‖A⁻¹‖₂² ‖E‖₂ / (1 - ‖A⁻¹‖₂ ‖E‖₂)`.
 Golub–Van Loan 2013, Thm 2.3.4 with `‖A⁻¹E‖ ≤ ‖A⁻¹‖‖E‖`; Higham 2002, Problem 6.14.
-atlas: inverse-perturbation -/
+atlas: inverse-perturbation (partial) -/
 theorem specNorm_inv_add_sub_inv_le_of_mul_lt_one {A E : Matrix n n ℝ} (hA : IsUnit A)
     (hE : specNorm A⁻¹ * specNorm E < 1) :
     specNorm ((A + E)⁻¹ - A⁻¹) ≤
@@ -408,54 +409,44 @@ theorem specNorm_moorePenroseInverse_add_sub_le_three_mul_max [DecidableEq m] [D
         _ ≤ _ := h1
   linarith
 
-/-- SCAFFOLD: pseudoinverse-perturbation
+/-- Coverage: pseudoinverse-perturbation
 Wedin's sharp spectral bound without a rank assumption:
 `‖(A + E)⁺ - A⁺‖₂ ≤ ((1 + √5)/2) max(‖A⁺‖₂², ‖(A + E)⁺‖₂²) ‖E‖₂`.
 Wedin 1973, Thm 4.1; Stewart–Sun 1990, Thm III.3.8 (`μ = (1 + √5)/2` for the spectral norm).
-Deferred: the sharp constant needs Wedin's orthogonality argument, not the triangle inequality
-over the three terms of `moorePenroseInverse_add_sub_moorePenroseInverse` (which gives `3`).
-Proof sketch: write `B⁺ - A⁺ = X + Y` with `X = -B⁺EA⁺ + (I - B⁺B)EᵀA⁺ᵀA⁺` (range in
-`range Bᵀ ⊕ (range Bᵀ)⊥` split) and `Y`; the first and third terms have orthogonal row/column
-spaces so `‖·‖² ≤` sum of squares (`specNorm_add_sq_le_of_transpose_mul_eq_zero`), then a
-`2 × 2` scalar optimisation gives `((1 + √5)/2)²`. Difficulty 4.
-atlas: pseudoinverse-perturbation -/
+atlas: pseudoinverse-perturbation (partial) -/
 theorem specNorm_moorePenroseInverse_add_sub_le_goldenRatio_mul_max [DecidableEq m]
     [DecidableEq n] (A E : Matrix m n ℝ) :
     specNorm (moorePenroseInverse (A + E) - moorePenroseInverse A) ≤
       (1 + Real.sqrt 5) / 2 * max (specNorm (moorePenroseInverse A) ^ 2)
         (specNorm (moorePenroseInverse (A + E)) ^ 2) * specNorm E := by
-  sorry
+  simpa only [Real.goldenRatio, add_sub_cancel_left] using
+    specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq A (A + E)
 
-/-- SCAFFOLD: pseudoinverse-perturbation
+/-- Coverage: pseudoinverse-perturbation
 Wedin's sharp spectral bound under equal rank: if `rank (A + E) = rank A` then
 `‖(A + E)⁺ - A⁺‖₂ ≤ ((1 + √5)/2) ‖A⁺‖₂ ‖(A + E)⁺‖₂ ‖E‖₂`.
-Wedin 1973, Thm 4.1; Stewart–Sun 1990, Thm III.3.8. Deferred: needs, besides the orthogonality
-argument of `specNorm_moorePenroseInverse_add_sub_le_goldenRatio_mul_max`, the equal-rank
-symmetry `‖(I - AA⁺)BB⁺‖₂ = ‖(I - BB⁺)AA⁺‖₂` (sine of the largest principal angle between
-subspaces of equal dimension, atlas `principal-angles-def`), which turns the middle term's
-`‖B⁺‖²` into `‖A⁺‖‖B⁺‖` via `(I - BB⁺)AA⁺ = -(I - BB⁺)EA⁺`. Difficulty 4.
-atlas: pseudoinverse-perturbation -/
+Wedin 1973, Thm 4.1; Stewart–Sun 1990, Thm III.3.8.
+atlas: pseudoinverse-perturbation (partial) -/
 theorem specNorm_moorePenroseInverse_add_sub_le_goldenRatio_mul_of_rank_eq [DecidableEq m]
     [DecidableEq n] (A E : Matrix m n ℝ) (hr : (A + E).rank = A.rank) :
     specNorm (moorePenroseInverse (A + E) - moorePenroseInverse A) ≤
       (1 + Real.sqrt 5) / 2 * specNorm (moorePenroseInverse A) *
         specNorm (moorePenroseInverse (A + E)) * specNorm E := by
-  sorry
+  simpa only [Real.goldenRatio, add_sub_cancel_left] using
+    specNorm_moorePenroseInverse_sub_le_goldenRatio_mul_of_rank_eq hr.symm
 
-/-- SCAFFOLD: pseudoinverse-perturbation
+/-- Coverage: pseudoinverse-perturbation
 Perturbation of the column-space projector under equal rank: if `rank (A + E) = rank A` then
 `‖A A⁺ - (A + E)(A + E)⁺‖₂ ≤ min(‖A⁺‖₂, ‖(A + E)⁺‖₂) ‖E‖₂`.
-Stewart–Sun 1990, Thm III.3.8 / Wedin 1973, Lemma 4.2 (projector form). Deferred: needs the
-equal-dimension principal-angle identity `‖P_A - P_B‖₂ = ‖(I - P_B)P_A‖₂ = ‖(I - P_A)P_B‖₂`
-(atlas `principal-angles-def`); then `(I - P_B)P_A = (I - P_B)AA⁺ = -(I - P_B)EA⁺` gives
-`‖A⁺‖‖E‖` and symmetrically `‖B⁺‖‖E‖`. Difficulty 3.
-atlas: pseudoinverse-perturbation -/
+Stewart–Sun 1990, Thm III.3.8 / Wedin 1973, Lemma 4.2 (projector form).
+atlas: pseudoinverse-perturbation (partial) -/
 theorem specNorm_mul_moorePenroseInverse_sub_le_of_rank_eq [DecidableEq m] [DecidableEq n]
     (A E : Matrix m n ℝ) (hr : (A + E).rank = A.rank) :
     specNorm (A * moorePenroseInverse A - (A + E) * moorePenroseInverse (A + E)) ≤
       min (specNorm (moorePenroseInverse A)) (specNorm (moorePenroseInverse (A + E))) *
         specNorm E := by
-  sorry
+  simpa only [add_sub_cancel_left] using
+    specNorm_sub_columnProjector_le_min_pinv_mul_specNorm hr.symm
 
 end MoorePenrose
 

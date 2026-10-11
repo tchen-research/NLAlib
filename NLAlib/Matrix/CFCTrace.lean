@@ -18,6 +18,16 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+/-- Real matrix functional calculus in orthogonal eigenbasis coordinates.
+Mathlib's Hermitian functional calculus, in transpose notation. -/
+theorem cfc_eq_eigenvectorUnitary_mul_diagonal_mul_transpose {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) (f : ℝ → ℝ) :
+    hA.cfc f = (hA.eigenvectorUnitary : Matrix n n ℝ) *
+      Matrix.diagonal (fun i => f (hA.eigenvalues i)) *
+        (hA.eigenvectorUnitary : Matrix n n ℝ)ᵀ := by
+  simp [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply, Matrix.star_eq_conjTranspose,
+    Function.comp_def]
+
 /-- The trace of real Hermitian functional calculus is the sum of the scalar function
 at the actual eigenvalues, including the empty-index case.
 Source: finite spectral theorem; helper for operator rederivations `rt:slq-relative`

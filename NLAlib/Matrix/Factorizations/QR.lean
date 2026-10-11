@@ -56,7 +56,7 @@ variable {m : Type*} [Fintype m] {n : ℕ}
 `R : n × n` upper triangular. The signs of `R_ii` are not fixed (see `IsQR.diagonal_mul`); the
 alternative convention `R_ii ≥ 0` is a separate conjunct where it is needed (`exists_isQR`).
 Trefethen–Bau 1997, Lect. 7 (reduced QR); Golub–Van Loan 2013, Thm 5.2.3 (thin QR).
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 structure IsQR (A Q : Matrix m (Fin n) ℝ) (R : Matrix (Fin n) (Fin n) ℝ) : Prop where
   /-- The factorization `A = QR`. -/
   eq : A = Q * R
@@ -74,7 +74,7 @@ variable {m n : ℕ}
 /-- A rectangular matrix is **upper trapezoidal** (upper triangular in the rectangular sense):
 `R i j = 0` whenever `j < i`. For square matrices this is Mathlib's `IsUpperTriangular`
 (`isUpperTrapezoidal_iff_isUpperTriangular`). Golub–Van Loan 2013, §5.2 (the `R` of a full QR).
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 def IsUpperTrapezoidal (R : Matrix (Fin m) (Fin n) ℝ) : Prop :=
   ∀ (i : Fin m) (j : Fin n), (j : ℕ) < i → R i j = 0
 
@@ -87,7 +87,7 @@ theorem isUpperTrapezoidal_iff_isUpperTriangular (R : Matrix (Fin n) (Fin n) ℝ
 /-- **Full QR factorization**: `A = QR` with `Q : m × m` orthogonal and `R : m × n` upper
 trapezoidal. No relation between `m` and `n` is assumed. Trefethen–Bau 1997, Lect. 7 (full QR);
 Golub–Van Loan 2013, Thm 5.2.1.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 structure IsFullQR (A : Matrix (Fin m) (Fin n) ℝ) (Q : Matrix (Fin m) (Fin m) ℝ)
     (R : Matrix (Fin m) (Fin n) ℝ) : Prop where
   /-- The factorization `A = QR`. -/
@@ -110,7 +110,7 @@ theorem IsFullQR.transpose_mul_eq {A : Matrix (Fin m) (Fin n) ℝ} {Q : Matrix (
 /-- **Thin QR from full QR**: if `n ≤ m`, the first `n` columns of `Q` and the first `n` rows
 of `R` form a thin QR. Trefethen–Bau 1997, Lect. 7 (reduced from full QR); Golub–Van Loan 2013,
 Thm 5.2.3 (proof).
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem IsFullQR.isQR_castLE {A : Matrix (Fin m) (Fin n) ℝ} {Q : Matrix (Fin m) (Fin m) ℝ}
     {R : Matrix (Fin m) (Fin n) ℝ} (h : IsFullQR A Q R) (hnm : n ≤ m) :
     IsQR A (Q.submatrix id (Fin.castLE hnm)) (R.submatrix (Fin.castLE hnm) id) where
@@ -236,13 +236,13 @@ variable {m : Type*} [Fintype m] {n : ℕ} {A Q : Matrix m (Fin n) ℝ} {R : Mat
 namespace IsQR
 
 /-- `Qᵀ A = R`. Trefethen–Bau 1997, Lect. 7; Golub–Van Loan 2013, §5.2.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem transpose_mul_eq (h : IsQR A Q R) : Qᵀ * A = R := by
   rw [h.eq, ← Matrix.mul_assoc, show Qᵀ * Q = 1 from h.orth, Matrix.one_mul]
 
 /-- `Aᵀ A = Rᵀ R`: `Rᵀ` is a (Cholesky) triangular factor of the Gram matrix `AᵀA`.
 Trefethen–Bau 1997, Lect. 11 (normal equations via QR); Golub–Van Loan 2013, §5.2.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem transpose_mul_self_eq (h : IsQR A Q R) : Aᵀ * A = Rᵀ * R := by
   rw [h.eq, Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Qᵀ,
     show Qᵀ * Q = 1 from h.orth, Matrix.one_mul]
@@ -258,7 +258,7 @@ theorem isUnit_det_iff (h : IsQR A Q R) : IsUnit R.det ↔ ∀ i, R i i ≠ 0 :=
 
 /-- **Full column rank iff nonzero diagonal**: `AᵀA` is invertible iff every `R_ii ≠ 0`.
 Trefethen–Bau 1997, Thm 7.2 (proof); Golub–Van Loan 2013, Thm 5.2.3.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem isUnit_transpose_mul_self_iff (h : IsQR A Q R) :
     IsUnit (Aᵀ * A) ↔ ∀ i, R i i ≠ 0 := by
   rw [Matrix.isUnit_iff_isUnit_det, h.transpose_mul_self_eq, Matrix.det_mul, Matrix.det_transpose,
@@ -266,7 +266,7 @@ theorem isUnit_transpose_mul_self_iff (h : IsQR A Q R) :
 
 /-- `range A = range Q` when `R` is invertible. Trefethen–Bau 1997, Lect. 7 (the columns of `Q`
 span the column flag); Golub–Van Loan 2013, Thm 5.2.3.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem range_mulVecLin_eq (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) :
     LinearMap.range A.mulVecLin = LinearMap.range Q.mulVecLin := by
   have hdet : IsUnit R.det := h.isUnit_det_iff.2 hR
@@ -307,7 +307,7 @@ end IsQR
 
 /-- **Pseudoinverse via QR**: under full column rank (`R_ii ≠ 0`), `(AᵀA)⁻¹Aᵀ = R⁻¹Qᵀ`.
 Trefethen–Bau 1997, Lect. 11 (Alg. 11.2); Golub–Van Loan 2013, §5.3.3.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem pinvL_eq_of_isQR (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) : pinvL A = R⁻¹ * Qᵀ := by
   have hdet : IsUnit R.det := h.isUnit_det_iff.2 hR
   have hdetT : IsUnit Rᵀ.det := by rwa [Matrix.det_transpose]
@@ -318,7 +318,7 @@ theorem pinvL_eq_of_isQR (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) : pinvL A = 
 
 /-- The Moore–Penrose inverse via QR: under full column rank, `A⁺ = R⁻¹ Qᵀ`.
 Trefethen–Bau 1997, Lect. 11; Golub–Van Loan 2013, §5.3.3.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem moorePenroseInverse_eq_of_isQR (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) :
     moorePenroseInverse A = R⁻¹ * Qᵀ := by
   rw [moorePenroseInverse_eq_pinvL A (h.isUnit_transpose_mul_self_iff.2 hR),
@@ -326,7 +326,7 @@ theorem moorePenroseInverse_eq_of_isQR (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0
 
 /-- **`QQᵀ` is the orthogonal projector onto `range A`**: `QQᵀ = AA⁺` under full column rank.
 Trefethen–Bau 1997, Lect. 6–7; Golub–Van Loan 2013, §5.2.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem IsQR.mul_transpose_eq (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) :
     Q * Qᵀ = A * moorePenroseInverse A := by
   rw [moorePenroseInverse_eq_of_isQR h hR, h.eq, Matrix.mul_assoc, ← Matrix.mul_assoc R,
@@ -382,7 +382,7 @@ Trefethen–Bau 1997, Thm 7.1 (existence); Golub–Van Loan 2013, Thm 5.2.1. Pro
 `m`; one orthogonal step (`exists_transpose_mul_apply_succ_zero_eq_zero`) and
 `isFullQR_mul_borderedUpper`. The constructive version with Householder reflectors is
 `isFullQR_householderQR` (`NLAlib.Matrix.Factorizations.Householder`).
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem exists_isFullQR : ∀ {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ), ∃ Q R, IsFullQR A Q R
   | 0, _, A => ⟨1, A, ⟨by simp, by simp [HasOrthonormalCols], fun i => i.elim0⟩⟩
   | _ + 1, 0, A => ⟨1, A, ⟨by simp, by simp [HasOrthonormalCols], fun _ j => j.elim0⟩⟩
@@ -396,7 +396,7 @@ many rows as columns (`n ≤ |m|`); no rank hypothesis. Trefethen–Bau 1997, Th
 Golub–Van Loan 2013, Thm 5.2.3. Proof: full QR (`exists_isFullQR`), its first `n` columns
 (`IsFullQR.isQR_castLE`), then sign normalisation (`IsQR.diagonal_mul`), after reindexing the
 rows by `Fin |m|`.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem exists_isQR {m : Type*} [Fintype m] {n : ℕ} (A : Matrix m (Fin n) ℝ)
     (hn : n ≤ Fintype.card m) :
     ∃ Q R, IsQR A Q R ∧ ∀ i, 0 ≤ R i i := by
@@ -416,7 +416,7 @@ theorem exists_isQR {m : Type*} [Fintype m] {n : ℕ} (A : Matrix m (Fin n) ℝ)
 /-- **Existence with positive diagonal under full column rank**: if `AᵀA` is invertible
 (`rank A = n`), `A` has a thin QR with `R_ii > 0`. Trefethen–Bau 1997, Thm 7.2;
 Golub–Van Loan 2013, Thm 5.2.3. The row-count condition `n ≤ |m|` follows from the rank.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem exists_isQR_of_isUnit {m : Type*} [Fintype m] {n : ℕ} {A : Matrix m (Fin n) ℝ}
     (hA : IsUnit (Aᵀ * A)) :
     ∃ Q R, IsQR A Q R ∧ ∀ i, 0 < R i i := by
@@ -447,7 +447,7 @@ Golub–Van Loan 2013, Thm 5.2.3. Proof: `T := Q₂ᵀQ₁` satisfies `T R₁ = 
 `Tᵀ R₂ = R₁` (`IsQR.transpose_mul_eq`), so `T = R₂R₁⁻¹` and `Tᵀ = R₁R₂⁻¹` are both upper
 triangular, hence `T` is diagonal, with `T_ii R₁ii = R₂ii`, `T_ii R₂ii = R₁ii`, so `T_ii² = 1`,
 `T_ii > 0`; thus `T = I`, `R₂ = R₁` and `Q₂ = A R₂⁻¹ = Q₁`.
-atlas: qr-decomposition -/
+atlas: qr-decomposition (partial) -/
 theorem IsQR.eq_of_diag_pos {m : Type*} [Fintype m] {n : ℕ} {A Q₁ Q₂ : Matrix m (Fin n) ℝ}
     {R₁ R₂ : Matrix (Fin n) (Fin n) ℝ} (h₁ : IsQR A Q₁ R₁) (h₂ : IsQR A Q₂ R₂)
     (hR₁ : ∀ i, 0 < R₁ i i) (hR₂ : ∀ i, 0 < R₂ i i) : Q₁ = Q₂ ∧ R₁ = R₂ := by

@@ -1,3 +1,7 @@
+import NLAlib.ForMathlib.Analysis.FinitePairNorm
+import NLAlib.ForMathlib.Analysis.FinitePowerSums
+import NLAlib.ForMathlib.Analysis.OneSidedVariation
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
 import NLAlib.ForMathlib.Algebra.DiagonalSums
 import NLAlib.ForMathlib.Algebra.Intervals
 import NLAlib.ForMathlib.Analysis.BernsteinParameter

@@ -6,7 +6,7 @@ Statuses: **nlalib** an NLAlib declaration states it · **partial** a special ca
 
 | book | items | nlalib | partial | mathlib | candidate | out of scope | report |
 |---|---|---|---|---|---|---|---|
-| Horn & Johnson, *Matrix Analysis* (2nd ed., 2013) | 607 | 32 | 29 | 166 | 181 | 199 | [`hj13.md`](hj13.md) |
+| Horn & Johnson, *Matrix Analysis* (2nd ed., 2013) | 607 | 39 | 44 | 166 | 159 | 199 | [`hj13.md`](hj13.md) |
 | Trefethen, *Approximation Theory and Approximation Practice* (2013/2019) | 88 | 8 | 8 | 11 | 34 | 27 | [`trefethen19.md`](trefethen19.md) |
 | Gautschi, *Orthogonal Polynomials: Computation and Approximation* (2004) | 131 | 2 | 22 | 2 | 64 | 41 | [`gautschi04.md`](gautschi04.md) |
 

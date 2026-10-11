@@ -1,4 +1,5 @@
 import NLAlib.Matrix.MoorePenrose
+import NLAlib.Matrix.MoorePenroseRank
 import NLAlib.Matrix.EckartYoung
 import NLAlib.Matrix.Projections
 
@@ -29,14 +30,6 @@ open scoped Matrix
 namespace NLAlib
 
 variable {m n q : Type*} [Fintype m] [Fintype n] [Fintype q]
-
-/-- The rank of the Moore–Penrose column-space projector `A A⁺` is the rank of `A`.
-Horn–Johnson §7.3; atlas `pseudoinverse` (helper for `leverage-scores`). -/
-theorem rank_mul_moorePenroseInverse (A : Matrix m n ℝ) :
-    (A * moorePenroseInverse A).rank = A.rank := by
-  refine le_antisymm (Matrix.rank_mul_le_left _ _) ?_
-  calc A.rank = (A * moorePenroseInverse A * A).rank := by rw [mul_moorePenroseInverse_mul]
-    _ ≤ (A * moorePenroseInverse A).rank := Matrix.rank_mul_le_left _ _
 
 /-- The trace of the Moore–Penrose column-space projector is the rank: `tr(A A⁺) = rank A`.
 Horn–Johnson §7.3; atlas `pseudoinverse` (helper for `leverage-scores`). -/

@@ -37,6 +37,7 @@ import NLAlib.LowRank.SketchedRegression
 import NLAlib.LowRank.SpectralRangeFinder
 import NLAlib.LowRank.PowerIteration
 import NLAlib.LowRank.Nystrom
+import NLAlib.LowRank.PartialCholesky
 
 /-!
 # Low-rank approximation

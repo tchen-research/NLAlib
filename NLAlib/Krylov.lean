@@ -22,6 +22,13 @@ import NLAlib.Krylov.GMRES
 import NLAlib.Krylov.Ritz
 import NLAlib.Krylov.Block
 import NLAlib.Krylov.Preconditioned
+import NLAlib.Krylov.CGRecurrence
+import NLAlib.Krylov.LanczosRecurrence
+import NLAlib.Krylov.GMRESArnoldi
+import NLAlib.Krylov.PowerMethod
+import NLAlib.Krylov.SubspaceIteration
+import NLAlib.Krylov.QRAlgorithm
+import NLAlib.Krylov.Bidiagonalization
 
 /-!
 # Krylov and polynomial methods

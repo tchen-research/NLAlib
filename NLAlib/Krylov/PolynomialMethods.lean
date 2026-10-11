@@ -21,12 +21,13 @@ the polynomial *is* the definition and the recurrence is a theorem.
   `quadForm_richardsonIterate_sub_le`, `dotProduct_self_sub_mulVec_richardsonIterate_le` and
   the optimal step `quadForm_richardsonIterate_sub_le_of_optimal`.
 * `chebyshevIterate a b A c x₀ q` (residual polynomial `chebyshevResidual a b q`) with the
-  rates `quadForm_chebyshevIterate_sub_le`, `dotProduct_self_sub_mulVec_chebyshevIterate_le`.
+  rates `quadForm_chebyshevIterate_sub_le`, `dotProduct_self_sub_mulVec_chebyshevIterate_le`,
+  and the recurrence of Saad Alg. 12.1: `chebyshevIterate_zero`, `chebyshevIterate_one`
+  (`x_1 = x₀ + r₀/θ`) and the three-term step `chebyshevIterate_add_two`.
 
 Source: Saad (2003) [`saad03`], §4.2 (Richardson), §12.3 (Chebyshev, Alg. 12.1); Greenbaum
 (1997) [`greenbaum97`], §2.1. Atlas: `richardson-iteration` (unpreconditioned case),
-`chebyshev-iteration` (residual polynomial and rates; the three-term recurrence is not
-formalised).
+`chebyshev-iteration` (residual polynomial, rates and the three-term recurrence).
 -/
 
 noncomputable section
@@ -195,7 +196,7 @@ theorem quadForm_richardsonIterate_sub_le_of_optimal {A : Matrix n n ℝ} (hA : 
 polynomial is `chebyshevResidual a b q = T_q((b + a − 2X)/(b − a)) / T_q((b + a)/(b − a))`,
 i.e. iteration polynomial `(1 − chebyshevResidual a b q) /ₘ X`. Source: Saad (2003)
 [`saad03`], §12.3; Golub–Varga (1961) [`gv61`]. Deviation: defined by its polynomial; the
-three-term recurrence of Saad Alg. 12.1 is not formalised.
+recurrence of Saad Alg. 12.1 is the theorem `chebyshevIterate_add_two`.
 atlas: chebyshev-iteration (partial) -/
 def chebyshevIterate (a b : ℝ) (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) : n → ℝ :=
   polyIterate A c x₀ ((1 - chebyshevResidual a b q) /ₘ X)
@@ -251,5 +252,135 @@ theorem dotProduct_self_sub_mulVec_chebyshevIterate_le {A : Matrix n n ℝ} (hA 
   dotProduct_self_sub_mulVec_polyIterate_le hA hspec (fun x hx => by
     rw [one_sub_X_mul_divByMonic (eval_chebyshevResidual_zero ha hab)]
     exact abs_eval_chebyshevResidual_le_two_mul_pow q ha hab hx) c x₀
+
+/-! ### The Chebyshev three-term recurrence -/
+
+/-- `T_q((b + a)/(b − a)) ≥ 1 > 0` for `0 < a < b`. -/
+private lemma one_le_eval_T_chebyshevCenter {a b : ℝ} (ha : 0 < a) (hab : a < b) (q : ℤ) :
+    1 ≤ (Chebyshev.T ℝ q).eval ((b + a) / (b - a)) :=
+  Chebyshev.one_le_eval_T_real q (by rw [one_le_div (by linarith)]; linarith)
+
+/-- The polynomial identity behind the Chebyshev recurrence: with `τ_k = T_k(σ)`,
+`σ = (b + a)/(b − a)`, `θ = (b + a)/2` and `s_k = (1 − R_k) /ₘ X` the iteration polynomials,
+`τ_{q+2} s_{q+2} = (4/(b − a)) τ_{q+1} (θ s_{q+1} + R_{q+1}) − τ_q s_q`. -/
+private lemma chebyshev_iterationPoly_add_two {a b : ℝ} (ha : 0 < a) (hab : a < b) (q : ℕ) :
+    C ((Chebyshev.T ℝ ((q + 2 : ℕ) : ℤ)).eval ((b + a) / (b - a))) *
+        ((1 - chebyshevResidual a b (q + 2)) /ₘ X) =
+      C (4 / (b - a) * (Chebyshev.T ℝ ((q + 1 : ℕ) : ℤ)).eval ((b + a) / (b - a))) *
+          (C ((b + a) / 2) * ((1 - chebyshevResidual a b (q + 1)) /ₘ X) +
+            chebyshevResidual a b (q + 1)) -
+        C ((Chebyshev.T ℝ (q : ℤ)).eval ((b + a) / (b - a))) *
+          ((1 - chebyshevResidual a b q) /ₘ X) := by
+  set σ := (b + a) / (b - a)
+  have hS : ∀ k : ℕ, X * ((1 - chebyshevResidual a b k) /ₘ X) = 1 - chebyshevResidual a b k :=
+    fun k => by
+      have h := one_sub_X_mul_divByMonic (eval_chebyshevResidual_zero (q := k) ha hab)
+      linear_combination -h
+  have hτ : ∀ k : ℕ, (Chebyshev.T ℝ (k : ℤ)).eval σ ≠ 0 := fun k =>
+    (zero_lt_one.trans_le (one_le_eval_T_chebyshevCenter ha hab k)).ne'
+  have hR : ∀ (k : ℕ) (t : ℝ), (Chebyshev.T ℝ (k : ℤ)).eval σ * (chebyshevResidual a b k).eval t =
+      (Chebyshev.T ℝ (k : ℤ)).eval (σ - 2 / (b - a) * t) := fun k t => by
+    rw [eval_chebyshevResidual]; exact mul_div_cancel₀ _ (hτ k)
+  have hT : ∀ u : ℝ, (Chebyshev.T ℝ ((q + 2 : ℕ) : ℤ)).eval u =
+      2 * u * (Chebyshev.T ℝ ((q + 1 : ℕ) : ℤ)).eval u - (Chebyshev.T ℝ (q : ℤ)).eval u := by
+    intro u
+    rw [show ((q + 2 : ℕ) : ℤ) = (q : ℤ) + 2 by push_cast; ring, Chebyshev.T_add_two,
+      show ((q + 1 : ℕ) : ℤ) = (q : ℤ) + 1 by push_cast; ring]
+    simp
+  refine mul_left_cancel₀ X_ne_zero (Polynomial.funext fun t => ?_)
+  have h2 := congrArg (eval t) (hS (q + 2))
+  have h1 := congrArg (eval t) (hS (q + 1))
+  have h0 := congrArg (eval t) (hS q)
+  simp only [eval_mul, eval_X, eval_sub, eval_one] at h2 h1 h0
+  simp only [eval_mul, eval_X, eval_sub, eval_add, eval_C]
+  have hσ : 4 / (b - a) * ((b + a) / 2) = 2 * σ := by
+    simp only [σ]; field_simp; ring
+  linear_combination
+    (Chebyshev.T ℝ ((q + 2 : ℕ) : ℤ)).eval σ * h2 -
+      4 / (b - a) * (Chebyshev.T ℝ ((q + 1 : ℕ) : ℤ)).eval σ * ((b + a) / 2) * h1 +
+      (Chebyshev.T ℝ (q : ℤ)).eval σ * h0 - hR (q + 2) t +
+      (4 / (b - a) * ((b + a) / 2) - 4 / (b - a) * t) * hR (q + 1) t - hR q t +
+      hT σ - hT (σ - 2 / (b - a) * t) +
+      ((Chebyshev.T ℝ ((q + 1 : ℕ) : ℤ)).eval σ -
+        (Chebyshev.T ℝ ((q + 1 : ℕ) : ℤ)).eval (σ - 2 / (b - a) * t)) * hσ
+
+/-- The Chebyshev recurrence at the centre `σ = (b + a)/(b − a)`:
+`τ_{q+2} = (4/(b − a)) τ_{q+1} (b + a)/2 − τ_q` (that is, `2σ τ_{q+1} − τ_q`). -/
+private lemma eval_T_add_two_center {a b : ℝ} (hab : a < b) (q : ℕ) :
+    (Chebyshev.T ℝ ((q + 2 : ℕ) : ℤ)).eval ((b + a) / (b - a)) =
+      4 / (b - a) * (Chebyshev.T ℝ ((q + 1 : ℕ) : ℤ)).eval ((b + a) / (b - a)) * ((b + a) / 2) -
+        (Chebyshev.T ℝ (q : ℤ)).eval ((b + a) / (b - a)) := by
+  have hba : b - a ≠ 0 := by linarith
+  have e2 : ((q + 2 : ℕ) : ℤ) = (q : ℤ) + 2 := by push_cast; ring
+  have e1 : ((q + 1 : ℕ) : ℤ) = (q : ℤ) + 1 := by push_cast; ring
+  rw [e2, e1, Chebyshev.T_add_two]
+  simp only [eval_sub, eval_mul, eval_X, eval_ofNat]
+  field_simp
+  ring
+
+/-- `chebyshevIterate` at `q = 0` is the starting point. Source: Saad (2003) [`saad03`],
+Alg. 12.1. Atlas: `chebyshev-iteration`. -/
+@[simp] theorem chebyshevIterate_zero (a b : ℝ) (A : Matrix n n ℝ) (c x₀ : n → ℝ) :
+    chebyshevIterate a b A c x₀ 0 = x₀ := by
+  simp [chebyshevIterate, polyIterate, chebyshevResidual]
+
+/-- **First Chebyshev step**: `x_1 = x₀ + r₀/θ`, `θ = (b + a)/2`, for `0 < a < b`.
+Source: Saad (2003) [`saad03`], Alg. 12.1 (`d_0 = r_0/θ`).
+atlas: chebyshev-iteration (partial) -/
+theorem chebyshevIterate_one {a b : ℝ} (ha : 0 < a) (hab : a < b) (A : Matrix n n ℝ)
+    (c x₀ : n → ℝ) :
+    chebyshevIterate a b A c x₀ 1 = x₀ + (2 / (b + a)) • (c - A *ᵥ x₀) := by
+  have hba : b - a ≠ 0 := by linarith
+  have hab' : b + a ≠ 0 := by linarith
+  have hs : (1 - chebyshevResidual a b 1) /ₘ X = C (2 / (b + a)) := by
+    have h : 1 - chebyshevResidual a b 1 = X * C (2 / (b + a)) := by
+      refine Polynomial.funext fun t => ?_
+      simp only [eval_sub, eval_one, eval_chebyshevResidual, Nat.cast_one, Chebyshev.T_one,
+        eval_X, eval_mul, eval_C]
+      field_simp
+      ring
+    rw [h, mul_divByMonic_cancel_left _ monic_X]
+  rw [chebyshevIterate, polyIterate, hs, aeval_C, Algebra.algebraMap_eq_smul_one,
+    Matrix.smul_mulVec, Matrix.one_mulVec]
+
+/-- **The Chebyshev three-term recurrence** (Saad Alg. 12.1 in three-term form): for `0 < a < b`,
+with `τ_k = T_k(σ)`, `σ = (b + a)/(b − a)`, `θ = (b + a)/2`, `δ = (b − a)/2` and
+`r_k = c − A x_k`,
+`τ_{q+2} x_{q+2} = (2τ_{q+1}/δ)(θ x_{q+1} + r_{q+1}) − τ_q x_q`, i.e.
+`x_{q+2} = τ_{q+2}⁻¹ ((4τ_{q+1}/(b − a)) (θ x_{q+1} + r_{q+1}) − τ_q x_q)`.
+No hypothesis on `A` and no solution is needed (a polynomial identity applied to `r₀`).
+Saad's two-term form with `ρ_k = τ_k/τ_{k+1}` and `d_k = x_{k+1} − x_k`
+(`d_k = ρ_kρ_{k−1} d_{k−1} + (2ρ_k/δ) r_k`) is a rearrangement of this identity together with
+`τ_{q+2} = 2σ τ_{q+1} − τ_q`. Proof: `Polynomial.funext` after cancelling `X`, using
+`Chebyshev.T_add_two` at `σ − 2t/(b − a)` and at `σ`.
+Source: Saad (2003) [`saad03`], §12.3, Alg. 12.1; Golub–Varga (1961) [`gv61`].
+atlas: chebyshev-iteration (partial) -/
+theorem chebyshevIterate_add_two {a b : ℝ} (ha : 0 < a) (hab : a < b) (A : Matrix n n ℝ)
+    (c x₀ : n → ℝ) (q : ℕ) :
+    chebyshevIterate a b A c x₀ (q + 2) =
+      ((Chebyshev.T ℝ ((q + 2 : ℕ) : ℤ)).eval ((b + a) / (b - a)))⁻¹ •
+        ((4 / (b - a) * (Chebyshev.T ℝ ((q + 1 : ℕ) : ℤ)).eval ((b + a) / (b - a))) •
+            (((b + a) / 2) • chebyshevIterate a b A c x₀ (q + 1) +
+              (c - A *ᵥ chebyshevIterate a b A c x₀ (q + 1))) -
+          (Chebyshev.T ℝ (q : ℤ)).eval ((b + a) / (b - a)) • chebyshevIterate a b A c x₀ q) := by
+  have hpoly := congrArg (fun p => aeval A p *ᵥ (c - A *ᵥ x₀))
+    (chebyshev_iterationPoly_add_two ha hab q)
+  simp only [map_sub, map_mul, map_add, aeval_C, Algebra.algebraMap_eq_smul_one,
+    Matrix.smul_mul, Matrix.one_mul, Matrix.sub_mulVec, Matrix.add_mulVec,
+    Matrix.smul_mulVec] at hpoly
+  have hr : c - A *ᵥ chebyshevIterate a b A c x₀ (q + 1) =
+      aeval A (chebyshevResidual a b (q + 1)) *ᵥ (c - A *ᵥ x₀) := by
+    rw [chebyshevIterate, sub_mulVec_polyIterate,
+      one_sub_X_mul_divByMonic (eval_chebyshevResidual_zero ha hab)]
+  set σ := (b + a) / (b - a)
+  set τ₂ := (Chebyshev.T ℝ ((q + 2 : ℕ) : ℤ)).eval σ
+  set τ₁ := (Chebyshev.T ℝ ((q + 1 : ℕ) : ℤ)).eval σ
+  set τ₀ := (Chebyshev.T ℝ (q : ℤ)).eval σ
+  have hτ₂ : τ₂ ≠ 0 := (zero_lt_one.trans_le (one_le_eval_T_chebyshevCenter ha hab _)).ne'
+  have hrec : τ₂ = 4 / (b - a) * τ₁ * ((b + a) / 2) - τ₀ := eval_T_add_two_center hab q
+  rw [eq_inv_smul_iff₀ hτ₂, hr]
+  simp only [chebyshevIterate, polyIterate]
+  rw [smul_add, hpoly, hrec]
+  module
 
 end NLAlib

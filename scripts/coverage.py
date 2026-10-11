@@ -22,12 +22,13 @@ STATUSES = ["nlalib", "partial", "mathlib", "candidate", "out-of-scope"]
 GLYPH = {"nlalib": "✓", "partial": "◐", "mathlib": "M", "candidate": "○", "out-of-scope": "–"}
 want = sys.argv[1:]
 problems = []
-for p in sorted((ROOT / "docs/coverage").glob("*.json")):
+for p in sorted(q for q in (ROOT / "docs/coverage").glob("*.json") if not q.name.endswith(".candidates.json")):
     src = p.stem
     if want and src not in want: continue
     idx = json.load(open(p))
-    if idx.get("source") != src: problems.append(f"{p.name}: source field {idx.get('source')!r} ≠ file name")
-    if src not in src_ids: problems.append(f"{p.name}: unknown atlas source {src}")
+    src_field = idx.get("source", "")
+    if not src.startswith(src_field): problems.append(f"{p.name}: source field {src_field!r} does not match file name")
+    if src_field not in src_ids: problems.append(f"{p.name}: unknown atlas source {src_field}")
     items = idx["items"]; seen = set()
     for it in items:
         lab = it.get("label", "?")
@@ -49,16 +50,21 @@ for p in sorted((ROOT / "docs/coverage").glob("*.json")):
     atlas_labels = collections.defaultdict(list)
     for r in atlas["results"]:
         for s in r["sources"]:
-            if s["source"] == src and s.get("label"): atlas_labels[s["label"]].append(r["id"])
+            if s["source"] == src_field and s.get("label"): atlas_labels[s["label"]].append(r["id"])
     index_labels = {it["label"] for it in items}
-    def norm(l): return l.replace("Theorem", "Thm").replace("Corollary", "Cor").replace("Lemma", "Lem").replace("Definition", "Def").replace(".", "").replace(" ", "").lower()
+    import re
+    def norm(l):
+        l = re.sub(r"\(.*?\)", "", l); l = re.sub(r"^(cf\.|see)\s*", "", l.strip())
+        for a, b in (("Theorem", "Thm"), ("Corollary", "Cor"), ("Lemma", "Lem"), ("Definition", "Def"), ("Proposition", "Prop"), ("Observation", "Obs"), ("Problem", "Ex"), ("Exercise", "Ex"), ("Example", "Ex"), ("Section", "§"), ("Sec", "§"), ("Ch", "§")):
+            l = l.replace(a, b)
+        return l.replace(".", "").replace(" ", "").lower()
     nl = {norm(l) for l in index_labels}
-    unmatched = [(l, ids) for l, ids in atlas_labels.items() if not any(norm(part.strip()) in nl for part in l.replace(";", ",").split(","))]
+    unmatched = [(l, ids) for l, ids in atlas_labels.items() if not any(norm(part) in nl for part in re.split(r"[;,]", l) if part.strip())]
     # report
     by_ch = collections.OrderedDict()
     for it in items: by_ch.setdefault(it["chapter"].split(".")[0], []).append(it)
     tot = collections.Counter(it["status"] for it in items)
-    title = next((s["title"] for s in atlas["sources"] if s["id"] == src), src)
+    title = next((s["title"] for s in atlas["sources"] if s["id"] == src_field), src)
     out = [f"# Coverage of {title} (`{src}`)", "", idx.get("edition_note", ""), "",
            "Legend: ✓ in NLAlib · ◐ partially in NLAlib · M in Mathlib (not an atlas result by policy) · ○ candidate (to add) · – out of scope", "",
            "| status | count |", "|---|---|"] + [f"| {GLYPH[s]} {s} | {tot[s]} |" for s in STATUSES] + [f"| total | {len(items)} |", ""]

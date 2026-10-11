@@ -61,7 +61,7 @@ theorem IsLU.det_eq_prod {A L U : Matrix n n ℝ} (h : IsLU A L U) : A.det = ∏
 
 /-- **Uniqueness of the LU factorization** of an invertible matrix. Proof: `L'⁻¹ L = U' U⁻¹` is
 unit lower and upper triangular, hence the identity. Golub–Van Loan 2013, Thm 3.2.1;
-Horn–Johnson 2013, Cor. 3.5.5; Trefethen–Bau 1997, Lect. 20.
+Horn–Johnson 2013, Cor. 3.5.6; Trefethen–Bau 1997, Lect. 20.
 atlas: lu-decomposition -/
 theorem IsLU.unique {A L U L' U' : Matrix n n ℝ} (hA : IsUnit A.det) (h₁ : IsLU A L U)
     (h₂ : IsLU A L' U') : L = L' ∧ U = U' := by
@@ -313,7 +313,7 @@ theorem isLU_lu_of_forall_det_ne_zero {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
 
 /-- **Existence of LU** when the leading principal minors of orders `1, …, n − 1` are nonzero (no
 condition on `det A` itself); witnessed by `lu A` (`isLU_lu_of_forall_det_ne_zero`).
-Golub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.5.
+Golub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.6.
 atlas: lu-decomposition -/
 theorem exists_isLU_of_forall_det_ne_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (h : ∀ k (hk : k < n), (leadingSubmatrix A k hk.le).det ≠ 0) :
@@ -322,7 +322,7 @@ theorem exists_isLU_of_forall_det_ne_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) 
 
 /-- **Existence of LU for invertible matrices**: an invertible `A` has an LU factorization iff
 all its leading principal minors are nonzero (and it is then unique, `IsLU.unique`).
-Trefethen–Bau 1997, Lect. 20; Golub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.5.
+Trefethen–Bau 1997, Lect. 20; Golub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.6.
 atlas: lu-decomposition -/
 theorem exists_isLU_iff_forall_det_ne_zero {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : IsUnit A.det) :

@@ -78,7 +78,7 @@ theorem singularValues_antitone (A : Matrix (Fin m) (Fin n) ℝ) :
   fun _ _ h => LinearMap.singularValues_antitone _ h
 
 /-- The nonzero singular values are exactly the first `rank A` ones
-(Horn–Johnson 2013, Thm 2.6.3 / §2.6.1). Atlas `svd`. -/
+(Horn–Johnson 2013, Thm 2.6.3). Atlas `svd`. -/
 theorem singularValues_ne_zero_iff (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     singularValues A k ≠ 0 ↔ k < A.rank := by
   unfold singularValues
@@ -114,7 +114,7 @@ theorem singularValues_eq_zero_of_min_le (A : Matrix (Fin m) (Fin n) ℝ) {k : �
   · exact singularValues_eq_zero_of_height_le A (by simpa [min_eq_left h] using hk)
   · exact singularValues_eq_zero_of_width_le A (by simpa [min_eq_right h] using hk)
 
-/-- The rank is the number of nonzero singular values (Horn–Johnson 2013, §2.6.1).
+/-- The rank is the number of nonzero singular values (Horn–Johnson 2013, Thm 2.6.3).
 Atlas `svd`. -/
 theorem rank_eq_card_singularValues_ne_zero (A : Matrix (Fin m) (Fin n) ℝ) :
     A.rank = ((Finset.range (min m n)).filter fun k => singularValues A k ≠ 0).card := by

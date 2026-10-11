@@ -1,0 +1,885 @@
+{
+ "results": [
+  {
+   "id": "chebyshev-projection-lebesgue-constant",
+   "title": "Lebesgue constant of Chebyshev truncation and near-best projection (ATAP Thms 15.1, 15.3, 16.1)",
+   "aliases": [
+    "ATAP Theorem 15.3",
+    "ATAP Theorem 16.1",
+    "Dirichlet kernel L1 norm",
+    "near-best Chebyshev projection",
+    "Lebesgue constant of Chebyshev series"
+   ],
+   "area": "polynomial-best",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "The degree-$n$ Chebyshev truncation $f\\mapsto f_n$ is a linear projection of $C[-1,1]$ onto $\\mathcal P_n$ whose norm is the Dirichlet-kernel integral $\\Lambda_n=\\frac1{2\\pi}\\int_{-\\pi}^{\\pi}\\left|\\frac{\\sin((n+\\frac12)t)}{\\sin(t/2)}\\right|dt\\le\\frac4{\\pi^2}\\log(n+1)+3$. With the general near-best lemma $\\|f-Lf\\|\\le(1+\\|L\\|)E_n(f)$ this gives $\\|f-f_n\\|\\le(4+\\frac4{\\pi^2}\\log(n+1))E_n(f)$.",
+   "hypotheses": [
+    "$f$ continuous on $[-1,1]$, $n\\ge1$",
+    "$f_n=\\sum_{k\\le n}a_k(f)T_k$ the Chebyshev truncation (chebyshev-coefficients-def)",
+    "for the lemma: $L$ linear on $C[-1,1]$ with $Lp=p$ for $\\deg p\\le n$ and $\\|Lf\\|_\\infty\\le\\Lambda\\|f\\|_\\infty$"
+   ],
+   "conclusion": "$\\|f-Lf\\|_\\infty\\le(1+\\Lambda)E_n(f)$; $\\max_{[-1,1]}|f_n|\\le\\Lambda_n\\max_{[-1,1]}|f|$ with $\\Lambda_n\\le\\frac4{\\pi^2}\\log(n+1)+3$; hence $\\|f-f_n\\|_\\infty\\le\\big(4+\\frac4{\\pi^2}\\log(n+1)\\big)E_n(f)$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 15.1"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 15.3"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 16.1"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "minimax-error-def",
+    "lebesgue-constant-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cos",
+     "present": true
+    },
+    {
+     "decl": "intervalIntegral.integral_comp_mul_deriv",
+     "present": true,
+     "note": "cosine substitution turning the truncation into a Dirichlet-kernel convolution"
+    },
+    {
+     "decl": "dirichletKernel",
+     "present": false,
+     "note": "Mathlib has Fourier series but no L1 bound on the Dirichlet kernel"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "chebyshev",
+    "near-best",
+    "lebesgue-constant"
+   ],
+   "notes": "Consumers: Chebyshev-truncation estimators of tr f(A) and spectral densities (KPM, Chebyshev-moment Hutchinson), which use $f_n$ rather than an interpolant; turns any $E_n$ bound (jackson-lipschitz, bernstein-ellipse-approx, exp-polynomial-approx) into a bound for the explicit truncation at a $\\log n$ cost. The interpolation half of Thm 16.1 is already in lebesgue-constant-chebyshev. Prove the lemma; the explicit $\\log$ bound can be proved (elementary estimate of the Dirichlet kernel with a weaker constant such as $\\frac4{\\pi^2}\\log n+3$) or assumed with the printed constant.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "lebesgue-constant-lower-bound",
+   "title": "Lower bounds on Lebesgue constants; exponential growth for equispaced nodes (ATAP Thm 15.2)",
+   "aliases": [
+    "ATAP Theorem 15.2 (15.7), (15.9)",
+    "Erdős–Brutman lower bound",
+    "Faber",
+    "equispaced Lebesgue constant",
+    "Runge phenomenon"
+   ],
+   "area": "polynomial-best",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "For any $n+1$ distinct nodes in $[-1,1]$ the interpolation Lebesgue constant satisfies $\\Lambda_n\\ge\\frac2\\pi\\log(n+1)+0.52125\\ldots$, and for equispaced nodes $\\Lambda_n>2^{n-2}/n^2$ ($n\\ge1$).",
+   "hypotheses": [
+    "$x_0<\\dots<x_n$ distinct in $[-1,1]$; $\\Lambda_n$ as in lebesgue-constant-def"
+   ],
+   "conclusion": "$\\Lambda_n\\ge\\frac2\\pi\\big(\\log(n+1)+\\gamma+\\log\\frac4\\pi\\big)$; for $x_j=-1+2j/n$, $\\Lambda_n>2^{n-2}/n^2$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 15.2"
+    }
+   ],
+   "depends_on": [
+    "lebesgue-constant-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Lagrange.basis",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.nodal",
+     "present": true
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "interpolation",
+    "lower-bound"
+   ],
+   "notes": "Consumers: optimality of the $\\log n$ factor in lebesgue-constant-chebyshev / chebyshev-projection-lebesgue-constant, and a formal warning against equispaced interpolation. The equispaced bound is elementary (evaluate $\\ell_0$ near the end); the sharp Erdős–Brutman constant should be assumed (a weaker $c\\log n$ lower bound is provable). Low priority.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "bernstein-converse",
+   "title": "Geometric approximability implies analyticity in a Bernstein ellipse (ATAP Thm 8.3, Bernstein's theorem)",
+   "aliases": [
+    "ATAP Theorem 8.3",
+    "Bernstein's theorem",
+    "converse of Theorem 8.2",
+    "maximal convergence"
+   ],
+   "area": "polynomial-series",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If polynomials $q_n\\in\\mathcal P_n$ satisfy $\\|f-q_n\\|_{[-1,1]}\\le C\\rho^{-n}$ for all $n$ (or only $\\limsup\\|f-q_n\\|^{1/n}\\le\\rho^{-1}$), then $f$ extends to a holomorphic function on the open Bernstein ellipse $E_\\rho$.",
+   "hypotheses": [
+    "$\\rho>1$, $C>0$",
+    "$f:[-1,1]\\to\\mathbb R$; $q_n$ real polynomials with $\\deg q_n\\le n$ and $\\max_{[-1,1]}|f-q_n|\\le C\\rho^{-n}$"
+   ],
+   "conclusion": "there is $F$ holomorphic on $E_\\rho$ (NLAlib `openBernsteinEllipse`) with $F(x)=f(x)$ on $[-1,1]$; $q_n\\to F$ locally uniformly on $E_\\rho$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 8.3"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ex 8.11"
+    }
+   ],
+   "depends_on": [
+    "bernstein-walsh-ellipse",
+    "bernstein-ellipse-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "TendstoLocallyUniformlyOn.differentiableOn",
+     "present": true,
+     "note": "uniform limits of holomorphic functions are holomorphic"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "analytic",
+    "bernstein-ellipse",
+    "lower-bound"
+   ],
+   "notes": "Consumers: shows the $\\rho^{-n}$ rates of bernstein-ellipse-approx / chebyshev-approx-analytic and of Lanczos f(A)b bounds cannot be improved in the exponent for a given singularity, a lower-bound tool for Krylov matrix-function analyses. Proof: telescoping series $q_0+\\sum(q_n-q_{n-1})$ with bernstein-walsh-ellipse on each difference. Prove once bernstein-walsh-ellipse exists.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "hermite-integral-formula",
+   "title": "Hermite contour-integral formula for polynomial interpolation (ATAP Thm 11.1)",
+   "aliases": [
+    "ATAP Theorem 11.1",
+    "Hermite integral formula",
+    "contour integral interpolation error"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $f$ holomorphic on a region containing distinct nodes $x_0,\\dots,x_n$ and a positively oriented contour $\\Gamma$ around them, with node polynomial $\\ell$, the interpolant is $p(x)=\\frac1{2\\pi i}\\oint_\\Gamma\\frac{f(t)(\\ell(t)-\\ell(x))}{\\ell(t)(t-x)}dt$ and, for $x$ inside $\\Gamma$, $f(x)-p(x)=\\frac{\\ell(x)}{2\\pi i}\\oint_\\Gamma\\frac{f(t)}{\\ell(t)(t-x)}dt$.",
+   "hypotheses": [
+    "$f$ complex-differentiable on a neighbourhood of the closed disc $\\overline{D(c,R)}$",
+    "distinct nodes $x_j$ and the point $x$ in the open disc $D(c,R)$ (state with circle contours first)"
+   ],
+   "conclusion": "$f(x)-p(x)=\\dfrac{\\ell(x)}{2\\pi i}\\oint_{|t-c|=R}\\dfrac{f(t)}{\\ell(t)(t-x)}dt$ where $p$ = `Lagrange.interpolate` of $f$ at the nodes and $\\ell$ = `Lagrange.nodal`",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 11.1"
+    }
+   ],
+   "depends_on": [
+    "interpolation-remainder"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Complex.two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.nodal",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.interpolate",
+     "present": true
+    },
+    {
+     "decl": "contour integrals over general curves",
+     "present": false,
+     "note": "Mathlib's Cauchy formula is for circles; state for circles"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "interpolation",
+    "complex-analysis"
+   ],
+   "notes": "Consumers: contour-integral error bounds for interpolation of analytic functions in arbitrary nodes (Ritz-value interpolation in Lanczos-FA, rational Krylov analyses), and the analytic counterpart of interpolation-remainder. This is the only interpolation-error formula ATAP itself states. Prove (residue calculus on a circle).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-barycentric-weights",
+   "title": "Node polynomial and barycentric weights of the Chebyshev points (ATAP Thm 5.2, Ex 4.1)",
+   "aliases": [
+    "ATAP Theorem 5.2",
+    "Salzer weights",
+    "barycentric formula in Chebyshev points",
+    "Chebyshev node polynomial"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For the $n+1$ Chebyshev points $x_j=\\cos(j\\pi/n)$ the node polynomial is $2^{-n}(T_{n+1}-T_{n-1})$, and the barycentric weights $\\lambda_j=1/\\prod_{k\\ne j}(x_j-x_k)$ are $\\frac{2^{n-1}}{n}(-1)^j$, halved for $j=0,n$; hence the interpolant is $\\sum_j{}'\\frac{(-1)^jf_j}{x-x_j}/\\sum_j{}'\\frac{(-1)^j}{x-x_j}$.",
+   "hypotheses": [
+    "$n\\ge1$; nodes `Polynomial.Chebyshev.node n j`, $0\\le j\\le n$"
+   ],
+   "conclusion": "`Lagrange.nodal` of the grid $=2^{-n}(T_{n+1}-T_{n-1})$; `Lagrange.nodalWeight` at $j$ equals $\\frac{2^{n-1}}{n}(-1)^j\\delta_j$ with $\\delta_0=\\delta_n=\\frac12$, $\\delta_j=1$ otherwise",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 5.2"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ex 4.1"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-interpolation-error"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Lagrange.nodalWeight",
+     "present": true
+    },
+    {
+     "decl": "Lagrange.eval_interpolate_not_at_node'",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.node",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.zero_lt_prod_node_sub_node",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "interpolation"
+   ],
+   "notes": "Consumers: explicit formulas for the canonical Chebyshev interpolant used by chebyshev-approx-analytic (its interpolant is `Lagrange.interpolate` on Mathlib nodes), and the Lebesgue-constant proof of lebesgue-constant-chebyshev, which bounds $\\sum|\\ell_j|$ via these weights. Mathlib's Extremal.lean already computes the related product $\\prod_{k\\ne j}(x_j-x_k)$ sign. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "orthogonal-polynomial-zeros",
+   "title": "Zeros of orthogonal polynomials are real, simple and interior (ATAP Ex 17.4)",
+   "aliases": [
+    "ATAP Exercise 17.4",
+    "zeros of orthogonal polynomials",
+    "Gauss nodes are distinct",
+    "Ritz values are distinct"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $p_n$ (degree $n$) is orthogonal to all polynomials of lower degree with respect to a positive finite measure $\\mu$ on $[a,b]$ whose support has at least $n+1$ points, then $p_n$ has $n$ distinct real zeros, all in the open interval spanned by the support.",
+   "hypotheses": [
+    "$\\mu$ a finite Borel measure on $\\mathbb R$ supported in $[a,b]$ with at least $n+1$ support points",
+    "$\\deg p_n=n$ and $\\int p_nq\\,d\\mu=0$ for all $\\deg q<n$"
+   ],
+   "conclusion": "$p_n$ splits over $\\mathbb R$ with $n$ simple roots, each in $(\\min\\operatorname{supp}\\mu,\\max\\operatorname{supp}\\mu)$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 17.4"
+    }
+   ],
+   "depends_on": [
+    "lanczos-orthogonal-polynomials"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "MeasureTheory.integral_pos_iff_support_of_nonneg_ae",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.card_roots'",
+     "present": true
+    }
+   ],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "orthogonal-polynomials",
+    "gauss-quadrature",
+    "lanczos"
+   ],
+   "notes": "Consumers: lanczos-gauss-quadrature (the $q$ Gauss nodes $=$ Ritz values are distinct and lie strictly inside the spectral interval, so the quadrature weights are positive), Ritz-value bounds and interlacing for Lanczos, gauss-quadrature-general-measure. The discrete-measure case $\\mu=\\mu_b$ is the one NLAlib needs first (the charpoly of the Jacobi matrix, via lanczos-orthogonal-polynomials). Prove: sign-change argument with $q=\\prod(x-\\xi_i)$ over odd-multiplicity roots in the interval.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gauss-quadrature-general-measure",
+   "title": "Gauss quadrature for a general measure: positivity and exactness to degree 2n+1 (ATAP Thm 19.1)",
+   "aliases": [
+    "ATAP Theorem 19.1",
+    "Gauss quadrature exactness",
+    "interpolatory quadrature",
+    "Gauss–Jacobi theorem"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For a finite positive measure $\\mu$ on $[a,b]$ with infinite support, the $(n+1)$-point interpolatory rule at the zeros of the degree-$(n+1)$ orthogonal polynomial has positive weights $w_k=\\int\\ell_k\\,d\\mu$ summing to $\\mu([a,b])$ and integrates every polynomial of degree $\\le2n+1$ exactly; any interpolatory rule is exact on $\\mathcal P_n$.",
+   "hypotheses": [
+    "$\\mu$ finite Borel measure on $[a,b]$ with infinite support (or with at least $n+1$ points for the discrete version)",
+    "nodes $x_0,\\dots,x_n$ the zeros of the orthogonal polynomial $p_{n+1}$ (orthogonal-polynomial-zeros)",
+    "$w_k=\\int\\ell_k\\,d\\mu$"
+   ],
+   "conclusion": "$w_k>0$, $\\sum_kw_k=\\mu([a,b])$, and $\\sum_kw_kp(x_k)=\\int p\\,d\\mu$ for every real polynomial with $\\deg p\\le2n+1$; for arbitrary distinct nodes, exactness holds for $\\deg p\\le n$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.1"
+    }
+   ],
+   "depends_on": [
+    "orthogonal-polynomial-zeros",
+    "lanczos-gauss-quadrature"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.integral_eq_sumZeroes",
+     "present": true,
+     "note": "Gauss–Chebyshev case (Chebyshev weight) only"
+    },
+    {
+     "decl": "Lagrange.interpolate",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.modByMonic_add_div",
+     "present": true
+    }
+   ],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "gauss-quadrature",
+    "orthogonal-polynomials",
+    "slq"
+   ],
+   "notes": "Consumers: unifies NLAlib's discrete-measure Gauss rule (lanczos-gauss-quadrature) and Mathlib's Gauss–Chebyshev rule; needed for SLQ / spectral-density analyses that compare with a continuous limiting density, and for gauss-clenshaw-curtis-quadrature-error. The ATAP statement is for Lebesgue measure (Legendre points); state for general $\\mu$. Prove (division by $p_{n+1}$).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-integral-formula",
+   "title": "Integral of a Chebyshev series (ATAP Thm 19.2)",
+   "aliases": [
+    "ATAP Theorem 19.2",
+    "integral of T_k",
+    "Clenshaw–Curtis in coefficient space"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "$\\int_{-1}^1T_k(x)\\,dx=\\frac2{1-k^2}$ for even $k$ and $0$ for odd $k$; hence $\\int_{-1}^1\\sum_{k\\le n}c_kT_k=\\sum_{k\\text{ even}}\\frac{2c_k}{1-k^2}$.",
+   "hypotheses": [
+    "$k\\in\\mathbb N$; $c_0,\\dots,c_n\\in\\mathbb R$"
+   ],
+   "conclusion": "$\\int_{-1}^{1}T_k=\\dfrac{1+(-1)^k}{1-k^2}$ for $k\\ne1$ and $0$ for $k=1$; linearity gives the series formula",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.2"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cos",
+     "present": true
+    },
+    {
+     "decl": "intervalIntegral.integral_comp_mul_deriv",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "quadrature"
+   ],
+   "notes": "Consumers: Clenshaw–Curtis quadrature (gauss-clenshaw-curtis-quadrature-error), integrals of Chebyshev expansions in KPM spectral-density estimation, $|T_k|$ integral bounds. Routine; prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "gauss-clenshaw-curtis-quadrature-error",
+   "title": "Error bounds for Clenshaw–Curtis and Gauss quadrature (ATAP Thms 19.3–19.5)",
+   "aliases": [
+    "ATAP Theorems 19.3, 19.4, 19.5",
+    "Clenshaw–Curtis convergence",
+    "Gauss quadrature error",
+    "Stieltjes convergence of Gauss quadrature"
+   ],
+   "area": "polynomial-approximation",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "For $f$ analytic and bounded by $M$ in $E_\\rho$, $(n+1)$-point Clenshaw–Curtis ($n\\ge2$) and Gauss ($n\\ge1$) on $[-1,1]$ have errors $\\le\\frac{64}{15}\\frac{M\\rho^{1-n}}{\\rho^2-1}$ and $\\le\\frac{64}{15}\\frac{M\\rho^{-2n}}{\\rho^2-1}$. Both converge for every continuous $f$; if $f^{(\\nu)}$ has variation $V$, Clenshaw–Curtis error $\\le\\frac{32}{15}\\frac{V}{\\pi\\nu(n-\\nu)^\\nu}$ and Gauss $\\le\\frac{32}{15}\\frac{V}{\\pi\\nu(n-2\\nu-1)^{2\\nu+1}}$, the latter also for Clenshaw–Curtis when $n$ is large (Thm 19.5).",
+   "hypotheses": [
+    "$I=\\int_{-1}^1f$, $I_n$ the $(n+1)$-point rule",
+    "analytic case: $f$ holomorphic on `openBernsteinEllipse ρ`, $|f|\\le M$",
+    "differentiable case: $f,\\dots,f^{(\\nu-1)}$ absolutely continuous, $f^{(\\nu)}$ of variation $V$, $\\nu\\ge1$"
+   ],
+   "conclusion": "the displayed inequalities (19.7)–(19.10), and $I_n\\to I$ for every continuous $f$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.3"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.4"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Thm 19.5"
+    }
+   ],
+   "depends_on": [
+    "gauss-quadrature-general-measure",
+    "chebyshev-integral-formula",
+    "chebyshev-coeff-analytic-decay",
+    "chebyshev-coeff-bv-decay",
+    "chebyshev-aliasing"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.integral_eq_sumZeroes",
+     "present": true,
+     "note": "Gauss–Chebyshev exactness"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "quadrature",
+    "chebyshev"
+   ],
+   "notes": "NLAlib analogues: lanczos-quadrature-analytic-error (Gauss rule of a spectral measure, constant $4M\\rho^{1-2q}/(\\rho-1)$ per unit mass) and lanczos-quadrature-lipschitz-error. The ATAP constants come from Thm 8.1 and $|\\int T_k|$; the Gauss part generalises to any measure with mass $\\mu([a,b])$ and would sharpen the SLQ constant. Thm 19.5 is proved only by reference and should be assumed. Low priority for RandNLA.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "colleague-matrix",
+   "title": "Roots of a Chebyshev series are colleague-matrix eigenvalues (ATAP Thm 18.1)",
+   "aliases": [
+    "ATAP Theorem 18.1",
+    "colleague matrix",
+    "comrade matrix",
+    "Chebyshev companion matrix",
+    "Good 1961"
+   ],
+   "area": "polynomial-chebyshev",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "For $p=\\sum_{k=0}^na_kT_k$ with $a_n\\ne0$, $\\det(xI-C)=p(x)/(2^{n-1}a_n)$ for the colleague matrix $C$ (tridiagonal with $\\frac12$ off the diagonal, first-row entry $1$, last row corrected by $-a_k/(2a_n)$); so its eigenvalues are the roots of $p$ with multiplicity.",
+   "hypotheses": [
+    "$n\\ge1$, $a_n\\ne0$; $C\\in\\mathbb R^{n\\times n}$ as in ATAP (18.1)"
+   ],
+   "conclusion": "$\\operatorname{charpoly}C=\\dfrac{1}{2^{n-1}a_n}\\sum_{k=0}^na_kT_k$; in particular the eigenvalues of $C$ are the roots of $p$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 18.1"
+    }
+   ],
+   "depends_on": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "Matrix.charpoly",
+     "present": true
+    },
+    {
+     "decl": "Polynomial.Chebyshev.T_add_two",
+     "present": true
+    },
+    {
+     "decl": "Matrix.companion",
+     "present": false,
+     "note": "No companion-matrix API in Mathlib; expand the determinant directly"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "eigenvalues",
+    "rootfinding"
+   ],
+   "notes": "Consumers: Chebyshev-basis rootfinding (locating extrema of filter polynomials), and the template for comrade/Jacobi matrices whose eigenvalues are Gauss nodes (lanczos-gauss-quadrature). Prove by cofactor expansion along the last row with the three-term recurrence. Low priority.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-series-abs-sign",
+   "title": "Chebyshev series of |x| and sign(x) (ATAP Ex 3.6, Bernstein 1914)",
+   "aliases": [
+    "ATAP Exercise 3.6",
+    "Chebyshev expansion of |x|",
+    "Chebyshev expansion of sign",
+    "square wave"
+   ],
+   "area": "polynomial-functions",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "$|x|=\\frac2\\pi+\\frac4\\pi\\sum_{j\\ge1}\\frac{(-1)^{j+1}}{4j^2-1}T_{2j}(x)$ uniformly on $[-1,1]$, so the degree-$2m$ truncation has error $\\le\\frac{2}{\\pi(2m+1)}$; and $\\operatorname{sign}(x)=\\frac4\\pi\\sum_{j\\ge0}\\frac{(-1)^j}{2j+1}T_{2j+1}(x)$ (convergence away from $0$).",
+   "hypotheses": [
+    "$x\\in[-1,1]$"
+   ],
+   "conclusion": "the Chebyshev coefficients of $|x|$ are $a_0=2/\\pi$, $a_{2j}=\\frac{4}{\\pi}\\frac{(-1)^{j+1}}{4j^2-1}$, $a_{2j+1}=0$; $\\max_{[-1,1]}\\big||x|-\\sum_{k\\le 2m}a_kT_k\\big|\\le\\sum_{j>m}|a_{2j}|=\\frac{2}{\\pi(2m+1)}$; the coefficients of sign are $\\frac4\\pi\\frac{(-1)^j}{2j+1}$ at $k=2j+1$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 3.6"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "chebyshev-series-convergence"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Polynomial.Chebyshev.T_real_cos",
+     "present": true
+    },
+    {
+     "decl": "hasSum_one_div_nat_pow_mul_fourier",
+     "present": true,
+     "note": "Fourier series machinery"
+    }
+   ],
+   "difficulty": 2,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "sign-function",
+    "explicit-expansion"
+   ],
+   "notes": "Consumers: sign-polynomial-approx and sign-approx-lower-bound (explicit $O(1/n)$ uniform approximation of $|x|$, the classical starting point for approximating sign and spectral projectors), abs-best-approx-asymptotics (upper half). The extracted ATAP text prints the sign coefficient as $(-1)^{k-1}$; use $(-1)^{(k-1)/2}$. Prove (cosine series of $|\\cos\\theta|$).",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "chebyshev-series-exp-bessel",
+   "title": "Chebyshev series of e^{ax}: modified Bessel coefficients (ATAP Ex 3.15)",
+   "aliases": [
+    "ATAP Exercise 3.15",
+    "Jacobi–Anger for e^{a cos θ}",
+    "e^{ax} = I_0(a) + 2 sum I_k(a) T_k(x)"
+   ],
+   "area": "polynomial-functions",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "$e^{ax}=I_0(a)+2\\sum_{k\\ge1}I_k(a)T_k(x)$ uniformly on $[-1,1]$ with $I_k(a)=\\frac1\\pi\\int_0^\\pi e^{a\\cos\\theta}\\cos k\\theta\\,d\\theta$, and $0\\le I_k(a)\\le\\frac{(a/2)^k}{k!}e^{a^2/4}$ for $a\\ge0$; truncation at degree $n$ has error $\\le2\\sum_{k>n}|I_k(a)|$.",
+   "hypotheses": [
+    "$a\\in\\mathbb R$, $x\\in[-1,1]$"
+   ],
+   "conclusion": "the Chebyshev coefficients of $e^{ax}$ are $2I_k(a)$ ($I_0(a)$ for $k=0$), with the stated bound on $I_k$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 3.15"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "chebyshev-series-convergence"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "Real.besselI",
+     "present": false,
+     "note": "not in Mathlib; define by the integral above"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "exponential",
+    "explicit-expansion"
+   ],
+   "notes": "Consumers: exp-polynomial-approx (sharper constants and the Chebyshev-truncation form used for $e^{-tA}$ in Krylov and trace estimation), exp-approx-lower-bound. Define $I_k$ by its integral; the Bessel bound follows from the power series. Prove.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "fejer-chebyshev-means",
+   "title": "Fejér: Cesàro means of Chebyshev series converge uniformly (ATAP Ex 6.6)",
+   "aliases": [
+    "ATAP Exercise 6.6",
+    "Fejér's theorem",
+    "Cesàro means",
+    "Fejér kernel",
+    "Jackson damping (KPM)"
+   ],
+   "area": "polynomial-series",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For every $f\\in C[-1,1]$ the Cesàro means $S_n=\\frac1{n+1}\\sum_{m=0}^nf_m$ of its Chebyshev truncations converge uniformly to $f$; $S_n=\\sum_{k\\le n}(1-\\frac{k}{n+1})a_kT_k$ is a positive operator ($f\\ge0\\Rightarrow S_nf\\ge0$) of norm $1$.",
+   "hypotheses": [
+    "$f$ continuous on $[-1,1]$"
+   ],
+   "conclusion": "$S_nf\\to f$ uniformly on $[-1,1]$; $\\|S_nf\\|_\\infty\\le\\|f\\|_\\infty$ and $S_nf\\ge0$ when $f\\ge0$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 6.6"
+    }
+   ],
+   "depends_on": [
+    "chebyshev-coefficients-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "fejerKernel",
+     "present": false,
+     "note": "Mathlib has Fourier series on AddCircle but no Fejér-mean convergence theorem"
+    }
+   ],
+   "difficulty": 3,
+   "priority": "later",
+   "tags": [
+    "chebyshev",
+    "kernel-polynomial-method",
+    "positivity"
+   ],
+   "notes": "Consumers: kernel polynomial method / Chebyshev-moment spectral-density estimation, where damping (Fejér or Jackson kernel) makes the approximant positive and the estimated density a probability measure; positivity-preserving polynomial approximation in trace estimation. Prove via the Fejér kernel on the circle.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "best-approximant-interpolates",
+   "title": "Every best uniform approximant interpolates f at n+1 points (ATAP Ex 10.12)",
+   "aliases": [
+    "ATAP Exercise 10.12",
+    "best approximation is an interpolant"
+   ],
+   "area": "polynomial-best",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "If $p^*$ is the best approximation of degree $\\le n$ to real $f\\in C[-1,1]$, there are $n+1$ distinct points $-1<x_0<\\dots<x_n<1$ with $p^*(x_j)=f(x_j)$.",
+   "hypotheses": [
+    "$f$ continuous and real on $[-1,1]$",
+    "$p^*$ attains $E_n(f)$ (minimax-error-def)"
+   ],
+   "conclusion": "$\\exists\\,x_0<\\cdots<x_n$ in $(-1,1)$ with $f(x_j)=p^*(x_j)$; hence $p^*$ = `Lagrange.interpolate` of $f$ at these points",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Ex 10.12"
+    }
+   ],
+   "depends_on": [
+    "equioscillation",
+    "minimax-error-def"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "intermediate_value_Icc",
+     "present": true
+    }
+   ],
+   "difficulty": 1,
+   "priority": "later",
+   "tags": [
+    "best-approximation"
+   ],
+   "notes": "Consumers: links best approximation to interpolation (lets Lebesgue-constant and interpolation-remainder bounds apply to $p^*$); Marcinkiewicz-type constructions. Immediate from equioscillation by the intermediate value theorem. Prove after equioscillation.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "rational-equioscillation",
+   "title": "Rational best approximation: existence, uniqueness and equioscillation (ATAP Thm 24.1, Ex 24.5)",
+   "aliases": [
+    "ATAP Theorem 24.1",
+    "Achieser's theorem",
+    "rational Chebyshev alternation",
+    "rational de la Vallée Poussin",
+    "defect"
+   ],
+   "area": "polynomial-best",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "A real $f\\in C[-1,1]$ has a unique best real approximation $r^*\\in R_{mn}$ (type $(m,n)$), and real $r\\in R_{mn}$ is $r^*$ iff $f-r$ equioscillates at $\\ge m+n+2-d$ points, $d=\\min(m-\\mu,n-\\nu)$ the defect of $r$ of exact type $(\\mu,\\nu)$; if $f-r$ alternates in sign at $m+n+2-d$ points with $|f-r|\\ge\\varepsilon$ there, then $\\|f-r^*\\|\\ge\\varepsilon$.",
+   "hypotheses": [
+    "$f$ real continuous on $[-1,1]$; $m,n\\ge0$",
+    "$R_{mn}=\\{p/q:\\deg p\\le m,\\deg q\\le n,\\ q\\ne0\\text{ on }[-1,1]\\}$"
+   ],
+   "conclusion": "existence and uniqueness of $r^*$; characterisation by $m+n+2-d$ alternation points; the de la Vallée Poussin lower bound",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 24.1"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Ex 24.5"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Def 23 (rational functions of type (m,n))"
+    },
+    {
+     "source": "trefethen19",
+     "label": "Def 24 (defect)"
+    }
+   ],
+   "depends_on": [
+    "equioscillation",
+    "de-la-vallee-poussin"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "RatFunc",
+     "present": true,
+     "note": "rational functions exist but no approximation theory"
+    }
+   ],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "rational-approximation",
+    "best-approximation"
+   ],
+   "notes": "Consumers: Zolotarev's optimal rational approximation of sign (spectral projectors, polar decomposition, rational Krylov filters) and the de la Vallée Poussin lower bound used to certify rational rates. Not needed by the current polynomial/Krylov foundations; assume if a rational consumer appears.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "abs-best-approx-asymptotics",
+   "title": "Best approximation of |x|: Bernstein's constant and Newman–Stahl rational rate (ATAP Thm 25.1)",
+   "aliases": [
+    "ATAP Theorem 25.1",
+    "Bernstein's constant 0.2801",
+    "Varga–Carpenter",
+    "Stahl's theorem",
+    "Newman's approximation of |x|"
+   ],
+   "area": "polynomial-functions",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "$E_{n,0}(|x|;[-1,1])\\sim\\beta/n$ with $\\beta=0.2801\\ldots$ and $E_{n,n}(|x|)\\sim8e^{-\\pi\\sqrt n}$.",
+   "hypotheses": [
+    "best uniform approximation errors on $[-1,1]$ by polynomials of degree $\\le n$, resp. type $(n,n)$ rationals"
+   ],
+   "conclusion": "$nE_{n,0}(|x|)\\to\\beta$ and $E_{n,n}(|x|)e^{\\pi\\sqrt n}\\to8$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 25.1"
+    }
+   ],
+   "depends_on": [
+    "minimax-error-def"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "sign-function",
+    "lower-bound",
+    "asymptotics"
+   ],
+   "notes": "Consumers: sign-approx-lower-bound / sign-polynomial-approx (the polynomial rate for $|x|$ is $\\Theta(1/n)$, so gap-free sign approximation cannot beat $1/n$; a non-asymptotic $E_{n,0}(|x|)\\ge c/n$ is the useful part and follows from Bernstein-type arguments). Assume the asymptotics; prove only a non-asymptotic lower bound if a consumer needs it.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  },
+  {
+   "id": "exp-rational-halfline",
+   "title": "Rational approximation of e^{x} on (−∞,0]: geometric rates (ATAP Thm 25.2)",
+   "aliases": [
+    "ATAP Theorem 25.2",
+    "Cody–Meinardus–Varga",
+    "Schönhage 1/3",
+    "Halphen's constant 9.28903",
+    "Gonchar–Rakhmanov",
+    "Aptekarev"
+   ],
+   "area": "polynomial-functions",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Best type-$(0,n)$ approximation of $e^x$ on $(-\\infty,0]$ has $E_{0n}^{1/n}\\to\\frac13$, and best type-$(n,n)$ has $E_{nn}\\sim2H^{n+1/2}$ with $H=1/9.28902549\\ldots$; polynomials do not converge at all on the half-line.",
+   "hypotheses": [
+    "uniform best approximation on $(-\\infty,0]$"
+   ],
+   "conclusion": "$\\lim_nE_{0n}^{1/n}=1/3$; $E_{nn}/(2H^{n+1/2})\\to1$",
+   "sources": [
+    {
+     "source": "trefethen19",
+     "label": "Thm 25.2"
+    }
+   ],
+   "depends_on": [
+    "exp-polynomial-approx"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "exponential",
+    "rational-approximation",
+    "asymptotics"
+   ],
+   "notes": "Consumers: rational Krylov / shift-invert approximation of $e^{-tA}b$ for PSD $A$ (the Sachdeva–Vishnoi rational section, Laplacian solvers), where a non-asymptotic $3^{-n}$-type upper bound would be the usable form. Assume; low priority.",
+   "updated_at": "2026-10-11",
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": []
+  }
+ ],
+ "sources": []
+}

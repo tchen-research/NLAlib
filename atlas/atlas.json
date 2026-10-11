@@ -13492,13 +13492,34 @@
     "definition"
    ],
    "notes": "FOM is the Arnoldi approximation of f(A)b for f(z) = 1/z, so it ties the f(A)b entries to linear solves. Later variant (identity, difficulty 3): the Brown / Cullum–Greenbaum peak–plateau relation ‖r_k^F‖ = ‖r_k^G‖ / √(1 − (‖r_k^G‖/‖r_{k−1}^G‖)²), with FOM undefined exactly when GMRES stagnates (Saad 2003 §6.5.7). Consumers: lanczos-fa-error for 1/x, sketched FOM, the identification of CG as Galerkin (cg-convergence). Prove.",
-   "updated_at": "2026-10-10",
+   "updated_at": "2026-10-11",
    "variants": [
     "cg-convergence",
     "lanczos-fa-error"
    ],
-   "formalizations": [],
-   "uses_defs": []
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.forall_dotProduct_sub_mulVec_eq_zero_iff",
+     "module": "NLAlib.Krylov.GMRESArnoldi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.isCGIterate_add_mulVec_of_mulVec_eq",
+     "module": "NLAlib.Krylov.GMRESArnoldi",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.ArnoldiDecomp",
+    "NLAlib.ArnoldiDecomp.H",
+    "NLAlib.ArnoldiDecomp.Q",
+    "NLAlib.IsCGIterate",
+    "NLAlib.krylovSpace"
+   ]
   },
   {
    "id": "chebyshev-iteration",
@@ -13569,6 +13590,20 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.dotProduct_self_sub_mulVec_chebyshevIterate_le",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.chebyshevIterate_one",
+     "module": "NLAlib.Krylov.PolynomialMethods",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.chebyshevIterate_add_two",
      "module": "NLAlib.Krylov.PolynomialMethods",
      "status": "proved",
      "partial": true
@@ -16747,7 +16782,7 @@
    ],
    "area": "matrix-subspace-perturbation",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with orthonormal columns, the canonical angles $0\\le\\theta_1\\le\\dots\\le\\theta_k\\le\\pi/2$ are defined by $\\cos\\theta_i=\\sigma_i(Q^\\top\\hat Q)$ (so $\\|\\sin\\Theta\\|=\\sin\\theta_k=\\sqrt{1-\\sigma_k(Q^\\top\\hat Q)^2}$), and $\\sin\\Theta(Q,\\hat Q)=\\operatorname{diag}(\\sin\\theta_i)$. Characterisations, with $Q_\\perp$ an orthonormal complement of $Q$: $\\|\\sin\\Theta\\|=\\|Q_\\perp^\\top\\hat Q\\|=\\|(I-QQ^\\top)\\hat Q\\|=\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|$; $\\|\\sin\\Theta\\|_F^2=k-\\|Q^\\top\\hat Q\\|_F^2=\\tfrac12\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|_F^2$; $\\Theta$ depends only on the ranges, is symmetric in $(Q,\\hat Q)$; if $\\theta_k<\\pi/2$, $\\|\\tan\\Theta\\|=\\|(Q_\\perp^\\top\\hat Q)(Q^\\top\\hat Q)^{-1}\\|$.",
    "hypotheses": [
     "$Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with $Q^\\top Q=\\hat Q^\\top\\hat Q=I_k$",
@@ -16797,9 +16832,135 @@
     "subspaces"
    ],
    "notes": "State with matrices (HasOrthonormalCols) rather than submodules, as every consumer manipulates frames; give the submodule-level invariance as a lemma. Define the angles through NLAlib.singularValues (Qᵀ Q̂) on Fin k indices and expose ‖sin Θ‖ as specNorm (residual Q Q̂) so the projections API applies directly. Consumers: davis-kahan-sin-theta, wedin-sin-theta, pseudoinverse-perturbation (projector part), subspace-iteration-expected and block-krylov-lra (gap-dependent tan Θ forms), random-start-power (tan θ of the start vector), hmt-9-1-spectral (Ω₂Ω₁† is a tan Θ), leverage-score approximation from approximate bases. Recommendation: prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sq_tanThetaMax_replicateCol_eq_tanSqAngle",
+     "module": "NLAlib.Krylov.PowerMethod",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanThetaMax",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.principalAngles",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax_congr_left",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax_congr_right",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanThetaMax_mul_right",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanThetaMax_eq_of_range_eq",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanThetaMax_congr_left",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax_eq_specNorm_transpose_mul",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanThetaMax_eq_specNorm_transpose_mul_mul",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_residual_eq_card_sub",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sq_sinThetaMax_eq_one_sub_sq_sigmaMin",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax_eq_sqrt_one_sub_sq_singularValues",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax_eq_sin_principalAngles",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "stated"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax_comm",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax_eq_specNorm_sub",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sinThetaMax_lt_one_iff_isUnit",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sq_tanThetaMax_eq_div",
+     "module": "NLAlib.Matrix.PrincipalAngles",
+     "status": "scaffold"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.frobSq",
+    "NLAlib.principalAngles",
+    "NLAlib.residual",
+    "NLAlib.sigmaMin",
+    "NLAlib.sinThetaMax",
+    "NLAlib.singularValues",
+    "NLAlib.specNorm",
+    "NLAlib.tanSqAngle",
+    "NLAlib.tanThetaMax"
+   ],
    "variants": []
   },
   {
@@ -17001,7 +17162,7 @@
    ],
    "area": "matrix-projections",
    "kind": "bound",
-   "status": "candidate",
+   "status": "scaffold",
    "informal": "$A,B=A+E\\in\\mathbb R^{m\\times n}$. Identity: $$B^\\dagger-A^\\dagger=-B^\\dagger EA^\\dagger+B^\\dagger B^{\\dagger\\top}E^\\top(I-AA^\\dagger)+(I-B^\\dagger B)E^\\top A^{\\dagger\\top}A^\\dagger.$$ Bounds: if $\\operatorname{rank}A=\\operatorname{rank}B$ then $\\|B^\\dagger-A^\\dagger\\|\\le\\mu\\|A^\\dagger\\|\\|B^\\dagger\\|\\|E\\|$ with $\\mu=\\tfrac{1+\\sqrt5}{2}$ (and $\\|B^\\dagger-A^\\dagger\\|_F\\le\\sqrt2\\|A^\\dagger\\|\\|B^\\dagger\\|\\|E\\|_F$); without the rank condition, $\\|B^\\dagger-A^\\dagger\\|\\le\\mu\\max(\\|A^\\dagger\\|^2,\\|B^\\dagger\\|^2)\\|E\\|$. If $\\operatorname{rank}A=\\operatorname{rank}B$ and $\\|A^\\dagger\\|\\|E\\|<1$: $\\|B^\\dagger\\|\\le\\frac{\\|A^\\dagger\\|}{1-\\|A^\\dagger\\|\\|E\\|}$, and $\\|AA^\\dagger-BB^\\dagger\\|\\le\\min(\\|A^\\dagger\\|,\\|B^\\dagger\\|)\\|E\\|$.",
    "hypotheses": [
     "$A,E\\in\\mathbb R^{m\\times n}$, $B=A+E$ (any `Fintype` indices; `moorePenroseInverse`)",
@@ -17039,9 +17200,59 @@
     "pseudoinverse"
    ],
    "notes": "The identity is pure algebra from the four Penrose identities (NLAlib.IsMoorePenroseInverse). The simple constant μ = 3 is an immediate corollary (each term ≤ ‖B†‖‖E‖‖A†‖); the sharp (1+√5)/2 needs Wedin's orthogonality argument (difficulty 3–4). Labels and the μ table (3 for a general unitarily invariant norm, (1+√5)/2 spectral, √2 Frobenius) to verify against Stewart–Sun III.3.8 / Wedin 1973 before stating. Consumers: least-squares-perturbation, sketch-and-solve-ls and sketched-regression (stability of (SA)†), generalized Nyström stability (nakatsukasa20), sketch-and-precondition stability. Recommendation: prove the identity and μ = 3 form; assume the sharp constant if a consumer needs it.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.moorePenroseInverse_add_sub_moorePenroseInverse",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_moorePenroseInverse_add_sub_le",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_moorePenroseInverse_add_sub_le_three_mul_max",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_moorePenroseInverse_add_sub_le_goldenRatio_mul_max",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_moorePenroseInverse_add_sub_le_goldenRatio_mul_of_rank_eq",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_mul_moorePenroseInverse_sub_le_of_rank_eq",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_moorePenroseInverse_add_le_of_rank_eq",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.specNorm"
+   ],
    "variants": []
   },
   {
@@ -17056,7 +17267,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "scaffold",
    "informal": "For symmetric $M=\\begin{pmatrix}A&B\\\\B^\\top&C\\end{pmatrix}$ with $A\\in\\mathbb R^{p\\times p}$: $$M\\succeq0\\iff A\\succeq0,\\ (I-AA^\\dagger)B=0,\\ C-B^\\top A^\\dagger B\\succeq0.$$ When $M\\succeq0$, the Schur complement $M/A=C-B^\\top A^\\dagger B$ satisfies $x^\\top(M/A)x=\\min_{y}\\begin{pmatrix}y\\\\x\\end{pmatrix}^\\top M\\begin{pmatrix}y\\\\x\\end{pmatrix}$ (attained at $y=-A^\\dagger Bx$), and $0\\preceq M/A\\preceq C$.",
    "hypotheses": [
     "$A=A^\\top\\in\\mathbb R^{p\\times p}$, $B\\in\\mathbb R^{p\\times q}$, $C=C^\\top\\in\\mathbb R^{q\\times q}$ (any `Fintype` indices, `Matrix.fromBlocks`)",
@@ -17109,9 +17320,38 @@
     "schur-complement"
    ],
    "notes": "Gap with Mathlib: Mathlib's PosDef.fromBlocks₁₁ needs an invertible pivot; Nyström and Cholesky-type arguments have singular pivots (ΩᵀAΩ need not be invertible). Consumers: nystrom-structural (its 'A − A⟨Ω⟩ is the Schur complement' clause is recorded as not formalised), rpcholesky (the residual after k pivots is a Schur complement, hence PSD with trace decreasing), cholesky-decomposition (recursive step), nystrom-pcg, column subset selection / volume-sampling (Schur complements and determinants), Gaussian conditioning with singular covariance. Recommendation: prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posSemidef_fromBlocks_iff",
+     "module": "NLAlib.Matrix.SchurComplement",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_schurComplement_mulVec_le",
+     "module": "NLAlib.Matrix.SchurComplement",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_schurComplement_mulVec_eq",
+     "module": "NLAlib.Matrix.SchurComplement",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posSemidef_sub_schurComplement",
+     "module": "NLAlib.Matrix.SchurComplement",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.schurComplement"
+   ],
    "variants": []
   },
   {
@@ -17211,7 +17451,7 @@
    ],
    "area": "matrix-conditioning",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$\\kappa(A)=\\|A\\|\\,\\|A^\\dagger\\|$ for $A\\in\\mathbb R^{m\\times n}$ (with the total conventions $\\kappa(0)=0$); for $\\operatorname{rank}A=r\\ge1$, $\\kappa(A)=\\sigma_1(A)/\\sigma_r(A)$, and $\\kappa(A)=\\sigma_{\\max}/\\sigma_{\\min}$ for full column rank. Characterisations: $\\kappa(A)\\ge1$ for $A\\ne0$; $\\kappa(cA)=\\kappa(A)$ for $c\\ne0$; $\\kappa(A^\\top)=\\kappa(A)$; $\\kappa(A^\\top A)=\\kappa(A)^2$; $\\kappa(QA)=\\kappa(A)$ for $Q$ with orthonormal columns; $\\kappa=\\lambda_{\\max}/\\lambda_{\\min}$ for $A\\succ0$; for square invertible $A$, $\\min\\{\\|E\\|:A+E\\ \\text{singular}\\}=1/\\|A^{-1}\\|$, i.e. $1/\\kappa(A)$ is the relative distance to singularity.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$ (`Fin` indices for the singular-value forms)",
@@ -17247,9 +17487,91 @@
     "conditioning"
    ],
    "notes": "NLAlib has NLAlib.frobConditionNumber (‖A‖_F‖A†‖, Kaczmarz) but no spectral κ; cg-convergence and Gaussian condition-number results state κ ad hoc. Define with the general moorePenroseInverse so it is total. Consumers: cg-convergence, sketch-and-precondition (κ(AR⁻¹) ≤ √((1+ε)/(1−ε))), nystrom-pcg, randomized-kaczmarz (relation κ_F ≤ √rank κ), linear-system-perturbation, least-squares-perturbation, pinv-spectral-tail (condition numbers of Gaussian matrices, cd05). Recommendation: prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_transpose",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.one_le_conditionNumber",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_eq_of_isUnit",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_smul",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_mul_of_hasOrthonormalCols",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_transpose_mul_self",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUnit_add_of_specNorm_lt",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_specNorm_eq_not_isUnit_add",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_eq_singularValues_div",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_eq_div_sigmaMin",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.conditionNumber",
+    "NLAlib.sigmaMin",
+    "NLAlib.singularValues",
+    "NLAlib.specNorm"
+   ],
    "variants": []
   },
   {
@@ -17264,7 +17586,7 @@
    ],
    "area": "matrix-conditioning",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "If $\\|F\\|<1$ then $I-F$ is invertible, $(I-F)^{-1}=\\sum_{k\\ge0}F^k$, $\\|(I-F)^{-1}\\|\\le\\frac1{1-\\|F\\|}$ and $\\|(I-F)^{-1}-I\\|\\le\\frac{\\|F\\|}{1-\\|F\\|}$. For invertible $A$ and $\\|A^{-1}E\\|<1$: $A+E$ is invertible, $$\\|(A+E)^{-1}\\|\\le\\frac{\\|A^{-1}\\|}{1-\\|A^{-1}E\\|},\\qquad\\|(A+E)^{-1}-A^{-1}\\|\\le\\frac{\\|A^{-1}\\|^2\\|E\\|}{1-\\|A^{-1}E\\|},$$ and $\\|(A+E)^{-1}-A^{-1}\\|_F\\le\\frac{\\|A^{-1}\\|^2\\|E\\|_F}{1-\\|A^{-1}E\\|}$.",
    "hypotheses": [
     "$A,E,F\\in\\mathbb R^{n\\times n}$ (any `Fintype` index), spectral norm `specNorm`",
@@ -17322,9 +17644,80 @@
     "perturbation"
    ],
    "notes": "A thin but much-cited wrapper: Mathlib has the abstract Neumann series in normed rings but no explicit, matrix-specialised perturbation bound in NLAlib's specNorm spelling. Proof: (A+E)⁻¹ − A⁻¹ = −(A+E)⁻¹EA⁻¹ plus the Neumann norm bound. Consumers: linear-system-perturbation, pseudoinverse-perturbation (square case), sketch-and-precondition, nystrom-pcg (regularised inverses (Â + μI)⁻¹), iterative refinement / sketch-and-iterate, T1 resolvent bounds. Recommendation: prove (quick win).",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUnit_one_sub_of_specNorm_lt_one",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inv_one_sub_eq_tsum_pow",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inv_one_sub_le",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inv_one_sub_sub_one_le",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUnit_add_of_specNorm_inv_mul_lt_one",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inv_add_le",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inv_add_sub_inv_le",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobNorm_inv_add_sub_inv_le",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inv_add_sub_inv_le_of_mul_lt_one",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inv_add_le_of_mul_lt_one",
+     "module": "NLAlib.Matrix.InversePerturbation",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.frobNorm",
+    "NLAlib.specNorm"
+   ],
    "variants": []
   },
   {
@@ -17339,7 +17732,7 @@
    ],
    "area": "matrix-conditioning",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Let $A$ be invertible, $Ax=b\\ne0$, and $(A+\\Delta A)(x+\\Delta x)=b+\\Delta b$ with $\\kappa(A)\\frac{\\|\\Delta A\\|}{\\|A\\|}<1$. Then $$\\frac{\\|\\Delta x\\|}{\\|x\\|}\\le\\frac{\\kappa(A)}{1-\\kappa(A)\\frac{\\|\\Delta A\\|}{\\|A\\|}}\\Big(\\frac{\\|\\Delta A\\|}{\\|A\\|}+\\frac{\\|\\Delta b\\|}{\\|b\\|}\\Big).$$ A posteriori: for any $\\hat x$, $\\frac{\\|x-\\hat x\\|}{\\|x\\|}\\le\\kappa(A)\\frac{\\|b-A\\hat x\\|}{\\|b\\|}$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{n\\times n}$ invertible, $b\\ne0$, $Ax=b$",
@@ -17373,9 +17766,33 @@
     "perturbation"
    ],
    "notes": "Consumers: cg-convergence and nystrom-pcg (turning residual stopping criteria into error guarantees), sketch-and-precondition, randomized-kaczmarz / sketch-and-project error-vs-residual statements, iterative refinement with sketched preconditioners. Recommendation: prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_dotProduct_sub_div_le_conditionNumber_mul",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_dotProduct_div_le_conditionNumber_mul_of_mulVec_add",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_dotProduct_div_le_of_add_mulVec_add",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.conditionNumber",
+    "NLAlib.specNorm"
+   ],
    "variants": []
   },
   {
@@ -17390,7 +17807,7 @@
    ],
    "area": "matrix-conditioning",
    "kind": "bound",
-   "status": "candidate",
+   "status": "scaffold",
    "informal": "$A\\in\\mathbb R^{m\\times n}$ of full column rank, $x=\\arg\\min\\|Ax-b\\|$ with $x\\ne0$, $r=b-Ax$. Let $\\|\\Delta A\\|\\le\\varepsilon\\|A\\|$, $\\|\\Delta b\\|\\le\\varepsilon\\|b\\|$, $\\kappa(A)\\varepsilon<1$, $y=\\arg\\min\\|(A+\\Delta A)y-(b+\\Delta b)\\|$, $s=(b+\\Delta b)-(A+\\Delta A)y$. Then $$\\frac{\\|x-y\\|}{\\|x\\|}\\le\\frac{\\kappa\\varepsilon}{1-\\kappa\\varepsilon}\\Big(2+(\\kappa+1)\\frac{\\|r\\|}{\\|A\\|\\|x\\|}\\Big),\\qquad\\frac{\\|r-s\\|}{\\|b\\|}\\le(1+2\\kappa)\\varepsilon.$$ First-order form: $\\frac{\\|x-y\\|}{\\|x\\|}\\le\\varepsilon\\big(\\frac{2\\kappa}{\\cos\\theta}+\\kappa^2\\tan\\theta\\big)+O(\\varepsilon^2)$, $\\sin\\theta=\\|r\\|/\\|b\\|$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$, $\\operatorname{rank}A=n$, $b\\in\\mathbb R^m$ with $A^\\top b\\ne0$",
@@ -17431,9 +17848,76 @@
     "least-squares"
    ],
    "notes": "State the non-asymptotic Higham/Wedin form (explicit constants), mention the GVL first-order κ² tan θ form as the corollary people quote. Consumers: sketch-and-solve-ls (forward error of the sketched solution, not just the residual), sketched-regression, iterative sketching / Blendenpik-LSRN stability analyses, randomized-kaczmarz on inconsistent systems (kaczmarz-inconsistent). Recommendation: assume until pseudoinverse-perturbation is proved, then prove.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
+   "updated_at": "2026-10-11",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.leastSquaresCos",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.leastSquaresTan",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.leastSquaresEta",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_dotProduct_mul_moorePenroseInverse_sub_div_le",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_dotProduct_moorePenroseInverse_sub_div_le",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_pos_forall_sqrt_fit_sub_div_le",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_pos_forall_sqrt_solution_sub_div_le",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_dotProduct_solution_sub_div_le",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_dotProduct_residual_sub_div_le",
+     "module": "NLAlib.Matrix.Conditioning",
+     "status": "scaffold"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.conditionNumber",
+    "NLAlib.leastSquaresCos",
+    "NLAlib.leastSquaresEta",
+    "NLAlib.leastSquaresTan",
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.specNorm"
+   ],
    "variants": []
   },
   {
@@ -17449,7 +17933,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Every real symmetric positive definite $A\\in\\mathbb R^{n\\times n}$ has a unique factorisation $A=LL^\\top$ with $L$ lower triangular and $L_{ii}>0$; $L_{11}=\\sqrt{A_{11}}$ and the trailing block of $L$ is the Cholesky factor of the Schur complement $A_{22}-A_{21}A_{11}^{-1}A_{12}$; $\\det A=\\prod_iL_{ii}^2$. Every PSD $A$ has $A=LL^\\top$ with $L$ lower triangular and $L_{ii}\\ge0$ (not unique in general).",
    "hypotheses": [
     "$A\\in\\mathbb R^{n\\times n}$ symmetric positive definite (index `Fin n`, or a linearly ordered `Fintype`)",
@@ -17500,10 +17984,51 @@
     "factorization",
     "conditioning"
    ],
-   "notes": "Route: Mathlib's LDL gives S = L D Lᵀ with L⁻¹ lower triangular; finishing Mathlib's TODO (L lower triangular) and setting L·D^{1/2} gives existence; uniqueness by the usual triangular argument. Consumers: rpcholesky (partial pivoted Cholesky equals Nyström; residual is a Schur complement), nystrom-pcg (Cholesky of the core matrix), sketch-and-precondition (R = chol((SA)ᵀSA)ᵀ), qr-decomposition (R from AᵀA), Gaussian sampling N(0,Σ) = L z. Recommendation: prove (the TODO is a natural upstream contribution to Mathlib).",
+   "notes": "Route: Mathlib's LDL gives S = L D Lᵀ with L⁻¹ lower triangular; finishing Mathlib's TODO (L lower triangular) and setting L·D^{1/2} gives existence; uniqueness by the usual triangular argument. Consumers: rpcholesky (partial pivoted Cholesky equals Nyström; residual is a Schur complement), nystrom-pcg (Cholesky of the core matrix), sketch-and-precondition (R = chol((SA)ᵀSA)ᵀ), qr-decomposition (R from AᵀA), Gaussian sampling N(0,Σ) = L z. Recommendation: prove (the TODO is a natural upstream contribution to Mathlib). Only the pivot case of the Schur-complement criterion is used (proved in Matrix/SchurComplement.lean); the Albert scaffold is not on its path.",
    "updated_at": "2026-10-11",
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsCholesky",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsCholesky.posDef",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsCholesky.unique",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCholesky_iff_posDef",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eq_cholesky_mul_transpose_of_posSemidef",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_eq_mul_transpose_of_posSemidef",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsCholesky",
+    "NLAlib.cholesky"
+   ],
    "variants": []
   },
   {
@@ -17519,7 +18044,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Every $A\\in\\mathbb R^{m\\times n}$ with $m\\ge n$ factors as $A=QR$ with $Q\\in\\mathbb R^{m\\times n}$, $Q^\\top Q=I_n$, and $R$ upper triangular with $R_{ii}\\ge0$ (thin QR; a full QR has $Q$ orthogonal $m\\times m$). If $\\operatorname{rank}A=n$ then $R_{ii}>0$, the pair $(Q,R)$ is unique, $R^\\top R=A^\\top A$ (so $R^\\top$ is the Cholesky factor of $A^\\top A$), $QQ^\\top$ is the orthogonal projector onto $\\operatorname{range}A$, $\\sigma_i(R)=\\sigma_i(A)$ and $\\kappa(R)=\\kappa(A)$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$, $m\\ge n$ (`Fin` indices)",
@@ -17574,8 +18099,104 @@
    ],
    "notes": "Consumers: sketch-and-precondition (SA = QR, then κ(AR⁻¹)), haar-orthogonal (the Q factor of a Gaussian matrix with R_ii > 0 is Haar; needs uniqueness), rsvd-expected-error / hmt-9-1-spectral (Q = orth(Y); NLAlib currently uses polarFrame instead), leverage-scores (ℓᵢ = ‖Q_{i,:}‖²), block-krylov-lra. Recommendation: prove.",
    "updated_at": "2026-10-11",
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsUpperTrapezoidal",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsFullQR",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsFullQR.isQR_castLE",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.transpose_mul_eq",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.transpose_mul_self_eq",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.isUnit_transpose_mul_self_iff",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.range_mulVecLin_eq",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pinvL_eq_of_isQR",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.moorePenroseInverse_eq_of_isQR",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.mul_transpose_eq",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isFullQR",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isQR",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isQR_of_isUnit",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.eq_of_diag_pos",
+     "module": "NLAlib.Matrix.Factorizations.QR",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsFullQR",
+    "NLAlib.IsQR",
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.pinvL"
+   ],
    "variants": []
   },
   {
@@ -17672,7 +18293,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For symmetric $A$ with eigenvalues $\\lambda_1 \\ge \\dots \\ge \\lambda_n$, $\\lambda_s > \\lambda_{s+1} \\ge 0$, dominant eigenspace $\\mathcal{U}_s$, and $\\Omega$ with $U_s^\\top \\Omega$ invertible: $\\tan\\theta_{\\max}(\\mathcal{S}_k, \\mathcal{U}_s) \\le (\\lambda_{s+1}/\\lambda_s)^k \\tan\\theta_{\\max}(\\operatorname{range}\\Omega, \\mathcal{U}_s)$, and per-vector: for each $i \\le s$ with $\\lambda_i > \\lambda_{s+1}$, the angle between $u_i$ and $\\mathcal{S}_k$ decays like $(\\lambda_{s+1}/\\lambda_i)^k$.",
    "hypotheses": [
     "$A$ symmetric, $\\lambda_s > \\lambda_{s+1} \\ge 0$",
@@ -17703,8 +18324,25 @@
    ],
    "notes": "Prove. Consumers: random-start-power (with the Gaussian a.s. invertibility of U_sᵀΩ and the tan θ₀ moment bounds), gap-dependent block Krylov comparison (mm15 §4), rsvd-spectral-expected with power iteration. Saad states the theorem for general diagonalisable A; the symmetric form suffices here. K-D (round 8) lists the inputs: principal angles via ‖U_⊥ᵀ Q (U_sᵀ Q)⁻¹‖, basis independence (transpose_mul_mul_eq_of_range_le, proved), the split A^k Ω = U_s Λ_s^k U_sᵀ Ω + U_⊥ Λ_⊥^k U_⊥ᵀ Ω, and ‖Λ_⊥^k X Λ_s^{−k}‖ ≤ (λ_{s+1}/λ_s)^k ‖X‖; Davis–Kahan is not needed in the symmetric case.",
    "updated_at": "2026-10-11",
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanThetaMax_pow_mul_le",
+     "module": "NLAlib.Krylov.SubspaceIteration",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanThetaMax_le_of_range_eq_subspaceIterate",
+     "module": "NLAlib.Krylov.SubspaceIteration",
+     "status": "proved"
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.subspaceIterate",
+    "NLAlib.tanThetaMax"
+   ],
    "variants": []
   },
   {
@@ -18333,7 +18971,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Upper/lower (unit) triangular predicates on $\\mathbb{R}^{n\\times n}$ over an ordered index; products and inverses of triangular matrices are triangular, $\\det$ is the product of the diagonal, and a triangular matrix is invertible iff its diagonal is nonzero. Triangular systems are solved by substitution.",
    "hypotheses": [],
    "conclusion": "closure under $\\cdot$ and $^{-1}$; $\\det = \\prod_i t_{ii}$; invertible $\\iff \\forall i,\\ t_{ii} \\ne 0$",
@@ -18347,23 +18985,76 @@
      "label": "§3.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsUnitLowerTriangular",
+     "module": "NLAlib.Matrix.Factorizations.Triangular",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsUnitUpperTriangular",
+     "module": "NLAlib.Matrix.Factorizations.Triangular",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUnit_det_iff_of_isUpperTriangular",
+     "module": "NLAlib.Matrix.Factorizations.Triangular",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUnit_det_iff_of_isLowerTriangular",
+     "module": "NLAlib.Matrix.Factorizations.Triangular",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.forwardSubst",
+     "module": "NLAlib.Matrix.Factorizations.Triangular",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.backSubst",
+     "module": "NLAlib.Matrix.Factorizations.Triangular",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mulVec_forwardSubst",
+     "module": "NLAlib.Matrix.Factorizations.Triangular",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mulVec_backSubst",
+     "module": "NLAlib.Matrix.Factorizations.Triangular",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "matrix-norms-def"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.backSubst",
+    "NLAlib.forwardSubst"
+   ],
    "variants": [],
    "mathlib_prereqs": [
     {
-     "decl": "Matrix.BlockTriangular",
+     "decl": "Matrix.IsUpperTriangular",
+     "present": true,
+     "note": "abbreviation for BlockTriangular id; NLAlib uses it directly"
+    },
+    {
+     "decl": "Matrix.det_of_isUpperTriangular",
      "present": true
     },
     {
-     "decl": "Matrix.det_of_upperTriangular",
-     "present": true
-    },
-    {
-     "decl": "Matrix.BlockTriangular.inv",
+     "decl": "Matrix.blockTriangular_inv_of_blockTriangular",
      "present": true
     }
    ],
@@ -18386,7 +19077,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$A \\in \\mathbb{R}^{n\\times n}$ invertible has a factorization $A = LU$ with $L$ unit lower triangular and $U$ upper triangular iff every leading principal minor $\\det A_{1..k,1..k}$ is nonzero; the factorization is then unique. One elimination step is the Schur complement: $A = \\begin{pmatrix} 1 & 0 \\\\ b/a & I\\end{pmatrix}\\begin{pmatrix} a & c^\\top \\\\ 0 & C - b c^\\top/a\\end{pmatrix}$.",
    "hypotheses": [
     "$A$ invertible (for the iff); or just: all leading principal minors nonzero (for existence)"
@@ -18406,11 +19097,39 @@
      "label": "Cor. 3.5.5"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsLU",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsLU.unique",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isLU_of_forall_det_ne_zero",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isLU_iff_forall_det_ne_zero",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "triangular-matrices-def"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsLU",
+    "NLAlib.leadingSubmatrix"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -18430,7 +19149,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Gaussian elimination without pivoting, as a total recursion on the leading pivot, succeeds iff every pivot (the $(1,1)$ entry of the successive Schur complements) is nonzero, equivalently iff every leading principal minor is nonzero; on success its output $(L, U)$ satisfies $A = LU$ (`IsLU`).",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n \\times n}$"
@@ -18446,11 +19165,47 @@
      "label": "Alg. 3.2.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lu",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LUSucceeds",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLU_lu",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.luSucceeds_iff_forall_det_ne_zero",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLU_lu_of_forall_det_ne_zero",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "lu-decomposition"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsLU",
+    "NLAlib.LUSucceeds",
+    "NLAlib.leadingSubmatrix",
+    "NLAlib.lu"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -18473,7 +19228,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For every invertible $A$ there is a permutation $P$ with $PA = LU$, $L$ unit lower triangular with $|l_{ij}| \\le 1$, $U$ upper triangular; the elimination recursion that pivots on the largest entry of the current column never fails for invertible $A$ and produces such a factorization.",
    "hypotheses": [
     "$A$ invertible"
@@ -18489,12 +19244,59 @@
      "label": "Thm 3.4.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsPLU",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.luPartialPivot",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.LUPartialPivotSucceeds",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isPLU_luPartialPivot",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_luPartialPivot_lower_le_one",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.luPartialPivotSucceeds_iff_isUnit_det",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isPLU_abs_le_one",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "lu-decomposition",
     "lu-algorithm"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsPLU",
+    "NLAlib.LUPartialPivotSucceeds",
+    "NLAlib.luPartialPivot"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -18515,7 +19317,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "With partial pivoting, $\\max_{ij} |u_{ij}| \\le 2^{n-1} \\max_{ij} |a_{ij}|$ (Wilkinson); the bound is attained.",
    "hypotheses": [
     "$PA = LU$ produced by partial pivoting ($|l_{ij}| \\le 1$)"
@@ -18531,11 +19333,26 @@
      "label": "§9.3 (label to verify)"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_luPartialPivot_upper_le",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_luPartialPivot_upper_le_two_pow",
+     "module": "NLAlib.Matrix.Factorizations.LU",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "lu-partial-pivoting"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.luPartialPivot"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -18556,7 +19373,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "The Cholesky recursion ($a \\mapsto \\sqrt a$, $b \\mapsto b/\\sqrt a$, continue on the Schur complement $C - bb^\\top/a$) succeeds (every pivot $> 0$) iff $A$ is positive definite (for symmetric $A$); on success $L L^\\top = A$ with $L$ lower triangular with positive diagonal, and $L$ is unique. For positive semidefinite $A$, pivoted (diagonal-pivoting) Cholesky never fails, stops after $\\operatorname{rank} A$ steps and returns $L L^\\top = A$.",
    "hypotheses": [
     "$A$ symmetric"
@@ -18576,17 +19393,79 @@
      "label": "Cor. 7.2.9"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.cholesky",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.CholeskySucceeds",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isCholesky_cholesky",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.choleskySucceeds_iff_posDef",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsPivotedCholesky",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.choleskyPivoted",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isPivotedCholesky_choleskyPivoted",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.choleskyPivoted_apply_self_pos_iff_lt_rank",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.choleskyPivoted_apply_eq_zero_of_rank_le",
+     "module": "NLAlib.Matrix.Factorizations.Cholesky",
+     "status": "scaffold"
+    }
+   ],
    "depends_on": [
     "cholesky-decomposition",
     "lu-algorithm"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.CholeskySucceeds",
+    "NLAlib.IsCholesky",
+    "NLAlib.IsPivotedCholesky",
+    "NLAlib.cholesky",
+    "NLAlib.choleskyPivoted"
+   ],
    "variants": [],
    "mathlib_prereqs": [
     {
-     "decl": "Matrix.PosDef.fromBlocks₁₁",
-     "present": true
+     "decl": "Matrix.PosSemidef.fromBlocks₁₁",
+     "present": true,
+     "note": "PSD form; the PD pivot criterion is proved in NLAlib by completing the square (`posDef_iff_pivotSchur`)"
     }
    ],
    "difficulty": 2,
@@ -18609,10 +19488,10 @@
    ],
    "area": "lra-deterministic",
    "kind": "identity",
-   "status": "candidate",
+   "status": "scaffold",
    "informal": "For $A \\succeq 0$ and pivots $S = \\{s_1,\\dots,s_k\\}$ chosen in order, the partial Cholesky factor $F_k \\in \\mathbb{R}^{n\\times k}$ satisfies $F_k F_k^\\top = A(:,S)\\,A(S,S)^{\\dagger}\\,A(S,:)$ (the column Nyström approximation) and the residual $A - F_k F_k^\\top$ is the Schur complement of $A(S,S)$, again positive semidefinite with zero rows/columns on $S$.",
    "hypotheses": [
-    "$A \\succeq 0$, pivots with $A(s_i, s_i) > 0$ at the time of selection"
+    "$A \\succeq 0$, any pivot sequence (zero or repeated pivots allowed; $0^{-1} = 0$)"
    ],
    "conclusion": "$F_k F_k^\\top = A(:,S) A(S,S)^\\dagger A(S,:)$; residual $= A / A(S,S) \\succeq 0$",
    "sources": [
@@ -18625,13 +19504,74 @@
      "label": "§4.2.9"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.partialCholeskyResidual",
+     "module": "NLAlib.LowRank.PartialCholesky",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.partialCholeskyFactor",
+     "module": "NLAlib.LowRank.PartialCholesky",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posSemidef_partialCholeskyResidual",
+     "module": "NLAlib.LowRank.PartialCholesky",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.partialCholeskyResidual_apply_pivot_left",
+     "module": "NLAlib.LowRank.PartialCholesky",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.partialCholeskyResidual_apply_pivot_right",
+     "module": "NLAlib.LowRank.PartialCholesky",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sub_partialCholeskyFactor_mul_transpose",
+     "module": "NLAlib.LowRank.PartialCholesky",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.partialCholeskyFactor_mul_transpose_eq_nystrom",
+     "module": "NLAlib.LowRank.PartialCholesky",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.partialCholeskyResidual_eq_sub_nystrom",
+     "module": "NLAlib.LowRank.PartialCholesky",
+     "status": "stated"
+    }
+   ],
    "depends_on": [
     "cholesky-algorithm",
     "nystrom-structural",
     "generalized-schur-complement-psd"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.nystrom",
+    "NLAlib.partialCholeskyFactor",
+    "NLAlib.partialCholeskyResidual",
+    "NLAlib.selectionMatrix"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -18641,7 +19581,7 @@
     "cholesky",
     "rpcholesky"
    ],
-   "notes": "The deterministic heart of RPCholesky; the random pivot rule is layered on top in LowRank.",
+   "notes": "The deterministic heart of RPCholesky; the random pivot rule is layered on top in LowRank. D-A (round 9): holds for every pivot sequence of a PSD matrix; the positivity hypothesis was dropped.",
    "updated_at": "2026-10-11"
   },
   {
@@ -18654,7 +19594,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Classical and modified Gram–Schmidt on the columns of $A \\in \\mathbb{R}^{m\\times n}$, as recursions, produce $Q$ with orthonormal columns and upper triangular $R$ with $A = QR$ and $r_{jj} > 0$; step $k$ breaks down iff $a_k \\in \\operatorname{span}(a_1,\\dots,a_{k-1})$ (in exact arithmetic CGS and MGS give the same $Q, R$). $Q$ is the graded orthonormal basis of the column flag.",
    "hypotheses": [
     "$A$ with linearly independent columns (for no breakdown)"
@@ -18670,12 +19610,156 @@
      "label": "§5.2.7–5.2.8"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gramSchmidtCol",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gramSchmidtResidual",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gramSchmidtQ",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gramSchmidtR",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GramSchmidtSucceeds",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gramSchmidtQ_mul_gramSchmidtR",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.transpose_gramSchmidtQ_mul_self",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasOrthonormalCols_gramSchmidtQ",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isQR_gramSchmidt",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gramSchmidtResidual_eq_zero_iff",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gramSchmidtSucceeds_iff_linearIndependent",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGradedColumnBasis",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.span_gramSchmidtCol_image_Iic",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.span_gramSchmidtQ_castLE",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGradedColumnBasis_gramSchmidtQ",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.isGradedColumnBasis",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedGramSchmidtState",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedGramSchmidtQ",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedGramSchmidtR",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedGramSchmidt_eq",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isQR_modifiedGramSchmidt",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gramSchmidtCol_eq_gramSchmidtNormed",
+     "module": "NLAlib.Matrix.Factorizations.GramSchmidt",
+     "status": "scaffold"
+    }
+   ],
    "depends_on": [
     "qr-decomposition",
     "orthonormal-columns-def"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.GramSchmidtSucceeds",
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.IsGradedColumnBasis",
+    "NLAlib.IsQR",
+    "NLAlib.gramSchmidtCol",
+    "NLAlib.gramSchmidtQ",
+    "NLAlib.gramSchmidtR",
+    "NLAlib.gramSchmidtResidual",
+    "NLAlib.modifiedGramSchmidtQ",
+    "NLAlib.modifiedGramSchmidtR"
+   ],
    "variants": [],
    "mathlib_prereqs": [
     {
@@ -18706,7 +19790,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$H_v = I - 2 v v^\\top / (v^\\top v)$ for $v \\ne 0$ ($H_0 = I$): $H_v^\\top = H_v$, $H_v^2 = I$, $H_v v = -v$, $H_v$ fixes $v^\\perp$. With $v = x + \\operatorname{sign}(x_1)\\|x\\| e_1$, $H_v x = -\\operatorname{sign}(x_1)\\|x\\| e_1$.",
    "hypotheses": [],
    "conclusion": "$H_v$ orthogonal symmetric involution; $H_v x = \\mp \\|x\\| e_1$ for the standard choice of $v$",
@@ -18720,11 +19804,77 @@
      "label": "§5.1.2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householder",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householder_transpose",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householder_mul_self",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householder_transpose_mul_self",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasOrthonormalCols_householder",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householder_mulVec_self",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householder_mulVec_of_dotProduct_eq_zero",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householderSign",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householderVector",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householder_mulVec_householderVector",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "orthonormal-columns-def"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.householder",
+    "NLAlib.householderSign",
+    "NLAlib.householderVector"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 1,
@@ -18744,7 +19894,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "The Householder recursion (reflect column $k$ of the current matrix below the diagonal to zero) is total, needs no rank hypothesis, and returns reflectors $H_1,\\dots,H_n$ and upper triangular $R$ with $H_n \\cdots H_1 A = R$, i.e. $A = QR$ with $Q = H_1 \\cdots H_n$ orthogonal (full QR); the first $n$ columns of $Q$ give the thin QR.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$, $m \\ge n$ (or any $m$ with the obvious truncation)"
@@ -18760,12 +19910,67 @@
      "label": "Alg. 5.2.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householderQR",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householderQ",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householderR",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householderQ_transpose_mul_self",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperTrapezoidal_householderR",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isFullQR_householderQR",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.householderQ_mul_householderR",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isQR_householderQR",
+     "module": "NLAlib.Matrix.Factorizations.Householder",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "householder-reflector-def",
     "qr-decomposition"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsFullQR",
+    "NLAlib.IsQR",
+    "NLAlib.IsUpperTrapezoidal",
+    "NLAlib.householderQ",
+    "NLAlib.householderR"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -18787,7 +19992,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "A Givens rotation $G(i,j,\\theta)$ is the identity except for the $2\\times2$ rotation block in rows/columns $i,j$; it is orthogonal and can zero one chosen entry. An upper Hessenberg $H$ has $H = QR$ with $Q$ a product of $n-1$ rotations; $RQ$ is again upper Hessenberg (tridiagonal if $H$ is symmetric tridiagonal).",
    "hypotheses": [],
    "conclusion": "$G$ orthogonal; $G x$ zeroes $x_j$; Hessenberg QR in $n-1$ rotations; $RQ$ Hessenberg",
@@ -18801,12 +20006,141 @@
      "label": "Lect. 10 (exercise)"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givens",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givens_transpose_mul_self",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensCos",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensSin",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensRotation",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensRotation_mulVec_apply_right",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensRotation_mulVec_apply_left",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsUpperHessenberg",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsTridiagonal",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperHessenberg_mul_of_isQR",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isTridiagonal_mul_of_isQR",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensQRState",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensQRQ",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensQR",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperTriangular_givensQR_snd",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isQR_givensQR",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.givensQRQ_invariant",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperHessenberg_givensQR_fst",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "stated"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperHessenberg_givensQR_snd_mul_fst",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "stated"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isTridiagonal_givensQR_snd_mul_fst",
+     "module": "NLAlib.Matrix.Factorizations.Givens",
+     "status": "stated"
+    }
+   ],
    "depends_on": [
     "orthonormal-columns-def",
     "triangular-matrices-def"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsQR",
+    "NLAlib.IsTridiagonal",
+    "NLAlib.IsUpperHessenberg",
+    "NLAlib.givens",
+    "NLAlib.givensQR",
+    "NLAlib.givensQRQ",
+    "NLAlib.givensRotation"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -18829,7 +20163,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $A \\in \\mathbb{R}^{n\\times n}$ there is orthogonal $Q$ with $Q^\\top A Q = H$ upper Hessenberg, constructed by $n-2$ Householder reflectors; if $A$ is symmetric, $H$ is symmetric tridiagonal. When the first column of $Q$ is fixed and $H$ is unreduced, $Q$ and $H$ are determined up to signs (implicit Q theorem), and the columns of $Q$ form the Arnoldi basis of $(A, q_1)$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$"
@@ -18845,13 +20179,100 @@
      "label": "§7.4.3, Thm 7.4.2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsHessenbergForm",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsUnreducedHessenberg",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsHessenbergForm.transpose_mul_mul_eq",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsHessenbergForm.isTridiagonal",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hessenbergReflectors",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hessenbergQ",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hessenbergH",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hessenbergReduction",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hessenbergQ_mulVec_single_zero",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperHessenberg_hessenbergH",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isHessenbergForm_hessenbergReduction",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "stated"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isHessenbergForm",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "stated"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsHessenbergForm.exists_sign",
+     "module": "NLAlib.Matrix.Factorizations.Hessenberg",
+     "status": "scaffold"
+    }
+   ],
    "depends_on": [
     "householder-reflector-def",
     "graded-krylov-basis-def",
     "arnoldi-def"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsHessenbergForm",
+    "NLAlib.IsTridiagonal",
+    "NLAlib.IsUnreducedHessenberg",
+    "NLAlib.IsUpperHessenberg",
+    "NLAlib.hessenbergH",
+    "NLAlib.hessenbergQ",
+    "NLAlib.hessenbergReduction"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 3,
@@ -18873,7 +20294,7 @@
    ],
    "area": "matrix-projections",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$x$ minimises $\\|Ax - b\\|_2$ iff $A^\\top A x = A^\\top b$ iff $r = b - Ax \\perp \\operatorname{range} A$; the minimiser is unique iff $A$ has full column rank, and then $x = A^\\dagger b = R^{-1} Q^\\top b$ for a thin QR $A = QR$, with $\\|r\\|^2 = \\|b\\|^2 - \\|Q^\\top b\\|^2$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$, $b \\in \\mathbb{R}^m$"
@@ -18889,13 +20310,123 @@
      "label": "§5.3"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsLeastSquaresSolution",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeastSquaresSolution_iff_transpose_mulVec_mulVec_eq",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeastSquaresSolution_iff_forall_dotProduct_mulVec_eq_zero",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeastSquaresSolution_moorePenroseInverse_mulVec",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeastSquaresSolution_iff_mulVec_eq",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsLeastSquaresSolution.sub_mulVec_eq",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsLeastSquaresSolution.dotProduct_sub_mulVec_eq",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_isLeastSquaresSolution_iff",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeastSquaresSolution_iff_eq_moorePenroseInverse_mulVec",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeastSquaresSolution_iff_eq_pinvL_mulVec",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsLeastSquaresSolution.dotProduct_self_moorePenroseInverse_mulVec_le",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isLeastSquaresSolution_iff_eq_inv_mulVec_of_eq_mul",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsLeastSquaresSolution.dotProduct_sub_mulVec_eq_of_eq_mul",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.isLeastSquaresSolution_iff",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsQR.dotProduct_sub_mulVec_eq",
+     "module": "NLAlib.Matrix.LeastSquares",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "pseudoinverse",
     "qr-decomposition",
     "projection-facts"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.IsLeastSquaresSolution",
+    "NLAlib.IsQR",
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.pinvL"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 1,
@@ -18914,7 +20445,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For symmetric $A$ with $|\\lambda_1| > |\\lambda_2| \\ge \\dots$ and $u_1^\\top x_0 \\ne 0$: the normalised iterates $x_k = A^k x_0 / \\|A^k x_0\\|$ satisfy $\\tan\\theta(x_k, u_1) \\le (|\\lambda_2|/|\\lambda_1|)^k \\tan\\theta(x_0, u_1)$ and $|\\rho(x_k) - \\lambda_1| \\le (\\lambda_1 - \\lambda_n)\\tan^2\\theta(x_k,u_1)$, i.e. the Rayleigh quotient converges at rate $(|\\lambda_2|/|\\lambda_1|)^{2k}$.",
    "hypotheses": [
     "$A$ symmetric, $|\\lambda_1| > |\\lambda_2|$, $u_1^\\top x_0 \\ne 0$"
@@ -18934,12 +20465,42 @@
      "label": "§4.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanSqAngle_powerIterate_le",
+     "module": "NLAlib.Krylov.PowerMethod",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanSqAngle_powerStep_iterate_le",
+     "module": "NLAlib.Krylov.PowerMethod",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_rayleighQuotient_sub_le_mul_tanSqAngle",
+     "module": "NLAlib.Krylov.PowerMethod",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_rayleighQuotient_powerIterate_sub_le",
+     "module": "NLAlib.Krylov.PowerMethod",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "subspace-iteration-def",
     "krylov-eigenvector-angle"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.powerIterate",
+    "NLAlib.powerStep",
+    "NLAlib.rayleighQuotient",
+    "NLAlib.tanSqAngle"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -18959,7 +20520,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Power iteration on $(A - \\mu I)^{-1}$: if $\\lambda_J$ is the eigenvalue closest to $\\mu$ and $\\lambda_K$ the second closest, $\\tan\\theta(x_k, u_J) \\le \\big(|\\mu - \\lambda_J| / |\\mu - \\lambda_K|\\big)^k \\tan\\theta(x_0, u_J)$ and the Rayleigh quotient error is the square of that.",
    "hypotheses": [
     "$A$ symmetric, $\\mu \\notin \\sigma(A)$, $|\\mu - \\lambda_J| < |\\mu - \\lambda_K|$, $u_J^\\top x_0 \\ne 0$"
@@ -18975,11 +20536,28 @@
      "label": "§8.2.2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tanSqAngle_inverseIterate_le",
+     "module": "NLAlib.Krylov.PowerMethod",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_rayleighQuotient_inverseIterate_sub_le",
+     "module": "NLAlib.Krylov.PowerMethod",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "power-iteration"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.inverseIterate",
+    "NLAlib.rayleighQuotient",
+    "NLAlib.tanSqAngle"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 1,
@@ -19001,7 +20579,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Let $A_0 = A$, $A_{j-1} = Q_j R_j$ (QR), $A_j = R_j Q_j$, and $\\underline{Q}^{(k)} = Q_1\\cdots Q_k$, $\\underline{R}^{(k)} = R_k \\cdots R_1$. Then $A^k = \\underline{Q}^{(k)} \\underline{R}^{(k)}$ and $A_k = \\underline{Q}^{(k)\\top} A \\underline{Q}^{(k)}$: the QR algorithm is simultaneous (subspace) iteration started from $I$, and each $A_k$ is orthogonally similar to $A$. A QR step preserves upper Hessenberg form and symmetry (hence tridiagonality), and the shifted step $A - \\mu I = QR$, $A_+ = RQ + \\mu I$ is again a similarity.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$; a QR factorization chosen at each step"
@@ -19017,13 +20595,127 @@
      "label": "§7.3.1, §7.4.2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.add_smul_one_eq_transpose_mul_mul_of_isQR",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.qrAlgorithm",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.QRAlgorithmSucceeds",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.qrAlgorithmSucceeds_of_forall_isQR",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.transpose_mul_self_qrAlgorithmQ",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperTriangular_qrAlgorithmR",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.qrAlgorithm_eq_transpose_mul_mul",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.aeval_prod_eq_qrAlgorithmQ_mul_qrAlgorithmR",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pow_eq_qrAlgorithmQ_mul_qrAlgorithmR",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isQR_pow_qrAlgorithm",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.range_qrAlgorithmQ_castLE_eq_subspaceIterate",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isSymm_qrAlgorithm",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperHessenberg_qrAlgorithm",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isTridiagonal_qrAlgorithm",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUpperHessenberg_qrAlgorithm_givensQR",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "stated"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.qrAlgorithmSucceeds_givensQR",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "stated"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isTridiagonal_qrAlgorithm_givensQR",
+     "module": "NLAlib.Krylov.QRAlgorithm",
+     "status": "stated"
+    }
+   ],
    "depends_on": [
     "qr-decomposition",
     "subspace-iteration-def",
     "givens-rotation-def"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsQR",
+    "NLAlib.IsTridiagonal",
+    "NLAlib.IsUpperHessenberg",
+    "NLAlib.QRAlgorithmSucceeds",
+    "NLAlib.givensQR",
+    "NLAlib.qrAlgorithm",
+    "NLAlib.qrAlgorithmFactors",
+    "NLAlib.qrAlgorithmQ",
+    "NLAlib.qrAlgorithmR",
+    "NLAlib.subspaceIterate"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -19045,7 +20737,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Inertia (numbers of positive, negative, zero eigenvalues) is invariant under congruence $A \\mapsto X^\\top A X$ with $X$ invertible. Consequently, for symmetric $A$ with $A - xI = L D L^\\top$, the number of eigenvalues of $A$ less than $x$ equals the number of negative entries of $D$; for unreduced symmetric tridiagonal $T$ the number of sign changes in the Sturm sequence $\\det(T_k - xI)$ counts the eigenvalues below $x$ (bisection).",
    "hypotheses": [
     "$A$ symmetric; $X$ invertible; for the count, $LDL^\\top$ of $A - xI$ exists (or the Sturm sequence has no zero)"
@@ -19065,15 +20757,101 @@
      "label": "Ch. 3"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaPos",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaNeg",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaPos_transpose_mul_mul",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaNeg_transpose_mul_mul",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaPos_diagonal",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaNeg_diagonal",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaPos_sub_smul_one_eq_card",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaNeg_sub_smul_one_eq_card",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaPos_eq_card_eigenvalues_pos",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inertiaNeg_eq_card_eigenvalues_neg",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.card_eigenvalues_lt_eq_card_neg_of_eq_mul_diagonal_mul",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.card_eigenvalues_lt_eq_card_sign_changes",
+     "module": "NLAlib.Matrix.Inertia",
+     "status": "scaffold"
+    }
+   ],
    "depends_on": [
     "lu-decomposition",
     "cauchy-interlacing",
     "jacobi-matrix-identities"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.inertiaNeg",
+    "NLAlib.inertiaPos",
+    "NLAlib.leadingMinor"
+   ],
    "variants": [],
-   "mathlib_prereqs": [],
+   "mathlib_prereqs": [
+    {
+     "decl": "QuadraticMap.Equivalent.sigPos_eq",
+     "present": true
+    },
+    {
+     "decl": "QuadraticForm.sigPos_weightedSumSquares",
+     "present": true
+    }
+   ],
    "difficulty": 3,
    "priority": "next",
    "tags": [
@@ -19081,7 +20859,7 @@
     "inertia",
     "bisection"
    ],
-   "notes": "Mathlib has no inertia theorem for matrices (check `QuadraticForm` material). The Sturm count is what bisection and the spectrum-slicing estimators use.",
+   "notes": "Mathlib has the uniqueness half of Sylvester's law for quadratic forms (`QuadraticMap.Equivalent.sigPos_eq`/`sigNeg_eq`, `QuadraticForm.sigPos_weightedSumSquares`, Mathlib.LinearAlgebra.QuadraticForm.Signature); the matrix statement is stated through `Matrix.toQuadraticForm'`. The Sturm count is what bisection and spectrum-slicing estimators use.",
    "updated_at": "2026-10-11"
   },
   {
@@ -19093,7 +20871,7 @@
    ],
    "area": "krylov-bases",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Starting from $u_1 = b/\\|b\\|$, the recursion $A^\\top u_k = \\beta_{k-1} v_{k-1} + \\alpha_k v_k$, $A v_k = \\alpha_k u_k + \\beta_k u_{k+1}$ produces orthonormal $U_k, V_k$ and lower bidiagonal $B_k$ with $A V_k = U_{k+1} \\underline{B}_k$ and $A^\\top U_{k+1} = V_k \\underline{B}_k^\\top + \\alpha_{k+1} v_{k+1} e_{k+1}^\\top$; $V_k$ is the Lanczos basis of $(A^\\top A, A^\\top b)$ and $U_k$ that of $(AA^\\top, b)$, with $B_k^\\top B_k$ the Lanczos tridiagonal of $A^\\top A$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$, $b \\ne 0$, $k \\le$ grade"
@@ -19109,13 +20887,97 @@
      "label": "Lect. 31"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanDecomp",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanDecomp.B",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanDecomp.mul_V_eq_U_mul_B",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanDecomp.B_apply_eq_zero_of_lt",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanDecomp.B_apply_eq_zero_of_add_one_lt",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanDecomp.transpose_B_mul_B_eq_T",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanDecomp.transpose_mulVec_U_col_mem_range_V",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golubKahanDecomp",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGradedKrylovBasis_golubKahanU_V",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golubKahanSucceeds_iff",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_golubKahan_eq",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "scaffold"
+    }
+   ],
    "depends_on": [
     "graded-krylov-basis-def",
     "lanczos-recurrence",
     "cgls-lsqr-bound"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.GolubKahanDecomp",
+    "NLAlib.GolubKahanDecomp.B",
+    "NLAlib.GolubKahanDecomp.U",
+    "NLAlib.GolubKahanDecomp.V",
+    "NLAlib.GolubKahanDecomp.lanczosV",
+    "NLAlib.GolubKahanState.u",
+    "NLAlib.GolubKahanState.v",
+    "NLAlib.GolubKahanState.α",
+    "NLAlib.GolubKahanState.β",
+    "NLAlib.GolubKahanSucceeds",
+    "NLAlib.IsGradedKrylovBasis",
+    "NLAlib.LanczosDecomp.T",
+    "NLAlib.golubKahanRecurrence",
+    "NLAlib.golubKahanU",
+    "NLAlib.golubKahanV",
+    "NLAlib.krylovGrade"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 3,
@@ -19137,7 +20999,7 @@
    ],
    "area": "krylov-linear-systems",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "scaffold",
    "informal": "For SPD $A$, the recursion $\\alpha_k = r_k^\\top r_k / p_k^\\top A p_k$, $x_{k+1} = x_k + \\alpha_k p_k$, $r_{k+1} = r_k - \\alpha_k A p_k$, $\\beta_k = r_{k+1}^\\top r_{k+1} / r_k^\\top r_k$, $p_{k+1} = r_{k+1} + \\beta_k p_k$ (with $p_0 = r_0$) produces residuals that are mutually orthogonal, search directions that are $A$-conjugate, $x_k - x_0 \\in \\mathcal{K}_k(A, r_0)$, and $x_k$ satisfying `IsCGIterate` (the $A$-norm minimiser over $x_0 + \\mathcal{K}_k$), until $r_k = 0$ at the grade.",
    "hypotheses": [
     "$A \\succ 0$; iterate while $r_k \\ne 0$ (total recursion with $x/0 = 0$ afterwards)"
@@ -19157,13 +21019,75 @@
      "label": "§2.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.cgRecurrence_r_ne_zero_of_lt_krylovGrade",
+     "module": "NLAlib.Krylov.CGRecurrence",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_cgRecurrence_r_eq_zero",
+     "module": "NLAlib.Krylov.CGRecurrence",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_cgRecurrence_p_mulVec_eq_zero",
+     "module": "NLAlib.Krylov.CGRecurrence",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.span_cgRecurrence_r",
+     "module": "NLAlib.Krylov.CGRecurrence",
+     "status": "stated",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.span_cgRecurrence_p",
+     "module": "NLAlib.Krylov.CGRecurrence",
+     "status": "stated",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isCGIterate_cgRecurrence",
+     "module": "NLAlib.Krylov.CGRecurrence",
+     "status": "stated"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.cgRecurrence_x_eq_of_krylovGrade_le",
+     "module": "NLAlib.Krylov.CGRecurrence",
+     "status": "stated",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.cgRecurrence_r_eq_zero_of_krylovGrade_le",
+     "module": "NLAlib.Krylov.CGRecurrence",
+     "status": "stated",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "cg-convergence",
     "krylov-grade",
     "affine-krylov-minimiser"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.CGState.p",
+    "NLAlib.CGState.r",
+    "NLAlib.CGState.x",
+    "NLAlib.IsCGIterate",
+    "NLAlib.cgRecurrence",
+    "NLAlib.krylovGrade",
+    "NLAlib.krylovSpace"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 3,
@@ -19185,7 +21109,7 @@
    ],
    "area": "krylov-bases",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "scaffold",
    "informal": "For symmetric $A$, the recursion $\\alpha_j = q_j^\\top A q_j$, $w = A q_j - \\alpha_j q_j - \\beta_j q_{j-1}$, $\\beta_{j+1} = \\|w\\|$, $q_{j+1} = w/\\beta_{j+1}$ (starting from $q_1 = b/\\|b\\|$, $\\beta_1 = 0$) produces exactly the columns of `arnoldiMatrix` (positive subdiagonal) while $j <$ grade, and $\\beta_{j+1} = 0$ exactly at the grade; the $\\alpha_j, \\beta_j$ are the entries of $T$ of the `LanczosDecomp`.",
    "hypotheses": [
     "$A$ symmetric, $b \\ne 0$"
@@ -19205,13 +21129,71 @@
      "label": "§4.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lanczosRecurrence_eq_arnoldiBasis",
+     "module": "NLAlib.Krylov.LanczosRecurrence",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lanczosBeta_pos",
+     "module": "NLAlib.Krylov.LanczosRecurrence",
+     "status": "stated",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lanczosBeta_eq_zero_of_krylovGrade_le",
+     "module": "NLAlib.Krylov.LanczosRecurrence",
+     "status": "stated",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lanczosBeta_eq_zero_iff",
+     "module": "NLAlib.Krylov.LanczosRecurrence",
+     "status": "stated",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lanczosAlpha_eq_alpha",
+     "module": "NLAlib.Krylov.LanczosRecurrence",
+     "status": "stated",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lanczosBeta_eq_beta",
+     "module": "NLAlib.Krylov.LanczosRecurrence",
+     "status": "stated",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGradedKrylovBasis_lanczosRecurrence",
+     "module": "NLAlib.Krylov.LanczosRecurrence",
+     "status": "stated"
+    }
+   ],
    "depends_on": [
     "graded-krylov-basis-def",
     "arnoldi-relation",
     "lanczos-recurrence"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsGradedKrylovBasis",
+    "NLAlib.LanczosDecomp.alpha",
+    "NLAlib.LanczosDecomp.beta",
+    "NLAlib.arnoldiBasis",
+    "NLAlib.arnoldiDecomp",
+    "NLAlib.krylovGrade",
+    "NLAlib.lanczosAlpha",
+    "NLAlib.lanczosBeta",
+    "NLAlib.lanczosRecurrence"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -19233,7 +21215,7 @@
    ],
    "area": "krylov-linear-systems",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For an `ArnoldiDecomp` of $(A, r_0)$ of order $q+1$ with $H̲_q \\in \\mathbb{R}^{(q+1)\\times q}$: $x = x_0 + Q_q y$ is the GMRES iterate iff $y$ minimises $\\|\\,\\|r_0\\| e_1 - \\underline{H}_q y\\|_2$, and then $\\|r_q\\| = \\min_y \\|\\,\\|r_0\\|e_1 - \\underline{H}_q y\\|$; FOM is the square system $H_q y = \\|r_0\\| e_1$.",
    "hypotheses": [
     "$q <$ grade of $(A, r_0)$ (so the decomposition of order $q+1$ exists)"
@@ -19249,13 +21231,44 @@
      "label": "§6.5.3, Prop. 6.9"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.dotProduct_sub_mulVec_add_mulVec_eq",
+     "module": "NLAlib.Krylov.GMRESArnoldi",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.isGMRESIterate_add_mulVec_iff",
+     "module": "NLAlib.Krylov.GMRESArnoldi",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.isGMRESIterate_add_mulVec_iff_of_pos",
+     "module": "NLAlib.Krylov.GMRESArnoldi",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ArnoldiDecomp.isLeast_dotProduct_of_isGMRESIterate",
+     "module": "NLAlib.Krylov.GMRESArnoldi",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "gmres-def",
     "arnoldi-relation",
     "least-squares-normal-equations"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.ArnoldiDecomp",
+    "NLAlib.ArnoldiDecomp.Hbar",
+    "NLAlib.ArnoldiDecomp.Q",
+    "NLAlib.ArnoldiDecomp.restrict",
+    "NLAlib.IsGMRESIterate"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 2,
@@ -19352,6 +21365,169 @@
     "assume"
    ],
    "notes": "Assume (Gu–Eisenstat 1996, Thm 3.2; add source). Consumers: interpolative-decomposition, CUR, randomized ID.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "golub-kahan-recurrence",
+   "title": "The Golub–Kahan recursion realises the bidiagonalization and breaks down exactly at the grades",
+   "aliases": [
+    "Lanczos bidiagonalization algorithm"
+   ],
+   "area": "krylov-bases",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "The recursion ($\\alpha_k = \\|A^\\top u_k - \\beta_{k-1} v_{k-1}\\|$, $v_k$ its normalisation, $\\beta_k = \\|A v_k - \\alpha_k u_k\\|$, $u_{k+1}$ its normalisation) produces the graded bases $U_{k+1}$ of $(AA^\\top, b)$ and $V_k$ of $(A^\\top A, A^\\top b)$, succeeds iff $k+1 \\le$ both grades, and its $\\alpha_k, \\beta_k$ are the entries of $B_k = U^\\top A V$.",
+   "hypotheses": [
+    "$b \\ne 0$"
+   ],
+   "conclusion": "`isGradedKrylovBasis` of both outputs; `GolubKahanSucceeds ↔ k+1 ≤ grade(AAᵀ,b) ∧ k+1 ≤ grade(AᵀA,Aᵀb)`; entries of $B$",
+   "sources": [
+    {
+     "source": "gvl13",
+     "label": "Alg. 10.4.1"
+    }
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golubKahanRecurrence",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanSucceeds",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGradedKrylovBasis_golubKahanU_V",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golubKahanSucceeds_iff",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "scaffold"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.dotProduct_golubKahan_eq",
+     "module": "NLAlib.Krylov.Bidiagonalization",
+     "status": "scaffold"
+    }
+   ],
+   "depends_on": [
+    "golub-kahan-bidiagonalization",
+    "lanczos-recurrence-algorithm"
+   ],
+   "uses_defs": [
+    "NLAlib.GolubKahanState",
+    "NLAlib.GolubKahanState.u",
+    "NLAlib.GolubKahanState.v",
+    "NLAlib.GolubKahanState.α",
+    "NLAlib.GolubKahanState.β",
+    "NLAlib.GolubKahanSucceeds",
+    "NLAlib.IsGradedKrylovBasis",
+    "NLAlib.golubKahanRecurrence",
+    "NLAlib.golubKahanU",
+    "NLAlib.golubKahanV",
+    "NLAlib.krylovGrade"
+   ],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "bidiagonalization",
+    "algorithm",
+    "realisation"
+   ],
+   "notes": "Realisation theorem kept separate from the predicate (ALGORITHM_CONVENTIONS §2).",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "qr-algorithm-convergence",
+   "title": "Unshifted QR algorithm converges to Schur form under a gap and nondegeneracy condition",
+   "aliases": [
+    "QR iteration convergence"
+   ],
+   "area": "krylov-eigenvalues",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For symmetric $A$ with $|\\lambda_1| > |\\lambda_2| > \\dots > |\\lambda_n|$ and eigenvector matrix $Q$ whose leading principal submatrices $Q^\\top_{1..j,1..j}$ are all nonsingular, the QR iterates $A_k$ converge linearly to $\\operatorname{diag}(\\lambda_i)$ and $\\underline{Q}^{(k)}$ to $Q$ (up to signs), with rate $\\max_j |\\lambda_{j+1}/\\lambda_j|$.",
+   "hypotheses": [
+    "$A$ symmetric, strict gaps in $|\\lambda_i|$, nonsingular leading submatrices of $Q^\\top$"
+   ],
+   "conclusion": "$A_k \\to \\Lambda$, $\\underline{Q}^{(k)} \\to Q$ (up to signs), linear rate",
+   "sources": [
+    {
+     "source": "tb97",
+     "label": "Thm 28.4"
+    },
+    {
+     "source": "gvl13",
+     "label": "Thm 7.3.1"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "qr-algorithm-simultaneous-iteration",
+    "subspace-iteration-convergence"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "eigenvalues",
+    "qr-algorithm"
+   ],
+   "notes": "Consumes subspace-iteration-convergence applied to every leading block simultaneously.",
+   "updated_at": "2026-10-11"
+  },
+  {
+   "id": "rayleigh-quotient-iteration",
+   "title": "Rayleigh quotient iteration converges cubically",
+   "aliases": [
+    "RQI"
+   ],
+   "area": "krylov-eigenvalues",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Inverse iteration with the shift updated to the Rayleigh quotient of the current iterate: for symmetric $A$, once the iterate is close enough to an eigenvector $u_J$ with a simple eigenvalue, $\\tan\\theta(x_{k+1}, u_J) = O(\\tan^3\\theta(x_k, u_J))$ and $|\\rho(x_{k+1}) - \\lambda_J| = O(|\\rho(x_k) - \\lambda_J|^3)$.",
+   "hypotheses": [
+    "$A$ symmetric, $\\lambda_J$ simple, $x_0$ in a neighbourhood of $u_J$"
+   ],
+   "conclusion": "cubic local convergence of the angle and of the Rayleigh quotient",
+   "sources": [
+    {
+     "source": "tb97",
+     "label": "Thm 27.3"
+    },
+    {
+     "source": "parlett98",
+     "label": "§4.6"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "inverse-iteration",
+    "power-iteration"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "eigenvalues",
+    "rqi"
+   ],
+   "notes": "Local statement; needs an explicit neighbourhood and constants to be NLAlib-style.",
    "updated_at": "2026-10-11"
   }
  ],

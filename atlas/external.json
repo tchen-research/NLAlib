@@ -3253,4 +3253,114 @@
   "atlas_partial":
   [],
   "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.IsUpperTriangular.{v, u_3} {m : Type u_3} {R : Type v} [Zero R] [LT m] (M : Matrix m m R) : Prop",
+  "name":
+  "Matrix.IsUpperTriangular",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Block",
+  "line":
+  64,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "`M` is upper triangular: entries below the diagonal vanish. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.det_of_isUpperTriangular.{v, u_3} {m : Type u_3} {R : Type v} {M : Matrix m m R} [CommRing R] [DecidableEq m]\n  [Fintype m] [LinearOrder m] (h : M.IsUpperTriangular) : M.det = ∏ i, M i i",
+  "name":
+  "Matrix.det_of_isUpperTriangular",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Block",
+  "line":
+  337,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.blockTriangular_inv_of_blockTriangular.{v, u_1, u_3} {α : Type u_1} {m : Type u_3} {R : Type v}\n  {M : Matrix m m R} {b : m → α} [CommRing R] [DecidableEq m] [Fintype m] [LinearOrder α] [Invertible M]\n  (hM : M.BlockTriangular b) : M⁻¹.BlockTriangular b",
+  "name":
+  "Matrix.blockTriangular_inv_of_blockTriangular",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Block",
+  "line":
+  422,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The inverse of a block-triangular matrix is block-triangular. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "QuadraticMap.Equivalent.sigPos_eq.{u_1, u_2, u_3} {R : Type u_1} {M : Type u_2} {M' : Type u_3} [AddCommGroup M]\n  [AddCommGroup M'] [CommRing R] [LinearOrder R] [_root_.Module R M] {Q : QuadraticForm R M} [_root_.Module R M']\n  {Q' : QuadraticForm R M'} (h : QuadraticMap.Equivalent Q Q') : sigPos Q = sigPos Q'",
+  "name":
+  "QuadraticMap.Equivalent.sigPos_eq",
+  "module":
+  "Mathlib.LinearAlgebra.QuadraticForm.Signature",
+  "line":
+  121,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "QuadraticForm.sigPos_weightedSumSquares.{u_4, u_5} {𝕜 : Type u_4} [Field 𝕜] [LinearOrder 𝕜] {ι : Type u_5} [Fintype ι]\n  {w : ι → 𝕜} [IsStrictOrderedRing 𝕜] : sigPos (QuadraticMap.weightedSumSquares 𝕜 w) = {i | 0 < w i}.ncard",
+  "name":
+  "QuadraticForm.sigPos_weightedSumSquares",
+  "module":
+  "Mathlib.LinearAlgebra.QuadraticForm.Signature",
+  "line":
+  189,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "Key lemma for Sylvester's law of inertia: compute the signature of a weighted sum of squares. ",
+  "atlas_partial":
+  [],
+  "atlas":
   []}]

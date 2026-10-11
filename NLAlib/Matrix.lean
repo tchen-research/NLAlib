@@ -34,6 +34,20 @@ import NLAlib.Matrix.Pseudoinverse
 import NLAlib.Matrix.SVD
 import NLAlib.Matrix.Spectral
 import NLAlib.Matrix.QuadForm
+import NLAlib.Matrix.Factorizations.Triangular
+import NLAlib.Matrix.SchurComplement
+import NLAlib.Matrix.Factorizations.LU
+import NLAlib.Matrix.Factorizations.Cholesky
+import NLAlib.Matrix.Factorizations.QR
+import NLAlib.Matrix.Factorizations.GramSchmidt
+import NLAlib.Matrix.Factorizations.Householder
+import NLAlib.Matrix.Factorizations.Givens
+import NLAlib.Matrix.Factorizations.Hessenberg
+import NLAlib.Matrix.LeastSquares
+import NLAlib.Matrix.InversePerturbation
+import NLAlib.Matrix.Conditioning
+import NLAlib.Matrix.PrincipalAngles
+import NLAlib.Matrix.Inertia
 
 /-!
 # Matrix analysis toolkit

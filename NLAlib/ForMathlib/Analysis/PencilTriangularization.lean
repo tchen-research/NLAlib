@@ -1,6 +1,5 @@
 import NLAlib.ForMathlib.Analysis.OrthonormalCons
 import NLAlib.ForMathlib.LinearAlgebra.PencilLine
-
 /-!
 # Two orthonormal bases simultaneously triangularizing a complex pencil
 

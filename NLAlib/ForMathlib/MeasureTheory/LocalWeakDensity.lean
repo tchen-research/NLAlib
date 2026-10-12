@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.MeasureTheory.WeakDensity
-
 /-!
 # Weak densities for measures locally finite on a half-line
 

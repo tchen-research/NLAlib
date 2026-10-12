@@ -1,7 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Block
-import NLAlib.Matrix.Projections
-import NLAlib.Matrix.MoorePenrose
-
+import NLAlib.Matrix.Subspaces.Projections
+import NLAlib.Matrix.Basic.MoorePenrose
 /-!
 # The QR factorization
 

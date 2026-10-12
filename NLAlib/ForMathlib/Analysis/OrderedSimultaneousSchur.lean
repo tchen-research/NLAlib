@@ -1,7 +1,6 @@
 import NLAlib.ForMathlib.LinearAlgebra.OrderedCommonEigenvector
 import NLAlib.ForMathlib.Analysis.InvariantCompression
 import NLAlib.ForMathlib.Analysis.OrthonormalEigenline
-
 /-!
 # Simultaneous Schur bases with a designated characteristic-root order
 

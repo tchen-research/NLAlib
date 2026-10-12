@@ -68,7 +68,7 @@ Files there are named by Mathlib's directory they would land in (`ForMathlib/Ana
    `Extreme/LinearForms.lean` (`integral_gaussianMatrix_entry_eq_zero`,
    `integral_gaussianMatrix_entry_sq_eq_one`, …), merged with Basic's private copies. Keep
    `linForm` and its lemmas in LinearForms. Do the Basic additions FIRST and build the olean
-   (`lake build NLAlib.Gaussian.Basic`), because group H2a polls for `gaussianMatrix_eq_map_curry`.
+   (`lake build NLAlib.Probability.Gaussian.Basic.GaussianMatrix`), because group H2a polls for `gaussianMatrix_eq_map_curry`.
 2. Matrix layer homes: `frobSq_pinvR_eq_trace_inv` → `Matrix/Pseudoinverse.lean`;
    `specNorm_inv_self_mul_transpose_eq`, `specNorm_pinvR_sq` → `Matrix/Spectral.lean`;
    `exists_iInf_sqrt_mulVec_le_of_sigmaMin_le`, `sqrt_mulVec_smul_dotProduct` → `Matrix/Spectral.lean`;
@@ -101,5 +101,5 @@ Files there are named by Mathlib's directory they would land in (`ForMathlib/Ana
 
 ## Report
 Per the Round 1 brief, plus: the list of moved declarations (name, old module, new module), the
-rename map, and final `lake build` outputs for `NLAlib.Concentration`, `NLAlib.Gaussian`,
-`NLAlib.Matrix`, `NLAlib.Sketching`, `NLAlib.ForMathlib` as applicable.
+rename map, and final `lake build` outputs for `NLAlib.Probability.Concentration.Matrix`, `NLAlib.RandomMatrix.Gaussian.InverseMoments`,
+`NLAlib.Matrix.Spectral.Core`, `NLAlib.Sketching.Sparse.SparseFock`, `NLAlib.ForMathlib.Probability` as applicable.

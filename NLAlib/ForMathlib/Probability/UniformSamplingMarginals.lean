@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Probability.UniformSamplingCoupling
-
 /-!
 # Genuine marginals and symmetries of iid/subset sampling
 

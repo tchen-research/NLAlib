@@ -51,7 +51,7 @@ theorem fourier_nat_div_period_ne_one {k N : ℕ} (hk : 0 < k) (hkN : k < N) :
 
 /-- The real part of a period-`2π` Fourier monomial is the usual cosine frequency.
 Source: Trefethen, ATAP, Chapters 3 and 8; used by analytic Chebyshev approximation
-and sharp Jackson. Relocated unchanged from `NLAlib.Polynomial.AnalyticApproximation`. -/
+and sharp Jackson. Relocated unchanged from `NLAlib.Polynomial.FunctionApproximation.AnalyticApproximation`. -/
 theorem re_fourier_nat_coe_eq_cos (k : ℕ) (θ : ℝ) :
     (fourier (k : ℤ) (θ : AddCircle (2 * Real.pi))).re = Real.cos ((k : ℝ) * θ) := by
   rw [fourier_coe_apply]

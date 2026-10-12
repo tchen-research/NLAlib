@@ -45,15 +45,15 @@ chapter-numbered files; map in `docs/renames/2026-10-09-housekeeping-H1.json`):
 
 | Module | Contents |
 |---|---|
-| `NLAlib.Concentration.Matrix.Defs.Spectral` | `spectralNorm`, `lambdaMax`, `lambdaMin`, `matrixExp`, `matrixLog`, `traceExp`, `LoewnerLE` |
-| `NLAlib.Concentration.Matrix.Defs.Dilation` | `dilation` |
-| `NLAlib.Concentration.Matrix.Defs.Probability` | Borel instance on `Matrix m n ℂ`, `rectSecondMoment`, `hermitianSecondMoment`, `cumulantSum`, `bernsteinTail` |
-| `NLAlib.Concentration.Matrix.Defs.ScalarLaws` (was `Ch4ScalarLaws`) | `IsStandardGaussian`, `IsRademacher`, `gaussianSeriesTail` |
-| `NLAlib.Concentration.Matrix.Defs.ChernoffFunctions` (was `Ch5ChernoffFunctions`) | `chernoffCgfCoefficient`, `chernoffLowerTail`, `chernoffUpperTail` |
-| `NLAlib.Concentration.Matrix.Defs.IntrinsicDimension` (was `Ch7Intrinsic`) | `intrinsicDimension`, `traceFunction` |
-| `NLAlib.Concentration.Matrix.Defs.RelativeEntropy` (was `Ch8Entropy`) | `matrixFunction`, `relativeEntropy`, `OperatorConvexOn`, `matrixPerspective` |
-| `NLAlib.Concentration.Matrix.Defs.JointTensor` (was `Ch8JointTensor`) | `jointTensorLeft`, `jointTensorRight`, `jointTensorVec`, `jointTensorEval` |
-| `NLAlib.Concentration.Matrix.Defs.Calculus` | shared lemmas: `matrixExp_smul_eq_cfc`, `traceExp_smul_eq_sum`, `abs_le_norm_of_mem_spectrum`, reindexing (`reindexStarAlgEquiv`, `norm_reindex`, `lambdaMax_reindex`, `integral_reindex`), `dilationLinearMap`, `dilation_sq`, `integral_fromBlocks_diag` |
+| `NLAlib.Matrix.Functions.ExpLog` | `spectralNorm`, `lambdaMax`, `lambdaMin`, `matrixExp`, `matrixLog`, `traceExp`, `LoewnerLE` |
+| `NLAlib.Matrix.Basic.Dilation` | `dilation` |
+| `NLAlib.Probability.Concentration.Basic.MatrixStatistics` | Borel instance on `Matrix m n ℂ`, `rectSecondMoment`, `hermitianSecondMoment`, `cumulantSum`, `bernsteinTail` |
+| `NLAlib.Probability.Concentration.Basic.ScalarLaws` (was `Ch4ScalarLaws`) | `IsStandardGaussian`, `IsRademacher`, `gaussianSeriesTail` |
+| `NLAlib.Probability.Concentration.Basic.ChernoffFunctions` (was `Ch5ChernoffFunctions`) | `chernoffCgfCoefficient`, `chernoffLowerTail`, `chernoffUpperTail` |
+| `NLAlib.Probability.Concentration.Basic.IntrinsicDimension` (was `Ch7Intrinsic`) | `intrinsicDimension`, `traceFunction` |
+| `NLAlib.Matrix.OperatorTheory.Basic` (was `Ch8Entropy`) | `matrixFunction`, `relativeEntropy`, `OperatorConvexOn`, `matrixPerspective` |
+| `NLAlib.Matrix.OperatorTheory.JointTensor` (was `Ch8JointTensor`) | `jointTensorLeft`, `jointTensorRight`, `jointTensorVec`, `jointTensorEval` |
+| `NLAlib.Probability.Concentration.Basic.MatrixCalculus` | shared lemmas: `matrixExp_smul_eq_cfc`, `traceExp_smul_eq_sum`, `abs_le_norm_of_mem_spectrum`, reindexing (`reindexStarAlgEquiv`, `norm_reindex`, `lambdaMax_reindex`, `integral_reindex`), `dilationLinearMap`, `dilation_sq`, `integral_fromBlocks_diag` |
 
 Random matrices are measurable functions into `Matrix (Fin d) (Fin d) ℂ` with the Borel σ-algebra, expectations are Bochner integrals for the operator norm, and the usual Lean conventions apply (real division by zero is zero, so the tail expressions are defined piecewise to match the source exactly in the degenerate cases).
 
@@ -64,55 +64,55 @@ are listed in `docs/renames/2026-10-09-concentration.json`.
 
 | Chapter | Result | Lean declaration | Module |
 |---|---|---|---|
-| 3 | Hermitian exponential is positive definite and logarithm is its inverse | `NLAlib.posDef_matrixExp_and_matrixLog_matrixExp` | `NLAlib.Concentration.Matrix.Laplace.CgfExpLog` |
-| 3 | Lieb replacement for an independent random matrix offset | `NLAlib.integral_traceExp_add_le_integral_traceExp_add_matrixLog` | `NLAlib.Concentration.Matrix.Laplace.CgfIndependentReplacement` |
-| 3 | Integrability of extreme eigenvalues | `NLAlib.integrable_lambdaMax_and_lambdaMin` | `NLAlib.Concentration.Matrix.Laplace.ExpectExtremaIntegrable` |
-| 3 | Proposition 3.2.2 — Expectation bounds for eigenvalues | `NLAlib.integral_lambdaMax_le_and_le_integral_lambdaMin` | `NLAlib.Concentration.Matrix.Laplace.LaplaceExpectations` |
-| 3 | Proposition 3.2.1 — Tail bounds for eigenvalues | `NLAlib.measure_lambdaMax_ge_le_and_measure_lambdaMin_le_le` | `NLAlib.Concentration.Matrix.Laplace.LaplaceTails` |
-| 3 | Expectation of an almost surely positive-definite matrix | `NLAlib.posDef_integral_of_ae_posDef` | `NLAlib.Concentration.Matrix.Laplace.LiebIntegralPosDef` |
-| 3 | Jensen inequality on a nonclosed convex domain | `NLAlib.ConcaveOn.le_map_integral_of_integral_mem` | `NLAlib.Concentration.Matrix.Laplace.LiebJensen` |
-| 3 | Exponential integrability survives a fixed Hermitian shift | `NLAlib.integrable_matrixExp_add_and_traceExp_add` | `NLAlib.Concentration.Matrix.Laplace.LiebRegularityShiftIntegrable` |
-| 3 | Theorem 3.6.1 — Master expectation and tail bounds | `NLAlib.master_bounds` | `NLAlib.Concentration.Matrix.Laplace.MasterBounds` |
-| 3 | Exponential integrability of an independent Hermitian sum | `NLAlib.integrable_matrixExp_smul_sum_of_iIndepFun` | `NLAlib.Concentration.Matrix.Laplace.MasterSumExponentialIntegrable` |
-| 3 | Corollary 3.4.2 — Probabilistic Lieb inequality | `NLAlib.integral_traceExp_add_le_traceExp_add_matrixLog` | `NLAlib.Concentration.Matrix.Laplace.ProbabilisticLieb` |
-| 3 | Trace exponential dominates exponentials of extremal eigenvalues | `NLAlib.exp_mul_lambdaMax_lambdaMin_le_traceExp_smul` | `NLAlib.Concentration.Matrix.Laplace.TailSpectralComparison` |
-| 3 | Lemma 3.5.1 — Subadditivity of matrix cgfs | `NLAlib.trace_cgf_subadditivity` | `NLAlib.Concentration.Matrix.Laplace.TraceCgfSubadditivity` |
-| 4 | Lemma 4.6.2 — Gaussian matrix mgf and cgf identities | `NLAlib.gaussian_matrix_mgf_cgf_eq` | `NLAlib.Concentration.Matrix.Series.GaussianMgfCgf` |
-| 4 | Theorem 4.6.1 — Hermitian Gaussian and Rademacher series | `NLAlib.hermitian_gaussian_series` | `NLAlib.Concentration.Matrix.Series.HermitianSeries` |
-| 4 | Theorem 4.1.1 — Matrix Gaussian and Rademacher series | `NLAlib.matrix_gaussian_series` | `NLAlib.Concentration.Matrix.Series.MatrixSeries` |
-| 4 | Lemma 4.6.3 — Rademacher matrix mgf and cgf bounds | `NLAlib.rademacher_matrix_mgf_cgf_le` | `NLAlib.Concentration.Matrix.Series.RademacherMgfCgf` |
-| 5 | Lemma 5.4.1 — Matrix Chernoff mgf and cgf bounds | `NLAlib.chernoff_matrix_mgf_cgf_le` | `NLAlib.Concentration.Matrix.Chernoff.ChernoffMgfCgf` |
-| 5 | Theorem 5.1.1 — Matrix Chernoff, both spectral sides | `NLAlib.matrix_chernoff` | `NLAlib.Concentration.Matrix.Chernoff.MatrixChernoff` |
-| 6 | Lemma 6.6.2 — Matrix Bernstein mgf and cgf bounds | `NLAlib.bernstein_matrix_mgf_cgf_le` | `NLAlib.Concentration.Matrix.Bernstein.BernsteinMgfCgf` |
-| 6 | Equations 2.1.27–2.1.28 — Hermitian dilation identities | `NLAlib.dilation_identities` | `NLAlib.Concentration.Matrix.Bernstein.DilationIdentities` |
-| 6 | Equation 2.2.10 — Variance statistic under dilation | `NLAlib.hermitianSecondMoment_dilation_eq_rectSecondMoment` | `NLAlib.Concentration.Matrix.Bernstein.DilationVariance` |
-| 6 | Theorem 6.6.1 — Hermitian matrix Bernstein | `NLAlib.hermitian_bernstein` | `NLAlib.Concentration.Matrix.Bernstein.HermitianBernstein` |
-| 6 | Second moment of an independent centered matrix sum: cross terms vanish | `NLAlib.integral_sum_mul_sum_eq_sum_integral_mul` | `NLAlib.Concentration.Matrix.Bernstein.IndependentSumSecondMoment` |
-| 6 | Theorem 6.1.1 — Matrix Bernstein for rectangular matrices | `NLAlib.matrix_bernstein` | `NLAlib.Concentration.Matrix.Bernstein.MatrixBernstein` |
-| 6 | Equation 2.2.5 — Additivity of matrix variance | `NLAlib.variance_additivity` | `NLAlib.Concentration.Matrix.Bernstein.VarianceAdditivity` |
-| 7 | Equation 7.3.4 — Intrinsic dimension of variance blocks | `NLAlib.intrinsicDimension_fromBlocks` | `NLAlib.Concentration.Matrix.Intrinsic.BlockIntrinsic` |
-| 7 | Proposition 7.4.1 — Generalized matrix Laplace transform | `NLAlib.measure_lambdaMax_ge_le_integral_traceFunction_div` | `NLAlib.Concentration.Matrix.Intrinsic.GeneralizedLaplace` |
-| 7 | Theorem 7.3.1 — Intrinsic matrix Bernstein | `NLAlib.intrinsic_matrix_bernstein` | `NLAlib.Concentration.Matrix.Intrinsic.IntrinsicBernstein` |
-| 7 | Corollary 7.3.2 — Intrinsic Bernstein expectation bound | `NLAlib.intrinsic_matrix_bernstein_expectation` | `NLAlib.Concentration.Matrix.Intrinsic.IntrinsicBernsteinExpectation` |
-| 7 | Theorem 7.2.1 — Intrinsic matrix Chernoff | `NLAlib.intrinsic_matrix_chernoff` | `NLAlib.Concentration.Matrix.Intrinsic.IntrinsicChernoff` |
-| 7 | Lemma 7.5.1 — Intrinsic dimension trace inequality | `NLAlib.traceFunction_le_intrinsicDimension_mul` | `NLAlib.Concentration.Matrix.Intrinsic.IntrinsicDimension` |
-| 7 | Theorem 7.7.1 — Intrinsic Hermitian matrix Bernstein | `NLAlib.intrinsic_hermitian_bernstein` | `NLAlib.Concentration.Matrix.Intrinsic.IntrinsicHermitianBernstein` |
-| 8 | Theorem 8.1.4 — Joint convexity of matrix relative entropy | `NLAlib.convexOn_relativeEntropy` | `NLAlib.Concentration.Matrix.OperatorConvexity.EntropyJointConvex` |
-| 8 | Proposition 8.1.3 — Matrix relative entropy is nonnegative | `NLAlib.relativeEntropy_nonneg` | `NLAlib.Concentration.Matrix.OperatorConvexity.EntropyNonnegative` |
-| 8 | Proposition 8.3.5 — Generalized Klein inequality | `NLAlib.generalized_klein` | `NLAlib.Concentration.Matrix.OperatorConvexity.GeneralizedKlein` |
-| 8 | Functional calculus and spectrum of a block-diagonal Hermitian matrix | `NLAlib.matrixFunction_fromBlocks` | `NLAlib.Concentration.Matrix.OperatorConvexity.JensenBlockCalculus` |
-| 8 | Operator convexity under isometric compression | `NLAlib.OperatorConvexOn.matrixFunction_conjTranspose_mul_mul_le` | `NLAlib.Concentration.Matrix.OperatorConvexity.JensenIsometricCompression` |
-| 8 | Hermitian unitary dilation of an isometry | `NLAlib.isometry_reflection_identities` | `NLAlib.Concentration.Matrix.OperatorConvexity.JensenReflectionAlgebra` |
-| 8 | Relative entropy as a tensor perspective | `NLAlib.relativeEntropy_eq_jointTensorEval_sub_trace` | `NLAlib.Concentration.Matrix.OperatorConvexity.JointTensorRepresentation` |
-| 8 | Theorem 8.1.1 — Lieb concavity | `NLAlib.lieb_concavity` | `NLAlib.Concentration.Matrix.OperatorConvexity.LiebConcavity` |
-| 8 | Proposition 8.4.8 — Logarithm is operator concave | `NLAlib.operatorConvexOn_neg_log` | `NLAlib.Concentration.Matrix.OperatorConvexity.LogOperatorConcave` |
-| 8 | Proposition 8.4.4 — Logarithm is operator monotone | `NLAlib.matrixLog_le_matrixLog` | `NLAlib.Concentration.Matrix.OperatorConvexity.LogOperatorMonotone` |
-| 8 | Theorem 8.5.2 — Operator Jensen inequality | `NLAlib.operator_jensen` | `NLAlib.Concentration.Matrix.OperatorConvexity.OperatorJensen` |
-| 8 | Theorem 8.6.2 — Matrix perspective is jointly operator convex | `NLAlib.matrixPerspective_jointly_operatorConvex` | `NLAlib.Concentration.Matrix.OperatorConvexity.PerspectiveConvex` |
-| 8 | Square-root and inverse-square-root identities for positive definite matrices | `NLAlib.matrixFunction_sqrt_identities` | `NLAlib.Concentration.Matrix.OperatorConvexity.PerspectiveSqrtNormalization` |
-| 8 | Example 8.3.4 — Trace exponential is monotone | `NLAlib.traceExp_le_traceExp` | `NLAlib.Concentration.Matrix.OperatorConvexity.TraceExpMonotone` |
-| 8 | Lemma 8.1.6 — Attained variational formula for trace | `NLAlib.isGreatest_variational_trace` | `NLAlib.Concentration.Matrix.OperatorConvexity.VariationalTrace` |
-| 8 | Equation 8.1.2 — Variational trace exponential | `NLAlib.isGreatest_variational_traceExp` | `NLAlib.Concentration.Matrix.OperatorConvexity.VariationalTraceExp` |
+| 3 | Hermitian exponential is positive definite and logarithm is its inverse | `NLAlib.posDef_matrixExp_and_matrixLog_matrixExp` | `NLAlib.Matrix.Functions.ExpLogPosDef` |
+| 3 | Lieb replacement for an independent random matrix offset | `NLAlib.integral_traceExp_add_le_integral_traceExp_add_matrixLog` | `NLAlib.Probability.Concentration.Matrix.CgfIndependentReplacement` |
+| 3 | Integrability of extreme eigenvalues | `NLAlib.integrable_lambdaMax_and_lambdaMin` | `NLAlib.Probability.Concentration.Matrix.ExpectExtremaIntegrable` |
+| 3 | Proposition 3.2.2 — Expectation bounds for eigenvalues | `NLAlib.integral_lambdaMax_le_and_le_integral_lambdaMin` | `NLAlib.Probability.Concentration.Matrix.LaplaceExpectations` |
+| 3 | Proposition 3.2.1 — Tail bounds for eigenvalues | `NLAlib.measure_lambdaMax_ge_le_and_measure_lambdaMin_le_le` | `NLAlib.Probability.Concentration.Matrix.LaplaceTails` |
+| 3 | Expectation of an almost surely positive-definite matrix | `NLAlib.posDef_integral_of_ae_posDef` | `NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef` |
+| 3 | Jensen inequality on a nonclosed convex domain | `NLAlib.ConcaveOn.le_map_integral_of_integral_mem` | `NLAlib.Probability.Concentration.Matrix.LiebJensen` |
+| 3 | Exponential integrability survives a fixed Hermitian shift | `NLAlib.integrable_matrixExp_add_and_traceExp_add` | `NLAlib.Probability.Concentration.Matrix.LiebRegularityShiftIntegrable` |
+| 3 | Theorem 3.6.1 — Master expectation and tail bounds | `NLAlib.master_bounds` | `NLAlib.Probability.Concentration.Matrix.MasterBounds` |
+| 3 | Exponential integrability of an independent Hermitian sum | `NLAlib.integrable_matrixExp_smul_sum_of_iIndepFun` | `NLAlib.Probability.Concentration.Matrix.MasterSumExponentialIntegrable` |
+| 3 | Corollary 3.4.2 — Probabilistic Lieb inequality | `NLAlib.integral_traceExp_add_le_traceExp_add_matrixLog` | `NLAlib.Probability.Concentration.Matrix.ProbabilisticLieb` |
+| 3 | Trace exponential dominates exponentials of extremal eigenvalues | `NLAlib.exp_mul_lambdaMax_lambdaMin_le_traceExp_smul` | `NLAlib.Probability.Concentration.Matrix.TailSpectralComparison` |
+| 3 | Lemma 3.5.1 — Subadditivity of matrix cgfs | `NLAlib.trace_cgf_subadditivity` | `NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity` |
+| 4 | Lemma 4.6.2 — Gaussian matrix mgf and cgf identities | `NLAlib.gaussian_matrix_mgf_cgf_eq` | `NLAlib.Probability.Concentration.Matrix.GaussianMgfCgf` |
+| 4 | Theorem 4.6.1 — Hermitian Gaussian and Rademacher series | `NLAlib.hermitian_gaussian_series` | `NLAlib.Probability.Concentration.Matrix.HermitianSeries` |
+| 4 | Theorem 4.1.1 — Matrix Gaussian and Rademacher series | `NLAlib.matrix_gaussian_series` | `NLAlib.Probability.Concentration.Matrix.MatrixSeries` |
+| 4 | Lemma 4.6.3 — Rademacher matrix mgf and cgf bounds | `NLAlib.rademacher_matrix_mgf_cgf_le` | `NLAlib.Probability.Concentration.Matrix.RademacherMgfCgf` |
+| 5 | Lemma 5.4.1 — Matrix Chernoff mgf and cgf bounds | `NLAlib.chernoff_matrix_mgf_cgf_le` | `NLAlib.Probability.Concentration.Matrix.ChernoffMgfCgf` |
+| 5 | Theorem 5.1.1 — Matrix Chernoff, both spectral sides | `NLAlib.matrix_chernoff` | `NLAlib.Probability.Concentration.Matrix.MatrixChernoff` |
+| 6 | Lemma 6.6.2 — Matrix Bernstein mgf and cgf bounds | `NLAlib.bernstein_matrix_mgf_cgf_le` | `NLAlib.Probability.Concentration.Matrix.BernsteinMgfCgf` |
+| 6 | Equations 2.1.27–2.1.28 — Hermitian dilation identities | `NLAlib.dilation_identities` | `NLAlib.Probability.Concentration.Matrix.DilationIdentities` |
+| 6 | Equation 2.2.10 — Variance statistic under dilation | `NLAlib.hermitianSecondMoment_dilation_eq_rectSecondMoment` | `NLAlib.Probability.Concentration.Matrix.DilationVariance` |
+| 6 | Theorem 6.6.1 — Hermitian matrix Bernstein | `NLAlib.hermitian_bernstein` | `NLAlib.Probability.Concentration.Matrix.HermitianBernstein` |
+| 6 | Second moment of an independent centered matrix sum: cross terms vanish | `NLAlib.integral_sum_mul_sum_eq_sum_integral_mul` | `NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment` |
+| 6 | Theorem 6.1.1 — Matrix Bernstein for rectangular matrices | `NLAlib.matrix_bernstein` | `NLAlib.Probability.Concentration.Matrix.MatrixBernstein` |
+| 6 | Equation 2.2.5 — Additivity of matrix variance | `NLAlib.variance_additivity` | `NLAlib.Probability.Concentration.Matrix.VarianceAdditivity` |
+| 7 | Equation 7.3.4 — Intrinsic dimension of variance blocks | `NLAlib.intrinsicDimension_fromBlocks` | `NLAlib.Probability.Concentration.Matrix.BlockIntrinsic` |
+| 7 | Proposition 7.4.1 — Generalized matrix Laplace transform | `NLAlib.measure_lambdaMax_ge_le_integral_traceFunction_div` | `NLAlib.Probability.Concentration.Matrix.GeneralizedLaplace` |
+| 7 | Theorem 7.3.1 — Intrinsic matrix Bernstein | `NLAlib.intrinsic_matrix_bernstein` | `NLAlib.Probability.Concentration.Matrix.IntrinsicBernstein` |
+| 7 | Corollary 7.3.2 — Intrinsic Bernstein expectation bound | `NLAlib.intrinsic_matrix_bernstein_expectation` | `NLAlib.Probability.Concentration.Matrix.IntrinsicBernsteinExpectation` |
+| 7 | Theorem 7.2.1 — Intrinsic matrix Chernoff | `NLAlib.intrinsic_matrix_chernoff` | `NLAlib.Probability.Concentration.Matrix.IntrinsicChernoff` |
+| 7 | Lemma 7.5.1 — Intrinsic dimension trace inequality | `NLAlib.traceFunction_le_intrinsicDimension_mul` | `NLAlib.Probability.Concentration.Matrix.IntrinsicDimension` |
+| 7 | Theorem 7.7.1 — Intrinsic Hermitian matrix Bernstein | `NLAlib.intrinsic_hermitian_bernstein` | `NLAlib.Probability.Concentration.Matrix.IntrinsicHermitianBernstein` |
+| 8 | Theorem 8.1.4 — Joint convexity of matrix relative entropy | `NLAlib.convexOn_relativeEntropy` | `NLAlib.Matrix.OperatorTheory.EntropyJointConvex` |
+| 8 | Proposition 8.1.3 — Matrix relative entropy is nonnegative | `NLAlib.relativeEntropy_nonneg` | `NLAlib.Matrix.OperatorTheory.EntropyNonnegative` |
+| 8 | Proposition 8.3.5 — Generalized Klein inequality | `NLAlib.generalized_klein` | `NLAlib.Matrix.OperatorTheory.GeneralizedKlein` |
+| 8 | Functional calculus and spectrum of a block-diagonal Hermitian matrix | `NLAlib.matrixFunction_fromBlocks` | `NLAlib.Matrix.Functions.JensenBlockCalculus` |
+| 8 | Operator convexity under isometric compression | `NLAlib.OperatorConvexOn.matrixFunction_conjTranspose_mul_mul_le` | `NLAlib.Matrix.OperatorTheory.JensenIsometricCompression` |
+| 8 | Hermitian unitary dilation of an isometry | `NLAlib.isometry_reflection_identities` | `NLAlib.Matrix.OperatorTheory.JensenReflectionAlgebra` |
+| 8 | Relative entropy as a tensor perspective | `NLAlib.relativeEntropy_eq_jointTensorEval_sub_trace` | `NLAlib.Matrix.OperatorTheory.JointTensorRepresentation` |
+| 8 | Theorem 8.1.1 — Lieb concavity | `NLAlib.lieb_concavity` | `NLAlib.Matrix.OperatorTheory.LiebConcavity` |
+| 8 | Proposition 8.4.8 — Logarithm is operator concave | `NLAlib.operatorConvexOn_neg_log` | `NLAlib.Matrix.OperatorTheory.LogOperatorConcave` |
+| 8 | Proposition 8.4.4 — Logarithm is operator monotone | `NLAlib.matrixLog_le_matrixLog` | `NLAlib.Matrix.OperatorTheory.LogOperatorMonotone` |
+| 8 | Theorem 8.5.2 — Operator Jensen inequality | `NLAlib.operator_jensen` | `NLAlib.Matrix.OperatorTheory.OperatorJensen` |
+| 8 | Theorem 8.6.2 — Matrix perspective is jointly operator convex | `NLAlib.matrixPerspective_jointly_operatorConvex` | `NLAlib.Matrix.OperatorTheory.PerspectiveConvex` |
+| 8 | Square-root and inverse-square-root identities for positive definite matrices | `NLAlib.matrixFunction_sqrt_identities` | `NLAlib.Matrix.Functions.PerspectiveSqrtNormalization` |
+| 8 | Example 8.3.4 — Trace exponential is monotone | `NLAlib.traceExp_le_traceExp` | `NLAlib.Matrix.Inequalities.TraceExpMonotone` |
+| 8 | Lemma 8.1.6 — Attained variational formula for trace | `NLAlib.isGreatest_variational_trace` | `NLAlib.Matrix.OperatorTheory.VariationalTrace` |
+| 8 | Equation 8.1.2 — Variational trace exponential | `NLAlib.isGreatest_variational_traceExp` | `NLAlib.Matrix.OperatorTheory.VariationalTraceExp` |
 
 ## Building
 

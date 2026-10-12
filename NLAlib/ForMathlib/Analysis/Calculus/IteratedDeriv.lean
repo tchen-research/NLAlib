@@ -7,7 +7,7 @@ import Mathlib.Analysis.Calculus.Deriv.Polynomial
 `iteratedDeriv_sub_eval_eqOn`: on an open set where `f, f', …, f^{(n−1)}` are differentiable,
 the `k`-th derivative (`k ≤ n`) of `f − p` is `f^{(k)} − p^{(k)}`. A general calculus fact, not
 about NLAlib's objects; candidate for upstreaming to `Mathlib/Analysis/Calculus/IteratedDeriv/`.
-Used by `NLAlib.Polynomial.Interpolation` (atlas `interpolation-remainder`).
+Used by `NLAlib.Polynomial.Interpolation.Lagrange` (atlas `interpolation-remainder`).
 -/
 
 namespace NLAlib

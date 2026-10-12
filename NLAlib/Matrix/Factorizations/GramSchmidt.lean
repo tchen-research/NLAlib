@@ -1,6 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
 import NLAlib.Matrix.Factorizations.QR
-
 /-!
 # Gram–Schmidt orthogonalisation (classical and modified)
 
@@ -348,7 +347,7 @@ theorem gramSchmidtSucceeds_iff_linearIndependent (A : Matrix m (Fin n) ℝ) :
 
 /-- `Q` is a **graded orthonormal basis of the column flag of `A`**: `Q` has orthonormal columns
 and, for each `k`, its first `k + 1` columns span the first `k + 1` columns of `A`. The analogue
-of `IsGradedKrylovBasis` (`NLAlib.Krylov.Arnoldi`) with `K_{k+1}(A, b)` replaced by
+of `IsGradedKrylovBasis` (`NLAlib.Krylov.Processes.Arnoldi`) with `K_{k+1}(A, b)` replaced by
 `span(a_0, …, a_k)`. Trefethen–Bau 1997, Lect. 7, eq. (7.1); Golub–Van Loan 2013, §5.2.
 atlas: gram-schmidt -/
 structure IsGradedColumnBasis (A Q : Matrix m (Fin n) ℝ) : Prop where

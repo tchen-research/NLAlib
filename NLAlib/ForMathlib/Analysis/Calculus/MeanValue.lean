@@ -6,7 +6,7 @@ import Mathlib.Analysis.Calculus.MeanValue
 `abs_le_abs_add_mul_abs_of_abs_deriv_le`: a differentiable `f : ℝ → ℝ` with `|f'| ≤ C` satisfies
 `|f z| ≤ |f 0| + C |z|`. A general consequence of the mean value inequality, not about NLAlib's
 objects; candidate for upstreaming to `Mathlib/Analysis/Calculus/MeanValue.lean`. Used throughout
-`NLAlib.Gaussian.Concentration` (atlas `gaussian-integration-by-parts`).
+`NLAlib.Probability.Gaussian.Calculus` (atlas `gaussian-integration-by-parts`).
 -/
 
 namespace NLAlib

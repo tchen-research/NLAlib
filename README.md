@@ -15,11 +15,11 @@ NLAlib/
   ForMathlib/     general facts headed upstream                                        (layer −1)
   Matrix/         norms, projections, pseudoinverse, SVD, spectral, measurability      (layer 0)
   Polynomial/     Chebyshev growth and minimax, Markov, interpolation                  (layer 0)
-  Concentration/  Scalar/ tail integrals, entropy; Matrix/ = Tropp 2015 Ch. 3–8        (layer 1)
-  Krylov/         Krylov spaces, Lanczos, CG (deterministic)                           (layer 1)
-  Gaussian/       Basic, Invariance, Moments/, Conditioning, Concentration/ (log-Sobolev,
-                  Herbst), Comparison/ (Slepian, Gordon), Extreme/ (singular values,
-                  chi-square, small ball), InverseMoments/ (Wishart, pseudoinverse)     (layer 2)
+  Probability/    Gaussian/ (scalar and vector facts), Concentration/ (Scalar, Matrix = Tropp
+                  2015 Ch. 3–8, QuadraticForms, Entropy, Martingales), SubGaussian/, Rademacher/,
+                  ChiSquare/, Sampling/                                                (layer 1)
+  RandomMatrix/   Gaussian/ (Basic, Invariance, Moments, Spectral, Wishart, InverseMoments),
+                  SubGaussian/, Haar/                                                     (layer 2)
   Sketching/      subspace embeddings, JL                                              (layer 3)
   LowRank/ Estimation/   range finder, RSVD, generalized Nyström; Hutchinson, randomized
                          Krylov estimators                                              (layer 4)

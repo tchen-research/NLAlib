@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Factorizations.Householder
 import NLAlib.Matrix.Factorizations.Givens
-
 /-!
 # Reduction to upper Hessenberg form
 
@@ -24,7 +23,7 @@ by accumulating `PAP` in place is a deviation from Trefethen–Bau Alg. 26.1 in 
 
 The link with the Krylov layer (the columns of `Q` are the Arnoldi basis of `(A, q₁)`, and the
 implicit Q theorem is `ArnoldiDecomp.exists_sign`) cannot be stated here (layer 0 does not import
-`Krylov`); it belongs in `NLAlib.Krylov`.
+`Krylov`); it belongs in `NLAlib.Krylov.Solvers`.
 
 Sources: Trefethen–Bau 1997 [`tb97`], Lect. 26 (Alg. 26.1); Golub–Van Loan 2013 [`gvl13`],
 §7.4.3 (Alg. 7.4.2), Thm 7.4.2 (implicit Q), §8.3.1 (tridiagonalisation).

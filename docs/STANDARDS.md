@@ -40,8 +40,14 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
 - One concept per file, under about 500 lines, `UpperCamelCase.lean`, with a module docstring
   `/-! # Title … -/` that says what the file provides and names the atlas ids it realises.
 - Layers (a module imports only its own layer and lower; `scripts/check_layers.py`):
-  −1 `ForMathlib` · 0 `Matrix`, `Polynomial` · 1 `Concentration`, `Krylov` · 2 `Gaussian` · 3 `Sketching` ·
-  4 `LowRank`, `Estimation` · 5 `Solvers`. `Krylov` is the deterministic theory (Krylov spaces,
+  −1 `ForMathlib` · 0 `Matrix`, `Polynomial` · 1 `Probability`, `Krylov` · 2 `RandomMatrix` · 3 `Sketching` ·
+  4 `LowRank`, `Estimation` · 5 `Solvers`. Each top-level directory is split into topic subdirectories
+  (`Matrix/{Basic,Norms,Spectral,Subspaces,Factorizations,Perturbation,Inequalities,OperatorTheory,
+  Functions,Structured,Calculus}`, `Probability/{Gaussian,Concentration,…}`, `RandomMatrix/{Gaussian,…}`,
+  …; see `docs/REORG_PLAN.md`); content files live in those subdirectories and every `<Dir>.lean` is a
+  generated aggregator (`scripts/reorg.py`), never edited by hand. Inside a leaf, `Basic.lean` holds
+  definitions and their simp-level API only; a leaf's namesake file that carries theory as well is
+  `Core.lean` (`Matrix/Norms/Core.lean`, `Matrix/Spectral/Core.lean`, …). `Krylov` is the deterministic theory (Krylov spaces,
   Lanczos, CG, Gauss quadrature); randomized Krylov guarantees live with their consumers in
   `LowRank` and `Estimation`. Krylov methods are defined by predicates or compressions, never by
   recurrences, and use two interfaces: "any orthonormal `Q` containing `K_q`" for approximant

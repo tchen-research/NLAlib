@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.LinearAlgebra.CommonEigenvector
-
 /-!
 # Common eigenvectors with one prescribed eigenvalue
 

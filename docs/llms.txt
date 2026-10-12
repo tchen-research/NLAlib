@@ -10,7 +10,7 @@ Lean v4.33.1, Mathlib pinned in lake-manifest.json. Namespace `NLAlib`.
   (definitions the statement is written with), depends_on[] (proof dependencies), variants[],
   sources[] {source, label}, mathlib_prereqs[] {decl, present}.
 - declarations.json: every public Lean declaration (matrix concentration ones are under
-  NLAlib.Concentration.Matrix.*): name, kind, module, line, signature
+  NLAlib.Probability.Concentration.Matrix.*): name, kind, module, line, signature
   (pretty-printed), doc, sorry (depends on sorryAx). Generated from the built library.
 
 ## How to find a fact

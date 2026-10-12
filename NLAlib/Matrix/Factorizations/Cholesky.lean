@@ -1,6 +1,5 @@
 import Mathlib.Analysis.Real.Sqrt
 import NLAlib.Matrix.Factorizations.LU
-
 /-!
 # Cholesky factorization and the Cholesky recursion
 

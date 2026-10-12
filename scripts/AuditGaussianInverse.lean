@@ -1,5 +1,4 @@
-import NLAlib.Gaussian.InverseMoments.SpectralTail
-
+import NLAlib.RandomMatrix.Gaussian.InverseMoments.SpectralTail
 /-!
 # Required completion audit for the four operator rederivations
 

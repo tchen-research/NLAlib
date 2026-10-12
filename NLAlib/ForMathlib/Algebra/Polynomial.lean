@@ -15,7 +15,7 @@ General facts not about NLAlib's objects; candidates for upstreaming to
 * `eval_iterate_derivative_natDegree`: the `n`-th derivative of a degree-`n` polynomial is the
   constant `n! · leadingCoeff`.
 
-Used by `NLAlib.Polynomial.Minimax` and `NLAlib.Polynomial.Interpolation`.
+Used by `NLAlib.Polynomial.BestApproximation.Minimax` and `NLAlib.Polynomial.Interpolation.Lagrange`.
 -/
 
 namespace NLAlib

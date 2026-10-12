@@ -1,8 +1,7 @@
 import Mathlib.GroupTheory.Perm.Fin
 import Mathlib.LinearAlgebra.Matrix.Permutation
 import NLAlib.Matrix.Factorizations.Triangular
-import NLAlib.Matrix.SchurComplement
-
+import NLAlib.Matrix.Basic.SchurComplement
 /-!
 # LU factorization and Gaussian elimination
 

@@ -15,8 +15,8 @@ success, an abandoned target is not. Never scaffold something you are not sure i
 written. Constants explicit, `[Fintype ι]` unless a Gaussian law is involved, no `Fin`-only
 statements where a general index type works.
 
-Layering facts for this round: `quadForm` is now `NLAlib.Matrix.QuadForm` (layer 0) and the
-public Hanson–Wright theorems are `NLAlib.Concentration.HansonWright` (layer 1). Krylov is
+Layering facts for this round: `quadForm` is now `NLAlib.Matrix.Basic.QuadForm` (layer 0) and the
+public Hanson–Wright theorems are `NLAlib.Probability.Concentration.QuadraticForms.HansonWright` (layer 1). Krylov is
 layer 1 (imports Matrix, Polynomial, ForMathlib only). Polynomial facts: `NLAlib/Polynomial/*`
 (`inv_eval_T_real_le_of_forall_abs_eval_le`, `abs_eval_chebyshevResidual_le_two_mul_pow`,
 `exists_degree_lt_abs_eval_sub_inv_le`, `chebyshevAmplifier`, Markov, interpolation).
@@ -29,10 +29,10 @@ new `Matrix/PolynomialCalculus.lean`, `Matrix/CourantFischer.lean`, `Matrix/Weyl
 olean after each of the first two steps, because groups C and D poll for them:
 1. G0 C1 (spectral-norm helpers, into `Norms.lean`) and G0 C5 / G3 C1 (`specNorm_aeval_le` and
    the vector / energy forms `‖p(A)v‖ ≤ max|p(λᵢ)| ‖v‖`, into `PolynomialCalculus.lean`).
-   `lake build NLAlib.Matrix.Norms NLAlib.Matrix.PolynomialCalculus`.
+   `lake build NLAlib.Matrix.Norms.Basic NLAlib.Matrix.Functions.PolynomialCalculus`.
 2. G0 C4 (the von Neumann rank corollary `⟨X,E⟩ ≤ √r ‖X‖_F ‖E‖` for `rank X ≤ r`, into
    `VonNeumann.lean`) and G0 C3 (`specNorm (A − truncatedSVD A k) = σ_k`, into `EckartYoung.lean`).
-   `lake build NLAlib.Matrix.VonNeumann NLAlib.Matrix.EckartYoung`.
+   `lake build NLAlib.Matrix.Inequalities.VonNeumann NLAlib.Matrix.Spectral.EckartYoung`.
 3. G0 A1 Courant–Fischer (prove it; scaffold the two halves if it does not close), then
    G0 B1 (singular-value form), B2 (Weyl `σ_{i+j}(A+B) ≤ σ_i(A)+σ_j(B)`), B3 (`|σ_k(A+E)−σ_k(A)| ≤ ‖E‖`),
    B5 (Eckart–Young spectral lower bound), B8 (Cauchy interlacing), B6, B7.
@@ -45,7 +45,7 @@ olean after each of the first two steps, because groups C and D poll for them:
 for the new import). Goal: `jl_distributional` proved, the four `jl_lemma*` declarations sorry-free.
 1. G1 C1 chi-square upper tail (Chernoff and Laurent–Massart forms) and G1 C2 sharp lower tail
    (make `measureReal_sum_sq_le_le_exp_mul` public under a STANDARDS name, add the Laurent–Massart
-   lower form). Build `NLAlib.Gaussian.Extreme.ChiSquare`.
+   lower form). Build `NLAlib.Probability.ChiSquare.ChiSquare`.
 2. G1 C3 / G2 C10: law of `G x` for a unit vector, `gaussianMatrix_map_transpose`,
    `gaussianMatrix_map_mul_right` (into `LinearImage.lean`). Build it; group C polls for it.
 3. The two log inequalities (G2 C1(d)) into `ForMathlib/Analysis/Real.lean`.
@@ -55,8 +55,8 @@ for the new import). Goal: `jl_distributional` proved, the four `jl_lemma*` decl
 **R6-C — sketching and low-rank** (new `NLAlib/LowRank/SpectralRangeFinder.lean`,
 `LowRank/PowerIteration.lean`, `LowRank/Nystrom.lean`, `Sketching/Leverage.lean`,
 `Sketching/GaussianEmbedding.lean`, `Sketching/ApproxMultiplication.lean`; aggregators
-`LowRank.lean`, `Sketching.lean`). Poll `lake build NLAlib.Matrix.Norms` (R6-A step 1) before
-starting item 1, and `NLAlib.Gaussian.LinearImage` (R6-B step 2) before item 5.
+`LowRank.lean`, `Sketching.lean`). Poll `lake build NLAlib.Matrix.Norms.Basic` (R6-A step 1) before
+starting item 1, and `NLAlib.RandomMatrix.Gaussian.Invariance.LinearImage` (R6-B step 2) before item 5.
 1. G2 C4 / G0 C2: `hmt-9-1-spectral` with exactly the hypotheses of `frobSq_residual_le_of_range_subset`.
 2. G2 C2 `nystrom-structural` (exact identity, no square root) and C7 `nystrom-randomized`.
 3. G2 C3 `leverage-scores`.
@@ -68,17 +68,17 @@ starting item 1, and `NLAlib.Gaussian.LinearImage` (R6-B step 2) before item 5.
 **R6-D — Krylov, estimation, solvers** (`NLAlib/Krylov/**` new files `SpectralMeasure.lean`,
 `CG.lean`, `GaussQuadrature.lean`, `Lanczos.lean`; `NLAlib/Estimation/**` new files
 `HutchinsonTail.lean`, `Diagonal.lean`, `Unbiased.lean`, and `HutchinsonLaws.lean` for item 7;
-`NLAlib/Solvers/**`; aggregators). Poll `lake build NLAlib.Matrix.PolynomialCalculus` (R6-A
+`NLAlib/Solvers/**`; aggregators). Poll `lake build NLAlib.Matrix.Functions.PolynomialCalculus` (R6-A
 step 1) before item 2.
 1. G3 C2 `spectral-measure` (definition and `uᵀf(A)u = ∫ f dμ_u`), in `Krylov/SpectralMeasure.lean`.
 2. G3 C3 `cg-convergence`: CG iterate defined as the A-norm minimiser over `krylovSpace`, existence,
    the polynomial form, and the κ-bound from `abs_eval_chebyshevResidual_le_two_mul_pow`.
 3. G3 C5 `lanczos-gauss-quadrature` exactness (any orthonormal basis containing the Krylov space)
    and its error bound; G3 C13 SLQ for `1/x`.
-4. G3 C6 `hutchinson-tail` from `NLAlib.Concentration.HansonWright` with the explicit constant.
+4. G3 C6 `hutchinson-tail` from `NLAlib.Probability.Concentration.QuadraticForms.HansonWright` with the explicit constant.
 5. G3 C8 diagonal estimator, C11 Hutch++ / XTrace unbiasedness.
 6. G3 C12 Kaczmarz extensions (inconsistent, rank-deficient, sketch-and-project).
-7. Last: when `NLAlib.Concentration.Scalar.Rademacher` exists (R6-E step 1), delete the
+7. Last: when `NLAlib.Probability.Rademacher.Basic` exists (R6-E step 1), delete the
    `rademacherMeasure` definition from `Estimation/HutchinsonLaws.lean` and import R6-E's file.
 8. If time remains: G3 C15 `lanczos-recurrence`, C14 Ritz-value bounds.
 

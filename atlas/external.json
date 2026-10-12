@@ -2581,7 +2581,7 @@
   "name":
   "NLAlib.add_div_sub_add_sqrt_sq_sub_one_eq",
   "module":
-  "NLAlib.Polynomial.Chebyshev",
+  "NLAlib.Polynomial.Chebyshev.Growth",
   "line":
   97,
   "library":

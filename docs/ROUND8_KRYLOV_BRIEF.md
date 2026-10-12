@@ -15,7 +15,7 @@ Lean forces it and say so in the docstring and the report. Difficulty and priori
 ## Working rules (in addition to ROUND1_BRIEF)
 - **Exclusive file ownership** as listed per group. Create the new files named; do not touch other
   groups' files. The aggregator `NLAlib/Krylov.lean` is the coordinator's: name the modules to add
-  in your report. Build your own modules with `lake build NLAlib.Krylov.<Module>` (never a full
+  in your report. Build your own modules with `lake build NLAlib.Krylov.Solvers.<Module>` (never a full
   `lake build`); if Lake reports a lock, wait and retry.
 - **Additive changes to shared files.** `Krylov/Basic.lean` and `Krylov/Polynomial.lean` are
   imported by everyone: group K-A may add to them but must not rename or change the statement
@@ -60,11 +60,11 @@ so do them first and build them:
    `krylovSpace_eq_of_krylovGrade_le`, `linearIndependent_pow_mulVec_iff_le_krylovGrade`,
    invariance `mulVec_mem_krylovSpace_krylovGrade`, `krylovGrade_le_natDegree_minpoly`,
    `krylovGrade_le_card`, finite termination `sub_mem_krylovSpace_krylovGrade` (§3.1).
-   `lake build NLAlib.Krylov.Grade`.
+   `lake build NLAlib.Krylov.Spaces.Grade`.
 2. `Krylov/Minimiser.lean` (atlas `residual-polynomial` for the polynomial part): `IsAffineMinimiser E x₀ S x`,
    `isAffineMinimiser_iff_isMinOn`, the residual-polynomial lemma promoted from CG.lean's private
    `exists_degree_lt_one_sub_eq_X_mul` into `Polynomial/Basic.lean` under a STANDARDS name, and
-   K1 `IsAffineMinimiser.le_aeval` (§3.2). `lake build NLAlib.Krylov.Minimiser`.
+   K1 `IsAffineMinimiser.le_aeval` (§3.2). `lake build NLAlib.Krylov.Solvers.Minimiser`.
 3. Generalise `quadForm_aeval_mulVec_le` in `Matrix/PolynomialCalculus.lean` to weight `aeval A g`
    (keep the old statement as a corollary with its name), then the class theorem
    `quadForm_sub_le_of_isAffineMinimiser` (§3.2) in `Minimiser.lean`.
@@ -77,7 +77,7 @@ so do them first and build them:
 
 **K-B — graded bases, Arnoldi, Lanczos, Jacobi** (owner of `Krylov/Lanczos.lean`, new
 `Krylov/Arnoldi.lean`, new `Krylov/Jacobi.lean`, `docs/renames/2026-10-10-krylov.json`). Poll
-`lake build NLAlib.Krylov.Grade` before step 2.
+`lake build NLAlib.Krylov.Spaces.Grade` before step 2.
 1. `Krylov/Arnoldi.lean` (atlas `graded-krylov-basis-def`, `arnoldi-def`): `IsGradedKrylovBasis A b Q`,
    `structure ArnoldiDecomp A b q := (Q, graded)`, `ArnoldiDecomp.H := Qᵀ * A * Q`,
    `ArnoldiDecomp.restrict`, `H_restrict` (leading principal submatrix), `exists_sign` (uniqueness up
@@ -103,7 +103,7 @@ so do them first and build them:
 **K-C — approximants: `f(A)b`, GMRES/MINRES, quadrature exactness** (owner of new
 `Krylov/FunctionApprox.lean`, new `Krylov/GMRES.lean`, `Krylov/GaussQuadrature.lean`,
 `Matrix/Projections.lean`, `Estimation/SLQ.lean`). Start with 1 (needs nothing new); poll
-`lake build NLAlib.Krylov.Minimiser` before 3.
+`lake build NLAlib.Krylov.Solvers.Minimiser` before 3.
 1. `Krylov/FunctionApprox.lean` (atlas `krylov-polynomial-exactness`, `lanczos-fa-error`):
    `krylovFunApprox Q A f b := Q *ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b))`, `krylovFunApprox_congr` (same
    range ⇒ same value), exactness `krylovFunApprox_eval_eq_aeval` for `p.degree < q`, interpolation
@@ -127,7 +127,7 @@ so do them first and build them:
    indefinite bound if `two-interval-minimax` exists (it does not yet: report instead).
 
 **K-D — eigenvalues, block spaces, preconditioning** (owner of `Krylov/Ritz.lean`, new
-`Krylov/Block.lean`, new `Krylov/Preconditioned.lean`). Poll `lake build NLAlib.Krylov.CG` (K-A step 4)
+`Krylov/Block.lean`, new `Krylov/Preconditioned.lean`). Poll `lake build NLAlib.Krylov.Solvers.CG` (K-A step 4)
 before step 3.
 1. `Krylov/Block.lean` (atlas `block-krylov-subspace`, `subspace-iteration-def`): `blockKrylovSpace A Ω q`,
    `blockKrylovSpace_eq_iSup`, `mem_blockKrylovSpace_iff` (matrix polynomials), `range_aeval_mul_le_blockKrylovSpace`,

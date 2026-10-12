@@ -2,10 +2,10 @@
 
 Read `docs/STANDARDS.md` and `docs/ROUND1_BRIEF.md` (working rules: single-file checks with
 `lake env lean NLAlib/Polynomial/<File>.lean`, build an olean you depend on with
-`lake build NLAlib.Polynomial.<Module>`, wait and retry on a Lake lock, no full `lake build`, no
+`lake build NLAlib.Polynomial.BestApproximation.<Module>`, wait and retry on a Lake lock, no full `lake build`, no
 atlas edits, every file warning-free, `sorry` only in a named `SCAFFOLD: <atlas id>` lemma).
 
-New module `NLAlib/Polynomial/` (layer 0, imports Mathlib and `NLAlib.ForMathlib` only; NO
+New module `NLAlib/Polynomial/` (layer 0, imports Mathlib and `NLAlib.ForMathlib.Probability` only; NO
 matrices). `NLAlib/Polynomial/Basic.lean` is written and built: it defines `chebyshevResidual a b q`
 (= `T_q((b+a−2X)/(b−a)) / T_q((b+a)/(b−a))`, value 1 at 0) and `chebyshevAmplifier α γ q`
 (= `T_q(X/α) / T_q(1+γ)`). Everything is a real polynomial `ℝ[X]`; use Mathlib's
@@ -56,8 +56,8 @@ separate `κ` variable: the CG rate is `(√b − √a)/(√b + √a)`.
    (from `T_derivative_eq_U` and the previous, or `abs_iterate_derivative_T_real_le` with `k = 1`).
    Also `eval_derivative_T_real_one : (derivative (T ℝ q)).eval 1 = q^2` if it falls out.
 
-`Approximation.lean` (imports `NLAlib.Polynomial.Basic`, `.Chebyshev`, `.Minimax`): wait for
-group P2's `Minimax.lean` olean (`lake build NLAlib.Polynomial.Minimax`; poll every few minutes,
+`Approximation.lean` (imports `NLAlib.Polynomial.Chebyshev.Basic`, `.Chebyshev`, `.Minimax`): wait for
+group P2's `Minimax.lean` olean (`lake build NLAlib.Polynomial.BestApproximation.Minimax`; poll every few minutes,
 start on the amplifier items meanwhile, which need only `Chebyshev.lean`), atlas
 `chebyshev-amplifier`, `inverse-polynomial-approx`, and the κ-form of `chebyshev-minimax`:
 6. `chebyshevAmplifier` API: `degree_chebyshevAmplifier_le`, `eval_chebyshevAmplifier_self :
@@ -73,9 +73,9 @@ start on the amplifier items meanwhile, which need only `Chebyshev.lean`), atlas
    `r − 1 = X * (−p)` via `X ∣ r − 1` from `r.eval 0 = 1`, and `|1/x − p x| = |r x|/x ≤ |r x|/a`).
    Golub–Meurant (2010) [`gm10`], Ch. 8; the CG bound in the form consumers want.
 
-**P2 — `NLAlib/Polynomial/Minimax.lean`** (imports `NLAlib.Polynomial.Basic` and Mathlib),
+**P2 — `NLAlib/Polynomial/Minimax.lean`** (imports `NLAlib.Polynomial.Chebyshev.Basic` and Mathlib),
 atlas `chebyshev-extremal`, `chebyshev-minimax`, `chebyshev-monic-minimal`. Do items 1–3 FIRST and
-build the olean (`lake build NLAlib.Polynomial.Minimax`) as soon as they compile, since P1 polls
+build the olean (`lake build NLAlib.Polynomial.BestApproximation.Minimax`) as soon as they compile, since P1 polls
 for it; item 4 may land in a second build.
 1. `abs_eval_le_abs_eval_T_real_of_forall_abs_le_one : P.degree ≤ q → (∀ x ∈ Icc (−1) 1,
    |P.eval x| ≤ 1) → 1 ≤ |x| → |P.eval x| ≤ |(T ℝ q).eval x|` (Mathlib's
@@ -104,7 +104,7 @@ for it; item 4 may land in a second build.
    `monic_inv_two_pow_mul_T` and `abs_eval_inv_two_pow_mul_T_le`).
 
 **P3 — `NLAlib/Polynomial/Markov.lean`** (imports Mathlib; may import
-`NLAlib.Polynomial.Chebyshev` once P1 has built it, but do not wait for it), atlas
+`NLAlib.Polynomial.Chebyshev.Growth` once P1 has built it, but do not wait for it), atlas
 `markov-brothers`, `bernstein-polynomial-inequality`.
 1. Markov brothers' inequality: `abs_eval_derivative_le_sq_mul_of_forall_abs_eval_le :
    p.degree ≤ q → (∀ x ∈ Icc (−1) 1, |p.eval x| ≤ M) → x ∈ Icc (−1) 1 →

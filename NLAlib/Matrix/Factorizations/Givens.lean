@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Factorizations.QR
-
 /-!
 # Givens rotations and the QR factorization of an upper Hessenberg matrix
 

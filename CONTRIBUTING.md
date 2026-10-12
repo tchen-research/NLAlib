@@ -14,8 +14,8 @@ in `atlas/atlas.json` in your first PR (a one-line change is fine).
 | Layer | Directory | May import |
 |---|---|---|
 | 0 | `NLAlib/Matrix/`, `NLAlib/Polynomial/` | Mathlib, `ForMathlib` |
-| 1 | `NLAlib/Concentration/`, `NLAlib/Krylov/` | layer 0 |
-| 2 | `NLAlib/Gaussian/` | layers 0–1 |
+| 1 | `NLAlib/Probability/`, `NLAlib/Krylov/` | layer 0 |
+| 2 | `NLAlib/RandomMatrix/` | layers 0–1 |
 | 3 | `NLAlib/Sketching/` | layers 0–2 |
 | 4 | `NLAlib/LowRank/`, `NLAlib/Estimation/` | layers 0–3 |
 | 5 | `NLAlib/Solvers/` | everything |
@@ -25,7 +25,7 @@ in `atlas/atlas.json` in your first PR (a one-line change is fine).
 - **One concept per file**, under about 500 lines. Name the file after the mathematics
   (`EckartYoung.lean`), not the source (`HornJohnson749.lean`).
 - **Namespace `NLAlib`** everywhere, including the matrix concentration files under
-  `NLAlib/Concentration/Matrix/` (ported from Tropp 2015; their theorem names keep a `chN_`
+  `NLAlib/Probability/Concentration/Matrix/` (ported from Tropp 2015; their theorem names keep a `chN_`
   prefix for now).
 
 ## 3. Statement conventions

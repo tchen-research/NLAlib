@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Factorizations.QR
-
 /-!
 # Householder reflectors and Householder QR
 

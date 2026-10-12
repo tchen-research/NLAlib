@@ -8,8 +8,7 @@ Anything outside NLAlib (Mathlib, Std) is layer -1.
 """
 import pathlib, re, sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-LAYER = {"ForMathlib": -1, "Matrix": 0, "Polynomial": 0, "Concentration": 1, "Gaussian": 2, "Sketching": 3,
-         "Krylov": 1, "LowRank": 4, "Estimation": 4, "Solvers": 5}
+LAYER = {"ForMathlib": -1, "Matrix": 0, "Polynomial": 0, "Probability": 1, "Krylov": 1, "RandomMatrix": 2, "Sketching": 3, "LowRank": 4, "Estimation": 4, "Solvers": 5}
 def layer(mod):
     parts = mod.split(".")
     if parts[0] != "NLAlib": return -1

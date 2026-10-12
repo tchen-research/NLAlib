@@ -1,5 +1,6 @@
 import NLAlib.Krylov.Spaces.Polynomial
 import NLAlib.Matrix.Subspaces.Projections
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
 /-!
 # Block Krylov subspaces and subspace iteration
 
@@ -44,14 +45,6 @@ variable {n s : Type*} [Fintype n] [DecidableEq n] [Fintype s]
 atlas: block-krylov-subspace -/
 def blockKrylovSpace (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q : ℕ) : Submodule ℝ (n → ℝ) :=
   Submodule.span ℝ (Set.range fun ij : Fin q × s => ((A ^ (ij.1 : ℕ)) * Ω).col ij.2)
-
-omit [DecidableEq n] [Fintype s] in
-/-- Column `j` of a product is the matrix applied to column `j`: `(M Ω) e_j = M (Ω e_j)`.
-Helper for `block-krylov-subspace`. -/
-theorem col_mul_eq_mulVec_col {m : Type*} (M : Matrix m n ℝ) (Ω : Matrix n s ℝ) (j : s) :
-    (M * Ω).col j = M *ᵥ Ω.col j := by
-  ext i
-  simp [Matrix.mul_apply, Matrix.mulVec, dotProduct]
 
 omit [Fintype s] in
 /-- The generators `(A^i Ω) e_j` (`i < q`) lie in `K_q(A, Ω)`. Helper for

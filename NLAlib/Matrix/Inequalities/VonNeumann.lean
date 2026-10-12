@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Spectral.FiniteIndexTransport
+import NLAlib.Matrix.Spectral.SingularValueInvariance
 /-!
 # Von Neumann-type trace inequalities
 
@@ -258,7 +259,7 @@ theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (F
   have hD : singularValues D = singularValues E := by
     have hU : (Uᵀ)ᵀ * Uᵀ = 1 := by rw [Matrix.transpose_transpose]; exact h.mul_transpose_left
     rw [hDdef, singularValues_mul_orthogonal _ h.transpose_mul_right,
-      singularValues_orthogonal_mul _ hU]
+      singularValues_isometry_mul hU]
   have hinner : frobInner X E =
       frobInner (rectDiag (singularValues X) : Matrix (Fin m) (Fin n) ℝ) D := by
     rw [frobInner_eq_trace, frobInner_eq_trace]

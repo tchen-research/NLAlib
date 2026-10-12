@@ -35,15 +35,6 @@ theorem complex_eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub
   simp only [Matrix.sub_mulVec, dotProduct_sub, Complex.sub_re] at h0
   linarith
 
-/-- Real complex traces of powers equal real eigenvalue power sums.
-Source: finite complex spectral theorem; manuscript `sa:rp-recursion`. -/
-theorem complex_re_trace_pow_eq_sum_eigenvalues {R : Matrix n n ℂ}
-    (hR : R.IsHermitian) (j : ℕ) : (R ^ j).trace.re = ∑ i, hR.eigenvalues i ^ j := by
-  conv_lhs => rw [hR.spectral_theorem, ← map_pow]
-  rw [trace_conjStarAlgAut_complex, Matrix.diagonal_pow, Matrix.trace_diagonal,
-    Complex.re_sum]
-  change (∑ i, ((hR.eigenvalues i : ℂ) ^ j).re) = _
-  simp only [← Complex.ofReal_pow, Complex.ofReal_re]
 /-- Summing a function of the sorted eigenvalues gives the same spectral sum as the
 matrix-labelled eigenvalues. Source: Mathlib's spectral ordering convention;
 manuscript `sa:rp-recursion`, ordered trace sums. -/
@@ -126,7 +117,7 @@ theorem complex_sq_max_trace_sub_spectralTraceTail_le_mul_trace_sq
     simp only [← RCLike.re_eq_complex_re, RCLike.ofReal_re]
     exact complex_sum_eigenvalues_eq_sum_sorted hR.isHermitian (fun x => x)
   have hs : (R * R).trace.re = ∑ i, d i ^ 2 := by
-    rw [← pow_two, complex_re_trace_pow_eq_sum_eigenvalues hR.isHermitian]
+    rw [← pow_two, re_trace_pow_eq_sum_eigenvalues_pow _ hR.isHermitian]
     exact complex_sum_eigenvalues_eq_sum_sorted hR.isHermitian (fun x => x ^ 2)
   rw [ht, hs]
   exact sq_max_sum_sub_tail_le_card_mul_sum_sq d hd S hcard htail

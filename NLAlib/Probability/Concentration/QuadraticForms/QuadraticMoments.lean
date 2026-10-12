@@ -34,20 +34,6 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n]
 
-/-- Expansion `(zᵀ A z)² = ∑ᵢⱼₖₗ A_ij A_kl z_i z_j z_k z_l`. Atlas: `hutchinson-variance`
-(helper). -/
-theorem quadForm_sq_eq_sum (A : Matrix n n ℝ) (z : n → ℝ) :
-    quadForm A z ^ 2 =
-      ∑ i, ∑ j, ∑ k, ∑ l, A i j * A k l * (z i * z j * z k * z l) := by
-  rw [sq, quadForm_eq_sum, Finset.sum_mul]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [Finset.sum_mul]
-  refine Finset.sum_congr rfl fun j _ => ?_
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun k _ => ?_
-  rw [Finset.mul_sum]
-  exact Finset.sum_congr rfl fun l _ => by ring
-
 /-! ### Elementary inequalities used for integrability -/
 
 private lemma abs_mul_le_sq_add_sq (a b : ℝ) : |a * b| ≤ a ^ 2 + b ^ 2 := by

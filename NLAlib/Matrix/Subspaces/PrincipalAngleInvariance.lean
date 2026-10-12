@@ -44,18 +44,6 @@ theorem exists_orthogonal_frame_transition {P P' : Matrix m n ℝ}
     exact hgram.symm
   exact ⟨T, hTT, mul_eq_one_comm.mp hTT, hPT⟩
 
-/-- Orthogonal left multiplication preserves the finite-normalized overlap
-singular values. Stewart–Sun §I.5, on arbitrary finite coordinate labels. -/
-theorem singularValues_reindex_orthogonal_mul (C T : Matrix n n ℝ) (hT : Tᵀ*T=1) :
-    singularValues ((T*C).reindex (Fintype.equivFin n) (Fintype.equivFin n)) =
-      singularValues (C.reindex (Fintype.equivFin n) (Fintype.equivFin n)) := by
-  let e := Fintype.equivFin n
-  have hTF := (show HasOrthonormalCols T from hT).reindex e e
-  have heq : (T*C).reindex e e = T.reindex e e*C.reindex e e := by
-    simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv]
-  rw [heq]
-  exact singularValues_orthogonal_mul _ hTF
-
 omit [DecidableEq m] in
 /-- Changing the left orthonormal frame within its range preserves every
 principal angle. Stewart–Sun §I.5; no spectral-gap condition is used.
@@ -68,7 +56,9 @@ theorem principalAngles_eq_of_range_eq_left {P P' : Matrix m n ℝ}
   have heq : P'ᵀ*Q=Tᵀ*(Pᵀ*Q) := by
     rw [← hPT, Matrix.transpose_mul, Matrix.mul_assoc]
   have hTt : Tᵀᵀ*Tᵀ=1 := by simpa only [Matrix.transpose_transpose] using hT
-  have hh := singularValues_reindex_orthogonal_mul (Pᵀ*Q) Tᵀ hTt
+  have hh : singularValues ((Tᵀ*(Pᵀ*Q)).reindex (Fintype.equivFin n) (Fintype.equivFin n)) =
+      singularValues ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) := by
+    rw [singularValues_reindex, singularValues_reindex, singularValues_isometry_mul hTt]
   funext i
   simp only [principalAnglesFintype, heq]
   rw [hh]

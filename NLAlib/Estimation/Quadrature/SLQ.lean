@@ -114,11 +114,6 @@ theorem abs_slqEstimate_inv_sub_hutchinsonEstimate_le {A : Matrix n n ℝ} (hA :
   exact abs_slqEstimate_sub_hutchinsonEstimate_le hA hQ G hq hK hp hspec
     (fun x hx => by rw [abs_sub_comm]; exact hpE x hx)
 
-/-- `‖I‖_F² = n`. Atlas: `slq-error` (helper). -/
-theorem frobNorm_one_sq : frobNorm (1 : Matrix n n ℝ) ^ 2 = Fintype.card n := by
-  rw [frobNorm_sq, frobSq_eq_sum_sq]
-  simp [Matrix.one_apply]
-
 /-- **SLQ for `tr A⁻¹`, Gaussian test vectors.** Let `A` be symmetric with spectrum in `[a, b]`,
 `0 < a < b`, `G : n → κ → ℝ` with independent standard Gaussian entries (`m = |κ|` test
 vectors), and `Q(ω)_k` orthonormal with `K_q(A, g_k) ⊆ range Q(ω)_k`, `q ≥ 1`. With

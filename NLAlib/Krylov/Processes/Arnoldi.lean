@@ -1,5 +1,7 @@
 import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.Krylov.Spaces.Grade
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Graded Krylov bases, the Arnoldi decomposition and the Arnoldi process
 
@@ -34,46 +36,6 @@ open Matrix
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-
-/-! ### Matrix helpers -/
-
-omit [DecidableEq n] in
-/-- `(Qᵀ A Q)_ij = q_iᵀ A q_j` for the columns `q_i` of `Q`. Helper for `arnoldi-def`. -/
-theorem transpose_mul_mul_apply {k : Type*} (Q : Matrix n k ℝ) (A : Matrix n n ℝ) (i j : k) :
-    (Qᵀ * A * Q) i j = Q.col i ⬝ᵥ (A *ᵥ Q.col j) := by
-  simp only [Matrix.mul_apply, Matrix.transpose_apply, dotProduct, Matrix.mulVec, Matrix.col,
-    Finset.sum_mul, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
-
-omit [DecidableEq n] in
-/-- `(Qᵀ Q)_ij = q_i ⬝ q_j`. Helper for `arnoldi-def`. -/
-theorem transpose_mul_self_apply {k : Type*} (Q : Matrix n k ℝ) (i j : k) :
-    (Qᵀ * Q) i j = Q.col i ⬝ᵥ Q.col j := by
-  simp [Matrix.mul_apply, dotProduct, Matrix.col]
-
-omit [Fintype n] [DecidableEq n] in
-/-- `Q v = ∑ⱼ vⱼ qⱼ`. Helper for `arnoldi-def`. -/
-theorem mulVec_eq_sum_smul_col {k : Type*} [Fintype k] (Q : Matrix n k ℝ) (v : k → ℝ) :
-    Q *ᵥ v = ∑ j, v j • Q.col j := by
-  ext r
-  simp [Matrix.mulVec, dotProduct, Finset.sum_apply, Matrix.col, mul_comm]
-
-omit [DecidableEq n] in
-/-- Columns of a matrix with orthonormal columns: `q_i ⬝ q_j = δ_ij`. -/
-theorem HasOrthonormalCols.col_dotProduct_col {k : Type*} [Fintype k] [DecidableEq k]
-    {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (i j : k) :
-    Q.col i ⬝ᵥ Q.col j = if i = j then 1 else 0 := by
-  rw [← transpose_mul_self_apply, show Qᵀ * Q = 1 from hQ, Matrix.one_apply]
-
-omit [DecidableEq n] in
-/-- Orthonormal columns are linearly independent. Helper for `graded-krylov-basis-def`. -/
-theorem HasOrthonormalCols.linearIndependent_col {k : Type*} [Fintype k] [DecidableEq k]
-    {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) : LinearIndependent ℝ Q.col := by
-  rw [← Matrix.mulVec_injective_iff]
-  intro x y hxy
-  have h := congrArg (fun v => Qᵀ *ᵥ v) hxy
-  simpa only [Matrix.mulVec_mulVec, show Qᵀ * Q = 1 from hQ, Matrix.one_mulVec] using h
 
 /-! ### Graded Krylov bases -/
 
@@ -198,7 +160,7 @@ every `A`. Source: Saad (2003) [`saad03`], Prop. 6.5; Trefethen–Bau (1997) [`t
 Atlas: `graded-krylov-basis-def`. -/
 theorem transpose_mul_mul_apply_eq_zero (hQ : IsGradedKrylovBasis A b Q) {i j : Fin q}
     (hij : (j : ℕ) + 1 < i) : (Qᵀ * A * Q) i j = 0 := by
-  rw [transpose_mul_mul_apply]
+  rw [transpose_mul_mul_apply_eq_dotProduct]
   exact hQ.col_dotProduct_eq_zero i (krylovSpace_mono A b (by omega) (hQ.mulVec_col_mem j))
 
 /-- If `K_m` (`1 ≤ m`) is mapped into itself by `A`, every Krylov space is contained in it. -/
@@ -218,14 +180,14 @@ iff `K_{j+1}` is invariant). Atlas: `graded-krylov-basis-def`. -/
 theorem transpose_mul_mul_apply_succ_ne_zero (hQ : IsGradedKrylovBasis A b Q) {j : ℕ}
     (hj : j + 1 < q) : (Qᵀ * A * Q) ⟨j + 1, hj⟩ ⟨j, by omega⟩ ≠ 0 := by
   intro h0
-  rw [transpose_mul_mul_apply] at h0
+  rw [transpose_mul_mul_apply_eq_dotProduct] at h0
   -- `A q_j ∈ K_{j+1}`
   have hAq : A *ᵥ Q.col ⟨j, by omega⟩ ∈ krylovSpace A b q :=
     krylovSpace_mono A b (show j + 2 ≤ q by omega) (hQ.mulVec_col_mem ⟨j, by omega⟩)
   have hAj : A *ᵥ Q.col ⟨j, by omega⟩ ∈ krylovSpace A b (j + 1) := by
     refine hQ.mem_of_forall_le_dotProduct_eq_zero hAq (by omega) fun i hi => ?_
     rcases Nat.lt_or_ge (j + 1) i with hlt | hge
-    · rw [← transpose_mul_mul_apply]; exact hQ.transpose_mul_mul_apply_eq_zero hlt
+    · rw [← transpose_mul_mul_apply_eq_dotProduct]; exact hQ.transpose_mul_mul_apply_eq_zero hlt
     · obtain rfl : i = ⟨j + 1, hj⟩ := Fin.ext (by simp only; omega)
       exact h0
   -- hence `K_{j+1}` is invariant
@@ -284,7 +246,7 @@ theorem H_def (D : ArnoldiDecomp A b q) : D.H = D.Qᵀ * A * D.Q := rfl
 
 /-- `H_ij = q_iᵀ A q_j`. Atlas: `arnoldi-def`. -/
 theorem H_apply (D : ArnoldiDecomp A b q) (i j : Fin q) : D.H i j = D.Q.col i ⬝ᵥ (A *ᵥ D.Q.col j) :=
-  transpose_mul_mul_apply _ _ _ _
+  transpose_mul_mul_apply_eq_dotProduct _ _ _ _ _
 
 /-- The basis matrix has orthonormal columns. Atlas: `arnoldi-def`. -/
 theorem hasOrthonormalCols (D : ArnoldiDecomp A b q) : HasOrthonormalCols D.Q := D.graded.orth

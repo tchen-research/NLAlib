@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Block
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
 import Mathlib.Data.Real.Basic
 
 /-!
@@ -11,8 +12,10 @@ linearly ordered index). This file adds:
 * the entrywise forms `isUpperTriangular_iff`, `isLowerTriangular_iff` (the bridge lemmas) and
   transposition;
 * unit triangular matrices `IsUnitLowerTriangular`, `IsUnitUpperTriangular`;
-* closure under products (`isUpperTriangular_mul`, diagonal of a product) and inverses
-  (`isUpperTriangular_inv`, no invertibility hypothesis since `A⁻¹ = 0` for singular `A`);
+* closure under inverses (`isUpperTriangular_inv`, no invertibility hypothesis since `A⁻¹ = 0`
+  for singular `A`); closure under products is Mathlib's `Matrix.BlockTriangular.mul` and the
+  diagonal of a product is `mul_apply_self_of_isUpperTriangular` /
+  `mul_apply_self_of_isLowerTriangular` (`NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular`);
 * invertibility iff nonzero diagonal (`isUnit_det_iff_of_isUpperTriangular`); the determinant is
   Mathlib's `Matrix.det_of_isUpperTriangular` / `Matrix.det_of_isLowerTriangular`;
 * the leading-pivot splitting `borderedMatrix a r c M = [[a, rᵀ], [c, M]]` on `Fin (n + 1)`, with
@@ -119,40 +122,6 @@ theorem eq_one_of_isUnitLowerTriangular_of_isUpperTriangular {A : Matrix n n ℝ
 
 variable [Fintype n]
 
-/-- A product of upper triangular matrices is upper triangular. Trefethen–Bau 1997, Lect. 17
-(closure); this is Mathlib's `BlockTriangular.mul`. -/
-theorem isUpperTriangular_mul {A B : Matrix n n ℝ} (hA : A.IsUpperTriangular)
-    (hB : B.IsUpperTriangular) : (A * B).IsUpperTriangular :=
-  BlockTriangular.mul hA hB
-
-/-- A product of lower triangular matrices is lower triangular. Trefethen–Bau 1997, Lect. 17
-(closure); this is Mathlib's `BlockTriangular.mul`. -/
-theorem isLowerTriangular_mul {A B : Matrix n n ℝ} (hA : A.IsLowerTriangular)
-    (hB : B.IsLowerTriangular) : (A * B).IsLowerTriangular :=
-  BlockTriangular.mul hA hB
-
-/-- The diagonal of a product of upper triangular matrices is the product of the diagonals.
-Golub–Van Loan 2013, §3.1. -/
-theorem mul_apply_self_of_isUpperTriangular {A B : Matrix n n ℝ} (hA : A.IsUpperTriangular)
-    (hB : B.IsUpperTriangular) (i : n) : (A * B) i i = A i i * B i i := by
-  rw [Matrix.mul_apply, Finset.sum_eq_single i]
-  · intro k _ hki
-    rcases lt_or_gt_of_ne hki with h | h
-    · rw [isUpperTriangular_iff.1 hA i k h, zero_mul]
-    · rw [isUpperTriangular_iff.1 hB k i h, mul_zero]
-  · simp
-
-/-- The diagonal of a product of lower triangular matrices is the product of the diagonals.
-Golub–Van Loan 2013, §3.1. -/
-theorem mul_apply_self_of_isLowerTriangular {A B : Matrix n n ℝ} (hA : A.IsLowerTriangular)
-    (hB : B.IsLowerTriangular) (i : n) : (A * B) i i = A i i * B i i := by
-  rw [Matrix.mul_apply, Finset.sum_eq_single i]
-  · intro k _ hki
-    rcases lt_or_gt_of_ne hki with h | h
-    · rw [isLowerTriangular_iff.1 hB k i h, mul_zero]
-    · rw [isLowerTriangular_iff.1 hA i k h, zero_mul]
-  · simp
-
 /-- The inverse of an upper triangular matrix is upper triangular. No invertibility hypothesis:
 for singular `A`, Mathlib's `A⁻¹` is `0`. Trefethen–Bau 1997, Lect. 17; Golub–Van Loan 2013,
 §3.1 (closure under inversion). -/
@@ -215,14 +184,14 @@ theorem inv_apply_self_of_isLowerTriangular {A : Matrix n n ℝ} (hA : A.IsLower
 §3.1. -/
 theorem IsUnitLowerTriangular.mul {A B : Matrix n n ℝ} (hA : IsUnitLowerTriangular A)
     (hB : IsUnitLowerTriangular B) : IsUnitLowerTriangular (A * B) :=
-  ⟨isLowerTriangular_mul hA.1 hB.1, fun i => by
+  ⟨BlockTriangular.mul hA.1 hB.1, fun i => by
     rw [mul_apply_self_of_isLowerTriangular hA.1 hB.1, hA.2, hB.2, one_mul]⟩
 
 /-- A product of unit upper triangular matrices is unit upper triangular. Golub–Van Loan 2013,
 §3.1. -/
 theorem IsUnitUpperTriangular.mul {A B : Matrix n n ℝ} (hA : IsUnitUpperTriangular A)
     (hB : IsUnitUpperTriangular B) : IsUnitUpperTriangular (A * B) :=
-  ⟨isUpperTriangular_mul hA.1 hB.1, fun i => by
+  ⟨BlockTriangular.mul hA.1 hB.1, fun i => by
     rw [mul_apply_self_of_isUpperTriangular hA.1 hB.1, hA.2, hB.2, one_mul]⟩
 
 /-- A unit lower triangular matrix has determinant one. Golub–Van Loan 2013, §3.1. -/

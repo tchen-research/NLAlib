@@ -1,13 +1,13 @@
 import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
-import Mathlib.LinearAlgebra.Trace
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.Matrix.Hermitian
+import NLAlib.Matrix.Subspaces.ProjectorTrace
 
 /-!
 # Complex orthogonal projector trace and diagonal budgets
 
-Actual complex projectors have trace equal to rank, and diagonal capture
-weights between zero and one. Source: Frobenius Eckart–Young proof;
+Squared Frobenius mass splits over complementary complex orthogonal projectors.
+The field-generic trace-equals-rank identity and the diagonal capture budgets are
+`trace_eq_rank_of_isIdempotentElem` and `re_diag_mem_Icc_of_isHermitian_of_isIdempotentElem`
+(`NLAlib.Matrix.Subspaces.ProjectorTrace`). Source: Frobenius Eckart–Young proof;
 supports `sa:volume-theorem` and `volume-sampling`.
 -/
 
@@ -15,47 +15,6 @@ noncomputable section
 set_option autoImplicit false
 open scoped Classical Matrix Matrix.Norms.Frobenius ComplexOrder
 namespace NLAlib
-
-/-- The real trace of any complex idempotent matrix equals its actual rank.
-Source: Mathlib's projection trace theorem, `sa:volume-theorem`. -/
-theorem re_trace_eq_rank_of_isIdempotentElem
-    {ι : Type*} [Fintype ι] [DecidableEq ι] (P : Matrix ι ι ℂ)
-    (hP : IsIdempotentElem P) : P.trace.re = (P.rank : ℝ) := by
-  have hf : IsIdempotentElem P.mulVecLin := by
-    change P.mulVecLin.comp P.mulVecLin = P.mulVecLin
-    rw [← Matrix.mulVecLin_mul, show P * P = P from hP]
-  have ht : P.trace = (P.rank : ℂ) := by
-    calc
-      _ = LinearMap.trace ℂ (ι → ℂ) P.toLin' := (Matrix.trace_toLin'_eq P).symm
-      _ = LinearMap.trace ℂ (ι → ℂ) P.mulVecLin := by rw [Matrix.toLin'_apply']
-      _ = _ := LinearMap.IsProj.trace
-        ((LinearMap.isProj_range_iff_isIdempotentElem P.mulVecLin).mpr hf)
-  simpa only [Complex.natCast_re] using congrArg Complex.re ht
-
-/-- Every diagonal capture weight of a genuine complex orthogonal projector
-lies in `[0,1]`, including zero dimensions. Source: `sa:volume-theorem`. -/
-theorem re_diag_mem_Icc_of_isHermitian_of_isIdempotentElem
-    {ι : Type*} [Fintype ι] (P : Matrix ι ι ℂ)
-    (hs : P.IsHermitian) (hp : IsIdempotentElem P) (j : ι) :
-    (P j j).re ∈ Set.Icc (0 : ℝ) 1 := by
-  have hgram : Pᴴ * P = P := by rw [hs.eq]; exact hp
-  have hsum : (∑ i, ‖P i j‖ ^ 2) = (P j j).re := by
-    have he := congrArg (fun M : Matrix ι ι ℂ => (M j j).re) hgram
-    simpa only [Matrix.mul_apply, Matrix.conjTranspose_apply, Complex.re_sum,
-      Complex.star_def, ← Complex.normSq_eq_conj_mul_self, Complex.ofReal_re,
-      Complex.normSq_eq_norm_sq] using he
-  have h0 : 0 ≤ (P j j).re := by
-    rw [← hsum]
-    exact Finset.sum_nonneg fun i _ => sq_nonneg _
-  have hsq : (P j j).re ^ 2 ≤ (P j j).re := by
-    have ha := Complex.abs_re_le_norm (P j j)
-    rw [abs_of_nonneg h0] at ha
-    have hn : 0 ≤ ‖P j j‖ := norm_nonneg _
-    have hb : ‖P j j‖ ^ 2 ≤ (P j j).re := by
-      rw [← hsum]
-      exact Finset.single_le_sum (fun i _ => sq_nonneg ‖P i j‖) (Finset.mem_univ j)
-    nlinarith
-  exact ⟨h0, by nlinarith⟩
 
 /-- Real squared Frobenius mass splits over complementary complex
 orthogonal projectors on the right. Source: `sa:volume-theorem`. -/

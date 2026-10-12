@@ -21,26 +21,6 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n]
 
-/-- An invertible column Gram matrix gives the lower singular bound required
-by the Kaczmarz recurrence, using the actual norm of the full-rank left inverse.
-Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`. -/
-theorem inv_specNorm_pinvL_sq_mul_dotProduct_le [DecidableEq m] [DecidableEq n]
-    (A : Matrix m n ℝ) (hA : IsUnit (Aᵀ * A)) (v : n → ℝ) :
-    (specNorm (pinvL A))⁻¹ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v) := by
-  classical
-  by_cases hB : specNorm (pinvL A) = 0
-  · simp only [hB, inv_zero, zero_pow (by decide : (2 : ℕ) ≠ 0), zero_mul]
-    exact dotProduct_self_nonneg _
-  have hBound := sum_sq_mulVec_le_specNorm_sq (pinvL A) (A *ᵥ v)
-  have hId : pinvL A *ᵥ (A *ᵥ v) = v := by
-    rw [Matrix.mulVec_mulVec, pinvL_mul hA, Matrix.one_mulVec]
-  rw [hId] at hBound
-  have hScale := mul_le_mul_of_nonneg_left hBound (sq_nonneg (specNorm (pinvL A))⁻¹)
-  have hCancel : (specNorm (pinvL A))⁻¹ ^ 2 * specNorm (pinvL A) ^ 2 = 1 := by
-    rw [← mul_pow, inv_mul_cancel₀ hB, one_pow]
-  rw [← mul_assoc, hCancel, one_mul] at hScale
-  simpa only [dotProduct, pow_two] using hScale
-
 /-- The Frobenius condition number formed with the general Moore–Penrose
 inverse. The zero matrix has value zero under this total definition.
 Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`.

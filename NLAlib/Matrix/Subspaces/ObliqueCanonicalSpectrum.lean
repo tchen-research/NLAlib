@@ -1,4 +1,5 @@
-import NLAlib.Matrix.Spectral.SingularIsometries
+import NLAlib.Matrix.Spectral.SingularValueInvariance
+import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
 /-!
 # Singular values of the oblique canonical blocks
 
@@ -55,8 +56,8 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
         norm_num
     · simp [Matrix.add_apply, hij]
   have hND : N.toEuclideanLin.singularValues k = D.toEuclideanLin.singularValues k := by
-    rw [← toEuclideanLin_singularValues_transpose N,
-      ← toEuclideanLin_singularValues_transpose D]
+    rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
+      ← singularValues_transpose N, ← singularValues_transpose D]
     apply toEuclideanLin_singularValues_eq_of_gram_eq
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hGram
   have hD : D = (rectDiag d : Matrix (Fin (r + s)) (Fin (r + s)) ℝ).reindex
@@ -78,7 +79,7 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
         simp [D, Matrix.reindex_apply, rectDiag_apply, hij]
       | inr j =>
         simp [D, Matrix.reindex_apply, rectDiag_apply, d]
-  rw [hND, hD, toEuclideanLin_singularValues_reindex]
+  rw [hND, hD, ← singularValues_eq_linearMap, singularValues_reindex]
   change singularValues (rectDiag d : Matrix (Fin (r + s)) (Fin (r + s)) ℝ) k = d k
   by_cases hk : k < r + s
   · apply singularValues_eq_of_eq_mul_rectDiag_mul (U := 1) (V := 1)

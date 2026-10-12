@@ -68,7 +68,9 @@ theorem det_gram_mul_le_prod_sq_singularValues {m n k : ℕ}
   rw [← (finCongr (Fintype.card_fin k).symm).prod_comp]
   apply Finset.prod_congr rfl
   intro i _
-  have hi := sq_singularValues_eq_eigenvalues₀ A hG.isHermitian (Fin.castLE hkn i)
+  have hi : singularValues A (Fin.castLE hkn i) ^ 2 =
+      hG.isHermitian.eigenvalues₀ (Fin.cast (Fintype.card_fin n).symm (Fin.castLE hkn i)) :=
+    sq_singularValues_eq_eigenvalues₀ A (Fin.cast (Fintype.card_fin n).symm (Fin.castLE hkn i))
   simpa only [Fin.val_castLE, Fin.val_cast, Fin.castLE, Fin.cast, finCongr_apply] using hi.symm
 
 end NLAlib

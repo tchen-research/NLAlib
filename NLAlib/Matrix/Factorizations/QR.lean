@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Basic.MoorePenrose
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
 /-!
 # The QR factorization
 
@@ -426,18 +427,6 @@ theorem exists_isQR_of_isUnit {m : Type*} [Fintype m] {n : ℕ} {A : Matrix m (F
   exact ⟨Q, R, h, fun i => lt_of_le_of_ne (hpos i)
     (h.isUnit_transpose_mul_self_iff.1 hA i).symm⟩
 
-/-- The diagonal of a product of upper triangular matrices is the product of the diagonals
-(helper; also `mul_apply_self_of_isUpperTriangular` in `Factorizations.Triangular`). -/
-private lemma mul_apply_self_of_upper {n : ℕ} {S T : Matrix (Fin n) (Fin n) ℝ}
-    (hS : S.IsUpperTriangular) (hT : T.IsUpperTriangular) (i : Fin n) :
-    (S * T) i i = S i i * T i i := by
-  rw [Matrix.mul_apply, Finset.sum_eq_single i]
-  · intro k _ hki
-    rcases lt_or_gt_of_ne hki with h | h
-    · rw [hS h, zero_mul]
-    · rw [hT h, mul_zero]
-  · simp
-
 /-- **Uniqueness of the thin QR with positive diagonal**: two thin QR factorizations of the same
 `A` whose `R` factors have positive diagonals coincide. (Positivity of the diagonal forces full
 column rank, so no separate rank hypothesis is needed.) Trefethen–Bau 1997, Thm 7.2;
@@ -470,8 +459,8 @@ theorem IsQR.eq_of_diag_pos {m : Type*} [Fintype m] {n : ℕ} {A Q₁ Q₂ : Mat
     rw [this]; exact h₁.upper.mul hinv₂
   have hdiag : ∀ i, T i i = 1 := by
     intro i
-    have e1 := mul_apply_self_of_upper hTu h₁.upper i
-    have e2 := mul_apply_self_of_upper hTl h₂.upper i
+    have e1 := mul_apply_self_of_isUpperTriangular hTu h₁.upper i
+    have e2 := mul_apply_self_of_isUpperTriangular hTl h₂.upper i
     rw [hT] at e1; rw [hT', Matrix.transpose_apply] at e2
     have hpos : 0 < T i i := by
       have := hR₂ i; rw [e1] at this; exact pos_of_mul_pos_left this (hR₁ i).le

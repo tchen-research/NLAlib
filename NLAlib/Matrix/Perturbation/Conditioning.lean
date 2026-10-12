@@ -154,19 +154,6 @@ section LinearSystem
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-/-- A nonzero vector has positive Euclidean length `√(v ⬝ᵥ v)`. -/
-theorem sqrt_dotProduct_self_pos {ι : Type*} [Fintype ι] {v : ι → ℝ} (hv : v ≠ 0) :
-    0 < Real.sqrt (v ⬝ᵥ v) :=
-  Real.sqrt_pos.mpr (lt_of_le_of_ne (dotProduct_self_nonneg v)
-    (Ne.symm (fun h => hv (dotProduct_self_eq_zero.mp h))))
-
-/-- Euclidean triangle inequality for a difference, `‖u - v‖ ≤ ‖u‖ + ‖v‖`, in the
-`Real.sqrt (v ⬝ᵥ v)` spelling. -/
-theorem sqrt_dotProduct_sub_le {ι : Type*} [Fintype ι] (u v : ι → ℝ) :
-    Real.sqrt ((u - v) ⬝ᵥ (u - v)) ≤ Real.sqrt (u ⬝ᵥ u) + Real.sqrt (v ⬝ᵥ v) := by
-  have h := sqrt_dotProduct_add_le u (-v)
-  simpa only [sub_eq_add_neg, neg_dotProduct, dotProduct_neg, neg_neg] using h
-
 /-- **A posteriori error bound.** For invertible `A`, `A x = b ≠ 0` and any `x̂`,
 `‖x - x̂‖/‖x‖ ≤ κ(A) ‖b - A x̂‖/‖b‖`. Higham 2002, eq. (7.4) / Thm 7.2 discussion;
 Golub–Van Loan 2013, §3.5.3; Trefethen–Bau 1997, Thm 12.1 (eq. (12.15)).

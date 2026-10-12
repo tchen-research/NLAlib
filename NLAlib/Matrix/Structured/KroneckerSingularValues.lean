@@ -44,8 +44,8 @@ theorem multiset_toEuclideanLin_singularValues_eq_sqrt_eigenvalues {m n : Type*}
   have hs : (fun i : Fin (Fintype.card n) => A.toEuclideanLin.singularValues (i : ℕ)) =
       fun i => Real.sqrt (hG.eigenvalues₀ i) := by
     funext i
-    rw [← sq_toEuclideanLin_singularValues_eq_eigenvalues₀ A i,
-      Real.sqrt_sq (A.toEuclideanLin.singularValues_nonneg _)]
+    rw [← singularValues_eq_linearMap, ← sq_singularValues_eq_eigenvalues₀ A i,
+      Real.sqrt_sq (singularValues_nonneg A _)]
   rw [hs]
   have he : (Finset.univ : Finset n).val.map hG.eigenvalues =
       (Finset.univ : Finset (Fin (Fintype.card n))).val.map hG.eigenvalues₀ := by

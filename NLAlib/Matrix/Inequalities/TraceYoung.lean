@@ -109,20 +109,6 @@ theorem re_trace_pow_mul_pow_eq_sum_overlap
     simp only [Matrix.mul_assoc]
   rw [ht, re_trace_diagonal_mul_conj_diagonal]
 
-/-- Every natural Hermitian power has real trace equal to the corresponding
-power sum of its real eigenvalues. Source: spectral theorem; supports the
-integer trace method for `noncommutative-khintchine`. -/
-theorem re_trace_pow_eq_sum_eigenvalues_pow
-    (A : Matrix ι ι ℂ) (hA : A.IsHermitian) (r : ℕ) :
-    (A ^ r).trace.re = ∑ i, hA.eigenvalues i ^ r := by
-  conv_lhs => rw [hA.spectral_theorem]
-  rw [← map_pow, trace_conjStarAlgAut_complex,
-    Matrix.diagonal_pow, Matrix.trace_diagonal]
-  simp only [Complex.re_sum, Pi.pow_apply, Function.comp_apply]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  change ((hA.eigenvalues i : ℂ) ^ r).re = _
-  rw [← Complex.ofReal_pow, Complex.ofReal_re]
-
 /-- Every even natural Hermitian trace moment is nonnegative. Source:
 the real eigenvalue power sum; supports `noncommutative-khintchine`. -/
 theorem re_trace_pow_nonneg_of_even (A : Matrix ι ι ℂ) (hA : A.IsHermitian)

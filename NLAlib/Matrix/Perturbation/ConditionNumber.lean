@@ -108,10 +108,10 @@ theorem conditionNumber_eq_toEuclideanLin_singularValues_ratio
     conditionNumber A = A.toEuclideanLin.singularValues 0 /
       A.toEuclideanLin.singularValues (A.rank - 1) := by
   have hZero : A.toEuclideanLin.singularValues 0 = specNorm A :=
-    (singularValues_reindex_eq_toEuclideanLin_singularValues A 0).symm.trans
+    (congrFun (singularValues_reindex A (Fintype.equivFin _) (Fintype.equivFin _)) 0).symm.trans
       (singularValues_reindex_zero_eq_specNorm A)
   rw [conditionNumber, specNorm_moorePenroseInverse_eq_fintype,
-    if_neg (Nat.ne_of_gt hr), singularValues_reindex_eq_toEuclideanLin_singularValues,
+    if_neg (Nat.ne_of_gt hr), singularValues_reindex, singularValues_eq_linearMap,
     ← hZero]
   ring
 

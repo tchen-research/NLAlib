@@ -2,9 +2,8 @@ import NLAlib.Matrix.Basic.CauchyBinet
 import NLAlib.Matrix.Basic.CauchyBinetAdjoint
 import NLAlib.Matrix.Basic.ComplementaryNullities
 import NLAlib.Matrix.Basic.ComplementaryRank
-import NLAlib.Matrix.Basic.ComplexComplementaryNullities
-import NLAlib.Matrix.Basic.ComplexComplementaryRank
 import NLAlib.Matrix.Basic.ComplexFullRowInverse
+import NLAlib.Matrix.Basic.ComplexPosSemidefTrace
 import NLAlib.Matrix.Basic.CoordinateUpdates
 import NLAlib.Matrix.Basic.DeterminantDiagonalUpdate
 import NLAlib.Matrix.Basic.Dilation

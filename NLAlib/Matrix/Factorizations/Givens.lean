@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Factorizations.QR
+import NLAlib.Matrix.Structured.Hessenberg
 /-!
 # Givens rotations and the QR factorization of an upper Hessenberg matrix
 
@@ -9,11 +10,8 @@ import NLAlib.Matrix.Factorizations.QR
 * `givensCos a b`, `givensSin a b`: the rotation zeroing `b` against `a`; total, with
   `(c, s) = (1, 0)` when `a = b = 0`, so `c² + s² = 1` always. `givensRotation i j x` zeroes
   `x_j` and puts `√(x_i² + x_j²)` in position `i`.
-* Shape predicates on `Fin n`: `IsUpperHessenberg H` (`H i j = 0` for `j + 1 < i`) and
-  `IsTridiagonal T` (`T` and `Tᵀ` upper Hessenberg), with the closure lemmas
-  Hessenberg × upper triangular and upper triangular × Hessenberg, and symmetric Hessenberg ⇒
-  tridiagonal. (They are used by `NLAlib.Matrix.Factorizations.Hessenberg` and by the QR
-  algorithm; they could move to a shapes file later.)
+* The shape predicates `IsUpperHessenberg`, `IsTridiagonal` and their closure lemmas live in
+  `NLAlib.Matrix.Structured.Hessenberg`.
 * **Hessenberg QR by `n − 1` rotations**: the recursion `givensQRState` (`H₀ = H`,
   `H_{k+1} = G_k H_k` with `G_k` the rotation in rows `k, k+1` zeroing entry `(k+1, k)`), the
   accumulated `Q_k = G_0ᵀ ⋯ G_{k−1}ᵀ` (`givensQRQ`) and `givensQR H = (Q_{n−1}, H_{n−1})`.
@@ -179,55 +177,11 @@ theorem givensRotation_mulVec_apply_of_ne {i j a : n} (hai : a ≠ i) (haj : a �
 
 end Rotation
 
-/-! ### Hessenberg and tridiagonal shapes -/
+/-! ### `RQ` preserves Hessenberg and tridiagonal shapes -/
 
 section Shapes
 
 variable {n : ℕ}
-
-/-- `H` is **upper Hessenberg**: `H i j = 0` whenever `j + 1 < i` (zero below the first
-subdiagonal). Golub–Van Loan 2013, §7.4; Trefethen–Bau 1997, Lect. 26.
-atlas: givens-rotation-def -/
-def IsUpperHessenberg (H : Matrix (Fin n) (Fin n) ℝ) : Prop :=
-  ∀ i j : Fin n, (j : ℕ) + 1 < i → H i j = 0
-
-/-- `T` is **tridiagonal**: `T` and `Tᵀ` are upper Hessenberg (`T i j = 0` for `|i − j| > 1`).
-Golub–Van Loan 2013, §8.3; Trefethen–Bau 1997, Lect. 26.
-atlas: givens-rotation-def -/
-def IsTridiagonal (T : Matrix (Fin n) (Fin n) ℝ) : Prop :=
-  IsUpperHessenberg T ∧ IsUpperHessenberg Tᵀ
-
-/-- An upper triangular matrix is upper Hessenberg. -/
-theorem isUpperHessenberg_of_isUpperTriangular {U : Matrix (Fin n) (Fin n) ℝ}
-    (hU : U.IsUpperTriangular) : IsUpperHessenberg U :=
-  fun i j hij => hU (show j < i by rw [Fin.lt_def]; omega)
-
-/-- **Hessenberg × upper triangular is Hessenberg.** Golub–Van Loan 2013, §7.4.2 (proof of
-Hessenberg preservation). -/
-theorem IsUpperHessenberg.mul_isUpperTriangular {H U : Matrix (Fin n) (Fin n) ℝ}
-    (hH : IsUpperHessenberg H) (hU : U.IsUpperTriangular) : IsUpperHessenberg (H * U) := by
-  intro i j hij
-  rw [Matrix.mul_apply]
-  refine Finset.sum_eq_zero fun k _ => ?_
-  by_cases hk : (k : ℕ) + 1 < i
-  · rw [hH i k hk, zero_mul]
-  · rw [hU (show j < k by rw [Fin.lt_def]; omega), mul_zero]
-
-/-- **Upper triangular × Hessenberg is Hessenberg.** Golub–Van Loan 2013, §7.4.2. -/
-theorem IsUpperHessenberg.isUpperTriangular_mul {H U : Matrix (Fin n) (Fin n) ℝ}
-    (hH : IsUpperHessenberg H) (hU : U.IsUpperTriangular) : IsUpperHessenberg (U * H) := by
-  intro i j hij
-  rw [Matrix.mul_apply]
-  refine Finset.sum_eq_zero fun k _ => ?_
-  by_cases hk : (k : ℕ) < i
-  · rw [hU (Fin.lt_def.2 hk), zero_mul]
-  · rw [hH k j (by omega), mul_zero]
-
-/-- **A symmetric upper Hessenberg matrix is tridiagonal.** Golub–Van Loan 2013, §8.3.1;
-Trefethen–Bau 1997, Lect. 26. -/
-theorem IsUpperHessenberg.isTridiagonal_of_isSymm {H : Matrix (Fin n) (Fin n) ℝ}
-    (hH : IsUpperHessenberg H) (hS : H.IsSymm) : IsTridiagonal H :=
-  ⟨hH, by rw [hS.eq]; exact hH⟩
 
 /-- For a square QR, `RQ = QᵀHQ` (`R = QᵀH`). Golub–Van Loan 2013, §7.3.1 (the QR step is an
 orthogonal similarity). -/

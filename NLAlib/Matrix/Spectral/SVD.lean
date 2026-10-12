@@ -10,8 +10,10 @@ non-increasing diagonal (Horn–Johnson 2013, Thm 2.6.3; HMT 2011, §2.1).
 ## Conventions
 
 * `NLAlib.singularValues A : ℕ → ℝ` is Mathlib's `LinearMap.singularValues` of the Euclidean
-  linear map of `A`: **zero-indexed** (`σ 0` is the largest), nonnegative, antitone, and
-  `σ k ≠ 0 ↔ k < A.rank`; in particular `σ k = 0` for `k ≥ min m n`. Indexing by `ℕ` (rather
+  linear map of `A`, defined for `A : Matrix m n 𝕜` with `𝕜` `RCLike` and `m`, `n` arbitrary
+  finite types: **zero-indexed** (`σ 0` is the largest), nonnegative, antitone, and
+  `σ k ≠ 0 ↔ k < A.rank`; in particular `σ k = 0` for `k ≥ min m n`. The factorization
+  `IsSVD` (and `rectDiag`) is stated for real `Fin`-indexed matrices. Indexing by `ℕ` (rather
   than `Fin (min m n)`) means the singular values of matrices of different shapes are compared
   without casts, a rank-`k` split is `k < ·` vs `k ≤ ·`, and the truncated SVD is
   `rectDiag (fun i => if i < k then σ i else 0)`.
@@ -28,10 +30,10 @@ non-increasing diagonal (Horn–Johnson 2013, Thm 2.6.3; HMT 2011, §2.1).
   `A i j = ∑_{k < min m n} σ_k U_{ik} V_{jk}`.
 * `NLAlib.frobSq_eq_sum_sq_singularValues`: `‖A‖_F² = ∑_{k < min m n} σ_k²`.
 * `NLAlib.singularValues_ne_zero_iff`, `NLAlib.rank_eq_card_singularValues_ne_zero`: rank.
-* `NLAlib.sq_singularValues_eq_eigenvalues₀`: `σ_k²` is the `k`-th largest eigenvalue of `AᵀA`.
+* `NLAlib.sq_singularValues_eq_eigenvalues₀`: `σ_k²` is the `k`-th largest eigenvalue of `AᴴA`.
 * `NLAlib.IsSVD.eq_head_add_tail`: block split `A = U Σ_{<k} Vᵀ + U Σ_{≥k} Vᵀ`.
-* `NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul`: uniqueness of the singular values, hence
-  `singularValues_transpose`, `singularValues_orthogonal_mul`, `singularValues_mul_orthogonal`.
+* `NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul`: uniqueness of the singular values (used for
+  `singularValues_transpose` and the isometry invariances in `SingularValueInvariance.lean`).
 
 The orthonormal completion of `{A vⱼ / σⱼ : σⱼ ≠ 0}` (atlas `orthonormal-completion`) is
 Mathlib's `Orthonormal.exists_orthonormalBasis_extension_of_card_eq`.
@@ -46,35 +48,39 @@ open Module Polynomial
 
 namespace NLAlib
 
-variable {m n : ℕ}
-
 /-! ### Singular values -/
 
-/-- The singular values `σ₀ ≥ σ₁ ≥ ⋯ ≥ 0` of a real matrix, zero-indexed, padded with zeros:
-`σ k = √(λ_k(AᵀA))` for `k < n` and `σ k = 0` for `k ≥ n`. Defined as Mathlib's
-`LinearMap.singularValues` of `Matrix.toEuclideanLin A`. Atlas `svd`
-(Horn–Johnson 2013, §2.6; HMT 2011, §2.1). Deviation: zero-indexed, indexed by `ℕ`.
+section General
+
+variable {𝕜 : Type*} [RCLike 𝕜] {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+
+/-- The singular values `σ₀ ≥ σ₁ ≥ ⋯ ≥ 0` of a matrix over `ℝ` or `ℂ` (any `RCLike` field) with
+arbitrary finite row and column types, zero-indexed, padded with zeros:
+`σ k = √(λ_k(AᴴA))` for `k < card n` and `σ k = 0` for `k ≥ card n`. Defined as Mathlib's
+`LinearMap.singularValues` of `Matrix.toEuclideanLin A` (Horn–Johnson 2013, §2.6;
+HMT 2011, §2.1). Deviation: zero-indexed, indexed by `ℕ`. The `Fin`-indexed real case is the
+one the SVD factorization `IsSVD` below is stated for.
 atlas: svd-def -/
-def singularValues (A : Matrix (Fin m) (Fin n) ℝ) : ℕ → ℝ :=
+def singularValues (A : Matrix m n 𝕜) : ℕ → ℝ :=
   fun k => (Matrix.toEuclideanLin A).singularValues k
 
-/-- Bridge to Mathlib's `LinearMap.singularValues`. Atlas `svd`. -/
-theorem singularValues_eq_linearMap (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+/-- Bridge to Mathlib's `LinearMap.singularValues` (definitional). Atlas `svd`. -/
+theorem singularValues_eq_linearMap (A : Matrix m n 𝕜) (k : ℕ) :
     singularValues A k = (Matrix.toEuclideanLin A).singularValues k := rfl
 
 /-- Singular values are nonnegative. Atlas `svd`. -/
-theorem singularValues_nonneg (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+theorem singularValues_nonneg (A : Matrix m n 𝕜) (k : ℕ) :
     0 ≤ singularValues A k :=
   LinearMap.singularValues_nonneg _ _
 
 /-- Singular values are listed in non-increasing order. Atlas `svd`. -/
-theorem singularValues_antitone (A : Matrix (Fin m) (Fin n) ℝ) :
+theorem singularValues_antitone (A : Matrix m n 𝕜) :
     Antitone (singularValues A) :=
   fun _ _ h => LinearMap.singularValues_antitone _ h
 
 /-- The nonzero singular values are exactly the first `rank A` ones
 (Horn–Johnson 2013, Thm 2.6.3). Atlas `svd`. -/
-theorem singularValues_ne_zero_iff (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+theorem singularValues_ne_zero_iff (A : Matrix m n 𝕜) (k : ℕ) :
     singularValues A k ≠ 0 ↔ k < A.rank := by
   unfold singularValues
   rw [← LinearMap.singularValues_pos_iff_ne_zero,
@@ -82,15 +88,43 @@ theorem singularValues_ne_zero_iff (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     Matrix.toEuclideanLin_eq_toLin_orthonormal, ← Matrix.rank_eq_finrank_range_toLin]
 
 /-- The positive singular values are exactly the first `rank A` ones. Atlas `svd`. -/
-theorem singularValues_pos_iff (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+theorem singularValues_pos_iff (A : Matrix m n 𝕜) (k : ℕ) :
     0 < singularValues A k ↔ k < A.rank := by
   rw [← singularValues_ne_zero_iff, (singularValues_nonneg A k).lt_iff_ne', ne_comm]
 
 /-- `σ k = 0` once `k ≥ rank A`. Atlas `svd`. -/
-theorem singularValues_eq_zero_of_rank_le (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+theorem singularValues_eq_zero_of_rank_le (A : Matrix m n 𝕜) {k : ℕ}
     (hk : A.rank ≤ k) : singularValues A k = 0 := by
   by_contra h
   exact absurd ((singularValues_ne_zero_iff A k).1 h) (not_lt.2 hk)
+
+/-- Sorted eigenvalues of a symmetric operator do not depend on how the operator is
+spelled. -/
+private lemma eigenvalues_congr {E : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [FiniteDimensional 𝕜 E] {T₁ T₂ : E →ₗ[𝕜] E} (h : T₁ = T₂) (h₁ : T₁.IsSymmetric)
+    (h₂ : T₂.IsSymmetric) {d : ℕ} (hd : Module.finrank 𝕜 E = d) (i : Fin d) :
+    h₁.eigenvalues hd i = h₂.eigenvalues hd i := by
+  subst h
+  rfl
+
+/-- The squared singular values are the eigenvalues of the Gram matrix `AᴴA`, in decreasing
+order: `σ_k² = λ_k(AᴴA)` for `k < card n`, with Mathlib's sorted
+`Matrix.IsHermitian.eigenvalues₀` (Horn–Johnson 2013, §2.6). For real matrices `Aᴴ = Aᵀ`
+(`Matrix.conjTranspose_eq_transpose_of_trivial`). Atlas `svd`. -/
+theorem sq_singularValues_eq_eigenvalues₀ (A : Matrix m n 𝕜) (i : Fin (Fintype.card n)) :
+    singularValues A i ^ 2 = (Matrix.isHermitian_conjTranspose_mul_self A).eigenvalues₀ i := by
+  classical
+  have heq : LinearMap.adjoint (Matrix.toEuclideanLin A) ∘ₗ Matrix.toEuclideanLin A =
+      Matrix.toEuclideanLin (Aᴴ * A) := by
+    rw [← Matrix.toEuclideanLin_conjTranspose_eq_adjoint]
+    simp only [Matrix.toEuclideanLin, Matrix.toLpLin_mul_same]
+  rw [singularValues_eq_linearMap,
+    (Matrix.toEuclideanLin A).sq_singularValues_fin finrank_euclideanSpace i]
+  exact eigenvalues_congr heq _ _ finrank_euclideanSpace i
+
+end General
+
+variable {m n : ℕ}
 
 /-- `σ k = 0` once `k ≥ m` (number of rows). Atlas `svd`. -/
 theorem singularValues_eq_zero_of_height_le (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
@@ -120,37 +154,6 @@ theorem rank_eq_card_singularValues_ne_zero (A : Matrix (Fin m) (Fin n) ℝ) :
     simp only [Finset.mem_filter, Finset.mem_range, singularValues_ne_zero_iff]
     exact ⟨fun h => h.2, fun h => ⟨h.trans_le hr, h⟩⟩
   rw [this, Finset.card_range]
-
-/-- `σ k² = λ_k(AᵀA)` for `k < n`, in terms of Mathlib's sorted eigenvalues of the
-self-adjoint operator `T† T`, `T = toEuclideanLin A`. Atlas `svd`. -/
-theorem sq_singularValues_eq_eigenvalues_adjoint_comp_self (A : Matrix (Fin m) (Fin n) ℝ)
-    (k : Fin n) :
-    singularValues A k ^ 2 =
-      (Matrix.toEuclideanLin A).isSymmetric_adjoint_comp_self.eigenvalues
-        finrank_euclideanSpace_fin k :=
-  (Matrix.toEuclideanLin A).sq_singularValues_fin finrank_euclideanSpace_fin k
-
-/-- Sorted eigenvalues of a symmetric operator do not depend on how it or the dimension is
-spelled. -/
-private lemma eigenvalues_congr {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E] {T₁ T₂ : E →ₗ[ℝ] E} (h : T₁ = T₂) (h₁ : T₁.IsSymmetric)
-    (h₂ : T₂.IsSymmetric) {n₁ n₂ : ℕ} (hn₁ : finrank ℝ E = n₁) (hn₂ : finrank ℝ E = n₂)
-    (i : Fin n₁) :
-    h₁.eigenvalues hn₁ i = h₂.eigenvalues hn₂ (Fin.cast (hn₁.symm.trans hn₂) i) := by
-  subst h; subst hn₁; subst hn₂
-  rfl
-
-/-- The squared singular values are the eigenvalues of the Gram matrix `AᵀA`, in decreasing
-order: `σ_k² = λ_k(AᵀA)`, with Mathlib's sorted `Matrix.IsHermitian.eigenvalues₀`
-(Horn–Johnson 2013, §2.6). Atlas `svd`. -/
-theorem sq_singularValues_eq_eigenvalues₀ (A : Matrix (Fin m) (Fin n) ℝ)
-    (hAA : (Aᵀ * A).IsHermitian) (k : Fin n) :
-    singularValues A k ^ 2 = hAA.eigenvalues₀ (Fin.cast (Fintype.card_fin n).symm k) := by
-  rw [sq_singularValues_eq_eigenvalues_adjoint_comp_self, Matrix.IsHermitian.eigenvalues₀]
-  apply eigenvalues_congr
-  rw [← Matrix.toEuclideanLin_conjTranspose_eq_adjoint,
-    Matrix.conjTranspose_eq_transpose_of_trivial,
-    Matrix.toEuclideanLin, Matrix.toLpLin_mul_same]
 
 /-! ### Rectangular diagonal matrices -/
 
@@ -510,49 +513,12 @@ theorem singularValues_eq_of_eq_mul_rectDiag_mul {A : Matrix (Fin m) (Fin n) ℝ
       _ = V * (Sgᵀ * (Uᵀ * U) * Sg) * Vᵀ := by
         simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
       _ = _ := by rw [hU, Matrix.mul_one, transpose_rectDiag_mul_rectDiag]
-  have hH : (Aᵀ * A).IsHermitian := by
-    simpa [Matrix.conjTranspose_eq_transpose_of_trivial] using
-      Matrix.isHermitian_conjTranspose_mul_self A
-  have e1 := sq_singularValues_eq_eigenvalues₀ A hH ⟨k, hkn⟩
-  rw [eigenvalues₀_eq_of_eq_mul_diagonal_mul hH hμ hV hAA] at e1
+  have hH := Matrix.isHermitian_conjTranspose_mul_self A
+  have hAA' : Aᴴ * A = V * Matrix.diagonal μ * Vᵀ := by
+    rw [Matrix.conjTranspose_eq_transpose_of_trivial]; exact hAA
+  have e1 := sq_singularValues_eq_eigenvalues₀ A (Fin.cast (Fintype.card_fin n).symm ⟨k, hkn⟩)
+  rw [eigenvalues₀_eq_of_eq_mul_diagonal_mul hH hμ hV hAA'] at e1
   simp only [μ, if_pos hkm] at e1
   exact (sq_eq_sq₀ (singularValues_nonneg A k) (hτ0 k)).1 e1
-
-/-- `σ(Aᵀ) = σ(A)` (Horn–Johnson 2013, §2.6). Atlas `svd`. -/
-theorem singularValues_transpose (A : Matrix (Fin m) (Fin n) ℝ) :
-    singularValues Aᵀ = singularValues A := by
-  funext k
-  by_cases hk : k < min n m
-  · obtain ⟨U, V, h⟩ := exists_isSVD A
-    exact singularValues_eq_of_eq_mul_rectDiag_mul h.transpose_mul_right h.transpose_mul_left
-      (singularValues_nonneg A) (singularValues_antitone A) h.transpose_eq hk
-  · rw [singularValues_eq_zero_of_min_le _ (not_lt.1 hk),
-      singularValues_eq_zero_of_min_le _ (by rw [min_comm]; exact not_lt.1 hk)]
-
-/-- Singular values are invariant under left multiplication by an orthogonal matrix
-(Horn–Johnson 2013, §2.6). Atlas `svd`. -/
-theorem singularValues_orthogonal_mul (A : Matrix (Fin m) (Fin n) ℝ) {Q : Matrix (Fin m) (Fin m) ℝ}
-    (hQ : Qᵀ * Q = 1) : singularValues (Q * A) = singularValues A := by
-  funext k
-  by_cases hk : k < min m n
-  · obtain ⟨U, V, h⟩ := exists_isSVD A
-    refine singularValues_eq_of_eq_mul_rectDiag_mul (U := Q * U) (V := V) ?_ h.transpose_mul_right
-      (singularValues_nonneg A) (singularValues_antitone A) ?_ hk
-    · rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Qᵀ, hQ, Matrix.one_mul,
-        h.transpose_mul_left]
-    · conv_lhs => rw [h.eq]
-      simp only [Matrix.mul_assoc]
-  · rw [singularValues_eq_zero_of_min_le _ (not_lt.1 hk),
-      singularValues_eq_zero_of_min_le _ (not_lt.1 hk)]
-
-/-- Singular values are invariant under right multiplication by an orthogonal matrix
-(Horn–Johnson 2013, §2.6). Atlas `svd`. -/
-theorem singularValues_mul_orthogonal (A : Matrix (Fin m) (Fin n) ℝ) {Q : Matrix (Fin n) (Fin n) ℝ}
-    (hQ : Qᵀ * Q = 1) : singularValues (A * Q) = singularValues A := by
-  have hQ' : Q * Qᵀ = 1 := mul_eq_one_comm.1 hQ
-  have hQ'' : (Qᵀ)ᵀ * Qᵀ = 1 := by rwa [Matrix.transpose_transpose]
-  rw [← singularValues_transpose, Matrix.transpose_mul, singularValues_orthogonal_mul _ hQ'',
-    singularValues_transpose]
-
 
 end NLAlib

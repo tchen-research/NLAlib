@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace
 import NLAlib.Matrix.Spectral.EckartYoung
-import NLAlib.LowRank.Sampling.ComplexVolumeSamplingError
+import NLAlib.Matrix.Spectral.ComplexVolumeSpectrum
+import NLAlib.Matrix.Subspaces.ComplexVolumeProjection
 /-!
 # Genuine complex Frobenius Eckart–Young tail
 
@@ -95,7 +96,7 @@ theorem complexGramTail_le_frobenius_norm_sq_sub_of_rank_le
     rw [e.sum_comp (fun j => (R j j).re)]
     rw [← Complex.re_sum]
     change R.trace.re ≤ (k : ℝ)
-    rw [re_trace_eq_rank_of_isIdempotentElem R hpR]
+    rw [trace_eq_rank_of_isIdempotentElem R hpR, Complex.natCast_re]
     exact_mod_cast hrankR
   have hcaptured_le : ‖A * P‖ ^ 2 ≤
       ∑ i : Fin (Fintype.card n), if (i : ℕ) < k then complexGramEigenvalues A i else 0 := by

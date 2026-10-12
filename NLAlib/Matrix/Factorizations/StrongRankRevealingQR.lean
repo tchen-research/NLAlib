@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Factorizations.RankRevealingTrailing
 import NLAlib.Matrix.Factorizations.MaximumVolumeRankAdapted
-import NLAlib.Matrix.Spectral.SingularIsometries
+import NLAlib.Matrix.Spectral.SingularValueInvariance
+import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
 /-!
 # Strong rank-revealing QR with the exact Gu–Eisenstat constants
 
@@ -63,9 +64,9 @@ theorem exists_strong_rank_revealing_qr {m n : Type*}
   have hSmall : Real.sqrt (1 + b) ≤ c := Real.sqrt_le_sqrt hConst
   have hSpec (i : ℕ) : (Matrix.fromBlocks R (R * T) 0 D).toEuclideanLin.singularValues i =
       A.toEuclideanLin.singularValues i := by
-    have hh := toEuclideanLin_singularValues_reindex A (Equiv.refl m) π.symm i
-    change (A.submatrix id π).toEuclideanLin.singularValues i = _ at hh
-    rw [hFact, toEuclideanLin_singularValues_isometry_mul hQ] at hh
+    have hh := congrFun (singularValues_reindex A (Equiv.refl m) π.symm) i
+    change singularValues (A.submatrix id π) i = _ at hh
+    rw [hFact, singularValues_isometry_mul hQ] at hh
     exact hh
   refine ⟨π, Q, R, R * T, D, hQ, hQt, hR, hUpper, hDUpper, hFact, ?_, ?_, ?_, ?_⟩
   · intro i hi

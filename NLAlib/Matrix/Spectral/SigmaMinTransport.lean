@@ -46,7 +46,6 @@ theorem sigmaMin_eq_toEuclideanLin_singularValues_last {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) (hn : 0 < Fintype.card n) :
     sigmaMin A = A.toEuclideanLin.singularValues (Fintype.card n - 1) := by
   rw [← sigmaMin_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
-    sigmaMin_eq_singularValues_last _ hn,
-    singularValues_reindex_eq_toEuclideanLin_singularValues]
+    sigmaMin_eq_singularValues_last _ hn, singularValues_reindex, singularValues_eq_linearMap]
 
 end NLAlib

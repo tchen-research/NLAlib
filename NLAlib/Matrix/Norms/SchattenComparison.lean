@@ -21,9 +21,7 @@ omit [DecidableEq m] in
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem toEuclideanLin_singularValues_eq_zero_of_rank_le (A : Matrix m n ℝ) {i : ℕ}
     (hi : A.rank ≤ i) : A.toEuclideanLin.singularValues i = 0 := by
-  rw [← singularValues_reindex_eq_toEuclideanLin_singularValues A i]
-  apply singularValues_eq_zero_of_rank_le
-  rwa [Matrix.rank_reindex]
+  exact singularValues_eq_zero_of_rank_le A hi
 
 omit [DecidableEq m] in
 /-- Every positive-exponent Schatten power sum uses exactly the actual rank

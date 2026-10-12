@@ -244,20 +244,6 @@ theorem eigenvalues₀_add_le {A B : Matrix n n ℝ} (hA : A.IsHermitian) (hB : 
 /-! ### Interlacing for compressions -/
 
 omit [DecidableEq n] in
-/-- A real matrix with orthonormal columns has at most as many columns as rows (general finite
-index types). Helper for interlacing; atlas `orthonormal-completion`.
-atlas: orthonormal-completion -/
-theorem card_le_card_of_hasOrthonormalCols {r : Type*} [Fintype r] [DecidableEq r]
-    {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q) : Fintype.card r ≤ Fintype.card n := by
-  have hinj : Function.Injective Q.mulVecLin := by
-    intro x y hxy
-    have h := congrArg (fun v => Qᵀ *ᵥ v) hxy
-    simp only [Matrix.mulVecLin_apply, Matrix.mulVec_mulVec] at h
-    rwa [show Qᵀ * Q = 1 from hQ, Matrix.one_mulVec, Matrix.one_mulVec] at h
-  simpa [Module.finrank_fintype_fun_eq_card] using
-    LinearMap.finrank_le_finrank_of_injective hinj
-
-omit [DecidableEq n] in
 /-- Pushing a subspace forward by a matrix with orthonormal columns preserves its dimension. -/
 private theorem finrank_map_mulVecLin_of_hasOrthonormalCols {r : Type*} [Fintype r]
     [DecidableEq r] {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q) (S : Submodule ℝ (r → ℝ)) :
@@ -332,7 +318,7 @@ private theorem sq_singularValues_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ
     (hk : k < n) :
     singularValues A k ^ 2 = (isHermitian_transpose_mul_self A).eigenvalues₀
       (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩) :=
-  sq_singularValues_eq_eigenvalues₀ A _ ⟨k, hk⟩
+  sq_singularValues_eq_eigenvalues₀ A (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩)
 
 /-- **Courant–Fischer for singular values, min-max half.** If `‖Ax‖² ≤ c² ‖x‖²` on a subspace
 `W ⊆ ℝⁿ` of codimension at most `k`, then `σ_k(A) ≤ c` (zero-indexed). Horn–Johnson 2013,
@@ -346,7 +332,7 @@ theorem singularValues_le_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) 
   by_cases hk : k < n
   · have h := eigenvalues₀_le_of_forall_mem (isHermitian_transpose_mul_self A)
       (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩) W (by simpa using hW) (c := c ^ 2)
-      fun x hx => by rw [dotProduct_transpose_mul_mulVec]; exact hAW x hx
+      fun x hx => by rw [← mulVec_dotProduct_mulVec_self]; exact hAW x hx
     rw [← sq_singularValues_eq A hk] at h
     exact (pow_le_pow_iff_left₀ (singularValues_nonneg A k) hc two_ne_zero).1 h
   · rw [singularValues_eq_zero_of_width_le A (not_lt.1 hk)]
@@ -366,7 +352,7 @@ theorem le_singularValues_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) 
   · exact hc.trans (singularValues_nonneg A k)
   have h := le_eigenvalues₀_of_forall_mem (isHermitian_transpose_mul_self A)
     (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩) S (by simpa using hS) (c := c ^ 2)
-    fun x hx => by rw [dotProduct_transpose_mul_mulVec]; exact hAS x hx
+    fun x hx => by rw [← mulVec_dotProduct_mulVec_self]; exact hAS x hx
   rw [← sq_singularValues_eq A hk] at h
   exact (pow_le_pow_iff_left₀ hc.le (singularValues_nonneg A k) two_ne_zero).1 h
 
@@ -381,7 +367,7 @@ theorem exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul {m n : ℕ}
   · obtain ⟨W, hW, hAW⟩ := exists_submodule_le_eigenvalues₀_mul
       (isHermitian_transpose_mul_self A) (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩)
     refine ⟨W, by simpa using hW, fun x hx => ?_⟩
-    rw [sq_singularValues_eq A hk, ← dotProduct_transpose_mul_mulVec]
+    rw [sq_singularValues_eq A hk, mulVec_dotProduct_mulVec_self]
     exact hAW x hx
   · refine ⟨⊥, by simp; omega, fun x hx => ?_⟩
     rw [(Submodule.mem_bot ℝ).1 hx]
@@ -398,7 +384,7 @@ theorem exists_submodule_sq_singularValues_mul_le_mulVec_dotProduct {m n : ℕ}
   obtain ⟨S, hS, hAS⟩ := exists_submodule_eigenvalues₀_mul_le
     (isHermitian_transpose_mul_self A) (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩)
   refine ⟨S, by simpa using hS, fun x hx => ?_⟩
-  rw [sq_singularValues_eq A hk, ← dotProduct_transpose_mul_mulVec]
+  rw [sq_singularValues_eq A hk, mulVec_dotProduct_mulVec_self]
   exact hAS x hx
 
 end NLAlib

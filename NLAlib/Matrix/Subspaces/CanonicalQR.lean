@@ -3,6 +3,7 @@ import NLAlib.Matrix.Spectral.Core
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.GramSchmidt
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
 import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 
 /-!
 # Canonical positive-diagonal thin QR
@@ -138,23 +139,13 @@ theorem canonicalQRUpper_apply_self_pos {n k : ℕ} (hkn : k ≤ n)
   rw [inner_gramSchmidtNormed_self_eq_norm_gramSchmidt]
   exact norm_pos_iff.mpr (gramSchmidt_ne_zero i hA)
 
-/-- An actual real orthogonal matrix defines a Euclidean linear isometry.
-Source: operator re-derivation `sh:qr-equiv`. -/
-def orthogonalToEuclideanIsometry {n : ℕ} (O : Matrix.orthogonalGroup (Fin n) ℝ) :
-    EuclideanSpace ℝ (Fin n) →ₗᵢ[ℝ] EuclideanSpace ℝ (Fin n) where
-  toLinearMap := Matrix.toEuclideanLin O.val
-  norm_map' x := by
-    rw [norm_eq_sqrt_dotProduct, norm_eq_sqrt_dotProduct]
-    change Real.sqrt ((O.val *ᵥ x.ofLp) ⬝ᵥ (O.val *ᵥ x.ofLp)) = Real.sqrt (x.ofLp ⬝ᵥ x.ofLp)
-    rw [mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols
-      (transpose_mul_self_orthogonalGroup O)]
-
 /-- Orthogonal left multiplication carries each input column through its
 Euclidean isometry. Source: operator re-derivation `sh:qr-equiv`. -/
 theorem qrColumnFamily_orthogonal_mul {n k : ℕ}
     (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Fin n → Fin k → ℝ) :
     qrColumnFamily (Matrix.of.symm (O.val * Matrix.of A)) =
-      fun j => orthogonalToEuclideanIsometry O (qrColumnFamily A j) := by
+      fun j => HasOrthonormalCols.toLinearIsometry (transpose_mul_self_orthogonalGroup O)
+        (qrColumnFamily A j) := by
   rfl
 
 /-- The canonical positive normalized Gram–Schmidt array is equivariant
@@ -180,8 +171,8 @@ theorem canonicalQRFrame_orthogonal_mul {n k : ℕ} (hkn : k ≤ n)
   have hOA : LinearIndependent ℝ
       (qrColumnFamily (Matrix.of.symm (O.val * Matrix.of A))) := by
     rw [qrColumnFamily_orthogonal_mul]
-    exact hA.map' (orthogonalToEuclideanIsometry O).toLinearMap
-      ((LinearMap.ker_eq_bot).mpr (orthogonalToEuclideanIsometry O).injective)
+    let L := HasOrthonormalCols.toLinearIsometry (transpose_mul_self_orthogonalGroup O)
+    exact hA.map' L.toLinearMap ((LinearMap.ker_eq_bot).mpr L.injective)
   apply Subtype.ext
   change (canonicalQRFrame n k hkn (Matrix.of.symm (O.val * Matrix.of A))).val =
     Matrix.of.symm (O.val * Matrix.of (canonicalQRFrame n k hkn A).val)
@@ -204,7 +195,8 @@ theorem canonicalQRUpper_orthogonal_mul {n k : ℕ} (hkn : k ≤ n)
     (qrColumnFamily (Matrix.of.symm (O.val * Matrix.of (canonicalQRFrame n k hkn A).val)) i)
     (qrColumnFamily (Matrix.of.symm (O.val * Matrix.of A)) j) = _
   rw [qrColumnFamily_orthogonal_mul, qrColumnFamily_orthogonal_mul]
-  exact (orthogonalToEuclideanIsometry O).inner_map_map _ _
+  exact (HasOrthonormalCols.toLinearIsometry
+    (transpose_mul_self_orthogonalGroup O)).inner_map_map _ _
 
 /-- The literal canonical factors multiply to the original full-column-rank
 input. Together with triangularity and positive diagonal, this is an actual

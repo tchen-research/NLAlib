@@ -86,13 +86,15 @@ def leverageScore (A : Matrix m n ℝ) (i : m) : ℝ := (A * moorePenroseInverse
 /-- `0 ≤ ℓᵢ(A)`. Woodruff 2014, §2.4; atlas `leverage-scores`.
 atlas: leverage-scores -/
 theorem leverageScore_nonneg (A : Matrix m n ℝ) (i : m) : 0 ≤ leverageScore A i :=
-  (diag_mem_Icc_of_isSymm_of_isIdempotentElem _ (mul_moorePenroseInverse_isSymm A).eq
+  (re_diag_mem_Icc_of_isHermitian_of_isIdempotentElem _
+    (Matrix.isHermitian_iff_isSymm.mpr (mul_moorePenroseInverse_isSymm A))
     (mul_moorePenroseInverse_isIdempotentElem A) i).1
 
 /-- `ℓᵢ(A) ≤ 1`. Woodruff 2014, §2.4; atlas `leverage-scores`.
 atlas: leverage-scores -/
 theorem leverageScore_le_one (A : Matrix m n ℝ) (i : m) : leverageScore A i ≤ 1 :=
-  (diag_mem_Icc_of_isSymm_of_isIdempotentElem _ (mul_moorePenroseInverse_isSymm A).eq
+  (re_diag_mem_Icc_of_isHermitian_of_isIdempotentElem _
+    (Matrix.isHermitian_iff_isSymm.mpr (mul_moorePenroseInverse_isSymm A))
     (mul_moorePenroseInverse_isIdempotentElem A) i).2
 
 /-- The leverage scores sum to the rank: `∑ᵢ ℓᵢ(A) = rank A`. Woodruff 2014, §2.4

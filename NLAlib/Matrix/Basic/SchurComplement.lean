@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Basic.GeneralizedSchurComplement
+import NLAlib.Matrix.Basic.GramVanishing
 import NLAlib.Matrix.Factorizations.Triangular
 /-!
 # Schur complements: the elimination step and Albert's criterion
@@ -9,8 +10,6 @@ import NLAlib.Matrix.Factorizations.Triangular
   (`posDef_iff_pivotSchur`, `posSemidef_pivotSchur`) is a passage to `pivotSchur A`;
   `det A = a · det (pivotSchur A)` (`det_eq_mul_det_pivotSchur`). With Lean's `x / 0 = 0` the
   definition is total: a zero pivot gives the trailing block.
-* A zero diagonal entry of a PSD matrix kills its row and column
-  (`apply_eq_zero_of_posSemidef_of_apply_self_eq_zero`).
 * `borderedMatrix_eq_reindex_fromBlocks`: the bridge from the `Fin.cons` splitting to Mathlib's
   `Matrix.fromBlocks` over `Fin 1 ⊕ Fin n`, so that Mathlib's block lemmas
   (`Matrix.PosSemidef.fromBlocks₁₁`, `Matrix.det_fromBlocks₁₁`) apply.
@@ -31,30 +30,6 @@ open scoped Matrix
 open Matrix
 
 namespace NLAlib
-
-section ZeroDiagonal
-
-variable {m : Type*} [Fintype m] [DecidableEq m]
-
-/-- A zero diagonal entry of a positive semidefinite matrix kills its column: `aᵢᵢ = 0` gives
-`aⱼᵢ = 0` for every `j` (from `eᵢᵀ A eᵢ = 0 ⟹ A eᵢ = 0`,
-`Matrix.PosSemidef.dotProduct_mulVec_zero_iff`). Horn–Johnson 2013, Obs. 7.1.10. -/
-theorem apply_eq_zero_of_posSemidef_of_apply_self_eq_zero {A : Matrix m m ℝ}
-    (hA : A.PosSemidef) {i : m} (h : A i i = 0) (j : m) : A j i = 0 := by
-  have h0 : star (Pi.single i 1 : m → ℝ) ⬝ᵥ A *ᵥ Pi.single i 1 = 0 := by
-    simp [h]
-  have := congrFun ((hA.dotProduct_mulVec_zero_iff _).1 h0) j
-  simpa using this
-
-/-- A zero diagonal entry of a positive semidefinite matrix kills its row. -/
-theorem apply_eq_zero_of_posSemidef_of_apply_self_eq_zero' {A : Matrix m m ℝ}
-    (hA : A.PosSemidef) {i : m} (h : A i i = 0) (j : m) : A i j = 0 := by
-  have hs : A i j = A j i := by
-    have := congrFun (congrFun hA.isHermitian j) i
-    simpa using this
-  rw [hs]; exact apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hA h j
-
-end ZeroDiagonal
 
 section Pivot
 

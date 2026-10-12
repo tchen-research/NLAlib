@@ -277,34 +277,6 @@ theorem expErr_le_of_sub_mem_range [DecidableEq m] (A : Matrix m n ℝ) (b : m �
           mul_le_mul_of_nonneg_left hstep (pow_nonneg hρ k)
       _ = (1 - σ ^ 2 / frobSq A) ^ (k + 1) * ((x - xs) ⬝ᵥ (x - xs)) := by ring
 
-/-- The Moore–Penrose lower bound on the row space: for `v ∈ range Aᵀ`,
-`‖A⁺‖⁻² ‖v‖² ≤ ‖Av‖²`. Source: Zouzias–Freris (2013) [`zf13`], §2 (`σ_min⁺ = ‖A⁺‖⁻¹`).
-Atlas: `kaczmarz-rank-deficient` (helper). -/
-theorem inv_specNorm_moorePenroseInverse_sq_mul_le [DecidableEq m] [DecidableEq n]
-    (A : Matrix m n ℝ) {v : n → ℝ} (hv : v ∈ LinearMap.range Aᵀ.mulVecLin) :
-    (specNorm (moorePenroseInverse A))⁻¹ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v) := by
-  set B := moorePenroseInverse A
-  by_cases hB : specNorm B = 0
-  · simp only [hB, _root_.inv_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
-      zero_mul]
-    exact dotProduct_self_nonneg _
-  obtain ⟨w, rfl⟩ := hv
-  simp only [Matrix.mulVecLin_apply]
-  have hfix : B *ᵥ (A *ᵥ (Aᵀ *ᵥ w)) = Aᵀ *ᵥ w := by
-    have hsym : (B * A)ᵀ = B * A := moorePenroseInverse_mul_isSymm A
-    have h : B * A * Aᵀ = Aᵀ := by
-      calc B * A * Aᵀ = (B * A)ᵀ * Aᵀ := by rw [hsym]
-        _ = (A * (B * A))ᵀ := (Matrix.transpose_mul _ _).symm
-        _ = Aᵀ := by rw [← Matrix.mul_assoc, mul_moorePenroseInverse_mul]
-    rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, h]
-  have hBound := sum_sq_mulVec_le_specNorm_sq B (A *ᵥ (Aᵀ *ᵥ w))
-  rw [hfix] at hBound
-  have hScale := mul_le_mul_of_nonneg_left hBound (sq_nonneg (specNorm B)⁻¹)
-  have hCancel : (specNorm B)⁻¹ ^ 2 * specNorm B ^ 2 = 1 := by
-    rw [← mul_pow, inv_mul_cancel₀ hB, one_pow]
-  rw [← mul_assoc, hCancel, one_mul] at hScale
-  simpa only [dotProduct, pow_two] using hScale
-
 /-- **Randomized Kaczmarz converges to the least-norm solution.** For a consistent system
 (`b ∈ range A`) started at `x₀ = 0`,
 `E‖x_k − A⁺b‖² ≤ (1 − ‖A⁺‖⁻²/‖A‖_F²)^k ‖A⁺b‖²`, with no rank assumption.
@@ -333,7 +305,7 @@ theorem expErr_zero_le_moorePenroseInverse [DecidableEq m] [DecidableEq n] (A : 
     refine ⟨-((Bᵀ * B) *ᵥ (A *ᵥ y)), ?_⟩
     rw [Matrix.mulVecLin_apply, Matrix.mulVec_neg, zero_sub, hB']
   have h := expErr_le_of_sub_mem_range A (A *ᵥ y) (B *ᵥ (A *ᵥ y)) hxs
-    (specNorm B)⁻¹ (fun v hv => inv_specNorm_moorePenroseInverse_sq_mul_le A hv) 0 hmem k
+    (specNorm B)⁻¹ (fun v hv => inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le A hv) 0 hmem k
   simpa using h
 
 end Kaczmarz

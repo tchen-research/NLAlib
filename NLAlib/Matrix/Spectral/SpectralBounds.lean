@@ -17,18 +17,6 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
-/-- Spectral-norm control of the Euclidean length of a matrix-vector product.
-Atlas: `norms-frob-spec`, `norm-lipschitz`. -/
-theorem sqrt_mulVec_dotProduct_le_specNorm_mul (A : Matrix m n ℝ) (x : n → ℝ) :
-    Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x)) ≤ specNorm A * Real.sqrt (x ⬝ᵥ x) := by
-  have h := Matrix.l2_opNorm_mulVec A (WithLp.toLp 2 x)
-  have hnAx : ‖(EuclideanSpace.equiv m ℝ).symm (A *ᵥ x)‖ =
-      Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x)) := by
-    rw [EuclideanSpace.norm_eq]
-    congr 1
-    simp [dotProduct, sq]
-  simpa only [hnAx, ← sqrt_dotProduct_self_eq_norm, specNorm] using h
-
 /-- One-sided Weyl perturbation bound in the spectral norm, including empty
 dimensions. Atlas: `norm-lipschitz`. -/
 theorem sigmaMin_le_sigmaMin_add_specNorm (A B : Matrix m n ℝ) :
@@ -66,26 +54,6 @@ theorem abs_sigmaMin_sub_sigmaMin_le_specNorm (A B : Matrix m n ℝ) :
     unfold specNorm
     rw [norm_sub_rev]
   constructor <;> linarith
-
-/-- Multiplication by an orthonormal frame preserves the spectral norm.
-Atlas: `norms-frob-spec`, `svd`.
-atlas: norms-frob-spec -/
-theorem specNorm_mul_left_of_hasOrthonormalCols {p : Type*} [Fintype p]
-    [DecidableEq p] {P : Matrix m n ℝ} (hP : Pᵀ * P = 1) (A : Matrix n p ℝ) :
-    specNorm (P * A) = specNorm A := by
-  have hPA : P * A = P * (Pᵀ * (P * A)) := by
-    rw [← Matrix.mul_assoc Pᵀ P, hP, Matrix.one_mul]
-  have h := specNorm_transpose_mul_of_eq_mul hP hPA
-  simpa only [← Matrix.mul_assoc, hP, Matrix.one_mul] using h.symm
-
-/-- Right multiplication by the transpose of an orthonormal frame preserves
-the spectral norm. Atlas: `norms-frob-spec`, `svd`.
-atlas: norms-frob-spec -/
-theorem specNorm_mul_transpose_right_of_hasOrthonormalCols {p : Type*}
-    [Fintype p] [DecidableEq p] {P : Matrix m n ℝ} (hP : Pᵀ * P = 1)
-    (A : Matrix p n ℝ) : specNorm (A * Pᵀ) = specNorm A := by
-  rw [← specNorm_transpose (A * Pᵀ), Matrix.transpose_mul, Matrix.transpose_transpose,
-    specNorm_mul_left_of_hasOrthonormalCols hP, specNorm_transpose]
 
 /-- The spectral norm squared is the norm of the Gram matrix, including
 empty dimensions. Atlas: `norms-frob-spec`, `svd`.

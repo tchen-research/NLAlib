@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Subspaces.ProjectionGaps
+import NLAlib.Matrix.Spectral.SingularValueInvariance
 
 /-!
 # Principal angles of equal-dimensional subspaces

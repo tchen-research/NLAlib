@@ -20,17 +20,17 @@ variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 /-- Orthogonal left multiplication preserves every finite Schatten power sum. -/
 theorem schattenNorm_orthogonal_mul (A : Matrix m n ℝ) {U : Matrix m m ℝ}
     (hU : HasOrthonormalCols U) (p : ℝ) : schattenNorm (U * A) p = schattenNorm A p := by
-  simp only [schattenNorm, toEuclideanLin_singularValues_orthogonal_mul A hU]
+  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_isometry_mul hU A]
 
 omit [DecidableEq m] in
 /-- Orthogonal right multiplication preserves every finite Schatten power sum. -/
 theorem schattenNorm_mul_orthogonal (A : Matrix m n ℝ) {V : Matrix n n ℝ}
     (hV : HasOrthonormalCols V) (p : ℝ) : schattenNorm (A * V) p = schattenNorm A p := by
-  simp only [schattenNorm, toEuclideanLin_singularValues_mul_orthogonal A hV]
+  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_mul_orthogonal A hV]
 
 /-- Transposition preserves every finite Schatten power sum. -/
 theorem schattenNorm_transpose (A : Matrix m n ℝ) (p : ℝ) : schattenNorm Aᵀ p = schattenNorm A p := by
-  simp only [schattenNorm, toEuclideanLin_singularValues_transpose, min_comm]
+  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_transpose, min_comm]
 
 /-- Every extended norm exponent obeys the triangle inequality, including infinity. -/
 theorem schattenNormExtended_add_le (A B : Matrix m n ℝ) {p : ℝ≥0∞} (hp : 1 ≤ p) :

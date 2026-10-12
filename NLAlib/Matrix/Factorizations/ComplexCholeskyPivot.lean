@@ -1,4 +1,6 @@
 import Mathlib.Analysis.Matrix.Order
+import NLAlib.Matrix.Basic.GramVanishing
+import NLAlib.Matrix.Basic.ComplexPosSemidefTrace
 
 /-!
 # Actual complex coordinate Cholesky pivots
@@ -221,50 +223,6 @@ theorem rank_complexCholeskyResidualStep_add_one_eq
     Module.finrank ℂ (LinearMap.ker (complexCholeskyResidualStep R i).mulVecLin) = _ at hS
   omega
 
-omit [Fintype n] [DecidableEq n] in
-/-- A complex PSD diagonal entry is exactly its embedded nonnegative real part.
-Source: Hermitian positivity; manuscript `sa:rp-update`, pivot probabilities. -/
-theorem diag_eq_ofReal_re_of_complex_posSemidef {R : Matrix n n ℂ}
-    (hR : R.PosSemidef) (i : n) : R i i = ((R i i).re : ℂ) :=
-  (Complex.conj_eq_iff_re.mp (hR.isHermitian.apply i i)).symm
-
-omit [DecidableEq n] in
-/-- The ordered complex PSD trace is its real complex trace, with no dimension
-doubling. Source: audit Part VII, complex RPCholesky normalization. -/
-theorem trace_eq_ofReal_re_of_complex_posSemidef {R : Matrix n n ℂ}
-    (hR : R.PosSemidef) : R.trace = (R.trace.re : ℂ) := by
-  have hi := (RCLike.nonneg_iff.mp hR.trace_nonneg).2
-  change R.trace.im = 0 at hi
-  apply Complex.ext <;> simp [hi]
-
-omit [DecidableEq n] in
-/-- A PSD matrix has nonnegative real complex trace.
-Source: manuscript `sa:rp-one-step`; audit Part VII. -/
-theorem re_trace_nonneg_of_complex_posSemidef {R : Matrix n n ℂ}
-    (hR : R.PosSemidef) : 0 ≤ R.trace.re := (RCLike.nonneg_iff.mp hR.trace_nonneg).1
-
-omit [DecidableEq n] in
-/-- Zero real complex trace characterizes the zero PSD matrix.
-Source: manuscript `sa:rp-one-step`, absorbing residual. -/
-theorem re_trace_eq_zero_iff_of_complex_posSemidef {R : Matrix n n ℂ}
-    (hR : R.PosSemidef) : R.trace.re = 0 ↔ R = 0 := by
-  constructor
-  · intro ht
-    apply hR.trace_eq_zero_iff.mp
-    rw [trace_eq_ofReal_re_of_complex_posSemidef hR, ht, Complex.ofReal_zero]
-  · rintro rfl
-    simp
-
-/-- A zero PSD complex diagonal forces its actual complex column to vanish.
-Source: manuscript `sa:rp-one-step`, zero selection probability. -/
-theorem apply_eq_zero_of_complex_posSemidef_of_diag_eq_zero
-    {R : Matrix n n ℂ} (hR : R.PosSemidef) {i : n} (hi : R i i = 0) (j : n) : R j i = 0 := by
-  let e : n → ℂ := Pi.single i 1
-  have hq : star e ⬝ᵥ (R *ᵥ e) = 0 := by simp [e, hi]
-  have hz : R *ᵥ e = 0 := (hR.dotProduct_mulVec_zero_iff e).mp hq
-  have hj := congrFun hz j
-  simpa [e] using hj
-
 /-- Complex diagonal-over-real-trace pivot probabilities, with a uniform
 absorbing-state convention. Source: manuscript `sa:rp-update`; CETW (2025). -/
 def complexCholeskyPivotProbability (R : Matrix n n ℂ) (i : n) : ℝ :=
@@ -304,7 +262,7 @@ theorem sum_complexCholeskyPivotProbability_smul_step_eq [Nonempty n]
       (R j i * (R i i)⁻¹ * R i k) = (R.trace.re)⁻¹ • (R j i * R i k) := by
     intro i j k
     by_cases hi : R i i = 0
-    · rw [hi, apply_eq_zero_of_complex_posSemidef_of_diag_eq_zero hR hi j]
+    · rw [hi, apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hR hi j]
       simp
     · rw [Complex.real_smul, Complex.real_smul]
       rw [Complex.ofReal_div, Complex.ofReal_inv,
@@ -334,18 +292,5 @@ theorem sum_complexCholeskyPivotProbability_mul_re_trace_step_eq [Nonempty n]
     simpa only [Matrix.trace_sum, Matrix.trace_smul, Matrix.trace_sub, Complex.sub_re,
       Complex.re_sum, Complex.smul_re, smul_eq_mul, div_eq_mul_inv,
       mul_comm] using h
-
-omit [DecidableEq n] in
-/-- Native complex rank zero means the actual complex matrix is zero.
-Source: rank--range identity; manuscript `sa:rp-rank`, exact termination. -/
-theorem eq_zero_of_complex_matrix_rank_eq_zero {m : Type*} [Fintype m]
-    {R : Matrix m n ℂ} (hR : R.rank = 0) : R = 0 := by
-  have hrange : LinearMap.range R.mulVecLin = ⊥ := Submodule.finrank_eq_zero.mp hR
-  ext i j
-  have hj : R.col j ∈ LinearMap.range R.mulVecLin := by
-    rw [Matrix.range_mulVecLin]
-    exact Submodule.subset_span ⟨j, rfl⟩
-  rw [hrange, Submodule.mem_bot] at hj
-  exact congrFun hj i
 
 end NLAlib

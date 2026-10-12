@@ -73,7 +73,7 @@ theorem IsLU.unique {A L U L' U' : Matrix n n ℝ} (hA : IsUnit A.det) (h₁ : I
       _ = L'⁻¹ * (L' * U') * U⁻¹ := by rw [hLU]
       _ = U' * U⁻¹ := by rw [← Matrix.mul_assoc, nonsing_inv_mul L' hL', Matrix.one_mul]
   have hup : (L'⁻¹ * L).IsUpperTriangular := by
-    rw [key]; exact isUpperTriangular_mul h₂.isUpperTriangular
+    rw [key]; exact BlockTriangular.mul h₂.isUpperTriangular
       (isUpperTriangular_inv h₁.isUpperTriangular)
   have h1 : L'⁻¹ * L = 1 := eq_one_of_isUnitLowerTriangular_of_isUpperTriangular
     (h₂.isUnitLowerTriangular.inv.mul h₁.isUnitLowerTriangular) hup

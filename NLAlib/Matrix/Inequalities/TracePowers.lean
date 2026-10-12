@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Matrix.Spectrum
 import NLAlib.Matrix.Norms.Core
+import NLAlib.Matrix.Spectral.TraceEigenvalues
 import NLAlib.ForMathlib.Analysis.PowerInequalities
 /-!
 # Polynomial traces in Hermitian eigenbases
@@ -19,12 +20,20 @@ namespace NLAlib
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-/-- Complex trace is invariant under unitary conjugation, including empty
-matrices. Source: trace cyclicity; supports `noncommutative-khintchine`. -/
-theorem trace_conjStarAlgAut_complex (U : Matrix.unitaryGroup ι ℂ) (A : Matrix ι ι ℂ) :
-    (Unitary.conjStarAlgAut ℂ _ U A).trace = A.trace := by
-  rw [Unitary.conjStarAlgAut_apply, Matrix.trace_mul_cycle,
-    Unitary.coe_star_mul_self, one_mul]
+/-- Every natural Hermitian power has real trace equal to the corresponding
+power sum of its real eigenvalues. Source: spectral theorem; supports the
+integer trace method for `noncommutative-khintchine` and manuscript `sa:rp-recursion`
+(complex trace tails). -/
+theorem re_trace_pow_eq_sum_eigenvalues_pow
+    (A : Matrix ι ι ℂ) (hA : A.IsHermitian) (r : ℕ) :
+    (A ^ r).trace.re = ∑ i, hA.eigenvalues i ^ r := by
+  conv_lhs => rw [hA.spectral_theorem]
+  rw [← map_pow, trace_conjStarAlgAut,
+    Matrix.diagonal_pow, Matrix.trace_diagonal]
+  simp only [Complex.re_sum, Pi.pow_apply, Function.comp_apply]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  change ((hA.eigenvalues i : ℂ) ^ r).re = _
+  rw [← Complex.ofReal_pow, Complex.ofReal_re]
 
 /-- Two powers of a real diagonal matrix, separated by a Hermitian matrix,
 have real trace equal to a sum weighted by squared complex entry norms.
@@ -68,7 +77,7 @@ theorem trace_mul_pow_mul_mul_pow_conjStarAlgAut
     (E C * E H ^ a * E C * E H ^ b).trace = (C * H ^ a * C * H ^ b).trace := by
   dsimp only
   rw [← map_pow, ← map_pow, ← map_mul, ← map_mul, ← map_mul,
-    trace_conjStarAlgAut_complex]
+    trace_conjStarAlgAut]
 
 /-- Even mixed powers in a Hermitian diagonal basis are bounded by the endpoint
 quadratic trace. Negative eigenvalues and exponent zero are included.

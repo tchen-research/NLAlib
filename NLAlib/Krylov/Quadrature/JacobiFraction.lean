@@ -1,4 +1,5 @@
 import NLAlib.Krylov.Quadrature.Jacobi
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Adjugate
 /-!
 # The Jacobi continued fraction
 
@@ -8,8 +9,9 @@ Jacobi matrix is the `q`-th convergent of the continued fraction of the Stieltje
 
 * `jacobiMatrix a β m` (symmetric tridiagonal), `jacobiFraction a β x m k` (finite continued
   fraction), `T_eq_jacobiMatrix` (`T_q = jacobiMatrix α β q`);
-* `det_smul_one_sub_jacobiMatrix` (three-term determinant recurrence), `inv_apply_zero_zero`
-  (Cramer at `(0,0)`), `inv_smul_one_sub_jacobiMatrix_apply_zero_zero` (matrix level);
+* `det_smul_one_sub_jacobiMatrix` (three-term determinant recurrence),
+  `inv_smul_one_sub_jacobiMatrix_apply_zero_zero` (matrix level, via Cramer at `(0,0)`,
+  `inv_apply_zero_zero` in `NLAlib.ForMathlib.LinearAlgebra.Matrix.Adjugate`);
 * `LanczosDecomp.inv_smul_one_sub_T_apply_zero_zero`:
   `e₁ᵀ (x I − T_q)⁻¹ e₁ = 1/(x − α₀ − β₁²/(x − α₁ − ⋯))` for `x` above the spectrum of `A`.
 
@@ -58,14 +60,6 @@ theorem submatrix_succ_jacobiMatrix (a β : ℕ → ℝ) (m : ℕ) :
   ext i j
   simp only [jacobiMatrix, Matrix.submatrix_apply, Matrix.of_apply, Fin.val_succ]
   split_ifs <;> first | rfl | (exfalso; omega)
-
-/-- Cramer's rule at `(0, 0)`: `(N⁻¹)₀₀ = det N_{[1:],[1:]} / det N` (no hypothesis; both sides
-vanish when `N` is singular). -/
-theorem inv_apply_zero_zero {m : ℕ} (N : Matrix (Fin (m + 1)) (Fin (m + 1)) ℝ) :
-    N⁻¹ 0 0 = (N.submatrix Fin.succ Fin.succ).det / N.det := by
-  rw [Matrix.inv_def, Matrix.smul_apply, adjugate_fin_succ_eq_det_submatrix, Ring.inverse_eq_inv',
-    smul_eq_mul]
-  simp [div_eq_inv_mul]
 
 /-- `(x − J)` restricted to the trailing block is `x − J'`. -/
 private lemma submatrix_succ_smul_one_sub_jacobiMatrix (a β : ℕ → ℝ) (m : ℕ) (x : ℝ) :

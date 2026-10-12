@@ -1,11 +1,11 @@
-import NLAlib.Matrix.Factorizations.CholeskyTrailingResidual
+import NLAlib.Matrix.Basic.SchurComplement
 import Mathlib.Tactic.FieldSimp
 import NLAlib.Matrix.Basic.GramVanishing
 
 /-!
 # Triangular Cholesky factors for positive-semidefinite matrices
 
-Induct on the trailing coordinate Schur residual. A vanishing pivot forces
+Induct on the trailing coordinate Schur residual `pivotSchur A`. A vanishing pivot forces
 the first row and column to vanish; the total square-root formula therefore
 also works at zero pivots. Source: Higham, Theorem 10.1; Golub--Van Loan,
 Theorem 4.2.7. Atlas target: `cholesky-decomposition`.
@@ -58,7 +58,7 @@ theorem sqrt_pivot_mul_div_eq {n : ℕ}
     {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA : A.PosSemidef) (i : Fin (n + 1)) :
     Real.sqrt (A 0 0) * (A i 0 / Real.sqrt (A 0 0)) = A i 0 := by
   by_cases hZero : A 0 0 = 0
-  · have hi := apply_eq_zero_of_posSemidef_of_diag_eq_zero hA hZero i
+  · have hi := apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hA hZero i
     simp [hZero, hi]
   · have hSqrt : Real.sqrt (A 0 0) ≠ 0 := by
       intro h
@@ -72,14 +72,14 @@ theorem sqrt_pivot_mul_div_eq {n : ℕ}
 first-pivot extension. Higham, Theorem 10.1; supports `cholesky-decomposition`. -/
 theorem choleskyExtend_mul_transpose {n : ℕ}
     {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA : A.PosSemidef)
-    (L : Matrix (Fin n) (Fin n) ℝ) (hL : L * Lᵀ = choleskyTrailingResidual A) :
+    (L : Matrix (Fin n) (Fin n) ℝ) (hL : L * Lᵀ = pivotSchur A) :
     choleskyExtend A L * (choleskyExtend A L)ᵀ = A := by
   have hSqrt : Real.sqrt (A 0 0) * Real.sqrt (A 0 0) = A 0 0 :=
     Real.mul_self_sqrt hA.diag_nonneg
   have hSymm : ∀ i j, A i j = A j i := by
     intro i j
     simpa only [star_trivial] using (hA.isHermitian.apply i j).symm
-  have hTail (i j : Fin n) : ∑ k, L i k * L j k = choleskyTrailingResidual A i j := by
+  have hTail (i j : Fin n) : ∑ k, L i k * L j k = pivotSchur A i j := by
     simpa only [Matrix.mul_apply, Matrix.transpose_apply] using congrFun (congrFun hL i) j
   ext i j
   cases i using Fin.cases with
@@ -98,7 +98,7 @@ theorem choleskyExtend_mul_transpose {n : ℕ}
       simp only [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_succ,
         choleskyExtend, Fin.cases_zero, Fin.cases_succ, hTail]
       rw [div_mul_div_comm, hSqrt]
-      simp only [choleskyTrailingResidual, hSymm 0 j.succ]
+      simp only [pivotSchur_apply, hSymm 0 j.succ]
       ring
 
 /-- Every PSD real matrix has a lower-triangular Cholesky factor with nonnegative
@@ -116,8 +116,8 @@ theorem exists_cholesky_of_posSemidef {n : ℕ}
     · intro i; exact Fin.elim0 i
     · exact Subsingleton.elim _ _
   | succ n ih =>
-    obtain ⟨L, hLower, hDiag, hFactor⟩ := ih (choleskyTrailingResidual A)
-      (posSemidef_choleskyTrailingResidual hA)
+    obtain ⟨L, hLower, hDiag, hFactor⟩ := ih (pivotSchur A)
+      (posSemidef_pivotSchur hA)
     exact ⟨choleskyExtend A L, isLowerTriangular_choleskyExtend A hLower,
       choleskyExtend_diag_nonneg A hDiag, choleskyExtend_mul_transpose hA L hFactor⟩
 

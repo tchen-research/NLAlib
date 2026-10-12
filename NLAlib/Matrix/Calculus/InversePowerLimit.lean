@@ -173,17 +173,6 @@ theorem tendsto_sum_pow_rpow_mul_pow_succ_of_unique_max
   filter_upwards [eventually_gt_atTop 0] with n hn
   exact (sum_pow_rpow_mul_pow_succ_eq_normalized b i₀ hb₀ hb n hn i).symm
 
-/-- Natural trace powers of a Hermitian real matrix are the power sums of
-its eigenvalues. Source: finite spectral theorem and unitary trace
-invariance; atlas `wishart-lambda-min-tail` (limit helper). -/
-theorem trace_pow_eq_sum_eigenvalues {ι : Type*} [Fintype ι] [DecidableEq ι]
-    {R : Matrix ι ι ℝ} (hR : R.IsHermitian) (n : ℕ) :
-    Matrix.trace (R ^ n) = ∑ i, hR.eigenvalues i ^ n := by
-  conv_lhs => rw [hR.spectral_theorem, ← map_pow]
-  rw [trace_conjStarAlgAut,
-    Matrix.diagonal_pow, Matrix.trace_diagonal]
-  rfl
-
 /-- A positive definite inverse-power soft minimum converges to the
 reciprocal largest inverse eigenvalue, hence the smallest eigenvalue.
 Source: operator soft minimum limit; atlas `wishart-lambda-min-tail`.

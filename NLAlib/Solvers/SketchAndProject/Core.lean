@@ -65,31 +65,6 @@ theorem step_sub_solution (A : Matrix m n ℝ) (b : m → ℝ) (S : Matrix m s �
   rw [step, h, Matrix.mulVec_mulVec]
   abel
 
-/-- The Moore–Penrose row projector `Z = M⁺M` satisfies `(d − Zd)ᵀ(d − Zd) = dᵀd − dᵀZd`.
-Atlas: `sketch-and-project` (helper). -/
-theorem sub_mulVec_dotProduct_sub_mulVec {p q : Type*} [Fintype p] [Fintype q]
-    (M : Matrix p q ℝ) (d : q → ℝ) :
-    (d - (moorePenroseInverse M * M) *ᵥ d) ⬝ᵥ (d - (moorePenroseInverse M * M) *ᵥ d) =
-      d ⬝ᵥ d - d ⬝ᵥ ((moorePenroseInverse M * M) *ᵥ d) := by
-  set Z := moorePenroseInverse M * M
-  have hsym : Zᵀ = Z := moorePenroseInverse_mul_isSymm M
-  have hidem : Z * Z = Z := (moorePenroseInverse_mul_isIdempotentElem M).eq
-  have hZZ : (Z *ᵥ d) ⬝ᵥ (Z *ᵥ d) = d ⬝ᵥ (Z *ᵥ d) := by
-    rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hsym, Matrix.mulVec_mulVec,
-      hidem, dotProduct_comm]
-  have hdZ : (Z *ᵥ d) ⬝ᵥ d = d ⬝ᵥ (Z *ᵥ d) := dotProduct_comm _ _
-  simp only [sub_dotProduct, dotProduct_sub, hZZ, hdZ]
-  ring
-
-/-- The projector is a contraction in the quadratic-form sense: `dᵀ (M⁺M) d ≤ dᵀd`.
-Atlas: `sketch-and-project` (helper). -/
-theorem dotProduct_mulVec_le_dotProduct_self {p q : Type*} [Fintype p] [Fintype q]
-    (M : Matrix p q ℝ) (d : q → ℝ) :
-    d ⬝ᵥ ((moorePenroseInverse M * M) *ᵥ d) ≤ d ⬝ᵥ d := by
-  have h := sub_mulVec_dotProduct_sub_mulVec M d
-  have h0 := dotProduct_self_nonneg (d - (moorePenroseInverse M * M) *ᵥ d)
-  linarith
-
 /-- One-step expected error identity: for `A xs = b` and `∑ pⱼ = 1`,
 `∑ⱼ pⱼ ‖step A b (S j) x − xs‖² = ‖x − xs‖² − (x − xs)ᵀ W (x − xs)`.
 Source: Gower–Richtárik (2015) [`gr15`], proof of Thm 4.6. Atlas: `sketch-and-project`. -/
@@ -98,8 +73,8 @@ theorem expected_sqErr_step_eq (A : Matrix m n ℝ) (b : m → ℝ) (p : J → �
     (x : n → ℝ) :
     ∑ j, p j * ((step A b (S j) x - xs) ⬝ᵥ (step A b (S j) x - xs)) =
       (x - xs) ⬝ᵥ (x - xs) - (x - xs) ⬝ᵥ (expectedProjector A p S *ᵥ (x - xs)) := by
-  simp_rw [step_sub_solution A b _ hxs x, sub_mulVec_dotProduct_sub_mulVec, mul_sub,
-    Finset.sum_sub_distrib, ← Finset.sum_mul, hp1, one_mul, expectedProjector,
+  simp_rw [step_sub_solution A b _ hxs x, dotProduct_self_sub_moorePenroseInverse_mul_mulVec,
+    mul_sub, Finset.sum_sub_distrib, ← Finset.sum_mul, hp1, one_mul, expectedProjector,
     Matrix.sum_mulVec, dotProduct_sum, Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul]
 
 /-- A convex combination of sketch row-space projectors is a contraction in
@@ -113,7 +88,8 @@ theorem dotProduct_expectedProjector_mulVec_le (A : Matrix m n ℝ)
     dotProduct_smul, smul_eq_mul]
   calc ∑ j, p j * (v ⬝ᵥ ((moorePenroseInverse ((S j)ᵀ * A) * ((S j)ᵀ * A)) *ᵥ v))
       ≤ ∑ j, p j * (v ⬝ᵥ v) := Finset.sum_le_sum fun j _ =>
-        mul_le_mul_of_nonneg_left (dotProduct_mulVec_le_dotProduct_self _ v) (hp j)
+        mul_le_mul_of_nonneg_left
+          (dotProduct_moorePenroseInverse_mul_mulVec_le_dotProduct_self _ v) (hp j)
     _ = v ⬝ᵥ v := by rw [← Finset.sum_mul, hp1, one_mul]
 
 /-- **Sketch-and-project converges linearly in expectation.** Let `A xs = b`, `pⱼ ≥ 0`,

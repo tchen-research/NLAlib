@@ -225,4 +225,6 @@ if __name__ == "__main__":
     if a[:1] == ["--check"]: check_table(a[1])
     elif a[:1] == ["--check-all"]: check_all()
     elif a[:1] == ["--apply"]: apply()
+    elif a[:1] == ["--gen-aggregators"]:
+        made = gen_aggregators(ROOT / "NLAlib"); print(f"regenerated {len(made)} aggregators")
     else: print(__doc__)

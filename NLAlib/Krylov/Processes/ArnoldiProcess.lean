@@ -37,14 +37,6 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 
 open InnerProductSpace
 
-omit [DecidableEq n] in
-/-- The real inner product on `EuclideanSpace ℝ n` is the dot product of the coordinates.
-Helper for `arnoldi-def`. -/
-theorem inner_eq_dotProduct_ofLp (x y : EuclideanSpace ℝ n) :
-    inner ℝ x y = x.ofLp ⬝ᵥ y.ofLp := by
-  rw [EuclideanSpace.inner_eq_star_dotProduct]
-  simp [dotProduct_comm]
-
 /-- The Krylov sequence `b, A b, A² b, …` in `EuclideanSpace ℝ n` (the input of Gram–Schmidt).
 Atlas: `arnoldi-def`. -/
 def krylovSeq (A : Matrix n n ℝ) (b : n → ℝ) (i : ℕ) : EuclideanSpace ℝ n :=
@@ -198,7 +190,7 @@ Source: Saad (2003) [`saad03`], Prop. 6.5; Trefethen–Bau (1997) [`tb97`], Lect
 atlas: arnoldi-def (partial) -/
 theorem arnoldiHessenberg_apply_eq_zero_of_add_one_lt (A : Matrix n n ℝ) (b : n → ℝ) {q : ℕ}
     {i j : Fin q} (hij : (j : ℕ) + 1 < i) : arnoldiHessenberg A b q i j = 0 := by
-  rw [arnoldiHessenberg, transpose_mul_mul_apply, arnoldiMatrix_col, arnoldiMatrix_col,
+  rw [arnoldiHessenberg, transpose_mul_mul_apply_eq_dotProduct, arnoldiMatrix_col, arnoldiMatrix_col,
     arnoldiBasis, gramSchmidtNormed, WithLp.ofLp_smul, smul_dotProduct,
     ← inner_eq_dotProduct_ofLp]
   have hx : WithLp.toLp 2 (A *ᵥ arnoldiBasis A b j) ∈

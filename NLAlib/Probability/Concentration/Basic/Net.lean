@@ -35,21 +35,10 @@ variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-! ### Euclidean-norm bridges -/
 
-omit [DecidableEq n] in
-private lemma norm_toLp_eq_sqrt (v : n → ℝ) :
-    ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = √(v ⬝ᵥ v) := by
-  rw [norm_eq_sqrt_dotProduct]
-
 private lemma norm_toLp_mulVec_le (A : Matrix m n ℝ) (x : n → ℝ) :
     ‖(WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace ℝ m)‖ ≤
       specNorm A * ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖ := by
   simpa [specNorm_eq_norm] using A.l2_opNorm_mulVec (WithLp.toLp 2 x)
-
-/-- `‖A y‖₂ ≤ ‖A‖₂ ‖y‖₂`, written with `dotProduct`. Atlas `norms-frob-spec`. -/
-theorem sqrt_mulVec_dotProduct_le (A : Matrix m n ℝ) (y : n → ℝ) :
-    √((A *ᵥ y) ⬝ᵥ (A *ᵥ y)) ≤ specNorm A * √(y ⬝ᵥ y) := by
-  rw [← norm_toLp_eq_sqrt, ← norm_toLp_eq_sqrt]
-  exact norm_toLp_mulVec_le A y
 
 /-- `|uᵀ A x| ≤ ‖u‖₂ ‖A‖₂ ‖x‖₂`. Atlas `norms-frob-spec`. -/
 theorem abs_dotProduct_mulVec_le (A : Matrix m n ℝ) (u : m → ℝ) (x : n → ℝ) :
@@ -65,7 +54,7 @@ theorem abs_dotProduct_mulVec_le (A : Matrix m n ℝ) (u : m → ℝ) (x : n →
           (specNorm A * ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖) := by
         gcongr
         exact norm_toLp_mulVec_le A x
-    _ = _ := by rw [norm_toLp_eq_sqrt, norm_toLp_eq_sqrt]
+    _ = _ := by rw [← sqrt_dotProduct_self_eq_norm, ← sqrt_dotProduct_self_eq_norm]
 
 /-- The spectral norm is at most `K ≥ 0` as soon as `‖A y‖₂ ≤ K` for every unit vector `y`.
 Atlas `epsilon-net-norm` (helper). -/
@@ -85,7 +74,7 @@ theorem specNorm_le_of_forall_sqrt_le (A : Matrix m n ℝ) {K : ℝ} (hK : 0 ≤
     simp only [y, smul_dotProduct, dotProduct_smul, smul_eq_mul, h2]
     field_simp
   have hAy := h y hy
-  rw [← norm_toLp_eq_sqrt] at hAy
+  rw [sqrt_dotProduct_self_eq_norm] at hAy
   have hscale : (WithLp.toLp 2 (A *ᵥ y) : EuclideanSpace ℝ m) =
       ‖x‖⁻¹ • (WithLp.toLp 2 (A *ᵥ x.ofLp) : EuclideanSpace ℝ m) := by
     simp only [y, Matrix.mulVec_smul]
@@ -132,7 +121,7 @@ theorem specNorm_le_div_of_net (A : Matrix m n ℝ) (N : Finset (n → ℝ)) {ε
     obtain ⟨x, hxN, hxy⟩ := hN y hy
     have hd : √((x - y) ⬝ᵥ (x - y)) ≤ ε := by
       rw [Real.sqrt_le_left hε0]; exact hxy
-    rw [← norm_toLp_eq_sqrt]
+    rw [sqrt_dotProduct_self_eq_norm]
     have hsplit : (WithLp.toLp 2 (A *ᵥ y) : EuclideanSpace ℝ m) =
         WithLp.toLp 2 (A *ᵥ x) - WithLp.toLp 2 (A *ᵥ (x - y)) := by
       rw [Matrix.mulVec_sub, ← WithLp.toLp_sub, sub_sub_cancel]
@@ -141,10 +130,10 @@ theorem specNorm_le_div_of_net (A : Matrix m n ℝ) (N : Finset (n → ℝ)) {ε
           ‖(WithLp.toLp 2 (A *ᵥ (x - y)) : EuclideanSpace ℝ m)‖ := norm_sub_le _ _
       _ ≤ M + specNorm A * ε := by
         gcongr
-        · rw [norm_toLp_eq_sqrt]; exact hM x hxN
+        · rw [← sqrt_dotProduct_self_eq_norm]; exact hM x hxN
         · calc _ ≤ specNorm A * ‖(WithLp.toLp 2 (x - y) : EuclideanSpace ℝ n)‖ :=
                 norm_toLp_mulVec_le A _
-            _ ≤ specNorm A * ε := by rw [norm_toLp_eq_sqrt]; gcongr
+            _ ≤ specNorm A * ε := by rw [← sqrt_dotProduct_self_eq_norm]; gcongr
   rw [le_div_iff₀ (by linarith)]
   linarith
 

@@ -28,7 +28,7 @@ theorem commute_of_posSemidef_add_eq_diagonal_projection {A B : Matrix n n ℝ}
     · have he := congrArg (fun M : Matrix n n ℝ => M j j) hAB
       simp only [Matrix.add_apply, Matrix.diagonal_apply_eq, hj] at he
       have hz : A j j = 0 := by linarith [hA.diag_nonneg (i := j), hB.diag_nonneg (i := j)]
-      rw [hj, mul_zero, apply_eq_zero_of_posSemidef_of_diag_eq_zero hA hz i]
+      rw [hj, mul_zero, apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hA hz i]
     · rw [hj, mul_one]
   have hPA : diagonal p * A = A := by
     have h := congrArg Matrix.transpose hAP

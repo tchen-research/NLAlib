@@ -85,14 +85,6 @@ theorem isAffineMinimiser_map_iff {W : Matrix n n ℝ} (hW : IsUnit W) {E : (n �
     simpa [hWW, Matrix.mulVec_add] using this
 
 omit [DecidableEq n] in
-/-- `quadForm (WᵀAW) v = quadForm A (Wv)`. Helper for `preconditioned-cg` (belongs in
-`NLAlib.Matrix.Basic.QuadForm`). -/
-theorem quadForm_transpose_mul_mul (A W : Matrix n n ℝ) (v : n → ℝ) :
-    quadForm (Wᵀ * A * W) v = quadForm A (W *ᵥ v) := by
-  simp only [quadForm, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec v Wᵀ,
-    Matrix.vecMul_transpose]
-
-omit [DecidableEq n] in
 /-- The CG objective under a change of variables: `φ_{A,c}(Wy) = φ_{WᵀAW, Wᵀc}(y)`.
 Helper for `preconditioned-cg`. -/
 theorem cgObjective_mulVec (A W : Matrix n n ℝ) (c y : n → ℝ) :
@@ -240,13 +232,6 @@ atlas: cgls-lsqr-bound -/
 def IsCGLSIterate (A : Matrix m n ℝ) (b : m → ℝ) (x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
   IsAffineMinimiser (fun y => (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y)) x₀
     (krylovSpace (Aᵀ * A) (Aᵀ *ᵥ (b - A *ᵥ x₀)) q) x
-
-omit [DecidableEq n] in
-/-- `(Aᵀ A y) ⬝ y = ‖A y‖²`: the quadratic form of the normal-equations matrix.
-Helper for `cgls-lsqr-bound` (belongs in `NLAlib.Matrix.Basic.QuadForm`). -/
-theorem quadForm_transpose_mul_self (A : Matrix m n ℝ) (y : n → ℝ) :
-    quadForm (Aᵀ * A) y = (A *ᵥ y) ⬝ᵥ (A *ᵥ y) := by
-  rw [quadForm, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, Matrix.vecMul_transpose]
 
 omit [DecidableEq n] in
 /-- The least-squares objective is twice the CG objective of the normal equations plus a

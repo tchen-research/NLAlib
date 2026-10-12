@@ -67,7 +67,7 @@ theorem lamMin_eq_of_orthogonal_diagonalization
   let v : ι → ℝ := U *ᵥ e
   have hv : v ⬝ᵥ v = 1 := by
     dsimp [v]
-    rw [← dotProduct_transpose_mul_mulVec, hU, Matrix.one_mulVec]
+    rw [mulVec_dotProduct_mulVec_self, hU, Matrix.one_mulVec]
     simp [e, dotProduct, Pi.single_apply]
   have heig : A *ᵥ v = l i₀ • v := by
     rw [hA]

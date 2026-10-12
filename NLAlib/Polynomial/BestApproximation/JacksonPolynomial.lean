@@ -16,7 +16,7 @@ open scoped ComplexConjugate
 
 namespace NLAlib
 
-local instance : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
+open scoped NLAlib.TwoPi
 
 /-- The real cosine pullback to the circle of period `2π`.
 Source: operator rederivations `rt:jackson`; construction for `jackson-lipschitz`. -/

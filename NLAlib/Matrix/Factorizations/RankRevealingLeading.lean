@@ -29,7 +29,8 @@ theorem toEuclideanLin_singularValues_le_specNorm_sub_of_rank_le {m n : Type*}
       B.reindex (Fintype.equivFin m) (Fintype.equivFin n) =
       (A - B).reindex (Fintype.equivFin m) (Fintype.equivFin n) := rfl
   rw [hSub, specNorm_reindex] at hh
-  simpa only [singularValues_reindex_eq_toEuclideanLin_singularValues] using hh
+  simp only [singularValues_reindex] at hh
+  exact hh
 
 /-- Every singular value of an invertible square matrix satisfies
 `1 ≤ σᵢ(R)² ‖R⁻¹‖F²`. Gu–Eisenstat 1996, leading-block estimate. -/

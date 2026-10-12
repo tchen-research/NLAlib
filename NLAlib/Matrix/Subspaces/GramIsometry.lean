@@ -1,4 +1,5 @@
-import NLAlib.Matrix.Inequalities.KyFan
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
+import NLAlib.Matrix.Basic.MoorePenrose
 
 /-!
 # Isometries from matrix Gram identities
@@ -28,18 +29,6 @@ theorem norm_toEuclideanLin_apply_eq_of_gram_eq (A : Matrix m n ℝ) (B : Matrix
     ‖(WithLp.toLp 2 (B *ᵥ x.ofLp) : EuclideanSpace ℝ p)‖ ^ 2
   rw [EuclideanSpace.real_norm_sq_eq, EuclideanSpace.real_norm_sq_eq]
   simpa only [dotProduct, sq] using h
-
-/-- A rectangular real matrix with orthonormal columns defines an actual
-linear isometry of the corresponding Euclidean spaces. Supports QR. -/
-def HasOrthonormalCols.toLinearIsometry {Q : Matrix m n ℝ} (hQ : HasOrthonormalCols Q) :
-    EuclideanSpace ℝ n →ₗᵢ[ℝ] EuclideanSpace ℝ m where
-  toLinearMap := Q.toEuclideanLin
-  norm_map' x := by
-    have hGram : Qᵀ * Q = (1 : Matrix n n ℝ)ᵀ * 1 := by
-      simpa only [Matrix.transpose_one, Matrix.one_mul] using
-        (show Qᵀ * Q = 1 from hQ)
-    have h := norm_toEuclideanLin_apply_eq_of_gram_eq Q (1 : Matrix n n ℝ) hGram x
-    simpa only [Matrix.toEuclideanLin, Matrix.toLpLin_one, LinearMap.id_apply] using h
 
 /-- Every actual Euclidean linear isometry has an orthonormal-column matrix
 in the standard coordinates. Supports `qr-decomposition`. -/

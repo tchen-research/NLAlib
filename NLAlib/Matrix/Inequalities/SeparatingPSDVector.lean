@@ -15,14 +15,6 @@ open scoped MatrixOrder Matrix.Norms.L2Operator
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-omit [DecidableEq n] in
-/-- The quadratic form of a real rank-one Gram matrix is the squared
-dot product with its defining vector. Horn--Johnson (2013), Section 7.1;
-helper for finite exponential certificates. -/
-theorem quadForm_vecMulVec_self (b x : n → ℝ) :
-    quadForm (vecMulVec b b) x = (x ⬝ᵥ b) ^ 2 := by
-  simp [quadForm, Matrix.vecMulVec_mulVec, dotProduct_smul, dotProduct_comm, sq]
-
 /-- PSD Cauchy--Schwarz for a real symmetric form, including its kernel.
 Horn--Johnson (2013), Section 7.1; helper for rank-one domination. -/
 theorem sq_bilinear_le_quadForm_mul_of_posSemidef {A : Matrix n n ℝ}

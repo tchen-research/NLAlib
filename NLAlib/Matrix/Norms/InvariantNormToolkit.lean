@@ -30,7 +30,9 @@ theorem invariant_norm_toolkit_properties :
     (∀ {m : Type u_1} {n : Type u_2} [_inst : Fintype m] [_inst_1 : Fintype n] [_inst_2 : DecidableEq m]
   [_inst_3 : DecidableEq n] (A B : Matrix m n ℝ),
   (∀ (ν : NLAlib.OrthogonallyInvariantNorm m n), ν.seminorm A ≤ ν.seminorm B) ↔
-    NLAlib.WeaklyMajorized (NLAlib.singularValueVector A) (NLAlib.singularValueVector B)) ∧
+    NLAlib.WeaklyMajorized
+      (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => NLAlib.singularValues A i)
+      (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => NLAlib.singularValues B i)) ∧
     (∀ {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
     (Φ : SymmetricGauge (Fin (min (Fintype.card m) (Fintype.card n)))) (A : Matrix m n ℝ),
     (Φ.toOrthogonallyInvariantNorm (m := m) (n := n)).seminorm A = Φ.matrixValue A) := by

@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Spectral.ComplexBestRankApproximation
+import NLAlib.LowRank.Sampling.ComplexVolumeSamplingError
 /-!
 # Full actual complex volume-sampling error theorem
 

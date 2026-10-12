@@ -1,10 +1,10 @@
 import NLAlib.Matrix.Factorizations.Householder
-import NLAlib.Matrix.Factorizations.Givens
+import NLAlib.Matrix.Structured.Hessenberg
 /-!
 # Reduction to upper Hessenberg form
 
 * `IsHessenbergForm A Q H`: `Q` orthogonal, `A = Q H Qᵀ` and `H` upper Hessenberg
-  (`IsUpperHessenberg`, from `NLAlib.Matrix.Factorizations.Givens`). Equivalently
+  (`IsUpperHessenberg`, from `NLAlib.Matrix.Structured.Hessenberg`). Equivalently
   `QᵀAQ = H` (`IsHessenbergForm.transpose_mul_mul_eq`).
 * The Householder recursion (`hessenbergReflectors`): on `A : (k+3) × (k+3)` reflect the
   subdiagonal part `A(1:, 0)` of the first column onto `e₁` with `P = diag(1, H_w)`, form `PAP`,
@@ -13,7 +13,8 @@ import NLAlib.Matrix.Factorizations.Givens
   `hessenbergH A := QᵀAQ`; the realisation theorem is `isHessenbergForm_hessenbergReduction`
   (no hypothesis), whence `exists_isHessenbergForm`.
 * Symmetric `A`: `H` is symmetric tridiagonal (`IsHessenbergForm.isTridiagonal`).
-* `IsUnreducedHessenberg H` (no zero subdiagonal entry) and the **implicit Q theorem**
+* `IsUnreducedHessenberg H` (no zero subdiagonal entry, `NLAlib.Matrix.Structured.Hessenberg`)
+  and the **implicit Q theorem**
   (`IsHessenbergForm.exists_sign`): two Hessenberg forms of `A` with the same first column of `Q`
   and unreduced `H` differ by a diagonal sign matrix.
 
@@ -51,12 +52,6 @@ structure IsHessenbergForm (A Q H : Matrix (Fin n) (Fin n) ℝ) : Prop where
   eq : A = Q * H * Qᵀ
   /-- `H` is upper Hessenberg. -/
   hess : IsUpperHessenberg H
-
-/-- `H` has **no zero subdiagonal entry** (`H (j+1) j ≠ 0`) and is upper Hessenberg.
-Golub–Van Loan 2013, §7.4.3 ("unreduced"); Trefethen–Bau 1997, Lect. 26.
-atlas: hessenberg-reduction -/
-def IsUnreducedHessenberg (H : Matrix (Fin n) (Fin n) ℝ) : Prop :=
-  IsUpperHessenberg H ∧ ∀ i j : Fin n, (i : ℕ) = j + 1 → H i j ≠ 0
 
 namespace IsHessenbergForm
 

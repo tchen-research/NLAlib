@@ -41,10 +41,11 @@ theorem singularValues_one_sub_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
       neg_neg, neg_zero, add_zero]
   calc
     _ = A.toEuclideanLin.singularValues k := by
-      rw [← hA, toEuclideanLin_singularValues_reindex, toEuclideanLin_singularValues_transpose]
+      rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap, ← hA, singularValues_reindex,
+        singularValues_transpose]
     _ = B.toEuclideanLin.singularValues k := by
-      rw [← toEuclideanLin_singularValues_transpose A,
-        ← toEuclideanLin_singularValues_transpose B]
+      rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
+        ← singularValues_transpose A, ← singularValues_transpose B]
       apply toEuclideanLin_singularValues_eq_of_gram_eq
       simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hGram
     _ = _ := singularValues_oblique_canonical t ht0 ht (by simpa only [min_comm] using hz) k

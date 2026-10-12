@@ -45,7 +45,7 @@ theorem exists_orthogonal_transpose_mul_mul_eq_diagonal_singularValues
   simp only [hij]
   split_ifs with h
   · subst j
-    exact singularValues_reindex_eq_toEuclideanLin_singularValues A _
+    exact congrFun (singularValues_reindex A _ _) _
   · rfl
 
 end NLAlib

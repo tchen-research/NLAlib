@@ -50,12 +50,12 @@ private theorem diagonal_reindex_dilationOrdering {m n : ℕ}
 /-- Every sorted eigenvalue of the actual real dilation equals the corresponding
 explicit paired singular value. Bhatia 1997, Section III.4; all rectangular
 shapes, multiplicities and zero padding are included. -/
-theorem eigenvalues₀_realDilation {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
+theorem eigenvalues₀_dilation {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     (k : Fin (m + n)) :
-    (isHermitian_realDilation A).eigenvalues₀ (Fin.cast (by simp) k) = realDilationSpectrum A k := by
+    (isHermitian_dilation A).eigenvalues₀ (Fin.cast (by simp) k) = realDilationSpectrum A k := by
   classical
-  obtain ⟨P, hP, hHP⟩ := exists_realDilation_orthogonal_diagonalization A
-  have hc : (realDilation A).charpoly = (Matrix.diagonal (realDilationSpectrum A)).charpoly := by
+  obtain ⟨P, hP, hHP⟩ := exists_dilation_orthogonal_diagonalization A
+  have hc : (dilation A).charpoly = (Matrix.diagonal (realDilationSpectrum A)).charpoly := by
     rw [hHP, Matrix.charpoly_mul_comm, ← Matrix.mul_assoc Pᵀ P, hP, Matrix.one_mul]
     calc
       _ = ((Matrix.diagonal (Sum.elim (fun i : Fin m => singularValues A i)
@@ -63,12 +63,12 @@ theorem eigenvalues₀_realDilation {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
           (dilationOrderingEquiv m n) (dilationOrderingEquiv m n)).charpoly :=
         (Matrix.charpoly_reindex (dilationOrderingEquiv m n) _).symm
       _ = _ := congrArg Matrix.charpoly (diagonal_reindex_dilationOrdering A)
-  have hsort := (isHermitian_realDilation A).sort_roots_charpoly_eq_eigenvalues₀
+  have hsort := (isHermitian_dilation A).sort_roots_charpoly_eq_eigenvalues₀
   rw [hc, Matrix.charpoly_diagonal, Polynomial.roots_prod _ _ (by
     simp [Finset.prod_ne_zero_iff, Polynomial.X_sub_C_ne_zero])] at hsort
   simp only [Polynomial.roots_X_sub_C, Multiset.bind_singleton, Multiset.map_map,
     Function.comp_def, RCLike.re_to_real] at hsort
-  have hl : List.ofFn (isHermitian_realDilation A).eigenvalues₀ =
+  have hl : List.ofFn (isHermitian_dilation A).eigenvalues₀ =
       List.ofFn (realDilationSpectrum A) := by
     rw [← hsort]
     simp_rw [Fin.univ_val_map, Multiset.coe_sort]
@@ -80,21 +80,21 @@ theorem eigenvalues₀_realDilation {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
 
 /-- The top thin slots of real dilation are the ordered singular values.
 Bhatia 1997, Section III.4; singular zeros cause no exceptions. -/
-theorem eigenvalues₀_realDilation_top {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
+theorem eigenvalues₀_dilation_top {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     (i : Fin (min m n)) :
-    (isHermitian_realDilation A).eigenvalues₀
+    (isHermitian_dilation A).eigenvalues₀
       (Fin.cast (by simp) (Fin.castLE (by omega : min m n ≤ m + n) i)) = singularValues A i := by
-  rw [eigenvalues₀_realDilation]
+  rw [eigenvalues₀_dilation]
   simp [realDilationSpectrum, show (i : ℕ) < m from lt_of_lt_of_le i.isLt (min_le_left m n)]
 
 /-- The reversed bottom thin slots of real dilation are the negative singular values.
 Bhatia 1997, Section III.4; all empty and rank-deficient cases are included. -/
-theorem eigenvalues₀_realDilation_bottom {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
+theorem eigenvalues₀_dilation_bottom {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     (i : Fin (min m n)) :
-    (isHermitian_realDilation A).eigenvalues₀
+    (isHermitian_dilation A).eigenvalues₀
       (Fin.cast (by simp) ((Fin.castLE (by omega : min m n ≤ m + n) i).rev)) =
       -singularValues A i := by
-  rw [eigenvalues₀_realDilation]
+  rw [eigenvalues₀_dilation]
   have hm : ¬ (((Fin.castLE (by omega : min m n ≤ m + n) i).rev : Fin (m + n)) : ℕ) < m := by
     simp only [Fin.val_rev, Fin.val_castLE]
     have hin := lt_of_lt_of_le i.isLt (min_le_right m n)

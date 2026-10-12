@@ -89,17 +89,6 @@ theorem transpose_mulVec_mem_krylovSpace (A : Matrix m n ℝ) (b : m → ℝ) {q
     (hx : x ∈ krylovSpace (A * Aᵀ) b q) : Aᵀ *ᵥ x ∈ krylovSpace (Aᵀ * A) (Aᵀ *ᵥ b) q :=
   mulVec_mem_krylovSpace_of_mul_eq (by simp only [Matrix.mul_assoc]) hx
 
-omit [DecidableEq m] [DecidableEq n] in
-/-- Entries of a rectangular compression: `(Uᵀ A V)_{ij} = uᵢ ⬝ (A vⱼ)`. Helper for
-`golub-kahan-bidiagonalization` (generalises `transpose_mul_mul_apply`). -/
-theorem transpose_mul_mul_apply_eq_dotProduct {k l : Type*} [Fintype k] [Fintype l]
-    (U : Matrix m k ℝ) (A : Matrix m n ℝ) (V : Matrix n l ℝ) (i : k) (j : l) :
-    (Uᵀ * A * V) i j = U.col i ⬝ᵥ (A *ᵥ V.col j) := by
-  simp only [Matrix.mul_apply, Matrix.transpose_apply, dotProduct, Matrix.mulVec, Matrix.col,
-    Finset.sum_mul, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
-
 /-! ### The decomposition -/
 
 /-- A **Golub–Kahan decomposition** of `(A, b)` of size `k`: `U : m × (k+1)` is a graded

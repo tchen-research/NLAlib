@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.SigmaMinTransport
 import NLAlib.Matrix.Spectral.SingularValueInvariance
+import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
 import NLAlib.ForMathlib.LinearAlgebra.ComapDimension
 /-!
 # Ostrowski's eigenvalue theorem under congruence
@@ -25,8 +26,8 @@ by transposition. Singular-value invariance; helper for
 theorem sigmaMin_transpose_eq (S : Matrix n n ℝ) (hn : 0 < Fintype.card n) :
     sigmaMin Sᵀ = sigmaMin S := by
   rw [sigmaMin_eq_toEuclideanLin_singularValues_last Sᵀ hn,
-    sigmaMin_eq_toEuclideanLin_singularValues_last S hn,
-    toEuclideanLin_singularValues_transpose]
+    sigmaMin_eq_toEuclideanLin_singularValues_last S hn, ← singularValues_eq_linearMap,
+    singularValues_transpose, singularValues_eq_linearMap]
 
 omit [DecidableEq n] in
 /-- The homogeneous lower squared-length bound for a matrix uses its
@@ -39,19 +40,6 @@ theorem sq_sigmaMin_mul_dotProduct_le_mulVec_dotProduct (S : Matrix n n ℝ) (x 
     (mul_nonneg (sigmaMin_nonneg S) (Real.sqrt_nonneg _)) h 2
   simpa only [mul_pow, Real.sq_sqrt (dotProduct_self_nonneg x),
     Real.sq_sqrt (dotProduct_self_nonneg (S *ᵥ x))] using h₂
-
-omit [DecidableEq n] in
-/-- Congruence evaluates the original quadratic form at the transposed
-image of a vector. Horn--Johnson (2013), Theorem 4.5.9;
-helper for `ostrowski-congruence-eigenvalues`. -/
-theorem quadForm_mul_mul_transpose (S A : Matrix n n ℝ) (x : n → ℝ) :
-    quadForm (S * A * Sᵀ) x = quadForm A (Sᵀ *ᵥ x) := by
-  simp only [quadForm, ← Matrix.mulVec_mulVec]
-  calc
-    _ = (A *ᵥ (Sᵀ *ᵥ x)) ⬝ᵥ (Sᵀ *ᵥ x) := by
-      simpa only [Matrix.transpose_transpose] using
-        Matrix.dotProduct_transpose_mulVec Sᵀ x (A *ᵥ (Sᵀ *ᵥ x))
-    _ = _ := dotProduct_comm _ _
 
 /-- At a nonnegative original eigenvalue, congruence scales between the
 squared smallest and largest singular values. Singular transformations
@@ -80,7 +68,8 @@ theorem eigenvalues₀_congruence_bounds_of_nonneg {A : Matrix n n ℝ}
     intro x hx
     change Sᵀ *ᵥ x ∈ V at hx
     change _ ≤ quadForm (S * A * Sᵀ) x
-    rw [quadForm_mul_mul_transpose]
+    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
+      quadForm_transpose_mul_mul]
     calc
       _ = hA.eigenvalues₀ k * (sigmaMin S ^ 2 * (x ⬝ᵥ x)) := by ring
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) :=
@@ -93,7 +82,8 @@ theorem eigenvalues₀_congruence_bounds_of_nonneg {A : Matrix n n ℝ}
     intro x hx
     change Sᵀ *ᵥ x ∈ W at hx
     change quadForm (S * A * Sᵀ) x ≤ _
-    rw [quadForm_mul_mul_transpose]
+    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
+      quadForm_transpose_mul_mul]
     calc
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) := hAW _ hx
       _ ≤ hA.eigenvalues₀ k * (specNorm S ^ 2 * (x ⬝ᵥ x)) :=
@@ -126,7 +116,8 @@ theorem eigenvalues₀_congruence_bounds_of_nonpos {A : Matrix n n ℝ}
     intro x hx
     change Sᵀ *ᵥ x ∈ V at hx
     change _ ≤ quadForm (S * A * Sᵀ) x
-    rw [quadForm_mul_mul_transpose]
+    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
+      quadForm_transpose_mul_mul]
     calc
       _ = hA.eigenvalues₀ k * (specNorm S ^ 2 * (x ⬝ᵥ x)) := by ring
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) :=
@@ -139,7 +130,8 @@ theorem eigenvalues₀_congruence_bounds_of_nonpos {A : Matrix n n ℝ}
     intro x hx
     change Sᵀ *ᵥ x ∈ W at hx
     change quadForm (S * A * Sᵀ) x ≤ _
-    rw [quadForm_mul_mul_transpose]
+    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
+      quadForm_transpose_mul_mul]
     calc
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) := hAW _ hx
       _ ≤ hA.eigenvalues₀ k * (sigmaMin S ^ 2 * (x ⬝ᵥ x)) :=

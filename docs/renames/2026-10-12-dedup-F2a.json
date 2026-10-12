@@ -1,0 +1,21 @@
+{
+  "NLAlib.choleskyTrailingResidual": "NLAlib.pivotSchur",
+  "NLAlib.posSemidef_choleskyTrailingResidual": "NLAlib.posSemidef_pivotSchur",
+  "NLAlib.realDilation": "NLAlib.dilation",
+  "NLAlib.isHermitian_realDilation": "NLAlib.isHermitian_dilation",
+  "NLAlib.realDilation_add": "NLAlib.dilation_add",
+  "NLAlib.exists_realDilation_orthogonal_diagonalization": "NLAlib.exists_dilation_orthogonal_diagonalization",
+  "NLAlib.eigenvalues₀_realDilation": "NLAlib.eigenvalues₀_dilation",
+  "NLAlib.eigenvalues₀_realDilation_top": "NLAlib.eigenvalues₀_dilation_top",
+  "NLAlib.eigenvalues₀_realDilation_bottom": "NLAlib.eigenvalues₀_dilation_bottom",
+  "NLAlib.apply_eq_zero_of_posSemidef_of_diag_eq_zero": "NLAlib.apply_eq_zero_of_posSemidef_of_apply_self_eq_zero",
+  "NLAlib.apply_eq_zero_of_complex_posSemidef_of_diag_eq_zero": "NLAlib.apply_eq_zero_of_posSemidef_of_apply_self_eq_zero",
+  "NLAlib.eq_zero_of_complex_matrix_rank_eq_zero": "NLAlib.eq_zero_of_matrix_rank_eq_zero",
+  "NLAlib.frobSq_eq_card_of_hasOrthonormalCols": "NLAlib.frobSq_frame_eq_card",
+  "NLAlib.card_le_of_transpose_mul_self_eq_one": "NLAlib.card_le_card_of_hasOrthonormalCols",
+  "NLAlib.orthogonalToEuclideanIsometry": "NLAlib.HasOrthonormalCols.toLinearIsometry",
+  "NLAlib.quadForm_mul_mul_transpose": "NLAlib.quadForm_transpose_mul_mul",
+  "NLAlib.SketchProject.sub_mulVec_dotProduct_sub_mulVec": "NLAlib.dotProduct_self_sub_moorePenroseInverse_mul_mulVec",
+  "NLAlib.SketchProject.dotProduct_mulVec_le_dotProduct_self": "NLAlib.dotProduct_moorePenroseInverse_mul_mulVec_le_dotProduct_self",
+  "NLAlib.Kaczmarz.inv_specNorm_moorePenroseInverse_sq_mul_le": "NLAlib.inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le"
+}

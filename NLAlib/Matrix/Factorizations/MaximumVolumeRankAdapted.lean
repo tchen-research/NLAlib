@@ -1,5 +1,7 @@
 import NLAlib.Matrix.Factorizations.MaximumVolumeTriangularQR
 import NLAlib.Matrix.Basic.SchurRank
+import NLAlib.Matrix.Norms.RankNorm
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Rank-adapted maximum-volume QR
 
@@ -13,19 +15,6 @@ noncomputable section
 open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
-
-/-- A column isometry preserves matrix rank, including rectangular and empty
-isometries. Horn–Johnson 2013, Section 0.4; RRQR transport helper. -/
-theorem rank_isometry_mul_eq {m n p : Type*}
-    [Fintype m] [Fintype n] [Fintype p] [DecidableEq p]
-    {Q : Matrix m p ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix p n ℝ) :
-    (Q * A).rank = A.rank := by
-  apply le_antisymm (Matrix.rank_mul_le_right _ _)
-  have hBack : Qᵀ * (Q * A) = A := by
-    rw [← Matrix.mul_assoc, show Qᵀ * Q = 1 from hQ, Matrix.one_mul]
-  calc
-    A.rank = (Qᵀ * (Q * A)).rank := congrArg Matrix.rank hBack.symm
-    _ ≤ (Q * A).rank := Matrix.rank_mul_le_right _ _
 
 /-- At the actual rank, maximum-volume QR has an invertible triangular
 leading block and an exactly zero trailing residual. Its interpolation

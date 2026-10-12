@@ -51,6 +51,20 @@ theorem frobSq_eq_sum_sq_eigenvalues {A : Matrix n n ℝ} (hA : A.IsHermitian) :
     frobSq_mul_left_of_orthonormal (transpose_eigenvectorUnitary_mul_self hA)]
   simp [frobSq_eq_sum_sq, Matrix.diagonal_apply]
 
+/-- `‖A‖_F ≤ tr A` for positive semidefinite `A`. Source: Cortinovis–Kressner (2021) [`ck21`],
+proof of Cor. 1; Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], Lem. 2. Atlas: `hutchinson-tail`
+(helper). -/
+theorem frobNorm_le_trace_of_posSemidef {A : Matrix n n ℝ} (hA : A.PosSemidef) :
+    frobNorm A ≤ A.trace := by
+  have hH := hA.isHermitian
+  have hnn : ∀ i, 0 ≤ hH.eigenvalues i := hA.eigenvalues_nonneg
+  have htr : A.trace = ∑ i, hH.eigenvalues i := by
+    simpa using hH.trace_eq_sum_eigenvalues
+  have htr0 : 0 ≤ A.trace := htr ▸ Finset.sum_nonneg fun i _ => hnn i
+  rw [← abs_of_nonneg (frobNorm_nonneg A), ← abs_of_nonneg htr0, ← sq_le_sq, frobNorm_sq,
+    frobSq_eq_sum_sq_eigenvalues hH, htr]
+  exact Finset.sum_sq_le_sq_sum_of_nonneg fun i _ => hnn i
+
 /-- Richter's signed trace inequality for arbitrary finite real symmetric
 matrices. Both lists are decreasing, and negative eigenvalues retain their signs.
 Horn–Johnson 2013, Section 4.3; Bhatia 1997, Corollary III.2.6.

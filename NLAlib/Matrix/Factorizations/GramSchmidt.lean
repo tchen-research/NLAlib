@@ -61,9 +61,6 @@ atlas: gram-schmidt -/
 def gramSchmidtResidual (A : Matrix m (Fin n) ℝ) (j : Fin n) : m → ℝ :=
   A.col j - ∑ i : Finset.Iio j, (gramSchmidtCol A i ⬝ᵥ A.col j) • gramSchmidtCol A i
 
-private lemma dotProduct_self_nonneg' (v : m → ℝ) : 0 ≤ v ⬝ᵥ v := by
-  unfold dotProduct; exact Finset.sum_nonneg fun i _ => mul_self_nonneg _
-
 /-- Entrywise unfolding of the residual: `v_j(i) = a_ij − ∑_{k<j} (q_kᵀ a_j) q_k(i)`. -/
 theorem gramSchmidtResidual_apply (A : Matrix m (Fin n) ℝ) (j : Fin n) (i : m) :
     gramSchmidtResidual A j i =
@@ -85,7 +82,7 @@ theorem sqrt_smul_gramSchmidtCol (A : Matrix m (Fin n) ℝ) (j : Fin n) :
       gramSchmidtResidual A j := by
   rw [gramSchmidtCol_eq, smul_smul]
   by_cases h : √(gramSchmidtResidual A j ⬝ᵥ gramSchmidtResidual A j) = 0
-  · rw [Real.sqrt_eq_zero (dotProduct_self_nonneg' _)] at h
+  · rw [Real.sqrt_eq_zero (dotProduct_self_nonneg _)] at h
     rw [dotProduct_self_eq_zero.1 h, smul_zero]
   · rw [mul_inv_cancel₀ h, one_smul]
 
@@ -127,7 +124,7 @@ theorem gramSchmidtR_apply_self_nonneg (A : Matrix m (Fin n) ℝ) (j : Fin n) :
 theorem gramSchmidtR_apply_self_pos {A : Matrix m (Fin n) ℝ} (h : GramSchmidtSucceeds A)
     (j : Fin n) : 0 < gramSchmidtR A j j := by
   simp only [gramSchmidtR, of_apply, lt_irrefl, if_false, if_true]
-  refine Real.sqrt_pos.2 (lt_of_le_of_ne (dotProduct_self_nonneg' _) ?_)
+  refine Real.sqrt_pos.2 (lt_of_le_of_ne (dotProduct_self_nonneg _) ?_)
   exact fun h0 => h j (dotProduct_self_eq_zero.1 h0.symm)
 
 /-- **`QR = A` for classical Gram–Schmidt**, for every `A` (no success hypothesis: after a
@@ -167,7 +164,7 @@ theorem gramSchmidtCol_dotProduct_self (A : Matrix m (Fin n) ℝ) (j : Fin n) :
   split_ifs with h
   · simp [h]
   · have hpos : 0 < gramSchmidtResidual A j ⬝ᵥ gramSchmidtResidual A j :=
-      lt_of_le_of_ne (dotProduct_self_nonneg' _) (fun h0 => h (dotProduct_self_eq_zero.1 h0.symm))
+      lt_of_le_of_ne (dotProduct_self_nonneg _) (fun h0 => h (dotProduct_self_eq_zero.1 h0.symm))
     rw [← mul_assoc, ← mul_inv, Real.mul_self_sqrt hpos.le, inv_mul_cancel₀ hpos.ne']
 
 /-- **The Gram–Schmidt columns are pairwise orthogonal**, for every `A` (breakdowns included):

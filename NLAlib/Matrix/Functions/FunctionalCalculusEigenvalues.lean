@@ -61,7 +61,7 @@ theorem toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef
       cfc (fun x : ℝ => x ^ (2 : ℕ)) A = A ^ 2 := cfc_pow_id (R := ℝ) A 2 hA.isHermitian
       _ = Aᴴ * A := by rw [pow_two, hA.isHermitian.eq]
   have hE := eigenvalues₀_cfc_of_antitone (fun x : ℝ => x ^ (2 : ℕ)) hA.isHermitian hAnti i
-  have hSq := sq_toEuclideanLin_singularValues_eq_eigenvalues₀ A i
+  have hSq := sq_singularValues_eq_eigenvalues₀ A i
   have h : (A.toEuclideanLin.singularValues (i : ℕ)) ^ 2 =
       (hA.isHermitian.eigenvalues₀ i) ^ 2 := hSq.trans
         ((eigenvalues₀_eq_of_eq hCfc.symm _ _ i).trans hE)

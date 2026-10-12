@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Functions.PolynomialIntertwining
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
 
 /-!
 # Actual complex block Krylov spaces
@@ -21,21 +22,13 @@ def complexBlockKrylovSpace (A : Matrix n n ℂ) (Ω : Matrix n s ℂ) (q : ℕ)
     Submodule ℂ (n → ℂ) :=
   Submodule.span ℂ (Set.range fun ij : Fin q × s => ((A ^ (ij.1 : ℕ)) * Ω).col ij.2)
 
-omit [DecidableEq n] [Fintype s] in
-/-- A product's complex column is the native matrix applied to that column.
-Source: matrix multiplication; helper for manuscript `sa:filter`. -/
-theorem complex_col_mul_eq_mulVec_col {m : Type*}
-    (M : Matrix m n ℂ) (Ω : Matrix n s ℂ) (j : s) : (M * Ω).col j = M *ᵥ Ω.col j := by
-  ext i
-  simp [Matrix.mul_apply, Matrix.mulVec, dotProduct]
-
 omit [Fintype s] in
 /-- Every native complex block power belongs to the block Krylov span.
 Source: manuscript `sa:filter`, block Krylov definition. -/
 theorem pow_mulVec_col_mem_complexBlockKrylovSpace (A : Matrix n n ℂ)
     (Ω : Matrix n s ℂ) {q i : ℕ} (hi : i < q) (j : s) :
     (A ^ i) *ᵥ Ω.col j ∈ complexBlockKrylovSpace A Ω q := by
-  rw [← complex_col_mul_eq_mulVec_col]
+  rw [← col_mul_eq_mulVec_col]
   exact Submodule.subset_span ⟨(⟨i, hi⟩, j), rfl⟩
 
 /-- Every real polynomial filter below the block Krylov order lies in the actual
@@ -51,7 +44,7 @@ theorem range_aeval_mul_le_complexBlockKrylovSpace
   rw [Matrix.range_mulVecLin]
   apply Submodule.span_le.mpr
   rintro _ ⟨j, rfl⟩
-  rw [complex_col_mul_eq_mulVec_col, aeval_eq_sum_range' hnat, Matrix.sum_mulVec]
+  rw [col_mul_eq_mulVec_col, aeval_eq_sum_range' hnat, Matrix.sum_mulVec]
   apply Submodule.sum_mem
   intro i hi
   rw [Matrix.smul_mulVec]

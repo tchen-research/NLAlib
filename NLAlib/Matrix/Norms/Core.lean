@@ -1,4 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.LinearAlgebra.Matrix.DotProduct
 
 /-!
 # Matrix norms
@@ -13,19 +14,26 @@ The two norms every NLAlib statement is written in.
 
 ## Contents
 
-* Algebra of `frobInner` (bilinearity, symmetry, trace form, transpose).
+* Algebra of `frobInner` (bilinearity, symmetry, trace forms `tr(AᵀB) = tr(ABᵀ)`, transpose).
 * `frobSq` / `frobNorm`: nonnegativity, definiteness, expansion of `frobSq (A ± B)`, Pythagoras,
-  Cauchy–Schwarz, triangle inequality, transpose.
+  Cauchy–Schwarz, triangle inequality, transpose, `‖I‖_F² = n`.
 * Products: `⟨PX, QY⟩_F = ⟨X, PᵀQY⟩_F`, invariance under multiplication by matrices with
   orthonormal columns (stated with the raw hypothesis `Qᵀ * Q = 1`, which is
   `NLAlib.HasOrthonormalCols Q` by definition).
-* Rows: `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`, `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, `‖Av‖² = vᵀ(AᵀA)v`, `v ⬝ v ≥ 0`.
-* Spectral norm: transpose, submultiplicativity, `‖I‖₂ ≤ 1`, `‖P‖₂ ≤ 1` and `‖PᵀX‖₂ = ‖X‖₂` on
+* Rows: `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`, `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, `‖Av‖² = vᵀ(AᵀA)v`, `v ⬝ v ≥ 0`,
+  `‖Bx‖² ≤ ‖B‖_F² ‖x‖²`.
+* Euclidean length: `‖v‖ = √(v ⬝ v) = √(∑ vⱼ²)` for `EuclideanSpace`, positivity and the
+  triangle inequalities for `√(v ⬝ v)`.
+* Spectral norm: `‖0‖₂ = 0`, transpose, submultiplicativity, `‖I‖₂ ≤ 1`, `‖P‖₂ ≤ 1` and `‖PᵀX‖₂ = ‖X‖₂` on
   `range P` for orthonormal columns, the mixed inequalities `‖AB‖_F ≤ ‖A‖₂ ‖B‖_F`,
   `‖AB‖_F ≤ ‖A‖_F ‖B‖₂`, `‖A‖₂ ≤ ‖A‖_F`, and the quadratic-form bound `|xᵀMx| ≤ ‖M‖₂ ‖x‖²`.
 * Spectral-norm helpers (audit G0 C1): the triangle inequality, `‖AAᵀ‖₂ = ‖A‖₂²`,
   `‖P‖₂ ≤ 1` for orthogonal projectors, `‖(I − QQᵀ)A‖₂ ≤ ‖A‖₂`, and the block bound
   `‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²` when `XYᵀ = 0` (or `XᵀY = 0`).
+
+Further spectral-norm bounds (orthonormal-frame invariance, Lipschitz bounds, diagonal and
+block-diagonal bounds) are in `NLAlib.Matrix.Norms.SpectralNormBounds`; invariance under
+`Matrix.reindex` is in `NLAlib.Matrix.Norms.Reindex`.
 
 The Frobenius algebra is ported from the LRA project (`LRA/Basic.lean`,
 `LRA/Deterministic/RangeFinder.lean`, Chen–Persson formalization), namespace renamed.
@@ -80,6 +88,13 @@ theorem frobInner_eq_trace (A B : Matrix m n ℝ) : frobInner A B = (Aᵀ * B).t
   unfold frobInner Matrix.trace
   simp only [Matrix.diag, Matrix.mul_apply, Matrix.transpose_apply]
   rw [Finset.sum_comm]
+
+/-- The Frobenius pairing is also the trace of the row cross-product.
+Horn–Johnson §7.4; Procrustes equality helper. -/
+theorem frobInner_eq_trace_mul_transpose (A B : Matrix m n ℝ) :
+    frobInner A B = (A * Bᵀ).trace := by
+  rw [frobInner_eq_trace, ← Matrix.trace_transpose (A * Bᵀ), Matrix.transpose_mul,
+    Matrix.transpose_transpose, Matrix.trace_mul_comm]
 
 /-- Additivity in the first argument. Atlas `norms-frob-spec`. -/
 theorem frobInner_add_left (A B C : Matrix m n ℝ) :
@@ -237,6 +252,11 @@ theorem frobNorm_neg (A : Matrix m n ℝ) : frobNorm (-A) = frobNorm A := by
 theorem frobNorm_smul (c : ℝ) (A : Matrix m n ℝ) : frobNorm (c • A) = |c| * frobNorm A := by
   rw [frobNorm, frobSq_smul, Real.sqrt_mul (sq_nonneg c), Real.sqrt_sq_eq_abs, frobNorm]
 
+/-- `‖I‖_F² = n`. Atlas: `slq-error` (helper). -/
+theorem frobNorm_one_sq [DecidableEq n] : frobNorm (1 : Matrix n n ℝ) ^ 2 = Fintype.card n := by
+  rw [frobNorm_sq, frobSq_eq_sum_sq]
+  simp [Matrix.one_apply]
+
 /-! ### Rows and dot products -/
 
 /-- `v ⬝ᵥ v ≥ 0` for real vectors (Mathlib has only the `star` forms
@@ -259,6 +279,48 @@ theorem mulVec_dotProduct_mulVec_eq_sum_sq [Fintype m] (A : Matrix m n ℝ) (v :
 theorem mulVec_dotProduct_mulVec_self (A : Matrix m n ℝ) (x : n → ℝ) :
     (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) := by
   rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec x Aᵀ, Matrix.vecMul_transpose]
+
+/-! ### Euclidean length `√(v ⬝ v)` -/
+
+/-- `‖v‖ = √(v ⬝ v)` for a real Euclidean vector. Ported from Prove2me solution
+`GaussianMatrix.spectral_second_moment_bound` (helper `ssb_euclid_norm`).
+Atlas `norm-lipschitz` (helper). -/
+theorem norm_eq_sqrt_dotProduct (v : EuclideanSpace ℝ n) : ‖v‖ = Real.sqrt (v.ofLp ⬝ᵥ v.ofLp) := by
+  rw [EuclideanSpace.norm_eq]
+  congr 1
+  simp [dotProduct, sq]
+
+/-- `‖v‖₂ = √(v ⬝ v)` for the Euclidean norm of `WithLp.toLp 2 v`; `norm_eq_sqrt_dotProduct`
+read from right to left. Atlas `norm-lipschitz`. -/
+theorem sqrt_dotProduct_self_eq_norm (v : m → ℝ) :
+    Real.sqrt (v ⬝ᵥ v) = ‖(WithLp.toLp 2 v : EuclideanSpace ℝ m)‖ :=
+  (norm_eq_sqrt_dotProduct _).symm
+
+/-- `‖u‖ = √(∑ⱼ uⱼ²)` for a real Euclidean vector. Ported from Prove2me solution
+`GaussianMatrix.gordon_upper` (helper `gu_norm_eq_sqrt`). Atlas `norm-lipschitz` (helper). -/
+theorem norm_eq_sqrt_sum_sq {κ : Type*} [Fintype κ] (u : EuclideanSpace ℝ κ) :
+    ‖u‖ = Real.sqrt (∑ j, u j ^ 2) := by
+  rw [← EuclideanSpace.real_norm_sq_eq, Real.sqrt_sq (norm_nonneg _)]
+
+/-- A nonzero vector has positive Euclidean length `√(v ⬝ᵥ v)`. -/
+theorem sqrt_dotProduct_self_pos {ι : Type*} [Fintype ι] {v : ι → ℝ} (hv : v ≠ 0) :
+    0 < Real.sqrt (v ⬝ᵥ v) :=
+  Real.sqrt_pos.mpr (lt_of_le_of_ne (dotProduct_self_nonneg v)
+    (Ne.symm (fun h => hv (dotProduct_self_eq_zero.mp h))))
+
+/-- Triangle inequality for the Euclidean length `√(v ⬝ v)`. Atlas `norm-lipschitz`. -/
+theorem sqrt_dotProduct_add_le (u v : m → ℝ) :
+    Real.sqrt ((u + v) ⬝ᵥ (u + v)) ≤ Real.sqrt (u ⬝ᵥ u) + Real.sqrt (v ⬝ᵥ v) := by
+  rw [sqrt_dotProduct_self_eq_norm, sqrt_dotProduct_self_eq_norm, sqrt_dotProduct_self_eq_norm,
+    WithLp.toLp_add]
+  exact norm_add_le _ _
+
+/-- Euclidean triangle inequality for a difference, `‖u - v‖ ≤ ‖u‖ + ‖v‖`, in the
+`Real.sqrt (v ⬝ᵥ v)` spelling. -/
+theorem sqrt_dotProduct_sub_le {ι : Type*} [Fintype ι] (u v : ι → ℝ) :
+    Real.sqrt ((u - v) ⬝ᵥ (u - v)) ≤ Real.sqrt (u ⬝ᵥ u) + Real.sqrt (v ⬝ᵥ v) := by
+  have h := sqrt_dotProduct_add_le u (-v)
+  simpa only [sub_eq_add_neg, neg_dotProduct, dotProduct_neg, neg_neg] using h
 
 /-! ### Cauchy–Schwarz and the triangle inequality -/
 
@@ -355,6 +417,10 @@ variable [DecidableEq m] [DecidableEq n]
 theorem specNorm_transpose (A : Matrix m n ℝ) : specNorm Aᵀ = specNorm A := by
   unfold specNorm
   rw [← Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.l2_opNorm_conjTranspose]
+
+/-- `‖0‖₂ = 0`. Atlas `norm-lipschitz` (helper). -/
+theorem specNorm_zero : specNorm (0 : Matrix m n ℝ) = 0 :=
+  norm_zero
 
 /-- Submultiplicativity `‖AB‖₂ ≤ ‖A‖₂ ‖B‖₂`. Standard; atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/
@@ -453,6 +519,14 @@ theorem sum_sq_mulVec_le_frobSq (A : Matrix m n ℝ) (x : n → ℝ) :
   rw [frobSq_eq_sum_sq, Finset.sum_mul]
   refine Finset.sum_le_sum fun i _ => ?_
   simpa [Matrix.mulVec, dotProduct] using Finset.sum_mul_sq_le_sq_mul_sq Finset.univ (A i) x
+
+omit [DecidableEq m] [DecidableEq n] in
+/-- Row-wise Cauchy–Schwarz, dot-product form: `‖Bx‖₂² ≤ ‖B‖_F² ‖x‖₂²`.
+Atlas `norm-lipschitz`. -/
+theorem mulVec_dotProduct_mulVec_le_frobSq_mul (B : Matrix m n ℝ) (x : n → ℝ) :
+    (B *ᵥ x) ⬝ᵥ (B *ᵥ x) ≤ frobSq B * (x ⬝ᵥ x) := by
+  have h := sum_sq_mulVec_le_frobSq B x
+  simpa [dotProduct, sq] using h
 
 /-- `‖A‖₂ ≤ ‖A‖_F`. Standard (Golub–Van Loan, 4th ed., eq. (2.3.7)); atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/

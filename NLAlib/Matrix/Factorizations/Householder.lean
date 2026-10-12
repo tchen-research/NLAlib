@@ -132,10 +132,6 @@ atlas: householder-reflector-def -/
 def householderVector (x : m → ℝ) (i₀ : m) : m → ℝ :=
   x + (householderSign (x i₀) * √(x ⬝ᵥ x)) • Pi.single i₀ 1
 
-omit [DecidableEq m] in
-private lemma dotProduct_self_nonneg' (x : m → ℝ) : 0 ≤ x ⬝ᵥ x :=
-  Finset.sum_nonneg fun i _ => mul_self_nonneg (x i)
-
 /-- **The reflector maps `x` onto the axis**: `H_v x = −sign(x_{i₀}) ‖x‖ e_{i₀}` for the
 Trefethen–Bau vector `v = householderVector x i₀`. No hypothesis (for `x = 0`, `v = 0`).
 Trefethen–Bau 1997, Lect. 10 (eq. (10.5) and Fig. 10.2); Golub–Van Loan 2013, §5.1.2.
@@ -146,7 +142,7 @@ theorem householder_mulVec_householderVector (x : m → ℝ) (i₀ : m) :
   set σ := householderSign (x i₀)
   set ν := √(x ⬝ᵥ x)
   set v := householderVector x i₀
-  have hν : ν ^ 2 = x ⬝ᵥ x := Real.sq_sqrt (dotProduct_self_nonneg' x)
+  have hν : ν ^ 2 = x ⬝ᵥ x := Real.sq_sqrt (dotProduct_self_nonneg x)
   have hσ : σ ^ 2 = 1 := householderSign_sq _
   have hvx : v ⬝ᵥ x = x ⬝ᵥ x + σ * ν * x i₀ := by
     simp only [v, householderVector, add_dotProduct, smul_dotProduct, single_dotProduct,

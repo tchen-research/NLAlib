@@ -14,21 +14,6 @@ open scoped MatrixOrder Matrix.Norms.L2Operator
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-omit [DecidableEq n] in
-/-- Expanding a real symmetric quadratic form on two scaled vectors gives
-the diagonal energies and twice the cross term. Horn--Johnson (2013),
-Section 7.4.12; helper for Wielandt's inequality. -/
-theorem quadForm_smul_add_smul {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    (x y : n → ℝ) (r s : ℝ) :
-    quadForm A (r • x + s • y) = r ^ 2 * quadForm A x +
-      2 * r * s * (x ⬝ᵥ A *ᵥ y) + s ^ 2 * quadForm A y := by
-  have hAt : Aᵀ = A := by simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hA.eq
-  have hcross : y ⬝ᵥ A *ᵥ x = x ⬝ᵥ A *ᵥ y := by
-    simpa only [hAt] using Matrix.dotProduct_transpose_mulVec A y x
-  simp only [quadForm, Matrix.mulVec_add, Matrix.mulVec_smul, add_dotProduct,
-    dotProduct_add, smul_dotProduct, dotProduct_smul, smul_eq_mul, hcross]
-  ring
-
 /-- The quadratic form of a scalar Loewner sandwich satisfies the same
 endpoint bounds on every vector. Horn--Johnson (2013), Section 7.4.12;
 helper for Wielandt's inequality. -/

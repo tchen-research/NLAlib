@@ -1,4 +1,5 @@
 import NLAlib.Krylov.Processes.ArnoldiProcess
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
 /-!
 # The Arnoldi relation and the Lanczos three-term recurrence
 
@@ -33,13 +34,6 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-omit [Fintype n] [DecidableEq n] in
-/-- Column `j` of a product: `(M N)_{:,j} = M N_{:,j}`. Helper for `arnoldi-relation`. -/
-theorem col_mul {k l : Type*} [Fintype k] (M : Matrix n k ℝ) (N : Matrix k l ℝ) (j : l) :
-    (M * N).col j = M *ᵥ N.col j := by
-  ext r
-  simp [Matrix.mul_apply, Matrix.mulVec, dotProduct, Matrix.col]
-
 namespace ArnoldiDecomp
 
 variable {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
@@ -70,7 +64,7 @@ theorem mul_restrict_Q_eq_mul (D : ArnoldiDecomp A b (q + 1)) :
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc]
   change (A * (D.restrict q.le_succ).Q).col j r =
     (D.Q * D.Qᵀ * A * (D.restrict q.le_succ).Q).col j r
-  rw [col_mul, col_mul, ← h]
+  rw [col_mul_eq_mulVec_col, col_mul_eq_mulVec_col, ← h]
   simp only [Matrix.mulVec_mulVec, Matrix.mul_assoc]
 
 /-- **The Arnoldi relation** (outer-product form): `A Q_q = Q_q H_q + q_{q+1} h̲ᵀ` where
@@ -121,7 +115,7 @@ theorem mul_Q_eq_of_krylovGrade_le (D : ArnoldiDecomp A b q) (h : krylovGrade A 
   have h := congrFun (mulVec_transpose_mulVec_of_mem_range D.hasOrthonormalCols hmem) r
   rw [H_def, ← Matrix.mul_assoc, ← Matrix.mul_assoc]
   change (A * D.Q).col j r = (D.Q * D.Qᵀ * A * D.Q).col j r
-  rw [col_mul, col_mul, ← h]
+  rw [col_mul_eq_mulVec_col, col_mul_eq_mulVec_col, ← h]
   simp only [Matrix.mulVec_mulVec, Matrix.mul_assoc]
 
 /-- **Breakdown characterisation**: for `q ≥ 1`, the Arnoldi relation closes (`A Q_q = Q_q H_q`,

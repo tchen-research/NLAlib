@@ -1,3 +1,4 @@
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
 import NLAlib.Matrix.Spectral.SimultaneousTriangularization
 /-!
 # Paired spectra of commuting sums and products
@@ -13,21 +14,6 @@ open Polynomial
 open scoped Matrix
 
 namespace NLAlib
-
-/-- The diagonal of the product of two upper triangular matrices is the
-pointwise product of their diagonals. Source: Horn–Johnson (2013), §0.7;
-helper for the commuting spectral sum and product formulas. -/
-theorem mul_apply_self_eq_mul_of_isUpperTriangular
-    {n K : Type*} [Fintype n] [DecidableEq n] [LinearOrder n] [Semiring K]
-    {A B : Matrix n n K} (hA : A.IsUpperTriangular) (hB : B.IsUpperTriangular) (i : n) :
-    (A * B) i i = A i i * B i i := by
-  rw [Matrix.mul_apply]
-  apply Finset.sum_eq_single i
-  · intro j _ hji
-    rcases lt_or_gt_of_ne hji with h | h
-    · rw [hA h, zero_mul]
-    · rw [hB h, mul_zero]
-  · simp
 
 /-- Commuting matrices have complete characteristic eigenvalue lists in
 paired orders for which the sum and product spectra are the corresponding
@@ -73,6 +59,6 @@ theorem exists_paired_charpoly_factors_add_mul_of_commute
       simp only [Matrix.mul_assoc, ← Matrix.mul_assoc (U : Matrix n n ℂ)ᴴ (U : Matrix n n ℂ),
         hUt, Matrix.one_mul]
     rw [hprod, hchar, Matrix.charpoly_of_isUpperTriangular _ (hTA'.mul hTB')]
-    simp only [mul_apply_self_eq_mul_of_isUpperTriangular hTA' hTB']
+    simp only [mul_apply_self_of_isUpperTriangular hTA' hTB']
 
 end NLAlib

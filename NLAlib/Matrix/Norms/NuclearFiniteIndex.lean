@@ -13,18 +13,6 @@ open scoped Matrix Matrix.Norms.L2Operator BigOperators
 
 namespace NLAlib
 
-/-- Relabeling rows and columns preserves the real Frobenius pairing. -/
-theorem frobInner_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
-    (A B : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
-    frobInner (A.reindex em en) (B.reindex em en) = frobInner A B := by
-  simp only [frobInner, Matrix.reindex_apply, Matrix.submatrix_apply]
-  calc
-    (∑ i : p, ∑ j : q, A (em.symm i) (en.symm j) * B (em.symm i) (en.symm j)) =
-        ∑ i : m, ∑ j : q, A i (en.symm j) * B i (en.symm j) :=
-      em.symm.sum_comp (fun i => ∑ j : q, A i (en.symm j) * B i (en.symm j))
-    _ = ∑ i : m, ∑ j : n, A i j * B i j :=
-      Finset.sum_congr rfl (fun i _ => en.symm.sum_comp (fun j => A i j * B i j))
-
 /-- Relabeling rows and columns preserves the nuclear norm. -/
 theorem nuclearNorm_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
     [DecidableEq n] [DecidableEq q] (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :

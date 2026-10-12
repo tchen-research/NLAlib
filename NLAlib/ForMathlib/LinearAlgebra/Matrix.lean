@@ -1,3 +1,5 @@
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Adjugate
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
 
 /-! # `ForMathlib/LinearAlgebra/Matrix`

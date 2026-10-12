@@ -53,7 +53,7 @@ theorem cholesky_trailing_mul_transpose {n : ℕ}
     (A L : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ)
     (hLower : L.IsLowerTriangular) (hDiag : 0 < L 0 0) (hFactor : L * Lᵀ = A) :
     L.submatrix Fin.succ Fin.succ * (L.submatrix Fin.succ Fin.succ)ᵀ =
-      choleskyTrailingResidual A := by
+      pivotSchur A := by
   have hZero (j : Fin n) : L 0 j.succ = 0 := by
     have hLt : (0 : Fin (n + 1)) < j.succ := by
       simpa only [Fin.lt_def, Fin.val_zero, Fin.val_succ] using Nat.succ_pos j.val
@@ -69,7 +69,7 @@ theorem cholesky_trailing_mul_transpose {n : ℕ}
     have h := congrFun (congrFun hFactor 0) j.succ
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_succ,
       hZero, zero_mul, Finset.sum_const_zero, add_zero] using h
-  have hCorrection (i j : Fin n) : A i.succ 0 * (A 0 0)⁻¹ * A 0 j.succ =
+  have hCorrection (i j : Fin n) : (A 0 0)⁻¹ * (A i.succ 0 * A 0 j.succ) =
       L i.succ 0 * L j.succ 0 := by
     rw [← hPivot, ← hFirst i, ← hRow j]
     field_simp [hDiag.ne']
@@ -77,7 +77,7 @@ theorem cholesky_trailing_mul_transpose {n : ℕ}
   have h := congrFun (congrFun hFactor i.succ) j.succ
   simp only [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_succ] at h
   simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.submatrix,
-    choleskyTrailingResidual, hCorrection]
+    pivotSchur_apply, hCorrection]
   change (∑ k : Fin n, L i.succ k.succ * L j.succ k.succ) =
     A i.succ j.succ - L i.succ 0 * L j.succ 0
   linarith

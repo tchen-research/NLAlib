@@ -21,7 +21,8 @@ import NLAlib.Matrix.Norms.Core
 * Range-finder fact: `range(AΩ) ⊆ range(Q)` (written `Q (Qᵀ (A Ω)) = A Ω`) gives
   `(I − QQᵀ) A Ω = 0`.
 * Orthogonal completions: a matrix with orthonormal columns has at most as many columns as
-  rows and extends to an orthogonal matrix (`exists_orthogonal_completion`) or, with the
+  rows (`card_le_card_of_hasOrthonormalCols`) and extends to an orthogonal matrix
+  (`exists_orthogonal_completion`) or, with the
   complementary block, to `QQᵀ + Q⊥Q⊥ᵀ = I` (`exists_orthonormal_complement`); for such a
   completion `QᵀQ⊥ = 0` and `(I − QQᵀ)A = Q⊥Q⊥ᵀ(I − QQᵀ)A`.
 * Vectors and compressions: `QQᵀx = x` on `range Q`, `‖Qᵀx‖² ≤ ‖x‖²` (equality on `range Q`),
@@ -162,6 +163,12 @@ theorem residual_mul_eq_zero_of_range {Q : Matrix m q ℝ} {A : Matrix m n ℝ} 
   rw [residual_mul, residual, h, sub_self]
 
 /-! ### Pythagoras and contraction -/
+
+/-- The squared Frobenius size of an orthonormal frame is its width.
+Stewart–Sun §I.5; valid at width zero. -/
+theorem frobSq_frame_eq_card [DecidableEq n] {Q : Matrix m n ℝ} (hQ : HasOrthonormalCols Q) :
+    frobSq Q = Fintype.card n := by
+  rw [frobSq, frobInner_eq_trace, hQ, Matrix.trace_one]
 
 /-- Pythagoras for the projector: `‖A‖_F² = ‖Q(QᵀA)‖_F² + ‖(I − QQᵀ)A‖_F²`.
 Atlas `projection-facts`.
@@ -309,13 +316,18 @@ private lemma col_orthonormal {k : ℕ} {ι : Type*} [Fintype ι] [DecidableEq �
   · subst h; simp
   · simp [h, Ne.symm h]
 
-/-- A real matrix with orthonormal columns has at most as many columns as rows.
-Ported from the Prove2me workspace (Gaussian Random Matrices series). Atlas
-`orthonormal-completion`. -/
-theorem card_le_of_transpose_mul_self_eq_one {k : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (V : Matrix (Fin k) ι ℝ) (hV : Vᵀ * V = 1) : Fintype.card ι ≤ k := by
-  have := (col_orthonormal V hV).linearIndependent.fintype_card_le_finrank
-  simpa [finrank_euclideanSpace] using this
+/-- A real matrix with orthonormal columns has at most as many columns as rows (general finite
+index types). Atlas `orthonormal-completion`.
+atlas: orthonormal-completion -/
+theorem card_le_card_of_hasOrthonormalCols {r : Type*} [Fintype r] [DecidableEq r]
+    {Q : Matrix m r ℝ} (hQ : HasOrthonormalCols Q) : Fintype.card r ≤ Fintype.card m := by
+  have hinj : Function.Injective Q.mulVecLin := by
+    intro x y hxy
+    have h := congrArg (fun v => Qᵀ *ᵥ v) hxy
+    simp only [Matrix.mulVecLin_apply, Matrix.mulVec_mulVec] at h
+    rwa [show Qᵀ * Q = 1 from hQ, Matrix.one_mulVec, Matrix.one_mulVec] at h
+  simpa [Module.finrank_fintype_fun_eq_card] using
+    LinearMap.finrank_le_finrank_of_injective hinj
 
 /-- **Orthogonal completion.** A real matrix `V` with orthonormal columns indexed by `ι`, placed
 in the columns `e '' ι` of `Fin k`, extends to an orthogonal `k × k` matrix `W`.
@@ -359,7 +371,7 @@ theorem exists_orthonormal_complement {k q : ℕ} (Q : Matrix (Fin k) (Fin q) �
     (hQ : HasOrthonormalCols Q) :
     ∃ r : ℕ, ∃ Qp : Matrix (Fin k) (Fin r) ℝ,
       HasOrthonormalCols Qp ∧ Q * Qᵀ + Qp * Qpᵀ = 1 := by
-  have hqk : q ≤ k := by simpa using card_le_of_transpose_mul_self_eq_one Q hQ
+  have hqk : q ≤ k := by simpa using card_le_card_of_hasOrthonormalCols hQ
   obtain ⟨r, rfl⟩ : ∃ r, k = q + r := ⟨k - q, by omega⟩
   obtain ⟨W, hW, hWQ⟩ := exists_orthogonal_completion Q hQ (Fin.castAddEmb r)
   have hWW : W * Wᵀ = 1 := mul_eq_one_comm.mp hW

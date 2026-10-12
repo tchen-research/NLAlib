@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Functions.InverseCalculus
+import NLAlib.Matrix.Spectral.TraceEigenvalues
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 import Mathlib.Analysis.InnerProductSpace.StarOrder
 
@@ -22,43 +23,6 @@ open Matrix
 namespace NLAlib
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-
-/-- Trace is invariant under unitary conjugation. Source: matrix trace
-cyclicity; atlas `wishart-lambda-min-tail` (operator calculus helper). -/
-theorem trace_conjStarAlgAut (U : Matrix.unitaryGroup ι ℝ) (A : Matrix ι ι ℝ) :
-    Matrix.trace (Unitary.conjStarAlgAut ℝ _ U A) = Matrix.trace A := by
-  rw [Unitary.conjStarAlgAut_apply, Matrix.trace_mul_cycle,
-    Unitary.coe_star_mul_self, one_mul]
-
-/-- A symmetric matrix quadratic trace in a diagonal basis is a weighted
-sum of squares. Source: ported from SparseFockFormal,
-`TracePowerConvexity.trace_mul_diagonal_pow_mul_mul_diagonal_pow`;
-atlas `wishart-lambda-min-tail` (operator calculus helper). -/
-theorem trace_mul_diagonal_pow_mul_mul_diagonal_pow (B : Matrix ι ι ℝ)
-    (hB : Bᵀ = B) (ev : ι → ℝ) (a c : ℕ) :
-    Matrix.trace (B * (Matrix.diagonal ev) ^ a * B * (Matrix.diagonal ev) ^ c) =
-      ∑ i, ∑ j, B i j ^ 2 * ev j ^ a * ev i ^ c := by
-  rw [Matrix.diagonal_pow, Matrix.diagonal_pow,
-    Matrix.mul_assoc B (Matrix.diagonal (ev ^ a)) B]
-  have hentry (i : ι) : (B * (Matrix.diagonal (ev ^ a) * B)) i i =
-      ∑ j, B i j * (ev j ^ a * B j i) := by
-    rw [Matrix.mul_apply]
-    apply Finset.sum_congr rfl
-    intro j _
-    rw [Matrix.diagonal_mul]
-    rfl
-  simp only [Matrix.trace, Matrix.diag, Matrix.mul_diagonal]
-  simp_rw [hentry]
-  apply Finset.sum_congr rfl
-  intro i _
-  rw [Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro j _
-  have hs := congrFun (congrFun hB j) i
-  simp only [Matrix.transpose_apply] at hs
-  rw [hs]
-  simp only [Pi.pow_apply]
-  ring
 
 /-- The quadratic kernel arising as the second derivative of an inverse
 trace power. Source: finite noncommutative power rule; atlas

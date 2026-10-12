@@ -14,11 +14,11 @@ namespace NLAlib
 
 private theorem eigenvaluePrefix_realDilation {m n k : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (hk : k ≤ min m n) :
-    eigenvaluePrefix (isHermitian_realDilation A) (k := k) (by simp; omega) =
+    eigenvaluePrefix (isHermitian_dilation A) (k := k) (by simp; omega) =
       ∑ i : Fin k, singularValues A i := by
   apply Finset.sum_congr rfl
   intro i _
-  have hi := eigenvalues₀_realDilation A (Fin.castLE (by omega : k ≤ m + n) i)
+  have hi := eigenvalues₀_dilation A (Fin.castLE (by omega : k ≤ m + n) i)
   have him : (i : ℕ) < m := lt_of_lt_of_le i.isLt (hk.trans (min_le_left m n))
   simpa [realDilationSpectrum, him, Fin.cast, Fin.castLE] using hi
 
@@ -48,19 +48,19 @@ theorem sum_abs_singularValues_add_sub_le_sum_prefix {m n : ℕ}
   let f : Fin (min m n) ↪ Fin (Fintype.card (Fin m ⊕ Fin n)) :=
     ⟨fun i => Fin.cast (by simp) (f₀ i), fun i j hij => hf₀ (Fin.ext (congrArg (fun k : Fin (Fintype.card (Fin m ⊕ Fin n)) => k.val) hij))⟩
   have hspectrum (C : Matrix (Fin m) (Fin n) ℝ) (i : Fin (min m n)) :
-      (isHermitian_realDilation C).eigenvalues₀ (f i) =
+      (isHermitian_dilation C).eigenvalues₀ (f i) =
         if 0 ≤ δ i then singularValues C i else -singularValues C i := by
-    change (isHermitian_realDilation C).eigenvalues₀
+    change (isHermitian_dilation C).eigenvalues₀
       (Fin.cast (by simp) (if 0 ≤ δ i then Fin.castLE (by omega : min m n ≤ m + n) i
         else (Fin.castLE (by omega : min m n ≤ m + n) i).rev)) =
           if 0 ≤ δ i then singularValues C i else -singularValues C i
     split_ifs
-    · exact eigenvalues₀_realDilation_top C i
-    · exact eigenvalues₀_realDilation_bottom C i
+    · exact eigenvalues₀_dilation_top C i
+    · exact eigenvalues₀_dilation_bottom C i
   have hdiff (i : Fin (min m n)) :
-      ((isHermitian_realDilation A).add (isHermitian_realDilation E)).eigenvalues₀ (f i) -
-        (isHermitian_realDilation A).eigenvalues₀ (f i) = |δ i| := by
-    rw [eigenvalues₀_eq_of_eq (realDilation_add A E).symm _ (isHermitian_realDilation (A + E))]
+      ((isHermitian_dilation A).add (isHermitian_dilation E)).eigenvalues₀ (f i) -
+        (isHermitian_dilation A).eigenvalues₀ (f i) = |δ i| := by
+    rw [eigenvalues₀_eq_of_eq (dilation_add A E).symm _ (isHermitian_dilation (A + E))]
     rw [hspectrum, hspectrum]
     split_ifs with hi
     · exact (abs_of_nonneg hi).symm
@@ -68,16 +68,16 @@ theorem sum_abs_singularValues_add_sub_le_sum_prefix {m n : ℕ}
       rw [abs_of_neg (lt_of_not_ge hi)]
       ring
   have h := sum_eigenvalues₀_add_le_sum_add_eigenvaluePrefix
-    (isHermitian_realDilation A) (isHermitian_realDilation E) (S.map f)
+    (isHermitian_dilation A) (isHermitian_dilation E) (S.map f)
   have hcard : S.card ≤ min m n := by simpa using Finset.card_le_univ S
-  have hprefix : eigenvaluePrefix (isHermitian_realDilation E) (k := (S.map f).card)
+  have hprefix : eigenvaluePrefix (isHermitian_dilation E) (k := (S.map f).card)
       (by simpa using Finset.card_le_univ (S.map f)) =
         ∑ j : Fin S.card, singularValues E j := by
     simpa only [Finset.card_map] using eigenvaluePrefix_realDilation E hcard
   rw [hprefix, Finset.sum_map, Finset.sum_map] at h
   have hdiffsum :
-      (∑ i ∈ S, ((isHermitian_realDilation A).add (isHermitian_realDilation E)).eigenvalues₀ (f i)) -
-        (∑ i ∈ S, (isHermitian_realDilation A).eigenvalues₀ (f i)) = ∑ i ∈ S, |δ i| := by
+      (∑ i ∈ S, ((isHermitian_dilation A).add (isHermitian_dilation E)).eigenvalues₀ (f i)) -
+        (∑ i ∈ S, (isHermitian_dilation A).eigenvalues₀ (f i)) = ∑ i ∈ S, |δ i| := by
     rw [← Finset.sum_sub_distrib]
     exact Finset.sum_congr rfl fun i _ => hdiff i
   change (∑ i ∈ S, |δ i|) ≤ _
@@ -118,6 +118,7 @@ theorem weaklyMajorized_abs_toEuclideanLin_singularValues_add_sub {m n : Type*}
       E.reindex (Fintype.equivFin m) (Fintype.equivFin n) =
       (A + E).reindex (Fintype.equivFin m) (Fintype.equivFin n) := rfl
   rw [hadd] at h
-  simpa only [singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  simp only [singularValues_reindex] at h
+  exact h
 
 end NLAlib

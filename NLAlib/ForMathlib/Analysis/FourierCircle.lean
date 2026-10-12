@@ -5,6 +5,8 @@ import Mathlib.Analysis.Fourier.AddCircle
 
 Character multiplication in the argument, uniform-grid roots of unity, and the real-angle
 sine formula are generic Fourier facts used by the sharp Jackson square-wave duality.
+The scoped instance `NLAlib.TwoPi.fact_zero_lt_two_pi` (`open scoped NLAlib.TwoPi`) supplies
+the period fact `0 < 2π` to every file working on `AddCircle (2 * π)`.
 -/
 
 noncomputable section
@@ -14,7 +16,17 @@ open scoped Real
 
 namespace NLAlib
 
-local instance : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
+namespace TwoPi
+
+/-- `0 < 2π` as a `Fact`, the period hypothesis Mathlib's `AddCircle (2 * π)` API (Haar
+measure, Fourier characters) needs. Scoped rather than global, as in Mathlib's own local
+instance (`Mathlib/Analysis/Polynomial/Fourier.lean`); activate it with
+`open scoped NLAlib.TwoPi`. -/
+scoped instance fact_zero_lt_two_pi : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
+
+end TwoPi
+
+open scoped TwoPi
 
 /-- Fourier characters multiply under addition of their circle arguments.
 Source: Mathlib's additive-circle Fourier definition; used by sharp `jackson-lipschitz`. -/

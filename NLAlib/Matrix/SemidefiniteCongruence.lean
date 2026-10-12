@@ -1,5 +1,6 @@
 import NLAlib.Matrix.SimultaneousOrthogonal
 import NLAlib.Matrix.DefiniteCongruence
+import NLAlib.Matrix.GramVanishing
 
 /-!
 # Simultaneous congruence of singular positive semidefinite pairs
@@ -17,16 +18,6 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-/-- A zero diagonal entry of a positive semidefinite real matrix forces
-its entire column to vanish. Horn--Johnson (2013), Section 7.1;
-helper for singular simultaneous congruence. -/
-theorem apply_eq_zero_of_posSemidef_diag_eq_zero {A : Matrix n n ℝ}
-    (hA : A.PosSemidef) {i : n} (hi : A i i = 0) (j : n) : A j i = 0 := by
-  have hq : star (Pi.single i (1 : ℝ)) ⬝ᵥ A *ᵥ Pi.single i 1 = 0 := by
-    simp [hi]
-  have hzero := (hA.dotProduct_mulVec_zero_iff _).mp hq
-  simpa only [Matrix.mulVec_single_one, Matrix.col_apply, Pi.zero_apply] using congrFun hzero j
-
 /-- Two PSD summands of a diagonal orthogonal projection commute.
 Horn--Johnson (2013), Section 7.6; helper for singular simultaneous congruence. -/
 theorem commute_of_posSemidef_add_eq_diagonal_projection {A B : Matrix n n ℝ}
@@ -39,7 +30,7 @@ theorem commute_of_posSemidef_add_eq_diagonal_projection {A B : Matrix n n ℝ}
     · have he := congrArg (fun M : Matrix n n ℝ => M j j) hAB
       simp only [Matrix.add_apply, Matrix.diagonal_apply_eq, hj] at he
       have hz : A j j = 0 := by linarith [hA.diag_nonneg (i := j), hB.diag_nonneg (i := j)]
-      rw [hj, mul_zero, apply_eq_zero_of_posSemidef_diag_eq_zero hA hz i]
+      rw [hj, mul_zero, apply_eq_zero_of_posSemidef_of_diag_eq_zero hA hz i]
     · rw [hj, mul_one]
   have hPA : diagonal p * A = A := by
     have h := congrArg Matrix.transpose hAP

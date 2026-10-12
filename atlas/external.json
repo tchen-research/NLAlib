@@ -4139,6 +4139,28 @@
   "sorry":
   false,
   "signature":
+  "LinearMap.linearEquivOfInjective.{u, v, v'} {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V]\n  [_root_.Module K V] {V₂ : Type v'} [AddCommGroup V₂] [_root_.Module K V₂] [FiniteDimensional K V]\n  [FiniteDimensional K V₂] (f : V →ₗ[K] V₂) (hf : Function.Injective ⇑f)\n  (hdim : Module.finrank K V = Module.finrank K V₂) : V ≃ₗ[K] V₂",
+  "name":
+  "LinearMap.linearEquivOfInjective",
+  "module":
+  "Mathlib.LinearAlgebra.FiniteDimensional.Lemmas",
+  "line":
+  212,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "Given a linear map `f` between two vector spaces with the same dimension, if\n`ker f = ⊥` then `linearEquivOfInjective` is the induced isomorphism\nbetween the two vector spaces. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "LinearMap.IsSymmetric.directSum_isInternal_of_commute.{u_1, u_2} {𝕜 : Type u_1} {E : Type u_2} [RCLike 𝕜]\n  [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {A B : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] (hA : A.IsSymmetric)\n  (hB : B.IsSymmetric) (hAB : Commute A B) :\n  DirectSum.IsInternal fun i => Module.End.eigenspace A i.2 ⊓ Module.End.eigenspace B i.1",
   "name":
   "LinearMap.IsSymmetric.directSum_isInternal_of_commute",
@@ -4240,6 +4262,94 @@
   "theorem",
   "doc":
   "**Fuglede–Putnam–Rosenblum**: If `a` and `b` are normal elements in a C⋆-algebra `A` which\nare interwined by `x`, then `star a` and `star b` are also intertwined by `x`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.trace_mul_conjTranspose_self_eq_zero_iff.{u_1, u_2, u_5} {m : Type u_1} {n : Type u_2} [Fintype n] [Fintype m]\n  {R : Type u_5} [PartialOrder R] [NonUnitalRing R] [StarRing R] [StarOrderedRing R] [NoZeroDivisors R]\n  {A : Matrix m n R} : (A * A.conjTranspose).trace = 0 ↔ A = 0",
+  "name":
+  "Matrix.trace_mul_conjTranspose_self_eq_zero_iff",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.PosDef",
+  "line":
+  379,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "OrthonormalBasis.toMatrix_orthonormalBasis_mem_unitary.{u_1, u_3, u_4} {ι : Type u_1} {𝕜 : Type u_3} [RCLike 𝕜]\n  {E : Type u_4} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [Fintype ι] [DecidableEq ι]\n  (a b : OrthonormalBasis ι 𝕜 E) : a.toBasis.toMatrix ⇑b ∈ Matrix.unitaryGroup ι 𝕜",
+  "name":
+  "OrthonormalBasis.toMatrix_orthonormalBasis_mem_unitary",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.PiL2",
+  "line":
+  962,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The change-of-basis matrix between two orthonormal bases `a`, `b` is a unitary matrix. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "LinearMap.charpoly_toMatrix.{w, u_1, u_2} {R : Type u_1} {M : Type u_2} [CommRing R] [AddCommGroup M]\n  [_root_.Module R M] [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] M) {ι : Type w} [DecidableEq ι] [Fintype ι]\n  (b : Module.Basis ι R M) : ((LinearMap.toMatrix b b) f).charpoly = f.charpoly",
+  "name":
+  "LinearMap.charpoly_toMatrix",
+  "module":
+  "Mathlib.LinearAlgebra.Charpoly.ToMatrix",
+  "line":
+  41,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "`charpoly f` is the characteristic polynomial of the matrix of `f` in any basis. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.Basis.span.{u_1, u_3, u_5} {ι : Type u_1} {R : Type u_3} {M : Type u_5} [Semiring R] [AddCommMonoid M]\n  [_root_.Module R M] {v : ι → M} (hli : LinearIndependent R v) : Module.Basis ι R ↥(Submodule.span R (Set.range v))",
+  "name":
+  "Module.Basis.span",
+  "module":
+  "Mathlib.LinearAlgebra.Basis.Basic",
+  "line":
+  169,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "A linear independent family of vectors is a basis for their span. ",
   "atlas_partial":
   [],
   "atlas":
@@ -4498,6 +4608,94 @@
   "Mathlib.LinearAlgebra.Eigenspace.Pi",
   "line":
   90,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.End.mapsTo_genEigenspace_of_comm.{v, w} {R : Type v} {M : Type w} [CommRing R] [AddCommGroup M]\n  [_root_.Module R M] {f g : Module.End R M} (h : Commute f g) (μ : R) (k : ℕ∞) :\n  Set.MapsTo ⇑g ↑((f.genEigenspace μ) k) ↑((f.genEigenspace μ) k)",
+  "name":
+  "Module.End.mapsTo_genEigenspace_of_comm",
+  "module":
+  "Mathlib.LinearAlgebra.Eigenspace.Basic",
+  "line":
+  367,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.End.hasEigenvalue_iff_isRoot_charpoly.{u_1, u_2} {R : Type u_1} {M : Type u_2} [CommRing R] [IsDomain R]\n  [AddCommGroup M] [_root_.Module R M] [Module.Free R M] [Module.Finite R M] (f : Module.End R M) (μ : R) :\n  f.HasEigenvalue μ ↔ (LinearMap.charpoly f).IsRoot μ",
+  "name":
+  "Module.End.hasEigenvalue_iff_isRoot_charpoly",
+  "module":
+  "Mathlib.LinearAlgebra.Eigenspace.Charpoly",
+  "line":
+  34,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The roots of the characteristic polynomial are exactly the eigenvalues.\n\n`R` is required to be an integral domain, otherwise there is the counterexample:\nR = M = Z/6Z, f(x) = 2x, v = 3, μ = 4, but p = X - 2.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Submodule.nontrivial_iff_ne_bot.{u_1, u_3} {R : Type u_1} {M : Type u_3} [Semiring R] [AddCommMonoid M]\n  [_root_.Module R M] {p : Submodule R M} : Nontrivial ↥p ↔ p ≠ ⊥",
+  "name":
+  "Submodule.nontrivial_iff_ne_bot",
+  "module":
+  "Mathlib.Algebra.Module.Submodule.Lattice",
+  "line":
+  122,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.X_sub_C_ne_zero.{u} {R : Type u} [Ring R] [Nontrivial R] (r : R) : Polynomial.X - Polynomial.C r ≠ 0",
+  "name":
+  "Polynomial.X_sub_C_ne_zero",
+  "module":
+  "Mathlib.Algebra.Polynomial.Degree.Operations",
+  "line":
+  773,
   "library":
   "mathlib",
   "kind":
@@ -4865,6 +5063,182 @@
   "sorry":
   false,
   "signature":
+  "LinearIsometry.extend.{u_3, u_7} {𝕜 : Type u_3} [RCLike 𝕜] {V : Type u_7} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V]\n  [FiniteDimensional 𝕜 V] {S : Submodule 𝕜 V} (L : ↥S →ₗᵢ[𝕜] V) : V →ₗᵢ[𝕜] V",
+  "name":
+  "LinearIsometry.extend",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.PiL2",
+  "line":
+  1173,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "Let `S` be a subspace of a finite-dimensional complex inner product space `V`.  A linear\nisometry mapping `S` into `V` can be extended to a full isometry of `V`.\n\nTODO:  The case when `S` is a finite-dimensional subspace of an infinite-dimensional `V`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "LinearMap.quotKerEquivRange.{u_1, u_2, u_3} {R : Type u_1} {M : Type u_2} {M₂ : Type u_3} [Ring R] [AddCommGroup M]\n  [AddCommGroup M₂] [_root_.Module R M] [_root_.Module R M₂] (f : M →ₗ[R] M₂) : (M ⧸ f.ker) ≃ₗ[R] ↥f.range",
+  "name":
+  "LinearMap.quotKerEquivRange",
+  "module":
+  "Mathlib.LinearAlgebra.Isomorphisms",
+  "line":
+  37,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "The **first isomorphism law for modules**. The quotient of `M` by the kernel of `f` is linearly\nequivalent to the range of `f`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "LinearMap.IsSymmetric.eigenvectorBasis.{u_3, u_4} {𝕜 : Type u_3} [RCLike 𝕜] {E : Type u_4} [NormedAddCommGroup E]\n  [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ} (hT : T.IsSymmetric)\n  (hn : Module.finrank 𝕜 E = n) : OrthonormalBasis (Fin n) 𝕜 E",
+  "name":
+  "LinearMap.IsSymmetric.eigenvectorBasis",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.Spectrum",
+  "line":
+  297,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "A choice of orthonormal basis of eigenvectors for self-adjoint operator `T` on a\nfinite-dimensional inner product space `E`.  Eigenvectors are sorted in decreasing\norder of their eigenvalues. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "LinearMap.singularValues_pos_iff_lt_finrank_range.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {E : Type u_2}\n  [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] {F : Type u_3} [NormedAddCommGroup F]\n  [InnerProductSpace 𝕜 F] [FiniteDimensional 𝕜 F] (T : E →ₗ[𝕜] F) {n : ℕ} :\n  0 < T.singularValues n ↔ n < Module.finrank 𝕜 ↥T.range",
+  "name":
+  "LinearMap.singularValues_pos_iff_lt_finrank_range",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.SingularValues",
+  "line":
+  196,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.IsHermitian.sort_roots_charpoly_eq_eigenvalues₀.{u_1, u_2} {𝕜 : Type u_1} [RCLike 𝕜] {n : Type u_2} [Fintype n]\n  {A : Matrix n n 𝕜} [DecidableEq n] (hA : A.IsHermitian) :\n  ((Multiset.map (⇑RCLike.re) A.charpoly.roots).sort fun x1 x2 => x1 ≥ x2) = List.ofFn hA.eigenvalues₀",
+  "name":
+  "Matrix.IsHermitian.sort_roots_charpoly_eq_eigenvalues₀",
+  "module":
+  "Mathlib.Analysis.Matrix.Spectrum",
+  "line":
+  172,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.Splits.roots_map.{u_1, u_2} {R : Type u_1} {S : Type u_2} [Field R] [CommRing S] [IsDomain S]\n  {f : Polynomial R} (hf : f.Splits) (i : R →+* S) : (Polynomial.map i f).roots = Multiset.map (⇑i) f.roots",
+  "name":
+  "Polynomial.Splits.roots_map",
+  "module":
+  "Mathlib.Algebra.Polynomial.Splits",
+  "line":
+  544,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "CStarRing.norm_coe_unitary_mul.{u_2} {E : Type u_2} [NormedRing E] [StarRing E] [CStarRing E] (U : ↥(unitary E))\n  (A : E) : ‖↑U * A‖ = ‖A‖",
+  "name":
+  "CStarRing.norm_coe_unitary_mul",
+  "module":
+  "Mathlib.Analysis.CStarAlgebra.Basic",
+  "line":
+  244,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "LinearMap.orthogonal_ker.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2} {F : Type u_3} [RCLike 𝕜] [NormedAddCommGroup E]\n  [NormedAddCommGroup F] [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 F] [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F]\n  (A : E →ₗ[𝕜] F) : A.kerᗮ = (LinearMap.adjoint A).range",
+  "name":
+  "LinearMap.orthogonal_ker",
+  "module":
+  "Mathlib.Analysis.InnerProductSpace.Adjoint",
+  "line":
+  626,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "7.6(b) from [axler2024].\nSee `ContinuousLinearMap.orthogonal_ker` for the infinite-dimensional version. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.det_apply.{v, u_2} {n : Type u_2} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R] (M : Matrix n n R) :\n  M.det = ∑ σ, Equiv.Perm.sign σ • ∏ i, M (σ i) i",
   "name":
   "Matrix.det_apply",
@@ -4944,6 +5318,116 @@
   "theorem",
   "doc":
   "Reindexing both indices along the same equivalence preserves the determinant.\n\nFor the `simp` version of this lemma, see `det_submatrix_equiv_self`; this one is unsuitable because\n`Matrix.reindex_apply` unfolds `reindex` first.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.submatrix_one.{v, u_1, u_2} {l : Type u_1} {m : Type u_2} {α : Type v} [Zero α] [One α] [DecidableEq m]\n  [DecidableEq l] (e : l → m) (he : Function.Injective e) : Matrix.submatrix 1 e e = 1",
+  "name":
+  "Matrix.submatrix_one",
+  "module":
+  "Mathlib.Data.Matrix.Diagonal",
+  "line":
+  399,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.det_eq_zero_of_row_eq_zero.{v, u_2} {n : Type u_2} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]\n  {A : Matrix n n R} (i : n) (h : ∀ (j : n), A i j = 0) : A.det = 0",
+  "name":
+  "Matrix.det_eq_zero_of_row_eq_zero",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Determinant.Basic",
+  "line":
+  359,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.conjTranspose_submatrix.{v, u_1, u_2, u_3, u_4} {l : Type u_1} {m : Type u_2} {n : Type u_3} {o : Type u_4}\n  {α : Type v} [Star α] (A : Matrix m n α) (r : l → m) (c : o → n) :\n  (A.submatrix r c).conjTranspose = A.conjTranspose.submatrix c r",
+  "name":
+  "Matrix.conjTranspose_submatrix",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.ConjTranspose",
+  "line":
+  439,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.det_conjTranspose.{v, u_1} {m : Type u_1} [DecidableEq m] [Fintype m] {R : Type v} [CommRing R] [StarRing R]\n  (M : Matrix m m R) : M.conjTranspose.det = star M.det",
+  "name":
+  "Matrix.det_conjTranspose",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Determinant.Basic",
+  "line":
+  346,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.normSq_eq_conj_mul_self {z : ℂ} : ↑(Complex.normSq z) = (starRingEnd ℂ) z * z",
+  "name":
+  "Complex.normSq_eq_conj_mul_self",
+  "module":
+  "Mathlib.Data.Complex.Basic",
+  "line":
+  545,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
   "atlas_partial":
   [],
   "atlas":
@@ -5525,6 +6009,160 @@
   "sorry":
   false,
   "signature":
+  "Lagrange.interpolate_eq_sum.{u_1, u_2} {F : Type u_1} [Field F] {ι : Type u_2} [DecidableEq ι] {s : Finset ι}\n  {v : ι → F} (r : ι → F) :\n  (Lagrange.interpolate s v) r =\n    ∑ i ∈ s, Polynomial.C (r i / ∏ j ∈ s.erase i, (v i - v j)) * ∏ j ∈ s.erase i, (Polynomial.X - Polynomial.C (v j))",
+  "name":
+  "Lagrange.interpolate_eq_sum",
+  "module":
+  "Mathlib.LinearAlgebra.Lagrange",
+  "line":
+  453,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.prod_X_sub_C_nextCoeff.{u, w} {R : Type u} {ι : Type w} [CommRing R] {s : Finset ι} (f : ι → R) :\n  (∏ i ∈ s, (Polynomial.X - Polynomial.C (f i))).nextCoeff = -∑ i ∈ s, f i",
+  "name":
+  "Polynomial.prod_X_sub_C_nextCoeff",
+  "module":
+  "Mathlib.Algebra.Polynomial.BigOperators",
+  "line":
+  263,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.charpoly_fromBlocks_zero₂₁.{u_1, u_3, u_4} {R : Type u_1} [CommRing R] {m : Type u_3} {n : Type u_4}\n  [DecidableEq m] [DecidableEq n] [Fintype m] [Fintype n] (M₁₁ : Matrix m m R) (M₁₂ : Matrix m n R)\n  (M₂₂ : Matrix n n R) : (Matrix.fromBlocks M₁₁ M₁₂ 0 M₂₂).charpoly = M₁₁.charpoly * M₂₂.charpoly",
+  "name":
+  "Matrix.charpoly_fromBlocks_zero₂₁",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Charpoly.Basic",
+  "line":
+  186,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.charpoly_reindex.{u_1, u_3, u_4} {R : Type u_1} [CommRing R] {m : Type u_3} {n : Type u_4} [DecidableEq m]\n  [DecidableEq n] [Fintype m] [Fintype n] (e : n ≃ m) (M : Matrix n n R) :\n  ((Matrix.reindex e e) M).charpoly = M.charpoly",
+  "name":
+  "Matrix.charpoly_reindex",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Charpoly.Basic",
+  "line":
+  170,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Fin.prod_univ_succAbove.{u_2} {M : Type u_2} [CommMonoid M] {n : ℕ} (f : Fin (n + 1) → M) (x : Fin (n + 1)) :\n  ∏ i, f i = f x * ∏ i, f (x.succAbove i)",
+  "name":
+  "Fin.prod_univ_succAbove",
+  "module":
+  "Mathlib.Algebra.BigOperators.Fin",
+  "line":
+  64,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "A product of a function `f : Fin (n + 1) → M` over all `Fin (n + 1)`\nis the product of `f x`, for some `x : Fin (n + 1)` times the remaining product ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Real.sq_sqrt {x : ℝ} (h : 0 ≤ x) : √x ^ 2 = x",
+  "name":
+  "Real.sq_sqrt",
+  "module":
+  "Mathlib.Analysis.Real.Sqrt",
+  "line":
+  177,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.degree_sub_lt_left.{u} {R : Type u} [Ring R] {p q : Polynomial R} (hd : p.degree = q.degree) (hp0 : p ≠ 0)\n  (hlc : p.leadingCoeff = q.leadingCoeff) : (p - q).degree < p.degree",
+  "name":
+  "Polynomial.degree_sub_lt_left",
+  "module":
+  "Mathlib.Algebra.Polynomial.Degree.Defs",
+  "line":
+  540,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "selfAdjointPart.{u_1, u_2} (R : Type u_1) {A : Type u_2} [Semiring R] [StarMul R] [TrivialStar R] [AddCommGroup A]\n  [_root_.Module R A] [StarAddMonoid A] [StarModule R A] [Invertible 2] : A →ₗ[R] ↥(selfAdjoint A)",
   "name":
   "selfAdjointPart",
@@ -5745,6 +6383,50 @@
   "sorry":
   false,
   "signature":
+  "eigenvalue_mem_ball.{u_1, u_2} {K : Type u_1} {n : Type u_2} [NormedField K] [Fintype n] [DecidableEq n]\n  {A : Matrix n n K} {μ : K} (hμ : Module.End.HasEigenvalue (Matrix.toLin' A) μ) :\n  ∃ k, μ ∈ Metric.closedBall (A k k) (∑ j ∈ Finset.univ.erase k, ‖A k j‖)",
+  "name":
+  "eigenvalue_mem_ball",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Gershgorin",
+  "line":
+  27,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "**Gershgorin's circle theorem**: for any eigenvalue `μ` of a square matrix `A`, there exists an\nindex `k` such that `μ` lies in the closed ball of center the diagonal term `A k k` and of\nradius the sum of the norms `∑ j ≠ k, ‖A k j‖`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "det_ne_zero_of_sum_row_lt_diag.{u_1, u_2} {K : Type u_1} {n : Type u_2} [NormedField K] [Fintype n] [DecidableEq n]\n  {A : Matrix n n K} (h : ∀ (k : n), ∑ j ∈ Finset.univ.erase k, ‖A k j‖ < ‖A k k‖) : A.det ≠ 0",
+  "name":
+  "det_ne_zero_of_sum_row_lt_diag",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Gershgorin",
+  "line":
+  62,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "If `A` is a row strictly dominant diagonal matrix, then its determinant is nonzero. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "spectrum.spectralRadius_le_nnnorm.{u_1, u_2} {𝕜 : Type u_1} {A : Type u_2} [NormedField 𝕜] [NormedRing A]\n  [NormedAlgebra 𝕜 A] [CompleteSpace A] [NormOneClass A] (a : A) : spectralRadius 𝕜 a ≤ ↑‖a‖₊",
   "name":
   "spectrum.spectralRadius_le_nnnorm",
@@ -5758,6 +6440,28 @@
   "theorem",
   "doc":
   "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.IsIrreducible.{u_1, u_2} {n : Type u_1} {R : Type u_2} [Ring R] [LinearOrder R] (A : Matrix n n R) : Prop",
+  "name":
+  "Matrix.IsIrreducible",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Irreducible.Defs",
+  "line":
+  80,
+  "library":
+  "mathlib",
+  "kind":
+  "inductive",
+  "doc":
+  "A matrix `A` is irreducible if it is entrywise nonnegative and\nits quiver of positive entries (`toQuiver A`) is strongly connected. ",
   "atlas_partial":
   [],
   "atlas":
@@ -5912,6 +6616,160 @@
   "theorem",
   "doc":
   "If a complex function `e` is differentiable at a real point, then its restriction to `ℝ` is\ndifferentiable there as a function `ℝ → ℂ`, with the same derivative. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.one_lt_rootMultiplicity_iff_isRoot.{u} {R : Type u} [CommRing R] {p : Polynomial R} {t : R} (h : p ≠ 0) :\n  1 < Polynomial.rootMultiplicity t p ↔ p.IsRoot t ∧ (Polynomial.derivative p).IsRoot t",
+  "name":
+  "Polynomial.one_lt_rootMultiplicity_iff_isRoot",
+  "module":
+  "Mathlib.Algebra.Polynomial.FieldDivision",
+  "line":
+  133,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.rootMultiplicity_pos.{u} {R : Type u} [CommRing R] {p : Polynomial R} (hp : p ≠ 0) {x : R} :\n  0 < Polynomial.rootMultiplicity x p ↔ p.IsRoot x",
+  "name":
+  "Polynomial.rootMultiplicity_pos",
+  "module":
+  "Mathlib.Algebra.Polynomial.Div",
+  "line":
+  637,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.continuous.{u_1} {R : Type u_1} [Semiring R] [TopologicalSpace R] [IsTopologicalSemiring R]\n  (p : Polynomial R) : Continuous fun x => Polynomial.eval x p",
+  "name":
+  "Polynomial.continuous",
+  "module":
+  "Mathlib.Topology.Algebra.Polynomial",
+  "line":
+  56,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.charpoly_map.{u_1, u_2, u_4} {R : Type u_1} {S : Type u_2} [CommRing R] [CommRing S] {n : Type u_4}\n  [DecidableEq n] [Fintype n] (M : Matrix n n R) (f : R →+* S) : (M.map ⇑f).charpoly = Polynomial.map f M.charpoly",
+  "name":
+  "Matrix.charpoly_map",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Charpoly.Basic",
+  "line":
+  175,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.derivative_map.{u, v} {R : Type u} {S : Type v} [Semiring R] [Semiring S] (p : Polynomial R) (f : R →+* S) :\n  Polynomial.derivative (Polynomial.map f p) = Polynomial.map f (Polynomial.derivative p)",
+  "name":
+  "Polynomial.derivative_map",
+  "module":
+  "Mathlib.Algebra.Polynomial.Derivative",
+  "line":
+  247,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.mem_spectrum_iff_isRoot_charpoly.{u_1, u_3} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_3} [Field K]\n  {A : Matrix n n K} {r : K} : r ∈ spectrum K A ↔ A.charpoly.IsRoot r",
+  "name":
+  "Matrix.mem_spectrum_iff_isRoot_charpoly",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs",
+  "line":
+  76,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "In fields, the roots of the characteristic polynomial are exactly the spectrum of the matrix.\nThe weaker direction is true in nontrivial rings (see `Matrix.mem_spectrum_of_isRoot_charpoly`).\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "ContinuousAt.eventually_ne.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [TopologicalSpace X] [TopologicalSpace Y]\n  [T1Space Y] {g : X → Y} {x : X} {y : Y} (hg1 : ContinuousAt g x) (hg2 : g x ≠ y) : ∀ᶠ (z : X) in nhds x, g z ≠ y",
+  "name":
+  "ContinuousAt.eventually_ne",
+  "module":
+  "Mathlib.Topology.Separation.Basic",
+  "line":
+  710,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
   "atlas_partial":
   [],
   "atlas":
@@ -6295,28 +7153,6 @@
   "sorry":
   false,
   "signature":
-  "Real.sq_sqrt {x : ℝ} (h : 0 ≤ x) : √x ^ 2 = x",
-  "name":
-  "Real.sq_sqrt",
-  "module":
-  "Mathlib.Analysis.Real.Sqrt",
-  "line":
-  177,
-  "library":
-  "mathlib",
-  "kind":
-  "theorem",
-  "doc":
-  "",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  [],
-  "sorry":
-  false,
-  "signature":
   "Matrix.PosDef.eigenvalues_pos.{u_2, u_3} {n : Type u_2} {𝕜 : Type u_3} [Fintype n] [RCLike 𝕜] {A : Matrix n n 𝕜}\n  [DecidableEq n] (hA : A.PosDef) (i : n) : 0 < ⋯.eigenvalues i",
   "name":
   "Matrix.PosDef.eigenvalues_pos",
@@ -6440,6 +7276,94 @@
   "theorem",
   "doc":
   "**Schur product theorem**: the Hadamard (entrywise) product of positive definite\nmatrices is positive definite. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.kronecker.{u_1, u_2, u_3} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Finite n] {m : Type u_3} [Finite m]\n  {x : Matrix n n 𝕜} {y : Matrix m m 𝕜} (hx : x.PosDef) (hy : y.PosDef) :\n  (Matrix.kroneckerMap (fun x1 x2 => x1 * x2) x y).PosDef",
+  "name":
+  "Matrix.PosDef.kronecker",
+  "module":
+  "Mathlib.Analysis.Matrix.Order",
+  "line":
+  223,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "The kronecker of two positive definite matrices is positive definite. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "FormalMultilinearSeries.hasSum.{u_1, u_3, u_4} {𝕜 : Type u_1} {E : Type u_3} {F : Type u_4} [NontriviallyNormedField 𝕜]\n  [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F] [CompleteSpace F]\n  (p : FormalMultilinearSeries 𝕜 E F) {x : E} (hx : x ∈ Metric.eball 0 p.radius) :\n  HasSum (fun n => (p n) fun x_1 => x) (p.sum x)",
+  "name":
+  "FormalMultilinearSeries.hasSum",
+  "module":
+  "Mathlib.Analysis.Analytic.ConvergenceRadius",
+  "line":
+  456,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Module.Dual.exists_forall_ne_zero_of_forall_exists.{u_1, u_2, u_3} {ι : Type u_1} {K : Type u_2} {M : Type u_3}\n  [Field K] [AddCommGroup M] [_root_.Module K M] [Finite ι] [Infinite K] (f : ι → Module.Dual K M)\n  (h : ∀ (i : ι), ∃ x, (f i) x ≠ 0) : ∃ x, ∀ (i : ι), (f i) x ≠ 0",
+  "name":
+  "Module.Dual.exists_forall_ne_zero_of_forall_exists",
+  "module":
+  "Mathlib.Algebra.Module.Submodule.Union",
+  "line":
+  96,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero.{u_1} {R : Type u_1} [CommRing R] {n : ℕ} [IsDomain R]\n  {f v : Fin n → R} (hf : Function.Injective f) (hfv : ∀ (i : Fin n), ∑ j, v j * f j ^ ↑i = 0) : v = 0",
+  "name":
+  "Matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero",
+  "module":
+  "Mathlib.LinearAlgebra.Vandermonde",
+  "line":
+  258,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
   "atlas_partial":
   [],
   "atlas":
@@ -6682,6 +7606,94 @@
   "theorem",
   "doc":
   "If a polynomial of degree 2 is always positive, then its discriminant is negative,\nat least when the coefficient of the quadratic term is nonzero.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Finset.prod_bij'.{u_1, u_2, u_3} {ι : Type u_1} {κ : Type u_2} {M : Type u_3} [CommMonoid M] {s : Finset ι}\n  {t : Finset κ} {f : ι → M} {g : κ → M} (i : (a : ι) → a ∈ s → κ) (j : (a : κ) → a ∈ t → ι)\n  (hi : ∀ (a : ι) (ha : a ∈ s), i a ha ∈ t) (hj : ∀ (a : κ) (ha : a ∈ t), j a ha ∈ s)\n  (left_inv : ∀ (a : ι) (ha : a ∈ s), j (i a ha) ⋯ = a) (right_inv : ∀ (a : κ) (ha : a ∈ t), i (j a ha) ⋯ = a)\n  (h : ∀ (a : ι) (ha : a ∈ s), f a = g (i a ha)) : ∏ x ∈ s, f x = ∏ x ∈ t, g x",
+  "name":
+  "Finset.prod_bij'",
+  "module":
+  "Mathlib.Algebra.BigOperators.Group.Finset.Defs",
+  "line":
+  465,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "Reorder a product.\n\nThe difference with `Finset.prod_bij` is that the bijection is specified with an inverse, rather\nthan as a surjective injection.\n\nThe difference with `Finset.prod_nbij'` is that the bijection and its inverse are allowed to use\nmembership of the domains of the products, rather than being non-dependent functions. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Nat.choose_succ_right_eq (n k : ℕ) : n.choose (k + 1) * (k + 1) = n.choose k * (n - k)",
+  "name":
+  "Nat.choose_succ_right_eq",
+  "module":
+  "Mathlib.Data.Nat.Choose.Basic",
+  "line":
+  210,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Real.rpow_le_rpow_iff {x y z : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y) (hz : 0 < z) : x ^ z ≤ y ^ z ↔ x ≤ y",
+  "name":
+  "Real.rpow_le_rpow_iff",
+  "module":
+  "Mathlib.Analysis.SpecialFunctions.Pow.Real",
+  "line":
+  572,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Finset.exists_subsuperset_card_eq.{u_1} {α : Type u_1} {s t : Finset α} {n : ℕ} (hst : s ⊆ t) (hsn : s.card ≤ n)\n  (hnt : n ≤ t.card) : ∃ u, s ⊆ u ∧ u ⊆ t ∧ u.card = n",
+  "name":
+  "Finset.exists_subsuperset_card_eq",
+  "module":
+  "Mathlib.Data.Finset.Card",
+  "line":
+  653,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "Given a subset `s` of a set `t`, of sizes at most and at least `n` respectively, there exists a\nset `u` of size `n` which is both a superset of `s` and a subset of `t`. ",
   "atlas_partial":
   [],
   "atlas":

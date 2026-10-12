@@ -1,4 +1,6 @@
 import NLAlib.Matrix.Spectral.EigenvectorDeflationConverse
+import NLAlib.Matrix.Spectral.EigenvectorDeflation
+import NLAlib.Matrix.Spectral.EigenvalueSimplicity
 /-!
 # The left–right eigenvector toolkit
 

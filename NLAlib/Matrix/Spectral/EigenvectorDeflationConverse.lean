@@ -1,5 +1,5 @@
-import NLAlib.Matrix.Spectral.EigenvectorDeflation
 import NLAlib.Matrix.Spectral.AdjugateRankOne
+import Mathlib.LinearAlgebra.Eigenspace.Basic
 /-!
 # The converse to paired deflation and the eigenvalue adjugate
 

@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
-import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Ordered eigenvalues of matrix functional calculus

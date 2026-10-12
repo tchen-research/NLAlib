@@ -1,6 +1,4 @@
 import NLAlib.Probability.Gaussian.Moments.PolynomialLinearMoments
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.List.FinRange
 
 /-!
 # The finite canonical pairing family and Gaussian Wick evaluation

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Functions.PolynomialCalculus
-import NLAlib.Matrix.Spectral.SVD
 /-!
 # Diagonal polynomial filter envelopes
 

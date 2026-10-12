@@ -1,8 +1,5 @@
 import NLAlib.Matrix.Perturbation.EigenvaluePencil
-import NLAlib.Matrix.Inequalities.KyFan
-import Mathlib.Topology.Sequences
-import Mathlib.Topology.MetricSpace.ProperSpace
-import Mathlib.Analysis.SpecificLimits.Basic
+import NLAlib.Matrix.Inequalities.KyFanSums
 
 /-!
 # Subsequential first variation of signed eigenvalue sums

@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Probability.BoundedDifferences
-import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Sharp bounded-differences concentration by coordinate averaging

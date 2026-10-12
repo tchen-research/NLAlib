@@ -1,6 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import NLAlib.Matrix.Basic.MoorePenrose
-import NLAlib.Matrix.Spectral.SpectralBounds
 import NLAlib.Sketching.Sampling.Leverage
 import NLAlib.LowRank.RandomizedSVD.OptimalError
 /-!

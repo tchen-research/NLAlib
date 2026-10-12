@@ -1,5 +1,7 @@
 import NLAlib.Matrix.Perturbation.SpectralFrameWeights
 import NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions
+import NLAlib.Matrix.Inequalities.Lidskii
+import NLAlib.Matrix.Perturbation.SpectralWeightGap
 /-!
 # The actual top-cluster trace deficit
 

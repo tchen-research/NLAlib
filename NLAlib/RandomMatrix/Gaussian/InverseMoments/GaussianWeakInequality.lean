@@ -2,9 +2,7 @@ import NLAlib.RandomMatrix.Gaussian.InverseMoments.WeakInequality
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.RegularizedApproximation
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.ResolventLimit
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.HardEdgeEndpoint
-import NLAlib.RandomMatrix.Gaussian.Basic.PolynomialGrowth
 import NLAlib.Matrix.Basic.CoordinateUpdates
-import NLAlib.Matrix.Structured.GramSoftMinMeasurable
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.RegularizedIntegrability
 /-!
 # The Gaussian hard-edge weak inequality by operator regularization

@@ -2,10 +2,7 @@ import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import NLAlib.Matrix.Norms.Core
 import NLAlib.Probability.Gaussian.Concentration.LogSobolev
 import NLAlib.Probability.Concentration.Entropy.Herbst
-import NLAlib.ForMathlib.Analysis.Real
 import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Probability.ProductMeasure
 
 /-!
 # Gaussian concentration of Lipschitz functions

@@ -1,8 +1,4 @@
-import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.LinearAlgebra.Matrix.Symmetric
-import Mathlib.Probability.Independence.Integration
 import Mathlib.Probability.Moments.Variance
-import Mathlib.MeasureTheory.Function.L2Space
 import NLAlib.Matrix.Basic.QuadForm
 import NLAlib.Matrix.Norms.Core
 /-!

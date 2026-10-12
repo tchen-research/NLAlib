@@ -1,6 +1,4 @@
 import NLAlib.Probability.Gaussian.Calculus.Stein
-import NLAlib.Probability.Gaussian.Moments.FourthMoment
-import NLAlib.ForMathlib.MeasureTheory.Integral
 /-!
 # Gaussian integration by parts on polynomial-growth domains
 

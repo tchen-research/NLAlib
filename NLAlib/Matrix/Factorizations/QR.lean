@@ -1,4 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.Block
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Basic.MoorePenrose
 /-!

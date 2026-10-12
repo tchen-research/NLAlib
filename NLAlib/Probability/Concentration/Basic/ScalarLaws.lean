@@ -1,4 +1,3 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import Mathlib.Probability.Distributions.Gaussian.Real
 
 /-!

@@ -1,4 +1,3 @@
-import Mathlib.Topology.Order.Compact
 import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!

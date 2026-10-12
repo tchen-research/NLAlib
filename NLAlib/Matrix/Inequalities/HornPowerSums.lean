@@ -1,7 +1,5 @@
 import NLAlib.Matrix.Inequalities.MajorizationConvex
 import NLAlib.Matrix.Spectral.ProductSingularValues
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Analysis.Convex.Function
 
 /-!
 # Horn product inequalities imply power-sum inequalities

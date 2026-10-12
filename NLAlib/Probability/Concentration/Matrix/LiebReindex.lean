@@ -1,5 +1,6 @@
 import NLAlib.Probability.Concentration.Matrix.ProbabilisticLieb
 import NLAlib.Probability.Concentration.Matrix.UnitaryCalculus
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 /-!
 # Lieb concavity and regularity for arbitrary finite matrix labels
 

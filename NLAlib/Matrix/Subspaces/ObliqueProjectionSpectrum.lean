@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Subspaces.ObliqueCanonicalSpectrum
+import NLAlib.Matrix.Subspaces.ObliqueProjectionCanonical
 /-!
 # Oblique canonical coefficients and the actual singular spectrum
 

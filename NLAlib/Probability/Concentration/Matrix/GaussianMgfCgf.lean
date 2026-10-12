@@ -1,6 +1,5 @@
 import NLAlib.Probability.Concentration.Basic.ScalarLaws
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Matrix.Basic.Dilation
 /-!
 # Lemma 4.6.2 — Gaussian matrix mgf and cgf identities
 

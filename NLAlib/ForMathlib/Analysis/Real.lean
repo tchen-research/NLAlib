@@ -1,8 +1,4 @@
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # Elementary real inequalities

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.Diagonalizable
-import Mathlib.Analysis.Normed.Group.Seminorm
 import Mathlib.Analysis.Complex.Basic
 
 /-!

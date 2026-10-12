@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.PowerRayleigh
 import NLAlib.RandomMatrix.Gaussian.Moments.LogOverlapMoments
+import NLAlib.Matrix.Spectral.QuadraticProbe
 /-!
 # Expected error of Gaussian random-start power iteration
 

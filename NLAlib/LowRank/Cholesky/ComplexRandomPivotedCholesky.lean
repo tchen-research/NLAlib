@@ -1,5 +1,4 @@
 import NLAlib.LowRank.Cholesky.ComplexCholeskyHistories
-import NLAlib.LowRank.Cholesky.TraceDrift
 import NLAlib.LowRank.Cholesky.TracePotential
 import NLAlib.Matrix.Inequalities.ComplexTraceTail
 /-!

@@ -6,8 +6,6 @@ import NLAlib.RandomMatrix.Gaussian.InverseMoments.Residual
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
 import NLAlib.Probability.ChiSquare.ChiSquare
 import NLAlib.Matrix.Structured.Measurable
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Mean of the inverse Wishart matrix and the Frobenius moment of the pseudoinverse

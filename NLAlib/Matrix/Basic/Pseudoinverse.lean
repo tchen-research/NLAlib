@@ -1,7 +1,3 @@
-import Mathlib.Data.Real.Basic
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.Symmetric
-import Mathlib.Algebra.Group.Idempotent
 import NLAlib.Matrix.Norms.Core
 /-!
 # Pseudoinverses

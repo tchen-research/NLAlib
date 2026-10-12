@@ -1,6 +1,6 @@
 import NLAlib.ForMathlib.LinearAlgebra.CommonEigenvector
 import NLAlib.ForMathlib.Analysis.InvariantCompression
-import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # One orthonormal triangularizing basis for a commuting family

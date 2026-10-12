@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
 import NLAlib.Matrix.Spectral.Weyl
 /-!
 # Pseudoinverse norm control under a small perturbation

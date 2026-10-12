@@ -1,7 +1,4 @@
 import NLAlib.Matrix.Perturbation.InversePerturbation
-import NLAlib.Matrix.Norms.Core
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring

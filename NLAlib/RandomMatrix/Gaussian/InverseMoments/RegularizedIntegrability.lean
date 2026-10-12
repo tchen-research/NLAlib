@@ -1,5 +1,4 @@
 import NLAlib.RandomMatrix.Gaussian.Basic.PolynomialGrowth
-import NLAlib.Matrix.Structured.Measurable
 import NLAlib.Matrix.Calculus.InversePowerGrowth
 import NLAlib.Matrix.Structured.GramSoftMinMeasurable
 /-!

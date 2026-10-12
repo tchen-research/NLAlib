@@ -1,7 +1,7 @@
 import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
 import Mathlib.LinearAlgebra.Trace
-import Mathlib.Analysis.Matrix.Hermitian
 import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.LinearAlgebra.Matrix.Hermitian
 
 /-!
 # Complex orthogonal projector trace and diagonal budgets

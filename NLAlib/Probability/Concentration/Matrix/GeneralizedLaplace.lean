@@ -1,6 +1,5 @@
 import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
-import Mathlib.Order.ConditionallyCompleteLattice.Finset
+import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 
 /-!
 # Proposition 7.4.1 — Generalized matrix Laplace transform

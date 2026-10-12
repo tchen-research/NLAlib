@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Inequalities.InverseDiagonalMinor
 import NLAlib.Matrix.Basic.PositiveDefiniteClosure
 /-!
 # Principal minors and their fixed-cardinality products

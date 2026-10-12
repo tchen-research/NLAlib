@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Calculus.InversePowerConcavity
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
-import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Trace and positivity of Hermitian matrix functional calculus

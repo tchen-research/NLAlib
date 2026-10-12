@@ -1,6 +1,4 @@
 import NLAlib.ForMathlib.LinearAlgebra.IsolatedCharpoly
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.LinearAlgebra.Matrix.Vec
 import Mathlib.Data.Real.Basic
 
 /-!

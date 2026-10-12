@@ -1,6 +1,3 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
-import NLAlib.Matrix.Basic.Dilation
-import Mathlib.Analysis.Convex.Function
 import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
 /-!
 # Equation 2.2.5 — Additivity of matrix variance

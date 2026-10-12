@@ -1,6 +1,4 @@
 import NLAlib.Polynomial.BestApproximation.SawtoothZeros
-import Mathlib.Topology.Order.IntermediateValue
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 /-!
 # Alternating sign of the actual sawtooth interpolation error

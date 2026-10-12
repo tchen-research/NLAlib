@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.EigenvectorDeflationSpectrum
-import Mathlib.Data.Matrix.Block
 
 /-!
 # Block coordinates for a paired eigenline and its perturbation

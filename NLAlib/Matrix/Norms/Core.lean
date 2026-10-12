@@ -1,5 +1,4 @@
 import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.LinearAlgebra.Matrix.Trace
 
 /-!
 # Matrix norms

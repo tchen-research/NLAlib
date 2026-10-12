@@ -1,6 +1,7 @@
 import NLAlib.Krylov.Spectral.MeasurableRitz
 import NLAlib.Polynomial.Chebyshev.LanczosFilterMean
 import NLAlib.RandomMatrix.Gaussian.Moments.LogOverlapMoments
+import NLAlib.Matrix.Spectral.QuadraticProbe
 /-!
 # Expected Lanczos error from logarithmic Gaussian overlap
 

@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Fourier.AddCircle
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
 
 /-!
 # Explicit Fourier characters on the circle of period two pi

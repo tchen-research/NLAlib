@@ -1,6 +1,4 @@
-import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Subspaces.ComplexProjectionBounds
-import NLAlib.LowRank.PolynomialMethods.PolynomialFilter
 import NLAlib.Krylov.Spaces.ComplexBlock
 /-!
 # Complex polynomial-filter range finding

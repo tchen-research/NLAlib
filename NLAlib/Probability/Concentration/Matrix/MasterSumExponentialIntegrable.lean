@@ -1,6 +1,7 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 import Mathlib.Probability.Independence.Integration
+import NLAlib.Matrix.Functions.ExpLogPosDef
 
 /-!
 # Exponential integrability of an independent Hermitian sum

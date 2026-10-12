@@ -1,7 +1,5 @@
 import Mathlib.Algebra.Polynomial.Eval.Degree
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Data.Real.Basic
-import Lean.Elab.Tactic.Omega
 import Mathlib.Tactic.Ring
 
 /-!

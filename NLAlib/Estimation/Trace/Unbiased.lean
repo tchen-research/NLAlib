@@ -1,7 +1,5 @@
 import NLAlib.Estimation.Trace.HutchinsonTail
 import NLAlib.RandomMatrix.Gaussian.Moments.Conditioning
-import NLAlib.Krylov.Quadrature.SpectralMeasure
-import NLAlib.Matrix.Subspaces.Projections
 /-!
 # Unbiasedness of deflated trace estimators: Hutch++ and XTrace
 

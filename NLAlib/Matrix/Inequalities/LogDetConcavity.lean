@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.DefinitePairCalculus
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 
 /-!
 # Strict log-determinant concavity

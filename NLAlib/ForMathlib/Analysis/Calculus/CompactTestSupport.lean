@@ -1,6 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Support
 import Mathlib.Analysis.Calculus.ContDiff.Deriv
-import Mathlib.Topology.Order.Compact
 
 /-!
 # Positive compact test supports

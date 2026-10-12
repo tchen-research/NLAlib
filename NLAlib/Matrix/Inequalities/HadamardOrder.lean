@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Inequalities.PositiveSpectralEndpoints
-import NLAlib.Matrix.Inequalities.BlockOrderConsequences
 /-!
 # Hadamard products and Loewner order
 

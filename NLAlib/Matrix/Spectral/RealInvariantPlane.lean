@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.SVD
 import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 

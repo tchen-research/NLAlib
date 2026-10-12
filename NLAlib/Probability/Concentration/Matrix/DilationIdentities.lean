@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Basic.Dilation
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 

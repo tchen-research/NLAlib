@@ -1,7 +1,4 @@
 import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Algebra.BigOperators.Intervals
 
 /-!
 # Scalar power comparisons for polynomial trace inequalities

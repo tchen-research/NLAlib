@@ -1,6 +1,4 @@
 import NLAlib.Polynomial.Chebyshev.Growth
-import Mathlib.Algebra.Polynomial.Expand
-import Mathlib.Algebra.Polynomial.Eval.Degree
 
 /-!
 # Even second-kind Chebyshev filters

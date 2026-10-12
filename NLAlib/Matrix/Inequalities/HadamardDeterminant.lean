@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Factorizations.CholeskyDefinite
 import Mathlib.LinearAlgebra.Matrix.IsDiag
-import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Hadamard's determinant bound and equality

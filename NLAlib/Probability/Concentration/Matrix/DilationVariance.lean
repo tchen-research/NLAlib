@@ -1,11 +1,6 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Matrix.Basic.Dilation
-import Mathlib.Analysis.Convex.Function
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.Data.Matrix.ColumnRowPartitioned
-import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Equation 2.2.10 — Variance statistic under dilation

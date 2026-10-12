@@ -1,4 +1,3 @@
-import Mathlib.LinearAlgebra.Lagrange
 import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.Polynomial.FunctionApproximation.Approximation
 /-!

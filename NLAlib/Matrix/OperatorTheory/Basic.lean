@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Functions.ExpLog
-import Mathlib.Analysis.Convex.Function
 
 /-!
 # Matrix functions, relative entropy, operator convexity

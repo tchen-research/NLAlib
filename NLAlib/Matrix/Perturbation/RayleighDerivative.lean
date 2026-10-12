@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Perturbation.ResidualBounds
-import Mathlib.Analysis.Matrix.Hermitian
-import Mathlib.Analysis.Calculus.FDeriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-!

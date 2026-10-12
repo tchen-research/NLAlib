@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Inequalities.KyFanNorms
-import Mathlib.Analysis.Seminorm
 
 /-!
 # Ky Fan norms on arbitrary finite matrix indices

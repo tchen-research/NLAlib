@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Norms.NuclearFiniteIndex
 import NLAlib.Matrix.Inequalities.KyFanSums
 import NLAlib.Matrix.Functions.FunctionalCalculusEigenvalues
 /-!

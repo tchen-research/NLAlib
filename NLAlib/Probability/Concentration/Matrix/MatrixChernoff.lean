@@ -1,12 +1,6 @@
-import NLAlib.Probability.Concentration.Basic.ChernoffFunctions
-import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.ChernoffMgfCgf
-import NLAlib.Matrix.Inequalities.TraceExpMonotone
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import NLAlib.Probability.Concentration.Martingales.Freedman
 
 /-!
 # Theorem 5.1.1 — Matrix Chernoff, both spectral sides

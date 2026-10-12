@@ -1,9 +1,6 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Probability.Concentration.Matrix.ExpectExtremaIntegrable
 import NLAlib.Probability.Concentration.Matrix.TailSpectralComparison
 import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 
 /-!
 # Proposition 3.2.2 — Expectation bounds for eigenvalues

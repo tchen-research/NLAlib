@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.Core
-import Mathlib.Topology.Instances.Matrix
 
 /-!
 # Continuity of the smallest singular value on matrix arrays

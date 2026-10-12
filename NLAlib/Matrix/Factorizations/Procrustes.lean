@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Factorizations.PolarDecomposition
 import NLAlib.Matrix.Norms.NuclearPSD
 import NLAlib.Matrix.Spectral.GramSingularValues
+import NLAlib.Matrix.Norms.NuclearFiniteIndex
 /-!
 # Orthogonal Procrustes and trace equality
 

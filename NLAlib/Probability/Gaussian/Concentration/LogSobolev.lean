@@ -1,6 +1,5 @@
 import NLAlib.Probability.Gaussian.Concentration.LogSobolevOneDim
 import NLAlib.Probability.Concentration.Entropy.EntropyTensorization
-import NLAlib.ForMathlib.Analysis.Real
 import Mathlib.Analysis.Calculus.Deriv.Pi
 
 /-!

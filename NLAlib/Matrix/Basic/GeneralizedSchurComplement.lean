@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Basic.MoorePenroseTransformations
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
 import Mathlib.Tactic.Abel
 
 /-!

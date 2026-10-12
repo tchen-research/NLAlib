@@ -1,8 +1,4 @@
 import NLAlib.Probability.Gaussian.Concentration.LogSobolev
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Sinc
-import Mathlib.MeasureTheory.Integral.Lebesgue.DominatedConvergence
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 import Mathlib.Tactic
 
 /-!

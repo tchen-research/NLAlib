@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.CourantFischer
 import NLAlib.Matrix.Calculus.InversePowerLimit
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # Trace-square lower bounds from an upper spectral tail

@@ -1,5 +1,3 @@
-import Mathlib.LinearAlgebra.AffineSpace.AffineSubspace.Defs
-import Mathlib.Order.Filter.Extr
 import NLAlib.Krylov.Spaces.Polynomial
 import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Polynomial.Chebyshev.Core

@@ -1,7 +1,6 @@
 import NLAlib.Polynomial.Chebyshev.Core
 import NLAlib.ForMathlib.Algebra.Polynomial
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Extremal
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
 
 /-!
 # Extremal properties of Chebyshev polynomials: minimax and monic minimality

@@ -1,8 +1,4 @@
-import Mathlib.Probability.Distributions.Gaussian.Real
 import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
-import Mathlib.Probability.Moments.Covariance
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import NLAlib.ForMathlib.Analysis.Calculus.MeanValue
 /-!
 # Gaussian integration by parts

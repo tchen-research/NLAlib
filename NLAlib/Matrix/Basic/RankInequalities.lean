@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Basic.RankBounds
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 
 /-!

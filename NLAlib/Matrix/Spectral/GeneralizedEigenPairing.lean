@@ -1,7 +1,5 @@
-import NLAlib.Matrix.Spectral.EigenvectorPairing
 import Mathlib.LinearAlgebra.Eigenspace.Zero
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Generalized eigenspaces and simple left–right pairing

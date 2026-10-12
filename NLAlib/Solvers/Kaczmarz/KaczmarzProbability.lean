@@ -1,7 +1,6 @@
 import NLAlib.Solvers.Kaczmarz.Core
 import NLAlib.Matrix.Basic.MoorePenrose
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import Mathlib.Algebra.BigOperators.Ring.Finset
 
 /-!
 # Randomized Kaczmarz as an actual probability expectation

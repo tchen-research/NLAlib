@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Factorizations.RankRevealingLeading
-import Mathlib.LinearAlgebra.Prod
 
 /-!
 # Trailing singular-value bound from the RRQR exchange budget

@@ -1,7 +1,5 @@
 import NLAlib.Matrix.Subspaces.ObliqueProjectionBlocks
-import NLAlib.Matrix.Spectral.SigmaMinTransport
 import NLAlib.Matrix.Perturbation.Conditioning
-import NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions
 /-!
 # Oblique projection as the inverse frame overlap
 

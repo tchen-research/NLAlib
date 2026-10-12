@@ -1,7 +1,3 @@
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
-import NLAlib.Matrix.Subspaces.Projections
-import NLAlib.Matrix.Spectral.Core
-import NLAlib.Matrix.Spectral.SVD
 import NLAlib.Matrix.Subspaces.PrincipalAngleBridges
 /-!
 # Principal (canonical) angles between subspaces

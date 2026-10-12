@@ -1,6 +1,5 @@
 import NLAlib.Probability.Concentration.QuadraticForms.QuadraticMoments
 import NLAlib.Probability.Rademacher.RademacherSymmetry
-import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Quadratic moments of the actual finite Rademacher cube

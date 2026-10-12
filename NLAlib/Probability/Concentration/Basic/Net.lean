@@ -1,8 +1,5 @@
-import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Spectral.QuadraticProbe
 import NLAlib.Matrix.Basic.QuadForm
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathlib.Probability.Moments.SubGaussian
 
 /-!

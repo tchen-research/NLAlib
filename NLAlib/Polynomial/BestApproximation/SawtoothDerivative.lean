@@ -1,5 +1,4 @@
 import NLAlib.Polynomial.BestApproximation.SawtoothInterpolation
-import Mathlib.Analysis.Calculus.LocalExtr.Rolle
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!

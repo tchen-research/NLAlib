@@ -1,6 +1,4 @@
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.Dirac
 import NLAlib.Matrix.Functions.PolynomialCalculus
 /-!
 # The spectral measure of a symmetric matrix and a vector

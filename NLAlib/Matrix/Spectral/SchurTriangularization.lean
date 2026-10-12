@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Analysis.SchurTriangularization
-import Mathlib.Analysis.Matrix.Spectrum
 
 /-!
 # Complex unitary Schur triangularization

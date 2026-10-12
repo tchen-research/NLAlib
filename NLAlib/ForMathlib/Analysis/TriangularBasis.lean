@@ -1,5 +1,4 @@
 import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
-import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-!
 # Orthonormalization preserves a triangularizing basis

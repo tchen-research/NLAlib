@@ -1,8 +1,6 @@
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeckEntropy
 import NLAlib.ForMathlib.Analysis.Real
 import NLAlib.Probability.Gaussian.Calculus.PolynomialGrowthIntegrationByParts
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
 import Mathlib.Tactic
 
 /-!

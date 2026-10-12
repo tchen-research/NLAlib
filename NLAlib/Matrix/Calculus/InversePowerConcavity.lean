@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Functions.InverseCalculus
-import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 import Mathlib.Analysis.InnerProductSpace.StarOrder
 

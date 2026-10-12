@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.LocalOperators
 import NLAlib.ForMathlib.Probability.FiniteL2
 import NLAlib.ForMathlib.Probability.FiniteLaw
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
 
 set_option autoImplicit false

@@ -1,4 +1,3 @@
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.LinearAlgebra.SesquilinearForm.Star
 

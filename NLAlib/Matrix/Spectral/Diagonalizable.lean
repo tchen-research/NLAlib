@@ -1,10 +1,6 @@
 import NLAlib.Matrix.Spectral.EigenvectorPairing
-import Mathlib.LinearAlgebra.Eigenspace.Matrix
 import Mathlib.LinearAlgebra.Eigenspace.Semisimple
 import Mathlib.LinearAlgebra.Eigenspace.Zero
-import Mathlib.LinearAlgebra.Eigenspace.Minpoly
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.Algebra.DirectSum.Module
 
 /-!
 # Diagonalizable matrices and eigenvector bases

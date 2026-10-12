@@ -1,6 +1,6 @@
 import NLAlib.Matrix.Inequalities.MajorizationHinges
 import NLAlib.Matrix.Inequalities.MajorizationWeakSupport
-import Mathlib.Topology.Algebra.Group.Pointwise
+import NLAlib.Matrix.Inequalities.MajorizationHLP
 
 /-!
 # Full convex-function criteria for majorization

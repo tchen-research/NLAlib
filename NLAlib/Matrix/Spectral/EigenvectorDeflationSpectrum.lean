@@ -1,7 +1,5 @@
 import NLAlib.Matrix.Spectral.EigenvectorDeflation
 import NLAlib.Matrix.Spectral.GeneralizedEigenPairing
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-import Mathlib.Algebra.Polynomial.FieldDivision
 
 /-!
 # Characteristic factors of isolated eigenlines

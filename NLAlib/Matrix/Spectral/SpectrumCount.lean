@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.SchurTriangularization
-import Mathlib.Topology.Connected.Clopen
-import Mathlib.Topology.Algebra.Polynomial
 
 /-!
 # Counting characteristic roots in a set

@@ -3,6 +3,7 @@ import NLAlib.Sketching.Structured.SRHTParameters
 import NLAlib.Probability.Concentration.Matrix.SamplingWithoutReplacementTails
 import NLAlib.ForMathlib.Probability.FiniteProductEvents
 import NLAlib.Matrix.Structured.WalshFin
+import NLAlib.Matrix.Norms.RealComplexNorm
 /-!
 # Classical SRHT with one shared diagonal and actual distinct-row sampling
 

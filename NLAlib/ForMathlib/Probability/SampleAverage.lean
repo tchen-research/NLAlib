@@ -1,7 +1,4 @@
 import Mathlib.Probability.Moments.Variance
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.Data.Complex.BigOperators
 
 /-!
 # Variance of a finite sample average

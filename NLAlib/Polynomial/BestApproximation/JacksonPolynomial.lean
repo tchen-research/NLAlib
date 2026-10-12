@@ -1,7 +1,6 @@
 import NLAlib.Polynomial.BestApproximation.JacksonPeriodic
 import NLAlib.Polynomial.Chebyshev.CosineBasis
 import NLAlib.ForMathlib.Analysis.FourierConvolution
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 
 /-!
 # Algebraic polynomials from the sharp Jackson convolution

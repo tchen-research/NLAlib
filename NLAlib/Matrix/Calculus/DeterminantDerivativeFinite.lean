@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Calculus.DeterminantDerivative
-import Mathlib.LinearAlgebra.Matrix.Block
 
 /-!
 # Principal-minor determinant derivatives on arbitrary finite labels

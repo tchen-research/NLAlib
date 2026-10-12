@@ -1,7 +1,6 @@
 import NLAlib.Matrix.Spectral.SingularValueScaling
 import NLAlib.Matrix.Subspaces.Projections
 import Mathlib.LinearAlgebra.Matrix.Permutation
-import Mathlib.Logic.Equiv.Fintype
 
 /-!
 # Rectangular diagonal embeddings

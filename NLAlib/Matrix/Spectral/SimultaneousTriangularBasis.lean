@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Analysis.TriangularBasis
-import NLAlib.Matrix.Spectral.SimultaneousTriangularization
 /-!
 # Similarity and unitary simultaneous triangularization are equivalent
 

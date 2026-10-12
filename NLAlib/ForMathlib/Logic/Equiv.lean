@@ -1,6 +1,4 @@
 import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Data.Fintype.Card
-import Mathlib.Logic.Equiv.Sum
 
 /-!
 # Completing a finite embedding to a sum equivalence

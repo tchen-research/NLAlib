@@ -1,7 +1,6 @@
 import NLAlib.Matrix.Spectral.LowRankInterlacing
 import NLAlib.Matrix.Spectral.EigenvalueEquality
 import NLAlib.Matrix.Spectral.SingularValueInvariance
-import NLAlib.Matrix.Spectral.SingularValueSpectrum
 /-!
 # Singular-value interlacing under row and column deletion
 

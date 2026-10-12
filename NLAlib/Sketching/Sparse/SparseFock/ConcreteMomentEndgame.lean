@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.MomentTransfer
 import NLAlib.Sketching.Sparse.SparseFock.ConcreteLadderIteration
 import NLAlib.Sketching.Sparse.SparseFock.MatrixTail
-import NLAlib.Sketching.Sparse.SparseFock.PaperParameters
 import Mathlib.Tactic
 
 set_option autoImplicit false

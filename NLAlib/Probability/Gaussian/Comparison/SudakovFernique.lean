@@ -1,5 +1,6 @@
 import NLAlib.Probability.Gaussian.Calculus.IntegrationByParts
 import NLAlib.Probability.Gaussian.Comparison.Interpolation
+import NLAlib.ForMathlib.MeasureTheory.Integral
 /-!
 # The Sudakov–Fernique inequality
 

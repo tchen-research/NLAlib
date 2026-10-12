@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Inequalities.MajorizationHLP
 import NLAlib.Matrix.Inequalities.MajorizationProperties
 /-!
 # Hinge-function characterization of majorization

@@ -1,5 +1,4 @@
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
 import Mathlib.Tactic
 
 /-!

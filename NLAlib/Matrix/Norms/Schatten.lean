@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Data.ENNReal.Holder
 
 /-!
 # Schatten norm definitions and scalar exponents

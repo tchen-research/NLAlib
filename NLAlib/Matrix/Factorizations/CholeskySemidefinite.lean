@@ -1,7 +1,6 @@
 import NLAlib.Matrix.Factorizations.CholeskyTrailingResidual
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.Data.Fintype.Sort
 import Mathlib.Tactic.FieldSimp
+import NLAlib.Matrix.Basic.GramVanishing
 
 /-!
 # Triangular Cholesky factors for positive-semidefinite matrices

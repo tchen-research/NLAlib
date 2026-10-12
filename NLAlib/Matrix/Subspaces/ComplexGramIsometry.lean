@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Analysis.RangeIsometry
-import Mathlib.Analysis.Matrix.Spectrum
 
 /-!
 # Complex unitary transport of equal Gram matrices

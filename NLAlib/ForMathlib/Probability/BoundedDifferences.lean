@@ -1,6 +1,4 @@
 import Mathlib.Probability.Moments.SubGaussian
-import Mathlib.MeasureTheory.Integral.IntegrableOn
-import Mathlib.Data.Finset.Update
 
 /-!
 # Bounded coordinate oscillation

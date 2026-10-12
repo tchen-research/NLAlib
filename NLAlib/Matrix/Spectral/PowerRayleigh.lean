@@ -1,7 +1,5 @@
 import NLAlib.Matrix.Functions.PolynomialCalculus
-import NLAlib.Matrix.Spectral.QuadraticProbe
 import NLAlib.ForMathlib.Analysis.LogPowerMean
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
 
 /-!
 # Power-method Rayleigh error and logarithmic overlap

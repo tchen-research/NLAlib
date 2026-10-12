@@ -1,7 +1,4 @@
-import Mathlib.MeasureTheory.Integral.Layercake
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # First and second moments from a half-rate exponential tail

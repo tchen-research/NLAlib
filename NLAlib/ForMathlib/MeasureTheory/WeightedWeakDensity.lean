@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.MeasureTheory.LocalWeakDensity
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 
 /-!
 # Gamma-weighted density from a weak scalar inequality

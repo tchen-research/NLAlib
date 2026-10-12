@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Spectral.SpectrumCount
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 /-!
 # Constant multiplicity counts in separated compact spectral sets
 

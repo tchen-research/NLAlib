@@ -1,9 +1,5 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
-import NLAlib.Matrix.Basic.Dilation
-import Mathlib.Analysis.Convex.Function
 import Mathlib.Probability.Independence.Integration
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.LinearAlgebra.Matrix.Bilinear
 
 /-!

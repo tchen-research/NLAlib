@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.InterlacingDeterminants
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
-import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Data.Real.Basic
 
 /-!
 # Exact trace parameters in converse interlacing

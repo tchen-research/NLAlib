@@ -1,7 +1,5 @@
-import Mathlib.Analysis.Calculus.ImplicitFunction.ProdDomain
 import Mathlib.Analysis.Calculus.FDeriv.Mul
 import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
 
 /-!
 # The scalar Schur-complement equation near a simple eigenvalue

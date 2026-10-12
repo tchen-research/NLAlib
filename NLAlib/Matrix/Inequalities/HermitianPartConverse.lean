@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Inequalities.HermitianPart
 import NLAlib.Matrix.Inequalities.SchurHorn
 import NLAlib.Matrix.Functions.RealComplexCFC
 /-!

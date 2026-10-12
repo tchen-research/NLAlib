@@ -1,5 +1,4 @@
 import NLAlib.LowRank.Sampling.ComplexVolumeSamplingError
-import Mathlib.MeasureTheory.Measure.Dirac
 
 /-!
 # Exact degenerate clauses for the actual complex volume law

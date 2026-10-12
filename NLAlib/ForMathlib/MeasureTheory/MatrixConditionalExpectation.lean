@@ -1,4 +1,3 @@
-import Mathlib.Analysis.Matrix.Order
 import Mathlib.MeasureTheory.Function.ConditionalExpectation.CondJensen
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 

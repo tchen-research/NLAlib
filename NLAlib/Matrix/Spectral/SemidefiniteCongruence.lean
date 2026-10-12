@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.SimultaneousOrthogonal
-import NLAlib.Matrix.Spectral.DefiniteCongruence
 import NLAlib.Matrix.Basic.GramVanishing
 /-!
 # Simultaneous congruence of singular positive semidefinite pairs

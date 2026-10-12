@@ -1,5 +1,3 @@
-import Mathlib.RingTheory.Polynomial.Chebyshev
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
 
 /-!

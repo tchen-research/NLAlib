@@ -1,8 +1,5 @@
-import NLAlib.Matrix.Inequalities.HadamardOrder
 import NLAlib.Matrix.Basic.PositiveSemidefiniteSeries
-import Mathlib.Analysis.Analytic.OfScalars
 import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Topology.Algebra.InfiniteSum.Constructions
 
 /-!
 # Positive-coefficient entrywise power series

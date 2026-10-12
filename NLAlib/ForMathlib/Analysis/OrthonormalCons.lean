@@ -1,5 +1,4 @@
 import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
 
 /-!
 # Prepending a unit vector to a basis of its orthogonal complement

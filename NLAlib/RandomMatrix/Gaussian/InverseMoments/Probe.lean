@@ -1,8 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.DiagonalLaw
 import NLAlib.Probability.Gaussian.Moments.PositiveMoments
-import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Spectral.QuadraticProbe
-import Mathlib.Analysis.Matrix.PosDef
 
 /-!+# Gaussian quadratic probes for inverse spectral moments
 

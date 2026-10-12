@@ -1,5 +1,4 @@
 import Mathlib.Algebra.Module.Submodule.Union
-import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.LinearAlgebra.Matrix.DotProduct
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.CharZero.Infinite

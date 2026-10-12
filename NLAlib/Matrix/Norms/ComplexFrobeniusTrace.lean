@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Norms.ComplexFrobenius
-import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!
 # Complex Frobenius trace and column identities

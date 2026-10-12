@@ -2,10 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.SparseStackDistribution
-import NLAlib.ForMathlib.Probability.FiniteLaw
 import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.Tactic
 

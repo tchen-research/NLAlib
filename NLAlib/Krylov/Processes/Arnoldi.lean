@@ -1,6 +1,5 @@
 import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.Krylov.Spaces.Grade
-import NLAlib.Matrix.Subspaces.Projections
 /-!
 # Graded Krylov bases, the Arnoldi decomposition and the Arnoldi process
 

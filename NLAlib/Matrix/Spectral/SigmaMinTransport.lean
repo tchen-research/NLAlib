@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
 import NLAlib.Matrix.Spectral.SpectralBounds
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
 /-!

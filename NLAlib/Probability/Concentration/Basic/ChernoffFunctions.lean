@@ -1,4 +1,3 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!

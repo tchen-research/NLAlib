@@ -1,7 +1,4 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Basic
-import Mathlib.Analysis.SpecialFunctions.Arcosh
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # Chebyshev polynomials: growth outside `[-1, 1]` and the second kind

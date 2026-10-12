@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Norms.Schatten
 import NLAlib.Matrix.Norms.NuclearFiniteIndex
-import NLAlib.Matrix.Spectral.SingularValueInvariance
 /-!
 # Trace Hölder for Schatten norms
 

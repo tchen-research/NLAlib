@@ -1,7 +1,6 @@
 import NLAlib.Matrix.Calculus.InversePowerConcavity
 import NLAlib.Matrix.Calculus.GramTrace
 import NLAlib.Matrix.Spectral.QuadraticProbe
-import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # Regularized Gram resolvent derivatives

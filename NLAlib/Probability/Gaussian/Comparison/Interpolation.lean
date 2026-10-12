@@ -1,7 +1,4 @@
 import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
-import Mathlib.Probability.Moments.Covariance
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import NLAlib.ForMathlib.MeasureTheory.Integral
 /-!
 # Gaussian interpolation: second-moment bookkeeping
 

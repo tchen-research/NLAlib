@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Inequalities.PrincipalMinorProducts
 import NLAlib.ForMathlib.Combinatorics.SubsetDeletionProduct
+import NLAlib.Matrix.Inequalities.InverseDiagonalMinor
 /-!
 # Products of consecutive principal-minor orders
 

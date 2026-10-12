@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Functions.DiagonalFilter
-import NLAlib.Matrix.Functions.PolynomialIntertwining
-import Mathlib.Analysis.CStarAlgebra.Matrix
 
 /-!
 # Complex diagonal polynomial filter envelopes

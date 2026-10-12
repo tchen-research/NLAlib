@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Subspaces.Projections
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Real rotations in a prescribed plane

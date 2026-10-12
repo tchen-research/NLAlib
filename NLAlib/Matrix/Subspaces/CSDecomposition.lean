@@ -1,7 +1,6 @@
 import NLAlib.Matrix.Subspaces.CanonicalCS
 import NLAlib.Matrix.Subspaces.OrthogonalBlockCompletion
 import NLAlib.Matrix.Spectral.SquareSingularBasis
-import NLAlib.Matrix.Subspaces.GramIsometry
 /-!
 # Cosine–sine decomposition of an orthogonal block matrix
 

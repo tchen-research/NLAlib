@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.RealSchur
 import NLAlib.Matrix.Spectral.QuasiPencilBasis
+import NLAlib.ForMathlib.Analysis.OrthonormalCons
 /-!
 # Orthonormal bases for the real generalized Schur form
 

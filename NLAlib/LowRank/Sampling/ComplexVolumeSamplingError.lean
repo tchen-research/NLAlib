@@ -1,6 +1,7 @@
 import NLAlib.LowRank.Sampling.ComplexVolumeSamplingLaw
 import NLAlib.Matrix.Subspaces.ComplexGramColumnDeterminant
 import NLAlib.LowRank.Sampling.VolumeCounting
+import Mathlib.Algebra.Order.Star.Real
 /-!
 # Exact error of actual complex volume sampling
 

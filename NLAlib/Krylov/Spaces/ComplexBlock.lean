@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Functions.PolynomialIntertwining
-import Mathlib.Algebra.Polynomial.Degree.Support
-import Mathlib.Analysis.RCLike.Basic
 
 /-!
 # Actual complex block Krylov spaces

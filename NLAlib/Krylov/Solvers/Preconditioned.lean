@@ -1,4 +1,3 @@
-import Mathlib.Analysis.Matrix.Order
 import NLAlib.Krylov.Solvers.CG
 import NLAlib.Krylov.Quadrature.GaussQuadrature
 /-!

@@ -1,5 +1,6 @@
 import NLAlib.Polynomial.FunctionApproximation.AnalyticFourier
 import NLAlib.ForMathlib.Analysis.FourierCircle
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
 /-!
 # Chebyshev series and truncation for a holomorphic Bernstein ellipse
 

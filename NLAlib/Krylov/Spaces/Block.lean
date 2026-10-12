@@ -1,6 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.Finsupp.Span
 import NLAlib.Krylov.Spaces.Polynomial
 import NLAlib.Matrix.Subspaces.Projections
 /-!

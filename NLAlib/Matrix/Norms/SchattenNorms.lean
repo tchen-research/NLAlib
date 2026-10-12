@@ -3,7 +3,6 @@ import NLAlib.Matrix.Spectral.SingularValueInvariance
 import NLAlib.Matrix.Norms.NuclearFiniteIndex
 import NLAlib.Matrix.Inequalities.KyFanSums
 import NLAlib.Matrix.Inequalities.MajorizationConvex
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 
 /-!
 # Schatten norm axioms

@@ -1,13 +1,7 @@
-import NLAlib.LowRank.Structural.RangeFinder
-import NLAlib.LowRank.RandomizedSVD.Assembly
 import NLAlib.LowRank.RandomizedSVD.GaussianSketch
-import NLAlib.Matrix.Spectral.SpectralBounds
-import NLAlib.Matrix.Structured.Measurable
 import NLAlib.Matrix.Spectral.EckartYoung
 import NLAlib.RandomMatrix.Gaussian.Spectral.SketchRank
-import NLAlib.RandomMatrix.Gaussian.Moments.Conditioning
 import NLAlib.RandomMatrix.Gaussian.Spectral.Chevet
-import NLAlib.RandomMatrix.Gaussian.InverseMoments.Mean
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.SpectralTail
 /-!
 # The deterministic range-finder bound (spectral form)

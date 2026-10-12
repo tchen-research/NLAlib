@@ -1,4 +1,3 @@
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
 import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
 /-!
 # Linear forms of a Gaussian matrix

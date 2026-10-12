@@ -1,9 +1,6 @@
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import Mathlib.Algebra.Star.UnitaryStarAlgAut
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unique
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Pi
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import Mathlib.LinearAlgebra.Matrix.PosDef
+import NLAlib.Matrix.OperatorTheory.TraceExpConvex
 
 /-!
 # Unitary covariance of matrix functional calculus

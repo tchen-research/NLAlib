@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.NormalIntertwining
-import Mathlib.Data.Matrix.Block
 
 /-!
 # Rectangular Fuglede–Putnam for complex normal matrices

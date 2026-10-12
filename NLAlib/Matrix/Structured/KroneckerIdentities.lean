@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Basic.MoorePenrose
-import Mathlib.LinearAlgebra.Matrix.Kronecker
-import Mathlib.LinearAlgebra.Matrix.Vec
 
 /-!
 # Frobenius and Moore–Penrose identities for Kronecker products

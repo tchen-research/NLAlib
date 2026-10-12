@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Subspaces.ComplexVolumeProjection
 import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Analysis.Matrix.PosDef
 

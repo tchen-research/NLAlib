@@ -11,7 +11,6 @@ vocabulary definitions are supplied locally; there is no HighDimProb dependency.
 import NLAlib.Probability.Concentration.QuadraticForms.UniversalBound
 import NLAlib.Probability.SubGaussian.OrliczMGF
 import NLAlib.Matrix.Basic.QuadForm
-import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Spectral.FiniteIndexTransport
 /-!
 # Hanson–Wright in NLAlib's matrix vocabulary

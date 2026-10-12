@@ -1,7 +1,7 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Tactic.FinCases
+import NLAlib.Matrix.Functions.ExpLogPosDef
 
 /-!
 # Exponential integrability survives a fixed Hermitian shift

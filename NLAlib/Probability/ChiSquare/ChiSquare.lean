@@ -1,13 +1,7 @@
 import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Probability.Moments.Basic
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
-import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
 import Mathlib.Analysis.SpecialFunctions.Stirling
 import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.MeasureTheory.Integral.Prod
 import NLAlib.ForMathlib.Analysis.Real
 /-!
 # Chi-square tails and negative moments

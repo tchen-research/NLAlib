@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Inequalities.RelativeSpectrum
-import NLAlib.Matrix.Perturbation.ConditionNumber
 /-!
 # Positive extreme eigenvalues and endpoint constants
 

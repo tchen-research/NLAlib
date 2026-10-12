@@ -1,4 +1,5 @@
 import NLAlib.ForMathlib.Probability.UniformSamplingCounts
+import Mathlib.Probability.ProbabilityMassFunction.Integrals
 /-!
 # Actual without-replacement versus iid convex-order comparison
 

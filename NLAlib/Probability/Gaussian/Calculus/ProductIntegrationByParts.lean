@@ -1,6 +1,5 @@
 import NLAlib.Probability.Gaussian.Calculus.PolynomialGrowthIntegrationByParts
-import Mathlib.Analysis.Calculus.Deriv.Pi
-import Mathlib.MeasureTheory.Function.L2Space
+import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 
 /-!
 # Gaussian coordinate integration by parts with moderate growth

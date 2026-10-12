@@ -1,4 +1,3 @@
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!

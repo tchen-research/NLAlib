@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.NormalSpectral
 import NLAlib.ForMathlib.Data.MultisetPermutation
-import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-!
 # Unitary similarity classification of normal matrices

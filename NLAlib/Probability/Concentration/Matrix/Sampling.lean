@@ -1,7 +1,4 @@
 import NLAlib.Probability.Concentration.Matrix.MatrixChernoff
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Data.Real.Pointwise
 
 /-!
 # Matrix Chernoff for sampling: explicit-constant tails

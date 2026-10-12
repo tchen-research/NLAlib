@@ -1,12 +1,8 @@
 import NLAlib.Probability.Gaussian.Calculus.Stein
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.RegularizedApproximation
-import NLAlib.Matrix.Calculus.UnshiftedGramSoftMin
-import NLAlib.Matrix.Structured.GramSoftMinMeasurable
 import NLAlib.Matrix.Basic.CoordinateUpdates
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.CutoffIntegrability
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.CutoffDerivativeIntegrability
-import Mathlib.Analysis.Matrix.Order
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # The unshifted Gaussian hard-edge weak inequality

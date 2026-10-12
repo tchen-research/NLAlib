@@ -1,7 +1,5 @@
 import NLAlib.Probability.Gaussian.Moments.Khintchine
 import NLAlib.Probability.Concentration.Matrix.RademacherKhintchine
-import NLAlib.Probability.Concentration.Basic.ScalarLaws
-import Mathlib.Probability.Independence.Basic
 
 /-!
 # Noncommutative Khintchine on arbitrary probability spaces

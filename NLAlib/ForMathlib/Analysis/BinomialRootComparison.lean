@@ -1,5 +1,4 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Tactic.FieldSimp
 
 /-!

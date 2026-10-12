@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Functions.RealComplexCFC
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Order
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 
 /-!

@@ -30,13 +30,6 @@ namespace NLAlib
 
 open NLAlib Matrix
 
-/-- Reindexing preserves the trace. -/
-private lemma trace_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
-    (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
-    Matrix.trace (Matrix.reindex e e A) = Matrix.trace A := by
-  simp only [Matrix.trace, Matrix.reindex_apply, Matrix.diag_apply, Matrix.submatrix_apply]
-  exact Equiv.sum_comp e.symm (fun i => A i i)
-
 /-- Reindexing preserves the intrinsic dimension. -/
 private lemma intrinsicDimension_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :

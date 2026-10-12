@@ -1,4 +1,6 @@
 import NLAlib.Matrix.Perturbation.WedinResidual
+import NLAlib.Matrix.Spectral.Weyl
+import NLAlib.Matrix.Subspaces.FrameContractions
 /-!
 # Wedin perturbation and population-gap bounds
 

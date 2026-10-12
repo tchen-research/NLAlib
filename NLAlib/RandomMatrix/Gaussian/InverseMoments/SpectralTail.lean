@@ -4,13 +4,8 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_pinv_spectral_expectation`,
 `Sol_GaussianMatrix_inverse_wishart_spectral_moment`).
 -/
-import NLAlib.RandomMatrix.Gaussian.InverseMoments.LambdaMinTail
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.SpectralProbe
-import NLAlib.Matrix.Structured.Measurable
-import Mathlib.Analysis.SpecialFunctions.Stirling
-import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 
 /-!
 # Spectral tails and moments of the Gaussian pseudoinverse

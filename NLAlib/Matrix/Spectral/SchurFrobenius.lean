@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.SchurTriangularization
 import NLAlib.Matrix.Spectral.NormalSpectral
 import NLAlib.Matrix.Subspaces.ComplexProjectionBounds
 /-!

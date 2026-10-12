@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Basic.MoorePenrose
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 
 /-!

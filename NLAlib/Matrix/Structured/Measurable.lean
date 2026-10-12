@@ -1,5 +1,4 @@
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
-import Mathlib.Topology.Instances.Matrix
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Basic.Pseudoinverse
 /-!

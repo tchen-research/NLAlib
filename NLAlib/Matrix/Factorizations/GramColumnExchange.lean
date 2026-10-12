@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Basic.DeterminantDiagonalUpdate
-import NLAlib.Matrix.Subspaces.GramColumnDeterminant
 /-!
 # Exact maximum-volume column exchange identity
 

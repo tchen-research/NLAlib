@@ -1,8 +1,4 @@
 import Mathlib.Analysis.InnerProductSpace.SingularValues
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import Mathlib.Analysis.Matrix.Spectrum
-import Mathlib.LinearAlgebra.Matrix.Rank
 import NLAlib.Matrix.Norms.Core
 /-!
 # Singular value decomposition

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.OperatorTheory.Basic
-import Mathlib.Logic.Equiv.Fin.Basic
 
 /-!
 # Tensor representation for relative entropy

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Perturbation.SimpleEigenvaluePerturbation
-import Mathlib.Analysis.Complex.RealDeriv
 
 /-!
 # Simple eigenvalues of real symmetric matrices

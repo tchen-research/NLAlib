@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
-import NLAlib.Matrix.Spectral.SchurTriangularization
 /-!
 # Simultaneous unitary triangularization of commuting complex families
 

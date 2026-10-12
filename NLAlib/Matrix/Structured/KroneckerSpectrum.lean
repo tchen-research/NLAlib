@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Structured.KroneckerIdentities
 import NLAlib.Matrix.Functions.PolynomialCalculus
 /-!
 # Eigenvalue multisets of Kronecker products and sums

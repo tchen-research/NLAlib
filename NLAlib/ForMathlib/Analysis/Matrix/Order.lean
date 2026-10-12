@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 
 /-!
 # Positive matrix norm, trace, and real scalar order

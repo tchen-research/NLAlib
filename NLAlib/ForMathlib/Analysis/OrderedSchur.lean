@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Analysis.OrthonormalEigenline
-import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # An orthonormal Schur basis with prescribed characteristic-root order

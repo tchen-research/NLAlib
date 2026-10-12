@@ -1,7 +1,5 @@
 import NLAlib.ForMathlib.Analysis.OrthonormalCons
-import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
 import Mathlib.LinearAlgebra.Eigenspace.Charpoly
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 
 /-!
 # An orthonormal eigenline and its compressed characteristic factor

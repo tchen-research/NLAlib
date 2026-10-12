@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueContinuousBranch
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueSchurSpectrum
 import NLAlib.Matrix.Spectral.EigenvectorDeflationBlocks
+import Mathlib.Analysis.Complex.Polynomial.Basic
 /-!
 # The local branch of a simple eigenvalue
 

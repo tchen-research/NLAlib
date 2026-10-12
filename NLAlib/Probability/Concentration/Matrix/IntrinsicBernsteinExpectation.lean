@@ -1,13 +1,6 @@
-import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
 import NLAlib.Probability.Concentration.Matrix.IntrinsicBernstein
-import Mathlib.MeasureTheory.Integral.Layercake
 import Mathlib.MeasureTheory.Integral.ExpDecay
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.Matrix.Spectrum
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!
 # Corollary 7.3.2 — Intrinsic Bernstein expectation bound

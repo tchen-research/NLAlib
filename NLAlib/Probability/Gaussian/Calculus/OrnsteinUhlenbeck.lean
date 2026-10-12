@@ -1,6 +1,4 @@
 import NLAlib.Probability.Gaussian.Calculus.IntegrationByParts
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.MeasureTheory.Group.Convolution
 
 /-!
 # The Ornstein–Uhlenbeck semigroup

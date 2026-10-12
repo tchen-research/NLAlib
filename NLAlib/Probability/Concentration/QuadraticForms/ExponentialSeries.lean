@@ -8,19 +8,7 @@ HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. Only the two used legacy
 vocabulary definitions are supplied locally; there is no HighDimProb dependency.
 -/
-import NLAlib.Matrix.Norms.Core
-import NLAlib.Probability.SubGaussian.OrliczMGF
-import Mathlib.Probability.Moments.SubGaussian
 import Mathlib.Tactic
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Matrix.Normed
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.InnerProductSpace.SingularValues
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 import NLAlib.Probability.Concentration.QuadraticForms.ScalarMoments
 /-!
 # Hanson–Wright proof: ExponentialSeries

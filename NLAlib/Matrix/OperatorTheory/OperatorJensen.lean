@@ -1,5 +1,4 @@
 import NLAlib.Matrix.OperatorTheory.JensenIsometricCompression
-import NLAlib.Matrix.Functions.JensenBlockCalculus
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 
 /-!

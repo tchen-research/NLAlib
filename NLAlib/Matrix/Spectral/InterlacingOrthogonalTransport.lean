@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.OrderedSymmetricDiagonalization
-import NLAlib.Matrix.Spectral.InterlacingTrace
 /-!
 # Orthogonal transport of converse-interlacing constructions
 

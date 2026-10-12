@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Factorizations.LU
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 /-!
 # Singular LU and row/column inclusion

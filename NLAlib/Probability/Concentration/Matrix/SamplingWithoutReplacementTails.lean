@@ -1,5 +1,6 @@
 import NLAlib.Probability.Concentration.Matrix.SamplingWithoutReplacement
 import NLAlib.Probability.Concentration.Matrix.SamplingSpectralBounds
+import NLAlib.Probability.Concentration.Matrix.IntrinsicChernoff
 /-!
 # Genuine without-replacement Chernoff endpoints
 

@@ -1,5 +1,4 @@
 import NLAlib.Polynomial.Chebyshev.Core
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 /-!
 # Finite cosine expansions through the Chebyshev first-kind basis

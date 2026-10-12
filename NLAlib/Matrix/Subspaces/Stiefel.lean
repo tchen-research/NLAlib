@@ -1,10 +1,5 @@
 import NLAlib.Matrix.Subspaces.Projections
-import Mathlib.LinearAlgebra.UnitaryGroup
-import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Topology.Algebra.Star.Unitary
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.MeasureTheory.Measure.Haar.Basic
 
 /-!

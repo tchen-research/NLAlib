@@ -1,6 +1,4 @@
 import Mathlib.FieldTheory.Minpoly.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
 import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
 import NLAlib.Krylov.Spaces.Polynomial
 /-!

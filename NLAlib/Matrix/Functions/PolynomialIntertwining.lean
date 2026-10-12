@@ -1,7 +1,4 @@
 import Mathlib.Algebra.Polynomial.AlgebraMap
-import Mathlib.LinearAlgebra.Matrix.Polynomial
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Complex.Module
 
 /-!

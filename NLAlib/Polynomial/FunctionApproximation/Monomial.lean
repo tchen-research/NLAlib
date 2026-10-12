@@ -1,6 +1,5 @@
 import NLAlib.Polynomial.Chebyshev.Core
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
-import Mathlib.Data.Nat.Choose.Sum
 
 /-!
 # Compressed monomials in the Chebyshev basis

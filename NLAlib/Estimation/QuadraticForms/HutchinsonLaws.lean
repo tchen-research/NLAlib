@@ -1,7 +1,4 @@
-import NLAlib.Estimation.Trace.Hutchinson
 import NLAlib.Probability.Gaussian.Moments.FourthMoment
-import NLAlib.Probability.Concentration.Basic.ScalarLaws
-import NLAlib.Probability.Rademacher.Core
 import NLAlib.Probability.Concentration.QuadraticForms.RademacherQuadraticMoments
 /-!
 # Hutchinson identities for concrete Gaussian and Rademacher laws

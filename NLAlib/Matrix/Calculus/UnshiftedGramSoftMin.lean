@@ -1,7 +1,5 @@
-import NLAlib.Matrix.Calculus.GramSoftMin
 import NLAlib.Matrix.Calculus.InversePowerLimit
 import NLAlib.Matrix.Spectral.SpectralMinimum
-import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Finite unshifted inverse-power Gram bounds

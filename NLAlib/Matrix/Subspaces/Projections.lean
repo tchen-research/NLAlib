@@ -1,8 +1,5 @@
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Matrix.Mul
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.LinearAlgebra.Matrix.Hermitian
-import Mathlib.Analysis.InnerProductSpace.PiL2
 import NLAlib.Matrix.Norms.Core
 /-!
 # Orthonormal frames, projectors and residuals

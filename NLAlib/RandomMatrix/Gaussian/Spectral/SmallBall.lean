@@ -1,10 +1,6 @@
 import NLAlib.Matrix.Spectral.Core
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 import NLAlib.Probability.ChiSquare.ChiSquare
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Topology.Semicontinuity.Basic
 
 /-!
 # Small-ball estimate for the smallest singular value of a Gaussian matrix

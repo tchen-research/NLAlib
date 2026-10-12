@@ -1,7 +1,5 @@
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Analysis.InnerProductSpace.JointEigenspace
-import Mathlib.LinearAlgebra.Complex.Module
-import Mathlib.Analysis.CStarAlgebra.Fuglede
 import Mathlib.Analysis.CStarAlgebra.Matrix
 
 /-!

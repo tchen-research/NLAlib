@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Perturbation.PseudoinverseProjectors
 import NLAlib.Matrix.Perturbation.InversePerturbationBounds
 import NLAlib.Matrix.Basic.LeastSquares
 import Mathlib.Tactic.FieldSimp

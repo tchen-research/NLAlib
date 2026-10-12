@@ -1,6 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.Moments.LogOverlap
 import NLAlib.ForMathlib.Probability.ExponentialTailMoments
-import NLAlib.Matrix.Functions.PolynomialCalculus
+import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 /-!
 # First and second moments of Gaussian logarithmic overlap
 

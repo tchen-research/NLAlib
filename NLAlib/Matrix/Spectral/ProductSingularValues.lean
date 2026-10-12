@@ -2,7 +2,6 @@ import NLAlib.Matrix.Inequalities.CompressionDeterminant
 import NLAlib.Matrix.Subspaces.PolarFrame
 import NLAlib.Matrix.Spectral.ProductWeyl
 import NLAlib.Matrix.Inequalities.KyFan
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 
 /-!
 # Horn's multiplicative singular-value inequality

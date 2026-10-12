@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Inequalities.Schur
 import NLAlib.Matrix.Subspaces.Stiefel
-import Mathlib.Topology.Order.Compact
 
 /-!
 # Projected eigenvector certificates for Schur–Horn

@@ -2,6 +2,7 @@ import NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter
 import NLAlib.Matrix.Functions.ComplexDiagonalFilter
 import NLAlib.Matrix.Basic.ComplexFullRowInverse
 import NLAlib.Matrix.Subspaces.ComplexProjectionComposition
+import NLAlib.LowRank.PolynomialMethods.PolynomialFilter
 /-!
 # Canonical complex polynomial-filter bounds
 

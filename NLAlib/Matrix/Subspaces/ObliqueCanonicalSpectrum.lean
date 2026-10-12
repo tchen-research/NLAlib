@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.SingularIsometries
-import NLAlib.Matrix.Subspaces.ObliqueProjectionCanonical
 /-!
 # Singular values of the oblique canonical blocks
 

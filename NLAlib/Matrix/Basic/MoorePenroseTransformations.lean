@@ -1,7 +1,5 @@
 import NLAlib.Matrix.Basic.MoorePenrose
-import NLAlib.Matrix.Spectral.SpectralBounds
 import NLAlib.Matrix.Subspaces.Projections
-import Mathlib.Analysis.Matrix.Order
 import Mathlib.Tactic.FieldSimp
 
 /-!

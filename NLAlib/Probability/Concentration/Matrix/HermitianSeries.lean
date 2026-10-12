@@ -1,16 +1,7 @@
-import NLAlib.Probability.Concentration.Basic.ScalarLaws
-import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Matrix.Basic.Dilation
 import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.GaussianMgfCgf
 import NLAlib.Probability.Concentration.Matrix.RademacherMgfCgf
 import NLAlib.Matrix.Inequalities.TraceExpMonotone
-import Mathlib.Probability.Independence.Integration
-import Mathlib.Probability.Moments.Variance
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Theorem 4.6.1 — Hermitian Gaussian and Rademacher series

@@ -27,9 +27,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -/
 import Mathlib.Probability.Distributions.Uniform
-import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import Mathlib.Logic.Equiv.Fintype
-import Mathlib.GroupTheory.Perm.Fin
 
 /-!
 # A literal finite iid/subset sampling coupling

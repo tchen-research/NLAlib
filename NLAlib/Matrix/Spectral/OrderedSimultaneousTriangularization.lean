@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Analysis.OrderedSimultaneousSchur
-import NLAlib.Matrix.Spectral.SchurTriangularization
 /-!
 # Simultaneous unitary triangularization with one prescribed root order
 

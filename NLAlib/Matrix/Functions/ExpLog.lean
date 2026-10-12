@@ -1,6 +1,4 @@
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
-import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 
 /-!
 # Spectral vocabulary for complex matrices

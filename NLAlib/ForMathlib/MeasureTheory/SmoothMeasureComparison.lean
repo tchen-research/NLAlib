@@ -7,7 +7,6 @@ The compact-set comparison proof is adapted from Mathlib's
 MeasureTheory.Integral.RieszMarkovKakutani.Real.
 -/
 import Mathlib.Geometry.Manifold.PartitionOfUnity
-import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
 
 /-!
 # Comparing measures using nonnegative smooth tests

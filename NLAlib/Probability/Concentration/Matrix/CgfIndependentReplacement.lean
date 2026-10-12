@@ -1,6 +1,6 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Probability.Concentration.Matrix.ProbabilisticLieb
-import Mathlib.MeasureTheory.Integral.Prod
+import NLAlib.Matrix.OperatorTheory.TraceExpConvex
+import Mathlib.Probability.Independence.Basic
 
 /-!
 # Lieb replacement for an independent random matrix offset

@@ -1,7 +1,5 @@
-import NLAlib.Matrix.Spectral.OrderedSchur
 import NLAlib.Matrix.Spectral.SchurFrobenius
 import NLAlib.Matrix.Spectral.SchurDensity
-import NLAlib.Matrix.Spectral.SmallTriangularSimilarity
 import NLAlib.Matrix.Spectral.RealSpectrumSchur
 import NLAlib.Matrix.Spectral.RealSchurSimilarity
 import NLAlib.Matrix.Spectral.ComplexQZ

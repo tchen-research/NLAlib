@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.SimultaneousDiagonalization
 import NLAlib.Matrix.Factorizations.PolarIntertwining
-import NLAlib.Matrix.Functions.PolynomialCalculus
 /-!
 # Simultaneous orthogonal diagonalization of real symmetric families
 

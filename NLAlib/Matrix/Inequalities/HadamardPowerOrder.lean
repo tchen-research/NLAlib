@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Inequalities.HadamardPowerSeries
+import NLAlib.Matrix.Inequalities.HadamardOrder
 /-!
 # Monotonicity of natural Hadamard powers and exponential
 

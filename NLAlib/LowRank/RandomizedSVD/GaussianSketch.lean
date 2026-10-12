@@ -1,8 +1,6 @@
-import NLAlib.LowRank.RandomizedSVD.RSVD
 import NLAlib.LowRank.Nystrom.GeneralizedNystrom
 import NLAlib.RandomMatrix.Gaussian.Moments.Conditioning
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.Mean
-import NLAlib.Matrix.Structured.Measurable
 /-!
 # Randomized SVD and generalized Nyström with Gaussian test matrices
 

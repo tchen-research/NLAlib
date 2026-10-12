@@ -1,7 +1,4 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
-import Mathlib.Topology.Semicontinuity.Hemicontinuity
-import Mathlib.Topology.Order.Compact
 
 /-!
 # Integrability of extreme eigenvalues

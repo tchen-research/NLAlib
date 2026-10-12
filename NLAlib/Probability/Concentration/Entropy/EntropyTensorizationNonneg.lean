@@ -2,7 +2,6 @@ import NLAlib.Probability.Concentration.Entropy.EntropyTensorization
 import NLAlib.ForMathlib.Analysis.Real
 import Mathlib.Analysis.Convex.Integral
 import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
 import Mathlib.Tactic
 
 /-!

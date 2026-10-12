@@ -1,5 +1,3 @@
-import Mathlib.Analysis.SpecificLimits.Normed
-import NLAlib.Matrix.Norms.RankNorm
 import NLAlib.Matrix.Spectral.Weyl
 import NLAlib.Matrix.Perturbation.PseudoinverseSpectralPerturbation
 /-!

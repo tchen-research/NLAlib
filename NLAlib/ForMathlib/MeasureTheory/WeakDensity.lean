@@ -2,7 +2,6 @@ import NLAlib.ForMathlib.MeasureTheory.MonotoneDensity
 import NLAlib.ForMathlib.MeasureTheory.SmoothMeasureComparison
 import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-import Mathlib.Analysis.Calculus.ContDiff.Convolution
 
 /-!
 # Absolute continuity from a weak derivative sign

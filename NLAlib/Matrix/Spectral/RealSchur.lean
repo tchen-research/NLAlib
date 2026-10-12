@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.RealInvariantSubspace
 import NLAlib.Matrix.Spectral.QuasiTriangular
+import NLAlib.ForMathlib.Analysis.OrthonormalSum
 /-!
 # Orthogonal real Schur forms
 

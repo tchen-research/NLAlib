@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.Inertia
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Haynsworth inertia additivity

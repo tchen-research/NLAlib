@@ -1,11 +1,6 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Matrix.Basic.Dilation
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
 import Mathlib.Analysis.CStarAlgebra.Spectrum
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.LinearAlgebra.Matrix.Reindex
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+import NLAlib.Matrix.Functions.ExpLogPosDef
 
 /-!
 # Shared calculus for complex matrices

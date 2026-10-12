@@ -3,7 +3,6 @@ import NLAlib.Matrix.Inequalities.SchurHornWeights
 import NLAlib.Matrix.Inequalities.SchurHornResidual
 import NLAlib.Matrix.Inequalities.SchurHornDescent
 import NLAlib.Matrix.Inequalities.PlaneRotationDerivative
-import NLAlib.Matrix.Inequalities.PlaneRotationCoordinates
 /-!
 # The real orthogonal Schur–Horn converse
 

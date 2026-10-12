@@ -1,4 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import NLAlib.Krylov.Spaces.Grade
 import NLAlib.Krylov.Solvers.Minimiser
 import NLAlib.Matrix.Subspaces.Projections

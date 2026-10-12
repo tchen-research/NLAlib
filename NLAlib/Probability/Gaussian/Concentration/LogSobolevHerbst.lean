@@ -1,7 +1,6 @@
 import NLAlib.Probability.Gaussian.Concentration.LipschitzConcentration
 import NLAlib.Probability.Gaussian.Concentration.LogSobolevCoverage
 import Mathlib.Probability.Moments.SubGaussian
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
 /-!
 # Concentration from a genuine Euclidean logarithmic Sobolev inequality

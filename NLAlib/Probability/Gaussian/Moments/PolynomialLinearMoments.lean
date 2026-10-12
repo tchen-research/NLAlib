@@ -1,8 +1,4 @@
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
-import NLAlib.Probability.Gaussian.Calculus.Stein
 import NLAlib.Probability.Gaussian.Calculus.ProductIntegrationByParts
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 
 /-!
 # Polynomial products of Gaussian linear forms

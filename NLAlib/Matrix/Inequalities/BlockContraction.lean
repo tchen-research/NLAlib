@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Inequalities.RelativeSpectrum
 import NLAlib.Matrix.Factorizations.PolarDecomposition
-import NLAlib.Matrix.Basic.GeneralizedSchurComplement
 /-!
 # Positive semidefinite blocks as contractive couplings
 

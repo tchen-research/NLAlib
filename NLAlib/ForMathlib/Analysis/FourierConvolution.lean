@@ -1,5 +1,4 @@
-import NLAlib.ForMathlib.Analysis.FourierCircle
-import Mathlib.MeasureTheory.Measure.Haar.Unique
+import NLAlib.Polynomial.FunctionApproximation.AnalyticApproximation
 
 /-!
 # Fourier convolution identities on the circle of period two pi

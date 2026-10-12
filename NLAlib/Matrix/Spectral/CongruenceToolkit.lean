@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.IndefiniteCongruence
 import NLAlib.Matrix.Spectral.SemidefiniteCongruence
+import NLAlib.Matrix.Spectral.DefiniteCongruence
 /-!
 # Simultaneous real congruence: definite, indefinite, and semidefinite pairs
 

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.ComplexSingularTransport
-import NLAlib.Matrix.Subspaces.ObliqueFrameInverse
 import NLAlib.Matrix.Subspaces.PrincipalAngles
 /-!
 # Complexifying real range frames and applying unitary similarities

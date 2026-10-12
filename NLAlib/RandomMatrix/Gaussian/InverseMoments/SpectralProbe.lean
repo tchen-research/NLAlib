@@ -1,4 +1,3 @@
-import NLAlib.RandomMatrix.Gaussian.InverseMoments.Probe
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.GammaBounds
 import NLAlib.ForMathlib.MeasureTheory.MomentInterpolation
 /-!

@@ -1,5 +1,4 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
 import Mathlib.Data.Real.Basic
 
 /-!

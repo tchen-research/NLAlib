@@ -1,6 +1,5 @@
-import Mathlib.Analysis.Real.Sqrt
 import NLAlib.Matrix.Basic.SchurComplement
-import NLAlib.LowRank.Nystrom.Structural
+import NLAlib.LowRank.Cholesky.CholeskyPivot
 /-!
 # Partial (pivoted) Cholesky and the column Nyström approximation
 

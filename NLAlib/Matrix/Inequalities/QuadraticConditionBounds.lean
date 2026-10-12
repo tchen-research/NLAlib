@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Inequalities.Wielandt
 import NLAlib.Matrix.Inequalities.PositiveSpectralEndpoints
+import NLAlib.Matrix.Perturbation.ConditionNumber
 /-!
 # Sharp quadratic inverse and orthogonal angle bounds
 

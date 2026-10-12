@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Spectral.Core
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 import NLAlib.Probability.ChiSquare.ChiSquare
+import NLAlib.ForMathlib.MeasureTheory.Integral
 
 /-!
 # Small-ball estimate for the smallest singular value of a Gaussian matrix
@@ -23,8 +24,8 @@ The argument (Davidson–Szarek 2001, Thm II.13; Vershynin 2012, §5.2 / Rudelso
 
 and `measure_sigmaMin_le_le_gaussianMatrix` is the union bound over the columns.
 
-Helpers of general use: `measurePreserving_update_pi_gaussianReal` and
-`measurePreserving_updateCol_gaussianMatrix` (resampling a coordinate / a column). The
+Helper of general use: `measurePreserving_updateCol_gaussianMatrix` (resampling a column; the
+coordinate version is `measurePreserving_update_pi` in `NLAlib.ForMathlib.MeasureTheory.Integral`). The
 deterministic step lives in `NLAlib.Matrix.Spectral.Core` and the rotation invariance in coordinates,
 `measurePreserving_orthonormalBasis_repr_pi_gaussianReal`, in `NLAlib.RandomMatrix.Gaussian.Invariance.Invariance`.
 
@@ -151,45 +152,6 @@ theorem measure_sq_dist_colSpace_le_le_gaussianReal {N p d : ℕ} (B : Matrix (F
 
 /-! ### Distance from a Gaussian column to the span of the others -/
 
-/-- **Resampling one coordinate.** `(a, g) ↦ update a j g` pushes `γⁿ ⊗ γ` forward to `γⁿ`,
-where `γ = N(0,1)`. Atlas: `smin-small-ball` (helper). Ported from Prove2me solution
-`GaussianMatrix.dist_col_span_small_ball`. -/
-theorem measurePreserving_update_pi_gaussianReal {n : ℕ} (j : Fin n) :
-    MeasurePreserving (fun p : (Fin n → ℝ) × ℝ => Function.update p.1 j p.2)
-      ((Measure.pi fun _ : Fin n => gaussianReal 0 1).prod (gaussianReal 0 1))
-      (Measure.pi fun _ : Fin n => gaussianReal 0 1) := by
-  have hmeas : Measurable (fun p : (Fin n → ℝ) × ℝ => Function.update p.1 j p.2) := by
-    fun_prop
-  refine ⟨hmeas, ?_⟩
-  symm
-  refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.map_apply hmeas (MeasurableSet.univ_pi hs)]
-  have hpre : (fun p : (Fin n → ℝ) × ℝ => Function.update p.1 j p.2) ⁻¹' Set.univ.pi s
-      = Set.univ.pi (Function.update s j Set.univ) ×ˢ s j := by
-    ext ⟨a, g⟩
-    simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_prod]
-    constructor
-    · intro h
-      refine ⟨fun l => ?_, by simpa using h j⟩
-      by_cases hl : l = j
-      · subst hl; simp
-      · have := h l
-        rw [Function.update_of_ne hl] at this
-        rw [Function.update_of_ne hl]; exact this
-    · rintro ⟨h1, h2⟩ l
-      by_cases hl : l = j
-      · subst hl; simpa using h2
-      · have := h1 l
-        rw [Function.update_of_ne hl] at this
-        rw [Function.update_of_ne hl]; exact this
-  rw [hpre, Measure.prod_prod, Measure.pi_pi,
-    ← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ j),
-    ← Finset.mul_prod_erase Finset.univ (fun i => gaussianReal 0 1 (s i)) (Finset.mem_univ j),
-    Function.update_self, measure_univ, one_mul, mul_comm]
-  congr 1
-  refine Finset.prod_congr rfl fun l hl => ?_
-  rw [Function.update_of_ne (Finset.ne_of_mem_erase hl)]
-
 /-- **Resampling one column of a Gaussian matrix.** Replacing column `j` of a standard Gaussian
 matrix by an independent standard Gaussian vector leaves its law unchanged.
 Atlas: `smin-small-ball` (helper). Ported from Prove2me solution
@@ -204,7 +166,7 @@ theorem measurePreserving_updateCol_gaussianMatrix (N n : ℕ) (j : Fin n) :
   have h2 := measurePreserving_pi
     (fun _ : Fin N => (Measure.pi fun _ : Fin n => gaussianReal 0 1).prod (gaussianReal 0 1))
     (fun _ => Measure.pi fun _ : Fin n => gaussianReal 0 1)
-    (fun _ => measurePreserving_update_pi_gaussianReal j)
+    (fun _ => measurePreserving_update_pi (fun _ : Fin n => gaussianReal 0 1) j)
   exact h2.comp h1
 
 /-- The distance from column `j` to the span of the other columns is measurable (an infimum of

@@ -2,6 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.LightGramQuadratic
+import NLAlib.Matrix.Basic.QuadForm
 /-!
 # The combined synthesis matrix and its two Gram bounds
 
@@ -20,14 +21,6 @@ variable {d m n ell : ℕ}
 
 /-! ### Actual rectangular synthesis matrix and its two Gram matrices -/
 
-/-- Quadratic form for an arbitrary literal finite square matrix.
-
-Source: ported from `SparseFockFormal.LightSectorConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def coordinateQuadratic {I : Type*} [Fintype I]
-    (A : Matrix I I ℝ) (x : I → ℝ) : ℝ :=
-  ∑ i, x i * A.mulVec x i
-
 /-- Elementary rectangular Gram identity in exact finite coordinates.
 
 Source: ported from `SparseFockFormal.LightSectorConcrete`,
@@ -35,19 +28,9 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem coordinateEnergy_mulVec_eq_gram
     {I J : Type*} [Fintype I] [Fintype J]
     (A : Matrix I J ℝ) (x : J → ℝ) :
-    coordinateEnergy (A.mulVec x) =
-      coordinateQuadratic (A.transpose * A) x := by
-  simp only [coordinateEnergy, coordinateQuadratic, pow_two]
-  change (A.mulVec x) ⬝ᵥ (A.mulVec x) =
-    x ⬝ᵥ (A.transpose * A).mulVec x
-  rw [← Matrix.mulVec_mulVec]
-  calc
-    A.mulVec x ⬝ᵥ A.mulVec x = Matrix.vecMul (A.mulVec x) A ⬝ᵥ x :=
-      Matrix.dotProduct_mulVec (A.mulVec x) A x
-    _ = A.transpose.mulVec (A.mulVec x) ⬝ᵥ x := by
-      have h := Matrix.vecMul_transpose A.transpose (A.mulVec x)
-      simpa using congrArg (fun y ↦ y ⬝ᵥ x) h
-    _ = x ⬝ᵥ A.transpose.mulVec (A.mulVec x) := dotProduct_comm _ _
+    FiniteHilbert.normSq (A.mulVec x) =
+      quadForm (A.transpose * A) x := by
+  rw [FiniteHilbert.normSq_eq_dotProduct, quadForm_transpose_mul_self]
 
 /-- The combined synthesis domain is the disjoint union of the individual particle domains.
 Source: ported sparse-Fock shared-leg/vacuum proof, commit
@@ -77,8 +60,8 @@ dependent component energies.
 Source: ported from `SparseFockFormal.LightSectorConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem coordinateEnergy_sigma (z : AllDomainIndex m n ell → ℝ) :
-    coordinateEnergy z = ∑ k, componentEnergy (sigmaToFamily z) k := by
-  simp only [coordinateEnergy, componentEnergy, sigmaToFamily]
+    FiniteHilbert.normSq z = ∑ k, componentEnergy (sigmaToFamily z) k := by
+  simp only [FiniteHilbert.normSq, componentEnergy, sigmaToFamily]
   rw [Fintype.sum_sigma]
 
 /-- The `(k,l)` block pairing in the literal Gram matrix `VᵀV`.
@@ -98,11 +81,11 @@ Source: ported from `SparseFockFormal.LightSectorConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem coordinateQuadratic_VAll_gram_eq_sum_blocks
     (F : Frame n d) (ell : ℕ) (z : AllDomainIndex m n ell → ℝ) :
-    coordinateQuadratic
+    quadForm
         ((VAllMatrix (m := m) F ell).transpose * VAllMatrix F ell) z =
       ∑ k, ∑ l, blockGramPairing F ell z k l := by
   classical
-  simp only [coordinateQuadratic, Matrix.mulVec, dotProduct,
+  simp only [quadForm, Matrix.mulVec, dotProduct,
     Matrix.mul_apply, Matrix.transpose_apply, VAllMatrix,
     blockGramPairing]
   rw [Fintype.sum_sigma]
@@ -122,7 +105,7 @@ theorem blockGramPairing_self (F : Frame n d) (ell : ℕ)
       (d : ℝ) * componentEnergy (sigmaToFamily z) k := by
   classical
   rw [blockGramPairing, transpose_VMatrix_mul]
-  simp [componentEnergy, sigmaToFamily, coordinateEnergy,
+  simp [componentEnergy, sigmaToFamily, FiniteHilbert.normSq,
     Matrix.mulVec, dotProduct, Matrix.one_apply]
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
@@ -183,7 +166,7 @@ Source: ported sparse-Fock shared-leg/vacuum proof, commit
 `b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
 theorem coordinateQuadratic_VAll_gram_eq_sharedLeg
     (F : Frame n d) (ell : ℕ) (z : AllDomainIndex m n ell → ℝ) :
-    coordinateQuadratic
+    quadForm
         ((VAllMatrix (m := m) F ell).transpose * VAllMatrix F ell) z =
       sharedLegGramQuadratic F (sigmaToFamily z) := by
   rw [coordinateQuadratic_VAll_gram_eq_sum_blocks,
@@ -196,19 +179,12 @@ Source: ported from `SparseFockFormal.LightSectorConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem VAllMatrix_energy_le (F : Frame n d) (ell : ℕ)
     (z : AllDomainIndex m n ell → ℝ) (hell : 1 ≤ ell) :
-    coordinateEnergy ((VAllMatrix (m := m) F ell).mulVec z) ≤
-      ((d : ℝ) + (ell : ℝ) - 1) * coordinateEnergy z := by
+    FiniteHilbert.normSq ((VAllMatrix (m := m) F ell).mulVec z) ≤
+      ((d : ℝ) + (ell : ℝ) - 1) * FiniteHilbert.normSq z := by
   rw [coordinateEnergy_mulVec_eq_gram,
     coordinateQuadratic_VAll_gram_eq_sharedLeg,
     coordinateEnergy_sigma]
   exact sharedLegGramQuadratic_le F (sigmaToFamily z) hell
-
-/-- A finite sum of squared real coordinate entries is nonnegative.
-Source: ported sparse-Fock shared-leg/vacuum proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-theorem coordinateEnergy_nonneg {I : Type*} [Fintype I] (x : I → ℝ) :
-    0 ≤ coordinateEnergy x := by
-  exact Finset.sum_nonneg fun i _hi ↦ sq_nonneg (x i)
 
 /-- Finite-coordinate Cauchy--Schwarz in the exact normalization used here.
 
@@ -216,8 +192,8 @@ Source: ported from `SparseFockFormal.LightSectorConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem coordinate_dot_sq_le {I : Type*} [Fintype I]
     (x y : I → ℝ) :
-    (∑ i, x i * y i) ^ 2 ≤ coordinateEnergy x * coordinateEnergy y := by
-  simpa [coordinateEnergy] using
+    (∑ i, x i * y i) ^ 2 ≤ FiniteHilbert.normSq x * FiniteHilbert.normSq y := by
+  simpa [FiniteHilbert.normSq] using
     (Finset.sum_mul_sq_le_sq_mul_sq (Finset.univ) x y)
 
 /-- A synthesis energy bound implies the same one-sided quadratic bound for
@@ -230,51 +206,37 @@ theorem gramQuadratic_le_of_energy_le
     {I J : Type*} [Fintype I] [Fintype J]
     (A : Matrix I J ℝ) (c : ℝ) (hc : 0 ≤ c)
     (hA : ∀ z : J → ℝ,
-      coordinateEnergy (A.mulVec z) ≤ c * coordinateEnergy z)
+      FiniteHilbert.normSq (A.mulVec z) ≤ c * FiniteHilbert.normSq z)
     (x : I → ℝ) :
-    coordinateQuadratic (A * A.transpose) x ≤
-      c * coordinateEnergy x := by
+    quadForm (A * A.transpose) x ≤
+      c * FiniteHilbert.normSq x := by
   let z : J → ℝ := A.transpose.mulVec x
-  have hgram : coordinateEnergy z = coordinateQuadratic (A * A.transpose) x := by
+  have hgram : FiniteHilbert.normSq z = quadForm (A * A.transpose) x := by
     simpa [z] using coordinateEnergy_mulVec_eq_gram A.transpose x
-  have hinner : coordinateEnergy z = ∑ i, x i * A.mulVec z i := by
+  have hinner : FiniteHilbert.normSq z = ∑ i, x i * A.mulVec z i := by
     calc
-      coordinateEnergy z = coordinateQuadratic (A * A.transpose) x := hgram
+      FiniteHilbert.normSq z = quadForm (A * A.transpose) x := hgram
       _ = ∑ i, x i * A.mulVec z i := by
-        simp only [coordinateQuadratic]
+        simp only [quadForm, dotProduct]
         rw [Matrix.mulVec_mulVec]
-  have hcs : coordinateEnergy z ^ 2 ≤
-      coordinateEnergy x * coordinateEnergy (A.mulVec z) := by
+  have hcs : FiniteHilbert.normSq z ^ 2 ≤
+      FiniteHilbert.normSq x * FiniteHilbert.normSq (A.mulVec z) := by
     rw [hinner]
     exact coordinate_dot_sq_le x (A.mulVec z)
-  have hmul : coordinateEnergy x * coordinateEnergy (A.mulVec z) ≤
-      coordinateEnergy x * (c * coordinateEnergy z) :=
-    mul_le_mul_of_nonneg_left (hA z) (coordinateEnergy_nonneg x)
-  have hchain : coordinateEnergy z ^ 2 ≤
-      coordinateEnergy x * (c * coordinateEnergy z) := hcs.trans hmul
-  have hznonneg := coordinateEnergy_nonneg z
-  have hbound : coordinateEnergy z ≤ c * coordinateEnergy x := by
-    by_cases hz : coordinateEnergy z = 0
+  have hmul : FiniteHilbert.normSq x * FiniteHilbert.normSq (A.mulVec z) ≤
+      FiniteHilbert.normSq x * (c * FiniteHilbert.normSq z) :=
+    mul_le_mul_of_nonneg_left (hA z) (FiniteHilbert.normSq_nonneg x)
+  have hchain : FiniteHilbert.normSq z ^ 2 ≤
+      FiniteHilbert.normSq x * (c * FiniteHilbert.normSq z) := hcs.trans hmul
+  have hznonneg := FiniteHilbert.normSq_nonneg z
+  have hbound : FiniteHilbert.normSq z ≤ c * FiniteHilbert.normSq x := by
+    by_cases hz : FiniteHilbert.normSq z = 0
     · rw [hz]
-      exact mul_nonneg hc (coordinateEnergy_nonneg x)
-    · have hzpos : 0 < coordinateEnergy z := lt_of_le_of_ne hznonneg (Ne.symm hz)
+      exact mul_nonneg hc (FiniteHilbert.normSq_nonneg x)
+    · have hzpos : 0 < FiniteHilbert.normSq z := lt_of_le_of_ne hznonneg (Ne.symm hz)
       nlinarith
   rw [← hgram]
   exact hbound
-
-/-- Coordinate and Euclidean-space presentations of a real matrix quadratic
-form agree exactly.
-
-Source: ported from `SparseFockFormal.LightSectorConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem quadraticForm_toLp_eq_coordinateQuadratic
-    {I : Type*} [Fintype I] [DecidableEq I]
-    (A : Matrix I I ℝ) (x : I → ℝ) :
-    MatrixTail.quadraticForm A (WithLp.toLp 2 x) =
-      coordinateQuadratic A x := by
-  rw [MatrixTail.quadraticForm, real_inner_comm,
-    Matrix.inner_toEuclideanCLM]
-  rfl
 
 /-- The labelled-particle operator `Σ_k Q_k`.
 
@@ -353,18 +315,18 @@ Source: ported from `SparseFockFormal.LightSectorConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem labelledG_coordinateQuadratic_nonneg (F : Frame n d) (ell : ℕ)
     (x : LabelledIndex d m n ell → ℝ) :
-    0 ≤ coordinateQuadratic (labelledG F ell) x := by
+    0 ≤ quadForm (labelledG F ell) x := by
   rw [← VAllMatrix_mul_transpose]
   have hgram :
-      coordinateEnergy
+      FiniteHilbert.normSq
           ((VAllMatrix (m := m) F ell).transpose.mulVec x) =
-        coordinateQuadratic
+        quadForm
           (VAllMatrix (m := m) F ell *
             (VAllMatrix (m := m) F ell).transpose) x := by
     simpa using coordinateEnergy_mulVec_eq_gram
       (VAllMatrix (m := m) F ell).transpose x
   rw [← hgram]
-  exact coordinateEnergy_nonneg _
+  exact FiniteHilbert.normSq_nonneg _
 
 /-- The concrete labelled-particle Gram operator obeys the sharp light-sector
 constant `d + ell - 1` as an actual coordinate quadratic-form estimate.
@@ -373,8 +335,8 @@ Source: ported from `SparseFockFormal.LightSectorConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem labelledG_coordinateQuadratic_le (F : Frame n d) (ell : ℕ)
     (x : LabelledIndex d m n ell → ℝ) (hell : 1 ≤ ell) :
-    coordinateQuadratic (labelledG F ell) x ≤
-      ((d : ℝ) + (ell : ℝ) - 1) * coordinateEnergy x := by
+    quadForm (labelledG F ell) x ≤
+      ((d : ℝ) + (ell : ℝ) - 1) * FiniteHilbert.normSq x := by
   have hellR : (1 : ℝ) ≤ (ell : ℝ) := by exact_mod_cast hell
   have hd : (0 : ℝ) ≤ (d : ℝ) := Nat.cast_nonneg d
   have hc : 0 ≤ (d : ℝ) + (ell : ℝ) - 1 := by
@@ -384,32 +346,6 @@ theorem labelledG_coordinateQuadratic_le (F : Frame n d) (ell : ℕ)
     (VAllMatrix (m := m) F ell)
     ((d : ℝ) + (ell : ℝ) - 1) hc
     (fun z ↦ VAllMatrix_energy_le F ell z hell) x
-
-/-- The same estimate stated on the genuine Euclidean space.
-
-Source: ported from `SparseFockFormal.LightSectorConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem labelledG_quadraticForm_le (F : Frame n d) (ell : ℕ)
-    (x : EuclideanSpace ℝ (LabelledIndex d m n ell)) (hell : 1 ≤ ell) :
-    MatrixTail.quadraticForm (labelledG F ell) x ≤
-      ((d : ℝ) + (ell : ℝ) - 1) * ‖x‖ ^ 2 := by
-  have h := labelledG_coordinateQuadratic_le F ell (WithLp.ofLp x) hell
-  rw [← quadraticForm_toLp_eq_coordinateQuadratic] at h
-  have hxnorm : coordinateEnergy (WithLp.ofLp x) = ‖x‖ ^ 2 := by
-    rw [EuclideanSpace.norm_sq_eq]
-    simp [coordinateEnergy, Real.norm_eq_abs, pow_two]
-  rw [hxnorm] at h
-  simpa using h
-
-/-- The labelled shared-leg operator has a nonnegative Euclidean quadratic form.
-Source: ported sparse-Fock shared-leg/vacuum proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-theorem labelledG_quadraticForm_nonneg (F : Frame n d) (ell : ℕ)
-    (x : EuclideanSpace ℝ (LabelledIndex d m n ell)) :
-    0 ≤ MatrixTail.quadraticForm (labelledG F ell) x := by
-  have h := labelledG_coordinateQuadratic_nonneg F ell (WithLp.ofLp x)
-  rw [← quadraticForm_toLp_eq_coordinateQuadratic] at h
-  simpa using h
 
 /-- Final L2 operator-norm form of the concrete labelled shared-leg bound.
 
@@ -421,12 +357,13 @@ theorem labelledG_norm_le (F : Frame n d) (ell : ℕ) (hell : 1 ≤ ell) :
   have hd : (0 : ℝ) ≤ (d : ℝ) := Nat.cast_nonneg d
   have hc : 0 ≤ (d : ℝ) + (ell : ℝ) - 1 := by
     linarith
-  apply (MatrixTail.opNorm_le_iff_quadraticForm
+  apply (specNorm_le_iff_abs_dotProduct_mulVec_le
     (labelledG (m := m) F ell) (labelledG_isHermitian F ell)
     ((d : ℝ) + (ell : ℝ) - 1) hc).2
   intro x
-  rw [abs_of_nonneg (labelledG_quadraticForm_nonneg F ell x)]
-  exact labelledG_quadraticForm_le F ell x hell
+  have hupper := labelledG_coordinateQuadratic_le F ell x hell
+  rw [FiniteHilbert.normSq_eq_dotProduct] at hupper
+  exact (abs_of_nonneg (labelledG_coordinateQuadratic_nonneg F ell x)).trans_le hupper
 
 /-- Grade-envelope form: whenever a nonzero light count `ell` occurs inside
 total grade `nu`, the labelled shared-leg operator is bounded by `d + nu`.

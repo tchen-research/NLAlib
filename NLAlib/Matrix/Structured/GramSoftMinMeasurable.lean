@@ -22,41 +22,6 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 variable {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]
 
 omit [Fintype κ] [DecidableEq κ] in
-/-- Entries of a total inverse of an entrywise measurable real matrix map
-are measurable. Source: determinant/adjugate inverse formula; atlas
-`wishart-lambda-min-tail` (helper). -/
-theorem measurable_inv_entry_of {A : Ω → Matrix ι ι ℝ}
-    (hA : ∀ i j, Measurable fun x => A x i j) (i j : ι) :
-    Measurable fun x => (A x)⁻¹ i j := by
-  have harray : Measurable (fun x => fun i j => A x i j) :=
-    measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => hA i j
-  have hc : Continuous (fun M : ι → ι → ℝ => Matrix.of M) := continuous_id
-  have hdet : Measurable fun x => (A x).det := hc.matrix_det.measurable.comp harray
-  have hadj : Measurable fun x => (A x).adjugate i j :=
-    (hc.matrix_adjugate.matrix_elem i j).measurable.comp harray
-  simp only [Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul]
-  exact hdet.inv.mul hadj
-
-omit [Fintype κ] [DecidableEq κ] in
-/-- Every finite power of an entrywise measurable matrix map is entrywise
-measurable. Source: finite multiplication; atlas `wishart-lambda-min-tail` (helper). -/
-theorem measurable_pow_entry_of {A : Ω → Matrix ι ι ℝ}
-    (hA : ∀ i j, Measurable fun x => A x i j) (n : ℕ) (i j : ι) :
-    Measurable fun x => (A x ^ n) i j := by
-  induction n generalizing i j with
-  | zero => simpa only [pow_zero] using measurable_const
-  | succ n ih =>
-    simp only [pow_succ]
-    exact measurable_mul_entry_of (fun a b => ih a b) hA i j
-
-omit [DecidableEq ι] [Fintype κ] [DecidableEq κ] in
-/-- The trace of an entrywise measurable matrix map is measurable.
-Source: finite diagonal sum; atlas `wishart-lambda-min-tail` (helper). -/
-theorem measurable_trace_of_entries {A : Ω → Matrix ι ι ℝ}
-    (hA : ∀ i j, Measurable fun x => A x i j) : Measurable fun x => Matrix.trace (A x) := by
-  exact Finset.measurable_sum _ fun i _ => hA i i
-
-omit [Fintype κ] [DecidableEq κ] in
 /-- The resolvent minimum is measurable for an entrywise measurable matrix
 map. Source: inverse/trace-power formula; atlas `wishart-lambda-min-tail` (helper). -/
 theorem measurable_inversePowerSoftMin_of_entries {A : Ω → Matrix ι ι ℝ}

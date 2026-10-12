@@ -1,4 +1,5 @@
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
+import NLAlib.Probability.Gaussian.Basic.StandardGaussian
 import Mathlib.Probability.Moments.SubGaussian
 
 /-!
@@ -13,8 +14,8 @@ Laws of `Gᵀ`, `G U` and `G x` for a standard Gaussian matrix `G` (`NLAlib.gaus
 * `gaussianMatrix_map_mulVec_of_dotProduct_self_eq_one`: for a unit vector `x`, `G x` is a
   standard Gaussian vector;
 * `gaussianMatrix_map_mulVec`: for any `x`, `G x ∼ N(0, ‖x‖² I)`;
-* `hasSubgaussianMGF_id_gaussianReal`, `hasSubgaussianMGF_mulVec_apply_gaussianMatrix`: `N(0, v)`
-  is sub-Gaussian with proxy `v`, hence so is each coordinate of `G x` with proxy `‖x‖²`.
+* `hasSubgaussianMGF_mulVec_apply_gaussianMatrix`: each coordinate of `G x` is sub-Gaussian with
+  proxy `‖x‖²` (from `hasSubgaussianMGF_id_gaussianReal`, `NLAlib.Probability.Gaussian.Basic.StandardGaussian`).
 
 Atlas: `rotation-invariance` (corollaries), `gaussian-matrix-mulVec-law` (new, audit G1 C3 /
 G2 C10), `gaussian-matrix-def` (sub-Gaussian API, audit G1 C9).
@@ -161,22 +162,6 @@ theorem gaussianMatrix_map_mulVec {k n : ℕ} (x : Fin n → ℝ) :
     exact (measurePreserving_pi _ _ hmp).map_eq
 
 /-! ### Sub-Gaussian moment generating functions -/
-
-/-- **A centred Gaussian is sub-Gaussian with its variance as proxy**:
-`E[exp(t Y)] = exp(v t²/2)` for `Y ∼ N(0, v)`, so `HasSubgaussianMGF id v (gaussianReal 0 v)`
-(with equality in the mgf bound).
-
-Vershynin 2018, §2.5, Example 2.5.8(i) (there in `ψ₂`-norm form; here the exact mgf form);
-proof from Mathlib `mgf_id_gaussianReal`. Atlas: `gaussian-matrix-def` (sub-Gaussian API, audit G1 C9).
-Generalises `HansonWrightProof.hasSubgaussianMGF_id_gaussianReal_zero_one` (`v = 1`).
-atlas: gaussian-matrix-def -/
-theorem hasSubgaussianMGF_id_gaussianReal (v : NNReal) :
-    HasSubgaussianMGF id v (gaussianReal 0 v) where
-  integrable_exp_mul t := by
-    simpa only [id_eq] using integrable_exp_mul_gaussianReal (μ := 0) (v := v) t
-  mgf_le t := by
-    rw [mgf_id_gaussianReal]
-    simp only [zero_mul, zero_add, le_refl]
 
 /-- **Coordinates of `G x` are sub-Gaussian**: for a `k × n` standard Gaussian matrix `G`, each
 coordinate `(G x)ᵢ` has `HasSubgaussianMGF` with proxy `‖x‖² = x ⬝ᵥ x`.

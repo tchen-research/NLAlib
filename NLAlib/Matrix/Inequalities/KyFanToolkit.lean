@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.KyFanTrace
+import NLAlib.Matrix.Inequalities.KyFanNorms
 import NLAlib.Matrix.Inequalities.KyFanSums
 /-!
 # Complete ky fan maximum principle contract
@@ -16,7 +16,7 @@ universe u_1 u_2 u_3
 
 /-- All clauses of the ky-fan-maximum-principle result, with their original hypotheses,
 constants, finite indices and endpoint conventions.
-Components: `trace_compression_le_eigenvaluePrefix`, `exists_trace_compression_eq_eigenvaluePrefix`, `sum_bottom_eigenvalues_le_trace_compression`, `exists_trace_compression_eq_bottom_eigenvalues`, `trace_twoSided_compression_le_kyFanNorm_fintype`, `exists_trace_twoSided_compression_eq_kyFanNorm_fintype`, `majorized_eigenvalues₀_add`, `weaklyMajorized_toEuclideanLin_singularValues_add`.
+Components: `trace_compression_le_eigenvaluePrefix`, `exists_trace_compression_eq_eigenvaluePrefix`, `sum_bottom_eigenvalues_le_trace_compression`, `exists_trace_compression_eq_bottom_eigenvalues`, `trace_twoSided_compression_le_kyFanNorm`, `exists_trace_twoSided_compression_eq_kyFanNorm`, `majorized_eigenvalues₀_add`, `weaklyMajorized_toEuclideanLin_singularValues_add`.
 Source: fan49, Thm 1; hj13, Cor 4.3.39; hj91, Thm 3.4.1.
 atlas: ky-fan-maximum-principle -/
 theorem ky_fan_toolkit_properties :
@@ -70,8 +70,8 @@ theorem ky_fan_toolkit_properties :
     @NLAlib.exists_trace_compression_eq_eigenvaluePrefix,
     @NLAlib.sum_bottom_eigenvalues_le_trace_compression,
     @NLAlib.exists_trace_compression_eq_bottom_eigenvalues,
-    @NLAlib.trace_twoSided_compression_le_kyFanNorm_fintype,
-    @NLAlib.exists_trace_twoSided_compression_eq_kyFanNorm_fintype,
+    @NLAlib.trace_twoSided_compression_le_kyFanNorm,
+    @NLAlib.exists_trace_twoSided_compression_eq_kyFanNorm,
     @NLAlib.majorized_eigenvalues₀_add,
     @NLAlib.weaklyMajorized_toEuclideanLin_singularValues_add⟩
 

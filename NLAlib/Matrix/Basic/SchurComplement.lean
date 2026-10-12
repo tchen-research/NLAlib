@@ -1,8 +1,7 @@
-import NLAlib.Matrix.Basic.GeneralizedSchurComplement
 import NLAlib.Matrix.Basic.GramVanishing
 import NLAlib.Matrix.Factorizations.Triangular
 /-!
-# Schur complements: the elimination step and Albert's criterion
+# Schur complements: the elimination step
 
 * `pivotSchur A`: the Schur complement `C − c rᵀ / a` of the leading pivot `a` of a matrix on
   `Fin (n + 1)` written as `[[a, rᵀ], [c, C]]` (`borderedMatrix`). One step of Gaussian
@@ -13,15 +12,13 @@ import NLAlib.Matrix.Factorizations.Triangular
 * `borderedMatrix_eq_reindex_fromBlocks`: the bridge from the `Fin.cons` splitting to Mathlib's
   `Matrix.fromBlocks` over `Fin 1 ⊕ Fin n`, so that Mathlib's block lemmas
   (`Matrix.PosSemidef.fromBlocks₁₁`, `Matrix.det_fromBlocks₁₁`) apply.
-* `schurComplement A B C = C − Bᵀ A⁺ B` with the Moore–Penrose inverse (no invertibility), and
-  Albert's criterion `[[A, B], [Bᵀ, C]] ⪰ 0 ⟺ A ⪰ 0, (I − AA⁺)B = 0, C − BᵀA⁺B ⪰ 0`
-  (`posSemidef_fromBlocks_iff`) with the attained variational characterisation and
-  `C − M / A ⪰ 0` (`posSemidef_sub_schurComplement`, proved).
 
-Sources: Trefethen–Bau 1997, Lect. 20 and 23; Golub–Van Loan 2013, §3.2.10 and §4.2;
-Albert 1969, Thm 1; cf. Horn–Johnson 2013, §7.7 for related results.
-Atlas: `generalized-schur-complement-psd`; helpers for `lu-decomposition`,
-`cholesky-decomposition`.
+The generalized Schur complement `schurComplement A B C = C − Bᵀ A⁺ B` and Albert's criterion
+live in `Matrix/Basic/GeneralizedSchurComplement.lean`.
+
+Sources: Trefethen–Bau 1997, Lect. 20 and 23; Golub–Van Loan 2013, §3.2.10 and §4.2.
+Helpers for `lu-decomposition`, `cholesky-decomposition` and (special case)
+`generalized-schur-complement-psd`.
 -/
 
 noncomputable section
@@ -148,16 +145,6 @@ theorem dotProduct_pivotSchur_mulVec (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ
   refine Finset.sum_congr rfl fun j _ => ?_
   ring
 
-/-- For real matrices, symmetric is Hermitian. -/
-theorem isHermitian_of_isSymm {m : Type*} {A : Matrix m m ℝ} (hA : A.IsSymm) :
-    A.IsHermitian := by
-  rw [IsHermitian, conjTranspose_eq_transpose_of_trivial]; exact hA
-
-/-- For real matrices, Hermitian is symmetric. -/
-theorem isSymm_of_isHermitian {m : Type*} {A : Matrix m m ℝ} (hA : A.IsHermitian) :
-    A.IsSymm := by
-  rwa [IsHermitian, conjTranspose_eq_transpose_of_trivial] at hA
-
 /-- **Positive definiteness through the pivot**: a symmetric `A` on `Fin (n + 1)` is positive
 definite iff its pivot is positive and its pivot Schur complement is positive definite.
 Proof: complete the square, `xᵀAx = a (x₀ + cᵀy / a)² + yᵀ (pivotSchur A) y` for
@@ -168,7 +155,7 @@ theorem posDef_iff_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA :
     A.PosDef ↔ 0 < A 0 0 ∧ (pivotSchur A).PosDef := by
   have hsym : ∀ y : Fin n → ℝ, ∑ i, y i * A i.succ 0 = ∑ j, A 0 j.succ * y j := fun y =>
     Finset.sum_congr rfl fun i _ => by rw [hA.apply 0 i.succ, mul_comm]
-  have hSh := isHermitian_of_isSymm (isSymm_pivotSchur hA)
+  have hSh := Matrix.isHermitian_iff_isSymm.mpr (isSymm_pivotSchur hA)
   constructor
   · intro hPD
     refine ⟨hPD.diag_pos, posDef_iff_dotProduct_mulVec.2 ⟨hSh, fun y hy => ?_⟩⟩
@@ -184,7 +171,7 @@ theorem posDef_iff_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA :
       field_simp
     nlinarith [key]
   · rintro ⟨ha, hS⟩
-    refine posDef_iff_dotProduct_mulVec.2 ⟨isHermitian_of_isSymm hA, fun x hx => ?_⟩
+    refine posDef_iff_dotProduct_mulVec.2 ⟨Matrix.isHermitian_iff_isSymm.mpr hA, fun x hx => ?_⟩
     have hxe : x = vecCons (x 0) (Fin.tail x) := (Fin.cons_self_tail x).symm
     simp only [star_trivial]
     rw [hxe, dotProduct_mulVec_vecCons, hsym]
@@ -212,11 +199,11 @@ trailing block). Proof: `yᵀ (pivotSchur A) y = xᵀ A x` at `x = (−cᵀy / a
 Albert 1969, Thm 1 (atlas `generalized-schur-complement-psd`). -/
 theorem posSemidef_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ}
     (hA : A.PosSemidef) : (pivotSchur A).PosSemidef := by
-  have hAs := isSymm_of_isHermitian hA.isHermitian
+  have hAs := Matrix.isHermitian_iff_isSymm.mp hA.isHermitian
   have hsym : ∀ y : Fin n → ℝ, ∑ i, y i * A i.succ 0 = ∑ j, A 0 j.succ * y j := fun y =>
     Finset.sum_congr rfl fun i _ => by rw [hAs.apply 0 i.succ, mul_comm]
   refine posSemidef_iff_dotProduct_mulVec.2
-    ⟨isHermitian_of_isSymm (isSymm_pivotSchur hAs), fun y => ?_⟩
+    ⟨Matrix.isHermitian_iff_isSymm.mpr (isSymm_pivotSchur hAs), fun y => ?_⟩
   have hx := (posSemidef_iff_dotProduct_mulVec.1 hA).2
     (vecCons (-((A 0 0)⁻¹ * ∑ j, A 0 j.succ * y j)) y)
   simp only [star_trivial] at hx ⊢
@@ -230,86 +217,5 @@ theorem posSemidef_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ}
   nlinarith [key]
 
 end Pivot
-
-/-! ### The generalized Schur complement (Albert 1969) -/
-
-section Albert
-
-variable {p q : Type*} [Fintype p] [Fintype q] [DecidableEq p]
-
-/-- The **generalized Schur complement** `M / A = C − Bᵀ A⁺ B` of the block `A` in
-`M = [[A, B], [Bᵀ, C]]`, with the Moore–Penrose inverse `A⁺` (`moorePenroseInverse`), so no
-invertibility is needed. Albert 1969, §1; Horn–Johnson 2013, §7.7. For invertible `A` this is
-the classical Schur complement `C − Bᵀ A⁻¹ B` (`moorePenroseInverse` of an invertible matrix is
-its inverse). -/
-def schurComplement (A : Matrix p p ℝ) (B : Matrix p q ℝ) (C : Matrix q q ℝ) :
-    Matrix q q ℝ :=
-  C - Bᵀ * moorePenroseInverse A * B
-
-/-- Coverage: generalized-schur-complement-psd
-**Albert's criterion**: `[[A, B], [Bᵀ, C]] ⪰ 0` iff `A ⪰ 0`, `(I − AA⁺) B = 0` (range of `B`
-inside range of `A`) and `C − Bᵀ A⁺ B ⪰ 0`. No symmetry hypotheses are needed: each side
-forces `A` and `C` symmetric. Albert 1969, Thm 1; cf. Horn–Johnson 2013, Theorems 7.7.7 and 7.7.9 for related matrix-order results.
-Proof sketch: (⇒) `A ⪰ 0` and `C ⪰ 0` are principal submatrices; for `x ∈ ker A`,
-`(x, t y)ᵀ M (x, t y) ≥ 0` for all `t` forces `Bᵀ x = 0`, i.e. `range B ⊆ range A`, which is
-`(I − AA⁺)B = 0`; then with `y = −A⁺Bx` the quadratic form is `xᵀ(M/A)x ≥ 0`.
-(⇐) with `B = AA⁺B`, `M = Kᵀ diag(A, M/A) K` for the unit triangular `K = [[I, A⁺B], [0, I]]`.
-atlas: generalized-schur-complement-psd (partial) -/
-theorem posSemidef_fromBlocks_iff (A : Matrix p p ℝ) (B : Matrix p q ℝ) (C : Matrix q q ℝ) :
-    (fromBlocks A B Bᵀ C).PosSemidef ↔
-      A.PosSemidef ∧ (1 - A * moorePenroseInverse A) * B = 0 ∧
-        (schurComplement A B C).PosSemidef := by
-  classical
-  exact posSemidef_fromBlocks_iff_generalized_schur A B C
-
-/-- Coverage: generalized-schur-complement-psd
-**Variational characterisation, lower bound**: for `M = [[A, B], [Bᵀ, C]] ⪰ 0`,
-`xᵀ (M / A) x ≤ (y, x)ᵀ M (y, x)` for every `y`. Albert 1969, Thm 1; cf. Horn–Johnson 2013, §7.7 for related results.
-Proof sketch: expand the right side with `B = AA⁺B` (from `posSemidef_fromBlocks_iff`) as
-`(y + A⁺Bx)ᵀ A (y + A⁺Bx) + xᵀ (M/A) x` and use `A ⪰ 0`.
-atlas: generalized-schur-complement-psd (partial) -/
-theorem dotProduct_schurComplement_mulVec_le {A : Matrix p p ℝ} {B : Matrix p q ℝ}
-    {C : Matrix q q ℝ} (hM : (fromBlocks A B Bᵀ C).PosSemidef) (x : q → ℝ) (y : p → ℝ) :
-    x ⬝ᵥ (schurComplement A B C *ᵥ x) ≤
-      Sum.elim y x ⬝ᵥ (fromBlocks A B Bᵀ C *ᵥ Sum.elim y x) := by
-  classical
-  exact (isLeast_generalized_schur_quadratic A B C hM x).2 ⟨y, rfl⟩
-
-/-- Coverage: generalized-schur-complement-psd
-**Variational characterisation, attainment**: for `M = [[A, B], [Bᵀ, C]] ⪰ 0` the minimum over
-`y` of `(y, x)ᵀ M (y, x)` is attained at `y = −A⁺Bx` and equals `xᵀ (M / A) x`.
-Albert 1969, Thm 1; cf. Horn–Johnson 2013, §7.7 for related results.
-Proof sketch: the expansion in `dotProduct_schurComplement_mulVec_le` with `y + A⁺Bx = 0`.
-atlas: generalized-schur-complement-psd (partial) -/
-theorem dotProduct_schurComplement_mulVec_eq {A : Matrix p p ℝ} {B : Matrix p q ℝ}
-    {C : Matrix q q ℝ} (hM : (fromBlocks A B Bᵀ C).PosSemidef) (x : q → ℝ) :
-    x ⬝ᵥ (schurComplement A B C *ᵥ x) =
-      Sum.elim (-(moorePenroseInverse A * B) *ᵥ x) x ⬝ᵥ
-        (fromBlocks A B Bᵀ C *ᵥ Sum.elim (-(moorePenroseInverse A * B) *ᵥ x) x) := by
-  classical
-  simpa only [schurComplement, Matrix.mulVec_mulVec, Matrix.neg_mulVec] using
-    (dotProduct_generalized_schur_minimizer_eq A B C hM x).symm
-
-omit [DecidableEq p] in
-/-- **Schur complement below the trailing block**: for `A ⪰ 0`, `C − M / A = Bᵀ A⁺ B ⪰ 0`
-(the upper half of `0 ⪯ M / A ⪯ C`; the lower half is part of `posSemidef_fromBlocks_iff`).
-Proof: `A⁺` is symmetric and `A⁺ = A⁺ A A⁺`, so `Bᵀ A⁺ B = (A⁺B)ᵀ A (A⁺B)`.
-Albert 1969, Thm 1; cf. Horn–Johnson 2013, §7.7 for related results.
-atlas: generalized-schur-complement-psd (partial) -/
-theorem posSemidef_sub_schurComplement {A : Matrix p p ℝ} {B : Matrix p q ℝ}
-    {C : Matrix q q ℝ} (hA : A.PosSemidef) :
-    (C - schurComplement A B C).PosSemidef := by
-  have hAs : Aᵀ = A := isSymm_of_isHermitian hA.isHermitian
-  have hP : (moorePenroseInverse A)ᵀ = moorePenroseInverse A := by
-    rw [← moorePenroseInverse_transpose, hAs]
-  have h : C - schurComplement A B C =
-      (moorePenroseInverse A * B)ᴴ * A * (moorePenroseInverse A * B) := by
-    rw [conjTranspose_eq_transpose_of_trivial, transpose_mul, hP, schurComplement, sub_sub_cancel]
-    conv_lhs => rw [← moorePenroseInverse_mul_moorePenroseInverse A]
-    simp only [Matrix.mul_assoc]
-  rw [h]
-  exact hA.conjTranspose_mul_mul_same _
-
-end Albert
 
 end NLAlib

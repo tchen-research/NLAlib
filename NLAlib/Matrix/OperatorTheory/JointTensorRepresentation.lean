@@ -85,7 +85,7 @@ private theorem perspective_diag {n : ℕ} (U : unitary (Matrix (Fin n) (Fin n) 
       ((U : Matrix (Fin n) (Fin n) ℂ) * diagonal (fun i => (h i : ℂ)) * star (U : Matrix _ _ ℂ)) =
     (U : Matrix (Fin n) (Fin n) ℂ) *
       diagonal (fun i => ((a i * (Real.log (a i) - Real.log (h i)) : ℝ) : ℂ)) * star (U : Matrix _ _ ℂ) := by
-  simp only [matrixPerspective, matrixFunction, cfc_diag_conj, conj_diag_mul]
+  simp only [matrixPerspective, cfc_diag_conj, conj_diag_mul]
   congr 2
   apply congrArg diagonal
   funext i

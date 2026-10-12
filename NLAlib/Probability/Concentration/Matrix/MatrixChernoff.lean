@@ -1,6 +1,7 @@
 import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.ChernoffMgfCgf
 import NLAlib.Probability.Concentration.Martingales.Freedman
+import NLAlib.Matrix.Functions.TraceExpBounds
 
 /-!
 # Theorem 5.1.1 — Matrix Chernoff, both spectral sides
@@ -16,13 +17,6 @@ open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 set_option autoImplicit false
 
 namespace NLAlib
-
-private lemma traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
-    0 < traceExp H := by
-  have h := traceExp_smul_eq_sum H hH 1
-  rw [one_smul] at h
-  rw [h]
-  exact Finset.sum_pos (fun i _ => Real.exp_pos _) Finset.univ_nonempty
 
 private lemma mem_spec_bounds {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
     (hA : A.IsHermitian) {x : ℝ} (hx : x ∈ spectrum ℝ A) :
@@ -193,8 +187,9 @@ theorem NLAlib.matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
       traceExp (chernoffCgfCoefficient L θ • B) := by
     intro θ
     have hk := fun k => (chernoff_matrix_mgf_cgf_le μ (X k) L hL (hMeas k) (hHerm k) (hBound k) θ).2
-    have hsum : LoewnerLE (cumulantSum μ X θ) (chernoffCgfCoefficient L θ • B) := by
-      unfold LoewnerLE cumulantSum
+    have hsum : (cumulantSum μ X θ) ≤ (chernoffCgfCoefficient L θ • B) := by
+      unfold cumulantSum
+      rw [Matrix.le_iff]
       rw [hBdef, Finset.smul_sum, ← Finset.sum_sub_distrib]
       exact Matrix.posSemidef_sum _ (fun k _ => hk k)
     exact traceExp_le_traceExp _ _ (hcumH θ)
@@ -208,7 +203,7 @@ theorem NLAlib.matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
   have hlog : ∀ θ c : ℝ, traceExp (cumulantSum μ X θ) ≤ d * Real.exp c →
       Real.log (traceExp (cumulantSum μ X θ)) ≤ Real.log d + c := by
     intro θ c h
-    calc _ ≤ Real.log (d * Real.exp c) := Real.log_le_log (traceExp_pos _ (hcumH θ)) h
+    calc _ ≤ Real.log (d * Real.exp c) := Real.log_le_log (traceExp_pos_of_isHermitian _ (hcumH θ)) h
       _ = _ := by rw [Real.log_mul hd0.ne' (Real.exp_pos _).ne', Real.log_exp]
   have hP1 : ∀ s : Set Ω, (μ s).toReal ≤ d := fun s =>
     (measureReal_le_one (μ := μ)).trans hd

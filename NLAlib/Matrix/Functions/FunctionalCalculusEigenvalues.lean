@@ -64,7 +64,7 @@ theorem toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef
   have hSq := sq_singularValues_eq_eigenvalues₀ A i
   have h : (A.toEuclideanLin.singularValues (i : ℕ)) ^ 2 =
       (hA.isHermitian.eigenvalues₀ i) ^ 2 := hSq.trans
-        ((eigenvalues₀_eq_of_eq hCfc.symm _ _ i).trans hE)
+        ((congrFun (eigenvalues₀_eq_of_matrix_eq _ _ hCfc.symm) i).trans hE)
   exact (sq_eq_sq₀ (A.toEuclideanLin.singularValues_nonneg _) (hNonneg i)).mp h
 
 end NLAlib

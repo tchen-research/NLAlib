@@ -53,12 +53,12 @@ theorem measure_srht_gram_failure_le_of_flat_rows
     have ht := trace_srhtPopulationAtom V j
     exact (lambdaMax_le_trace_of_posSemidef (hPSD j)).trans (by rw [ht]; exact hflat j)
   have hmean := mean_srhtPopulationAtom V (hasOrthonormalCols_srhtSignedFrame H hH U hU ξ)
-  have hc := measure_spectralNorm_uniform_subset_sub_one_le hk0
+  have hc := measure_norm_uniform_subset_sub_one_le hk0
     (show k ≤ Fintype.card (Fin n) by simpa using hk) A L hL
     (fun j => (hPSD j).isHermitian) hbound hmean hε hε1
   have hsub : {T : ExactRowSubset (Fin n) k | ε <
       specNorm ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1)} ⊆
-      {T | ε ≤ spectralNorm ((1 / (k : ℝ)) • ∑ j ∈ T.val, A j - 1)} := by
+      {T | ε ≤ ‖(1 / (k : ℝ)) • ∑ j ∈ T.val, A j - 1‖} := by
     intro T hT
     have hm : (((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1).map Complex.ofReal) =
         (1 / (k : ℝ)) • ∑ j ∈ T.val, A j - 1 := by

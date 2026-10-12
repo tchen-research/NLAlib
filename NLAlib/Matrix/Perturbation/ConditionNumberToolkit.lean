@@ -37,7 +37,7 @@ theorem condition_number_characterizations (A : Matrix m n ℝ) :
       IsLeast ((fun E : Matrix n n ℝ => specNorm E / specNorm B) ''
         {E | ¬ IsUnit (B + E)}) (1 / conditionNumber B)) := by
   refine ⟨conditionNumber_zero, fun hA => one_le_conditionNumber hA,
-    fun hr => conditionNumber_eq_toEuclideanLin_singularValues_ratio A hr,
+    fun hr => conditionNumber_eq_singularValues_ratio A hr,
     fun c hc => conditionNumber_smul (c := c) hc A, conditionNumber_transpose A,
     conditionNumber_transpose_mul_self A,
     fun Q hQ => conditionNumber_mul_left_of_hasOrthonormalCols Q A hQ, ?_, ?_⟩

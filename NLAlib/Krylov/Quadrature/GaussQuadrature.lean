@@ -15,23 +15,23 @@ measure `μ_b` (`NLAlib.spectralMeasure`): when `Q` is the Lanczos basis, `B` is
 
 * `NLAlib.dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul`: exactness for `deg p < 2q` (any
   `q`); `NLAlib.dotProduct_aeval_mulVec_eq_of_krylovSpace_le` is the `natDegree ≤ 2q − 1` form.
-* `NLAlib.mul_dotProduct_le_dotProduct_mulVec_of_eigenvalues`,
-  `NLAlib.dotProduct_mulVec_le_mul_dotProduct_of_eigenvalues` (Rayleigh bounds) and
-  `NLAlib.eigenvalues_transpose_mul_mul_mem_Icc`: the eigenvalues of `Qᵀ A Q` stay in any
+* `NLAlib.transpose_mulVec_pow_mulVec_eq`, `NLAlib.transpose_mulVec_aeval_mulVec_eq`:
+  compression commutes with polynomials of degree `≤ q`, `Qᵀ p(A) b = p(QᵀAQ) Qᵀ b`.
+* `NLAlib.eigenvalues_transpose_mul_mul_mem_Icc`: the eigenvalues of `Qᵀ A Q` stay in any
   interval containing those of `A`.
 * `NLAlib.abs_dotProduct_cfc_mulVec_sub_le_of_degree_lt_two_mul`: the quadrature error
   `|bᵀ f(A) b − cᵀ f(B) c| ≤ 2 E ‖b‖²` when `|f − p| ≤ E` on an interval containing the spectrum
   of `A`, for some `p` of degree `< 2q` (`…_of_krylovSpace_le`: the `natDegree ≤ 2q − 1` form).
 
 Source: Golub–Meurant (2010) [`gm10`], Ch. 6–7 (Thm 6.6 exactness of Gauss quadrature);
-Chen–Trogdon–Ubaru (2021) [`ctu21`], Thm 2.1. Atlas: `lanczos-gauss-quadrature`.
+Chen–Trogdon–Ubaru (2021) [`ctu21`], Thm 2.1; Saad (1992) [`saad92`], Lemma 3.1 (compression).
+Atlas: `lanczos-gauss-quadrature`, `krylov-polynomial-exactness` (partial).
 Deviation from the printed statements: any orthonormal `Q` with `K_q(A,b) ⊆ range Q` is
 allowed, so neither tridiagonality nor the Lanczos recurrence is used.
 
 The projection helpers `mulVec_transpose_mulVec_of_mem_range` and `isSymm_transpose_mul_mul`
-live in `NLAlib.Matrix.Subspaces.Projections`. The Rayleigh bounds below need the eigen-expansion of
-`NLAlib.Matrix.Functions.PolynomialCalculus` and belong there (moving them into `Projections` would make
-that widely imported file depend on the spectral calculus).
+live in `NLAlib.Matrix.Subspaces.Projections`; the Rayleigh bounds and the eigen-expansion of
+`cfc` used below live in `NLAlib.Matrix.Functions.CFCQuadratic`.
 -/
 
 noncomputable section
@@ -68,6 +68,45 @@ theorem mulVec_pow_transpose_mul_mul_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix 
         show A *ᵥ (A ^ j *ᵥ b) = A ^ (j + 1) *ᵥ b by rw [Matrix.mulVec_mulVec, ← pow_succ']]
     rw [hstep]
     exact mulVec_transpose_mulVec_of_mem_range hQ (hK (pow_mulVec_mem_krylovSpace A b hj))
+
+/-- Compressed powers act like powers on `Qᵀ b` up to degree `q`: if `K_q(A,b) ⊆ range Q` and
+`j ≤ q` then `Qᵀ Aʲ b = (QᵀAQ)ʲ Qᵀ b`. Source: Saad (1992) [`saad92`], Lemma 3.1.
+Atlas: `krylov-polynomial-exactness` (helper). -/
+theorem transpose_mulVec_pow_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix n k ℝ}
+    (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
+    (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {j : ℕ} (hj : j ≤ q) :
+    Qᵀ *ᵥ (A ^ j *ᵥ b) = (Qᵀ * A * Q) ^ j *ᵥ (Qᵀ *ᵥ b) := by
+  induction j with
+  | zero => simp
+  | succ j ih =>
+    have hmem := hK (pow_mulVec_mem_krylovSpace A b (show j < q by omega))
+    calc Qᵀ *ᵥ (A ^ (j + 1) *ᵥ b) = Qᵀ *ᵥ (A *ᵥ (A ^ j *ᵥ b)) := by
+          rw [pow_succ', ← Matrix.mulVec_mulVec]
+      _ = Qᵀ *ᵥ (A *ᵥ (Q *ᵥ (Qᵀ *ᵥ (A ^ j *ᵥ b)))) := by
+          rw [mulVec_transpose_mulVec_of_mem_range hQ hmem]
+      _ = (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ (A ^ j *ᵥ b)) := by
+          simp only [Matrix.mulVec_mulVec, Matrix.mul_assoc]
+      _ = (Qᵀ * A * Q) *ᵥ ((Qᵀ * A * Q) ^ j *ᵥ (Qᵀ *ᵥ b)) := by rw [ih (by omega)]
+      _ = (Qᵀ * A * Q) ^ (j + 1) *ᵥ (Qᵀ *ᵥ b) := by rw [Matrix.mulVec_mulVec, ← pow_succ']
+
+open Polynomial in
+/-- **Compression commutes with polynomials of degree `≤ q`.** If `Q` has orthonormal columns
+and `K_q(A,b) ⊆ range Q`, then `Qᵀ p(A) b = p(QᵀAQ) Qᵀ b` for every `p` with `deg p ≤ q`, for
+any square `A`. Source: Saad (1992) [`saad92`], Lemma 3.1.
+atlas: krylov-polynomial-exactness (partial) -/
+theorem transpose_mulVec_aeval_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix n k ℝ}
+    (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
+    (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {p : ℝ[X]} (hp : p.degree ≤ q) :
+    Qᵀ *ᵥ (aeval A p *ᵥ b) = aeval (Qᵀ * A * Q) p *ᵥ (Qᵀ *ᵥ b) := by
+  rcases eq_or_ne p 0 with rfl | hp0
+  · simp
+  have hnat : p.natDegree ≤ q := (natDegree_le_iff_degree_le).2 hp
+  rw [aeval_eq_sum_range, aeval_eq_sum_range, Matrix.sum_mulVec, Matrix.sum_mulVec,
+    Matrix.mulVec_sum]
+  refine Finset.sum_congr rfl fun j hj => ?_
+  rw [Matrix.smul_mulVec, Matrix.smul_mulVec, Matrix.mulVec_smul,
+    transpose_mulVec_pow_mulVec_eq hQ b hK
+      ((Nat.lt_succ_iff.1 (Finset.mem_range.1 hj)).trans hnat)]
 
 /-- Exactness on monomials `X^m`, `m < 2q`. -/
 private lemma dotProduct_pow_mulVec_eq {A : Matrix n n ℝ} (hA : A.IsSymm) {Q : Matrix n k ℝ}
@@ -150,46 +189,6 @@ theorem dotProduct_aeval_mulVec_eq_of_krylovSpace_le {A : Matrix n n ℝ} (hA : 
 
 /-! ### Rayleigh bounds and the quadrature error -/
 
-/-- Rayleigh bounds from an eigenvalue enclosure: if every eigenvalue of the symmetric `A` lies
-in `[a, c]`, then `a ‖x‖² ≤ xᵀ A x ≤ c ‖x‖²`. Lower half.
-Source: Horn–Johnson (2013), Thm 4.2.2 (Rayleigh–Ritz). Atlas: `lanczos-gauss-quadrature`
-(helper; belongs in `NLAlib.Matrix.Functions.PolynomialCalculus`). -/
-theorem mul_dotProduct_le_dotProduct_mulVec_of_eigenvalues {A : Matrix n n ℝ}
-    (hA : A.IsHermitian) {a : ℝ} (ha : ∀ i, a ≤ hA.eigenvalues i) (x : n → ℝ) :
-    a * (x ⬝ᵥ x) ≤ x ⬝ᵥ (A *ᵥ x) := by
-  have h := dotProduct_cfc_mulVec_eq_sum hA id x
-  rw [cfc_id ℝ A] at h
-  rw [h, ← sum_sq_eigenvectorBasis_dotProduct hA x, Finset.mul_sum]
-  exact Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_right (ha i) (sq_nonneg _)
-
-/-- Upper Rayleigh bound from an eigenvalue enclosure: `xᵀ A x ≤ c ‖x‖²` if every eigenvalue is
-at most `c`. Source: Horn–Johnson (2013), Thm 4.2.2. Atlas: `lanczos-gauss-quadrature`
-(helper). -/
-theorem dotProduct_mulVec_le_mul_dotProduct_of_eigenvalues {A : Matrix n n ℝ}
-    (hA : A.IsHermitian) {c : ℝ} (hc : ∀ i, hA.eigenvalues i ≤ c) (x : n → ℝ) :
-    x ⬝ᵥ (A *ᵥ x) ≤ c * (x ⬝ᵥ x) := by
-  have h := dotProduct_cfc_mulVec_eq_sum hA id x
-  rw [cfc_id ℝ A] at h
-  rw [h, ← sum_sq_eigenvectorBasis_dotProduct hA x, Finset.mul_sum]
-  exact Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_right (hc i) (sq_nonneg _)
-
-/-- An eigenvalue is the Rayleigh quotient of its unit eigenvector: `λᵢ = uᵢᵀ A uᵢ`.
-Atlas: `lanczos-gauss-quadrature` (helper). -/
-theorem eigenvalues_eq_dotProduct_mulVec {A : Matrix n n ℝ} (hA : A.IsHermitian) (i : n) :
-    hA.eigenvalues i =
-      (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ (A *ᵥ (hA.eigenvectorBasis i : n → ℝ)) := by
-  simpa [dotProduct_comm] using hA.eigenvalues_eq i
-
-/-- The eigenvector basis consists of unit vectors: `uᵢ ⬝ uᵢ = 1`. Atlas:
-`lanczos-gauss-quadrature` (helper). -/
-theorem eigenvectorBasis_dotProduct_self {A : Matrix n n ℝ} (hA : A.IsHermitian) (i : n) :
-    (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ (hA.eigenvectorBasis i : n → ℝ) = 1 := by
-  have h := hA.eigenvectorBasis.orthonormal.1 i
-  have h2 : inner ℝ (hA.eigenvectorBasis i) (hA.eigenvectorBasis i) = (1 : ℝ) := by
-    rw [real_inner_self_eq_norm_sq, h, one_pow]
-  rw [EuclideanSpace.inner_eq_star_dotProduct] at h2
-  simpa using h2
-
 /-- The eigenvalues of the projected matrix `Qᵀ A Q` (`Q` with orthonormal columns) lie in any
 interval `[a, c]` containing the eigenvalues of `A` (Ritz values interlace inside the spectral
 interval). Source: Golub–Meurant (2010) [`gm10`], Ch. 4; Parlett (1998), Thm 10.1.1 (weak form).
@@ -199,7 +198,7 @@ theorem eigenvalues_transpose_mul_mul_mem_Icc {A : Matrix n n ℝ} (hA : A.IsHer
     (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c) (j : k) :
     hB.eigenvalues j ∈ Set.Icc a c := by
   set w : k → ℝ := (hB.eigenvectorBasis j).ofLp
-  have hw : w ⬝ᵥ w = 1 := eigenvectorBasis_dotProduct_self hB j
+  have hw : w ⬝ᵥ w = 1 := by simpa using eigenvectorBasis_dotProduct_eigenvectorBasis hB j j
   have hQw : (Q *ᵥ w) ⬝ᵥ (Q *ᵥ w) = 1 := by
     rw [mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ, hw]
   have hval : hB.eigenvalues j = (Q *ᵥ w) ⬝ᵥ (A *ᵥ (Q *ᵥ w)) := by
@@ -211,18 +210,6 @@ theorem eigenvalues_transpose_mul_mul_mem_Icc {A : Matrix n n ℝ} (hA : A.IsHer
     (Q *ᵥ w)
   rw [hQw, mul_one] at h1 h2
   exact ⟨hval ▸ h1, hval ▸ h2⟩
-
-/-- A function bounded by `E` on the eigenvalues gives a quadratic form bounded by `E ‖v‖²`:
-`|vᵀ g(A) v| ≤ E (v ⬝ v)`. Atlas: `lanczos-gauss-quadrature` (helper; the `cfc` form of
-`polynomial-spectral-bound`). -/
-theorem abs_dotProduct_cfc_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {g : ℝ → ℝ}
-    {E : ℝ} (hg : ∀ i, |g (hA.eigenvalues i)| ≤ E) (v : n → ℝ) :
-    |v ⬝ᵥ (cfc g A *ᵥ v)| ≤ E * (v ⬝ᵥ v) := by
-  rw [dotProduct_cfc_mulVec_eq_sum hA g v, ← sum_sq_eigenvectorBasis_dotProduct hA v,
-    Finset.mul_sum]
-  refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun i _ => ?_)
-  rw [abs_mul, abs_sq]
-  exact mul_le_mul_of_nonneg_right (hg i) (sq_nonneg _)
 
 /-- `vᵀ f(A) v − vᵀ p(A) v = ∑ᵢ (f(λᵢ) − p(λᵢ)) (uᵢ ⬝ v)²`, bounded by `E ‖v‖²`. -/
 private lemma abs_dotProduct_cfc_sub_aeval_le {A : Matrix n n ℝ} (hA : A.IsHermitian)

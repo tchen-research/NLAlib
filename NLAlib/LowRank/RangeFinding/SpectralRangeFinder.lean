@@ -3,6 +3,8 @@ import NLAlib.Matrix.Spectral.EckartYoung
 import NLAlib.RandomMatrix.Gaussian.Spectral.SketchRank
 import NLAlib.RandomMatrix.Gaussian.Spectral.Chevet
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.SpectralTail
+import NLAlib.Matrix.Structured.SpectralMeasurable
+import NLAlib.ForMathlib.MeasureTheory.IntegralSqrt
 /-!
 # The deterministic range-finder bound (spectral form)
 
@@ -27,7 +29,9 @@ perturbation-theoretic route (`Σ₁⁻¹`, Weyl) of HMT's printed proof.
 
 ## Expected spectral error with a Gaussian test matrix (HMT 2011, Thm 10.6)
 
-For an `n × (k + p)` standard Gaussian `Ω`, `k, p ≥ 2`, and the same block decomposition,
+For an `n × (k + p)` standard Gaussian `Ω`, `k ≥ 1`, `p ≥ 2` (HMT: `k, p ≥ 2`; the one-row
+endpoint `k = 1` comes from the `r = 1` case of the inverse moment), and the same block
+decomposition,
 `E‖(I − QQᵀ)A‖ ≤ (1 + √(k/(p−1)))‖Σ₂‖ + (e√(k+p)/p)‖Σ₂‖_F`
 (`integral_specNorm_residual_le_of_gaussian`). Proof: the unsquared deterministic bound, then
 conditioning on `Ω₁ = V₁ᵀΩ` (independent of `Ω₂ = V₂ᵀΩ`), Chevet's inequality
@@ -49,24 +53,6 @@ namespace NLAlib
 variable {m n r r' t q : Type*} [Fintype m] [Fintype n] [Fintype r] [Fintype r'] [Fintype t]
   [Fintype q] [DecidableEq m] [DecidableEq n] [DecidableEq r] [DecidableEq r']
   [DecidableEq q] {k : ℕ}
-
-omit [Fintype m] [DecidableEq m] [DecidableEq n] [DecidableEq r] [DecidableEq r'] in
-/-- The competitor identity of the range-finder proof: `A − AΩΩ₁†V₁ᵀ = U₂(Σ₂V₂ᵀ − Σ₂Ω₂Ω₁†V₁ᵀ)`
-when `A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ`, `Ω₁ = V₁ᵀΩ` has full row rank and `Ω₂ = V₂ᵀΩ`. HMT 2011, proof of
-Thm 9.1 (§9.2). Atlas `hmt-9-1-spectral`, `hmt-9-1-frobenius`. -/
-theorem sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}
-    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}
-    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}
-    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ)
-    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}
-    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :
-    A - A * Ω * pinvR Ω₁ * V₁ᵀ = U₂ * (S₂ * V₂ᵀ - S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ) := by
-  have hZ : A * Ω * pinvR Ω₁ * V₁ᵀ = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ := by
-    rw [mul_eq_mul_add_mul_of_eq_add hA Ω, ← hΩ₁, ← hΩ₂, Matrix.add_mul, Matrix.add_mul,
-      Matrix.mul_assoc (U₁ * S₁) Ω₁, mul_pinvR hunit, Matrix.mul_one]
-  rw [hZ, hA, Matrix.mul_sub]
-  simp only [Matrix.mul_assoc]
-  abel
 
 /-- **Deterministic range-finder bound, spectral form** (HMT 2011, Thm 9.1, spectral case): if
 `A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ`, `Ω₁ = V₁ᵀΩ` has full row rank, `Ω₂ = V₂ᵀΩ`, `QᵀQ = I` and
@@ -139,16 +125,6 @@ section Expected
 
 open MeasureTheory ProbabilityTheory
 
-open scoped Matrix.Norms.L2Operator in
-/-- `z ↦ ‖f z‖₂` is measurable when every entry of `f` is. Proof-local. -/
-private theorem measurable_specNorm_of_entries' {γ a b : Type*} [MeasurableSpace γ] [Fintype a]
-    [Fintype b] [DecidableEq a] [DecidableEq b] {f : γ → Matrix a b ℝ}
-    (hf : ∀ i j, Measurable fun z => f z i j) : Measurable fun z => specNorm (f z) := by
-  have h1 : Measurable fun z => Matrix.of.symm (f z) :=
-    measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => hf i j
-  have h2 : Continuous (fun M : a → b → ℝ => ‖Matrix.of M‖) := continuous_norm.comp continuous_id
-  exact h2.measurable.comp h1
-
 /-- `E‖G†‖_F ≤ √(k/(p−1))` (with integrability) for a `k × (k+p)` standard Gaussian `G`,
 `p ≥ 2`: Jensen and `E‖G†‖_F² = k/(p−1)`. HMT 2011, Prop 10.2 and proof of Thm 10.6.
 Atlas `rsvd-spectral-expected` (uses `pinv-frob-moment`). -/
@@ -170,7 +146,7 @@ theorem integrable_and_integral_frobNorm_pinvR_gaussianMatrix_le {k p : ℕ} (hp
       (gaussianMatrix k (k + p)) :=
     ((memLp_two_iff_integrable_sq hm.aestronglyMeasurable).2 hsqi').integrable one_le_two
   refine ⟨hint, ?_⟩
-  have hJ := Assembly.integral_le_sqrt_integral_sq (fun G => frobNorm_nonneg _) hint hsqi'
+  have hJ := integral_le_sqrt_integral_sq hint hsqi'
   rw [hsq, hsqv] at hJ
   refine hJ.trans (le_of_eq ?_)
   congr 1
@@ -178,9 +154,10 @@ theorem integrable_and_integral_frobNorm_pinvR_gaussianMatrix_le {k p : ℕ} (hp
   ring_nf
 
 /-- **Conditioned Chevet bound.** For an `n × (k+p)` standard Gaussian `Ω`, `V₁`, `V₂` with
-orthonormal, mutually orthogonal columns, `k, p ≥ 2`, and any `Σ₂`, the variable
+orthonormal, mutually orthogonal columns, `k ≥ 1`, `p ≥ 2`, and any `Σ₂`, the variable
 `‖Σ₂Ω₂Ω₁†‖` (`Ω₁ = V₁ᵀΩ`, `Ω₂ = V₂ᵀΩ`) is integrable and
-`E‖Σ₂Ω₂Ω₁†‖ ≤ ‖Σ₂‖√(k/(p−1)) + ‖Σ₂‖_F e√(k+p)/p`. HMT 2011, proof of Thm 10.6 (§10.3).
+`E‖Σ₂Ω₂Ω₁†‖ ≤ ‖Σ₂‖√(k/(p−1)) + ‖Σ₂‖_F e√(k+p)/p`. HMT 2011, proof of Thm 10.6 (§10.3), there
+for `k ≥ 2`; the one-row endpoint is manuscript `sa:expected-power`.
 Atlas `rsvd-spectral-expected` (uses `chevet`, `pinv-spectral-expectation`,
 `pinv-frob-moment`, `gaussian-conditioning`). -/
 theorem integrable_and_integral_specNorm_mul_block_mul_pinvR_block_le
@@ -189,7 +166,7 @@ theorem integrable_and_integral_specNorm_mul_block_mul_pinvR_block_le
     (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n (k + p))
     {V₁ : Matrix (Fin n) (Fin k) ℝ} {V₂ : Matrix (Fin n) (Fin r') ℝ}
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
-    (S₂ : Matrix (Fin r) (Fin r') ℝ) (hk : 2 ≤ k) (hp : 2 ≤ p) :
+    (S₂ : Matrix (Fin r) (Fin r') ℝ) (hk : 1 ≤ k) (hp : 2 ≤ p) :
     Integrable (fun ω => specNorm (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω))) μ ∧
     ∫ ω, specNorm (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) ∂μ ≤
       specNorm S₂ * Real.sqrt (k / ((p : ℝ) - 1)) +
@@ -209,7 +186,7 @@ theorem integrable_and_integral_specNorm_mul_block_mul_pinvR_block_le
       fun ω => g (X ω) (Y ω) := rfl
   have hgm : Measurable fun q : (Fin k → Fin (k + p) → ℝ) × (Fin r' → Fin (k + p) → ℝ) =>
       g q.1 q.2 := by
-    refine measurable_specNorm_of_entries' fun i j => ?_
+    refine measurable_specNorm_of_entries fun i j => ?_
     simp only [Matrix.mul_apply, Matrix.of_apply]
     refine Finset.measurable_sum _ fun l _ => Measurable.mul ?_
       ((measurable_pinvR_entry l j).comp measurable_fst)
@@ -265,11 +242,12 @@ theorem integrable_and_integral_specNorm_mul_block_mul_pinvR_block_le
 /-- **Expected spectral error of the randomized range finder** (HMT 2011, Thm 10.6): for a
 block decomposition `A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ` (hypotheses of
 `specNorm_residual_sq_le_of_range_subset`), an `n × (k+p)` standard Gaussian test matrix `Ω`
-with `k, p ≥ 2`, and any `Q ω` with a.s. orthonormal columns and `range(AΩ) ⊆ range(Q)`,
+with `k ≥ 1`, `p ≥ 2`, and any `Q ω` with a.s. orthonormal columns and `range(AΩ) ⊆ range(Q)`,
 `E‖(I − QQᵀ)A‖ ≤ (1 + √(k/(p−1)))‖Σ₂‖ + (e√(k+p)/p)‖Σ₂‖_F`.
 
 With the SVD blocks, `‖Σ₂‖ = σ_{k+1}` and `‖Σ₂‖_F = (Σ_{j>k} σ_j²)^{1/2}`, which is HMT's
-printed form. Deviations: the general block form (same hypotheses as `rsvd_main_gaussian`); no
+printed form. Deviations: `k ≥ 1` instead of HMT's `k ≥ 2` (one-row endpoint, manuscript
+`sa:expected-power`); the general block form (same hypotheses as `rsvd_main_gaussian`); no
 measurability of `Q` is required (the left side is `0` if not integrable, and the bound is
 nonnegative); `n`, `k`, `p`, `r`, `r'` are `Fin` sizes (Gaussian law convention).
 Atlas `rsvd-spectral-expected` (new; uses `hmt-9-1-spectral`, `chevet`,
@@ -284,7 +262,7 @@ theorem integral_specNorm_residual_le_of_gaussian
     {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix (Fin r) (Fin r') ℝ}
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
-    (hk : 2 ≤ k) (hp : 2 ≤ p) (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
+    (hk : 1 ≤ k) (hp : 2 ≤ p) (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
     (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n (k + p))
     (Q : Ωs → Matrix m' q' ℝ) (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω) :
@@ -400,18 +378,19 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
   exact ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.transpose_mul_left, hV₁, hV₂, hcross, hspec, hfrob⟩
 
 /-- **Expected spectral error of the randomized range finder, singular-value form**
-(HMT 2011, Thm 10.6): for `A ∈ ℝ^{m×n}`, `k, p ≥ 2`, `k ≤ n`, an `n × (k+p)` standard Gaussian
+(HMT 2011, Thm 10.6): for `A ∈ ℝ^{m×n}`, `k ≥ 1`, `p ≥ 2`, `k ≤ n`, an `n × (k+p)` standard Gaussian
 `Ω` and any `Q ω` with a.s. orthonormal columns and `range(AΩ) ⊆ range(Q)`,
 `E‖(I − QQᵀ)A‖ ≤ (1 + √(k/(p−1)))σ_{k+1} + (e√(k+p)/p)(Σ_{j>k} σ_j²)^{1/2}`
 (zero-indexed: `singularValues A k`, `singularValueTailSq A k`).
-Deviations: `Q` is any a.s. orthonormal frame containing `range(AΩ)` (HMT: `Q = orth(AΩ)`),
+Deviations: `k ≥ 1` (HMT: `k ≥ 2`; manuscript `sa:expected-power`, one-row endpoint); `Q` is
+any a.s. orthonormal frame containing `range(AΩ)` (HMT: `Q = orth(AΩ)`),
 no measurability of `Q` required; `k ≤ n` is assumed (for `k > n` the error is `0` a.s.).
 Atlas `rsvd-spectral-expected`.
 atlas: rsvd-spectral-expected -/
 theorem integral_specNorm_residual_le_singularValues_of_gaussian
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {q' : Type*} [Fintype q'] [DecidableEq q'] {m n k p : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
-    (hk : 2 ≤ k) (hp : 2 ≤ p) (hkn : k ≤ n) (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
+    (hk : 1 ≤ k) (hp : 2 ≤ p) (hkn : k ≤ n) (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
     (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n (k + p))
     (Q : Ωs → Matrix (Fin m) q' ℝ) (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω) :
@@ -426,11 +405,12 @@ theorem integral_specNorm_residual_le_singularValues_of_gaussian
 /-- **Expected spectral error of the Gaussian range finder** (HMT 2011, Thm 10.6) for the
 constructed measurable range frame `gaussianRangeFrame A (k + p)` of `AΩ`: no frame
 hypothesis remains. `E‖(I − QQᵀ)A‖ ≤ (1 + √(k/(p−1)))σ_{k+1} + (e√(k+p)/p)(Σ_{j>k} σ_j²)^{1/2}`
-for `k, p ≥ 2`, `k ≤ n`. Atlas `rsvd-spectral-expected` (audit G2 B2 statement).
+for `k ≥ 1`, `p ≥ 2`, `k ≤ n` (HMT: `k ≥ 2`). Atlas `rsvd-spectral-expected` (audit G2 B2
+statement).
 atlas: rsvd-spectral-expected -/
 theorem integral_specNorm_residual_gaussianRangeFrame_le
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
-    {m n k p : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hk : 2 ≤ k) (hp : 2 ≤ p) (hkn : k ≤ n)
+    {m n k p : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hk : 1 ≤ k) (hp : 2 ≤ p) (hkn : k ≤ n)
     (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
     (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n (k + p)) :
     ∫ ω, specNorm (residual (gaussianRangeFrame A (k + p) (Matrix.of.symm (Ω ω))) A) ∂μ ≤

@@ -51,8 +51,9 @@ theorem exists_full_qr_of_embedding {m n : Type*} [Fintype m] [Fintype n]
     ∃ W : Matrix m m ℝ, ∃ R : Matrix n n ℝ, ∃ T : Matrix m n ℝ,
       HasOrthonormalCols W ∧ R.IsUpperTriangular ∧ (∀ i, 0 ≤ R i i) ∧
         W * T = A ∧ T.submatrix e id = R ∧ (∀ i ∉ Set.range e, ∀ j, T i j = 0) := by
-  obtain ⟨Q, R, hQ, hUpper, hDiag, hFactor⟩ :=
-    exists_qr A (Fintype.card_le_of_injective e e.injective)
+  obtain ⟨Q, R, ⟨hFactor, hQ, hUpper⟩, hDiag⟩ :=
+    exists_isQR A (Fintype.card_le_of_injective e e.injective)
+  replace hFactor := hFactor.symm
   obtain ⟨W, T, hW, _, hFullFactor, hCorner, hZero⟩ := exists_full_qr_completion hQ hFactor e
   exact ⟨W, R, T, hW, hUpper, hDiag, hFullFactor, hCorner, hZero⟩
 

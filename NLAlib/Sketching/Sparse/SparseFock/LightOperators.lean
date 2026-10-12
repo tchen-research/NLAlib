@@ -161,20 +161,6 @@ Source: ported sparse-Fock shared-leg/vacuum proof, commit
   classical
   simp [blockProjection, Matrix.diagonal_mul_diagonal]
 
-/-- Coordinate energy on the actual external-pattern Euclidean space.
-
-Source: ported from `SparseFockFormal.LightSectorConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def energy (x : Fin d × Pattern m n → ℝ) : ℝ :=
-  ∑ a, x a ^ 2
-
-/-- Quadratic form of a literal full matrix.
-
-Source: ported from `SparseFockFormal.LightSectorConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def quadratic (A : FullOp d m n) (x : Fin d × Pattern m n → ℝ) : ℝ :=
-  ∑ a, x a * A.mulVec x a
-
 /-- The column-space Gram matrix `U Uᵀ` on the `n` column coordinates.
 
 Source: ported from `SparseFockFormal.LightSectorConcrete`,
@@ -267,7 +253,7 @@ theorem sum_frame_coordinate_sq_eq_dim (F : Frame n d) :
     (∑ a, ∑ i, F.u i a * F.u i a) = (d : ℝ) := by
   have hdiag (a : Fin d) : ∑ i, F.u i a * F.u i a = 1 := by
     have h := congrFun (congrFun F.parseval a) a
-    simpa [Matrix.sum_apply, ParsevalFrame.outer] using h
+    simpa [Matrix.sum_apply, Matrix.vecMulVec_apply] using h
   simp_rw [hdiag]
   simp
 

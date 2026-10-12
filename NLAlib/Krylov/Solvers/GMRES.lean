@@ -1,6 +1,6 @@
 import NLAlib.Krylov.Spaces.Grade
 import NLAlib.Krylov.Solvers.Minimiser
-import NLAlib.Matrix.Subspaces.Projections
+import NLAlib.Matrix.Subspaces.OrthonormalBasisMatrix
 import NLAlib.Polynomial.FunctionApproximation.Approximation
 /-!
 # GMRES and MINRES: residual minimisation over the Krylov space

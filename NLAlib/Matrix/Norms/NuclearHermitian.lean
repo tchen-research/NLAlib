@@ -20,14 +20,6 @@ open scoped Matrix Matrix.Norms.L2Operator BigOperators
 
 namespace NLAlib
 
-/-- Real Hermitian functional calculus in actual orthogonal spectral coordinates. -/
-theorem cfc_eq_mul_diagonal_eigenvalues_mul_transpose {n : Type*} [Fintype n] [DecidableEq n]
-    {A : Matrix n n ℝ} (hA : A.IsHermitian) (f : ℝ → ℝ) :
-    cfc f A = (hA.eigenvectorUnitary : Matrix n n ℝ) *
-      Matrix.diagonal (fun i => f (hA.eigenvalues i)) * (hA.eigenvectorUnitary : Matrix n n ℝ)ᵀ := by
-  rw [hA.cfc_eq]
-  exact cfc_eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA f
-
 /-- The Gram matrix of an orthogonally diagonalized real matrix is obtained by
 squaring the diagonal coefficients. -/
 theorem gram_orthogonal_diagonalization {n : Type*} [Fintype n] [DecidableEq n]
@@ -52,7 +44,7 @@ theorem gram_cfc_abs_eq {n : Type*} [Fintype n] [DecidableEq n]
     (cfc (abs : ℝ → ℝ) A)ᴴ * cfc (abs : ℝ → ℝ) A = Aᴴ * A := by
   rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.conjTranspose_eq_transpose_of_trivial]
   have hP := transpose_eigenvectorUnitary_mul_self hA
-  rw [cfc_eq_mul_diagonal_eigenvalues_mul_transpose hA (abs : ℝ → ℝ),
+  rw [hA.cfc_eq, cfc_eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA (abs : ℝ → ℝ),
     gram_orthogonal_diagonalization hP]
   conv_rhs => rw [eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA]
   rw [gram_orthogonal_diagonalization hP]
@@ -63,7 +55,7 @@ real Hermitian matrix. -/
 theorem toEuclideanLin_singularValues_cfc_abs {n : Type*} [Fintype n] [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.IsHermitian) (k : ℕ) :
     (cfc (abs : ℝ → ℝ) A).toEuclideanLin.singularValues k = A.toEuclideanLin.singularValues k :=
-  toEuclideanLin_singularValues_eq_of_gram_eq _ _ (gram_cfc_abs_eq hA) k
+  singularValues_eq_of_gram_eq _ _ (gram_cfc_abs_eq hA) k
 
 /-- The nuclear norm of a real Hermitian matrix is the sum of the absolute
 values of its full decreasing eigenvalue list. Empty dimensions are included. -/

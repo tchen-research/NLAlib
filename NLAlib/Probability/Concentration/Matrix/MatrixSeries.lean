@@ -107,10 +107,10 @@ theorem NLAlib.matrix_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     (hLaw : (∀ k, IsStandardGaussian μ (g k)) ∨ (∀ k, IsRademacher μ (g k))) :
     let Z := fun ω => ∑ k, g k ω • B k
     let v := rectSecondMoment μ Z
-    v = max (spectralNorm (∑ k, B k * (B k).conjTranspose))
-      (spectralNorm (∑ k, (B k).conjTranspose * B k)) ∧
-    (∫ ω, spectralNorm (Z ω) ∂μ) ≤ Real.sqrt (2 * v * Real.log (m + n)) ∧
-    ∀ t : ℝ, 0 ≤ t → (μ {ω | t ≤ spectralNorm (Z ω)}).toReal ≤
+    v = max (‖∑ k, B k * (B k).conjTranspose‖)
+      (‖∑ k, (B k).conjTranspose * B k‖) ∧
+    (∫ ω, ‖Z ω‖ ∂μ) ≤ Real.sqrt (2 * v * Real.log (m + n)) ∧
+    ∀ t : ℝ, 0 ≤ t → (μ {ω | t ≤ ‖Z ω‖}).toReal ≤
       gaussianSeriesTail (m + n) v t := by
   intro Z v
   have hpkg := scalar_package μ g hMeas hLaw
@@ -132,10 +132,10 @@ theorem NLAlib.matrix_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
   have hZhZ : ∫ ω, (Z ω).conjTranspose * Z ω ∂μ = ∑ k, (B k).conjTranspose * B k := by
     simp_rw [hZh]
     exact second_moment_series μ g hint hcorr (fun k => (B k).conjTranspose) B
-  have hv1 : v = max (spectralNorm (∑ k, B k * (B k).conjTranspose))
-      (spectralNorm (∑ k, (B k).conjTranspose * B k)) := by
-    show max (spectralNorm (∫ ω, Z ω * (Z ω).conjTranspose ∂μ))
-      (spectralNorm (∫ ω, (Z ω).conjTranspose * Z ω ∂μ)) = _
+  have hv1 : v = max (‖∑ k, B k * (B k).conjTranspose‖)
+      (‖∑ k, (B k).conjTranspose * B k‖) := by
+    show max (‖∫ ω, Z ω * (Z ω).conjTranspose ∂μ‖)
+      (‖∫ ω, (Z ω).conjTranspose * Z ω ∂μ‖) = _
     rw [hZZ, hZhZ]
   -- Step 2: `Z` is centered, measurable and square integrable.
   have hZint : ∫ ω, Z ω ∂μ = 0 := by
@@ -160,7 +160,7 @@ theorem NLAlib.matrix_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     intro ω
     rw [← Matrix.coe_reindexLinearEquiv ℝ ℂ e e, ← dilationLinearMap_apply]
     simp only [Z, map_sum, map_smul, A, dilationLinearMap_apply, Matrix.coe_reindexLinearEquiv]
-  have hlam : ∀ ω, lambdaMax (∑ k, g k ω • A k) = spectralNorm (Z ω) := by
+  have hlam : ∀ ω, lambdaMax (∑ k, g k ω • A k) = ‖Z ω‖ := by
     intro ω
     rw [hY ω, lambdaMax_reindex]
     exact (dilation_identities (Z ω)).2.2.1.trans (dilation_identities (Z ω)).2.2.2
@@ -171,7 +171,7 @@ theorem NLAlib.matrix_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
       rw [← Matrix.coe_reindexAlgEquiv ℝ, map_pow]
     unfold hermitianSecondMoment
     simp_rw [hY, hsq]
-    rw [integral_reindex, spectralNorm, norm_reindex]
+    rw [integral_reindex, norm_reindex]
     exact hdv
   have H := hermitian_gaussian_series μ A hA g hMeas hIndep hLaw
   obtain ⟨-, H2, H3⟩ := H

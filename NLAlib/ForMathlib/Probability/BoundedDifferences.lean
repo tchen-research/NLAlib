@@ -3,9 +3,10 @@ import Mathlib.Probability.Moments.SubGaussian
 /-!
 # Bounded coordinate oscillation
 
-Finite coordinate replacement bounds imply a global diameter bound, hence
-integrability on product probability spaces. A bounded scalar range diameter
-gives Hoeffding's sharp MGF proxy `c²/4` without requiring an attained minimum.
+Finite coordinate replacement bounds imply a global diameter bound. A bounded scalar range
+diameter gives Hoeffding's sharp MGF proxy `c²/4` without requiring an attained minimum
+(`hasSubgaussianMGF_of_range_oscillation`, a convenience form of Mathlib's
+`ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc` (Hoeffding's lemma); upstreaming candidate).
 These are general prerequisites for the operator averaging proof of McDiarmid.
 
 Source: `open_problems_operator_rederivations.tex`, `eq:bd` and
@@ -42,27 +43,6 @@ theorem abs_sub_le_sum_of_coordinate_oscillation
       rw [hz, Finset.sum_insert hi]
       exact (abs_sub_le _ _ _).trans (add_le_add (h i (z s) (y i)) ih)
   simpa [z] using hs Finset.univ
-
-/-- Global coordinate bounds make a measurable function integrable on a finite
-product probability space; integrability is derived, not an extra hypothesis.
-Source: manuscript `eq:bd`, boundedness paragraph; supports atlas `mcdiarmid`. -/
-theorem integrable_pi_of_coordinate_oscillation
-    {ι : Type*} [Fintype ι] [DecidableEq ι] {S : ι → Type*}
-    [∀ i, MeasurableSpace (S i)] (μ : ∀ i, Measure (S i))
-    [∀ i, IsProbabilityMeasure (μ i)] (f : (∀ i, S i) → ℝ) (hf : Measurable f)
-    (c : ι → ℝ)
-    (h : ∀ i (x : ∀ j, S j) (y : S i), |f (Function.update x i y) - f x| ≤ c i) :
-    Integrable f (Measure.pi μ) := by
-  let : ∀ i, Nonempty (S i) := fun i => nonempty_of_isProbabilityMeasure (μ i)
-  let x₀ : ∀ i, S i := fun i => Classical.choice (inferInstance : Nonempty (S i))
-  refine Integrable.of_bound hf.aestronglyMeasurable (|f x₀| + ∑ i, c i)
-    (Filter.Eventually.of_forall fun x => ?_)
-  rw [Real.norm_eq_abs]
-  have hd := abs_sub_le_sum_of_coordinate_oscillation f c h x₀ x
-  calc |f x| ≤ |f x - f x₀| + |f x₀| := by
-          simpa only [sub_add_cancel] using abs_add_le (f x - f x₀) (f x₀)
-    _ ≤ (∑ i, c i) + |f x₀| := add_le_add hd le_rfl
-    _ = |f x₀| + ∑ i, c i := add_comm _ _
 
 /-- A measurable scalar function of range diameter at most `c≥0` has centred
 MGF proxy `c²/4`. The infimum of its range need not be attained.

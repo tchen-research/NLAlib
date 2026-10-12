@@ -7,7 +7,6 @@ import NLAlib.Sketching.Sparse.SparseFock.ConcreteLadder
 import NLAlib.Sketching.Sparse.SparseFock.ConcreteLadderIteration
 import NLAlib.Sketching.Sparse.SparseFock.ConcreteMomentEndgame
 import NLAlib.Sketching.Sparse.SparseFock.DirectionalBounds
-import NLAlib.Sketching.Sparse.SparseFock.DirectionalConcrete
 import NLAlib.Sketching.Sparse.SparseFock.DirectionalMarkedCoefficients
 import NLAlib.Sketching.Sparse.SparseFock.DirectionalMarkedReindexing
 import NLAlib.Sketching.Sparse.SparseFock.DirectionalNormalized
@@ -26,7 +25,6 @@ import NLAlib.Sketching.Sparse.SparseFock.ExactIIDMatrixError
 import NLAlib.Sketching.Sparse.SparseFock.ExactMomentTransfer
 import NLAlib.Sketching.Sparse.SparseFock.ExactSelectionSymmetry
 import NLAlib.Sketching.Sparse.SparseFock.ExactSignActions
-import NLAlib.Sketching.Sparse.SparseFock.ExactSparseEmbedding
 import NLAlib.Sketching.Sparse.SparseFock.ExactSparseMatrixEmbedding
 import NLAlib.Sketching.Sparse.SparseFock.ExactSparseMomentMatching
 import NLAlib.Sketching.Sparse.SparseFock.ExactSparseProjectionTail
@@ -37,8 +35,8 @@ import NLAlib.Sketching.Sparse.SparseFock.FiniteSiteOperators
 import NLAlib.Sketching.Sparse.SparseFock.FockHilbert
 import NLAlib.Sketching.Sparse.SparseFock.FullyIndependentSparseStack
 import NLAlib.Sketching.Sparse.SparseFock.GlobalBands
+import NLAlib.Sketching.Sparse.SparseFock.GramError
 import NLAlib.Sketching.Sparse.SparseFock.HeavyAnalysisOperators
-import NLAlib.Sketching.Sparse.SparseFock.HeavyBandsConcrete
 import NLAlib.Sketching.Sparse.SparseFock.HeavyCreationEnergy
 import NLAlib.Sketching.Sparse.SparseFock.HeavyDemotionEnergy
 import NLAlib.Sketching.Sparse.SparseFock.HeavyDiagonalEnergy
@@ -53,7 +51,6 @@ import NLAlib.Sketching.Sparse.SparseFock.HeavyRaisingBound
 import NLAlib.Sketching.Sparse.SparseFock.HeavyRowFactorization
 import NLAlib.Sketching.Sparse.SparseFock.IndependentFrameAssembly
 import NLAlib.Sketching.Sparse.SparseFock.LightAnalysisGram
-import NLAlib.Sketching.Sparse.SparseFock.LightBandsConcrete
 import NLAlib.Sketching.Sparse.SparseFock.LightBlockDecomposition
 import NLAlib.Sketching.Sparse.SparseFock.LightCrossContraction
 import NLAlib.Sketching.Sparse.SparseFock.LightCrossCoordinates
@@ -71,26 +68,22 @@ import NLAlib.Sketching.Sparse.SparseFock.LightPatternWords
 import NLAlib.Sketching.Sparse.SparseFock.LightPreservingDiagonal
 import NLAlib.Sketching.Sparse.SparseFock.LightRowFactorization
 import NLAlib.Sketching.Sparse.SparseFock.LightSectorAbstract
-import NLAlib.Sketching.Sparse.SparseFock.LightSectorConcrete
 import NLAlib.Sketching.Sparse.SparseFock.LightSynthesisBounds
 import NLAlib.Sketching.Sparse.SparseFock.LightZeroBlock
 import NLAlib.Sketching.Sparse.SparseFock.LocalOperators
 import NLAlib.Sketching.Sparse.SparseFock.MatrixFrameBridge
 import NLAlib.Sketching.Sparse.SparseFock.MatrixTail
-import NLAlib.Sketching.Sparse.SparseFock.MixedBandsConcrete
 import NLAlib.Sketching.Sparse.SparseFock.MixedNormalizedBands
 import NLAlib.Sketching.Sparse.SparseFock.MixedRestrictedBounds
 import NLAlib.Sketching.Sparse.SparseFock.MixedRowFactorization
 import NLAlib.Sketching.Sparse.SparseFock.MomentTransfer
 import NLAlib.Sketching.Sparse.SparseFock.NamedBands
-import NLAlib.Sketching.Sparse.SparseFock.PaperParameters
 import NLAlib.Sketching.Sparse.SparseFock.ParsevalFrame
 import NLAlib.Sketching.Sparse.SparseFock.Pattern
 import NLAlib.Sketching.Sparse.SparseFock.ProductFock
 import NLAlib.Sketching.Sparse.SparseFock.ScalarBounds
 import NLAlib.Sketching.Sparse.SparseFock.SparseFailureOrder
 import NLAlib.Sketching.Sparse.SparseFock.SparseIIDConditionalBarycenter
-import NLAlib.Sketching.Sparse.SparseFock.SparseIIDCoupling
 import NLAlib.Sketching.Sparse.SparseFock.SparseIIDFiniteLaws
 import NLAlib.Sketching.Sparse.SparseFock.SparseIIDSelectionKernel
 import NLAlib.Sketching.Sparse.SparseFock.SparseIIDSelectorMarginals
@@ -105,12 +98,9 @@ import NLAlib.Sketching.Sparse.SparseFock.SparseStackModel
 import NLAlib.Sketching.Sparse.SparseFock.TernaryJacobi
 import NLAlib.Sketching.Sparse.SparseFock.TracePowerConvexity
 import NLAlib.Sketching.Sparse.SparseFock.TypedBlockCS
-import NLAlib.Sketching.Sparse.SparseFock.UniformExactSBarycenter
 import NLAlib.Sketching.Sparse.SparseFock.UniformExactSCoupling
 import NLAlib.Sketching.Sparse.SparseFock.UniformExactSFiniteLaw
 import NLAlib.Sketching.Sparse.SparseFock.UniformExactSModel
-import NLAlib.Sketching.Sparse.SparseFock.UniformExactSSymmetry
-import NLAlib.Sketching.Sparse.SparseFock.UniformExactSTransfer
 import NLAlib.Sketching.Sparse.SparseFock.VacuumMoment
 
 /-! # `Sketching/Sparse/SparseFock`

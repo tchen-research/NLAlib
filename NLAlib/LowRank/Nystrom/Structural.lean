@@ -1,5 +1,6 @@
 import NLAlib.Sketching.Sampling.Leverage
 import NLAlib.LowRank.RandomizedSVD.OptimalError
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.PosSemidef
 /-!
 # The Nyström approximation
 
@@ -133,14 +134,6 @@ theorem specNorm_sub_nystrom_eq_of_eq_transpose_mul [DecidableEq n] [DecidableEq
     specNorm (A - nystrom A Ω) =
       specNorm ((1 - F * Ω * moorePenroseInverse (F * Ω)) * F) ^ 2 := by
   rw [sub_nystrom_eq_of_eq_transpose_mul hA Ω, specNorm_sq_eq_specNorm_transpose_mul_self]
-
-open scoped MatrixOrder Matrix.Norms.L2Operator in
-/-- A real positive semidefinite matrix is a Gram matrix: `A = FᵀF` for some square `F`.
-Mathlib `CStarAlgebra.nonneg_iff_eq_star_mul_self`. Atlas `nystrom-structural` (helper). -/
-theorem exists_eq_transpose_mul_of_posSemidef [DecidableEq n] {A : Matrix n n ℝ}
-    (hA : A.PosSemidef) : ∃ F : Matrix n n ℝ, A = Fᵀ * F := by
-  obtain ⟨F, hF⟩ := CStarAlgebra.nonneg_iff_eq_star_mul_self.mp hA.nonneg
-  exact ⟨F, by rw [hF, Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]⟩
 
 /-- **Nyström, lower Loewner bound**: for `A` positive semidefinite and any `Ω`, `0 ⪯ A⟨Ω⟩`.
 Gittens–Mahoney 2016, Lemma 1; Martinsson–Tropp 2020, §14. Atlas `nystrom-structural`.

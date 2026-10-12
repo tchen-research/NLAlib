@@ -31,12 +31,10 @@ import NLAlib.Matrix.Inequalities.InverseDiagonalMinor
 import NLAlib.Matrix.Inequalities.Kantorovich
 import NLAlib.Matrix.Inequalities.KyFan
 import NLAlib.Matrix.Inequalities.KyFanAttainment
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
 import NLAlib.Matrix.Inequalities.KyFanNormToolkit
 import NLAlib.Matrix.Inequalities.KyFanNorms
 import NLAlib.Matrix.Inequalities.KyFanSums
 import NLAlib.Matrix.Inequalities.KyFanToolkit
-import NLAlib.Matrix.Inequalities.KyFanTrace
 import NLAlib.Matrix.Inequalities.Lidskii
 import NLAlib.Matrix.Inequalities.LidskiiToolkit
 import NLAlib.Matrix.Inequalities.LogDetConcavity

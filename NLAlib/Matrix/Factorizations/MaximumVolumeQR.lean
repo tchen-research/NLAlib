@@ -51,7 +51,8 @@ theorem exists_maximum_volume_qr_blocks {m n : Type*}
     cases j with
     | inl j => simp [C, Matrix.submatrix_apply, hπ]
     | inr j => rfl
-  obtain ⟨L, R, hL, hUpper, _, hLR⟩ := exists_qr C (by simpa using hkm)
+  obtain ⟨L, R, ⟨hLR, hL, hUpper⟩, -⟩ := exists_isQR C (by simpa using hkm)
+  replace hLR := hLR.symm
   have hGram : Cᵀ * C = Rᵀ * R := by
     rw [← hLR, Matrix.transpose_mul, Matrix.mul_assoc,
       ← Matrix.mul_assoc Lᵀ L R, show Lᵀ * L = 1 from hL, Matrix.one_mul]

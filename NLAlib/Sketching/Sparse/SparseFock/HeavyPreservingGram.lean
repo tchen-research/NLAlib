@@ -65,11 +65,11 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem AUpOne_transpose_mul_AUpOne_of_ne (F : Frame n d) (r : Fin m)
     {i j : Fin n} (hij : i ≠ j) :
     (AUpOne F r i).transpose * AUpOne F r j =
-      orderedWordTerm (frameRows F) r i j (.rDown, .rUp) := by
+      orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rDown, .rUp) := by
   classical
   ext out inp
   simp only [Matrix.mul_apply, Matrix.transpose_apply, AUpOne, orderedWordTerm,
-    externalTensor, ExternalOperator.outer]
+    externalTensor, Matrix.vecMulVec_apply]
   calc
     (∑ p, (F.u i out.1 * rUpAt r i p out.2) *
         (F.u j inp.1 * rUpAt r j p inp.2)) =
@@ -96,11 +96,11 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem ADownOne_transpose_mul_ADownOne_of_ne (F : Frame n d) (r : Fin m)
     {i j : Fin n} (hij : i ≠ j) :
     (ADownOne F r i).transpose * ADownOne F r j =
-      orderedWordTerm (frameRows F) r i j (.rUp, .rDown) := by
+      orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rUp, .rDown) := by
   classical
   ext out inp
   simp only [Matrix.mul_apply, Matrix.transpose_apply, ADownOne, orderedWordTerm,
-    externalTensor, ExternalOperator.outer]
+    externalTensor, Matrix.vecMulVec_apply]
   calc
     (∑ p, (F.u i out.1 * rDownAt r i p out.2) *
         (F.u j inp.1 * rDownAt r j p inp.2)) =
@@ -139,7 +139,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem AUpMatrix_gram_row (F : Frame n d) (r : Fin m) :
     (AUpMatrix F r).transpose * AUpMatrix F r =
       (∑ i, ∑ j ∈ Finset.univ.erase i,
-        orderedWordTerm (frameRows F) r i j (.rDown, .rUp)) +
+        orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rDown, .rUp)) +
       ∑ i, (AUpOne F r i).transpose * AUpOne F r i := by
   classical
   rw [AUpMatrix_eq_sum_one, Matrix.transpose_sum, Matrix.sum_mul]
@@ -171,7 +171,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem ADownMatrix_gram_row (F : Frame n d) (r : Fin m) :
     (ADownMatrix F r).transpose * ADownMatrix F r =
       (∑ i, ∑ j ∈ Finset.univ.erase i,
-        orderedWordTerm (frameRows F) r i j (.rUp, .rDown)) +
+        orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rUp, .rDown)) +
       ∑ i, (ADownOne F r i).transpose * ADownOne F r i := by
   classical
   rw [ADownMatrix_eq_sum_one, Matrix.transpose_sum, Matrix.sum_mul]
@@ -202,7 +202,7 @@ Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem AUpStack_gram (F : Frame n d) :
     (AUpStack (m := m) F).transpose * AUpStack (m := m) F =
-      wordSum m (frameRows F) .rDown .rUp + DUp (m := m) F := by
+      wordSum m (DirectionalConcrete.frameRows F) .rDown .rUp + DUp (m := m) F := by
   classical
   calc
     (AUpStack (m := m) F).transpose * AUpStack (m := m) F =
@@ -212,16 +212,16 @@ theorem AUpStack_gram (F : Frame n d) :
         Matrix.sum_apply]
       rw [Fintype.sum_prod_type]
     _ = ∑ r, ((∑ i, ∑ j ∈ Finset.univ.erase i,
-          orderedWordTerm (frameRows F) r i j (.rDown, .rUp)) +
+          orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rDown, .rUp)) +
         ∑ i, (AUpOne F r i).transpose * AUpOne F r i) := by
       apply Finset.sum_congr rfl
       intro r _
       exact AUpMatrix_gram_row F r
     _ = (∑ r, ∑ i, ∑ j ∈ Finset.univ.erase i,
-          orderedWordTerm (frameRows F) r i j (.rDown, .rUp)) +
+          orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rDown, .rUp)) +
         ∑ r, ∑ i, (AUpOne F r i).transpose * AUpOne F r i := by
       rw [Finset.sum_add_distrib]
-    _ = wordSum m (frameRows F) .rDown .rUp + DUp (m := m) F := by
+    _ = wordSum m (DirectionalConcrete.frameRows F) .rDown .rUp + DUp (m := m) F := by
       rfl
 
 /-- The annihilation stack Gram matrix splits into its heavy hopping word and diagonal correction.
@@ -229,7 +229,7 @@ Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem ADownStack_gram (F : Frame n d) :
     (ADownStack (m := m) F).transpose * ADownStack (m := m) F =
-      wordSum m (frameRows F) .rUp .rDown + DDown (m := m) F := by
+      wordSum m (DirectionalConcrete.frameRows F) .rUp .rDown + DDown (m := m) F := by
   classical
   calc
     (ADownStack (m := m) F).transpose * ADownStack (m := m) F =
@@ -239,16 +239,16 @@ theorem ADownStack_gram (F : Frame n d) :
         Matrix.sum_apply]
       rw [Fintype.sum_prod_type]
     _ = ∑ r, ((∑ i, ∑ j ∈ Finset.univ.erase i,
-          orderedWordTerm (frameRows F) r i j (.rUp, .rDown)) +
+          orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rUp, .rDown)) +
         ∑ i, (ADownOne F r i).transpose * ADownOne F r i) := by
       apply Finset.sum_congr rfl
       intro r _
       exact ADownMatrix_gram_row F r
     _ = (∑ r, ∑ i, ∑ j ∈ Finset.univ.erase i,
-          orderedWordTerm (frameRows F) r i j (.rUp, .rDown)) +
+          orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rUp, .rDown)) +
         ∑ r, ∑ i, (ADownOne F r i).transpose * ADownOne F r i := by
       rw [Finset.sum_add_distrib]
-    _ = wordSum m (frameRows F) .rUp .rDown + DDown (m := m) F := by
+    _ = wordSum m (DirectionalConcrete.frameRows F) .rUp .rDown + DDown (m := m) F := by
       rfl
 
 end

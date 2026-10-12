@@ -1,4 +1,5 @@
-import NLAlib.Probability.Gaussian.Concentration.LipschitzConcentration
+import NLAlib.ForMathlib.Analysis.LipschitzApprox
+import NLAlib.Probability.Concentration.Entropy.Herbst
 import NLAlib.Probability.Gaussian.Concentration.LogSobolevCoverage
 import Mathlib.Probability.Moments.SubGaussian
 

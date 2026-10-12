@@ -7,6 +7,10 @@ import Mathlib.Tactic
 Lagrange interpolation reconstructs the two secular polynomial identities
 from their values at distinct original roots. Source: Horn--Johnson (2013),
 Section 4.3; supports `interlacing-converse`.
+
+Upstreaming note: `degree_sub_lt_of_monic_natDegree_eq` is a two-line corollary of Mathlib's
+`Polynomial.degree_sub_lt_left` (cf. `Polynomial.degree_sub_lt`) for monic polynomials of equal
+degree, a convenience form that is a candidate for upstreaming.
 -/
 
 noncomputable section

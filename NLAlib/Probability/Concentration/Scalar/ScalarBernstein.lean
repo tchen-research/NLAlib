@@ -4,7 +4,9 @@ import NLAlib.Probability.SubGaussian.OrliczMGF
 # Scalar Bernstein inequality from genuine Orlicz bounds
 
 Independent centered coordinates satisfying `E exp(|Xᵢ|/Kᵢ) ≤ 2` obey
-`P(|Σ Xᵢ| ≥ t) ≤ 2 exp(-min(t²/Σ Kᵢ², t/B)/64)`, where `B>0` dominates the scales.
+`P(|Σ Xᵢ| ≥ t) ≤ 2 exp(-min(t²/Σ Kᵢ², t/B)/64)`, where `B>0` dominates the scales. The
+Chernoff step is the general local-CGF tail bound `measureReal_ge_le_exp_of_cgf_le` (and its
+two-sided form), shared with the Hanson–Wright proof.
 All moments and local exponential integrability are derived from the nonnegative Orlicz
 expectations. The sum may be empty. The constant `1/64` is conservative.
 
@@ -14,7 +16,7 @@ The independent-MGF factorization is Mathlib's theorem; no HighDimProb dependenc
 
 noncomputable section
 
-open MeasureTheory ProbabilityTheory
+open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal
 
 namespace NLAlib
@@ -56,70 +58,132 @@ theorem integrable_and_local_mgf_sum_le_of_lintegral_exp_abs_le_two
       congr 1
       rw [← Finset.sum_mul, ← Finset.mul_sum]
 
-/-- A local MGF bound `mgf(s)≤exp(16Vs²)` for `|s|≤1/(2B)`, including tilt
-integrability, gives the upper Bernstein tail with constant `1/64`.
-Vershynin 2018, Theorem 2.8.4 (Chernoff step); atlas `bernstein-scalar`. -/
-theorem measureReal_ge_le_bernstein_of_local_mgf {Ω : Type*} [MeasurableSpace Ω]
-    {μ : Measure Ω} [IsProbabilityMeasure μ] {S : Ω → ℝ}
-    (V B : ℝ) (hV : 0 < V) (hB : 0 < B)
-    (hlocal : ∀ s : ℝ, |s| ≤ 1 / (2 * B) →
-      Integrable (fun ω => Real.exp (s * S ω)) μ ∧ mgf S μ s ≤ Real.exp (16 * V * s ^ 2))
-    (t : ℝ) (ht : 0 ≤ t) :
-    μ.real {ω | t ≤ S ω} ≤ Real.exp (-(1 / 64 : ℝ) * min (t ^ 2 / V) (t / B)) := by
-  let s := min (t / (32 * V)) (1 / (32 * B))
-  have hs0 : 0 ≤ s := le_min (by positivity) (by positivity)
-  have hsV : s ≤ t / (32 * V) := min_le_left _ _
-  have hsB : s ≤ 1 / (32 * B) := min_le_right _ _
-  have hsdom : |s| ≤ 1 / (2 * B) := by
-    rw [abs_of_nonneg hs0]
-    exact hsB.trans (one_div_le_one_div_of_le (by positivity) (by nlinarith))
-  obtain ⟨hexp, hmgf⟩ := hlocal s hsdom
-  have htV : s * (32 * V) ≤ t := (le_div_iff₀ (by positivity)).mp hsV
-  have hexponent : -s * t + 16 * V * s ^ 2 ≤ -(s * t / 2) := by
-    nlinarith [mul_le_mul_of_nonneg_left htV hs0]
-  have hrate : s * t / 2 = (1 / 64 : ℝ) * min (t ^ 2 / V) (t / B) := by
-    dsimp [s]
-    rw [mul_div_assoc, min_mul_of_nonneg _ _ (by positivity : 0 ≤ t / 2)]
-    have h1 : t / (32 * V) * (t / 2) = (1 / 64 : ℝ) * (t ^ 2 / V) := by ring
-    have h2 : 1 / (32 * B) * (t / 2) = (1 / 64 : ℝ) * (t / B) := by ring
-    rw [h1, h2, ← mul_min_of_nonneg _ _ (by norm_num : (0 : ℝ) ≤ 1 / 64)]
-  calc
-    μ.real {ω | t ≤ S ω} ≤ Real.exp (-s * t) * mgf S μ s :=
-      measure_ge_le_exp_mul_mgf t hs0 hexp
-    _ ≤ Real.exp (-s * t) * Real.exp (16 * V * s ^ 2) :=
-      mul_le_mul_of_nonneg_left hmgf (Real.exp_pos _).le
-    _ = Real.exp (-s * t + 16 * V * s ^ 2) := (Real.exp_add _ _).symm
-    _ ≤ Real.exp (-(s * t / 2)) := Real.exp_le_exp.mpr hexponent
-    _ = _ := by rw [hrate]; congr 1; ring
+/-- **Chernoff bound from a local quadratic CGF estimate.** If `cgf Y l ≤ C l² v` and
+`e^{lY}` is integrable for `|l| ≤ (2Cb)⁻¹`, then for `t ≥ 0`
+`P(Y ≥ t) ≤ exp(-(1/(4C)) min(t²/v, t/b))`. Vershynin 2018, proof of Theorem 2.8.1 (Chernoff
+step, sub-exponential regime); atlas `hanson-wright`, `bernstein-scalar` (tail step). Ported from
+HighDimProb commit c0cb8d9 (Hanson–Wright proof). -/
+theorem measureReal_ge_le_exp_of_cgf_le {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} [IsProbabilityMeasure μ] {Y : Ω → ℝ} {v b C t : ℝ} (hC : 0 < C) (hv : 0 < v) (hb : 0 < b)
+    (hcgf : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ → cgf Y μ l ≤ C * l ^ 2 * v)
+    (hint : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ →
+      Integrable (fun ω => exp (l * Y ω)) μ) (ht : 0 ≤ t) :
+    μ.real {ω | t ≤ Y ω} ≤
+      exp (-(1 / (4 * C)) * min (t ^ 2 / v) (t / b)) := by
+  rcases eq_or_lt_of_le ht with rfl | ht_pos
+  · calc μ.real {ω | 0 ≤ Y ω}
+      _ ≤ (1 : ℝ) := ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
+      _ = exp (-(1 / (4 * C)) * min (0 ^ 2 / v) (0 / b)) := by simp
+  · set l : ℝ := min (t / (2 * C * v)) ((2 * C * b)⁻¹) with hl_def
+    have hden_v : 0 < 2 * C * v := by positivity
+    have hden_b : 0 < 2 * C * b := by positivity
+    have hl_nonneg : 0 ≤ l := by
+      rw [hl_def]
+      exact le_min (div_nonneg ht (le_of_lt hden_v)) (inv_nonneg.mpr (le_of_lt hden_b))
+    have hl_domain : |l| ≤ (2 * C * b)⁻¹ := by
+      rw [abs_of_nonneg hl_nonneg, hl_def]
+      exact min_le_right _ _
+    have hl_le_v : l ≤ t / (2 * C * v) := by
+      rw [hl_def]
+      exact min_le_left _ _
+    have hl_mul_le_t : l * (2 * C * v) ≤ t := by
+      rwa [le_div_iff₀ hden_v] at hl_le_v
+    have hquad_le : C * l ^ 2 * v ≤ l * t / 2 := by
+      nlinarith [hl_mul_le_t, hl_nonneg, hC.le, hv.le]
+    have h_exp_to_half : -l * t + C * l ^ 2 * v ≤ -(l * t / 2) := by
+      linarith
+    have h_rate :
+        l * t / 2 = (1 / (4 * C)) * min (t ^ 2 / v) (t / b) := by
+      by_cases hcase : t / (2 * C * v) ≤ (2 * C * b)⁻¹
+      · have htb_le_v : t * b ≤ v := by
+          rw [inv_eq_one_div] at hcase
+          rw [div_le_div_iff₀ hden_v hden_b] at hcase
+          nlinarith [hcase, hC, hb]
+        have hmin : min (t ^ 2 / v) (t / b) = t ^ 2 / v := by
+          rw [min_eq_left]
+          rw [div_le_div_iff₀ hv hb]
+          nlinarith [htb_le_v, ht_pos]
+        rw [hl_def, min_eq_left hcase, hmin]
+        field_simp [hC.ne', hv.ne']
+        ring
+      · have hcase' : (2 * C * b)⁻¹ ≤ t / (2 * C * v) := le_of_not_ge hcase
+        have hv_le_tb : v ≤ t * b := by
+          rw [inv_eq_one_div] at hcase'
+          rw [div_le_div_iff₀ hden_b hden_v] at hcase'
+          nlinarith [hcase', hC, hv]
+        have hmin : min (t ^ 2 / v) (t / b) = t / b := by
+          rw [min_eq_right]
+          rw [div_le_div_iff₀ hb hv]
+          nlinarith [hv_le_tb, ht_pos]
+        rw [hl_def, min_eq_right hcase', hmin]
+        field_simp [hC.ne', hb.ne']
+        ring
+    have h_chernoff : μ.real {ω | t ≤ Y ω} ≤ exp (-l * t + cgf Y μ l) :=
+      measure_ge_le_exp_cgf t hl_nonneg (hint l hl_domain)
+    calc μ.real {ω | t ≤ Y ω}
+      _ ≤ exp (-l * t + cgf Y μ l) := h_chernoff
+      _ ≤ exp (-l * t + C * l ^ 2 * v) := by
+        exact exp_le_exp.mpr (by linarith [hcgf l hl_domain])
+      _ ≤ exp (-(l * t / 2)) := exp_le_exp.mpr h_exp_to_half
+      _ = exp (-(1 / (4 * C)) * min (t ^ 2 / v) (t / b)) := by
+        rw [h_rate]
+        ring_nf
 
-/-- A symmetric local MGF bound `mgf(s)≤exp(16Vs²)` for `|s|≤1/(2B)`, including
-tilt integrability, gives the two-sided Bernstein tail with constant `1/64`.
-Vershynin 2018, Theorem 2.8.4 (Chernoff step); atlas `bernstein-scalar`. -/
-theorem measureReal_abs_ge_le_bernstein_of_local_mgf {Ω : Type*} [MeasurableSpace Ω]
-    {μ : Measure Ω} [IsProbabilityMeasure μ] {S : Ω → ℝ}
-    (V B : ℝ) (hV : 0 < V) (hB : 0 < B)
-    (hlocal : ∀ s : ℝ, |s| ≤ 1 / (2 * B) →
-      Integrable (fun ω => Real.exp (s * S ω)) μ ∧ mgf S μ s ≤ Real.exp (16 * V * s ^ 2))
-    (t : ℝ) (ht : 0 ≤ t) :
-    μ.real {ω | t ≤ |S ω|} ≤ 2 * Real.exp (-(1 / 64 : ℝ) * min (t ^ 2 / V) (t / B)) := by
-  have hupper := measureReal_ge_le_bernstein_of_local_mgf V B hV hB hlocal t ht
-  have hneg : ∀ s : ℝ, |s| ≤ 1 / (2 * B) →
-      Integrable (fun ω => Real.exp (s * (-S ω))) μ ∧
-        mgf (fun ω => -S ω) μ s ≤ Real.exp (16 * V * s ^ 2) := by
-    intro s hs
-    simpa only [mgf, neg_mul, mul_neg, neg_sq] using hlocal (-s) (by simpa using hs)
-  have hlower := measureReal_ge_le_bernstein_of_local_mgf V B hV hB hneg t ht
-  have hsub : {ω | t ≤ |S ω|} ⊆ {ω | t ≤ S ω} ∪ {ω | t ≤ -S ω} := by
+/-- **Two-sided Chernoff bound from a local quadratic CGF estimate.** Under the hypotheses of
+`measureReal_ge_le_exp_of_cgf_le`, `P(|Y| ≥ t) ≤ 2 exp(-(1/(4C)) min(t²/v, t/b))` for `t ≥ 0`.
+Vershynin 2018, proof of Theorem 2.8.1; atlas `hanson-wright`, `bernstein-scalar` (tail step).
+Ported from HighDimProb commit c0cb8d9 (Hanson–Wright proof). -/
+theorem measureReal_abs_ge_le_two_mul_exp_of_cgf_le {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {Y : Ω → ℝ} {v b C t : ℝ} (hC : 0 < C) (hv : 0 < v) (hb : 0 < b)
+    (hcgf : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ → cgf Y μ l ≤ C * l ^ 2 * v)
+    (hint : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ →
+      Integrable (fun ω => exp (l * Y ω)) μ) (ht : 0 ≤ t) :
+    μ.real {ω | t ≤ |Y ω|} ≤
+      2 * exp (-(1 / (4 * C)) * min (t ^ 2 / v) (t / b)) := by
+  have hpos := measureReal_ge_le_exp_of_cgf_le hC hv hb hcgf hint ht
+  have hcgf_neg :
+      ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ →
+        cgf (fun ω => -Y ω) μ l ≤ C * l ^ 2 * v := by
+    intro l hl
+    have h_eq : cgf (fun ω => -Y ω) μ l = cgf Y μ (-l) := by
+      unfold cgf mgf
+      congr 1
+      apply integral_congr_ae
+      filter_upwards with ω
+      congr 1
+      ring
+    rw [h_eq]
+    have hl' : |-l| ≤ (2 * C * b)⁻¹ := by simpa [abs_neg] using hl
+    simpa using hcgf (-l) hl'
+  have hint_neg : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ →
+      Integrable (fun ω => exp (l * (-Y ω))) μ := by
+    intro l hl
+    convert hint (-l) (by simpa [abs_neg] using hl) using 1
+    ext ω
+    ring_nf
+  have hneg := measureReal_ge_le_exp_of_cgf_le hC hv hb hcgf_neg hint_neg ht
+  have h_subset :
+      {ω | t ≤ |Y ω|} ⊆ {ω | t ≤ Y ω} ∪ {ω | t ≤ -Y ω} := by
     intro ω hω
-    change t ≤ |S ω| at hω
-    by_cases hS : 0 ≤ S ω
-    · exact Or.inl (by simpa only [Set.mem_ofPred_eq, abs_of_nonneg hS] using hω)
-    · exact Or.inr (by simpa only [Set.mem_ofPred_eq, abs_of_neg (not_le.mp hS)] using hω)
-  calc
-    μ.real {ω | t ≤ |S ω|} ≤ μ.real ({ω | t ≤ S ω} ∪ {ω | t ≤ -S ω}) :=
-      measureReal_mono hsub
-    _ ≤ μ.real {ω | t ≤ S ω} + μ.real {ω | t ≤ -S ω} := measureReal_union_le _ _
-    _ ≤ 2 * Real.exp (-(1 / 64 : ℝ) * min (t ^ 2 / V) (t / B)) := by linarith
+    simp only [Set.mem_ofPred_eq, Set.mem_union] at hω ⊢
+    rcases le_or_gt 0 (Y ω) with hY | hY
+    · left
+      simpa [abs_of_nonneg hY] using hω
+    · right
+      simpa [abs_of_neg hY] using hω
+  calc (μ {ω | t ≤ |Y ω|}).toReal
+      ≤ (μ ({ω | t ≤ Y ω} ∪ {ω | t ≤ -Y ω})).toReal := by
+        exact ENNReal.toReal_mono (measure_ne_top μ _) (measure_mono h_subset)
+    _ ≤ (μ {ω | t ≤ Y ω}).toReal + (μ {ω | t ≤ -Y ω}).toReal := by
+        rw [← ENNReal.toReal_add (measure_ne_top μ _) (measure_ne_top μ _)]
+        exact ENNReal.toReal_mono
+          (ENNReal.add_ne_top.mpr ⟨measure_ne_top μ _, measure_ne_top μ _⟩)
+          (measure_union_le _ _)
+    _ ≤ exp (-(1 / (4 * C)) * min (t ^ 2 / v) (t / b)) +
+        exp (-(1 / (4 * C)) * min (t ^ 2 / v) (t / b)) := by
+        exact add_le_add hpos hneg
+    _ = 2 * exp (-(1 / (4 * C)) * min (t ^ 2 / v) (t / b)) := by ring
 
 /-- **Scalar Bernstein inequality from genuine `ψ₁` exponential bounds.** For mutually
 independent centered real coordinates with positive scales satisfying
@@ -151,9 +215,31 @@ theorem bernstein_sum_of_lintegral_exp_abs_le_two
         simpa [measureReal_def] using
           (measureReal_mono (μ := μ) (Set.subset_univ {ω | t ≤ |∑ i, X i ω|}))
       linarith
-    · exact measureReal_abs_ge_le_bernstein_of_local_mgf V B hV hB
-        (fun s hs => integrable_and_local_mgf_sum_le_of_lintegral_exp_abs_le_two
-          X K hX hindep hK hmean hpsi B hB hKB s hs) t ht
+    · have hloc := fun s (hs : |s| ≤ 1 / (2 * B)) =>
+        integrable_and_local_mgf_sum_le_of_lintegral_exp_abs_le_two
+          X K hX hindep hK hmean hpsi B hB hKB s hs
+      have hdom : ∀ l : ℝ, |l| ≤ (2 * 16 * (B / 16))⁻¹ → |l| ≤ 1 / (2 * B) := by
+        intro l hl
+        convert hl using 1
+        field_simp
+      have htail := measureReal_abs_ge_le_two_mul_exp_of_cgf_le
+        (Y := fun ω => ∑ i, X i ω) (C := 16) (v := V) (b := B / 16)
+        (by norm_num) hV (by positivity)
+        (fun l hl => by
+          obtain ⟨hint, hmgf⟩ := hloc l (hdom l hl)
+          calc cgf (fun ω => ∑ i, X i ω) μ l
+              ≤ Real.log (Real.exp (16 * V * l ^ 2)) := Real.log_le_log (mgf_pos hint) hmgf
+            _ = 16 * l ^ 2 * V := by rw [Real.log_exp]; ring)
+        (fun l hl => (hloc l (hdom l hl)).1) ht
+      refine htail.trans ?_
+      gcongr 2 * Real.exp ?_
+      have hmin : min (t ^ 2 / V) (t / B) ≤ min (t ^ 2 / V) (t / (B / 16)) := by
+        refine min_le_min le_rfl ?_
+        rw [div_div_eq_mul_div]
+        exact div_le_div_of_nonneg_right (by nlinarith) hB.le
+      have h64 : (1 : ℝ) / (4 * 16) = 1 / 64 := by norm_num
+      rw [h64]
+      nlinarith [hmin]
   rw [← ofReal_measureReal (μ := μ)]
   exact ENNReal.ofReal_le_ofReal hreal
 

@@ -14,9 +14,11 @@ import NLAlib.Matrix.Basic.JacobiBlockMinor
 import NLAlib.Matrix.Basic.JacobiMinor
 import NLAlib.Matrix.Basic.LeastSquares
 import NLAlib.Matrix.Basic.MoorePenrose
+import NLAlib.Matrix.Basic.MoorePenroseProjector
 import NLAlib.Matrix.Basic.MoorePenroseRank
 import NLAlib.Matrix.Basic.MoorePenroseTransformations
 import NLAlib.Matrix.Basic.PSDDuality
+import NLAlib.Matrix.Basic.PenroseIdentities
 import NLAlib.Matrix.Basic.PositiveDefiniteClosure
 import NLAlib.Matrix.Basic.PositiveSemidefiniteSeries
 import NLAlib.Matrix.Basic.Pseudoinverse
@@ -25,6 +27,7 @@ import NLAlib.Matrix.Basic.RankBounds
 import NLAlib.Matrix.Basic.RankInequalities
 import NLAlib.Matrix.Basic.SchurComplement
 import NLAlib.Matrix.Basic.SchurRank
+import NLAlib.Matrix.Basic.Selection
 import NLAlib.Matrix.Basic.SingletonInverse
 
 /-! # `Matrix/Basic`

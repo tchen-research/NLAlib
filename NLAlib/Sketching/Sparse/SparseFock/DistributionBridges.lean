@@ -56,11 +56,11 @@ Source: ported from `SparseFockFormal.DistributionBridges`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem sparseVectorError_eq_gramError (hs : 0 < s)
     (F : Frame n d) (x : XArray b s n) :
-    sparseVectorError F x = gramError F (toSample x) := by
+    sparseVectorError F x = gramError F (stackMatrix (toSample x)) := by
   rw [SparseStackModel.gramError_eq_block_first F (toSample x) hs]
   ext a c
   simp only [sparseVectorError, Matrix.smul_apply, Matrix.sum_apply,
-    ParsevalFrame.outer_apply, smul_eq_mul]
+    Matrix.vecMulVec_apply, smul_eq_mul]
   congr 1
   apply Finset.sum_congr rfl
   intro g _
@@ -213,7 +213,7 @@ theorem iidVectorError_eq_flattened_iidGramError
     iidVectorError F y = iidGramError b F (flattenY y) := by
   ext a c
   simp only [iidVectorError, iidGramError, Matrix.smul_apply,
-    Matrix.sum_apply, ParsevalFrame.outer_apply, smul_eq_mul]
+    Matrix.sum_apply, Matrix.vecMulVec_apply, smul_eq_mul]
   have hsR : (s : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hs)
   have hbR : (b : ℝ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt (lt_trans Nat.zero_lt_one hb))

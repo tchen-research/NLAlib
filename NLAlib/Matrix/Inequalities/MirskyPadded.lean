@@ -29,8 +29,8 @@ theorem sum_abs_singularValues_add_sub_le_sum_range {m n : ℕ}
     intro k hk hkT
     have hge : min m n ≤ k := by
       simpa only [T, Finset.mem_filter, hk, true_and, not_lt] using hkT
-    rw [singularValues_eq_zero_of_min_le _ hge,
-      singularValues_eq_zero_of_min_le _ hge]
+    rw [singularValues_eq_zero_of_min_le _ (by simpa only [Fintype.card_fin] using hge),
+      singularValues_eq_zero_of_min_le _ (by simpa only [Fintype.card_fin] using hge)]
     simp
   have hI : (∑ i ∈ I, |singularValues (A + E) i - singularValues A i|) =
       ∑ i ∈ T, |singularValues (A + E) i - singularValues A i| := by

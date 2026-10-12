@@ -16,8 +16,7 @@ set_option backward.isDefEq.respectTransparency false
 private theorem native_singularValue_zero_eq_specNorm {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) :
     A.toEuclideanLin.singularValues 0 = specNorm A :=
-  (congrFun (singularValues_reindex A (Fintype.equivFin _) (Fintype.equivFin _)) 0).symm.trans
-    (singularValues_reindex_zero_eq_specNorm A)
+  singularValues_zero_eq_specNorm A
 
 /-- An idempotent and its complement have a common norm factor at least one,
 with the factor present exactly when the corresponding range is nonzero.

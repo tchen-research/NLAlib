@@ -51,13 +51,13 @@ structure MainConclusions {n d : ℕ} (delta eps : ℝ) (F : Frame n d)
     (rawSampleLaw (roundedS (failureOrder d delta) eps)
         (roundedB d (failureOrder d delta) eps) n
         (canonicalB_pos (d := d) (delta := delta) heps0 heps1)).prob
-      {z | eps < ‖gramError F (toSample z)‖} ≤ delta
+      {z | eps < ‖gramError F (stackMatrix (toSample z))‖} ≤ delta
   oseSuccess :
     1 - delta ≤
       (rawSampleLaw (roundedS (failureOrder d delta) eps)
           (roundedB d (failureOrder d delta) eps) n
           (canonicalB_pos (d := d) (delta := delta) heps0 heps1)).prob
-        {z | MatrixTail.IsSparseStackOSE F (toSample z) eps}
+        {z | IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps}
   exactColumnSparsity :
     ∀ (z : RawSample (roundedS (failureOrder d delta) eps)
         (roundedB d (failureOrder d delta) eps) n) (i : Fin n),

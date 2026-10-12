@@ -14,7 +14,8 @@ namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- The exact equal-rank pseudoinverse norm control under a small
-perturbation. Wedin (1973); equality of ranks is essential, and rank zero and
+perturbation: `‖B⁺‖₂ ≤ ‖A⁺‖₂ / (1 - ‖A⁺‖₂ ‖B - A‖₂)`. Wedin 1973, §4; Stewart–Sun 1990,
+Thm III.3.8 (the bound on `‖B⁺‖`); equality of ranks is essential, and rank zero and
 arbitrary finite row/column labels are included.
 atlas: pseudoinverse-perturbation (partial) -/
 theorem specNorm_moorePenroseInverse_le_div_of_rank_eq {A B : Matrix m n ℝ}

@@ -26,7 +26,7 @@ variable {d m n : ℕ}
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hplus_transpose_eq_Hminus (F : Frame n d) :
-    (Hplus m (frameRows F)).transpose = Hminus m (frameRows F) := by
+    (Hplus m (DirectionalConcrete.frameRows F)).transpose = Hminus m (DirectionalConcrete.frameRows F) := by
   rw [Hplus, Hminus, wordSum, wordSum,
     DirectionalConcrete.transpose_physicalWordSum]
   rfl
@@ -36,7 +36,7 @@ theorem Hplus_transpose_eq_Hminus (F : Frame n d) :
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hminus_eq_AUpStackTranspose_mul_ADownStack (F : Frame n d) :
-    Hminus m (frameRows F) =
+    Hminus m (DirectionalConcrete.frameRows F) =
       (AUpStack (m := m) F).transpose * ADownStack (m := m) F := by
   rw [← Hplus_transpose_eq_Hminus, Hplus_eq_BUpStack_mul_AUpStack,
     Matrix.transpose_mul, BUpStack_transpose]
@@ -55,7 +55,7 @@ theorem AUpStackTranspose_rowGradeProjection_norm
     simp [A, R, Matrix.transpose_mul]
   calc
     ‖A.transpose * R‖ = ‖(A.transpose * R).transpose‖ :=
-      (norm_transpose_real (A.transpose * R)).symm
+      (specNorm_transpose (A.transpose * R)).symm
     _ = ‖R * A‖ := by rw [ht]
     _ = ‖R * A * P‖ := by
       rw [rowProjection_AUpStack_input (m := m) F k]
@@ -73,7 +73,7 @@ theorem AUpStackTranspose_rowGradeProjection_norm
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hminus_grade_factor_add_two (F : Frame n d) (k : ℕ) :
-    Hminus m (frameRows F) * gradeProjection (d := d) (k + 2) =
+    Hminus m (DirectionalConcrete.frameRows F) * gradeProjection (d := d) (k + 2) =
       ((AUpStack (m := m) F).transpose *
         rowGradeProjection (m := m) (n := n) (k + 1)) *
       (ADownStack (m := m) F * gradeProjection (d := d) (k + 2)) := by
@@ -100,7 +100,7 @@ theorem Hminus_grade_factor_add_two (F : Frame n d) (k : ℕ) :
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hminus_gradeProjection_zero (F : Frame n d) :
-    Hminus m (frameRows F) * gradeProjection (d := d) 0 = 0 := by
+    Hminus m (DirectionalConcrete.frameRows F) * gradeProjection (d := d) 0 = 0 := by
   rw [Hminus_eq_AUpStackTranspose_mul_ADownStack, Matrix.mul_assoc,
     ADownStack_gradeProjection_zero, Matrix.mul_zero]
 
@@ -108,7 +108,7 @@ theorem Hminus_gradeProjection_zero (F : Frame n d) :
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hminus_gradeProjection_one (F : Frame n d) :
-    Hminus m (frameRows F) * gradeProjection (d := d) 1 = 0 := by
+    Hminus m (DirectionalConcrete.frameRows F) * gradeProjection (d := d) 1 = 0 := by
   rw [Hminus_eq_AUpStackTranspose_mul_ADownStack]
   have hout := rowProjection_ADownStack_output (m := m) F 0
   have hout' :
@@ -141,7 +141,7 @@ component table.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hminus_gradeProjection_norm (F : Frame n d) (nu : ℕ) :
-    ‖Hminus m (frameRows F) * gradeProjection (d := d) nu‖ ≤ (nu : ℝ) + 1 := by
+    ‖Hminus m (DirectionalConcrete.frameRows F) * gradeProjection (d := d) nu‖ ≤ (nu : ℝ) + 1 := by
   rcases nu with (_ | _ | k)
   · rw [Hminus_gradeProjection_zero]
     norm_num

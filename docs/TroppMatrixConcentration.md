@@ -36,7 +36,7 @@ TroppMatrixConcentration/
 
 All declarations live in the namespace `TroppMatrixConcentration`. The main definitions (in `Defs/`) are:
 
-- `spectralNorm` (the ℓ₂ operator norm), `lambdaMax`, `lambdaMin` (supremum and infimum of the real spectrum), `matrixExp`, `matrixLog` (via the continuous functional calculus), `traceExp`, and `LoewnerLE` (the semidefinite order).
+- `lambdaMax`, `lambdaMin` (supremum and infimum of the real spectrum), `matrixExp`, `matrixLog` (via the continuous functional calculus) and `traceExp`. The spectral norm is Mathlib's `‖A‖` under `open scoped Matrix.Norms.L2Operator` and the semidefinite order is Mathlib's `A ≤ B` under `open scoped MatrixOrder` (`Matrix.le_iff`); the former `spectralNorm` and `LoewnerLE` were retired in the 2026-10-12 dedup round.
 - `hermitianSecondMoment`, `rectSecondMoment` (matrix variance statistics), `cumulantSum`, and the tail expressions `bernsteinTail`, `gaussianSeriesTail`, `chernoffLowerTail`, `chernoffUpperTail`.
 - `dilation` (the Hermitian dilation of a rectangular matrix), `IsStandardGaussian`, `IsRademacher`, `intrinsicDimension`, `traceFunction`, and the Chapter 8 notions `matrixFunction`, `relativeEntropy` (matrix relative entropy), `OperatorConvexOn` (operator convexity), and `matrixPerspective`.
 
@@ -45,7 +45,7 @@ chapter-numbered files; map in `docs/renames/2026-10-09-housekeeping-H1.json`):
 
 | Module | Contents |
 |---|---|
-| `NLAlib.Matrix.Functions.ExpLog` | `spectralNorm`, `lambdaMax`, `lambdaMin`, `matrixExp`, `matrixLog`, `traceExp`, `LoewnerLE` |
+| `NLAlib.Matrix.Functions.ExpLog` | `lambdaMax`, `lambdaMin`, `matrixExp`, `matrixLog`, `traceExp` |
 | `NLAlib.Matrix.Basic.Dilation` | `dilation` |
 | `NLAlib.Probability.Concentration.Basic.MatrixStatistics` | Borel instance on `Matrix m n ℂ`, `rectSecondMoment`, `hermitianSecondMoment`, `cumulantSum`, `bernsteinTail` |
 | `NLAlib.Probability.Concentration.Basic.ScalarLaws` (was `Ch4ScalarLaws`) | `IsStandardGaussian`, `IsRademacher`, `gaussianSeriesTail` |

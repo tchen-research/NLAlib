@@ -76,7 +76,7 @@ theorem conditionNumber_transpose_mul_self (A : Matrix m n ℝ) :
   ring
 
 /-- Left multiplication by a rectangular orthonormal frame preserves condition
-numbers. Golub--Van Loan, Section 2.6.2.
+numbers. Golub--Van Loan, Section 2.6.2 and §5.3.2 (`κ(R) = κ(A)` for `A = QR`).
 atlas: condition-number-def (partial) -/
 theorem conditionNumber_mul_left_of_hasOrthonormalCols (Q : Matrix p m ℝ)
     (A : Matrix m n ℝ) (hQ : HasOrthonormalCols Q) : conditionNumber (Q * A) = conditionNumber A := by
@@ -85,35 +85,22 @@ theorem conditionNumber_mul_left_of_hasOrthonormalCols (Q : Matrix p m ℝ)
     specNorm_mul_transpose_right_of_hasOrthonormalCols hQ, conditionNumber]
 
 /-- At positive rank the condition number is the ratio of the largest and
-last positive singular values. Golub--Van Loan, Section 2.6.2.
+last positive singular values, `κ(A) = σ₁/σ_r` (zero-indexed: `σ 0 / σ (r-1)`), on arbitrary
+finite index types. Golub--Van Loan 2013, Sections 2.6.2 and 5.5.2.
 atlas: condition-number-def (partial) -/
-theorem conditionNumber_eq_singularValues_ratio {a b : ℕ}
-    (A : Matrix (Fin a) (Fin b) ℝ) (hr : 0 < A.rank) :
+theorem conditionNumber_eq_singularValues_ratio (A : Matrix m n ℝ) (hr : 0 < A.rank) :
     conditionNumber A = singularValues A 0 / singularValues A (A.rank - 1) := by
-  rw [conditionNumber, specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A hr,
-    ← singularValues_zero_eq_specNorm]
+  rw [conditionNumber, specNorm_moorePenroseInverse_eq_fintype, if_neg (Nat.ne_of_gt hr),
+    singularValues_reindex, ← singularValues_zero_eq_specNorm]
   ring
 
-/-- On the nonsingular branch the condition number uses the ordinary inverse.
-Golub--Van Loan, Section 2.6.2; supports `linear-system-perturbation`. -/
+/-- On the nonsingular branch the condition number uses the ordinary inverse:
+`κ(A) = ‖A‖₂ ‖A⁻¹‖₂`. Golub--Van Loan 2013, Section 2.6.2, eq. (2.6.4); Trefethen–Bau 1997,
+eq. (12.13); supports `linear-system-perturbation`.
+atlas: condition-number-def (partial) -/
 theorem conditionNumber_eq_mul_specNorm_inv {A : Matrix n n ℝ} (hA : IsUnit A) :
     conditionNumber A = specNorm A * specNorm A⁻¹ := by
   rw [conditionNumber, moorePenroseInverse_eq_inv_of_isUnit A hA]
-
-/-- The singular-value ratio uses Mathlib's actual native list on arbitrary
-finite matrix indices. Golub--Van Loan, Section 2.6.2.
-atlas: condition-number-def (partial) -/
-theorem conditionNumber_eq_toEuclideanLin_singularValues_ratio
-    (A : Matrix m n ℝ) (hr : 0 < A.rank) :
-    conditionNumber A = A.toEuclideanLin.singularValues 0 /
-      A.toEuclideanLin.singularValues (A.rank - 1) := by
-  have hZero : A.toEuclideanLin.singularValues 0 = specNorm A :=
-    (congrFun (singularValues_reindex A (Fintype.equivFin _) (Fintype.equivFin _)) 0).symm.trans
-      (singularValues_reindex_zero_eq_specNorm A)
-  rw [conditionNumber, specNorm_moorePenroseInverse_eq_fintype,
-    if_neg (Nat.ne_of_gt hr), singularValues_reindex, singularValues_eq_linearMap,
-    ← hZero]
-  ring
 
 /-- For a positive-definite real matrix of positive dimension, the condition
 number is the ratio of its largest and smallest positive eigenvalues.
@@ -126,7 +113,7 @@ theorem conditionNumber_eq_eigenvalues₀_ratio [Nonempty n]
         ⟨Fintype.card n - 1, Nat.sub_lt Fintype.card_pos (by decide : 0 < 1)⟩ := by
   have hRank := Matrix.rank_of_isUnit A hA.isUnit
   have hPos : 0 < A.rank := by rw [hRank]; exact Fintype.card_pos
-  rw [conditionNumber_eq_toEuclideanLin_singularValues_ratio A hPos, hRank]
+  rw [conditionNumber_eq_singularValues_ratio A hPos, hRank]
   exact congrArg₂ (fun a b : ℝ => a / b)
     (toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef hA.posSemidef
       ⟨0, Fintype.card_pos⟩)

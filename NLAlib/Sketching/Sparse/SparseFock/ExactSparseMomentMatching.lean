@@ -2,7 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.FiniteLocalMoments
-import NLAlib.Sketching.Sparse.SparseFock.ExactSparseEmbedding
+import NLAlib.Sketching.Sparse.SparseFock.ExactSparseMatrixEmbedding
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -62,7 +62,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem gramError_entry_hasLocalDegree_two
     (hs : 0 < s) (F : Frame n d) (a c : Fin d) :
     HasLocalDegree (ι := Fin n) (α := ExactColumn (s * b) s) 2
-      (fun X : ExactSample (s * b) s n => gramError F X a c) := by
+      (fun X : ExactSample (s * b) s n => gramError F (sketchMatrix X) a c) := by
   have hterm (i j : Fin n) :
       HasLocalDegree (ι := Fin n) (α := ExactColumn (s * b) s) 2
         (fun X : ExactSample (s * b) s n =>
@@ -102,7 +102,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem gramError_pow_entry_hasLocalDegree
     (hs : 0 < s) (F : Frame n d) (r : ℕ) (a c : Fin d) :
     HasLocalDegree (ι := Fin n) (α := ExactColumn (s * b) s) (2 * r)
-      (fun X : ExactSample (s * b) s n => ((gramError F X) ^ r) a c) := by
+      (fun X : ExactSample (s * b) s n => ((gramError F (sketchMatrix X)) ^ r) a c) := by
   induction r generalizing a c with
   | zero =>
       simpa using
@@ -115,7 +115,7 @@ theorem gramError_pow_entry_hasLocalDegree
             (2 * r + 2)
             (fun X : ExactSample (s * b) s n =>
               ∑ x : Fin d,
-                ((gramError F X) ^ r) a x * gramError F X x c) := by
+                ((gramError F (sketchMatrix X)) ^ r) a x * gramError F (sketchMatrix X) x c) := by
         apply HasLocalDegree.sum_fintype
         intro x
         exact HasLocalDegree.mul (ihr a x)
@@ -125,7 +125,7 @@ theorem gramError_pow_entry_hasLocalDegree
             (2 * (Nat.succ r))
             (fun X : ExactSample (s * b) s n =>
               ∑ x : Fin d,
-                ((gramError F X) ^ r) a x * gramError F X x c) := by
+                ((gramError F (sketchMatrix X)) ^ r) a x * gramError F (sketchMatrix X) x c) := by
         simpa [Nat.mul_succ] using hsum
       apply HasLocalDegree.congr hdegree
       funext X
@@ -139,11 +139,11 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem trace_power_hasLocalDegree
     (hs : 0 < s) (F : Frame n d) (r : ℕ) :
     HasLocalDegree (ι := Fin n) (α := ExactColumn (s * b) s) (2 * r)
-      (fun X : ExactSample (s * b) s n => ((gramError F X) ^ r).trace) := by
+      (fun X : ExactSample (s * b) s n => ((gramError F (sketchMatrix X)) ^ r).trace) := by
   have hsum :
       HasLocalDegree (ι := Fin n) (α := ExactColumn (s * b) s) (2 * r)
         (fun X : ExactSample (s * b) s n =>
-          ∑ a : Fin d, ((gramError F X) ^ r) a a) := by
+          ∑ a : Fin d, ((gramError F (sketchMatrix X)) ^ r) a a) := by
     apply HasLocalDegree.sum_fintype
     intro a
     exact gramError_pow_entry_hasLocalDegree (b := b) hs F r a a
@@ -162,9 +162,9 @@ theorem trace_even_moment_eq_of_matchesUpTo_four_mul
     (μ : FiniteLaw (ExactSample (s * b) s n))
     (hmatch : MatchesUpTo μ
       (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb)) (4 * q)) :
-    μ.expect (fun X => ((gramError F X) ^ (2 * q)).trace) =
+    μ.expect (fun X => ((gramError F (sketchMatrix X)) ^ (2 * q)).trace) =
       (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb)).expect
-        (fun X => ((gramError F X) ^ (2 * q)).trace) := by
+        (fun X => ((gramError F (sketchMatrix X)) ^ (2 * q)).trace) := by
   apply HasLocalDegree.expect_eq_of_matchesUpTo hmatch
   have hdegree : 2 * (2 * q) = 4 * q := by omega
   simpa only [hdegree] using
@@ -181,12 +181,13 @@ theorem matrix_markov_tail_of_matchesUpTo_four_mul
     (μ : FiniteLaw (ExactSample (s * b) s n))
     (hmatch : MatchesUpTo μ
       (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb)) (4 * q)) :
-    μ.prob {X | eps ≤ ‖gramError F X‖} ≤
+    μ.prob {X | eps ≤ ‖gramError F (sketchMatrix X)‖} ≤
       (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb)).expect
-          (fun X => ((gramError F X) ^ (2 * q)).trace) /
+          (fun X => ((gramError F (sketchMatrix X)) ^ (2 * q)).trace) /
         eps ^ (2 * q) := by
   have htail := MatrixTail.matrix_markov_tail μ
-    (gramError F) (gramError_isHermitian F) q hq eps heps
+    (fun X ↦ gramError F (sketchMatrix X))
+    (fun X ↦ gramError_isHermitian F (sketchMatrix X)) q hq eps heps
   rw [trace_even_moment_eq_of_matchesUpTo_four_mul hs hb F q μ hmatch] at htail
   exact htail
 
@@ -201,20 +202,19 @@ theorem ose_failure_tail_of_matchesUpTo_four_mul
     (μ : FiniteLaw (ExactSample (s * b) s n))
     (hmatch : MatchesUpTo μ
       (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb)) (4 * q)) :
-    μ.prob {X | ¬ IsUniformExactSOSE F X eps} ≤
+    μ.prob {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} ≤
       (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb)).expect
-          (fun X => ((gramError F X) ^ (2 * q)).trace) /
+          (fun X => ((gramError F (sketchMatrix X)) ^ (2 * q)).trace) /
         eps ^ (2 * q) := by
   calc
-    μ.prob {X | ¬ IsUniformExactSOSE F X eps} ≤
-        μ.prob {X | eps ≤ ‖gramError F X‖} := by
+    μ.prob {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} ≤
+        μ.prob {X | eps ≤ ‖gramError F (sketchMatrix X)‖} := by
       apply FiniteLaw.prob_mono
       intro X hbad
       by_contra htail
-      exact hbad ((gramError_norm_le_iff_uniformExactSOSE
-        F X eps heps.le).mp (not_le.mp htail).le)
+      exact hbad ((norm_gramError_le_iff_isSubspaceEmbedding F (sketchMatrix X) heps.le).mp (not_le.mp htail).le)
     _ ≤ (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb)).expect
-          (fun X => ((gramError F X) ^ (2 * q)).trace) /
+          (fun X => ((gramError F (sketchMatrix X)) ^ (2 * q)).trace) /
         eps ^ (2 * q) :=
       matrix_markov_tail_of_matchesUpTo_four_mul
         hs hb F q hq eps heps μ hmatch
@@ -237,7 +237,7 @@ theorem limited_failure_tail_of_band_bounds
     (hmatch : MatchesUpTo μ
       (exactSampleLaw (n := n)
         (exactS_le_rows (s := s) (lt_trans Nat.zero_lt_one hb))) (4 * q)) :
-    μ.prob {X | ¬ IsUniformExactSOSE F X eps} ≤
+    μ.prob {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} ≤
       (d : ℝ) *
         ((3 * exactScale (s := s) (lt_trans Nat.zero_lt_one hb) ^ 2 * beta) /
           eps) ^ (2 * q) := by
@@ -246,10 +246,10 @@ theorem limited_failure_tail_of_band_bounds
   have hmoment := exactS_trace_moment_le_of_band_bounds
     (n := n) hs hb F hbeta hband
   calc
-    μ.prob {X | ¬ IsUniformExactSOSE F X eps} ≤
+    μ.prob {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} ≤
         (exactSampleLaw (n := n)
           (exactS_le_rows (s := s) (lt_trans Nat.zero_lt_one hb))).expect
-            (fun X => ((gramError F X) ^ (2 * q)).trace) /
+            (fun X => ((gramError F (sketchMatrix X)) ^ (2 * q)).trace) /
           eps ^ (2 * q) := hmarkov
     _ ≤ ((d : ℝ) *
           (3 * exactScale (s := s) (lt_trans Nat.zero_lt_one hb) ^ 2 * beta) ^
@@ -282,7 +282,7 @@ theorem rounded_ose_failure_le_delta_of_matchesUpTo
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (canonicalB_pos (d := d) (delta := delta) heps0 heps1)))
       (4 * failureOrder d delta)) :
-    μ.prob {X | ¬ IsUniformExactSOSE F X eps} ≤ delta := by
+    μ.prob {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} ≤ delta := by
   let q := failureOrder d delta
   let s := roundedS q eps
   let b := roundedB d q eps
@@ -332,7 +332,7 @@ theorem rounded_ose_failure_le_delta_of_matchesUpTo
       (roundedMomentBase d q eps) ^ (2 * q) :=
     pow_le_pow_left₀ hbase0 hbase _
   calc
-    μ.prob {X | ¬ IsUniformExactSOSE F X eps} ≤
+    μ.prob {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} ≤
         (d : ℝ) * (3 * scale ^ 2 * beta / eps) ^ (2 * q) := by
       simpa [scale, hb0] using htail
     _ ≤ (d : ℝ) * (roundedMomentBase d q eps) ^ (2 * q) :=
@@ -360,16 +360,16 @@ theorem rounded_operator_norm_failure_le_delta_of_matchesUpTo
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (canonicalB_pos (d := d) (delta := delta) heps0 heps1)))
       (4 * failureOrder d delta)) :
-    μ.prob {X | eps < ‖gramError F X‖} ≤ delta := by
+    μ.prob {X | eps < ‖gramError F (sketchMatrix X)‖} ≤ delta := by
   have hevent :
       {X : ExactSample
           (roundedS (failureOrder d delta) eps *
             roundedB d (failureOrder d delta) eps)
           (roundedS (failureOrder d delta) eps) n |
-        eps < ‖gramError F X‖} =
-      {X | ¬ IsUniformExactSOSE F X eps} := by
+        eps < ‖gramError F (sketchMatrix X)‖} =
+      {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} := by
     ext X
-    have hiff := gramError_norm_le_iff_uniformExactSOSE F X eps heps0.le
+    have hiff := norm_gramError_le_iff_isSubspaceEmbedding F (sketchMatrix X) heps0.le
     simpa [not_le] using not_congr hiff
   rw [hevent]
   exact rounded_ose_failure_le_delta_of_matchesUpTo

@@ -14,16 +14,6 @@ noncomputable section
 open scoped BigOperators
 namespace NLAlib
 
-/-- Distinct real interpolation nodes make the product of their non-pivot
-differences nonzero. Horn--Johnson (2013), Section 4.3;
-helper for inverse interlacing residues. -/
-theorem prod_sub_erase_ne_zero_of_injective {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (d : ι → ℝ) (hd : Function.Injective d) (j : ι) :
-    (∏ l ∈ (Finset.univ : Finset ι).erase j, (d j - d l)) ≠ 0 := by
-  apply Finset.prod_ne_zero_iff.mpr
-  intro l hl
-  exact sub_ne_zero.mpr (fun he => (Finset.mem_erase.mp hl).1 (hd he).symm)
-
 /-- Weakly interlacing bordered targets give nonnegative interpolation
 residues when the original spectrum is strictly increasing. Target
 equalities, repeated target roots, and zero residues are allowed.

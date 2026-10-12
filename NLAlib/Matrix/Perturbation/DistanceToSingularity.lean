@@ -28,7 +28,9 @@ theorem specNorm_inv_pos_of_isUnit {A : Matrix n n ℝ} (hA : IsUnit A) :
   exact one_ne_zero h.symm
 
 /-- Every perturbation producing a singular matrix has spectral norm at least
-the reciprocal inverse norm. Higham, Theorem 6.5.
+the reciprocal inverse norm; equivalently (Gastinel–Kahan lower bound) `‖E‖₂ < 1/‖A⁻¹‖₂` keeps
+`A + E` invertible, i.e. relative distance to singularity `≥ 1/κ(A)`. Higham 2002, Thm 6.5 (lower
+bound); Golub–Van Loan 2013, Thm 2.6.2 (corollary).
 atlas: condition-number-def (partial) -/
 theorem inv_specNorm_inv_le_specNorm_of_not_isUnit_add
     {A E : Matrix n n ℝ} (hA : IsUnit A) (hAE : ¬ IsUnit (A + E)) :
@@ -42,8 +44,10 @@ theorem inv_specNorm_inv_le_specNorm_of_not_isUnit_add
   exact hAE (isUnit_add_of_specNorm_inv_mul_lt_one hA
     ((specNorm_mul_le A⁻¹ E).trans_lt hProd))
 
-/-- An actual singular perturbation attains the reciprocal inverse norm.
-Higham, Theorem 6.5. The construction uses spectral Eckart--Young rather
+/-- An actual singular perturbation attains the reciprocal inverse norm (Gastinel–Kahan): with
+`inv_specNorm_inv_le_specNorm_of_not_isUnit_add` this gives
+`min {‖E‖₂ : A + E singular} = 1/‖A⁻¹‖₂`. Higham 2002, Thm 6.5; Golub–Van Loan 2013, §2.6.2.
+The construction uses spectral Eckart--Young rather
 than an assumed minimizing perturbation.
 atlas: condition-number-def (partial) -/
 theorem exists_not_isUnit_add_specNorm_eq_inv_specNorm_inv

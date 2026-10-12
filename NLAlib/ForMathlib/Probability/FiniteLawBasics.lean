@@ -117,13 +117,6 @@ theorem expect_sub (μ : FiniteLaw α) (f g : α → ℝ) :
     μ.expect (fun x => f x - g x) = μ.expect f - μ.expect g := by
   simp only [expect, mul_sub, Finset.sum_sub_distrib]
 
-/-- Finite expectation preserves negation of observables.
-Source: pinned sparse-Fock finite-law/basis proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-theorem expect_neg (μ : FiniteLaw α) (f : α → ℝ) :
-    μ.expect (fun x => -f x) = -μ.expect f := by
-  simp [expect]
-
 /-- A real scalar factors out of finite expectation.
 Source: pinned sparse-Fock finite-law/basis proof, commit
 `b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
@@ -158,19 +151,6 @@ theorem expect_mono (μ : FiniteLaw α) {f g : α → ℝ}
   apply Finset.sum_le_sum
   intro x _hx
   exact mul_le_mul_of_nonneg_left (hfg x) (μ.weight_nonneg x)
-
-/-- The absolute finite expectation is at most the finite expectation of the absolute value.
-Source: pinned sparse-Fock finite-law/basis proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-theorem abs_expect_le_expect_abs (μ : FiniteLaw α) (f : α → ℝ) :
-    |μ.expect f| ≤ μ.expect (fun x => |f x|) := by
-  calc
-    |μ.expect f| = |∑ x, μ.weight x * f x| := rfl
-    _ ≤ ∑ x, |μ.weight x * f x| := Finset.abs_sum_le_sum_abs _ _
-    _ = μ.expect (fun x => |f x|) := by
-      apply Finset.sum_congr rfl
-      intro x _hx
-      rw [abs_mul, abs_of_nonneg (μ.weight_nonneg x)]
 
 /-- The empty event has probability zero.
 Source: pinned sparse-Fock finite-law/basis proof, commit
@@ -222,12 +202,6 @@ theorem prob_le_one (μ : FiniteLaw α) (s : Set α) : μ.prob s ≤ 1 := by
       unfold indicator
       split <;> norm_num
     _ = 1 := μ.expect_one
-
-/-- Every finite-law event probability belongs to the closed unit interval.
-Source: pinned sparse-Fock finite-law/basis proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-theorem prob_mem_Icc (μ : FiniteLaw α) (s : Set α) : μ.prob s ∈ Set.Icc 0 1 :=
-  ⟨μ.prob_nonneg s, μ.prob_le_one s⟩
 
 /-- Finite-law probability is monotone under event inclusion.
 Source: pinned sparse-Fock finite-law/basis proof, commit

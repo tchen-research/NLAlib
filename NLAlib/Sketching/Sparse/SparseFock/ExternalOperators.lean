@@ -45,21 +45,6 @@ theorem transpose_externalTensor
   ext out inp
   rfl
 
-/-- The external rank-one coefficient `|u><v|`.
-
-Source: ported from `SparseFockFormal.ExternalOperators`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def outer (u v : Fin d → ℝ) : Matrix (Fin d) (Fin d) ℝ :=
-  fun a b => u a * v b
-
-/-- Transposing an external rank-one matrix exchanges its two vectors.
-Source: ported from `SparseFockFormal.ExternalOperators`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp] theorem transpose_outer (u v : Fin d → ℝ) :
-    (outer u v).transpose = outer v u := by
-  ext a b
-  simp [outer, Matrix.transpose_apply, mul_comm]
-
 /-- One ordered, externally weighted word at the two sites `(r,i)` and `(r,j)`.
 
 Source: ported from `SparseFockFormal.ExternalOperators`,
@@ -67,7 +52,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 noncomputable def orderedWordTerm
     (u : Fin n → Fin d → ℝ) (r : Fin m) (i j : Fin n) (w : Word) :
     FullOp d m n :=
-  externalTensor (outer (u i) (u j)) (wordKernel (r, i) (r, j) w)
+  externalTensor (Matrix.vecMulVec (u i) (u j)) (wordKernel (r, i) (r, j) w)
 
 /-- Transposition swaps the external vectors and the two sites and reverses both
 local arrows.  This is the precise ordered-word adjoint convention.
@@ -78,7 +63,7 @@ theorem transpose_orderedWordTerm
     (u : Fin n → Fin d → ℝ) (r : Fin m) (i j : Fin n) (w : Word) :
     (orderedWordTerm u r i j w).transpose =
       orderedWordTerm u r j i w.orderedAdjoint := by
-  rw [orderedWordTerm, transpose_externalTensor, transpose_outer,
+  rw [orderedWordTerm, transpose_externalTensor, Matrix.transpose_vecMulVec,
     transpose_wordKernel]
   rfl
 

@@ -1,0 +1,15 @@
+{
+  "NLAlib.rank_sum_le_sum_rank": "NLAlib.rank_add_le",
+  "NLAlib.isHermitian_of_isSymm": "Matrix.isHermitian_iff_isSymm",
+  "NLAlib.isSymm_of_isHermitian": "Matrix.isHermitian_iff_isSymm",
+  "NLAlib.posSemidef_fromBlocks_iff_generalized_schur": "NLAlib.posSemidef_fromBlocks_iff",
+  "NLAlib.dotProduct_generalized_schur_minimizer_eq": "NLAlib.dotProduct_schurComplement_mulVec_eq",
+  "NLAlib.transpose_residual_mul_residual_eq_one_sub_overlap_of_unequal_widths": "NLAlib.transpose_residual_mul_residual_eq_one_sub_overlap",
+  "NLAlib.sq_sinThetaMax_eq_one_sub_sq_sigmaMin": "NLAlib.specNorm_residual_sq_eq_one_sub_sigmaMin_sq",
+  "NLAlib.sinThetaMax_comm": "NLAlib.specNorm_residual_comm",
+  "NLAlib.sinThetaMax_eq_specNorm_sub": "NLAlib.specNorm_sub_frame_projector_eq_residual",
+  "NLAlib.principalAngles": "NLAlib.principalAnglesFintype",
+  "NLAlib.principalAnglesFintype_eq_principalAngles": "bridge between the two principal-angle definitions; dropped with NLAlib.principalAngles",
+  "NLAlib.measurable_nonsing_inv_entry_of": "NLAlib.measurable_inv_entry_of",
+  "NLAlib.specNorm_mul_of_transpose_mul_self_eq_one": "NLAlib.specNorm_mul_transpose_right_of_hasOrthonormalCols"
+}

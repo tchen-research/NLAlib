@@ -87,6 +87,38 @@ theorem integral_coord_mul_coord [DecidableEq n] {z : Ω → n → ℝ}
       (hz j).aestronglyMeasurable]
     rw [hmean i, zero_mul]
 
+/-- An isotropic second-moment matrix implies integrable quadratic forms and
+Hutchinson unbiasedness for every real square matrix. The diagonal second moments
+force square integrability, so the cross moments and quadratic form are genuine
+integrals. Independence and zero means are unnecessary; arbitrary measures and empty
+index types are included. Source: Hutchinson 1989; Avron–Toledo 2011, §2;
+atlas `hutchinson-unbiased` (general second-moment form).
+atlas: hutchinson-unbiased -/
+theorem integrable_and_integral_quadForm_eq_trace_of_second_moments [DecidableEq n]
+    (A : Matrix n n ℝ) {z : Ω → n → ℝ}
+    (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
+    (hsecond : ∀ i j, ∫ ω, z ω i * z ω j ∂μ = if i = j then 1 else 0) :
+    Integrable (fun ω => quadForm A (z ω)) μ ∧
+      (∫ ω, quadForm A (z ω) ∂μ) = A.trace := by
+  have hL2 (i : n) : MemLp (fun ω => z ω i) 2 μ := by
+    apply (memLp_two_iff_integrable_sq (hmeas i).aestronglyMeasurable).2
+    apply integrable_of_integral_eq_one
+    simpa [pow_two] using hsecond i i
+  have hprod (i j : n) : Integrable (fun ω => z ω i * z ω j) μ :=
+    (hL2 i).integrable_mul (hL2 j)
+  constructor
+  · simp_rw [quadForm_eq_sum]
+    exact integrable_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
+      (hprod i j).const_mul (A i j)
+  · simp_rw [quadForm_eq_sum]
+    rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
+      (hprod i j).const_mul (A i j)]
+    rw [Matrix.trace]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [integral_finsetSum _ fun j _ => (hprod i j).const_mul (A i j)]
+    simp_rw [integral_const_mul, hsecond]
+    simp
+
 /-- **Hutchinson's estimator is unbiased.** If the coordinates `z_i` of a random vector are
 square-integrable, pairwise independent, centred and have unit second moment, then
 `𝔼[zᵀ A z] = tr A`.
@@ -101,14 +133,9 @@ theorem integral_quadForm_eq_trace [IsProbabilityMeasure μ] (A : Matrix n n ℝ
     (hmean : ∀ i, ∫ ω, z ω i ∂μ = 0) (hsq : ∀ i, ∫ ω, z ω i ^ 2 ∂μ = 1) :
     ∫ ω, quadForm A (z ω) ∂μ = A.trace := by
   classical
-  simp_rw [quadForm_eq_sum]
-  rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
-    (integrable_coord_mul_coord hz i j).const_mul (A i j)]
-  rw [Matrix.trace]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [integral_finsetSum _ fun j _ => (integrable_coord_mul_coord hz i j).const_mul (A i j)]
-  simp_rw [integral_const_mul, integral_coord_mul_coord hz hind hmean hsq]
-  simp
+  exact (integrable_and_integral_quadForm_eq_trace_of_second_moments A
+    (fun i => (hz i).aestronglyMeasurable.aemeasurable)
+    (integral_coord_mul_coord hz hind hmean hsq)).2
 
 /-! ### Fourth moments and the variance identity -/
 

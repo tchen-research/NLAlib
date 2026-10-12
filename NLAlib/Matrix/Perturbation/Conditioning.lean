@@ -3,22 +3,21 @@ import NLAlib.Matrix.Perturbation.LeastSquaresPurePerturbation
 /-!
 # Condition numbers and the sensitivity of linear systems and least squares
 
-* `conditionNumber A := ‖A‖₂ ‖A⁺‖₂` (`specNorm`, `moorePenroseInverse`): total, `0` at `A = 0`;
-  `κ(A) = σ₁/σ_r` (`conditionNumber_eq_singularValues_div`), `κ(A) = ‖A‖₂/σ_min(A)` under full
-  column rank (`conditionNumber_eq_div_sigmaMin`), `κ(A) = ‖A‖₂‖A⁻¹‖₂` for invertible `A`;
-  `κ(A) ≥ 1` for `A ≠ 0`, invariance under transpose, nonzero scaling and orthonormal-column left
-  factors, `κ(AᵀA) = κ(A)²`; distance to singularity (Gastinel–Kahan): `‖E‖₂ < 1/‖A⁻¹‖₂` keeps
-  `A + E` invertible, and the bound is attained.
-  Golub–Van Loan 2013, §2.6.2; Higham 2002, Thm 6.5. Atlas: `condition-number-def`.
+* Condition number (`conditionNumber`, its API and the distance to singularity live in
+  `NLAlib.Matrix.Perturbation.ConditionNumber` and `…DistanceToSingularity`): here
+  `κ(A) = ‖A‖₂/σ_min(A)` under full column rank (`conditionNumber_eq_div_sigmaMin`) and
+  `‖P‖₂ ≥ 1` for a nonzero idempotent. Golub–Van Loan 2013, §2.6.2; Higham 2002, Thm 6.5.
+  Atlas: `condition-number-def`.
 * Linear systems (Trefethen–Bau 1997, Thm 12.1–12.2; Higham 2002, Thm 7.2; Golub–Van Loan
   2013, Thm 2.6.2): perturbation of `b`, the a posteriori residual bound, and the joint bound
-  `‖Δx‖/‖x‖ ≤ κ/(1 - κ‖ΔA‖/‖A‖) (‖ΔA‖/‖A‖ + ‖Δb‖/‖b‖)` under `κ‖ΔA‖/‖A‖ < 1`.
-  Atlas: `linear-system-perturbation`.
+  `‖Δx‖/‖x‖ ≤ κ/(1 - κ‖ΔA‖/‖A‖) (‖ΔA‖/‖A‖ + ‖Δb‖/‖b‖)` under `κ‖ΔA‖/‖A‖ < 1`, bundled as
+  `linear_system_perturbation`. Atlas: `linear-system-perturbation`.
 * Least squares (Trefethen–Bau 1997, Thm 18.1, with its `κ, θ, η`; Higham 2002, Thm 20.1):
-  `leastSquaresCos A b = cos θ = ‖y‖/‖b‖`, `leastSquaresTan A b = tan θ = ‖b - y‖/‖y‖`,
-  `leastSquaresEta A b = η = ‖A‖‖x‖/‖y‖` for `x = A⁺b`, `y = Ax`; the two exact bounds for
-  perturbations of `b` (proved, any rank), the two first-order bounds for perturbations of `A`
-  (stated in `ε`–`δ` form), and Higham's non-asymptotic bounds.
+  the two exact bounds for perturbations of `b` (any rank). The first-order bounds for
+  perturbations of `A` and Higham's non-asymptotic bounds are
+  `exists_pos_forall_sqrt_pinv_fit_sub_div_le`, `exists_pos_forall_sqrt_pinv_solution_sub_div_le`
+  (`…LeastSquaresPurePerturbation`), `sqrt_pinv_solution_sub_div_le` and
+  `sqrt_pinv_residual_sub_div_le` (`…LeastSquaresCoordinateBounds`).
   Atlas: `least-squares-perturbation`.
 
 Euclidean vector norms are written `Real.sqrt (v ⬝ᵥ v)`. Exact arithmetic only.
@@ -44,97 +43,11 @@ theorem one_le_specNorm_of_isIdempotentElem {P : Matrix m m ℝ} (hP : IsIdempot
   rw [show P * P = P from hP] at h
   nlinarith
 
-/-- The Moore–Penrose inverse of an invertible square matrix is its inverse.
-Horn–Johnson 2013, §7.3. -/
-theorem moorePenroseInverse_eq_nonsing_inv {A : Matrix n n ℝ} (hA : IsUnit A) :
-    moorePenroseInverse A = A⁻¹ := by
-  have hd : IsUnit A.det := (Matrix.isUnit_iff_isUnit_det A).mp hA
-  apply (isMoorePenroseInverse A).unique
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · rw [Matrix.mul_nonsing_inv _ hd, Matrix.one_mul]
-  · rw [Matrix.nonsing_inv_mul _ hd, Matrix.one_mul]
-  · rw [Matrix.mul_nonsing_inv _ hd, Matrix.transpose_one]
-  · rw [Matrix.nonsing_inv_mul _ hd, Matrix.transpose_one]
-
-/-- For invertible square `A`, `κ(A) = ‖A‖₂ ‖A⁻¹‖₂`. Trefethen–Bau 1997, eq. (12.13);
-Golub–Van Loan 2013, eq. (2.6.4).
-atlas: condition-number-def (partial) -/
-theorem conditionNumber_eq_of_isUnit {A : Matrix n n ℝ} (hA : IsUnit A) :
-    conditionNumber A = specNorm A * specNorm A⁻¹ := by
-  rw [conditionNumber, moorePenroseInverse_eq_nonsing_inv hA]
-
-omit [DecidableEq n] in
-/-- `(Q A)⁺ = A⁺ Qᵀ` when `Q` has orthonormal columns. Golub–Van Loan 2013, §5.5.2. -/
-theorem moorePenroseInverse_mul_of_hasOrthonormalCols {p : Type*} [Fintype p]
-    {Q : Matrix p m ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) :
-    moorePenroseInverse (Q * A) = moorePenroseInverse A * Qᵀ := by
-  have hQ' : Qᵀ * Q = 1 := hQ
-  have hA := isMoorePenroseInverse A
-  apply (isMoorePenroseInverse (Q * A)).unique
-  have e2 : moorePenroseInverse A * Qᵀ * (Q * A) = moorePenroseInverse A * A := by
-    rw [Matrix.mul_assoc, ← Matrix.mul_assoc Qᵀ, hQ', Matrix.one_mul]
-  have e1 : Q * A * (moorePenroseInverse A * Qᵀ) = Q * (A * moorePenroseInverse A) * Qᵀ := by
-    simp only [Matrix.mul_assoc]
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · rw [Matrix.mul_assoc (Q * A), e2, Matrix.mul_assoc Q, ← Matrix.mul_assoc A, hA.mul_mul_eq]
-  · rw [e2, ← Matrix.mul_assoc, hA.inv_mul_inv_eq]
-  · rw [e1, Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose,
-      hA.transpose_mul_eq]
-    simp only [Matrix.mul_assoc]
-  · rw [e2, hA.transpose_inv_mul_eq]
-
-/-- `κ(Q A) = κ(A)` when `Q` has orthonormal columns (`QᵀQ = I`). Golub–Van Loan 2013, §2.6.2
-and §5.3.2 (`κ(R) = κ(A)` for `A = QR`).
-atlas: condition-number-def (partial) -/
-theorem conditionNumber_mul_of_hasOrthonormalCols {p : Type*} [Fintype p] [DecidableEq p]
-    {Q : Matrix p m ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) :
-    conditionNumber (Q * A) = conditionNumber A := by
-  rw [conditionNumber, conditionNumber, moorePenroseInverse_mul_of_hasOrthonormalCols hQ,
-    specNorm_mul_left_of_hasOrthonormalCols hQ,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hQ]
-
-/-- `‖E‖₂ < 1/‖A⁻¹‖₂` keeps `A + E` invertible: the distance from an invertible `A` to the
-singular matrices is at least `1/‖A⁻¹‖₂`, i.e. relative distance `≥ 1/κ(A)`. Golub–Van Loan 2013,
-Thm 2.6.2 (corollary); Higham 2002, Thm 6.5 (lower bound).
-atlas: condition-number-def (partial) -/
-theorem isUnit_add_of_specNorm_lt {A E : Matrix n n ℝ} (hA : IsUnit A)
-    (hE : specNorm E < 1 / specNorm A⁻¹) : IsUnit (A + E) := by
-  have hpos : 0 < specNorm A⁻¹ := by
-    by_contra h
-    have h0 : specNorm A⁻¹ = 0 := le_antisymm (not_lt.mp h) (specNorm_nonneg _)
-    rw [h0, div_zero] at hE
-    exact absurd hE (not_lt.mpr (specNorm_nonneg E))
-  apply isUnit_add_of_specNorm_inv_mul_lt_one hA
-  apply specNorm_inv_mul_lt_one
-  rw [lt_div_iff₀ hpos] at hE
-  linarith
-
-/-- Coverage: condition-number-def
-Distance to singularity is attained (Gastinel–Kahan): for invertible `A` on a nonempty index
-there is `E` with `‖E‖₂ = 1/‖A⁻¹‖₂` and `A + E` singular. With `isUnit_add_of_specNorm_lt` this
-gives `min {‖E‖₂ : A + E singular} = 1/‖A⁻¹‖₂`, i.e. relative distance `1/κ(A)`.
-Higham 2002, Thm 6.5; Golub–Van Loan 2013, §2.6.2.
-atlas: condition-number-def (partial) -/
-theorem exists_specNorm_eq_not_isUnit_add [Nonempty n] {A : Matrix n n ℝ} (hA : IsUnit A) :
-    ∃ E : Matrix n n ℝ, specNorm E = 1 / specNorm A⁻¹ ∧ ¬ IsUnit (A + E) := by
-  obtain ⟨E, hE, hNorm⟩ := exists_not_isUnit_add_specNorm_eq_inv_specNorm_inv A hA
-  exact ⟨E, hNorm, hE⟩
-
 end Def
 
 section FinIndex
 
 variable {m n : ℕ}
-
-/-- `κ(A) = σ₁(A)/σ_r(A)` for `r = rank A ≥ 1` (zero-indexed singular values: `σ 0 / σ (r-1)`).
-Golub–Van Loan 2013, §2.6.2 and §5.5.2.
-atlas: condition-number-def (partial) -/
-theorem conditionNumber_eq_singularValues_div (A : Matrix (Fin m) (Fin n) ℝ)
-    (hr : A.rank ≠ 0) :
-    conditionNumber A = singularValues A 0 / singularValues A (A.rank - 1) := by
-  rw [conditionNumber, specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A
-    (Nat.pos_of_ne_zero hr), singularValues_zero_eq_specNorm]
-  ring
 
 /-- Under full column rank (`rank A = n ≥ 1`), `κ(A) = ‖A‖₂ / σ_min(A)` with the variational
 `sigmaMin`. This covers invertible square `A`. Golub–Van Loan 2013, §5.3.2 (`κ₂(A) = σ₁/σ_n`);
@@ -143,7 +56,8 @@ atlas: condition-number-def (partial) -/
 theorem conditionNumber_eq_div_sigmaMin (A : Matrix (Fin m) (Fin n) ℝ) (hn : 0 < n)
     (hA : A.rank = n) : conditionNumber A = specNorm A / sigmaMin A := by
   rw [conditionNumber, specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A
-    (by omega), sigmaMin_eq_singularValues_last A hn, hA]
+    (by omega), sigmaMin_eq_singularValues_last A (by simpa only [Fintype.card_fin] using hn),
+    Fintype.card_fin, hA]
   ring
 
 end FinIndex
@@ -164,7 +78,7 @@ theorem sqrt_dotProduct_sub_div_le_conditionNumber_mul {A : Matrix n n ℝ} (hA 
       conditionNumber A * (Real.sqrt ((b - A *ᵥ x') ⬝ᵥ (b - A *ᵥ x')) /
         Real.sqrt (b ⬝ᵥ b)) := by
   have hd : IsUnit A.det := (Matrix.isUnit_iff_isUnit_det A).mp hA
-  rw [conditionNumber_eq_of_isUnit hA]
+  rw [conditionNumber_eq_mul_specNorm_inv hA]
   have hbpos : 0 < Real.sqrt (b ⬝ᵥ b) := sqrt_dotProduct_self_pos hb
   have hbx : Real.sqrt (b ⬝ᵥ b) ≤ specNorm A * Real.sqrt (x ⬝ᵥ x) := by
     rw [← hx]; exact sqrt_mulVec_dotProduct_le_specNorm_mul A x
@@ -209,8 +123,8 @@ theorem sqrt_dotProduct_div_le_conditionNumber_mul_of_mulVec_add {A : Matrix n n
 Higham 2002, Thm 7.2 (normwise, with `ε = ‖ΔA‖/‖A‖`-type tolerances); Golub–Van Loan 2013,
 Thm 2.6.2; the first-order content is Trefethen–Bau 1997, Thm 12.1–12.2. Proof: `A Δx = Δb -
 ΔA (x + Δx)`, so `‖Δx‖ ≤ ‖A⁻¹‖(‖Δb‖ + ‖ΔA‖‖x‖ + ‖ΔA‖‖Δx‖)`; absorb the last term, then use
-`‖b‖ ≤ ‖A‖‖x‖`. (`A + ΔA` is then invertible by `isUnit_add_of_specNorm_lt`, so `Δx` is
-determined.)
+`‖b‖ ≤ ‖A‖‖x‖`. (`A + ΔA` is then invertible by `isUnit_add_of_specNorm_inv_mul_lt_one`, so
+`Δx` is determined.)
 atlas: linear-system-perturbation (partial) -/
 theorem sqrt_dotProduct_div_le_of_add_mulVec_add {A ΔA : Matrix n n ℝ} (hA : IsUnit A)
     {x b Δx Δb : n → ℝ} (hx : A *ᵥ x = b) (hb : b ≠ 0)
@@ -220,7 +134,7 @@ theorem sqrt_dotProduct_div_le_of_add_mulVec_add {A ΔA : Matrix n n ℝ} (hA : 
       conditionNumber A / (1 - conditionNumber A * (specNorm ΔA / specNorm A)) *
         (specNorm ΔA / specNorm A + Real.sqrt (Δb ⬝ᵥ Δb) / Real.sqrt (b ⬝ᵥ b)) := by
   have hd : IsUnit A.det := (Matrix.isUnit_iff_isUnit_det A).mp hA
-  rw [conditionNumber_eq_of_isUnit hA] at hsmall ⊢
+  rw [conditionNumber_eq_mul_specNorm_inv hA] at hsmall ⊢
   have hbx : Real.sqrt (b ⬝ᵥ b) ≤ specNorm A * Real.sqrt (x ⬝ᵥ x) := by
     rw [← hx]; exact sqrt_mulVec_dotProduct_le_specNorm_mul A x
   have hdx : Δx = A⁻¹ *ᵥ (Δb - ΔA *ᵥ (x + Δx)) := by
@@ -281,6 +195,26 @@ theorem sqrt_dotProduct_div_le_of_add_mulVec_add {A ΔA : Matrix n n ℝ} (hA : 
         apply mul_le_mul_of_nonneg_right _ hxpos.le
         exact mul_le_mul_of_nonneg_left (add_le_add h3 le_rfl) (div_nonneg ha hgap.le)
     _ = α * a / (1 - a * e) * (e / α + Ndb / Nb) * Nx := by field_simp; ring
+
+/-- **Linear-system perturbation**, the complete statement: for invertible `A`, `A x = b ≠ 0`,
+`(A + ΔA)(x + Δx) = b + Δb` and `κ(A) ‖ΔA‖/‖A‖ < 1`, the relative forward error obeys
+`‖Δx‖/‖x‖ ≤ κ(A)/(1 - κ(A)‖ΔA‖/‖A‖) · (‖ΔA‖/‖A‖ + ‖Δb‖/‖b‖)`, and every approximate solution
+`x̂` obeys the a posteriori bound `‖x - x̂‖/‖x‖ ≤ κ(A) ‖b - A x̂‖/‖b‖`. Bundles
+`sqrt_dotProduct_div_le_of_add_mulVec_add` and `sqrt_dotProduct_sub_div_le_conditionNumber_mul`.
+Higham 2002, Thm 7.2; Golub–Van Loan 2013, Thm 2.6.2.
+atlas: linear-system-perturbation -/
+theorem linear_system_perturbation {A ΔA : Matrix n n ℝ} (hA : IsUnit A)
+    {x b Δx Δb : n → ℝ} (hx : A *ᵥ x = b) (hb : b ≠ 0)
+    (hΔ : (A + ΔA) *ᵥ (x + Δx) = b + Δb)
+    (hsmall : conditionNumber A * (specNorm ΔA / specNorm A) < 1) :
+    Real.sqrt (Δx ⬝ᵥ Δx) / Real.sqrt (x ⬝ᵥ x) ≤
+        conditionNumber A / (1 - conditionNumber A * (specNorm ΔA / specNorm A)) *
+          (specNorm ΔA / specNorm A + Real.sqrt (Δb ⬝ᵥ Δb) / Real.sqrt (b ⬝ᵥ b)) ∧
+      ∀ x' : n → ℝ, Real.sqrt ((x - x') ⬝ᵥ (x - x')) / Real.sqrt (x ⬝ᵥ x) ≤
+        conditionNumber A * (Real.sqrt ((b - A *ᵥ x') ⬝ᵥ (b - A *ᵥ x')) /
+          Real.sqrt (b ⬝ᵥ b)) :=
+  ⟨sqrt_dotProduct_div_le_of_add_mulVec_add hA hx hb hΔ hsmall,
+    sqrt_dotProduct_sub_div_le_conditionNumber_mul hA hx hb⟩
 
 end LinearSystem
 
@@ -387,88 +321,6 @@ theorem sqrt_dotProduct_moorePenroseInverse_sub_div_le (A : Matrix m n ℝ) (b �
   calc Real.sqrt ((A' *ᵥ Δb) ⬝ᵥ (A' *ᵥ Δb)) / Nx ≤ specNorm A' * Ndb / Nx :=
         div_le_div_of_nonneg_right h1 hNx.le
     _ = specNorm A' * Nb / Nx * (Ndb / Nb) := by field_simp
-
-/--
-**Least squares, `y` under perturbation of `A` (first order).** For full column rank `A`,
-`y = A A⁺ b`: for every `ε > 0` there is `δ > 0` such that `‖ΔA‖₂ < δ` implies
-`‖Δy‖/‖y‖ ≤ (κ(A)/cos θ + ε) ‖ΔA‖/‖A‖`, where `Δy = (A + ΔA)(A + ΔA)⁺ b - A A⁺ b`.
-Trefethen–Bau 1997, Thm 18.1 (third entry: condition number `≤ κ/cos θ`), stated in `ε`–`δ`
-form since the source bound is a first-order (condition-number) statement. The exact
-equal-rank projector bound gives `‖Δy‖ ≤ ‖ΔA‖‖A⁺‖‖b‖` in a rank-preserving neighborhood.
-atlas: least-squares-perturbation (partial) -/
-theorem exists_pos_forall_sqrt_fit_sub_div_le (A : Matrix m n ℝ)
-    (hA : A.rank = Fintype.card n) (b : m → ℝ) :
-    ∀ ε > 0, ∃ δ > 0, ∀ ΔA : Matrix m n ℝ, specNorm ΔA < δ →
-      Real.sqrt ((((A + ΔA) * moorePenroseInverse (A + ΔA)) *ᵥ b -
-            (A * moorePenroseInverse A) *ᵥ b) ⬝ᵥ
-          (((A + ΔA) * moorePenroseInverse (A + ΔA)) *ᵥ b -
-            (A * moorePenroseInverse A) *ᵥ b)) /
-        Real.sqrt (((A * moorePenroseInverse A) *ᵥ b) ⬝ᵥ ((A * moorePenroseInverse A) *ᵥ b)) ≤
-        (conditionNumber A / leastSquaresCos A b + ε) * (specNorm ΔA / specNorm A) := by
-  exact exists_pos_forall_sqrt_pinv_fit_sub_div_le A hA b
-
-/--
-**Least squares, `x` under perturbation of `A` (first order).** For full column rank `A`,
-`x = A⁺ b`: for every `ε > 0` there is `δ > 0` such that `‖ΔA‖₂ < δ` implies
-`‖Δx‖/‖x‖ ≤ (κ(A) + κ(A)² tan θ/η + ε) ‖ΔA‖/‖A‖`, where `Δx = (A + ΔA)⁺ b - A⁺ b`.
-Trefethen–Bau 1997, Thm 18.1 (fourth entry: `κ + κ² tan θ/η`); Golub–Van Loan 2013, Thm 5.3.1
-(first-order `κ² tan θ` form). The finite pseudoinverse perturbation estimate gives
-the coefficient with denominator `1 - ‖A⁺‖‖ΔA‖`, absorbed by choosing a small enough `δ`;
-`κ² tan θ/η = κ²‖r‖/(‖A‖‖x‖)`.
-atlas: least-squares-perturbation (partial) -/
-theorem exists_pos_forall_sqrt_solution_sub_div_le (A : Matrix m n ℝ)
-    (hA : A.rank = Fintype.card n) (b : m → ℝ) :
-    ∀ ε > 0, ∃ δ > 0, ∀ ΔA : Matrix m n ℝ, specNorm ΔA < δ →
-      Real.sqrt ((moorePenroseInverse (A + ΔA) *ᵥ b - moorePenroseInverse A *ᵥ b) ⬝ᵥ
-          (moorePenroseInverse (A + ΔA) *ᵥ b - moorePenroseInverse A *ᵥ b)) /
-        Real.sqrt ((moorePenroseInverse A *ᵥ b) ⬝ᵥ (moorePenroseInverse A *ᵥ b)) ≤
-        (conditionNumber A + conditionNumber A ^ 2 * leastSquaresTan A b / leastSquaresEta A b +
-          ε) * (specNorm ΔA / specNorm A) := by
-  exact exists_pos_forall_sqrt_pinv_solution_sub_div_le A hA b
-
-/--
-**Wedin's least-squares bound (solution).** Let `A` have full column rank, `x = A⁺ b`,
-`r = b - A x`, `y = (A + ΔA)⁺(b + Δb)`, `0 ≤ ε`, `‖ΔA‖₂ ≤ ε‖A‖₂`, `‖Δb‖ ≤ ε‖b‖` and
-`κ(A) ε < 1`. Then `‖x - y‖/‖x‖ ≤ κε/(1 - κε) · (2 + (κ + 1) ‖r‖/(‖A‖₂‖x‖))`.
-Higham 2002, Thm 20.1 (from Wedin 1973, §5); first-order form Golub–Van Loan 2013, Thm 5.3.1.
-`A + ΔA` has full column rank automatically (`σ_min(A + ΔA) ≥ σ_min(A)(1 - κε) > 0`), and `y` is
-its unique least-squares solution. This is the coordinate transport of the existing
-Euclidean finite bound, with total division including a zero old solution.
-atlas: least-squares-perturbation (partial) -/
-theorem sqrt_dotProduct_solution_sub_div_le (A ΔA : Matrix m n ℝ)
-    (hA : A.rank = Fintype.card n) (b Δb : m → ℝ) {ε : ℝ} (hε : 0 ≤ ε)
-    (hΔA : specNorm ΔA ≤ ε * specNorm A)
-    (hΔb : Real.sqrt (Δb ⬝ᵥ Δb) ≤ ε * Real.sqrt (b ⬝ᵥ b))
-    (hκ : conditionNumber A * ε < 1) :
-    Real.sqrt ((moorePenroseInverse A *ᵥ b - moorePenroseInverse (A + ΔA) *ᵥ (b + Δb)) ⬝ᵥ
-        (moorePenroseInverse A *ᵥ b - moorePenroseInverse (A + ΔA) *ᵥ (b + Δb))) /
-      Real.sqrt ((moorePenroseInverse A *ᵥ b) ⬝ᵥ (moorePenroseInverse A *ᵥ b)) ≤
-      conditionNumber A * ε / (1 - conditionNumber A * ε) *
-        (2 + (conditionNumber A + 1) *
-          Real.sqrt ((b - A *ᵥ (moorePenroseInverse A *ᵥ b)) ⬝ᵥ
-            (b - A *ᵥ (moorePenroseInverse A *ᵥ b))) /
-          (specNorm A * Real.sqrt ((moorePenroseInverse A *ᵥ b) ⬝ᵥ
-            (moorePenroseInverse A *ᵥ b)))) := by
-  exact sqrt_pinv_solution_sub_div_le A ΔA hA b Δb hε hΔA hΔb hκ
-
-/--
-**Wedin's least-squares bound (residual).** Under the hypotheses of
-`sqrt_dotProduct_solution_sub_div_le`, with `r = b - A x`, `s = (b + Δb) - (A + ΔA) y`:
-`‖r - s‖/‖b‖ ≤ (1 + 2κ(A)) ε`. Higham 2002, Thm 20.1; Wedin 1973, §5.
-This transports the stronger Euclidean coefficient `1 + κ(A)`, with total division
-including zero data.
-atlas: least-squares-perturbation (partial) -/
-theorem sqrt_dotProduct_residual_sub_div_le (A ΔA : Matrix m n ℝ)
-    (hA : A.rank = Fintype.card n) (b Δb : m → ℝ) {ε : ℝ} (hε : 0 ≤ ε)
-    (hΔA : specNorm ΔA ≤ ε * specNorm A)
-    (hΔb : Real.sqrt (Δb ⬝ᵥ Δb) ≤ ε * Real.sqrt (b ⬝ᵥ b))
-    (hκ : conditionNumber A * ε < 1) :
-    Real.sqrt ((b - A *ᵥ (moorePenroseInverse A *ᵥ b) -
-          ((b + Δb) - (A + ΔA) *ᵥ (moorePenroseInverse (A + ΔA) *ᵥ (b + Δb)))) ⬝ᵥ
-        (b - A *ᵥ (moorePenroseInverse A *ᵥ b) -
-          ((b + Δb) - (A + ΔA) *ᵥ (moorePenroseInverse (A + ΔA) *ᵥ (b + Δb))))) /
-      Real.sqrt (b ⬝ᵥ b) ≤ (1 + 2 * conditionNumber A) * ε := by
-  exact sqrt_pinv_residual_sub_div_le A ΔA hA b Δb hε hΔA hΔb hκ
 
 end LeastSquares
 

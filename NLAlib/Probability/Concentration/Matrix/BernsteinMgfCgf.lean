@@ -1,6 +1,8 @@
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
-import NLAlib.Matrix.OperatorTheory.LogOperatorMonotone
+import NLAlib.Matrix.OperatorTheory.Basic
+import NLAlib.ForMathlib.Analysis.ExpBounds
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 
 /-!
 # Lemma 6.6.2 — Matrix Bernstein mgf and cgf bounds
@@ -13,123 +15,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
-
-namespace NLAlib
-
-/-- Auxiliary function `g(u) = u²/2 - (1 - u/3)(eᵘ - 1 - u)`. -/
-private noncomputable def gFun (u : ℝ) : ℝ := u ^ 2 / 2 - (1 - u / 3) * (Real.exp u - 1 - u)
-
-/-- Its derivative `h = g'`. -/
-private noncomputable def hFun (u : ℝ) : ℝ := u + (Real.exp u - 1 - u) / 3 - (1 - u / 3) * (Real.exp u - 1)
-
-private lemma hasDerivAt_hFun (u : ℝ) : HasDerivAt hFun ((1 - Real.exp u * (1 - u)) / 3) u := by
-  have h1 := (((Real.hasDerivAt_exp u).sub_const 1).sub (hasDerivAt_id u)).div_const 3
-  have h2 := ((hasDerivAt_id u).div_const 3).const_sub 1
-  have h3 := h2.mul ((Real.hasDerivAt_exp u).sub_const 1)
-  have h4 := ((hasDerivAt_id u).add h1).sub h3
-  refine (h4.congr_deriv ?_).congr_of_eventuallyEq (Filter.Eventually.of_forall fun x => ?_)
-  · simp; ring
-  · simp [hFun]
-
-private lemma hasDerivAt_gFun (u : ℝ) : HasDerivAt gFun (hFun u) u := by
-  have h1 := ((Real.hasDerivAt_exp u).sub_const 1).sub (hasDerivAt_id u)
-  have h2 := ((hasDerivAt_id u).div_const 3).const_sub 1
-  have h4 := ((hasDerivAt_pow 2 u).div_const 2).sub (h2.mul h1)
-  refine (h4.congr_deriv ?_).congr_of_eventuallyEq (Filter.Eventually.of_forall fun x => ?_)
-  · simp [hFun]; ring
-  · simp [gFun]
-
-private lemma hFun_mono : Monotone hFun := by
-  apply monotone_of_deriv_nonneg (fun u => (hasDerivAt_hFun u).differentiableAt)
-  intro u
-  rw [(hasDerivAt_hFun u).deriv]
-  have h1 := Real.add_one_le_exp (-u)
-  have h2 : Real.exp u * Real.exp (-u) = 1 := by rw [← Real.exp_add]; simp
-  have hpos := Real.exp_pos u
-  apply div_nonneg _ (by norm_num)
-  nlinarith
-
-private lemma gFun_nonneg (u : ℝ) : 0 ≤ gFun u := by
-  have hdiff : Differentiable ℝ gFun := fun u => (hasDerivAt_gFun u).differentiableAt
-  have g0 : gFun 0 = 0 := by simp [gFun]
-  have h0 : hFun 0 = 0 := by simp [hFun]
-  rcases le_total u 0 with hu | hu
-  · have hanti : AntitoneOn gFun (Set.Iic 0) := by
-      apply antitoneOn_of_deriv_nonpos (convex_Iic 0) hdiff.continuous.continuousOn
-        hdiff.differentiableOn
-      intro x hx
-      rw [interior_Iic] at hx
-      rw [(hasDerivAt_gFun x).deriv]
-      have := hFun_mono (le_of_lt (Set.mem_Iio.mp hx))
-      linarith
-    have := hanti (Set.mem_Iic.mpr hu) (Set.mem_Iic.mpr le_rfl) hu
-    linarith
-  · have hmono : MonotoneOn gFun (Set.Ici 0) := by
-      apply monotoneOn_of_deriv_nonneg (convex_Ici 0) hdiff.continuous.continuousOn
-        hdiff.differentiableOn
-      intro x hx
-      rw [interior_Ici] at hx
-      rw [(hasDerivAt_gFun x).deriv]
-      have := hFun_mono (le_of_lt (Set.mem_Ioi.mp hx))
-      linarith
-    have := hmono (Set.mem_Ici.mpr le_rfl) (Set.mem_Ici.mpr hu) hu
-    linarith
-
-/-- The scalar one-sided Bernstein exponential bound, permitting arbitrarily negative
-`x ≤ L`: `exp(θx) ≤ 1+θx+((θ²/2)/(1-θL/3))x²`.
-Source: Tropp 2015, Lemma 6.6.2; scalar Taylor comparison in operator rederivations
-`eq:scalarbernstein`. Reused by `matrix-bernstein` and `matrix-freedman` (partial). -/
-theorem exp_mul_le_one_add_mul_add_sq_mul_of_le {L θ x : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3) (hx : x ≤ L) :
-    Real.exp (θ * x) ≤ 1 + θ * x + (θ ^ 2 / 2) / (1 - θ * L / 3) * x ^ 2 := by
-  have hux : θ * x ≤ θ * L := mul_le_mul_of_nonneg_left hx hθ.le
-  have hpos : 0 < 1 - θ * L / 3 := by linarith
-  have hpos' : 0 < 1 - θ * x / 3 := by linarith
-  have hg := gFun_nonneg (θ * x)
-  unfold gFun at hg
-  have h1 : Real.exp (θ * x) - 1 - θ * x ≤ ((θ * x) ^ 2 / 2) / (1 - θ * x / 3) := by
-    rw [le_div_iff₀ hpos']; nlinarith
-  have h2 : ((θ * x) ^ 2 / 2) / (1 - θ * x / 3) ≤ ((θ * x) ^ 2 / 2) / (1 - θ * L / 3) :=
-    div_le_div_of_nonneg_left (by positivity) hpos (by linarith)
-  have h3 : (θ ^ 2 / 2) / (1 - θ * L / 3) * x ^ 2 = ((θ * x) ^ 2 / 2) / (1 - θ * L / 3) := by
-    ring
-  linarith
-
-variable {d : Type*} [Fintype d] [DecidableEq d]
-
-/-- Real functional calculus evaluates the actual affine-quadratic polynomial at any
-finite Hermitian matrix.
-Source: scalar polynomial functional calculus, Tropp 2015, Section 2.1.11;
-reused by `matrix-bernstein` and `matrix-freedman` (partial). -/
-theorem one_add_smul_add_smul_sq_eq_cfc (A : Matrix d d ℂ) (hA : A.IsHermitian) (θ c : ℝ) :
-    1 + θ • A + c • A ^ 2 = cfc (fun x => 1 + θ * x + c * x ^ 2) A := by
-  have e1 := cfc_add A (fun x => 1 + θ * x) (fun x => c * x ^ 2)
-  have e2 := cfc_const_add 1 (fun x => θ * x) A
-  rw [e1, e2, cfc_const_mul_id θ A, cfc_const_mul c (fun x : ℝ => x ^ 2) A,
-    cfc_pow_id A 2 hA.isSelfAdjoint, map_one]
-
-/-- A scalar exponential-versus-quadratic comparison on the actual spectrum transfers
-to Loewner order for a finite Hermitian matrix.
-Source: scalar functional calculus monotonicity, Tropp 2015, Lemma 6.6.2;
-reused by `matrix-bernstein` and `matrix-freedman` (partial). -/
-theorem matrixExp_smul_le_one_add_smul_add_smul_sq_of_spectrum_le
-    (A : Matrix d d ℂ) (hA : A.IsHermitian) {θ c : ℝ}
-    (hb : ∀ x ∈ spectrum ℝ A, Real.exp (θ * x) ≤ 1 + θ * x + c * x ^ 2) :
-    matrixExp (θ • A) ≤ 1 + θ • A + c • A ^ 2 := by
-  rw [matrixExp_smul_eq_cfc A hA θ, one_add_smul_add_smul_sq_eq_cfc A hA θ c]
-  exact cfc_mono hb
-
-/-- The scalar tangent inequality `1+x ≤ exp x` transfers to every finite Hermitian
-matrix as `I+B ≤ exp B`, without a lower or upper spectral bound.
-Source: `Real.add_one_le_exp` and scalar functional calculus, Tropp 2015, Section 2.1.11;
-reused by `matrix-bernstein` and `matrix-freedman` (partial). -/
-theorem one_add_le_matrixExp_of_isHermitian (B : Matrix d d ℂ) (hB : B.IsHermitian) :
-    1 + B ≤ matrixExp B := by
-  have e1 : 1 + B = cfc (fun x : ℝ => 1 + x) B := by
-    rw [cfc_const_add (1 : ℝ) (fun x : ℝ => x) B, cfc_id' ℝ B hB.isSelfAdjoint, map_one]
-  rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp hB, e1]
-  exact cfc_mono (fun x _ => by linarith [Real.add_one_le_exp x])
-
-end NLAlib
 
 open NLAlib
 
@@ -146,9 +31,9 @@ theorem NLAlib.bernstein_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     (hMeas : Measurable X) (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian)
     (hL2 : MemLp X 2 μ) (hMean : (∫ ω, X ω ∂μ) = 0)
     (hBound : ∀ᵐ ω ∂μ, lambdaMax (X ω) ≤ L) :
-    LoewnerLE (∫ ω, matrixExp (θ • X ω) ∂μ)
+    (∫ ω, matrixExp (θ • X ω) ∂μ) ≤
       (matrixExp (((θ ^ 2 / 2) / (1 - θ * L / 3)) • (∫ ω, X ω ^ 2 ∂μ))) ∧
-    LoewnerLE (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ))
+    (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ)) ≤
       (((θ ^ 2 / 2) / (1 - θ * L / 3)) • (∫ ω, X ω ^ 2 ∂μ)) := by
   have hθL' : θ * L < 3 := (lt_div_iff₀ hL).mp hθL
   set c := (θ ^ 2 / 2) / (1 - θ * L / 3) with hc
@@ -208,5 +93,6 @@ theorem NLAlib.bernstein_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     filter_upwards [hHerm] with ω hH
     exact (posDef_matrixExp_and_matrixLog_matrixExp _ (hH.smul (isSelfAdjoint_iff.mpr (star_trivial θ)))).1
   obtain ⟨hEPD, hlog⟩ := posDef_matrixExp_and_matrixLog_matrixExp (c • S) hBH
-  have h2 := matrixLog_le_matrixLog _ _ hMPD hEPD (Matrix.le_iff.mp h1)
+  have h2 : (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ)) ≤ (matrixLog (matrixExp (c • S))) :=
+    CFC.log_monotoneOn hMPD.isStrictlyPositive hEPD.isStrictlyPositive h1
   rwa [hlog] at h2

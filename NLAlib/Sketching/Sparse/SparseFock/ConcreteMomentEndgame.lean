@@ -41,7 +41,7 @@ theorem raw_trace_moment_le_of_band_bounds
       ‖normalizedBand (s * b) F b delta *
         gradeProjection (d := d) nu‖ ≤ beta) :
     (rawSampleLaw s b n (lt_trans Nat.zero_lt_one hb)).expect
-        (fun z ↦ ((gramError F (toSample z)) ^ (2 * q)).trace) ≤
+        (fun z ↦ ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) ≤
       (d : ℝ) * (3 * cB b ^ 2 * beta) ^ (2 * q) := by
   have htransfer := raw_trace_moment_le_scaled_product hs hb F q
   have hiid := iid_trace_moment_le_of_band_bounds
@@ -51,7 +51,7 @@ theorem raw_trace_moment_le_of_band_bounds
       (SparseIIDCoupling.one_le_cB (lt_trans Nat.zero_lt_one hb))
   calc
     (rawSampleLaw s b n (lt_trans Nat.zero_lt_one hb)).expect
-        (fun z ↦ ((gramError F (toSample z)) ^ (2 * q)).trace) ≤
+        (fun z ↦ ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) ≤
         cB b ^ (4 * q) *
           (ProductFock.iidLaw b hb (s * b) n).expect
             (fun omega ↦ Matrix.trace
@@ -90,16 +90,16 @@ theorem sparseStack_failure_tail_of_band_bounds
         gradeProjection (d := d) nu‖ ≤ beta)
     {eps : ℝ} (heps : 0 < eps) :
     (rawSampleLaw s b n (lt_trans Nat.zero_lt_one hb)).prob
-        {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤
+        {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤
       (d : ℝ) * ((3 * cB b ^ 2 * beta) / eps) ^ (2 * q) := by
   have hmarkov := MatrixTail.sparseStack_ose_failure_tail
     (s := s) (lt_trans Nat.zero_lt_one hb) F q hq eps heps
   have hmoment := raw_trace_moment_le_of_band_bounds hs hb F hbeta hband
   calc
     (rawSampleLaw s b n (lt_trans Nat.zero_lt_one hb)).prob
-        {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤
+        {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤
         (rawSampleLaw s b n (lt_trans Nat.zero_lt_one hb)).expect
-          (fun z ↦ ((gramError F (toSample z)) ^ (2 * q)).trace) /
+          (fun z ↦ ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) /
             eps ^ (2 * q) := hmarkov
     _ ≤ ((d : ℝ) * (3 * cB b ^ 2 * beta) ^ (2 * q)) /
           eps ^ (2 * q) := by
@@ -132,7 +132,7 @@ theorem rounded_failure_le_delta_of_band_bounds
           have h := two_le_main_roundedB
             (d := d) (delta := delta) heps0 heps1
           omega : 0 < roundedB d (failureOrder d delta) eps)).prob
-      {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤ delta := by
+      {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤ delta := by
   let q := failureOrder d delta
   let s := roundedS q eps
   let b := roundedB d q eps
@@ -181,9 +181,9 @@ theorem rounded_failure_le_delta_of_band_bounds
           have h := two_le_main_roundedB
             (d := d) (delta := delta) heps0 heps1
           omega : 0 < roundedB d (failureOrder d delta) eps)).prob
-      {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} =
+      {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} =
         (rawSampleLaw s b n (lt_trans Nat.zero_lt_one hb)).prob
-          {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} := by
+          {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := by
             simp [s, b, q]
     _ ≤ (d : ℝ) * (3 * cB b ^ 2 * beta / eps) ^ (2 * q) := htail
     _ ≤ (d : ℝ) * (roundedMomentBase d q eps) ^ (2 * q) :=
@@ -215,15 +215,14 @@ theorem rounded_operator_norm_failure_le_delta_of_band_bounds
           have h := two_le_main_roundedB
             (d := d) (delta := delta) heps0 heps1
           omega : 0 < roundedB d (failureOrder d delta) eps)).prob
-      {z | eps < ‖gramError F (toSample z)‖} ≤ delta := by
+      {z | eps < ‖gramError F (stackMatrix (toSample z))‖} ≤ delta := by
   have hevent :
       {z : RawSample (roundedS (failureOrder d delta) eps)
           (roundedB d (failureOrder d delta) eps) n |
-        eps < ‖gramError F (toSample z)‖} =
-      {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} := by
+        eps < ‖gramError F (stackMatrix (toSample z))‖} =
+      {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := by
     ext z
-    have hiff := MatrixTail.sparseStack_gramError_norm_le_iff_vector_ose
-      F (toSample z) eps heps0.le
+    have hiff := norm_gramError_le_iff_isSubspaceEmbedding F (stackMatrix (toSample z)) heps0.le
     simpa [not_le] using not_congr hiff
   rw [hevent]
   exact rounded_failure_le_delta_of_band_bounds
@@ -252,7 +251,7 @@ theorem rounded_success_probability_of_band_bounds
           have h := two_le_main_roundedB
             (d := d) (delta := delta) heps0 heps1
           omega : 0 < roundedB d (failureOrder d delta) eps)).prob
-        {z | MatrixTail.IsSparseStackOSE F (toSample z) eps} := by
+        {z | IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := by
   let hbpos : 0 < roundedB d (failureOrder d delta) eps := by
     have h := two_le_main_roundedB
       (d := d) (delta := delta) heps0 heps1
@@ -261,9 +260,9 @@ theorem rounded_success_probability_of_band_bounds
     (roundedB d (failureOrder d delta) eps) n hbpos
   let good : Set (RawSample (roundedS (failureOrder d delta) eps)
       (roundedB d (failureOrder d delta) eps) n) :=
-    {z | MatrixTail.IsSparseStackOSE F (toSample z) eps}
+    {z | IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps}
   have hgoodCompl : goodᶜ =
-      {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} := by
+      {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := by
     ext z
     rfl
   have hfail : mu.prob goodᶜ ≤ delta := by
@@ -280,7 +279,7 @@ theorem rounded_success_probability_of_band_bounds
           have h := two_le_main_roundedB
             (d := d) (delta := delta) heps0 heps1
           omega : 0 < roundedB d (failureOrder d delta) eps)).prob
-        {z | MatrixTail.IsSparseStackOSE F (toSample z) eps} := by
+        {z | IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := by
       rfl
 
 end

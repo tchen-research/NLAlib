@@ -53,12 +53,12 @@ theorem condExp_traceExp_add_le_traceExp_add_matrixLog_of_predictable
     apply hi.congr
     filter_upwards [hX] with ω hω
     dsimp [g]
-    rw [(posDef_matrixExp_and_matrixLog_matrixExp_finite _ hω).2]
+    rw [(posDef_matrixExp_and_matrixLog_matrixExp _ hω).2]
   have heq : (fun ω => g (U ω) (matrixExp (X ω))) =ᵐ[μ]
       (fun ω => traceExp (H ω + X ω)) := by
     filter_upwards [hUH, hX] with ω hUω hXω
     dsimp [g]
-    rw [hUω, (posDef_matrixExp_and_matrixLog_matrixExp_finite _ hXω).2]
+    rw [hUω, (posDef_matrixExp_and_matrixLog_matrixExp _ hXω).2]
   have hcomp : ∀ p q : selfAdjoint (Matrix n n ℂ), ∀ A ∈ {A : Matrix n n ℂ | A.PosDef},
       ∀ δ : ℝ, 0 ≤ δ → dist p q ≤ δ → g p A ≤ Real.exp δ * g q A := by
     intro p q A hA δ hδ hd
@@ -68,11 +68,11 @@ theorem condExp_traceExp_add_le_traceExp_add_matrixLog_of_predictable
     rw [dist_eq_norm] at hh
     simpa only [add_sub_add_right_eq_sub] using hh
   have hpos : ∀ᵐ ω ∂μ, (matrixExp (X ω)).PosDef :=
-    hX.mono fun ω hω => (posDef_matrixExp_and_matrixLog_matrixExp_finite _ hω).1
+    hX.mono fun ω hω => (posDef_matrixExp_and_matrixLog_matrixExp _ hω).1
   have hJ := condExp_family_le_family_condExp_of_exponential_comparison hm
     (g := g) (f := fun ω => matrixExp (X ω)) (U := U)
     (fun p => lieb_concavity_finite (p : Matrix n n ℂ) p.property)
-    (fun p => continuousOn_traceExp_add_matrixLog_finite (p : Matrix n n ℂ))
+    (fun p => continuousOn_traceExp_add_matrixLog (p : Matrix n n ℂ))
     hcomp hpos hExp hfixed (hTrace.congr heq.symm) hmean hUMeas
   filter_upwards [hJ, condExp_congr_ae heq, hUH] with ω hJω hEqω hUω
   change μ[(fun ω => g (U ω) (matrixExp (X ω))) | m] ω ≤

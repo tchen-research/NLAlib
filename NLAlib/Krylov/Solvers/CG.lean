@@ -25,8 +25,7 @@ instance `IsAffineMinimiser (cgObjective A c) x₀ K_q` of the generic minimiser
 * `NLAlib.quadForm_sub_le_of_isCGIterate_of_poly`: the polynomial bound
   `‖x_q − x⋆‖_A² ≤ (max_i |p(λᵢ)|)² ‖x₀ − x⋆‖_A²` for every `p` with `deg p ≤ q`, `p(0) = 1`.
 * `NLAlib.quadForm_sub_le_of_isCGIterate`: the condition-number bound
-  `‖x_q − x⋆‖_A ≤ 2((√b − √a)/(√b + √a))^q ‖x₀ − x⋆‖_A` for spectrum in `[a, b]`, `0 < a < b`,
-  and `NLAlib.quadForm_sub_le_of_isCGIterate_of_le` for `0 < a ≤ b`.
+  `‖x_q − x⋆‖_A ≤ 2((√b − √a)/(√b + √a))^q ‖x₀ − x⋆‖_A` for spectrum in `[a, b]`, `0 < a ≤ b`.
 
 Source: Trefethen–Bau (1997) [`tb97`], Lecture 38 (Thms 38.1, 38.3, 38.5); Golub–Meurant (2010)
 [`gm10`], Ch. 8; Saad (2003), Thm 6.29. Atlas: `cg-convergence`; finite termination uses
@@ -198,31 +197,23 @@ theorem quadForm_sub_le_of_isCGIterate_of_poly {A : Matrix n n ℝ} (hA : A.IsHe
   simpa only [aeval_X] using h
 
 /-- **CG convergence, condition-number form.** Let `A` be symmetric with every eigenvalue in
-`[a, b]`, `0 < a < b`, `A x⋆ = c`, and `x` a `q`-th CG iterate from `x₀`. Then
+`[a, b]`, `0 < a ≤ b`, `A x⋆ = c`, and `x` a `q`-th CG iterate from `x₀`. Then
 `‖x − x⋆‖_A² ≤ (2 ((√b − √a)/(√b + √a))^q)² ‖x₀ − x⋆‖_A²`; with `κ = b/a`,
-`(√b − √a)/(√b + √a) = (√κ − 1)/(√κ + 1)`.
+`(√b − √a)/(√b + √a) = (√κ − 1)/(√κ + 1)`. When `a = b` (`A = aI`), CG is exact after one step
+and the bound reads `0` for `q ≥ 1` and `4 ‖x₀ − x⋆‖_A²` for `q = 0`.
 Source: Trefethen–Bau (1997) [`tb97`], Thm 38.5; Golub–Meurant (2010) [`gm10`], Ch. 8.
 Atlas: `cg-convergence`; uses `chebyshev-minimax`, `polynomial-spectral-bound`,
-`krylov-subspace`. Deviation: squared `A`-norms (the source states the unsquared form).
+`krylov-subspace`. Deviation: squared `A`-norms (the source states the unsquared form); the
+degenerate case `a = b` is included.
 atlas: cg-convergence -/
 theorem quadForm_sub_le_of_isCGIterate {A : Matrix n n ℝ} (hA : A.IsHermitian) {a b : ℝ}
-    (ha : 0 < a) (hab : a < b) (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a b)
-    {c x₀ xs x : n → ℝ} (hxs : A *ᵥ xs = c) {q : ℕ} (hx : IsCGIterate A c x₀ q x) :
-    quadForm A (x - xs) ≤ (2 * ((√b - √a) / (√b + √a)) ^ q) ^ 2 * quadForm A (x₀ - xs) :=
-  quadForm_sub_le_of_isCGIterate_of_poly hA (fun i => ha.le.trans (hspec i).1) hxs hx
-    (degree_chebyshevResidual_le a b q) (eval_chebyshevResidual_zero ha hab)
-    (fun i => abs_eval_chebyshevResidual_le_two_mul_pow q ha hab (hspec i))
-
-/-- **CG convergence, condition-number form including `a = b`.** As
-`quadForm_sub_le_of_isCGIterate` but for `0 < a ≤ b`. When `a = b` (`A = aI`), CG is exact
-after one step and the bound reads `0` for `q ≥ 1` and `4 ‖x₀ − x⋆‖_A²` for `q = 0`.
-Source: Trefethen–Bau (1997) [`tb97`], Thm 38.5. Atlas: `cg-convergence`. -/
-theorem quadForm_sub_le_of_isCGIterate_of_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {a b : ℝ}
     (ha : 0 < a) (hab : a ≤ b) (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a b)
     {c x₀ xs x : n → ℝ} (hxs : A *ᵥ xs = c) {q : ℕ} (hx : IsCGIterate A c x₀ q x) :
     quadForm A (x - xs) ≤ (2 * ((√b - √a) / (√b + √a)) ^ q) ^ 2 * quadForm A (x₀ - xs) := by
   rcases hab.lt_or_eq with hlt | rfl
-  · exact quadForm_sub_le_of_isCGIterate hA ha hlt hspec hxs hx
+  · exact quadForm_sub_le_of_isCGIterate_of_poly hA (fun i => ha.le.trans (hspec i).1) hxs hx
+      (degree_chebyshevResidual_le a b q) (eval_chebyshevResidual_zero ha hlt)
+      (fun i => abs_eval_chebyshevResidual_le_two_mul_pow q ha hlt (hspec i))
   have hpsd : ∀ i, 0 ≤ hA.eigenvalues i := fun i => ha.le.trans (hspec i).1
   have hq0 := quadForm_nonneg_of_eigenvalues_nonneg hA hpsd (x₀ - xs)
   rcases Nat.eq_zero_or_pos q with rfl | hq

@@ -1,4 +1,4 @@
-import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
+import NLAlib.Matrix.Functions.IntrinsicDimension
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 
 /-!
@@ -14,14 +14,6 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator ComplexOrder
 
 namespace NLAlib
-
-private lemma traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
-    (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
-    traceFunction φ A = ∑ i, φ (hA.eigenvalues i) := by
-  rw [traceFunction, hA.cfc_eq]
-  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
-  simp
 
 /-- For Hermitian `B`, `ψ ≥ 0`, `ψ` monotone on `[0,∞)`, `0 ≤ t ≤ λmax B`:
 `ψ t ≤ tr ψ(B)`. -/

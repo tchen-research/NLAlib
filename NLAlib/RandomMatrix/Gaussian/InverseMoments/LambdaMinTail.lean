@@ -234,16 +234,20 @@ Atlas: `wishart-lambda-min-tail`. Proof: Gaussian operator calculus gives a scal
 weak inequality; the scalar weighted-density theorem and quadratic-probe Mellin
 endpoint recover the exact coefficient. No joint Wishart eigenvalue density or
 Vandermonde Jacobian is used. The rank-one case holds with equality. The statement
-is identical to the Prove2me density-bound theorem.
+is identical to the Prove2me density-bound theorem. The positive threshold hypothesis matches
+the published statement and is not used by the proof.
 atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral {r k : ℕ} (hr : 1 ≤ r)
-    (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :
+    (hrk : r ≤ k) (t : ℝ) (_ht : 0 < t) :
     (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
       ≤ ∫⁻ x in Set.Ioc 0 t, ENNReal.ofReal
           (2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2)
               / (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))
             * x ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-x / 2)) := by
-  exact gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_operator hr hrk t ht
+  apply gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality hr hrk _ t
+  intro ψ hψ hψc hψs hψ0
+  exact integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix
+    hr hrk ψ hψ hψc hψs hψ0
 
 /-! ### The Gamma-ratio estimate -/
 

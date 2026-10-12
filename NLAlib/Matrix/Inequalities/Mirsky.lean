@@ -60,7 +60,7 @@ theorem sum_abs_singularValues_add_sub_le_sum_prefix {m n : ℕ}
   have hdiff (i : Fin (min m n)) :
       ((isHermitian_dilation A).add (isHermitian_dilation E)).eigenvalues₀ (f i) -
         (isHermitian_dilation A).eigenvalues₀ (f i) = |δ i| := by
-    rw [eigenvalues₀_eq_of_eq (dilation_add A E).symm _ (isHermitian_dilation (A + E))]
+    rw [eigenvalues₀_eq_of_matrix_eq _ (isHermitian_dilation (A + E)) (dilation_add A E).symm]
     rw [hspectrum, hspectrum]
     split_ifs with hi
     · exact (abs_of_nonneg hi).symm

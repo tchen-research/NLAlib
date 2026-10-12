@@ -1,5 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.DiagonalLaw
 import NLAlib.Probability.Gaussian.Moments.PositiveMoments
+import NLAlib.Probability.Gaussian.Basic.StandardVector
 import NLAlib.Matrix.Spectral.QuadraticProbe
 
 /-!+# Gaussian quadratic probes for inverse spectral moments
@@ -16,19 +17,6 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
-
-/-- Orthogonal conjugation transports the total inverse Gram matrix, including singular
-matrices. Source: Schur/operator inverse-Wishart route; atlas `inverse-wishart-spectral-moment`.
--/
-theorem inv_self_mul_transpose_orthogonal_mul {r k : ℕ}
-    (U : Matrix (Fin r) (Fin r) ℝ) (hU : Uᵀ * U = 1)
-    (G : Matrix (Fin r) (Fin k) ℝ) :
-    ((U * G) * (U * G)ᵀ)⁻¹ = U * (G * Gᵀ)⁻¹ * Uᵀ := by
-  have hUinv : U⁻¹ = Uᵀ := Matrix.inv_eq_left_inv hU
-  rw [Matrix.transpose_mul]
-  rw [show U * G * (Gᵀ * Uᵀ) = U * (G * Gᵀ) * Uᵀ by simp [Matrix.mul_assoc]]
-  rw [Matrix.mul_inv_rev, Matrix.mul_inv_rev, ← Matrix.transpose_nonsing_inv, hUinv,
-    Matrix.transpose_transpose, Matrix.mul_assoc]
 
 /-- Every admissible positive real moment of an inverse Gram diagonal entry is finite,
 with its inverse-chi-square Gamma value. Source: Schur residual law and scalar Gaussian
@@ -175,26 +163,6 @@ theorem integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_gaussianM
   · simpa only [hscale] using hint.const_mul (S ^ q)
   · simp_rw [hscale]
     rw [integral_const_mul, hval]
-
-set_option backward.isDefEq.respectTransparency false in
-/-- A unit directional Gaussian probe is a scalar standard Gaussian.
-Source: Gaussian orthogonal invariance; atlas `gaussian-positive-moments` (probe interface). -/
-theorem pi_gaussianReal_map_dotProduct_unit {r : ℕ} (v : Fin r → ℝ)
-    (hv : v ⬝ᵥ v = 1) :
-    (Measure.pi fun _ : Fin r => gaussianReal 0 1).map (fun z => v ⬝ᵥ z)
-      = gaussianReal 0 1 := by
-  let w : EuclideanSpace ℝ (Fin r) := WithLp.toLp 2 v
-  let L : StrongDual ℝ (EuclideanSpace ℝ (Fin r)) := innerSL ℝ w
-  have hLsq : ‖L‖ ^ 2 = 1 := by
-    rw [show L = innerSL ℝ w from rfl, innerSL_apply_norm, EuclideanSpace.real_norm_sq_eq]
-    simpa [w, dotProduct, sq] using hv
-  have hfun : (fun z : Fin r → ℝ => v ⬝ᵥ z) = L ∘ (WithLp.toLp 2) := by
-    funext z
-    simp [L, w, PiLp.inner_apply, dotProduct, mul_comm]
-  rw [hfun, ← Measure.map_map L.continuous.measurable (by fun_prop), map_pi_eq_stdGaussian,
-    IsGaussian.map_eq_gaussianReal L, integral_strongDual_stdGaussian,
-    variance_dual_stdGaussian, hLsq]
-  simp
 
 /-- The moment of a squared unit Gaussian projection has the scalar Gamma value.
 Source: scalar Gaussian moments; atlas `gaussian-positive-moments` (operator probe detector).

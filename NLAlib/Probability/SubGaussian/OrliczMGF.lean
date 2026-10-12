@@ -1,4 +1,5 @@
 import Mathlib.Probability.Moments.SubGaussian
+import NLAlib.ForMathlib.Analysis.ExpBounds
 
 /-!
 # From Orlicz exponential moments to centered moment-generating bounds
@@ -19,37 +20,6 @@ open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
 namespace NLAlib
-
-/-- A global first-order exponential remainder bound. Used to recover the quadratic MGF
-behavior of a centered variable from an Orlicz exponential moment.
-Atlas `subgaussian-def`, `bernstein-scalar` (analytic helper). -/
-theorem exp_le_one_add_add_sq_mul_exp_abs (x : ℝ) :
-    Real.exp x ≤ 1 + x + x ^ 2 * Real.exp |x| := by
-  have he : 1 ≤ Real.exp |x| := Real.one_le_exp (abs_nonneg x)
-  by_cases hsmall : |x| ≤ 1
-  · have hrem := Real.abs_exp_sub_one_sub_id_le hsmall
-    have hupper : Real.exp x ≤ 1 + x + x ^ 2 := by
-      linarith [(le_abs_self (Real.exp x - 1 - x)).trans hrem]
-    have hmul : x ^ 2 ≤ x ^ 2 * Real.exp |x| := by
-      simpa using mul_le_mul_of_nonneg_left he (sq_nonneg x)
-    linarith
-  · by_cases hx : 0 ≤ x
-    · have hx1 : 1 ≤ x := by simpa [abs_of_nonneg hx] using (not_le.mp hsmall).le
-      rw [abs_of_nonneg hx]
-      have hsq : 1 ≤ x ^ 2 := by nlinarith
-      have hmul : Real.exp x ≤ x ^ 2 * Real.exp x := by
-        simpa using mul_le_mul_of_nonneg_right hsq (Real.exp_pos x).le
-      linarith
-    · have hx0 : x ≤ 0 := (not_le.mp hx).le
-      have hx1 : x ≤ -1 := by
-        have h := (not_le.mp hsmall).le
-        rw [abs_of_nonpos hx0] at h
-        linarith
-      have hex : Real.exp x ≤ 1 := by simpa using Real.exp_le_exp.mpr hx0
-      have hsq : -x ≤ x ^ 2 := by nlinarith
-      have hmul : x ^ 2 ≤ x ^ 2 * Real.exp |x| := by
-        simpa using mul_le_mul_of_nonneg_left he (sq_nonneg x)
-      linarith
 
 private theorem quadratic_remainder_le_exp_sq (u y : ℝ) :
     (u * y) ^ 2 * Real.exp |u * y| ≤

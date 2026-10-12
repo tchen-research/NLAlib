@@ -1,5 +1,5 @@
 import NLAlib.Estimation.Trace.HutchinsonTail
-import NLAlib.RandomMatrix.Gaussian.Moments.Conditioning
+import NLAlib.ForMathlib.Probability.Independence
 /-!
 # Unbiasedness of deflated trace estimators: Hutch++ and XTrace
 

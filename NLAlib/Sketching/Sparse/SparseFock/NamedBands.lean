@@ -23,100 +23,95 @@ noncomputable section
 
 variable {d m n : ℕ}
 
-/-- A physical sparse-Fock operator is a finite matrix on external-coordinate and pattern indices.
-Source: ported from `SparseFockFormal.NamedBands`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-abbrev Physical (d m n : ℕ) := FullOp d m n
-
 /-- A named two-leg word sums its physical distinct-column terms over all rows.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 def wordSum (m : ℕ) (u : Fin n → Fin d → ℝ) (a b : Leg) :
-    Physical d m n :=
+    FullOp d m n :=
   physicalWordSum m u (a, b)
 
 /-- The light-light raising band consists of two light creation legs.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Lplus (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Lplus (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .pUp .pUp
 
 /-- The light-light preserving band sums the two light creation-annihilation orientations.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Lzero (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Lzero (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .pUp .pDown + wordSum m u .pDown .pUp
 
 /-- The light-light lowering band consists of two light annihilation legs.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Lminus (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Lminus (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .pDown .pDown
 
 /-- The heavy-heavy raising band consists of two heavy creation legs.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Hplus (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Hplus (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .rUp .rUp
 
 /-- The heavy-heavy preserving band sums the two heavy creation-annihilation orientations.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Hzero (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Hzero (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .rUp .rDown + wordSum m u .rDown .rUp
 
 /-- The heavy-heavy lowering band consists of two heavy annihilation legs.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Hminus (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Hminus (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .rDown .rDown
 
 /-- The first mixed raising band has light creation followed by heavy creation.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Xplus (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Xplus (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .pUp .rUp
 
 /-- The second mixed raising band has heavy creation followed by light creation.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Yplus (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Yplus (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .rUp .pUp
 
 /-- The first mixed preserving band has light creation followed by heavy annihilation.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Xzero (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Xzero (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .pUp .rDown
 
 /-- The second mixed preserving band has heavy annihilation followed by light creation.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def Yzero (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def Yzero (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .rDown .pUp
 
 /-- The first mixed lowering band is the ordered adjoint of the first raising band.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def XplusAdj (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def XplusAdj (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .rDown .pDown
 
 /-- The second mixed lowering band is the ordered adjoint of the second raising band.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def YplusAdj (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def YplusAdj (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .pDown .rDown
 
 /-- The first mixed preserving adjoint reverses the light-heavy orientation.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def XzeroAdj (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def XzeroAdj (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .rUp .pDown
 
 /-- The second mixed preserving adjoint reverses the heavy-light orientation.
 Source: ported from `SparseFockFormal.NamedBands`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def YzeroAdj (m : ℕ) (u : Fin n → Fin d → ℝ) : Physical d m n :=
+def YzeroAdj (m : ℕ) (u : Fin n → Fin d → ℝ) : FullOp d m n :=
   wordSum m u .pDown .rUp
 
 /-- The raising lightLight inventory cell equals its named physical band family.

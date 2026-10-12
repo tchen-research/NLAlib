@@ -99,13 +99,13 @@ Source: ported sparse-Fock shared-leg/vacuum proof, commit
 `b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
 theorem normSq_eq_sum_blockFiber (x : Fin d × Pattern m n → ℝ) :
     FiniteHilbert.normSq x =
-      ∑ q : FockBlockKey m n, coordinateEnergy (blockFiber x q) := by
+      ∑ q : FockBlockKey m n, FiniteHilbert.normSq (blockFiber x q) := by
   classical
   have h := Equiv.sum_comp (fullIndexBlockEquiv (d := d) (m := m) (n := n))
     (fun z : Σ q : FockBlockKey m n, BlockIndex d q.1 q.2.1 ↦
       x ((fullIndexBlockEquiv (d := d) (m := m) (n := n)).symm z) ^ 2)
   rw [Fintype.sum_sigma] at h
-  simpa [FiniteHilbert.normSq, coordinateEnergy, blockFiber] using h
+  simpa [FiniteHilbert.normSq, FiniteHilbert.normSq, blockFiber] using h
 
 /-- A block's grade is its light count plus twice its heavy count.
 Source: ported sparse-Fock shared-leg/vacuum proof, commit

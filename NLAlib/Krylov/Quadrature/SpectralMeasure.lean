@@ -1,5 +1,5 @@
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import NLAlib.Matrix.Functions.PolynomialCalculus
+import NLAlib.Matrix.Functions.CFCQuadratic
 /-!
 # The spectral measure of a symmetric matrix and a vector
 
@@ -11,14 +11,16 @@ functional calculus (every function is continuous on the finite spectrum).
 
 ## Main results
 
-* `NLAlib.dotProduct_cfc_mulVec_eq_sum`: `vᵀ f(A) v = ∑ᵢ f(λᵢ) (uᵢ ⬝ v)²` (eigen-expansion for
-  an arbitrary function; the polynomial case is `NLAlib.dotProduct_aeval_mulVec_eq_sum`).
 * `NLAlib.spectralMeasure`, `NLAlib.integral_spectralMeasure`: `∫ f dμ_v = vᵀ f(A) v`.
 * `NLAlib.integral_eval_spectralMeasure`, `NLAlib.integral_pow_spectralMeasure`:
-  polynomial and moment forms, `∫ p dμ_v = vᵀ p(A) v`, `∫ xᵏ dμ_v = vᵀ Aᵏ v`.
+  polynomial and moment forms, `∫ p dμ_v = vᵀ p(A) v`, `∫ xᵏ dμ_v = vᵀ Aᵏ v`;
+  `NLAlib.integral_eval_mul_eval_spectralMeasure`: `∫ p p' dμ_v = (p(A) v) ⬝ (p'(A) v)`.
 * `NLAlib.spectralMeasure_univ`: total mass `‖v‖²`;
   `NLAlib.spectralMeasure_compl_range_eigenvalues`:
   the measure lives on the eigenvalues.
+
+The eigen-expansion `vᵀ f(A) v = ∑ᵢ f(λᵢ) (uᵢ ⬝ v)²` behind it is
+`NLAlib.dotProduct_cfc_mulVec_eq_sum` (`NLAlib.Matrix.Functions.CFCQuadratic`).
 
 The Hutchinson clause `𝔼_g[gᵀ f(A) g] = tr f(A)` of the atlas entry is `hutchinson-unbiased`
 applied to `f(A)` and lives in `NLAlib.Estimation.Trace.Unbiased` (layer 4).
@@ -35,27 +37,6 @@ open MeasureTheory Matrix
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-
-/-- Eigen-expansion of a quadratic form of a matrix function: for symmetric `A`,
-`vᵀ f(A) v = ∑ᵢ f(λᵢ) (uᵢ ⬝ v)²` with `(λᵢ, uᵢ)` the eigenpairs of `A`.
-Source: Golub–Meurant (2010) [`gm10`], Ch. 7, eq. (7.1). Atlas: `spectral-measure` (helper;
-belongs with the polynomial calculus in `NLAlib.Matrix.Spectral.Core`). -/
-theorem dotProduct_cfc_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (f : ℝ → ℝ)
-    (v : n → ℝ) :
-    v ⬝ᵥ (cfc f A *ᵥ v) =
-      ∑ i, f (hA.eigenvalues i) * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v) ^ 2 := by
-  rw [hA.cfc_eq, IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
-  have h1 : v ᵥ* (hA.eigenvectorUnitary : Matrix n n ℝ) =
-      fun i => (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v := by
-    ext i; simp [Matrix.vecMul, dotProduct, mul_comm]
-  have h2 : (star (hA.eigenvectorUnitary : Matrix n n ℝ)) *ᵥ v =
-      fun i => (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v := by
-    ext i; simp [Matrix.mulVec, dotProduct, Matrix.star_apply]
-  rw [h1, h2]
-  simp only [dotProduct, Matrix.mulVec_diagonal, Function.comp_apply, RCLike.ofReal_real_eq_id,
-    id]
-  exact Finset.sum_congr rfl fun i _ => by ring
 
 /-- The spectral measure `μ_v = ∑ᵢ (uᵢ ⬝ v)² δ_{λᵢ}` of a symmetric matrix `A` and a vector `v`.
 Source: Golub–Meurant (2010) [`gm10`], Ch. 7 (the measure `α(λ)` of the Riemann–Stieltjes
@@ -118,6 +99,16 @@ atlas: spectral-measure -/
 theorem integral_pow_spectralMeasure {A : Matrix n n ℝ} (hA : A.IsHermitian) (v : n → ℝ)
     (k : ℕ) : ∫ x, x ^ k ∂spectralMeasure hA v = v ⬝ᵥ ((A ^ k) *ᵥ v) := by
   simpa using integral_eval_spectralMeasure hA v (Polynomial.X ^ k)
+
+open Polynomial in
+/-- For symmetric `A`, `∫ p p' dμ_b = (p(A) b) ⬝ (p'(A) b)`. Helper for `spectral-measure`. -/
+theorem integral_eval_mul_eval_spectralMeasure {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    (b : n → ℝ) (p p' : ℝ[X]) :
+    ∫ x, p.eval x * p'.eval x ∂spectralMeasure hA b = (aeval A p *ᵥ b) ⬝ᵥ (aeval A p' *ᵥ b) := by
+  have h := integral_eval_spectralMeasure hA b (p * p')
+  simp only [eval_mul] at h
+  rw [h, map_mul, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose,
+    transpose_aeval hA]
 
 /-- Quadratic-form spelling: `∫ f dμ_v = quadForm (f(A)) v`. Atlas: `spectral-measure`. -/
 theorem integral_spectralMeasure_eq_quadForm {A : Matrix n n ℝ} (hA : A.IsHermitian)

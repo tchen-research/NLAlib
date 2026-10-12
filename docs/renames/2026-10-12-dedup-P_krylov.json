@@ -1,0 +1,14 @@
+{
+  "NLAlib.frobSq_eq_sum_eigenvalues_sq": "NLAlib.frobSq_eq_sum_sq_eigenvalues",
+  "NLAlib.mul_pow_eq_pow_mul_of_mul_eq": "NLAlib.pow_mul_eq_mul_pow_of_mul_eq",
+  "NLAlib.mul_pow_mul_eq_mul_mul_pow": "mul_pow_mul",
+  "NLAlib.LanczosDecomp.transpose_Q_mulVec_pow_mulVec": "NLAlib.transpose_mulVec_pow_mulVec_eq",
+  "NLAlib.LanczosDecomp.transpose_Q_mulVec_aeval_mulVec": "NLAlib.transpose_mulVec_aeval_mulVec_eq",
+  "NLAlib.eigenvectorBasis_dotProduct_self": "NLAlib.eigenvectorBasis_dotProduct_eigenvectorBasis",
+  "NLAlib.Kaczmarz.step_sub_mem_range": "NLAlib.Kaczmarz.step_sub_mem_range_of_sub_mem_range",
+  "NLAlib.Kaczmarz.rate_nonneg": "NLAlib.Kaczmarz.rate_nonneg_of_lower_bound_on_range",
+  "NLAlib.eval_derivative_T_real_one": "Polynomial.Chebyshev.derivative_T_eval_one",
+  "NLAlib.sum_pow_div_factorial_le_exp": "Real.sum_le_exp_of_nonneg",
+  "NLAlib.quadForm_sub_le_of_isCGIterate_of_le": "NLAlib.quadForm_sub_le_of_isCGIterate",
+  "NLAlib.ArnoldiDecomp.mul_restrict_Q_eq_mul_Hbar": "NLAlib.ArnoldiDecomp.mul_restrict_Q_eq_mul"
+}

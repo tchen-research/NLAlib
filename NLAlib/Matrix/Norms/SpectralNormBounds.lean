@@ -11,7 +11,7 @@ Elementary spectral-norm facts that only need the definitions of `NLAlib.Matrix.
   `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖_F` (atlas `norm-lipschitz`);
 * invariance under multiplication by orthonormal frames, `‖PA‖₂ = ‖A‖₂` and `‖APᵀ‖₂ = ‖A‖₂`
   when `PᵀP = I`;
-* bounds from coordinates: `‖A‖₂ ≤ C` from `∑ᵢ (Ax)ᵢ² ≤ C² ∑ⱼ xⱼ²`, `‖diag(v)‖₂ ≤ c` from
+* bounds from coordinates: `‖A‖₂ ≤ c` from `(Ax) ⬝ (Ax) ≤ c² (x ⬝ x)`, `‖diag(v)‖₂ ≤ c` from
   `|vᵢ| ≤ c`, and `‖diag(A, …, A)‖₂ ≤ ‖A‖₂`.
 
 Atlas: `norms-frob-spec`, `norm-lipschitz`.
@@ -73,20 +73,26 @@ theorem specNorm_mul_transpose_right_of_hasOrthonormalCols {p : Type*}
   rw [← specNorm_transpose (A * Pᵀ), Matrix.transpose_mul, Matrix.transpose_transpose,
     specNorm_mul_left_of_hasOrthonormalCols hP, specNorm_transpose]
 
-/-- A spectral-norm bound from a bound on `‖Ax‖²`: if `0 ≤ C` and `∑ᵢ (Ax)ᵢ² ≤ C² ∑ⱼ xⱼ²` for
-every `x`, then `‖A‖₂ ≤ C`. Atlas: `norms-frob-spec` (helper). -/
-theorem specNorm_le_of_forall_sum_sq_mulVec_le (A : Matrix m n ℝ) {C : ℝ} (hC : 0 ≤ C)
-    (h : ∀ x : n → ℝ, ∑ i, (A *ᵥ x) i ^ 2 ≤ C ^ 2 * ∑ j, x j ^ 2) : specNorm A ≤ C := by
+/-- A squared Euclidean vector bound controls the spectral norm: if `0 ≤ c` and
+`(Ax) ⬝ (Ax) ≤ c² (x ⬝ x)` for every `x`, then `‖A‖₂ ≤ c`. This is the defining operator
+supremum; used for Sylvester separation, projection gaps and block-diagonal bounds.
+Atlas: `norms-frob-spec` (helper). -/
+theorem specNorm_le_of_mulVec_sq_le {A : Matrix m n ℝ} {c : ℝ} (hc : 0 ≤ c)
+    (h : ∀ x : n → ℝ, (A *ᵥ x) ⬝ᵥ (A *ᵥ x) ≤ c ^ 2 * (x ⬝ᵥ x)) :
+    specNorm A ≤ c := by
   unfold specNorm
   rw [Matrix.l2_opNorm_def]
-  refine ContinuousLinearMap.opNorm_le_bound _ hC fun x => ?_
-  have h := h x.ofLp
-  have hx : ∑ j, x.ofLp j ^ 2 = ‖x‖ ^ 2 := (EuclideanSpace.real_norm_sq_eq x).symm
+  refine ContinuousLinearMap.opNorm_le_bound _ hc fun x => ?_
+  have hh := h x.ofLp
+  have hx : x.ofLp ⬝ᵥ x.ofLp = ‖x‖ ^ 2 := by
+    simpa [dotProduct, sq] using (EuclideanSpace.real_norm_sq_eq x).symm
   have hy : ‖(Matrix.toEuclideanLin.trans LinearMap.toContinuousLinearMap) A x‖ ^ 2 =
-      ∑ i, (A *ᵥ x.ofLp) i ^ 2 := by
-    rw [EuclideanSpace.real_norm_sq_eq]; rfl
-  rw [hx, ← mul_pow, ← hy] at h
-  exact le_of_pow_le_pow_left₀ two_ne_zero (mul_nonneg hC (norm_nonneg x)) h
+      (A *ᵥ x.ofLp) ⬝ᵥ (A *ᵥ x.ofLp) := by
+    rw [EuclideanSpace.real_norm_sq_eq]
+    simp only [dotProduct, sq]
+    rfl
+  rw [hx, ← hy, ← mul_pow] at hh
+  exact le_of_pow_le_pow_left₀ two_ne_zero (mul_nonneg hc (norm_nonneg x)) hh
 
 omit [Fintype m] [DecidableEq m] in
 /-- `‖diag(v)‖₂ ≤ c` when every `|vᵢ| ≤ c` (`c ≥ 0`). Helper for
@@ -101,7 +107,8 @@ omit [Fintype m] [DecidableEq m] in
 theorem specNorm_blockDiagonal_const_le {κ : Type*} [Fintype κ] [DecidableEq κ]
     (A : Matrix n n ℝ) :
     specNorm (Matrix.blockDiagonal (fun _ : κ => A)) ≤ specNorm A := by
-  refine specNorm_le_of_forall_sum_sq_mulVec_le _ (specNorm_nonneg A) fun x => ?_
+  refine specNorm_le_of_mulVec_sq_le (specNorm_nonneg A) fun x => ?_
+  simp only [dotProduct, ← sq]
   have hD : ∀ i k, (Matrix.blockDiagonal (fun _ : κ => A) *ᵥ x) (i, k) =
       (A *ᵥ fun j => x (j, k)) i := fun i k => by
     rw [Matrix.mulVec, Matrix.mulVec, dotProduct, dotProduct, Fintype.sum_prod_type]

@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.EigenvectorDeflation
 import NLAlib.Matrix.Spectral.GeneralizedEigenPairing
+import NLAlib.ForMathlib.LinearAlgebra.IsolatedCharpoly
 
 /-!
 # Characteristic factors of isolated eigenlines
@@ -17,53 +18,6 @@ open scoped Matrix
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n] {K : Type*} [Field K]
-
-/-- An isolated coordinate contributes exactly one characteristic linear
-factor. Source: Horn–Johnson (2013), Theorem 1.4.7; the remaining block is
-the principal submatrix on all other coordinates, including an empty block. -/
-theorem charpoly_eq_X_sub_C_mul_submatrix_of_isolated_coordinate
-    (M : Matrix n n K) (i : n) (μ : K)
-    (hcol : ∀ j, M j i = if j = i then μ else 0)
-    (hrow : ∀ j, M i j = if j = i then μ else 0) :
-    M.charpoly = (X - C μ) *
-      (M.submatrix (fun j : {j : n // j ≠ i} => j.val) (fun j : {j : n // j ≠ i} => j.val)).charpoly := by
-  classical
-  let L := {j : n // j = i}
-  let R := {j : n // j ≠ i}
-  let : Unique L := ⟨⟨⟨i, rfl⟩⟩, fun j => Subtype.ext j.property⟩
-  let e : L ⊕ R ≃ n := Equiv.sumCompl (fun j => j = i)
-  let B : Matrix R R K := M.submatrix Subtype.val Subtype.val
-  have hblock : M.submatrix e e = Matrix.fromBlocks (Matrix.diagonal (fun _ : L => μ)) 0 0 B := by
-    ext a b
-    cases a with
-    | inl a =>
-      cases b with
-      | inl b =>
-        have ha : a.val = i := a.property
-        have hb : b.val = i := b.property
-        change M a.val b.val = Matrix.diagonal (fun _ : L => μ) a b
-        rw [ha, hb, hcol]
-        simp only [ite_true, Matrix.diagonal_apply, Subsingleton.elim a b, ite_true]
-      | inr b =>
-        have ha : a.val = i := a.property
-        have hb : b.val ≠ i := b.property
-        change M a.val b.val = 0
-        rw [ha, hrow]
-        exact if_neg hb
-    | inr a =>
-      cases b with
-      | inl b =>
-        have ha : a.val ≠ i := a.property
-        have hb : b.val = i := b.property
-        change M a.val b.val = 0
-        rw [hb, hcol]
-        exact if_neg ha
-      | inr b => rfl
-  calc
-    M.charpoly = (M.submatrix e e).charpoly := (Matrix.charpoly_reindex e.symm M).symm
-    _ = (X - C μ) * B.charpoly := by
-      rw [hblock, Matrix.charpoly_fromBlocks_zero₂₁, Matrix.charpoly_diagonal]
-      simp only [Fintype.prod_unique]
 
 /-- Algebraic simplicity excludes the isolated eigenvalue from the remaining
 principal block. Source: Horn–Johnson (2013), Lemma 6.3.10.

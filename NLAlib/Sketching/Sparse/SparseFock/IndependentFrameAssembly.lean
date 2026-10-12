@@ -48,8 +48,7 @@ theorem independent_frame_ose_success_of_band_bounds
         (rawSampleLaw (roundedS (failureOrder d delta) eps)
           (roundedB d (failureOrder d delta) eps) n
           (canonicalB_pos (d := d) (delta := delta) heps0 heps1))).prob
-        {outcome | MatrixTail.IsSparseStackOSE (frames outcome.1)
-          (toSample outcome.2) eps} := by
+        {outcome | IsSubspaceEmbedding (stackMatrix (toSample outcome.2)) (rowMatrix (frames outcome.1).u) eps} := by
   apply FiniteLaw.le_product_prob
   intro omega
   exact ConcreteMomentEndgame.rounded_success_probability_of_band_bounds
@@ -78,7 +77,7 @@ theorem independent_frame_operator_failure_of_band_bounds
         (roundedB d (failureOrder d delta) eps) n
         (canonicalB_pos (d := d) (delta := delta) heps0 heps1))).prob
       {outcome | eps <
-        ‖gramError (frames outcome.1) (toSample outcome.2)‖} ≤ delta := by
+        ‖gramError (frames outcome.1) (stackMatrix (toSample outcome.2))‖} ≤ delta := by
   apply FiniteLaw.product_prob_le
   intro omega
   exact ConcreteMomentEndgame.rounded_operator_norm_failure_le_delta_of_band_bounds

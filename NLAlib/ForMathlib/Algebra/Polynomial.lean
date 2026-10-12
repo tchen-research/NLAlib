@@ -9,7 +9,6 @@ import Mathlib.Data.Real.Basic
 General facts not about NLAlib's objects; candidates for upstreaming to
 `Mathlib/Algebra/Polynomial/`.
 
-* `degree_C_mul_le`: multiplying by a constant does not raise the degree;
 * `eq_zero_of_forall_abs_eval_le_of_nonpos`: a polynomial bounded by `M ≤ 0` on `[−1, 1]` is `0`;
 * `eval_iterate_derivative_natDegree`: the `n`-th derivative of a degree-`n` polynomial is the
   constant `n! · leadingCoeff`.
@@ -20,12 +19,6 @@ Used by `NLAlib.Polynomial.BestApproximation.Minimax` and `NLAlib.Polynomial.Int
 namespace NLAlib
 
 open Polynomial
-
-/-- Multiplying by a constant does not raise the degree. (Mathlib has `natDegree_C_mul_le`.) -/
-theorem degree_C_mul_le {R : Type*} [Semiring R] (c : R) (P : R[X]) :
-    (C c * P).degree ≤ P.degree := by
-  rw [C_mul']
-  exact degree_smul_le _ _
 
 /-- A real polynomial bounded by `M ≤ 0` on `[−1, 1]` is zero. -/
 theorem eq_zero_of_forall_abs_eval_le_of_nonpos {P : ℝ[X]} {M : ℝ} (hM : M ≤ 0)

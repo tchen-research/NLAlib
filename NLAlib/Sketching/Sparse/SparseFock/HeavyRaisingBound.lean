@@ -22,53 +22,14 @@ noncomputable section
 
 variable {d m n : ℕ}
 
-/-- The explicit squared energy is the sum of squared real coordinates.
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def coordNormSq {I : Type*} [Fintype I] (x : I → ℝ) : ℝ :=
-  ∑ i, x i ^ 2
-
-/-- Explicit coordinate squared energy equals the Euclidean norm squared.
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem coordNormSq_toLp {I : Type*} [Fintype I] (x : I → ℝ) :
-    ‖WithLp.toLp 2 x‖ ^ 2 = coordNormSq x := by
-  rw [EuclideanSpace.norm_sq_eq]
-  simp [coordNormSq]
-
-/-- Generic finite-dimensional conversion from a coordinate energy estimate
-to the rectangular matrix L2 operator norm.
-
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem matrix_norm_le_of_coord_energy
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq J]
-    {A : Matrix I J ℝ} {C : ℝ} (hC : 0 ≤ C)
-    (henergy : ∀ x : J → ℝ,
-      coordNormSq (Matrix.mulVec A x) ≤ C ^ 2 * coordNormSq x) :
-    ‖A‖ ≤ C := by
-  rw [Matrix.l2_opNorm_def]
-  apply ContinuousLinearMap.opNorm_le_bound _ hC
-  intro x
-  change ‖WithLp.toLp 2 (Matrix.mulVec A (WithLp.ofLp x))‖ ≤ C * ‖x‖
-  have hsq := henergy (WithLp.ofLp x)
-  have hout := coordNormSq_toLp (Matrix.mulVec A (WithLp.ofLp x))
-  have hin := coordNormSq_toLp (WithLp.ofLp x)
-  have hx : ‖x‖ ^ 2 = coordNormSq (WithLp.ofLp x) := by
-    simpa using hin
-  rw [← hout, ← hx] at hsq
-  have hright : 0 ≤ C * ‖x‖ := mul_nonneg hC (norm_nonneg _)
-  nlinarith [norm_nonneg (WithLp.toLp 2
-    (Matrix.mulVec A (WithLp.ofLp x)))]
-
 /-- Creation block-column energy is the sum of physical-row creation energies.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem coordNormSq_AUpStack (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) :
-    coordNormSq (Matrix.mulVec (AUpStack F) x) =
-      ∑ r, fockNormSq (Matrix.mulVec (AUpMatrix F r) x) := by
-  simp only [coordNormSq, fockNormSq, AUpStack, Matrix.mulVec, dotProduct]
+    FiniteHilbert.normSq (Matrix.mulVec (AUpStack F) x) =
+      ∑ r, FiniteHilbert.normSq (Matrix.mulVec (AUpMatrix F r) x) := by
+  simp only [FiniteHilbert.normSq, FiniteHilbert.normSq, AUpStack, Matrix.mulVec, dotProduct]
   rw [Fintype.sum_prod_type]
 
 /-- Annihilation block-column energy is the sum of physical-row annihilation energies.
@@ -76,9 +37,9 @@ Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem coordNormSq_ADownStack (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) :
-    coordNormSq (Matrix.mulVec (ADownStack F) x) =
-      ∑ r, fockNormSq (Matrix.mulVec (ADownMatrix F r) x) := by
-  simp only [coordNormSq, fockNormSq, ADownStack, Matrix.mulVec, dotProduct]
+    FiniteHilbert.normSq (Matrix.mulVec (ADownStack F) x) =
+      ∑ r, FiniteHilbert.normSq (Matrix.mulVec (ADownMatrix F r) x) := by
+  simp only [FiniteHilbert.normSq, FiniteHilbert.normSq, ADownStack, Matrix.mulVec, dotProduct]
   rw [Fintype.sum_prod_type]
 
 /-- Operator form of the first heavy-leg Loewner/energy estimate.
@@ -88,14 +49,13 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem AUpStack_gradeProjection_norm (F : Frame n d) (nu : ℕ) :
     ‖AUpStack (m := m) F * gradeProjection (d := d) (m := m) nu‖ ≤
       Real.sqrt nu := by
-  apply matrix_norm_le_of_coord_energy (Real.sqrt_nonneg _)
+  apply FiniteHilbert.norm_le_of_normSq_mulVec_le (Real.sqrt_nonneg _)
   intro x
   rw [← Matrix.mulVec_mulVec, coordNormSq_AUpStack]
   calc
     _ ≤ (nu : ℝ) * FiniteHilbert.normSq x := AUp_grade_energy F nu x
-    _ = (Real.sqrt nu) ^ 2 * coordNormSq x := by
+    _ = (Real.sqrt nu) ^ 2 * FiniteHilbert.normSq x := by
       rw [Real.sq_sqrt (Nat.cast_nonneg nu)]
-      rfl
 
 /-- Operator form of the second heavy-leg Loewner/energy estimate.
 
@@ -104,14 +64,13 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem ADownStack_gradeProjection_norm (F : Frame n d) (nu : ℕ) :
     ‖ADownStack (m := m) F * gradeProjection (d := d) (m := m) nu‖ ≤
       Real.sqrt nu := by
-  apply matrix_norm_le_of_coord_energy (Real.sqrt_nonneg _)
+  apply FiniteHilbert.norm_le_of_normSq_mulVec_le (Real.sqrt_nonneg _)
   intro x
   rw [← Matrix.mulVec_mulVec, coordNormSq_ADownStack]
   calc
     _ ≤ (nu : ℝ) * FiniteHilbert.normSq x := ADown_grade_energy F nu x
-    _ = (Real.sqrt nu) ^ 2 * coordNormSq x := by
+    _ = (Real.sqrt nu) ^ 2 * FiniteHilbert.normSq x := by
       rw [Real.sq_sqrt (Nat.cast_nonneg nu)]
-      rfl
 
 /-- The transpose of a heavy synthesis row is the matching annihilation analysis column.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
@@ -125,17 +84,6 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
   congr 1
   have h := congrArg (fun K : FockOp m n ↦ K σ inp.2) (rUpAt_transpose r i)
   simpa [Matrix.transpose_apply] using h
-
-/-- Transposing a real matrix preserves its Euclidean operator norm.
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem norm_transpose_real
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (A : Matrix I J ℝ) : ‖A.transpose‖ = ‖A‖ := by
-  have hct : A.conjTranspose = A.transpose := by
-    ext i j
-    simp [Matrix.conjTranspose_apply, Matrix.transpose_apply]
-  rw [← hct, Matrix.l2_opNorm_conjTranspose]
 
 /-- The row synthesis factor, restricted to middle grade `mu`, has norm at
 most `√(mu+1)`.  This is the concrete `B_r B_r†` estimate.
@@ -152,7 +100,7 @@ theorem BUpStack_rowGradeProjection_norm (F : Frame n d) (mu : ℕ) :
   have ht : (B * R).transpose = R * A := by
     simp [B, R, A, Matrix.transpose_mul]
   calc
-    ‖B * R‖ = ‖(B * R).transpose‖ := (norm_transpose_real (B * R)).symm
+    ‖B * R‖ = ‖(B * R).transpose‖ := (specNorm_transpose (B * R)).symm
     _ = ‖R * A‖ := by rw [ht]
     _ = ‖R * A * P‖ := by
       rw [rowProjection_ADownStack_input (m := m) F mu]
@@ -172,7 +120,7 @@ theorem BUpStack_rowGradeProjection_norm (F : Frame n d) (mu : ℕ) :
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hplus_grade_factor (F : Frame n d) (nu : ℕ) :
-    Hplus m (frameRows F) * gradeProjection (d := d) nu =
+    Hplus m (DirectionalConcrete.frameRows F) * gradeProjection (d := d) nu =
       (BUpStack (m := m) F * rowGradeProjection (m := m) (n := n) (nu + 1)) *
         (AUpStack (m := m) F * gradeProjection (d := d) nu) := by
   rw [Hplus_eq_BUpStack_mul_AUpStack]
@@ -211,7 +159,7 @@ table.  No abstract component-bound premise occurs in the statement.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hplus_gradeProjection_norm (F : Frame n d) (nu : ℕ) :
-    ‖Hplus m (frameRows F) * gradeProjection (d := d) nu‖ ≤ (nu : ℝ) + 1 := by
+    ‖Hplus m (DirectionalConcrete.frameRows F) * gradeProjection (d := d) nu‖ ≤ (nu : ℝ) + 1 := by
   rw [Hplus_grade_factor]
   calc
     _ ≤

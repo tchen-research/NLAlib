@@ -1,6 +1,6 @@
 import NLAlib.Matrix.Spectral.SigmaMinTransport
 import NLAlib.Matrix.Spectral.SingularValueInvariance
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
+import NLAlib.Matrix.Inequalities.KyFanNorms
 import NLAlib.ForMathlib.LinearAlgebra.ComapDimension
 /-!
 # Ostrowski's eigenvalue theorem under congruence
@@ -19,27 +19,6 @@ open Matrix Module
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-
-/-- The smallest singular value of a nonempty square matrix is preserved
-by transposition. Singular-value invariance; helper for
-`ostrowski-congruence-eigenvalues`. -/
-theorem sigmaMin_transpose_eq (S : Matrix n n ℝ) (hn : 0 < Fintype.card n) :
-    sigmaMin Sᵀ = sigmaMin S := by
-  rw [sigmaMin_eq_toEuclideanLin_singularValues_last Sᵀ hn,
-    sigmaMin_eq_toEuclideanLin_singularValues_last S hn, ← singularValues_eq_linearMap,
-    singularValues_transpose, singularValues_eq_linearMap]
-
-omit [DecidableEq n] in
-/-- The homogeneous lower squared-length bound for a matrix uses its
-smallest singular value. Variational singular-value characterization;
-helper for `ostrowski-congruence-eigenvalues`. -/
-theorem sq_sigmaMin_mul_dotProduct_le_mulVec_dotProduct (S : Matrix n n ℝ) (x : n → ℝ) :
-    sigmaMin S ^ 2 * (x ⬝ᵥ x) ≤ (S *ᵥ x) ⬝ᵥ (S *ᵥ x) := by
-  have h := sigmaMin_mul_sqrt_le S x
-  have h₂ := pow_le_pow_left₀
-    (mul_nonneg (sigmaMin_nonneg S) (Real.sqrt_nonneg _)) h 2
-  simpa only [mul_pow, Real.sq_sqrt (dotProduct_self_nonneg x),
-    Real.sq_sqrt (dotProduct_self_nonneg (S *ᵥ x))] using h₂
 
 /-- At a nonnegative original eigenvalue, congruence scales between the
 squared smallest and largest singular values. Singular transformations
@@ -170,18 +149,6 @@ theorem exists_eigenvalues₀_congruence_scale {A : Matrix n n ℝ} (hA : A.IsHe
       · exact (div_le_iff₀ hpos).mpr hb.2
       · rw [div_mul_cancel₀ _ hz]
 
-/-- An invertible real square matrix on a nonempty space has a positive
-smallest singular value. Rank and singular-value support;
-helper for `ostrowski-congruence-eigenvalues`. -/
-theorem sigmaMin_pos_of_isUnit (S : Matrix n n ℝ) (hS : IsUnit S)
-    (hn : 0 < Fintype.card n) : 0 < sigmaMin S := by
-  have hr : (S.reindex (Fintype.equivFin n) (Fintype.equivFin n)).rank = Fintype.card n := by
-    rw [Matrix.rank_reindex]
-    exact Matrix.rank_of_isUnit S hS
-  have hp := (sigmaMin_pos_iff_rank_eq_width
-    (S.reindex (Fintype.equivFin n) (Fintype.equivFin n)) hn).mpr hr
-  simpa only [sigmaMin_reindex] using hp
-
 /-- Every congruence scaling factor can be chosen positive when the
 transformation is invertible. Horn--Johnson (2013), Theorem 4.5.9.
 atlas: ostrowski-congruence-eigenvalues (partial) -/
@@ -190,7 +157,8 @@ theorem exists_pos_eigenvalues₀_congruence_scale {A : Matrix n n ℝ} (hA : A.
     ∃ θ : ℝ, sigmaMin S ^ 2 ≤ θ ∧ θ ≤ specNorm S ^ 2 ∧ 0 < θ ∧
       (Matrix.isHermitian_mul_mul_conjTranspose S hA).eigenvalues₀ k = θ * hA.eigenvalues₀ k := by
   obtain ⟨θ, hlo, hup, heq⟩ := exists_eigenvalues₀_congruence_scale hA S k
-  have hmin := sigmaMin_pos_of_isUnit S hS ((Nat.zero_le k.val).trans_lt k.isLt)
+  haveI : Nonempty n := Fintype.card_pos_iff.mp ((Nat.zero_le k.val).trans_lt k.isLt)
+  have hmin := (sigmaMin_pos_iff_isUnit_of_nonempty S).mpr hS
   exact ⟨θ, hlo, hup, (sq_pos_of_pos hmin).trans_le hlo, heq⟩
 
 /-- Congruence cannot increase the number of positive eigenvalues, even

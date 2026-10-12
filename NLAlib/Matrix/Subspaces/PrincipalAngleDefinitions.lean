@@ -16,9 +16,12 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
-/-- Principal angles are arccosines of the overlap singular values in
-descending order; row and column labels are temporarily normalized to `Fin`.
-Stewart–Sun §I.5.
+/-- The **principal angles** `θ_i = arccos σ_i(PᵀQ)` between `range P` and `range Q` (frames of
+the same width): arccosines of the overlap singular values in descending order, so the angles
+are nondecreasing in `i` (`principalAngles_monotone`); row and column labels are temporarily
+normalized to `Fin`. Stewart–Sun §I.5 (Def I.5.3); Golub–Van Loan 2013, §6.4.3. For frames of
+unequal widths the largest angle is reached through `sinThetaMax` and
+`sinThetaMax_eq_sqrt_one_sub_sq_singularValues`.
 atlas: principal-angles-def (partial) -/
 def principalAnglesFintype (P Q : Matrix m n ℝ) : Fin (Fintype.card n) → ℝ :=
   fun i => Real.arccos (singularValues
@@ -140,7 +143,7 @@ theorem frobSq_sinePrincipalAngles_eq_card_sub_overlap {P Q : Matrix m n ℝ}
     Fintype.card_fin, nsmul_eq_mul, mul_one]
   congr 1
   rw [← frobSq_reindex (Pᵀ*Q) (Fintype.equivFin n) (Fintype.equivFin n),
-    frobSq_eq_sum_sq_singularValues, min_self]
+    frobSq_eq_sum_sq_singularValues, min_self, Fintype.card_fin]
   exact Fin.sum_univ_eq_sum_range (fun j => singularValues
     ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) j^2) (Fintype.card n)
 

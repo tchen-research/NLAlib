@@ -17,13 +17,6 @@ namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 omit [DecidableEq m] in
-/-- Native singular values vanish after the actual matrix rank.
-Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem toEuclideanLin_singularValues_eq_zero_of_rank_le (A : Matrix m n ℝ) {i : ℕ}
-    (hi : A.rank ≤ i) : A.toEuclideanLin.singularValues i = 0 := by
-  exact singularValues_eq_zero_of_rank_le A hi
-
-omit [DecidableEq m] in
 /-- Every positive-exponent Schatten power sum uses exactly the actual rank
 prefix; zero rank yields an empty sum.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
@@ -36,7 +29,7 @@ theorem schattenNorm_eq_sum_rank_rpow (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p
     le_min A.rank_le_card_height A.rank_le_card_width
   apply Finset.sum_subset (Finset.range_subset_range.mpr hr)
   intro i _ hi
-  rw [toEuclideanLin_singularValues_eq_zero_of_rank_le A (by
+  rw [← singularValues_eq_linearMap, singularValues_eq_zero_of_rank_le A (by
     simpa only [Finset.mem_range, not_lt] using hi), Real.zero_rpow hp.ne']
 
 /-- Every positive-exponent Schatten norm dominates the spectral norm,
@@ -54,7 +47,7 @@ theorem specNorm_le_schattenNorm (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
         (Finset.mem_range.mpr hN)
     · have hs : specNorm A = 0 := by
         rw [← hfirst]
-        exact toEuclideanLin_singularValues_eq_zero_of_min_le A (by omega)
+        exact singularValues_eq_zero_of_min_le A (by omega)
       rw [hs, Real.zero_rpow hp.ne']
       exact Finset.sum_nonneg (fun i _ => Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p)
   have h := Real.rpow_le_rpow (Real.rpow_nonneg (specNorm_nonneg A) p) hsum
@@ -96,7 +89,7 @@ theorem schattenNorm_le_rank_rpow_mul_specNorm (A : Matrix m n ℝ) {p : ℝ} (h
     calc
       _ ≤ ∑ _i ∈ Finset.range A.rank, specNorm A ^ p :=
         Finset.sum_le_sum fun i _ => Real.rpow_le_rpow (LinearMap.singularValues_nonneg _ i)
-          (toEuclideanLin_singularValues_le_specNorm A i) hp.le
+          (singularValues_le_specNorm A i) hp.le
       _ = _ := by simp
   have h := Real.rpow_le_rpow (Finset.sum_nonneg fun i _ =>
     Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p) hsum (one_div_nonneg.mpr hp.le)

@@ -1,5 +1,5 @@
 import NLAlib.Probability.Gaussian.Calculus.PolynomialGrowthIntegrationByParts
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
+import NLAlib.Probability.Gaussian.Basic.StandardVector
 
 /-!
 # Gaussian coordinate integration by parts with moderate growth

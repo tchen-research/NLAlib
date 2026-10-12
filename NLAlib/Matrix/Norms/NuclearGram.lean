@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Norms.NuclearPSD
-import NLAlib.Matrix.Norms.NuclearFiniteIndex
+import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Spectral.GramSingularValues
 
 /-!
@@ -30,7 +30,7 @@ theorem nuclearNorm_eq_of_gram_eq (A B : Matrix m n ℝ) (hGram : Aᵀ * A = B�
   unfold nuclearNorm kyFanNorm
   apply Finset.sum_congr rfl
   intro i _
-  exact toEuclideanLin_singularValues_eq_of_gram_eq A B
+  exact singularValues_eq_of_gram_eq A B
     (by simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hGram) i
 
 /-- The trace of the positive polar factor is the nuclear norm, including

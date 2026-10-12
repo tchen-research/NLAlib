@@ -1,0 +1,8 @@
+{
+  "NLAlib.gramSchmidt_eq_sub_sum_inner_div_norm_sq": "InnerProductSpace.gramSchmidt_def''",
+  "NLAlib.degree_C_mul_le": "Polynomial.degree_smul_le",
+  "NLAlib.hasDerivAt_integral_sub_kernel": "deleted (unused)",
+  "NLAlib.antitoneOn_integral_sub_of_integral_deriv_nonneg": "deleted (unused)",
+  "NLAlib.integrable_pi_of_coordinate_oscillation": "deleted (unused)",
+  "NLAlib.prod_sub_erase_ne_zero_of_injective": "deleted (unused)"
+}

@@ -14,9 +14,12 @@ open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
-/-- The fitted-value sensitivity under a pure matrix perturbation has coefficient
-`κ/cos θ`, in epsilon–delta form. Trefethen–Bau 1997, Theorem 18.1; the projector
-gap gives the coefficient exactly inside a rank-preserving neighborhood. -/
+/-- **Least squares, `y` under perturbation of `A` (first order).** The fitted-value sensitivity
+under a pure matrix perturbation has coefficient `κ/cos θ`, in epsilon–delta form: for full column
+rank `A` and `y = A A⁺ b`, `‖Δy‖/‖y‖ ≤ (κ(A)/cos θ + ε) ‖ΔA‖/‖A‖` once `‖ΔA‖₂ < δ`.
+Trefethen–Bau 1997, Theorem 18.1 (third entry); the projector gap gives the coefficient exactly
+inside a rank-preserving neighborhood.
+atlas: least-squares-perturbation (partial) -/
 theorem exists_pos_forall_sqrt_pinv_fit_sub_div_le (A : Matrix m n ℝ)
     (hA : A.rank = Fintype.card n) (b : m → ℝ) :
     ∀ ε > 0, ∃ δ > 0, ∀ E : Matrix m n ℝ, specNorm E < δ →
@@ -92,9 +95,11 @@ theorem exists_pos_forall_sqrt_pinv_fit_sub_div_le (A : Matrix m n ℝ)
     _ ≤ (conditionNumber A / leastSquaresCos A b + ε) * (specNorm E / specNorm A) :=
       mul_le_mul_of_nonneg_right (by linarith) (div_nonneg he hM.le)
 
-/-- The solution sensitivity under a pure matrix perturbation has coefficient
-`κ+κ² tan θ/η`, in epsilon–delta form. Trefethen–Bau 1997, Theorem 18.1;
-the finite pseudoinverse denominator is absorbed in the prescribed epsilon. -/
+/-- **Least squares, `x` under perturbation of `A` (first order).** The solution sensitivity
+under a pure matrix perturbation has coefficient `κ+κ² tan θ/η`, in epsilon–delta form.
+Trefethen–Bau 1997, Theorem 18.1 (fourth entry); Golub–Van Loan 2013, Thm 5.3.1 (first-order
+`κ² tan θ` form); the finite pseudoinverse denominator is absorbed in the prescribed epsilon.
+atlas: least-squares-perturbation (partial) -/
 theorem exists_pos_forall_sqrt_pinv_solution_sub_div_le (A : Matrix m n ℝ)
     (hA : A.rank = Fintype.card n) (b : m → ℝ) :
     ∀ ε > 0, ∃ δ > 0, ∀ E : Matrix m n ℝ, specNorm E < δ →

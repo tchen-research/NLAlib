@@ -121,9 +121,9 @@ theorem fullFiber_mulVec_eq_zero_of_grade {delta : ℤ}
     {nu : ℕ} {x : Fin d × Pattern m n → ℝ}
     (hx : SupportedAtGrade nu x) (p : Pattern m n)
     (hp : (p.grade : ℤ) ≠ (nu : ℤ) + delta) :
-    fullFiber (Matrix.mulVec A x) p = 0 := by
+    fiber (Matrix.mulVec A x) p = 0 := by
   ext k
-  simp only [fullFiber, PiLp.toLp_apply, Matrix.mulVec, dotProduct]
+  simp only [fiber, PiLp.toLp_apply, Matrix.mulVec, dotProduct]
   apply Finset.sum_eq_zero
   intro inp _
   by_cases hin : inp.2.grade = nu
@@ -254,7 +254,7 @@ theorem markedEnergy_one_zero_le (F : Frame n d) {nu : ℕ}
     _ = (nu : ℝ) * FiniteHilbert.normSq x := by
       rw [← Finset.mul_sum]
       congr 1
-      simpa [fiber, fullFiber] using (full_normSq_eq_sum_fiber x).symm
+      simpa [fiber, fiber] using (full_normSq_eq_sum_fiber x).symm
 
 /-- Fully concrete input-side resummation for heavy marks, with the factor two
 kept denominator-free.
@@ -308,7 +308,7 @@ theorem two_mul_markedEnergy_two_zero_le (F : Frame n d) {nu : ℕ}
     _ = (nu : ℝ) * FiniteHilbert.normSq x := by
       rw [← Finset.mul_sum]
       congr 1
-      simpa [fiber, fullFiber] using (full_normSq_eq_sum_fiber x).symm
+      simpa [fiber, fiber] using (full_normSq_eq_sum_fiber x).symm
 
 end
 

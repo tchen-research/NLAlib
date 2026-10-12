@@ -1,7 +1,7 @@
 /- Copyright (c) 2026 Diar Heidary.
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
-import NLAlib.Sketching.Sparse.SparseFock.ParsevalFrame
+import NLAlib.Sketching.Sparse.SparseFock.GramError
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -242,13 +242,6 @@ theorem exactly_s_nonzeros_per_column {s b n : ℕ} (Z : Sample s b n) (hs : 0 <
   rw [Fintype.card_congr (columnSupportEquiv Z hs i)]
   simp
 
-/-- The sketch Gram matrix `ΠᵀΠ`.
-
-Source: ported from `SparseFockFormal.SparseStackModel`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def sketchGram {s b n : ℕ} (Z : Sample s b n) : Matrix (Fin n) (Fin n) ℝ :=
-  (stackMatrix Z).transpose * stackMatrix Z
-
 /-- One block Gram entry is its normalization squared times the signed-basis inner product.
 Source: ported from `SparseFockFormal.SparseStackModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
@@ -269,29 +262,13 @@ Source: ported from `SparseFockFormal.SparseStackModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem sketchGram_apply {s b n : ℕ} (Z : Sample s b n) (hs : 0 < s)
     (i j : Fin n) :
-    sketchGram Z i j =
+    sketchGram (stackMatrix Z) i j =
       (1 / (s : ℝ)) * ∑ g, ⟪signedBasis Z g i, signedBasis Z g j⟫_ℝ := by
   rw [sketchGram, Matrix.mul_apply]
   simp only [Matrix.transpose_apply]
   rw [Fintype.sum_prod_type]
   simp_rw [block_gram_apply Z]
   rw [← Finset.mul_sum, invSqrt_sq hs]
-
-/-- The embedded Gram matrix `UᵀΠᵀΠU`.
-
-Source: ported from `SparseFockFormal.SparseStackModel`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def embeddedGram {s b n d : ℕ} (F : Frame n d) (Z : Sample s b n) :
-    Matrix (Fin d) (Fin d) ℝ :=
-  (rowMatrix F.u).transpose * (sketchGram Z * rowMatrix F.u)
-
-/-- The Gram error `UᵀΠᵀΠU - I_d`.
-
-Source: ported from `SparseFockFormal.SparseStackModel`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def gramError {s b n d : ℕ} (F : Frame n d) (Z : Sample s b n) :
-    Matrix (Fin d) (Fin d) ℝ :=
-  embeddedGram F Z - 1
 
 /-- The full ordered-column expansion, before canceling its diagonal.
 
@@ -319,7 +296,7 @@ Source: ported from `SparseFockFormal.SparseStackModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem embeddedGram_eq_fullExpansion {s b n d : ℕ} (F : Frame n d)
     (Z : Sample s b n) (hs : 0 < s) :
-    embeddedGram F Z = fullGramExpansion F Z := by
+    embeddedGram F (stackMatrix Z) = fullGramExpansion F Z := by
   ext a c
   simp only [embeddedGram, Matrix.mul_apply, Matrix.transpose_apply, rowMatrix]
   simp_rw [sketchGram_apply Z hs]
@@ -348,7 +325,7 @@ theorem fullExpansion_eq_one_add_hollow {s b n d : ℕ} (F : Frame n d)
     (fun M : Matrix (Fin d) (Fin d) ℝ ↦ M a c) F.parseval
   have hparseval' : (∑ i, F.u i a * F.u i c) =
       (1 : Matrix (Fin d) (Fin d) ℝ) a c := by
-    simpa [Matrix.sum_apply, outer] using hparseval
+    simpa [Matrix.sum_apply, Matrix.vecMulVec_apply] using hparseval
   let T : Fin n → Fin n → ℝ := fun i j ↦
     (∑ g, ⟪signedBasis Z g i, signedBasis Z g j⟫_ℝ) * F.u i a * F.u j c
   have hsplit (i : Fin n) :
@@ -390,7 +367,7 @@ Source: ported from `SparseFockFormal.SparseStackModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem gramError_eq_hollow {s b n d : ℕ} (F : Frame n d)
     (Z : Sample s b n) (hs : 0 < s) :
-    gramError F Z = hollowGram F Z := by
+    gramError F (stackMatrix Z) = hollowGram F Z := by
   rw [gramError, embeddedGram_eq_fullExpansion F Z hs,
     fullExpansion_eq_one_add_hollow F Z hs]
   abel
@@ -432,7 +409,7 @@ Source: ported from `SparseFockFormal.SparseStackModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem gramError_eq_block_first {s b n d : ℕ} (F : Frame n d)
     (Z : Sample s b n) (hs : 0 < s) :
-    gramError F Z = fun a c ↦ (1 / (s : ℝ)) *
+    gramError F (stackMatrix Z) = fun a c ↦ (1 / (s : ℝ)) *
       ∑ g, ∑ i, ∑ j ∈ Finset.univ.erase i,
         ⟪signedBasis Z g i, signedBasis Z g j⟫_ℝ * F.u i a * F.u j c := by
   rw [gramError_eq_hollow F Z hs, hollowGram_block_first F Z]

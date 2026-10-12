@@ -178,16 +178,6 @@ theorem measure_le_abs_hutchinsonEstimate_sub_integral_le [Nonempty κ] (A : Mat
           div_le_div_of_nonneg_left ht (by positivity)
             (mul_le_mul_of_nonneg_left hle (by positivity))
 
-omit [IsProbabilityMeasure μ] in
-/-- A standard Gaussian variable is sub-Gaussian with variance proxy `1`.
-Source: Vershynin (2018), Example 2.5.8(i). Atlas: `hutchinson-tail` (helper; belongs in
-`NLAlib.Probability.SubGaussian.Moments`). -/
-theorem hasSubgaussianMGF_of_isStandardGaussian {g : Ω → ℝ} (hg : IsStandardGaussian μ g) :
-    HasSubgaussianMGF g 1 μ := by
-  have hm : AEMeasurable g μ := aemeasurable_of_isStandardGaussian hg
-  rw [← HasSubgaussianMGF.id_map_iff hm, show μ.map g = gaussianReal 0 1 from hg]
-  exact HansonWrightProof.hasSubgaussianMGF_id_gaussianReal_zero_one
-
 private lemma nnreal_one_sq : (⟨(1 : ℝ) ^ 2, sq_nonneg 1⟩ : NNReal) = 1 := by ext; simp
 
 /-- **Hutchinson tail bound, Gaussian test vectors.** If the entries of `Z : n → κ → ℝ` are
@@ -237,27 +227,6 @@ theorem measure_le_abs_hutchinsonEstimate_sub_trace_le_of_rademacher [Nonempty �
 end Tail
 
 /-! ### Relative error for positive semidefinite matrices -/
-
-/-- `‖A‖_F² = ∑ᵢ λᵢ²` for symmetric `A`. Atlas: `hutchinson-tail` (helper; belongs in
-`NLAlib.Matrix.Functions.PolynomialCalculus`). -/
-theorem frobSq_eq_sum_eigenvalues_sq {A : Matrix n n ℝ} (hA : A.IsHermitian) :
-    frobSq A = ∑ i, hA.eigenvalues i ^ 2 := by
-  have hcol : ∀ j, (A *ᵥ Pi.single j 1) ⬝ᵥ (A *ᵥ Pi.single j 1) =
-      ∑ i, hA.eigenvalues i ^ 2 * (hA.eigenvectorBasis i : n → ℝ) j ^ 2 := fun j => by
-    have h := dotProduct_aeval_mulVec_self_eq_sum hA Polynomial.X (Pi.single j 1)
-    simpa using h
-  have hF : frobSq A = ∑ j, (A *ᵥ Pi.single j 1) ⬝ᵥ (A *ᵥ Pi.single j 1) := by
-    rw [frobSq_eq_sum_sq, Finset.sum_comm]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    simp [dotProduct, sq]
-  rw [hF]
-  simp_rw [hcol]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [← Finset.mul_sum]
-  have h1 : ∑ j, (hA.eigenvectorBasis i : n → ℝ) j ^ 2 = 1 := by
-    simpa [dotProduct, sq] using eigenvectorBasis_dotProduct_self hA i
-  rw [h1, mul_one]
 
 section Relative
 

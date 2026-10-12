@@ -174,7 +174,7 @@ theorem exists_dilation_orthogonal_diagonalization {m n : ℕ}
     simp only [Matrix.mul_assoc]
     rw [← Matrix.mul_assoc Wᵀ, hW, Matrix.one_mul, hR]
   · have hrot := rectDiag_dilation_mul_pairRotation (singularValues A)
-      (fun k hk => singularValues_eq_zero_of_min_le A hk) r
+      (fun k hk => singularValues_eq_zero_of_min_le A (by simpa only [Fintype.card_fin] using hk)) r
     have hdiag : dilation (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) =
         R * Matrix.diagonal (Sum.elim (fun i : Fin m => singularValues A i)
           (fun j : Fin n => -singularValues A j)) * Rᵀ := by

@@ -206,7 +206,7 @@ theorem Yplus_output_fiber_le_marked (F : Frame n d) {nu : ℕ}
     {x : Fin d × Pattern m n → ℝ} (hx : SupportedAtGrade nu x)
     (p : Pattern m n) :
     ParsevalFrame.normSq
-      (fullFiber (Matrix.mulVec (Yplus m (frameRows F)) x) p) ≤
+      (fiber (Matrix.mulVec (Yplus m (frameRows F)) x) p) ≤
       (nu : ℝ) * ∑ r, ∑ c ∈ p.lightInRow r,
         ParsevalFrame.normSq (yPlusMarked F x p r c) := by
   by_cases hp : p.grade = nu + 2
@@ -283,7 +283,7 @@ theorem Yzero_output_fiber_le_marked (F : Frame n d) {nu : ℕ}
     {x : Fin d × Pattern m n → ℝ} (hx : SupportedAtGrade nu x)
     (p : Pattern m n) :
     ParsevalFrame.normSq
-      (fullFiber (Matrix.mulVec (Yzero m (frameRows F)) x) p) ≤
+      (fiber (Matrix.mulVec (Yzero m (frameRows F)) x) p) ≤
       (nu : ℝ) * ∑ r, ∑ c ∈ p.lightInRow r,
         ParsevalFrame.normSq (yZeroMarked F x p r c) := by
   by_cases hp : p.grade = nu
@@ -330,7 +330,7 @@ theorem Hprime_output_fiber_le_marked (F : Frame n d) {nu : ℕ}
     {x : Fin d × Pattern m n → ℝ} (hx : SupportedAtGrade nu x)
     (p : Pattern m n) :
     ParsevalFrame.normSq
-      (fullFiber (Matrix.mulVec (Hprime m (frameRows F)) x) p) ≤
+      (fiber (Matrix.mulVec (Hprime m (frameRows F)) x) p) ≤
       (nu : ℝ) * ∑ r, ∑ c ∈ p.lightInRow r,
         ParsevalFrame.normSq (hprimeMarked F x p r c) := by
   by_cases hp : p.grade = nu
@@ -381,7 +381,7 @@ theorem Yplus_output_energy_le_marked (F : Frame n d) {nu : ℕ}
   rw [full_normSq_eq_sum_fiber]
   calc
     (∑ p, ParsevalFrame.normSq
-        (fullFiber (Matrix.mulVec (Yplus m (frameRows F)) x) p)) ≤
+        (fiber (Matrix.mulVec (Yplus m (frameRows F)) x) p)) ≤
         ∑ p, (nu : ℝ) * ∑ r, ∑ c ∈ p.lightInRow r,
           ParsevalFrame.normSq (yPlusMarked F x p r c) := by
       exact Finset.sum_le_sum fun p _ ↦ Yplus_output_fiber_le_marked F hx p
@@ -403,7 +403,7 @@ theorem Yzero_output_energy_le_marked (F : Frame n d) {nu : ℕ}
   rw [full_normSq_eq_sum_fiber]
   calc
     (∑ p, ParsevalFrame.normSq
-        (fullFiber (Matrix.mulVec (Yzero m (frameRows F)) x) p)) ≤
+        (fiber (Matrix.mulVec (Yzero m (frameRows F)) x) p)) ≤
         ∑ p, (nu : ℝ) * ∑ r, ∑ c ∈ p.lightInRow r,
           ParsevalFrame.normSq (yZeroMarked F x p r c) := by
       exact Finset.sum_le_sum fun p _ ↦ Yzero_output_fiber_le_marked F hx p
@@ -425,7 +425,7 @@ theorem Hprime_output_energy_le_marked (F : Frame n d) {nu : ℕ}
   rw [full_normSq_eq_sum_fiber]
   calc
     (∑ p, ParsevalFrame.normSq
-        (fullFiber (Matrix.mulVec (Hprime m (frameRows F)) x) p)) ≤
+        (fiber (Matrix.mulVec (Hprime m (frameRows F)) x) p)) ≤
         ∑ p, (nu : ℝ) * ∑ r, ∑ c ∈ p.lightInRow r,
           ParsevalFrame.normSq (hprimeMarked F x p r c) := by
       exact Finset.sum_le_sum fun p _ ↦ Hprime_output_fiber_le_marked F hx p

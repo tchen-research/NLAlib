@@ -85,7 +85,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 def orderedJacobiTerm
     (u : Fin n → Fin d → ℝ) (ρ : ℝ)
     (r : Fin m) (i j : Fin n) : FullOp d m n :=
-  externalTensor (outer (u i) (u j))
+  externalTensor (Matrix.vecMulVec (u i) (u j))
     (pairKernel (r, i) (r, j) (jacobi ρ) (jacobi ρ))
 
 /-- An external Jacobi pair equals its weighted sum of typed word operators.

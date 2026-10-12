@@ -2,6 +2,7 @@ import NLAlib.Matrix.Factorizations.Cholesky
 import NLAlib.Matrix.Factorizations.CholeskyCharacterization
 import NLAlib.Matrix.Factorizations.CholeskyDefinite
 import NLAlib.Matrix.Factorizations.CholeskySemidefinite
+import NLAlib.Matrix.Factorizations.CholeskyStep
 import NLAlib.Matrix.Factorizations.CholeskyToolkit
 import NLAlib.Matrix.Factorizations.ComplexCholeskyPivot
 import NLAlib.Matrix.Factorizations.Givens

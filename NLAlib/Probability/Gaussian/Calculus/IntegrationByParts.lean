@@ -1,5 +1,6 @@
 import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
 import NLAlib.ForMathlib.Analysis.Calculus.MeanValue
+import NLAlib.Probability.Gaussian.Basic.StandardGaussian
 /-!
 # Gaussian integration by parts
 
@@ -13,7 +14,7 @@ vectors:
 * `integral_mul_eq_sum_covariance_mul_integral`: `𝔼[U G(V)] = ∑ⱼ Cov(U, Vⱼ) 𝔼[∂ⱼG(V)]` for a
   jointly Gaussian `(U, V)` with `U` centred.
 
-Also the integrability facts `integrable_abs_gaussianReal`, `integrable_sq_gaussianReal` used
+Also the integrability fact `integrable_abs_gaussianReal` (with `integrable_pow_gaussianReal`) used
 throughout `NLAlib.Probability.Gaussian.Calculus` (the linear-growth bound
 `abs_le_abs_add_mul_abs_of_abs_deriv_le` is in `NLAlib.ForMathlib.Analysis.Calculus.MeanValue`).
 
@@ -33,12 +34,6 @@ namespace NLAlib
 theorem integrable_abs_gaussianReal : Integrable (fun y : ℝ => |y|) (gaussianReal 0 1) :=
   (memLp_one_iff_integrable.1 (memLp_id_gaussianReal 1)).abs
 
-/-- `y²` is integrable for the standard Gaussian. Atlas: `gaussian-integration-by-parts`
-(helper). Ported from Prove2me solution `GaussianMatrix.gaussian_ibp_one_dim`. -/
-theorem integrable_sq_gaussianReal : Integrable (fun y : ℝ => y ^ 2) (gaussianReal 0 1) := by
-  have := (memLp_id_gaussianReal (μ := 0) (v := 1) 2).integrable_norm_pow (by norm_num)
-  simpa using this
-
 /-- Integrability under the standard Gaussian is equivalent to Lebesgue
 integrability after multiplication by its scalar density. Source: the Gaussian
 density formula; atlas gaussian-integration-by-parts (helper). -/
@@ -48,17 +43,6 @@ theorem integrable_gaussianReal_iff (g : ℝ → ℝ) :
     integrable_withDensity_iff_integrable_smul' (measurable_gaussianPDF _ _)
       (ae_of_all _ fun _ => gaussianPDF_lt_top)]
   simp [smul_eq_mul]
-
-private lemma gaussianPDFReal_zero_one_eq :
-    gaussianPDFReal 0 1 = fun x => (Real.sqrt (2 * Real.pi))⁻¹ * Real.exp (-(x ^ 2) / 2) := by
-  funext x; simp [gaussianPDFReal_def]
-
-private lemma hasDerivAt_gaussianPDFReal_zero_one (x : ℝ) :
-    HasDerivAt (gaussianPDFReal 0 1) (-(x * gaussianPDFReal 0 1 x)) x := by
-  rw [gaussianPDFReal_zero_one_eq]
-  have h1 : HasDerivAt (fun x : ℝ => -(x ^ 2) / 2) (-x) x :=
-    (((hasDerivAt_pow 2 x).neg).div_const 2).congr_deriv (by norm_num; ring)
-  exact ((h1.exp).const_mul (Real.sqrt (2 * Real.pi))⁻¹).congr_deriv (by ring)
 
 /-- The derivative of the centred Gaussian density: `φ_v'(x) = -(x / v) φ_v(x)`.
 Atlas: `gaussian-integration-by-parts` (helper). Ported from Prove2me solution
@@ -76,6 +60,45 @@ theorem hasDerivAt_gaussianPDFReal_zero (v : NNReal) (hv : v ≠ 0) (x : ℝ) :
 
 /-! ### One-dimensional Stein identity -/
 
+/-- Gaussian integration by parts for an unbounded differentiable function whose
+value, coordinate product, and derivative are integrable. Source: Stein 1981,
+Lemma 1; atlas gaussian-integration-by-parts (operator hard-edge helper).
+atlas: gaussian-integration-by-parts -/
+theorem integral_mul_eq_integral_deriv_gaussianReal_of_integrable
+    (h : ℝ → ℝ) (hh : Differentiable ℝ h)
+    (hhi : Integrable h (gaussianReal 0 1))
+    (hxh : Integrable (fun x => x * h x) (gaussianReal 0 1))
+    (hdi : Integrable (deriv h) (gaussianReal 0 1)) :
+    (∫ x, x * h x ∂(gaussianReal 0 1)) =
+      ∫ x, deriv h x ∂(gaussianReal 0 1) := by
+  let φ := gaussianPDFReal 0 1
+  rw [integrable_gaussianReal_iff] at hxh hdi hhi
+  rw [integral_gaussianReal_eq_integral_smul one_ne_zero,
+    integral_gaussianReal_eq_integral_smul one_ne_zero]
+  simp only [smul_eq_mul]
+  have key := integral_mul_deriv_eq_deriv_mul_of_integrable (u := h)
+    (v := fun x => -φ x) (u' := deriv h) (v' := fun x => x * φ x)
+    (fun x _ => (hh x).hasDerivAt)
+    (fun x _ => ((hasDerivAt_gaussianPDFReal_zero 1 one_ne_zero x).neg).congr_deriv
+      (by simp [φ]))
+    (by
+      have : (h * fun x => x * φ x) = fun x => φ x * (x * h x) := by
+        funext x; simp; ring
+      rw [this]; exact hxh)
+    (by
+      have : (deriv h * fun x => -φ x) = fun x => -(φ x * deriv h x) := by
+        funext x; simp; ring
+      rw [this]; exact hdi.neg)
+    (by
+      have : (h * fun x => -φ x) = fun x => -(φ x * h x) := by
+        funext x; simp; ring
+      rw [this]; exact hhi.neg)
+  have e1 : (fun x => φ x * (x * h x)) = fun x => h x * (x * φ x) := by
+    funext x; ring
+  have e2 : (fun x => φ x * deriv h x) = fun x => -(deriv h x * -φ x) := by
+    funext x; ring
+  rw [e1, key, e2, integral_neg]
+
 /-- **Gaussian integration by parts** (Stein's identity) in dimension one: for `h`
 differentiable with `|h'| ≤ C`, `∫ x h(x) dγ(x) = ∫ h'(x) dγ(x)` with `γ = N(0,1)`.
 Source: Stein 1981, Lemma 1; Vershynin 2018, Lemma 7.2.3 (one-dimensional case). Atlas:
@@ -85,12 +108,10 @@ atlas: gaussian-integration-by-parts -/
 theorem integral_mul_eq_integral_deriv_gaussianReal (h : ℝ → ℝ) (hh : Differentiable ℝ h)
     (C : ℝ) (hdh : ∀ x, |deriv h x| ≤ C) :
     ∫ x, x * h x ∂(gaussianReal 0 1) = ∫ x, deriv h x ∂(gaussianReal 0 1) := by
-  have hC : 0 ≤ C := le_trans (abs_nonneg _) (hdh 0)
-  set φ := gaussianPDFReal 0 1
   have hhc : Continuous h := hh.continuous
   have hxh : Integrable (fun x => x * h x) (gaussianReal 0 1) := by
     refine Integrable.mono' ((integrable_abs_gaussianReal.const_mul |h 0|).add
-      (integrable_sq_gaussianReal.const_mul C)) (by fun_prop) ?_
+      ((integrable_pow_gaussianReal 2).const_mul C)) (by fun_prop) ?_
     refine Filter.Eventually.of_forall (fun x => ?_)
     rw [Real.norm_eq_abs, abs_mul]
     have := abs_le_abs_add_mul_abs_of_abs_deriv_le h hh C hdh x
@@ -107,27 +128,7 @@ theorem integral_mul_eq_integral_deriv_gaussianReal (h : ℝ → ℝ) (hh : Diff
       (integrable_abs_gaussianReal.const_mul C)) hhc.aestronglyMeasurable ?_
     exact Filter.Eventually.of_forall (fun x => by
       rw [Real.norm_eq_abs]; exact abs_le_abs_add_mul_abs_of_abs_deriv_le h hh C hdh x)
-  rw [integrable_gaussianReal_iff] at hxh hdi hhi
-  rw [integral_gaussianReal_eq_integral_smul one_ne_zero,
-    integral_gaussianReal_eq_integral_smul one_ne_zero]
-  simp only [smul_eq_mul]
-  -- integration by parts on the line with `u = h`, `v = -φ`, `v' = x φ`
-  have key := integral_mul_deriv_eq_deriv_mul_of_integrable (u := h) (v := fun x => -φ x)
-    (u' := deriv h) (v' := fun x => x * φ x)
-    (fun x _ => (hh x).hasDerivAt)
-    (fun x _ => ((hasDerivAt_gaussianPDFReal_zero_one x).neg).congr_deriv (by ring))
-    (by
-      have : (h * fun x => x * φ x) = fun x => φ x * (x * h x) := by funext x; simp; ring
-      rw [this]; exact hxh)
-    (by
-      have : (deriv h * fun x => -φ x) = fun x => -(φ x * deriv h x) := by funext x; simp; ring
-      rw [this]; exact hdi.neg)
-    (by
-      have : (h * fun x => -φ x) = fun x => -(φ x * h x) := by funext x; simp; ring
-      rw [this]; exact hhi.neg)
-  have e1 : (fun x => φ x * (x * h x)) = fun x => h x * (x * φ x) := by funext x; ring
-  have e2 : (fun x => φ x * deriv h x) = fun x => -(deriv h x * -φ x) := by funext x; ring
-  rw [e1, key, e2, integral_neg]
+  exact integral_mul_eq_integral_deriv_gaussianReal_of_integrable h hh hhi hxh hdi
 
 /-- Stein's identity for a centred Gaussian of variance `v`: for `h` bounded with bounded
 continuous derivative `h'`, `∫ x h(x) dN(0,v) = v ∫ h'(x) dN(0,v)` (both sides vanish when

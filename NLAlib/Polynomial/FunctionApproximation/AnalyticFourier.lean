@@ -41,16 +41,6 @@ theorem continuous_chebyshevCircleFunction {F : ℂ → ℂ} {ρ : ℝ} (hρ : 1
   exact hFc.comp_continuous hJ (fun θ =>
     joukowski_mem_filledBernsteinEllipse (by rw [hnorm]; exact ⟨le_rfl, hρ⟩))
 
-/-- Fourier monomials of period `2π` equal the unit-circle parametrization at frequency one.
-Source: Mathlib additive-circle Fourier definition; helper for `chebyshev-approx-analytic`. -/
-theorem fourier_one_eq_circleMap (θ : ℝ) :
-    fourier 1 (θ : AddCircle (2 * Real.pi)) = circleMap 0 1 θ := by
-  rw [fourier_coe_apply]
-  simp only [circleMap, Complex.ofReal_one, one_mul, zero_add]
-  congr 1
-  push_cast
-  field_simp
-
 /-- The circle pullback evaluated at a real angle is exactly `F(cos θ)`.
 Source: Trefethen, ATAP, Chapters 3 and 8 (`chebyshev-approx-analytic`, helper). -/
 theorem chebyshevCircleFunction_coe_eq_cos (F : ℂ → ℂ) (θ : ℝ) :
@@ -60,15 +50,6 @@ theorem chebyshevCircleFunction_coe_eq_cos (F : ℂ → ℂ) (θ : ℝ) :
   rw [joukowski_eq_re_of_norm_eq_one hn]
   congr 1
   simp [circleMap, Complex.exp_mul_I]
-
-/-- Natural Fourier frequencies are powers of the first unit-circle monomial.
-Source: Mathlib additive-circle Fourier multiplication; helper for `chebyshev-approx-analytic`. -/
-theorem fourier_nat_eq_pow (k : ℕ) (θ : AddCircle (2 * Real.pi)) :
-    fourier (k : ℤ) θ = fourier 1 θ ^ k := by
-  induction k with
-  | zero => simp only [Nat.cast_zero, fourier_zero, pow_zero]
-  | succ k ih =>
-    rw [Nat.cast_add, Nat.cast_one, fourier_add, ih, pow_succ]
 
 /-- The nonnegative Fourier coefficient of the circle pullback equals its normalized
 Joukowski contour coefficient, with the zeroth Chebyshev normalization not yet doubled.
@@ -128,12 +109,6 @@ theorem chebyshevCircleFunction_neg (F : ℂ → ℂ) (θ : AddCircle (2 * Real.
     chebyshevCircleFunction F (-θ) = chebyshevCircleFunction F θ := by
   simp only [chebyshevCircleFunction, fourier_one, AddCircle.toCircle_neg, Circle.coe_inv,
     joukowski_inv]
-
-/-- Reflecting a Fourier monomial in the circle reverses its frequency.
-Source: Mathlib additive-circle Fourier definition; helper for `chebyshev-approx-analytic`. -/
-theorem fourier_apply_neg (k : ℤ) (θ : AddCircle (2 * Real.pi)) :
-    fourier k (-θ) = fourier (-k) θ := by
-  simp only [fourier_apply, smul_neg, neg_smul]
 
 /-- The Fourier coefficients of the even Joukowski pullback are even.
 Source: Trefethen, ATAP, Chapters 3 and 8 (`chebyshev-approx-analytic`, helper). -/

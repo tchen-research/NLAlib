@@ -4,7 +4,7 @@ import Mathlib.Tactic.NoncommRing
 /-!
 # Operator convexity under isometric compression
 
-Main declaration: `NLAlib.OperatorConvexOn.matrixFunction_conjTranspose_mul_mul_le`.
+Main declaration: `NLAlib.OperatorConvexOn.cfc_conjTranspose_mul_mul_le`.
 
 Atlas: `operator-monotone-convex` (operator Jensen inequality for an isometry).
 
@@ -39,8 +39,8 @@ private lemma operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A H : Matrix ι ι ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
     (hAsp : spectrum ℝ A ⊆ I) (hHsp : spectrum ℝ H ⊆ I)
     (t : ℝ) (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1) :
-    LoewnerLE (matrixFunction f (t • A + (1-t) • H))
-      (t • matrixFunction f A + (1-t) • matrixFunction f H) := by
+    (cfc f (t • A + (1-t) • H)) ≤
+      (t • cfc f A + (1-t) • cfc f H) := by
   let e := Fintype.equivFin ι
   let E := reindexStar e
   have hs (B : Matrix ι ι ℂ) : spectrum ℝ (E B) = spectrum ℝ B :=
@@ -55,7 +55,7 @@ private lemma operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι]
     ← map_sub E] at h
   have hh := h.submatrix e
   simpa [E, reindexStar, Matrix.reindexAlgEquiv, Matrix.reindex_apply,
-    matrixFunction, LoewnerLE, Matrix.submatrix_submatrix] using hh
+    Matrix.le_iff, Matrix.submatrix_submatrix] using hh
 
 private lemma unitary_calculus {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     (U A : Matrix ι ι ℂ) (hU : U.conjTranspose = U) (hU2 : U * U = 1)
@@ -84,7 +84,7 @@ private lemma pinching {ι κ : Type*} [Fintype ι] [Fintype κ]
     (I : Set ℝ) (f : ℝ → ℝ) (hf : OperatorConvexOn I f)
     (X : Matrix (ι ⊕ κ) (ι ⊕ κ) ℂ) (hX : X.IsHermitian)
     (hXI : spectrum ℝ X ⊆ I) :
-    LoewnerLE (cfc f (X.submatrix Sum.inr Sum.inr))
+    (cfc f (X.submatrix Sum.inr Sum.inr)) ≤
       ((cfc f X).submatrix Sum.inr Sum.inr) := by
   let V : Matrix (ι ⊕ κ) (ι ⊕ κ) ℂ := Matrix.fromBlocks 1 0 0 (-1)
   have hV : V.conjTranspose = V := by simp [V, Matrix.fromBlocks_conjTranspose]
@@ -99,12 +99,11 @@ private lemma pinching {ι κ : Type*} [Fintype ι] [Fintype κ]
     simp only [V, Matrix.fromBlocks_multiply, one_mul, mul_one, neg_mul, mul_neg]
     ext i j
     cases i <;> cases j <;> simp <;> ring
-  unfold LoewnerLE at hh
-  rw [hmid, (matrixFunction_fromBlocks _ _ (hX.submatrix _) (hX.submatrix _) f).2.2] at hh
+  rw [Matrix.le_iff] at hh
+  rw [hmid, (cfc_fromBlocks _ _ (hX.submatrix _) (hX.submatrix _) f).2.2] at hh
   have hr := hh.submatrix Sum.inr
-  unfold LoewnerLE
+  rw [Matrix.le_iff]
   convert hr using 1
-  simp only [matrixFunction]
   rw [hcalc.2.2]
   ext i j
   simp [V, Matrix.mul_apply, Fintype.sum_sum_type, Matrix.one_apply]
@@ -148,14 +147,14 @@ private theorem isometry_reflection_identities
 
 Tropp 2015, Thm 8.5.2 (single-isometry form). Atlas: `operator-monotone-convex`. Ported from the
 Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 8*. -/
-theorem NLAlib.OperatorConvexOn.matrixFunction_conjTranspose_mul_mul_le
+theorem NLAlib.OperatorConvexOn.cfc_conjTranspose_mul_mul_le
     {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     [Fintype κ] [DecidableEq κ] [Nonempty κ]
     (I : Set ℝ) (f : ℝ → ℝ) (hf : OperatorConvexOn I f)
     (A : Matrix ι ι ℂ) (hA : A.IsHermitian) (hAI : spectrum ℝ A ⊆ I)
     (K : Matrix ι κ ℂ) (hK : K.conjTranspose * K = 1) :
-    LoewnerLE (matrixFunction f (K.conjTranspose * A * K))
-      (K.conjTranspose * matrixFunction f A * K) := by
+    (cfc f (K.conjTranspose * A * K)) ≤
+      (K.conjTranspose * cfc f A * K) := by
   obtain ⟨c, hc⟩ := ContinuousFunctionalCalculus.spectrum_nonempty (R := ℝ) A hA
   let B : Matrix κ κ ℂ := algebraMap ℝ _ c
   have hB : B.IsHermitian := by
@@ -163,7 +162,7 @@ theorem NLAlib.OperatorConvexOn.matrixFunction_conjTranspose_mul_mul_le
     rw [Algebra.algebraMap_eq_smul_one]
     exact Matrix.isHermitian_one.smul (IsSelfAdjoint.all c)
   let D := Matrix.fromBlocks A 0 0 B
-  have hD := matrixFunction_fromBlocks A B hA hB f
+  have hD := cfc_fromBlocks A B hA hB f
   have hDI : spectrum ℝ D ⊆ I := by
     rw [hD.2.1]
     apply Set.union_subset hAI

@@ -1,4 +1,3 @@
-import NLAlib.Probability.Gaussian.Calculus.IntegrationByParts
 import NLAlib.Probability.Gaussian.Comparison.Interpolation
 import NLAlib.ForMathlib.MeasureTheory.Integral
 /-!
@@ -233,6 +232,9 @@ section Interp2
 variable {ι Ω : Type*} [Fintype ι] [Nonempty ι] [DecidableEq ι] [MeasurableSpace Ω]
   {P : Measure Ω}
 
+/-- Sudakov–Fernique comparison for the soft-max `F_β`: an instance of
+`integral_le_integral_of_covariance_hessian_nonneg`, the Hessian `β (diag p - p pᵀ)` pairing
+nonnegatively with the covariance difference under dominated increments (`sf_quad_nonneg`). -/
 private theorem sf_softmax_compare (X Y : ι → Ω → ℝ)
     (hXY : HasGaussianLaw (fun ω => (fun t => X t ω, fun t => Y t ω)) P)
     (hX0 : ∀ t, ∫ ω, X t ω ∂P = 0) (hY0 : ∀ t, ∫ ω, Y t ω ∂P = 0)
@@ -240,76 +242,8 @@ private theorem sf_softmax_compare (X Y : ι → Ω → ℝ)
     (hinc : ∀ s t, ∫ ω, (X s ω - X t ω) ^ 2 ∂P ≤ ∫ ω, (Y s ω - Y t ω) ^ 2 ∂P)
     {β : ℝ} (hβ : 0 < β) :
     ∫ ω, sfF β (fun t => X t ω) ∂P ≤ ∫ ω, sfF β (fun t => Y t ω) ∂P := by
-  have hP := hXY.isProbabilityMeasure
   have hXm : ∀ t, MemLp (X t) 2 P := fun t => (hXY.fst.eval t).memLp_two
   have hYm : ∀ t, MemLp (Y t) 2 P := fun t => (hXY.snd.eval t).memLp_two
-  have hXi : ∀ t, Integrable (X t) P := fun t => (hXm t).integrable one_le_two
-  have hYi : ∀ t, Integrable (Y t) P := fun t => (hYm t).integrable one_le_two
-  have hXae : ∀ t, AEMeasurable (X t) P := fun t => (hXm t).aestronglyMeasurable.aemeasurable
-  have hYae : ∀ t, AEMeasurable (Y t) P := fun t => (hYm t).aestronglyMeasurable.aemeasurable
-  set Z : ℝ → Ω → ι → ℝ := fun θ ω t => Real.cos θ * X t ω + Real.sin θ * Y t ω with hZ
-  set D : ℝ → Ω → ι → ℝ := fun θ ω t => -Real.sin θ * X t ω + Real.cos θ * Y t ω with hD
-  set B : Ω → ℝ := fun ω => ∑ t, (|X t ω| + |Y t ω|) with hBdef
-  have hB : Integrable B P :=
-    integrable_finsetSum _ fun t _ => (hXi t).abs.add (hYi t).abs
-  have hZb : ∀ θ ω t, |Z θ ω t| ≤ |X t ω| + |Y t ω| := by
-    intro θ ω t
-    refine (abs_add_le _ _).trans ?_
-    rw [abs_mul, abs_mul]
-    gcongr
-    · exact (mul_le_of_le_one_left (abs_nonneg _) (Real.abs_cos_le_one θ))
-    · exact (mul_le_of_le_one_left (abs_nonneg _) (Real.abs_sin_le_one θ))
-  have hDb : ∀ θ ω t, |D θ ω t| ≤ |X t ω| + |Y t ω| := by
-    intro θ ω t
-    refine (abs_add_le _ _).trans ?_
-    rw [abs_mul, abs_mul, abs_neg]
-    gcongr
-    · exact (mul_le_of_le_one_left (abs_nonneg _) (Real.abs_sin_le_one θ))
-    · exact (mul_le_of_le_one_left (abs_nonneg _) (Real.abs_cos_le_one θ))
-  have hZae : ∀ θ, AEMeasurable (Z θ) P := fun θ =>
-    aemeasurable_pi_lambda _ fun t => ((hXae t).const_mul _).add ((hYae t).const_mul _)
-  have hDae : ∀ θ t, AEMeasurable (fun ω => D θ ω t) P := fun θ t =>
-    ((hXae t).const_mul _).add ((hYae t).const_mul _)
-  set Lc := Real.log (Fintype.card ι) / β with hLc
-  set Φ : ℝ → ℝ := fun θ => ∫ ω, sfF β (Z θ ω) ∂P with hΦ
-  set F' : ℝ → Ω → ℝ := fun θ ω => ∑ i, sfp β i (Z θ ω) * D θ ω i with hF'
-  have hderiv : ∀ θ0, HasDerivAt Φ (∫ ω, F' θ0 ω ∂P) θ0 := by
-    intro θ0
-    have hFm : ∀ θ, AEStronglyMeasurable (fun ω => sfF β (Z θ ω)) P := fun θ =>
-      ((sfF_continuous hβ.ne').measurable.comp_aemeasurable (hZae θ)).aestronglyMeasurable
-    have hFint : Integrable (fun ω => sfF β (Z θ0 ω)) P := by
-      refine Integrable.mono' (hB.add (integrable_const Lc)) (hFm θ0)
-        (ae_of_all _ fun ω => ?_)
-      rw [Real.norm_eq_abs]
-      refine (abs_sfF_le hβ _).trans ?_
-      simp only [Pi.add_apply, hBdef]
-      gcongr with t
-      exact hZb θ0 ω t
-    have hF'm : AEStronglyMeasurable (F' θ0) P := by
-      refine (Finset.aemeasurable_fun_sum _ fun i _ => ?_).aestronglyMeasurable
-      exact ((sfp_continuous β i).measurable.comp_aemeasurable (hZae θ0)).mul (hDae θ0 i)
-    have hbound : ∀ θ ω, ‖F' θ ω‖ ≤ B ω := by
-      intro θ ω
-      rw [Real.norm_eq_abs, hF', hBdef]
-      refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun i _ => ?_)
-      rw [abs_mul, abs_of_nonneg (sfp_nonneg β i _)]
-      calc sfp β i (Z θ ω) * |D θ ω i| ≤ 1 * |D θ ω i| :=
-            mul_le_mul_of_nonneg_right (sfp_le_one β i _) (abs_nonneg _)
-        _ ≤ |X i ω| + |Y i ω| := by rw [one_mul]; exact hDb θ ω i
-    have hdiff : ∀ ω θ, HasDerivAt (fun θ => sfF β (Z θ ω)) (F' θ ω) θ := by
-      intro ω θ
-      have hZd : HasDerivAt (fun θ => Z θ ω) (D θ ω) θ := by
-        rw [hasDerivAt_pi]
-        intro t
-        exact ((Real.hasDerivAt_cos θ).mul_const (X t ω)).add
-          ((Real.hasDerivAt_sin θ).mul_const (Y t ω))
-      have := (sfF_hasFDerivAt β hβ.ne' (Z θ ω)).comp_hasDerivAt θ hZd
-      refine this.congr_deriv ?_
-      simp [hF']
-    exact (hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := P)
-      (F := fun θ ω => sfF β (Z θ ω)) (F' := F') (x₀ := θ0) (bound := B) (s := Set.univ)
-      Filter.univ_mem (Filter.Eventually.of_forall hFm) hFint hF'm
-      (ae_of_all _ fun ω θ _ => hbound θ ω) hB (ae_of_all _ fun ω θ _ => hdiff ω θ)).2
   -- the increment condition in covariance form
   set Δ : ι → ι → ℝ := fun i j => ∫ ω, Y i ω * Y j ω ∂P - ∫ ω, X i ω * X j ω ∂P with hΔdef
   have hΔ : ∀ i j, 0 ≤ Δ i i + Δ j j - Δ i j - Δ j i := by
@@ -318,97 +252,21 @@ private theorem sf_softmax_compare (X Y : ι → Ω → ℝ)
     rw [integral_sub_sq_eq X hXm i j, integral_sub_sq_eq Y hYm i j] at h1
     simp only [hΔdef]
     linarith
-  have hHi : ∀ θ i j, Integrable (fun ω => sfH β i j (Z θ ω)) P := fun θ i j =>
-    Integrable.mono' (integrable_const (1 + 2 * β))
-      ((sfH_continuous β i j).measurable.comp_aemeasurable (hZae θ)).aestronglyMeasurable
-      (ae_of_all _ fun ω => by rw [Real.norm_eq_abs]; exact sfH_abs_le hβ i j _)
-  have hnonneg : ∀ θ, 0 ≤ Real.sin θ * Real.cos θ → 0 ≤ ∫ ω, F' θ ω ∂P := by
-    intro θ hsc
-    have hUV : ∀ i, HasGaussianLaw (fun ω => (D θ ω i, fun j => Z θ ω j)) P := by
-      intro i
-      set L : (ι → ℝ) × (ι → ℝ) →L[ℝ] ℝ × (ι → ℝ) :=
-        ((-Real.sin θ) • ((ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : ι => ℝ) i).comp
-            (ContinuousLinearMap.fst ℝ (ι → ℝ) (ι → ℝ))) +
-          Real.cos θ • ((ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : ι => ℝ) i).comp
-            (ContinuousLinearMap.snd ℝ (ι → ℝ) (ι → ℝ)))).prod
-        (Real.cos θ • ContinuousLinearMap.fst ℝ (ι → ℝ) (ι → ℝ) +
-          Real.sin θ • ContinuousLinearMap.snd ℝ (ι → ℝ) (ι → ℝ)) with hL
-      have := hXY.map_fun L
-      have heq : (fun ω => (D θ ω i, fun j => Z θ ω j))
-          = fun ω => L (fun t => X t ω, fun t => Y t ω) := by
-        funext ω
-        simp only [hL, hD, hZ]
-        ext j <;> simp
-      rw [heq]; exact this
-    have hU0 : ∀ i, ∫ ω, D θ ω i ∂P = 0 := by
-      intro i
-      simp only [hD]
-      rw [integral_add ((hXi i).const_mul _) ((hYi i).const_mul _), integral_const_mul,
-        integral_const_mul, hX0, hY0]; ring
-    have hIBP : ∀ i, ∫ ω, D θ ω i * sfp β i (Z θ ω) ∂P
-        = ∑ j, (Real.sin θ * Real.cos θ * Δ i j) * ∫ ω, sfH β i j (Z θ ω) ∂P := by
-      intro i
-      have h := integral_mul_eq_sum_covariance_mul_integral (fun ω => D θ ω i)
-        (fun j ω => Z θ ω j) (hUV i)
-        (hU0 i) (sfp β i) (sfH β i) (fun x => sfp_hasFDerivAt β i x)
-        (fun j => sfH_continuous β i j) (1 + 2 * β)
-        (fun x => by
-          rw [abs_of_nonneg (sfp_nonneg β i x)]
-          linarith [sfp_le_one β i x])
-        (fun j x => sfH_abs_le hβ i j x)
-      refine h.trans (Finset.sum_congr rfl fun j _ => ?_)
-      congr 1
-      exact covariance_rotation_eq X Y hXY hX0 hY0 hcross θ i j
-    have hDp : ∀ i, Integrable (fun ω => D θ ω i * sfp β i (Z θ ω)) P := by
-      intro i
-      refine Integrable.mono' (((hXi i).abs.add (hYi i).abs)) (((hDae θ i).mul
-        ((sfp_continuous β i).measurable.comp_aemeasurable (hZae θ))).aestronglyMeasurable)
-        (ae_of_all _ fun ω => ?_)
-      rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (sfp_nonneg β i _)]
-      calc |D θ ω i| * sfp β i (Z θ ω) ≤ |D θ ω i| * 1 :=
-            mul_le_mul_of_nonneg_left (sfp_le_one β i _) (abs_nonneg _)
-        _ ≤ |X i ω| + |Y i ω| := by rw [mul_one]; exact hDb θ ω i
-    have e1 : ∫ ω, F' θ ω ∂P = ∑ i, ∫ ω, D θ ω i * sfp β i (Z θ ω) ∂P := by
-      simp only [hF']
-      rw [integral_finsetSum _ (fun i _ => by simpa only [mul_comm] using hDp i)]
-      refine Finset.sum_congr rfl fun i _ => ?_
-      congr 1; ext ω; ring
-    have e2 : ∑ i, ∑ j, (Real.sin θ * Real.cos θ * Δ i j) * ∫ ω, sfH β i j (Z θ ω) ∂P
-        = ∫ ω, ∑ i, ∑ j, (Real.sin θ * Real.cos θ * Δ i j) * sfH β i j (Z θ ω) ∂P := by
-      rw [integral_finsetSum _ (fun i _ => integrable_finsetSum _ fun j _ =>
-        (hHi θ i j).const_mul _)]
-      refine Finset.sum_congr rfl fun i _ => ?_
-      rw [integral_finsetSum _ (fun j _ => (hHi θ i j).const_mul _)]
-      refine Finset.sum_congr rfl fun j _ => ?_
-      rw [integral_const_mul]
-    rw [e1]
-    simp_rw [hIBP]
-    rw [e2]
-    refine integral_nonneg fun ω => ?_
-    have e3 : ∑ i, ∑ j, (Real.sin θ * Real.cos θ * Δ i j) * sfH β i j (Z θ ω)
-        = (Real.sin θ * Real.cos θ * β) * ∑ i, ∑ j, Δ i j *
-          ((if i = j then sfp β i (Z θ ω) else 0) - sfp β i (Z θ ω) * sfp β j (Z θ ω)) := by
-      rw [Finset.mul_sum]
-      refine Finset.sum_congr rfl fun i _ => ?_
-      rw [Finset.mul_sum]
-      refine Finset.sum_congr rfl fun j _ => ?_
-      unfold sfH; ring
-    rw [e3]
-    exact mul_nonneg (mul_nonneg hsc hβ.le) (sf_quad_nonneg (fun i => sfp β i (Z θ ω))
-      (sfp_sum β _) (fun i => sfp_nonneg β i _) Δ hΔ)
-  -- monotonicity of Φ on [0, π/2]
-  have hcont : Continuous Φ := continuous_iff_continuousAt.2 fun θ => (hderiv θ).continuousAt
-  have hmono : MonotoneOn Φ (Set.Icc 0 (Real.pi / 2)) := by
-    refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc 0 (Real.pi / 2))
-      hcont.continuousOn (fun θ _ => (hderiv θ).hasDerivWithinAt) (fun θ hθ => ?_)
-    rw [interior_Icc] at hθ
-    refine hnonneg θ (mul_nonneg (Real.sin_nonneg_of_nonneg_of_le_pi hθ.1.le (by linarith [hθ.2,
-      Real.pi_pos])) (Real.cos_nonneg_of_mem_Icc ⟨by linarith [hθ.1, Real.pi_pos], hθ.2.le⟩))
-  have hpi : (0 : ℝ) ≤ Real.pi / 2 := by linarith [Real.pi_pos]
-  have h := hmono ⟨le_refl 0, hpi⟩ ⟨hpi, le_refl _⟩ hpi
-  have h0 : Φ 0 = ∫ ω, sfF β (fun t => X t ω) ∂P := by simp [hΦ, hZ]
-  have h1 : Φ (Real.pi / 2) = ∫ ω, sfF β (fun t => Y t ω) ∂P := by simp [hΦ, hZ]
-  rw [← h0, ← h1]; exact h
+  refine integral_le_integral_of_covariance_hessian_nonneg X Y hXY hX0 hY0 hcross (sfF β)
+    (sfp β) (sfH β) (sfF_hasFDerivAt β hβ.ne') (sfp_hasFDerivAt β) (sfH_continuous β) (1 + 2 * β)
+    (fun i x => by rw [abs_of_nonneg (sfp_nonneg β i x)]; linarith [sfp_le_one β i x])
+    (fun i j x => sfH_abs_le hβ i j x) (Real.log (Fintype.card ι) / β) (abs_sfF_le hβ)
+    (fun x => ?_)
+  have e3 : ∑ i, ∑ j, Δ i j * sfH β i j x
+      = β * ∑ i, ∑ j, Δ i j * ((if i = j then sfp β i x else 0) - sfp β i x * sfp β j x) := by
+    rw [Finset.mul_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [Finset.mul_sum]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    unfold sfH; ring
+  rw [e3]
+  exact mul_nonneg hβ.le (sf_quad_nonneg (fun i => sfp β i x) (sfp_sum β x)
+    (fun i => sfp_nonneg β i x) Δ hΔ)
 
 end Interp2
 

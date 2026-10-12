@@ -65,18 +65,6 @@ theorem fully_independent_sparseStack
   intro shift nu hnu
   exact rounded_band_bound heps0 heps1 F shift nu hnu
 
-/-- Literal matrix-vector version of the OSE event in the displayed theorem.
-
-Source: ported from `SparseFockFormal.MainTheorem`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def IsMatrixSparseStackOSE {s b n d : ℕ}
-    (U : Matrix (Fin n) (Fin d) ℝ) (Z : Sample s b n) (eps : ℝ) : Prop :=
-  ∀ x : EVec d,
-    (1 - eps) * ‖x‖ ^ 2 ≤
-        ‖MatrixTail.applyRectMatrix (stackMatrix Z * U) x‖ ^ 2 ∧
-      ‖MatrixTail.applyRectMatrix (stackMatrix Z * U) x‖ ^ 2 ≤
-        (1 + eps) * ‖x‖ ^ 2
-
 /-- Every conclusion of TeX Theorem 1.1 in the source matrix notation.
 
 Source: ported from `SparseFockFormal.MainTheorem`,
@@ -89,13 +77,13 @@ structure MatrixMainConclusions {n d : ℕ} (delta eps : ℝ)
         (roundedB d (failureOrder d delta) eps) n
         (canonicalB_pos (d := d) (delta := delta) heps0 heps1)).prob
       {z | eps <
-        ‖U.transpose * (sketchGram (toSample z) * U) - 1‖} ≤ delta
+        ‖U.transpose * (sketchGram (stackMatrix (toSample z)) * U) - 1‖} ≤ delta
   oseSuccess :
     1 - delta ≤
       (rawSampleLaw (roundedS (failureOrder d delta) eps)
           (roundedB d (failureOrder d delta) eps) n
           (canonicalB_pos (d := d) (delta := delta) heps0 heps1)).prob
-        {z | IsMatrixSparseStackOSE U (toSample z) eps}
+        {z | IsSubspaceEmbedding (stackMatrix (toSample z)) U eps}
   exactColumnSparsity :
     ∀ (z : RawSample (roundedS (failureOrder d delta) eps)
         (roundedB d (failureOrder d delta) eps) n) (i : Fin n),
@@ -141,8 +129,7 @@ theorem fully_independent_sparseStack_matrix
       bAtLeastTwo := hmain.bAtLeastTwo
       rowsFactor := hmain.rowsFactor }
   · simpa [F] using hmain.operatorFailure
-  · simpa [F, IsMatrixSparseStackOSE, MatrixTail.IsSparseStackOSE] using
-      hmain.oseSuccess
+  · simpa [F] using hmain.oseSuccess
 
 /-- Conditioning corollary for an arbitrary finite law of frames independent
 of the fully independent SparseStack sample.
@@ -160,8 +147,7 @@ theorem fully_independent_sparseStack_independent_frame
         (rawSampleLaw (roundedS (failureOrder d delta) eps)
           (roundedB d (failureOrder d delta) eps) n
           (canonicalB_pos (d := d) (delta := delta) heps0 heps1))).prob
-        {outcome | MatrixTail.IsSparseStackOSE (frames outcome.1)
-          (toSample outcome.2) eps} := by
+        {outcome | IsSubspaceEmbedding (stackMatrix (toSample outcome.2)) (rowMatrix (frames outcome.1).u) eps} := by
   apply IndependentFrameAssembly.independent_frame_ose_success_of_band_bounds
     hd hdelta0 hdelta1 heps0 heps1 frameLaw frames
   intro omega shift nu hnu

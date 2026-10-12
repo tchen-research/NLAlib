@@ -2,6 +2,7 @@ import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.GaussianMgfCgf
 import NLAlib.Probability.Concentration.Matrix.RademacherMgfCgf
 import NLAlib.Matrix.Inequalities.TraceExpMonotone
+import NLAlib.Matrix.Functions.TraceExpBounds
 
 /-!
 # Theorem 4.6.1 — Hermitian Gaussian and Rademacher series
@@ -17,24 +18,6 @@ open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 set_option autoImplicit false
 
 namespace NLAlib
-
-private lemma traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian)
-    {c : ℝ} (hc : 0 ≤ c) : traceExp (c • B) ≤ d * Real.exp (c * ‖B‖) := by
-  rw [traceExp_smul_eq_sum B hB c]
-  calc ∑ i, Real.exp (c * hB.eigenvalues i) ≤ ∑ _i : Fin d, Real.exp (c * ‖B‖) := by
-        apply Finset.sum_le_sum
-        intro i _
-        apply Real.exp_le_exp.mpr
-        apply mul_le_mul_of_nonneg_left _ hc
-        exact (le_abs_self _).trans (abs_le_norm_of_mem_spectrum B (hB.eigenvalues_mem_spectrum_real i))
-    _ = d * Real.exp (c * ‖B‖) := by simp
-
-private lemma traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
-    0 < traceExp H := by
-  have h := traceExp_smul_eq_sum H hH 1
-  rw [one_smul] at h
-  rw [h]
-  exact Finset.sum_pos (fun i _ => Real.exp_pos _) Finset.univ_nonempty
 
 private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
     (s : ℝ) : ‖matrixExp (s • A)‖ ≤ Real.exp (s * ‖A‖) + Real.exp (-(s * ‖A‖)) := by
@@ -133,7 +116,7 @@ private lemma rad_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     [IsProbabilityMeasure μ] (g : Ω → ℝ) (hg : Measurable g) (hL : IsRademacher μ g) :
     MemLp g 2 μ ∧ ∫ ω, g ω ∂μ = 0 ∧ ∫ ω, g ω ^ 2 ∂μ = 1 ∧
       ∀ c : ℝ, Integrable (fun ω => Real.exp (c * g ω)) μ := by
-  unfold IsRademacher at hL
+  rw [isRademacher_iff_map_eq, rademacherMeasure] at hL
   have hS : MeasurableSet {x : ℝ | x = 1 ∨ x = -1} :=
     (measurableSet_singleton 1).union (measurableSet_singleton (-1))
   have hpm : ∀ᵐ ω ∂μ, g ω = 1 ∨ g ω = -1 := by
@@ -218,7 +201,7 @@ theorem NLAlib.hermitian_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     (hLaw : (∀ k, IsStandardGaussian μ (g k)) ∨ (∀ k, IsRademacher μ (g k))) :
     let Y := fun ω => ∑ k, g k ω • A k
     let v := hermitianSecondMoment μ Y
-    v = spectralNorm (∑ k, A k ^ 2) ∧
+    v = ‖∑ k, A k ^ 2‖ ∧
     (∫ ω, lambdaMax (Y ω) ∂μ) ≤ Real.sqrt (2 * v * Real.log d) ∧
     ∀ t : ℝ, 0 ≤ t → (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
       gaussianSeriesTail d v t := by
@@ -234,10 +217,9 @@ theorem NLAlib.hermitian_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
   have hd0 : (0 : ℝ) < d := lt_of_lt_of_le one_pos hd
   have hBherm : (∑ k, A k ^ 2).IsHermitian := isSelfAdjoint_sum _ (fun k _ => (hA k).pow 2)
   have hv : v = ‖∑ k, A k ^ 2‖ := by
-    show spectralNorm (∫ ω, (∑ k, g k ω • A k) ^ 2 ∂μ) = ‖∑ k, A k ^ 2‖
+    show ‖∫ ω, (∑ k, g k ω • A k) ^ 2 ∂μ‖ = ‖∑ k, A k ^ 2‖
     rw [second_moment μ A g hMeas hIndep (fun k => (hfacts k).1)
       (fun k => (hfacts k).2.1) (fun k => (hfacts k).2.2.1)]
-    rfl
   have hv0 : 0 ≤ v := hv ▸ norm_nonneg _
   let X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ := fun k ω => g k ω • A k
   have hsmulMeas : ∀ k, Measurable (fun s : ℝ => s • A k) := fun k =>
@@ -254,7 +236,7 @@ theorem NLAlib.hermitian_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     isSelfAdjoint_sum _ (fun k _ => by unfold matrixLog; exact IsSelfAdjoint.cfc)
   have hcgf : ∀ θ : ℝ, traceExp (cumulantSum μ X θ) ≤ d * Real.exp (θ ^ 2 / 2 * v) := by
     intro θ
-    have hk : ∀ k, LoewnerLE (matrixLog (∫ ω, matrixExp (θ • X k ω) ∂μ))
+    have hk : ∀ k, (matrixLog (∫ ω, matrixExp (θ • X k ω) ∂μ)) ≤
         ((θ ^ 2 / 2) • A k ^ 2) := by
       intro k
       have e : (fun ω => matrixExp (θ • X k ω)) = fun ω => matrixExp ((θ * g k ω) • A k) := by
@@ -263,12 +245,10 @@ theorem NLAlib.hermitian_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
       rw [e]
       rcases hLaw with h | h
       · rw [(gaussian_matrix_mgf_cgf_eq μ (A k) (hA k) (g k) (hMeas k) (h k) θ).2]
-        show ((θ ^ 2 / 2) • A k ^ 2 - (θ ^ 2 / 2) • A k ^ 2).PosSemidef
-        rw [sub_self]
-        exact Matrix.PosSemidef.zero
       · exact (rademacher_matrix_mgf_cgf_le μ (A k) (hA k) (g k) (hMeas k) (h k) θ).2
-    have hsum : LoewnerLE (cumulantSum μ X θ) ((θ ^ 2 / 2) • ∑ k, A k ^ 2) := by
-      unfold LoewnerLE cumulantSum
+    have hsum : (cumulantSum μ X θ) ≤ ((θ ^ 2 / 2) • ∑ k, A k ^ 2) := by
+      unfold cumulantSum
+      rw [Matrix.le_iff]
       rw [Finset.smul_sum, ← Finset.sum_sub_distrib]
       exact Matrix.posSemidef_sum _ (fun k _ => hk k)
     have hBH' : ((θ ^ 2 / 2) • ∑ k, A k ^ 2).IsHermitian :=
@@ -276,14 +256,14 @@ theorem NLAlib.hermitian_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
     calc traceExp (cumulantSum μ X θ) ≤ traceExp ((θ ^ 2 / 2) • ∑ k, A k ^ 2) :=
           traceExp_le_traceExp _ _ (hcumH θ) hBH' hsum
       _ ≤ d * Real.exp (θ ^ 2 / 2 * ‖∑ k, A k ^ 2‖) :=
-          traceExp_le _ hBherm (by positivity)
+          traceExp_smul_le_mul_exp_mul_norm _ hBherm (by positivity)
       _ = d * Real.exp (θ ^ 2 / 2 * v) := by rw [hv]
   refine ⟨hv, ?_, ?_⟩
   · -- expectation bound
     have hE : ∀ θ : ℝ, 0 < θ → (∫ ω, lambdaMax (Y ω) ∂μ) ≤ Real.log d / θ + θ * v / 2 := by
       intro θ hθ
       have h1 := ((master_bounds μ X θ hXMeas hXHerm hXInt hXIndep (hXExp θ)).1 hθ).1
-      have hpos : 0 < traceExp (cumulantSum μ X θ) := traceExp_pos _ (hcumH θ)
+      have hpos : 0 < traceExp (cumulantSum μ X θ) := traceExp_pos_of_isHermitian _ (hcumH θ)
       have hlog : Real.log (traceExp (cumulantSum μ X θ)) ≤ Real.log d + θ ^ 2 / 2 * v := by
         calc _ ≤ Real.log (d * Real.exp (θ ^ 2 / 2 * v)) := Real.log_le_log hpos (hcgf θ)
           _ = _ := by rw [Real.log_mul hd0.ne' (Real.exp_pos _).ne', Real.log_exp]

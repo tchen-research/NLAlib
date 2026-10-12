@@ -1,12 +1,20 @@
 import Mathlib.Analysis.Fourier.AddCircle
+import Mathlib.Analysis.SpecialFunctions.Complex.CircleMap
 
 /-!
 # Explicit Fourier characters on the circle of period two pi
 
-Character multiplication in the argument, uniform-grid roots of unity, and the real-angle
-sine formula are generic Fourier facts used by the sharp Jackson square-wave duality.
+Character multiplication in the argument, reflection, natural frequencies as powers of the
+first character, the unit-circle parametrisation, uniform-grid roots of unity, and the
+real-angle cosine and sine formulas are generic Fourier facts used by the sharp Jackson
+square-wave duality and the analytic Chebyshev (Fourier) reconstruction.
 The scoped instance `NLAlib.TwoPi.fact_zero_lt_two_pi` (`open scoped NLAlib.TwoPi`) supplies
 the period fact `0 < 2π` to every file working on `AddCircle (2 * π)`.
+
+Upstreaming note: `fourier_apply_add` (`fourier_apply` with `AddCircle.toCircle_add`),
+`fourier_apply_neg` (`fourier_apply` with `smul_neg`) and `fourier_nat_eq_pow` (induction on
+Mathlib's `fourier_add`) are short corollaries of Mathlib's `Mathlib/Analysis/Fourier/AddCircle`
+API, stated for period `2π` only; candidates for upstreaming for a general period `T`.
 -/
 
 noncomputable section
@@ -89,5 +97,30 @@ theorem im_fourier_nat_coe_eq_sin (k : ℕ) (t : ℝ) :
   rw [heq, Complex.exp_mul_I]
   simp only [Complex.add_im, Complex.mul_im, Complex.cos_ofReal_im, Complex.sin_ofReal_re,
     Complex.I_re, Complex.I_im, mul_zero, mul_one, add_zero, zero_add]
+
+/-- Reflecting a Fourier monomial in the circle reverses its frequency.
+Source: Mathlib additive-circle Fourier definition; helper for `chebyshev-approx-analytic`. -/
+theorem fourier_apply_neg (k : ℤ) (θ : AddCircle (2 * Real.pi)) :
+    fourier k (-θ) = fourier (-k) θ := by
+  simp only [fourier_apply, smul_neg, neg_smul]
+
+/-- Natural Fourier frequencies are powers of the first unit-circle monomial.
+Source: Mathlib additive-circle Fourier multiplication; helper for `chebyshev-approx-analytic`. -/
+theorem fourier_nat_eq_pow (k : ℕ) (θ : AddCircle (2 * Real.pi)) :
+    fourier (k : ℤ) θ = fourier 1 θ ^ k := by
+  induction k with
+  | zero => simp only [Nat.cast_zero, fourier_zero, pow_zero]
+  | succ k ih =>
+    rw [Nat.cast_add, Nat.cast_one, fourier_add, ih, pow_succ]
+
+/-- Fourier monomials of period `2π` equal the unit-circle parametrization at frequency one.
+Source: Mathlib additive-circle Fourier definition; helper for `chebyshev-approx-analytic`. -/
+theorem fourier_one_eq_circleMap (θ : ℝ) :
+    fourier 1 (θ : AddCircle (2 * Real.pi)) = circleMap 0 1 θ := by
+  rw [fourier_coe_apply]
+  simp only [circleMap, Complex.ofReal_one, one_mul, zero_add]
+  congr 1
+  push_cast
+  field_simp
 
 end NLAlib

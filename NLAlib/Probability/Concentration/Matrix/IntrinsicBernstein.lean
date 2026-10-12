@@ -1,8 +1,7 @@
-import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
+import NLAlib.Matrix.Functions.IntrinsicDimension
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.IntrinsicHermitianBernstein
-import NLAlib.Probability.Concentration.Matrix.DilationIdentities
-import NLAlib.Probability.Concentration.Matrix.BlockIntrinsic
+import NLAlib.Matrix.Functions.DilationIdentities
 import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
 import Mathlib.Analysis.CStarAlgebra.Spectrum
 import Mathlib.LinearAlgebra.Matrix.Reindex
@@ -34,7 +33,7 @@ open NLAlib Matrix
 private lemma intrinsicDimension_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     intrinsicDimension (Matrix.reindex e e A) = intrinsicDimension A := by
-  unfold intrinsicDimension spectralNorm
+  unfold intrinsicDimension
   rw [trace_reindex, norm_reindex]
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -83,27 +82,25 @@ theorem NLAlib.intrinsic_matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (hV : V₁ ≠ 0 ∨ V₂ ≠ 0)
     (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
     (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0)
-    (hBound : ∀ k, ∀ᵐ ω ∂μ, spectralNorm (S k ω) ≤ L)
-    (hVariance₁ : LoewnerLE
-      (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) V₁)
-    (hVariance₂ : LoewnerLE
-      (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) V₂) :
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, ‖S k ω‖ ≤ L)
+    (hVariance₁ : (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) ≤ V₁)
+    (hVariance₂ : (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) ≤ V₂) :
     let Z := fun ω => ∑ k, S k ω
     let r := intrinsicDimension (Matrix.fromBlocks V₁ 0 0 V₂)
-    let v := max (spectralNorm V₁) (spectralNorm V₂)
+    let v := max (‖V₁‖) (‖V₂‖)
     (∫ ω, Z ω * (Z ω).conjTranspose ∂μ) =
       ∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ ∧
     (∫ ω, (Z ω).conjTranspose * Z ω ∂μ) =
       ∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ ∧
     ∀ t : ℝ, Real.sqrt v + L / 3 ≤ t →
-      (μ {ω | t ≤ spectralNorm (Z ω)}).toReal ≤
+      (μ {ω | t ≤ ‖Z ω‖}).toReal ≤
         4 * r * Real.exp (-(t ^ 2 / 2) / (v + L * t / 3)) := by
   intro Z r v
   -- Step 0: integrability and centering of the summands and their adjoints.
   have hSL2 : ∀ k, MemLp (S k) 2 μ := fun k =>
     MemLp.of_bound (hMeas k).aestronglyMeasurable L (by
       filter_upwards [hBound k] with ω h
-      simpa [spectralNorm] using h)
+      simpa using h)
   have hct_meas : Measurable (fun A : Matrix (Fin m) (Fin n) ℂ => A.conjTranspose) :=
     (ctCLM (Fin m) (Fin n)).continuous.measurable
   have hSHL2 : ∀ k, MemLp (fun ω => (S k ω).conjTranspose) 2 μ := fun k =>
@@ -176,16 +173,15 @@ theorem NLAlib.intrinsic_matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     · exact hv h00.1
     · exact hv h00.2.2.2
   obtain ⟨-, hnorm, -⟩ := intrinsicDimension_fromBlocks V₁ V₂ hV₁ hV₂
-  have hvV : spectralNorm V = v := by
+  have hvV : ‖V‖ = v := by
     rw [hVdef]
-    unfold spectralNorm
     rw [norm_reindex]
     exact hnorm
   have hrV : intrinsicDimension V = r := by
     rw [hVdef, intrinsicDimension_reindex]
   have hY : ∀ ω, ∑ k, Φ m n (S k ω) = Φ m n (Z ω) := fun ω =>
     (map_sum (Φ m n) (fun k => S k ω) Finset.univ).symm
-  have hlam : ∀ A : Matrix (Fin m) (Fin n) ℂ, lambdaMax (Φ m n A) = spectralNorm A := by
+  have hlam : ∀ A : Matrix (Fin m) (Fin n) ℂ, lambdaMax (Φ m n A) = ‖A‖ := by
     intro A
     rw [Φ_apply, lambdaMax_reindex]
     exact (dilation_identities A).2.2.1.trans (dilation_identities A).2.2.2
@@ -203,14 +199,14 @@ theorem NLAlib.intrinsic_matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
   have hXbound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (Φ m n (S k ω)) ≤ L := fun k => by
     filter_upwards [hBound k] with ω h
     rw [hlam]; exact h
-  have hVar : LoewnerLE (∫ ω, (∑ k, Φ m n (S k ω)) ^ 2 ∂μ) V := by
+  have hVar : (∫ ω, (∑ k, Φ m n (S k ω)) ^ 2 ∂μ) ≤ V := by
     have hsq : ∀ ω, (Φ m n (Z ω)) ^ 2 = Matrix.reindex finSumFinEquiv finSumFinEquiv
         (Matrix.fromBlocks (Z ω * (Z ω).conjTranspose) 0 0 ((Z ω).conjTranspose * Z ω)) := by
       intro ω
       rw [Φ_apply, ← dilation_sq, ← Matrix.coe_reindexAlgEquiv ℝ, map_pow]
     simp_rw [hY, hsq]
     rw [integral_reindex, integral_fromBlocks_diag μ _ _ hP hQ, hVdef]
-    unfold LoewnerLE
+    rw [Matrix.le_iff]
     rw [← Matrix.coe_reindexLinearEquiv ℂ ℂ, ← map_sub, Matrix.coe_reindexLinearEquiv,
       fromBlocks_diag_sub, Matrix.reindex_apply]
     obtain ⟨hpsd, -⟩ := intrinsicDimension_fromBlocks _ _ hD₁ hD₂

@@ -20,45 +20,6 @@ open MeasureTheory ProbabilityTheory
 
 namespace NLAlib
 
-/-- Gaussian integration by parts for an unbounded differentiable function whose
-value, coordinate product, and derivative are integrable. Source: Stein 1981,
-Lemma 1; atlas gaussian-integration-by-parts (operator hard-edge helper).
-atlas: gaussian-integration-by-parts -/
-theorem integral_mul_eq_integral_deriv_gaussianReal_of_integrable
-    (h : ℝ → ℝ) (hh : Differentiable ℝ h)
-    (hhi : Integrable h (gaussianReal 0 1))
-    (hxh : Integrable (fun x => x * h x) (gaussianReal 0 1))
-    (hdi : Integrable (deriv h) (gaussianReal 0 1)) :
-    (∫ x, x * h x ∂(gaussianReal 0 1)) =
-      ∫ x, deriv h x ∂(gaussianReal 0 1) := by
-  let φ := gaussianPDFReal 0 1
-  rw [integrable_gaussianReal_iff] at hxh hdi hhi
-  rw [integral_gaussianReal_eq_integral_smul one_ne_zero,
-    integral_gaussianReal_eq_integral_smul one_ne_zero]
-  simp only [smul_eq_mul]
-  have key := integral_mul_deriv_eq_deriv_mul_of_integrable (u := h)
-    (v := fun x => -φ x) (u' := deriv h) (v' := fun x => x * φ x)
-    (fun x _ => (hh x).hasDerivAt)
-    (fun x _ => ((hasDerivAt_gaussianPDFReal_zero 1 one_ne_zero x).neg).congr_deriv
-      (by simp [φ]))
-    (by
-      have : (h * fun x => x * φ x) = fun x => φ x * (x * h x) := by
-        funext x; simp; ring
-      rw [this]; exact hxh)
-    (by
-      have : (deriv h * fun x => -φ x) = fun x => -(φ x * deriv h x) := by
-        funext x; simp; ring
-      rw [this]; exact hdi.neg)
-    (by
-      have : (h * fun x => -φ x) = fun x => -(φ x * h x) := by
-        funext x; simp; ring
-      rw [this]; exact hhi.neg)
-  have e1 : (fun x => φ x * (x * h x)) = fun x => h x * (x * φ x) := by
-    funext x; ring
-  have e2 : (fun x => φ x * deriv h x) = fun x => -(deriv h x * -φ x) := by
-    funext x; ring
-  rw [e1, key, e2, integral_neg]
-
 /-- Coordinate Stein identity on a finite product of standard Gaussian laws.
 Source: scalar Gaussian integration by parts and one-coordinate resampling;
 atlas gaussian-integration-by-parts and wishart-lambda-min-tail.

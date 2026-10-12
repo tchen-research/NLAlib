@@ -94,6 +94,7 @@ theorem rectangularDiagonal_singularValues_eq_rectDiag {m n : ℕ}
   by_cases hi : i < min m n
   · simp only [dif_pos hi]
   · simp only [dif_neg hi]
-    exact (singularValues_eq_zero_of_min_le A (k := i) (by omega)).symm
+    exact (singularValues_eq_zero_of_min_le A (k := i)
+      (by simp only [Fintype.card_fin]; omega)).symm
 
 end NLAlib

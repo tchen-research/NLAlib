@@ -14,8 +14,9 @@ linear forms of a standard Gaussian matrix `G`:
   `𝔼⟨c, G⟩² = ∑ᵢⱼ cᵢⱼ²`;
 * `𝔼 √(∑ⱼ H_{0,σ(j)}²) ≤ √k` (`integral_sqrt_sum_sq_gaussianMatrix_entry_le`).
 
-The entrywise facts (`hasGaussianLaw_id_gaussianMatrix`, the instance
-`isGaussian_gaussianMatrix`, `𝔼 Gᵢⱼ = 0`, `𝔼 Gᵢⱼ² = 1`) live in `NLAlib.Probability.Gaussian.Basic.GaussianMatrix`.
+The definition `linForm` with `linForm_eq_frobInner`, `continuous_linForm`, and the entrywise
+facts (`hasGaussianLaw_id_gaussianMatrix`, the instance `isGaussian_gaussianMatrix`, `𝔼 Gᵢⱼ = 0`,
+`𝔼 Gᵢⱼ² = 1`) live in `NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix`.
 
 Ported from the Prove2me solutions `GaussianMatrix.gordon_upper`, `GaussianMatrix.gordon_lower`
 and `GaussianMatrix.spectral_second_moment_bound` (identical helper sections, deduplicated).
@@ -29,16 +30,6 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix
 
 namespace NLAlib
-
-/-- The linear form `⟨c, G⟩ = ∑ᵢⱼ cᵢⱼ Gᵢⱼ` on arrays `Fin p → Fin m → ℝ` (the space carrying
-`gaussianMatrix p m`); equal to `frobInner (Matrix.of c) (Matrix.of G)` (`linForm_eq_frobInner`).
-Ported from Prove2me solution `GaussianMatrix.gordon_upper` (`guLin`). -/
-noncomputable def linForm {p m : ℕ} (c : Fin p → Fin m → ℝ) (G : Fin p → Fin m → ℝ) : ℝ :=
-  ∑ i, ∑ j, c i j * G i j
-
-/-- Bridge to the Frobenius inner product. -/
-theorem linForm_eq_frobInner {p m : ℕ} (c G : Fin p → Fin m → ℝ) :
-    linForm c G = frobInner (Matrix.of c) (Matrix.of G) := rfl
 
 /-- A finite family of linear forms `(⟨a t, ·⟩)ₜ` as one continuous linear map into `ι → ℝ`.
 Ported from Prove2me solution `GaussianMatrix.gordon_upper` (`guLinCLM`). -/
@@ -67,11 +58,6 @@ theorem integrable_linForm_gaussianMatrix {p m : ℕ} (c : Fin p → Fin m → �
   unfold linForm
   exact integrable_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
     ((memLp_gaussianMatrix_entry i j 2 (by simp)).integrable (by simp)).const_mul _
-
-/-- `G ↦ ⟨c, G⟩` is continuous. Ported from Prove2me solution `GaussianMatrix.gordon_upper`
-(helper `gu_continuous_lin`). -/
-theorem continuous_linForm {p m : ℕ} (c : Fin p → Fin m → ℝ) : Continuous (linForm c) := by
-  unfold linForm; fun_prop
 
 /-- `𝔼⟨c, G⟩ = 0`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
 `gu_integral_lin`). Atlas: helper of `gordon`. -/

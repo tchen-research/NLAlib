@@ -19,13 +19,13 @@ set_option autoImplicit false
 /-- Matrix relative entropy of positive definite matrices is nonnegative.
 
 Tropp 2015, Prop. 8.1.3. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 8*. -/
-theorem NLAlib.relativeEntropy_nonneg {d : ℕ} [NeZero d]
-    (A H : Matrix (Fin d) (Fin d) ℂ) (hA : A.PosDef) (hH : H.PosDef) :
+Introduction to Matrix Concentration Inequalities, Ch 8*. Stated on any finite index type. -/
+theorem NLAlib.relativeEntropy_nonneg {d : Type*} [Fintype d] [DecidableEq d]
+    (A H : Matrix d d ℂ) (hA : A.PosDef) (hH : H.PosDef) :
     0 ≤ relativeEntropy A H := by
   let f : Fin 3 → ℝ → ℝ := ![fun a => a * Real.log a - a, fun a => -a, fun _ => 1]
   let g : Fin 3 → ℝ → ℝ := ![fun _ => 1, Real.log, id]
-  have hp (M : Matrix (Fin d) (Fin d) ℂ) (hM : M.PosDef) :
+  have hp (M : Matrix d d ℂ) (hM : M.PosDef) :
       spectrum ℝ M ⊆ Set.Ioi 0 := by
     rw [hM.1.spectrum_real_eq_range_eigenvalues]
     rintro _ ⟨i, rfl⟩
@@ -44,12 +44,12 @@ theorem NLAlib.relativeEntropy_nonneg {d : ℕ} [NeZero d]
     nlinarith
   have hk := generalized_klein (Set.Ioi 0) (convex_Ioi 0) f g hf A H hA.1 hH.1
     (hp A hA) (hp H hH)
-  have hc (M : Matrix (Fin d) (Fin d) ℂ) (hM : M.IsHermitian) (q : ℝ → ℝ) :
+  have hc (M : Matrix d d ℂ) (hM : M.IsHermitian) (q : ℝ → ℝ) :
       ContinuousOn q (spectrum ℝ M) := by
     rw [continuousOn_iff_continuous_domRestrict]
     fun_prop
   simp only [Fin.sum_univ_succ, f, g, Matrix.cons_val_zero, Matrix.cons_val_succ,
-    Matrix.cons_val_fin_one, matrixFunction] at hk
+    Matrix.cons_val_fin_one] at hk
   simp only [cfc_sub _ _ A (hc A hA.1 _) (hc A hA.1 _),
     cfc_mul _ _ A (hc A hA.1 _) (hc A hA.1 _), cfc_neg (fun x : ℝ => x) A,
     cfc_id' ℝ A hA.1.isSelfAdjoint, cfc_id ℝ H hH.1.isSelfAdjoint,

@@ -1,5 +1,4 @@
 import NLAlib.Probability.Concentration.Basic.ChernoffFunctions
-import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Probability.Concentration.Basic.Net

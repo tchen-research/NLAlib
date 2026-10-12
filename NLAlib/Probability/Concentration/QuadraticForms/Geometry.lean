@@ -5,19 +5,20 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
 Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
-The original Apache-2.0 copyright notice is retained. Only the two used legacy
-vocabulary definitions are supplied locally; there is no HighDimProb dependency.
+The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
+vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
 -/
 import Mathlib.Probability.Moments.SubGaussian
-import Mathlib.Tactic
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
+import NLAlib.Matrix.Norms.Core
+import NLAlib.Matrix.Basic.QuadForm
 
 /-!
 # Hanson–Wright proof: Geometry
 
 A focused leaf of the transported independent-coordinate proof.
-Shared helper declarations live in `NLAlib.HansonWrightProof`; the canonical
-public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
 Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
 -/
 
@@ -28,26 +29,8 @@ noncomputable section
 set_option maxRecDepth 5000
 
 namespace NLAlib
-namespace HansonWrightProof
 
 variable {Ω : Type*} [MeasurableSpace Ω]
-/-- Proof-local double-sum form of the quadratic form, retained for source transport. -/
-def matrixQuadraticForm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
-    (x : Fin n → ℝ) : ℝ := ∑ i, ∑ j, x i * A i j * x j
-
-/-- Proof-local name for Mathlib's actual Euclidean operator norm. -/
-def deterministicOperatorNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) : ℝ := ‖A‖
-
-/-- Source-transport helper `real_inner_mul` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma real_inner_mul (a b : ℝ) : inner ℝ a b = a * b := by
-  calc
-    inner ℝ a b = inner ℝ (a • (1 : ℝ)) (b • (1 : ℝ)) := by simp
-    _ = a * b * inner ℝ (1 : ℝ) (1 : ℝ) := by
-      rw [real_inner_smul_left, real_inner_smul_right]
-      simp
-    _ = a * b := by norm_num
-
 /-- Source-transport helper `mgf_innerSL_stdGaussian` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
 lemma mgf_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
@@ -85,17 +68,6 @@ lemma integral_exp_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E]
     ∫ x : E, exp (t * inner ℝ v x) ∂(stdGaussian E) =
       exp (‖v‖ ^ 2 * t ^ 2 / 2) := by
   exact mgf_innerSL_stdGaussian v t
-
-/-- Source-transport helper `hasSubgaussianMGF_id_gaussianReal_zero_one` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma hasSubgaussianMGF_id_gaussianReal_zero_one :
-    HasSubgaussianMGF id (1 : ℝ≥0) (gaussianReal 0 1) where
-  integrable_exp_mul t := by
-    simpa only [id_eq] using integrable_exp_mul_gaussianReal (μ := 0) (v := 1) t
-  mgf_le t := by
-    rw [mgf_id_gaussianReal]
-    simp only [zero_mul, NNReal.coe_one, one_mul, zero_add]
-    rfl
 
 /-- Source-transport helper `symmetric_inner_apply_eq_sum_eigenvalues_repr` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
@@ -141,10 +113,17 @@ lemma orthonormalBasis_repr_sum_smul {E : Type*} [NormedAddCommGroup E]
   · intro hi
     exact (hi (Finset.mem_univ i)).elim
 
+/-- The quadratic form as the double sum `zᵀ A z = ∑ᵢ ∑ⱼ zᵢ Aᵢⱼ zⱼ` (the order of factors used
+throughout the Hanson–Wright proof). Atlas `hanson-wright` (helper). -/
+theorem quadForm_eq_sum_mul_mul {ι : Type*} [Fintype ι] (A : Matrix ι ι ℝ) (z : ι → ℝ) :
+    quadForm A z = ∑ i, ∑ j, z i * A i j * z j := by
+  rw [quadForm_eq_sum]
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
+
 /-- The random quadratic form associated to a random vector `X`. -/
 def randomQuadraticForm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (X : Fin n → Ω → ℝ) : Ω → ℝ :=
-  fun ω => matrixQuadraticForm A fun i => X i ω
+  fun ω => quadForm A fun i => X i ω
 
 /-- The coordinate random vector as an element of Euclidean space. -/
 def randomVector {n : ℕ} (X : Fin n → Ω → ℝ) : Ω → EuclideanSpace ℝ (Fin n) :=
@@ -165,45 +144,10 @@ lemma randomVector_aemeasurable {μ : Measure Ω} {n : ℕ} {X : Fin n → Ω �
   exact (MeasurableEquiv.toLp 2 (Fin n → ℝ)).measurable.comp_aemeasurable
     (aemeasurable_pi_lambda _ hX_meas)
 
-omit [MeasurableSpace Ω] in
-/-- Source-transport helper `measure_map_prod_map_of_aemeasurable` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma measure_map_prod_map_of_aemeasurable {α β γ δ : Type*}
-    [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ]
-    {μ : Measure α} {ν : Measure β} [SFinite μ] [SFinite ν]
-    {f : α → γ} {g : β → δ} (hf : AEMeasurable f μ) (hg : AEMeasurable g ν) :
-    (μ.map f).prod (ν.map g) =
-      (μ.prod ν).map (fun p : α × β => (f p.1, g p.2)) := by
-  let f' := hf.mk f
-  let g' := hg.mk g
-  have hf_map : μ.map f = μ.map f' := Measure.map_congr hf.ae_eq_mk
-  have hg_map : ν.map g = ν.map g' := Measure.map_congr hg.ae_eq_mk
-  have hpair :
-      (fun p : α × β => (f p.1, g p.2)) =ᵐ[μ.prod ν]
-        Prod.map f' g' := by
-    exact
-      ((Measure.quasiMeasurePreserving_fst (μ := μ) (ν := ν)).ae_eq_comp hf.ae_eq_mk).prodMk
-        ((Measure.quasiMeasurePreserving_snd (μ := μ) (ν := ν)).ae_eq_comp hg.ae_eq_mk)
-  calc
-    (μ.map f).prod (ν.map g)
-        = (μ.map f').prod (ν.map g') := by rw [hf_map, hg_map]
-    _ = (μ.prod ν).map (Prod.map f' g') :=
-        Measure.map_prod_map μ ν hf.measurable_mk hg.measurable_mk
-    _ = (μ.prod ν).map (fun p : α × β => (f p.1, g p.2)) :=
-        Measure.map_congr hpair.symm
-
 /-- The centered random quadratic form `Xᵀ A X - E Xᵀ A X`. -/
 def centeredQuadraticForm {n : ℕ} (μ : Measure Ω) (A : Matrix (Fin n) (Fin n) ℝ)
     (X : Fin n → Ω → ℝ) : Ω → ℝ :=
   fun ω => randomQuadraticForm A X ω - ∫ ω, randomQuadraticForm A X ω ∂μ
-
-/-- The squared Frobenius norm of a finite real matrix. -/
-def frobeniusNormSq {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
-  ∑ i, ∑ j, (A i j) ^ 2
-
-/-- The Frobenius norm of a finite real matrix, computed from its entries. -/
-def deterministicFrobeniusNorm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
-  sqrt (frobeniusNormSq A)
 
 /-- The entrywise `ℓ¹` norm of a finite real matrix. -/
 def entrywiseL1Norm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
@@ -306,25 +250,6 @@ lemma coordinateMask_indepFun_compl {μ : Measure Ω} {n : ℕ} {X : Fin n → �
     · simp [coordinateMask, subtypeMask, hi]
     · simp [coordinateMask, subtypeMask, hi]
 
-/-- Source-transport helper `frobeniusNormSq_nonneg` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma frobeniusNormSq_nonneg {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    0 ≤ frobeniusNormSq A := by
-  unfold frobeniusNormSq
-  exact Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => sq_nonneg _
-
-/-- Source-transport helper `frobeniusNorm_nonneg` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma frobeniusNorm_nonneg {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    0 ≤ deterministicFrobeniusNorm A :=
-  sqrt_nonneg _
-
-/-- Source-transport helper `operatorNorm_nonneg` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma operatorNorm_nonneg {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    0 ≤ deterministicOperatorNorm A :=
-  norm_nonneg _
-
 /-- Source-transport helper `entrywiseL1Norm_nonneg` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
 lemma entrywiseL1Norm_nonneg {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
@@ -382,12 +307,12 @@ lemma inner_toEuclideanCLM_cutMatrix_eq_inner_masks {n : ℕ}
   · simp [hi]
   · simp [hi]
 
-/-- Source-transport helper `operatorNorm_cutMatrix_le` for Hanson–Wright.
+/-- Source-transport helper `specNorm_cutMatrix_le` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma operatorNorm_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+lemma specNorm_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) :
-    deterministicOperatorNorm (cutMatrix A s) ≤ deterministicOperatorNorm A := by
-  unfold deterministicOperatorNorm
+    specNorm (cutMatrix A s) ≤ specNorm A := by
+  unfold specNorm
   let T : EuclideanSpace ℝ (Fin n) →L[ℝ] EuclideanSpace ℝ (Fin n) :=
     Matrix.toEuclideanCLM (𝕜 := ℝ) A
   refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg T) fun x => ?_
@@ -403,31 +328,25 @@ lemma operatorNorm_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
           mul_le_mul_of_nonneg_left
             (coordinateMask_norm_le ((Finset.univ : Finset (Fin n)) \ s) x) (norm_nonneg T)
 
-/-- Source-transport helper `frobeniusNormSq_cutMatrix_le` for Hanson–Wright.
+/-- Source-transport helper `frobSq_cutMatrix_le` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma frobeniusNormSq_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+lemma frobSq_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) :
-    frobeniusNormSq (cutMatrix A s) ≤ frobeniusNormSq A := by
-  unfold frobeniusNormSq cutMatrix
+    frobSq (cutMatrix A s) ≤ frobSq A := by
+  simp only [frobSq_eq_sum_sq]
+  unfold cutMatrix
   refine Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => ?_
   by_cases h : i ∈ s ∧ j ∉ s
   · simp [h]
   · simp [h, sq_nonneg]
 
-/-- Source-transport helper `frobeniusNorm_sq` for Hanson–Wright.
+/-- Source-transport helper `frobNorm_cutMatrix_sq_le` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma frobeniusNorm_sq {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    deterministicFrobeniusNorm A ^ 2 = frobeniusNormSq A := by
-  unfold deterministicFrobeniusNorm
-  rw [sq_sqrt (frobeniusNormSq_nonneg A)]
-
-/-- Source-transport helper `frobeniusNorm_cutMatrix_sq_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma frobeniusNorm_cutMatrix_sq_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+lemma frobNorm_cutMatrix_sq_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) :
-    deterministicFrobeniusNorm (cutMatrix A s) ^ 2 ≤ deterministicFrobeniusNorm A ^ 2 := by
-  rw [frobeniusNorm_sq, frobeniusNorm_sq]
-  exact frobeniusNormSq_cutMatrix_le A s
+    frobNorm (cutMatrix A s) ^ 2 ≤ frobNorm A ^ 2 := by
+  rw [frobNorm_sq, frobNorm_sq]
+  exact frobSq_cutMatrix_le A s
 
 /-- Source-transport helper `card_powerset_filter_mem_notMem_eq` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
@@ -497,5 +416,4 @@ lemma card_powerset_filter_mem_notMem_eq {n : ℕ} {i j : Fin n} (hij : i ≠ j)
       exact (Finset.mem_erase.mp (Finset.mem_erase.mp hi_erase).2).1 rfl
     exact Finset.erase_insert hi_not
 
-end HansonWrightProof
 end NLAlib

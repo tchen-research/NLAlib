@@ -29,7 +29,7 @@ theorem ae_sq_eq_one_of_isRademacher {g : Ω → ℝ} (hlaw : IsRademacher μ g)
   have hS : MeasurableSet {x : ℝ | x = 1 ∨ x = -1} :=
     (measurableSet_singleton 1).union (measurableSet_singleton (-1))
   have hpm : ∀ᵐ ω ∂μ, g ω = 1 ∨ g ω = -1 := by
-    unfold IsRademacher at hlaw
+    rw [isRademacher_iff_map_eq, rademacherMeasure] at hlaw
     rw [← ae_map_iff hg hS]
     rw [hlaw, ae_add_measure_iff]
     constructor

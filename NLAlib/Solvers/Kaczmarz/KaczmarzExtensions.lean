@@ -136,7 +136,7 @@ theorem expErr_le_add (A : Matrix m n ℝ) (b : m → ℝ) (xh : n → ℝ) (σ 
     rw [hρ]
     simp only [one_pow, Finset.sum_const, Finset.card_range, nsmul_eq_mul, mul_one]
     exact mul_nonneg (Nat.cast_nonneg k) hc
-  have hρ : 0 ≤ ρ := rate_nonneg A σ hσ
+  have hρ : 0 ≤ ρ := rate_nonneg_of_lower_bound_on_range A σ (fun v _ => hσ v)
   have hsum : ∀ i, 0 ≤ prob A i := prob_nonneg A
   have hsum1 : ∑ i, prob A i ≤ 1 := by
     by_cases hA : A = 0
@@ -190,7 +190,8 @@ theorem expErr_le_add_div_sq (A : Matrix m n ℝ) (b : m → ℝ) (xh : n → �
     nlinarith [sq_pos_of_pos hσ0]
   have hF : 0 < frobSq A :=
     lt_of_le_of_ne (frobSq_nonneg A) (Ne.symm ((frobSq_eq_zero_iff A).not.mpr hA))
-  have hρ0 : 0 ≤ 1 - σ ^ 2 / frobSq A := rate_nonneg A σ hσ
+  have hρ0 : 0 ≤ 1 - σ ^ 2 / frobSq A :=
+    rate_nonneg_of_lower_bound_on_range A σ (fun v _ => hσ v)
   have hρ1 : 1 - σ ^ 2 / frobSq A < 1 := by
     have : 0 < σ ^ 2 / frobSq A := div_pos (by positivity) hF
     linarith
@@ -207,13 +208,19 @@ theorem expErr_le_add_div_sq (A : Matrix m n ℝ) (b : m → ℝ) (xh : n → �
 
 /-! ### Rank-deficient consistent systems -/
 
-/-- Kaczmarz steps keep the error in the row space: if `A xs = b` and `x − xs ∈ range Aᵀ`, then
-`step A b x i − xs ∈ range Aᵀ`. Atlas: `kaczmarz-rank-deficient` (helper). -/
-theorem step_sub_mem_range [DecidableEq m] (A : Matrix m n ℝ) (b : m → ℝ) (xs x : n → ℝ)
-    (hxs : A *ᵥ xs = b) (hx : x - xs ∈ LinearMap.range Aᵀ.mulVecLin) (i : m) :
-    step A b x i - xs ∈ LinearMap.range Aᵀ.mulVecLin := by
-  rw [step_sub_solution A b xs x hxs i]
-  refine Submodule.sub_mem _ hx (Submodule.smul_mem _ _ ⟨Pi.single i 1, ?_⟩)
+/-- An arbitrary affine Kaczmarz update preserves row-space error membership.
+No consistency assumption on the right-hand side or reference point is needed.
+Needell 2010, proof of Theorem 2.1; atlas `kaczmarz-inconsistent` (invariant helper). -/
+theorem step_sub_mem_range_of_sub_mem_range [DecidableEq m]
+    (A : Matrix m n ℝ) (b : m → ℝ) (xh x : n → ℝ)
+    (hx : x - xh ∈ LinearMap.range Aᵀ.mulVecLin) (i : m) :
+    step A b x i - xh ∈ LinearMap.range Aᵀ.mulVecLin := by
+  have hstep : step A b x i - xh =
+      (x - xh) + ((b i - A i ⬝ᵥ x) / (A i ⬝ᵥ A i)) • A i := by
+    simp only [step]
+    abel
+  rw [hstep]
+  refine Submodule.add_mem _ hx (Submodule.smul_mem _ _ ⟨Pi.single i 1, ?_⟩)
   ext j
   simp
 
@@ -269,7 +276,7 @@ theorem expErr_le_of_sub_mem_range [DecidableEq m] (A : Matrix m n ℝ) (b : m �
         ≤ ∑ i, prob A i * ((1 - σ ^ 2 / frobSq A) ^ k *
             ((step A b x i - xs) ⬝ᵥ (step A b x i - xs))) :=
           Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_left
-            (ih _ (step_sub_mem_range A b xs x hxs hx i)) (prob_nonneg A i)
+            (ih _ (step_sub_mem_range_of_sub_mem_range A b xs x hx i)) (prob_nonneg A i)
       _ = (1 - σ ^ 2 / frobSq A) ^ k *
             ∑ i, prob A i * ((step A b x i - xs) ⬝ᵥ (step A b x i - xs)) := by
           rw [Finset.mul_sum]; congr 1; ext i; ring

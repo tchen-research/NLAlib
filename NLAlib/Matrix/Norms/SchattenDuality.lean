@@ -3,7 +3,8 @@ import NLAlib.Matrix.Norms.SchattenSingularCoefficients
 # Attained Schatten duality
 
 Finite conjugates use the normalized powers of the original singular values.
-The endpoint witnesses are the polar partial isometry and a leading rank-one
+The endpoint witnesses are the top-singular-frame partial isometry
+(`exists_specNorm_le_one_frobInner_eq_nuclearNorm`) and a leading rank-one
 singular-vector outer product. Zero matrices use zero, including empty shapes.
 Source: Bhatia (1997), §IV.2; matrix toolkit derivations, (10).
 Atlas: `schatten-norms-def`.
@@ -99,10 +100,8 @@ theorem IsSVD.schattenDualCoefficients_attain {m n : ℕ}
   · rw [h.frobInner_mul_rectDiag_mul_transpose,
       sum_singularValues_mul_schattenDualCoefficients_eq A hpq hA]
 
-/-- Finite-conjugate Schatten duality is attained by explicit singular powers;
-the zero matrix uses the zero witness, covering empty shapes.
-Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem exists_schattenNorm_le_one_frobInner_eq_fin {m n : ℕ}
+/-- `Fin` step of `exists_schattenNorm_le_one_frobInner_eq`. -/
+private theorem exists_schattenNorm_le_one_frobInner_eq_fin {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) {p q : ℝ} (hpq : Real.HolderConjugate p q) :
     ∃ B : Matrix (Fin m) (Fin n) ℝ, schattenNorm B q ≤ 1 ∧ frobInner A B = schattenNorm A p := by
   by_cases hA : A = 0
@@ -180,53 +179,6 @@ theorem rank_mul_rectDiag_leadingSingularCoefficients_mul_transpose {m n : ℕ}
   rw [heq]
   exact rank_mul_rectDiag_polarSingularCoefficients_mul_transpose hU hV hN
 
-/-- The actual-rank polar partial isometry in the matrix's SVD frames is a
-spectral contraction and attains its nuclear norm, including rank zero.
-Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem IsSVD.polarSingularCoefficients_attain {m n : ℕ}
-    {A : Matrix (Fin m) (Fin n) ℝ} {U : Matrix (Fin m) (Fin m) ℝ}
-    {V : Matrix (Fin n) (Fin n) ℝ} (h : IsSVD A U V) :
-    specNorm (U * (rectDiag (polarSingularCoefficients A.rank) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) ≤ 1 ∧
-    frobInner A (U * (rectDiag (polarSingularCoefficients A.rank) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) =
-      nuclearNorm A := by
-  let B := U * (rectDiag (polarSingularCoefficients A.rank) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ
-  constructor
-  · have hfirst : singularValues B 0 = specNorm B := by
-      simpa only [kyFanNorm, Finset.sum_range_one, singularValues] using kyFanNorm_one_eq_specNorm B
-    rw [← hfirst]
-    by_cases hN : 0 < min m n
-    · rw [singularValues_eq_of_eq_mul_rectDiag_mul h.transpose_mul_left h.transpose_mul_right
-        (polarSingularCoefficients_nonneg A.rank) (polarSingularCoefficients_antitone A.rank) rfl hN]
-      simp only [polarSingularCoefficients]
-      split_ifs <;> norm_num
-    · rw [singularValues_eq_zero_of_min_le B (by omega)]
-      norm_num
-  · rw [h.frobInner_mul_rectDiag_mul_transpose]
-    simp only [nuclearNorm, kyFanNorm, Fintype.card_fin]
-    change (∑ i ∈ Finset.range (min m n), singularValues A i * polarSingularCoefficients A.rank i) =
-      ∑ i ∈ Finset.range (min m n), singularValues A i
-    apply Finset.sum_congr rfl
-    intro i _
-    by_cases hi : i < A.rank
-    · simp [polarSingularCoefficients, hi]
-    · rw [singularValues_eq_zero_of_rank_le A (by omega)]
-      simp
-
-/-- The nuclear endpoint is attained by the actual-rank polar partial
-isometry, with zero as the witness for the zero matrix.
-Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem exists_specNorm_le_one_frobInner_eq_nuclearNorm_polar_fin {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) :
-    ∃ B : Matrix (Fin m) (Fin n) ℝ, specNorm B ≤ 1 ∧ frobInner A B = nuclearNorm A := by
-  by_cases hA : A = 0
-  · subst A
-    refine ⟨0, ?_, ?_⟩
-    · simp [specNorm]
-    · rw [frobInner_zero_left, nuclearNorm, kyFanNorm_zero_matrix]
-  · obtain ⟨U, V, h⟩ := exists_isSVD A
-    have hb := h.polarSingularCoefficients_attain
-    exact ⟨_, hb.1, hb.2⟩
-
 /-- The leading singular-vector outer product has nuclear norm one and
 attains the spectral pairing for every nonzero matrix.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
@@ -239,7 +191,8 @@ theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
     simpa only [kyFanNorm, Finset.sum_range_one, singularValues] using kyFanNorm_one_eq_specNorm A
   have hN : 0 < min m n := by
     by_contra hn
-    have hs : singularValues A 0 = 0 := singularValues_eq_zero_of_min_le A (by omega)
+    have hs : singularValues A 0 = 0 :=
+      singularValues_eq_zero_of_min_le A (by simp only [Fintype.card_fin]; omega)
     have hzero : specNorm A = 0 := hfirst.symm.trans hs
     exact hA (norm_eq_zero.mp (by simpa only [specNorm_eq_norm] using hzero))
   have hb0 : ∀ i, 0 ≤ leadingSingularCoefficients i := by
@@ -261,10 +214,8 @@ theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
   · rw [h.frobInner_mul_rectDiag_mul_transpose]
     simpa [leadingSingularCoefficients, hN] using hfirst
 
-/-- Spectral–nuclear duality is attained by the leading singular-vector
-rank-one outer product; the zero matrix uses zero, including empty shapes.
-Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm_fin {m n : ℕ}
+/-- `Fin` step of `exists_nuclearNorm_le_one_frobInner_eq_specNorm`. -/
+private theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm_fin {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) :
     ∃ B : Matrix (Fin m) (Fin n) ℝ, nuclearNorm B ≤ 1 ∧ frobInner A B = specNorm A := by
   by_cases hA : A = 0
@@ -279,8 +230,9 @@ theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm_fin {m n : ℕ}
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 omit [DecidableEq m] in
-/-- Finite Schatten duality has an actual witness on arbitrary finite matrix
-indices. The witness is transported from the explicit singular-power formula.
+/-- Finite-conjugate Schatten duality is attained on arbitrary finite matrix indices:
+the witness is the explicit singular-power formula in SVD frames (transported from `Fin`),
+and the zero matrix uses the zero witness, covering empty shapes.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem exists_schattenNorm_le_one_frobInner_eq (A : Matrix m n ℝ) {p q : ℝ}
     (hpq : Real.HolderConjugate p q) :
@@ -297,9 +249,9 @@ theorem exists_schattenNorm_le_one_frobInner_eq (A : Matrix m n ℝ) {p q : ℝ}
     rw [hBr, hBpair, schattenNorm_reindex] at h
     exact h.symm
 
-/-- Spectral–nuclear duality has a transported leading singular-vector
-rank-one witness on arbitrary finite indices; zero uses zero.
-Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
+/-- Spectral–nuclear duality is attained on arbitrary finite indices by the leading
+singular-vector rank-one outer product (transported from `Fin`); the zero matrix uses
+zero, including empty shapes. Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm (A : Matrix m n ℝ) :
     ∃ B : Matrix m n ℝ, nuclearNorm B ≤ 1 ∧ frobInner A B = specNorm A := by
   let em := Fintype.equivFin m
@@ -312,23 +264,6 @@ theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm (A : Matrix m n ℝ) :
     rwa [nuclearNorm_reindex]
   · have h := frobInner_reindex A B em en
     rw [hBr, hBpair, specNorm_reindex] at h
-    exact h.symm
-
-/-- The actual-rank polar partial-isometry nuclear attainer transports to
-arbitrary finite index types, including all zero and empty matrix cases.
-Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem exists_specNorm_le_one_frobInner_eq_nuclearNorm_polar (A : Matrix m n ℝ) :
-    ∃ B : Matrix m n ℝ, specNorm B ≤ 1 ∧ frobInner A B = nuclearNorm A := by
-  let em := Fintype.equivFin m
-  let en := Fintype.equivFin n
-  obtain ⟨Bf, hBn, hBpair⟩ := exists_specNorm_le_one_frobInner_eq_nuclearNorm_polar_fin (A.reindex em en)
-  let B := Bf.reindex em.symm en.symm
-  have hBr : B.reindex em en = Bf := by ext i j; simp [B, Matrix.reindex_apply]
-  refine ⟨B, ?_, ?_⟩
-  · change specNorm (Bf.reindex em.symm en.symm) ≤ 1
-    rwa [specNorm_reindex]
-  · have h := frobInner_reindex A B em en
-    rw [hBr, hBpair, nuclearNorm_reindex] at h
     exact h.symm
 
 /-- Extended Schatten norms are nonnegative, including exponent infinity.
@@ -363,7 +298,7 @@ theorem exists_schattenNormExtended_le_one_frobInner_eq (A : Matrix m n ℝ)
       simp only [schattenNormExtended_top]
       simp only [schattenNormExtended_eq_of_ne_top _ (show (1 : ℝ≥0∞) ≠ ∞ by simp),
         ENNReal.toReal_one, schattenNorm_one]
-      exact exists_specNorm_le_one_frobInner_eq_nuclearNorm_polar A
+      exact exists_specNorm_le_one_frobInner_eq_nuclearNorm A
     · simp only [schattenNormExtended_eq_of_ne_top _ hpTop,
         schattenNormExtended_eq_of_ne_top _ hqTop]
       exact exists_schattenNorm_le_one_frobInner_eq A

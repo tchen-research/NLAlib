@@ -117,8 +117,6 @@ theorem globalJacobiOperator_eq_smul_rawMultiplication
   intro j hj
   have hij : i ≠ j := Ne.symm (Finset.mem_erase.mp hj).1
   rw [siteJacobiProduct_eq_pairKernel r i j hij]
-  ext out inp
-  rfl
 
 /-- One normalized concrete grade band.
 

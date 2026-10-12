@@ -180,30 +180,6 @@ theorem lanczosBeta_succ_eq (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) :
 
 /-! ### Realisation: the recursion is the Arnoldi process (symmetric `A`) -/
 
-open InnerProductSpace
-
-/-- Distinct Arnoldi vectors are orthogonal, `q_iᵀ q_j = 0` for `i ≠ j`, with no grade hypothesis
-(past the grade the vectors are `0`). Helper for `lanczos-recurrence-algorithm`; belongs in
-`NLAlib.Krylov.Processes.ArnoldiProcess`. -/
-theorem arnoldiBasis_dotProduct_of_ne (A : Matrix n n ℝ) (b : n → ℝ) {i j : ℕ} (hij : i ≠ j) :
-    arnoldiBasis A b i ⬝ᵥ arnoldiBasis A b j = 0 := by
-  rw [arnoldiBasis, arnoldiBasis, ← inner_eq_dotProduct_ofLp]
-  simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right,
-    gramSchmidt_orthogonal ℝ _ hij, mul_zero]
-
-/-- The Arnoldi vectors vanish from the grade on: `arnoldiBasis A b j = 0` for
-`krylovGrade A b ≤ j` (breakdown). Helper for `lanczos-recurrence-algorithm`; belongs in
-`NLAlib.Krylov.Processes.ArnoldiProcess`. Source: Saad (2003) [`saad03`], Prop. 6.6. -/
-theorem arnoldiBasis_eq_zero_of_krylovGrade_le (A : Matrix n n ℝ) (b : n → ℝ) {j : ℕ}
-    (hj : krylovGrade A b ≤ j) : arnoldiBasis A b j = 0 := by
-  set D := arnoldiDecomp A b (krylovGrade A b) le_rfl
-  have hx : arnoldiBasis A b j ∈ krylovSpace A b (krylovGrade A b) := by
-    rw [← krylovSpace_eq_of_krylovGrade_le A b (show krylovGrade A b ≤ j + 1 by omega)]
-    exact arnoldiBasis_mem_krylovSpace A b j
-  refine D.eq_of_forall_col_dotProduct_eq hx (Submodule.zero_mem _) fun i => ?_
-  rw [dotProduct_zero]
-  exact arnoldiBasis_dotProduct_of_ne A b (by have := i.isLt; omega)
-
 /-- SCAFFOLD: lanczos-recurrence-algorithm
 **The three-term recursion is the Arnoldi process**: for symmetric `A`, `q_j = arnoldiBasis A b j`
 for every `j` (below the grade the Gram–Schmidt vectors with positive `β`; from the grade on both

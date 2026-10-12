@@ -37,15 +37,6 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-! ### Change of variables -/
 
-/-- `(W B)^i W = W (B W)^i`. Helper for `preconditioned-cg`. -/
-theorem mul_pow_mul_eq_mul_mul_pow (W B : Matrix n n ℝ) (i : ℕ) :
-    (W * B) ^ i * W = W * (B * W) ^ i := by
-  induction i with
-  | zero => simp
-  | succ i ih =>
-    rw [pow_succ', Matrix.mul_assoc, ih, pow_succ', ← Matrix.mul_assoc, ← Matrix.mul_assoc,
-      Matrix.mul_assoc W B W]
-
 /-- **Krylov spaces under a change of variables:** `K_q(WB, Wv) = W K_q(BW, v)`. With
 `P⁻¹ = WWᵀ` and `B = WᵀA` this is `K_q(P⁻¹A, P⁻¹r) = W K_q(WᵀAW, Wᵀr)`, the identity behind
 split preconditioning. Source: Saad (2003) [`saad03`], §9.2.1.
@@ -56,7 +47,7 @@ theorem krylovSpace_mul_mulVec_eq_map (W B : Matrix n n ℝ) (v : n → ℝ) (q 
   congr 2
   funext i
   simp only [Function.comp_apply, Matrix.mulVecLin_apply, Matrix.mulVec_mulVec,
-    mul_pow_mul_eq_mul_mul_pow]
+    mul_pow_mul]
 
 /-- **Affine minimisers under an invertible change of variables:** `x` minimises `E` over
 `x₀ + W S` iff `W⁻¹x` minimises `E ∘ W` over `W⁻¹x₀ + S`. Helper for `preconditioned-cg`
@@ -171,7 +162,7 @@ theorem isPCGIterate_iff_isCGIterate {A P W : Matrix n n ℝ} (hW : Wᵀ * P * W
 `A x⋆ = c`, and `x` a `q`-th PCG iterate from `x₀`. Then
 `‖x − x⋆‖_A² ≤ (2((√b − √a)/(√b + √a))^q)² ‖x₀ − x⋆‖_A²`.
 Proof: CG on `P^{-1/2} A P^{-1/2}`, whose spectrum lies in `[a, b]`
-(`isPCGIterate_iff_isCGIterate`, `quadForm_sub_le_of_isCGIterate_of_le`).
+(`isPCGIterate_iff_isCGIterate`, `quadForm_sub_le_of_isCGIterate`).
 Source: Saad (2003) [`saad03`], §9.2; Greenbaum (1997) [`greenbaum97`], Ch. 8.
 Deviation: squared `A`-norms.
 atlas: preconditioned-cg -/
@@ -207,7 +198,7 @@ theorem quadForm_sub_le_of_isPCGIterate {A P : Matrix n n ℝ} (hP : P.PosDef) {
     rwa [hWt, hcong'] at this
   have hspec : ∀ i, hBh.eigenvalues i ∈ Set.Icc a b := fun i => by
     set u : n → ℝ := (hBh.eigenvectorBasis i : n → ℝ)
-    have hu : u ⬝ᵥ u = 1 := eigenvectorBasis_dotProduct_self hBh i
+    have hu : u ⬝ᵥ u = 1 := by simpa using eigenvectorBasis_dotProduct_eigenvectorBasis hBh i i
     have hval := eigenvalues_eq_dotProduct_mulVec hBh i
     have h1 := hlowB.dotProduct_mulVec_nonneg u
     have h2 := hupB.dotProduct_mulVec_nonneg u
@@ -216,7 +207,7 @@ theorem quadForm_sub_le_of_isPCGIterate {A P : Matrix n n ℝ} (hP : P.PosDef) {
     constructor <;> linarith
   have hxs' : B *ᵥ (W⁻¹ *ᵥ xs) = Wᵀ *ᵥ c := by
     rw [hBdef, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hWW, hxs]
-  have hcg := quadForm_sub_le_of_isCGIterate_of_le hBh ha hab hspec hxs'
+  have hcg := quadForm_sub_le_of_isCGIterate hBh ha hab hspec hxs'
     ((isPCGIterate_iff_isCGIterate hW).1 hx)
   simpa only [← Matrix.mulVec_sub, quadForm_transpose_mul_mul, hWW, hBdef] using hcg
 
@@ -283,7 +274,7 @@ theorem dotProduct_sub_mulVec_self_eq_add {A : Matrix m n ℝ} {b : m → ℝ} {
 has full column rank), let `x⋆` solve the normal equations `AᵀA x⋆ = Aᵀb`, and `x` be a `q`-th
 CGLS iterate from `x₀`. Then
 `‖A(x − x⋆)‖² ≤ (2((σ_hi − σ_lo)/(σ_hi + σ_lo))^q)² ‖A(x₀ − x⋆)‖²`.
-Proof: CG on `AᵀA` with spectrum in `[σ_lo², σ_hi²]` (`quadForm_sub_le_of_isCGIterate_of_le`).
+Proof: CG on `AᵀA` with spectrum in `[σ_lo², σ_hi²]` (`quadForm_sub_le_of_isCGIterate`).
 Source: Saad (2003) [`saad03`], §8.3; Paige–Saunders (1982) [`ps82`].
 Deviation: squared norms; the singular-value hypothesis in Rayleigh form.
 atlas: cgls-lsqr-bound -/
@@ -299,7 +290,7 @@ theorem dotProduct_mulVec_sub_le_of_isCGLSIterate {A : Matrix m n ℝ} {σlo σh
       Matrix.isHermitian_conjTranspose_mul_self A
   have hspec : ∀ i, hG.eigenvalues i ∈ Set.Icc (σlo ^ 2) (σhi ^ 2) := fun i => by
     set u : n → ℝ := (hG.eigenvectorBasis i : n → ℝ)
-    have hu : u ⬝ᵥ u = 1 := eigenvectorBasis_dotProduct_self hG i
+    have hu : u ⬝ᵥ u = 1 := by simpa using eigenvectorBasis_dotProduct_eigenvectorBasis hG i i
     have hval : hG.eigenvalues i = (A *ᵥ u) ⬝ᵥ (A *ᵥ u) := by
       rw [eigenvalues_eq_dotProduct_mulVec hG i, ← quadForm_transpose_mul_self]; rfl
     have h1 := hlow u
@@ -307,7 +298,7 @@ theorem dotProduct_mulVec_sub_le_of_isCGLSIterate {A : Matrix m n ℝ} {σlo σh
     rw [hu, mul_one] at h1 h2
     exact ⟨hval ▸ h1, hval ▸ h2⟩
   have hxs' : (Aᵀ * A) *ᵥ xs = Aᵀ *ᵥ b := by rw [← Matrix.mulVec_mulVec, hxs]
-  have h := quadForm_sub_le_of_isCGIterate_of_le hG (by positivity)
+  have h := quadForm_sub_le_of_isCGIterate hG (by positivity)
     (pow_le_pow_left₀ hlo.le hlohi 2) hspec hxs' (isCGLSIterate_iff_isCGIterate.1 hx)
   rwa [Real.sqrt_sq (by linarith), Real.sqrt_sq hlo.le, quadForm_transpose_mul_self,
     quadForm_transpose_mul_self] at h

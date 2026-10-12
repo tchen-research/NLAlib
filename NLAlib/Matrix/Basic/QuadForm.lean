@@ -11,7 +11,7 @@ import Mathlib.LinearAlgebra.Matrix.Hermitian
 rank-one form (`quadForm_vecMulVec_self`), congruence (`quadForm_transpose_mul_mul`) and the
 normal-equations form (`quadForm_transpose_mul_self`); and the Rayleigh quotient
 `rayleighQuotient A x = xᵀAx / xᵀx`. Layer 0: used by the Krylov layer (spectral measure, CG
-energy norm, power method) and by the estimators in `NLAlib.Estimation.Trace.Hutchinson`.
+energy norm, power method) and by the Hutchinson estimators (`NLAlib.Estimation.Trace`).
 
 Atlas: `hutchinson-unbiased`, `hutchinson-variance`, `spectral-measure` (definition used in their
 statements).

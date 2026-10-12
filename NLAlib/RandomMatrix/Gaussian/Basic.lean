@@ -1,5 +1,7 @@
+import NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix
 import NLAlib.RandomMatrix.Gaussian.Basic.LinearForms
 import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
+import NLAlib.RandomMatrix.Gaussian.Basic.LipschitzConcentration
 import NLAlib.RandomMatrix.Gaussian.Basic.PolynomialGrowth
 
 /-! # `RandomMatrix/Gaussian/Basic`

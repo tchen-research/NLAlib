@@ -32,7 +32,6 @@ import NLAlib.Matrix.Perturbation.LeastSquaresPerturbation
 import NLAlib.Matrix.Perturbation.LeastSquaresPurePerturbation
 import NLAlib.Matrix.Perturbation.LeastSquaresScalar
 import NLAlib.Matrix.Perturbation.LeastSquaresToolkit
-import NLAlib.Matrix.Perturbation.LinearSystemPerturbation
 import NLAlib.Matrix.Perturbation.MapConditioning
 import NLAlib.Matrix.Perturbation.OptimalErrorContinuity
 import NLAlib.Matrix.Perturbation.PopulationTraceGap

@@ -83,7 +83,8 @@ theorem abs_eval_le_mul_abs_eval_T_real_of_forall_abs_le {q : ℕ} {P : ℝ[X]} 
   · have h0 : 0 ≤ M := (abs_nonneg _).trans (hb 0 ⟨by norm_num, by norm_num⟩)
     rw [eq_zero_of_forall_abs_eval_le_of_nonpos hM hb]
     simpa using mul_nonneg h0 (abs_nonneg ((T ℝ q).eval x))
-  · have hQ : (C M⁻¹ * P).degree ≤ q := (degree_C_mul_le _ _).trans hP
+  · have hQ : (C M⁻¹ * P).degree ≤ q :=
+      ((congrArg degree (C_mul' _ _)).trans_le (degree_smul_le _ _)).trans hP
     have hQb : ∀ y ∈ Set.Icc (-1 : ℝ) 1, |(C M⁻¹ * P).eval y| ≤ 1 := by
       intro y hy
       rw [eval_mul, eval_C, abs_mul, abs_of_pos (inv_pos.mpr hM), inv_mul_le_iff₀ hM, mul_one]
@@ -119,7 +120,8 @@ atlas: chebyshev-minimax -/
 theorem degree_chebyshevResidual_le (a b : ℝ) (q : ℕ) :
     (chebyshevResidual a b q).degree ≤ q := by
   rw [chebyshevResidual_def]
-  refine (degree_C_mul_le _ _).trans (degree_le_natDegree.trans ?_)
+  refine ((congrArg degree (C_mul' _ _)).trans_le (degree_smul_le _ _)).trans
+    (degree_le_natDegree.trans ?_)
   have : ((T ℝ q).comp (C ((b + a) / (b - a)) - C (2 / (b - a)) * X)).natDegree ≤ q := by
     refine natDegree_comp_le.trans ?_
     rw [natDegree_T, Int.natAbs_natCast]
@@ -241,7 +243,7 @@ theorem inv_two_pow_le_of_monic_of_forall_abs_eval_le {q : ℕ} {p : ℝ[X]} {M 
     by_contra hM
     exact hp.ne_zero (eq_zero_of_forall_abs_eval_le_of_nonpos (not_lt.mp hM) hb)
   have hQ : (C M⁻¹ * p).degree ≤ q := by
-    refine (degree_C_mul_le _ _).trans ?_
+    refine ((congrArg degree (C_mul' _ _)).trans_le (degree_smul_le _ _)).trans ?_
     rw [← hdeg]
     exact degree_le_natDegree
   have hQb : ∀ y ∈ Set.Icc (-1 : ℝ) 1, |(C M⁻¹ * p).eval y| ≤ 1 := by

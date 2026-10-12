@@ -1,5 +1,5 @@
 import NLAlib.Sketching.Sampling.SamplingMultiplication
-import NLAlib.Probability.Concentration.Matrix.SamplingSpectralBounds
+import NLAlib.Probability.Concentration.Matrix.Sampling
 import NLAlib.Matrix.Perturbation.ComplexEmbedding
 /-!
 # Leverage sampling with replacement
@@ -65,8 +65,7 @@ theorem measure_le_spectralNorm_leverage_gram_sub_one
     (hdom : ∀ i, β * (∑ a, ‖U i a‖ ^ 2) / d ≤ p i)
     {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
     (Measure.pi (fun _ : Fin k => finiteSamplingLaw p hp)
-      {ω | ε ≤ spectralNorm
-        ((leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1)}).toReal ≤
+      {ω | ε ≤ ‖(leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1‖}).toReal ≤
       2 * d * Real.exp (-β * k * ε ^ 2 / (3 * d)) := by
   classical
   have hd : (0 : ℝ) < d := by exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne d)
@@ -135,12 +134,11 @@ theorem measure_le_spectralNorm_leverage_gram_sub_one
       (lambdaMax_le_trace_of_posSemidef (hPSD (ω j))).trans (hbound (ω j))⟩)
   obtain ⟨hl, hu⟩ := matrix_chernoff_sampling (Measure.pi (fun _ : Fin k => ν)) hk M
     ((d : ℝ) / β) (div_pos hd hβ) (fun _ => .of_discrete) hind hherm hb hmean hε0.le hε1
-  have hsub : {ω | ε ≤ spectralNorm
-      ((leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1)} ⊆
+  have hsub : {ω | ε ≤ ‖(leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1‖} ⊆
       {ω | lambdaMin ((1 / (k : ℝ)) • ∑ j, M j ω) ≤ 1 - ε} ∪
       {ω | 1 + ε ≤ lambdaMax ((1 / (k : ℝ)) • ∑ j, M j ω)} := by
     intro ω hω
-    have hh := lambdaMin_le_or_le_lambdaMax_of_le_spectralNorm_sub_one
+    have hh := lambdaMin_le_or_le_lambdaMax_of_le_norm_sub_one
       (Matrix.isHermitian_conjTranspose_mul_self (leverageSamplingSketch p ω * U)) hω
     simpa only [Set.mem_union, Set.mem_ofPred_eq,
       conjTranspose_leverageSamplingSketch_mul_self, M, X] using hh
@@ -168,8 +166,7 @@ theorem norm_leverage_mulVec_sq_bounds_of_gram_le
     (U : Matrix n (Fin d) ℂ) (hU : Uᴴ * U = 1)
     (A : Matrix n q ℂ) (hUA : U * (Uᴴ * A) = A)
     (p : n → ℝ≥0) (ω : Fin k → n) {ε : ℝ}
-    (h : spectralNorm
-      ((leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1) ≤ ε)
+    (h : ‖(leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1‖ ≤ ε)
     (x : q → ℂ) :
     (1 - ε) * ‖(WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace ℂ n)‖ ^ 2 ≤
         ‖(WithLp.toLp 2 (leverageSamplingSketch p ω *ᵥ (A *ᵥ x)) :
@@ -247,12 +244,11 @@ theorem measure_leverage_embedding_failure_le_of_sample_size
         (1 + ε) * ‖(WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace ℂ n)‖ ^ 2 <
           ‖(WithLp.toLp 2 (leverageSamplingSketch p ω *ᵥ (A *ᵥ x)) :
             EuclideanSpace ℂ (Fin k))‖ ^ 2} ⊆
-      {ω | ε ≤ spectralNorm
-        ((leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1)} := by
+      {ω | ε ≤ ‖(leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1‖} := by
     intro ω hω
     obtain ⟨x, hx⟩ := hω
     by_contra hnot
-    change ¬ε ≤ spectralNorm _ at hnot
+    change ¬ε ≤ ‖_‖ at hnot
     obtain ⟨hl, hu⟩ := norm_leverage_mulVec_sq_bounds_of_gram_le U hU A hUA p ω
       (not_le.mp hnot).le x
     rcases hx with hx | hx <;> linarith

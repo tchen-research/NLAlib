@@ -1,4 +1,4 @@
-import NLAlib.ForMathlib.Probability.FiniteLaw
+import NLAlib.ForMathlib.Probability.FiniteLawIndependent
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
 import Mathlib.MeasureTheory.Integral.Bochner.Set
 
@@ -43,13 +43,6 @@ instance toMeasure_isProbabilityMeasure [MeasurableSpace α]
     (μ : NLAlib.SparseFock.FiniteLaw α) : IsProbabilityMeasure μ.toMeasure := by
   unfold toMeasure
   infer_instance
-
-/-- Singleton masses under the actual measure equal the explicitly supplied
-finite-law weights. Source: the PMF bridge; supports `sparse-ose`. -/
-theorem toMeasure_singleton [MeasurableSpace α] [MeasurableSingletonClass α]
-    (μ : NLAlib.SparseFock.FiniteLaw α) (x : α) :
-    μ.toMeasure {x} = ENNReal.ofReal (μ.weight x) := by
-  rw [toMeasure, PMF.toMeasure_apply_singleton _ _ (measurableSet_singleton x), toPMF_apply]
 
 /-- Every finite-law expectation is the actual Bochner integral under its
 native measure. Source: PMF finite integration; supports `sparse-ose`. -/

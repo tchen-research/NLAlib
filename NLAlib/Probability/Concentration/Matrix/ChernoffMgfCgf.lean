@@ -1,7 +1,8 @@
 import NLAlib.Probability.Concentration.Basic.ChernoffFunctions
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
-import NLAlib.Matrix.OperatorTheory.LogOperatorMonotone
+import NLAlib.Matrix.OperatorTheory.Basic
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 
 /-!
 # Lemma 5.4.1 — Matrix Chernoff mgf and cgf bounds
@@ -127,9 +128,9 @@ theorem NLAlib.chernoff_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     (hMeas : Measurable X) (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian)
     (hBound : ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (X ω) ∧ lambdaMax (X ω) ≤ L)
     (θ : ℝ) :
-    LoewnerLE (∫ ω, matrixExp (θ • X ω) ∂μ)
+    (∫ ω, matrixExp (θ • X ω) ∂μ) ≤
       (matrixExp (chernoffCgfCoefficient L θ • (∫ ω, X ω ∂μ))) ∧
-    LoewnerLE (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ))
+    (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ)) ≤
       (chernoffCgfCoefficient L θ • (∫ ω, X ω ∂μ)) := by
   set g := chernoffCgfCoefficient L θ with hg
   have hXae : AEStronglyMeasurable X μ := hMeas.aestronglyMeasurable
@@ -180,6 +181,8 @@ theorem NLAlib.chernoff_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
   have h1Bpd : ((1 : Matrix (Fin d) (Fin d) ℂ) + g • ∫ ω, X ω ∂μ).PosDef := by
     have := hEpd.add_posSemidef hD
     rwa [add_sub_cancel] at this
-  have hlog1 := matrixLog_le_matrixLog _ _ hEpd h1Bpd hD
+  have hlog1 : (matrixLog (∫ ω, matrixExp (θ • X ω) ∂μ)) ≤
+      (matrixLog ((1 : Matrix (Fin d) (Fin d) ℂ) + g • ∫ ω, X ω ∂μ)) :=
+    CFC.log_monotoneOn hEpd.isStrictlyPositive h1Bpd.isStrictlyPositive (Matrix.le_iff.mpr hD)
   have hlog2 := log_one_add_le _ h1Bpd
   exact Matrix.le_iff.mp ((Matrix.le_iff.mpr hlog1).trans hlog2)

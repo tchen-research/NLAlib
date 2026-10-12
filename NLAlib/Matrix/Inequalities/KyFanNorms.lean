@@ -6,7 +6,9 @@ import NLAlib.Matrix.Spectral.SingularValueSpectrum
 
 The variational principle proves the triangle inequality. Native linear-map
 singular values give coordinate-free definitions on arbitrary finite matrix
-indices. Source: Horn–Johnson (1991), Theorem 3.4.1; Bhatia (1997), §IV.2.
+indices: the norm axioms and invariances hold over `[Fintype m] [Fintype n]`, every
+positive prefix is a genuine norm, and the bundled `kyFanSeminorm` packages the axioms.
+Source: Horn–Johnson (1991), Theorem 3.4.1; Bhatia (1997), §IV.2.
 Atlas: `ky-fan-norms-def`.
 -/
 
@@ -14,12 +16,6 @@ noncomputable section
 open scoped Matrix Matrix.Norms.L2Operator BigOperators
 
 namespace NLAlib
-
-/-- Relabeling matrix indices preserves every Ky Fan sum. -/
-theorem kyFanNorm_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
-    [DecidableEq n] [DecidableEq q] (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) (k : ℕ) :
-    kyFanNorm (A.reindex em en) k = kyFanNorm A k := by
-  simp only [kyFanNorm, ← singularValues_eq_linearMap, singularValues_reindex]
 
 /-- Every Ky Fan sum is nonnegative, including the zero seminorm. -/
 theorem kyFanNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
@@ -45,62 +41,85 @@ theorem kyFanNorm_eq_min {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) 
   apply Finset.sum_subset (Finset.range_subset_range.mpr (min_le_left _ _))
   intro i hi hni
   exact singularValues_eq_zero_of_min_le A (by
-    simp only [Finset.mem_range] at hi hni
+    simp only [Finset.mem_range, Fintype.card_fin] at hi hni ⊢
     omega)
 
-/-- The Ky Fan sums obey the triangle inequality, including the zero prefix
-and all zero-padded prefixes. Horn–Johnson (1991), Theorem 3.4.1.
-atlas: ky-fan-norms-def (partial) -/
-theorem kyFanNorm_add_le_fin {m n : ℕ} (A B : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+/-- `Fin` step of `kyFanNorm_add_le`: prefixes are capped at `min m n` and the
+maximum principle gives the bound at each admissible prefix. -/
+private theorem kyFanNorm_add_le_fin {m n : ℕ} (A B : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     kyFanNorm (A + B) k ≤ kyFanNorm A k + kyFanNorm B k := by
   have hbound (j : ℕ) (hj : j ≤ min m n) :
       kyFanNorm (A + B) j ≤ kyFanNorm A j + kyFanNorm B j := by
-    obtain ⟨U, V, hU, hV, hUV⟩ := exists_trace_twoSided_compression_eq_kyFanNorm (A + B) hj
+    obtain ⟨U, V, hU, hV, hUV⟩ :=
+      exists_trace_twoSided_compression_eq_kyFanNorm (A + B) (by simpa using hj)
+    have h1 := trace_twoSided_compression_le_kyFanNorm A hU hV
+    have h2 := trace_twoSided_compression_le_kyFanNorm B hU hV
+    rw [Fintype.card_fin] at h1 h2
     rw [← hUV, Matrix.mul_add, Matrix.add_mul, Matrix.trace_add]
-    exact add_le_add (trace_twoSided_compression_le_kyFanNorm A hU hV)
-      (trace_twoSided_compression_le_kyFanNorm B hU hV)
+    exact add_le_add h1 h2
   rw [kyFanNorm_eq_min (A + B) k, kyFanNorm_eq_min A k, kyFanNorm_eq_min B k]
   exact hbound _ (min_le_right _ _)
 
-/-- Ky Fan sums are absolutely homogeneous. Horn–Johnson (1991), §3.4. -/
-theorem kyFanNorm_smul_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (c : ℝ) (k : ℕ) :
+section FiniteIndex
+
+variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
+
+omit [DecidableEq m] in
+/-- The Ky Fan sums obey the triangle inequality on arbitrary finite matrix indices,
+including the zero prefix and all zero-padded prefixes.
+Horn–Johnson (1991), Theorem 3.4.1.
+atlas: ky-fan-norms-def (partial) -/
+theorem kyFanNorm_add_le (A B : Matrix m n ℝ) (k : ℕ) :
+    kyFanNorm (A + B) k ≤ kyFanNorm A k + kyFanNorm B k := by
+  have h := kyFanNorm_add_le_fin (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
+    (B.reindex (Fintype.equivFin m) (Fintype.equivFin n)) k
+  change kyFanNorm ((A + B).reindex (Fintype.equivFin m) (Fintype.equivFin n)) k ≤ _ at h
+  rwa [kyFanNorm_reindex, kyFanNorm_reindex, kyFanNorm_reindex] at h
+
+omit [DecidableEq m] in
+/-- Ky Fan sums are absolutely homogeneous on arbitrary finite indices.
+Horn–Johnson (1991), §3.4. -/
+theorem kyFanNorm_smul (A : Matrix m n ℝ) (c : ℝ) (k : ℕ) :
     kyFanNorm (c • A) k = |c| * kyFanNorm A k := by
-  change (∑ i ∈ Finset.range k, singularValues (c • A) i) =
-    |c| * ∑ i ∈ Finset.range k, singularValues A i
-  simp only [singularValues_smul, Finset.mul_sum]
+  simp only [kyFanNorm, ← singularValues_eq_linearMap, singularValues_smul, Finset.mul_sum]
 
-/-- Left orthogonal multiplication preserves every Ky Fan sum. -/
-theorem kyFanNorm_orthogonal_mul_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
-    {U : Matrix (Fin m) (Fin m) ℝ} (hU : HasOrthonormalCols U) (k : ℕ) :
-    kyFanNorm (U * A) k = kyFanNorm A k := by
-  change (∑ i ∈ Finset.range k, singularValues (U * A) i) =
-    ∑ i ∈ Finset.range k, singularValues A i
-  rw [singularValues_isometry_mul hU A]
+/-- Orthogonal multiplication on the left preserves Ky Fan sums. -/
+theorem kyFanNorm_orthogonal_mul (A : Matrix m n ℝ) {U : Matrix m m ℝ}
+    (hU : HasOrthonormalCols U) (k : ℕ) : kyFanNorm (U * A) k = kyFanNorm A k := by
+  simp only [kyFanNorm, ← singularValues_eq_linearMap, singularValues_isometry_mul hU A]
 
-/-- Right orthogonal multiplication preserves every Ky Fan sum. -/
-theorem kyFanNorm_mul_orthogonal_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
-    {V : Matrix (Fin n) (Fin n) ℝ} (hV : HasOrthonormalCols V) (k : ℕ) :
-    kyFanNorm (A * V) k = kyFanNorm A k := by
-  change (∑ i ∈ Finset.range k, singularValues (A * V) i) =
-    ∑ i ∈ Finset.range k, singularValues A i
-  rw [singularValues_mul_orthogonal A hV]
+omit [DecidableEq m] in
+/-- Orthogonal multiplication on the right preserves Ky Fan sums. -/
+theorem kyFanNorm_mul_orthogonal (A : Matrix m n ℝ) {V : Matrix n n ℝ}
+    (hV : HasOrthonormalCols V) (k : ℕ) : kyFanNorm (A * V) k = kyFanNorm A k := by
+  simp only [kyFanNorm, ← singularValues_eq_linearMap, singularValues_mul_orthogonal A hV]
 
-/-- Transposition preserves every Ky Fan sum. -/
-theorem kyFanNorm_transpose_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
-    kyFanNorm Aᵀ k = kyFanNorm A k := by
-  change (∑ i ∈ Finset.range k, singularValues Aᵀ i) =
-    ∑ i ∈ Finset.range k, singularValues A i
-  rw [singularValues_transpose]
+/-- Transposition preserves Ky Fan sums on arbitrary finite indices. -/
+theorem kyFanNorm_transpose (A : Matrix m n ℝ) (k : ℕ) : kyFanNorm Aᵀ k = kyFanNorm A k := by
+  simp only [kyFanNorm, ← singularValues_eq_linearMap, singularValues_transpose]
+
+/-- The bundled Ky Fan seminorm, using Mathlib's norm vocabulary. For `k ≥ 1`
+the separately proved zero criterion shows that this is a genuine norm.
+Horn–Johnson (1991), Theorem 3.4.1.
+atlas: ky-fan-norms-def (partial) -/
+def kyFanSeminorm (k : ℕ) : Seminorm ℝ (Matrix m n ℝ) :=
+  Seminorm.of (fun A => kyFanNorm A k) (fun A B => kyFanNorm_add_le A B k)
+    (fun c A => by simpa only [Real.norm_eq_abs] using kyFanNorm_smul A c k)
+
+omit [DecidableEq m] in
+/-- The bundled Ky Fan seminorm agrees exactly with the singular-value sum. -/
+@[simp] theorem kyFanSeminorm_apply (k : ℕ) (A : Matrix m n ℝ) :
+    kyFanSeminorm k A = kyFanNorm A k := rfl
+
+end FiniteIndex
 
 /-- The first Ky Fan sum is exactly the spectral norm, including empty indices.
 Horn–Johnson (1991), §3.4.
 atlas: ky-fan-norms-def (partial) -/
 theorem kyFanNorm_one_eq_specNorm {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) : kyFanNorm A 1 = specNorm A := by
-  rw [← kyFanNorm_reindex A (Fintype.equivFin m) (Fintype.equivFin n)]
   simp only [kyFanNorm, Finset.sum_range_one]
-  change singularValues (A.reindex (Fintype.equivFin m) (Fintype.equivFin n)) 0 = _
-  exact singularValues_reindex_zero_eq_specNorm A
+  exact singularValues_zero_eq_specNorm A
 
 /-- Every nonzero Ky Fan prefix dominates the spectral norm. -/
 theorem specNorm_le_kyFanNorm {m n : Type*} [Fintype m] [Fintype n]

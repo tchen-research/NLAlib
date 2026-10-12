@@ -52,8 +52,9 @@ theorem singularValues_gram_pow_mul (A : Matrix (Fin m) (Fin n) ℝ) (q j : ℕ)
       h.transpose_mul_right (fun i => pow_nonneg (singularValues_nonneg A i) _)
       (fun a b hab => pow_le_pow_left₀ (singularValues_nonneg A b)
         (singularValues_antitone A hab) _) (h.gram_pow_mul_eq q) hj
-  · rw [singularValues_eq_zero_of_min_le _ (not_lt.mp hj),
-      singularValues_eq_zero_of_min_le _ (not_lt.mp hj), zero_pow (by omega)]
+  · rw [singularValues_eq_zero_of_min_le _ (by simpa only [Fintype.card_fin] using not_lt.mp hj),
+      singularValues_eq_zero_of_min_le _ (by simpa only [Fintype.card_fin] using not_lt.mp hj),
+      zero_pow (by omega)]
 
 /-- Odd rectangular Gram powers preserve rank, including rank zero.
 Source: HMT (2011), §10.4; manuscript `sa:expected-power`, exact-width branch. -/

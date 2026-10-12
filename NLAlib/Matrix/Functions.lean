@@ -1,9 +1,14 @@
+import NLAlib.Matrix.Functions.CFCQuadratic
 import NLAlib.Matrix.Functions.CFCTrace
 import NLAlib.Matrix.Functions.ComplexDiagonalFilter
 import NLAlib.Matrix.Functions.DiagonalFilter
+import NLAlib.Matrix.Functions.DilationIdentities
 import NLAlib.Matrix.Functions.ExpLog
 import NLAlib.Matrix.Functions.ExpLogPosDef
+import NLAlib.Matrix.Functions.ExtremeEigenvalues
 import NLAlib.Matrix.Functions.FunctionalCalculusEigenvalues
+import NLAlib.Matrix.Functions.HermitianCalculus
+import NLAlib.Matrix.Functions.IntrinsicDimension
 import NLAlib.Matrix.Functions.InverseCalculus
 import NLAlib.Matrix.Functions.JensenBlockCalculus
 import NLAlib.Matrix.Functions.PerspectiveSqrtNormalization
@@ -11,6 +16,8 @@ import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Functions.PolynomialSeries
 import NLAlib.Matrix.Functions.RealComplexCFC
+import NLAlib.Matrix.Functions.TraceExpBounds
+import NLAlib.Matrix.Functions.UnitaryCalculus
 
 /-! # `Matrix/Functions`
 

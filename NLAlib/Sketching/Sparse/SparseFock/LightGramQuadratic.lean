@@ -33,7 +33,7 @@ abbrev DomainFamily (m n ell : ℕ) :=
 Source: ported sparse-Fock shared-leg/vacuum proof, commit
 `b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
 def componentEnergy (z : DomainFamily m n ell) (k : Fin ell) : ℝ :=
-  coordinateEnergy (z k)
+  FiniteHilbert.normSq (z k)
 
 /-- The off-diagonal pairing applies the concrete cross matrix between two component vectors.
 Source: ported sparse-Fock shared-leg/vacuum proof, commit
@@ -58,7 +58,7 @@ theorem two_crossPairing_le (F : Frame n d) (z : DomainFamily m n ell)
     nlinarith [sq_nonneg (z k a - w a)]
   have hsum :
       2 * crossPairing F z k l hkl ≤
-        componentEnergy z k + coordinateEnergy w := by
+        componentEnergy z k + FiniteHilbert.normSq w := by
     calc
       2 * crossPairing F z k l hkl = ∑ a, 2 * z k a * w a := by
         simp only [crossPairing, w, Finset.mul_sum]
@@ -67,9 +67,9 @@ theorem two_crossPairing_le (F : Frame n d) (z : DomainFamily m n ell)
         ring
       _ ≤ ∑ a, ((z k a) ^ 2 + (w a) ^ 2) :=
         Finset.sum_le_sum fun a _ha ↦ hpoint a
-      _ = componentEnergy z k + coordinateEnergy w := by
-        simp [componentEnergy, coordinateEnergy, Finset.sum_add_distrib]
-  have hcontract : coordinateEnergy w ≤ componentEnergy z l := by
+      _ = componentEnergy z k + FiniteHilbert.normSq w := by
+        simp [componentEnergy, FiniteHilbert.normSq, Finset.sum_add_distrib]
+  have hcontract : FiniteHilbert.normSq w ≤ componentEnergy z l := by
     exact crossMatrix_energy_le F k l hkl (z l)
   linarith
 

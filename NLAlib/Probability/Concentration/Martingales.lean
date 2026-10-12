@@ -8,7 +8,6 @@ import NLAlib.Probability.Concentration.Martingales.LocalSecondMomentBounded
 import NLAlib.Probability.Concentration.Martingales.LocalSecondMomentIndicator
 import NLAlib.Probability.Concentration.Martingales.LocalSecondMomentIntegral
 import NLAlib.Probability.Concentration.Martingales.TracePotential
-import NLAlib.Probability.Concentration.Martingales.TracePotentialCrossing
 import NLAlib.Probability.Concentration.Martingales.TracePotentialProcess
 import NLAlib.Probability.Concentration.Martingales.TracePotentialStep
 import NLAlib.Probability.Concentration.Martingales.VarianceBudget

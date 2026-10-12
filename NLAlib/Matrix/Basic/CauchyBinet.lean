@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathlib.Data.Real.Basic
+import NLAlib.ForMathlib.Data.ExactRowSubset
 
 /-!
 # Cauchy–Binet and compound matrices
@@ -20,8 +21,9 @@ variable {r k R : Type*} [Fintype r] [Fintype k] [DecidableEq r] [DecidableEq k]
   [CommRing R]
 
 /-- The subsets of a finite index type having the size of the given minor
-coordinate type. Horn–Johnson §0.8.7, compound matrix index vocabulary. -/
-abbrev SizedSubset (k r : Type*) [Fintype r] := {S : Finset k // S.card = Fintype.card r}
+coordinate type: `ExactRowSubset k (Fintype.card r)`. Horn–Johnson §0.8.7, compound matrix
+index vocabulary. -/
+abbrev SizedSubset (k r : Type*) [Fintype r] := ExactRowSubset k (Fintype.card r)
 
 /-- A fixed coordinate listing of a sized subset, reused in both middle
 minors of Cauchy–Binet. Its order may be arbitrary because the determinant

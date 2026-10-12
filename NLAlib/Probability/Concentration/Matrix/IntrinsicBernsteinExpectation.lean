@@ -22,7 +22,7 @@ open Matrix
 private lemma posSemidef_of_loewnerLE {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Ω → Matrix d d ℂ) (hF : ∀ ω, (F ω).PosSemidef) (V : Matrix d d ℂ)
-    (h : LoewnerLE (∫ ω, F ω ∂μ) V) : V.PosSemidef := by
+    (h : (∫ ω, F ω ∂μ) ≤ V) : V.PosSemidef := by
   have h0 : (0 : Matrix d d ℂ) ≤ ∫ ω, F ω ∂μ :=
     integral_nonneg_of_ae (Filter.Eventually.of_forall fun ω => (hF ω).nonneg)
   have hI : (∫ ω, F ω ∂μ).PosSemidef := Matrix.nonneg_iff_posSemidef.mp h0
@@ -53,20 +53,6 @@ private lemma norm_le_trace {d : Type*} [Fintype d] [DecidableEq d] [Nonempty d]
   rw [htr]
   exact hi.trans (Finset.single_le_sum (fun j _ => hnn j) (Finset.mem_univ i))
 
-/-- A block-diagonal matrix with PSD blocks is PSD. -/
-private lemma posSemidef_fromBlocks_diag {m n : Type*} [Fintype m] [Fintype n]
-    {P : Matrix m m ℂ} {Q : Matrix n n ℂ}
-    (hP : P.PosSemidef) (hQ : Q.PosSemidef) : (fromBlocks P 0 0 Q).PosSemidef := by
-  refine PosSemidef.of_dotProduct_mulVec_nonneg
-    (IsHermitian.fromBlocks hP.1 (by simp) hQ.1) fun x => ?_
-  have e : star x ⬝ᵥ (fromBlocks P 0 0 Q *ᵥ x) =
-      star (x ∘ Sum.inl) ⬝ᵥ (P *ᵥ (x ∘ Sum.inl)) +
-        star (x ∘ Sum.inr) ⬝ᵥ (Q *ᵥ (x ∘ Sum.inr)) := by
-    rw [fromBlocks_mulVec]
-    simp [dotProduct, Fintype.sum_sum_type]
-  rw [e]
-  exact add_nonneg (hP.dotProduct_mulVec_nonneg _) (hQ.dotProduct_mulVec_nonneg _)
-
 /-- The intrinsic dimension of a nonzero PSD matrix is at least one. -/
 private lemma one_le_intrinsicDimension {d : Type*} [Fintype d] [DecidableEq d]
     {P : Matrix d d ℂ} (hP : P.PosSemidef) (hne : P ≠ 0) : 1 ≤ intrinsicDimension P := by
@@ -75,7 +61,7 @@ private lemma one_le_intrinsicDimension {d : Type*} [Fintype d] [DecidableEq d]
     by_contra hd
     rw [not_nonempty_iff] at hd
     exact hne (Subsingleton.elim _ _)
-  unfold intrinsicDimension spectralNorm
+  unfold intrinsicDimension
   rw [le_div_iff₀ hpos, one_mul]
   exact norm_le_trace hP
 
@@ -180,12 +166,12 @@ theorem NLAlib.intrinsic_matrix_bernstein_expectation :
       (V₁ ≠ 0 ∨ V₂ ≠ 0) →
       (∀ k, Measurable (S k)) → iIndepFun S μ →
       (∀ k, (∫ ω, S k ω ∂μ) = 0) →
-      (∀ k, ∀ᵐ ω ∂μ, spectralNorm (S k ω) ≤ L) →
-      LoewnerLE (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) V₁ →
-      LoewnerLE (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) V₂ →
+      (∀ k, ∀ᵐ ω ∂μ, ‖S k ω‖ ≤ L) →
+      (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) ≤ V₁ →
+      (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) ≤ V₂ →
       let r := intrinsicDimension (Matrix.fromBlocks V₁ 0 0 V₂)
-      let v := max (spectralNorm V₁) (spectralNorm V₂)
-      (∫ ω, spectralNorm (∑ k, S k ω) ∂μ) ≤
+      let v := max (‖V₁‖) (‖V₂‖)
+      (∫ ω, ‖∑ k, S k ω‖ ∂μ) ≤
         C * (Real.sqrt (v * Real.log (1 + r)) + L * Real.log (1 + r)) := by
   refine ⟨20, by norm_num, ?_⟩
   intro Ω _ μ _ m n N _ _ S L hL V₁ V₂ hV hMeas hIndep hMean hBound hVar₁ hVar₂ r v
@@ -221,20 +207,20 @@ theorem NLAlib.intrinsic_matrix_bernstein_expectation :
   have htail := (intrinsic_matrix_bernstein μ S L hL V₁ V₂ hV hMeas hIndep hMean hBound
     hVar₁ hVar₂).2.2
   -- reduce to integrable case
-  by_cases hint : Integrable (fun ω => spectralNorm (∑ k, S k ω)) μ
+  by_cases hint : Integrable (fun ω => ‖∑ k, S k ω‖) μ
   swap
   · rw [integral_undef hint]
     have : 0 ≤ Real.sqrt (v * ℓ) + L * ℓ := by
       have : 0 ≤ ℓ := by linarith
       positivity
     linarith
-  set W : Ω → ℝ := fun ω => max (spectralNorm (∑ k, S k ω) - μ₀) 0 with hWdef
+  set W : Ω → ℝ := fun ω => max (‖∑ k, S k ω‖ - μ₀) 0 with hWdef
   have hWint : Integrable W μ := (hint.sub (integrable_const μ₀)).pos_part
-  have hsplit : (∫ ω, spectralNorm (∑ k, S k ω) ∂μ) ≤ μ₀ + ∫ ω, W ω ∂μ := by
-    have h1 : (∫ ω, spectralNorm (∑ k, S k ω) ∂μ) ≤ ∫ ω, (μ₀ + W ω) ∂μ :=
+  have hsplit : (∫ ω, ‖∑ k, S k ω‖ ∂μ) ≤ μ₀ + ∫ ω, W ω ∂μ := by
+    have h1 : (∫ ω, ‖∑ k, S k ω‖ ∂μ) ≤ ∫ ω, (μ₀ + W ω) ∂μ :=
       integral_mono hint ((integrable_const μ₀).add hWint) fun ω => by
         simp only [hWdef]
-        have := le_max_left (spectralNorm (∑ k, S k ω) - μ₀) 0
+        have := le_max_left (‖∑ k, S k ω‖ - μ₀) 0
         linarith
     rw [integral_add (integrable_const μ₀) hWint, integral_const] at h1
     simpa using h1
@@ -247,13 +233,13 @@ theorem NLAlib.intrinsic_matrix_bernstein_expectation :
       (integrable_exp hc) ?_
     refine (ae_restrict_iff' measurableSet_Ioi).mpr (Filter.Eventually.of_forall fun t ht => ?_)
     have ht : 0 < t := ht
-    have hsub : {a | t ≤ W a} ⊆ {ω | t + μ₀ ≤ spectralNorm (∑ k, S k ω)} := by
+    have hsub : {a | t ≤ W a} ⊆ {ω | t + μ₀ ≤ ‖∑ k, S k ω‖} := by
       intro a ha
       simp only [Set.mem_ofPred_eq, hWdef] at ha ⊢
       rcases le_max_iff.mp ha with h | h
       · linarith
       · linarith
-    calc μ.real {a | t ≤ W a} ≤ μ.real {ω | t + μ₀ ≤ spectralNorm (∑ k, S k ω)} :=
+    calc μ.real {a | t ≤ W a} ≤ μ.real {ω | t + μ₀ ≤ ‖∑ k, S k ω‖} :=
           measureReal_mono hsub
       _ ≤ 4 * r * Real.exp (-((t + μ₀) ^ 2 / 2) / (v + L * (t + μ₀) / 3)) :=
           htail (t + μ₀) (by linarith)
@@ -262,6 +248,6 @@ theorem NLAlib.intrinsic_matrix_bernstein_expectation :
             (Real.exp_le_exp.mpr (exponent_le hv hL hμpos (by linarith))) (by linarith)
       _ = 4 * r * Real.exp (-c * μ₀) * Real.exp (-c * t) := by
           rw [show -c * (t + μ₀) = -c * μ₀ + -c * t by ring, Real.exp_add]; ring
-  calc (∫ ω, spectralNorm (∑ k, S k ω) ∂μ) ≤ μ₀ + 4 * r * Real.exp (-c * μ₀) / c := by
+  calc (∫ ω, ‖∑ k, S k ω‖ ∂μ) ≤ μ₀ + 4 * r * Real.exp (-c * μ₀) / c := by
         linarith
     _ ≤ 20 * (Real.sqrt (v * ℓ) + L * ℓ) := hfinal

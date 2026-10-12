@@ -3,14 +3,15 @@ import NLAlib.Matrix.OperatorTheory.CoordinatePinching
 import NLAlib.Matrix.OperatorTheory.EntropyJointConvex
 import NLAlib.Matrix.OperatorTheory.EntropyNonnegative
 import NLAlib.Matrix.OperatorTheory.GeneralizedKlein
+import NLAlib.Matrix.OperatorTheory.GoldenThompson
 import NLAlib.Matrix.OperatorTheory.JensenIsometricCompression
 import NLAlib.Matrix.OperatorTheory.JensenReflectionAlgebra
 import NLAlib.Matrix.OperatorTheory.JointTensor
 import NLAlib.Matrix.OperatorTheory.JointTensorRepresentation
 import NLAlib.Matrix.OperatorTheory.LiebConcavity
+import NLAlib.Matrix.OperatorTheory.LiebTraceFunction
 import NLAlib.Matrix.OperatorTheory.LoewnerHeinz
 import NLAlib.Matrix.OperatorTheory.LogOperatorConcave
-import NLAlib.Matrix.OperatorTheory.LogOperatorMonotone
 import NLAlib.Matrix.OperatorTheory.OperatorJensen
 import NLAlib.Matrix.OperatorTheory.PerspectiveConvex
 import NLAlib.Matrix.OperatorTheory.TraceExpConvex

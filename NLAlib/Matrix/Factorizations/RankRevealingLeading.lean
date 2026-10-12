@@ -14,24 +14,6 @@ open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
-/-- Spectral Eckart–Young's lower bound on arbitrary finite index types,
-using the actual native singular-value sequence. Horn–Johnson 2013,
-Theorem 7.4.9.1; supports `rank-revealing-qr`. -/
-theorem toEuclideanLin_singularValues_le_specNorm_sub_of_rank_le {m n : Type*}
-    [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (A B : Matrix m n ℝ) {k : ℕ} (hB : B.rank ≤ k) :
-    A.toEuclideanLin.singularValues k ≤ specNorm (A - B) := by
-  have hh := singularValues_le_specNorm_sub_of_rank_le
-    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-    (B.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-    (by simpa only [Matrix.rank_reindex] using hB)
-  have hSub : A.reindex (Fintype.equivFin m) (Fintype.equivFin n) -
-      B.reindex (Fintype.equivFin m) (Fintype.equivFin n) =
-      (A - B).reindex (Fintype.equivFin m) (Fintype.equivFin n) := rfl
-  rw [hSub, specNorm_reindex] at hh
-  simp only [singularValues_reindex] at hh
-  exact hh
-
 /-- Every singular value of an invertible square matrix satisfies
 `1 ≤ σᵢ(R)² ‖R⁻¹‖F²`. Gu–Eisenstat 1996, leading-block estimate. -/
 theorem one_le_sq_singularValue_mul_frobSq_inv {k : ℕ}
@@ -84,7 +66,7 @@ theorem singularValues_upper_block_le_sqrt_budget_mul {k : ℕ} {r q : Type*}
     nlinarith
   have hNorm := (sq_le_sq₀ (specNorm_nonneg _)
     (mul_nonneg (Real.sqrt_nonneg _) (singularValues_nonneg R i))).mp hSq
-  exact (toEuclideanLin_singularValues_le_specNorm_sub_of_rank_le _ B hB).trans
+  exact (singularValues_le_specNorm_sub_of_rank_le _ B hB).trans
     (by simpa only [hDiff] using hNorm)
 
 end NLAlib

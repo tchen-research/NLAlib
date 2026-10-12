@@ -1,5 +1,5 @@
 import NLAlib.RandomMatrix.Gaussian.Spectral.Gordon
-import NLAlib.Probability.Gaussian.Concentration.LipschitzConcentration
+import NLAlib.RandomMatrix.Gaussian.Basic.LipschitzConcentration
 /-!
 # Deviation of the extreme singular values of a Gaussian matrix
 

@@ -142,8 +142,7 @@ theorem singular_subspace_perturbation_bounds_fintype
   · simpa only [hsinU, hsinV, hE] using hgbound
   · simpa only [hsinU, hsinV] using hzero
   · intro hfull
-    rw [← hσA, ← hσB]
-    exact ⟨singularValues_eq_zero_of_min_le AF hfull.ge,
-      singularValues_eq_zero_of_min_le (AF + EF) hfull.ge⟩
+    exact ⟨singularValues_eq_zero_of_min_le A hfull.ge,
+      singularValues_eq_zero_of_min_le (A + E) hfull.ge⟩
 
 end NLAlib

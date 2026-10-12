@@ -49,7 +49,7 @@ theorem COne_mul_COne_transpose_of_ne (F : Frame n d) (r : Fin m)
   classical
   ext out inp
   simp only [Matrix.mul_apply, Matrix.transpose_apply, COne, orderedWordTerm,
-    externalTensor, ExternalOperator.outer]
+    externalTensor, Matrix.vecMulVec_apply]
   calc
     (∑ p, (F.u i out.1 * pDagAt r i out.2 p) *
         (F.u j inp.1 * pDagAt r j inp.2 p)) =
@@ -249,12 +249,12 @@ Source: ported from `SparseFockFormal.LightBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem D1_fullFiber_rows (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) (p : Pattern m n) :
-    fullFiber (Matrix.mulVec (D1 (m := m) F) x) p =
+    fiber (Matrix.mulVec (D1 (m := m) F) x) p =
       ∑ r, applyMatrix (partialFrameOperator F (p.lightInRow r))
-        (fullFiber x p) := by
+        (fiber x p) := by
   classical
   ext k
-  simp only [fullFiber, PiLp.toLp_apply, Matrix.mulVec, dotProduct,
+  simp only [fiber, PiLp.toLp_apply, Matrix.mulVec, dotProduct,
     applyMatrix, WithLp.ofLp_sum, Finset.sum_apply]
   change (∑ inp : Fin d × Pattern m n,
       D1 (m := m) F (k, p) inp * x inp) =
@@ -283,16 +283,16 @@ Source: ported from `SparseFockFormal.LightBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem D1_fullFiber_sites (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) (p : Pattern m n) :
-    fullFiber (Matrix.mulVec (D1 (m := m) F) x) p =
+    fiber (Matrix.mulVec (D1 (m := m) F) x) p =
       ∑ s ∈ p.light,
-        (analyze F (fullFiber x p) s.2) • F.u s.2 := by
+        (analyze F (fiber x p) s.2) • F.u s.2 := by
   rw [D1_fullFiber_rows]
   simp_rw [partialFrameOperator_mulVec]
   ext k
   simp only [synthesize, WithLp.ofLp_sum, Finset.sum_apply,
     WithLp.ofLp_smul, Pi.smul_apply]
   exact DirectionalConcrete.sum_rows_light_eq_sum_light p
-    (fun s ↦ analyze F (fullFiber x p) s.2 * F.u s.2 k)
+    (fun s ↦ analyze F (fiber x p) s.2 * F.u s.2 k)
 
 /-- A scaled frame-vector analysis energy is bounded by its scalar energy.
 Source: ported from `SparseFockFormal.LightBandsConcrete`,
@@ -327,26 +327,26 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem D1_output_fiber_energy_le (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) (p : Pattern m n) :
     ParsevalFrame.normSq
-        (fullFiber (Matrix.mulVec (D1 (m := m) F) x) p) ≤
+        (fiber (Matrix.mulVec (D1 (m := m) F) x) p) ≤
       (p.light.card : ℝ) ^ 2 *
-        ParsevalFrame.normSq (fullFiber x p) := by
+        ParsevalFrame.normSq (fiber x p) := by
   rw [D1_fullFiber_sites]
   calc
     ParsevalFrame.normSq
-        (∑ s ∈ p.light, (analyze F (fullFiber x p) s.2) • F.u s.2) ≤
+        (∑ s ∈ p.light, (analyze F (fiber x p) s.2) • F.u s.2) ≤
         (p.light.card : ℝ) * ∑ s ∈ p.light,
           ParsevalFrame.normSq
-            ((analyze F (fullFiber x p) s.2) • F.u s.2) :=
+            ((analyze F (fiber x p) s.2) • F.u s.2) :=
       DirectionalConcrete.normSq_sum_le_card p.light
-        (fun s ↦ (analyze F (fullFiber x p) s.2) • F.u s.2)
+        (fun s ↦ (analyze F (fiber x p) s.2) • F.u s.2)
     _ ≤ (p.light.card : ℝ) * ∑ _s ∈ p.light,
-          ParsevalFrame.normSq (fullFiber x p) := by
+          ParsevalFrame.normSq (fiber x p) := by
       apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg _)
       apply Finset.sum_le_sum
       intro s _
-      exact analyze_smul_frame_normSq_le F (fullFiber x p) s.2
+      exact analyze_smul_frame_normSq_le F (fiber x p) s.2
     _ = (p.light.card : ℝ) ^ 2 *
-          ParsevalFrame.normSq (fullFiber x p) := by
+          ParsevalFrame.normSq (fiber x p) := by
       simp
       ring
 
@@ -361,9 +361,9 @@ theorem D1_supported_energy_le (F : Frame n d) {nu : ℕ}
   rw [DirectionalConcrete.full_normSq_eq_sum_fiber]
   calc
     (∑ p, ParsevalFrame.normSq
-        (fullFiber (Matrix.mulVec (D1 (m := m) F) x) p)) ≤
+        (fiber (Matrix.mulVec (D1 (m := m) F) x) p)) ≤
         ∑ p, (nu : ℝ) ^ 2 *
-          ParsevalFrame.normSq (fullFiber x p) := by
+          ParsevalFrame.normSq (fiber x p) := by
       apply Finset.sum_le_sum
       intro p _
       by_cases hp : p.grade = nu
@@ -377,7 +377,7 @@ theorem D1_supported_energy_le (F : Frame n d) {nu : ℕ}
           nlinarith
         exact (D1_output_fiber_energy_le F x p).trans
           (mul_le_mul_of_nonneg_right hsquare real_inner_self_nonneg)
-      · have hz : fullFiber x p = 0 := by
+      · have hz : fiber x p = 0 := by
           ext k
           exact hx k p hp
         have hlocal := D1_output_fiber_energy_le (m := m) F x p

@@ -314,24 +314,24 @@ theorem isHermitian_transpose_mul_self {m p : Type*} [Fintype m] (A : Matrix m p
   simpa [Matrix.conjTranspose_eq_transpose_of_trivial] using
     Matrix.isHermitian_conjTranspose_mul_self A
 
-private theorem sq_singularValues_eq {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
-    (hk : k < n) :
-    singularValues A k ^ 2 = (isHermitian_transpose_mul_self A).eigenvalues₀
-      (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩) :=
-  sq_singularValues_eq_eigenvalues₀ A (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩)
+private theorem sq_singularValues_eq {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    (A : Matrix m n ℝ) {k : ℕ} (hk : k < Fintype.card n) :
+    singularValues A k ^ 2 = (isHermitian_transpose_mul_self A).eigenvalues₀ ⟨k, hk⟩ :=
+  sq_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩
 
 /-- **Courant–Fischer for singular values, min-max half.** If `‖Ax‖² ≤ c² ‖x‖²` on a subspace
-`W ⊆ ℝⁿ` of codimension at most `k`, then `σ_k(A) ≤ c` (zero-indexed). Horn–Johnson 2013,
-§7.3 (Thm 7.3.8, label to verify). Audit G0 B1; atlas `courant-fischer`. The hypothesis
-`0 ≤ c` covers `k ≥ n`, where `σ_k = 0`.
+`W ⊆ ℝⁿ` of codimension at most `k`, then `σ_k(A) ≤ c` (zero-indexed), on arbitrary finite
+index types. Horn–Johnson 2013, §7.3 (Thm 7.3.8, label to verify). Audit G0 B1; atlas
+`courant-fischer`. The hypothesis `0 ≤ c` covers `k ≥ card n`, where `σ_k = 0`.
 atlas: courant-fischer -/
-theorem singularValues_le_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ)
-    (W : Submodule ℝ (Fin n → ℝ)) (hW : n ≤ finrank ℝ W + k) {c : ℝ} (hc : 0 ≤ c)
+theorem singularValues_le_of_forall_mem {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    (A : Matrix m n ℝ) (k : ℕ) (W : Submodule ℝ (n → ℝ))
+    (hW : Fintype.card n ≤ finrank ℝ W + k) {c : ℝ} (hc : 0 ≤ c)
     (hAW : ∀ x ∈ W, (A *ᵥ x) ⬝ᵥ (A *ᵥ x) ≤ c ^ 2 * (x ⬝ᵥ x)) :
     singularValues A k ≤ c := by
-  by_cases hk : k < n
+  by_cases hk : k < Fintype.card n
   · have h := eigenvalues₀_le_of_forall_mem (isHermitian_transpose_mul_self A)
-      (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩) W (by simpa using hW) (c := c ^ 2)
+      ⟨k, hk⟩ W hW (c := c ^ 2)
       fun x hx => by rw [← mulVec_dotProduct_mulVec_self]; exact hAW x hx
     rw [← sq_singularValues_eq A hk] at h
     exact (pow_le_pow_iff_left₀ (singularValues_nonneg A k) hc two_ne_zero).1 h
@@ -339,19 +339,19 @@ theorem singularValues_le_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) 
     exact hc
 
 /-- **Courant–Fischer for singular values, max-min half.** If `c² ‖x‖² ≤ ‖Ax‖²` on a subspace
-of dimension at least `k + 1`, then `c ≤ σ_k(A)`. Horn–Johnson 2013, §7.3. Audit G0 B1;
-atlas `courant-fischer`.
+of dimension at least `k + 1`, then `c ≤ σ_k(A)`, on arbitrary finite index types.
+Horn–Johnson 2013, §7.3 (Thm 7.3.8). Audit G0 B1; atlas `courant-fischer`.
 atlas: courant-fischer -/
-theorem le_singularValues_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ)
-    (S : Submodule ℝ (Fin n → ℝ)) (hS : k + 1 ≤ finrank ℝ S) {c : ℝ}
+theorem le_singularValues_of_forall_mem {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    (A : Matrix m n ℝ) (k : ℕ) (S : Submodule ℝ (n → ℝ)) (hS : k + 1 ≤ finrank ℝ S) {c : ℝ}
     (hAS : ∀ x ∈ S, c ^ 2 * (x ⬝ᵥ x) ≤ (A *ᵥ x) ⬝ᵥ (A *ᵥ x)) :
     c ≤ singularValues A k := by
-  have hSn : finrank ℝ S ≤ n := by simpa using S.finrank_le
-  have hk : k < n := by omega
+  have hSn : finrank ℝ S ≤ Fintype.card n := by simpa using S.finrank_le
+  have hk : k < Fintype.card n := by omega
   rcases le_or_gt c 0 with hc | hc
   · exact hc.trans (singularValues_nonneg A k)
   have h := le_eigenvalues₀_of_forall_mem (isHermitian_transpose_mul_self A)
-    (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩) S (by simpa using hS) (c := c ^ 2)
+    ⟨k, hk⟩ S hS (c := c ^ 2)
     fun x hx => by rw [← mulVec_dotProduct_mulVec_self]; exact hAS x hx
   rw [← sq_singularValues_eq A hk] at h
   exact (pow_le_pow_iff_left₀ hc.le (singularValues_nonneg A k) two_ne_zero).1 h
@@ -359,31 +359,31 @@ theorem le_singularValues_of_forall_mem {m n : ℕ} (A : Matrix (Fin m) (Fin n) 
 /-- **Attaining subspace, min-max half (singular values)**: there is a subspace of codimension
 at most `k` (spanned by the right singular vectors `k, k+1, …`) on which `‖Ax‖² ≤ σ_k² ‖x‖²`.
 Horn–Johnson 2013, §7.3. Audit G0 B1/C6; atlas `courant-fischer`. -/
-theorem exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
-    ∃ W : Submodule ℝ (Fin n → ℝ), n ≤ finrank ℝ W + k ∧
+theorem exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul {m n : Type*} [Fintype m]
+    [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) (k : ℕ) :
+    ∃ W : Submodule ℝ (n → ℝ), Fintype.card n ≤ finrank ℝ W + k ∧
       ∀ x ∈ W, (A *ᵥ x) ⬝ᵥ (A *ᵥ x) ≤ singularValues A k ^ 2 * (x ⬝ᵥ x) := by
-  by_cases hk : k < n
+  by_cases hk : k < Fintype.card n
   · obtain ⟨W, hW, hAW⟩ := exists_submodule_le_eigenvalues₀_mul
-      (isHermitian_transpose_mul_self A) (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩)
-    refine ⟨W, by simpa using hW, fun x hx => ?_⟩
+      (isHermitian_transpose_mul_self A) ⟨k, hk⟩
+    refine ⟨W, hW, fun x hx => ?_⟩
     rw [sq_singularValues_eq A hk, mulVec_dotProduct_mulVec_self]
     exact hAW x hx
   · refine ⟨⊥, by simp; omega, fun x hx => ?_⟩
     rw [(Submodule.mem_bot ℝ).1 hx]
     simp
 
-/-- **Attaining subspace, max-min half (singular values)**: for `k < n` there is a subspace of
-dimension at least `k + 1` (spanned by the top `k + 1` right singular vectors) on which
-`σ_k² ‖x‖² ≤ ‖Ax‖²`. Horn–Johnson 2013, §7.3. Audit G0 B1/C6;
+/-- **Attaining subspace, max-min half (singular values)**: for `k < card n` there is a
+subspace of dimension at least `k + 1` (spanned by the top `k + 1` right singular vectors) on
+which `σ_k² ‖x‖² ≤ ‖Ax‖²`. Horn–Johnson 2013, §7.3. Audit G0 B1/C6;
 atlas `courant-fischer`. -/
-theorem exists_submodule_sq_singularValues_mul_le_mulVec_dotProduct {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ} (hk : k < n) :
-    ∃ S : Submodule ℝ (Fin n → ℝ), k + 1 ≤ finrank ℝ S ∧
+theorem exists_submodule_sq_singularValues_mul_le_mulVec_dotProduct {m n : Type*} [Fintype m]
+    [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) {k : ℕ} (hk : k < Fintype.card n) :
+    ∃ S : Submodule ℝ (n → ℝ), k + 1 ≤ finrank ℝ S ∧
       ∀ x ∈ S, singularValues A k ^ 2 * (x ⬝ᵥ x) ≤ (A *ᵥ x) ⬝ᵥ (A *ᵥ x) := by
   obtain ⟨S, hS, hAS⟩ := exists_submodule_eigenvalues₀_mul_le
-    (isHermitian_transpose_mul_self A) (Fin.cast (Fintype.card_fin n).symm ⟨k, hk⟩)
-  refine ⟨S, by simpa using hS, fun x hx => ?_⟩
+    (isHermitian_transpose_mul_self A) ⟨k, hk⟩
+  refine ⟨S, hS, fun x hx => ?_⟩
   rw [sq_singularValues_eq A hk, mulVec_dotProduct_mulVec_self]
   exact hAS x hx
 

@@ -20,7 +20,9 @@ span of the others (Schur complement), and given the other rows that squared dis
   Gaussian vector `g`, `E[Q_H(g)^{-2}] = 1/((k-n-2)(k-n-4))` (`Q_H(g)` the squared distance
   from `g` to the row space of `H`);
 * `integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix`:
-  `E[(G Gᵀ)⁻¹ᵢᵢ²] = 1/((k-r-1)(k-r-3))` for `r + 4 ≤ k`.
+  `E[(G Gᵀ)⁻¹ᵢᵢ²] = 1/((k-r-1)(k-r-3))` for `r + 4 ≤ k`;
+* `inv_self_mul_transpose_orthogonal_mul`: `((UG)(UG)ᵀ)⁻¹ = U (GGᵀ)⁻¹ Uᵀ` for orthogonal `U`
+  (the algebra behind the orthogonal invariance of the inverse Wishart law).
 
 Atlas: `inverse-wishart-frob-moment`, `pinv-frob-tail` (helpers). Proof source: Prove2me
 workspace, Gaussian Random Matrices series, with the workspace's `full_rank_ae`,
@@ -252,5 +254,20 @@ theorem integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMat
     rw [h2]
     push_cast
     ring_nf
+
+/-! ### Orthogonal conjugation of the inverse Gram matrix -/
+
+/-- Orthogonal conjugation transports the total inverse Gram matrix, including singular
+matrices. Source: Schur/operator inverse-Wishart route; atlas `inverse-wishart-spectral-moment`.
+-/
+theorem inv_self_mul_transpose_orthogonal_mul {r k : ℕ}
+    (U : Matrix (Fin r) (Fin r) ℝ) (hU : Uᵀ * U = 1)
+    (G : Matrix (Fin r) (Fin k) ℝ) :
+    ((U * G) * (U * G)ᵀ)⁻¹ = U * (G * Gᵀ)⁻¹ * Uᵀ := by
+  have hUinv : U⁻¹ = Uᵀ := Matrix.inv_eq_left_inv hU
+  rw [Matrix.transpose_mul]
+  rw [show U * G * (Gᵀ * Uᵀ) = U * (G * Gᵀ) * Uᵀ by simp [Matrix.mul_assoc]]
+  rw [Matrix.mul_inv_rev, Matrix.mul_inv_rev, ← Matrix.transpose_nonsing_inv, hUinv,
+    Matrix.transpose_transpose, Matrix.mul_assoc]
 
 end NLAlib

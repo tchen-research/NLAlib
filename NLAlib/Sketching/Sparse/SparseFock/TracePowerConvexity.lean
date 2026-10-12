@@ -76,31 +76,6 @@ theorem geomKernel_nonneg_of_odd {n : ℕ} (hn : Odd n) (x y : ℝ) :
     have hgeom := (Commute.all x y).mul_geom_sum₂ n
     nlinarith
 
-/-- Trace as a continuous real-linear functional on finite matrices equipped
-with their Euclidean operator norm.
-
-Source: ported from `SparseFockFormal.TracePowerConvexity`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def traceCLM (d : ℕ) :
-    Matrix (Fin d) (Fin d) ℝ →L[ℝ] ℝ :=
-  (Matrix.traceLinearMap (Fin d) ℝ ℝ).toContinuousLinearMap
-
-/-- The continuous trace functional evaluates to the usual matrix trace.
-Source: the pinned sparse-Fock trace-power proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-@[simp] theorem traceCLM_apply {d : ℕ}
-    (A : Matrix (Fin d) (Fin d) ℝ) :
-    traceCLM d A = Matrix.trace A := rfl
-
-/-- An affine matrix line has its direction matrix as derivative.
-
-Source: ported from `SparseFockFormal.TracePowerConvexity`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem hasDerivAt_affineMatrix {d : ℕ}
-    (A B : Matrix (Fin d) (Fin d) ℝ) (t : ℝ) :
-    HasDerivAt (fun r : ℝ ↦ A + r • B) B t := by
-  simpa using (hasDerivAt_id t).smul_const B |>.const_add A
-
 /-- Trace of a matrix power along an affine line.
 
 Source: ported from `SparseFockFormal.TracePowerConvexity`,
@@ -117,9 +92,11 @@ theorem hasDerivAt_tracePowerAlong {d p : ℕ}
     (A B : Matrix (Fin d) (Fin d) ℝ) (t : ℝ) :
     HasDerivAt (tracePowerAlong p A B)
       ((p : ℝ) * Matrix.trace (B * (A + t • B) ^ (p - 1))) t := by
+  have haff : HasDerivAt (fun r : ℝ ↦ A + r • B) B t := by
+    simpa using ((hasDerivAt_id t).smul_const B).const_add A
   let : NormedAddCommGroup ℝ := standardRealNormedAddCommGroup
   let : NormedSpace ℝ ℝ := standardRealNormedSpace
-  have hpow := (hasDerivAt_affineMatrix A B t).fun_pow' p
+  have hpow := haff.fun_pow' p
   let tr : Matrix (Fin d) (Fin d) ℝ →L[ℝ] ℝ :=
     (Matrix.traceLinearMap (Fin d) ℝ ℝ).toContinuousLinearMap
   have htrace := (hasDerivAt_const t tr).clm_apply hpow
@@ -153,9 +130,11 @@ theorem hasDerivAt_tracePowerFirst {d p : ℕ}
       (fun r ↦ (p : ℝ) *
         Matrix.trace (B * (A + r • B) ^ (p - 1)))
       (tracePowerSecondAlong p A B t) t := by
+  have haff : HasDerivAt (fun r : ℝ ↦ A + r • B) B t := by
+    simpa using ((hasDerivAt_id t).smul_const B).const_add A
   let : NormedAddCommGroup ℝ := standardRealNormedAddCommGroup
   let : NormedSpace ℝ ℝ := standardRealNormedSpace
-  have hpow := (hasDerivAt_affineMatrix A B t).fun_pow' (p - 1)
+  have hpow := haff.fun_pow' (p - 1)
   have hleft := hpow.const_mul B
   let tr : Matrix (Fin d) (Fin d) ℝ →L[ℝ] ℝ :=
     (Matrix.traceLinearMap (Fin d) ℝ ℝ).toContinuousLinearMap

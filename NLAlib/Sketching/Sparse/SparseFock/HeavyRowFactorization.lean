@@ -82,12 +82,6 @@ theorem rUpAt_sq_zero (r : Fin m) (i : Fin n) :
     · simp
   · simp [rUpAt_apply, hout]
 
-/-- The external frame vectors are exposed in the coordinate form used by named bands.
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def frameRows (F : Frame n d) : Fin n → Fin d → ℝ :=
-  fun i k ↦ F.u i k
-
 /-- A one-site heavy synthesis summand combines the frame coordinate with heavy creation.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
@@ -135,11 +129,11 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem BUpOne_mul_AUpOne_of_ne (F : Frame n d) (r : Fin m)
     {i j : Fin n} (hij : i ≠ j) :
     BUpOne F r i * AUpOne F r j =
-      orderedWordTerm (frameRows F) r i j (.rUp, .rUp) := by
+      orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rUp, .rUp) := by
   classical
   ext out inp
   simp only [Matrix.mul_apply, BUpOne, AUpOne, orderedWordTerm,
-    externalTensor, ExternalOperator.outer]
+    externalTensor, Matrix.vecMulVec_apply]
   calc
     (∑ p, (F.u i out.1 * rUpAt r i out.2 p) *
         (F.u j inp.1 * rUpAt r j p inp.2)) =
@@ -187,7 +181,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem BUpMatrix_mul_AUpMatrix (F : Frame n d) (r : Fin m) :
     BUpMatrix F r * AUpMatrix F r =
       ∑ i, ∑ j ∈ Finset.univ.erase i,
-        orderedWordTerm (frameRows F) r i j (.rUp, .rUp) := by
+        orderedWordTerm (DirectionalConcrete.frameRows F) r i j (.rUp, .rUp) := by
   classical
   rw [BUpMatrix_eq_sum_one, AUpMatrix_eq_sum_one, Matrix.sum_mul]
   simp_rw [Matrix.mul_sum]
@@ -206,7 +200,7 @@ synthesis and analysis matrices.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hplus_eq_BUpStack_mul_AUpStack (F : Frame n d) :
-    Hplus m (frameRows F) = BUpStack (m := m) F * AUpStack (m := m) F := by
+    Hplus m (DirectionalConcrete.frameRows F) = BUpStack (m := m) F * AUpStack (m := m) F := by
   classical
   ext out inp
   simp only [Hplus, wordSum, physicalWordSum, Matrix.sum_apply,

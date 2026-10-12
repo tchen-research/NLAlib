@@ -13,7 +13,8 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 open scoped Matrix.Norms.L2Operator ComplexOrder
 open Matrix
 set_option autoImplicit false
-private theorem trace_pair {d : ℕ} (U V : Matrix (Fin d) (Fin d) ℂ) (a b : Fin d → ℝ) :
+private theorem trace_pair {d : Type*} [Fintype d] [DecidableEq d] (U V : Matrix d d ℂ)
+    (a b : d → ℝ) :
     (trace ((U * diagonal (fun j => (a j : ℂ)) * Uᴴ) *
       (V * diagonal (fun k => (b k : ℂ)) * Vᴴ))).re =
     ∑ j, ∑ k, a j * b k * Complex.normSq ((Uᴴ * V) j k) := by
@@ -46,22 +47,22 @@ open NLAlib
 ≥ 0` for Hermitian `A`, `H` with spectra in `I`.
 
 Tropp 2015, Prop. 8.3.5. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 8*.
+Introduction to Matrix Concentration Inequalities, Ch 8*. Stated on any finite index type.
 
 The convexity hypothesis on `I` is not used by the proof; it is kept to match the source. -/
-theorem NLAlib.generalized_klein {d N : ℕ} [NeZero d]
+theorem NLAlib.generalized_klein {d : Type*} [Fintype d] [DecidableEq d] {N : ℕ}
     (I : Set ℝ) (_hI : Convex ℝ I) (f g : Fin N → ℝ → ℝ)
     (hfg : ∀ a ∈ I, ∀ h ∈ I, 0 ≤ ∑ i, f i a * g i h)
-    (A H : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
+    (A H : Matrix d d ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
     (hAI : spectrum ℝ A ⊆ I) (hHI : spectrum ℝ H ⊆ I) :
-    0 ≤ ∑ i, (Matrix.trace (matrixFunction (f i) A *
-      matrixFunction (g i) H)).re := by
+    0 ≤ ∑ i, (Matrix.trace (cfc (f i) A *
+      cfc (g i) H)).re := by
   have heq (i : Fin N) :
-      (trace (matrixFunction (f i) A * matrixFunction (g i) H)).re =
+      (trace (cfc (f i) A * cfc (g i) H)).re =
       ∑ j, ∑ k, f i (hA.eigenvalues j) * g i (hH.eigenvalues k) *
-        Complex.normSq (((hA.eigenvectorUnitary : Matrix (Fin d) (Fin d) ℂ)ᴴ *
-          (hH.eigenvectorUnitary : Matrix (Fin d) (Fin d) ℂ)) j k) := by
-    simp only [matrixFunction, hA.cfc_eq, hH.cfc_eq, Matrix.IsHermitian.cfc,
+        Complex.normSq (((hA.eigenvectorUnitary : Matrix d d ℂ)ᴴ *
+          (hH.eigenvectorUnitary : Matrix d d ℂ)) j k) := by
+    simp only [hA.cfc_eq, hH.cfc_eq, Matrix.IsHermitian.cfc,
       Unitary.conjStarAlgAut_apply, Function.comp_def, Matrix.star_eq_conjTranspose]
     exact trace_pair _ _ _ _
   simp_rw [heq]

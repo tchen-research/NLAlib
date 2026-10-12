@@ -57,7 +57,8 @@ theorem specNorm_sub_columnProjector_le_pinv_mul_specNorm {A B : Matrix m n ℝ}
     _ = _ := by ring
 
 /-- Equal-rank column-space projector perturbation with the sharp minimum
-pseudoinverse coefficient. Stewart–Sun §III.3; both zero matrices are included.
+pseudoinverse coefficient. Stewart–Sun 1990, §III.3, Thm III.3.8; Wedin 1973, Lemma 4.2
+(projector form); both zero matrices are included.
 atlas: pseudoinverse-perturbation (partial) -/
 theorem specNorm_sub_columnProjector_le_min_pinv_mul_specNorm {A B : Matrix m n ℝ}
     (hr : A.rank=B.rank) :

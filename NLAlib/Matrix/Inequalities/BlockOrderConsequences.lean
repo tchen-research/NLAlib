@@ -128,20 +128,4 @@ theorem inv_submatrix_le_submatrix_inv {A : Matrix m m ℝ} (hA : A.PosDef)
     simpa only [Matrix.mul_one, Matrix.submatrix_one f hf] using hh
   simpa only [hc] using inv_compression_le_compression_inv hA hV
 
-/-- A symmetric off-diagonal block matrix is positive definite exactly when
-its leading block and ordinary Schur complement are both positive definite.
-The forward implication derives invertibility of the leading block.
-Horn--Johnson (2013), Theorem 7.7.7.
-atlas: psd-block-contraction (partial) -/
-theorem posDef_fromBlocks_iff_posDef_and_schur
-    (A : Matrix m m ℝ) (B : Matrix m n ℝ) (C : Matrix n n ℝ) :
-    (fromBlocks A B Bᵀ C).PosDef ↔ A.PosDef ∧ (C - Bᵀ * A⁻¹ * B).PosDef := by
-  constructor
-  · intro hH
-    have hA : A.PosDef := hH.submatrix
-      (Sum.inl_injective : Function.Injective (Sum.inl : m → m ⊕ n))
-    exact (posDef_fromBlocks_iff_posDef_schur hA.isHermitian hA.isUnit B C).mp hH
-  · rintro ⟨hA, hS⟩
-    exact (posDef_fromBlocks_iff_posDef_schur hA.isHermitian hA.isUnit B C).mpr ⟨hA, hS⟩
-
 end NLAlib

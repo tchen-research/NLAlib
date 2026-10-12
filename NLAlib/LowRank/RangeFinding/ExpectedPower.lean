@@ -1,5 +1,5 @@
 import NLAlib.LowRank.Structural.PowerIteration
-import NLAlib.LowRank.RangeFinding.GaussianSpectralEndpoints
+import NLAlib.LowRank.RangeFinding.SpectralRangeFinder
 import NLAlib.Matrix.Spectral.SvdPowers
 import Mathlib.Analysis.Convex.Integral
 
@@ -147,7 +147,7 @@ theorem integral_specNorm_residual_gram_pow_gaussian_le
     rw [integral_congr_ae hzero, integral_zero]
     exact Real.rpow_nonneg hB0 _
   · have hkn : k ≤ n := by have := A.rank_le_width; omega
-    have hH := integral_specNorm_residual_le_singularValues_of_gaussian_of_pos
+    have hH := integral_specNorm_residual_le_singularValues_of_gaussian
       C hk hp hkn G hG Q hQo hQr
     have htail : singularValueTailSq C k = ∑ i : Fin m, if k ≤ (i : ℕ) then
         singularValues A i ^ (2 * (2 * q + 1)) else 0 := by

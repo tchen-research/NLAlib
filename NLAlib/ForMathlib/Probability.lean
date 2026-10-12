@@ -1,12 +1,13 @@
 import NLAlib.ForMathlib.Probability.BoundedDifferences
 import NLAlib.ForMathlib.Probability.ExponentialTailMoments
 import NLAlib.ForMathlib.Probability.FiniteL2
-import NLAlib.ForMathlib.Probability.FiniteLaw
 import NLAlib.ForMathlib.Probability.FiniteLawBasics
 import NLAlib.ForMathlib.Probability.FiniteLawIndependent
 import NLAlib.ForMathlib.Probability.FiniteLawMeasure
 import NLAlib.ForMathlib.Probability.FiniteProductEvents
 import NLAlib.ForMathlib.Probability.FiniteProductLaw
+import NLAlib.ForMathlib.Probability.IndepExpSum
+import NLAlib.ForMathlib.Probability.Independence
 import NLAlib.ForMathlib.Probability.NonnegativeSupermartingale
 import NLAlib.ForMathlib.Probability.SampleAverage
 import NLAlib.ForMathlib.Probability.UniformCollision

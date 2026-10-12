@@ -1,7 +1,7 @@
 import NLAlib.Matrix.Norms.Schatten
 import NLAlib.Matrix.Spectral.SingularValueInvariance
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
-import NLAlib.Matrix.Norms.NuclearFiniteIndex
+import NLAlib.Matrix.Inequalities.KyFanNorms
+import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Inequalities.KyFanSums
 import NLAlib.Matrix.Inequalities.MajorizationConvex
 

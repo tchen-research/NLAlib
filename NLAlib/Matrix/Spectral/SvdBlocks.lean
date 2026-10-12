@@ -27,7 +27,7 @@ theorem singularValueTailSq_eq_sum_width {m n : ℕ}
     apply Finset.sum_subset (Finset.range_mono hd)
     intro i _ hi
     have hz := singularValues_eq_zero_of_min_le A (k := i)
-      (by simpa only [Finset.mem_range, not_lt] using hi)
+      (by simpa only [Finset.mem_range, not_lt, Fintype.card_fin] using hi)
     simp [f, hz]
   have hm := hsum m (min_le_left m n)
   have hn := hsum n (min_le_right m n)
@@ -101,7 +101,8 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
         have hival : (i : ℕ) ≠ k + j := fun he => hi (Fin.ext he)
         simp [S₂, D, rectDiag_apply, hival]
       · simp
-    · rw [singularValues_eq_zero_of_height_le A (not_lt.mp hjm)]
+    · rw [singularValues_eq_zero_of_height_le A
+        (by simpa only [Fintype.card_fin] using not_lt.mp hjm)]
       simp only [zero_pow (by decide : 2 ≠ 0)]
       apply Finset.sum_eq_zero
       intro i _

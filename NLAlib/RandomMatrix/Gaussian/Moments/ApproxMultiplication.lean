@@ -1,4 +1,4 @@
-import NLAlib.Probability.Gaussian.Moments.FourthMoment
+import NLAlib.RandomMatrix.Gaussian.Moments.FourthMoment
 /-!
 # Gaussian approximate matrix multiplication
 
@@ -8,7 +8,7 @@ Frobenius error
 `E ‖M (Ω Ωᵀ / t) Nᵀ − M Nᵀ‖_F² = (‖M‖_F² ‖N‖_F² + ‖M Nᵀ‖_F²) / t ≤ 2 ‖M‖_F² ‖N‖_F² / t`
 (`integral_frobSq_mul_gram_mul_transpose_sub`, atlas `gaussian-amm`).
 
-The proof applies the Isserlis formula of `NLAlib.Probability.Gaussian.Moments.FourthMoment` entrywise.
+The proof applies the Isserlis formula of `NLAlib.RandomMatrix.Gaussian.Moments.FourthMoment` entrywise.
 Proof source: Prove2me workspace, Gaussian Random Matrices series (solution
 `approx_multiplication`, namespace `GaussianMatrix.ApproxMultAux`).
 -/

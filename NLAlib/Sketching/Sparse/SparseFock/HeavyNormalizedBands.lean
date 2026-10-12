@@ -49,13 +49,13 @@ theorem norm_normalized_Hplus_restricted_le (F : Frame n d)
     (s b nu : ℕ) (hs : 0 < s) (hb : 1 < b) :
     ‖((1 / (((s * b : ℕ) : ℝ))) •
         (Real.sqrt ((b : ℝ) - 1) ^ 2 •
-          Hplus (s * b) (frameRows F))) *
+          Hplus (s * b) (DirectionalConcrete.frameRows F))) *
         gradeProjection (d := d) nu‖ ≤
       BandEnvelope.cTerm (nu : ℝ) (s : ℝ) := by
   rw [norm_normalized_heavy_term_eq]
   calc
     Real.sqrt ((b : ℝ) - 1) ^ 2 / (((s * b : ℕ) : ℝ)) *
-        ‖Hplus (s * b) (frameRows F) * gradeProjection (d := d) nu‖ ≤
+        ‖Hplus (s * b) (DirectionalConcrete.frameRows F) * gradeProjection (d := d) nu‖ ≤
       Real.sqrt ((b : ℝ) - 1) ^ 2 / (((s * b : ℕ) : ℝ)) *
         ((nu : ℝ) + 1) := by
       exact mul_le_mul_of_nonneg_left
@@ -77,19 +77,19 @@ theorem norm_normalized_Hzero_restricted_le (F : Frame n d)
     (s b nu : ℕ) (hs : 0 < s) (hb : 1 < b) :
     ‖((1 / (((s * b : ℕ) : ℝ))) •
         (Real.sqrt ((b : ℝ) - 1) ^ 2 •
-          Hzero (s * b) (frameRows F))) *
+          Hzero (s * b) (DirectionalConcrete.frameRows F))) *
         gradeProjection (d := d) nu‖ ≤
       2 * BandEnvelope.cTerm (nu : ℝ) (s : ℝ) := by
   rw [norm_normalized_heavy_term_eq]
   have hraw :
-      ‖Hzero (s * b) (frameRows F) * gradeProjection (d := d) nu‖ ≤
+      ‖Hzero (s * b) (DirectionalConcrete.frameRows F) * gradeProjection (d := d) nu‖ ≤
         2 * ((nu : ℝ) + 1) := by
     calc
       _ ≤ 2 * (nu : ℝ) := Hzero_gradeProjection_norm (m := s * b) F nu
       _ ≤ 2 * ((nu : ℝ) + 1) := by linarith
   calc
     Real.sqrt ((b : ℝ) - 1) ^ 2 / (((s * b : ℕ) : ℝ)) *
-        ‖Hzero (s * b) (frameRows F) * gradeProjection (d := d) nu‖ ≤
+        ‖Hzero (s * b) (DirectionalConcrete.frameRows F) * gradeProjection (d := d) nu‖ ≤
       Real.sqrt ((b : ℝ) - 1) ^ 2 / (((s * b : ℕ) : ℝ)) *
         (2 * ((nu : ℝ) + 1)) := by
       exact mul_le_mul_of_nonneg_left hraw
@@ -110,13 +110,13 @@ theorem norm_normalized_Hminus_restricted_le (F : Frame n d)
     (s b nu : ℕ) (hs : 0 < s) (hb : 1 < b) :
     ‖((1 / (((s * b : ℕ) : ℝ))) •
         (Real.sqrt ((b : ℝ) - 1) ^ 2 •
-          Hminus (s * b) (frameRows F))) *
+          Hminus (s * b) (DirectionalConcrete.frameRows F))) *
         gradeProjection (d := d) nu‖ ≤
       BandEnvelope.cTerm (nu : ℝ) (s : ℝ) := by
   rw [norm_normalized_heavy_term_eq]
   calc
     Real.sqrt ((b : ℝ) - 1) ^ 2 / (((s * b : ℕ) : ℝ)) *
-        ‖Hminus (s * b) (frameRows F) * gradeProjection (d := d) nu‖ ≤
+        ‖Hminus (s * b) (DirectionalConcrete.frameRows F) * gradeProjection (d := d) nu‖ ≤
       Real.sqrt ((b : ℝ) - 1) ^ 2 / (((s * b : ℕ) : ℝ)) *
         ((nu : ℝ) + 1) := by
       exact mul_le_mul_of_nonneg_left

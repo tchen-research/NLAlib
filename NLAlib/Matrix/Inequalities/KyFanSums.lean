@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Spectral.Eigenframes
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
+import NLAlib.Matrix.Inequalities.KyFanNorms
 import NLAlib.Matrix.Inequalities.MajorizationProperties
 /-!
 # Ky Fan sum inequalities and spectral majorization

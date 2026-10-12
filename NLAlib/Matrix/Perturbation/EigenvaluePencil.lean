@@ -66,7 +66,7 @@ theorem eigenvalues₀_pencil_add {A B : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) (t h : ℝ) (i : Fin (Fintype.card n)) :
     (isHermitian_add_smul (isHermitian_add_smul hA hB t) hB h).eigenvalues₀ i =
       (isHermitian_add_smul hA hB (t + h)).eigenvalues₀ i := by
-  apply eigenvalues₀_eq_of_eq _ _ _ i
+  refine congrFun (eigenvalues₀_eq_of_matrix_eq _ _ ?_) i
   rw [add_smul]
   abel
 

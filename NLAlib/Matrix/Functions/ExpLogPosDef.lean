@@ -14,13 +14,14 @@ set_option autoImplicit false
 open NLAlib
 
 /-- The exponential of a Hermitian matrix is positive definite and `matrixLog` inverts it: `(matrixExp
-A).PosDef ∧ matrixLog (matrixExp A) = A`.
+A).PosDef ∧ matrixLog (matrixExp A) = A`, on any finite index type (including the empty one).
+The second conjunct is Mathlib's `CFC.log_exp` (`matrixLog = CFC.log`, `matrixLog_eq_log`).
 
 Tropp 2015, §2.1.11–12, eq. (2.1.17). Atlas: `loewner-order`. Ported from the Prove2me mission *An
 Introduction to Matrix Concentration Inequalities, Ch 3*.
 atlas: matrix-calculus-def -/
-theorem NLAlib.posDef_matrixExp_and_matrixLog_matrixExp {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ)
-    (hA : A.IsHermitian) :
+theorem NLAlib.posDef_matrixExp_and_matrixLog_matrixExp {d : Type*} [Fintype d] [DecidableEq d]
+    (A : Matrix d d ℂ) (hA : A.IsHermitian) :
     (matrixExp A).PosDef ∧ matrixLog (matrixExp A) = A := by
   constructor
   · rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp hA.isSelfAdjoint]

@@ -2,6 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.LightGradeNorm
+import NLAlib.Matrix.Basic.QuadForm
 /-!
 # Vanishing of shared-leg operators on zero-light blocks
 
@@ -103,8 +104,8 @@ Source: ported sparse-Fock shared-leg/vacuum proof, commit
 theorem ghat_quadratic_eq_zero_of_zeroLight
     (F : Frame n d) (T : Finset (Site m n))
     (x : Fin d × Pattern m n → ℝ) (hx : SupportedOnBlock T 0 x) :
-    quadratic (ghat (m := m) F) x = 0 := by
-  rw [quadratic, ghat_mulVec_eq_zero_of_zeroLight F T x hx]
+    quadForm (ghat (m := m) F) x = 0 := by
+  rw [quadForm, ghat_mulVec_eq_zero_of_zeroLight F T x hx]
   simp
 
 end NLAlib.SparseFock.LightSectorConcrete

@@ -6,14 +6,14 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 -/
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.DiagonalLaw
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.Mean
+import NLAlib.Matrix.Inequalities.PlaneRotation
+import NLAlib.Probability.Gaussian.Basic.StandardVector
 /-!
 # Second moments of the inverse Wishart matrix
 
 For an `r × k` standard Gaussian matrix `G` with `r + 4 ≤ k` and `i ≠ j`, with
 `N = (G Gᵀ)⁻¹`:
 
-* `integrable_and_integral_dotProduct_sq_pi_gaussianReal`: `E[(w ⬝ g)²] = w ⬝ w` for a
-  standard Gaussian vector `g`;
 * `integrable_and_integral_inv_self_mul_transpose_apply_sq_gaussianMatrix`:
   `E[Nᵢⱼ²] = 1/((k-r)(k-r-1)(k-r-3))`;
 * `integral_inv_self_mul_transpose_apply_self_sq_eq`: the rotation relation
@@ -41,61 +41,6 @@ open scoped Matrix
 namespace NLAlib
 
 /-! ### Off-diagonal second moment -/
-
-/-- **Second moment of a linear form of a standard Gaussian vector.** For `w ∈ ℝᵏ` and `g` a
-standard Gaussian vector, `(w ⬝ g)²` is integrable and `E[(w ⬝ g)²] = w ⬝ w`.
-
-Helper for Tropp–Webber 2023, Lemma B.2. Atlas: `inverse-wishart-frob-moment` (helper). Ported
-from the Prove2me solution `Sol_GaussianMatrix_inverse_wishart_offdiag_sq_moment`
-(`iwg_gauss_sq`). -/
-theorem integrable_and_integral_dotProduct_sq_pi_gaussianReal {k : ℕ} (w : Fin k → ℝ) :
-    Integrable (fun g : Fin k → ℝ => (w ⬝ᵥ g) ^ 2) (Measure.pi fun _ : Fin k => gaussianReal 0 1) ∧
-    ∫ g, (w ⬝ᵥ g) ^ 2 ∂(Measure.pi fun _ : Fin k => gaussianReal 0 1) = w ⬝ᵥ w := by
-  set μ := Measure.pi fun _ : Fin k => gaussianReal 0 1 with hμ
-  have hmono : ∀ (a b : Fin k) (g : Fin k → ℝ),
-      g a * g b = ∏ c, g c ^ ((if a = c then 1 else 0) + (if b = c then 1 else 0)) := by
-    intro a b g
-    simp only [pow_add, Finset.prod_mul_distrib, Finset.prod_pow_boole, Finset.mem_univ, if_true]
-  have gint : ∀ m : ℕ, Integrable (fun x : ℝ => x ^ m) (gaussianReal 0 1) := by
-    intro m
-    have h := (memLp_id_gaussianReal (μ := 0) (v := 1) (m : NNReal)).integrable_norm_pow'
-    refine h.mono' (by fun_prop) (Filter.Eventually.of_forall fun x => ?_)
-    simp [norm_pow]
-  have hint2 : ∀ a b : Fin k, Integrable (fun g : Fin k → ℝ => g a * g b) μ := by
-    intro a b
-    simp_rw [hmono a b]
-    exact Integrable.fintype_prod (f := fun c (x : ℝ) =>
-      x ^ ((if a = c then 1 else 0) + (if b = c then 1 else 0))) (fun c => gint _)
-  have gm2 : ∫ x, x ^ 2 ∂(gaussianReal 0 1) = 1 := by
-    have h := variance_id_gaussianReal (μ := 0) (v := 1)
-    rw [variance_of_integral_eq_zero aemeasurable_id
-      (by simp [integral_id_gaussianReal (μ := 0) (v := 1)])] at h
-    simpa using h
-  have hval2 : ∀ a b : Fin k, ∫ g, g a * g b ∂μ = if a = b then 1 else 0 := by
-    intro a b
-    simp_rw [hmono a b]
-    rw [hμ, integral_fintype_prod_eq_prod (fun c (x : ℝ) =>
-      x ^ ((if a = c then 1 else 0) + (if b = c then 1 else 0)))]
-    by_cases h : a = b
-    · subst h
-      rw [Finset.prod_eq_single a]
-      · simp [gm2]
-      · intro c _ hc; simp [Ne.symm hc]
-      · simp
-    · rw [if_neg h]
-      exact Finset.prod_eq_zero (Finset.mem_univ a) (by simp [Ne.symm h])
-  have hexp : (fun g : Fin k → ℝ => (w ⬝ᵥ g) ^ 2)
-      = fun g => ∑ a, ∑ b, (w a * w b) * (g a * g b) := by
-    funext g
-    simp only [dotProduct, sq, Finset.sum_mul_sum]
-    refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
-    ring
-  rw [hexp]
-  refine ⟨integrable_finsetSum _ fun a _ => integrable_finsetSum _ fun b _ =>
-    (hint2 a b).const_mul _, ?_⟩
-  rw [integral_finsetSum _ fun a _ => integrable_finsetSum _ fun b _ => (hint2 a b).const_mul _]
-  simp_rw [integral_finsetSum _ fun b _ => (hint2 _ b).const_mul _, integral_const_mul, hval2]
-  simp [dotProduct]
 
 /-- Conditional moment: for fixed full-rank `H`, with `c = (HHᵀ)⁻¹ H g` the regression
 coefficients and `Q` the residual, `E[c_a² / Q²] = ((HHᵀ)⁻¹)_{aa} / ((k-n-2)(k-n-4))`. -/
@@ -263,47 +208,34 @@ theorem integrable_and_integral_inv_self_mul_transpose_apply_sq_gaussianMatrix {
 
 /-! ### The rotation relation -/
 
-/-- The 45-degree rotation in the `(i, j)` coordinate plane. -/
-private def planeRotation {r : ℕ} (i j : Fin r) : Matrix (Fin r) (Fin r) ℝ :=
-  Matrix.of fun a => if a = i then (Real.sqrt 2)⁻¹ • (Pi.single i 1 + Pi.single j 1)
-    else if a = j then (Real.sqrt 2)⁻¹ • (Pi.single j 1 - Pi.single i 1) else Pi.single a 1
+/-- Row `i` of the plane rotation of `(eᵢ, eⱼ)`: `c eᵢ + s eⱼ`. -/
+private lemma planeRotation_single_apply_left {r : ℕ} {i j : Fin r} (hij : i ≠ j) (c s : ℝ)
+    (a : Fin r) :
+    planeRotation (Pi.single i 1) (Pi.single j 1) c s i a =
+      (if a = i then c else 0) + (if a = j then s else 0) := by
+  by_cases hai : a = i <;> by_cases haj : a = j <;>
+    simp_all [planeRotation, Matrix.vecMulVec_apply, Pi.single_apply, Matrix.one_apply, eq_comm]
 
 private lemma inv_sqrt_two_mul_self : (Real.sqrt 2)⁻¹ * (Real.sqrt 2)⁻¹ = (1 / 2 : ℝ) := by
   rw [← mul_inv, Real.mul_self_sqrt (by norm_num)]; norm_num
 
-private lemma planeRotation_transpose_mul {r : ℕ} (i j : Fin r) (hij : i ≠ j) :
-    (planeRotation i j)ᵀ * planeRotation i j = 1 := by
-  rw [mul_eq_one_comm]
-  ext a b
-  rw [Matrix.mul_apply]
-  simp only [Matrix.transpose_apply]
-  have hc := inv_sqrt_two_mul_self
-  have hji : j ≠ i := Ne.symm hij
-  by_cases hai : a = i <;> by_cases haj : a = j <;>
-    by_cases hbi : b = i <;> by_cases hbj : b = j <;>
-    simp_all [planeRotation, Pi.single_apply, Finset.sum_add_distrib, Finset.sum_sub_distrib,
-      Matrix.one_apply, mul_add, add_mul, sub_mul, mul_sub, eq_comm] <;>
-    linarith
+/-- The 45-degree rotation in the `(i, j)` coordinate plane is orthogonal. -/
+private lemma planeRotation_single_transpose_mul {r : ℕ} {i j : Fin r} (hij : i ≠ j) :
+    (planeRotation (Pi.single i 1) (Pi.single j 1) (Real.sqrt 2)⁻¹ (Real.sqrt 2)⁻¹)ᵀ *
+      planeRotation (Pi.single i 1) (Pi.single j 1) (Real.sqrt 2)⁻¹ (Real.sqrt 2)⁻¹ = 1 :=
+  transpose_planeRotation_mul_self _ _ (by simp) (by simp) (by simp [hij])
+    _ _ (by rw [sq, inv_sqrt_two_mul_self]; norm_num)
 
-private lemma planeRotation_conj_apply {r : ℕ} (i j : Fin r) (N : Matrix (Fin r) (Fin r) ℝ) :
-    (planeRotation i j * N * (planeRotation i j)ᵀ) i i = (N i i + N i j + N j i + N j j) / 2 := by
+/-- Conjugating by the 45-degree rotation averages the `(i, j)` block into the `(i, i)` entry. -/
+private lemma planeRotation_single_conj_apply {r : ℕ} {i j : Fin r} (hij : i ≠ j)
+    (N : Matrix (Fin r) (Fin r) ℝ) :
+    (planeRotation (Pi.single i 1) (Pi.single j 1) (Real.sqrt 2)⁻¹ (Real.sqrt 2)⁻¹ * N *
+      (planeRotation (Pi.single i 1) (Pi.single j 1) (Real.sqrt 2)⁻¹ (Real.sqrt 2)⁻¹)ᵀ) i i =
+      (N i i + N i j + N j i + N j j) / 2 := by
   have hc := inv_sqrt_two_mul_self
-  simp only [Matrix.mul_apply, Matrix.transpose_apply]
-  simp [planeRotation, Pi.single_apply, Finset.sum_add_distrib, add_mul, mul_add, eq_comm]
-  linear_combination (-(N i i + N j i + N i j + N j j)) * hc
-
-/-- The inverse Wishart matrix transforms by conjugation under a left orthogonal rotation. -/
-private lemma inv_self_mul_transpose_orthogonal_mul {r k : ℕ} (U : Matrix (Fin r) (Fin r) ℝ)
-    (hU : Uᵀ * U = 1) (G : Fin r → Fin k → ℝ) :
-    (Matrix.of (Matrix.of.symm (U * Matrix.of G * (1 : Matrix (Fin k) (Fin k) ℝ))) *
-        (Matrix.of (Matrix.of.symm (U * Matrix.of G * (1 : Matrix (Fin k) (Fin k) ℝ))))ᵀ)⁻¹
-      = U * (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ * Uᵀ := by
-  have hUinv : U⁻¹ = Uᵀ := Matrix.inv_eq_left_inv hU
-  simp only [Equiv.apply_symm_apply, Matrix.mul_one, Matrix.transpose_mul]
-  rw [show U * Matrix.of G * ((Matrix.of G)ᵀ * Uᵀ) = U * (Matrix.of G * (Matrix.of G)ᵀ) * Uᵀ by
-    simp [Matrix.mul_assoc]]
-  rw [Matrix.mul_inv_rev, Matrix.mul_inv_rev, ← Matrix.transpose_nonsing_inv, hUinv,
-    Matrix.transpose_transpose, Matrix.mul_assoc]
+  simp only [Matrix.mul_apply, Matrix.transpose_apply, planeRotation_single_apply_left hij]
+  simp [Finset.sum_add_distrib, add_mul, mul_add, ite_mul, mul_ite, Finset.sum_ite_eq']
+  linear_combination (N i i + N j i + N i j + N j j) * hc
 
 /-- Invariance of the inverse-Wishart law under orthogonal conjugation. -/
 private lemma integral_inv_self_mul_transpose_conj {r k : ℕ} (U : Matrix (Fin r) (Fin r) ℝ)
@@ -323,7 +255,7 @@ private lemma integral_inv_self_mul_transpose_conj {r k : ℕ} (U : Matrix (Fin 
           (1 : Matrix (Fin k) (Fin k) ℝ))) (gaussianMatrix r k)) := by
     rw [hrot]
   rw [integral_map hmeas.aemeasurable hF.aestronglyMeasurable] at h1
-  simp_rw [inv_self_mul_transpose_orthogonal_mul U hU] at h1
+  simp only [Equiv.apply_symm_apply, Matrix.mul_one, inv_self_mul_transpose_orthogonal_mul U hU] at h1
   exact h1
 
 /-- The sign flip of coordinate `j`. -/
@@ -418,9 +350,10 @@ theorem integral_inv_self_mul_transpose_apply_self_sq_eq {r k : ℕ} (hrk : r + 
     linarith
   have hxz0 := hflip i hij
   -- the 45-degree rotation
-  have hrot := integral_inv_self_mul_transpose_conj (k := k) (planeRotation i j)
-    (planeRotation_transpose_mul i j hij) (fun N => N i i ^ 2) ((hm i i).pow_const 2)
-  simp only [planeRotation_conj_apply i j] at hrot
+  have hrot := integral_inv_self_mul_transpose_conj (k := k)
+    (planeRotation (Pi.single i 1) (Pi.single j 1) (Real.sqrt 2)⁻¹ (Real.sqrt 2)⁻¹)
+    (planeRotation_single_transpose_mul hij) (fun N => N i i ^ 2) ((hm i i).pow_const 2)
+  simp only [planeRotation_single_conj_apply hij] at hrot
   change ∫ G, M G i i ^ 2 ∂μ = ∫ G, ((M G i i + M G i j + M G j i + M G j j) / 2) ^ 2 ∂μ at hrot
   have hexp : (fun G => ((M G i i + M G i j + M G j i + M G j j) / 2) ^ 2)
       = fun G => (1 / 4 : ℝ) * (((((M G i i ^ 2 + M G j j ^ 2) + 4 * M G i j ^ 2)

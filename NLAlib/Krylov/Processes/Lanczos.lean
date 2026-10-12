@@ -1,4 +1,5 @@
 import NLAlib.Krylov.Processes.ArnoldiProcess
+import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
 /-!
 # The Arnoldi relation and the Lanczos three-term recurrence
@@ -6,7 +7,8 @@ import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
 For an Arnoldi decomposition `D : ArnoldiDecomp A b (q + 1)` (`NLAlib.Krylov.Processes.Arnoldi`) with
 leading part `D_q = D.restrict _` (`Q_q`, `H_q`):
 
-* `ArnoldiDecomp.mul_restrict_Q_eq_mul`: `A Q_q = Q_{q+1} H̲_q` with `H̲_q = Q_{q+1}ᵀ A Q_q`;
+* `ArnoldiDecomp.mul_restrict_Q_eq_mul`: `A Q_q = Q_{q+1} H̲_q` with `H̲_q = Q_{q+1}ᵀ A Q_q`
+  (`ArnoldiDecomp.Hbar`);
 * `ArnoldiDecomp.mul_restrict_Q_eq_add_vecMulVec`, `ArnoldiDecomp.mul_restrict_Q_eq_add_smul`:
   the **Arnoldi relation** `A Q_q = Q_q H_q + h_{q+1,q} q_{q+1} e_qᵀ`;
 * `ArnoldiDecomp.mul_Q_eq_mul_H_iff`: breakdown, `A Q_q = Q_q H_q ↔ q = krylovGrade A b`;
@@ -49,12 +51,20 @@ theorem mulVec_col_eq_sum (D : ArnoldiDecomp A b q) {j : Fin q} (hj : (j : ℕ) 
   conv_lhs => rw [D.graded.eq_sum_of_mem hmem]
   simp only [H_apply]
 
-/-- **`A Q_q = Q_{q+1} H̲_q`** with `H̲_q = Q_{q+1}ᵀ A Q_q` (the `(q+1) × q` Hessenberg matrix),
-with no hypothesis beyond the decomposition of size `q + 1`. Source: Saad (2003) [`saad03`],
-Prop. 6.5, eq. (6.8).
+/-- The `(q+1) × q` upper Hessenberg matrix `H̲_q = Q_{q+1}ᵀ A Q_q` of a decomposition of size
+`q + 1`; `A Q_q = Q_{q+1} H̲_q` (`ArnoldiDecomp.mul_restrict_Q_eq_mul`). Source: Trefethen–Bau
+(1997) [`tb97`], eq. (33.13); Saad (2011) [`saad11`], Prop. 6.5 (`H̄_m`).
+Atlas: `gmres-arnoldi-form`. -/
+def Hbar (D : ArnoldiDecomp A b (q + 1)) : Matrix (Fin (q + 1)) (Fin q) ℝ :=
+  D.Qᵀ * A * (D.restrict q.le_succ).Q
+
+/-- **`A Q_q = Q_{q+1} H̲_q`** with `H̲_q = Q_{q+1}ᵀ A Q_q` (`Hbar`, the `(q+1) × q` Hessenberg
+matrix), with no hypothesis beyond the decomposition of size `q + 1`. Source: Saad (2003)
+[`saad03`], Prop. 6.5, eq. (6.8). Also the form used by `gmres-arnoldi-form`.
 atlas: arnoldi-relation (partial) -/
 theorem mul_restrict_Q_eq_mul (D : ArnoldiDecomp A b (q + 1)) :
-    A * (D.restrict q.le_succ).Q = D.Q * (D.Qᵀ * A * (D.restrict q.le_succ).Q) := by
+    A * (D.restrict q.le_succ).Q = D.Q * D.Hbar := by
+  rw [Hbar]
   ext r j
   have hmem : A *ᵥ (D.restrict q.le_succ).Q.col j ∈ LinearMap.range D.Q.mulVecLin := by
     rw [D.range_Q]
@@ -76,7 +86,7 @@ atlas: arnoldi-relation (partial) -/
 theorem mul_restrict_Q_eq_add_vecMulVec (D : ArnoldiDecomp A b (q + 1)) :
     A * (D.restrict q.le_succ).Q = (D.restrict q.le_succ).Q * (D.restrict q.le_succ).H +
       vecMulVec (D.Q.col (Fin.last q)) (fun j => D.H (Fin.last q) j.castSucc) := by
-  rw [mul_restrict_Q_eq_mul]
+  rw [mul_restrict_Q_eq_mul, Hbar]
   ext r j
   rw [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_castSucc, Matrix.mul_apply,
     vecMulVec_apply]

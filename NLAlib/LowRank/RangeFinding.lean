@@ -1,7 +1,6 @@
 import NLAlib.LowRank.RangeFinding.ComplexSubspaceAngles
 import NLAlib.LowRank.RangeFinding.ComplexSubspaceConvergence
 import NLAlib.LowRank.RangeFinding.ExpectedPower
-import NLAlib.LowRank.RangeFinding.GaussianSpectralEndpoints
 import NLAlib.LowRank.RangeFinding.SpectralRangeFinder
 import NLAlib.LowRank.RangeFinding.SubspaceConvergence
 

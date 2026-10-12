@@ -125,7 +125,7 @@ theorem inv_eq_mul_transpose_of_transpose_mul_mul_eq_one {P W : Matrix n n ℝ}
 
 /-- A positive definite `P` has a symmetric inverse square root: some `W = Wᵀ` with
 `Wᵀ P W = I` (`W = P^{-1/2} = U diag(λ^{-1/2}) Uᵀ`). Source: Horn–Johnson (2013), Thm 7.2.6.
-Helper for `preconditioned-cg` (belongs in `NLAlib.Matrix.Spectral`). -/
+Helper for `preconditioned-cg` (belongs in `NLAlib.Matrix.Spectral.Core`). -/
 theorem exists_isSymm_transpose_mul_mul_eq_one {P : Matrix n n ℝ} (hP : P.PosDef) :
     ∃ W : Matrix n n ℝ, W.IsSymm ∧ Wᵀ * P * W = 1 := by
   set U : Matrix n n ℝ := (hP.1.eigenvectorUnitary : Matrix n n ℝ)

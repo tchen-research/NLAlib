@@ -1,15 +1,33 @@
 import NLAlib.ForMathlib.Analysis.BernsteinParameter
+import NLAlib.ForMathlib.Analysis.BinomialRootComparison
 import NLAlib.ForMathlib.Analysis.Calculus
 import NLAlib.ForMathlib.Analysis.DerivativeLimit
+import NLAlib.ForMathlib.Analysis.FinitePairNorm
+import NLAlib.ForMathlib.Analysis.FinitePowerSums
 import NLAlib.ForMathlib.Analysis.FourierCircle
 import NLAlib.ForMathlib.Analysis.FourierConvolution
 import NLAlib.ForMathlib.Analysis.GeometricRate
+import NLAlib.ForMathlib.Analysis.ImplicitFunction
 import NLAlib.ForMathlib.Analysis.InnerProductSpace
+import NLAlib.ForMathlib.Analysis.InvariantCompression
+import NLAlib.ForMathlib.Analysis.InverseConvexity
 import NLAlib.ForMathlib.Analysis.Lipschitz
 import NLAlib.ForMathlib.Analysis.LogPowerMean
 import NLAlib.ForMathlib.Analysis.Matrix
+import NLAlib.ForMathlib.Analysis.OneSidedVariation
+import NLAlib.ForMathlib.Analysis.OrderedSchur
+import NLAlib.ForMathlib.Analysis.OrderedSimultaneousSchur
+import NLAlib.ForMathlib.Analysis.OrthonormalCons
+import NLAlib.ForMathlib.Analysis.OrthonormalEigenline
+import NLAlib.ForMathlib.Analysis.OrthonormalSum
+import NLAlib.ForMathlib.Analysis.PencilTriangularization
+import NLAlib.ForMathlib.Analysis.PowerBoundedEigen
 import NLAlib.ForMathlib.Analysis.PowerInequalities
+import NLAlib.ForMathlib.Analysis.RangeIsometry
 import NLAlib.ForMathlib.Analysis.Real
+import NLAlib.ForMathlib.Analysis.SchurTriangularization
+import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
+import NLAlib.ForMathlib.Analysis.TriangularBasis
 
 /-! # `ForMathlib/Analysis`
 

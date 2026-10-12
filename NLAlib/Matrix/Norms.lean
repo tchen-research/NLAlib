@@ -1,10 +1,33 @@
+import NLAlib.Matrix.Norms.BlockNormBounds
 import NLAlib.Matrix.Norms.ColumnNorms
 import NLAlib.Matrix.Norms.ComplexFrobenius
 import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
 import NLAlib.Matrix.Norms.Core
+import NLAlib.Matrix.Norms.EuclideanOperatorBounds
+import NLAlib.Matrix.Norms.FanDominance
+import NLAlib.Matrix.Norms.InvariantNorm
+import NLAlib.Matrix.Norms.InvariantNormRepresentation
+import NLAlib.Matrix.Norms.InvariantNormToolkit
+import NLAlib.Matrix.Norms.NuclearFiniteIndex
+import NLAlib.Matrix.Norms.NuclearHermitian
+import NLAlib.Matrix.Norms.NuclearNorm
+import NLAlib.Matrix.Norms.NuclearPSD
 import NLAlib.Matrix.Norms.RankNorm
 import NLAlib.Matrix.Norms.RayleighNorm
 import NLAlib.Matrix.Norms.RealComplexNorm
+import NLAlib.Matrix.Norms.RectangularDiagonal
+import NLAlib.Matrix.Norms.RectangularDiagonalPermutation
+import NLAlib.Matrix.Norms.Schatten
+import NLAlib.Matrix.Norms.SchattenComparison
+import NLAlib.Matrix.Norms.SchattenDuality
+import NLAlib.Matrix.Norms.SchattenEndpoints
+import NLAlib.Matrix.Norms.SchattenInvariant
+import NLAlib.Matrix.Norms.SchattenNorms
+import NLAlib.Matrix.Norms.SchattenProducts
+import NLAlib.Matrix.Norms.SchattenSingularCoefficients
+import NLAlib.Matrix.Norms.SchattenToolkit
+import NLAlib.Matrix.Norms.SchattenTrace
+import NLAlib.Matrix.Norms.SymmetricGauge
 
 /-! # `Matrix/Norms`
 

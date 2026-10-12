@@ -1,5 +1,5 @@
 import NLAlib.RandomMatrix.Haar.HaarFrameMeasure
-import NLAlib.RandomMatrix.Haar.CanonicalQR
+import NLAlib.Matrix.Subspaces.CanonicalQR
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 /-!

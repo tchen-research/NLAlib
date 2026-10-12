@@ -84,8 +84,8 @@ def all_moves():
     for p in sorted((ROOT / "docs/reorg/mapping").glob("*.json")):
         j, pr = check_table(p, verbose=False); problems += [f"{p.name}: {x}" for x in pr]
         for s, d in j["moves"].items():
-            if s in moves: problems.append(f"{s} mapped twice ({moves[s]} and {d})")
-            moves[s] = d
+            if s in moves and moves[s] != d and moves[s] != s: problems.append(f"{s} mapped twice ({moves[s]} and {d})")
+            moves[s] = d   # an explicit table entry overrides the implicit identity
     return moves, problems
 def agg_modmap(moves, aggs):
     """old aggregator module -> new aggregator module of the directory most of its content moved to"""
@@ -117,6 +117,7 @@ def check_all():
             if tgt is None:
                 saved = ROOT / "docs/reorg/modmap.json"
                 tgt = json.load(open(saved))["modules"].get(imp) if saved.exists() else None
+                if tgt is not None: tgt = modmap.get(tgt, tgt)     # chain: old name -> previous home -> current move
                 if tgt is None and (ROOT / (imp.replace(".", "/") + ".lean")).exists(): tgt = imp   # an aggregator of the new tree
             if tgt is None: problems.append(f"{s}: import {imp} has no new home"); continue
             if LAYER[d.split("/")[1]] < LAYER[tgt.split(".")[1]]: problems.append(f"layer violation: {d} imports {tgt}")
@@ -180,7 +181,7 @@ def apply():
     modmap = {mod_of(s): mod_of(d) for s, d in moves.items() if s != d}; modmap.update(agg_modmap(moves, aggs))
     saved = ROOT / "docs/reorg/modmap.json"
     if saved.exists():
-        for k, v in json.load(open(saved))["modules"].items(): modmap.setdefault(k, v)
+        for k, v in json.load(open(saved))["modules"].items(): modmap.setdefault(k, modmap.get(v, v))   # compose with earlier moves
     # 2. git mv
     for s, d in moves.items():
         if s == d: continue
@@ -189,7 +190,7 @@ def apply():
     # 3. delete old aggregators
     for a in aggs:
         p = ROOT / (a.replace(".", "/") + ".lean")
-        if p.exists(): subprocess.run(["git", "rm", "-q", str(p.relative_to(ROOT))], cwd=ROOT, check=True)
+        if p.exists(): subprocess.run(["git", "rm", "-q", "--ignore-unmatch", str(p.relative_to(ROOT))], cwd=ROOT, check=False); p.unlink(missing_ok=True)
     # 4. rewrite imports everywhere
     pat = re.compile(r"^import (NLAlib(?:\.\w+)*)\s*$", re.M)
     for p in list((ROOT / "NLAlib").rglob("*.lean")) + list((ROOT / "scripts").glob("*.lean")):

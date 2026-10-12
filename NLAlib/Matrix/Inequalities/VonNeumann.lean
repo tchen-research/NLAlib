@@ -64,8 +64,9 @@ theorem frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le {r : ℕ} (X E : 
 section TraceInequality
 
 /-- Abel summation: partial-sum domination `∑_{i<k} dᵢ ≤ ∑_{i<k} tᵢ` (`k ≤ N`) survives
-weighting by a nonnegative non-increasing sequence. -/
-private theorem sum_range_mul_le_of_partial_le {s d t : ℕ → ℝ} {N : ℕ}
+weighting by a nonnegative non-increasing sequence. Abel summation; Horn–Johnson (1991),
+§3.4, finite core of the von Neumann trace inequality and majorization duality. -/
+theorem sum_range_mul_le_of_partial_le {s d t : ℕ → ℝ} {N : ℕ}
     (hs0 : ∀ i, 0 ≤ s i) (hs : Antitone s)
     (h : ∀ k ≤ N, ∑ i ∈ Finset.range k, d i ≤ ∑ i ∈ Finset.range k, t i) :
     ∑ i ∈ Finset.range N, s i * d i ≤ ∑ i ∈ Finset.range N, s i * t i := by
@@ -94,18 +95,19 @@ private theorem sum_range_mul_le_of_partial_le {s d t : ℕ → ℝ} {N : ℕ}
     exact Finset.sum_congr rfl fun i _ => by ring
   linarith
 
-/-- The diagonal of a rectangular matrix, as a zero-padded sequence. -/
-private def diagSeq {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ) (i : ℕ) : ℝ :=
+/-- The diagonal of a rectangular matrix as a zero-padded sequence. The coordinate is zero
+when either index is outside the matrix. Horn–Johnson (1991), §3.4; Ky Fan helper. -/
+def diagonalSequence {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ) (i : ℕ) : ℝ :=
   if h : i < m ∧ i < n then D ⟨i, h.1⟩ ⟨i, h.2⟩ else 0
 
 private theorem frobInner_rectDiag {m n : ℕ} (σ : ℕ → ℝ) (D : Matrix (Fin m) (Fin n) ℝ) :
     frobInner (rectDiag σ : Matrix (Fin m) (Fin n) ℝ) D =
-      ∑ i ∈ Finset.range (min m n), σ i * diagSeq D i := by
+      ∑ i ∈ Finset.range (min m n), σ i * diagonalSequence D i := by
   have h1 : frobInner (rectDiag σ : Matrix (Fin m) (Fin n) ℝ) D =
-      ∑ i : Fin m, σ i * diagSeq D i := by
+      ∑ i : Fin m, σ i * diagonalSequence D i := by
     unfold frobInner
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [rectDiag_apply, diagSeq]
+    simp only [rectDiag_apply, diagonalSequence]
     by_cases hi : (i : ℕ) < n
     · rw [Finset.sum_eq_single ⟨i, hi⟩]
       · simp [hi]
@@ -116,7 +118,7 @@ private theorem frobInner_rectDiag {m n : ℕ} (σ : ℕ → ℝ) (D : Matrix (F
       · simp [hi]
       · intro j _
         rw [if_neg (fun (h : (i : ℕ) = j) => hi (h ▸ j.isLt)), zero_mul]
-  rw [h1, Fin.sum_univ_eq_sum_range (fun i => σ i * diagSeq D i) m]
+  rw [h1, Fin.sum_univ_eq_sum_range (fun i => σ i * diagonalSequence D i) m]
   symm
   apply Finset.sum_subset
   · intro i hi
@@ -125,14 +127,16 @@ private theorem frobInner_rectDiag {m n : ℕ} (σ : ℕ → ℝ) (D : Matrix (F
   · intro i _ hi
     simp only [Finset.mem_range, lt_min_iff, not_and_or, not_lt] at hi
     have : ¬ (i < m ∧ i < n) := by omega
-    simp [diagSeq, this]
+    simp [diagonalSequence, this]
 
 private theorem sum_castLE_le {N M : ℕ} (h : N ≤ M) (f : Fin M → ℝ) (hf : ∀ j, 0 ≤ f j) :
     ∑ l : Fin N, f (Fin.castLE h l) ≤ ∑ j, f j := by
   rw [← Finset.sum_image (fun a _ b _ hab => Fin.castLE_injective h hab)]
   exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _) (fun j _ _ => hf j)
 
-private theorem sum_fin_ite_lt_eq_sum_range {N k : ℕ} (hk : k ≤ N) (g : ℕ → ℝ) :
+/-- A prefix selected in a finite coordinate sum equals the corresponding range sum.
+Includes zero and full prefixes; finite summation helper for majorization. -/
+theorem sum_fin_ite_lt_eq_sum_range {N k : ℕ} (hk : k ≤ N) (g : ℕ → ℝ) :
     ∑ l : Fin N, (if (l : ℕ) < k then g l else 0) = ∑ i ∈ Finset.range k, g i := by
   rw [Fin.sum_univ_eq_sum_range (fun i => if i < k then g i else 0) N, ← Finset.sum_filter]
   congr 1
@@ -152,9 +156,9 @@ private theorem sum_sq_row_eq_one {m : ℕ} {P : Matrix (Fin m) (Fin m) ℝ} (hP
 
 /-- **Ky Fan's maximum principle, diagonal form.** The sum of the first `k` diagonal entries of
 `D` is at most the sum of its `k` largest singular values. -/
-private theorem sum_range_diagSeq_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
     (hk : k ≤ min m n) :
-    ∑ i ∈ Finset.range k, diagSeq D i ≤ ∑ i ∈ Finset.range k, singularValues D i := by
+    ∑ i ∈ Finset.range k, diagonalSequence D i ≤ ∑ i ∈ Finset.range k, singularValues D i := by
   obtain ⟨P, R, h⟩ := exists_isSVD D
   have hkm : k ≤ m := hk.trans (min_le_left m n)
   have hkn : k ≤ n := hk.trans (min_le_right m n)
@@ -163,13 +167,13 @@ private theorem sum_range_diagSeq_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ
   let r : ℕ → Fin (min m n) → ℝ := fun i l =>
     if hi : i < n then R ⟨i, hi⟩ (Fin.castLE (min_le_right m n) l) else 0
   let t : Fin (min m n) → ℝ := fun l => singularValues D l
-  have hdiag : ∀ i, diagSeq D i = ∑ l, t l * (p i l * r i l) := by
+  have hdiag : ∀ i, diagonalSequence D i = ∑ l, t l * (p i l * r i l) := by
     intro i
     by_cases hi : i < m ∧ i < n
-    · simp only [diagSeq, dif_pos hi, p, r, dif_pos hi.1, dif_pos hi.2, t]
+    · simp only [diagonalSequence, dif_pos hi, p, r, dif_pos hi.1, dif_pos hi.2, t]
       rw [h.apply]
       exact Finset.sum_congr rfl fun l _ => by ring
-    · simp only [diagSeq, dif_neg hi]
+    · simp only [diagonalSequence, dif_neg hi]
       symm
       refine Finset.sum_eq_zero fun l _ => ?_
       rcases not_and_or.1 hi with h1 | h1 <;> simp [p, r, h1]
@@ -226,7 +230,7 @@ private theorem sum_range_diagSeq_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ
       _ = k := by simp
   have hanti : Antitone t := fun a b hab =>
     singularValues_antitone D (show (a : ℕ) ≤ b from hab)
-  calc ∑ i ∈ Finset.range k, diagSeq D i
+  calc ∑ i ∈ Finset.range k, diagonalSequence D i
       = ∑ l, t l * ∑ i ∈ Finset.range k, p i l * r i l := by
         simp_rw [hdiag, Finset.mul_sum]
         exact Finset.sum_comm
@@ -266,7 +270,7 @@ theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (F
   refine sum_range_mul_le_of_partial_le (singularValues_nonneg X) (singularValues_antitone X)
     fun k hk => ?_
   rw [← hD]
-  exact sum_range_diagSeq_le D hk
+  exact sum_range_diagonalSequence_le D hk
 
 end TraceInequality
 

@@ -3,12 +3,14 @@ import NLAlib.Matrix.Functions.ComplexDiagonalFilter
 import NLAlib.Matrix.Functions.DiagonalFilter
 import NLAlib.Matrix.Functions.ExpLog
 import NLAlib.Matrix.Functions.ExpLogPosDef
+import NLAlib.Matrix.Functions.FunctionalCalculusEigenvalues
 import NLAlib.Matrix.Functions.InverseCalculus
 import NLAlib.Matrix.Functions.JensenBlockCalculus
 import NLAlib.Matrix.Functions.PerspectiveSqrtNormalization
 import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Functions.PolynomialSeries
+import NLAlib.Matrix.Functions.RealComplexCFC
 
 /-! # `Matrix/Functions`
 

@@ -294,7 +294,7 @@ theorem frobSq_eq_sum_eigenvalues_sq {A : Matrix n n ℝ} (hA : A.IsHermitian) :
 
 /-- `‖A‖_F ≤ tr A` for positive semidefinite `A`. Source: Cortinovis–Kressner (2021) [`ck21`],
 proof of Cor. 1; Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], Lem. 2. Atlas: `hutchinson-tail`
-(helper; belongs in `NLAlib.Matrix.Spectral`). -/
+(helper; belongs in `NLAlib.Matrix.Spectral.Core`). -/
 theorem frobNorm_le_trace_of_posSemidef {A : Matrix n n ℝ} (hA : A.PosSemidef) :
     frobNorm A ≤ A.trace := by
   have hH := hA.isHermitian

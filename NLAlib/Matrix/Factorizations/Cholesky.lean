@@ -37,7 +37,7 @@ variable {n : Type*} [Fintype n] [LinearOrder n]
 
 /-- **Cholesky factorization**: `A = L Lᵀ` with `L` lower triangular with positive diagonal.
 Trefethen–Bau 1997, Lect. 23; Golub–Van Loan 2013, Thm 4.2.7; Higham 2002, Thm 10.1.
-atlas: cholesky-decomposition -/
+atlas: cholesky-decomposition (partial) -/
 structure IsCholesky (A L : Matrix n n ℝ) : Prop where
   /-- `L` is lower triangular. -/
   isLowerTriangular : L.IsLowerTriangular
@@ -59,7 +59,7 @@ theorem IsCholesky.det_eq_prod_sq {A L : Matrix n n ℝ} (h : IsCholesky A L) :
 
 /-- A matrix with a Cholesky factorization is positive definite (`L` invertible, so
 `xᵀ A x = ‖Lᵀ x‖² > 0` for `x ≠ 0`). Trefethen–Bau 1997, Thm 23.1 (converse direction).
-atlas: cholesky-decomposition -/
+atlas: cholesky-decomposition (partial) -/
 theorem IsCholesky.posDef {A L : Matrix n n ℝ} (h : IsCholesky A L) : A.PosDef := by
   have hL : IsUnit L := (Matrix.isUnit_iff_isUnit_det L).2 h.isUnit_det
   have := PosDef.mul_conjTranspose_self L (vecMul_injective_iff_isUnit.2 hL)
@@ -68,7 +68,7 @@ theorem IsCholesky.posDef {A L : Matrix n n ℝ} (h : IsCholesky A L) : A.PosDef
 /-- **Uniqueness of the Cholesky factor**. Proof: `D = L'⁻¹ L = L'ᵀ L⁻ᵀ` is lower and upper
 triangular, hence diagonal with positive diagonal, and `D Dᵀ = 1`, so `D = 1`.
 Trefethen–Bau 1997, Thm 23.1; Golub–Van Loan 2013, Thm 4.2.7; Higham 2002, Thm 10.1.
-atlas: cholesky-decomposition -/
+atlas: cholesky-decomposition (partial) -/
 theorem IsCholesky.unique {A L L' : Matrix n n ℝ} (h : IsCholesky A L) (h' : IsCholesky A L') :
     L = L' := by
   have hL := h.isUnit_det
@@ -232,7 +232,7 @@ factorization iff it is positive definite; the factor is `cholesky A` and it is 
 (`IsCholesky.unique`). Trefethen–Bau 1997, Thm 23.1; Golub–Van Loan 2013, Thm 4.2.7;
 Higham 2002, Thm 10.1. The statement for a general linearly ordered index follows by
 transport along `Fintype.orderIsoFinOfCardEq` (not formalized here).
-atlas: cholesky-decomposition -/
+atlas: cholesky-decomposition (partial) -/
 theorem exists_isCholesky_iff_posDef {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
     (∃ L, IsCholesky A L) ↔ A.PosDef := by
   refine ⟨fun ⟨_, h⟩ => h.posDef, fun hA => ?_⟩
@@ -262,7 +262,7 @@ theorem eq_cholesky_mul_transpose_of_posSemidef {n : ℕ} {A : Matrix (Fin n) (F
 
 /-- Every positive semidefinite matrix on `Fin n` is `L Lᵀ` with `L` lower triangular with
 nonnegative diagonal. Golub–Van Loan 2013, §4.2.8; Higham 2002, Thm 10.9 (label to verify).
-atlas: cholesky-decomposition -/
+atlas: cholesky-decomposition (partial) -/
 theorem exists_eq_mul_transpose_of_posSemidef {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.PosSemidef) :
     ∃ L : Matrix (Fin n) (Fin n) ℝ, L.IsLowerTriangular ∧ (∀ i, 0 ≤ L i i) ∧ A = L * Lᵀ :=

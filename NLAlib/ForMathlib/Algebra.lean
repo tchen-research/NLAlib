@@ -1,6 +1,9 @@
 import NLAlib.ForMathlib.Algebra.DiagonalSums
+import NLAlib.ForMathlib.Algebra.InterlacingInterpolation
+import NLAlib.ForMathlib.Algebra.InterlacingWeights
 import NLAlib.ForMathlib.Algebra.Intervals
 import NLAlib.ForMathlib.Algebra.Polynomial
+import NLAlib.ForMathlib.Algebra.SignedCoefficients
 
 /-! # `ForMathlib/Algebra`
 

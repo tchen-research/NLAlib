@@ -1,0 +1,12 @@
+{
+ "group": "M7",
+ "moves": {
+  "NLAlib/RandomMatrix/Haar/Stiefel.lean": "NLAlib/Matrix/Subspaces/Stiefel.lean",
+  "NLAlib/RandomMatrix/Haar/CanonicalQR.lean": "NLAlib/Matrix/Subspaces/CanonicalQR.lean"
+ },
+ "renames": {},
+ "notes": [
+  "Coordinator: codex's SchurHornProjection (Matrix, layer 0) imports Stiefel, so Stiefel and CanonicalQR take M1's alternative placement Matrix/Subspaces; their Mathlib Haar-measure imports do not violate the NLAlib layer rule."
+ ],
+ "flags": []
+}

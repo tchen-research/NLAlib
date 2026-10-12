@@ -1,13 +1,31 @@
+import NLAlib.Matrix.Basic.CauchyBinet
+import NLAlib.Matrix.Basic.CauchyBinetAdjoint
+import NLAlib.Matrix.Basic.ComplementaryNullities
+import NLAlib.Matrix.Basic.ComplementaryRank
+import NLAlib.Matrix.Basic.ComplexComplementaryNullities
+import NLAlib.Matrix.Basic.ComplexComplementaryRank
 import NLAlib.Matrix.Basic.ComplexFullRowInverse
 import NLAlib.Matrix.Basic.CoordinateUpdates
+import NLAlib.Matrix.Basic.DeterminantDiagonalUpdate
 import NLAlib.Matrix.Basic.Dilation
+import NLAlib.Matrix.Basic.GeneralizedSchurComplement
 import NLAlib.Matrix.Basic.Gram
 import NLAlib.Matrix.Basic.GramVanishing
+import NLAlib.Matrix.Basic.JacobiBlockMinor
+import NLAlib.Matrix.Basic.JacobiMinor
 import NLAlib.Matrix.Basic.LeastSquares
 import NLAlib.Matrix.Basic.MoorePenrose
+import NLAlib.Matrix.Basic.MoorePenroseRank
+import NLAlib.Matrix.Basic.MoorePenroseTransformations
+import NLAlib.Matrix.Basic.PSDDuality
+import NLAlib.Matrix.Basic.PositiveDefiniteClosure
+import NLAlib.Matrix.Basic.PositiveSemidefiniteSeries
 import NLAlib.Matrix.Basic.Pseudoinverse
 import NLAlib.Matrix.Basic.QuadForm
+import NLAlib.Matrix.Basic.RankBounds
+import NLAlib.Matrix.Basic.RankInequalities
 import NLAlib.Matrix.Basic.SchurComplement
+import NLAlib.Matrix.Basic.SchurRank
 import NLAlib.Matrix.Basic.SingletonInverse
 
 /-! # `Matrix/Basic`

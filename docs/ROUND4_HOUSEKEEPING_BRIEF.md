@@ -102,4 +102,4 @@ Files there are named by Mathlib's directory they would land in (`ForMathlib/Ana
 ## Report
 Per the Round 1 brief, plus: the list of moved declarations (name, old module, new module), the
 rename map, and final `lake build` outputs for `NLAlib.Probability.Concentration.Matrix`, `NLAlib.RandomMatrix.Gaussian.InverseMoments`,
-`NLAlib.Matrix.Spectral`, `NLAlib.Sketching.Sparse.SparseFock`, `NLAlib.ForMathlib.Probability` as applicable.
+`NLAlib.Matrix.Spectral.Core`, `NLAlib.Sketching.Sparse.SparseFock`, `NLAlib.ForMathlib.Probability` as applicable.

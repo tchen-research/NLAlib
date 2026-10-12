@@ -1,0 +1,48 @@
+{
+ "group": "M7",
+ "moves": {
+  "NLAlib/ForMathlib/Algebra/InterlacingInterpolation.lean": "NLAlib/ForMathlib/Algebra/InterlacingInterpolation.lean",
+  "NLAlib/ForMathlib/Algebra/InterlacingWeights.lean": "NLAlib/ForMathlib/Algebra/InterlacingWeights.lean",
+  "NLAlib/ForMathlib/Algebra/SignedCoefficients.lean": "NLAlib/ForMathlib/Algebra/SignedCoefficients.lean",
+  "NLAlib/ForMathlib/Analysis/BinomialRootComparison.lean": "NLAlib/ForMathlib/Analysis/BinomialRootComparison.lean",
+  "NLAlib/ForMathlib/Analysis/FinitePairNorm.lean": "NLAlib/ForMathlib/Analysis/FinitePairNorm.lean",
+  "NLAlib/ForMathlib/Analysis/FinitePowerSums.lean": "NLAlib/ForMathlib/Analysis/FinitePowerSums.lean",
+  "NLAlib/ForMathlib/Analysis/ImplicitFunction.lean": "NLAlib/ForMathlib/Analysis/ImplicitFunction.lean",
+  "NLAlib/ForMathlib/Analysis/InvariantCompression.lean": "NLAlib/ForMathlib/Analysis/InvariantCompression.lean",
+  "NLAlib/ForMathlib/Analysis/InverseConvexity.lean": "NLAlib/ForMathlib/Analysis/InverseConvexity.lean",
+  "NLAlib/ForMathlib/Analysis/OneSidedVariation.lean": "NLAlib/ForMathlib/Analysis/OneSidedVariation.lean",
+  "NLAlib/ForMathlib/Analysis/OrderedSchur.lean": "NLAlib/ForMathlib/Analysis/OrderedSchur.lean",
+  "NLAlib/ForMathlib/Analysis/OrderedSimultaneousSchur.lean": "NLAlib/ForMathlib/Analysis/OrderedSimultaneousSchur.lean",
+  "NLAlib/ForMathlib/Analysis/OrthonormalCons.lean": "NLAlib/ForMathlib/Analysis/OrthonormalCons.lean",
+  "NLAlib/ForMathlib/Analysis/OrthonormalEigenline.lean": "NLAlib/ForMathlib/Analysis/OrthonormalEigenline.lean",
+  "NLAlib/ForMathlib/Analysis/OrthonormalSum.lean": "NLAlib/ForMathlib/Analysis/OrthonormalSum.lean",
+  "NLAlib/ForMathlib/Analysis/PencilTriangularization.lean": "NLAlib/ForMathlib/Analysis/PencilTriangularization.lean",
+  "NLAlib/ForMathlib/Analysis/PowerBoundedEigen.lean": "NLAlib/ForMathlib/Analysis/PowerBoundedEigen.lean",
+  "NLAlib/ForMathlib/Analysis/RangeIsometry.lean": "NLAlib/ForMathlib/Analysis/RangeIsometry.lean",
+  "NLAlib/ForMathlib/Analysis/SchurTriangularization.lean": "NLAlib/ForMathlib/Analysis/SchurTriangularization.lean",
+  "NLAlib/ForMathlib/Analysis/SimultaneousTriangularization.lean": "NLAlib/ForMathlib/Analysis/SimultaneousTriangularization.lean",
+  "NLAlib/ForMathlib/Analysis/TriangularBasis.lean": "NLAlib/ForMathlib/Analysis/TriangularBasis.lean",
+  "NLAlib/ForMathlib/Combinatorics/SubsetDeletionProduct.lean": "NLAlib/ForMathlib/Combinatorics/SubsetDeletionProduct.lean",
+  "NLAlib/ForMathlib/Data/MultisetPermutation.lean": "NLAlib/ForMathlib/Data/MultisetPermutation.lean",
+  "NLAlib/ForMathlib/LinearAlgebra/ComapDimension.lean": "NLAlib/ForMathlib/LinearAlgebra/ComapDimension.lean",
+  "NLAlib/ForMathlib/LinearAlgebra/CommonEigenvector.lean": "NLAlib/ForMathlib/LinearAlgebra/CommonEigenvector.lean",
+  "NLAlib/ForMathlib/LinearAlgebra/IsolatedCharpoly.lean": "NLAlib/ForMathlib/LinearAlgebra/IsolatedCharpoly.lean",
+  "NLAlib/ForMathlib/LinearAlgebra/Matrix/Triangular.lean": "NLAlib/ForMathlib/LinearAlgebra/Matrix/Triangular.lean",
+  "NLAlib/ForMathlib/LinearAlgebra/OrderedCommonEigenvector.lean": "NLAlib/ForMathlib/LinearAlgebra/OrderedCommonEigenvector.lean",
+  "NLAlib/ForMathlib/LinearAlgebra/PencilLine.lean": "NLAlib/ForMathlib/LinearAlgebra/PencilLine.lean",
+  "NLAlib/ForMathlib/LinearAlgebra/SeparatingRows.lean": "NLAlib/ForMathlib/LinearAlgebra/SeparatingRows.lean",
+  "NLAlib/ForMathlib/Logic/Equiv.lean": "NLAlib/ForMathlib/Logic/Equiv.lean",
+  "NLAlib/ForMathlib/Order/InterlacingDeletion.lean": "NLAlib/ForMathlib/Order/InterlacingDeletion.lean"
+ },
+ "renames": {},
+ "notes": [
+  "M7 part d: the 32 ForMathlib files merged from main (#21, #24) map to themselves; all import only Mathlib or other ForMathlib files and use the project-wide flat `namespace NLAlib` (no NLAlib-specific definitions or objects).",
+  "Nested ForMathlib/LinearAlgebra/Matrix/Triangular.lean is kept as is (nested paths under a ForMathlib area are allowed); it concerns Mathlib's `Matrix` and `IsLowerTriangular`, not NLAlib's matrices.",
+  "Schur family (SchurTriangularization, OrderedSchur, SimultaneousTriangularization, OrderedSimultaneousSchur, PencilTriangularization, TriangularBasis, Orthonormal*, InvariantCompression) is stated for abstract inner-product spaces / LinearMaps and stays in ForMathlib/Analysis; CommonEigenvector, OrderedCommonEigenvector, PencilLine stay in ForMathlib/LinearAlgebra."
+ ],
+ "flags": [
+  "NLAlib/ForMathlib/Algebra/InterlacingWeights.lean and NLAlib/ForMathlib/Order/InterlacingDeletion.lean: scalar real-list/real-polynomial facts named after eigenvalue interlacing (bordered / rank-one interlacing hypotheses stated on Fin n → ℝ); genuinely Mathlib-level but specialised to ℝ and to the interlacing-converse proof; kept in ForMathlib, upstream would likely want generalisation to an ordered field.",
+  "NLAlib/ForMathlib/Algebra/InterlacingInterpolation.lean: Lagrange-interpolation identity for ℝ[X]; fits Mathlib's Polynomial/Lagrange area better than Algebra/ (no move proposed).",
+  "Area placement (not ownership) quibbles, no move proposed: OrthonormalEigenline.lean and IsolatedCharpoly.lean are charpoly facts arguably LinearAlgebra rather than Analysis; SeparatingRows.lean is about Matrix.mulVec over ℝ (LinearAlgebra/Matrix would match the nested Triangular.lean)."
+ ]
+}

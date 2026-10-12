@@ -1,6 +1,11 @@
 import NLAlib.ForMathlib.Algebra
 import NLAlib.ForMathlib.Analysis
+import NLAlib.ForMathlib.Combinatorics
+import NLAlib.ForMathlib.Data
+import NLAlib.ForMathlib.LinearAlgebra
+import NLAlib.ForMathlib.Logic
 import NLAlib.ForMathlib.MeasureTheory
+import NLAlib.ForMathlib.Order
 import NLAlib.ForMathlib.Probability
 
 /-! # `ForMathlib`

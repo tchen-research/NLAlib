@@ -16,6 +16,15 @@ open scoped Matrix Matrix.Norms.L2Operator BigOperators
 
 namespace NLAlib
 
+/-- Equivalent row, middle, and column labels commute with rectangular matrix
+multiplication. Mathlib's submatrix multiplication transport; supports
+`wedin-sin-theta` on arbitrary finite coordinate labels. -/
+theorem mul_reindex {m n p m' n' p' : Type*} [Fintype n] [Fintype n']
+    (A : Matrix m n ℝ) (B : Matrix n p ℝ)
+    (em : m ≃ m') (en : n ≃ n') (ep : p ≃ p') :
+    (A * B).reindex em ep = A.reindex em en * B.reindex en ep := by
+  simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv]
+
 variable {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
 
 /-- Relabeling rows and columns preserves the squared Frobenius norm.

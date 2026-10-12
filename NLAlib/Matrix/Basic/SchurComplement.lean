@@ -2,6 +2,7 @@ import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.LinearAlgebra.Matrix.SchurComplement
 import Mathlib.Analysis.Matrix.Order
 import NLAlib.Matrix.Basic.MoorePenrose
+import NLAlib.Matrix.Basic.GeneralizedSchurComplement
 import NLAlib.Matrix.Factorizations.Triangular
 /-!
 # Schur complements: the elimination step and Albert's criterion
@@ -19,11 +20,11 @@ import NLAlib.Matrix.Factorizations.Triangular
   (`Matrix.PosSemidef.fromBlocks₁₁`, `Matrix.det_fromBlocks₁₁`) apply.
 * `schurComplement A B C = C − Bᵀ A⁺ B` with the Moore–Penrose inverse (no invertibility), and
   Albert's criterion `[[A, B], [Bᵀ, C]] ⪰ 0 ⟺ A ⪰ 0, (I − AA⁺)B = 0, C − BᵀA⁺B ⪰ 0`
-  (`posSemidef_fromBlocks_iff`, scaffold) with the variational characterisation (scaffolds) and
+  (`posSemidef_fromBlocks_iff`) with the attained variational characterisation and
   `C − M / A ⪰ 0` (`posSemidef_sub_schurComplement`, proved).
 
 Sources: Trefethen–Bau 1997, Lect. 20 and 23; Golub–Van Loan 2013, §3.2.10 and §4.2;
-Albert 1969, Thm 1; Horn–Johnson 2013, §7.7.
+Albert 1969, Thm 1; cf. Horn–Johnson 2013, §7.7 for related results.
 Atlas: `generalized-schur-complement-psd`; helpers for `lu-decomposition`,
 `cholesky-decomposition`.
 -/
@@ -274,24 +275,25 @@ def schurComplement (A : Matrix p p ℝ) (B : Matrix p q ℝ) (C : Matrix q q �
     Matrix q q ℝ :=
   C - Bᵀ * moorePenroseInverse A * B
 
-/-- SCAFFOLD: generalized-schur-complement-psd
+/-- Coverage: generalized-schur-complement-psd
 **Albert's criterion**: `[[A, B], [Bᵀ, C]] ⪰ 0` iff `A ⪰ 0`, `(I − AA⁺) B = 0` (range of `B`
 inside range of `A`) and `C − Bᵀ A⁺ B ⪰ 0`. No symmetry hypotheses are needed: each side
-forces `A` and `C` symmetric. Albert 1969, Thm 1; Horn–Johnson 2013, Thm 7.7.9 (label to verify).
+forces `A` and `C` symmetric. Albert 1969, Thm 1; cf. Horn–Johnson 2013, Theorems 7.7.7 and 7.7.9 for related matrix-order results.
 Proof sketch: (⇒) `A ⪰ 0` and `C ⪰ 0` are principal submatrices; for `x ∈ ker A`,
 `(x, t y)ᵀ M (x, t y) ≥ 0` for all `t` forces `Bᵀ x = 0`, i.e. `range B ⊆ range A`, which is
 `(I − AA⁺)B = 0`; then with `y = −A⁺Bx` the quadratic form is `xᵀ(M/A)x ≥ 0`.
 (⇐) with `B = AA⁺B`, `M = Kᵀ diag(A, M/A) K` for the unit triangular `K = [[I, A⁺B], [0, I]]`.
-atlas: generalized-schur-complement-psd -/
+atlas: generalized-schur-complement-psd (partial) -/
 theorem posSemidef_fromBlocks_iff (A : Matrix p p ℝ) (B : Matrix p q ℝ) (C : Matrix q q ℝ) :
     (fromBlocks A B Bᵀ C).PosSemidef ↔
       A.PosSemidef ∧ (1 - A * moorePenroseInverse A) * B = 0 ∧
         (schurComplement A B C).PosSemidef := by
-  sorry
+  classical
+  exact posSemidef_fromBlocks_iff_generalized_schur A B C
 
-/-- SCAFFOLD: generalized-schur-complement-psd
+/-- Coverage: generalized-schur-complement-psd
 **Variational characterisation, lower bound**: for `M = [[A, B], [Bᵀ, C]] ⪰ 0`,
-`xᵀ (M / A) x ≤ (y, x)ᵀ M (y, x)` for every `y`. Albert 1969, Thm 1; Horn–Johnson 2013, §7.7.
+`xᵀ (M / A) x ≤ (y, x)ᵀ M (y, x)` for every `y`. Albert 1969, Thm 1; cf. Horn–Johnson 2013, §7.7 for related results.
 Proof sketch: expand the right side with `B = AA⁺B` (from `posSemidef_fromBlocks_iff`) as
 `(y + A⁺Bx)ᵀ A (y + A⁺Bx) + xᵀ (M/A) x` and use `A ⪰ 0`.
 atlas: generalized-schur-complement-psd (partial) -/
@@ -299,12 +301,13 @@ theorem dotProduct_schurComplement_mulVec_le {A : Matrix p p ℝ} {B : Matrix p 
     {C : Matrix q q ℝ} (hM : (fromBlocks A B Bᵀ C).PosSemidef) (x : q → ℝ) (y : p → ℝ) :
     x ⬝ᵥ (schurComplement A B C *ᵥ x) ≤
       Sum.elim y x ⬝ᵥ (fromBlocks A B Bᵀ C *ᵥ Sum.elim y x) := by
-  sorry
+  classical
+  exact (isLeast_generalized_schur_quadratic A B C hM x).2 ⟨y, rfl⟩
 
-/-- SCAFFOLD: generalized-schur-complement-psd
+/-- Coverage: generalized-schur-complement-psd
 **Variational characterisation, attainment**: for `M = [[A, B], [Bᵀ, C]] ⪰ 0` the minimum over
 `y` of `(y, x)ᵀ M (y, x)` is attained at `y = −A⁺Bx` and equals `xᵀ (M / A) x`.
-Albert 1969, Thm 1; Horn–Johnson 2013, §7.7.
+Albert 1969, Thm 1; cf. Horn–Johnson 2013, §7.7 for related results.
 Proof sketch: the expansion in `dotProduct_schurComplement_mulVec_le` with `y + A⁺Bx = 0`.
 atlas: generalized-schur-complement-psd (partial) -/
 theorem dotProduct_schurComplement_mulVec_eq {A : Matrix p p ℝ} {B : Matrix p q ℝ}
@@ -312,13 +315,15 @@ theorem dotProduct_schurComplement_mulVec_eq {A : Matrix p p ℝ} {B : Matrix p 
     x ⬝ᵥ (schurComplement A B C *ᵥ x) =
       Sum.elim (-(moorePenroseInverse A * B) *ᵥ x) x ⬝ᵥ
         (fromBlocks A B Bᵀ C *ᵥ Sum.elim (-(moorePenroseInverse A * B) *ᵥ x) x) := by
-  sorry
+  classical
+  simpa only [schurComplement, Matrix.mulVec_mulVec, Matrix.neg_mulVec] using
+    (dotProduct_generalized_schur_minimizer_eq A B C hM x).symm
 
 omit [DecidableEq p] in
 /-- **Schur complement below the trailing block**: for `A ⪰ 0`, `C − M / A = Bᵀ A⁺ B ⪰ 0`
 (the upper half of `0 ⪯ M / A ⪯ C`; the lower half is part of `posSemidef_fromBlocks_iff`).
 Proof: `A⁺` is symmetric and `A⁺ = A⁺ A A⁺`, so `Bᵀ A⁺ B = (A⁺B)ᵀ A (A⁺B)`.
-Albert 1969, Thm 1; Horn–Johnson 2013, §7.7.
+Albert 1969, Thm 1; cf. Horn–Johnson 2013, §7.7 for related results.
 atlas: generalized-schur-complement-psd (partial) -/
 theorem posSemidef_sub_schurComplement {A : Matrix p p ℝ} {B : Matrix p q ℝ}
     {C : Matrix q q ℝ} (hA : A.PosSemidef) :

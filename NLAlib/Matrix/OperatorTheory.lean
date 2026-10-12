@@ -8,6 +8,7 @@ import NLAlib.Matrix.OperatorTheory.JensenReflectionAlgebra
 import NLAlib.Matrix.OperatorTheory.JointTensor
 import NLAlib.Matrix.OperatorTheory.JointTensorRepresentation
 import NLAlib.Matrix.OperatorTheory.LiebConcavity
+import NLAlib.Matrix.OperatorTheory.LoewnerHeinz
 import NLAlib.Matrix.OperatorTheory.LogOperatorConcave
 import NLAlib.Matrix.OperatorTheory.LogOperatorMonotone
 import NLAlib.Matrix.OperatorTheory.OperatorJensen

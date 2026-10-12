@@ -1,3 +1,5 @@
+import NLAlib.Matrix.Calculus.DeterminantDerivative
+import NLAlib.Matrix.Calculus.DeterminantDerivativeFinite
 import NLAlib.Matrix.Calculus.GramCutoffCalculus
 import NLAlib.Matrix.Calculus.GramSoftMin
 import NLAlib.Matrix.Calculus.GramSoftMinSpectral

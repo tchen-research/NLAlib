@@ -41,7 +41,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 /-- Eigen-expansion of a quadratic form of a matrix function: for symmetric `A`,
 `vᵀ f(A) v = ∑ᵢ f(λᵢ) (uᵢ ⬝ v)²` with `(λᵢ, uᵢ)` the eigenpairs of `A`.
 Source: Golub–Meurant (2010) [`gm10`], Ch. 7, eq. (7.1). Atlas: `spectral-measure` (helper;
-belongs with the polynomial calculus in `NLAlib.Matrix.Spectral`). -/
+belongs with the polynomial calculus in `NLAlib.Matrix.Spectral.Core`). -/
 theorem dotProduct_cfc_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (f : ℝ → ℝ)
     (v : n → ℝ) :
     v ⬝ᵥ (cfc f A *ᵥ v) =

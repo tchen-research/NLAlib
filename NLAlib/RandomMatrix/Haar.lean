@@ -1,7 +1,5 @@
-import NLAlib.RandomMatrix.Haar.CanonicalQR
 import NLAlib.RandomMatrix.Haar.HaarFrameMeasure
 import NLAlib.RandomMatrix.Haar.HaarQR
-import NLAlib.RandomMatrix.Haar.Stiefel
 
 /-! # `RandomMatrix/Haar`
 

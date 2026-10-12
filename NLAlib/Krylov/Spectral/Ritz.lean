@@ -210,7 +210,7 @@ omit [DecidableEq n] in
 `tan² ∠(u, x) = (‖u‖² ‖x‖² − ⟨u, x⟩²)/⟨u, x⟩²`. For a unit `u` this is
 `‖(I − u uᵀ) x‖²/⟨u, x⟩²`. Junk value `0` when `⟨u, x⟩ = 0` (the angle is `π/2`).
 Source: Saad (2011) [`saad11`], §6.6.1 (where `tan θ(u, x)` is used with `‖u‖ = 1`).
-Helper for `krylov-eigenvector-angle` (belongs with principal angles in `NLAlib.Matrix.Spectral`). -/
+Helper for `krylov-eigenvector-angle` (belongs with principal angles in `NLAlib.Matrix.Spectral.Core`). -/
 def tanSqAngle (u x : n → ℝ) : ℝ := ((u ⬝ᵥ u) * (x ⬝ᵥ x) - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2
 
 /-- The eigenvector basis is orthonormal in dot-product form: `uᵢ ⬝ uⱼ = δᵢⱼ`.

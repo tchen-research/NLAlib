@@ -1,4 +1,4 @@
-import NLAlib.RandomMatrix.Haar.Stiefel
+import NLAlib.Matrix.Subspaces.Stiefel
 import Mathlib.MeasureTheory.Measure.Haar.Unique
 import Mathlib.MeasureTheory.Group.Integral
 import Mathlib.MeasureTheory.Integral.Prod

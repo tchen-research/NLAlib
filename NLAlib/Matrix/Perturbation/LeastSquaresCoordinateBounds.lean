@@ -34,9 +34,13 @@ def leastSquaresEta (A : Matrix m n ℝ) (b : m → ℝ) : ℝ :=
   specNorm A * Real.sqrt ((moorePenroseInverse A *ᵥ b) ⬝ᵥ (moorePenroseInverse A *ᵥ b)) /
     Real.sqrt (((A * moorePenroseInverse A) *ᵥ b) ⬝ᵥ ((A * moorePenroseInverse A) *ᵥ b))
 
-/-- Higham's finite relative least-squares solution bound in ordinary coordinates,
-with total division covering a zero old solution. Higham 2002, Theorem 20.1;
-transports `norm_least_squares_sub_div_le`, supporting least-squares perturbation. -/
+/-- **Wedin's least-squares bound (solution).** Higham's finite relative least-squares solution
+bound in ordinary coordinates, with total division covering a zero old solution: for full column
+rank `A`, `x = A⁺ b`, `r = b - A x`, `‖E‖₂ ≤ ε‖A‖₂`, `‖f‖ ≤ ε‖b‖` and `κ(A) ε < 1`,
+`‖x - y‖/‖x‖ ≤ κε/(1 - κε) · (2 + (κ + 1) ‖r‖/(‖A‖₂‖x‖))` for `y = (A + E)⁺(b + f)`.
+Higham 2002, Theorem 20.1 (from Wedin 1973, §5); first-order form Golub–Van Loan 2013,
+Thm 5.3.1. Transports `norm_least_squares_sub_div_le`.
+atlas: least-squares-perturbation (partial) -/
 theorem sqrt_pinv_solution_sub_div_le (A E : Matrix m n ℝ)
     (hA : A.rank = Fintype.card n) (b f : m → ℝ) {ε : ℝ} (hε : 0 ≤ ε)
     (hE : specNorm E ≤ ε * specNorm A)
@@ -68,9 +72,11 @@ theorem sqrt_pinv_solution_sub_div_le (A E : Matrix m n ℝ)
   simpa only [norm_sub_rev, norm_eq_sqrt_dotProduct, WithLp.ofLp_sub, WithLp.ofLp_add,
     Matrix.toEuclideanLin, Matrix.ofLp_toLpLin, Matrix.toLin'_apply, WithLp.ofLp_toLp] using h
 
-/-- Higham's finite residual bound in ordinary coordinates, including zero data.
-Higham 2002, Theorem 20.1; transports the stronger Euclidean coefficient `1+κ`
-and supports least-squares perturbation. -/
+/-- **Wedin's least-squares bound (residual).** Higham's finite residual bound in ordinary
+coordinates, including zero data: under the hypotheses of `sqrt_pinv_solution_sub_div_le`,
+`‖r - s‖/‖b‖ ≤ (1 + 2κ(A)) ε`. Higham 2002, Theorem 20.1; Wedin 1973, §5. Transports the
+stronger Euclidean coefficient `1+κ`.
+atlas: least-squares-perturbation (partial) -/
 theorem sqrt_pinv_residual_sub_div_le (A E : Matrix m n ℝ)
     (hA : A.rank = Fintype.card n) (b f : m → ℝ) {ε : ℝ} (hε : 0 ≤ ε)
     (hE : specNorm E ≤ ε * specNorm A)

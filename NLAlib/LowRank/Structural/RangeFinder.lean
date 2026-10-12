@@ -57,6 +57,24 @@ theorem mul_eq_mul_add_mul_of_eq_add {A : Matrix m n ℝ} {U₁ : Matrix m (Fin 
     A * Ω = U₁ * S₁ * (V₁ᵀ * Ω) + U₂ * S₂ * (V₂ᵀ * Ω) := by
   rw [hA, Matrix.add_mul, Matrix.mul_assoc (U₁ * S₁), Matrix.mul_assoc (U₂ * S₂)]
 
+omit [Fintype m] [Fintype q] [DecidableEq r] [DecidableEq r'] [DecidableEq q] in
+/-- The competitor identity of the range-finder proof: `A − AΩΩ₁†V₁ᵀ = U₂(Σ₂V₂ᵀ − Σ₂Ω₂Ω₁†V₁ᵀ)`
+when `A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ`, `Ω₁ = V₁ᵀΩ` has full row rank and `Ω₂ = V₂ᵀΩ`. HMT 2011, proof of
+Thm 9.1 (§9.2). Atlas `hmt-9-1-spectral`, `hmt-9-1-frobenius`. -/
+theorem sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}
+    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}
+    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}
+    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ)
+    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}
+    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :
+    A - A * Ω * pinvR Ω₁ * V₁ᵀ = U₂ * (S₂ * V₂ᵀ - S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ) := by
+  have hZ : A * Ω * pinvR Ω₁ * V₁ᵀ = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ := by
+    rw [mul_eq_mul_add_mul_of_eq_add hA Ω, ← hΩ₁, ← hΩ₂, Matrix.add_mul, Matrix.add_mul,
+      Matrix.mul_assoc (U₁ * S₁) Ω₁, mul_pinvR hunit, Matrix.mul_one]
+  rw [hZ, hA, Matrix.mul_sub]
+  simp only [Matrix.mul_assoc]
+  abel
+
 omit [Fintype q] [DecidableEq q] in
 /-- The rank-`≤ k` competitor `Z = AΩΩ₁†V₁ᵀ` satisfies `A − Z = U₂Σ₂V₂ᵀ − U₂Σ₂Ω₂Ω₁†V₁ᵀ`
 and hence `‖A − Z‖_F² = ‖Σ₂‖_F² + ‖Σ₂Ω₂Ω₁†‖_F²` (HMT 2011, proof of Thm 9.1; Chen–Persson,
@@ -70,20 +88,12 @@ theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matri
     {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}
     (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :
     frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) := by
-  have hZ : A * Ω * pinvR Ω₁ * V₁ᵀ = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ := by
-    rw [mul_eq_mul_add_mul_of_eq_add hA Ω, ← hΩ₁, ← hΩ₂, Matrix.add_mul, Matrix.add_mul,
-      Matrix.mul_assoc (U₁ * S₁) Ω₁, mul_pinvR hunit, Matrix.mul_one]
-  rw [hZ]
-  have hdiff : A - (U₁ * S₁ * V₁ᵀ + U₂ * S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ)
-      = U₂ * (S₂ * V₂ᵀ - S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ) := by
-    rw [hA, Matrix.mul_sub]
-    simp only [Matrix.mul_assoc]
-    abel
   have horth : frobInner (S₂ * V₂ᵀ) (S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ) = 0 := by
     rw [← frobInner_transpose]
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose]
     exact frobInner_mul_mul_eq_zero _ _ _ _ (transpose_mul_eq_zero_comm.1 hV)
-  rw [hdiff, frobSq_mul_left_of_orthonormal hU₂, frobSq_sub_of_frobInner_eq_zero _ _ horth,
+  rw [sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit, frobSq_mul_left_of_orthonormal hU₂,
+    frobSq_sub_of_frobInner_eq_zero _ _ horth,
     frobSq_mul_right_of_orthonormal hV₂, frobSq_mul_right_of_orthonormal hV₁]
 
 omit [DecidableEq q] in

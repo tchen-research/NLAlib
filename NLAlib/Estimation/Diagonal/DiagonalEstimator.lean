@@ -107,7 +107,7 @@ theorem integral_and_variance_mul_mulVec_apply_of_standardGaussian (A : Matrix n
     (∫ ω, z ω i * (A *ᵥ z ω) i ∂μ) = A i i ∧
       Var[fun ω => z ω i * (A *ᵥ z ω) i; μ] = ∑ j, A i j ^ 2 + A i i ^ 2 := by
   have hmeas := fun i => aemeasurable_of_isStandardGaussian (hlaw i)
-  have hf := fun i => standardGaussian_hutchinson_moments (hmeas i) (hlaw i)
+  have hf := fun i => memLp_two_and_moments_of_isStandardGaussian (hmeas i) (hlaw i)
   refine ⟨integral_mul_mulVec_apply_eq A (fun i => (hf i).1)
     (fun _ _ hij => hindep.indepFun hij) (fun i => (hf i).2.1) (fun i => (hf i).2.2.1) i, ?_⟩
   rw [variance_mul_mulVec_apply A hmeas hindep (fun i => (hf i).2.1) (fun i => (hf i).2.2.1)
@@ -124,7 +124,7 @@ theorem integral_and_variance_mul_mulVec_apply_of_rademacher (A : Matrix n n ℝ
     (∫ ω, z ω i * (A *ᵥ z ω) i ∂μ) = A i i ∧
       Var[fun ω => z ω i * (A *ᵥ z ω) i; μ] = ∑ j, A i j ^ 2 - A i i ^ 2 := by
   have hmeas := fun i => aemeasurable_of_isRademacher (hlaw i)
-  have hf := fun i => rademacher_hutchinson_moments (hmeas i) (hlaw i)
+  have hf := fun i => memLp_two_and_moments_of_isRademacher (hmeas i) (hlaw i)
   refine ⟨integral_mul_mulVec_apply_eq A (fun i => (hf i).1)
     (fun _ _ hij => hindep.indepFun hij) (fun i => (hf i).2.1) (fun i => (hf i).2.2.1) i, ?_⟩
   rw [variance_mul_mulVec_apply A hmeas hindep (fun i => (hf i).2.1) (fun i => (hf i).2.2.1)

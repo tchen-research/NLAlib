@@ -67,21 +67,14 @@ theorem normSq_sum_le_card {α : Type*} [DecidableEq α]
       intro k _
       ring
 
-/-- The fiber of a full coordinate vector at one Fock pattern.
-
-Source: ported from `SparseFockFormal.DirectionalConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def fullFiber (v : Fin d × Pattern m n → ℝ) (σ : Pattern m n) : EVec d :=
-  WithLp.toLp 2 (fun k ↦ v (k, σ))
-
 /-- The full finite coordinate energy is the sum of its external-fiber energies.
 Source: ported from `SparseFockFormal.DirectionalConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem full_normSq_eq_sum_fiber (v : Fin d × Pattern m n → ℝ) :
     FiniteHilbert.normSq v =
-      ∑ σ, ParsevalFrame.normSq (fullFiber v σ) := by
+      ∑ σ, ParsevalFrame.normSq (fiber v σ) := by
   simp only [FiniteHilbert.normSq, ParsevalFrame.normSq, PiLp.inner_apply,
-    Real.inner_apply, fullFiber]
+    Real.inner_apply, fiber]
   rw [Fintype.sum_prod_type]
   rw [Finset.sum_comm]
   apply Finset.sum_congr rfl
@@ -95,10 +88,10 @@ Source: ported from `SparseFockFormal.DirectionalConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Yplus_fullFiber (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) (σ : Pattern m n) :
-    fullFiber (Matrix.mulVec (Yplus m (frameRows F)) x) σ =
+    fiber (Matrix.mulVec (Yplus m (frameRows F)) x) σ =
       ∑ s ∈ σ.light, yPlusMarked F x σ s.1 s.2 := by
   ext k
-  rw [show fullFiber (Matrix.mulVec (Yplus m (frameRows F)) x) σ k =
+  rw [show fiber (Matrix.mulVec (Yplus m (frameRows F)) x) σ k =
       Matrix.mulVec (Yplus m (frameRows F)) x (k, σ) by rfl]
   rw [Yplus_mulVec_marked]
   simpa only [WithLp.ofLp_sum, Finset.sum_apply] using
@@ -110,10 +103,10 @@ Source: ported from `SparseFockFormal.DirectionalConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Yzero_fullFiber (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) (σ : Pattern m n) :
-    fullFiber (Matrix.mulVec (Yzero m (frameRows F)) x) σ =
+    fiber (Matrix.mulVec (Yzero m (frameRows F)) x) σ =
       ∑ s ∈ σ.light, yZeroMarked F x σ s.1 s.2 := by
   ext k
-  rw [show fullFiber (Matrix.mulVec (Yzero m (frameRows F)) x) σ k =
+  rw [show fiber (Matrix.mulVec (Yzero m (frameRows F)) x) σ k =
       Matrix.mulVec (Yzero m (frameRows F)) x (k, σ) by rfl]
   rw [Yzero_mulVec_marked]
   simpa only [WithLp.ofLp_sum, Finset.sum_apply] using
@@ -125,10 +118,10 @@ Source: ported from `SparseFockFormal.DirectionalConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem Hprime_fullFiber (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) (σ : Pattern m n) :
-    fullFiber (Matrix.mulVec (Hprime m (frameRows F)) x) σ =
+    fiber (Matrix.mulVec (Hprime m (frameRows F)) x) σ =
       ∑ s ∈ σ.light, hprimeMarked F x σ s.1 s.2 := by
   ext k
-  rw [show fullFiber (Matrix.mulVec (Hprime m (frameRows F)) x) σ k =
+  rw [show fiber (Matrix.mulVec (Hprime m (frameRows F)) x) σ k =
       Matrix.mulVec (Hprime m (frameRows F)) x (k, σ) by rfl]
   rw [Hprime_mulVec_marked]
   simpa only [WithLp.ofLp_sum, Finset.sum_apply] using

@@ -44,18 +44,6 @@ namespace ArnoldiDecomp
 
 variable {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
 
-/-- The `(q+1) × q` upper Hessenberg matrix `H̲_q = Q_{q+1}ᵀ A Q_q` of a decomposition of size
-`q + 1`; `A Q_q = Q_{q+1} H̲_q` (`ArnoldiDecomp.mul_restrict_Q_eq_mul`). Source: Trefethen–Bau
-(1997) [`tb97`], eq. (33.13); Saad (2011) [`saad11`], Prop. 6.5 (`H̄_m`).
-Atlas: `gmres-arnoldi-form`. -/
-def Hbar (D : ArnoldiDecomp A b (q + 1)) : Matrix (Fin (q + 1)) (Fin q) ℝ :=
-  D.Qᵀ * A * (D.restrict q.le_succ).Q
-
-/-- `A Q_q = Q_{q+1} H̲_q`, restated with `Hbar`. Atlas: `gmres-arnoldi-form`. -/
-theorem mul_restrict_Q_eq_mul_Hbar (D : ArnoldiDecomp A b (q + 1)) :
-    A * (D.restrict q.le_succ).Q = D.Q * D.Hbar :=
-  D.mul_restrict_Q_eq_mul
-
 /-- `Q_q Q_qᵀ b = b` for the starting vector (`b ∈ K_q`, `q ≥ 1`). Source: Saad (2011)
 [`saad11`], §6.5.3 (`r₀ = β v₁`). Atlas: `gmres-arnoldi-form`. -/
 theorem mulVec_transpose_Q_mulVec_self (D : ArnoldiDecomp A b q) (hq : 0 < q) :
@@ -106,7 +94,7 @@ theorem dotProduct_sub_mulVec_add_mulVec_eq (D : ArnoldiDecomp A (c - A *ᵥ x�
   have hres : c - A *ᵥ (x₀ + (D.restrict q.le_succ).Q *ᵥ y) =
       D.Q *ᵥ (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y) := by
     rw [Matrix.mulVec_sub, D.mulVec_transpose_Q_mulVec_self (Nat.succ_pos q),
-      Matrix.mulVec_mulVec, ← D.mul_restrict_Q_eq_mul_Hbar, ← Matrix.mulVec_mulVec,
+      Matrix.mulVec_mulVec, ← D.mul_restrict_Q_eq_mul, ← Matrix.mulVec_mulVec,
       Matrix.mulVec_add]
     abel
   rw [hres, mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols D.hasOrthonormalCols]

@@ -175,11 +175,7 @@ theorem posDef_fromBlocks_zero_iff (A : Matrix m m ℝ) (C : Matrix n n ℝ) :
     exact hPSD.posDef_iff_isUnit.mpr
       (isUnit_fromBlocks_zero₂₁.mpr ⟨hA.isUnit, hC.isUnit⟩)
 
-/-- Positive definiteness of a symmetric block matrix is equivalent to
-positive definiteness of its invertible leading block and Schur complement.
-Horn--Johnson (2013), Exercise 4.5.P21.
-atlas: haynsworth-inertia-additivity (partial) -/
-theorem posDef_fromBlocks_iff_posDef_schur {A : Matrix m m ℝ}
+private theorem posDef_fromBlocks_iff_posDef_schur {A : Matrix m m ℝ}
     (hA : A.IsHermitian) (hAu : IsUnit A) (B : Matrix m n ℝ) (C : Matrix n n ℝ) :
     (fromBlocks A B Bᵀ C).PosDef ↔ A.PosDef ∧ (C - Bᵀ * A⁻¹ * B).PosDef := by
   rw [fromBlocks_eq_transpose_mul_schur_mul hA hAu B C]
@@ -188,6 +184,22 @@ theorem posDef_fromBlocks_iff_posDef_schur {A : Matrix m m ℝ}
   rw [show (fromBlocks 1 (A⁻¹ * B) 0 1 : Matrix (m ⊕ n) (m ⊕ n) ℝ)ᵀ =
     star (fromBlocks 1 (A⁻¹ * B) 0 1 : Matrix (m ⊕ n) (m ⊕ n) ℝ) by rfl,
     hU.posDef_star_left_conjugate_iff, posDef_fromBlocks_zero_iff]
+
+/-- A symmetric block matrix `[A B; Bᵀ C]` is positive definite exactly when its leading block
+`A` and its Schur complement `C − BᵀA⁻¹B` are both positive definite; no invertibility
+hypothesis is needed (the forward implication derives it). Horn--Johnson (2013),
+Exercise 4.5.P21 and Theorem 7.7.7.
+atlas: haynsworth-inertia-additivity (partial), psd-block-contraction (partial) -/
+theorem posDef_fromBlocks_iff_posDef_and_schur
+    (A : Matrix m m ℝ) (B : Matrix m n ℝ) (C : Matrix n n ℝ) :
+    (fromBlocks A B Bᵀ C).PosDef ↔ A.PosDef ∧ (C - Bᵀ * A⁻¹ * B).PosDef := by
+  constructor
+  · intro hH
+    have hA : A.PosDef := hH.submatrix
+      (Sum.inl_injective : Function.Injective (Sum.inl : m → m ⊕ n))
+    exact (posDef_fromBlocks_iff_posDef_schur hA.isHermitian hA.isUnit B C).mp hH
+  · rintro ⟨hA, hS⟩
+    exact (posDef_fromBlocks_iff_posDef_schur hA.isHermitian hA.isUnit B C).mpr ⟨hA, hS⟩
 
 /-- An invertible leading block leaves all nullity in its Schur complement.
 Horn--Johnson (2013), Exercise 4.5.P21.

@@ -12,7 +12,7 @@ conjugate-gradient arguments.
   `(1 + √(2γ))^q / 2 ≤ T_q(1 + γ)` and the condition-number form
   `((√b + √a)/(√b − √a))^q / 2 ≤ T_q((b + a)/(b − a))`.
 * Second kind and derivatives on `[-1, 1]` (atlas `chebyshev-second-kind`):
-  `|U_q(x)| ≤ q + 1`, `|T_q'(x)| ≤ q²`, and `T_q'(1) = q²`.
+  `|U_q(x)| ≤ q + 1` and `|T_q'(x)| ≤ q²` (`T_q'(1) = q²` is Mathlib's `derivative_T_eval_one`).
 
 Atlas: `chebyshev-growth`, `chebyshev-second-kind`.
 -/
@@ -125,14 +125,6 @@ theorem sqrt_add_div_sqrt_sub_pow_div_two_le_eval_T_real {a b : ℝ} (ha : 0 < a
 
 /-! ### Second kind and derivatives on `[-1, 1]` -/
 
-/-- The derivative of `T_q` at `1` is `q²`.
-Source: Rivlin (1990), §1.5; Mathlib `T_derivative_eq_U` and `U_eval_one`. Atlas:
-`chebyshev-second-kind`.
-atlas: chebyshev-second-kind -/
-theorem eval_derivative_T_real_one (q : ℕ) : (derivative (T ℝ q)).eval 1 = (q : ℝ) ^ 2 := by
-  rw [T_derivative_eq_U, eval_mul, U_eval_one]
-  simp; ring
-
 /-- The Chebyshev polynomial of the second kind is bounded by `q + 1` on `[-1, 1]`:
 `|x| ≤ 1 → |U_q(x)| ≤ q + 1`.
 Source: Rivlin (1990), §1.5. Atlas: `chebyshev-second-kind`. Proof: `T_{q+1}' = (q + 1) U_q`
@@ -157,6 +149,6 @@ theorem abs_eval_derivative_T_real_le {x : ℝ} (hx : |x| ≤ 1) (q : ℕ) :
     |(derivative (T ℝ q)).eval x| ≤ (q : ℝ) ^ 2 := by
   have h := abs_iterate_derivative_T_real_le (q : ℤ) 1 hx
   simp only [Function.iterate_one] at h
-  rwa [eval_derivative_T_real_one] at h
+  rwa [derivative_T_eval_one, Int.cast_natCast] at h
 
 end NLAlib

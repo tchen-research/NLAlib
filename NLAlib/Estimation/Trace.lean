@@ -1,4 +1,3 @@
-import NLAlib.Estimation.Trace.Hutchinson
 import NLAlib.Estimation.Trace.HutchinsonTail
 import NLAlib.Estimation.Trace.Unbiased
 

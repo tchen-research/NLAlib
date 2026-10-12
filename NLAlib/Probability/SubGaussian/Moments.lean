@@ -1,6 +1,7 @@
 import Mathlib.MeasureTheory.Integral.Gamma
 import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-import NLAlib.Probability.Concentration.QuadraticForms.LinearFormComparison
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import NLAlib.Probability.SubGaussian.ExpSquare
 import NLAlib.Probability.Rademacher.Core
 /-!
 # Sub-Gaussian moments, Khintchine and the maximal inequality
@@ -13,8 +14,10 @@ For `ProbabilityTheory.HasSubgaussianMGF X c μ` (Mathlib's sub-Gaussian predica
   inequality with an explicit constant (atlas `rademacher-khintchine`, upper half);
 * `integral_iSup_le_of_hasSubgaussianMGF` and the `|·|` and `√(2c log N)` forms: the maximal
   inequality (atlas `subgaussian-max`), no independence needed;
-* promoted (as `alias`es, proofs untouched) generic sub-Gaussian lemmas from the Hanson–Wright
-  proof namespace `NLAlib.HansonWrightProof`.
+* the generic moment and exponential-square API (`hasSubgaussianMGF_mono`,
+  `integral_eq_zero_of_hasSubgaussianMGF`, `integral_pow_two_mul_le_of_hasSubgaussianMGF`,
+  `integral_exp_mul_sq_le_of_hasSubgaussianMGF`, `hasSubgaussianMGF_finset_sum_mul_of_iIndepFun`)
+  lives in `NLAlib.Probability.SubGaussian.EvenMoments` and `…ExpSquare`.
 
 Sources: Vershynin 2018, Prop 2.5.2, Thm 2.6.3, Ex 2.5.10; Boucheron–Lugosi–Massart 2013,
 Thm 2.5. Audit G1 C6, C7, C9.
@@ -109,38 +112,6 @@ theorem integral_abs_rpow_le_of_hasSubgaussianMGF [IsProbabilityMeasure μ] {X :
         ENNReal.toReal_le_of_le_ofReal (by positivity) hlin
     _ = _ := by ring
 
-
-/-! ### Promoted sub-Gaussian API from the Hanson–Wright proof -/
-
-/-- A random variable with a sub-Gaussian MGF bound (for every real `t`) is centred:
-`𝔼 X = 0`. Vershynin 2018, Prop 2.5.2 (v) ⇒ mean zero; atlas `hanson-wright` (helper).
-Promoted from `HansonWrightProof.hasSubgaussianMGF_integral_eq_zero`. -/
-alias integral_eq_zero_of_hasSubgaussianMGF := HansonWrightProof.hasSubgaussianMGF_integral_eq_zero
-
-/-- Even moments of a sub-Gaussian variable: for every scale `s > 0`,
-`𝔼 X^{2m} ≤ (2m)!/s^{2m} · e^{c s²/2}`. Vershynin 2018, Prop 2.5.2 (moment step);
-atlas `hanson-wright` (helper). Promoted from
-`HansonWrightProof.integral_even_power_le_of_hasSubgaussianMGF`. -/
-alias integral_pow_two_mul_le_of_hasSubgaussianMGF :=
-  HansonWrightProof.integral_even_power_le_of_hasSubgaussianMGF
-
-/-- Exponential-square bound: if `X` is sub-Gaussian with proxy `c ≤ C₀` and
-`θ C₀ e < 1`, then `𝔼 e^{θ X²} ≤ e (1 - θ C₀ e)⁻¹`. Vershynin 2018, Prop 2.5.2 (iii);
-atlas `hanson-wright` (helper). Promoted from
-`HansonWrightProof.integral_exp_mul_sq_le_inv_of_hasSubgaussianMGF_of_le`. -/
-alias integral_exp_mul_sq_le_of_hasSubgaussianMGF :=
-  HansonWrightProof.integral_exp_mul_sq_le_inv_of_hasSubgaussianMGF_of_le
-
-/-- Monotonicity in the variance proxy: `HasSubgaussianMGF X c μ` and `c ≤ d` give
-`HasSubgaussianMGF X d μ`. Atlas `hanson-wright` (helper). Promoted from
-`HansonWrightProof.hasSubgaussianMGF_mono_param`. -/
-alias hasSubgaussianMGF_mono := HansonWrightProof.hasSubgaussianMGF_mono_param
-
-/-- A finite linear combination `∑_{i ∈ s} aᵢ Xᵢ` of independent sub-Gaussian variables is
-sub-Gaussian with proxy `∑_{i ∈ s} aᵢ² cᵢ`. Vershynin 2018, Prop 2.6.1; atlas `hanson-wright`
-(helper). Promoted from `HansonWrightProof.hasSubgaussianMGF_finset_sum_const_mul_of_iIndepFun`. -/
-alias hasSubgaussianMGF_finset_sum_mul_of_iIndepFun :=
-  HansonWrightProof.hasSubgaussianMGF_finset_sum_const_mul_of_iIndepFun
 
 /-! ### Khintchine's inequality with an explicit constant -/
 

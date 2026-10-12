@@ -12,7 +12,8 @@ number of columns.
 * `range_arnoldiMatrix` (`range Q_q = K_q`, no hypothesis), `hasOrthonormalCols_arnoldiMatrix`
   (`q ≤ krylovGrade A b`), `arnoldiHessenberg_apply_eq_zero_of_add_one_lt` (upper Hessenberg,
   no hypothesis) and its symmetric (tridiagonal) form,
-  `transpose_arnoldiMatrix_mulVec_apply_eq_zero`;
+  `transpose_arnoldiMatrix_mulVec_apply_eq_zero`; `arnoldiBasis_dotProduct_of_ne` (orthogonality, no
+  hypothesis) and `arnoldiBasis_eq_zero_of_krylovGrade_le` (zero from the grade on);
 * the canonical witness `arnoldiDecomp A b q h : ArnoldiDecomp A b q` for `q ≤ krylovGrade A b`,
   with positive subdiagonal (`arnoldiDecomp_H_subdiag_pos`) and `q_1 ⬝ b = ‖b‖ > 0`
   (`arnoldiBasis_zero_dotProduct_pos`); it is the only decomposition with these signs
@@ -165,6 +166,14 @@ theorem arnoldiBasis_dotProduct (A : Matrix n n ℝ) (b : n → ℝ) {i j : ℕ}
   · simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right,
       gramSchmidt_orthogonal ℝ _ hij, mul_zero]
 
+/-- Distinct Arnoldi vectors are orthogonal, `q_iᵀ q_j = 0` for `i ≠ j`, with no grade hypothesis
+(past the grade the vectors are `0`). Helper for `lanczos-recurrence-algorithm`. -/
+theorem arnoldiBasis_dotProduct_of_ne (A : Matrix n n ℝ) (b : n → ℝ) {i j : ℕ} (hij : i ≠ j) :
+    arnoldiBasis A b i ⬝ᵥ arnoldiBasis A b j = 0 := by
+  rw [arnoldiBasis, arnoldiBasis, ← inner_eq_dotProduct_ofLp]
+  simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right,
+    gramSchmidt_orthogonal ℝ _ hij, mul_zero]
+
 /-- **The Arnoldi basis spans the Krylov space**: `range Q_q = K_q(A, b)`, with no hypothesis.
 Source: Saad (2003) [`saad03`], Prop. 6.4.
 atlas: arnoldi-def (partial) -/
@@ -190,8 +199,8 @@ Source: Saad (2003) [`saad03`], Prop. 6.5; Trefethen–Bau (1997) [`tb97`], Lect
 atlas: arnoldi-def (partial) -/
 theorem arnoldiHessenberg_apply_eq_zero_of_add_one_lt (A : Matrix n n ℝ) (b : n → ℝ) {q : ℕ}
     {i j : Fin q} (hij : (j : ℕ) + 1 < i) : arnoldiHessenberg A b q i j = 0 := by
-  rw [arnoldiHessenberg, transpose_mul_mul_apply_eq_dotProduct, arnoldiMatrix_col, arnoldiMatrix_col,
-    arnoldiBasis, gramSchmidtNormed, WithLp.ofLp_smul, smul_dotProduct,
+  rw [arnoldiHessenberg, transpose_mul_mul_apply_eq_dotProduct, arnoldiMatrix_col,
+    arnoldiMatrix_col, arnoldiBasis, gramSchmidtNormed, WithLp.ofLp_smul, smul_dotProduct,
     ← inner_eq_dotProduct_ofLp]
   have hx : WithLp.toLp 2 (A *ᵥ arnoldiBasis A b j) ∈
       Submodule.span ℝ (gramSchmidt ℝ (krylovSeq A b) '' Set.Iio i) := by
@@ -311,5 +320,20 @@ theorem ArnoldiDecomp.Q_eq_arnoldiMatrix {A : Matrix n n ℝ} {b : n → ℝ} {q
   (arnoldiDecomp A b q D.le_krylovGrade).Q_eq_of_pos D
     (fun hq => arnoldiBasis_zero_dotProduct_pos A b (by have := D.le_krylovGrade; omega)) h0
     (fun _ hj => arnoldiDecomp_H_subdiag_pos A b _ hj) hH
+
+/-- The Arnoldi vectors vanish from the grade on: `arnoldiBasis A b j = 0` for
+`krylovGrade A b ≤ j` (breakdown). Helper for `lanczos-recurrence-algorithm`.
+Source: Saad (2003) [`saad03`], Prop. 6.6. -/
+theorem arnoldiBasis_eq_zero_of_krylovGrade_le (A : Matrix n n ℝ) (b : n → ℝ) {j : ℕ}
+    (hj : krylovGrade A b ≤ j) : arnoldiBasis A b j = 0 := by
+  set D := arnoldiDecomp A b (krylovGrade A b) le_rfl
+  have hx : arnoldiBasis A b j ∈ krylovSpace A b (krylovGrade A b) := by
+    rw [← krylovSpace_eq_of_krylovGrade_le A b (show krylovGrade A b ≤ j + 1 by omega)]
+    exact arnoldiBasis_mem_krylovSpace A b j
+  rw [D.graded.eq_sum_of_mem hx]
+  refine Finset.sum_eq_zero fun i _ => ?_
+  have h0 : D.Q.col i ⬝ᵥ arnoldiBasis A b j = 0 :=
+    arnoldiBasis_dotProduct_of_ne A b (by have := i.isLt; omega)
+  rw [h0, zero_smul]
 
 end NLAlib

@@ -33,8 +33,8 @@ private theorem singularValues_smul_of_nonneg_fin {m n : ℕ} (A : Matrix (Fin m
     exact singularValues_eq_of_eq_mul_rectDiag_mul hSVD.transpose_mul_left
       hSVD.transpose_mul_right (fun i => mul_nonneg hc (singularValues_nonneg A i))
       (fun i j hij => mul_le_mul_of_nonneg_left (singularValues_antitone A hij) hc) hfact hk
-  · rw [singularValues_eq_zero_of_min_le _ (by omega),
-      singularValues_eq_zero_of_min_le A (by omega), mul_zero]
+  · rw [singularValues_eq_zero_of_min_le _ (by simp only [Fintype.card_fin]; omega),
+      singularValues_eq_zero_of_min_le A (by simp only [Fintype.card_fin]; omega), mul_zero]
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
 

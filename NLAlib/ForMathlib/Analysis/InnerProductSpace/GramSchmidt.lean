@@ -8,24 +8,16 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
 The explicit residual recursion uses totalized inverse norms, so it is
 measurable even at zero residuals. Isometries preserve every residual and
 the positive normalization. Source: operator re-derivation `sh:qr-equiv`.
+The explicit residual formula is Mathlib's `InnerProductSpace.gramSchmidt_def''`.
+
+Upstreaming note: `inner_gramSchmidtNormed_eq_zero_of_lt` is a one-line corollary of Mathlib's
+`gramSchmidt_inv_triangular` for the normalized family, a candidate for upstreaming.
 -/
 
 noncomputable section
 set_option autoImplicit false
 open MeasureTheory InnerProductSpace
 namespace NLAlib
-
-/-- Gram–Schmidt's residual written explicitly with scalar inner products and
-inverse squared norms. Source: Mathlib's singleton star projection formula;
-operator re-derivation `sh:qr-equiv`. -/
-theorem gramSchmidt_eq_sub_sum_inner_div_norm_sq
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {k : ℕ}
-    (f : Fin k → E) (j : Fin k) :
-    gramSchmidt ℝ f j = f j - ∑ i ∈ Finset.Iio j,
-      (inner ℝ (gramSchmidt ℝ f i) (f j) / ‖gramSchmidt ℝ f i‖ ^ 2) •
-        gramSchmidt ℝ f i := by
-  rw [gramSchmidt_def]
-  simp only [Submodule.starProjection_singleton, RCLike.ofReal_real_eq_id, id_eq]
 
 /-- Gram–Schmidt residuals commute with every real linear isometry.
 Source: operator re-derivation `sh:qr-equiv`, using the literal recursion. -/
@@ -37,8 +29,8 @@ theorem gramSchmidt_map_linearIsometry
   refine (show WellFounded ((· < ·) : Fin k → Fin k → Prop) from wellFounded_lt).induction
     (C := fun j => gramSchmidt ℝ (fun i => L (f i)) j = L (gramSchmidt ℝ f j)) j ?_
   intro j ih
-  rw [gramSchmidt_eq_sub_sum_inner_div_norm_sq,
-    gramSchmidt_eq_sub_sum_inner_div_norm_sq f j, map_sub, map_sum]
+  rw [eq_sub_of_add_eq (gramSchmidt_def'' ℝ (fun i => L (f i)) j).symm,
+    eq_sub_of_add_eq (gramSchmidt_def'' ℝ f j).symm, map_sub, map_sum]
   congr 1
   apply Finset.sum_congr rfl
   intro i hi
@@ -69,7 +61,7 @@ theorem measurable_gramSchmidt
       (fun ω => f ω j - ∑ i ∈ Finset.Iio j,
         (inner ℝ (gramSchmidt ℝ (f ω) i) (f ω j) /
           ‖gramSchmidt ℝ (f ω) i‖ ^ 2) • gramSchmidt ℝ (f ω) i) :=
-    funext (fun ω => gramSchmidt_eq_sub_sum_inner_div_norm_sq (f ω) j)
+    funext (fun ω => eq_sub_of_add_eq (gramSchmidt_def'' ℝ (f ω) j).symm)
   rw [heq]
   apply (hf j).sub
   apply Finset.measurable_sum
@@ -98,8 +90,7 @@ theorem inner_gramSchmidtNormed_self_eq_norm_gramSchmidt
     have heq : f j = gramSchmidt ℝ f j + ∑ i ∈ Finset.Iio j,
         (inner ℝ (gramSchmidt ℝ f i) (f j) / ‖gramSchmidt ℝ f i‖ ^ 2) •
           gramSchmidt ℝ f i := by
-      rw [gramSchmidt_eq_sub_sum_inner_div_norm_sq f j]
-      abel
+      exact gramSchmidt_def'' ℝ f j
     rw [heq]
     rw [inner_add_right, inner_self_eq_norm_sq_to_K]
     have hsum : (∑ i ∈ Finset.Iio j,

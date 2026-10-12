@@ -100,41 +100,12 @@ theorem IsBestRankApprox.frobSq_sub_eq_bestRankFrobSq {k : ℕ} {A B : Matrix m 
     exact h.2 Z hZ
   · exact csInf_le hbdd hmem
 
-/-- The squared Frobenius norm is bounded by rank times squared spectral
-norm for arbitrary finite real matrices. Horn–Johnson §5.6;
-atlas `norms-frob-spec`. No nonempty or positive-rank condition is imposed. -/
-theorem frobSq_le_rank_mul_specNorm_sq_fintype [DecidableEq m] [DecidableEq n]
-    (A : Matrix m n ℝ) :
-    frobSq A ≤ (A.rank : ℝ) * specNorm A ^ 2 := by
-  have h := frobSq_le_rank_mul_specNorm_sq
-    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-  simpa only [frobSq_reindex, Matrix.rank_reindex, specNorm_reindex] using h
-
-/-- The Frobenius norm is at most the spectral norm times square root of
-rank on arbitrary finite indices. Horn–Johnson §5.6; atlas `norms-frob-spec`.
-atlas: norms-frob-spec -/
-theorem frobNorm_le_sqrt_rank_mul_specNorm_fintype [DecidableEq m] [DecidableEq n]
-    (A : Matrix m n ℝ) :
-    frobNorm A ≤ Real.sqrt (A.rank : ℝ) * specNorm A := by
-  have h := frobNorm_le_sqrt_rank_mul_specNorm
-    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-  simpa only [frobNorm_reindex, Matrix.rank_reindex, specNorm_reindex] using h
-
 /-- Reindexing commutes with the general Moore–Penrose inverse, reversing
 row and column labels. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
 theorem moorePenroseInverse_reindex (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
     moorePenroseInverse (A.reindex em en) = (moorePenroseInverse A).reindex en em :=
   (isMoorePenroseInverse (A.reindex em en)).unique
     ((isMoorePenroseInverse A).submatrix em.symm en.symm)
-
-/-- The largest singular value of the explicit finite normalization is the
-original spectral norm. Horn–Johnson §5.6; atlas `svd`, `norms-frob-spec`.
-The reindex is temporary normalization for the parent `Fin`-only list API. -/
-theorem singularValues_reindex_zero_eq_specNorm [DecidableEq m] [DecidableEq n]
-    (A : Matrix m n ℝ) :
-    singularValues (A.reindex (Fintype.equivFin m) (Fintype.equivFin n)) 0 =
-      specNorm A := by
-  rw [singularValues_zero_eq_specNorm, specNorm_reindex]
 
 /-- The Moore–Penrose norm on general indices is zero at rank zero and the
 reciprocal of the last positive singular value otherwise. Horn–Johnson §7.3;

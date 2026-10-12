@@ -2,6 +2,7 @@ import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.BernsteinMgfCgf
 import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
 import NLAlib.Matrix.Inequalities.TraceExpMonotone
+import NLAlib.Matrix.Functions.TraceExpBounds
 
 /-!
 # Theorem 6.6.1 — Hermitian matrix Bernstein
@@ -17,24 +18,6 @@ open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 set_option autoImplicit false
 
 namespace NLAlib
-
-private lemma traceExp_le {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian)
-    {c : ℝ} (hc : 0 ≤ c) : traceExp (c • B) ≤ d * Real.exp (c * ‖B‖) := by
-  rw [traceExp_smul_eq_sum B hB c]
-  calc ∑ i, Real.exp (c * hB.eigenvalues i) ≤ ∑ _i : Fin d, Real.exp (c * ‖B‖) := by
-        apply Finset.sum_le_sum
-        intro i _
-        apply Real.exp_le_exp.mpr
-        apply mul_le_mul_of_nonneg_left _ hc
-        exact (le_abs_self _).trans (abs_le_norm_of_mem_spectrum B (hB.eigenvalues_mem_spectrum_real i))
-    _ = d * Real.exp (c * ‖B‖) := by simp
-
-private lemma traceExp_pos {d : ℕ} [NeZero d] (H : Matrix (Fin d) (Fin d) ℂ) (hH : H.IsHermitian) :
-    0 < traceExp H := by
-  have h := traceExp_smul_eq_sum H hH 1
-  rw [one_smul] at h
-  rw [h]
-  exact Finset.sum_pos (fun i _ => Real.exp_pos _) Finset.univ_nonempty
 
 /-- Scalar optimization for the expectation bound. -/
 private lemma scalar_expect {x a b L : ℝ} (hL : 0 < L) (ha : 0 ≤ a) (hb : 0 ≤ b)
@@ -157,7 +140,7 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) :
     let Y := fun ω => ∑ k, X k ω
     let v := hermitianSecondMoment μ Y
-    v = spectralNorm (∑ k, ∫ ω, X k ω ^ 2 ∂μ) ∧
+    v = ‖∑ k, ∫ ω, X k ω ^ 2 ∂μ‖ ∧
     (∫ ω, lambdaMax (Y ω) ∂μ) ≤
       Real.sqrt (2 * v * Real.log d) + L * Real.log d / 3 ∧
     ∀ t : ℝ, 0 ≤ t → (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
@@ -174,9 +157,8 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     simp only [Y, sq]
     exact h
   have hv : v = ‖∑ k, ∫ ω, X k ω ^ 2 ∂μ‖ := by
-    show spectralNorm (∫ ω, Y ω ^ 2 ∂μ) = _
+    show ‖∫ ω, Y ω ^ 2 ∂μ‖ = _
     rw [hsm]
-    rfl
   have hv0 : 0 ≤ v := hv ▸ norm_nonneg _
   have hBpsd : (∑ k, ∫ ω, X k ω ^ 2 ∂μ).PosSemidef := by
     apply Matrix.posSemidef_sum
@@ -267,8 +249,9 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
         have : θ * L < 3 := (lt_div_iff₀ hLpos).mp hθL
         apply div_nonneg (by positivity)
         linarith
-      have hsum : LoewnerLE (cumulantSum μ X θ) (((θ ^ 2 / 2) / (1 - θ * L / 3)) • B) := by
-        unfold LoewnerLE cumulantSum
+      have hsum : (cumulantSum μ X θ) ≤ (((θ ^ 2 / 2) / (1 - θ * L / 3)) • B) := by
+        unfold cumulantSum
+        rw [Matrix.le_iff]
         rw [hBdef, Finset.smul_sum, ← Finset.sum_sub_distrib]
         exact Matrix.posSemidef_sum _ (fun k _ => (bernstein_matrix_mgf_cgf_le μ (X k) L θ hLpos hθ hθL
           (hMeas k) (hHerm k) (hL2 k) (hMean k) (hBound k)).2)
@@ -276,14 +259,14 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
           ≤ traceExp (((θ ^ 2 / 2) / (1 - θ * L / 3)) • B) :=
             traceExp_le_traceExp _ _ (hcumH θ)
               (hBH.smul (isSelfAdjoint_iff.mpr (star_trivial _))) hsum
-        _ ≤ d * Real.exp ((θ ^ 2 / 2) / (1 - θ * L / 3) * ‖B‖) := traceExp_le _ hBH hg
+        _ ≤ d * Real.exp ((θ ^ 2 / 2) / (1 - θ * L / 3) * ‖B‖) := traceExp_smul_le_mul_exp_mul_norm _ hBH hg
         _ = _ := by rw [hv]
     have hE : ∀ θ : ℝ, 0 < θ → θ < 3 / L →
         (∫ ω, lambdaMax (Y ω) ∂μ) ≤
           (Real.log d + (θ ^ 2 / 2) / (1 - θ * L / 3) * v) / θ := by
       intro θ hθ hθL
       have h1 := ((master_bounds μ X θ hMeas hHerm hInt hIndep (hExp θ hθ)).1 hθ).1
-      have hpos : 0 < traceExp (cumulantSum μ X θ) := traceExp_pos _ (hcumH θ)
+      have hpos : 0 < traceExp (cumulantSum μ X θ) := traceExp_pos_of_isHermitian _ (hcumH θ)
       have hlog : Real.log (traceExp (cumulantSum μ X θ)) ≤
           Real.log d + (θ ^ 2 / 2) / (1 - θ * L / 3) * v := by
         calc _ ≤ Real.log (d * Real.exp ((θ ^ 2 / 2) / (1 - θ * L / 3) * v)) :=

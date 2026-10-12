@@ -1,7 +1,6 @@
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeckEntropy
 import NLAlib.ForMathlib.Analysis.Real
 import NLAlib.Probability.Gaussian.Calculus.PolynomialGrowthIntegrationByParts
-import Mathlib.Tactic
 
 /-!
 # Polynomial-growth domains of the Mehler operator

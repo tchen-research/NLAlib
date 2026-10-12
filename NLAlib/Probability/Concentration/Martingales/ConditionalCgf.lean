@@ -1,5 +1,5 @@
 import NLAlib.Probability.Concentration.Matrix.BernsteinMgfCgf
-import NLAlib.Probability.Concentration.Matrix.LiebReindex
+import NLAlib.Matrix.OperatorTheory.LiebTraceFunction
 import NLAlib.ForMathlib.MeasureTheory.MatrixConditionalExpectation
 /-!
 # One-sided conditional matrix Bernstein cumulant bounds
@@ -117,7 +117,7 @@ theorem ae_condExp_matrixExp_one_le_and_condExp_sq_posSemidef_and_matrixLog_le
     exact hp
   have hgv : (g • V ω).IsHermitian := hv.isHermitian.smul
     (isSelfAdjoint_iff.mpr (star_trivial g))
-  have hexp := posDef_matrixExp_and_matrixLog_matrixExp_finite (g • V ω) hgv
+  have hexp := posDef_matrixExp_and_matrixLog_matrixExp (g • V ω) hgv
   have hu' : M ω ≤ matrixExp (g • V ω) :=
     hu.trans (one_add_le_matrixExp_of_isHermitian _ hgv)
   have hlog := CFC.log_monotoneOn hMpd.isStrictlyPositive hexp.1.isStrictlyPositive hu'

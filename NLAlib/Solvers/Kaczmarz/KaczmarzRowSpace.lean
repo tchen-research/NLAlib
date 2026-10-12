@@ -25,50 +25,6 @@ namespace Kaczmarz
 
 variable {m n : Type*} [Fintype m] [Fintype n]
 
-/-- An arbitrary affine Kaczmarz update preserves row-space error membership.
-No consistency assumption on the right-hand side or reference point is needed.
-Needell 2010, proof of Theorem 2.1; atlas `kaczmarz-inconsistent` (invariant helper). -/
-theorem step_sub_mem_range_of_sub_mem_range [DecidableEq m]
-    (A : Matrix m n ℝ) (b : m → ℝ) (xh x : n → ℝ)
-    (hx : x - xh ∈ LinearMap.range Aᵀ.mulVecLin) (i : m) :
-    step A b x i - xh ∈ LinearMap.range Aᵀ.mulVecLin := by
-  have hstep : step A b x i - xh =
-      (x - xh) + ((b i - A i ⬝ᵥ x) / (A i ⬝ᵥ A i)) • A i := by
-    simp only [step]
-    abel
-  rw [hstep]
-  refine Submodule.add_mem _ hx (Submodule.smul_mem _ _ ⟨Pi.single i 1, ?_⟩)
-  ext j
-  simp
-
-/-- A lower singular bound on the row space makes the Kaczmarz contraction
-factor nonnegative, including a zero matrix and empty index types.
-Zouzias–Freris 2013, equation (5); atlas `kaczmarz-inconsistent` (rate helper). -/
-theorem rate_nonneg_of_lower_bound_on_range [DecidableEq m]
-    (A : Matrix m n ℝ) (σ : ℝ)
-    (hσ : ∀ v ∈ LinearMap.range Aᵀ.mulVecLin,
-      σ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v)) :
-    0 ≤ 1 - σ ^ 2 / frobSq A := by
-  classical
-  by_cases hA : A = 0
-  · subst hA
-    simp
-  have hF : 0 < frobSq A :=
-    lt_of_le_of_ne (frobSq_nonneg A) (Ne.symm ((frobSq_eq_zero_iff A).not.mpr hA))
-  obtain ⟨i, hi⟩ : ∃ i, A i ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hA (Matrix.ext fun i j => by simp [h i])
-  have hmem : A i ∈ LinearMap.range Aᵀ.mulVecLin := ⟨Pi.single i 1, by
-    ext j
-    simp⟩
-  have hpos : 0 < A i ⬝ᵥ A i := lt_of_le_of_ne (dotProduct_self_nonneg _)
-    (Ne.symm fun h => hi (dotProduct_self_eq_zero.mp h))
-  have hbound : σ ^ 2 ≤ frobSq A := le_of_mul_le_mul_right
-    ((hσ _ hmem).trans (mulVec_dotProduct_mulVec_le_frobSq_mul A (A i))) hpos
-  rw [sub_nonneg, div_le_one hF]
-  exact hbound
-
 /-- One inconsistent-system Kaczmarz step contracts a row-space error, with
 additive noise `‖b-A*xh‖²/‖A‖F²`. The lower singular bound is needed only on
 the row space. Needell 2010, proof of Theorem 2.1;

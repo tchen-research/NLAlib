@@ -73,19 +73,6 @@ def BUpMatrix (F : Frame n d) (r : Fin m) :
     Matrix (Fin d × Pattern m n) (Pattern m n) ℝ :=
   fun out τ ↦ ∑ i, F.u i out.1 * rUpAt r i out.2 τ
 
-/-- External Euclidean fiber at one Fock pattern.
-
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def fiber (x : Fin d × Pattern m n → ℝ) (p : Pattern m n) : EVec d :=
-  WithLp.toLp 2 (fun k ↦ x (k, p))
-
-/-- A Euclidean external fiber reads the vector at its specified Fock pattern.
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp] theorem fiber_apply (x : Fin d × Pattern m n → ℝ)
-    (p : Pattern m n) (k : Fin d) : fiber x p k = x (k, p) := rfl
-
 /-- One-site heavy creation has coefficient one precisely at the matching marked transition.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
@@ -113,12 +100,12 @@ theorem one_rUp_analysis (F : Frame n d)
     (∑ inp : Fin d × Pattern m n,
         (F.u i inp.1 * rUpAt r i σ inp.2) * x inp) =
       if σ (r, i) = .two then
-        analyze F (fiber x (setSite σ (r, i) .one)) i else 0 := by
+        analyze F (DirectionalConcrete.fiber x (setSite σ (r, i) .one)) i else 0 := by
   classical
   rw [Fintype.sum_prod_type]
   by_cases hi : σ (r, i) = .two
   · simp only [rUpAt_apply, hi, true_and, if_true]
-    simp only [analyze, fiber, PiLp.inner_apply, Real.inner_apply]
+    simp only [analyze, DirectionalConcrete.fiber, PiLp.inner_apply, Real.inner_apply]
     apply Finset.sum_congr rfl
     intro k _
     simp
@@ -133,12 +120,12 @@ theorem one_rDown_analysis (F : Frame n d)
     (∑ inp : Fin d × Pattern m n,
         (F.u i inp.1 * rDownAt r i σ inp.2) * x inp) =
       if σ (r, i) = .one then
-        analyze F (fiber x (setSite σ (r, i) .two)) i else 0 := by
+        analyze F (DirectionalConcrete.fiber x (setSite σ (r, i) .two)) i else 0 := by
   classical
   rw [Fintype.sum_prod_type]
   by_cases hi : σ (r, i) = .one
   · simp only [rDownAt_apply, hi, true_and, if_true]
-    simp only [analyze, fiber, PiLp.inner_apply, Real.inner_apply]
+    simp only [analyze, DirectionalConcrete.fiber, PiLp.inner_apply, Real.inner_apply]
     apply Finset.sum_congr rfl
     intro k _
     simp
@@ -151,7 +138,7 @@ theorem AUpMatrix_mulVec (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) (r : Fin m) (σ : Pattern m n) :
     Matrix.mulVec (AUpMatrix F r) x σ =
       ∑ i ∈ σ.heavyInRow r,
-        analyze F (fiber x (setSite σ (r, i) .one)) i := by
+        analyze F (DirectionalConcrete.fiber x (setSite σ (r, i) .one)) i := by
   classical
   simp only [Matrix.mulVec, dotProduct, AUpMatrix]
   simp_rw [Finset.sum_mul]
@@ -166,7 +153,7 @@ theorem ADownMatrix_mulVec (F : Frame n d)
     (x : Fin d × Pattern m n → ℝ) (r : Fin m) (σ : Pattern m n) :
     Matrix.mulVec (ADownMatrix F r) x σ =
       ∑ i ∈ σ.lightInRow r,
-        analyze F (fiber x (setSite σ (r, i) .two)) i := by
+        analyze F (DirectionalConcrete.fiber x (setSite σ (r, i) .two)) i := by
   classical
   simp only [Matrix.mulVec, dotProduct, ADownMatrix]
   simp_rw [Finset.sum_mul]
@@ -174,36 +161,16 @@ theorem ADownMatrix_mulVec (F : Frame n d)
   simp_rw [one_rDown_analysis]
   rw [Pattern.lightInRow, Finset.sum_filter]
 
-/-- Squared Euclidean energy on the scalar Fock-pattern space.
-
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def fockNormSq (y : Pattern m n → ℝ) : ℝ := ∑ p, y p ^ 2
-
-/-- Full coordinate energy equals the sum of external-fiber energies.
-Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem full_normSq_eq_sum_fiber (x : Fin d × Pattern m n → ℝ) :
-    FiniteHilbert.normSq x = ∑ p, ParsevalFrame.normSq (fiber x p) := by
-  simp only [FiniteHilbert.normSq, ParsevalFrame.normSq, PiLp.inner_apply,
-    Real.inner_apply, fiber]
-  rw [Fintype.sum_prod_type, Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro p _
-  apply Finset.sum_congr rfl
-  intro k _
-  ring
-
 /-- The fiber of an exact-grade projection is retained precisely on that pattern grade.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem fiber_gradeProjection (nu : ℕ)
     (x : Fin d × Pattern m n → ℝ) (p : Pattern m n) :
-    fiber (Matrix.mulVec (gradeProjection (d := d) nu) x) p =
-      if p.grade = nu then fiber x p else 0 := by
+    DirectionalConcrete.fiber (Matrix.mulVec (gradeProjection (d := d) nu) x) p =
+      if p.grade = nu then DirectionalConcrete.fiber x p else 0 := by
   ext k
   by_cases hp : p.grade = nu <;>
-    simp [fiber, gradeProjection_mulVec, hp]
+    simp [DirectionalConcrete.fiber, gradeProjection_mulVec, hp]
 
 /-- On an exact grade, occupation-weighted energy is the grade times the projected energy.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
@@ -211,10 +178,10 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem weighted_gradeProjection (nu : ℕ)
     (x : Fin d × Pattern m n → ℝ) :
     (∑ p, (p.grade : ℝ) * ParsevalFrame.normSq
-      (fiber (Matrix.mulVec (gradeProjection (d := d) nu) x) p)) =
+      (DirectionalConcrete.fiber (Matrix.mulVec (gradeProjection (d := d) nu) x) p)) =
       (nu : ℝ) * FiniteHilbert.normSq
         (Matrix.mulVec (gradeProjection (d := d) nu) x) := by
-  rw [full_normSq_eq_sum_fiber]
+  rw [DirectionalConcrete.full_normSq_eq_sum_fiber]
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro p _

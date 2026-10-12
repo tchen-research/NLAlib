@@ -5,6 +5,10 @@ import Mathlib.Probability.Martingale.OptionalStopping
 
 Actual bounded hitting times and optional stopping give Ville's inequality. Passing
 from finite horizons to the increasing union preserves the exact initial-mean constant.
+
+Upstreaming note: `integral_stoppedValue_le_integral_zero_of_supermartingale` is Mathlib's
+`MeasureTheory.Submartingale.expected_stoppedValue_mono` applied to `-S`; a supermartingale
+form that is a candidate for upstreaming.
 -/
 
 noncomputable section

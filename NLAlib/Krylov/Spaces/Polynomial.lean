@@ -2,6 +2,7 @@ import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.Algebra.Polynomial.AlgebraMap
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import NLAlib.Krylov.Spaces.Basic
+import NLAlib.Matrix.Functions.PolynomialIntertwining
 /-!
 # Krylov subspaces: polynomial characterisation and basic structure
 
@@ -12,7 +13,9 @@ Facts about `NLAlib.krylovSpace A b q = span {b, A b, …, A^(q−1) b}`:
 * `krylovSpace_zero`, `krylovSpace_succ`: `K_0 = 0` and `K_{q+1} = K_q ⊔ span {A^q b}`;
 * `krylovSpace_mono`: monotonicity in `q`;
 * `mulVec_mem_krylovSpace_succ`: `A K_q ⊆ K_{q+1}`;
-* `finrank_krylovSpace_le`: `dim K_q ≤ q`.
+* `finrank_krylovSpace_le`: `dim K_q ≤ q`;
+* `krylovSpace_mulVec_le_succ`: `K_q(A, A b) ⊆ K_{q+1}(A, b)`;
+* `mulVec_mem_krylovSpace_of_mul_eq`: `C B = B' C` implies `C K_q(B, b) ⊆ K_q(B', C b)`.
 
 Source: Golub–Meurant (2010) [`gm10`], Ch. 4; Martinsson–Tropp (2020) [`mt20`], §11.7.
 Atlas: `krylov-subspace`.
@@ -131,5 +134,37 @@ theorem finrank_krylovSpace_le (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
     Module.finrank ℝ (krylovSpace A b q) ≤ q := by
   exact (finrank_range_le_card (R := ℝ) (fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b)).trans
     (by simp)
+
+/-! ### Shifted and intertwined Krylov spaces -/
+
+/-- `K_q(B, B b) ⊆ K_{q+1}(B, b)`. Helper for `golub-kahan-bidiagonalization`. -/
+theorem krylovSpace_mulVec_le_succ (B : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
+    krylovSpace B (B *ᵥ b) q ≤ krylovSpace B b (q + 1) := by
+  refine Submodule.span_le.2 ?_
+  rintro _ ⟨i, rfl⟩
+  change (B ^ (i : ℕ)) *ᵥ (B *ᵥ b) ∈ _
+  rw [Matrix.mulVec_mulVec, ← pow_succ]
+  exact pow_mulVec_mem_krylovSpace _ _ (Nat.succ_lt_succ i.isLt)
+
+section Intertwining
+
+variable {m : Type*} [Fintype m] [DecidableEq m]
+
+/-- Krylov spaces are carried along an intertwining map: if `C B = B' C` then
+`C K_q(B, b) ⊆ K_q(B', C b)`. Source: Golub–Van Loan (2013) [`gvl13`], §10.4.1. Helper for
+`golub-kahan-bidiagonalization`. -/
+theorem mulVec_mem_krylovSpace_of_mul_eq {C : Matrix m n ℝ} {B : Matrix n n ℝ}
+    {B' : Matrix m m ℝ} (hC : C * B = B' * C) {b x : n → ℝ} {q : ℕ}
+    (hx : x ∈ krylovSpace B b q) : C *ᵥ x ∈ krylovSpace B' (C *ᵥ b) q := by
+  have hle : krylovSpace B b q ≤ (krylovSpace B' (C *ᵥ b) q).comap C.mulVecLin := by
+    refine Submodule.span_le.2 ?_
+    rintro _ ⟨i, rfl⟩
+    change C *ᵥ ((B ^ (i : ℕ)) *ᵥ b) ∈ krylovSpace B' (C *ᵥ b) q
+    rw [Matrix.mulVec_mulVec, (pow_mul_eq_mul_pow_of_mul_eq hC.symm i).symm,
+      ← Matrix.mulVec_mulVec]
+    exact pow_mulVec_mem_krylovSpace _ _ i.isLt
+  exact hle hx
+
+end Intertwining
 
 end NLAlib

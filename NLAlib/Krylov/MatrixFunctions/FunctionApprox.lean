@@ -21,10 +21,10 @@ the compression `T = Qᵀ A Q`, the Krylov (Lanczos-FA) approximation of `f(A) b
 
 The approximation depends only on `range Q` (`krylovFunApprox_congr`).
 
-Matrix-calculus helpers proved here for want of a better home (they belong in
-`NLAlib.Matrix.Functions.PolynomialCalculus`): `cfc_eq_aeval_of_forall_eval_eq` (a matrix function is the
-polynomial calculus of any polynomial agreeing with `f` on the eigenvalues) and
-`dotProduct_cfc_mulVec_self_le` (the `cfc` form of `polynomial-spectral-bound`).
+The matrix-calculus helpers (`cfc_eq_aeval_of_forall_eval_eq`, `cfc_eq_aeval_interpolate`,
+`dotProduct_cfc_mulVec_self_le`) live in `NLAlib.Matrix.Functions.CFCQuadratic`; the compression
+lemmas `transpose_mulVec_pow_mulVec_eq`, `transpose_mulVec_aeval_mulVec_eq` in
+`NLAlib.Krylov.Quadrature.GaussQuadrature`.
 
 Source: Saad (1992) [`saad92`], Lemma 3.1, Thm 3.3, Thm 3.4; Druskin–Knizhnerman (1989) [`dk89`];
 Higham (2008) [`higham08`], §13.2. Atlas: `krylov-polynomial-exactness`, `lanczos-fa-error`.
@@ -39,50 +39,6 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 variable {k : Type*} [Fintype k] [DecidableEq k]
-
-/-! ### Matrix functions are interpolating polynomials -/
-
-/-- A matrix function of a symmetric `A` equals the polynomial calculus of any polynomial that
-agrees with `f` at the eigenvalues: `f(A) = p(A)` when `p(λᵢ) = f(λᵢ)` for all `i`.
-Standard (Higham 2008 [`higham08`], Def. 1.4 and Thm 1.12). Atlas: `lanczos-fa-error` (helper;
-belongs in `NLAlib.Matrix.Functions.PolynomialCalculus`). -/
-theorem cfc_eq_aeval_of_forall_eval_eq {A : Matrix n n ℝ} (hA : A.IsHermitian) {f : ℝ → ℝ}
-    {p : ℝ[X]} (h : ∀ i, p.eval (hA.eigenvalues i) = f (hA.eigenvalues i)) :
-    cfc f A = aeval A p := by
-  rw [← cfc_polynomial p A hA.isSelfAdjoint]
-  refine cfc_congr fun x hx => ?_
-  rw [hA.spectrum_real_eq_range_eigenvalues] at hx
-  obtain ⟨i, rfl⟩ := hx
-  exact (h i).symm
-
-/-- The Lagrange interpolant at the distinct eigenvalues takes the value `f(λᵢ)` at `λᵢ`. -/
-private lemma eval_interpolate_eigenvalues {A : Matrix n n ℝ} (hA : A.IsHermitian) (f : ℝ → ℝ)
-    (i : n) :
-    (Lagrange.interpolate (Finset.univ.image hA.eigenvalues) id f).eval (hA.eigenvalues i) =
-      f (hA.eigenvalues i) :=
-  Lagrange.eval_interpolate_at_node (v := id) f (Set.injOn_id _)
-    (Finset.mem_image_of_mem _ (Finset.mem_univ i))
-
-/-- `f(A)` is `p(A)` for the Lagrange interpolant `p` of `f` at the (distinct) eigenvalues of the
-symmetric `A`. Standard (Higham 2008 [`higham08`], Def. 1.4). Atlas: `lanczos-fa-error`
-(helper; belongs in `NLAlib.Matrix.Functions.PolynomialCalculus`). -/
-theorem cfc_eq_aeval_interpolate {A : Matrix n n ℝ} (hA : A.IsHermitian) (f : ℝ → ℝ) :
-    cfc f A = aeval A (Lagrange.interpolate (Finset.univ.image hA.eigenvalues) id f) :=
-  cfc_eq_aeval_of_forall_eval_eq hA (eval_interpolate_eigenvalues hA f)
-
-/-- **Spectral bound, `cfc` form.** If every eigenvalue of the symmetric `A` lies in `S` and
-`|g| ≤ M` on `S`, then `‖g(A) v‖² ≤ M² ‖v‖²`. The `cfc` form of
-`dotProduct_aeval_mulVec_self_le` (Saad 2003, §6.11). Atlas: `lanczos-fa-error` (helper; the
-`cfc` form of `polynomial-spectral-bound`). -/
-theorem dotProduct_cfc_mulVec_self_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {g : ℝ → ℝ}
-    {S : Set ℝ} {M : ℝ} (hspec : ∀ i, hA.eigenvalues i ∈ S) (hg : ∀ x ∈ S, |g x| ≤ M)
-    (v : n → ℝ) : (cfc g A *ᵥ v) ⬝ᵥ (cfc g A *ᵥ v) ≤ M ^ 2 * (v ⬝ᵥ v) := by
-  rw [cfc_eq_aeval_interpolate hA g]
-  refine dotProduct_aeval_mulVec_self_le hA (S := Set.range hA.eigenvalues) (fun i => ⟨i, rfl⟩)
-    ?_ v
-  rintro _ ⟨i, rfl⟩
-  rw [eval_interpolate_eigenvalues hA g]
-  exact hg _ (hspec i)
 
 /-- `‖(f(A) − p(A)) v‖² ≤ E² ‖v‖²` when `|f − p| ≤ E` at the eigenvalues of the symmetric `A`. -/
 private lemma dotProduct_cfc_sub_aeval_mulVec_self_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
@@ -107,26 +63,6 @@ and this is `‖b‖ Q f(T_q) e₁`. Source: Saad (1992) [`saad92`], eq. (3.2); 
 def krylovFunApprox (Q : Matrix n k ℝ) (A : Matrix n n ℝ) (f : ℝ → ℝ) (b : n → ℝ) : n → ℝ :=
   Q *ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b))
 
-/-- Compressed powers act like powers on `Qᵀ b` up to degree `q`: if `K_q(A,b) ⊆ range Q` and
-`j ≤ q` then `Qᵀ Aʲ b = (QᵀAQ)ʲ Qᵀ b`. Source: Saad (1992) [`saad92`], Lemma 3.1.
-Atlas: `krylov-polynomial-exactness` (helper). -/
-theorem transpose_mulVec_pow_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix n k ℝ}
-    (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
-    (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {j : ℕ} (hj : j ≤ q) :
-    Qᵀ *ᵥ (A ^ j *ᵥ b) = (Qᵀ * A * Q) ^ j *ᵥ (Qᵀ *ᵥ b) := by
-  induction j with
-  | zero => simp
-  | succ j ih =>
-    have hmem := hK (pow_mulVec_mem_krylovSpace A b (show j < q by omega))
-    calc Qᵀ *ᵥ (A ^ (j + 1) *ᵥ b) = Qᵀ *ᵥ (A *ᵥ (A ^ j *ᵥ b)) := by
-          rw [pow_succ', ← Matrix.mulVec_mulVec]
-      _ = Qᵀ *ᵥ (A *ᵥ (Q *ᵥ (Qᵀ *ᵥ (A ^ j *ᵥ b)))) := by
-          rw [mulVec_transpose_mulVec_of_mem_range hQ hmem]
-      _ = (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ (A ^ j *ᵥ b)) := by
-          simp only [Matrix.mulVec_mulVec, Matrix.mul_assoc]
-      _ = (Qᵀ * A * Q) *ᵥ ((Qᵀ * A * Q) ^ j *ᵥ (Qᵀ *ᵥ b)) := by rw [ih (by omega)]
-      _ = (Qᵀ * A * Q) ^ (j + 1) *ᵥ (Qᵀ *ᵥ b) := by rw [Matrix.mulVec_mulVec, ← pow_succ']
-
 /-- **Krylov projection is exact on polynomials of degree `< q`.** If `Q` has orthonormal
 columns and `K_q(A,b) ⊆ range Q`, then `Q p(QᵀAQ) Qᵀ b = p(A) b` for every `p` with
 `deg p < q`, for any square `A`. Source: Saad (1992) [`saad92`], Lemma 3.1; Trefethen–Bau
@@ -145,24 +81,6 @@ theorem mulVec_aeval_transpose_mul_mul_mulVec_eq {A : Matrix n n ℝ} {Q : Matri
   rw [Matrix.smul_mulVec, Matrix.smul_mulVec, Matrix.mulVec_smul,
     mulVec_pow_transpose_mul_mul_mulVec_eq hQ b hK
       (lt_of_le_of_lt (Nat.lt_succ_iff.1 (Finset.mem_range.1 hj)) hnat)]
-
-/-- **Compression commutes with polynomials of degree `≤ q`.** If `Q` has orthonormal columns
-and `K_q(A,b) ⊆ range Q`, then `Qᵀ p(A) b = p(QᵀAQ) Qᵀ b` for every `p` with `deg p ≤ q`, for
-any square `A`. Source: Saad (1992) [`saad92`], Lemma 3.1.
-atlas: krylov-polynomial-exactness (partial) -/
-theorem transpose_mulVec_aeval_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix n k ℝ}
-    (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
-    (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {p : ℝ[X]} (hp : p.degree ≤ q) :
-    Qᵀ *ᵥ (aeval A p *ᵥ b) = aeval (Qᵀ * A * Q) p *ᵥ (Qᵀ *ᵥ b) := by
-  rcases eq_or_ne p 0 with rfl | hp0
-  · simp
-  have hnat : p.natDegree ≤ q := (natDegree_le_iff_degree_le).2 hp
-  rw [aeval_eq_sum_range, aeval_eq_sum_range, Matrix.sum_mulVec, Matrix.sum_mulVec,
-    Matrix.mulVec_sum]
-  refine Finset.sum_congr rfl fun j hj => ?_
-  rw [Matrix.smul_mulVec, Matrix.smul_mulVec, Matrix.mulVec_smul,
-    transpose_mulVec_pow_mulVec_eq hQ b hK
-      ((Nat.lt_succ_iff.1 (Finset.mem_range.1 hj)).trans hnat)]
 
 /-- **Lanczos-FA is exact on polynomials.** For symmetric `A`, `Q` with orthonormal columns and
 `K_q(A,b) ⊆ range Q`, `krylovFunApprox Q A p b = p(A) b` for every `p` with `deg p < q`.

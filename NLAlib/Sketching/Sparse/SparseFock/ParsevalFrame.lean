@@ -2,6 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Data.Matrix.Mul
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -40,36 +41,14 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem normSq_eq_norm_sq {d : ℕ} (x : EVec d) : normSq x = ‖x‖ ^ 2 := by
   exact real_inner_self_eq_norm_sq x
 
-/-- The rank-one matrix `x yᵀ`.
-
-Source: ported from `SparseFockFormal.ParsevalFrame`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def outer {d : ℕ} (x y : EVec d) : Matrix (Fin d) (Fin d) ℝ :=
-  fun a b ↦ x a * y b
-
-/-- An external rank-one matrix entry is the product of its two vector coordinates.
-Source: ported from `SparseFockFormal.ParsevalFrame`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp]
-theorem outer_apply {d : ℕ} (x y : EVec d) (a b : Fin d) :
-    outer x y a b = x a * y b := rfl
-
-/-- Transposing a rank-one matrix reverses its two vector factors.
-
-Source: ported from `SparseFockFormal.ParsevalFrame`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem outer_transpose {d : ℕ} (x y : EVec d) :
-    (outer x y).transpose = outer y x := by
-  ext a b
-  simp [outer, Matrix.transpose_apply, mul_comm]
-
 /-- A finite Parseval frame, encoded by the exact identity `Σᵢ uᵢuᵢᵀ = I`.
 
 Source: ported from `SparseFockFormal.ParsevalFrame`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 structure Frame (n d : ℕ) where
   u : Fin n → EVec d
-  parseval : (∑ i, outer (u i) (u i)) = (1 : Matrix (Fin d) (Fin d) ℝ)
+  parseval : (∑ i, Matrix.vecMulVec (WithLp.ofLp (u i)) (WithLp.ofLp (u i))) =
+    (1 : Matrix (Fin d) (Fin d) ℝ)
 
 /-- The `n × d` matrix whose row `i` is `u i`.
 
@@ -83,7 +62,7 @@ def rowMatrix {n d : ℕ} (u : Fin n → EVec d) : Matrix (Fin n) (Fin d) ℝ :=
 Source: ported from `SparseFockFormal.ParsevalFrame`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 def frameOperator {n d : ℕ} (u : Fin n → EVec d) : Matrix (Fin d) (Fin d) ℝ :=
-  ∑ i, outer (u i) (u i)
+  ∑ i, Matrix.vecMulVec (WithLp.ofLp (u i)) (WithLp.ofLp (u i))
 
 /-- Apply a real matrix to a Euclidean vector, retaining the Euclidean-space wrapper.
 
@@ -112,11 +91,11 @@ theorem parseval_iff_transpose_mul {n d : ℕ} (u : Fin n → EVec d) :
   · intro h
     rw [← h]
     ext a b
-    simp [frameOperator, rowMatrix, outer, Matrix.mul_apply, Matrix.sum_apply]
+    simp [frameOperator, rowMatrix, Matrix.vecMulVec_apply, Matrix.mul_apply, Matrix.sum_apply]
   · intro h
     rw [← h]
     ext a b
-    simp [frameOperator, rowMatrix, outer, Matrix.mul_apply, Matrix.sum_apply]
+    simp [frameOperator, rowMatrix, Matrix.vecMulVec_apply, Matrix.mul_apply, Matrix.sum_apply]
 
 /-- The row matrix of a Parseval frame has identity column Gram matrix.
 Source: ported from `SparseFockFormal.ParsevalFrame`,
@@ -187,7 +166,7 @@ theorem reconstruct {n d : ℕ} (F : Frame n d) (x : EVec d) :
       (1 : Matrix (Fin d) (Fin d) ℝ) := by
     ext a b
     have hab := congrArg (fun M : Matrix (Fin d) (Fin d) ℝ ↦ M a b) F.parseval
-    simpa [partialFrameOperator, Matrix.sum_apply, outer] using hab
+    simpa [partialFrameOperator, Matrix.sum_apply, Matrix.vecMulVec_apply] using hab
   rw [hpartial]
   exact applyMatrix_one x
 

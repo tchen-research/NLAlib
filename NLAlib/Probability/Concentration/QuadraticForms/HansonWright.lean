@@ -5,8 +5,8 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
 Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
-The original Apache-2.0 copyright notice is retained. Only the two used legacy
-vocabulary definitions are supplied locally; there is no HighDimProb dependency.
+The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
+vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
 -/
 import NLAlib.Probability.Concentration.QuadraticForms.UniversalBound
 import NLAlib.Probability.SubGaussian.OrliczMGF
@@ -16,9 +16,9 @@ import NLAlib.Matrix.Spectral.FiniteIndexTransport
 # Hanson–Wright in NLAlib's matrix vocabulary
 
 The complete independent-coordinate MGF proof is split into focused leaves.
-This module transports it to `quadForm`, `frobNorm`, and `specNorm`, relabels an arbitrary
-finite index type `ι` through `Fintype.equivFin ι` (the leaf proof is over `Fin n`), then
-uses the proved Orlicz-to-MGF bridge for the centered ψ₂ formulation.
+This module fixes the universal constant `1/(256 e²)` (the private `Fin n` leaf), relabels an
+arbitrary finite index type `ι` through `Fintype.equivFin ι` (the leaf proof is over `Fin n`),
+then uses the proved Orlicz-to-MGF bridge for the centered ψ₂ formulation.
 Atlas: `hanson-wright`. Vershynin 2018, Theorem 6.2.1.
 -/
 
@@ -30,51 +30,100 @@ set_option autoImplicit false
 
 namespace NLAlib
 
-private theorem hw_quadraticForm_eq_quadForm {n : ℕ}
-    (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
-    HansonWrightProof.matrixQuadraticForm A x = quadForm A x := by
-  rw [quadForm_eq_sum]
-  unfold HansonWrightProof.matrixQuadraticForm
-  apply Finset.sum_congr rfl
-  intro i _
-  apply Finset.sum_congr rfl
-  intro j _
-  ring
-
-private theorem hw_frobeniusNorm_eq_frobNorm {n : ℕ}
-    (A : Matrix (Fin n) (Fin n) ℝ) :
-    HansonWrightProof.deterministicFrobeniusNorm A = frobNorm A := by
-  unfold HansonWrightProof.deterministicFrobeniusNorm HansonWrightProof.frobeniusNormSq frobNorm
-  rw [frobSq_eq_sum_sq]
-
-private theorem hw_centeredQuadraticForm_eq {Ω : Type*} [MeasurableSpace Ω]
-    {n : ℕ} (μ : Measure Ω) (A : Matrix (Fin n) (Fin n) ℝ) (X : Fin n → Ω → ℝ) :
-    HansonWrightProof.centeredQuadraticForm μ A X =
-      (fun ω => quadForm A (fun i => X i ω) -
-        ∫ ω', quadForm A (fun i => X i ω') ∂μ) := by
-  funext ω
-  unfold HansonWrightProof.centeredQuadraticForm HansonWrightProof.randomQuadraticForm
-  simp_rw [hw_quadraticForm_eq_quadForm]
-
+/-- The `Fin n` leaf of `hanson_wright_mgf`, with the constant `1/(4 · 64 e²)`. -/
 private theorem hanson_wright_mgf_fin {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {n : ℕ}
-    (A : Matrix (Fin n) (Fin n) ℝ) (X : Fin n → Ω → ℝ) (K : ℝ) (hK : 0 < K)
-    (hind : iIndepFun X μ)
-    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
-    (t : ℝ) (ht : 0 ≤ t) :
-    (μ {ω | t ≤ |quadForm A (fun i => X i ω) -
-      ∫ ω', quadForm A (fun i => X i ω') ∂μ|}).toReal ≤
-      2 * exp (-(1 / (256 * exp 1 ^ 2)) *
+    {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ} {K : ℝ} (hK : 0 < K)
+    (h_indep : iIndepFun X μ)
+    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) (t : ℝ) (ht : 0 ≤ t) :
+    (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤
+      2 * exp (-(1 / (4 * (64 * exp 1 ^ 2))) *
         min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2)) (t / (K ^ 2 * specNorm A))) := by
-  have h := HansonWrightProof.hanson_wright_inequality_hdp_explicit_constant
-    (A := A) (X := X) hK hind hmgf t ht
-  rw [hw_centeredQuadraticForm_eq, hw_frobeniusNorm_eq_frobNorm] at h
-  change (μ {ω | t ≤ |quadForm A (fun i => X i ω) -
-    ∫ ω', quadForm A (fun i => X i ω') ∂μ|}).toReal ≤
-    2 * exp (-HansonWrightProof.hansonWrightUniversalConstant *
-      min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2)) (t / (K ^ 2 * specNorm A))) at h
-  simpa only [HansonWrightProof.hansonWrightUniversalConstant,
-    show (4 : ℝ) * (64 * exp 1 ^ 2) = 256 * exp 1 ^ 2 by ring] using h
+  let C0 : ℝ := 64 * exp 1 ^ 2
+  have hexp_pos : 0 < exp 1 := exp_pos 1
+  have hexp_ge_one : 1 ≤ exp 1 := one_le_exp (by norm_num : (0 : ℝ) ≤ 1)
+  have hexp_le_eight : exp 1 ≤ 8 := by
+    nlinarith [exp_one_lt_three.le]
+  have hC0_pos : 0 < C0 := by
+    dsimp [C0]
+    positivity
+  have hC0_domain : 4 * exp 1 ≤ C0 := by
+    dsimp [C0]
+    have hmul := mul_le_mul_of_nonneg_left hexp_ge_one
+      (by positivity : 0 ≤ 4 * exp 1)
+    nlinarith
+  have hC0_diag_quad : 8 * exp 1 ^ 3 ≤ C0 := by
+    dsimp [C0]
+    have hmul := mul_le_mul_of_nonneg_left hexp_le_eight
+      (by positivity : 0 ≤ 8 * exp 1 ^ 2)
+    nlinarith
+  have hC0_ge_offdiag : 16 * exp 1 ≤ C0 := by
+    dsimp [C0]
+    have hmul := mul_le_mul_of_nonneg_left hexp_ge_one
+      (by positivity : 0 ≤ 16 * exp 1)
+    nlinarith
+  have hC0_ge_one : 1 ≤ C0 := by
+    dsimp [C0]
+    nlinarith [hexp_ge_one, sq_nonneg (exp 1)]
+  have hC0_sq_ge : C0 ≤ C0 ^ 2 := by
+    have hC0_nonneg : 0 ≤ C0 := hC0_pos.le
+    have hmul := mul_le_mul hC0_ge_one (le_refl C0) hC0_nonneg hC0_nonneg
+    simpa [pow_two] using hmul
+  have hC0_offdiag_domain : 16 * exp 1 ≤ C0 ^ 2 :=
+    hC0_ge_offdiag.trans hC0_sq_ge
+  have hC0_offdiag_quad : 64 * exp 1 ^ 2 ≤ C0 := by
+    dsimp [C0]
+    rfl
+  change (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤
+    2 * exp (-(1 / (4 * C0)) *
+      min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
+        (t / (K ^ 2 * specNorm A)))
+  by_cases hF : 0 < frobNorm A
+  · by_cases hOp : 0 < specNorm A
+    · exact
+        hanson_wright_inequality (μ := μ) (A := A) (X := X)
+          (K := K) (C := C0) (t := t) hK hC0_pos hC0_domain
+          hC0_diag_quad hC0_offdiag_domain hC0_offdiag_quad hF hOp
+          h_indep hX_subG ht
+    · have hOp_nonneg : 0 ≤ specNorm A := specNorm_nonneg A
+      have hOp_zero : specNorm A = 0 := le_antisymm (le_of_not_gt hOp) hOp_nonneg
+      have hfirst_nonneg :
+          0 ≤ t ^ 2 / (K ^ 4 * frobNorm A ^ 2) := by positivity
+      have hsecond_zero : t / (K ^ 2 * specNorm A) = 0 := by
+        rw [hOp_zero, mul_zero, div_zero]
+      have hmin :
+          min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
+              (t / (K ^ 2 * specNorm A)) = 0 := by
+        rw [hsecond_zero, min_eq_right hfirst_nonneg]
+      calc
+        (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤ (1 : ℝ) :=
+          ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
+        _ ≤ 2 * exp (-(1 / (4 * C0)) *
+            min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
+              (t / (K ^ 2 * specNorm A))) := by
+            rw [hmin]
+            norm_num
+  · have hF_nonneg : 0 ≤ frobNorm A := frobNorm_nonneg A
+    have hF_zero : frobNorm A = 0 := le_antisymm (le_of_not_gt hF) hF_nonneg
+    have hOp_nonneg : 0 ≤ specNorm A := specNorm_nonneg A
+    have hfirst_zero :
+        t ^ 2 / (K ^ 4 * frobNorm A ^ 2) = 0 := by
+      rw [hF_zero]
+      simp
+    have hsecond_nonneg : 0 ≤ t / (K ^ 2 * specNorm A) :=
+      div_nonneg ht (mul_nonneg (sq_nonneg K) hOp_nonneg)
+    have hmin :
+        min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
+            (t / (K ^ 2 * specNorm A)) = 0 := by
+      rw [hfirst_zero, min_eq_left hsecond_nonneg]
+    calc
+      (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤ (1 : ℝ) :=
+        ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
+      _ ≤ 2 * exp (-(1 / (4 * C0)) *
+          min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
+            (t / (K ^ 2 * specNorm A))) := by
+          rw [hmin]
+          norm_num
 
 /-- **Hanson–Wright, MGF form.** Independent coordinates with sub-Gaussian
 variance proxy `K²` satisfy the quadratic-form tail bound with the explicit
@@ -97,11 +146,13 @@ theorem hanson_wright_mgf {Ω : Type*} [MeasurableSpace Ω]
       2 * exp (-(1 / (256 * exp 1 ^ 2)) *
         min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2)) (t / (K ^ 2 * specNorm A))) := by
   let e := Fintype.equivFin ι
-  have h := hanson_wright_mgf_fin (A.reindex e e) (fun k => X (e.symm k)) K hK
+  have h := hanson_wright_mgf_fin (A := A.reindex e e) (X := fun k => X (e.symm k)) hK
     (hind.precomp e.symm.injective) (fun k => hmgf (e.symm k)) t ht
+  rw [show (4 : ℝ) * (64 * exp 1 ^ 2) = 256 * exp 1 ^ 2 by ring] at h
   have hq : ∀ ω, quadForm (A.reindex e e) (fun k => X (e.symm k) ω) =
       quadForm A (fun i => X i ω) := fun ω => quadForm_reindex A e (fun i => X i ω)
-  simp only [hq, frobNorm_reindex, specNorm_reindex] at h
+  simp only [centeredQuadraticForm, randomQuadraticForm, hq, frobNorm_reindex,
+    specNorm_reindex] at h
   exact h
 
 /-- **Hanson–Wright, exponential-square/ψ₂ form.** Independent centered

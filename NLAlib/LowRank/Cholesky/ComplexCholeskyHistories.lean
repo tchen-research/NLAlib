@@ -1,4 +1,4 @@
-import NLAlib.LowRank.Cholesky.ComplexCholeskyPivot
+import NLAlib.Matrix.Factorizations.ComplexCholeskyPivot
 
 /-!
 # Finite adaptive complex Cholesky histories
@@ -140,14 +140,6 @@ theorem complexCholeskyExpectedTrace_antitone [Nonempty n] {A : Matrix n n ℂ}
       linarith
     _ = R.trace.re := by rw [← Finset.sum_mul, sum_complexCholeskyPivotProbability, one_mul]
 
-/-- The one-step trace mean also holds at the absorbing zero state, using totalized
-division by zero. Source: manuscript `sa:rp-recursion`, absorbing-zero extension. -/
-theorem sum_complexCholeskyPivotProbability_mul_trace_step_eq_all [Nonempty n]
-    {R : Matrix n n ℂ} (hR : R.PosSemidef) :
-    (∑ i, complexCholeskyPivotProbability R i * (complexCholeskyResidualStep R i).trace.re) =
-      R.trace.re - (R * R).trace.re / R.trace.re :=
-  sum_complexCholeskyPivotProbability_mul_re_trace_step_eq hR
-
 /-- The actual adaptive expected trace obeys the exact finite one-step averaging
 formula before applying the scalar tail drift. Source: manuscript `sa:rp-recursion`. -/
 theorem complexCholeskyExpectedTrace_succ_eq [Nonempty n] {A : Matrix n n ℂ}
@@ -161,7 +153,7 @@ theorem complexCholeskyExpectedTrace_succ_eq [Nonempty n] {A : Matrix n n ℂ}
     sum_complexCholeskyHistoryWeight_mul_succ A t (fun R => R.trace.re)]
   apply Finset.sum_congr rfl
   intro h _
-  rw [sum_complexCholeskyPivotProbability_mul_trace_step_eq_all
+  rw [sum_complexCholeskyPivotProbability_mul_re_trace_step_eq
     (posSemidef_complexCholeskyResidualHistory hA t h)]
 
 /-- Every positive-probability adaptive history has exhausted one residual rank per

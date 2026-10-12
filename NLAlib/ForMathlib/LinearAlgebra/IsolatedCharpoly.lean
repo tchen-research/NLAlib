@@ -72,4 +72,27 @@ theorem charpoly_eq_mul_of_isolated_equiv {m n K : Type*}
   rw [hblocks, Matrix.charpoly_fromBlocks_zero₂₁, Matrix.charpoly_diagonal]
   simp [B]
 
+/-- An isolated coordinate contributes exactly one characteristic linear
+factor. Source: Horn–Johnson (2013), Theorem 1.4.7; the remaining block is
+the principal submatrix on all other coordinates, including an empty block.
+The special case of `charpoly_eq_mul_of_isolated_equiv` for the equivalence
+`Fin 1 ⊕ {j // j ≠ i} ≃ n` (over any commutative ring). -/
+theorem charpoly_eq_X_sub_C_mul_submatrix_of_isolated_coordinate {n K : Type*}
+    [Fintype n] [DecidableEq n] [CommRing K]
+    (M : Matrix n n K) (i : n) (μ : K)
+    (hcol : ∀ j, M j i = if j = i then μ else 0)
+    (hrow : ∀ j, M i j = if j = i then μ else 0) :
+    M.charpoly = (X - C μ) *
+      (M.submatrix (fun j : {j : n // j ≠ i} => j.val)
+        (fun j : {j : n // j ≠ i} => j.val)).charpoly := by
+  let e : Fin 1 ⊕ {j : n // j ≠ i} ≃ n :=
+    (Equiv.sumCongr (Equiv.ofUnique (Fin 1) {j : n // j = i}) (Equiv.refl _)).trans
+      (Equiv.sumCompl (· = i))
+  have he : e (Sum.inl 0) = i := rfl
+  have h := charpoly_eq_mul_of_isolated_equiv M e fun j =>
+    ⟨by rw [he]; exact (hrow j.val).trans (if_neg j.property),
+      by rw [he]; exact (hcol j.val).trans (if_neg j.property)⟩
+  rw [he, (hcol i).trans (if_pos rfl)] at h
+  exact h
+
 end NLAlib

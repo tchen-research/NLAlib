@@ -75,23 +75,6 @@ theorem polarFrame_mul_transpose_mul_eq {m q : Type*} [Fintype m] [Fintype q]
     _ = Y * S⁻¹ * (S⁻¹ * S) * S := by simp only [Matrix.mul_assoc]
     _ = Y := by rw [hSl]; simp only [Matrix.mul_one, hSl, Matrix.mul_assoc, Matrix.mul_one]
 
-/-- The nonsingular inverse of an entrywise measurable square matrix family is
-entrywise measurable, including singular inputs under the zero-inverse convention.
-Atlas `gn-expected-error` (frame measurability helper). -/
-theorem measurable_nonsing_inv_entry_of {α q : Type*} [MeasurableSpace α]
-    [Fintype q] [DecidableEq q] {S : α → Matrix q q ℝ}
-    (hS : ∀ i j, Measurable fun x => S x i j) (i j : q) :
-    Measurable fun x => (S x)⁻¹ i j := by
-  have hArray : Measurable fun x => (fun i j => S x i j : q → q → ℝ) :=
-    measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => hS i j
-  have hcD : Continuous fun G : q → q → ℝ => (Matrix.of G).det := continuous_id.matrix_det
-  have hcA : Continuous fun G : q → q → ℝ => (Matrix.of G).adjugate i j :=
-    continuous_id.matrix_adjugate.matrix_elem i j
-  have hdet := hcD.measurable.comp hArray
-  have hadj := hcA.measurable.comp hArray
-  simp only [Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul]
-  exact hdet.inv.mul hadj
-
 /-- The polar frame map is entrywise measurable on all real arrays, so it defines a
 valid random frame without any measurability certificate from the caller.
 Horn–Johnson §7.3; atlas `gn-expected-error`. -/
@@ -104,7 +87,7 @@ theorem measurable_polarFrame_entry {m q : Type*} [Fintype m] [Fintype q] [Decid
   have hS : ∀ a b, Measurable fun Y : m → q → ℝ =>
       CFC.sqrt ((Matrix.of Y)ᵀ * Matrix.of Y) a b :=
     fun a b => (hcS.matrix_elem a b).measurable
-  have hInv := measurable_nonsing_inv_entry_of hS
+  have hInv := measurable_inv_entry_of hS
   exact measurable_mul_entry_of (fun a b => by simp only [Matrix.of_apply]; fun_prop) hInv i j
 
 end NLAlib

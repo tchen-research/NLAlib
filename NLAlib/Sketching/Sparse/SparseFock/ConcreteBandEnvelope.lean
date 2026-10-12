@@ -2,7 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.ConcreteBandAssembly
-import NLAlib.Sketching.Sparse.SparseFock.MixedBandsConcrete
+import NLAlib.Sketching.Sparse.SparseFock.MixedNormalizedBands
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -51,8 +51,6 @@ theorem concrete_band_envelope
     cTerm_nonneg (Nat.cast_nonneg _) hsR
   have hdir : DirectionalConcrete.frameRows F =
       (fun i x ↦ F.u i x) := rfl
-  have hheavy : HeavyBandsConcrete.frameRows F =
-      (fun i x ↦ F.u i x) := rfl
   cases shift with
   | plus =>
       apply plus_band_envelope_of_components F nu ha hc
@@ -62,7 +60,7 @@ theorem concrete_band_envelope
       · rw [← hdir]
         exact MixedBandsConcrete.norm_normalized_mixed_plus_restricted_le
           F s b nu hs hb
-      · rw [← hheavy]
+      · rw [← hdir]
         exact HeavyBandsConcrete.norm_normalized_Hplus_restricted_le
           F s b nu hs hb
       · exact hbt
@@ -74,7 +72,7 @@ theorem concrete_band_envelope
       · rw [← hdir]
         exact MixedBandsConcrete.norm_normalized_mixed_zero_restricted_le
           F s b nu hs hb
-      · rw [← hheavy]
+      · rw [← hdir]
         exact HeavyBandsConcrete.norm_normalized_Hzero_restricted_le
           F s b nu hs hb
       · exact hbt
@@ -87,7 +85,7 @@ theorem concrete_band_envelope
       · rw [← hdir]
         exact MixedBandsConcrete.norm_normalized_mixed_minus_restricted_le
           F s b nu hs hb
-      · rw [← hheavy]
+      · rw [← hdir]
         exact HeavyBandsConcrete.norm_normalized_Hminus_restricted_le
           F s b nu hs hb
       · exact hbt

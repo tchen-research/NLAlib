@@ -15,19 +15,6 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-/-- Mathlib's Euclidean Rayleigh quotient is the matrix quadratic form
-divided by the squared Euclidean length. Parlett §4.5, with total division
-also making both sides zero at the zero vector. -/
-theorem rayleighQuotient_toEuclideanCLM_eq_quadForm_div (A : Matrix n n ℝ) (x : n → ℝ) :
-    (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient (WithLp.toLp 2 x) =
-      quadForm A x/(x ⬝ᵥ x) := by
-  rw [ContinuousLinearMap.rayleighQuotient, ContinuousLinearMap.reApplyInnerSelf_apply]
-  have hn : ‖WithLp.toLp 2 x‖^2=x ⬝ᵥ x := by
-    simpa only [WithLp.ofLp_toLp, dotProduct, sq] using
-      EuclideanSpace.real_norm_sq_eq (WithLp.toLp 2 x : EuclideanSpace ℝ n)
-  rw [hn]
-  congr 1
-
 /-- The complete approximate-eigenpair residual toolkit, including the
 actual eigenspace projector and the nonzero-vector Rayleigh gradient.
 Parlett §4.5, §10.6, §11.7; Saad §3.2. Finite index types may be empty, although

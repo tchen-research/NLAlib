@@ -35,7 +35,7 @@ theorem singularValues_eq_one_of_hasOrthonormalCols {m n : ℕ}
   have hGram : Uᴴ * U = Jᴴ * J := by
     simp only [Matrix.conjTranspose_eq_transpose_of_trivial]
     rw [hU, hJ]
-  have h := toEuclideanLin_singularValues_eq_of_gram_eq U J hGram k
+  have h := singularValues_eq_of_gram_eq U J hGram k
   change singularValues U k = singularValues J k at h
   rw [h]
   apply singularValues_eq_of_eq_mul_rectDiag_mul

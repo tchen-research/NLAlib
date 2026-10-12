@@ -51,7 +51,7 @@ private lemma integral_ct {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {m
   (LinearMap.toContinuousLinearMap (ctLin (Fin m) (Fin n))).integral_comp_comm hX
 
 private lemma lambdaMax_phiLin {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
-    lambdaMax (phiLin m n A) = spectralNorm A := by
+    lambdaMax (phiLin m n A) = ‖A‖ := by
   rw [phiLin_apply, lambdaMax_reindex]
   exact (dilation_identities A).2.2.1.trans (dilation_identities A).2.2.2
 
@@ -76,14 +76,14 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) (L : ℝ) (hL : 0 ≤ L)
     (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
     (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0)
-    (hBound : ∀ k, ∀ᵐ ω ∂μ, spectralNorm (S k ω) ≤ L) :
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, ‖S k ω‖ ≤ L) :
     let Z := fun ω => ∑ k, S k ω
     let v := rectSecondMoment μ Z
-    v = max (spectralNorm (∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ))
-      (spectralNorm (∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ)) ∧
-    (∫ ω, spectralNorm (Z ω) ∂μ) ≤
+    v = max (‖∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ‖)
+      (‖∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ‖) ∧
+    (∫ ω, ‖Z ω‖ ∂μ) ≤
       Real.sqrt (2 * v * Real.log (m + n)) + L * Real.log (m + n) / 3 ∧
-    ∀ t : ℝ, 0 ≤ t → (μ {ω | t ≤ spectralNorm (Z ω)}).toReal ≤
+    ∀ t : ℝ, 0 ≤ t → (μ {ω | t ≤ ‖Z ω‖}).toReal ≤
       bernsteinTail (m + n) v L t := by
   intro Z v
   -- Square integrability of the summands and their adjoints.
@@ -113,10 +113,10 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     simp_rw [hZh]
     exact integral_sum_mul_sum_eq_sum_integral_mul μ S Matrix.conjTranspose id
       (measurable_ct m n) measurable_id hMeas hIndep hSL2h hSL2 hSmeanh
-  have hv1 : v = max (spectralNorm (∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ))
-      (spectralNorm (∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ)) := by
-    show max (spectralNorm (∫ ω, Z ω * (Z ω).conjTranspose ∂μ))
-      (spectralNorm (∫ ω, (Z ω).conjTranspose * Z ω ∂μ)) = _
+  have hv1 : v = max (‖∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ‖)
+      (‖∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ‖) := by
+    show max (‖∫ ω, Z ω * (Z ω).conjTranspose ∂μ‖)
+      (‖∫ ω, (Z ω).conjTranspose * Z ω ∂μ‖) = _
     rw [hZZ, hZhZ]
   -- Step 2: `Z` is centered, measurable and square integrable.
   have hZint : ∫ ω, Z ω ∂μ = 0 := by
@@ -157,7 +157,7 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
   have hY : ∀ ω, ∑ k, phiLin m n (S k ω) = phiLin m n (Z ω) := by
     intro ω
     simp only [Z, map_sum]
-  have hlam : ∀ ω, lambdaMax (∑ k, phiLin m n (S k ω)) = spectralNorm (Z ω) := by
+  have hlam : ∀ ω, lambdaMax (∑ k, phiLin m n (S k ω)) = ‖Z ω‖ := by
     intro ω
     rw [hY ω, lambdaMax_phiLin]
   have hvY : hermitianSecondMoment μ (fun ω => ∑ k, phiLin m n (S k ω)) = v := by
@@ -167,7 +167,7 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
       rw [phiLin_apply, ← Matrix.coe_reindexAlgEquiv ℝ, map_pow]
     unfold hermitianSecondMoment
     simp_rw [hY, hsq]
-    rw [integral_reindex, spectralNorm, norm_reindex]
+    rw [integral_reindex, norm_reindex]
     exact hdv
   have H := hermitian_bernstein μ X L hL hXmeas hXherm hXL2 hXindep hXmean hXbound
   obtain ⟨-, H2, H3⟩ := H

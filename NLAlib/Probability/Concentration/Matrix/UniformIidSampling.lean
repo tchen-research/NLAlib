@@ -1,5 +1,5 @@
 import NLAlib.ForMathlib.Probability.UniformProduct
-import NLAlib.Probability.Concentration.Matrix.SamplingSpectralBounds
+import NLAlib.Probability.Concentration.Matrix.Sampling
 /-!
 # Chernoff for the actual uniform iid finite population law
 
@@ -15,7 +15,7 @@ namespace NLAlib
 
 /-- The actual iid uniform empirical mean satisfies the two-sided operator
 norm Chernoff bound. Source: `sh:srht-ose`, with-replacement variant. -/
-theorem measure_spectralNorm_uniform_iid_sub_one_le
+theorem measure_norm_uniform_iid_sub_one_le
     {α : Type*} [Fintype α] [DecidableEq α] [Nonempty α]
     [MeasurableSpace α] [MeasurableSingletonClass α] {d k : ℕ} [NeZero d]
     (hk : 0 < k) (A : α → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 < L)
@@ -24,7 +24,7 @@ theorem measure_spectralNorm_uniform_iid_sub_one_le
     (hmean : (1 / (Fintype.card α : ℝ)) • ∑ j, A j = 1)
     {ε : ℝ} (hε : 0 < ε) (hε1 : ε < 1) :
     ((PMF.uniformOfFintype (Fin k → α)).toMeasure
-      {I | ε ≤ spectralNorm ((1 / (k : ℝ)) • ∑ a, A (I a) - 1)}).toReal ≤
+      {I | ε ≤ ‖(1 / (k : ℝ)) • ∑ a, A (I a) - 1‖}).toReal ≤
       2 * d * Real.exp (-(ε ^ 2) * k / (3 * L)) := by
   let μ := (PMF.uniformOfFintype (Fin k → α)).toMeasure
   let X : Fin k → (Fin k → α) → Matrix (Fin d) (Fin d) ℂ := fun a I => A (I a)
@@ -41,12 +41,12 @@ theorem measure_spectralNorm_uniform_iid_sub_one_le
   obtain ⟨hl, hu⟩ := matrix_chernoff_sampling μ hk X L hL hm hi hh hb he hε.le hε1
   let Y : (Fin k → α) → Matrix (Fin d) (Fin d) ℂ :=
     fun I => (1 / (k : ℝ)) • ∑ a, A (I a)
-  have hsub : {I | ε ≤ spectralNorm (Y I - 1)} ⊆
+  have hsub : {I | ε ≤ ‖Y I - 1‖} ⊆
       {I | lambdaMin (Y I) ≤ 1 - ε} ∪ {I | 1 + ε ≤ lambdaMax (Y I)} := by
     intro I hI
     have hs : (∑ a, A (I a)).IsHermitian := isSelfAdjoint_sum _ (fun a _ => hA (I a))
     have hY : (Y I).IsHermitian := hs.smul (IsSelfAdjoint.all (1 / (k : ℝ)))
-    exact lambdaMin_le_or_le_lambdaMax_of_le_spectralNorm_sub_one hY hI
+    exact lambdaMin_le_or_le_lambdaMax_of_le_norm_sub_one hY hI
   have he' : d * Real.exp (-(ε ^ 2) * k / (2 * L)) ≤
       d * Real.exp (-(ε ^ 2) * k / (3 * L)) := by
     apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg d)

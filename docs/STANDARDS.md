@@ -82,7 +82,9 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   `residual Q A`; `pinvL`, `pinvR` with explicit `IsUnit` side conditions until the general
   pseudoinverse exists; `singularValues A : ℕ → ℝ` and `IsSVD A U V`; `gaussianMatrix p m` with
   `Matrix.of` as the matrix view; `IsSubspaceEmbedding S U ε`; `quadForm A z`;
-  `krylovSpace A b q`. Do not introduce a second spelling of any of these.
+  `krylovSpace A b q`; the Loewner order `≤` from `Mathlib.Analysis.Matrix.Order`
+  (`open scoped MatrixOrder`; `Matrix.le_iff`). Do not introduce a second spelling of any of
+  these.
 - Probability: an abstract space `{Ω} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]`,
   random matrices as functions, laws as `μ.map X = …`, expectations as Bochner integrals.
   Prefer statements without integrability hypotheses (prove the `lintegral` form, then convert);

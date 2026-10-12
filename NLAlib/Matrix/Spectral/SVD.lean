@@ -28,7 +28,8 @@ non-increasing diagonal (Horn–Johnson 2013, Thm 2.6.3; HMT 2011, §2.1).
   `AAᵀ = U Σ² Uᵀ`.
 * `NLAlib.IsSVD.apply`: the entrywise outer-product expansion
   `A i j = ∑_{k < min m n} σ_k U_{ik} V_{jk}`.
-* `NLAlib.frobSq_eq_sum_sq_singularValues`: `‖A‖_F² = ∑_{k < min m n} σ_k²`.
+* `NLAlib.frobSq_eq_sum_sq_singularValues` (in `SingularValueSpectrum`):
+  `‖A‖_F² = ∑_{k < min m n} σ_k²`.
 * `NLAlib.singularValues_ne_zero_iff`, `NLAlib.rank_eq_card_singularValues_ne_zero`: rank.
 * `NLAlib.sq_singularValues_eq_eigenvalues₀`: `σ_k²` is the `k`-th largest eigenvalue of `AᴴA`.
 * `NLAlib.IsSVD.eq_head_add_tail`: block split `A = U Σ_{<k} Vᵀ + U Σ_{≥k} Vᵀ`.
@@ -122,26 +123,25 @@ theorem sq_singularValues_eq_eigenvalues₀ (A : Matrix m n 𝕜) (i : Fin (Fint
     (Matrix.toEuclideanLin A).sq_singularValues_fin finrank_euclideanSpace i]
   exact eigenvalues_congr heq _ _ finrank_euclideanSpace i
 
+/-- `σ k = 0` once `k` is at least the number of rows. Atlas `svd`. -/
+theorem singularValues_eq_zero_of_height_le (A : Matrix m n 𝕜) {k : ℕ}
+    (hk : Fintype.card m ≤ k) : singularValues A k = 0 :=
+  singularValues_eq_zero_of_rank_le A (A.rank_le_card_height.trans hk)
+
+/-- `σ k = 0` once `k` is at least the number of columns. Atlas `svd`. -/
+theorem singularValues_eq_zero_of_width_le (A : Matrix m n 𝕜) {k : ℕ}
+    (hk : Fintype.card n ≤ k) : singularValues A k = 0 :=
+  singularValues_eq_zero_of_rank_le A (A.rank_le_card_width.trans hk)
+
+/-- `σ k = 0` once `k ≥ min (card m) (card n)`. Atlas `svd`. -/
+theorem singularValues_eq_zero_of_min_le (A : Matrix m n 𝕜) {k : ℕ}
+    (hk : min (Fintype.card m) (Fintype.card n) ≤ k) : singularValues A k = 0 :=
+  singularValues_eq_zero_of_rank_le A
+    ((le_min A.rank_le_card_height A.rank_le_card_width).trans hk)
+
 end General
 
 variable {m n : ℕ}
-
-/-- `σ k = 0` once `k ≥ m` (number of rows). Atlas `svd`. -/
-theorem singularValues_eq_zero_of_height_le (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
-    (hk : m ≤ k) : singularValues A k = 0 :=
-  singularValues_eq_zero_of_rank_le A (A.rank_le_height.trans hk)
-
-/-- `σ k = 0` once `k ≥ n` (number of columns). Atlas `svd`. -/
-theorem singularValues_eq_zero_of_width_le (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
-    (hk : n ≤ k) : singularValues A k = 0 :=
-  singularValues_eq_zero_of_rank_le A (A.rank_le_width.trans hk)
-
-/-- `σ k = 0` once `k ≥ min m n`. Atlas `svd`. -/
-theorem singularValues_eq_zero_of_min_le (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
-    (hk : min m n ≤ k) : singularValues A k = 0 := by
-  rcases le_total m n with h | h
-  · exact singularValues_eq_zero_of_height_le A (by simpa [min_eq_left h] using hk)
-  · exact singularValues_eq_zero_of_width_le A (by simpa [min_eq_right h] using hk)
 
 /-- The rank is the number of nonzero singular values (Horn–Johnson 2013, Thm 2.6.3).
 Atlas `svd`. -/
@@ -377,7 +377,9 @@ theorem transpose_mul_self (h : IsSVD A U V) :
     congr 1; funext j
     split_ifs with hj
     · rfl
-    · rw [singularValues_eq_zero_of_height_le A (not_lt.1 hj)]; simp
+    · rw [singularValues_eq_zero_of_height_le A
+        (by simpa only [Fintype.card_fin] using not_lt.1 hj)]
+      simp
   set S : Matrix (Fin m) (Fin n) ℝ := rectDiag (singularValues A)
   calc Aᵀ * A = (U * S * Vᵀ)ᵀ * (U * S * Vᵀ) := by rw [← h.eq]
     _ = V * (Sᵀ * (Uᵀ * U) * S) * Vᵀ := by
@@ -393,7 +395,9 @@ theorem mul_transpose_self (h : IsSVD A U V) :
     congr 1; funext i
     split_ifs with hi
     · rfl
-    · rw [singularValues_eq_zero_of_width_le A (not_lt.1 hi)]; simp
+    · rw [singularValues_eq_zero_of_width_le A
+        (by simpa only [Fintype.card_fin] using not_lt.1 hi)]
+      simp
   set S : Matrix (Fin m) (Fin n) ℝ := rectDiag (singularValues A)
   calc A * Aᵀ = (U * S * Vᵀ) * (U * S * Vᵀ)ᵀ := by rw [← h.eq]
     _ = U * (S * (Vᵀ * V) * Sᵀ) * Uᵀ := by
@@ -410,7 +414,7 @@ theorem apply (h : IsSVD A U V) (i : Fin m) (j : Fin n) :
     singularValues A k * U i ⟨k, h.1⟩ * V j ⟨k, h.2⟩ else 0
   have hg : ∀ k, min m n ≤ k → g k = 0 := fun k hk => by
     simp only [g]; split_ifs
-    · rw [singularValues_eq_zero_of_min_le A hk]; simp
+    · rw [singularValues_eq_zero_of_min_le A (by simpa only [Fintype.card_fin] using hk)]; simp
     · rfl
   have rhs : ∀ k : Fin (min m n), singularValues A k * U i (Fin.castLE (min_le_left m n) k) *
       V j (Fin.castLE (min_le_right m n) k) = g k := fun k => by
@@ -445,23 +449,6 @@ theorem eq_head_add_tail (h : IsSVD A U V) (k : ℕ) :
   simp only [Pi.add_apply]; split_ifs <;> simp
 
 end IsSVD
-
-/-- `‖A‖_F² = ∑_{k < min m n} σ_k²` (Horn–Johnson 2013, §2.6 / 5.6; HMT 2011, §2.1).
-Atlas `svd`.
-atlas: svd -/
-theorem frobSq_eq_sum_sq_singularValues (A : Matrix (Fin m) (Fin n) ℝ) :
-    frobSq A = ∑ k ∈ Finset.range (min m n), singularValues A k ^ 2 := by
-  obtain ⟨U, V, h⟩ := exists_isSVD A
-  rw [frobSq, frobInner_eq_trace, h.transpose_mul_self, Matrix.trace_mul_cycle,
-    h.transpose_mul_right, Matrix.one_mul, Matrix.trace_diagonal,
-    Fin.sum_univ_eq_sum_range (fun k => singularValues A k ^ 2)]
-  symm
-  apply Finset.sum_subset
-  · intro k hk; simp at hk ⊢; omega
-  · intro k _ hk
-    rw [singularValues_eq_zero_of_min_le A
-      (by simp only [Finset.mem_range, min_le_iff] at hk ⊢; omega)]; simp
-
 
 /-- For a real symmetric `S = W diag(μ) Wᵀ` with `W` orthogonal and `μ` non-increasing, `μ` is
 Mathlib's sorted eigenvalue list `eigenvalues₀` of `S` (uniqueness of the sorted spectrum, via

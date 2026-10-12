@@ -69,10 +69,9 @@ theorem exists_trace_compression_eq_bottom_eigenvalues {n : Type*} [Fintype n]
   simp [Matrix.IsHermitian.eigenvalues, f, e, Fin.natAdd_castLEEmb]
   congr 1
 
-/-- The top singular vectors attain the Ky Fan singular-value sum, including
-zero and full prefixes. Fan (1949), Theorem 1; Horn–Johnson (1991), Theorem 3.4.1.
-atlas: ky-fan-maximum-principle (partial) -/
-theorem exists_trace_twoSided_compression_eq_kyFanNorm {m n k : ℕ}
+/-- `Fin` step of `exists_trace_twoSided_compression_eq_kyFanNorm`: the top singular
+vectors of an SVD attain the Ky Fan sum. -/
+private theorem exists_trace_twoSided_compression_eq_kyFanNorm_fin {m n k : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (hk : k ≤ min m n) :
     ∃ (U : Matrix (Fin m) (Fin k) ℝ) (V : Matrix (Fin n) (Fin k) ℝ),
       HasOrthonormalCols U ∧ HasOrthonormalCols V ∧ (Uᵀ * A * V).trace = kyFanNorm A k := by
@@ -102,5 +101,28 @@ theorem exists_trace_twoSided_compression_eq_kyFanNorm {m n k : ℕ}
     simp [Fin.val_inj]
   rw [hd, Matrix.trace_diagonal, kyFanNorm, Fin.sum_univ_eq_sum_range]
   rfl
+
+/-- Actual top singular frames attain the Ky Fan singular-value sum on arbitrary finite
+row and column types, for every admissible prefix including zero and full prefixes.
+Fan (1949), Theorem 1; Horn–Johnson (1991), Theorem 3.4.1.
+atlas: ky-fan-maximum-principle (partial) -/
+theorem exists_trace_twoSided_compression_eq_kyFanNorm {m n : Type*}
+    [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) {k : ℕ}
+    (hk : k ≤ min (Fintype.card m) (Fintype.card n)) :
+    ∃ (U : Matrix m (Fin k) ℝ) (V : Matrix n (Fin k) ℝ),
+      HasOrthonormalCols U ∧ HasOrthonormalCols V ∧ (Uᵀ * A * V).trace = kyFanNorm A k := by
+  let em := Fintype.equivFin m
+  let en := Fintype.equivFin n
+  let Af := A.reindex em en
+  obtain ⟨Uf, Vf, hUf, hVf, ht⟩ := exists_trace_twoSided_compression_eq_kyFanNorm_fin Af hk
+  let er := Equiv.refl (Fin k)
+  refine ⟨Uf.reindex em.symm er, Vf.reindex en.symm er,
+    hUf.reindex em.symm er, hVf.reindex en.symm er, ?_⟩
+  have hback : Af.reindex em.symm en.symm = A := by
+    ext i j
+    simp [Af, Matrix.reindex_apply]
+  have h := twoSided_compression_trace_reindex Af Uf Vf em.symm en.symm er
+  rw [hback, ht, kyFanNorm_reindex] at h
+  exact h
 
 end NLAlib

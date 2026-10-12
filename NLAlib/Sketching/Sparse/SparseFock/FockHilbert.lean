@@ -167,24 +167,36 @@ theorem gradeProjection_mulVec (nu : ℕ)
   classical
   simp [gradeProjection, Matrix.mulVec_diagonal]
 
-/-- The squared Euclidean norm of an explicitly indexed vector.
+/-- The squared Euclidean norm `∑ i, x i ^ 2` of a finitely indexed real vector.
+
+This is the single sum-of-squares spelling of the sparse-sketch proof: it replaces the
+former copies `LightSectorConcrete.energy`, `LightSectorConcrete.coordinateEnergy`,
+`HeavyBandsConcrete.coordNormSq` and `HeavyBandsConcrete.fockNormSq`. It is an interim
+definition (decision D9 of `docs/SPARSE_INTEGRATION.md`): it equals `x ⬝ᵥ x`
+(`normSq_eq_dotProduct`) and is to be replaced by that expression.
 
 Source: ported from `SparseFockFormal.FiniteHilbert`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def normSq (x : Fin d × Pattern m n → ℝ) : ℝ :=
-  ∑ a, x a ^ 2
+def normSq {I : Type*} [Fintype I] (x : I → ℝ) : ℝ :=
+  ∑ i, x i ^ 2
 
 /-- The finite coordinate squared energy is nonnegative.
 Source: ported from `SparseFockFormal.FiniteHilbert`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem normSq_nonneg (x : Fin d × Pattern m n → ℝ) :
+theorem normSq_nonneg {I : Type*} [Fintype I] (x : I → ℝ) :
     0 ≤ normSq x := by
   exact Finset.sum_nonneg fun _ _ ↦ sq_nonneg _
+
+/-- The interim sum of squares is the self dot product.
+Source: decision D9 of `docs/SPARSE_INTEGRATION.md`; supports `sparse-ose`. -/
+theorem normSq_eq_dotProduct {I : Type*} [Fintype I] (x : I → ℝ) :
+    normSq x = dotProduct x x := by
+  simp [normSq, dotProduct, pow_two]
 
 /-- The Euclidean norm squared equals the explicit finite coordinate energy.
 Source: ported from `SparseFockFormal.FiniteHilbert`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem norm_toLp_sq (x : Fin d × Pattern m n → ℝ) :
+theorem norm_toLp_sq {I : Type*} [Fintype I] (x : I → ℝ) :
     ‖WithLp.toLp 2 x‖ ^ 2 = normSq x := by
   rw [EuclideanSpace.norm_sq_eq]
   simp [normSq]
@@ -223,19 +235,18 @@ operator-norm bound for the concrete finite matrix.
 
 Source: ported from `SparseFockFormal.FiniteHilbert`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem norm_le_of_normSq_mulVec_le {A : FullOp d m n} {C : ℝ}
-    (hC : 0 ≤ C)
-    (henergy : ∀ x : Fin d × Pattern m n → ℝ,
+theorem norm_le_of_normSq_mulVec_le {I J : Type*} [Fintype I] [Fintype J] [DecidableEq J]
+    {A : Matrix I J ℝ} {C : ℝ} (hC : 0 ≤ C)
+    (henergy : ∀ x : J → ℝ,
       normSq (Matrix.mulVec A x) ≤ C ^ 2 * normSq x) :
     ‖A‖ ≤ C := by
-  rw [← norm_asOperator]
+  rw [Matrix.l2_opNorm_def]
   apply ContinuousLinearMap.opNorm_le_bound _ hC
   intro x
   change ‖WithLp.toLp 2 (Matrix.mulVec A (WithLp.ofLp x))‖ ≤ C * ‖x‖
   have hsq := henergy (WithLp.ofLp x)
-  have hout := norm_toLp_sq (d := d) (m := m) (n := n)
-    (Matrix.mulVec A (WithLp.ofLp x))
-  have hin := norm_toLp_sq (d := d) (m := m) (n := n) (WithLp.ofLp x)
+  have hout := norm_toLp_sq (Matrix.mulVec A (WithLp.ofLp x))
+  have hin := norm_toLp_sq (WithLp.ofLp x)
   have hx : ‖x‖ ^ 2 = normSq (WithLp.ofLp x) := by
     simpa using hin
   rw [← hout, ← hx] at hsq

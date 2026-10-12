@@ -19,12 +19,14 @@ are in `NLAlib/LowRank/RSVD.lean` and `NLAlib/LowRank/GeneralizedNystrom.lean`.
 * Integrability of every random variable whose integral is manipulated is an explicit
   hypothesis.
 
-What is proved here is the paper's own reasoning: linearity and monotonicity of expectation,
-Jensen `E Y ≤ √(E Y²)`, and the arithmetic with explicit constants.
+What is proved here is the paper's own reasoning: linearity and monotonicity of expectation
+and the arithmetic with explicit constants (Jensen `E Y ≤ √(E Y²)` is
+`NLAlib.integral_le_sqrt_integral_sq`).
 
 Ported from the LRA project (Chen–Persson formalization, same Mathlib pin),
-`LRA/Probability/Assembly.lean` (`expectation_jensen_sqrt`, here
-`integral_le_sqrt_integral_sq`; `rsvd_assembly`, `rsvd_explicit`, `gn_assembly`, `gn_explicit`)
+`LRA/Probability/Assembly.lean` (`expectation_jensen_sqrt`, now
+`NLAlib.integral_le_sqrt_integral_sq` in `ForMathlib/MeasureTheory/IntegralSqrt`; `rsvd_assembly`,
+`rsvd_explicit`, `gn_assembly`, `gn_explicit`)
 and `LRA/Arithmetic/Constants.lean` (`completion_factor_mono`).
 
 Atlas: `rsvd-expected-error`, `gn-expected-error`.
@@ -39,22 +41,7 @@ namespace NLAlib.Assembly
 
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
 
-/-! ### A. Jensen and the completion factor -/
-
-/-- Jensen's inequality in the form used throughout Chen–Persson: for a nonnegative
-square-integrable random variable `Y`, `E Y ≤ √(E Y²)`. Proved from
-`0 ≤ Var Y = E Y² − (E Y)²`. Helper for atlas `rsvd-expected-error` (Frobenius-norm,
-unsquared form of HMT 2011, Thm 10.5). -/
-theorem integral_le_sqrt_integral_sq [IsProbabilityMeasure μ] {Y : Ω → ℝ} (hY : 0 ≤ Y)
-    (hYi : Integrable Y μ) (hY2 : Integrable (fun ω => Y ω ^ 2) μ) :
-    ∫ ω, Y ω ∂μ ≤ Real.sqrt (∫ ω, Y ω ^ 2 ∂μ) := by
-  have hL2 : MemLp Y 2 μ := (memLp_two_iff_integrable_sq hYi.aestronglyMeasurable).mpr hY2
-  have hvar := variance_nonneg Y μ
-  rw [variance_eq_sub hL2] at hvar
-  have h2 : (∫ ω, Y ω ∂μ) ^ 2 ≤ ∫ ω, Y ω ^ 2 ∂μ := by
-    have : μ[Y ^ 2] = ∫ ω, Y ω ^ 2 ∂μ := rfl
-    linarith
-  exact (Real.le_sqrt (integral_nonneg hY) (integral_nonneg fun ω => sq_nonneg _)).mpr h2
+/-! ### A. The completion factor -/
 
 /-- Monotonicity of the completion factor (Chen–Persson, proof of `thm:GN`): `q ↦ q/(s−q−1)`
 is increasing for `q < s − 1`, so the factor of `lem:completion` for dimension `q ≤ k` is at

@@ -4,7 +4,7 @@ import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
 /-!
 # Functional calculus and spectrum of a block-diagonal Hermitian matrix
 
-Main declaration: `NLAlib.matrixFunction_fromBlocks`.
+Main declaration: `NLAlib.cfc_fromBlocks`.
 
 Atlas: `operator-monotone-convex` (step of the operator Jensen inequality).
 
@@ -34,15 +34,15 @@ Tropp 2015, proof of Thm 8.5.2. Atlas: `operator-monotone-convex`. Ported from t
 mission *An Introduction to Matrix Concentration Inequalities, Ch 8*.
 
 Auxiliary; not a numbered result in the source. -/
-theorem NLAlib.matrixFunction_fromBlocks
+theorem NLAlib.cfc_fromBlocks
     {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     [Fintype κ] [DecidableEq κ] [Nonempty κ]
     (A : Matrix ι ι ℂ) (B : Matrix κ κ ℂ)
     (hA : A.IsHermitian) (hB : B.IsHermitian) (f : ℝ → ℝ) :
     (Matrix.fromBlocks A 0 0 B).IsHermitian ∧
     spectrum ℝ (Matrix.fromBlocks A 0 0 B) = spectrum ℝ A ∪ spectrum ℝ B ∧
-    matrixFunction f (Matrix.fromBlocks A 0 0 B) =
-      Matrix.fromBlocks (matrixFunction f A) 0 0 (matrixFunction f B) := by
+    cfc f (Matrix.fromBlocks A 0 0 B) =
+      Matrix.fromBlocks (cfc f A) 0 0 (cfc f B) := by
   have hblock := hA.fromBlocks (B := (0 : Matrix ι κ ℂ)) (C := 0) (by simp) hB
   refine ⟨hblock, ?_, ?_⟩
   · ext r

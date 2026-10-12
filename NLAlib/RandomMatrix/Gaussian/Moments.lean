@@ -1,5 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.Moments.ApproxMultiplication
 import NLAlib.RandomMatrix.Gaussian.Moments.Conditioning
+import NLAlib.RandomMatrix.Gaussian.Moments.FourthMoment
 import NLAlib.RandomMatrix.Gaussian.Moments.LogOverlap
 import NLAlib.RandomMatrix.Gaussian.Moments.LogOverlapMoments
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment

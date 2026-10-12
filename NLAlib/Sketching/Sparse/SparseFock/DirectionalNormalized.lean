@@ -1,8 +1,9 @@
 /- Copyright (c) 2026 Diar Heidary.
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
-import NLAlib.Sketching.Sparse.SparseFock.DirectionalConcrete
+import NLAlib.Sketching.Sparse.SparseFock.DirectionalRestrictedBounds
 import NLAlib.Sketching.Sparse.SparseFock.BandCoefficientBounds
+import NLAlib.Matrix.Norms.Core
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -26,16 +27,6 @@ open scoped BigOperators Matrix.Norms.L2Operator
 noncomputable section
 
 variable {d m n : ℕ}
-
-/-- Transposing a real matrix preserves its Euclidean operator norm.
-Source: ported from `SparseFockFormal.DirectionalNormalized`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem l2_norm_transpose (A : FullOp d m n) : ‖A.transpose‖ = ‖A‖ := by
-  have h : A.conjTranspose = A.transpose := by
-    ext i j
-    simp [Matrix.conjTranspose]
-  rw [← h]
-  exact Matrix.l2_opNorm_conjTranspose A
 
 /-- The paper's named `Y₊†` is literally the matrix transpose of `Y₊`.
 
@@ -131,7 +122,7 @@ theorem norm_YplusAdj_restricted_add_two_le (F : Frame n d) (nu : ℕ) :
     ‖YplusAdj m (frameRows F) * gradeProjection (d := d) (nu + 2)‖ =
         ‖(YplusAdj m (frameRows F) *
           gradeProjection (d := d) (nu + 2)).transpose‖ := by
-      exact (l2_norm_transpose
+      exact (specNorm_transpose
         (YplusAdj m (frameRows F) *
           gradeProjection (d := d) (nu + 2))).symm
     _ = ‖gradeProjection (d := d) (nu + 2) *
@@ -184,7 +175,7 @@ theorem norm_YzeroAdj_restricted_le (F : Frame n d) (nu : ℕ) :
     ‖YzeroAdj m (frameRows F) * gradeProjection (d := d) nu‖ =
         ‖(YzeroAdj m (frameRows F) *
           gradeProjection (d := d) nu).transpose‖ := by
-      exact (l2_norm_transpose
+      exact (specNorm_transpose
         (YzeroAdj m (frameRows F) *
           gradeProjection (d := d) nu)).symm
     _ = ‖gradeProjection (d := d) nu * Yzero m (frameRows F)‖ := by

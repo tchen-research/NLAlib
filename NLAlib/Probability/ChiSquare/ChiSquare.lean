@@ -3,6 +3,7 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 import Mathlib.Analysis.SpecialFunctions.Stirling
 import Mathlib.Analysis.Complex.ExponentialBounds
 import NLAlib.ForMathlib.Analysis.Real
+import NLAlib.ForMathlib.Analysis.SpecialFunctions.Gamma
 /-!
 # Chi-square tails and negative moments
 
@@ -328,25 +329,6 @@ theorem measure_sum_sq_le_sub_two_sqrt_mul_le_gaussianReal {d : ℕ} (hd : 1 ≤
 
 /-! ### Negative moments -/
 
-/-- **Euler's integral in `lintegral` form**: `∫₀^∞ c t^{a-1} e^{-rt} dt = c (1/r)^a Γ(a)` for
-`a, r > 0` and `c ≥ 0`. Atlas: `chi-square-neg-moment` (helper). Ported from Prove2me solution
-`GaussianMatrix.chi_square_neg_moment` (`cnm_gamma_lintegral`). -/
-theorem lintegral_ofReal_mul_rpow_mul_exp_Ioi {a r : ℝ} (ha : 0 < a) (hr : 0 < r) (c : ℝ)
-    (hc : 0 ≤ c) :
-    ∫⁻ t in Ioi (0 : ℝ), ENNReal.ofReal (c * (t ^ (a - 1) * Real.exp (-(r * t))))
-      = ENNReal.ofReal (c * ((1 / r) ^ a * Gamma a)) := by
-  have hI := Real.integral_rpow_mul_exp_neg_mul_Ioi ha hr
-  have hpos : 0 < (1 / r) ^ a * Gamma a := by
-    have : 0 < Gamma a := Gamma_pos_of_pos ha
-    positivity
-  have hint : IntegrableOn (fun t : ℝ => t ^ (a - 1) * Real.exp (-(r * t))) (Ioi 0) :=
-    Integrable.of_integral_ne_zero (by rw [hI]; exact hpos.ne')
-  rw [← ofReal_integral_eq_lintegral_ofReal (hint.const_mul c), integral_const_mul, hI]
-  filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht
-  have ht0 : (0 : ℝ) < t := ht
-  have : 0 ≤ t ^ (a - 1) := Real.rpow_nonneg ht0.le _
-  positivity
-
 /-- The negative moment of a chi-square variable, in `lintegral` form. -/
 private lemma lintegral_rpow_inv_sum_sq_gaussianReal {d : ℕ} (q : ℝ) (hq : 0 < q)
     (hqd : q < (d : ℝ) / 2) :
@@ -509,20 +491,6 @@ theorem integrable_and_integral_rpow_inv_sum_sq_gaussianReal {d : ℕ} (q : ℝ)
       lintegral_rpow_inv_sum_sq_gaussianReal q hq0 hqd, ENNReal.toReal_ofReal hpos]
 
 /-! ### The `L^{(d-1)/2}` bound (HMT Lemma A.10) -/
-
-/-- `Γ(x + 1/2) ≤ Γ(x) √x` for `x > 0` (log-convexity of `Γ`, Bohr–Mollerup).
-Atlas: `chi-square-neg-moment` (helper). Ported from Prove2me solution
-`GaussianMatrix.inv_chi_square_Lq_bound` (`icl_Gamma_add_half_le`). -/
-theorem Gamma_add_half_le_mul_sqrt {x : ℝ} (hx : 0 < x) :
-    Gamma (x + 1 / 2) ≤ Gamma x * √x := by
-  have h := Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma hx (by linarith : 0 < x + 1)
-    (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)
-  have hG : 0 < Gamma x := Gamma_pos_of_pos hx
-  rw [show 1 / 2 * x + 1 / 2 * (x + 1) = x + 1 / 2 by ring, Gamma_add_one hx.ne',
-    ← Real.mul_rpow hG.le (by positivity), ← Real.sqrt_eq_rpow,
-    show Gamma x * (x * Gamma x) = Gamma x ^ 2 * x by ring,
-    Real.sqrt_mul (by positivity), Real.sqrt_sq hG.le] at h
-  exact h
 
 /-- `e^n · 3 < 2 · 3^n` for `n ≥ 5`. -/
 private lemma exp_one_pow_mul_three_lt {n : ℕ} (hn : 5 ≤ n) :

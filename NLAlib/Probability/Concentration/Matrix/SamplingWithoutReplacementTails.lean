@@ -1,5 +1,5 @@
 import NLAlib.Probability.Concentration.Matrix.SamplingWithoutReplacement
-import NLAlib.Probability.Concentration.Matrix.SamplingSpectralBounds
+import NLAlib.Probability.Concentration.Matrix.Sampling
 import NLAlib.Probability.Concentration.Matrix.IntrinsicChernoff
 /-!
 # Genuine without-replacement Chernoff endpoints
@@ -150,7 +150,7 @@ theorem matrix_chernoff_uniform_subset_lower
 
 /-- The genuine uniform distinct-row empirical mean satisfies the two-sided
 operator norm Chernoff bound. Source: `sh:srht-ose`, with constant `3`. -/
-theorem measure_spectralNorm_uniform_subset_sub_one_le
+theorem measure_norm_uniform_subset_sub_one_le
     {α : Type*} [Fintype α] [DecidableEq α] [Nonempty α]
     [MeasurableSpace α] [MeasurableSingletonClass α] {d k : ℕ} [NeZero d]
     (hk0 : 0 < k) (hk : k ≤ Fintype.card α)
@@ -160,18 +160,18 @@ theorem measure_spectralNorm_uniform_subset_sub_one_le
     (hmean : (1 / (Fintype.card α : ℝ)) • ∑ j, A j = 1)
     {ε : ℝ} (hε : 0 < ε) (hε1 : ε < 1) :
     ((uniformExactRowSubsetPMF hk).toMeasure
-      {T | ε ≤ spectralNorm ((1 / (k : ℝ)) • ∑ j ∈ T.val, A j - 1)}).toReal ≤
+      {T | ε ≤ ‖(1 / (k : ℝ)) • ∑ j ∈ T.val, A j - 1‖}).toReal ≤
       2 * d * Real.exp (-(ε ^ 2) * k / (3 * L)) := by
   let Y : ExactRowSubset α k → Matrix (Fin d) (Fin d) ℂ :=
     fun T => (1 / (k : ℝ)) • ∑ j ∈ T.val, A j
   let μ := (uniformExactRowSubsetPMF hk).toMeasure
-  have hsub : {T | ε ≤ spectralNorm (Y T - 1)} ⊆
+  have hsub : {T | ε ≤ ‖Y T - 1‖} ⊆
       {T | lambdaMin (Y T) ≤ 1 - ε} ∪ {T | 1 + ε ≤ lambdaMax (Y T)} := by
     intro T hT
     have hsum : (∑ j ∈ T.val, A j).IsHermitian :=
       isSelfAdjoint_sum _ (fun j _ => hA j)
     have hYT : (Y T).IsHermitian := hsum.smul (IsSelfAdjoint.all (1 / (k : ℝ)))
-    exact lambdaMin_le_or_le_lambdaMax_of_le_spectralNorm_sub_one hYT hT
+    exact lambdaMin_le_or_le_lambdaMax_of_le_norm_sub_one hYT hT
   have hl := matrix_chernoff_uniform_subset_lower hk0 hk A L hL hA hbound hmean hε hε1
   have hu := matrix_chernoff_uniform_subset_upper hk0 hk A L hL hA hbound hmean hε hε1.le
   have he : d * Real.exp (-(ε ^ 2) * k / (2 * L)) ≤

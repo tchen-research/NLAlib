@@ -19,18 +19,6 @@ namespace LightSectorAbstract
 
 open scoped BigOperators
 
-/-- The sum over all indices other than `i` is the full sum with the `i`th
-term removed.  This small identity is used to count every off-diagonal block
-exactly `ell - 1` times.
-
-Source: ported from `SparseFockFormal.LightSectorAbstract`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem sum_erase_univ_eq_sub {ell : ℕ} (energy : Fin ell → ℝ) (i : Fin ell) :
-    (∑ j ∈ (Finset.univ.erase i), energy j) = (∑ j, energy j) - energy i := by
-  have hi : i ∈ (Finset.univ : Finset (Fin ell)) := Finset.mem_univ i
-  rw [← Finset.sum_erase_add _ _ hi]
-  ring
-
 /-- The first-index contribution to an ordered off-diagonal sum.
 
 Source: ported from `SparseFockFormal.LightSectorAbstract`,
@@ -67,7 +55,7 @@ theorem sum_offDiagonal_right {ell : ℕ} (_hell : 1 ≤ ell)
         ∑ i, (total - energy i) := by
           apply Finset.sum_congr rfl
           intro i _
-          exact sum_erase_univ_eq_sub energy i
+          exact Finset.sum_erase_eq_sub (Finset.mem_univ i)
     _ = (ell : ℝ) * total - total := by
           simp [total, Finset.sum_sub_distrib]
     _ = ((ell : ℝ) - 1) * total := by ring

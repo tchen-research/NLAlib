@@ -26,21 +26,6 @@ set_option maxHeartbeats 1000000
 
 variable {d m n : ℕ}
 
-/-- Exact L2-norm scaling for the nested normalized mixed coefficient.
-
-Source: ported from `SparseFockFormal.MixedBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem norm_normalized_mixed_term_eq {s b : ℕ}
-    (A : FullOp d m n) (P : FullOp d m n) :
-    ‖((1 / (((s * b : ℕ) : ℝ))) •
-        (Real.sqrt ((b : ℝ) - 1) • A)) * P‖ =
-      (Real.sqrt ((b : ℝ) - 1) / (((s * b : ℕ) : ℝ))) * ‖A * P‖ := by
-  simp only [Matrix.smul_mul, norm_smul, Real.norm_eq_abs]
-  rw [abs_of_nonneg (by positivity :
-      0 ≤ (1 : ℝ) / (((s * b : ℕ) : ℝ))),
-    abs_of_nonneg (Real.sqrt_nonneg _)]
-  ring
-
 /-- Raw restricted norm of the concrete `X₊` factorization.
 
 Source: ported from `SparseFockFormal.MixedBandsConcrete`,
@@ -136,7 +121,7 @@ theorem norm_XplusAdj_restricted_add_two_le (F : Frame n d) (k : ℕ) :
   calc
     _ = ‖(XplusAdj m (DirectionalConcrete.frameRows F) *
           gradeProjection (d := d) (k + 2)).transpose‖ := by
-      exact (DirectionalNormalized.l2_norm_transpose _).symm
+      exact (specNorm_transpose _).symm
     _ = ‖gradeProjection (d := d) (k + 2) *
           Xplus m (DirectionalConcrete.frameRows F)‖ := by
       rw [Matrix.transpose_mul, transpose_XplusAdj, gradeProjection_transpose]
@@ -202,7 +187,7 @@ theorem norm_XzeroAdj_restricted_le (F : Frame n d) (nu : ℕ) :
   calc
     _ = ‖(XzeroAdj m (DirectionalConcrete.frameRows F) *
           gradeProjection (d := d) nu).transpose‖ := by
-      exact (DirectionalNormalized.l2_norm_transpose _).symm
+      exact (specNorm_transpose _).symm
     _ = ‖gradeProjection (d := d) nu *
           Xzero m (DirectionalConcrete.frameRows F)‖ := by
       rw [Matrix.transpose_mul, transpose_XzeroAdj, gradeProjection_transpose]

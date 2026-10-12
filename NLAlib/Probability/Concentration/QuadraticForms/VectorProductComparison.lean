@@ -5,17 +5,17 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
 Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
-The original Apache-2.0 copyright notice is retained. Only the two used legacy
-vocabulary definitions are supplied locally; there is no HighDimProb dependency.
+The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
+vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
 -/
-import Mathlib.Tactic
 import NLAlib.Probability.Concentration.QuadraticForms.LinearFormComparison
+import NLAlib.ForMathlib.MeasureTheory.MapProd
 /-!
 # Hanson–Wright proof: VectorProductComparison
 
 A focused leaf of the transported independent-coordinate proof.
-Shared helper declarations live in `NLAlib.HansonWrightProof`; the canonical
-public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
 Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
 -/
 
@@ -26,7 +26,6 @@ noncomputable section
 set_option maxRecDepth 5000
 
 namespace NLAlib
-namespace HansonWrightProof
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
@@ -37,7 +36,7 @@ lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
     {X : Fin n → Ω → ℝ} {K θ : ℝ} (hθ : 0 ≤ θ)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
-    (hsmall : θ * K ^ 2 * deterministicOperatorNorm A ^ 2 * exp 1 < 1) :
+    (hsmall : θ * K ^ 2 * specNorm A ^ 2 * exp 1 < 1) :
     Integrable (fun ω =>
       exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2)) μ := by
   let E := EuclideanSpace ℝ (Fin n)
@@ -54,8 +53,8 @@ lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
     rw [sq_sqrt]
     nlinarith
   have hKθ_nonneg : 0 ≤ K ^ 2 * θ := mul_nonneg (sq_nonneg K) hθ
-  have hUnorm : ‖U‖ = deterministicOperatorNorm A := by
-    dsimp [U, T, deterministicOperatorNorm]
+  have hUnorm : ‖U‖ = specNorm A := by
+    dsimp [U, T, specNorm]
     exact ContinuousLinearMap.adjoint.norm_map _
   have hsmall_eig_lt :
       ∀ i : Fin (Module.finrank ℝ E),
@@ -154,7 +153,7 @@ lemma integrable_exp_inner_toEuclideanCLM_randomVector_prod {μ : Measure Ω}
     {X : Fin n → Ω → ℝ} {K l : ℝ}
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
-    (hsmall : (K ^ 2 * l ^ 2 / 2) * K ^ 2 * deterministicOperatorNorm A ^ 2 * exp 1 < 1) :
+    (hsmall : (K ^ 2 * l ^ 2 / 2) * K ^ 2 * specNorm A ^ 2 * exp 1 < 1) :
     Integrable
       (fun p : Ω × Ω =>
         exp (l * inner ℝ
@@ -242,12 +241,12 @@ lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
     {X : Fin n → Ω → ℝ} {K l : ℝ}
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
-    (hsmall : (K ^ 2 * l ^ 2 / 2) * K ^ 2 * deterministicOperatorNorm A ^ 2 * exp 1 ≤ 1 / 2) :
+    (hsmall : (K ^ 2 * l ^ 2 / 2) * K ^ 2 * specNorm A ^ 2 * exp 1 ≤ 1 / 2) :
     ∫ p : Ω × Ω,
         exp (l * inner ℝ
           (Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X p.1))
           (randomVector X p.2)) ∂(μ.prod μ) ≤
-      exp (exp 1 ^ 2 * l ^ 2 * K ^ 4 * deterministicFrobeniusNorm A ^ 2) := by
+      exp (exp 1 ^ 2 * l ^ 2 * K ^ 4 * frobNorm A ^ 2) := by
   let E := EuclideanSpace ℝ (Fin n)
   let T : E →L[ℝ] E := Matrix.toEuclideanCLM (𝕜 := ℝ) A
   let θ : ℝ := K ^ 2 * l ^ 2 / 2
@@ -262,7 +261,7 @@ lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
   have hsquare_bound :
       ∫ ω,
           exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2) ∂μ ≤
-        exp (2 * exp 1 ^ 2 * θ * K ^ 2 * deterministicFrobeniusNorm A ^ 2) :=
+        exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobNorm A ^ 2) :=
     integral_exp_norm_toEuclideanCLM_randomVector_sq_le A hθ_nonneg
       h_indep hX_subG (by simpa [θ, T] using hsmall)
   have hsquare_int :
@@ -300,9 +299,9 @@ lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
             exact integral_mono_ae hf_int.integral_prod_left
               hsquare_int
               hinner_bound
-    _ ≤ exp (2 * exp 1 ^ 2 * θ * K ^ 2 * deterministicFrobeniusNorm A ^ 2) := by
+    _ ≤ exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobNorm A ^ 2) := by
             exact hsquare_bound
-    _ = exp (exp 1 ^ 2 * l ^ 2 * K ^ 4 * deterministicFrobeniusNorm A ^ 2) := by
+    _ = exp (exp 1 ^ 2 * l ^ 2 * K ^ 4 * frobNorm A ^ 2) := by
             congr 1
             dsimp [θ]
             ring
@@ -319,7 +318,7 @@ lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
           exp (l * inner ℝ
             (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
             (randomVector X p.2))) (μ.prod μ)) :
-    ∫ ω, exp (l * matrixQuadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ =
+    ∫ ω, exp (l * quadForm (cutMatrix A s) (fun i => X i ω)) ∂μ =
       ∫ p : Ω × Ω,
         exp (l * inner ℝ
           (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
@@ -337,7 +336,7 @@ lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
       (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
       (randomVector X p.2))
   let H : Ω → ℝ :=
-    fun ω => exp (l * matrixQuadraticForm (cutMatrix A s) (fun i => X i ω))
+    fun ω => exp (l * quadForm (cutMatrix A s) (fun i => X i ω))
   have hU_meas : AEMeasurable U μ := by
     dsimp [U]
     exact coordinateMask_aemeasurable _ hX_meas
@@ -379,7 +378,7 @@ lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
     exact hg_aesm
   have hH_eq : H = g ∘ ψ := by
     ext ω
-    change exp (l * matrixQuadraticForm (cutMatrix A s) (fun i => X i ω)) =
+    change exp (l * quadForm (cutMatrix A s) (fun i => X i ω)) =
       exp (l * inner ℝ
         (Matrix.toEuclideanCLM (𝕜 := ℝ) A
           (coordinateMask ((Finset.univ : Finset (Fin n)) \ s) (randomVector X ω)))
@@ -388,7 +387,7 @@ lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
     rw [inner_toEuclideanCLM_cutMatrix_eq_inner_masks]
     rfl
   calc
-    ∫ ω, exp (l * matrixQuadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ
+    ∫ ω, exp (l * quadForm (cutMatrix A s) (fun i => X i ω)) ∂μ
         = ∫ ω, H ω ∂μ := by rfl
     _ = ∫ ω, (g ∘ ψ) ω ∂μ := by rw [hH_eq]
     _ = ∫ ω, g (ψ ω) ∂μ := by rfl
@@ -401,5 +400,4 @@ lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
     _ = ∫ p : Ω × Ω, (g ∘ φ) p ∂(μ.prod μ) := by rfl
     _ = ∫ p : Ω × Ω, F p ∂(μ.prod μ) := by rw [hF_eq]
 
-end HansonWrightProof
 end NLAlib

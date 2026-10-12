@@ -24,7 +24,7 @@ def complexRandomizedCholeskyApproximation (A : Matrix n n ℂ) (t : ℕ) (h : F
 /-- The relative optimal trace tail is the spectral tail divided by the full trace.
 Source: manuscript `sa:rp-theorem`, its relative parameter `eta`. -/
 def complexRelativeSpectralTraceTail (A : Matrix n n ℂ) (hA : A.IsHermitian) (r : ℕ) : ℝ :=
-  complexSpectralTraceTail A hA r / A.trace.re
+  spectralTraceTail A hA r / A.trace.re
 
 /-- The actual adaptive expected trace obeys the source's nonlinear relative-tail
 recursion. Source: manuscript `sa:rp-recursion`; CETW (2025).
@@ -33,8 +33,8 @@ atlas: rpcholesky (partial) -/
 theorem complexCholeskyExpectedTrace_succ_le_traceExcessDrift
     {A : Matrix n n ℂ} (hA : A.PosSemidef) {r : ℕ} (hr : 1 ≤ r) (t : ℕ) :
     complexCholeskyExpectedTrace A (t + 1) ≤ complexCholeskyExpectedTrace A t -
-      traceExcessDrift (complexSpectralTraceTail A hA.isHermitian r) (complexCholeskyExpectedTrace A t) / r := by
-  let τ := complexSpectralTraceTail A hA.isHermitian r
+      traceExcessDrift (spectralTraceTail A hA.isHermitian r) (complexCholeskyExpectedTrace A t) / r := by
+  let τ := spectralTraceTail A hA.isHermitian r
   have hr0 : (0 : ℝ) < r := by exact_mod_cast (by omega : 0 < r)
   have hstep : ∀ h : Fin t → n,
       (complexCholeskyResidualHistory A t h).trace.re -
@@ -66,7 +66,7 @@ theorem complexCholeskyExpectedTrace_succ_le_traceExcessDrift
     (fun h => (complexCholeskyResidualHistory A t h).trace.re)
     (complexCholeskyHistoryWeight_nonneg hA t)
     (fun h => re_trace_nonneg_of_complex_posSemidef (posSemidef_complexCholeskyResidualHistory hA t h))
-    (sum_complexCholeskyHistoryWeight A t) (complexSpectralTraceTail_nonneg hA r)
+    (sum_complexCholeskyHistoryWeight A t) (spectralTraceTail_nonneg hA r)
   have hJ := div_le_div_of_nonneg_right hj hr0.le
   change complexCholeskyExpectedTrace A (t + 1) ≤ complexCholeskyExpectedTrace A t -
     (∑ h : Fin t → n, complexCholeskyHistoryWeight A t h * traceExcessDrift τ
@@ -80,9 +80,9 @@ CETW (2025). This is the positive-tail complex-matrix branch, with all positive 
 atlas: rpcholesky (partial) -/
 theorem complexCholeskyExpectedTrace_le_mul_complexSpectralTraceTail
     {A : Matrix n n ℂ} (hA : A.PosSemidef) {r k : ℕ} (hr : 1 ≤ r)
-    (hτ : 0 < complexSpectralTraceTail A hA.isHermitian r) {ε : ℝ} (hε : 0 < ε)
-    (hbudget : (r : ℝ) / ε + r * Real.log (A.trace.re / (ε * complexSpectralTraceTail A hA.isHermitian r)) ≤ k) :
-    complexCholeskyExpectedTrace A k ≤ (1 + ε) * complexSpectralTraceTail A hA.isHermitian r := by
+    (hτ : 0 < spectralTraceTail A hA.isHermitian r) {ε : ℝ} (hε : 0 < ε)
+    (hbudget : (r : ℝ) / ε + r * Real.log (A.trace.re / (ε * spectralTraceTail A hA.isHermitian r)) ≤ k) :
+    complexCholeskyExpectedTrace A k ≤ (1 + ε) * spectralTraceTail A hA.isHermitian r := by
   apply le_mul_tail_of_traceExcessDrift_recursion (complexCholeskyExpectedTrace A)
     (complexCholeskyExpectedTrace_antitone hA) hτ (by exact_mod_cast (by omega : 0 < r)) hε
     (fun t => complexCholeskyExpectedTrace_succ_le_traceExcessDrift hA hr t) k
@@ -94,12 +94,12 @@ It is not interpreted as an additive error tolerance.
 atlas: rpcholesky (partial) -/
 theorem complexCholeskyExpectedTrace_le_of_complexRelativeSpectralTraceTail
     {A : Matrix n n ℂ} (hA : A.PosSemidef) {r k : ℕ} (hr : 1 ≤ r)
-    (hτ : 0 < complexSpectralTraceTail A hA.isHermitian r) {ε : ℝ} (hε : 0 < ε)
+    (hτ : 0 < spectralTraceTail A hA.isHermitian r) {ε : ℝ} (hε : 0 < ε)
     (hbudget : (r : ℝ) / ε + r * Real.log (1 / (ε * complexRelativeSpectralTraceTail A hA.isHermitian r)) ≤ k) :
-    complexCholeskyExpectedTrace A k ≤ (1 + ε) * complexSpectralTraceTail A hA.isHermitian r := by
-  have htr : 0 < A.trace.re := hτ.trans_le (complexSpectralTraceTail_le_trace hA r)
+    complexCholeskyExpectedTrace A k ≤ (1 + ε) * spectralTraceTail A hA.isHermitian r := by
+  have htr : 0 < A.trace.re := hτ.trans_le (spectralTraceTail_le_trace hA r)
   have he : 1 / (ε * complexRelativeSpectralTraceTail A hA.isHermitian r) =
-      A.trace.re / (ε * complexSpectralTraceTail A hA.isHermitian r) := by
+      A.trace.re / (ε * spectralTraceTail A hA.isHermitian r) := by
     unfold complexRelativeSpectralTraceTail
     field_simp
   apply complexCholeskyExpectedTrace_le_mul_complexSpectralTraceTail hA hr hτ hε
@@ -110,12 +110,12 @@ relative optimal tail parameter. Source: manuscript `sa:rp-theorem`, additive co
 atlas: rpcholesky (partial) -/
 theorem complexCholeskyExpectedTrace_le_mul_complexSpectralTraceTail_add
     {A : Matrix n n ℂ} (hA : A.PosSemidef) {r k : ℕ} (hr : 1 ≤ r)
-    (hτ : 0 < complexSpectralTraceTail A hA.isHermitian r) {ε h : ℝ} (hε : 0 < ε) (hh : 0 < h)
-    (hbudget : (r : ℝ) * complexSpectralTraceTail A hA.isHermitian r /
-        (ε * complexSpectralTraceTail A hA.isHermitian r + h) +
-      r * Real.log (A.trace.re / (ε * complexSpectralTraceTail A hA.isHermitian r + h)) ≤ k) :
-    complexCholeskyExpectedTrace A k ≤ (1 + ε) * complexSpectralTraceTail A hA.isHermitian r + h := by
-  let τ := complexSpectralTraceTail A hA.isHermitian r
+    (hτ : 0 < spectralTraceTail A hA.isHermitian r) {ε h : ℝ} (hε : 0 < ε) (hh : 0 < h)
+    (hbudget : (r : ℝ) * spectralTraceTail A hA.isHermitian r /
+        (ε * spectralTraceTail A hA.isHermitian r + h) +
+      r * Real.log (A.trace.re / (ε * spectralTraceTail A hA.isHermitian r + h)) ≤ k) :
+    complexCholeskyExpectedTrace A k ≤ (1 + ε) * spectralTraceTail A hA.isHermitian r + h := by
+  let τ := spectralTraceTail A hA.isHermitian r
   have heps : 0 < ε + h / τ := add_pos hε (div_pos hh hτ)
   have hmul : (ε + h / τ) * τ = ε * τ + h := by
     rw [add_mul, div_mul_cancel₀ _ hτ.ne']
@@ -139,9 +139,9 @@ the target rank pivots, including a rank-zero input. Source: manuscript `sa:rp-t
 atlas: rpcholesky (partial) -/
 theorem complexCholeskyExpectedTrace_eq_zero_of_complexSpectralTraceTail_eq_zero
     {A : Matrix n n ℂ} (hA : A.PosSemidef) {r k : ℕ}
-    (ht : complexSpectralTraceTail A hA.isHermitian r = 0) (hk : r ≤ k) :
+    (ht : spectralTraceTail A hA.isHermitian r = 0) (hk : r ≤ k) :
     complexCholeskyExpectedTrace A k = 0 :=
-  complexCholeskyExpectedTrace_eq_zero_of_rank_le hA ((complex_rank_le_of_spectralTraceTail_eq_zero hA ht).trans hk)
+  complexCholeskyExpectedTrace_eq_zero_of_rank_le hA ((rank_le_of_spectralTraceTail_eq_zero hA ht).trans hk)
 
 omit [Nonempty n] [DecidableEq n] in
 /-- The expected trace of the actual approximation error equals the expected residual
@@ -166,11 +166,11 @@ atlas: rpcholesky -/
 theorem complexCholeskyExpectedTrace_le_of_relative_budget_or_zero_tail
     {A : Matrix n n ℂ} (hA : A.PosSemidef) {r k : ℕ} (hr : 1 ≤ r)
     {ε : ℝ} (hε : 0 < ε)
-    (hbudget : (0 < complexSpectralTraceTail A hA.isHermitian r ∧
+    (hbudget : (0 < spectralTraceTail A hA.isHermitian r ∧
       (r : ℝ) / ε + r * Real.log
         (1 / (ε * complexRelativeSpectralTraceTail A hA.isHermitian r)) ≤ k) ∨
-      (complexSpectralTraceTail A hA.isHermitian r = 0 ∧ r ≤ k)) :
-    complexCholeskyExpectedTrace A k ≤ (1 + ε) * complexSpectralTraceTail A hA.isHermitian r := by
+      (spectralTraceTail A hA.isHermitian r = 0 ∧ r ≤ k)) :
+    complexCholeskyExpectedTrace A k ≤ (1 + ε) * spectralTraceTail A hA.isHermitian r := by
   rcases hbudget with ⟨hτ, hb⟩ | ⟨hτ, hk⟩
   · exact complexCholeskyExpectedTrace_le_of_complexRelativeSpectralTraceTail hA hr hτ hε hb
   · rw [complexCholeskyExpectedTrace_eq_zero_of_complexSpectralTraceTail_eq_zero hA hτ hk,

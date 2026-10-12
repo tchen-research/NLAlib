@@ -35,7 +35,7 @@ theorem schattenNorm_mul_le_mul_specNorm (A : Matrix m n ℝ) (B : Matrix n q �
     calc
       _ ≤ (A.toEuclideanLin.singularValues i * specNorm B) ^ p :=
         Real.rpow_le_rpow (LinearMap.singularValues_nonneg _ i)
-          (toEuclideanLin_singularValues_mul_le_mul_specNorm A B i) hp.le
+          (singularValues_mul_le_mul_specNorm A B i) hp.le
       _ = _ := by rw [Real.mul_rpow (LinearMap.singularValues_nonneg _ i) (specNorm_nonneg B)]; ring
   rw [schattenNorm_eq_sum_range_rpow_of_min_le (A * B) hNAB hp,
     schattenNorm_eq_sum_range_rpow_of_min_le A hNA hp]
@@ -64,7 +64,7 @@ theorem schattenNorm_mul_le_specNorm_mul (A : Matrix m n ℝ) (B : Matrix n q �
     calc
       _ ≤ (specNorm A * B.toEuclideanLin.singularValues i) ^ p :=
         Real.rpow_le_rpow (LinearMap.singularValues_nonneg _ i)
-          (toEuclideanLin_singularValues_mul_le_specNorm_mul A B i) hp.le
+          (singularValues_mul_le_specNorm_mul A B i) hp.le
       _ = _ := Real.mul_rpow (specNorm_nonneg A) (LinearMap.singularValues_nonneg _ i)
   rw [schattenNorm_eq_sum_range_rpow_of_min_le (A * B) hNAB hp,
     schattenNorm_eq_sum_range_rpow_of_min_le B hNB hp]

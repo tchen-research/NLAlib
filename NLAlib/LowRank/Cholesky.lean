@@ -1,7 +1,6 @@
 import NLAlib.LowRank.Cholesky.CholeskyHistories
 import NLAlib.LowRank.Cholesky.CholeskyPivot
 import NLAlib.LowRank.Cholesky.ComplexCholeskyHistories
-import NLAlib.LowRank.Cholesky.ComplexCholeskyPivot
 import NLAlib.LowRank.Cholesky.ComplexRandomPivotedCholesky
 import NLAlib.LowRank.Cholesky.PartialCholesky
 import NLAlib.LowRank.Cholesky.RandomPivotedCholesky

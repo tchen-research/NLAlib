@@ -1,5 +1,6 @@
 import NLAlib.Probability.Gaussian.Basic.CovarianceRepresentation
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
+import NLAlib.Probability.Gaussian.Basic.StandardGaussian
+import NLAlib.Probability.Gaussian.Basic.StandardVector
 
 /-! # `Probability/Gaussian/Basic`
 

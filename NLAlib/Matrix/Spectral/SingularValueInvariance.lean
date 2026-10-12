@@ -26,8 +26,9 @@ private theorem singularValues_transpose_fin {a b : ℕ} (A : Matrix (Fin a) (Fi
   · obtain ⟨U, V, h⟩ := exists_isSVD A
     exact singularValues_eq_of_eq_mul_rectDiag_mul h.transpose_mul_right h.transpose_mul_left
       (singularValues_nonneg A) (singularValues_antitone A) h.transpose_eq hk
-  · rw [singularValues_eq_zero_of_min_le _ (not_lt.1 hk),
-      singularValues_eq_zero_of_min_le _ (by rw [min_comm]; exact not_lt.1 hk)]
+  · rw [singularValues_eq_zero_of_min_le _ (by simpa only [Fintype.card_fin] using not_lt.1 hk),
+      singularValues_eq_zero_of_min_le _
+        (by simp only [Fintype.card_fin]; rw [min_comm]; exact not_lt.1 hk)]
 
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
 
@@ -46,7 +47,7 @@ theorem singularValues_isometry_mul [DecidableEq n] [DecidableEq p]
     {H : Matrix m p ℝ} (hH : HasOrthonormalCols H) (A : Matrix p n ℝ) :
     singularValues (H * A) = singularValues A := by
   funext k
-  apply toEuclideanLin_singularValues_eq_of_gram_eq
+  apply singularValues_eq_of_gram_eq
   simp only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul,
     Matrix.mul_assoc]
   rw [← Matrix.mul_assoc Hᵀ H A, show Hᵀ * H = 1 from hH, Matrix.one_mul]

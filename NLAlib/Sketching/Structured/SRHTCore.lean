@@ -1,4 +1,5 @@
 import NLAlib.Sketching.Structured.SRHTFlattening
+import NLAlib.Matrix.Basic.Selection
 import NLAlib.ForMathlib.Probability.UniformSamplingCoupling
 
 /-!
@@ -13,25 +14,14 @@ set_option autoImplicit false
 open scoped Classical Matrix Matrix.Norms.L2Operator ComplexOrder
 namespace NLAlib
 
-/-- The literal selector of the distinct rows, in increasing order.
-Source: operator re-derivation `sh:srht-ose`. -/
-def srhtRowSelector {n k : ℕ} (T : ExactRowSubset (Fin n) k) :
-    Matrix (Fin k) (Fin n) ℝ :=
-  fun a j => if j = T.val.orderEmbOfFin T.prop a then 1 else 0
-
-/-- The actual classical SRHT matrix with one shared sign diagonal.
+/-- The actual classical SRHT matrix with one shared sign diagonal: `√(n/k) R H D` with row
+selector `R = Sᵀ`, `S` the selection matrix of the rows of `T` in increasing order.
 Source: operator re-derivation `sh:srht-ose`. -/
 def srhtSketch {n k : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
     (ξ : Fin n → Bool) (T : ExactRowSubset (Fin n) k) : Matrix (Fin k) (Fin n) ℝ :=
   Real.sqrt ((n : ℝ) / k) •
-    (srhtRowSelector T * H * Matrix.diagonal (fun i => rademacherBoolSign (ξ i)))
-
-/-- The literal selector picks the requested row.
-Source: `sh:srht-ose`; no sampling law is required for this algebraic identity. -/
-theorem srhtRowSelector_mul {n k d : ℕ} (T : ExactRowSubset (Fin n) k)
-    (V : Matrix (Fin n) (Fin d) ℝ) (a : Fin k) (b : Fin d) :
-    (srhtRowSelector T * V) a b = V (T.val.orderEmbOfFin T.prop a) b := by
-  simp [srhtRowSelector, Matrix.mul_apply, ite_mul]
+    ((selectionMatrix (T.val.orderEmbOfFin T.prop))ᵀ * H *
+      Matrix.diagonal (fun i => rademacherBoolSign (ξ i)))
 
 /-- The actual sketch's action on a frame is the rescaled selected row of
 the one-diagonal transformed frame. Source: `sh:srht-ose`. -/
@@ -42,7 +32,8 @@ theorem srhtSketch_mul_apply {n k d : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
       srhtSignedFrame H U ξ (T.val.orderEmbOfFin T.prop a) b := by
   simp only [srhtSketch, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul,
     Matrix.mul_assoc, srhtSignedFrame]
-  rw [srhtRowSelector_mul]
+  rw [transpose_selectionMatrix_mul]
+  rfl
 
 /-- Summing the literal distinct selected labels is summing the subset.
 Source: the increasing row enumeration; supports `sh:srht-ose`. -/

@@ -1,8 +1,5 @@
-import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import Mathlib.MeasureTheory.Integral.Gamma
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Topology.UniformSpace.Uniformizable
+import NLAlib.ForMathlib.Analysis.SpecialFunctions.Gamma
+import NLAlib.Probability.Gaussian.Moments.PositiveMoments
 
 /-!
 # Growth of the expected norm of a standard Gaussian vector
@@ -33,97 +30,14 @@ namespace NLAlib
 
 open Real Set
 
-/-- The product of `m` standard Gaussians has density `∏ᵢ φ(xᵢ)` w.r.t. Lebesgue measure. -/
-private theorem en_pi_gauss (m : ℕ) :
-    Measure.pi (fun _ : Fin m => gaussianReal 0 1)
-      = volume.withDensity
-          (fun x : Fin m → ℝ => ENNReal.ofReal (∏ i, gaussianPDFReal 0 1 (x i))) := by
-  refine Measure.pi_eq (μ := fun _ : Fin m => gaussianReal 0 1) fun s hs => ?_
-  have hS : MeasurableSet (Set.univ.pi s) := MeasurableSet.univ_pi hs
-  rw [withDensity_apply _ hS, ← lintegral_indicator hS]
-  have hind : ∀ x : Fin m → ℝ,
-      (Set.univ.pi s).indicator (fun x => ENNReal.ofReal (∏ i, gaussianPDFReal 0 1 (x i))) x
-        = ENNReal.ofReal (∏ i, (s i).indicator (gaussianPDFReal 0 1) (x i)) := by
-    intro x
-    by_cases hx : x ∈ Set.univ.pi s
-    · rw [Set.indicator_of_mem hx]
-      congr 1
-      refine Finset.prod_congr rfl fun i _ => ?_
-      rw [Set.indicator_of_mem (hx i (Set.mem_univ i))]
-    · rw [Set.indicator_of_notMem hx]
-      simp only [Set.mem_pi, Set.mem_univ, true_implies, not_forall] at hx
-      obtain ⟨i, hi⟩ := hx
-      rw [Finset.prod_eq_zero (Finset.mem_univ i) (Set.indicator_of_notMem hi _)]
-      simp
-  simp_rw [hind]
-  have hint : Integrable (fun x : Fin m → ℝ => ∏ i, (s i).indicator (gaussianPDFReal 0 1) (x i))
-      volume := by
-    rw [volume_pi]
-    exact Integrable.fintype_prod (f := fun i => (s i).indicator (gaussianPDFReal 0 1))
-      (fun i => (integrable_gaussianPDFReal 0 1).indicator (hs i))
-  rw [← ofReal_integral_eq_lintegral_ofReal hint
-    (ae_of_all _ fun x => Finset.prod_nonneg fun i _ =>
-      Set.indicator_nonneg (fun y _ => gaussianPDFReal_nonneg 0 1 y) _)]
-  rw [integral_fintype_prod_volume_eq_prod, ENNReal.ofReal_prod_of_nonneg
-    (fun i _ => integral_nonneg fun y =>
-      Set.indicator_nonneg (fun y _ => gaussianPDFReal_nonneg 0 1 y) _)]
-  refine Finset.prod_congr rfl fun i _ => ?_
-  rw [gaussianReal_apply_eq_integral 0 one_ne_zero, integral_indicator (hs i)]
-
-private theorem en_prod_pdf {m : ℕ} (x : Fin m → ℝ) :
-    ∏ i, gaussianPDFReal 0 1 (x i)
-      = (Real.sqrt (2 * π))⁻¹ ^ m * Real.exp (-(∑ i, x i ^ 2) / 2) := by
-  simp only [gaussianPDFReal, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ,
-    Fintype.card_fin, ← Real.exp_sum]
-  congr 2
-  · simp
-  · simp only [sub_zero, NNReal.coe_one, mul_one, neg_div]
-    rw [Finset.sum_neg_distrib, Finset.sum_div]
-
-private theorem en_sum_sq_ofLp {m : ℕ} (y : EuclideanSpace ℝ (Fin m)) :
-    ∑ i, (WithLp.ofLp y) i ^ 2 = ‖y‖ ^ 2 := by
-  rw [EuclideanSpace.norm_eq, Real.sq_sqrt (Finset.sum_nonneg fun _ _ => sq_nonneg _)]
-  simp [Real.norm_eq_abs, sq_abs]
-
-/-- Polar coordinates for a radial function of a standard Gaussian vector. -/
-private theorem en_radial (m : ℕ) (hm : 1 ≤ m) (φ : ℝ → ℝ) :
-    ∫ x, φ (Real.sqrt (∑ i, x i ^ 2)) ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1)
-      = m * (volume : Measure (EuclideanSpace ℝ (Fin m))).real (Metric.ball 0 1)
-        * ((Real.sqrt (2 * π))⁻¹ ^ m
-          * ∫ y in Ioi (0 : ℝ), y ^ (m - 1) * (Real.exp (-y ^ 2 / 2) * φ y)) := by
-  rw [en_pi_gauss, integral_withDensity_eq_integral_toReal_smul (by fun_prop)
-    (ae_of_all _ fun _ => ENNReal.ofReal_lt_top)]
-  simp_rw [ENNReal.toReal_ofReal (Finset.prod_nonneg fun i _ => gaussianPDFReal_nonneg 0 1 _),
-    smul_eq_mul, en_prod_pdf]
-  rw [← (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin m)).integral_comp']
-  simp only [MeasurableEquiv.toLp_symm_apply]
-  simp_rw [en_sum_sq_ofLp, Real.sqrt_sq (norm_nonneg _)]
-  have : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
-  have : Nontrivial (EuclideanSpace ℝ (Fin m)) := inferInstance
-  have := integral_fun_norm_addHaar (volume : Measure (EuclideanSpace ℝ (Fin m)))
-    (fun r => (Real.sqrt (2 * π))⁻¹ ^ m * Real.exp (-r ^ 2 / 2) * φ r)
-  rw [this, finrank_euclideanSpace_fin, nsmul_eq_mul, smul_eq_mul]
-  simp_rw [smul_eq_mul]
-  have e : ∀ y : ℝ, y ^ (m - 1) * ((Real.sqrt (2 * π))⁻¹ ^ m * Real.exp (-y ^ 2 / 2) * φ y)
-      = (Real.sqrt (2 * π))⁻¹ ^ m * (y ^ (m - 1) * (Real.exp (-y ^ 2 / 2) * φ y)) := fun y => by
-    ring
-  simp_rw [e]
-  rw [integral_const_mul]
-  ring
-
-
 /-- `J k = ∫₀^∞ y^k e^{-y²/2} dy`. -/
 private noncomputable def enJ (k : ℕ) : ℝ := ∫ y in Ioi (0 : ℝ), y ^ k * Real.exp (-y ^ 2 / 2)
 
 private theorem enJ_eq (k : ℕ) :
-    enJ k = (1 / 2 : ℝ) ^ (-((k : ℝ) + 1) / 2) * (1 / 2) * Real.Gamma (((k : ℝ) + 1) / 2) := by
-  have h := integral_rpow_mul_exp_neg_mul_rpow (p := 2) (q := (k : ℝ)) (b := 1 / 2)
-    (by norm_num) (by have := (Nat.cast_nonneg k : (0 : ℝ) ≤ k); linarith) (by norm_num)
-  rw [← h, enJ]
-  refine setIntegral_congr_fun measurableSet_Ioi fun y hy => ?_
-  rw [Real.rpow_natCast, show (2 : ℝ) = ((2 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]
-  congr 2
-  ring
+    enJ k = 2 ^ (((k : ℝ) + 1) / 2) * (1 / 2) * Real.Gamma (((k : ℝ) + 1) / 2) := by
+  rw [enJ, ← integral_rpow_mul_exp_neg_sq_div_two (k : ℝ)
+    (by have := (Nat.cast_nonneg k : (0 : ℝ) ≤ k); linarith)]
+  simp_rw [Real.rpow_natCast]
 
 private theorem enJ_pos (k : ℕ) : 0 < enJ k := by
   rw [enJ_eq]
@@ -138,11 +52,9 @@ private theorem enJ_rec (k : ℕ) : enJ (k + 2) = (k + 1) * enJ k := by
       = ((k : ℝ) + 1) / 2 * Real.Gamma (((k : ℝ) + 1) / 2) := by
     rw [show ((k : ℝ) + 2 + 1) / 2 = ((k : ℝ) + 1) / 2 + 1 by ring]
     exact Real.Gamma_add_one (by positivity)
-  have hp : (1 / 2 : ℝ) ^ (-((k : ℝ) + 2 + 1) / 2)
-      = (1 / 2 : ℝ) ^ (-((k : ℝ) + 1) / 2) * 2 := by
-    rw [show -((k : ℝ) + 2 + 1) / 2 = -((k : ℝ) + 1) / 2 + (-1) by ring,
-      Real.rpow_add (by norm_num), Real.rpow_neg_one]
-    norm_num
+  have hp : (2 : ℝ) ^ (((k : ℝ) + 2 + 1) / 2) = 2 ^ (((k : ℝ) + 1) / 2) * 2 := by
+    rw [show ((k : ℝ) + 2 + 1) / 2 = ((k : ℝ) + 1) / 2 + 1 by ring,
+      Real.rpow_add (by norm_num), Real.rpow_one]
   rw [hG, hp]
   ring
 
@@ -150,8 +62,8 @@ private theorem enJ_rec (k : ℕ) : enJ (k + 2) = (k + 1) * enJ k := by
 private theorem en_norm_eq (m : ℕ) (hm : 1 ≤ m) :
     ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1)
       = enJ m / enJ (m - 1) := by
-  have h1 := en_radial m hm (fun _ => 1)
-  have h2 := en_radial m hm (fun y => y)
+  have h1 := integral_radial_pi_gaussianReal m hm (fun _ => 1)
+  have h2 := integral_radial_pi_gaussianReal m hm (fun y => y)
   simp only [integral_const, smul_eq_mul, mul_one] at h1
   rw [measureReal_def, measure_univ, ENNReal.toReal_one] at h1
   have e1 : ∫ y in Ioi (0 : ℝ), y ^ (m - 1) * Real.exp (-y ^ 2 / 2) = enJ (m - 1) := rfl
@@ -171,46 +83,30 @@ private theorem en_norm_eq (m : ℕ) (hm : 1 ≤ m) :
   rw [this, ← h1, mul_one]
 
 
-/-- Log-convexity of `Γ` gives `J (k+1)² ≤ J k · J (k+2)`. -/
+/-- Log-convexity of `Γ` (`Gamma_add_half_le_mul_sqrt`) gives `J (k+1)² ≤ J k · J (k+2)`. -/
 private theorem enJ_logconvex (k : ℕ) : enJ (k + 1) ^ 2 ≤ enJ k * enJ (k + 2) := by
   rw [enJ_eq, enJ_eq, enJ_eq]
   push_cast
   set s : ℝ := ((k : ℝ) + 1) / 2 with hs
   have hs0 : 0 < s := by positivity
-  have hG := Real.Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma (s := s) (t := s + 1)
-    (a := 1 / 2) (b := 1 / 2) hs0 (by linarith) (by norm_num) (by norm_num) (by norm_num)
-  have e1 : (1 / 2 : ℝ) * s + 1 / 2 * (s + 1) = ((k : ℝ) + 1 + 1) / 2 := by rw [hs]; ring
+  have e1 : ((k : ℝ) + 1 + 1) / 2 = s + 1 / 2 := by rw [hs]; ring
   have e3 : ((k : ℝ) + 2 + 1) / 2 = s + 1 := by rw [hs]; ring
-  rw [e1] at hG
-  rw [e3]
-  have hGs := Real.Gamma_pos_of_pos hs0
-  have hGt := Real.Gamma_pos_of_pos (show 0 < s + 1 by linarith)
-  have hGm := Real.Gamma_pos_of_pos (show 0 < ((k : ℝ) + 1 + 1) / 2 by positivity)
-  have hG2 : Real.Gamma (((k : ℝ) + 1 + 1) / 2) ^ 2 ≤ Real.Gamma s * Real.Gamma (s + 1) := by
-    have hsq : (Real.Gamma s ^ (1 / 2 : ℝ) * Real.Gamma (s + 1) ^ (1 / 2 : ℝ)) ^ 2
-        = Real.Gamma s * Real.Gamma (s + 1) := by
-      rw [mul_pow, ← Real.rpow_natCast, ← Real.rpow_natCast (Real.Gamma (s + 1) ^ (1 / 2 : ℝ)),
-        ← Real.rpow_mul hGs.le, ← Real.rpow_mul hGt.le]
-      norm_num
-    rw [← hsq]
-    exact pow_le_pow_left₀ hGm.le hG 2
-  have hP : ((1 / 2 : ℝ) ^ (-((k : ℝ) + 1 + 1) / 2)) ^ 2
-      = (1 / 2 : ℝ) ^ (-((k : ℝ) + 1) / 2) * (1 / 2 : ℝ) ^ (-((k : ℝ) + 2 + 1) / 2) := by
-    rw [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num), ← Real.rpow_add (by norm_num)]
-    congr 1
-    push_cast
-    ring
-  have hP0 : 0 < (1 / 2 : ℝ) ^ (-((k : ℝ) + 1) / 2) * (1 / 2 : ℝ) ^ (-((k : ℝ) + 2 + 1) / 2) := by
-    positivity
-  calc ((1 / 2 : ℝ) ^ (-((k : ℝ) + 1 + 1) / 2) * (1 / 2) * Real.Gamma (((k : ℝ) + 1 + 1) / 2)) ^ 2
-      = ((1 / 2 : ℝ) ^ (-((k : ℝ) + 1 + 1) / 2)) ^ 2 * (1 / 4)
-          * Real.Gamma (((k : ℝ) + 1 + 1) / 2) ^ 2 := by ring
-    _ ≤ ((1 / 2 : ℝ) ^ (-((k : ℝ) + 1 + 1) / 2)) ^ 2 * (1 / 4)
-          * (Real.Gamma s * Real.Gamma (s + 1)) := by
-        apply mul_le_mul_of_nonneg_left hG2; positivity
-    _ = (1 / 2 : ℝ) ^ (-((k : ℝ) + 1) / 2) * (1 / 2) * Real.Gamma s *
-          ((1 / 2 : ℝ) ^ (-((k : ℝ) + 2 + 1) / 2) * (1 / 2) * Real.Gamma (s + 1)) := by
-        rw [hP]; ring
+  rw [e1, e3, Real.Gamma_add_one hs0.ne', Real.rpow_add (by norm_num),
+    Real.rpow_add (by norm_num), Real.rpow_one]
+  have hGh := Real.Gamma_pos_of_pos (show 0 < s + 1 / 2 by linarith)
+  have hG2 : Real.Gamma (s + 1 / 2) ^ 2 ≤ Real.Gamma s ^ 2 * s :=
+    calc Real.Gamma (s + 1 / 2) ^ 2 ≤ (Real.Gamma s * √s) ^ 2 :=
+          pow_le_pow_left₀ hGh.le (Gamma_add_half_le_mul_sqrt hs0) 2
+      _ = Real.Gamma s ^ 2 * s := by rw [mul_pow, Real.sq_sqrt hs0.le]
+  have hc : ((2 : ℝ) ^ (1 / 2 : ℝ)) ^ 2 = 2 := by
+    rw [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num)]; norm_num
+  calc (2 ^ s * 2 ^ (1 / 2 : ℝ) * (1 / 2) * Real.Gamma (s + 1 / 2)) ^ 2
+      = (2 ^ s) ^ 2 * ((2 : ℝ) ^ (1 / 2 : ℝ)) ^ 2 * (1 / 4) * Real.Gamma (s + 1 / 2) ^ 2 := by
+        ring
+    _ ≤ (2 ^ s) ^ 2 * ((2 : ℝ) ^ (1 / 2 : ℝ)) ^ 2 * (1 / 4) * (Real.Gamma s ^ 2 * s) := by
+        gcongr
+    _ = 2 ^ s * (1 / 2) * Real.Gamma s * (2 ^ s * 2 * (1 / 2) * (s * Real.Gamma s)) := by
+        rw [hc]; ring
 
 
 /-! ### The sequence argument -/

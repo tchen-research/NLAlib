@@ -37,7 +37,7 @@ private lemma eval_combo {d : ℕ} (A B : Matrix (Fin (d*d)) (Fin (d*d)) ℂ) (a
   simp [jointTensorEval, Matrix.add_mulVec, Matrix.smul_mulVec, dotProduct_add,
     dotProduct_smul]
 private lemma eval_mono {d : ℕ} (A B : Matrix (Fin (d*d)) (Fin (d*d)) ℂ)
-    (h : LoewnerLE A B) : jointTensorEval A ≤ jointTensorEval B := by
+    (h : A ≤ B) : jointTensorEval A ≤ jointTensorEval B := by
   have hp := h.dotProduct_mulVec_nonneg jointTensorVec
   have hr := (Complex.nonneg_iff.mp hp).1
   simpa [jointTensorEval, Matrix.sub_mulVec, dotProduct_sub] using hr

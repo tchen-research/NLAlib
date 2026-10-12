@@ -1,6 +1,7 @@
 import NLAlib.ForMathlib.Probability.UniformSamplingJensen
 import NLAlib.ForMathlib.Probability.UniformProduct
 import NLAlib.Probability.Concentration.Matrix.Sampling
+import NLAlib.Matrix.Functions.TraceExpBounds
 
 /-!
 # Matrix Chernoff for actual sampling without replacement
@@ -14,35 +15,9 @@ noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 600000
 open MeasureTheory ProbabilityTheory
+open scoped MatrixOrder
 open scoped Classical Matrix Matrix.Norms.L2Operator ENNReal ComplexOrder
 namespace NLAlib
-
-/-- The trace exponential of a scalar identity has its exact scalar value.
-Source: the spectral formula; supports `sh:srht-ose`. -/
-theorem traceExp_smul_one {d : ℕ} [NeZero d] (t : ℝ) :
-    traceExp (t • (1 : Matrix (Fin d) (Fin d) ℂ)) = d * Real.exp t := by
-  have hI := (Matrix.isHermitian_one : (1 : Matrix (Fin d) (Fin d) ℂ).IsHermitian)
-  rw [traceExp_smul_eq_sum _ hI]
-  have he (i : Fin d) : hI.eigenvalues i = 1 := by
-    have hi := hI.eigenvalues_mem_spectrum_real i
-    simpa only [spectrum.one_eq, Set.mem_singleton_iff] using hi
-  simp only [he, mul_one, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-    nsmul_eq_mul]
-
-/-- Convexity of the actual trace exponential on bundled Hermitian matrices,
-at either sign of the Laplace parameter. Source: `sh:convex-sampling`. -/
-theorem convexOn_traceExp_smul_selfAdjoint {d : ℕ} [NeZero d] (θ : ℝ) :
-    ConvexOn ℝ Set.univ
-      (fun A : selfAdjoint (Matrix (Fin d) (Fin d) ℂ) => traceExp (θ • A.val)) := by
-  refine ⟨convex_univ, ?_⟩
-  intro A _ B _ a b ha hb hab
-  have hA : (θ • A.val).IsHermitian :=
-    (Matrix.isHermitian_iff_isSelfAdjoint.mpr selfAdjoint.isSelfAdjoint).smul (IsSelfAdjoint.all θ)
-  have hB : (θ • B.val).IsHermitian :=
-    (Matrix.isHermitian_iff_isSelfAdjoint.mpr selfAdjoint.isSelfAdjoint).smul (IsSelfAdjoint.all θ)
-  have hh := (convexOn_traceExp_isHermitian (d := d)).2 hA hB ha hb hab
-  simpa only [selfAdjoint.val_smul, AddSubgroup.coe_add, smul_add, smul_smul,
-    mul_comm θ] using hh
 
 /-- The genuine uniform-subset trace MGF is below the uniform-iid trace MGF.
 Source: Hoeffding comparison from the explicit support-extension coupling. -/
@@ -112,15 +87,16 @@ theorem integral_traceExp_uniform_iid_le
   have hcum := trace_cgf_subadditivity μ X θ hm hh hi hexp
   have hcH : (cumulantSum μ X θ).IsHermitian :=
     isSelfAdjoint_sum _ (fun a _ => cfc_predicate Real.log _)
-  have hsum : LoewnerLE (cumulantSum μ X θ)
+  have hsum : (cumulantSum μ X θ) ≤
       (((k : ℝ) * chernoffCgfCoefficient L θ) • (1 : Matrix (Fin d) (Fin d) ℂ)) := by
     have hc (a : Fin k) :=
       (chernoff_matrix_mgf_cgf_le μ (X a) L hL (hm a) (hh a) (hb a) θ).2
-    have hs : LoewnerLE (cumulantSum μ X θ)
+    have hs : (cumulantSum μ X θ) ≤
         (∑ _a : Fin k, chernoffCgfCoefficient L θ • (1 : Matrix (Fin d) (Fin d) ℂ)) := by
-      unfold LoewnerLE cumulantSum
+      unfold cumulantSum
+      rw [Matrix.le_iff]
       rw [← Finset.sum_sub_distrib]
-      exact Matrix.posSemidef_sum _ (fun a _ => by simpa only [he, LoewnerLE] using hc a)
+      exact Matrix.posSemidef_sum _ (fun a _ => by simpa only [he, Matrix.le_iff] using hc a)
     simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
       ← Nat.cast_smul_eq_nsmul ℝ, smul_smul] using hs
   calc
@@ -129,6 +105,6 @@ theorem integral_traceExp_uniform_iid_le
     _ ≤ traceExp (((k : ℝ) * chernoffCgfCoefficient L θ) •
         (1 : Matrix (Fin d) (Fin d) ℂ)) :=
       traceExp_le_traceExp _ _ hcH (Matrix.isHermitian_one.smul (IsSelfAdjoint.all _)) hsum
-    _ = _ := traceExp_smul_one _
+    _ = _ := by rw [traceExp_smul_one_eq_card_mul_exp, Fintype.card_fin]
 
 end NLAlib

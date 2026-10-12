@@ -25,7 +25,7 @@ theorem coordinateEnergy_mulVec_le_of_norm_le
     {I : Type*} [Fintype I] [DecidableEq I]
     (A : Matrix I I ℝ) (z : I → ℝ) (C : ℝ)
     (_hC : 0 ≤ C) (hA : ‖A‖ ≤ C) :
-    coordinateEnergy (A.mulVec z) ≤ C ^ 2 * coordinateEnergy z := by
+    FiniteHilbert.normSq (A.mulVec z) ≤ C ^ 2 * FiniteHilbert.normSq z := by
   let zE : EuclideanSpace ℝ I := WithLp.toLp 2 z
   let yE : EuclideanSpace ℝ I :=
     (EuclideanSpace.equiv I ℝ).symm (Matrix.mulVec A zE)
@@ -33,17 +33,17 @@ theorem coordinateEnergy_mulVec_le_of_norm_le
     simpa [yE] using Matrix.l2_opNorm_mulVec A zE
   have hopC : ‖yE‖ ≤ C * ‖zE‖ :=
     hop.trans (mul_le_mul_of_nonneg_right hA (norm_nonneg zE))
-  have hz : ‖zE‖ ^ 2 = coordinateEnergy z := by
+  have hz : ‖zE‖ ^ 2 = FiniteHilbert.normSq z := by
     rw [EuclideanSpace.norm_sq_eq]
-    simp [zE, coordinateEnergy]
-  have hy : ‖yE‖ ^ 2 = coordinateEnergy (A.mulVec z) := by
+    simp [zE, FiniteHilbert.normSq]
+  have hy : ‖yE‖ ^ 2 = FiniteHilbert.normSq (A.mulVec z) := by
     rw [EuclideanSpace.norm_sq_eq]
-    simp [yE, zE, coordinateEnergy, Matrix.mulVec]
+    simp [yE, zE, FiniteHilbert.normSq, Matrix.mulVec]
   calc
-    coordinateEnergy (A.mulVec z) = ‖yE‖ ^ 2 := hy.symm
+    FiniteHilbert.normSq (A.mulVec z) = ‖yE‖ ^ 2 := hy.symm
     _ ≤ (C * ‖zE‖) ^ 2 := by
       nlinarith [norm_nonneg yE, mul_nonneg _hC (norm_nonneg zE)]
-    _ = C ^ 2 * coordinateEnergy z := by rw [mul_pow, hz]
+    _ = C ^ 2 * FiniteHilbert.normSq z := by rw [mul_pow, hz]
 
 set_option maxHeartbeats 1000000 in
 /-- The grade-restricted shared-leg operator has the dimension-plus-grade squared-energy bound.
@@ -67,22 +67,22 @@ theorem ghat_gradeProjection_normSq_le
   rw [normSq_eq_sum_blockFiber, normSq_eq_sum_blockFiber]
   calc
     (∑ q : FockBlockKey m n,
-      coordinateEnergy
+      FiniteHilbert.normSq
         (blockFiber
           (Matrix.mulVec
             (ghat (m := m) F *
               gradeProjection (d := d) (m := m) (n := n) nu) x) q)) =
         ∑ q : FockBlockKey m n,
           if blockGrade q = nu then
-            coordinateEnergy
+            FiniteHilbert.normSq
               (Matrix.mulVec (ghatBlock F q.1 q.2.1) (blockFiber x q))
           else 0 := by
             apply Finset.sum_congr rfl
             intro q _hq
             rw [blockFiber_ghat_gradeProjection_mulVec]
             by_cases hg : blockGrade q = nu <;>
-              simp [hg, coordinateEnergy]
-    _ ≤ ∑ q : FockBlockKey m n, C ^ 2 * coordinateEnergy (blockFiber x q) := by
+              simp [hg, FiniteHilbert.normSq]
+    _ ≤ ∑ q : FockBlockKey m n, C ^ 2 * FiniteHilbert.normSq (blockFiber x q) := by
       apply Finset.sum_le_sum
       intro q _hq
       by_cases hg : blockGrade q = nu
@@ -93,8 +93,8 @@ theorem ghat_gradeProjection_normSq_le
             exact ghatBlock_zero_light F q.1
           rw [hzero]
           have hnonneg := mul_nonneg (sq_nonneg C)
-            (coordinateEnergy_nonneg (blockFiber x q))
-          simpa [coordinateEnergy] using hnonneg
+            (FiniteHilbert.normSq_nonneg (blockFiber x q))
+          simpa [FiniteHilbert.normSq] using hnonneg
         · have hellPos : 1 ≤ q.2.1 := Nat.one_le_iff_ne_zero.mpr hell
           have hellLe : q.2.1 ≤ nu := by
             dsimp [blockGrade] at hg
@@ -105,11 +105,11 @@ theorem ghat_gradeProjection_normSq_le
               simpa [C] using
                 ghatBlock_norm_le_grade F q.1 q.2.1 nu hellPos hellLe)
       · rw [if_neg hg]
-        exact mul_nonneg (sq_nonneg C) (coordinateEnergy_nonneg (blockFiber x q))
-    _ = C ^ 2 * ∑ q : FockBlockKey m n, coordinateEnergy (blockFiber x q) := by
+        exact mul_nonneg (sq_nonneg C) (FiniteHilbert.normSq_nonneg (blockFiber x q))
+    _ = C ^ 2 * ∑ q : FockBlockKey m n, FiniteHilbert.normSq (blockFiber x q) := by
       rw [Finset.mul_sum]
     _ = ((d : ℝ) + (nu : ℝ) - 1) ^ 2 *
-        ∑ q : FockBlockKey m n, coordinateEnergy (blockFiber x q) := rfl
+        ∑ q : FockBlockKey m n, FiniteHilbert.normSq (blockFiber x q) := rfl
 
 /-- Sharp positive-grade Euclidean operator bound on the actual Pattern/Fock
 operator.

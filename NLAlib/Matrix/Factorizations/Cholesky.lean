@@ -3,7 +3,8 @@ import NLAlib.Matrix.Factorizations.LU
 # Cholesky factorization and the Cholesky recursion
 
 * `IsCholesky A L`: `A = L Lᵀ` with `L` lower triangular with positive diagonal (any linearly
-  ordered index); `IsCholesky.posDef`, `IsCholesky.unique`, `IsCholesky.det_eq_prod_sq`.
+  ordered index); `IsCholesky.posDef`, `IsCholesky.unique` (the determinant formula is
+  `det_eq_prod_sq_diag_of_cholesky` in `CholeskyDefinite`).
 * The recursion `cholesky A` on the leading pivot (`a ↦ √a`, `c ↦ c/√a`, continue on
   `pivotSchur A`), the success predicate `CholeskySucceeds A` (every pivot positive), the
   realisation `isCholesky_cholesky` (symmetric `A`) and the breakdown theorem
@@ -48,13 +49,6 @@ structure IsCholesky (A L : Matrix n n ℝ) : Prop where
 /-- A Cholesky factor is invertible. -/
 theorem IsCholesky.isUnit_det {A L : Matrix n n ℝ} (h : IsCholesky A L) : IsUnit L.det :=
   (isUnit_det_iff_of_isLowerTriangular h.isLowerTriangular).2 fun i => (h.apply_self_pos i).ne'
-
-/-- `det A = ∏ᵢ lᵢᵢ²` for a Cholesky factorization. Trefethen–Bau 1997, Lect. 23;
-Golub–Van Loan 2013, §4.2. -/
-theorem IsCholesky.det_eq_prod_sq {A L : Matrix n n ℝ} (h : IsCholesky A L) :
-    A.det = ∏ i, L i i ^ 2 := by
-  rw [h.eq_mul_transpose, det_mul, det_transpose, det_of_isLowerTriangular L h.isLowerTriangular,
-    ← sq, Finset.prod_pow]
 
 /-- A matrix with a Cholesky factorization is positive definite (`L` invertible, so
 `xᵀ A x = ‖Lᵀ x‖² > 0` for `x ≠ 0`). Trefethen–Bau 1997, Thm 23.1 (converse direction).

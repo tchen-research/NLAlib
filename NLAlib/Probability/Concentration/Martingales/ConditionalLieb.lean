@@ -1,5 +1,5 @@
 import NLAlib.ForMathlib.MeasureTheory.ConditionalJensen
-import NLAlib.Probability.Concentration.Matrix.LiebReindex
+import NLAlib.Matrix.OperatorTheory.LiebTraceFunction
 /-!
 # Actual conditional Lieb inequality for a fixed Hermitian offset
 
@@ -32,13 +32,13 @@ theorem condExp_traceExp_add_le_traceExp_add_matrixLog_of_ae_posDef_condExp
     μ[(fun ω => traceExp (H + X ω)) | m] ≤ᵐ[μ]
       fun ω => traceExp (H + matrixLog (μ[(fun ω => matrixExp (X ω)) | m] ω)) := by
   have hpos : ∀ᵐ ω ∂μ, (matrixExp (X ω)).PosDef :=
-    hHerm.mono fun ω hω => (posDef_matrixExp_and_matrixLog_matrixExp_finite _ hω).1
+    hHerm.mono fun ω hω => (posDef_matrixExp_and_matrixLog_matrixExp _ hω).1
   have heq : (fun ω => traceExp (H + matrixLog (matrixExp (X ω)))) =ᵐ[μ]
       (fun ω => traceExp (H + X ω)) := by
     filter_upwards [hHerm] with ω hω
-    rw [(posDef_matrixExp_and_matrixLog_matrixExp_finite _ hω).2]
+    rw [(posDef_matrixExp_and_matrixLog_matrixExp _ hω).2]
   have hJ := ConcaveOn.condExp_map_le_of_condExp_mem hm (lieb_concavity_finite H hH)
-    (continuousOn_traceExp_add_matrixLog_finite H) hpos hExp (hTrace.congr heq.symm) hmean
+    (continuousOn_traceExp_add_matrixLog H) hpos hExp (hTrace.congr heq.symm) hmean
   filter_upwards [hJ, condExp_congr_ae heq] with ω hω hEq
   rw [← hEq]
   exact hω

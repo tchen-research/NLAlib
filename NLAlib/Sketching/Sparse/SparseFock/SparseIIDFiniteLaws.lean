@@ -3,7 +3,7 @@ Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.SparseStackDistribution
 import NLAlib.Sketching.Sparse.SparseFock.TernaryJacobi
-import NLAlib.Sketching.Sparse.SparseFock.PaperParameters
+import NLAlib.Sketching.Sparse.SparseFock.SparseMomentParameters
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -92,21 +92,6 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
     outcomeOfSign (flipSign e) = negateOutcome (outcomeOfSign e) := by
   cases e <;> rfl
 
-/-- One iid ternary coordinate with masses `1/(2b), 1-1/b, 1/(2b)`.
-
-Source: ported from `SparseFockFormal.SparseIIDCoupling`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def coordinateLaw (b : ℕ) (hb : 0 < b) : FiniteLaw EtaOutcome where
-  weight := TernaryJacobi.mass b
-  weight_nonneg := TernaryJacobi.mass_nonneg hb
-  sum_weight := TernaryJacobi.sum_mass hb
-
-/-- The coordinate law has exactly the prescribed ternary mass.
-Source: ported from `SparseFockFormal.SparseIIDCoupling`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp] theorem coordinateLaw_weight (b : ℕ) (hb : 0 < b) (z : EtaOutcome) :
-    (coordinateLaw b hb).weight z = TernaryJacobi.mass b z := rfl
-
 /-- An iid vector `Y ∈ {-1,0,1}^b`.
 
 Source: ported from `SparseFockFormal.SparseIIDCoupling`,
@@ -118,7 +103,7 @@ abbrev YVector (b : ℕ) := Fin b → EtaOutcome
 Source: ported from `SparseFockFormal.SparseIIDCoupling`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 def yVectorLaw (b : ℕ) (hb : 0 < b) : FiniteLaw (YVector b) :=
-  FiniteLaw.independentProduct (fun _ : Fin b => coordinateLaw b hb)
+  FiniteLaw.independentProduct (fun _ : Fin b => TernaryJacobi.law b hb)
 
 /-- The iid vector-law weight is the product of its coordinate masses.
 Source: ported from `SparseFockFormal.SparseIIDCoupling`,

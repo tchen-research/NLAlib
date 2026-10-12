@@ -14,14 +14,6 @@ open scoped Matrix Matrix.Norms.L2Operator BigOperators ENNReal
 
 namespace NLAlib
 
-/-- Native singular values vanish past the smaller matrix dimension. -/
-theorem toEuclideanLin_singularValues_eq_zero_of_min_le {m n : Type*}
-    [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) {i : ℕ}
-    (hi : min (Fintype.card m) (Fintype.card n) ≤ i) : A.toEuclideanLin.singularValues i = 0 := by
-  rw [← singularValues_eq_linearMap,
-    ← singularValues_reindex A (Fintype.equivFin m) (Fintype.equivFin n)]
-  exact singularValues_eq_zero_of_min_le _ hi
-
 /-- Zero padding a positive-exponent singular-value power sum leaves it unchanged. -/
 theorem sum_range_toEuclideanLin_singularValues_rpow_eq_of_min_le {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) {N : ℕ}
@@ -31,7 +23,7 @@ theorem sum_range_toEuclideanLin_singularValues_rpow_eq_of_min_le {m n : Type*}
   symm
   apply Finset.sum_subset (Finset.range_subset_range.mpr hN)
   intro i _ hi
-  rw [toEuclideanLin_singularValues_eq_zero_of_min_le A (by
+  rw [← singularValues_eq_linearMap, singularValues_eq_zero_of_min_le A (by
     simpa only [Finset.mem_range, not_lt] using hi), Real.zero_rpow hp.ne']
 
 /-- Schatten norms may be written with any sufficiently long zero-padded
@@ -76,35 +68,5 @@ theorem schattenNorm_mul_le_mul {m n q : Type*} [Fintype m] [Fintype n] [Fintype
       rw [Real.mul_rpow (Real.rpow_nonneg hSA _) (Real.rpow_nonneg hSB _),
         ← Real.rpow_mul hSA, ← Real.rpow_mul hSB]
       congr 1 <;> congr 1 <;> field_simp
-
-/-- Native right-ideal singular-value bound for every padded index. -/
-theorem toEuclideanLin_singularValues_mul_le_mul_specNorm {m n q : Type*}
-    [Fintype m] [Fintype n] [Fintype q] [DecidableEq n] [DecidableEq q]
-    (A : Matrix m n ℝ) (B : Matrix n q ℝ) (i : ℕ) :
-    (A * B).toEuclideanLin.singularValues i ≤ A.toEuclideanLin.singularValues i * specNorm B := by
-  let em := Fintype.equivFin m
-  let en := Fintype.equivFin n
-  let eq := Fintype.equivFin q
-  have h := singularValues_mul_le_mul_specNorm (A.reindex em en) (B.reindex en eq) i
-  have hmul : A.reindex em en * B.reindex en eq = (A * B).reindex em eq := by
-    simpa only [Matrix.reindex_apply] using Matrix.submatrix_mul_equiv A B em.symm en.symm eq.symm
-  rw [hmul, specNorm_reindex] at h
-  simp only [em, en, eq, singularValues_reindex] at h
-  exact h
-
-/-- Native left-ideal singular-value bound for every padded index. -/
-theorem toEuclideanLin_singularValues_mul_le_specNorm_mul {m n q : Type*}
-    [Fintype m] [Fintype n] [Fintype q] [DecidableEq m] [DecidableEq n] [DecidableEq q]
-    (A : Matrix m n ℝ) (B : Matrix n q ℝ) (i : ℕ) :
-    (A * B).toEuclideanLin.singularValues i ≤ specNorm A * B.toEuclideanLin.singularValues i := by
-  let em := Fintype.equivFin m
-  let en := Fintype.equivFin n
-  let eq := Fintype.equivFin q
-  have h := singularValues_mul_le_specNorm_mul (A.reindex em en) (B.reindex en eq) i
-  have hmul : A.reindex em en * B.reindex en eq = (A * B).reindex em eq := by
-    simpa only [Matrix.reindex_apply] using Matrix.submatrix_mul_equiv A B em.symm en.symm eq.symm
-  rw [hmul, specNorm_reindex] at h
-  simp only [em, en, eq, singularValues_reindex] at h
-  exact h
 
 end NLAlib

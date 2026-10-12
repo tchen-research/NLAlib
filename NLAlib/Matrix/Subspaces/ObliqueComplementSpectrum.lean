@@ -46,7 +46,7 @@ theorem singularValues_one_sub_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
     _ = B.toEuclideanLin.singularValues k := by
       rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
         ← singularValues_transpose A, ← singularValues_transpose B]
-      apply toEuclideanLin_singularValues_eq_of_gram_eq
+      apply singularValues_eq_of_gram_eq
       simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hGram
     _ = _ := singularValues_oblique_canonical t ht0 ht (by simpa only [min_comm] using hz) k
 

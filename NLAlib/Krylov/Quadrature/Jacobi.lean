@@ -37,42 +37,6 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-/-! ### Polynomials below the grade -/
-
-/-- A polynomial of degree below the grade that annihilates `b` is zero: the vectors
-`b, A b, …, A^{ν−1} b` are linearly independent. Helper for `krylov-grade` (belongs in
-`NLAlib.Krylov.Spaces.Grade`). -/
-theorem eq_zero_of_aeval_mulVec_eq_zero {A : Matrix n n ℝ} {b : n → ℝ} {p : ℝ[X]}
-    (hp : p.degree < krylovGrade A b) (h0 : aeval A p *ᵥ b = 0) : p = 0 := by
-  set ν := krylovGrade A b
-  have hli := (linearIndependent_pow_mulVec_iff_le_krylovGrade A b (q := ν)).2 le_rfl
-  have hsum : ∑ i : Fin ν, p.coeff i • ((A ^ (i : ℕ)) *ᵥ b) = 0 := by
-    rw [← h0]
-    by_cases hp0 : p = 0
-    · simp [hp0]
-    have hnat : p.natDegree < ν := (natDegree_lt_iff_degree_lt hp0).2 hp
-    conv_rhs => rw [p.as_sum_range' ν hnat]
-    simp only [map_sum, Matrix.sum_mulVec, ← C_mul_X_pow_eq_monomial, map_mul, aeval_C,
-      map_pow, aeval_X, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
-      Matrix.smul_mulVec]
-    exact (Fin.sum_univ_eq_sum_range (fun i => p.coeff i • (A ^ i) *ᵥ b) ν)
-  have hc := Fintype.linearIndependent_iff.1 hli _ hsum
-  ext i
-  rw [coeff_zero]
-  by_cases hi : i < ν
-  · exact hc ⟨i, hi⟩
-  · exact coeff_eq_zero_of_degree_lt (lt_of_lt_of_le hp (by exact_mod_cast not_lt.1 hi))
-
-/-- For symmetric `A`, `∫ p p' dμ_b = (p(A) b) ⬝ (p'(A) b)`. Helper for `spectral-measure`
-(belongs in `NLAlib.Krylov.Quadrature.SpectralMeasure`). -/
-theorem integral_eval_mul_eval_spectralMeasure {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    (b : n → ℝ) (p p' : ℝ[X]) :
-    ∫ x, p.eval x * p'.eval x ∂spectralMeasure hA b = (aeval A p *ᵥ b) ⬝ᵥ (aeval A p' *ᵥ b) := by
-  have h := integral_eval_spectralMeasure hA b (p * p')
-  simp only [eval_mul] at h
-  rw [h, map_mul, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose,
-    transpose_aeval hA]
-
 namespace LanczosDecomp
 
 variable {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
@@ -195,31 +159,6 @@ theorem sub_mul_sum_eval_poly_mul (D : LanczosDecomp A b q) (hA : A.IsSymm) {m :
 
 /-! ### The characteristic polynomial of `T` -/
 
-/-- Projected powers: `Q_qᵀ A^k b = T_q^k Q_qᵀ b` for `k ≤ q`. -/
-theorem transpose_Q_mulVec_pow_mulVec (D : LanczosDecomp A b q) {k : ℕ} (hk : k ≤ q) :
-    D.Qᵀ *ᵥ ((A ^ k) *ᵥ b) = (D.T ^ k) *ᵥ (D.Qᵀ *ᵥ b) := by
-  have hQ := D.hasOrthonormalCols
-  have hQQ : D.Qᵀ * D.Q = 1 := hQ
-  have hlift : ∀ i, i < q → D.Q *ᵥ ((D.T ^ i) *ᵥ (D.Qᵀ *ᵥ b)) = (A ^ i) *ᵥ b := fun i hi =>
-    mulVec_pow_transpose_mul_mul_mulVec_eq hQ b D.range_Q.ge hi
-  rcases Nat.lt_or_ge k q with hlt | hge
-  · rw [← hlift k hlt, Matrix.mulVec_mulVec, hQQ, Matrix.one_mulVec]
-  · obtain rfl : k = q := le_antisymm hk hge
-    rcases k with _ | k
-    · simp
-    · rw [pow_succ', ← Matrix.mulVec_mulVec, ← hlift k (by omega), pow_succ',
-        ← Matrix.mulVec_mulVec]
-      simp only [Matrix.mulVec_mulVec, ArnoldiDecomp.H_def, Matrix.mul_assoc]
-
-/-- `Q_qᵀ p(A) b = p(T_q) Q_qᵀ b` for `deg p ≤ q`. -/
-theorem transpose_Q_mulVec_aeval_mulVec (D : LanczosDecomp A b q) {p : ℝ[X]}
-    (hp : p.natDegree ≤ q) : D.Qᵀ *ᵥ (aeval A p *ᵥ b) = aeval D.T p *ᵥ (D.Qᵀ *ᵥ b) := by
-  rw [aeval_eq_sum_range, aeval_eq_sum_range, Matrix.sum_mulVec, Matrix.mulVec_sum,
-    Matrix.sum_mulVec]
-  refine Finset.sum_congr rfl fun k hk => ?_
-  rw [Matrix.smul_mulVec, Matrix.mulVec_smul, Matrix.smul_mulVec,
-    D.transpose_Q_mulVec_pow_mulVec (by have := Finset.mem_range.1 hk; omega)]
-
 /-- **`det(x I − T_q)` is the monic orthogonal polynomial of degree `q`**: for symmetric `A`,
 `χ_q = charpoly T_q` (monic of degree `q`, `charpoly_T_monic`, `natDegree_charpoly_T`) is
 orthogonal in `μ_b` to every polynomial of degree `< q`. Source: Golub–Meurant (2010)
@@ -233,8 +172,9 @@ theorem integral_eval_charpoly_mul_eq_zero (D : LanczosDecomp A b q) (hA : A.IsH
   obtain ⟨y, hy⟩ : aeval A r *ᵥ b ∈ LinearMap.range D.Q.mulVecLin := by
     rw [D.range_Q]; exact (mem_krylovSpace_iff_degree A b q _).2 ⟨r, hr, rfl⟩
   rw [← hy, Matrix.mulVecLin_apply, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose,
-    D.transpose_Q_mulVec_aeval_mulVec (by rw [charpoly_natDegree_eq_dim, Fintype.card_fin]),
-    aeval_self_charpoly, Matrix.zero_mulVec, zero_dotProduct]
+    transpose_mulVec_aeval_mulVec_eq D.hasOrthonormalCols b D.range_Q.ge
+      (natDegree_le_iff_degree_le.1 (by rw [charpoly_natDegree_eq_dim, Fintype.card_fin])),
+    ← ArnoldiDecomp.H_def, aeval_self_charpoly, Matrix.zero_mulVec, zero_dotProduct]
 
 /-- `charpoly T_q` is monic of degree `q`. Atlas: `lanczos-orthogonal-polynomials`. -/
 theorem charpoly_T_monic (D : LanczosDecomp A b q) :
@@ -280,7 +220,9 @@ theorem charpoly_restrict_T_mul_poly_zero (D : LanczosDecomp A b q) (hA : A.IsSy
   set χ := (LanczosDecomp.T D').charpoly
   have hχdeg : χ.natDegree = j := by rw [charpoly_natDegree_eq_dim, Fintype.card_fin]
   have hχ0 : D'.Qᵀ *ᵥ (aeval A χ *ᵥ b) = 0 := by
-    rw [D'.transpose_Q_mulVec_aeval_mulVec hχdeg.le, aeval_self_charpoly, Matrix.zero_mulVec]
+    rw [transpose_mulVec_aeval_mulVec_eq D'.hasOrthonormalCols b D'.range_Q.ge
+      (natDegree_le_iff_degree_le.1 hχdeg.le), ← ArnoldiDecomp.H_def, aeval_self_charpoly,
+      Matrix.zero_mulVec]
   have hmem : aeval A χ *ᵥ b ∈ krylovSpace A b (j + 1) := by
     refine (mem_krylovSpace_iff_degree A b _ _).2 ⟨χ, ?_, rfl⟩
     rw [degree_eq_natDegree (charpoly_monic _).ne_zero, hχdeg]

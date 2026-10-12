@@ -283,7 +283,7 @@ theorem normalized_Lminus_gradeProjection_norm_eq_shift
     _ = ‖(((1 / (m : ℝ)) •
           Lminus m (DirectionalConcrete.frameRows F)) *
           gradeProjection (d := d) (m := m) (n := n) (k + 2)).transpose‖ := by
-      exact (DirectionalNormalized.l2_norm_transpose _).symm
+      exact (specNorm_transpose _).symm
     _ = _ := by
       rw [Matrix.transpose_mul, Matrix.transpose_smul,
         Lminus_transpose_eq_Lplus, gradeProjection_transpose,

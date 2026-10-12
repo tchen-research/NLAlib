@@ -56,7 +56,7 @@ private theorem col_dotProduct_self_eq_one {U : Matrix n n ℝ} (hU : Uᵀ * U =
 private theorem eigenvalues₀_pencil_zero {C B : Matrix n n ℝ}
     (hC : C.IsHermitian) (hB : B.IsHermitian) (i : Fin (Fintype.card n)) :
     (isHermitian_add_smul hC hB 0).eigenvalues₀ i = hC.eigenvalues₀ i := by
-  exact eigenvalues₀_eq_of_eq (by simp) _ hC i
+  exact congrFun (eigenvalues₀_eq_of_matrix_eq _ hC (by simp)) i
 
 set_option maxHeartbeats 2000000 in
 /-- Any positive perturbation sequence tending to zero admits a subsequence of

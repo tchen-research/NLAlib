@@ -70,15 +70,6 @@ theorem existsUnique_sylvester_of_isCoprime_charpoly (A : Matrix m m K)
   refine ⟨X, hX, fun Y hY => ?_⟩
   exact (sylvesterLinearMap_bijective_of_isCoprime_charpoly A B hcop).1 (hY.trans hX.symm)
 
-/-- Polynomial functional calculus preserves every rectangular intertwining
-relation. Source: Horn–Johnson (2013), Lemma 2.4.4.0; this applies the existing
-polynomial-intertwining API over an arbitrary field.
-atlas: sylvester-equation (partial) -/
-theorem aeval_intertwines {A : Matrix m m K} {B : Matrix n n K}
-    {X : Matrix m n K} (hX : A * X = X * B) (p : K[X]) :
-    aeval A p * X = X * aeval B p :=
-  aeval_mul_eq_mul_aeval_of_mul_eq hX p
-
 /-- Over an algebraically closed field, spectral disjointness is exactly
 coprimality of characteristic polynomials. Source: Horn–Johnson (2013),
 Theorem 2.4.4.1; empty spectra cause no exception. -/

@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Norms.EuclideanOperatorBounds
 import NLAlib.Matrix.Spectral.FiniteIndexTransport
+import NLAlib.Matrix.Subspaces.OrthonormalBasisMatrix
 /-!
 # Distances between orthogonal projections
 
@@ -143,9 +144,11 @@ theorem specNorm_one_sub_transpose_mul_eq_one_sub_mul_transpose (C : Matrix n n 
   exact hf
 
 /-- The residual Gram equals the identity minus the overlap Gram for
-orthonormal frames. Stewart–Sun §I.5; empty frames are allowed. -/
-theorem transpose_residual_mul_residual_eq_one_sub_overlap
-    {P Q : Matrix m n ℝ} (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
+orthonormal frames: `(residual P Q)ᵀ (residual P Q) = I − (PᵀQ)ᵀ(PᵀQ)`. The frame widths may
+differ, and empty frames are allowed. Stewart–Sun, §I.5 (Theorem I.5.5). -/
+theorem transpose_residual_mul_residual_eq_one_sub_overlap {p : Type*} [DecidableEq p]
+    {P : Matrix m n ℝ} {Q : Matrix m p ℝ} (hP : HasOrthonormalCols P)
+    (hQ : HasOrthonormalCols Q) :
     (residual P Q)ᵀ * residual P Q = 1 - (Pᵀ*Q)ᵀ*(Pᵀ*Q) := by
   rw [residual_eq_one_sub_mul, Matrix.transpose_mul,
     show (1-P*Pᵀ)ᵀ = 1-P*Pᵀ by simp,
@@ -154,8 +157,10 @@ theorem transpose_residual_mul_residual_eq_one_sub_overlap
     Matrix.one_mul, hQ]
   simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
 
-/-- The two residuals between equal-width orthonormal frames have equal
-spectral norm. Stewart–Sun §I.5; the square overlap SVD handles zero angles.
+/-- **Symmetry of `θ_max` for equal dimensions.** The two residuals between equal-width
+orthonormal frames have equal spectral norm: `‖(I − PPᵀ)Q‖₂ = ‖(I − QQᵀ)P‖₂`. False for unequal
+widths (a line inside a plane has `θ = 0` one way and `π/2` the other). Stewart–Sun, Thm I.5.5;
+Golub–Van Loan 2013, Thm 2.5.1; the square overlap SVD handles zero angles.
 atlas: principal-angles-def (partial) -/
 theorem specNorm_residual_comm {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
@@ -169,8 +174,9 @@ theorem specNorm_residual_comm {P Q : Matrix m n ℝ}
     Matrix.transpose_transpose] at hq
   nlinarith [specNorm_nonneg (residual P Q), specNorm_nonneg (residual Q P)]
 
-/-- Equal-rank frame projector distance is exactly the one-sided residual
-spectral norm. Stewart–Sun §I.5, including empty frames.
+/-- **Projector form of `sin θ_max`.** Equal-rank frame projector distance is exactly the
+one-sided residual spectral norm: `‖PPᵀ − QQᵀ‖₂ = ‖(I − PPᵀ)Q‖₂`. Stewart–Sun, Thm I.5.5;
+Golub–Van Loan 2013, Thm 2.5.1; including empty frames.
 atlas: principal-angles-def (partial) -/
 theorem specNorm_sub_frame_projector_eq_residual {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :

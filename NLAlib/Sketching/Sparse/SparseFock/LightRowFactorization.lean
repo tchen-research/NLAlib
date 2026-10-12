@@ -1,9 +1,9 @@
 /- Copyright (c) 2026 Diar Heidary.
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
-import NLAlib.Sketching.Sparse.SparseFock.LightSectorConcrete
+import NLAlib.Sketching.Sparse.SparseFock.LightZeroBlock
 import NLAlib.Sketching.Sparse.SparseFock.DirectionalNormalized
-import NLAlib.Sketching.Sparse.SparseFock.HeavyBandsConcrete
+import NLAlib.Sketching.Sparse.SparseFock.HeavyNormalizedBands
 import NLAlib.Sketching.Sparse.SparseFock.ConcreteLadder
 import NLAlib.Sketching.Sparse.SparseFock.TypedBlockCS
 import NLAlib.Sketching.Sparse.SparseFock.BandEnvelope
@@ -31,12 +31,6 @@ open BandInventory GlobalBands
 noncomputable section
 
 variable {d m n : ℕ}
-
-/-- The common middle space: one scalar Fock copy for every physical row.
-
-Source: ported from `SparseFockFormal.LightBandsConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-abbrev RowFock (m n : ℕ) := HeavyBandsConcrete.RowFock m n
 
 /-- One creation-synthesis summand `u_i ⊗ P†_(r,i)`.
 
@@ -67,7 +61,7 @@ def cMatrix (F : Frame n d) (r : Fin m) :
 Source: ported from `SparseFockFormal.LightBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 def CStack (F : Frame n d) :
-    Matrix (Fin d × Pattern m n) (RowFock m n) ℝ :=
+    Matrix (Fin d × Pattern m n) (HeavyBandsConcrete.RowFock m n) ℝ :=
   fun out inp ↦ CMatrix F inp.1 out inp.2
 
 /-- Row-stacked creation analysis.
@@ -75,7 +69,7 @@ def CStack (F : Frame n d) :
 Source: ported from `SparseFockFormal.LightBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 def CreateAnalysisStack (F : Frame n d) :
-    Matrix (RowFock m n) (Fin d × Pattern m n) ℝ :=
+    Matrix (HeavyBandsConcrete.RowFock m n) (Fin d × Pattern m n) ℝ :=
   fun out inp ↦ cMatrix F out.1 out.2 inp
 
 /-- The row light creation synthesis matrix is the sum of its one-site summands.
@@ -109,7 +103,7 @@ theorem CStack_mul_transpose (F : Frame n d) :
 Source: ported from `SparseFockFormal.LightBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 @[simp] theorem CStack_transpose_apply (F : Frame n d)
-    (out : RowFock m n) (inp : Fin d × Pattern m n) :
+    (out : HeavyBandsConcrete.RowFock m n) (inp : Fin d × Pattern m n) :
     (CStack F).transpose out inp = (CMatrix F out.1).transpose out.2 inp := by
   rfl
 
@@ -195,7 +189,7 @@ theorem COne_mul_cOne_of_ne (F : Frame n d) (r : Fin m)
   classical
   ext out inp
   simp only [Matrix.mul_apply, COne, cOne, orderedWordTerm,
-    externalTensor, ExternalOperator.outer]
+    externalTensor, Matrix.vecMulVec_apply]
   calc
     (∑ p, (F.u i out.1 * pDagAt r i out.2 p) *
         (F.u j inp.1 * pDagAt r j p inp.2)) =

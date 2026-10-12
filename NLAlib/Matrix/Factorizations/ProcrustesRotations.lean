@@ -17,17 +17,6 @@ namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 omit [DecidableEq m] in
-/-- The squared Frobenius norm is the sum of squared native singular values
-on arbitrary finite labels. Horn–Johnson §2.6; Procrustes helper. -/
-theorem frobSq_eq_sum_toEuclideanLin_singularValues_sq (A : Matrix m n ℝ) :
-    frobSq A = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      A.toEuclideanLin.singularValues i ^ 2 := by
-  have h := frobSq_eq_sum_sq_singularValues
-    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-  simp only [frobSq_reindex, singularValues_reindex] at h
-  exact h
-
-omit [DecidableEq m] in
 /-- Equality in Frobenius Mirsky is exactly equality in the signed von
 Neumann pairing. Arbitrary finite indices and empty dimensions are included.
 Horn–Johnson 2013, Corollary 7.4.1.5.
@@ -41,8 +30,9 @@ theorem frobSq_sub_eq_sum_singularValues_sub_sq_iff (A B : Matrix m n ℝ) :
       (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2) =
       frobSq A - 2 * (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
         A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i) + frobSq B := by
-    rw [frobSq_eq_sum_toEuclideanLin_singularValues_sq,
-      frobSq_eq_sum_toEuclideanLin_singularValues_sq, Finset.mul_sum,
+    simp only [← singularValues_eq_linearMap]
+    rw [frobSq_eq_sum_sq_singularValues,
+      frobSq_eq_sum_sq_singularValues, Finset.mul_sum,
       ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
     exact Finset.sum_congr rfl (fun _ _ => by ring)
   rw [frobSq_sub, hExpand]
@@ -58,7 +48,7 @@ theorem nuclearNorm_mul_transpose_le_sum_singularValues_mul (A B : Matrix m n �
     rw [frobInner_mul_eq_frobInner_mul_transpose,
       frobInner_eq_nuclearNorm_of_polar hU hPolar]
   have h := (le_abs_self (frobInner A (U * B))).trans
-    (abs_frobInner_le_sum_toEuclideanLin_singularValues_mul A (U * B))
+    (abs_frobInner_le_sum_singularValues_mul A (U * B))
   simpa only [hPair, ← singularValues_eq_linearMap, singularValues_isometry_mul hU B] using h
 
 /-- Equality in von Neumann's signed trace inequality forces the row
@@ -147,22 +137,6 @@ theorem exists_orthogonal_pair_attaining_singularValue_pairing (A B : Matrix m n
   simp only [em, en, singularValues_reindex] at hPair
   exact hPair
 
-omit [DecidableEq m] in
-/-- The full singular-value squared-distance lower bound for arbitrary finite
-real rectangular matrices. Mirsky 1960; Horn–Johnson 2013, §7.4.9. -/
-theorem sum_singularValues_sub_sq_le_frobSq_sub (A B : Matrix m n ℝ) :
-    (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2) ≤
-      frobSq (A - B) := by
-  let AF := A.reindex (Fintype.equivFin m) (Fintype.equivFin n)
-  let BF := B.reindex (Fintype.equivFin m) (Fintype.equivFin n)
-  have h := sum_sq_singularValues_add_sub_le_frobSq BF (AF - BF)
-  rw [show BF + (AF - BF) = AF by abel] at h
-  have hDiff : AF - BF = (A - B).reindex (Fintype.equivFin m) (Fintype.equivFin n) := rfl
-  rw [hDiff, frobSq_reindex] at h
-  simp only [AF, BF, singularValues_reindex] at h
-  exact h
-
 /-- Two-sided orthogonal Procrustes has the exact singular-value squared
 distance as its minimum. SVD alignment supplies genuine attained rotations,
 including rank-deficient and empty shapes. Horn–Johnson 2013, §7.4.5.
@@ -183,7 +157,9 @@ theorem isLeast_frobSq_sub_orthogonal_mul_mul (A B : Matrix m n ℝ) :
       (by simpa only [hσ U T hU hT] using hPair)
     simpa only [hσ U T hU hT] using h
   · rintro z ⟨V, W, hV, hW, rfl⟩
-    have h := sum_singularValues_sub_sq_le_frobSq_sub A (V * B * W)
+    have h := sum_sq_singularValues_add_sub_le_frobSq (V * B * W) (A - V * B * W)
+    rw [show V * B * W + (A - V * B * W) = A by abel] at h
+    simp only [singularValues_eq_linearMap] at h
     simpa only [hσ V W hV hW] using h
 
 end NLAlib

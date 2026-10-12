@@ -34,33 +34,6 @@ theorem add_eq_mul_one_add_inv_mul (A E : Matrix n n ℝ) (hA : IsUnit A) :
   rw [Matrix.mul_add, Matrix.mul_one, ← Matrix.mul_assoc,
     Matrix.mul_nonsing_inv _ ((Matrix.isUnit_iff_isUnit_det _).mp hA), Matrix.one_mul]
 
-/-- The exact difference-of-inverses identity without any norm assumptions.
-Stewart--Sun, Section III.2; supports `inverse-perturbation`. -/
-theorem inv_sub_inv_eq_neg_inv_mul_sub_mul_inv {A B : Matrix n n ℝ}
-    (hA : IsUnit A) (hB : IsUnit B) : B⁻¹ - A⁻¹ = -(B⁻¹ * (B - A) * A⁻¹) := by
-  have hEq : B⁻¹ * (A - B) * A⁻¹ = B⁻¹ - A⁻¹ := by
-    rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_assoc,
-      Matrix.mul_nonsing_inv _ ((Matrix.isUnit_iff_isUnit_det _).mp hA), Matrix.mul_one,
-      Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det _).mp hB), Matrix.one_mul]
-  rw [← hEq, ← neg_sub B A, Matrix.mul_neg, Matrix.neg_mul]
-
-/-- The simpler sufficient perturbation criterion, expressed in separate norms.
-Golub--Van Loan, Theorem 2.3.4; supports `linear-system-perturbation`. -/
-theorem isUnit_add_of_specNorm_inv_mul_specNorm_lt_one {A E : Matrix n n ℝ}
-    (hA : IsUnit A) (hE : specNorm A⁻¹ * specNorm E < 1) : IsUnit (A + E) :=
-  isUnit_add_of_specNorm_inv_mul_lt_one hA ((specNorm_mul_le A⁻¹ E).trans_lt hE)
-
-/-- The inverse norm estimate under the separate-norm sufficient criterion.
-Golub--Van Loan, Theorem 2.3.4; supports `linear-system-perturbation`. -/
-theorem specNorm_inv_add_le_of_specNorm_inv_mul_specNorm_lt_one
-    {A E : Matrix n n ℝ} (hA : IsUnit A) (hE : specNorm A⁻¹ * specNorm E < 1) :
-    specNorm (A + E)⁻¹ ≤ specNorm A⁻¹ / (1 - specNorm A⁻¹ * specNorm E) := by
-  have hProduct := specNorm_mul_le A⁻¹ E
-  have hExact := hProduct.trans_lt hE
-  apply (specNorm_inv_add_le hA hExact).trans
-  apply (div_le_div_iff₀ (sub_pos.mpr hExact) (sub_pos.mpr hE)).mpr
-  exact mul_le_mul_of_nonneg_left (sub_le_sub_left hProduct 1) (specNorm_nonneg A⁻¹)
-
 /-- Complete quantitative Neumann and inverse perturbation contract. The actual
 matrix inverses are used throughout, and both the spectral and Frobenius
 difference estimates retain the product-scale denominator. Empty dimensions

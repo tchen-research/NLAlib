@@ -166,19 +166,12 @@ def crossMatrix (F : Frame n d) (k l : Fin ell) (hkl : k ≠ l) :
     let xl := domainLToFiber k l hkl zl
     if xk.1 = xl.1 then columnGram F xk.2 xl.2 else 0
 
-/-- Squared coordinate energy on any finite real coordinate space.
-
-Source: ported from `SparseFockFormal.LightSectorConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def coordinateEnergy {I : Type*} [Fintype I] (x : I → ℝ) : ℝ :=
-  ∑ i, x i ^ 2
-
 /-- Euclidean squared norm agrees with the sum of squared coordinate entries.
 Source: ported sparse-Fock shared-leg/vacuum proof, commit
 `b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
 theorem normSq_eq_coordinateEnergy (x : EVec n) :
-    ParsevalFrame.normSq x = coordinateEnergy (fun i ↦ x i) := by
+    ParsevalFrame.normSq x = FiniteHilbert.normSq (fun i ↦ x i) := by
   rw [ParsevalFrame.normSq_eq_norm_sq, EuclideanSpace.norm_sq_eq]
-  simp [coordinateEnergy, Real.norm_eq_abs, pow_two]
+  simp [FiniteHilbert.normSq, Real.norm_eq_abs, pow_two]
 
 end NLAlib.SparseFock.LightSectorConcrete

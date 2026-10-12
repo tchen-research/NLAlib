@@ -6,7 +6,6 @@ import NLAlib.Sketching.Sparse.SparseEmbedding
 import NLAlib.Sketching.Sparse.SparseEmbeddingTransport
 import NLAlib.Sketching.Sparse.SparseFiniteIndex
 import NLAlib.Sketching.Sparse.SparseFock
-import NLAlib.Sketching.Sparse.SparseFrameBridge
 import NLAlib.Sketching.Sparse.SparseLaws
 
 /-! # `Sketching/Sparse`

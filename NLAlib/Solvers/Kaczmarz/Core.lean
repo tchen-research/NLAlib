@@ -154,19 +154,34 @@ theorem expected_sqErr_step_le (A : Matrix m n ℝ) (b : m → ℝ) (xs x : n �
   rw [sub_mul, one_mul, div_mul_eq_mul_div]
   linarith
 
-/-- The contraction factor is nonnegative when `n` is nonempty: `σ² ≤ ‖A‖_F²`.
-Atlas `randomized-kaczmarz`. -/
-theorem rate_nonneg [Nonempty n] (A : Matrix m n ℝ) (σ : ℝ)
-    (hσ : ∀ v : n → ℝ, σ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v)) :
+/-- A lower singular bound on the row space makes the Kaczmarz contraction
+factor nonnegative, including a zero matrix and empty index types.
+Zouzias–Freris 2013, equation (5); atlas `kaczmarz-inconsistent`, `randomized-kaczmarz` (rate
+helper). -/
+theorem rate_nonneg_of_lower_bound_on_range [DecidableEq m]
+    (A : Matrix m n ℝ) (σ : ℝ)
+    (hσ : ∀ v ∈ LinearMap.range Aᵀ.mulVecLin,
+      σ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v)) :
     0 ≤ 1 - σ ^ 2 / frobSq A := by
   classical
-  obtain ⟨j⟩ := ‹Nonempty n›
-  set e : n → ℝ := Pi.single j 1
-  have he : e ⬝ᵥ e = 1 := by simp [e]
-  have h := expected_sqErr_step_le A 0 0 e (by simp) σ hσ
-  simp only [sub_zero, he, mul_one] at h
-  refine le_trans ?_ h
-  exact Finset.sum_nonneg fun i _ => mul_nonneg (prob_nonneg A i) (dotProduct_self_nonneg _)
+  by_cases hA : A = 0
+  · subst hA
+    simp
+  have hF : 0 < frobSq A :=
+    lt_of_le_of_ne (frobSq_nonneg A) (Ne.symm ((frobSq_eq_zero_iff A).not.mpr hA))
+  obtain ⟨i, hi⟩ : ∃ i, A i ≠ 0 := by
+    by_contra h
+    push Not at h
+    exact hA (Matrix.ext fun i j => by simp [h i])
+  have hmem : A i ∈ LinearMap.range Aᵀ.mulVecLin := ⟨Pi.single i 1, by
+    ext j
+    simp⟩
+  have hpos : 0 < A i ⬝ᵥ A i := lt_of_le_of_ne (dotProduct_self_nonneg _)
+    (Ne.symm fun h => hi (dotProduct_self_eq_zero.mp h))
+  have hbound : σ ^ 2 ≤ frobSq A := le_of_mul_le_mul_right
+    ((hσ _ hmem).trans (mulVec_dotProduct_mulVec_le_frobSq_mul A (A i))) hpos
+  rw [sub_nonneg, div_le_one hF]
+  exact hbound
 
 /-- Unfolding `expErr` at `0` steps. Atlas `randomized-kaczmarz`. -/
 theorem expErr_zero (A : Matrix m n ℝ) (b : m → ℝ) (xs x : n → ℝ) :
@@ -198,7 +213,7 @@ theorem expErr_le (A : Matrix m n ℝ) (b : m → ℝ) (xs : n → ℝ) (hxs : A
       | zero => intro x; exact h0 _
       | succ k ih => intro x; simp [expErr_succ, ih]
     rw [this, h0, mul_zero]
-  · have hρ := rate_nonneg A σ hσ
+  · have hρ := rate_nonneg_of_lower_bound_on_range A σ (fun v _ => hσ v)
     induction k generalizing x with
     | zero => simp [expErr_zero]
     | succ k ih =>

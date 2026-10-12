@@ -10,6 +10,8 @@ Mathlib has no `MeasurableSpace (Matrix m n ℝ)`, so measurability of a matrix-
 probabilistic files need:
 
 * `measurable_mul_entry_of`: entries of a product of entrywise-measurable maps are measurable;
+  likewise entries of powers and of the total inverse `A⁻¹` (`measurable_pow_entry_of`,
+  `measurable_inv_entry_of`), and the trace (`measurable_trace_of_entries`);
 * `measurable_pinvL_entry_of`: entries of `pinvL (f z)` are measurable (through `det` and
   `adjugate`, both continuous);
 * `measurable_frobSq_residual_of`: `z ↦ ‖(I − Q(z)Q(z)ᵀ)A‖_F²` is measurable;
@@ -41,6 +43,39 @@ theorem measurable_mul_entry_of {a b c : Type*} [Fintype b] {f : γ → Matrix a
     Measurable fun z => (f z * g z) i j := by
   simp only [Matrix.mul_apply]
   exact Finset.measurable_sum _ fun l _ => (hf i l).mul (hg l j)
+
+/-- Entries of a total inverse of an entrywise measurable real matrix map
+are measurable, including singular inputs under the zero-inverse convention.
+Source: determinant/adjugate inverse formula; atlas `wishart-lambda-min-tail`,
+`gn-expected-error` (helper). -/
+theorem measurable_inv_entry_of {ι : Type*} [Fintype ι] [DecidableEq ι] {A : γ → Matrix ι ι ℝ}
+    (hA : ∀ i j, Measurable fun x => A x i j) (i j : ι) :
+    Measurable fun x => (A x)⁻¹ i j := by
+  have harray : Measurable (fun x => fun i j => A x i j) :=
+    measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => hA i j
+  have hc : Continuous (fun M : ι → ι → ℝ => Matrix.of M) := continuous_id
+  have hdet : Measurable fun x => (A x).det := hc.matrix_det.measurable.comp harray
+  have hadj : Measurable fun x => (A x).adjugate i j :=
+    (hc.matrix_adjugate.matrix_elem i j).measurable.comp harray
+  simp only [Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul]
+  exact hdet.inv.mul hadj
+
+/-- Every finite power of an entrywise measurable matrix map is entrywise
+measurable. Source: finite multiplication; atlas `wishart-lambda-min-tail` (helper). -/
+theorem measurable_pow_entry_of {ι : Type*} [Fintype ι] [DecidableEq ι] {A : γ → Matrix ι ι ℝ}
+    (hA : ∀ i j, Measurable fun x => A x i j) (n : ℕ) (i j : ι) :
+    Measurable fun x => (A x ^ n) i j := by
+  induction n generalizing i j with
+  | zero => simpa only [pow_zero] using measurable_const
+  | succ n ih =>
+    simp only [pow_succ]
+    exact measurable_mul_entry_of (fun a b => ih a b) hA i j
+
+/-- The trace of an entrywise measurable matrix map is measurable.
+Source: finite diagonal sum; atlas `wishart-lambda-min-tail` (helper). -/
+theorem measurable_trace_of_entries {ι : Type*} [Fintype ι] {A : γ → Matrix ι ι ℝ}
+    (hA : ∀ i j, Measurable fun x => A x i j) : Measurable fun x => Matrix.trace (A x) := by
+  exact Finset.measurable_sum _ fun i _ => hA i i
 
 /-- Entries of `pinvL (f z)` are measurable when the entries of `f` are.
 Atlas `gn-expected-error` (measurability helper). -/

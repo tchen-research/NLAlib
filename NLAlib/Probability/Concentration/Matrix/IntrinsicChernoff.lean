@@ -1,4 +1,5 @@
-import NLAlib.Probability.Concentration.Matrix.IntrinsicDimension
+import NLAlib.Matrix.Functions.IntrinsicDimension
+import NLAlib.Probability.Concentration.Matrix.GeneralizedLaplace
 import NLAlib.Probability.Concentration.Matrix.ChernoffMgfCgf
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
 import NLAlib.Matrix.Inequalities.TraceExpMonotone
@@ -16,14 +17,6 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 
 namespace NLAlib
-
-private lemma traceFunction_eq_sum {d : ℕ} (φ : ℝ → ℝ)
-    (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
-    traceFunction φ A = ∑ i, φ (hA.eigenvalues i) := by
-  rw [traceFunction, hA.cfc_eq]
-  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
-  simp
 
 private lemma lambdaMax_mem {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hB : B.IsHermitian) : ∃ i, hB.eigenvalues i = lambdaMax B := by
@@ -76,7 +69,7 @@ private lemma intrinsic_ge_one {d : ℕ} [NeZero d] (M : Matrix (Fin d) (Fin d) 
   have hle : ‖M‖ ≤ ∑ j, hA.eigenvalues j := by
     rw [← lambdaMax_eq_norm M hP, ← hi]
     exact Finset.single_le_sum (fun j _ => hP.eigenvalues_nonneg j) (Finset.mem_univ i)
-  unfold intrinsicDimension spectralNorm
+  unfold intrinsicDimension
   rw [htr, le_div_iff₀ hn, one_mul]
   exact hle
 
@@ -163,7 +156,7 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
     (hMeas : ∀ k, Measurable (X k)) (hIndep : iIndepFun X μ)
     (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).PosSemidef)
     (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L)
-    (hMeanBound : LoewnerLE (∫ ω, ∑ k, X k ω ∂μ) M) :
+    (hMeanBound : (∫ ω, ∑ k, X k ω ∂μ) ≤ M) :
     let Y := fun ω => ∑ k, X k ω
     let r := intrinsicDimension M
     let a := lambdaMax M
@@ -259,15 +252,16 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
       funext ω
       simp only [Y, Finset.smul_sum]
     rw [e1] at hsub
-    have hk : ∀ k, LoewnerLE (matrixLog (∫ ω, matrixExp (θ' • X k ω) ∂μ))
+    have hk : ∀ k, (matrixLog (∫ ω, matrixExp (θ' • X k ω) ∂μ)) ≤
         (g • ∫ ω, X k ω ∂μ) := by
       intro k
       have hb : ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (X k ω) ∧ lambdaMax (X k ω) ≤ L := by
         filter_upwards [hPSD k, hBound k] with ω h1 h2
         exact ⟨lambdaMin_nonneg _ h1, h2⟩
       exact (chernoff_matrix_mgf_cgf_le μ (X k) L hL.le (hMeas k) (hXHerm k) hb θ').2
-    have hsum : LoewnerLE (cumulantSum μ X θ') (g • ∑ k, ∫ ω, X k ω ∂μ) := by
-      unfold LoewnerLE cumulantSum
+    have hsum : (cumulantSum μ X θ') ≤ (g • ∑ k, ∫ ω, X k ω ∂μ) := by
+      unfold cumulantSum
+      rw [Matrix.le_iff]
       rw [Finset.smul_sum, ← Finset.sum_sub_distrib]
       exact Matrix.posSemidef_sum _ (fun k _ => hk k)
     rw [← hInt1] at hsum
@@ -277,8 +271,8 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
       hIntPSD.isHermitian.smul (isSelfAdjoint_iff.mpr (star_trivial _))
     have hgMH : (g • M).IsHermitian :=
       hMPSD.isHermitian.smul (isSelfAdjoint_iff.mpr (star_trivial _))
-    have hle2 : LoewnerLE (g • ∫ ω, Y ω ∂μ) (g • M) := by
-      unfold LoewnerLE
+    have hle2 : (g • ∫ ω, Y ω ∂μ) ≤ (g • M) := by
+      rw [Matrix.le_iff]
       rw [← smul_sub]
       exact Matrix.PosSemidef.smul hMeanBound hg0
     have hT : (∫ ω, traceExp (θ' • Y ω) ∂μ) ≤ traceExp (g • M) :=
@@ -293,7 +287,7 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
     rw [hE]
     calc (∫ ω, traceExp (θ' • Y ω) ∂μ) - d ≤ traceExp (g • M) - d := by linarith
       _ ≤ r * (Real.exp (g * a) - 1) := by
-        have : spectralNorm M = a := ha.symm
+        have : ‖M‖ = a := ha.symm
         rw [this] at hID
         exact hID
       _ ≤ r * Real.exp (g * a) := by nlinarith

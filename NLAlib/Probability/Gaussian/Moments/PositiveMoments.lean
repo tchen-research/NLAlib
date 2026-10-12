@@ -98,8 +98,11 @@ theorem integral_radial_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m) (φ : ℝ → �
   rw [integral_const_mul]
   ring
 
-
-private lemma integral_rpow_mul_exp_neg_sq_div_two (s : ℝ) (hs : -1 < s) :
+/-- The half-line Gaussian moment `∫₀^∞ yˢ e^{-y²/2} dy = 2^{(s+1)/2} · ½ · Γ((s+1)/2)` for
+`s > -1`. Source: Euler's Gamma integral (`integral_rpow_mul_exp_neg_mul_rpow` with `p = 2`,
+`b = 1/2`); atlas `gaussian-positive-moments`.
+atlas: gaussian-positive-moments -/
+theorem integral_rpow_mul_exp_neg_sq_div_two (s : ℝ) (hs : -1 < s) :
     ∫ y in Ioi (0 : ℝ), y ^ s * Real.exp (-y ^ 2 / 2)
       = 2 ^ ((s + 1) / 2) * (1 / 2) * Real.Gamma ((s + 1) / 2) := by
   have h := integral_rpow_mul_exp_neg_mul_rpow (p := 2) (q := s) (b := 1 / 2)

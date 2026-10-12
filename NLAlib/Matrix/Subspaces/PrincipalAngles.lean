@@ -11,13 +11,17 @@ through its sine and tangent, defined as spectral norms so that the projection A
   invertible, junk value `0` otherwise because Mathlib's inverse of a singular matrix is `0`);
   this form needs no orthonormality of `X`, and depends only on `range X`
   (`tanThetaMax_mul_right`, `tanThetaMax_eq_of_range_eq`);
-* `NLAlib.principalAngles Q Q' i = arccos σ_i(QᵀQ')` (zero-indexed, nondecreasing in `i`).
+* the principal angles themselves are `principalAnglesFintype` (`PrincipalAngleDefinitions`);
+  `sinThetaMax_eq_sin_principalAngles` identifies `sin θ_max` with the sine of the last one.
 
 Proved: basis independence in both arguments (`sinThetaMax_congr_left/right`,
 `tanThetaMax_congr_left`, `tanThetaMax_eq_of_range_eq`), the complement forms
 `sin θ_max = ‖Q⊥ᵀ X‖₂` and `tan θ_max = ‖Q⊥ᵀ X (QᵀX)⁻¹‖₂`, `0 ≤ sin θ_max ≤ 1`, and the
 Frobenius identity `‖sin Θ‖_F² = k' − ‖QᵀQ'‖_F²`. Proved also: the singular-value
-characterisation, symmetry, the projector-difference form, and the `sin`–`tan` relation.
+characterisation (`specNorm_residual_sq_eq_one_sub_sigmaMin_sq`), symmetry
+(`specNorm_residual_comm`), the projector-difference form
+(`specNorm_sub_frame_projector_eq_residual`), and the `sin`–`tan` relation; these are stated
+for `residual` and apply to `sinThetaMax` by unfolding.
 
 Deviation from the atlas notes: basis independence in this layer-0 file uses
 `mul_transpose_eq_of_range_eq` (Projections) instead of `transpose_mul_mul_eq_of_range_le`
@@ -44,7 +48,7 @@ variable {n k k' : Type*} [Fintype n] [DecidableEq n] [Fintype k] [DecidableEq k
 
 /-- The sine of the largest principal angle between `range Q` and `range X`:
 `sin θ_max = ‖(I − QQᵀ) X‖₂`, for `Q` and `X` with orthonormal columns. With `X` orthonormal
-and `k' ≤ k` columns this is `√(1 − σ_min(QᵀX)²)` (`sq_sinThetaMax_eq_one_sub_sq_sigmaMin`).
+and `k' ≤ k` columns this is `√(1 − σ_min(QᵀX)²)` (`specNorm_residual_sq_eq_one_sub_sigmaMin_sq`).
 Source: Golub–Van Loan (2013) [`gvl13`], Thm 2.5.1; Stewart–Sun (1990) [`ss90`], Thm I.5.5.
 atlas: principal-angles-def (partial) -/
 def sinThetaMax (Q : Matrix n k ℝ) (X : Matrix n k' ℝ) : ℝ := specNorm (residual Q X)
@@ -54,38 +58,11 @@ def sinThetaMax (Q : Matrix n k ℝ) (X : Matrix n k' ℝ) : ℝ := specNorm (re
 `tan θ_max = ‖(I − QQᵀ) X (QᵀX)⁻¹‖₂`; with an orthonormal complement `Q⊥` this is
 `‖Q⊥ᵀ X (QᵀX)⁻¹‖₂` (`tanThetaMax_eq_specNorm_transpose_mul_mul`). Junk value `0` when `QᵀX` is
 singular (the angle is `π/2`). Source: Saad (2011) [`saad11`], §5.2 (proof of Thm 5.2);
-Golub–Van Loan (2013) [`gvl13`], §8.2.4. Alternative: a definition via `tan ∘ principalAngles`
-would need `Fin` indices and the SVD; this one is index-free and basis-independent in `X`.
+Golub–Van Loan (2013) [`gvl13`], §8.2.4. Alternative: a definition via
+`tan ∘ principalAnglesFintype` would need the SVD; this one is index-free and basis-independent in `X`.
 atlas: principal-angles-def (partial) -/
 def tanThetaMax (Q : Matrix n k ℝ) (X : Matrix n k ℝ) : ℝ :=
   specNorm (residual Q X * (Qᵀ * X)⁻¹)
-
-omit [Fintype k] [DecidableEq k] [Fintype k'] [DecidableEq k'] in
-/-- The principal angles `θ_i = arccos σ_i(QᵀQ')` between `range Q` and `range Q'` (both with
-orthonormal columns), zero-indexed and nondecreasing in `i` (the singular values are
-nonincreasing); there are `min k k'` of them, and `θ_i = π/2` (`σ_i = 0`) past that index.
-Source: Golub–Van Loan (2013) [`gvl13`], §6.4.3; Stewart–Sun (1990) [`ss90`], Def I.5.3.
-atlas: principal-angles-def (partial) -/
-def principalAngles {r r' : ℕ} (Q : Matrix n (Fin r) ℝ) (Q' : Matrix n (Fin r') ℝ) (i : ℕ) :
-    ℝ :=
-  Real.arccos (singularValues (Qᵀ * Q') i)
-
-omit [Fintype k'] [DecidableEq k'] [DecidableEq n] [DecidableEq k] in
-/-- The finite-index angle representation is exactly the standard natural
-index principal angle after normalizing the frame's columns to `Fin`.
-This is equality of the actual arccos singular values. Stewart--Sun,
-Definition I.5.3; supports `principal-angles-def`. -/
-theorem principalAnglesFintype_eq_principalAngles (Q Q' : Matrix n k ℝ)
-    (i : Fin (Fintype.card k)) :
-    principalAnglesFintype Q Q' i =
-      principalAngles (Q.submatrix id (Fintype.equivFin k).symm)
-        (Q'.submatrix id (Fintype.equivFin k).symm) i := by
-  unfold principalAnglesFintype principalAngles
-  apply congrArg Real.arccos
-  apply congrArg (fun C : Matrix (Fin (Fintype.card k)) (Fin (Fintype.card k)) ℝ =>
-    singularValues C i)
-  rw [Matrix.transpose_submatrix, ← Matrix.submatrix_mul _ _ _ id _ Function.bijective_id]
-  rfl
 
 /-! ### Elementary properties -/
 
@@ -113,18 +90,6 @@ theorem residual_eq_of_range_eq {k₂ : Type*} [Fintype k₂] [DecidableEq k₂]
     (h : LinearMap.range Q.mulVecLin = LinearMap.range P.mulVecLin) (X : Matrix n k' ℝ) :
     residual Q X = residual P X := by
   rw [residual_eq_one_sub_mul, residual_eq_one_sub_mul, mul_transpose_eq_of_range_eq hQ hP h]
-
-/-- Right multiplication by a square orthogonal matrix preserves the spectral norm:
-`‖Y W‖₂ = ‖Y‖₂` for `WᵀW = I`. Helper for `principal-angles-def` (belongs in
-`NLAlib.Matrix.Norms.Core`). -/
-theorem specNorm_mul_of_transpose_mul_self_eq_one {W : Matrix k k ℝ} (hW : Wᵀ * W = 1)
-    (Y : Matrix k' k ℝ) : specNorm (Y * W) = specNorm Y := by
-  have hW' : W * Wᵀ = 1 := (Matrix.mul_eq_one_comm_of_equiv (Equiv.refl k)).1 hW
-  calc specNorm (Y * W) = specNorm (Y * W)ᵀ := (specNorm_transpose _).symm
-    _ = specNorm (Wᵀ * Yᵀ) := by rw [Matrix.transpose_mul]
-    _ = specNorm Yᵀ := specNorm_transpose_mul_of_eq_mul hW (by
-          rw [← Matrix.mul_assoc, hW', Matrix.one_mul])
-    _ = specNorm Y := specNorm_transpose _
 
 /-! ### Basis independence -/
 
@@ -234,7 +199,10 @@ theorem tanThetaMax_congr_left {Q P : Matrix n k ℝ} (hQ : HasOrthonormalCols Q
     rw [← hPQ, Matrix.transpose_mul, Matrix.mul_assoc]
   have hWinv : Wᵀ⁻¹ = W := Matrix.inv_eq_left_inv hW'
   rw [tanThetaMax, tanThetaMax, hPt, Matrix.mul_inv_rev, hWinv, ← residual_eq_of_range_eq hQ hP h,
-    ← Matrix.mul_assoc, specNorm_mul_of_transpose_mul_self_eq_one hW]
+    ← Matrix.mul_assoc]
+  have hWt : Wᵀᵀ * Wᵀ = 1 := by rw [Matrix.transpose_transpose]; exact hW'
+  conv_rhs => rw [← Matrix.transpose_transpose W]
+  exact (specNorm_mul_transpose_right_of_hasOrthonormalCols hWt _).symm
 
 /-! ### Complement forms -/
 
@@ -284,26 +252,10 @@ theorem frobSq_residual_eq_card_sub {Q : Matrix n k ℝ} {Q' : Matrix n k' ℝ}
 /-! ### Singular values, symmetry, projectors, `sin`–`tan` -/
 
 /--
-**Singular-value characterisation.** For `Q`, `Q'` with orthonormal columns and `k'` nonempty,
-`sin² θ_max = ‖(I − QQᵀ)Q'‖₂² = 1 − σ_min(QᵀQ')²` (`sigmaMin` is the infimum of `‖QᵀQ' x‖` over
-unit `x`, the smallest of the `k'` singular values when `k' ≤ k`, and `0` when `k' > k`).
-Source: Golub–Van Loan (2013) [`gvl13`], Thm 2.5.1; Stewart–Sun (1990) [`ss90`], Thm I.5.5.
-Proof sketch: for unit `x`, `‖(I − QQᵀ)Q'x‖² = ‖Q'x‖² − ‖QᵀQ'x‖² = 1 − ‖QᵀQ'x‖²`
-(`mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`, Pythagoras); take the supremum over
-the unit sphere (`specNorm` as `sup ‖Mx‖`, e.g. via `specNorm_le_iff_abs_dotProduct_mulVec_le`
-on `Mᵀ M`) and compare with `sigmaMin` (an infimum over the same sphere). `Nonempty k'` is
-needed: for empty `k'` both norms are `0`.
-atlas: principal-angles-def (partial) -/
-theorem sq_sinThetaMax_eq_one_sub_sq_sigmaMin [Nonempty k'] {Q : Matrix n k ℝ}
-    {Q' : Matrix n k' ℝ} (hQ : HasOrthonormalCols Q) (hQ' : HasOrthonormalCols Q') :
-    sinThetaMax Q Q' ^ 2 = 1 - sigmaMin (Qᵀ * Q') ^ 2 := by
-  exact specNorm_residual_sq_eq_one_sub_sigmaMin_sq hQ hQ'
-
-/--
 **Principal angles from the SVD.** For `Q : n × r`, `Q' : n × r'` with orthonormal columns and
 `0 < r' ≤ r`: `sin θ_max = √(1 − σ_{r'−1}(QᵀQ')²)`, `σ` the zero-indexed singular values.
 Source: Golub–Van Loan (2013) [`gvl13`], §6.4.3 and Thm 2.5.1; Stewart–Sun (1990) [`ss90`],
-Def I.5.3. Proof sketch: `sq_sinThetaMax_eq_one_sub_sq_sigmaMin` and
+Def I.5.3. Proof: `specNorm_residual_sq_eq_one_sub_sigmaMin_sq` and
 `σ_min(M) = σ_{r'−1}(M)` for `M : r × r'` with `r' ≤ r` (Courant–Fischer for `MᵀM`, the bridge
 `singularValues` = `√` eigenvalues of `MᵀM`, `NLAlib.Matrix.Spectral.SVD`).
 atlas: principal-angles-def (partial) -/
@@ -313,51 +265,30 @@ theorem sinThetaMax_eq_sqrt_one_sub_sq_singularValues {r r' : ℕ} {Q : Matrix n
     sinThetaMax Q Q' = √(1 - singularValues (Qᵀ * Q') (r' - 1) ^ 2) := by
   have _ := hrr
   let : Nonempty (Fin r') := ⟨⟨0, hr'⟩⟩
-  have h := sq_sinThetaMax_eq_one_sub_sq_sigmaMin hQ hQ'
-  rw [sigmaMin_eq_singularValues_last _ hr'] at h
+  have h : sinThetaMax Q Q' ^ 2 = 1 - sigmaMin (Qᵀ * Q') ^ 2 :=
+    specNorm_residual_sq_eq_one_sub_sigmaMin_sq hQ hQ'
+  rw [sigmaMin_eq_singularValues_last _ (by simpa only [Fintype.card_fin] using hr'),
+    Fintype.card_fin] at h
   rw [← h, Real.sqrt_sq (sinThetaMax_nonneg Q Q')]
 
-/-- `sin θ_max` is the sine of the largest principal angle: `‖(I − QQᵀ)Q'‖₂ = sin θ_{r'−1}` for
-`0 < r' ≤ r`. Source: Golub–Van Loan (2013) [`gvl13`], §6.4.3; Stewart–Sun (1990) [`ss90`],
-Def I.5.3 and Thm I.5.5.
+omit [Fintype k'] [DecidableEq k'] in
+/-- `sin θ_max` is the sine of the largest principal angle: for frames `Q`, `Q'` of the same
+positive width, `‖(I − QQᵀ)Q'‖₂ = sin θ_last`, `θ` the ordered principal angles
+`principalAnglesFintype Q Q'`. (For unequal widths `0 < r' ≤ r` use
+`sinThetaMax_eq_sqrt_one_sub_sq_singularValues`.) Source: Golub–Van Loan (2013) [`gvl13`],
+§6.4.3; Stewart–Sun (1990) [`ss90`], Def I.5.3 and Thm I.5.5.
 atlas: principal-angles-def (partial) -/
-theorem sinThetaMax_eq_sin_principalAngles {r r' : ℕ} {Q : Matrix n (Fin r) ℝ}
-    {Q' : Matrix n (Fin r') ℝ} (hQ : HasOrthonormalCols Q) (hQ' : HasOrthonormalCols Q')
-    (hr' : 0 < r') (hrr : r' ≤ r) :
-    sinThetaMax Q Q' = Real.sin (principalAngles Q Q' (r' - 1)) := by
-  rw [principalAngles, Real.sin_arccos,
-    sinThetaMax_eq_sqrt_one_sub_sq_singularValues hQ hQ' hr' hrr]
-
-/--
-**Symmetry for equal dimensions.** For `Q`, `Q'` with orthonormal columns indexed by the same
-`k`: `θ_max(range Q, range Q') = θ_max(range Q', range Q)`, i.e.
-`‖(I − QQᵀ)Q'‖₂ = ‖(I − Q'Q'ᵀ)Q‖₂`. Source: Stewart–Sun (1990) [`ss90`], Thm I.5.5;
-Golub–Van Loan (2013) [`gvl13`], Thm 2.5.1. Proof sketch: by
-`sq_sinThetaMax_eq_one_sub_sq_sigmaMin` both sides are `1 − σ_min²` of `QᵀQ'` and of
-`Q'ᵀQ = (QᵀQ')ᵀ`; a square matrix and its transpose have the same smallest singular value
-(`MᵀM` and `MMᵀ` have the same eigenvalues). False for unequal dimensions (a line inside a
-plane has `θ = 0` one way and `π/2` the other).
-atlas: principal-angles-def (partial) -/
-theorem sinThetaMax_comm {Q Q' : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
-    (hQ' : HasOrthonormalCols Q') : sinThetaMax Q Q' = sinThetaMax Q' Q := by
-  exact specNorm_residual_comm hQ hQ'
-
-/--
-**Projector form.** For `Q`, `Q'` with orthonormal columns indexed by the same `k`:
-`sin θ_max = ‖QQᵀ − Q'Q'ᵀ‖₂`. Source: Golub–Van Loan (2013) [`gvl13`], Thm 2.5.1; Stewart–Sun
-(1990) [`ss90`], Thm I.5.5. Proof sketch: `P − P' = P(I − P') − (I − P)P'`, the two terms have
-orthogonal ranges and co-ranges, so `‖P − P'‖ = max(‖(I − P)P'‖, ‖P(I − P')‖)`
-(`specNorm_add_sq_le_of_mul_transpose_eq_zero` for `≤`, compression for `≥`), and both are
-`sin θ_max` by `sinThetaMax_comm`.
-atlas: principal-angles-def (partial) -/
-theorem sinThetaMax_eq_specNorm_sub {Q Q' : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
-    (hQ' : HasOrthonormalCols Q') : sinThetaMax Q Q' = specNorm (Q * Qᵀ - Q' * Q'ᵀ) := by
-  exact (specNorm_sub_frame_projector_eq_residual hQ hQ').symm
+theorem sinThetaMax_eq_sin_principalAngles {Q Q' : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
+    (hQ' : HasOrthonormalCols Q') (hk : 0 < Fintype.card k) :
+    sinThetaMax Q Q' =
+      Real.sin (principalAnglesFintype Q Q' ⟨Fintype.card k - 1, by omega⟩) := by
+  rw [sinThetaMax, ← specNorm_sinePrincipalAngles_eq_residual hQ hQ',
+    specNorm_sinePrincipalAngles_eq_sin_last hQ hQ' hk]
 
 /--
 **`QᵀQ'` is invertible iff `θ_max < π/2`.** For `Q`, `Q'` with orthonormal columns indexed by
 the same `k`: `sin θ_max < 1 ↔ IsUnit (QᵀQ')`. Source: Golub–Van Loan (2013) [`gvl13`],
-§2.5.3. Proof sketch: by `sq_sinThetaMax_eq_one_sub_sq_sigmaMin` (`k` nonempty; the empty case
+§2.5.3. Proof: by `specNorm_residual_sq_eq_one_sub_sigmaMin_sq` (`k` nonempty; the empty case
 is trivial), `sin θ_max < 1 ↔ σ_min(QᵀQ') > 0 ↔` `QᵀQ'` injective `↔` invertible (square).
 atlas: principal-angles-def (partial) -/
 theorem sinThetaMax_lt_one_iff_isUnit {Q Q' : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
@@ -366,7 +297,8 @@ theorem sinThetaMax_lt_one_iff_isUnit {Q Q' : Matrix n k ℝ} (hQ : HasOrthonorm
   · have hR : residual Q Q' = 0 := Subsingleton.elim _ _
     have hUnit := isUnit_of_subsingleton (Qᵀ * Q')
     exact ⟨fun _ => hUnit, fun _ => by simp [sinThetaMax, hR, specNorm_zero]⟩
-  · have hEq := sq_sinThetaMax_eq_one_sub_sq_sigmaMin hQ hQ'
+  · have hEq : sinThetaMax Q Q' ^ 2 = 1 - sigmaMin (Qᵀ * Q') ^ 2 :=
+      specNorm_residual_sq_eq_one_sub_sigmaMin_sq hQ hQ'
     have hNonneg := sinThetaMax_nonneg Q Q'
     have hBound := sinThetaMax_le_one hQ hQ'
     have hSigma := sigmaMin_nonneg (Qᵀ * Q')

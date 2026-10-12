@@ -1,5 +1,4 @@
 import NLAlib.Probability.Gaussian.Moments.ExpectationNormDiff
-import NLAlib.Probability.Gaussian.Moments.FourthMoment
 import NLAlib.Probability.Gaussian.Moments.Isserlis
 import NLAlib.Probability.Gaussian.Moments.Khintchine
 import NLAlib.Probability.Gaussian.Moments.PolynomialLinearMoments

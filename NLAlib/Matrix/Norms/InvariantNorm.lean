@@ -1,7 +1,7 @@
 import NLAlib.Matrix.Norms.SymmetricGauge
 import NLAlib.Matrix.Spectral.SingularValueInvariance
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
-import NLAlib.Matrix.Norms.NuclearFiniteIndex
+import NLAlib.Matrix.Inequalities.KyFanNorms
+import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Inequalities.KyFanSums
 /-!
 # Orthogonally invariant norms from symmetric gauges

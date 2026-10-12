@@ -19,7 +19,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
 /-- The exact Cholesky approximation after a finite adaptive pivot history.
 Source: manuscript `sa:rp-update`, `Ahat_t = A - R_t`. -/
 def randomizedCholeskyApproximation (A : Matrix n n ℝ) (t : ℕ) (h : Fin t → n) :
-    Matrix n n ℝ := A - choleskyResidualHistory A t h
+    Matrix n n ℝ := A - partialCholeskyResidual A h
 
 /-- The relative optimal trace tail is the spectral tail divided by the full trace.
 Source: manuscript `sa:rp-theorem`, its relative parameter `eta`. -/
@@ -37,15 +37,15 @@ theorem choleskyExpectedTrace_succ_le_traceExcessDrift
   let τ := spectralTraceTail A hA.isHermitian r
   have hr0 : (0 : ℝ) < r := by exact_mod_cast (by omega : 0 < r)
   have hstep : ∀ h : Fin t → n,
-      (choleskyResidualHistory A t h).trace -
-        (choleskyResidualHistory A t h * choleskyResidualHistory A t h).trace /
-          (choleskyResidualHistory A t h).trace ≤
-      (choleskyResidualHistory A t h).trace -
-        traceExcessDrift τ (choleskyResidualHistory A t h).trace / r := by
+      (partialCholeskyResidual A h).trace -
+        (partialCholeskyResidual A h * partialCholeskyResidual A h).trace /
+          (partialCholeskyResidual A h).trace ≤
+      (partialCholeskyResidual A h).trace -
+        traceExcessDrift τ (partialCholeskyResidual A h).trace / r := by
     intro h
-    let R := choleskyResidualHistory A t h
-    have hR := posSemidef_choleskyResidualHistory hA t h
-    have hAR := posSemidef_sub_choleskyResidualHistory hA t h
+    let R := partialCholeskyResidual A h
+    have hR := posSemidef_partialCholeskyResidual hA h
+    have hAR := posSemidef_sub_partialCholeskyResidual hA h
     have he := sq_max_trace_sub_spectralTraceTail_le_mul_trace_sq hA hR hAR r
     have hd : (max (R.trace - τ) 0) ^ 2 / r ≤ (R * R).trace :=
       (div_le_iff₀ hr0).mpr (by simpa only [mul_comm] using he)
@@ -56,21 +56,21 @@ theorem choleskyExpectedTrace_succ_le_traceExcessDrift
     exact sub_le_sub_left hdiv R.trace
   have he : choleskyExpectedTrace A (t + 1) ≤
       ∑ h : Fin t → n, choleskyHistoryWeight A t h *
-        ((choleskyResidualHistory A t h).trace -
-          traceExcessDrift τ (choleskyResidualHistory A t h).trace / r) := by
+        ((partialCholeskyResidual A h).trace -
+          traceExcessDrift τ (partialCholeskyResidual A h).trace / r) := by
     rw [choleskyExpectedTrace_succ_eq hA t]
     exact Finset.sum_le_sum fun h _ => mul_le_mul_of_nonneg_left (hstep h)
       (choleskyHistoryWeight_nonneg hA t h)
   simp only [mul_sub, Finset.sum_sub_distrib, ← mul_div_assoc, ← Finset.sum_div] at he
   have hj := traceExcessDrift_sum_le_sum (choleskyHistoryWeight A t)
-    (fun h => (choleskyResidualHistory A t h).trace)
+    (fun h => (partialCholeskyResidual A h).trace)
     (choleskyHistoryWeight_nonneg hA t)
-    (fun h => Finset.sum_nonneg fun j _ => (posSemidef_choleskyResidualHistory hA t h).diag_nonneg)
+    (fun h => Finset.sum_nonneg fun j _ => (posSemidef_partialCholeskyResidual hA h).diag_nonneg)
     (sum_choleskyHistoryWeight A t) (spectralTraceTail_nonneg hA r)
   have hJ := div_le_div_of_nonneg_right hj hr0.le
   change choleskyExpectedTrace A (t + 1) ≤ choleskyExpectedTrace A t -
     (∑ h : Fin t → n, choleskyHistoryWeight A t h * traceExcessDrift τ
-      (choleskyResidualHistory A t h).trace) / r at he
+      (partialCholeskyResidual A h).trace) / r at he
   change traceExcessDrift τ (choleskyExpectedTrace A t) / r ≤ _ at hJ
   exact he.trans (sub_le_sub_left hJ _)
 
@@ -143,7 +143,7 @@ theorem choleskyExpectedTrace_eq_zero_of_spectralTraceTail_eq_zero
     choleskyExpectedTrace A k = 0 :=
   choleskyExpectedTrace_eq_zero_of_rank_le hA ((rank_le_of_spectralTraceTail_eq_zero hA ht).trans hk)
 
-omit [Nonempty n] in
+omit [Nonempty n] [DecidableEq n] in
 /-- The expected trace of the actual approximation error equals the expected residual
 trace used in the bounds. Source: manuscript `sa:rp-update`, definition of `Ahat_t`. -/
 theorem sum_choleskyHistoryWeight_mul_trace_sub_approximation_eq
@@ -152,7 +152,7 @@ theorem sum_choleskyHistoryWeight_mul_trace_sub_approximation_eq
       (A - randomizedCholeskyApproximation A t h).trace) = choleskyExpectedTrace A t := by
   apply Finset.sum_congr rfl
   intro h _
-  have he : A - randomizedCholeskyApproximation A t h = choleskyResidualHistory A t h := by
+  have he : A - randomizedCholeskyApproximation A t h = partialCholeskyResidual A h := by
     unfold randomizedCholeskyApproximation
     abel
   rw [he]

@@ -3,8 +3,8 @@ import NLAlib.Matrix.Spectral.SigmaMinTransport
 /-!
 # Principal-angle bridges to variational minima and tangent ratios
 
-The residual Gram identity and largest-sine formula hold also for unequal
-frame widths. For equal widths the actual largest tangent has the exact
+The largest-sine formula holds also for unequal frame widths (through the
+residual Gram identity `transpose_residual_mul_residual_eq_one_sub_overlap`). For equal widths the actual largest tangent has the exact
 sine ratio. These results connect the first-course principal-angle API to
 the native singular spectrum. Source: Stewart--Sun, Section I.5;
 Golub--Van Loan, Theorem 2.5.1. Atlas: `principal-angles-def`.
@@ -17,25 +17,12 @@ namespace NLAlib
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
   [DecidableEq m] [DecidableEq n] [DecidableEq p]
 
-omit [Fintype p] in
-/-- The residual Gram is the identity minus the overlap Gram even for
-unequal frame widths. Stewart--Sun, Theorem I.5.5;
-supports `principal-angles-def`. -/
-theorem transpose_residual_mul_residual_eq_one_sub_overlap_of_unequal_widths
-    {P : Matrix m n ℝ} {Q : Matrix m p ℝ}
-    (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
-    (residual P Q)ᵀ * residual P Q = 1 - (Pᵀ * Q)ᵀ * (Pᵀ * Q) := by
-  rw [residual_eq_one_sub_mul, Matrix.transpose_mul,
-    show (1 - P * Pᵀ)ᵀ = 1 - P * Pᵀ by simp,
-    Matrix.mul_assoc, ← Matrix.mul_assoc (1 - P * Pᵀ),
-    one_sub_mul_transpose_idem hP, Matrix.sub_mul, Matrix.mul_sub,
-    Matrix.one_mul, hQ]
-  simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
-
-/-- With nonempty right frame, its residual norm squared is one minus
-the squared variational smallest overlap singular value. The widths may
-differ, and wide overlaps include their kernel zeros. Stewart--Sun,
-Theorem I.5.5; supports `principal-angles-def`. -/
+/-- **Singular-value characterisation of `sin θ_max`.** With nonempty right frame, its residual
+norm squared is one minus the squared variational smallest overlap singular value:
+`‖(I − PPᵀ)Q‖₂² = 1 − σ_min(PᵀQ)²`. The widths may differ, and wide overlaps include their
+kernel zeros (`σ_min = 0` when `Q` is wider than `P`). `Nonempty p` is needed: for an empty
+frame both norms are `0`. Golub–Van Loan 2013, Thm 2.5.1; Stewart--Sun, Theorem I.5.5.
+atlas: principal-angles-def (partial) -/
 theorem specNorm_residual_sq_eq_one_sub_sigmaMin_sq [Nonempty p]
     {P : Matrix m n ℝ} {Q : Matrix m p ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
@@ -81,28 +68,10 @@ theorem specNorm_residual_sq_eq_one_sub_sigmaMin_sq [Nonempty p]
     rw [Matrix.submatrix_one_equiv]
   rw [hGramTransport, specNorm_reindex, specNorm_sub_comm, hPi] at hGramNorm
   have hSigma : sigmaMin C = singularValues CF last := by
-    rw [← sigmaMin_reindex C en ep, sigmaMin_eq_singularValues_last _ hp]
+    rw [sigmaMin_eq_singularValues_last C hp, ← singularValues_reindex C en ep]
   have hResidual := specNorm_sq_eq_specNorm_transpose_mul_self (residual P Q)
-  rw [transpose_residual_mul_residual_eq_one_sub_overlap_of_unequal_widths hP hQ] at hResidual
+  rw [transpose_residual_mul_residual_eq_one_sub_overlap hP hQ] at hResidual
   exact hResidual.trans (hGramNorm.trans (by rw [hSigma]))
-
-/-- A nonempty square real matrix has positive variational minimum exactly
-when it is invertible. Empty squares are handled separately by consumers.
-Horn--Johnson, Section 2.6; supports `principal-angles-def`. -/
-theorem sigmaMin_pos_iff_isUnit_of_nonempty [Nonempty n] (C : Matrix n n ℝ) :
-    0 < sigmaMin C ↔ IsUnit C := by
-  let e := Fintype.equivFin n
-  let CF := C.reindex e e
-  rw [← sigmaMin_reindex C e e, sigmaMin_pos_iff_rank_eq_width CF Fintype.card_pos]
-  constructor
-  · intro hRank
-    apply (Matrix.isUnit_iff_isUnit_det C).mpr
-    apply isUnit_iff_ne_zero.mpr
-    apply det_ne_zero_of_rank_eq
-    simpa only [CF, Matrix.rank_reindex] using hRank
-  · intro hUnit
-    have hCF : IsUnit CF := hUnit.map (Matrix.reindexRingEquiv ℝ e).toMonoidHom
-    simpa only [Fintype.card_fin] using Matrix.rank_of_isUnit CF hCF
 
 /-- At positive width and invertible overlap, the norm of the genuine
 tangent matrix is the tangent of the last principal angle. Stewart--Sun,

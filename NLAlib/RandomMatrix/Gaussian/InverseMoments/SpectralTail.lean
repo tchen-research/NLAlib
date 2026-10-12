@@ -16,7 +16,8 @@ For an `r × k` standard Gaussian matrix `G` with pseudoinverse `G† = pinvR G 
   `P[‖G†‖ > t] ≤ (2π(k-r+1))^{-1/2} (e√k/(k-r+1))^{k-r+1} t^{-(k-r+1)}` for `2 ≤ r ≤ k`
   (HMT 2011, Prop A.3; Chen–Dongarra 2005; atlas `pinv-spectral-tail`);
 * `integrable_and_integral_specNorm_pinvR_gaussianMatrix_le`: `E‖G†‖ ≤ e√k/(k-r)` for
-  `2 ≤ r`, `r + 1 ≤ k` (HMT 2011, Prop A.4; atlas `pinv-spectral-expectation`);
+  `1 ≤ r`, `r + 1 ≤ k` (HMT 2011, Prop A.4, there for `r ≥ 2`; atlas
+  `pinv-spectral-expectation`);
 * `integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le`:
   `E‖(G Gᵀ)⁻¹‖^p ≤ (e² (k+r) / (2 (k-r)²))^p` for `1 ≤ p ≤ 18`, `r + 2p ≤ k`
   (Tropp–Webber 2023, Lemma B.4; atlas `inverse-wishart-spectral-moment`);
@@ -267,24 +268,25 @@ theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r 
   convert this using 3
 
 /-- **Expectation of the spectral norm of the Gaussian pseudoinverse.** For an `r × k`
-standard Gaussian matrix `G` with `2 ≤ r` and `r + 1 ≤ k`, `‖G†‖` is integrable and
+standard Gaussian matrix `G` with `1 ≤ r` and `r + 1 ≤ k`, `‖G†‖` is integrable and
 `E‖G†‖ ≤ e√k/(k-r)`, with `G† = pinvR G`.
 
-HMT 2011, Prop A.4 (`E‖Ω₁†‖ ≤ e√(k+p)/p` with `Ω₁` of size `k × (k+p)`). Atlas:
+HMT 2011, Prop A.4 (`E‖Ω₁†‖ ≤ e√(k+p)/p` with `Ω₁` of size `k × (k+p)`). Deviation: HMT
+assume `r ≥ 2`; the one-row case `r = 1` holds as well (manuscript `sa:expected-power`, one-row
+endpoint), which is how the range-finder bounds of HMT Thm 10.6 cover every `k ≥ 1`. Atlas:
 `pinv-spectral-expectation`. Proof: Gaussian quadratic probes, Schur residual laws,
 scalar Gamma estimates, and positive moment comparison. The sharper expectation
 bound with k+r-1 is proved in SpectralProbe and implies the source constant.
 This proof has no density or spectral-tail dependency.
 atlas: pinv-spectral-expectation -/
-theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le {r k : ℕ} (hr : 2 ≤ r)
+theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le {r k : ℕ} (hr : 1 ≤ r)
     (hrk : r + 1 ≤ k) :
     Integrable (fun G : Fin r → Fin k → ℝ => specNorm (pinvR (Matrix.of G))) (gaussianMatrix r k) ∧
     ∫ G, specNorm (pinvR (Matrix.of G)) ∂(gaussianMatrix r k)
       ≤ Real.exp 1 * Real.sqrt k / ((k : ℝ) - r) := by
-  have hr1 : 1 ≤ r := by omega
   have hrk' : r < k := by omega
   obtain ⟨hint, hbound⟩ :=
-    integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_sharp hr1 hrk'
+    integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_sharp hr hrk'
   refine ⟨hint, hbound.trans ?_⟩
   have hgap : (0 : ℝ) < (k : ℝ) - r := sub_pos.mpr (by exact_mod_cast hrk')
   have hcast : (r : ℝ) < k := by exact_mod_cast hrk'

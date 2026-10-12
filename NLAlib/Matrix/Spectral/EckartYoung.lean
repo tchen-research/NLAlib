@@ -255,7 +255,8 @@ theorem IsSVD.frobSq_sub_truncatedMatrix {m n : ℕ} {A : Matrix (Fin m) (Fin n)
     by_cases hik : (i : ℕ) < k
     · simp [hik, not_le.mpr hik]
     · simp [hik, not_lt.mp hik]
-  · rw [if_neg hin, singularValues_eq_zero_of_width_le A (not_lt.mp hin)]
+  · rw [if_neg hin, singularValues_eq_zero_of_width_le A
+      (by simpa only [Fintype.card_fin] using not_lt.mp hin)]
     simp
 
 /-- **Frobenius Eckart–Young minimizer.** Truncating any actual SVD gives a
@@ -373,7 +374,8 @@ theorem IsSVD.specNorm_sub_truncatedMatrix {m n : ℕ} {A : Matrix (Fin m) (Fin 
           ⟨k, hkn⟩
         simp only [hkm, if_true, hτ, lt_irrefl, if_false, Real.norm_eq_abs] at h0
         rwa [abs_of_nonneg (sq_nonneg _)] at h0
-      · rw [singularValues_eq_zero_of_min_le A (not_lt.1 hk)]
+      · rw [singularValues_eq_zero_of_min_le A
+          (by simpa only [Fintype.card_fin] using not_lt.1 hk)]
         simp
   exact (sq_eq_sq₀ (specNorm_nonneg T) hσk).1 hsq
 

@@ -93,7 +93,7 @@ theorem condExp_traceExp_variance_update_le
   have hgv : (g • V ω).IsHermitian := hVω.isHermitian.smul (IsSelfAdjoint.all _)
   have hlogLe : matrixLog (M ω) ≤ g • V ω := hcgfω.2.2
   have hcomp := add_le_add (le_refl (H ω)) hlogLe
-  have htrace := traceExp_le_traceExp_finite _ _ (hHω.add hlog) (hHω.add hgv) hcomp
+  have htrace := traceExp_le_traceExp _ _ (hHω.add hlog) (hHω.add hgv) hcomp
   have heq : H ω + g • V ω = θ • Y ω - g • W ω := by
     dsimp [H]
     rw [smul_add]

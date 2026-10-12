@@ -40,39 +40,6 @@ variable {m n : Type*} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
 
 /-! ### Krylov spaces of `AAᵀ` and `AᵀA` -/
 
-/-- Intertwining powers: `C B = B' C` implies `C Bⁱ = B'ⁱ C`. Helper for
-`golub-kahan-bidiagonalization`. -/
-theorem mul_pow_eq_pow_mul_of_mul_eq {C : Matrix m n ℝ} {B : Matrix n n ℝ} {B' : Matrix m m ℝ}
-    (hC : C * B = B' * C) (i : ℕ) : C * B ^ i = B' ^ i * C := by
-  induction i with
-  | zero => simp
-  | succ i ih => rw [pow_succ, ← Matrix.mul_assoc, ih, Matrix.mul_assoc, hC, ← Matrix.mul_assoc,
-      ← pow_succ]
-
-/-- Krylov spaces are carried along an intertwining map: if `C B = B' C` then
-`C K_q(B, b) ⊆ K_q(B', C b)`. Source: Golub–Van Loan (2013) [`gvl13`], §10.4.1. Helper for
-`golub-kahan-bidiagonalization`. -/
-theorem mulVec_mem_krylovSpace_of_mul_eq {C : Matrix m n ℝ} {B : Matrix n n ℝ}
-    {B' : Matrix m m ℝ} (hC : C * B = B' * C) {b x : n → ℝ} {q : ℕ}
-    (hx : x ∈ krylovSpace B b q) : C *ᵥ x ∈ krylovSpace B' (C *ᵥ b) q := by
-  have hle : krylovSpace B b q ≤ (krylovSpace B' (C *ᵥ b) q).comap C.mulVecLin := by
-    refine Submodule.span_le.2 ?_
-    rintro _ ⟨i, rfl⟩
-    change C *ᵥ ((B ^ (i : ℕ)) *ᵥ b) ∈ krylovSpace B' (C *ᵥ b) q
-    rw [Matrix.mulVec_mulVec, mul_pow_eq_pow_mul_of_mul_eq hC, ← Matrix.mulVec_mulVec]
-    exact pow_mulVec_mem_krylovSpace _ _ i.isLt
-  exact hle hx
-
-/-- `K_q(B, B b) ⊆ K_{q+1}(B, b)`. Helper for `golub-kahan-bidiagonalization` (belongs in
-`NLAlib.Krylov.Spaces.Polynomial`). -/
-theorem krylovSpace_mulVec_le_succ (B : Matrix m m ℝ) (b : m → ℝ) (q : ℕ) :
-    krylovSpace B (B *ᵥ b) q ≤ krylovSpace B b (q + 1) := by
-  refine Submodule.span_le.2 ?_
-  rintro _ ⟨i, rfl⟩
-  change (B ^ (i : ℕ)) *ᵥ (B *ᵥ b) ∈ _
-  rw [Matrix.mulVec_mulVec, ← pow_succ]
-  exact pow_mulVec_mem_krylovSpace _ _ (Nat.succ_lt_succ i.isLt)
-
 /-- `A K_q(AᵀA, Aᵀb) ⊆ K_{q+1}(AAᵀ, b)`. Source: Golub–Van Loan (2013) [`gvl13`], §10.4.1.
 Helper for `golub-kahan-bidiagonalization`. -/
 theorem mulVec_mem_krylovSpace_mul_transpose (A : Matrix m n ℝ) (b : m → ℝ) {q : ℕ}

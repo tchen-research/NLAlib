@@ -72,7 +72,7 @@ theorem lipschitz_sqrt_bestRankFrobSq [DecidableEq m] [DecidableEq n] (k : ℕ) 
   intro A B
   have hcompare : frobNorm (A - B) ≤ Real.sqrt (Fintype.card n : ℝ) * specNorm (A - B) := by
     have hr : ((A - B).rank : ℝ) ≤ Fintype.card n := by exact_mod_cast (A - B).rank_le_card_width
-    exact (frobNorm_le_sqrt_rank_mul_specNorm_fintype (A - B)).trans
+    exact (frobNorm_le_sqrt_rank_mul_specNorm (A - B)).trans
       (mul_le_mul_of_nonneg_right (Real.sqrt_le_sqrt hr) (specNorm_nonneg _))
   calc
     dist (Real.sqrt (bestRankFrobSq k A)) (Real.sqrt (bestRankFrobSq k B)) =

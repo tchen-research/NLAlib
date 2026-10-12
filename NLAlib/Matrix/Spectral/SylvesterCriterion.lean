@@ -61,8 +61,9 @@ theorem posDef_of_leadingMinor_pos {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     have ha : 0 < A 0 0 := by
       have h := hminor 1 (by rfl) (by omega)
       simpa [leadingMinor] using h
-    apply (posDef_iff_pivotSchur (isSymm_of_isHermitian hA)).mpr
-    refine ⟨ha, ih (isHermitian_of_isSymm (isSymm_pivotSchur (isSymm_of_isHermitian hA))) ?_⟩
+    apply (posDef_iff_pivotSchur (Matrix.isHermitian_iff_isSymm.mp hA)).mpr
+    refine ⟨ha, ih (Matrix.isHermitian_iff_isSymm.mpr
+      (isSymm_pivotSchur (Matrix.isHermitian_iff_isSymm.mp hA))) ?_⟩
     intro k hk₁ hkn
     have h := hminor (k + 1) (by omega) (by omega)
     rw [leadingMinor_eq_pivot_mul_leadingMinor_pivotSchur A ha.ne' k hkn] at h
@@ -112,7 +113,7 @@ theorem posSemidef_of_pivotSchur_posSemidef {n : ℕ}
   have hsym : ∀ y : Fin n → ℝ,
       ∑ i, y i * A i.succ 0 = ∑ j, A 0 j.succ * y j := fun y =>
     Finset.sum_congr rfl fun i _ => by rw [hA.apply 0 i.succ, mul_comm]
-  apply PosSemidef.of_dotProduct_mulVec_nonneg (isHermitian_of_isSymm hA)
+  apply PosSemidef.of_dotProduct_mulVec_nonneg (Matrix.isHermitian_iff_isSymm.mpr hA)
   intro x
   have hxe : x = Matrix.vecCons (x 0) (Fin.tail x) := (Fin.cons_self_tail x).symm
   simp only [star_trivial]
@@ -160,8 +161,9 @@ theorem posSemidef_of_leadingMinor_pos_and_det_nonneg {n : ℕ}
       have ha : 0 < A 0 0 := by
         have h := hminor 1 (by rfl) (by omega)
         simpa [leadingMinor] using h
-      apply posSemidef_of_pivotSchur_posSemidef (isSymm_of_isHermitian hA) ha
-      apply ih (isHermitian_of_isSymm (isSymm_pivotSchur (isSymm_of_isHermitian hA)))
+      apply posSemidef_of_pivotSchur_posSemidef (Matrix.isHermitian_iff_isSymm.mp hA) ha
+      apply ih (Matrix.isHermitian_iff_isSymm.mpr
+        (isSymm_pivotSchur (Matrix.isHermitian_iff_isSymm.mp hA)))
       · intro k hk hkn
         have h := hminor (k + 1) (by omega) (by omega)
         rw [leadingMinor_eq_pivot_mul_leadingMinor_pivotSchur A ha.ne' k (by omega)] at h

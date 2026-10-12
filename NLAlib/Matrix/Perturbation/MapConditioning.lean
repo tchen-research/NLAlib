@@ -1,4 +1,5 @@
-import NLAlib.Matrix.Perturbation.LinearSystemPerturbation
+import NLAlib.Matrix.Perturbation.ConditionNumber
+import NLAlib.Matrix.Perturbation.LeastSquaresGeometry
 
 /-!
 # Condition numbers of differentiable maps
@@ -195,6 +196,14 @@ theorem mapComponentRelativeCondition_le_diagonal_scaling
       rw [← specNorm_euclideanJacobian]
       exact mul_le_mul_of_nonneg_right (specNorm_mul_le _ _) (specNorm_nonneg _)
 
+/-- The matrix inverse cancels the original Euclidean action.
+Source: the nonsingular inverse identity; supports `linear-system-perturbation`. -/
+theorem toEuclideanCLM_inv_apply_apply {A : Matrix n n ℝ} (hA : IsUnit A)
+    (x : EuclideanSpace ℝ n) : Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A⁻¹ (Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A x) = x := by
+  have h := congrArg (fun M : Matrix n n ℝ => Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) M x)
+    (Matrix.nonsing_inv_mul A ((Matrix.isUnit_iff_isUnit_det A).mp hA))
+  simpa only [map_mul, map_one, mul_apply_eq_comp, one_apply_eq_self] using h
+
 /-- The absolute condition number of a matrix's Euclidean action is its
 spectral norm. Gautschi (2004), Definitions 2.3--2.4.
 atlas: condition-number-of-map-def (partial) -/
@@ -220,7 +229,7 @@ theorem mapNormRelativeCondition_toEuclideanCLM_le_conditionNumber
       ‖x‖ = ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A⁻¹
           (Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A x)‖ := by
         rw [toEuclideanCLM_inv_apply_apply hA]
-      _ ≤ _ := norm_toEuclideanCLM_apply_le _ _
+      _ ≤ _ := norm_toEuclideanLin_apply_le A⁻¹ _
   rw [mapNormRelativeCondition, mapAbsCondition_toEuclideanCLM,
     conditionNumber_eq_mul_specNorm_inv hA]
   apply (div_le_iff₀ (norm_pos_iff.mpr hx)).mpr

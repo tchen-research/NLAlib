@@ -2,7 +2,7 @@
 Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_frobenius_second_moment`, `Sol_GaussianMatrix_full_rank_ae`).
 -/
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
+import NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix
 import NLAlib.Matrix.Norms.Core
 import Mathlib.Topology.Algebra.MvPolynomial
 import Mathlib.Algebra.MvPolynomial.Funext
@@ -21,7 +21,7 @@ import Mathlib.Algebra.MvPolynomial.Funext
   `gaussian-full-rank-ae`).
 
 The entry-level facts (`integral_gaussianMatrix_entry_mul`, `gaussianMatrix_map_uncurry`) are in
-`NLAlib.Probability.Gaussian.Basic.GaussianMatrix`. Proof source: Prove2me workspace, Gaussian Random Matrices series
+`NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix`. Proof source: Prove2me workspace, Gaussian Random Matrices series
 (Frobenius second moment, full rank a.s.).
 -/
 

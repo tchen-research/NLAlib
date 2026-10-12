@@ -6,7 +6,7 @@ import NLAlib.Sketching.Sparse.SparseFock.FockHilbert
 import NLAlib.Sketching.Sparse.SparseFock.TypedBlockCS
 import NLAlib.Sketching.Sparse.SparseFock.ParsevalFrame
 import NLAlib.Sketching.Sparse.SparseFock.ConcreteLadder
-import NLAlib.Sketching.Sparse.SparseFock.DirectionalConcrete
+import NLAlib.Sketching.Sparse.SparseFock.DirectionalRestrictedBounds
 import NLAlib.Sketching.Sparse.SparseFock.MatrixTail
 import NLAlib.Sketching.Sparse.SparseFock.BandCoefficientBounds
 import NLAlib.Sketching.Sparse.SparseFock.BandEnvelope

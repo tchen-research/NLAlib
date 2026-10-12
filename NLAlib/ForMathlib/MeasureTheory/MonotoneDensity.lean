@@ -5,7 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
-# Integrating factors and monotone regularizations
+# Integrating factors and weak-derivative primitives
 
 This file supplies calculus prerequisites for the scalar weighted-density argument
 in Section 5 of Re-derivations/operator_rederivations.tex, atlas
@@ -121,75 +121,6 @@ theorem integral_rpow_exp_mul_deriv_nonneg_of_weak_gamma
     simpa [g, mul_assoc] using weighted_deriv_mul_rpow_exp_eq m x hx η
       (hη.differentiable (by simp) x)
   rw [heq] at hw
-  linarith
-
-/-- A bounded differentiable kernel can be differentiated after averaging it against
-a finite measure. Source: operator rederivations, Section 5, mollification step;
-atlas wishart-lambda-min-tail (helper). -/
-theorem hasDerivAt_integral_sub_kernel (μ : Measure ℝ) [IsFiniteMeasure μ]
-    (ρ : ℝ → ℝ) (hρ : ContDiff ℝ 1 ρ) (hρc : HasCompactSupport ρ) (x : ℝ) :
-    HasDerivAt (fun z => ∫ y, ρ (z - y) ∂μ) (∫ y, deriv ρ (x - y) ∂μ) x := by
-  obtain ⟨C, hC⟩ := (hρ.continuous_deriv le_rfl).bounded_above_of_compact_support
-    hρc.deriv
-  have hcont (z : ℝ) : Continuous (fun y => ρ (z - y)) :=
-    hρ.continuous.comp (continuous_const.sub continuous_id)
-  have hdcont (z : ℝ) : Continuous (fun y => deriv ρ (z - y)) :=
-    (hρ.continuous_deriv le_rfl).comp (continuous_const.sub continuous_id)
-  have hi : Integrable (fun y => ρ (x - y)) μ := by
-    obtain ⟨B, hB⟩ := hρ.continuous.bounded_above_of_compact_support hρc
-    exact (integrable_const B).mono' (hcont x).aestronglyMeasurable
-      (Eventually.of_forall fun y => hB (x - y))
-  refine (hasDerivAt_integral_of_dominated_loc_of_deriv_le
-    (μ := μ) (s := Set.univ) (bound := fun _ => C) (F := fun z y => ρ (z - y))
-    (F' := fun z y => deriv ρ (z - y)) (by simp)
-    (Eventually.of_forall fun z => (hcont z).aestronglyMeasurable) hi
-    (hdcont x).aestronglyMeasurable
-    (Eventually.of_forall fun y z _ => hC (z - y)) (integrable_const C) ?_).2
-  filter_upwards with y
-  intro z _
-  convert! ((hρ.differentiable (by norm_num) (z - y)).hasDerivAt.comp z
-    ((hasDerivAt_id z).sub_const y)) using 1
-  simp
-
-/-- A nonnegative smooth compactly supported kernel regularizes a positive measure
-with nonpositive weak derivative to an antitone function on every interior interval.
-The weak hypothesis is tested against all smooth nonnegative functions supported in
-the original interval. Source: operator rederivations, Section 5, mollification step;
-atlas wishart-lambda-min-tail (helper). -/
-theorem antitoneOn_integral_sub_of_integral_deriv_nonneg
-    (μ : Measure ℝ) [IsFiniteMeasure μ] (a b R : ℝ) (ρ : ℝ → ℝ)
-    (hρ : ContDiff ℝ ∞ ρ) (hρc : HasCompactSupport ρ)
-    (hρ0 : ∀ y, 0 ≤ ρ y) (hsupp : tsupport ρ ⊆ Icc (-R) R)
-    (hweak : ∀ ψ : ℝ → ℝ, ContDiff ℝ ∞ ψ → HasCompactSupport ψ →
-      tsupport ψ ⊆ Ioo a b → (∀ y, 0 ≤ ψ y) →
-      0 ≤ ∫ y, deriv ψ y ∂μ) :
-    AntitoneOn (fun x => ∫ y, ρ (x - y) ∂μ) (Ioo (a + R) (b - R)) := by
-  have hd (x : ℝ) := hasDerivAt_integral_sub_kernel μ ρ (hρ.of_le (by simp)) hρc x
-  apply antitoneOn_of_deriv_nonpos (convex_Ioo _ _)
-    (fun x _ => (hd x).continuousAt.continuousWithinAt)
-    (fun x _ => (hd x).differentiableAt.differentiableWithinAt)
-  intro x hx
-  rw [interior_Ioo] at hx
-  rw [(hd x).deriv]
-  have hψ : ContDiff ℝ ∞ (fun y => ρ (x - y)) :=
-    hρ.comp (contDiff_const.sub contDiff_id)
-  have hψc : HasCompactSupport (fun y => ρ (x - y)) :=
-    hρc.comp_homeomorph (Homeomorph.subLeft x)
-  have hψs : tsupport (fun y => ρ (x - y)) ⊆ Ioo a b := by
-    have hh := tsupport_comp_subset_preimage ρ (continuous_const.sub continuous_id :
-      Continuous (fun y : ℝ => x - y))
-    intro y hy
-    have hxy : x - y ∈ Icc (-R) R := hsupp (hh hy)
-    constructor <;> linarith [hx.1, hx.2, hxy.1, hxy.2]
-  have hw := hweak _ hψ hψc hψs (fun y => hρ0 (x - y))
-  have hderiv : ∀ y, deriv (fun z => ρ (x - z)) y = -deriv ρ (x - y) := by
-    intro y
-    have hh : HasDerivAt (fun z => ρ (x - z)) (-deriv ρ (x - y)) y := by
-      convert! (((hρ.differentiable (by simp) (x - y)).hasDerivAt).comp y
-        ((hasDerivAt_const y x).sub (hasDerivAt_id y))) using 1
-      simp
-    exact hh.deriv
-  simp_rw [hderiv, integral_neg] at hw
   linarith
 
 /-- Two nonnegative smooth functions with disjoint ordered supports and equal total

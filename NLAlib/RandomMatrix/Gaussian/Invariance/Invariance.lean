@@ -3,7 +3,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_rotation_invariance`, `Sol_GaussianMatrix_block_law`,
 `Sol_GaussianMatrix_block_indep`).
 -/
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
+import NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix
 import NLAlib.Matrix.Subspaces.Projections
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.Data.Matrix.ColumnRowPartitioned

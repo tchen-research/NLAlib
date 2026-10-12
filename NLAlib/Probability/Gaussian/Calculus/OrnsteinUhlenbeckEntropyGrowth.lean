@@ -1,7 +1,6 @@
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeckGrowth
 import NLAlib.ForMathlib.Analysis.DerivativeLimit
 import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-import Mathlib.Tactic
 
 /-!
 # Entropy dissipation on the positive polynomial-growth domain

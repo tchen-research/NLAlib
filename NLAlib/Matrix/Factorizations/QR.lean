@@ -8,8 +8,8 @@ The factorization predicates of `docs/ALGORITHM_CONVENTIONS.md` §1 for `A = QR`
 
 * `IsQR A Q R` (**thin** QR): `A : m × n`, `Q : m × n` with orthonormal columns
   (`HasOrthonormalCols Q`), `R : n × n` upper triangular (Mathlib's `Matrix.IsUpperTriangular`,
-  i.e. `R.BlockTriangular id`), `A = QR`. The row index `m` is any `Fintype`; the column index is
-  `Fin n` because triangularity needs the order.
+  i.e. `R.BlockTriangular id`), `A = QR`. The row index `m` is any `Fintype`; the column index `n`
+  is any `Fintype` with a `LinearOrder`, because triangularity needs the order.
 * `IsFullQR A Q R` (**full** QR): `A : Fin m × Fin n`, `Q : m × m` orthogonal, `R : m × n` upper
   trapezoidal (`IsUpperTrapezoidal R`: `R i j = 0` for `j < i`), `A = QR`; no relation between
   `m` and `n` is required.
@@ -29,8 +29,9 @@ Trefethen–Bau signs, Gram–Schmidt produces `R_ii ≥ 0`. Sign normalisation 
   thin from full `IsFullQR.isQR_castLE`.
 * Existence: `exists_isFullQR` (induction with an orthogonal completion step,
   `isFullQR_mul_borderedUpper`; realised constructively by `householderQR` in
-  `NLAlib.Matrix.Factorizations.Householder`), `exists_isQR` (thin, `R_ii ≥ 0`, for `n ≤ |m|`),
-  `exists_isQR_of_isUnit` (`R_ii > 0` under full column rank).
+  `NLAlib.Matrix.Factorizations.Householder`). Thin existence, `exists_isQR` (`R_ii ≥ 0`, for
+  `|n| ≤ |m|`) and `exists_isQR_of_isUnit` (`R_ii > 0` under full column rank), is in
+  `NLAlib.Matrix.Factorizations.QRExistence` (Cholesky of the Gram matrix).
 * Uniqueness: `IsQR.eq_of_diag_pos` (positive diagonals).
 
 Sources: Trefethen–Bau 1997 [`tb97`], Lect. 7 (Thm 7.1, 7.2); Golub–Van Loan 2013 [`gvl13`],
@@ -49,14 +50,14 @@ namespace NLAlib
 
 section Predicates
 
-variable {m : Type*} [Fintype m] {n : ℕ}
+variable {m : Type*} [Fintype m] {n : Type*} [Fintype n] [LinearOrder n]
 
 /-- **Thin QR factorization**: `A = QR` with `Q : m × n` having orthonormal columns and
 `R : n × n` upper triangular. The signs of `R_ii` are not fixed (see `IsQR.diagonal_mul`); the
 alternative convention `R_ii ≥ 0` is a separate conjunct where it is needed (`exists_isQR`).
 Trefethen–Bau 1997, Lect. 7 (reduced QR); Golub–Van Loan 2013, Thm 5.2.3 (thin QR).
 atlas: qr-decomposition (partial) -/
-structure IsQR (A Q : Matrix m (Fin n) ℝ) (R : Matrix (Fin n) (Fin n) ℝ) : Prop where
+structure IsQR (A Q : Matrix m n ℝ) (R : Matrix n n ℝ) : Prop where
   /-- The factorization `A = QR`. -/
   eq : A = Q * R
   /-- `Q` has orthonormal columns, `Qᵀ Q = I`. -/
@@ -228,9 +229,28 @@ end Trapezoidal
 
 /-! ### Identities -/
 
+section Gram
+
+variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+
+/-- The Gram matrix of every thin QR factor equals the original Gram matrix,
+even at deficient rank: `A = QR` with `QᵀQ = I` gives `RᵀR = AᵀA` (no triangularity needed).
+Trefethen--Bau, Theorem 7.1.
+atlas: qr-decomposition (partial) -/
+theorem transpose_mul_self_eq_of_qr {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
+    (hQ : HasOrthonormalCols Q) (hFactor : Q * R = A) : Rᵀ * R = Aᵀ * A := by
+  rw [← hFactor, Matrix.transpose_mul]
+  have hGram : Qᵀ * Q = 1 := hQ
+  calc
+    Rᵀ * R = Rᵀ * (Qᵀ * Q) * R := by rw [hGram, Matrix.mul_one]
+    _ = Rᵀ * Qᵀ * (Q * R) := by simp only [Matrix.mul_assoc]
+
+end Gram
+
 section Identities
 
-variable {m : Type*} [Fintype m] {n : ℕ} {A Q : Matrix m (Fin n) ℝ} {R : Matrix (Fin n) (Fin n) ℝ}
+variable {m : Type*} [Fintype m] {n : Type*} [Fintype n] [LinearOrder n] {A Q : Matrix m n ℝ}
+  {R : Matrix n n ℝ}
 
 namespace IsQR
 
@@ -242,9 +262,8 @@ theorem transpose_mul_eq (h : IsQR A Q R) : Qᵀ * A = R := by
 /-- `Aᵀ A = Rᵀ R`: `Rᵀ` is a (Cholesky) triangular factor of the Gram matrix `AᵀA`.
 Trefethen–Bau 1997, Lect. 11 (normal equations via QR); Golub–Van Loan 2013, §5.2.
 atlas: qr-decomposition (partial) -/
-theorem transpose_mul_self_eq (h : IsQR A Q R) : Aᵀ * A = Rᵀ * R := by
-  rw [h.eq, Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Qᵀ,
-    show Qᵀ * Q = 1 from h.orth, Matrix.one_mul]
+theorem transpose_mul_self_eq (h : IsQR A Q R) : Aᵀ * A = Rᵀ * R :=
+  (transpose_mul_self_eq_of_qr h.orth h.eq.symm).symm
 
 /-- `det R = ∏ R_ii` (Mathlib's `det_of_isUpperTriangular`). Golub–Van Loan 2013, §3.1. -/
 theorem det_eq (h : IsQR A Q R) : R.det = ∏ i, R i i :=
@@ -278,7 +297,7 @@ theorem range_mulVecLin_eq (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) :
 /-- **Sign normalisation**: multiplying `Q` on the right and `R` on the left by a diagonal sign
 matrix `D` (`D² = I`) gives another thin QR. Trefethen–Bau 1997, Thm 7.1 (proof, sign choice);
 Golub–Van Loan 2013, §5.2. -/
-theorem diagonal_mul (h : IsQR A Q R) (d : Fin n → ℝ) (hd : ∀ i, d i * d i = 1) :
+theorem diagonal_mul (h : IsQR A Q R) (d : n → ℝ) (hd : ∀ i, d i * d i = 1) :
     IsQR A (Q * diagonal d) (diagonal d * R) where
   eq := by
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc (diagonal d), diagonal_mul_diagonal,
@@ -390,43 +409,6 @@ theorem exists_isFullQR : ∀ {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ), ∃ 
     obtain ⟨Q', R', h'⟩ := exists_isFullQR ((Wᵀ * A).submatrix Fin.succ Fin.succ)
     exact ⟨_, _, isFullQR_mul_borderedUpper hW hB h'⟩
 
-/-- **Existence of a thin QR with nonnegative diagonal** for every real matrix with at least as
-many rows as columns (`n ≤ |m|`); no rank hypothesis. Trefethen–Bau 1997, Thm 7.1;
-Golub–Van Loan 2013, Thm 5.2.3. Proof: full QR (`exists_isFullQR`), its first `n` columns
-(`IsFullQR.isQR_castLE`), then sign normalisation (`IsQR.diagonal_mul`), after reindexing the
-rows by `Fin |m|`.
-atlas: qr-decomposition (partial) -/
-theorem exists_isQR {m : Type*} [Fintype m] {n : ℕ} (A : Matrix m (Fin n) ℝ)
-    (hn : n ≤ Fintype.card m) :
-    ∃ Q R, IsQR A Q R ∧ ∀ i, 0 ≤ R i i := by
-  let e := Fintype.equivFin m
-  obtain ⟨Q₀, R₀, h₀⟩ := exists_isFullQR (A.submatrix e.symm id)
-  have h₁ := (h₀.isQR_castLE hn).submatrix_rows e
-  rw [show (A.submatrix e.symm id).submatrix e id = A by ext; simp] at h₁
-  set R₁ := R₀.submatrix (Fin.castLE hn) id
-  let d : Fin n → ℝ := fun i => if 0 ≤ R₁ i i then 1 else -1
-  have hd : ∀ i, d i * d i = 1 := fun i => by by_cases hi : 0 ≤ R₁ i i <;> simp [d, hi]
-  refine ⟨_, _, h₁.diagonal_mul d hd, fun i => ?_⟩
-  rw [Matrix.diagonal_mul]
-  by_cases hi : 0 ≤ R₁ i i
-  · simp [d, hi]
-  · simp only [d, hi, if_false]; linarith
-
-/-- **Existence with positive diagonal under full column rank**: if `AᵀA` is invertible
-(`rank A = n`), `A` has a thin QR with `R_ii > 0`. Trefethen–Bau 1997, Thm 7.2;
-Golub–Van Loan 2013, Thm 5.2.3. The row-count condition `n ≤ |m|` follows from the rank.
-atlas: qr-decomposition (partial) -/
-theorem exists_isQR_of_isUnit {m : Type*} [Fintype m] {n : ℕ} {A : Matrix m (Fin n) ℝ}
-    (hA : IsUnit (Aᵀ * A)) :
-    ∃ Q R, IsQR A Q R ∧ ∀ i, 0 < R i i := by
-  have hn : n ≤ Fintype.card m := by
-    have h1 := Matrix.rank_of_isUnit _ hA
-    rw [Matrix.rank_transpose_mul_self, Fintype.card_fin] at h1
-    exact h1 ▸ Matrix.rank_le_card_height A
-  obtain ⟨Q, R, h, hpos⟩ := exists_isQR A hn
-  exact ⟨Q, R, h, fun i => lt_of_le_of_ne (hpos i)
-    (h.isUnit_transpose_mul_self_iff.1 hA i).symm⟩
-
 /-- **Uniqueness of the thin QR with positive diagonal**: two thin QR factorizations of the same
 `A` whose `R` factors have positive diagonals coincide. (Positivity of the diagonal forces full
 column rank, so no separate rank hypothesis is needed.) Trefethen–Bau 1997, Thm 7.2;
@@ -435,8 +417,8 @@ Golub–Van Loan 2013, Thm 5.2.3. Proof: `T := Q₂ᵀQ₁` satisfies `T R₁ = 
 triangular, hence `T` is diagonal, with `T_ii R₁ii = R₂ii`, `T_ii R₂ii = R₁ii`, so `T_ii² = 1`,
 `T_ii > 0`; thus `T = I`, `R₂ = R₁` and `Q₂ = A R₂⁻¹ = Q₁`.
 atlas: qr-decomposition (partial) -/
-theorem IsQR.eq_of_diag_pos {m : Type*} [Fintype m] {n : ℕ} {A Q₁ Q₂ : Matrix m (Fin n) ℝ}
-    {R₁ R₂ : Matrix (Fin n) (Fin n) ℝ} (h₁ : IsQR A Q₁ R₁) (h₂ : IsQR A Q₂ R₂)
+theorem IsQR.eq_of_diag_pos {m : Type*} [Fintype m] {n : Type*} [Fintype n] [LinearOrder n]
+    {A Q₁ Q₂ : Matrix m n ℝ} {R₁ R₂ : Matrix n n ℝ} (h₁ : IsQR A Q₁ R₁) (h₂ : IsQR A Q₂ R₂)
     (hR₁ : ∀ i, 0 < R₁ i i) (hR₂ : ∀ i, 0 < R₂ i i) : Q₁ = Q₂ ∧ R₁ = R₂ := by
   have hd₁ : IsUnit R₁.det := h₁.isUnit_det_iff.2 fun i => (hR₁ i).ne'
   have hd₂ : IsUnit R₂.det := h₂.isUnit_det_iff.2 fun i => (hR₂ i).ne'

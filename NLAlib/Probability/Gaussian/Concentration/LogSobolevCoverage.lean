@@ -1,5 +1,4 @@
 import NLAlib.Probability.Gaussian.Concentration.LogSobolev
-import Mathlib.Tactic
 
 /-!
 # Gaussian logarithmic Sobolev inequality without an entropy-integrability hypothesis

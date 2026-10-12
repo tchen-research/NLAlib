@@ -1,4 +1,4 @@
-import NLAlib.Matrix.OperatorTheory.LiebConcavity
+import NLAlib.Matrix.OperatorTheory.LiebTraceFunction
 import NLAlib.Probability.Concentration.Matrix.LiebJensen
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
 import NLAlib.Probability.Concentration.Matrix.LiebRegularityShiftIntegrable
@@ -17,24 +17,6 @@ open scoped Matrix.Norms.L2Operator ComplexOrder
 set_option autoImplicit false
 
 namespace NLAlib
-
-/-- The Lieb trace function is continuous on the actual positive-definite cone.
-Source: Tropp 2015, Corollary 3.4.2; operator rederivations `eq:condlieb`.
-Reusable regularity for atlas `matrix-laplace` and `matrix-freedman`; promoted unchanged
-from the proof-local helper of probabilistic Lieb. -/
-theorem continuousOn_traceExp_add_matrixLog {d : ℕ} [NeZero d]
-    (H : Matrix (Fin d) (Fin d) ℂ) :
-    ContinuousOn (fun A => traceExp (H + matrixLog A))
-      {A : Matrix (Fin d) (Fin d) ℂ | A.PosDef} := by
-  let : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
-  have hl : ContinuousOn (matrixLog : Matrix (Fin d) (Fin d) ℂ → _)
-      {A : Matrix (Fin d) (Fin d) ℂ | A.PosDef} :=
-    CFC.continuousOn_log.mono (fun A hA => ⟨hA.isHermitian, hA.isUnit⟩)
-  have he : ContinuousOn (fun A => matrixExp (H + matrixLog A))
-      {A : Matrix (Fin d) (Fin d) ℂ | A.PosDef} :=
-    NormedSpace.exp_continuous.comp_continuousOn (continuousOn_const.add hl)
-  exact Complex.continuous_re.comp_continuousOn
-    ((Matrix.traceLinearMap (Fin d) ℂ ℂ).toContinuousLinearMap.continuous.comp_continuousOn he)
 
 end NLAlib
 

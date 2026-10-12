@@ -27,6 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -/
 import Mathlib.Probability.Distributions.Uniform
+import NLAlib.ForMathlib.Data.ExactRowSubset
 
 /-!
 # A literal finite iid/subset sampling coupling
@@ -76,18 +77,6 @@ theorem toReal_map_pmf_invariant {α β : Type*} [Fintype α]
   rw [toReal_map_pmf_apply, toReal_map_pmf_apply,
     ← e.sum_comp (fun a => if f a = g b then (p a).toReal else 0)]
   simp_rw [hf, hp, g.injective.eq_iff]
-
-/-- The finite sample space of literal size-`k` subsets.
-Source: operator re-derivation `sh:convex-sampling`. -/
-abbrev ExactRowSubset (α : Type*) [Fintype α] (k : ℕ) := {T : Finset α // T.card = k}
-
-/-- Exact-size subsets exist when the requested size is at most the population.
-Source: operator re-derivation `sh:convex-sampling`. -/
-theorem exactRowSubset_nonempty {α : Type*} [Fintype α] {k : ℕ}
-    (hk : k ≤ Fintype.card α) : Nonempty (ExactRowSubset α k) := by
-  obtain ⟨T, _, hT⟩ := Finset.exists_subset_card_eq (s := (Finset.univ : Finset α))
-    (by simpa using hk)
-  exact ⟨T, hT⟩
 
 /-- A sequence's distinct support has cardinality at most its length.
 Source: operator re-derivation `sh:convex-sampling`. -/

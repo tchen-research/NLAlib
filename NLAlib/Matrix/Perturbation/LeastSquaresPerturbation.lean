@@ -24,19 +24,6 @@ theorem columnProjector_apply_pinv_residual_eq_zero (A : Matrix m n ℝ)
   change (A*moorePenroseInverse A)*(A*moorePenroseInverse A)=A*moorePenroseInverse A at h
   rw [← toEuclideanLin_mul_apply, map_sub, ← toEuclideanLin_mul_apply, h, sub_self]
 
-omit [DecidableEq n] in
-/-- The complement of the Moore–Penrose column projector is a contraction.
-Orthogonal-projector norm bound; supports least-squares perturbation. -/
-theorem specNorm_complement_columnProjector_le_one (A : Matrix m n ℝ) :
-    specNorm (1-A*moorePenroseInverse A) ≤ 1 := by
-  apply specNorm_le_one_of_isSymm_of_isIdempotentElem
-  · simp [Matrix.IsSymm, (mul_moorePenroseInverse_isSymm A).eq]
-  · change (1-A*moorePenroseInverse A)*(1-A*moorePenroseInverse A)=1-A*moorePenroseInverse A
-    have h : (A*moorePenroseInverse A)*(A*moorePenroseInverse A)=A*moorePenroseInverse A :=
-      mul_moorePenroseInverse_isIdempotentElem A
-    simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one, h]
-    abel
-
 /-- The perturbed inverse applied to the old residual is controlled by the
 equal-rank projector gap. Higham, Theorem 20.1; Wedin §5. -/
 theorem norm_pinv_apply_pinv_residual_le {A B : Matrix m n ℝ}
@@ -143,7 +130,7 @@ theorem norm_least_squares_residual_sub_le {A B : Matrix m n ℝ}
   have h2 : ‖(1-B*moorePenroseInverse B).toEuclideanLin f‖ ≤ ‖f‖ := by
     have hbound := norm_toEuclideanLin_apply_le (1-B*moorePenroseInverse B) f
     have hcontract := mul_le_mul_of_nonneg_right
-      (specNorm_complement_columnProjector_le_one B) (norm_nonneg f)
+      (isMoorePenroseInverse B).specNorm_one_sub_mul_le (norm_nonneg f)
     exact hbound.trans (by simpa only [one_mul] using hcontract)
   exact (norm_sub_le _ _).trans (add_le_add h1 h2)
 

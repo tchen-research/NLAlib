@@ -135,6 +135,17 @@ theorem sigmaMin_mul_sqrt_le (A : Matrix m n ℝ) (x : n → ℝ) :
           mul_le_mul_of_nonneg_right h hrpos.le
       _ = Real.sqrt ((A *ᵥ x) ⬝ᵥ (A *ᵥ x)) := by field_simp
 
+/-- Squared form of `sigmaMin_mul_sqrt_le`: `σ_min(A)² ‖x‖² ≤ ‖Ax‖²` for every vector `x`.
+Variational singular-value characterization; helper for `ostrowski-congruence-eigenvalues`.
+Atlas `norm-lipschitz`. -/
+theorem sq_sigmaMin_mul_dotProduct_le_mulVec_dotProduct (A : Matrix m n ℝ) (x : n → ℝ) :
+    sigmaMin A ^ 2 * (x ⬝ᵥ x) ≤ (A *ᵥ x) ⬝ᵥ (A *ᵥ x) := by
+  have h := sigmaMin_mul_sqrt_le A x
+  have h₂ := pow_le_pow_left₀
+    (mul_nonneg (sigmaMin_nonneg A) (Real.sqrt_nonneg _)) h 2
+  simpa only [mul_pow, Real.sq_sqrt (dotProduct_self_nonneg x),
+    Real.sq_sqrt (dotProduct_self_nonneg (A *ᵥ x))] using h₂
+
 /-- For a nonempty index type, the smallest singular value is at most the spectral norm.
 Ported from the Prove2me solution `GaussianMatrix.gordon` (helper `gordonSol_sMin_le_specNorm`).
 Atlas `norm-lipschitz`. -/

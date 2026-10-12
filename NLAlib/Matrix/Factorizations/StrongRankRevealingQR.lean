@@ -1,7 +1,7 @@
 import NLAlib.Matrix.Factorizations.RankRevealingTrailing
 import NLAlib.Matrix.Factorizations.MaximumVolumeRankAdapted
 import NLAlib.Matrix.Spectral.SingularValueInvariance
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
+import NLAlib.Matrix.Inequalities.KyFanNorms
 /-!
 # Strong rank-revealing QR with the exact Gu–Eisenstat constants
 

@@ -2,7 +2,7 @@ import NLAlib.Probability.Concentration.Entropy.EntropyTensorization
 import NLAlib.ForMathlib.Analysis.Real
 import Mathlib.Analysis.Convex.Integral
 import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.Tactic
+import NLAlib.ForMathlib.MeasureTheory.IntegralUpdate
 
 /-!
 # Entropy tensorization for nonnegative functions
@@ -92,17 +92,6 @@ section Product
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι] {Ω : Type*} [MeasurableSpace Ω]
     (μ : ι → Measure Ω) [∀ i, IsProbabilityMeasure (μ i)]
-
-omit [Fintype ι] in
-/-- A one-coordinate conditional mean is measurable. Source: Mathlib's
-`StronglyMeasurable.integral_prod_right'` applied to coordinate resampling.
-Atlas: `entropy-tensorization`. -/
-theorem measurable_integral_update_pi (i : ι) {f : (ι → Ω) → ℝ}
-    (hfm : Measurable f) :
-    Measurable (fun x => ∫ t, f (Function.update x i t) ∂(μ i)) := by
-  exact (StronglyMeasurable.integral_prod_right'
-    (f := fun p : (ι → Ω) × Ω => f (Function.update p.1 i p.2))
-    (hfm.comp measurable_update').stronglyMeasurable).measurable
 
 /-- `E_i f log(E_i f)` is integrable whenever a nonnegative `f` and its
 entropy integrand are integrable. The proof uses conditional Jensen and

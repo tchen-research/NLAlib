@@ -825,7 +825,7 @@
    ],
    "decls": [
     "NLAlib.isUnit_det_iff_of_isUpperTriangular",
-    "NLAlib.isUpperTriangular_mul",
+    "Mathlib:Matrix.BlockTriangular.mul",
     "NLAlib.isUpperTriangular_inv",
     "Mathlib:Matrix.det_of_isUpperTriangular"
    ],
@@ -1220,7 +1220,7 @@
    "atlas": [],
    "decls": [
     "NLAlib.sum_det_principal_minors_eq_sum_prod_of_isHermitian",
-    "NLAlib.sum_det_principal_minors_eq_sum_prod_of_orthogonal_diagonalization"
+    "NLAlib.sum_det_principal_minors_eq_sum_prod_of_diagonalization"
    ],
    "note": "NLAlib has the Hermitian / orthogonally diagonalizable case; general (non-normal) A missing"
   },
@@ -6422,7 +6422,7 @@
     "NLAlib.one_sub_mul_moorePenroseInverse_mul_eq_zero_of_fromBlocks_posSemidef",
     "NLAlib.transpose_mulVec_eq_zero_of_fromBlocks_posSemidef",
     "NLAlib.apply_eq_zero_of_posSemidef_of_apply_self_eq_zero",
-    "NLAlib.apply_eq_zero_of_complex_posSemidef_of_diag_eq_zero"
+    "NLAlib.apply_eq_zero_of_posSemidef_of_apply_self_eq_zero"
    ],
    "note": "Real block inclusion is proved as (I − AA†)B = 0, with the equivalent kernel-annihilation form, for arbitrary finite block splits. Zero-diagonal row/column vanishing is proved for real and complex matrices."
   },
@@ -6792,8 +6792,8 @@
    ],
    "decls": [
     "NLAlib.sum_sq_singularValues_add_sub_le_frobSq",
-    "NLAlib.trace_twoSided_compression_le_kyFanNorm_fintype",
-    "NLAlib.exists_trace_twoSided_compression_eq_kyFanNorm_fintype"
+    "NLAlib.trace_twoSided_compression_le_kyFanNorm",
+    "NLAlib.exists_trace_twoSided_compression_eq_kyFanNorm"
    ],
    "note": "Mirsky and the attained two-sided orthonormal-frame trace maximum are proved for real matrices. The single-unitary maximum formulation is not separately stated."
   },
@@ -6808,7 +6808,7 @@
     "ky-fan-norms-def"
    ],
    "decls": [
-    "NLAlib.trace_twoSided_compression_le_kyFanNorm_fintype",
+    "NLAlib.trace_twoSided_compression_le_kyFanNorm",
     "NLAlib.nuclearNorm_eq_trace_of_posSemidef"
    ],
    "note": "The real trace bound and PSD implying trace/nuclear-norm equality are proved. The converse equality characterization, including the rectangular leading block and vanishing remainder, is not stated."
@@ -6952,7 +6952,7 @@
    ],
    "decls": [
     "NLAlib.forall_invariantNorm_le_iff_weaklyMajorized",
-    "NLAlib.sumLargest_singularValueVector_eq_kyFanNorm"
+    "NLAlib.sumLargest_singularValues_eq_kyFanNorm"
    ],
    "note": "Both directions hold for genuine orthogonally invariant norms on arbitrary finite real rectangular shapes; the singular-prefix sums are explicitly identified with Ky Fan norms."
   },
@@ -7254,11 +7254,10 @@
     "matrix-calculus-def"
    ],
    "decls": [
-    "NLAlib.LoewnerLE",
     "Mathlib:Matrix.le_iff",
     "Mathlib:Matrix.instPartialOrder"
    ],
-   "note": ""
+   "note": "[dedup 2026-10-12: NLAlib.LoewnerLE removed; see docs/renames]"
   },
   {
    "label": "Thm 7.7.2",

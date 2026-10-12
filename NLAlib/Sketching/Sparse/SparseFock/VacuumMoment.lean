@@ -27,7 +27,7 @@ def iidGramError {m n d : ℕ} (b : ℕ) (F : Frame n d)
   (1 / (m : ℝ)) •
     ∑ r, ∑ i, ∑ j ∈ Finset.univ.erase i,
       (etaCoordinate b (r, i) omega * etaCoordinate b (r, j) omega) •
-        ParsevalFrame.outer (F.u i) (F.u j)
+        Matrix.vecMulVec (WithLp.ofLp (F.u i)) (WithLp.ofLp (F.u j))
 
 /-- An iid hollow Gram-error entry is the explicit off-diagonal ternary-coordinate sum.
 Source: ported sparse-Fock shared-leg/vacuum proof, commit
@@ -39,7 +39,7 @@ theorem iidGramError_apply {m n d : ℕ} (b : ℕ) (F : Frame n d)
         etaCoordinate b (r, i) omega * etaCoordinate b (r, j) omega *
           F.u i a * F.u j c := by
   simp only [iidGramError, Matrix.smul_apply, Matrix.sum_apply,
-    ParsevalFrame.outer_apply, smul_eq_mul]
+    Matrix.vecMulVec_apply, smul_eq_mul]
   congr 1
   apply Finset.sum_congr rfl
   intro r hr
@@ -151,7 +151,7 @@ def globalJacobiOperator {m n d : ℕ} (b : ℕ) (F : Frame n d) :
   let J := LocalOperator.jacobi (Real.sqrt ((b : ℝ) - 1))
   (1 / (m : ℝ)) •
     ∑ r, ∑ i, ∑ j ∈ Finset.univ.erase i,
-      externalTensor (ParsevalFrame.outer (F.u i) (F.u j))
+      externalTensor (Matrix.vecMulVec (WithLp.ofLp (F.u i)) (WithLp.ofLp (F.u j)))
         (siteKernel (r, i) J * siteKernel (r, j) J)
 
 /-- The matrix-valued multiplication operator is exactly the explicit global
@@ -168,7 +168,7 @@ theorem multiplicationOperator_eq_globalJacobi {m n d b : ℕ} (hb : 1 < b)
   rw [show iidGramError b F = fun omega ↦ (1 / (m : ℝ)) •
       ∑ r, ∑ i, ∑ j ∈ Finset.univ.erase i,
         (etaCoordinate b (r, i) omega * etaCoordinate b (r, j) omega) •
-          ParsevalFrame.outer (F.u i) (F.u j) from rfl]
+          Matrix.vecMulVec (WithLp.ofLp (F.u i)) (WithLp.ofLp (F.u j)) from rfl]
   rw [matrixMulOp_smul]
   rw [matrixMulOp_fintype_sum]
   congr 1

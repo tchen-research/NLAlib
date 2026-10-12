@@ -51,7 +51,7 @@ theorem frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le {r : ℕ} (X E : 
       _ = specNorm E := one_mul _
   have hfrob : frobNorm (P * E) ≤ Real.sqrt r * specNorm E :=
     calc frobNorm (P * E) ≤ Real.sqrt ((P * E).rank : ℝ) * specNorm (P * E) :=
-          frobNorm_le_sqrt_rank_mul_specNorm_fintype (P * E)
+          frobNorm_le_sqrt_rank_mul_specNorm (P * E)
       _ ≤ Real.sqrt r * specNorm E :=
           mul_le_mul (Real.sqrt_le_sqrt hrank) hspec (specNorm_nonneg _) (Real.sqrt_nonneg _)
   calc frobInner X E = frobInner X (P * E) := hinner

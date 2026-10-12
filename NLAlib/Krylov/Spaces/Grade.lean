@@ -16,6 +16,7 @@ vocabulary of the Krylov layer (`docs/KRYLOV_DEFINITIONS.md` §3.1, §6.7):
 * `mulVec_mem_krylovSpace_krylovGrade`: `A K_ν ⊆ K_ν`;
 * `krylovGrade_le_natDegree_minpoly`, `krylovGrade_le_card`: `ν ≤ deg μ_A ≤ n`;
 * `krylovGrade_eq_zero_iff`: `ν = 0 ↔ b = 0`;
+* `eq_zero_of_aeval_mulVec_eq_zero`: a polynomial of degree `< ν` with `p(A) b = 0` is zero;
 * `sub_mem_krylovSpace_krylovGrade`: finite termination, `x⋆ − x₀ ∈ K_ν(A, r₀)` for invertible
   `A`.
 
@@ -273,5 +274,28 @@ theorem sub_mem_krylovSpace_krylovGrade {A : Matrix n n ℝ} (hA : IsUnit A) {c 
     rw [← hr]; exact congrArg Subtype.val hy
   rw [← hinjA hy']
   exact y.2
+
+/-- A polynomial of degree below the grade that annihilates `b` is zero: the vectors
+`b, A b, …, A^{ν−1} b` are linearly independent. Helper for `krylov-grade`. -/
+theorem eq_zero_of_aeval_mulVec_eq_zero {A : Matrix n n ℝ} {b : n → ℝ} {p : ℝ[X]}
+    (hp : p.degree < krylovGrade A b) (h0 : aeval A p *ᵥ b = 0) : p = 0 := by
+  set ν := krylovGrade A b
+  have hli := (linearIndependent_pow_mulVec_iff_le_krylovGrade A b (q := ν)).2 le_rfl
+  have hsum : ∑ i : Fin ν, p.coeff i • ((A ^ (i : ℕ)) *ᵥ b) = 0 := by
+    rw [← h0]
+    by_cases hp0 : p = 0
+    · simp [hp0]
+    have hnat : p.natDegree < ν := (natDegree_lt_iff_degree_lt hp0).2 hp
+    conv_rhs => rw [p.as_sum_range' ν hnat]
+    simp only [map_sum, Matrix.sum_mulVec, ← C_mul_X_pow_eq_monomial, map_mul, aeval_C,
+      map_pow, aeval_X, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
+      Matrix.smul_mulVec]
+    exact (Fin.sum_univ_eq_sum_range (fun i => p.coeff i • (A ^ i) *ᵥ b) ν)
+  have hc := Fintype.linearIndependent_iff.1 hli _ hsum
+  ext i
+  rw [coeff_zero]
+  by_cases hi : i < ν
+  · exact hc ⟨i, hi⟩
+  · exact coeff_eq_zero_of_degree_lt (lt_of_lt_of_le hp (by exact_mod_cast not_lt.1 hi))
 
 end NLAlib

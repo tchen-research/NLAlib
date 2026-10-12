@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+import NLAlib.ForMathlib.Analysis.SpecialFunctions.Gamma
 
 /-!
 # Expectations from tail bounds
@@ -112,33 +113,5 @@ theorem integrable_and_integral_le_of_tail_le_rpow {Ω : Type*} [MeasurableSpace
   dsimp only [a]
   field_simp
   ring
-
-/-- **Truncated Gamma integral bound.** For `a > -1` and `t ≥ 0`,
-`∫₀ᵗ x^a e^{-x/2} dx ≤ t^{a+1} / (a + 1)` (drop the exponential factor).
-
-Elementary; used for the chi-square small-ball density bound (Davidson–Szarek 2001,
-Vershynin 2012). Atlas: `tail-integral`. Ported from Prove2me solution
-`GaussianMatrix.integral_power_exp_le`.
-atlas: tail-integral (partial) -/
-theorem lintegral_rpow_mul_exp_le {a : ℝ} (ha : -1 < a) {t : ℝ} (ht : 0 ≤ t) :
-    ∫⁻ x in Ioc 0 t, ENNReal.ofReal (x ^ a * Real.exp (-x / 2))
-      ≤ ENNReal.ofReal (t ^ (a + 1) / (a + 1)) := by
-  have hint : IntegrableOn (fun x : ℝ => x ^ a) (Ioc 0 t) := by
-    have := (intervalIntegral.intervalIntegrable_rpow' (a := 0) (b := t) ha)
-    exact (intervalIntegrable_iff_integrableOn_Ioc_of_le ht).1 this
-  calc ∫⁻ x in Ioc 0 t, ENNReal.ofReal (x ^ a * Real.exp (-x / 2))
-      ≤ ∫⁻ x in Ioc 0 t, ENNReal.ofReal (x ^ a) := by
-        refine setLIntegral_mono' measurableSet_Ioc fun x hx => ?_
-        apply ENNReal.ofReal_le_ofReal
-        have h1 : 0 ≤ x ^ a := Real.rpow_nonneg hx.1.le _
-        have h2 : Real.exp (-x / 2) ≤ 1 := Real.exp_le_one_iff.2 (by linarith [hx.1])
-        nlinarith
-    _ = ENNReal.ofReal (∫ x in Ioc 0 t, x ^ a) := by
-        rw [ofReal_integral_eq_lintegral_ofReal hint]
-        filter_upwards [ae_restrict_mem measurableSet_Ioc] with x hx
-        exact Real.rpow_nonneg hx.1.le _
-    _ = ENNReal.ofReal (t ^ (a + 1) / (a + 1)) := by
-        rw [← intervalIntegral.integral_of_le ht, integral_rpow (Or.inl ha),
-          Real.zero_rpow (by linarith), sub_zero]
 
 end NLAlib

@@ -14,27 +14,6 @@ namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 800000
 
-/-- The singular-value max-min lower bound on arbitrary finite coordinate
-types, with the actual native singular values. Horn–Johnson 2013,
-Theorem 7.3.8; supports `rank-revealing-qr`. -/
-theorem le_toEuclideanLin_singularValues_of_forall_mem {m n : Type*}
-    [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) (k : ℕ)
-    (S : Submodule ℝ (n → ℝ)) (hS : k + 1 ≤ Module.finrank ℝ S) {c : ℝ}
-    (hAS : ∀ x ∈ S, c ^ 2 * (x ⬝ᵥ x) ≤ (A *ᵥ x) ⬝ᵥ (A *ᵥ x)) :
-    c ≤ A.toEuclideanLin.singularValues k := by
-  have hSn : Module.finrank ℝ S ≤ Fintype.card n := by simpa using S.finrank_le
-  have hk : k < Fintype.card n := by omega
-  rcases le_or_gt c 0 with hc | hc
-  · exact hc.trans (LinearMap.singularValues_nonneg _ _)
-  have hh := le_eigenvalues₀_of_forall_mem (isHermitian_transpose_mul_self A)
-    ⟨k, hk⟩ S hS (c := c ^ 2) (fun x hx => by
-      rw [← mulVec_dotProduct_mulVec_self]; exact hAS x hx)
-  have hs := sq_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩
-  have hs' : A.toEuclideanLin.singularValues k ^ 2 =
-      (isHermitian_transpose_mul_self A).eigenvalues₀ ⟨k, hk⟩ := hs
-  rw [← hs'] at hh
-  exact (sq_le_sq₀ hc.le (LinearMap.singularValues_nonneg _ _)).mp hh
-
 /-- The trailing singular-value estimate with the exact shared RRQR budget,
 at every zero-padded index: `σⱼ(D) ≤ sqrt(1+b) σₖ₊ⱼ([R RT;0 D])`.
 The leading block is genuinely invertible; no rank assumption is imposed on
@@ -48,14 +27,16 @@ theorem singularValues_trailing_le_sqrt_budget_mul {k r q : ℕ}
       (Matrix.fromBlocks R (R * T) 0 D).toEuclideanLin.singularValues (k + j) := by
   by_cases hj : j < q
   swap
-  · rw [singularValues_eq_zero_of_width_le D (Nat.le_of_not_gt hj)]
+  · rw [singularValues_eq_zero_of_width_le D
+      (by simpa only [Fintype.card_fin] using Nat.le_of_not_gt hj)]
     exact mul_nonneg (Real.sqrt_nonneg _) (LinearMap.singularValues_nonneg _ _)
   let s := singularValues D j
   let M := Matrix.fromBlocks R (R * T) (0 : Matrix (Fin r) (Fin k) ℝ) D
   have hs0 : 0 ≤ s := singularValues_nonneg D j
   have hb1 : 0 < 1 + b := by linarith
   have hc : 0 < Real.sqrt (1 + b) := Real.sqrt_pos.mpr hb1
-  obtain ⟨Y, hYdim, hY⟩ := exists_submodule_sq_singularValues_mul_le_mulVec_dotProduct D hj
+  obtain ⟨Y, hYdim, hY⟩ := exists_submodule_sq_singularValues_mul_le_mulVec_dotProduct D
+    (by simpa only [Fintype.card_fin] using hj)
   let tail : ((Fin k ⊕ Fin q) → ℝ) →ₗ[ℝ] (Fin q → ℝ) :=
     { toFun := fun z a => z (Sum.inr a)
       map_add' := fun _ _ => rfl
@@ -73,7 +54,7 @@ theorem singularValues_trailing_le_sqrt_budget_mul {k r q : ℕ}
       Fintype.card_fin]
     omega
   have hLower : s / Real.sqrt (1 + b) ≤ M.toEuclideanLin.singularValues (k + j) := by
-    apply le_toEuclideanLin_singularValues_of_forall_mem M (k + j) S hSdim
+    apply le_singularValues_of_forall_mem M (k + j) S hSdim
     intro z hz
     let x : Fin k → ℝ := fun a => z (Sum.inl a)
     let y : Fin q → ℝ := fun a => z (Sum.inr a)

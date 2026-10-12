@@ -13,7 +13,8 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 open Matrix
-private theorem trace_mul_nonneg {d : ℕ} (A B : Matrix (Fin d) (Fin d) ℂ) (hA : A.PosSemidef) (hB : B.PosSemidef) :
+private theorem trace_mul_nonneg {d : Type*} [Fintype d] [DecidableEq d] (A B : Matrix d d ℂ)
+    (hA : A.PosSemidef) (hB : B.PosSemidef) :
     0 ≤ (Matrix.trace (A * B)).re := by
   let S := CFC.sqrt A
   have hS : Sᴴ = S := (CFC.sqrt_nonneg A).isSelfAdjoint
@@ -28,13 +29,14 @@ open NLAlib
 set_option autoImplicit false
 
 /-- The trace exponential is monotone: `A ≼ H` implies `traceExp A ≤ traceExp H` for Hermitian `A`,
-`H`.
+`H`, on any finite index type (including the empty one). Here `≤` is the Loewner order under
+`MatrixOrder` (`Matrix.le_iff`).
 
 Tropp 2015, Example 8.3.4. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
 Introduction to Matrix Concentration Inequalities, Ch 8*. -/
-theorem NLAlib.traceExp_le_traceExp {d : ℕ} [NeZero d]
-    (A H : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
-    (hAH : LoewnerLE A H) :
+theorem NLAlib.traceExp_le_traceExp {d : Type*} [Fintype d] [DecidableEq d]
+    (A H : Matrix d d ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
+    (hAH : A ≤ H) :
     traceExp A ≤ traceExp H := by
   obtain ⟨hEA, hLA⟩ := posDef_matrixExp_and_matrixLog_matrixExp A hA
   obtain ⟨hEH, hLH⟩ := posDef_matrixExp_and_matrixLog_matrixExp H hH

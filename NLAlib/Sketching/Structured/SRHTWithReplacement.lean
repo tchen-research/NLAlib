@@ -1,4 +1,5 @@
 import NLAlib.Sketching.Structured.SRHT
+import NLAlib.Matrix.Basic.Selection
 import NLAlib.Probability.Concentration.Matrix.UniformIidSampling
 /-!
 # Classical one-diagonal SRHT with actual sampling with replacement
@@ -15,17 +16,13 @@ open MeasureTheory ProbabilityTheory
 open scoped Classical Matrix Matrix.Norms.L2Operator ENNReal ComplexOrder
 namespace NLAlib
 
-/-- The literal row selector for an iid sequence, permitting repeats.
-Source: `sh:srht-ose`, with-replacement variant. -/
-def srhtSequenceRowSelector {n k : ℕ} (I : Fin k → Fin n) : Matrix (Fin k) (Fin n) ℝ :=
-  fun a j => if j = I a then 1 else 0
-
-/-- The actual with-replacement classical `√(n/k) R H D` matrix.
+/-- The actual with-replacement classical `√(n/k) R H D` matrix, with row selector
+`R = (selectionMatrix I)ᵀ` for an iid label sequence `I` (repeats allowed).
 Source: `sh:srht-ose`; one shared sign diagonal. -/
 def srhtWithReplacementSketch {n k : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
     (ξ : Fin n → Bool) (I : Fin k → Fin n) : Matrix (Fin k) (Fin n) ℝ :=
   Real.sqrt ((n : ℝ) / k) •
-    (srhtSequenceRowSelector I * H * Matrix.diagonal (fun i => rademacherBoolSign (ξ i)))
+    ((selectionMatrix I)ᵀ * H * Matrix.diagonal (fun i => rademacherBoolSign (ξ i)))
 
 /-- The actual independent product law for the sign diagonal and iid row
 sequence. Source: `sh:srht-ose`, with-replacement variant. -/
@@ -48,11 +45,8 @@ theorem srhtWithReplacementSketch_mul_apply {n k d : ℕ}
       srhtSignedFrame H U ξ (I a) b := by
   simp only [srhtWithReplacementSketch, Matrix.smul_mul, Matrix.smul_apply,
     smul_eq_mul, Matrix.mul_assoc, srhtSignedFrame]
-  have hs : ∀ V : Matrix (Fin n) (Fin d) ℝ,
-      (srhtSequenceRowSelector I * V) a b = V (I a) b := by
-    intro V
-    simp [srhtSequenceRowSelector, Matrix.mul_apply, ite_mul]
-  rw [hs]
+  rw [transpose_selectionMatrix_mul]
+  rfl
 
 /-- The complex Chernoff iid population mean is exactly the extension of
 the actual real sketch Gram matrix. Source: `sh:srht-ose`. -/
@@ -109,11 +103,11 @@ theorem measure_srhtWithReplacement_gram_failure_le_of_flat_rows
     have ht := trace_srhtPopulationAtom V j
     exact (lambdaMax_le_trace_of_posSemidef (hPSD j)).trans (by rw [ht]; exact hflat j)
   have hmean := mean_srhtPopulationAtom V (hasOrthonormalCols_srhtSignedFrame H hH U hU ξ)
-  have hc := measure_spectralNorm_uniform_iid_sub_one_le hk A L hL
+  have hc := measure_norm_uniform_iid_sub_one_le hk A L hL
     (fun j => (hPSD j).isHermitian) hbound hmean hε hε1
   have hsub : {I : Fin k → Fin n | ε < specNorm ((srhtWithReplacementSketch H ξ I * U)ᵀ *
       (srhtWithReplacementSketch H ξ I * U) - 1)} ⊆
-      {I | ε ≤ spectralNorm ((1 / (k : ℝ)) • ∑ a, A (I a) - 1)} := by
+      {I | ε ≤ ‖(1 / (k : ℝ)) • ∑ a, A (I a) - 1‖} := by
     intro I hI
     have hm : (((srhtWithReplacementSketch H ξ I * U)ᵀ *
         (srhtWithReplacementSketch H ξ I * U) - 1).map Complex.ofReal) =

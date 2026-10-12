@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Spectral.SingularValueInvariance
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
+import NLAlib.Matrix.Inequalities.KyFanNorms
 /-!
 # Singular values of the oblique canonical blocks
 
@@ -58,7 +58,7 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
   have hND : N.toEuclideanLin.singularValues k = D.toEuclideanLin.singularValues k := by
     rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
       ← singularValues_transpose N, ← singularValues_transpose D]
-    apply toEuclideanLin_singularValues_eq_of_gram_eq
+    apply singularValues_eq_of_gram_eq
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hGram
   have hD : D = (rectDiag d : Matrix (Fin (r + s)) (Fin (r + s)) ℝ).reindex
       finSumFinEquiv.symm finSumFinEquiv.symm := by
@@ -85,7 +85,8 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
   · apply singularValues_eq_of_eq_mul_rectDiag_mul (U := 1) (V := 1)
       (by simp) (by simp) hd0 hd (by simp)
     simpa using hk
-  · rw [singularValues_eq_zero_of_width_le _ (Nat.le_of_not_gt hk)]
+  · rw [singularValues_eq_zero_of_width_le _
+      (by simpa only [Fintype.card_fin] using Nat.le_of_not_gt hk)]
     simp only [d, if_neg (show ¬k < r by omega)]
 
 end NLAlib

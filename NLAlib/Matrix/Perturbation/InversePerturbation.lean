@@ -12,12 +12,15 @@ norm `specNorm` (and the Frobenius norm `frobNorm` where the bound is the same).
   `A + E` is invertible, `‖(A + E)⁻¹‖₂ ≤ ‖A⁻¹‖₂ / (1 - ‖A⁻¹E‖₂)` and
   `‖(A + E)⁻¹ - A⁻¹‖ ≤ ‖A⁻¹‖₂² ‖E‖ / (1 - ‖A⁻¹E‖₂)` (spectral and Frobenius), with the
   corollaries under the cruder hypothesis `‖A⁻¹‖₂ ‖E‖₂ < 1`.
-* Wedin's identity (Wedin 1973; Stewart–Sun 1990, §III.3) for `B = A + E` at every rank:
-  `B⁺ - A⁺ = -B⁺ E A⁺ + B⁺ B⁺ᵀ Eᵀ (I - A A⁺) + (I - B⁺ B) Eᵀ A⁺ᵀ A⁺`, proved from the four Penrose
-  identities; the resulting bound `‖B⁺ - A⁺‖₂ ≤ (‖B⁺‖‖A⁺‖ + ‖B⁺‖² + ‖A⁺‖²) ‖E‖₂`, hence the
-  constant `3` form; and the sharp constant `(1 + √5)/2` (Stewart–Sun Thm III.3.8),
-  in the general and the equal-rank form, and the projector bound. The equal-rank inverse-norm
-  bound `‖B⁺‖₂ ≤ ‖A⁺‖₂ / (1 - ‖A⁺‖₂‖E‖₂)` is proved from Weyl's inequality.
+* Moore–Penrose inverse at every rank, from Wedin's identity (`moorePenroseInverse_sub_eq`,
+  Wedin 1973; Stewart–Sun 1990, §III.3) term by term:
+  `‖B⁺ - A⁺‖₂ ≤ (‖B⁺‖‖A⁺‖ + ‖B⁺‖² + ‖A⁺‖²) ‖E‖₂` for `B = A + E`, hence the constant `3` form.
+  The sharp constant `(1 + √5)/2` (Stewart–Sun Thm III.3.8), the equal-rank forms, the projector
+  bound and the equal-rank inverse-norm bound are stated for a pair `(A, B)` in
+  `NLAlib.Matrix.Perturbation.Pseudoinverse*` (`specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq`,
+  `specNorm_moorePenroseInverse_sub_le_goldenRatio_mul_of_rank_eq`,
+  `specNorm_sub_columnProjector_le_min_pinv_mul_specNorm`,
+  `specNorm_moorePenroseInverse_le_div_of_rank_eq`).
 
 Atlas: `inverse-perturbation`, `pseudoinverse-perturbation`.
 -/
@@ -118,18 +121,6 @@ theorem isUnit_add_of_specNorm_inv_mul_lt_one {A E : Matrix n n ℝ} (hA : IsUni
   rw [heq]
   exact hA.mul h1
 
-/-- The resolvent identity `(A + E)⁻¹ - A⁻¹ = -(A + E)⁻¹ E A⁻¹` for invertible `A` and `A + E`.
-Golub–Van Loan 2013, proof of Thm 2.3.4. -/
-theorem inv_add_sub_inv_eq {A E : Matrix n n ℝ} (hA : IsUnit A) (hAE : IsUnit (A + E)) :
-    (A + E)⁻¹ - A⁻¹ = -((A + E)⁻¹ * E * A⁻¹) := by
-  have hd : IsUnit A.det := (Matrix.isUnit_iff_isUnit_det _).mp hA
-  have hd' : IsUnit (A + E).det := (Matrix.isUnit_iff_isUnit_det _).mp hAE
-  calc (A + E)⁻¹ - A⁻¹ = (A + E)⁻¹ * A * A⁻¹ - (A + E)⁻¹ * (A + E) * A⁻¹ := by
-        rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hd, Matrix.mul_one,
-          Matrix.nonsing_inv_mul _ hd', Matrix.one_mul]
-    _ = -((A + E)⁻¹ * E * A⁻¹) := by
-        simp only [Matrix.mul_add, Matrix.add_mul]; abel
-
 /-- Inverse-norm bound under perturbation: for invertible `A` and `‖A⁻¹E‖₂ < 1`,
 `‖(A + E)⁻¹‖₂ ≤ ‖A⁻¹‖₂ / (1 - ‖A⁻¹E‖₂)`. Golub–Van Loan 2013, Thm 2.3.4; Stewart–Sun 1990,
 §III.2.
@@ -161,7 +152,8 @@ theorem specNorm_inv_add_sub_inv_le {A E : Matrix n n ℝ} (hA : IsUnit A)
       specNorm A⁻¹ ^ 2 * specNorm E / (1 - specNorm (A⁻¹ * E)) := by
   have hAE := isUnit_add_of_specNorm_inv_mul_lt_one hA hE
   have hpos : 0 < 1 - specNorm (A⁻¹ * E) := by linarith
-  rw [inv_add_sub_inv_eq hA hAE, specNorm_neg]
+  rw [Matrix.inv_sub_inv (iff_of_true hAE hA), sub_add_cancel_left, Matrix.mul_neg,
+    Matrix.neg_mul, specNorm_neg]
   calc specNorm ((A + E)⁻¹ * E * A⁻¹)
       ≤ specNorm (A + E)⁻¹ * specNorm E * specNorm A⁻¹ := by
         refine (specNorm_mul_le _ _).trans ?_
@@ -182,7 +174,8 @@ theorem frobNorm_inv_add_sub_inv_le {A E : Matrix n n ℝ} (hA : IsUnit A)
       specNorm A⁻¹ ^ 2 * frobNorm E / (1 - specNorm (A⁻¹ * E)) := by
   have hAE := isUnit_add_of_specNorm_inv_mul_lt_one hA hE
   have hpos : 0 < 1 - specNorm (A⁻¹ * E) := by linarith
-  rw [inv_add_sub_inv_eq hA hAE, frobNorm_neg]
+  rw [Matrix.inv_sub_inv (iff_of_true hAE hA), sub_add_cancel_left, Matrix.mul_neg,
+    Matrix.neg_mul, frobNorm_neg]
   calc frobNorm ((A + E)⁻¹ * E * A⁻¹)
       ≤ frobNorm ((A + E)⁻¹ * E) * specNorm A⁻¹ :=
         frobNorm_mul_le_frobNorm_mul_specNorm ((A + E)⁻¹ * E) A⁻¹
@@ -234,75 +227,6 @@ section MoorePenrose
 
 variable {m n : Type*} [Fintype m] [Fintype n]
 
-/-- The column-space projector annihilates on the left of its complement:
-`Aᵀ (I - A A⁺) = 0` for any Moore–Penrose pair. Stewart–Sun 1990, §III.1. -/
-theorem IsMoorePenroseInverse.transpose_mul_one_sub_mul_eq_zero [DecidableEq m]
-    {A : Matrix m n ℝ} {A' : Matrix n m ℝ} (h : IsMoorePenroseInverse A A') :
-    Aᵀ * (1 - A * A') = 0 := by
-  rw [Matrix.mul_sub, Matrix.mul_one, ← h.transpose_mul_eq, ← Matrix.transpose_mul,
-    h.mul_mul_eq, sub_self]
-
-/-- The row-space complement annihilates `Aᵀ` on the left: `(I - A⁺ A) Aᵀ = 0` for any
-Moore–Penrose pair. Stewart–Sun 1990, §III.1. -/
-theorem IsMoorePenroseInverse.one_sub_inv_mul_mul_transpose_eq_zero [DecidableEq n]
-    {A : Matrix m n ℝ} {A' : Matrix n m ℝ} (h : IsMoorePenroseInverse A A') :
-    (1 - A' * A) * Aᵀ = 0 := by
-  rw [Matrix.sub_mul, Matrix.one_mul, ← h.transpose_inv_mul_eq, ← Matrix.transpose_mul,
-    ← Matrix.mul_assoc, h.mul_mul_eq, sub_self]
-
-/-- **Wedin's identity** for Moore–Penrose pairs `(A, A')`, `(B, B')` with `E = B - A`, at
-every rank: `B' - A' = -B' E A' + B' B'ᵀ Eᵀ (I - A A') + (I - B' B) Eᵀ A'ᵀ A'`.
-Wedin 1973, Thm 4.1 (proof); Stewart–Sun 1990, §III.3. Proof: `B' - A' = -B'(B - A)A' +
-B'(I - AA') - (I - B'B)A'`, then `B' = B'B'ᵀBᵀ`, `Aᵀ(I - AA') = 0`, `A' = AᵀA'ᵀA'`,
-`(I - B'B)Bᵀ = 0`. -/
-theorem IsMoorePenroseInverse.sub_eq [DecidableEq m] [DecidableEq n]
-    {A B : Matrix m n ℝ} {A' B' : Matrix n m ℝ} (hA : IsMoorePenroseInverse A A')
-    (hB : IsMoorePenroseInverse B B') :
-    B' - A' = -(B' * (B - A) * A') + B' * B'ᵀ * (B - A)ᵀ * (1 - A * A') +
-      (1 - B' * B) * (B - A)ᵀ * A'ᵀ * A' := by
-  have h0 : B' - A' = -(B' * (B - A) * A') + B' * (1 - A * A') - (1 - B' * B) * A' := by
-    simp only [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, Matrix.one_mul,
-      Matrix.mul_assoc]
-    abel
-  have hB' : B' = B' * B'ᵀ * Bᵀ := by
-    rw [Matrix.mul_assoc, ← Matrix.transpose_mul, hB.transpose_mul_eq, ← Matrix.mul_assoc,
-      hB.inv_mul_inv_eq]
-  have hA' : A' = Aᵀ * A'ᵀ * A' := by
-    rw [← Matrix.transpose_mul, hA.transpose_inv_mul_eq, hA.inv_mul_inv_eq]
-  have h2 : B' * (1 - A * A') = B' * B'ᵀ * (B - A)ᵀ * (1 - A * A') := by
-    have hz := hA.transpose_mul_one_sub_mul_eq_zero
-    have hBt : Bᵀ = (B - A)ᵀ + Aᵀ := by rw [Matrix.transpose_sub, sub_add_cancel]
-    calc B' * (1 - A * A') = B' * B'ᵀ * Bᵀ * (1 - A * A') := by rw [← hB']
-      _ = B' * B'ᵀ * (B - A)ᵀ * (1 - A * A') + B' * B'ᵀ * (Aᵀ * (1 - A * A')) := by
-          rw [hBt, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc (B' * B'ᵀ) Aᵀ]
-      _ = B' * B'ᵀ * (B - A)ᵀ * (1 - A * A') := by rw [hz, Matrix.mul_zero, add_zero]
-  have h3 : (1 - B' * B) * A' = -((1 - B' * B) * (B - A)ᵀ * A'ᵀ * A') := by
-    have hz := hB.one_sub_inv_mul_mul_transpose_eq_zero
-    have hAt : Aᵀ = Bᵀ - (B - A)ᵀ := by rw [Matrix.transpose_sub, sub_sub_cancel]
-    calc (1 - B' * B) * A' = (1 - B' * B) * Aᵀ * A'ᵀ * A' := by
-          rw [Matrix.mul_assoc (1 - B' * B) Aᵀ, Matrix.mul_assoc (1 - B' * B), ← hA']
-      _ = (1 - B' * B) * Bᵀ * A'ᵀ * A' - (1 - B' * B) * (B - A)ᵀ * A'ᵀ * A' := by
-          rw [hAt, Matrix.mul_sub, Matrix.sub_mul, Matrix.sub_mul]
-      _ = -((1 - B' * B) * (B - A)ᵀ * A'ᵀ * A') := by
-          rw [hz, Matrix.zero_mul, Matrix.zero_mul, zero_sub]
-  rw [h0, h2, h3, sub_neg_eq_add]
-
-/-- **Wedin's identity** for the Moore–Penrose inverse of `B = A + E`:
-`(A + E)⁺ - A⁺ = -(A + E)⁺ E A⁺ + (A + E)⁺ (A + E)⁺ᵀ Eᵀ (I - A A⁺)
-  + (I - (A + E)⁺ (A + E)) Eᵀ A⁺ᵀ A⁺`,
-with no rank assumption. Wedin 1973, Thm 4.1 (proof); Stewart–Sun 1990, §III.3.
-atlas: pseudoinverse-perturbation (partial) -/
-theorem moorePenroseInverse_add_sub_moorePenroseInverse [DecidableEq m] [DecidableEq n]
-    (A E : Matrix m n ℝ) :
-    moorePenroseInverse (A + E) - moorePenroseInverse A =
-      -(moorePenroseInverse (A + E) * E * moorePenroseInverse A) +
-        moorePenroseInverse (A + E) * (moorePenroseInverse (A + E))ᵀ * Eᵀ *
-          (1 - A * moorePenroseInverse A) +
-        (1 - moorePenroseInverse (A + E) * (A + E)) * Eᵀ * (moorePenroseInverse A)ᵀ *
-          moorePenroseInverse A := by
-  have h := (isMoorePenroseInverse A).sub_eq (isMoorePenroseInverse (A + E))
-  rwa [add_sub_cancel_left] at h
-
 /-- `‖I - A A'‖₂ ≤ 1` for a Moore–Penrose pair: `I - A A'` is a symmetric idempotent. -/
 theorem IsMoorePenroseInverse.specNorm_one_sub_mul_le [DecidableEq m]
     {A : Matrix m n ℝ} {A' : Matrix n m ℝ} (h : IsMoorePenroseInverse A A') :
@@ -329,6 +253,8 @@ theorem specNorm_moorePenroseInverse_add_sub_le [DecidableEq m] [DecidableEq n]
       (specNorm (moorePenroseInverse (A + E)) * specNorm (moorePenroseInverse A) +
         specNorm (moorePenroseInverse (A + E)) ^ 2 + specNorm (moorePenroseInverse A) ^ 2) *
         specNorm E := by
+  have hW := moorePenroseInverse_sub_eq A (A + E)
+  rw [add_sub_cancel_left, Matrix.neg_mul, Matrix.neg_mul] at hW
   set A' := moorePenroseInverse A
   set B' := moorePenroseInverse (A + E)
   have hA := isMoorePenroseInverse A
@@ -338,7 +264,7 @@ theorem specNorm_moorePenroseInverse_add_sub_le [DecidableEq m] [DecidableEq n]
   have ha := specNorm_nonneg A'
   have hb := specNorm_nonneg B'
   have he := specNorm_nonneg E
-  rw [moorePenroseInverse_add_sub_moorePenroseInverse]
+  rw [hW]
   have t1 : specNorm (-(B' * E * A')) ≤ specNorm B' * specNorm A' * specNorm E := by
     rw [specNorm_neg]
     calc specNorm (B' * E * A') ≤ specNorm (B' * E) * specNorm A' := specNorm_mul_le _ _
@@ -381,7 +307,7 @@ theorem specNorm_moorePenroseInverse_add_sub_le [DecidableEq m] [DecidableEq n]
 /-- Pseudoinverse perturbation bound with the constant `3` and no rank assumption:
 `‖(A + E)⁺ - A⁺‖₂ ≤ 3 max(‖A⁺‖₂², ‖(A + E)⁺‖₂²) ‖E‖₂`. Wedin 1973, Thm 4.1 with `μ = 3`;
 Stewart–Sun 1990, Thm III.3.8 (the constant for a general unitarily invariant norm; the sharp
-spectral constant `(1 + √5)/2` is `specNorm_moorePenroseInverse_add_sub_le_goldenRatio_mul_max`).
+spectral constant `(1 + √5)/2` is `specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq`).
 atlas: pseudoinverse-perturbation (partial) -/
 theorem specNorm_moorePenroseInverse_add_sub_le_three_mul_max [DecidableEq m] [DecidableEq n]
     (A E : Matrix m n ℝ) :
@@ -406,81 +332,6 @@ theorem specNorm_moorePenroseInverse_add_sub_le_three_mul_max [DecidableEq m] [D
         _ ≤ _ := h1
   linarith
 
-/-- Coverage: pseudoinverse-perturbation
-Wedin's sharp spectral bound without a rank assumption:
-`‖(A + E)⁺ - A⁺‖₂ ≤ ((1 + √5)/2) max(‖A⁺‖₂², ‖(A + E)⁺‖₂²) ‖E‖₂`.
-Wedin 1973, Thm 4.1; Stewart–Sun 1990, Thm III.3.8 (`μ = (1 + √5)/2` for the spectral norm).
-atlas: pseudoinverse-perturbation (partial) -/
-theorem specNorm_moorePenroseInverse_add_sub_le_goldenRatio_mul_max [DecidableEq m]
-    [DecidableEq n] (A E : Matrix m n ℝ) :
-    specNorm (moorePenroseInverse (A + E) - moorePenroseInverse A) ≤
-      (1 + Real.sqrt 5) / 2 * max (specNorm (moorePenroseInverse A) ^ 2)
-        (specNorm (moorePenroseInverse (A + E)) ^ 2) * specNorm E := by
-  simpa only [Real.goldenRatio, add_sub_cancel_left] using
-    specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq A (A + E)
-
-/-- Coverage: pseudoinverse-perturbation
-Wedin's sharp spectral bound under equal rank: if `rank (A + E) = rank A` then
-`‖(A + E)⁺ - A⁺‖₂ ≤ ((1 + √5)/2) ‖A⁺‖₂ ‖(A + E)⁺‖₂ ‖E‖₂`.
-Wedin 1973, Thm 4.1; Stewart–Sun 1990, Thm III.3.8.
-atlas: pseudoinverse-perturbation (partial) -/
-theorem specNorm_moorePenroseInverse_add_sub_le_goldenRatio_mul_of_rank_eq [DecidableEq m]
-    [DecidableEq n] (A E : Matrix m n ℝ) (hr : (A + E).rank = A.rank) :
-    specNorm (moorePenroseInverse (A + E) - moorePenroseInverse A) ≤
-      (1 + Real.sqrt 5) / 2 * specNorm (moorePenroseInverse A) *
-        specNorm (moorePenroseInverse (A + E)) * specNorm E := by
-  simpa only [Real.goldenRatio, add_sub_cancel_left] using
-    specNorm_moorePenroseInverse_sub_le_goldenRatio_mul_of_rank_eq hr.symm
-
-/-- Coverage: pseudoinverse-perturbation
-Perturbation of the column-space projector under equal rank: if `rank (A + E) = rank A` then
-`‖A A⁺ - (A + E)(A + E)⁺‖₂ ≤ min(‖A⁺‖₂, ‖(A + E)⁺‖₂) ‖E‖₂`.
-Stewart–Sun 1990, Thm III.3.8 / Wedin 1973, Lemma 4.2 (projector form).
-atlas: pseudoinverse-perturbation (partial) -/
-theorem specNorm_mul_moorePenroseInverse_sub_le_of_rank_eq [DecidableEq m] [DecidableEq n]
-    (A E : Matrix m n ℝ) (hr : (A + E).rank = A.rank) :
-    specNorm (A * moorePenroseInverse A - (A + E) * moorePenroseInverse (A + E)) ≤
-      min (specNorm (moorePenroseInverse A)) (specNorm (moorePenroseInverse (A + E))) *
-        specNorm E := by
-  simpa only [add_sub_cancel_left] using
-    specNorm_sub_columnProjector_le_min_pinv_mul_specNorm hr.symm
-
 end MoorePenrose
-
-/-- Equal-rank inverse-norm bound for the pseudoinverse: if `rank (A + E) = rank A` and
-`‖A⁺‖₂ ‖E‖₂ < 1` then `‖(A + E)⁺‖₂ ≤ ‖A⁺‖₂ / (1 - ‖A⁺‖₂ ‖E‖₂)`. Stewart–Sun 1990, Thm III.3.8
-(the bound on `‖B⁺‖`); Wedin 1973, §4. Proof: with `r = rank A > 0`, `‖A⁺‖ = 1/σ_r(A)` and
-`‖B⁺‖ = 1/σ_r(B)` (`specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive`), and Weyl
-gives `σ_r(B) ≥ σ_r(A) - ‖E‖ > 0`. Stated on `Fin` indices like the singular-value API.
-atlas: pseudoinverse-perturbation (partial) -/
-theorem specNorm_moorePenroseInverse_add_le_of_rank_eq {m n : ℕ}
-    (A E : Matrix (Fin m) (Fin n) ℝ) (hr : (A + E).rank = A.rank)
-    (hE : specNorm (moorePenroseInverse A) * specNorm E < 1) :
-    specNorm (moorePenroseInverse (A + E)) ≤
-      specNorm (moorePenroseInverse A) / (1 - specNorm (moorePenroseInverse A) * specNorm E) := by
-  have hpos : 0 < 1 - specNorm (moorePenroseInverse A) * specNorm E := by linarith
-  by_cases h0 : A.rank = 0
-  · rw [moorePenroseInverse_eq_zero_of_rank_eq_zero (A + E) (hr.trans h0)]
-    rw [specNorm_zero]
-    exact div_nonneg (specNorm_nonneg _) hpos.le
-  · have hrpos : 0 < A.rank := Nat.pos_of_ne_zero h0
-    set k := A.rank - 1
-    have hsA : 0 < singularValues A k := (singularValues_pos_iff A k).mpr (by omega)
-    have hA := specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A hrpos
-    have hB := specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive (A + E)
-      (hr ▸ hrpos)
-    rw [hr] at hB
-    have hW := singularValues_le_singularValues_add_add_specNorm A E k
-    rw [hA] at hE ⊢
-    rw [hB]
-    have hEs : specNorm E < singularValues A k := by
-      rw [one_div, inv_mul_lt_iff₀ hsA, mul_one] at hE
-      exact hE
-    have hsB : singularValues A k - specNorm E ≤ singularValues (A + E) k := by linarith
-    have hd : 0 < singularValues A k - specNorm E := by linarith
-    calc 1 / singularValues (A + E) k ≤ 1 / (singularValues A k - specNorm E) :=
-          one_div_le_one_div_of_le hd hsB
-      _ = 1 / singularValues A k / (1 - 1 / singularValues A k * specNorm E) := by
-          field_simp
 
 end NLAlib

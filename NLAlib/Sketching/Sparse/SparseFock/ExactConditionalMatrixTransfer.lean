@@ -200,10 +200,10 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem conditional_matrix_transfer
     (hb : 0 < b) (hs : 0 < s) (F : Frame n d)
     (X : ExactSample (s * b) s n) :
-    matrixExpectation (conditionalSampleLaw hb hs X)
+    barycenter (conditionalSampleLaw hb hs X)
         (exactScaledIIDError hb F) = groupedExactError F X := by
   ext a c
-  simp only [matrixExpectation, groupedExactError]
+  simp only [barycenter_apply, groupedExactError]
   simp_rw [exactScaledIIDError_apply_grouped hb F]
   rw [FiniteLaw.expect_smul]
   congr 1
@@ -230,8 +230,8 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem conditional_matrix_transfer_gramError
     (hb : 0 < b) (hs : 0 < s) (F : Frame n d)
     (X : ExactSample (s * b) s n) :
-    matrixExpectation (conditionalSampleLaw hb hs X)
-        (exactScaledIIDError hb F) = gramError F X := by
+    barycenter (conditionalSampleLaw hb hs X)
+        (exactScaledIIDError hb F) = gramError F (sketchMatrix X) := by
   rw [conditional_matrix_transfer hb hs F X,
     groupedExactError_eq_hollow F X, gramError_eq_hollow F X hs]
 

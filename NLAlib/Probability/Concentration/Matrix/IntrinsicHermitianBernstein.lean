@@ -1,6 +1,7 @@
 import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
-import NLAlib.Probability.Concentration.Matrix.IntrinsicDimension
+import NLAlib.Matrix.Functions.IntrinsicDimension
+import NLAlib.Probability.Concentration.Matrix.GeneralizedLaplace
 import NLAlib.Probability.Concentration.Martingales.Freedman
 
 /-!
@@ -19,22 +20,10 @@ namespace NLAlib
 
 variable {d : ℕ}
 
-private lemma traceFunction_eq_sum (φ : ℝ → ℝ)
-    (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
-    traceFunction φ A = ∑ i, φ (hA.eigenvalues i) := by
-  rw [traceFunction, hA.cfc_eq]
-  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
-  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc]
-  simp
-
 private lemma trace_re_eq_sum (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
     (Matrix.trace A).re = ∑ i, hA.eigenvalues i := by
   rw [hA.trace_eq_sum_eigenvalues]
   simp
-
-private lemma trace_re_nonneg {A : Matrix (Fin d) (Fin d) ℂ} (hA : A.PosSemidef) :
-    0 ≤ (Matrix.trace A).re :=
-  (Complex.nonneg_iff.mp hA.trace_nonneg).1
 
 private lemma lambdaMax_zero [NeZero d] : lambdaMax (0 : Matrix (Fin d) (Fin d) ℂ) = 0 := by
   rw [lambdaMax, spectrum.zero_eq, csSup_singleton]
@@ -109,9 +98,9 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (hL2 : ∀ k, MemLp (X k) 2 μ)
     (hMean : ∀ k, (∫ ω, X k ω ∂μ) = 0)
     (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L)
-    (hVarianceBound : LoewnerLE (∫ ω, (∑ k, X k ω) ^ 2 ∂μ) V) :
+    (hVarianceBound : (∫ ω, (∑ k, X k ω) ^ 2 ∂μ) ≤ V) :
     let Y := fun ω => ∑ k, X k ω
-    let v := spectralNorm V
+    let v := ‖V‖
     (∫ ω, Y ω ^ 2 ∂μ) = ∑ k, ∫ ω, X k ω ^ 2 ∂μ ∧
     ∀ t : ℝ, Real.sqrt v + L / 3 ≤ t →
       (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
@@ -144,7 +133,7 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     show 0 < ‖V‖
     exact norm_pos_iff.mpr hV
   have hr : 0 ≤ intrinsicDimension V :=
-    div_nonneg (trace_re_nonneg hVpsd) (le_of_lt hv)
+    div_nonneg (Complex.nonneg_iff.mp hVpsd.trace_nonneg).1 (le_of_lt hv)
   intro t ht
   have hsq := Real.sqrt_pos.mpr hv
   have hsqsq : Real.sqrt v ^ 2 = v := Real.sq_sqrt hv.le
@@ -161,7 +150,7 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
         trace_re_integrable μ (fun ω => -X k ω) (hXint k).neg
       have hnn : 0 ≤ᵐ[μ] fun ω => (Matrix.trace (-X k ω)).re := by
         filter_upwards [hneg] with ω h
-        exact trace_re_nonneg h
+        exact (Complex.nonneg_iff.mp h.trace_nonneg).1
       have hI : ∫ ω, (Matrix.trace (-X k ω)).re ∂μ = 0 := by
         rw [integral_trace_re μ (fun ω => -X k ω) (hXint k).neg, integral_neg, hMean k]
         simp
@@ -262,14 +251,15 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
         _ ≤ _ := trace_cgf_subadditivity μ X θ hMeas hHerm hIndep hExpk
     have hcumH : (cumulantSum μ X θ).IsHermitian :=
       isSelfAdjoint_sum _ (fun k _ => by unfold matrixLog; exact IsSelfAdjoint.cfc)
-    have hcum : LoewnerLE (cumulantSum μ X θ) (g • ∑ k, ∫ ω, X k ω ^ 2 ∂μ) := by
-      have hk : ∀ k, LoewnerLE (matrixLog (∫ ω, matrixExp (θ • X k ω) ∂μ))
+    have hcum : (cumulantSum μ X θ) ≤ (g • ∑ k, ∫ ω, X k ω ^ 2 ∂μ) := by
+      have hk : ∀ k, (matrixLog (∫ ω, matrixExp (θ • X k ω) ∂μ)) ≤
           (g • ∫ ω, X k ω ^ 2 ∂μ) := by
         intro k
         rw [hgdef]
         exact (bernstein_matrix_mgf_cgf_le μ (X k) L θ hLpos hθ hθL (hMeas k) (hHerm k) (hL2 k)
           (hMean k) (hBound k)).2
-      unfold LoewnerLE cumulantSum
+      unfold cumulantSum
+      rw [Matrix.le_iff]
       rw [Finset.smul_sum, ← Finset.sum_sub_distrib]
       exact Matrix.posSemidef_sum _ (fun k _ => hk k)
     rw [← hsecond] at hcum
@@ -277,8 +267,8 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
       hS.isHermitian.smul (isSelfAdjoint_iff.mpr (star_trivial g))
     have hgV : (g • V).IsHermitian :=
       hVpsd.isHermitian.smul (isSelfAdjoint_iff.mpr (star_trivial g))
-    have hSV : LoewnerLE (g • ∫ ω, Y ω ^ 2 ∂μ) (g • V) := by
-      unfold LoewnerLE
+    have hSV : (g • ∫ ω, Y ω ^ 2 ∂μ) ≤ (g • V) := by
+      rw [Matrix.le_iff]
       rw [← smul_sub]
       exact hVS.smul hg0
     have hE2 : traceExp (cumulantSum μ X θ) ≤ traceExp (g • V) :=
@@ -300,7 +290,7 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
         Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, mul_one]
     have hnum : ∫ ω, traceFunction ψ (Y ω) ∂μ ≤ intrinsicDimension V * Real.exp (g * v) := by
       rw [hψI]
-      have h1 : intrinsicDimension V * (Real.exp (g * spectralNorm V) - 1) ≤
+      have h1 : intrinsicDimension V * (Real.exp (g * ‖V‖) - 1) ≤
           intrinsicDimension V * Real.exp (g * v) := by
         apply mul_le_mul_of_nonneg_left _ hr
         show Real.exp (g * v) - 1 ≤ Real.exp (g * v)

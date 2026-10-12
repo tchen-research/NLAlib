@@ -3,7 +3,7 @@ Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.LocalOperators
 import NLAlib.ForMathlib.Probability.FiniteL2
-import NLAlib.ForMathlib.Probability.FiniteLaw
+import NLAlib.ForMathlib.Probability.FiniteLawIndependent
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -107,6 +107,12 @@ noncomputable def law (b : ℕ) (hb : 0 < b) : FiniteLaw EtaOutcome where
   weight := mass b
   weight_nonneg := mass_nonneg hb
   sum_weight := sum_mass hb
+
+/-- The ternary law has exactly the prescribed masses `1/(2b), 1-1/b, 1/(2b)`.
+Source: ported from `SparseFockFormal.SparseIIDCoupling` (`coordinateLaw_weight`),
+b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
+@[simp] theorem law_weight (b : ℕ) (hb : 0 < b) (z : EtaOutcome) :
+    (law b hb).weight z = mass b z := rfl
 
 /-- Explicit finite expectation for the ternary law.
 

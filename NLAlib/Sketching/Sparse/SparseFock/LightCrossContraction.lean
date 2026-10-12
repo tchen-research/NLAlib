@@ -76,14 +76,14 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem crossMatrix_energy_le (F : Frame n d)
     (k l : Fin ell) (hkl : k ≠ l)
     (y : ParticleDomainIndex m n ell l → ℝ) :
-    coordinateEnergy ((crossMatrix F k l hkl).mulVec y) ≤
-      coordinateEnergy y := by
+    FiniteHilbert.normSq ((crossMatrix F k l hkl).mulVec y) ≤
+      FiniteHilbert.normSq y := by
   classical
   let outEnergy : ParticleDomainIndex m n ell k → ℝ := fun zk ↦
     ((crossMatrix F k l hkl).mulVec y zk) ^ 2
   let inEnergy : ParticleDomainIndex m n ell l → ℝ := fun zl ↦ y zl ^ 2
   calc
-    coordinateEnergy ((crossMatrix F k l hkl).mulVec y) =
+    FiniteHilbert.normSq ((crossMatrix F k l hkl).mulVec y) =
         ∑ zk, outEnergy zk := rfl
     _ = ∑ t : CrossFiberIndex m n ell k l × Fin n,
         outEnergy ((domainKEquiv k l hkl).symm t) :=
@@ -114,7 +114,7 @@ theorem crossMatrix_energy_le (F : Frame n d)
           inEnergy ((domainLEquiv k l hkl).symm t))).symm
     _ = ∑ zl, inEnergy zl :=
       (domainLEquiv k l hkl).symm.sum_comp inEnergy
-    _ = coordinateEnergy y := rfl
+    _ = FiniteHilbert.normSq y := rfl
 
 /-- Reconstruct a labelled word from a cross fiber and the two distinguished
 column coordinates: `j` at particle `k` and `i` at particle `l`.

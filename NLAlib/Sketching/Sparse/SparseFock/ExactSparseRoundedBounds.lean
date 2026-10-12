@@ -47,7 +47,7 @@ theorem uniformExactS_rounded_failure_le_delta_of_band_bounds
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-      {X | ¬ IsUniformExactSOSE F X eps} ≤ delta := by
+      {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} ≤ delta := by
   let q := failureOrder d delta
   let s := roundedS q eps
   let b := roundedB d q eps
@@ -95,9 +95,9 @@ theorem uniformExactS_rounded_failure_le_delta_of_band_bounds
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-      {X | ¬ IsUniformExactSOSE F X eps} =
+      {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} =
         (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb0)).prob
-          {X | ¬ IsUniformExactSOSE F X eps} := by
+          {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} := by
       simp [s, b, q]
     _ ≤ (d : ℝ) * (3 * scale ^ 2 * beta / eps) ^ (2 * q) := htail
     _ ≤ (d : ℝ) * (roundedMomentBase d q eps) ^ (2 * q) :=
@@ -127,16 +127,16 @@ theorem uniformExactS_rounded_operator_norm_failure_le_delta_of_band_bounds
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-      {X | eps < ‖gramError F X‖} ≤ delta := by
+      {X | eps < ‖gramError F (sketchMatrix X)‖} ≤ delta := by
   have hevent :
       {X : ExactSample
           (roundedS (failureOrder d delta) eps *
             roundedB d (failureOrder d delta) eps)
           (roundedS (failureOrder d delta) eps) n |
-        eps < ‖gramError F X‖} =
-      {X | ¬ IsUniformExactSOSE F X eps} := by
+        eps < ‖gramError F (sketchMatrix X)‖} =
+      {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} := by
     ext X
-    have hiff := gramError_norm_le_iff_uniformExactSOSE F X eps heps0.le
+    have hiff := norm_gramError_le_iff_isSubspaceEmbedding F (sketchMatrix X) heps0.le
     simpa [not_le] using not_congr hiff
   rw [hevent]
   exact uniformExactS_rounded_failure_le_delta_of_band_bounds
@@ -164,7 +164,7 @@ theorem uniformExactS_rounded_success_probability_of_band_bounds
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-        {X | IsUniformExactSOSE F X eps} := by
+        {X | IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} := by
   let mu := exactSampleLaw (n := n)
     (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
       (MainTheoremAssembly.canonicalB_pos
@@ -173,9 +173,9 @@ theorem uniformExactS_rounded_success_probability_of_band_bounds
       (roundedS (failureOrder d delta) eps *
         roundedB d (failureOrder d delta) eps)
       (roundedS (failureOrder d delta) eps) n) :=
-    {X | IsUniformExactSOSE F X eps}
+    {X | IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps}
   have hfail : mu.prob goodᶜ ≤ delta := by
-    change mu.prob {X | ¬ IsUniformExactSOSE F X eps} ≤ delta
+    change mu.prob {X | ¬ IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} ≤ delta
     exact uniformExactS_rounded_failure_le_delta_of_band_bounds
       hd hdelta0 hdelta1 heps0 heps1 F hband
   calc
@@ -196,7 +196,7 @@ theorem uniformExactS_rounded_operator_norm_failure_le_delta
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-      {X | eps < ‖gramError F X‖} ≤ delta := by
+      {X | eps < ‖gramError F (sketchMatrix X)‖} ≤ delta := by
   apply uniformExactS_rounded_operator_norm_failure_le_delta_of_band_bounds
     hd hdelta0 hdelta1 heps0 heps1 F
   intro shift nu hnu
@@ -215,7 +215,7 @@ theorem uniformExactS_rounded_ose_success
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-        {X | IsUniformExactSOSE F X eps} := by
+        {X | IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps} := by
   apply uniformExactS_rounded_success_probability_of_band_bounds
     hd hdelta0 hdelta1 heps0 heps1 F
   intro shift nu hnu

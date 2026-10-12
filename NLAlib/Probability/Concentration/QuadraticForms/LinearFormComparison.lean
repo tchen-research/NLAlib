@@ -5,18 +5,17 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
 Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
-The original Apache-2.0 copyright notice is retained. Only the two used legacy
-vocabulary definitions are supplied locally; there is no HighDimProb dependency.
+The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
+vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
 -/
-import Mathlib.Tactic
 import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 import NLAlib.Probability.Concentration.QuadraticForms.Centering
 /-!
 # Hanson–Wright proof: LinearFormComparison
 
 A focused leaf of the transported independent-coordinate proof.
-Shared helper declarations live in `NLAlib.HansonWrightProof`; the canonical
-public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
 Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
 -/
 
@@ -27,7 +26,6 @@ noncomputable section
 set_option maxRecDepth 5000
 
 namespace NLAlib
-namespace HansonWrightProof
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
@@ -40,7 +38,7 @@ lemma centeredQuadraticForm_eq_diagonal_add_offDiagonal {μ : Measure Ω}
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
     centeredQuadraticForm μ A X =
       fun ω => diagonalCenteredQuadraticForm μ A X ω +
-        matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i ω) := by
+        quadForm (offDiagonalMatrix A) (fun i => X i ω) := by
   classical
   have hdiag_term_int : ∀ i, Integrable (fun ω => A i i * X i ω ^ 2) μ := by
     intro i
@@ -52,37 +50,37 @@ lemma centeredQuadraticForm_eq_diagonal_add_offDiagonal {μ : Measure Ω}
       Integrable (fun ω => ∑ i, A i i * X i ω ^ 2) μ :=
     MeasureTheory.integrable_finsetSum _ fun i _ => hdiag_term_int i
   have hoff_int :
-      Integrable (fun ω => matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i ω)) μ :=
+      Integrable (fun ω => quadForm (offDiagonalMatrix A) (fun i => X i ω)) μ :=
     integrable_randomQuadraticForm_offDiagonal_of_subgaussian A h_indep hX_subG
   have hqfun :
       (fun ω => randomQuadraticForm A X ω) =
         fun ω => (∑ i, A i i * X i ω ^ 2) +
-          matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i ω) := by
+          quadForm (offDiagonalMatrix A) (fun i => X i ω) := by
     ext ω
     exact quadraticForm_eq_diag_add_offDiagonal A (fun i => X i ω)
   ext ω
   unfold centeredQuadraticForm diagonalCenteredQuadraticForm
   rw [show randomQuadraticForm A X ω =
       (∑ i, A i i * X i ω ^ 2) +
-        matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i ω) by
+        quadForm (offDiagonalMatrix A) (fun i => X i ω) by
         exact congrFun hqfun ω]
   rw [show (∫ ω, randomQuadraticForm A X ω ∂μ) =
       ∫ ω, (∑ i, A i i * X i ω ^ 2) +
-        matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i ω) ∂μ by rw [hqfun]]
+        quadForm (offDiagonalMatrix A) (fun i => X i ω) ∂μ by rw [hqfun]]
   rw [integral_add hdiag_int hoff_int]
   have hoff_zero :
-      ∫ a, matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i a) ∂μ = 0 := by
+      ∫ a, quadForm (offDiagonalMatrix A) (fun i => X i a) ∂μ = 0 := by
     simpa only [randomQuadraticForm] using
       integral_randomQuadraticForm_offDiagonal_eq_zero A h_indep hX_subG
   rw [hoff_zero]
   rw [MeasureTheory.integral_finsetSum]
   · calc
-      (∑ i, A i i * X i ω ^ 2) + matrixQuadraticForm (offDiagonalMatrix A)
+      (∑ i, A i i * X i ω ^ 2) + quadForm (offDiagonalMatrix A)
           (fun i => X i ω) - (∑ i, ∫ (ω : Ω), A i i * X i ω ^ 2 ∂μ + 0)
           = (∑ i, (A i i * X i ω ^ 2 -
               ∫ (ω : Ω), A i i * X i ω ^ 2 ∂μ)) +
-              matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i ω) := by
-              let O : ℝ := matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i ω)
+              quadForm (offDiagonalMatrix A) (fun i => X i ω) := by
+              let O : ℝ := quadForm (offDiagonalMatrix A) (fun i => X i ω)
               let f : Fin n → ℝ := fun i => A i i * X i ω ^ 2
               let g : Fin n → ℝ := fun i => ∫ (ω : Ω), A i i * X i ω ^ 2 ∂μ
               have hsum_sub : (∑ i, f i) - ∑ i, g i = ∑ i, (f i - g i) := by
@@ -92,7 +90,7 @@ lemma centeredQuadraticForm_eq_diagonal_add_offDiagonal {μ : Measure Ω}
               rw [← hsum_sub]
               ring
       _ = (∑ i, A i i * (X i ω ^ 2 - ∫ (ω : Ω), X i ω ^ 2 ∂μ)) +
-            matrixQuadraticForm (offDiagonalMatrix A) (fun i => X i ω) := by
+            quadForm (offDiagonalMatrix A) (fun i => X i ω) := by
           congr 1
           apply Finset.sum_congr rfl
           intro i _
@@ -100,40 +98,6 @@ lemma centeredQuadraticForm_eq_diagonal_add_offDiagonal {μ : Measure Ω}
           ring
   · intro i _
     exact hdiag_term_int i
-
-/-- Source-transport helper `hasSubgaussianMGF_mono_param` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma hasSubgaussianMGF_mono_param {μ : Measure Ω} {X : Ω → ℝ} {c d : ℝ≥0}
-    (h : HasSubgaussianMGF X c μ) (hcd : (c : ℝ) ≤ d) :
-    HasSubgaussianMGF X d μ where
-  integrable_exp_mul t := h.integrable_exp_mul t
-  mgf_le t := by
-    have hmul : (c : ℝ) * t ^ 2 ≤ (d : ℝ) * t ^ 2 :=
-      mul_le_mul_of_nonneg_right hcd (sq_nonneg t)
-    calc
-      mgf X μ t ≤ exp ((c : ℝ) * t ^ 2 / 2) := h.mgf_le t
-      _ ≤ exp ((d : ℝ) * t ^ 2 / 2) := by
-          exact exp_le_exp.mpr (by linarith)
-
-/-- A finite independent linear combination of sub-Gaussian variables is sub-Gaussian. -/
-lemma hasSubgaussianMGF_finset_sum_const_mul_of_iIndepFun {ι : Type*} {μ : Measure Ω}
-    {X : ι → Ω → ℝ} (h_indep : iIndepFun X μ) {c : ι → ℝ≥0}
-    {s : Finset ι} (h_subG : ∀ i ∈ s, HasSubgaussianMGF (X i) (c i) μ)
-    (a : ι → ℝ) :
-    HasSubgaussianMGF (fun ω => ∑ i ∈ s, a i * X i ω)
-      (∑ i ∈ s, Real.toNNReal (a i ^ 2) * c i) μ := by
-  have h_indep_mul :
-      iIndepFun (fun i => fun ω => a i * X i ω) μ := by
-    simpa [Function.comp_def] using
-      h_indep.comp (fun i x => a i * x) (fun i => by fun_prop)
-  have h_subG_mul :
-      ∀ i ∈ s, HasSubgaussianMGF (fun ω => a i * X i ω)
-      (Real.toNNReal (a i ^ 2) * c i) μ := by
-    intro i hi
-    convert (h_subG i hi).const_mul (a i) using 1
-    rw [Real.toNNReal_of_nonneg (sq_nonneg (a i))]
-    rfl
-  exact HasSubgaussianMGF.sum_of_iIndepFun h_indep_mul h_subG_mul
 
 /-- Fixed linear forms of an independent sub-Gaussian coordinate vector are sub-Gaussian. -/
 lemma inner_randomVector_hasSubgaussianMGF_of_iIndepFun {μ : Measure Ω}
@@ -153,7 +117,7 @@ lemma inner_randomVector_hasSubgaussianMGF_of_iIndepFun {μ : Measure Ω}
     rw [hcK]
     exact hX_subG i
   have hsum :=
-    hasSubgaussianMGF_finset_sum_const_mul_of_iIndepFun
+    hasSubgaussianMGF_finset_sum_mul_of_iIndepFun
       (μ := μ) h_indep (s := Finset.univ) hX_subG' (fun i => v i)
   have hsum_inner :
       HasSubgaussianMGF (fun ω => inner ℝ v (randomVector X ω))
@@ -164,7 +128,7 @@ lemma inner_randomVector_hasSubgaussianMGF_of_iIndepFun {μ : Measure Ω}
     simp only [randomVector_apply]
     apply Finset.sum_congr rfl
     intro i _
-    exact (real_inner_mul _ _).symm
+    exact (Real.inner_apply _ _).symm
   have hparam :
       (((∑ i ∈ (Finset.univ : Finset (Fin n)), Real.toNNReal (v i ^ 2) * cK) : ℝ≥0) :
           ℝ) ≤ K ^ 2 * ‖v‖ ^ 2 := by
@@ -177,7 +141,7 @@ lemma inner_randomVector_hasSubgaussianMGF_of_iIndepFun {μ : Measure Ω}
     rw [Real.coe_toNNReal (v i ^ 2) (sq_nonneg (v i)),
       Real.coe_toNNReal (K ^ 2) (sq_nonneg K)]
     ring
-  exact hasSubgaussianMGF_mono_param hsum_inner hparam
+  exact hasSubgaussianMGF_mono hsum_inner hparam
 
 /-- Gaussian-comparison square-exponential bound for a linear image of an independent
 sub-Gaussian vector. -/
@@ -186,10 +150,10 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
     {X : Fin n → Ω → ℝ} {K θ : ℝ} (hθ : 0 ≤ θ)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
-    (hsmall : θ * K ^ 2 * deterministicOperatorNorm A ^ 2 * exp 1 ≤ 1 / 2) :
+    (hsmall : θ * K ^ 2 * specNorm A ^ 2 * exp 1 ≤ 1 / 2) :
     ∫ ω, exp (θ *
         ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2) ∂μ ≤
-      exp (2 * exp 1 ^ 2 * θ * K ^ 2 * deterministicFrobeniusNorm A ^ 2) := by
+      exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobNorm A ^ 2) := by
   let E := EuclideanSpace ℝ (Fin n)
   let γ : Measure E := stdGaussian E
   let T : E →L[ℝ] E := Matrix.toEuclideanCLM (𝕜 := ℝ) A
@@ -207,8 +171,8 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
     rw [sq_sqrt]
     nlinarith
   have hKθ_nonneg : 0 ≤ K ^ 2 * θ := mul_nonneg (sq_nonneg K) hθ
-  have hUnorm : ‖U‖ = deterministicOperatorNorm A := by
-    dsimp [U, T, deterministicOperatorNorm]
+  have hUnorm : ‖U‖ = specNorm A := by
+    dsimp [U, T, specNorm]
     exact ContinuousLinearMap.adjoint.norm_map _
   have hsmall_eig :
       ∀ i : Fin (Module.finrank ℝ E),
@@ -287,14 +251,14 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
       exact Integrable.mono' hquad_int hf_aesm.norm.integral_prod_right' hnorm_outer_bound
   have hsum_eq :
       (∑ i : Fin (Module.finrank ℝ E), hSpos.isSymmetric.eigenvalues rfl i) =
-        frobeniusNormSq A := by
+        frobSq A := by
     have htrace_eigs :
         (LinearMap.trace ℝ E) S.toLinearMap =
           ∑ i : Fin (Module.finrank ℝ E), hSpos.isSymmetric.eigenvalues rfl i := by
       simpa using hSpos.isSymmetric.trace_eq_sum_eigenvalues
         (by rfl : Module.finrank ℝ E = Module.finrank ℝ E)
     have htrace_frob :
-        (LinearMap.trace ℝ E) S.toLinearMap = frobeniusNormSq A := by
+        (LinearMap.trace ℝ E) S.toLinearMap = frobSq A := by
       have hUeq : U = Matrix.toEuclideanCLM (𝕜 := ℝ) A.conjTranspose := by
         dsimp [U, T]
         exact toEuclideanCLM_adjoint A
@@ -308,13 +272,13 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
                     (Matrix.toEuclideanCLM (𝕜 := ℝ) A.conjTranspose) ∘L
                   Matrix.toEuclideanCLM (𝕜 := ℝ) A.conjTranspose).toLinearMap) := by
                 rw [hUeq]
-        _ = frobeniusNormSq A.conjTranspose :=
-                trace_adjoint_comp_toEuclideanCLM_eq_frobeniusNormSq A.conjTranspose
-        _ = frobeniusNormSq A := frobeniusNormSq_conjTranspose A
+        _ = frobSq A.conjTranspose :=
+                trace_adjoint_comp_toEuclideanCLM_eq_frobSq A.conjTranspose
+        _ = frobSq A := by rw [Matrix.conjTranspose_eq_transpose_of_trivial, frobSq_transpose]
     exact htrace_eigs.symm.trans htrace_frob
   have hprod_bound :
       ∫ p : E × Ω, f p ∂(γ.prod μ) ≤
-        exp (2 * exp 1 ^ 2 * θ * K ^ 2 * deterministicFrobeniusNorm A ^ 2) := by
+        exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobNorm A ^ 2) := by
     calc
       ∫ p : E × Ω, f p ∂(γ.prod μ)
           = ∫ g : E, ∫ ω, f (g, ω) ∂μ ∂γ := by
@@ -324,8 +288,8 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
       _ ≤ exp (2 * exp 1 ^ 2 * (K ^ 2 * θ) *
             (∑ i : Fin (Module.finrank ℝ E), hSpos.isSymmetric.eigenvalues rfl i)) :=
               integral_exp_quadratic_stdGaussian_le S hSpos hKθ_nonneg hsmall_eig
-      _ = exp (2 * exp 1 ^ 2 * θ * K ^ 2 * deterministicFrobeniusNorm A ^ 2) := by
-              rw [hsum_eq, frobeniusNorm_sq]
+      _ = exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobNorm A ^ 2) := by
+              rw [hsum_eq, frobNorm_sq]
               congr 1
               ring
   have hleft_eq :
@@ -349,9 +313,8 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
       _ = ∫ ω, ∫ g : E, f (g, ω) ∂γ ∂μ := hleft_eq
       _ = ∫ q : Ω × E, f q.swap ∂(μ.prod γ) := by
           exact (integral_prod (fun q : Ω × E => f q.swap) hf_int.swap).symm
-      _ ≤ exp (2 * exp 1 ^ 2 * θ * K ^ 2 * deterministicFrobeniusNorm A ^ 2) := by
+      _ ≤ exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobNorm A ^ 2) := by
           rw [integral_prod_swap f]
           exact hprod_bound
 
-end HansonWrightProof
 end NLAlib

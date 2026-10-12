@@ -36,6 +36,7 @@ import NLAlib.Matrix.Subspaces.OrthogonalBasisChange
 import NLAlib.Matrix.Subspaces.OrthogonalBlockCompletion
 import NLAlib.Matrix.Subspaces.OrthogonalProducts
 import NLAlib.Matrix.Subspaces.OrthogonalSumCompletion
+import NLAlib.Matrix.Subspaces.OrthonormalBasisMatrix
 import NLAlib.Matrix.Subspaces.PolarFrame
 import NLAlib.Matrix.Subspaces.PrincipalAngleBridges
 import NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions

@@ -19,18 +19,6 @@ open MeasureTheory ProbabilityTheory
 
 namespace NLAlib
 
-/-- Bounded measurable scalar functions have integrable exponential moments on
-probability spaces. Supports the product averaging proof of `mcdiarmid`. -/
-theorem integrable_exp_mul_of_abs_le
-    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
-    {f : Ω → ℝ} (hf : Measurable f) {M : ℝ} (hM : ∀ x, |f x| ≤ M) (θ : ℝ) :
-    Integrable (fun x => Real.exp (θ * f x)) μ := by
-  refine Integrable.of_bound (by fun_prop) (Real.exp (|θ| * M))
-    (Filter.Eventually.of_forall fun x => ?_)
-  rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-  apply Real.exp_le_exp.mpr
-  exact (le_abs_self _).trans (by rw [abs_mul]; exact mul_le_mul_of_nonneg_left (hM x) (abs_nonneg _))
-
 /-- The bounded finite-coordinate averaging calculation before centring.
 The auxiliary uniform bound is discharged from coordinate oscillation in the
 public product theorem. Source: manuscript `thm:mcdiarmidmgf`. -/
@@ -102,7 +90,8 @@ theorem integral_exp_mul_le_exp_of_fin_coordinate_oscillation
         ∫ y, ∫ z, Real.exp (θ * F (z, y)) ∂μ 0 ∂ν := by
       rw [← ((measurePreserving_piFinSuccAbove μ 0).symm).integral_comp']
       refine Eq.trans ?_ (integral_prod_symm (μ := μ 0) (ν := ν) _
-        (integrable_exp_mul_of_abs_le hFm hFM θ))
+        (integrable_exp_mul_of_mem_Icc (t := θ) hFm.aemeasurable
+          (Filter.Eventually.of_forall fun x => abs_le.mp (hFM x))))
       apply integral_congr_ae
       filter_upwards with p
       congr 2
@@ -135,10 +124,12 @@ theorem integral_exp_mul_le_exp_of_fin_coordinate_oscillation
         _ = Real.exp (θ * g y + θ ^ 2 * c 0 ^ 2 / 8) := by rw [← Real.exp_add]; congr 1; ring
     rw [heqexp, heqf, Fin.sum_univ_succ]
     have hleft : Integrable (fun y => ∫ z, Real.exp (θ * F (z, y)) ∂μ 0) ν :=
-      (integrable_exp_mul_of_abs_le (μ := (μ 0).prod ν) hFm hFM θ).integral_prod_right
+      (integrable_exp_mul_of_mem_Icc (μ := (μ 0).prod ν) (t := θ) hFm.aemeasurable
+        (Filter.Eventually.of_forall fun x => abs_le.mp (hFM x))).integral_prod_right
     have hright : Integrable (fun y => Real.exp (θ * g y + θ ^ 2 * c 0 ^ 2 / 8)) ν := by
       simp_rw [Real.exp_add]
-      exact (integrable_exp_mul_of_abs_le hgm hgM θ).mul_const _
+      exact (integrable_exp_mul_of_mem_Icc (t := θ) hgm.aemeasurable
+        (Filter.Eventually.of_forall fun x => abs_le.mp (hgM x))).mul_const _
     calc (∫ y, ∫ z, Real.exp (θ * F (z, y)) ∂μ 0 ∂ν) ≤
           ∫ y, Real.exp (θ * g y + θ ^ 2 * c 0 ^ 2 / 8) ∂ν :=
             integral_mono hleft hright hfiber
@@ -205,8 +196,8 @@ theorem hasSubgaussianMGF_pi_of_coordinate_oscillation
       _ ≤ (∑ i, c i) + |f x₀| := add_le_add h le_rfl
       _ = M := add_comm _ _
   let m := ∫ y, f y ∂Measure.pi μ
-  refine ⟨fun θ => integrable_exp_mul_of_abs_le (hf.sub_const m)
-    (M := M + |m|) (fun x => ?_) θ, fun θ => ?_⟩
+  refine ⟨fun θ => integrable_exp_mul_of_mem_Icc (t := θ) (a := -(M + |m|)) (b := M + |m|)
+    (hf.sub_const m).aemeasurable (Filter.Eventually.of_forall fun x => abs_le.mp ?_), fun θ => ?_⟩
   · calc |f x - m| ≤ |f x| + |m| := by
           simpa only [sub_zero, zero_sub, abs_neg] using abs_sub_le (f x) 0 m
       _ ≤ M + |m| := add_le_add (hM x) le_rfl

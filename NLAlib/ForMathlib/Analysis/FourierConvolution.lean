@@ -6,6 +6,11 @@ import Mathlib.MeasureTheory.Measure.Haar.Unique
 
 Haar invariance gives the exact character-convolution formula, and normalized Haar
 integration agrees with the normalized full-period interval integral.
+
+Upstreaming note: `integral_haarAddCircle_eq_inv_mul_intervalIntegral` is a short corollary of
+Mathlib's `AddCircle.integral_haarAddCircle` and `AddCircle.intervalIntegral_preimage`, and
+`fourier_apply_sub` of `fourier_apply_add` and `fourier_apply`; convenience forms that are
+candidates for upstreaming next to those lemmas.
 -/
 
 noncomputable section

@@ -28,8 +28,10 @@ theorem pow_mul_eq_mul_pow_of_mul_eq {𝕜 : Type*} [Semiring 𝕜]
     rw [pow_succ', Matrix.mul_assoc, hj, ← Matrix.mul_assoc, h, Matrix.mul_assoc,
       ← pow_succ']
 
-/-- Polynomial calculus preserves rectangular intertwining. Source: the manuscript
-`sa:filter`; standard polynomial functional calculus. -/
+/-- Polynomial calculus preserves rectangular intertwining: `BA = AC` implies
+`p(B) A = A p(C)` for every polynomial `p`. Source: the manuscript `sa:filter`; Horn–Johnson
+(2013), Lemma 2.4.4.0; standard polynomial functional calculus.
+atlas: sylvester-equation (partial) -/
 theorem aeval_mul_eq_mul_aeval_of_mul_eq {R 𝕜 : Type*}
     [CommSemiring R] [CommSemiring 𝕜] [Algebra R 𝕜]
     {B : Matrix m m 𝕜} {A : Matrix m n 𝕜}

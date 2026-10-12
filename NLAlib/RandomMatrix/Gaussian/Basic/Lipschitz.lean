@@ -1,5 +1,7 @@
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
+import NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix
 import NLAlib.Matrix.Norms.Core
+import NLAlib.ForMathlib.MeasureTheory.IntegrableSup
+import NLAlib.ForMathlib.MeasureTheory.IntegralSqrt
 /-!
 # Integrability of Lipschitz functionals of a Gaussian matrix
 
@@ -9,9 +11,8 @@ import NLAlib.Matrix.Norms.Core
 * `abs_specNorm_mul_of_mul_sub_le`: `G ↦ ‖S G T‖₂` is `‖S‖₂‖T‖₂`-Lipschitz for the Frobenius norm;
   together with the Lipschitz bounds of `NLAlib.Matrix.Spectral.Core` this makes `σ_min(G)`, `‖G‖₂`
   and `‖S G T‖₂` integrable;
-* generic helpers: the maximum and minimum of finitely many integrable functions are integrable
-  (`integrable_iSup_of_fintype`, `integrable_iInf_of_fintype`), and
-  `𝔼 X² ≤ c²`, `c ≥ 0` imply `𝔼 X ≤ c` (`integral_le_of_integral_sq_le`).
+* the generic helpers (integrability of finite maxima and minima, `𝔼 X² ≤ c²` ⟹ `𝔼 X ≤ c`)
+  live in `NLAlib.ForMathlib.MeasureTheory.{IntegrableSup,IntegralSqrt}`.
 
 Ported from the Prove2me solutions `GaussianMatrix.gordon_upper`, `GaussianMatrix.gordon_lower`,
 `GaussianMatrix.gordon`, `GaussianMatrix.chevet_expectation_bound`, `GaussianMatrix.chevet`,
@@ -28,88 +29,6 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix
 
 namespace NLAlib
-
-/-- The pointwise maximum of finitely many (nonempty index) measurable integrable functions is
-integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
-`gu_integrable_iSup`). Atlas: helper of `gordon`. -/
-theorem integrable_iSup_of_fintype {Ω ι : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [Fintype ι]
-    [Nonempty ι] (f : ι → Ω → ℝ) (hf : ∀ t, Integrable (f t) μ) (hm : ∀ t, Measurable (f t)) :
-    Integrable (fun ω => ⨆ t, f t ω) μ := by
-  refine Integrable.mono' (integrable_finsetSum Finset.univ fun t _ => (hf t).abs)
-    (Measurable.iSup hm).aestronglyMeasurable (Filter.Eventually.of_forall fun ω => ?_)
-  rw [Real.norm_eq_abs, abs_le]
-  obtain ⟨t0⟩ := ‹Nonempty ι›
-  have hb : BddAbove (Set.range fun t => f t ω) := (Set.finite_range _).bddAbove
-  have hs : ∀ t, |f t ω| ≤ ∑ t, |f t ω| := fun t =>
-    Finset.single_le_sum (f := fun t => |f t ω|) (fun t _ => abs_nonneg _) (Finset.mem_univ t)
-  constructor
-  · have h1 := le_ciSup hb t0
-    have h2 := hs t0
-    have := neg_abs_le (f t0 ω)
-    linarith
-  · exact ciSup_le fun t => (le_abs_self _).trans (hs t)
-
-/-- `𝔼 X ≤ (𝔼 X² / δ + δ) / 2` for every `δ > 0` (integrate `2δx ≤ x² + δ²`). Ported from
-Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_integral_le_of_sq`). Atlas: helper of
-`gordon`, `chevet`. -/
-theorem integral_le_integral_sq_div_add_div_two {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    [IsProbabilityMeasure μ] (X : Ω → ℝ) (hX : Integrable X μ)
-    (hX2 : Integrable (fun ω => X ω ^ 2) μ) (δ : ℝ) (hδ : 0 < δ) :
-    ∫ ω, X ω ∂μ ≤ ((∫ ω, X ω ^ 2 ∂μ) / δ + δ) / 2 := by
-  have hI : Integrable (fun ω => (X ω ^ 2 / δ + δ) / 2) μ :=
-    ((hX2.div_const δ).add (integrable_const δ)).div_const 2
-  have hpt : ∀ ω, X ω ≤ (X ω ^ 2 / δ + δ) / 2 := by
-    intro ω
-    rw [div_add' _ _ _ hδ.ne', div_div, le_div_iff₀ (by positivity)]
-    nlinarith [sq_nonneg (X ω - δ)]
-  refine (integral_mono hX hI hpt).trans (le_of_eq ?_)
-  rw [integral_div, integral_add (hX2.div_const δ) (integrable_const δ), integral_div,
-    integral_const]
-  simp
-
-/-- Jensen (Cauchy–Schwarz) in the form used for first moments: if `𝔼 X² ≤ c²` with `c ≥ 0`,
-then `𝔼 X ≤ c`. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
-`gu_integral_le_of_integral_sq_le`). Atlas: helper of `gordon`, `chevet`. -/
-theorem integral_le_of_integral_sq_le {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    [IsProbabilityMeasure μ] (X : Ω → ℝ) (hX : Integrable X μ)
-    (hX2 : Integrable (fun ω => X ω ^ 2) μ) (c : ℝ) (hc : 0 ≤ c)
-    (h : ∫ ω, X ω ^ 2 ∂μ ≤ c ^ 2) : ∫ ω, X ω ∂μ ≤ c := by
-  rcases hc.lt_or_eq with hc | hc
-  · refine (integral_le_integral_sq_div_add_div_two μ X hX hX2 c hc).trans ?_
-    have : (∫ ω, X ω ^ 2 ∂μ) / c ≤ c := by
-      rw [div_le_iff₀ hc]; nlinarith
-    linarith
-  · subst hc
-    refine le_of_forall_pos_le_add fun δ hδ => ?_
-    refine (integral_le_integral_sq_div_add_div_two μ X hX hX2 δ hδ).trans ?_
-    have : (∫ ω, X ω ^ 2 ∂μ) / δ ≤ 0 := div_nonpos_of_nonpos_of_nonneg (by simpa using h) hδ.le
-    linarith
-
-
-
-/-- The pointwise minimum of finitely many (nonempty index) measurable integrable functions is
-integrable. Ported from Prove2me solution `GaussianMatrix.gordon_lower` (helper
-`gl_integrable_iInf`). Atlas: helper of `gordon`. -/
-theorem integrable_iInf_of_fintype {Ω ι : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [Fintype ι]
-    [Nonempty ι] (f : ι → Ω → ℝ) (hf : ∀ t, Integrable (f t) μ) (hm : ∀ t, Measurable (f t)) :
-    Integrable (fun ω => ⨅ t, f t ω) μ := by
-  refine Integrable.mono' (integrable_finsetSum Finset.univ fun t _ => (hf t).abs)
-    (Measurable.iInf hm).aestronglyMeasurable (Filter.Eventually.of_forall fun ω => ?_)
-  rw [Real.norm_eq_abs, abs_le]
-  obtain ⟨t0⟩ := ‹Nonempty ι›
-  have hb : BddBelow (Set.range fun t => f t ω) := (Set.finite_range _).bddBelow
-  have hs : ∀ t, |f t ω| ≤ ∑ t, |f t ω| := fun t =>
-    Finset.single_le_sum (f := fun t => |f t ω|) (fun t _ => abs_nonneg _) (Finset.mem_univ t)
-  constructor
-  · refine le_ciInf fun t => ?_
-    have := neg_abs_le (f t ω)
-    have := hs t
-    linarith
-  · have h1 := ciInf_le hb t0
-    have h2 := hs t0
-    have := le_abs_self (f t0 ω)
-    linarith
-
 
 /-- `‖G‖_F² = ∑ᵢⱼ Gᵢⱼ²` is integrable under the Gaussian matrix law. Ported from Prove2me
 solution `GaussianMatrix.gordon_upper` (helper `gu_integrable_frobSq`). Atlas: helper of
@@ -198,7 +117,6 @@ theorem integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm {p m : ℕ}
     simp only [Pi.add_apply]
     have hs := hsq X
     nlinarith [sq_nonneg (|h 0| - L * frobNorm (Matrix.of X)), sq_abs (h 0)]
-
 
 open scoped Matrix.Norms.L2Operator in
 /-- `G ↦ ‖S G T‖₂` is `‖S‖₂‖T‖₂`-Lipschitz for the Frobenius norm:

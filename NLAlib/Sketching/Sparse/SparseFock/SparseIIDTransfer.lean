@@ -1,7 +1,7 @@
 /- Copyright (c) 2026 Diar Heidary.
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
-import NLAlib.Sketching.Sparse.SparseFock.SparseIIDCoupling
+import NLAlib.Sketching.Sparse.SparseFock.SparseIIDConditionalBarycenter
 
 set_option autoImplicit false
 
@@ -168,7 +168,7 @@ def sparseVectorError {b s n d : ℕ} (F : Frame n d) (x : XArray b s n) :
   (1 / (s : ℝ)) •
     ∑ g, ∑ i, ∑ j ∈ Finset.univ.erase i,
       inner ℝ (selectorVector (x (g, i))) (selectorVector (x (g, j))) •
-        ParsevalFrame.outer (F.u i) (F.u j)
+        Matrix.vecMulVec (WithLp.ofLp (F.u i)) (WithLp.ofLp (F.u j))
 
 /-- The iid-vector hollow Gram error before multiplying by `c_b²`.
 
@@ -179,7 +179,7 @@ def iidVectorError {b s n d : ℕ} (F : Frame n d) (y : YArray b s n) :
   (1 / (s : ℝ)) •
     ∑ g, ∑ i, ∑ j ∈ Finset.univ.erase i,
       inner ℝ (unscaledYVector (y (g, i))) (unscaledYVector (y (g, j))) •
-        ParsevalFrame.outer (F.u i) (F.u j)
+        Matrix.vecMulVec (WithLp.ofLp (F.u i)) (WithLp.ofLp (F.u j))
 
 /-- The same iid error with `c_b` placed on each of its two column vectors.
 
@@ -190,7 +190,7 @@ def scaledIIDVectorError {b s n d : ℕ} (F : Frame n d) (y : YArray b s n) :
   (1 / (s : ℝ)) •
     ∑ g, ∑ i, ∑ j ∈ Finset.univ.erase i,
       inner ℝ (scaledYVector (y (g, i))) (scaledYVector (y (g, j))) •
-        ParsevalFrame.outer (F.u i) (F.u j)
+        Matrix.vecMulVec (WithLp.ofLp (F.u i)) (WithLp.ofLp (F.u j))
 
 /-- The corrected iid Gram error is the squared scalar correction times the unscaled error.
 Source: ported from `SparseFockFormal.SparseIIDTransfer`,
@@ -200,18 +200,27 @@ theorem scaledIIDVectorError_eq_smul {b s n d : ℕ}
     scaledIIDVectorError F y = cB b ^ 2 • iidVectorError F y := by
   ext a c
   simp only [scaledIIDVectorError, iidVectorError, Matrix.smul_apply,
-    Matrix.sum_apply, ParsevalFrame.outer_apply, smul_eq_mul]
+    Matrix.sum_apply, Matrix.vecMulVec_apply, smul_eq_mul]
   simp_rw [scaled_inner_eq]
   simp_rw [Finset.mul_sum]
   ring
 
-/-- Entrywise expectation of a finite random matrix.
+/-- Barycenter of a finite law in any real vector space.
 
 Source: ported from `SparseFockFormal.SparseIIDTransfer`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def matrixExpectation {Omega A : Type*} [Fintype Omega]
-    (mu : FiniteLaw Omega) (M : Omega → Matrix A A ℝ) : Matrix A A ℝ :=
-  fun a c ↦ mu.expect (fun omega ↦ M omega a c)
+def barycenter {Omega E : Type*} [Fintype Omega]
+    [AddCommGroup E] [Module ℝ E]
+    (mu : FiniteLaw Omega) (p : Omega → E) : E :=
+  ∑ omega, mu.weight omega • p omega
+
+/-- A matrix-valued barycenter is the entrywise finite expectation.
+Source: ported from `SparseFockFormal.SparseIIDTransfer` (`matrixExpectation`),
+b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
+theorem barycenter_apply {Omega A : Type*} [Fintype Omega]
+    (mu : FiniteLaw Omega) (M : Omega → Matrix A A ℝ) (a c : A) :
+    barycenter mu M a c = mu.expect (fun omega ↦ M omega a c) := by
+  simp [barycenter, Matrix.sum_apply, FiniteLaw.expect]
 
 /-- Exact off-diagonal conditional transfer.  No diagonal term is present,
 and the proof uses `i ≠ j` to invoke independence at two distinct sites.
@@ -220,11 +229,11 @@ Source: ported from `SparseFockFormal.SparseIIDTransfer`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem conditional_matrix_transfer {b s n d : ℕ} (hb : 0 < b)
     (F : Frame n d) (x : XArray b s n) :
-    matrixExpectation (conditionalArrayLaw hb x) (scaledIIDVectorError F) =
+    barycenter (conditionalArrayLaw hb x) (scaledIIDVectorError F) =
       sparseVectorError F x := by
   ext a c
-  simp only [matrixExpectation, scaledIIDVectorError, sparseVectorError,
-    Matrix.smul_apply, Matrix.sum_apply, ParsevalFrame.outer_apply, smul_eq_mul]
+  simp only [barycenter_apply, scaledIIDVectorError, sparseVectorError,
+    Matrix.smul_apply, Matrix.sum_apply, Matrix.vecMulVec_apply, smul_eq_mul]
   rw [FiniteLaw.expect_smul]
   congr 1
   rw [expect_fintype_sum]
@@ -271,7 +280,7 @@ theorem sparseVectorError_symmetric {b s n d : ℕ}
     (sparseVectorError F x).transpose = sparseVectorError F x := by
   ext a c
   simp only [Matrix.transpose_apply, sparseVectorError, Matrix.smul_apply,
-    Matrix.sum_apply, ParsevalFrame.outer_apply, smul_eq_mul]
+    Matrix.sum_apply, Matrix.vecMulVec_apply, smul_eq_mul]
   apply congrArg ((1 / (s : ℝ)) * ·)
   apply Finset.sum_congr rfl
   intro g _
@@ -291,7 +300,7 @@ theorem iidVectorError_symmetric {b s n d : ℕ}
     (iidVectorError F y).transpose = iidVectorError F y := by
   ext a c
   simp only [Matrix.transpose_apply, iidVectorError, Matrix.smul_apply,
-    Matrix.sum_apply, ParsevalFrame.outer_apply, smul_eq_mul]
+    Matrix.sum_apply, Matrix.vecMulVec_apply, smul_eq_mul]
   apply congrArg ((1 / (s : ℝ)) * ·)
   apply Finset.sum_congr rfl
   intro g _
@@ -357,15 +366,6 @@ def scaledIIDSymmetricError {b s n d : ℕ}
     (F : Frame n d) (y : YArray b s n) : SymmetricMatrix d :=
   ⟨scaledIIDVectorError F y, scaledIIDVectorError_symmetric F y⟩
 
-/-- Barycenter of a finite law in any real vector space.
-
-Source: ported from `SparseFockFormal.SparseIIDTransfer`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def barycenter {Omega E : Type*} [Fintype Omega]
-    [AddCommGroup E] [Module ℝ E]
-    (mu : FiniteLaw Omega) (p : Omega → E) : E :=
-  ∑ omega, mu.weight omega • p omega
-
 /-- Finite Jensen inequality for the project's explicit normalized weights.
 
 Source: ported from `SparseFockFormal.SparseIIDTransfer`,
@@ -379,7 +379,7 @@ theorem finite_jensen {Omega E : Type*} [Fintype Omega]
     hPhi.map_sum_le (t := Finset.univ) (w := mu.weight) (p := p)
       (fun i _ ↦ mu.weight_nonneg i) mu.sum_weight (fun _ _ ↦ Set.mem_univ _)
 
-/-- The subtype barycenter is the entrywise matrix expectation.
+/-- The symmetric-matrix barycenter coerces to the matrix barycenter.
 
 Source: ported from `SparseFockFormal.SparseIIDTransfer`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
@@ -387,11 +387,11 @@ theorem coe_barycenter_scaledIID {b s n d : ℕ} (hb : 0 < b)
     (F : Frame n d) (x : XArray b s n) :
     ((barycenter (conditionalArrayLaw hb x) (scaledIIDSymmetricError F) :
         SymmetricMatrix d) : Matrix (Fin d) (Fin d) ℝ) =
-      matrixExpectation (conditionalArrayLaw hb x) (scaledIIDVectorError F) := by
+      barycenter (conditionalArrayLaw hb x) (scaledIIDVectorError F) := by
   ext a c
-  simp only [barycenter, matrixExpectation, Submodule.coe_sum,
+  simp only [barycenter, Submodule.coe_sum,
     Submodule.coe_smul_of_tower, Matrix.sum_apply, Matrix.smul_apply,
-    scaledIIDSymmetricError, FiniteLaw.expect, smul_eq_mul]
+    scaledIIDSymmetricError, smul_eq_mul]
 
 /-- The conditional corrected iid matrix barycenter equals the literal selector-vector error.
 Source: ported from `SparseFockFormal.SparseIIDTransfer`,

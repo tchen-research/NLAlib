@@ -32,8 +32,8 @@ Source: ported from `SparseFockFormal.UniformExactSTransfer`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 def exactSymmetricError (F : Frame n d) (X : ExactSample (s * b) s n) :
     SymmetricMatrix d :=
-  ⟨gramError F X,
-    Matrix.isHermitian_iff_isSymm.mp (gramError_isHermitian F X)⟩
+  ⟨gramError F (sketchMatrix X),
+    Matrix.isHermitian_iff_isSymm.mp (gramError_isHermitian F (sketchMatrix X))⟩
 
 /-- The scaled iid comparison error in the same vector space.
 
@@ -43,7 +43,7 @@ def exactScaledIIDSymmetricError (hb : 0 < b) (F : Frame n d)
     (Y : IidColumnSample b s n) : SymmetricMatrix d :=
   ⟨exactScaledIIDError hb F Y, exactScaledIIDError_symmetric hb F Y⟩
 
-/-- The subtype barycenter is the entrywise matrix expectation.
+/-- The symmetric-matrix barycenter coerces to the matrix barycenter.
 
 Source: ported from `SparseFockFormal.UniformExactSTransfer`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
@@ -53,12 +53,12 @@ theorem coe_barycenter_exactScaledIID
     ((barycenter (conditionalSampleLaw hb hs X)
         (exactScaledIIDSymmetricError hb F) : SymmetricMatrix d) :
       Matrix (Fin d) (Fin d) ℝ) =
-      matrixExpectation (conditionalSampleLaw hb hs X)
+      barycenter (conditionalSampleLaw hb hs X)
         (exactScaledIIDError hb F) := by
   ext a c
-  simp only [barycenter, matrixExpectation, Submodule.coe_sum,
+  simp only [barycenter, Submodule.coe_sum,
     Submodule.coe_smul_of_tower, Matrix.sum_apply, Matrix.smul_apply,
-    exactScaledIIDSymmetricError, FiniteLaw.expect, smul_eq_mul]
+    exactScaledIIDSymmetricError, smul_eq_mul]
 
 /-- The conditional symmetric-matrix barycenter is the actual exact-`s`
 error.
@@ -132,7 +132,7 @@ theorem exactScaledIIDError_trace_even (hb : 0 < b) (F : Frame n d)
     ((exactScaledIIDError hb F Y) ^ (2 * q)).trace =
       exactScale (s := s) hb ^ (4 * q) *
         ((iidVectorError F (toYArray Y)) ^ (2 * q)).trace := by
-  rw [exactScaledIIDError_eq_smul, MomentTransfer.trace_pow_smul]
+  rw [exactScaledIIDError_eq_smul, smul_pow, Matrix.trace_smul, smul_eq_mul]
   congr 1
   rw [← pow_mul]
   congr 1
@@ -202,7 +202,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem unconditional_trace_moment_order
     (hb : 0 < b) (hs : 0 < s) (F : Frame n d) (q : ℕ) :
     (exactSampleLaw (n := n) (exactS_le_rows (s := s) hb)).expect
-        (fun X => ((gramError F X) ^ (2 * q)).trace) ≤
+        (fun X => ((gramError F (sketchMatrix X)) ^ (2 * q)).trace) ≤
       (iidColumnSampleLaw hb s n).expect
         (fun Y => ((exactScaledIIDError hb F Y) ^ (2 * q)).trace) := by
   simpa [TracePowerConvexity.traceEvenPower, exactSymmetricError,
@@ -220,7 +220,7 @@ theorem exactS_trace_moment_le_scaled_product
     (hs : 0 < s) (hb : 1 < b) (F : Frame n d) (q : ℕ) :
     (exactSampleLaw (n := n)
         (exactS_le_rows (s := s) (lt_trans Nat.zero_lt_one hb))).expect
-        (fun X => ((gramError F X) ^ (2 * q)).trace) ≤
+        (fun X => ((gramError F (sketchMatrix X)) ^ (2 * q)).trace) ≤
       exactScale (s := s) (lt_trans Nat.zero_lt_one hb) ^ (4 * q) *
         (iidLaw b hb (s * b) n).expect
           (fun omega => ((iidGramError b F omega) ^ (2 * q)).trace) := by

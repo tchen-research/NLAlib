@@ -5,6 +5,10 @@ import Mathlib.Analysis.Matrix.Order
 
 The spectral theorem bounds the norm of a PSD complex matrix by its real trace. Applied
 to a Gram matrix this gives the exact squared operator-norm versus coordinate-sum bound.
+
+Upstreaming note: `matrix_smul_le_smul_of_nonneg` (from `Matrix.PosSemidef.smul` on the
+difference) and `re_trace_le_re_trace_of_le` (from `Matrix.PosSemidef.trace_nonneg` on the
+difference) are one-line Loewner-order corollaries, candidates for upstreaming.
 -/
 
 noncomputable section

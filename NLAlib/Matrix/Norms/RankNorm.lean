@@ -1,11 +1,12 @@
 import NLAlib.Matrix.Spectral.SpectralBounds
 import NLAlib.Matrix.Basic.MoorePenrose
+import NLAlib.Matrix.Norms.Reindex
 /-!
 # Rank-dependent comparison of the Frobenius and spectral norms
 
-This completes the advertised upper comparison in atlas `norms-frob-spec`.
-The rank counts the nonzero singular values, and each such value is bounded by
-the largest one. No positive-rank or nonempty-dimension hypothesis is needed.
+This completes the advertised upper comparison in atlas `norms-frob-spec`, on arbitrary
+finite index types. The rank counts the nonzero singular values, and each such value is
+bounded by the largest one. No positive-rank or nonempty-dimension hypothesis is needed.
 
 Source: Horn–Johnson, Matrix Analysis, §5.6.
 
@@ -19,12 +20,6 @@ open scoped Matrix Matrix.Norms.L2Operator BigOperators
 
 namespace NLAlib
 
-/-- Every padded singular value is bounded by the spectral norm.
-Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`. -/
-theorem singularValues_le_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
-    singularValues A k ≤ specNorm A :=
-  (singularValues_antitone A (Nat.zero_le k)).trans_eq (singularValues_zero_eq_specNorm A)
-
 /-- The squared Frobenius norm is the sum of the squares of precisely the
 positive singular values. Zero singular values contribute nothing.
 Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`.
@@ -35,14 +30,13 @@ theorem frobSq_eq_sum_rank_singularValues_sq {m n : ℕ}
   rw [frobSq_eq_sum_sq_singularValues]
   symm
   apply Finset.sum_subset
-  · exact Finset.range_mono (le_min A.rank_le_height A.rank_le_width)
+  · exact Finset.range_mono (le_min A.rank_le_card_height A.rank_le_card_width)
   · intro k _ hk
     rw [singularValues_eq_zero_of_rank_le A (by simpa only [Finset.mem_range, not_lt] using hk)]
     simp
 
-/-- The rank-dependent squared norm comparison, including rank zero and
-empty rectangular matrices. Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
-theorem frobSq_le_rank_mul_specNorm_sq {m n : ℕ}
+/-- `Fin` step of `frobSq_le_rank_mul_specNorm_sq`. -/
+private theorem frobSq_le_rank_mul_specNorm_sq_fin {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) :
     frobSq A ≤ (A.rank : ℝ) * specNorm A ^ 2 := by
   calc
@@ -53,15 +47,31 @@ theorem frobSq_le_rank_mul_specNorm_sq {m n : ℕ}
         (singularValues_nonneg A k) (singularValues_le_specNorm A k) 2)
     _ = (A.rank : ℝ) * specNorm A ^ 2 := by simp
 
-/-- The Frobenius norm is at most the spectral norm times the square root of
-the rank, with no excluded zero cases. Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
-theorem frobNorm_le_sqrt_rank_mul_specNorm {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) :
+section FiniteIndex
+
+variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
+
+/-- The rank-dependent squared norm comparison `‖A‖_F² ≤ rank A · ‖A‖₂²` on arbitrary
+finite index types, including rank zero and empty rectangular matrices.
+Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
+theorem frobSq_le_rank_mul_specNorm_sq (A : Matrix m n ℝ) :
+    frobSq A ≤ (A.rank : ℝ) * specNorm A ^ 2 := by
+  have h := frobSq_le_rank_mul_specNorm_sq_fin
+    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
+  simpa only [frobSq_reindex, Matrix.rank_reindex, specNorm_reindex] using h
+
+/-- The Frobenius norm is at most the spectral norm times the square root of the rank,
+on arbitrary finite index types, with no excluded zero cases.
+Horn–Johnson §5.6; atlas `norms-frob-spec`.
+atlas: norms-frob-spec -/
+theorem frobNorm_le_sqrt_rank_mul_specNorm (A : Matrix m n ℝ) :
     frobNorm A ≤ Real.sqrt (A.rank : ℝ) * specNorm A := by
   apply (sq_le_sq₀ (frobNorm_nonneg A)
     (mul_nonneg (Real.sqrt_nonneg _) (specNorm_nonneg A))).mp
   rw [frobNorm_sq, mul_pow, Real.sq_sqrt (Nat.cast_nonneg A.rank)]
   exact frobSq_le_rank_mul_specNorm_sq A
+
+end FiniteIndex
 
 private theorem specNorm_inverse_rectDiag_sq {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) :
@@ -75,7 +85,8 @@ private theorem specNorm_inverse_rectDiag_sq {m n : ℕ}
     funext i
     by_cases hin : (i : ℕ) < n
     · simp only [if_pos hin]
-    · rw [if_neg hin, singularValues_eq_zero_of_width_le A (not_lt.mp hin)]
+    · rw [if_neg hin,
+        singularValues_eq_zero_of_width_le A (by simpa only [Fintype.card_fin] using not_lt.mp hin)]
       simp
   rw [he, specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
 

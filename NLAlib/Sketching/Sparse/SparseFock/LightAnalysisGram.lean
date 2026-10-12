@@ -49,7 +49,7 @@ theorem cOne_transpose_mul_cOne_of_ne (F : Frame n d) (r : Fin m)
   classical
   ext out inp
   simp only [Matrix.mul_apply, Matrix.transpose_apply, cOne, orderedWordTerm,
-    externalTensor, ExternalOperator.outer]
+    externalTensor, Matrix.vecMulVec_apply]
   calc
     (∑ p, (F.u i out.1 * pDagAt r i p out.2) *
         (F.u j inp.1 * pDagAt r j p inp.2)) =
@@ -223,11 +223,11 @@ Source: ported from `SparseFockFormal.LightBandsConcrete`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem D0Row_fullFiber (F : Frame n d) (r : Fin m)
     (x : Fin d × Pattern m n → ℝ) (p : Pattern m n) :
-    fullFiber (Matrix.mulVec (D0Row F r) x) p =
-      applyMatrix (partialFrameOperator F (p.freshInRow r)) (fullFiber x p) := by
+    fiber (Matrix.mulVec (D0Row F r) x) p =
+      applyMatrix (partialFrameOperator F (p.freshInRow r)) (fiber x p) := by
   classical
   ext k
-  simp only [fullFiber, Matrix.mulVec, dotProduct, D0Row_apply, applyMatrix,
+  simp only [fiber, Matrix.mulVec, dotProduct, D0Row_apply, applyMatrix,
     PiLp.toLp_apply]
   rw [Fintype.sum_prod_type]
   apply Finset.sum_congr rfl
@@ -245,17 +245,17 @@ theorem D0Row_norm_le_one (F : Frame n d) (r : Fin m) :
   rw [DirectionalConcrete.full_normSq_eq_sum_fiber]
   calc
     (∑ p, ParsevalFrame.normSq
-        (fullFiber (Matrix.mulVec (D0Row F r) x) p)) =
+        (fiber (Matrix.mulVec (D0Row F r) x) p)) =
         ∑ p, ParsevalFrame.normSq
           (applyMatrix (partialFrameOperator F (p.freshInRow r))
-            (fullFiber x p)) := by
+            (fiber x p)) := by
       apply Finset.sum_congr rfl
       intro p _
       rw [D0Row_fullFiber]
-    _ ≤ ∑ p, ParsevalFrame.normSq (fullFiber x p) := by
+    _ ≤ ∑ p, ParsevalFrame.normSq (fiber x p) := by
       apply Finset.sum_le_sum
       intro p _
-      exact partialFrameOperator_contraction F (p.freshInRow r) (fullFiber x p)
+      exact partialFrameOperator_contraction F (p.freshInRow r) (fiber x p)
     _ = 1 ^ 2 * FiniteHilbert.normSq x := by
       rw [DirectionalConcrete.full_normSq_eq_sum_fiber]
       ring
@@ -301,7 +301,7 @@ theorem matrix_typed_block_cs
       _ = ‖B.transpose‖ * ‖B.transpose‖ :=
         Matrix.l2_opNorm_conjTranspose_mul_self B.transpose
       _ = ‖B‖ * ‖B‖ := by
-        rw [HeavyBandsConcrete.norm_transpose_real]
+        rw [show ‖B.transpose‖ = ‖B‖ from specNorm_transpose B]
   calc
     ‖B * A‖ ^ 2 ≤ (‖B‖ * ‖A‖) ^ 2 :=
       pow_le_pow_left₀ (norm_nonneg _) hmul 2

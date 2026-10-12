@@ -68,16 +68,16 @@ def columnRowSample {m n t : Type*} (A : Matrix m n ℂ) (B : Matrix n t ℂ)
     (p : n → ℝ≥0) (i : n) : Matrix m t ℂ :=
   (p i : ℝ)⁻¹ • Matrix.vecMulVec (fun a => A a i) (fun b => B i b)
 
-/-- Sampled columns, rescaled by `1/√(c p_i)`.
-Source: operator re-derivation `sa:amm-theorem`. -/
-def sampledColumnMatrix {m n : Type*} (A : Matrix m n ℂ) (p : n → ℝ≥0)
-    {c : ℕ} (ω : Fin c → n) : Matrix m (Fin c) ℂ :=
+/-- Sampled columns, rescaled by `1/√(c p_i)`, over `ℝ` or `ℂ` (any `RCLike` field; the
+rescaling is a real scalar). Source: operator re-derivation `sa:amm-theorem`. -/
+def sampledColumnMatrix {𝕜 : Type*} [RCLike 𝕜] {m n : Type*} (A : Matrix m n 𝕜)
+    (p : n → ℝ≥0) {c : ℕ} (ω : Fin c → n) : Matrix m (Fin c) 𝕜 :=
   fun a j => (Real.sqrt ((c : ℝ) * p (ω j)))⁻¹ • A a (ω j)
 
-/-- Sampled rows, rescaled by `1/√(c p_i)`.
-Source: operator re-derivation `sa:amm-theorem`. -/
-def sampledRowMatrix {n t : Type*} (B : Matrix n t ℂ) (p : n → ℝ≥0)
-    {c : ℕ} (ω : Fin c → n) : Matrix (Fin c) t ℂ :=
+/-- Sampled rows, rescaled by `1/√(c p_i)`, over `ℝ` or `ℂ` (any `RCLike` field; the
+rescaling is a real scalar). Source: operator re-derivation `sa:amm-theorem`. -/
+def sampledRowMatrix {𝕜 : Type*} [RCLike 𝕜] {n t : Type*} (B : Matrix n t 𝕜) (p : n → ℝ≥0)
+    {c : ℕ} (ω : Fin c → n) : Matrix (Fin c) t 𝕜 :=
   fun j b => (Real.sqrt ((c : ℝ) * p (ω j)))⁻¹ • B (ω j) b
 
 /-- The product of the literally sampled and rescaled columns and rows is
@@ -296,35 +296,23 @@ theorem mul_eq_zero_of_sum_columnRowWeight_eq_zero
     (fun i _ => vecMulVec_eq_zero_of_columnRowWeight_eq_zero A B i (hw i))
   simpa using h.symm
 
-/-- Real sampled columns with the same literal square-root rescaling.
-Source: operator re-derivation `sa:amm-theorem`. -/
-def sampledColumnMatrixReal {m n : Type*} (A : Matrix m n ℝ) (p : n → ℝ≥0)
-    {c : ℕ} (ω : Fin c → n) : Matrix m (Fin c) ℝ := fun a j =>
-  (Real.sqrt ((c : ℝ) * p (ω j)))⁻¹ * A a (ω j)
-
-/-- Real sampled rows with the same literal square-root rescaling.
-Source: operator re-derivation `sa:amm-theorem`. -/
-def sampledRowMatrixReal {n t : Type*} (B : Matrix n t ℝ) (p : n → ℝ≥0)
-    {c : ℕ} (ω : Fin c → n) : Matrix (Fin c) t ℝ := fun j b =>
-  (Real.sqrt ((c : ℝ) * p (ω j)))⁻¹ * B (ω j) b
-
 /-- Real column sampling embeds into the complex sampling construction.
 Source: operator re-derivation `sa:amm-theorem`. -/
 theorem sampledColumnMatrix_map_ofReal {m n : Type*}
     (A : Matrix m n ℝ) (p : n → ℝ≥0) {c : ℕ} (ω : Fin c → n) :
     sampledColumnMatrix (A.map Complex.ofReal) p ω =
-      (sampledColumnMatrixReal A p ω).map Complex.ofReal := by
+      (sampledColumnMatrix A p ω).map Complex.ofReal := by
   ext a j
-  simp [sampledColumnMatrix, sampledColumnMatrixReal, Matrix.map_apply, Complex.real_smul]
+  simp [sampledColumnMatrix, Matrix.map_apply, Complex.real_smul]
 
 /-- Real row sampling embeds into the complex sampling construction.
 Source: operator re-derivation `sa:amm-theorem`. -/
 theorem sampledRowMatrix_map_ofReal {n t : Type*}
     (B : Matrix n t ℝ) (p : n → ℝ≥0) {c : ℕ} (ω : Fin c → n) :
     sampledRowMatrix (B.map Complex.ofReal) p ω =
-      (sampledRowMatrixReal B p ω).map Complex.ofReal := by
+      (sampledRowMatrix B p ω).map Complex.ofReal := by
   ext j b
-  simp [sampledRowMatrix, sampledRowMatrixReal, Matrix.map_apply, Complex.real_smul]
+  simp [sampledRowMatrix, Matrix.map_apply, Complex.real_smul]
 
 /-- The real normalized column/row sampling law has the same exact error
 identity and Frobenius upper bound, stated using NLAlib's `frobSq`.
@@ -336,14 +324,14 @@ theorem integral_frobSq_sampled_mul_sub_of_columnRowProbabilities
     (A : Matrix m n ℝ) (B : Matrix n t ℝ)
     (hW : 0 < ∑ i, columnRowWeight A B i) {c : ℕ} (hc : 0 < c) :
     (∫ ω : Fin c → n,
-      frobSq (sampledColumnMatrixReal A (columnRowProbabilities A B) ω *
-        sampledRowMatrixReal B (columnRowProbabilities A B) ω - A * B)
+      frobSq (sampledColumnMatrix A (columnRowProbabilities A B) ω *
+        sampledRowMatrix B (columnRowProbabilities A B) ω - A * B)
       ∂Measure.pi (fun _ => finiteSamplingLaw (columnRowProbabilities A B)
         (sum_columnRowProbabilities A B hW))) =
       ((∑ i, columnRowWeight A B i) ^ 2 - frobSq (A * B)) / (c : ℝ) ∧
     (∫ ω : Fin c → n,
-      frobSq (sampledColumnMatrixReal A (columnRowProbabilities A B) ω *
-        sampledRowMatrixReal B (columnRowProbabilities A B) ω - A * B)
+      frobSq (sampledColumnMatrix A (columnRowProbabilities A B) ω *
+        sampledRowMatrix B (columnRowProbabilities A B) ω - A * B)
       ∂Measure.pi (fun _ => finiteSamplingLaw (columnRowProbabilities A B)
         (sum_columnRowProbabilities A B hW))) ≤ frobSq A * frobSq B / (c : ℝ) := by
   have hw : columnRowWeight (A.map Complex.ofReal) (B.map Complex.ofReal) =

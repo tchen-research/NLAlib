@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Norms.ComplexFrobenius
+import NLAlib.Matrix.Spectral.PrincipalMinors
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
@@ -112,34 +113,6 @@ Source: the empty determinant convention in manuscript `sa:volume-theorem`. -/
 @[simp] theorem complexGramElementary_zero (A : Matrix m n ℂ) :
     complexGramElementary A 0 = 1 := by simp [complexGramElementary]
 
-/-- Similarity preserves the determinant polynomial `det(I+tG)` over any
-commutative ring. Source: the determinant coefficient proof of
-manuscript `sa:volume-theorem`; no reality assumption is needed. -/
-theorem det_one_add_X_smul_eq_of_diagonalization {R ι : Type*} [CommRing R]
-    [Fintype ι] [DecidableEq ι] {G U V : Matrix ι ι R} {d : ι → R}
-    (hVU : V * U = 1) (hG : G = U * Matrix.diagonal d * V) :
-    Matrix.det (1 + (X : R[X]) • G.map C) =
-      Matrix.det (1 + (X : R[X]) • (Matrix.diagonal d).map C) := by
-  let Up : Matrix ι ι R[X] := U.map C
-  let Vp : Matrix ι ι R[X] := V.map C
-  let Dp : Matrix ι ι R[X] := (Matrix.diagonal d).map C
-  have hp : Vp * Up = 1 := by
-    have h := congrArg (fun M : Matrix ι ι R => M.map C) hVU
-    simpa [Up, Vp, Matrix.map_mul, Matrix.map_one] using h
-  have hp' : Up * Vp = 1 := mul_eq_one_comm.1 hp
-  have hg : G.map C = Up * Dp * Vp := by
-    rw [hG, Matrix.map_mul, Matrix.map_mul]
-  have he : 1 + (X : R[X]) • G.map C = Up * (1 + (X : R[X]) • Dp) * Vp := by
-    rw [Matrix.mul_add, Matrix.add_mul, Matrix.mul_one, hp']
-    simp only [Matrix.mul_smul, Matrix.smul_mul, hg]
-  have hd : Up.det * Vp.det = 1 := by rw [← Matrix.det_mul, hp', Matrix.det_one]
-  rw [he, Matrix.det_mul, Matrix.det_mul]
-  dsimp only [Dp]
-  calc
-    Up.det * (1 + (X : R[X]) • (Matrix.diagonal d).map C).det * Vp.det =
-        (Up.det * Vp.det) * (1 + (X : R[X]) • (Matrix.diagonal d).map C).det := by ring
-    _ = _ := by rw [hd, one_mul]
-
 /-- The sum of fixed-order complex Hermitian principal determinants equals
 the elementary sum of the actual eigenvalues. Source: the Hermitian spectral
 theorem and determinant coefficient proof of manuscript `sa:volume-theorem`. -/
@@ -152,19 +125,8 @@ theorem sum_det_principal_minors_eq_sum_prod_of_isHermitian {G : Matrix n n ℂ}
       Matrix.diagonal (fun i => (hG.eigenvalues i : ℂ)) *
       star (hG.eigenvectorUnitary : Matrix n n ℂ) := by
     simpa [Unitary.conjStarAlgAut_apply, Function.comp_def] using hG.spectral_theorem
-  rw [← Matrix.coeff_det_one_add_X_smul_eq_sum_minors,
-    det_one_add_X_smul_eq_of_diagonalization
-      (Unitary.coe_star_mul_self hG.eigenvectorUnitary) hd,
-    Matrix.coeff_det_one_add_X_smul_eq_sum_minors]
-  apply Finset.sum_congr rfl
-  intro S _
-  have hD : (Matrix.diagonal (fun i => (hG.eigenvalues i : ℂ))).submatrix
-      (Subtype.val : S → n) (Subtype.val : S → n) =
-      Matrix.diagonal (fun i : S => (hG.eigenvalues i : ℂ)) := by
-    ext i j
-    simp [Matrix.submatrix_apply, Matrix.diagonal_apply]
-  rw [hD, Matrix.det_diagonal]
-  exact Finset.prod_coe_sort S (fun i => (hG.eigenvalues i : ℂ))
+  exact sum_det_principal_minors_eq_sum_prod_of_diagonalization
+    (Unitary.coe_star_mul_self hG.eigenvectorUnitary) hd k
 
 /-- The real complex Gram principal-minor normalizer equals its actual
 elementary spectral sum. Source: manuscript `sa:volume-theorem`.

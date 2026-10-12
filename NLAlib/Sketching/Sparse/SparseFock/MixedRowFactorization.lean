@@ -1,7 +1,7 @@
 /- Copyright (c) 2026 Diar Heidary.
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
-import NLAlib.Sketching.Sparse.SparseFock.LightBandsConcrete
+import NLAlib.Sketching.Sparse.SparseFock.LightNormalizedBands
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -100,7 +100,7 @@ theorem COne_mul_AUpOne_of_ne (F : Frame n d) (r : Fin m)
   ext out inp
   simp only [Matrix.mul_apply, LightBandsConcrete.COne,
     HeavyBandsConcrete.AUpOne, orderedWordTerm, externalTensor,
-    ExternalOperator.outer]
+    Matrix.vecMulVec_apply]
   calc
     (∑ p, (F.u i out.1 * LightSectorConcrete.pDagAt r i out.2 p) *
         (F.u j inp.1 * rUpAt r j p inp.2)) =
@@ -154,7 +154,7 @@ theorem COne_mul_ADownOne_of_ne (F : Frame n d) (r : Fin m)
   ext out inp
   simp only [Matrix.mul_apply, LightBandsConcrete.COne,
     HeavyBandsConcrete.ADownOne, orderedWordTerm, externalTensor,
-    ExternalOperator.outer]
+    Matrix.vecMulVec_apply]
   calc
     (∑ p, (F.u i out.1 * LightSectorConcrete.pDagAt r i out.2 p) *
         (F.u j inp.1 * rDownAt r j p inp.2)) =

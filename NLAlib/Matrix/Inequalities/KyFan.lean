@@ -78,13 +78,33 @@ theorem frobInner_le_kyFanNorm_of_rank_le_of_specNorm_le_one {m n k : ℕ}
         exact hi.2
       · intro i hi hni
         simp only [Finset.mem_filter, Finset.mem_range] at hi hni
-        exact singularValues_eq_zero_of_min_le A (by omega)
+        exact singularValues_eq_zero_of_min_le A (by simp only [Fintype.card_fin]; omega)
 
-/-- Every two-sided orthonormal compression trace is at most the sum of the
-corresponding top singular values. The rank/norm proof includes zero columns.
-Fan (1949), Theorem 1; Horn–Johnson (1991), Theorem 3.4.1.
-atlas: ky-fan-maximum-principle (partial) -/
-theorem trace_twoSided_compression_le_kyFanNorm {m n k : ℕ}
+/-- Relabeling matrix indices preserves every Ky Fan sum. -/
+theorem kyFanNorm_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
+    [DecidableEq n] [DecidableEq q] (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) (k : ℕ) :
+    kyFanNorm (A.reindex em en) k = kyFanNorm A k := by
+  simp only [kyFanNorm, ← singularValues_eq_linearMap, singularValues_reindex]
+
+/-- Simultaneously relabeling both frame spaces and the matrix preserves the
+actual two-sided compression trace. -/
+theorem twoSided_compression_trace_reindex {m n r p q s : Type*}
+    [Fintype m] [Fintype n] [Fintype r] [Fintype p] [Fintype q] [Fintype s]
+    (A : Matrix m n ℝ) (U : Matrix m r ℝ) (V : Matrix n r ℝ)
+    (em : m ≃ p) (en : n ≃ q) (er : r ≃ s) :
+    ((U.reindex em er)ᵀ * A.reindex em en * V.reindex en er).trace = (Uᵀ * A * V).trace := by
+  have h1 : (U.reindex em er)ᵀ * A.reindex em en = (Uᵀ * A).reindex er en := by
+    simpa only [Matrix.reindex_apply, Matrix.transpose_submatrix] using
+      Matrix.submatrix_mul_equiv Uᵀ A er.symm em.symm en.symm
+  have h2 : (Uᵀ * A).reindex er en * V.reindex en er = (Uᵀ * A * V).reindex er er := by
+    simpa only [Matrix.reindex_apply] using
+      Matrix.submatrix_mul_equiv (Uᵀ * A) V er.symm en.symm er.symm
+  rw [h1, h2]
+  simp only [Matrix.trace, Matrix.diag, Matrix.reindex_apply, Matrix.submatrix_apply]
+  exact er.symm.sum_comp (fun i => (Uᵀ * A * V) i i)
+
+/-- `Fin` step of `trace_twoSided_compression_le_kyFanNorm`. -/
+private theorem trace_twoSided_compression_le_kyFanNorm_fin {m n k : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) {U : Matrix (Fin m) (Fin k) ℝ}
     {V : Matrix (Fin n) (Fin k) ℝ} (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) :
     (Uᵀ * A * V).trace ≤ kyFanNorm A k := by
@@ -99,5 +119,23 @@ theorem trace_twoSided_compression_le_kyFanNorm {m n k : ℕ}
     exact Matrix.trace_mul_cycle Uᵀ A V
   rw [htrace]
   exact frobInner_le_kyFanNorm_of_rank_le_of_specNorm_le_one A (U * Vᵀ) hP hPn
+
+
+/-- Every two-sided orthonormal compression trace is at most the sum of the
+corresponding top singular values, on arbitrary finite row, column and frame indices.
+No dimension hypothesis beyond the orthonormal frames is needed; zero columns are
+included. Fan (1949), Theorem 1; Horn–Johnson (1991), Theorem 3.4.1.
+atlas: ky-fan-maximum-principle (partial) -/
+theorem trace_twoSided_compression_le_kyFanNorm {m n r : Type*}
+    [Fintype m] [Fintype n] [Fintype r] [DecidableEq n] [DecidableEq r]
+    (A : Matrix m n ℝ) {U : Matrix m r ℝ} {V : Matrix n r ℝ}
+    (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) :
+    (Uᵀ * A * V).trace ≤ kyFanNorm A (Fintype.card r) := by
+  let em := Fintype.equivFin m
+  let en := Fintype.equivFin n
+  let er := Fintype.equivFin r
+  have h := trace_twoSided_compression_le_kyFanNorm_fin (A.reindex em en)
+    (hU.reindex em er) (hV.reindex en er)
+  rwa [twoSided_compression_trace_reindex, kyFanNorm_reindex] at h
 
 end NLAlib

@@ -213,25 +213,6 @@ Source: Saad (2011) [`saad11`], §6.6.1 (where `tan θ(u, x)` is used with `‖u
 Helper for `krylov-eigenvector-angle` (belongs with principal angles in `NLAlib.Matrix.Spectral.Core`). -/
 def tanSqAngle (u x : n → ℝ) : ℝ := ((u ⬝ᵥ u) * (x ⬝ᵥ x) - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2
 
-/-- The eigenvector basis is orthonormal in dot-product form: `uᵢ ⬝ uⱼ = δᵢⱼ`.
-Helper for `krylov-eigenvector-angle` (belongs in `NLAlib.Matrix.Functions.PolynomialCalculus`). -/
-theorem eigenvectorBasis_dotProduct_eigenvectorBasis {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    (i j : n) :
-    (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ (hA.eigenvectorBasis j : n → ℝ) =
-      if i = j then 1 else 0 := by
-  have h := orthonormal_iff_ite.1 hA.eigenvectorBasis.orthonormal i j
-  rw [EuclideanSpace.inner_eq_star_dotProduct] at h
-  simpa [dotProduct_comm] using h
-
-/-- Eigen-coordinates of `p(A) v`: `uᵢ ⬝ p(A) v = p(λᵢ) (uᵢ ⬝ v)` for real symmetric `A`.
-Helper for `krylov-eigenvector-angle` (belongs in `NLAlib.Matrix.Functions.PolynomialCalculus`). -/
-theorem eigenvectorBasis_dotProduct_aeval_mulVec {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    (p : ℝ[X]) (v : n → ℝ) (i : n) :
-    (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ (aeval A p *ᵥ v) =
-      p.eval (hA.eigenvalues i) * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v) := by
-  rw [aeval_mulVec_eq_sum hA p v, dotProduct_sum]
-  simp [dotProduct_smul, eigenvectorBasis_dotProduct_eigenvectorBasis hA]
-
 /-- The squared tangent to an eigenvector in eigen-coordinates:
 `tan² ∠(u_{i₁}, v) = (∑_{i ≠ i₁} (uᵢ ⬝ v)²)/(u_{i₁} ⬝ v)²`.
 Helper for `krylov-eigenvector-angle`. -/
@@ -240,7 +221,7 @@ theorem tanSqAngle_eigenvectorBasis_eq {A : Matrix n n ℝ} (hA : A.IsHermitian)
     tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) v =
       (∑ i ∈ Finset.univ.erase i₁, ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v) ^ 2) /
         ((hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ v) ^ 2 := by
-  rw [tanSqAngle, eigenvectorBasis_dotProduct_self hA i₁, one_mul,
+  rw [tanSqAngle, eigenvectorBasis_dotProduct_eigenvectorBasis hA i₁ i₁, if_pos rfl, one_mul,
     ← sum_sq_eigenvectorBasis_dotProduct hA v,
     ← Finset.add_sum_erase _ _ (Finset.mem_univ i₁), add_sub_cancel_left]
 

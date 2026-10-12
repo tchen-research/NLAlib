@@ -54,7 +54,7 @@ theorem sylvester_equation_properties
       (∀ μ, (T μ).IsUpperTriangular) ∧ (∀ μ i, T μ i i = μ)) :=
   ⟨sylvesterLinearMap_bijective_iff_disjoint_spectrum A B,
     fun h C => existsUnique_sylvester_of_disjoint_spectrum A B h C,
-    fun _ h g => aeval_intertwines h g,
+    fun _ h g => aeval_mul_eq_mul_aeval_of_mul_eq h g,
     fun h C => existsUnique_real_sylvester_of_disjoint_complex_spectrum Ar Br h C,
     fun h _ hX => eq_blockDiagonal'_of_intertwines_of_disjoint_spectrum P Q h hX,
     fun h S X hS => commute_similarity_blockDiagonal'_iff P h S X hS,

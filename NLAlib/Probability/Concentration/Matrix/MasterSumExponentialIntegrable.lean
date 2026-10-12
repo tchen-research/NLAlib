@@ -2,6 +2,7 @@ import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 import Mathlib.Probability.Independence.Integration
 import NLAlib.Matrix.Functions.ExpLogPosDef
+import NLAlib.Matrix.Functions.TraceExpBounds
 
 /-!
 # Exponential integrability of an independent Hermitian sum
@@ -16,37 +17,6 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator MatrixOrder
 open NLAlib
 set_option autoImplicit false
-
-private lemma matrix_exp_sum_norm_bound {d N : ℕ}
-    (A : Fin N → Matrix (Fin d) (Fin d) ℂ)
-    (hA : ∀ k, (A k).IsHermitian) :
-    ‖matrixExp (∑ k, A k)‖ ≤ ∏ k, (1 + ‖matrixExp (A k)‖) := by
-  let b : Fin N → ℝ := fun k => Real.log (1 + ‖matrixExp (A k)‖)
-  have hb (k : Fin N) : A k ≤ algebraMap ℝ _ (b k) := by
-    apply le_algebraMap_of_spectrum_le _ (hA k)
-    intro x hx
-    apply Real.le_log_iff_exp_le (by positivity) |>.2
-    have hx' := norm_apply_le_norm_cfc Real.exp (A k) hx Real.continuous_exp.continuousOn (hA k)
-    rw [CFC.real_exp_eq_normedSpace_exp (hA k)] at hx'
-    have hx'' : Real.exp x ≤ ‖matrixExp (A k)‖ := by
-      simpa [matrixExp, Real.norm_eq_abs, abs_of_pos (Real.exp_pos x)] using hx'
-    exact hx''.trans (le_add_of_nonneg_left zero_le_one)
-  have hsum : (∑ k, A k).IsHermitian := isSelfAdjoint_sum _ (fun k _ => hA k)
-  have hsumle : (∑ k, A k) ≤ algebraMap ℝ _ (∑ k, b k) := by
-    simpa only [map_sum] using Finset.sum_le_sum (fun k (_ : k ∈ Finset.univ) => hb k)
-  calc
-    ‖matrixExp (∑ k, A k)‖ = ‖cfc Real.exp (∑ k, A k)‖ := by
-      rw [CFC.real_exp_eq_normedSpace_exp hsum, matrixExp]
-    _ ≤ Real.exp (∑ k, b k) := by
-      apply norm_cfc_le (Real.exp_pos _).le
-      intro x hx
-      rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos x)]
-      exact Real.exp_le_exp.mpr ((le_algebraMap_iff_spectrum_le hsum).1 hsumle x hx)
-    _ = ∏ k, (1 + ‖matrixExp (A k)‖) := by
-      rw [Real.exp_sum]
-      apply Finset.prod_congr rfl
-      intro k hk
-      exact Real.exp_log (by positivity)
 
 /-- For independent Hermitian random matrices with integrable `matrixExp (θ • X k)`, the exponential
 `matrixExp (θ • ∑ k, X k)` of the sum is integrable.
@@ -86,4 +56,4 @@ theorem NLAlib.integrable_matrixExp_smul_sum_of_iIndepFun {Ω : Type*} [Measurab
     exact Finset.measurable_sum _ (fun k _ => hMeas k)
   · filter_upwards [ae_all_iff.2 hHerm] with ω hω
     simpa only [Finset.smul_sum] using
-      matrix_exp_sum_norm_bound (fun k => θ • X k ω) (fun k => (hω k).smul (isSelfAdjoint_iff.mpr rfl))
+      norm_matrixExp_sum_le_prod (fun k => θ • X k ω) (fun k => (hω k).smul (isSelfAdjoint_iff.mpr rfl))

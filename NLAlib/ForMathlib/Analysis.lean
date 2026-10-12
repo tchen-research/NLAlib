@@ -1,7 +1,9 @@
 import NLAlib.ForMathlib.Analysis.BernsteinParameter
 import NLAlib.ForMathlib.Analysis.BinomialRootComparison
 import NLAlib.ForMathlib.Analysis.Calculus
+import NLAlib.ForMathlib.Analysis.Convex
 import NLAlib.ForMathlib.Analysis.DerivativeLimit
+import NLAlib.ForMathlib.Analysis.ExpBounds
 import NLAlib.ForMathlib.Analysis.FinitePairNorm
 import NLAlib.ForMathlib.Analysis.FinitePowerSums
 import NLAlib.ForMathlib.Analysis.FourierCircle
@@ -12,6 +14,7 @@ import NLAlib.ForMathlib.Analysis.InnerProductSpace
 import NLAlib.ForMathlib.Analysis.InvariantCompression
 import NLAlib.ForMathlib.Analysis.InverseConvexity
 import NLAlib.ForMathlib.Analysis.Lipschitz
+import NLAlib.ForMathlib.Analysis.LipschitzApprox
 import NLAlib.ForMathlib.Analysis.LogPowerMean
 import NLAlib.ForMathlib.Analysis.Matrix
 import NLAlib.ForMathlib.Analysis.OneSidedVariation
@@ -27,6 +30,7 @@ import NLAlib.ForMathlib.Analysis.RangeIsometry
 import NLAlib.ForMathlib.Analysis.Real
 import NLAlib.ForMathlib.Analysis.SchurTriangularization
 import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
+import NLAlib.ForMathlib.Analysis.SpecialFunctions
 import NLAlib.ForMathlib.Analysis.TriangularBasis
 
 /-! # `ForMathlib/Analysis`

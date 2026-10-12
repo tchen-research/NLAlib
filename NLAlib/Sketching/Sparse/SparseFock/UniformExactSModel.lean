@@ -2,7 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.UniformExactSFiniteLaw
-import NLAlib.Sketching.Sparse.SparseFock.SparseIIDCoupling
+import NLAlib.Sketching.Sparse.SparseFock.SparseIIDConditionalBarycenter
 import Mathlib.Data.Set.PowersetCard
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Tactic
@@ -192,20 +192,12 @@ theorem exactly_s_nonzeros_per_column {m s n : ℕ} (X : ExactSample m s n)
   rw [Nat.card_coe_set_eq]
   exact Set.powersetCard.ncard_eq (X i).1
 
-/-- The column Gram matrix.
-
-Source: ported from `SparseFockFormal.UniformExactSModel`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def sketchGram {m s n : ℕ} (X : ExactSample m s n) :
-    Matrix (Fin n) (Fin n) ℝ :=
-  (sketchMatrix X).transpose * sketchMatrix X
-
 /-- The exact-s sketch Gram entry is its reciprocal-sparsity weighted signed-support inner product.
 Source: ported from `SparseFockFormal.UniformExactSModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem sketchGram_apply {m s n : ℕ} (X : ExactSample m s n)
     (hs : 0 < s) (i j : Fin n) :
-    sketchGram X i j =
+    sketchGram (sketchMatrix X) i j =
       (1 / (s : ℝ)) * ∑ r, columnValue (X i) r * columnValue (X j) r := by
   rw [sketchGram, Matrix.mul_apply]
   simp only [Matrix.transpose_apply, sketchMatrix]
@@ -226,27 +218,12 @@ theorem sketchGram_apply {m s n : ℕ} (X : ExactSample m s n)
 Source: ported from `SparseFockFormal.UniformExactSModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 @[simp] theorem sketchGram_diag {m s n : ℕ} (X : ExactSample m s n)
-    (hs : 0 < s) (i : Fin n) : sketchGram X i i = 1 := by
+    (hs : 0 < s) (i : Fin n) : sketchGram (sketchMatrix X) i i = 1 := by
   rw [sketchGram_apply X hs]
   have hs0 : (s : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hs)
   rw [show (∑ r, columnValue (X i) r * columnValue (X i) r) = (s : ℝ) by
     simpa [pow_two] using sum_columnValue_sq (X i)]
   field_simp
-
-/-- Embedded Gram matrix for a Parseval frame.
-
-Source: ported from `SparseFockFormal.UniformExactSModel`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def embeddedGram {m s n d : ℕ} (F : Frame n d) (X : ExactSample m s n) :
-    Matrix (Fin d) (Fin d) ℝ :=
-  (rowMatrix F.u).transpose * (sketchGram X * rowMatrix F.u)
-
-/-- Exact-s Gram error.
-
-Source: ported from `SparseFockFormal.UniformExactSModel`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def gramError {m s n d : ℕ} (F : Frame n d) (X : ExactSample m s n) :
-    Matrix (Fin d) (Fin d) ℝ := embeddedGram F X - 1
 
 /-- The hollow expansion.
 
@@ -263,7 +240,7 @@ Source: ported from `SparseFockFormal.UniformExactSModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem embeddedGram_apply {m s n d : ℕ} (F : Frame n d)
     (X : ExactSample m s n) (hs : 0 < s) (a c : Fin d) :
-    embeddedGram F X a c =
+    embeddedGram F (sketchMatrix X) a c =
       (1 / (s : ℝ)) * ∑ i, ∑ j,
         (∑ r, columnValue (X i) r * columnValue (X j) r) *
           F.u i a * F.u j c := by
@@ -296,7 +273,7 @@ Source: ported from `SparseFockFormal.UniformExactSModel`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem gramError_eq_hollow {m s n d : ℕ} (F : Frame n d)
     (X : ExactSample m s n) (hs : 0 < s) :
-    gramError F X = hollowGram F X := by
+    gramError F (sketchMatrix X) = hollowGram F X := by
   classical
   ext a c
   rw [gramError, Matrix.sub_apply, embeddedGram_apply F X hs]
@@ -304,7 +281,7 @@ theorem gramError_eq_hollow {m s n d : ℕ} (F : Frame n d)
     (fun M : Matrix (Fin d) (Fin d) ℝ => M a c) F.parseval
   have hparseval' : (∑ i, F.u i a * F.u i c) =
       (1 : Matrix (Fin d) (Fin d) ℝ) a c := by
-    simpa [Matrix.sum_apply, ParsevalFrame.outer] using hparseval
+    simpa [Matrix.sum_apply, Matrix.vecMulVec_apply] using hparseval
   let T : Fin n → Fin n → ℝ := fun i j =>
     (∑ r, columnValue (X i) r * columnValue (X j) r) *
       F.u i a * F.u j c
@@ -331,22 +308,6 @@ theorem gramError_eq_hollow {m s n d : ℕ} (F : Frame n d)
   simp_rw [hsplit]
   rw [Finset.sum_add_distrib, mul_add, hdiag]
   ring
-
-/-- The literal embedded exact-s Gram matrix is Hermitian.
-Source: ported from `SparseFockFormal.UniformExactSModel`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem embeddedGram_isHermitian {m s n d : ℕ} (F : Frame n d)
-    (X : ExactSample m s n) : (embeddedGram F X).IsHermitian := by
-  rw [Matrix.isHermitian_iff_isSymm]
-  change (embeddedGram F X).transpose = embeddedGram F X
-  simp [embeddedGram, sketchGram, Matrix.transpose_mul, Matrix.mul_assoc]
-
-/-- The literal exact-s embedded Gram error is Hermitian.
-Source: ported from `SparseFockFormal.UniformExactSModel`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem gramError_isHermitian {m s n d : ℕ} (F : Frame n d)
-    (X : ExactSample m s n) : (gramError F X).IsHermitian := by
-  exact (embeddedGram_isHermitian F X).sub Matrix.isHermitian_one
 
 end
 

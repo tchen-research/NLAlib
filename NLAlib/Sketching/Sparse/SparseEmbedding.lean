@@ -1,5 +1,4 @@
-import NLAlib.Sketching.Sparse.SparseFock.ExactSparseEmbedding
-import NLAlib.Sketching.Sparse.SparseFrameBridge
+import NLAlib.Sketching.Sparse.SparseFock.ExactSparseMatrixEmbedding
 import NLAlib.Sketching.Sparse.SparseLaws
 /-!
 # SparseStack and uniform exact-s subspace embeddings
@@ -57,8 +56,7 @@ theorem measure_sparseStack_embedding_success_ge
     linarith
   · have hmain := SparseFock.MainTheorem.fully_independent_sparseStack_matrix
       (Nat.one_le_iff_ne_zero.mpr hd) hδ hδ1 hε hε1 U hU
-    simpa only [sparseStackMeasure, SparseFock.FiniteLaw.real_toMeasure,
-      ← isMatrixSparseStackOSE_iff_isSubspaceEmbedding hU] using hmain.oseSuccess
+    simpa only [sparseStackMeasure, SparseFock.FiniteLaw.real_toMeasure] using hmain.oseSuccess
 
 /-- SparseStack's actual Gram-error failure probability is at most delta.
 Source: manuscript `sh:sparse`, pinned full moment/coupling theorem.
@@ -70,22 +68,15 @@ theorem measure_sparseStack_gram_failure_le
     (sparseStackMeasure (roundedS (failureOrder d δ) ε)
       (roundedB d (failureOrder d δ) ε) n
       (canonicalB_pos hε hε1)).real
-      {z | ε < specNorm (U.transpose *
-        (SparseFock.SparseStackModel.sketchGram
-          (SparseFock.SparseStackDistribution.toSample z) * U) - 1)} ≤ δ := by
+      {z | ε < specNorm (Uᵀ *
+        ((SparseFock.SparseStackModel.stackMatrix
+            (SparseFock.SparseStackDistribution.toSample z))ᵀ *
+          SparseFock.SparseStackModel.stackMatrix
+            (SparseFock.SparseStackDistribution.toSample z) * U) - 1)} ≤ δ := by
   simpa only [sparseStackMeasure, SparseFock.FiniteLaw.real_toMeasure,
-    specNorm_eq_norm] using
+    specNorm_eq_norm, SparseFock.sketchGram] using
     (SparseFock.MainTheorem.fully_independent_sparseStack_matrix
       hd hδ hδ1 hε hε1 U hU).operatorFailure
-
-/-- The uniform exact-s source predicate is the library embedding predicate.
-Source: manuscript `sh:exact-s`, coordinate identification; supports `sparse-ose`. -/
-theorem isMatrixUniformExactSOSE_iff_isSubspaceEmbedding
-    {s b n d : ℕ} {U : Matrix (Fin n) (Fin d) ℝ} (hU : HasOrthonormalCols U)
-    (X : SparseFock.UniformExactS.ExactSample (s * b) s n) (ε : ℝ) :
-    SparseFock.UniformExactS.IsMatrixUniformExactSOSE U X ε ↔
-      IsSubspaceEmbedding (SparseFock.UniformExactS.sketchMatrix X) U ε :=
-  (isSubspaceEmbedding_iff_applyRectMatrix_bounds _ hU ε).symm
 
 /-- Independent uniform signed supports of exactly s rows give an embedding
 with probability at least 1-delta under their actual measure, also for d=0.
@@ -112,8 +103,7 @@ theorem measure_uniformSparse_embedding_success_ge
       simp [isSubspaceEmbedding_of_isEmpty]
     rw [hevent, probReal_univ]
     linarith
-  · simpa only [uniformSparseMeasure, SparseFock.FiniteLaw.real_toMeasure,
-      ← isMatrixUniformExactSOSE_iff_isSubspaceEmbedding hU] using
+  · simpa only [uniformSparseMeasure, SparseFock.FiniteLaw.real_toMeasure] using
       (SparseFock.UniformExactS.uniformExactS_matrix_ose_success
         (Nat.one_le_iff_ne_zero.mpr hd) hδ hδ1 hε hε1 U hU)
 
@@ -130,10 +120,10 @@ theorem measure_uniformSparse_gram_failure_le
       (roundedS (failureOrder d δ) ε) n
       (SparseFock.UniformExactS.exactS_le_rows
         (canonicalB_pos hε hε1))).real
-      {X | ε < specNorm (U.transpose *
-        (SparseFock.UniformExactS.sketchGram X * U) - 1)} ≤ δ := by
+      {X | ε < specNorm (Uᵀ * ((SparseFock.UniformExactS.sketchMatrix X)ᵀ *
+        SparseFock.UniformExactS.sketchMatrix X * U) - 1)} ≤ δ := by
   simpa only [uniformSparseMeasure, SparseFock.FiniteLaw.real_toMeasure,
-    specNorm_eq_norm] using
+    specNorm_eq_norm, SparseFock.sketchGram] using
     (SparseFock.UniformExactS.uniformExactS_matrix_operator_failure
       hd hδ hδ1 hε hε1 U hU)
 

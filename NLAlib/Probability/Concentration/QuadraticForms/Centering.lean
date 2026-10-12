@@ -5,18 +5,16 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
 Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
-The original Apache-2.0 copyright notice is retained. Only the two used legacy
-vocabulary definitions are supplied locally; there is no HighDimProb dependency.
+The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
+vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
 -/
-import Mathlib.Tactic
-import Mathlib.Analysis.Convex.Integral
 import NLAlib.Probability.Concentration.QuadraticForms.DiagonalCGF
 /-!
 # Hanson–Wright proof: Centering
 
 A focused leaf of the transported independent-coordinate proof.
-Shared helper declarations live in `NLAlib.HansonWrightProof`; the canonical
-public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
 Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
 -/
 
@@ -27,7 +25,6 @@ noncomputable section
 set_option maxRecDepth 5000
 
 namespace NLAlib
-namespace HansonWrightProof
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
@@ -36,10 +33,10 @@ HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
 lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
-    (hC_domain : exp 1 ≤ C) (hOp : 0 < deterministicOperatorNorm A)
+    (hC_domain : exp 1 ≤ C) (hOp : 0 < specNorm A)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
-    (hθ : |θ| ≤ (2 * C * K ^ 2 * deterministicOperatorNorm A)⁻¹) :
+    (hθ : |θ| ≤ (2 * C * K ^ 2 * specNorm A)⁻¹) :
     Integrable (fun ω => exp (θ * diagonalCenteredQuadraticForm μ A X ω)) μ := by
   let Y : Fin n → Ω → ℝ :=
     fun i ω => X i ω ^ 2 - ∫ ω, X i ω ^ 2 ∂μ
@@ -48,22 +45,22 @@ lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabil
   have hKsq_nonneg : 0 ≤ K ^ 2 := hKsq_pos.le
   have hC0_le : ((⟨K ^ 2, sq_nonneg K⟩ : ℝ≥0) : ℝ) ≤ K ^ 2 := by simp
   have hscale :
-      |θ| * K ^ 2 * deterministicOperatorNorm A ≤ 1 / (2 * C) := by
-    have hfactor_nonneg : 0 ≤ K ^ 2 * deterministicOperatorNorm A :=
-      mul_nonneg hKsq_nonneg (operatorNorm_nonneg A)
+      |θ| * K ^ 2 * specNorm A ≤ 1 / (2 * C) := by
+    have hfactor_nonneg : 0 ≤ K ^ 2 * specNorm A :=
+      mul_nonneg hKsq_nonneg (specNorm_nonneg A)
     calc
-      |θ| * K ^ 2 * deterministicOperatorNorm A
-          = |θ| * (K ^ 2 * deterministicOperatorNorm A) := by ring_nf
-      _ ≤ (2 * C * K ^ 2 * deterministicOperatorNorm A)⁻¹ * (K ^ 2 * deterministicOperatorNorm A) :=
+      |θ| * K ^ 2 * specNorm A
+          = |θ| * (K ^ 2 * specNorm A) := by ring_nf
+      _ ≤ (2 * C * K ^ 2 * specNorm A)⁻¹ * (K ^ 2 * specNorm A) :=
           mul_le_mul_of_nonneg_right hθ hfactor_nonneg
       _ = 1 / (2 * C) := by
           field_simp [hC.ne', hKsq_pos.ne', hOp.ne']
   have hhalf_i : ∀ i, |A i i * θ| * K ^ 2 * exp 1 ≤ 1 / 2 := by
     intro i
-    have hdiag := abs_diag_le_operatorNorm A i
+    have hdiag := abs_diag_le_specNorm A i
     have hθ_abs_nonneg : 0 ≤ |θ| := abs_nonneg θ
     have hle_op :
-        |θ| * |A i i| * K ^ 2 ≤ |θ| * deterministicOperatorNorm A * K ^ 2 := by
+        |θ| * |A i i| * K ^ 2 ≤ |θ| * specNorm A * K ^ 2 := by
       exact mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_left hdiag hθ_abs_nonneg) hKsq_nonneg
     calc
@@ -71,9 +68,9 @@ lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabil
           = (|θ| * |A i i| * K ^ 2) * exp 1 := by
               rw [abs_mul]
               ring_nf
-      _ ≤ (|θ| * deterministicOperatorNorm A * K ^ 2) * exp 1 :=
+      _ ≤ (|θ| * specNorm A * K ^ 2) * exp 1 :=
           mul_le_mul_of_nonneg_right hle_op (exp_nonneg 1)
-      _ = (|θ| * K ^ 2 * deterministicOperatorNorm A) * exp 1 := by ring_nf
+      _ = (|θ| * K ^ 2 * specNorm A) * exp 1 := by ring_nf
       _ ≤ (1 / (2 * C)) * exp 1 :=
           mul_le_mul_of_nonneg_right hscale (exp_nonneg 1)
       _ ≤ 1 / 2 := by
@@ -119,8 +116,8 @@ HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
 lemma quadraticForm_eq_sum_diag_of_offdiag_eq_zero {n : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {x : Fin n → ℝ}
     (hA_diag : ∀ i j, i ≠ j → A i j = 0) :
-    matrixQuadraticForm A x = ∑ i, A i i * x i ^ 2 := by
-  unfold matrixQuadraticForm
+    quadForm A x = ∑ i, A i i * x i ^ 2 := by
+  simp only [quadForm_eq_sum_mul_mul]
   apply Finset.sum_congr rfl
   intro i _
   calc
@@ -150,12 +147,12 @@ lemma centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero
   ext ω
   unfold centeredQuadraticForm randomQuadraticForm diagonalCenteredQuadraticForm
   have hqfun :
-      (fun ω => matrixQuadraticForm A fun i => X i ω) =
+      (fun ω => quadForm A fun i => X i ω) =
         (fun ω => ∑ i, A i i * X i ω ^ 2) := by
     ext ω
     exact quadraticForm_eq_sum_diag_of_offdiag_eq_zero hA_diag
   rw [quadraticForm_eq_sum_diag_of_offdiag_eq_zero hA_diag]
-  rw [show (∫ ω, matrixQuadraticForm A (fun i => X i ω) ∂μ) =
+  rw [show (∫ ω, quadForm A (fun i => X i ω) ∂μ) =
       ∫ ω, (∑ i, A i i * X i ω ^ 2) ∂μ by rw [hqfun]]
   have hintegral :
       ∫ ω, (∑ i, A i i * X i ω ^ 2) ∂μ =
@@ -179,7 +176,7 @@ theorem hasHansonWrightMGF_diagonal_of_subgaussian {μ : Measure Ω} [IsProbabil
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K C : ℝ} (hK : 0 < K) (hC : 0 < C)
     (hC_domain : exp 1 ≤ C) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
-    (hOp : 0 < deterministicOperatorNorm A)
+    (hOp : 0 < specNorm A)
     (hA_diag : ∀ i j, i ≠ j → A i j = 0)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
@@ -195,84 +192,15 @@ theorem hasHansonWrightMGF_diagonal_of_subgaussian {μ : Measure Ω} [IsProbabil
     rw [hcenter_eq]
     exact diagonalCenteredQuadraticForm_integrable_exp hK hC hC_domain hOp h_indep hX_subG hl
 
-/-- Source-transport helper `mean_le_log_mgf` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma mean_le_log_mgf {μ : Measure Ω} [IsProbabilityMeasure μ]
-    {X : Ω → ℝ} (hX_int : Integrable X μ) {t : ℝ} (ht : 0 < t)
-    (hexpX_int : Integrable (fun ω => exp (t * X ω)) μ) :
-    ∫ ω, X ω ∂μ ≤ (1 / t) * log (∫ ω, exp (t * X ω) ∂μ) := by
-  have h := (convexOn_exp.map_integral_le continuous_exp.continuousOn isClosed_univ
-    (by simp) (hX_int.const_mul t) hexpX_int)
-  have h1 : ∫ ω, t * X ω ∂μ = t * ∫ ω, X ω ∂μ := integral_const_mul t X
-  have h2 : t * ∫ ω, X ω ∂μ ≤ log (∫ ω, exp (t * X ω) ∂μ) := by
-    have hexp_bound : exp (t * ∫ ω, X ω ∂μ) ≤ ∫ ω, exp (t * X ω) ∂μ := h1 ▸ h
-    calc
-      t * ∫ ω, X ω ∂μ = log (exp (t * ∫ ω, X ω ∂μ)) := (log_exp _).symm
-      _ ≤ log (∫ ω, exp (t * X ω) ∂μ) :=
-        log_le_log (exp_pos _) hexp_bound
-  calc
-    ∫ ω, X ω ∂μ = (∫ ω, X ω ∂μ) * t / t := by
-      calc
-        ∫ ω, X ω ∂μ = (∫ ω, X ω ∂μ) * 1 := by ring
-        _ = (∫ ω, X ω ∂μ) * (t / t) := by rw [div_self ht.ne']
-        _ = (∫ ω, X ω ∂μ) * t / t := by ring
-    _ ≤ log (∫ ω, exp (t * X ω) ∂μ) / t := by
-      exact div_le_div_of_nonneg_right (by linarith) ht.le
-    _ = (1 / t) * log (∫ ω, exp (t * X ω) ∂μ) := by ring
-
-/-- Source-transport helper `hasSubgaussianMGF_integral_le_zero` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma hasSubgaussianMGF_integral_le_zero {μ : Measure Ω} [IsProbabilityMeasure μ]
-    {X : Ω → ℝ} {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) :
-    ∫ ω, X ω ∂μ ≤ 0 := by
-  refine le_of_forall_pos_le_add fun ε hε => ?_
-  set t : ℝ := ε / ((c : ℝ) + 1) with ht_def
-  have hden_pos : 0 < (c : ℝ) + 1 := by positivity
-  have ht_pos : 0 < t := by
-    rw [ht_def]
-    positivity
-  have hmean := mean_le_log_mgf h.integrable ht_pos (h.integrable_exp_mul t)
-  have hmgf_pos : 0 < mgf X μ t := mgf_pos (h.integrable_exp_mul t)
-  have hlog_le : log (mgf X μ t) ≤ (c : ℝ) * t ^ 2 / 2 := by
-    calc
-      log (mgf X μ t) ≤ log (exp ((c : ℝ) * t ^ 2 / 2)) :=
-        log_le_log hmgf_pos (h.mgf_le t)
-      _ = (c : ℝ) * t ^ 2 / 2 := log_exp _
-  have hmean_le : ∫ ω, X ω ∂μ ≤ (1 / t) * ((c : ℝ) * t ^ 2 / 2) :=
-    hmean.trans (mul_le_mul_of_nonneg_left hlog_le (by positivity))
-  calc
-    ∫ ω, X ω ∂μ ≤ (1 / t) * ((c : ℝ) * t ^ 2 / 2) := hmean_le
-    _ = (c : ℝ) * t / 2 := by field_simp [ht_pos.ne']
-    _ ≤ ε := by
-      rw [ht_def]
-      have hratio : (c : ℝ) / ((c : ℝ) + 1) ≤ 1 :=
-        (div_le_one hden_pos).mpr (by linarith)
-      calc
-        (c : ℝ) * (ε / ((c : ℝ) + 1)) / 2 =
-            (ε / 2) * ((c : ℝ) / ((c : ℝ) + 1)) := by ring
-        _ ≤ (ε / 2) * 1 := mul_le_mul_of_nonneg_left hratio (by positivity)
-        _ ≤ ε := by linarith
-    _ = 0 + ε := by ring
-
-/-- A random variable satisfying the global sub-Gaussian MGF bound is centered. -/
-lemma hasSubgaussianMGF_integral_eq_zero {μ : Measure Ω} [IsProbabilityMeasure μ]
-    {X : Ω → ℝ} {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) :
-    ∫ ω, X ω ∂μ = 0 := by
-  have hle : ∫ ω, X ω ∂μ ≤ 0 := hasSubgaussianMGF_integral_le_zero h
-  have hle_neg : ∫ ω, -X ω ∂μ ≤ 0 := hasSubgaussianMGF_integral_le_zero h.neg
-  have hge : 0 ≤ ∫ ω, X ω ∂μ := by
-    rw [integral_neg] at hle_neg
-    linarith
-  exact le_antisymm hle hge
-
 /-- Source-transport helper `quadraticForm_eq_diag_add_offDiagonal` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
 lemma quadraticForm_eq_diag_add_offDiagonal {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
-    matrixQuadraticForm A x =
-      (∑ i, A i i * x i ^ 2) + matrixQuadraticForm (offDiagonalMatrix A) x := by
+    quadForm A x =
+      (∑ i, A i i * x i ^ 2) + quadForm (offDiagonalMatrix A) x := by
   classical
-  unfold matrixQuadraticForm offDiagonalMatrix
+  simp only [quadForm_eq_sum_mul_mul]
+  unfold offDiagonalMatrix
   calc
     ∑ i, ∑ j, x i * A i j * x j
         = ∑ i, (A i i * x i ^ 2 +
@@ -331,7 +259,8 @@ lemma integrable_randomQuadraticForm_offDiagonal_of_subgaussian {μ : Measure Ω
       ext ω
       simp [offDiagonalMatrix, hij]
       ring
-  unfold randomQuadraticForm matrixQuadraticForm
+  unfold randomQuadraticForm
+  simp only [quadForm_eq_sum_mul_mul]
   exact MeasureTheory.integrable_finsetSum _ fun i _ =>
     MeasureTheory.integrable_finsetSum _ fun j _ => hterm i j
 
@@ -365,7 +294,8 @@ lemma integral_randomQuadraticForm_offDiagonal_eq_zero {μ : Measure Ω}
     ∫ ω, randomQuadraticForm (offDiagonalMatrix A) X ω ∂μ
         = ∑ i, ∑ j,
             ∫ ω, X i ω * offDiagonalMatrix A i j * X j ω ∂μ := by
-          unfold randomQuadraticForm matrixQuadraticForm
+          unfold randomQuadraticForm
+          simp only [quadForm_eq_sum_mul_mul]
           rw [MeasureTheory.integral_finsetSum _ (fun i _ => hrow_int i)]
           apply Finset.sum_congr rfl
           intro i _
@@ -399,8 +329,7 @@ lemma integral_randomQuadraticForm_offDiagonal_eq_zero {μ : Measure Ω}
               _ = A i j * ((∫ ω, X i ω ∂μ) * (∫ ω, X j ω ∂μ)) := by
                     rw [hmul_eq]
               _ = 0 := by
-                    rw [hasSubgaussianMGF_integral_eq_zero (hX_subG i)]
+                    rw [integral_eq_zero_of_hasSubgaussianMGF (hX_subG i)]
                     ring
 
-end HansonWrightProof
 end NLAlib

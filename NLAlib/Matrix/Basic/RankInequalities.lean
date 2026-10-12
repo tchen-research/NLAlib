@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Basic.RankBounds
+import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 
 /-!
@@ -145,11 +145,5 @@ theorem solution_set_eq_add_ker (A : Matrix m n K) (b : m → K) (x₀ : n → K
     abel
   · rintro ⟨z, hz, rfl⟩
     rw [Matrix.mulVec_add, h₀, show A *ᵥ z = 0 from hz, add_zero]
-
-/-- Rank subadditivity for finite matrices, packaged with the rank-inequality
-bundle. Horn–Johnson 2013, §0.4.2; uses the existing library rank API.
-atlas: rank-inequalities -/
-theorem rank_sum_le_sum_rank [Fintype m] (A B : Matrix m n K) :
-    (A + B).rank ≤ A.rank + B.rank := rank_add_le A B
 
 end NLAlib

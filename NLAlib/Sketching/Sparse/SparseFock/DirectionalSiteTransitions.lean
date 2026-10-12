@@ -270,7 +270,7 @@ theorem orderedYplus_mulVec (u : Fin n → Fin d → ℝ)
   classical
   simp only [Matrix.mulVec, dotProduct]
   rw [Fintype.sum_prod_type]
-  simp only [orderedWordTerm, externalTensor, ExternalOperator.outer]
+  simp only [orderedWordTerm, externalTensor, Matrix.vecMulVec_apply]
   simp_rw [yPlus_wordKernel_apply hij]
   by_cases hout : σ (r, i) = .two ∧ σ (r, j) = .one
   · simp [hout]
@@ -296,7 +296,7 @@ theorem orderedYzero_mulVec (u : Fin n → Fin d → ℝ)
   classical
   simp only [Matrix.mulVec, dotProduct]
   rw [Fintype.sum_prod_type]
-  simp only [orderedWordTerm, externalTensor, ExternalOperator.outer]
+  simp only [orderedWordTerm, externalTensor, Matrix.vecMulVec_apply]
   simp_rw [yZero_wordKernel_apply hij]
   by_cases hout : σ (r, i) = .one ∧ σ (r, j) = .one
   · simp [hout]
@@ -322,7 +322,7 @@ theorem orderedHprime_mulVec (u : Fin n → Fin d → ℝ)
   classical
   simp only [Matrix.mulVec, dotProduct]
   rw [Fintype.sum_prod_type]
-  simp only [orderedWordTerm, externalTensor, ExternalOperator.outer]
+  simp only [orderedWordTerm, externalTensor, Matrix.vecMulVec_apply]
   simp_rw [hprime_wordKernel_apply hij]
   by_cases hout : σ (r, i) = .zero ∧ σ (r, j) = .one
   · simp [hout]

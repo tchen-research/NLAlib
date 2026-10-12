@@ -1,4 +1,4 @@
-import NLAlib.Krylov.Quadrature.GaussQuadrature
+import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Krylov.Spaces.Grade
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
 import NLAlib.Matrix.Subspaces.OrthogonalProducts

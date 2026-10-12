@@ -12,8 +12,8 @@ noncomputable section
 namespace NLAlib
 
 /-- The rank of a matrix sum is at most the sum of the ranks.
-Horn–Johnson, Matrix Analysis, Section 0.4; arbitrary finite indices.
--/
+Horn–Johnson, Matrix Analysis, Section 0.4 (Horn–Johnson 2013, §0.4.2); arbitrary finite indices.
+atlas: rank-inequalities -/
 theorem rank_add_le {m n K : Type*} [Field K] [Fintype m] [Fintype n]
     (A B : Matrix m n K) : (A + B).rank ≤ A.rank + B.rank := by
   change Module.finrank K (LinearMap.range (A + B).mulVecLin) ≤

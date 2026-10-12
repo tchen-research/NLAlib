@@ -2,6 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.LightPatternWords
+import NLAlib.Matrix.Basic.QuadForm
 /-!
 # Normalized hard-core symmetrization and compression bounds
 
@@ -147,41 +148,16 @@ theorem hardCoreEmbedding_transpose_mul
     Matrix.mul_smul, hardCoreLift_transpose_mul]
   rw [smul_smul, smul_smul, hscalar, one_smul]
 
-/-- Exact pullback identity for a finite matrix quadratic form.
-
-Source: ported from `SparseFockFormal.LightSectorConcrete`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem coordinateQuadratic_compression
-    {I J : Type*} [Fintype I] [Fintype J]
-    (E : Matrix I J ℝ) (A : Matrix I I ℝ) (x : J → ℝ) :
-    coordinateQuadratic (E.transpose * A * E) x =
-      coordinateQuadratic A (E.mulVec x) := by
-  simp only [coordinateQuadratic]
-  rw [Matrix.mul_assoc]
-  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
-  change x ⬝ᵥ E.transpose.mulVec (A.mulVec (E.mulVec x)) =
-    E.mulVec x ⬝ᵥ A.mulVec (E.mulVec x)
-  calc
-    x ⬝ᵥ E.transpose.mulVec (A.mulVec (E.mulVec x)) =
-        E.transpose.mulVec (A.mulVec (E.mulVec x)) ⬝ᵥ x :=
-      dotProduct_comm _ _
-    _ = Matrix.vecMul (A.mulVec (E.mulVec x)) E ⬝ᵥ x := by
-      have h := Matrix.vecMul_transpose E.transpose (A.mulVec (E.mulVec x))
-      simpa using congrArg (fun y ↦ y ⬝ᵥ x) h.symm
-    _ = A.mulVec (E.mulVec x) ⬝ᵥ E.mulVec x :=
-      (Matrix.dotProduct_mulVec (A.mulVec (E.mulVec x)) E x).symm
-    _ = E.mulVec x ⬝ᵥ A.mulVec (E.mulVec x) := dotProduct_comm _ _
-
 /-- The normalized hard-core embedding preserves coordinate energy.
 Source: ported sparse-Fock shared-leg/vacuum proof, commit
 `b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
 theorem hardCoreEmbedding_energy (T : Finset (Site m n)) (ell : ℕ)
     (x : BlockIndex d T ell → ℝ) :
-    coordinateEnergy ((hardCoreEmbedding (d := d) T ell).mulVec x) =
-      coordinateEnergy x := by
+    FiniteHilbert.normSq ((hardCoreEmbedding (d := d) T ell).mulVec x) =
+      FiniteHilbert.normSq x := by
   rw [coordinateEnergy_mulVec_eq_gram,
     hardCoreEmbedding_transpose_mul]
-  simp [coordinateQuadratic, coordinateEnergy, Matrix.mulVec,
+  simp [quadForm, FiniteHilbert.normSq, Matrix.mulVec,
     dotProduct, Matrix.one_apply, pow_two]
 
 /-- The literal normalized hard-core compression of the labelled shared-leg
@@ -208,8 +184,8 @@ Source: ported sparse-Fock shared-leg/vacuum proof, commit
 theorem hardCoreCompressedG_coordinateQuadratic_nonneg
     (F : Frame n d) (T : Finset (Site m n)) (ell : ℕ)
     (x : BlockIndex d T ell → ℝ) :
-    0 ≤ coordinateQuadratic (hardCoreCompressedG F T ell) x := by
-  rw [hardCoreCompressedG, coordinateQuadratic_compression]
+    0 ≤ quadForm (hardCoreCompressedG F T ell) x := by
+  rw [hardCoreCompressedG, quadForm_transpose_mul_mul]
   exact labelledG_coordinateQuadratic_nonneg F ell _
 
 /-- Sharp concrete bound on the explicitly normalized hard-core
@@ -220,9 +196,9 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem hardCoreCompressedG_coordinateQuadratic_le
     (F : Frame n d) (T : Finset (Site m n)) (ell : ℕ)
     (x : BlockIndex d T ell → ℝ) (hell : 1 ≤ ell) :
-    coordinateQuadratic (hardCoreCompressedG F T ell) x ≤
-      ((d : ℝ) + (ell : ℝ) - 1) * coordinateEnergy x := by
-  rw [hardCoreCompressedG, coordinateQuadratic_compression,
+    quadForm (hardCoreCompressedG F T ell) x ≤
+      ((d : ℝ) + (ell : ℝ) - 1) * FiniteHilbert.normSq x := by
+  rw [hardCoreCompressedG, quadForm_transpose_mul_mul,
     ← hardCoreEmbedding_energy T ell x]
   exact labelledG_coordinateQuadratic_le F ell _ hell
 
@@ -245,21 +221,15 @@ theorem hardCoreCompressedG_norm_le
   have hellR : (1 : ℝ) ≤ (ell : ℝ) := by exact_mod_cast hell
   have hd : (0 : ℝ) ≤ (d : ℝ) := Nat.cast_nonneg d
   have hc : 0 ≤ (d : ℝ) + (ell : ℝ) - 1 := by linarith
-  apply (MatrixTail.opNorm_le_iff_quadraticForm
+  apply (specNorm_le_iff_abs_dotProduct_mulVec_le
     (hardCoreCompressedG F T ell)
     (hardCoreCompressedG_isHermitian F T ell)
     ((d : ℝ) + (ell : ℝ) - 1) hc).2
   intro x
-  have hupper := hardCoreCompressedG_coordinateQuadratic_le F T ell
-    (WithLp.ofLp x) hell
-  have hnonneg := hardCoreCompressedG_coordinateQuadratic_nonneg F T ell
-    (WithLp.ofLp x)
-  rw [← quadraticForm_toLp_eq_coordinateQuadratic] at hupper hnonneg
-  have hxnorm : coordinateEnergy (WithLp.ofLp x) = ‖x‖ ^ 2 := by
-    rw [EuclideanSpace.norm_sq_eq]
-    simp [coordinateEnergy, Real.norm_eq_abs, pow_two]
-  rw [hxnorm] at hupper
-  simpa [abs_of_nonneg (by simpa using hnonneg)] using hupper
+  have hupper := hardCoreCompressedG_coordinateQuadratic_le F T ell x hell
+  rw [FiniteHilbert.normSq_eq_dotProduct] at hupper
+  exact (abs_of_nonneg
+    (hardCoreCompressedG_coordinateQuadratic_nonneg F T ell x)).trans_le hupper
 
 /-- The hard-core compression norm is bounded by dimension plus a dominating grade.
 Source: ported sparse-Fock shared-leg/vacuum proof, commit

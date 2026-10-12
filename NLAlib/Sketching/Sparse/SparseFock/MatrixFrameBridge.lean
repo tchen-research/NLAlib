@@ -73,17 +73,17 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
     rowMatrix (frameOfMatrix U hU).u = U := by
   rfl
 
-/-- The embedded Gram matrix becomes the paper's literal
-`Uᵀ (Piᵀ Pi) U`.
+/-- For the frame of an orthonormal-column matrix `U`, the embedded Gram matrix of any sketch
+`S` is the paper's literal `Uᵀ (SᵀS) U`.
 
 Source: ported from `SparseFockFormal.MatrixFrameBridge`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp] theorem embeddedGram_frameOfMatrix {s b n d : ℕ}
+@[simp] theorem embeddedGram_frameOfMatrix {k : Type*} [Fintype k] {n d : ℕ}
     (U : Matrix (Fin n) (Fin d) ℝ)
     (hU : U.transpose * U = (1 : Matrix (Fin d) (Fin d) ℝ))
-    (Z : Sample s b n) :
-    embeddedGram (frameOfMatrix U hU) Z =
-      U.transpose * (sketchGram Z * U) := by
+    (S : Matrix k (Fin n) ℝ) :
+    embeddedGram (frameOfMatrix U hU) S =
+      U.transpose * (sketchGram S * U) := by
   simp [embeddedGram]
 
 /-- Consequently the formal Gram error is exactly the displayed matrix in the
@@ -91,26 +91,13 @@ main probability event.
 
 Source: ported from `SparseFockFormal.MatrixFrameBridge`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp] theorem gramError_frameOfMatrix {s b n d : ℕ}
+@[simp] theorem gramError_frameOfMatrix {k : Type*} [Fintype k] {n d : ℕ}
     (U : Matrix (Fin n) (Fin d) ℝ)
     (hU : U.transpose * U = (1 : Matrix (Fin d) (Fin d) ℝ))
-    (Z : Sample s b n) :
-    gramError (frameOfMatrix U hU) Z =
-      U.transpose * (sketchGram Z * U) - 1 := by
+    (S : Matrix k (Fin n) ℝ) :
+    gramError (frameOfMatrix U hU) S =
+      U.transpose * (sketchGram S * U) - 1 := by
   simp [gramError]
-
-/-- The vector in the OSE conclusion is literally the stack matrix applied to
-`U x`.
-
-Source: ported from `SparseFockFormal.MatrixFrameBridge`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp] theorem sparseStackVector_frameOfMatrix {s b n d : ℕ}
-    (U : Matrix (Fin n) (Fin d) ℝ)
-    (hU : U.transpose * U = (1 : Matrix (Fin d) (Fin d) ℝ))
-    (Z : Sample s b n) (x : EVec d) :
-    MatrixTail.sparseStackVector (frameOfMatrix U hU) Z x =
-      MatrixTail.applyRectMatrix (stackMatrix Z * U) x := by
-  simp [MatrixTail.sparseStackVector]
 
 end
 

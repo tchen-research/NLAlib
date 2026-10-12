@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Spectral.CourantFischer
+import NLAlib.Matrix.Spectral.SpectralBounds
 import NLAlib.Matrix.Inequalities.VonNeumann
 /-!
 # Weyl inequalities for singular values and the spectral Eckart–Young theorem
@@ -15,7 +16,9 @@ import NLAlib.Matrix.Inequalities.VonNeumann
   `∑ₖ (σ_k(A + E) − σ_k(A))² ≤ ‖E‖_F²`, from the von Neumann trace inequality.
 
 All singular values are zero-indexed (`σ 0 = ‖A‖₂`) and padded with zeros, so no index side
-conditions are needed.
+conditions are needed. Everything except the attainment statement `isLeast_specNorm_sub_of_rank_le`
+(which uses the `Fin`-indexed `truncatedSVD`) is stated on arbitrary finite index types; Mirsky's
+inequality is proved for `Fin` and transported with `singularValues_reindex`.
 
 Source: Horn–Johnson 2013, §7.3 (Weyl inequalities for singular values) and §7.4.9
 (Eckart–Young–Mirsky); Mirsky 1960; Bhatia 1997, §III.2 and §IV.3. Theorem labels marked
@@ -33,32 +36,35 @@ open Module
 
 namespace NLAlib
 
-variable {m n p : ℕ}
+variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
+  [DecidableEq m] [DecidableEq n] [DecidableEq p]
 
-private theorem sqrt_le_mul_sqrt_of_le {u : Fin m → ℝ} {x : Fin n → ℝ} {c : ℝ} (hc : 0 ≤ c)
+omit [DecidableEq m] [DecidableEq n] in
+private theorem sqrt_le_mul_sqrt_of_le {u : m → ℝ} {x : n → ℝ} {c : ℝ} (hc : 0 ≤ c)
     (h : u ⬝ᵥ u ≤ c ^ 2 * (x ⬝ᵥ x)) : Real.sqrt (u ⬝ᵥ u) ≤ c * Real.sqrt (x ⬝ᵥ x) := by
   calc Real.sqrt (u ⬝ᵥ u) ≤ Real.sqrt (c ^ 2 * (x ⬝ᵥ x)) := Real.sqrt_le_sqrt h
     _ = c * Real.sqrt (x ⬝ᵥ x) := by rw [Real.sqrt_mul (sq_nonneg c), Real.sqrt_sq hc]
 
-private theorem le_of_sqrt_le_mul_sqrt {u : Fin m → ℝ} {x : Fin n → ℝ} {c : ℝ}
+omit [DecidableEq m] [DecidableEq n] in
+private theorem le_of_sqrt_le_mul_sqrt {u : m → ℝ} {x : n → ℝ} {c : ℝ}
     (h : Real.sqrt (u ⬝ᵥ u) ≤ c * Real.sqrt (x ⬝ᵥ x)) : u ⬝ᵥ u ≤ c ^ 2 * (x ⬝ᵥ x) := by
   have h0 : 0 ≤ Real.sqrt (u ⬝ᵥ u) := Real.sqrt_nonneg _
   have h2 := pow_le_pow_left₀ h0 h 2
   rwa [Real.sq_sqrt (dotProduct_self_nonneg u), mul_pow,
     Real.sq_sqrt (dotProduct_self_nonneg x)] at h2
 
+omit [DecidableEq m] in
 /-- **Weyl's inequality for singular values.** `σ_{i+j}(A + B) ≤ σ_i(A) + σ_j(B)` for real
 `m × n` matrices (zero-indexed). Horn–Johnson 2013, §7.3 (Cor 7.3.5, label to verify); Bhatia
 1997, Thm III.2.1 (Hermitian eigenvalue form). Audit G0 B2; atlas `weyl-mirsky`.
 atlas: weyl-mirsky -/
-theorem singularValues_add_add_le (A B : Matrix (Fin m) (Fin n) ℝ) (i j : ℕ) :
+theorem singularValues_add_add_le (A B : Matrix m n ℝ) (i j : ℕ) :
     singularValues (A + B) (i + j) ≤ singularValues A i + singularValues B j := by
   obtain ⟨W₁, h₁, hA⟩ := exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul A i
   obtain ⟨W₂, h₂, hB⟩ := exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul B j
   have hσA := singularValues_nonneg A i
   have hσB := singularValues_nonneg B j
-  have hW := card_le_finrank_inf_add (n := Fin n) (by simpa using h₁) (by simpa using h₂)
-  rw [Fintype.card_fin] at hW
+  have hW := card_le_finrank_inf_add h₁ h₂
   refine singularValues_le_of_forall_mem (A + B) (i + j) (W₁ ⊓ W₂) hW (add_nonneg hσA hσB)
     fun x hx => le_of_sqrt_le_mul_sqrt ?_
   have ha := sqrt_le_mul_sqrt_of_le hσA (hA x hx.1)
@@ -70,14 +76,14 @@ theorem singularValues_add_add_le (A B : Matrix (Fin m) (Fin n) ℝ) (i j : ℕ)
 
 /-- **Weyl perturbation bound, upper side.** `σ_k(A + E) ≤ σ_k(A) + ‖E‖₂`. Horn–Johnson 2013,
 §7.3 (Cor 7.3.5, label to verify). Audit G0 B3; atlas `weyl-mirsky`. -/
-theorem singularValues_add_le_add_specNorm (A E : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+theorem singularValues_add_le_add_specNorm (A E : Matrix m n ℝ) (k : ℕ) :
     singularValues (A + E) k ≤ singularValues A k + specNorm E := by
   have h := singularValues_add_add_le A E k 0
   rwa [Nat.add_zero, singularValues_zero_eq_specNorm] at h
 
 /-- **Weyl perturbation bound, lower side.** `σ_k(A) ≤ σ_k(A + E) + ‖E‖₂`. Horn–Johnson 2013,
 §7.3 (Cor 7.3.5, label to verify). Audit G0 B3; atlas `weyl-mirsky`. -/
-theorem singularValues_le_singularValues_add_add_specNorm (A E : Matrix (Fin m) (Fin n) ℝ)
+theorem singularValues_le_singularValues_add_add_specNorm (A E : Matrix m n ℝ)
     (k : ℕ) : singularValues A k ≤ singularValues (A + E) k + specNorm E := by
   have h := singularValues_add_le_add_specNorm (A + E) (-E) k
   rwa [add_neg_cancel_right, specNorm_neg] at h
@@ -85,7 +91,7 @@ theorem singularValues_le_singularValues_add_add_specNorm (A E : Matrix (Fin m) 
 /-- **Weyl perturbation bound.** `|σ_k(A + E) − σ_k(A)| ≤ ‖E‖₂` for every `k`. Horn–Johnson
 2013, §7.3 (Cor 7.3.5, label to verify); Bhatia 1997, §III.2. Audit G0 B3; atlas `weyl-mirsky`.
 atlas: weyl-mirsky -/
-theorem abs_singularValues_add_sub_le_specNorm (A E : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+theorem abs_singularValues_add_sub_le_specNorm (A E : Matrix m n ℝ) (k : ℕ) :
     |singularValues (A + E) k - singularValues A k| ≤ specNorm E := by
   have h1 := singularValues_add_le_add_specNorm A E k
   have h2 := singularValues_le_singularValues_add_add_specNorm A E k
@@ -95,8 +101,7 @@ theorem abs_singularValues_add_sub_le_specNorm (A E : Matrix (Fin m) (Fin n) ℝ
 §III.6 (the special case `i = 0` of `σ_{i+j}(BA) ≤ σ_i(B) σ_j(A)`). Audit G0 B6;
 atlas `weyl-mirsky` (new corollary `singularValues_mul_le`).
 atlas: weyl-mirsky -/
-theorem singularValues_mul_le_specNorm_mul (B : Matrix (Fin p) (Fin m) ℝ)
-    (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
+theorem singularValues_mul_le_specNorm_mul (B : Matrix p m ℝ) (A : Matrix m n ℝ) (k : ℕ) :
     singularValues (B * A) k ≤ specNorm B * singularValues A k := by
   obtain ⟨W, hW, hA⟩ := exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul A k
   have hσ := singularValues_nonneg A k
@@ -111,25 +116,28 @@ theorem singularValues_mul_le_specNorm_mul (B : Matrix (Fin p) (Fin m) ℝ)
         mul_le_mul_of_nonneg_left ha hB
     _ = specNorm B * singularValues A k * Real.sqrt (x ⬝ᵥ x) := by ring
 
+omit [DecidableEq m] in
 /-- **Right multiplication.** `σ_k(AC) ≤ σ_k(A) ‖C‖₂`. Horn–Johnson 2013, §7.3 (transpose of
 `singularValues_mul_le_specNorm_mul`). Audit G0 B6; atlas `weyl-mirsky`. -/
-theorem singularValues_mul_le_mul_specNorm (A : Matrix (Fin m) (Fin n) ℝ)
-    (C : Matrix (Fin n) (Fin p) ℝ) (k : ℕ) :
+theorem singularValues_mul_le_mul_specNorm (A : Matrix m n ℝ) (C : Matrix n p ℝ) (k : ℕ) :
     singularValues (A * C) k ≤ singularValues A k * specNorm C := by
+  classical
   have h := singularValues_mul_le_specNorm_mul Cᵀ Aᵀ k
   rw [← Matrix.transpose_mul, singularValues_transpose, singularValues_transpose,
     specNorm_transpose] at h
   linarith
 
+omit [DecidableEq m] in
 /-- **Projection does not increase singular values.** For `Q` with orthonormal columns,
 `σ_k((I − QQᵀ)A) ≤ σ_k(A)`. HMT 2011, §8.4 (used in Prop 8.6 and Thm 9.2). Audit G0 B6;
 atlas `weyl-mirsky`, `projection-facts`.
 atlas: projection-facts -/
 theorem singularValues_residual_le {q : Type*} [Fintype q] [DecidableEq q]
-    {Q : Matrix (Fin m) q ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix (Fin m) (Fin n) ℝ)
+    {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ)
     (k : ℕ) : singularValues (residual Q A) k ≤ singularValues A k := by
-  have hP : specNorm (1 - Q * Qᵀ : Matrix (Fin m) (Fin m) ℝ) ≤ 1 := by
-    have h := specNorm_sub_mul_transpose_mul_le hQ (1 : Matrix (Fin m) (Fin m) ℝ)
+  classical
+  have hP : specNorm (1 - Q * Qᵀ : Matrix m m ℝ) ≤ 1 := by
+    have h := specNorm_sub_mul_transpose_mul_le hQ (1 : Matrix m m ℝ)
     rw [Matrix.mul_one] at h
     exact h.trans specNorm_one_le
   rw [residual_eq_one_sub_mul]
@@ -143,7 +151,7 @@ theorem singularValues_residual_le {q : Type*} [Fintype q] [DecidableEq q]
 error at least `σ_k(A)` (zero-indexed): `σ_k(A) ≤ ‖A − B‖₂`. Horn–Johnson 2013, Thm 7.4.9.1
 (spectral case); HMT 2011, eq. (2.3). Audit G0 B5; atlas `eckart-young`.
 atlas: eckart-young -/
-theorem singularValues_le_specNorm_sub_of_rank_le (A B : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+theorem singularValues_le_specNorm_sub_of_rank_le (A B : Matrix m n ℝ) {k : ℕ}
     (hB : B.rank ≤ k) : singularValues A k ≤ specNorm (A - B) := by
   have h := singularValues_add_add_le (A - B) B 0 k
   rwa [sub_add_cancel, Nat.zero_add, singularValues_zero_eq_specNorm,
@@ -153,37 +161,52 @@ theorem singularValues_le_specNorm_sub_of_rank_le (A B : Matrix (Fin m) (Fin n) 
 approximation, attained by `truncatedSVD A k`. Horn–Johnson 2013, Thm 7.4.9.1; HMT 2011,
 eq. (2.3). Audit G0 B5 + C3; atlas `eckart-young`.
 atlas: eckart-young -/
-theorem isLeast_specNorm_sub_of_rank_le (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
-    IsLeast {v : ℝ | ∃ B : Matrix (Fin m) (Fin n) ℝ, B.rank ≤ k ∧ v = specNorm (A - B)}
+theorem isLeast_specNorm_sub_of_rank_le {a b : ℕ} (A : Matrix (Fin a) (Fin b) ℝ) (k : ℕ) :
+    IsLeast {v : ℝ | ∃ B : Matrix (Fin a) (Fin b) ℝ, B.rank ≤ k ∧ v = specNorm (A - B)}
       (singularValues A k) := by
   refine ⟨⟨truncatedSVD A k, (isBestRankApprox_truncatedSVD A k).1,
     (specNorm_sub_truncatedSVD_eq A k).symm⟩, ?_⟩
   rintro v ⟨B, hB, rfl⟩
   exact singularValues_le_specNorm_sub_of_rank_le A B hB
 
-/-- **Mirsky's inequality** (Frobenius half of Weyl–Mirsky):
-`∑_{k < min m n} (σ_k(A + E) − σ_k(A))² ≤ ‖E‖_F²`. Proof: expand
-`‖E‖_F² = ‖A + E‖_F² − 2⟨A + E, A⟩_F + ‖A‖_F²` and bound the inner product by the von Neumann
-trace inequality. Mirsky 1960 (Q. J. Math. 11); Horn–Johnson 2013, §7.4.9 (label to verify);
-Bhatia 1997, §IV.3 (unitarily invariant form). Audit G0 B4;
-atlas `weyl-mirsky`.
-atlas: weyl-mirsky -/
-theorem sum_sq_singularValues_add_sub_le_frobSq (A E : Matrix (Fin m) (Fin n) ℝ) :
-    ∑ k ∈ Finset.range (min m n), (singularValues (A + E) k - singularValues A k) ^ 2 ≤
+private theorem sum_sq_singularValues_add_sub_le_frobSq_fin {a b : ℕ}
+    (A E : Matrix (Fin a) (Fin b) ℝ) :
+    ∑ k ∈ Finset.range (min a b), (singularValues (A + E) k - singularValues A k) ^ 2 ≤
       frobSq E := by
   have hvN := frobInner_le_sum_singularValues_mul (A + E) A
   have hF : frobSq E = frobSq (A + E) - 2 * frobInner (A + E) A + frobSq A := by
     rw [← frobSq_sub]
     congr 1
     abel
-  have hexp : ∑ k ∈ Finset.range (min m n),
+  have hexp : ∑ k ∈ Finset.range (min a b),
       (singularValues (A + E) k - singularValues A k) ^ 2 =
-      ∑ k ∈ Finset.range (min m n), singularValues (A + E) k ^ 2 -
-        2 * ∑ k ∈ Finset.range (min m n), singularValues (A + E) k * singularValues A k +
-        ∑ k ∈ Finset.range (min m n), singularValues A k ^ 2 := by
+      ∑ k ∈ Finset.range (min a b), singularValues (A + E) k ^ 2 -
+        2 * ∑ k ∈ Finset.range (min a b), singularValues (A + E) k * singularValues A k +
+        ∑ k ∈ Finset.range (min a b), singularValues A k ^ 2 := by
     rw [Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
     exact Finset.sum_congr rfl fun k _ => by ring
-  rw [hexp, hF, frobSq_eq_sum_sq_singularValues, frobSq_eq_sum_sq_singularValues]
+  rw [hexp, hF, frobSq_eq_sum_sq_singularValues, frobSq_eq_sum_sq_singularValues,
+    Fintype.card_fin, Fintype.card_fin]
   linarith
+
+omit [DecidableEq m] in
+/-- **Mirsky's inequality** (Frobenius half of Weyl–Mirsky):
+`∑_{k < min m n} (σ_k(A + E) − σ_k(A))² ≤ ‖E‖_F²`, on arbitrary finite index types. Proof (for
+`Fin`, then transported along `Fintype.equivFin`): expand
+`‖E‖_F² = ‖A + E‖_F² − 2⟨A + E, A⟩_F + ‖A‖_F²` and bound the inner product by the von Neumann
+trace inequality. Mirsky 1960 (Q. J. Math. 11); Horn–Johnson 2013, §7.4.9 (label to verify);
+Bhatia 1997, §IV.3 (unitarily invariant form). Audit G0 B4;
+atlas `weyl-mirsky`.
+atlas: weyl-mirsky -/
+theorem sum_sq_singularValues_add_sub_le_frobSq (A E : Matrix m n ℝ) :
+    ∑ k ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
+        (singularValues (A + E) k - singularValues A k) ^ 2 ≤ frobSq E := by
+  have h := sum_sq_singularValues_add_sub_le_frobSq_fin
+    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
+    (E.reindex (Fintype.equivFin m) (Fintype.equivFin n))
+  have hadd : A.reindex (Fintype.equivFin m) (Fintype.equivFin n) +
+      E.reindex (Fintype.equivFin m) (Fintype.equivFin n) =
+      (A + E).reindex (Fintype.equivFin m) (Fintype.equivFin n) := rfl
+  rwa [hadd, singularValues_reindex, singularValues_reindex, frobSq_reindex] at h
 
 end NLAlib

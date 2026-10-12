@@ -1,5 +1,7 @@
 import NLAlib.Matrix.Basic.SchurComplement
-import NLAlib.LowRank.Cholesky.CholeskyPivot
+import NLAlib.Matrix.Basic.Selection
+import NLAlib.Matrix.Factorizations.CholeskyStep
+import NLAlib.LowRank.Nystrom.Structural
 /-!
 # Partial (pivoted) Cholesky and the column Nyström approximation
 
@@ -7,7 +9,8 @@ import NLAlib.LowRank.Cholesky.CholeskyPivot
 advance or adaptively by the caller: greedy, uniform, RPCholesky; the pivot rule is not part of
 the recursion):
 
-* `choleskyStep A t = A − A(:,t) A(t,:) / A(t,t)` (total: a zero pivot leaves `A` unchanged);
+* the step `choleskyStep A t = A − A(:,t) A(t,:) / A(t,t)` (Matrix/Factorizations/CholeskyStep;
+  total: a zero pivot leaves `A` unchanged);
 * `partialCholeskyResidual A s`: the residual after eliminating `s 0, …, s (k−1)` in order;
 * `partialCholeskyFactor A s : Matrix n (Fin k) ℝ`: column `j` is
   `R_j(:, s j) / √R_j(s j, s j)` with `R_j` the residual before step `j`.
@@ -35,18 +38,6 @@ open Matrix
 namespace NLAlib
 
 variable {n : Type*}
-
-/-- **One step of (pivoted) Cholesky elimination** on pivot `t`:
-`A − A(:,t) A(t,:) / A(t,t)`, the Schur complement of `A(t,t)` padded with a zero row and column
-at `t`. Total: for `A(t,t) = 0` it returns `A`. Golub–Van Loan 2013, §4.2.9; CETW 2023, §2. -/
-def choleskyStep (A : Matrix n n ℝ) (t : n) : Matrix n n ℝ :=
-  A - (A t t)⁻¹ • vecMulVec (fun i => A i t) fun j => A t j
-
-/-- Entrywise form of a Cholesky step: `aᵢⱼ − aᵢₜ aₜⱼ / aₜₜ`. -/
-@[simp]
-theorem choleskyStep_apply (A : Matrix n n ℝ) (t i j : n) :
-    choleskyStep A t i j = A i j - (A t t)⁻¹ * (A i t * A t j) := by
-  simp [choleskyStep, vecMulVec_apply]
 
 /-- The **residual of partial Cholesky** after the pivots `s 0, …, s (k−1)`, in this order.
 CETW 2023, Alg. 1 (residual update); Golub–Van Loan 2013, §4.2.9.
@@ -77,26 +68,7 @@ theorem partialCholeskyFactor_last (A : Matrix n n ℝ) {k : ℕ} (s : Fin (k + 
         Real.sqrt (partialCholeskyResidual A (Fin.init s) (s (Fin.last k)) (s (Fin.last k))) :=
   rfl
 
-variable [DecidableEq n]
-
-/-- The **column-selection matrix** `[e_{s 0}, …, e_{s (k−1)}] ∈ ℝ^{n×k}`, so that
-`A (selectionMatrix s) = A(:,S)` (`mul_selectionMatrix`) and the Nyström approximation with this
-test matrix is the column Nyström approximation `A(:,S) A(S,S)⁺ A(S,:)`. -/
-def selectionMatrix {k : ℕ} (s : Fin k → n) : Matrix n (Fin k) ℝ :=
-  Matrix.of fun i j => if i = s j then 1 else 0
-
-variable [Fintype n]
-
-/-- Right multiplication by a selection matrix selects columns: `A (selectionMatrix s) = A(:,S)`. -/
-theorem mul_selectionMatrix {m : Type*} {k : ℕ} (A : Matrix m n ℝ) (s : Fin k → n) :
-    A * selectionMatrix s = A.submatrix id s := by
-  ext i j; simp [selectionMatrix, Matrix.mul_apply]
-
-/-- Left multiplication by the transpose of a selection matrix selects rows:
-`(selectionMatrix s)ᵀ A = A(S,:)`. -/
-theorem transpose_selectionMatrix_mul {m : Type*} [Fintype m] {k : ℕ} (A : Matrix n m ℝ)
-    (s : Fin k → n) : (selectionMatrix s)ᵀ * A = A.submatrix s id := by
-  ext i j; simp [selectionMatrix, Matrix.mul_apply]
+variable [DecidableEq n] [Fintype n]
 
 /-- The Nyström approximation with a selection matrix is the column Nyström approximation
 `A(:,S) A(S,S)⁺ A(S,:)`. CETW 2023, §2; Gittens–Mahoney 2016, §2. -/
@@ -107,68 +79,6 @@ theorem nystrom_selectionMatrix {k : ℕ} (A : Matrix n n ℝ) (s : Fin k → n)
     rw [transpose_selectionMatrix_mul, mul_selectionMatrix]; rfl
   rw [nystrom, mul_selectionMatrix, h, transpose_selectionMatrix_mul]
 
-omit [DecidableEq n] in
-/-- The quadratic form of a Cholesky step: `xᵀ (A − A(:,t) A(t,:) / A(t,t)) x =
-xᵀ A x − (xᵀ A(:,t)) (A(t,:) x) / A(t,t)`. -/
-theorem dotProduct_choleskyStep_mulVec (A : Matrix n n ℝ) (t : n) (x : n → ℝ) :
-    x ⬝ᵥ choleskyStep A t *ᵥ x =
-      x ⬝ᵥ A *ᵥ x - (A t t)⁻¹ * ((∑ i, x i * A i t) * ∑ j, A t j * x j) := by
-  rw [Finset.sum_mul_sum, Finset.mul_sum]
-  simp only [dotProduct, mulVec, choleskyStep_apply, Finset.mul_sum, ← Finset.sum_sub_distrib]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  ring
-
-/-- One Cholesky step preserves positive semidefiniteness, for any pivot (for `A(t,t) = 0` the
-step is the identity). Proof: `xᵀ (choleskyStep A t) x = zᵀ A z` at
-`z = x − (A(t,:) x / A(t,t)) eₜ`. Golub–Van Loan 2013, §4.2.8; special case of Albert 1969,
-Thm 1 (atlas `generalized-schur-complement-psd`). -/
-theorem posSemidef_choleskyStep {A : Matrix n n ℝ} (hA : A.PosSemidef) (t : n) :
-    (choleskyStep A t).PosSemidef := by
-  have hsym : ∀ i j, A i j = A j i := fun i j => by
-    have := congrFun (congrFun hA.isHermitian j) i
-    simpa using this
-  refine posSemidef_iff_dotProduct_mulVec.2 ⟨?_, fun x => ?_⟩
-  · ext i j
-    simp only [conjTranspose_apply, star_trivial, choleskyStep_apply]
-    rw [hsym j i, hsym j t, hsym t i]; ring
-  · set α := -((A t t)⁻¹ * ∑ j, A t j * x j) with hα
-    have hx := (posSemidef_iff_dotProduct_mulVec.1 hA).2 (x + α • Pi.single t 1)
-    have hexp : (x + α • Pi.single t 1) ⬝ᵥ A *ᵥ (x + α • Pi.single t 1) =
-        x ⬝ᵥ A *ᵥ x + α * (∑ i, x i * A i t) + α * (∑ j, A t j * x j) + α ^ 2 * A t t := by
-      simp only [mulVec_add, mulVec_smul, dotProduct_add, add_dotProduct, dotProduct_smul,
-        smul_dotProduct, smul_eq_mul]
-      simp [dotProduct, mulVec, Pi.single_apply]
-      ring
-    have hs : ∑ i, x i * A i t = ∑ j, A t j * x j :=
-      Finset.sum_congr rfl fun i _ => by rw [hsym i t, mul_comm]
-    simp only [star_trivial] at hx ⊢
-    rw [hexp, hs] at hx
-    rw [dotProduct_choleskyStep_mulVec, hs]
-    have key : α ^ 2 * A t t = (A t t)⁻¹ * ((∑ j, A t j * x j) * ∑ j, A t j * x j) := by
-      rw [hα]
-      by_cases ha : A t t = 0
-      · simp [ha]
-      · field_simp
-    have key2 : α * ∑ j, A t j * x j = -((A t t)⁻¹ * ((∑ j, A t j * x j) * ∑ j, A t j * x j)) := by
-      rw [hα]; ring
-    linarith
-
-/-- After a Cholesky step on a PSD matrix the pivot row vanishes. -/
-theorem choleskyStep_apply_pivot_left {A : Matrix n n ℝ} (hA : A.PosSemidef) (t j : n) :
-    choleskyStep A t t j = 0 := by
-  rw [choleskyStep_apply]
-  by_cases h : A t t = 0
-  · rw [apply_eq_zero_of_posSemidef_of_apply_self_eq_zero' hA h j]; simp
-  · field_simp; ring
-
-/-- After a Cholesky step on a PSD matrix the pivot column vanishes. -/
-theorem choleskyStep_apply_pivot_right {A : Matrix n n ℝ} (hA : A.PosSemidef) (t i : n) :
-    choleskyStep A t i t = 0 := by
-  rw [choleskyStep_apply]
-  by_cases h : A t t = 0
-  · rw [apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hA h i]; simp
-  · field_simp; ring
-
 /-- The partial Cholesky residual of a PSD matrix is PSD (each step is a Schur complement).
 CETW 2023, §2; Golub–Van Loan 2013, §4.2.9.
 atlas: partial-cholesky-nystrom (partial) -/
@@ -178,17 +88,20 @@ theorem posSemidef_partialCholeskyResidual {A : Matrix n n ℝ} (hA : A.PosSemid
   | zero => exact hA
   | succ k ih => exact posSemidef_choleskyStep (ih _) _
 
-omit [DecidableEq n] [Fintype n] in
-/-- A Cholesky step keeps zero rows zero. -/
-theorem choleskyStep_apply_eq_zero_of_row {A : Matrix n n ℝ} {u : n} (hu : ∀ j, A u j = 0)
-    (t j : n) : choleskyStep A t u j = 0 := by
-  simp [hu]
-
-omit [DecidableEq n] [Fintype n] in
-/-- A Cholesky step keeps zero columns zero. -/
-theorem choleskyStep_apply_eq_zero_of_col {A : Matrix n n ℝ} {u : n} (hu : ∀ i, A i u = 0)
-    (t i : n) : choleskyStep A t i u = 0 := by
-  simp [hu]
+/-- Every partial Cholesky residual of a PSD matrix is bounded above by the matrix:
+`A − R` is PSD. Source: manuscript `sa:rp-one-step`; CETW (2025), PSD order invariant. -/
+theorem posSemidef_sub_partialCholeskyResidual {A : Matrix n n ℝ} (hA : A.PosSemidef) {k : ℕ}
+    (s : Fin k → n) : (A - partialCholeskyResidual A s).PosSemidef := by
+  induction k with
+  | zero =>
+    simpa only [partialCholeskyResidual, sub_self] using (Matrix.PosSemidef.zero (n := n) (R := ℝ))
+  | succ k ih =>
+    have h := (ih (Fin.init s)).add
+      (posSemidef_sub_choleskyStep (posSemidef_partialCholeskyResidual hA (Fin.init s))
+        (s (Fin.last k)))
+    convert h using 1
+    dsimp only [partialCholeskyResidual]
+    abel
 
 /-- The partial Cholesky residual of a PSD matrix vanishes on the pivot rows.
 CETW 2023, §2.

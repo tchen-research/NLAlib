@@ -38,14 +38,14 @@ structure UniformExactSMainConclusions
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-      {X | eps < ‖gramError F X‖} ≤ delta
+      {X | eps < ‖gramError F (sketchMatrix X)‖} ≤ delta
   oseSuccess :
     1 - delta ≤
       (exactSampleLaw (n := n)
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-        {X | IsUniformExactSOSE F X eps}
+        {X | IsSubspaceEmbedding (sketchMatrix X) (rowMatrix F.u) eps}
   exactColumnSparsity :
     ∀ (X : ExactSample
         (roundedS (failureOrder d delta) eps *
@@ -103,42 +103,6 @@ theorem uniformExactS_main
 
 open MatrixFrameBridge
 
-/-- Literal vector OSE property for an `n × d` matrix with orthonormal
-columns.
-
-Source: ported from `SparseFockFormal.UniformExactSMainTheorem`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-def IsMatrixUniformExactSOSE
-    (U : Matrix (Fin n) (Fin d) ℝ)
-    (X : ExactSample (s * b) s n) (eps : ℝ) : Prop :=
-  ∀ x : EVec d,
-    (1 - eps) * ‖x‖ ^ 2 ≤
-        ‖MatrixTail.applyRectMatrix (sketchMatrix X * U) x‖ ^ 2 ∧
-      ‖MatrixTail.applyRectMatrix (sketchMatrix X * U) x‖ ^ 2 ≤
-        (1 + eps) * ‖x‖ ^ 2
-
-/-- The matrix-based exact-s Gram error equals the error of its constructed Parseval frame.
-Source: ported from `SparseFockFormal.UniformExactSMainTheorem`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp] theorem gramError_frameOfMatrix_exactS
-    (U : Matrix (Fin n) (Fin d) ℝ)
-    (hU : U.transpose * U = (1 : Matrix (Fin d) (Fin d) ℝ))
-    (X : ExactSample (s * b) s n) :
-    gramError (frameOfMatrix U hU) X =
-      U.transpose * (sketchGram X * U) - 1 := by
-  simp [gramError, embeddedGram]
-
-/-- The exact-s action on a constructed frame equals the literal sketch applied to the input matrix vector.
-Source: ported from `SparseFockFormal.UniformExactSMainTheorem`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-@[simp] theorem exactSVector_frameOfMatrix
-    (U : Matrix (Fin n) (Fin d) ℝ)
-    (hU : U.transpose * U = (1 : Matrix (Fin d) (Fin d) ℝ))
-    (X : ExactSample (s * b) s n) (x : EVec d) :
-    exactSVector (frameOfMatrix U hU) X x =
-      MatrixTail.applyRectMatrix (sketchMatrix X * U) x := by
-  simp [exactSVector]
-
 /-- Literal source-matrix operator-norm tail.
 
 Source: ported from `SparseFockFormal.UniformExactSMainTheorem`,
@@ -154,7 +118,7 @@ theorem uniformExactS_matrix_operator_failure
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
       {X | eps <
-        ‖U.transpose * (sketchGram X * U) - 1‖} ≤ delta := by
+        ‖U.transpose * (sketchGram (sketchMatrix X) * U) - 1‖} ≤ delta := by
   let F := frameOfMatrix U hU
   simpa [F] using
     (uniformExactS_rounded_operator_norm_failure_le_delta
@@ -175,9 +139,9 @@ theorem uniformExactS_matrix_ose_success
         (exactS_le_rows (s := roundedS (failureOrder d delta) eps)
           (MainTheoremAssembly.canonicalB_pos
             (d := d) (delta := delta) heps0 heps1))).prob
-        {X | IsMatrixUniformExactSOSE U X eps} := by
+        {X | IsSubspaceEmbedding (sketchMatrix X) U eps} := by
   let F := frameOfMatrix U hU
-  simpa [F, IsUniformExactSOSE, IsMatrixUniformExactSOSE] using
+  simpa [F] using
     (uniformExactS_rounded_ose_success
       hd hdelta0 hdelta1 heps0 heps1 F)
 

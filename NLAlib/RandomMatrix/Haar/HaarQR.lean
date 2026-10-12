@@ -28,12 +28,6 @@ theorem gaussianMatrix_ae_linearIndependent_qrColumnFamily {n k : ℕ} (hkn : k 
   rw [gram_qrColumnFamily]
   exact isUnit_iff_ne_zero.mp ((Matrix.isUnit_iff_isUnit_det _).mp hG)
 
-/-- The rank-deficient inputs of canonical Gaussian QR have measure zero.
-Source: operator re-derivation `sh:gaussian-qr`. -/
-theorem gaussianMatrix_rank_deficient_qr_measure_zero {n k : ℕ} (hkn : k ≤ n) :
-    gaussianMatrix n k {G | ¬LinearIndependent ℝ (qrColumnFamily G)} = 0 :=
-  ae_iff.mp (gaussianMatrix_ae_linearIndependent_qrColumnFamily hkn)
-
 /-- Canonical Gaussian QR has the actual invariant Haar probability law on
 the entire rectangular Stiefel frame space, including empty frames. The map
 uses positive-diagonal QR on full rank and its explicit coordinate fallback

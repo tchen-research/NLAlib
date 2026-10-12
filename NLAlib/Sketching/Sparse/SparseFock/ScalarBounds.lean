@@ -17,13 +17,6 @@ namespace NLAlib.SparseFock
 
 namespace ScalarBounds
 
-/-- Scalar AM-GM inequality used to absorb products of strong and sparse scales.
-
-Source: ported from `SparseFockFormal.ScalarBounds`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem two_mul_le_sq_add_sq (x y : ℝ) : 2 * x * y ≤ x ^ 2 + y ^ 2 := by
-  nlinarith [sq_nonneg (x - y)]
-
 /-- The algebraic last step in the block-Gram estimate `d + ℓ - 1`.
 
 The operator-specific hypotheses (diagonal block at most `d`, each off-diagonal
@@ -88,7 +81,7 @@ theorem mixed_product_into_envelope
   have hsy : 0 ≤ Real.sqrt y := Real.sqrt_nonneg y
   have hx' : (Real.sqrt x) ^ 2 = x := Real.sq_sqrt hx
   have hy' : (Real.sqrt y) ^ 2 = y := Real.sq_sqrt hy
-  nlinarith [two_mul_le_sq_add_sq (Real.sqrt x) (Real.sqrt y)]
+  nlinarith [two_mul_le_add_sq (Real.sqrt x) (Real.sqrt y)]
 
 /-- Exact arithmetic behind the final parameter substitution.
 

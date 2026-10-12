@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Subspaces.OrthogonalSumCompletion
 import NLAlib.Matrix.Basic.RankInequalities
+import NLAlib.Matrix.Subspaces.OrthonormalBasisMatrix
 /-!
 # Range-adapted orthogonal blocks of an idempotent
 

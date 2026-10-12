@@ -27,8 +27,7 @@ theorem NLAlib.matrixPerspective_jointly_operatorConvex {d : ℕ} [NeZero d]
     (A₁ A₂ H₁ H₂ : Matrix (Fin d) (Fin d) ℂ)
     (hA₁ : A₁.PosDef) (hA₂ : A₂.PosDef) (hH₁ : H₁.PosDef) (hH₂ : H₂.PosDef)
     (t : ℝ) (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1) :
-    LoewnerLE
-      (matrixPerspective f (t • A₁ + (1 - t) • A₂) (t • H₁ + (1 - t) • H₂))
+    (matrixPerspective f (t • A₁ + (1 - t) • A₂) (t • H₁ + (1 - t) • H₂)) ≤
       (t • matrixPerspective f A₁ H₁ + (1 - t) • matrixPerspective f A₂ H₂) := by
   have htbar : 0 ≤ 1 - t := sub_nonneg.mpr ht₁
   let A := t • A₁ + (1 - t) • A₂
@@ -37,15 +36,15 @@ theorem NLAlib.matrixPerspective_jointly_operatorConvex {d : ℕ} [NeZero d]
     · simpa [A, ht] using hA₂
     · exact (hA₁.smul (lt_of_le_of_ne ht₀ (Ne.symm ht))).add_posSemidef
         (hA₂.posSemidef.smul htbar)
-  let S := matrixFunction Real.sqrt A
-  let R := matrixFunction (fun x => (Real.sqrt x)⁻¹) A
-  let S₁ := matrixFunction Real.sqrt A₁
-  let R₁ := matrixFunction (fun x => (Real.sqrt x)⁻¹) A₁
-  let S₂ := matrixFunction Real.sqrt A₂
-  let R₂ := matrixFunction (fun x => (Real.sqrt x)⁻¹) A₂
-  obtain ⟨hS, hR, hSS, hRS, hSR⟩ := matrixFunction_sqrt_identities A hA
-  obtain ⟨hS₁, hR₁, hSS₁, hRS₁, hSR₁⟩ := matrixFunction_sqrt_identities A₁ hA₁
-  obtain ⟨hS₂, hR₂, hSS₂, hRS₂, hSR₂⟩ := matrixFunction_sqrt_identities A₂ hA₂
+  let S := cfc Real.sqrt A
+  let R := cfc (fun x => (Real.sqrt x)⁻¹) A
+  let S₁ := cfc Real.sqrt A₁
+  let R₁ := cfc (fun x => (Real.sqrt x)⁻¹) A₁
+  let S₂ := cfc Real.sqrt A₂
+  let R₂ := cfc (fun x => (Real.sqrt x)⁻¹) A₂
+  obtain ⟨hS, hR, hSS, hRS, hSR⟩ := cfc_sqrt_identities A hA
+  obtain ⟨hS₁, hR₁, hSS₁, hRS₁, hSR₁⟩ := cfc_sqrt_identities A₁ hA₁
+  obtain ⟨hS₂, hR₂, hSS₂, hRS₂, hSR₂⟩ := cfc_sqrt_identities A₂ hA₂
   change S.IsHermitian at hS
   change R.IsHermitian at hR
   change S * S = A at hSS
@@ -116,11 +115,11 @@ theorem NLAlib.matrixPerspective_jointly_operatorConvex {d : ℕ} [NeZero d]
     calc
       _ = (S * R) * Sj * F * Sj * (R * S) := by noncomm_ring
       _ = _ := by rw [hSR, hRS]; simp
-  change LoewnerLE (S * matrixFunction f (R * (t • H₁ + (1 - t) • H₂) * R) * S)
-    (t • (S₁ * matrixFunction f B₁ * S₁) +
-      (1 - t) • (S₂ * matrixFunction f B₂ * S₂))
-  simpa only [LoewnerLE, Matrix.mul_add, Matrix.add_mul, hK₁, hK₂, K₁, K₂,
-    hsand t ht₀ S₁ (matrixFunction f B₁),
-    hsand (1 - t) htbar S₂ (matrixFunction f B₂)] using hc
+  change (S * cfc f (R * (t • H₁ + (1 - t) • H₂) * R) * S) ≤
+    (t • (S₁ * cfc f B₁ * S₁) +
+      (1 - t) • (S₂ * cfc f B₂ * S₂))
+  simpa only [Matrix.le_iff, Matrix.mul_add, Matrix.add_mul, hK₁, hK₂, K₁, K₂,
+    hsand t ht₀ S₁ (cfc f B₁),
+    hsand (1 - t) htbar S₂ (cfc f B₂)] using hc
 
 

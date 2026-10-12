@@ -9,7 +9,6 @@ import NLAlib.Matrix.Norms.InvariantNorm
 import NLAlib.Matrix.Norms.InvariantNormRepresentation
 import NLAlib.Matrix.Norms.InvariantNormToolkit
 import NLAlib.Matrix.Norms.KyFanNorm
-import NLAlib.Matrix.Norms.NuclearFiniteIndex
 import NLAlib.Matrix.Norms.NuclearGram
 import NLAlib.Matrix.Norms.NuclearHermitian
 import NLAlib.Matrix.Norms.NuclearNorm

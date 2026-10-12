@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
+import NLAlib.Matrix.Inequalities.KyFanNorms
 
 /-!
 # Schatten norm definitions and scalar exponents
@@ -59,44 +59,41 @@ theorem schattenNorm_reindex {m n r s : Type*} [Fintype m] [Fintype n] [Fintype 
     (A : Matrix m n ℝ) : schattenNorm A 1 = nuclearNorm A := by
   simp [schattenNorm, nuclearNorm, kyFanNorm]
 
-/-- The Schatten-2 norm is precisely the Frobenius norm. -/
-theorem schattenNorm_two_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
+/-- `Fin` step of `schattenNorm_two`. -/
+private theorem schattenNorm_two_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
     schattenNorm A 2 = frobNorm A := by
-  simp only [schattenNorm, Fintype.card_fin, Real.rpow_two, one_div]
-  change (∑ i ∈ Finset.range (min m n), singularValues A i ^ 2) ^ ((2 : ℝ)⁻¹) = _
+  simp only [schattenNorm, Real.rpow_two, one_div]
+  change (∑ i ∈ Finset.range (min (Fintype.card (Fin m)) (Fintype.card (Fin n))),
+    singularValues A i ^ 2) ^ ((2 : ℝ)⁻¹) = _
   rw [← frobSq_eq_sum_sq_singularValues, ← one_div (2 : ℝ), ← Real.sqrt_eq_rpow]
   rfl
 
-/-- The Schatten-2 identity holds on arbitrary finite matrix index types. -/
+/-- The Schatten-2 norm is precisely the Frobenius norm, on arbitrary finite matrix
+index types. -/
 theorem schattenNorm_two {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) : schattenNorm A 2 = frobNorm A := by
   rw [← schattenNorm_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
     schattenNorm_two_fin, frobNorm_reindex]
 
-/-- Left orthogonal multiplication preserves the finite Schatten power sum. -/
-theorem schattenNorm_orthogonal_mul_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
-    {U : Matrix (Fin m) (Fin m) ℝ} (hU : HasOrthonormalCols U) (p : ℝ) :
-    schattenNorm (U * A) p = schattenNorm A p := by
-  simp only [schattenNorm, Fintype.card_fin]
-  change (∑ i ∈ Finset.range (min m n), singularValues (U * A) i ^ p) ^ (1 / p) = _
-  rw [singularValues_isometry_mul hU A]
-  rfl
+section FiniteIndex
 
-/-- Right orthogonal multiplication preserves the finite Schatten power sum. -/
-theorem schattenNorm_mul_orthogonal_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
-    {V : Matrix (Fin n) (Fin n) ℝ} (hV : HasOrthonormalCols V) (p : ℝ) :
-    schattenNorm (A * V) p = schattenNorm A p := by
-  simp only [schattenNorm, Fintype.card_fin]
-  change (∑ i ∈ Finset.range (min m n), singularValues (A * V) i ^ p) ^ (1 / p) = _
-  rw [singularValues_mul_orthogonal A hV]
-  rfl
+variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
-/-- Transposition preserves the finite Schatten power sum. -/
-theorem schattenNorm_transpose_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (p : ℝ) :
-    schattenNorm Aᵀ p = schattenNorm A p := by
-  simp only [schattenNorm, Fintype.card_fin]
-  change (∑ i ∈ Finset.range (min n m), singularValues Aᵀ i ^ p) ^ (1 / p) = _
-  rw [singularValues_transpose, min_comm]
-  rfl
+/-- Orthogonal left multiplication preserves every finite Schatten power sum. -/
+theorem schattenNorm_orthogonal_mul (A : Matrix m n ℝ) {U : Matrix m m ℝ}
+    (hU : HasOrthonormalCols U) (p : ℝ) : schattenNorm (U * A) p = schattenNorm A p := by
+  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_isometry_mul hU A]
+
+omit [DecidableEq m] in
+/-- Orthogonal right multiplication preserves every finite Schatten power sum. -/
+theorem schattenNorm_mul_orthogonal (A : Matrix m n ℝ) {V : Matrix n n ℝ}
+    (hV : HasOrthonormalCols V) (p : ℝ) : schattenNorm (A * V) p = schattenNorm A p := by
+  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_mul_orthogonal A hV]
+
+/-- Transposition preserves every finite Schatten power sum. -/
+theorem schattenNorm_transpose (A : Matrix m n ℝ) (p : ℝ) : schattenNorm Aᵀ p = schattenNorm A p := by
+  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_transpose, min_comm]
+
+end FiniteIndex
 
 end NLAlib

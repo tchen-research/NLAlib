@@ -82,7 +82,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem gramError_entry_hasLocalDegree_two
     (hs : 0 < s) (F : Frame n d) (a c : Fin d) :
     HasLocalDegree (ι := Fin s × Fin n) (α := SignedHash b) 2
-      (fun z : RawSample s b n => (gramError F (toSample z)) a c) := by
+      (fun z : RawSample s b n => (gramError F (stackMatrix (toSample z))) a c) := by
   have hinner (g : Fin s) (i j : Fin n) :
       HasLocalDegree (ι := Fin s × Fin n) (α := SignedHash b) 2
         (fun z : RawSample s b n =>
@@ -125,7 +125,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem gramError_pow_entry_hasLocalDegree
     (hs : 0 < s) (F : Frame n d) (r : ℕ) (a c : Fin d) :
     HasLocalDegree (ι := Fin s × Fin n) (α := SignedHash b) (2 * r)
-      (fun z : RawSample s b n => ((gramError F (toSample z)) ^ r) a c) := by
+      (fun z : RawSample s b n => ((gramError F (stackMatrix (toSample z))) ^ r) a c) := by
   induction r generalizing a c with
   | zero =>
       simpa using
@@ -137,8 +137,8 @@ theorem gramError_pow_entry_hasLocalDegree
             (2 * r + 2)
             (fun z : RawSample s b n =>
               ∑ x : Fin d,
-                ((gramError F (toSample z)) ^ r) a x *
-                  (gramError F (toSample z)) x c) := by
+                ((gramError F (stackMatrix (toSample z))) ^ r) a x *
+                  (gramError F (stackMatrix (toSample z))) x c) := by
         apply HasLocalDegree.sum_fintype
         intro x
         exact HasLocalDegree.mul (ihr a x)
@@ -148,8 +148,8 @@ theorem gramError_pow_entry_hasLocalDegree
             (2 * (Nat.succ r))
             (fun z : RawSample s b n =>
               ∑ x : Fin d,
-                ((gramError F (toSample z)) ^ r) a x *
-                  (gramError F (toSample z)) x c) := by
+                ((gramError F (stackMatrix (toSample z))) ^ r) a x *
+                  (gramError F (stackMatrix (toSample z))) x c) := by
         simpa [Nat.mul_succ] using hsum
       apply HasLocalDegree.congr hdegree
       funext z
@@ -163,11 +163,11 @@ theorem trace_power_hasLocalDegree
     (hs : 0 < s) (F : Frame n d) (r : ℕ) :
     HasLocalDegree (ι := Fin s × Fin n) (α := SignedHash b) (2 * r)
       (fun z : RawSample s b n =>
-        ((gramError F (toSample z)) ^ r).trace) := by
+        ((gramError F (stackMatrix (toSample z))) ^ r).trace) := by
   have hsum :
       HasLocalDegree (ι := Fin s × Fin n) (α := SignedHash b) (2 * r)
         (fun z : RawSample s b n =>
-          ∑ a : Fin d, ((gramError F (toSample z)) ^ r) a a) := by
+          ∑ a : Fin d, ((gramError F (stackMatrix (toSample z))) ^ r) a a) := by
     apply HasLocalDegree.sum_fintype
     intro a
     exact gramError_pow_entry_hasLocalDegree (b := b) hs F r a a
@@ -186,9 +186,9 @@ theorem trace_even_moment_eq_of_matchesUpTo_four_mul
     (hs : 0 < s) (hb : 0 < b) (F : Frame n d) (q : ℕ)
     (μ : FiniteLaw (RawSample s b n))
     (hmatch : MatchesUpTo μ (rawSampleLaw s b n hb) (4 * q)) :
-    μ.expect (fun z => ((gramError F (toSample z)) ^ (2 * q)).trace) =
+    μ.expect (fun z => ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) =
       (rawSampleLaw s b n hb).expect
-        (fun z => ((gramError F (toSample z)) ^ (2 * q)).trace) := by
+        (fun z => ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) := by
   apply HasLocalDegree.expect_eq_of_matchesUpTo hmatch
   have hdegree : 2 * (2 * q) = 4 * q := by omega
   simpa only [hdegree] using
@@ -204,13 +204,13 @@ theorem matrix_markov_tail_of_matchesUpTo_four_mul
     (q : ℕ) (hq : 0 < q) (eps : ℝ) (heps : 0 < eps)
     (μ : FiniteLaw (RawSample s b n))
     (hmatch : MatchesUpTo μ (rawSampleLaw s b n hb) (4 * q)) :
-    μ.prob {z | eps ≤ ‖gramError F (toSample z)‖} ≤
+    μ.prob {z | eps ≤ ‖gramError F (stackMatrix (toSample z))‖} ≤
       (rawSampleLaw s b n hb).expect
-          (fun z => ((gramError F (toSample z)) ^ (2 * q)).trace) /
+          (fun z => ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) /
         eps ^ (2 * q) := by
   have htail := MatrixTail.matrix_markov_tail μ
-    (fun z => gramError F (toSample z))
-    (fun z => MatrixTail.sparseStack_gramError_isHermitian F (toSample z))
+    (fun z => gramError F (stackMatrix (toSample z)))
+    (fun z => gramError_isHermitian F (stackMatrix (toSample z)))
     q hq eps heps
   rw [trace_even_moment_eq_of_matchesUpTo_four_mul hs hb F q μ hmatch] at htail
   exact htail
@@ -224,21 +224,20 @@ theorem ose_failure_tail_of_matchesUpTo_four_mul
     (q : ℕ) (hq : 0 < q) (eps : ℝ) (heps : 0 < eps)
     (μ : FiniteLaw (RawSample s b n))
     (hmatch : MatchesUpTo μ (rawSampleLaw s b n hb) (4 * q)) :
-    μ.prob {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤
+    μ.prob {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤
       (rawSampleLaw s b n hb).expect
-          (fun z => ((gramError F (toSample z)) ^ (2 * q)).trace) /
+          (fun z => ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) /
         eps ^ (2 * q) := by
   calc
-    μ.prob {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤
-        μ.prob {z | eps ≤ ‖gramError F (toSample z)‖} := by
+    μ.prob {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤
+        μ.prob {z | eps ≤ ‖gramError F (stackMatrix (toSample z))‖} := by
       apply FiniteLaw.prob_mono
       intro z hfail
-      have hiff := MatrixTail.sparseStack_gramError_norm_le_iff_vector_ose
-        F (toSample z) eps heps.le
+      have hiff := norm_gramError_le_iff_isSubspaceEmbedding F (stackMatrix (toSample z)) heps.le
       by_contra htail
       exact hfail (hiff.mp (not_le.mp htail).le)
     _ ≤ (rawSampleLaw s b n hb).expect
-          (fun z => ((gramError F (toSample z)) ^ (2 * q)).trace) /
+          (fun z => ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) /
         eps ^ (2 * q) :=
       matrix_markov_tail_of_matchesUpTo_four_mul
         hs hb F q hq eps heps μ hmatch
@@ -259,16 +258,16 @@ theorem failure_tail_of_band_bounds
     (μ : FiniteLaw (RawSample s b n))
     (hmatch : MatchesUpTo μ
       (rawSampleLaw s b n (lt_trans Nat.zero_lt_one hb)) (4 * q)) :
-    μ.prob {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤
+    μ.prob {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤
       (d : ℝ) * ((3 * cB b ^ 2 * beta) / eps) ^ (2 * q) := by
   have hmarkov := ose_failure_tail_of_matchesUpTo_four_mul
     hs (lt_trans Nat.zero_lt_one hb) F q hq eps heps μ hmatch
   have hmoment := raw_trace_moment_le_of_band_bounds
     hs hb F hbeta hband
   calc
-    μ.prob {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤
+    μ.prob {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤
         (rawSampleLaw s b n (lt_trans Nat.zero_lt_one hb)).expect
-            (fun z => ((gramError F (toSample z)) ^ (2 * q)).trace) /
+            (fun z => ((gramError F (stackMatrix (toSample z))) ^ (2 * q)).trace) /
           eps ^ (2 * q) := hmarkov
     _ ≤ ((d : ℝ) * (3 * cB b ^ 2 * beta) ^ (2 * q)) /
           eps ^ (2 * q) := by
@@ -297,7 +296,7 @@ theorem rounded_ose_failure_le_delta
         (roundedB d (failureOrder d delta) eps) n
         (canonicalB_pos (d := d) (delta := delta) heps0 heps1))
       (4 * failureOrder d delta)) :
-    μ.prob {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤ delta := by
+    μ.prob {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤ delta := by
   let q := failureOrder d delta
   let s := roundedS q eps
   let b := roundedB d q eps
@@ -344,7 +343,7 @@ theorem rounded_ose_failure_le_delta
       (roundedMomentBase d q eps) ^ (2 * q) :=
     pow_le_pow_left₀ hbase0 hbase _
   calc
-    μ.prob {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} ≤
+    μ.prob {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} ≤
         (d : ℝ) * (3 * cB b ^ 2 * beta / eps) ^ (2 * q) := by
       simpa [q, s, b, beta] using htail
     _ ≤ (d : ℝ) * (roundedMomentBase d q eps) ^ (2 * q) :=
@@ -369,15 +368,14 @@ theorem rounded_operator_norm_failure_le_delta
         (roundedB d (failureOrder d delta) eps) n
         (canonicalB_pos (d := d) (delta := delta) heps0 heps1))
       (4 * failureOrder d delta)) :
-    μ.prob {z | eps < ‖gramError F (toSample z)‖} ≤ delta := by
+    μ.prob {z | eps < ‖gramError F (stackMatrix (toSample z))‖} ≤ delta := by
   have hevent :
       {z : RawSample (roundedS (failureOrder d delta) eps)
           (roundedB d (failureOrder d delta) eps) n |
-        eps < ‖gramError F (toSample z)‖} =
-      {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} := by
+        eps < ‖gramError F (stackMatrix (toSample z))‖} =
+      {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := by
     ext z
-    have hiff := MatrixTail.sparseStack_gramError_norm_le_iff_vector_ose
-      F (toSample z) eps heps0.le
+    have hiff := norm_gramError_le_iff_isSubspaceEmbedding F (stackMatrix (toSample z)) heps0.le
     simpa [not_le] using not_congr hiff
   rw [hevent]
   exact rounded_ose_failure_le_delta
@@ -400,14 +398,14 @@ theorem rounded_ose_success_probability
         (canonicalB_pos (d := d) (delta := delta) heps0 heps1))
       (4 * failureOrder d delta)) :
     1 - delta ≤
-      μ.prob {z | MatrixTail.IsSparseStackOSE F (toSample z) eps} := by
+      μ.prob {z | IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := by
   let good : Set
       (RawSample (roundedS (failureOrder d delta) eps)
         (roundedB d (failureOrder d delta) eps) n) :=
-    {z | MatrixTail.IsSparseStackOSE F (toSample z) eps}
+    {z | IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps}
   have hfail : μ.prob goodᶜ ≤ delta := by
     have hcomp : goodᶜ =
-        {z | ¬ MatrixTail.IsSparseStackOSE F (toSample z) eps} := by
+        {z | ¬ IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := by
       ext z
       rfl
     rw [hcomp]
@@ -417,7 +415,7 @@ theorem rounded_ose_success_probability
     1 - delta ≤ 1 - μ.prob goodᶜ := sub_le_sub_left hfail 1
     _ = μ.prob good := by
       simpa using (FiniteLaw.prob_compl μ goodᶜ).symm
-    _ = μ.prob {z | MatrixTail.IsSparseStackOSE F (toSample z) eps} := rfl
+    _ = μ.prob {z | IsSubspaceEmbedding (stackMatrix (toSample z)) (rowMatrix F.u) eps} := rfl
 
 end
 

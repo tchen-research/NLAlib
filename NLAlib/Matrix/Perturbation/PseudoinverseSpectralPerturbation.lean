@@ -32,8 +32,10 @@ theorem specNorm_mul_mul_le {p q : Type*} [Fintype p] [Fintype q]
   (specNorm_mul_le _ _).trans
     (mul_le_mul_of_nonneg_right (specNorm_mul_le _ _) (specNorm_nonneg _))
 
-/-- General-rank pseudoinverse perturbation with the exact golden ratio.
-Wedin (1973); rectangular, empty, and rank-changing matrices are all allowed.
+/-- General-rank pseudoinverse perturbation with the exact golden ratio:
+`‖B⁺ - A⁺‖₂ ≤ ((1 + √5)/2) max(‖A⁺‖₂², ‖B⁺‖₂²) ‖B - A‖₂`.
+Wedin 1973, Thm 4.1; Stewart–Sun 1990, Thm III.3.8 (`μ = (1 + √5)/2` for the spectral norm);
+rectangular, empty, and rank-changing matrices are all allowed.
 atlas: pseudoinverse-perturbation (partial) -/
 theorem specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq (A B : Matrix m n ℝ) :
     specNorm (moorePenroseInverse B-moorePenroseInverse A) ≤
@@ -88,7 +90,8 @@ theorem specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq (A B : Matrix m n
   simpa only [d, e, a, b, mul_assoc] using hh
 
 /-- Equal-rank pseudoinverse perturbation with the exact golden-ratio
-product coefficient. Wedin (1973), Stewart–Sun §III.3. Rank zero is included.
+product coefficient: `‖B⁺ - A⁺‖₂ ≤ ((1 + √5)/2) ‖A⁺‖₂ ‖B⁺‖₂ ‖B - A‖₂` when `rank A = rank B`.
+Wedin 1973, Thm 4.1; Stewart–Sun 1990, §III.3, Thm III.3.8. Rank zero is included.
 atlas: pseudoinverse-perturbation (partial) -/
 theorem specNorm_moorePenroseInverse_sub_le_goldenRatio_mul_of_rank_eq
     {A B : Matrix m n ℝ} (hr : A.rank=B.rank) :

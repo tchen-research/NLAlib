@@ -1,6 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 import Mathlib.LinearAlgebra.Lagrange
 import NLAlib.Polynomial.Chebyshev.Growth
+import NLAlib.Polynomial.Interpolation.Lagrange
 /-!
 # Markov brothers' and Bernstein's inequalities
 
@@ -14,8 +15,8 @@ Layer 0 (no matrices). Derivative bounds for real polynomials bounded on `[−1,
   constant): `|p'(x)| ≤ q² M` on `[−1, 1]`; and the interval form
   `abs_eval_derivative_le_two_mul_sq_div_mul_of_forall_abs_eval_le` with constant `2 q²/(b − a)`.
 
-Proof route: Schur's inequality by Lagrange interpolation at the zeros of `T_q` (Mathlib's
-`Polynomial.Chebyshev.roots_T_real`, `Lagrange.eq_interpolate`, `Lagrange.derivative_nodal`);
+Proof route: Schur's inequality by Lagrange interpolation at the zeros `NLAlib.chebyshevZero` of
+`T_q` (`nodal_chebyshevZero`, `Lagrange.eq_interpolate`, `Lagrange.derivative_nodal`);
 Bernstein by applying Schur at `y = 1` to the polynomial `r` with
 `p(cos(θ₀ + θ)) − p(cos(θ₀ − θ)) = −2 sin θ · r(cos θ)` (built from Hasse derivatives, no
 trigonometric polynomials needed); Markov from Bernstein plus Schur applied to `p'`.
@@ -31,9 +32,6 @@ namespace NLAlib
 
 namespace Markov
 
-/-- The zeros of `T_q`. -/
-private def zero (q k : ℕ) : ℝ := cos ((2 * k + 1) * π / (2 * q))
-
 private lemma angle_mem {q k : ℕ} (hk : k < q) :
     0 < (2 * k + 1) * π / (2 * q) ∧ (2 * k + 1) * π / (2 * q) < π := by
   have hq : (0 : ℝ) < q := by exact_mod_cast (Nat.zero_lt_of_lt hk)
@@ -45,44 +43,22 @@ private lemma angle_mem {q k : ℕ} (hk : k < q) :
   · rw [div_lt_iff₀ (by positivity)]
     nlinarith [pi_pos]
 
-private lemma injOn_zero (q : ℕ) : Set.InjOn (zero q) (range q) :=
-  (Finset.range q).nodup_map_iff_injOn.mp (roots_T_real_nodup q)
-
-private lemma eval_T_zero {q k : ℕ} (hk : k < q) : (T ℝ q).eval (zero q k) = 0 := by
-  have : zero q k ∈ (T ℝ q).roots := by
-    rw [roots_T_real]; simp only [Finset.mem_val, Finset.mem_image]
-    exact ⟨k, Finset.mem_range.mpr hk, rfl⟩
-  exact (mem_roots'.mp this).2
-
-private lemma T_eq_C_mul_nodal (q : ℕ) :
-    Chebyshev.T ℝ q = C (2 ^ (q - 1) : ℝ) * Lagrange.nodal (range q) (zero q) := by
-  refine Polynomial.eq_of_degree_le_of_eval_index_eq (range q) (injOn_zero q) ?_ ?_ ?_ ?_
-  · simp [Chebyshev.degree_T]
-  · rw [degree_C_mul (by positivity), Lagrange.degree_nodal, Chebyshev.degree_T]
-    simp
-  · rw [leadingCoeff_C_mul_of_isUnit (by simp), Lagrange.nodal_monic.leadingCoeff,
-      Chebyshev.leadingCoeff_T]
-    simp
-  · intro i hi
-    rw [eval_mul, Lagrange.eval_nodal_at_node hi, mul_zero]
-    exact eval_T_zero (Finset.mem_range.mp hi)
-
 private lemma eval_derivative_T (q : ℕ) (x : ℝ) :
     (derivative (T ℝ q)).eval x = q * (U ℝ ((q : ℤ) - 1)).eval x := by
   rw [T_derivative_eq_U, eval_mul]
   simp
 
-private lemma sin_angle_eq_sqrt {q k : ℕ} (hk : k < q) :
-    sin ((2 * k + 1) * π / (2 * q)) = √(1 - zero q k ^ 2) :=
-  sin_eq_sqrt_one_sub_cos_sq (angle_mem hk).1.le (angle_mem hk).2.le
+private lemma sin_angle_eq_sqrt {q : ℕ} (k : Fin q) :
+    sin ((2 * ((k : ℕ) : ℝ) + 1) * π / (2 * q)) = √(1 - chebyshevZero q k ^ 2) :=
+  sin_eq_sqrt_one_sub_cos_sq (angle_mem k.isLt).1.le (angle_mem k.isLt).2.le
 
 /-- At a zero `ξ_k = cos θ_k` of `T_q`, `|T_q'(ξ_k)| · sin θ_k = q`. -/
-private lemma abs_eval_derivative_T_zero_mul_sqrt {q k : ℕ} (hk : k < q) :
-    |(derivative (T ℝ q)).eval (zero q k)| * √(1 - zero q k ^ 2) = q := by
-  set θ := (2 * k + 1) * π / (2 * q) with hθ
+private lemma abs_eval_derivative_T_zero_mul_sqrt {q : ℕ} (k : Fin q) :
+    |(derivative (T ℝ q)).eval (chebyshevZero q k)| * √(1 - chebyshevZero q k ^ 2) = q := by
+  set θ := (2 * ((k : ℕ) : ℝ) + 1) * π / (2 * q) with hθ
   have hU := U_real_cos θ ((q : ℤ) - 1)
   have hT := T_real_cos θ (q : ℤ)
-  have h0 : (T ℝ q).eval (cos θ) = 0 := eval_T_zero hk
+  have h0 : (T ℝ q).eval (cos θ) = 0 := eval_T_real_chebyshevZero q k
   rw [h0] at hT
   have hsin : |sin ((q : ℝ) * θ)| = 1 := by
     have := sin_sq_add_cos_sq ((q : ℝ) * θ)
@@ -90,36 +66,38 @@ private lemma abs_eval_derivative_T_zero_mul_sqrt {q k : ℕ} (hk : k < q) :
     rw [← hT] at this
     have h1 : sin ((q : ℝ) * θ) ^ 2 = 1 := by simpa using this
     rcases sq_eq_one_iff.mp h1 with h | h <;> simp [h]
-  have hpos : 0 ≤ sin θ := sin_nonneg_of_nonneg_of_le_pi (angle_mem hk).1.le (angle_mem hk).2.le
-  rw [← sin_angle_eq_sqrt hk, eval_derivative_T]
+  have hpos : 0 ≤ sin θ :=
+    sin_nonneg_of_nonneg_of_le_pi (angle_mem k.isLt).1.le (angle_mem k.isLt).2.le
+  rw [← sin_angle_eq_sqrt k, eval_derivative_T]
   change |(q : ℝ) * (U ℝ ((q : ℤ) - 1)).eval (cos θ)| * sin θ = q
   rw [← abs_of_nonneg hpos, ← abs_mul, mul_assoc, hU]
   push_cast
   rw [sub_add_cancel, abs_mul, hsin]
   simp
 
-private lemma zero_le_zero_zero {q k : ℕ} (hk : k < q) : zero q k ≤ zero q 0 := by
-  have h0 := angle_mem (Nat.zero_lt_of_lt hk)
-  have hk' := angle_mem hk
-  unfold zero
+private lemma zero_le_zero_zero {q : ℕ} (hq : 0 < q) (k : Fin q) :
+    chebyshevZero q k ≤ chebyshevZero q ⟨0, hq⟩ := by
+  have h0 := angle_mem hq
+  have hk' := angle_mem k.isLt
+  unfold chebyshevZero
   apply cos_le_cos_of_nonneg_of_le_pi h0.1.le hk'.2.le
   push_cast
   gcongr
-  linarith [(Nat.cast_nonneg k : (0 : ℝ) ≤ k)]
+  linarith [(Nat.cast_nonneg (k : ℕ) : (0 : ℝ) ≤ (k : ℕ))]
 
-private lemma eval_basis_eq {q i : ℕ} (hi : i ∈ range q) (y : ℝ) :
-    (Lagrange.basis (range q) (zero q) i).eval y =
-      Lagrange.nodalWeight (range q) (zero q) i *
-        (Lagrange.nodal ((range q).erase i) (zero q)).eval y := by
+private lemma eval_basis_eq {q : ℕ} {i : Fin q} (hi : i ∈ (univ : Finset (Fin q))) (y : ℝ) :
+    (Lagrange.basis univ (chebyshevZero q) i).eval y =
+      Lagrange.nodalWeight univ (chebyshevZero q) i *
+        (Lagrange.nodal (univ.erase i) (chebyshevZero q)).eval y := by
   rw [Lagrange.basis_eq_prod_sub_inv_mul_nodal_div hi, ← Lagrange.nodal_erase_eq_nodal_div hi,
     eval_mul, eval_C]
 
 /-- Schur's inequality on `[cos(π/(2q)), 1]`, by Lagrange interpolation at the zeros of `T_q`. -/
 private lemma abs_eval_le_of_zero_le {q : ℕ} {r : ℝ[X]} {M y : ℝ} (hq : 0 < q)
     (hr : r.degree < q) (hM : ∀ y ∈ Set.Icc (-1 : ℝ) 1, √(1 - y ^ 2) * |r.eval y| ≤ M)
-    (hy0 : zero q 0 ≤ y) (hy1 : y ≤ 1) : |r.eval y| ≤ q * M := by
-  set s := range q
-  set v := zero q
+    (hy0 : chebyshevZero q ⟨0, hq⟩ ≤ y) (hy1 : y ≤ 1) : |r.eval y| ≤ q * M := by
+  set s : Finset (Fin q) := univ
+  set v := chebyshevZero q
   set N := Lagrange.nodal s v
   set c : ℝ := 2 ^ (q - 1) with hc
   have hcpos : 0 < c := by positivity
@@ -129,28 +107,28 @@ private lemma abs_eval_le_of_zero_le {q : ℕ} {r : ℝ[X]} {M y : ℝ} (hq : 0 
     simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, sub_zero, sqrt_one,
       one_mul] at this
     exact (abs_nonneg _).trans this
+  have hN : N = C (1 / 2 ^ (q - 1)) * T ℝ q := nodal_chebyshevZero q
   have hderiv : ∀ x, (derivative (T ℝ q)).eval x = c * (derivative N).eval x := by
     intro x
-    rw [T_eq_C_mul_nodal q, derivative_C_mul, eval_mul, eval_C]
+    rw [hN, derivative_C_mul, eval_mul, eval_C, ← mul_assoc, hc,
+      mul_one_div_cancel (by positivity), one_mul]
   have hinterp : r = Lagrange.interpolate s v (fun i => r.eval (v i)) :=
-    Lagrange.eq_interpolate (injOn_zero q) (by simpa [s] using hr)
+    Lagrange.eq_interpolate (chebyshevZero_injective q).injOn (by simpa [s] using hr)
   -- nonnegativity of the partial nodal polynomials at `y`
   have hNi : ∀ i ∈ s, 0 ≤ (Lagrange.nodal (s.erase i) v).eval y := by
     intro i _
     rw [Lagrange.eval_nodal]
     refine Finset.prod_nonneg fun j hj => ?_
-    have hj' : j < q := Finset.mem_range.mp (Finset.mem_of_mem_erase hj)
-    linarith [zero_le_zero_zero hj']
+    linarith [zero_le_zero_zero hq j]
   -- the per-node weight bound
   have hterm : ∀ i ∈ s,
       |r.eval (v i)| * |Lagrange.nodalWeight s v i| ≤ c * M / q := by
     intro i hi
-    have hik : i < q := Finset.mem_range.mp hi
     rw [Lagrange.nodalWeight_eq_eval_derivative_nodal hi, abs_inv]
-    have hT := abs_eval_derivative_T_zero_mul_sqrt hik
+    have hT := abs_eval_derivative_T_zero_mul_sqrt i
     rw [hderiv, abs_mul, abs_of_pos hcpos] at hT
     set D := |(derivative N).eval (v i)|
-    set S := √(1 - zero q i ^ 2)
+    set S := √(1 - chebyshevZero q i ^ 2)
     have hDpos : D ≠ 0 := by
       intro h
       rw [h, mul_zero, zero_mul] at hT
@@ -159,14 +137,14 @@ private lemma abs_eval_le_of_zero_le {q : ℕ} {r : ℝ[X]} {M y : ℝ} (hq : 0 
       rw [eq_div_iff hqpos.ne', ← hT]
       field_simp
     rw [hinv]
-    have hSi : S * |r.eval (v i)| ≤ M := hM _ (cos_mem_Icc _)
+    have hSi : S * |r.eval (v i)| ≤ M := hM _ (chebyshevZero_mem_Icc q i)
     calc |r.eval (v i)| * (c * S / q) = c * (S * |r.eval (v i)|) / q := by ring
       _ ≤ c * M / q := by gcongr
   have hsum : (derivative N).eval y = ∑ i ∈ s, (Lagrange.nodal (s.erase i) v).eval y := by
     rw [Lagrange.derivative_nodal, eval_finsetSum]
   have hy : |y| ≤ 1 := by
     rw [abs_le]; constructor
-    · have : -1 ≤ zero q 0 := neg_one_le_cos _
+    · have : -1 ≤ chebyshevZero q ⟨0, hq⟩ := (chebyshevZero_mem_Icc q ⟨0, hq⟩).1
       linarith
     · exact hy1
   rw [hinterp, Lagrange.interpolate_apply, eval_finsetSum]
@@ -190,7 +168,7 @@ private lemma abs_eval_le_of_zero_le {q : ℕ} {r : ℝ[X]} {M y : ℝ} (hq : 0 
 /-- Schur's inequality on `[−cos(π/(2q)), cos(π/(2q))]`, where `√(1 − y²) ≥ sin(π/(2q)) ≥ 1/q`. -/
 private lemma abs_eval_le_of_abs_le_zero {q : ℕ} {r : ℝ[X]} {M y : ℝ} (hq : 0 < q)
     (hM : ∀ y ∈ Set.Icc (-1 : ℝ) 1, √(1 - y ^ 2) * |r.eval y| ≤ M)
-    (hy : |y| ≤ zero q 0) : |r.eval y| ≤ q * M := by
+    (hy : |y| ≤ chebyshevZero q ⟨0, hq⟩) : |r.eval y| ≤ q * M := by
   have hqpos : (0 : ℝ) < q := by exact_mod_cast hq
   set α := (2 * ((0 : ℕ) : ℝ) + 1) * π / (2 * q) with hα
   have hα0 : 0 ≤ α := (angle_mem hq).1.le
@@ -213,7 +191,7 @@ private lemma abs_eval_le_of_abs_le_zero {q : ℕ} {r : ℝ[X]} {M y : ℝ} (hq 
     apply sqrt_le_sqrt
     nlinarith [sin_sq_add_cos_sq α]
   have hyI : y ∈ Set.Icc (-1 : ℝ) 1 := by
-    have : zero q 0 ≤ 1 := cos_le_one _
+    have : chebyshevZero q ⟨0, hq⟩ ≤ 1 := (chebyshevZero_mem_Icc q ⟨0, hq⟩).2
     exact ⟨by linarith [neg_abs_le y], by linarith [le_abs_self y]⟩
   have h1 : 1 / (q : ℝ) * |r.eval y| ≤ M :=
     (mul_le_mul_of_nonneg_right (hsin.trans hsqrt) (abs_nonneg _)).trans (hM y hyI)
@@ -237,9 +215,9 @@ theorem abs_eval_le_mul_of_forall_sqrt_one_sub_sq_mul_abs_eval_le {q : ℕ} {r :
     (hq : 0 < q) (hr : r.degree < q)
     (hM : ∀ y ∈ Set.Icc (-1 : ℝ) 1, √(1 - y ^ 2) * |r.eval y| ≤ M)
     (hx : x ∈ Set.Icc (-1 : ℝ) 1) : |r.eval x| ≤ q * M := by
-  rcases le_or_gt (zero q 0) x with h | h
+  rcases le_or_gt (chebyshevZero q ⟨0, hq⟩) x with h | h
   · exact abs_eval_le_of_zero_le hq hr hM h hx.2
-  rcases le_or_gt x (-zero q 0) with h' | h'
+  rcases le_or_gt x (-chebyshevZero q ⟨0, hq⟩) with h' | h'
   · -- reflect
     have hr' : (r.comp (-X)).degree < q := by
       rcases eq_or_ne r 0 with h0 | h0

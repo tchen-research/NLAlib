@@ -1,7 +1,7 @@
 /- Copyright (c) 2026 Diar Heidary.
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
-import NLAlib.Sketching.Sparse.SparseFock.UniformExactSBarycenter
+import NLAlib.Sketching.Sparse.SparseFock.ExactConditionalBarycenter
 import NLAlib.Sketching.Sparse.SparseFock.MomentTransfer
 set_option autoImplicit false
 
@@ -285,7 +285,7 @@ theorem exactScaledIIDError_apply_grouped (hb : 0 < b) (F : Frame n d)
           inner ℝ (unscaledYVector (Y i g))
             (unscaledYVector (Y j g))) * F.u i a * F.u j c := by
   simp only [exactScaledIIDError, iidVectorError, Matrix.smul_apply,
-    Matrix.sum_apply, ParsevalFrame.outer_apply, smul_eq_mul, toYArray]
+    Matrix.sum_apply, Matrix.vecMulVec_apply, smul_eq_mul, toYArray]
   ring_nf
   have hreorder :
       (∑ g : Fin s, ∑ i : Fin n, ∑ j ∈ Finset.univ.erase i,

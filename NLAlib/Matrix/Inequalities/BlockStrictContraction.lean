@@ -22,7 +22,7 @@ Horn--Johnson (2013), Lemma 7.7.6.
 atlas: psd-block-contraction (partial) -/
 theorem posDef_identity_fromBlocks_iff_specNorm_lt_one (X : Matrix m n ℝ) :
     (fromBlocks 1 X Xᵀ 1).PosDef ↔ specNorm X < 1 := by
-  rw [posDef_fromBlocks_iff_posDef_schur Matrix.isHermitian_one isUnit_one,
+  rw [posDef_fromBlocks_iff_posDef_and_schur,
     inv_one, Matrix.mul_one, and_iff_right Matrix.PosDef.one]
   have hG : (Xᵀ * X).PosSemidef := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using Matrix.posSemidef_conjTranspose_mul_self X
@@ -104,7 +104,7 @@ theorem fromBlocks_positivity_iff_relative_spectralRadius
     simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hs
     rw [hs, ← Matrix.le_iff, le_iff_relative_spectralRadius_le_one hC hD,
       spectralRadius_mul_comm C⁻¹]
-  · rw [posDef_fromBlocks_iff_posDef_schur hA.isHermitian hA.isUnit,
+  · rw [posDef_fromBlocks_iff_posDef_and_schur,
       and_iff_right hA, posDef_sub_iff_relative_spectralRadius_lt_one hC hD,
       spectralRadius_mul_comm C⁻¹]
 

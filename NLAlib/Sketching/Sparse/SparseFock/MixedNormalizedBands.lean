@@ -38,7 +38,7 @@ theorem norm_normalized_Xplus_restricted_le (F : Frame n d)
       (1 / 2 : ℝ) *
         (BandEnvelope.bTerm (d : ℝ) (nu : ℝ) (((s * b : ℕ) : ℝ)) +
           (nu : ℝ) / s) := by
-  rw [norm_normalized_mixed_term_eq]
+  rw [norm_normalized_directional_term_eq]
   calc
     Real.sqrt ((b : ℝ) - 1) / (((s * b : ℕ) : ℝ)) *
         ‖Xplus (s * b) (DirectionalConcrete.frameRows F) *
@@ -65,7 +65,7 @@ theorem norm_normalized_XplusAdj_restricted_le (F : Frame n d)
       (1 / 2 : ℝ) *
         (BandEnvelope.bTerm (d : ℝ) (nu : ℝ) (((s * b : ℕ) : ℝ)) +
           (nu : ℝ) / s) := by
-  rw [norm_normalized_mixed_term_eq]
+  rw [norm_normalized_directional_term_eq]
   calc
     Real.sqrt ((b : ℝ) - 1) / (((s * b : ℕ) : ℝ)) *
         ‖XplusAdj (s * b) (DirectionalConcrete.frameRows F) *
@@ -91,7 +91,7 @@ theorem norm_normalized_Xzero_restricted_le (F : Frame n d)
         gradeProjection (d := d) nu‖ ≤
       (Real.sqrt ((b : ℝ) - 1) / (((s * b : ℕ) : ℝ))) *
         Real.sqrt ((nu : ℝ) * ((d : ℝ) + nu)) := by
-  rw [norm_normalized_mixed_term_eq]
+  rw [norm_normalized_directional_term_eq]
   exact mul_le_mul_of_nonneg_left
     (norm_Xzero_restricted_le (m := s * b) F nu)
     BandCoefficientBounds.rho_div_stack_nonneg
@@ -107,7 +107,7 @@ theorem norm_normalized_XzeroAdj_restricted_le (F : Frame n d)
         gradeProjection (d := d) nu‖ ≤
       (Real.sqrt ((b : ℝ) - 1) / (((s * b : ℕ) : ℝ))) *
         Real.sqrt ((nu : ℝ) * ((d : ℝ) + nu)) := by
-  rw [norm_normalized_mixed_term_eq]
+  rw [norm_normalized_directional_term_eq]
   exact mul_le_mul_of_nonneg_left
     (norm_XzeroAdj_restricted_le (m := s * b) F nu)
     BandCoefficientBounds.rho_div_stack_nonneg

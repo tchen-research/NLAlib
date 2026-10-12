@@ -57,7 +57,9 @@ theorem complement_rowProjector_mul_transpose_eq_zero (A : Matrix m n ℝ) :
     (isMoorePenroseInverse A).transpose_inv_mul_eq, Matrix.transpose_zero] using hh
 
 /-- The exact Moore–Penrose difference identity with its three signs and
-complementary range projectors. Stewart–Sun §III.3; no rank condition is needed.
+complementary range projectors (Wedin's identity):
+`B⁺ - A⁺ = -B⁺ (B - A) A⁺ + B⁺ B⁺ᵀ (B - A)ᵀ (I - A A⁺) + (I - B⁺ B) (B - A)ᵀ A⁺ᵀ A⁺`.
+Wedin 1973, Thm 4.1 (proof); Stewart–Sun 1990, §III.3; no rank condition is needed.
 atlas: pseudoinverse-perturbation (partial) -/
 theorem moorePenroseInverse_sub_eq (A B : Matrix m n ℝ) :
     moorePenroseInverse B-moorePenroseInverse A =

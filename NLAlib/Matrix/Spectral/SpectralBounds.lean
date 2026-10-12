@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.Core
-import NLAlib.Matrix.Spectral.SVD
+import NLAlib.Matrix.Spectral.SingularValueSpectrum
+import NLAlib.Matrix.Norms.Reindex
 import Mathlib.Tactic
 
 /-!
@@ -8,6 +9,12 @@ import Mathlib.Tactic
 Atlas: `norm-lipschitz`. This strengthens the Frobenius-norm bound in
 `NLAlib.Matrix.Spectral.Core` using the same infimum argument and Mathlib's actual
 Euclidean operator norm. Empty source dimensions are handled explicitly.
+
+It also identifies the extreme singular values on arbitrary finite index types:
+`singularValues_zero_eq_specNorm` (`σ₀ = ‖A‖₂`), `singularValues_le_specNorm`, and
+`sigmaMin_eq_singularValues_last` (the variational `σ_min` is `σ_{card n - 1}`), together with
+the relabeling invariance `sigmaMin_reindex`. The `Fin` cases are proved from the SVD and
+transported with `singularValues_reindex`, `specNorm_reindex` and `sigmaMin_reindex`.
 -/
 
 noncomputable section
@@ -68,16 +75,38 @@ end NLAlib
 
 namespace NLAlib
 
-/-- The largest sorted singular value equals the spectral norm. The padded
-singular-value convention also covers matrices with zero rows or columns.
-Atlas: `svd`, `norms-frob-spec`.
-atlas: norm-lipschitz -/
-theorem singularValues_zero_eq_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
+/-- Relabeling finite real matrix indices preserves the variational smallest
+singular value, including empty domains. The unit spheres are explicitly
+equivalent. Horn--Johnson, Section 2.6; supports `principal-angles-def`. -/
+theorem sigmaMin_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
+    (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
+    sigmaMin (A.reindex em en) = sigmaMin A := by
+  let E : {x : n → ℝ // x ⬝ᵥ x = 1} ≃ {x : q → ℝ // x ⬝ᵥ x = 1} :=
+    { toFun x := ⟨fun j => x.val (en.symm j),
+        (en.symm.sum_comp (fun j => x.val j * x.val j)).trans x.property⟩
+      invFun y := ⟨fun i => y.val (en i),
+        (en.sum_comp (fun i => y.val i * y.val i)).trans y.property⟩
+      left_inv x := by apply Subtype.ext; funext i; simp
+      right_inv y := by apply Subtype.ext; funext j; simp }
+  unfold sigmaMin
+  rw [← E.surjective.iInf_comp]
+  apply iInf_congr
+  intro x
+  have hMv : (A.reindex em en) *ᵥ (E x).val = (A *ᵥ x.val) ∘ em.symm := by
+    funext i
+    change (∑ j : q, A (em.symm i) (en.symm j) * x.val (en.symm j)) =
+      ∑ j : n, A (em.symm i) j * x.val j
+    exact en.symm.sum_comp (fun j : n => A (em.symm i) j * x.val j)
+  rw [hMv]
+  exact congrArg Real.sqrt (em.symm.sum_comp
+    (fun i => (A *ᵥ x.val) i * (A *ᵥ x.val) i))
+
+private theorem singularValues_zero_eq_specNorm_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
     singularValues A 0 = specNorm A := by
   by_cases hn : n = 0
   · subst n
     have hA : A = 0 := by ext i j; exact Fin.elim0 j
-    rw [singularValues_eq_zero_of_width_le A (by omega), hA, specNorm_zero]
+    rw [singularValues_eq_zero_of_width_le A (by simp), hA, specNorm_zero]
   · have hnpos : 0 < n := Nat.pos_of_ne_zero hn
     obtain ⟨U, V, hSVD⟩ := exists_isSVD A
     have hGram : specNorm (Aᵀ * A) =
@@ -100,6 +129,22 @@ theorem singularValues_zero_eq_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n) 
     have hSq := specNorm_sq_eq_specNorm_transpose_mul_self A
     rw [hGram, hMax] at hSq
     nlinarith [singularValues_nonneg A 0, specNorm_nonneg A]
+
+/-- The largest sorted singular value equals the spectral norm, on arbitrary finite index
+types. The padded singular-value convention also covers matrices with zero rows or columns.
+Horn–Johnson 2013, §5.6. Atlas: `svd`, `norms-frob-spec`.
+atlas: norm-lipschitz -/
+theorem singularValues_zero_eq_specNorm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
+    [DecidableEq n] (A : Matrix m n ℝ) : singularValues A 0 = specNorm A := by
+  rw [← singularValues_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
+    ← specNorm_reindex A (Fintype.equivFin m) (Fintype.equivFin n)]
+  exact singularValues_zero_eq_specNorm_fin _
+
+/-- Every padded singular value is bounded by the spectral norm, on arbitrary finite index
+types. Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`. -/
+theorem singularValues_le_specNorm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
+    [DecidableEq n] (A : Matrix m n ℝ) (k : ℕ) : singularValues A k ≤ specNorm A :=
+  (singularValues_antitone A (Nat.zero_le k)).trans_eq (singularValues_zero_eq_specNorm A)
 
 /-- A Gram error has the norm of the list `σᵢ² − 1`, for every domain
 singular value (including zero singular values and empty dimensions).
@@ -135,13 +180,7 @@ theorem IsSVD.mulVec_dotProduct_mulVec_eq_sum {m n : ℕ}
   intro j _
   ring
 
-/-- The variational smallest singular value equals the last singular value
-in the list indexed by the domain dimension. For wide matrices this list
-includes kernel zeros; for tall matrices it is the usual smallest singular
-value. Atlas: `svd`, `norm-lipschitz`. The empty-domain value is handled by
-the existing theorem `sigmaMin_of_isEmpty`.
-atlas: norm-lipschitz -/
-theorem sigmaMin_eq_singularValues_last {m n : ℕ}
+private theorem sigmaMin_eq_singularValues_last_fin {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (hn : 0 < n) :
     sigmaMin A = singularValues A (n - 1) := by
   have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
@@ -186,15 +225,27 @@ theorem sigmaMin_eq_singularValues_last {m n : ℕ}
     rw [Real.sqrt_sq hs] at h
     exact h
 
+/-- The variational smallest singular value equals the last singular value
+in the list indexed by the domain dimension, on arbitrary finite index types. For wide
+matrices this list includes kernel zeros; for tall matrices it is the usual smallest singular
+value. Horn–Johnson 2013, Section 2.6. Atlas: `svd`, `norm-lipschitz`. The empty-domain value
+is handled by the existing theorem `sigmaMin_of_isEmpty`.
+atlas: norm-lipschitz -/
+theorem sigmaMin_eq_singularValues_last {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    (A : Matrix m n ℝ) (hn : 0 < Fintype.card n) :
+    sigmaMin A = singularValues A (Fintype.card n - 1) := by
+  rw [← sigmaMin_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
+    sigmaMin_eq_singularValues_last_fin _ hn, singularValues_reindex]
+
 /-- Positivity of the variational smallest singular value is exactly full
 column rank when there is at least one column. Atlas: `svd`,
 `randomized-kaczmarz`, `norm-lipschitz`.
 atlas: norm-lipschitz -/
-theorem sigmaMin_pos_iff_rank_eq_width {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) (hn : 0 < n) :
-    0 < sigmaMin A ↔ A.rank = n := by
+theorem sigmaMin_pos_iff_rank_eq_width {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    (A : Matrix m n ℝ) (hn : 0 < Fintype.card n) :
+    0 < sigmaMin A ↔ A.rank = Fintype.card n := by
   rw [sigmaMin_eq_singularValues_last A hn, singularValues_pos_iff]
-  have hr := A.rank_le_width
+  have hr := A.rank_le_card_width
   omega
 
 end NLAlib

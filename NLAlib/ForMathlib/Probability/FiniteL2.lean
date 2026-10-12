@@ -122,14 +122,6 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 noncomputable def mulOp (a : Omega → ℝ) : Matrix I I ℝ :=
   fun i j => B.coeff i (fun x => a x * B.basis j x)
 
-/-- Multiplication by the constant observable one is the identity coefficient matrix.
-Source: pinned sparse-Fock finite-law/basis proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-theorem mulOp_one : B.mulOp (fun _ => 1) = 1 := by
-  classical
-  ext i j
-  simp [mulOp, coeff_basis, Matrix.one_apply]
-
 omit [DecidableEq I] in
 /-- Finite multiplication operators compose as multiplication of their
 observables. Source: pinned sparse-Fock `FiniteL2`; supports `sparse-ose`. -/
@@ -160,33 +152,6 @@ theorem mulOp_mul (a b : Omega → ℝ) :
             congr 2
             funext x
             ring
-
-/-- The coefficient multiplication operator preserves powers of an observable.
-Source: pinned sparse-Fock finite-law/basis proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-theorem mulOp_pow (a : Omega → ℝ) (k : ℕ) :
-    B.mulOp a ^ k = B.mulOp (fun x => a x ^ k) := by
-  classical
-  induction k with
-  | zero => exact B.mulOp_one.symm
-  | succ k ih =>
-      rw [pow_succ, ih, B.mulOp_mul]
-      congr 1
-
-omit [DecidableEq I] in
-/-- The vacuum matrix entry equals the actual weighted expectation. Source:
-pinned sparse-Fock `FiniteL2`, `vacuum_mulOp`; supports `sparse-ose`. -/
-theorem vacuum_mulOp (a : Omega → ℝ) :
-    B.mulOp a B.vacuum B.vacuum = B.expect a := by
-  simp [mulOp, coeff, expect, B.vacuum_eq_one]
-
-/-- A scalar multiplication-operator vacuum entry is the corresponding weighted moment.
-Source: pinned sparse-Fock finite-law/basis proof, commit
-`b9da2b5d96e5fd70252e9c6551aefc92643e7d0b`; supports `sparse-ose`. -/
-theorem vacuum_moment (a : Omega → ℝ) (k : ℕ) :
-    (B.mulOp a ^ k) B.vacuum B.vacuum = B.expect (fun x => a x ^ k) := by
-  rw [B.mulOp_pow]
-  exact B.vacuum_mulOp _
 
 section MatrixValued
 

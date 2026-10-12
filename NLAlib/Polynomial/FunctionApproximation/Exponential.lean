@@ -114,13 +114,6 @@ theorem degree_exponentialChebyshevApprox_le (ℓ : ℝ) (t d : ℕ) :
   rw [C_mul']
   exact (degree_smul_le _ _).trans (degree_monomialChebyshevApprox_le i d)
 
-/-- A finite initial segment of a nonnegative exponential series is at most the full sum.
-Source: exponential series, used by Sachdeva–Vishnoi, Theorem 4.1 (`exp-polynomial-approx`). -/
-theorem sum_pow_div_factorial_le_exp {ℓ : ℝ} (hℓ : 0 ≤ ℓ) (t : ℕ) :
-    (∑ i ∈ range t, ℓ ^ i / (i.factorial : ℝ)) ≤ exp ℓ := by
-  have hs := hasSum_pow_div_factorial_exp ℓ
-  exact (hs.summable.sum_le_tsum (range t) (fun i _ => by positivity)).trans_eq hs.tsum_eq
-
 /-- The Chebyshev-compressed exponential has error at most the factorial tail plus the
 uniform monomial-compression error.
 Source: Sachdeva–Vishnoi, Theorem 4.1; operator rederivations `pg:exponential`.
@@ -168,7 +161,7 @@ theorem abs_exp_sub_eval_exponentialChebyshevApprox_le {ℓ : ℝ} (hℓ : 0 ≤
   have htail := exp_neg_mul_tsum_pow_div_factorial_nat_add_le hℓ t ht
   have hfirst := (mul_le_mul_of_nonneg_left hTaylor (by positivity)).trans htail
   have hweight : exp (-ℓ) * (∑ i ∈ range t, ℓ ^ i / (i.factorial : ℝ)) ≤ 1 := by
-    have h := mul_le_mul_of_nonneg_left (sum_pow_div_factorial_le_exp hℓ t)
+    have h := mul_le_mul_of_nonneg_left (Real.sum_le_exp_of_nonneg hℓ t)
       (show 0 ≤ exp (-ℓ) by positivity)
     simpa [← exp_add] using h
   have hsecond : exp (-ℓ) * |S - V| ≤ E := by

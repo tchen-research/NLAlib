@@ -28,7 +28,8 @@ theorem bestRankFrobSq_eq_zero_of_width_le {m n k : ℕ}
   apply Finset.sum_eq_zero
   intro i _
   by_cases hi : k ≤ (i : ℕ)
-  · rw [if_pos hi, singularValues_eq_zero_of_width_le A (hnk.trans hi)]
+  · rw [if_pos hi, singularValues_eq_zero_of_width_le A
+      (by simpa only [Fintype.card_fin] using hnk.trans hi)]
     simp
   · rw [if_neg hi]
 

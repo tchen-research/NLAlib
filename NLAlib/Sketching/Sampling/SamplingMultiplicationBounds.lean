@@ -76,7 +76,7 @@ theorem integral_frobSq_sampled_mul_sub_le_of_probability_domination
     (hdom : ∀ i, β * columnRowWeight A B i / ∑ j, columnRowWeight A B j ≤ p i)
     {c : ℕ} (hc : 0 < c) :
     (∫ ω : Fin c → n,
-      frobSq (sampledColumnMatrixReal A p ω * sampledRowMatrixReal B p ω - A * B)
+      frobSq (sampledColumnMatrix A p ω * sampledRowMatrix B p ω - A * B)
       ∂Measure.pi (fun _ => finiteSamplingLaw p hp)) ≤ frobSq A * frobSq B / (β * c) := by
   have hw : columnRowWeight (A.map Complex.ofReal) (B.map Complex.ofReal) =
       columnRowWeight A B := by

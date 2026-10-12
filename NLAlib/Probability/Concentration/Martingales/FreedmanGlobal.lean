@@ -1,5 +1,5 @@
 import NLAlib.Probability.Concentration.Martingales.TracePotentialProcess
-import NLAlib.Probability.Concentration.Martingales.TracePotentialCrossing
+import NLAlib.Matrix.Functions.TraceExpBounds
 import NLAlib.ForMathlib.Probability.NonnegativeSupermartingale
 /-!
 # Matrix Freedman for globally integrable actual second moments

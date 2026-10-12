@@ -1,4 +1,4 @@
-import NLAlib.Probability.Rademacher.Basic
+import NLAlib.Probability.Rademacher.Core
 import Mathlib.Probability.Distributions.Uniform
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
 import Mathlib.Probability.Independence.InfinitePi

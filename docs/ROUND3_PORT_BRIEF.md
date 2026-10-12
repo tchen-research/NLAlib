@@ -24,7 +24,7 @@ Frobenius moment (`Gaussian/InverseMoments.lean`), conditioning (`Gaussian/Condi
 Read those files for the CURRENT names before you start (a rename pass just finished). The
 workspace's `sigmaMin`, `lamMin`, `sigmaMinSq` do not exist in NLAlib yet: the Comparison agent
 defines them in `NLAlib/Matrix/Spectral.lean` (see its task); everyone else imports that file
-(poll for it with `lake build NLAlib.Matrix.Spectral.Basic`).
+(poll for it with `lake build NLAlib.Matrix.Spectral.Core`).
 
 Rules for every ported declaration:
 - Statement identical in content to the source (generalise only when free; never weaken);

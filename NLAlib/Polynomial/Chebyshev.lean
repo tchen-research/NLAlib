@@ -1,5 +1,5 @@
-import NLAlib.Polynomial.Chebyshev.Basic
 import NLAlib.Polynomial.Chebyshev.ChebyshevAliasing
+import NLAlib.Polynomial.Chebyshev.Core
 import NLAlib.Polynomial.Chebyshev.CosineBasis
 import NLAlib.Polynomial.Chebyshev.EvenChebyshevFilter
 import NLAlib.Polynomial.Chebyshev.Growth

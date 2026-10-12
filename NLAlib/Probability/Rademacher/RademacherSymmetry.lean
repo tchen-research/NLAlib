@@ -1,4 +1,4 @@
-import NLAlib.Probability.Rademacher.Basic
+import NLAlib.Probability.Rademacher.Core
 import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 

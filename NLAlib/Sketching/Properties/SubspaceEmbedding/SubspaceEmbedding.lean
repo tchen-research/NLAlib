@@ -1,5 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Sketching.Properties.SubspaceEmbedding.Basic
 /-!
@@ -19,7 +19,7 @@ The converse of the Gram form is in `NLAlib.Sketching.Properties.SubspaceEmbeddi
 form is in `NLAlib.Sketching.Properties.SubspaceEmbedding.SingularValueEmbedding` and its finite-index transport.
 The matrix facts used here (`mulVec_dotProduct_mulVec_self`,
 `abs_dotProduct_mulVec_le_specNorm`, `mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`) are
-in `NLAlib.Matrix.Norms.Basic` and `NLAlib.Matrix.Subspaces.Projections`.
+in `NLAlib.Matrix.Norms.Core` and `NLAlib.Matrix.Subspaces.Projections`.
 
 Atlas: `ose-def`.
 -/

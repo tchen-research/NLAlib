@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Spectral.SVD
 import Mathlib.Tactic
 
@@ -6,7 +6,7 @@ import Mathlib.Tactic
 # Spectral-norm perturbation of the smallest singular value
 
 Atlas: `norm-lipschitz`. This strengthens the Frobenius-norm bound in
-`NLAlib.Matrix.Spectral.Basic` using the same infimum argument and Mathlib's actual
+`NLAlib.Matrix.Spectral.Core` using the same infimum argument and Mathlib's actual
 Euclidean operator norm. Empty source dimensions are handled explicitly.
 -/
 

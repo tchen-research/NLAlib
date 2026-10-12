@@ -1,4 +1,4 @@
-import NLAlib.Solvers.Kaczmarz.Basic
+import NLAlib.Solvers.Kaczmarz.Core
 import NLAlib.Matrix.Basic.MoorePenrose
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
 import Mathlib.Algebra.BigOperators.Ring.Finset

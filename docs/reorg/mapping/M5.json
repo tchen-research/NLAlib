@@ -32,7 +32,7 @@
   "NLAlib/Krylov/AnalyticQuadrature.lean": "NLAlib/Krylov/Quadrature/AnalyticQuadrature.lean",
   "NLAlib/Krylov/ExponentialQuadrature.lean": "NLAlib/Krylov/Quadrature/ExponentialQuadrature.lean",
   "NLAlib/Krylov/FunctionApprox.lean": "NLAlib/Krylov/MatrixFunctions/FunctionApprox.lean",
-  "NLAlib/Polynomial/Basic.lean": "NLAlib/Polynomial/Chebyshev/Basic.lean",
+  "NLAlib/Polynomial/Basic.lean": "NLAlib.Polynomial.Chebyshev.Core.lean",
   "NLAlib/Polynomial/Chebyshev.lean": "NLAlib/Polynomial/Chebyshev/Growth.lean",
   "NLAlib/Polynomial/ChebyshevAliasing.lean": "NLAlib/Polynomial/Chebyshev/ChebyshevAliasing.lean",
   "NLAlib/Polynomial/Markov.lean": "NLAlib/Polynomial/Chebyshev/Markov.lean",

@@ -2,7 +2,7 @@ import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Data.Complex.BigOperators
 import Mathlib.Algebra.Star.UnitaryStarAlgAut
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import NLAlib.ForMathlib.Analysis.PowerInequalities
 /-!
 # Polynomial traces in Hermitian eigenbases

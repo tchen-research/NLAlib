@@ -29,7 +29,7 @@ new `Matrix/PolynomialCalculus.lean`, `Matrix/CourantFischer.lean`, `Matrix/Weyl
 olean after each of the first two steps, because groups C and D poll for them:
 1. G0 C1 (spectral-norm helpers, into `Norms.lean`) and G0 C5 / G3 C1 (`specNorm_aeval_le` and
    the vector / energy forms `‖p(A)v‖ ≤ max|p(λᵢ)| ‖v‖`, into `PolynomialCalculus.lean`).
-   `lake build NLAlib.Matrix.Norms.Basic NLAlib.Matrix.Functions.PolynomialCalculus`.
+   `lake build NLAlib.Matrix.Norms.Core NLAlib.Matrix.Functions.PolynomialCalculus`.
 2. G0 C4 (the von Neumann rank corollary `⟨X,E⟩ ≤ √r ‖X‖_F ‖E‖` for `rank X ≤ r`, into
    `VonNeumann.lean`) and G0 C3 (`specNorm (A − truncatedSVD A k) = σ_k`, into `EckartYoung.lean`).
    `lake build NLAlib.Matrix.Inequalities.VonNeumann NLAlib.Matrix.Spectral.EckartYoung`.
@@ -55,7 +55,7 @@ for the new import). Goal: `jl_distributional` proved, the four `jl_lemma*` decl
 **R6-C — sketching and low-rank** (new `NLAlib/LowRank/SpectralRangeFinder.lean`,
 `LowRank/PowerIteration.lean`, `LowRank/Nystrom.lean`, `Sketching/Leverage.lean`,
 `Sketching/GaussianEmbedding.lean`, `Sketching/ApproxMultiplication.lean`; aggregators
-`LowRank.lean`, `Sketching.lean`). Poll `lake build NLAlib.Matrix.Norms.Basic` (R6-A step 1) before
+`LowRank.lean`, `Sketching.lean`). Poll `lake build NLAlib.Matrix.Norms.Core` (R6-A step 1) before
 starting item 1, and `NLAlib.RandomMatrix.Gaussian.Invariance.LinearImage` (R6-B step 2) before item 5.
 1. G2 C4 / G0 C2: `hmt-9-1-spectral` with exactly the hypotheses of `frobSq_residual_le_of_range_subset`.
 2. G2 C2 `nystrom-structural` (exact identity, no square root) and C7 `nystrom-randomized`.
@@ -78,7 +78,7 @@ step 1) before item 2.
 4. G3 C6 `hutchinson-tail` from `NLAlib.Probability.Concentration.QuadraticForms.HansonWright` with the explicit constant.
 5. G3 C8 diagonal estimator, C11 Hutch++ / XTrace unbiasedness.
 6. G3 C12 Kaczmarz extensions (inconsistent, rank-deficient, sketch-and-project).
-7. Last: when `NLAlib.Probability.Rademacher.Basic` exists (R6-E step 1), delete the
+7. Last: when `NLAlib.Probability.Rademacher.Core` exists (R6-E step 1), delete the
    `rademacherMeasure` definition from `Estimation/HutchinsonLaws.lean` and import R6-E's file.
 8. If time remains: G3 C15 `lanczos-recurrence`, C14 Ritz-value bounds.
 

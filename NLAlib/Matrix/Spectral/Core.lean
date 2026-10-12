@@ -1,5 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.DotProduct
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Basic.Pseudoinverse
 /-!
 # Extreme eigenvalues and singular values

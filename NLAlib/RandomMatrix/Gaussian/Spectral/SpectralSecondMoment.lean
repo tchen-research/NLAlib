@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.Probability.Gaussian.Comparison.Slepian
 import NLAlib.RandomMatrix.Gaussian.Basic.LinearForms
 /-!

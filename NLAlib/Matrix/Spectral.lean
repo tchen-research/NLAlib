@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.Basic
 import NLAlib.Matrix.Spectral.ComplexBestRankApproximation
 import NLAlib.Matrix.Spectral.ComplexEckartYoung
 import NLAlib.Matrix.Spectral.ComplexGramTruncation
@@ -6,6 +5,7 @@ import NLAlib.Matrix.Spectral.ComplexRayleigh
 import NLAlib.Matrix.Spectral.ComplexVariationalExtrema
 import NLAlib.Matrix.Spectral.ComplexVariationalPrinciple
 import NLAlib.Matrix.Spectral.ComplexVolumeSpectrum
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Spectral.CourantFischer
 import NLAlib.Matrix.Spectral.EckartYoung
 import NLAlib.Matrix.Spectral.FiniteIndexTransport

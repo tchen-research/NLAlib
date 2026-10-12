@@ -2,7 +2,7 @@ import NLAlib.Polynomial.FunctionApproximation.AnalyticCoefficients
 import Mathlib.Analysis.Fourier.AddCircle
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.MeasureTheory.Measure.Haar.Unique
-import NLAlib.Polynomial.Chebyshev.Basic
+import NLAlib.Polynomial.Chebyshev.Core
 /-!
 # Fourier reconstruction of analytic Chebyshev series
 

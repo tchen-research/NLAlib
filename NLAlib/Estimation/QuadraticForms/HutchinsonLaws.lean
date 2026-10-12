@@ -1,7 +1,7 @@
 import NLAlib.Estimation.Trace.Hutchinson
 import NLAlib.Probability.Gaussian.Moments.FourthMoment
 import NLAlib.Probability.Concentration.Basic.ScalarLaws
-import NLAlib.Probability.Rademacher.Basic
+import NLAlib.Probability.Rademacher.Core
 import NLAlib.Probability.Concentration.QuadraticForms.RademacherQuadraticMoments
 /-!
 # Hutchinson identities for concrete Gaussian and Rademacher laws
@@ -10,7 +10,7 @@ These endpoints derive the coordinate moments and integrability from the actual 
 No second- or fourth-moment assumptions are needed by the law-based trace and variance
 theorems. The canonical product Gaussian and one-column Gaussian-matrix corollaries also
 discharge independence. The concrete law `rademacherMeasure` is
-`NLAlib.Probability.Rademacher.Basic`. Atlas: `hutchinson-unbiased`, `hutchinson-variance`.
+`NLAlib.Probability.Rademacher.Core`. Atlas: `hutchinson-unbiased`, `hutchinson-variance`.
 
 The general isotropic endpoint uses only measurable coordinates and the identity of
 their second cross moments. Its diagonal moments derive square and product integrability;

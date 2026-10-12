@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 import NLAlib.Probability.ChiSquare.ChiSquare
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
@@ -29,7 +29,7 @@ and `measure_sigmaMin_le_le_gaussianMatrix` is the union bound over the columns.
 
 Helpers of general use: `measurePreserving_update_pi_gaussianReal` and
 `measurePreserving_updateCol_gaussianMatrix` (resampling a coordinate / a column). The
-deterministic step lives in `NLAlib.Matrix.Spectral.Basic` and the rotation invariance in coordinates,
+deterministic step lives in `NLAlib.Matrix.Spectral.Core` and the rotation invariance in coordinates,
 `measurePreserving_orthonormalBasis_repr_pi_gaussianReal`, in `NLAlib.RandomMatrix.Gaussian.Invariance.Invariance`.
 
 Atlas: `smin-small-ball`. Proofs ported from the Prove2me Gaussian series (solutions

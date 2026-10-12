@@ -10,7 +10,7 @@ Declaration names never change (one flat `namespace NLAlib`); only paths and imp
 """
 import json, pathlib, re, subprocess, sys, collections
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-TREE = """ForMathlib/Algebra ForMathlib/Analysis ForMathlib/MeasureTheory ForMathlib/Probability ForMathlib/Topology
+TREE = """ForMathlib/Algebra ForMathlib/Analysis ForMathlib/MeasureTheory ForMathlib/Probability ForMathlib/Topology ForMathlib/LinearAlgebra ForMathlib/Order ForMathlib/Logic ForMathlib/Data ForMathlib/Combinatorics
 Matrix/Basic Matrix/Norms Matrix/Spectral Matrix/Subspaces Matrix/Factorizations Matrix/Perturbation Matrix/Inequalities Matrix/OperatorTheory Matrix/Functions Matrix/Structured Matrix/Calculus
 Polynomial/Chebyshev Polynomial/Interpolation Polynomial/BestApproximation Polynomial/FunctionApproximation
 Probability/Basic Probability/Moments Probability/Sampling Probability/SubGaussian Probability/Rademacher Probability/ChiSquare
@@ -62,7 +62,7 @@ def check_table(path, verbose=True):
         if not re.match(r"^[A-Z][A-Za-z0-9]*\.lean$", dp.name): problems.append(f"destination base name not UpperCamelCase: {dst}")
         if dests[dst] > 1: problems.append(f"two files map to {dst}")
     if srcdirs:
-        expected = {str(p.relative_to(ROOT)) for d in srcdirs for p in (ROOT / "NLAlib" / d).rglob("*.lean") if not is_aggregator(p)}
+        expected = {str(p.relative_to(ROOT)) for d in srcdirs for p in (ROOT / "NLAlib" / d).rglob("*.lean") if not is_aggregator(p) and not in_tree(str(p.relative_to(ROOT)))}
         unmapped = sorted(expected - set(moves)); extra = sorted(set(moves) - expected)
         if unmapped: problems.append(f"{len(unmapped)} content files of group {group} not mapped: " + ", ".join(unmapped[:15]) + (" …" if len(unmapped) > 15 else ""))
         for e in extra:
@@ -73,8 +73,14 @@ def check_table(path, verbose=True):
         print(f"{path}: {len(moves)} moves -> " + ", ".join(f"{k} {v}" for k, v in sorted(by.items())))
         print("problems:\n  " + "\n  ".join(problems) if problems else "table OK")
     return j, problems
+def in_tree(path):
+    leaf = leaf_of(path)
+    return leaf in LEAVES or any(leaf.startswith(l + "/") for l in LEAVES if l.startswith("ForMathlib/"))
 def all_moves():
     moves = {}; problems = []
+    for p in content_files():   # already placed files map to themselves
+        rel = str(p.relative_to(ROOT))
+        if in_tree(rel): moves[rel] = rel
     for p in sorted((ROOT / "docs/reorg/mapping").glob("*.json")):
         j, pr = check_table(p, verbose=False); problems += [f"{p.name}: {x}" for x in pr]
         for s, d in j["moves"].items():
@@ -108,6 +114,10 @@ def check_all():
         for imp in imports_of(ROOT / s):
             if imp in deleted: continue
             tgt = modmap.get(imp)
+            if tgt is None:
+                saved = ROOT / "docs/reorg/modmap.json"
+                tgt = json.load(open(saved))["modules"].get(imp) if saved.exists() else None
+                if tgt is None and (ROOT / (imp.replace(".", "/") + ".lean")).exists(): tgt = imp   # an aggregator of the new tree
             if tgt is None: problems.append(f"{s}: import {imp} has no new home"); continue
             if LAYER[d.split("/")[1]] < LAYER[tgt.split(".")[1]]: problems.append(f"layer violation: {d} imports {tgt}")
             edges[dm].add(tgt)
@@ -167,7 +177,10 @@ def apply():
         if d is None: subprocess.run(["git", "rm", "-q", s_], cwd=ROOT, check=True)
     moves = {s_: d for s_, d in moves.items() if d}
     # 1. module rename map: content modules; old aggregators -> new aggregator of the directory most of their content moved to
-    modmap = {mod_of(s): mod_of(d) for s, d in moves.items()}; modmap.update(agg_modmap(moves, aggs))
+    modmap = {mod_of(s): mod_of(d) for s, d in moves.items() if s != d}; modmap.update(agg_modmap(moves, aggs))
+    saved = ROOT / "docs/reorg/modmap.json"
+    if saved.exists():
+        for k, v in json.load(open(saved))["modules"].items(): modmap.setdefault(k, v)
     # 2. git mv
     for s, d in moves.items():
         if s == d: continue

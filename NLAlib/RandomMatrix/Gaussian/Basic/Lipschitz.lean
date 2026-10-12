@@ -1,5 +1,5 @@
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 /-!
 # Integrability of Lipschitz functionals of a Gaussian matrix
 
@@ -7,7 +7,7 @@ import NLAlib.Matrix.Norms.Basic
   matrix that is `L`-Lipschitz for the Frobenius norm is integrable with integrable square
   (it grows at most like `|h 0| + L ‖G‖_F`, and `‖G‖_F²` is integrable);
 * `abs_specNorm_mul_of_mul_sub_le`: `G ↦ ‖S G T‖₂` is `‖S‖₂‖T‖₂`-Lipschitz for the Frobenius norm;
-  together with the Lipschitz bounds of `NLAlib.Matrix.Spectral.Basic` this makes `σ_min(G)`, `‖G‖₂`
+  together with the Lipschitz bounds of `NLAlib.Matrix.Spectral.Core` this makes `σ_min(G)`, `‖G‖₂`
   and `‖S G T‖₂` integrable;
 * generic helpers: the maximum and minimum of finitely many integrable functions are integrable
   (`integrable_iSup_of_fintype`, `integrable_iInf_of_fintype`), and

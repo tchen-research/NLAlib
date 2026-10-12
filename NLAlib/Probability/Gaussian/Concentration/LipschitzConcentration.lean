@@ -1,5 +1,5 @@
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Probability.Gaussian.Concentration.LogSobolev
 import NLAlib.Probability.Concentration.Entropy.Herbst
 import NLAlib.ForMathlib.Analysis.Real

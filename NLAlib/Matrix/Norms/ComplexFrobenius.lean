@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 /-!
 # Complex Frobenius identities
 

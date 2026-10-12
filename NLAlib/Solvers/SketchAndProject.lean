@@ -1,4 +1,4 @@
-import NLAlib.Solvers.SketchAndProject.Basic
+import NLAlib.Solvers.SketchAndProject.Core
 
 /-! # `Solvers/SketchAndProject`
 

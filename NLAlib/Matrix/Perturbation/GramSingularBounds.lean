@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 /-!
 # Extreme singular bounds from a scaled Gram error
 

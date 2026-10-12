@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 import NLAlib.Matrix.Subspaces.Projections
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Spectral.SVD
 /-!
 # Principal (canonical) angles between subspaces
@@ -102,7 +102,7 @@ theorem residual_eq_of_range_eq {k₂ : Type*} [Fintype k₂] [DecidableEq k₂]
 
 /-- Right multiplication by a square orthogonal matrix preserves the spectral norm:
 `‖Y W‖₂ = ‖Y‖₂` for `WᵀW = I`. Helper for `principal-angles-def` (belongs in
-`NLAlib.Matrix.Norms.Basic`). -/
+`NLAlib.Matrix.Norms.Core`). -/
 theorem specNorm_mul_of_transpose_mul_self_eq_one {W : Matrix k k ℝ} (hW : Wᵀ * W = 1)
     (Y : Matrix k' k ℝ) : specNorm (Y * W) = specNorm Y := by
   have hW' : W * Wᵀ = 1 := (Matrix.mul_eq_one_comm_of_equiv (Equiv.refl k)).1 hW

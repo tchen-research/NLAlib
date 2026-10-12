@@ -1,7 +1,7 @@
-import NLAlib.Matrix.Norms.Basic
 import NLAlib.Matrix.Norms.ColumnNorms
 import NLAlib.Matrix.Norms.ComplexFrobenius
 import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Norms.RankNorm
 import NLAlib.Matrix.Norms.RayleighNorm
 import NLAlib.Matrix.Norms.RealComplexNorm

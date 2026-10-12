@@ -1,5 +1,5 @@
 /- Copyright (c) 2026 Diar Heidary. Adapted under the MIT license. -/
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import Mathlib.Analysis.InnerProductSpace.Rayleigh
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Tactic

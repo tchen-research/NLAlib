@@ -1,4 +1,4 @@
-import NLAlib.Polynomial.Chebyshev.Basic
+import NLAlib.Polynomial.Chebyshev.Core
 import NLAlib.ForMathlib.Algebra.Polynomial
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Extremal
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema

@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 /-! # Squared Frobenius norms as sums of column errors -/
 noncomputable section
 namespace NLAlib

@@ -356,42 +356,42 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_eq_norm",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "No hypotheses; rewrites `specNorm A = ‖A‖`, the ℓ₂ operator norm of `Matrix.Norms.L2Operator`, so Mathlib's operator-norm lemmas apply."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.frobSq_eq_sum_sq",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "No hypotheses; unfolds `frobSq A = ∑ i, ∑ j, A i j ^ 2` to reach entrywise sums."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.frobInner_le_frobNorm_mul_frobNorm",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Apply to `A B : Matrix m n ℝ` of the same shape (no side conditions); gives Cauchy–Schwarz `frobInner A B ≤ frobNorm A * frobNorm B`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.frobSq_mul_left_of_orthonormal",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Pass `hQ : Q.transpose * Q = 1` and any `X`; gives `frobSq (Q * X) = frobSq X`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_mul_le",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Apply to any `A : Matrix m n ℝ`, `B : Matrix n p ℝ` (no side conditions); gives `specNorm (A * B) ≤ specNorm A * specNorm B`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.frobSq_mul_le_specNorm_sq_mul_frobSq",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Apply to any `A : Matrix m n ℝ`, `B : Matrix n p ℝ` (no side conditions); gives `frobSq (A * B) ≤ specNorm A ^ 2 * frobSq B`.",
      "note": "consolidated API in NLAlib/Matrix/Norms.lean: frobInner algebra, Pythagoras, Cauchy–Schwarz, triangle inequality, unitary invariance, mixed Frobenius/spectral inequalities, Frobenius submultiplicativity, specNorm ≤ frobNorm"
@@ -399,42 +399,42 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.frobSq_mul_le_frobSq_mul_specNorm_sq",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Apply to any `A : Matrix m n ℝ`, `B : Matrix n p ℝ` (no side conditions); gives `frobSq (A * B) ≤ frobSq A * specNorm B ^ 2`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_le_frobNorm",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Apply to any real `A` (no side conditions); gives `specNorm A ≤ frobNorm A`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_add_le",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "`specNorm (A + B) ≤ specNorm A + specNorm B`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_mul_transpose_self",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "`specNorm (A * Aᵀ) = specNorm A ^ 2`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_sub_mul_transpose_mul_le",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "From `hQ : Qᵀ * Q = 1`; gives `specNorm (A - Q * (Qᵀ * A)) ≤ specNorm A` (the residual is a contraction)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_add_sq_le_of_mul_transpose_eq_zero",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "From `h : X * Yᵀ = 0`; gives `specNorm (X + Y)^2 ≤ specNorm X^2 + specNorm Y^2`."
     },
@@ -1147,14 +1147,14 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_inv_self_mul_transpose_eq",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "Apply to A; obtain specNorm((AAᵀ)⁻¹)=1/sigmaMin(Aᵀ)^2 under total inverse/division conventions, including the zero singular branch."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_pinvR_sq",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "Apply to the total full-row formula pinvR G; obtain specNorm(pinvR G)^2=specNorm((GGᵀ)⁻¹). It agrees with the general Moore-Penrose inverse under IsUnit(GGᵀ); both total-inverse sides vanish for singular Gram."
     },
@@ -1241,7 +1241,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_le_one_of_isSymm_of_isIdempotentElem",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "A symmetric idempotent has `specNorm ≤ 1`."
     },
@@ -3167,21 +3167,21 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.lamMin",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.sigmaMin",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The smallest singular value of a tall matrix `A : Matrix m n ℝ`: `σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention `inf ∅ = 0`)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.abs_sigmaMin_sub_sigmaMin_le_frobNorm",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The smallest singular value is `1`-Lipschitz for the Frobenius norm: `|σ_min(A) − σ_min(B)| ≤ ‖A − B‖_F`.",
      "note": "σ_min (tall convention: inf over unit x of ‖Ax‖, Matrix/Spectral.lean) and the spectral norm are 1-Lipschitz in the Frobenius norm, over any finite index types"
@@ -3189,7 +3189,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.abs_specNorm_sub_specNorm_le_frobNorm",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The spectral norm is `1`-Lipschitz for the Frobenius norm: `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖_F` (Vershynin 2012, proof of Cor. 5.35)."
     },
@@ -3761,7 +3761,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.hasSubgaussianMGF_of_isRademacher",
-     "module": "NLAlib.Probability.Rademacher.Basic",
+     "module": "NLAlib.Probability.Rademacher.Core",
      "status": "proved",
      "usage": "`IsRademacher μ r → HasSubgaussianMGF r 1 μ`."
     },
@@ -8932,7 +8932,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.Kaczmarz.expErr_le",
-     "module": "NLAlib.Solvers.Kaczmarz.Basic",
+     "module": "NLAlib.Solvers.Kaczmarz.Core",
      "status": "proved",
      "usage": "Pass a solution `hxs : A.mulVec xs = b` and a constant `σ` with `hσ : ∀ v, σ ^ 2 * v ⬝ᵥ v ≤ A.mulVec v ⬝ᵥ A.mulVec v` (any lower bound on σ_min; no rank assumption); gives `Kaczmarz.expErr A b xs x k ≤ (1 - σ ^ 2 / frobSq A) ^ k * (x - xs) ⬝ᵥ (x - xs)`.",
      "note": "Also sum_paths_le (explicit product-weighted sum over row sequences), expected_sqErr_step_le, expected_sqErr_step_eq. σ enters as the hypothesis ∀ v, σ²(v⬝v) ≤ (Av)⬝(Av), so any lower bound on σ_min works; no full-rank assumption."
@@ -9005,35 +9005,35 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.SketchProject.step",
-     "module": "NLAlib.Solvers.SketchAndProject.Basic",
+     "module": "NLAlib.Solvers.SketchAndProject.Core",
      "status": "proved",
      "usage": "One sketch-and-project step with sketch `S`: the Euclidean projection of `x` onto `{y | Sᵀ A y = Sᵀ b}`, written `x − (SᵀA)⁺ Sᵀ (A x − b)`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.SketchProject.expErr",
-     "module": "NLAlib.Solvers.SketchAndProject.Basic",
+     "module": "NLAlib.Solvers.SketchAndProject.Core",
      "status": "proved",
      "usage": "Expected squared error after `k` sketch-and-project steps from `x`, sketches `S j` drawn i.i.d. with probabilities `p j`, by first-step recursion: `expErr 0 x = ‖x − xs‖²`, `expErr (k+1) x = ∑ⱼ pⱼ expErr k (step A b (S j) x)`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.SketchProject.expectedProjector",
-     "module": "NLAlib.Solvers.SketchAndProject.Basic",
+     "module": "NLAlib.Solvers.SketchAndProject.Core",
      "status": "proved",
      "usage": "The expected projector `W = ∑ⱼ pⱼ (SⱼᵀA)⁺(SⱼᵀA)`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.SketchProject.expErr_le",
-     "module": "NLAlib.Solvers.SketchAndProject.Basic",
+     "module": "NLAlib.Solvers.SketchAndProject.Core",
      "status": "proved",
      "usage": "Retained all-space coercivity version for finite iid sketches; the row-space version supplies the intended rank-deficient coverage."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.SketchProject.expErr_le_of_sub_mem_range",
-     "module": "NLAlib.Solvers.SketchAndProject.Basic",
+     "module": "NLAlib.Solvers.SketchAndProject.Core",
      "status": "proved",
      "usage": "Finite iid sketches contract error in range(Aᵀ) at rate (1−λ)^k, assuming coercivity only on that row space and explicit initial-error membership."
     }
@@ -11659,7 +11659,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.chebyshevAmplifier",
-     "module": "NLAlib.Polynomial.Chebyshev.Basic",
+     "module": "NLAlib.Polynomial.Chebyshev.Core",
      "status": "proved",
      "usage": "The gap-amplifying polynomial `chebyshevAmplifier α γ q = T_q(X/α) / T_q(1 + γ)`: equal to `1` at `α(1 + γ)`, increasing beyond it, and exponentially small on `[−α, α]`."
     },
@@ -11770,7 +11770,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.chebyshevResidual",
-     "module": "NLAlib.Polynomial.Chebyshev.Basic",
+     "module": "NLAlib.Polynomial.Chebyshev.Core",
      "status": "proved",
      "usage": "The shifted, scaled Chebyshev polynomial normalised to `1` at `0`: `chebyshevResidual a b q = T_q((b + a − 2 X)/(b − a)) / T_q((b + a)/(b − a))`."
     },
@@ -12040,7 +12040,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.chebyshevZero",
-     "module": "NLAlib.Polynomial.Chebyshev.Basic",
+     "module": "NLAlib.Polynomial.Chebyshev.Core",
      "status": "proved",
      "usage": "The Chebyshev zeros `chebyshevZero q k = cos((2k + 1)π/(2q))`, `k < q`: the `q` roots of `T_q`, in decreasing order."
     },
@@ -13057,28 +13057,28 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.frobInner",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Frobenius inner product `⟨A, B⟩_F = ∑ᵢⱼ Aᵢⱼ Bᵢⱼ`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.frobSq",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Squared Frobenius norm `‖A‖_F²`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.frobNorm",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Frobenius norm `‖A‖_F`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm",
-     "module": "NLAlib.Matrix.Norms.Basic",
+     "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "Spectral norm `‖A‖₂`, the largest singular value: Mathlib's ℓ₂ operator norm."
     }
@@ -13185,21 +13185,21 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.lamMin",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.sigmaMin",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The smallest singular value of a tall matrix `A : Matrix m n ℝ`: `σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention `inf ∅ = 0`)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.sigmaMinSq",
-     "module": "NLAlib.Matrix.Spectral.Basic",
+     "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The squared smallest singular value of a tall matrix, `σ_min(A)² = λ_min(AᵀA)` (`sigmaMinSq_eq_sigmaMin_sq`)."
     },
@@ -13470,7 +13470,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.rademacherMeasure",
-     "module": "NLAlib.Probability.Rademacher.Basic",
+     "module": "NLAlib.Probability.Rademacher.Core",
      "status": "proved",
      "usage": "The concrete Rademacher probability measure, assigning mass one half to each of `1` and `-1`."
     }
@@ -13569,28 +13569,28 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.Kaczmarz.step",
-     "module": "NLAlib.Solvers.Kaczmarz.Basic",
+     "module": "NLAlib.Solvers.Kaczmarz.Core",
      "status": "proved",
      "usage": "One Kaczmarz step on row `i`: the orthogonal projection of `x` onto the hyperplane `{y | A i ⬝ᵥ y = b i}`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.Kaczmarz.prob",
-     "module": "NLAlib.Solvers.Kaczmarz.Basic",
+     "module": "NLAlib.Solvers.Kaczmarz.Core",
      "status": "proved",
      "usage": "Row-selection probability `‖A i‖² / ‖A‖_F²` of randomized Kaczmarz."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.Kaczmarz.expErr",
-     "module": "NLAlib.Solvers.Kaczmarz.Basic",
+     "module": "NLAlib.Solvers.Kaczmarz.Core",
      "status": "proved",
      "usage": "Expected squared error `E‖x_k - xs‖²` after `k` randomized Kaczmarz steps started at `x`, rows drawn i.i.d. with probabilities `prob A`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.Kaczmarz.run",
-     "module": "NLAlib.Solvers.Kaczmarz.Basic",
+     "module": "NLAlib.Solvers.Kaczmarz.Core",
      "status": "proved",
      "usage": "The iterate after applying the steps with rows `ω 0, ω 1, …, ω (k-1)` in that order, starting from `x`."
     },

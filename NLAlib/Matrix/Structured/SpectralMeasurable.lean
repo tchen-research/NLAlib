@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Structured.Measurable
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 /-!
 # Measurable spectral projection residuals
 

@@ -1,5 +1,5 @@
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
 import Mathlib.MeasureTheory.Function.LpSpace.Basic
 

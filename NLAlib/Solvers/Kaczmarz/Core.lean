@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import Mathlib.LinearAlgebra.Matrix.DotProduct
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Data.Fin.Tuple.Basic
@@ -23,7 +23,7 @@ row sequences `ω : Fin k → m` weighted by `∏ j, prob A (ω j)`.
 Squared Euclidean norms are written `v ⬝ᵥ v`. The row identities `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`
 (`NLAlib.frobSq_eq_sum_dotProduct_self`), `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`
 (`NLAlib.mulVec_dotProduct_mulVec_eq_sum_sq`) and `v ⬝ v ≥ 0` (`NLAlib.dotProduct_self_nonneg`)
-are in `NLAlib.Matrix.Norms.Basic`.
+are in `NLAlib.Matrix.Norms.Core`.
 
 ## Main results
 

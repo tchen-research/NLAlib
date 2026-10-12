@@ -1,4 +1,4 @@
-import NLAlib.Polynomial.Chebyshev.Basic
+import NLAlib.Polynomial.Chebyshev.Core
 import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 /-!

@@ -56,7 +56,7 @@ separate `κ` variable: the CG rate is `(√b − √a)/(√b + √a)`.
    (from `T_derivative_eq_U` and the previous, or `abs_iterate_derivative_T_real_le` with `k = 1`).
    Also `eval_derivative_T_real_one : (derivative (T ℝ q)).eval 1 = q^2` if it falls out.
 
-`Approximation.lean` (imports `NLAlib.Polynomial.Chebyshev.Basic`, `.Chebyshev`, `.Minimax`): wait for
+`Approximation.lean` (imports `NLAlib.Polynomial.Chebyshev.Core`, `.Chebyshev`, `.Minimax`): wait for
 group P2's `Minimax.lean` olean (`lake build NLAlib.Polynomial.BestApproximation.Minimax`; poll every few minutes,
 start on the amplifier items meanwhile, which need only `Chebyshev.lean`), atlas
 `chebyshev-amplifier`, `inverse-polynomial-approx`, and the κ-form of `chebyshev-minimax`:
@@ -73,7 +73,7 @@ start on the amplifier items meanwhile, which need only `Chebyshev.lean`), atlas
    `r − 1 = X * (−p)` via `X ∣ r − 1` from `r.eval 0 = 1`, and `|1/x − p x| = |r x|/x ≤ |r x|/a`).
    Golub–Meurant (2010) [`gm10`], Ch. 8; the CG bound in the form consumers want.
 
-**P2 — `NLAlib/Polynomial/Minimax.lean`** (imports `NLAlib.Polynomial.Chebyshev.Basic` and Mathlib),
+**P2 — `NLAlib/Polynomial/Minimax.lean`** (imports `NLAlib.Polynomial.Chebyshev.Core` and Mathlib),
 atlas `chebyshev-extremal`, `chebyshev-minimax`, `chebyshev-monic-minimal`. Do items 1–3 FIRST and
 build the olean (`lake build NLAlib.Polynomial.BestApproximation.Minimax`) as soon as they compile, since P1 polls
 for it; item 4 may land in a second build.

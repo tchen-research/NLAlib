@@ -4,7 +4,7 @@ import Mathlib.Probability.Independence.Integration
 import Mathlib.Probability.Moments.Variance
 import Mathlib.MeasureTheory.Function.L2Space
 import NLAlib.Matrix.Basic.QuadForm
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 /-!
 # Hutchinson's trace estimator: unbiasedness and variance
 

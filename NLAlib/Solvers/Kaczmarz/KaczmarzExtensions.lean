@@ -1,6 +1,6 @@
-import NLAlib.Solvers.Kaczmarz.Basic
+import NLAlib.Solvers.Kaczmarz.Core
 import NLAlib.Matrix.Basic.MoorePenrose
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import Mathlib.Algebra.Order.Field.GeomSum
 
 /-!

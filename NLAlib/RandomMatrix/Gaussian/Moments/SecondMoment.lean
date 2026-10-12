@@ -3,7 +3,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_frobenius_second_moment`, `Sol_GaussianMatrix_full_rank_ae`).
 -/
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import Mathlib.Probability.Distributions.Gaussian.Real
 import Mathlib.LinearAlgebra.Matrix.MvPolynomial
 import Mathlib.LinearAlgebra.Matrix.Rank

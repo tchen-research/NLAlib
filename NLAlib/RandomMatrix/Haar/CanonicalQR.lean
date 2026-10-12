@@ -1,5 +1,5 @@
 import NLAlib.RandomMatrix.Haar.Stiefel
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.GramSchmidt
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
 import Mathlib.Analysis.Normed.Lp.MeasurableSpace

@@ -1,5 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.Matrix
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Basic.Pseudoinverse
 /-!
@@ -26,7 +26,7 @@ source (`mul_add_residual`, `transpose_mul_residual_eq_zero`, `frobInner_residua
 and `NLAlib.residual_eq_mul_transpose_mul_residual` in `NLAlib.Matrix.Subspaces.Projections`; its spectral
 facts (`l2_opNorm_one_le`, `l2_opNorm_le_one_of_orthonormal`, `l2_opNorm_transpose_mul_of_eq`)
 are `NLAlib.specNorm_one_le`, `NLAlib.specNorm_le_one_of_orthonormal` and
-`NLAlib.specNorm_transpose_mul_of_eq_mul` in `NLAlib.Matrix.Norms.Basic`. The source's `‖·‖` under
+`NLAlib.specNorm_transpose_mul_of_eq_mul` in `NLAlib.Matrix.Norms.Core`. The source's `‖·‖` under
 `Matrix.Norms.L2Operator` is `NLAlib.specNorm` here (definitionally equal, `specNorm_eq_norm`).
 
 ## Set-up (matching the paper)

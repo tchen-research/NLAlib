@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.Probability.Gaussian.Comparison.SudakovFernique
 import NLAlib.Probability.Gaussian.Comparison.GordonMinimax
 import NLAlib.Probability.Gaussian.Moments.ExpectationNormDiff

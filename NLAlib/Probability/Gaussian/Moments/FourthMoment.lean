@@ -1,5 +1,5 @@
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import Mathlib.MeasureTheory.Integral.Gamma
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Mathlib.MeasureTheory.Integral.Pi

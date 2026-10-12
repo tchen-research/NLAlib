@@ -47,7 +47,7 @@ that creates a cycle or a layer violation, so check imports before assigning.
 
 ## Output: `docs/reorg/mapping/<group>.json`
 ```json
-{"group": "M1", "moves": {"NLAlib/Matrix/Norms.lean": "NLAlib/Matrix/Norms/Basic.lean", "...": "..."},
+{"group": "M1", "moves": {"NLAlib/Matrix/Norms.lean": "NLAlib.Matrix.Norms.Core.lean", "...": "..."},
  "renames": {"NLAlib/Matrix/Old.lean": "reason"}, "notes": ["Factorizations/ moved wholesale", "..."],
  "flags": ["NLAlib/Matrix/GramSoftMin.lean: mixes ... ; placed in Structured; split later", "..."]}
 ```

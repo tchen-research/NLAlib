@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Spectral.QuadraticProbe
 import NLAlib.Matrix.Basic.QuadForm
 import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar

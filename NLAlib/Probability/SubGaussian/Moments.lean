@@ -5,7 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 import Mathlib.Analysis.Convex.Integral
 import NLAlib.Probability.Concentration.QuadraticForms.ExponentialSeries
 import NLAlib.Probability.Concentration.QuadraticForms.LinearFormComparison
-import NLAlib.Probability.Rademacher.Basic
+import NLAlib.Probability.Rademacher.Core
 /-!
 # Sub-Gaussian moments, Khintchine and the maximal inequality
 

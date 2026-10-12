@@ -43,7 +43,7 @@ variable {n s r : Type*} [Fintype n] [DecidableEq n] [Fintype s] [DecidableEq s]
   [DecidableEq r]
 
 /-- `‖diag(v)‖₂ ≤ c` when every `|vᵢ| ≤ c` (`c ≥ 0`). Helper for
-`subspace-iteration-convergence` (belongs in `NLAlib.Matrix.Norms.Basic`). -/
+`subspace-iteration-convergence` (belongs in `NLAlib.Matrix.Norms.Core`). -/
 theorem specNorm_diagonal_le {v : s → ℝ} {c : ℝ} (hc : 0 ≤ c) (hv : ∀ i, |v i| ≤ c) :
     specNorm (diagonal v) ≤ c := by
   rw [specNorm_eq_norm, Matrix.l2_opNorm_diagonal]

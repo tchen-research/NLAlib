@@ -7,7 +7,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import NLAlib.Probability.Gaussian.Moments.PositiveMoments
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.OperatorHardEdge
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.Probability.Concentration.Basic.TailIntegral
 import NLAlib.Probability.ChiSquare.ChiSquare
 import Mathlib.MeasureTheory.Constructions.HaarToSphere

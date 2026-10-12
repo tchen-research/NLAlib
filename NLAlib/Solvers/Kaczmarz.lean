@@ -1,4 +1,4 @@
-import NLAlib.Solvers.Kaczmarz.Basic
+import NLAlib.Solvers.Kaczmarz.Core
 import NLAlib.Solvers.Kaczmarz.KaczmarzExtensions
 import NLAlib.Solvers.Kaczmarz.KaczmarzProbability
 import NLAlib.Solvers.Kaczmarz.KaczmarzRowSpace

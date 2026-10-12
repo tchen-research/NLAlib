@@ -20,7 +20,7 @@ first. Then the files named in your task.
   declaration (never inline inside a larger proof), with docstring `SCAFFOLD: <atlas id>` and the
   mathematical reason it is deferred. A proved theorem may use a scaffold lemma.
 - Conventions: `noncomputable section`, `namespace NLAlib`, `open scoped Matrix`, real matrices,
-  `NLAlib.frobSq/frobNorm/frobInner/specNorm` from `NLAlib.Matrix.Norms.Basic`, `HasOrthonormalCols`,
+  `NLAlib.frobSq/frobNorm/frobInner/specNorm` from `NLAlib.Matrix.Norms.Core`, `HasOrthonormalCols`,
   `residual`, `IsBestRankApprox` from `NLAlib.Matrix.Subspaces.Projections`, `pinvL/pinvR` from
   `NLAlib.Matrix.Basic.Pseudoinverse`, `gaussianMatrix` from `NLAlib.Probability.Gaussian.Basic.GaussianMatrix`. Import the
   specific Mathlib files you need; `import Mathlib` is acceptable if you cannot find them quickly.

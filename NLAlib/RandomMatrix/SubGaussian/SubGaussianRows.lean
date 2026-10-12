@@ -1,6 +1,6 @@
 import NLAlib.RandomMatrix.SubGaussian.SubGaussianJL
 import NLAlib.Probability.Concentration.Basic.Net
-import NLAlib.Matrix.Spectral.Basic
+import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Perturbation.GramSingularBounds
 /-!
 # Extreme singular values of independent isotropic sub-Gaussian rows

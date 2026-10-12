@@ -45,7 +45,9 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   (`Matrix/{Basic,Norms,Spectral,Subspaces,Factorizations,Perturbation,Inequalities,OperatorTheory,
   Functions,Structured,Calculus}`, `Probability/{Gaussian,Concentration,…}`, `RandomMatrix/{Gaussian,…}`,
   …; see `docs/REORG_PLAN.md`); content files live in those subdirectories and every `<Dir>.lean` is a
-  generated aggregator (`scripts/reorg.py`), never edited by hand. `Krylov` is the deterministic theory (Krylov spaces,
+  generated aggregator (`scripts/reorg.py`), never edited by hand. Inside a leaf, `Basic.lean` holds
+  definitions and their simp-level API only; a leaf's namesake file that carries theory as well is
+  `Core.lean` (`Matrix/Norms/Core.lean`, `Matrix/Spectral/Core.lean`, …). `Krylov` is the deterministic theory (Krylov spaces,
   Lanczos, CG, Gauss quadrature); randomized Krylov guarantees live with their consumers in
   `LowRank` and `Estimation`. Krylov methods are defined by predicates or compressions, never by
   recurrences, and use two interfaces: "any orthonormal `Q` containing `K_q`" for approximant

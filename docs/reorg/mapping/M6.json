@@ -50,11 +50,11 @@
   "NLAlib/Estimation/SLQAnalyticSteps.lean": "NLAlib/Estimation/Quadrature/SLQAnalyticSteps.lean",
   "NLAlib/Estimation/SLQLipschitz.lean": "NLAlib/Estimation/Quadrature/SLQLipschitz.lean",
   "NLAlib/Estimation/SLQPositiveLowerBound.lean": "NLAlib/Estimation/Quadrature/SLQPositiveLowerBound.lean",
-  "NLAlib/Solvers/Kaczmarz.lean": "NLAlib/Solvers/Kaczmarz/Basic.lean",
+  "NLAlib/Solvers/Kaczmarz.lean": "NLAlib.Solvers.Kaczmarz.Core.lean",
   "NLAlib/Solvers/KaczmarzExtensions.lean": "NLAlib/Solvers/Kaczmarz/KaczmarzExtensions.lean",
   "NLAlib/Solvers/KaczmarzProbability.lean": "NLAlib/Solvers/Kaczmarz/KaczmarzProbability.lean",
   "NLAlib/Solvers/KaczmarzRowSpace.lean": "NLAlib/Solvers/Kaczmarz/KaczmarzRowSpace.lean",
-  "NLAlib/Solvers/SketchProject.lean": "NLAlib/Solvers/SketchAndProject/Basic.lean",
+  "NLAlib/Solvers/SketchProject.lean": "NLAlib.Solvers.SketchAndProject.Core.lean",
   "NLAlib/LowRank/Basic.lean": null,
   "NLAlib/Solvers/Basic.lean": null,
   "NLAlib/Estimation/Hutchinson.lean": "NLAlib/Estimation/Trace/Hutchinson.lean"

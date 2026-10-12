@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Order.Interval.Finset.Nat
-import NLAlib.Matrix.Norms.Basic
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Basic.Pseudoinverse
 import NLAlib.Matrix.Spectral.SVD
@@ -22,7 +22,7 @@ inequality `σ_{ℓ+1}² ≤ (4/t) Σ_{j>k} σ_j²` (`sq_le_four_div_mul_sum_Ico
 
 Ported from the LRA project, `LRA/Deterministic/RangeFinder.lean` (Chen–Persson formalization,
 same Mathlib pin). The Frobenius and projector helpers of the source are the
-`NLAlib.Matrix.Norms.Basic` and `NLAlib.Matrix.Subspaces.Projections` lemmas.
+`NLAlib.Matrix.Norms.Core` and `NLAlib.Matrix.Subspaces.Projections` lemmas.
 
 ## Conventions
 

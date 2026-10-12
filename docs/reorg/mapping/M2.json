@@ -13,7 +13,7 @@
   "NLAlib/Concentration/Scalar/Herbst.lean": "NLAlib/Probability/Concentration/Entropy/Herbst.lean",
   "NLAlib/Concentration/Scalar/Net.lean": "NLAlib/Probability/Concentration/Basic/Net.lean",
   "NLAlib/Concentration/Scalar/TailIntegral.lean": "NLAlib/Probability/Concentration/Basic/TailIntegral.lean",
-  "NLAlib/Concentration/Scalar/Rademacher.lean": "NLAlib/Probability/Rademacher/Basic.lean",
+  "NLAlib/Concentration/Scalar/Rademacher.lean": "NLAlib.Probability.Rademacher.Core.lean",
   "NLAlib/Concentration/Scalar/RademacherCube.lean": "NLAlib/Probability/Rademacher/RademacherCube.lean",
   "NLAlib/Concentration/Scalar/RademacherSymmetry.lean": "NLAlib/Probability/Rademacher/RademacherSymmetry.lean",
   "NLAlib/Concentration/Scalar/SubGaussian.lean": "NLAlib/Probability/SubGaussian/Moments.lean",

@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Block
 import NLAlib.Probability.Concentration.QuadraticForms.HansonWright
-import NLAlib.Probability.Rademacher.Basic
+import NLAlib.Probability.Rademacher.Core
 import NLAlib.Estimation.QuadraticForms.HutchinsonLaws
 import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.Matrix.Spectral.QuadraticProbe
@@ -94,7 +94,7 @@ theorem frobSq_hutchinsonBlock [Nonempty κ] (A : Matrix n n ℝ) :
   field_simp
 
 /-- A spectral-norm bound from a bound on `‖Ax‖²`: if `0 ≤ C` and `∑ᵢ (Ax)ᵢ² ≤ C² ∑ⱼ xⱼ²` for
-every `x`, then `‖A‖₂ ≤ C`. Atlas: `norms-frob-spec` (helper; belongs in `NLAlib.Matrix.Norms.Basic`). -/
+every `x`, then `‖A‖₂ ≤ C`. Atlas: `norms-frob-spec` (helper; belongs in `NLAlib.Matrix.Norms.Core`). -/
 theorem specNorm_le_of_forall_sum_sq_mulVec_le {m p : Type*} [Fintype m] [Fintype p]
     [DecidableEq m] [DecidableEq p] (A : Matrix m p ℝ) {C : ℝ} (hC : 0 ≤ C)
     (h : ∀ x : p → ℝ, ∑ i, (A *ᵥ x) i ^ 2 ≤ C ^ 2 * ∑ j, x j ^ 2) : specNorm A ≤ C := by

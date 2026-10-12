@@ -48,8 +48,8 @@ theorem exists_orthogonal_idempotent_canonical_spectrum {n : Type*}
       _ = (H * N * Hᵀ).toEuclideanLin.singularValues i :=
         congrArg (fun A : Matrix n n ℝ => A.toEuclideanLin.singularValues i) hForm
       _ = N.toEuclideanLin.singularValues i := by
-        rw [toEuclideanLin_singularValues_mul_isometry_transpose hH,
-          toEuclideanLin_singularValues_isometry_mul hH]
+        rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
+          singularValues_mul_isometry_transpose hH, singularValues_isometry_mul hH]
       _ = _ := singularValues_oblique_canonical t ht0 ht (fun j hj => hz j (hg.trans hj)) i
   refine ⟨g, hg, t, ht0, ht, htpos, H, hH, hHt, hBlock, hSpec, ?_, ?_⟩
   · intro i

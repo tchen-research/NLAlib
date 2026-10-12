@@ -1,0 +1,4 @@
+{
+  "NLAlib.dotProduct_transpose_mul_mulVec": "NLAlib.mulVec_dotProduct_mulVec_self",
+  "NLAlib.sqrt_mulVec_dotProduct_le": "NLAlib.sqrt_mulVec_dotProduct_le_specNorm_mul"
+}

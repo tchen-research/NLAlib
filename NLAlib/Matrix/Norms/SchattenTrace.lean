@@ -43,7 +43,8 @@ theorem abs_frobInner_le_sum_toEuclideanLin_singularValues_mul {m n : Type*}
   have h := abs_frobInner_le_sum_singularValues_mul_fin
     (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
     (B.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-  simpa only [frobInner_reindex, singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  simp only [frobInner_reindex, singularValues_reindex] at h
+  exact h
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 

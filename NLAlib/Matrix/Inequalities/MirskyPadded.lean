@@ -63,7 +63,8 @@ theorem sum_abs_toEuclideanLin_singularValues_add_sub_le_sum_range {m n : Type*}
       E.reindex (Fintype.equivFin m) (Fintype.equivFin n) =
       (A + E).reindex (Fintype.equivFin m) (Fintype.equivFin n) := rfl
   rw [hadd] at h
-  simpa only [singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  simp only [singularValues_reindex] at h
+  exact h
 
 /-- Mirsky weak majorization on any finite zero-padded length, without a dimension
 bound on that length. Bhatia 1997, Theorem IV.3.4; native arbitrary finite indices. -/

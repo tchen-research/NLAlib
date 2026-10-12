@@ -25,7 +25,6 @@ run_cmd do
     `NLAlib.Matrix.Factorizations.CholeskyCharacterization,
     `NLAlib.Matrix.Factorizations.CholeskyDefinite,
     `NLAlib.Matrix.Factorizations.CholeskySemidefinite,
-    `NLAlib.Matrix.Factorizations.CholeskyTrailingResidual,
     `NLAlib.Matrix.Factorizations.ComplexCholeskyPivot,
     `NLAlib.Matrix.Inequalities.CompressionDeterminant,
     `NLAlib.Matrix.Perturbation.ConditionNumber,

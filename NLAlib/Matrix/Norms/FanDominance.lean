@@ -27,13 +27,12 @@ def kyFanInvariantNorm (k : ℕ) (hk : 1 ≤ k) : OrthogonallyInvariantNorm m n 
 omit [DecidableEq m] in
 /-- Intrinsic top-coordinate sums of the singular-value vector are precisely
 the Ky Fan sums for every admissible thin prefix. -/
-theorem sumLargest_singularValueVector_eq_kyFanNorm (A : Matrix m n ℝ) {k : ℕ}
+theorem sumLargest_singularValues_eq_kyFanNorm (A : Matrix m n ℝ) {k : ℕ}
     (hk : k ≤ min (Fintype.card m) (Fintype.card n)) :
-    sumLargest (singularValueVector A) k = kyFanNorm A k := by
-  rw [sumLargest_eq_prefix_of_antitone _ (show Antitone (singularValueVector A) from
-    fun i j hij => LinearMap.singularValues_antitone _ hij)]
-  simp only [singularValueVector]
-  rw [sum_fin_ite_lt_eq_sum_range hk A.toEuclideanLin.singularValues]
+    sumLargest (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i) k = kyFanNorm A k := by
+  rw [sumLargest_eq_prefix_of_antitone _ (show Antitone (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i) from
+    fun i j hij => singularValues_antitone A hij)]
+  rw [sum_fin_ite_lt_eq_sum_range hk (singularValues A)]
   rfl
 
 /-- Fan dominance in both directions for all genuine invariant norms on a fixed
@@ -42,12 +41,13 @@ Bhatia (1997), Theorem IV.2.2.
 atlas: unitarily-invariant-norm-def (partial) -/
 theorem forall_invariantNorm_le_iff_weaklyMajorized (A B : Matrix m n ℝ) :
     (∀ ν : OrthogonallyInvariantNorm m n, ν.seminorm A ≤ ν.seminorm B) ↔
-      WeaklyMajorized (singularValueVector A) (singularValueVector B) := by
+      WeaklyMajorized (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i)
+        (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues B i) := by
   constructor
   · intro h k hk
     have hkN : k ≤ min (Fintype.card m) (Fintype.card n) := by simpa using hk
-    rw [sumLargest_singularValueVector_eq_kyFanNorm A hkN,
-      sumLargest_singularValueVector_eq_kyFanNorm B hkN]
+    rw [sumLargest_singularValues_eq_kyFanNorm A hkN,
+      sumLargest_singularValues_eq_kyFanNorm B hkN]
     by_cases hk0 : k = 0
     · simp [hk0]
     · exact h (kyFanInvariantNorm k (by omega))

@@ -1,5 +1,6 @@
 import NLAlib.Polynomial.FunctionApproximation.AnalyticCoefficients
 import Mathlib.Analysis.Fourier.AddCircle
+import NLAlib.ForMathlib.Analysis.FourierCircle
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.MeasureTheory.Measure.Haar.Unique
 import NLAlib.Polynomial.Chebyshev.Core
@@ -18,7 +19,7 @@ open scoped Topology ComplexConjugate Real
 
 namespace NLAlib
 
-local instance : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
+open scoped NLAlib.TwoPi
 
 /-- Pull back a complex function on the Bernstein ellipse to the additive circle.
 Source: Trefethen, ATAP, Chapters 3 and 8 (`chebyshev-approx-analytic`, helper). -/

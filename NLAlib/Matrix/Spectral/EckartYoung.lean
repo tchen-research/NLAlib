@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Basic.MoorePenrose
 import NLAlib.Matrix.Subspaces.Projections
+import NLAlib.Matrix.Subspaces.ProjectorTrace
 import NLAlib.Matrix.Spectral.SpectralBounds
 import Mathlib.Tactic
 
@@ -22,40 +23,6 @@ noncomputable section
 open scoped Matrix Matrix.Norms.L2Operator BigOperators
 
 namespace NLAlib
-
-/-- The trace of an idempotent real matrix is its rank. Empty index types
-are included. This is Mathlib's projection trace theorem in matrix coordinates.
-Atlas `eckart-young` (foundation). -/
-theorem trace_eq_rank_of_isIdempotentElem {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (P : Matrix ι ι ℝ) (hP : IsIdempotentElem P) : P.trace = (P.rank : ℝ) := by
-  have hf : IsIdempotentElem P.mulVecLin := by
-    change P.mulVecLin.comp P.mulVecLin = P.mulVecLin
-    rw [← Matrix.mulVecLin_mul, show P * P = P from hP]
-  calc
-    P.trace = LinearMap.trace ℝ (ι → ℝ) P.toLin' := (Matrix.trace_toLin'_eq P).symm
-    _ = LinearMap.trace ℝ (ι → ℝ) P.mulVecLin := by rw [Matrix.toLin'_apply']
-    _ = (P.rank : ℝ) := LinearMap.IsProj.trace
-      ((LinearMap.isProj_range_iff_isIdempotentElem P.mulVecLin).mpr hf)
-
-/-- Every diagonal weight of a real orthogonal projector lies in `[0,1]`.
-The proof uses the squared column length, including all degenerate cases.
-Atlas `eckart-young` (foundation). -/
-theorem diag_mem_Icc_of_isSymm_of_isIdempotentElem {ι : Type*} [Fintype ι]
-    (P : Matrix ι ι ℝ) (hs : Pᵀ = P) (hp : IsIdempotentElem P) (j : ι) :
-    P j j ∈ Set.Icc (0 : ℝ) 1 := by
-  have hgram : Pᵀ * P = P := by rw [hs]; exact hp
-  have hsum : (∑ i, P i j ^ 2) = P j j := by
-    have h := congrArg (fun M : Matrix ι ι ℝ => M j j) hgram
-    simpa only [Matrix.mul_apply, Matrix.transpose_apply, pow_two] using h
-  have h0 : 0 ≤ P j j := by
-    rw [← hsum]
-    exact Finset.sum_nonneg (fun i _ => sq_nonneg _)
-  have hsq : P j j ^ 2 ≤ P j j := by
-    calc
-      _ ≤ ∑ i, P i j ^ 2 :=
-        Finset.single_le_sum (fun i _ => sq_nonneg (P i j)) (Finset.mem_univ j)
-      _ = P j j := hsum
-  exact ⟨h0, by nlinarith⟩
 
 private theorem card_fin_head {m k : ℕ} (hk : k < m) :
     ((Finset.univ : Finset (Fin m)).filter fun i : Fin m => (i : ℕ) < k).card = k := by
@@ -175,7 +142,9 @@ theorem singularValueTailSq_le_frobSq_sub_of_rank_le {m n : ℕ}
     change R.trace ≤ (k : ℝ)
     rw [trace_eq_rank_of_isIdempotentElem R hpR]
     exact_mod_cast hrankR
-  have hweights (i : Fin m) := diag_mem_Icc_of_isSymm_of_isIdempotentElem R hsR hpR i
+  have hweights (i : Fin m) : R i i ∈ Set.Icc (0 : ℝ) 1 :=
+    re_diag_mem_Icc_of_isHermitian_of_isIdempotentElem R (Matrix.isHermitian_iff_isSymm.mpr hsR)
+      hpR i
   have hcaptured : frobSq (P * A) = ∑ i : Fin m, singularValues A i ^ 2 * R i i := by
     have hgram : (P * A)ᵀ * (P * A) = Aᵀ * P * A := by
       calc

@@ -2,6 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.SparseStackDistribution
+import NLAlib.Matrix.Spectral.TraceEigenvalues
 import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.Tactic
@@ -46,35 +47,6 @@ theorem opNorm_eq_piNorm_eigenvalues (A : Matrix ι ι ℝ)
         Matrix.l2_opNorm_diagonal]
       rfl
 
-/-- Trace of an arbitrary natural power of a real symmetric matrix, written
-as the literal finite sum of the corresponding eigenvalue powers.
-
-Source: ported from `SparseFockFormal.MatrixTail`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem trace_pow_eq_sum_eigenvalues (A : Matrix ι ι ℝ)
-    (hA : A.IsHermitian) (k : ℕ) :
-    (A ^ k).trace = ∑ i, hA.eigenvalues i ^ k := by
-  calc
-    (A ^ k).trace =
-        ((Unitary.conjStarAlgAut ℝ (Matrix ι ι ℝ)
-          hA.eigenvectorUnitary
-          (Matrix.diagonal ((RCLike.ofReal ∘ hA.eigenvalues) : ι → ℝ))) ^ k).trace :=
-      congrArg (fun M : Matrix ι ι ℝ => (M ^ k).trace) hA.spectral_theorem
-    _ = (Unitary.conjStarAlgAut ℝ (Matrix ι ι ℝ)
-          hA.eigenvectorUnitary
-          (Matrix.diagonal ((RCLike.ofReal ∘ hA.eigenvalues) : ι → ℝ) ^ k)).trace := by
-      rw [map_pow]
-    _ = (star (↑hA.eigenvectorUnitary : Matrix ι ι ℝ) *
-          ((↑hA.eigenvectorUnitary : Matrix ι ι ℝ) *
-            (Matrix.diagonal ((RCLike.ofReal ∘ hA.eigenvalues) : ι → ℝ) ^ k))).trace := by
-          rw [Unitary.conjStarAlgAut_apply]
-          exact Matrix.trace_mul_comm _ _
-    _ = (Matrix.diagonal ((RCLike.ofReal ∘ hA.eigenvalues) : ι → ℝ) ^ k).trace := by
-          rw [← mul_assoc, Unitary.coe_star_mul_self, one_mul]
-    _ = ∑ i, hA.eigenvalues i ^ k := by
-          rw [Matrix.diagonal_pow, Matrix.trace_diagonal]
-          rfl
-
 /-- Every even power of a real symmetric matrix has nonnegative trace.
 
 Source: ported from `SparseFockFormal.MatrixTail`,
@@ -82,7 +54,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
 theorem trace_even_pow_nonneg (A : Matrix ι ι ℝ)
     (hA : A.IsHermitian) (q : ℕ) :
     0 ≤ (A ^ (2 * q)).trace := by
-  rw [trace_pow_eq_sum_eigenvalues A hA]
+  rw [NLAlib.trace_pow_eq_sum_eigenvalues hA]
   exact Finset.sum_nonneg fun i _hi => (even_two_mul q).pow_nonneg (hA.eigenvalues i)
 
 /-- For a nonempty finite index type, the even power of the L2 operator norm
@@ -94,7 +66,7 @@ theorem opNorm_even_pow_le_trace_of_nonempty [Nonempty ι]
     (A : Matrix ι ι ℝ) (hA : A.IsHermitian) (q : ℕ) :
     ‖A‖ ^ (2 * q) ≤ (A ^ (2 * q)).trace := by
   rw [opNorm_eq_piNorm_eigenvalues A hA,
-    trace_pow_eq_sum_eigenvalues A hA]
+    NLAlib.trace_pow_eq_sum_eigenvalues hA]
   obtain ⟨i, hi⟩ := (IsGreatest.pi_norm hA.eigenvalues).1
   rw [← hi]
   calc

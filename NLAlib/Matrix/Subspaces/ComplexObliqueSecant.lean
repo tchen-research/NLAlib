@@ -75,7 +75,8 @@ theorem exists_complex_range_kernel_frames_norm_eq_secant {n : Type*}
   have hAngle (i : Fin (Fintype.card (Fin R.rank))) :
       complexPrincipalAnglesFintype W Q i = principalAnglesFintype W₀ Q₀ i := by
     simp only [complexPrincipalAnglesFintype, principalAnglesFintype, hOverlap,
-      toEuclideanLin_singularValues_map_ofReal, singularValues_reindex_eq_toEuclideanLin_singularValues]
+      toEuclideanLin_singularValues_map_ofReal]
+    simp only [← singularValues_eq_linearMap, singularValues_reindex]
   have hFinal : ∃ Q W : Matrix n (Fin R.rank) ℂ,
       Qᴴ * Q = 1 ∧ Wᴴ * W = 1 ∧
       LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin ∧

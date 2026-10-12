@@ -116,7 +116,7 @@ theorem seminorm_eq_toSymmetricGauge_matrixValue {m n : Type*} [Fintype m] [Fint
     _ = ν.toSymmetricGauge.matrixValue A := by
       apply congrArg (ν.reindex em en).toSymmetricGaugeFin.value
       funext i
-      exact singularValues_reindex_eq_toEuclideanLin_singularValues A i
+      exact congrFun (singularValues_reindex A em en) i
 
 end OrthogonallyInvariantNorm
 

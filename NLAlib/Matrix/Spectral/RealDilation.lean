@@ -1,9 +1,11 @@
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
+import NLAlib.Matrix.Basic.Dilation
 
 /-!
 # Real symmetric dilation and its orthogonal diagonalization
 
-The actual real block matrix `[0 A; Aᵀ 0]` has the paired singular spectrum,
+The real dilation `dilation A = [0 A; Aᵀ 0]` (`Matrix/Basic/Dilation`) has the paired singular
+spectrum,
 including every rectangular padded zero. Source: Bhatia 1997, Section III.4;
 the matrix-toolkit operator manuscript, dilation argument for `lidskii`.
 -/
@@ -11,22 +13,6 @@ the matrix-toolkit operator manuscript, dilation argument for `lidskii`.
 noncomputable section
 open scoped Matrix
 namespace NLAlib
-
-/-- The real symmetric dilation is the block matrix with `A` and `Aᵀ` off diagonal.
-Bhatia 1997, Section III.4; layer-zero real interface for the Mirsky proof. -/
-def realDilation {m n : Type*} (A : Matrix m n ℝ) : Matrix (m ⊕ n) (m ⊕ n) ℝ :=
-  Matrix.fromBlocks 0 A Aᵀ 0
-
-/-- Real dilation is symmetric. Bhatia 1997, Section III.4. -/
-theorem isHermitian_realDilation {m n : Type*} (A : Matrix m n ℝ) :
-    (realDilation A).IsHermitian := by
-  simp [realDilation, Matrix.IsHermitian, Matrix.conjTranspose_eq_transpose_of_trivial,
-    Matrix.fromBlocks_transpose]
-
-/-- Dilation preserves addition. Bhatia 1997, Section III.4. -/
-theorem realDilation_add {m n : Type*} (A B : Matrix m n ℝ) :
-    realDilation (A + B) = realDilation A + realDilation B := by
-  simp [realDilation, Matrix.fromBlocks_add]
 
 /-- Mixed rectangular diagonal multiplication gives the coordinate products,
 with zeros beyond the intermediate dimension. Horn–Johnson 2013, Section 2.6. -/
@@ -113,10 +99,11 @@ private theorem pairRotation_orthogonal (m n : ℕ) (r : ℝ) (hr : r ^ 2 + r ^ 
 
 private theorem rectDiag_dilation_mul_pairRotation {m n : ℕ} (s : ℕ → ℝ)
     (hs : ∀ k, min m n ≤ k → s k = 0) (r : ℝ) :
-    realDilation (rectDiag s : Matrix (Fin m) (Fin n) ℝ) * pairRotation m n r =
+    dilation (rectDiag s : Matrix (Fin m) (Fin n) ℝ) * pairRotation m n r =
       pairRotation m n r * Matrix.diagonal (Sum.elim (fun i : Fin m => s i)
         (fun j : Fin n => -s j)) := by
-  rw [realDilation, pairRotation, transpose_rectDiag, ← Matrix.fromBlocks_diagonal,
+  rw [dilation, Matrix.conjTranspose_eq_transpose_of_trivial, pairRotation, transpose_rectDiag,
+    ← Matrix.fromBlocks_diagonal,
     Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply]
   simp only [Matrix.zero_mul, Matrix.mul_zero, zero_add, add_zero]
   congr 1
@@ -158,10 +145,10 @@ private theorem rectDiag_dilation_mul_pairRotation {m n : ℕ} (s : ℕ → ℝ)
 /-- Every real rectangular dilation admits an orthogonal diagonalization with
 positive row-side and negative column-side padded singular values.
 Bhatia 1997, Section III.4; empty dimensions and repeated zeros are included. -/
-theorem exists_realDilation_orthogonal_diagonalization {m n : ℕ}
+theorem exists_dilation_orthogonal_diagonalization {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) :
     ∃ P : Matrix (Fin m ⊕ Fin n) (Fin m ⊕ Fin n) ℝ, Pᵀ * P = 1 ∧
-      realDilation A = P * Matrix.diagonal (Sum.elim
+      dilation A = P * Matrix.diagonal (Sum.elim
         (fun i : Fin m => singularValues A i) (fun j : Fin n => -singularValues A j)) * Pᵀ := by
   obtain ⟨U, V, h⟩ := exists_isSVD A
   let W := Matrix.fromBlocks U 0 0 V
@@ -177,8 +164,9 @@ theorem exists_realDilation_orthogonal_diagonalization {m n : ℕ}
     simp only [W, Matrix.fromBlocks_transpose, Matrix.transpose_zero,
       Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add,
       h.transpose_mul_left, h.transpose_mul_right, Matrix.fromBlocks_one]
-  have hA : realDilation A = W * realDilation (rectDiag (singularValues A)) * Wᵀ := by
-    simp only [W, realDilation, Matrix.fromBlocks_transpose, Matrix.transpose_zero,
+  have hA : dilation A = W * dilation (rectDiag (singularValues A)) * Wᵀ := by
+    simp only [W, dilation, Matrix.conjTranspose_eq_transpose_of_trivial,
+      Matrix.fromBlocks_transpose, Matrix.transpose_zero,
       Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add]
     rw [← h.eq, h.transpose_eq, transpose_rectDiag]
   refine ⟨W * R, ?_, ?_⟩
@@ -187,7 +175,7 @@ theorem exists_realDilation_orthogonal_diagonalization {m n : ℕ}
     rw [← Matrix.mul_assoc Wᵀ, hW, Matrix.one_mul, hR]
   · have hrot := rectDiag_dilation_mul_pairRotation (singularValues A)
       (fun k hk => singularValues_eq_zero_of_min_le A hk) r
-    have hdiag : realDilation (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) =
+    have hdiag : dilation (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) =
         R * Matrix.diagonal (Sum.elim (fun i : Fin m => singularValues A i)
           (fun j : Fin n => -singularValues A j)) * Rᵀ := by
       rw [← hrot, Matrix.mul_assoc, hRR, Matrix.mul_one]

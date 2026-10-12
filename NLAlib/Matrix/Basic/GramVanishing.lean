@@ -3,39 +3,47 @@ import Mathlib.Analysis.Matrix.Order
 /-!
 # Vanishing rows of positive semidefinite matrices
 
-A zero diagonal entry forces its entire Gram column and row to vanish. This
-handles zero-probability pivots in finite Cholesky transition sums.
+* A zero diagonal entry of a positive semidefinite matrix over `ℝ` or `ℂ` (any `RCLike` field)
+  kills its column and its row (`apply_eq_zero_of_posSemidef_of_apply_self_eq_zero` and its
+  primed row version). This handles zero pivots in the Cholesky recursion and zero-probability
+  pivots in finite Cholesky transition sums.
+* A matrix of rank zero over a field is zero (`eq_zero_of_matrix_rank_eq_zero`).
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix ComplexOrder
 namespace NLAlib
 
-/-- A zero diagonal of a real positive semidefinite matrix forces its corresponding
-column to vanish. Source: manuscript `sa:rp-one-step`, zero-probability pivot case;
-standard Gram-factor Cauchy--Schwarz. -/
-theorem apply_eq_zero_of_posSemidef_of_diag_eq_zero {n : Type*}
-    [Fintype n] [DecidableEq n] {R : Matrix n n ℝ} (hR : R.PosSemidef)
-    {i : n} (hi : R i i = 0) (j : n) : R j i = 0 := by
-  obtain ⟨F, hF⟩ := CStarAlgebra.nonneg_iff_eq_star_mul_self.mp hR.nonneg
-  have hGram : R = Fᵀ * F := by
-    rw [hF, Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]
-  have hsum : ∑ a, (F a i) ^ 2 = 0 := by
-    have h := hi
-    rw [hGram] at h
-    simpa only [Matrix.mul_apply, Matrix.transpose_apply, pow_two] using h
-  have hzero : ∀ a, F a i = 0 := by
-    intro a
-    apply eq_zero_of_pow_eq_zero (n := 2)
-    exact (Finset.sum_eq_zero_iff_of_nonneg fun b _ => sq_nonneg (F b i)).mp hsum a
-      (Finset.mem_univ a)
-  rw [hGram]
-  simp only [Matrix.mul_apply, Matrix.transpose_apply, hzero, mul_zero, Finset.sum_const_zero]
+section ZeroDiagonal
 
-/-- A real finite matrix of rank zero is zero. Source: rank--range identity;
+variable {𝕜 : Type*} [RCLike 𝕜] {m : Type*} [Fintype m] [DecidableEq m]
+
+/-- A zero diagonal entry of a positive semidefinite matrix kills its column: `aᵢᵢ = 0` gives
+`aⱼᵢ = 0` for every `j` (from `eᵢᴴ A eᵢ = 0 ⟹ A eᵢ = 0`,
+`Matrix.PosSemidef.dotProduct_mulVec_zero_iff`). Stated over any `RCLike` field (real and complex
+matrices). Horn–Johnson 2013, Obs. 7.1.10; manuscript `sa:rp-one-step`, zero-probability pivot
+case. -/
+theorem apply_eq_zero_of_posSemidef_of_apply_self_eq_zero {A : Matrix m m 𝕜}
+    (hA : A.PosSemidef) {i : m} (h : A i i = 0) (j : m) : A j i = 0 := by
+  have h0 : star (Pi.single i 1 : m → 𝕜) ⬝ᵥ A *ᵥ Pi.single i 1 = 0 := by
+    simp [h]
+  have := congrFun ((hA.dotProduct_mulVec_zero_iff _).1 h0) j
+  simpa using this
+
+/-- A zero diagonal entry of a positive semidefinite matrix kills its row. -/
+theorem apply_eq_zero_of_posSemidef_of_apply_self_eq_zero' {A : Matrix m m 𝕜}
+    (hA : A.PosSemidef) {i : m} (h : A i i = 0) (j : m) : A i j = 0 := by
+  have hs : A i j = star (A j i) := by
+    have := congrFun (congrFun hA.isHermitian i) j
+    simpa using this.symm
+  rw [hs, apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hA h j, star_zero]
+
+end ZeroDiagonal
+
+/-- A finite matrix of rank zero over a field is zero. Source: rank--range identity;
 manuscript `sa:rp-rank`, zero-rank termination. -/
-theorem eq_zero_of_matrix_rank_eq_zero {m n : Type*} [Fintype m] [Fintype n]
-    {R : Matrix m n ℝ} (hR : R.rank = 0) : R = 0 := by
+theorem eq_zero_of_matrix_rank_eq_zero {K : Type*} [Field K] {m n : Type*} [Fintype m]
+    [Fintype n] {R : Matrix m n K} (hR : R.rank = 0) : R = 0 := by
   have hrange : LinearMap.range R.mulVecLin = ⊥ := Submodule.finrank_eq_zero.mp hR
   ext i j
   have hj : R.col j ∈ LinearMap.range R.mulVecLin := by

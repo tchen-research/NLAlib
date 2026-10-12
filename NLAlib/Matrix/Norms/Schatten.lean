@@ -51,7 +51,7 @@ theorem schattenNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n
 theorem schattenNorm_reindex {m n r s : Type*} [Fintype m] [Fintype n] [Fintype r] [Fintype s]
     [DecidableEq n] [DecidableEq s] (A : Matrix m n ℝ) (em : m ≃ r) (en : n ≃ s) (p : ℝ) :
     schattenNorm (A.reindex em en) p = schattenNorm A p := by
-  simp only [schattenNorm, toEuclideanLin_singularValues_reindex,
+  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_reindex,
     ← Fintype.card_congr em, ← Fintype.card_congr en]
 
 /-- The Schatten-1 norm is precisely the nuclear norm, at every matrix shape. -/
@@ -79,7 +79,7 @@ theorem schattenNorm_orthogonal_mul_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) 
     schattenNorm (U * A) p = schattenNorm A p := by
   simp only [schattenNorm, Fintype.card_fin]
   change (∑ i ∈ Finset.range (min m n), singularValues (U * A) i ^ p) ^ (1 / p) = _
-  rw [singularValues_orthogonal_mul A hU]
+  rw [singularValues_isometry_mul hU A]
   rfl
 
 /-- Right orthogonal multiplication preserves the finite Schatten power sum. -/

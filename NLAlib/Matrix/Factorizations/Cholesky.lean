@@ -76,7 +76,7 @@ theorem IsCholesky.unique {A L L' : Matrix n n ℝ} (h : IsCholesky A L) (h' : I
   have hLL : L * Lᵀ = L' * L'ᵀ := h.eq_mul_transpose.symm.trans h'.eq_mul_transpose
   set D := L'⁻¹ * L with hD
   have hDlow : D.IsLowerTriangular :=
-    isLowerTriangular_mul (isLowerTriangular_inv h'.isLowerTriangular) h.isLowerTriangular
+    BlockTriangular.mul (isLowerTriangular_inv h'.isLowerTriangular) h.isLowerTriangular
   have hD2 : D = L'ᵀ * (Lᵀ)⁻¹ := by
     calc D = L'⁻¹ * L * (Lᵀ * (Lᵀ)⁻¹) := by rw [mul_nonsing_inv _ hLt, Matrix.mul_one]
       _ = L'⁻¹ * (L * Lᵀ) * (Lᵀ)⁻¹ := by simp only [Matrix.mul_assoc]
@@ -84,7 +84,7 @@ theorem IsCholesky.unique {A L L' : Matrix n n ℝ} (h : IsCholesky A L) (h' : I
       _ = L'ᵀ * (Lᵀ)⁻¹ := by rw [← Matrix.mul_assoc, nonsing_inv_mul _ hL', Matrix.one_mul]
   have hDup : D.IsUpperTriangular := by
     rw [hD2]
-    exact isUpperTriangular_mul (isUpperTriangular_transpose_iff.2 h'.isLowerTriangular)
+    exact BlockTriangular.mul (isUpperTriangular_transpose_iff.2 h'.isLowerTriangular)
       (isUpperTriangular_inv (isUpperTriangular_transpose_iff.2 h.isLowerTriangular))
   have hdiag : ∀ i, D i i = (L' i i)⁻¹ * L i i := fun i => by
     rw [hD, mul_apply_self_of_isLowerTriangular (isLowerTriangular_inv h'.isLowerTriangular)

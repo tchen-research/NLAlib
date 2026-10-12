@@ -28,8 +28,8 @@ theorem le_toEuclideanLin_singularValues_of_forall_mem {m n : Type*}
   · exact hc.trans (LinearMap.singularValues_nonneg _ _)
   have hh := le_eigenvalues₀_of_forall_mem (isHermitian_transpose_mul_self A)
     ⟨k, hk⟩ S hS (c := c ^ 2) (fun x hx => by
-      rw [dotProduct_transpose_mul_mulVec]; exact hAS x hx)
-  have hs := sq_toEuclideanLin_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩
+      rw [← mulVec_dotProduct_mulVec_self]; exact hAS x hx)
+  have hs := sq_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩
   have hs' : A.toEuclideanLin.singularValues k ^ 2 =
       (isHermitian_transpose_mul_self A).eigenvalues₀ ⟨k, hk⟩ := hs
   rw [← hs'] at hh

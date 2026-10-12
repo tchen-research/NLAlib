@@ -213,7 +213,7 @@ theorem gaussianMatrix_map_block {n k t : ℕ} (V₁ : Matrix (Fin n) (Fin k) �
       (gaussianMatrix n t) = gaussianMatrix k t := by
   classical
   have hk : Fintype.card (Fin k) ≤ Fintype.card (Fin n) := by
-    simpa using card_le_of_transpose_mul_self_eq_one V₁ hV₁
+    simpa using card_le_card_of_hasOrthonormalCols (Q := V₁) hV₁
   obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le hk
   obtain ⟨W, hW, hWe⟩ := exists_orthogonal_completion V₁ hV₁ e
   let H : (Fin n → Fin t → ℝ) → (Fin n → Fin t → ℝ) :=
@@ -255,7 +255,7 @@ theorem gaussianMatrix_indepFun_block {n k r t : ℕ} (V₁ : Matrix (Fin n) (Fi
     simp only [V, Matrix.transpose_fromCols, Matrix.fromRows_mul_fromCols, hV₁, hV₂, hV₁₂,
       hV₂₁, Matrix.fromBlocks_one]
   have hk : Fintype.card (Fin k ⊕ Fin r) ≤ Fintype.card (Fin n) := by
-    simpa using card_le_of_transpose_mul_self_eq_one V hV
+    simpa using card_le_card_of_hasOrthonormalCols (Q := V) hV
   obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le hk
   obtain ⟨W, hW, hWe⟩ := exists_orthogonal_completion V hV e
   let H : (Fin n → Fin t → ℝ) → (Fin n → Fin t → ℝ) :=

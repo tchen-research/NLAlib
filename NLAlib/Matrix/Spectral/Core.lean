@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.DotProduct
 import NLAlib.Matrix.Basic.Pseudoinverse
+import NLAlib.Matrix.Norms.SpectralNormBounds
 /-!
 # Extreme eigenvalues and singular values
 
@@ -21,9 +22,10 @@ real convention `inf ∅ = 0` makes all three equal to `0`.
 
 * Basic facts: nonnegativity, `sigmaMin A ≤ ‖Ax‖₂` on the sphere and `sigmaMin A ‖x‖₂ ≤ ‖Ax‖₂`
   everywhere, `sigmaMin A ≤ ‖A‖₂` when `n` is nonempty, the relation with `lamMin (AᵀA)`.
-* Lipschitz bounds (atlas `norm-lipschitz`): `σ_min` and `‖·‖₂` are `1`-Lipschitz for the
-  Frobenius norm, `|σ_min(A) − σ_min(B)| ≤ ‖A − B‖_F` and `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖_F`.
-* Euclidean coordinates and nets: `‖u‖ = √(∑ uⱼ²)`, `⟨v, A u⟩ = ∑ᵢⱼ vᵢ Aᵢⱼ uⱼ`, and the net
+* Lipschitz bound (atlas `norm-lipschitz`): `σ_min` is `1`-Lipschitz for the Frobenius norm,
+  `|σ_min(A) − σ_min(B)| ≤ ‖A − B‖_F` (the spectral-norm analogue
+  `abs_specNorm_sub_specNorm_le_frobNorm` is in `NLAlib.Matrix.Norms.SpectralNormBounds`).
+* Coordinates and nets: `⟨v, A u⟩ = ∑ᵢⱼ vᵢ Aᵢⱼ uⱼ`, and the net
   bound `(1 - 2ε)‖A‖₂ ≤ max_{(u,v) ∈ I} ⟨v, A u⟩` for an `ε`-net `I` of pairs of unit vectors
   (`one_sub_two_mul_mul_specNorm_le_iSup`), used by the Gaussian comparison proofs of
   `NLAlib.RandomMatrix.Gaussian.Spectral`.
@@ -73,32 +75,6 @@ atlas: svd-def -/
 def sigmaMinSq (A : Matrix m n ℝ) : ℝ := lamMin (Aᵀ * A)
 
 /-! ### Basic facts -/
-
-/-- `‖v‖₂ = √(v ⬝ v)` for the Euclidean norm of `WithLp.toLp 2 v`. Atlas `norm-lipschitz`. -/
-theorem sqrt_dotProduct_self_eq_norm (v : m → ℝ) :
-    Real.sqrt (v ⬝ᵥ v) = ‖(WithLp.toLp 2 v : EuclideanSpace ℝ m)‖ := by
-  rw [EuclideanSpace.norm_eq]
-  congr 1
-  simp [dotProduct, sq]
-
-/-- Triangle inequality for the Euclidean length `√(v ⬝ v)`. Atlas `norm-lipschitz`. -/
-theorem sqrt_dotProduct_add_le (u v : m → ℝ) :
-    Real.sqrt ((u + v) ⬝ᵥ (u + v)) ≤ Real.sqrt (u ⬝ᵥ u) + Real.sqrt (v ⬝ᵥ v) := by
-  rw [sqrt_dotProduct_self_eq_norm, sqrt_dotProduct_self_eq_norm, sqrt_dotProduct_self_eq_norm,
-    WithLp.toLp_add]
-  exact norm_add_le _ _
-
-/-- Row-wise Cauchy–Schwarz, dot-product form: `‖Bx‖₂² ≤ ‖B‖_F² ‖x‖₂²`.
-Atlas `norm-lipschitz`. -/
-theorem mulVec_dotProduct_mulVec_le_frobSq_mul (B : Matrix m n ℝ) (x : n → ℝ) :
-    (B *ᵥ x) ⬝ᵥ (B *ᵥ x) ≤ frobSq B * (x ⬝ᵥ x) := by
-  have h := sum_sq_mulVec_le_frobSq B x
-  simpa [dotProduct, sq] using h
-
-/-- `x ⬝ (AᵀA) x = ‖Ax‖₂²`. Atlas `norm-lipschitz`. -/
-theorem dotProduct_transpose_mul_mulVec (A : Matrix m n ℝ) (x : n → ℝ) :
-    x ⬝ᵥ (Aᵀ * A) *ᵥ x = (A *ᵥ x) ⬝ᵥ (A *ᵥ x) := by
-  rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, Matrix.vecMul_transpose]
 
 omit [Fintype m] in
 /-- On an empty index type the unit sphere is empty and `σ_min = 0`. -/
@@ -189,14 +165,14 @@ theorem sigmaMinSq_nonneg (A : Matrix m n ℝ) : 0 ≤ sigmaMinSq A := by
   rcases isEmpty_or_nonempty {x : n → ℝ // x ⬝ᵥ x = 1} with hE | hE
   · rw [Real.iInf_of_isEmpty]
   · refine le_ciInf fun x => ?_
-    rw [dotProduct_transpose_mul_mulVec]
+    rw [← mulVec_dotProduct_mulVec_self]
     exact dotProduct_self_nonneg _
 
 /-- `σ_min(A) = √(λ_min(AᵀA))`. Atlas `norm-lipschitz`. -/
 theorem sigmaMin_eq_sqrt_sigmaMinSq (A : Matrix m n ℝ) :
     sigmaMin A = Real.sqrt (sigmaMinSq A) := by
   unfold sigmaMin sigmaMinSq lamMin
-  simp_rw [dotProduct_transpose_mul_mulVec]
+  simp_rw [← mulVec_dotProduct_mulVec_self]
   rcases isEmpty_or_nonempty {x : n → ℝ // x ⬝ᵥ x = 1} with hE | hE
   · rw [Real.iInf_of_isEmpty, Real.iInf_of_isEmpty, Real.sqrt_zero]
   · have hbdd : BddBelow (Set.range fun x : {x : n → ℝ // x ⬝ᵥ x = 1} =>
@@ -336,42 +312,7 @@ theorem abs_sigmaMin_sub_sigmaMin_le_frobNorm (A B : Matrix m n ℝ) :
     rw [← neg_sub, frobNorm_neg]
   constructor <;> linarith
 
-/-- Reverse triangle inequality for the spectral norm: `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖₂`.
-Ported from Prove2me solution `GaussianMatrix.specNorm_lipschitz` (helper `specNorm_sub_le`).
-Atlas `norm-lipschitz`. -/
-theorem abs_specNorm_sub_specNorm_le [DecidableEq m] [DecidableEq n] (A B : Matrix m n ℝ) :
-    |specNorm A - specNorm B| ≤ specNorm (A - B) :=
-  abs_norm_sub_norm_le A B
-
-/-- The spectral norm is `1`-Lipschitz for the Frobenius norm: `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖_F`
-(Vershynin 2012, proof of Cor. 5.35). Generalised from `Fin N × Fin n` to arbitrary finite index
-types. Ported from Prove2me solution `GaussianMatrix.specNorm_lipschitz`.
-Atlas `norm-lipschitz`.
-atlas: norm-lipschitz -/
-theorem abs_specNorm_sub_specNorm_le_frobNorm [DecidableEq m] [DecidableEq n]
-    (A B : Matrix m n ℝ) : |specNorm A - specNorm B| ≤ frobNorm (A - B) :=
-  (abs_specNorm_sub_specNorm_le A B).trans (specNorm_le_frobNorm (A - B))
-
-
-/-! ### Euclidean coordinates and nets -/
-
-/-- `‖u‖ = √(∑ⱼ uⱼ²)` for a real Euclidean vector. Ported from Prove2me solution
-`GaussianMatrix.gordon_upper` (helper `gu_norm_eq_sqrt`). Atlas `norm-lipschitz` (helper). -/
-theorem norm_eq_sqrt_sum_sq {κ : Type*} [Fintype κ] (u : EuclideanSpace ℝ κ) :
-    ‖u‖ = Real.sqrt (∑ j, u j ^ 2) := by
-  rw [← EuclideanSpace.real_norm_sq_eq, Real.sqrt_sq (norm_nonneg _)]
-
-/-- `‖v‖ = √(v ⬝ v)` for a real Euclidean vector. Ported from Prove2me solution
-`GaussianMatrix.spectral_second_moment_bound` (helper `ssb_euclid_norm`).
-Atlas `norm-lipschitz` (helper). -/
-theorem norm_eq_sqrt_dotProduct (v : EuclideanSpace ℝ n) : ‖v‖ = Real.sqrt (v.ofLp ⬝ᵥ v.ofLp) := by
-  rw [EuclideanSpace.norm_eq]
-  congr 1
-  simp [dotProduct, sq]
-
-/-- `‖0‖₂ = 0`. Atlas `norm-lipschitz` (helper). -/
-theorem specNorm_zero [DecidableEq m] [DecidableEq n] : specNorm (0 : Matrix m n ℝ) = 0 :=
-  norm_zero
+/-! ### Coordinates and nets -/
 
 open scoped RealInnerProductSpace in
 /-- The bilinear form of a matrix in coordinates: `⟨v, A u⟩ = ∑ᵢⱼ vᵢ Aᵢⱼ uⱼ`.

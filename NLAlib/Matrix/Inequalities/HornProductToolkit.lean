@@ -15,7 +15,7 @@ universe u_1 u_2 u_3
 
 /-- All clauses of the horn-product-inequality result, with their original hypotheses,
 constants, finite indices and endpoint conventions.
-Components: `prod_toEuclideanLin_singularValues_mul_le`, `sum_range_toEuclideanLin_singularValues_mul_rpow_le`.
+Components: `prod_singularValues_mul_le`, `sum_range_toEuclideanLin_singularValues_mul_rpow_le`.
 Source: hj91, Thm 3.3.4 (Horn), Thm 3.3.14 (weak majorization); mo11, 9.H.1.
 atlas: horn-product-inequality -/
 theorem horn_product_toolkit_properties :
@@ -33,7 +33,7 @@ theorem horn_product_toolkit_properties :
       ∑ i ∈ Finset.range N,
         ((Matrix.toEuclideanLin A).singularValues i * (Matrix.toEuclideanLin B).singularValues i) ^
           p) := by
-  exact ⟨@NLAlib.prod_toEuclideanLin_singularValues_mul_le,
+  exact ⟨@NLAlib.prod_singularValues_mul_le,
     @NLAlib.sum_range_toEuclideanLin_singularValues_mul_rpow_le⟩
 
 end NLAlib

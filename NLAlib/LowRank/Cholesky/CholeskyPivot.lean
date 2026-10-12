@@ -106,7 +106,7 @@ theorem sum_choleskyPivotProbability_smul_step_eq [Nonempty n]
       R.trace⁻¹ * (R j i * R i k) := by
     intro i j k
     by_cases hi : R i i = 0
-    · rw [hi, apply_eq_zero_of_posSemidef_of_diag_eq_zero hR hi j]
+    · rw [hi, apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hR hi j]
       simp
     · field_simp
   ext j k

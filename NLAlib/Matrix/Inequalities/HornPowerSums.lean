@@ -130,6 +130,7 @@ theorem sum_range_toEuclideanLin_singularValues_mul_rpow_le {m n q : Type*}
   have hmul : A.reindex em en * B.reindex en eq = (A * B).reindex em eq := by
     simpa only [Matrix.reindex_apply] using Matrix.submatrix_mul_equiv A B em.symm en.symm eq.symm
   rw [hmul] at h
-  simpa only [em, en, eq, singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  simp only [em, en, eq, singularValues_reindex] at h
+  exact h
 
 end NLAlib

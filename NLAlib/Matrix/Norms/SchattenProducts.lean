@@ -18,7 +18,8 @@ namespace NLAlib
 theorem toEuclideanLin_singularValues_eq_zero_of_min_le {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) {i : ℕ}
     (hi : min (Fintype.card m) (Fintype.card n) ≤ i) : A.toEuclideanLin.singularValues i = 0 := by
-  rw [← singularValues_reindex_eq_toEuclideanLin_singularValues A i]
+  rw [← singularValues_eq_linearMap,
+    ← singularValues_reindex A (Fintype.equivFin m) (Fintype.equivFin n)]
   exact singularValues_eq_zero_of_min_le _ hi
 
 /-- Zero padding a positive-exponent singular-value power sum leaves it unchanged. -/
@@ -88,7 +89,8 @@ theorem toEuclideanLin_singularValues_mul_le_mul_specNorm {m n q : Type*}
   have hmul : A.reindex em en * B.reindex en eq = (A * B).reindex em eq := by
     simpa only [Matrix.reindex_apply] using Matrix.submatrix_mul_equiv A B em.symm en.symm eq.symm
   rw [hmul, specNorm_reindex] at h
-  simpa only [em, en, eq, singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  simp only [em, en, eq, singularValues_reindex] at h
+  exact h
 
 /-- Native left-ideal singular-value bound for every padded index. -/
 theorem toEuclideanLin_singularValues_mul_le_specNorm_mul {m n q : Type*}
@@ -102,6 +104,7 @@ theorem toEuclideanLin_singularValues_mul_le_specNorm_mul {m n q : Type*}
   have hmul : A.reindex em en * B.reindex en eq = (A * B).reindex em eq := by
     simpa only [Matrix.reindex_apply] using Matrix.submatrix_mul_equiv A B em.symm en.symm eq.symm
   rw [hmul, specNorm_reindex] at h
-  simpa only [em, en, eq, singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  simp only [em, en, eq, singularValues_reindex] at h
+  exact h
 
 end NLAlib

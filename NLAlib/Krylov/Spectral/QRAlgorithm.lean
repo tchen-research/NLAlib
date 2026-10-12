@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Factorizations.Givens
+import NLAlib.Matrix.Structured.Hessenberg
 import NLAlib.Krylov.Spaces.Block
 /-!
 # The QR algorithm is simultaneous iteration

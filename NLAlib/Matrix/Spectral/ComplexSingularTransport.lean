@@ -54,7 +54,8 @@ theorem complex_singularValues_eq_of_gram_charpoly {m n p : Type*}
       (Matrix.isHermitian_conjTranspose_mul_self A) (Matrix.isHermitian_conjTranspose_mul_self B) h)
       ⟨k, hk⟩
     have hs : A.toEuclideanLin.singularValues k ^ 2 = B.toEuclideanLin.singularValues k ^ 2 :=
-      (complexSingularValues_sq A ⟨k, hk⟩).trans (he.trans (complexSingularValues_sq B ⟨k, hk⟩).symm)
+      (sq_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩).trans
+        (he.trans (sq_singularValues_eq_eigenvalues₀ B ⟨k, hk⟩).symm)
     nlinarith [A.toEuclideanLin.singularValues_nonneg k, B.toEuclideanLin.singularValues_nonneg k]
   · rw [LinearMap.singularValues_of_finrank_le, LinearMap.singularValues_of_finrank_le] <;>
       simpa only [finrank_euclideanSpace] using Nat.le_of_not_gt hk
@@ -76,8 +77,8 @@ theorem toEuclideanLin_singularValues_map_ofReal {m n : Type*}
     rw [conjTranspose_map_ofReal, ← map_ofReal_mul]
     rfl
   by_cases hk : k < Fintype.card n
-  · have h₁ := complexSingularValues_sq (A.map Complex.ofReal) ⟨k, hk⟩
-    have h₂ := sq_toEuclideanLin_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩
+  · have h₁ := sq_singularValues_eq_eigenvalues₀ (A.map Complex.ofReal) ⟨k, hk⟩
+    have h₂ := sq_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩
     have he := congrFun (complex_eigenvalues₀_eq_of_charpoly
       (Matrix.isHermitian_conjTranspose_mul_self (A.map Complex.ofReal)) hGC
       (congrArg Matrix.charpoly hGram)) ⟨k, hk⟩
@@ -144,7 +145,7 @@ norm exactly. Horn–Johnson 2013, Section 2.6; no dimension doubling. -/
 theorem norm_map_ofReal_eq_specNorm {n : Type*} [Fintype n] [DecidableEq n]
     (A : Matrix n n ℝ) : ‖A.map Complex.ofReal‖ = specNorm A := by
   rw [← complex_singularValues_zero_eq_norm, toEuclideanLin_singularValues_map_ofReal]
-  exact (singularValues_reindex_eq_toEuclideanLin_singularValues A 0).symm.trans
+  exact (congrFun (singularValues_reindex A (Fintype.equivFin _) (Fintype.equivFin _)) 0).symm.trans
     (singularValues_reindex_zero_eq_specNorm A)
 
 /-- A complex and a real matrix with identical native singular-value

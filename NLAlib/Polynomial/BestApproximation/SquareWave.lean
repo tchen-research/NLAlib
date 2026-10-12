@@ -15,7 +15,7 @@ open scoped Topology Real ComplexConjugate
 
 namespace NLAlib
 
-local instance : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
+open scoped NLAlib.TwoPi
 
 /-- The periodic sine square wave on the additive circle.
 Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/

@@ -27,7 +27,7 @@ theorem det_gram_mul_eq_zero_of_det_gram_eq_zero {m p k : Type*}
     ((A * Y)ᵀ * (A * Y)).det = 0 := by
   obtain ⟨x, hx, hYx⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr hY
   have hnorm : (Y *ᵥ x) ⬝ᵥ (Y *ᵥ x) = 0 := by
-    rw [← dotProduct_transpose_mul_mulVec, hYx]
+    rw [mulVec_dotProduct_mulVec_self, hYx]
     simp
   have hy : Y *ᵥ x = 0 := dotProduct_self_eq_zero.mp hnorm
   apply Matrix.exists_mulVec_eq_zero_iff.mp
@@ -108,11 +108,9 @@ theorem IsSVD.det_gram_mul_submatrix_eq_prod_sq_singularValues {m n k : ℕ}
         Matrix.one_apply, hij]
   rw [hGram, hDiag, Matrix.det_diagonal]
 
-/-- Horn's product inequality at every natural prefix length, with zero-indexed,
-zero-padded singular values. Horn–Johnson 1991, Theorem 3.3.4. No positivity,
-rank, or nonemptiness assumptions are imposed.
-atlas: horn-product-inequality (partial) -/
-theorem prod_singularValues_mul_le {m p n : ℕ}
+/-- Horn's prefix-product inequality for `Fin`-indexed matrices (base case of
+`prod_singularValues_mul_le`). -/
+private theorem prod_singularValues_mul_le_fin {m p n : ℕ}
     (A : Matrix (Fin m) (Fin p) ℝ) (B : Matrix (Fin p) (Fin n) ℝ) (k : ℕ) :
     (∏ i ∈ Finset.range k, singularValues (A * B) i) ≤
       ∏ i ∈ Finset.range k, singularValues A i * singularValues B i := by
@@ -151,23 +149,22 @@ theorem prod_singularValues_mul_le {m p n : ℕ}
     rw [hzero]
     exact Finset.prod_nonneg fun i _ => mul_nonneg (singularValues_nonneg A i) (singularValues_nonneg B i)
 
-/-- Horn's prefix-product inequality for native singular values on arbitrary finite
-real matrix indices. Horn–Johnson 1991, Theorem 3.3.4; every natural prefix,
-empty types, rank deficient matrices, and all padded zeros are included.
+/-- Horn's product inequality `∏_{i<k} σ_i(AB) ≤ ∏_{i<k} σ_i(A) σ_i(B)` at every natural prefix
+length, with zero-indexed, zero-padded singular values, on arbitrary finite real matrix indices.
+Horn–Johnson 1991, Theorem 3.3.4. No positivity, rank, or nonemptiness assumptions are imposed.
 atlas: horn-product-inequality (partial) -/
-theorem prod_toEuclideanLin_singularValues_mul_le {m p n : Type*}
+theorem prod_singularValues_mul_le {m p n : Type*}
     [Fintype m] [Fintype p] [Fintype n] [DecidableEq p] [DecidableEq n]
     (A : Matrix m p ℝ) (B : Matrix p n ℝ) (k : ℕ) :
-    (∏ i ∈ Finset.range k, (A * B).toEuclideanLin.singularValues i) ≤
-      ∏ i ∈ Finset.range k, A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i := by
-  have h := prod_singularValues_mul_le
+    (∏ i ∈ Finset.range k, singularValues (A * B) i) ≤
+      ∏ i ∈ Finset.range k, singularValues A i * singularValues B i := by
+  have h := prod_singularValues_mul_le_fin
     (A.reindex (Fintype.equivFin m) (Fintype.equivFin p))
     (B.reindex (Fintype.equivFin p) (Fintype.equivFin n)) k
   have hAB : A.reindex (Fintype.equivFin m) (Fintype.equivFin p) *
       B.reindex (Fintype.equivFin p) (Fintype.equivFin n) =
       (A * B).reindex (Fintype.equivFin m) (Fintype.equivFin n) := by
     simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv]
-  rw [hAB] at h
-  simpa only [singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  rwa [hAB, singularValues_reindex, singularValues_reindex, singularValues_reindex] at h
 
 end NLAlib

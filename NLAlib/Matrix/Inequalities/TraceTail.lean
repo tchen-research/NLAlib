@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Spectral.CourantFischer
-import NLAlib.Matrix.Calculus.InversePowerLimit
+import NLAlib.Matrix.Spectral.TraceEigenvalues
 
 /-!
 # Trace-square lower bounds from an upper spectral tail

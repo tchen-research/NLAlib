@@ -188,13 +188,6 @@ theorem specNorm_sub_frame_projector_eq_residual {P Q : Matrix m n ℝ}
     specNorm_mul_transpose_right_of_hasOrthonormalCols hQ,
     specNorm_residual_comm hQ hP, max_self]
 
-omit [DecidableEq m] in
-/-- The squared Frobenius size of an orthonormal frame is its width.
-Stewart–Sun §I.5; valid at width zero. -/
-theorem frobSq_frame_eq_card {Q : Matrix m n ℝ} (hQ : HasOrthonormalCols Q) :
-    frobSq Q = Fintype.card n := by
-  rw [frobSq, frobInner_eq_trace, hQ, Matrix.trace_one]
-
 omit [DecidableEq m] [DecidableEq n] in
 /-- The Frobenius inner product of frame projectors is the squared
 Frobenius norm of the overlap. Stewart–Sun §I.5. -/

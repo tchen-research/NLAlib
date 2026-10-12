@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Norms.Schatten
 import NLAlib.Matrix.Spectral.SingularValueInvariance
+import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
 import NLAlib.Matrix.Norms.NuclearFiniteIndex
 import NLAlib.Matrix.Inequalities.KyFanSums
 import NLAlib.Matrix.Inequalities.MajorizationConvex
@@ -83,7 +84,7 @@ theorem schattenNorm_smul (A : Matrix m n ℝ) (c : ℝ) {p : ℝ} (hp : 0 < p) 
       A.toEuclideanLin.singularValues i ^ p :=
     Finset.sum_nonneg (fun i _ => Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p)
   unfold schattenNorm
-  simp_rw [toEuclideanLin_singularValues_smul,
+  simp_rw [← singularValues_eq_linearMap, singularValues_smul, singularValues_eq_linearMap,
     Real.mul_rpow (abs_nonneg c) (LinearMap.singularValues_nonneg _ _), ← Finset.mul_sum]
   rw [Real.mul_rpow (Real.rpow_nonneg (abs_nonneg c) p) hsum,
     one_div, Real.rpow_rpow_inv (abs_nonneg c) hp.ne']

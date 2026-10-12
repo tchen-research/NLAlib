@@ -1,4 +1,5 @@
-import NLAlib.Polynomial.FunctionApproximation.AnalyticApproximation
+import NLAlib.ForMathlib.Analysis.FourierCircle
+import Mathlib.MeasureTheory.Measure.Haar.Unique
 
 /-!
 # Fourier convolution identities on the circle of period two pi
@@ -14,7 +15,7 @@ open scoped Real ComplexConjugate
 
 namespace NLAlib
 
-local instance : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
+open scoped NLAlib.TwoPi
 
 /-- Subtracting circle arguments reverses the Fourier frequency in the second argument.
 Source: Mathlib additive-circle Fourier characters; used by sharp `jackson-lipschitz`. -/

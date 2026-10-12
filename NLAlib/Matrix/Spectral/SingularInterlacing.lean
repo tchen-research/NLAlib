@@ -46,9 +46,9 @@ omit [DecidableEq p] in
 /-- Row selection cannot increase any singular value, including padded
 zeros. Horn--Johnson (2013), Corollary 7.3.6.
 atlas: singular-value-interlacing (partial) -/
-theorem toEuclideanLin_singularValues_submatrix_rows_le (A : Matrix m n ℝ)
+theorem singularValues_submatrix_rows_le (A : Matrix m n ℝ)
     (f : p → m) (hf : Function.Injective f) (k : ℕ) :
-    (A.submatrix f id).toEuclideanLin.singularValues k ≤ A.toEuclideanLin.singularValues k := by
+    singularValues (A.submatrix f id) k ≤ singularValues A k := by
   classical
   by_cases hk : k < Fintype.card n
   · let D := A.submatrix (Subtype.val : {i : m // i ∉ Set.range f} → m) id
@@ -59,21 +59,21 @@ theorem toEuclideanLin_singularValues_submatrix_rows_le (A : Matrix m n ℝ)
     have h := eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub
       (Matrix.isHermitian_conjTranspose_mul_self (A.submatrix f id))
       (Matrix.isHermitian_conjTranspose_mul_self A) hd ⟨k, hk⟩
-    rw [← sq_toEuclideanLin_singularValues_eq_eigenvalues₀ (A.submatrix f id) ⟨k, hk⟩,
-      ← sq_toEuclideanLin_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩] at h
-    nlinarith [(A.submatrix f id).toEuclideanLin.singularValues_nonneg k,
-      A.toEuclideanLin.singularValues_nonneg k]
-  · rw [LinearMap.singularValues_of_finrank_le, LinearMap.singularValues_of_finrank_le]
+    rw [← sq_singularValues_eq_eigenvalues₀ (A.submatrix f id) ⟨k, hk⟩,
+      ← sq_singularValues_eq_eigenvalues₀ A ⟨k, hk⟩] at h
+    nlinarith [singularValues_nonneg (A.submatrix f id) k, singularValues_nonneg A k]
+  · rw [singularValues_eq_linearMap, singularValues_eq_linearMap,
+      LinearMap.singularValues_of_finrank_le, LinearMap.singularValues_of_finrank_le]
     all_goals simpa only [finrank_euclideanSpace] using Nat.le_of_not_gt hk
 
 omit [DecidableEq p] in
 /-- Deleting rows shifts the lower singular-value bound by exactly the
 number of omitted rows. Horn--Johnson (2013), Corollary 7.3.6.
 atlas: singular-value-interlacing (partial) -/
-theorem toEuclideanLin_singularValues_le_submatrix_rows (A : Matrix m n ℝ)
+theorem singularValues_le_submatrix_rows (A : Matrix m n ℝ)
     (f : p → m) (hf : Function.Injective f) (k : ℕ) :
-    A.toEuclideanLin.singularValues (k + (Fintype.card m - Fintype.card p)) ≤
-      (A.submatrix f id).toEuclideanLin.singularValues k := by
+    singularValues A (k + (Fintype.card m - Fintype.card p)) ≤
+      singularValues (A.submatrix f id) k := by
   classical
   let D := A.submatrix (Subtype.val : {i : m // i ∉ Set.range f} → m) id
   have hc : Fintype.card {i : m // i ∉ Set.range f} = Fintype.card m - Fintype.card p := by
@@ -94,36 +94,34 @@ theorem toEuclideanLin_singularValues_le_submatrix_rows (A : Matrix m n ℝ)
       (Matrix.isHermitian_conjTranspose_mul_self A)
       (by simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hGram.symm)
     rw [heig] at h
-    rw [← sq_toEuclideanLin_singularValues_eq_eigenvalues₀ A
+    rw [← sq_singularValues_eq_eigenvalues₀ A
       ⟨k + (Fintype.card m - Fintype.card p), hk⟩,
-      ← sq_toEuclideanLin_singularValues_eq_eigenvalues₀ (A.submatrix f id) ⟨k, hk₀⟩] at h
-    nlinarith [A.toEuclideanLin.singularValues_nonneg (k + (Fintype.card m - Fintype.card p)),
-      (A.submatrix f id).toEuclideanLin.singularValues_nonneg k]
-  · rw [LinearMap.singularValues_of_finrank_le]
-    · exact (A.submatrix f id).toEuclideanLin.singularValues_nonneg k
+      ← sq_singularValues_eq_eigenvalues₀ (A.submatrix f id) ⟨k, hk₀⟩] at h
+    nlinarith [singularValues_nonneg A (k + (Fintype.card m - Fintype.card p)),
+      singularValues_nonneg (A.submatrix f id) k]
+  · rw [singularValues_eq_linearMap, LinearMap.singularValues_of_finrank_le]
+    · exact singularValues_nonneg (A.submatrix f id) k
     · simpa only [finrank_euclideanSpace] using Nat.le_of_not_gt hk
 
 /-- Column selection cannot increase any singular value.
 Horn--Johnson (2013), Corollary 7.3.6.
 atlas: singular-value-interlacing (partial) -/
-theorem toEuclideanLin_singularValues_submatrix_cols_le (A : Matrix m n ℝ)
+theorem singularValues_submatrix_cols_le (A : Matrix m n ℝ)
     (f : p → n) (hf : Function.Injective f) (k : ℕ) :
-    (A.submatrix id f).toEuclideanLin.singularValues k ≤ A.toEuclideanLin.singularValues k := by
-  have h := toEuclideanLin_singularValues_submatrix_rows_le Aᵀ f hf k
-  rw [← Matrix.transpose_submatrix, toEuclideanLin_singularValues_transpose,
-    toEuclideanLin_singularValues_transpose] at h
+    singularValues (A.submatrix id f) k ≤ singularValues A k := by
+  have h := singularValues_submatrix_rows_le Aᵀ f hf k
+  rw [← Matrix.transpose_submatrix, singularValues_transpose, singularValues_transpose] at h
   exact h
 
 /-- Deleting columns shifts the lower singular-value bound by the number
 of omitted columns. Horn--Johnson (2013), Corollary 7.3.6.
 atlas: singular-value-interlacing (partial) -/
-theorem toEuclideanLin_singularValues_le_submatrix_cols (A : Matrix m n ℝ)
+theorem singularValues_le_submatrix_cols (A : Matrix m n ℝ)
     (f : p → n) (hf : Function.Injective f) (k : ℕ) :
-    A.toEuclideanLin.singularValues (k + (Fintype.card n - Fintype.card p)) ≤
-      (A.submatrix id f).toEuclideanLin.singularValues k := by
-  have h := toEuclideanLin_singularValues_le_submatrix_rows Aᵀ f hf k
-  rw [← Matrix.transpose_submatrix, toEuclideanLin_singularValues_transpose,
-    toEuclideanLin_singularValues_transpose] at h
+    singularValues A (k + (Fintype.card n - Fintype.card p)) ≤
+      singularValues (A.submatrix id f) k := by
+  have h := singularValues_le_submatrix_rows Aᵀ f hf k
+  rw [← Matrix.transpose_submatrix, singularValues_transpose, singularValues_transpose] at h
   exact h
 
 /-- Arbitrary row and column deletion gives the full singular-value
@@ -132,18 +130,18 @@ lower shift. Taking one omitted coordinate gives the one-step interlacing
 chain; all statements use the actual padded singular values.
 Horn--Johnson (2013), Corollary 7.3.6.
 atlas: singular-value-interlacing -/
-theorem toEuclideanLin_singularValues_submatrix_interlacing
+theorem singularValues_submatrix_interlacing
     {q : Type*} [Fintype q] [DecidableEq q] (A : Matrix m n ℝ)
     (f : p → m) (g : q → n) (hf : Function.Injective f) (hg : Function.Injective g) (k : ℕ) :
-    A.toEuclideanLin.singularValues
+    singularValues A
       (k + (Fintype.card m - Fintype.card p) + (Fintype.card n - Fintype.card q)) ≤
-        (A.submatrix f g).toEuclideanLin.singularValues k ∧
-    (A.submatrix f g).toEuclideanLin.singularValues k ≤ A.toEuclideanLin.singularValues k := by
-  have hc := toEuclideanLin_singularValues_le_submatrix_cols (A.submatrix f id) g hg k
-  have hr := toEuclideanLin_singularValues_le_submatrix_rows A f hf
+        singularValues (A.submatrix f g) k ∧
+    singularValues (A.submatrix f g) k ≤ singularValues A k := by
+  have hc := singularValues_le_submatrix_cols (A.submatrix f id) g hg k
+  have hr := singularValues_le_submatrix_rows A f hf
     (k + (Fintype.card n - Fintype.card q))
-  have hcu := toEuclideanLin_singularValues_submatrix_cols_le (A.submatrix f id) g hg k
-  have hru := toEuclideanLin_singularValues_submatrix_rows_le A f hf k
+  have hcu := singularValues_submatrix_cols_le (A.submatrix f id) g hg k
+  have hru := singularValues_submatrix_rows_le A f hf k
   simp only [Matrix.submatrix_submatrix, Function.comp_id, Function.id_comp] at hc hcu
   refine ⟨?_, hcu.trans hru⟩
   have hidx : k + (Fintype.card m - Fintype.card p) + (Fintype.card n - Fintype.card q) =

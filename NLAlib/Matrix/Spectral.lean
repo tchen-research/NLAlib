@@ -117,7 +117,6 @@ import NLAlib.Matrix.Spectral.SimultaneousTriangularBasis
 import NLAlib.Matrix.Spectral.SimultaneousTriangularization
 import NLAlib.Matrix.Spectral.SingularInterlacing
 import NLAlib.Matrix.Spectral.SingularInterlacingToolkit
-import NLAlib.Matrix.Spectral.SingularIsometries
 import NLAlib.Matrix.Spectral.SingularValueInvariance
 import NLAlib.Matrix.Spectral.SingularValueScaling
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
@@ -135,6 +134,7 @@ import NLAlib.Matrix.Spectral.SylvesterCriterionToolkit
 import NLAlib.Matrix.Spectral.SylvesterQualitative
 import NLAlib.Matrix.Spectral.SylvesterSimilarity
 import NLAlib.Matrix.Spectral.SylvesterToolkit
+import NLAlib.Matrix.Spectral.TraceEigenvalues
 import NLAlib.Matrix.Spectral.Weyl
 
 /-! # `Matrix/Spectral`

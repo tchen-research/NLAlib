@@ -76,16 +76,6 @@ private theorem hanson_wright_mgf_fin {Ω : Type*} [MeasurableSpace Ω]
   simpa only [HansonWrightProof.hansonWrightUniversalConstant,
     show (4 : ℝ) * (64 * exp 1 ^ 2) = 256 * exp 1 ^ 2 by ring] using h
 
-/-- Relabelling the coordinates by an equivalence does not change the quadratic form.
-Atlas `hanson-wright` (index transport). -/
-theorem quadForm_reindex {ι κ : Type*} [Fintype ι] [Fintype κ] (A : Matrix ι ι ℝ) (e : ι ≃ κ)
-    (z : ι → ℝ) : quadForm (A.reindex e e) (fun k => z (e.symm k)) = quadForm A z := by
-  rw [quadForm_eq_sum, quadForm_eq_sum]
-  simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
-  rw [e.symm.sum_comp (fun i => ∑ k, A i (e.symm k) * (z i * z (e.symm k)))]
-  exact Finset.sum_congr rfl fun i _ =>
-    e.symm.sum_comp (fun j => A i j * (z i * z j))
-
 /-- **Hanson–Wright, MGF form.** Independent coordinates with sub-Gaussian
 variance proxy `K²` satisfy the quadratic-form tail bound with the explicit
 constant `1/(256 exp(1)²)`. The matrix is arbitrary, and zero matrix/dimension

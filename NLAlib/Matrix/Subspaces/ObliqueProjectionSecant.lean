@@ -39,7 +39,8 @@ theorem specNorm_idempotent_eq_secant_of_range_frames {n r : Type*}
   rw [hForm, specNorm_mul_transpose_right_of_hasOrthonormalCols hW,
     specNorm_mul_left_of_hasOrthonormalCols hQ,
     specNorm_inv_eq_inv_singularValues_last _ hC hr,
-    cos_principalAngles hW hQ, singularValues_reindex_eq_toEuclideanLin_singularValues]
+    cos_principalAngles hW hQ, singularValues_reindex,
+    singularValues_eq_linearMap]
 
 /-- Every positive-rank real idempotent has orthonormal frames for its
 actual range and the orthogonal complement of its actual kernel whose

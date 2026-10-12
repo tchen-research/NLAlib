@@ -100,7 +100,7 @@ theorem lanczosRayleighRelativeError_le_log_sq {ι : Type*} [Fintype ι] [Decida
     exact (sq_pos_of_ne_zero hb).trans_le ht
   have hRQ : (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient (WithLp.toLp 2 y) =
       L * ((∑ i, d i * p.eval (d i) ^ 2 * c i ^ 2) / (∑ i, p.eval (d i) ^ 2 * c i ^ 2)) := by
-    rw [rayleighQuotient_toEuclideanCLM_eq, hN, hD, mul_div_assoc]
+    rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient, quadForm, hN, hD, mul_div_assoc]
   have hCompare := rayleighQuotient_le_lanczosRitzValue_of_mem hA b q hy
   have hError : lanczosRayleighRelativeError A b q ≤
       1 - (∑ i, d i * p.eval (d i) ^ 2 * c i ^ 2) / (∑ i, p.eval (d i) ^ 2 * c i ^ 2) := by

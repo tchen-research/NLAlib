@@ -51,7 +51,7 @@ theorem cholesky_factor_unique {A L M : Matrix n n ℝ} (hA : A.PosDef)
   have hUnit := isUnit_of_mul_transpose_eq_posDef hA hLFactor
   have hDet := (Matrix.isUnit_iff_isUnit_det L).mp hUnit
   let R := L⁻¹ * M
-  have hInvLower := isLowerTriangular_inv_of_isUnit hL hUnit
+  have hInvLower := isLowerTriangular_inv hL
   have hLower : R.IsLowerTriangular := hInvLower.mul hM
   have hLR : L * R = M := by
     dsimp [R]
@@ -66,7 +66,7 @@ theorem cholesky_factor_unique {A L M : Matrix n n ℝ} (hA : A.PosDef)
           ← Matrix.transpose_mul, Matrix.nonsing_inv_mul L hDet, Matrix.transpose_one]
   have hRDiag (i : n) : 0 < R i i := by
     have hd := congrFun (congrFun hLR i) i
-    rw [mul_apply_diag_of_isLowerTriangular L R hL hLower i] at hd
+    rw [mul_apply_self_of_isLowerTriangular hL hLower i] at hd
     have hp : 0 < L i i * R i i := by rw [hd]; exact hMDiag i
     have hp' : 0 < R i i * L i i := by simpa only [mul_comm] using hp
     exact pos_of_mul_pos_left hp' (hLDiag i).le

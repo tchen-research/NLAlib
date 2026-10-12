@@ -81,9 +81,9 @@ theorem singular_subspace_perturbation_bounds_fintype
   let RF := AF * VhatF - UhatF * T
   let SF := AFᵀ * UhatF - VhatF * T
   have hσA : singularValues AF = A.toEuclideanLin.singularValues :=
-    funext (singularValues_reindex_eq_toEuclideanLin_singularValues A)
+    singularValues_reindex A _ _
   have hσB : singularValues (AF + EF) = (A + E).toEuclideanLin.singularValues :=
-    funext (singularValues_reindex_eq_toEuclideanLin_singularValues (A + E))
+    singularValues_reindex (A + E) _ _
   have h := singular_subspace_perturbation_bounds (A := AF) (E := EF) hA hhat hk
   change (AF * VhatF - UhatF * Matrix.diagonal (fun i : Fin k => singularValues (AF + EF) i) =
       -(EF * VhatF)) ∧ _ at h

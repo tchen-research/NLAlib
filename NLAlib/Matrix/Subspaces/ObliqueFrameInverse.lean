@@ -68,6 +68,7 @@ theorem specNorm_inv_eq_inv_singularValues_last {r : Type*}
     specNorm C⁻¹ = 1 / C.toEuclideanLin.singularValues (Fintype.card r - 1) := by
   have hRank : C.rank = Fintype.card r := Matrix.rank_of_isUnit C hC
   rw [← moorePenroseInverse_eq_nonsing_inv hC, specNorm_moorePenroseInverse_eq_fintype,
-    hRank, if_neg (Nat.ne_of_gt hr), singularValues_reindex_eq_toEuclideanLin_singularValues]
+    hRank, if_neg (Nat.ne_of_gt hr), singularValues_reindex,
+    singularValues_eq_linearMap]
 
 end NLAlib

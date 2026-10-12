@@ -77,10 +77,6 @@ theorem span_powerIterate_eq_subspaceIterate (A : Matrix n n ℝ) (x₀ : n → 
     rfl
   rw [h]
 
-/-- The Rayleigh quotient `ρ(x) = xᵀAx/xᵀx` (junk value `0` at `x = 0`). Source: Trefethen–Bau
-(1997) [`tb97`], Lect. 27. Helper for `power-iteration` (belongs in `NLAlib.Matrix.Basic.QuadForm`). -/
-def rayleighQuotient (A : Matrix n n ℝ) (x : n → ℝ) : ℝ := quadForm A x / (x ⬝ᵥ x)
-
 /-- The normalised power step `x ↦ A x/‖A x‖` (junk value `0` when `A x = 0`). Source:
 Trefethen–Bau (1997) [`tb97`], Alg. 27.1. Helper for `power-iteration`. -/
 def powerStep (A : Matrix n n ℝ) (x : n → ℝ) : n → ℝ :=

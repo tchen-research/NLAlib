@@ -1,13 +1,13 @@
 import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Data.Real.Basic
 
 /-!
 # Complementary right nullities
 
 An invertible map on split coordinates identifies the upper-left kernel with
 the lower-right kernel of its inverse. This gives the rectangular law with
-its right-nullity orientation and no equal-cardinality premise.
-Horn–Johnson 2013, §§0.7.5–0.7.6; atlas `complementary-nullities`.
+its right-nullity orientation and no equal-cardinality premise. Stated over
+an arbitrary field (in particular `ℝ` and `ℂ`).
+Horn–Johnson 2013, §§0.7.5–0.7.6; atlas `complementary-nullities`, `cs-decomposition`.
 -/
 
 noncomputable section
@@ -15,6 +15,8 @@ open scoped Matrix BigOperators
 namespace NLAlib
 set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
+
+variable {K : Type*} [Field K]
 
 private def firstBlockMap {R E F G H : Type*} [CommRing R]
     [AddCommGroup E] [Module R E] [AddCommGroup F] [Module R F]
@@ -67,7 +69,7 @@ private def complementaryKernelEquiv {R E F G H : Type*} [CommRing R]
     rfl
 
 private def coordinateSplit {n : Type*} (p : n → Prop) [DecidablePred p] :
-    (n → ℝ) ≃ₗ[ℝ] (({i // p i} → ℝ) × ({i // ¬p i} → ℝ)) where
+    (n → K) ≃ₗ[K] (({i // p i} → K) × ({i // ¬p i} → K)) where
   toFun x := (fun i => x i.val, fun i => x i.val)
   invFun x := fun i => if h : p i then x.1 ⟨i, h⟩ else x.2 ⟨i, h⟩
   left_inv x := by funext i; dsimp; split_ifs <;> rfl
@@ -77,10 +79,10 @@ private def coordinateSplit {n : Type*} (p : n → Prop) [DecidablePred p] :
   map_smul' c x := rfl
 
 private theorem firstBlockMap_coordinateSplit {n : Type*} [Fintype n] [DecidableEq n]
-    (A : Matrix n n ℝ) (hA : IsUnit A.det) (p q : n → Prop)
+    (A : Matrix n n K) (hA : IsUnit A.det) (p q : n → Prop)
     [DecidablePred p] [DecidablePred q] :
     firstBlockMap ((coordinateSplit q).symm.trans
-      ((A.toLinearEquiv (Pi.basisFun ℝ n) hA).trans (coordinateSplit p))) =
+      ((A.toLinearEquiv (Pi.basisFun K n) hA).trans (coordinateSplit p))) =
       (A.toBlock p q).mulVecLin := by
   apply LinearMap.ext
   intro x
@@ -93,7 +95,7 @@ private theorem firstBlockMap_coordinateSplit {n : Type*} [Fintype n] [Decidable
       (if h : q j.val then x ⟨j.val, h⟩ else 0)) = fun j => A i.val j.val * x j := by
     funext j; rw [dif_pos j.property]
   have hNeg : (fun j : {j // ¬q j} => A i.val j.val *
-      (if h : q j.val then x ⟨j.val, h⟩ else 0)) = fun _ => (0 : ℝ) := by
+      (if h : q j.val then x ⟨j.val, h⟩ else 0)) = fun _ => (0 : K) := by
     funext j; rw [dif_neg j.property, mul_zero]
   rw [hPos, hNeg, Finset.sum_const_zero, add_zero] at h
   exact h.symm
@@ -101,15 +103,16 @@ private theorem firstBlockMap_coordinateSplit {n : Type*} [Fintype n] [Decidable
 /-- Rectangular complementary submatrices of an invertible matrix have the
 same right nullity. No equal-size condition is required: the inverse minor's
 rows complement the original columns and its columns complement the original
-rows. Horn–Johnson 2013, §§0.7.5–0.7.6.
-atlas: complementary-nullities (partial) -/
+rows. Holds over any field (generalised from `ℝ`, covering `ℂ`). Horn–Johnson 2013,
+§§0.7.5–0.7.6.
+atlas: complementary-nullities (partial), cs-decomposition (partial) -/
 theorem finrank_ker_toBlock_eq_finrank_ker_inverse_complement {n : Type*}
-    [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) (hA : IsUnit A.det)
+    [Fintype n] [DecidableEq n] (A : Matrix n n K) (hA : IsUnit A.det)
     (p q : n → Prop) [DecidablePred p] [DecidablePred q] :
-    Module.finrank ℝ (LinearMap.ker (A.toBlock p q).mulVecLin) =
-      Module.finrank ℝ (LinearMap.ker (A⁻¹.toBlock (fun i => ¬q i) (fun i => ¬p i)).mulVecLin) := by
+    Module.finrank K (LinearMap.ker (A.toBlock p q).mulVecLin) =
+      Module.finrank K (LinearMap.ker (A⁻¹.toBlock (fun i => ¬q i) (fun i => ¬p i)).mulVecLin) := by
   let f := (coordinateSplit q).symm.trans
-    ((A.toLinearEquiv (Pi.basisFun ℝ n) hA).trans (coordinateSplit p))
+    ((A.toLinearEquiv (Pi.basisFun K n) hA).trans (coordinateSplit p))
   have hFirst := firstBlockMap_coordinateSplit A hA p q
   have hLast : inverseLastBlockMap f =
       (A⁻¹.toBlock (fun i => ¬q i) (fun i => ¬p i)).mulVecLin := by
@@ -121,7 +124,7 @@ theorem finrank_ker_toBlock_eq_finrank_ker_inverse_complement {n : Type*}
     have h := Fintype.sum_subtype_add_sum_subtype p
       (fun j => A⁻¹ i.val j * (if h : p j then 0 else y ⟨j, h⟩))
     have hPos : (fun j : {j // p j} => A⁻¹ i.val j.val *
-        (if h : p j.val then 0 else y ⟨j.val, h⟩)) = fun _ => (0 : ℝ) := by
+        (if h : p j.val then 0 else y ⟨j.val, h⟩)) = fun _ => (0 : K) := by
       funext j; rw [dif_pos j.property, mul_zero]
     have hNeg : (fun j : {j // ¬p j} => A⁻¹ i.val j.val *
         (if h : p j.val then 0 else y ⟨j.val, h⟩)) = fun j => A⁻¹ i.val j.val * y j := by

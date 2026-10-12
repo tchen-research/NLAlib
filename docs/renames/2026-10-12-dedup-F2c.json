@@ -1,0 +1,23 @@
+{
+  "NLAlib.trace_conjStarAlgAut_complex": "NLAlib.trace_conjStarAlgAut",
+  "NLAlib.SparseFock.TracePowerConvexity.trace_conjStarAlgAut": "NLAlib.trace_conjStarAlgAut",
+  "NLAlib.SparseFock.TracePowerConvexity.trace_mul_diagonal_pow_mul_mul_diagonal_pow": "NLAlib.trace_mul_diagonal_pow_mul_mul_diagonal_pow",
+  "NLAlib.SparseFock.TracePowerConvexity.trace_power_derivative_sum": "NLAlib.trace_power_derivative_sum",
+  "NLAlib.SparseFock.MatrixTail.trace_pow_eq_sum_eigenvalues": "NLAlib.trace_pow_eq_sum_eigenvalues",
+  "NLAlib.complex_re_trace_pow_eq_sum_eigenvalues": "NLAlib.re_trace_pow_eq_sum_eigenvalues_pow",
+  "NLAlib.re_trace_eq_rank_of_isIdempotentElem": "NLAlib.trace_eq_rank_of_isIdempotentElem",
+  "NLAlib.diag_mem_Icc_of_isSymm_of_isIdempotentElem": "NLAlib.re_diag_mem_Icc_of_isHermitian_of_isIdempotentElem",
+  "NLAlib.complex_finrank_ker_toBlock_eq_finrank_ker_inverse_complement": "NLAlib.finrank_ker_toBlock_eq_finrank_ker_inverse_complement",
+  "NLAlib.complex_card_columns_sub_rank_toBlock_eq_inverse_complement": "NLAlib.card_columns_sub_rank_toBlock_eq_inverse_complement",
+  "NLAlib.col_mul": "NLAlib.col_mul_eq_mulVec_col",
+  "NLAlib.complex_col_mul_eq_mulVec_col": "NLAlib.col_mul_eq_mulVec_col",
+  "NLAlib.transpose_mul_mul_apply": "NLAlib.transpose_mul_mul_apply_eq_dotProduct",
+  "NLAlib.instFactLtRealOfNatHMulPi_nLAlib": "NLAlib.TwoPi.fact_zero_lt_two_pi",
+  "NLAlib.instFactLtRealOfNatHMulPi_nLAlib_1": "NLAlib.TwoPi.fact_zero_lt_two_pi",
+  "NLAlib.instFactLtRealOfNatHMulPi_nLAlib_2": "NLAlib.TwoPi.fact_zero_lt_two_pi",
+  "NLAlib.mul_apply_diag_of_isLowerTriangular": "NLAlib.mul_apply_self_of_isLowerTriangular",
+  "NLAlib.mul_apply_self_eq_mul_of_isUpperTriangular": "NLAlib.mul_apply_self_of_isUpperTriangular",
+  "NLAlib.isLowerTriangular_inv_of_isUnit": "NLAlib.isLowerTriangular_inv",
+  "NLAlib.isUpperTriangular_mul": "Matrix.BlockTriangular.mul",
+  "NLAlib.isLowerTriangular_mul": "Matrix.BlockTriangular.mul"
+}

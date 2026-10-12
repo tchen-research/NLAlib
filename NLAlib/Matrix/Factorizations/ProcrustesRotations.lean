@@ -24,7 +24,8 @@ theorem frobSq_eq_sum_toEuclideanLin_singularValues_sq (A : Matrix m n ℝ) :
       A.toEuclideanLin.singularValues i ^ 2 := by
   have h := frobSq_eq_sum_sq_singularValues
     (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-  simpa only [frobSq_reindex, singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  simp only [frobSq_reindex, singularValues_reindex] at h
+  exact h
 
 omit [DecidableEq m] in
 /-- Equality in Frobenius Mirsky is exactly equality in the signed von
@@ -58,15 +59,7 @@ theorem nuclearNorm_mul_transpose_le_sum_singularValues_mul (A B : Matrix m n �
       frobInner_eq_nuclearNorm_of_polar hU hPolar]
   have h := (le_abs_self (frobInner A (U * B))).trans
     (abs_frobInner_le_sum_toEuclideanLin_singularValues_mul A (U * B))
-  simpa only [hPair, toEuclideanLin_singularValues_orthogonal_mul B hU] using h
-
-omit [DecidableEq m] [DecidableEq n] in
-/-- The Frobenius pairing is also the trace of the row cross-product.
-Horn–Johnson §7.4; Procrustes equality helper. -/
-theorem frobInner_eq_trace_mul_transpose (A B : Matrix m n ℝ) :
-    frobInner A B = (A * Bᵀ).trace := by
-  rw [frobInner_eq_trace, ← Matrix.trace_transpose (A * Bᵀ), Matrix.transpose_mul,
-    Matrix.transpose_transpose, Matrix.trace_mul_comm]
+  simpa only [hPair, ← singularValues_eq_linearMap, singularValues_isometry_mul hU B] using h
 
 /-- Equality in von Neumann's signed trace inequality forces the row
 cross-product to be PSD. Horn–Johnson 2013, Corollary 7.4.1.5.
@@ -101,7 +94,7 @@ theorem posSemidef_cross_products_of_frobSq_sub_eq_sum_singularValues_sub_sq
       ∑ i ∈ Finset.range (min (Fintype.card n) (Fintype.card m)),
         Bᵀ.toEuclideanLin.singularValues i * Aᵀ.toEuclideanLin.singularValues i := by
     simpa only [frobInner_transpose, frobInner_comm B A,
-      toEuclideanLin_singularValues_transpose, min_comm, mul_comm] using hPair
+      ← singularValues_eq_linearMap, singularValues_transpose, min_comm, mul_comm] using hPair
   simpa only [Matrix.transpose_transpose] using
     posSemidef_mul_transpose_of_frobInner_eq_sum_singularValues_mul Bᵀ Aᵀ hPairT
 
@@ -151,7 +144,8 @@ theorem exists_orthogonal_pair_attaining_singularValue_pairing (A B : Matrix m n
       ext i j; simp [T, Matrix.reindex_apply]
     rw [mul_reindex (U * B) T em en en, mul_reindex U B em em en, hUBack, hTBack]
   rw [← frobInner_reindex A (U * B * T) em en, hBack]
-  simpa only [em, en, singularValues_reindex_eq_toEuclideanLin_singularValues] using hPair
+  simp only [em, en, singularValues_reindex] at hPair
+  exact hPair
 
 omit [DecidableEq m] in
 /-- The full singular-value squared-distance lower bound for arbitrary finite
@@ -166,7 +160,8 @@ theorem sum_singularValues_sub_sq_le_frobSq_sub (A B : Matrix m n ℝ) :
   rw [show BF + (AF - BF) = AF by abel] at h
   have hDiff : AF - BF = (A - B).reindex (Fintype.equivFin m) (Fintype.equivFin n) := rfl
   rw [hDiff, frobSq_reindex] at h
-  simpa only [AF, BF, singularValues_reindex_eq_toEuclideanLin_singularValues] using h
+  simp only [AF, BF, singularValues_reindex] at h
+  exact h
 
 /-- Two-sided orthogonal Procrustes has the exact singular-value squared
 distance as its minimum. SVD alignment supplies genuine attained rotations,
@@ -180,8 +175,8 @@ theorem isLeast_frobSq_sub_orthogonal_mul_mul (A B : Matrix m n ℝ) :
   have hσ (U : Matrix m m ℝ) (T : Matrix n n ℝ)
       (hU : HasOrthonormalCols U) (hT : HasOrthonormalCols T) (i : ℕ) :
       (U * B * T).toEuclideanLin.singularValues i = B.toEuclideanLin.singularValues i := by
-    rw [toEuclideanLin_singularValues_mul_orthogonal _ hT,
-      toEuclideanLin_singularValues_orthogonal_mul _ hU]
+    rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
+      singularValues_mul_orthogonal _ hT, singularValues_isometry_mul hU]
   obtain ⟨U, T, hU, hT, hPair⟩ := exists_orthogonal_pair_attaining_singularValue_pairing A B
   refine ⟨⟨U, T, hU, hT, ?_⟩, ?_⟩
   · have h := (frobSq_sub_eq_sum_singularValues_sub_sq_iff A (U * B * T)).mpr

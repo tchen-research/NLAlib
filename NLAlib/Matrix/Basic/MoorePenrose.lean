@@ -8,7 +8,9 @@ The inverse constructed here is distinct from the full-rank formulas `pinvL` and
 types, and for rank-deficient matrices. The construction uses NLAlib's real SVD
 and scalar reciprocals, with zero singular values sent to zero. The four Penrose
 identities characterize it uniquely and identify it with the existing full-rank
-formulas when their Gram matrices are invertible.
+formulas when their Gram matrices are invertible. The row projector `A⁺A` is a quadratic-form
+contraction (`dotProduct_self_sub_moorePenroseInverse_mul_mulVec`), and `‖A⁺‖⁻¹` bounds `A`
+below on `range Aᵀ` (`inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le`).
 
 Source: Horn–Johnson, Matrix Analysis, §7.3. Atlas: `pseudoinverse`.
 -/
@@ -454,5 +456,88 @@ theorem specNorm_moorePenroseInverse_sq {m n : Type*} [Fintype m] [Fintype n]
   unfold specNorm
   rw [sq, ← Matrix.l2_opNorm_conjTranspose_mul_self,
     Matrix.conjTranspose_eq_transpose_of_trivial]
+
+/-! ### The row projector `A⁺A` and the smallest positive singular value -/
+
+section RowProjector
+
+variable {m n : Type*} [Fintype m] [Fintype n]
+
+/-- The Moore–Penrose row projector `Z = M⁺M` satisfies `(d − Zd)ᵀ(d − Zd) = dᵀd − dᵀZd`
+(Pythagoras for the orthogonal projector onto `range Mᵀ`). Horn–Johnson §7.3; helper for
+`sketch-and-project` (Gower–Richtárik 2015). -/
+theorem dotProduct_self_sub_moorePenroseInverse_mul_mulVec (M : Matrix m n ℝ) (d : n → ℝ) :
+    (d - (moorePenroseInverse M * M) *ᵥ d) ⬝ᵥ (d - (moorePenroseInverse M * M) *ᵥ d) =
+      d ⬝ᵥ d - d ⬝ᵥ ((moorePenroseInverse M * M) *ᵥ d) := by
+  set Z := moorePenroseInverse M * M
+  have hsym : Zᵀ = Z := moorePenroseInverse_mul_isSymm M
+  have hidem : Z * Z = Z := (moorePenroseInverse_mul_isIdempotentElem M).eq
+  have hZZ : (Z *ᵥ d) ⬝ᵥ (Z *ᵥ d) = d ⬝ᵥ (Z *ᵥ d) := by
+    rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hsym, Matrix.mulVec_mulVec,
+      hidem, dotProduct_comm]
+  have hdZ : (Z *ᵥ d) ⬝ᵥ d = d ⬝ᵥ (Z *ᵥ d) := dotProduct_comm _ _
+  simp only [sub_dotProduct, dotProduct_sub, hZZ, hdZ]
+  ring
+
+/-- The Moore–Penrose row projector is a contraction in the quadratic-form sense:
+`dᵀ (M⁺M) d ≤ dᵀd`. Horn–Johnson §7.3; helper for `sketch-and-project`. -/
+theorem dotProduct_moorePenroseInverse_mul_mulVec_le_dotProduct_self (M : Matrix m n ℝ)
+    (d : n → ℝ) :
+    d ⬝ᵥ ((moorePenroseInverse M * M) *ᵥ d) ≤ d ⬝ᵥ d := by
+  have h := dotProduct_self_sub_moorePenroseInverse_mul_mulVec M d
+  have h0 := dotProduct_self_nonneg (d - (moorePenroseInverse M * M) *ᵥ d)
+  linarith
+
+/-- The Moore–Penrose lower bound on the row space: for `v ∈ range Aᵀ`,
+`‖A⁺‖⁻² ‖v‖² ≤ ‖Av‖²`. Source: Zouzias–Freris (2013) [`zf13`], §2 (`σ_min⁺ = ‖A⁺‖⁻¹`).
+Helper for atlas `kaczmarz-rank-deficient`. -/
+theorem inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le [DecidableEq m] [DecidableEq n]
+    (A : Matrix m n ℝ) {v : n → ℝ} (hv : v ∈ LinearMap.range Aᵀ.mulVecLin) :
+    (specNorm (moorePenroseInverse A))⁻¹ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v) := by
+  set B := moorePenroseInverse A
+  by_cases hB : specNorm B = 0
+  · simp only [hB, _root_.inv_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+      zero_mul]
+    exact dotProduct_self_nonneg _
+  obtain ⟨w, rfl⟩ := hv
+  simp only [Matrix.mulVecLin_apply]
+  have hfix : B *ᵥ (A *ᵥ (Aᵀ *ᵥ w)) = Aᵀ *ᵥ w := by
+    have hsym : (B * A)ᵀ = B * A := moorePenroseInverse_mul_isSymm A
+    have h : B * A * Aᵀ = Aᵀ := by
+      calc B * A * Aᵀ = (B * A)ᵀ * Aᵀ := by rw [hsym]
+        _ = (A * (B * A))ᵀ := (Matrix.transpose_mul _ _).symm
+        _ = Aᵀ := by rw [← Matrix.mul_assoc, mul_moorePenroseInverse_mul]
+    rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, h]
+  have hBound := sum_sq_mulVec_le_specNorm_sq B (A *ᵥ (Aᵀ *ᵥ w))
+  rw [hfix] at hBound
+  have hScale := mul_le_mul_of_nonneg_left hBound (sq_nonneg (specNorm B)⁻¹)
+  have hCancel : (specNorm B)⁻¹ ^ 2 * specNorm B ^ 2 = 1 := by
+    rw [← mul_pow, inv_mul_cancel₀ hB, one_pow]
+  rw [← mul_assoc, hCancel, one_mul] at hScale
+  simpa only [dotProduct, pow_two] using hScale
+
+/-- Full-column-rank case of `inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le`: an
+invertible column Gram matrix gives `‖A⁺_L‖⁻² ‖v‖² ≤ ‖Av‖²` for every `v`, with the
+full-rank left inverse `pinvL A`. This is the lower singular bound required by the Kaczmarz
+recurrence. Source: Strohmer–Vershynin 2009, Theorem 2; helper for atlas
+`randomized-kaczmarz`. -/
+theorem inv_specNorm_pinvL_sq_mul_dotProduct_le [DecidableEq m] [DecidableEq n]
+    (A : Matrix m n ℝ) (hA : IsUnit (Aᵀ * A)) (v : n → ℝ) :
+    (specNorm (pinvL A))⁻¹ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v) := by
+  classical
+  by_cases hB : specNorm (pinvL A) = 0
+  · simp only [hB, inv_zero, zero_pow (by decide : (2 : ℕ) ≠ 0), zero_mul]
+    exact dotProduct_self_nonneg _
+  have hBound := sum_sq_mulVec_le_specNorm_sq (pinvL A) (A *ᵥ v)
+  have hId : pinvL A *ᵥ (A *ᵥ v) = v := by
+    rw [Matrix.mulVec_mulVec, pinvL_mul hA, Matrix.one_mulVec]
+  rw [hId] at hBound
+  have hScale := mul_le_mul_of_nonneg_left hBound (sq_nonneg (specNorm (pinvL A))⁻¹)
+  have hCancel : (specNorm (pinvL A))⁻¹ ^ 2 * specNorm (pinvL A) ^ 2 = 1 := by
+    rw [← mul_pow, inv_mul_cancel₀ hB, one_pow]
+  rw [← mul_assoc, hCancel, one_mul] at hScale
+  simpa only [dotProduct, pow_two] using hScale
+
+end RowProjector
 
 end NLAlib

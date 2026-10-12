@@ -1,7 +1,5 @@
 import NLAlib.Matrix.Factorizations.PolarDecomposition
-import NLAlib.Matrix.Norms.NuclearPSD
-import NLAlib.Matrix.Spectral.GramSingularValues
-import NLAlib.Matrix.Norms.NuclearFiniteIndex
+import NLAlib.Matrix.Norms.NuclearGram
 /-!
 # Orthogonal Procrustes and trace equality
 
@@ -16,33 +14,6 @@ namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-
-omit [DecidableEq m] in
-/-- Equal Gram matrices on the same matrix shape have equal nuclear norms.
-Horn–Johnson §7.3; supports orthogonal-procrustes. -/
-theorem nuclearNorm_eq_of_gram_eq (A B : Matrix m n ℝ) (hGram : Aᵀ * A = Bᵀ * B) :
-    nuclearNorm A = nuclearNorm B := by
-  unfold nuclearNorm kyFanNorm
-  apply Finset.sum_congr rfl
-  intro i _
-  exact toEuclideanLin_singularValues_eq_of_gram_eq A B
-    (by simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hGram) i
-
-/-- The trace of the positive polar factor is the nuclear norm, including
-singular and empty matrices. Horn–Johnson 2013, §7.4.4. -/
-theorem nuclearNorm_eq_trace_sqrt_gram (M : Matrix n n ℝ) :
-    nuclearNorm M = (CFC.sqrt (Mᵀ * M)).trace := by
-  let Q := CFC.sqrt (Mᵀ * M)
-  have hQ : Q.PosSemidef := Matrix.nonneg_iff_posSemidef.mp (CFC.sqrt_nonneg _)
-  have hQs : Qᵀ = Q := by
-    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hQ.isHermitian.eq
-  have hNonneg : 0 ≤ Mᵀ * M := by
-    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-      (Matrix.posSemidef_conjTranspose_mul_self M).nonneg
-  have hGram : Mᵀ * M = Qᵀ * Q := by
-    rw [hQs]
-    exact (CFC.sqrt_mul_sqrt_self _ hNonneg).symm
-  rw [nuclearNorm_eq_of_gram_eq M Q hGram, nuclearNorm_eq_trace_of_posSemidef hQ]
 
 /-- Every orthogonal square polar factor attains the nuclear dual pairing,
 including arbitrary rank and empty spaces. Horn–Johnson 2013, §7.4.4.

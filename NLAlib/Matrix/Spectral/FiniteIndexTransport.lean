@@ -1,11 +1,14 @@
 import NLAlib.Matrix.Spectral.EckartYoung
 import NLAlib.Matrix.Norms.RankNorm
+import NLAlib.Matrix.Norms.Reindex
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Matrix norm and best-rank results on arbitrary finite indices
 
 Atlas: `norms-frob-spec`, `pseudoinverse`, `eckart-young`, `svd`.
-Equivalent row and column labels preserve rank, norms, the Moore–Penrose
-inverse and the actual rank-constrained optimum, including empty index types.
+Equivalent row and column labels preserve rank, the Moore–Penrose
+inverse and the actual rank-constrained optimum, including empty index types
+(the norm invariances are in `NLAlib.Matrix.Norms.Reindex`).
 This exposes general finite-index results without another spelling of matrix
 norms or optimal error. The parent singular-value API is presently `Fin`-indexed;
 statements involving its list explicitly normalize to `Fin (Fintype.card _)`.
@@ -26,53 +29,6 @@ theorem mul_reindex {m n p m' n' p' : Type*} [Fintype n] [Fintype n']
   simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv]
 
 variable {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
-
-/-- Relabeling rows and columns preserves the squared Frobenius norm.
-Horn–Johnson §5.6; atlas `norms-frob-spec`. Empty indices are allowed. -/
-theorem frobSq_reindex (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
-    frobSq (A.reindex em en) = frobSq A := by
-  rw [frobSq_eq_sum_sq, frobSq_eq_sum_sq]
-  simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
-  calc
-    _ = ∑ i : m, ∑ j : q, A i (en.symm j) ^ 2 :=
-      em.symm.sum_comp (fun i : m => ∑ j : q, A i (en.symm j) ^ 2)
-    _ = _ := Finset.sum_congr rfl (fun i _ => en.symm.sum_comp (fun j : n => A i j ^ 2))
-
-/-- Relabeling rows and columns preserves the Frobenius norm.
-Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
-theorem frobNorm_reindex (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
-    frobNorm (A.reindex em en) = frobNorm A := by
-  rw [frobNorm, frobNorm, frobSq_reindex]
-
-private theorem reindex_frame_orth [DecidableEq m] (em : m ≃ p) :
-    ((1 : Matrix m m ℝ).submatrix em.symm id)ᵀ *
-      (1 : Matrix m m ℝ).submatrix em.symm id = 1 := by
-  rw [Matrix.transpose_submatrix, Matrix.transpose_one]
-  simpa only [Matrix.submatrix_id_id, Matrix.mul_one] using
-    Matrix.submatrix_mul_equiv (1 : Matrix m m ℝ) (1 : Matrix m m ℝ)
-      id em.symm id
-
-/-- Equivalent row and column labels preserve the spectral norm, by
-orthogonal permutation frames. Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
-theorem specNorm_reindex [DecidableEq m] [DecidableEq n] [DecidableEq p] [DecidableEq q]
-    (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
-    specNorm (A.reindex em en) = specNorm A := by
-  let P : Matrix p m ℝ := (1 : Matrix m m ℝ).submatrix em.symm id
-  let Q : Matrix q n ℝ := (1 : Matrix n n ℝ).submatrix en.symm id
-  have hP : Pᵀ * P = 1 := reindex_frame_orth em
-  have hQ : Qᵀ * Q = 1 := reindex_frame_orth en
-  have hleft : P * A = A.submatrix em.symm id := by
-    simpa only [P, Equiv.refl_symm, Equiv.coe_refl, Function.id_comp, Function.comp_id] using
-      Matrix.one_submatrix_mul em.symm (Equiv.refl m) A
-  have hright : (A.submatrix em.symm id) * Qᵀ = A.reindex em en := by
-    rw [show Qᵀ = (1 : Matrix n n ℝ).submatrix id en.symm by
-      simp only [Q, Matrix.transpose_submatrix, Matrix.transpose_one]]
-    simpa only [Matrix.reindex_apply, Matrix.submatrix_submatrix, Equiv.refl_symm, Equiv.coe_refl,
-      Function.id_comp, Function.comp_id] using
-      Matrix.mul_submatrix_one (Equiv.refl n) en.symm (A.submatrix em.symm id)
-  rw [← hright, ← hleft,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hQ,
-    specNorm_mul_left_of_hasOrthonormalCols hP]
 
 /-- Relabeling an actual best-rank approximation preserves its minimizing
 property. Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
@@ -201,16 +157,5 @@ theorem bestRankFrobSq_eq_singularValueTailSq_reindex (A : Matrix m n ℝ) (k : 
       singularValueTailSq (A.reindex (Fintype.equivFin m) (Fintype.equivFin n)) k := by
   rw [← bestRankFrobSq_reindex A k (Fintype.equivFin m) (Fintype.equivFin n),
     bestRankFrobSq_eq_singularValueTailSq]
-
-omit [Fintype n] [Fintype q] in
-/-- Relabelling rows and columns preserves orthonormal columns, including
-empty index types. Source: Horn–Johnson, §5.6, permutation of Gram coordinates;
-supports `ose-def` and finite-index sparse sampling. -/
-theorem HasOrthonormalCols.reindex [DecidableEq n] [DecidableEq q]
-    {U : Matrix m n ℝ} (hU : HasOrthonormalCols U) (em : m ≃ p) (en : n ≃ q) :
-    HasOrthonormalCols (U.reindex em en) := by
-  change (U.reindex em en)ᵀ * (U.reindex em en) = 1
-  simp only [Matrix.reindex_apply, Matrix.transpose_submatrix, Matrix.submatrix_mul_equiv]
-  rw [hU, Matrix.submatrix_one_equiv]
 
 end NLAlib

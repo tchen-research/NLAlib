@@ -1,5 +1,7 @@
 import NLAlib.Matrix.Inequalities.TraceTail
 import NLAlib.Matrix.Inequalities.VonNeumann
+import NLAlib.Matrix.Norms.KyFanNorm
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Ky Fan variational trace bounds
 
@@ -7,26 +9,14 @@ The maximum principle for real eigenvalue and singular-value sums, including
 attainment and the empty prefix. Eigenvalue bounds use compression interlacing;
 singular-value bounds use the already proved von Neumann trace inequality.
 Source: Fan (1949), Theorem 1; Horn–Johnson (2013), Corollary 4.3.39.
-Atlas: `ky-fan-maximum-principle`, `ky-fan-norms-def`.
+Atlas: `ky-fan-maximum-principle`, `ky-fan-norms-def`. The definitions of `kyFanNorm` and
+`nuclearNorm` are in `NLAlib.Matrix.Norms.KyFanNorm`.
 -/
 
 noncomputable section
 open scoped Matrix BigOperators
 
 namespace NLAlib
-
-/-- Selecting distinct columns of an orthonormal frame preserves orthonormality.
-This is the finite frame API used by the attaining Ky Fan optimizers. -/
-theorem HasOrthonormalCols.submatrix_cols {m n r : Type*} [Fintype m] [Fintype n]
-    [Fintype r] [DecidableEq n] [DecidableEq r] {Q : Matrix m n ℝ}
-    (hQ : HasOrthonormalCols Q) (e : r ↪ n) : HasOrthonormalCols (Q.submatrix id e) := by
-  change (Q.submatrix id e)ᵀ * Q.submatrix id e = 1
-  rw [Matrix.transpose_submatrix]
-  have h := Matrix.submatrix_mul_equiv Qᵀ Q e (Equiv.refl m) e
-  simp only [Equiv.coe_refl] at h
-  rw [h, hQ]
-  ext i j
-  simp [Matrix.one_apply, e.injective.eq_iff]
 
 /-- The sum of a specified number of the largest sorted eigenvalues. The
 cardinality proof supplies the actual eigenvalue indices. -/
@@ -61,21 +51,6 @@ theorem sum_bottom_eigenvalues_le_trace_compression {n r : Type*} [Fintype n] [F
   change _ ≤ ∑ i, id (hB.eigenvalues i)
   rw [sum_eigenvalues_eq_sum_sorted hB id]
   exact Finset.sum_le_sum fun i _ => eigenvalues₀_le_eigenvalues₀_compression hA hQ hB i
-
-/-- The Ky Fan `k` sum, with the existing zero-padded singular-value convention.
-For positive `k` up to the smaller matrix dimension it is a norm; at zero it is
-the zero seminorm. Horn–Johnson (1991), §3.4.
-atlas: ky-fan-norms-def (partial) -/
-def kyFanNorm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
-    (A : Matrix m n ℝ) (k : ℕ) : ℝ :=
-  ∑ i ∈ Finset.range k, A.toEuclideanLin.singularValues i
-
-/-- The nuclear norm is the sum of all singular values, including matrices with
-an empty dimension. Horn–Johnson (1991), §3.4.
-atlas: ky-fan-norms-def (partial) -/
-def nuclearNorm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
-    (A : Matrix m n ℝ) : ℝ :=
-  kyFanNorm A (min (Fintype.card m) (Fintype.card n))
 
 /-- A spectral contraction of rank at most `k` pairs with a matrix at most its
 Ky Fan `k` sum. Source: von Neumann trace inequality and the singular-value rank

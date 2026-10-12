@@ -15,7 +15,7 @@ open scoped Topology ComplexConjugate Real
 
 namespace NLAlib
 
-local instance : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
+open scoped NLAlib.TwoPi
 
 /-- Pairing opposite Fourier frequencies gives the positive Chebyshev series term.
 Source: Trefethen, ATAP, Chapters 3 and 8 (`chebyshev-approx-analytic`, helper). -/

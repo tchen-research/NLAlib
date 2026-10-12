@@ -29,7 +29,7 @@ theorem cholesky_decomposition {ι : Type*} [Fintype ι] [LinearOrder ι]
       L.IsLowerTriangular → (∀ i, 0 < L i i) → L * Lᵀ = B →
         L 0 0 = Real.sqrt (B 0 0) ∧
         L.submatrix Fin.succ Fin.succ * (L.submatrix Fin.succ Fin.succ)ᵀ =
-          choleskyTrailingResidual B) := by
+          pivotSchur B) := by
   refine ⟨fun hA => exists_cholesky_of_posSemidef_fintype A hA,
     fun hA => existsUnique_cholesky_of_posDef A hA,
     fun L hLower hFactor => det_eq_prod_sq_diag_of_cholesky A L hLower hFactor, ?_⟩

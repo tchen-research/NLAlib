@@ -13,12 +13,6 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-/-- Every square orthogonal matrix has squared Frobenius norm equal to its
-dimension, including dimension zero. Horn–Johnson §2.1; Procrustes helper. -/
-theorem frobSq_eq_card_of_hasOrthonormalCols {U : Matrix n n ℝ}
-    (hU : HasOrthonormalCols U) : frobSq U = (Fintype.card n : ℝ) := by
-  rw [frobSq, frobInner_eq_trace, hU, Matrix.trace_one]
-
 /-- The one-sided scaled Procrustes error at a polar orthogonal factor is an
 explicit scalar quadratic. Horn–Johnson 2013, §7.4.6.
 atlas: orthogonal-procrustes (partial) -/
@@ -26,7 +20,7 @@ theorem frobSq_sub_smul_polar_eq {A U : Matrix n n ℝ}
     (hU : HasOrthonormalCols U) (hA : U * CFC.sqrt (Aᵀ * A) = A) (c : ℝ) :
     frobSq (A - c • U) = frobSq A - 2 * c * nuclearNorm A + (Fintype.card n : ℝ) * c ^ 2 := by
   rw [frobSq_sub, frobInner_smul_right, frobSq_smul,
-    frobInner_eq_nuclearNorm_of_polar hU hA, frobSq_eq_card_of_hasOrthonormalCols hU]
+    frobInner_eq_nuclearNorm_of_polar hU hA, frobSq_frame_eq_card hU]
   ring
 
 /-- At positive dimension every scaled orthogonal competitor has error at
@@ -48,7 +42,7 @@ theorem frobSq_sub_nuclearNorm_sq_div_card_le_sub_smul
     have h := pow_le_pow_left₀ (abs_nonneg (frobInner A U)) hAbs 2
     simpa only [sq_abs] using h
   have hN : (0 : ℝ) < Fintype.card n := by exact_mod_cast hCard
-  rw [frobSq_sub, frobInner_smul_right, frobSq_smul, frobSq_eq_card_of_hasOrthonormalCols hU]
+  rw [frobSq_sub, frobInner_smul_right, frobSq_smul, frobSq_frame_eq_card hU]
   apply le_of_mul_le_mul_left _ hN
   have hDiv : (Fintype.card n : ℝ) * (nuclearNorm A ^ 2 / (Fintype.card n : ℝ)) =
       nuclearNorm A ^ 2 := by field_simp
@@ -97,14 +91,6 @@ theorem isLeast_frobSq_sub_scaled_orthogonal_of_isEmpty [IsEmpty n] (A : Matrix 
     simp [hA, frobSq_zero]
   · rintro z ⟨c, U, _, rfl⟩
     exact frobSq_nonneg _
-
-/-- The positive row-polar factor has trace equal to the nuclear norm, so the
-average used in the scaled Procrustes formula is `tr P / n` in the usual
-left-polar convention. Horn–Johnson 2013, §7.4.6. -/
-theorem nuclearNorm_eq_trace_sqrt_rowGram (A : Matrix n n ℝ) :
-    nuclearNorm A = (CFC.sqrt (A * Aᵀ)).trace := by
-  have h := nuclearNorm_eq_trace_sqrt_gram Aᵀ
-  simpa only [nuclearNorm_transpose, Matrix.transpose_transpose] using h
 
 /-- In the source's left-polar convention `A = P U`, the nearest scaled
 orthogonal matrix is exactly `(tr P / n) U`. Horn–Johnson 2013, §7.4.6.

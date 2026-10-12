@@ -214,7 +214,7 @@ atlas: rpcholesky (partial) -/
 theorem complexCholeskyResidualHistory_eq_zero_of_rank_le {A : Matrix n n ℂ} (hA : A.PosSemidef)
     {t : ℕ} (ht : A.rank ≤ t) (h : Fin t → n) (hw : 0 < complexCholeskyHistoryWeight A t h) :
     complexCholeskyResidualHistory A t h = 0 := by
-  apply eq_zero_of_complex_matrix_rank_eq_zero
+  apply eq_zero_of_matrix_rank_eq_zero
   have hr := rank_complexCholeskyResidualHistory_le_sub hA t h hw
   rw [Nat.sub_eq_zero_of_le ht] at hr
   exact Nat.eq_zero_of_le_zero hr

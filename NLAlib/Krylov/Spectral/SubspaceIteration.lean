@@ -42,13 +42,6 @@ namespace NLAlib
 variable {n s r : Type*} [Fintype n] [DecidableEq n] [Fintype s] [DecidableEq s] [Fintype r]
   [DecidableEq r]
 
-/-- `‖diag(v)‖₂ ≤ c` when every `|vᵢ| ≤ c` (`c ≥ 0`). Helper for
-`subspace-iteration-convergence` (belongs in `NLAlib.Matrix.Norms.Core`). -/
-theorem specNorm_diagonal_le {v : s → ℝ} {c : ℝ} (hc : 0 ≤ c) (hv : ∀ i, |v i| ≤ c) :
-    specNorm (diagonal v) ≤ c := by
-  rw [specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
-  exact (pi_norm_le_iff_of_nonneg hc).2 fun i => by simpa using hv i
-
 /-- Ingredients of the convergence proof: with an invariant orthogonal splitting
 `UUᵀ + VVᵀ = I`, `AU = U diag(d)`, `AV = V diag(e)`, one has `UᵀV = 0`, `Uᵀ A^k = diag(d)^k Uᵀ`
 and `Vᵀ A^k = diag(e)^k Vᵀ`. Source: Saad (2011) [`saad11`], proof of Thm 5.2. Helper for

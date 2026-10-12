@@ -19,7 +19,7 @@ namespace NLAlib
 theorem kyFanNorm_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
     [DecidableEq n] [DecidableEq q] (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) (k : ℕ) :
     kyFanNorm (A.reindex em en) k = kyFanNorm A k := by
-  simp only [kyFanNorm, toEuclideanLin_singularValues_reindex]
+  simp only [kyFanNorm, ← singularValues_eq_linearMap, singularValues_reindex]
 
 /-- Every Ky Fan sum is nonnegative, including the zero seminorm. -/
 theorem kyFanNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
@@ -75,7 +75,7 @@ theorem kyFanNorm_orthogonal_mul_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ
     kyFanNorm (U * A) k = kyFanNorm A k := by
   change (∑ i ∈ Finset.range k, singularValues (U * A) i) =
     ∑ i ∈ Finset.range k, singularValues A i
-  rw [singularValues_orthogonal_mul A hU]
+  rw [singularValues_isometry_mul hU A]
 
 /-- Right orthogonal multiplication preserves every Ky Fan sum. -/
 theorem kyFanNorm_mul_orthogonal_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)

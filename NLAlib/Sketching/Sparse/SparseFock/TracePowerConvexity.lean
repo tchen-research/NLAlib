@@ -76,29 +76,6 @@ theorem geomKernel_nonneg_of_odd {n : ℕ} (hn : Odd n) (x y : ℝ) :
     have hgeom := (Commute.all x y).mul_geom_sum₂ n
     nlinarith
 
-/-- Matrix trace is invariant under unitary conjugation.
-
-Source: ported from `SparseFockFormal.TracePowerConvexity`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem trace_conjStarAlgAut {d : ℕ}
-    (U : Matrix.unitaryGroup (Fin d) ℝ)
-    (M : Matrix (Fin d) (Fin d) ℝ) :
-    Matrix.trace (Unitary.conjStarAlgAut ℝ _ U M) = Matrix.trace M := by
-  exact NLAlib.trace_conjStarAlgAut U M
-
-/-- Entrywise form of the trace expression occurring in the Hessian after
-diagonalizing its symmetric base point.
-
-Source: ported from `SparseFockFormal.TracePowerConvexity`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem trace_mul_diagonal_pow_mul_mul_diagonal_pow
-    {d : ℕ} (B : Matrix (Fin d) (Fin d) ℝ)
-    (hB : B.transpose = B) (lambda : Fin d → ℝ) (a c : ℕ) :
-    Matrix.trace
-        (B * (Matrix.diagonal lambda) ^ a * B * (Matrix.diagonal lambda) ^ c) =
-      ∑ i, ∑ j, (B i j) ^ 2 * lambda j ^ a * lambda i ^ c := by
-  exact NLAlib.trace_mul_diagonal_pow_mul_mul_diagonal_pow B hB lambda a c
-
 /-- Trace as a continuous real-linear functional on finite matrices equipped
 with their Euclidean operator norm.
 
@@ -123,18 +100,6 @@ theorem hasDerivAt_affineMatrix {d : ℕ}
     (A B : Matrix (Fin d) (Fin d) ℝ) (t : ℝ) :
     HasDerivAt (fun r : ℝ ↦ A + r • B) B t := by
   simpa using (hasDerivAt_id t).smul_const B |>.const_add A
-
-/-- Cyclicity collapses the noncommutative derivative of a power after taking
-trace.
-
-Source: ported from `SparseFockFormal.TracePowerConvexity`,
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. -/
-theorem trace_power_derivative_sum {d p : ℕ}
-    (C B : Matrix (Fin d) (Fin d) ℝ) :
-    Matrix.trace
-        (∑ i ∈ Finset.range p, C ^ (p.pred - i) * B * C ^ i) =
-      (p : ℝ) * Matrix.trace (B * C ^ (p - 1)) := by
-  exact NLAlib.trace_power_derivative_sum C B p
 
 /-- Trace of a matrix power along an affine line.
 

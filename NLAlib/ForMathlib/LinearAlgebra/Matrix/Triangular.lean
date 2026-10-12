@@ -5,8 +5,8 @@ import Mathlib.Tactic.Linarith
 /-!
 # Triangular products and orthogonal triangular matrices
 
-The diagonal of a triangular product is the product of the diagonals. A real
-lower-triangular orthogonal matrix with positive diagonal is the identity.
+The diagonal of a triangular product is the product of the diagonals (over any semiring). A
+real lower-triangular orthogonal matrix with positive diagonal is the identity.
 These elementary facts support uniqueness of positive-diagonal Cholesky and QR.
 Source: Higham, Theorem 10.1; Trefethen--Bau, Theorems 7.1--7.2.
 -/
@@ -15,27 +15,32 @@ noncomputable section
 open scoped Matrix
 namespace NLAlib
 
-/-- Diagonal multiplication for lower-triangular matrices.
-Source: triangular matrix algebra; supports `cholesky-decomposition` and
-`qr-decomposition`. -/
-theorem mul_apply_diag_of_isLowerTriangular {n R : Type*} [Fintype n]
-    [LinearOrder n] [Semiring R] (A B : Matrix n n R)
-    (hA : A.IsLowerTriangular) (hB : B.IsLowerTriangular) (i : n) :
-    (A * B) i i = A i i * B i i := by
+/-- The diagonal of a product of upper triangular matrices is the product of the diagonals,
+over any semiring. Golub–Van Loan 2013, §3.1; Horn–Johnson 2013, §0.7. Supports
+`cholesky-decomposition`, `qr-decomposition` and the commuting spectral sum and product
+formulas (`simultaneous-diagonalization`). -/
+theorem mul_apply_self_of_isUpperTriangular {n R : Type*} [Fintype n] [LinearOrder n]
+    [Semiring R] {A B : Matrix n n R} (hA : A.IsUpperTriangular) (hB : B.IsUpperTriangular)
+    (i : n) : (A * B) i i = A i i * B i i := by
   rw [Matrix.mul_apply, Finset.sum_eq_single i]
-  · intro j _ hji
-    rcases lt_or_gt_of_ne hji with hlt | hgt
-    · rw [hB (i := j) (j := i) hlt, mul_zero]
-    · rw [hA (i := i) (j := j) hgt, zero_mul]
+  · intro k _ hki
+    rcases lt_or_gt_of_ne hki with h | h
+    · rw [hA h, zero_mul]
+    · rw [hB h, mul_zero]
   · simp
 
-/-- The ordinary inverse of a nonsingular lower-triangular real matrix remains
-lower triangular. Source: triangular matrix algebra; supports Cholesky/QR. -/
-theorem isLowerTriangular_inv_of_isUnit {n : Type*} [Fintype n] [LinearOrder n]
-    {A : Matrix n n ℝ} (hA : A.IsLowerTriangular) (hUnit : IsUnit A) :
-    A⁻¹.IsLowerTriangular := by
-  let := Matrix.invertibleOfIsUnitDet A ((Matrix.isUnit_iff_isUnit_det A).mp hUnit)
-  exact Matrix.blockTriangular_inv_of_blockTriangular hA
+/-- The diagonal of a product of lower triangular matrices is the product of the diagonals,
+over any semiring. Golub–Van Loan 2013, §3.1. Supports `cholesky-decomposition` and
+`qr-decomposition`. -/
+theorem mul_apply_self_of_isLowerTriangular {n R : Type*} [Fintype n] [LinearOrder n]
+    [Semiring R] {A B : Matrix n n R} (hA : A.IsLowerTriangular) (hB : B.IsLowerTriangular)
+    (i : n) : (A * B) i i = A i i * B i i := by
+  rw [Matrix.mul_apply, Finset.sum_eq_single i]
+  · intro k _ hki
+    rcases lt_or_gt_of_ne hki with h | h
+    · rw [hB (i := k) (j := i) h, mul_zero]
+    · rw [hA (i := i) (j := k) h, zero_mul]
+  · simp
 
 /-- An orthogonal lower-triangular real matrix with positive diagonal is the
 identity, including empty dimensions. Higham, Theorem 10.1; supports

@@ -2,6 +2,7 @@ import NLAlib.Probability.Concentration.QuadraticForms.HansonWright
 import NLAlib.Estimation.QuadraticForms.HutchinsonLaws
 import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.Matrix.Spectral.QuadraticProbe
+import NLAlib.Matrix.Perturbation.EigenvalueTrace
 
 /-!
 # Tail bound for Hutchinson's trace estimator
@@ -89,37 +90,6 @@ theorem frobSq_hutchinsonBlock [Nonempty κ] (A : Matrix n n ℝ) :
     Finset.card_univ, nsmul_eq_mul]
   rw [← Finset.mul_sum]
   field_simp
-
-/-- A spectral-norm bound from a bound on `‖Ax‖²`: if `0 ≤ C` and `∑ᵢ (Ax)ᵢ² ≤ C² ∑ⱼ xⱼ²` for
-every `x`, then `‖A‖₂ ≤ C`. Atlas: `norms-frob-spec` (helper; belongs in `NLAlib.Matrix.Norms.Core`). -/
-theorem specNorm_le_of_forall_sum_sq_mulVec_le {m p : Type*} [Fintype m] [Fintype p]
-    [DecidableEq m] [DecidableEq p] (A : Matrix m p ℝ) {C : ℝ} (hC : 0 ≤ C)
-    (h : ∀ x : p → ℝ, ∑ i, (A *ᵥ x) i ^ 2 ≤ C ^ 2 * ∑ j, x j ^ 2) : specNorm A ≤ C := by
-  unfold specNorm
-  rw [Matrix.l2_opNorm_def]
-  refine ContinuousLinearMap.opNorm_le_bound _ hC fun x => ?_
-  have h := h x.ofLp
-  have hx : ∑ j, x.ofLp j ^ 2 = ‖x‖ ^ 2 := (EuclideanSpace.real_norm_sq_eq x).symm
-  have hy : ‖(Matrix.toEuclideanLin.trans LinearMap.toContinuousLinearMap) A x‖ ^ 2 =
-      ∑ i, (A *ᵥ x.ofLp) i ^ 2 := by
-    rw [EuclideanSpace.real_norm_sq_eq]; rfl
-  rw [hx, ← mul_pow, ← hy] at h
-  exact le_of_pow_le_pow_left₀ two_ne_zero (mul_nonneg hC (norm_nonneg x)) h
-
-/-- `‖diag(A, …, A)‖₂ ≤ ‖A‖₂`. Atlas: `hutchinson-tail` (helper). -/
-theorem specNorm_blockDiagonal_const_le (A : Matrix n n ℝ) :
-    specNorm (Matrix.blockDiagonal (fun _ : κ => A)) ≤ specNorm A := by
-  refine specNorm_le_of_forall_sum_sq_mulVec_le _ (specNorm_nonneg A) fun x => ?_
-  have hD : ∀ i k, (Matrix.blockDiagonal (fun _ : κ => A) *ᵥ x) (i, k) =
-      (A *ᵥ fun j => x (j, k)) i := fun i k => by
-    rw [Matrix.mulVec, Matrix.mulVec, dotProduct, dotProduct, Fintype.sum_prod_type]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    rw [Finset.sum_eq_single k
-      (fun l _ hl => by simp [Matrix.blockDiagonal_apply, Ne.symm hl]) (by simp)]
-    simp [Matrix.blockDiagonal_apply]
-  simp only [Fintype.sum_prod_type, hD]
-  rw [Finset.sum_comm, Finset.sum_comm (f := fun j k => x (j, k) ^ 2), Finset.mul_sum]
-  exact Finset.sum_le_sum fun k _ => sum_sq_mulVec_le_specNorm_sq A _
 
 /-- `‖B‖₂ ≤ ‖A‖₂ / m` for the Hutchinson block matrix. Atlas: `hutchinson-tail` (helper). -/
 theorem specNorm_hutchinsonBlock_le (A : Matrix n n ℝ) :
@@ -288,20 +258,6 @@ theorem frobSq_eq_sum_eigenvalues_sq {A : Matrix n n ℝ} (hA : A.IsHermitian) :
   have h1 : ∑ j, (hA.eigenvectorBasis i : n → ℝ) j ^ 2 = 1 := by
     simpa [dotProduct, sq] using eigenvectorBasis_dotProduct_self hA i
   rw [h1, mul_one]
-
-/-- `‖A‖_F ≤ tr A` for positive semidefinite `A`. Source: Cortinovis–Kressner (2021) [`ck21`],
-proof of Cor. 1; Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], Lem. 2. Atlas: `hutchinson-tail`
-(helper; belongs in `NLAlib.Matrix.Spectral.Core`). -/
-theorem frobNorm_le_trace_of_posSemidef {A : Matrix n n ℝ} (hA : A.PosSemidef) :
-    frobNorm A ≤ A.trace := by
-  have hH := hA.isHermitian
-  have hnn : ∀ i, 0 ≤ hH.eigenvalues i := hA.eigenvalues_nonneg
-  have htr : A.trace = ∑ i, hH.eigenvalues i := by
-    simpa using hH.trace_eq_sum_eigenvalues
-  have htr0 : 0 ≤ A.trace := htr ▸ Finset.sum_nonneg fun i _ => hnn i
-  rw [← abs_of_nonneg (frobNorm_nonneg A), ← abs_of_nonneg htr0, ← sq_le_sq, frobNorm_sq,
-    frobSq_eq_sum_eigenvalues_sq hH, htr]
-  exact Finset.sum_sq_le_sq_sum_of_nonneg fun i _ => hnn i
 
 section Relative
 

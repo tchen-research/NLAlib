@@ -21,8 +21,8 @@ theorem toEuclideanLin_singularValues_eq_of_gram_eq {m n p : Type*}
     A.toEuclideanLin.singularValues k = B.toEuclideanLin.singularValues k := by
   by_cases hk : k < Fintype.card n
   · let i : Fin (Fintype.card n) := ⟨k, hk⟩
-    have hA := sq_toEuclideanLin_singularValues_eq_eigenvalues₀ A i
-    have hB := sq_toEuclideanLin_singularValues_eq_eigenvalues₀ B i
+    have hA := sq_singularValues_eq_eigenvalues₀ A i
+    have hB := sq_singularValues_eq_eigenvalues₀ B i
     have he := eigenvalues₀_eq_of_eq hGram
       (Matrix.isHermitian_conjTranspose_mul_self A) (Matrix.isHermitian_conjTranspose_mul_self B) i
     have hs : A.toEuclideanLin.singularValues k ^ 2 = B.toEuclideanLin.singularValues k ^ 2 :=

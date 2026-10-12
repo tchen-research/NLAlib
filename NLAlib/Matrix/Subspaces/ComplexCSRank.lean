@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Basic.ComplexComplementaryRank
+import NLAlib.Matrix.Basic.ComplementaryRank
 import NLAlib.Matrix.Subspaces.ComplexGramIsometry
 /-!
 # Ranks of complementary unitary blocks
@@ -46,7 +46,7 @@ theorem rank_offDiagonal_blocks_eq_of_unitary {p q : Type*}
     (U : Matrix (p ⊕ q) (p ⊕ q) ℂ) (hU : Uᴴ * U = 1) :
     U.toBlocks₁₂.rank = U.toBlocks₂₁.rank := by
   obtain ⟨hUnit, hInv⟩ := inverse_eq_conjTranspose_of_unitary hU
-  have h := complex_card_columns_sub_rank_toBlock_eq_inverse_complement U hUnit
+  have h := card_columns_sub_rank_toBlock_eq_inverse_complement U hUnit
     (fun s => s.isLeft) (fun s => s.isRight)
   have h12 : (U.toBlock (fun s => s.isLeft) (fun s => s.isRight)).rank = U.toBlocks₁₂.rank := by
     exact rank_toBlock_of_equiv U _ _ Equiv.sumIsLeft Equiv.sumIsRight
@@ -71,7 +71,7 @@ theorem rank_bottomRight_eq_rank_topLeft_add_card_sub_of_unitary {p q : Type*}
     (hCard : Fintype.card p ≤ Fintype.card q) :
     U.toBlocks₂₂.rank = U.toBlocks₁₁.rank + Fintype.card q - Fintype.card p := by
   obtain ⟨hUnit, hInv⟩ := inverse_eq_conjTranspose_of_unitary hU
-  have h := complex_card_columns_sub_rank_toBlock_eq_inverse_complement U hUnit
+  have h := card_columns_sub_rank_toBlock_eq_inverse_complement U hUnit
     (fun s => s.isLeft) (fun s => s.isLeft)
   have h11 : (U.toBlock (fun s => s.isLeft) (fun s => s.isLeft)).rank = U.toBlocks₁₁.rank :=
     rank_toBlock_of_equiv U _ _ Equiv.sumIsLeft Equiv.sumIsLeft

@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Structured.CauchyDeterminantFinite
 import NLAlib.Matrix.Structured.CirculantCharacterization
 import NLAlib.Matrix.Structured.GramSoftMinMeasurable
+import NLAlib.Matrix.Structured.Hessenberg
 import NLAlib.Matrix.Structured.KroneckerIdentities
 import NLAlib.Matrix.Structured.KroneckerNormRank
 import NLAlib.Matrix.Structured.KroneckerSingularValues

@@ -22,11 +22,12 @@ atlas: ky-fan-norms-def (partial) -/
 theorem nuclearNorm_eq_trace_of_posSemidef {n : Type*} [Fintype n] [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.PosSemidef) : nuclearNorm A = A.trace := by
   unfold nuclearNorm kyFanNorm
-  rw [min_self, ← Fin.sum_univ_eq_sum_range (fun i => A.toEuclideanLin.singularValues i)]
+  simp only [← singularValues_eq_linearMap]
+  rw [min_self, ← Fin.sum_univ_eq_sum_range (fun i => singularValues A i)]
   calc
-    (∑ i : Fin (Fintype.card n), A.toEuclideanLin.singularValues i) =
+    (∑ i : Fin (Fintype.card n), singularValues A i) =
         ∑ i : Fin (Fintype.card n), hA.isHermitian.eigenvalues₀ i :=
-      Finset.sum_congr rfl (fun i _ => toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef hA i)
+      Finset.sum_congr rfl (fun i _ => singularValues_eq_eigenvalues₀_of_posSemidef hA i)
     _ = A.trace := (trace_eq_sum_eigenvalues₀ hA.isHermitian).symm
 
 end NLAlib

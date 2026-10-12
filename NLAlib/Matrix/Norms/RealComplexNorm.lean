@@ -23,7 +23,7 @@ theorem norm_toLp_ofReal_eq {n : Type*} [Fintype n] (x : n → ℝ) :
 
 /-- The real operator norm is bounded by the norm of its complex extension.
 Source: restricting a complex operator to real vectors; supports `srht-ose`. -/
-theorem specNorm_le_spectralNorm_map_ofReal
+theorem specNorm_le_norm_map_ofReal
     {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
     (A : Matrix m n ℝ) : specNorm A ≤ ‖A.map Complex.ofReal‖ := by
   rw [specNorm_eq_norm, Matrix.l2_opNorm_def]

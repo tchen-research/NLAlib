@@ -37,14 +37,14 @@ atlas: cs-decomposition (partial) -/
 theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
     [Fintype p] [Fintype q] [DecidableEq p] [DecidableEq q]
     (U : Matrix (p ⊕ q) (p ⊕ q) ℂ) (hU : Uᴴ * U = 1) (e : p ↪ q) :
-    let c := fun i : p => U.toBlocks₁₁.toEuclideanLin.singularValues ((Fintype.equivFin p) i)
+    let c := fun i : p => singularValues U.toBlocks₁₁ ((Fintype.equivFin p) i)
     (∀ i, c i ∈ Set.Icc (0 : ℝ) 1) ∧
     ∃ V₁ W₁ : Matrix p p ℂ, ∃ V₂ W₂ : Matrix q q ℂ,
       V₁ᴴ * V₁ = 1 ∧ W₁ᴴ * W₁ = 1 ∧ V₂ᴴ * V₂ = 1 ∧ W₂ᴴ * W₂ = 1 ∧
       (Matrix.fromBlocks V₁ 0 0 V₂)ᴴ * U * Matrix.fromBlocks W₁ 0 0 W₂ =
         (csCanonicalMatrix c ((1 : Matrix q q ℝ).submatrix id e)).map Complex.ofReal := by
   dsimp only
-  let c := fun i : p => U.toBlocks₁₁.toEuclideanLin.singularValues ((Fintype.equivFin p) i)
+  let c := fun i : p => singularValues U.toBlocks₁₁ ((Fintype.equivFin p) i)
   let C : Matrix p p ℂ := Matrix.diagonal (fun i => (c i : ℂ))
   let S : Matrix p p ℂ := Matrix.diagonal (fun i => (Real.sqrt (1 - c i ^ 2) : ℂ))
   let E₀ := (1 : Matrix q q ℝ).submatrix id e
@@ -86,7 +86,7 @@ theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
         ext i j; simp [Matrix.toBlocks₁₁, Matrix.one_apply]] using h
   have hc : ∀ i, c i ∈ Set.Icc (0 : ℝ) 1 := by
     intro i
-    have hci : 0 ≤ c i := LinearMap.singularValues_nonneg _ _
+    have hci : 0 ≤ c i := singularValues_nonneg _ _
     have hdiag := congrArg (fun A : Matrix p p ℂ => (A i i).re) hGram
     have hnonneg : 0 ≤ (Dᴴ * D) i i := (Matrix.posSemidef_conjTranspose_mul_self D).diag_nonneg
     have hnonneg' : 0 ≤ ((Dᴴ * D) i i).re := (RCLike.nonneg_iff.mp hnonneg).1

@@ -16,23 +16,23 @@ set_option autoImplicit false
 open MeasureTheory
 open scoped Matrix
 namespace NLAlib
-open SparseFock.PaperParameters SparseFock.MainTheoremAssembly
+open SparseSketch
 
 /-- A literal SparseStack sketch with arbitrary finite input-column labels.
 Source: the pinned signed-selector construction; supports `sparse-ose`. -/
 def sparseStackMatrixOn (ι : Type*) [Fintype ι] {s b : ℕ}
-    (z : SparseFock.SparseStackDistribution.RawSample s b (Fintype.card ι)) :
+    (z : SparseStackSelectors s b (Fintype.card ι)) :
     Matrix (Fin s × Fin b) ι ℝ :=
-  (SparseFock.SparseStackModel.stackMatrix
-    (SparseFock.SparseStackDistribution.toSample z)).reindex
+  (sparseStackMatrix
+    (SparseStackSelectors.toSample z)).reindex
       (Equiv.refl _) (Fintype.equivFin ι).symm
 
 /-- A uniform signed exact-s sketch with arbitrary finite input-column labels.
 Source: the pinned uniform-support construction; supports `sparse-ose`. -/
 def uniformSparseMatrixOn (ι : Type*) [Fintype ι] {m s : ℕ}
-    (X : SparseFock.UniformExactS.ExactSample m s (Fintype.card ι)) :
+    (X : UniformSparseSample m s (Fintype.card ι)) :
     Matrix (Fin m) ι ℝ :=
-  (SparseFock.UniformExactS.sketchMatrix X).reindex
+  (uniformSparseMatrix X).reindex
     (Equiv.refl _) (Fintype.equivFin ι).symm
 
 /-- Relabelling a concrete sketch back to the user's finite ambient indices
@@ -66,16 +66,16 @@ theorem measure_sparseStack_embedding_success_ge_fintype
     {δ ε : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) (hε : 0 < ε) (hε1 : ε ≤ 1)
     {U : Matrix ι κ ℝ} (hU : HasOrthonormalCols U) :
     1 - δ ≤
-      (sparseStackMeasure (roundedS (failureOrder (Fintype.card κ) δ) ε)
-        (roundedB (Fintype.card κ) (failureOrder (Fintype.card κ) δ) ε)
+      (sparseStackMeasure (sparseColumnSparsity (sparseMomentOrder (Fintype.card κ) δ) ε)
+        (sparseBlockRows (Fintype.card κ) (sparseMomentOrder (Fintype.card κ) δ) ε)
         (Fintype.card ι) (canonicalB_pos hε hε1)).real
       {z | IsSubspaceEmbedding (sparseStackMatrixOn ι z) U ε} := by
-  have hevent : {z : SparseFock.SparseStackDistribution.RawSample
-        (roundedS (failureOrder (Fintype.card κ) δ) ε)
-        (roundedB (Fintype.card κ) (failureOrder (Fintype.card κ) δ) ε)
+  have hevent : {z : SparseStackSelectors
+        (sparseColumnSparsity (sparseMomentOrder (Fintype.card κ) δ) ε)
+        (sparseBlockRows (Fintype.card κ) (sparseMomentOrder (Fintype.card κ) δ) ε)
         (Fintype.card ι) | IsSubspaceEmbedding (sparseStackMatrixOn ι z) U ε} =
-      {z | IsSubspaceEmbedding (SparseFock.SparseStackModel.stackMatrix
-        (SparseFock.SparseStackDistribution.toSample z))
+      {z | IsSubspaceEmbedding (sparseStackMatrix
+        (SparseStackSelectors.toSample z))
         (U.reindex (Fintype.equivFin ι) (Fintype.equivFin κ)) ε} := by
     ext z
     exact isSubspaceEmbedding_reindex_equivFin_symm_iff hU _ hε.le
@@ -93,17 +93,17 @@ theorem measure_uniformSparse_embedding_success_ge_fintype
     {U : Matrix ι κ ℝ} (hU : HasOrthonormalCols U) :
     1 - δ ≤
       (uniformSparseMeasure
-        (roundedS (failureOrder (Fintype.card κ) δ) ε *
-          roundedB (Fintype.card κ) (failureOrder (Fintype.card κ) δ) ε)
-        (roundedS (failureOrder (Fintype.card κ) δ) ε) (Fintype.card ι)
-        (SparseFock.UniformExactS.exactS_le_rows (canonicalB_pos hε hε1))).real
+        (sparseColumnSparsity (sparseMomentOrder (Fintype.card κ) δ) ε *
+          sparseBlockRows (Fintype.card κ) (sparseMomentOrder (Fintype.card κ) δ) ε)
+        (sparseColumnSparsity (sparseMomentOrder (Fintype.card κ) δ) ε) (Fintype.card ι)
+        (UniformSparse.le_rows (canonicalB_pos hε hε1))).real
       {X | IsSubspaceEmbedding (uniformSparseMatrixOn ι X) U ε} := by
-  have hevent : {X : SparseFock.UniformExactS.ExactSample
-        (roundedS (failureOrder (Fintype.card κ) δ) ε *
-          roundedB (Fintype.card κ) (failureOrder (Fintype.card κ) δ) ε)
-        (roundedS (failureOrder (Fintype.card κ) δ) ε) (Fintype.card ι) |
+  have hevent : {X : UniformSparseSample
+        (sparseColumnSparsity (sparseMomentOrder (Fintype.card κ) δ) ε *
+          sparseBlockRows (Fintype.card κ) (sparseMomentOrder (Fintype.card κ) δ) ε)
+        (sparseColumnSparsity (sparseMomentOrder (Fintype.card κ) δ) ε) (Fintype.card ι) |
         IsSubspaceEmbedding (uniformSparseMatrixOn ι X) U ε} =
-      {X | IsSubspaceEmbedding (SparseFock.UniformExactS.sketchMatrix X)
+      {X | IsSubspaceEmbedding (uniformSparseMatrix X)
         (U.reindex (Fintype.equivFin ι) (Fintype.equivFin κ)) ε} := by
     ext X
     exact isSubspaceEmbedding_reindex_equivFin_symm_iff hU _ hε.le

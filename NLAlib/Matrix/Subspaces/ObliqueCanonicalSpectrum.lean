@@ -20,9 +20,9 @@ Corollary 3.4.3.3; supports `cs-decomposition`. -/
 theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
     (ht0 : ∀ i, 0 ≤ t i) (ht : Antitone t)
     (hz : ∀ i, min r s ≤ i → t i = 0) (k : ℕ) :
-    (Matrix.fromBlocks (1 : Matrix (Fin r) (Fin r) ℝ)
+    singularValues (Matrix.fromBlocks (1 : Matrix (Fin r) (Fin r) ℝ)
       (rectDiag t : Matrix (Fin r) (Fin s) ℝ) 0
-      (0 : Matrix (Fin s) (Fin s) ℝ)).toEuclideanLin.singularValues k =
+      (0 : Matrix (Fin s) (Fin s) ℝ)) k =
       if k < r then Real.sqrt (1 + t k ^ 2) else 0 := by
   let N := Matrix.fromBlocks (1 : Matrix (Fin r) (Fin r) ℝ)
     (rectDiag t : Matrix (Fin r) (Fin s) ℝ) 0 (0 : Matrix (Fin s) (Fin s) ℝ)
@@ -55,9 +55,8 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
       · rw [if_neg hi, hz i (min_le_right r s |>.trans (Nat.le_of_not_gt hi))]
         norm_num
     · simp [Matrix.add_apply, hij]
-  have hND : N.toEuclideanLin.singularValues k = D.toEuclideanLin.singularValues k := by
-    rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
-      ← singularValues_transpose N, ← singularValues_transpose D]
+  have hND : singularValues N k = singularValues D k := by
+    rw [← singularValues_transpose N, ← singularValues_transpose D]
     apply singularValues_eq_of_gram_eq
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hGram
   have hD : D = (rectDiag d : Matrix (Fin (r + s)) (Fin (r + s)) ℝ).reindex
@@ -79,7 +78,7 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
         simp [D, Matrix.reindex_apply, rectDiag_apply, hij]
       | inr j =>
         simp [D, Matrix.reindex_apply, rectDiag_apply, d]
-  rw [hND, hD, ← singularValues_eq_linearMap, singularValues_reindex]
+  rw [hND, hD, singularValues_reindex]
   change singularValues (rectDiag d : Matrix (Fin (r + s)) (Fin (r + s)) ℝ) k = d k
   by_cases hk : k < r + s
   · apply singularValues_eq_of_eq_mul_rectDiag_mul (U := 1) (V := 1)

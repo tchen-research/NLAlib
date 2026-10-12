@@ -18,7 +18,7 @@ arccosines of the descending actual singular values of their conjugate
 overlap. Stewart–Sun, Section I.5; complex CS and oblique projection helper. -/
 def complexPrincipalAnglesFintype {m r : Type*} [Fintype m] [Fintype r] [DecidableEq r]
     (Q W : Matrix m r ℂ) : Fin (Fintype.card r) → ℝ :=
-  fun i => Real.arccos ((Qᴴ * W).toEuclideanLin.singularValues i)
+  fun i => Real.arccos (singularValues (Qᴴ * W) i)
 
 /-- Every positive-rank complex idempotent has unitary-column frames for
 its actual range and kernel orthogonal complement. Their largest actual
@@ -75,8 +75,8 @@ theorem exists_complex_range_kernel_frames_norm_eq_secant {n : Type*}
   have hAngle (i : Fin (Fintype.card (Fin R.rank))) :
       complexPrincipalAnglesFintype W Q i = principalAnglesFintype W₀ Q₀ i := by
     simp only [complexPrincipalAnglesFintype, principalAnglesFintype, hOverlap,
-      toEuclideanLin_singularValues_map_ofReal]
-    simp only [← singularValues_eq_linearMap, singularValues_reindex]
+      singularValues_map_ofReal]
+    simp only [singularValues_reindex]
   have hFinal : ∃ Q W : Matrix n (Fin R.rank) ℂ,
       Qᴴ * Q = 1 ∧ Wᴴ * W = 1 ∧
       LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin ∧

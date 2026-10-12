@@ -46,9 +46,9 @@ theorem eigenvalues₀_cfc_of_antitone (f : ℝ → ℝ) {A : Matrix n n ℝ}
 decreasing eigenvalues at every in-dimension index, including zeros and repeated
 values. Horn--Johnson, spectral theorem; supports `condition-number-def`.
 -/
-theorem toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef
+theorem singularValues_eq_eigenvalues₀_of_posSemidef
     {A : Matrix n n ℝ} (hA : A.PosSemidef) (i : Fin (Fintype.card n)) :
-    A.toEuclideanLin.singularValues (i : ℕ) = hA.isHermitian.eigenvalues₀ i := by
+    singularValues A (i : ℕ) = hA.isHermitian.eigenvalues₀ i := by
   have hNonneg (j : Fin (Fintype.card n)) : 0 ≤ hA.isHermitian.eigenvalues₀ j := by
     let e : Fin (Fintype.card n) ≃ n := Fintype.equivOfCardEq (Fintype.card_fin _)
     have h := hA.eigenvalues_nonneg (e j)
@@ -62,9 +62,9 @@ theorem toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef
       _ = Aᴴ * A := by rw [pow_two, hA.isHermitian.eq]
   have hE := eigenvalues₀_cfc_of_antitone (fun x : ℝ => x ^ (2 : ℕ)) hA.isHermitian hAnti i
   have hSq := sq_singularValues_eq_eigenvalues₀ A i
-  have h : (A.toEuclideanLin.singularValues (i : ℕ)) ^ 2 =
+  have h : (singularValues A (i : ℕ)) ^ 2 =
       (hA.isHermitian.eigenvalues₀ i) ^ 2 := hSq.trans
         ((congrFun (eigenvalues₀_eq_of_matrix_eq _ _ hCfc.symm) i).trans hE)
-  exact (sq_eq_sq₀ (A.toEuclideanLin.singularValues_nonneg _) (hNonneg i)).mp h
+  exact (sq_eq_sq₀ (singularValues_nonneg A _) (hNonneg i)).mp h
 
 end NLAlib

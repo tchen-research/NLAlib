@@ -74,7 +74,7 @@ theorem exists_bound_norm_real_matrix_pow_iff_complexification (A : Matrix n n �
     exact h.trans (mul_le_mul_of_nonneg_left (hC k) (norm_nonneg L.toContinuousLinearMap))
   · rintro ⟨C, hC⟩
     refine ⟨C, fun k => ?_⟩
-    have h := specNorm_le_spectralNorm_map_ofReal (A ^ k)
+    have h := specNorm_le_norm_map_ofReal (A ^ k)
     rw [specNorm_eq_norm, map_ofReal_matrix_pow] at h
     exact h.trans (hC k)
 

@@ -21,7 +21,7 @@ theorem exists_real_idempotent_unitary_similarity {n : Type*}
     [Fintype n] [DecidableEq n] (P : Matrix n n ℂ) (hP : IsIdempotentElem P) :
     ∃ U : Matrix.unitaryGroup n ℂ, ∃ R : Matrix n n ℝ,
       IsIdempotentElem R ∧ P = (U : Matrix n n ℂ) * R.map Complex.ofReal * (U : Matrix n n ℂ)ᴴ ∧
-      (∀ i, P.toEuclideanLin.singularValues i = R.toEuclideanLin.singularValues i) ∧
+      (∀ i, singularValues P i = singularValues R i) ∧
       P.rank = R.rank ∧ ‖P‖ = specNorm R ∧ ‖1 - P‖ = specNorm (1 - R) := by
   classical
   obtain ⟨g, hg, t, ht0, ht, htpos, H, hH, hHt, hBlock⟩ := exists_unitary_idempotent_canonical P hP
@@ -60,12 +60,12 @@ theorem exists_real_idempotent_unitary_similarity {n : Type*}
     rw [Matrix.submatrix_mul_equiv H (N.map Complex.ofReal) id e.symm e.symm,
       Matrix.submatrix_mul_equiv (H * N.map Complex.ofReal) Hᴴ id e.symm id,
       Matrix.submatrix_id_id]
-  have hspec (i : ℕ) : P.toEuclideanLin.singularValues i = R.toEuclideanLin.singularValues i := by
+  have hspec (i : ℕ) : singularValues P i = singularValues R i := by
     rw [hfactor]
-    change (((U : Matrix n n ℂ) * R.map Complex.ofReal) * ((star U : Matrix.unitaryGroup n ℂ) : Matrix n n ℂ)).toEuclideanLin.singularValues i = _
+    change singularValues (((U : Matrix n n ℂ) * R.map Complex.ofReal) * ((star U : Matrix.unitaryGroup n ℂ) : Matrix n n ℂ)) i = _
     rw [complex_singularValues_mul_unitary _ (star U),
       complex_singularValues_isometry_mul (show (U : Matrix n n ℂ)ᴴ * (U : Matrix n n ℂ) = 1
-        from Unitary.coe_star_mul_self U), toEuclideanLin_singularValues_map_ofReal]
+        from Unitary.coe_star_mul_self U), singularValues_map_ofReal]
   have hnorm (A : Matrix n n ℝ) :
       ‖(U : Matrix n n ℂ) * A.map Complex.ofReal * (U : Matrix n n ℂ)ᴴ‖ = specNorm A := by
     change ‖((U : Matrix n n ℂ) * A.map Complex.ofReal) * ((star U : Matrix.unitaryGroup n ℂ) : Matrix n n ℂ)‖ = _

@@ -16,7 +16,7 @@ universe u_1 u_2 u_3
 
 /-- All clauses of the ky-fan-maximum-principle result, with their original hypotheses,
 constants, finite indices and endpoint conventions.
-Components: `trace_compression_le_eigenvaluePrefix`, `exists_trace_compression_eq_eigenvaluePrefix`, `sum_bottom_eigenvalues_le_trace_compression`, `exists_trace_compression_eq_bottom_eigenvalues`, `trace_twoSided_compression_le_kyFanNorm`, `exists_trace_twoSided_compression_eq_kyFanNorm`, `majorized_eigenvalues₀_add`, `weaklyMajorized_toEuclideanLin_singularValues_add`.
+Components: `trace_compression_le_eigenvaluePrefix`, `exists_trace_compression_eq_eigenvaluePrefix`, `sum_bottom_eigenvalues_le_trace_compression`, `exists_trace_compression_eq_bottom_eigenvalues`, `trace_twoSided_compression_le_kyFanNorm`, `exists_trace_twoSided_compression_eq_kyFanNorm`, `majorized_eigenvalues₀_add`, `weaklyMajorized_singularValues_add`.
 Source: fan49, Thm 1; hj13, Cor 4.3.39; hj91, Thm 3.4.1.
 atlas: ky-fan-maximum-principle -/
 theorem ky_fan_toolkit_properties :
@@ -63,9 +63,9 @@ theorem ky_fan_toolkit_properties :
   [_inst_3 : DecidableEq n] (A B : Matrix m n ℝ),
   NLAlib.WeaklyMajorized
     (fun (i : Fin (Min.min (Fintype.card m) (Fintype.card n))) =>
-      (Matrix.toEuclideanLin (A + B)).singularValues ↑i)
+      singularValues (A + B) ↑i)
     fun (i : Fin (Min.min (Fintype.card m) (Fintype.card n))) =>
-    (Matrix.toEuclideanLin A).singularValues ↑i + (Matrix.toEuclideanLin B).singularValues ↑i) := by
+    singularValues A ↑i + singularValues B ↑i) := by
   exact ⟨@NLAlib.trace_compression_le_eigenvaluePrefix,
     @NLAlib.exists_trace_compression_eq_eigenvaluePrefix,
     @NLAlib.sum_bottom_eigenvalues_le_trace_compression,
@@ -73,6 +73,6 @@ theorem ky_fan_toolkit_properties :
     @NLAlib.trace_twoSided_compression_le_kyFanNorm,
     @NLAlib.exists_trace_twoSided_compression_eq_kyFanNorm,
     @NLAlib.majorized_eigenvalues₀_add,
-    @NLAlib.weaklyMajorized_toEuclideanLin_singularValues_add⟩
+    @NLAlib.weaklyMajorized_singularValues_add⟩
 
 end NLAlib

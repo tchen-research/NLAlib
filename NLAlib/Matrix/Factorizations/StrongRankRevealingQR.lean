@@ -42,9 +42,9 @@ theorem exists_strong_rank_revealing_qr {m n : Type*}
     ∃ R₂₂ : Matrix (Fin (Fintype.card m - k)) (Fin (Fintype.card n - k)) ℝ,
       HasOrthonormalCols Q ∧ Q * Qᵀ = 1 ∧ IsUnit R₁₁ ∧ R₁₁.IsUpperTriangular ∧
       IsUpperTrapezoidal R₂₂ ∧ A.submatrix id π = Q * Matrix.fromBlocks R₁₁ R₁₂ 0 R₂₂ ∧
-      (∀ i < k, A.toEuclideanLin.singularValues i /
+      (∀ i < k, singularValues A i /
         Real.sqrt (1 + f ^ 2 * k * ((Fintype.card n : ℝ) - k)) ≤ singularValues R₁₁ i) ∧
-      (∀ j, singularValues R₂₂ j ≤ A.toEuclideanLin.singularValues (k + j) *
+      (∀ j, singularValues R₂₂ j ≤ singularValues A (k + j) *
         Real.sqrt (1 + f ^ 2 * k * ((Fintype.card n : ℝ) - k))) ∧
       (∀ i j, |(R₁₁⁻¹ * R₁₂) i j| ≤ f) ∧
       (k = A.rank → R₂₂ = 0) := by
@@ -62,8 +62,8 @@ theorem exists_strong_rank_revealing_qr {m n : Type*}
     nlinarith
   have hc : 0 < c := Real.sqrt_pos.mpr (lt_of_lt_of_le (by linarith : 0 < 1 + b) hConst)
   have hSmall : Real.sqrt (1 + b) ≤ c := Real.sqrt_le_sqrt hConst
-  have hSpec (i : ℕ) : (Matrix.fromBlocks R (R * T) 0 D).toEuclideanLin.singularValues i =
-      A.toEuclideanLin.singularValues i := by
+  have hSpec (i : ℕ) : singularValues (Matrix.fromBlocks R (R * T) 0 D) i =
+      singularValues A i := by
     have hh := congrFun (singularValues_reindex A (Equiv.refl m) π.symm) i
     change singularValues (A.submatrix id π) i = _ at hh
     rw [hFact, singularValues_isometry_mul hQ] at hh
@@ -72,7 +72,7 @@ theorem exists_strong_rank_revealing_qr {m n : Type*}
   · intro i hi
     apply (div_le_iff₀ hc).mpr
     calc
-      _ = (Matrix.fromBlocks R (R * T) 0 D).toEuclideanLin.singularValues i := (hSpec i).symm
+      _ = singularValues (Matrix.fromBlocks R (R * T) 0 D) i := (hSpec i).symm
       _ ≤ Real.sqrt (1 + b) * singularValues R i :=
         singularValues_upper_block_le_sqrt_budget_mul R T D hR b hb hBudget hi
       _ ≤ c * singularValues R i :=
@@ -82,7 +82,7 @@ theorem exists_strong_rank_revealing_qr {m n : Type*}
     have hh := singularValues_trailing_le_sqrt_budget_mul R T D hR b hb hBudget j
     rw [hSpec] at hh
     exact hh.trans ((mul_le_mul_of_nonneg_right hSmall
-      (LinearMap.singularValues_nonneg _ _)).trans_eq (mul_comm _ _))
+      (singularValues_nonneg _ _)).trans_eq (mul_comm _ _))
   · intro i j
     rw [← Matrix.mul_assoc, Matrix.nonsing_inv_mul R ((Matrix.isUnit_iff_isUnit_det _).mp hR),
       Matrix.one_mul]

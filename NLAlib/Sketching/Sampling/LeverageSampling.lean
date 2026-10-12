@@ -57,7 +57,7 @@ The rank-one isotropy and eigenvalue bounds are derived from `UᴴU = I`
 and the probability domination, including zero-probability rows.
 Source: operator re-derivation `sa:leverage-theorem`, Tropp 2015, Chapter 5.
 atlas: leverage-sampling-ose (partial) -/
-theorem measure_le_spectralNorm_leverage_gram_sub_one
+theorem measure_le_norm_leverage_gram_sub_one
     {n : Type*} [Fintype n] [DecidableEq n] [MeasurableSpace n] [MeasurableSingletonClass n]
     {d k : ℕ} [NeZero d] (hk : 0 < k)
     (U : Matrix n (Fin d) ℂ) (hU : Uᴴ * U = 1)
@@ -253,7 +253,7 @@ theorem measure_leverage_embedding_failure_le_of_sample_size
       (not_le.mp hnot).le x
     rcases hx with hx | hx <;> linarith
   exact (measureReal_mono hsub).trans
-    ((measure_le_spectralNorm_leverage_gram_sub_one hk U hU p hp hβ hdom hε0 hε1).trans
+    ((measure_le_norm_leverage_gram_sub_one hk U hU p hp hβ hdom hε0 hε1).trans
       (leverage_tail_le_of_sample_size (Nat.pos_of_ne_zero (NeZero.ne d)) hβ hε0 hδ hsize))
 
 /-- A rank-zero range is preserved by every sketch deterministically, without

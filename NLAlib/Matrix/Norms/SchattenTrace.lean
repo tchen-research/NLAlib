@@ -46,8 +46,8 @@ theorem abs_frobInner_le_schattenNorm_mul (A B : Matrix m n ℝ) {p q : ℝ}
   apply (abs_frobInner_le_sum_singularValues_mul A B).trans
   exact Real.inner_le_Lp_mul_Lq_of_nonneg
     (Finset.range (min (Fintype.card m) (Fintype.card n)))
-    (f := A.toEuclideanLin.singularValues) (g := B.toEuclideanLin.singularValues) hpq
-    (fun i _ => LinearMap.singularValues_nonneg _ i) (fun i _ => LinearMap.singularValues_nonneg _ i)
+    (f := singularValues A) (g := singularValues B) hpq
+    (fun i _ => singularValues_nonneg _ i) (fun i _ => singularValues_nonneg _ i)
 
 /-- The `(1,∞)` Schatten trace Hölder endpoint, expressed in nuclear and
 spectral norms. The constant is exactly one.
@@ -56,12 +56,12 @@ theorem abs_frobInner_le_nuclearNorm_mul_specNorm (A B : Matrix m n ℝ) :
     |frobInner A B| ≤ nuclearNorm A * specNorm B := by
   calc
     |frobInner A B| ≤ ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-        A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i :=
+        singularValues A i * singularValues B i :=
       abs_frobInner_le_sum_singularValues_mul A B
     _ ≤ ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-        A.toEuclideanLin.singularValues i * specNorm B :=
+        singularValues A i * specNorm B :=
       Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_left
-        (singularValues_le_specNorm B i) (LinearMap.singularValues_nonneg _ i)
+        (singularValues_le_specNorm B i) (singularValues_nonneg _ i)
     _ = nuclearNorm A * specNorm B := by rw [← Finset.sum_mul]; rfl
 
 /-- The `(∞,1)` Schatten trace Hölder endpoint, with exact constant one. -/

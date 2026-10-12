@@ -10,7 +10,7 @@ vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimPr
 -/
 import Mathlib.Probability.Moments.SubGaussian
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import NLAlib.Matrix.Norms.Core
+import NLAlib.Matrix.Norms.SpectralNormBounds
 import NLAlib.Matrix.Basic.QuadForm
 
 /-!
@@ -112,13 +112,6 @@ lemma orthonormalBasis_repr_sum_smul {E : Type*} [NormedAddCommGroup E]
     simp
   · intro hi
     exact (hi (Finset.mem_univ i)).elim
-
-/-- The quadratic form as the double sum `zᵀ A z = ∑ᵢ ∑ⱼ zᵢ Aᵢⱼ zⱼ` (the order of factors used
-throughout the Hanson–Wright proof). Atlas `hanson-wright` (helper). -/
-theorem quadForm_eq_sum_mul_mul {ι : Type*} [Fintype ι] (A : Matrix ι ι ℝ) (z : ι → ℝ) :
-    quadForm A z = ∑ i, ∑ j, z i * A i j * z j := by
-  rw [quadForm_eq_sum]
-  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
 
 /-- The random quadratic form associated to a random vector `X`. -/
 def randomQuadraticForm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)

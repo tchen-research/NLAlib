@@ -125,6 +125,7 @@ theorem invariantNorm_sub_polar_le_sub_isometry_fin {m n : ℕ}
     rw [← hEq, ν.left_invariant _ O hO]
   rw [hNorm, hDistance]
   have hWeak := weaklyMajorized_abs_singularValues_add_sub V (A - V)
+  rw [Fintype.card_fin, Fintype.card_fin] at hWeak
   rw [show V + (A - V) = A by abel] at hWeak
   have hσ : (fun i : Fin (min m n) => singularValues V i) = fun _ => (1 : ℝ) := by
     funext i

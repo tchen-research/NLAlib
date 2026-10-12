@@ -1,4 +1,4 @@
-import NLAlib.Sketching.Sparse.SparseFock.ExactSparseMatrixEmbedding
+import NLAlib.Sketching.Sparse.MomentMethod.UniformSparseTheorem
 import NLAlib.Sketching.Sparse.SparseLaws
 /-!
 # SparseStack and uniform exact-s subspace embeddings
@@ -15,7 +15,7 @@ set_option autoImplicit false
 open MeasureTheory
 open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
-open SparseFock.PaperParameters SparseFock.MainTheoremAssembly
+open SparseSketch
 
 /-- With no coefficient directions, every sketch preserves the zero subspace.
 Source: manuscript `sh:sparse`, empty-subspace convention; supports `sparse-ose`. -/
@@ -37,26 +37,27 @@ theorem measure_sparseStack_embedding_success_ge
     (hε : 0 < ε) (hε1 : ε ≤ 1)
     {U : Matrix (Fin n) (Fin d) ℝ} (hU : HasOrthonormalCols U) :
     1 - δ ≤
-      (sparseStackMeasure (roundedS (failureOrder d δ) ε)
-        (roundedB d (failureOrder d δ) ε) n
+      (sparseStackMeasure (sparseColumnSparsity (sparseMomentOrder d δ) ε)
+        (sparseBlockRows d (sparseMomentOrder d δ) ε) n
         (canonicalB_pos hε hε1)).real
       {z | IsSubspaceEmbedding
-        (SparseFock.SparseStackModel.stackMatrix
-          (SparseFock.SparseStackDistribution.toSample z)) U ε} := by
+        (sparseStackMatrix
+          (SparseStackSelectors.toSample z)) U ε} := by
   by_cases hd : d = 0
   · subst d
-    have hevent : {z : SparseFock.SparseStackDistribution.RawSample
-        (roundedS (failureOrder 0 δ) ε) (roundedB 0 (failureOrder 0 δ) ε) n |
+    have hevent : {z : SparseStackSelectors
+        (sparseColumnSparsity (sparseMomentOrder 0 δ) ε)
+            (sparseBlockRows 0 (sparseMomentOrder 0 δ) ε) n |
         IsSubspaceEmbedding
-        (SparseFock.SparseStackModel.stackMatrix
-          (SparseFock.SparseStackDistribution.toSample z)) U ε} = Set.univ := by
+        (sparseStackMatrix
+          (SparseStackSelectors.toSample z)) U ε} = Set.univ := by
       ext z
       simp [isSubspaceEmbedding_of_isEmpty]
     rw [hevent, probReal_univ]
     linarith
-  · have hmain := SparseFock.MainTheorem.fully_independent_sparseStack_matrix
+  · have hmain := fully_independent_sparseStack_matrix
       (Nat.one_le_iff_ne_zero.mpr hd) hδ hδ1 hε hε1 U hU
-    simpa only [sparseStackMeasure, SparseFock.FiniteLaw.real_toMeasure] using hmain.oseSuccess
+    simpa only [sparseStackMeasure, FiniteLaw.real_toMeasure] using hmain.oseSuccess
 
 /-- SparseStack's actual Gram-error failure probability is at most delta.
 Source: manuscript `sh:sparse`, pinned full moment/coupling theorem.
@@ -65,17 +66,17 @@ theorem measure_sparseStack_gram_failure_le
     {n d : ℕ} {δ ε : ℝ} (hd : 1 ≤ d) (hδ : 0 < δ) (hδ1 : δ ≤ 1)
     (hε : 0 < ε) (hε1 : ε ≤ 1)
     {U : Matrix (Fin n) (Fin d) ℝ} (hU : HasOrthonormalCols U) :
-    (sparseStackMeasure (roundedS (failureOrder d δ) ε)
-      (roundedB d (failureOrder d δ) ε) n
+    (sparseStackMeasure (sparseColumnSparsity (sparseMomentOrder d δ) ε)
+      (sparseBlockRows d (sparseMomentOrder d δ) ε) n
       (canonicalB_pos hε hε1)).real
       {z | ε < specNorm (Uᵀ *
-        ((SparseFock.SparseStackModel.stackMatrix
-            (SparseFock.SparseStackDistribution.toSample z))ᵀ *
-          SparseFock.SparseStackModel.stackMatrix
-            (SparseFock.SparseStackDistribution.toSample z) * U) - 1)} ≤ δ := by
-  simpa only [sparseStackMeasure, SparseFock.FiniteLaw.real_toMeasure,
-    specNorm_eq_norm, SparseFock.sketchGram] using
-    (SparseFock.MainTheorem.fully_independent_sparseStack_matrix
+        ((sparseStackMatrix
+            (SparseStackSelectors.toSample z))ᵀ *
+          sparseStackMatrix
+            (SparseStackSelectors.toSample z) * U) - 1)} ≤ δ := by
+  simpa only [sparseStackMeasure, FiniteLaw.real_toMeasure,
+    specNorm_eq_norm, sketchGram] using
+    (fully_independent_sparseStack_matrix
       hd hδ hδ1 hε hε1 U hU).operatorFailure
 
 /-- Independent uniform signed supports of exactly s rows give an embedding
@@ -88,23 +89,25 @@ theorem measure_uniformSparse_embedding_success_ge
     {U : Matrix (Fin n) (Fin d) ℝ} (hU : HasOrthonormalCols U) :
     1 - δ ≤
       (uniformSparseMeasure
-        (roundedS (failureOrder d δ) ε * roundedB d (failureOrder d δ) ε)
-        (roundedS (failureOrder d δ) ε) n
-        (SparseFock.UniformExactS.exactS_le_rows
+        (sparseColumnSparsity (sparseMomentOrder d δ) ε * sparseBlockRows d (sparseMomentOrder d δ)
+            ε)
+        (sparseColumnSparsity (sparseMomentOrder d δ) ε) n
+        (UniformSparse.le_rows
           (canonicalB_pos hε hε1))).real
-      {X | IsSubspaceEmbedding (SparseFock.UniformExactS.sketchMatrix X) U ε} := by
+      {X | IsSubspaceEmbedding (uniformSparseMatrix X) U ε} := by
   by_cases hd : d = 0
   · subst d
-    have hevent : {X : SparseFock.UniformExactS.ExactSample
-        (roundedS (failureOrder 0 δ) ε * roundedB 0 (failureOrder 0 δ) ε)
-        (roundedS (failureOrder 0 δ) ε) n | IsSubspaceEmbedding
-        (SparseFock.UniformExactS.sketchMatrix X) U ε} = Set.univ := by
+    have hevent : {X : UniformSparseSample
+        (sparseColumnSparsity (sparseMomentOrder 0 δ) ε * sparseBlockRows 0 (sparseMomentOrder 0 δ)
+            ε)
+        (sparseColumnSparsity (sparseMomentOrder 0 δ) ε) n | IsSubspaceEmbedding
+        (uniformSparseMatrix X) U ε} = Set.univ := by
       ext X
       simp [isSubspaceEmbedding_of_isEmpty]
     rw [hevent, probReal_univ]
     linarith
-  · simpa only [uniformSparseMeasure, SparseFock.FiniteLaw.real_toMeasure] using
-      (SparseFock.UniformExactS.uniformExactS_matrix_ose_success
+  · simpa only [uniformSparseMeasure, FiniteLaw.real_toMeasure] using
+      (UniformSparse.matrix_ose_success
         (Nat.one_le_iff_ne_zero.mpr hd) hδ hδ1 hε hε1 U hU)
 
 /-- Uniform exact-s signed supports have the same explicit Gram failure
@@ -116,15 +119,15 @@ theorem measure_uniformSparse_gram_failure_le
     (hε : 0 < ε) (hε1 : ε ≤ 1)
     {U : Matrix (Fin n) (Fin d) ℝ} (hU : HasOrthonormalCols U) :
     (uniformSparseMeasure
-      (roundedS (failureOrder d δ) ε * roundedB d (failureOrder d δ) ε)
-      (roundedS (failureOrder d δ) ε) n
-      (SparseFock.UniformExactS.exactS_le_rows
+      (sparseColumnSparsity (sparseMomentOrder d δ) ε * sparseBlockRows d (sparseMomentOrder d δ) ε)
+      (sparseColumnSparsity (sparseMomentOrder d δ) ε) n
+      (UniformSparse.le_rows
         (canonicalB_pos hε hε1))).real
-      {X | ε < specNorm (Uᵀ * ((SparseFock.UniformExactS.sketchMatrix X)ᵀ *
-        SparseFock.UniformExactS.sketchMatrix X * U) - 1)} ≤ δ := by
-  simpa only [uniformSparseMeasure, SparseFock.FiniteLaw.real_toMeasure,
-    specNorm_eq_norm, SparseFock.sketchGram] using
-    (SparseFock.UniformExactS.uniformExactS_matrix_operator_failure
+      {X | ε < specNorm (Uᵀ * ((uniformSparseMatrix X)ᵀ *
+        uniformSparseMatrix X * U) - 1)} ≤ δ := by
+  simpa only [uniformSparseMeasure, FiniteLaw.real_toMeasure,
+    specNorm_eq_norm, sketchGram] using
+    (UniformSparse.matrix_operator_failure
       hd hδ hδ1 hε hε1 U hU)
 
 /-- The rounded sparsity and row count shared by both sparse laws satisfy
@@ -133,11 +136,11 @@ Source: manuscript `sh:sparse`, pinned rounded integer parameter package.
 atlas: sparse-ose -/
 theorem sparse_embedding_parameters
     {d : ℕ} {δ ε : ℝ} (hd : 1 ≤ d) (hε : 0 < ε) (hε1 : ε ≤ 1) :
-    (roundedS (failureOrder d δ) ε : ℝ) <
-        1356 * (failureOrder d δ : ℝ) / ε ∧
-      (roundedM d (failureOrder d δ) ε : ℝ) <
-        306456 * ((d : ℝ) + failureOrder d δ) / ε ^ 2 ∧
-      2 ≤ roundedB d (failureOrder d δ) ε := by
+    (sparseColumnSparsity (sparseMomentOrder d δ) ε : ℝ) <
+        1356 * (sparseMomentOrder d δ : ℝ) / ε ∧
+      (sparseRows d (sparseMomentOrder d δ) ε : ℝ) <
+        306456 * ((d : ℝ) + sparseMomentOrder d δ) / ε ^ 2 ∧
+      2 ≤ sparseBlockRows d (sparseMomentOrder d δ) ε := by
   obtain ⟨_, _, hs, hm, hb⟩ := main_parameter_package (delta := δ) hd hε hε1
   exact ⟨hs, hm, hb⟩
 

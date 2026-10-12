@@ -239,44 +239,6 @@ lemma quadraticForm_eq_inner_toEuclideanCLM {n : ℕ}
   intro j _
   ring
 
-/-- Source-transport helper `sum_diag_sq_le_frobSq` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma sum_diag_sq_le_frobSq {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    (∑ i, A i i ^ 2) ≤ frobSq A := by
-  simp only [frobSq_eq_sum_sq]
-  exact Finset.sum_le_sum fun i _ => by
-    exact Finset.single_le_sum (fun j _ => sq_nonneg (A i j)) (Finset.mem_univ i)
-
-/-- Source-transport helper `sum_diag_sq_le_frobNorm_sq` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma sum_diag_sq_le_frobNorm_sq {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    (∑ i, A i i ^ 2) ≤ frobNorm A ^ 2 := by
-  rw [frobNorm_sq]
-  exact sum_diag_sq_le_frobSq A
-
-/-- Source-transport helper `abs_diag_le_specNorm` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
-lemma abs_diag_le_specNorm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) (i : Fin n) :
-    |A i i| ≤ specNorm A := by
-  let e : EuclideanSpace ℝ (Fin n) := EuclideanSpace.single i (1 : ℝ)
-  have hcoord :
-      |A i i| ≤ ‖Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℝ) A e‖ := by
-    have h :=
-      PiLp.norm_apply_le
-        (x := Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℝ) A e) i
-    simpa [e, Matrix.toEuclideanCLM_toLp, Matrix.mulVec_single_one, Real.norm_eq_abs]
-      using h
-  have hop :=
-    (Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℝ) A).le_opNorm e
-  have he_norm : ‖e‖ = 1 := by
-    simp [e]
-  calc
-    |A i i| ≤ ‖Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℝ) A e‖ := hcoord
-    _ ≤ ‖Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℝ) A‖ * ‖e‖ := hop
-    _ = specNorm A := by
-      rw [he_norm, mul_one]
-      rfl
-
 /-- Source-transport helper `abs_quadraticForm_le` for Hanson–Wright.
 HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
 lemma abs_quadraticForm_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)

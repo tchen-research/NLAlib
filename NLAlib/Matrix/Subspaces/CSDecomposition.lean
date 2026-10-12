@@ -38,7 +38,7 @@ theorem exists_cs_decomposition {p q : Type*}
     [Fintype p] [Fintype q] [DecidableEq p] [DecidableEq q]
     (U : Matrix (p ⊕ q) (p ⊕ q) ℝ) (hU : HasOrthonormalCols U)
     (E : Matrix q p ℝ) (hE : HasOrthonormalCols E) :
-    let c := fun i : p => U.toBlocks₁₁.toEuclideanLin.singularValues
+    let c := fun i : p => singularValues U.toBlocks₁₁
       ((Fintype.equivFin p) i)
     (∀ i, c i ∈ Set.Icc (0 : ℝ) 1) ∧
     ∃ V₁ W₁ : Matrix p p ℝ, ∃ V₂ W₂ : Matrix q q ℝ,
@@ -47,7 +47,7 @@ theorem exists_cs_decomposition {p q : Type*}
       (Matrix.fromBlocks V₁ 0 0 V₂)ᵀ * U * Matrix.fromBlocks W₁ 0 0 W₂ =
         csCanonicalMatrix c E := by
   dsimp only
-  let c := fun i : p => U.toBlocks₁₁.toEuclideanLin.singularValues
+  let c := fun i : p => singularValues U.toBlocks₁₁
     ((Fintype.equivFin p) i)
   let C := Matrix.diagonal c
   let S := Matrix.diagonal (fun i => Real.sqrt (1 - c i ^ 2))
@@ -76,7 +76,7 @@ theorem exists_cs_decomposition {p q : Type*}
         ext i j; simp [Matrix.toBlocks₁₁, Matrix.one_apply]] using h
   have hc : ∀ i, c i ∈ Set.Icc (0 : ℝ) 1 := by
     intro i
-    have hci : 0 ≤ c i := LinearMap.singularValues_nonneg _ _
+    have hci : 0 ≤ c i := singularValues_nonneg _ _
     have hdiag := congrArg (fun A : Matrix p p ℝ => A i i) hGram
     have hnonneg : 0 ≤ (Dᵀ * D) i i :=
       dotProduct_self_nonneg (fun j => D j i)
@@ -131,7 +131,7 @@ atlas: cs-decomposition (partial) -/
 theorem exists_cs_decomposition_of_embedding {p q : Type*}
     [Fintype p] [Fintype q] [DecidableEq p] [DecidableEq q]
     (U : Matrix (p ⊕ q) (p ⊕ q) ℝ) (hU : HasOrthonormalCols U) (e : p ↪ q) :
-    let c := fun i : p => U.toBlocks₁₁.toEuclideanLin.singularValues
+    let c := fun i : p => singularValues U.toBlocks₁₁
       ((Fintype.equivFin p) i)
     (∀ i, c i ∈ Set.Icc (0 : ℝ) 1) ∧
     ∃ V₁ W₁ : Matrix p p ℝ, ∃ V₂ W₂ : Matrix q q ℝ,

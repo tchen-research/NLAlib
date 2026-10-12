@@ -45,7 +45,8 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   (`Matrix/{Basic,Norms,Spectral,Subspaces,Factorizations,Perturbation,Inequalities,OperatorTheory,
   Functions,Structured,Calculus}`, `Probability/{Gaussian,Concentration,…}`, `RandomMatrix/{Gaussian,…}`,
   …; see `docs/REORG_PLAN.md`); content files live in those subdirectories and every `<Dir>.lean` is a
-  generated aggregator (`scripts/reorg.py`), never edited by hand. Inside a leaf, `Basic.lean` holds
+  generated aggregator, never edited by hand: after creating, moving or deleting a file run
+  `python3 scripts/reorg.py --gen-aggregators`. Inside a leaf, `Basic.lean` holds
   definitions and their simp-level API only; a leaf's namesake file that carries theory as well is
   `Core.lean` (`Matrix/Norms/Core.lean`, `Matrix/Spectral/Core.lean`, …). `Krylov` is the deterministic theory (Krylov spaces,
   Lanczos, CG, Gauss quadrature); randomized Krylov guarantees live with their consumers in
@@ -71,6 +72,11 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
 - `private` is for proof-local scaffolding only. Anything a second file could want is public,
   named by §1, and documented.
 - Imports are the specific Mathlib files needed (`import Mathlib` only in scratch files).
+  Dependency tools: `lake env lean scripts/ImportUsage.lean` computes, for every module, the
+  imports its declarations actually use and a minimal import list (and lists NLAlib names that
+  collide with Mathlib), written to `atlas/import_usage.json`; `python3 scripts/apply_imports.py`
+  applies those suggestions (`--revert M …` restores a module's import block). Verify with
+  `lake build` of the touched modules and their dependants.
 
 ## 3. Statements
 
@@ -79,12 +85,21 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   because a dependency was, is a defect to fix at the dependency.
 - Vocabulary: `frobInner`, `frobSq`, `frobNorm`, `specNorm` (bridge `specNorm_eq_norm`);
   `HasOrthonormalCols Q` for `Qᵀ * Q = 1` (take the hypothesis in this form, it unfolds);
-  `residual Q A`; `pinvL`, `pinvR` with explicit `IsUnit` side conditions until the general
-  pseudoinverse exists; `singularValues A : ℕ → ℝ` and `IsSVD A U V`; `gaussianMatrix p m` with
-  `Matrix.of` as the matrix view; `IsSubspaceEmbedding S U ε`; `quadForm A z`;
-  `krylovSpace A b q`; the Loewner order `≤` from `Mathlib.Analysis.Matrix.Order`
-  (`open scoped MatrixOrder`; `Matrix.le_iff`). Do not introduce a second spelling of any of
-  these.
+  `residual Q A`; two pseudoinverses: `moorePenroseInverse A` (Basic/MoorePenrose) is the general
+  Moore–Penrose inverse, defined for every real matrix including rank-deficient and empty ones,
+  and is the default in statements; `pinvL A = (AᵀA)⁻¹Aᵀ` and `pinvR A = Aᵀ(AAᵀ)⁻¹`
+  (Basic/Pseudoinverse) are the full-rank formulas, used with an explicit `IsUnit (Aᵀ * A)` /
+  `IsUnit (A * Aᵀ)` hypothesis when a proof computes with the formula (sketching, range finders);
+  the bridges are `moorePenroseInverse_eq_pinvL`, `moorePenroseInverse_eq_pinvR`;
+  `singularValues A : ℕ → ℝ` (over `[RCLike 𝕜]` and any `[Fintype m] [Fintype n]`, zero-padded,
+  antitone; never spell it `(Matrix.toEuclideanLin A).singularValues`, the bridge to Mathlib's
+  `LinearMap.singularValues` is `singularValues_eq_linearMap`, by `rfl`) and `IsSVD A U V`;
+  `gaussianMatrix p m` with `Matrix.of` as the matrix view and `linForm c G` for its linear
+  forms; `IsSubspaceEmbedding S U ε`; `quadForm A z`; `krylovSpace A b q`; the matrix function
+  `cfc f A` (Mathlib) with `matrixExp`, `matrixLog`, `traceExp`; the Loewner order `≤` from
+  `Mathlib.Analysis.Matrix.Order` (`open scoped MatrixOrder`; `Matrix.le_iff`); the L2 operator
+  norm `‖A‖` of complex matrices under `open scoped Matrix.Norms.L2Operator` (never a named
+  `spectralNorm`). Do not introduce a second spelling of any of these.
 - Probability: an abstract space `{Ω} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]`,
   random matrices as functions, laws as `μ.map X = …`, expectations as Bochner integrals.
   Prefer statements without integrability hypotheses (prove the `lintegral` form, then convert);

@@ -65,7 +65,6 @@ theorem schattenNorm_mul_rectDiag_mul_transpose {m n : ℕ}
   congr 1
   apply Finset.sum_congr rfl
   intro i hi
-  change singularValues _ i ^ q = b i ^ q
   rw [singularValues_eq_of_eq_mul_rectDiag_mul hU hV hb0 hb rfl (Finset.mem_range.mp hi)]
 
 /-- Pairing a matrix with prescribed coefficients in its own SVD frames gives

@@ -38,7 +38,7 @@ theorem singularValues_upper_block_le_sqrt_budget_mul {k : ℕ} {r q : Type*}
     (R : Matrix (Fin k) (Fin k) ℝ) (T : Matrix (Fin k) q ℝ) (D : Matrix r q ℝ)
     (hR : IsUnit R) (b : ℝ) (hb : 0 ≤ b)
     (hBudget : frobSq T + frobSq R⁻¹ * frobSq D ≤ b) {i : ℕ} (hi : i < k) :
-    (Matrix.fromBlocks R (R * T) 0 D).toEuclideanLin.singularValues i ≤
+    singularValues (Matrix.fromBlocks R (R * T) 0 D) i ≤
       Real.sqrt (1 + b) * singularValues R i := by
   let Ri := truncatedSVD R i
   let B := Matrix.fromBlocks Ri (Ri * T) (0 : Matrix r (Fin k) ℝ) (0 : Matrix r q ℝ)

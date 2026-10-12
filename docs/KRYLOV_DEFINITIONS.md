@@ -138,8 +138,8 @@ variant is needed. `range_aeval_mul_le_blockKrylovSpace` plus the existing
 `power-iteration-deterministic` with `p(AAᵀ)A` in place of `(AAᵀ)^q A` is the whole deterministic
 half of block-Krylov LRA.
 
-Basis interface (Matrix layer, `Matrix/Projections`). Add one canonical orthonormal-basis matrix
-for an arbitrary subspace, built internally from `stdOrthonormalBasis` on `EuclideanSpace`:
+Basis interface (Matrix layer, `Matrix/Subspaces/OrthonormalBasisMatrix`). Add one canonical
+orthonormal-basis matrix for an arbitrary subspace, built internally from `stdOrthonormalBasis` on `EuclideanSpace`:
 
 ```lean
 def orthonormalBasisMatrix (S : Submodule ℝ (m → ℝ)) : Matrix m (Fin (Module.finrank ℝ S)) ℝ
@@ -364,7 +364,7 @@ and in any model that establishes the hypotheses.
 | `lanczosBasis`/`lanczosMatrix` (`Fin q`-indexed) → `arnoldiBasis : ℕ → n → ℝ`, `arnoldiMatrix`, `arnoldiHessenberg` | Arnoldi relation statable with no hypothesis; correct name for GMRES/FOM; nesting is `rfl` |
 | `lanczos_apply_eq_zero_of_add_one_lt` → `arnoldiHessenberg_apply_eq_zero_of_add_one_lt`; `…'` → `…_of_isSymm` | names spell head and hypothesis (STANDARDS §1) |
 | add `krylovGrade` + `finrank_krylovSpace`, `linearIndependent_…_iff_le_krylovGrade` | one breakdown vocabulary; finite termination; Gaussian a.s. grade plugs in |
-| add `orthonormalBasisMatrix S` (Matrix/Projections) | unconditional orthonormal basis for every Krylov/block space |
+| add `orthonormalBasisMatrix S` (Matrix/Subspaces/OrthonormalBasisMatrix) | unconditional orthonormal basis for every Krylov/block space |
 | redefine `IsCGIterate` via `IsAffineMinimiser` (`Iff.rfl`, same name) | GMRES/MINRES/LSQR/sGMRES reuse K1 |
 | promote private `exists_degree_lt_one_sub_eq_X_mul`; dedupe `exists_degree_lt_abs_eval_sub_inv_le` | removes duplicate algebra (STANDARDS §2 "helpers where they belong") |
 | restate Gauss exactness with `p.degree < 2 * q` | drops `0 < q` and truncated subtraction |

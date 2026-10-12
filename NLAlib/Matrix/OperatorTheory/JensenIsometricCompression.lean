@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Functions.JensenBlockCalculus
+import NLAlib.Matrix.Functions.UnitaryCalculus
 import Mathlib.Tactic.NoncommRing
 
 /-!
@@ -14,26 +15,6 @@ open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 open NLAlib
 set_option autoImplicit false
 
-private noncomputable def reindexStar {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) :
-    Matrix ι ι ℂ ≃⋆ₐ[ℝ] Matrix κ κ ℂ :=
-  { Matrix.reindexAlgEquiv ℝ ℂ e with
-    map_star' := by intro A; rfl
-    map_smul' := by intro r A; rfl }
-
-private lemma reindex_cfc {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ] [Nonempty ι] [Nonempty κ]
-    (e : ι ≃ κ) (f : ℝ → ℝ) (A : Matrix ι ι ℂ) (hA : A.IsHermitian) :
-    reindexStar e (cfc f A) = cfc f (reindexStar e A) := by
-  have hs : spectrum ℝ (reindexStar e A) = spectrum ℝ A :=
-    AlgEquiv.spectrum_eq (reindexStar e).toAlgEquiv A
-  by_cases hf : ContinuousOn f (spectrum ℝ A)
-  · exact StarAlgHomClass.map_cfc (reindexStar e) f A hf
-      (reindexStar e).toAlgEquiv.toLinearEquiv.toLinearMap.continuous_of_finiteDimensional hA
-      (hA.submatrix _)
-  · rw [cfc_apply_of_not_continuousOn A hf, map_zero,
-      cfc_apply_of_not_continuousOn _ (by rwa [hs])]
-
 private lemma operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     (I : Set ℝ) (f : ℝ → ℝ) (hf : OperatorConvexOn I f)
     (A H : Matrix ι ι ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
@@ -42,42 +23,21 @@ private lemma operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι]
     (cfc f (t • A + (1-t) • H)) ≤
       (t • cfc f A + (1-t) • cfc f H) := by
   let e := Fintype.equivFin ι
-  let E := reindexStar e
-  have hs (B : Matrix ι ι ℂ) : spectrum ℝ (E B) = spectrum ℝ B :=
-    AlgEquiv.spectrum_eq E.toAlgEquiv B
-  have h := hf.2 (Fintype.card ι) inferInstance (E A) (E H)
-    (hA.submatrix _) (hH.submatrix _) (by rwa [hs]) (by rwa [hs]) t ht₀ ht₁
-  have hmix : (t • A + (1-t) • H).IsHermitian := (hA.smul (IsSelfAdjoint.all t)).add (hH.smul (IsSelfAdjoint.all (1-t)))
-  change (t • cfc f (E A) + (1-t) • cfc f (E H) - cfc f (t • E A + (1-t) • E H)).PosSemidef at h
-  have hm : t • E A + (1-t) • E H = E (t • A + (1-t) • H) := by simp
-  rw [hm, ← reindex_cfc e f A hA, ← reindex_cfc e f H hH,
-    ← reindex_cfc e f _ hmix, ← map_smul E, ← map_smul E, ← map_add E,
-    ← map_sub E] at h
+  let R : Matrix ι ι ℂ → Matrix (Fin (Fintype.card ι)) (Fin (Fintype.card ι)) ℂ :=
+    Matrix.reindex e e
+  have h := hf.2 (Fintype.card ι) inferInstance (R A) (R H)
+    (hA.reindex e) (hH.reindex e) (by rwa [spectrum_reindex]) (by rwa [spectrum_reindex])
+    t ht₀ ht₁
+  have hmix : (t • A + (1-t) • H).IsHermitian :=
+    (hA.smul (IsSelfAdjoint.all t)).add (hH.smul (IsSelfAdjoint.all (1-t)))
+  change (t • cfc f (R A) + (1-t) • cfc f (R H) - cfc f (t • R A + (1-t) • R H)).PosSemidef at h
+  have hm : t • R A + (1-t) • R H = R (t • A + (1-t) • H) := by
+    simp [R, Matrix.reindex_apply, Matrix.submatrix_add, Matrix.submatrix_smul]
+  rw [hm, cfc_reindex_of_isHermitian e f A hA, cfc_reindex_of_isHermitian e f H hH,
+    cfc_reindex_of_isHermitian e f _ hmix] at h
   have hh := h.submatrix e
-  simpa [E, reindexStar, Matrix.reindexAlgEquiv, Matrix.reindex_apply,
-    Matrix.le_iff, Matrix.submatrix_submatrix] using hh
-
-private lemma unitary_calculus {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
-    (U A : Matrix ι ι ℂ) (hU : U.conjTranspose = U) (hU2 : U * U = 1)
-    (hA : A.IsHermitian) (f : ℝ → ℝ) :
-    (U * A * U).IsHermitian ∧ spectrum ℝ (U * A * U) = spectrum ℝ A ∧
-    cfc f (U * A * U) = U * cfc f A * U := by
-  have hunit : U ∈ unitary (Matrix ι ι ℂ) := by
-    constructor <;> simpa only [Matrix.star_eq_conjTranspose, hU] using hU2
-  let u : unitary (Matrix ι ι ℂ) := ⟨U, hunit⟩
-  let E := Unitary.conjStarAlgAut ℝ (Matrix ι ι ℂ) u
-  have he (M : Matrix ι ι ℂ) : E M = U * M * U := by
-    change U * M * U.conjTranspose = _
-    rw [hU]
-  have hh : (U * A * U).IsHermitian := by
-    simpa only [hU] using Matrix.isHermitian_mul_mul_conjTranspose U hA
-  refine ⟨hh, ?_, ?_⟩
-  · rw [← he]; exact AlgEquiv.spectrum_eq E.toAlgEquiv A
-  · rw [← he, ← he]
-    symm
-    exact StarAlgHomClass.map_cfc E f A (A.finite_real_spectrum.continuousOn f)
-      E.toAlgEquiv.toLinearEquiv.toLinearMap.continuous_of_finiteDimensional hA
-      (by rwa [he])
+  simpa [R, Matrix.reindex_apply, Matrix.le_iff, Matrix.submatrix_submatrix,
+    Matrix.submatrix_add, Matrix.submatrix_sub, Matrix.submatrix_smul] using hh
 
 private lemma pinching {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] [Nonempty ι] [Nonempty κ]
@@ -90,9 +50,9 @@ private lemma pinching {ι κ : Type*} [Fintype ι] [Fintype κ]
   have hV : V.conjTranspose = V := by simp [V, Matrix.fromBlocks_conjTranspose]
   have hV2 : V * V = 1 := by
     simp [V, Matrix.fromBlocks_multiply, ← Matrix.fromBlocks_one]
-  have hcalc := unitary_calculus V X hV hV2 hX f
-  have hh := operatorConvexOn_finite I f hf X (V * X * V) hX hcalc.1 hXI
-    (by rwa [hcalc.2.1]) (1/2) (by norm_num) (by norm_num)
+  have hh := operatorConvexOn_finite I f hf X (V * X * V) hX
+    (isHermitian_reflection_conj V X hV hX) hXI (by rwa [spectrum_reflection_conj V X hV hV2])
+    (1/2) (by norm_num) (by norm_num)
   have hmid : (1/2 : ℝ) • X + (1 - (1/2 : ℝ)) • (V * X * V) =
       Matrix.fromBlocks (X.submatrix Sum.inl Sum.inl) 0 0 (X.submatrix Sum.inr Sum.inr) := by
     rw [← Matrix.fromBlocks_toBlocks X]
@@ -104,7 +64,7 @@ private lemma pinching {ι κ : Type*} [Fintype ι] [Fintype κ]
   have hr := hh.submatrix Sum.inr
   rw [Matrix.le_iff]
   convert hr using 1
-  rw [hcalc.2.2]
+  rw [cfc_reflection_conj V X hV hV2 hX f]
   ext i j
   simp [V, Matrix.mul_apply, Fintype.sum_sum_type, Matrix.one_apply]
   ring
@@ -173,10 +133,10 @@ theorem NLAlib.OperatorConvexOn.cfc_conjTranspose_mul_mul_le
   have hr := isometry_reflection_identities K hK A B
   have hu : U.conjTranspose = U := hr.1
   have hu2 : U * U = 1 := hr.2.1
-  have hcalc := unitary_calculus U D hu hu2 hD.1 f
-  have hp := pinching I f hf (U * D * U) hcalc.1 (by rwa [hcalc.2.1])
+  have hp := pinching I f hf (U * D * U) (isHermitian_reflection_conj U D hu hD.1)
+    (by rwa [spectrum_reflection_conj U D hu hu2])
   have hcorner : (U * D * U).submatrix Sum.inr Sum.inr = K.conjTranspose * A * K := hr.2.2
-  rw [hcorner, hcalc.2.2] at hp
+  rw [hcorner, cfc_reflection_conj U D hu hu2 hD.1 f] at hp
   have hcfc : (U * cfc f D * U).submatrix Sum.inr Sum.inr =
       K.conjTranspose * cfc f A * K := by
     rw [show cfc f D = Matrix.fromBlocks (cfc f A) 0 0 (cfc f B) from hD.2.2]

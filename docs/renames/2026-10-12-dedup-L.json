@@ -1,0 +1,21 @@
+{
+  "NLAlib.lieb_concavity_finite": "NLAlib.lieb_concavity",
+  "NLAlib.integrable_linear_mul_two_gaussianMatrix": "NLAlib.integrable_linForm_mul_two_gaussianMatrix",
+  "NLAlib.integrable_linear_mul_four_gaussianMatrix": "NLAlib.integrable_linForm_mul_four_gaussianMatrix",
+  "NLAlib.integral_linear_mul_two_gaussianMatrix": "NLAlib.integral_linForm_mul_two_gaussianMatrix",
+  "NLAlib.integral_linear_mul_four_gaussianMatrix": "NLAlib.integral_linForm_mul_four_gaussianMatrix",
+  "NLAlib.specNorm_le_spectralNorm_map_ofReal": "NLAlib.specNorm_le_norm_map_ofReal",
+  "NLAlib.measure_le_spectralNorm_leverage_gram_sub_one": "NLAlib.measure_le_norm_leverage_gram_sub_one",
+  "NLAlib.fromBlocks_zero_posSemidef": "NLAlib.posSemidef_fromBlocks_diag",
+  "NLAlib.weaklyMajorized_abs_toEuclideanLin_singularValues_add_sub_padded": "NLAlib.weaklyMajorized_abs_singularValues_add_sub_padded",
+  "NLAlib.weaklyMajorized_abs_toEuclideanLin_singularValues_add_sub": "NLAlib.weaklyMajorized_abs_singularValues_add_sub",
+  "NLAlib.sum_abs_toEuclideanLin_singularValues_add_sub_le_sum_range": "NLAlib.sum_abs_singularValues_add_sub_le_sum_range",
+  "NLAlib.sum_range_toEuclideanLin_singularValues_mul_rpow_le": "NLAlib.sum_range_singularValues_mul_rpow_le",
+  "NLAlib.toEuclideanLin_singularValues_map_ofReal": "NLAlib.singularValues_map_ofReal",
+  "NLAlib.toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef": "NLAlib.singularValues_eq_eigenvalues₀_of_posSemidef",
+  "NLAlib.weaklyMajorized_toEuclideanLin_singularValues_add": "NLAlib.weaklyMajorized_singularValues_add",
+  "NLAlib.sum_range_toEuclideanLin_singularValues_rpow_eq_of_min_le": "NLAlib.sum_range_singularValues_rpow_eq_of_min_le",
+  "NLAlib.toEuclideanLin_singularValues_cfc_abs": "NLAlib.singularValues_cfc_abs",
+  "NLAlib.multiset_toEuclideanLin_singularValues_eq_sqrt_eigenvalues": "NLAlib.multiset_singularValues_eq_sqrt_eigenvalues",
+  "NLAlib.multiset_toEuclideanLin_singularValues_kronecker": "NLAlib.multiset_singularValues_kronecker"
+}

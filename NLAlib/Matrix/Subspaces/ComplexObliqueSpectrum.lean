@@ -25,10 +25,10 @@ theorem exists_unitary_idempotent_canonical_spectrum {n : Type*}
     ∃ H : Matrix n (Fin P.rank ⊕ Fin (Fintype.card n - P.rank)) ℂ,
       Hᴴ * H = 1 ∧ H * Hᴴ = 1 ∧
       Hᴴ * P * H = Matrix.fromBlocks 1 ((rectDiag t).map Complex.ofReal) 0 0 ∧
-      (∀ i, P.toEuclideanLin.singularValues i =
+      (∀ i, singularValues P i =
         if i < P.rank then Real.sqrt (1 + t i ^ 2) else 0) ∧
-      (∀ i, 1 < P.toEuclideanLin.singularValues i ↔ i < g) ∧
-      (∀ i < g, t i = Real.sqrt (P.toEuclideanLin.singularValues i ^ 2 - 1)) := by
+      (∀ i, 1 < singularValues P i ↔ i < g) ∧
+      (∀ i < g, t i = Real.sqrt (singularValues P i ^ 2 - 1)) := by
   obtain ⟨U, R, hR, hPR, hspec, hRank, _, _⟩ := exists_real_idempotent_unitary_similarity P hP
   obtain ⟨g, hg, t, ht0, ht, htpos, L, hL, hLt, hBlock, hSpec, hGt, hCoeff⟩ :=
     exists_orthogonal_idempotent_canonical_spectrum R hR

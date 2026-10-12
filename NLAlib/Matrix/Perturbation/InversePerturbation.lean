@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.Weyl
 import NLAlib.Matrix.Perturbation.PseudoinverseSpectralPerturbation
 /-!
 # Perturbation of the inverse and of the Moore–Penrose inverse

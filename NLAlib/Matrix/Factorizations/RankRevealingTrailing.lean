@@ -24,12 +24,12 @@ theorem singularValues_trailing_le_sqrt_budget_mul {k r q : ℕ}
     (D : Matrix (Fin r) (Fin q) ℝ) (hR : IsUnit R) (b : ℝ) (hb : 0 ≤ b)
     (hBudget : frobSq T + frobSq R⁻¹ * frobSq D ≤ b) (j : ℕ) :
     singularValues D j ≤ Real.sqrt (1 + b) *
-      (Matrix.fromBlocks R (R * T) 0 D).toEuclideanLin.singularValues (k + j) := by
+      singularValues (Matrix.fromBlocks R (R * T) 0 D) (k + j) := by
   by_cases hj : j < q
   swap
   · rw [singularValues_eq_zero_of_width_le D
       (by simpa only [Fintype.card_fin] using Nat.le_of_not_gt hj)]
-    exact mul_nonneg (Real.sqrt_nonneg _) (LinearMap.singularValues_nonneg _ _)
+    exact mul_nonneg (Real.sqrt_nonneg _) (singularValues_nonneg _ _)
   let s := singularValues D j
   let M := Matrix.fromBlocks R (R * T) (0 : Matrix (Fin r) (Fin k) ℝ) D
   have hs0 : 0 ≤ s := singularValues_nonneg D j
@@ -53,7 +53,7 @@ theorem singularValues_trailing_le_sqrt_budget_mul {k r q : ℕ}
     rw [e.finrank_eq, Module.finrank_prod, Module.finrank_fintype_fun_eq_card,
       Fintype.card_fin]
     omega
-  have hLower : s / Real.sqrt (1 + b) ≤ M.toEuclideanLin.singularValues (k + j) := by
+  have hLower : s / Real.sqrt (1 + b) ≤ singularValues M (k + j) := by
     apply le_singularValues_of_forall_mem M (k + j) S hSdim
     intro z hz
     let x : Fin k → ℝ := fun a => z (Sum.inl a)

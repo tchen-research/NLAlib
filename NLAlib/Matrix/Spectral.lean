@@ -135,6 +135,7 @@ import NLAlib.Matrix.Spectral.SylvesterQualitative
 import NLAlib.Matrix.Spectral.SylvesterSimilarity
 import NLAlib.Matrix.Spectral.SylvesterToolkit
 import NLAlib.Matrix.Spectral.TraceEigenvalues
+import NLAlib.Matrix.Spectral.TracePowerBounds
 import NLAlib.Matrix.Spectral.Weyl
 
 /-! # `Matrix/Spectral`

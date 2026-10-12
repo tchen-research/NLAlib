@@ -127,13 +127,17 @@ def reindexStarAlgEquiv (e : ι ≃ κ) : Matrix ι ι ℂ ≃⋆ₐ[ℂ] Matrix
 theorem norm_reindex (e : ι ≃ κ) (A : Matrix ι ι ℂ) : ‖Matrix.reindex e e A‖ = ‖A‖ :=
   StarAlgEquiv.norm_map (reindexStarAlgEquiv e) A
 
+/-- Reindexing preserves the real spectrum: `spectrum ℝ (reindex e e A) = spectrum ℝ A`. -/
+theorem spectrum_reindex (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
+    spectrum ℝ (Matrix.reindex e e A) = spectrum ℝ A := by
+  have h := AlgEquiv.spectrum_eq (Matrix.reindexAlgEquiv ℝ ℂ e) A
+  rwa [Matrix.coe_reindexAlgEquiv] at h
+
 /-- Reindexing preserves the real spectrum, hence `lambdaMax`. -/
 theorem lambdaMax_reindex (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     lambdaMax (Matrix.reindex e e A) = lambdaMax A := by
-  have h := AlgEquiv.spectrum_eq (Matrix.reindexAlgEquiv ℝ ℂ e) A
-  rw [Matrix.coe_reindexAlgEquiv] at h
   unfold lambdaMax
-  rw [h]
+  rw [spectrum_reindex]
 
 end Reindex
 

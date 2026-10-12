@@ -71,7 +71,7 @@ theorem condExp_traceExp_add_le_traceExp_add_matrixLog_of_predictable
     hX.mono fun ω hω => (posDef_matrixExp_and_matrixLog_matrixExp _ hω).1
   have hJ := condExp_family_le_family_condExp_of_exponential_comparison hm
     (g := g) (f := fun ω => matrixExp (X ω)) (U := U)
-    (fun p => lieb_concavity_finite (p : Matrix n n ℂ) p.property)
+    (fun p => lieb_concavity (p : Matrix n n ℂ) p.property)
     (fun p => continuousOn_traceExp_add_matrixLog (p : Matrix n n ℂ))
     hcomp hpos hExp hfixed (hTrace.congr heq.symm) hmean hUMeas
   filter_upwards [hJ, condExp_congr_ae heq, hUH] with ω hJω hEqω hUω

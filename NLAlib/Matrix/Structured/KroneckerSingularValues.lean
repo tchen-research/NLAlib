@@ -34,17 +34,17 @@ theorem IsSVD.kronecker_factorization {m n p q : ℕ}
 /-- The domain-side multiset of native singular values is the square-root Gram
 spectrum, including every domain zero. Horn–Johnson 2013, Section 2.6.
 -/
-theorem multiset_toEuclideanLin_singularValues_eq_sqrt_eigenvalues {m n : Type*}
+theorem multiset_singularValues_eq_sqrt_eigenvalues {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) :
     (Finset.univ : Finset (Fin (Fintype.card n))).val.map
-      (fun i : Fin (Fintype.card n) => A.toEuclideanLin.singularValues (i : ℕ)) =
+      (fun i : Fin (Fintype.card n) => singularValues A (i : ℕ)) =
     (Finset.univ : Finset n).val.map
       (fun i => Real.sqrt ((Matrix.isHermitian_conjTranspose_mul_self A).eigenvalues i)) := by
   have hG := Matrix.isHermitian_conjTranspose_mul_self A
-  have hs : (fun i : Fin (Fintype.card n) => A.toEuclideanLin.singularValues (i : ℕ)) =
+  have hs : (fun i : Fin (Fintype.card n) => singularValues A (i : ℕ)) =
       fun i => Real.sqrt (hG.eigenvalues₀ i) := by
     funext i
-    rw [← singularValues_eq_linearMap, ← sq_singularValues_eq_eigenvalues₀ A i,
+    rw [← sq_singularValues_eq_eigenvalues₀ A i,
       Real.sqrt_sq (singularValues_nonneg A _)]
   rw [hs]
   have he : (Finset.univ : Finset n).val.map hG.eigenvalues =
@@ -65,15 +65,15 @@ Horn–Johnson 1991, Theorem 4.2.15. Domain lists have `card n`, `card q`, and
 `card n * card q` entries; each includes its full domain-side zero padding.
 This covers empty dimensions and the additional rectangular zeros automatically.
 atlas: kronecker-spectral (partial) -/
-theorem multiset_toEuclideanLin_singularValues_kronecker {m n p q : Type*}
+theorem multiset_singularValues_kronecker {m n p q : Type*}
     [Fintype m] [Fintype n] [Fintype p] [Fintype q] [DecidableEq n] [DecidableEq q]
     (A : Matrix m n ℝ) (B : Matrix p q ℝ) :
     (Finset.univ : Finset (Fin (Fintype.card (n × q)))).val.map
-      (fun i : Fin (Fintype.card (n × q)) => (A ⊗ₖ B).toEuclideanLin.singularValues (i : ℕ)) =
+      (fun i : Fin (Fintype.card (n × q)) => singularValues (A ⊗ₖ B) (i : ℕ)) =
     (((Finset.univ : Finset (Fin (Fintype.card n))).val.map
-      (fun i : Fin (Fintype.card n) => A.toEuclideanLin.singularValues (i : ℕ))) ×ˢ
+      (fun i : Fin (Fintype.card n) => singularValues A (i : ℕ))) ×ˢ
       ((Finset.univ : Finset (Fin (Fintype.card q))).val.map
-      (fun i : Fin (Fintype.card q) => B.toEuclideanLin.singularValues (i : ℕ)))).map (fun xy => xy.1 * xy.2) := by
+      (fun i : Fin (Fintype.card q) => singularValues B (i : ℕ)))).map (fun xy => xy.1 * xy.2) := by
   classical
   let hA := Matrix.isHermitian_conjTranspose_mul_self A
   let hB := Matrix.isHermitian_conjTranspose_mul_self B
@@ -88,9 +88,9 @@ theorem multiset_toEuclideanLin_singularValues_kronecker {m n p q : Type*}
       rw [hGram]
     rw [hc]
     exact multiset_eigenvalues_kronecker hA hB
-  rw [multiset_toEuclideanLin_singularValues_eq_sqrt_eigenvalues,
-    multiset_toEuclideanLin_singularValues_eq_sqrt_eigenvalues,
-    multiset_toEuclideanLin_singularValues_eq_sqrt_eigenvalues,
+  rw [multiset_singularValues_eq_sqrt_eigenvalues,
+    multiset_singularValues_eq_sqrt_eigenvalues,
+    multiset_singularValues_eq_sqrt_eigenvalues,
     map_product_maps]
   have hsqrt := congrArg (Multiset.map Real.sqrt) heig
   simp only [Multiset.map_map, Function.comp_def] at hsqrt

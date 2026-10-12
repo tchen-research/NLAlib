@@ -23,14 +23,13 @@ Horn–Johnson 2013, Corollary 7.4.1.5.
 atlas: orthogonal-procrustes (partial) -/
 theorem frobSq_sub_eq_sum_singularValues_sub_sq_iff (A B : Matrix m n ℝ) :
     frobSq (A - B) = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2 ↔
+      (singularValues A i - singularValues B i) ^ 2 ↔
     frobInner A B = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i := by
+      singularValues A i * singularValues B i := by
   have hExpand : (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2) =
+      (singularValues A i - singularValues B i) ^ 2) =
       frobSq A - 2 * (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-        A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i) + frobSq B := by
-    simp only [← singularValues_eq_linearMap]
+        singularValues A i * singularValues B i) + frobSq B := by
     rw [frobSq_eq_sum_sq_singularValues,
       frobSq_eq_sum_sq_singularValues, Finset.mul_sum,
       ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
@@ -42,7 +41,7 @@ theorem frobSq_sub_eq_sum_singularValues_sub_sq_iff (A B : Matrix m n ℝ) :
 pairing of its two factors. Horn–Johnson 2013, §7.4.4. -/
 theorem nuclearNorm_mul_transpose_le_sum_singularValues_mul (A B : Matrix m n ℝ) :
     nuclearNorm (A * Bᵀ) ≤ ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i := by
+      singularValues A i * singularValues B i := by
   obtain ⟨U, hU, hPolar⟩ := exists_isometry_mul_sqrt_gram_eq (A * Bᵀ) le_rfl
   have hPair : frobInner A (U * B) = nuclearNorm (A * Bᵀ) := by
     rw [frobInner_mul_eq_frobInner_mul_transpose,
@@ -57,7 +56,7 @@ atlas: orthogonal-procrustes (partial) -/
 theorem posSemidef_mul_transpose_of_frobInner_eq_sum_singularValues_mul
     (A B : Matrix m n ℝ)
     (hEq : frobInner A B = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i) :
+      singularValues A i * singularValues B i) :
     (A * Bᵀ).PosSemidef := by
   apply (trace_eq_nuclearNorm_iff_posSemidef _).mp
   have hNuclear := nuclearNorm_mul_transpose_le_sum_singularValues_mul A B
@@ -76,13 +75,13 @@ atlas: orthogonal-procrustes (partial) -/
 theorem posSemidef_cross_products_of_frobSq_sub_eq_sum_singularValues_sub_sq
     (A B : Matrix m n ℝ)
     (hEq : frobSq (A - B) = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2) :
+      (singularValues A i - singularValues B i) ^ 2) :
     (A * Bᵀ).PosSemidef ∧ (Bᵀ * A).PosSemidef := by
   have hPair := (frobSq_sub_eq_sum_singularValues_sub_sq_iff A B).mp hEq
   refine ⟨posSemidef_mul_transpose_of_frobInner_eq_sum_singularValues_mul A B hPair, ?_⟩
   have hPairT : frobInner Bᵀ Aᵀ =
       ∑ i ∈ Finset.range (min (Fintype.card n) (Fintype.card m)),
-        Bᵀ.toEuclideanLin.singularValues i * Aᵀ.toEuclideanLin.singularValues i := by
+        singularValues Bᵀ i * singularValues Aᵀ i := by
     simpa only [frobInner_transpose, frobInner_comm B A,
       ← singularValues_eq_linearMap, singularValues_transpose, min_comm, mul_comm] using hPair
   simpa only [Matrix.transpose_transpose] using
@@ -119,7 +118,7 @@ atlas: orthogonal-procrustes (partial) -/
 theorem exists_orthogonal_pair_attaining_singularValue_pairing (A B : Matrix m n ℝ) :
     ∃ (U : Matrix m m ℝ) (T : Matrix n n ℝ), HasOrthonormalCols U ∧ HasOrthonormalCols T ∧
       frobInner A (U * B * T) = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-        A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i := by
+        singularValues A i * singularValues B i := by
   let em := Fintype.equivFin m
   let en := Fintype.equivFin n
   obtain ⟨UF, TF, hUF, hTF, hPair⟩ := exists_orthogonal_pair_attaining_fin
@@ -145,12 +144,11 @@ theorem isLeast_frobSq_sub_orthogonal_mul_mul (A B : Matrix m n ℝ) :
     IsLeast {z : ℝ | ∃ (U : Matrix m m ℝ) (T : Matrix n n ℝ),
       HasOrthonormalCols U ∧ HasOrthonormalCols T ∧ frobSq (A - U * B * T) = z}
       (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-        (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2) := by
+        (singularValues A i - singularValues B i) ^ 2) := by
   have hσ (U : Matrix m m ℝ) (T : Matrix n n ℝ)
       (hU : HasOrthonormalCols U) (hT : HasOrthonormalCols T) (i : ℕ) :
-      (U * B * T).toEuclideanLin.singularValues i = B.toEuclideanLin.singularValues i := by
-    rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
-      singularValues_mul_orthogonal _ hT, singularValues_isometry_mul hU]
+      singularValues (U * B * T) i = singularValues B i := by
+    rw [singularValues_mul_orthogonal _ hT, singularValues_isometry_mul hU]
   obtain ⟨U, T, hU, hT, hPair⟩ := exists_orthogonal_pair_attaining_singularValue_pairing A B
   refine ⟨⟨U, T, hU, hT, ?_⟩, ?_⟩
   · have h := (frobSq_sub_eq_sum_singularValues_sub_sq_iff A (U * B * T)).mpr
@@ -159,7 +157,6 @@ theorem isLeast_frobSq_sub_orthogonal_mul_mul (A B : Matrix m n ℝ) :
   · rintro z ⟨V, W, hV, hW, rfl⟩
     have h := sum_sq_singularValues_add_sub_le_frobSq (V * B * W) (A - V * B * W)
     rw [show V * B * W + (A - V * B * W) = A by abel] at h
-    simp only [singularValues_eq_linearMap] at h
     simpa only [hσ V W hV hW] using h
 
 end NLAlib

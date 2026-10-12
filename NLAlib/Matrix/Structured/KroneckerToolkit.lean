@@ -16,7 +16,7 @@ universe u_1 u_2 u_3 u_4
 
 /-- All clauses of the kronecker-spectral result, with their original hypotheses,
 constants, finite indices and endpoint conventions.
-Components: `IsSVD.kronecker_factorization`, `multiset_toEuclideanLin_singularValues_kronecker`, `multiset_eigenvalues_kronecker`, `multiset_eigenvalues_kronecker_sum`, `specNorm_kronecker`, `frobNorm_kronecker`, `rank_kronecker`, `moorePenroseInverse_kronecker`.
+Components: `IsSVD.kronecker_factorization`, `multiset_singularValues_kronecker`, `multiset_eigenvalues_kronecker`, `multiset_eigenvalues_kronecker_sum`, `specNorm_kronecker`, `frobNorm_kronecker`, `rank_kronecker`, `moorePenroseInverse_kronecker`.
 Source: hj91, Thm 4.2.12 (eigenvalues), Thm 4.2.15 (SVD); vl00, §2.
 atlas: kronecker-spectral -/
 theorem kronecker_toolkit_properties :
@@ -36,14 +36,12 @@ theorem kronecker_toolkit_properties :
   [_inst_5 : DecidableEq q] (A : Matrix m n ℝ) (B : Matrix p q ℝ),
   Multiset.map
       (fun (i : Fin (Fintype.card (n × q))) =>
-        (Matrix.toEuclideanLin
-              (Matrix.kroneckerMap (fun (x1 x2 : ℝ) => x1 * x2) A B)).singularValues
-          ↑i)
+        singularValues (Matrix.kroneckerMap (fun (x1 x2 : ℝ) => x1 * x2) A B) ↑i)
       Finset.univ.val =
     Multiset.map (fun (xy : ℝ × ℝ) => xy.1 * xy.2)
-      (Multiset.map (fun (i : Fin (Fintype.card n)) => (Matrix.toEuclideanLin A).singularValues ↑i)
+      (Multiset.map (fun (i : Fin (Fintype.card n)) => singularValues A ↑i)
           Finset.univ.val ×ˢ
-        Multiset.map (fun (i : Fin (Fintype.card q)) => (Matrix.toEuclideanLin B).singularValues ↑i)
+        Multiset.map (fun (i : Fin (Fintype.card q)) => singularValues B ↑i)
           Finset.univ.val)) ∧
     (∀ {m : Type u_1} {n : Type u_2} [_inst : Fintype m] [_inst_1 : Fintype n] [_inst_2 : DecidableEq m]
   [_inst_3 : DecidableEq n] {A : Matrix m m ℝ} {B : Matrix n n ℝ} (hA : A.IsHermitian)
@@ -79,7 +77,7 @@ theorem kronecker_toolkit_properties :
     Matrix.kroneckerMap (fun (x1 x2 : ℝ) => x1 * x2) (NLAlib.moorePenroseInverse A)
       (NLAlib.moorePenroseInverse B)) := by
   exact ⟨@NLAlib.IsSVD.kronecker_factorization,
-    @NLAlib.multiset_toEuclideanLin_singularValues_kronecker,
+    @NLAlib.multiset_singularValues_kronecker,
     @NLAlib.multiset_eigenvalues_kronecker,
     @NLAlib.multiset_eigenvalues_kronecker_sum,
     @NLAlib.specNorm_kronecker,

@@ -3,12 +3,14 @@ import NLAlib.Matrix.Norms.ColumnNorms
 import NLAlib.Matrix.Norms.ComplexFrobenius
 import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
 import NLAlib.Matrix.Norms.Core
+import NLAlib.Matrix.Norms.EntryBounds
 import NLAlib.Matrix.Norms.EuclideanOperatorBounds
 import NLAlib.Matrix.Norms.FanDominance
 import NLAlib.Matrix.Norms.InvariantNorm
 import NLAlib.Matrix.Norms.InvariantNormRepresentation
 import NLAlib.Matrix.Norms.InvariantNormToolkit
 import NLAlib.Matrix.Norms.KyFanNorm
+import NLAlib.Matrix.Norms.Net
 import NLAlib.Matrix.Norms.NuclearGram
 import NLAlib.Matrix.Norms.NuclearHermitian
 import NLAlib.Matrix.Norms.NuclearNorm

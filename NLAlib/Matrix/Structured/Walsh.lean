@@ -25,7 +25,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -/
 import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.LinearAlgebra.Matrix.HadamardMatrix
 import Mathlib.Tactic.NormNum

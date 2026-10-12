@@ -1,6 +1,4 @@
 import NLAlib.Polynomial.Chebyshev.ChebyshevAliasing
-import Mathlib.Analysis.Calculus.Deriv.Polynomial
-import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Odd trigonometric interpolation of the sawtooth

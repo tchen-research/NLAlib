@@ -1,5 +1,4 @@
 import NLAlib.Estimation.Trace.HutchinsonTail
-import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.Polynomial.FunctionApproximation.Approximation
 /-!
 # Stochastic Lanczos quadrature for `tr f(A)`, and the case `f(x) = 1/x`

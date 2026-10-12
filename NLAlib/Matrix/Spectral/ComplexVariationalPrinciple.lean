@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.ComplexRayleigh
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Complex Hermitian Courant–Fischer certificates

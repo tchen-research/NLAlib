@@ -1,6 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.LinearAlgebra.Complex.Module
 import Mathlib.Data.Complex.BigOperators
 
 /-!

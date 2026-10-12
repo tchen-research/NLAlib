@@ -1,7 +1,5 @@
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.Algebra.Polynomial.AlgebraMap
-import Mathlib.Algebra.Polynomial.Degree.Support
-import Mathlib.Algebra.Polynomial.Degree.Operations
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import NLAlib.Krylov.Spaces.Basic
 /-!

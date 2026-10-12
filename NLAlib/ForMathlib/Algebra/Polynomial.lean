@@ -1,4 +1,3 @@
-import Mathlib.Algebra.Polynomial.Degree.Operations
 import Mathlib.Algebra.Polynomial.Derivative
 import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.Order.Interval.Set.Infinite

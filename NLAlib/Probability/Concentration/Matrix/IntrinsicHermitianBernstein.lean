@@ -1,19 +1,7 @@
-import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
-import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
-import NLAlib.Probability.Concentration.Matrix.BernsteinMgfCgf
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
-import NLAlib.Matrix.Inequalities.TraceExpMonotone
-import NLAlib.Probability.Concentration.Matrix.GeneralizedLaplace
 import NLAlib.Probability.Concentration.Matrix.IntrinsicDimension
-import NLAlib.Probability.Concentration.Matrix.MasterSumExponentialIntegrable
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+import NLAlib.Probability.Concentration.Martingales.Freedman
 
 /-!
 # Theorem 7.7.1 — Intrinsic Hermitian matrix Bernstein

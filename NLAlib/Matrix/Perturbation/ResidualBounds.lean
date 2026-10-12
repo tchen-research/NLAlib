@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Functions.PolynomialCalculus
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
 
 /-!
 # Residual estimates for approximate symmetric eigenpairs

@@ -1,5 +1,4 @@
 import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
-import Mathlib.Analysis.InnerProductSpace.PiL2
 import NLAlib.Krylov.Processes.Arnoldi
 /-!
 # The Arnoldi process

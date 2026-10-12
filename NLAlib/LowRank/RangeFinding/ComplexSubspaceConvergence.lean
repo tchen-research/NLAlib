@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Subspaces.ComplexProjectionBounds
 import NLAlib.Matrix.Functions.PolynomialIntertwining
-import Mathlib.Analysis.Normed.Operator.NNNorm
 
 /-!
 # Complex subspace iteration and its transverse graph

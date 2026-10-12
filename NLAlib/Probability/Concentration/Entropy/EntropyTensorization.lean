@@ -1,5 +1,3 @@
-import Mathlib.MeasureTheory.Integral.Marginal
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import NLAlib.ForMathlib.MeasureTheory.Integral
 /-!
 # Tensorization of entropy

@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Analysis.OrderedSchur
-import NLAlib.Matrix.Spectral.SchurTriangularization
 /-!
 # Complex Schur triangularization with prescribed eigenvalue order
 

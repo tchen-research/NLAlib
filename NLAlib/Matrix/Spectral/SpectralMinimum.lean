@@ -1,7 +1,4 @@
-import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Calculus.GramSoftMinSpectral
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Identifying the Rayleigh minimum from a diagonalization

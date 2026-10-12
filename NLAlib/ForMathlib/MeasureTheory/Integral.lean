@@ -1,5 +1,4 @@
 import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Constructions.Pi
 
 /-!
 # Integrals: resampling one coordinate, Cauchy–Schwarz, linear-growth integrability

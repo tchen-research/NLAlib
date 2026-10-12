@@ -6,9 +6,6 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import NLAlib.Matrix.Subspaces.Projections
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.ProductMeasure
-import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 
 /-!

@@ -1,6 +1,4 @@
 import Mathlib.LinearAlgebra.Eigenspace.Basic
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic.Module
 

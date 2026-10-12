@@ -1,5 +1,3 @@
-import NLAlib.Matrix.Basic.MoorePenrose
-import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Factorizations.QR
 /-!
 # Linear least squares in exact arithmetic

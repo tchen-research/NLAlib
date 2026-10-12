@@ -2,7 +2,6 @@ import NLAlib.Sketching.Sparse.CountSketchMoments
 import NLAlib.ForMathlib.Probability.UniformCollision
 import NLAlib.Matrix.Subspaces.FrameFourthContractions
 import NLAlib.Sketching.Sampling.Leverage
-import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Exact CountSketch Gram-error expectation

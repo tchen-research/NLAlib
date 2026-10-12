@@ -1,6 +1,4 @@
-import NLAlib.Matrix.Functions.ExpLog
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import Mathlib.Order.ConditionallyCompleteLattice.Finset
 
 /-!
 # Trace exponential dominates exponentials of extremal eigenvalues

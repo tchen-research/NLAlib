@@ -1,6 +1,5 @@
 import NLAlib.Polynomial.Chebyshev.Core
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Extremal
-import Mathlib.LinearAlgebra.Lagrange
 
 /-!
 # Aliasing on the canonical Chebyshev extrema grid

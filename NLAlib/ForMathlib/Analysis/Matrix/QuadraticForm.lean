@@ -1,7 +1,5 @@
 import Mathlib.Analysis.Matrix.Hermitian
 import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.InnerProductSpace.LinearMap
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 
 /-!
 # Continuous matrix quadratic forms and complex polarization

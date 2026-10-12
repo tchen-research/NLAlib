@@ -1,11 +1,6 @@
 import NLAlib.ForMathlib.Probability.UniformSamplingJensen
 import NLAlib.ForMathlib.Probability.UniformProduct
-import NLAlib.Matrix.OperatorTheory.TraceExpConvex
-import NLAlib.Probability.Concentration.Matrix.ChernoffMgfCgf
-import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
-import NLAlib.Matrix.Inequalities.TraceExpMonotone
 import NLAlib.Probability.Concentration.Matrix.Sampling
-import Mathlib.Probability.Independence.InfinitePi
 
 /-!
 # Matrix Chernoff for actual sampling without replacement

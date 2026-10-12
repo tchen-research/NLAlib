@@ -1,7 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Nat.Choose.Basic
 
 /-!
 # Double counting products over one-element deletions

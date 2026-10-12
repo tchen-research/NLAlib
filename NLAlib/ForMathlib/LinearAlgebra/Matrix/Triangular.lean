@@ -1,5 +1,4 @@
 import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
 

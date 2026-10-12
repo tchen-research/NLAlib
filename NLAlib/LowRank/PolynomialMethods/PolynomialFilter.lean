@@ -1,4 +1,3 @@
-import NLAlib.LowRank.RangeFinding.SpectralRangeFinder
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Krylov.Spaces.Block
 import NLAlib.Matrix.Functions.DiagonalFilter

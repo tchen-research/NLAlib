@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.RealDilationSpectrum
 import NLAlib.Matrix.Inequalities.Lidskii
-import NLAlib.Matrix.Inequalities.MajorizationProperties
 /-!
 # Rectangular Mirsky weak majorization
 

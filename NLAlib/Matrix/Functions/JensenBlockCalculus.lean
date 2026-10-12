@@ -1,8 +1,5 @@
 import NLAlib.Matrix.OperatorTheory.Basic
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Pi
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!
 # Functional calculus and spectrum of a block-diagonal Hermitian matrix

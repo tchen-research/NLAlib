@@ -1,6 +1,4 @@
 import NLAlib.LowRank.Cholesky.CholeskyPivot
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Data.Fintype.BigOperators
 
 /-!
 # Finite adaptive Cholesky histories

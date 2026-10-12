@@ -1,15 +1,7 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
-import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Matrix.Basic.Dilation
 import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.BernsteinMgfCgf
 import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
 import NLAlib.Matrix.Inequalities.TraceExpMonotone
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Theorem 6.6.1 — Hermitian matrix Bernstein

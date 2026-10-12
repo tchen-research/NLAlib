@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Inequalities.RelativeSpectrum
 import NLAlib.Matrix.Inequalities.BlockOrderConsequences
 /-!
 # Kantorovich's inequality from spectral endpoints

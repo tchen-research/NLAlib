@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Calculus.GramSoftMin
 import NLAlib.Matrix.Structured.Measurable
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 
 /-!
 # Measurability of the Gram resolvent calculus

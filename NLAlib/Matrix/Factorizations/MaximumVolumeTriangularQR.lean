@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Factorizations.MaximumVolumeQR
 import NLAlib.Matrix.Factorizations.Householder
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Upper-trapezoidal maximum-volume QR
 

@@ -1,6 +1,4 @@
-import NLAlib.Matrix.Norms.Core
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.LinearAlgebra.Matrix.Rank
 
 /-!
 # Vanishing rows of positive semidefinite matrices

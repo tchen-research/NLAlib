@@ -1,9 +1,5 @@
-import Mathlib.Probability.Moments.SubGaussian
 import Mathlib.MeasureTheory.Integral.Gamma
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-import Mathlib.Analysis.Convex.Integral
-import NLAlib.Probability.Concentration.QuadraticForms.ExponentialSeries
 import NLAlib.Probability.Concentration.QuadraticForms.LinearFormComparison
 import NLAlib.Probability.Rademacher.Core
 /-!

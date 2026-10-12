@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.RealPencilTriangularization
 import NLAlib.Matrix.Subspaces.Projections
-import Mathlib.Analysis.Matrix.Spectrum
 
 /-!
 # Real QZ for every square matrix pencil

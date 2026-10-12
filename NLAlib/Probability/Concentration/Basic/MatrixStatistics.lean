@@ -1,8 +1,5 @@
 import NLAlib.Matrix.Functions.ExpLog
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Probability.Independence.Basic
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
 
 /-!
 # Random-matrix statistics

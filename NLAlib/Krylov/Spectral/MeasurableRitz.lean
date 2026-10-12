@@ -1,8 +1,6 @@
 import NLAlib.Krylov.Spaces.Polynomial
 import NLAlib.Matrix.Spectral.PowerRayleigh
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
-import Mathlib.Topology.DenseEmbedding
-import Mathlib.Topology.Algebra.Order.Archimedean
 
 /-!
 # Measurable variational Lanczos values

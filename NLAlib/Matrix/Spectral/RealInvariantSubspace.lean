@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.RealInvariantPlane
-import NLAlib.ForMathlib.Analysis.OrthonormalSum
-import Mathlib.LinearAlgebra.Charpoly.ToMatrix
 
 /-!
 # Real invariant subspaces of dimension one or two

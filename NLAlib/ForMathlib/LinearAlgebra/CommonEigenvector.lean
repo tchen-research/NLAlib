@@ -1,5 +1,4 @@
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # A common eigenvector for an arbitrary commuting family

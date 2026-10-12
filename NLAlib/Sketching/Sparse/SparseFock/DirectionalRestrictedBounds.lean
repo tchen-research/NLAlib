@@ -2,6 +2,7 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.DirectionalOutputEnergy
+import NLAlib.Sketching.Sparse.SparseFock.DirectionalBounds
 set_option autoImplicit false
 
 /-!

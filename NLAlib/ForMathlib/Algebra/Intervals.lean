@@ -1,5 +1,4 @@
 import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.Ring.Commute
 import Mathlib.Tactic.Ring
 
 /-!

@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.PrincipalMinors
 import NLAlib.ForMathlib.Algebra.SignedCoefficients
 import Mathlib.Analysis.Matrix.PosDef
 

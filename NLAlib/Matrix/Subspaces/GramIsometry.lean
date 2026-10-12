@@ -1,6 +1,4 @@
-import NLAlib.Matrix.Basic.MoorePenroseTransformations
 import NLAlib.Matrix.Inequalities.KyFan
-import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # Isometries from matrix Gram identities

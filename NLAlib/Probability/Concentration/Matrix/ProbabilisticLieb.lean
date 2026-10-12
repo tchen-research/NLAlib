@@ -1,9 +1,7 @@
 import NLAlib.Matrix.OperatorTheory.LiebConcavity
 import NLAlib.Probability.Concentration.Matrix.LiebJensen
-import NLAlib.Matrix.Functions.ExpLogPosDef
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
 import NLAlib.Probability.Concentration.Matrix.LiebRegularityShiftIntegrable
-import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!
 # Corollary 3.4.2 — Probabilistic Lieb inequality

@@ -1,6 +1,3 @@
-import Mathlib.Algebra.Order.Group.MinMax
-import Mathlib.Algebra.Polynomial.Div
-import Mathlib.Algebra.Ring.GeomSum
 import NLAlib.Krylov.Spaces.Polynomial
 import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Polynomial.FunctionApproximation.Approximation

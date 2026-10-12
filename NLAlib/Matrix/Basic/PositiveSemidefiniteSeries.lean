@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.Topology.Algebra.InfiniteSum.NatInt
 
 /-!
 # Limits and convergent sums in the PSD cone

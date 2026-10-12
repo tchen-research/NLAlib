@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Matrix.Spectrum
-import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Complex Hermitian Rayleigh expansions

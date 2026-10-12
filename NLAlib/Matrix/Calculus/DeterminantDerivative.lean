@@ -1,12 +1,4 @@
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.Deriv.Comp
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.LinearAlgebra.Matrix.Adjugate
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Matrix.Normed
 
 /-!

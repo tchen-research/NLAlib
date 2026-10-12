@@ -1,8 +1,6 @@
 import NLAlib.Matrix.Basic.MoorePenrose
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Spectral.SpectralBounds
-import Mathlib.LinearAlgebra.Trace
-import Mathlib.Order.Interval.Finset.Fin
 import Mathlib.Tactic
 
 /-!

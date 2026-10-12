@@ -1,4 +1,3 @@
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 import Mathlib.Probability.Moments.SubGaussian
 

@@ -1,7 +1,6 @@
-import NLAlib.Matrix.Subspaces.ComplexVolumeProjection
-import NLAlib.Matrix.Spectral.ComplexVolumeSpectrum
 import NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace
 import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.LowRank.Sampling.ComplexVolumeSamplingError
 /-!
 # Genuine complex Frobenius Eckart–Young tail
 

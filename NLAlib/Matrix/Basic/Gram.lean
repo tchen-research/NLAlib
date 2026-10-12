@@ -1,6 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import Mathlib.Algebra.Order.Star.Real
 
 /-!

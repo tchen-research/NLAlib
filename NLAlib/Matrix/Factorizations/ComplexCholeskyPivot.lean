@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Actual complex coordinate Cholesky pivots

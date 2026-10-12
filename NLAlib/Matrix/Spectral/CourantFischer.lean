@@ -1,8 +1,5 @@
 import NLAlib.Matrix.Functions.PolynomialCalculus
-import NLAlib.Matrix.Spectral.SVD
-import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Subspaces.Projections
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Courant–Fischer min-max theorem

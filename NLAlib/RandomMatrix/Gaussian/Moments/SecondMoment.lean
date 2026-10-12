@@ -4,11 +4,6 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 -/
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import NLAlib.Matrix.Norms.Core
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.LinearAlgebra.Matrix.MvPolynomial
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Algebra.MvPolynomial.Equiv
-import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.Topology.Algebra.MvPolynomial
 import Mathlib.Algebra.MvPolynomial.Funext
 

@@ -1,9 +1,6 @@
 import NLAlib.Probability.Concentration.Matrix.LaplaceTails
 import NLAlib.Probability.Concentration.Matrix.LaplaceExpectations
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
-import NLAlib.Probability.Concentration.Matrix.MasterSumExponentialIntegrable
-import NLAlib.Probability.Concentration.Matrix.TailSpectralComparison
-import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!
 # Theorem 3.6.1 — Master expectation and tail bounds

@@ -1,4 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import NLAlib.Matrix.Subspaces.ComplexVolumeProjection
 /-!
 # The canonical full-row-rank complex right inverse

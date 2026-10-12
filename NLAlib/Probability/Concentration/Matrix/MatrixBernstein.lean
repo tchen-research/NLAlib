@@ -1,17 +1,6 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
-import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Matrix.Basic.Dilation
 import NLAlib.Probability.Concentration.Matrix.HermitianBernstein
-import NLAlib.Probability.Concentration.Matrix.DilationIdentities
 import NLAlib.Probability.Concentration.Matrix.DilationVariance
-import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
-import Mathlib.Analysis.CStarAlgebra.Spectrum
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.LinearAlgebra.Matrix.Reindex
-import Mathlib.Probability.Independence.Integration
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import Mathlib.Analysis.Convex.Function
+import NLAlib.Probability.Concentration.Matrix.IntrinsicBernstein
 
 /-!
 # Theorem 6.1.1 — Matrix Bernstein for rectangular matrices

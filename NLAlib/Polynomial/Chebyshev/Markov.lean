@@ -1,9 +1,5 @@
-import Mathlib.RingTheory.Polynomial.Chebyshev
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.Algebra.Polynomial.Taylor
 import NLAlib.Polynomial.Chebyshev.Growth
 /-!
 # Markov brothers' and Bernstein's inequalities

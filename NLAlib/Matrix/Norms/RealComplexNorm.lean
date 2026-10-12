@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Norms.Core
-import Mathlib.Analysis.CStarAlgebra.Matrix
 
 /-!
 # The real to complex operator norm bridge

@@ -1,10 +1,5 @@
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import NLAlib.RandomMatrix.Gaussian.Invariance.LinearImage
 import NLAlib.Probability.ChiSquare.ChiSquare
-import NLAlib.ForMathlib.Analysis.Real
-import NLAlib.Sketching.Properties.SubspaceEmbedding.Basic
 /-!
 # The Johnson–Lindenstrauss lemma for a Gaussian sketch
 

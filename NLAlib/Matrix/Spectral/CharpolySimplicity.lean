@@ -1,8 +1,4 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
-import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.Topology.Algebra.Polynomial
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
 
 /-!

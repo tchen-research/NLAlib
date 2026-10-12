@@ -1,6 +1,4 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-import Mathlib.Logic.Equiv.Fin.Basic
-import Mathlib.Data.Fin.Tuple.Basic
 
 /-!
 # Removing an uncoupled scalar coordinate from a characteristic polynomial

@@ -1,12 +1,6 @@
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
-import NLAlib.Matrix.Norms.Core
-import NLAlib.Matrix.Basic.Pseudoinverse
 import NLAlib.Matrix.Structured.Measurable
-import Mathlib.Probability.Independence.Basic
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Topology.Instances.Matrix
 
 /-!
 # Conditioning on independent Gaussian blocks

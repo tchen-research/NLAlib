@@ -1,5 +1,3 @@
-import Mathlib.Analysis.Normed.Group.Constructions
-import Mathlib.Analysis.Normed.Group.Real
 import Mathlib.Analysis.Normed.Field.Basic
 
 /-!

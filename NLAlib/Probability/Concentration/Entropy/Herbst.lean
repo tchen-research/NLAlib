@@ -1,6 +1,4 @@
 import Mathlib.Probability.Moments.MGFAnalytic
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # The Herbst argument

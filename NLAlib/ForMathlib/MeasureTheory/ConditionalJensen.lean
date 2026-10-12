@@ -1,5 +1,4 @@
 import Mathlib.MeasureTheory.Function.ConditionalExpectation.CondJensen
-import Mathlib.Topology.Sequences
 
 /-!
 # Conditional Jensen on a nonclosed convex domain

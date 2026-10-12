@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Factorizations.ComplexCholeskyPivot
 import NLAlib.Matrix.Functions.RealComplexCFC
-import NLAlib.Matrix.Basic.GramVanishing
 /-!
 # Cholesky trailing Schur residual
 

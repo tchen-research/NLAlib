@@ -1,11 +1,7 @@
 import NLAlib.LowRank.Structural.PowerIteration
-import NLAlib.LowRank.RangeFinding.SpectralRangeFinder
-import NLAlib.LowRank.RandomizedSVD.OptimalError
 import NLAlib.LowRank.RangeFinding.GaussianSpectralEndpoints
 import NLAlib.Matrix.Spectral.SvdPowers
-import NLAlib.Matrix.Structured.SpectralMeasurable
 import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.Mul
 
 /-!
 # Expected error of Gaussian subspace iteration

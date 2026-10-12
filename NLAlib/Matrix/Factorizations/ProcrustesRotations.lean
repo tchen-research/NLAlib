@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Factorizations.Procrustes
 import NLAlib.Matrix.Subspaces.OrthogonalProducts
-import NLAlib.Matrix.Norms.SchattenTrace
 import NLAlib.Matrix.Norms.SchattenSingularCoefficients
 /-!
 # Two-sided Procrustes and equality consequences

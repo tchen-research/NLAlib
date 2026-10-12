@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Factorizations.QRCompletion
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
-import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Orthogonal completion with separately labelled block columns
 

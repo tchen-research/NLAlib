@@ -1,5 +1,4 @@
 import Mathlib.Probability.Moments.SubGaussian
-import Mathlib.Analysis.Complex.Exponential
 
 /-!
 # From Orlicz exponential moments to centered moment-generating bounds

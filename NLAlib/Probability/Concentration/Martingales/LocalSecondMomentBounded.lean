@@ -1,5 +1,6 @@
 import NLAlib.Probability.Concentration.Martingales.LocalSecondMoment
 import NLAlib.ForMathlib.Analysis.Matrix.Order
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 /-!
 # Finite trace budgets make genuine local moments integrable
 

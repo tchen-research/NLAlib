@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Inequalities.MajorizationConvex
-import Mathlib.Analysis.Seminorm
-import Mathlib.Analysis.Convex.Combination
 
 /-!
 # Symmetric gauges and majorization dominance

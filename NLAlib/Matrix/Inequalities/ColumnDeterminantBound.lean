@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Inequalities.HadamardDeterminant
-import NLAlib.Matrix.Norms.Core
 /-!
 # Column Hadamard determinant inequality
 

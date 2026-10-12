@@ -1,6 +1,3 @@
-import NLAlib.Matrix.Perturbation.InversePerturbation
-import NLAlib.Matrix.Basic.LeastSquares
-import NLAlib.Matrix.Perturbation.ConditionNumber
 import NLAlib.Matrix.Perturbation.DistanceToSingularity
 import NLAlib.Matrix.Perturbation.LeastSquaresPurePerturbation
 /-!

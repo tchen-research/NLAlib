@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Inequalities.HadamardInverse
+import NLAlib.Matrix.Inequalities.HadamardOrder
 /-!
 # Minimum spectrum of a positive Hadamard product
 

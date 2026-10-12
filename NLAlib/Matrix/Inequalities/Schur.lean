@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Inequalities.MajorizationHLP
-import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Matrix.Functions.CFCTrace
 /-!

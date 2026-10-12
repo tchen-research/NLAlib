@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.EigenvectorPairing
-import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 
 /-!
 # Nonunitary left–right eigenvector deflation

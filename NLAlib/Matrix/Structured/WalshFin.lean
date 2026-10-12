@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Structured.Walsh
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.LinearAlgebra.Matrix.Reindex
 
 /-!
 # The actual normalized Walsh transform on ordinary finite labels

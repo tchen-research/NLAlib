@@ -1,10 +1,7 @@
 import Mathlib.Probability.Distributions.Gaussian.Real
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathlib.MeasureTheory.Integral.Gamma
 import Mathlib.MeasureTheory.SpecificCodomains.WithLp
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 
 /-!
 # Positive Gaussian radial moments

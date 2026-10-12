@@ -1,6 +1,4 @@
 import NLAlib.Polynomial.FunctionApproximation.Monomial
-import Mathlib.Topology.Algebra.InfiniteSum.NatInt
-import Mathlib.Algebra.Order.Floor.Ring
 
 /-!
 # Explicit low-degree approximation of the exponential

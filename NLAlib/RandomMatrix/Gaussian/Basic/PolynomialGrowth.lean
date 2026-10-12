@@ -1,7 +1,4 @@
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
-import NLAlib.Matrix.Norms.Core
 import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-!
 # Integrability of polynomial growth under Gaussian matrix laws

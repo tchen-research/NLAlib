@@ -1,8 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
 import NLAlib.Matrix.Basic.Gram
 import NLAlib.Matrix.Subspaces.PolarFrame
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
 /-!
 # Rank of a fixed matrix times a Gaussian sketch

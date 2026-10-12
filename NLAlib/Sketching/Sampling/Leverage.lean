@@ -1,6 +1,4 @@
-import NLAlib.Matrix.Basic.MoorePenrose
 import NLAlib.Matrix.Spectral.EckartYoung
-import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Basic.MoorePenroseRank
 /-!
 # Leverage scores

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Inequalities.BlockContraction
-import Mathlib.Algebra.QuadraticDiscriminant
 
 /-!
 # Quadratic and bilinear tests for block positivity

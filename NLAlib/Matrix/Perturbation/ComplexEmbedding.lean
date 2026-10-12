@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Norms.ComplexFrobenius
 import Mathlib.Analysis.CStarAlgebra.Matrix
 
 /-!

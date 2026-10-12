@@ -1,18 +1,7 @@
-import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
-import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Probability.Concentration.Basic.ChernoffFunctions
-import NLAlib.Probability.Concentration.Matrix.GeneralizedLaplace
 import NLAlib.Probability.Concentration.Matrix.IntrinsicDimension
 import NLAlib.Probability.Concentration.Matrix.ChernoffMgfCgf
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
 import NLAlib.Matrix.Inequalities.TraceExpMonotone
-import NLAlib.Probability.Concentration.Matrix.LiebJensen
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Order.ConditionallyCompleteLattice.Finset
 
 /-!
 # Theorem 7.2.1 — Intrinsic matrix Chernoff

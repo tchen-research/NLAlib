@@ -1,10 +1,7 @@
-import Mathlib.Data.Matrix.Block
 import NLAlib.Probability.Concentration.QuadraticForms.HansonWright
-import NLAlib.Probability.Rademacher.Core
 import NLAlib.Estimation.QuadraticForms.HutchinsonLaws
 import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.Matrix.Spectral.QuadraticProbe
-import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Tail bound for Hutchinson's trace estimator

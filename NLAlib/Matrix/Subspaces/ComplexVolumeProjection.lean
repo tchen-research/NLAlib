@@ -1,7 +1,5 @@
-import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
 import Mathlib.Analysis.Matrix.Hermitian
 import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Analysis.Normed.Lp.Matrix
 
 /-!
 # Actual complex column-range orthogonal projectors

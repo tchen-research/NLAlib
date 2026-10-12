@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Structured.Measurable
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Isometric
 
 /-!
 # A measurable polar frame for full-column-rank real matrices

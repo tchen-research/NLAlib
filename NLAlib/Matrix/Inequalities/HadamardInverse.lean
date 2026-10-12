@@ -1,5 +1,4 @@
-import NLAlib.Matrix.Inequalities.HadamardOrder
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import NLAlib.Matrix.Inequalities.BlockOrderConsequences
 
 /-!
 # Inverse inequalities for Hadamard products

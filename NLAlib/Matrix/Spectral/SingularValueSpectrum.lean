@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.SVD
-import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Native singular values and the sorted matrix Gram spectrum

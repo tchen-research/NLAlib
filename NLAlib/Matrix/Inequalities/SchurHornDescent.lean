@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Inequalities.PlaneRotationSpectrum
-import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Decreasing rotations for the Schur–Horn minimum

@@ -1,5 +1,4 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
-import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 
 /-!

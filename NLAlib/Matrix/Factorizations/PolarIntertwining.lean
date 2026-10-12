@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Factorizations.PolarDecomposition
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
 
 /-!
 # Polar factors preserve adjoint intertwining

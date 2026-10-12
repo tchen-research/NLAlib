@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Subspaces.ComplexGramIsometry
 import NLAlib.ForMathlib.Analysis.OrthonormalSum
 import Mathlib.LinearAlgebra.Matrix.Rank
 

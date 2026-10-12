@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Inequalities.PlaneRotation
 import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.Analysis.Calculus.Deriv.Pow
 
 /-!
 # Scalar first variation of a real plane rotation

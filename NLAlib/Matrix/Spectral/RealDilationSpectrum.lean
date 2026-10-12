@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.RealDilation
-import Mathlib.Data.Fin.Rev
 
 /-!
 # Decreasing eigenvalues of real rectangular dilation

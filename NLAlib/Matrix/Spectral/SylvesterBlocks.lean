@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.SylvesterQualitative
-import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.Data.Matrix.Block
 import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!

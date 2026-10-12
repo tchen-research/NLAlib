@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.ComplexVariationalPrinciple
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Topology.Order.Compact
 import Mathlib.Tactic.FunProp
 import Mathlib.Tactic.Linarith
 

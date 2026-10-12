@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.QuasiTriangular
-import NLAlib.ForMathlib.Analysis.OrthonormalCons
 import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
 
 /-!

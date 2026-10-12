@@ -1,11 +1,9 @@
 /- Copyright (c) 2026 Diar Heidary.
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
-import NLAlib.ForMathlib.Probability.FiniteLaw
 import NLAlib.Sketching.Sparse.SparseFock.SparseStackDistribution
 import NLAlib.Sketching.Sparse.SparseFock.TernaryJacobi
 import NLAlib.Sketching.Sparse.SparseFock.PaperParameters
-import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic
 
 set_option autoImplicit false

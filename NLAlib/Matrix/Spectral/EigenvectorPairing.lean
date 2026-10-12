@@ -1,7 +1,4 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.Data.Complex.Basic
 
 /-!
 # Left and right eigenvectors

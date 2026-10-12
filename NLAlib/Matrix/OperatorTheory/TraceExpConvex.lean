@@ -1,5 +1,4 @@
 import NLAlib.Matrix.OperatorTheory.VariationalTraceExp
-import Mathlib.Analysis.Convex.Jensen
 
 /-!
 # Convexity of the Hermitian trace exponential

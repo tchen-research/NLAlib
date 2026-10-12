@@ -1,7 +1,6 @@
 import NLAlib.Matrix.Inequalities.HadamardExponential
 import NLAlib.Matrix.Inequalities.HadamardDeterminantLower
 import NLAlib.Matrix.Inequalities.HadamardMinimumSpectrum
-import NLAlib.Matrix.Inequalities.HadamardDominanceCounterexample
 /-!
 # Complete Schur-product inequalities
 

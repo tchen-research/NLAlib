@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Perturbation.PopulationTraceGap
-import NLAlib.Matrix.Inequalities.VonNeumann
 import NLAlib.Matrix.Basic.RankBounds
 /-!
 # Population-gap Davis–Kahan Frobenius bounds

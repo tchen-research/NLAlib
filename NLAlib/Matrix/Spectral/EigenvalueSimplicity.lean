@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.GeneralizedEigenPairing
-import NLAlib.Matrix.Spectral.Diagonalizable
 /-!
 # Simplicity from geometric multiplicity and left–right pairing
 

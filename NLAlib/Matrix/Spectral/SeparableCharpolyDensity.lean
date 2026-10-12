@@ -1,7 +1,5 @@
 import Mathlib.RingTheory.Polynomial.Resultant.Basic
 import Mathlib.FieldTheory.Separable
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathlib.Topology.Instances.Matrix
 import Mathlib.Analysis.RCLike.Basic
 

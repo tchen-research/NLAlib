@@ -1,10 +1,5 @@
 import NLAlib.Matrix.Functions.JensenBlockCalculus
-import Mathlib.Algebra.Star.UnitaryStarAlgAut
-import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Tactic.NoncommRing
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unique
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.LinearAlgebra.Matrix.Reindex
 
 /-!
 # Operator convexity under isometric compression

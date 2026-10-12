@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Perturbation.EigenvaluePerturbation
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
-import Mathlib.Topology.MetricSpace.Lipschitz
 
 /-!
 # Continuous signed eigenvalues of a symmetric affine pencil

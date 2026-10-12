@@ -1,6 +1,4 @@
 import NLAlib.Polynomial.BestApproximation.SawtoothDerivative
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Data.Finset.Max
 
 /-!
 # Exact critical points of the sawtooth error

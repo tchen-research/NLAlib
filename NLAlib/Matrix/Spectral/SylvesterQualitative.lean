@@ -1,8 +1,5 @@
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Spectral.EigenvectorPairing
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Algebra.Polynomial.RingDivision
 
 /-!
 # Qualitative Sylvester equations

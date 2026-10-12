@@ -1,6 +1,4 @@
-import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.LinearAlgebra.Isomorphisms
 
 /-!
 # Extending the isometry identified by equal norms

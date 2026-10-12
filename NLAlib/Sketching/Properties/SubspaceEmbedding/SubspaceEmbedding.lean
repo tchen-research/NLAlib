@@ -1,5 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Sketching.Properties.SubspaceEmbedding.Basic
 /-!

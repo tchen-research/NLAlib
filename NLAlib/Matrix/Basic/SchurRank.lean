@@ -1,6 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.LinearAlgebra.Prod
 import Mathlib.Data.Real.Basic
 
 /-!

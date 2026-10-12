@@ -1,5 +1,4 @@
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import Mathlib.Probability.Independence.InfinitePi
 
 /-!
 # Finite probability laws for sampling with replacement

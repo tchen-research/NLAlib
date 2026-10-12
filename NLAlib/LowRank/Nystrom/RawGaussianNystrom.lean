@@ -2,8 +2,6 @@ import NLAlib.LowRank.Nystrom.GaussianNystrom
 import NLAlib.LowRank.Nystrom.RawNystromBridge
 import NLAlib.RandomMatrix.Gaussian.Spectral.SketchRank
 import NLAlib.Matrix.Spectral.SvdBlocks
-import NLAlib.Matrix.Structured.Measurable
-import Mathlib.MeasureTheory.Measure.Prod
 
 /-!
 # Gaussian compression of an independent random orthonormal frame

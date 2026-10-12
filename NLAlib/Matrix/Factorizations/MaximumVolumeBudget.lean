@@ -1,5 +1,7 @@
 import NLAlib.Matrix.Factorizations.GramColumnExchange
-import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Algebra.Order.Star.Real
+import NLAlib.Matrix.Norms.Core
 
 /-!
 # The shared maximum-volume exchange budget

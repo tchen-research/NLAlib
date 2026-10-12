@@ -1,6 +1,4 @@
-import Mathlib.MeasureTheory.Integral.Layercake
 import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Expectations from tail bounds

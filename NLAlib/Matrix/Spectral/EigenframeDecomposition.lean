@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Perturbation.SpectralFrameWeights
-import Mathlib.LinearAlgebra.Eigenspace.Matrix
+import NLAlib.Matrix.Perturbation.SpectralWeightGap
 
 /-!
 # The invariant top/complement spectral decomposition

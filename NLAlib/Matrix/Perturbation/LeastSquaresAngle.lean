@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Perturbation.LeastSquaresGeometry
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 
 /-!
 # The geometric least-squares angle

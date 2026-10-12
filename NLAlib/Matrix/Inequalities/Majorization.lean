@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Inequalities.MajorizationWeights
-import Mathlib.Data.Fin.Tuple.Sort
 
 /-!
 # Majorization of finite real vectors

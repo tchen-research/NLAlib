@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.Diagonalizable
-import Mathlib.LinearAlgebra.Matrix.Block
 
 /-!
 # Direct sums and changes of eigenvector bases

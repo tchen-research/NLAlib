@@ -1,5 +1,4 @@
 import NLAlib.Probability.SubGaussian.OrliczMGF
-import Mathlib.Probability.Independence.Integration
 
 /-!
 # Scalar Bernstein inequality from genuine Orlicz bounds

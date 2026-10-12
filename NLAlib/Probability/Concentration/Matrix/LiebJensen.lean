@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Convex.Integral
-import Mathlib.Topology.Sequences
 
 /-!
 # Jensen inequality on a nonclosed convex domain

@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.EigenvalueOrder
 import NLAlib.Matrix.Spectral.SigmaMinTransport
 import NLAlib.Matrix.Spectral.SingularValueInvariance
 import NLAlib.ForMathlib.LinearAlgebra.ComapDimension

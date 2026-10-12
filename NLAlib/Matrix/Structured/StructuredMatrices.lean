@@ -1,6 +1,4 @@
-import NLAlib.Matrix.Factorizations.Triangular
 import NLAlib.Matrix.Basic.SchurComplement
-import Mathlib.LinearAlgebra.Matrix.Circulant
 import Mathlib.LinearAlgebra.Vandermonde
 
 /-!

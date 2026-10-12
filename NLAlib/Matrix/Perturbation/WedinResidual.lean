@@ -1,8 +1,6 @@
 import NLAlib.Matrix.Perturbation.SingularFrameTails
 import NLAlib.Matrix.Perturbation.WedinCoupled
 import NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions
-import NLAlib.Matrix.Subspaces.FrameContractions
-import NLAlib.Matrix.Spectral.Weyl
 /-!
 # Wedin bounds for actual paired singular-vector frames
 

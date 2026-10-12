@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Norms.NuclearPSD
 import NLAlib.Matrix.Norms.NuclearFiniteIndex
-import NLAlib.Matrix.Inequalities.KyFanFiniteIndex
 /-!
 # Complete ky fan norms def contract
 

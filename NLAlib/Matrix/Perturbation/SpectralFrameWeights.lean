@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.Eigenframes
-import NLAlib.Matrix.Perturbation.SpectralWeightGap
 import NLAlib.Matrix.Subspaces.ProjectionGaps
 /-!
 # Actual overlap weights in a sorted eigenframe

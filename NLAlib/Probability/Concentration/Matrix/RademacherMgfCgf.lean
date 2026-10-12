@@ -1,7 +1,8 @@
-import NLAlib.Probability.Concentration.Basic.ScalarLaws
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Matrix.Basic.Dilation
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+import NLAlib.Estimation.QuadraticForms.HutchinsonLaws
+import NLAlib.Matrix.OperatorTheory.EntropyNonnegative
+import NLAlib.Matrix.OperatorTheory.JensenIsometricCompression
 
 /-!
 # Lemma 4.6.3 — Rademacher matrix mgf and cgf bounds

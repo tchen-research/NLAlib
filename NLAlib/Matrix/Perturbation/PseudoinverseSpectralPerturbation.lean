@@ -1,6 +1,6 @@
 import NLAlib.Matrix.Perturbation.PseudoinverseBlocks
 import NLAlib.Matrix.Subspaces.ProjectorBlocks
-import NLAlib.Matrix.Spectral.Weyl
+import NLAlib.Matrix.Perturbation.GoldenRatioBlock
 /-!
 # Sharp spectral pseudoinverse perturbation
 

@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Analysis.PencilTriangularization
-import Mathlib.Analysis.Matrix.Spectrum
 
 /-!
 # Complex QZ for every square matrix pencil

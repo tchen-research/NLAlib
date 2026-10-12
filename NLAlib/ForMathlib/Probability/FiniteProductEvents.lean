@@ -1,6 +1,4 @@
 import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.Probability.ProbabilityMassFunction.Integrals
 
 /-!
 # Integrating finite conditional event estimates

@@ -1,4 +1,3 @@
-import Mathlib.Data.Multiset.Fintype
 import Mathlib.Logic.Equiv.Fintype
 
 /-!

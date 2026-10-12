@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Subspaces.OrthogonalProducts
 import NLAlib.Matrix.Factorizations.NearestPolar
 /-!
 # The dimensionally correct cosine–sine canonical matrix

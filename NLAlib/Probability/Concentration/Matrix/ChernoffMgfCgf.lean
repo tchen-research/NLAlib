@@ -1,12 +1,7 @@
 import NLAlib.Probability.Concentration.Basic.ChernoffFunctions
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
-import NLAlib.Matrix.Functions.ExpLogPosDef
 import NLAlib.Matrix.OperatorTheory.LogOperatorMonotone
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 
 /-!
 # Lemma 5.4.1 — Matrix Chernoff mgf and cgf bounds

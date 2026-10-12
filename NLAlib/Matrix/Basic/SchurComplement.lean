@@ -1,7 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.Analysis.Matrix.Order
-import NLAlib.Matrix.Basic.MoorePenrose
 import NLAlib.Matrix.Basic.GeneralizedSchurComplement
 import NLAlib.Matrix.Factorizations.Triangular
 /-!

@@ -1,11 +1,5 @@
 import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.Analysis.Calculus.LocalExtr.Rolle
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-import Mathlib.Analysis.Calculus.Deriv.Polynomial
 import Mathlib.Topology.Algebra.Polynomial
-import Mathlib.RingTheory.Polynomial.Chebyshev
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
-import Mathlib.Data.Finset.Sort
 import NLAlib.Polynomial.Chebyshev.Core
 import NLAlib.ForMathlib.Algebra.Polynomial
 import NLAlib.ForMathlib.Analysis.Calculus.IteratedDeriv

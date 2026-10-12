@@ -1,8 +1,6 @@
 import NLAlib.Matrix.Inequalities.TraceYoung
 import Mathlib.Analysis.Calculus.Deriv.Pi
-import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Pow
 
 /-!
 # Polynomial traces of matrix series

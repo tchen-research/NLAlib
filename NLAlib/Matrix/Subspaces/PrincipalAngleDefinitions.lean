@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Subspaces.ProjectionGaps
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 
 /-!
 # Principal angles of equal-dimensional subspaces

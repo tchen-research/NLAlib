@@ -1,5 +1,3 @@
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 import Mathlib.Analysis.Complex.Polynomial.Basic
 

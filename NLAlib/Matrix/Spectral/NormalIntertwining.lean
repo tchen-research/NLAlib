@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Spectral.NormalSpectral
+import Mathlib.Analysis.CStarAlgebra.Fuglede
 /-!
 # Fuglede–Putnam for normal matrices
 

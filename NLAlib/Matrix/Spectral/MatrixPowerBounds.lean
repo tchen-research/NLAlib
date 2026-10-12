@@ -1,6 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.GelfandFormula
 import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.SpecificLimits.Normed
 
 /-!
 # Quantitative matrix-power bounds from Gelfand's formula

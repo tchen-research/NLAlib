@@ -1,6 +1,5 @@
-import NLAlib.ForMathlib.Analysis.FourierCircle
-import Mathlib.MeasureTheory.Measure.Haar.Unique
 import Mathlib.Data.Real.Sign
+import NLAlib.Polynomial.FunctionApproximation.AnalyticApproximation
 
 /-!
 # Square-wave orthogonality for sharp Jackson

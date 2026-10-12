@@ -1,7 +1,5 @@
-import NLAlib.Matrix.Spectral.CourantFischer
 import NLAlib.Matrix.Inequalities.TraceTail
 import NLAlib.Matrix.Inequalities.VonNeumann
-import NLAlib.Matrix.Inequalities.Majorization
 /-!
 # Ky Fan variational trace bounds
 

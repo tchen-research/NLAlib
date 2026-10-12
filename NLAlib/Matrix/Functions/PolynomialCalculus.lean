@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.SpectralBounds
 import NLAlib.Matrix.Basic.QuadForm
-import Mathlib.Analysis.Matrix.Spectrum
 
 /-!
 # Polynomial calculus of real symmetric matrices

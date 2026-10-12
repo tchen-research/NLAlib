@@ -1,6 +1,5 @@
 import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
 import Mathlib.Data.Matrix.ColumnRowPartitioned
-import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!
 # Equation 7.3.4 — Intrinsic dimension of variance blocks

@@ -1,9 +1,5 @@
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.LinearAlgebra.Dual.Lemmas
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import NLAlib.Krylov.Spaces.Grade
 import NLAlib.Krylov.Solvers.Minimiser
-import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Polynomial.FunctionApproximation.Approximation
 /-!
 # Conjugate gradients, variational form

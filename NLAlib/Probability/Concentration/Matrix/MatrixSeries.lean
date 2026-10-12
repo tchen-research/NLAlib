@@ -1,14 +1,5 @@
-import NLAlib.Probability.Concentration.Basic.ScalarLaws
-import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Matrix.Basic.Dilation
 import NLAlib.Probability.Concentration.Matrix.HermitianSeries
-import NLAlib.Probability.Concentration.Matrix.DilationIdentities
-import NLAlib.Probability.Concentration.Matrix.DilationVariance
-import Mathlib.Analysis.CStarAlgebra.Spectrum
-import Mathlib.LinearAlgebra.Matrix.Reindex
-import Mathlib.Probability.Independence.Integration
-import Mathlib.Probability.Moments.Variance
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+import NLAlib.Probability.Concentration.Matrix.MatrixBernstein
 
 /-!
 # Theorem 4.1.1 — Matrix Gaussian and Rademacher series

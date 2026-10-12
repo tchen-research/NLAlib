@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.Inertia
 import NLAlib.Matrix.Spectral.Diagonalizable
-import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Definite pairs under simultaneous congruence

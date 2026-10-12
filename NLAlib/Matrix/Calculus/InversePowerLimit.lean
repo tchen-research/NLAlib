@@ -1,7 +1,4 @@
 import NLAlib.Matrix.Calculus.InversePowerConcavity
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
-import Mathlib.Algebra.Field.GeomSum
 
 /-!
 # Limits of inverse-power spectral probes

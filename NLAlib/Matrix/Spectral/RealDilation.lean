@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
-import Mathlib.Data.Matrix.Block
 
 /-!
 # Real symmetric dilation and its orthogonal diagonalization

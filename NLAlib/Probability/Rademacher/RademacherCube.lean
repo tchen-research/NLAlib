@@ -1,8 +1,5 @@
 import NLAlib.Probability.Rademacher.Core
 import Mathlib.Probability.Distributions.Uniform
-import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import Mathlib.Probability.Independence.InfinitePi
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
 
 /-!
 # An actual finite independent sign cube

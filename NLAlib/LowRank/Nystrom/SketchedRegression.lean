@@ -1,5 +1,3 @@
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Basic.Pseudoinverse
 /-!

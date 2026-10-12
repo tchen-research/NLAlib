@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Structured.CirculantCharacterization
-import NLAlib.Matrix.Structured.CauchyDeterminantFinite
 /-!
 # Complete structured-matrix contract
 

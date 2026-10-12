@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.CourantFischer
-import NLAlib.Matrix.Spectral.EckartYoung
 import NLAlib.Matrix.Inequalities.VonNeumann
 /-!
 # Weyl inequalities for singular values and the spectral Eckart–Young theorem

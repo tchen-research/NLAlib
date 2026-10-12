@@ -1,7 +1,4 @@
 import NLAlib.Matrix.Basic.LeastSquares
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
-import Mathlib.Data.Finset.Max
 
 /-!
 # Existence of a maximum-volume independent column selection

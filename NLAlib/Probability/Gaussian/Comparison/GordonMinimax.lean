@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Ring.IsFormallyReal
 import NLAlib.Probability.Gaussian.Calculus.IntegrationByParts
 import NLAlib.Probability.Gaussian.Comparison.Interpolation
+import NLAlib.ForMathlib.MeasureTheory.Integral
 /-!
 # Gordon's minimax comparison inequality
 

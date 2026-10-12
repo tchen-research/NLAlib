@@ -1,5 +1,4 @@
 import Mathlib.Analysis.MeanInequalitiesPow
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Matrix.Spectral.QuadraticProbe
 import NLAlib.Matrix.Subspaces.Projections

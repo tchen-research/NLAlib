@@ -1,6 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Order.Interval.Finset.Nat
-import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Basic.Pseudoinverse
 import NLAlib.Matrix.Spectral.SVD

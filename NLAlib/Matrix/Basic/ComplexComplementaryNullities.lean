@@ -1,7 +1,4 @@
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.LinearAlgebra.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.Prod
 import Mathlib.Data.Complex.Basic
 
 /-!

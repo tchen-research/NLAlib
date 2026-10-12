@@ -1,5 +1,4 @@
 import NLAlib.Sketching.Sparse.CountSketchExpectation
-import NLAlib.Sketching.Properties.SubspaceEmbedding.Gram
 /-!
 # CountSketch subspace embeddings from the exact second moment
 

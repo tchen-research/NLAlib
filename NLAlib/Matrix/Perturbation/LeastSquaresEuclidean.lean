@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Basic.LeastSquares
 import NLAlib.Matrix.Perturbation.LeastSquaresGeometry
 /-!
 # Native least-squares predicates and Euclidean norms

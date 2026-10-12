@@ -1,6 +1,4 @@
 import NLAlib.Polynomial.Chebyshev.EvenChebyshevFilter
-import Mathlib.Algebra.Order.Floor.Semiring
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # Logarithmic overlap and finite Lanczos filter means

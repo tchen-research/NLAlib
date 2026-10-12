@@ -1,5 +1,4 @@
 import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.Dimension.LinearMap
 
 /-!
 # Rank subadditivity for finite rectangular matrices

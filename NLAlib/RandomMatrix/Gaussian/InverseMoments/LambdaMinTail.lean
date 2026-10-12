@@ -4,19 +4,8 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 `Sol_GaussianMatrix_wishart_lambda_min_tail`; theorem
 `Thm_GaussianMatrix_wishart_lambda_min_cdf_density_bound`, whose density proof is replaced by the operator route below).
 -/
-import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
-import NLAlib.Probability.Gaussian.Moments.PositiveMoments
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.OperatorHardEdge
-import NLAlib.Matrix.Spectral.Core
 import NLAlib.Probability.Concentration.Basic.TailIntegral
-import NLAlib.Probability.ChiSquare.ChiSquare
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import Mathlib.MeasureTheory.Integral.Gamma
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
-import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 
 /-!
 # Lower tail of the smallest eigenvalue of a Wishart matrix

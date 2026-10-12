@@ -1,4 +1,3 @@
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 import NLAlib.Krylov.MatrixFunctions.FunctionApprox
 import NLAlib.Krylov.Quadrature.Jacobi
 /-!

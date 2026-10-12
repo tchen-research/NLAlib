@@ -1,5 +1,4 @@
 import NLAlib.Polynomial.BestApproximation.SawtoothInterpolation
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 /-!
 # Finite sine expansions through the Chebyshev second-kind basis

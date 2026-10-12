@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Subspaces.ObliqueFrameInverse
+import NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions
 /-!
 # The oblique projection norm is the principal-angle secant
 

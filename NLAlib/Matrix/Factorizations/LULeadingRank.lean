@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Factorizations.LURowInclusion
 import NLAlib.Matrix.Inequalities.MajorizationProperties
-import NLAlib.Matrix.Basic.Gram
 /-!
 # LU from leading minors through the rank
 

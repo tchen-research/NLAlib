@@ -4,9 +4,6 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 -/
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 import NLAlib.Matrix.Basic.Gram
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
-import Mathlib.Probability.Moments.Covariance
-import Mathlib.LinearAlgebra.Matrix.Adjugate
 
 /-!
 # Schur complements of the Gram matrix and Gaussian regression

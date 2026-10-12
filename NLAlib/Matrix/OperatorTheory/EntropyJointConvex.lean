@@ -1,7 +1,6 @@
 import NLAlib.Matrix.OperatorTheory.JointTensorRepresentation
 import NLAlib.Matrix.OperatorTheory.PerspectiveConvex
 import NLAlib.Matrix.OperatorTheory.LogOperatorConcave
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 
 /-!
 # Theorem 8.1.4 — Joint convexity of matrix relative entropy

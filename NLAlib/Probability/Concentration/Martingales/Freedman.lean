@@ -1,6 +1,7 @@
 import NLAlib.Probability.Concentration.Martingales.FreedmanGlobal
 import NLAlib.Probability.Concentration.Martingales.VarianceBudget
 import NLAlib.Probability.Concentration.Martingales.LocalSecondMomentIntegral
+import NLAlib.ForMathlib.Analysis.BernsteinParameter
 /-!
 # Matrix Freedman with genuine finite local conditional variance
 

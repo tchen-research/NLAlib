@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.RealSchurCanonical
-import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!
 # Real normal matrices preserve Schur block boundaries

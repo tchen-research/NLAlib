@@ -1,4 +1,3 @@
-import NLAlib.Matrix.Spectral.EigenvalueSimplicity
 import Mathlib.LinearAlgebra.Matrix.Rank
 
 /-!

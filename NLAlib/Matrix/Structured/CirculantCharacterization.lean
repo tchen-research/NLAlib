@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Structured.StructuredMatrices
-import Mathlib.Algebra.Ring.Fin
+import Mathlib.LinearAlgebra.Matrix.Circulant
 
 /-!
 # Circulants are precisely the cyclic-shift commutant

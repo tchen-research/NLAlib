@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.Topology.Order.Basic
 
 /-!
 # Extending continuous inequalities to the PSD boundary

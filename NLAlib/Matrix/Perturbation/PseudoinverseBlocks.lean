@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Perturbation.PseudoinverseDifference
-import NLAlib.Matrix.Perturbation.GoldenRatioBlock
 /-!
 # The orthogonal blocks of a Moore–Penrose difference
 

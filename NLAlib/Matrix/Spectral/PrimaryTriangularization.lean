@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.SchurTriangularization
-import NLAlib.Matrix.Spectral.SylvesterSimilarity
-import Mathlib.Algebra.DirectSum.Module
 import Mathlib.LinearAlgebra.Eigenspace.Charpoly
 
 /-!

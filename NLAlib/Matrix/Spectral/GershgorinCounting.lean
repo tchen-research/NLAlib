@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.GershgorinBasic
 import NLAlib.Matrix.Spectral.SpectrumCountContinuity
-import Mathlib.Topology.Order.IntermediateValue
 
 /-!
 # Exact Gershgorin counts in isolated unions

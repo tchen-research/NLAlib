@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Calculus.GramSoftMin
-import NLAlib.Matrix.Spectral.QuadraticProbe
 /-!
 # Growth bounds for inverse-power Gram derivatives
 

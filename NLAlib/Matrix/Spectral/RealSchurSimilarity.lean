@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.RealSchurCanonical
-import Mathlib.Analysis.Matrix.Spectrum
 
 /-!
 # Orthogonal similarity to the corrected real Schur form

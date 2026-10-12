@@ -1,8 +1,4 @@
-import NLAlib.Matrix.Perturbation.ConditionNumber
 import NLAlib.Matrix.Perturbation.LinearSystemPerturbation
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Add
-import Mathlib.Analysis.Calculus.FDeriv.Comp
 
 /-!
 # Condition numbers of differentiable maps

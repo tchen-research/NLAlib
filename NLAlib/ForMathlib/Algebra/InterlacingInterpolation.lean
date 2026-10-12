@@ -1,6 +1,4 @@
 import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.Algebra.Polynomial.BigOperators
-import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 /-!

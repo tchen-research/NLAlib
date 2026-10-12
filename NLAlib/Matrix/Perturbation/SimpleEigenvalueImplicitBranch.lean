@@ -1,4 +1,6 @@
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueSchurFunction
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.ImplicitFunction.ProdDomain
 /-!
 # A local differentiable branch of the scalar Schur equation
 

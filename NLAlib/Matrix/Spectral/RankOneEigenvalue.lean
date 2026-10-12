@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Spectral.EigenvectorPairing
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.Algebra.Polynomial.Roots
 
 /-!
 # Rank-one eigenvalue shifts

@@ -1,6 +1,5 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Probability.Concentration.Matrix.TailSpectralComparison
-import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Tactic.Positivity
 
 /-!

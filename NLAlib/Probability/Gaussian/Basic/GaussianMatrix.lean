@@ -1,10 +1,5 @@
-import Mathlib.Probability.Distributions.Gaussian.Real
 import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
-import Mathlib.Probability.Independence.Integration
 import Mathlib.Probability.ProductMeasure
-import Mathlib.Probability.Moments.Variance
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.Data.Matrix.Mul
 
 /-!
 # Standard Gaussian matrices

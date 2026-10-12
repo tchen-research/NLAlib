@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Spectral.SchurTriangularization
-import Mathlib.Analysis.RCLike.Basic
 
 /-!
 # Arbitrarily small strictly upper entries by diagonal similarity

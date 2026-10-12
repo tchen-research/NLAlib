@@ -2,11 +2,8 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.UniformExactSFiniteLaw
-import NLAlib.Sketching.Sparse.SparseFock.SparseStackModel
 import NLAlib.Sketching.Sparse.SparseFock.SparseIIDCoupling
 import Mathlib.Data.Set.PowersetCard
-import Mathlib.Data.Fin.Embedding
-import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Tactic
 

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Norms.Core
-import Mathlib.Data.Matrix.Basis
 
 /-!
 # Trace contractions for coordinate Gram derivatives

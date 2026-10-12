@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Spectral.PrimaryTriangularization
 import NLAlib.Matrix.Spectral.MatrixPowerConvergence
-import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!
 # Decay inside generalized eigenspaces of subunit eigenvalues

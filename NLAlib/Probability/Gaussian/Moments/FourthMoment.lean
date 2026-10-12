@@ -1,8 +1,6 @@
 import NLAlib.Probability.Gaussian.Basic.GaussianMatrix
 import NLAlib.Matrix.Norms.Core
 import Mathlib.MeasureTheory.Integral.Gamma
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Fourth moments of a standard Gaussian matrix

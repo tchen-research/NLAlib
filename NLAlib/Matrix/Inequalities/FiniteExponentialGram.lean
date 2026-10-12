@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Inequalities.SeparatingPSDVector
 import NLAlib.Matrix.Inequalities.HadamardPowerOrder
-import Mathlib.LinearAlgebra.Vandermonde
 
 /-!
 # The finite Vandermonde certificate for entrywise exponential

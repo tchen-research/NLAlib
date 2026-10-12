@@ -1,5 +1,4 @@
 import NLAlib.ForMathlib.Probability.UniformSamplingMarginals
-import Mathlib.Analysis.Convex.Jensen
 
 /-!
 # Conditional label counts for sampling without replacement

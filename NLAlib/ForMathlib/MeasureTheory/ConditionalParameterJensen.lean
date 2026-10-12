@@ -1,7 +1,5 @@
 import NLAlib.ForMathlib.MeasureTheory.ConditionalJensen
 import NLAlib.ForMathlib.MeasureTheory.ConditionalComparison
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Conditional Jensen with a measurable parameter

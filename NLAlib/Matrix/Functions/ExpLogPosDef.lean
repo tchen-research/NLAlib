@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Functions.ExpLog
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
 /-!
 # Hermitian exponential is positive definite and logarithm is its inverse
 

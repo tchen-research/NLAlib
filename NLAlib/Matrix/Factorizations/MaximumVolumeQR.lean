@@ -2,6 +2,7 @@ import NLAlib.ForMathlib.Logic.Equiv
 import NLAlib.Matrix.Factorizations.MaximumVolumeColumns
 import NLAlib.Matrix.Factorizations.MaximumVolumeBudget
 import NLAlib.Matrix.Subspaces.OrthogonalSumCompletion
+import Mathlib.Data.Matrix.ColumnRowPartitioned
 /-!
 # Maximum-volume QR blocks and their shared budget
 

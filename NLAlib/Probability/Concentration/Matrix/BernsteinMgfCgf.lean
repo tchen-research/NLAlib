@@ -1,15 +1,6 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
-import NLAlib.Matrix.Basic.Dilation
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
-import NLAlib.Matrix.Functions.ExpLogPosDef
 import NLAlib.Matrix.OperatorTheory.LogOperatorMonotone
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # Lemma 6.6.2 — Matrix Bernstein mgf and cgf bounds

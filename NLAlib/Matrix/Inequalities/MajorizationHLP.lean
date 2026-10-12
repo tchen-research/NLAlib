@@ -1,6 +1,4 @@
 import NLAlib.Matrix.Inequalities.MajorizationSupport
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Analysis.LocallyConvex.Separation
 
 /-!
 # Hardy–Littlewood–Pólya characterization

@@ -2,8 +2,6 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.SparseFock.FockHilbert
-import NLAlib.Sketching.Sparse.SparseFock.ParsevalFrame
-import NLAlib.Sketching.Sparse.SparseFock.LightSectorAbstract
 import NLAlib.Sketching.Sparse.SparseFock.MatrixTail
 import Mathlib.Tactic
 

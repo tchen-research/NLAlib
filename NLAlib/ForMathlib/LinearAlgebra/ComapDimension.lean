@@ -1,4 +1,3 @@
-import Mathlib.LinearAlgebra.Dimension.RankNullity
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!

@@ -1,7 +1,5 @@
 import NLAlib.Matrix.Norms.Core
 import Mathlib.LinearAlgebra.Matrix.DotProduct
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Data.Fin.Tuple.Basic
 
 /-!
 # Randomized Kaczmarz

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Functions.PolynomialCalculus
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 
 /-!
 # Principal minors and elementary spectral sums

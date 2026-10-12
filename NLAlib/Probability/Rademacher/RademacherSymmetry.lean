@@ -1,6 +1,4 @@
 import NLAlib.Probability.Rademacher.Core
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Symmetry and support of the finite Rademacher cube

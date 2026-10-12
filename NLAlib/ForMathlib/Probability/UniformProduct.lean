@@ -1,7 +1,5 @@
 import Mathlib.Probability.Distributions.Uniform
-import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import Mathlib.Probability.Independence.Basic
 
 /-!
 # The actual finite uniform sequence law is a product law

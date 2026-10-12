@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Subspaces.Projections
-import Mathlib.Analysis.Normed.Operator.NNNorm
 
 /-!
 # Largest tangent of a transverse graph

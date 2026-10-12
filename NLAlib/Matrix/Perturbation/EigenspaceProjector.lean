@@ -1,7 +1,6 @@
 import NLAlib.Matrix.Perturbation.ResidualBounds
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Functions.CFCTrace
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
 
 /-!
 # Eigenspace projectors and one-vector sine bounds

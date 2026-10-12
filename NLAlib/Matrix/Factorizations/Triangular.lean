@@ -1,5 +1,4 @@
 import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Data.Real.Basic
 
 /-!

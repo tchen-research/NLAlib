@@ -1,5 +1,4 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 
 /-!
 # Genuine finite local conditional second moments

@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueSchurFunction
+import Mathlib.LinearAlgebra.Matrix.SchurComplement
 /-!
 # Spectrum and the scalar Schur eigenvalue equation
 

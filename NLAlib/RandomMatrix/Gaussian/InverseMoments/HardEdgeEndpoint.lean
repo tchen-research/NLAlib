@@ -1,6 +1,4 @@
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.Probe
-import Mathlib.Analysis.SpecialFunctions.Gamma.Deriv
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Scalar endpoint bounds for an antitone hard-edge density

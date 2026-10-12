@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Basic.MoorePenrose
-import NLAlib.Matrix.Norms.Core
 /-!
 # Sketch-and-project for consistent linear systems
 

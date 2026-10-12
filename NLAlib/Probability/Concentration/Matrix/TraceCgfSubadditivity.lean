@@ -1,7 +1,5 @@
-import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Probability.Concentration.Matrix.CgfIndependentReplacement
 import NLAlib.Probability.Concentration.Matrix.MasterSumExponentialIntegrable
-import NLAlib.Probability.Concentration.Matrix.LiebRegularityShiftIntegrable
 /-!
 # Lemma 3.5.1 — Subadditivity of matrix cgfs
 

@@ -1,7 +1,6 @@
 import NLAlib.LowRank.Nystrom.Structural
 import NLAlib.Matrix.Basic.SingletonInverse
 import NLAlib.Matrix.Basic.GramVanishing
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Coordinate Cholesky residual pivots

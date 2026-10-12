@@ -1,4 +1,3 @@
-import NLAlib.Krylov.Quadrature.GaussQuadrature
 import NLAlib.Krylov.MatrixFunctions.FunctionApprox
 import NLAlib.Polynomial.FunctionApproximation.AnalyticApproximation
 /-!

@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Subspaces.ComplexProjectionBounds
-import Mathlib.LinearAlgebra.Matrix.Block
 
 /-!
 # Normal block triangular matrices are block diagonal

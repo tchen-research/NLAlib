@@ -1,5 +1,4 @@
 import Mathlib.LinearAlgebra.QuadraticForm.Signature
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import NLAlib.Matrix.Functions.PolynomialCalculus
 /-!
 # Sylvester's law of inertia and eigenvalue counts

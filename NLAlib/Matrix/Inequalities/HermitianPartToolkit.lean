@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Inequalities.HermitianPartConverse
+import NLAlib.Matrix.Inequalities.HermitianPart
 /-!
 # Complete real-part eigenvalue majorization
 

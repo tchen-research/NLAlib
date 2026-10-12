@@ -3,6 +3,7 @@ import NLAlib.Matrix.Spectral.SchurFrobenius
 import NLAlib.Matrix.Spectral.NormalBlocks
 import NLAlib.Matrix.Spectral.NormalRectangularIntertwining
 import NLAlib.Matrix.Spectral.RealNormalSpecializations
+import NLAlib.Matrix.Spectral.SchurTriangularization
 /-!
 # The complex and real normal-matrix toolkit
 

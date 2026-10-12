@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Spectral.PrimaryTriangularization
+import NLAlib.Matrix.Spectral.SylvesterSimilarity
 /-!
 # The qualitative Sylvester toolkit
 

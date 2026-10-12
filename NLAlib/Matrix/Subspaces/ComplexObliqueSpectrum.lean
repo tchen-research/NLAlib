@@ -1,5 +1,4 @@
 import NLAlib.Matrix.Subspaces.ComplexIdempotentRealForm
-import NLAlib.Matrix.Subspaces.ObliqueProjectionSpectrum
 import NLAlib.Matrix.Subspaces.ObliqueProjectionNorms
 /-!
 # Actual singular coefficients and norms of complex idempotents

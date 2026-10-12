@@ -1,6 +1,4 @@
-import NLAlib.Probability.Concentration.Basic.IntrinsicDimension
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
-import Mathlib.Analysis.Matrix.PosDef
+import NLAlib.Probability.Concentration.Matrix.GeneralizedLaplace
 
 /-!
 # Lemma 7.5.1 — Intrinsic dimension trace inequality

@@ -1,9 +1,7 @@
 import NLAlib.Matrix.Spectral.EckartYoung
 import Mathlib.Analysis.Convex.Birkhoff
-import Mathlib.Analysis.Convex.Jensen
 import Mathlib.Algebra.Order.Rearrangement
 import Mathlib.Algebra.Order.Monovary
-import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-!
 # Finite weight budgets and doubly stochastic comparisons

@@ -32,14 +32,18 @@ in `atlas/atlas.json` in your first PR (a one-line change is fine).
 
 The statement is the product; a proof can be replaced, a statement nobody can apply is wasted.
 
-- Matrices are `Matrix (Fin m) (Fin n) ℝ` when a Gaussian law is involved (the product measure is
-  over `Fin p → Fin m → ℝ`), and over `[Fintype ι]` index types when that costs nothing.
+- Matrices are over `[Fintype m] [Fintype n]` index types, and in the Matrix layer over
+  `{𝕜} [RCLike 𝕜]` with `ᴴ` (no ℝ/ℂ or `ᵀ` twins; `docs/STANDARDS.md` §2). `Matrix (Fin m) (Fin n) ℝ`
+  only when a Gaussian law is involved (the product measure is over `Fin p → Fin m → ℝ`; F2 of
+  `docs/FOUNDATIONS_BRIEF.md` revisits this).
 - Norms: `NLAlib.specNorm` (= Mathlib's ℓ₂ operator norm, bridge `specNorm_eq_norm`) and
-  `NLAlib.frobSq` / `frobNorm` (explicit sums). Do not introduce another spelling.
+  `NLAlib.frobSq` / `frobNorm` (bridge `frobNorm_eq_norm` to Mathlib's Frobenius norm). Do not
+  introduce another spelling.
 - Gaussian matrices: `NLAlib.gaussianMatrix p m`; random objects on an abstract probability space
   `{Ω} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]`, expectations as Bochner
   integrals.
-- Order and functional calculus: `open scoped MatrixOrder`, `Matrix.PosSemidef`, `cfc`.
+- Order and functional calculus: `open scoped MatrixOrder` with `A ≤ B` (never a
+  `(B - A).PosSemidef` hypothesis), `Matrix.PosSemidef`, `cfc`.
 - Prefer Mathlib's definition. If you must define your own, ship the bridge lemma to Mathlib's
   notion in the same file.
 - Every hypothesis explicit. No `axiom`, no `native_decide`. A cited fact you do not prove enters

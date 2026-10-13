@@ -404,36 +404,15 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.specNorm_mul_transpose_self",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "`specNorm (A * Aᵀ) = specNorm A ^ 2`."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.specNorm_sub_mul_conjTranspose_mul_le",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.specNorm_sub_mul_transpose_mul_le",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "From `hQ : Qᵀ * Q = 1`; gives `specNorm (A - Q * (Qᵀ * A)) ≤ specNorm A` (the residual is a contraction)."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.specNorm_add_sq_le_of_mul_conjTranspose_eq_zero",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.specNorm_add_sq_le_of_mul_transpose_eq_zero",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "From `h : X * Yᵀ = 0`; gives `specNorm (X + Y)^2 ≤ specNorm X^2 + specNorm Y^2`."
     },
     {
      "library": "nlalib",
@@ -461,12 +440,6 @@
      "module": "NLAlib.Matrix.Norms.Frobenius",
      "status": "proved",
      "usage": "Pass `hQ : Q.transpose * Q = 1` and any `X`; gives `frobSq (Q * X) = frobSq X`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobSq_mul_left_of_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Norms.Frobenius",
-     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1274,13 +1247,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.specNorm_le_one_of_isSymm_of_isIdempotentElem",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "A symmetric idempotent has `specNorm ≤ 1`."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.singularValues_residual_le",
      "module": "NLAlib.Matrix.Spectral.Weyl",
      "status": "proved",
@@ -1896,11 +1862,9 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.gaussianMatrix_map_orthogonal",
+     "decl": "NLAlib.hasLaw_gaussianMatrix_orthogonal",
      "module": "NLAlib.RandomMatrix.Gaussian.Invariance.Invariance",
-     "status": "proved",
-     "usage": "Pass `hU : Uᵀ * U = 1` and `hV : Vᵀ * V = 1`; gives `Measure.map (fun G => Matrix.of.symm (U * Matrix.of G * V)) (gaussianMatrix p m) = gaussianMatrix p m`.",
-     "note": "ported from the Prove2me solution; proof goes through Mathlib's stdGaussian_map"
+     "status": "proved"
     },
     {
      "library": "gaussian-facts",
@@ -1917,6 +1881,7 @@
     "gaussian-matrix-def"
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.gaussianMatrix"
    ],
    "variants": [
@@ -1934,7 +1899,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "block-law-indep",
@@ -1964,10 +1929,9 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.gaussianMatrix_map_block",
+     "decl": "NLAlib.hasLaw_gaussianMatrix_block",
      "module": "NLAlib.RandomMatrix.Gaussian.Invariance.Invariance",
-     "status": "proved",
-     "usage": "Pass `V₁ : Matrix (Fin n) (Fin k) ℝ` with `hV₁ : V₁ᵀ * V₁ = 1`; gives that `G ↦ Matrix.of.symm (V₁ᵀ * Matrix.of G)` pushes `gaussianMatrix n t` to `gaussianMatrix k t`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1991,6 +1955,7 @@
     "rotation-invariance"
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.gaussianMatrix"
    ],
    "variants": [
@@ -2003,7 +1968,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "gaussian-frob-second-moment",
@@ -8484,10 +8449,9 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.integral_lanczosRayleighRelativeError_le_of_map_eq_pi_gaussianReal",
+     "decl": "NLAlib.integral_lanczosRayleighRelativeError_le_of_hasLaw",
      "module": "NLAlib.Estimation.Spectral.RandomStartLanczos",
-     "status": "proved",
-     "usage": "The exact Lanczos constant transports through an actual Gaussian vector law on any probability space."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -8507,11 +8471,10 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.integral_powerRayleighRelativeError_le_of_map_eq_pi_gaussianReal",
+     "decl": "NLAlib.integral_powerRayleighRelativeError_le_of_hasLaw",
      "module": "NLAlib.Estimation.Spectral.RandomStartPower",
      "status": "proved",
-     "partial": true,
-     "usage": "The gap-free power bound transports through an actual Gaussian starting-vector law on an abstract probability space."
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -8597,7 +8560,7 @@
    "tags": [
     "krylov"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "slq-error",
@@ -9142,6 +9105,7 @@
     "gaussian-matrix-def"
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.frobSq",
     "NLAlib.gaussianMatrix",
     "NLAlib.pinvL",
@@ -9168,7 +9132,7 @@
     "engine"
    ],
    "notes": "Done. Mathlib gaps noted: no MeasurableSpace instance on Matrix; no lemma pulling IndepFun back along a map with a given law.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "gaussian-integration-by-parts",
@@ -12330,17 +12294,15 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.gaussianMatrix_map_transpose",
+     "decl": "NLAlib.hasLaw_gaussianMatrix_transpose",
      "module": "NLAlib.RandomMatrix.Gaussian.Invariance.LinearImage",
-     "status": "proved",
-     "usage": "`(gaussianMatrix p m).map transpose = gaussianMatrix m p`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.gaussianMatrix_map_mul_right",
+     "decl": "NLAlib.hasLaw_gaussianMatrix_mul_right",
      "module": "NLAlib.RandomMatrix.Gaussian.Invariance.LinearImage",
-     "status": "proved",
-     "usage": "From `hU : Uᵀ * U = 1`; `(gaussianMatrix k m).map (· * U) = gaussianMatrix k d`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -12369,6 +12331,7 @@
     "block-law-indep"
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.gaussianMatrix"
    ],
    "variants": [
@@ -12383,7 +12346,7 @@
     "gaussian",
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "polynomial-spectral-bound",
@@ -19343,7 +19306,7 @@
    ],
    "area": "matrix-subspace-perturbation",
    "kind": "definition",
-   "status": "scaffold",
+   "status": "proved",
    "informal": "For $Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with orthonormal columns, the canonical angles $0\\le\\theta_1\\le\\dots\\le\\theta_k\\le\\pi/2$ are defined by $\\cos\\theta_i=\\sigma_i(Q^\\top\\hat Q)$ (so $\\|\\sin\\Theta\\|=\\sin\\theta_k=\\sqrt{1-\\sigma_k(Q^\\top\\hat Q)^2}$), and $\\sin\\Theta(Q,\\hat Q)=\\operatorname{diag}(\\sin\\theta_i)$. Characterisations, with $Q_\\perp$ an orthonormal complement of $Q$: $\\|\\sin\\Theta\\|=\\|Q_\\perp^\\top\\hat Q\\|=\\|(I-QQ^\\top)\\hat Q\\|=\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|$; $\\|\\sin\\Theta\\|_F^2=k-\\|Q^\\top\\hat Q\\|_F^2=\\tfrac12\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|_F^2$; $\\Theta$ depends only on the ranges, is symmetric in $(Q,\\hat Q)$; if $\\theta_k<\\pi/2$, $\\|\\tan\\Theta\\|=\\|(Q_\\perp^\\top\\hat Q)(Q^\\top\\hat Q)^{-1}\\|$.",
    "hypotheses": [
     "$Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with $Q^\\top Q=\\hat Q^\\top\\hat Q=I_k$",
@@ -19400,6 +19363,7 @@
      "decl": "NLAlib.sq_tanThetaMax_replicateCol_eq_tanSqAngle",
      "module": "NLAlib.Krylov.Spectral.PowerMethod",
      "status": "scaffold",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
     },
     {
@@ -22940,7 +22904,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "scaffold",
+   "status": "proved",
    "informal": "The Cholesky recursion ($a \\mapsto \\sqrt a$, $b \\mapsto b/\\sqrt a$, continue on the Schur complement $C - bb^\\top/a$) succeeds (every pivot $> 0$) iff $A$ is positive definite (for symmetric $A$); on success $L L^\\top = A$ with $L$ lower triangular with positive diagonal, and $L$ is unique. For positive semidefinite $A$, pivoted (diagonal-pivoting) Cholesky never fails, stops after $\\operatorname{rank} A$ steps and returns $L L^\\top = A$.",
    "hypotheses": [
     "$A$ symmetric"
@@ -23015,6 +22979,7 @@
      "decl": "NLAlib.choleskyPivoted_apply_self_pos_iff_lt_rank",
      "module": "NLAlib.Matrix.Factorizations.Cholesky",
      "status": "scaffold",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
     },
     {
@@ -23022,6 +22987,7 @@
      "decl": "NLAlib.choleskyPivoted_apply_eq_zero_of_rank_le",
      "module": "NLAlib.Matrix.Factorizations.Cholesky",
      "status": "scaffold",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
     }
    ],

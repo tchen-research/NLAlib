@@ -486,8 +486,8 @@
     "orthonormal-completion"
    ],
    "decls": [
-    "NLAlib.exists_orthogonal_completion",
-    "NLAlib.exists_orthonormal_complement"
+    "NLAlib.exists_unitary_completion",
+    "NLAlib.exists_unitary_complement"
    ],
    "note": ""
   },
@@ -1800,7 +1800,7 @@
    "decls": [
     "Mathlib:Matrix.mem_unitaryGroup_iff",
     "Mathlib:Matrix.mem_unitaryGroup_iff'",
-    "NLAlib.mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols"
+    "NLAlib.star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols"
    ],
    "note": "the isometry direction (g)⇒(a) is not stated as such"
   },

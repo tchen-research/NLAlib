@@ -22,6 +22,7 @@ STATUSES = ["nlalib", "partial", "mathlib", "candidate", "out-of-scope"]
 GLYPH = {"nlalib": "✓", "partial": "◐", "mathlib": "M", "candidate": "○", "out-of-scope": "–"}
 want = sys.argv[1:]
 problems = []
+warnings = []
 for p in sorted(q for q in (ROOT / "docs/coverage").glob("*.json") if not q.name.endswith(".candidates.json")):
     src = p.stem
     if want and src not in want: continue
@@ -46,6 +47,12 @@ for p in sorted(q for q in (ROOT / "docs/coverage").glob("*.json") if not q.name
             problems.append(f"{src} {lab}: status {it['status']} needs an atlas id or a declaration")
         if it.get("status") == "out-of-scope" and not it.get("note"):
             problems.append(f"{src} {lab}: out-of-scope needs a note")
+        # item status against atlas status (warnings: the Books tab must not contradict the atlas)
+        sts = [by_id[i]["status"] for i in it.get("atlas", []) if i in by_id]
+        if it.get("status") == "candidate" and sts and all(s == "proved" for s in sts):
+            warnings.append(f"{src} {lab}: candidate, but every atlas id is proved ({', '.join(it['atlas'])})")
+        if it.get("status") in ("nlalib", "partial") and sts and all(s == "candidate" for s in sts) and not it.get("decls"):
+            warnings.append(f"{src} {lab}: {it['status']}, but every atlas id is a candidate ({', '.join(it['atlas'])})")
     # atlas labels for this source not present in the index (label verification)
     atlas_labels = collections.defaultdict(list)
     for r in atlas["results"]:
@@ -80,5 +87,7 @@ for p in sorted(q for q in (ROOT / "docs/coverage").glob("*.json") if not q.name
         out += ["## Atlas labels for this source not found in the index (verify)", ""] + [f"- `{l}` ← {', '.join(ids)}" for l, ids in unmatched] + [""]
     (ROOT / f"docs/coverage/{src}.md").write_text("\n".join(out))
     print(f"{src}: {len(items)} items; " + ", ".join(f"{s} {tot[s]}" for s in STATUSES) + f"; {len(unmatched)} atlas labels unmatched")
+if warnings:
+    print(f"warnings ({len(warnings)}; item status disagrees with the atlas):\n  " + "\n  ".join(warnings))
 if problems:
     print("problems:\n  " + "\n  ".join(problems)); sys.exit(1)

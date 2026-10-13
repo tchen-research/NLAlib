@@ -1,7 +1,8 @@
 import NLAlib
 open Lean Elab Command
 
-/-! Axiom audit. Every theorem in namespace `NLAlib` may depend
+/-! Axiom audit. Every theorem in namespace `NLAlib`, or declared in an `NLAlib` module (the
+`_root_.Matrix.IsHermitian.*` dot-notation theorems, instances on `Matrix`), may depend
 only on `propext`, `Classical.choice`, `Quot.sound`, plus `sorryAx` for declared scaffolds.
 Fails on any other axiom. Writes the list of declarations that depend on `sorryAx` to
 `.lake/sorries.txt`; `scripts/check_atlas.py` checks that list against the atlas
@@ -14,8 +15,13 @@ run_cmd do
   let mut n : Nat := 0
   let mut bad : Array (Name × Array Name) := #[]
   let mut sorried : Array Name := #[]
+  let inLib (d : Name) : Bool :=
+    roots.any (fun r => r.isPrefixOf d) ||
+      (match env.getModuleIdxFor? d with
+        | some i => roots.any (fun r => r.isPrefixOf env.header.moduleNames[i.toNat]!)
+        | none => false)
   for (d, ci) in env.constants.map₁.toList do
-    if roots.any (fun r => r.isPrefixOf d) && !d.isInternal then
+    if inLib d && !d.isInternal then
       if let .thmInfo _ := ci then
         n := n + 1
         let axs ← collectAxioms d

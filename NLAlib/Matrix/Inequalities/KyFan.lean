@@ -84,6 +84,7 @@ theorem frobInner_le_kyFanNorm_of_rank_le_of_specNorm_le_one {m n : Type*} [Fint
     [Fintype n] [DecidableEq n] {k : ℕ}
     (A P : Matrix m n ℝ) (hP : P.rank ≤ k) (hPn : specNorm P ≤ 1) :
     frobInner A P ≤ kyFanNorm A k := by
+  classical
   calc
     frobInner A P ≤ ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
         singularValues A i * singularValues P i :=

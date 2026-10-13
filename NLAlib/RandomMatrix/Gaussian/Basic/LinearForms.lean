@@ -123,7 +123,7 @@ theorem integral_sqrt_sum_sq_gaussianMatrix_entry_le {k m : ℕ} (σ : Fin k →
       (gaussianMatrix (Fin 1) (Fin m)) := by
     refine hQ.congr (Filter.Eventually.of_forall fun H => ?_)
     exact (Real.sq_sqrt (hQ0 H)).symm
-  refine integral_le_of_integral_sq_le _ _ hS hS2 _ (Real.sqrt_nonneg _) (le_of_eq ?_)
+  refine MeasureTheory.integral_le_of_integral_sq_le _ _ hS hS2 _ (Real.sqrt_nonneg _) (le_of_eq ?_)
   rw [Real.sq_sqrt (Nat.cast_nonneg k)]
   simp_rw [Real.sq_sqrt (hQ0 _)]
   rw [integral_finsetSum _ fun j _ =>

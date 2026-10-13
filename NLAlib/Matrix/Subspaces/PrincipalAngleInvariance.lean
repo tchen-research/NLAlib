@@ -16,11 +16,12 @@ sine matrix exactly. Stewart–Sun, Section I.5; the column labels and therefore
 the angle indices are unchanged. No orthonormality premise is needed.
 Supports `wedin-sin-theta` on arbitrary finite coordinate labels. -/
 theorem sinePrincipalAngles_reindex_rows {m n p : Type*}
-    [Fintype m] [Fintype n] [Fintype p]
+    [Fintype m] [Fintype n] [Fintype p] [DecidableEq n]
     (P Q : Matrix m n ℝ) (em : m ≃ p) :
     sinePrincipalAngles (P.reindex em (Equiv.refl n))
       (Q.reindex em (Equiv.refl n)) = sinePrincipalAngles P Q := by
   simp only [sinePrincipalAngles, principalAnglesFintype,
+    Matrix.conjTranspose_eq_transpose_of_trivial,
     Matrix.reindex_apply, Equiv.refl_symm, Equiv.coe_refl,
     Matrix.transpose_submatrix, Matrix.submatrix_mul_equiv,
     Matrix.submatrix_id_id]
@@ -56,11 +57,10 @@ theorem principalAngles_eq_of_range_eq_left {P P' : Matrix m n ℝ}
   have heq : P'ᵀ*Q=Tᵀ*(Pᵀ*Q) := by
     rw [← hPT, Matrix.transpose_mul, Matrix.mul_assoc]
   have hTt : Tᵀᵀ*Tᵀ=1 := by simpa only [Matrix.transpose_transpose] using hT
-  have hh : singularValues ((Tᵀ*(Pᵀ*Q)).reindex (Fintype.equivFin n) (Fintype.equivFin n)) =
-      singularValues ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) := by
-    rw [singularValues_reindex, singularValues_reindex, singularValues_isometry_mul (H := Tᵀ) hTt]
+  have hh : singularValues (Tᵀ*(Pᵀ*Q)) = singularValues (Pᵀ*Q) :=
+    singularValues_isometry_mul (H := Tᵀ) hTt _
   funext i
-  simp only [principalAnglesFintype, heq]
+  simp only [principalAnglesFintype, Matrix.conjTranspose_eq_transpose_of_trivial, heq]
   rw [hh]
 
 omit [DecidableEq m] in

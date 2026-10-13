@@ -1,0 +1,3502 @@
+{
+  "_comment": "Historical handwritten metadata for formalizations changed or removed by F4 and the subsequent contract audit. Preserved before regenerating the atlas on 2026-10-13. These recipes describe earlier APIs and need review before reuse; they are not current usage instructions.",
+  "formalizations": [
+    {
+      "atlas_id": "norms-frob-spec",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.specNorm_mul_transpose_right_of_hasOrthonormalCols",
+        "module": "NLAlib.Matrix.Norms.SpectralNormBounds",
+        "status": "proved",
+        "usage": "Pass QᵀQ=I; right multiplication by Qᵀ preserves the spectral norm."
+      }
+    },
+    {
+      "atlas_id": "norms-frob-spec",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.specNorm_sq_eq_specNorm_transpose_mul_self",
+        "module": "NLAlib.Matrix.Spectral.SpectralBounds",
+        "status": "proved",
+        "usage": "Apply to any A, including empty shapes; rewrite ‖A‖² as ‖AᵀA‖."
+      }
+    },
+    {
+      "atlas_id": "pseudoinverse",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.specNorm_moorePenroseInverse_eq_fintype",
+        "module": "NLAlib.Matrix.Norms.RankNorm",
+        "status": "proved",
+        "usage": "Apply on arbitrary finite indices at any rank; obtain the zero-rank branch or reciprocal of the last positive singular value of the explicit Fin(card) reindex."
+      }
+    },
+    {
+      "atlas_id": "projection-facts",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobSq_sub_mul_le_of_isBestRankApprox",
+        "module": "NLAlib.Matrix.Subspaces.Projections",
+        "status": "proved",
+        "usage": "Pass `hQ : HasOrthonormalCols Q`, `hY : IsBestRankApprox k (Qᵀ * A) Y` and a competitor `B` with `hB : B.rank ≤ k`; gives `frobSq (A - Q * Y) ≤ frobSq (A - Q * B)`."
+      }
+    },
+    {
+      "atlas_id": "chi-square-lower-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_sum_sq_le_le_gaussianReal",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "**Chi-square lower tail.** For `d ≥ 1` and `0 ≤ u ≤ d`, a `χ²_d` variable satisfies `P(χ²_d ≤ u) ≤ (e u / d)^{d/2}`.",
+        "note": "P[χ²_d ≤ u] ≤ (eu/d)^{d/2} for 0 ≤ u ≤ d, over Fin d"
+      }
+    },
+    {
+      "atlas_id": "chi-square-lower-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_sum_sq_le_one_sub_mul_le_gaussianReal",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "Sharp form: from `0 ≤ ε < 1`; gives `P(Σ gᵢ² ≤ (1-ε)d) ≤ ofReal (exp ((d/2)(ε + log(1-ε))))`."
+      }
+    },
+    {
+      "atlas_id": "chi-square-lower-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_sum_sq_le_sub_two_sqrt_mul_le_gaussianReal",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "Laurent–Massart form: from `1 ≤ d`, `0 ≤ x`; gives `P(Σ gᵢ² ≤ d - 2√(dx)) ≤ ofReal (exp (-x))`."
+      }
+    },
+    {
+      "atlas_id": "chi-square-upper-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_le_sum_sq_le_gaussianReal",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "From `hε : 0 ≤ ε`; gives `P((1+ε)d ≤ Σ gᵢ²) ≤ ofReal (exp (-(d/2)(ε - log(1+ε))))` (Dasgupta–Gupta Chernoff form)."
+      }
+    },
+    {
+      "atlas_id": "chi-square-upper-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_add_two_sqrt_mul_add_le_sum_sq_le_gaussianReal",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "Laurent–Massart form: from `hx : 0 ≤ x`; gives `P(d + 2√(dx) + 2x ≤ Σ gᵢ²) ≤ ofReal (exp (-x))`."
+      }
+    },
+    {
+      "atlas_id": "inverse-chi-square-moment",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "Pass `hd : 3 ≤ Fintype.card ι`; gives integrability of `x ↦ (∑ j, x j ^ 2)⁻¹` under `Measure.pi (fun _ => gaussianReal 0 1)` and its integral `1 / (card ι - 2)`.",
+        "note": "over any finite index type with card ≥ 3"
+      }
+    },
+    {
+      "atlas_id": "inverse-chi-square-moment",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_inv_sum_sq_gaussianReal_fin",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "Pass `hd : 3 ≤ d`; gives integrability and `∫ (∑ j, x j ^ 2)⁻¹ = 1 / (d - 2)` over `Fin d → ℝ` with the standard Gaussian product measure."
+      }
+    },
+    {
+      "atlas_id": "gaussian-concentration",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.gaussian_concentration_pi",
+        "module": "NLAlib.Probability.Gaussian.Concentration.LipschitzConcentration",
+        "status": "proved",
+        "usage": "**Gaussian concentration** for Lipschitz functions of a standard Gaussian vector: for `f` `L`-Lipschitz (Euclidean, `L > 0`) on `ι → ℝ` and `t ≥ 0`, `f` is `γₙ`-integrable and `γₙ{x | 𝔼 f + L t ≤ f x} ≤ e^{-t²/2}`."
+      }
+    },
+    {
+      "atlas_id": "norm-lipschitz",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.continuous_sigmaMin_array",
+        "module": "NLAlib.Matrix.Perturbation.SpectralContinuity",
+        "status": "proved",
+        "usage": "Use the Frobenius Lipschitz bound to obtain continuity of the least singular value as a function of the finite real array."
+      }
+    },
+    {
+      "atlas_id": "norm-lipschitz",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.continuous_sigmaMin_transpose_sq_array",
+        "module": "NLAlib.Matrix.Perturbation.SpectralContinuity",
+        "status": "proved",
+        "usage": "Apply directly to obtain continuity of G -> sigmaMin(G^T)^2, used to make cutoff fields locally zero at singular Grams."
+      }
+    },
+    {
+      "atlas_id": "norm-lipschitz",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sigmaMin",
+        "module": "NLAlib.Matrix.Spectral.Core",
+        "status": "proved",
+        "usage": "The smallest singular value of a tall matrix `A : Matrix m n ℝ`: `σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention `inf ∅ = 0`)."
+      }
+    },
+    {
+      "atlas_id": "norm-lipschitz",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_sigmaMin_sub_sigmaMin_le_frobNorm",
+        "module": "NLAlib.Matrix.Spectral.Core",
+        "status": "proved",
+        "usage": "The smallest singular value is `1`-Lipschitz for the Frobenius norm: `|σ_min(A) − σ_min(B)| ≤ ‖A − B‖_F`.",
+        "note": "σ_min (tall convention: inf over unit x of ‖Ax‖, Matrix/Spectral.lean) and the spectral norm are 1-Lipschitz in the Frobenius norm, over any finite index types"
+      }
+    },
+    {
+      "atlas_id": "norm-lipschitz",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_sigmaMin_sub_sigmaMin_le_specNorm",
+        "module": "NLAlib.Matrix.Spectral.SpectralBounds",
+        "status": "proved",
+        "usage": "Apply to equal-shaped A,B over finite indices; obtain |sigmaMin A−sigmaMin B|≤specNorm(A−B)."
+      }
+    },
+    {
+      "atlas_id": "norm-lipschitz",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sigmaMin_eq_singularValues_last",
+        "module": "NLAlib.Matrix.Spectral.SpectralBounds",
+        "status": "proved",
+        "usage": "For A : Matrix (Fin m) (Fin n) ℝ, pass hn : 0<n; obtain sigmaMin A=singularValues A (n-1), including kernel zeros in wide matrices."
+      }
+    },
+    {
+      "atlas_id": "norm-lipschitz",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sigmaMin_pos_iff_rank_eq_width",
+        "module": "NLAlib.Matrix.Spectral.SpectralBounds",
+        "status": "proved",
+        "usage": "For A : Matrix (Fin m) (Fin n) ℝ, pass hn : 0<n; obtain 0<sigmaMin A iff A.rank=n."
+      }
+    },
+    {
+      "atlas_id": "rademacher-khintchine",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsRademacher",
+        "module": "NLAlib.Probability.Rademacher.Core",
+        "status": "proved",
+        "usage": "`rademacherLaw μ r : Prop` says `r` is a ±1 Rademacher variable under `μ`; it is only a law predicate (no Khintchine inequality yet), used as the Rademacher branch of `hLaw` in `ch4_matrix_series` and `ch4_hermitian_series`.",
+        "note": "law only"
+      }
+    },
+    {
+      "atlas_id": "rademacher-khintchine",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hasSubgaussianMGF_of_isRademacher",
+        "module": "NLAlib.Probability.Rademacher.Core",
+        "status": "proved",
+        "usage": "`IsRademacher μ r → HasSubgaussianMGF r 1 μ`."
+      }
+    },
+    {
+      "atlas_id": "bernstein-scalar",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.bernstein_sum_of_lintegral_exp_abs_le_two_uniform",
+        "module": "NLAlib.Probability.Concentration.Scalar.ScalarBernstein",
+        "status": "proved",
+        "usage": "Pass a common positive ψ₁ scale K; obtain the N K² quadratic denominator and K linear denominator."
+      }
+    },
+    {
+      "atlas_id": "bernstein-scalar",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_local_mgf_le_of_lintegral_exp_abs_le_two",
+        "module": "NLAlib.Probability.SubGaussian.OrliczMGF",
+        "status": "proved",
+        "usage": "Pass a centered genuine ψ₁ bound; derive integrability and mgf≤exp(16K²t²) for |t|≤1/(2K)."
+      }
+    },
+    {
+      "atlas_id": "matrix-laplace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.master_bounds",
+        "module": "NLAlib.Probability.Concentration.Matrix.MasterBounds",
+        "status": "proved",
+        "usage": "Pass independent (`hIndep : iIndepFun X μ`), measurable, a.e.-Hermitian, integrable `X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ` and `hExp` (integrability of `matrixExp (θ • X k)`); for `0 < θ` gives the `lambdaMax` expectation and tail bounds in terms of `traceExp (cumulantSum μ X θ)`, and for `θ < 0` the `lambdaMin` analogues."
+      }
+    },
+    {
+      "atlas_id": "matrix-gaussian-series",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hermitian_gaussian_series",
+        "module": "NLAlib.Probability.Concentration.Matrix.HermitianSeries",
+        "status": "proved",
+        "usage": "Pass Hermitian `A k` (`hA`) and independent measurable scalars `g` with `hLaw` (Gaussian or Rademacher); for `Y = ∑ g k • A k` gives `v = spectralNorm (∑ A k ^ 2)`, `E lambdaMax Y ≤ √(2 v log d)` and the tail `gaussianSeriesTail d v t`."
+      }
+    },
+    {
+      "atlas_id": "matrix-gaussian-series",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.matrix_gaussian_series",
+        "module": "NLAlib.Probability.Concentration.Matrix.MatrixSeries",
+        "status": "proved",
+        "usage": "Pass fixed `B : Fin N → Matrix (Fin m) (Fin n) ℂ` and independent measurable scalars `g` with `hLaw` (all standard Gaussian or all Rademacher); for `Z = ∑ g k • B k` with second moment `v`, gives `v = max ‖∑ B Bᴴ‖ ‖∑ Bᴴ B‖`, `E spectralNorm Z ≤ √(2 v log(m + n))` and the tail `gaussianSeriesTail (m + n) v t`."
+      }
+    },
+    {
+      "atlas_id": "matrix-chernoff",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.matrix_chernoff",
+        "module": "NLAlib.Probability.Concentration.Matrix.MatrixChernoff",
+        "status": "proved",
+        "usage": "Pass independent, measurable, a.e.-Hermitian `X k` with `hBound : 0 ≤ lambdaMin (X k) ∧ lambdaMax (X k) ≤ L` a.e. and `hL : 0 ≤ L`; with `a`, `b` the extreme eigenvalues of `E ∑ X k`, gives expectation bounds for every `θ > 0`, the lower tail `chernoffLowerTail d a L ε` (`0 ≤ ε < 1`) and the upper tail `chernoffUpperTail d b L ε` (`0 ≤ ε`)."
+      }
+    },
+    {
+      "atlas_id": "matrix-bernstein",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hermitian_bernstein",
+        "module": "NLAlib.Probability.Concentration.Matrix.HermitianBernstein",
+        "status": "proved",
+        "usage": "Pass independent, centred, a.e.-Hermitian `X k` with `hL2 : MemLp (X k) 2 μ` and `hBound : lambdaMax (X k) ≤ L` a.e.; gives `v = spectralNorm (∑ E X k ^ 2)`, `E lambdaMax (∑ X k) ≤ √(2 v log d) + L log d / 3` and the tail `bernsteinTail d v L t`."
+      }
+    },
+    {
+      "atlas_id": "matrix-bernstein",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.matrix_bernstein",
+        "module": "NLAlib.Probability.Concentration.Matrix.MatrixBernstein",
+        "status": "proved",
+        "usage": "Pass independent, measurable, centred (`hMean`) `S k : Ω → Matrix (Fin m) (Fin n) ℂ` with `hBound : spectralNorm (S k) ≤ L` a.e. and `0 ≤ L`; for `Z = ∑ S k` and `v = rectSecondMoment μ Z` gives the formula for `v`, `E spectralNorm Z ≤ √(2 v log(m + n)) + L log(m + n) / 3` and the tail `bernsteinTail (m + n) v L t`."
+      }
+    },
+    {
+      "atlas_id": "intrinsic-dimension",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.intrinsic_matrix_bernstein",
+        "module": "NLAlib.Probability.Concentration.Matrix.IntrinsicBernstein",
+        "status": "proved",
+        "usage": "Pass independent centred `S k` with `spectralNorm (S k) ≤ L` a.e. and variance proxies `V₁`, `V₂` (not both 0) with `loewnerLE (E Z Zᴴ) V₁` and `loewnerLE (E Zᴴ Z) V₂`; with `r = intrinsicDimension (fromBlocks V₁ 0 0 V₂)` and `v = max ‖V₁‖ ‖V₂‖`, gives `P[t ≤ spectralNorm Z] ≤ 4 r exp(−(t²/2)/(v + L t/3))` for `t ≥ √v + L/3`."
+      }
+    },
+    {
+      "atlas_id": "intrinsic-dimension",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.intrinsic_matrix_chernoff",
+        "module": "NLAlib.Probability.Concentration.Matrix.IntrinsicChernoff",
+        "status": "proved",
+        "usage": "Pass independent PSD `X k` with `lambdaMax (X k) ≤ L` a.e. (`0 < L`) and a nonzero `M` with `hMeanBound : loewnerLE (E ∑ X k) M`; with `r = intrinsicDimension M`, `a = lambdaMax M`, gives `E lambdaMax ≤ (e^θ − 1)/θ · a + (L/θ) log(2r)` for `θ > 0` and the tail `2 r exp((a/L)(ε − (1+ε) log(1+ε)))` for `ε ≥ L/a`."
+      }
+    },
+    {
+      "atlas_id": "matrix-chernoff-sampling",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.matrix_chernoff_sampling",
+        "module": "NLAlib.Probability.Concentration.Matrix.Sampling",
+        "status": "proved",
+        "usage": "Isotropic i.i.d. PSD summands with `λ_max ≤ L`: `P(λ_min(N⁻¹ΣM_k) ≤ 1-ε) ≤ d e^{-ε²N/(2L)}` and `P(λ_max ≥ 1+ε) ≤ d e^{-ε²N/(3L)}` for `0 ≤ ε ≤ 1`."
+      }
+    },
+    {
+      "atlas_id": "matrix-freedman",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.ae_posSemidef_condExp_of_ae_posSemidef",
+        "module": "NLAlib.ForMathlib.MeasureTheory.MatrixConditionalExpectation",
+        "status": "proved",
+        "partial": true,
+        "usage": "Conditional expectation preserves actual positive semidefinite matrix values almost everywhere."
+      }
+    },
+    {
+      "atlas_id": "noncommutative-khintchine",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_re_trace_independent_series_pow_le",
+        "module": "NLAlib.Probability.Gaussian.Moments.SeriesKhintchine",
+        "status": "proved",
+        "usage": "Independent actual Gaussian or Rademacher coefficients on an arbitrary probability space obey the exact integer noncommutative trace-moment bound."
+      }
+    },
+    {
+      "atlas_id": "noncommutative-khintchine",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_re_trace_independent_series_pow_rpow_le",
+        "module": "NLAlib.Probability.Gaussian.Moments.SeriesKhintchine",
+        "status": "proved",
+        "usage": "**Integer noncommutative Khintchine, rooted form.** The exact nonnegative `2p`-th root of the trace moment is bounded by `sqrt(2p-1)` times the variance trace root, for independent standard Gaussian or Rademacher coefficients."
+      }
+    },
+    {
+      "atlas_id": "hmt-9-1-frobenius",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset",
+        "module": "NLAlib.LowRank.Structural.RangeFinder",
+        "status": "proved",
+        "usage": "Same hypotheses as `rangeFinder_frobSq_le` plus `hY : IsBestRankApprox k (Qᵀ * A) Y` (`k` = number of columns of `V₁`); gives `frobSq (A - Q * Y) ≤ frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)`."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_quadForm_eq_trace_of_standardGaussian",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Pass independent standard-Gaussian coordinate laws; obtain the expected quadratic form equal to trace A. Supply coordinate AE measurability, obtained from aemeasurable_of_isStandardGaussian and the laws."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_quadForm_eq_trace_of_rademacher",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Pass independent Rademacher coordinate laws; obtain the expected quadratic form equal to trace A. Supply coordinate AE measurability, obtained from aemeasurable_of_isRademacher and the laws."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hutchinson_of_standardGaussian",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Pass symmetric A, independent coordinates and actual standard Gaussian laws; derive measurability/integrability and obtain unbiasedness plus the corresponding variance identity."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hutchinson_of_rademacher",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Pass symmetric A, independent coordinates and actual Rademacher laws; derive measurability/integrability and obtain unbiasedness plus the corresponding variance identity."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_quadForm_eq_trace_of_second_moments",
+        "module": "NLAlib.Probability.Concentration.QuadraticForms.QuadraticMoments",
+        "status": "proved",
+        "usage": "Pass coordinate AE measurability and E[z_i*z_j]=δ_ij; derive quadratic-form integrability and its expectation equal to trace A, without independence, means or extra integrability certificates."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-variance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.variance_quadForm_of_isSymm_of_standardGaussian",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Pass symmetric A, independent coordinates and each standard-Gaussian map law; obtain variance=2*frobSq A with moment conditions derived. Supply coordinate AE measurability, obtained from aemeasurable_of_isStandardGaussian and the laws."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-variance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.variance_quadForm_of_isSymm_of_rademacher",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Pass symmetric A, independent coordinates and each Rademacher map law; obtain variance=2*(frobSq A−sum diagonal squares). Supply coordinate AE measurability, obtained from aemeasurable_of_isRademacher and the laws."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-variance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hutchinson_of_standardGaussian",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Pass symmetric A, independent coordinates and actual standard Gaussian laws; derive measurability/integrability and obtain unbiasedness plus the corresponding variance identity."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-variance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hutchinson_of_rademacher",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Pass symmetric A, independent coordinates and actual Rademacher laws; derive measurability/integrability and obtain unbiasedness plus the corresponding variance identity."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-variance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.variance_quadForm_gaussianMatrix_column",
+        "module": "NLAlib.Estimation.QuadraticForms.HutchinsonLaws",
+        "status": "proved",
+        "usage": "Apply the symmetric Gaussian variance formula to a literal gaussianMatrix n 1 column."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-variance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.variance_quadForm_of_isSymm",
+        "module": "NLAlib.Probability.Concentration.QuadraticForms.QuadraticMoments",
+        "status": "proved",
+        "usage": "Same coordinate hypotheses as `variance_quadForm` plus `hA : A.IsSymm`; gives `variance (quadForm A ∘ z) μ = 2 * (frobSq A - ∑ A i i ^ 2) + (m₄ - 1) * ∑ A i i ^ 2`."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-variance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.variance_quadForm_of_isSymm_of_fourth_moment_eq_three",
+        "module": "NLAlib.Probability.Concentration.QuadraticForms.QuadraticMoments",
+        "status": "proved",
+        "usage": "Pass `hA : A.IsSymm` and the coordinate hypotheses with `hm4 : E z_i⁴ = 3` (Gaussian-like; Gaussianity itself is not needed); gives `variance (quadForm A ∘ z) μ = 2 * frobSq A`."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-variance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.variance_quadForm_of_isSymm_of_fourth_moment_eq_one",
+        "module": "NLAlib.Probability.Concentration.QuadraticForms.QuadraticMoments",
+        "status": "proved",
+        "usage": "Pass `hA : A.IsSymm` and the coordinate hypotheses with `hm4 : E z_i⁴ = 1` (Rademacher-like); gives `variance (quadForm A ∘ z) μ = 2 * (frobSq A - ∑ A i i ^ 2)`."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_le_abs_hutchinsonEstimate_sub_trace_le_of_standardGaussian",
+        "module": "NLAlib.Estimation.Trace.HutchinsonTail",
+        "status": "proved",
+        "usage": "`P(|est - tr A| ≥ t) ≤ 2 exp(-(1/(256e²)) min(m t²/‖A‖_F², m t/‖A‖))` for `m` standard Gaussian samples."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_le_abs_hutchinsonEstimate_sub_trace_le_of_rademacher",
+        "module": "NLAlib.Estimation.Trace.HutchinsonTail",
+        "status": "proved",
+        "usage": "Same for Rademacher samples."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_le_abs_hutchinsonEstimate_sub_trace_le_mul_trace_of_standardGaussian",
+        "module": "NLAlib.Estimation.Trace.HutchinsonTail",
+        "status": "proved",
+        "usage": "PSD `A`: `P(|est - tr A| ≥ ε tr A) ≤ 2 exp(-m ε²/(256e²))` for `0 < ε ≤ 1`."
+      }
+    },
+    {
+      "atlas_id": "hutchinson-tail",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_le_abs_hutchinsonEstimate_sub_trace_le_of_le_card",
+        "module": "NLAlib.Estimation.Trace.HutchinsonTail",
+        "status": "proved",
+        "usage": "`m ≥ 256e² ε⁻² log(2/δ)` gives probability `≤ δ`."
+      }
+    },
+    {
+      "atlas_id": "diagonal-estimator",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_and_variance_mul_mulVec_apply_of_standardGaussian",
+        "module": "NLAlib.Estimation.Diagonal.DiagonalEstimator",
+        "status": "proved",
+        "usage": "Gaussian: variance `∑ⱼ A i j² + A i i²`."
+      }
+    },
+    {
+      "atlas_id": "diagonal-estimator",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_and_variance_mul_mulVec_apply_of_rademacher",
+        "module": "NLAlib.Estimation.Diagonal.DiagonalEstimator",
+        "status": "proved",
+        "usage": "Rademacher: variance `∑ⱼ A i j² - A i i²`."
+      }
+    },
+    {
+      "atlas_id": "krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mem_krylovSpace_iff_degree",
+        "module": "NLAlib.Krylov.Spaces.Polynomial",
+        "status": "proved",
+        "usage": "No hypotheses (valid also for `q = 0`); rewrites `x ∈ krylovSpace A b q ↔ ∃ p, p.degree < q ∧ x = (aeval A p).mulVec b`."
+      }
+    },
+    {
+      "atlas_id": "lanczos-recurrence",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.arnoldiHessenberg_apply_eq_zero_of_add_one_lt_of_isSymm",
+        "module": "NLAlib.Krylov.Processes.ArnoldiProcess",
+        "status": "proved",
+        "usage": "**For symmetric `A` the Arnoldi Hessenberg matrix is tridiagonal**: also `h_ij = 0` for `j > i + 1` (the Lanczos case)."
+      }
+    },
+    {
+      "atlas_id": "lanczos-gauss-quadrature",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.dotProduct_aeval_mulVec_eq_of_krylovSpace_le",
+        "module": "NLAlib.Krylov.Quadrature.GaussQuadrature",
+        "status": "proved",
+        "usage": "Exactness: for symmetric `A`, orthonormal `Q` with `krylovSpace A b q ≤ range Q`, `0 < q`, and `p.natDegree ≤ 2q - 1`: `b ⬝ᵥ p(A) b = (Qᵀb) ⬝ᵥ p(QᵀAQ) (Qᵀb)`."
+      }
+    },
+    {
+      "atlas_id": "lanczos-gauss-quadrature",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_dotProduct_cfc_mulVec_sub_le_of_krylovSpace_le",
+        "module": "NLAlib.Krylov.Quadrature.GaussQuadrature",
+        "status": "proved",
+        "usage": "Error: `|bᵀ f(A) b - (Qᵀb)ᵀ f(QᵀAQ)(Qᵀb)| ≤ 2E ‖b‖²` when `|f - p| ≤ E` on an interval containing the spectrum."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.powerRayleighRelativeError_singleton_eq_zero",
+        "module": "NLAlib.Estimation.Spectral.RandomStartEndpoints",
+        "status": "proved",
+        "usage": "A nonzero top-coordinate start gives exact power iteration in dimension one, including the initial Rayleigh quotient `q=0`."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.lanczosRayleighRelativeError_singleton_eq_zero",
+        "module": "NLAlib.Estimation.Spectral.RandomStartEndpoints",
+        "status": "proved",
+        "usage": "A nonzero top-coordinate start gives exact Lanczos in dimension one at every positive step count."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.ae_power_and_lanczos_singleton_eq_zero_pi_gaussianReal",
+        "module": "NLAlib.Estimation.Spectral.RandomStartEndpoints",
+        "status": "proved",
+        "usage": "Both random-start algorithms are exact almost surely in dimension one."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_lanczosRayleighRelativeError_pi_gaussianReal_le",
+        "module": "NLAlib.Estimation.Spectral.RandomStartLanczos",
+        "status": "proved",
+        "usage": "The Gaussian random-start Lanczos method has the explicit gap-free expectation rate with denominator q² after q≥1 matrix-vector products, using the variational value on K_{q+1} and the actual Gaussian law."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_lanczosRayleighRelativeError_pi_gaussianReal_le_all_dims",
+        "module": "NLAlib.Estimation.Spectral.RandomStartLanczos",
+        "status": "proved",
+        "usage": "The Gaussian Lanczos expectation theorem covers every matrix dimension."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_powerRayleighRelativeError_pi_gaussianReal_le",
+        "module": "NLAlib.Estimation.Spectral.RandomStartPower",
+        "status": "proved",
+        "partial": true,
+        "usage": "Expected Gaussian random-start power error has the source's explicit gap-free constant `min(1,(log(2N)+2)/(2q+1))`."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_powerRayleighRelativeError_pi_gaussianReal_le_all_dims",
+        "module": "NLAlib.Estimation.Spectral.RandomStartPower",
+        "status": "proved",
+        "partial": true,
+        "usage": "The Gaussian power-method expectation bound includes every matrix dimension, with zero relative error for the empty and zero matrices."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.lanczosRitzValue_eq_sSup",
+        "module": "NLAlib.Krylov.Spectral.MeasurableRitz",
+        "status": "proved",
+        "partial": true,
+        "usage": "The countable measurable value equals the ordinary Rayleigh supremum over the actual Krylov space."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.one_sub_filter_mean_le_four_div_sq",
+        "module": "NLAlib.Polynomial.Chebyshev.LanczosFilterMean",
+        "status": "proved",
+        "partial": true,
+        "usage": "Finite spectral filter means have relative error at most `4/(2k+1)^2` once `ℓ log 2` dominates the logarithmic inverse top-coordinate overlap."
+      }
+    },
+    {
+      "atlas_id": "random-start-power",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_polynomial_filter_mean_le_log_sq",
+        "module": "NLAlib.Polynomial.Chebyshev.LanczosFilterMean",
+        "status": "proved",
+        "partial": true,
+        "usage": "There is a genuine degree-bounded polynomial whose finite Rayleigh mean has the source's gap-free squared logarithmic rate."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_le_abs_slqEstimate_inv_sub_trace_le_of_standardGaussian",
+        "module": "NLAlib.Estimation.Quadrature.SLQ",
+        "status": "proved",
+        "partial": true,
+        "usage": "Case `f = 1/x`: `P(|SLQ - tr A⁻¹| ≥ t + 2E(n+s))` bounded by two Hanson–Wright tails."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_le_of_rademacher_open_bernsteinEllipse",
+        "module": "NLAlib.Estimation.Quadrature.SLQAnalytic",
+        "status": "proved",
+        "usage": "Analytic SLQ with independent Rademacher probes has the exact tail threshold `η+4nM/(ρ^(2q-1)(ρ-1))`."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_analytic_card_ge",
+        "module": "NLAlib.Estimation.Quadrature.SLQAnalytic",
+        "status": "proved",
+        "usage": "Relative analytic SLQ with the exact Rademacher sample budget has failure probability at most `δ` once the concrete geometric rate pays half the error budget."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_le_of_rademacher_analytic_log_steps",
+        "module": "NLAlib.Estimation.Quadrature.SLQAnalyticSteps",
+        "status": "proved",
+        "usage": "An explicit logarithmic analytic SLQ step budget gives absolute error threshold `ε`; the stochastic tail is evaluated at `ε/2` with the exact Hanson–Wright constant."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_analytic_log_steps",
+        "module": "NLAlib.Estimation.Quadrature.SLQAnalyticSteps",
+        "status": "proved",
+        "usage": "The fully explicit analytic relative-error SLQ choices: the geometric step budget `q≥(1+log(8nM/(ετ(ρ-1)))/logρ)/2`, `q≥1`, and `m≥1024e² log(2/δ)/ε²` imply failure probability at most `δ` for `|SLQ-τ|>ετ`."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_le_of_rademacher_lipschitzOnWith",
+        "module": "NLAlib.Estimation.Quadrature.SLQLipschitz",
+        "status": "proved",
+        "usage": "SLQ for any interval-Lipschitz function has threshold `η+πLn(c-a)/(4q)` and the established exact Hanson–Wright tail constant `1/(256e²)`."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_le_of_rademacher_lipschitz_steps",
+        "module": "NLAlib.Estimation.Quadrature.SLQLipschitz",
+        "status": "proved",
+        "usage": "The concrete Lipschitz step count `q ≥ πLn(c-a)/(2ε)` leaves half of an absolute error budget for the stochastic term."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lipschitz_steps",
+        "module": "NLAlib.Estimation.Quadrature.SLQLipschitz",
+        "status": "proved",
+        "usage": "For a positive semidefinite matrix function with trace `τ>0`, the concrete Lipschitz step count `q ≥ πLn(c-a)/(2ετ)` and sample count `m ≥ 1024e² ε⁻² log(2/δ)` give relative error at most `ε` with failure at most `δ`."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lower_bound",
+        "module": "NLAlib.Estimation.Quadrature.SLQPositiveLowerBound",
+        "status": "proved",
+        "partial": true,
+        "usage": "A positive lower bound `f_min` on the spectral interval makes the condition `E ≤ ε f_min/4` sufficient for relative SLQ with `m ≥ 1024e² ε⁻² log(2/δ)` probes."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lipschitz_lower_bound",
+        "module": "NLAlib.Estimation.Quadrature.SLQPositiveLowerBound",
+        "status": "proved",
+        "usage": "A positive scalar lower bound gives the computable Lipschitz step count `q ≥ πL(c-a)/(2ε f_min)` and sample count `m ≥ 1024e² ε⁻² log(2/δ)` for relative SLQ."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_analytic_lower_bound",
+        "module": "NLAlib.Estimation.Quadrature.SLQPositiveLowerBound",
+        "status": "proved",
+        "usage": "A positive scalar lower bound gives the computable analytic step count `q ≥ (1+log(8M/(ε f_min(ρ-1)))/log ρ)/2` and the exact Rademacher sample count `m ≥ 1024e² ε⁻² log(2/δ)` for relative SLQ."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_le_of_rademacher",
+        "module": "NLAlib.Estimation.Quadrature.SLQRademacher",
+        "status": "proved",
+        "partial": true,
+        "usage": "General SLQ tail for independent Rademacher probes, using a polynomial approximant of degree below `2q` and uniform error `E`: the error threshold is `η+2nE` and the tail is `2 exp(-(m/(256e²)) min(η²/‖f(A)‖_F²,η/‖f(A)‖))`."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher",
+        "module": "NLAlib.Estimation.Quadrature.SLQRademacher",
+        "status": "proved",
+        "partial": true,
+        "usage": "Relative-error SLQ tail for a positive semidefinite matrix function, when the explicit polynomial approximation contributes at most half of the relative error budget."
+      }
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_card_ge_rademacher",
+        "module": "NLAlib.Estimation.Quadrature.SLQRademacher",
+        "status": "proved",
+        "partial": true,
+        "usage": "The exact SLQ Rademacher sample budget `m ≥ 1024e² ε⁻² log(2/δ)` gives relative error at most `ε` with failure probability at most `δ`, provided the polynomial approximation uses at most half the deterministic error budget."
+      }
+    },
+    {
+      "atlas_id": "gaussian-integration-by-parts",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_coord_mul_eq_integral_fderiv_pi_gaussianReal",
+        "module": "NLAlib.Probability.Gaussian.Calculus.ProductIntegrationByParts",
+        "status": "proved",
+        "usage": "Pass C1 f and polynomial bounds for values and partial derivatives; obtain E[x_i f(x)]=E[∂_i f(x)] with all integrability derived."
+      }
+    },
+    {
+      "atlas_id": "herbst",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_hasSubgaussianMGF_of_logSobolev",
+        "module": "NLAlib.Probability.Gaussian.Concentration.LogSobolevHerbst",
+        "status": "proved",
+        "usage": "For a probability measure μ on a finite real coordinate space, pass HasEuclideanLogSobolev μ c, hL : 0≤L and the Euclidean L-Lipschitz bound; obtain Integrable F and centered HasSubgaussianMGF with proxy cL²."
+      }
+    },
+    {
+      "atlas_id": "herbst",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_ge_le_of_logSobolev",
+        "module": "NLAlib.Probability.Gaussian.Concentration.LogSobolevHerbst",
+        "status": "proved",
+        "usage": "For the same probability measure, pass HasEuclideanLogSobolev μ c, 0≤L, the Euclidean L-Lipschitz bound and 0≤t; obtain μ{F≥E F+t}≤ofReal(exp(−t²/(2cL²)))."
+      }
+    },
+    {
+      "atlas_id": "herbst",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hasEuclideanLogSobolev_pi_gaussianReal",
+        "module": "NLAlib.Probability.Gaussian.Concentration.LogSobolevHerbst",
+        "status": "proved",
+        "usage": "Apply in any finite dimension to discharge the genuine LSI premise with c=1 for the standard Gaussian product."
+      }
+    },
+    {
+      "atlas_id": "chi-square-neg-moment",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_rpow_inv_sum_sq_gaussianReal",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "**Negative moments of a chi-square variable.** For `0 ≤ q < d/2`, `(χ²_d)^{-q}` is integrable and `E[(χ²_d)^{-q}] = Γ(d/2 - q) / (2^q Γ(d/2))`.",
+        "note": "E[(χ²_d)^{-q}] = Γ(d/2−q)/(2^q Γ(d/2)) for 0 ≤ q < d/2; HMT Lemma A.10 bound; E[(χ²_d)^{-2}] = 1/((d−2)(d−4)) as the case q = 2"
+      }
+    },
+    {
+      "atlas_id": "chi-square-neg-moment",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "**`L^{(d-1)/2}` bound for the inverse chi-square.** For `d ≥ 5`, `(χ²_d)^{-(d-1)/2}` is integrable and `E[(χ²_d)^{-(d-1)/2}] < (3/d)^{(d-1)/2}`."
+      }
+    },
+    {
+      "atlas_id": "chi-square-neg-moment",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_inv_sum_sq_pow_two_gaussianReal",
+        "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+        "status": "proved",
+        "usage": "**Second inverse moment of a chi-square variable.** For `d ≥ 5`, `(χ²_d)^{-2}` is integrable and `E[(χ²_d)^{-2}] = 1/((d-2)(d-4))`."
+      }
+    },
+    {
+      "atlas_id": "tail-integral",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_le_of_tail_le",
+        "module": "NLAlib.Probability.Concentration.Basic.TailIntegral",
+        "status": "proved",
+        "usage": "A nonnegative integrable tail envelope above a≥0 derives integrability of f and E f≤a+∫ₐ∞F without assuming f integrable."
+      }
+    },
+    {
+      "atlas_id": "tail-integral",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_le_of_tail_le_rpow",
+        "module": "NLAlib.Probability.Concentration.Basic.TailIntegral",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Expectation from a polynomial tail.** If `f ≥ 0` a.e. on a probability space and `P(f > t) ≤ C t^{-m}` for all `t > 0`, with `C > 0` and `m > 1`, then `f` is integrable and `E f ≤ C^{1/m} · m / (m - 1)`.",
+        "note": "integrability and E f ≤ C^{1/m} m/(m−1) from a polynomial tail bound; truncated Gamma-type integral bound"
+      }
+    },
+    {
+      "atlas_id": "positive-real-moment-comparison",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_rpow_of_nonneg_of_le",
+        "module": "NLAlib.ForMathlib.MeasureTheory.MomentInterpolation",
+        "status": "proved",
+        "usage": "Pass a measurable nonnegative function and an integrable higher real power to obtain integrability of each lower nonnegative power."
+      }
+    },
+    {
+      "atlas_id": "positive-real-moment-comparison",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_rpow_root_le_of_nonneg_of_le",
+        "module": "NLAlib.ForMathlib.MeasureTheory.MomentInterpolation",
+        "status": "proved",
+        "usage": "Pass 0 < p ≤ q and the finite q moment to compare the two rooted real moments."
+      }
+    },
+    {
+      "atlas_id": "positive-real-moment-comparison",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_rpow_root_le_of_integral_rpow_le",
+        "module": "NLAlib.ForMathlib.MeasureTheory.MomentInterpolation",
+        "status": "proved",
+        "usage": "Pass a q moment bound C^q to bound each lower rooted positive real moment by C."
+      }
+    },
+    {
+      "atlas_id": "positive-real-moment-comparison",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_and_integral_rpow_le_of_integral_rpow_le",
+        "module": "NLAlib.ForMathlib.MeasureTheory.MomentInterpolation",
+        "status": "proved",
+        "usage": "Pass the finite bound E f^q ≤ C^q to obtain integrability and E f^p ≤ C^p for 0 < p ≤ q."
+      }
+    },
+    {
+      "atlas_id": "gaussian-positive-moments",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_radial_pi_gaussianReal",
+        "module": "NLAlib.Probability.Gaussian.Moments.PositiveMoments",
+        "status": "proved",
+        "usage": "Use the one-dimensional radial integral formula for a scalar radial integrand of an m-dimensional Gaussian with m ≥ 1."
+      }
+    },
+    {
+      "atlas_id": "gaussian-positive-moments",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integrable_rpow_sum_sq_pi_gaussianReal",
+        "module": "NLAlib.Probability.Gaussian.Moments.PositiveMoments",
+        "status": "proved",
+        "usage": "Pass a nonnegative real q to obtain integrability of the q power of the squared Gaussian radius, including zero dimension."
+      }
+    },
+    {
+      "atlas_id": "gaussian-positive-moments",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_rpow_sum_sq_pi_gaussianReal",
+        "module": "NLAlib.Probability.Gaussian.Moments.PositiveMoments",
+        "status": "proved",
+        "usage": "Pass m ≥ 1 and q ≥ 0 to evaluate the squared-radius q moment in Gamma functions."
+      }
+    },
+    {
+      "atlas_id": "eckart-young-frobenius",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.isBestRankApprox_truncatedSVD",
+        "module": "NLAlib.Matrix.Spectral.EckartYoung",
+        "status": "proved",
+        "usage": "Apply to any A,k; obtain rank≤k and global Frobenius optimality of the constructed truncated SVD."
+      }
+    },
+    {
+      "atlas_id": "eckart-young-frobenius",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_isBestRankApprox",
+        "module": "NLAlib.Matrix.Spectral.EckartYoung",
+        "status": "proved",
+        "usage": "Apply to any real matrix over arbitrary finite row and column types and any k; obtain a genuine best rank-at-most-k Frobenius approximant."
+      }
+    },
+    {
+      "atlas_id": "eckart-young-frobenius",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.bestRankFrobSq_eq_singularValueTailSq",
+        "module": "NLAlib.Matrix.Spectral.EckartYoung",
+        "status": "proved",
+        "usage": "Apply to any A,k; identify the actual rank-constrained infimum with the squared singular-value tail."
+      }
+    },
+    {
+      "atlas_id": "eckart-young-frobenius",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobSq_sub_truncatedSVD_eq_bestRankFrobSq",
+        "module": "NLAlib.Matrix.Spectral.EckartYoung",
+        "status": "proved",
+        "usage": "Apply to any A,k; rewrite the constructed approximation's squared error as the actual optimum."
+      }
+    },
+    {
+      "atlas_id": "truncation-lemma-projected",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual",
+        "module": "NLAlib.LowRank.RandomizedSVD.OptimalError",
+        "status": "proved",
+        "usage": "For arbitrary finite indices, pass an orthonormal Q and a best rank-k approximation Y of QᵀA; obtain actual OPT squared plus residual squared."
+      }
+    },
+    {
+      "atlas_id": "truncation-lemma-projected",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_two_mul_frobSq_residual",
+        "module": "NLAlib.LowRank.RandomizedSVD.OptimalError",
+        "status": "proved",
+        "usage": "Pass the same generic finite-index compressed-minimizer conditions; obtain the coefficient-two ordinary projected truncation bound."
+      }
+    },
+    {
+      "atlas_id": "inverse-polynomial-approx",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.chebyshevResidual",
+        "module": "NLAlib.Polynomial.Chebyshev.Core",
+        "status": "proved",
+        "usage": "The shifted, scaled Chebyshev polynomial normalised to `1` at `0`: `chebyshevResidual a b q = T_q((b + a − 2 X)/(b − a)) / T_q((b + a)/(b − a))`."
+      }
+    },
+    {
+      "atlas_id": "subgaussian-max",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_lt_abs_le_of_hasSubgaussianMGF",
+        "module": "NLAlib.Probability.SubGaussian.Moments",
+        "status": "proved",
+        "usage": "`μ {t < |X|} ≤ 2 exp (-t²/(2c))`."
+      }
+    },
+    {
+      "atlas_id": "subgaussian-spec-norm",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_lt_specNorm_le_of_hasSubgaussianMGF",
+        "module": "NLAlib.Probability.Concentration.Basic.Net",
+        "status": "proved",
+        "usage": "Strict event `2(√(2 log 9 (m+n) c) + √c t) < specNorm A`; `c = 0` handled; any `[Fintype]` indices; no independence assumed."
+      }
+    },
+    {
+      "atlas_id": "residual-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.residual",
+        "module": "NLAlib.Matrix.Subspaces.Projections",
+        "status": "proved",
+        "usage": "Residual of `A` after projecting onto the column space of `Q`: `(I − QQᵀ) A`."
+      }
+    },
+    {
+      "atlas_id": "svd-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sigmaMin",
+        "module": "NLAlib.Matrix.Spectral.Core",
+        "status": "proved",
+        "usage": "The smallest singular value of a tall matrix `A : Matrix m n ℝ`: `σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention `inf ∅ = 0`)."
+      }
+    },
+    {
+      "atlas_id": "best-rank-approx-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.singularValueTailSq",
+        "module": "NLAlib.Matrix.Spectral.EckartYoung",
+        "status": "proved",
+        "usage": "The squared singular-value tail after deleting the first `k` singular values."
+      }
+    },
+    {
+      "atlas_id": "best-rank-approx-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsBestRankApprox",
+        "module": "NLAlib.Matrix.Subspaces.Projections",
+        "status": "proved",
+        "usage": "`Y` is a best rank-`k` Frobenius approximation of `C`."
+      }
+    },
+    {
+      "atlas_id": "scalar-laws-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsStandardGaussian",
+        "module": "NLAlib.Probability.Gaussian.Basic.StandardGaussian",
+        "status": "proved",
+        "usage": "`g` has the standard Gaussian law under `μ`: `μ.map g = gaussianReal 0 1`."
+      }
+    },
+    {
+      "atlas_id": "scalar-laws-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsRademacher",
+        "module": "NLAlib.Probability.Rademacher.Core",
+        "status": "proved",
+        "usage": "`r` has the Rademacher law under `μ`: `μ.map r = ½ δ₁ + ½ δ₋₁`."
+      }
+    },
+    {
+      "atlas_id": "trace-estimators-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hutchinsonBlock",
+        "module": "NLAlib.Estimation.Trace.HutchinsonTail",
+        "status": "proved",
+        "usage": "The block-diagonal matrix `(1/m) diag(A, …, A)` on `n × κ` whose quadratic form at `vec(Z)` is the Hutchinson estimator."
+      }
+    },
+    {
+      "atlas_id": "krylov-polynomial-exactness",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.aeval_mulVec_eq_and_charpoly_is_unique_minimiser",
+        "module": "NLAlib.Krylov.Spectral.CharacteristicPolynomial",
+        "status": "proved",
+        "usage": "Bundles both Krylov polynomial exactness identities and, for an exact Krylov range with q≤grade, the monic degree-q compression characteristic polynomial's orthogonality, least residual norm, and unique minimizer."
+      }
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.complexBlockKrylovSpace",
+        "module": "NLAlib.Krylov.Spaces.ComplexBlock",
+        "status": "proved",
+        "partial": true,
+        "usage": "The actual complex block Krylov span of the first `q` block powers."
+      }
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.complexColumnProjector_aeval_conjGram_mul_mul_eq_of_complexBlockKrylovSpace_le",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter",
+        "status": "proved",
+        "partial": true,
+        "usage": "A complex frame containing the actual block Krylov space reproduces every filtered sketch below its order, simultaneously."
+      }
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.complex_polynomial_filter_residual_bounds_of_complexBlockKrylovSpace_le",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilterBounds",
+        "status": "proved",
+        "partial": true,
+        "usage": "Pass a containing complex block Krylov range and the polynomial degree condition; derives filter-range containment and all canonical projector residual bounds."
+      }
+    },
+    {
+      "atlas_id": "majorization-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.majorization_toolkit_properties",
+        "module": "NLAlib.Matrix.Inequalities.MajorizationToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for majorization and weak majorization of real vectors, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "ky-fan-maximum-principle",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.ky_fan_toolkit_properties",
+        "module": "NLAlib.Matrix.Inequalities.KyFanToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for ky fan maximum principle for eigenvalue and singular-value sums, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "ky-fan-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.ky_fan_norm_toolkit_properties",
+        "module": "NLAlib.Matrix.Inequalities.KyFanNormToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for ky fan k-norms and the nuclear norm, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schatten_toolkit_properties",
+        "module": "NLAlib.Matrix.Norms.SchattenToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for schatten p-norms and the matrix hölder inequality, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "unitarily-invariant-norm-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.OrthogonallyInvariantNorm.exists_symmetricGauge_representation",
+        "module": "NLAlib.Matrix.Norms.FanDominance",
+        "status": "proved",
+        "partial": true,
+        "usage": "Every invariant norm has a fixed actual symmetric gauge representation, valid simultaneously for every matrix of that shape."
+      }
+    },
+    {
+      "atlas_id": "unitarily-invariant-norm-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.OrthogonallyInvariantNorm",
+        "module": "NLAlib.Matrix.Norms.InvariantNorm",
+        "status": "proved",
+        "partial": true,
+        "usage": "An orthogonally invariant real matrix norm in Mathlib's bundled seminorm vocabulary, with an explicit separating zero criterion."
+      }
+    },
+    {
+      "atlas_id": "unitarily-invariant-norm-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.SymmetricGauge.toOrthogonallyInvariantNorm",
+        "module": "NLAlib.Matrix.Norms.InvariantNorm",
+        "status": "proved",
+        "partial": true,
+        "usage": "Every symmetric gauge produces a genuine orthogonally invariant matrix norm, with all norm axioms proved from singular-value inequalities."
+      }
+    },
+    {
+      "atlas_id": "unitarily-invariant-norm-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.OrthogonallyInvariantNorm.seminorm_eq_toSymmetricGauge_matrixValue",
+        "module": "NLAlib.Matrix.Norms.InvariantNormRepresentation",
+        "status": "proved",
+        "partial": true,
+        "usage": "Every invariant norm has its actual symmetric-gauge representation on the native singular-value vector, for arbitrary finite matrix indices."
+      }
+    },
+    {
+      "atlas_id": "unitarily-invariant-norm-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.invariant_norm_toolkit_properties",
+        "module": "NLAlib.Matrix.Norms.InvariantNormToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for unitarily invariant norms: von neumann's gauge characterisation and fan dominance, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "schur-horn",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.majorized_diagonal_and_orthogonal_converse_and_sum_convex_le_trace_cfc",
+        "module": "NLAlib.Matrix.Inequalities.SchurHorn",
+        "status": "proved",
+        "usage": "Use the complete contract for schur–horn: the diagonal is majorized by the spectrum, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "lidskii",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.lidskii_toolkit_properties",
+        "module": "NLAlib.Matrix.Inequalities.LidskiiToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for lidskii–wielandt: λ(a+b) − λ(a) ≺ λ(b), and mirsky in every unitarily invariant norm, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "lidskii",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.weaklyMajorized_abs_singularValues_add_sub",
+        "module": "NLAlib.Matrix.Inequalities.Mirsky",
+        "status": "proved",
+        "partial": true,
+        "usage": "Rectangular Mirsky: the entire absolute singular-value difference vector is weakly majorized by the perturbation singular list."
+      }
+    },
+    {
+      "atlas_id": "horn-product-inequality",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.horn_product_toolkit_properties",
+        "module": "NLAlib.Matrix.Inequalities.HornProductToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for horn's product inequality and weak majorization of σ(ab), or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "eigenvalue-perturbation-symmetric",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.eigenvalue_perturbation_toolkit_properties",
+        "module": "NLAlib.Matrix.Perturbation.EigenvaluePerturbationToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for weyl and hoffman–wielandt perturbation bounds for symmetric eigenvalues, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "eigenvalue-residual-bounds",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.eigenvalue_residual_bounds",
+        "module": "NLAlib.Matrix.Perturbation.EigenvalueResidualToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for residual bounds for approximate eigenpairs (krylov–bogoliubov, kato–temple, one-vector sin θ), or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "kronecker-spectral",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.kronecker_toolkit_properties",
+        "module": "NLAlib.Matrix.Structured.KroneckerToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for spectrum, singular values and norms of kronecker products, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "davis-kahan-sin-theta",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.davis_kahan_toolkit_properties",
+        "module": "NLAlib.Matrix.Perturbation.DavisKahanToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for davis–kahan sin θ theorem for invariant subspaces of symmetric matrices, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "wedin-sin-theta",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.singular_subspace_perturbation_bounds_fintype",
+        "module": "NLAlib.Matrix.Perturbation.WedinFiniteIndex",
+        "status": "proved",
+        "usage": "Use the complete contract for wedin's sin θ theorem for singular subspaces, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "generalized-schur-complement-psd",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.isLeast_generalized_schur_quadratic",
+        "module": "NLAlib.Matrix.Basic.GeneralizedSchurComplement",
+        "status": "proved",
+        "partial": true,
+        "usage": "The generalized Schur quadratic form is the attained minimum over the leading block variable."
+      }
+    },
+    {
+      "atlas_id": "generalized-schur-complement-psd",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.dotProduct_schurComplement_mulVec_le",
+        "module": "NLAlib.Matrix.Basic.GeneralizedSchurComplement",
+        "status": "proved",
+        "partial": true,
+        "usage": "Coverage: generalized-schur-complement-psd **Variational characterisation, lower bound**: for `M = [[A, B], [Bᵀ, C]] ⪰ 0`, `xᵀ (M / A) x ≤ (y, x)ᵀ M (y, x)` for every `y`."
+      }
+    },
+    {
+      "atlas_id": "generalized-schur-complement-psd",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.dotProduct_schurComplement_mulVec_eq",
+        "module": "NLAlib.Matrix.Basic.GeneralizedSchurComplement",
+        "status": "proved",
+        "partial": true,
+        "usage": "Coverage: generalized-schur-complement-psd **Variational characterisation, attainment**: for `M = [[A, B], [Bᵀ, C]] ⪰ 0` the minimum over `y` of `(y, x)ᵀ M (y, x)` is attained at `y = −A⁺Bx` and equals `xᵀ (M / A) x`."
+      }
+    },
+    {
+      "atlas_id": "generalized-schur-complement-psd",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.generalized_schur_nonneg_and_le",
+        "module": "NLAlib.Matrix.Basic.GeneralizedSchurComplement",
+        "status": "proved",
+        "partial": true,
+        "usage": "Generalized Schur complements lie between zero and the trailing block."
+      }
+    },
+    {
+      "atlas_id": "generalized-schur-complement-psd",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.posSemidef_sub_schurComplement",
+        "module": "NLAlib.Matrix.Basic.GeneralizedSchurComplement",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Schur complement below the trailing block**: for `A ⪰ 0`, `C − M / A = Bᵀ A⁺ B ⪰ 0` (the upper half of `0 ⪯ M / A ⪯ C`; the lower half is part of `posSemidef_fromBlocks_iff`)."
+      }
+    },
+    {
+      "atlas_id": "generalized-schur-complement-psd",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.generalized_schur_complement",
+        "module": "NLAlib.Matrix.Basic.GeneralizedSchurComplement",
+        "status": "proved",
+        "usage": "Use the complete contract for generalized schur complement criterion for positive semidefinite block matrices, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "condition-number-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.conditionNumber_transpose",
+        "module": "NLAlib.Matrix.Perturbation.ConditionNumber",
+        "status": "proved",
+        "partial": true,
+        "usage": "Transposition preserves the separate rectangular Moore–Penrose condition quantity."
+      }
+    },
+    {
+      "atlas_id": "condition-number-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.conditionNumber_smul",
+        "module": "NLAlib.Matrix.Perturbation.ConditionNumber",
+        "status": "proved",
+        "partial": true,
+        "usage": "Nonzero scalar multiplication preserves the separate Moore–Penrose condition quantity."
+      }
+    },
+    {
+      "atlas_id": "condition-number-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.conditionNumber_transpose_mul_self",
+        "module": "NLAlib.Matrix.Perturbation.ConditionNumber",
+        "status": "proved",
+        "partial": true,
+        "usage": "Taking a column Gram matrix squares the separate Moore–Penrose condition quantity, including at deficient rank."
+      }
+    },
+    {
+      "atlas_id": "condition-number-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.conditionNumber_mul_left_of_hasOrthonormalCols",
+        "module": "NLAlib.Matrix.Perturbation.ConditionNumber",
+        "status": "proved",
+        "partial": true,
+        "usage": "Left multiplication by a rectangular orthonormal frame preserves the Moore–Penrose condition quantity."
+      }
+    },
+    {
+      "atlas_id": "condition-number-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.condition_number_characterizations",
+        "module": "NLAlib.Matrix.Perturbation.ConditionNumberToolkit",
+        "status": "proved",
+        "usage": "The square spectral condition number and the separate rectangular Moore–Penrose quantity have distinct contracts; use the component declarations for their hypotheses."
+      }
+    },
+    {
+      "atlas_id": "condition-number-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.conditionNumber_eq_div_sigmaMin",
+        "module": "NLAlib.Matrix.Perturbation.Conditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "For a full-column-rank real matrix of positive column dimension, the separate Moore–Penrose condition quantity equals the spectral norm divided by sigmaMin."
+      }
+    },
+    {
+      "atlas_id": "linear-system-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sqrt_dotProduct_sub_div_le_conditionNumber_mul",
+        "module": "NLAlib.Matrix.Perturbation.Conditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "**A posteriori error bound.** For invertible `A`, `A x = b ≠ 0` and any `x̂`, `‖x - x̂‖/‖x‖ ≤ κ(A) ‖b - A x̂‖/‖b‖`."
+      }
+    },
+    {
+      "atlas_id": "linear-system-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sqrt_dotProduct_div_le_conditionNumber_mul_of_mulVec_add",
+        "module": "NLAlib.Matrix.Perturbation.Conditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Perturbation of the right-hand side.** For invertible `A`, `A x = b ≠ 0` and `A (x + Δx) = b + Δb`: `‖Δx‖/‖x‖ ≤ κ(A) ‖Δb‖/‖b‖`."
+      }
+    },
+    {
+      "atlas_id": "linear-system-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sqrt_dotProduct_div_le_of_add_mulVec_add",
+        "module": "NLAlib.Matrix.Perturbation.Conditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Perturbation of a linear system.** For invertible `A`, `A x = b ≠ 0`, `(A + ΔA)(x + Δx) = b + Δb` and `κ(A) ‖ΔA‖/‖A‖ < 1`: `‖Δx‖/‖x‖ ≤ κ(A)/(1 - κ(A)‖ΔA‖/‖A‖) · (‖ΔA‖/‖A‖ + ‖Δb‖/‖b‖)`."
+      }
+    },
+    {
+      "atlas_id": "linear-system-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.linear_system_perturbation",
+        "module": "NLAlib.Matrix.Perturbation.Conditioning",
+        "status": "proved",
+        "usage": "Use the complete contract for normwise forward-error bounds for linear systems, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "least-squares-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sqrt_dotProduct_mul_moorePenroseInverse_sub_div_le",
+        "module": "NLAlib.Matrix.Perturbation.Conditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Least squares, `y` under perturbation of `b`.** For `y = A A⁺ b` and any `Δb`: `‖Δy‖/‖y‖ ≤ (1/cos θ) ‖Δb‖/‖b‖`, where `Δy = A A⁺ Δb`."
+      }
+    },
+    {
+      "atlas_id": "least-squares-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sqrt_dotProduct_moorePenroseInverse_sub_div_le",
+        "module": "NLAlib.Matrix.Perturbation.Conditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Least squares, `x` under perturbation of `b`.** For `x = A⁺ b` and any `Δb`: `‖Δx‖/‖x‖ ≤ κ(A)/(η cos θ) · ‖Δb‖/‖b‖`, where `Δx = A⁺ Δb`."
+      }
+    },
+    {
+      "atlas_id": "least-squares-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.least_squares_perturbation",
+        "module": "NLAlib.Matrix.Perturbation.LeastSquaresToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for wedin's perturbation bound for full-rank least squares, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "cholesky-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_cholesky_of_posSemidef_fintype",
+        "module": "NLAlib.Matrix.Factorizations.CholeskySemidefinite",
+        "status": "proved",
+        "partial": true,
+        "usage": "The semidefinite Cholesky factor exists over every linearly ordered finite index type; finite normalization preserves the order and all zero pivots."
+      }
+    },
+    {
+      "atlas_id": "cholesky-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.cholesky_decomposition",
+        "module": "NLAlib.Matrix.Factorizations.CholeskyToolkit",
+        "status": "proved",
+        "usage": "Use the complete contract for cholesky factorisation: existence and uniqueness, or apply its documented component declarations for individual clauses."
+      }
+    },
+    {
+      "atlas_id": "qr-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.conditionNumber_eq_of_qr",
+        "module": "NLAlib.Matrix.Factorizations.QRConsequences",
+        "status": "proved",
+        "partial": true,
+        "usage": "QR preserves the total spectral condition number built from the actual Moore--Penrose inverse, including singular and zero-rank matrices."
+      }
+    },
+    {
+      "atlas_id": "subspace-iteration-convergence",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.complexSubspaceTangent_complexSubspaceIterate_le",
+        "module": "NLAlib.LowRank.RangeFinding.ComplexSubspaceConvergence",
+        "status": "proved",
+        "partial": true,
+        "usage": "Complex principal-angle tangents contract by the magnitude-gap norm product."
+      }
+    },
+    {
+      "atlas_id": "subspace-iteration-convergence",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.complexSubspaceTangent_complexSubspaceIterate_le_of_diagonal",
+        "module": "NLAlib.LowRank.RangeFinding.ComplexSubspaceConvergence",
+        "status": "proved",
+        "partial": true,
+        "usage": "The explicit complex magnitude-gap bound uses a positive lower envelope for the leading eigenvalue magnitudes."
+      }
+    },
+    {
+      "atlas_id": "affine-krylov-minimiser",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsAffineMinimiser.le_aeval",
+        "module": "NLAlib.Krylov.Solvers.Minimiser",
+        "status": "proved",
+        "usage": "**K1, error form.** If `x` minimises any objective `E` over `x₀ + K_q(A, r₀)` and `A x⋆ = c`, then `E x ≤ E (x⋆ + p(A)(x₀ − x⋆))` for every residual polynomial `p` (`deg p ≤ q`, `p(0) = 1`)."
+      }
+    },
+    {
+      "atlas_id": "affine-krylov-minimiser",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsAffineMinimiser.le_aeval_residual",
+        "module": "NLAlib.Krylov.Solvers.Minimiser",
+        "status": "proved",
+        "usage": "**K1, residual form.** If `x` minimises an objective of the residual, `y ↦ F (c − A y)`, over `x₀ + K_q(A, r₀)`, then `F (c − A x) ≤ F (p(A) r₀)` for every residual polynomial `p`."
+      }
+    },
+    {
+      "atlas_id": "affine-krylov-minimiser",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.quadForm_sub_le_of_isAffineMinimiser",
+        "module": "NLAlib.Krylov.Solvers.Minimiser",
+        "status": "proved",
+        "usage": "**The class theorem.** Let `A` be symmetric, `A x⋆ = c`, and `g` a weight polynomial with `g(λᵢ) ≥ 0` at every eigenvalue."
+      }
+    },
+    {
+      "atlas_id": "lu-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_isLU_of_forall_det_ne_zero",
+        "module": "NLAlib.Matrix.Factorizations.LU",
+        "status": "proved",
+        "usage": "**Existence of LU** when the leading principal minors of orders `1, …, n − 1` are nonzero (no condition on `det A` itself); witnessed by `lu A` (`isLU_lu_of_forall_det_ne_zero`)."
+      }
+    },
+    {
+      "atlas_id": "lu-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_isLU_iff_forall_det_ne_zero",
+        "module": "NLAlib.Matrix.Factorizations.LU",
+        "status": "proved",
+        "usage": "**Existence of LU for invertible matrices**: an invertible `A` has an LU factorization iff all its leading principal minors are nonzero (and it is then unique, `IsLU.unique`)."
+      }
+    },
+    {
+      "atlas_id": "lu-algorithm",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.luSucceeds_iff_forall_det_ne_zero",
+        "module": "NLAlib.Matrix.Factorizations.LU",
+        "status": "proved",
+        "usage": "**Breakdown of Gaussian elimination**: elimination without pivoting succeeds iff every leading principal minor `det A(1:k,1:k)`, `k = 1, …, n`, is nonzero."
+      }
+    },
+    {
+      "atlas_id": "lu-algorithm",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.isLU_lu_of_forall_det_ne_zero",
+        "module": "NLAlib.Matrix.Factorizations.LU",
+        "status": "proved",
+        "usage": "**Realisation of Gaussian elimination under the minimal hypothesis**: if the leading principal minors of orders `1, …, n − 1` are nonzero, `lu A` is an LU factorization (the last pivot is never divided by, so `det A` may vanish)."
+      }
+    },
+    {
+      "atlas_id": "householder-qr",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.householderQ_transpose_mul_self",
+        "module": "NLAlib.Matrix.Factorizations.Householder",
+        "status": "proved",
+        "usage": "The Householder `Q` is orthogonal (no hypothesis)."
+      }
+    },
+    {
+      "atlas_id": "givens-rotation-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.givens_transpose_mul_self",
+        "module": "NLAlib.Matrix.Factorizations.Givens",
+        "status": "proved",
+        "usage": "**A Givens rotation is orthogonal**: `GᵀG = I` when `i ≠ j` and `c² + s² = 1`."
+      }
+    },
+    {
+      "atlas_id": "givens-rotation-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.givensRotation_mulVec_apply_right",
+        "module": "NLAlib.Matrix.Factorizations.Givens",
+        "status": "proved",
+        "usage": "**A Givens rotation zeroes the chosen entry**: `(G x)_j = 0`."
+      }
+    },
+    {
+      "atlas_id": "givens-rotation-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.givensRotation_mulVec_apply_left",
+        "module": "NLAlib.Matrix.Factorizations.Givens",
+        "status": "proved",
+        "usage": "The rotated pivot: `(G x)_i = √(x_i² + x_j²)`."
+      }
+    },
+    {
+      "atlas_id": "least-squares-normal-equations",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsLeastSquaresSolution.dotProduct_sub_mulVec_eq",
+        "module": "NLAlib.Matrix.Basic.LeastSquares",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Residual identity.** For a least-squares solution, `‖b - A x‖² = ‖b‖² - ‖A x‖²` (Pythagoras, `b = A x + r` with `r ⟂ A x`)."
+      }
+    },
+    {
+      "atlas_id": "least-squares-normal-equations",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsLeastSquaresSolution.dotProduct_self_moorePenroseInverse_mulVec_le",
+        "module": "NLAlib.Matrix.Basic.LeastSquares",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Minimum-norm solution.** Among all least-squares solutions, `A⁺ b` has the smallest Euclidean norm: `‖A⁺ b‖² ≤ ‖x‖²`, since `x = A⁺ b + z` with `A z = 0` and `A⁺ b ⟂ ker A`."
+      }
+    },
+    {
+      "atlas_id": "least-squares-normal-equations",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsLeastSquaresSolution.dotProduct_sub_mulVec_eq_of_eq_mul",
+        "module": "NLAlib.Matrix.Basic.LeastSquares",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Residual via thin QR.** If `A = Q R` with `QᵀQ = I` and `R` invertible, the least-squares residual satisfies `‖b - A x‖² = ‖b‖² - ‖Qᵀ b‖²`."
+      }
+    },
+    {
+      "atlas_id": "least-squares-normal-equations",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.IsQR.dotProduct_sub_mulVec_eq",
+        "module": "NLAlib.Matrix.Basic.LeastSquares",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Residual via `IsQR`.** For `IsQR A Q R` with nonzero diagonal and a least-squares solution `x`, `‖b - A x‖² = ‖b‖² - ‖Qᵀ b‖²`."
+      }
+    },
+    {
+      "atlas_id": "qr-algorithm-simultaneous-iteration",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.isSymm_qrAlgorithm",
+        "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+        "status": "proved",
+        "usage": "**Symmetry is preserved**: if `A` is symmetric then so is every `A_k`."
+      }
+    },
+    {
+      "atlas_id": "condition-number-of-map-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mapAbsCondition",
+        "module": "NLAlib.Matrix.Perturbation.MapConditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "Use the norm of the Fréchet derivative for absolute local conditioning."
+      }
+    },
+    {
+      "atlas_id": "condition-number-of-map-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mapNormRelativeCondition",
+        "module": "NLAlib.Matrix.Perturbation.MapConditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "Use the derivative norm times input norm divided by output norm for normwise relative conditioning at nonzero input and output."
+      }
+    },
+    {
+      "atlas_id": "condition-number-of-map-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mapAbsCondition_eq_abs_deriv",
+        "module": "NLAlib.Matrix.Perturbation.MapConditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "Rewrite the absolute condition number of a scalar real map as the absolute value of its derivative."
+      }
+    },
+    {
+      "atlas_id": "condition-number-of-map-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mapNormRelativeCondition_eq_abs_mul_deriv_div",
+        "module": "NLAlib.Matrix.Perturbation.MapConditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "Rewrite scalar normwise relative conditioning as the absolute logarithmic derivative."
+      }
+    },
+    {
+      "atlas_id": "condition-number-of-map-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.componentRelativeConditionMatrix",
+        "module": "NLAlib.Matrix.Perturbation.MapConditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "Use the diagonal-scaled Jacobian for componentwise relative coordinate perturbations at nonzero input/output coordinates."
+      }
+    },
+    {
+      "atlas_id": "condition-number-of-map-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.componentRelativeConditionMatrix_apply",
+        "module": "NLAlib.Matrix.Perturbation.MapConditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "Compute a relative condition matrix entry as input coordinate times the partial derivative divided by the output coordinate."
+      }
+    },
+    {
+      "atlas_id": "condition-number-of-map-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mapAbsCondition_toEuclideanCLM",
+        "module": "NLAlib.Matrix.Perturbation.MapConditioning",
+        "status": "proved",
+        "partial": true,
+        "usage": "Rewrite absolute conditioning of a matrix Euclidean action as the matrix spectral norm."
+      }
+    },
+    {
+      "atlas_id": "condition-number-of-map-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.map_conditioning_characterizations",
+        "module": "NLAlib.Matrix.Perturbation.MapConditioning",
+        "status": "proved",
+        "usage": "Apply to a differentiable Euclidean map to obtain the derivative-norm and coordinate-relative formulas, scalar formulas, and both valid metric-specific bounds."
+      }
+    },
+    {
+      "atlas_id": "schur-triangularization",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobenius_norm_sq_eq_diagonal_add_off_diagonal",
+        "module": "NLAlib.Matrix.Spectral.SchurFrobenius",
+        "status": "proved",
+        "partial": true,
+        "usage": "Split Frobenius mass exactly into diagonal and off-diagonal mass; for upper triangular T the latter is the strictly upper part."
+      }
+    },
+    {
+      "atlas_id": "schur-triangularization",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sum_norm_sq_schur_diagonal_le_frobenius_norm_sq",
+        "module": "NLAlib.Matrix.Spectral.SchurFrobenius",
+        "status": "proved",
+        "partial": true,
+        "usage": "Pass a unitary Schur factorization to bound its squared diagonal eigenvalue magnitudes by Frobenius mass of A."
+      }
+    },
+    {
+      "atlas_id": "schur-triangularization",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sum_norm_sq_schur_diagonal_eq_iff_normal",
+        "module": "NLAlib.Matrix.Spectral.SchurFrobenius",
+        "status": "proved",
+        "partial": true,
+        "usage": "Pass a unitary Schur factor and its diagonal characteristic factorization to rewrite equality in Schur's Frobenius bound as normality."
+      }
+    },
+    {
+      "atlas_id": "schur-triangularization",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schur_triangularization_properties",
+        "module": "NLAlib.Matrix.Spectral.SchurToolkit",
+        "status": "proved",
+        "usage": "Use the ten components for prescribed complex Schur order, corrected real Schur, real-spectrum triangularization, Frobenius identity and equality, both density clauses, complex and real epsilon similarity, and complex and real QZ for every pencil."
+      }
+    },
+    {
+      "atlas_id": "normal-matrices",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sum_norm_sq_characteristic_eq_iff_normal",
+        "module": "NLAlib.Matrix.Spectral.NormalToolkit",
+        "status": "proved",
+        "partial": true,
+        "usage": "For any complete characteristic-root list with multiplicity, rewrite equality in the Frobenius root-magnitude bound as normality."
+      }
+    },
+    {
+      "atlas_id": "normal-matrices",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.normal_matrix_properties",
+        "module": "NLAlib.Matrix.Spectral.NormalToolkit",
+        "status": "proved",
+        "usage": "Use the nine components for all normality characterizations, block reduction, unitary classification, rectangular Fuglede-Putnam, and real normal, skew-symmetric and orthogonal canonical blocks."
+      }
+    },
+    {
+      "atlas_id": "normal-matrices",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobenius_norm_sq_eq_sum_norm_sq_of_normal",
+        "module": "NLAlib.Matrix.Spectral.SchurFrobenius",
+        "status": "proved",
+        "partial": true,
+        "usage": "Pass normality and any complete diagonal characteristic factorization to identify squared Frobenius mass with the sum of squared eigenvalue magnitudes."
+      }
+    },
+    {
+      "atlas_id": "normal-matrices",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sum_norm_sq_schur_diagonal_eq_iff_normal",
+        "module": "NLAlib.Matrix.Spectral.SchurFrobenius",
+        "status": "proved",
+        "partial": true,
+        "usage": "Pass a unitary Schur factor and its diagonal characteristic factorization to rewrite equality in Schur's Frobenius bound as normality."
+      }
+    },
+    {
+      "atlas_id": "diagonalizable-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.diagonalizable_properties",
+        "module": "NLAlib.Matrix.Spectral.DiagonalizableToolkit",
+        "status": "proved",
+        "usage": "Use the eight components for diagonal similarity, independent eigenvectors, equality of geometric and algebraic multiplicity, distinct-spectrum sufficiency, direct sums, aligned block changes, principal compression, and the algebraic multiplicity lower bound."
+      }
+    },
+    {
+      "atlas_id": "simultaneous-diagonalization",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.simultaneous_diagonalization_properties",
+        "module": "NLAlib.Matrix.Spectral.SimultaneousToolkit",
+        "status": "proved",
+        "usage": "Use the nine components for arbitrary-family common eigenvectors and Schur bases, similarity-unitary triangular equivalence, diagonalizable and normal equivalences, prescribed diagonal orders, real similarity, and paired spectral arithmetic."
+      }
+    },
+    {
+      "atlas_id": "left-right-eigenvectors",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.left_right_eigenvector_properties",
+        "module": "NLAlib.Matrix.Spectral.LeftRightEigenvectorToolkit",
+        "status": "proved",
+        "usage": "Use the eight components for biorthogonality, paired oblique deflation, its converse, simplicity and pairing, the nonzero adjugate factor, and both eigenvector transport directions."
+      }
+    },
+    {
+      "atlas_id": "sylvester-equation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sylvester_equation_properties",
+        "module": "NLAlib.Matrix.Spectral.SylvesterToolkit",
+        "status": "proved",
+        "usage": "Use the seven components for spectral invertibility, unique solutions, polynomial intertwining, real solutions, assembled block intertwiners, corrected conjugated block commutants, and triangular primary decomposition."
+      }
+    },
+    {
+      "atlas_id": "matrix-power-convergence",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.matrix_power_convergence_properties",
+        "module": "NLAlib.Matrix.Spectral.MatrixPowerToolkit",
+        "status": "proved",
+        "usage": "Use the four components for real power decay iff complex spectral radius below one, the exact inverse Neumann series, the power-boundedness iff criterion, and the explicit spectral-radius-plus-epsilon bound."
+      }
+    },
+    {
+      "atlas_id": "structured-matrices-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.structured_matrices_properties",
+        "module": "NLAlib.Matrix.Structured.StructuredToolkit",
+        "status": "proved",
+        "usage": "Apply for the complete structured-matrix determinant, indexing, Hilbert and circulant commutant bundle, including empty matrices."
+      }
+    },
+    {
+      "atlas_id": "lu-row-inclusion",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.lu_row_inclusion_properties",
+        "module": "NLAlib.Matrix.Factorizations.LULeadingRank",
+        "status": "proved",
+        "usage": "Apply for the complete local inclusion equivalences and rank-sized leading-minor sufficiency bundle, including rank zero."
+      }
+    },
+    {
+      "atlas_id": "interlacing-converse",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.interlacing_converse_properties",
+        "module": "NLAlib.Matrix.Spectral.InterlacingConverseToolkit",
+        "status": "proved",
+        "usage": "Supply any real symmetric matrix and its actual complete increasing characteristic-root list to obtain every weakly interlacing bordered, positive rank-one and negative rank-one realization, with exact characteristic multiplicities and exact scalar/squared-coupling trace identities in all finite dimensions."
+      }
+    },
+    {
+      "atlas_id": "real-part-eigenvalue-majorization",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.real_part_eigenvalue_majorization",
+        "module": "NLAlib.Matrix.Inequalities.HermitianPartToolkit",
+        "status": "proved",
+        "usage": "Apply for the full forward, converse-realization and Bendixson contract with exact algebraic multiplicities."
+      }
+    },
+    {
+      "atlas_id": "ostrowski-congruence-eigenvalues",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.ostrowski_congruence_eigenvalues",
+        "module": "NLAlib.Matrix.Spectral.OstrowskiCongruence",
+        "status": "proved",
+        "usage": "Apply to a real symmetric matrix and any square transformation for the full scaling-factor, signed-bound, invertible positivity, and inertia-count contract."
+      }
+    },
+    {
+      "atlas_id": "simultaneous-diagonalization-congruence",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.simultaneous_congruence_characterizations",
+        "module": "NLAlib.Matrix.Spectral.CongruenceToolkit",
+        "status": "proved",
+        "usage": "Apply to a real symmetric pair for the complete definite, invertible-indefinite, and singular-PSD simultaneous-congruence contract."
+      }
+    },
+    {
+      "atlas_id": "gershgorin-diagonal-dominance",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.gershgorin_diagonal_dominance_properties",
+        "module": "NLAlib.Matrix.Spectral.GershgorinToolkit",
+        "status": "proved",
+        "usage": "Apply to any complex matrix and real matrix of the same finite shape for the full Gershgorin contract: row/column localization and exact isolated algebraic counts, row/column/weighted radius bounds, strict dominance, and Taussky nonsingularity, positive stability and symmetric or Hermitian positive definiteness with an explicit strict row."
+      }
+    },
+    {
+      "atlas_id": "bauer-fike",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.bauer_fike_properties",
+        "module": "NLAlib.Matrix.Perturbation.BauerFike",
+        "status": "proved",
+        "usage": "Use the four components for general induced absolute-norm perturbation/residual bounds and the constant-one Euclidean normal specializations."
+      }
+    },
+    {
+      "atlas_id": "hoffman-wielandt-normal",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_perm_sum_sq_le_frobenius_norm_sq_of_unitary_diagonalizations",
+        "module": "NLAlib.Matrix.Perturbation.HoffmanWielandtNormal",
+        "status": "proved",
+        "partial": true,
+        "usage": "Pass two unitary diagonalizations in arbitrary eigenvalue orders to obtain a permutation matching with squared Frobenius error bound."
+      }
+    },
+    {
+      "atlas_id": "hoffman-wielandt-normal",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_eigenvalue_lists_perm_sum_sq_le_frobenius_norm_sq_of_normal",
+        "module": "NLAlib.Matrix.Perturbation.HoffmanWielandtNormal",
+        "status": "proved",
+        "usage": "Pass normality of A and B to obtain complete characteristic eigenvalue lists and a permutation whose squared eigenvalue distance sum is bounded by the squared Frobenius norm of A-B."
+      }
+    },
+    {
+      "atlas_id": "simple-eigenvalue-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_eigenvalue_branch_of_simple_of_isSymm_with_multiplicity",
+        "module": "NLAlib.Matrix.Perturbation.SimpleEigenvaluePersistence",
+        "status": "proved",
+        "partial": true,
+        "usage": "For a real symmetric matrix and a unit eigenvector at a simple eigenvalue, obtain a locally unique continuous branch under arbitrary real perturbations with derivative x-transpose-E-x and eventual multiplicity one in the actual complexified characteristic polynomial."
+      }
+    },
+    {
+      "atlas_id": "simple-eigenvalue-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_eigenvalue_branch_of_simple_of_isSymm",
+        "module": "NLAlib.Matrix.Perturbation.SimpleEigenvalueReal",
+        "status": "proved",
+        "partial": true,
+        "usage": "Pass a real symmetric matrix, real unit eigenvector, simple real characteristic root and any real perturbation to obtain the locally unique complex spectral branch with derivative x-transpose-E-x."
+      }
+    },
+    {
+      "atlas_id": "simple-eigenvalue-perturbation",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.simple_eigenvalue_perturbation_properties",
+        "module": "NLAlib.Matrix.Perturbation.SimpleEigenvalueToolkit",
+        "status": "proved",
+        "usage": "Use the four components for nonzero pairing, separated normalized similarity, the neighborhood-continuous locally unique complex branch and its derivative, and the real symmetric unit-vector specialization."
+      }
+    },
+    {
+      "atlas_id": "sylvester-criterion",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sylvester_criterion",
+        "module": "NLAlib.Matrix.Spectral.SylvesterCriterionToolkit",
+        "status": "proved",
+        "usage": "Apply to a real symmetric Fin-indexed matrix for both positive-definite minor tests, both PSD tests, and the positive-first-minors semidefinite boundary case."
+      }
+    },
+    {
+      "atlas_id": "polar-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.invariantNorm_sub_polar_le_sub_isometry_fin",
+        "module": "NLAlib.Matrix.Factorizations.NearestPolar",
+        "status": "proved",
+        "partial": true,
+        "usage": "Apply to finite numerical matrix dimensions to compare a tall polar isometry against every competing isometry in the specified invariant norm."
+      }
+    },
+    {
+      "atlas_id": "polar-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.polar_decomposition_properties",
+        "module": "NLAlib.Matrix.Factorizations.PolarToolkit",
+        "status": "proved",
+        "usage": "Apply to A for all tall and wide factorization clauses, exact rank uniqueness conditions, every-invariant-norm nearest-isometry assertions, PSD factor uniqueness and same square orthogonal factor on both sides."
+      }
+    },
+    {
+      "atlas_id": "orthogonal-procrustes",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.orthogonal_procrustes_properties",
+        "module": "NLAlib.Matrix.Factorizations.ProcrustesToolkit",
+        "status": "proved",
+        "usage": "Apply to A,B for all attained minima, scaled-matrix endpoints, exact equality equivalence and both PSD cross-product consequences."
+      }
+    },
+    {
+      "atlas_id": "kantorovich-inequality",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.quadratic_inverse_and_bilinear_bounds_of_sandwich",
+        "module": "NLAlib.Matrix.Inequalities.QuadraticConditionBounds",
+        "status": "proved",
+        "partial": true,
+        "usage": "Obtain both sharp endpoint inequalities and their equivalence, including the zero-dimensional extension."
+      }
+    },
+    {
+      "atlas_id": "kantorovich-inequality",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.quadForm_mul_quadForm_inv_le_conditionNumber_sqrt",
+        "module": "NLAlib.Matrix.Inequalities.QuadraticConditionBounds",
+        "status": "proved",
+        "partial": true,
+        "usage": "Apply Kantorovich with the existing conditionNumber and the Euclidean fourth-power norm in positive dimension."
+      }
+    },
+    {
+      "atlas_id": "kantorovich-inequality",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.quadratic_inverse_and_orthogonal_bilinear_bounds",
+        "module": "NLAlib.Matrix.Inequalities.QuadraticConditionBounds",
+        "status": "proved",
+        "usage": "Obtain the complete Kantorovich-Wielandt bounds, equivalence, actual extreme-eigenvalue constants and condition-number square-root expression."
+      }
+    },
+    {
+      "atlas_id": "schur-product-inequalities",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.entrywise_exponential_positivity_characterizations",
+        "module": "NLAlib.Matrix.Inequalities.HadamardExponential",
+        "status": "proved",
+        "partial": true,
+        "usage": "Obtain both exact exponential and finite-truncation positivity criteria together with the PSD infinite tail."
+      }
+    },
+    {
+      "atlas_id": "schur-product-inequalities",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hadamard_add_sub_posSemidef_of_add_sub_posSemidef",
+        "module": "NLAlib.Matrix.Inequalities.HadamardOrder",
+        "status": "proved",
+        "partial": true,
+        "usage": "Preserve both PSD sum-and-difference dominance inequalities under a Hadamard product of two pairs."
+      }
+    },
+    {
+      "atlas_id": "schur-product-inequalities",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schur_product_inequalities",
+        "module": "NLAlib.Matrix.Inequalities.HadamardToolkit",
+        "status": "proved",
+        "usage": "Apply the complete Schur-product order, series, exponential, determinant, inverse, minimum-spectrum and Hermitian-dominance contract."
+      }
+    },
+    {
+      "atlas_id": "log-det-concavity",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.determinant_concavity_and_inverse_trace_convexity",
+        "module": "NLAlib.Matrix.Inequalities.DeterminantConvexityToolkit",
+        "status": "proved",
+        "usage": "Obtain the complete log-determinant, determinant-root, Minkowski and inverse-trace convexity contract with exact equality cases."
+      }
+    },
+    {
+      "atlas_id": "log-det-concavity",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.det_smul_add_ge_rpow_mul_and_eq_iff",
+        "module": "NLAlib.Matrix.Inequalities.LogDetConcavity",
+        "status": "proved",
+        "partial": true,
+        "usage": "Obtain multiplicative determinant Jensen with real powers and its exact matrix-equality case."
+      }
+    },
+    {
+      "atlas_id": "log-det-concavity",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.det_add_rpow_inv_card_ge_and_eq_iff",
+        "module": "NLAlib.Matrix.Inequalities.MinkowskiDeterminant",
+        "status": "proved",
+        "partial": true,
+        "usage": "Apply Minkowski in positive dimension with equality exactly for positively proportional matrices."
+      }
+    },
+    {
+      "atlas_id": "loewner-relative-spectrum",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.trace_le_and_eq_iff_of_le",
+        "module": "NLAlib.Matrix.Inequalities.RelativeSpectrum",
+        "status": "proved",
+        "partial": true,
+        "usage": "Obtain trace monotonicity and its exact matrix-equality case from a Loewner comparison."
+      }
+    },
+    {
+      "atlas_id": "psd-block-contraction",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.psd_block_contraction_characterizations",
+        "module": "NLAlib.Matrix.Inequalities.BlockContractionToolkit",
+        "status": "proved",
+        "usage": "Apply for the complete weak and strict block-contraction, bilinear, relative-spectrum, Schur, order and inverse-principal-submatrix contract."
+      }
+    },
+    {
+      "atlas_id": "hadamard-fischer-inequalities",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_det_le_prod_column_norm_and_eq_iff",
+        "module": "NLAlib.Matrix.Inequalities.ColumnDeterminantBound",
+        "status": "proved",
+        "partial": true,
+        "usage": "Bound absolute determinant by Euclidean column norms with equality exactly for orthogonal columns or a zero column."
+      }
+    },
+    {
+      "atlas_id": "hadamard-fischer-inequalities",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hadamard_fischer_principal_minor_inequalities",
+        "module": "NLAlib.Matrix.Inequalities.DeterminantInequalityToolkit",
+        "status": "proved",
+        "usage": "Apply for the complete Hadamard, column-norm, Fischer, Koteljanski and Szasz determinant bounds with all stated equality and PSD-boundary cases."
+      }
+    },
+    {
+      "atlas_id": "hadamard-fischer-inequalities",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.det_principal_union_mul_inter_le_and_eq_iff_of_posDef",
+        "module": "NLAlib.Matrix.Inequalities.PrincipalOverlapDeterminant",
+        "status": "proved",
+        "partial": true,
+        "usage": "Apply Koteljanski to two principal index sets with equality exactly when the exclusive cross Schur block after eliminating their intersection vanishes."
+      }
+    },
+    {
+      "atlas_id": "sparse-ose",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_sparseStack_embedding_success_ge_of_map_eq",
+        "module": "NLAlib.Sketching.Sparse.SparseEmbeddingTransport",
+        "status": "proved",
+        "usage": "Give a measurable random variable on any probability space whose pushforward is the concrete independent SparseStack law; transfers the actual embedding probability bound."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "sparse-ose",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.measure_uniformSparse_embedding_success_ge_of_map_eq",
+        "module": "NLAlib.Sketching.Sparse.SparseEmbeddingTransport",
+        "status": "proved",
+        "usage": "Give a measurable random variable on any probability space whose pushforward is the concrete independent uniform signed exact-size column law; transfers the actual embedding probability bound."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "volume-sampling",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.det_gram_fromCols_eq_mul_frobenius_norm_sq_sub_complexColumnProjector",
+        "module": "NLAlib.Matrix.Subspaces.ComplexGramColumnDeterminant",
+        "status": "proved",
+        "partial": true,
+        "usage": "Appending a genuine complex column multiplies its Gram determinant by the squared Frobenius projection residual."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "rpcholesky",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.complexCholeskyExpectedTrace_le_of_relative_budget_or_zero_tail",
+        "module": "NLAlib.LowRank.Cholesky.ComplexRandomPivotedCholesky",
+        "status": "proved",
+        "usage": "For the actual complex adaptive pivot process, use eta=optimal trace tail/re(trace A) for the relative budget, or use the zero-tail branch for exact rank exhaustion."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "xtrace-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_xtraceEstimate_eq_trace",
+        "module": "NLAlib.Estimation.Trace.Unbiased",
+        "status": "proved",
+        "partial": true,
+        "usage": "Leave-one-out estimator is unbiased when `Sᵢ ⊥ ωᵢ`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mem_krylovSpace_iff",
+        "module": "NLAlib.Krylov.Spaces.Polynomial",
+        "status": "proved",
+        "usage": "Pass `hq : 0 < q`; rewrites `x ∈ krylovSpace A b q ↔ ∃ p, p.natDegree < q ∧ x = (aeval A p).mulVec b`.",
+        "note": "polynomial characterisation, nesting, A-invariance into the next space, dimension bound"
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.krylovSpace_mono",
+        "module": "NLAlib.Krylov.Spaces.Polynomial",
+        "status": "proved",
+        "usage": "Pass `h : q ≤ q'`; gives `krylovSpace A b q ≤ krylovSpace A b q'`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mulVec_mem_krylovSpace_succ",
+        "module": "NLAlib.Krylov.Spaces.Polynomial",
+        "status": "proved",
+        "usage": "From `hx : x ∈ krylovSpace A b q`; gives `A.mulVec x ∈ krylovSpace A b (q + 1)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.finrank_krylovSpace_le",
+        "module": "NLAlib.Krylov.Spaces.Polynomial",
+        "status": "proved",
+        "usage": "No hypotheses; gives `Module.finrank ℝ (krylovSpace A b q) ≤ q`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "slq-error",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_slqEstimate_inv_sub_hutchinsonEstimate_le",
+        "module": "NLAlib.Estimation.Quadrature.SLQ",
+        "status": "proved",
+        "partial": true,
+        "usage": "Case `f = 1/x`: `|SLQ - Hutchinson(A⁻¹)| ≤ 2 (2/a) ρ^{2q} tr_m(I)` with `ρ = (√b-√a)/(√b+√a)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "sketch-and-project",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.SketchProject.expErr_le",
+        "module": "NLAlib.Solvers.SketchAndProject.Core",
+        "status": "proved",
+        "usage": "Retained all-space coercivity version for finite iid sketches; the row-space version supplies the intended rank-deficient coverage."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "sketch-and-project",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.SketchProject.expErr_le_of_sub_mem_range",
+        "module": "NLAlib.Solvers.SketchAndProject.Core",
+        "status": "proved",
+        "usage": "Finite iid sketches contract error in range(Aᵀ) at rate (1−λ)^k, assuming coercivity only on that row space and explicit initial-error membership."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "hutchpp-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.trace_eq_trace_transpose_mul_mul_add",
+        "module": "NLAlib.Estimation.Trace.Unbiased",
+        "status": "proved",
+        "usage": "Trace split `tr A = tr (QᵀAQ) + tr ((1-QQᵀ)A(1-QQᵀ))`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "hutchpp-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_hutchPlusPlusEstimate_eq_trace",
+        "module": "NLAlib.Estimation.Trace.Unbiased",
+        "status": "proved",
+        "usage": "Fixed `Q`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "hutchpp-unbiased",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.integral_hutchPlusPlusEstimate_comp_eq_trace",
+        "module": "NLAlib.Estimation.Trace.Unbiased",
+        "status": "proved",
+        "usage": "Random `Q(S)` with `S ⊥ G`; product-measure integrability assumed explicitly."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "trace-estimators-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.slqEstimate",
+        "module": "NLAlib.Estimation.Quadrature.SLQ",
+        "status": "proved",
+        "usage": "The stochastic Lanczos quadrature estimate `(1/m) ∑ₖ (Q_kᵀ g_k)ᵀ f(Q_kᵀ A Q_k) (Q_kᵀ g_k)` with test vectors `g_k = G(·, k)` and bases `Q_k`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "trace-estimators-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.hutchPlusPlusEstimate",
+        "module": "NLAlib.Estimation.Trace.Unbiased",
+        "status": "proved",
+        "usage": "The Hutch++ estimator with deflation basis `Q` and Hutchinson test matrix `Z`: `tr(QᵀAQ) + tr_m((I − QQᵀ)A(I − QQᵀ))`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.blockKrylovSpace",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "The block Krylov subspace `K_q(A, Ω) = span {(A^i Ω) e_j : i < q, j ∈ s}`, the range of `[Ω, AΩ, …, A^(q−1)Ω]`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.krylovSpace_col_le_blockKrylovSpace",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "The Krylov space of a single column is contained in the block space: `K_q(A, Ω e_j) ⊆ K_q(A, Ω)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.blockKrylovSpace_eq_iSup",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "The block Krylov space is the sum of the single-vector Krylov spaces of the columns: `K_q(A, Ω) = ∑_j K_q(A, Ω e_j)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mem_blockKrylovSpace_iff",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "Matrix-polynomial characterisation of the block Krylov space (valid for every `q`): `x ∈ K_q(A, Ω) ↔ x = ∑_j p_j(A) Ω e_j` for polynomials `p_j` of degree `< q`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.range_aeval_mul_le_blockKrylovSpace",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "`range (p(A) Ω) ⊆ K_q(A, Ω)` for every scalar polynomial `p` with `deg p < q`: the form used by block Krylov low-rank approximation."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.blockKrylovSpace_mono",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "Block Krylov spaces are nested: `q ≤ q' → K_q(A, Ω) ⊆ K_{q'}(A, Ω)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.mulVec_mem_blockKrylovSpace_succ",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "`A K_q(A, Ω) ⊆ K_{q+1}(A, Ω)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "block-krylov-subspace",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.finrank_blockKrylovSpace_le",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "`dim K_q(A, Ω) ≤ q s` for `Ω` with `s` columns."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "krylov-eigenvector-angle",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanSqAngle_aeval_mulVec_le",
+        "module": "NLAlib.Krylov.Spectral.Ritz",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Eigenvector angle, polynomial form.** For real symmetric `A`, an index `i₁`, and any polynomial `p` with `|p(λᵢ)| ≤ M` for every `i ≠ i₁`, `tan² ∠(u_{i₁}, p(A) b) ≤ (M/p(λ_{i₁}))² tan² ∠(u_{i₁}, b)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "krylov-eigenvector-angle",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_mem_krylovSpace_tanSqAngle_le",
+        "module": "NLAlib.Krylov.Spectral.Ritz",
+        "status": "proved",
+        "usage": "**Angle between the top eigenvector and the Krylov space (Chebyshev bound).** Let `A` be real symmetric, `λ₁ = λ_{i₁}`, and suppose every other eigenvalue lies in `[a, c]` with `a < c < λ₁` (e.g. `a = λₙ`, `c = λ₂`)."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "krylov-eigenvector-angle",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_mem_krylovSpace_tanSqAngle_le_two_div_pow",
+        "module": "NLAlib.Krylov.Spectral.Ritz",
+        "status": "proved",
+        "usage": "**Eigenvector angle, explicit rate.** Under the hypotheses of `exists_mem_krylovSpace_tanSqAngle_le`, `K_{q+1}(A, b)` contains `x` with `u₁ ⬝ x ≠ 0` and `tan² ∠(u₁, x) ≤ (2/(1 + 2γ + 2√(γ + γ²))^q)² tan² ∠(u₁, b)`, `γ = (λ₁ − c)/(c − a)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "kaniel-paige-saad",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.eigenvalues_sub_eigenvalues_transpose_mul_mul_le_of_poly",
+        "module": "NLAlib.Krylov.Spectral.Ritz",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Kaniel–Paige–Saad, polynomial form.** Let `A` be real symmetric with every eigenvalue `≥ a`, `u₁ ⬝ b ≠ 0`, `Q` with orthonormal columns and `K_q(A, b) ⊆ range Q`, and `θ₁` the largest eigenvalue of `Qᵀ A Q`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "kaniel-paige-saad",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.eigenvalues_sub_eigenvalues_transpose_mul_mul_le",
+        "module": "NLAlib.Krylov.Spectral.Ritz",
+        "status": "proved",
+        "usage": "**Kaniel–Paige–Saad bound for the largest Ritz value.** Let `A` be real symmetric, `λ₁ = λ_{i₁}`, every other eigenvalue in `[a, c]` with `a < c < λ₁` (e.g. `a = λₙ`, `c = λ₂`), `u₁ ⬝ b ≠ 0`, `Q` with orthonormal columns and `K_{q+1}(A, b) ⊆ range Q` (e.g. a Lanczos basis), and `θ₁` the largest eigenvalue of `Qᵀ A Q`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.norm_complex_filter_residual_sq_le_of_filtered_blocks",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter",
+        "status": "proved",
+        "partial": true,
+        "usage": "The actual complex filtered column projector obeys the exact squared spectral competitor bound."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.norm_complex_polynomial_filter_residual_sq_le",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter",
+        "status": "proved",
+        "partial": true,
+        "usage": "A real polynomial filter of an actual complex matrix satisfies the squared spectral competitor bound with its exact filtered tail correction."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobenius_norm_complex_filter_residual_sq_le_of_filtered_blocks",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter",
+        "status": "proved",
+        "partial": true,
+        "usage": "The actual complex filtered column projector obeys the exact squared Frobenius competitor bound."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobenius_norm_complex_polynomial_filter_residual_sq_le",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter",
+        "status": "proved",
+        "partial": true,
+        "usage": "A real polynomial filter of an actual complex matrix satisfies the squared Frobenius competitor bound with its exact filtered tail correction."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.norm_complex_polynomial_filter_residual_sq_le_of_rank_eq_card",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilterBounds",
+        "status": "proved",
+        "partial": true,
+        "usage": "The actual complex canonical right inverse gives the source's scalar spectral filter envelope, for every column space containing the filtered sketch."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.norm_complex_polynomial_filter_residual_sq_le_exact_of_rank_eq_card",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilterBounds",
+        "status": "proved",
+        "partial": true,
+        "usage": "The actual native complex canonical inverse gives the exact spectral tail correction from the source theorem, before replacing it by a scalar envelope."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobenius_norm_complex_polynomial_filter_residual_sq_le_of_rank_eq_card",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilterBounds",
+        "status": "proved",
+        "partial": true,
+        "usage": "The source's exact Frobenius correction uses the native complex canonical right inverse, derived from full row rank, and the actual containing column space."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "polynomial-filter-range-finder",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.complex_polynomial_filter_residual_bounds",
+        "module": "NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilterBounds",
+        "status": "proved",
+        "usage": "Pass the complex block decomposition, native full row rank of the leading start block and nonzero leading filter values; derives the canonical dagger and returns exact spectral/Frobenius correction bounds and the scalar maximum/minimum envelope for the actual containing projector."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNorm",
+        "module": "NLAlib.Matrix.Norms.Schatten",
+        "status": "proved",
+        "partial": true,
+        "usage": "The Schatten power sum norm at a finite real exponent."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNormExtended",
+        "module": "NLAlib.Matrix.Norms.Schatten",
+        "status": "proved",
+        "partial": true,
+        "usage": "The Schatten norm at an extended exponent, with infinity defined exactly as the spectral norm."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNorm_le_schattenNorm_of_le",
+        "module": "NLAlib.Matrix.Norms.SchattenComparison",
+        "status": "proved",
+        "partial": true,
+        "usage": "Finite Schatten norms decrease with their positive real exponent."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNorm_le_rank_rpow_mul_schattenNorm",
+        "module": "NLAlib.Matrix.Norms.SchattenComparison",
+        "status": "proved",
+        "partial": true,
+        "usage": "The sharp finite-exponent comparison uses the actual matrix rank, with coefficient `rank(A)^(1/p - 1/q)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNorm_le_rank_rpow_mul_specNorm",
+        "module": "NLAlib.Matrix.Norms.SchattenComparison",
+        "status": "proved",
+        "partial": true,
+        "usage": "The sharp finite-to-infinite exponent bound uses the actual rank, including rank zero and empty matrix shapes."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNormExtended_le_of_le",
+        "module": "NLAlib.Matrix.Norms.SchattenComparison",
+        "status": "proved",
+        "usage": "Extended Schatten norms decrease for `1 ≤ p ≤ q ≤ ∞`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNormExtended_le_rank_rpow_mul",
+        "module": "NLAlib.Matrix.Norms.SchattenComparison",
+        "status": "proved",
+        "usage": "The sharp actual-rank comparison for all `1 ≤ p ≤ q ≤ ∞`, using extended reciprocals so that `1/∞ = 0`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_schattenNormExtended_le_one_frobInner_eq",
+        "module": "NLAlib.Matrix.Norms.SchattenDuality",
+        "status": "proved",
+        "partial": true,
+        "usage": "Every conjugate pair of extended Schatten exponents has an actual unit-ball attainer, including `(1,∞)`, `(∞,1)`, rank zero and empty shapes."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.isGreatest_schattenNormExtended_frobInner",
+        "module": "NLAlib.Matrix.Norms.SchattenDuality",
+        "status": "proved",
+        "usage": "Schatten duality as a greatest value on the genuine conjugate unit ball."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sSup_frobInner_schattenNormExtended_unitBall",
+        "module": "NLAlib.Matrix.Norms.SchattenDuality",
+        "status": "proved",
+        "partial": true,
+        "usage": "The unit-ball supremum in Schatten duality equals the norm and is attained, for every extended conjugate pair and every finite matrix shape."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNormExtended_mul_le_mul",
+        "module": "NLAlib.Matrix.Norms.SchattenEndpoints",
+        "status": "proved",
+        "usage": "Full Schatten product Hölder for extended norm exponents, including all infinity endpoints."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_frobInner_le_schattenNormExtended_mul",
+        "module": "NLAlib.Matrix.Norms.SchattenEndpoints",
+        "status": "proved",
+        "usage": "Full trace Hölder for extended conjugate Schatten exponents, including both `(1,∞)` and `(∞,1)` endpoints and every empty matrix shape."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNorm_add_le",
+        "module": "NLAlib.Matrix.Norms.SchattenNorms",
+        "status": "proved",
+        "partial": true,
+        "usage": "Every finite Schatten norm at exponent at least one obeys the matrix triangle inequality."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.schattenNorm_mul_le_mul",
+        "module": "NLAlib.Matrix.Norms.SchattenProducts",
+        "status": "proved",
+        "partial": true,
+        "usage": "Finite-exponent Schatten product Hölder with sharp constant one, on arbitrary finite compatible shapes."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "schatten-norms-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_frobInner_le_schattenNorm_mul",
+        "module": "NLAlib.Matrix.Norms.SchattenTrace",
+        "status": "proved",
+        "partial": true,
+        "usage": "Schatten trace Hölder for all finite conjugate real exponents, with sharp constant one and arbitrary finite matrix indices."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sq_tanThetaMax_replicateCol_eq_tanSqAngle",
+        "module": "NLAlib.Krylov.Spectral.PowerMethod",
+        "status": "scaffold",
+        "partial": true,
+        "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.principalAnglesFintype",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "Principal angles are arccosines of the overlap singular values in descending order; row and column labels are temporarily normalized to `Fin`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sinePrincipalAngles",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The diagonal sine matrix of the principal angles."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.principalAngles_mem_Icc",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "Every principal angle lies between zero and `π/2`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.principalAngles_monotone",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "Principal angles increase because overlap singular values decrease."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.cos_principalAngles",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The cosine of a principal angle is its overlap singular value."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.specNorm_sinePrincipalAngles_eq_residual",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The residual operator norm equals the norm of the genuine sine-angle matrix."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobSq_sinePrincipalAngles_eq_card_sub_overlap",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The sine-angle Frobenius square is width minus overlap Frobenius square."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobNorm_sinePrincipalAngles_eq_residual",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The actual sine-angle Frobenius norm equals the residual Frobenius norm."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.specNorm_sinePrincipalAngles_eq_projector_distance",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The sine-angle operator norm is exactly the equal-rank projector distance."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobSq_projector_distance_eq_two_mul_sinePrincipalAngles",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The projector-distance Frobenius square is twice the sine-angle square."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.principalAngles_comm",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "Principal angles are symmetric under exchanging frames."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.specNorm_sinePrincipalAngles_eq_complement_overlap",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The sine-angle norm equals the complementary overlap norm."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.frobNorm_sinePrincipalAngles_eq_complement_overlap",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions",
+        "status": "proved",
+        "partial": true,
+        "usage": "The Frobenius sine-angle norm equals the complementary overlap norm."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.specNorm_sinePrincipalAngles_eq_sqrt_one_sub_last_sq",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleMaximum",
+        "status": "proved",
+        "partial": true,
+        "usage": "The sine-angle operator norm is the square root of one minus the last overlap singular value square."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tangentPrincipalAngles",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngleTangent",
+        "status": "proved",
+        "partial": true,
+        "usage": "The diagonal tangent matrix of the principal angles."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sinThetaMax",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "The sine of the largest principal angle between `range Q` and `range X`: `sin θ_max = ‖(I − QQᵀ) X‖₂`, for `Q` and `X` with orthonormal columns."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanThetaMax",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "The tangent of the largest principal angle between `range Q` (`Q` orthonormal) and `range X` (`X` any block with the same number of columns and `QᵀX` invertible): `tan θ_max = ‖(I − QQᵀ) X (QᵀX)⁻¹‖₂`; with an orthonormal complement `Q⊥` this is `‖Q⊥ᵀ X (QᵀX)⁻¹‖₂` (`tanThetaMax_eq_specNorm_transpose_mul_mul`)."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sinThetaMax_congr_left",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "`sin θ_max` depends only on `range Q`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sinThetaMax_congr_right",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "`sin θ_max` depends only on `range Q'` among orthonormal frames: if `Q'`, `Q''` have orthonormal columns and the same range then `‖(I − QQᵀ)Q'‖₂ = ‖(I − QQᵀ)Q''‖₂`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanThetaMax_mul_right",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "`tan θ_max` is invariant under a change of basis of `range X`: `tan θ_max(Q, X R) = tan θ_max(Q, X)` for invertible `R`, since `(I − QQᵀ) X R (QᵀXR)⁻¹ = (I − QQᵀ) X (QᵀX)⁻¹`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanThetaMax_eq_of_range_eq",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "`tan θ_max` depends only on `range X`: if `range X = range Y` and `QᵀX` is invertible, then `tan θ_max(Q, X) = tan θ_max(Q, Y)` (and `QᵀY` is invertible too)."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanThetaMax_congr_left",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "`tan θ_max` depends only on `range Q` among orthonormal frames with the same index type: if `range Q = range P` then `tan θ_max(Q, X) = tan θ_max(P, X)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sinThetaMax_eq_specNorm_transpose_mul",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "With an orthonormal complement `Q⊥` (`Q⊥ᵀQ⊥ = I`, `QQᵀ + Q⊥Q⊥ᵀ = I`): `sin θ_max = ‖Q⊥ᵀ X‖₂`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanThetaMax_eq_specNorm_transpose_mul_mul",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "With an orthonormal complement `Q⊥`: `tan θ_max = ‖Q⊥ᵀ X (QᵀX)⁻¹‖₂`, the form of Saad and Golub–Van Loan."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sinThetaMax_eq_sqrt_one_sub_sq_singularValues",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "**Principal angles from the SVD.** For `Q : n × r`, `Q' : n × r'` with orthonormal columns and `0 < r' ≤ r`: `sin θ_max = √(1 − σ_{r'−1}(QᵀQ')²)`, `σ` the zero-indexed singular values."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sinThetaMax_eq_sin_principalAngles",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "`sin θ_max` is the sine of the largest principal angle: `‖(I − QQᵀ)Q'‖₂ = sin θ_{r'−1}` for `0 < r' ≤ r`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sinThetaMax_lt_one_iff_isUnit",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "**`QᵀQ'` is invertible iff `θ_max < π/2`.** For `Q`, `Q'` with orthonormal columns indexed by the same `k`: `sin θ_max < 1 ↔ IsUnit (QᵀQ')`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "principal-angles-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.sq_tanThetaMax_eq_div",
+        "module": "NLAlib.Matrix.Subspaces.PrincipalAngles",
+        "status": "proved",
+        "partial": true,
+        "usage": "**`tan² = sin²/(1 − sin²)`.** For `Q`, `Q'` with orthonormal columns indexed by the same `k` and `QᵀQ'` invertible: `tan² θ_max = sin² θ_max/(1 − sin² θ_max)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "subspace-iteration-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.subspaceIterate",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "The `k`-th subspace iterate `S_k = range (A^k Ω)` of subspace (orthogonal, simultaneous) iteration started from the block `Ω`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "subspace-iteration-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.subspaceIterate_succ",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "One step of subspace iteration: `S_{k+1} = A S_k`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "subspace-iteration-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.range_mul_eq_subspaceIterate_succ",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "Orthonormalisation does not change the iteration: if the columns of `Q` span `S_k` (for instance `Q` is an orthonormal basis of `S_k`), then `range (A Q) = S_{k+1}`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "subspace-iteration-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.subspaceIterate_le_blockKrylovSpace",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "Subspace iteration is block Krylov with the fixed polynomial `x^k`: `S_k = range (A^k Ω) ⊆ K_{k+1}(A, Ω)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "subspace-iteration-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.subspaceIterate_mul_of_isUnit",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "usage": "Subspace iteration depends only on `range Ω`: `S_k(A, Ω R) = S_k(A, Ω)` for invertible `R`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "subspace-iteration-def",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.transpose_mul_mul_eq_of_range_le",
+        "module": "NLAlib.Krylov.Spaces.Block",
+        "status": "proved",
+        "partial": true,
+        "usage": "Basis independence of the Rayleigh–Ritz compression: if `Q` and `Q'` have orthonormal columns and `range Q' ⊆ range Q`, then `U = Qᵀ Q'` has orthonormal columns and `Q'ᵀ A Q' = Uᵀ (Qᵀ A Q) U`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "subspace-iteration-convergence",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanThetaMax_pow_mul_le",
+        "module": "NLAlib.Krylov.Spectral.SubspaceIteration",
+        "status": "proved",
+        "usage": "**Convergence of subspace iteration (symmetric case).** With an invariant orthogonal splitting `UUᵀ + VVᵀ = I`, `AU = U diag(d)`, `AV = V diag(e)`, `|dᵢ| ≥ α > 0`, `|eⱼ| ≤ β` and `UᵀΩ` invertible: `tan θ_max(range U, range (A^k Ω)) ≤ (β/α)^k tan θ_max(range U, range Ω)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "subspace-iteration-convergence",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanThetaMax_le_of_range_eq_subspaceIterate",
+        "module": "NLAlib.Krylov.Spectral.SubspaceIteration",
+        "status": "proved",
+        "usage": "**Convergence of subspace iteration, basis form.** Under the hypotheses of `tanThetaMax_pow_mul_le`, for any `Q₀` with `range Q₀ = range Ω` and any `Q_k` with `range Q_k = S_k = subspaceIterate A Ω k` (for instance the orthonormal bases the algorithm carries), `tan θ_max(range U, range Q_k) ≤ (β/α)^k tan θ_max(range U, range Q₀)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "power-iteration",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanSqAngle_powerIterate_le",
+        "module": "NLAlib.Krylov.Spectral.PowerMethod",
+        "status": "proved",
+        "usage": "**Power iteration, angle bound.** Let `A` be real symmetric with eigenpair `(λ₁, u₁) = (λ_{i₁}, u_{i₁})` and `|λᵢ| ≤ ρ` for every `i ≠ i₁`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "power-iteration",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanSqAngle_powerStep_iterate_le",
+        "module": "NLAlib.Krylov.Spectral.PowerMethod",
+        "status": "proved",
+        "usage": "**Power iteration, normalised iterates.** Under the hypotheses of `tanSqAngle_powerIterate_le`, the textbook iterates `x_k = (powerStep A)^[k] x₀` (normalised at every step) satisfy `tan² ∠(u₁, x_k) ≤ (ρ/|λ₁|)^{2k} tan² ∠(u₁, x₀)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "power-iteration",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_rayleighQuotient_sub_le_mul_tanSqAngle",
+        "module": "NLAlib.Krylov.Spectral.PowerMethod",
+        "status": "proved",
+        "usage": "**Rayleigh quotient error from the angle.** For real symmetric `A`, an eigenpair `(λ₁, u₁) = (λ_{i₁}, u_{i₁})`, `D` with `|λᵢ − λ₁| ≤ D` for every `i` (e.g."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "power-iteration",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_rayleighQuotient_powerIterate_sub_le",
+        "module": "NLAlib.Krylov.Spectral.PowerMethod",
+        "status": "proved",
+        "usage": "**Power iteration, Rayleigh quotient.** For real symmetric `A` with eigenpair `(λ₁, u₁)`, `λ₁ ≠ 0`, `|λᵢ| ≤ ρ` for `i ≠ i₁`, `|λᵢ − λ₁| ≤ D` for all `i`, and `u₁ ⬝ x₀ ≠ 0`: `|ρ(A^k x₀) − λ₁| ≤ D (ρ/|λ₁|)^{2k} tan² ∠(u₁, x₀)`, the squared rate of the angle."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "inverse-iteration",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.tanSqAngle_inverseIterate_le",
+        "module": "NLAlib.Krylov.Spectral.PowerMethod",
+        "status": "proved",
+        "usage": "**Inverse iteration, angle bound.** Let `A` be real symmetric, `μ` not an eigenvalue, `J` an index and `d > 0` with `|λᵢ − μ| ≥ d` for every `i ≠ J` (`λ_J` closest to `μ`, `d` the distance of the second closest, T&B's `|μ − λ_K|`)."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "inverse-iteration",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.abs_rayleighQuotient_inverseIterate_sub_le",
+        "module": "NLAlib.Krylov.Spectral.PowerMethod",
+        "status": "proved",
+        "usage": "**Inverse iteration, Rayleigh quotient.** Under the hypotheses of `tanSqAngle_inverseIterate_le`, with `|λᵢ − λ_J| ≤ D` for all `i` and `u_J ⬝ x₀ ≠ 0`: `|ρ(x_k) − λ_J| ≤ D (|λ_J − μ|/d)^{2k} tan² ∠(u_J, x₀)`."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "cs-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.complex_cs_decomposition_properties",
+        "module": "NLAlib.Matrix.Subspaces.ComplexCSToolkit",
+        "status": "proved",
+        "usage": "Apply for the entire complex CS and complex oblique-projector contract, with correct block sizes, actual singular cosines and oblique coefficients, actual subspace secant, complementary norm equality and all rank/dimension endpoints; the companion cs_decomposition_properties retains the full real orthogonal contract."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    },
+    {
+      "atlas_id": "cs-decomposition",
+      "formalization": {
+        "library": "nlalib",
+        "decl": "NLAlib.exists_complex_range_kernel_frames_norm_eq_secant",
+        "module": "NLAlib.Matrix.Subspaces.ComplexObliqueSecant",
+        "status": "proved",
+        "partial": true,
+        "usage": "For any positive-rank complex idempotent obtain isometric frames of its actual complex range and kernel orthogonal complement whose largest actual principal angle has secant equal to the Euclidean operator norm."
+      },
+      "reason": "Contract audit: declaration, signature, or stated coverage changed; review recipe before reuse."
+    }
+  ]
+}

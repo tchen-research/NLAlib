@@ -28,19 +28,11 @@ theorem isLeastSquaresSolution_iff_euclidean_norm_min (A : Matrix m n ℝ)
     (b : EuclideanSpace ℝ m) (x : EuclideanSpace ℝ n) :
     IsLeastSquaresSolution A b.ofLp x.ofLp ↔
       ∀ z : EuclideanSpace ℝ n, ‖b-A.toEuclideanLin x‖ ≤ ‖b-A.toEuclideanLin z‖ := by
-  have hsq (z : EuclideanSpace ℝ n) :
-      (b.ofLp-A*ᵥz.ofLp) ⬝ᵥ (b.ofLp-A*ᵥz.ofLp)=‖b-A.toEuclideanLin z‖^2 :=
-    dotProduct_ofLp_self_eq_norm_sq (b-A.toEuclideanLin z)
   constructor
   · intro h z
-    have hs := h z.ofLp
-    rw [hsq,hsq] at hs
-    nlinarith [norm_nonneg (b-A.toEuclideanLin x), norm_nonneg (b-A.toEuclideanLin z)]
+    exact h z.ofLp
   · intro h z
-    have hs := pow_le_pow_left₀ (norm_nonneg (b-A.toEuclideanLin x))
-      (h (WithLp.toLp 2 z)) 2
-    rw [← hsq,← hsq] at hs
-    exact hs
+    exact h (WithLp.toLp 2 z)
 
 open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq n] in

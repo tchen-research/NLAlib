@@ -1,11 +1,14 @@
 import NLAlib.Estimation.Quadrature.SLQAnalytic
 import NLAlib.ForMathlib.Analysis.GeometricRate
 /-!
-# Explicit logarithmic step counts for analytic SLQ
+# Explicit logarithmic Krylov approximation orders for analytic SLQ
 
-The analytic domain and magnitude parameters determine the Krylov step budget, while the
+The analytic domain and magnitude parameters determine the Krylov Krylov approximation order, while the
 proved Hutchinson tail determines the probe count. Zero function size and zero dimension
 are covered through the zero geometric-error branch.
+These are bounds for supplied orthonormal compression frames containing `K_q`.
+The parameter `q` is an approximation order; no relation between the frame column count
+and `q`, construction algorithm, or matvec cost is asserted.
 -/
 
 noncomputable section
@@ -19,11 +22,11 @@ variable {Ω n κ r : Type*} [MeasurableSpace Ω] [Fintype n] [DecidableEq n]
 variable [Fintype κ] [DecidableEq κ] [Nonempty κ] [Fintype r] [DecidableEq r]
 variable {μ : Measure Ω} [IsProbabilityMeasure μ]
 
-/-- An explicit logarithmic analytic SLQ step budget gives absolute error threshold `ε`;
+/-- An explicit logarithmic analytic SLQ Krylov approximation order gives absolute error threshold `ε`;
 the stochastic tail is evaluated at `ε/2` with the Hanson–Wright constant.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 (absolute analytic form).
-atlas: slq-error -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_analytic_log_steps
+atlas: slq-error (partial) -/
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_analytic_log_order
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ} (hq : 0 < q)
@@ -35,7 +38,7 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_a
     (hmatch : ∀ t ∈ Icc (-1 : ℝ) 1, F t = (f (((c - a) * t + c + a) / 2) : ℂ))
     {ε : ℝ} (hε : 0 < ε)
     (hsteps : (1 + log (8 * (Fintype.card n : ℝ) * M / (ε * (ρ - 1))) / log ρ) / 2 ≤ (q : ℝ)) :
-    μ.real {ω | ε < |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
+    μ.real {ω | ε < |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
       2 * exp (-(1 / (256 * exp 1 ^ 2)) *
         min (Fintype.card κ * (ε / 2) ^ 2 / frobNorm (cfc f A) ^ 2)
           (Fintype.card κ * (ε / 2) / specNorm (cfc f A))) := by
@@ -48,20 +51,20 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_a
           8 * (Fintype.card n : ℝ) * M / (ε * (ρ - 1)) := by field_simp; ring
       rw [hratio]
       exact hsteps
-  have hraw := measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_open_bernsteinEllipse
+  have hraw := measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_open_bernsteinEllipse
     hA hG hQ hq hK hac hρ hspec hFd hM hmatch (η := ε / 2) (by positivity)
   refine (measureReal_mono (fun ω hω => ?_)).trans hraw
   change ε < _ at hω
   change ε / 2 + 4 * (Fintype.card n : ℝ) * M / ρ ^ (2 * q - 1) / (ρ - 1) < _
   linarith
 
-/-- The fully explicit analytic relative-error SLQ choices: the geometric step budget
+/-- The fully explicit analytic relative-error SLQ choices: the geometric Krylov approximation order
 `q≥(1+log(8nM/(ετ(ρ-1)))/logρ)/2`, `q≥1`, and
 `m≥1024e² log(2/δ)/ε²` imply failure probability at most `δ` for `|SLQ-τ|>ετ`.
 Here `τ=tr f(A)>0` and `f(A)` is positive semidefinite.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 (relative analytic form).
-atlas: slq-error -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_log_steps
+atlas: slq-error (partial) -/
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_log_order
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {f : ℝ → ℝ} (hF : (cfc f A).PosSemidef)
     (htr : 0 < (cfc f A).trace) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
@@ -76,8 +79,8 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademach
     (hsteps : (1 + log (8 * (Fintype.card n : ℝ) * M / (ε * (cfc f A).trace * (ρ - 1))) / log ρ) / 2 ≤
       (q : ℝ)) (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
     μ.real {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
-  apply measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_card_ge
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
+  apply measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_card_ge
     hA hF htr hG hQ hq hK hac hρ hspec hFd hM hmatch hε hε1 hδ _ hm
   have hM0 := nonneg_of_norm_le_on_open_bernsteinEllipse hρ hM
   rcases eq_or_lt_of_le (show 0 ≤ 4 * (Fintype.card n : ℝ) * M by positivity) with hzero | hpos

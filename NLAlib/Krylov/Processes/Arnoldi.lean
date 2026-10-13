@@ -60,10 +60,6 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-! ### Real forms of the orthonormal-column helpers -/
 
-/-- `‖WithLp.toLp 2 w‖ = √(w ⬝ᵥ w)` for real vectors (bridge of STANDARDS §3). Helper. -/
-theorem norm_toLp_eq_sqrt_dotProduct (w : n → ℝ) : ‖WithLp.toLp 2 w‖ = √(w ⬝ᵥ w) := by
-  rw [← norm_toLp_sq_eq_dotProduct_self, Real.sqrt_sq (norm_nonneg _)]
-
 /-- `(Qᵀ Q)_ij = q_i ⬝ q_j` for a real matrix (real form of `conjTranspose_mul_self_apply`).
 Helper for `arnoldi-def`. -/
 theorem transpose_mul_self_apply {k : Type*} (Q : Matrix n k ℝ) (i j : k) :

@@ -17,7 +17,9 @@ namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- The diagonal tangent matrix of the principal angles. Stewart–Sun §I.5;
-inverse formulas below explicitly require an invertible overlap.
+its finite geometric interpretation and the inverse formulas below require an
+invertible overlap. At a right angle Mathlib's total `Real.tan` returns zero,
+so this diagonal is an algebraic helper outside the transverse domain.
 atlas: principal-angles-def (partial) -/
 def tangentPrincipalAngles (P Q : Matrix m n ℝ) :
     Matrix (Fin (Fintype.card n)) (Fin (Fintype.card n)) ℝ :=
@@ -31,10 +33,11 @@ theorem tan_principalAngles_sq {P Q : Matrix m n ℝ}
       (singularValues ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i)⁻¹^2*
         (1-singularValues ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i^2) := by
   have hb := overlap_singularValues_mem_Icc hP hQ i
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hb
   have hn : 0 ≤ 1-singularValues ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i^2 := by
     nlinarith [hb.1, hb.2]
   rw [Real.tan_eq_sin_div_cos, cos_principalAngles hP hQ, sin_principalAngles,
-    div_eq_mul_inv, mul_pow, Real.sq_sqrt hn, mul_comm]
+    Matrix.conjTranspose_eq_transpose_of_trivial, div_eq_mul_inv, mul_pow, Real.sq_sqrt hn, mul_comm]
 
 /-- The actual tangent matrix has the residual-times-overlap-inverse norm.
 Stewart–Sun §I.5; arbitrary finite indices and empty frames are included.
@@ -55,7 +58,8 @@ theorem specNorm_tangentPrincipalAngles_eq_residual_mul_inv {P Q : Matrix m n �
   have hgram : RFᵀ*RF=1-CFᵀ*CF := by
     simp only [RF, CF, Matrix.reindex_apply, Matrix.transpose_submatrix,
       Equiv.refl_symm, Equiv.coe_refl, Matrix.submatrix_mul_equiv]
-    have hh := transpose_residual_mul_residual_eq_one_sub_overlap hP hQ
+    have hh := conjTranspose_residual_mul_residual_eq_one_sub_overlap hP hQ
+    simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hh
     change (Rᵀ*R).submatrix e.symm e.symm = 1-(Cᵀ*C).submatrix e.symm e.symm
     change Rᵀ*R=1-Cᵀ*C at hh
     rw [hh]
@@ -104,8 +108,10 @@ theorem isUnit_overlap_of_principalAngles_last_lt_pi_div_two {P Q : Matrix m n �
     IsUnit (Pᵀ*Q) := by
   let e := Fintype.equivFin n
   let C := (Pᵀ*Q).reindex e e
-  have hs : 0 < singularValues C (Fintype.card n-1) :=
-    Real.arccos_lt_pi_div_two.mp hangle
+  have hs : 0 < singularValues C (Fintype.card n-1) := by
+    simpa only [principalAnglesFintype, C, singularValues_reindex,
+      Matrix.conjTranspose_eq_transpose_of_trivial] using
+      (Real.arccos_lt_pi_div_two.mp hangle)
   have hi := (singularValues_pos_iff C (Fintype.card n-1)).mp hs
   have hc := Matrix.rank_le_card_width C
   have hr : C.rank=Fintype.card n := by simp only [Fintype.card_fin] at hc; omega

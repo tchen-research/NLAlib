@@ -300,8 +300,7 @@ theorem eigenvalues₀_restrict_T_le (D : LanczosDecomp A b q) (hA : A.IsHermiti
       (D.isHermitian_T hA).eigenvalues₀ (Fin.castLE (by simpa using h) i) := by
   have hE := hasOrthonormalCols_submatrix_one h
   have key := Matrix.IsHermitian.eigenvalues₀_compression_le (D.isHermitian_T hA) hE
-    (by rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← restrict_T_eq]
-        exact isHermitian_T (D.restrict h) hA) i
+    i
   convert key using 2
   rw [restrict_T_eq, Matrix.conjTranspose_eq_transpose_of_trivial]
 
@@ -318,8 +317,7 @@ theorem eigenvalues₀_le_eigenvalues₀_restrict_T (D : LanczosDecomp A b q) (h
       (isHermitian_T (D.restrict h) hA).eigenvalues₀ i := by
   have hE := hasOrthonormalCols_submatrix_one h
   have key := Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression (D.isHermitian_T hA) hE
-    (by rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← restrict_T_eq]
-        exact isHermitian_T (D.restrict h) hA) i
+    i
   convert key using 2
   rw [restrict_T_eq, Matrix.conjTranspose_eq_transpose_of_trivial]
 

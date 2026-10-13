@@ -22,7 +22,7 @@ attainer. At a nonzero matrix and `1 < p`, these are
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 def schattenDualCoefficients {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) (p : ℝ) (i : ℕ) : ℝ :=
-  singularValues A i ^ (p - 1) / schattenNorm A p ^ (p - 1)
+  singularValues A i ^ (p - 1) / schattenNormReal A p ^ (p - 1)
 
 open scoped Matrix.Norms.L2Operator in
 /-- A nonzero matrix's normalized singular power coefficients have conjugate
@@ -31,19 +31,19 @@ Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem sum_schattenDualCoefficients_rpow_eq_one {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) {p q : ℝ} (hpq : Real.HolderConjugate p q) (hA : A ≠ 0) :
     (∑ i ∈ Finset.range (min m n), schattenDualCoefficients A p i ^ q) = 1 := by
-  have hN : 0 < schattenNorm A p := lt_of_le_of_ne (schattenNorm_nonneg A p)
-    (Ne.symm (fun h => hA ((schattenNorm_eq_zero_iff A hpq.pos).mp h)))
+  have hN : 0 < schattenNormReal A p := lt_of_le_of_ne (schattenNormReal_nonneg A p)
+    (Ne.symm (fun h => hA ((schattenNormReal_eq_zero_iff A hpq.pos).mp h)))
   have hS : 0 ≤ ∑ i ∈ Finset.range (min m n), singularValues A i ^ p :=
     Finset.sum_nonneg (fun i _ => Real.rpow_nonneg (singularValues_nonneg A i) p)
-  have hpow : schattenNorm A p ^ p = ∑ i ∈ Finset.range (min m n), singularValues A i ^ p := by
-    simp only [schattenNorm, Fintype.card_fin]
+  have hpow : schattenNormReal A p ^ p = ∑ i ∈ Finset.range (min m n), singularValues A i ^ p := by
+    simp only [schattenNormReal, Fintype.card_fin]
     change ((∑ i ∈ Finset.range (min m n), singularValues A i ^ p) ^ (1 / p)) ^ p = _
     rw [one_div, Real.rpow_inv_rpow hS hpq.ne_zero]
-  have hden : (schattenNorm A p ^ (p - 1)) ^ q = schattenNorm A p ^ p := by
+  have hden : (schattenNormReal A p ^ (p - 1)) ^ q = schattenNormReal A p ^ p := by
     rw [← Real.rpow_mul hN.le, hpq.sub_one_mul_conj]
   simp only [schattenDualCoefficients]
   change (∑ i ∈ Finset.range (min m n),
-    (singularValues A i ^ (p - 1) / schattenNorm A p ^ (p - 1)) ^ q) = 1
+    (singularValues A i ^ (p - 1) / schattenNormReal A p ^ (p - 1)) ^ q) = 1
   simp_rw [Real.div_rpow (Real.rpow_nonneg (singularValues_nonneg A _) _) (Real.rpow_nonneg hN.le _),
     ← Real.rpow_mul (singularValues_nonneg A _), hpq.sub_one_mul_conj, hden]
   rw [← Finset.sum_div, ← hpow, div_self (Real.rpow_pos_of_pos hN p).ne']
@@ -55,17 +55,17 @@ Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem sum_singularValues_mul_schattenDualCoefficients_eq {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) {p q : ℝ} (hpq : Real.HolderConjugate p q) (hA : A ≠ 0) :
     (∑ i ∈ Finset.range (min m n), singularValues A i * schattenDualCoefficients A p i) =
-      schattenNorm A p := by
-  have hN : 0 < schattenNorm A p := lt_of_le_of_ne (schattenNorm_nonneg A p)
-    (Ne.symm (fun h => hA ((schattenNorm_eq_zero_iff A hpq.pos).mp h)))
+      schattenNormReal A p := by
+  have hN : 0 < schattenNormReal A p := lt_of_le_of_ne (schattenNormReal_nonneg A p)
+    (Ne.symm (fun h => hA ((schattenNormReal_eq_zero_iff A hpq.pos).mp h)))
   have hS : 0 ≤ ∑ i ∈ Finset.range (min m n), singularValues A i ^ p :=
     Finset.sum_nonneg (fun i _ => Real.rpow_nonneg (singularValues_nonneg A i) p)
-  have hpow : schattenNorm A p ^ p = ∑ i ∈ Finset.range (min m n), singularValues A i ^ p := by
-    simp only [schattenNorm, Fintype.card_fin]
+  have hpow : schattenNormReal A p ^ p = ∑ i ∈ Finset.range (min m n), singularValues A i ^ p := by
+    simp only [schattenNormReal, Fintype.card_fin]
     change ((∑ i ∈ Finset.range (min m n), singularValues A i ^ p) ^ (1 / p)) ^ p = _
     rw [one_div, Real.rpow_inv_rpow hS hpq.ne_zero]
   have hterm (i : ℕ) : singularValues A i * schattenDualCoefficients A p i =
-      singularValues A i ^ p / schattenNorm A p ^ (p - 1) := by
+      singularValues A i ^ p / schattenNormReal A p ^ (p - 1) := by
     change singularValues A i * (singularValues A i ^ (p - 1) / _) = _
     have hprod : singularValues A i * singularValues A i ^ (p - 1) = singularValues A i ^ p := by
       calc
@@ -87,33 +87,33 @@ theorem IsSVD.schattenDualCoefficients_attain {m n : ℕ}
     {A : Matrix (Fin m) (Fin n) ℝ} {U : Matrix (Fin m) (Fin m) ℝ}
     {V : Matrix (Fin n) (Fin n) ℝ} (h : IsSVD A U V) {p q : ℝ}
     (hpq : Real.HolderConjugate p q) (hA : A ≠ 0) :
-    schattenNorm (U * (rectDiag (schattenDualCoefficients A p) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) q = 1 ∧
+    schattenNormReal (U * (rectDiag (schattenDualCoefficients A p) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) q = 1 ∧
     frobInner A (U * (rectDiag (schattenDualCoefficients A p) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) =
-      schattenNorm A p := by
+      schattenNormReal A p := by
   have hb0 : ∀ i, 0 ≤ schattenDualCoefficients A p i := fun i =>
     div_nonneg (Real.rpow_nonneg (singularValues_nonneg A i) _)
-      (Real.rpow_nonneg (schattenNorm_nonneg A p) _)
+      (Real.rpow_nonneg (schattenNormReal_nonneg A p) _)
   have hb : Antitone (schattenDualCoefficients A p) := by
     intro i j hij
     exact div_le_div_of_nonneg_right
       (Real.rpow_le_rpow (singularValues_nonneg A j) (singularValues_antitone A hij) hpq.sub_one_pos.le)
-      (Real.rpow_nonneg (schattenNorm_nonneg A p) _)
+      (Real.rpow_nonneg (schattenNormReal_nonneg A p) _)
   constructor
-  · rw [schattenNorm_mul_rectDiag_mul_transpose h.conjTranspose_mul_left h.conjTranspose_mul_right
+  · rw [schattenNormReal_mul_rectDiag_mul_transpose h.conjTranspose_mul_left h.conjTranspose_mul_right
       _ hb0 hb, sum_schattenDualCoefficients_rpow_eq_one A hpq hA, Real.one_rpow]
   · rw [h.frobInner_mul_rectDiag_mul_transpose,
       sum_singularValues_mul_schattenDualCoefficients_eq A hpq hA]
 
 open scoped Matrix.Norms.L2Operator in
-/-- `Fin` step of `exists_schattenNorm_le_one_frobInner_eq`. -/
-private theorem exists_schattenNorm_le_one_frobInner_eq_fin {m n : ℕ}
+/-- `Fin` step of `exists_schattenNormReal_le_one_frobInner_eq`. -/
+private theorem exists_schattenNormReal_le_one_frobInner_eq_fin {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) {p q : ℝ} (hpq : Real.HolderConjugate p q) :
-    ∃ B : Matrix (Fin m) (Fin n) ℝ, schattenNorm B q ≤ 1 ∧ frobInner A B = schattenNorm A p := by
+    ∃ B : Matrix (Fin m) (Fin n) ℝ, schattenNormReal B q ≤ 1 ∧ frobInner A B = schattenNormReal A p := by
   by_cases hA : A = 0
   · subst A
     refine ⟨0, ?_, ?_⟩
-    · rw [schattenNorm_zero hpq.symm.pos]; norm_num
-    · rw [frobInner_zero_left, schattenNorm_zero hpq.pos]
+    · rw [schattenNormReal_zero hpq.symm.pos]; norm_num
+    · rw [frobInner_zero_left, schattenNormReal_zero hpq.pos]
   · obtain ⟨U, V, h⟩ := exists_isSVD A
     have hb := h.schattenDualCoefficients_attain hpq hA
     exact ⟨_, hb.1.le, hb.2⟩
@@ -200,7 +200,7 @@ theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
     nuclearNorm (U * (rectDiag leadingSingularCoefficients : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) = 1 ∧
     frobInner A (U * (rectDiag leadingSingularCoefficients : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) = specNorm A := by
   have hfirst : singularValues A 0 = specNorm A := by
-    simpa only [kyFanNorm, Finset.sum_range_one, singularValues] using kyFanNorm_one_eq_specNorm A
+    exact singularValues_zero_eq_specNorm A
   have hN : 0 < min m n := by
     by_contra hn
     have hs : singularValues A 0 = 0 :=
@@ -220,7 +220,7 @@ theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
     · simp only [leadingSingularCoefficients, if_neg hj]
       split_ifs <;> norm_num
   constructor
-  · rw [← schattenNorm_one, schattenNorm_mul_rectDiag_mul_transpose
+  · rw [← schattenNormReal_one, schattenNormReal_mul_rectDiag_mul_transpose
       h.conjTranspose_mul_left h.conjTranspose_mul_right _ hb0 hb]
     simp [leadingSingularCoefficients, hN]
   · rw [h.frobInner_mul_rectDiag_mul_transpose]
@@ -248,19 +248,19 @@ omit [DecidableEq m] in
 the witness is the explicit singular-power formula in SVD frames (transported from `Fin`),
 and the zero matrix uses the zero witness, covering empty shapes.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem exists_schattenNorm_le_one_frobInner_eq (A : Matrix m n ℝ) {p q : ℝ}
+theorem exists_schattenNormReal_le_one_frobInner_eq (A : Matrix m n ℝ) {p q : ℝ}
     (hpq : Real.HolderConjugate p q) :
-    ∃ B : Matrix m n ℝ, schattenNorm B q ≤ 1 ∧ frobInner A B = schattenNorm A p := by
+    ∃ B : Matrix m n ℝ, schattenNormReal B q ≤ 1 ∧ frobInner A B = schattenNormReal A p := by
   let em := Fintype.equivFin m
   let en := Fintype.equivFin n
-  obtain ⟨Bf, hBn, hBpair⟩ := exists_schattenNorm_le_one_frobInner_eq_fin (A.reindex em en) hpq
+  obtain ⟨Bf, hBn, hBpair⟩ := exists_schattenNormReal_le_one_frobInner_eq_fin (A.reindex em en) hpq
   let B := Bf.reindex em.symm en.symm
   have hBr : B.reindex em en = Bf := by ext i j; simp [B, Matrix.reindex_apply]
   refine ⟨B, ?_, ?_⟩
-  · change schattenNorm (Bf.reindex em.symm en.symm) q ≤ 1
-    rwa [schattenNorm_reindex]
+  · change schattenNormReal (Bf.reindex em.symm en.symm) q ≤ 1
+    rwa [schattenNormReal_reindex]
   · have h := frobInner_reindex A B em en
-    rw [hBr, hBpair, schattenNorm_reindex] at h
+    rw [hBr, hBpair, schattenNormReal_reindex] at h
     exact h.symm
 
 open scoped Matrix.Norms.L2Operator in
@@ -282,42 +282,31 @@ theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm (A : Matrix m n ℝ) :
     exact h.symm
 
 open scoped Matrix.Norms.L2Operator in
-/-- Extended Schatten norms are nonnegative, including exponent infinity.
-Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem schattenNormExtended_nonneg (A : Matrix m n ℝ) (p : ℝ≥0∞) :
-    0 ≤ schattenNormExtended A p := by
-  by_cases hp : p = ∞
-  · subst p
-    exact specNorm_nonneg A
-  · rw [schattenNormExtended_eq_of_ne_top _ hp]
-    exact schattenNorm_nonneg A _
-
-open scoped Matrix.Norms.L2Operator in
 /-- Every conjugate pair of extended Schatten exponents has an unit-ball attainer, including `(1,∞)`, `(∞,1)`, rank zero and empty shapes.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def (partial) -/
-theorem exists_schattenNormExtended_le_one_frobInner_eq (A : Matrix m n ℝ)
+theorem exists_schattenNorm_le_one_frobInner_eq (A : Matrix m n ℝ)
     {p q : ℝ≥0∞} [ENNReal.HolderConjugate p q] :
-    ∃ B : Matrix m n ℝ, schattenNormExtended B q ≤ 1 ∧ frobInner A B = schattenNormExtended A p := by
+    ∃ B : Matrix m n ℝ, schattenNorm B q ≤ 1 ∧ frobInner A B = schattenNorm A p := by
   by_cases hpTop : p = ∞
   · subst p
     have hq : q = 1 := (ENNReal.HolderTriple.unique ∞ q 1 q).symm
     subst q
-    simp only [schattenNormExtended_top]
-    simp only [schattenNormExtended_eq_of_ne_top _ (show (1 : ℝ≥0∞) ≠ ∞ by simp),
-      ENNReal.toReal_one, schattenNorm_one]
+    simp only [schattenNorm_top]
+    simp only [schattenNorm_eq_of_ne_top _ (show (1 : ℝ≥0∞) ≠ ∞ by simp),
+      ENNReal.toReal_one, schattenNormReal_one]
     exact exists_nuclearNorm_le_one_frobInner_eq_specNorm A
   · by_cases hqTop : q = ∞
     · subst q
       have hp : p = 1 := (ENNReal.HolderTriple.unique p ∞ 1 p).symm
       subst p
-      simp only [schattenNormExtended_top]
-      simp only [schattenNormExtended_eq_of_ne_top _ (show (1 : ℝ≥0∞) ≠ ∞ by simp),
-        ENNReal.toReal_one, schattenNorm_one]
+      simp only [schattenNorm_top]
+      simp only [schattenNorm_eq_of_ne_top _ (show (1 : ℝ≥0∞) ≠ ∞ by simp),
+        ENNReal.toReal_one, schattenNormReal_one]
       exact exists_specNorm_le_one_frobInner_eq_nuclearNorm A
-    · simp only [schattenNormExtended_eq_of_ne_top _ hpTop,
-        schattenNormExtended_eq_of_ne_top _ hqTop]
-      exact exists_schattenNorm_le_one_frobInner_eq A
+    · simp only [schattenNorm_eq_of_ne_top _ hpTop,
+        schattenNorm_eq_of_ne_top _ hqTop]
+      exact exists_schattenNormReal_le_one_frobInner_eq A
         (ENNReal.HolderConjugate.toReal_of_ne_top hpTop hqTop)
 
 open scoped Matrix.Norms.L2Operator in
@@ -325,18 +314,18 @@ open scoped Matrix.Norms.L2Operator in
 The upper bound is trace Hölder and membership is the explicit SVD attainer.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def -/
-theorem isGreatest_schattenNormExtended_frobInner (A : Matrix m n ℝ)
+theorem isGreatest_schattenNorm_frobInner (A : Matrix m n ℝ)
     {p q : ℝ≥0∞} [ENNReal.HolderConjugate p q] :
-    IsGreatest {z : ℝ | ∃ B : Matrix m n ℝ, schattenNormExtended B q ≤ 1 ∧ frobInner A B = z}
-      (schattenNormExtended A p) := by
-  refine ⟨exists_schattenNormExtended_le_one_frobInner_eq A, ?_⟩
+    IsGreatest {z : ℝ | ∃ B : Matrix m n ℝ, schattenNorm B q ≤ 1 ∧ frobInner A B = z}
+      (schattenNorm A p) := by
+  refine ⟨exists_schattenNorm_le_one_frobInner_eq A, ?_⟩
   rintro z ⟨B, hB, rfl⟩
   calc
     frobInner A B ≤ |frobInner A B| := le_abs_self _
-    _ ≤ schattenNormExtended A p * schattenNormExtended B q :=
-      abs_frobInner_le_schattenNormExtended_mul A B
-    _ ≤ schattenNormExtended A p * 1 :=
-      mul_le_mul_of_nonneg_left hB (schattenNormExtended_nonneg A p)
+    _ ≤ schattenNorm A p * schattenNorm B q :=
+      abs_frobInner_le_schattenNorm_mul A B
+    _ ≤ schattenNorm A p * 1 :=
+      mul_le_mul_of_nonneg_left hB (schattenNorm_nonneg A p)
     _ = _ := mul_one _
 
 open scoped Matrix.Norms.L2Operator in
@@ -344,11 +333,11 @@ open scoped Matrix.Norms.L2Operator in
 for every extended conjugate pair and every finite matrix shape.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def (partial) -/
-theorem sSup_frobInner_schattenNormExtended_unitBall (A : Matrix m n ℝ)
+theorem sSup_frobInner_schattenNorm_unitBall (A : Matrix m n ℝ)
     {p q : ℝ≥0∞} [ENNReal.HolderConjugate p q] :
-    sSup {z : ℝ | ∃ B : Matrix m n ℝ, schattenNormExtended B q ≤ 1 ∧ frobInner A B = z} =
-      schattenNormExtended A p := by
-  have h := isGreatest_schattenNormExtended_frobInner A (p := p) (q := q)
+    sSup {z : ℝ | ∃ B : Matrix m n ℝ, schattenNorm B q ≤ 1 ∧ frobInner A B = z} =
+      schattenNorm A p := by
+  have h := isGreatest_schattenNorm_frobInner A (p := p) (q := q)
   exact h.isLUB.csSup_eq ⟨_, h.1⟩
 
 end NLAlib

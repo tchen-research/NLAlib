@@ -107,9 +107,9 @@ theorem frobSq_sub_trace_rowGram_avg_smul_leftPolar_eq {A U : Matrix n n ℝ}
     simpa only [Matrix.transpose_mul, Matrix.transpose_transpose, hSym] using
       congrArg Matrix.transpose hA
   have hRight : U * CFC.sqrt (Aᵀ * A) = A := by
-    have h := sqrt_rowGram_mul_eq_of_isometry_mul_sqrt_gram_eq hU.transpose hAt
-    simpa only [Matrix.transpose_mul, Matrix.transpose_transpose, hSym] using
-      congrArg Matrix.transpose h
+    have h := sqrt_rowGram_mul_eq_of_isometry_mul_sqrt_gram_eq hU.conjTranspose hAt
+    simpa only [Matrix.transpose_mul, Matrix.conjTranspose_eq_transpose_of_trivial,
+      Matrix.transpose_transpose, hSym] using congrArg Matrix.transpose h
   rw [← nuclearNorm_eq_trace_sqrt_rowGram]
   exact frobSq_sub_avg_smul_polar_eq hU hRight hCard
 

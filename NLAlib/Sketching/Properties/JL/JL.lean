@@ -114,7 +114,8 @@ theorem jl_distributional (k n : ℕ) (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 <
   have hlaw := gaussianMatrix_map_mulVec_of_dotProduct_self_eq_one (k := k) u hu
   have h₁ : (Measure.pi fun _ : Fin k => gaussianReal 0 1) B₁
       ≤ ENNReal.ofReal (Real.exp (-(k : ℝ) * c)) := by
-    refine (measure_le_sum_sq_le_gaussianReal hε0.le).trans
+    rw [← ofReal_measureReal]
+    refine (ENNReal.ofReal_le_ofReal (measureReal_le_sum_sq_le_gaussianVector hε0.le)).trans
       (ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 ?_))
     have hlog := log_one_add_le_sub_sq_div_two_add_pow_three_div_three hε0.le
     have : (k : ℝ) / 2 * (2 * c) ≤ (k : ℝ) / 2 * (ε - Real.log (1 + ε)) :=
@@ -122,7 +123,8 @@ theorem jl_distributional (k n : ℕ) (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 <
     linarith
   have h₂ : (Measure.pi fun _ : Fin k => gaussianReal 0 1) B₂
       ≤ ENNReal.ofReal (Real.exp (-(k : ℝ) * c)) := by
-    refine (measure_sum_sq_le_one_sub_mul_le_gaussianReal hε0.le hε1).trans
+    rw [← ofReal_measureReal]
+    refine (ENNReal.ofReal_le_ofReal (measureReal_sum_sq_le_one_sub_mul_le_gaussianVector hε0.le hε1)).trans
       (ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 ?_))
     have hlog := log_one_sub_le_neg_sub_sq_div_two hε0.le hε1
     have hε3 : 0 ≤ ε ^ 3 := by positivity

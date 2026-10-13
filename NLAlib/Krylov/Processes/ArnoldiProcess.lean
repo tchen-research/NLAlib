@@ -157,7 +157,8 @@ theorem arnoldiBasis_mem_krylovSpace (A : Matrix n n ℝ) (b : n → ℝ) (j : �
 theorem arnoldiBasis_dotProduct (A : Matrix n n ℝ) (b : n → ℝ) {i j : ℕ}
     (hi : i < krylovGrade A b) (hj : j < krylovGrade A b) :
     arnoldiBasis A b i ⬝ᵥ arnoldiBasis A b j = if i = j then 1 else 0 := by
-  rw [arnoldiBasis, arnoldiBasis, ← inner_eq_dotProduct_ofLp]
+  rw [arnoldiBasis, arnoldiBasis, ← (inner_eq_star_dotProduct_ofLp (𝕜 := ℝ) _ _).trans
+      (congrArg (fun w => w ⬝ᵥ _) (star_trivial _))]
   split_ifs with hij
   · subst hij
     have hne := gramSchmidt_ne_zero_of_lt A b hi
@@ -170,7 +171,8 @@ theorem arnoldiBasis_dotProduct (A : Matrix n n ℝ) (b : n → ℝ) {i j : ℕ}
 (past the grade the vectors are `0`). Helper for `lanczos-recurrence-algorithm`. -/
 theorem arnoldiBasis_dotProduct_of_ne (A : Matrix n n ℝ) (b : n → ℝ) {i j : ℕ} (hij : i ≠ j) :
     arnoldiBasis A b i ⬝ᵥ arnoldiBasis A b j = 0 := by
-  rw [arnoldiBasis, arnoldiBasis, ← inner_eq_dotProduct_ofLp]
+  rw [arnoldiBasis, arnoldiBasis, ← (inner_eq_star_dotProduct_ofLp (𝕜 := ℝ) _ _).trans
+      (congrArg (fun w => w ⬝ᵥ _) (star_trivial _))]
   simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right,
     gramSchmidt_orthogonal ℝ _ hij, mul_zero]
 
@@ -194,6 +196,37 @@ theorem hasOrthonormalCols_arnoldiMatrix {A : Matrix n n ℝ} {b : n → ℝ} {q
     arnoldiBasis_dotProduct A b (by omega) (by omega), Matrix.one_apply]
   simp [Fin.ext_iff]
 
+/-- The Arnoldi basis stopped at breakdown, with `min q (grade A b)` columns.
+The zero start and zero requested order give a frame with no columns.
+Source: Saad (2003), Alg. 6.1 and Prop. 6.4. This is the Gram–Schmidt construction;
+no short-recurrence or operation-count assertion is part of this definition. -/
+def stoppedArnoldiMatrix (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
+    Matrix n (Fin (min q (krylovGrade A b))) ℝ :=
+  arnoldiMatrix A b (min q (krylovGrade A b))
+
+/-- Stopping at the grade removes the zero columns and leaves an orthonormal frame. -/
+theorem hasOrthonormalCols_stoppedArnoldiMatrix (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
+    HasOrthonormalCols (stoppedArnoldiMatrix A b q) :=
+  hasOrthonormalCols_arnoldiMatrix (min_le_right _ _)
+
+/-- The stopped frame spans the requested Krylov space, including early breakdown. -/
+theorem range_stoppedArnoldiMatrix (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
+    LinearMap.range (stoppedArnoldiMatrix A b q).mulVecLin = krylovSpace A b q := by
+  rw [stoppedArnoldiMatrix, range_arnoldiMatrix]
+  rcases le_total q (krylovGrade A b) with h | h
+  · rw [min_eq_left h]
+  · rw [min_eq_right h, krylovSpace_eq_of_krylovGrade_le A b h]
+
+/-- The stopped compression has at most the requested number of columns. -/
+theorem card_stoppedArnoldiMatrix_le (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
+    Fintype.card (Fin (min q (krylovGrade A b))) ≤ q := by
+  simpa using min_le_left q (krylovGrade A b)
+
+/-- The stopped compression uses exactly the dimension of the requested Krylov space. -/
+theorem card_stoppedArnoldiMatrix_eq_finrank (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
+    Fintype.card (Fin (min q (krylovGrade A b))) = Module.finrank ℝ (krylovSpace A b q) := by
+  rw [Fintype.card_fin, finrank_krylovSpace A b q]
+
 /-- **The Arnoldi Hessenberg matrix is upper Hessenberg**, `h_ij = 0` for `i > j + 1`, for every
 `A` and every `q` (no symmetry, no non-breakdown hypothesis).
 Source: Saad (2003) [`saad03`], Prop. 6.5; Trefethen–Bau (1997) [`tb97`], Lect. 33.
@@ -202,7 +235,8 @@ theorem arnoldiHessenberg_apply_eq_zero_of_add_one_lt (A : Matrix n n ℝ) (b : 
     {i j : Fin q} (hij : (j : ℕ) + 1 < i) : arnoldiHessenberg A b q i j = 0 := by
   rw [arnoldiHessenberg, transpose_mul_mul_apply_eq_dotProduct, arnoldiMatrix_col,
     arnoldiMatrix_col, arnoldiBasis, gramSchmidtNormed, WithLp.ofLp_smul, smul_dotProduct,
-    ← inner_eq_dotProduct_ofLp]
+    ← (inner_eq_star_dotProduct_ofLp (𝕜 := ℝ) _ _).trans
+      (congrArg (fun w => w ⬝ᵥ _) (star_trivial _))]
   have hx : WithLp.toLp 2 (A *ᵥ arnoldiBasis A b j) ∈
       Submodule.span ℝ (gramSchmidt ℝ (krylovSeq A b) '' Set.Iio i) := by
     rw [span_gramSchmidt_Iio, mem_span_krylovSeq_iff]
@@ -217,7 +251,11 @@ atlas: lanczos-recurrence -/
 theorem arnoldiHessenberg_apply_eq_zero_of_add_one_lt_of_isHermitian {A : Matrix n n ℝ}
     (hA : A.IsHermitian) (b : n → ℝ) {q : ℕ} {i j : Fin q} (hij : (i : ℕ) + 1 < j) :
     arnoldiHessenberg A b q i j = 0 := by
-  rw [arnoldiHessenberg, ← (isSymm_transpose_mul_mul hA (arnoldiMatrix A b q)).apply i j]
+  have hT : ((arnoldiMatrix A b q)ᵀ * A * arnoldiMatrix A b q).IsSymm := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
+      Matrix.isHermitian_iff_isSymm.mp
+        (Matrix.isHermitian_conjTranspose_mul_mul (arnoldiMatrix A b q) hA)
+  rw [arnoldiHessenberg, ← hT.apply i j]
   exact arnoldiHessenberg_apply_eq_zero_of_add_one_lt A b hij
 
 /-- The starting vector has Arnoldi coordinates supported on the first index:
@@ -231,7 +269,8 @@ theorem transpose_arnoldiMatrix_mulVec_apply_eq_zero (A : Matrix n n ℝ) (b : n
   have h0 := inner_gramSchmidt_eq_zero_of_mem_span A b hb
   have hrow : ((arnoldiMatrix A b q)ᵀ *ᵥ b) i = arnoldiBasis A b i ⬝ᵥ b := rfl
   rw [hrow, arnoldiBasis, gramSchmidtNormed, WithLp.ofLp_smul, smul_dotProduct,
-    show b = (WithLp.toLp 2 b).ofLp from rfl, ← inner_eq_dotProduct_ofLp, h0, smul_zero]
+    show b = (WithLp.toLp 2 b).ofLp from rfl, ← (inner_eq_star_dotProduct_ofLp (𝕜 := ℝ) _ _).trans
+      (congrArg (fun w => w ⬝ᵥ _) (star_trivial _)), h0, smul_zero]
 
 /-- The **canonical Arnoldi decomposition** (Gram–Schmidt, positive subdiagonal) of size
 `q ≤ krylovGrade A b`. Source: Saad (2003) [`saad03`], Alg. 6.1 and Prop. 6.4.
@@ -284,7 +323,8 @@ theorem arnoldiDecomp_H_subdiag_pos (A : Matrix n n ℝ) (b : n → ℝ) {q : �
     hperp _ (pow_mulVec_sub_gramSchmidt_mem A b (j + 1))
   have h4 : arnoldiBasis A b (j + 1) ⬝ᵥ g (j + 1) = ‖gramSchmidt ℝ (krylovSeq A b) (j + 1)‖ := by
     have hpos := hg (j + 1) (by omega)
-    rw [arnoldiBasis_eq, smul_dotProduct, ← inner_eq_dotProduct_ofLp, real_inner_self_eq_norm_sq,
+    rw [arnoldiBasis_eq, smul_dotProduct, ← (inner_eq_star_dotProduct_ofLp (𝕜 := ℝ) _ _).trans
+      (congrArg (fun w => w ⬝ᵥ _) (star_trivial _)), real_inner_self_eq_norm_sq,
       smul_eq_mul]
     field_simp
   rw [h1, dotProduct_smul, dotProduct_sub, h2, sub_zero, smul_eq_mul]
@@ -305,7 +345,8 @@ theorem arnoldiBasis_zero_dotProduct_pos (A : Matrix n n ℝ) (b : n → ℝ)
   have hdot : (gramSchmidt ℝ (krylovSeq A b) 0).ofLp ⬝ᵥ b =
       ‖gramSchmidt ℝ (krylovSeq A b) 0‖ ^ 2 := by
     conv_lhs => arg 2; rw [← hb]
-    rw [← inner_eq_dotProduct_ofLp, real_inner_self_eq_norm_sq]
+    rw [← (inner_eq_star_dotProduct_ofLp (𝕜 := ℝ) _ _).trans
+      (congrArg (fun w => w ⬝ᵥ _) (star_trivial _)), real_inner_self_eq_norm_sq]
   rw [arnoldiBasis_eq, smul_dotProduct, hdot, smul_eq_mul]
   positivity
 

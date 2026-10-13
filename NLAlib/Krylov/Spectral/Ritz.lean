@@ -30,10 +30,10 @@ the other sorted positions.
 * `NLAlib.dotProduct_mulVec_le_of_mem_range`: Rayleigh quotients over `range Q` are bounded by
   any upper bound on the Ritz values.
 * `NLAlib.exists_eigenvalues_transpose_mul_mul_ge`: the gap-free Ritz-value bound.
-* `NLAlib.tanSqAngle`, `NLAlib.tanSqAngle_aeval_mulVec_le`: the squared tangent of an angle and
-  the polynomial form of the eigenvector-angle bound (`tanSqAngle_le_of_forall_eigenvectorBasis_dotProduct_eq`
+* `NLAlib.overlapTangentSq`, `NLAlib.overlapTangentSq_aeval_mulVec_le`: the squared tangent of an angle and
+  the polynomial form of the eigenvector-angle bound (`overlapTangentSq_le_of_forall_eigenvectorBasis_dotProduct_eq`
   is the spectral-multiplier form shared with the power method).
-* `NLAlib.exists_mem_krylovSpace_tanSqAngle_le` (and `…_two_div_pow`): the Chebyshev angle bound.
+* `NLAlib.exists_mem_krylovSpace_overlapTangentSq_le` (and `…_two_div_pow`): the Chebyshev angle bound.
 * `NLAlib.eigenvalues_transpose_mul_mul_le`,
   `NLAlib.eigenvalues_sub_eigenvalues_transpose_mul_mul_le` (and `…_of_poly`): the
   Kaniel–Paige–Saad bound for the largest Ritz value.
@@ -66,8 +66,7 @@ theorem sq_dotProduct_le_dotProduct_mul_dotProduct (u v : n → ℝ) :
   have h := real_inner_mul_inner_self_le (WithLp.toLp 2 u : EuclideanSpace ℝ n)
     (WithLp.toLp 2 v)
   simp only [EuclideanSpace.inner_eq_star_dotProduct, star_trivial, WithLp.ofLp_toLp] at h
-  rw [sq, dotProduct_comm v u]
-  exact h
+  simpa only [sq, dotProduct_comm v u] using h
 
 /-- The eigenvalue at sorted position `i₀` is the eigenvalue of the label
 `Fintype.equivOfCardEq (Fintype.card_fin _) i₀` (the bridge between `eigenvalues₀` and
@@ -168,7 +167,7 @@ theorem sub_sq_dotProduct_le_of_forall_eigenvectorBasis_dotProduct_eq
       g (hA.eigenvalues i) * d i := fun i => by
     rw [hw i, huw, hd]; dsimp only
     have := hag i
-    linear_combination (-(u ⬝ᵥ v)) * this
+    linear_combination (u ⬝ᵥ v) * this
   have hsq_v : v ⬝ᵥ v - (u ⬝ᵥ v) ^ 2 = ∑ i, d i ^ 2 := by
     have h1 : ∑ i, d i ^ 2 = ∑ i, c i ^ 2 - 2 * (u ⬝ᵥ v) * ∑ i, a i * c i +
         (u ⬝ᵥ v) ^ 2 * ∑ i, a i ^ 2 := by
@@ -196,16 +195,14 @@ theorem sub_sq_dotProduct_le_of_forall_eigenvectorBasis_dotProduct_eq
     · obtain ⟨j, hj, hjL⟩ := hrep
       have := hM j hj
       rw [hjL, ← hLi] at this
-      exact mul_le_mul_of_nonneg_right (sq_le_sq' (by linarith [neg_abs_le
-        (g (hA.eigenvalues i))]) ((le_abs_self _).trans this)) (sq_nonneg _)
+      exact mul_le_mul_of_nonneg_right
+        (by simpa only [sq_abs] using pow_le_pow_left₀ (abs_nonneg _) this 2) (sq_nonneg _)
     · push Not at hrep
       -- `u` is a multiple of the `i`-th eigenvector
       have hzero : ∀ j, j ≠ i → a j = 0 := fun j hj => by
         have hne : hA.eigenvalues j ≠ L := fun hjL => by
-          apply hj
-          have := hrep (e.symm j) hjL
-          rw [← hi] at this
-          exact e.symm.injective this
+          exact hrep (e.symm j)
+            (fun h => hj (e.symm.injective (h.trans hi.symm))) hjL
         rcases mul_eq_zero.1 (eigenvalues_sub_mul_eigenvectorBasis_dotProduct_eq_zero hA hu j)
           with h | h
         · exact absurd (sub_eq_zero.1 h) hne
@@ -221,66 +218,92 @@ theorem sub_sq_dotProduct_le_of_forall_eigenvectorBasis_dotProduct_eq
         linear_combination (-(c i)) * hai
       rw [hdi]; simp
   · have := hM (e.symm i) hi
-    exact mul_le_mul_of_nonneg_right (sq_le_sq' (by linarith [neg_abs_le
-      (g (hA.eigenvalues i))]) ((le_abs_self _).trans this)) (sq_nonneg _)
+    change |g (hA.eigenvalues i)| ≤ M at this
+    exact mul_le_mul_of_nonneg_right
+      (by simpa only [sq_abs] using pow_le_pow_left₀ (abs_nonneg _) this 2) (sq_nonneg _)
 
 end EigenvectorCoordinates
 
 /-! ### The squared tangent and the spectral-multiplier bound -/
 
 omit [DecidableEq n] in
-/-- The squared tangent of the angle between `u` and `x`,
+/-- The totalized quadratic overlap ratio of `u` and `x`,
 `tan² ∠(u, x) = (‖u‖² ‖x‖² − ⟨u, x⟩²)/⟨u, x⟩²`. For a unit `u` this is
-`‖(I − u uᵀ) x‖²/⟨u, x⟩²`. Junk value `0` when `⟨u, x⟩ = 0` (the angle is `π/2`).
+`‖(I − u uᵀ) x‖²/⟨u, x⟩²`. The algebraic value is `0` when `⟨u, x⟩ = 0` (the angle is `π/2`).
 Source: Saad (2011) [`saad11`], §6.6.1 (where `tan θ(u, x)` is used with `‖u‖ = 1`).
-Helper for `krylov-eigenvector-angle` (the one-column case of `tanThetaMax`,
-`sq_tanThetaMax_replicateCol_eq_tanSqAngle`). -/
-def tanSqAngle (u x : n → ℝ) : ℝ := ((u ⬝ᵥ u) * (x ⬝ᵥ x) - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2
+Helper for `krylov-eigenvector-angle` (the one-column case of `overlapTangentNorm`,
+`sq_overlapTangentNorm_replicateCol_eq_overlapTangentSq`). -/
+def overlapTangentSq (u x : n → ℝ) : ℝ := ((u ⬝ᵥ u) * (x ⬝ᵥ x) - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2
+
+omit [DecidableEq n] in
+/-- The squared tangent of the angle between two vectors with nonzero overlap.
+Source: Saad (2011), §6.6.1. The overlap premise excludes the orthogonal and zero-vector cases. -/
+def tanSqAngle (u x : n → ℝ) (_hux : u ⬝ᵥ x ≠ 0) : ℝ := overlapTangentSq u x
+
+omit [DecidableEq n] in
+/-- The geometric squared tangent agrees with its quadratic quotient on the valid domain. -/
+theorem tanSqAngle_eq_overlapTangentSq (u x : n → ℝ) (hux : u ⬝ᵥ x ≠ 0) :
+    tanSqAngle u x hux = overlapTangentSq u x := rfl
 
 omit [DecidableEq n] in
 /-- `tan² ∠(u, x) ≥ 0` (Cauchy–Schwarz). Helper for `krylov-eigenvector-angle`. -/
-theorem tanSqAngle_nonneg (u x : n → ℝ) : 0 ≤ tanSqAngle u x :=
+theorem overlapTangentSq_nonneg (u x : n → ℝ) : 0 ≤ overlapTangentSq u x :=
   div_nonneg (sub_nonneg.2 (sq_dotProduct_le_dotProduct_mul_dotProduct u x)) (sq_nonneg _)
 
 omit [DecidableEq n] in
+/-- The squared tangent on its nonzero-overlap domain is nonnegative. -/
+theorem tanSqAngle_nonneg (u x : n → ℝ) (hux : u ⬝ᵥ x ≠ 0) :
+    0 ≤ tanSqAngle u x hux := overlapTangentSq_nonneg u x
+
+omit [DecidableEq n] in
 /-- For a unit vector `u`, `tan² ∠(u, x) = (‖x‖² − (u ⬝ x)²)/(u ⬝ x)²`. Helper. -/
-theorem tanSqAngle_of_norm_eq_one {u : n → ℝ} (hu : ‖WithLp.toLp 2 u‖ = 1) (x : n → ℝ) :
-    tanSqAngle u x = (x ⬝ᵥ x - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2 := by
-  rw [tanSqAngle, dotProduct_self_eq_one hu, one_mul]
+theorem overlapTangentSq_of_norm_eq_one {u : n → ℝ} (hu : ‖WithLp.toLp 2 u‖ = 1) (x : n → ℝ) :
+    overlapTangentSq u x = (x ⬝ᵥ x - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2 := by
+  classical
+  rw [overlapTangentSq, dotProduct_self_eq_one hu, one_mul]
+
+omit [DecidableEq n] in
+/-- For a unit reference vector and nonzero overlap, the squared tangent is the orthogonal
+energy divided by squared overlap. Source: Saad (2011), §6.6.1. -/
+theorem tanSqAngle_of_norm_eq_one {u : n → ℝ} (hu : ‖WithLp.toLp 2 u‖ = 1)
+    (x : n → ℝ) (hux : u ⬝ᵥ x ≠ 0) :
+    tanSqAngle u x hux = (x ⬝ᵥ x - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2 :=
+  overlapTangentSq_of_norm_eq_one hu x
 
 /-- **Angle contraction under a spectral multiplier.** Let `u` be a unit eigenvector for the
 eigenvalue at sorted position `i₀`, `|g| ≤ M` at every other sorted position, and
 `uᵢ ⬝ w = g(λᵢ)(uᵢ ⬝ v)` for every `i` (e.g. `w = p(A) v`, `w = (A − μI)⁻¹ v`). Then
 `tan² ∠(u, w) ≤ (M/g(λ_{i₀}))² tan² ∠(u, v)`. Source: Trefethen–Bau (1997) [`tb97`], proof of
 Thm 27.1. Helper for `krylov-eigenvector-angle`, `power-iteration`, `inverse-iteration`. -/
-theorem tanSqAngle_le_of_forall_eigenvectorBasis_dotProduct_eq {A : Matrix n n ℝ}
+theorem overlapTangentSq_le_of_forall_eigenvectorBasis_dotProduct_eq {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {i₀ : Fin (Fintype.card n)} {u : n → ℝ}
     (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u) (hu1 : ‖WithLp.toLp 2 u‖ = 1) {g : ℝ → ℝ} {M : ℝ}
     (hM : ∀ i, i ≠ i₀ → |g (hA.eigenvalues₀ i)| ≤ M) {v w : n → ℝ}
     (hw : ∀ i, (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w =
       g (hA.eigenvalues i) * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v)) :
-    tanSqAngle u w ≤ (M / g (hA.eigenvalues₀ i₀)) ^ 2 * tanSqAngle u v := by
+    overlapTangentSq u w ≤ (M / g (hA.eigenvalues₀ i₀)) ^ 2 * overlapTangentSq u v := by
   have huw : u ⬝ᵥ w = g (hA.eigenvalues₀ i₀) * (u ⬝ᵥ v) :=
     dotProduct_eq_mul_dotProduct_of_forall_eigenvectorBasis_dotProduct_eq hA hu hw
   have hnum := sub_sq_dotProduct_le_of_forall_eigenvectorBasis_dotProduct_eq hA hu hu1 hM hw
-  rw [tanSqAngle_of_norm_eq_one hu1, tanSqAngle_of_norm_eq_one hu1, huw, mul_pow, div_pow,
+  rw [overlapTangentSq_of_norm_eq_one hu1, overlapTangentSq_of_norm_eq_one hu1, huw, mul_pow, div_pow,
     div_mul_div_comm]
+  rw [huw, mul_pow] at hnum
   exact div_le_div_of_nonneg_right hnum (by positivity)
 
 /-- **Eigenvector angle, polynomial form.** Let `u` be a unit eigenvector for the eigenvalue
 `λ_{i₀}` at sorted position `i₀`, and `p` a polynomial with `|p(λᵢ)| ≤ M` at every other sorted
 position. Then `tan² ∠(u, p(A) b) ≤ (M/p(λ_{i₀}))² tan² ∠(u, b)`. With `deg p < q`,
-`p(A) b ∈ K_q(A, b)`. No hypothesis on `b` or `p(λ_{i₀})` is needed (both sides use the junk
-value `0` for a right angle). Source: Saad (2011) [`saad11`], §6.6.1, proof of the angle bound
+`p(A) b ∈ K_q(A, b)`. This algebraic quotient identity uses zero at vanishing overlap; its geometric form
+`tanSqAngle_aeval_mulVec_le` requires nonzero starting overlap and nonzero `p(λ_{i₀})`. Source: Saad (2011) [`saad11`], §6.6.1, proof of the angle bound
 (`i = 1`).
 atlas: krylov-eigenvector-angle (partial) -/
-theorem tanSqAngle_aeval_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
+theorem overlapTangentSq_aeval_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
     (hu1 : ‖WithLp.toLp 2 u‖ = 1) {p : ℝ[X]} {M : ℝ}
     (hM : ∀ i, i ≠ i₀ → |p.eval (hA.eigenvalues₀ i)| ≤ M) (b : n → ℝ) :
-    tanSqAngle u (aeval A p *ᵥ b) ≤
-      (M / p.eval (hA.eigenvalues₀ i₀)) ^ 2 * tanSqAngle u b :=
-  tanSqAngle_le_of_forall_eigenvectorBasis_dotProduct_eq hA hu hu1 (g := fun x => p.eval x) hM
+    overlapTangentSq u (aeval A p *ᵥ b) ≤
+      (M / p.eval (hA.eigenvalues₀ i₀)) ^ 2 * overlapTangentSq u b :=
+  overlapTangentSq_le_of_forall_eigenvectorBasis_dotProduct_eq hA hu hu1 (g := fun x => p.eval x) hM
     (fun i => eigenvectorBasis_dotProduct_aeval_mulVec hA p b i)
 
 /-- An eigenvector pairs with `p(A) b` through `p(λ)`: `u ⬝ p(A) b = p(λ)(u ⬝ b)` when
@@ -290,6 +313,25 @@ theorem dotProduct_aeval_mulVec_of_mulVec_eq_smul {A : Matrix n n ℝ} (hA : A.I
     u ⬝ᵥ (aeval A p *ᵥ b) = p.eval L * (u ⬝ᵥ b) :=
   dotProduct_eq_mul_dotProduct_of_forall_eigenvectorBasis_dotProduct_eq hA hu
     (g := fun x => p.eval x) (fun i => eigenvectorBasis_dotProduct_aeval_mulVec hA p b i)
+
+/-- A polynomial preserves nonzero eigenvector overlap when its value at the eigenvalue
+is nonzero. Source: Saad (2011), §6.6.1. -/
+theorem dotProduct_aeval_mulVec_ne_zero {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    {u : n → ℝ} {L : ℝ} (hu : A *ᵥ u = L • u) (p : ℝ[X]) (b : n → ℝ)
+    (hb : u ⬝ᵥ b ≠ 0) (hp : p.eval L ≠ 0) : u ⬝ᵥ (aeval A p *ᵥ b) ≠ 0 := by
+  rw [dotProduct_aeval_mulVec_of_mulVec_eq_smul hA hu]
+  exact mul_ne_zero hp hb
+
+/-- Polynomial contraction of the geometric squared tangent on its nonzero-overlap domain.
+Source: Saad (2011), §6.6.1. -/
+theorem tanSqAngle_aeval_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {p : ℝ[X]} {M : ℝ}
+    (hM : ∀ i, i ≠ i₀ → |p.eval (hA.eigenvalues₀ i)| ≤ M) (b : n → ℝ)
+    (hb : u ⬝ᵥ b ≠ 0) (hp : p.eval (hA.eigenvalues₀ i₀) ≠ 0) :
+    tanSqAngle u (aeval A p *ᵥ b) (dotProduct_aeval_mulVec_ne_zero hA hu p b hb hp) ≤
+      (M / p.eval (hA.eigenvalues₀ i₀)) ^ 2 * tanSqAngle u b hb :=
+  overlapTangentSq_aeval_mulVec_le hA hu hu1 hM b
 
 /-! ### Gap-free bounds -/
 
@@ -504,20 +546,20 @@ Source: Saad (2011) [`saad11`], §6.6.1 (case `i = 1`); Saad (2003), §6.11.
 Deviation: squared tangents; Krylov dimension `q + 1` (Saad's `m`) so that the degree is `q`;
 an arbitrary enclosure `[a, c]` of the other eigenvalues instead of `[λₙ, λ₂]`.
 atlas: krylov-eigenvector-angle -/
-theorem exists_mem_krylovSpace_tanSqAngle_le [Nonempty n] {A : Matrix n n ℝ}
+theorem exists_mem_krylovSpace_overlapTangentSq_le [Nonempty n] {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ 0 • u)
     (hu1 : ‖WithLp.toLp 2 u‖ = 1) {a c : ℝ} (hac : a < c) (hc : c < hA.eigenvalues₀ 0)
     (hspec : ∀ i, i ≠ 0 → hA.eigenvalues₀ i ∈ Set.Icc a c) {b : n → ℝ} (hb : u ⬝ᵥ b ≠ 0)
     (q : ℕ) :
     ∃ x ∈ krylovSpace A b (q + 1), u ⬝ᵥ x ≠ 0 ∧
-      tanSqAngle u x ≤ tanSqAngle u b /
+      overlapTangentSq u x ≤ overlapTangentSq u b /
         (Chebyshev.T ℝ q).eval (1 + 2 * ((hA.eigenvalues₀ 0 - c) / (c - a))) ^ 2 := by
   obtain ⟨p, hpdeg, hp1, hM⟩ := exists_degree_le_eval_eq_one_abs_eval_le hac hc q
   replace hM : ∀ i, i ≠ 0 → |p.eval (hA.eigenvalues₀ i)| ≤ _ := fun i hi => hM _ (hspec i hi)
   refine ⟨aeval A p *ᵥ b, (mem_krylovSpace_iff A b (q + 1) _).2
     ⟨p, hpdeg.trans_lt (by exact_mod_cast Nat.lt_succ_self q), rfl⟩, ?_, ?_⟩
   · rw [dotProduct_aeval_mulVec_of_mulVec_eq_smul hA hu, hp1, one_mul]; exact hb
-  · refine (tanSqAngle_aeval_mulVec_le hA hu hu1 hM b).trans (le_of_eq ?_)
+  · refine (overlapTangentSq_aeval_mulVec_le hA hu hu1 hM b).trans (le_of_eq ?_)
     rw [hp1, div_one, div_pow, one_pow, one_div_mul_eq_div]
 
 /-- The growth of `T_q` in gap form: for `γ ≥ 0`,
@@ -533,28 +575,28 @@ theorem pow_div_two_le_eval_T_real_one_add_two_mul {γ : ℝ} (hγ : 0 ≤ γ) (
   rwa [hs] at h
 
 /-- **Eigenvector angle, explicit rate.** Under the hypotheses of
-`exists_mem_krylovSpace_tanSqAngle_le`, `K_{q+1}(A, b)` contains `x` with `u ⬝ x ≠ 0` and
+`exists_mem_krylovSpace_overlapTangentSq_le`, `K_{q+1}(A, b)` contains `x` with `u ⬝ x ≠ 0` and
 `tan² ∠(u, x) ≤ (2/(1 + 2γ + 2√(γ + γ²))^q)² tan² ∠(u, b)`, `γ = (λ₁ − c)/(c − a)`.
 Source: Saad (2011) [`saad11`], §6.6.1.
 atlas: krylov-eigenvector-angle -/
-theorem exists_mem_krylovSpace_tanSqAngle_le_two_div_pow [Nonempty n] {A : Matrix n n ℝ}
+theorem exists_mem_krylovSpace_overlapTangentSq_le_two_div_pow [Nonempty n] {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ 0 • u)
     (hu1 : ‖WithLp.toLp 2 u‖ = 1) {a c : ℝ} (hac : a < c) (hc : c < hA.eigenvalues₀ 0)
     (hspec : ∀ i, i ≠ 0 → hA.eigenvalues₀ i ∈ Set.Icc a c) {b : n → ℝ} (hb : u ⬝ᵥ b ≠ 0)
     (q : ℕ) :
     ∃ x ∈ krylovSpace A b (q + 1), u ⬝ᵥ x ≠ 0 ∧
-      tanSqAngle u x ≤
+      overlapTangentSq u x ≤
         (2 / (1 + 2 * ((hA.eigenvalues₀ 0 - c) / (c - a)) +
           2 * √((hA.eigenvalues₀ 0 - c) / (c - a) + ((hA.eigenvalues₀ 0 - c) / (c - a)) ^ 2))
-            ^ q) ^ 2 * tanSqAngle u b := by
-  obtain ⟨x, hxK, hx0, hx⟩ := exists_mem_krylovSpace_tanSqAngle_le hA hu hu1 hac hc hspec hb q
+            ^ q) ^ 2 * overlapTangentSq u b := by
+  obtain ⟨x, hxK, hx0, hx⟩ := exists_mem_krylovSpace_overlapTangentSq_le hA hu hu1 hac hc hspec hb q
   refine ⟨x, hxK, hx0, hx.trans ?_⟩
   set γ := (hA.eigenvalues₀ 0 - c) / (c - a)
   have hγ : 0 ≤ γ := div_nonneg (by linarith) (by linarith)
   have hT := pow_div_two_le_eval_T_real_one_add_two_mul hγ q
   set ρ := (1 + 2 * γ + 2 * √(γ + γ ^ 2)) ^ q
   have hρ : 0 < ρ := by positivity
-  have htan := tanSqAngle_nonneg u b
+  have htan := overlapTangentSq_nonneg u b
   rw [div_eq_mul_inv, mul_comm, ← inv_pow]
   refine mul_le_mul_of_nonneg_right
     (pow_le_pow_left₀ (inv_nonneg.2 (by linarith [div_pos hρ two_pos])) ?_ 2) htan
@@ -582,7 +624,7 @@ with orthonormal columns, `θ₁ = θ_{j₁}` the largest eigenvalue of `Qᵀ A 
 with `u ⬝ x ≠ 0`. Then `λ − θ₁ ≤ (λ − a) tan² ∠(u, x)` (from
 `λ − xᵀAx/xᵀx ≤ (λ − a) sin² ∠(u, x)`). Source: Saad (2011) [`saad11`], proof of Thm 6.4.
 Helper for `kaniel-paige-saad`. -/
-theorem eigenvalues_sub_eigenvalues_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA : A.IsHermitian)
+theorem eigenvalues_sub_eigenvalues_le_mul_overlapTangentSq {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
     (hu1 : ‖WithLp.toLp 2 u‖ = 1) {a : ℝ} (ha : ∀ i, a ≤ hA.eigenvalues i)
     {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) {j₁ : k}
@@ -590,7 +632,7 @@ theorem eigenvalues_sub_eigenvalues_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA :
       (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁)
     {x : n → ℝ} (hxQ : x ∈ LinearMap.range Q.mulVecLin) (hx : u ⬝ᵥ x ≠ 0) :
     hA.eigenvalues₀ i₀ - (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁ ≤
-      (hA.eigenvalues₀ i₀ - a) * tanSqAngle u x := by
+      (hA.eigenvalues₀ i₀ - a) * overlapTangentSq u x := by
   set L := hA.eigenvalues₀ i₀ with hLdef
   set θ := (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁
   set c := u ⬝ᵥ x with hcdef
@@ -598,7 +640,7 @@ theorem eigenvalues_sub_eigenvalues_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA :
   have huu : u ⬝ᵥ u = 1 := dotProduct_self_eq_one hu1
   have hR := dotProduct_mulVec_le_of_mem_range hA hQ hj₁ hxQ
   have huw : u ⬝ᵥ w = 0 := by
-    simp only [hwdef, dotProduct_sub, dotProduct_smul, huu, smul_eq_mul, mul_one, sub_self]
+    simp only [hwdef, dotProduct_sub, dotProduct_smul, huu, smul_eq_mul, mul_one, ← hcdef, sub_self]
   set N := w ⬝ᵥ w with hNdef
   have hxx : x ⬝ᵥ x = c ^ 2 + N := by
     have : x = c • u + w := by simp [hwdef]
@@ -613,10 +655,10 @@ theorem eigenvalues_sub_eigenvalues_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA :
     rw [hsymm, hu, smul_dotProduct, smul_eq_mul]
   have hxAx : x ⬝ᵥ (A *ᵥ x) = L * c ^ 2 + w ⬝ᵥ (A *ᵥ w) := by
     have : x = c • u + w := by simp [hwdef]
-    rw [this, Matrix.mulVec_add, Matrix.mulVec_smul, add_dotProduct, dotProduct_add,
-      dotProduct_add, dotProduct_smul, smul_dotProduct, dotProduct_smul, smul_dotProduct,
-      hsymm w (c • u), Matrix.mulVec_smul, dotProduct_smul, hu, smul_dotProduct, huu,
-      dotProduct_comm u w, huw]
+    rw [this]
+    simp only [Matrix.mulVec_add, Matrix.mulVec_smul, add_dotProduct, dotProduct_add,
+      dotProduct_smul, smul_dotProduct, smul_eq_mul, hAu]
+    rw [hu, dotProduct_smul, dotProduct_comm w u, huw, huu]
     simp only [smul_eq_mul, mul_one, mul_zero, add_zero, zero_add]
     ring
   have hS : a * N ≤ w ⬝ᵥ (A *ᵥ w) := mul_dotProduct_le_dotProduct_mulVec_of_eigenvalues hA ha w
@@ -626,7 +668,7 @@ theorem eigenvalues_sub_eigenvalues_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA :
     have := ha (Fintype.equivOfCardEq (Fintype.card_fin _) i₀)
     rw [hA.eigenvalues_equivOfCardEq] at this
     linarith
-  rw [tanSqAngle_of_norm_eq_one hu1, hxx, ← hcdef, show c ^ 2 + N - c ^ 2 = N by ring,
+  rw [overlapTangentSq_of_norm_eq_one hu1, hxx, ← hcdef, show c ^ 2 + N - c ^ 2 = N by ring,
     ← mul_div_assoc, le_div_iff₀ hc1]
   rw [hxx, hxAx] at hR
   have key : (L - θ) * (c ^ 2 + N) ≤ (L - a) * N := by nlinarith
@@ -652,7 +694,7 @@ theorem eigenvalues_sub_eigenvalues_transpose_mul_mul_le_of_poly {A : Matrix n n
       (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁) :
     hA.eigenvalues₀ i₀ - (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁ ≤
       (hA.eigenvalues₀ i₀ - a) *
-        ((M / p.eval (hA.eigenvalues₀ i₀)) ^ 2 * tanSqAngle u b) := by
+        ((M / p.eval (hA.eigenvalues₀ i₀)) ^ 2 * overlapTangentSq u b) := by
   have hxK : aeval A p *ᵥ b ∈ krylovSpace A b q :=
     (mem_krylovSpace_iff A b q _).2 ⟨p, hp, rfl⟩
   have hx0 : u ⬝ᵥ (aeval A p *ᵥ b) ≠ 0 := by
@@ -661,9 +703,9 @@ theorem eigenvalues_sub_eigenvalues_transpose_mul_mul_le_of_poly {A : Matrix n n
     have := ha (Fintype.equivOfCardEq (Fintype.card_fin _) i₀)
     rw [hA.eigenvalues_equivOfCardEq] at this
     linarith
-  refine (eigenvalues_sub_eigenvalues_le_mul_tanSqAngle hA hu hu1 ha hQ hj₁ (hK hxK)
+  refine (eigenvalues_sub_eigenvalues_le_mul_overlapTangentSq hA hu hu1 ha hQ hj₁ (hK hxK)
     hx0).trans ?_
-  exact mul_le_mul_of_nonneg_left (tanSqAngle_aeval_mulVec_le hA hu hu1 hM b) haL
+  exact mul_le_mul_of_nonneg_left (overlapTangentSq_aeval_mulVec_le hA hu hu1 hM b) haL
 
 /-- **Kaniel–Paige–Saad bound for the largest Ritz value.** Let `A` be real symmetric with top
 eigenvalue `λ₁ = λ₀(A)` and unit eigenvector `u`, every other eigenvalue (sorted position `≠ 0`)
@@ -686,7 +728,7 @@ theorem eigenvalues_sub_eigenvalues_transpose_mul_mul_le [Nonempty n] {A : Matri
     (hj₁ : ∀ j, (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j ≤
       (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁) :
     hA.eigenvalues₀ 0 - (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁ ≤
-      (hA.eigenvalues₀ 0 - a) * (tanSqAngle u b /
+      (hA.eigenvalues₀ 0 - a) * (overlapTangentSq u b /
         (Chebyshev.T ℝ q).eval (1 + 2 * ((hA.eigenvalues₀ 0 - c) / (c - a))) ^ 2) := by
   have ha : ∀ i, a ≤ hA.eigenvalues i := fun i => by
     set e := Fintype.equivOfCardEq (Fintype.card_fin (Fintype.card n))
@@ -695,9 +737,11 @@ theorem eigenvalues_sub_eigenvalues_transpose_mul_mul_le [Nonempty n] {A : Matri
     by_cases h0 : e.symm i = 0
     · rw [h0]; linarith
     · exact (hspec _ h0).1
-  obtain ⟨x, hxK, hx0, hx⟩ := exists_mem_krylovSpace_tanSqAngle_le hA hu hu1 hac hc hspec hb q
-  exact (eigenvalues_sub_eigenvalues_le_mul_tanSqAngle hA hu hu1 ha hQ hj₁ (hK hxK) hx0).trans
-    (mul_le_mul_of_nonneg_left hx (by linarith [ha (Fintype.equivOfCardEq (Fintype.card_fin _) 0),
-      hA.eigenvalues_equivOfCardEq (0 : Fin (Fintype.card n))]))
+  obtain ⟨x, hxK, hx0, hx⟩ := exists_mem_krylovSpace_overlapTangentSq_le hA hu hu1 hac hc hspec hb q
+  exact (eigenvalues_sub_eigenvalues_le_mul_overlapTangentSq hA hu hu1 ha hQ hj₁ (hK hxK) hx0).trans
+    (mul_le_mul_of_nonneg_left hx (by
+      have htop := ha (Fintype.equivOfCardEq (Fintype.card_fin _) 0)
+      rw [hA.eigenvalues_equivOfCardEq] at htop
+      linarith))
 
 end NLAlib

@@ -112,7 +112,7 @@ theorem integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp
     apply div_nonneg
     · exact mul_nonneg (sq_nonneg _) (by linarith)
     · positivity
-  exact ⟨integrable_rpow_of_nonneg_of_le
+  exact ⟨MeasureTheory.integrable_rpow_of_nonneg_of_le
     measurable_specNorm_inv_self_mul_transpose.aestronglyMeasurable
     (fun _ => specNorm_nonneg _) hp.le (hp.trans_le hpq).le hpq hint,
     integral_rpow_le_of_integral_rpow_le
@@ -200,13 +200,13 @@ theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_sharp
     integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp
       hr hrk (p := 1 / 2) (by norm_num) (by linarith)
   have hf : (fun G : Matrix (Fin r) (Fin k) ℝ =>
-      specNorm (G * Gᵀ)⁻¹ ^ (1 / 2 : ℝ)) =
+      specNorm (G * Gᵀ)⁻¹ ^ (1 / 2 : ℝ)) =ᵐ[gaussianMatrix (Fin r) (Fin k)]
       (fun G => specNorm (pinvR G)) := by
-    funext G
-    rw [← specNorm_pinvR_sq, ← Real.rpow_natCast, ← Real.rpow_mul (specNorm_nonneg _)]
+    filter_upwards [gaussianMatrix_ae_isUnit_mul_transpose hrk.le] with G hG
+    rw [← specNorm_pinvR_sq G hG, ← Real.rpow_natCast, ← Real.rpow_mul (specNorm_nonneg _)]
     norm_num
-  rw [hf] at hint hbound
-  refine ⟨hint, hbound.trans_eq ?_⟩
+  rw [integral_congr_ae hf] at hbound
+  refine ⟨hint.congr hf, hbound.trans_eq ?_⟩
   let B : ℝ := Real.exp 1 / ((k : ℝ) - r) * Real.sqrt (((k : ℝ) + r - 1) / 2)
   have hB : 0 ≤ B := by dsimp [B]; positivity
   have hCsq : Real.exp 1 ^ 2 * ((k : ℝ) + r - 1) /

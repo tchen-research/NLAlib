@@ -19,15 +19,29 @@ namespace NLAlib
 `R = (selectionMatrix I)ᵀ` for an iid label sequence `I` (repeats allowed).
 Source: `sh:srht-ose`; one shared sign diagonal. -/
 def srhtWithReplacementSketch {n k : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
-    (ξ : Fin n → Bool) (I : Fin k → Fin n) : Matrix (Fin k) (Fin n) ℝ :=
+    (ξ : Fin n → ℝ) (I : Fin k → Fin n) : Matrix (Fin k) (Fin n) ℝ :=
   Real.sqrt ((n : ℝ) / k) •
-    ((selectionMatrix I)ᵀ * H * Matrix.diagonal (fun i => rademacherBoolSign (ξ i)))
+    ((selectionMatrix I)ᵀ * H * Matrix.diagonal ξ)
+
+/-- The iid row sketch is jointly measurable in its real diagonal and finite row sequence. -/
+@[fun_prop] theorem measurable_srhtWithReplacementSketch {n k : ℕ}
+    (H : Matrix (Fin n) (Fin n) ℝ) :
+    Measurable (fun ω : (Fin n → ℝ) × (Fin k → Fin n) =>
+      srhtWithReplacementSketch H ω.1 ω.2) := by
+  have hR : Measurable (fun I : Fin k → Fin n => (selectionMatrix I)ᵀ) := .of_discrete
+  have hD : Measurable (fun ω : (Fin n → ℝ) × (Fin k → Fin n) => Matrix.diagonal ω.1) := by
+    apply Matrix.measurable_iff_entries.mpr
+    intro i j
+    by_cases hij : i = j <;> simp [Matrix.diagonal_apply, hij] <;> fun_prop
+  unfold srhtWithReplacementSketch
+  exact (((hR.comp measurable_snd).matrix_mul measurable_const).matrix_mul hD).const_smul
+    (Real.sqrt ((n : ℝ) / k))
 
 /-- The actual independent product law for the sign diagonal and iid row
 sequence. Source: `sh:srht-ose`, with-replacement variant. -/
 def srhtWithReplacementLaw (n k : ℕ) [NeZero n] :
-    Measure ((Fin n → Bool) × (Fin k → Fin n)) :=
-  (rademacherCubePMF (Fin n)).toMeasure.prod
+    Measure ((Fin n → ℝ) × (Fin k → Fin n)) :=
+  (rademacherVector (Fin n)).prod
     (PMF.uniformOfFintype (Fin k → Fin n)).toMeasure
 
 instance srhtWithReplacementLaw_isProbabilityMeasure (n k : ℕ) [NeZero n] :
@@ -39,7 +53,7 @@ instance srhtWithReplacementLaw_isProbabilityMeasure (n k : ℕ) [NeZero n] :
 Source: `sh:srht-ose`, with-replacement variant. -/
 theorem srhtWithReplacementSketch_mul_apply {n k d : ℕ}
     (H : Matrix (Fin n) (Fin n) ℝ) (U : Matrix (Fin n) (Fin d) ℝ)
-    (ξ : Fin n → Bool) (I : Fin k → Fin n) (a : Fin k) (b : Fin d) :
+    (ξ : Fin n → ℝ) (I : Fin k → Fin n) (a : Fin k) (b : Fin d) :
     (srhtWithReplacementSketch H ξ I * U) a b = Real.sqrt ((n : ℝ) / k) *
       srhtSignedFrame H U ξ (I a) b := by
   simp only [srhtWithReplacementSketch, Matrix.smul_mul, Matrix.smul_apply,
@@ -51,7 +65,7 @@ theorem srhtWithReplacementSketch_mul_apply {n k d : ℕ}
 the actual real sketch Gram matrix. Source: `sh:srht-ose`. -/
 theorem map_ofReal_srhtWithReplacementSketch_gram {n k d : ℕ}
     (H : Matrix (Fin n) (Fin n) ℝ) (U : Matrix (Fin n) (Fin d) ℝ)
-    (ξ : Fin n → Bool) (I : Fin k → Fin n) :
+    (ξ : Fin n → ℝ) (I : Fin k → Fin n) :
     ((srhtWithReplacementSketch H ξ I * U)ᵀ * (srhtWithReplacementSketch H ξ I * U)).map
       Complex.ofReal = (1 / (k : ℝ)) • ∑ a, srhtPopulationAtom (srhtSignedFrame H U ξ) (I a) := by
   have hG : (srhtWithReplacementSketch H ξ I * U)ᵀ * (srhtWithReplacementSketch H ξ I * U) =
@@ -87,7 +101,7 @@ theorem measure_srhtWithReplacement_gram_failure_le_of_flat_rows
     {n d k : ℕ} [NeZero n] [NeZero d] (hk : 0 < k)
     (H : Matrix (Fin n) (Fin n) ℝ) (hH : Hᵀ * H = 1)
     (U : Matrix (Fin n) (Fin d) ℝ) (hU : HasOrthonormalCols U)
-    (ξ : Fin n → Bool) {L ε : ℝ} (hL : 0 < L)
+    (ξ : Fin n → ℝ) (hξ : ∀ i, ξ i ^ 2 = 1) {L ε : ℝ} (hL : 0 < L)
     (hflat : ∀ j, (n : ℝ) * (srhtSignedFrame H U ξ j ⬝ᵥ srhtSignedFrame H U ξ j) ≤ L)
     (hε : 0 < ε) (hε1 : ε < 1) :
     ((PMF.uniformOfFintype (Fin k → Fin n)).toMeasure
@@ -100,8 +114,11 @@ theorem measure_srhtWithReplacement_gram_failure_le_of_flat_rows
   have hbound (j : Fin n) : 0 ≤ lambdaMin (A j) ∧ lambdaMax (A j) ≤ L := by
     refine ⟨lambdaMin_nonneg_of_posSemidef (hPSD j), ?_⟩
     have ht := trace_srhtPopulationAtom V j
-    exact (lambdaMax_le_trace_of_posSemidef (hPSD j)).trans (by rw [ht]; exact hflat j)
-  have hmean := mean_srhtPopulationAtom V (hasOrthonormalCols_srhtSignedFrame H hH U hU ξ)
+    exact (lambdaMax_le_trace_of_posSemidef (hPSD j)).trans (by
+      change (srhtPopulationAtom V j).trace.re ≤ L
+      rw [ht]
+      exact hflat j)
+  have hmean := mean_srhtPopulationAtom V (hasOrthonormalCols_srhtSignedFrame H hH U hU ξ hξ)
   have hc := measure_norm_uniform_iid_sub_one_le hk A L hL
     (fun j => (hPSD j).isHermitian) hbound hmean hε hε1
   have hsub : {I : Fin k → Fin n | ε < specNorm ((srhtWithReplacementSketch H ξ I * U)ᵀ *
@@ -119,8 +136,9 @@ theorem measure_srhtWithReplacement_gram_failure_le_of_flat_rows
           (srhtWithReplacementSketch H ξ I * U) - 1) ≤
         ‖((srhtWithReplacementSketch H ξ I * U)ᵀ *
           (srhtWithReplacementSketch H ξ I * U) - 1).map Complex.ofReal‖ :=
-      specNorm_le_norm_map_ofReal (𝕜 := ℂ)
-        ((srhtWithReplacementSketch H ξ I * U)ᵀ * (srhtWithReplacementSketch H ξ I * U) - 1)
+      by
+        simpa only [specNorm_eq_norm, Complex.coe_algebraMap] using specNorm_le_specNorm_map_ofReal (𝕜 := ℂ)
+          ((srhtWithReplacementSketch H ξ I * U)ᵀ * (srhtWithReplacementSketch H ξ I * U) - 1)
     rw [hm] at hn
     exact hI.le.trans hn
   exact (measureReal_mono hsub).trans hc
@@ -143,10 +161,10 @@ theorem measure_srhtWithReplacement_gram_failure_le_of_sharp_sample_size
   have hL : 0 < L := by
     apply sq_pos_of_pos
     exact add_pos_of_pos_of_nonneg (Real.sqrt_pos.mpr hdR) (Real.sqrt_nonneg _)
-  let E : Set (Fin n → Bool) := {ξ | ∃ j : Fin n,
+  let E : Set (Fin n → ℝ) := {ξ | ∃ j : Fin n,
     L < (n : ℝ) * (srhtSignedFrame H U ξ j ⬝ᵥ srhtSignedFrame H U ξ j)}
   have hE := measure_srhtSharpRowBound_failure_le H hHflat U hU hδ hδ1
-  have hcond (ξ : Fin n → Bool) (hξ : ξ ∉ E) :
+  have hcond (ξ : Fin n → ℝ) (hsign : ∀ i, ξ i ^ 2 = 1) (hξ : ξ ∉ E) :
       ((PMF.uniformOfFintype (Fin k → Fin n)).toMeasure
         {I | ε < specNorm ((srhtWithReplacementSketch H ξ I * U)ᵀ *
           (srhtWithReplacementSketch H ξ I * U) - 1)}).toReal ≤ δ / 2 := by
@@ -154,14 +172,28 @@ theorem measure_srhtWithReplacement_gram_failure_le_of_sharp_sample_size
         (srhtSignedFrame H U ξ j ⬝ᵥ srhtSignedFrame H U ξ j) ≤ L := by
       by_contra hnot
       exact hξ ⟨j, lt_of_not_ge hnot⟩
-    exact (measure_srhtWithReplacement_gram_failure_le_of_flat_rows hk H hH U hU ξ
+    exact (measure_srhtWithReplacement_gram_failure_le_of_flat_rows hk H hH U hU ξ hsign
       hL hrows hε hε1).trans
       (srht_tail_le_half_of_sample_size (Nat.pos_of_ne_zero (NeZero.ne d)) hL hε hδ hsize)
-  have hh := measureReal_prod_le_measureReal_add_of_sections_le (rademacherCubePMF (Fin n)).toMeasure
+  have hh := measureReal_prod_le_measureReal_add_of_sections_le_of_measurableSet (rademacherVector (Fin n))
     (PMF.uniformOfFintype (Fin k → Fin n)).toMeasure E
     {ω | ε < specNorm ((srhtWithReplacementSketch H ω.1 ω.2 * U)ᵀ *
       (srhtWithReplacementSketch H ω.1 ω.2 * U) - 1)}
-    (show 0 ≤ δ / 2 by positivity) hcond
+    (by
+      dsimp only [E]
+      simp only [Set.ofPred_exists]
+      apply MeasurableSet.iUnion
+      intro j
+      apply measurableSet_lt measurable_const
+      unfold dotProduct
+      fun_prop)
+    (by
+      apply measurableSet_lt measurable_const
+      simp only [specNorm_eq_norm]
+      fun_prop)
+    (show 0 ≤ δ / 2 by positivity)
+    ((ae_forall_sq_eq_one_rademacherVector (ι := Fin n)).mono fun ξ hξ => hcond ξ hξ)
+  change (rademacherVector (Fin n)).real E ≤ δ / 2 at hE
   exact hh.trans (by linarith)
 
 /-- The manuscript's exact coarser row bound also gives the actual iid
@@ -212,7 +244,7 @@ theorem measure_srhtWithReplacement_zero_rank_failure_eq_zero
     (srhtWithReplacementLaw n k {ω | ε < specNorm
       ((srhtWithReplacementSketch H ω.1 ω.2 * U)ᵀ *
         (srhtWithReplacementSketch H ω.1 ω.2 * U) - 1)}).toReal = 0 := by
-  have he : {ω : (Fin n → Bool) × (Fin k → Fin n) | ε < specNorm
+  have he : {ω : (Fin n → ℝ) × (Fin k → Fin n) | ε < specNorm
       ((srhtWithReplacementSketch H ω.1 ω.2 * U)ᵀ *
         (srhtWithReplacementSketch H ω.1 ω.2 * U) - 1)} = ∅ := by
     ext ω

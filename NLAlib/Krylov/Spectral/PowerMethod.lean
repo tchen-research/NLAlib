@@ -18,21 +18,21 @@ the direction of `A^k x₀`, and normalisation is bookkeeping. Statements take a
   `powerIterate_mem_krylovSpace`, `span_powerIterate_eq_subspaceIterate`);
   `NLAlib.powerStep A x = A x/‖A x‖` is the textbook normalised step and
   `powerStep_iterate_succ` says that `k + 1` normalised steps give `A^{k+1} x₀/‖A^{k+1} x₀‖`;
-  angles and Rayleigh quotients are scale invariant (`tanSqAngle_smul`,
+  angles and Rayleigh quotients are scale invariant (`overlapTangentSq_smul`,
   `rayleighQuotient_smul`), so every statement transfers.
 * `NLAlib.rayleighQuotient A x = xᵀAx/xᵀx` (`NLAlib.Matrix.Basic.QuadForm`).
-* **Angle bound** (`tanSqAngle_powerIterate_le`): for symmetric `A`, a unit eigenvector `u` of
+* **Angle bound** (`overlapTangentSq_powerIterate_le`): for symmetric `A`, a unit eigenvector `u` of
   `λ₁ = λ_{i₀}` and `|λᵢ| ≤ ρ` at the other sorted positions,
   `tan² ∠(u, A^k x₀) ≤ (ρ/|λ₁|)^{2k} tan² ∠(u, x₀)` (the `p = X^k` case of
-  `tanSqAngle_aeval_mulVec_le`); the normalised form `tanSqAngle_powerStep_iterate_le`.
-* **Rayleigh quotient** (`abs_rayleighQuotient_sub_le_mul_tanSqAngle`):
+  `overlapTangentSq_aeval_mulVec_le`); the normalised form `overlapTangentSq_powerStep_iterate_le`.
+* **Rayleigh quotient** (`abs_rayleighQuotient_sub_le_mul_overlapTangentSq`):
   `|ρ(x) − λ₁| ≤ D tan² ∠(u, x)` whenever `|λᵢ − λ₁| ≤ D` for all `i`, so the Rayleigh quotient
   of the power iterates converges at the squared rate (`abs_rayleighQuotient_powerIterate_sub_le`).
   For the top eigenvalue the one-sided form with `D = λ₁ − λ_min` is Ritz.lean's
-  `eigenvalues_sub_eigenvalues_le_mul_tanSqAngle` (Rayleigh–Ritz on a one-column `Q`).
+  `eigenvalues_sub_eigenvalues_le_mul_overlapTangentSq` (Rayleigh–Ritz on a one-column `Q`).
 * **Inverse iteration** (`inverseIterate A μ x₀ k = (A − μI)^{-k} x₀`, power iteration on the
   resolvent): `tan² ∠(u, x_k) ≤ (|λ_{i₀} − μ|/d)^{2k} tan² ∠(u, x₀)` when every other
-  eigenvalue is at distance `≥ d > 0` from `μ` (`tanSqAngle_inverseIterate_le`), with the
+  eigenvalue is at distance `≥ d > 0` from `μ` (`overlapTangentSq_inverseIterate_le`), with the
   Rayleigh-quotient corollary. The resolvent shares the eigenvectors of `A`
   (`eigenvectorBasis_dotProduct_inv_sub_mulVec`).
 
@@ -96,9 +96,9 @@ def powerStep (A : Matrix n n ℝ) (x : n → ℝ) : n → ℝ :=
 omit [Fintype n] [DecidableEq n] in
 /-- Scaling does not change an angle: `tan² ∠(u, c x) = tan² ∠(u, x)` for `c ≠ 0`. Helper for
 `power-iteration`. -/
-theorem tanSqAngle_smul [Fintype n] (u x : n → ℝ) {c : ℝ} (hc : c ≠ 0) :
-    tanSqAngle u (c • x) = tanSqAngle u x := by
-  simp only [tanSqAngle, dotProduct_smul, smul_dotProduct, smul_eq_mul]
+theorem overlapTangentSq_smul [Fintype n] (u x : n → ℝ) {c : ℝ} (hc : c ≠ 0) :
+    overlapTangentSq u (c • x) = overlapTangentSq u x := by
+  simp only [overlapTangentSq, dotProduct_smul, smul_dotProduct, smul_eq_mul]
   by_cases hx : u ⬝ᵥ x = 0
   · simp [hx]
   · field_simp
@@ -119,6 +119,7 @@ omit [DecidableEq n] in
 `power-iteration`. -/
 theorem inv_norm_smul_smul (w : n → ℝ) {c : ℝ} (hc : 0 < c) :
     ‖WithLp.toLp 2 (c • w)‖⁻¹ • (c • w) = ‖WithLp.toLp 2 w‖⁻¹ • w := by
+  classical
   rw [norm_toLp_eq_sqrt, norm_toLp_eq_sqrt, dotProduct_smul, smul_dotProduct, smul_eq_mul,
     smul_eq_mul, ← mul_assoc, Real.sqrt_mul (by positivity) (w ⬝ᵥ w), Real.sqrt_mul_self hc.le,
     smul_smul, mul_inv, mul_comm c⁻¹ (√(w ⬝ᵥ w))⁻¹, mul_assoc, inv_mul_cancel₀ hc.ne', mul_one]
@@ -167,34 +168,34 @@ the gap is needed for the inequality (a right angle has the junk value `0` on bo
 is informative when `ρ < |λ₁|` and `u ⬝ x₀ ≠ 0`. Source: Trefethen–Bau (1997) [`tb97`],
 Thm 27.1; Golub–Van Loan (2013) [`gvl13`], Thm 8.2.1. Deviations: squared tangents; `ρ` any
 bound on the other eigenvalues (T&B: `ρ = |λ₂|`); unnormalised iterates
-(`tanSqAngle_powerStep_iterate_le` for the normalised ones).
+(`overlapTangentSq_powerStep_iterate_le` for the normalised ones).
 atlas: power-iteration -/
-theorem tanSqAngle_powerIterate_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
+theorem overlapTangentSq_powerIterate_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
     (hu1 : ‖WithLp.toLp 2 u‖ = 1) {ρ : ℝ} (hρ : ∀ i, i ≠ i₀ → |hA.eigenvalues₀ i| ≤ ρ)
     (x₀ : n → ℝ) (k : ℕ) :
-    tanSqAngle u (powerIterate A x₀ k) ≤
-      (ρ / |hA.eigenvalues₀ i₀|) ^ (2 * k) * tanSqAngle u x₀ := by
+    overlapTangentSq u (powerIterate A x₀ k) ≤
+      (ρ / |hA.eigenvalues₀ i₀|) ^ (2 * k) * overlapTangentSq u x₀ := by
   have hM : ∀ i, i ≠ i₀ → |(X ^ k : ℝ[X]).eval (hA.eigenvalues₀ i)| ≤ ρ ^ k := fun i hi => by
     rw [eval_pow, eval_X, abs_pow]
     exact pow_le_pow_left₀ (abs_nonneg _) (hρ i hi) k
-  have h := tanSqAngle_aeval_mulVec_le hA hu hu1 hM x₀
+  have h := overlapTangentSq_aeval_mulVec_le hA hu hu1 hM x₀
   rw [aeval_X_pow, eval_pow, eval_X] at h
   refine h.trans (le_of_eq ?_)
   congr 1
   rw [← div_pow, ← pow_mul, mul_comm k 2, pow_mul, pow_mul, div_pow, div_pow ρ, sq_abs]
 
 /-- **Power iteration, normalised iterates.** Under the hypotheses of
-`tanSqAngle_powerIterate_le`, the textbook iterates `x_k = (powerStep A)^[k] x₀` (normalised at
+`overlapTangentSq_powerIterate_le`, the textbook iterates `x_k = (powerStep A)^[k] x₀` (normalised at
 every step) satisfy `tan² ∠(u, x_k) ≤ (ρ/|λ₁|)^{2k} tan² ∠(u, x₀)`. Source: Trefethen–Bau
 (1997) [`tb97`], Thm 27.1.
 atlas: power-iteration -/
-theorem tanSqAngle_powerStep_iterate_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
+theorem overlapTangentSq_powerStep_iterate_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
     (hu1 : ‖WithLp.toLp 2 u‖ = 1) {ρ : ℝ} (hρ : ∀ i, i ≠ i₀ → |hA.eigenvalues₀ i| ≤ ρ)
     (x₀ : n → ℝ) (k : ℕ) :
-    tanSqAngle u ((powerStep A)^[k] x₀) ≤
-      (ρ / |hA.eigenvalues₀ i₀|) ^ (2 * k) * tanSqAngle u x₀ := by
+    overlapTangentSq u ((powerStep A)^[k] x₀) ≤
+      (ρ / |hA.eigenvalues₀ i₀|) ^ (2 * k) * overlapTangentSq u x₀ := by
   cases k with
   | zero => simp
   | succ k =>
@@ -202,11 +203,11 @@ theorem tanSqAngle_powerStep_iterate_le {A : Matrix n n ℝ} (hA : A.IsHermitian
     set v := powerIterate A x₀ (k + 1)
     by_cases hc : ‖WithLp.toLp 2 v‖⁻¹ = 0
     · rw [hc, zero_smul]
-      have h0 : tanSqAngle u 0 = 0 := by simp [tanSqAngle]
+      have h0 : overlapTangentSq u 0 = 0 := by simp [overlapTangentSq]
       rw [h0]
-      exact mul_nonneg ((even_two_mul _).pow_nonneg _) (tanSqAngle_nonneg u x₀)
-    · rw [tanSqAngle_smul _ _ hc]
-      exact tanSqAngle_powerIterate_le hA hu hu1 hρ x₀ (k + 1)
+      exact mul_nonneg ((even_two_mul _).pow_nonneg _) (overlapTangentSq_nonneg u x₀)
+    · rw [overlapTangentSq_smul _ _ hc]
+      exact overlapTangentSq_powerIterate_le hA hu hu1 hρ x₀ (k + 1)
 
 /-- **Rayleigh quotient error from the angle.** For real symmetric `A`, a unit eigenvector `u`
 for the eigenvalue `λ₁ = λ_{i₀}` at sorted position `i₀`, `D` with `|λᵢ − λ₁| ≤ D` for every
@@ -216,11 +217,11 @@ Proof: split `x = (u ⬝ x) u + w` with `w ⟂ u`; then
 Trefethen–Bau (1997) [`tb97`], Thm 27.1 (second bound) and Lect. 27 (`ρ(x) − λ = O(‖x − u‖²)`);
 Saad (2011) [`saad11`], §4.1. Deviation: explicit constant `D` instead of `O(·)`; two-sided.
 atlas: power-iteration -/
-theorem abs_rayleighQuotient_sub_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA : A.IsHermitian)
+theorem abs_rayleighQuotient_sub_le_mul_overlapTangentSq {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
     (hu1 : ‖WithLp.toLp 2 u‖ = 1) {D : ℝ}
     (hD : ∀ i, |hA.eigenvalues i - hA.eigenvalues₀ i₀| ≤ D) {x : n → ℝ} (hx : u ⬝ᵥ x ≠ 0) :
-    |rayleighQuotient A x - hA.eigenvalues₀ i₀| ≤ D * tanSqAngle u x := by
+    |rayleighQuotient A x - hA.eigenvalues₀ i₀| ≤ D * overlapTangentSq u x := by
   set L := hA.eigenvalues₀ i₀ with hLdef
   set c := u ⬝ᵥ x with hcdef
   set w := x - c • u with hwdef
@@ -231,7 +232,7 @@ theorem abs_rayleighQuotient_sub_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA : A.
     simp only [one_pow, Real.sq_sqrt (dotProduct_self_nonneg u)] at h2
     exact h2.symm
   have huw : u ⬝ᵥ w = 0 := by
-    simp only [hwdef, dotProduct_sub, dotProduct_smul, huu, smul_eq_mul, mul_one, sub_self]
+    simp only [hwdef, dotProduct_sub, dotProduct_smul, huu, smul_eq_mul, mul_one, ← hcdef, sub_self]
   set N := w ⬝ᵥ w with hNdef
   have hxw : x = c • u + w := by simp [hwdef]
   have hxx : x ⬝ᵥ x = c ^ 2 + N := by
@@ -243,10 +244,12 @@ theorem abs_rayleighQuotient_sub_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA : A.
     rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose,
       (Matrix.isHermitian_iff_isSymm.mp hA).eq]
   have hxAx : x ⬝ᵥ (A *ᵥ x) = L * c ^ 2 + w ⬝ᵥ (A *ᵥ w) := by
-    rw [hxw, Matrix.mulVec_add, Matrix.mulVec_smul, add_dotProduct, dotProduct_add,
-      dotProduct_add, dotProduct_smul, smul_dotProduct, dotProduct_smul, smul_dotProduct,
-      hsymm w (c • u), Matrix.mulVec_smul, dotProduct_smul, hu, smul_dotProduct, huu,
-      dotProduct_comm u w, huw]
+    have hAu : ∀ z : n → ℝ, u ⬝ᵥ (A *ᵥ z) = L * (u ⬝ᵥ z) := fun z => by
+      rw [hsymm, hu, smul_dotProduct, smul_eq_mul]
+    rw [hxw]
+    simp only [Matrix.mulVec_add, Matrix.mulVec_smul, add_dotProduct, dotProduct_add,
+      dotProduct_smul, smul_dotProduct, smul_eq_mul, hAu]
+    rw [hu, dotProduct_smul, dotProduct_comm w u, huw, huu]
     simp only [smul_eq_mul, mul_one, mul_zero, add_zero, zero_add]
     ring
   -- the orthogonal part in eigen-coordinates
@@ -260,7 +263,7 @@ theorem abs_rayleighQuotient_sub_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA : A.
   have hbound : |w ⬝ᵥ (A *ᵥ w) - L * N| ≤ D * N := by
     rw [hdiff, hNdef, ← sum_sq_eigenvectorBasis_dotProduct hA w, Finset.mul_sum]
     refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun i _ => ?_)
-    rw [abs_mul, abs_of_nonneg (sq_nonneg _)]
+    rw [abs_mul, abs_of_nonneg (sq_nonneg ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w))]
     exact mul_le_mul_of_nonneg_right (hD i) (sq_nonneg _)
   have hc1 : 0 < c ^ 2 := by positivity
   have hN : 0 ≤ N := dotProduct_self_nonneg w
@@ -272,7 +275,8 @@ theorem abs_rayleighQuotient_sub_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA : A.
   have hq : rayleighQuotient A x - L = (x ⬝ᵥ (A *ᵥ x) - L * (x ⬝ᵥ x)) / (x ⬝ᵥ x) := by
     rw [rayleighQuotient_def, RCLike.re_to_real, RCLike.re_to_real, quadForm_def, star_trivial,
       sub_div, mul_div_assoc, div_self hpos.ne', mul_one]
-  rw [tanSqAngle_of_norm_eq_one hu1, hq, hxAx, hxx, ← hcdef, abs_div, abs_of_pos hpos,
+  rw [overlapTangentSq_of_norm_eq_one hu1, hq, hxAx, hxx, ← hcdef, abs_div,
+    abs_of_pos (add_pos_of_pos_of_nonneg hc1 hN),
     show L * c ^ 2 + w ⬝ᵥ (A *ᵥ w) - L * (c ^ 2 + N) = w ⬝ᵥ (A *ᵥ w) - L * N by ring,
     show c ^ 2 + N - c ^ 2 = N by ring]
   calc _ ≤ D * N / (c ^ 2 + N) := div_le_div_of_nonneg_right hbound (by positivity)
@@ -293,7 +297,7 @@ theorem abs_rayleighQuotient_powerIterate_sub_le {A : Matrix n n ℝ} (hA : A.Is
     (hD : ∀ i, |hA.eigenvalues i - hA.eigenvalues₀ i₀| ≤ D) {x₀ : n → ℝ} (hx₀ : u ⬝ᵥ x₀ ≠ 0)
     (k : ℕ) :
     |rayleighQuotient A (powerIterate A x₀ k) - hA.eigenvalues₀ i₀| ≤
-      D * ((ρ / |hA.eigenvalues₀ i₀|) ^ (2 * k) * tanSqAngle u x₀) := by
+      D * ((ρ / |hA.eigenvalues₀ i₀|) ^ (2 * k) * overlapTangentSq u x₀) := by
   have hD0 : 0 ≤ D := by
     have := hD (Fintype.equivOfCardEq (Fintype.card_fin _) i₀)
     rw [hA.eigenvalues_equivOfCardEq, sub_self, abs_zero] at this
@@ -303,8 +307,8 @@ theorem abs_rayleighQuotient_powerIterate_sub_le {A : Matrix n n ℝ} (hA : A.Is
     rw [aeval_X_pow, eval_pow, eval_X] at h
     rw [powerIterate, h]
     exact mul_ne_zero (pow_ne_zero _ hl) hx₀
-  exact (abs_rayleighQuotient_sub_le_mul_tanSqAngle hA hu hu1 hD hxk).trans
-    (mul_le_mul_of_nonneg_left (tanSqAngle_powerIterate_le hA hu hu1 hρ x₀ k) hD0)
+  exact (abs_rayleighQuotient_sub_le_mul_overlapTangentSq hA hu hu1 hD hxk).trans
+    (mul_le_mul_of_nonneg_left (overlapTangentSq_powerIterate_le hA hu hu1 hρ x₀ k) hD0)
 
 /-! ### Inverse iteration -/
 
@@ -358,21 +362,21 @@ closest, T&B's `|μ − λ_K|`). Then the inverse-iteration iterates satisfy
 `tan² ∠(u, (A − μI)^{-k} x₀) ≤ (|λ_{i₀} − μ|/d)^{2k} tan² ∠(u, x₀)`. Source:
 Trefethen–Bau (1997) [`tb97`], Thm 27.2; Golub–Van Loan (2013) [`gvl13`], §8.2.2.
 Deviations: squared tangents; unnormalised iterates (normalisation is bookkeeping,
-`tanSqAngle_smul`).
+`overlapTangentSq_smul`).
 atlas: inverse-iteration -/
-theorem tanSqAngle_inverseIterate_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {μ : ℝ}
+theorem overlapTangentSq_inverseIterate_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {μ : ℝ}
     (hμ : ∀ i, hA.eigenvalues i ≠ μ) {i₀ : Fin (Fintype.card n)} {u : n → ℝ}
     (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u) (hu1 : ‖WithLp.toLp 2 u‖ = 1) {d : ℝ} (hd : 0 < d)
     (hdJ : ∀ i, i ≠ i₀ → d ≤ |hA.eigenvalues₀ i - μ|) (x₀ : n → ℝ) (k : ℕ) :
-    tanSqAngle u (inverseIterate A μ x₀ k) ≤
-      (|hA.eigenvalues₀ i₀ - μ| / d) ^ (2 * k) * tanSqAngle u x₀ := by
+    overlapTangentSq u (inverseIterate A μ x₀ k) ≤
+      (|hA.eigenvalues₀ i₀ - μ| / d) ^ (2 * k) * overlapTangentSq u x₀ := by
   have hf := eigenvectorBasis_dotProduct_pow_mulVec_eq hA (B := (A - μ • (1 : Matrix n n ℝ))⁻¹)
     (f := fun i => (hA.eigenvalues i - μ)⁻¹)
     (fun i y => eigenvectorBasis_dotProduct_inv_sub_mulVec hA hμ y i) k
   have hM : ∀ i, i ≠ i₀ → |(hA.eigenvalues₀ i - μ)⁻¹ ^ k| ≤ d⁻¹ ^ k := fun i hi => by
     rw [abs_pow, abs_inv]
     exact pow_le_pow_left₀ (inv_nonneg.2 (abs_nonneg _)) (inv_anti₀ hd (hdJ i hi)) k
-  have h := tanSqAngle_le_of_forall_eigenvectorBasis_dotProduct_eq hA hu hu1
+  have h := overlapTangentSq_le_of_forall_eigenvectorBasis_dotProduct_eq hA hu hu1
     (g := fun x => (x - μ)⁻¹ ^ k) hM (fun i => hf x₀ i)
   refine h.trans (le_of_eq ?_)
   congr 1
@@ -385,7 +389,7 @@ theorem tanSqAngle_inverseIterate_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {
   field_simp
 
 /-- **Inverse iteration, Rayleigh quotient.** Under the hypotheses of
-`tanSqAngle_inverseIterate_le`, with `|λᵢ − λ_{i₀}| ≤ D` for all `i` and `u ⬝ x₀ ≠ 0`:
+`overlapTangentSq_inverseIterate_le`, with `|λᵢ − λ_{i₀}| ≤ D` for all `i` and `u ⬝ x₀ ≠ 0`:
 `|ρ(x_k) − λ_{i₀}| ≤ D (|λ_{i₀} − μ|/d)^{2k} tan² ∠(u, x₀)`. Source: Trefethen–Bau (1997)
 [`tb97`], Thm 27.2 (second bound).
 atlas: inverse-iteration -/
@@ -396,7 +400,7 @@ theorem abs_rayleighQuotient_inverseIterate_sub_le {A : Matrix n n ℝ} (hA : A.
     (hD : ∀ i, |hA.eigenvalues i - hA.eigenvalues₀ i₀| ≤ D) {x₀ : n → ℝ} (hx₀ : u ⬝ᵥ x₀ ≠ 0)
     (k : ℕ) :
     |rayleighQuotient A (inverseIterate A μ x₀ k) - hA.eigenvalues₀ i₀| ≤
-      D * ((|hA.eigenvalues₀ i₀ - μ| / d) ^ (2 * k) * tanSqAngle u x₀) := by
+      D * ((|hA.eigenvalues₀ i₀ - μ| / d) ^ (2 * k) * overlapTangentSq u x₀) := by
   have hD0 : 0 ≤ D := by
     have := hD (Fintype.equivOfCardEq (Fintype.card_fin _) i₀)
     rw [hA.eigenvalues_equivOfCardEq, sub_self, abs_zero] at this
@@ -413,23 +417,23 @@ theorem abs_rayleighQuotient_inverseIterate_sub_le {A : Matrix n n ℝ} (hA : A.
       rw [hA.eigenvalues_equivOfCardEq] at this
       exact sub_ne_zero.2 this
     exact mul_ne_zero (pow_ne_zero _ (inv_ne_zero hJ)) hx₀
-  exact (abs_rayleighQuotient_sub_le_mul_tanSqAngle hA hu hu1 hD hxk).trans
-    (mul_le_mul_of_nonneg_left (tanSqAngle_inverseIterate_le hA hμ hu hu1 hd hdJ x₀ k) hD0)
+  exact (abs_rayleighQuotient_sub_le_mul_overlapTangentSq hA hu hu1 hD hxk).trans
+    (mul_le_mul_of_nonneg_left (overlapTangentSq_inverseIterate_le hA hμ hu hu1 hd hdJ x₀ k) hD0)
 
 /-! ### Bridge to principal angles -/
 
 /-- SCAFFOLD: principal-angles-def
-**`tanSqAngle` is the one-column `tan² θ_max`.** For a unit vector `u` and any `x`,
+**`overlapTangentSq` is the one-column `tan² θ_max`.** For a unit vector `u` and any `x`,
 `tan θ_max(range u, range x)² = tan² ∠(u, x)`, both sides `0` when `u ⬝ x = 0`. Source:
 Saad (2011) [`saad11`], §5.2 and §6.6.1. Proof sketch: `uᵀx` is the `1 × 1` matrix `(u ⬝ x)`, its
 inverse is `(u ⬝ x)⁻¹`; `(I − uuᵀ)x (u ⬝ x)⁻¹` is a single column whose spectral norm is its
 Euclidean norm (`specNorm` of an `n × 1` matrix: `‖M‖² = ‖MᵀM‖` = the `1 × 1` entry,
 `Matrix.l2_opNorm_conjTranspose_mul_self`), and `‖(I − uuᵀ)x‖² = ‖x‖² − (u ⬝ x)²`.
 atlas: principal-angles-def (partial) -/
-theorem sq_tanThetaMax_replicateCol_eq_tanSqAngle {u : n → ℝ} (hu : ‖WithLp.toLp 2 u‖ = 1)
+theorem sq_overlapTangentNorm_replicateCol_eq_overlapTangentSq {u : n → ℝ} (hu : ‖WithLp.toLp 2 u‖ = 1)
     (x : n → ℝ) :
-    tanThetaMax (Matrix.replicateCol Unit u) (Matrix.replicateCol Unit x) ^ 2 =
-      tanSqAngle u x := by
+    overlapTangentNorm (Matrix.replicateCol Unit u) (Matrix.replicateCol Unit x) ^ 2 =
+      overlapTangentSq u x := by
   sorry
 
 end NLAlib

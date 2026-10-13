@@ -13,13 +13,6 @@ open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
-/-- Principal angles between equal-dimensional complex frames are the
-arccosines of the descending actual singular values of their conjugate
-overlap. Stewart–Sun, Section I.5; complex CS and oblique projection helper. -/
-def complexPrincipalAnglesFintype {m r : Type*} [Fintype m] [Fintype r] [DecidableEq r]
-    (Q W : Matrix m r ℂ) : Fin (Fintype.card r) → ℝ :=
-  fun i => Real.arccos (singularValues (Qᴴ * W) i)
-
 /-- Every positive-rank complex idempotent has unitary-column frames for
 its actual range and kernel orthogonal complement. Their largest actual
 principal angle is strictly below pi/2 and its secant is exactly the
@@ -34,56 +27,56 @@ theorem exists_complex_range_kernel_frames_norm_eq_secant {n : Type*}
       Qᴴ * Q = 1 ∧ Wᴴ * W = 1 ∧
       LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin ∧
       LinearMap.range W.toEuclideanLin = (LinearMap.ker P.toEuclideanLin)ᗮ ∧
-      let θ := complexPrincipalAnglesFintype W Q ⟨P.rank - 1, by simpa using Nat.sub_lt hr Nat.one_pos⟩
-      (∀ i, complexPrincipalAnglesFintype W Q i ≤ θ) ∧
+      let θ := principalAnglesFintype W Q ⟨P.rank - 1, by simpa using Nat.sub_lt hr Nat.one_pos⟩
+      (∀ i, principalAnglesFintype W Q i ≤ θ) ∧
       θ < Real.pi / 2 ∧ ‖P‖ = 1 / Real.cos θ := by
   obtain ⟨U, R, hR, hPR, _, hRank, hNorm, _⟩ := exists_real_idempotent_unitary_similarity P hP
+  change P = (U : Matrix n n ℂ) * R.map Complex.ofRealHom * (U : Matrix n n ℂ)ᴴ at hPR
   have hrR : 0 < R.rank := by omega
   obtain ⟨Q₀, W₀, hQ₀, hW₀, hRange, hRow, hAngles⟩ := exists_range_kernel_frames_specNorm_eq_secant R hR hrR
-  let Q := (U : Matrix n n ℂ) * Q₀.map Complex.ofReal
-  let W := (U : Matrix n n ℂ) * W₀.map Complex.ofReal
+  let Q := (U : Matrix n n ℂ) * Q₀.map Complex.ofRealHom
+  let W := (U : Matrix n n ℂ) * W₀.map Complex.ofRealHom
   have hU : (U : Matrix n n ℂ)ᴴ * (U : Matrix n n ℂ) = 1 := Unitary.coe_star_mul_self U
   have hGram (F : Matrix n (Fin R.rank) ℝ) (hF : HasOrthonormalCols F) :
-      ((U : Matrix n n ℂ) * F.map Complex.ofReal)ᴴ *
-        ((U : Matrix n n ℂ) * F.map Complex.ofReal) = 1 := by
+      ((U : Matrix n n ℂ) * F.map Complex.ofRealHom)ᴴ *
+        ((U : Matrix n n ℂ) * F.map Complex.ofRealHom) = 1 := by
     simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc (U : Matrix n n ℂ)ᴴ (U : Matrix n n ℂ) (F.map Complex.ofReal),
-      hU, Matrix.one_mul, conjTranspose_map_ofReal, ← map_ofReal_mul, (show Fᵀ * F = 1 from hF)]
+    rw [← Matrix.mul_assoc (U : Matrix n n ℂ)ᴴ (U : Matrix n n ℂ) (F.map Complex.ofRealHom),
+      hU, Matrix.one_mul, (show (F.map Complex.ofRealHom)ᴴ = Fᵀ.map Complex.ofRealHom by ext; simp), ← Matrix.map_mul (f := Complex.ofRealHom) (L := Fᵀ) (M := F), (show Fᵀ * F = 1 from hF)]
     simp
   have hQrange : LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin :=
-    range_unitary_mul_eq_of_similarity U P (R.map Complex.ofReal) (Q₀.map Complex.ofReal)
+    range_unitary_mul_eq_of_similarity U P (R.map Complex.ofRealHom) (Q₀.map Complex.ofRealHom)
       hPR (range_toEuclideanLin_map_ofReal_eq Q₀ R hRange)
   have hRadj : Rᵀ.toEuclideanLin = LinearMap.adjoint R.toEuclideanLin := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
       Matrix.toEuclideanLin_conjTranspose_eq_adjoint R
   have hRow' : LinearMap.range W₀.toEuclideanLin = LinearMap.range Rᵀ.toEuclideanLin := by
     rw [hRow, hRadj, LinearMap.orthogonal_ker]
-  have hPRadj : Pᴴ = (U : Matrix n n ℂ) * Rᵀ.map Complex.ofReal * (U : Matrix n n ℂ)ᴴ := by
+  have hPRadj : Pᴴ = (U : Matrix n n ℂ) * Rᵀ.map Complex.ofRealHom * (U : Matrix n n ℂ)ᴴ := by
     rw [hPR]
     simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose,
-      conjTranspose_map_ofReal, Matrix.mul_assoc]
+      (show (R.map Complex.ofRealHom)ᴴ = Rᵀ.map Complex.ofRealHom by ext; simp), Matrix.mul_assoc]
   have hWrange : LinearMap.range W.toEuclideanLin = (LinearMap.ker P.toEuclideanLin)ᗮ := by
     calc
       _ = LinearMap.range Pᴴ.toEuclideanLin :=
-        range_unitary_mul_eq_of_similarity U Pᴴ (Rᵀ.map Complex.ofReal) (W₀.map Complex.ofReal)
+        range_unitary_mul_eq_of_similarity U Pᴴ (Rᵀ.map Complex.ofRealHom) (W₀.map Complex.ofRealHom)
           hPRadj (range_toEuclideanLin_map_ofReal_eq W₀ Rᵀ hRow')
       _ = _ := by rw [Matrix.toEuclideanLin_conjTranspose_eq_adjoint, LinearMap.orthogonal_ker]
-  have hOverlap : Wᴴ * Q = (W₀ᵀ * Q₀).map Complex.ofReal := by
+  have hOverlap : Wᴴ * Q = (W₀ᵀ * Q₀).map Complex.ofRealHom := by
     simp only [W, Q, Matrix.conjTranspose_mul, Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc (U : Matrix n n ℂ)ᴴ (U : Matrix n n ℂ) (Q₀.map Complex.ofReal),
-      hU, Matrix.one_mul, conjTranspose_map_ofReal, ← map_ofReal_mul]
+    rw [← Matrix.mul_assoc (U : Matrix n n ℂ)ᴴ (U : Matrix n n ℂ) (Q₀.map Complex.ofRealHom),
+      hU, Matrix.one_mul, (show (W₀.map Complex.ofRealHom)ᴴ = W₀ᵀ.map Complex.ofRealHom by ext; simp), ← Matrix.map_mul (f := Complex.ofRealHom) (L := W₀ᵀ) (M := Q₀)]
   have hAngle (i : Fin (Fintype.card (Fin R.rank))) :
-      complexPrincipalAnglesFintype W Q i = principalAnglesFintype W₀ Q₀ i := by
-    simp only [complexPrincipalAnglesFintype, principalAnglesFintype, hOverlap]
-    rw [show (W₀ᵀ * Q₀).map Complex.ofReal = (W₀ᵀ * Q₀).map (algebraMap ℝ ℂ) from rfl,
+      principalAnglesFintype W Q i = principalAnglesFintype W₀ Q₀ i := by
+    simp only [principalAnglesFintype, hOverlap, Matrix.conjTranspose_eq_transpose_of_trivial]
+    rw [show (W₀ᵀ * Q₀).map Complex.ofRealHom = (W₀ᵀ * Q₀).map (algebraMap ℝ ℂ) from rfl,
       singularValues_map_ofReal]
-    simp only [singularValues_reindex]
   have hFinal : ∃ Q W : Matrix n (Fin R.rank) ℂ,
       Qᴴ * Q = 1 ∧ Wᴴ * W = 1 ∧
       LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin ∧
       LinearMap.range W.toEuclideanLin = (LinearMap.ker P.toEuclideanLin)ᗮ ∧
-      let θ := complexPrincipalAnglesFintype W Q ⟨R.rank - 1, by simpa using Nat.sub_lt hrR Nat.one_pos⟩
-      (∀ i, complexPrincipalAnglesFintype W Q i ≤ θ) ∧
+      let θ := principalAnglesFintype W Q ⟨R.rank - 1, by simpa using Nat.sub_lt hrR Nat.one_pos⟩
+      (∀ i, principalAnglesFintype W Q i ≤ θ) ∧
       θ < Real.pi / 2 ∧ ‖P‖ = 1 / Real.cos θ := by
     refine ⟨Q, W, hGram Q₀ hQ₀, hGram W₀ hW₀, hQrange, hWrange, ?_⟩
     dsimp only at hAngles ⊢
@@ -94,8 +87,8 @@ theorem exists_complex_range_kernel_frames_norm_eq_secant {n : Type*}
       Qᴴ * Q = 1 ∧ Wᴴ * W = 1 ∧
       LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin ∧
       LinearMap.range W.toEuclideanLin = (LinearMap.ker P.toEuclideanLin)ᗮ ∧
-      let θ := complexPrincipalAnglesFintype W Q ⟨r - 1, by simpa using Nat.sub_lt hr Nat.one_pos⟩
-      (∀ i, complexPrincipalAnglesFintype W Q i ≤ θ) ∧
+      let θ := principalAnglesFintype W Q ⟨r - 1, by simpa using Nat.sub_lt hr Nat.one_pos⟩
+      (∀ i, principalAnglesFintype W Q i ≤ θ) ∧
       θ < Real.pi / 2 ∧ ‖P‖ = 1 / Real.cos θ
   have hGR : G R.rank := fun _ => hFinal
   have hGP : G P.rank := Eq.mp (congrArg G hRank.symm) hGR

@@ -1,0 +1,14 @@
+# Modules containing unfinished proofs. Their import dependants are excluded from
+# `import NLAlib`; `import NLAlib.Experimental` exposes the complete development.
+# Remove an entry once its proofs are complete and the strict audit passes.
+NLAlib.Krylov.Processes.Bidiagonalization
+NLAlib.Krylov.Processes.LanczosRecurrence
+NLAlib.Krylov.Solvers.CGRecurrence
+NLAlib.Krylov.Spectral.PowerMethod
+NLAlib.Krylov.Spectral.QRAlgorithm
+NLAlib.LowRank.Cholesky.PartialCholesky
+NLAlib.Matrix.Factorizations.Cholesky
+NLAlib.Matrix.Factorizations.Givens
+NLAlib.Matrix.Factorizations.GramSchmidt
+NLAlib.Matrix.Factorizations.Hessenberg
+NLAlib.Matrix.Spectral.Inertia

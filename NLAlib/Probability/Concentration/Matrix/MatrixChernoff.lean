@@ -6,7 +6,8 @@ import NLAlib.Matrix.Functions.TraceExpBounds
 /-!
 # Theorem 5.1.1 — Matrix Chernoff, both spectral sides
 
-Main declaration: `NLAlib.matrix_chernoff`.
+Main declarations: `measureReal_lambdaMin_sum_le_le_chernoffLowerTail` and
+`measureReal_lambdaMax_sum_ge_le_chernoffUpperTail`, with corresponding expectation bounds.
 
 Atlas: `matrix-chernoff`.
 
@@ -242,7 +243,7 @@ private lemma NLAlib.matrix_chernoff_package {Ω : Type*} [MeasurableSpace Ω]
       simp
     · constructor
       · have hθ' : -θ / L < 0 := div_neg_of_neg_of_pos (neg_lt_zero.mpr hθ) hLp
-        have h1 := ((master_bounds μ X (-θ / L) hMeas hHerm hInt hIndep (hExp _)).2 hθ').1
+        have h1 := log_traceExp_cumulantSum_div_le_integral_lambdaMin_sum μ X hθ' hMeas hHerm hInt hIndep (hExp _)
         have h2 := hlog _ _ (htrL _ hθ'.le)
         have h3 := div_le_div_of_nonpos_of_le hθ'.le h2
         have e : (Real.log d + chernoffCgfCoefficient L (-θ / L) * lambdaMin B) / (-θ / L) =
@@ -254,7 +255,7 @@ private lemma NLAlib.matrix_chernoff_package {Ω : Type*} [MeasurableSpace Ω]
         simp only [hYdef]
         linarith
       · have hθ' : 0 < θ / L := div_pos hθ hLp
-        have h1 := ((master_bounds μ X (θ / L) hMeas hHerm hInt hIndep (hExp _)).1 hθ').1
+        have h1 := integral_lambdaMax_sum_le_log_traceExp_cumulantSum_div μ X hθ' hMeas hHerm hInt hIndep (hExp _)
         have h2 := hlog _ _ (htrU _ hθ'.le)
         have h3 := div_le_div_of_nonneg_right h2 hθ'.le
         have e : (Real.log d + chernoffCgfCoefficient L (θ / L) * lambdaMax B) / (θ / L) =
@@ -279,7 +280,7 @@ private lemma NLAlib.matrix_chernoff_package {Ω : Type*} [MeasurableSpace Ω]
     have h1e : 0 < 1 - ε := by linarith
     have hθ' : Real.log (1 - ε) / L < 0 :=
       div_neg_of_neg_of_pos (Real.log_neg h1e (by linarith)) hLp
-    have h1 := ((master_bounds μ X _ hMeas hHerm hInt hIndep (hExp _)).2 hθ').2
+    have h1 := measureReal_lambdaMin_sum_le_le_exp_mul_traceExp_cumulantSum μ X hθ' hMeas hHerm hIndep (hExp _)
       ((1 - ε) * lambdaMin B)
     have h2 := htrL _ hθ'.le
     rw [g_pos hLp, div_mul_cancel₀ _ hLp.ne', Real.exp_log h1e] at h2
@@ -315,7 +316,7 @@ private lemma NLAlib.matrix_chernoff_package {Ω : Type*} [MeasurableSpace Ω]
     have h1e : 0 < 1 + ε := by linarith
     have hθ' : 0 < Real.log (1 + ε) / L :=
       div_pos (Real.log_pos (by linarith)) hLp
-    have h1 := ((master_bounds μ X _ hMeas hHerm hInt hIndep (hExp _)).1 hθ').2
+    have h1 := measureReal_lambdaMax_sum_ge_le_exp_mul_traceExp_cumulantSum μ X hθ' hMeas hHerm hIndep (hExp _)
       ((1 + ε) * lambdaMax B)
     have h2 := htrU _ hθ'.le
     rw [g_pos hLp, div_mul_cancel₀ _ hLp.ne', Real.exp_log h1e] at h2
@@ -352,7 +353,7 @@ private lemma chernoff_hyp {L : ℝ} (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).Po
     (∀ k, ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (X k ω) ∧ lambdaMax (X k ω) ≤ L) :=
   ⟨fun k => (hPSD k).mono fun ω h => h.isHermitian, fun k => by
     filter_upwards [hPSD k, hBound k] with ω h1 h2
-    exact ⟨lambdaMin_nonneg_of_posSemidef _ h1, h2⟩⟩
+    exact ⟨lambdaMin_nonneg_of_posSemidef h1, h2⟩⟩
 
 open scoped Matrix.Norms.L2Operator in
 /-- **Matrix Chernoff, expectation lower bound**: for independent PSD summands with

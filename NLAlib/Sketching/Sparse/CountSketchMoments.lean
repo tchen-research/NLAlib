@@ -46,7 +46,7 @@ theorem integrable_countSketch_gram_error_apply_sq
     Integrable (fun σ : ι → ℝ =>
       (((countSketchMatrix h σ * U)ᵀ * (countSketchMatrix h σ * U) - 1) : Matrix d d ℝ) a b ^ 2)
       (Measure.pi fun _ => rademacherMeasure) := by
-  apply (integrable_quadForm_sq_pi_rademacherMeasure (countSketchHollowCoefficient h U a b)).congr
+  apply (integrable_quadForm_sq_rademacherVector (countSketchHollowCoefficient h U a b)).congr
   exact (ae_countSketch_gram_error_apply_eq_quadForm h U hU a b).symm.mono
     fun _ hx => congrArg (fun z : ℝ => z ^ 2) hx
 
@@ -63,7 +63,7 @@ theorem integral_countSketch_gram_error_apply_sq
         (U i a * U j b) ^ 2 + (U i a * U j b) * (U j a * U i b) else 0 := by
   rw [integral_congr_ae ((ae_countSketch_gram_error_apply_eq_quadForm h U hU a b).mono
     fun _ hx => congrArg (fun z : ℝ => z ^ 2) hx)]
-  rw [integral_quadForm_sq_pi_rademacherMeasure_of_diag_zero _
+  rw [integral_quadForm_sq_rademacherVector_of_diag_zero _
     (countSketchHollowCoefficient_diag h U a b)]
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -89,7 +89,7 @@ theorem integral_countSketch_gram_error_apply_eq_zero
       (((countSketchMatrix h σ * U)ᵀ * (countSketchMatrix h σ * U) - 1) : Matrix d d ℝ) a b
         ∂Measure.pi (fun _ => rademacherMeasure)) = 0 := by
   rw [integral_congr_ae (ae_countSketch_gram_error_apply_eq_quadForm h U hU a b),
-    integral_quadForm_pi_rademacherMeasure]
+    integral_quadForm_rademacherVector]
   simp only [Matrix.trace, Matrix.diag, countSketchHollowCoefficient_diag, Finset.sum_const_zero]
 
 /-- The actual sign law's conditional squared Frobenius Gram-error moment

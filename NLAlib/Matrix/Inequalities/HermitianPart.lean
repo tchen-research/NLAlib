@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Inequalities.Schur
+import NLAlib.Matrix.Inequalities.MajorizationProperties
 import NLAlib.Matrix.Spectral.SchurTriangularization
 import NLAlib.Matrix.Spectral.NormalSimilarity
 /-!

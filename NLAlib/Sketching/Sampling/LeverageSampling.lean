@@ -124,15 +124,16 @@ theorem measure_le_norm_leverage_gram_sub_one
     exact (sum_probability_smul_columnRowSample Uᴴ U p hsupport).trans hU
   have hind : iIndepFun M (Measure.pi (fun _ : Fin k => ν)) :=
     iIndepFun_pi (fun _ => (show AEMeasurable X ν from Measurable.of_discrete.aemeasurable))
-  have hherm : ∀ j, ∀ᵐ ω ∂Measure.pi (fun _ : Fin k => ν), (M j ω).IsHermitian :=
-    fun j => ae_of_all _ (fun ω => (hPSD (ω j)).isHermitian)
+  have hp : ∀ j, ∀ᵐ ω ∂Measure.pi (fun _ : Fin k => ν), (M j ω).PosSemidef :=
+    fun j => ae_of_all _ (fun ω => hPSD (ω j))
   have hb : ∀ j, ∀ᵐ ω ∂Measure.pi (fun _ : Fin k => ν),
-      0 ≤ lambdaMin (M j ω) ∧ lambdaMax (M j ω) ≤ (d : ℝ) / β := by
-    intro j
-    exact ae_of_all _ (fun ω => ⟨lambdaMin_nonneg_of_posSemidef (hPSD (ω j)),
-      (lambdaMax_le_trace_of_posSemidef (hPSD (ω j))).trans (hbound (ω j))⟩)
-  obtain ⟨hl, hu⟩ := matrix_chernoff_sampling (Measure.pi (fun _ : Fin k => ν)) hk M
-    ((d : ℝ) / β) (div_pos hd hβ) (fun _ => .of_discrete) hind hherm hb hmean hε0.le hε1
+      lambdaMax (M j ω) ≤ (d : ℝ) / β :=
+    fun j => ae_of_all _ (fun ω =>
+      (lambdaMax_le_trace_of_posSemidef (hPSD (ω j))).trans (hbound (ω j)))
+  have hl := matrix_chernoff_sampling_lower (Measure.pi (fun _ : Fin k => ν)) hk M
+    ((d : ℝ) / β) (div_pos hd hβ) (fun _ => .of_discrete) hind hp hb hmean hε0.le hε1
+  have hu := matrix_chernoff_sampling_upper (Measure.pi (fun _ : Fin k => ν)) hk M
+    ((d : ℝ) / β) (div_pos hd hβ) (fun _ => .of_discrete) hind hp hb hmean hε0.le hε1.le
   have hsub : {ω | ε ≤ ‖(leverageSamplingSketch p ω * U)ᴴ * (leverageSamplingSketch p ω * U) - 1‖} ⊆
       {ω | lambdaMin ((1 / (k : ℝ)) • ∑ j, M j ω) ≤ 1 - ε} ∪
       {ω | 1 + ε ≤ lambdaMax ((1 / (k : ℝ)) • ∑ j, M j ω)} := by
@@ -179,12 +180,12 @@ theorem norm_leverage_mulVec_sq_bounds_of_gram_le
     rw [Matrix.mulVec_mulVec, hUA]
   have hnorm : ‖(WithLp.toLp 2 (U *ᵥ y) : EuclideanSpace ℂ n)‖ ^ 2 =
       ‖(WithLp.toLp 2 y : EuclideanSpace ℂ (Fin d))‖ ^ 2 := by
-    obtain ⟨hl, hu⟩ := norm_mulVec_sq_bounds_of_norm_gram_sub_one_le U
-      (show ‖Uᴴ * U - 1‖ ≤ (0 : ℝ) by rw [hU, sub_self, norm_zero]) y
+    obtain ⟨hl, hu⟩ := norm_mulVec_sq_bounds_of_specNorm_gram_sub_one_le U
+      (show specNorm (Uᴴ * U - 1) ≤ (0 : ℝ) by rw [hU, sub_self, specNorm_zero]) y
     simp only [sub_zero, add_zero, one_mul] at hl hu
     exact le_antisymm hu hl
-  have hh := norm_mulVec_sq_bounds_of_norm_gram_sub_one_le
-    (leverageSamplingSketch p ω * U) h y
+  have hh := norm_mulVec_sq_bounds_of_specNorm_gram_sub_one_le
+    (leverageSamplingSketch p ω * U) (by simpa only [specNorm_eq_norm] using h) y
   rw [← hnorm, ha, ← Matrix.mulVec_mulVec, ha] at hh
   exact hh
 

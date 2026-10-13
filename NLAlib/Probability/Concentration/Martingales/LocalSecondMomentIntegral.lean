@@ -83,4 +83,64 @@ theorem HasLocalMatrixSecondMoment.condExp_sq_eq_of_integrable {X V : Ω → Mat
     (fun B hB hμB => (h.setIntegral_sq_eq hm hX2 hV hHerm B hB).symm)
   exact h.measurable.stronglyMeasurable.aestronglyMeasurable
 
+open scoped Matrix.Norms.L2Operator in
+/-- An integrable Hermitian square's conditional expectation supplies the extended local
+second-moment interface. A predictable a.e.-equal representative is allowed; its positivity
+and integrability follow from the conditional expectation, rather than being extra premises.
+Source: conditional-expectation set-integral characterization; Tropp 2011, matrix Freedman. -/
+theorem hasLocalMatrixSecondMoment_of_condExp_sq_eq {X V : Ω → Matrix n n ℂ}
+    (hm : m ≤ mΩ) [SigmaFinite (μ.trim hm)]
+    (hX2 : Integrable (fun ω => X ω ^ 2) μ)
+    (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian) (hVm : Measurable[m] V)
+    (hVeq : μ[(fun ω => X ω ^ 2) | m] =ᵐ[μ] V) :
+    HasLocalMatrixSecondMoment μ m X V := by
+  have hXpos : ∀ᵐ ω ∂μ, (X ω ^ 2).PosSemidef := hHerm.mono fun ω hω => by
+    have heq : X ω ^ 2 = (X ω)ᴴ * X ω := by rw [hω.eq, sq]
+    rw [heq]
+    exact Matrix.posSemidef_conjTranspose_mul_self _
+  have hVpos : ∀ᵐ ω ∂μ, (V ω).PosSemidef := by
+    filter_upwards [ae_posSemidef_condExp_of_ae_posSemidef hm hX2 hXpos, hVeq] with ω hp he
+    rwa [he] at hp
+  have hV : Integrable V μ := integrable_condExp.congr hVeq
+  refine ⟨hVm, hVpos, ?_⟩
+  intro u B hB
+  let T := matrixRealQuadraticFormCLM u
+  have hqX : (fun ω => matrixVectorSqNorm (X ω) u) =ᵐ[μ] fun ω => T (X ω ^ 2) := by
+    filter_upwards [hHerm] with ω hω
+    exact (re_star_dotProduct_sq_mulVec_eq_sum_sq_norm_of_isHermitian _ hω u).symm
+  have hX0 : 0 ≤ᵐ[μ] fun ω => T (X ω ^ 2) := by
+    filter_upwards [hqX] with ω hω
+    rw [← hω]
+    exact matrixVectorSqNorm_nonneg _ _
+  have hV0 : 0 ≤ᵐ[μ] fun ω => T (V ω) :=
+    hVpos.mono fun ω hω => hω.re_dotProduct_nonneg u
+  have hset : (∫ ω in B, X ω ^ 2 ∂μ) = ∫ ω in B, V ω ∂μ := by
+    rw [← setIntegral_condExp hm hX2 hB]
+    exact integral_congr_ae (ae_restrict_of_ae hVeq)
+  calc
+    (∫⁻ ω in B, ENNReal.ofReal (matrixVectorSqNorm (X ω) u) ∂μ) =
+        ∫⁻ ω in B, ENNReal.ofReal (T (X ω ^ 2)) ∂μ := by
+      apply lintegral_congr_ae
+      exact (ae_restrict_of_ae hqX).mono fun ω hω => congrArg ENNReal.ofReal hω
+    _ = ENNReal.ofReal (∫ ω in B, T (X ω ^ 2) ∂μ) :=
+      (ofReal_integral_eq_lintegral_ofReal (T.integrable_comp hX2).restrict
+        (ae_restrict_of_ae hX0)).symm
+    _ = ENNReal.ofReal (∫ ω in B, T (V ω) ∂μ) := by
+      rw [T.integral_comp_comm hX2.restrict, T.integral_comp_comm hV.restrict, hset]
+    _ = ∫⁻ ω in B, ENNReal.ofReal (matrixQuadraticFormReal (V ω) u) ∂μ :=
+      ofReal_integral_eq_lintegral_ofReal (T.integrable_comp hV).restrict
+        (ae_restrict_of_ae hV0)
+
+open scoped Matrix.Norms.L2Operator in
+/-- The canonical conditional square satisfies the local second-moment interface whenever
+the square is integrable. The extended interface remains available beyond that global domain.
+Source: conditional-expectation characterization; Tropp 2011, matrix Freedman. -/
+theorem hasLocalMatrixSecondMoment_condExp_sq {X : Ω → Matrix n n ℂ}
+    (hm : m ≤ mΩ) [SigmaFinite (μ.trim hm)]
+    (hX2 : Integrable (fun ω => X ω ^ 2) μ)
+    (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian) :
+    HasLocalMatrixSecondMoment μ m X (μ[(fun ω => X ω ^ 2) | m]) :=
+  hasLocalMatrixSecondMoment_of_condExp_sq_eq hm hX2 hHerm
+    stronglyMeasurable_condExp.measurable Filter.EventuallyEq.rfl
+
 end NLAlib

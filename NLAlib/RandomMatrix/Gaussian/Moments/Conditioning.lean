@@ -22,7 +22,7 @@ Here a *block* of `Ω` is `Vᵀ Ω` for `V` with orthonormal columns (HMT 2011 �
 `Ω₁ = V₁ᵀ Ω`, `Ω₂ = V₂ᵀ Ω`).
 
 Atlas: `gaussian-conditioning`. No new Gaussian computation is done here; only independence,
-Fubini for independent variables (`lintegral_of_indepFun`, `integral_of_indepFun` in
+Fubini for independent variables (`ProbabilityTheory.lintegral_of_indepFun`, `ProbabilityTheory.integral_of_indepFun` in
 `NLAlib.ForMathlib.Probability.Independence`), the block law (`block-law-indep`) and the sandwiched second moment
 (`gaussian-frob-second-moment`). The measurability helpers `measurable_frobSq_of_entries` and
 `measurable_pinvR_entry` are in `NLAlib.Matrix.Structured.Measurable`.
@@ -90,7 +90,7 @@ theorem lintegral_frobSq_mul_gaussian_mul_of_indepFun {α ι κ : Type*} [Measur
     exact ENNReal.measurable_ofReal.comp (measurable_frobSq_mul_mul_prod S hT)
   have hGm : Measurable fun x : α => ENNReal.ofReal (frobSq S * frobSq (T x)) :=
     ENNReal.measurable_ofReal.comp (measurable_const.mul (measurable_frobSq_of_entries hT))
-  rw [lintegral_of_indepFun hX hYm hXY hFm.aemeasurable, hY.map_eq,
+  rw [ProbabilityTheory.lintegral_of_indepFun hX hYm hXY hFm.aemeasurable, hY.map_eq,
     ← lintegral_map' hGm.aemeasurable hX]
   congr 1
   funext x

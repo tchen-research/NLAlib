@@ -29,15 +29,22 @@ theorem measure_norm_uniform_iid_sub_one_le
   let X : Fin k → (Fin k → α) → Matrix (Fin d) (Fin d) ℂ := fun a I => A (I a)
   have hm (a : Fin k) : Measurable (X a) := Measurable.of_discrete
   have hi : iIndepFun X μ := iIndepFun_uniform_sequence_comp (ι := Fin k) A
-  have hh (a : Fin k) : ∀ᵐ I ∂μ, (X a I).IsHermitian :=
-    Filter.Eventually.of_forall (fun I => hA (I a))
-  have hb (a : Fin k) : ∀ᵐ I ∂μ, 0 ≤ lambdaMin (X a I) ∧ lambdaMax (X a I) ≤ L :=
-    Filter.Eventually.of_forall (fun I => hbound (I a))
+  have hp (a : Fin k) : ∀ᵐ I ∂μ, (X a I).PosSemidef := by
+    apply ae_of_all
+    intro I
+    apply (hA (I a)).posSemidef_iff_eigenvalues_nonneg.mpr
+    intro i
+    apply (hbound (I a)).1.trans
+    rw [lambdaMin, (hA (I a)).spectrum_real_eq_range_eigenvalues]
+    exact csInf_le (Set.finite_range _).bddBelow (Set.mem_range_self i)
+  have hb (a : Fin k) : ∀ᵐ I ∂μ, lambdaMax (X a I) ≤ L :=
+    ae_of_all _ (fun I => (hbound (I a)).2)
   have he (a : Fin k) : ∫ I, X a I ∂μ = 1 := by
     change (∫ I : Fin k → α, A (I a) ∂(PMF.uniformOfFintype (Fin k → α)).toMeasure) = 1
     rw [integral_uniform_sequence_comp_eval A a]
     exact hmean
-  obtain ⟨hl, hu⟩ := matrix_chernoff_sampling μ hk X L hL hm hi hh hb he hε.le hε1
+  have hl := matrix_chernoff_sampling_lower μ hk X L hL hm hi hp hb he hε.le hε1
+  have hu := matrix_chernoff_sampling_upper μ hk X L hL hm hi hp hb he hε.le hε1.le
   let Y : (Fin k → α) → Matrix (Fin d) (Fin d) ℂ :=
     fun I => (1 / (k : ℝ)) • ∑ a, A (I a)
   have hsub : {I | ε ≤ ‖Y I - 1‖} ⊆

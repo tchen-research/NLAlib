@@ -161,7 +161,7 @@ theorem rsvd_truncated_main_gaussian
     (Q : Ωs → Matrix m q ℝ) (Y : Ωs → Matrix q (Fin n) ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω)
-    (hY : ∀ ω, IsBestRankApprox k ((Q ω)ᵀ * A) (Y ω)) :
+    (hY : ∀ ω, IsBestFrobRankApprox ((Q ω)ᵀ * A) k (Y ω)) :
     ∫ ω, frobSq (A - Q ω * Y ω) ∂μ ≤ (1 + (k : ℝ) / (t - k - 1)) * frobSq S₂ := by
   obtain ⟨hunit, hinv, hZi⟩ := rsvd_gaussian_inputs S₂ hV₁ hV₂ hV hkt Ω hΩ
   by_cases hXi : Integrable (fun ω => frobSq (A - Q ω * Y ω)) μ
@@ -304,7 +304,7 @@ theorem completion_gaussian_of_orthonormal {ι : Type*} [Fintype ι] [DecidableE
     Integrable (fun y => frobSq (A - sketchedOutput Q y A)) (gaussianMatrix (Fin m) (Fin s)) ∧
     ∫ y, frobSq (A - sketchedOutput Q y A) ∂gaussianMatrix (Fin m) (Fin s)
       = (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual Q A) := by
-  obtain ⟨r, Qp, hQp, hcomp⟩ := exists_unitary_complement Q hQ
+  obtain ⟨Qp, hQp, hcomp⟩ := exists_unitary_complement Q hQ
   exact completion_reduction_gaussian_integrable (μ := gaussianMatrix (Fin m) (Fin s)) Q Qp A hQ hQp
     hcomp hq hqs (fun y => y) HasLaw.id
 

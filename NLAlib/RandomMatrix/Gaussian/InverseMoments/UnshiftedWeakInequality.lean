@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Perturbation.SpectralContinuity
 import NLAlib.Probability.Gaussian.Calculus.Stein
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.RegularizedApproximation
 import NLAlib.Matrix.Basic.CoordinateUpdates
@@ -31,11 +32,9 @@ private theorem ae_posDef_gram {r k : ℕ} (hrk : r ≤ k) :
   exact hp.posDef_iff_isUnit.mpr hG
 
 private theorem measurable_minSq {r k : ℕ} :
-    Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => sigmaMin Gᵀ ^ 2) := by
-  convert measurable_specNorm_inv_self_mul_transpose.inv using 1
-  funext G
-  change sigmaMin Gᵀ ^ 2 = (specNorm (G * Gᵀ)⁻¹)⁻¹
-  rw [specNorm_inv_self_mul_transpose_eq, one_div, inv_inv]
+    Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) := by
+  exact (continuous_sq_singularValues_transpose_last_array
+    (ι := Fin r) (κ := Fin k)).measurable
 
 /-- The unshifted Gram inverse-power probes and their gradient energy
 converge almost surely to the exact smallest squared Gaussian singular
@@ -47,9 +46,9 @@ theorem ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) :
     ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)),
       Tendsto (fun n : ℕ => inversePowerSoftMin n (regularizedGram 0 G))
-        atTop (𝓝 (sigmaMin Gᵀ ^ 2)) ∧
+        atTop (𝓝 (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)) ∧
       Tendsto (fun n : ℕ => frobSq (gramSoftMinGradient n 0 G))
-        atTop (𝓝 (4 * sigmaMin Gᵀ ^ 2)) := by
+        atTop (𝓝 (4 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)) := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   filter_upwards [gaussianMatrix_ae_isUnit_mul_transpose hrk,
     ae_charpoly_separable_self_mul_transpose_gaussianMatrix hrk] with G hunit hsep
@@ -86,7 +85,7 @@ theorem ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix
     exact hn
   have hmax (i : Fin r) (hi : i ≠ i₀) : b i < b i₀ :=
     lt_of_le_of_ne (hle i) (fun h => hi (hbinj h))
-  have hX := sigmaMin_transpose_sq_eq_inv_inverse_eigenvalue_sub 0 G hpd i₀ hle
+  have hX := sq_singularValues_transpose_last_eq_inv_inverse_eigenvalue_sub 0 G hpd i₀ hle
   simp only [sub_zero] at hX
   obtain ⟨hF, hA, _⟩ :=
     tendsto_regularizedGram_softMin_aggregates_of_unique_max 0 G hpd i₀ hmax
@@ -102,9 +101,9 @@ theorem ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix_of_hasLaw
     (hr : 1 ≤ r) (hrk : r ≤ k) :
     ∀ᵐ w ∂μ,
       Tendsto (fun n : ℕ => inversePowerSoftMin n (regularizedGram 0 (X w)))
-        atTop (𝓝 (sigmaMin (X w)ᵀ ^ 2)) ∧
+        atTop (𝓝 (singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2)) ∧
       Tendsto (fun n : ℕ => frobSq (gramSoftMinGradient n 0 (X w)))
-        atTop (𝓝 (4 * sigmaMin (X w)ᵀ ^ 2)) := by
+        atTop (𝓝 (4 * singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2)) := by
   have h := ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix hr hrk
   rw [← hX.map_eq] at h
   exact ae_of_ae_map hX.aemeasurable h
@@ -264,9 +263,9 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
     (hψs : tsupport ψ ⊆ Ioi (0 : ℝ)) (hψ0 : ∀ x, 0 ≤ ψ x) :
     0 ≤ ∫ G : Matrix (Fin r) (Fin k) ℝ,
-      4 * sigmaMin Gᵀ ^ 2 * deriv ψ (sigmaMin Gᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin Gᵀ ^ 2) *
-          ψ (sigmaMin Gᵀ ^ 2) ∂(gaussianMatrix (Fin r) (Fin k)) := by
+      4 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 * deriv ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        2 * ((k : ℝ) - r + 1 - singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) *
+          ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) ∂(gaussianMatrix (Fin r) (Fin k)) := by
   classical
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   let ν : Measure ((Fin r × Fin k) → ℝ) := Measure.pi fun _ => gaussianReal 0 1
@@ -274,7 +273,7 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
   have hmp : MeasurePreserving e ν (gaussianMatrix (Fin r) (Fin k)) :=
     ⟨e.measurable, (gaussianMatrix_eq_map_curry).symm⟩
   let G : ((Fin r × Fin k) → ℝ) → Matrix (Fin r) (Fin k) ℝ := fun x => (e x)
-  let X : ((Fin r × Fin k) → ℝ) → ℝ := fun x => sigmaMin (G x)ᵀ ^ 2
+  let X : ((Fin r × Fin k) → ℝ) → ℝ := fun x => singularValues (G x)ᵀ (Fintype.card (Fin r) - 1) ^ 2
   let F : ℕ → ((Fin r × Fin k) → ℝ) → ℝ :=
     fun n x => inversePowerSoftMin (n + 1) (G x * (G x)ᵀ)
   let D : ℕ → (Fin r × Fin k) → ((Fin r × Fin k) → ℝ) → ℝ :=
@@ -389,17 +388,17 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
       ((measurable_const.sub (measurable_const.mul (hFm n))).mul (hψm n))).aestronglyMeasurable)
     (integrable_const C) hbound hlim
   have hweak := ge_of_tendsto hInt (Eventually.of_forall hLn)
-  have hXm : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ => sigmaMin Hᵀ ^ 2) := measurable_minSq
+  have hXm : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ => singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) := measurable_minSq
   have hφ : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ =>
-      deriv ψ (sigmaMin Hᵀ ^ 2) * (4 * sigmaMin Hᵀ ^ 2) +
-        (b - 2 * sigmaMin Hᵀ ^ 2) * ψ (sigmaMin Hᵀ ^ 2)) :=
+      deriv ψ (singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) * (4 * singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        (b - 2 * singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) * ψ (singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2)) :=
     (((hψ1.continuous_deriv le_rfl).measurable.comp hXm).mul (measurable_const.mul hXm)).add
       ((measurable_const.sub (measurable_const.mul hXm)).mul (hψ.continuous.measurable.comp hXm))
   have heq : (fun H : Matrix (Fin r) (Fin k) ℝ =>
-      4 * sigmaMin Hᵀ ^ 2 * deriv ψ (sigmaMin Hᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin Hᵀ ^ 2) * ψ (sigmaMin Hᵀ ^ 2)) =
-      (fun H => deriv ψ (sigmaMin Hᵀ ^ 2) * (4 * sigmaMin Hᵀ ^ 2) +
-        (b - 2 * sigmaMin Hᵀ ^ 2) * ψ (sigmaMin Hᵀ ^ 2)) := by
+      4 * singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2 * deriv ψ (singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        2 * ((k : ℝ) - r + 1 - singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) * ψ (singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2)) =
+      (fun H => deriv ψ (singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) * (4 * singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        (b - 2 * singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) * ψ (singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2)) := by
     funext H
     dsimp only [b]
     ring
@@ -416,16 +415,16 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix_of_h
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
     (hψs : tsupport ψ ⊆ Ioi (0 : ℝ)) (hψ0 : ∀ x, 0 ≤ ψ x) :
     0 ≤ ∫ w,
-      4 * sigmaMin (X w)ᵀ ^ 2 * deriv ψ (sigmaMin (X w)ᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin (X w)ᵀ ^ 2) *
-          ψ (sigmaMin (X w)ᵀ ^ 2) ∂μ := by
+      4 * singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2 * deriv ψ (singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        2 * ((k : ℝ) - r + 1 - singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2) *
+          ψ (singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2) ∂μ := by
   have hψ1 : ContDiff ℝ 1 ψ := hψ.of_le (by simp)
   have hφ : Measurable (fun x : ℝ => 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x) :=
     ((measurable_const.mul measurable_id).mul (hψ1.continuous_deriv le_rfl).measurable).add
       ((measurable_const.mul (measurable_const.sub measurable_id)).mul hψ.continuous.measurable)
   have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ =>
-      4 * sigmaMin Gᵀ ^ 2 * deriv ψ (sigmaMin Gᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin Gᵀ ^ 2) * ψ (sigmaMin Gᵀ ^ 2)) :=
+      4 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 * deriv ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        2 * ((k : ℝ) - r + 1 - singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) * ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)) :=
     hφ.comp measurable_minSq
   exact le_of_le_of_eq
     (integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix hr hrk ψ hψ hψc hψs hψ0)
@@ -442,15 +441,15 @@ theorem integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
     (hψs : tsupport ψ ⊆ Ioi (0 : ℝ)) (hψ0 : ∀ x, 0 ≤ ψ x) :
     0 ≤ ∫ x in Ioi (0 : ℝ), 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x
-      ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)) := by
+      ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)) := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
-  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => sigmaMin Gᵀ ^ 2) := measurable_minSq
-  have hposG : ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), 0 < sigmaMin Gᵀ ^ 2 := by
+  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) := measurable_minSq
+  have hposG : ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), 0 < singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 := by
     filter_upwards [ae_posDef_gram hrk] with G hG
     have hpos : 0 < inversePowerSoftMin 1 (G * Gᵀ) :=
       Real.rpow_pos_of_pos (trace_pow_pos_of_posDef hG.inv 1) _
     exact hpos.trans_le (inversePowerSoftMin_gram_le_sigmaMin_sq 1 (by omega) G)
-  have hpos : ∀ᵐ x ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)),
+  have hpos : ∀ᵐ x ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)),
       x ∈ Ioi (0 : ℝ) := (ae_map_iff hm.aemeasurable measurableSet_Ioi).2 hposG
   have hφ : Measurable (fun x : ℝ => 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x) := by
     have hψ1 : ContDiff ℝ 1 ψ := hψ.of_le (by simp)
@@ -469,9 +468,9 @@ theorem integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix_
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
     (hψs : tsupport ψ ⊆ Ioi (0 : ℝ)) (hψ0 : ∀ x, 0 ≤ ψ x) :
     0 ≤ ∫ x in Ioi (0 : ℝ), 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x
-      ∂(μ.map (fun w => sigmaMin (X w)ᵀ ^ 2)) := by
-  have h : μ.map (fun w => sigmaMin (X w)ᵀ ^ 2) =
-      (gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2) := by
+      ∂(μ.map (fun w => singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2)) := by
+  have h : μ.map (fun w => singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2) =
+      (gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) := by
     rw [← hX.map_eq, AEMeasurable.map_map_of_aemeasurable measurable_minSq.aemeasurable
       hX.aemeasurable]
     rfl

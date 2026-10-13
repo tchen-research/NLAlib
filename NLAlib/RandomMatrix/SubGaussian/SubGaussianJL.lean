@@ -114,7 +114,7 @@ theorem measure_lt_abs_mulVec_sq_sub_le_of_independent_isotropic_rows
       _ ≤ ((Fintype.card m : ℝ) * ε / K ^ 2) * 1 :=
         mul_le_mul_of_nonneg_left ((div_le_one (by positivity)).2 hK2) (by positivity)
       _ = (Fintype.card m : ℝ) * ε / K ^ 2 := mul_one _
-  have h := measure_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF Y K hKpos hindY hmgfY hsqY
+  have h := measureReal_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF Y K hKpos hindY hmgfY hsqY
     (u := (Fintype.card m : ℝ) * ε) (by positivity)
   rw [hmin] at h
   refine (measureReal_mono hsub).trans (h.trans_eq ?_)

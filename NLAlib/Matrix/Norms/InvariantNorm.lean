@@ -98,7 +98,7 @@ theorem eq_zero_of_matrixValue_eq_zero (A : Matrix m n ℝ) (hA : Φ.matrixValue
   have hσ : (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i) = 0 :=
     Φ.eq_zero_of_map_eq_zero _ hA
   apply (nuclearNorm_eq_zero_iff A).mp
-  change (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)), singularValues A i) = 0
+  rw [nuclearNorm_eq_sum_range]
   rw [← Fin.sum_univ_eq_sum_range (fun i => singularValues A i)]
   rw [hσ]
   simp

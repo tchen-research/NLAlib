@@ -33,7 +33,7 @@ theorem sumLargest_singularValues_eq_kyFanNorm (A : Matrix m n ℝ) {k : ℕ}
   rw [sumLargest_eq_prefix_of_antitone _ (show Antitone (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i) from
     fun i j hij => singularValues_antitone A hij)]
   rw [sum_fin_ite_lt_eq_sum_range hk (singularValues A)]
-  rfl
+  exact (kyFanNorm_eq_sum_range A k).symm
 
 /-- Fan dominance in both directions for all invariant norms on a fixed
 rectangular matrix space. This has no gauge-representation or dominance premise.

@@ -1,3 +1,5 @@
+import Mathlib.Probability.ProbabilityMassFunction.Integrals
+import Mathlib.Probability.HasLaw
 import NLAlib.Matrix.Spectral.PrincipalMinors
 import NLAlib.Matrix.Subspaces.GramColumnDeterminant
 import NLAlib.LowRank.Sampling.VolumeCounting
@@ -6,6 +8,8 @@ import NLAlib.Matrix.Spectral.SvdBlocks
 /-!
 # Determinant-weighted column volume sampling
 
+`volumeSamplingLaw` defines the feasible sampling measure, and
+`integral_frobSq_volumeSamplingResidual_le_mul_bestRankFrobSq` states its error bound.
 Finite determinant weights and their spectral normalizer define volume sampling
 at every size up to the matrix rank, with empty determinant one. The projector
 uses the arbitrary-rank Moore--Penrose inverse.
@@ -13,6 +17,7 @@ Source: Deshpande--Rademacher--Vempala--Wang (2006); manuscript `sa:volume`.
 -/
 
 noncomputable section
+open MeasureTheory ProbabilityTheory
 open scoped Matrix
 namespace NLAlib
 
@@ -35,7 +40,8 @@ def volumeSamplingNormalizer (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) : ℝ :=
 
 /-- The finite determinant-weighted expected squared projection residual.
 Source: manuscript `sa:volume-theorem`; the normalized distribution is used when
-`k ≤ rank A`, where its normalizer is proved positive. -/
+`k ≤ rank A`, where its normalizer is proved positive. If the normalizer is
+zero, this total weighted formula is zero; `volumeSamplingLaw` requires feasibility. -/
 def volumeSamplingExpectedFrobSq (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) : ℝ :=
   ∑ S ∈ Finset.univ.powersetCard k, volumeSamplingWeight A S / volumeSamplingNormalizer A k *
     frobSq (A - volumeSampleColumns A S * moorePenroseInverse (volumeSampleColumns A S) * A)
@@ -177,18 +183,17 @@ rank zero, the empty sample, and the exact-rank endpoint are all included.
 atlas: volume-sampling (partial) -/
 theorem volumeSamplingExpectedFrobSq_le_mul_bestRankFrobSq
     (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ} (hk : k ≤ A.rank) :
-    volumeSamplingExpectedFrobSq A k ≤ (k + 1 : ℝ) * bestRankFrobSq k A := by
+    volumeSamplingExpectedFrobSq A k ≤ (k + 1 : ℝ) * bestRankFrobSq A k := by
   have hZ := volumeSamplingNormalizer_pos A hk
   have hratio : volumeSamplingNormalizer A (k + 1) ≤
-      singularValueTailSq A k * volumeSamplingNormalizer A k := by
+      bestRankFrobSq A k * volumeSamplingNormalizer A k := by
     rw [volumeSamplingNormalizer_eq_sum_prod_singularValues_sq,
-      volumeSamplingNormalizer_eq_sum_prod_singularValues_sq, singularValueTailSq_eq_sum_width]
+      volumeSamplingNormalizer_eq_sum_prod_singularValues_sq, bestRankFrobSq_eq_sum_width]
     exact sum_powersetCard_prod_succ_le_tail_mul_sum_prod
       (fun i : Fin n => singularValues A i ^ 2) (fun i => sq_nonneg _) k
   have hdiv : volumeSamplingNormalizer A (k + 1) / volumeSamplingNormalizer A k ≤
-      singularValueTailSq A k := (div_le_iff₀ hZ).mpr hratio
-  rw [volumeSamplingExpectedFrobSq_eq_mul_normalizer_succ_div, mul_div_assoc,
-    bestRankFrobSq_eq_singularValueTailSq]
+      bestRankFrobSq A k := (div_le_iff₀ hZ).mpr hratio
+  rw [volumeSamplingExpectedFrobSq_eq_mul_normalizer_succ_div, mul_div_assoc]
   exact mul_le_mul_of_nonneg_left hdiv (by positivity)
 
 /-- The finite expected squared volume-sampling residual is nonnegative.
@@ -207,15 +212,15 @@ atlas: volume-sampling (partial) -/
 theorem volumeSamplingExpectedFrobSq_rank_eq_zero (A : Matrix (Fin m) (Fin n) ℝ) :
     volumeSamplingExpectedFrobSq A A.rank = 0 := by
   have h := volumeSamplingExpectedFrobSq_le_mul_bestRankFrobSq A (k := A.rank) le_rfl
-  have htail : singularValueTailSq A A.rank = 0 := by
-    unfold singularValueTailSq
+  have htail : bestRankFrobSq A A.rank = 0 := by
+    unfold bestRankFrobSq
     apply Finset.sum_eq_zero
     intro i _
     split_ifs with hi
     · rw [singularValues_eq_zero_of_rank_le A hi]
       simp
     · rfl
-  rw [bestRankFrobSq_eq_singularValueTailSq, htail, mul_zero] at h
+  rw [htail, mul_zero] at h
   exact le_antisymm h (volumeSamplingExpectedFrobSq_nonneg A le_rfl)
 
 /-- Every positive-probability exact-rank volume sample reproduces the whole matrix.
@@ -235,5 +240,133 @@ theorem sub_volumeSample_projector_mul_eq_zero_of_card_eq_rank
   have hc : 0 < volumeSamplingWeight A S / volumeSamplingNormalizer A A.rank :=
     div_pos hw (volumeSamplingNormalizer_pos A le_rfl)
   exact (frobSq_eq_zero_iff _).mp ((mul_eq_zero.mp hterm).resolve_left hc.ne')
+
+/-- Prescribed-size determinant probabilities, with zero mass at other sizes.
+Source: Deshpande–Rademacher–Vempala–Wang (2006), volume sampling. -/
+def volumeSamplingProbability (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ)
+    (S : Finset (Fin n)) : ℝ :=
+  if S.card = k then volumeSamplingWeight A S / volumeSamplingNormalizer A k else 0
+
+/-- Feasible determinant probabilities are nonnegative. -/
+theorem volumeSamplingProbability_nonneg (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+    (hk : k ≤ A.rank) (S : Finset (Fin n)) : 0 ≤ volumeSamplingProbability A k S := by
+  unfold volumeSamplingProbability
+  split_ifs
+  · exact div_nonneg (volumeSamplingWeight_nonneg A S) (volumeSamplingNormalizer_pos A hk).le
+  · exact le_rfl
+
+/-- Feasible prescribed-size determinant probabilities sum to one. -/
+theorem sum_volumeSamplingProbability (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+    (hk : k ≤ A.rank) : ∑ S, volumeSamplingProbability A k S = 1 := by
+  classical
+  have hset : (Finset.univ : Finset (Finset (Fin n))).filter (fun S => S.card = k) =
+      Finset.univ.powersetCard k := by
+    ext S
+    simp [Finset.mem_powersetCard]
+  simp only [volumeSamplingProbability]
+  rw [← Finset.sum_filter, hset, ← Finset.sum_div]
+  exact div_self (volumeSamplingNormalizer_pos A hk).ne'
+
+/-- The probability mass function of real volume sampling at a feasible size.
+Source: Deshpande–Rademacher–Vempala–Wang (2006), volume sampling. -/
+def volumeSamplingPMF (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+    (hk : k ≤ A.rank) : PMF (Finset (Fin n)) := by
+  classical
+  refine PMF.ofFintype (fun S => ENNReal.ofReal (volumeSamplingProbability A k S)) ?_
+  rw [← ENNReal.ofReal_sum_of_nonneg (fun S _ => volumeSamplingProbability_nonneg A hk S),
+    sum_volumeSamplingProbability A hk]
+  simp
+
+/-- The real volume-sampling measure, defined at feasible subset sizes.
+Source: Deshpande–Rademacher–Vempala–Wang (2006), volume sampling. -/
+def volumeSamplingLaw (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+    (hk : k ≤ A.rank) : Measure (Finset (Fin n)) := (volumeSamplingPMF A hk).toMeasure
+
+/-- The feasible volume-sampling law is a probability measure. -/
+instance volumeSamplingLaw_isProbabilityMeasure (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+    (hk : k ≤ A.rank) : IsProbabilityMeasure (volumeSamplingLaw A hk) := by
+  unfold volumeSamplingLaw
+  infer_instance
+
+/-- Integration over volume samples is the prescribed-size weighted sum. -/
+theorem integral_volumeSamplingLaw (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+    (hk : k ≤ A.rank) (f : Finset (Fin n) → ℝ) :
+    (∫ S, f S ∂volumeSamplingLaw A hk) =
+      ∑ S ∈ Finset.univ.powersetCard k,
+        volumeSamplingWeight A S / volumeSamplingNormalizer A k * f S := by
+  classical
+  rw [volumeSamplingLaw, PMF.integral_eq_sum]
+  simp only [volumeSamplingPMF, PMF.ofFintype_apply]
+  simp_rw [ENNReal.toReal_ofReal (volumeSamplingProbability_nonneg A hk _)]
+  simp only [smul_eq_mul, volumeSamplingProbability, ite_mul, zero_mul]
+  have hset : (Finset.univ : Finset (Finset (Fin n))).filter (fun S => S.card = k) =
+      Finset.univ.powersetCard k := by
+    ext S
+    simp [Finset.mem_powersetCard]
+  rw [← Finset.sum_filter, hset]
+
+/-- The finite residual formula computes the expectation under the volume law. -/
+theorem integral_frobSq_volumeSamplingResidual (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+    (hk : k ≤ A.rank) :
+    (∫ S, frobSq (A - volumeSampleColumns A S *
+      moorePenroseInverse (volumeSampleColumns A S) * A) ∂volumeSamplingLaw A hk) =
+      volumeSamplingExpectedFrobSq A k := integral_volumeSamplingLaw A hk _
+
+/-- Volume sampling has expected Frobenius error at most `k+1` times the optimum.
+Source: Deshpande–Rademacher–Vempala–Wang (2006), volume-sampling error theorem.
+atlas: volume-sampling (partial) -/
+theorem integral_frobSq_volumeSamplingResidual_le_mul_bestRankFrobSq
+    (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ} (hk : k ≤ A.rank) :
+    (∫ S, frobSq (A - volumeSampleColumns A S *
+      moorePenroseInverse (volumeSampleColumns A S) * A) ∂volumeSamplingLaw A hk) ≤
+      (k + 1 : ℝ) * bestRankFrobSq A k := by
+  rw [integral_frobSq_volumeSamplingResidual]
+  exact volumeSamplingExpectedFrobSq_le_mul_bestRankFrobSq A hk
+
+/-- The volume-sampling error bound transports to a sample with the prescribed law.
+Source: Deshpande–Rademacher–Vempala–Wang (2006), volume-sampling error theorem. -/
+theorem integral_frobSq_volumeSamplingResidual_le_mul_bestRankFrobSq_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ} (hk : k ≤ A.rank)
+    {T : Ω → Finset (Fin n)} (hT : HasLaw T (volumeSamplingLaw A hk) μ) :
+    (∫ ω, frobSq (A - volumeSampleColumns A (T ω) *
+      moorePenroseInverse (volumeSampleColumns A (T ω)) * A) ∂μ) ≤
+      (k + 1 : ℝ) * bestRankFrobSq A k := by
+  have he := hT.integral_comp (Measurable.aestronglyMeasurable
+    (measurable_of_finite (fun S => frobSq (A - volumeSampleColumns A S *
+      moorePenroseInverse (volumeSampleColumns A S) * A))))
+  simp only [Function.comp_def] at he
+  rw [he]
+  exact integral_frobSq_volumeSamplingResidual_le_mul_bestRankFrobSq A hk
+
+/-- Every subset has its normalized determinant as mass at the prescribed size. -/
+theorem volumeSamplingLaw_singleton (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+    (hk : k ≤ A.rank) (S : Finset (Fin n)) :
+    (volumeSamplingLaw A hk).real {S} = volumeSamplingProbability A k S := by
+  classical
+  rw [Measure.real, volumeSamplingLaw,
+    PMF.toMeasure_apply_singleton _ _ (measurableSet_singleton _)]
+  exact ENNReal.toReal_ofReal (volumeSamplingProbability_nonneg A hk S)
+
+/-- Expected real volume-sampling error is the exact ratio of consecutive normalizers.
+Source: Deshpande–Rademacher–Vempala–Wang (2006), volume-sampling error formula.
+atlas: volume-sampling (partial) -/
+theorem integral_frobSq_volumeSamplingResidual_eq_mul_normalizer_succ_div
+    (A : Matrix (Fin m) (Fin n) ℝ) {k : ℕ} (hk : k ≤ A.rank) :
+    (∫ S, frobSq (A - volumeSampleColumns A S *
+      moorePenroseInverse (volumeSampleColumns A S) * A) ∂volumeSamplingLaw A hk) =
+      (k + 1 : ℝ) * volumeSamplingNormalizer A (k + 1) / volumeSamplingNormalizer A k := by
+  rw [integral_frobSq_volumeSamplingResidual]
+  exact volumeSamplingExpectedFrobSq_eq_mul_normalizer_succ_div A k
+
+/-- Exact-rank volume sampling has zero expected projection error.
+Source: Deshpande–Rademacher–Vempala–Wang (2006), exact-rank endpoint.
+atlas: volume-sampling (partial) -/
+theorem integral_frobSq_volumeSamplingResidual_rank_eq_zero
+    (A : Matrix (Fin m) (Fin n) ℝ) :
+    (∫ S, frobSq (A - volumeSampleColumns A S *
+      moorePenroseInverse (volumeSampleColumns A S) * A) ∂volumeSamplingLaw A (k := A.rank) le_rfl) = 0 := by
+  rw [integral_frobSq_volumeSamplingResidual]
+  exact volumeSamplingExpectedFrobSq_rank_eq_zero A
 
 end NLAlib

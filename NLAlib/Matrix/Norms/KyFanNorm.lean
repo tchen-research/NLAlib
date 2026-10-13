@@ -49,13 +49,12 @@ theorem kyFanNorm_eq_sum_range (A : Matrix m n 𝕜) (k : ℕ) :
       Fin.sum_univ_eq_sum_range (fun i => if i < k then singularValues A i else 0) N,
     Finset.sum_ite, Finset.sum_const_zero, add_zero]
   have hfilt : (Finset.range N).filter (fun i => i < k) = Finset.range (min N k) := by
-    ext i; simp [Finset.mem_filter, Finset.mem_range, lt_min_iff]
+    ext i; simp [Finset.mem_filter, Finset.mem_range]
   rw [hfilt]
-  symm
   apply Finset.sum_subset (Finset.range_mono (min_le_right _ _))
   intro i hi hni
   simp only [Finset.mem_range, lt_min_iff, not_and] at hi hni
-  exact singularValues_eq_zero_of_min_le A (by rw [← hN]; exact not_lt.mp (hni hi))
+  exact singularValues_eq_zero_of_min_le A (by rw [← hN]; omega)
 
 /-- The nuclear norm is the sum of the first `min m n` singular values. -/
 theorem nuclearNorm_eq_sum_range (A : Matrix m n 𝕜) :

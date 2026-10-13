@@ -35,7 +35,7 @@ open Polynomial
 
 namespace NLAlib
 
-variable {n s : Type*} [Fintype n] [DecidableEq n] [Fintype s]
+variable {K : Type*} [Field K] {n s : Type*} [Fintype n] [DecidableEq n] [Fintype s]
 
 /-! ### Block Krylov spaces -/
 
@@ -43,14 +43,14 @@ variable {n s : Type*} [Fintype n] [DecidableEq n] [Fintype s]
 `[Ω, AΩ, …, A^(q−1)Ω]`, over any field `K`. Source: Musco–Musco (2015) [`mm15`], Alg. 2;
 Saad (2011) [`saad11`], §6.3.
 atlas: block-krylov-subspace -/
-def blockKrylovSpace {K : Type*} [Field K] (A : Matrix n n K) (Ω : Matrix n s K) (q : ℕ) :
+def blockKrylovSpace (A : Matrix n n K) (Ω : Matrix n s K) (q : ℕ) :
     Submodule K (n → K) :=
   Submodule.span K (Set.range fun ij : Fin q × s => ((A ^ (ij.1 : ℕ)) * Ω).col ij.2)
 
 omit [Fintype s] in
 /-- The generators `(A^i Ω) e_j` (`i < q`) lie in `K_q(A, Ω)`. Helper for
 `block-krylov-subspace`. -/
-theorem pow_mulVec_col_mem_blockKrylovSpace (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) {q i : ℕ}
+theorem pow_mulVec_col_mem_blockKrylovSpace (A : Matrix n n K) (Ω : Matrix n s K) {q i : ℕ}
     (hi : i < q) (j : s) : (A ^ i) *ᵥ Ω.col j ∈ blockKrylovSpace A Ω q := by
   rw [← col_mul_eq_mulVec_col]
   exact Submodule.subset_span ⟨(⟨i, hi⟩, j), rfl⟩
@@ -59,7 +59,7 @@ omit [Fintype s] in
 /-- The Krylov space of a single column is contained in the block space:
 `K_q(A, Ω e_j) ⊆ K_q(A, Ω)`. Source: Saad (2011) [`saad11`], §6.3.
 atlas: block-krylov-subspace -/
-theorem krylovSpace_col_le_blockKrylovSpace (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q : ℕ)
+theorem krylovSpace_col_le_blockKrylovSpace (A : Matrix n n K) (Ω : Matrix n s K) (q : ℕ)
     (j : s) : krylovSpace A (Ω.col j) q ≤ blockKrylovSpace A Ω q :=
   Submodule.span_le.2 <| by
     rintro _ ⟨i, rfl⟩
@@ -69,7 +69,7 @@ omit [Fintype s] in
 /-- The block Krylov space is the sum of the single-vector Krylov spaces of the columns:
 `K_q(A, Ω) = ∑_j K_q(A, Ω e_j)`. Source: Saad (2011) [`saad11`], §6.3.
 atlas: block-krylov-subspace -/
-theorem blockKrylovSpace_eq_iSup (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q : ℕ) :
+theorem blockKrylovSpace_eq_iSup (A : Matrix n n K) (Ω : Matrix n s K) (q : ℕ) :
     blockKrylovSpace A Ω q = ⨆ j, krylovSpace A (Ω.col j) q := by
   refine le_antisymm (Submodule.span_le.2 ?_) (iSup_le (krylovSpace_col_le_blockKrylovSpace A Ω q))
   rintro _ ⟨⟨i, j⟩, rfl⟩
@@ -82,15 +82,15 @@ theorem blockKrylovSpace_eq_iSup (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q :
 `x ∈ K_q(A, Ω) ↔ x = ∑_j p_j(A) Ω e_j` for polynomials `p_j` of degree `< q`. Equivalently
 `x = ∑_{i<q} A^i Ω c_i`. Source: Saad (2011) [`saad11`], §6.3; Tropp–Webber (2023) [`tw23`], §7.
 atlas: block-krylov-subspace -/
-theorem mem_blockKrylovSpace_iff (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q : ℕ) (x : n → ℝ) :
+theorem mem_blockKrylovSpace_iff (A : Matrix n n K) (Ω : Matrix n s K) (q : ℕ) (x : n → K) :
     x ∈ blockKrylovSpace A Ω q ↔
-      ∃ p : s → ℝ[X], (∀ j, (p j).degree < q) ∧ x = ∑ j, aeval A (p j) *ᵥ Ω.col j := by
+      ∃ p : s → K[X], (∀ j, (p j).degree < q) ∧ x = ∑ j, aeval A (p j) *ᵥ Ω.col j := by
   classical
   rw [blockKrylovSpace_eq_iSup]
   constructor
   · intro hx
     obtain ⟨f, hf, rfl⟩ := (Submodule.mem_iSup_iff_exists_finsupp _ x).1 hx
-    have h : ∀ j, ∃ p : ℝ[X], p.degree < q ∧ f j = aeval A p *ᵥ Ω.col j := fun j =>
+    have h : ∀ j, ∃ p : K[X], p.degree < q ∧ f j = aeval A p *ᵥ Ω.col j := fun j =>
       (mem_krylovSpace_iff A _ q _).1 (hf j)
     choose p hpdeg hp using h
     refine ⟨p, hpdeg, ?_⟩
@@ -104,8 +104,8 @@ theorem mem_blockKrylovSpace_iff (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q :
 by block Krylov low-rank approximation. Source: Musco–Musco (2015) [`mm15`], proof of Thm 1;
 Tropp–Webber (2023) [`tw23`], §7.
 atlas: block-krylov-subspace -/
-theorem range_aeval_mul_le_blockKrylovSpace (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) {q : ℕ}
-    {p : ℝ[X]} (hp : p.degree < q) :
+theorem range_aeval_mul_le_blockKrylovSpace (A : Matrix n n K) (Ω : Matrix n s K) {q : ℕ}
+    {p : K[X]} (hp : p.degree < q) :
     LinearMap.range (aeval A p * Ω).mulVecLin ≤ blockKrylovSpace A Ω q := by
   rw [Matrix.range_mulVecLin, Submodule.span_le]
   rintro _ ⟨j, rfl⟩
@@ -117,7 +117,7 @@ omit [Fintype s] in
 /-- Block Krylov spaces are nested: `q ≤ q' → K_q(A, Ω) ⊆ K_{q'}(A, Ω)`.
 Source: Saad (2011) [`saad11`], §6.3.
 atlas: block-krylov-subspace -/
-theorem blockKrylovSpace_mono (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) {q q' : ℕ} (h : q ≤ q') :
+theorem blockKrylovSpace_mono (A : Matrix n n K) (Ω : Matrix n s K) {q q' : ℕ} (h : q ≤ q') :
     blockKrylovSpace A Ω q ≤ blockKrylovSpace A Ω q' :=
   Submodule.span_le.2 <| by
     rintro _ ⟨⟨i, j⟩, rfl⟩
@@ -128,8 +128,8 @@ theorem blockKrylovSpace_mono (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) {q q' :
 omit [Fintype s] in
 /-- `A K_q(A, Ω) ⊆ K_{q+1}(A, Ω)`. Source: Saad (2011) [`saad11`], §6.3.
 atlas: block-krylov-subspace -/
-theorem mulVec_mem_blockKrylovSpace_succ (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) {q : ℕ}
-    {x : n → ℝ} (hx : x ∈ blockKrylovSpace A Ω q) : A *ᵥ x ∈ blockKrylovSpace A Ω (q + 1) := by
+theorem mulVec_mem_blockKrylovSpace_succ (A : Matrix n n K) (Ω : Matrix n s K) {q : ℕ}
+    {x : n → K} (hx : x ∈ blockKrylovSpace A Ω q) : A *ᵥ x ∈ blockKrylovSpace A Ω (q + 1) := by
   have hle : blockKrylovSpace A Ω q ≤
       (blockKrylovSpace A Ω (q + 1)).comap (Matrix.mulVecLin A) := by
     refine Submodule.span_le.2 ?_
@@ -141,9 +141,9 @@ theorem mulVec_mem_blockKrylovSpace_succ (A : Matrix n n ℝ) (Ω : Matrix n s �
 
 /-- `dim K_q(A, Ω) ≤ q s` for `Ω` with `s` columns. Source: Saad (2011) [`saad11`], §6.3.
 atlas: block-krylov-subspace -/
-theorem finrank_blockKrylovSpace_le (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q : ℕ) :
-    Module.finrank ℝ (blockKrylovSpace A Ω q) ≤ q * Fintype.card s :=
-  (finrank_range_le_card (R := ℝ) _).trans (by simp)
+theorem finrank_blockKrylovSpace_le (A : Matrix n n K) (Ω : Matrix n s K) (q : ℕ) :
+    Module.finrank K (blockKrylovSpace A Ω q) ≤ q * Fintype.card s :=
+  (finrank_range_le_card (R := K) _).trans (by simp)
 
 /-! ### Subspace iteration -/
 
@@ -152,19 +152,19 @@ iteration started from the block `Ω`, over any field `K`. Orthonormalisation is
 `Q` with `range Q = S_k` is a basis the algorithm may carry (`range_mul_eq_subspaceIterate_succ`).
 Source: Saad (2011) [`saad11`], §5.1; Golub–Van Loan (2013) [`gvl13`], §8.2.4.
 atlas: subspace-iteration-def -/
-def subspaceIterate {K : Type*} [Field K] (A : Matrix n n K) (Ω : Matrix n s K) (k : ℕ) :
+def subspaceIterate (A : Matrix n n K) (Ω : Matrix n s K) (k : ℕ) :
     Submodule K (n → K) :=
   LinearMap.range (A ^ k * Ω).mulVecLin
 
 /-- `S_0 = range Ω`. Helper for `subspace-iteration-def`. -/
 @[simp]
-theorem subspaceIterate_zero (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) :
+theorem subspaceIterate_zero (A : Matrix n n K) (Ω : Matrix n s K) :
     subspaceIterate A Ω 0 = LinearMap.range Ω.mulVecLin := by
   simp [subspaceIterate]
 
 /-- One step of subspace iteration: `S_{k+1} = A S_k`. Source: Saad (2011) [`saad11`], §5.1.
 atlas: subspace-iteration-def -/
-theorem subspaceIterate_succ (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (k : ℕ) :
+theorem subspaceIterate_succ (A : Matrix n n K) (Ω : Matrix n s K) (k : ℕ) :
     subspaceIterate A Ω (k + 1) = (subspaceIterate A Ω k).map A.mulVecLin := by
   rw [subspaceIterate, subspaceIterate, pow_succ', Matrix.mul_assoc, Matrix.mulVecLin_mul,
     LinearMap.range_comp]
@@ -173,8 +173,8 @@ theorem subspaceIterate_succ (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (k : ℕ
 instance `Q` is an orthonormal basis of `S_k`), then `range (A Q) = S_{k+1}`. Source: Saad (2011)
 [`saad11`], §5.1, Alg. 5.1.
 atlas: subspace-iteration-def -/
-theorem range_mul_eq_subspaceIterate_succ {k' : Type*} [Fintype k'] (A : Matrix n n ℝ)
-    (Ω : Matrix n s ℝ) {k : ℕ} {Q : Matrix n k' ℝ}
+theorem range_mul_eq_subspaceIterate_succ {k' : Type*} [Fintype k'] (A : Matrix n n K)
+    (Ω : Matrix n s K) {k : ℕ} {Q : Matrix n k' K}
     (hQ : LinearMap.range Q.mulVecLin = subspaceIterate A Ω k) :
     LinearMap.range (A * Q).mulVecLin = subspaceIterate A Ω (k + 1) := by
   rw [subspaceIterate_succ, ← hQ, Matrix.mulVecLin_mul, LinearMap.range_comp]
@@ -183,7 +183,7 @@ theorem range_mul_eq_subspaceIterate_succ {k' : Type*} [Fintype k'] (A : Matrix 
 `S_k = range (A^k Ω) ⊆ K_{k+1}(A, Ω)`. Source: Saad (2011) [`saad11`], §5.1 and §6.3;
 Musco–Musco (2015) [`mm15`], §4.
 atlas: subspace-iteration-def -/
-theorem subspaceIterate_le_blockKrylovSpace (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (k : ℕ) :
+theorem subspaceIterate_le_blockKrylovSpace (A : Matrix n n K) (Ω : Matrix n s K) (k : ℕ) :
     subspaceIterate A Ω k ≤ blockKrylovSpace A Ω (k + 1) := by
   have h := range_aeval_mul_le_blockKrylovSpace A Ω (q := k + 1) (p := X ^ k)
     (by rw [degree_X_pow]; exact_mod_cast Nat.lt_succ_self k)
@@ -191,8 +191,8 @@ theorem subspaceIterate_le_blockKrylovSpace (A : Matrix n n ℝ) (Ω : Matrix n 
 
 /-- Right multiplication of the starting block can only shrink the iterates:
 `range (A^k Ω R) ⊆ range (A^k Ω)`. Helper for `subspace-iteration-def`. -/
-theorem subspaceIterate_mul_le {s' : Type*} [Fintype s'] (A : Matrix n n ℝ) (Ω : Matrix n s ℝ)
-    (R : Matrix s s' ℝ) (k : ℕ) : subspaceIterate A (Ω * R) k ≤ subspaceIterate A Ω k := by
+theorem subspaceIterate_mul_le {s' : Type*} [Fintype s'] (A : Matrix n n K) (Ω : Matrix n s K)
+    (R : Matrix s s' K) (k : ℕ) : subspaceIterate A (Ω * R) k ≤ subspaceIterate A Ω k := by
   rw [subspaceIterate, subspaceIterate, ← Matrix.mul_assoc, Matrix.mulVecLin_mul,
     LinearMap.range_comp]
   exact LinearMap.map_le_range
@@ -200,8 +200,8 @@ theorem subspaceIterate_mul_le {s' : Type*} [Fintype s'] (A : Matrix n n ℝ) (�
 /-- Subspace iteration depends only on `range Ω`: `S_k(A, Ω R) = S_k(A, Ω)` for invertible `R`.
 Source: Saad (2011) [`saad11`], §5.1.
 atlas: subspace-iteration-def -/
-theorem subspaceIterate_mul_of_isUnit [DecidableEq s] (A : Matrix n n ℝ) (Ω : Matrix n s ℝ)
-    {R : Matrix s s ℝ} (hR : IsUnit R) (k : ℕ) :
+theorem subspaceIterate_mul_of_isUnit [DecidableEq s] (A : Matrix n n K) (Ω : Matrix n s K)
+    {R : Matrix s s K} (hR : IsUnit R) (k : ℕ) :
     subspaceIterate A (Ω * R) k = subspaceIterate A Ω k := by
   refine le_antisymm (subspaceIterate_mul_le A Ω R k) ?_
   have h := subspaceIterate_mul_le A (Ω * R) R⁻¹ k

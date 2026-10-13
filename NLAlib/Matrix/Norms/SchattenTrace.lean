@@ -21,6 +21,7 @@ private theorem abs_frobInner_le_sum_singularValues_mul_fin {m n : ℕ}
   have hpos := frobInner_le_sum_singularValues_mul A B
   have hneg := frobInner_le_sum_singularValues_mul A (-B)
   rw [frobInner_neg_right, singularValues_neg] at hneg
+  simp only [Fintype.card_fin] at hpos hneg
   rw [abs_le]
   constructor <;> linarith
 
@@ -42,8 +43,8 @@ open scoped Matrix.Norms.L2Operator in
 /-- Schatten trace Hölder for all finite conjugate real exponents, with sharp
 constant one and arbitrary finite matrix indices.
 atlas: schatten-norms-def (partial) -/
-theorem abs_frobInner_le_schattenNorm_mul (A B : Matrix m n ℝ) {p q : ℝ}
-    (hpq : Real.HolderConjugate p q) : |frobInner A B| ≤ schattenNorm A p * schattenNorm B q := by
+theorem abs_frobInner_le_schattenNormReal_mul (A B : Matrix m n ℝ) {p q : ℝ}
+    (hpq : Real.HolderConjugate p q) : |frobInner A B| ≤ schattenNormReal A p * schattenNormReal B q := by
   apply (abs_frobInner_le_sum_singularValues_mul A B).trans
   exact Real.inner_le_Lp_mul_Lq_of_nonneg
     (Finset.range (min (Fintype.card m) (Fintype.card n)))
@@ -64,7 +65,7 @@ theorem abs_frobInner_le_nuclearNorm_mul_specNorm (A B : Matrix m n ℝ) :
         singularValues A i * specNorm B :=
       Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_left
         (singularValues_le_specNorm B i) (singularValues_nonneg _ i)
-    _ = nuclearNorm A * specNorm B := by rw [← Finset.sum_mul]; rfl
+    _ = nuclearNorm A * specNorm B := by rw [← Finset.sum_mul, nuclearNorm_eq_sum_range]
 
 open scoped Matrix.Norms.L2Operator in
 /-- The `(∞,1)` Schatten trace Hölder endpoint, with exact constant one. -/

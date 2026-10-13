@@ -16,7 +16,7 @@ import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 /-!
 # Theorem 7.3.1 — Intrinsic matrix Bernstein
 
-Main declaration: `NLAlib.intrinsic_matrix_bernstein`.
+Main declaration: `NLAlib.measureReal_specNorm_sum_ge_le_intrinsicDimension_mul_exp`.
 
 Atlas: `intrinsic-dimension`.
 
@@ -215,11 +215,12 @@ private lemma NLAlib.intrinsic_matrix_bernstein_package {Ω : Type*} [Measurable
     obtain ⟨hpsd, -⟩ := intrinsicDimension_fromBlocks _ _ hD₁ hD₂
     exact hpsd.submatrix _
   -- Step 5: apply the intrinsic Hermitian Bernstein inequality.
-  obtain ⟨-, H⟩ := intrinsic_hermitian_bernstein μ (fun k ω => Φ m n (S k ω)) L hL V hVne
-    hXmeas hXindep hXherm hXL2 hXmean hXbound hVar
   intro t ht
-  have := H t (by rw [hvV]; exact ht)
-  simp only [hY, hlam, hvV, hrV] at this
+  have := measureReal_lambdaMax_sum_ge_le_intrinsicDimension_mul_exp μ
+    (fun k ω => Φ m n (S k ω)) hL hVne
+    hXmeas hXindep hXherm hXL2 hXmean hXbound hVar
+    (t := t) (by rw [specNorm_eq_norm, hvV]; exact ht)
+  simp only [specNorm_eq_norm, hY, hlam, hvV, hrV] at this
   exact this
 
 namespace NLAlib

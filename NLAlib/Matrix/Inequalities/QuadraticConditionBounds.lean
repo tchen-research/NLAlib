@@ -30,7 +30,7 @@ theorem quadForm_mul_quadForm_inv_le_moorePenroseConditionNumber_sqrt {A : Matri
   let a := hA.isHermitian.eigenvalues₀ ⟨Fintype.card n - 1, Nat.sub_lt hN (by decide)⟩
   let b := hA.isHermitian.eigenvalues₀ ⟨0, hN⟩
   obtain ⟨ha, hab, hlo, hhi⟩ := posDef_extreme_eigenvalues_sandwich hA hN
-  have hc : moorePenroseConditionNumber A = b / a := moorePenroseConditionNumber_eq_eigenvalues₀_ratio A hA
+  have hc : moorePenroseConditionNumber A = b / a := moorePenroseConditionNumber_eq_eigenvalues₀_ratio hA
   have hconst : (a + b) ^ 2 / (4 * a * b) =
       (1 / 4 : ℝ) * (Real.sqrt (moorePenroseConditionNumber A) + (Real.sqrt (moorePenroseConditionNumber A))⁻¹) ^ 2 := by
     rw [hc]

@@ -29,7 +29,7 @@ Atlas: `lanczos-gauss-quadrature`, `krylov-polynomial-exactness` (partial).
 Deviation from the printed statements: any orthonormal `Q` with `K_q(A,b) ⊆ range Q` is
 allowed, so neither tridiagonality nor the Lanczos recurrence is used.
 
-The projection helpers `mulVec_conjTranspose_mulVec_of_mem_range` and `isSymm_transpose_mul_mul`
+The projection helpers `mulVec_conjTranspose_mulVec_of_mem_range` and the Hermitian compression identity
 live in `NLAlib.Matrix.Subspaces.Projections`; the Rayleigh bounds and the eigen-expansion of
 `cfc` used below live in `NLAlib.Matrix.Functions.CFCQuadratic`. The compression fact
 `eigenvalues_transpose_mul_mul_mem_Icc` is a Matrix-level statement kept here until it lands in
@@ -123,7 +123,8 @@ private lemma dotProduct_pow_mulVec_eq {A : Matrix n n ℝ} (hA' : A.IsHermitian
   have hA : A.IsSymm := isSymm_of_isHermitian hA'
   set B := Qᵀ * A * Q with hBdef
   set c := Qᵀ *ᵥ b
-  have hB : B.IsSymm := isSymm_transpose_mul_mul hA Q
+  have hB : B.IsSymm :=
+    Matrix.isHermitian_iff_isSymm.mp (Matrix.isHermitian_conjTranspose_mul_mul Q hA')
   have hlift := fun {j : ℕ} (hj : j < q) => mulVec_pow_transpose_mul_mul_mulVec_eq hQ b hK hj
   have hQQ : ∀ x y : k → ℝ, (Q *ᵥ x) ⬝ᵥ (Q *ᵥ y) = x ⬝ᵥ y := fun x y => by
     rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, Matrix.mulVec_mulVec,

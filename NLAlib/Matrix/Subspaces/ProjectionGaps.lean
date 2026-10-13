@@ -236,6 +236,7 @@ theorem frobInner_frame_projectors_eq_frobSq_overlap (P Q : Matrix m n 𝕜) :
   congr 1
   simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose]
   rw [← Matrix.mul_assoc, Matrix.trace_mul_comm, Matrix.mul_assoc]
+  rw [Matrix.mul_assoc]
 
 omit [DecidableEq m] in
 /-- Equal-rank frame projector distance squared is twice the residual Frobenius norm squared:
@@ -292,7 +293,7 @@ theorem specNorm_complement_mul_projector_eq_of_rank_eq {P Q : Matrix n n 𝕜}
   have hleft : (1 - Q) * P = projResidual V' U * Uᴴ := by
     rw [residual_eq_one_sub_mul, Matrix.mul_assoc, ← hPU, ← hQV']
   have hright : (1 - P) * Q = projResidual U V' * V'ᴴ := by
-    rw [residual_eq_one_sub_mul, ← hPU, ← hQV']
+    rw [residual_eq_one_sub_mul, ← hPU, Matrix.mul_assoc, ← hQV']
   rw [hleft, hright, specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hU,
     specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hV', specNorm_residual_comm hV' hU]
 

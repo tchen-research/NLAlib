@@ -15,7 +15,23 @@ jobs:
           use-mathlib-cache: true
           lint: false
           test: false
-      - name: Axiom audit (no sorry, only the three standard axioms)
+      - name: Build complete experimental development
+        run: lake build NLAlib.Experimental
+      - name: Default import surface is current
+        run: |
+          python3 -m unittest discover -s scripts/tests
+          python3 scripts/import_surface.py --check
+      - name: Default library axiom audit (no sorry)
+        run: lake env lean scripts/AuditTrusted.lean
+      - name: Standard declaration and instance linters
+        run: lake env lean scripts/Lint.lean
+      - name: Downstream API examples
+        run: |
+          lake env lean Examples/Downstream.lean
+          lake env lean Examples/Probability.lean
+          lake env lean scripts/AuditRitz.lean
+          lake env lean scripts/AuditSubspaces.lean
+      - name: Experimental development axiom inventory
         run: lake env lean scripts/Audit.lean
       - name: Completed Gaussian statements and new proof helpers
         run: |
@@ -33,5 +49,7 @@ jobs:
         run: |
           pip install --quiet jsonschema
           python3 scripts/check_atlas.py
+      - name: Book coverage references and proof status
+        run: python3 scripts/coverage.py
       - name: Site builds
         run: python3 scripts/build_site.py

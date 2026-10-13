@@ -25,7 +25,7 @@ omit [DecidableEq κ] in
 Source: the positive smallest-singular-value inverse criterion;
 atlas wishart-lambda-min-tail (cutoff helper). -/
 theorem sigmaMin_transpose_eq_zero_of_not_posDef_gram (G : Matrix ι κ ℝ)
-    (hnot : ¬(G * Gᵀ).PosDef) : sigmaMin Gᵀ = 0 := by
+    (hnot : ¬(G * Gᵀ).PosDef) : singularValues Gᵀ (Fintype.card ι - 1) = 0 := by
   have hh := sigmaMin_transpose_sq_eq_zero_of_not_posDef G hnot
   nlinarith
 
@@ -58,11 +58,11 @@ theorem hasDerivAt_test_mul_unshiftedGramGradient_single [Nonempty ι]
       exists_pos_bounds_tsupport_and_deriv ψ hψc hψs
     have hX := sigmaMin_transpose_eq_zero_of_not_posDef_gram G hpd
     let E : Matrix ι κ ℝ := Matrix.single i j 1
-    have hcont : Continuous (fun t : ℝ => sigmaMin (G + t • E)ᵀ ^ 2) :=
-      continuous_sigmaMin_transpose_sq_array.comp
+    have hcont : Continuous (fun t : ℝ => singularValues (G + t • E)ᵀ (Fintype.card ι - 1) ^ 2) :=
+      continuous_sq_singularValues_transpose_last_array.comp
         (continuous_const.add (continuous_id.smul continuous_const))
-    have hXlim : Tendsto (fun t : ℝ => sigmaMin (G + t • E)ᵀ ^ 2) (𝓝 0) (𝓝 (0 : ℝ)) := by
-      have hh : ContinuousAt (fun t : ℝ => sigmaMin (G + t • E)ᵀ ^ 2) 0 := hcont.continuousAt
+    have hXlim : Tendsto (fun t : ℝ => singularValues (G + t • E)ᵀ (Fintype.card ι - 1) ^ 2) (𝓝 0) (𝓝 (0 : ℝ)) := by
+      have hh : ContinuousAt (fun t : ℝ => singularValues (G + t • E)ᵀ (Fintype.card ι - 1) ^ 2) 0 := hcont.continuousAt
       simpa only [zero_smul, add_zero, hX, zero_pow (by norm_num : (2 : ℕ) ≠ 0)] using hh.tendsto
     have hzero :
         (fun t : ℝ => ψ (inversePowerSoftMin n ((G + t • E) * (G + t • E)ᵀ)) *
@@ -187,7 +187,11 @@ theorem sq_gramSoftMinGradient_unshifted_single_le [Nonempty ι]
     simpa only [frobSq, frobInner_eq_sum_mul, ← pow_two] using hrow.trans hall
   exact hD.trans ((frobSq_gramSoftMinGradient_unshifted_le_of_pos n hn G).trans
     (mul_le_mul_of_nonneg_left
-      ((inversePowerSoftMin_gram_le_sigmaMin_sq n hn G).trans (sigmaMin_transpose_sq_le_frobSq G))
+      ((inversePowerSoftMin_gram_le_sigmaMin_sq n hn G).trans (by
+        have h := (singularValues_le_specNorm Gᵀ (Fintype.card ι - 1)).trans
+          (specNorm_le_frobNorm Gᵀ)
+        have hh := pow_le_pow_left₀ (singularValues_nonneg Gᵀ _) h 2
+        simpa only [frobNorm_sq, frobSq_transpose] using hh))
       (by norm_num)))
 
 end NLAlib

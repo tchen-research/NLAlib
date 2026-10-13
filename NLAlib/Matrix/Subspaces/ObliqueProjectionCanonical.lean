@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Subspaces.ObliqueProjectionBlocks
 import NLAlib.Matrix.Subspaces.OrthogonalProducts
+import NLAlib.Matrix.Spectral.SVD
 /-!
 # Orthogonal canonical form of an oblique projection
 

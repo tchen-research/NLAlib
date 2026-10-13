@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
+import NLAlib.Matrix.Norms.Frobenius
 import NLAlib.Matrix.Subspaces.ProjectorTrace
 
 /-!
@@ -37,10 +37,10 @@ theorem frobenius_norm_sq_eq_right_projection_add_residual
   have htright : ((1 - P) * (Aᴴ * A) * (1 - P)).trace =
       ((1 - P) * (Aᴴ * A)).trace := by
     rw [Matrix.trace_mul_cycle, hcomp]
-  rw [frobenius_norm_sq_eq_re_trace_conjTranspose_mul,
-    frobenius_norm_sq_eq_re_trace_conjTranspose_mul,
-    frobenius_norm_sq_eq_re_trace_conjTranspose_mul, hleft, hright, htleft, htright]
-  rw [Matrix.sub_mul, Matrix.one_mul, Matrix.trace_sub, Complex.sub_re]
+  rw [← frobNorm_eq_norm, frobNorm_sq, frobSq_eq_re_trace_conjTranspose_mul_self,
+    ← frobNorm_eq_norm, frobNorm_sq, frobSq_eq_re_trace_conjTranspose_mul_self,
+    ← frobNorm_eq_norm, frobNorm_sq, frobSq_eq_re_trace_conjTranspose_mul_self, hleft, hright, htleft, htright]
+  rw [Matrix.sub_mul, Matrix.one_mul, Matrix.trace_sub, map_sub]
   ring
 
 end NLAlib

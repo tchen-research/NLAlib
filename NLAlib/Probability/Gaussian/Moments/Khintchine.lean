@@ -6,7 +6,7 @@ import NLAlib.Probability.Concentration.Matrix.PolynomialMoment
 The exact standard Gaussian product law, coordinate Stein and the mixed-power
 trace inequality give the lower-moment recursion. Polynomial trace Young then
 closes the moment with constant `(2p-1)^p`, without dividing by a moment.
-Source: operator manuscript `eq:recursion`, `thm:khintchine`.
+Source: Tropp 2015, *An Introduction to Matrix Concentration Inequalities*, §4.7.
 -/
 
 noncomputable section
@@ -19,7 +19,7 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι] {n : ℕ}
 
 open scoped Matrix.Norms.L2Operator in
 /-- The exact Gaussian matrix-series moment obeys the polynomial lower-moment
-recursion at every odd exponent. Source: manuscript `eq:recursion`, derived by
+recursion at every odd exponent. Source: Tropp 2015, §4.7; derived by
 coordinate Stein and mixed traces; supports `noncommutative-khintchine`. -/
 theorem integral_re_trace_gaussianSeries_even_pow_le_recursion
     (A : Fin n → Matrix ι ι ℂ) (hA : ∀ i, (A i).IsHermitian)
@@ -82,11 +82,10 @@ theorem integral_re_trace_gaussianSeries_even_pow_le_recursion
 
 open scoped Matrix.Norms.L2Operator in
 /-- **Integer noncommutative Khintchine, Gaussian polynomial form.** For the
-actual standard Gaussian coefficients and fixed complex Hermitian matrices,
+standard Gaussian coefficients and fixed complex Hermitian matrices,
 the `2p` trace moment is at most `(2p-1)^p tr((∑ Aᵢ²)^p)`. Empty coefficient
-families, empty matrices and zero variance are included. Source: manuscript
-`thm:khintchine`, Gaussian branch.
-atlas: noncommutative-khintchine (partial) -/
+families, empty matrices and zero variance are included. Source: Tropp 2015, §4.7.
+atlas: noncommutative-khintchine -/
 theorem integral_re_trace_gaussianSeries_pow_le
     (A : Fin n → Matrix ι ι ℂ) (hA : ∀ i, (A i).IsHermitian)
     {p : ℕ} (hp : 1 ≤ p) :

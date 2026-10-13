@@ -124,6 +124,6 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     intro j _
     simp
   refine ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.conjTranspose_mul_left, hV₁, hV₂, hcross, ?_⟩
-  rw [hF, bestRankFrobSq_eq_bestRankFrobSq, htail]
+  rw [hF, htail]
 
 end NLAlib

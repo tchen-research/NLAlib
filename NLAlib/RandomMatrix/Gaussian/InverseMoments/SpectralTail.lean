@@ -262,15 +262,23 @@ theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r 
   rw [measureReal_def]
   refine ENNReal.toReal_le_of_le_ofReal hc ?_
   have hsub : {G : Matrix (Fin r) (Fin k) ℝ | t < specNorm (pinvR G)}
-      ⊆ {G | sigmaMin Gᵀ ^ 2 ≤ 1 / t ^ 2} := by
+      ⊆ {G | singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ 1 / t ^ 2} := by
     intro G hG
     simp only [Set.mem_ofPred_eq] at hG ⊢
-    have hsq : specNorm (pinvR G) ^ 2 = 1 / sigmaMin Gᵀ ^ 2 := by
-      rw [specNorm_pinvR_sq, specNorm_inv_self_mul_transpose_eq]
-    have h1 : t ^ 2 < 1 / sigmaMin Gᵀ ^ 2 := by
+    have hunit : IsUnit (G * Gᵀ) := by
+      by_contra hunit
+      have hz : (G * Gᵀ)⁻¹ = 0 := Matrix.nonsing_inv_apply_not_isUnit _
+        (fun hdet => hunit ((Matrix.isUnit_iff_isUnit_det _).mpr hdet))
+      have hp : pinvR G = 0 := by
+        simp only [pinvR, Matrix.conjTranspose_eq_transpose_of_trivial, hz, Matrix.mul_zero]
+      rw [hp, specNorm_zero] at hG
+      exact (not_lt_of_ge ht.le) hG
+    have hsq : specNorm (pinvR G) ^ 2 = 1 / singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 := by
+      rw [specNorm_pinvR_sq G hunit, specNorm_inv_self_mul_transpose_eq G hunit]
+    have h1 : t ^ 2 < 1 / singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 := by
       rw [← hsq]; exact pow_lt_pow_left₀ hG ht.le (by norm_num)
-    have hs2 : 0 < sigmaMin Gᵀ ^ 2 := by
-      rcases (sq_nonneg (sigmaMin Gᵀ)).lt_or_eq with h | h
+    have hs2 : 0 < singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 := by
+      rcases (sq_nonneg (singularValues Gᵀ (Fintype.card (Fin r) - 1))).lt_or_eq with h | h
       · exact h
       · rw [← h, div_zero] at h1; nlinarith
     have ht2 : 0 < t ^ 2 := by positivity
@@ -280,7 +288,7 @@ theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r 
   refine (measure_mono hsub).trans ?_
   have hr1 : 1 ≤ r := by omega
   rw [← ofReal_measureReal (μ := gaussianMatrix (Fin r) (Fin k))
-    (s := {G | sigmaMin Gᵀ ^ 2 ≤ 1 / t ^ 2})]
+    (s := {G | singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ 1 / t ^ 2})]
   apply ENNReal.ofReal_le_ofReal
   refine (gaussianMatrix_sigmaMin_transpose_sq_le_le hr1 hrk (1 / t ^ 2) (by positivity)).trans ?_
   set N : ℕ := k - r + 1 with hN_def

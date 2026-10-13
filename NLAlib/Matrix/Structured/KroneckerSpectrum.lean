@@ -119,5 +119,6 @@ theorem multiset_eigenvalues_kronecker_sum {m n : Type*} [Fintype m] [Fintype n]
     rw [← Matrix.diagonal_one, Matrix.diagonal_kronecker_diagonal]
     simp only [one_mul]
   rw [hleft, hright, ← Matrix.add_mul, ← Matrix.mul_add, ← Matrix.diagonal_add]
+  rfl
 
 end NLAlib

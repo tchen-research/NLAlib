@@ -121,6 +121,40 @@ def HasOrthonormalCols.toLinearIsometry {m n : Type*} [Fintype m] [Fintype n] [D
     simp only [WithLp.toLp_ofLp] at h
     exact h.symm
 
+/-- The linear isometry associated with an orthonormal-column matrix has
+exactly its Euclidean matrix linear map. -/
+@[simp] theorem HasOrthonormalCols.toLinearIsometry_toLinearMap
+    {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    {Q : Matrix m n 𝕜} (hQ : HasOrthonormalCols Q) :
+    hQ.toLinearIsometry.toLinearMap = Q.toEuclideanLin := rfl
+
+/-- Converting a Euclidean linear isometry to its matrix yields orthonormal
+columns, the converse of `HasOrthonormalCols.toLinearIsometry`. -/
+theorem hasOrthonormalCols_toEuclideanLin_symm_linearIsometry
+    {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    (f : EuclideanSpace 𝕜 n →ₗᵢ[𝕜] EuclideanSpace 𝕜 m) :
+    HasOrthonormalCols (Matrix.toEuclideanLin.symm f.toLinearMap) := by
+  apply (hasOrthonormalCols_iff_orthonormal _).mpr
+  have hcol : (fun j => (WithLp.toLp 2
+      ((Matrix.toEuclideanLin.symm f.toLinearMap).col j) : EuclideanSpace 𝕜 m)) =
+      f ∘ (EuclideanSpace.basisFun n 𝕜) := by
+    funext j
+    have h := congrArg (fun g => g (EuclideanSpace.basisFun n 𝕜 j))
+      (Matrix.toEuclideanLin.apply_symm_apply f.toLinearMap)
+    simpa only [Function.comp_def, Matrix.toLpLin_apply,
+      EuclideanSpace.basisFun_apply, EuclideanSpace.single, PiLp.ofLp_single,
+      Matrix.mulVec_single, MulOpposite.op_one, one_smul, LinearIsometry.coe_toLinearMap] using h
+  rw [hcol]
+  exact (EuclideanSpace.basisFun n 𝕜).orthonormal.comp_linearIsometry f
+
+/-- Matrix reconstruction after passing to the associated Euclidean linear
+isometry recovers the original orthonormal-column matrix. -/
+@[simp] theorem HasOrthonormalCols.toEuclideanLin_symm_toLinearIsometry
+    {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    {Q : Matrix m n 𝕜} (hQ : HasOrthonormalCols Q) :
+    Matrix.toEuclideanLin.symm hQ.toLinearIsometry.toLinearMap = Q :=
+  Matrix.toEuclideanLin.symm_apply_apply Q
+
 /-! ### Columns of a frame -/
 
 section Columns

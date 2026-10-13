@@ -356,3 +356,128 @@ that is the old bundle with `specNorm` in place of `‖·‖`), and all of `Herm
 - Not movable as the brief asks: `ForMathlib/Data/ExactRowSubset.lean` is imported by
   `Matrix/Basic/CauchyBinet.lean` (layer 0), so it cannot go to `Sketching/Sampling/` (layer 3)
   unless `CauchyBinet`'s `SizedSubset` stops using it.
+
+## Continuation after `089abd4` (2026-10-13)
+
+This pass restores compilation first. No new scaffold, `sorry`, axiom or weakened
+Khintchine constant was introduced. This section supersedes the earlier failure list
+for the files it mentions; the wider P1/P5/P6 work is still unfinished.
+
+Changes:
+
+- Moved the MGF continuity proof before `cfc_comp'` and supplied its explicit
+  continuity argument in `SubgaussianMgfCgf`.
+- Removed the ineffective norm rewrite in `IntrinsicHermitianBernstein`; updated
+  `MatrixChernoff` to the four split master bounds and the two intrinsic Bernstein
+  consumers to the split tail theorems.
+- Replaced the invalid deleted-law disjunction in `SeriesKhintchine` with four
+  joint-`HasLaw` corollaries (Gaussian/Rademacher, polynomial/rooted bound), keeping
+  `(2p-1)^p` and `sqrt(2p-1)`. `SeriesSecondMoment` now proves the general identity
+  for independent centred unit-variance `MemLp`-two coefficients, on arbitrary
+  finite coefficient indices, and has separate joint-law corollaries. The two
+  canonical Khintchine proofs remain the only proof implementations; their tags
+  and the law-corollary tags no longer say `(partial)`.
+- `Sampling` now uses `PosSemidef` and the upper eigenvalue bound, calls the split
+  Chernoff tails, and exposes the existing separate lower/upper sampling bounds.
+  The duplicate public conjunction `matrix_chernoff_sampling` was removed.
+- Deleted the duplicate `lambdaMin_nonneg_of_posSemidef` in `ChernoffMgfCgf` and
+  imported the generic Matrix/Functions/ExtremeEigenvalues theorem. Probability
+  callers now use its implicit matrix argument.
+- Converted the three `TailIntegral` tail hypotheses to `μ.real`, exposed separate
+  integrability/expectation theorems, and kept conjunctions private as proof devices.
+- Converted the two ForMathlib Ville theorem statements to `μ.real`, renamed their
+  `measure_` prefixes to `measureReal_`, and updated `FreedmanGlobal`.
+- Recorded the changed APIs in `docs/renames/2026-10-F4-P.json`.
+
+Verification in progress: `/tmp/f4-p-build1.log` passed the three initially repaired
+matrix modules. `/tmp/f4-p-build2.log` compiled all four Khintchine law corollaries
+and found one scalar normalization error in the new general second-moment proof;
+that error is corrected on disk. `/tmp/f4-p-build3.log` found a missing
+`measureReal_def` rewrite in the final Ville proof; corrected on disk. The full
+Probability and owned ForMathlib verification is queued under the shared build
+lock in `/tmp/f4-p-build4.log`. Do not interpret the intermediate passes as a green
+Probability tree until the final verification result below is recorded.
+
+Cross-owner change: `Sketching/Sampling/{UniformIidSampling,LeverageSampling}`
+must replace the removed `matrix_chernoff_sampling` call by the lower and upper
+calls, each with `hPSD` and the upper-only eigenvalue bound. Argument recipe:
+`matrix_chernoff_sampling_lower μ hN M L hL hMeas hIndep hPSD hBound hMean hε0 hε1`
+and `matrix_chernoff_sampling_upper ... hε0 hε1.le`. No code outside P's ownership
+was edited.
+
+Still open: P1's generic/real headline Tropp interface, the remaining P5 bundles,
+P6's remaining public spectral-PSD hypotheses and zero-variance-proxy cases,
+and I7 docstring cleanup. The Gaussian matrix bridge stays with RandomMatrix's
+owner. The norm lint still reports 10 hits: nine private helper signatures and
+one false positive on scalar entry norms `‖A i j‖` in `matrixVectorSqNorm_single`.
+The owned docstring lint currently reports 98 hits (down from 126).
+
+The full owned build `/tmp/f4-p-build4.log` reached every Probability module and
+compiled all new Khintchine/second-moment, intrinsic Bernstein, tail-integral, and
+Ville/Freedman changes. Its only failing modules were `Sampling` (missing
+`ComplexOrder` scope for PSD) and the previously uncompiled `MatrixSeries`
+(missing `Matrix` notation scope and `DecidableEq r` for the matrix-valued integral
+in `integral_sum_smul_mul_sum_smul_eq`). Both are corrected; the recheck is
+`/tmp/f4-p-build5.log`.
+
+**Final P verification: green.**
+`flock /tmp/nlalib-f4-build.lock lake build NLAlib.Probability NLAlib.ForMathlib.Probability NLAlib.ForMathlib.MeasureTheory NLAlib.ForMathlib.Analysis.Matrix`
+completed successfully (4034 jobs), `/tmp/f4-p-build6.log`. `MatrixSeries` also
+needed an explicit conversion to `reindexLinearEquiv` before rewriting `map_sum`.
+`git diff --check` passed for the owned changes. This is compilation completion,
+not completion of every F4 Probability API requirement listed above.
+
+### R continuation
+
+The coordinator transferred RandomMatrix ownership for compilation repairs after
+P became green. Root had already corrected the scalar Gaussian-law name in
+`Basic/GaussianMatrix` and one `integrable_rpow_sum_sq_gaussianVector` reference in
+`Moments/LogOverlap`. This continuation preserves those edits and does not change
+Sketching or LowRank. Verification/results will be recorded below.
+
+R progress (continuing): replaced deleted `sigmaMin` applications with
+`singularValues A (card(column index) - 1)`, taking care that `Gᵀ` is indexed by
+G's row count, and updated variational, Frobenius Lipschitz, full-rank and Gram
+bounds. The rank-one case uses index zero. Updated split Gaussian concentration
+and chi-square moment consumers, the renamed inner product bridge, and the moved
+plane-rotation import. The deficient Gram case in `UnshiftedGramSoftMin` now proves
+zero smallest singular value from rank deficiency instead of using the newly
+hypothesis-restricted inverse identity. In probability arguments, inverse-Gram
+identities are used under the almost-sure full-rank hypothesis; measurability
+comes directly from singular-value continuity.
+
+`/tmp/f4-r-build3.log` compiled Gordon, Deviation, SmallBall, both SubGaussian
+files, SchurComplement, Mean, DiagonalLaw, and UnshiftedGramSoftMin. Three newly
+exposed failures in GramCutoffCalculus, Probe and OffDiagonal are fixed on disk;
+`/tmp/f4-r-build4.log` is queued. Later inverse-moment consumers are not yet all
+verified. These edits restore existing statements; R's remaining F4 tail/bundle
+and naming standardization is not claimed complete.
+
+At M2's request, added measurable-event variants of the two product-conditioning
+helpers in `ForMathlib/Probability/FiniteProductEvents`, allowing real-valued
+Rademacher vectors as the first probability space and an almost-everywhere
+section bound. The finite-space helpers remain unchanged. Verification queued
+in `/tmp/f4-p-conditioning.log`.
+
+**R compilation verification: green.**
+`flock /tmp/nlalib-f4-build.lock lake build NLAlib.RandomMatrix NLAlib.Probability.Rademacher.Core`
+completed successfully (4045 jobs), `/tmp/f4-r-build6.log`. In particular,
+`LambdaMinTail`, `SpectralTail`, `SpectralProbe` and the hard-edge/weak-inequality
+consumers are verified. `SpectralProbe` now transports the inverse-Gram norm
+identity through almost-everywhere full rank, preserving the original expectation
+statement. `SpectralTail` derives full rank inside its positive inverse-norm
+event. R's API redesign remains outside this compilation continuation.
+
+The measurable product-conditioning helpers compiled in
+`/tmp/f4-p-srht-helpers.log`. `ae_forall_sq_eq_one_rademacherVector` compiled with
+the R check above. A finite-support probability-measure wrapper for the
+directional squared-norm tail is added in `ChiSquare/DirectionalSquaredNorm`;
+its transport inference repair is under verification in `/tmp/f4-p-support2.log`.
+These three additions support M2's real-sign SRHT migration without placing a
+sampling-law construction in Sketching.
+
+**SRHT support additions: green.** `/tmp/f4-p-support2.log` compiled the
+finite-support directional tail wrapper successfully (3188 jobs); all three
+helpers above are now verified and handed to M2. The wrapper retains the original
+tail bound and transports the directional MGF through the finite support's
+subtype measure, without imposing measurability on the ambient vector map.

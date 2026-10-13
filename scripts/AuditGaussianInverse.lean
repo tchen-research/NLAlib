@@ -1,8 +1,8 @@
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.SpectralTail
 /-!
-# Required completion audit for the four operator rederivations
+# Required completion audit for the Gaussian inverse operator rederivations
 
-This audit fails if any of the four requested declarations depends on sorryAx
+This audit fails if any of the seven requested declarations depends on sorryAx
 or an axiom other than Lean's three standard classical axioms. Merely compiling
 a theorem against a scaffold does not satisfy this task.
 -/
@@ -12,6 +12,7 @@ open Lean Elab Command
 set_option maxHeartbeats 0
 
 run_cmd do
+  let env ← getEnv
   let targets : List Name := [
     ``NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral,
     ``NLAlib.gaussianMatrix_lt_specNorm_pinvR_le,
@@ -22,6 +23,10 @@ run_cmd do
     ``NLAlib.integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_sharp]
   let allowed : List Name := [``propext, ``Classical.choice, ``Quot.sound]
   for d in targets do
+    match env.find? d with
+    | some (.thmInfo _) => pure ()
+    | some _ => throwError "Audit target is not a theorem declaration: {d}"
+    | none => throwError "Audit target is missing: {d}"
     let axs ← collectAxioms d
     let extra := axs.filter (fun a => !allowed.contains a)
     if extra.isEmpty then
@@ -51,11 +56,12 @@ run_cmd do
       if forbidden.contains name then
         logError m!"Old regularization/Fatou dependency remains: {name}"
       if name.toString.startsWith "NLAlib." || name.toString.startsWith "_private.NLAlib." then
-        if let some ci := env.find? name then
-          pending := ci.type.getUsedConstants.toList ++ pending
-          match ci with
-          | .thmInfo info => pending := info.value.getUsedConstants.toList ++ pending
-          | .defnInfo info => pending := info.value.getUsedConstants.toList ++ pending
-          | .opaqueInfo info => pending := info.value.getUsedConstants.toList ++ pending
-          | _ => pure ()
+        let some ci := env.find? name
+          | throwError "Audit dependency is missing: {name}"
+        pending := ci.type.getUsedConstants.toList ++ pending
+        match ci with
+        | .thmInfo info => pending := info.value.getUsedConstants.toList ++ pending
+        | .defnInfo info => pending := info.value.getUsedConstants.toList ++ pending
+        | .opaqueInfo info => pending := info.value.getUsedConstants.toList ++ pending
+        | _ => pure ()
   logInfo m!"Checked {seen.size} transitive constants for the unshifted tail route."

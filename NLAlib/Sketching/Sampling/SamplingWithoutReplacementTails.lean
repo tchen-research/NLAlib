@@ -57,9 +57,9 @@ theorem matrix_chernoff_uniform_subset_upper
       one_div_mul_eq_div, le_div_iff₀ hkR]
   change (μ {T | 1 + ε ≤ lambdaMax ((1 / (k : ℝ)) • Y T)}).toReal ≤ _
   rw [hset]
-  have hlap := (measure_lambdaMax_ge_le_and_measure_lambdaMin_le_le μ Y θ
-    Measurable.of_discrete (Filter.Eventually.of_forall (fun T =>
-      isSelfAdjoint_sum _ (fun j _ => hA j))) Integrable.of_finite).1 hθ ((1 + ε) * k)
+  have hlap := measureReal_lambdaMax_ge_le_exp_mul_integral_traceExp μ Y hθ
+    (Filter.Eventually.of_forall (fun T =>
+      isSelfAdjoint_sum _ (fun j _ => hA j))) Integrable.of_finite ((1 + ε) * k)
   have htr := integral_traceExp_uniform_subset_le hk0 hk A L hL.le hA hbound hmean θ
   have hg : chernoffCgfCoefficient L θ = ε / L := by
     rw [chernoffCgfCoefficient, if_neg hL.ne']
@@ -116,9 +116,9 @@ theorem matrix_chernoff_uniform_subset_lower
       one_div_mul_eq_div, div_le_iff₀ hkR]
   change (μ {T | lambdaMin ((1 / (k : ℝ)) • Y T) ≤ 1 - ε}).toReal ≤ _
   rw [hset]
-  have hlap := (measure_lambdaMax_ge_le_and_measure_lambdaMin_le_le μ Y θ
-    Measurable.of_discrete (Filter.Eventually.of_forall (fun T =>
-      isSelfAdjoint_sum _ (fun j _ => hA j))) Integrable.of_finite).2 hθ ((1 - ε) * k)
+  have hlap := measureReal_lambdaMin_le_le_exp_mul_integral_traceExp μ Y hθ
+    (Filter.Eventually.of_forall (fun T =>
+      isSelfAdjoint_sum _ (fun j _ => hA j))) Integrable.of_finite ((1 - ε) * k)
   have htr := integral_traceExp_uniform_subset_le hk0 hk A L hL.le hA hbound hmean θ
   have hg : chernoffCgfCoefficient L θ = -ε / L := by
     rw [chernoffCgfCoefficient, if_neg hL.ne']

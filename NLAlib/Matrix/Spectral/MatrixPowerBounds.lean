@@ -116,7 +116,6 @@ geometric growth bound and includes empty matrix spaces.
 atlas: matrix-power-convergence (partial) -/
 theorem tendsto_matrix_pow_zero_of_spectralRadius_lt_one {A : Matrix n n ℂ}
     (hA : spectralRadius ℂ A < 1) : Tendsto (fun k : ℕ => A ^ k) atTop (𝓝 0) := by
-  unfold specNorm
   have hρ : (spectralRadius ℂ A).toReal < 1 := by
     exact (ENNReal.toReal_lt_toReal (matrix_spectralRadius_ne_top A) ENNReal.one_ne_top).mpr hA
   let r : ℝ := ((spectralRadius ℂ A).toReal + 1) / 2

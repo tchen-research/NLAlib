@@ -2,6 +2,7 @@ import NLAlib.Probability.Concentration.Basic.ChernoffFunctions
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
 import NLAlib.Matrix.OperatorTheory.Basic
+import NLAlib.Matrix.Functions.ExtremeEigenvalues
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 
 /-!
@@ -119,13 +120,6 @@ private lemma log_one_add_le {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hpd : (
     _ = B := e2
 
 
-open scoped Matrix.Norms.L2Operator in
-/-- The smallest eigenvalue of a positive semidefinite matrix is nonnegative. -/
-theorem lambdaMin_nonneg_of_posSemidef {d : ℕ} [NeZero d] (P : Matrix (Fin d) (Fin d) ℂ)
-    (hP : P.PosSemidef) : 0 ≤ lambdaMin P := by
-  unfold lambdaMin
-  rw [hP.isHermitian.spectrum_real_eq_range_eigenvalues]
-  exact le_csInf (Set.range_nonempty _) (by rintro _ ⟨i, rfl⟩; exact hP.eigenvalues_nonneg i)
 end NLAlib
 
 open NLAlib

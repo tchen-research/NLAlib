@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Spectral.Weyl
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import NLAlib.Matrix.Spectral.Core
 import NLAlib.Probability.Gaussian.Comparison.SudakovFernique
@@ -163,9 +164,9 @@ private theorem gu_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
       (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A) 1 zero_le_one
       fun X Y => by
         rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y).1
-  have hXsup := integrable_iSup_of_fintype (μ := gaussianMatrix (Fin N) (Fin n)) (fun t G => linForm (a t) G)
+  have hXsup := MeasureTheory.integrable_iSup_of_fintype (μ := gaussianMatrix (Fin N) (Fin n)) (fun t G => linForm (a t) G)
     (fun t => integrable_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable)
-  have hYsup := integrable_iSup_of_fintype (μ := gaussianMatrix (Fin 1) (Fin (n + N)))
+  have hYsup := MeasureTheory.integrable_iSup_of_fintype (μ := gaussianMatrix (Fin 1) (Fin (n + N)))
     (fun t H => linForm (b t) H)
     (fun t => integrable_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable)
   have hsq : ∀ {k : ℕ} (σ : Fin k → Fin (n + N)), Integrable
@@ -300,7 +301,7 @@ private theorem gl_matrix_side {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (ε 
     (hT : ∀ v ∈ T, ‖v‖ = 1)
     (hcov : ∀ x : EuclideanSpace ℝ (Fin n), ‖x‖ = 1 → ∃ u ∈ U, ‖x - u‖ ≤ ε)
     (hn : Nonempty {x : Fin n → ℝ // x ⬝ᵥ x = 1}) :
-    ⨅ u : U, ⨆ v : T, ∑ i, ∑ j, v.1 i * A i j * u.1 j ≤ sigmaMin A + ε * specNorm A := by
+    ⨅ u : U, ⨆ v : T, ∑ i, ∑ j, v.1 i * A i j * u.1 j ≤ singularValues A (Fintype.card (Fin n) - 1) + ε * specNorm A := by
   set Φ := (Matrix.toEuclideanLin.trans LinearMap.toContinuousLinearMap) A with hΦ
   have hM : specNorm A = ‖Φ‖ := rfl
   have key : ∀ u : U, ⨆ v : T, ∑ i, ∑ j, v.1 i * A i j * u.1 j ≤ ‖Φ u.1‖ := by
@@ -310,17 +311,11 @@ private theorem gl_matrix_side {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (ε 
     refine (real_inner_le_norm _ _).trans ?_
     rw [hT _ v.2, one_mul]
   set L := ⨅ u : U, ⨆ v : T, ∑ i, ∑ j, v.1 i * A i j * u.1 j with hL
-  have hx : ∀ x : {x : Fin n → ℝ // x ⬝ᵥ x = 1},
-      L - ε * specNorm A ≤ Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)) := by
+  have hx : ∀ x : {x : Fin n → ℝ // ‖WithLp.toLp 2 x‖ = 1},
+      L - ε * specNorm A ≤ ‖WithLp.toLp 2 (A *ᵥ x.1)‖ := by
     intro x
     set xe : EuclideanSpace ℝ (Fin n) := WithLp.toLp 2 x.1 with hxe
-    have hxe1 : ‖xe‖ = 1 := by
-      rw [hxe, gl_norm_toLp]
-      have : ∑ i, x.1 i ^ 2 = 1 := by
-        have h2 := x.2
-        simp only [dotProduct] at h2
-        simpa [sq] using h2
-      rw [this, Real.sqrt_one]
+    have hxe1 : ‖xe‖ = 1 := x.2
     obtain ⟨u, hu, hxu⟩ := hcov xe hxe1
     have hb : BddBelow (Set.range fun u : U => ⨆ v : T, ∑ i, ∑ j, v.1 i * A i j * u.1 j) :=
       (Set.finite_range _).bddBelow
@@ -330,14 +325,13 @@ private theorem gl_matrix_side {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (ε 
       rw [hd]
       refine (norm_sub_le _ _).trans (add_le_add_right ?_ _)
       exact (Φ.le_opNorm _).trans (mul_le_mul_of_nonneg_left hxu (norm_nonneg _))
-    have h3 : ‖Φ xe‖ = Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)) := by
-      have : Φ xe = WithLp.toLp 2 (A *ᵥ x.1) := rfl
-      rw [this, gl_norm_toLp]
-      simp [dotProduct, sq]
+    have h3 : ‖Φ xe‖ = ‖WithLp.toLp 2 (A *ᵥ x.1)‖ := rfl
     rw [hM]
     linarith
+  have : Nonempty {x : Fin n → ℝ // ‖WithLp.toLp 2 x‖ = 1} :=
+    ⟨⟨hn.some.1, by rw [norm_toLp_eq_sqrt_dotProduct_self, hn.some.2, Real.sqrt_one]⟩⟩
   have := le_ciInf hx
-  unfold sigmaMin
+  rw [singularValues_last_eq_iInf]
   linarith
 
 /-- The comparison process `⟨g, u⟩ + ⟨h, v⟩` written with one Gaussian row. -/
@@ -427,7 +421,7 @@ private theorem gl_coeff_same {N n : ℕ} (u : EuclideanSpace ℝ (Fin n))
 private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ) (hε : 0 < ε) :
     (1 - ε) * ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin N => gaussianReal 0 1)
         - ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1)
-      ≤ ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n))
+      ≤ ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n))
         + ε * ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) := by
   -- finite `ε`-nets of the two unit spheres
   obtain ⟨Fu, hFuS, hFufin, hFucov⟩ := Metric.finite_approx_of_totallyBounded
@@ -493,12 +487,12 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
     (fun u t => integral_linForm_gaussianMatrix _) (fun u t => integral_linForm_gaussianMatrix _)
     hsame hdiff
   -- integrability
-  have hsMin : Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => sigmaMin A)
+  have hsMin : Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => singularValues A (Fintype.card (Fin n) - 1))
       (gaussianMatrix (Fin N) (Fin n)) :=
     (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-      (fun A : Matrix (Fin N) (Fin n) ℝ => sigmaMin A) 1 zero_le_one
+      (fun A : Matrix (Fin N) (Fin n) ℝ => singularValues A (Fintype.card (Fin n) - 1)) 1 zero_le_one
       fun X Y => by
-        rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y).1
+        rw [one_mul]; exact abs_singularValues_sub_le_frobNorm X Y (Fintype.card (Fin n) - 1)).1
   have hspec : Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A)
       (gaussianMatrix (Fin N) (Fin n)) :=
     (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
@@ -507,14 +501,14 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
         rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y).1
   have hXmm : Integrable (fun H => ⨅ u : U, ⨆ t : T, linForm (b u t) H)
       (gaussianMatrix (Fin 1) (Fin (n + N))) :=
-    integrable_iInf_of_fintype (fun u H => ⨆ t : T, linForm (b u t) H)
-      (fun u => integrable_iSup_of_fintype (fun t H => linForm (b u t) H)
+    MeasureTheory.integrable_iInf_of_fintype (fun u H => ⨆ t : T, linForm (b u t) H)
+      (fun u => MeasureTheory.integrable_iSup_of_fintype (fun t H => linForm (b u t) H)
         (fun t => integrable_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable))
       (fun u => Measurable.iSup fun t => (continuous_linForm _).measurable)
   have hYmm : Integrable (fun G => ⨅ u : U, ⨆ t : T, linForm (a u t) G)
       (gaussianMatrix (Fin N) (Fin n)) :=
-    integrable_iInf_of_fintype (fun u G => ⨆ t : T, linForm (a u t) G)
-      (fun u => integrable_iSup_of_fintype (fun t G => linForm (a u t) G)
+    MeasureTheory.integrable_iInf_of_fintype (fun u G => ⨆ t : T, linForm (a u t) G)
+      (fun u => MeasureTheory.integrable_iSup_of_fintype (fun t G => linForm (a u t) G)
         (fun t => integrable_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable))
       (fun u => Measurable.iSup fun t => (continuous_linForm _).measurable)
   have hg := gl_integrable_sqrt_sumsq (m := n + N) (fun j : Fin n => Fin.castAdd N j)
@@ -533,14 +527,14 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
         refine integral_mono ((hh.const_mul _).sub hg) hXmm fun H => ?_
         exact gl_gauss_side hN ε U T hU1 hUne hcovT H
     _ ≤ ∫ G, (⨅ u : U, ⨆ t : T, linForm (a u t) G) ∂(gaussianMatrix (Fin N) (Fin n)) := hGM
-    _ ≤ ∫ A, (sigmaMin A + ε * specNorm A) ∂(gaussianMatrix (Fin N) (Fin n)) := by
+    _ ≤ ∫ A, (singularValues A (Fintype.card (Fin n) - 1) + ε * specNorm A) ∂(gaussianMatrix (Fin N) (Fin n)) := by
         refine integral_mono hYmm (hsMin.add (hspec.const_mul ε)) fun G => ?_
         refine le_trans (le_of_eq ?_) (gl_matrix_side G ε U T hT1 hcovU hsub)
         congr 1; funext u; congr 1; funext t
         simp only [linForm, ha]
         refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
         ring
-    _ = ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n))
+    _ = ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n))
           + ε * ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) := by
         rw [integral_add hsMin (hspec.const_mul ε), integral_const_mul]
 
@@ -551,9 +545,9 @@ Gordon 1985; Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Pro
 `GaussianMatrix.gordon_lower`.
 atlas: gordon -/
 theorem sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) :
-    Real.sqrt N - Real.sqrt n ≤ ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) := by
-  have hpos : 0 ≤ ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) :=
-    integral_nonneg fun A => Real.iInf_nonneg fun _ => Real.sqrt_nonneg _
+    Real.sqrt N - Real.sqrt n ≤ ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n)) := by
+  have hpos : 0 ≤ ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n)) :=
+    integral_nonneg fun A => singularValues_nonneg A _
   rcases le_or_gt N n with hNn | hNn
   · have : Real.sqrt N ≤ Real.sqrt n := Real.sqrt_le_sqrt (by exact_mod_cast hNn)
     linarith
@@ -562,7 +556,7 @@ theorem sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix {N n : ℕ} (hn : 1 �
     with hENdef
   set En := ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1)
     with hEndef
-  set E := ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) with hE
+  set E := ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n)) with hE
   set Sp := ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) with hSp
   have hD : Real.sqrt N - Real.sqrt n ≤ EN - En :=
     sqrt_sub_sqrt_le_integral_sqrt_sum_sq_sub hn hNn.le
@@ -596,15 +590,15 @@ Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solutio
 `GaussianMatrix.gordon`.
 atlas: gordon -/
 theorem gordon_extreme_singular_values {N n : ℕ} (hn : 1 ≤ n) :
-    Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => sigmaMin A) (gaussianMatrix (Fin N) (Fin n)) ∧
+    Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => singularValues A (Fintype.card (Fin n) - 1)) (gaussianMatrix (Fin N) (Fin n)) ∧
     Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A) (gaussianMatrix (Fin N) (Fin n)) ∧
-    Real.sqrt N - Real.sqrt n ≤ ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) ∧
-    ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n))
+    Real.sqrt N - Real.sqrt n ≤ ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n)) ∧
+    ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n))
       ≤ ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) ∧
     ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) ≤ Real.sqrt N + Real.sqrt n := by
   have hI1 := (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-    (fun A : Matrix (Fin N) (Fin n) ℝ => sigmaMin A) 1 zero_le_one fun X Y => by
-      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y).1
+    (fun A : Matrix (Fin N) (Fin n) ℝ => singularValues A (Fintype.card (Fin n) - 1)) 1 zero_le_one fun X Y => by
+      rw [one_mul]; exact abs_singularValues_sub_le_frobNorm X Y (Fintype.card (Fin n) - 1)).1
   have hI2 := (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
     (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A) 1 zero_le_one fun X Y => by
       rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y).1
@@ -612,7 +606,7 @@ theorem gordon_extreme_singular_values {N n : ℕ} (hn : 1 ≤ n) :
     integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt⟩
   exact integral_mono hI1 hI2 fun A => by
     have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
-    exact sigmaMin_le_specNorm A
+    exact singularValues_le_specNorm A _
 
 
 /-! ### Random matrices with a Gaussian law -/
@@ -636,11 +630,11 @@ theorem sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix_of_hasLaw {Ω : Type*}
     {μ : Measure Ω} {N n : ℕ}
     {X : Ω → Matrix (Fin N) (Fin n) ℝ} (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ)
     (hn : 1 ≤ n) :
-    Real.sqrt N - Real.sqrt n ≤ ∫ ω, sigmaMin (X ω) ∂μ := by
-  have hc : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
-    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
-      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
-  rw [show ∫ ω, sigmaMin (X ω) ∂μ = ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) from
+    Real.sqrt N - Real.sqrt n ≤ ∫ ω, singularValues (X ω) (Fintype.card (Fin n) - 1) ∂μ := by
+  have hc : Continuous ((fun A => singularValues A (Fintype.card (Fin n) - 1)) : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm (fun A => singularValues A (Fintype.card (Fin n) - 1)) 1 fun X Y => by
+      rw [one_mul]; exact abs_singularValues_sub_le_frobNorm X Y (Fintype.card (Fin n) - 1)
+  rw [show ∫ ω, singularValues (X ω) (Fintype.card (Fin n) - 1) ∂μ = ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n)) from
     hX.integral_comp hc.aestronglyMeasurable]
   exact sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix hn
 
@@ -650,18 +644,18 @@ theorem gordon_extreme_singular_values_of_hasLaw {Ω : Type*} [MeasurableSpace �
     {μ : Measure Ω} {N n : ℕ}
     {X : Ω → Matrix (Fin N) (Fin n) ℝ} (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ)
     (hn : 1 ≤ n) :
-    Integrable (fun ω => sigmaMin (X ω)) μ ∧ Integrable (fun ω => specNorm (X ω)) μ ∧
-    Real.sqrt N - Real.sqrt n ≤ ∫ ω, sigmaMin (X ω) ∂μ ∧
-    ∫ ω, sigmaMin (X ω) ∂μ ≤ ∫ ω, specNorm (X ω) ∂μ ∧
+    Integrable (fun ω => singularValues (X ω) (Fintype.card (Fin n) - 1)) μ ∧ Integrable (fun ω => specNorm (X ω)) μ ∧
+    Real.sqrt N - Real.sqrt n ≤ ∫ ω, singularValues (X ω) (Fintype.card (Fin n) - 1) ∂μ ∧
+    ∫ ω, singularValues (X ω) (Fintype.card (Fin n) - 1) ∂μ ≤ ∫ ω, specNorm (X ω) ∂μ ∧
     ∫ ω, specNorm (X ω) ∂μ ≤ Real.sqrt N + Real.sqrt n := by
   have hs : Continuous (specNorm : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
     continuous_of_abs_sub_le_mul_frobNorm specNorm 1 fun X Y => by
       rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y
-  have hm : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
-    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
-      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
+  have hm : Continuous ((fun A => singularValues A (Fintype.card (Fin n) - 1)) : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm (fun A => singularValues A (Fintype.card (Fin n) - 1)) 1 fun X Y => by
+      rw [one_mul]; exact abs_singularValues_sub_le_frobNorm X Y (Fintype.card (Fin n) - 1)
   obtain ⟨h1, h2, h3, h4, h5⟩ := gordon_extreme_singular_values (N := N) hn
-  have e1 : ∫ ω, sigmaMin (X ω) ∂μ = ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) :=
+  have e1 : ∫ ω, singularValues (X ω) (Fintype.card (Fin n) - 1) ∂μ = ∫ A, singularValues A (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n)) :=
     hX.integral_comp hm.aestronglyMeasurable
   have e2 : ∫ ω, specNorm (X ω) ∂μ = ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) :=
     hX.integral_comp hs.aestronglyMeasurable

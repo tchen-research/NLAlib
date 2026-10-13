@@ -176,8 +176,8 @@ theorem integrable_and_integral_inv_sq_dist_rowSpace_sq {n k : ℕ} (hnk : n + 5
     apply Continuous.measurable
     fun_prop
   have hlaw := pi_gaussianReal_map_sq_dist_rowSpace H hH
-  obtain ⟨hint, hval⟩ := integrable_and_integral_inv_sum_sq_pow_two_gaussianReal (d := k - n)
-    (by omega)
+  have hint := integrable_inv_sum_sq_pow_two_gaussianVector (d := k - n) (by omega)
+  have hval := integral_inv_sum_sq_pow_two_gaussianVector (d := k - n) (by omega)
   have hφ : Measurable (fun s : ℝ => (s⁻¹) ^ 2) := by fun_prop
   have hS : Measurable (fun x : Fin (k - n) → ℝ => ∑ j, x j ^ 2) := by fun_prop
   constructor

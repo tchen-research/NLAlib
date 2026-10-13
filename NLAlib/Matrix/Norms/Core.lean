@@ -406,6 +406,12 @@ theorem norm_toLp_sq_eq_dotProduct_self (x : n → ℝ) :
     ‖WithLp.toLp 2 x‖ ^ 2 = x ⬝ᵥ x := by
   rw [norm_toLp_sq_eq_re_star_dotProduct, star_trivial, RCLike.re_to_real]
 
+omit [DecidableEq n] in
+/-- The Euclidean norm of a real vector is the square root of its self dot product. -/
+theorem norm_toLp_eq_sqrt_dotProduct_self (x : n → ℝ) :
+    ‖WithLp.toLp 2 x‖ = √(x ⬝ᵥ x) := by
+  rw [← norm_toLp_sq_eq_dotProduct_self, Real.sqrt_sq (norm_nonneg _)]
+
 /-- A square matrix's quadratic form is bounded by its spectral norm times the vector's squared
 Euclidean norm: `|Re (x̄ ⬝ Hx)| ≤ ‖H‖₂ ‖x‖₂²`. Cauchy–Schwarz and the operator norm definition;
 supports `leverage-sampling-ose`. -/

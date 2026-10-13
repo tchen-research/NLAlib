@@ -149,9 +149,9 @@ theorem integral_specNorm_residual_gram_pow_gaussian_le
   · have hkn : k ≤ n := by have := A.rank_le_width; omega
     have hH := integral_specNorm_residual_le_singularValues_of_gaussian
       C hk hp hkn G hG Q hQo hQr
-    have htail : singularValueTailSq C k = ∑ i : Fin m, if k ≤ (i : ℕ) then
+    have htail : bestRankFrobSq C k = ∑ i : Fin m, if k ≤ (i : ℕ) then
         singularValues A i ^ (2 * (2 * q + 1)) else 0 := by
-      rw [singularValueTailSq, Fintype.card_fin,
+      rw [bestRankFrobSq, Fintype.card_fin,
         ← Fin.sum_univ_eq_sum_range (fun i => if k ≤ i then singularValues C i ^ 2 else 0)]
       simp only [C, singularValues_gram_pow_mul, ← pow_mul]
       exact Finset.sum_congr rfl fun i _ => by

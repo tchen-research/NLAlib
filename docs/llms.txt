@@ -1,50 +1,47 @@
 # NLAlib: randomized numerical linear algebra in Lean 4
 
-Site: https://research.chen.pw/NLAlib/   Repo: https://github.com/tchen-research/NLAlib
-Lean v4.33.1, Mathlib pinned in lake-manifest.json. Namespace `NLAlib`.
+Lean v4.33.1; the exact Mathlib revision is pinned in lake-manifest.json.
 
-## Machine-readable files (same directory as this file)
-- atlas.json: catalogue of results (schema.json). Per result: id, title, aliases, informal
-  statement (KaTeX), hypotheses[], conclusion, status (proved | scaffold | stated | assumed |
-  planned | candidate), formalizations[] {library, decl, module, status, usage}, uses_defs[]
-  (definitions the statement is written with), depends_on[] (proof dependencies), variants[],
-  sources[] {source, label}, mathlib_prereqs[] {decl, present}.
-- declarations.json: every public Lean declaration (matrix concentration ones are under
-  NLAlib.Probability.Concentration.Matrix.*): name, kind, module, line, signature
-  (pretty-printed), doc, sorry (depends on sorryAx). Generated from the built library.
+## Imports and proof status
 
-## How to find a fact
-1. Search atlas.json aliases/title/informal for the mathematical name; read `formalizations`
-   for the Lean declaration and `usage` for how to apply it.
-2. Look the declaration up in declarations.json for its exact signature and module; import the
-   module (`import NLAlib.Matrix.Spectral.SVD`).
-3. Statement conventions (docs/STANDARDS.md §3): the matrix layer is stated once over
-   `{𝕜} [RCLike 𝕜]` (ℝ or ℂ) and arbitrary finite index types, `A : Matrix m n 𝕜` with
-   `[Fintype m] [Fintype n]`; `Fin` appears only as a sorted position (`rectDiag σ :
-   Matrix (Fin p) (Fin q) 𝕜`, Mathlib's `IsHermitian.eigenvalues₀ : Fin (card n) → ℝ`, the
-   column index of SVD factors) and where a Gaussian law needs it. Lemmas use `ᴴ`, never a `ᵀ`
-   twin: at ℝ a term elaborates against the `ᵀ` form, and a `rw` on a `ᵀ` goal goes through
-   `Matrix.conjTranspose_eq_transpose_of_trivial` or `show Uᵀ * U = 1 from h.…`.
-   Vocabulary: norms `NLAlib.frobSq`/`frobNorm`/`frobInner` (real part of the pairing) and
-   `specNorm` (= Mathlib's ℓ₂ operator norm, bridge `specNorm_eq_norm`); orthonormal columns as
-   `HasOrthonormalCols Q := Qᴴ * Q = 1`; `residual Q A = A - Q * (Qᴴ * A)`;
-   `quadForm A z = star z ⬝ᵥ (A *ᵥ z)` and `rayleighQuotient`; the Moore–Penrose inverse
-   `moorePenroseInverse A` (any matrix; the default), full-rank pseudoinverses
-   `pinvL A = (AᴴA)⁻¹Aᴴ`, `pinvR A = Aᴴ(AAᴴ)⁻¹` with `IsUnit` side conditions;
-   `singularValues A : ℕ → ℝ` (zero-indexed, zero-padded, antitone) and
-   `IsSVD A U V` (`U : Matrix m (Fin p) 𝕜`, `A = U * rectDiag (singularValues A) * Vᴴ`) from
-   `obtain ⟨U, V, h⟩ := exists_isSVD A`; smallest eigenvalue `hA.eigenvalues₀ ⟨card n - 1, _⟩`;
-   the Loewner order `A ≤ B` under `open scoped MatrixOrder`; Gaussian matrices
-   `gaussianMatrix p m : Measure (Fin p → Fin m → ℝ)` with `Matrix.of` as the matrix view
-   (real); expectations as Bochner integrals on an abstract probability space.
-4. Status `scaffold` means the statement exists with a `sorry`; you may use it, and the atlas
-   says what it waits on (`depends_on`).
+- `import NLAlib` is the scaffold-free default. AuditTrusted.lean checks every reachable library
+  declaration, including definitions, instances and private helpers, for nonstandard axioms.
+- `import NLAlib.Experimental` includes unfinished proofs and their dependants.
+- import_surface.json lists default modules and excluded modules with their experimental roots.
+  Topic aggregators import the whole topic and may include experimental work.
+- declarations.json includes every public declaration in the complete development: name, kind,
+  module, line, signature, doc, sorry, atlas tags and uses. `sorry: true` is transitive, including
+  derived theorems whose own proof body contains no sorry.
+- atlas.json catalogues research results, hypotheses, sources, formalizations and their status.
+  `scaffold` includes results depending on unfinished proofs. Ordinary helpers need no atlas
+  entry of their own; their status is still recorded in declarations.json.
 
-## Contributing a result
-See CONTRIBUTING.md in the repo: one result per PR, definitions in Basic.lean, docstring with
-source label ending in the tag line `atlas: <id>` (that tag is what links a declaration to the
-atlas), hand-written atlas.json fields for a new result (title, informal, hypotheses, conclusion,
-sources, depends_on, aliases), then lake build, scripts/Audit.lean, scripts/ExtractDecls.lean,
-scripts/sync_atlas.py (fills formalizations, status, uses_defs from the tags),
-scripts/check_layers.py, scripts/check_atlas.py. Statements already in Mathlib are not atlas
-results; cite them under mathlib_prereqs.
+## Finding and using a result
+
+Search atlas.json for the mathematical statement, then declarations.json for its exact type.
+Use the default import or a module listed in the default surface. Matrix APIs generally use
+finite index types and RCLike scalars where appropriate. Named matrix norms distinguish spectral
+and Frobenius structures; bridge lemmas connect them to Mathlib's scoped norms. The general
+pseudoinverse is moorePenroseInverse; pinvL and pinvR are full-rank formula helpers.
+Subspaces use columnSpace and rangeProjector. Principal-angle interfaces distinguish the
+field-generic directedSubspaceGap from the real overlapTangentNorm and guarded tanThetaMax.
+
+Random matrices are functions into Matrix. Gaussian matrix laws are
+`gaussianMatrix m n : Measure (Matrix m n ℝ)` for finite row and column types; `HasLaw X ν μ`
+carries a.e. measurability and the push-forward identity. Probability guarantees should be
+applied as event probabilities or Bochner integrals under their specified laws. Finite sums and
+recurrences serve as computational identities. A theorem for a supplied compression is not an
+operation-count theorem for a named algorithm without a realization and size argument.
+
+## Contributing
+
+Read CONTRIBUTING.md and the authoritative docs/STANDARDS.md. First settle the mathematical
+statement and its domain/edge cases, then choose its proof. Reuse Mathlib objects; give useful
+domain definitions constructors and bridges. Basic.lean may contain foundational theorems.
+Generic algebraic APIs should not force real scalars or Fin indices without a mathematical reason.
+Historical migration briefs do not override current standards.
+
+For catalogued results, update source tags and hand-authored atlas statements, then build and run
+AuditTrusted.lean, Lint.lean, Audit.lean, ExtractDecls.lean, sync_atlas.py, the repository checks,
+and the downstream examples. Examples/Downstream.lean demonstrates the matrix and subspace API;
+Examples/Probability.lean demonstrates the probability API.

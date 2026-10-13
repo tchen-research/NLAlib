@@ -1901,7 +1901,7 @@
    "decls": [
     "NLAlib.givens",
     "NLAlib.givens_transpose_mul_self",
-    "NLAlib.givensRotation_mulVec_apply_right"
+    "NLAlib.givensRotation_transpose_mulVec_apply_right"
    ],
    "note": ""
   },
@@ -3356,11 +3356,11 @@
     "lu-decomposition"
    ],
    "decls": [
-    "NLAlib.exists_isLU_iff_forall_det_ne_zero",
+    "NLAlib.exists_isLU_iff_forall_leadingMinor_ne_zero",
     "NLAlib.IsLU.unique",
-    "NLAlib.IsLU.det_leadingSubmatrix"
+    "NLAlib.IsLU.leadingMinor_eq_prod"
    ],
-   "note": "D = diag(U); the pivot formula is IsLU.det_leadingSubmatrix. Atlas and docstrings cite this as 'Cor. 3.5.5' (an Example in the 2nd ed.)"
+   "note": "D = diag(U); the pivot formula is IsLU.leadingMinor_eq_prod. Atlas and docstrings cite this as 'Cor. 3.5.5' (an Example in the 2nd ed.)"
   },
   {
    "label": "Lem 3.5.7",
@@ -3376,7 +3376,7 @@
    ],
    "decls": [
     "NLAlib.exists_isPLU_abs_le_one",
-    "NLAlib.exists_isLU_iff_forall_det_ne_zero"
+    "NLAlib.exists_isLU_iff_forall_leadingMinor_ne_zero"
    ],
    "note": "follows by combining the two, not stated"
   },
@@ -3952,7 +3952,8 @@
     "ky-fan-maximum-principle"
    ],
    "decls": [
-    "NLAlib.ky_fan_toolkit_properties",
+    "NLAlib.trace_compression_le_eigenvaluePrefix",
+    "NLAlib.sum_bottom_eigenvalues_le_trace_compression",
     "NLAlib.exists_trace_compression_eq_eigenvaluePrefix",
     "NLAlib.exists_trace_compression_eq_bottom_eigenvalues"
    ],
@@ -4006,7 +4007,8 @@
    ],
    "decls": [
     "NLAlib.majorized_diagonal_eigenvalues",
-    "NLAlib.majorized_diagonal_and_orthogonal_converse_and_sum_convex_le_trace_cfc"
+    "NLAlib.majorized_iff_exists_orthogonal_diagonal_eq",
+    "NLAlib.sum_convex_diagonal_le_trace_cfc"
    ],
    "note": "Real symmetric diagonal majorization and every subset bound are proved. Equality at a proper prefix forcing a permutation-similar direct sum is not stated."
   },
@@ -5472,7 +5474,7 @@
    ],
    "decls": [
     "NLAlib.isGreatest_nuclearNorm_frobInner",
-    "NLAlib.isGreatest_schattenNormExtended_frobInner"
+    "NLAlib.isGreatest_schattenNorm_frobInner"
    ],
    "note": "Concrete attained spectral/nuclear and Schatten dual formulas over unit balls are proved. A generic arbitrary-norm dual definition and its unit-sphere formulation are not provided."
   },
@@ -5667,9 +5669,20 @@
     "linear-system-perturbation"
    ],
    "decls": [
-    "NLAlib.condition_number_characterizations",
+    "NLAlib.conditionNumber_of_isUnit",
+    "NLAlib.conditionNumber_eq_top_iff",
+    "NLAlib.one_le_conditionNumber",
+    "NLAlib.conditionNumber_eq_singularValues_ratio",
+    "NLAlib.conditionNumber_conjTranspose",
+    "NLAlib.conditionNumber_inv",
+    "NLAlib.conditionNumber_eq_eigenvalues₀_ratio",
+    "NLAlib.conditionNumber_eq_ofReal_moorePenroseConditionNumber",
+    "NLAlib.isLeast_specNorm_singular_perturbations",
+    "NLAlib.isLeast_relative_singular_perturbations",
     "NLAlib.neumann_and_inverse_perturbation",
-    "NLAlib.linear_system_perturbation"
+    "NLAlib.norm_div_le_conditionNumber_mul_of_mulVec_add",
+    "NLAlib.norm_div_le_of_add_mulVec_add",
+    "NLAlib.norm_sub_div_le_conditionNumber_mul"
    ],
    "note": "Unnumbered section: the real spectral-norm condition-number, inverse perturbation, simultaneous-data forward-error and a-posteriori residual versions are proved, using actual matrix inverses and Euclidean actions."
   },
@@ -6189,7 +6202,13 @@
    ],
    "decls": [
     "NLAlib.exists_eigenvalue_abs_sub_le_residual",
-    "NLAlib.eigenvalue_residual_bounds"
+    "NLAlib.dotProduct_shifted_residual_eq_rayleigh_add_sq",
+    "NLAlib.rayleigh_residual_le_shifted_residual",
+    "NLAlib.sqrt_complement_eigenvalueProjector_le_residual_div",
+    "NLAlib.abs_eigenvalue_sub_rayleigh_le_residual_sq_div",
+    "NLAlib.kato_temple_le_eigenvalue",
+    "NLAlib.kato_temple_eigenvalue_le",
+    "NLAlib.hasFDerivAt_rayleighQuotient"
    ],
    "note": "Residual inclusion is proved for a real symmetric matrix, real shift and unit vector. General normal/complex matrices, the diagonalizable condition-number factor, and a separately stated nonzero-vector quotient form are absent."
   },
@@ -6350,7 +6369,7 @@
     "Mathlib:Matrix.PosSemidef.det_nonneg",
     "Mathlib:Matrix.PosDef.det_pos",
     "Mathlib:Matrix.PosSemidef.trace_eq_zero_iff",
-    "NLAlib.re_trace_eq_zero_iff_of_complex_posSemidef"
+    "NLAlib.re_trace_eq_zero_iff_of_posSemidef"
    ],
    "note": ""
   },
@@ -6404,7 +6423,7 @@
    "status": "partial",
    "atlas": [],
    "decls": [
-    "NLAlib.isClosed_setOf_posSemidef_complex"
+    "Matrix.isClosed_setOf_posSemidef"
    ],
    "note": "Closedness of the PSD cone (the \"if\" direction) is in NLAlib; the approximation $A+\\varepsilon I$ direction is not stated."
   },
@@ -6420,8 +6439,7 @@
    ],
    "decls": [
     "NLAlib.one_sub_mul_moorePenroseInverse_mul_eq_zero_of_fromBlocks_posSemidef",
-    "NLAlib.transpose_mulVec_eq_zero_of_fromBlocks_posSemidef",
-    "NLAlib.apply_eq_zero_of_posSemidef_of_apply_self_eq_zero",
+    "NLAlib.conjTranspose_mulVec_eq_zero_of_fromBlocks_posSemidef",
     "NLAlib.apply_eq_zero_of_posSemidef_of_apply_self_eq_zero"
    ],
    "note": "Real block inclusion is proved as (I − AA†)B = 0, with the equivalent kernel-annihilation form, for arbitrary finite block splits. Zero-diagonal row/column vanishing is proved for real and complex matrices."
@@ -6610,10 +6628,10 @@
     "cholesky-algorithm"
    ],
    "decls": [
-    "NLAlib.cholesky_decomposition",
     "NLAlib.exists_isCholesky_iff_posDef",
-    "NLAlib.IsCholesky.posDef",
     "NLAlib.IsCholesky.unique",
+    "NLAlib.exists_eq_mul_transpose_of_posSemidef",
+    "NLAlib.IsCholesky.posDef",
     "NLAlib.eq_cholesky_mul_transpose_of_posSemidef"
    ],
    "note": "Real case: PSD lower-triangular nonnegative-diagonal existence and PD positive-diagonal uniqueness, including empty dimensions and singular zero pivots."
@@ -6840,10 +6858,11 @@
    ],
    "decls": [
     "NLAlib.frobSq_sub_truncatedSVD_eq_bestRankFrobSq",
-    "NLAlib.bestRankFrobSq_eq_singularValueTailSq",
+    "NLAlib.bestRankFrobSq",
+    "NLAlib.bestRankFrobSq_eq_sInf",
     "NLAlib.isLeast_specNorm_sub_of_rank_le"
    ],
-   "note": "Unnumbered subsection. Minimum value and attainment proved (Frobenius and spectral); the uniqueness clause is not stated."
+   "note": "Unnumbered subsection. Minimum value and attainment proved (Frobenius and spectral); the uniqueness clause is not stated. The singular-value tail sum is now the definition bestRankFrobSq; bestRankFrobSq_eq_sInf identifies it with the approximation infimum."
   },
   {
    "label": "§7.4.3",
@@ -6857,7 +6876,7 @@
     "pseudoinverse"
    ],
    "decls": [
-    "NLAlib.IsLeastSquaresSolution.dotProduct_self_moorePenroseInverse_mulVec_le",
+    "NLAlib.IsLeastSquaresSolution.norm_moorePenroseInverse_mulVec_le",
     "NLAlib.IsLeastSquaresSolution"
    ],
    "note": "Unnumbered subsection; NLAlib states it through the Moore–Penrose inverse."
@@ -6931,10 +6950,10 @@
     "unitarily-invariant-norm-def"
    ],
    "decls": [
-    "NLAlib.SymmetricGauge.toOrthogonallyInvariantNorm",
-    "NLAlib.OrthogonallyInvariantNorm.exists_symmetricGauge_representation",
-    "NLAlib.OrthogonallyInvariantNorm.value_toSymmetricGauge",
-    "NLAlib.SymmetricGauge.toOrthogonallyInvariantNorm_apply"
+    "NLAlib.SymmetricGauge.toUnitarilyInvariantNorm",
+    "NLAlib.UnitarilyInvariantNorm.exists_symmetricGauge_representation",
+    "NLAlib.UnitarilyInvariantNorm.value_toSymmetricGauge",
+    "NLAlib.SymmetricGauge.toUnitarilyInvariantNorm_apply"
    ],
    "note": "Both construction directions and the singular-value representation are proved for real rectangular matrices. Uniqueness of the representing gauge, or inverse laws establishing the stated bijection, are not provided."
   },
@@ -6971,8 +6990,8 @@
    "decls": [
     "NLAlib.invariantNorm_rectangularDiagonal_singularValues_add_sub_le",
     "NLAlib.isLeast_specNorm_sub_of_rank_le",
-    "NLAlib.isBestRankApprox_truncatedSVD",
-    "NLAlib.frobSq_sub_truncatedSVD_eq_singularValueTailSq"
+    "NLAlib.isBestFrobRankApprox_truncatedSVD",
+    "NLAlib.frobSq_sub_truncatedSVD_eq_bestRankFrobSq"
    ],
    "note": "The perturbation inequality is proved for every real orthogonally invariant norm on the actual rectangular shape. Best rank-k/truncated-SVD approximation is stated for spectral and Frobenius norms; the all-invariant-norm minimization conclusion is not stated."
   },
@@ -7304,7 +7323,7 @@
     "NLAlib.cfc_rpow_le_cfc_rpow",
     "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le",
     "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le",
-    "NLAlib.re_trace_le_re_trace_of_le",
+    "Matrix.re_trace_le_re_trace_of_le",
     "Mathlib:CStarAlgebra.inv_le_inv_iff",
     "Mathlib:CFC.sqrt_le_sqrt"
    ],

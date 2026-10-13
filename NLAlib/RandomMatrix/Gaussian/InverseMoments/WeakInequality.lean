@@ -217,7 +217,7 @@ theorem integral_nonneg_of_gaussian_coordinate_approximation
     funext x
     simp only [Pi.sub_apply]
     ring
-  exact integral_nonneg_of_shift_identity_limit μ F
+  exact MeasureTheory.integral_nonneg_of_shift_identity_limit μ F
     (fun n x => ∑ i, D n i x ^ 2) (fun n x => ∑ i, x i * D n i x)
     (fun n x => ∑ i, DD n i x) X A' B' C' ψ (deriv ψ)
     hψ.continuous (hψ.continuous_deriv le_rfl) b K P hP hψ0 hψP hLi hRi

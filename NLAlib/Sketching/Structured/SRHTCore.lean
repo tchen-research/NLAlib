@@ -17,15 +17,29 @@ namespace NLAlib
 selector `R = Sᵀ`, `S` the selection matrix of the rows of `T` in increasing order.
 Source: operator re-derivation `sh:srht-ose`. -/
 def srhtSketch {n k : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
-    (ξ : Fin n → Bool) (T : ExactRowSubset (Fin n) k) : Matrix (Fin k) (Fin n) ℝ :=
+    (ξ : Fin n → ℝ) (T : ExactRowSubset (Fin n) k) : Matrix (Fin k) (Fin n) ℝ :=
   Real.sqrt ((n : ℝ) / k) •
     ((selectionMatrix (T.val.orderEmbOfFin T.prop))ᵀ * H *
-      Matrix.diagonal (fun i => rademacherBoolSign (ξ i)))
+      Matrix.diagonal ξ)
+
+/-- The sampled sketch is jointly measurable in its diagonal and finite row subset. -/
+@[fun_prop] theorem measurable_srhtSketch {n k : ℕ} (H : Matrix (Fin n) (Fin n) ℝ) :
+    Measurable (fun ω : (Fin n → ℝ) × ExactRowSubset (Fin n) k => srhtSketch H ω.1 ω.2) := by
+  have hR : Measurable (fun T : ExactRowSubset (Fin n) k =>
+      (selectionMatrix (T.val.orderEmbOfFin T.prop))ᵀ) := .of_discrete
+  have hD : Measurable (fun ω : (Fin n → ℝ) × ExactRowSubset (Fin n) k =>
+      Matrix.diagonal ω.1) := by
+    apply Matrix.measurable_iff_entries.mpr
+    intro i j
+    by_cases hij : i = j <;> simp [Matrix.diagonal_apply, hij] <;> fun_prop
+  unfold srhtSketch
+  exact (((hR.comp measurable_snd).matrix_mul measurable_const).matrix_mul hD).const_smul
+    (Real.sqrt ((n : ℝ) / k))
 
 /-- The actual sketch's action on a frame is the rescaled selected row of
 the one-diagonal transformed frame. Source: `sh:srht-ose`. -/
 theorem srhtSketch_mul_apply {n k d : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
-    (U : Matrix (Fin n) (Fin d) ℝ) (ξ : Fin n → Bool)
+    (U : Matrix (Fin n) (Fin d) ℝ) (ξ : Fin n → ℝ)
     (T : ExactRowSubset (Fin n) k) (a : Fin k) (b : Fin d) :
     (srhtSketch H ξ T * U) a b = Real.sqrt ((n : ℝ) / k) *
       srhtSignedFrame H U ξ (T.val.orderEmbOfFin T.prop a) b := by
@@ -47,7 +61,7 @@ theorem sum_srhtRowEnumeration {n k : ℕ} (T : ExactRowSubset (Fin n) k)
 /-- The literal sampled Gram matrix is the uniform distinct-row average.
 Source: operator re-derivation `sh:srht-ose`. -/
 theorem transpose_srhtSketch_mul_self {n k d : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
-    (U : Matrix (Fin n) (Fin d) ℝ) (ξ : Fin n → Bool)
+    (U : Matrix (Fin n) (Fin d) ℝ) (ξ : Fin n → ℝ)
     (T : ExactRowSubset (Fin n) k) :
     (srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) =
       ((n : ℝ) / k) • ∑ j ∈ T.val,
@@ -100,7 +114,8 @@ theorem mean_srhtPopulationAtom {n d : ℕ} [NeZero n]
     (1 / (Fintype.card (Fin n) : ℝ)) • ∑ j, srhtPopulationAtom V j = 1 := by
   have hn : (n : ℝ) ≠ 0 := by exact_mod_cast NeZero.ne n
   have he := hV
-  change Vᵀ * V = 1 at he
+  change Vᴴ * V = 1 at he
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at he
   ext a b
   have hab := congrArg (fun M : Matrix (Fin d) (Fin d) ℝ => M a b) he
   simp only [Matrix.mul_apply, Matrix.transpose_apply] at hab
@@ -114,7 +129,7 @@ theorem mean_srhtPopulationAtom {n d : ℕ} [NeZero n]
 /-- The complex Chernoff empirical mean is precisely the complex extension
 of the actual real sketch Gram matrix. Source: `sh:srht-ose`. -/
 theorem map_ofReal_srhtSketch_gram {n k d : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
-    (U : Matrix (Fin n) (Fin d) ℝ) (ξ : Fin n → Bool)
+    (U : Matrix (Fin n) (Fin d) ℝ) (ξ : Fin n → ℝ)
     (T : ExactRowSubset (Fin n) k) :
     ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U)).map Complex.ofReal =
       (1 / (k : ℝ)) • ∑ j ∈ T.val, srhtPopulationAtom (srhtSignedFrame H U ξ) j := by
@@ -132,7 +147,7 @@ full-row branch of the capped row prescription. -/
 theorem transpose_srhtSketch_full_rows_mul_self {n d : ℕ} [NeZero n]
     (H : Matrix (Fin n) (Fin n) ℝ) (hH : Hᵀ * H = 1)
     (U : Matrix (Fin n) (Fin d) ℝ) (hU : HasOrthonormalCols U)
-    (ξ : Fin n → Bool) (T : ExactRowSubset (Fin n) n) :
+    (ξ : Fin n → ℝ) (hξ : ∀ i, ξ i ^ 2 = 1) (T : ExactRowSubset (Fin n) n) :
     (srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) = 1 := by
   have hn : (n : ℝ) ≠ 0 := by exact_mod_cast NeZero.ne n
   have hT : T.val = Finset.univ := Finset.eq_univ_of_card T.val (by simpa using T.prop)
@@ -141,6 +156,7 @@ theorem transpose_srhtSketch_full_rows_mul_self {n d : ℕ} [NeZero n]
     _ = (srhtSignedFrame H U ξ)ᵀ * srhtSignedFrame H U ξ := by
       ext a b
       simp only [Matrix.sum_apply, Matrix.vecMulVec_apply, Matrix.mul_apply, Matrix.transpose_apply]
-    _ = 1 := hasOrthonormalCols_srhtSignedFrame H hH U hU ξ
+    _ = 1 := by simpa only [HasOrthonormalCols, Matrix.conjTranspose_eq_transpose_of_trivial] using
+      (hasOrthonormalCols_srhtSignedFrame H hH U hU ξ hξ)
 
 end NLAlib

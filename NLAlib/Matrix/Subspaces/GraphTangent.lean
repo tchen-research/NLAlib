@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Subspaces.Projections
+import Mathlib.Data.ENNReal.Inv
 
 /-!
 # Largest tangent of a transverse graph
@@ -9,7 +10,7 @@ This is the principal-angle tangent in manuscript `sa:subspace`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix ENNReal
 
 namespace NLAlib
 
@@ -19,7 +20,9 @@ variable {n k r : Type*} [Fintype n] [Fintype k] [Fintype r]
 /-- The largest tangent from a subspace to the leading orthonormal block is the
 largest tail-coordinate norm among vectors whose head-coordinate norm is at most one.
 Source: Saad (2011), §5.1; manuscript `sa:subspace`. For transverse subspaces this is
-the usual supremum of the tail/head norm ratio. -/
+the usual supremum of the tail/head norm ratio. This real-valued supremum
+is an algebraic helper: if its defining set is unbounded above, Mathlib returns
+zero. Use it under a transverse-graph or explicit boundedness hypothesis. -/
 def subspaceTangent (U₁ : Matrix n k ℝ) (U₂ : Matrix n r ℝ)
     (S : Submodule ℝ (n → ℝ)) : ℝ :=
   sSup ((fun x : n → ℝ => ‖WithLp.toLp 2 (U₂ᵀ *ᵥ x)‖) ''
@@ -69,9 +72,82 @@ theorem subspaceTangent_range_graph_eq_specNorm
 
 /-- The tangent of the angle from a vector to an orthonormal frame's range is its
 orthogonal-residual norm divided by its projection norm. Source: Saad (2011), §5.1;
-manuscript `sa:subspace`, per-vector angle clause. -/
+manuscript `sa:subspace`, per-vector angle clause. This real quotient returns
+zero when the projection is zero, including nonzero orthogonal vectors.
+`vectorTangentToFrameENNReal` is the geometric diagnostic including right angles. -/
 def vectorTangentToFrame {l : Type*} [Fintype l] (Q : Matrix n l ℝ) (u : n → ℝ) : ℝ :=
   ‖WithLp.toLp 2 (u - Q *ᵥ (Qᵀ *ᵥ u))‖ / ‖WithLp.toLp 2 (Qᵀ *ᵥ u)‖
+
+omit [DecidableEq n] in
+/-- The extended nonnegative vector-to-frame tangent: residual norm divided by
+projection norm. A nonzero vector orthogonal to the frame has tangent `⊤`,
+while the zero vector has tangent zero. For an orthonormal frame and nonzero
+projection this agrees with the finite real quotient. Source: Saad (2011), §5.1. -/
+def vectorTangentToFrameENNReal {l : Type*} [Fintype l]
+    (Q : Matrix n l ℝ) (u : n → ℝ) : ℝ≥0∞ :=
+  ENNReal.ofReal ‖WithLp.toLp 2 (u - Q *ᵥ (Qᵀ *ᵥ u))‖ /
+    ENNReal.ofReal ‖WithLp.toLp 2 (Qᵀ *ᵥ u)‖
+
+omit [DecidableEq n] in
+/-- The zero vector has extended tangent zero. -/
+@[simp] theorem vectorTangentToFrameENNReal_zero {l : Type*} [Fintype l]
+    (Q : Matrix n l ℝ) : vectorTangentToFrameENNReal Q 0 = 0 := by
+  simp [vectorTangentToFrameENNReal]
+
+omit [DecidableEq n] in
+/-- A nonzero orthogonal vector has infinite tangent, rather than the zero
+produced by total real division. No orthonormality is needed for this degeneracy. -/
+theorem vectorTangentToFrameENNReal_eq_top_of_projection_eq_zero
+    {l : Type*} [Fintype l] (Q : Matrix n l ℝ) {u : n → ℝ}
+    (hu : u ≠ 0) (hp : Qᵀ *ᵥ u = 0) :
+    vectorTangentToFrameENNReal Q u = ⊤ := by
+  have hn : 0 < ‖WithLp.toLp 2 u‖ := norm_pos_iff.mpr (by
+    intro h
+    apply hu
+    exact WithLp.toLp_injective 2 h)
+  simp only [vectorTangentToFrameENNReal, hp, Matrix.mulVec_zero, sub_zero,
+    WithLp.toLp_zero, norm_zero, ENNReal.ofReal_zero]
+  exact ENNReal.div_eq_top.mpr (Or.inl ⟨ENNReal.ofReal_ne_zero_iff.mpr hn, rfl⟩)
+
+omit [DecidableEq n] in
+/-- With nonzero projection, the extended tangent is the embedding of the
+finite real quotient. The hypothesis explicitly excludes a right angle. -/
+theorem vectorTangentToFrameENNReal_eq_ofReal {l : Type*} [Fintype l]
+    (Q : Matrix n l ℝ) {u : n → ℝ} (hp : Qᵀ *ᵥ u ≠ 0) :
+    vectorTangentToFrameENNReal Q u = ENNReal.ofReal (vectorTangentToFrame Q u) := by
+  have hn : 0 < ‖WithLp.toLp 2 (Qᵀ *ᵥ u)‖ := norm_pos_iff.mpr (by
+    intro h
+    apply hp
+    exact WithLp.toLp_injective 2 h)
+  exact (ENNReal.ofReal_div_of_pos hn).symm
+
+/-- Zero projection makes the total real quotient zero. This lemma exposes its
+invalid-angle convention; use the extended tangent for geometric diagnostics. -/
+theorem vectorTangentToFrame_eq_zero_of_projection_eq_zero
+    {l : Type*} [Fintype l] (Q : Matrix n l ℝ) {u : n → ℝ}
+    (hp : Qᵀ *ᵥ u = 0) : vectorTangentToFrame Q u = 0 := by
+  simp [vectorTangentToFrame, hp]
+
+/-- An unbounded defining set makes the real supremum helper zero. A finite
+geometric interpretation therefore requires an explicit boundedness domain. -/
+theorem subspaceTangent_eq_zero_of_not_bddAbove
+    (U₁ : Matrix n k ℝ) (U₂ : Matrix n r ℝ) (S : Submodule ℝ (n → ℝ))
+    (h : ¬ BddAbove ((fun x : n → ℝ => ‖WithLp.toLp 2 (U₂ᵀ *ᵥ x)‖) ''
+      {x | x ∈ S ∧ ‖WithLp.toLp 2 (U₁ᵀ *ᵥ x)‖ ≤ 1})) :
+    subspaceTangent U₁ U₂ S = 0 := Real.sSup_of_not_bddAbove h
+
+omit [DecidableEq n] [DecidableEq k] [DecidableEq r] in
+/-- On its bounded domain the real subspace-tangent supremum is nonnegative,
+since its feasible set contains the zero vector. -/
+theorem subspaceTangent_nonneg_of_bddAbove
+    (U₁ : Matrix n k ℝ) (U₂ : Matrix n r ℝ) (S : Submodule ℝ (n → ℝ))
+    (h : BddAbove ((fun x : n → ℝ => ‖WithLp.toLp 2 (U₂ᵀ *ᵥ x)‖) ''
+      {x | x ∈ S ∧ ‖WithLp.toLp 2 (U₁ᵀ *ᵥ x)‖ ≤ 1})) :
+    0 ≤ subspaceTangent U₁ U₂ S := by
+  apply le_csSup h
+  refine ⟨0, ?_, ?_⟩
+  · simp
+  · simp
 
 omit [DecidableEq n] in
 /-- Comparing a unit vector with any orthogonal graph competitor bounds its angle
@@ -79,9 +155,13 @@ to the containing frame. Source: manuscript `sa:subspace`, per-vector comparison
 This is an actual vector-to-subspace tangent, not the initial graph-column norm. -/
 theorem vectorTangentToFrame_le_of_orthogonal_competitor
     {l : Type*} [Fintype l] [DecidableEq l] {Q : Matrix n l ℝ}
-    (hQ : HasOrthonormalCols Q) {u w : n → ℝ} (hu : u ⬝ᵥ u = 1)
+    (hQ : HasOrthonormalCols Q) {u w : n → ℝ} (huNorm : ‖WithLp.toLp 2 u‖ = 1)
     (huw : u ⬝ᵥ w = 0) (hw : u + w ∈ LinearMap.range Q.mulVecLin) :
     vectorTangentToFrame Q u ≤ ‖WithLp.toLp 2 w‖ := by
+  have hu : u ⬝ᵥ u = 1 := by
+    have h := norm_toLp_sq_eq_dotProduct_self u
+    rw [huNorm, one_pow] at h
+    exact h.symm
   let p := Qᵀ *ᵥ u
   let v := Qᵀ *ᵥ (u + w)
   have hpv : p ⬝ᵥ v = 1 := by
@@ -133,6 +213,31 @@ theorem vectorTangentToFrame_le_of_orthogonal_competitor
   nlinarith
 
 omit [DecidableEq n] in
+/-- An orthogonal graph competitor bounds the geometric extended tangent.
+The competitor forces a nonzero projection, so the result excludes the
+infinite right-angle case through its mathematical hypotheses. Source: Saad (2011), §5.1. -/
+theorem vectorTangentToFrameENNReal_le_of_orthogonal_competitor
+    {l : Type*} [Fintype l] [DecidableEq l] {Q : Matrix n l ℝ}
+    (hQ : HasOrthonormalCols Q) {u w : n → ℝ} (huNorm : ‖WithLp.toLp 2 u‖ = 1)
+    (huw : u ⬝ᵥ w = 0) (hw : u + w ∈ LinearMap.range Q.mulVecLin) :
+    vectorTangentToFrameENNReal Q u ≤ ENNReal.ofReal ‖WithLp.toLp 2 w‖ := by
+  have hu : u ⬝ᵥ u = 1 := by
+    have h := norm_toLp_sq_eq_dotProduct_self u
+    rw [huNorm, one_pow] at h
+    exact h.symm
+  have hp : Qᵀ *ᵥ u ≠ 0 := by
+    intro hp
+    have heq : (Qᵀ *ᵥ u) ⬝ᵥ (Qᵀ *ᵥ (u + w)) = 1 := by
+      rw [dotProduct_comm, Matrix.dotProduct_mulVec, Matrix.vecMul_transpose,
+        show Q *ᵥ (Qᵀ *ᵥ (u + w)) = u + w from
+          mulVec_conjTranspose_mulVec_of_mem_range hQ hw, dotProduct_comm,
+        dotProduct_add, hu, huw, add_zero]
+    rw [hp, zero_dotProduct] at heq
+    norm_num at heq
+  rw [vectorTangentToFrameENNReal_eq_ofReal Q hp]
+  exact ENNReal.ofReal_le_ofReal (vectorTangentToFrame_le_of_orthogonal_competitor hQ huNorm huw hw)
+
+omit [DecidableEq n] in
 /-- Each leading graph column has angle to any containing orthonormal frame at most
 its tail-column norm. Source: manuscript `sa:subspace`, the per-vector competitor. -/
 theorem vectorTangentToFrame_graph_col_le
@@ -159,7 +264,11 @@ theorem vectorTangentToFrame_graph_col_le
     refine ⟨i, ?_⟩
     ext j
     simp [Matrix.col, Matrix.add_apply, Matrix.mul_apply, Matrix.mulVec, dotProduct]
-  have h := vectorTangentToFrame_le_of_orthogonal_competitor hQ hu horth hw
+  have huNorm : ‖WithLp.toLp 2 (U₁.col i)‖ = 1 := by
+    have hnorm := norm_toLp_sq_eq_dotProduct_self (U₁.col i)
+    rw [hu] at hnorm
+    nlinarith [norm_nonneg (WithLp.toLp 2 (U₁.col i))]
+  have h := vectorTangentToFrame_le_of_orthogonal_competitor hQ huNorm horth hw
   have hnorm : ‖WithLp.toLp 2 (U₂ *ᵥ F.col i)‖ = ‖WithLp.toLp 2 (F.col i)‖ := by
     apply (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp
     rw [EuclideanSpace.real_norm_sq_eq, EuclideanSpace.real_norm_sq_eq]

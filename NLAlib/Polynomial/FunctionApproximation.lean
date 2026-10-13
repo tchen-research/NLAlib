@@ -3,6 +3,7 @@ import NLAlib.Polynomial.FunctionApproximation.AnalyticCoefficients
 import NLAlib.Polynomial.FunctionApproximation.AnalyticFourier
 import NLAlib.Polynomial.FunctionApproximation.Approximation
 import NLAlib.Polynomial.FunctionApproximation.BernsteinEllipse
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevCoefficients
 import NLAlib.Polynomial.FunctionApproximation.Exponential
 import NLAlib.Polynomial.FunctionApproximation.Monomial
 

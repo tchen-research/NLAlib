@@ -7,7 +7,7 @@ import NLAlib.Probability.Concentration.Martingales.Freedman
 /-!
 # Theorem 7.7.1 — Intrinsic Hermitian matrix Bernstein
 
-Main declaration: `NLAlib.intrinsic_hermitian_bernstein`.
+Main declaration: `NLAlib.measureReal_lambdaMax_sum_ge_le_intrinsicDimension_mul_exp`.
 
 Atlas: `intrinsic-dimension`.
 
@@ -111,7 +111,6 @@ private lemma NLAlib.intrinsic_hermitian_bernstein_package {Ω : Type*} [Measura
       μ.real {ω | t ≤ lambdaMax (Y ω)} ≤
         4 * intrinsicDimension V * Real.exp (-(t ^ 2 / 2) / (v + L * t / 3)) := by
   intro Y v
-  simp only [specNorm_eq_norm] at *
   -- second moment of the sum
   have hsecond : (∫ ω, Y ω ^ 2 ∂μ) = ∑ k, ∫ ω, X k ω ^ 2 ∂μ := by
     have h := integral_sum_mul_sum_eq_sum_integral_mul μ X id id measurable_id measurable_id

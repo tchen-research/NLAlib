@@ -35,12 +35,6 @@ open Matrix
 
 namespace NLAlib
 
-/-- `‖x‖₂ = √(x ⬝ x)` for real vectors (proof helper; the squared bridge is
-`norm_toLp_sq_eq_dotProduct_self`). -/
-private theorem norm_toLp_eq_sqrt_dotProduct_self {ι : Type*} [Fintype ι] (x : ι → ℝ) :
-    ‖(WithLp.toLp 2 x : EuclideanSpace ℝ ι)‖ = √(x ⬝ᵥ x) := by
-  rw [← norm_toLp_sq_eq_dotProduct_self, Real.sqrt_sq (norm_nonneg _)]
-
 /-! ### Reflectors -/
 
 section Reflector

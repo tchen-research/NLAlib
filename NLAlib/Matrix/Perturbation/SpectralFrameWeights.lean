@@ -116,7 +116,6 @@ theorem trace_topEigenframe_compression_eq_prefix (hA : A.IsHermitian)
     ((topEigenframe hA hk)ᵀ*A*topEigenframe hA hk).trace=eigenvaluePrefix hA k := by
   rw [compression_topEigenframe_eq_diagonal, Matrix.trace_diagonal,
     eigenvaluePrefix_eq_sum_castLE hA hk]
-  rfl
 
 /-- Every competing width-`k` frame has no larger compression trace than
 the named top frame. Yu–Wang–Samworth, Theorem 2, Ky Fan optimality. -/

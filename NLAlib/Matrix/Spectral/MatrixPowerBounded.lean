@@ -94,7 +94,6 @@ theorem exists_bound_norm_real_matrix_pow_iff (A : Matrix n n ℝ) :
       spectralRadius ℂ (A.map Complex.ofReal) ≤ 1 ∧
       ∀ μ : ℂ, ‖μ‖ = 1 → Module.End.maxGenEigenspace (A.map Complex.ofReal).toEuclideanLin μ =
         Module.End.eigenspace (A.map Complex.ofReal).toEuclideanLin μ := by
-  unfold specNorm
   rw [exists_bound_norm_real_matrix_pow_iff_complexification, exists_bound_norm_matrix_pow_iff]
 
 end NLAlib

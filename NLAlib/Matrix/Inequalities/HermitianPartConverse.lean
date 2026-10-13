@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Inequalities.SchurHorn
 import NLAlib.Matrix.Spectral.Core
+import NLAlib.Matrix.Spectral.Complexification
 /-!
 # Realizing eigenvalues and a prescribed Hermitian-part spectrum
 

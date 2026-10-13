@@ -25,24 +25,24 @@ theorem norm_le_one_of_isHermitian_of_isIdempotentElem {P : Matrix m m ℂ}
 
 /-- The complementary actual column projector is a contractive complex projection.
 Source: manuscript `sa:filter`, its one-competitor argument. -/
-theorem norm_one_sub_complexColumnProjector_le (B : Matrix m k ℂ) :
-    ‖(1 : Matrix m m ℂ) - complexColumnProjector B‖ ≤ 1 := by
+theorem norm_one_sub_rangeProjector_le (B : Matrix m k ℂ) :
+    ‖(1 : Matrix m m ℂ) - rangeProjector B‖ ≤ 1 := by
   apply norm_le_one_of_isHermitian_of_isIdempotentElem
   · simp only [Matrix.IsHermitian, Matrix.conjTranspose_sub, Matrix.conjTranspose_one,
-      (complexColumnProjector_isHermitian B).eq]
-  · change (1 - complexColumnProjector B) * (1 - complexColumnProjector B) = _
+      (rangeProjector_isHermitian B).eq]
+  · change (1 - rangeProjector B) * (1 - rangeProjector B) = _
     rw [Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_sub, Matrix.one_mul, Matrix.one_mul,
-      Matrix.mul_one, complexColumnProjector_mul_self]
+      Matrix.mul_one, rangeProjector_mul_self]
     abel
 
 /-- The actual complex column-projection residual contracts the operator norm.
 Source: manuscript `sa:filter`, orthogonal projection contraction. -/
-theorem norm_sub_complexColumnProjector_mul_le (B : Matrix m k ℂ) (A : Matrix m n ℂ) :
-    ‖A - complexColumnProjector B * A‖ ≤ ‖A‖ := by
-  rw [show A - complexColumnProjector B * A = (1 - complexColumnProjector B) * A by
+theorem norm_sub_rangeProjector_mul_le (B : Matrix m k ℂ) (A : Matrix m n ℂ) :
+    ‖A - rangeProjector B * A‖ ≤ ‖A‖ := by
+  rw [show A - rangeProjector B * A = (1 - rangeProjector B) * A by
     rw [Matrix.sub_mul, Matrix.one_mul]]
   exact (Matrix.l2_opNorm_mul _ _).trans
-    ((mul_le_mul_of_nonneg_right (norm_one_sub_complexColumnProjector_le B) (norm_nonneg A)).trans_eq
+    ((mul_le_mul_of_nonneg_right (norm_one_sub_rangeProjector_le B) (norm_nonneg A)).trans_eq
       (one_mul _))
 
 omit [DecidableEq m] in
@@ -91,15 +91,15 @@ Source: manuscript `sa:filter`, trace representation of Frobenius mass. -/
 theorem frobenius_norm_sq_eq_re_trace_mul_conjTranspose (A : Matrix m n ℂ) :
     ‖A‖ ^ 2 = (A * Aᴴ).trace.re := by
   rw [← Matrix.frobenius_norm_conjTranspose A,
-    frobenius_norm_sq_eq_re_trace_conjTranspose_mul, Matrix.conjTranspose_conjTranspose]
+    ← frobNorm_eq_norm, frobNorm_sq, frobSq_eq_re_trace_conjTranspose_mul_self, Matrix.conjTranspose_conjTranspose, RCLike.re_to_complex]
 
 omit [DecidableEq m] [DecidableEq n] in
 /-- Complex orthonormal columns preserve squared Frobenius mass on the left.
 Source: manuscript `sa:filter`, unitary invariance. -/
 theorem frobenius_norm_sq_mul_left_of_conjTranspose_mul_eq_one {U : Matrix m k ℂ}
     (hU : Uᴴ * U = 1) (B : Matrix k n ℂ) : ‖U * B‖ ^ 2 = ‖B‖ ^ 2 := by
-  rw [frobenius_norm_sq_eq_re_trace_conjTranspose_mul,
-    frobenius_norm_sq_eq_re_trace_conjTranspose_mul, Matrix.conjTranspose_mul,
+  rw [← frobNorm_eq_norm, frobNorm_sq, frobSq_eq_re_trace_conjTranspose_mul_self,
+    ← frobNorm_eq_norm, frobNorm_sq, frobSq_eq_re_trace_conjTranspose_mul_self, Matrix.conjTranspose_mul,
     Matrix.mul_assoc, ← Matrix.mul_assoc Uᴴ, hU, Matrix.one_mul]
 
 omit [DecidableEq m] [DecidableEq n] in
@@ -148,13 +148,13 @@ theorem frobenius_norm_sq_eq_left_projection_add_residual
 omit [DecidableEq n] in
 /-- The genuine complex column residual contracts squared Frobenius mass.
 Source: manuscript `sa:filter`, projection competitor. -/
-theorem frobenius_norm_sub_complexColumnProjector_mul_sq_le
+theorem frobenius_norm_sub_rangeProjector_mul_sq_le
     (B : Matrix m k ℂ) (A : Matrix m n ℂ) :
-    ‖A - complexColumnProjector B * A‖ ^ 2 ≤ ‖A‖ ^ 2 := by
-  have hs := frobenius_norm_sq_eq_left_projection_add_residual (complexColumnProjector B)
-    (complexColumnProjector_isHermitian B) (complexColumnProjector_mul_self B) A
+    ‖A - rangeProjector B * A‖ ^ 2 ≤ ‖A‖ ^ 2 := by
+  have hs := frobenius_norm_sq_eq_left_projection_add_residual (rangeProjector B)
+    (rangeProjector_isHermitian B) (rangeProjector_mul_self B) A
   rw [Matrix.sub_mul, Matrix.one_mul] at hs
-  linarith [sq_nonneg ‖complexColumnProjector B * A‖]
+  linarith [sq_nonneg ‖rangeProjector B * A‖]
 
 end Frobenius
 end NLAlib

@@ -19,7 +19,7 @@ Tropp 2015, eq. (2.2.2), as used in Corollary 3.4.2. Atlas: `matrix-laplace`. Po
 Prove2me mission *An Introduction to Matrix Concentration Inequalities, Ch 3*.
 
 Variant of Mathlib's `ConcaveOn.le_map_integral`, which needs `s` closed. -/
-theorem NLAlib.ConcaveOn.le_map_integral_of_integral_mem {Ω E : Type*} [MeasurableSpace Ω]
+theorem ConcaveOn.le_map_integral_of_integral_mem {Ω E : Type*} [MeasurableSpace Ω]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (s : Set E) (g : E → ℝ) (f : Ω → E)
     (hg : ConcaveOn ℝ s g) (hgc : ContinuousOn g s)

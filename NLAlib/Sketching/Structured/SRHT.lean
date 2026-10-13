@@ -7,7 +7,7 @@ import NLAlib.Matrix.Norms.Core
 /-!
 # Classical SRHT with one shared diagonal and actual distinct-row sampling
 
-The finite product law, literal `√(n/k) R H D` matrix, Gaussian-linearization
+The real-sign product law, literal `√(n/k) R H D` matrix, Gaussian-linearization
 row bound, proved without-replacement Chernoff inequality and full-row
 recovery close the classical source statement. Source: `sh:srht-ose`.
 Atlas: `srht-ose`.
@@ -19,11 +19,11 @@ open MeasureTheory ProbabilityTheory
 open scoped Classical Matrix Matrix.Norms.L2Operator ENNReal ComplexOrder
 namespace NLAlib
 
-/-- The actual classical SRHT law: one independent uniform sign cube and
+/-- The actual classical SRHT law: one independent Rademacher vector and
 one uniform exact-size row subset. Source: `sh:srht-ose`. -/
 def srhtLaw {n k : ℕ} (hk : k ≤ n) :
-    Measure ((Fin n → Bool) × ExactRowSubset (Fin n) k) :=
-  (rademacherCubePMF (Fin n)).toMeasure.prod
+    Measure ((Fin n → ℝ) × ExactRowSubset (Fin n) k) :=
+  (rademacherVector (Fin n)).prod
     (uniformExactRowSubsetPMF (show k ≤ Fintype.card (Fin n) by simpa using hk)).toMeasure
 
 instance srhtLaw_isProbabilityMeasure {n k : ℕ} (hk : k ≤ n) :
@@ -38,7 +38,7 @@ theorem measure_srht_gram_failure_le_of_flat_rows
     {n d k : ℕ} [NeZero n] [NeZero d] (hk0 : 0 < k) (hk : k ≤ n)
     (H : Matrix (Fin n) (Fin n) ℝ) (hH : Hᵀ * H = 1)
     (U : Matrix (Fin n) (Fin d) ℝ) (hU : HasOrthonormalCols U)
-    (ξ : Fin n → Bool) {L ε : ℝ} (hL : 0 < L)
+    (ξ : Fin n → ℝ) (hξ : ∀ i, ξ i ^ 2 = 1) {L ε : ℝ} (hL : 0 < L)
     (hflat : ∀ j, (n : ℝ) * (srhtSignedFrame H U ξ j ⬝ᵥ srhtSignedFrame H U ξ j) ≤ L)
     (hε : 0 < ε) (hε1 : ε < 1) :
     ((uniformExactRowSubsetPMF (show k ≤ Fintype.card (Fin n) by simpa using hk)).toMeasure
@@ -50,8 +50,11 @@ theorem measure_srht_gram_failure_le_of_flat_rows
   have hbound (j : Fin n) : 0 ≤ lambdaMin (A j) ∧ lambdaMax (A j) ≤ L := by
     refine ⟨lambdaMin_nonneg_of_posSemidef (hPSD j), ?_⟩
     have ht := trace_srhtPopulationAtom V j
-    exact (lambdaMax_le_trace_of_posSemidef (hPSD j)).trans (by rw [ht]; exact hflat j)
-  have hmean := mean_srhtPopulationAtom V (hasOrthonormalCols_srhtSignedFrame H hH U hU ξ)
+    exact (lambdaMax_le_trace_of_posSemidef (hPSD j)).trans (by
+      change (srhtPopulationAtom V j).trace.re ≤ L
+      rw [ht]
+      exact hflat j)
+  have hmean := mean_srhtPopulationAtom V (hasOrthonormalCols_srhtSignedFrame H hH U hU ξ hξ)
   have hc := measure_norm_uniform_subset_sub_one_le hk0
     (show k ≤ Fintype.card (Fin n) by simpa using hk) A L hL
     (fun j => (hPSD j).isHermitian) hbound hmean hε hε1
@@ -67,8 +70,9 @@ theorem measure_srht_gram_failure_le_of_flat_rows
       by_cases hab : a = b <;> simp [Matrix.map_apply, Matrix.one_apply, hab]
     have hnorm : specNorm ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1) ≤
         ‖((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1).map Complex.ofReal‖ :=
-      specNorm_le_norm_map_ofReal (𝕜 := ℂ)
-        ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1)
+      by
+        simpa only [specNorm_eq_norm, Complex.coe_algebraMap] using specNorm_le_specNorm_map_ofReal (𝕜 := ℂ)
+          ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1)
     rw [hm] at hnorm
     exact hT.le.trans hnorm
   exact (measureReal_mono hsub).trans hc
@@ -116,10 +120,10 @@ theorem measure_srht_gram_failure_le_of_sharp_sample_size
   have hL : 0 < L := by
     apply sq_pos_of_pos
     exact add_pos_of_pos_of_nonneg (Real.sqrt_pos.mpr hdR) (Real.sqrt_nonneg _)
-  let E : Set (Fin n → Bool) := {ξ | ∃ j : Fin n,
+  let E : Set (Fin n → ℝ) := {ξ | ∃ j : Fin n,
     L < (n : ℝ) * (srhtSignedFrame H U ξ j ⬝ᵥ srhtSignedFrame H U ξ j)}
   have hE := measure_srhtSharpRowBound_failure_le H hHflat U hU hδ hδ1
-  have hcond (ξ : Fin n → Bool) (hξ : ξ ∉ E) :
+  have hcond (ξ : Fin n → ℝ) (hsign : ∀ i, ξ i ^ 2 = 1) (hξ : ξ ∉ E) :
       ((uniformExactRowSubsetPMF (show k ≤ Fintype.card (Fin n) by simpa using hk)).toMeasure
         {T | ε < specNorm ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1)}).toReal ≤
           δ / 2 := by
@@ -127,12 +131,26 @@ theorem measure_srht_gram_failure_le_of_sharp_sample_size
         (srhtSignedFrame H U ξ j ⬝ᵥ srhtSignedFrame H U ξ j) ≤ L := by
       by_contra hnot
       exact hξ ⟨j, lt_of_not_ge hnot⟩
-    exact (measure_srht_gram_failure_le_of_flat_rows hk0 hk H hH U hU ξ hL hrows hε hε1).trans
+    exact (measure_srht_gram_failure_le_of_flat_rows hk0 hk H hH U hU ξ hsign hL hrows hε hε1).trans
       (srht_tail_le_half_of_sample_size (Nat.pos_of_ne_zero (NeZero.ne d)) hL hε hδ hsize)
-  have hh := measureReal_prod_le_measureReal_add_of_sections_le (rademacherCubePMF (Fin n)).toMeasure
+  have hh := measureReal_prod_le_measureReal_add_of_sections_le_of_measurableSet (rademacherVector (Fin n))
     (uniformExactRowSubsetPMF (show k ≤ Fintype.card (Fin n) by simpa using hk)).toMeasure E
     {ω | ε < specNorm ((srhtSketch H ω.1 ω.2 * U)ᵀ * (srhtSketch H ω.1 ω.2 * U) - 1)}
-    (show 0 ≤ δ / 2 by positivity) hcond
+    (by
+      dsimp only [E]
+      simp only [Set.ofPred_exists]
+      apply MeasurableSet.iUnion
+      intro j
+      apply measurableSet_lt measurable_const
+      unfold dotProduct
+      fun_prop)
+    (by
+      apply measurableSet_lt measurable_const
+      simp only [specNorm_eq_norm]
+      fun_prop)
+    (show 0 ≤ δ / 2 by positivity)
+    ((ae_forall_sq_eq_one_rademacherVector (ι := Fin n)).mono fun ξ hξ => hcond ξ hξ)
+  change (rademacherVector (Fin n)).real E ≤ δ / 2 at hE
   exact hh.trans (by linarith)
 
 /-- The manuscript's displayed Hanson–Wright row bound and row count imply
@@ -177,13 +195,18 @@ theorem measure_srht_full_rows_failure_eq_zero {n d : ℕ} [NeZero n]
     {ε : ℝ} (hε : 0 ≤ ε) :
     (srhtLaw (le_refl n) {ω | ε < specNorm
       ((srhtSketch H ω.1 ω.2 * U)ᵀ * (srhtSketch H ω.1 ω.2 * U) - 1)}).toReal = 0 := by
-  have he : {ω : (Fin n → Bool) × ExactRowSubset (Fin n) n | ε < specNorm
-      ((srhtSketch H ω.1 ω.2 * U)ᵀ * (srhtSketch H ω.1 ω.2 * U) - 1)} = ∅ := by
-    ext ω
-    simp only [Set.mem_ofPred_eq, transpose_srhtSketch_full_rows_mul_self H hH U hU,
-      sub_self, specNorm_eq_norm, norm_zero, Set.mem_empty_iff_false, iff_false]
-    exact not_lt.mpr hε
-  rw [he, measure_empty, ENNReal.toReal_zero]
+  suffices hz : srhtLaw (le_refl n) {ω | ε < specNorm
+      ((srhtSketch H ω.1 ω.2 * U)ᵀ * (srhtSketch H ω.1 ω.2 * U) - 1)} = 0 by
+    rw [hz, ENNReal.toReal_zero]
+  apply measure_eq_zero_iff_ae_notMem.mpr
+  have hs : ∀ᵐ ω ∂srhtLaw (le_refl n), ∀ i, ω.1 i ^ 2 = 1 :=
+    Measure.quasiMeasurePreserving_fst.ae
+      (ae_forall_sq_eq_one_rademacherVector (ι := Fin n))
+  filter_upwards [hs] with ω hω
+  simp only [Set.mem_ofPred_eq,
+    transpose_srhtSketch_full_rows_mul_self H hH U hU ω.1 hω,
+    sub_self, specNorm_zero]
+  exact not_lt.mpr hε
 
 /-- Rank-zero frames have zero Gram failure deterministically for every
 width, so no positive-rank concentration parameter is formed.
@@ -193,7 +216,7 @@ theorem measure_srht_zero_rank_failure_eq_zero {n k : ℕ} (hk : k ≤ n)
     {ε : ℝ} (hε : 0 ≤ ε) :
     (srhtLaw hk {ω | ε < specNorm
       ((srhtSketch H ω.1 ω.2 * U)ᵀ * (srhtSketch H ω.1 ω.2 * U) - 1)}).toReal = 0 := by
-  have he : {ω : (Fin n → Bool) × ExactRowSubset (Fin n) k | ε < specNorm
+  have he : {ω : (Fin n → ℝ) × ExactRowSubset (Fin n) k | ε < specNorm
       ((srhtSketch H ω.1 ω.2 * U)ᵀ * (srhtSketch H ω.1 ω.2 * U) - 1)} = ∅ := by
     ext ω
     have hM : (srhtSketch H ω.1 ω.2 * U)ᵀ * (srhtSketch H ω.1 ω.2 * U) - 1 = 0 :=

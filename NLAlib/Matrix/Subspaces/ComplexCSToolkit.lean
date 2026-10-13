@@ -53,8 +53,8 @@ theorem complex_cs_decomposition_properties {p q n : Type*}
       Qᴴ * Q = 1 ∧ Wᴴ * W = 1 ∧
       LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin ∧
       LinearMap.range W.toEuclideanLin = (LinearMap.ker P.toEuclideanLin)ᗮ ∧
-      let θ := complexPrincipalAnglesFintype W Q ⟨P.rank - 1, by simpa using Nat.sub_lt hr Nat.one_pos⟩
-      (∀ i, complexPrincipalAnglesFintype W Q i ≤ θ) ∧
+      let θ := principalAnglesFintype W Q ⟨P.rank - 1, by simpa using Nat.sub_lt hr Nat.one_pos⟩
+      (∀ i, principalAnglesFintype W Q i ≤ θ) ∧
       θ < Real.pi / 2 ∧ ‖P‖ = 1 / Real.cos θ) ∧
     (0 < P.rank → P.rank < Fintype.card n → ‖1 - P‖ = ‖P‖) ∧
     (P.rank = 0 → ‖P‖ = 0 ∧ ‖1 - P‖ = if Fintype.card n = 0 then 0 else 1) ∧

@@ -1,6 +1,6 @@
 import NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace
 import NLAlib.Matrix.Subspaces.ComplexVolumeProjection
-import NLAlib.Matrix.Functions.ComplexDiagonalFilter
+import NLAlib.Matrix.Functions.DiagonalFilter
 import NLAlib.Matrix.Spectral.GramSingularValues
 import NLAlib.Matrix.Spectral.EckartYoung
 import NLAlib.Matrix.Norms.RankNorm
@@ -54,15 +54,15 @@ theorem range_toEuclideanLin_map_ofReal_eq {m n p : Type*}
     [Fintype m] [Fintype n] [Fintype p] [DecidableEq n] [DecidableEq p]
     (A : Matrix m n ℝ) (B : Matrix m p ℝ)
     (h : LinearMap.range A.toEuclideanLin = LinearMap.range B.toEuclideanLin) :
-    LinearMap.range (A.map Complex.ofReal).toEuclideanLin =
-      LinearMap.range (B.map Complex.ofReal).toEuclideanLin := by
+    LinearMap.range (A.map Complex.ofRealHom).toEuclideanLin =
+      LinearMap.range (B.map Complex.ofRealHom).toEuclideanLin := by
   have hr := range_mulVecLin_eq_of_range_toEuclideanLin_eq A B h
   obtain ⟨F, hF⟩ := exists_eq_mul_of_range_le hr.le
   obtain ⟨G, hG⟩ := exists_eq_mul_of_range_le hr.ge
   apply le_antisymm
-  · rw [hF, map_ofReal_mul]
+  · rw [hF, Matrix.map_mul (f := Complex.ofRealHom) (L := B) (M := F)]
     exact range_toEuclideanLin_mul_le_complex _ _
-  · rw [hG, map_ofReal_mul]
+  · rw [hG, Matrix.map_mul (f := Complex.ofRealHom) (L := A) (M := G)]
     exact range_toEuclideanLin_mul_le_complex _ _
 
 /-- A unitary similarity carries any exact range frame to an exact range

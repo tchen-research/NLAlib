@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Spectral.SpectralBounds
 import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.InversePowerLimit
 import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.GramSoftMinSpectral
 
@@ -318,7 +319,7 @@ smallest singular value for every matrix, with zero on the singular domain.
 Source: inverse eigenvalue trace comparison; atlas `wishart-lambda-min-tail` (helper). -/
 theorem inversePowerSoftMin_gram_le_sigmaMin_sq [Nonempty ι]
     (n : ℕ) (hn : 0 < n) (G : Matrix ι κ ℝ) :
-    inversePowerSoftMin n (G * Gᵀ) ≤ sigmaMin Gᵀ ^ 2 := by
+    inversePowerSoftMin n (G * Gᵀ) ≤ singularValues Gᵀ (Fintype.card ι - 1) ^ 2 := by
   by_cases hpd : (G * Gᵀ).PosDef
   · have hreg : (regularizedGram 0 G).PosDef := by simpa only [regularizedGram_zero] using hpd
     obtain ⟨i, hi⟩ := (IsGreatest.pi_norm hreg.inv.isHermitian.eigenvalues).1
@@ -328,7 +329,7 @@ theorem inversePowerSoftMin_gram_le_sigmaMin_sq [Nonempty ι]
       rw [← hi, Real.norm_of_nonneg (hreg.inv.eigenvalues_pos j).le,
         Real.norm_of_nonneg (hreg.inv.eigenvalues_pos i).le] at h
       exact h
-    have hX := sigmaMin_transpose_sq_eq_inv_inverse_eigenvalue_sub 0 G hreg i hmax
+    have hX := sq_singularValues_transpose_last_eq_inv_inverse_eigenvalue_sub 0 G hreg i hmax
     have hF := inversePowerSoftMin_le_inv_inverse_eigenvalue n hn (regularizedGram 0 G) hreg i
     rw [sub_zero] at hX
     simpa only [regularizedGram_zero] using hF.trans_eq hX.symm
@@ -416,10 +417,23 @@ omit [DecidableEq κ] in
 squared smallest singular value zero. Source: the inverse spectral bridge;
 atlas `wishart-lambda-min-tail` (cutoff continuity helper). -/
 theorem sigmaMin_transpose_sq_eq_zero_of_not_posDef (G : Matrix ι κ ℝ)
-    (hnot : ¬(G * Gᵀ).PosDef) : sigmaMin Gᵀ ^ 2 = 0 := by
-  have h := specNorm_inv_self_mul_transpose_eq G
-  rw [inv_gram_eq_zero_of_not_posDef G hnot, specNorm_zero, one_div] at h
-  exact inv_eq_zero.mp h.symm
+    (hnot : ¬(G * Gᵀ).PosDef) : singularValues Gᵀ (Fintype.card ι - 1) ^ 2 = 0 := by
+  classical
+  have hzero : singularValues Gᵀ (Fintype.card ι - 1) = 0 := by
+    rcases isEmpty_or_nonempty ι with hι | hι
+    · exact singularValues_eq_zero_of_width_le _ (by simp)
+    apply le_antisymm _ (singularValues_nonneg _ _)
+    by_contra h
+    have hRank := (singularValues_last_pos_iff_rank_eq_card Gᵀ Fintype.card_pos).mp
+      (lt_of_not_ge h)
+    have hPSD : (G * Gᵀ).PosSemidef := by
+      simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
+        Matrix.posSemidef_self_mul_conjTranspose G
+    apply hnot
+    apply hPSD.posDef_iff_isUnit.mpr
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
+      isUnit_mul_conjTranspose_of_rank_eq_card G (by simpa using hRank)
+  rw [hzero, zero_pow (by decide : 2 ≠ 0)]
 
 omit [DecidableEq κ] in
 /-- The total unshifted inverse-power minimum is nonnegative everywhere.

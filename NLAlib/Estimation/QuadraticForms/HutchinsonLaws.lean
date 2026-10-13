@@ -75,8 +75,8 @@ theorem variance_quadForm_of_isHermitian_of_hasLaw_gaussianVector [DecidableEq n
     (hz : HasLaw z (gaussianVector n) μ) :
     Var[fun ω => quadForm A (z ω); μ] = 2 * frobSq A := by
   have hl := fun i => hz.hasLaw_eval_gaussianReal i
-  exact variance_quadForm_of_isSymm_of_fourth_moment_eq_three
-    (Matrix.isHermitian_iff_isSymm.mp hA) (fun i => (hl i).aemeasurable)
+  exact variance_quadForm_of_isHermitian_of_fourth_moment_eq_three
+    hA (fun i => (hl i).aemeasurable)
     hz.iIndepFun_eval_of_gaussianVector
     (fun i => integral_eq_zero_of_hasLaw_gaussianReal (hl i))
     (fun i => integral_sq_eq_one_of_hasLaw_gaussianReal (hl i))
@@ -91,8 +91,8 @@ theorem variance_quadForm_of_isHermitian_of_hasLaw_rademacherVector [DecidableEq
     (hz : HasLaw z (rademacherVector n) μ) :
     Var[fun ω => quadForm A (z ω); μ] = 2 * (frobSq A - ∑ i, A i i ^ 2) := by
   have hl := fun i => hz.hasLaw_eval_rademacherMeasure i
-  exact variance_quadForm_of_isSymm_of_fourth_moment_eq_one
-    (Matrix.isHermitian_iff_isSymm.mp hA) (fun i => (hl i).aemeasurable)
+  exact variance_quadForm_of_isHermitian_of_fourth_moment_eq_one
+    hA (fun i => (hl i).aemeasurable)
     hz.iIndepFun_eval_of_rademacherVector
     (fun i => integral_eq_zero_of_hasLaw_rademacherMeasure (hl i))
     (fun i => integral_sq_eq_one_of_hasLaw_rademacherMeasure (hl i))
@@ -115,13 +115,6 @@ atlas: hutchinson-unbiased -/
 theorem integral_quadForm_gaussianVector (A : Matrix n n ℝ) :
     ∫ z, quadForm A z ∂(gaussianVector n) = A.trace :=
   integral_quadForm_eq_trace_of_hasLaw_gaussianVector A (hasLaw_id _)
-
-/-- **Hutchinson is unbiased under the Rademacher product law**:
-`∫ zᵀ A z d(rademacherVector n) = tr A`. Source: Hutchinson (1989) [`hutch89`].
-atlas: hutchinson-unbiased -/
-theorem integral_quadForm_rademacherVector (A : Matrix n n ℝ) :
-    ∫ z, quadForm A z ∂(rademacherVector n) = A.trace :=
-  integral_quadForm_eq_trace_of_hasLaw_rademacherVector A (hasLaw_id _)
 
 /-- **Gaussian Hutchinson variance under the product law**, symmetric `A`:
 `Var(zᵀ A z) = 2 ‖A‖_F²`. Source: Avron–Toledo (2011) [`at11`], Lem. 5.
@@ -153,7 +146,7 @@ theorem hasLaw_col_gaussianMatrix (k : κ) :
   have hl : ∀ i, HasLaw (fun G : Matrix n κ ℝ => G i k) (gaussianReal 0 1) (gaussianMatrix n κ) :=
     fun i => (measurePreserving_gaussianMatrix_entry i k).hasLaw
   exact (iIndepFun_iff_hasLaw_pi_pi hl).1
-    (iIndepFun_gaussianMatrix_entry.precomp (f := fun i : n => (i, k))
+    (iIndepFun_gaussianMatrix_entry.precomp (g := fun i : n => (i, k))
       (fun i j h => (Prod.mk.inj h).1))
 
 /-- **Hutchinson is unbiased for a column of a standard Gaussian matrix**. Source: Avron–Toledo

@@ -55,13 +55,13 @@ open scoped Matrix.Norms.L2Operator in
 /-- Prescribed decreasing nonnegative singular coefficients have their exact
 Schatten power norm in any fixed orthogonal frames.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem schattenNorm_mul_rectDiag_mul_transpose {m n : ℕ}
+theorem schattenNormReal_mul_rectDiag_mul_transpose {m n : ℕ}
     {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ}
     (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) (b : ℕ → ℝ)
     (hb0 : ∀ i, 0 ≤ b i) (hb : Antitone b) (q : ℝ) :
-    schattenNorm (U * (rectDiag b : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) q =
+    schattenNormReal (U * (rectDiag b : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) q =
       (∑ i ∈ Finset.range (min m n), b i ^ q) ^ (1 / q) := by
-  unfold schattenNorm
+  unfold schattenNormReal
   simp only [Fintype.card_fin]
   congr 1
   apply Finset.sum_congr rfl

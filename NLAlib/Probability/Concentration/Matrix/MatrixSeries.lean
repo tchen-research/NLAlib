@@ -15,6 +15,7 @@ Atlas: `matrix-gaussian-series`. Source: Tropp 2015, *An Introduction to Matrix 
 Inequalities*, Theorem 4.1.1, equations (4.1.2–6), by Hermitian dilation of Theorem 4.6.1.
 -/
 open MeasureTheory ProbabilityTheory
+open scoped Matrix ComplexOrder
 
 namespace NLAlib
 
@@ -22,7 +23,7 @@ open scoped Matrix.Norms.L2Operator in
 /-- The second moment of a rectangular series with independent, centred, unit-variance
 coefficients. -/
 theorem integral_sum_smul_mul_sum_smul_eq {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
-    [IsProbabilityMeasure μ] {N : ℕ} {p q r : Type*} [Fintype p] [Fintype q] [Fintype r]
+    [IsProbabilityMeasure μ] {N : ℕ} {p q r : Type*} [Fintype p] [Fintype q] [Fintype r] [DecidableEq r]
     (g : Fin N → Ω → ℝ) (hMeas : ∀ k, Measurable (g k)) (hIndep : iIndepFun g μ)
     (h2 : ∀ k, MemLp (g k) 2 μ) (h0 : ∀ k, ∫ ω, g k ω ∂μ = 0)
     (h1 : ∀ k, ∫ ω, g k ω ^ 2 ∂μ = 1)
@@ -113,7 +114,8 @@ private lemma specNorm_sum_dilationFamily_sq :
     ext i j
     rcases i with i | i <;> rcases j with j | j <;> simp [Matrix.sum_apply]
   simp_rw [hsq]
-  rw [← map_sum (Matrix.reindexLinearEquiv ℝ ℂ finSumFinEquiv finSumFinEquiv), hsum]
+  rw [← Matrix.coe_reindexLinearEquiv ℝ ℂ finSumFinEquiv finSumFinEquiv,
+    ← map_sum, hsum]
   simp only [Matrix.reindexLinearEquiv_apply, specNorm_eq_norm, norm_reindex, norm_fromBlocks_diag]
 
 private lemma one_le_card_sum : (1 : ℝ) ≤ ((m + n : ℕ) : ℝ) := by

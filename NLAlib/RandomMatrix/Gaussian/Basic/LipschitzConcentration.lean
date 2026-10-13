@@ -50,11 +50,12 @@ theorem gaussian_concentration {p m : Type*} [Fintype p] [Fintype m] (h : Matrix
     intro x y
     rw [← frobNorm_curry_sub]
     exact hLip _ _
-  obtain ⟨hint, hmeas⟩ := gaussian_concentration_pi (h ∘ e) L hL hg t ht
+  have hint := integrable_of_lipschitz_gaussianVector (h ∘ e) L hL.le hg
+  have hmeas := measureReal_ge_le_of_lipschitz_gaussianVector (h ∘ e) L hL hg t ht
   rw [gaussianMatrix_eq_map_curry]
   refine ⟨(integrable_map_equiv e h).mpr hint, ?_⟩
   rw [integral_map_equiv, measureReal_def, e.map_apply]
-  exact ENNReal.toReal_le_of_le_ofReal (Real.exp_pos _).le hmeas
+  exact hmeas
 
 /-- `gaussian_concentration` for a random matrix `X` with `HasLaw X (gaussianMatrix p m) μ`:
 `P{h(X) ≥ 𝔼 h(G) + L t} ≤ e^{-t²/2}`. Atlas: `gaussian-concentration`. -/

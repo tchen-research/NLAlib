@@ -24,7 +24,7 @@ theorem exists_orthogonal_right_block_of_first_columns_eq {p q : Type*}
     (hFirst : X.submatrix id Sum.inl = Y.submatrix id Sum.inl) :
     ∃ W : Matrix q q ℝ, HasOrthonormalCols W ∧ X * Matrix.fromBlocks 1 0 0 W = Y := by
   let T := Xᵀ * Y
-  have hT : HasOrthonormalCols T := hX.transpose.mul hY
+  have hT : HasOrthonormalCols T := hX.conjTranspose.mul hY
   have hCols : T.submatrix id Sum.inl = (1 : Matrix (p ⊕ q) (p ⊕ q) ℝ).submatrix id Sum.inl := by
     have h := congrArg (fun M : Matrix (p ⊕ q) p ℝ => Xᵀ * M) hFirst
     have hMul (Z : Matrix (p ⊕ q) (p ⊕ q) ℝ) :

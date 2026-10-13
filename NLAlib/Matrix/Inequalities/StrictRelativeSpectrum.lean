@@ -65,8 +65,11 @@ theorem spectralRadius_eq_specNorm_of_posSemidef {A : Matrix n n ℝ} (hA : A.Po
       _ = ‖hA.isHermitian.eigenvalues‖ := by
         rw [← Matrix.conjTranspose_eq_transpose_of_trivial,
           specNorm_mul_conjTranspose_right_of_hasOrthonormalCols
+          (P := (hA.isHermitian.eigenvectorUnitary : Matrix n n ℝ))
           (transpose_eigenvectorUnitary_mul_self hA.isHermitian),
-          specNorm_mul_left_of_hasOrthonormalCols (transpose_eigenvectorUnitary_mul_self hA.isHermitian),
+          specNorm_mul_left_of_hasOrthonormalCols
+            (P := (hA.isHermitian.eigenvectorUnitary : Matrix n n ℝ))
+            (transpose_eigenvectorUnitary_mul_self hA.isHermitian),
           specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
   rw [hn]
   exact ENNReal.ofReal_coe_nnreal.symm

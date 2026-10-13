@@ -205,7 +205,8 @@ index type.
 atlas: polynomial-spectral-bound -/
 theorem specNorm_aeval_le {A : Matrix n n ℝ} (hA : A.IsHermitian) (p : ℝ[X]) {M : ℝ}
     (hM : 0 ≤ M) (h : ∀ i, |p.eval (hA.eigenvalues i)| ≤ M) : specNorm (aeval A p) ≤ M := by
-  have hU := transpose_eigenvectorUnitary_mul_self hA
+  have hU : HasOrthonormalCols (hA.eigenvectorUnitary : Matrix n n ℝ) :=
+    transpose_eigenvectorUnitary_mul_self hA
   rw [aeval_eq_mul_diagonal_mul hA p, specNorm_mul_transpose_right_of_hasOrthonormalCols hU,
     specNorm_mul_left_of_hasOrthonormalCols hU, specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
   exact (pi_norm_le_iff_of_nonneg hM).2 fun i => by simpa [Real.norm_eq_abs] using h i

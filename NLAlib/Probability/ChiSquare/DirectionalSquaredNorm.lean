@@ -1,12 +1,14 @@
 import NLAlib.Probability.ChiSquare.ChiSquare
 import NLAlib.Matrix.Norms.Core
-import Mathlib.Probability.ProbabilityMassFunction.Integrals
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.Probability.ProbabilityMassFunction.Basic
 import Mathlib.Probability.Moments.SubGaussian
 
 /-!
 # Gaussian chi-square domination from directional sub-Gaussian proxies
 
-Gaussian linearization compares the squared-norm MGF of a finite random vector with
+Nonnegative Gaussian linearization and Tonelli compare the squared-norm MGF on any
+probability space for a random vector with
 directional sub-Gaussian proxies to the standard Gaussian chi-square MGF, giving the
 chi-square Chernoff and Laurent–Massart tails for such a vector. This is the additive row
 flattening input for the one-sign SRHT (atlas `srht-ose`). Laurent–Massart 2000, Lemma 1;
@@ -53,41 +55,46 @@ theorem integral_exp_sqrt_mul_dotProduct_gaussianVector {d : ℕ}
   rw [← mul_assoc, ← sq, hs]
   ring
 
-/-- The directional proxy `‖u‖₂²` written as the self dot product, for the proofs below. -/
-private lemma hasSubgaussianMGF_dotProduct_self {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
-    {d : ℕ} {X : Ω → Fin d → ℝ}
-    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u) (‖WithLp.toLp 2 u‖₊ ^ 2) μ)
-    (u : Fin d → ℝ) :
-    HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u) ⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ μ := by
-  have h : (⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ : ℝ≥0) = ‖WithLp.toLp 2 u‖₊ ^ 2 :=
-    NNReal.eq (by
-      show u ⬝ᵥ u = ((‖WithLp.toLp 2 u‖₊ ^ 2 : ℝ≥0) : ℝ)
-      rw [NNReal.coe_pow, coe_nnnorm, norm_toLp_sq_eq_dotProduct_self])
-  rw [h]
-  exact hmgf u
-
-/-- A finite random vector with directional sub-Gaussian proxy `‖u‖₂²` in every direction `u`
-has squared-norm MGF at most the chi-square MGF `(1−2θ)^(-d/2)`, by Gaussian linearization:
-`𝔼 exp(θ ‖X‖₂²) ≤ (1 − 2θ)^{-d/2}` for `0 ≤ θ < 1/2`.
-Tropp 2011, Lemma 3.3 (SRHT row norms). -/
-theorem integral_exp_sq_norm_le_chi_square_mgf
-    {Ω : Type*} [Fintype Ω] [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
-    (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
+/-- Directional sub-Gaussian hypotheses imply almost-everywhere measurability of the vector.
+It suffices to evaluate them in the coordinate directions. -/
+theorem aemeasurable_of_directional_hasSubgaussianMGF {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {d : ℕ} {X : Ω → Fin d → ℝ}
     (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
-      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) μ) : AEMeasurable X μ := by
+  apply aemeasurable_pi_lambda
+  intro i
+  simpa using (hmgf (Pi.single i 1)).aemeasurable
+
+/-- Nonnegative Gaussian linearization and Tonelli bound the squared-norm exponential
+integral under an arbitrary probability measure by the chi-square MGF.
+Source: Tropp (2011), Lemma 3.3, directional sub-Gaussian version. -/
+theorem lintegral_exp_sq_norm_le_chi_square_mgf {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsProbabilityMeasure μ] {d : ℕ} (X : Ω → Fin d → ℝ)
+    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) μ)
     {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ < 1 / 2) :
-    ∫ ω, Real.exp (θ * ‖WithLp.toLp 2 (X ω)‖ ^ 2) ∂p.toMeasure ≤
-      (1 - 2 * θ) ^ (-((d : ℝ) / 2)) := by
-  replace hmgf := hasSubgaussianMGF_dotProduct_self hmgf
+    (∫⁻ ω, ENNReal.ofReal (Real.exp (θ * ‖WithLp.toLp 2 (X ω)‖ ^ 2)) ∂μ) ≤
+      ENNReal.ofReal ((1 - 2 * θ) ^ (-((d : ℝ) / 2))) := by
   simp only [norm_toLp_sq_eq_dotProduct_self]
-  have hlin : ∀ v : Fin d → ℝ, ∫ g : Fin d → ℝ, Real.exp (Real.sqrt (2 * θ) * (g ⬝ᵥ v))
-      ∂(gaussianVector (Fin d)) = Real.exp (θ * (v ⬝ᵥ v)) := fun v => by
-    rw [integral_exp_sqrt_mul_dotProduct_gaussianVector v hθ0, norm_toLp_sq_eq_dotProduct_self]
   let γ := gaussianVector (Fin d)
   let F : Ω → (Fin d → ℝ) → ℝ := fun ω g =>
     Real.exp (Real.sqrt (2 * θ) * (g ⬝ᵥ X ω))
-  have hF : ∀ ω, Integrable (F ω) γ := by
-    intro ω
+  have hXm := aemeasurable_of_directional_hasSubgaussianMGF hmgf
+  have hcoord (i : Fin d) : AEMeasurable (fun ω => X ω i) μ :=
+    aemeasurable_pi_iff.mp hXm i
+  have hFmeas : AEMeasurable (Function.uncurry F) (μ.prod γ) := by
+    have hcoord' (i : Fin d) : AEMeasurable
+        (fun z : Ω × (Fin d → ℝ) => X z.1 i) (μ.prod γ) := (hcoord i).comp_fst
+    dsimp [Function.uncurry, F, dotProduct]
+    apply AEMeasurable.exp
+    apply AEMeasurable.const_mul
+    exact Finset.aemeasurable_fun_sum Finset.univ fun i _ =>
+      (((measurable_pi_apply i).comp measurable_snd).aemeasurable.mul (hcoord' i))
+  have hlin (v : Fin d → ℝ) :
+      (∫ g, Real.exp (Real.sqrt (2 * θ) * (g ⬝ᵥ v)) ∂γ) =
+        Real.exp (θ * (v ⬝ᵥ v)) := by
+    rw [integral_exp_sqrt_mul_dotProduct_gaussianVector v hθ0, norm_toLp_sq_eq_dotProduct_self]
+  have hF (ω : Ω) : Integrable (F ω) γ := by
     apply Integrable.of_integral_ne_zero
     rw [show (∫ g, F ω g ∂γ) = Real.exp (θ * (X ω ⬝ᵥ X ω)) from hlin (X ω)]
     exact (Real.exp_pos _).ne'
@@ -100,65 +107,109 @@ theorem integral_exp_sq_norm_le_chi_square_mgf
   have hgint : Integrable (fun g : Fin d → ℝ => Real.exp (θ * (g ⬝ᵥ g))) γ :=
     Integrable.of_integral_ne_zero (by rw [hgauss]; exact
       (Real.rpow_pos_of_pos (show 0 < 1 - 2 * θ by linarith) _).ne')
-  have hsumint : Integrable (fun g => ∑ ω, (p ω).toReal * F ω g) γ :=
-    integrable_finsetSum _ (fun ω _ => (hF ω).const_mul (p ω).toReal)
-  have hpoint : ∀ g : Fin d → ℝ, (∑ ω, (p ω).toReal * F ω g) ≤
-      Real.exp (θ * (g ⬝ᵥ g)) := by
-    intro g
+  have hsection (g : Fin d → ℝ) : Integrable (fun ω => F ω g) μ ∧
+      (∫ ω, F ω g ∂μ) ≤ Real.exp (θ * (g ⬝ᵥ g)) := by
     let u := Real.sqrt (2 * θ) • g
-    have hu : (u ⬝ᵥ u) / 2 = θ * (g ⬝ᵥ g) := by
+    have hsu := hmgf u
+    have heu : ((‖WithLp.toLp 2 u‖₊ ^ 2 : ℝ≥0) : ℝ) / 2 = θ * (g ⬝ᵥ g) := by
+      rw [NNReal.coe_pow, coe_nnnorm, norm_toLp_sq_eq_dotProduct_self]
       dsimp only [u]
       rw [smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul]
-      have hs := Real.sq_sqrt (show 0 ≤ 2 * θ by positivity)
-      rw [← mul_assoc, ← sq, hs]
+      rw [← mul_assoc, ← sq, Real.sq_sqrt (show 0 ≤ 2 * θ by positivity)]
       ring
     have heq : (fun ω => Real.exp (1 * (X ω ⬝ᵥ u))) = (fun ω => F ω g) := by
       funext ω
       simp only [u, F, one_mul, dotProduct_smul, smul_eq_mul, dotProduct_comm]
-    have hh := (hmgf u).mgf_le 1
-    rw [mgf, heq, PMF.integral_eq_sum] at hh
-    simp only [smul_eq_mul, one_pow, mul_one] at hh
-    change (∑ ω, (p ω).toReal * F ω g) ≤ Real.exp ((u ⬝ᵥ u) / 2) at hh
-    rwa [hu] at hh
+    constructor
+    · simpa only [heq] using hsu.integrable_exp_mul 1
+    · have hh := hsu.mgf_le 1
+      rw [mgf, heq] at hh
+      simp only [one_pow, mul_one] at hh
+      change (∫ ω, F ω g ∂μ) ≤
+        Real.exp (((‖WithLp.toLp 2 u‖₊ ^ 2 : ℝ≥0) : ℝ) / 2) at hh
+      rwa [heu] at hh
   calc
-    _ = ∑ ω, (p ω).toReal * Real.exp (θ * (X ω ⬝ᵥ X ω)) := by
-      rw [PMF.integral_eq_sum]
-      simp only [smul_eq_mul]
-    _ = ∑ ω, (p ω).toReal * ∫ g, F ω g ∂γ := by
-      apply Finset.sum_congr rfl
-      intro ω _
-      rw [show (∫ g, F ω g ∂γ) = Real.exp (θ * (X ω ⬝ᵥ X ω)) from hlin (X ω)]
-    _ = ∫ g, ∑ ω, (p ω).toReal * F ω g ∂γ := by
-      rw [integral_finsetSum _ (fun ω _ => (hF ω).const_mul (p ω).toReal)]
-      simp only [integral_const_mul]
-    _ ≤ ∫ g, Real.exp (θ * (g ⬝ᵥ g)) ∂γ := integral_mono hsumint hgint hpoint
-    _ = _ := hgauss
+    _ = ∫⁻ ω, ∫⁻ g, ENNReal.ofReal (F ω g) ∂γ ∂μ := by
+      apply lintegral_congr
+      intro ω
+      rw [← ofReal_integral_eq_lintegral_ofReal (hF ω)
+        (Filter.Eventually.of_forall fun g => (Real.exp_pos _).le), hlin (X ω)]
+    _ = ∫⁻ g, ∫⁻ ω, ENNReal.ofReal (F ω g) ∂μ ∂γ :=
+      lintegral_lintegral_swap hFmeas.ennreal_ofReal
+    _ ≤ ∫⁻ g, ENNReal.ofReal (Real.exp (θ * (g ⬝ᵥ g))) ∂γ := by
+      apply lintegral_mono
+      intro g
+      change (∫⁻ ω, ENNReal.ofReal (F ω g) ∂μ) ≤
+        ENNReal.ofReal (Real.exp (θ * (g ⬝ᵥ g)))
+      rw [← ofReal_integral_eq_lintegral_ofReal (hsection g).1
+        (Filter.Eventually.of_forall fun ω => (Real.exp_pos _).le)]
+      exact ENNReal.ofReal_le_ofReal (hsection g).2
+    _ = _ := by
+      rw [← ofReal_integral_eq_lintegral_ofReal hgint
+        (Filter.Eventually.of_forall fun g => (Real.exp_pos _).le), hgauss]
 
-/-- The squared-norm tail of a finite random vector with directional sub-Gaussian proxies has
+/-- The finite Gaussian MGF bound implies integrability of the squared-norm exponential.
+Source: Tropp (2011), Lemma 3.3, Gaussian linearization. -/
+theorem integrable_exp_sq_norm_of_directional_hasSubgaussianMGF {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsProbabilityMeasure μ] {d : ℕ} (X : Ω → Fin d → ℝ)
+    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) μ)
+    {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ < 1 / 2) :
+    Integrable (fun ω => Real.exp (θ * ‖WithLp.toLp 2 (X ω)‖ ^ 2)) μ := by
+  have hXm := aemeasurable_of_directional_hasSubgaussianMGF hmgf
+  have hc (i : Fin d) : AEMeasurable (fun ω => X ω i) μ :=
+    aemeasurable_pi_iff.mp hXm i
+  have hm : AEMeasurable (fun ω => Real.exp (θ * ‖WithLp.toLp 2 (X ω)‖ ^ 2)) μ := by
+    simp only [norm_toLp_sq_eq_dotProduct_self, dotProduct]
+    apply AEMeasurable.exp
+    apply AEMeasurable.const_mul
+    exact Finset.aemeasurable_fun_sum Finset.univ fun i _ => (hc i).mul (hc i)
+  refine ⟨hm.aestronglyMeasurable,
+    (hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun ω => (Real.exp_pos _).le)).2 ?_⟩
+  exact (lintegral_exp_sq_norm_le_chi_square_mgf μ X hmgf hθ0 hθ1).trans_lt (by simp)
+
+/-- A random vector with directional sub-Gaussian proxy `‖u‖₂²` has squared-norm MGF
+at most `(1−2θ)^(-d/2)` for `0 ≤ θ < 1/2`, on any probability space.
+Source: Tropp (2011), Lemma 3.3, directional sub-Gaussian version. -/
+theorem integral_exp_sq_norm_le_chi_square_mgf {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsProbabilityMeasure μ] {d : ℕ} (X : Ω → Fin d → ℝ)
+    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) μ)
+    {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ < 1 / 2) :
+    (∫ ω, Real.exp (θ * ‖WithLp.toLp 2 (X ω)‖ ^ 2) ∂μ) ≤
+      (1 - 2 * θ) ^ (-((d : ℝ) / 2)) := by
+  have hpos := Real.rpow_pos_of_pos (show 0 < 1 - 2 * θ by linarith) (-((d : ℝ) / 2))
+  rw [← ENNReal.ofReal_le_ofReal_iff hpos.le,
+    ofReal_integral_eq_lintegral_ofReal (integrable_exp_sq_norm_of_directional_hasSubgaussianMGF μ X hmgf hθ0 hθ1)
+      (Filter.Eventually.of_forall fun ω => (Real.exp_pos _).le)]
+  exact lintegral_exp_sq_norm_le_chi_square_mgf μ X hmgf hθ0 hθ1
+
+
+/-- The squared-norm tail of a random vector with directional sub-Gaussian proxies has
 the chi-square Chernoff bound `P(‖X‖² ≥ u) ≤ e^{-θ u} (1 − 2θ)^{-d/2}`. Tropp 2011, Lemma 3.3. -/
 theorem measureReal_sq_norm_ge_le_chi_square_mgf
-    {Ω : Type*} [Fintype Ω] [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
-    (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
+    {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} (X : Ω → Fin d → ℝ)
     (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
-      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) μ)
     (u θ : ℝ) (hθ0 : 0 ≤ θ) (hθ1 : θ < 1 / 2) :
-    p.toMeasure.real {ω | u ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
+    μ.real {ω | u ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
       Real.exp (-θ * u) * (1 - 2 * θ) ^ (-((d : ℝ) / 2)) := by
-  have hh := measure_ge_le_exp_mul_mgf (μ := p.toMeasure)
-    (X := fun ω => ‖WithLp.toLp 2 (X ω)‖ ^ 2) u hθ0 (show Integrable _ _ from .of_finite)
+  have hh := measure_ge_le_exp_mul_mgf (μ := μ)
+    (X := fun ω => ‖WithLp.toLp 2 (X ω)‖ ^ 2) u hθ0 (integrable_exp_sq_norm_of_directional_hasSubgaussianMGF μ X hmgf hθ0 hθ1)
   apply hh.trans
   apply mul_le_mul_of_nonneg_left _ (Real.exp_pos _).le
-  exact integral_exp_sq_norm_le_chi_square_mgf p X hmgf hθ0 hθ1
+  exact integral_exp_sq_norm_le_chi_square_mgf μ X hmgf hθ0 hθ1
 
-/-- Optimised Chernoff tail for a finite random vector with directional sub-Gaussian proxies:
+/-- Optimised Chernoff tail for a random vector with directional sub-Gaussian proxies:
 `P(‖X‖² ≥ (1 + ε) d) ≤ exp(−(d/2)(ε − log(1 + ε)))`. Dasgupta–Gupta 2003, Lemma 2.2(b) form. -/
 theorem measureReal_sq_norm_ge_one_add_mul_le
-    {Ω : Type*} [Fintype Ω] [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
-    (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
+    {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} (X : Ω → Fin d → ℝ)
     (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
-      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) μ)
     {ε : ℝ} (hε : 0 ≤ ε) :
-    p.toMeasure.real {ω | (1 + ε) * d ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
+    μ.real {ω | (1 + ε) * d ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
       Real.exp (-((d : ℝ) / 2) * (ε - Real.log (1 + ε))) := by
   have h1ε : 0 < 1 + ε := by linarith
   let θ := ε / (2 * (1 + ε))
@@ -168,7 +219,7 @@ theorem measureReal_sq_norm_ge_one_add_mul_le
     rw [div_lt_iff₀ (by positivity)]
     linarith
   have h2 : 1 - 2 * θ = (1 + ε)⁻¹ := by dsimp only [θ]; field_simp; ring
-  refine (measureReal_sq_norm_ge_le_chi_square_mgf p X hmgf ((1 + ε) * d) θ hθ0 hθ1).trans
+  refine (measureReal_sq_norm_ge_le_chi_square_mgf μ X hmgf ((1 + ε) * d) θ hθ0 hθ1).trans
     (le_of_eq ?_)
   rw [h2, Real.inv_rpow h1ε.le, ← Real.rpow_neg h1ε.le, neg_neg, Real.rpow_def_of_pos h1ε,
     ← Real.exp_add]
@@ -177,16 +228,16 @@ theorem measureReal_sq_norm_ge_one_add_mul_le
   field_simp
   ring
 
-/-- Laurent–Massart's additive upper tail `P(‖X‖² ≥ d + 2√(d x) + 2x) ≤ e^{-x}` for a finite
+/-- Laurent–Massart's additive upper tail `P(‖X‖² ≥ d + 2√(d x) + 2x) ≤ e^{-x}` for a
 random vector with directional sub-Gaussian proxies, by Gaussian linearization.
 Laurent–Massart 2000, Lemma 1. -/
 theorem measureReal_sq_norm_ge_add_two_sqrt_mul_add_le
-    {Ω : Type*} [Fintype Ω] [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
-    (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
+    {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} (X : Ω → Fin d → ℝ)
     (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
-      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) μ)
     {x : ℝ} (hx : 0 ≤ x) :
-    p.toMeasure.real {ω | d + 2 * Real.sqrt (d * x) + 2 * x ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
+    μ.real {ω | d + 2 * Real.sqrt (d * x) + 2 * x ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
       Real.exp (-x) := by
   rw [← ENNReal.ofReal_le_ofReal_iff (by positivity), ofReal_measureReal]
   rcases Nat.eq_zero_or_pos d with rfl | hd
@@ -216,7 +267,7 @@ theorem measureReal_sq_norm_ge_add_two_sqrt_mul_add_le
     ring
   rw [hthreshold]
   rw [← ofReal_measureReal]
-  refine ENNReal.ofReal_le_ofReal ((measureReal_sq_norm_ge_one_add_mul_le p X hmgf
+  refine ENNReal.ofReal_le_ofReal ((measureReal_sq_norm_ge_one_add_mul_le μ X hmgf
     (by positivity)).trans (Real.exp_le_exp.mpr ?_))
   have hlog : Real.log (1 + (2 * a + 2 * a ^ 2)) ≤ 2 * a := by
     rw [Real.log_le_iff_le_exp (by positivity)]
@@ -225,5 +276,46 @@ theorem measureReal_sq_norm_ge_add_two_sqrt_mul_add_le
   have hx' : x = a ^ 2 * d := by rw [ha2]; field_simp
   rw [hx']
   nlinarith
+
+
+/-- The squared-norm MGF comparison specializes to a PMF on any sample type. -/
+theorem integral_exp_sq_norm_le_chi_square_mgf_pmf
+    {Ω : Type*} [MeasurableSpace Ω] (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
+    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
+    {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ < 1 / 2) :
+    (∫ ω, Real.exp (θ * ‖WithLp.toLp 2 (X ω)‖ ^ 2) ∂p.toMeasure) ≤
+      (1 - 2 * θ) ^ (-((d : ℝ) / 2)) :=
+  integral_exp_sq_norm_le_chi_square_mgf p.toMeasure X hmgf hθ0 hθ1
+
+/-- The squared-norm Chernoff bound specializes to a PMF on any sample type. -/
+theorem measureReal_sq_norm_ge_le_chi_square_mgf_pmf
+    {Ω : Type*} [MeasurableSpace Ω] (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
+    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
+    (u θ : ℝ) (hθ0 : 0 ≤ θ) (hθ1 : θ < 1 / 2) :
+    p.toMeasure.real {ω | u ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
+      Real.exp (-θ * u) * (1 - 2 * θ) ^ (-((d : ℝ) / 2)) :=
+  measureReal_sq_norm_ge_le_chi_square_mgf p.toMeasure X hmgf u θ hθ0 hθ1
+
+/-- The optimized squared-norm Chernoff bound specializes to a PMF on any sample type. -/
+theorem measureReal_sq_norm_ge_one_add_mul_le_pmf
+    {Ω : Type*} [MeasurableSpace Ω] (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
+    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
+    {ε : ℝ} (hε : 0 ≤ ε) :
+    p.toMeasure.real {ω | (1 + ε) * d ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
+      Real.exp (-((d : ℝ) / 2) * (ε - Real.log (1 + ε))) :=
+  measureReal_sq_norm_ge_one_add_mul_le p.toMeasure X hmgf hε
+
+/-- Laurent–Massart's additive upper tail specializes to a PMF on any sample type. -/
+theorem measureReal_sq_norm_ge_add_two_sqrt_mul_add_le_pmf
+    {Ω : Type*} [MeasurableSpace Ω] (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
+    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
+    {x : ℝ} (hx : 0 ≤ x) :
+    p.toMeasure.real {ω | d + 2 * Real.sqrt (d * x) + 2 * x ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
+      Real.exp (-x) :=
+  measureReal_sq_norm_ge_add_two_sqrt_mul_add_le p.toMeasure X hmgf hx
 
 end NLAlib

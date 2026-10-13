@@ -38,11 +38,11 @@ theorem integral_stoppedValue_le_integral_zero_of_supermartingale
 at most its initial mean divided by the positive threshold.
 Source: bounded optional stopping and Markov's inequality;
 Tropp 2011 (matrix Freedman), atlas `matrix-freedman` (partial). -/
-theorem measure_exists_le_nat_le_supermartingale_le
+theorem measureReal_exists_le_nat_le_supermartingale_le
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {ℱ : Filtration ℕ ‹MeasurableSpace Ω›} {S : ℕ → Ω → ℝ} (hS : Supermartingale S ℱ μ)
     (hNonneg : ∀ k, 0 ≤ᵐ[μ] S k) {c : ℝ} (hc : 0 < c) (N : ℕ) :
-    (μ {ω | ∃ k ≤ N, c ≤ S k ω}).toReal ≤ (∫ ω, S 0 ω ∂μ) / c := by
+    μ.real {ω | ∃ k ≤ N, c ≤ S k ω} ≤ (∫ ω, S 0 ω ∂μ) / c := by
   let τ : Ω → ℕ∞ := fun ω => (hittingBtwn S (Ici c) 0 N ω : ℕ)
   have hτ : IsStoppingTime ℱ τ :=
     hS.stronglyAdapted.adapted.isStoppingTime_hittingBtwn measurableSet_Ici
@@ -59,8 +59,8 @@ theorem measure_exists_le_nat_le_supermartingale_le
     intro ω hω
     obtain ⟨k, hk, hkc⟩ := hω
     exact stoppedValue_hittingBtwn_mem ⟨k, ⟨Nat.zero_le k, hk⟩, hkc⟩
-  have hbound : c * (μ {ω | ∃ k ≤ N, c ≤ S k ω}).toReal ≤ ∫ ω, S 0 ω ∂μ := by
-    calc c * (μ {ω | ∃ k ≤ N, c ≤ S k ω}).toReal ≤ c * (μ {ω | c ≤ R ω}).toReal :=
+  have hbound : c * μ.real {ω | ∃ k ≤ N, c ≤ S k ω} ≤ ∫ ω, S 0 ω ∂μ := by
+    calc c * μ.real {ω | ∃ k ≤ N, c ≤ S k ω} ≤ c * μ.real {ω | c ≤ R ω} :=
         mul_le_mul_of_nonneg_left (measureReal_mono hcross) hc.le
       _ ≤ ∫ ω, R ω ∂μ := mul_meas_ge_le_integral_of_nonneg hR0 hRI c
       _ ≤ ∫ ω, S 0 ω ∂μ := integral_stoppedValue_le_integral_zero_of_supermartingale hS hτ hbdd
@@ -71,11 +71,11 @@ theorem measure_exists_le_nat_le_supermartingale_le
 `P(∃k, S_k≥c) ≤ E[S_0]/c`. No union bound over individual times is used.
 Source: bounded optional stopping and continuity of measure on an increasing union;
 Tropp 2011 (matrix Freedman), atlas `matrix-freedman` (partial). -/
-theorem measure_exists_le_supermartingale_le
+theorem measureReal_exists_le_supermartingale_le
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {ℱ : Filtration ℕ ‹MeasurableSpace Ω›} {S : ℕ → Ω → ℝ} (hS : Supermartingale S ℱ μ)
     (hNonneg : ∀ k, 0 ≤ᵐ[μ] S k) {c : ℝ} (hc : 0 < c) :
-    (μ {ω | ∃ k, c ≤ S k ω}).toReal ≤ (∫ ω, S 0 ω ∂μ) / c := by
+    μ.real {ω | ∃ k, c ≤ S k ω} ≤ (∫ ω, S 0 ω ∂μ) / c := by
   let E : ℕ → Set Ω := fun N => {ω | ∃ k ≤ N, c ≤ S k ω}
   have hmono : Monotone E := by
     intro a b hab ω hω
@@ -96,8 +96,8 @@ theorem measure_exists_le_supermartingale_le
     calc μ (E N) = ENNReal.ofReal (μ (E N)).toReal :=
         (ENNReal.ofReal_toReal (measure_ne_top μ (E N))).symm
       _ ≤ ENNReal.ofReal ((∫ ω, S 0 ω ∂μ) / c) := ENNReal.ofReal_le_ofReal
-        (measure_exists_le_nat_le_supermartingale_le hS hNonneg hc N)
+        (measureReal_exists_le_nat_le_supermartingale_le hS hNonneg hc N)
   have h0 : 0 ≤ (∫ ω, S 0 ω ∂μ) / c := div_nonneg (integral_nonneg_of_ae (hNonneg 0)) hc.le
-  simpa only [ENNReal.toReal_ofReal h0] using ENNReal.toReal_mono (by simp) hbound
+  simpa only [measureReal_def, ENNReal.toReal_ofReal h0] using ENNReal.toReal_mono (by simp) hbound
 
 end MeasureTheory

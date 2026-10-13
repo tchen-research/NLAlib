@@ -90,9 +90,9 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
     (P Q : ℝ) (hP : 0 ≤ P) (hQ : 0 ≤ Q)
     (hψP : ∀ x, ‖ψ x‖ ≤ P) (hψQ : ∀ x, ‖deriv ψ x‖ ≤ Q) :
     0 ≤ ∫ G : Matrix (Fin r) (Fin k) ℝ,
-      deriv ψ (sigmaMin Gᵀ ^ 2 + ε) * (4 * sigmaMin Gᵀ ^ 2) +
-        (2 * ((k : ℝ) - r + 1) - 2 * sigmaMin Gᵀ ^ 2) *
-          ψ (sigmaMin Gᵀ ^ 2 + ε) ∂(gaussianMatrix (Fin r) (Fin k)) := by
+      deriv ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 + ε) * (4 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        (2 * ((k : ℝ) - r + 1) - 2 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) *
+          ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 + ε) ∂(gaussianMatrix (Fin r) (Fin k)) := by
   classical
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   let μ := gaussianMatrix (Fin r) (Fin k)
@@ -100,7 +100,7 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
   let e := (MeasurableEquiv.curry (Fin r) (Fin k) ℝ).trans Matrix.ofMeasurableEquiv
   have hmp : MeasurePreserving e ν μ := ⟨e.measurable, (gaussianMatrix_eq_map_curry).symm⟩
   let G : ((Fin r × Fin k) → ℝ) → Matrix (Fin r) (Fin k) ℝ := fun x => (e x)
-  let X : ((Fin r × Fin k) → ℝ) → ℝ := fun x => sigmaMin (G x)ᵀ ^ 2
+  let X : ((Fin r × Fin k) → ℝ) → ℝ := fun x => singularValues (G x)ᵀ (Fintype.card (Fin r) - 1) ^ 2
   let S : ((Fin r × Fin k) → ℝ) → ℝ := fun x => frobSq (G x)
   let F : ℕ → ((Fin r × Fin k) → ℝ) → ℝ :=
     fun n x => inversePowerSoftMin (n + 1) (regularizedGram ε (G x))
@@ -212,11 +212,11 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
     hClim hC' bound hboundi
     (fun n => ae_of_all _ fun x => norm_weak_expression_le hP hQ (hSnn x)
       (Finset.sum_nonneg fun i _ => sq_nonneg _) (hAs n x) (hBs n x) (hψP _) (hψQ _))
-  have hXm : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ => sigmaMin Hᵀ ^ 2) :=
+  have hXm : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ => singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) :=
     measurable_sigmaMin_transpose_sq
   have htest : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ =>
-      deriv ψ (sigmaMin Hᵀ ^ 2 + ε) * (4 * sigmaMin Hᵀ ^ 2) +
-        (b - 2 * sigmaMin Hᵀ ^ 2) * ψ (sigmaMin Hᵀ ^ 2 + ε)) := by
+      deriv ψ (singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2 + ε) * (4 * singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        (b - 2 * singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2) * ψ (singularValues Hᵀ (Fintype.card (Fin r) - 1) ^ 2 + ε)) := by
     exact (((hψ.continuous_deriv le_rfl).measurable.comp (hXm.add_const ε)).mul
       (measurable_const.mul hXm)).add
       ((measurable_const.sub (measurable_const.mul hXm)).mul
@@ -234,23 +234,23 @@ theorem integral_sigmaMin_transpose_sq_weak_nonneg_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ) (hψ0 : ∀ x, 0 ≤ ψ x) :
     0 ≤ ∫ G : Matrix (Fin r) (Fin k) ℝ,
-      4 * sigmaMin Gᵀ ^ 2 * deriv ψ (sigmaMin Gᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin Gᵀ ^ 2) *
-          ψ (sigmaMin Gᵀ ^ 2) ∂(gaussianMatrix (Fin r) (Fin k)) := by
+      4 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 * deriv ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        2 * ((k : ℝ) - r + 1 - singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) *
+          ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) ∂(gaussianMatrix (Fin r) (Fin k)) := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   have hψ1 : ContDiff ℝ 1 ψ := hψ.of_le (by simp)
   obtain ⟨P, hP⟩ := hψ.continuous.bounded_above_of_compact_support hψc
   obtain ⟨Q, hQ⟩ := (hψ1.continuous_deriv le_rfl).bounded_above_of_compact_support hψc.deriv
   have hP0 : 0 ≤ P := (norm_nonneg (ψ 0)).trans (hP 0)
   have hQ0 : 0 ≤ Q := (norm_nonneg (deriv ψ 0)).trans (hQ 0)
-  let X : (Matrix (Fin r) (Fin k) ℝ) → ℝ := fun G => sigmaMin Gᵀ ^ 2
+  let X : (Matrix (Fin r) (Fin k) ℝ) → ℝ := fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2
   let b : ℝ := 2 * ((k : ℝ) - r + 1)
   let bound : (Matrix (Fin r) (Fin k) ℝ) → ℝ :=
     fun G => (4 * Q + 2 * P) * frobSq G + |b| * P
   have hXi : Measurable X := measurable_sigmaMin_transpose_sq
   have hboundi : Integrable bound (gaussianMatrix (Fin r) (Fin k)) :=
     ((integrable_frobSq_gaussianMatrix r k).const_mul _).add (integrable_const _)
-  have hweak := integral_nonneg_of_positive_translates (gaussianMatrix (Fin r) (Fin k))
+  have hweak := MeasureTheory.integral_nonneg_of_positive_translates (gaussianMatrix (Fin r) (Fin k))
     X (fun G => 4 * X G) (fun G => 2 * X G) ψ (deriv ψ) hψ.continuous
     (hψ1.continuous_deriv le_rfl) b
     (fun ε _ => by
@@ -261,15 +261,19 @@ theorem integral_sigmaMin_transpose_sq_weak_nonneg_gaussianMatrix
     bound hboundi
     (fun ε _ => ae_of_all _ fun G => by
       have hX : 0 ≤ X G := sq_nonneg _
-      have hXs : X G ≤ frobSq G := sigmaMin_transpose_sq_le_frobSq _
+      have hXs : X G ≤ frobSq G := by
+        have h := (singularValues_le_specNorm Gᵀ (Fintype.card (Fin r) - 1)).trans
+          (specNorm_le_frobNorm Gᵀ)
+        have hh := pow_le_pow_left₀ (singularValues_nonneg Gᵀ _) h 2
+        simpa only [X, frobNorm_sq, frobSq_transpose] using hh
       apply norm_weak_expression_le hP0 hQ0 (frobSq_nonneg _) (by positivity)
         (mul_le_mul_of_nonneg_left hXs (by norm_num)) ?_ (hP _) (hQ _)
       rw [abs_of_nonneg (by positivity : 0 ≤ 2 * X G)]
       exact mul_le_mul_of_nonneg_left hXs (by norm_num))
     (fun ε hε => integral_weak_shift_nonneg_gaussianMatrix hr hrk ε hε ψ hψ1 hψ0 P Q hP0 hQ0 hP hQ)
   have heq : (fun G : Matrix (Fin r) (Fin k) ℝ =>
-      4 * sigmaMin Gᵀ ^ 2 * deriv ψ (sigmaMin Gᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin Gᵀ ^ 2) * ψ (sigmaMin Gᵀ ^ 2))
+      4 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 * deriv ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) +
+        2 * ((k : ℝ) - r + 1 - singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) * ψ (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2))
       = (fun G => deriv ψ (X G) * (4 * X G) + (b - 2 * X G) * ψ (X G)) := by
     funext G
     dsimp only [X, b]
@@ -286,10 +290,10 @@ theorem integral_sigmaMin_transpose_sq_law_weak_nonneg_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ) (hψ0 : ∀ x, 0 ≤ ψ x) :
     0 ≤ ∫ x in Ioi (0 : ℝ), 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x
-      ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)) := by
-  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => sigmaMin Gᵀ ^ 2) :=
+      ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)) := by
+  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) :=
     measurable_sigmaMin_transpose_sq
-  have hpos : ∀ᵐ x ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)),
+  have hpos : ∀ᵐ x ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)),
       x ∈ Ioi (0 : ℝ) :=
     (ae_map_iff hm.aemeasurable measurableSet_Ioi).2
       (ae_sigmaMin_transpose_sq_pos_gaussianMatrix hr hrk)

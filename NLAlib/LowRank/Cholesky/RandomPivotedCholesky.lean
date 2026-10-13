@@ -4,13 +4,16 @@ import NLAlib.Matrix.Inequalities.TraceTail
 /-!
 # Expected relative trace error of randomly pivoted Cholesky
 
-The actual finite adaptive pivot process supplies the PSD invariant, one-step
+`choleskyHistoryLaw` models adaptive sampling; the `integral_trace_`
+theorems below give the spectral-tail guarantees and their `HasLaw` transports.
+The finite adaptive pivot process supplies the PSD invariant, one-step
 trace mean, sorted-tail energy bound, finite Jensen recursion, and scalar potential.
 The source's relative optimal tail and additive tolerance are kept distinct.
 Source: CETW (2025); manuscript `sa:rp-theorem`.
 -/
 
 noncomputable section
+open MeasureTheory ProbabilityTheory
 open scoped Matrix
 namespace NLAlib
 
@@ -156,5 +159,80 @@ theorem sum_choleskyHistoryWeight_mul_trace_sub_approximation_eq
     unfold randomizedCholeskyApproximation
     abel
   rw [he]
+
+/-- RPCholesky's residual-trace integral reaches the relative spectral-tail target.
+Source: CETW (2025), Theorem 5.1, relative-tail budget.
+atlas: rpcholesky (partial) -/
+theorem integral_trace_choleskyHistoryLaw_le_mul_spectralTraceTail
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    {A : Matrix n n ℝ} (hA : A.PosSemidef) {r k : ℕ} (hr : 1 ≤ r)
+    (hτ : 0 < spectralTraceTail A hA.isHermitian r) {ε : ℝ} (hε : 0 < ε)
+    (hbudget : (r : ℝ) / ε + r * Real.log
+      (A.trace / (ε * spectralTraceTail A hA.isHermitian r)) ≤ k) :
+    (∫ h, (partialCholeskyResidual A h).trace ∂choleskyHistoryLaw A hA k) ≤
+      (1 + ε) * spectralTraceTail A hA.isHermitian r := by
+  rw [integral_trace_choleskyHistoryLaw]
+  exact choleskyExpectedTrace_le_mul_spectralTraceTail hA hr hτ hε hbudget
+
+/-- The relative-tail guarantee applies to a random adaptive pivot history on any space.
+Source: CETW (2025), Theorem 5.1, relative-tail budget. -/
+theorem integral_trace_choleskyHistoryLaw_le_mul_spectralTraceTail_of_hasLaw
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    {A : Matrix n n ℝ} (hA : A.PosSemidef) {r k : ℕ} (hr : 1 ≤ r)
+    (hτ : 0 < spectralTraceTail A hA.isHermitian r) {ε : ℝ} (hε : 0 < ε)
+    (hbudget : (r : ℝ) / ε + r * Real.log
+      (A.trace / (ε * spectralTraceTail A hA.isHermitian r)) ≤ k)
+    {H : Ω → Fin k → n} (hH : HasLaw H (choleskyHistoryLaw A hA k) μ) :
+    (∫ ω, (partialCholeskyResidual A (H ω)).trace ∂μ) ≤ (1 + ε) * spectralTraceTail A hA.isHermitian r := by
+  rw [integral_trace_choleskyHistoryLaw_of_hasLaw A hA k hH]
+  exact choleskyExpectedTrace_le_mul_spectralTraceTail hA hr hτ hε hbudget
+
+/-- Zero spectral tail gives zero expected residual trace after the target rank.
+Source: CETW (2025), rank termination endpoint.
+atlas: rpcholesky (partial) -/
+theorem integral_trace_choleskyHistoryLaw_eq_zero_of_spectralTraceTail_eq_zero
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    {A : Matrix n n ℝ} (hA : A.PosSemidef) {r k : ℕ}
+    (ht : spectralTraceTail A hA.isHermitian r = 0) (hk : r ≤ k) :
+    (∫ h, (partialCholeskyResidual A h).trace ∂choleskyHistoryLaw A hA k) = 0 := by
+  rw [integral_trace_choleskyHistoryLaw]
+  exact choleskyExpectedTrace_eq_zero_of_spectralTraceTail_eq_zero hA ht hk
+
+/-- The real adaptive pivot law satisfies the relative-tail guarantee and zero-tail endpoint.
+Source: CETW (2025), Theorem 5.1, relative-tail branch and rank termination.
+atlas: rpcholesky (partial) -/
+theorem integral_trace_choleskyHistoryLaw_le_of_relative_budget_or_zero_tail
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    {A : Matrix n n ℝ} (hA : A.PosSemidef) {r k : ℕ} (hr : 1 ≤ r)
+    {ε : ℝ} (hε : 0 < ε)
+    (hbudget : (0 < spectralTraceTail A hA.isHermitian r ∧
+      (r : ℝ) / ε + r * Real.log
+        (1 / (ε * relativeSpectralTraceTail A hA.isHermitian r)) ≤ k) ∨
+      (spectralTraceTail A hA.isHermitian r = 0 ∧ r ≤ k)) :
+    (∫ h, (partialCholeskyResidual A h).trace ∂choleskyHistoryLaw A hA k) ≤
+      (1 + ε) * spectralTraceTail A hA.isHermitian r := by
+  rw [integral_trace_choleskyHistoryLaw]
+  rcases hbudget with ⟨hτ, hb⟩ | ⟨hτ, hk⟩
+  · exact choleskyExpectedTrace_le_of_relativeSpectralTraceTail hA hr hτ hε hb
+  · simpa only [choleskyExpectedTrace_eq_zero_of_spectralTraceTail_eq_zero hA hτ hk,
+      hτ, mul_zero] using (le_rfl : (0 : ℝ) ≤ 0)
+
+/-- The relative-tail and zero-tail guarantees transport to a random adaptive history.
+Source: CETW (2025), Theorem 5.1, relative-tail branch and rank termination. -/
+theorem integral_trace_choleskyHistoryLaw_le_of_relative_budget_or_zero_tail_of_hasLaw
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    {A : Matrix n n ℝ} (hA : A.PosSemidef) {r k : ℕ} (hr : 1 ≤ r)
+    {ε : ℝ} (hε : 0 < ε)
+    (hbudget : (0 < spectralTraceTail A hA.isHermitian r ∧
+      (r : ℝ) / ε + r * Real.log
+        (1 / (ε * relativeSpectralTraceTail A hA.isHermitian r)) ≤ k) ∨
+      (spectralTraceTail A hA.isHermitian r = 0 ∧ r ≤ k))
+    {H : Ω → Fin k → n} (hH : HasLaw H (choleskyHistoryLaw A hA k) μ) :
+    (∫ ω, (partialCholeskyResidual A (H ω)).trace ∂μ) ≤ (1 + ε) * spectralTraceTail A hA.isHermitian r := by
+  rw [integral_trace_choleskyHistoryLaw_of_hasLaw A hA k hH,
+    ← integral_trace_choleskyHistoryLaw A hA k]
+  exact integral_trace_choleskyHistoryLaw_le_of_relative_budget_or_zero_tail hA hr hε hbudget
 
 end NLAlib

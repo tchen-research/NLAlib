@@ -1,13 +1,10 @@
 # F4: the consistency round (2026-10-13)
 
-**Authority.** Tyler, after reading `docs/review/STATE_2026-10-13.md`: "let's do this for the
-norms. It should be consistent and specified in the specs. And address all the other issues
-also. Condition number should be the standard ‖A‖‖A⁻¹‖ definition with infinity or undefined for
-non-invertible. This condition number can be renamed to something else since it comes up some."
-This supersedes the freeze of `docs/FOUNDATIONS_BRIEF.md` §4 for the items below. Everything else
-in that brief (one spelling, no leaf generalisation beyond what an item asks, the check list per
-PR) still holds. `docs/STANDARDS.md` §3 is the spec; this file is the work list. Where the two
-disagree, STANDARDS wins and this file is wrong.
+**Historical record.** This brief records the 2026-10-13 F4 consistency round and its original
+work plan. It is not a live policy or work list. Follow [`docs/STANDARDS.md`](STANDARDS.md) for
+current conventions; its statement-design, adapter, generality, and rename rules supersede
+conflicting decisions below. The concrete mathematical descriptions here remain historical
+context, not requirements to delete APIs or force every item through the listed migration.
 
 Branch `nlalib-f4`, stacked on `nlalib-f2` (which is stacked on `nlalib-scaffold`). Item numbers
 (M1…, A1…, P1…, I1…, C.n) refer to `docs/review/oddities_*.md` and `STATE_2026-10-13.md` §C.
@@ -54,10 +51,12 @@ Same as `docs/DEDUP_ROUND_BRIEF.md` §0, in short:
   `Real.sqrt (x ⬝ᵥ x)`, `{x // x ⬝ᵥ x = 1}` and `x ⬝ᵥ x` *as a norm* disappear from statements
   (`x ⬝ᵥ y` as a bilinear pairing is fine). Bridges: `norm_toLp_sq_eq_re_star_dotProduct` (𝕜),
   `norm_toLp_sq_eq_dotProduct_self` (ℝ) in `Matrix/Norms/Core.lean` (owner M1 adds the second).
-- **N3** One Schatten spelling: `schattenNorm (A) (p : ℝ≥0∞) : ℝ` (delete `schattenNormExtended`,
-  `schattenSeminorm`, `schattenInvariantNorm` as definitions; keep their content as lemmas).
-  `nuclearNorm A` is `schattenNorm A 1` (abbrev). `kyFanNorm A k` and `eigenvaluePrefix` are
-  defined through `sumLargest` of `singularValues` / `eigenvalues₀`. `OrthogonallyInvariantNorm`
+- **N3 (revised after statement audit)** One main scalar Schatten spelling:
+  `schattenNorm (A) (p : ℝ≥0∞) : ℝ`. Retain `schattenSeminorm` and `schattenInvariantNorm`
+  as useful bundled adapters, with evaluation lemmas identifying the common scalar quantity.
+  `schattenNormReal A (p : ℝ)` retains the finite power sum, with explicit finite-exponent
+  bridges. `nuclearNorm A = schattenNorm A 1` is a proved endpoint identity. `kyFanNorm A k`
+  and `eigenvaluePrefix` are defined through `sumLargest` of `singularValues` / `eigenvalues₀`. `OrthogonallyInvariantNorm`
   becomes `UnitarilyInvariantNorm` over 𝕜 (atlas id `unitarily-invariant-norm-def`), its
   `transpose` lemma moves into `Norms/InvariantNorm.lean`.
 - **N4 Condition number.** `conditionNumber (A : Matrix n n 𝕜) : ℝ≥0∞ :=

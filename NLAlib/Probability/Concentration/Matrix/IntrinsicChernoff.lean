@@ -7,7 +7,7 @@ import NLAlib.Matrix.Inequalities.TraceExpMonotone
 /-!
 # Theorem 7.2.1 — Intrinsic matrix Chernoff
 
-Main declaration: `NLAlib.intrinsic_matrix_chernoff`.
+Main declarations: the intrinsic-dimension Chernoff tail bounds below.
 
 Atlas: `intrinsic-dimension` (intrinsic matrix Chernoff; variant of `matrix-chernoff`).
 
@@ -256,7 +256,7 @@ private lemma NLAlib.intrinsic_matrix_chernoff_package {Ω : Type*} [MeasurableS
       intro k
       have hb : ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (X k ω) ∧ lambdaMax (X k ω) ≤ L := by
         filter_upwards [hPSD k, hBound k] with ω h1 h2
-        exact ⟨lambdaMin_nonneg_of_posSemidef _ h1, h2⟩
+        exact ⟨lambdaMin_nonneg_of_posSemidef h1, h2⟩
       exact (chernoff_matrix_mgf_cgf_le μ (X k) L hL.le (hMeas k) (hXHerm k) hb θ').2
     have hsum : (cumulantSum μ X θ') ≤ (g • ∑ k, ∫ ω, X k ω ∂μ) := by
       unfold cumulantSum

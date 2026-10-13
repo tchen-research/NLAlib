@@ -6,6 +6,9 @@ The deterministic quadrature error (degree `< 2q`) and the Hutchinson tail give 
 SLQ trace-estimation bound with the Hanson–Wright constant `1/(256e²)`. The polynomial
 approximation is an explicit hypothesis here; the Lipschitz and analytic rates are in
 `SLQLipschitz`, `SLQAnalytic`. Atlas: `slq-error`.
+These are bounds for supplied orthonormal compression frames containing `K_q`.
+The parameter `q` is an approximation order; no relation between the frame column count
+and `q`, construction algorithm, or matvec cost is asserted.
 -/
 
 noncomputable section
@@ -48,7 +51,7 @@ degree below `2q` and uniform error `E`: the error threshold is `η+2nE` and the
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1; Chen–Trogdon–Ubaru (2021) [`ctu21`], Lem. 2.2. The approximation is an explicit premise;
 the constant comes from NLAlib's proved Hanson–Wright inequality.
 atlas: slq-error (partial) -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector {A : Matrix n n ℝ}
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k))
@@ -57,23 +60,23 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector {
     (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c)
     (hfp : ∀ x ∈ Set.Icc a c, |f x - p.eval x| ≤ E) {η : ℝ} (hη : 0 ≤ η) :
     μ.real {ω | η + 2 * (Fintype.card n : ℝ) * E <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
       2 * exp (-(1 / (256 * exp 1 ^ 2)) *
         min (Fintype.card κ * η ^ 2 / frobNorm (cfc f A) ^ 2)
           (Fintype.card κ * η / specNorm (cfc f A))) := by
   have hnorm := ae_hutchinsonEstimate_one_eq_card_of_hasLaw_rademacherVector hG
   have hsub : ∀ᵐ ω ∂μ, ω ∈ {ω | η + 2 * (Fintype.card n : ℝ) * E <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} →
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} →
       ω ∈ {ω | η ≤ |hutchinsonEstimate (cfc f A) (G ω) - (cfc f A).trace|} := by
     filter_upwards [hnorm] with ω hω
     intro hbad
-    have hdet := abs_slqEstimate_sub_hutchinsonEstimate_le_of_degree_lt_two_mul
-      hA (hQ ω) (G ω) (hK ω) hp hspec hfp
+    have hdet := abs_compressionQuadratureEstimate_sub_hutchinsonEstimate_le
+      hA (G ω) (hQ ω) (hK ω) hp hspec hfp
     rw [hω] at hdet
-    have htri := abs_sub_le (slqEstimate A f (G ω) (Q ω))
+    have htri := abs_sub_le (compressionQuadratureEstimate A f (G ω) (Q ω))
       (hutchinsonEstimate (cfc f A) (G ω)) (cfc f A).trace
     change η + 2 * (Fintype.card n : ℝ) * E <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace| at hbad
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace| at hbad
     change η ≤ |hutchinsonEstimate (cfc f A) (G ω) - (cfc f A).trace|
     nlinarith
   exact (ENNReal.toReal_mono (measure_ne_top μ _)
@@ -85,7 +88,7 @@ polynomial approximation contributes at most half of the relative error budget.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1.
 The coefficient `1024e²` is derived from the Hanson–Wright constant.
 atlas: slq-error (partial) -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {f : ℝ → ℝ} (hF : (cfc f A).PosSemidef)
     (htr : 0 < (cfc f A).trace) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
@@ -96,14 +99,14 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademach
     (hfp : ∀ x ∈ Set.Icc a c, |f x - p.eval x| ≤ E) {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1)
     (hbudget : 2 * (Fintype.card n : ℝ) * E ≤ (ε / 2) * (cfc f A).trace) :
     μ.real {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
       2 * exp (-(Fintype.card κ * ε ^ 2 / (1024 * exp 1 ^ 2))) := by
-  have hraw := measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector hA hG hQ hK
+  have hraw := measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector hA hG hQ hK
     hp hspec hfp (η := (ε / 2) * (cfc f A).trace) (by positivity)
   have hsub : {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ⊆
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ⊆
       {ω | (ε / 2) * (cfc f A).trace + 2 * (Fintype.card n : ℝ) * E <
-        |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} := by
+        |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} := by
     intro ω hω
     change ε * (cfc f A).trace < _ at hω
     change (ε / 2) * (cfc f A).trace + 2 * (Fintype.card n : ℝ) * E < _
@@ -124,7 +127,7 @@ at most `ε` with failure probability at most `δ`, provided the polynomial appr
 uses at most half the deterministic error budget.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 (with the Hanson–Wright constant).
 atlas: slq-error (partial) -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {f : ℝ → ℝ} (hF : (cfc f A).PosSemidef)
     (htr : 0 < (cfc f A).trace) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
@@ -137,8 +140,8 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademach
     (hbudget : 2 * (Fintype.card n : ℝ) * E ≤ (ε / 2) * (cfc f A).trace)
     (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
     μ.real {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
-  refine (measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
+  refine (measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector
     hA hF htr hG hQ hK hp hspec hfp hε hε1 hbudget).trans ?_
   have hlog : log (2 / δ) ≤ Fintype.card κ * ε ^ 2 / (1024 * exp 1 ^ 2) := by
     rw [le_div_iff₀ (by positivity)]

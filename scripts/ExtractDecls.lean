@@ -1,4 +1,4 @@
-import NLAlib
+import NLAlib.Experimental
 open Lean Elab Command Meta
 
 /-! Declaration index for search, for prover agents and for the atlas.

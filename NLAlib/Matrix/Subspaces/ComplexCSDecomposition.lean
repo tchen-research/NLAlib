@@ -2,7 +2,7 @@ import NLAlib.Matrix.Spectral.SVD
 import NLAlib.Matrix.Subspaces.ComplexGramIsometry
 import NLAlib.Matrix.Subspaces.UnitaryBlockCompletion
 import NLAlib.Matrix.Subspaces.CanonicalCS
-import NLAlib.Matrix.Functions.ComplexDiagonalFilter
+import NLAlib.Matrix.Functions.DiagonalFilter
 /-!
 # Complex unitary cosine-sine decomposition
 
@@ -43,19 +43,19 @@ theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
     ∃ V₁ W₁ : Matrix p p ℂ, ∃ V₂ W₂ : Matrix q q ℂ,
       V₁ᴴ * V₁ = 1 ∧ W₁ᴴ * W₁ = 1 ∧ V₂ᴴ * V₂ = 1 ∧ W₂ᴴ * W₂ = 1 ∧
       (Matrix.fromBlocks V₁ 0 0 V₂)ᴴ * U * Matrix.fromBlocks W₁ 0 0 W₂ =
-        (csCanonicalMatrix c ((1 : Matrix q q ℝ).submatrix id e)).map Complex.ofReal := by
+        (csCanonicalMatrix c ((1 : Matrix q q ℝ).submatrix id e)).map Complex.ofRealHom := by
   dsimp only
   let c := fun i : p => singularValues U.toBlocks₁₁ ((Fintype.equivFin p) i)
   let C : Matrix p p ℂ := Matrix.diagonal (fun i => (c i : ℂ))
   let S : Matrix p p ℂ := Matrix.diagonal (fun i => (Real.sqrt (1 - c i ^ 2) : ℂ))
   let E₀ := (1 : Matrix q q ℝ).submatrix id e
-  let E := E₀.map Complex.ofReal
+  let E := E₀.map Complex.ofRealHom
   have hE₀ : HasOrthonormalCols E₀ := by
     have h : HasOrthonormalCols (1 : Matrix q q ℝ) := by simp [HasOrthonormalCols]
     exact h.submatrix_cols e
   have hE : Eᴴ * E = 1 := by
-    rw [show Eᴴ = E₀ᵀ.map Complex.ofReal from conjTranspose_map_ofReal E₀,
-      ← map_ofReal_mul, (show E₀ᵀ * E₀ = 1 from hE₀)]
+    rw [show Eᴴ = E₀ᵀ.map Complex.ofRealHom from by ext; simp [E],
+      ← Matrix.map_mul (f := Complex.ofRealHom) (L := E₀ᵀ) (M := E₀), (show E₀ᵀ * E₀ = 1 from hE₀)]
     simp
   obtain ⟨V₀, W₀, hSVD⟩ := exists_isSVD U.toBlocks₁₁
   let ep := Fintype.equivFin p
@@ -133,10 +133,11 @@ theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
   have hO : Oᴴ * O = 1 := Unitary.coe_star_mul_self O₀
   let N := Matrix.fromBlocks (1 : Matrix p p ℂ) 0 0 O * M
   have hN : Nᴴ * N = 1 := unitary_gram_mul (unitary_gram_blockDiagonal (by simp) hO) hM
-  let K := (csCanonicalMatrix c E₀).map Complex.ofReal
+  let K := (csCanonicalMatrix c E₀).map Complex.ofRealHom
   have hK : Kᴴ * K = 1 := by
-    rw [show Kᴴ = (csCanonicalMatrix c E₀)ᵀ.map Complex.ofReal from conjTranspose_map_ofReal _,
-      ← map_ofReal_mul, show (csCanonicalMatrix c E₀)ᵀ * csCanonicalMatrix c E₀ = 1 from
+    rw [show Kᴴ = (csCanonicalMatrix c E₀)ᵀ.map Complex.ofRealHom from by ext; simp [K],
+      ← Matrix.map_mul (f := Complex.ofRealHom)
+        (L := (csCanonicalMatrix c E₀)ᵀ) (M := csCanonicalMatrix c E₀), show (csCanonicalMatrix c E₀)ᵀ * csCanonicalMatrix c E₀ = 1 from
         hasOrthonormalCols_csCanonicalMatrix c E₀ hE₀ hc]
     simp
   have hFirst : N.submatrix id Sum.inl = K.submatrix id Sum.inl := by
@@ -147,8 +148,9 @@ theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
     cases i with
     | inl i => simp [C, Matrix.diagonal_apply]
     | inr i =>
-      change (-E * S) i j = ((-E₀ * Matrix.diagonal (fun i => Real.sqrt (1 - c i ^ 2))).map Complex.ofReal) i j
-      rw [map_ofReal_mul]
+      change (-E * S) i j = ((-E₀ * Matrix.diagonal (fun i => Real.sqrt (1 - c i ^ 2))).map Complex.ofRealHom) i j
+      rw [Matrix.map_mul (f := Complex.ofRealHom) (L := -E₀)
+        (M := Matrix.diagonal (fun i => Real.sqrt (1 - c i ^ 2)))]
       simp [E, S, Matrix.mul_apply, Matrix.diagonal_apply]
   obtain ⟨Z, hZ, hNZ⟩ := exists_unitary_right_block_of_first_columns_eq N K hN hK hFirst
   refine ⟨hc, V, W, Oᴴ, Z, hV, hW, ?_, hZ, ?_⟩

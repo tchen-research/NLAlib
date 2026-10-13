@@ -74,55 +74,55 @@ theorem measurable_inversePowerSoftMinSecond_of_entries {A B : Ω → Matrix ι 
     ((hT.pow_const _).mul hK)
 
 omit [DecidableEq κ] in
-/-- Every entry of a regularized Gram matrix is measurable on matrix
-arrays. Source: finite coordinate polynomials; atlas `wishart-lambda-min-tail` (helper). -/
+/-- Every entry of a regularized Gram matrix is measurable on
+matrices. Source: finite coordinate polynomials; atlas `wishart-lambda-min-tail` (helper). -/
 theorem measurable_regularizedGram_entry (ε : ℝ) (i j : ι) :
-    Measurable fun G : ι → κ → ℝ => regularizedGram ε (Matrix.of G) i j := by
-  have hc : Continuous fun G : ι → κ → ℝ => regularizedGram ε (Matrix.of G) := by
+    Measurable fun G : Matrix ι κ ℝ => regularizedGram ε G i j := by
+  have hc : Continuous fun G : Matrix ι κ ℝ => regularizedGram ε G := by
     unfold regularizedGram
     fun_prop
   exact (hc.matrix_elem i j).measurable
 
 omit [DecidableEq κ] in
-/-- The resolvent regularized Gram minimum is measurable on matrix arrays.
+/-- The resolvent regularized Gram minimum is measurable on matrices.
 Source: inverse/trace-power formula; atlas `wishart-lambda-min-tail` (helper). -/
 theorem measurable_inversePowerSoftMin_regularizedGram (n : ℕ) (ε : ℝ) :
-    Measurable fun G : ι → κ → ℝ => inversePowerSoftMin n (regularizedGram ε (Matrix.of G)) :=
+    Measurable fun G : Matrix ι κ ℝ => inversePowerSoftMin n (regularizedGram ε G) :=
   measurable_inversePowerSoftMin_of_entries (measurable_regularizedGram_entry ε) n
 
 omit [DecidableEq κ] in
-/-- Each actual Gram gradient entry is measurable on matrix arrays.
+/-- Each actual Gram gradient entry is measurable on matrices.
 Source: finite matrix product formula; atlas `wishart-lambda-min-tail` (helper). -/
 theorem measurable_gramSoftMinGradient_entry (n : ℕ) (ε : ℝ) (i : ι) (j : κ) :
-    Measurable fun G : ι → κ → ℝ => gramSoftMinGradient n ε (Matrix.of G) i j := by
-  have hG : ∀ i j, Measurable fun G : ι → κ → ℝ => Matrix.of G i j := fun i j => by fun_prop
-  have hP : ∀ a b : ι, Measurable fun G : ι → κ → ℝ =>
-      inversePowerSoftMinWeight n (regularizedGram ε (Matrix.of G)) a b :=
+    Measurable fun G : Matrix ι κ ℝ => gramSoftMinGradient n ε G i j := by
+  have hG : ∀ i j, Measurable fun G : Matrix ι κ ℝ => G i j := Matrix.measurable_entry
+  have hP : ∀ a b : ι, Measurable fun G : Matrix ι κ ℝ =>
+      inversePowerSoftMinWeight n (regularizedGram ε G) a b :=
     measurable_inversePowerSoftMinWeight_entry_of (measurable_regularizedGram_entry ε) n
   exact measurable_const.mul (measurable_mul_entry_of hP hG i j)
 
 set_option maxHeartbeats 800000 in
-/-- Each actual second coordinate Gram derivative is measurable on matrix
-arrays. Source: finite Gram Hessian formula; atlas `wishart-lambda-min-tail` (helper). -/
+/-- Each actual second coordinate Gram derivative is measurable on
+matrices. Source: finite Gram Hessian formula; atlas `wishart-lambda-min-tail` (helper). -/
 theorem measurable_gramSoftMinSecond_single (n : ℕ) (ε : ℝ) (i : ι) (j : κ) :
-    Measurable fun G : ι → κ → ℝ => gramSoftMinSecond n ε (Matrix.of G) (Matrix.single i j 1) := by
+    Measurable fun G : Matrix ι κ ℝ => gramSoftMinSecond n ε G (Matrix.single i j 1) := by
   let E : Matrix ι κ ℝ := Matrix.single i j 1
-  have hG : ∀ i j, Measurable fun G : ι → κ → ℝ => Matrix.of G i j := fun i j => by fun_prop
-  have hE : ∀ i j, Measurable fun _ : ι → κ → ℝ => E i j := fun _ _ => measurable_const
-  have hD : ∀ a b, Measurable fun G : ι → κ → ℝ =>
-      (E * (Matrix.of G)ᵀ + Matrix.of G * Eᵀ) a b := fun a b =>
+  have hG : ∀ i j, Measurable fun G : Matrix ι κ ℝ => G i j := Matrix.measurable_entry
+  have hE : ∀ i j, Measurable fun _ : Matrix ι κ ℝ => E i j := fun _ _ => measurable_const
+  have hD : ∀ a b, Measurable fun G : Matrix ι κ ℝ =>
+      (E * Gᵀ + G * Eᵀ) a b := fun a b =>
     (measurable_mul_entry_of hE (fun a b => hG b a) a b).add
       (measurable_mul_entry_of hG (fun a b => hE b a) a b)
-  have hW : ∀ a b : ι, Measurable fun G : ι → κ → ℝ => regularizedGram ε (Matrix.of G) a b :=
+  have hW : ∀ a b : ι, Measurable fun G : Matrix ι κ ℝ => regularizedGram ε G a b :=
     measurable_regularizedGram_entry ε
-  have hSecond : Measurable fun G : ι → κ → ℝ =>
-      inversePowerSoftMinSecond n (regularizedGram ε (Matrix.of G))
-        (E * (Matrix.of G)ᵀ + Matrix.of G * Eᵀ) :=
+  have hSecond : Measurable fun G : Matrix ι κ ℝ =>
+      inversePowerSoftMinSecond n (regularizedGram ε G)
+        (E * Gᵀ + G * Eᵀ) :=
     measurable_inversePowerSoftMinSecond_of_entries hW hD n
-  have hC : ∀ a b : ι, Measurable fun _ : ι → κ → ℝ => ((2 : ℝ) • (E * Eᵀ)) a b :=
+  have hC : ∀ a b : ι, Measurable fun _ : Matrix ι κ ℝ => ((2 : ℝ) • (E * Eᵀ)) a b :=
     fun _ _ => measurable_const
-  have hFirst : Measurable fun G : ι → κ → ℝ =>
-      inversePowerSoftMinFirst n (regularizedGram ε (Matrix.of G)) ((2 : ℝ) • (E * Eᵀ)) :=
+  have hFirst : Measurable fun G : Matrix ι κ ℝ =>
+      inversePowerSoftMinFirst n (regularizedGram ε G) ((2 : ℝ) • (E * Eᵀ)) :=
     measurable_inversePowerSoftMinFirst_of_entries hW hC n
   exact hSecond.add hFirst
 

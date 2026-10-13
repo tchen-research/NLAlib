@@ -47,6 +47,19 @@ private lemma sum_sum_ite_eq_mul_add {r : ℕ} (a b : ℝ) :
   simp_rw [this, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
   ring
 
+/-- Transfer of an integrability-and-integral statement from `gaussianMatrix` to a random
+matrix `X` with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. -/
+private lemma integrable_and_integral_eq_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    {F : Matrix (Fin r) (Fin k) ℝ → ℝ} (hF : Measurable F) {c : ℝ}
+    (h : Integrable F (gaussianMatrix (Fin r) (Fin k)) ∧
+      ∫ G, F G ∂(gaussianMatrix (Fin r) (Fin k)) = c) :
+    Integrable (fun w => F (X w)) μ ∧ ∫ w, F (X w) ∂μ = c := by
+  refine ⟨?_, (hX.integral_comp hF.aestronglyMeasurable).trans h.2⟩
+  have hI : Integrable F (μ.map X) := by rw [hX.map_eq]; exact h.1
+  exact hI.comp_aemeasurable hX.aemeasurable
+
 /-- **Frobenius moment of the inverse Wishart matrix.** For an `r × k` standard Gaussian matrix
 `G` with `r + 4 ≤ k`, `‖(G Gᵀ)⁻¹‖_F²` is integrable and
 `E‖(G Gᵀ)⁻¹‖_F² = r(k-1)/((k-r)(k-r-1)(k-r-3))`.
@@ -60,18 +73,18 @@ Prove2me solution `GaussianMatrix.inverse_wishart_frobenius_moment`.
 atlas: inverse-wishart-frob-moment -/
 theorem integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix {r k : ℕ}
     (hrk : r + 4 ≤ k) :
-    Integrable (fun G : Fin r → Fin k → ℝ => frobSq (Matrix.of G * (Matrix.of G)ᵀ)⁻¹)
-      (gaussianMatrix r k) ∧
-    ∫ G, frobSq (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ∂(gaussianMatrix r k)
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ => frobSq (G * Gᵀ)⁻¹)
+      (gaussianMatrix (Fin r) (Fin k)) ∧
+    ∫ G, frobSq (G * Gᵀ)⁻¹ ∂(gaussianMatrix (Fin r) (Fin k))
       = (r : ℝ) * ((k : ℝ) - 1)
           / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) := by
-  set M : (Fin r → Fin k → ℝ) → Matrix (Fin r) (Fin r) ℝ :=
-    fun G => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ with hM
-  have hfun : (fun G : Fin r → Fin k → ℝ => frobSq (Matrix.of G * (Matrix.of G)ᵀ)⁻¹)
+  set M : (Matrix (Fin r) (Fin k) ℝ) → Matrix (Fin r) (Fin r) ℝ :=
+    fun G => (G * Gᵀ)⁻¹ with hM
+  have hfun : (fun G : Matrix (Fin r) (Fin k) ℝ => frobSq (G * Gᵀ)⁻¹)
       = fun G => ∑ i, ∑ j, M G i j ^ 2 := by
     funext G; rw [frobSq_eq_sum_sq]
-  have hterm : ∀ i j : Fin r, Integrable (fun G => M G i j ^ 2) (gaussianMatrix r k) ∧
-      ∫ G, M G i j ^ 2 ∂(gaussianMatrix r k)
+  have hterm : ∀ i j : Fin r, Integrable (fun G => M G i j ^ 2) (gaussianMatrix (Fin r) (Fin k)) ∧
+      ∫ G, M G i j ^ 2 ∂(gaussianMatrix (Fin r) (Fin k))
         = if i = j then 1 / (((k : ℝ) - r - 1) * ((k : ℝ) - r - 3))
           else 1 / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) := by
     intro i j
@@ -95,6 +108,20 @@ theorem integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix {r 
   field_simp
   ring
 
+/-- `integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix` for a random matrix `X`
+with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `inverse-wishart-frob-moment`. -/
+theorem integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hrk : r + 4 ≤ k) :
+    Integrable (fun w => frobSq (X w * (X w)ᵀ)⁻¹) μ ∧
+    ∫ w, frobSq (X w * (X w)ᵀ)⁻¹ ∂μ
+      = (r : ℝ) * ((k : ℝ) - 1)
+          / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) :=
+  integrable_and_integral_eq_of_hasLaw hX
+    (measurable_frobSq_of_entries fun i j => measurable_inv_self_mul_transpose_apply i j)
+    (integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix hrk)
+
 /-- **Fourth Frobenius moment of the Gaussian pseudoinverse.** For an `r × k` standard Gaussian
 matrix `G` with `r + 4 ≤ k`, `‖G†‖_F⁴` is integrable and
 `E‖G†‖_F⁴ = (r²(k-r) - 2r(r-1))/((k-r)(k-r-1)(k-r-3))`, with `G† = pinvR G`.
@@ -108,20 +135,20 @@ mixed ones
 Prove2me solution `GaussianMatrix.pinv_frobenius_fourth_moment`.
 atlas: pinv-frob-fourth-moment -/
 theorem integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix {r k : ℕ} (hrk : r + 4 ≤ k) :
-    Integrable (fun G : Fin r → Fin k → ℝ => frobSq (pinvR (Matrix.of G)) ^ 2)
-      (gaussianMatrix r k) ∧
-    ∫ G, frobSq (pinvR (Matrix.of G)) ^ 2 ∂(gaussianMatrix r k)
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ => frobSq (pinvR G) ^ 2)
+      (gaussianMatrix (Fin r) (Fin k)) ∧
+    ∫ G, frobSq (pinvR G) ^ 2 ∂(gaussianMatrix (Fin r) (Fin k))
       = ((r : ℝ) ^ 2 * ((k : ℝ) - r) - 2 * r * ((r : ℝ) - 1))
           / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) := by
-  set M : (Fin r → Fin k → ℝ) → Matrix (Fin r) (Fin r) ℝ :=
-    fun G => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ with hM
-  have hfun : (fun G : Fin r → Fin k → ℝ => frobSq (pinvR (Matrix.of G)) ^ 2)
+  set M : (Matrix (Fin r) (Fin k) ℝ) → Matrix (Fin r) (Fin r) ℝ :=
+    fun G => (G * Gᵀ)⁻¹ with hM
+  have hfun : (fun G : Matrix (Fin r) (Fin k) ℝ => frobSq (pinvR G) ^ 2)
       = fun G => ∑ i, ∑ j, M G i i * M G j j := by
     funext G
     rw [frobSq_pinvR_eq_trace_inv, RCLike.re_to_real, Matrix.trace, sq, Finset.sum_mul_sum]
     rfl
-  have hterm : ∀ i j : Fin r, Integrable (fun G => M G i i * M G j j) (gaussianMatrix r k) ∧
-      ∫ G, M G i i * M G j j ∂(gaussianMatrix r k)
+  have hterm : ∀ i j : Fin r, Integrable (fun G => M G i i * M G j j) (gaussianMatrix (Fin r) (Fin k)) ∧
+      ∫ G, M G i i * M G j j ∂(gaussianMatrix (Fin r) (Fin k))
         = if i = j then 1 / (((k : ℝ) - r - 1) * ((k : ℝ) - r - 3))
           else ((k : ℝ) - r - 2) / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) := by
     intro i j
@@ -148,6 +175,20 @@ theorem integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix {r k : ℕ} (hrk 
   have h3 : (k : ℝ) - r - 3 ≠ 0 := by linarith
   field_simp
   ring
+
+/-- `integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `pinv-frob-fourth-moment`. -/
+theorem integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hrk : r + 4 ≤ k) :
+    Integrable (fun w => frobSq (pinvR (X w)) ^ 2) μ ∧
+    ∫ w, frobSq (pinvR (X w)) ^ 2 ∂μ
+      = ((r : ℝ) ^ 2 * ((k : ℝ) - r) - 2 * r * ((r : ℝ) - 1))
+          / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) :=
+  integrable_and_integral_eq_of_hasLaw hX
+    ((measurable_frobSq_of_entries fun i j => measurable_pinvR_entry i j).pow_const 2)
+    (integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix hrk)
 
 /-- HMT Lemma A.10 (endpoint case) in `eLpNorm` form: `‖1/χ²_d‖_{L^q} ≤ 3/d` for
 `q = (d-1)/2`. -/
@@ -193,8 +234,12 @@ Proof: each diagonal entry of `(G Gᵀ)⁻¹` is `1/χ²_{k-r+1}`
 inequality gives the tail. Ported from Prove2me solution `GaussianMatrix.pinv_frobenius_tail`.
 atlas: pinv-frob-tail -/
 theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : ℝ) (ht : 1 ≤ t) :
-    (gaussianMatrix r k) {G | 12 * (r : ℝ) / ((k : ℝ) - r) * t < frobSq (pinvR (Matrix.of G))}
-      ≤ ENNReal.ofReal (4 * t ^ (-(((k : ℝ) - r) / 2))) := by
+    (gaussianMatrix (Fin r) (Fin k)).real
+        {G | 12 * (r : ℝ) / ((k : ℝ) - r) * t < frobSq (pinvR G)}
+      ≤ 4 * t ^ (-(((k : ℝ) - r) / 2)) := by
+  rw [measureReal_def]
+  refine ENNReal.toReal_le_of_le_ofReal
+    (mul_nonneg (by norm_num) (Real.rpow_nonneg (by linarith) _)) ?_
   have hrk' : (r : ℝ) + 4 ≤ k := by exact_mod_cast hrk
   have hp : (4 : ℝ) ≤ (k : ℝ) - r := by linarith
   have hq : (2 : ℝ) ≤ ((k : ℝ) - r) / 2 := by linarith
@@ -202,22 +247,22 @@ theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : �
   have ht0 : (0 : ℝ) < t := by linarith
   rcases Nat.eq_zero_or_pos r with hr0 | hrpos
   · subst hr0
-    have : {G : Fin 0 → Fin k → ℝ | 12 * ((0 : ℕ) : ℝ) / ((k : ℝ) - (0 : ℕ)) * t
-        < frobSq (pinvR (Matrix.of G))} = ∅ := by
+    have : {G : Matrix (Fin 0) (Fin k) ℝ | 12 * ((0 : ℕ) : ℝ) / ((k : ℝ) - (0 : ℕ)) * t
+        < frobSq (pinvR G)} = ∅ := by
       ext G; simp [frobSq, frobInner]
     rw [this, measure_empty]
     exact zero_le
   have hr : (1 : ℝ) ≤ r := by exact_mod_cast hrpos
-  set μ := gaussianMatrix r k with hμ
+  set μ := gaussianMatrix (Fin r) (Fin k) with hμ
   set Q : ENNReal := ENNReal.ofReal (((k : ℝ) - r) / 2) with hQ
   have hQ0 : Q ≠ 0 := by simpa [hQ] using hq0
   have hQtop : Q ≠ ⊤ := ENNReal.ofReal_ne_top
   have hQ1 : 1 ≤ Q := by rw [hQ]; exact ENNReal.one_le_ofReal.mpr (by linarith)
   have hQr : Q.toReal = ((k : ℝ) - r) / 2 := ENNReal.toReal_ofReal hq0.le
-  set D : Fin r → (Fin r → Fin k → ℝ) → ℝ :=
-    fun i G => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i with hD
+  set D : Fin r → (Matrix (Fin r) (Fin k) ℝ) → ℝ :=
+    fun i G => (G * Gᵀ)⁻¹ i i with hD
   have hDm : ∀ i, Measurable (D i) := fun i => measurable_inv_self_mul_transpose_apply i i
-  have hZ : ∀ G : Fin r → Fin k → ℝ, frobSq (pinvR (Matrix.of G)) = (∑ i, D i) G := by
+  have hZ : ∀ G : Matrix (Fin r) (Fin k) ℝ, frobSq (pinvR G) = (∑ i, D i) G := by
     intro G
     rw [frobSq_pinvR_eq_trace_inv, RCLike.re_to_real, Finset.sum_apply]
     rfl
@@ -242,7 +287,7 @@ theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : �
             ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_natCast]
   set a : ℝ := 12 * (r : ℝ) / ((k : ℝ) - r) * t with ha
   have ha0 : 0 < a := by rw [ha]; positivity
-  have hsub : {G : Fin r → Fin k → ℝ | a < frobSq (pinvR (Matrix.of G))}
+  have hsub : {G : Matrix (Fin r) (Fin k) ℝ | a < frobSq (pinvR G)}
       ⊆ {G | ENNReal.ofReal a ≤ ‖(∑ i, D i) G‖ₑ} := by
     intro G hG
     simp only [Set.mem_ofPred_eq] at hG ⊢
@@ -256,7 +301,7 @@ theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : �
     (ε := ENNReal.ofReal a) (by simpa using ha0) (fun h => absurd h ENNReal.ofReal_ne_top)
   rw [hQr] at hmarkov
   have hc : (0 : ℝ) ≤ r * (3 / ((k : ℝ) - r + 1)) := by positivity
-  calc μ {G | a < frobSq (pinvR (Matrix.of G))}
+  calc μ {G | a < frobSq (pinvR G)}
       ≤ μ {G | ENNReal.ofReal a ≤ ‖(∑ i, D i) G‖ₑ} := measure_mono hsub
     _ ≤ (ENNReal.ofReal a)⁻¹ ^ (((k : ℝ) - r) / 2) *
           eLpNorm (∑ i, D i) Q μ ^ (((k : ℝ) - r) / 2) := hmarkov
@@ -285,5 +330,18 @@ theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : �
           _ ≤ 4 * t ^ (-(((k : ℝ) - r) / 2)) := by
               have : 0 ≤ t ^ (-(((k : ℝ) - r) / 2)) := Real.rpow_nonneg ht0.le _
               linarith
+
+/-- `gaussianMatrix_lt_frobSq_pinvR_le` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `pinv-frob-tail`. -/
+theorem gaussianMatrix_lt_frobSq_pinvR_le_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hrk : r + 4 ≤ k) (t : ℝ) (ht : 1 ≤ t) :
+    μ.real {w | 12 * (r : ℝ) / ((k : ℝ) - r) * t < frobSq (pinvR (X w))}
+      ≤ 4 * t ^ (-(((k : ℝ) - r) / 2)) := by
+  rw [hX.measureReal_eq (p := fun G => 12 * (r : ℝ) / ((k : ℝ) - r) * t < frobSq (pinvR G))
+    (measurableSet_lt measurable_const
+      (measurable_frobSq_of_entries fun i j => measurable_pinvR_entry i j))]
+  exact gaussianMatrix_lt_frobSq_pinvR_le hrk t ht
 
 end NLAlib

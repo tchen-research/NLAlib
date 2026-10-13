@@ -81,13 +81,12 @@ theorem ae_gaussian_projection_reproduces_of_rank_le
     {Ω l : Type*} [MeasurableSpace Ω] [Fintype l]
     {μ : Measure Ω} {m n t : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (G : Ω → Matrix (Fin n) (Fin t) ℝ)
-    (hG : μ.map (fun ω => Matrix.of.symm (G ω)) = gaussianMatrix n t)
+    (hG : HasLaw G (gaussianMatrix (Fin n) (Fin t)) μ)
     (Q : Ω → Matrix (Fin m) l ℝ)
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * G ω)) = A * G ω)
     (ht : A.rank ≤ t) : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * A) = A := by
   have hRank : ∀ᵐ ω ∂μ, (A * G ω).rank = A.rank := by
-    simpa only [min_eq_left ht, Equiv.apply_symm_apply] using
-      ae_rank_mul_gaussian_eq_min A (fun ω => Matrix.of.symm (G ω)) hG
+    simpa only [min_eq_left ht] using ae_rank_mul_gaussian_eq_min A G hG
   filter_upwards [hRank, hQr] with ω hr hproj
   have hRange := range_mulVecLin_mul_eq_of_rank_eq A (G ω) hr
   have hCols : ∀ j : Fin n, ∃ v : Fin t → ℝ, (A * G ω) *ᵥ v = A.col j := by
@@ -115,7 +114,7 @@ theorem integral_specNorm_residual_gram_pow_gaussian_le
     {μ : Measure Ω} [IsProbabilityMeasure μ] {m n k p : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (hk : 1 ≤ k) (hp : 2 ≤ p)
     (G : Ω → Matrix (Fin n) (Fin (k + p)) ℝ)
-    (hG : μ.map (fun ω => Matrix.of.symm (G ω)) = gaussianMatrix n (k + p))
+    (hG : HasLaw G (gaussianMatrix (Fin n) (Fin (k + p))) μ)
     (Q : Ω → Matrix (Fin m) l ℝ) (hQ : ∀ i j, Measurable fun ω => Q ω i j)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω)) (q : ℕ)
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (((A * Aᵀ) ^ q * A) * G ω)) =

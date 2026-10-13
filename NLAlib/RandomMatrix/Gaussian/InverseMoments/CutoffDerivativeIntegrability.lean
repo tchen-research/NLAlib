@@ -28,11 +28,11 @@ theorem integrable_test_unshiftedGramVectorFieldDerivative_single_gaussianMatrix
     {r k : ℕ} (hr : 0 < r) (n : ℕ) (hn : 0 < n)
     (ψ : ℝ → ℝ) (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
     (hψs : tsupport ψ ⊆ Ioi 0) (i : Fin r) (j : Fin k) :
-    Integrable (fun G : Fin r → Fin k → ℝ =>
-      deriv ψ (inversePowerSoftMin n (Matrix.of G * (Matrix.of G)ᵀ)) *
-          gramSoftMinGradient n 0 (Matrix.of G) i j ^ 2 +
-        ψ (inversePowerSoftMin n (Matrix.of G * (Matrix.of G)ᵀ)) *
-          gramSoftMinSecond n 0 (Matrix.of G) (Matrix.single i j 1)) (gaussianMatrix r k) := by
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      deriv ψ (inversePowerSoftMin n (G * Gᵀ)) *
+          gramSoftMinGradient n 0 G i j ^ 2 +
+        ψ (inversePowerSoftMin n (G * Gᵀ)) *
+          gramSoftMinSecond n 0 G (Matrix.single i j 1)) (gaussianMatrix (Fin r) (Fin k)) := by
   let : NeZero r := ⟨hr.ne'⟩
   obtain ⟨a, b, ha, hab, hs, _⟩ := exists_pos_bounds_tsupport_and_deriv ψ hψc hψs
   have hb : 0 < b := ha.trans hab
@@ -43,22 +43,22 @@ theorem integrable_test_unshiftedGramVectorFieldDerivative_single_gaussianMatrix
   let M : ℝ := 4 * b ^ (n + 1) * ((n : ℝ) + 1) * a⁻¹ ^ (n + 2)
   have hM0 : 0 ≤ M := by dsimp only [M]; positivity
   have hD0 : 0 ≤ 4 * Q + P * M := by positivity
-  have hFm : Measurable (fun G : Fin r → Fin k → ℝ =>
-      inversePowerSoftMin n (Matrix.of G * (Matrix.of G)ᵀ)) := by
+  have hFm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      inversePowerSoftMin n (G * Gᵀ)) := by
     simpa only [regularizedGram_zero] using
       (measurable_inversePowerSoftMin_regularizedGram (ι := Fin r) (κ := Fin k) n 0)
   have hDm := measurable_gramSoftMinGradient_entry (ι := Fin r) (κ := Fin k) n 0 i j
   have hDDm := measurable_gramSoftMinSecond_single (ι := Fin r) (κ := Fin k) n 0 i j
-  have hm : Measurable (fun G : Fin r → Fin k → ℝ =>
-      deriv ψ (inversePowerSoftMin n (Matrix.of G * (Matrix.of G)ᵀ)) *
-          gramSoftMinGradient n 0 (Matrix.of G) i j ^ 2 +
-        ψ (inversePowerSoftMin n (Matrix.of G * (Matrix.of G)ᵀ)) *
-          gramSoftMinSecond n 0 (Matrix.of G) (Matrix.single i j 1)) :=
+  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      deriv ψ (inversePowerSoftMin n (G * Gᵀ)) *
+          gramSoftMinGradient n 0 G i j ^ 2 +
+        ψ (inversePowerSoftMin n (G * Gᵀ)) *
+          gramSoftMinSecond n 0 G (Matrix.single i j 1)) :=
     (((hψ.continuous_deriv (by simp)).measurable.comp hFm).mul (hDm.pow_const 2)).add
       ((hψ.continuous.measurable.comp hFm).mul hDDm)
   apply integrable_of_abs_le_frobSq_polynomial_gaussianMatrix r k 1 _ hm (2 * P) (4 * Q + P * M)
   intro G
-  let H : Matrix (Fin r) (Fin k) ℝ := Matrix.of G
+  let H : Matrix (Fin r) (Fin k) ℝ := G
   let F : ℝ := inversePowerSoftMin n (H * Hᵀ)
   have hG0 : 0 ≤ frobSq H := frobSq_nonneg H
   have hfirst : |deriv ψ F * gramSoftMinGradient n 0 H i j ^ 2| ≤ 4 * Q * frobSq H := by

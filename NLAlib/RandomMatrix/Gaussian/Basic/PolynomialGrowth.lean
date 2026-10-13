@@ -3,8 +3,8 @@ import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
 /-!
 # Integrability of polynomial growth under Gaussian matrix laws
 
-Every natural power of a constant plus the ambient matrix-coordinate norm
-is integrable. These dominators justify Gaussian integration by parts for
+Every natural power of a constant plus the elementwise sup norm of the matrix
+(`open scoped Matrix.Norms.Elementwise`, the norm of the coordinates) is integrable. These dominators justify Gaussian integration by parts for
 the finite resolvent regularizations in the operator hard-edge proof.
 
 Atlas: gaussian-matrix-def and wishart-lambda-min-tail.
@@ -13,17 +13,17 @@ Atlas: gaussian-matrix-def and wishart-lambda-min-tail.
 noncomputable section
 
 open MeasureTheory ProbabilityTheory
-open scoped ENNReal
+open scoped ENNReal Matrix.Norms.Elementwise
 
 namespace NLAlib
 
 /-- The squared Frobenius size is bounded by the number of coordinates times
-the squared ambient coordinate norm. Source: finite-coordinate norm comparison;
+the squared elementwise sup norm. Source: finite-coordinate norm comparison;
 atlas wishart-lambda-min-tail (Gaussian domination helper). -/
-theorem frobSq_of_le_card_mul_sq_norm {r k : ℕ} (G : Fin r → Fin k → ℝ) :
-    frobSq (Matrix.of G) ≤ (r : ℝ) * k * ‖G‖ ^ 2 := by
+theorem frobSq_of_le_card_mul_sq_norm {r k : ℕ} (G : Matrix (Fin r) (Fin k) ℝ) :
+    frobSq G ≤ (r : ℝ) * k * ‖G‖ ^ 2 := by
   have hentry (i : Fin r) (j : Fin k) : (G i j) ^ 2 ≤ ‖G‖ ^ 2 := by
-    have h := (norm_le_pi_norm (G i) j).trans (norm_le_pi_norm G i)
+    have h := Matrix.norm_entry_le_entrywise_sup_norm (A := G) (i := i) (j := j)
     simpa only [Real.norm_eq_abs, sq_abs] using
       pow_le_pow_left₀ (norm_nonneg (G i j)) h 2
   simp only [frobSq, frobInner_eq_sum_mul, ← sq]
@@ -31,19 +31,22 @@ theorem frobSq_of_le_card_mul_sq_norm {r k : ℕ} (G : Fin r → Fin k → ℝ) 
       Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => hentry i j
     _ = _ := by simp; ring
 
-/-- A nonnegative constant plus the ambient coordinate norm of a Gaussian
+/-- A nonnegative constant plus the elementwise sup norm of a Gaussian
 matrix has every natural moment. Source: Gaussian moments of all orders
 and the Lp triangle inequality; atlas gaussian-matrix-def and
 wishart-lambda-min-tail (domination helper). -/
 theorem integrable_const_add_norm_gaussianMatrix_pow (r k n : ℕ) (c : ℝ)
     (hc : 0 ≤ c) :
-    Integrable (fun G : Fin r → Fin k → ℝ => (c + ‖G‖) ^ n)
-      (gaussianMatrix r k) := by
-  have hx : MemLp (fun G : Fin r → Fin k → ℝ => G) (n : ℝ≥0∞)
-      (gaussianMatrix r k) :=
-    (hasGaussianLaw_id_gaussianMatrix r k).memLp (by simp)
-  have hconst : MemLp (fun _ : Fin r → Fin k → ℝ => c) (n : ℝ≥0∞)
-      (gaussianMatrix r k) := memLp_const c
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ => (c + ‖G‖) ^ n)
+      (gaussianMatrix (Fin r) (Fin k)) := by
+  have : @BorelSpace (Matrix (Fin r) (Fin k) ℝ)
+      (UniformSpace.toTopologicalSpace (self := PseudoMetricSpace.toUniformSpace)) _ :=
+    Matrix.instBorelSpace
+  have hx : MemLp (fun G : Matrix (Fin r) (Fin k) ℝ => G) (n : ℝ≥0∞)
+      (gaussianMatrix (Fin r) (Fin k)) :=
+    (hasGaussianLaw_id_gaussianMatrix (Fin r) (Fin k)).memLp (by simp)
+  have hconst : MemLp (fun _ : Matrix (Fin r) (Fin k) ℝ => c) (n : ℝ≥0∞)
+      (gaussianMatrix (Fin r) (Fin k)) := memLp_const c
   have hsum := hconst.add hx.norm
   have hint := hsum.integrable_norm_pow'
   convert! hint using 1

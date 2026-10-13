@@ -34,14 +34,14 @@ namespace NLAlib
 
 /-! ### The sandwiched second moment -/
 
-private lemma frobSq_expand {ι κ : Type*} [Fintype ι] [Fintype κ] {p m : ℕ}
-    (S : Matrix ι (Fin p) ℝ) (T : Matrix (Fin m) κ ℝ) (G : Fin p → Fin m → ℝ) :
-    frobSq (S * Matrix.of G * T) = ∑ i, ∑ j, ∑ k, ∑ c, ∑ b, ∑ d,
+private lemma frobSq_expand {ι κ p m : Type*} [Fintype ι] [Fintype κ] [Fintype p] [Fintype m]
+    (S : Matrix ι p ℝ) (T : Matrix m κ ℝ) (G : Matrix p m ℝ) :
+    frobSq (S * G * T) = ∑ i, ∑ j, ∑ k, ∑ c, ∑ b, ∑ d,
       (S i k * T b j * S i c * T d j) * (G k b * G c d) := by
   rw [frobSq_eq_sum_sq]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  have h : (S * Matrix.of G * T) i j = ∑ k, ∑ b, S i k * G k b * T b j := by
-    simp only [Matrix.mul_apply, Matrix.of_apply, Finset.sum_mul]
+  have h : (S * G * T) i j = ∑ k, ∑ b, S i k * G k b * T b j := by
+    simp only [Matrix.mul_apply, Finset.sum_mul]
     rw [Finset.sum_comm]
   rw [h, sq, Finset.sum_mul_sum]
   refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun c _ => ?_
@@ -49,13 +49,14 @@ private lemma frobSq_expand {ι κ : Type*} [Fintype ι] [Fintype κ] {p m : ℕ
   refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun d _ => ?_
   ring
 
-private lemma integral_quadratic {ι κ : Type*} [Fintype ι] [Fintype κ] {p m : ℕ}
-    (w : ι → κ → Fin p → Fin p → Fin m → Fin m → ℝ) :
+private lemma integral_quadratic {ι κ p m : Type*} [Fintype ι] [Fintype κ] [Fintype p] [Fintype m]
+    (w : ι → κ → p → p → m → m → ℝ) :
     ∫ G, (∑ i, ∑ j, ∑ k, ∑ c, ∑ b, ∑ d, w i j k c b d * (G k b * G c d))
         ∂(gaussianMatrix p m)
       = ∑ i, ∑ j, ∑ k, ∑ b, w i j k k b b := by
-  have hI : ∀ (k c : Fin p) (b : Fin m) (f : Fin m → ℝ),
-      Integrable (fun G : Fin p → Fin m → ℝ => ∑ d, f d * (G k b * G c d))
+  classical
+  have hI : ∀ (k c : p) (b : m) (f : m → ℝ),
+      Integrable (fun G : Matrix p m ℝ => ∑ d, f d * (G k b * G c d))
         (gaussianMatrix p m) :=
     fun k c b f => integrable_finsetSum _ fun d _ =>
       integrable_const_mul_gaussianMatrix_entry_mul k c b d _
@@ -88,13 +89,13 @@ private lemma integral_quadratic {ι κ : Type*} [Fintype ι] [Fintype κ] {p m 
 `p × m` standard Gaussian matrix `G`, `E ‖S G T‖_F² = ‖S‖_F² ‖T‖_F²`.
 
 HMT 2011 (Halko–Martinsson–Tropp), Prop 10.1, first identity (`E‖SGT‖_F² = ‖S‖_F² ‖T‖_F²`).
-Atlas: `gaussian-frob-second-moment`. The outer dimensions are arbitrary finite index types
-(the source and the Prove2me statement use `Fin a`, `Fin n`). Ported from the Prove2me
+Atlas: `gaussian-frob-second-moment`. All four dimensions are arbitrary finite index types
+(the source and the Prove2me statement use `Fin`). Ported from the Prove2me
 workspace, Gaussian Random Matrices series.
 atlas: gaussian-frob-second-moment -/
 theorem integral_frobSq_mul_gaussianMatrix_mul {ι κ : Type*} [Fintype ι] [Fintype κ]
-    {p m : ℕ} (S : Matrix ι (Fin p) ℝ) (T : Matrix (Fin m) κ ℝ) :
-    ∫ G, frobSq (S * Matrix.of G * T) ∂(gaussianMatrix p m) = frobSq S * frobSq T := by
+    {p m : Type*} [Fintype p] [Fintype m] (S : Matrix ι p ℝ) (T : Matrix m κ ℝ) :
+    ∫ G, frobSq (S * G * T) ∂(gaussianMatrix p m) = frobSq S * frobSq T := by
   simp_rw [frobSq_expand]
   rw [integral_quadratic (fun i j k c b d => S i k * T b j * S i c * T d j)]
   rw [frobSq_eq_sum_sq, frobSq_eq_sum_sq]
@@ -107,6 +108,19 @@ theorem integral_frobSq_mul_gaussianMatrix_mul {ι κ : Type*} [Fintype ι] [Fin
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   ring
+
+/-- `integral_frobSq_mul_gaussianMatrix_mul` for a random matrix `X` with
+`HasLaw X (gaussianMatrix p m) μ`: `E ‖S X T‖_F² = ‖S‖_F² ‖T‖_F²`.
+Atlas: `gaussian-frob-second-moment`. -/
+theorem integral_frobSq_mul_gaussianMatrix_mul_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {ι κ p m : Type*} [Fintype ι] [Fintype κ] [Fintype p] [Fintype m]
+    {X : Ω → Matrix p m ℝ} (hX : HasLaw X (gaussianMatrix p m) μ) (S : Matrix ι p ℝ)
+    (T : Matrix m κ ℝ) :
+    ∫ ω, frobSq (S * X ω * T) ∂μ = frobSq S * frobSq T := by
+  have hc : Continuous fun G : Matrix p m ℝ => frobSq (S * G * T) := by
+    simp only [frobSq_eq_sum_sq]; fun_prop
+  rw [← integral_frobSq_mul_gaussianMatrix_mul S T]
+  exact hX.integral_comp hc.aestronglyMeasurable
 
 /-! ### Zero sets of polynomials and full rank -/
 
@@ -217,30 +231,30 @@ theorem ae_ne_zero_mvPolynomial {ι : Type*} [Fintype ι] (μ : Measure ℝ)
 Helper for HMT 2011 Prop A.5; atlas `gaussian-full-rank-ae`. -/
 theorem gaussianMatrix_ae_eval_ne_zero (p m : ℕ) (f : MvPolynomial (Fin p × Fin m) ℝ)
     (hf : f ≠ 0) :
-    ∀ᵐ G ∂(gaussianMatrix p m), MvPolynomial.eval (fun ab => G ab.1 ab.2) f ≠ 0 := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin p) (Fin m)), MvPolynomial.eval (fun ab => G ab.1 ab.2) f ≠ 0 := by
   have : NullSingletonClass (gaussianReal 0 1) := nullSingletonClass_gaussianReal one_ne_zero
   have h := ae_ne_zero_mvPolynomial (gaussianReal 0 1) f hf
   rw [← gaussianMatrix_map_uncurry] at h
   exact ae_of_ae_map (measurable_pi_lambda _ fun ab =>
     (measurable_pi_apply ab.2).comp (measurable_pi_apply ab.1)).aemeasurable h
 
-private theorem eval_det_gram (p m : ℕ) (G : Fin p → Fin m → ℝ) :
+private theorem eval_det_gram (p m : ℕ) (G : Matrix (Fin p) (Fin m) ℝ) :
     MvPolynomial.eval (fun ab : Fin p × Fin m => G ab.1 ab.2)
       (Matrix.mvPolynomialX (Fin p) (Fin m) ℝ * (Matrix.mvPolynomialX (Fin p) (Fin m) ℝ)ᵀ).det
-      = (Matrix.of G * (Matrix.of G)ᵀ).det := by
+      = (G * Gᵀ).det := by
   rw [RingHom.map_det, RingHom.mapMatrix_apply, Matrix.map_mul, Matrix.transpose_map]
   have hX : (Matrix.mvPolynomialX (Fin p) (Fin m) ℝ).map
-      (MvPolynomial.eval fun ab : Fin p × Fin m => G ab.1 ab.2) = Matrix.of G := by
+      (MvPolynomial.eval fun ab : Fin p × Fin m => G ab.1 ab.2) = G := by
     ext i j; simp
   rw [hX]
 
-private theorem eval_det_gram_transpose (p m : ℕ) (G : Fin p → Fin m → ℝ) :
+private theorem eval_det_gram_transpose (p m : ℕ) (G : Matrix (Fin p) (Fin m) ℝ) :
     MvPolynomial.eval (fun ab : Fin p × Fin m => G ab.1 ab.2)
       ((Matrix.mvPolynomialX (Fin p) (Fin m) ℝ)ᵀ * Matrix.mvPolynomialX (Fin p) (Fin m) ℝ).det
-      = ((Matrix.of G)ᵀ * Matrix.of G).det := by
+      = (Gᵀ * G).det := by
   rw [RingHom.map_det, RingHom.mapMatrix_apply, Matrix.map_mul, Matrix.transpose_map]
   have hX : (Matrix.mvPolynomialX (Fin p) (Fin m) ℝ).map
-      (MvPolynomial.eval fun ab : Fin p × Fin m => G ab.1 ab.2) = Matrix.of G := by
+      (MvPolynomial.eval fun ab : Fin p × Fin m => G ab.1 ab.2) = G := by
     ext i j; simp
   rw [hX]
 
@@ -252,12 +266,12 @@ one). Atlas: `gaussian-full-rank-ae`. Ported from the Prove2me workspace, Gaussi
 Matrices series.
 atlas: gaussian-full-rank-ae -/
 theorem gaussianMatrix_ae_isUnit_mul_transpose {k t : ℕ} (h : k ≤ t) :
-    ∀ᵐ G ∂(gaussianMatrix k t), IsUnit (Matrix.of G * (Matrix.of G)ᵀ) := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin k) (Fin t)), IsUnit (G * Gᵀ) := by
   have hP : (Matrix.mvPolynomialX (Fin k) (Fin t) ℝ *
       (Matrix.mvPolynomialX (Fin k) (Fin t) ℝ)ᵀ).det ≠ 0 := by
     intro h0
-    let G0 : Fin k → Fin t → ℝ := fun i j => if j = Fin.castLE h i then 1 else 0
-    have hE : Matrix.of G0 * (Matrix.of G0)ᵀ = 1 := by
+    let G0 : Matrix (Fin k) (Fin t) ℝ := Matrix.of fun i j => if j = Fin.castLE h i then 1 else 0
+    have hE : G0 * G0ᵀ = 1 := by
       ext i l
       simp [G0, Matrix.mul_apply, Matrix.one_apply, Fin.castLE_inj, eq_comm]
     have := eval_det_gram k t G0
@@ -274,12 +288,12 @@ HMT 2011 (Halko–Martinsson–Tropp), Prop A.5 (transposed form). Atlas: `gauss
 Ported from the Prove2me workspace, Gaussian Random Matrices series.
 atlas: gaussian-full-rank-ae -/
 theorem gaussianMatrix_ae_isUnit_transpose_mul {k t : ℕ} (h : t ≤ k) :
-    ∀ᵐ G ∂(gaussianMatrix k t), IsUnit ((Matrix.of G)ᵀ * Matrix.of G) := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin k) (Fin t)), IsUnit (Gᵀ * G) := by
   have hP : ((Matrix.mvPolynomialX (Fin k) (Fin t) ℝ)ᵀ *
       Matrix.mvPolynomialX (Fin k) (Fin t) ℝ).det ≠ 0 := by
     intro h0
-    let G0 : Fin k → Fin t → ℝ := fun i j => if i = Fin.castLE h j then 1 else 0
-    have hE : (Matrix.of G0)ᵀ * Matrix.of G0 = 1 := by
+    let G0 : Matrix (Fin k) (Fin t) ℝ := Matrix.of fun i j => if i = Fin.castLE h j then 1 else 0
+    have hE : G0ᵀ * G0 = 1 := by
       ext i l
       simp [G0, Matrix.mul_apply, Matrix.one_apply, Fin.castLE_inj, eq_comm]
     have := eval_det_gram_transpose k t G0
@@ -296,18 +310,18 @@ HMT 2011 (Halko–Martinsson–Tropp), Prop A.5 / §10.2. Atlas: `gaussian-full-
 from the Prove2me workspace, Gaussian Random Matrices series.
 atlas: gaussian-full-rank-ae -/
 theorem gaussianMatrix_ae_rank_eq (p m : ℕ) :
-    ∀ᵐ G ∂(gaussianMatrix p m), (Matrix.of G).rank = min p m := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin p) (Fin m)), G.rank = min p m := by
   rcases le_total p m with h | h
   · filter_upwards [gaussianMatrix_ae_isUnit_mul_transpose h] with G hu
     have h1 := Matrix.rank_of_isUnit _ hu
-    have h2 := Matrix.rank_mul_le_left (Matrix.of G) (Matrix.of G)ᵀ
-    have h3 := Matrix.rank_le_height (Matrix.of G)
+    have h2 := Matrix.rank_mul_le_left G Gᵀ
+    have h3 := Matrix.rank_le_height G
     rw [Fintype.card_fin] at h1
     rw [min_eq_left h]; omega
   · filter_upwards [gaussianMatrix_ae_isUnit_transpose_mul h] with G hu
     have h1 := Matrix.rank_of_isUnit _ hu
-    have h2 := Matrix.rank_mul_le_right (Matrix.of G)ᵀ (Matrix.of G)
-    have h3 := Matrix.rank_le_width (Matrix.of G)
+    have h2 := Matrix.rank_mul_le_right Gᵀ G
+    have h3 := Matrix.rank_le_width G
     rw [Fintype.card_fin] at h1
     rw [min_eq_right h]; omega
 

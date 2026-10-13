@@ -138,21 +138,21 @@ open MeasureTheory ProbabilityTheory
 `p ≥ 2`: Jensen and `E‖G†‖_F² = k/(p−1)`. HMT 2011, Prop 10.2 and proof of Thm 10.6.
 Atlas `rsvd-spectral-expected` (uses `pinv-frob-moment`). -/
 theorem integrable_and_integral_frobNorm_pinvR_gaussianMatrix_le {k p : ℕ} (hp : 2 ≤ p) :
-    Integrable (fun G : Fin k → Fin (k + p) → ℝ => frobNorm (pinvR (Matrix.of G)))
-      (gaussianMatrix k (k + p)) ∧
-    ∫ G, frobNorm (pinvR (Matrix.of G)) ∂(gaussianMatrix k (k + p))
+    Integrable (fun G : Matrix (Fin k) (Fin (k + p)) ℝ => frobNorm (pinvR G))
+      (gaussianMatrix (Fin k) (Fin (k + p))) ∧
+    ∫ G, frobNorm (pinvR G) ∂(gaussianMatrix (Fin k) (Fin (k + p)))
       ≤ Real.sqrt (k / ((p : ℝ) - 1)) := by
   obtain ⟨hsqi, hsqv⟩ := integrable_and_integral_frobSq_pinvR_gaussianMatrix
     (r := k) (k := k + p) (by omega)
-  have hm : Measurable fun G : Fin k → Fin (k + p) → ℝ => frobNorm (pinvR (Matrix.of G)) :=
+  have hm : Measurable fun G : Matrix (Fin k) (Fin (k + p)) ℝ => frobNorm (pinvR G) :=
     Real.continuous_sqrt.measurable.comp
       (measurable_frobSq_of_entries fun i j => measurable_pinvR_entry i j)
-  have hsq : (fun G : Fin k → Fin (k + p) → ℝ => frobNorm (pinvR (Matrix.of G)) ^ 2) =
-      fun G => frobSq (pinvR (Matrix.of G)) := funext fun G => frobNorm_sq _
-  have hsqi' : Integrable (fun G : Fin k → Fin (k + p) → ℝ =>
-      frobNorm (pinvR (Matrix.of G)) ^ 2) (gaussianMatrix k (k + p)) := by rw [hsq]; exact hsqi
-  have hint : Integrable (fun G : Fin k → Fin (k + p) → ℝ => frobNorm (pinvR (Matrix.of G)))
-      (gaussianMatrix k (k + p)) :=
+  have hsq : (fun G : Matrix (Fin k) (Fin (k + p)) ℝ => frobNorm (pinvR G) ^ 2) =
+      fun G => frobSq (pinvR G) := funext fun G => frobNorm_sq _
+  have hsqi' : Integrable (fun G : Matrix (Fin k) (Fin (k + p)) ℝ =>
+      frobNorm (pinvR G) ^ 2) (gaussianMatrix (Fin k) (Fin (k + p))) := by rw [hsq]; exact hsqi
+  have hint : Integrable (fun G : Matrix (Fin k) (Fin (k + p)) ℝ => frobNorm (pinvR G))
+      (gaussianMatrix (Fin k) (Fin (k + p))) :=
     ((memLp_two_iff_integrable_sq hm.aestronglyMeasurable).2 hsqi').integrable one_le_two
   refine ⟨hint, ?_⟩
   have hJ := integral_le_sqrt_integral_sq hint hsqi'
@@ -172,7 +172,7 @@ Atlas `rsvd-spectral-expected` (uses `chevet`, `pinv-spectral-expectation`,
 theorem integrable_and_integral_specNorm_mul_block_mul_pinvR_block_le
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {n k p r r' : ℕ} (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n (k + p))
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin (k + p))) μ)
     {V₁ : Matrix (Fin n) (Fin k) ℝ} {V₂ : Matrix (Fin n) (Fin r') ℝ}
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (S₂ : Matrix (Fin r) (Fin r') ℝ) (hk : 1 ≤ k) (hp : 2 ≤ p) :
@@ -180,34 +180,32 @@ theorem integrable_and_integral_specNorm_mul_block_mul_pinvR_block_le
     ∫ ω, specNorm (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) ∂μ ≤
       specNorm S₂ * Real.sqrt (k / ((p : ℝ) - 1)) +
         frobNorm S₂ * (Real.exp 1 * Real.sqrt (k + p) / p) := by
-  set X : Ωs → Fin k → Fin (k + p) → ℝ :=
-    fun ω => Matrix.of.symm (V₁ᵀ * Matrix.of (Matrix.of.symm (Ω ω))) with hXdef
-  set Y : Ωs → Fin r' → Fin (k + p) → ℝ :=
-    fun ω => Matrix.of.symm (V₂ᵀ * Matrix.of (Matrix.of.symm (Ω ω))) with hYdef
-  have hXlaw : μ.map X = gaussianMatrix k (k + p) := map_block_eq_gaussianMatrix hΩ V₁ hV₁
-  have hYlaw : μ.map Y = gaussianMatrix r' (k + p) := map_block_eq_gaussianMatrix hΩ V₂ hV₂
-  have hind : IndepFun X Y μ := indepFun_block_of_map_eq hΩ V₁ V₂ hV₁ hV₂ hV
-  have hXm := aemeasurable_of_map_eq_gaussianMatrix hXlaw
-  have hYm := aemeasurable_of_map_eq_gaussianMatrix hYlaw
-  set g : (Fin k → Fin (k + p) → ℝ) → (Fin r' → Fin (k + p) → ℝ) → ℝ :=
-    fun x y => specNorm (S₂ * Matrix.of y * pinvR (Matrix.of x)) with hgdef
+  set X : Ωs → Matrix (Fin k) (Fin (k + p)) ℝ := fun ω => V₁ᵀ * Ω ω with hXdef
+  set Y : Ωs → Matrix (Fin r') (Fin (k + p)) ℝ := fun ω => V₂ᵀ * Ω ω with hYdef
+  have hXlaw : HasLaw X (gaussianMatrix (Fin k) (Fin (k + p))) μ :=
+    hasLaw_gaussianMatrix_block_of_hasLaw hΩ V₁ hV₁
+  have hYlaw : HasLaw Y (gaussianMatrix (Fin r') (Fin (k + p))) μ :=
+    hasLaw_gaussianMatrix_block_of_hasLaw hΩ V₂ hV₂
+  have hind : IndepFun X Y μ := gaussianMatrix_indepFun_block_of_hasLaw hΩ V₁ V₂ hV₁ hV₂ hV
+  have hXm := hXlaw.aemeasurable
+  have hYm := hYlaw.aemeasurable
+  set g : Matrix (Fin k) (Fin (k + p)) ℝ → Matrix (Fin r') (Fin (k + p)) ℝ → ℝ :=
+    fun x y => specNorm (S₂ * y * pinvR x) with hgdef
   have hfg : (fun ω => specNorm (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω))) =
       fun ω => g (X ω) (Y ω) := rfl
-  have hgm : Measurable fun q : (Fin k → Fin (k + p) → ℝ) × (Fin r' → Fin (k + p) → ℝ) =>
-      g q.1 q.2 := by
-    refine measurable_specNorm_of_entries fun i j => ?_
-    simp only [Matrix.mul_apply, Matrix.of_apply]
-    refine Finset.measurable_sum _ fun l _ => Measurable.mul ?_
-      ((measurable_pinvR_entry l j).comp measurable_fst)
-    fun_prop
+  have hgm : Measurable fun q : Matrix (Fin k) (Fin (k + p)) ℝ × Matrix (Fin r') (Fin (k + p)) ℝ =>
+      g q.1 q.2 :=
+    measurable_specNorm_of_entries (Matrix.measurable_iff_entries.mp
+      ((measurable_const.matrix_mul measurable_snd).matrix_mul
+        ((Matrix.measurable_iff_entries.mpr measurable_pinvR_entry).comp measurable_fst)))
   -- The deterministic bound after integrating out `Ω₂`.
-  set B : (Fin k → Fin (k + p) → ℝ) → ℝ := fun x =>
-    specNorm S₂ * frobNorm (pinvR (Matrix.of x)) + frobNorm S₂ * specNorm (pinvR (Matrix.of x))
+  set B : (Matrix (Fin k) (Fin (k + p)) ℝ) → ℝ := fun x =>
+    specNorm S₂ * frobNorm (pinvR x) + frobNorm S₂ * specNorm (pinvR x)
     with hBdef
   obtain ⟨hFi, hFv⟩ := integrable_and_integral_frobNorm_pinvR_gaussianMatrix_le (k := k) hp
   obtain ⟨hSi, hSv⟩ := integrable_and_integral_specNorm_pinvR_gaussianMatrix_le
     (r := k) (k := k + p) hk (by omega)
-  have hBi : Integrable B (gaussianMatrix k (k + p)) :=
+  have hBi : Integrable B (gaussianMatrix (Fin k) (Fin (k + p))) :=
     (hFi.const_mul _).add (hSi.const_mul _)
   have hB0 : ∀ x, 0 ≤ B x := fun x =>
     add_nonneg (mul_nonneg (specNorm_nonneg _) (frobNorm_nonneg _))
@@ -217,7 +215,7 @@ theorem integrable_and_integral_specNorm_mul_block_mul_pinvR_block_le
   have hbound0 : 0 ≤ bound :=
     add_nonneg (mul_nonneg (specNorm_nonneg _) (Real.sqrt_nonneg _))
       (mul_nonneg (frobNorm_nonneg _) (by positivity))
-  have hBint : ∫ x, B x ∂(gaussianMatrix k (k + p)) ≤ bound := by
+  have hBint : ∫ x, B x ∂(gaussianMatrix (Fin k) (Fin (k + p))) ≤ bound := by
     rw [hBdef, integral_add (hFi.const_mul _) (hSi.const_mul _), integral_const_mul,
       integral_const_mul]
     have hcast : ((k + p : ℕ) : ℝ) - k = p := by push_cast; ring
@@ -227,15 +225,16 @@ theorem integrable_and_integral_specNorm_mul_block_mul_pinvR_block_le
       (mul_le_mul_of_nonneg_left hSv (frobNorm_nonneg _))
   have hL : ∫⁻ ω, ENNReal.ofReal (g (X ω) (Y ω)) ∂μ ≤ ENNReal.ofReal bound := by
     rw [lintegral_of_indepFun hXm hYm hind (g := fun x y => ENNReal.ofReal (g x y))
-      (ENNReal.measurable_ofReal.comp hgm).aemeasurable, hXlaw, hYlaw]
-    calc ∫⁻ x, ∫⁻ y, ENNReal.ofReal (g x y) ∂gaussianMatrix r' (k + p) ∂gaussianMatrix k (k + p)
-        ≤ ∫⁻ x, ENNReal.ofReal (B x) ∂gaussianMatrix k (k + p) := by
+      (ENNReal.measurable_ofReal.comp hgm).aemeasurable, hXlaw.map_eq, hYlaw.map_eq]
+    calc ∫⁻ x, ∫⁻ y, ENNReal.ofReal (g x y) ∂gaussianMatrix (Fin r') (Fin (k + p))
+          ∂gaussianMatrix (Fin k) (Fin (k + p))
+        ≤ ∫⁻ x, ENNReal.ofReal (B x) ∂gaussianMatrix (Fin k) (Fin (k + p)) := by
           refine lintegral_mono fun x => ?_
           obtain ⟨hci, hcv⟩ :=
-            integrable_and_integral_specNorm_mul_gaussianMatrix_mul_le S₂ (pinvR (Matrix.of x))
+            integrable_and_integral_specNorm_mul_gaussianMatrix_mul_le S₂ (pinvR x)
           rw [← ofReal_integral_eq_lintegral_ofReal hci (ae_of_all _ fun _ => specNorm_nonneg _)]
           exact ENNReal.ofReal_le_ofReal hcv
-      _ = ENNReal.ofReal (∫ x, B x ∂gaussianMatrix k (k + p)) :=
+      _ = ENNReal.ofReal (∫ x, B x ∂gaussianMatrix (Fin k) (Fin (k + p))) :=
           (ofReal_integral_eq_lintegral_ofReal hBi (ae_of_all _ hB0)).symm
       _ ≤ ENNReal.ofReal bound := ENNReal.ofReal_le_ofReal hBint
   have hf0 : 0 ≤ᵐ[μ] fun ω => g (X ω) (Y ω) := ae_of_all _ fun _ => specNorm_nonneg _
@@ -272,7 +271,7 @@ theorem integral_specNorm_residual_le_of_gaussian
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hk : 1 ≤ k) (hp : 2 ≤ p) (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n (k + p))
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin (k + p))) μ)
     (Q : Ωs → Matrix m' q' ℝ) (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω) :
     ∫ ω, specNorm (residual (Q ω) A) ∂μ ≤
@@ -404,7 +403,7 @@ theorem integral_specNorm_residual_le_singularValues_of_gaussian
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {q' : Type*} [Fintype q'] [DecidableEq q'] {m n k p : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     (hk : 1 ≤ k) (hp : 2 ≤ p) (hkn : k ≤ n) (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n (k + p))
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin (k + p))) μ)
     (Q : Ωs → Matrix (Fin m) q' ℝ) (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω) :
     ∫ ω, specNorm (residual (Q ω) A) ∂μ ≤
@@ -425,14 +424,13 @@ theorem integral_specNorm_residual_gaussianRangeFrame_le
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {m n k p : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hk : 1 ≤ k) (hp : 2 ≤ p) (hkn : k ≤ n)
     (Ω : Ωs → Matrix (Fin n) (Fin (k + p)) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n (k + p)) :
-    ∫ ω, specNorm (residual (gaussianRangeFrame A (k + p) (Matrix.of.symm (Ω ω))) A) ∂μ ≤
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin (k + p))) μ) :
+    ∫ ω, specNorm (residual (gaussianRangeFrame A (k + p) (Ω ω)) A) ∂μ ≤
       (1 + Real.sqrt (k / ((p : ℝ) - 1))) * singularValues A k +
         Real.exp 1 * Real.sqrt (k + p) / p * Real.sqrt (singularValueTailSq A k) :=
   integral_specNorm_residual_le_singularValues_of_gaussian A hk hp hkn Ω hΩ _
-    (ae_hasOrthonormalCols_gaussianRangeFrame_of_map_eq A (fun ω => Matrix.of.symm (Ω ω)) hΩ)
-    (by simpa only [Equiv.apply_symm_apply] using
-      ae_project_gaussianRangeFrame_of_map_eq A (fun ω => Matrix.of.symm (Ω ω)) hΩ)
+    (ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw A Ω hΩ)
+    (ae_project_gaussianRangeFrame_of_hasLaw A Ω hΩ)
 
 end Expected
 

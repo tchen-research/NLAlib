@@ -29,7 +29,7 @@ the second moments of `N`; they give `E‖N‖_F²` and `E‖G†‖_F⁴` (`Fro
 Atlas: `inverse-wishart-frob-moment`, `pinv-frob-fourth-moment` (helpers). Proof source:
 Prove2me workspace, Gaussian Random Matrices series; the workspace's `rotation_invariance`,
 `inverse_wishart_mean`, `regression_residual_indep`, `schur_offdiag_inv` are
-`gaussianMatrix_map_orthogonal`, `integrable_and_integral_inv_self_mul_transpose_gaussianMatrix`,
+`hasLaw_gaussianMatrix_orthogonal`, `integrable_and_integral_inv_self_mul_transpose_gaussianMatrix`,
 `indepFun_mulVec_sq_dist_rowSpace`, `inv_self_mul_transpose_apply_succAbove`.
 -/
 
@@ -100,18 +100,20 @@ private lemma integrable_and_integral_coeff_sq_mul_inv_sq_dist_rowSpace_sq {n k 
 
 private lemma integrable_and_integral_inv_self_mul_transpose_apply_succAbove_sq {n k : ℕ}
     (hnk : n + 5 ≤ k) (i : Fin (n + 1)) (a : Fin n) :
-    Integrable (fun G : Fin (n + 1) → Fin k → ℝ =>
-        (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i (i.succAbove a) ^ 2) (gaussianMatrix (n + 1) k) ∧
-    ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i (i.succAbove a) ^ 2 ∂(gaussianMatrix (n + 1) k)
+    Integrable (fun G : Matrix (Fin (n + 1)) (Fin k) ℝ =>
+        (G * Gᵀ)⁻¹ i (i.succAbove a) ^ 2) (gaussianMatrix (Fin (n + 1)) (Fin k)) ∧
+    ∫ G, (G * Gᵀ)⁻¹ i (i.succAbove a) ^ 2 ∂(gaussianMatrix (Fin (n + 1)) (Fin k))
       = (1 / ((k : ℝ) - n - 1)) * (1 / (((k : ℝ) - n - 2) * ((k : ℝ) - n - 4))) := by
+  rw [integrable_gaussianMatrix_iff, integral_gaussianMatrix_eq]
   set μ : Measure (Fin k → ℝ) := Measure.pi fun _ : Fin k => gaussianReal 0 1 with hμ
   set ν : Measure (Fin n → Fin k → ℝ) := Measure.pi fun _ : Fin n => μ with hν
   set C : ℝ := 1 / (((k : ℝ) - n - 2) * ((k : ℝ) - n - 4)) with hC
   set F : (Fin (n + 1) → Fin k → ℝ) → ℝ :=
     fun G => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i (i.succAbove a) ^ 2 with hF
-  have hFm : Measurable F := (measurable_inv_self_mul_transpose_apply i (i.succAbove a)).pow_const 2
+  have hFm : Measurable F :=
+    ((measurable_inv_self_mul_transpose_apply i (i.succAbove a)).comp Matrix.measurable_of).pow_const 2
   set e := MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => Fin k → ℝ) i with he
-  have hmp : MeasurePreserving e (gaussianMatrix (n + 1) k) (μ.prod ν) :=
+  have hmp : MeasurePreserving e (Measure.pi fun _ : Fin (n + 1) => μ) (μ.prod ν) :=
     measurePreserving_piFinSuccAbove (fun _ : Fin (n + 1) => μ) i
   set Φ : (Fin k → ℝ) × (Fin n → Fin k → ℝ) → ℝ := fun p => F (e.symm p) with hΦ
   have hΦm : Measurable Φ := hFm.comp e.symm.measurable
@@ -138,8 +140,10 @@ private lemma integrable_and_integral_inv_self_mul_transpose_apply_succAbove_sq 
     rw [this, h2]
     ring
   have hrank : ∀ᵐ H ∂ν, (Matrix.of H).rank = n := by
-    have := gaussianMatrix_ae_rank_eq n k
+    have := (measurePreserving_ofMeasurableEquiv_gaussianMatrix (m := Fin n)
+      (n := Fin k)).quasiMeasurePreserving.ae (gaussianMatrix_ae_rank_eq n k)
     filter_upwards [this] with H hH
+    rw [Matrix.coe_ofMeasurableEquiv] at hH
     rw [hH]; omega
   have hinner : ∀ᵐ H ∂ν, Integrable (fun g => Φ (g, H)) μ ∧
       ∫ g, Φ (g, H) ∂μ = (Matrix.of H * (Matrix.of H)ᵀ)⁻¹ a a * C := by
@@ -149,7 +153,8 @@ private lemma integrable_and_integral_inv_self_mul_transpose_apply_succAbove_sq 
   obtain ⟨hmint, hmval⟩ :=
     integrable_and_integral_inv_self_mul_transpose_gaussianMatrix (r := n) (k := k) (by omega)
   have hmint' : Integrable (fun H : Fin n → Fin k → ℝ =>
-      (Matrix.of H * (Matrix.of H)ᵀ)⁻¹ a a * C) ν := (hmint a a).mul_const C
+      (Matrix.of H * (Matrix.of H)ᵀ)⁻¹ a a * C) ν :=
+    (integrable_gaussianMatrix_iff.mp (hmint a a)).mul_const C
   have hint : Integrable Φ (μ.prod ν) := by
     rw [integrable_prod_iff' hΦm.aestronglyMeasurable]
     refine ⟨hinner.mono fun H h => h.1, ?_⟩
@@ -166,7 +171,7 @@ private lemma integrable_and_integral_inv_self_mul_transpose_apply_succAbove_sq 
     rw [h1, integral_prod_symm Φ hint]
     rw [integral_congr_ae (hinner.mono fun H h => h.2)]
     rw [integral_mul_const]
-    change (∫ H, (Matrix.of H * (Matrix.of H)ᵀ)⁻¹ a a ∂(gaussianMatrix n k)) * C = _
+    rw [← integral_gaussianMatrix_eq (fun H : Matrix (Fin n) (Fin k) ℝ => (H * Hᵀ)⁻¹ a a)]
     rw [hmval a a, Matrix.one_apply_eq, mul_one]
 
 /-- **Off-diagonal second moment of the inverse Wishart matrix.** For an `r × k` standard
@@ -183,9 +188,9 @@ independent (`indepFun_mulVec_sq_dist_rowSpace`), `Q ∼ χ²_{k-r+1}` (atlas `b
 `GaussianMatrix.inverse_wishart_offdiag_sq_moment`. -/
 theorem integrable_and_integral_inv_self_mul_transpose_apply_sq_gaussianMatrix {r k : ℕ}
     (hrk : r + 4 ≤ k) (i j : Fin r) (hij : i ≠ j) :
-    Integrable (fun G : Fin r → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j ^ 2)
-      (gaussianMatrix r k) ∧
-    ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j ^ 2 ∂(gaussianMatrix r k)
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ => (G * Gᵀ)⁻¹ i j ^ 2)
+      (gaussianMatrix (Fin r) (Fin k)) ∧
+    ∫ G, (G * Gᵀ)⁻¹ i j ^ 2 ∂(gaussianMatrix (Fin r) (Fin k))
       = 1 / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) := by
   cases r with
   | zero => exact i.elim0
@@ -239,24 +244,15 @@ private lemma planeRotation_single_conj_apply {r : ℕ} {i j : Fin r} (hij : i �
 
 /-- Invariance of the inverse-Wishart law under orthogonal conjugation. -/
 private lemma integral_inv_self_mul_transpose_conj {r k : ℕ} (U : Matrix (Fin r) (Fin r) ℝ)
-    (hU : Uᵀ * U = 1) (F : Matrix (Fin r) (Fin r) ℝ → ℝ)
-    (hF : Measurable (fun G : Fin r → Fin k → ℝ => F (Matrix.of G * (Matrix.of G)ᵀ)⁻¹)) :
-    ∫ G, F (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ∂(gaussianMatrix r k)
-      = ∫ G, F (U * (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ * Uᵀ) ∂(gaussianMatrix r k) := by
-  have hrot := gaussianMatrix_map_orthogonal U (1 : Matrix (Fin k) (Fin k) ℝ) hU (by simp)
-  have hmeas : Measurable (fun G : Fin r → Fin k → ℝ =>
-      Matrix.of.symm (U * Matrix.of G * (1 : Matrix (Fin k) (Fin k) ℝ))) := by
-    refine measurable_pi_lambda _ fun a => measurable_pi_lambda _ fun b => ?_
-    simp only [Matrix.of_symm_apply, Matrix.mul_one, Matrix.mul_apply, Matrix.of_apply]
-    fun_prop
-  have h1 : ∫ G, F (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ∂(gaussianMatrix r k) =
-      ∫ G, F (Matrix.of G * (Matrix.of G)ᵀ)⁻¹
-        ∂(Measure.map (fun G => Matrix.of.symm (U * Matrix.of G *
-          (1 : Matrix (Fin k) (Fin k) ℝ))) (gaussianMatrix r k)) := by
-    rw [hrot]
-  rw [integral_map hmeas.aemeasurable hF.aestronglyMeasurable] at h1
-  simp only [Equiv.apply_symm_apply, Matrix.mul_one, inv_self_mul_transpose_orthogonal_mul U hU] at h1
-  exact h1
+    (hU : HasOrthonormalCols U) (F : Matrix (Fin r) (Fin r) ℝ → ℝ)
+    (hF : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => F (G * Gᵀ)⁻¹)) :
+    ∫ G, F (G * Gᵀ)⁻¹ ∂(gaussianMatrix (Fin r) (Fin k))
+      = ∫ G, F (U * (G * Gᵀ)⁻¹ * Uᵀ) ∂(gaussianMatrix (Fin r) (Fin k)) := by
+  have hrot := hasLaw_gaussianMatrix_orthogonal U (1 : Matrix (Fin k) (Fin k) ℝ) hU
+    (by simp [HasOrthonormalCols])
+  have h1 := hrot.integral_comp hF.aestronglyMeasurable
+  simp only [Function.comp_def, Matrix.mul_one, inv_self_mul_transpose_orthogonal_mul U hU] at h1
+  exact h1.symm
 
 /-- The sign flip of coordinate `j`. -/
 private def signFlip {r : ℕ} (j : Fin r) : Matrix (Fin r) (Fin r) ℝ :=
@@ -272,9 +268,9 @@ private lemma signFlip_conj_apply {r : ℕ} (j : Fin r) (N : Matrix (Fin r) (Fin
       = (if a = j then -1 else 1) * N a b * (if b = j then -1 else 1) := by
   simp [signFlip, Matrix.diagonal_transpose, Matrix.diagonal_mul, Matrix.mul_diagonal]
 
-private lemma inv_self_mul_transpose_apply_comm {r k : ℕ} (G : Fin r → Fin k → ℝ) (i j : Fin r) :
-    (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ j i = (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j := by
-  have := (posSemidef_inv_self_mul_transpose (Matrix.of G)).isHermitian.apply i j
+private lemma inv_self_mul_transpose_apply_comm {r k : ℕ} (G : Matrix (Fin r) (Fin k) ℝ) (i j : Fin r) :
+    (G * Gᵀ)⁻¹ j i = (G * Gᵀ)⁻¹ i j := by
+  have := (posSemidef_inv_self_mul_transpose G).isHermitian.apply i j
   simpa using this
 
 /-- A product of two functions with integrable squares is integrable. -/
@@ -294,20 +290,20 @@ matrix `G` with `r + 4 ≤ k` and `i ≠ j`, with `N = (G Gᵀ)⁻¹`,
 
 Tropp–Webber 2023, proof of Lemma B.2 (orthogonal invariance of the inverse Wishart law).
 Atlas: `pinv-frob-fourth-moment` (helper). Proof: the law of `N` is invariant under
-`N ↦ U N Uᵀ` for orthogonal `U` (`gaussianMatrix_map_orthogonal`, atlas
+`N ↦ U N Uᵀ` for orthogonal `U` (`hasLaw_gaussianMatrix_orthogonal`, atlas
 `rotation-invariance`); sign flips kill the mixed moments `E[Nₐₐ Nᵢⱼ]` and the 45° rotation in
 the `(i, j)` plane gives the relation. Integrability from the diagonal second moment
 (`integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix`). Ported from
 Prove2me solution `GaussianMatrix.inverse_wishart_rotation_relation`. -/
 theorem integral_inv_self_mul_transpose_apply_self_sq_eq {r k : ℕ} (hrk : r + 4 ≤ k)
     (i j : Fin r) (hij : i ≠ j) :
-    ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i ^ 2 ∂(gaussianMatrix r k)
-      = ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i * (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ j j
-            ∂(gaussianMatrix r k)
-        + 2 * ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i j ^ 2 ∂(gaussianMatrix r k) := by
-  set μ := gaussianMatrix r k with hμ
-  set M : (Fin r → Fin k → ℝ) → Matrix (Fin r) (Fin r) ℝ :=
-    fun G => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ with hM
+    ∫ G, (G * Gᵀ)⁻¹ i i ^ 2 ∂(gaussianMatrix (Fin r) (Fin k))
+      = ∫ G, (G * Gᵀ)⁻¹ i i * (G * Gᵀ)⁻¹ j j
+            ∂(gaussianMatrix (Fin r) (Fin k))
+        + 2 * ∫ G, (G * Gᵀ)⁻¹ i j ^ 2 ∂(gaussianMatrix (Fin r) (Fin k)) := by
+  set μ := gaussianMatrix (Fin r) (Fin k) with hμ
+  set M : (Matrix (Fin r) (Fin k) ℝ) → Matrix (Fin r) (Fin r) ℝ :=
+    fun G => (G * Gᵀ)⁻¹ with hM
   have hm : ∀ a b : Fin r, Measurable (fun G => M G a b) := fun a b =>
     measurable_inv_self_mul_transpose_apply a b
   obtain ⟨hx2, hxval⟩ :=
@@ -318,7 +314,7 @@ theorem integral_inv_self_mul_transpose_apply_self_sq_eq {r k : ℕ} (hrk : r + 
     refine Integrable.mono' ((hx2.add hy2).const_mul 2)
       ((hm i j).pow_const 2).aestronglyMeasurable (Filter.Eventually.of_forall fun G => ?_)
     have h := abs_apply_le_apply_self_add_apply_self _
-      (posSemidef_inv_self_mul_transpose (Matrix.of G)) i j
+      (posSemidef_inv_self_mul_transpose G) i j
     rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
     have : M G i j ^ 2 ≤ (M G i i + M G j j) ^ 2 := by
       rw [← sq_abs]
@@ -376,8 +372,8 @@ theorem integral_inv_self_mul_transpose_apply_self_sq_eq {r k : ℕ} (hrk : r + 
     integral_const_mul, integral_const_mul, integral_const_mul, integral_const_mul,
     hxz0, hflip'] at hrot
   have hxy' : ∫ G, M G i i ^ 2 ∂μ = ∫ G, M G j j ^ 2 ∂μ := by
-    change ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i ^ 2 ∂μ
-      = ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ j j ^ 2 ∂μ
+    change ∫ G, (G * Gᵀ)⁻¹ i i ^ 2 ∂μ
+      = ∫ G, (G * Gᵀ)⁻¹ j j ^ 2 ∂μ
     rw [hxval, hyval]
   change ∫ G, M G i i ^ 2 ∂μ = ∫ G, M G i i * M G j j ∂μ + 2 * ∫ G, M G i j ^ 2 ∂μ
   linarith
@@ -394,11 +390,11 @@ off-diagonal second moments. Ported from Prove2me solution
 `GaussianMatrix.inverse_wishart_diag_prod_moment`. -/
 theorem integrable_and_integral_inv_self_mul_transpose_apply_self_mul_apply_self_gaussianMatrix
     {r k : ℕ} (hrk : r + 4 ≤ k) (i j : Fin r) (hij : i ≠ j) :
-    Integrable (fun G : Fin r → Fin k → ℝ =>
-        (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i * (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ j j)
-      (gaussianMatrix r k) ∧
-    ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i * (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ j j
-        ∂(gaussianMatrix r k)
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+        (G * Gᵀ)⁻¹ i i * (G * Gᵀ)⁻¹ j j)
+      (gaussianMatrix (Fin r) (Fin k)) ∧
+    ∫ G, (G * Gᵀ)⁻¹ i i * (G * Gᵀ)⁻¹ j j
+        ∂(gaussianMatrix (Fin r) (Fin k))
       = ((k : ℝ) - r - 2) / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) := by
   obtain ⟨hx2, hxval⟩ :=
     integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix hrk i
@@ -415,9 +411,9 @@ theorem integrable_and_integral_inv_self_mul_transpose_apply_self_mul_apply_self
     rw [Real.norm_eq_abs, abs_le]
     simp only [Pi.add_apply]
     constructor <;>
-      nlinarith [sq_nonneg ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i
-          + (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ j j),
-        sq_nonneg ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i - (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ j j)]
+      nlinarith [sq_nonneg ((G * Gᵀ)⁻¹ i i
+          + (G * Gᵀ)⁻¹ j j),
+        sq_nonneg ((G * Gᵀ)⁻¹ i i - (G * Gᵀ)⁻¹ j j)]
   · rw [hxval, hzval] at hrel
     have hx : (4 : ℝ) ≤ (k : ℝ) - r := by
       have : ((r + 4 : ℕ) : ℝ) ≤ k := by exact_mod_cast hrk
@@ -425,8 +421,8 @@ theorem integrable_and_integral_inv_self_mul_transpose_apply_self_mul_apply_self
     have h1 : (k : ℝ) - r ≠ 0 := by linarith
     have h2 : (k : ℝ) - r - 1 ≠ 0 := by linarith
     have h3 : (k : ℝ) - r - 3 ≠ 0 := by linarith
-    have : ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i * (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ j j
-        ∂(gaussianMatrix r k)
+    have : ∫ G, (G * Gᵀ)⁻¹ i i * (G * Gᵀ)⁻¹ j j
+        ∂(gaussianMatrix (Fin r) (Fin k))
         = 1 / (((k : ℝ) - r - 1) * ((k : ℝ) - r - 3))
           - 2 * (1 / (((k : ℝ) - r) * ((k : ℝ) - r - 1) * ((k : ℝ) - r - 3))) := by linarith
     rw [this]

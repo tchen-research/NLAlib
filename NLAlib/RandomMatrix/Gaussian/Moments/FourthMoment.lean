@@ -56,38 +56,40 @@ private def mom (k : ℕ) : ℝ := ∫ x, x ^ k ∂(gaussianReal 0 1)
 
 /-! ### Products of entries -/
 
-variable {p m : ℕ}
+variable {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
 
 /-- **Independence of the entries.** For functions `f_e : ℝ → ℝ` indexed by the entries,
 `E ∏ₑ f_e(G_e) = ∏ₑ E f_e(X)` with `X ∼ N(0,1)`. Atlas: `gaussian-frob-fourth-moment` (helper).
 Ported from Prove2me solution `GaussianMatrix.frobenius_fourth_moment` (`integral_prod_coord`). -/
-theorem integral_prod_entry_gaussianMatrix (f : Fin p × Fin m → ℝ → ℝ) :
-    ∫ G, ∏ e : Fin p × Fin m, f e (G e.1 e.2) ∂(gaussianMatrix p m)
-      = ∏ e : Fin p × Fin m, ∫ x, f e x ∂(gaussianReal 0 1) := by
+theorem integral_prod_entry_gaussianMatrix (f : p × m → ℝ → ℝ) :
+    ∫ G, ∏ e : p × m, f e (G e.1 e.2) ∂(gaussianMatrix p m)
+      = ∏ e : p × m, ∫ x, f e x ∂(gaussianReal 0 1) := by
   simp_rw [Fintype.prod_prod_type]
-  unfold gaussianMatrix
-  rw [integral_fintype_prod_eq_prod (fun (a : Fin p) (g : Fin m → ℝ) => ∏ b, f (a, b) (g b))]
+  rw [integral_gaussianMatrix_eq]
+  simp only [Matrix.of_apply]
+  rw [integral_fintype_prod_eq_prod (fun (a : p) (g : m → ℝ) => ∏ b, f (a, b) (g b))]
   refine Finset.prod_congr rfl fun a _ => ?_
   exact integral_fintype_prod_eq_prod (fun b x => f (a, b) x)
 
 /-- `G ↦ ∏ₑ f_e(G_e)` is integrable when every `f_e` is. Atlas: `gaussian-frob-fourth-moment`
 (helper). Ported from Prove2me solution `GaussianMatrix.frobenius_fourth_moment`
 (`integrable_prod_coord`). -/
-theorem integrable_prod_entry_gaussianMatrix (f : Fin p × Fin m → ℝ → ℝ)
+theorem integrable_prod_entry_gaussianMatrix (f : p × m → ℝ → ℝ)
     (hf : ∀ e, Integrable (f e) (gaussianReal 0 1)) :
-    Integrable (fun G : Fin p → Fin m → ℝ => ∏ e : Fin p × Fin m, f e (G e.1 e.2))
+    Integrable (fun G : Matrix p m ℝ => ∏ e : p × m, f e (G e.1 e.2))
       (gaussianMatrix p m) := by
   simp_rw [Fintype.prod_prod_type]
-  unfold gaussianMatrix
-  exact Integrable.fintype_prod (f := fun (a : Fin p) (g : Fin m → ℝ) => ∏ b, f (a, b) (g b))
+  rw [integrable_gaussianMatrix_iff]
+  simp only [Matrix.of_apply]
+  exact Integrable.fintype_prod (f := fun (a : p) (g : m → ℝ) => ∏ b, f (a, b) (g b))
     (fun a => Integrable.fintype_prod (fun b => hf (a, b)))
 
 /-- Multiplicity of the index `e` among `e1, e2, e3, e4`. -/
-private def cnt4 (e1 e2 e3 e4 e : Fin p × Fin m) : ℕ :=
+private def cnt4 (e1 e2 e3 e4 e : p × m) : ℕ :=
   (if e1 = e then 1 else 0) + (if e2 = e then 1 else 0) + (if e3 = e then 1 else 0)
     + (if e4 = e then 1 else 0)
 
-private lemma mono4 (G : Fin p → Fin m → ℝ) (e1 e2 e3 e4 : Fin p × Fin m) :
+private lemma mono4 (G : Matrix p m ℝ) (e1 e2 e3 e4 : p × m) :
     G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2
       = ∏ e, G e.1 e.2 ^ cnt4 e1 e2 e3 e4 e := by
   simp only [cnt4, pow_add, Finset.prod_mul_distrib, Finset.prod_pow_boole, Finset.mem_univ,
@@ -95,14 +97,14 @@ private lemma mono4 (G : Fin p → Fin m → ℝ) (e1 e2 e3 e4 : Fin p × Fin m)
 
 /-- A product of four entries of a Gaussian matrix is integrable. Atlas:
 `gaussian-frob-fourth-moment` (helper). -/
-theorem integrable_entry_mul_four_gaussianMatrix (e1 e2 e3 e4 : Fin p × Fin m) :
-    Integrable (fun G : Fin p → Fin m → ℝ =>
+theorem integrable_entry_mul_four_gaussianMatrix (e1 e2 e3 e4 : p × m) :
+    Integrable (fun G : Matrix p m ℝ =>
       G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2) (gaussianMatrix p m) := by
   simp_rw [mono4]
   exact integrable_prod_entry_gaussianMatrix (fun e x => x ^ cnt4 e1 e2 e3 e4 e)
     (fun e => integrable_pow_gaussianReal _)
 
-private lemma prod_mom_cnt4 (e1 e2 e3 e4 : Fin p × Fin m) :
+private lemma prod_mom_cnt4 (e1 e2 e3 e4 : p × m) :
     ∏ e, mom (cnt4 e1 e2 e3 e4 e) = ∏ e ∈ {e1, e2, e3, e4}, mom (cnt4 e1 e2 e3 e4 e) := by
   symm
   refine Finset.prod_subset (Finset.subset_univ _) fun e _ he => ?_
@@ -115,7 +117,7 @@ private lemma prod_mom_cnt4 (e1 e2 e3 e4 : Fin p × Fin m) :
 Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
 `GaussianMatrix.frobenius_fourth_moment` (`isserlis_idx`).
 atlas: gaussian-frob-fourth-moment -/
-theorem integral_entry_mul_four_gaussianMatrix (e1 e2 e3 e4 : Fin p × Fin m) :
+theorem integral_entry_mul_four_gaussianMatrix (e1 e2 e3 e4 : p × m) :
     ∫ G, G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2 ∂(gaussianMatrix p m)
       = (if e1 = e2 then 1 else 0) * (if e3 = e4 then 1 else 0)
         + (if e1 = e3 then 1 else 0) * (if e2 = e4 then 1 else 0)
@@ -128,18 +130,18 @@ theorem integral_entry_mul_four_gaussianMatrix (e1 e2 e3 e4 : Fin p × Fin m) :
     by_cases h23 : e2 = e3 <;> by_cases h24 : e2 = e4 <;> by_cases h34 : e3 = e4 <;>
     subst_vars <;> (simp_all [Finset.prod_insert, cnt4, eq_comm]; try norm_num)
 
-private lemma mono2 (G : Fin p → Fin m → ℝ) (e1 e2 : Fin p × Fin m) :
+private lemma mono2 (G : Matrix p m ℝ) (e1 e2 : p × m) :
     G e1.1 e1.2 * G e2.1 e2.2
       = ∏ e, G e.1 e.2 ^ ((if e1 = e then 1 else 0) + (if e2 = e then 1 else 0)) := by
   simp only [pow_add, Finset.prod_mul_distrib, Finset.prod_pow_boole, Finset.mem_univ, if_true]
 
-private lemma integrable_mono2 (e1 e2 : Fin p × Fin m) :
-    Integrable (fun G : Fin p → Fin m → ℝ => G e1.1 e1.2 * G e2.1 e2.2)
+private lemma integrable_mono2 (e1 e2 : p × m) :
+    Integrable (fun G : Matrix p m ℝ => G e1.1 e1.2 * G e2.1 e2.2)
       (gaussianMatrix p m) := by
   simp_rw [mono2]
   exact integrable_prod_entry_gaussianMatrix _ (fun e => integrable_pow_gaussianReal _)
 
-private lemma integral_mono2 (e1 e2 : Fin p × Fin m) :
+private lemma integral_mono2 (e1 e2 : p × m) :
     ∫ G, G e1.1 e1.2 * G e2.1 e2.2 ∂(gaussianMatrix p m) = if e1 = e2 then 1 else 0 := by
   simp_rw [mono2]
   rw [integral_prod_entry_gaussianMatrix
@@ -157,37 +159,37 @@ private lemma integral_mono2 (e1 e2 : Fin p × Fin m) :
 /-! ### Linear forms in a Gaussian matrix -/
 
 /-- The linear form `G ↦ ∑ₑ u e * G e`. -/
-private def L (u : Fin p × Fin m → ℝ) (G : Fin p → Fin m → ℝ) : ℝ := ∑ e, u e * G e.1 e.2
+private def L (u : p × m → ℝ) (G : Matrix p m ℝ) : ℝ := ∑ e, u e * G e.1 e.2
 
 /-- Euclidean inner product of coefficient vectors. -/
-private def ip (u v : Fin p × Fin m → ℝ) : ℝ := ∑ e, u e * v e
+private def ip (u v : p × m → ℝ) : ℝ := ∑ e, u e * v e
 
-private lemma L2_expand (u v : Fin p × Fin m → ℝ) (G : Fin p → Fin m → ℝ) :
+private lemma L2_expand (u v : p × m → ℝ) (G : Matrix p m ℝ) :
     L u G * L v G = ∑ e2, ∑ e1, (u e1 * v e2) * (G e1.1 e1.2 * G e2.1 e2.2) := by
   simp only [L, Finset.sum_mul, Finset.mul_sum]
   exact Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => by ring
 
-private lemma L4_expand (u v w z : Fin p × Fin m → ℝ) (G : Fin p → Fin m → ℝ) :
+private lemma L4_expand (u v w z : p × m → ℝ) (G : Matrix p m ℝ) :
     L u G * L v G * L w G * L z G = ∑ e4, ∑ e3, ∑ e2, ∑ e1, (u e1 * v e2 * w e3 * z e4) *
       (G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2) := by
   simp only [L, Finset.sum_mul, Finset.mul_sum]
   exact Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ =>
     Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => by ring
 
-private lemma integrable_L2 (u v : Fin p × Fin m → ℝ) :
+private lemma integrable_L2 (u v : p × m → ℝ) :
     Integrable (fun G => L u G * L v G) (gaussianMatrix p m) := by
   simp_rw [L2_expand]
   exact integrable_finsetSum _ fun e2 _ => integrable_finsetSum _ fun e1 _ =>
     (integrable_mono2 e1 e2).const_mul _
 
-private lemma integrable_L4 (u v w z : Fin p × Fin m → ℝ) :
+private lemma integrable_L4 (u v w z : p × m → ℝ) :
     Integrable (fun G => L u G * L v G * L w G * L z G) (gaussianMatrix p m) := by
   simp_rw [L4_expand]
   exact integrable_finsetSum _ fun e4 _ => integrable_finsetSum _ fun e3 _ =>
     integrable_finsetSum _ fun e2 _ => integrable_finsetSum _ fun e1 _ =>
     (integrable_entry_mul_four_gaussianMatrix e1 e2 e3 e4).const_mul _
 
-private lemma integral_L2 (u v : Fin p × Fin m → ℝ) :
+private lemma integral_L2 (u v : p × m → ℝ) :
     ∫ G, L u G * L v G ∂(gaussianMatrix p m) = ip u v := by
   simp_rw [L2_expand]
   rw [integral_finsetSum _ fun e2 _ => integrable_finsetSum _ fun e1 _ =>
@@ -200,11 +202,11 @@ private lemma integral_L2 (u v : Fin p × Fin m → ℝ) :
   simp_rw [this]
   simp [ip, mul_ite]
 
-private lemma integral_L4 (u v w z : Fin p × Fin m → ℝ) :
+private lemma integral_L4 (u v w z : p × m → ℝ) :
     ∫ G, L u G * L v G * L w G * L z G ∂(gaussianMatrix p m)
       = ip u v * ip w z + ip u w * ip v z + ip u z * ip v w := by
   simp_rw [L4_expand]
-  have hI : ∀ e1 e2 e3 e4 : Fin p × Fin m, Integrable (fun G : Fin p → Fin m → ℝ =>
+  have hI : ∀ e1 e2 e3 e4 : p × m, Integrable (fun G : Matrix p m ℝ =>
       (u e1 * v e2 * w e3 * z e4) * (G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2))
       (gaussianMatrix p m) := fun e1 e2 e3 e4 =>
     (integrable_entry_mul_four_gaussianMatrix e1 e2 e3 e4).const_mul _
@@ -235,18 +237,18 @@ private lemma integral_L4 (u v w z : Fin p × Fin m → ℝ) :
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
   · exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
 
-private lemma linForm_eq_L (c : Fin p → Fin m → ℝ) (G : Fin p → Fin m → ℝ) :
+private lemma linForm_eq_L (c : p → m → ℝ) (G : Matrix p m ℝ) :
     linForm c G = L (Function.uncurry c) G := by
-  simp only [linForm, L, Fintype.sum_prod_type, Function.uncurry_apply_pair]
+  simp only [linForm, L, Fintype.sum_prod_type, Function.uncurry]
 
-private lemma sum_sum_mul_eq_ip (u v : Fin p → Fin m → ℝ) :
+private lemma sum_sum_mul_eq_ip (u v : p → m → ℝ) :
     ∑ i, ∑ j, u i j * v i j = ip (Function.uncurry u) (Function.uncurry v) := by
-  simp only [ip, Fintype.sum_prod_type, Function.uncurry_apply_pair]
+  simp only [ip, Fintype.sum_prod_type, Function.uncurry]
 
 /-- The product of two linear forms `⟨u,G⟩⟨v,G⟩` in a Gaussian matrix is integrable. Atlas:
 `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
 `GaussianMatrix.frobenius_fourth_moment` (`integrable_L2`). -/
-theorem integrable_linForm_mul_two_gaussianMatrix (u v : Fin p → Fin m → ℝ) :
+theorem integrable_linForm_mul_two_gaussianMatrix (u v : p → m → ℝ) :
     Integrable (fun G => linForm u G * linForm v G) (gaussianMatrix p m) := by
   simp_rw [linForm_eq_L]
   exact integrable_L2 _ _
@@ -254,7 +256,7 @@ theorem integrable_linForm_mul_two_gaussianMatrix (u v : Fin p → Fin m → ℝ
 /-- The product of four linear forms `⟨u,G⟩⟨v,G⟩⟨w,G⟩⟨z,G⟩` in a Gaussian matrix is integrable.
 Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
 `GaussianMatrix.frobenius_fourth_moment` (`integrable_L4`). -/
-theorem integrable_linForm_mul_four_gaussianMatrix (u v w z : Fin p → Fin m → ℝ) :
+theorem integrable_linForm_mul_four_gaussianMatrix (u v w z : p → m → ℝ) :
     Integrable (fun G => linForm u G * linForm v G * linForm w G * linForm z G)
       (gaussianMatrix p m) := by
   simp_rw [linForm_eq_L]
@@ -264,7 +266,7 @@ theorem integrable_linForm_mul_four_gaussianMatrix (u v w z : Fin p → Fin m �
 matrix `G`; `u = v` gives `integral_linForm_sq_gaussianMatrix`.
 Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
 `GaussianMatrix.frobenius_fourth_moment` (`integral_L2`). -/
-theorem integral_linForm_mul_two_gaussianMatrix (u v : Fin p → Fin m → ℝ) :
+theorem integral_linForm_mul_two_gaussianMatrix (u v : p → m → ℝ) :
     ∫ G, linForm u G * linForm v G ∂(gaussianMatrix p m) = ∑ i, ∑ j, u i j * v i j := by
   simp_rw [linForm_eq_L, sum_sum_mul_eq_ip]
   exact integral_L2 _ _
@@ -275,7 +277,7 @@ theorem integral_linForm_mul_two_gaussianMatrix (u v : Fin p → Fin m → ℝ) 
 Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
 `GaussianMatrix.frobenius_fourth_moment` (`integral_L4`).
 atlas: gaussian-frob-fourth-moment -/
-theorem integral_linForm_mul_four_gaussianMatrix (u v w z : Fin p → Fin m → ℝ) :
+theorem integral_linForm_mul_four_gaussianMatrix (u v w z : p → m → ℝ) :
     ∫ G, linForm u G * linForm v G * linForm w G * linForm z G ∂(gaussianMatrix p m)
       = (∑ i, ∑ j, u i j * v i j) * (∑ i, ∑ j, w i j * z i j)
         + (∑ i, ∑ j, u i j * w i j) * (∑ i, ∑ j, v i j * z i j)
@@ -298,31 +300,31 @@ private lemma sum_sq_gram_comm {ι κ : Type*} [Fintype ι] [Fintype κ] (S : ι
     _ = _ := Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ =>
         Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
 
-variable {a n : ℕ}
+variable {a n : Type*} [Fintype a] [Fintype n]
 
 /-- Coefficient vector of the entry `(S G T)_x` as a linear form in `G`. -/
-private def uST (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ)
-    (x : Fin a × Fin n) : Fin p × Fin m → ℝ :=
+private def uST (S : Matrix a p ℝ) (T : Matrix m n ℝ)
+    (x : a × n) : p × m → ℝ :=
   fun e => S x.1 e.1 * T e.2 x.2
 
-private lemma entry_eq (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ)
-    (G : Fin p → Fin m → ℝ) (i : Fin a) (j : Fin n) :
-    (S * Matrix.of G * T) i j = L (uST S T (i, j)) G := by
-  simp only [Matrix.mul_apply, Matrix.of_apply, L, uST, Fintype.sum_prod_type, Finset.sum_mul]
+private lemma entry_eq (S : Matrix a p ℝ) (T : Matrix m n ℝ)
+    (G : Matrix p m ℝ) (i : a) (j : n) :
+    (S * G * T) i j = L (uST S T (i, j)) G := by
+  simp only [Matrix.mul_apply, L, uST, Fintype.sum_prod_type, Finset.sum_mul]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
 
-private lemma ip_uST (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ)
-    (x y : Fin a × Fin n) :
+private lemma ip_uST (S : Matrix a p ℝ) (T : Matrix m n ℝ)
+    (x y : a × n) :
     ip (uST S T x) (uST S T y) = (∑ c, S x.1 c * S y.1 c) * (∑ b, T b x.2 * T b y.2) := by
   simp only [ip, uST, Fintype.sum_prod_type, Finset.sum_mul_sum]
   exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
 
-private lemma frobSq_sq_eq (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ)
-    (G : Fin p → Fin m → ℝ) :
-    frobSq (S * Matrix.of G * T) ^ 2 = ∑ x : Fin a × Fin n, ∑ y : Fin a × Fin n,
+private lemma frobSq_sq_eq (S : Matrix a p ℝ) (T : Matrix m n ℝ)
+    (G : Matrix p m ℝ) :
+    frobSq (S * G * T) ^ 2 = ∑ x : a × n, ∑ y : a × n,
       L (uST S T x) G * L (uST S T x) G * L (uST S T y) G * L (uST S T y) G := by
-  have : frobSq (S * Matrix.of G * T) = ∑ x : Fin a × Fin n, L (uST S T x) G ^ 2 := by
+  have : frobSq (S * G * T) = ∑ x : a × n, L (uST S T x) G ^ 2 := by
     simp only [frobSq_eq_sum_sq, entry_eq, Fintype.sum_prod_type]
   rw [this, sq, Finset.sum_mul_sum]
   exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
@@ -336,23 +338,23 @@ Gaussian sketches (Tropp–Webber 2023, App. A; HMT 2011, Prop 10.1 second-momen
 Atlas: `gaussian-frob-fourth-moment`. Ported from Prove2me solution
 `GaussianMatrix.frobenius_fourth_moment`.
 atlas: gaussian-frob-fourth-moment -/
-theorem integral_frobSq_mul_gaussianMatrix_mul_sq (S : Matrix (Fin a) (Fin p) ℝ)
-    (T : Matrix (Fin m) (Fin n) ℝ) :
-    ∫ G, frobSq (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)
+theorem integral_frobSq_mul_gaussianMatrix_mul_sq (S : Matrix a p ℝ)
+    (T : Matrix m n ℝ) :
+    ∫ G, frobSq (S * G * T) ^ 2 ∂(gaussianMatrix p m)
       = (frobSq S * frobSq T) ^ 2 + 2 * frobSq (Sᵀ * S) * frobSq (T * Tᵀ) := by
-  have hL4 : ∀ u v w z : Fin p × Fin m → ℝ,
+  have hL4 : ∀ u v w z : p × m → ℝ,
       ∫ G, L u G * L v G * L w G * L z G ∂(gaussianMatrix p m)
         = ip u v * ip w z + ip u w * ip v z + ip u z * ip v w :=
     integral_L4
-  have hI4 : ∀ u v w z : Fin p × Fin m → ℝ,
+  have hI4 : ∀ u v w z : p × m → ℝ,
       Integrable (fun G => L u G * L v G * L w G * L z G) (gaussianMatrix p m) :=
     integrable_L4
   simp_rw [frobSq_sq_eq]
   rw [integral_finsetSum _ fun x _ => integrable_finsetSum _ fun y _ => hI4 _ _ _ _]
-  have h1 : ∀ x : Fin a × Fin n, ∫ G, ∑ y : Fin a × Fin n,
+  have h1 : ∀ x : a × n, ∫ G, ∑ y : a × n,
       L (uST S T x) G * L (uST S T x) G * L (uST S T y) G * L (uST S T y) G
         ∂(gaussianMatrix p m)
-      = ∑ y : Fin a × Fin n, (ip (uST S T x) (uST S T x) * ip (uST S T y) (uST S T y)
+      = ∑ y : a × n, (ip (uST S T x) (uST S T x) * ip (uST S T y) (uST S T y)
           + 2 * ip (uST S T x) (uST S T y) ^ 2) := by
     intro x
     rw [integral_finsetSum _ fun y _ => hI4 _ _ _ _]
@@ -361,7 +363,7 @@ theorem integral_frobSq_mul_gaussianMatrix_mul_sq (S : Matrix (Fin a) (Fin p) �
   have hS : ∑ i, ∑ c, S i c * S i c = frobSq S := by simp [frobSq_eq_sum_sq, sq]
   have hT : ∑ j, ∑ b, T b j * T b j = frobSq T := by
     rw [Finset.sum_comm]; simp [frobSq_eq_sum_sq, sq]
-  have hP : ∑ x : Fin a × Fin n, (∑ c, S x.1 c * S x.1 c) * (∑ b, T b x.2 * T b x.2)
+  have hP : ∑ x : a × n, (∑ c, S x.1 c * S x.1 c) * (∑ b, T b x.2 * T b x.2)
       = frobSq S * frobSq T := by
     rw [Fintype.sum_prod_type, ← hS, ← hT, Finset.sum_mul_sum]
   have hS2 : ∑ i, ∑ k, (∑ c, S i c * S k c) ^ 2 = frobSq (Sᵀ * S) := by
@@ -370,7 +372,7 @@ theorem integral_frobSq_mul_gaussianMatrix_mul_sq (S : Matrix (Fin a) (Fin p) �
   have hT2 : ∑ j, ∑ l, (∑ b, T b j * T b l) ^ 2 = frobSq (T * Tᵀ) := by
     have := sum_sq_gram_comm (fun j b => T b j)
     rw [this]; simp [frobSq_eq_sum_sq, Matrix.mul_apply]
-  have hQ : ∑ x : Fin a × Fin n, ∑ y : Fin a × Fin n,
+  have hQ : ∑ x : a × n, ∑ y : a × n,
       ((∑ c, S x.1 c * S y.1 c) * (∑ b, T b x.2 * T b y.2)) ^ 2
       = frobSq (Sᵀ * S) * frobSq (T * Tᵀ) := by
     rw [← hS2, ← hT2]
@@ -384,5 +386,17 @@ theorem integral_frobSq_mul_gaussianMatrix_mul_sq (S : Matrix (Fin a) (Fin p) �
     rw [Finset.mul_sum]
   rw [← Finset.sum_mul, hP, hQ]
   ring
+
+/-- `integral_frobSq_mul_gaussianMatrix_mul_sq` for a random matrix `X` with
+`HasLaw X (gaussianMatrix p m) μ`. Atlas: `gaussian-frob-fourth-moment`. -/
+theorem integral_frobSq_mul_gaussianMatrix_mul_sq_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {X : Ω → Matrix p m ℝ} (hX : HasLaw X (gaussianMatrix p m) μ)
+    (S : Matrix a p ℝ) (T : Matrix m n ℝ) :
+    ∫ ω, frobSq (S * X ω * T) ^ 2 ∂μ
+      = (frobSq S * frobSq T) ^ 2 + 2 * frobSq (Sᵀ * S) * frobSq (T * Tᵀ) := by
+  have hc : Continuous fun G : Matrix p m ℝ => frobSq (S * G * T) ^ 2 := by
+    simp only [frobSq_eq_sum_sq]; fun_prop
+  rw [← integral_frobSq_mul_gaussianMatrix_mul_sq S T]
+  exact hX.integral_comp hc.aestronglyMeasurable
 
 end NLAlib

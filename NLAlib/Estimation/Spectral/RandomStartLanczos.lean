@@ -239,17 +239,15 @@ theorem integral_lanczosRayleighRelativeError_pi_gaussianReal_le_all_dims
 on any probability space. Source: manuscript `rt:lanczos`.
 The rational variational representation supplies measurability.
 atlas: random-start-power -/
-theorem integral_lanczosRayleighRelativeError_le_of_map_eq_pi_gaussianReal
+theorem integral_lanczosRayleighRelativeError_le_of_hasLaw
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (hA : A.PosSemidef) {q : ℕ} (hq : 2 ≤ q)
-    (G : Ω → Fin n → ℝ) (hG : μ.map G = Measure.pi fun _ : Fin n => gaussianReal 0 1) :
+    (G : Ω → Fin n → ℝ) (hG : HasLaw G (Measure.pi fun _ : Fin n => gaussianReal 0 1) μ) :
     (∫ ω, lanczosRayleighRelativeError A (G ω) q ∂μ) ≤
       min 1 (4 * ((Real.log (2 * (n : ℝ)) + 2 + Real.log 2) ^ 2 + 4) /
         ((Real.log 2) ^ 2 * ((q - 1 : ℕ) : ℝ) ^ 2)) := by
-  have hGm : AEMeasurable G μ := AEMeasurable.of_map_ne_zero
-    (by rw [hG]; exact IsProbabilityMeasure.ne_zero _)
-  have he := integral_map hGm (measurable_lanczosRayleighRelativeError A q).aestronglyMeasurable
-  rw [hG] at he
-  exact he.symm.trans_le (integral_lanczosRayleighRelativeError_pi_gaussianReal_le_all_dims A hA hq)
+  have he : (∫ ω, lanczosRayleighRelativeError A (G ω) q ∂μ) = _ :=
+    hG.integral_comp (measurable_lanczosRayleighRelativeError A q).aestronglyMeasurable
+  exact he.trans_le (integral_lanczosRayleighRelativeError_pi_gaussianReal_le_all_dims A hA hq)
 
 end NLAlib

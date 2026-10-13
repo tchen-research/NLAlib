@@ -1,4 +1,5 @@
 import Mathlib.Probability.Moments.SubGaussian
+import Mathlib.Probability.HasLaw
 /-!
 # The Rademacher law
 
@@ -6,7 +7,7 @@ The concrete Rademacher probability measure `rademacherMeasure = ½ δ₁ + ½ �
 bridge `IsRademacher μ r ↔ μ.map r = rademacherMeasure`, and the fact that a Rademacher variable
 is sub-Gaussian with variance proxy `1` (Hoeffding's lemma on `[-1, 1]`).
 
-The predicate `IsRademacher μ r` (`μ.map r = rademacherMeasure`), the a.e.-measurability and the
+The predicate `IsRademacher μ r` (`HasLaw r rademacherMeasure μ`, an `abbrev`), the a.e.-measurability and the
 first four moments of a Rademacher variable (`memLp_two_and_moments_of_isRademacher`) are here as
 well.
 
@@ -35,29 +36,26 @@ instance isProbabilityMeasure_rademacherMeasure : IsProbabilityMeasure rademache
   norm_num [rademacherMeasure]
   simpa only [one_div] using ENNReal.add_halves 1
 
-/-- `r` has the Rademacher law under `μ`: `μ.map r = rademacherMeasure = ½ δ₁ + ½ δ₋₁`.
-Tropp 2015, §4.1.
+/-- `r` has the Rademacher law under `μ`: `HasLaw r rademacherMeasure μ`, i.e. `r` is
+a.e.-measurable and `μ.map r = rademacherMeasure = ½ δ₁ + ½ δ₋₁`. Tropp 2015, §4.1.
 atlas: rademacher-khintchine, scalar-laws-def -/
-def IsRademacher {Ω : Type*} [MeasurableSpace Ω]
+abbrev IsRademacher {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) (r : Ω → ℝ) : Prop :=
-  Measure.map r μ = rademacherMeasure
+  HasLaw r rademacherMeasure μ
 
-/-- `r` is Rademacher under `μ` exactly when its law is `rademacherMeasure`; this is the
-definition of `IsRademacher`. Tropp 2015, §4.1. Atlas `rademacher-khintchine`. -/
+/-- `r` is Rademacher under `μ` exactly when its law is `rademacherMeasure` (the law being a
+probability measure forces a.e. measurability). Tropp 2015, §4.1. Atlas `rademacher-khintchine`. -/
 theorem isRademacher_iff_map_eq {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
-    {r : Ω → ℝ} : IsRademacher μ r ↔ μ.map r = rademacherMeasure := Iff.rfl
+    {r : Ω → ℝ} : IsRademacher μ r ↔ μ.map r = rademacherMeasure :=
+  ⟨fun h => h.map_eq, fun h => ⟨AEMeasurable.of_map_ne_zero (by
+    rw [h]; exact IsProbabilityMeasure.ne_zero _), h⟩⟩
 
 /-- A Rademacher law already forces a.e. measurability, since its total mass is one.
 Atlas `hutchinson-variance` (law-to-measurability bridge). -/
 theorem aemeasurable_of_isRademacher {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     {g : Ω → ℝ}
-    (hlaw : IsRademacher μ g) : AEMeasurable g μ := by
-  apply AEMeasurable.of_map_ne_zero
-  intro hz
-  have h := congrArg (fun ν : Measure ℝ => ν Set.univ) hz
-  rw [IsRademacher] at hlaw
-  rw [hlaw] at h
-  norm_num at h
+    (hlaw : IsRademacher μ g) : AEMeasurable g μ :=
+  hlaw.aemeasurable
 
 /-- Almost every point of the Rademacher law lies in `[-1, 1]`.
 Atlas `rademacher-khintchine` (support of the law). -/
@@ -94,8 +92,9 @@ Vershynin 2018, Example 2.5.8(ii); audit G1 C5. Atlas `rademacher-khintchine`
 (sub-Gaussian half).
 atlas: rademacher-khintchine -/
 theorem hasSubgaussianMGF_of_isRademacher {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
-    [IsProbabilityMeasure μ] {r : Ω → ℝ} (hr : IsRademacher μ r) :
+    {r : Ω → ℝ} (hr : IsRademacher μ r) :
     HasSubgaussianMGF r 1 μ := by
+  have := hr.isProbabilityMeasure
   have hm : AEMeasurable r μ := aemeasurable_of_isRademacher hr
   rw [isRademacher_iff_map_eq] at hr
   have hb : ∀ᵐ ω ∂μ, r ω ∈ Set.Icc (-1 : ℝ) 1 := by
@@ -115,10 +114,11 @@ theorem hasSubgaussianMGF_of_isRademacher {Ω : Type*} [MeasurableSpace Ω] {μ 
 even moments equal to one. Hutchinson 1989; Avron–Toledo 2011, Lemma 6;
 atlas `hutchinson-variance` (law-to-moments bridge). -/
 theorem memLp_two_and_moments_of_isRademacher {Ω : Type*} [MeasurableSpace Ω]
-    {μ : Measure Ω} [IsProbabilityMeasure μ] {g : Ω → ℝ}
-    (hg : AEMeasurable g μ) (hlaw : IsRademacher μ g) :
+    {μ : Measure Ω} {g : Ω → ℝ} (hlaw : IsRademacher μ g) :
     MemLp g 2 μ ∧ (∫ ω, g ω ∂μ) = 0 ∧ (∫ ω, g ω ^ 2 ∂μ) = 1 ∧
       Integrable (fun ω => g ω ^ 4) μ ∧ (∫ ω, g ω ^ 4 ∂μ) = 1 := by
+  have := hlaw.isProbabilityMeasure
+  have hg := hlaw.aemeasurable
   rw [isRademacher_iff_map_eq, rademacherMeasure] at hlaw
   have hS : MeasurableSet {x : ℝ | x = 1 ∨ x = -1} :=
     (measurableSet_singleton 1).union (measurableSet_singleton (-1))

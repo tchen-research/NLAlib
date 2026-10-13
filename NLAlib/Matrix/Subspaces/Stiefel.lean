@@ -6,8 +6,9 @@ import NLAlib.ForMathlib.MeasureTheory.Matrix
 /-!
 # The compact orthogonal group and Stiefel frame space
 
-Frames use the array view of matrices, so their Borel structure is the
-established product structure. The orthogonal group is Mathlib's actual group.
+Frames are matrices with orthonormal columns; their Borel structure is the subtype of the
+global product structure on `Matrix` (`Matrix.instBorelSpace`). The orthogonal group is
+Mathlib's actual group.
 Source: operator re-derivation `sh:haar`.
 Supports atlas `haar-orthogonal`.
 -/
@@ -33,47 +34,29 @@ instance orthogonalGroupCompactSpace (n : ℕ) :
     norm_num
   · exact (CStarRing.norm_coe_unitary ⟨O, hO⟩).le
 
-/-- The Stiefel space of real orthonormal `k`-frames, in the array view.
+/-- The Stiefel space of real orthonormal `k`-frames, as a subtype of `Matrix (Fin n) (Fin k) ℝ`.
 Source: operator re-derivation `sh:haar`; equivalent to `QᵀQ = I`. -/
-abbrev Stiefel (n k : ℕ) := {Q : Fin n → Fin k → ℝ // HasOrthonormalCols (Matrix.of Q)}
+abbrev Stiefel (n k : ℕ) := {Q : Matrix (Fin n) (Fin k) ℝ // HasOrthonormalCols Q}
 
-/-- Coordinate equations make the frame space a closed subset of the ambient
-array space. Source: operator re-derivation `sh:haar`. -/
+/-- The orthonormality equations make the frame space a closed subset of the ambient
+matrix space. Source: operator re-derivation `sh:haar`. -/
 theorem isClosed_stiefel (n k : ℕ) :
-    IsClosed {Q : Fin n → Fin k → ℝ | HasOrthonormalCols (Matrix.of Q)} := by
-  let f : (Fin n → Fin k → ℝ) → Fin k → Fin k → ℝ :=
-    fun Q a b => ∑ i, Q i a * Q i b
-  have hf : Continuous f := by dsimp [f]; fun_prop
-  have heq : {Q : Fin n → Fin k → ℝ | HasOrthonormalCols (Matrix.of Q)} =
-      f ⁻¹' {Matrix.of.symm (1 : Matrix (Fin k) (Fin k) ℝ)} := by
-    ext Q
-    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_singleton_iff]
-    change (Matrix.of Q)ᵀ * Matrix.of Q = 1 ↔ _
-    rw [← Matrix.ext_iff (M := (Matrix.of Q)ᵀ * Matrix.of Q) (N := 1)]
-    simp only [funext_iff, f, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply,
-      Matrix.of_symm_apply]
-  rw [heq]
-  exact isClosed_singleton.preimage hf
+    IsClosed {Q : Matrix (Fin n) (Fin k) ℝ | HasOrthonormalCols Q} := by
+  change IsClosed {Q : Matrix (Fin n) (Fin k) ℝ | Qᴴ * Q = 1}
+  exact isClosed_eq (continuous_id.matrix_conjTranspose.matrix_mul continuous_id)
+    continuous_const
 
-/-- An orthonormal frame has ambient coordinate norm at most one.
-Source: operator re-derivation `sh:haar`; every squared entry is at most
-the unit squared norm of its column. -/
+/-- An orthonormal frame has `L2` operator norm at most one.
+Source: operator re-derivation `sh:haar`; the C⋆-identity `‖QᴴQ‖ = ‖Q‖²` with `QᴴQ = 1`. -/
 theorem norm_array_le_one_of_hasOrthonormalCols {n k : ℕ}
-    {Q : Fin n → Fin k → ℝ} (hQ : HasOrthonormalCols (Matrix.of Q)) : ‖Q‖ ≤ 1 := by
-  apply (pi_norm_le_iff_of_nonneg (by norm_num)).mpr
-  intro i
-  apply (pi_norm_le_iff_of_nonneg (by norm_num)).mpr
-  intro j
-  have hc : ∑ a, Q a j ^ 2 = 1 := by
-    have hh := congrArg (fun M : Matrix (Fin k) (Fin k) ℝ => M j j)
-      (show (Matrix.of Q)ᵀ * Matrix.of Q = 1 from hQ)
-    simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply,
-      Matrix.one_apply_eq, ← sq] using hh
-  have he : Q i j ^ 2 ≤ 1 := by
-    rw [← hc]
-    exact Finset.single_le_sum (fun a _ => sq_nonneg (Q a j)) (Finset.mem_univ i)
-  rw [Real.norm_eq_abs]
-  nlinarith [sq_abs (Q i j), abs_nonneg (Q i j)]
+    {Q : Matrix (Fin n) (Fin k) ℝ} (hQ : HasOrthonormalCols Q) : ‖Q‖ ≤ 1 := by
+  have h1 : ‖(1 : Matrix (Fin k) (Fin k) ℝ)‖ ≤ 1 := by
+    rw [← Matrix.diagonal_one, Matrix.l2_opNorm_diagonal]
+    exact (pi_norm_le_iff_of_nonneg zero_le_one).mpr fun _ => by simp
+  have h2 : ‖Q‖ * ‖Q‖ ≤ 1 := by
+    rw [← Matrix.l2_opNorm_conjTranspose_mul_self, show Qᴴ * Q = 1 from hQ]
+    exact h1
+  nlinarith [norm_nonneg Q]
 
 /-- The Stiefel frame space is compact, including empty frames.
 Source: operator re-derivation `sh:haar`. -/
@@ -85,7 +68,7 @@ instance stiefelCompactSpace (n k : ℕ) : CompactSpace (Stiefel n k) := by
 /-- The coordinate frame embeds the first `k` standard basis vectors.
 Source: operator re-derivation `sh:haar`, requiring `k ≤ n`. -/
 def coordinateStiefel (n k : ℕ) (hkn : k ≤ n) : Stiefel n k :=
-  ⟨fun i j => if i = Fin.castLE hkn j then 1 else 0, by
+  ⟨Matrix.of fun i j => if i = Fin.castLE hkn j then 1 else 0, by
     ext a b
     simp [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, Matrix.one_apply,
       Fin.castLE_inj, eq_comm]⟩
@@ -111,8 +94,8 @@ theorem transpose_mul_self_orthogonalGroup {n : ℕ}
 Source: operator re-derivation `sh:haar`. -/
 def stiefelAction {n k : ℕ} (O : Matrix.orthogonalGroup (Fin n) ℝ)
     (Q : Stiefel n k) : Stiefel n k :=
-  ⟨Matrix.of.symm (O.val * Matrix.of Q.val), by
-    change (O.val * Matrix.of Q.val)ᵀ * (O.val * Matrix.of Q.val) = 1
+  ⟨O.val * Q.val, by
+    change (O.val * Q.val)ᵀ * (O.val * Q.val) = 1
     rw [Matrix.transpose_mul]
     simp only [Matrix.mul_assoc]
     rw [← Matrix.mul_assoc O.valᵀ, transpose_mul_self_orthogonalGroup,
@@ -126,32 +109,20 @@ instance stiefelMulAction (n k : ℕ) :
   smul := stiefelAction
   one_smul Q := by
     apply Subtype.ext
-    change Matrix.of.symm (1 * Matrix.of Q.val) = Q.val
-    rw [Matrix.one_mul, Equiv.symm_apply_apply]
+    change 1 * Q.val = Q.val
+    rw [Matrix.one_mul]
   mul_smul O P Q := by
     apply Subtype.ext
-    change Matrix.of.symm ((O.val * P.val) * Matrix.of Q.val) =
-      Matrix.of.symm (O.val * Matrix.of (Matrix.of.symm (P.val * Matrix.of Q.val)))
-    rw [Equiv.apply_symm_apply, Matrix.mul_assoc]
+    change (O.val * P.val) * Q.val = O.val * (P.val * Q.val)
+    rw [Matrix.mul_assoc]
 
 /-- The group action on frames is jointly continuous.
 Source: operator re-derivation `sh:haar`, finite matrix multiplication. -/
 instance stiefelContinuousSMul (n k : ℕ) :
     ContinuousSMul (Matrix.orthogonalGroup (Fin n) ℝ) (Stiefel n k) where
-  continuous_smul := by
-    apply Continuous.subtype_mk
-    apply continuous_pi
-    intro i
-    apply continuous_pi
-    intro j
-    change Continuous (fun p : Matrix.orthogonalGroup (Fin n) ℝ × Stiefel n k =>
-      ∑ a, p.1.val i a * p.2.val a j)
-    apply continuous_finsetSum
-    intro a _
-    exact ((continuous_matrix_apply i a).comp
-      (continuous_subtype_val.comp continuous_fst)).mul
-      ((continuous_apply j).comp ((continuous_apply a).comp
-        (continuous_subtype_val.comp continuous_snd)))
+  continuous_smul :=
+    ((continuous_subtype_val.comp continuous_fst).matrix_mul
+      (continuous_subtype_val.comp continuous_snd)).subtype_mk _
 
 /-- The action of the real orthogonal group on `k`-frames is transitive whenever
 `k ≤ n`, including zero-dimensional frames. Source: operator re-derivation
@@ -160,8 +131,8 @@ theorem exists_orthogonalGroup_smul_eq {n k : ℕ} (hkn : k ≤ n)
     (Q Q' : Stiefel n k) :
     ∃ O : Matrix.orthogonalGroup (Fin n) ℝ, O • Q = Q' := by
   let e := Fin.castLEEmb hkn
-  obtain ⟨W, hW, hWQ⟩ := exists_orthogonal_completion (Matrix.of Q.val) Q.property e
-  obtain ⟨V, hV, hVQ⟩ := exists_orthogonal_completion (Matrix.of Q'.val) Q'.property e
+  obtain ⟨W, hW, hWQ⟩ := exists_orthogonal_completion Q.val Q.property e
+  obtain ⟨V, hV, hVQ⟩ := exists_orthogonal_completion Q'.val Q'.property e
   simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hW hV
   have hWt : W * Wᵀ = 1 := mul_eq_one_comm.mp hW
   let O := V * Wᵀ
@@ -178,9 +149,9 @@ theorem exists_orthogonalGroup_smul_eq {n k : ℕ} (hkn : k ≤ n)
     rw [Matrix.mul_assoc, hW, Matrix.mul_one]
   apply Subtype.ext
   funext i j
-  change (O * Matrix.of Q.val) i j = Q'.val i j
+  change (O * Q.val) i j = Q'.val i j
   calc
-    _ = (O * W) i (e j) := by simp only [Matrix.mul_apply, hWQ, Matrix.of_apply]
+    _ = (O * W) i (e j) := by simp only [Matrix.mul_apply, hWQ]
     _ = V i (e j) := congrArg (fun M : Matrix (Fin n) (Fin n) ℝ => M i (e j)) heqOW
     _ = Q'.val i j := hVQ i j
 

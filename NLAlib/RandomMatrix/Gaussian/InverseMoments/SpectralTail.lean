@@ -220,6 +220,19 @@ private lemma inv_Gamma_mul_rpow_le {N : ℕ} (hN : 1 ≤ N) (K R t : ℝ) (hRK 
         simp only [div_pow, mul_pow]
         field_simp
 
+/-- Transfer of an integrability-and-integral-bound statement from `gaussianMatrix` to a random
+matrix `X` with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. -/
+private lemma integrable_and_integral_le_of_hasLaw'
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    {F : Matrix (Fin r) (Fin k) ℝ → ℝ} (hF : Measurable F) {c : ℝ}
+    (h : Integrable F (gaussianMatrix (Fin r) (Fin k)) ∧
+      ∫ G, F G ∂(gaussianMatrix (Fin r) (Fin k)) ≤ c) :
+    Integrable (fun w => F (X w)) μ ∧ ∫ w, F (X w) ∂μ ≤ c := by
+  refine ⟨?_, le_of_eq_of_le (hX.integral_comp hF.aestronglyMeasurable) h.2⟩
+  have hI : Integrable F (μ.map X) := by rw [hX.map_eq]; exact h.1
+  exact hI.comp_aemeasurable hX.aemeasurable
+
 /-- **Tail bound for the spectral norm of the Gaussian pseudoinverse.** For an `r × k`
 standard Gaussian matrix `G` with `2 ≤ r ≤ k` and `t > 0`,
 `P[‖G†‖ > t] ≤ (2π(k-r+1))^{-1/2} (e√k/(k-r+1))^{k-r+1} t^{-(k-r+1)}`,
@@ -234,20 +247,30 @@ proved operator bound (B.5)) and Stirling's formula. Ported from Prove2me soluti
 atlas: pinv-spectral-tail -/
 theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r ≤ k) (t : ℝ)
     (ht : 0 < t) :
-    (gaussianMatrix r k) {G | t < specNorm (pinvR (Matrix.of G))}
-      ≤ ENNReal.ofReal ((1 / Real.sqrt (2 * Real.pi * ((k : ℝ) - r + 1)))
+    (gaussianMatrix (Fin r) (Fin k)).real {G | t < specNorm (pinvR G)}
+      ≤ (1 / Real.sqrt (2 * Real.pi * ((k : ℝ) - r + 1)))
           * (Real.exp 1 * Real.sqrt k / ((k : ℝ) - r + 1)) ^ ((k : ℝ) - r + 1)
-          * t ^ (-((k : ℝ) - r + 1))) := by
-  have hsub : {G : Fin r → Fin k → ℝ | t < specNorm (pinvR (Matrix.of G))}
-      ⊆ {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ 1 / t ^ 2} := by
+          * t ^ (-((k : ℝ) - r + 1)) := by
+  have hgap : 0 < (k : ℝ) - r + 1 := by
+    have : (r : ℝ) ≤ k := by exact_mod_cast hrk
+    linarith
+  have hc : 0 ≤ (1 / Real.sqrt (2 * Real.pi * ((k : ℝ) - r + 1)))
+      * (Real.exp 1 * Real.sqrt k / ((k : ℝ) - r + 1)) ^ ((k : ℝ) - r + 1)
+      * t ^ (-((k : ℝ) - r + 1)) :=
+    mul_nonneg (mul_nonneg (div_nonneg zero_le_one (Real.sqrt_nonneg _))
+      (Real.rpow_nonneg (div_nonneg (by positivity) hgap.le) _)) (Real.rpow_nonneg ht.le _)
+  rw [measureReal_def]
+  refine ENNReal.toReal_le_of_le_ofReal hc ?_
+  have hsub : {G : Matrix (Fin r) (Fin k) ℝ | t < specNorm (pinvR G)}
+      ⊆ {G | sigmaMin Gᵀ ^ 2 ≤ 1 / t ^ 2} := by
     intro G hG
     simp only [Set.mem_ofPred_eq] at hG ⊢
-    have hsq : specNorm (pinvR (Matrix.of G)) ^ 2 = 1 / sigmaMin (Matrix.of G)ᵀ ^ 2 := by
+    have hsq : specNorm (pinvR G) ^ 2 = 1 / sigmaMin Gᵀ ^ 2 := by
       rw [specNorm_pinvR_sq, specNorm_inv_self_mul_transpose_eq]
-    have h1 : t ^ 2 < 1 / sigmaMin (Matrix.of G)ᵀ ^ 2 := by
+    have h1 : t ^ 2 < 1 / sigmaMin Gᵀ ^ 2 := by
       rw [← hsq]; exact pow_lt_pow_left₀ hG ht.le (by norm_num)
-    have hs2 : 0 < sigmaMin (Matrix.of G)ᵀ ^ 2 := by
-      rcases (sq_nonneg (sigmaMin (Matrix.of G)ᵀ)).lt_or_eq with h | h
+    have hs2 : 0 < sigmaMin Gᵀ ^ 2 := by
+      rcases (sq_nonneg (sigmaMin Gᵀ)).lt_or_eq with h | h
       · exact h
       · rw [← h, div_zero] at h1; nlinarith
     have ht2 : 0 < t ^ 2 := by positivity
@@ -256,8 +279,10 @@ theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r 
     linarith
   refine (measure_mono hsub).trans ?_
   have hr1 : 1 ≤ r := by omega
-  refine (gaussianMatrix_sigmaMin_transpose_sq_le_le hr1 hrk (1 / t ^ 2) (by positivity)).trans ?_
+  rw [← ofReal_measureReal (μ := gaussianMatrix (Fin r) (Fin k))
+    (s := {G | sigmaMin Gᵀ ^ 2 ≤ 1 / t ^ 2})]
   apply ENNReal.ofReal_le_ofReal
+  refine (gaussianMatrix_sigmaMin_transpose_sq_le_le hr1 hrk (1 / t ^ 2) (by positivity)).trans ?_
   set N : ℕ := k - r + 1 with hN_def
   have hN : (N : ℝ) = (k : ℝ) - r + 1 := by
     rw [hN_def, Nat.cast_add, Nat.cast_sub hrk]; push_cast; ring
@@ -266,6 +291,20 @@ theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r 
   have hRK : (r : ℝ) ≤ k := by exact_mod_cast hrk
   have := inv_Gamma_mul_rpow_le (N := N) (by omega) (k : ℝ) (r : ℝ) t hRK (by positivity) ht
   convert this using 3
+
+/-- `gaussianMatrix_lt_specNorm_pinvR_le` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `pinv-spectral-tail`. -/
+theorem gaussianMatrix_lt_specNorm_pinvR_le_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 2 ≤ r) (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :
+    μ.real {w | t < specNorm (pinvR (X w))}
+      ≤ (1 / Real.sqrt (2 * Real.pi * ((k : ℝ) - r + 1)))
+          * (Real.exp 1 * Real.sqrt k / ((k : ℝ) - r + 1)) ^ ((k : ℝ) - r + 1)
+          * t ^ (-((k : ℝ) - r + 1)) := by
+  rw [hX.measureReal_eq (p := fun G => t < specNorm (pinvR G))
+    (measurableSet_lt measurable_const measurable_specNorm_pinvR)]
+  exact gaussianMatrix_lt_specNorm_pinvR_le hr hrk t ht
 
 /-- **Expectation of the spectral norm of the Gaussian pseudoinverse.** For an `r × k`
 standard Gaussian matrix `G` with `1 ≤ r` and `r + 1 ≤ k`, `‖G†‖` is integrable and
@@ -281,8 +320,8 @@ This proof has no density or spectral-tail dependency.
 atlas: pinv-spectral-expectation -/
 theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le {r k : ℕ} (hr : 1 ≤ r)
     (hrk : r + 1 ≤ k) :
-    Integrable (fun G : Fin r → Fin k → ℝ => specNorm (pinvR (Matrix.of G))) (gaussianMatrix r k) ∧
-    ∫ G, specNorm (pinvR (Matrix.of G)) ∂(gaussianMatrix r k)
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ => specNorm (pinvR G)) (gaussianMatrix (Fin r) (Fin k)) ∧
+    ∫ G, specNorm (pinvR G) ∂(gaussianMatrix (Fin r) (Fin k))
       ≤ Real.exp 1 * Real.sqrt k / ((k : ℝ) - r) := by
   have hrk' : r < k := by omega
   obtain ⟨hint, hbound⟩ :=
@@ -296,6 +335,17 @@ theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le {r k : ℕ} (hr
       ≤ Real.exp 1 / ((k : ℝ) - r) * Real.sqrt k :=
         mul_le_mul_of_nonneg_left hsqrt (by positivity)
     _ = Real.exp 1 * Real.sqrt k / ((k : ℝ) - r) := by ring
+
+/-- `integrable_and_integral_specNorm_pinvR_gaussianMatrix_le` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `pinv-spectral-expectation`. -/
+theorem integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 1 ≤ r) (hrk : r + 1 ≤ k) :
+    Integrable (fun w => specNorm (pinvR (X w))) μ ∧
+    ∫ w, specNorm (pinvR (X w)) ∂μ ≤ Real.exp 1 * Real.sqrt k / ((k : ℝ) - r) :=
+  integrable_and_integral_le_of_hasLaw' hX measurable_specNorm_pinvR
+    (integrable_and_integral_specNorm_pinvR_gaussianMatrix_le hr hrk)
 
 /-! ### Spectral moments of the inverse Wishart matrix -/
 
@@ -317,14 +367,14 @@ corollary; the stronger real-power theorem in SpectralProbe does not need it.
 atlas: inverse-wishart-spectral-moment -/
 theorem integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le
     {r k p : ℕ} (hp : 1 ≤ p) (hp18 : p ≤ 18) (hrk : r + 2 * p ≤ k) :
-    Integrable (fun G : Fin r → Fin k → ℝ => specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p)
-      (gaussianMatrix r k) ∧
-    ∫ G, specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p ∂(gaussianMatrix r k)
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ => specNorm (G * Gᵀ)⁻¹ ^ p)
+      (gaussianMatrix (Fin r) (Fin k)) ∧
+    ∫ G, specNorm (G * Gᵀ)⁻¹ ^ p ∂(gaussianMatrix (Fin r) (Fin k))
       ≤ (Real.exp 1 ^ 2 * ((k : ℝ) + r) / (2 * ((k : ℝ) - r) ^ 2)) ^ p := by
   rcases Nat.eq_zero_or_pos r with hr0 | hr1
   · subst hr0
-    have hf : (fun G : Fin 0 → Fin k → ℝ =>
-        specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ p) = fun _ => 0 := by
+    have hf : (fun G : Matrix (Fin 0) (Fin k) ℝ =>
+        specNorm (G * Gᵀ)⁻¹ ^ p) = fun _ => 0 := by
       funext G
       rw [specNorm_of_isEmpty, zero_pow (by omega)]
     rw [hf]
@@ -356,5 +406,19 @@ theorem integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatr
     apply div_le_div_of_nonneg_right _ (by positivity)
     exact mul_le_mul_of_nonneg_left (by linarith) (sq_nonneg _)
   exact pow_le_pow_left₀ hC hle p
+
+/-- `integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le` for a random
+matrix `X` with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas:
+`inverse-wishart-spectral-moment`. -/
+theorem integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k p : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hp : 1 ≤ p) (hp18 : p ≤ 18) (hrk : r + 2 * p ≤ k) :
+    Integrable (fun w => specNorm (X w * (X w)ᵀ)⁻¹ ^ p) μ ∧
+    ∫ w, specNorm (X w * (X w)ᵀ)⁻¹ ^ p ∂μ
+      ≤ (Real.exp 1 ^ 2 * ((k : ℝ) + r) / (2 * ((k : ℝ) - r) ^ 2)) ^ p :=
+  integrable_and_integral_le_of_hasLaw' hX
+    (measurable_specNorm_inv_self_mul_transpose.pow_const p)
+    (integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le hp hp18 hrk)
 
 end NLAlib

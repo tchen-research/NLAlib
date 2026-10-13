@@ -191,19 +191,17 @@ atlas: nystrom-randomized (partial) -/
 theorem integrable_and_integral_trace_sub_nystrom_le {n r k t : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {F : Matrix (Fin r) (Fin n) ℝ} (hA : A = Fᵀ * F)
     (hkt : k + 2 ≤ t) (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t) :
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) :
     Integrable (fun ω => (A - nystrom A (Ω ω)).trace) μ ∧
       ∫ ω, (A - nystrom A (Ω ω)).trace ∂μ ≤ (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k F := by
   obtain ⟨hint, hle⟩ :=
     integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq F hkt Ω hΩ
-  have hae : (fun ω => frobSq (residual (gaussianRangeFrame F t (Matrix.of.symm (Ω ω))) F))
+  have hae : (fun ω => frobSq (residual (gaussianRangeFrame F t (Ω ω)) F))
       =ᵐ[μ] fun ω => (A - nystrom A (Ω ω)).trace := by
-    have ho := ae_hasOrthonormalCols_gaussianRangeFrame_of_map_eq F
-      (fun ω => Matrix.of.symm (Ω ω)) hΩ
-    have hp := ae_project_gaussianRangeFrame_of_map_eq F (fun ω => Matrix.of.symm (Ω ω)) hΩ
-    have hrk := ae_rank_mul_gaussian_eq_min F (fun ω => Matrix.of.symm (Ω ω)) hΩ
+    have ho := ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw F Ω hΩ
+    have hp := ae_project_gaussianRangeFrame_of_hasLaw F Ω hΩ
+    have hrk := ae_rank_mul_gaussian_eq_min F Ω hΩ
     filter_upwards [ho, hp, hrk] with ω hω hpω hrω
-    simp only [Equiv.apply_symm_apply] at hpω hrω
     rw [trace_sub_nystrom_eq_of_eq_transpose_mul hA,
       one_sub_mul_moorePenroseInverse_mul_eq_residual hω hpω (by rw [hrω, Fintype.card_fin]) F]
   exact ⟨hint.congr hae, (integral_congr_ae hae).symm.le.trans hle⟩

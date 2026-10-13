@@ -2,8 +2,8 @@ import NLAlib.Matrix.Structured.Measurable
 /-!
 # Measurable spectral projection residuals
 
-Entrywise measurability suffices for the spectral norm and for projection residuals.
-This avoids a global measurable-space instance for real matrices.
+Entrywise measurability suffices for the spectral norm and for projection residuals,
+through the product σ-algebra `Matrix.instMeasurableSpace`.
 -/
 
 noncomputable section
@@ -18,11 +18,7 @@ theorem measurable_specNorm_of_entries {γ m n : Type*} [MeasurableSpace γ]
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
     {f : γ → Matrix m n ℝ} (hf : ∀ i j, Measurable fun z => f z i j) :
     Measurable fun z => specNorm (f z) := by
-  have h1 : Measurable fun z => Matrix.of.symm (f z) :=
-    measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => hf i j
-  have h2 : Continuous (fun M : m → n → ℝ => ‖Matrix.of M‖) :=
-    continuous_norm.comp continuous_id
-  exact h2.measurable.comp h1
+  exact continuous_norm.measurable.comp (Matrix.measurable_iff_entries.mpr hf)
 
 /-- A projection residual has measurable spectral norm for an entrywise measurable
 frame. Source: HMT (2011), Theorems 10.6--10.7, measurability step. -/

@@ -37,90 +37,61 @@ namespace NLAlib
 
 variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
 
-/-! ### Gaussian blocks -/
-
-omit [IsProbabilityMeasure μ] in
-/-- If `Ω` has law `gaussianMatrix n t` and `V₁ᵀ V₁ = 1`, then `V₁ᵀ Ω` has law
-`gaussianMatrix k t`. HMT 2011 §10.2; atlas `gaussian-conditioning` (uses `block-law-indep`). -/
-theorem map_block_eq_gaussianMatrix {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ) (hV₁ : V₁ᵀ * V₁ = 1) :
-    μ.map (fun ω => Matrix.of.symm (V₁ᵀ * Matrix.of (Ω ω))) = gaussianMatrix k t := by
-  have hΩm := aemeasurable_of_map_eq_gaussianMatrix hΩ
-  have := AEMeasurable.map_map_of_aemeasurable (measurable_block (t := t) V₁).aemeasurable hΩm
-  refine this.symm.trans ?_
-  rw [hΩ, gaussianMatrix_map_block V₁ hV₁]
-
-/-- If `Ω` has law `gaussianMatrix n t`, `V₁`, `V₂` have orthonormal columns and `V₁ᵀ V₂ = 0`,
-then `V₁ᵀ Ω` and `V₂ᵀ Ω` are independent. HMT 2011 §10.2; atlas `gaussian-conditioning`
-(uses `block-law-indep`). -/
-theorem indepFun_block_of_map_eq {n k r t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
-    (V₂ : Matrix (Fin n) (Fin r) ℝ) (hV₁ : V₁ᵀ * V₁ = 1) (hV₂ : V₂ᵀ * V₂ = 1)
-    (hV₁₂ : V₁ᵀ * V₂ = 0) :
-    IndepFun (fun ω => Matrix.of.symm (V₁ᵀ * Matrix.of (Ω ω)))
-      (fun ω => Matrix.of.symm (V₂ᵀ * Matrix.of (Ω ω))) μ := by
-  have hΩm := aemeasurable_of_map_eq_gaussianMatrix hΩ
-  have hind := gaussianMatrix_indepFun_block (t := t) V₁ V₂ hV₁ hV₂ hV₁₂
-  have hm₁ := measurable_block (t := t) V₁
-  have hm₂ := measurable_block (t := t) V₂
-  rw [← hΩ] at hind
-  rw [indepFun_iff_map_prod_eq_prod_map_map hm₁.aemeasurable hm₂.aemeasurable] at hind
-  show IndepFun ((fun G : Fin n → Fin t → ℝ => Matrix.of.symm (V₁ᵀ * Matrix.of G)) ∘ Ω)
-    ((fun G : Fin n → Fin t → ℝ => Matrix.of.symm (V₂ᵀ * Matrix.of G)) ∘ Ω) μ
-  rw [indepFun_iff_map_prod_eq_prod_map_map (hm₁.comp_aemeasurable hΩm)
-    (hm₂.comp_aemeasurable hΩm)]
-  rw [← AEMeasurable.map_map_of_aemeasurable hm₁.aemeasurable hΩm,
-    ← AEMeasurable.map_map_of_aemeasurable hm₂.aemeasurable hΩm, ← hind,
-    AEMeasurable.map_map_of_aemeasurable (hm₁.prodMk hm₂).aemeasurable hΩm]
-  rfl
-
 /-! ### The sandwiched Gaussian second moment, conditioned -/
 
 /-- `G ↦ ‖S G T‖_F²` is integrable under the standard Gaussian matrix law. Atlas
 `gaussian-conditioning` (integrability side condition of `gaussian-moments`). -/
 theorem integrable_frobSq_mul_gaussianMatrix_mul {ι κ : Type*} [Fintype ι] [Fintype κ]
-    {p m : ℕ} (S : Matrix ι (Fin p) ℝ) (T : Matrix (Fin m) κ ℝ) :
-    Integrable (fun G : Fin p → Fin m → ℝ => frobSq (S * Matrix.of G * T))
+    {p m : Type*} [Fintype p] [Fintype m] (S : Matrix ι p ℝ) (T : Matrix m κ ℝ) :
+    Integrable (fun G : Matrix p m ℝ => frobSq (S * G * T))
       (gaussianMatrix p m) := by
   classical
-  have hsq : Integrable (fun G : Fin p → Fin m → ℝ => frobSq (Matrix.of G))
+  have hsq : Integrable (fun G : Matrix p m ℝ => frobSq G)
       (gaussianMatrix p m) := by
     simp_rw [frobSq_eq_sum_sq]
     refine integrable_finsetSum _ fun a _ => integrable_finsetSum _ fun b _ => ?_
     exact (memLp_gaussianMatrix_entry a b 2 (by simp)).integrable_sq
-  have hm : Measurable fun G : Fin p → Fin m → ℝ => frobSq (S * Matrix.of G * T) :=
-    measurable_frobSq_of_entries fun i j => by
-      simp only [Matrix.mul_apply, Matrix.of_apply]; fun_prop
+  have hm : Measurable fun G : Matrix p m ℝ => frobSq (S * G * T) :=
+    measurable_frobSq_of_entries (Matrix.measurable_iff_entries.mp
+      ((measurable_const.matrix_mul measurable_id).matrix_mul measurable_const))
   refine (hsq.const_mul (frobSq S * frobSq T)).mono' hm.aestronglyMeasurable
     (ae_of_all _ fun G => ?_)
   rw [Real.norm_of_nonneg (frobSq_nonneg _)]
-  calc frobSq (S * Matrix.of G * T) ≤ frobSq (S * Matrix.of G) * frobSq T := frobSq_mul_le _ _
-    _ ≤ frobSq S * frobSq (Matrix.of G) * frobSq T :=
+  calc frobSq (S * G * T) ≤ frobSq (S * G) * frobSq T := frobSq_mul_le _ _
+    _ ≤ frobSq S * frobSq G * frobSq T :=
         mul_le_mul_of_nonneg_right (frobSq_mul_le _ _) (frobSq_nonneg _)
-    _ = frobSq S * frobSq T * frobSq (Matrix.of G) := by ring
+    _ = frobSq S * frobSq T * frobSq G := by ring
+
+/-- `(x, y) ↦ ‖S y T(x)‖_F²` is measurable when `T` is entrywise measurable. -/
+private lemma measurable_frobSq_mul_mul_prod {α ι κ : Type*} [MeasurableSpace α] [Fintype ι]
+    [Fintype κ] {p m : Type*} [Fintype p] [Fintype m] (S : Matrix ι p ℝ)
+    {T : α → Matrix m κ ℝ}
+    (hT : ∀ i j, Measurable fun x => T x i j) :
+    Measurable fun q : α × Matrix p m ℝ => frobSq (S * q.2 * T q.1) :=
+  measurable_frobSq_of_entries (Matrix.measurable_iff_entries.mp
+    ((measurable_const.matrix_mul measurable_snd).matrix_mul
+      ((Matrix.measurable_iff_entries.mpr hT).comp measurable_fst)))
 
 /-- `ℝ≥0∞` form of `integral_frobSq_mul_gaussian_mul_of_indepFun`; no integrability needed.
 HMT 2011 Prop 10.1 combined with the tower property (proof of Thm 10.5). Atlas
 `gaussian-conditioning`. -/
 theorem lintegral_frobSq_mul_gaussian_mul_of_indepFun {α ι κ : Type*} [MeasurableSpace α]
-    [Fintype ι] [Fintype κ] {p m : ℕ} {X : Ωs → α} {Y : Ωs → Fin p → Fin m → ℝ}
-    (hX : AEMeasurable X μ) (hY : μ.map Y = gaussianMatrix p m) (hXY : IndepFun X Y μ)
-    (S : Matrix ι (Fin p) ℝ) {T : α → Matrix (Fin m) κ ℝ}
+    [Fintype ι] [Fintype κ] {p m : Type*} [Fintype p] [Fintype m] {X : Ωs → α}
+    {Y : Ωs → Matrix p m ℝ}
+    (hX : AEMeasurable X μ) (hY : HasLaw Y (gaussianMatrix p m) μ)
+    (hXY : IndepFun X Y μ)
+    (S : Matrix ι p ℝ) {T : α → Matrix m κ ℝ}
     (hT : ∀ i j, Measurable fun x => T x i j) :
-    ∫⁻ ω, ENNReal.ofReal (frobSq (S * Matrix.of (Y ω) * T (X ω))) ∂μ =
+    ∫⁻ ω, ENNReal.ofReal (frobSq (S * Y ω * T (X ω))) ∂μ =
       ∫⁻ ω, ENNReal.ofReal (frobSq S * frobSq (T (X ω))) ∂μ := by
-  have hYm : AEMeasurable Y μ := aemeasurable_of_map_eq_gaussianMatrix hY
-  have hFm : Measurable (Function.uncurry fun (x : α) (y : Fin p → Fin m → ℝ) =>
-      ENNReal.ofReal (frobSq (S * Matrix.of y * T x))) := by
-    refine ENNReal.measurable_ofReal.comp (measurable_frobSq_of_entries fun i j => ?_)
-    have hT' : ∀ l j, Measurable fun q : α × (Fin p → Fin m → ℝ) => T q.1 l j :=
-      fun l j => (hT l j).comp measurable_fst
-    simp only [Matrix.mul_apply, Matrix.of_apply]
-    refine Finset.measurable_sum _ fun l _ => Measurable.mul ?_ (hT' l j)
-    fun_prop
+  have hYm : AEMeasurable Y μ := hY.aemeasurable
+  have hFm : Measurable (Function.uncurry fun (x : α) (y : Matrix p m ℝ) =>
+      ENNReal.ofReal (frobSq (S * y * T x))) := by
+    exact ENNReal.measurable_ofReal.comp (measurable_frobSq_mul_mul_prod S hT)
   have hGm : Measurable fun x : α => ENNReal.ofReal (frobSq S * frobSq (T x)) :=
     ENNReal.measurable_ofReal.comp (measurable_const.mul (measurable_frobSq_of_entries hT))
-  rw [lintegral_of_indepFun hX hYm hXY hFm.aemeasurable, hY, ← lintegral_map' hGm.aemeasurable hX]
+  rw [lintegral_of_indepFun hX hYm hXY hFm.aemeasurable, hY.map_eq,
+    ← lintegral_map' hGm.aemeasurable hX]
   congr 1
   funext x
   rw [← ofReal_integral_eq_lintegral_ofReal (integrable_frobSq_mul_gaussianMatrix_mul S (T x))
@@ -134,23 +105,19 @@ lower Lebesgue integrals (`lintegral_frobSq_mul_gaussian_mul_of_indepFun`); when
 is not integrable both Bochner integrals are `0`. Integrability of the left side is
 `integrable_frobSq_mul_gaussian_mul_of_indepFun`.
 HMT 2011 Prop 10.1 with the tower property (proof of Thm 10.5). Atlas `gaussian-conditioning`.
-Measurability of `T` is stated entrywise (`Matrix` carries no `MeasurableSpace` instance).
+Measurability of `T` is stated entrywise.
 atlas: gaussian-conditioning -/
 theorem integral_frobSq_mul_gaussian_mul_of_indepFun {α ι κ : Type*} [MeasurableSpace α]
-    [Fintype ι] [Fintype κ] {p m : ℕ} {X : Ωs → α} {Y : Ωs → Fin p → Fin m → ℝ}
-    (hX : AEMeasurable X μ) (hY : μ.map Y = gaussianMatrix p m) (hXY : IndepFun X Y μ)
-    (S : Matrix ι (Fin p) ℝ) {T : α → Matrix (Fin m) κ ℝ}
+    [Fintype ι] [Fintype κ] {p m : Type*} [Fintype p] [Fintype m] {X : Ωs → α}
+    {Y : Ωs → Matrix p m ℝ}
+    (hX : AEMeasurable X μ) (hY : HasLaw Y (gaussianMatrix p m) μ)
+    (hXY : IndepFun X Y μ)
+    (S : Matrix ι p ℝ) {T : α → Matrix m κ ℝ}
     (hT : ∀ i j, Measurable fun x => T x i j) :
-    ∫ ω, frobSq (S * Matrix.of (Y ω) * T (X ω)) ∂μ = frobSq S * ∫ ω, frobSq (T (X ω)) ∂μ := by
-  have hYm : AEMeasurable Y μ := aemeasurable_of_map_eq_gaussianMatrix hY
-  have hL : AEStronglyMeasurable (fun ω => frobSq (S * Matrix.of (Y ω) * T (X ω))) μ := by
-    have hF : Measurable fun q : α × (Fin p → Fin m → ℝ) => frobSq (S * Matrix.of q.2 * T q.1) :=
-      measurable_frobSq_of_entries fun i j => by
-        have hT' : ∀ l j, Measurable fun q : α × (Fin p → Fin m → ℝ) => T q.1 l j :=
-          fun l j => (hT l j).comp measurable_fst
-        simp only [Matrix.mul_apply, Matrix.of_apply]
-        refine Finset.measurable_sum _ fun l _ => Measurable.mul ?_ (hT' l j)
-        fun_prop
+    ∫ ω, frobSq (S * Y ω * T (X ω)) ∂μ = frobSq S * ∫ ω, frobSq (T (X ω)) ∂μ := by
+  have hYm : AEMeasurable Y μ := hY.aemeasurable
+  have hL : AEStronglyMeasurable (fun ω => frobSq (S * Y ω * T (X ω))) μ := by
+    have hF := measurable_frobSq_mul_mul_prod S hT
     exact (hF.comp_aemeasurable (hX.prodMk hYm)).aestronglyMeasurable
   have hR : AEStronglyMeasurable (fun ω => frobSq S * frobSq (T (X ω))) μ :=
     (measurable_const.mul (measurable_frobSq_of_entries hT)).comp_aemeasurable hX
@@ -164,20 +131,16 @@ theorem integral_frobSq_mul_gaussian_mul_of_indepFun {α ι κ : Type*} [Measura
 /-- Integrability companion of `integral_frobSq_mul_gaussian_mul_of_indepFun`: if
 `‖T(X)‖_F²` is integrable, so is `‖S Y T(X)‖_F²`. Atlas `gaussian-conditioning`. -/
 theorem integrable_frobSq_mul_gaussian_mul_of_indepFun {α ι κ : Type*} [MeasurableSpace α]
-    [Fintype ι] [Fintype κ] {p m : ℕ} {X : Ωs → α} {Y : Ωs → Fin p → Fin m → ℝ}
-    (hX : AEMeasurable X μ) (hY : μ.map Y = gaussianMatrix p m) (hXY : IndepFun X Y μ)
-    (S : Matrix ι (Fin p) ℝ) {T : α → Matrix (Fin m) κ ℝ}
+    [Fintype ι] [Fintype κ] {p m : Type*} [Fintype p] [Fintype m] {X : Ωs → α}
+    {Y : Ωs → Matrix p m ℝ}
+    (hX : AEMeasurable X μ) (hY : HasLaw Y (gaussianMatrix p m) μ)
+    (hXY : IndepFun X Y μ)
+    (S : Matrix ι p ℝ) {T : α → Matrix m κ ℝ}
     (hT : ∀ i j, Measurable fun x => T x i j)
     (hTi : Integrable (fun ω => frobSq (T (X ω))) μ) :
-    Integrable (fun ω => frobSq (S * Matrix.of (Y ω) * T (X ω))) μ := by
-  have hYm : AEMeasurable Y μ := aemeasurable_of_map_eq_gaussianMatrix hY
-  have hF : Measurable fun q : α × (Fin p → Fin m → ℝ) => frobSq (S * Matrix.of q.2 * T q.1) :=
-    measurable_frobSq_of_entries fun i j => by
-      have hT' : ∀ l j, Measurable fun q : α × (Fin p → Fin m → ℝ) => T q.1 l j :=
-        fun l j => (hT l j).comp measurable_fst
-      simp only [Matrix.mul_apply, Matrix.of_apply]
-      refine Finset.measurable_sum _ fun l _ => Measurable.mul ?_ (hT' l j)
-      fun_prop
+    Integrable (fun ω => frobSq (S * Y ω * T (X ω))) μ := by
+  have hYm : AEMeasurable Y μ := hY.aemeasurable
+  have hF := measurable_frobSq_mul_mul_prod S hT
   refine ⟨(hF.comp_aemeasurable (hX.prodMk hYm)).aestronglyMeasurable, ?_⟩
   rw [hasFiniteIntegral_iff_ofReal (ae_of_all _ fun _ => frobSq_nonneg _),
     lintegral_frobSq_mul_gaussian_mul_of_indepFun hX hY hXY S hT]
@@ -194,41 +157,42 @@ theorem integrable_frobSq_mul_gaussian_mul_of_indepFun {α ι κ : Type*} [Measu
 HMT 2011 (Halko–Martinsson–Tropp), proof of Thm 10.5 (conditioning on `Ω₁`, then Prop 10.1).
 This is hypothesis `hinv` of `NLAlib.rsvd_truncated_main` modulo the inverse moment
 `E ‖Ω₁†‖_F² = k/(t−k−1)`. No integrability hypothesis is needed (see
-`integral_frobSq_mul_gaussian_mul_of_indepFun`). `Ω` is array-valued; for a `Matrix`-valued
-`Ω'` take `Ω := fun ω => Matrix.of.symm (Ω' ω)` (definitionally `Matrix.of (Ω ω) = Ω' ω`).
+`integral_frobSq_mul_gaussian_mul_of_indepFun`).
 Atlas `gaussian-conditioning`.
 atlas: gaussian-conditioning -/
 theorem integral_frobSq_mul_block_mul_pinvR_block {n k r r' t : ℕ}
-    {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
-    (V₂ : Matrix (Fin n) (Fin r') ℝ) (hV₁ : V₁ᵀ * V₁ = 1) (hV₂ : V₂ᵀ * V₂ = 1)
+    {Ω : Ωs → Matrix (Fin n) (Fin t) ℝ}
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) (V₁ : Matrix (Fin n) (Fin k) ℝ)
+    (V₂ : Matrix (Fin n) (Fin r') ℝ) (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂)
     (hV₁₂ : V₁ᵀ * V₂ = 0) (S₂ : Matrix (Fin r) (Fin r') ℝ) :
-    ∫ ω, frobSq (S₂ * (V₂ᵀ * Matrix.of (Ω ω)) * pinvR (V₁ᵀ * Matrix.of (Ω ω))) ∂μ =
-      frobSq S₂ * ∫ ω, frobSq (pinvR (V₁ᵀ * Matrix.of (Ω ω))) ∂μ :=
+    ∫ ω, frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) ∂μ =
+      frobSq S₂ * ∫ ω, frobSq (pinvR (V₁ᵀ * Ω ω)) ∂μ :=
   integral_frobSq_mul_gaussian_mul_of_indepFun
-    (X := fun ω => Matrix.of.symm (V₁ᵀ * Matrix.of (Ω ω)))
-    (Y := fun ω => Matrix.of.symm (V₂ᵀ * Matrix.of (Ω ω)))
-    ((measurable_block V₁).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΩ))
-    (map_block_eq_gaussianMatrix hΩ V₂ hV₂) (indepFun_block_of_map_eq hΩ V₁ V₂ hV₁ hV₂ hV₁₂)
-    S₂ (T := fun x => pinvR (Matrix.of x)) measurable_pinvR_entry
+    (X := fun ω => V₁ᵀ * Ω ω)
+    (Y := fun ω => V₂ᵀ * Ω ω)
+    ((measurable_block V₁).comp_aemeasurable hΩ.aemeasurable)
+    (hasLaw_gaussianMatrix_block_of_hasLaw hΩ V₂ hV₂)
+    (gaussianMatrix_indepFun_block_of_hasLaw hΩ V₁ V₂ hV₁ hV₂ hV₁₂)
+    S₂ (T := fun x => pinvR x) measurable_pinvR_entry
 
 /-- Integrability companion of `integral_frobSq_mul_block_mul_pinvR_block` (hypothesis `hZi`
 of `NLAlib.rsvd_truncated_main`, given integrability of `‖(V₁ᵀΩ)†‖_F²`). HMT 2011 proof of
 Thm 10.5. Atlas `gaussian-conditioning`. -/
 theorem integrable_frobSq_mul_block_mul_pinvR_block {n k r r' t : ℕ}
-    {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
-    (V₂ : Matrix (Fin n) (Fin r') ℝ) (hV₁ : V₁ᵀ * V₁ = 1) (hV₂ : V₂ᵀ * V₂ = 1)
+    {Ω : Ωs → Matrix (Fin n) (Fin t) ℝ}
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) (V₁ : Matrix (Fin n) (Fin k) ℝ)
+    (V₂ : Matrix (Fin n) (Fin r') ℝ) (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂)
     (hV₁₂ : V₁ᵀ * V₂ = 0) (S₂ : Matrix (Fin r) (Fin r') ℝ)
-    (hi : Integrable (fun ω => frobSq (pinvR (V₁ᵀ * Matrix.of (Ω ω)))) μ) :
+    (hi : Integrable (fun ω => frobSq (pinvR (V₁ᵀ * Ω ω))) μ) :
     Integrable
-      (fun ω => frobSq (S₂ * (V₂ᵀ * Matrix.of (Ω ω)) * pinvR (V₁ᵀ * Matrix.of (Ω ω)))) μ :=
+      (fun ω => frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω))) μ :=
   integrable_frobSq_mul_gaussian_mul_of_indepFun
-    (X := fun ω => Matrix.of.symm (V₁ᵀ * Matrix.of (Ω ω)))
-    (Y := fun ω => Matrix.of.symm (V₂ᵀ * Matrix.of (Ω ω)))
-    ((measurable_block V₁).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΩ))
-    (map_block_eq_gaussianMatrix hΩ V₂ hV₂) (indepFun_block_of_map_eq hΩ V₁ V₂ hV₁ hV₂ hV₁₂)
-    S₂ (T := fun x => pinvR (Matrix.of x)) measurable_pinvR_entry hi
+    (X := fun ω => V₁ᵀ * Ω ω)
+    (Y := fun ω => V₂ᵀ * Ω ω)
+    ((measurable_block V₁).comp_aemeasurable hΩ.aemeasurable)
+    (hasLaw_gaussianMatrix_block_of_hasLaw hΩ V₂ hV₂)
+    (gaussianMatrix_indepFun_block_of_hasLaw hΩ V₁ V₂ hV₁ hV₂ hV₁₂)
+    S₂ (T := fun x => pinvR x) measurable_pinvR_entry hi
 
 /-- **Completion-step inverse-moment factorisation** (transposed form of
 `integral_frobSq_mul_block_mul_pinvR_block`). If `Ψ` is an `m × s` standard Gaussian matrix and
@@ -240,25 +204,26 @@ the conditioning argument of HMT 2011 Thm 10.5 applied to the transposed sketch.
 `(ΨᵀQ)† = pinvL (ΨᵀQ)`. Atlas `gaussian-conditioning`.
 atlas: gaussian-conditioning -/
 theorem integral_frobSq_pinvL_block_mul_block_mul {m s q rp : ℕ} {ι : Type*} [Fintype ι]
-    {Ψ : Ωs → Fin m → Fin s → ℝ} (hΨ : μ.map Ψ = gaussianMatrix m s)
-    (Q : Matrix (Fin m) (Fin q) ℝ) (Qp : Matrix (Fin m) (Fin rp) ℝ) (hQ : Qᵀ * Q = 1)
-    (hQp : Qpᵀ * Qp = 1) (hQQp : Qᵀ * Qp = 0) (B : Matrix (Fin rp) ι ℝ) :
-    ∫ ω, frobSq (pinvL ((Matrix.of (Ψ ω))ᵀ * Q) * ((Matrix.of (Ψ ω))ᵀ * Qp) * B) ∂μ =
-      (∫ ω, frobSq (pinvL ((Matrix.of (Ψ ω))ᵀ * Q)) ∂μ) * frobSq B := by
+    {Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ} (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ)
+    (Q : Matrix (Fin m) (Fin q) ℝ) (Qp : Matrix (Fin m) (Fin rp) ℝ) (hQ : HasOrthonormalCols Q)
+    (hQp : HasOrthonormalCols Qp) (hQQp : Qᵀ * Qp = 0) (B : Matrix (Fin rp) ι ℝ) :
+    ∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * B) ∂μ =
+      (∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q)) ∂μ) * frobSq B := by
   have key := integral_frobSq_mul_gaussian_mul_of_indepFun
-    (X := fun ω => Matrix.of.symm (Qᵀ * Matrix.of (Ψ ω)))
-    (Y := fun ω => Matrix.of.symm (Qpᵀ * Matrix.of (Ψ ω)))
-    ((measurable_block Q).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΨ))
-    (map_block_eq_gaussianMatrix hΨ Qp hQp) (indepFun_block_of_map_eq hΨ Q Qp hQ hQp hQQp)
-    Bᵀ (T := fun x => pinvR (Matrix.of x)) measurable_pinvR_entry
-  have h1 : ∀ ω, frobSq (pinvL ((Matrix.of (Ψ ω))ᵀ * Q) * ((Matrix.of (Ψ ω))ᵀ * Qp) * B) =
-      frobSq (Bᵀ * (Qpᵀ * Matrix.of (Ψ ω)) * pinvR (Qᵀ * Matrix.of (Ψ ω))) := by
+    (X := fun ω => Qᵀ * Ψ ω)
+    (Y := fun ω => Qpᵀ * Ψ ω)
+    ((measurable_block Q).comp_aemeasurable hΨ.aemeasurable)
+    (hasLaw_gaussianMatrix_block_of_hasLaw hΨ Qp hQp)
+    (gaussianMatrix_indepFun_block_of_hasLaw hΨ Q Qp hQ hQp hQQp)
+    Bᵀ (T := fun x => pinvR x) measurable_pinvR_entry
+  have h1 : ∀ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * B) =
+      frobSq (Bᵀ * (Qpᵀ * Ψ ω) * pinvR (Qᵀ * Ψ ω)) := by
     intro ω
     rw [← frobSq_transpose]
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose, pinvL_transpose,
       Matrix.mul_assoc]
-  have h2 : ∀ ω, frobSq (pinvL ((Matrix.of (Ψ ω))ᵀ * Q)) =
-      frobSq (pinvR (Qᵀ * Matrix.of (Ψ ω))) := by
+  have h2 : ∀ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q)) =
+      frobSq (pinvR (Qᵀ * Ψ ω)) := by
     intro ω
     rw [← frobSq_transpose, pinvL_transpose, Matrix.transpose_mul, Matrix.transpose_transpose]
   simp_rw [h1, h2, frobSq_transpose] at *
@@ -269,19 +234,19 @@ theorem integral_frobSq_pinvL_block_mul_block_mul {m s q rp : ℕ} {ι : Type*} 
 
 omit [IsProbabilityMeasure μ] in
 /-- **Inverse moment of a Gaussian block.** If `Ω` is an `n × t` standard Gaussian matrix and
-`V₁ᵀ V₁ = 1`, then `E ‖(V₁ᵀΩ)†‖_F² = E_{G} ‖G†‖_F²` for `G` a `k × t` standard Gaussian matrix.
+`V₁` has orthonormal columns, then `E ‖(V₁ᵀΩ)†‖_F² = E_{G} ‖G†‖_F²` for `G` a `k × t` standard Gaussian matrix.
 Combined with `integral_frobSq_mul_block_mul_pinvR_block` and the inverse moment of a Gaussian
 matrix this closes hypothesis `hinv` of `NLAlib.rsvd_truncated_main`. HMT 2011 §10.2 (block law).
 Atlas `gaussian-conditioning`.
 atlas: gaussian-conditioning -/
-theorem integral_frobSq_pinvR_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
-    (hV₁ : V₁ᵀ * V₁ = 1) :
-    ∫ ω, frobSq (pinvR (V₁ᵀ * Matrix.of (Ω ω))) ∂μ =
-      ∫ G, frobSq (pinvR (Matrix.of G)) ∂gaussianMatrix k t := by
-  rw [← map_block_eq_gaussianMatrix hΩ V₁ hV₁]
-  exact (integral_map (φ := fun ω => Matrix.of.symm (V₁ᵀ * Matrix.of (Ω ω)))
-    ((measurable_block V₁).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΩ))
+theorem integral_frobSq_pinvR_block {n k t : ℕ} {Ω : Ωs → Matrix (Fin n) (Fin t) ℝ}
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) (V₁ : Matrix (Fin n) (Fin k) ℝ)
+    (hV₁ : HasOrthonormalCols V₁) :
+    ∫ ω, frobSq (pinvR (V₁ᵀ * Ω ω)) ∂μ =
+      ∫ G, frobSq (pinvR G) ∂gaussianMatrix (Fin k) (Fin t) := by
+  rw [← (hasLaw_gaussianMatrix_block_of_hasLaw hΩ V₁ hV₁).map_eq]
+  exact (integral_map (φ := fun ω => V₁ᵀ * Ω ω)
+    ((measurable_block V₁).comp_aemeasurable hΩ.aemeasurable)
     (measurable_frobSq_of_entries measurable_pinvR_entry).aestronglyMeasurable).symm
 
 end NLAlib

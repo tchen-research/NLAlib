@@ -49,16 +49,16 @@ private lemma integral_pow_mul_exp_neg_sq_div_two (k : ℕ) :
   congr 2
   ring
 
-private lemma sigmaMin_transpose_sq_of_one {k : ℕ} (G : Fin 1 → Fin k → ℝ) :
-    sigmaMin (Matrix.of G)ᵀ ^ 2 = ∑ j, G 0 j ^ 2 := by
+private lemma sigmaMin_transpose_sq_of_one {k : ℕ} (G : Matrix (Fin 1) (Fin k) ℝ) :
+    sigmaMin Gᵀ ^ 2 = ∑ j, G 0 j ^ 2 := by
   have hconst : ∀ x : {x : Fin 1 → ℝ // x ⬝ᵥ x = 1},
-      Real.sqrt (((Matrix.of G)ᵀ *ᵥ x.1) ⬝ᵥ ((Matrix.of G)ᵀ *ᵥ x.1))
+      Real.sqrt ((Gᵀ *ᵥ x.1) ⬝ᵥ (Gᵀ *ᵥ x.1))
         = Real.sqrt (∑ j, G 0 j ^ 2) := by
     rintro ⟨x, hx⟩
     congr 1
     have hx0 : x 0 ^ 2 = 1 := by
       simpa [dotProduct, Fin.sum_univ_one, sq] using hx
-    simp only [dotProduct, Matrix.mulVec, Matrix.transpose_apply, Matrix.of_apply,
+    simp only [dotProduct, Matrix.mulVec, Matrix.transpose_apply,
       Fin.sum_univ_one]
     calc ∑ j, G 0 j * x 0 * (G 0 j * x 0) = ∑ j, G 0 j ^ 2 * x 0 ^ 2 :=
           Finset.sum_congr rfl fun j _ => by ring
@@ -70,11 +70,9 @@ private lemma sigmaMin_transpose_sq_of_one {k : ℕ} (G : Fin 1 → Fin k → �
   rw [ciInf_const, Real.sq_sqrt (Finset.sum_nonneg fun _ _ => sq_nonneg _)]
 
 private lemma gaussianMatrix_one_preimage {k : ℕ} (T : Set (Fin k → ℝ)) (hT : MeasurableSet T) :
-    (gaussianMatrix 1 k) ((fun G => G 0) ⁻¹' T)
+    (gaussianMatrix (Fin 1) (Fin k)) ((fun G => G 0) ⁻¹' T)
       = (Measure.pi fun _ : Fin k => gaussianReal 0 1) T := by
-  have h := measurePreserving_funUnique (Measure.pi fun _ : Fin k => gaussianReal 0 1) (Fin 1)
-  unfold gaussianMatrix
-  exact h.measure_preimage hT.nullMeasurableSet
+  exact (measurePreserving_gaussianMatrix_row 0).measure_preimage hT.nullMeasurableSet
 
 /-- Change of variables `y = √λ`. -/
 private lemma integral_Ioi_indicator_eq {k : ℕ} (hk : 1 ≤ k) {t : ℝ} (ht : 0 ≤ t) :
@@ -149,7 +147,7 @@ Gaussian vector and the substitution `y = √x`. Ported from Prove2me solution
 atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_one_sigmaMin_transpose_sq_le_eq {k : ℕ} (hk : 1 ≤ k) (t : ℝ)
     (ht : 0 ≤ t) :
-    (gaussianMatrix 1 k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
+    (gaussianMatrix (Fin 1) (Fin k)) {G | sigmaMin Gᵀ ^ 2 ≤ t}
       = ∫⁻ x in Set.Ioc 0 t, ENNReal.ofReal
           (2 ^ (((k : ℝ) - 2) / 2) * Real.Gamma (((k : ℝ) + 1) / 2)
               / (Real.Gamma (1 / 2) * Real.Gamma (k : ℝ))
@@ -167,7 +165,7 @@ theorem gaussianMatrix_one_sigmaMin_transpose_sq_le_eq {k : ℕ} (hk : 1 ≤ k) 
     positivity
   set T : Set (Fin k → ℝ) := {g | ∑ j, g j ^ 2 ≤ t} with hT
   have hTm : MeasurableSet T := measurableSet_le (by fun_prop) measurable_const
-  have hset : {G : Fin 1 → Fin k → ℝ | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
+  have hset : {G : Matrix (Fin 1) (Fin k) ℝ | sigmaMin Gᵀ ^ 2 ≤ t}
       = (fun G => G 0) ⁻¹' T := by
     ext G; simp [hT, sigmaMin_transpose_sq_of_one]
   rw [hset, gaussianMatrix_one_preimage T hTm]
@@ -224,6 +222,21 @@ theorem gaussianMatrix_one_sigmaMin_transpose_sq_le_eq {k : ℕ} (hk : 1 ≤ k) 
 
 /-! ### The operator density bound -/
 
+/-- `gaussianMatrix_one_sigmaMin_transpose_sq_le_eq` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin 1) (Fin k)) μ`. Atlas: `wishart-lambda-min-tail`. -/
+theorem gaussianMatrix_one_sigmaMin_transpose_sq_le_eq_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {k : ℕ}
+    {X : Ω → Matrix (Fin 1) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin 1) (Fin k)) μ)
+    (hk : 1 ≤ k) (t : ℝ) (ht : 0 ≤ t) :
+    μ {w | sigmaMin (X w)ᵀ ^ 2 ≤ t}
+      = ∫⁻ x in Set.Ioc 0 t, ENNReal.ofReal
+          (2 ^ (((k : ℝ) - 2) / 2) * Real.Gamma (((k : ℝ) + 1) / 2)
+              / (Real.Gamma (1 / 2) * Real.Gamma (k : ℝ))
+            * x ^ (((k : ℝ) - 2) / 2) * Real.exp (-x / 2)) := by
+  rw [hX.measure_eq (p := fun G => sigmaMin Gᵀ ^ 2 ≤ t)
+    (measurableSet_le measurable_sigmaMin_transpose_sq measurable_const)]
+  exact gaussianMatrix_one_sigmaMin_transpose_sq_le_eq hk t ht
+
 /-- **Density bound for the smallest Wishart eigenvalue** (Tropp–Webber 2023, (B.5); Edelman
 1988, Chen–Dongarra 2005). For an `r × k` standard Gaussian matrix `G` with `1 ≤ r ≤ k` and
 `t > 0`,
@@ -239,7 +252,7 @@ the published statement and is not used by the proof.
 atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral {r k : ℕ} (hr : 1 ≤ r)
     (hrk : r ≤ k) (t : ℝ) (_ht : 0 < t) :
-    (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
+    (gaussianMatrix (Fin r) (Fin k)) {G | sigmaMin Gᵀ ^ 2 ≤ t}
       ≤ ∫⁻ x in Set.Ioc 0 t, ENNReal.ofReal
           (2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2)
               / (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))
@@ -248,6 +261,21 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral {r k : ℕ} (hr : 1
   intro ψ hψ hψc hψs hψ0
   exact integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix
     hr hrk ψ hψ hψc hψs hψ0
+
+/-- `gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `wishart-lambda-min-tail`. -/
+theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :
+    μ {w | sigmaMin (X w)ᵀ ^ 2 ≤ t}
+      ≤ ∫⁻ x in Set.Ioc 0 t, ENNReal.ofReal
+          (2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2)
+              / (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))
+            * x ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-x / 2)) := by
+  rw [hX.measure_eq (p := fun G => sigmaMin Gᵀ ^ 2 ≤ t)
+    (measurableSet_le measurable_sigmaMin_transpose_sq measurable_const)]
+  exact gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral hr hrk t ht
 
 /-! ### The Gamma-ratio estimate -/
 
@@ -389,9 +417,16 @@ Proof: the density bound (B.5)
 atlas: wishart-lambda-min-tail -/
 theorem gaussianMatrix_sigmaMin_transpose_sq_le_le {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ)
     (ht : 0 < t) :
-    (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
-      ≤ ENNReal.ofReal ((1 / Real.Gamma ((k : ℝ) - r + 2))
-          * (t * ((k : ℝ) + r) / 2) ^ (((k : ℝ) - r + 1) / 2)) := by
+    (gaussianMatrix (Fin r) (Fin k)).real {G | sigmaMin Gᵀ ^ 2 ≤ t}
+      ≤ (1 / Real.Gamma ((k : ℝ) - r + 2))
+          * (t * ((k : ℝ) + r) / 2) ^ (((k : ℝ) - r + 1) / 2) := by
+  have hpos : 0 ≤ (1 / Real.Gamma ((k : ℝ) - r + 2))
+      * (t * ((k : ℝ) + r) / 2) ^ (((k : ℝ) - r + 1) / 2) := by
+    have hrk' : (r : ℝ) ≤ k := by exact_mod_cast hrk
+    have := Real.Gamma_pos_of_pos (show (0 : ℝ) < (k : ℝ) - r + 2 by linarith)
+    positivity
+  rw [measureReal_def]
+  refine ENNReal.toReal_le_of_le_ofReal hpos ?_
   set c5 : ℝ := 2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2)
       / (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1)) with hc5
   set c6 : ℝ := (((k : ℝ) + r) / 2) ^ (((k : ℝ) - r + 1) / 2)
@@ -404,7 +439,7 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le {r k : ℕ} (hr : 1 ≤ r) (h
   have hD1 := gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral hr hrk t ht
   have hD2 : c5 ≤ c6 := gammaRatio_le hr hrk
   have hD3 := lintegral_rpow_mul_exp_le ha1 ht.le
-  calc (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t}
+  calc (gaussianMatrix (Fin r) (Fin k)) {G | sigmaMin Gᵀ ^ 2 ≤ t}
       ≤ ∫⁻ x in Set.Ioc 0 t, ENNReal.ofReal (c5 * x ^ a * Real.exp (-x / 2)) := hD1
     _ ≤ ∫⁻ x in Set.Ioc 0 t, ENNReal.ofReal c6 * ENNReal.ofReal (x ^ a * Real.exp (-x / 2)) := by
         refine setLIntegral_mono' measurableSet_Ioc fun x hx => ?_
@@ -433,5 +468,18 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le {r k : ℕ} (hr : 1 ≤ r) (h
             Real.mul_rpow ht.le (by positivity)]
         rw [hE, hsplit, hG2, hc6]
         field_simp
+
+/-- `gaussianMatrix_sigmaMin_transpose_sq_le_le` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `wishart-lambda-min-tail`. -/
+theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ) (ht : 0 < t) :
+    μ.real {w | sigmaMin (X w)ᵀ ^ 2 ≤ t}
+      ≤ (1 / Real.Gamma ((k : ℝ) - r + 2))
+          * (t * ((k : ℝ) + r) / 2) ^ (((k : ℝ) - r + 1) / 2) := by
+  rw [hX.measureReal_eq (p := fun G => sigmaMin Gᵀ ^ 2 ≤ t)
+    (measurableSet_le measurable_sigmaMin_transpose_sq measurable_const)]
+  exact gaussianMatrix_sigmaMin_transpose_sq_le_le hr hrk t ht
 
 end NLAlib

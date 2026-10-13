@@ -89,17 +89,17 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
     (ψ : ℝ → ℝ) (hψ : ContDiff ℝ 1 ψ) (hψ0 : ∀ x, 0 ≤ ψ x)
     (P Q : ℝ) (hP : 0 ≤ P) (hQ : 0 ≤ Q)
     (hψP : ∀ x, ‖ψ x‖ ≤ P) (hψQ : ∀ x, ‖deriv ψ x‖ ≤ Q) :
-    0 ≤ ∫ G : Fin r → Fin k → ℝ,
-      deriv ψ (sigmaMin (Matrix.of G)ᵀ ^ 2 + ε) * (4 * sigmaMin (Matrix.of G)ᵀ ^ 2) +
-        (2 * ((k : ℝ) - r + 1) - 2 * sigmaMin (Matrix.of G)ᵀ ^ 2) *
-          ψ (sigmaMin (Matrix.of G)ᵀ ^ 2 + ε) ∂(gaussianMatrix r k) := by
+    0 ≤ ∫ G : Matrix (Fin r) (Fin k) ℝ,
+      deriv ψ (sigmaMin Gᵀ ^ 2 + ε) * (4 * sigmaMin Gᵀ ^ 2) +
+        (2 * ((k : ℝ) - r + 1) - 2 * sigmaMin Gᵀ ^ 2) *
+          ψ (sigmaMin Gᵀ ^ 2 + ε) ∂(gaussianMatrix (Fin r) (Fin k)) := by
   classical
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
-  let μ := gaussianMatrix r k
+  let μ := gaussianMatrix (Fin r) (Fin k)
   let ν : Measure ((Fin r × Fin k) → ℝ) := Measure.pi fun _ => gaussianReal 0 1
-  let e := MeasurableEquiv.curry (Fin r) (Fin k) ℝ
-  have hmp : MeasurePreserving e ν μ := ⟨e.measurable, (gaussianMatrix_eq_map_curry r k).symm⟩
-  let G : ((Fin r × Fin k) → ℝ) → Matrix (Fin r) (Fin k) ℝ := fun x => Matrix.of (e x)
+  let e := (MeasurableEquiv.curry (Fin r) (Fin k) ℝ).trans Matrix.ofMeasurableEquiv
+  have hmp : MeasurePreserving e ν μ := ⟨e.measurable, (gaussianMatrix_eq_map_curry).symm⟩
+  let G : ((Fin r × Fin k) → ℝ) → Matrix (Fin r) (Fin k) ℝ := fun x => (e x)
   let X : ((Fin r × Fin k) → ℝ) → ℝ := fun x => sigmaMin (G x)ᵀ ^ 2
   let S : ((Fin r × Fin k) → ℝ) → ℝ := fun x => frobSq (G x)
   let F : ℕ → ((Fin r × Fin k) → ℝ) → ℝ :=
@@ -120,7 +120,7 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
   have henergy (n x) : (∑ i, D n i x ^ 2) = frobSq (gramSoftMinGradient (n + 1) ε (G x)) := by
     simp only [Fintype.sum_prod_type, D, frobSq, frobInner_eq_sum_mul, ← sq]
   have heuler (n x) : (∑ i, x i * D n i x) = frobInner (G x) (gramSoftMinGradient (n + 1) ε (G x)) := by
-    simp only [Fintype.sum_prod_type, D, frobInner_eq_sum_mul, G, e, MeasurableEquiv.curry_apply,
+    simp only [Fintype.sum_prod_type, D, frobInner_eq_sum_mul, G, e, MeasurableEquiv.trans_apply, Matrix.coe_ofMeasurableEquiv, MeasurableEquiv.curry_apply,
       Matrix.of_apply]
   have hlap (n x) : (∑ i, DD n i x) = gramSoftMinLaplacian (n + 1) ε (G x) := by
     simp only [Fintype.sum_prod_type, DD, gramSoftMinLaplacian]
@@ -174,7 +174,7 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
       Tendsto (fun n : ℕ => ∑ i, D n i x ^ 2) atTop (𝓝 (4 * X x)) ∧
       Tendsto (fun n : ℕ => ∑ i, x i * D n i x) atTop (𝓝 (2 * X x)) := by
     have h := ae_tendsto_regularizedGram_softMin_aggregates_gaussianMatrix hr hrk ε hε
-    rw [gaussianMatrix_eq_map_curry r k] at h
+    rw [gaussianMatrix_eq_map_curry] at h
     filter_upwards [ae_of_ae_map e.measurable.aemeasurable h] with x hx
     refine ⟨hx.1.comp (tendsto_add_atTop_nat 1), ?_, ?_⟩
     · simpa only [henergy, Function.comp_def, G, X] using hx.2.1.comp (tendsto_add_atTop_nat 1)
@@ -182,7 +182,7 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
   have hCex : ∀ᵐ x ∂ν, ∃ L : ℝ, L ≤ b ∧
       Tendsto (fun n : ℕ => ∑ i, DD n i x) atTop (𝓝 L) := by
     have h := ae_exists_tendsto_gramSoftMinLaplacian_le_gaussianMatrix hr hrk ε hε
-    rw [gaussianMatrix_eq_map_curry r k] at h
+    rw [gaussianMatrix_eq_map_curry] at h
     filter_upwards [ae_of_ae_map e.measurable.aemeasurable h] with x hx
     obtain ⟨L, hL, ht⟩ := hx
     refine ⟨L, hL, ?_⟩
@@ -212,16 +212,16 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
     hClim hC' bound hboundi
     (fun n => ae_of_all _ fun x => norm_weak_expression_le hP hQ (hSnn x)
       (Finset.sum_nonneg fun i _ => sq_nonneg _) (hAs n x) (hBs n x) (hψP _) (hψQ _))
-  have hXm : Measurable (fun H : Fin r → Fin k → ℝ => sigmaMin (Matrix.of H)ᵀ ^ 2) :=
+  have hXm : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ => sigmaMin Hᵀ ^ 2) :=
     measurable_sigmaMin_transpose_sq
-  have htest : Measurable (fun H : Fin r → Fin k → ℝ =>
-      deriv ψ (sigmaMin (Matrix.of H)ᵀ ^ 2 + ε) * (4 * sigmaMin (Matrix.of H)ᵀ ^ 2) +
-        (b - 2 * sigmaMin (Matrix.of H)ᵀ ^ 2) * ψ (sigmaMin (Matrix.of H)ᵀ ^ 2 + ε)) := by
+  have htest : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ =>
+      deriv ψ (sigmaMin Hᵀ ^ 2 + ε) * (4 * sigmaMin Hᵀ ^ 2) +
+        (b - 2 * sigmaMin Hᵀ ^ 2) * ψ (sigmaMin Hᵀ ^ 2 + ε)) := by
     exact (((hψ.continuous_deriv le_rfl).measurable.comp (hXm.add_const ε)).mul
       (measurable_const.mul hXm)).add
       ((measurable_const.sub (measurable_const.mul hXm)).mul
         (hψ.continuous.measurable.comp (hXm.add_const ε)))
-  rw [gaussianMatrix_eq_map_curry r k, integral_map e.measurable.aemeasurable htest.aestronglyMeasurable]
+  rw [gaussianMatrix_eq_map_curry, integral_map e.measurable.aemeasurable htest.aestronglyMeasurable]
   exact hweak
 
 /-- The smallest squared singular value of a wide standard Gaussian matrix
@@ -233,24 +233,24 @@ The test may be any nonnegative smooth compactly supported function. -/
 theorem integral_sigmaMin_transpose_sq_weak_nonneg_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ) (hψ0 : ∀ x, 0 ≤ ψ x) :
-    0 ≤ ∫ G : Fin r → Fin k → ℝ,
-      4 * sigmaMin (Matrix.of G)ᵀ ^ 2 * deriv ψ (sigmaMin (Matrix.of G)ᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin (Matrix.of G)ᵀ ^ 2) *
-          ψ (sigmaMin (Matrix.of G)ᵀ ^ 2) ∂(gaussianMatrix r k) := by
+    0 ≤ ∫ G : Matrix (Fin r) (Fin k) ℝ,
+      4 * sigmaMin Gᵀ ^ 2 * deriv ψ (sigmaMin Gᵀ ^ 2) +
+        2 * ((k : ℝ) - r + 1 - sigmaMin Gᵀ ^ 2) *
+          ψ (sigmaMin Gᵀ ^ 2) ∂(gaussianMatrix (Fin r) (Fin k)) := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   have hψ1 : ContDiff ℝ 1 ψ := hψ.of_le (by simp)
   obtain ⟨P, hP⟩ := hψ.continuous.bounded_above_of_compact_support hψc
   obtain ⟨Q, hQ⟩ := (hψ1.continuous_deriv le_rfl).bounded_above_of_compact_support hψc.deriv
   have hP0 : 0 ≤ P := (norm_nonneg (ψ 0)).trans (hP 0)
   have hQ0 : 0 ≤ Q := (norm_nonneg (deriv ψ 0)).trans (hQ 0)
-  let X : (Fin r → Fin k → ℝ) → ℝ := fun G => sigmaMin (Matrix.of G)ᵀ ^ 2
+  let X : (Matrix (Fin r) (Fin k) ℝ) → ℝ := fun G => sigmaMin Gᵀ ^ 2
   let b : ℝ := 2 * ((k : ℝ) - r + 1)
-  let bound : (Fin r → Fin k → ℝ) → ℝ :=
-    fun G => (4 * Q + 2 * P) * frobSq (Matrix.of G) + |b| * P
+  let bound : (Matrix (Fin r) (Fin k) ℝ) → ℝ :=
+    fun G => (4 * Q + 2 * P) * frobSq G + |b| * P
   have hXi : Measurable X := measurable_sigmaMin_transpose_sq
-  have hboundi : Integrable bound (gaussianMatrix r k) :=
+  have hboundi : Integrable bound (gaussianMatrix (Fin r) (Fin k)) :=
     ((integrable_frobSq_gaussianMatrix r k).const_mul _).add (integrable_const _)
-  have hweak := integral_nonneg_of_positive_translates (gaussianMatrix r k)
+  have hweak := integral_nonneg_of_positive_translates (gaussianMatrix (Fin r) (Fin k))
     X (fun G => 4 * X G) (fun G => 2 * X G) ψ (deriv ψ) hψ.continuous
     (hψ1.continuous_deriv le_rfl) b
     (fun ε _ => by
@@ -261,15 +261,15 @@ theorem integral_sigmaMin_transpose_sq_weak_nonneg_gaussianMatrix
     bound hboundi
     (fun ε _ => ae_of_all _ fun G => by
       have hX : 0 ≤ X G := sq_nonneg _
-      have hXs : X G ≤ frobSq (Matrix.of G) := sigmaMin_transpose_sq_le_frobSq _
+      have hXs : X G ≤ frobSq G := sigmaMin_transpose_sq_le_frobSq _
       apply norm_weak_expression_le hP0 hQ0 (frobSq_nonneg _) (by positivity)
         (mul_le_mul_of_nonneg_left hXs (by norm_num)) ?_ (hP _) (hQ _)
       rw [abs_of_nonneg (by positivity : 0 ≤ 2 * X G)]
       exact mul_le_mul_of_nonneg_left hXs (by norm_num))
     (fun ε hε => integral_weak_shift_nonneg_gaussianMatrix hr hrk ε hε ψ hψ1 hψ0 P Q hP0 hQ0 hP hQ)
-  have heq : (fun G : Fin r → Fin k → ℝ =>
-      4 * sigmaMin (Matrix.of G)ᵀ ^ 2 * deriv ψ (sigmaMin (Matrix.of G)ᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin (Matrix.of G)ᵀ ^ 2) * ψ (sigmaMin (Matrix.of G)ᵀ ^ 2))
+  have heq : (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      4 * sigmaMin Gᵀ ^ 2 * deriv ψ (sigmaMin Gᵀ ^ 2) +
+        2 * ((k : ℝ) - r + 1 - sigmaMin Gᵀ ^ 2) * ψ (sigmaMin Gᵀ ^ 2))
       = (fun G => deriv ψ (X G) * (4 * X G) + (b - 2 * X G) * ψ (X G)) := by
     funext G
     dsimp only [X, b]
@@ -286,10 +286,10 @@ theorem integral_sigmaMin_transpose_sq_law_weak_nonneg_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ) (hψ0 : ∀ x, 0 ≤ ψ x) :
     0 ≤ ∫ x in Ioi (0 : ℝ), 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x
-      ∂((gaussianMatrix r k).map (fun G => sigmaMin (Matrix.of G)ᵀ ^ 2)) := by
-  have hm : Measurable (fun G : Fin r → Fin k → ℝ => sigmaMin (Matrix.of G)ᵀ ^ 2) :=
+      ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)) := by
+  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => sigmaMin Gᵀ ^ 2) :=
     measurable_sigmaMin_transpose_sq
-  have hpos : ∀ᵐ x ∂((gaussianMatrix r k).map (fun G => sigmaMin (Matrix.of G)ᵀ ^ 2)),
+  have hpos : ∀ᵐ x ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)),
       x ∈ Ioi (0 : ℝ) :=
     (ae_map_iff hm.aemeasurable measurableSet_Ioi).2
       (ae_sigmaMin_transpose_sq_pos_gaussianMatrix hr hrk)

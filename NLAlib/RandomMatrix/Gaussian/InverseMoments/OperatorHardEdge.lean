@@ -28,20 +28,41 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality
       tsupport ψ ⊆ Ioi 0 → (∀ x, 0 ≤ ψ x) →
       0 ≤ ∫ x in Ioi 0, 4 * x * deriv ψ x +
         2 * (((k : ℝ) - r + 1) - x) * ψ x
-        ∂((gaussianMatrix r k).map (fun G => sigmaMin (Matrix.of G)ᵀ ^ 2)))
+        ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)))
     (t : ℝ) :
-    (gaussianMatrix r k) {G | sigmaMin (Matrix.of G)ᵀ ^ 2 ≤ t} ≤
+    (gaussianMatrix (Fin r) (Fin k)) {G | sigmaMin Gᵀ ^ 2 ≤ t} ≤
       ∫⁻ y in Ioc (0 : ℝ) t, ENNReal.ofReal
         ((2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2) /
           (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))) *
           y ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-y / 2)) := by
   obtain ⟨h, hh, hanti, hnn, hdens⟩ :=
     exists_gamma_weighted_antitone_density_of_weak_inequality
-      ((gaussianMatrix r k).map (fun G => sigmaMin (Matrix.of G)ᵀ ^ 2))
+      ((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2))
       ((k : ℝ) - r + 1) hweak
   have he : ((k : ℝ) - r + 1) / 2 - 1 = ((k : ℝ) - r - 1) / 2 := by ring
   simp_rw [he] at hdens
   exact gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_antitone_density
     hr hrk h hh hnn hanti hdens t
+
+/-- `gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality` for a random matrix
+`X` with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `wishart-lambda-min-tail`. -/
+theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 1 ≤ r) (hrk : r ≤ k)
+    (hweak : ∀ ψ : ℝ → ℝ, ContDiff ℝ ∞ ψ → HasCompactSupport ψ →
+      tsupport ψ ⊆ Ioi 0 → (∀ x, 0 ≤ ψ x) →
+      0 ≤ ∫ x in Ioi 0, 4 * x * deriv ψ x +
+        2 * (((k : ℝ) - r + 1) - x) * ψ x
+        ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)))
+    (t : ℝ) :
+    μ {w | sigmaMin (X w)ᵀ ^ 2 ≤ t} ≤
+      ∫⁻ y in Ioc (0 : ℝ) t, ENNReal.ofReal
+        ((2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2) /
+          (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))) *
+          y ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-y / 2)) := by
+  rw [hX.measure_eq (p := fun G => sigmaMin Gᵀ ^ 2 ≤ t)
+    (measurableSet_le measurable_sigmaMin_transpose_sq measurable_const)]
+  exact gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality hr hrk hweak t
 
 end NLAlib

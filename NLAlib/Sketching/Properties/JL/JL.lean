@@ -4,13 +4,13 @@ import NLAlib.Probability.ChiSquare.ChiSquare
 # The Johnson–Lindenstrauss lemma for a Gaussian sketch
 
 `S = k^{-1/2} G` with `G` a `k × n` standard Gaussian matrix (`NLAlib.gaussianMatrix k n`,
-matrix view `Matrix.of G`). Squared norms are written `v ⬝ᵥ v`.
+matrix view `G`). Squared norms are written `v ⬝ᵥ v`.
 
 * `jl_distributional`: for fixed `x`,
   `P[|‖Sx‖² − ‖x‖²| > ε‖x‖²] ≤ 2 exp(−k(ε²/4 − ε³/6))` (Dasgupta–Gupta 2003, Lem 2.2), from the
   law of `G x` (`gaussianMatrix_map_mulVec_of_dotProduct_self_eq_one`) and the sharp chi-square
   tails (`measure_le_sum_sq_le_gaussianReal`, `measure_sum_sq_le_one_sub_mul_le_gaussianReal`).
-* `jl_lemma`: union bound over all ordered pairs of a finite family `p : Fin N → Fin n → ℝ`,
+* `jl_lemma`: union bound over all ordered pairs of a finite family `p : Matrix (Fin N) (Fin n) ℝ`,
   failure probability `≤ N² · 2 exp(−k(ε²/4 − ε³/6))` (Dasgupta–Gupta 2003, Thm 2.1).
 * `jl_lemma_prob_le_of_log_le`: failure probability `≤ δ` once
   `k ≥ (ε²/4 − ε³/6)⁻¹ log(2N²/δ)`.
@@ -45,10 +45,11 @@ event lies in `{χ²_k ≥ (1+ε)k} ∪ {χ²_k ≤ (1−ε)k}`. The Chernoff ta
 Degenerate cases: for `x = 0` the event is empty; for `k = 0` the bound is `2`.
 atlas: jl-distributional -/
 theorem jl_distributional (k n : ℕ) (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
-    gaussianMatrix k n {G |
-      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x
+    (gaussianMatrix (Fin k) (Fin n)).real {G |
+      |((1 / Real.sqrt k) • G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • G) *ᵥ x
         - x ⬝ᵥ x| > ε * (x ⬝ᵥ x)}
-      ≤ ENNReal.ofReal (2 * Real.exp (-(k : ℝ) * (ε ^ 2 / 4 - ε ^ 3 / 6))) := by
+      ≤ 2 * Real.exp (-(k : ℝ) * (ε ^ 2 / 4 - ε ^ 3 / 6)) := by
+  refine ENNReal.toReal_le_of_le_ofReal (by positivity) ?_
   rcases Nat.eq_zero_or_pos k with rfl | hk
   · refine prob_le_one.trans ?_
     rw [← ENNReal.ofReal_one]
@@ -69,9 +70,9 @@ theorem jl_distributional (k n : ℕ) (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 <
       ← sq, inv_pow, hr_def, Real.sq_sqrt hpos.le, inv_mul_cancel₀ hx0]
   have hxu : x = r • u := by rw [hu_def, smul_smul, mul_inv_cancel₀ hr.ne', one_smul]
   -- `‖Sx‖² = (‖x‖² / k) ‖G u‖²`
-  have hid : ∀ G : Fin k → Fin n → ℝ,
-      ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x
-        = (x ⬝ᵥ x) / k * ∑ i, (Matrix.of G *ᵥ u) i ^ 2 := by
+  have hid : ∀ G : Matrix (Fin k) (Fin n) ℝ,
+      ((1 / Real.sqrt k) • G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • G) *ᵥ x
+        = (x ⬝ᵥ x) / k * ∑ i, (G *ᵥ u) i ^ 2 := by
     intro G
     have hsq : (1 / Real.sqrt k) ^ 2 = 1 / k := by
       rw [div_pow, Real.sq_sqrt hkpos.le, one_pow]
@@ -81,21 +82,21 @@ theorem jl_distributional (k n : ℕ) (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 <
       smul_eq_mul, smul_eq_mul, ← mul_assoc, ← sq, mul_pow, hsq, hr2]
     simp only [dotProduct, ← sq]
     ring
-  set f : (Fin k → Fin n → ℝ) → (Fin k → ℝ) := fun G => Matrix.of G *ᵥ u with hf_def
+  set f : (Matrix (Fin k) (Fin n) ℝ) → (Fin k → ℝ) := fun G => G *ᵥ u with hf_def
   have hf : Measurable f := by
     refine measurable_pi_lambda _ fun i => ?_
-    simp only [hf_def, Matrix.mulVec, dotProduct, Matrix.of_apply]
+    simp only [hf_def, Matrix.mulVec, dotProduct]
     fun_prop
   set B₁ : Set (Fin k → ℝ) := {y | (1 + ε) * k ≤ ∑ i, y i ^ 2} with hB₁_def
   set B₂ : Set (Fin k → ℝ) := {y | ∑ i, y i ^ 2 ≤ (1 - ε) * k} with hB₂_def
   have hB₁ : MeasurableSet B₁ := measurableSet_le measurable_const (by fun_prop)
   have hB₂ : MeasurableSet B₂ := measurableSet_le (by fun_prop) measurable_const
-  have hsub : {G : Fin k → Fin n → ℝ |
-      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • Matrix.of G) *ᵥ x
+  have hsub : {G : Matrix (Fin k) (Fin n) ℝ |
+      |((1 / Real.sqrt k) • G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • G) *ᵥ x
         - x ⬝ᵥ x| > ε * (x ⬝ᵥ x)} ⊆ f ⁻¹' (B₁ ∪ B₂) := by
     intro G hG
     simp only [Set.mem_ofPred_eq, hid] at hG
-    set s := ∑ i, (Matrix.of G *ᵥ u) i ^ 2 with hs_def
+    set s := ∑ i, (G *ᵥ u) i ^ 2 with hs_def
     simp only [Set.mem_preimage, Set.mem_union, hB₁_def, hB₂_def, Set.mem_ofPred_eq, hf_def,
       ← hs_def]
     by_contra hcon
@@ -129,7 +130,7 @@ theorem jl_distributional (k n : ℕ) (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 <
     have : (k : ℝ) / 2 * (ε + Real.log (1 - ε)) ≤ (k : ℝ) / 2 * (-(ε ^ 2 / 2)) :=
       mul_le_mul_of_nonneg_left (by linarith) (by positivity)
     nlinarith
-  calc _ ≤ gaussianMatrix k n (f ⁻¹' (B₁ ∪ B₂)) := measure_mono hsub
+  calc _ ≤ gaussianMatrix (Fin k) (Fin n) (f ⁻¹' (B₁ ∪ B₂)) := measure_mono hsub
     _ = (Measure.pi fun _ : Fin k => gaussianReal 0 1) (B₁ ∪ B₂) := by
         rw [← Measure.map_apply hf (hB₁.union hB₂), hf_def, hlaw]
     _ ≤ (Measure.pi fun _ : Fin k => gaussianReal 0 1) B₁
@@ -150,31 +151,33 @@ bound holds for the outer measure).
 
 Atlas: `jl-lemma`; uses `jl-distributional`.
 atlas: jl-lemma -/
-theorem jl_lemma (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
-    gaussianMatrix k n {G | ∃ i j, i ≠ j ∧
-      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
-          ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
+theorem jl_lemma (k n N : ℕ) (p : Matrix (Fin N) (Fin n) ℝ) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
+    (gaussianMatrix (Fin k) (Fin n)).real {G | ∃ i j, i ≠ j ∧
+      |((1 / Real.sqrt k) • G) *ᵥ (p i - p j) ⬝ᵥ
+          ((1 / Real.sqrt k) • G) *ᵥ (p i - p j)
         - (p i - p j) ⬝ᵥ (p i - p j)| > ε * ((p i - p j) ⬝ᵥ (p i - p j))}
-      ≤ ENNReal.ofReal ((N : ℝ) ^ 2 * 2 * Real.exp (-(k : ℝ) * (ε ^ 2 / 4 - ε ^ 3 / 6))) := by
+      ≤ (N : ℝ) ^ 2 * 2 * Real.exp (-(k : ℝ) * (ε ^ 2 / 4 - ε ^ 3 / 6)) := by
+  refine ENNReal.toReal_le_of_le_ofReal (by positivity) ?_
   set b := 2 * Real.exp (-(k : ℝ) * (ε ^ 2 / 4 - ε ^ 3 / 6)) with hb
-  let bad : Fin N → Fin N → Set (Fin k → Fin n → ℝ) := fun i j => {G |
-      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
-          ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
+  let bad : Fin N → Fin N → Set (Matrix (Fin k) (Fin n) ℝ) := fun i j => {G |
+      |((1 / Real.sqrt k) • G) *ᵥ (p i - p j) ⬝ᵥ
+          ((1 / Real.sqrt k) • G) *ᵥ (p i - p j)
         - (p i - p j) ⬝ᵥ (p i - p j)| > ε * ((p i - p j) ⬝ᵥ (p i - p j))}
   have hsub : {G | ∃ i j, i ≠ j ∧
-      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
-          ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
+      |((1 / Real.sqrt k) • G) *ᵥ (p i - p j) ⬝ᵥ
+          ((1 / Real.sqrt k) • G) *ᵥ (p i - p j)
         - (p i - p j) ⬝ᵥ (p i - p j)| > ε * ((p i - p j) ⬝ᵥ (p i - p j))}
       ⊆ ⋃ i, ⋃ j, bad i j := by
     rintro G ⟨i, j, -, hG⟩
     exact Set.mem_iUnion.2 ⟨i, Set.mem_iUnion.2 ⟨j, hG⟩⟩
-  calc _ ≤ gaussianMatrix k n (⋃ i, ⋃ j, bad i j) := measure_mono hsub
-    _ ≤ ∑ i, gaussianMatrix k n (⋃ j, bad i j) := measure_iUnion_fintype_le _ _
-    _ ≤ ∑ i : Fin N, ∑ j : Fin N, gaussianMatrix k n (bad i j) :=
+  calc _ ≤ gaussianMatrix (Fin k) (Fin n) (⋃ i, ⋃ j, bad i j) := measure_mono hsub
+    _ ≤ ∑ i, gaussianMatrix (Fin k) (Fin n) (⋃ j, bad i j) := measure_iUnion_fintype_le _ _
+    _ ≤ ∑ i : Fin N, ∑ j : Fin N, gaussianMatrix (Fin k) (Fin n) (bad i j) :=
         Finset.sum_le_sum fun i _ => measure_iUnion_fintype_le _ _
     _ ≤ ∑ _i : Fin N, ∑ _j : Fin N, ENNReal.ofReal b :=
         Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ =>
-          jl_distributional k n (p i - p j) hε0 hε1
+          by rw [← ofReal_measureReal]
+             exact ENNReal.ofReal_le_ofReal (jl_distributional k n (p i - p j) hε0 hε1)
     _ = ENNReal.ofReal ((N : ℝ) ^ 2 * b) := by
         have hN : (0 : ℝ) ≤ (N : ℝ) ^ 2 := by positivity
         rw [ENNReal.ofReal_mul hN, ENNReal.ofReal_pow (Nat.cast_nonneg N),
@@ -182,6 +185,24 @@ theorem jl_lemma (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 
         simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, sq,
           mul_assoc]
     _ = _ := by rw [hb, mul_assoc]
+
+/-- `jl_distributional` for a random matrix `X` with `HasLaw X (gaussianMatrix (Fin k) (Fin n)) μ`.
+Atlas: `jl-distributional`. -/
+theorem jl_distributional_of_hasLaw {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {k n : ℕ}
+    {X : Ω → Matrix (Fin k) (Fin n) ℝ} (hX : HasLaw X (gaussianMatrix (Fin k) (Fin n)) μ)
+    (x : Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
+    μ.real {ω |
+      |((1 / Real.sqrt k) • X ω) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • X ω) *ᵥ x
+        - x ⬝ᵥ x| > ε * (x ⬝ᵥ x)}
+      ≤ 2 * Real.exp (-(k : ℝ) * (ε ^ 2 / 4 - ε ^ 3 / 6)) := by
+  have hc : Continuous fun G : Matrix (Fin k) (Fin n) ℝ =>
+      |((1 / Real.sqrt k) • G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • G) *ᵥ x - x ⬝ᵥ x| := by
+    simp only [Matrix.mulVec, dotProduct, Matrix.smul_apply, smul_eq_mul]
+    fun_prop
+  rw [hX.measureReal_eq (p := fun G : Matrix (Fin k) (Fin n) ℝ =>
+      |((1 / Real.sqrt k) • G) *ᵥ x ⬝ᵥ ((1 / Real.sqrt k) • G) *ᵥ x - x ⬝ᵥ x| > ε * (x ⬝ᵥ x))
+    (measurableSet_lt measurable_const hc.measurable)]
+  exact jl_distributional k n x hε0 hε1
 
 /-- `ε²/4 − ε³/6 > 0` for `0 < ε < 1`: the exponent of the Johnson–Lindenstrauss tail
 (Dasgupta–Gupta 2003, Lem 2.2) is positive. Helper for `jl-lemma`. -/
@@ -223,15 +244,15 @@ in `jl_lemma`.
 
 Atlas: `jl-lemma`; uses `jl-distributional`.
 atlas: jl-lemma -/
-theorem jl_lemma_prob_le_of_log_le (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε δ : ℝ} (hε0 : 0 < ε)
+theorem jl_lemma_prob_le_of_log_le (k n N : ℕ) (p : Matrix (Fin N) (Fin n) ℝ) {ε δ : ℝ} (hε0 : 0 < ε)
     (hε1 : ε < 1) (hδ : 0 < δ)
     (hk : (ε ^ 2 / 4 - ε ^ 3 / 6)⁻¹ * Real.log (2 * (N : ℝ) ^ 2 / δ) ≤ k) :
-    gaussianMatrix k n {G | ∃ i j, i ≠ j ∧
-      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
-          ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
+    (gaussianMatrix (Fin k) (Fin n)).real {G | ∃ i j, i ≠ j ∧
+      |((1 / Real.sqrt k) • G) *ᵥ (p i - p j) ⬝ᵥ
+          ((1 / Real.sqrt k) • G) *ᵥ (p i - p j)
         - (p i - p j) ⬝ᵥ (p i - p j)| > ε * ((p i - p j) ⬝ᵥ (p i - p j))}
-      ≤ ENNReal.ofReal δ :=
-  (jl_lemma k n N p hε0 hε1).trans <| ENNReal.ofReal_le_ofReal <|
+      ≤ δ :=
+  (jl_lemma k n N p hε0 hε1).trans <|
     sq_mul_two_mul_exp_neg_mul_le_of_inv_mul_log_le
       (sq_div_four_sub_pow_three_div_six_pos hε0 hε1) hδ hk
 
@@ -245,13 +266,13 @@ at failure probability `1 − 1/N`.
 
 Atlas: `jl-lemma`; uses `jl-distributional`.
 atlas: jl-lemma -/
-theorem jl_lemma_prob_le_half (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε)
+theorem jl_lemma_prob_le_half (k n N : ℕ) (p : Matrix (Fin N) (Fin n) ℝ) {ε : ℝ} (hε0 : 0 < ε)
     (hε1 : ε < 1) (hN : 2 ≤ N) (hk : 48 * Real.log N / ε ^ 2 ≤ k) :
-    gaussianMatrix k n {G | ∃ i j, i ≠ j ∧
-      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
-          ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
+    (gaussianMatrix (Fin k) (Fin n)).real {G | ∃ i j, i ≠ j ∧
+      |((1 / Real.sqrt k) • G) *ᵥ (p i - p j) ⬝ᵥ
+          ((1 / Real.sqrt k) • G) *ᵥ (p i - p j)
         - (p i - p j) ⬝ᵥ (p i - p j)| > ε * ((p i - p j) ⬝ᵥ (p i - p j))}
-      ≤ ENNReal.ofReal (1 / 2) := by
+      ≤ 1 / 2 := by
   apply jl_lemma_prob_le_of_log_le k n N p hε0 hε1 (by norm_num)
   have hc := sq_div_four_sub_pow_three_div_six_pos hε0 hε1
   have hε2 : 0 < ε ^ 2 := by positivity
@@ -287,32 +308,30 @@ theorem jl_lemma_prob_le_half (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : 
 
 Atlas: `jl-lemma`; uses `jl-distributional`.
 atlas: jl-lemma -/
-theorem jl_lemma_exists (k n N : ℕ) (p : Fin N → Fin n → ℝ) {ε : ℝ} (hε0 : 0 < ε)
+theorem jl_lemma_exists (k n N : ℕ) (p : Matrix (Fin N) (Fin n) ℝ) {ε : ℝ} (hε0 : 0 < ε)
     (hε1 : ε < 1) (hN : 2 ≤ N) (hk : 48 * Real.log N / ε ^ 2 ≤ k) :
     ∃ S : Matrix (Fin k) (Fin n) ℝ, ∀ i j,
       (1 - ε) * ((p i - p j) ⬝ᵥ (p i - p j)) ≤ S *ᵥ (p i - p j) ⬝ᵥ S *ᵥ (p i - p j) ∧
       S *ᵥ (p i - p j) ⬝ᵥ S *ᵥ (p i - p j) ≤ (1 + ε) * ((p i - p j) ⬝ᵥ (p i - p j)) := by
   by_contra hcon
   push Not at hcon
-  have hall : {G : Fin k → Fin n → ℝ | ∃ i j, i ≠ j ∧
-      |((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
-          ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
+  have hall : {G : Matrix (Fin k) (Fin n) ℝ | ∃ i j, i ≠ j ∧
+      |((1 / Real.sqrt k) • G) *ᵥ (p i - p j) ⬝ᵥ
+          ((1 / Real.sqrt k) • G) *ᵥ (p i - p j)
         - (p i - p j) ⬝ᵥ (p i - p j)| > ε * ((p i - p j) ⬝ᵥ (p i - p j))} = Set.univ := by
     refine Set.eq_univ_of_forall fun G => ?_
-    obtain ⟨i, j, hij⟩ := hcon ((1 / Real.sqrt k) • Matrix.of G)
+    obtain ⟨i, j, hij⟩ := hcon ((1 / Real.sqrt k) • G)
     refine ⟨i, j, ?_, ?_⟩
     · rintro rfl
       simp at hij
     · rw [gt_iff_lt, lt_abs]
       by_cases h : (1 - ε) * ((p i - p j) ⬝ᵥ (p i - p j)) ≤
-          ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j) ⬝ᵥ
-            ((1 / Real.sqrt k) • Matrix.of G) *ᵥ (p i - p j)
+          ((1 / Real.sqrt k) • G) *ᵥ (p i - p j) ⬝ᵥ
+            ((1 / Real.sqrt k) • G) *ᵥ (p i - p j)
       · left; have := hij h; linarith
       · right; push Not at h; linarith
   have h := jl_lemma_prob_le_half k n N p hε0 hε1 hN hk
-  rw [hall, measure_univ] at h
-  have : (1 : ENNReal) ≤ ENNReal.ofReal (1 / 2) := h
-  rw [← ENNReal.ofReal_one, ENNReal.ofReal_le_ofReal_iff (by norm_num)] at this
-  norm_num at this
+  rw [hall, probReal_univ] at h
+  norm_num at h
 
 end NLAlib

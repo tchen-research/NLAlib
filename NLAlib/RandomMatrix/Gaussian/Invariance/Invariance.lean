@@ -11,18 +11,18 @@ import Mathlib.Data.Matrix.ColumnRowPartitioned
 /-!
 # Orthogonal invariance of the standard Gaussian matrix
 
-* `NLAlib.gaussianMatrix_map_orthogonal`: for orthogonal `U`, `V`, the law of `U G V` is the law
-  of `G` (HMT 2011 §10.1, atlas `rotation-invariance`).
+* `NLAlib.hasLaw_gaussianMatrix_orthogonal`: for orthogonal `U`, `V`, the law of `U G V` is the
+  law of `G` (HMT 2011 §10.1, atlas `rotation-invariance`);
 * `NLAlib.measurePreserving_orthonormalBasis_repr_pi_gaussianReal`: the coordinates of a
-  standard Gaussian vector in an orthonormal basis are i.i.d. standard Gaussian.
-* `NLAlib.gaussianMatrix_map_block`: for `V₁` with orthonormal columns, `V₁ᵀ G` is a standard
-  Gaussian matrix (HMT 2011 §10.2, atlas `block-law-indep`).
+  standard Gaussian vector in an orthonormal basis are i.i.d. standard Gaussian;
+* `NLAlib.hasLaw_gaussianMatrix_block`: for `V₁` with orthonormal columns, `V₁ᵀ G` is a standard
+  Gaussian matrix (HMT 2011 §10.2, atlas `block-law-indep`);
 * `NLAlib.gaussianMatrix_indepFun_block`: if moreover `V₂` has orthonormal columns and
   `V₁ᵀ V₂ = 0`, then `V₁ᵀ G` and `V₂ᵀ G` are independent (HMT 2011 §10.2, atlas
   `block-law-indep`).
 
-The orthonormality hypotheses are written `Vᵀ * V = 1`, which is `NLAlib.HasOrthonormalCols V`
-unfolded.
+Each is stated for the identity random variable under `gaussianMatrix`, with a `_of_hasLaw`
+corollary for a random matrix `X` with `HasLaw X (gaussianMatrix _ _) μ`.
 
 Proof source: Prove2me workspace, Gaussian Random Matrices series (rotation invariance, block
 law, block independence), ported without change of statement.
@@ -37,35 +37,41 @@ namespace NLAlib
 
 /-! ### Flattening to `EuclideanSpace` and the rotation isometry -/
 
-/-- Flatten a `p × m` array into a vector of `EuclideanSpace ℝ (Fin p × Fin m)`. -/
-private def flat (p m : ℕ) (G : Fin p → Fin m → ℝ) : EuclideanSpace ℝ (Fin p × Fin m) :=
+/-- Flatten a `p × m` matrix into a vector of `EuclideanSpace ℝ (p × m)`. -/
+private def flat (p m : Type*) [Fintype p] [Fintype m] (G : Matrix p m ℝ) :
+    EuclideanSpace ℝ (p × m) :=
   WithLp.toLp 2 (fun ij => G ij.1 ij.2)
 
-private lemma measurable_flat (p m : ℕ) : Measurable (flat p m) := by
-  unfold flat
-  exact (WithLp.measurable_toLp 2 _).comp (by fun_prop)
+private lemma measurable_uncurry (p m : Type*) [Fintype p] [Fintype m] :
+    Measurable fun G : Matrix p m ℝ => fun ij : p × m => G ij.1 ij.2 :=
+  measurable_pi_lambda _ fun ij => Matrix.measurable_entry ij.1 ij.2
+
+private lemma measurable_flat (p m : Type*) [Fintype p] [Fintype m] : Measurable (flat p m) :=
+  (WithLp.measurable_toLp 2 _).comp (measurable_uncurry p m)
 
 /-- `flat` as a measurable equivalence. -/
-private def flatEquiv (p m : ℕ) :
-    (Fin p → Fin m → ℝ) ≃ᵐ EuclideanSpace ℝ (Fin p × Fin m) :=
-  (MeasurableEquiv.curry (Fin p) (Fin m) ℝ).symm.trans (MeasurableEquiv.toLp 2 _)
+private def flatEquiv (p m : Type*) [Fintype p] [Fintype m] :
+    Matrix p m ℝ ≃ᵐ EuclideanSpace ℝ (p × m) :=
+  Matrix.ofMeasurableEquiv.symm.trans
+    ((MeasurableEquiv.curry p m ℝ).symm.trans (MeasurableEquiv.toLp 2 _))
 
 /-- The Gaussian matrix law, flattened, is the standard Gaussian on `EuclideanSpace`. -/
-private lemma map_flat_gaussianMatrix (p m : ℕ) :
-    (gaussianMatrix p m).map (flat p m) = stdGaussian (EuclideanSpace ℝ (Fin p × Fin m)) := by
-  rw [gaussianMatrix_eq_map_curry,
-    Measure.map_map (measurable_flat p m) (MeasurableEquiv.measurable _)]
-  have h2 : flat p m ∘ (MeasurableEquiv.curry (Fin p) (Fin m) ℝ) = WithLp.toLp 2 := by
-    funext x; rfl
-  rw [h2, map_pi_eq_stdGaussian]
+private lemma map_flat_gaussianMatrix (p m : Type*) [Fintype p] [Fintype m] :
+    (gaussianMatrix p m).map (flat p m) =
+      stdGaussian (EuclideanSpace ℝ (p × m)) := by
+  rw [show flat p m = WithLp.toLp 2 ∘ fun G : Matrix p m ℝ => fun ij => G ij.1 ij.2
+      from rfl, ← Measure.map_map (WithLp.measurable_toLp 2 _) (measurable_uncurry p m),
+    gaussianMatrix_map_uncurry, map_pi_eq_stdGaussian]
 
-private lemma sum_sq_eq_trace {p m : ℕ} (A : Matrix (Fin p) (Fin m) ℝ) :
+private lemma sum_sq_eq_trace {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
+    (A : Matrix p m ℝ) :
     ∑ i, ∑ j, A i j ^ 2 = Matrix.trace (A * Aᵀ) := by
   simp [Matrix.trace, Matrix.mul_apply, sq]
 
-private lemma sum_sq_mul_orth {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ)
-    (V : Matrix (Fin m) (Fin m) ℝ) (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1)
-    (X : Matrix (Fin p) (Fin m) ℝ) :
+private lemma sum_sq_mul_orth {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
+    (U : Matrix p p ℝ)
+    (V : Matrix m m ℝ) (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1)
+    (X : Matrix p m ℝ) :
     ∑ i, ∑ j, (U * X * V) i j ^ 2 = ∑ i, ∑ j, X i j ^ 2 := by
   have hV' : V * Vᵀ = 1 := mul_eq_one_comm.mp hV
   rw [sum_sq_eq_trace, sum_sq_eq_trace]
@@ -77,14 +83,16 @@ private lemma sum_sq_mul_orth {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ)
     _ = Matrix.trace (X * Xᵀ) := by rw [hU, hV', Matrix.one_mul, Matrix.mul_one]
 
 /-- Unflatten a vector into a matrix. -/
-private def unflat {p m : ℕ} (x : EuclideanSpace ℝ (Fin p × Fin m)) :
-    Matrix (Fin p) (Fin m) ℝ :=
+private def unflat {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
+    (x : EuclideanSpace ℝ (p × m)) :
+    Matrix p m ℝ :=
   Matrix.of fun i j => x (i, j)
 
 /-- The linear map `X ↦ U X V` on flattened matrices. -/
-private def rotLin {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ) (V : Matrix (Fin m) (Fin m) ℝ) :
-    EuclideanSpace ℝ (Fin p × Fin m) →ₗ[ℝ] EuclideanSpace ℝ (Fin p × Fin m) where
-  toFun x := flat p m (Matrix.of.symm (U * unflat x * V))
+private def rotLin {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
+    (U : Matrix p p ℝ) (V : Matrix m m ℝ) :
+    EuclideanSpace ℝ (p × m) →ₗ[ℝ] EuclideanSpace ℝ (p × m) where
+  toFun x := flat p m (U * unflat x * V)
   map_add' x y := by
     have : unflat (x + y) = unflat x + unflat y := by ext i j; simp [unflat]
     rw [this, Matrix.mul_add, Matrix.add_mul]
@@ -94,9 +102,10 @@ private def rotLin {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ) (V : Matrix (Fin
     rw [this, Matrix.mul_smul, Matrix.smul_mul]
     ext ij; simp [flat]
 
-private lemma norm_rotLin {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ)
-    (V : Matrix (Fin m) (Fin m) ℝ) (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1)
-    (x : EuclideanSpace ℝ (Fin p × Fin m)) :
+private lemma norm_rotLin {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
+    (U : Matrix p p ℝ)
+    (V : Matrix m m ℝ) (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1)
+    (x : EuclideanSpace ℝ (p × m)) :
     ‖rotLin U V x‖ = ‖x‖ := by
   have h : ‖rotLin U V x‖ ^ 2 = ‖x‖ ^ 2 := by
     rw [EuclideanSpace.real_norm_sq_eq, EuclideanSpace.real_norm_sq_eq, Fintype.sum_prod_type,
@@ -108,16 +117,18 @@ private lemma norm_rotLin {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ)
   nlinarith [sq_nonneg (‖rotLin U V x‖ - ‖x‖), sq_nonneg (‖rotLin U V x‖ + ‖x‖)]
 
 /-- The isometry `X ↦ U X V` of the Frobenius space. -/
-private def rotIso {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ) (V : Matrix (Fin m) (Fin m) ℝ)
+private def rotIso {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
+    (U : Matrix p p ℝ) (V : Matrix m m ℝ)
     (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1) :
-    EuclideanSpace ℝ (Fin p × Fin m) ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Fin p × Fin m) :=
+    EuclideanSpace ℝ (p × m) ≃ₗᵢ[ℝ] EuclideanSpace ℝ (p × m) :=
   LinearIsometry.toLinearIsometryEquiv
     { toLinearMap := rotLin U V, norm_map' := norm_rotLin U V hU hV } rfl
 
-private lemma rotIso_flat {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ)
-    (V : Matrix (Fin m) (Fin m) ℝ) (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1)
-    (G : Fin p → Fin m → ℝ) :
-    rotIso U V hU hV (flat p m G) = flat p m (Matrix.of.symm (U * Matrix.of G * V)) := by
+private lemma rotIso_flat {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
+    (U : Matrix p p ℝ)
+    (V : Matrix m m ℝ) (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1)
+    (G : Matrix p m ℝ) :
+    rotIso U V hU hV (flat p m G) = flat p m (U * G * V) := by
   rfl
 
 /-- **Orthogonal invariance of the standard Gaussian matrix.** For orthogonal `U` (`p × p`) and
@@ -125,34 +136,41 @@ private lemma rotIso_flat {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ)
 matrix.
 
 HMT 2011 (Halko–Martinsson–Tropp), §10.1 (rotational invariance of the standard Gaussian
-matrix). Atlas: `rotation-invariance`. The law is the pushforward of
-`gaussianMatrix p m` (a measure on `Fin p → Fin m → ℝ`), so the map is written with
-`Matrix.of.symm`. Ported from the Prove2me workspace, Gaussian Random Matrices series.
+matrix). Atlas: `rotation-invariance`. Ported from the Prove2me workspace, Gaussian Random
+Matrices series.
 atlas: rotation-invariance -/
-theorem gaussianMatrix_map_orthogonal {p m : ℕ} (U : Matrix (Fin p) (Fin p) ℝ)
-    (V : Matrix (Fin m) (Fin m) ℝ) (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1) :
-    Measure.map (fun G : Fin p → Fin m → ℝ => Matrix.of.symm (U * Matrix.of G * V))
-      (gaussianMatrix p m) = gaussianMatrix p m := by
-  have hmeas : Measurable
-      (fun G : Fin p → Fin m → ℝ => Matrix.of.symm (U * Matrix.of G * V)) := by
-    have hc : Continuous
-        (fun G : Fin p → Fin m → ℝ => Matrix.of.symm (U * Matrix.of G * V)) := by
-      refine continuous_pi fun i => continuous_pi fun j => ?_
-      simp only [Matrix.of_symm_apply, Matrix.mul_apply, Matrix.of_apply]
-      fun_prop
-    exact hc.measurable
+theorem hasLaw_gaussianMatrix_orthogonal {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p]
+    [DecidableEq m] (U : Matrix p p ℝ)
+    (V : Matrix m m ℝ) (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) :
+    HasLaw (fun G : Matrix p m ℝ => U * G * V) (gaussianMatrix p m)
+      (gaussianMatrix p m) := by
+  have hU' : Uᵀ * U = 1 := hU
+  have hV' : Vᵀ * V = 1 := hV
+  have hmeas : Measurable (fun G : Matrix p m ℝ => U * G * V) :=
+    (measurable_const.matrix_mul measurable_id).matrix_mul measurable_const
+  refine ⟨hmeas.aemeasurable, ?_⟩
   have key : ((gaussianMatrix p m).map
-      (fun G : Fin p → Fin m → ℝ => Matrix.of.symm (U * Matrix.of G * V))).map (flat p m) =
+      (fun G : Matrix p m ℝ => U * G * V)).map (flat p m) =
       (gaussianMatrix p m).map (flat p m) := by
     rw [Measure.map_map (measurable_flat p m) hmeas]
-    have : flat p m ∘ (fun G : Fin p → Fin m → ℝ => Matrix.of.symm (U * Matrix.of G * V)) =
-        rotIso U V hU hV ∘ flat p m := by
-      funext G; exact (rotIso_flat U V hU hV G).symm
-    rw [this, ← Measure.map_map (rotIso U V hU hV).continuous.measurable (measurable_flat p m),
+    have : flat p m ∘ (fun G : Matrix p m ℝ => U * G * V) =
+        rotIso U V hU' hV' ∘ flat p m := by
+      funext G; exact (rotIso_flat U V hU' hV' G).symm
+    rw [this, ← Measure.map_map (rotIso U V hU' hV').continuous.measurable (measurable_flat p m),
       map_flat_gaussianMatrix, stdGaussian_map]
   have hfe : ⇑(flatEquiv p m) = flat p m := rfl
   rw [← hfe] at key
   exact (flatEquiv p m).map_measurableEquiv_injective key
+
+/-- `hasLaw_gaussianMatrix_orthogonal` for a random matrix: if `X` is a `p × m` standard Gaussian
+matrix under `μ` and `U`, `V` are orthogonal, so is `U X V`. Atlas: `rotation-invariance`. -/
+theorem hasLaw_gaussianMatrix_orthogonal_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {p m : Type*} [Fintype p] [Fintype m] [DecidableEq p] [DecidableEq m]
+    {X : Ω → Matrix p m ℝ}
+    (hX : HasLaw X (gaussianMatrix p m) μ) (U : Matrix p p ℝ)
+    (V : Matrix m m ℝ) (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) :
+    HasLaw (fun ω => U * X ω * V) (gaussianMatrix p m) μ :=
+  (hasLaw_gaussianMatrix_orthogonal U V hU hV).comp hX
 
 /-! ### Rotation invariance of a standard Gaussian vector -/
 
@@ -207,30 +225,49 @@ HMT 2011 (Halko–Martinsson–Tropp), §10.2 (with `G = Ω` and `V₁` the lead
 vectors: `Ω₁ = V₁ᵀ Ω` is standard Gaussian). Atlas: `block-law-indep`. Ported from the Prove2me
 workspace, Gaussian Random Matrices series.
 atlas: block-law-indep -/
-theorem gaussianMatrix_map_block {n k t : ℕ} (V₁ : Matrix (Fin n) (Fin k) ℝ)
-    (hV₁ : V₁ᵀ * V₁ = 1) :
-    Measure.map (fun G : Fin n → Fin t → ℝ => Matrix.of.symm (V₁ᵀ * Matrix.of G))
-      (gaussianMatrix n t) = gaussianMatrix k t := by
+theorem hasLaw_gaussianMatrix_block {n : ℕ} {k t : Type*} [Fintype k] [Fintype t]
+    [DecidableEq k] (V₁ : Matrix (Fin n) k ℝ)
+    (hV₁ : HasOrthonormalCols V₁) :
+    HasLaw (fun G : Matrix (Fin n) t ℝ => V₁ᵀ * G) (gaussianMatrix k t)
+      (gaussianMatrix (Fin n) t) := by
   classical
-  have hk : Fintype.card (Fin k) ≤ Fintype.card (Fin n) := by
+  have hk : Fintype.card k ≤ Fintype.card (Fin n) := by
     simpa using card_le_card_of_hasOrthonormalCols (Q := V₁) hV₁
   obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le hk
   obtain ⟨W, hW, hWe⟩ := exists_unitary_completion V₁ hV₁ e
-  let H : (Fin n → Fin t → ℝ) → (Fin n → Fin t → ℝ) :=
-    fun G => Matrix.of.symm (Wᵀ * Matrix.of G * (1 : Matrix (Fin t) (Fin t) ℝ))
-  have hHm : Measurable H := by
-    have : H = fun G a l => ∑ i, W i a * G i l := by
-      funext G a l; simp [H, Matrix.mul_apply, Matrix.mul_one]
-    rw [this]; fun_prop
-  have hH : Measure.map H (gaussianMatrix n t) = gaussianMatrix n t :=
-    gaussianMatrix_map_orthogonal Wᵀ 1
-      (by rw [Matrix.transpose_transpose]; exact mul_eq_one_comm.mp hW) (by simp)
-  have hfun : (fun G : Fin n → Fin t → ℝ => Matrix.of.symm (V₁ᵀ * Matrix.of G)) =
-      (fun X : Fin n → Fin t → ℝ => fun j => X (e j)) ∘ H := by
+  let H : Matrix (Fin n) t ℝ → Matrix (Fin n) t ℝ :=
+    fun G => Wᵀ * G * (1 : Matrix t t ℝ)
+  have hH : HasLaw H (gaussianMatrix (Fin n) t) (gaussianMatrix (Fin n) t) :=
+    hasLaw_gaussianMatrix_orthogonal Wᵀ 1
+      (by
+        show Wᵀᵀ * Wᵀ = 1
+        rw [Matrix.transpose_transpose]; exact mul_eq_one_comm.mp hW) (by simp [HasOrthonormalCols])
+  have hR : HasLaw (fun X : Matrix (Fin n) t ℝ => Matrix.of fun j => X (e j))
+      (gaussianMatrix k t) (gaussianMatrix (Fin n) t) := by
+    have hRm : Measurable fun X : Matrix (Fin n) t ℝ => Matrix.of fun j => X (e j) :=
+      Matrix.measurable_iff_entries.mpr fun j l => Matrix.measurable_entry (e j) l
+    refine ⟨hRm.aemeasurable, ?_⟩
+    rw [gaussianMatrix, Measure.map_map hRm Matrix.ofMeasurableEquiv.measurable, gaussianMatrix,
+      ← map_comp_injective_pi _ e e.injective,
+      Measure.map_map Matrix.ofMeasurableEquiv.measurable (by fun_prop)]
+    rfl
+  have hfun : (fun G : Matrix (Fin n) t ℝ => V₁ᵀ * G) =
+      (fun X : Matrix (Fin n) t ℝ => Matrix.of fun j => X (e j)) ∘ H := by
     funext G j l
     simp [H, Matrix.mul_apply, hWe]
-  rw [hfun, ← Measure.map_map (by fun_prop) hHm, hH]
-  exact map_comp_injective_pi _ e e.injective
+  rw [hfun]
+  exact hR.comp hH
+
+/-- `hasLaw_gaussianMatrix_block` for a random matrix: if `X` is an `n × t` standard Gaussian
+matrix under `μ` and `V₁` has orthonormal columns, `V₁ᵀ X` is a `k × t` standard Gaussian
+matrix. Atlas: `block-law-indep`. -/
+theorem hasLaw_gaussianMatrix_block_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {n : ℕ} {k t : Type*} [Fintype k] [Fintype t] [DecidableEq k]
+    {X : Ω → Matrix (Fin n) t ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin n) t) μ) (V₁ : Matrix (Fin n) k ℝ)
+    (hV₁ : HasOrthonormalCols V₁) :
+    HasLaw (fun ω => V₁ᵀ * X ω) (gaussianMatrix k t) μ :=
+  (hasLaw_gaussianMatrix_block V₁ hV₁).comp hX
 
 /-- **Independence of Gaussian blocks.** If `V₁` (`n × k`) and `V₂` (`n × r`) have orthonormal
 columns and `V₁ᵀ V₂ = 0`, and `G` is an `n × t` standard Gaussian matrix, then `V₁ᵀ G` and
@@ -240,46 +277,59 @@ HMT 2011 (Halko–Martinsson–Tropp), §10.2 (`Ω₁ = V₁ᵀ Ω` and `Ω₂ =
 Atlas: `block-law-indep`. Ported from the Prove2me workspace, Gaussian Random Matrices
 series.
 atlas: block-law-indep -/
-theorem gaussianMatrix_indepFun_block {n k r t : ℕ} (V₁ : Matrix (Fin n) (Fin k) ℝ)
-    (V₂ : Matrix (Fin n) (Fin r) ℝ) (hV₁ : V₁ᵀ * V₁ = 1) (hV₂ : V₂ᵀ * V₂ = 1)
+theorem gaussianMatrix_indepFun_block {n : ℕ} {k r t : Type*} [Fintype k] [Fintype r]
+    [Fintype t] [DecidableEq k] [DecidableEq r] (V₁ : Matrix (Fin n) k ℝ)
+    (V₂ : Matrix (Fin n) r ℝ) (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂)
     (hV₁₂ : V₁ᵀ * V₂ = 0) :
-    IndepFun (fun G : Fin n → Fin t → ℝ => Matrix.of.symm (V₁ᵀ * Matrix.of G))
-      (fun G : Fin n → Fin t → ℝ => Matrix.of.symm (V₂ᵀ * Matrix.of G))
-      (gaussianMatrix n t) := by
+    IndepFun (fun G : Matrix (Fin n) t ℝ => V₁ᵀ * G)
+      (fun G : Matrix (Fin n) t ℝ => V₂ᵀ * G)
+      (gaussianMatrix (Fin n) t) := by
   classical
+  have hV₁' : V₁ᵀ * V₁ = 1 := hV₁
+  have hV₂' : V₂ᵀ * V₂ = 1 := hV₂
   -- the concatenated matrix `[V₁ V₂]` has orthonormal columns
-  let V : Matrix (Fin n) (Fin k ⊕ Fin r) ℝ := Matrix.fromCols V₁ V₂
+  let V : Matrix (Fin n) (k ⊕ r) ℝ := Matrix.fromCols V₁ V₂
   have hV₂₁ : V₂ᵀ * V₁ = 0 := by
     rw [← Matrix.transpose_transpose V₁, ← Matrix.transpose_mul, hV₁₂, Matrix.transpose_zero]
   have hV : Vᵀ * V = 1 := by
-    simp only [V, Matrix.transpose_fromCols, Matrix.fromRows_mul_fromCols, hV₁, hV₂, hV₁₂,
+    simp only [V, Matrix.transpose_fromCols, Matrix.fromRows_mul_fromCols, hV₁', hV₂', hV₁₂,
       hV₂₁, Matrix.fromBlocks_one]
-  have hk : Fintype.card (Fin k ⊕ Fin r) ≤ Fintype.card (Fin n) := by
+  have hk : Fintype.card (k ⊕ r) ≤ Fintype.card (Fin n) := by
     simpa using card_le_card_of_hasOrthonormalCols (Q := V) hV
   obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le hk
   obtain ⟨W, hW, hWe⟩ := exists_unitary_completion V hV e
-  let H : (Fin n → Fin t → ℝ) → (Fin n → Fin t → ℝ) :=
-    fun G => Matrix.of.symm (Wᵀ * Matrix.of G * (1 : Matrix (Fin t) (Fin t) ℝ))
-  have hHm : Measurable H := by
-    have : H = fun G a l => ∑ i, W i a * G i l := by
-      funext G a l; simp [H, Matrix.mul_apply, Matrix.mul_one]
-    rw [this]; fun_prop
-  have hH : Measure.map H (gaussianMatrix n t) = gaussianMatrix n t :=
-    gaussianMatrix_map_orthogonal Wᵀ 1
-      (by rw [Matrix.transpose_transpose]; exact mul_eq_one_comm.mp hW) (by simp)
+  let H : Matrix (Fin n) t ℝ → Matrix (Fin n) t ℝ :=
+    fun G => Wᵀ * G * (1 : Matrix t t ℝ)
+  have hH : HasLaw H (gaussianMatrix (Fin n) t) (gaussianMatrix (Fin n) t) :=
+    hasLaw_gaussianMatrix_orthogonal Wᵀ 1
+      (by
+        show Wᵀᵀ * Wᵀ = 1
+        rw [Matrix.transpose_transpose]; exact mul_eq_one_comm.mp hW) (by simp [HasOrthonormalCols])
+  have hHm : Measurable H := (measurable_const.matrix_mul measurable_id).matrix_mul measurable_const
   -- the rows of `H G` are independent under the Gaussian law
-  have hmeas : ∀ a, Measurable fun G => H G a := fun a => (measurable_pi_apply a).comp hHm
-  have hind : iIndepFun (fun (a : Fin n) G => H G a) (gaussianMatrix n t) := by
-    rw [iIndepFun_iff_map_fun_eq_pi_map (fun a => (hmeas a).aemeasurable)]
-    have h1 : ∀ a, Measure.map (fun G => H G a) (gaussianMatrix n t) =
-        Measure.pi fun _ : Fin t => gaussianReal 0 1 := by
-      intro a
-      rw [show (fun G => H G a) = (fun f => f a) ∘ H from rfl,
-        ← Measure.map_map (measurable_pi_apply a) hHm, hH]
-      exact (measurePreserving_eval
-        (fun _ : Fin n => Measure.pi fun _ : Fin t => gaussianReal 0 1) a).map_eq
+  have hrowm : ∀ a, Measurable fun G : Matrix (Fin n) t ℝ => G a := fun a =>
+    measurable_pi_lambda _ fun j => Matrix.measurable_entry a j
+  have hmeas : ∀ a, Measurable fun G => H G a := fun a => (hrowm a).comp hHm
+  -- the rows of a Gaussian matrix are i.i.d. standard Gaussian vectors
+  have hrows : iIndepFun (fun (a : Fin n) (G : Matrix (Fin n) t ℝ) => G a)
+      (gaussianMatrix (Fin n) t) := by
+    rw [iIndepFun_iff_map_fun_eq_pi_map (fun a => (hrowm a).aemeasurable)]
+    have h1 : ∀ a, Measure.map (fun G : Matrix (Fin n) t ℝ => G a)
+        (gaussianMatrix (Fin n) t) = Measure.pi fun _ : t => gaussianReal 0 1 :=
+      fun a => ((measurePreserving_eval
+        (fun _ : Fin n => Measure.pi fun _ : t => gaussianReal 0 1) a).comp
+        measurePreserving_ofMeasurableEquiv_gaussianMatrix.symm).map_eq
     simp_rw [h1]
-    exact hH
+    exact (measurePreserving_ofMeasurableEquiv_gaussianMatrix.symm).map_eq
+  have hind : iIndepFun (fun (a : Fin n) G => H G a) (gaussianMatrix (Fin n) t) := by
+    rw [iIndepFun_iff_map_fun_eq_pi_map (fun a => (hrowm a).aemeasurable)] at hrows
+    rw [iIndepFun_iff_map_fun_eq_pi_map (fun a => (hmeas a).aemeasurable),
+      show (fun G (a : Fin n) => H G a) = (fun G (a : Fin n) => G a) ∘ H from rfl,
+      ← Measure.map_map (measurable_pi_lambda _ hrowm) hHm, hH.map_eq, hrows]
+    congr 1
+    funext a
+    rw [show (fun G => H G a) = (fun G : Matrix (Fin n) t ℝ => G a) ∘ H from rfl,
+      ← Measure.map_map (hrowm a) hHm, hH.map_eq]
   let S : Finset (Fin n) := Finset.univ.map (Function.Embedding.inl.trans e)
   let T : Finset (Fin n) := Finset.univ.map (Function.Embedding.inr.trans e)
   have hST : Disjoint S T := by
@@ -291,10 +341,12 @@ theorem gaussianMatrix_indepFun_block {n k r t : ℕ} (V₁ : Matrix (Fin n) (Fi
     obtain ⟨j, hj⟩ := hb
     exact absurd (e.injective hj) (by simp)
   have hpair := hind.indepFun_finset S T hST hmeas
-  have hS : ∀ j : Fin k, e (Sum.inl j) ∈ S := fun j => by simp [S]
-  have hT : ∀ j : Fin r, e (Sum.inr j) ∈ T := fun j => by simp [T]
-  let φ : (S → Fin t → ℝ) → (Fin k → Fin t → ℝ) := fun y j => y ⟨e (Sum.inl j), hS j⟩
-  let ψ : (T → Fin t → ℝ) → (Fin r → Fin t → ℝ) := fun y j => y ⟨e (Sum.inr j), hT j⟩
+  have hS : ∀ j : k, e (Sum.inl j) ∈ S := fun j => by simp [S]
+  have hT : ∀ j : r, e (Sum.inr j) ∈ T := fun j => by simp [T]
+  let φ : (S → t → ℝ) → Matrix k t ℝ :=
+    fun y => Matrix.of fun j => y ⟨e (Sum.inl j), hS j⟩
+  let ψ : (T → t → ℝ) → Matrix r t ℝ :=
+    fun y => Matrix.of fun j => y ⟨e (Sum.inr j), hT j⟩
   have hφ : Measurable φ := measurable_pi_lambda _ fun j => measurable_pi_apply _
   have hψ : Measurable ψ := measurable_pi_lambda _ fun j => measurable_pi_apply _
   have h := hpair.comp hφ hψ
@@ -303,5 +355,29 @@ theorem gaussianMatrix_indepFun_block {n k r t : ℕ} (V₁ : Matrix (Fin n) (Fi
     simp [φ, H, Matrix.mul_apply, hWe, V]
   · funext G j l
     simp [ψ, H, Matrix.mul_apply, hWe, V]
+
+/-- `gaussianMatrix_indepFun_block` for a random matrix: if `X` is an `n × t` standard Gaussian
+matrix under `μ`, `V₁`, `V₂` have orthonormal columns and `V₁ᵀ V₂ = 0`, then `V₁ᵀ X` and `V₂ᵀ X`
+are independent. Atlas: `block-law-indep`. -/
+theorem gaussianMatrix_indepFun_block_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {n : ℕ} {k r t : Type*} [Fintype k] [Fintype r] [Fintype t]
+    [DecidableEq k] [DecidableEq r] {X : Ω → Matrix (Fin n) t ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin n) t) μ) (V₁ : Matrix (Fin n) k ℝ)
+    (V₂ : Matrix (Fin n) r ℝ) (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂)
+    (hV₁₂ : V₁ᵀ * V₂ = 0) :
+    IndepFun (fun ω => V₁ᵀ * X ω) (fun ω => V₂ᵀ * X ω) μ := by
+  have := hX.isProbabilityMeasure
+  have hXm := hX.aemeasurable
+  have hind := gaussianMatrix_indepFun_block (t := t) V₁ V₂ hV₁ hV₂ hV₁₂
+  have hm₁ := measurable_block (t := t) V₁
+  have hm₂ := measurable_block (t := t) V₂
+  rw [← hX.map_eq, indepFun_iff_map_prod_eq_prod_map_map hm₁.aemeasurable hm₂.aemeasurable] at hind
+  show IndepFun ((fun G : Matrix (Fin n) t ℝ => V₁ᵀ * G) ∘ X)
+    ((fun G : Matrix (Fin n) t ℝ => V₂ᵀ * G) ∘ X) μ
+  rw [indepFun_iff_map_prod_eq_prod_map_map (hm₁.comp_aemeasurable hXm)
+    (hm₂.comp_aemeasurable hXm), ← AEMeasurable.map_map_of_aemeasurable hm₁.aemeasurable hXm,
+    ← AEMeasurable.map_map_of_aemeasurable hm₂.aemeasurable hXm, ← hind,
+    AEMeasurable.map_map_of_aemeasurable (hm₁.prodMk hm₂).aemeasurable hXm]
+  rfl
 
 end NLAlib

@@ -2,5 +2,17 @@
   "NLAlib.matrixMeasurableSpace": "Matrix.instMeasurableSpace",
   "NLAlib.matrixBorelSpace": "Matrix.instBorelSpace",
   "NLAlib.orthogonalGroupMeasurableSpace": "Subtype.instMeasurableSpace",
-  "NLAlib.orthogonalGroupBorelSpace": "Subtype.borelSpace"
+  "NLAlib.orthogonalGroupBorelSpace": "Subtype.borelSpace",
+  "NLAlib.aemeasurable_of_map_eq_gaussianMatrix": "ProbabilityTheory.HasLaw.aemeasurable",
+  "NLAlib.gaussianMatrix_map_orthogonal": "NLAlib.hasLaw_gaussianMatrix_orthogonal",
+  "NLAlib.gaussianMatrix_map_block": "NLAlib.hasLaw_gaussianMatrix_block",
+  "NLAlib.gaussianMatrix_map_transpose": "NLAlib.hasLaw_gaussianMatrix_transpose",
+  "NLAlib.gaussianMatrix_map_mul_right": "NLAlib.hasLaw_gaussianMatrix_mul_right",
+  "NLAlib.integral_powerRayleighRelativeError_le_of_map_eq_pi_gaussianReal": "NLAlib.integral_powerRayleighRelativeError_le_of_hasLaw",
+  "NLAlib.integral_lanczosRayleighRelativeError_le_of_map_eq_pi_gaussianReal": "NLAlib.integral_lanczosRayleighRelativeError_le_of_hasLaw",
+  "NLAlib.map_block_eq_gaussianMatrix": "NLAlib.hasLaw_gaussianMatrix_block_of_hasLaw",
+  "NLAlib.indepFun_block_of_map_eq": "NLAlib.gaussianMatrix_indepFun_block_of_hasLaw",
+  "NLAlib.gaussianMatrix_map_first_cols": "NLAlib.hasLaw_gaussianMatrix_first_cols",
+  "NLAlib.ae_hasOrthonormalCols_gaussianRangeFrame_of_map_eq": "NLAlib.ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw",
+  "NLAlib.ae_project_gaussianRangeFrame_of_map_eq": "NLAlib.ae_project_gaussianRangeFrame_of_hasLaw"
 }

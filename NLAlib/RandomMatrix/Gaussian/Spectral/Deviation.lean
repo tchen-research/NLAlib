@@ -40,23 +40,23 @@ Atlas: `smin-lower-tail`. The source's hypothesis `n ≤ N` is not needed and is
 atlas: smin-lower-tail -/
 theorem measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) (u : ℝ)
     (hu : 0 ≤ u) :
-    (gaussianMatrix N n) {A | sigmaMin (Matrix.of A) ≤ Real.sqrt N - Real.sqrt n - u}
-      ≤ ENNReal.ofReal (Real.exp (-u ^ 2 / 2)) := by
-  set h : (Fin N → Fin n → ℝ) → ℝ := fun X => -sigmaMin (Matrix.of X) with hh
-  have hLip : ∀ X Y, |h X - h Y| ≤ 1 * frobNorm (Matrix.of X - Matrix.of Y) := by
+    (gaussianMatrix (Fin N) (Fin n)).real {A | sigmaMin A ≤ Real.sqrt N - Real.sqrt n - u}
+      ≤ Real.exp (-u ^ 2 / 2) := by
+  set h : (Matrix (Fin N) (Fin n) ℝ) → ℝ := fun X => -sigmaMin X with hh
+  have hLip : ∀ X Y, |h X - h Y| ≤ 1 * frobNorm (X - Y) := by
     intro X Y
-    have := abs_sigmaMin_sub_sigmaMin_le_frobNorm (Matrix.of X) (Matrix.of Y)
+    have := abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
     simp only [hh, one_mul]
-    rw [show -sigmaMin (Matrix.of X) - -sigmaMin (Matrix.of Y)
-        = -(sigmaMin (Matrix.of X) - sigmaMin (Matrix.of Y)) by ring, abs_neg]
+    rw [show -sigmaMin X - -sigmaMin Y
+        = -(sigmaMin X - sigmaMin Y) by ring, abs_neg]
     exact this
   obtain ⟨-, hconc⟩ := gaussian_concentration h 1 one_pos hLip u hu
   obtain ⟨-, -, hmean, -, -⟩ := gordon_extreme_singular_values (N := N) hn
-  have hint : ∫ Y, h Y ∂(gaussianMatrix N n)
-      = -∫ Y, sigmaMin (Matrix.of Y) ∂(gaussianMatrix N n) := by
+  have hint : ∫ Y, h Y ∂(gaussianMatrix (Fin N) (Fin n))
+      = -∫ Y, sigmaMin Y ∂(gaussianMatrix (Fin N) (Fin n)) := by
     simp only [hh]
     exact integral_neg _
-  refine le_trans (measure_mono ?_) hconc
+  refine le_trans (measureReal_mono ?_) hconc
   intro X hX
   simp only [Set.mem_ofPred_eq] at hX ⊢
   rw [hint]
@@ -73,16 +73,16 @@ is not needed. Ported from Prove2me solution
 atlas: extreme-singular-values-deviation -/
 theorem measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix {N n : ℕ} (t : ℝ)
     (ht : 0 ≤ t) :
-    (gaussianMatrix N n) {A | Real.sqrt N + Real.sqrt n + t ≤ specNorm (Matrix.of A)}
-      ≤ ENNReal.ofReal (Real.exp (-t ^ 2 / 2)) := by
-  set h : (Fin N → Fin n → ℝ) → ℝ := fun X => specNorm (Matrix.of X) with hh
-  have hLip : ∀ X Y, |h X - h Y| ≤ 1 * frobNorm (Matrix.of X - Matrix.of Y) := by
+    (gaussianMatrix (Fin N) (Fin n)).real {A | Real.sqrt N + Real.sqrt n + t ≤ specNorm A}
+      ≤ Real.exp (-t ^ 2 / 2) := by
+  set h : (Matrix (Fin N) (Fin n) ℝ) → ℝ := fun X => specNorm X with hh
+  have hLip : ∀ X Y, |h X - h Y| ≤ 1 * frobNorm (X - Y) := by
     intro X Y
     simp only [hh, one_mul]
-    exact abs_specNorm_sub_specNorm_le_frobNorm (Matrix.of X) (Matrix.of Y)
+    exact abs_specNorm_sub_specNorm_le_frobNorm X Y
   obtain ⟨-, hconc⟩ := gaussian_concentration h 1 one_pos hLip t ht
   have hmean := integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt (N := N) (n := n)
-  refine le_trans (measure_mono ?_) hconc
+  refine le_trans (measureReal_mono ?_) hconc
   intro X hX
   simp only [Set.mem_ofPred_eq, hh] at hX ⊢
   linarith
@@ -97,32 +97,81 @@ Atlas: `extreme-singular-values-deviation`. Ported from Prove2me solution
 atlas: extreme-singular-values-deviation -/
 theorem one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n)
     (t : ℝ) (ht : 0 ≤ t) :
-    1 - ENNReal.ofReal (2 * Real.exp (-t ^ 2 / 2))
-      ≤ (gaussianMatrix N n) {A | Real.sqrt N - Real.sqrt n - t ≤ sigmaMin (Matrix.of A) ∧
-          specNorm (Matrix.of A) ≤ Real.sqrt N + Real.sqrt n + t} := by
-  set μ := gaussianMatrix N n
-  set E := {A : Fin N → Fin n → ℝ | Real.sqrt N - Real.sqrt n - t ≤ sigmaMin (Matrix.of A) ∧
-          specNorm (Matrix.of A) ≤ Real.sqrt N + Real.sqrt n + t} with hE
-  set S1 := {A : Fin N → Fin n → ℝ | sigmaMin (Matrix.of A) ≤ Real.sqrt N - Real.sqrt n - t}
-  set S2 := {A : Fin N → Fin n → ℝ | Real.sqrt N + Real.sqrt n + t ≤ specNorm (Matrix.of A)}
+    1 - 2 * Real.exp (-t ^ 2 / 2)
+      ≤ (gaussianMatrix (Fin N) (Fin n)).real {A | Real.sqrt N - Real.sqrt n - t ≤ sigmaMin A ∧
+          specNorm A ≤ Real.sqrt N + Real.sqrt n + t} := by
+  set μ := gaussianMatrix (Fin N) (Fin n)
+  set E := {A : Matrix (Fin N) (Fin n) ℝ | Real.sqrt N - Real.sqrt n - t ≤ sigmaMin A ∧
+          specNorm A ≤ Real.sqrt N + Real.sqrt n + t} with hE
+  set S1 := {A : Matrix (Fin N) (Fin n) ℝ | sigmaMin A ≤ Real.sqrt N - Real.sqrt n - t}
+  set S2 := {A : Matrix (Fin N) (Fin n) ℝ | Real.sqrt N + Real.sqrt n + t ≤ specNorm A}
   have hsub : Eᶜ ⊆ S1 ∪ S2 := by
     intro X hX
     simp only [hE, Set.mem_compl_iff, Set.mem_ofPred_eq, not_and_or, not_le] at hX
     rcases hX with hX | hX
     · exact Or.inl (le_of_lt hX)
     · exact Or.inr (le_of_lt hX)
-  have hc : μ Eᶜ ≤ ENNReal.ofReal (2 * Real.exp (-t ^ 2 / 2)) := by
-    have hpos : 0 ≤ Real.exp (-t ^ 2 / 2) := (Real.exp_pos _).le
-    rw [two_mul, ENNReal.ofReal_add hpos hpos]
-    calc μ Eᶜ ≤ μ (S1 ∪ S2) := measure_mono hsub
-      _ ≤ μ S1 + μ S2 := measure_union_le _ _
-      _ ≤ _ := add_le_add (measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix hn t ht)
-          (measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix t ht)
-  have h1 : (1 : ENNReal) ≤ μ E + μ Eᶜ := by
-    calc (1 : ENNReal) = μ Set.univ := measure_univ.symm
-      _ = μ (E ∪ Eᶜ) := by rw [Set.union_compl_self]
-      _ ≤ μ E + μ Eᶜ := measure_union_le _ _
-  rw [tsub_le_iff_right]
-  exact h1.trans (add_le_add le_rfl hc)
+  have hc : μ.real Eᶜ ≤ 2 * Real.exp (-t ^ 2 / 2) := by
+    have h1 := measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix (N := N) hn t ht
+    have h2 := measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix (N := N) (n := n) t ht
+    calc μ.real Eᶜ ≤ μ.real (S1 ∪ S2) := measureReal_mono hsub
+      _ ≤ μ.real S1 + μ.real S2 := measureReal_union_le _ _
+      _ ≤ _ := by linarith
+  have h1 : (1 : ℝ) ≤ μ.real E + μ.real Eᶜ := by
+    calc (1 : ℝ) = μ.real Set.univ := by simp
+      _ = μ.real (E ∪ Eᶜ) := by rw [Set.union_compl_self]
+      _ ≤ μ.real E + μ.real Eᶜ := measureReal_union_le _ _
+  linarith
+
+/-! ### Random matrices with a Gaussian law -/
+
+/-- `measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ`. Atlas: `smin-lower-tail`. -/
+theorem measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω}
+    {N n : ℕ} {X : Ω → Matrix (Fin N) (Fin n) ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ) (hn : 1 ≤ n) (u : ℝ) (hu : 0 ≤ u) :
+    μ.real {ω | sigmaMin (X ω) ≤ Real.sqrt N - Real.sqrt n - u} ≤ Real.exp (-u ^ 2 / 2) := by
+  have hc : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
+      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
+  rw [hX.measureReal_eq (p := fun A => sigmaMin A ≤ Real.sqrt N - Real.sqrt n - u)
+    (measurableSet_le hc.measurable measurable_const)]
+  exact measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix hn u hu
+
+/-- `measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ`. Atlas: `extreme-singular-values-deviation`. -/
+theorem measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω}
+    {N n : ℕ} {X : Ω → Matrix (Fin N) (Fin n) ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ) (t : ℝ) (ht : 0 ≤ t) :
+    μ.real {ω | Real.sqrt N + Real.sqrt n + t ≤ specNorm (X ω)} ≤ Real.exp (-t ^ 2 / 2) := by
+  have hc : Continuous (specNorm : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm specNorm 1 fun X Y => by
+      rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y
+  rw [hX.measureReal_eq (p := fun A => Real.sqrt N + Real.sqrt n + t ≤ specNorm A)
+    (measurableSet_le measurable_const hc.measurable)]
+  exact measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix t ht
+
+/-- `one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ`. Atlas: `extreme-singular-values-deviation`. -/
+theorem one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω}
+    {N n : ℕ} {X : Ω → Matrix (Fin N) (Fin n) ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ) (hn : 1 ≤ n) (t : ℝ) (ht : 0 ≤ t) :
+    1 - 2 * Real.exp (-t ^ 2 / 2)
+      ≤ μ.real {ω | Real.sqrt N - Real.sqrt n - t ≤ sigmaMin (X ω) ∧
+          specNorm (X ω) ≤ Real.sqrt N + Real.sqrt n + t} := by
+  have hs : Continuous (specNorm : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm specNorm 1 fun X Y => by
+      rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y
+  have hm : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
+      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
+  rw [hX.measureReal_eq (p := fun A => Real.sqrt N - Real.sqrt n - t ≤ sigmaMin A ∧
+      specNorm A ≤ Real.sqrt N + Real.sqrt n + t)
+    ((measurableSet_le measurable_const hm.measurable).inter
+      (measurableSet_le hs.measurable measurable_const))]
+  exact one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix hn t ht
 
 end NLAlib

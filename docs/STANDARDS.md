@@ -113,10 +113,11 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
 
 - Index types: `[Fintype m] [Fintype n]` everywhere in the Matrix layer, and wherever a statement
   does not touch a Gaussian law (the sorted positions of §2 are the only `Fin` in layer 0).
-  `Fin n` only where a Gaussian law needs the product measure (`gaussianMatrix p m` lives on
-  `Fin p → Fin m → ℝ`); F2 revisits this (`gaussianMatrix m n` on `Matrix m n ℝ`, planned,
-  `docs/FOUNDATIONS_BRIEF.md` §2). A theorem stated over `Fin` because a dependency was, is a
-  defect to fix at the dependency.
+  `gaussianMatrix m n` is itself over arbitrary `[Fintype m] [Fintype n]` (a measure on
+  `Matrix m n ℝ`); results imported from the Gaussian Random Matrices series keep `Fin p`/`Fin m`
+  where the proof uses `Fin` structure (orthogonal completion, `Fin.castLE`, dimension
+  arithmetic), and are stated over `Fintype` otherwise. A theorem stated over `Fin` because a
+  dependency was, is a defect to fix at the dependency.
 - Vocabulary (over `𝕜` unless marked ℝ): `frobInner A B` (the real part of the Frobenius pairing,
   `RCLike.re (∑ i, ∑ j, star (A i j) * B i j)`; the `𝕜`-valued pairing is `(Aᴴ * B).trace` and has
   no name), `frobSq`, `frobNorm` (bridge `frobNorm_eq_norm` to Mathlib's Frobenius norm under
@@ -144,23 +145,31 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   `Fin a` factors at `Fin a` indices; decision E′, `docs/rclike/F1b-alpha.md`); the smallest
   eigenvalue of a Hermitian `A` is `hA.eigenvalues₀ ⟨Fintype.card n - 1, _⟩` (Rayleigh form
   `Matrix.IsHermitian.eigenvalues₀_last_eq_iInf`), with no `lamMin`; the Loewner order `≤` (§2);
-  `gaussianMatrix p m` with `Matrix.of` as the matrix view and `linForm c G` for its linear forms
-  (ℝ); `IsSubspaceEmbedding S U ε` (ℝ); `krylovSpace A b q` (over any field, as are
+  `gaussianMatrix m n` (a measure on `Matrix m n ℝ`, the push-forward of the i.i.d. product
+  measure by `Matrix.of`) and `linForm c G` for its linear forms (coefficient array `c`, sample
+  `G : Matrix m n ℝ`) (ℝ); `IsSubspaceEmbedding S U ε` (ℝ); `krylovSpace A b q` (over any field, as are
   `blockKrylovSpace` and `subspaceIterate`; the Krylov methods stay real); the matrix function
   `cfc f A` (Mathlib) with `matrixExp`, `matrixLog`, `traceExp`. Do not introduce a second spelling
   of any of these.
 - Probability: an abstract space `{Ω} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]`,
-  random matrices as functions, laws as `μ.map X = …`, expectations as Bochner integrals.
-  Prefer statements without integrability hypotheses (prove the `lintegral` form, then convert);
-  measurability of matrix-valued maps is stated entrywise (`∀ i j, Measurable fun x => T x i j`)
-  because Mathlib has no `MeasurableSpace (Matrix m n ℝ)`. (One deliberate exception: the matrix
-  concentration files use a global Borel instance on `Matrix m n ℂ`, `matrixMeasurableSpace` /
-  `matrixBorelSpace`, inherited from the Tropp port and documented in
-  `Probability/Concentration/Basic/MatrixStatistics.lean`.) Planned, `docs/FOUNDATIONS_BRIEF.md`
-  §2 (F2): both are replaced by a global `Matrix.instMeasurableSpace` / `Matrix.instBorelSpace` in
-  `ForMathlib/MeasureTheory/Matrix.lean`, so a random matrix is `X : Ω → Matrix m n 𝕜`; laws are
-  stated with Mathlib's `HasLaw X (gaussianMatrix m n) μ` instead of `μ.map X = …`; tails are
-  `μ.real s ≤ …`.
+  random matrices as functions `X : Ω → Matrix m n 𝕜`, expectations as Bochner integrals.
+  `Matrix m n α` carries the global product σ-algebra `Matrix.instMeasurableSpace` and, for a
+  second-countable Borel `α`, the Borel instance `Matrix.instBorelSpace`
+  (`ForMathlib/MeasureTheory/Matrix.lean`, with `Matrix.measurable_entry`,
+  `Matrix.measurable_iff_entries`, `Matrix.ofMeasurableEquiv`, `Measurable.matrix_mul`); state
+  measurability of a matrix-valued map as `Measurable T`, not entrywise. Laws are stated with
+  Mathlib's `HasLaw X ν μ` (fields `.aemeasurable`, `.map_eq`), never as `μ.map X = …`: a standard
+  Gaussian matrix is `HasLaw X (gaussianMatrix m n) μ`, and the scalar laws `IsStandardGaussian μ g`
+  / `IsRademacher μ r` are `abbrev`s of `HasLaw g (gaussianReal 0 1) μ` / `HasLaw r rademacherMeasure μ`
+  (`IsGaussian`/`HasGaussianLaw` for vectors are Mathlib's). A theorem about `gaussianMatrix`
+  itself integrates against it (the primary, most general form) and has a corollary
+  `<name>_of_hasLaw` for a random matrix with that law in the same file; no `_of_map_eq` wrappers.
+  Tails are `μ.real s ≤ c` (not `μ s ≤ ENNReal.ofReal c` or `(μ s).toReal ≤ c`). Orthonormality
+  hypotheses are `HasOrthonormalCols V`. Prefer statements without integrability hypotheses
+  (prove the `lintegral` form, then convert). `Matrix` has no global norm: Mathlib results that need
+  a normed space on the sample space (Fernique, `HasGaussianLaw.map_fun`, `IsGaussian` of a product)
+  are used under `open scoped Matrix.Norms.L2Operator` (whose topology is `Matrix`'s, so the Borel
+  instance applies) or after flattening (`integral_gaussianMatrix_eq`, `gaussianMatrix_map_uncurry`).
 - Constants explicit, never `∃ C`. Degenerate cases match the source. Two-sided bounds are two
   theorems. General form first, corollaries after.
 - Every hypothesis explicit; no `axiom`, no `native_decide`; `sorry` only in a named scaffold

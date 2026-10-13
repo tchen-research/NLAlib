@@ -24,14 +24,14 @@ atlas `wishart-lambda-min-tail`. All simplicity and unique-max conditions
 are discharged by the Gaussian polynomial zero-set argument. -/
 theorem ae_exists_tendsto_gramSoftMinLaplacian_le_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ε : ℝ) (hε : 0 < ε) :
-    ∀ᵐ G ∂(gaussianMatrix r k), ∃ L : ℝ, L ≤ 2 * ((k : ℝ) - r + 1) ∧
-      Tendsto (fun n : ℕ => gramSoftMinLaplacian n ε (Matrix.of G)) atTop (𝓝 L) := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), ∃ L : ℝ, L ≤ 2 * ((k : ℝ) - r + 1) ∧
+      Tendsto (fun n : ℕ => gramSoftMinLaplacian n ε G) atTop (𝓝 L) := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   filter_upwards [ae_injective_eigenvalues_inv_regularizedGram_gaussianMatrix hrk ε hε,
     ae_exists_unique_max_eigenvalues_inv_regularizedGram_gaussianMatrix hr hrk ε hε]
     with G hbinj hmaxex
   obtain ⟨i₀, hmax⟩ := hmaxex
-  let hpd := regularizedGram_posDef hε (Matrix.of G)
+  let hpd := regularizedGram_posDef hε G
   let b : Fin r → ℝ := hpd.inv.isHermitian.eigenvalues
   let b₀ : ℝ := b i₀
   let ρ : Fin r → ℝ := fun i => b i / b₀
@@ -49,15 +49,15 @@ theorem ae_exists_tendsto_gramSoftMinLaplacian_le_gaussianMatrix
   have hw : ∀ i, 0 ≤ w i := by
     let U := hpd.inv.isHermitian.eigenvectorUnitary
     let φ := Unitary.conjStarAlgAut ℝ (Matrix (Fin r) (Fin r) ℝ) (star U)
-    have hW : (Matrix.of G * (Matrix.of G)ᵀ).PosSemidef := by
+    have hW : (G * Gᵀ).PosSemidef := by
       simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-        Matrix.posSemidef_self_mul_conjTranspose (Matrix.of G)
-    have hconj : (φ (Matrix.of G * (Matrix.of G)ᵀ)).PosSemidef := by
+        Matrix.posSemidef_self_mul_conjTranspose G
+    have hconj : (φ (G * Gᵀ)).PosSemidef := by
       simpa only [φ, Unitary.conjStarAlgAut_apply, Unitary.coe_star, star_star,
         Matrix.star_eq_conjTranspose, Matrix.conjTranspose_conjTranspose] using
         hW.conjTranspose_mul_mul_same (U : Matrix (Fin r) (Fin r) ℝ)
-    have hdiag : φ (Matrix.of G * (Matrix.of G)ᵀ) = Matrix.diagonal w :=
-      regularizedGram_inv_basis_conj_eq ε (Matrix.of G) hpd
+    have hdiag : φ (G * Gᵀ) = Matrix.diagonal w :=
+      regularizedGram_inv_basis_conj_eq ε G hpd
     rw [hdiag, Matrix.posSemidef_diagonal_iff] at hconj
     exact hconj
   have hrel : ∀ j, j ≠ i₀ → b₀ * ρ j * (w j - w i₀) = 1 - ρ j := by
@@ -78,6 +78,6 @@ theorem ae_exists_tendsto_gramSoftMinLaplacian_le_gaussianMatrix
   apply ht.congr'
   filter_upwards [eventually_gt_atTop 0] with n hn
   simpa only [Fintype.card_fin] using
-    (gramSoftMinLaplacian_eq_normalized n hn ε (Matrix.of G) hpd b₀ hb₀).symm
+    (gramSoftMinLaplacian_eq_normalized n hn ε G hpd b₀ hb₀).symm
 
 end NLAlib

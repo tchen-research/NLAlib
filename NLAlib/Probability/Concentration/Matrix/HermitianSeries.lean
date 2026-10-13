@@ -94,7 +94,7 @@ private lemma gauss_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     [IsProbabilityMeasure μ] (g : Ω → ℝ) (hg : Measurable g) (hL : IsStandardGaussian μ g) :
     MemLp g 2 μ ∧ ∫ ω, g ω ∂μ = 0 ∧ ∫ ω, g ω ^ 2 ∂μ = 1 ∧
       ∀ c : ℝ, Integrable (fun ω => Real.exp (c * g ω)) μ := by
-  unfold IsStandardGaussian at hL
+  replace hL := hL.map_eq
   refine ⟨?_, ?_, ?_, ?_⟩
   · have h := memLp_id_gaussianReal' (μ := 0) (v := 1) 2 (by simp)
     rw [← hL] at h
@@ -244,8 +244,8 @@ theorem NLAlib.hermitian_gaussian_series {Ω : Type*} [MeasurableSpace Ω]
         simp only [X, smul_smul]
       rw [e]
       rcases hLaw with h | h
-      · rw [(gaussian_matrix_mgf_cgf_eq μ (A k) (hA k) (g k) (hMeas k) (h k) θ).2]
-      · exact (rademacher_matrix_mgf_cgf_le μ (A k) (hA k) (g k) (hMeas k) (h k) θ).2
+      · rw [(gaussian_matrix_mgf_cgf_eq μ (A k) (hA k) (g k) (h k) θ).2]
+      · exact (rademacher_matrix_mgf_cgf_le μ (A k) (hA k) (g k) (h k) θ).2
     have hsum : (cumulantSum μ X θ) ≤ ((θ ^ 2 / 2) • ∑ k, A k ^ 2) := by
       unfold cumulantSum
       rw [Matrix.le_iff]

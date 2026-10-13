@@ -112,9 +112,12 @@ theorem integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp
     apply div_nonneg
     · exact mul_nonneg (sq_nonneg _) (by linarith)
     · positivity
-  exact integrable_and_integral_rpow_le_of_integral_rpow_le
+  exact ⟨integrable_rpow_of_nonneg_of_le
     measurable_specNorm_inv_self_mul_transpose.aestronglyMeasurable
-    (fun _ => specNorm_nonneg _) hp hpq hC hint hbound
+    (fun _ => specNorm_nonneg _) hp.le (hp.trans_le hpq).le hpq hint,
+    integral_rpow_le_of_integral_rpow_le
+    measurable_specNorm_inv_self_mul_transpose.aestronglyMeasurable
+    (fun _ => specNorm_nonneg _) hp hpq hC hint hbound⟩
 
 /-- `integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp` for a random matrix `X`
 with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas:

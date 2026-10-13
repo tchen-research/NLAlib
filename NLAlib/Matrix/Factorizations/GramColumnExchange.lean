@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Basic.DeterminantDiagonalUpdate
 /-!
 # Exact maximum-volume column exchange identity
@@ -16,14 +17,14 @@ set_option backward.isDefEq.respectTransparency false
 component in the selected column range and `d` is perpendicular to that range.
 The inverse-Gram diagonal is the squared norm of the corresponding inverse
 triangular-factor row in QR coordinates. No approximation or relaxed constant
-is used. Gu–Eisenstat 1996, Theorem 3.2; derivations equation alg:swap.
-Supports `rank-revealing-qr`. -/
+is used. Gu–Eisenstat 1996, Theorem 3.2. Supports `rank-revealing-qr`. -/
 theorem det_gram_updateCol_eq_det_mul {m p : Type*}
     [Fintype m] [Fintype p] [DecidableEq m] [DecidableEq p]
     (C : Matrix m p ℝ) (hC : IsUnit (Cᵀ * C).det) (i : p) (t : p → ℝ) (d : m → ℝ)
     (hd : Cᵀ *ᵥ d = 0) :
     ((C.updateCol i (C *ᵥ t + d))ᵀ * C.updateCol i (C *ᵥ t + d)).det =
-      (Cᵀ * C).det * (t i ^ 2 + (d ⬝ᵥ d) * (Cᵀ * C)⁻¹ i i) := by
+      (Cᵀ * C).det * (t i ^ 2 + ‖(WithLp.toLp 2 d : EuclideanSpace ℝ m)‖ ^ 2 * (Cᵀ * C)⁻¹ i i) := by
+  rw [norm_toLp_sq_eq_dotProduct_self]
   let K := (1 : Matrix p p ℝ).updateCol i t
   let M := C * K
   let R := (0 : Matrix m p ℝ).updateCol i d

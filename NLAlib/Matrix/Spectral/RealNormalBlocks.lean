@@ -54,7 +54,7 @@ theorem eq_zero_of_real_normal_cut {n : Type*} [Fintype n] [DecidableEq n]
   exact congrArg (fun N : Matrix {i // p i} {j // ¬p j} ℝ => N ⟨i, hi⟩ ⟨j, hj⟩) h12
 
 /-- A zero subdiagonal boundary of a real normal quasitriangular matrix
-separates actual orthogonal diagonal blocks. Horn–Johnson 2013,
+separates orthogonal diagonal blocks. Horn–Johnson 2013,
 Lemma 2.5.2; real normal Schur helper. -/
 theorem real_normal_quasi_cut_eq_zero {k r : ℕ}
     {T : Matrix (Fin k) (Fin k) ℝ} (hT : IsUpperQuasiTriangular T)

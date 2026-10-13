@@ -11,10 +11,11 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator ENNReal
+open scoped Matrix ENNReal
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- The explicit normalized power coefficients in the finite Schatten dual
 attainer. At a nonzero matrix and `1 < p`, these are
 `σᵢ^(p-1) / ‖A‖_(S_p)^(p-1)`.
@@ -23,6 +24,7 @@ def schattenDualCoefficients {m n : Type*} [Fintype m] [Fintype n] [DecidableEq 
     (A : Matrix m n ℝ) (p : ℝ) (i : ℕ) : ℝ :=
   singularValues A i ^ (p - 1) / schattenNorm A p ^ (p - 1)
 
+open scoped Matrix.Norms.L2Operator in
 /-- A nonzero matrix's normalized singular power coefficients have conjugate
 power sum one, with the exact source scaling.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
@@ -46,6 +48,7 @@ theorem sum_schattenDualCoefficients_rpow_eq_one {m n : ℕ}
     ← Real.rpow_mul (singularValues_nonneg A _), hpq.sub_one_mul_conj, hden]
   rw [← Finset.sum_div, ← hpow, div_self (Real.rpow_pos_of_pos hN p).ne']
 
+open scoped Matrix.Norms.L2Operator in
 /-- Pairing with the normalized singular power coefficients is exactly the
 original Schatten norm. Zero singular values contribute zero.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
@@ -76,6 +79,7 @@ theorem sum_singularValues_mul_schattenDualCoefficients_eq {m n : ℕ}
   rw [← Finset.sum_div, ← hpow, Real.rpow_sub hN, Real.rpow_one]
   field_simp [(Real.rpow_pos_of_pos hN p).ne']
 
+open scoped Matrix.Norms.L2Operator in
 /-- In fixed SVD frames, the normalized power coefficients give a unit
 conjugate Schatten norm and attain the source matrix norm.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
@@ -100,6 +104,7 @@ theorem IsSVD.schattenDualCoefficients_attain {m n : ℕ}
   · rw [h.frobInner_mul_rectDiag_mul_transpose,
       sum_singularValues_mul_schattenDualCoefficients_eq A hpq hA]
 
+open scoped Matrix.Norms.L2Operator in
 /-- `Fin` step of `exists_schattenNorm_le_one_frobInner_eq`. -/
 private theorem exists_schattenNorm_le_one_frobInner_eq_fin {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) {p q : ℝ} (hpq : Real.HolderConjugate p q) :
@@ -123,12 +128,14 @@ singular-value prefix of length equal to the matrix rank.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 def polarSingularCoefficients (r i : ℕ) : ℝ := if i < r then 1 else 0
 
+open scoped Matrix.Norms.L2Operator in
 /-- Polar singular coefficients are nonnegative.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem polarSingularCoefficients_nonneg (r i : ℕ) : 0 ≤ polarSingularCoefficients r i := by
   simp only [polarSingularCoefficients]
   split_ifs <;> norm_num
 
+open scoped Matrix.Norms.L2Operator in
 /-- Polar singular coefficients decrease with their index.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem polarSingularCoefficients_antitone (r : ℕ) : Antitone (polarSingularCoefficients r) := by
@@ -183,6 +190,7 @@ theorem rank_mul_rectDiag_leadingSingularCoefficients_mul_transpose {m n : ℕ}
   rw [heq]
   exact rank_mul_rectDiag_polarSingularCoefficients_mul_transpose hU hV hN
 
+open scoped Matrix.Norms.L2Operator in
 /-- The leading singular-vector outer product has nuclear norm one and
 attains the spectral pairing for every nonzero matrix.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
@@ -218,6 +226,7 @@ theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
   · rw [h.frobInner_mul_rectDiag_mul_transpose]
     simpa [leadingSingularCoefficients, hN] using hfirst
 
+open scoped Matrix.Norms.L2Operator in
 /-- `Fin` step of `exists_nuclearNorm_le_one_frobInner_eq_specNorm`. -/
 private theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm_fin {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) :
@@ -233,6 +242,7 @@ private theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm_fin {m n : ℕ}
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- Finite-conjugate Schatten duality is attained on arbitrary finite matrix indices:
 the witness is the explicit singular-power formula in SVD frames (transported from `Fin`),
@@ -253,6 +263,7 @@ theorem exists_schattenNorm_le_one_frobInner_eq (A : Matrix m n ℝ) {p q : ℝ}
     rw [hBr, hBpair, schattenNorm_reindex] at h
     exact h.symm
 
+open scoped Matrix.Norms.L2Operator in
 /-- Spectral–nuclear duality is attained on arbitrary finite indices by the leading
 singular-vector rank-one outer product (transported from `Fin`); the zero matrix uses
 zero, including empty shapes. Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
@@ -270,6 +281,7 @@ theorem exists_nuclearNorm_le_one_frobInner_eq_specNorm (A : Matrix m n ℝ) :
     rw [hBr, hBpair, specNorm_reindex] at h
     exact h.symm
 
+open scoped Matrix.Norms.L2Operator in
 /-- Extended Schatten norms are nonnegative, including exponent infinity.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem schattenNormExtended_nonneg (A : Matrix m n ℝ) (p : ℝ≥0∞) :
@@ -280,8 +292,8 @@ theorem schattenNormExtended_nonneg (A : Matrix m n ℝ) (p : ℝ≥0∞) :
   · rw [schattenNormExtended_eq_of_ne_top _ hp]
     exact schattenNorm_nonneg A _
 
-/-- Every conjugate pair of extended Schatten exponents has an actual
-unit-ball attainer, including `(1,∞)`, `(∞,1)`, rank zero and empty shapes.
+open scoped Matrix.Norms.L2Operator in
+/-- Every conjugate pair of extended Schatten exponents has an unit-ball attainer, including `(1,∞)`, `(∞,1)`, rank zero and empty shapes.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def (partial) -/
 theorem exists_schattenNormExtended_le_one_frobInner_eq (A : Matrix m n ℝ)
@@ -308,10 +320,11 @@ theorem exists_schattenNormExtended_le_one_frobInner_eq (A : Matrix m n ℝ)
       exact exists_schattenNorm_le_one_frobInner_eq A
         (ENNReal.HolderConjugate.toReal_of_ne_top hpTop hqTop)
 
-/-- Schatten duality as a greatest value on the genuine conjugate unit ball.
+open scoped Matrix.Norms.L2Operator in
+/-- Schatten duality as a greatest value on the conjugate unit ball.
 The upper bound is trace Hölder and membership is the explicit SVD attainer.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
-atlas: schatten-norms-def (partial) -/
+atlas: schatten-norms-def -/
 theorem isGreatest_schattenNormExtended_frobInner (A : Matrix m n ℝ)
     {p q : ℝ≥0∞} [ENNReal.HolderConjugate p q] :
     IsGreatest {z : ℝ | ∃ B : Matrix m n ℝ, schattenNormExtended B q ≤ 1 ∧ frobInner A B = z}
@@ -326,6 +339,7 @@ theorem isGreatest_schattenNormExtended_frobInner (A : Matrix m n ℝ)
       mul_le_mul_of_nonneg_left hB (schattenNormExtended_nonneg A p)
     _ = _ := mul_one _
 
+open scoped Matrix.Norms.L2Operator in
 /-- The unit-ball supremum in Schatten duality equals the norm and is attained,
 for every extended conjugate pair and every finite matrix shape.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).

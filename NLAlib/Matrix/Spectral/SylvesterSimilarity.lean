@@ -35,7 +35,7 @@ theorem commute_nonsing_inv_mul_mul_iff
 has exactly the conjugates of block diagonal commuting matrices as its
 commutant. Source: Horn–Johnson (2013), Corollary 2.4.4.2; diagonal blocks
 are constrained to commute, correcting the unrestricted-block formulation.
-atlas: sylvester-equation (partial) -/
+atlas: sylvester-equation -/
 theorem commute_similarity_blockDiagonal'_iff
     {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ι → Type*}
     [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)]

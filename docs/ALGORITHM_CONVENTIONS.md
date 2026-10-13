@@ -26,6 +26,19 @@ Krylov methods follow the same shape with the predicate first (`IsCGIterate`, `L
 the recurrence (`cgRecurrence`, three-term Lanczos) is the witness and `isCGIterate_cgRecurrence`
 the realisation theorem.
 
+**Why CG and Lanczos have no success predicate (F4, 2026-10-13).** `CholeskySucceeds`,
+`GolubKahanSucceeds` and `QRAlgorithmSucceeds` exist because a bad pivot produces junk that
+no longer realises the factorization. The CG and Lanczos recursions are total through
+`x / 0 = 0` in a way that *keeps* realising the predicate: once `r_k = 0` (CG) or `w_j = 0`
+(Lanczos) the state freezes at the exact solution / at the zero vector, which is exactly the CG
+iterate past the grade (`cgRecurrence_add_of_r_eq_zero`, `isCGIterate_cgRecurrence` for every
+`k`) and the zero Arnoldi vector past the grade (`arnoldiBasis_eq_zero_of_krylovGrade_le`,
+`lanczosRecurrence_eq_arnoldiBasis` for every `j`). Breakdown is therefore a theorem about the
+grade, not a predicate: `lanczosBeta_eq_zero_iff` (`β_j = 0 ↔ ν(A, b) ≤ j`),
+`cgRecurrence_r_ne_zero_of_lt_krylovGrade` and `cgRecurrence_r_eq_zero_of_krylovGrade_le`
+(`r_k = 0 ↔ ν(A, r₀) ≤ k` for `A ≻ 0`). A `CGSucceeds`/`LanczosSucceeds` predicate would be
+`True` for `A ≻ 0` / symmetric `A`, so none is defined.
+
 ## 2. Conventions
 - Names: recursion `fooBar` (lowerCamel), success predicate `FooSucceeds` (UpperCamel, Prop),
   factorization predicate `IsFoo`, realisation theorem `isFoo_fooBar`/`isFoo_of_fooSucceeds`,

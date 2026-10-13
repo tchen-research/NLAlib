@@ -10,7 +10,7 @@ supports `hadamard-fischer-inequalities`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {ι m n : Type*} [Fintype ι] [Fintype m] [Fintype n]
   [DecidableEq ι] [DecidableEq m] [DecidableEq n]
@@ -20,7 +20,7 @@ overlapping determinant inequality. Equality is exactly vanishing of the
 cross Schur block after eliminating the intersection. Empty intersections
 and empty exclusive blocks are included. Horn--Johnson (2013), Theorem 7.8.9;
 helper for the principal-index Koteljanski inequality. -/
-theorem det_overlapping_blocks_le_and_eq_iff
+private theorem det_overlapping_blocks_le_and_eq_iff_aux
     (P : Matrix ι ι ℝ) (U : Matrix ι m ℝ) (V : Matrix ι n ℝ)
     (A : Matrix m m ℝ) (B : Matrix m n ℝ) (C : Matrix n n ℝ)
     (hH : (fromBlocks P (fromCols U V) (fromCols U V)ᵀ (fromBlocks A B Bᵀ C)).PosDef) :
@@ -69,5 +69,26 @@ theorem det_overlapping_blocks_le_and_eq_iff
         rw [h]
         ring
     rw [heq, det_fromBlocks_eq_mul_det_iff_of_posDef hSPD]
+
+/-- Two principal blocks sharing a common leading block satisfy the overlapping determinant inequality `det M · det P ≤ det M₁ · det M₂`. Horn–Johnson 2013, Theorem 7.8.9.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem det_overlapping_blocks_le
+    (P : Matrix ι ι ℝ) (U : Matrix ι m ℝ) (V : Matrix ι n ℝ)
+    (A : Matrix m m ℝ) (B : Matrix m n ℝ) (C : Matrix n n ℝ)
+    (hH : (fromBlocks P (fromCols U V) (fromCols U V)ᵀ (fromBlocks A B Bᵀ C)).PosDef) :
+    (fromBlocks P (fromCols U V) (fromCols U V)ᵀ (fromBlocks A B Bᵀ C)).det * P.det ≤
+      (fromBlocks P U Uᵀ A).det * (fromBlocks P V Vᵀ C).det :=
+  (det_overlapping_blocks_le_and_eq_iff_aux P U V A B C hH).1
+
+/-- Equality in the overlapping determinant inequality holds exactly when the cross Schur block `B − Uᵀ P⁻¹ V` vanishes. Horn–Johnson 2013, Theorem 7.8.9.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem det_overlapping_blocks_eq_iff
+    (P : Matrix ι ι ℝ) (U : Matrix ι m ℝ) (V : Matrix ι n ℝ)
+    (A : Matrix m m ℝ) (B : Matrix m n ℝ) (C : Matrix n n ℝ)
+    (hH : (fromBlocks P (fromCols U V) (fromCols U V)ᵀ (fromBlocks A B Bᵀ C)).PosDef) :
+    (fromBlocks P (fromCols U V) (fromCols U V)ᵀ (fromBlocks A B Bᵀ C)).det * P.det =
+      (fromBlocks P U Uᵀ A).det * (fromBlocks P V Vᵀ C).det ↔
+      B - Uᵀ * P⁻¹ * V = 0 :=
+  (det_overlapping_blocks_le_and_eq_iff_aux P U V A B C hH).2
 
 end NLAlib

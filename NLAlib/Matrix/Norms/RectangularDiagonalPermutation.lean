@@ -3,8 +3,7 @@ import NLAlib.Matrix.Norms.RectangularDiagonal
 # Permuting rectangular diagonals with orthogonal matrices
 
 The same thin permutation is extended separately to rows and columns, while
-unused coordinates stay fixed. This realizes gauge permutations on the actual
-fixed rectangular matrix shape. Source: Bhatia (1997), Theorem IV.2.1.
+unused coordinates stay fixed. This realizes gauge permutations on the fixed rectangular matrix shape. Source: Bhatia (1997), Theorem IV.2.1.
 -/
 
 noncomputable section
@@ -62,7 +61,7 @@ theorem rectangularDiagonal_submatrix_prefixPermutation {m n : ℕ}
       x _ _ (by simpa only [prefixPermutation_apply_lt_iff] using hi),
       rectangularDiagonal_apply_eq_zero_of_not_lt_left (x ∘ σ) i j hi]
 
-/-- Thin coordinate permutations are implemented by actual left and right
+/-- Thin coordinate permutations are implemented by left and right
 orthogonal matrices on the original rectangular shape. -/
 theorem exists_orthogonal_rectangularDiagonal_perm {m n : ℕ}
     (x : Fin (min m n) → ℝ) (σ : Equiv.Perm (Fin (min m n))) :

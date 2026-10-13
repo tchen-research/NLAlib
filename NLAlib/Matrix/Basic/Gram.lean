@@ -25,11 +25,8 @@ open scoped Matrix
 
 namespace NLAlib
 
-/-- A square real matrix of full rank has nonzero determinant.
-
-Helper (linear algebra) for the inverse-Wishart computations. Atlas: `inverse-wishart-mean`
-(helper). Generalised from `Fin n` to an arbitrary finite index type. Ported from the Prove2me
-solutions of the inverse Wishart series (`rri_det_ne_zero_of_rank`). -/
+/-- A square real matrix of full rank has nonzero determinant (rank–nullity). Helper for the
+inverse-Wishart computations; atlas `inverse-wishart-mean` (helper). -/
 theorem det_ne_zero_of_rank_eq {n : Type*} [Fintype n] [DecidableEq n] (M : Matrix n n ℝ)
     (h : M.rank = Fintype.card n) : M.det ≠ 0 := by
   intro hdet
@@ -42,10 +39,9 @@ theorem det_ne_zero_of_rank_eq {n : Type*} [Fintype n] [DecidableEq n] (M : Matr
   simp only [Module.finrank_fintype_fun_eq_card] at h2
   omega
 
-/-- `(G Gᵀ)⁻¹` is positive semidefinite for every real matrix `G`.
-
-Helper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the
-Prove2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_inv`). -/
+/-- `(G Gᵀ)⁻¹` is positive semidefinite for every real matrix `G` (Mathlib's total inverse, `0`
+when `G Gᵀ` is singular). Helper for Tropp–Webber 2023, App. B; atlas `inverse-wishart-mean`
+(helper). -/
 theorem posSemidef_inv_self_mul_transpose {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
     (G : Matrix m n ℝ) : ((G * Gᵀ)⁻¹).PosSemidef := by
   have := Matrix.posSemidef_self_mul_conjTranspose G
@@ -53,10 +49,8 @@ theorem posSemidef_inv_self_mul_transpose {m n : Type*} [Fintype m] [Fintype n] 
   exact this.inv
 
 /-- An entry of a real positive semidefinite matrix is dominated by the diagonal:
-`|Mᵢⱼ| ≤ Mᵢᵢ + Mⱼⱼ`.
-
-Helper for Tropp–Webber 2023, App. B. Atlas: `inverse-wishart-mean` (helper). Ported from the
-Prove2me solution `Sol_GaussianMatrix_inverse_wishart_rotation_relation` (`iwr_psd_offdiag`). -/
+`|Mᵢⱼ| ≤ Mᵢᵢ + Mⱼⱼ`. Horn–Johnson 2013, Obs. 7.1.10; helper for Tropp–Webber 2023, App. B;
+atlas `inverse-wishart-mean` (helper). -/
 theorem abs_apply_le_apply_self_add_apply_self {m : Type*} [Fintype m] [DecidableEq m]
     (M : Matrix m m ℝ) (hM : M.PosSemidef) (i j : m) : |M i j| ≤ M i i + M j j := by
   have hs : M j i = M i j := by

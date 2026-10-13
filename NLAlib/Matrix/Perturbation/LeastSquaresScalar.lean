@@ -6,7 +6,7 @@ import Mathlib.Tactic.Ring
 /-!
 # Scalar conversion of least-squares perturbation estimates
 
-These scalar inequalities convert the actual residual estimates into the
+These scalar inequalities convert the residual estimates into the
 advertised relative and angle coefficients and an explicit quadratic
 first-order remainder. Source: Higham, Theorem 20.1; Golub--Van Loan,
 Theorem 5.3.1. Supports `least-squares-perturbation`.
@@ -39,7 +39,7 @@ theorem least_squares_forward_ratio_le {Q M a X b R ε : ℝ}
     _ = _ := by field_simp [hM.ne', hX.ne', hd.ne']; ring
 
 /-- The same residual estimate yields the angle coefficient with the
-actual fitted-vector length; Golub--Van Loan, Theorem 5.3.1. -/
+fitted-vector length; Golub--Van Loan, Theorem 5.3.1. -/
 theorem least_squares_forward_angle_coefficient_le {Q M a X b R ε L : ℝ}
     (hM : 0 < M) (hX : 0 < X) (ha : 0 ≤ a) (hR : 0 ≤ R)
     (hb : 0 < b) (hε : 0 ≤ ε) (hsmall : M * a * ε < 1)

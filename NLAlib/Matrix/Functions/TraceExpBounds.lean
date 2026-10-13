@@ -43,8 +43,7 @@ theorem traceExp_add_smul_one_eq_exp_mul (A : Matrix n n ℂ) (t : ℝ) :
   have hc : Commute A (t • (1 : Matrix n n ℂ)) := (Commute.one_right A).smul_right t
   have he : matrixExp (A + t • (1 : Matrix n n ℂ)) =
       matrixExp A * matrixExp (t • (1 : Matrix n n ℂ)) := NormedSpace.exp_add_of_commute hc
-  unfold traceExp
-  rw [he, matrixExp_smul_one_eq_exp_smul_one, Matrix.mul_smul, Matrix.mul_one, Matrix.trace_smul]
+  rw [traceExp_complex, traceExp_complex, he, matrixExp_smul_one_eq_exp_smul_one, Matrix.mul_smul, Matrix.mul_one, Matrix.trace_smul]
   simp only [Complex.smul_re, smul_eq_mul]
 
 /-- The trace exponential changes by at most the multiplicative factor `exp δ` when
@@ -79,8 +78,7 @@ theorem traceExp_nonneg_of_isHermitian (A : Matrix n n ℂ) (hA : A.IsHermitian)
 Source: the exact scalar exponential identity; helper for `matrix-freedman` (partial). -/
 theorem traceExp_smul_one_eq_card_mul_exp (t : ℝ) :
     traceExp (t • (1 : Matrix n n ℂ)) = Fintype.card n * Real.exp t := by
-  unfold traceExp
-  rw [matrixExp_smul_one_eq_exp_smul_one, Matrix.trace_smul]
+  rw [traceExp_complex, matrixExp_smul_one_eq_exp_smul_one, Matrix.trace_smul]
   simp only [Matrix.trace_one, Complex.smul_re, Complex.natCast_re, smul_eq_mul, mul_comm]
 
 /-- `traceExp (θ • A)` is nonnegative and dominates `exp (θ λmax A)` for `θ > 0` and `exp (θ λmin A)`

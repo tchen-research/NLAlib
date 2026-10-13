@@ -10,9 +10,9 @@ Atlas: `matrix-laplace`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Lemma 3.5.1, equation (3.5.1), printed pp. 35–36.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 private lemma finite_tensorization {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ)
@@ -79,6 +79,7 @@ private lemma finite_tensorization {Ω : Type*} [MeasurableSpace Ω]
       simpa only [L, Finset.sum_insert ha, add_assoc, add_left_comm, add_comm] using step
     simpa only [L, Finset.sum_insert ha, add_assoc] using step'.trans finish
 
+open scoped Matrix.Norms.L2Operator in
 /-- Subadditivity of matrix cgfs: `𝔼 traceExp (∑ k, θ • X k) ≤ traceExp (cumulantSum μ X θ)` for
 independent Hermitian random matrices.
 

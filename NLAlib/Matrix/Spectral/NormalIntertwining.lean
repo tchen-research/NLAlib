@@ -9,12 +9,13 @@ atlas `normal-matrices`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Intertwining complex normal matrices is unchanged by taking adjoints.
 Source: Horn–Johnson (2013), Theorem 2.5.15; Mathlib's
 Fuglede–Putnam–Rosenblum theorem supplies the C⋆-algebra proof.

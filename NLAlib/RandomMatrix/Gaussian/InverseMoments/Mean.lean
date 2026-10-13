@@ -5,7 +5,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.Residual
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
 import NLAlib.Probability.ChiSquare.ChiSquare
-import NLAlib.Matrix.Structured.Measurable
+import NLAlib.Matrix.Measurability.Measurable
 
 /-!
 # Mean of the inverse Wishart matrix and the Frobenius moment of the pseudoinverse

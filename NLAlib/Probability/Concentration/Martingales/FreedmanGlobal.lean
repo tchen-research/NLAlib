@@ -11,10 +11,11 @@ give the parameter bound. The exact Bernstein parameter retains the stated const
 noncomputable section
 
 open MeasureTheory Matrix Finset Filter Set
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder ENNReal
+open scoped MatrixOrder ComplexOrder ENNReal
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Ville's inequality for the actual compensated matrix trace process bounds the
 original matrix crossing. This intermediate states its supermartingale hypothesis
 explicitly; the actual conditional-moment theorem below proves it.
@@ -27,8 +28,8 @@ theorem measure_exists_matrix_crossing_le_of_trace_supermartingale
     (hX : ∀ j, ∀ᵐ ω ∂μ, (X j ω).IsHermitian)
     (hV : ∀ j, ∀ᵐ ω ∂μ, (V j ω).IsHermitian)
     (hS : Supermartingale (matrixCompensatedTracePotential θ g X V) ℱ μ) :
-    (μ {ω | ∃ k, t ≤ lambdaMax (matrixIncrementSum X k ω) ∧
-        ‖matrixIncrementSum V k ω‖ ≤ v}).toReal ≤
+    μ.real {ω | ∃ k, t ≤ lambdaMax (matrixIncrementSum X k ω) ∧
+        ‖matrixIncrementSum V k ω‖ ≤ v} ≤
       Fintype.card n * Real.exp (-θ * t + g * v) := by
   let S := matrixCompensatedTracePotential θ g X V
   have hall : ∀ᵐ ω ∂μ, (∀ j, (X j ω).IsHermitian) ∧ ∀ j, (V j ω).IsHermitian :=
@@ -59,6 +60,7 @@ theorem measure_exists_matrix_crossing_le_of_trace_supermartingale
   congr 2
   ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- Actual integrable conditional second moments give the parameter matrix Freedman
 bound on the arbitrary-time matrix crossing, with upper-only bounded increments.
 This is the global integrability intermediate used after the audited predictable cut.
@@ -76,8 +78,8 @@ theorem measure_exists_matrix_crossing_le_of_condExp_sq
     (hMean : ∀ j, μ[X j | ℱ j] =ᵐ[μ] 0)
     {L θ t v : ℝ} (hθ : 0 < θ) (hθL : θ * L < 3)
     (hBound : ∀ j, ∀ᵐ ω ∂μ, X j ω ≤ algebraMap ℝ (Matrix n n ℂ) L) :
-    (μ {ω | ∃ k, t ≤ lambdaMax (matrixIncrementSum X k ω) ∧
-        ‖matrixIncrementSum V k ω‖ ≤ v}).toReal ≤
+    μ.real {ω | ∃ k, t ≤ lambdaMax (matrixIncrementSum X k ω) ∧
+        ‖matrixIncrementSum V k ω‖ ≤ v} ≤
       Fintype.card n * Real.exp (-θ * t + ((θ ^ 2 / 2) / (1 - θ * L / 3)) * v) := by
   have hVHerm : ∀ j, ∀ᵐ ω ∂μ, (V j ω).IsHermitian := by
     intro j

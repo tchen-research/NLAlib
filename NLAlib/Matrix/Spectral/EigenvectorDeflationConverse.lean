@@ -20,7 +20,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n] {K : Type*} [Field K]
 /-- An isolated row and column under an invertible similarity supply nonzero
 right and left eigenvectors with pairing one. Source: Horn–Johnson (2013),
 Theorem 1.4.7, converse; the left vector is the corresponding inverse row.
-atlas: left-right-eigenvectors (partial) -/
+atlas: left-right-eigenvectors -/
 theorem eigenpair_of_isolated_similarity
     (A S : Matrix n n K) (i : n) (μ : K) (hS : IsUnit S)
     (hcol : ∀ j, (S⁻¹ * A * S) j i = if j = i then μ else 0)
@@ -55,7 +55,7 @@ theorem eigenpair_of_isolated_similarity
 scalar multiple of any nonzero right-column/left-row eigenvector pair.
 Source: Horn–Johnson (2013), Theorem 1.4.12. Algebraic simplicity and nonzero
 left–right pairing are not required, so defective eigenvalues are included.
-atlas: left-right-eigenvectors (partial) -/
+atlas: left-right-eigenvectors -/
 theorem exists_adjugate_shift_eq_smul_vecMulVec_of_finrank_eigenspace_eq_one
     {A : Matrix n n K} {x y : n → K} {μ : K}
     (hx : x ≠ 0) (hy : y ≠ 0) (hAx : A *ᵥ x = μ • x) (hyA : y ᵥ* A = μ • y)

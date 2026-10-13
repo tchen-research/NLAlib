@@ -1,3 +1,4 @@
+import NLAlib.Probability.Gaussian.Basic.StandardGaussian
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.LinearAlgebra.SesquilinearForm.Star
 
@@ -6,7 +7,7 @@ import Mathlib.LinearAlgebra.SesquilinearForm.Star
 
 Every centered Gaussian law, including singular covariance, is the canonical
 multivariate law and hence a linear image of independent standard coordinates.
-Source: operator re-derivation `pg:gaussian-linear-image`.
+Source: Vershynin 2018, §3.3.2.
 Supports atlas `isserlis` and `rotation-invariance`.
 -/
 
@@ -17,7 +18,7 @@ namespace NLAlib
 
 /-- The covariance matrix of a Euclidean vector law, in the standard basis.
 For a centered Gaussian it equals the coordinate product expectations.
-Source: operator re-derivation `pg:gaussian-linear-image`. -/
+Source: Vershynin 2018, §3.3.2. -/
 def gaussianCovarianceMatrix {n : ℕ} (μ : Measure (EuclideanSpace ℝ (Fin n))) :
     Matrix (Fin n) (Fin n) ℝ :=
   LinearMap.toMatrix₂ (EuclideanSpace.basisFun (Fin n) ℝ).toBasis
@@ -33,7 +34,7 @@ theorem gaussianCovarianceMatrix_posSemidef {n : ℕ}
       (LinearMap.BilinForm.isPosSemidef_iff.mp isPosSemidef_covarianceBilin)
 
 /-- Covariance matrix entries are covariances of the coordinate maps.
-Source: the standard Euclidean basis; operator re-derivation `pg:gaussian-linear-image`. -/
+Source: Vershynin 2018, §3.3.2. -/
 theorem gaussianCovarianceMatrix_apply {n : ℕ}
     (μ : Measure (EuclideanSpace ℝ (Fin n))) [IsProbabilityMeasure μ]
     (hμ : MemLp id 2 μ) (i j : Fin n) :
@@ -44,8 +45,7 @@ theorem gaussianCovarianceMatrix_apply {n : ℕ}
 
 /-- An arbitrary centered Gaussian law is its canonical covariance law.
 No inverse covariance or nonsingularity assumption is used.
-Source: operator re-derivation `pg:gaussian-linear-image`, Gaussian uniqueness
-from mean and covariance. -/
+Source: Vershynin 2018, §3.3.2 (a Gaussian law is determined by mean and covariance). -/
 theorem gaussian_eq_multivariateGaussian_covariance_of_centered {n : ℕ}
     (μ : Measure (EuclideanSpace ℝ (Fin n))) [IsGaussian μ]
     (hmean : ∫ x, x ∂μ = 0) :
@@ -62,11 +62,11 @@ theorem gaussian_eq_multivariateGaussian_covariance_of_centered {n : ℕ}
 
 /-- A general centered Gaussian law is the image of independent standard
 coordinates under the positive covariance square root, including singular
-and zero-dimensional laws. Source: operator re-derivation `pg:gaussian-linear-image`. -/
-theorem gaussian_eq_map_pi_sqrt_covariance_of_centered {n : ℕ}
+and zero-dimensional laws. Source: Vershynin 2018, §3.3.2. -/
+theorem gaussian_eq_map_gaussianVector_sqrt_covariance_of_centered {n : ℕ}
     (μ : Measure (EuclideanSpace ℝ (Fin n))) [IsGaussian μ]
     (hmean : ∫ x, x ∂μ = 0) :
-    μ = (Measure.pi (fun _ : Fin n => gaussianReal 0 1)).map
+    μ = (gaussianVector (Fin n)).map
       (fun x => WithLp.toLp 2 (CFC.sqrt (gaussianCovarianceMatrix μ) *ᵥ x)) := by
   calc
     μ = multivariateGaussian 0 (gaussianCovarianceMatrix μ) :=

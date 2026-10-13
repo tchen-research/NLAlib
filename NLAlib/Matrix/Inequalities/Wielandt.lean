@@ -10,7 +10,7 @@ atlas `kantorovich-inequality`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

@@ -12,9 +12,8 @@ supports `schur-product-inequalities`.
 
 noncomputable section
 open Matrix Filter
-open scoped Topology MatrixOrder Matrix.Norms.L2Operator
+open scoped Topology MatrixOrder
 namespace NLAlib
-set_option backward.isDefEq.respectTransparency false
 variable {n : Type*} [Fintype n]
 
 /-- A limit of PSD real matrices along a nontrivial filter is PSD.

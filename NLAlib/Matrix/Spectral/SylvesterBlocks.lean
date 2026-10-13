@@ -18,7 +18,7 @@ namespace NLAlib
 /-- Disjoint complex spectra give exactly one real solution of every real
 Sylvester equation. Source: Horn–Johnson (2013), Theorem 2.4.4.1;
 arbitrary finite rectangular shapes, including empty ones, are allowed.
-atlas: sylvester-equation (partial) -/
+atlas: sylvester-equation -/
 theorem existsUnique_real_sylvester_of_disjoint_complex_spectrum
     {m n : Type*} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
     (A : Matrix m m ℝ) (B : Matrix n n ℝ)
@@ -74,7 +74,7 @@ theorem submatrix_mul_blockDiagonal' (B : ∀ i, Matrix (n i) (n i) K)
 vanishes off the block diagonal if the corresponding distinct block spectra
 are disjoint. Its diagonal blocks still intertwine the corresponding blocks.
 Source: Horn–Johnson (2013), Corollary 2.4.4.2.
-atlas: sylvester-equation (partial) -/
+atlas: sylvester-equation -/
 theorem eq_blockDiagonal'_of_intertwines_of_disjoint_spectrum [IsAlgClosed K]
     (A : ∀ i, Matrix (m i) (m i) K) (B : ∀ i, Matrix (n i) (n i) K)
     (hdisj : ∀ i j, i ≠ j → Disjoint (spectrum K (A i)) (spectrum K (B j)))

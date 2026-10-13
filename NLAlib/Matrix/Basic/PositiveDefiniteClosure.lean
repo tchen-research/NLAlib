@@ -10,7 +10,7 @@ supports determinant inequalities and Schur-product inequalities.
 
 noncomputable section
 open Matrix Filter
-open scoped Topology MatrixOrder Matrix.Norms.L2Operator
+open scoped Topology MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

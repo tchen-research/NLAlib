@@ -226,7 +226,7 @@ private theorem finish {d : ℕ} [NeZero d]
   have hc := jointTensor_contraction (A * matrixLog A) (1 : Matrix (Fin d) (Fin d) ℂ)
   simp only [transpose_one, mul_one] at hc
   rw [hc]
-  simp [relativeEntropy, mul_sub, Matrix.trace_sub, Complex.sub_re]
+  simp [relativeEntropy_complex, mul_sub, Matrix.trace_sub, Complex.sub_re]
 
 set_option maxHeartbeats 1000000 in
 private theorem cfc_transpose {d : ℕ} (H : Matrix (Fin d) (Fin d) ℂ)

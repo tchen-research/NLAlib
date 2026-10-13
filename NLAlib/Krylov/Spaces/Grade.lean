@@ -224,7 +224,7 @@ theorem krylovGrade_le_natDegree_minpoly :
       (by rw [degree_X_pow, hpdeg]) hmon.ne_zero
       (by rw [hmon.leadingCoeff, leadingCoeff_X_pow])
     rwa [hpdeg] at h
-  have hmem := (mem_krylovSpace_iff_degree A b m (-(aeval A (p - X ^ m) *ᵥ b))).2
+  have hmem := (mem_krylovSpace_iff A b m (-(aeval A (p - X ^ m) *ᵥ b))).2
     ⟨-(p - X ^ m), by rwa [degree_neg], by rw [map_neg, Matrix.neg_mulVec]⟩
   have hp : aeval A p = 0 := minpoly.aeval ℝ A
   rw [map_sub, hp, zero_sub, Matrix.neg_mulVec, neg_neg, map_pow, aeval_X] at hmem

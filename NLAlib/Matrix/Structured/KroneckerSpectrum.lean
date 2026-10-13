@@ -18,8 +18,9 @@ multiplicities and signed entries. The real spectral theorem; Kronecker helper.
 -/
 theorem multiset_eigenvalues_eq_of_orthogonal_diagonalization {n : Type*}
     [Fintype n] [DecidableEq n] {T P : Matrix n n ℝ} (hT : T.IsHermitian)
-    (d : n → ℝ) (hP : Pᵀ * P = 1) (hTd : T = P * Matrix.diagonal d * Pᵀ) :
+    (d : n → ℝ) (hPo : HasOrthonormalCols P) (hTd : T = P * Matrix.diagonal d * Pᵀ) :
     Finset.univ.val.map hT.eigenvalues = Finset.univ.val.map d := by
+  have hP : Pᵀ * P = 1 := hPo
   have hc : T.charpoly = (Matrix.diagonal d).charpoly := by
     rw [hTd, Matrix.charpoly_mul_comm]
     rw [← Matrix.mul_assoc Pᵀ P, hP, Matrix.one_mul]
@@ -31,10 +32,13 @@ theorem multiset_eigenvalues_eq_of_orthogonal_diagonalization {n : Type*}
 /-- Tensor products of orthogonal matrices are orthogonal.
 Horn–Johnson 1991, Theorem 4.2.15; all finite index types, including empty ones.
 -/
-theorem transpose_kronecker_mul_self_eq_one {m n : Type*} [Fintype m] [Fintype n]
+theorem hasOrthonormalCols_kronecker {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] {U : Matrix m m ℝ} {V : Matrix n n ℝ}
-    (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1) :
-    (U ⊗ₖ V)ᵀ * (U ⊗ₖ V) = 1 := by
+    (hUo : HasOrthonormalCols U) (hVo : HasOrthonormalCols V) :
+    HasOrthonormalCols (U ⊗ₖ V) := by
+  have hU : Uᵀ * U = 1 := hUo
+  have hV : Vᵀ * V = 1 := hVo
+  change (U ⊗ₖ V)ᵀ * (U ⊗ₖ V) = 1
   rw [← Matrix.kroneckerMap_transpose, ← Matrix.mul_kronecker_mul, hU, hV,
     Matrix.one_kronecker_one]
 
@@ -65,20 +69,20 @@ theorem eq_eigenvectorUnitary_kronecker_mul_diagonal_mul_transpose
 /-- The Kronecker product's eigenvalues are exactly all pairwise products, as a
 multiset with algebraic multiplicities. Horn–Johnson 1991, Theorem 4.2.12.
 Empty dimensions give empty multisets; pairwise products need sorting for an ordered list.
-atlas: kronecker-spectral (partial) -/
+atlas: kronecker-spectral -/
 theorem multiset_eigenvalues_kronecker {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] {A : Matrix m m ℝ} {B : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) :
     Finset.univ.val.map (isHermitian_kronecker hA hB).eigenvalues =
       (Finset.univ : Finset (m × n)).val.map (fun ij => hA.eigenvalues ij.1 * hB.eigenvalues ij.2) := by
   apply multiset_eigenvalues_eq_of_orthogonal_diagonalization _ _
-    (transpose_kronecker_mul_self_eq_one (transpose_eigenvectorUnitary_mul_self hA)
+    (hasOrthonormalCols_kronecker (transpose_eigenvectorUnitary_mul_self hA)
       (transpose_eigenvectorUnitary_mul_self hB))
   exact eq_eigenvectorUnitary_kronecker_mul_diagonal_mul_transpose hA hB
 
 /-- The Kronecker sum's eigenvalues are exactly all pairwise sums, as a multiset.
 Horn–Johnson 1991, Theorem 4.2.12; signed symmetric spectra and empty types are included.
-atlas: kronecker-spectral (partial) -/
+atlas: kronecker-spectral -/
 theorem multiset_eigenvalues_kronecker_sum {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] {A : Matrix m m ℝ} {B : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) :
@@ -93,7 +97,7 @@ theorem multiset_eigenvalues_kronecker_sum {m n : Type*} [Fintype m] [Fintype n]
   have hU' : U * Uᵀ = 1 := mul_eq_one_comm.mp hU
   have hV' : V * Vᵀ = 1 := mul_eq_one_comm.mp hV
   apply multiset_eigenvalues_eq_of_orthogonal_diagonalization _ _
-    (transpose_kronecker_mul_self_eq_one hU hV)
+    (hasOrthonormalCols_kronecker hU hV)
   have hleft : A ⊗ₖ (1 : Matrix n n ℝ) = (U ⊗ₖ V) *
       Matrix.diagonal (fun ij => hA.eigenvalues ij.1) * (U ⊗ₖ V)ᵀ := by
     conv_lhs => rw [eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA, ← hV']

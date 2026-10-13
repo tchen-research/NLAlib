@@ -55,7 +55,7 @@ theorem isDiag_inv_iff_of_isUnit {A : Matrix n n ℝ} (hA : IsUnit A) :
 the determinant to the dimension minus one. For positive definite matrices,
 equality holds exactly for diagonal matrices. This is the local Szász step.
 Horn--Johnson (2013), Lemma 7.8.8 and Theorem 7.8.11. -/
-theorem det_pow_card_pred_le_prod_complement_singleton_and_eq_iff
+private theorem det_pow_card_pred_le_prod_complement_singleton_and_eq_iff_aux
     [Nonempty n] {A : Matrix n n ℝ} (hA : A.PosDef) :
     A.det ^ (Fintype.card n - 1) ≤
       ∏ i, (A.toBlock (fun j => j ≠ i) (fun j => j ≠ i)).det ∧
@@ -83,5 +83,21 @@ theorem det_pow_card_pred_le_prod_complement_singleton_and_eq_iff
       have he := (det_eq_prod_diag_iff_isDiag_of_posDef hA.inv).mpr
         ((isDiag_inv_iff_of_isUnit hA.isUnit).mpr h)
       rw [he]
+
+/-- `det(A)^{n−1} ≤ ∏ᵢ det A[iᶜ]` for positive definite `A` (local Szász step). Horn–Johnson 2013, Lemma 7.8.8.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem det_pow_card_pred_le_prod_complement_singleton
+    [Nonempty n] {A : Matrix n n ℝ} (hA : A.PosDef) :
+    A.det ^ (Fintype.card n - 1) ≤
+      ∏ i, (A.toBlock (fun j => j ≠ i) (fun j => j ≠ i)).det :=
+  (det_pow_card_pred_le_prod_complement_singleton_and_eq_iff_aux hA).1
+
+/-- Equality in the local Szász step holds exactly for diagonal matrices. Horn–Johnson 2013, Theorem 7.8.11.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem det_pow_card_pred_eq_prod_complement_singleton_iff
+    [Nonempty n] {A : Matrix n n ℝ} (hA : A.PosDef) :
+    A.det ^ (Fintype.card n - 1) =
+      (∏ i, (A.toBlock (fun j => j ≠ i) (fun j => j ≠ i)).det) ↔ A.IsDiag :=
+  (det_pow_card_pred_le_prod_complement_singleton_and_eq_iff_aux hA).2
 
 end NLAlib

@@ -11,7 +11,7 @@ Horn–Johnson 2013, §§7.4.4–7.4.6 and Corollary 7.4.1.5.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -89,7 +89,7 @@ theorem posSemidef_cross_products_of_frobSq_sub_eq_sum_singularValues_sub_sq
   simpa only [Matrix.transpose_transpose] using
     posSemidef_mul_transpose_of_frobInner_eq_sum_singularValues_mul Bᵀ Aᵀ hPairT
 
-/-- Genuine orthogonal rotations on both sides attain von Neumann's
+/-- Orthogonal rotations on both sides attain von Neumann's
 singular-value pairing, on arbitrary finite rectangular indices.
 Horn–Johnson 2013, §7.4.5.
 atlas: orthogonal-procrustes (partial) -/
@@ -127,7 +127,7 @@ theorem exists_orthogonal_pair_attaining_singularValue_pairing (A B : Matrix m n
   rw [hAligned, hA.frobInner_mul_rectDiag_mul_transpose]
 
 /-- Two-sided orthogonal Procrustes has the exact singular-value squared
-distance as its minimum. SVD alignment supplies genuine attained rotations,
+distance as its minimum. SVD alignment supplies the attained rotations,
 including rank-deficient and empty shapes. Horn–Johnson 2013, §7.4.5.
 atlas: orthogonal-procrustes (partial) -/
 theorem isLeast_frobSq_sub_orthogonal_mul_mul (A B : Matrix m n ℝ) :

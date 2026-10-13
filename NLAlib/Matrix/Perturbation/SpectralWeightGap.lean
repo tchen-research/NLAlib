@@ -11,7 +11,7 @@ Davis–Kahan proof. Source: Yu–Wang–Samworth, Theorem 2.
 noncomputable section
 namespace NLAlib
 
-/-- A finite prefix indicator sum equals the sum over the actual prefix
+/-- A finite prefix indicator sum equals the sum over the prefix
 index type. Useful for frame Frobenius and trace budgets. -/
 theorem sum_fin_ite_lt_eq_sum_prefix {N k : ℕ} (hk : k ≤ N) (f : Fin N → ℝ) :
     (∑ i : Fin N, if i.val < k then f i else 0)=∑ j : Fin k, f (Fin.castLE hk j) := by
@@ -52,7 +52,7 @@ theorem antitone_sub_prefix_gap {N k : ℕ} (a : Fin N → ℝ) (ha : Antitone a
 
 /-- The loss in a top-`k` linear objective dominates the boundary gap
 times missing prefix mass. Yu–Wang–Samworth, Theorem 2, finite trace proof.
-Weights are actual nonnegative contractions of total `k`; no norm conclusion
+Weights are nonnegative contractions of total `k`; no norm conclusion
 is assumed. -/
 theorem prefix_gap_mul_deficit_le_trace_deficit {N k : ℕ} (a w : Fin N → ℝ)
     (ha : Antitone a) (hw0 : ∀ i, 0 ≤ w i) (hw1 : ∀ i, w i ≤ 1)

@@ -3,7 +3,7 @@ import NLAlib.Matrix.Spectral.SchurTriangularization
 /-!
 # Counting characteristic roots in a set
 
-Counts use the actual characteristic-root multiset, so all algebraic
+Counts use the characteristic-root multiset, so all algebraic
 multiplicities are retained. Complete root tuples can be recovered from
 finitely many polynomial values, avoiding any choice of continuous root labels.
 Source: Horn–Johnson (2013), Theorem 6.1.1.

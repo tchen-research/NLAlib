@@ -13,7 +13,7 @@ Moved from the Hanson–Wright proof (ported from HighDimProb commit c0cb8d9) in
 
 open MeasureTheory ProbabilityTheory Real
 
-namespace NLAlib
+namespace ProbabilityTheory
 
 /-- If the `X i` are independent and a.e.-measurable and each `exp (t X i)` is integrable for
 `i ∈ s`, then `exp (t ∑_{i ∈ s} X i)` is integrable; the `AEMeasurable` version of
@@ -36,4 +36,4 @@ theorem iIndepFun.integrable_exp_mul_sum₀ {Ω ι : Type*} [MeasurableSpace Ω]
       refine IndepFun.integrable_exp_mul_add ?_ (h_int i (Finset.mem_insert_self _ _)) h_rec
       exact (h_indep.indepFun_finsetSum_of_notMem₀ h_meas hi_notin_s).symm
 
-end NLAlib
+end ProbabilityTheory

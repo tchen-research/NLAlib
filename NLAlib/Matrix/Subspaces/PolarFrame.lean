@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Structured.Measurable
+import NLAlib.Matrix.Measurability.Measurable
 import Mathlib.Analysis.Matrix.Order
 
 /-!

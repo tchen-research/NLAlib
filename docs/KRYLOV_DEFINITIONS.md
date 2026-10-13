@@ -85,7 +85,7 @@ than by executing a recurrence.
 ```
 K0  spaces       krylovSpace, krylovGrade, blockKrylovSpace          (Krylov/Basic, Krylov/Polynomial, Krylov/Grade, Krylov/Block)
 K1  transfer     residual polynomials; minimiser-beats-every-polynomial (Krylov/Minimiser)
-K2  methods      IsAffineMinimiser, IsPetrovGalerkinIterate, polyIterate and their instances
+K2  methods      IsAffineMinimizer, IsPetrovGalerkinIterate, polyIterate and their instances
 K3  processes    arnoldiBasis : ℕ → n → ℝ, arnoldiMatrix, arnoldiHessenberg; Arnoldi relation; Lanczos = symmetric case
 K4  realisation  recurrences (CG/Hestenes–Stiefel, Lanczos three-term, Chebyshev semi-iteration) = K2/K3 objects
 K5  inexact      IsPerturbedArnoldi-style hypotheses (AQ = QH + f eᵀ + F); no rounding model
@@ -155,28 +155,28 @@ basis (§3.5) is a *particular* orthonormal basis with extra structure. It is no
 
 ```lean
 /-- `x` minimises `E` over the affine space `x₀ + S`. -/
-def IsAffineMinimiser (E : (n → ℝ) → ℝ) (x₀ : n → ℝ) (S : Submodule ℝ (n → ℝ)) (x : n → ℝ) : Prop :=
+def IsAffineMinimizer (E : (n → ℝ) → ℝ) (x₀ : n → ℝ) (S : Submodule ℝ (n → ℝ)) (x : n → ℝ) : Prop :=
   x - x₀ ∈ S ∧ ∀ y ∈ S, E x ≤ E (x₀ + y)
-theorem isAffineMinimiser_iff_isMinOn :
-    IsAffineMinimiser E x₀ S x ↔ x ∈ AffineSubspace.mk' x₀ S ∧ IsMinOn E (AffineSubspace.mk' x₀ S) x
+theorem isAffineMinimizer_iff_isMinOn :
+    IsAffineMinimizer E x₀ S x ↔ x ∈ AffineSubspace.mk' x₀ S ∧ IsMinOn E (AffineSubspace.mk' x₀ S) x
 /-- Residual-polynomial algebra (promote the private CG lemma; Polynomial/Basic). -/
 theorem exists_degree_lt_eq_X_mul_of_eval_zero {p : ℝ[X]} (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) :
     ∃ s : ℝ[X], s.degree < q ∧ 1 - p = X * s
 /-- K1: a Krylov minimiser beats every residual polynomial. No spectral hypothesis, any `E`. -/
-theorem IsAffineMinimiser.le_aeval {E} (hx : IsAffineMinimiser E x₀ (krylovSpace A (c - A *ᵥ x₀) q) x)
+theorem IsAffineMinimizer.le_aeval {E} (hx : IsAffineMinimizer E x₀ (krylovSpace A (c - A *ᵥ x₀) q) x)
     (hxs : A *ᵥ xs = c) {p : ℝ[X]} (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) :
     E x ≤ E (xs + aeval A p *ᵥ (x₀ - xs))
 /-- The class theorem: weighted-norm minimisers, symmetric `A`, weight `g(A)`, `g ≥ 0` on the spectrum.
 CG: `g = X` (via `cgObjective_eq_add_quadForm_sub`); MINRES: `g = X²`; error-minimising: `g = 1`. -/
-theorem quadForm_sub_le_of_isAffineMinimiser {A : Matrix n n ℝ} (hA : A.IsHermitian) {g : ℝ[X]}
+theorem quadForm_sub_le_of_isAffineMinimizer {A : Matrix n n ℝ} (hA : A.IsHermitian) {g : ℝ[X]}
     (hg : ∀ i, 0 ≤ g.eval (hA.eigenvalues i)) (hxs : A *ᵥ xs = c)
-    (hx : IsAffineMinimiser (fun y => quadForm (aeval A g) (y - xs)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x)
+    (hx : IsAffineMinimizer (fun y => quadForm (aeval A g) (y - xs)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x)
     {p : ℝ[X]} (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) {M : ℝ} (hM : ∀ i, |p.eval (hA.eigenvalues i)| ≤ M) :
     quadForm (aeval A g) (x - xs) ≤ M ^ 2 * quadForm (aeval A g) (x₀ - xs)
 ```
 
 The spectral step is `quadForm_aeval_mulVec_le` generalised from weight `A` to weight `aeval A g`.
-`IsCGIterate` becomes `IsAffineMinimiser (cgObjective A c) x₀ (krylovSpace A (c - A *ᵥ x₀) q)`
+`IsCGIterate` becomes `IsAffineMinimizer (cgObjective A c) x₀ (krylovSpace A (c - A *ᵥ x₀) q)`
 by `Iff.rfl`: keep the name and redefine the body. `quadForm_sub_le_of_isCGIterate_of_poly` then
 becomes a two-line corollary.
 
@@ -184,7 +184,7 @@ becomes a two-line corollary.
 
 ```lean
 def IsGMRESIterate (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
-  IsAffineMinimiser (fun y => (c - A *ᵥ y) ⬝ᵥ (c - A *ᵥ y)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x
+  IsAffineMinimizer (fun y => (c - A *ᵥ y) ⬝ᵥ (c - A *ᵥ y)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x
 theorem exists_isGMRESIterate (A c x₀ q) : ∃ x, IsGMRESIterate A c x₀ q x   -- any A: least squares
 theorem IsGMRESIterate.exists_residual_eq (hx : IsGMRESIterate A c x₀ q x) :
     ∃ p : ℝ[X], p.degree ≤ q ∧ p.eval 0 = 1 ∧ c - A *ᵥ x = aeval A p *ᵥ (c - A *ᵥ x₀)
@@ -201,15 +201,15 @@ theorem isGMRESIterate_iff_isPetrovGalerkinIterate :   -- r ⟂ A K_q
   Crouzeix–Palencia and Elman, is where **complex scalars** enter. It is assumed, not built.
 * **MINRES** is GMRES for symmetric `A` (same iterate in exact arithmetic). Do not add a second
   predicate. MINRES theorems are `IsGMRESIterate` theorems with `hA : A.IsHermitian`, and they
-  equal `quadForm_sub_le_of_isAffineMinimiser` with `g = X²` when `A` is nonsingular. The
+  equal `quadForm_sub_le_of_isAffineMinimizer` with `g = X²` when `A` is nonsingular. The
   indefinite two-interval bound needs a new polynomial (§4).
 * **LSQR/CGLS** (rectangular `A : Matrix m n ℝ`):
-  `IsAffineMinimiser (fun y => (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y)) x₀ (krylovSpace (Aᵀ * A) (Aᵀ *ᵥ (b - A *ᵥ x₀)) q)`,
+  `IsAffineMinimizer (fun y => (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y)) x₀ (krylovSpace (Aᵀ * A) (Aᵀ *ᵥ (b - A *ᵥ x₀)) q)`,
   with `iff` to `IsCGIterate (Aᵀ * A) (Aᵀ *ᵥ b) x₀ q`. LSMR changes the objective to
   `‖Aᵀ(b − Ay)‖²`. Golub–Kahan bidiagonalisation is K3, a theorem about
   `arnoldiBasis (Aᵀ * A) (Aᵀ *ᵥ b)` and `arnoldiBasis (A * Aᵀ) b`.
-* **Sketched GMRES** (Nakatsukasa–Tropp) is `IsAffineMinimiser (fun y => (S *ᵥ (c - A *ᵥ y)) ⬝ᵥ (S *ᵥ (c - A *ᵥ y))) x₀ (range B)`
-  with `B` *any* basis of (a subspace of) `K_q`. This is why `S` in `IsAffineMinimiser` is an
+* **Sketched GMRES** (Nakatsukasa–Tropp) is `IsAffineMinimizer (fun y => (S *ᵥ (c - A *ᵥ y)) ⬝ᵥ (S *ᵥ (c - A *ᵥ y))) x₀ (range B)`
+  with `B` *any* basis of (a subspace of) `K_q`. This is why `S` in `IsAffineMinimizer` is an
   arbitrary `Submodule`. The comparison with GMRES needs an `IsSubspaceEmbedding` for
   `span(r₀, A·range B)` and lives in `Solvers`.
 
@@ -302,7 +302,7 @@ Use `Nat.iterate` on a state structure. Avoid `Fin`-recursion and well-founded r
 
 ```lean
 /-- Krylov (Lanczos-FA) approximation of `f(A)b` from any basis matrix `Q`. -/
-def krylovFunApprox {k} [Fintype k] [DecidableEq k] (Q : Matrix n k ℝ) (A : Matrix n n ℝ) (f : ℝ → ℝ) (b : n → ℝ) : n → ℝ :=
+def krylovFunApprox {k} [Fintype k] [DecidableEq k] (A : Matrix n n ℝ) (f : ℝ → ℝ) (b : n → ℝ) (Q : Matrix n k ℝ) : n → ℝ :=
   Q *ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b))
 theorem krylovFunApprox_eval_eq_aeval (hQ : HasOrthonormalCols Q) (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin)
     {p : ℝ[X]} (hp : p.degree < q) : krylovFunApprox Q A (fun x => p.eval x) b = aeval A p *ᵥ b
@@ -314,8 +314,8 @@ theorem sqNorm_cfc_mulVec_sub_krylovFunApprox_le (hA : A.IsHermitian) (hQ) (hK) 
 These build on `mulVec_pow_transpose_mul_mul_mulVec_eq`, `eigenvalues_transpose_mul_mul_mem_Icc`,
 `cfc_polynomial` and `dotProduct_aeval_mulVec_self_le`. The block version
 (`f(A)Ω`, Krylov-aware trace estimation) is columnwise, using `blockKrylovSpace_eq_iSup`. Gauss
-quadrature exactness should be restated as `p.degree < 2 * q` (no `0 < q`). Keep the `natDegree`
-version as a deprecated alias. Nonsymmetric `f(A)b` (Arnoldi-FA) needs complex spectra or the
+quadrature exactness is stated as `p.degree < 2 * q` (no `0 < q`); there is no `natDegree`
+form (F4). Nonsymmetric `f(A)b` (Arnoldi-FA) needs complex spectra or the
 field of values, so assume it.
 
 ### 3.8 Finite precision (K5)
@@ -365,7 +365,7 @@ and in any model that establishes the hypotheses.
 | `lanczos_apply_eq_zero_of_add_one_lt` → `arnoldiHessenberg_apply_eq_zero_of_add_one_lt`; `…'` → `…_of_isSymm` | names spell head and hypothesis (STANDARDS §1) |
 | add `krylovGrade` + `finrank_krylovSpace`, `linearIndependent_…_iff_le_krylovGrade` | one breakdown vocabulary; finite termination; Gaussian a.s. grade plugs in |
 | add `orthonormalBasisMatrix S` (Matrix/Subspaces/OrthonormalBasisMatrix) | unconditional orthonormal basis for every Krylov/block space |
-| redefine `IsCGIterate` via `IsAffineMinimiser` (`Iff.rfl`, same name) | GMRES/MINRES/LSQR/sGMRES reuse K1 |
+| redefine `IsCGIterate` via `IsAffineMinimizer` (`Iff.rfl`, same name) | GMRES/MINRES/LSQR/sGMRES reuse K1 |
 | promote private `exists_degree_lt_one_sub_eq_X_mul`; dedupe `exists_degree_lt_abs_eval_sub_inv_le` | removes duplicate algebra (STANDARDS §2 "helpers where they belong") |
 | restate Gauss exactness with `p.degree < 2 * q` | drops `0 < q` and truncated subtraction |
 | generalise `quadForm_aeval_mulVec_le` to weight `aeval A g` | the class theorem of §3.2 |
@@ -380,10 +380,14 @@ consumers cite.
 ## 6. Recommended conventions (summary for prover agents)
 
 1. **Spaces first.** State results about `krylovSpace A b q` / `blockKrylovSpace A Ω q`
-   (`Submodule ℝ (n → ℝ)`). Degrees are `p.degree < q` (membership) and `p.degree ≤ q`
-   (residual polynomials, `p.eval 0 = 1`). Avoid `natDegree` and `q - 1`.
+   (`Submodule ℝ (n → ℝ)`); `q` counts generators, so `K_q` is `q − 1` matvecs and
+   `mem_krylovSpace_iff` (no hypothesis) is the characterisation. Degrees are `p.degree < q`
+   (membership) and `p.degree ≤ q` (residual polynomials, `p.eval 0 = 1`); Gauss exactness is
+   `p.degree < 2 * q`. Bounds indexed by matvecs use `K_{q+1}` and exponent `q`
+   (`exists_eigenvalues_transpose_mul_mul_ge`, random-start Lanczos). Avoid `natDegree` and
+   `q - 1`.
 2. **Methods are predicates.**
-   * Minimising methods: `IsAffineMinimiser E x₀ S x`. Instances are `IsCGIterate` and
+   * Minimising methods: `IsAffineMinimizer E x₀ S x`. Instances are `IsCGIterate` and
      `IsGMRESIterate`. MINRES is GMRES with `A.IsHermitian`; LSQR uses `Aᵀ * A`.
    * Projection methods: `IsPetrovGalerkinIterate A c x₀ K L x`. Instances are `IsFOMIterate`
      and `IsBiCGIterate`.
@@ -410,9 +414,16 @@ consumers cite.
    in exact arithmetic. Never make a downstream theorem depend on the recurrence.
 9. **Finite precision enters as hypotheses**: `IsPerturbedLanczos`-style structures (relation
    with error `F`, bounds as separate fields). The exact case is `F = 0`.
-10. **Vocabulary.** Vectors are `n → ℝ`. Squared norms are `v ⬝ᵥ v` / `quadForm W v`, never
-    `‖v‖`. Matrix functions are `cfc f A` and polynomials `aeval A p`. Projected matrices are
-    `Qᵀ * A * Q`. `EuclideanSpace`, `gramSchmidtNormed`, `starProjection` and
+10. **Vocabulary.** Vectors are `n → ℝ`. The Euclidean norm is `‖WithLp.toLp 2 v‖` and the
+    squared norm `‖WithLp.toLp 2 v‖ ^ 2` (STANDARDS §3, F4), with the bridge
+    `norm_toLp_sq_eq_dotProduct_self : ‖WithLp.toLp 2 v‖ ^ 2 = v ⬝ᵥ v`; weighted norms are
+    `quadForm W v`; `v ⬝ᵥ w` is the pairing. Never `‖v‖` on `n → ℝ` (the sup norm). Matrix
+    functions are `cfc f A` and polynomials `aeval A p`. Projected matrices are
+    `Qᵀ * A * Q`; the Ritz values are `(Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j`,
+    built inside the statement, never an extra `hT : (QᵀAQ).IsHermitian` binder. Spectral
+    statements take a unit eigenvector `u` with `A *ᵥ u = hA.eigenvalues₀ i₀ • u`,
+    `‖WithLp.toLp 2 u‖ = 1`; the top eigenvalue is `hA.eigenvalues₀ 0`, "the other eigenvalues"
+    are the other sorted positions `i ≠ i₀` (never `hA.eigenvectorBasis i`). `EuclideanSpace`, `gramSchmidtNormed`, `starProjection` and
     `stdOrthonormalBasis` are internal tools only. Use real scalars. Complex spectra (nonnormal
     GMRES, Arnoldi-FA, Crouzeix) enter as assumed hypotheses on `A.map (algebraMap ℝ ℂ)` until
     proved.

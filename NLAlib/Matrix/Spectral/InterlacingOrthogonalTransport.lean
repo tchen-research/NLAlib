@@ -21,7 +21,7 @@ theorem charpoly_mul_mul_transpose_of_hasOrthonormalCols
 
 omit [DecidableEq n] in
 /-- Orthogonal conjugation transports a symmetric rank-one update by
-applying the orthogonal factor to the coupling vector. Source:
+applying the orthogonal factor to the coupling vector.
 Horn–Johnson (2013), converse-interlacing transport. -/
 theorem mul_add_vecMulVec_mul_transpose (Q A : Matrix n n ℝ) (v : n → ℝ) :
     Q * (A + Matrix.vecMulVec v v) * Qᵀ =
@@ -51,7 +51,7 @@ theorem fromBlocks_mul_arrowhead_mul_transpose
     Matrix.transpose_apply, mul_comm]
 
 /-- An arrowhead constructed over a diagonal list transports to any real
-symmetric matrix with that full characteristic-root list. Source:
+symmetric matrix with that full characteristic-root list.
 Horn–Johnson (2013), converse interlacing; the border scalar is unchanged
 and the equality is of complete characteristic polynomials. -/
 theorem exists_bordered_charpoly_of_diagonal_construction

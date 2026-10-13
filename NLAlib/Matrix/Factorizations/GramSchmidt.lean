@@ -1,5 +1,6 @@
 import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
 import NLAlib.Matrix.Factorizations.QR
+import NLAlib.Matrix.Norms.Core
 /-!
 # Gram–Schmidt orthogonalisation (classical and modified)
 
@@ -40,6 +41,12 @@ open Matrix
 
 namespace NLAlib
 
+/-- `‖x‖₂ = √(x ⬝ x)` for real vectors (proof helper; the squared bridge is
+`norm_toLp_sq_eq_dotProduct_self`). -/
+private theorem norm_toLp_eq_sqrt_dotProduct_self {ι : Type*} [Fintype ι] (x : ι → ℝ) :
+    ‖(WithLp.toLp 2 x : EuclideanSpace ℝ ι)‖ = √(x ⬝ᵥ x) := by
+  rw [← norm_toLp_sq_eq_dotProduct_self, Real.sqrt_sq (norm_nonneg _)]
+
 variable {m : Type*} [Fintype m] {n : ℕ}
 
 /-! ### Classical Gram–Schmidt -/
@@ -73,14 +80,16 @@ theorem gramSchmidtResidual_apply (A : Matrix m (Fin n) ℝ) (j : Fin n) (i : m)
 /-- Unfolding: `q_j = ‖v_j‖⁻¹ v_j`. -/
 theorem gramSchmidtCol_eq (A : Matrix m (Fin n) ℝ) (j : Fin n) :
     gramSchmidtCol A j =
-      (√(gramSchmidtResidual A j ⬝ᵥ gramSchmidtResidual A j))⁻¹ • gramSchmidtResidual A j := by
-  rw [gramSchmidtCol]; rfl
+      ‖(WithLp.toLp 2 (gramSchmidtResidual A j) : EuclideanSpace ℝ m)‖⁻¹ •
+        gramSchmidtResidual A j := by
+  rw [norm_toLp_eq_sqrt_dotProduct_self, gramSchmidtCol]; rfl
 
 /-- `‖v_j‖ q_j = v_j` (also after a breakdown, where both sides vanish). -/
-theorem sqrt_smul_gramSchmidtCol (A : Matrix m (Fin n) ℝ) (j : Fin n) :
-    √(gramSchmidtResidual A j ⬝ᵥ gramSchmidtResidual A j) • gramSchmidtCol A j =
+theorem norm_smul_gramSchmidtCol (A : Matrix m (Fin n) ℝ) (j : Fin n) :
+    ‖(WithLp.toLp 2 (gramSchmidtResidual A j) : EuclideanSpace ℝ m)‖ • gramSchmidtCol A j =
       gramSchmidtResidual A j := by
-  rw [gramSchmidtCol_eq, smul_smul]
+  rw [norm_toLp_eq_sqrt_dotProduct_self, gramSchmidtCol_eq, norm_toLp_eq_sqrt_dotProduct_self,
+    smul_smul]
   by_cases h : √(gramSchmidtResidual A j ⬝ᵥ gramSchmidtResidual A j) = 0
   · rw [Real.sqrt_eq_zero (dotProduct_self_nonneg _)] at h
     rw [dotProduct_self_eq_zero.1 h, smul_zero]
@@ -134,7 +143,8 @@ atlas: gram-schmidt -/
 theorem gramSchmidtQ_mul_gramSchmidtR (A : Matrix m (Fin n) ℝ) :
     gramSchmidtQ A * gramSchmidtR A = A := by
   ext i j
-  have hv := congrFun (sqrt_smul_gramSchmidtCol A j) i
+  have hv := congrFun (norm_smul_gramSchmidtCol A j) i
+  rw [norm_toLp_eq_sqrt_dotProduct_self] at hv
   rw [Pi.smul_apply, smul_eq_mul, gramSchmidtResidual_apply] at hv
   simp only [mul_apply, gramSchmidtQ, gramSchmidtR, of_apply, mul_ite, mul_zero]
   rw [Finset.sum_ite, Finset.sum_ite, Finset.sum_const_zero, add_zero,
@@ -165,7 +175,7 @@ theorem gramSchmidtCol_dotProduct_self (A : Matrix m (Fin n) ℝ) (j : Fin n) :
   · simp [h]
   · have hpos : 0 < gramSchmidtResidual A j ⬝ᵥ gramSchmidtResidual A j :=
       lt_of_le_of_ne (dotProduct_self_nonneg _) (fun h0 => h (dotProduct_self_eq_zero.1 h0.symm))
-    rw [← mul_assoc, ← mul_inv, Real.mul_self_sqrt hpos.le, inv_mul_cancel₀ hpos.ne']
+    rw [← mul_assoc, ← mul_inv, ← sq, norm_toLp_sq_eq_dotProduct_self, inv_mul_cancel₀ hpos.ne']
 
 /-- **The Gram–Schmidt columns are pairwise orthogonal**, for every `A` (breakdowns included):
 `q_iᵀ q_j = 0` for `i < j`. Trefethen–Bau 1997, Lect. 7; Golub–Van Loan 2013, §5.2.7.
@@ -276,7 +286,7 @@ theorem col_mem_span_gramSchmidtCol (A : Matrix m (Fin n) ℝ) (j : Fin n) :
   have h : A.col j = gramSchmidtResidual A j +
       ∑ k ∈ Finset.Iio j, (gramSchmidtCol A k ⬝ᵥ A.col j) • gramSchmidtCol A k := by
     rw [gramSchmidtResidual_eq_sum]; abel
-  rw [← sqrt_smul_gramSchmidtCol A j] at h
+  rw [← norm_smul_gramSchmidtCol A j, norm_toLp_eq_sqrt_dotProduct_self] at h
   rw [h]
   refine Submodule.add_mem _ (Submodule.smul_mem _ _
     (Submodule.subset_span ⟨j, Set.mem_Iic.2 le_rfl, rfl⟩))
@@ -484,7 +494,7 @@ theorem modifiedGramSchmidtState_eq (A : Matrix m (Fin n) ℝ) :
       rw [ih hk.le, if_neg (lt_irrefl _), hfilt, gramSchmidtResidual_eq_sum]
     have hq : (√(modifiedGramSchmidtState A k K ⬝ᵥ modifiedGramSchmidtState A k K))⁻¹ •
         modifiedGramSchmidtState A k K = gramSchmidtCol A K := by
-      rw [hw, gramSchmidtCol_eq]
+      rw [hw, gramSchmidtCol_eq, norm_toLp_eq_sqrt_dotProduct_self]
     simp only [modifiedGramSchmidtState, dif_pos hk]
     rw [← hK, hq]
     rcases lt_trichotomy (j : ℕ) k with hjk | hjk | hjk

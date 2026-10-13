@@ -17,7 +17,7 @@ namespace NLAlib
 characteristic-root order. Source: Horn–Johnson (2013), Theorem 2.3.1;
 the enumeration orders arbitrary finite labels, with repeated eigenvalues
 and the empty matrix allowed.
-atlas: schur-triangularization (partial) -/
+atlas: schur-triangularization -/
 theorem exists_unitary_schur_triangularization_with_charpoly
     {n 𝕜 : Type*} [Fintype n] [DecidableEq n] [RCLike 𝕜] (A : Matrix n n 𝕜)
     (e : Fin (Fintype.card n) ≃ n) (d : n → 𝕜)

@@ -3,7 +3,7 @@ import NLAlib.Matrix.Spectral.EckartYoung
 import NLAlib.RandomMatrix.Gaussian.Spectral.SketchRank
 import NLAlib.RandomMatrix.Gaussian.Spectral.Chevet
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.SpectralTail
-import NLAlib.Matrix.Structured.SpectralMeasurable
+import NLAlib.Matrix.Measurability.SpectralMeasurable
 import NLAlib.ForMathlib.MeasureTheory.IntegralSqrt
 /-!
 # The deterministic range-finder bound (spectral form)

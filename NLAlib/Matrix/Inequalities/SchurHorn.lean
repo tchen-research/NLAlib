@@ -6,7 +6,7 @@ import NLAlib.Matrix.Inequalities.PlaneRotationDerivative
 /-!
 # The real orthogonal Schur–Horn converse
 
-Squared diagonal error attains a minimum on the actual compact orthogonal
+Squared diagonal error attains a minimum on the compact orthogonal
 group. Rational coordinate rotations make the maximal residual coordinates
 reducing. Projected columns of the minimizing orthogonal diagonalizer give the
 unit eigenvectors for a decreasing rotation. The resulting scalar threshold
@@ -86,9 +86,11 @@ theorem exists_orthogonal_diagonal_eq_of_majorized (d lam : n → ℝ)
     intro j k hj hk
     let u := normalizedProjectedColumn Q S j
     let v := normalizedProjectedColumn Q Sᶜ k
-    have hu : u ⬝ᵥ u = 1 := normalizedProjectedColumn_dotProduct_self Q S j hj
-    have hv : v ⬝ᵥ v = 1 := normalizedProjectedColumn_dotProduct_self Q Sᶜ k
-      (by rw [columnProjectionMass_compl hQ S k]; exact sub_pos.mpr hk)
+    have hu : ‖(WithLp.toLp 2 u : EuclideanSpace ℝ n)‖ = 1 :=
+      norm_toLp_normalizedProjectedColumn Q S j hj
+    have hv : ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = 1 :=
+      norm_toLp_normalizedProjectedColumn Q Sᶜ k
+        (by rw [columnProjectionMass_compl hQ S k]; exact sub_pos.mpr hk)
     have huv : u ⬝ᵥ v = 0 := normalizedProjectedColumn_dotProduct_compl_eq_zero Q S j k
     have hAu : A *ᵥ u = lam j • u :=
       mulVec_normalizedProjectedColumn_eq_smul hQ lam rfl S hcomm j
@@ -122,7 +124,7 @@ theorem exists_orthogonal_diagonal_eq_of_majorized (d lam : n → ℝ)
   rw [hweighted, hresidual] at hbottom
   linarith
 
-/-- Orthogonal-conjugation diagonals use the squared entries of the actual
+/-- Orthogonal-conjugation diagonals use the squared entries of the
 conjugating matrix as spectral weights. Horn–Johnson (2013), Theorem 4.3.45;
 the identity itself holds without orthogonality. -/
 theorem diagonal_conjugation_eq_sq_mulVec (Q : Matrix n n ℝ) (lam : n → ℝ) :
@@ -140,7 +142,7 @@ theorem diagonal_conjugation_eq_sq_mulVec (Q : Matrix n n ℝ) (lam : n → ℝ)
 /-- Ordinary real majorization is exactly attainment as the diagonal of a real
 orthogonal conjugate of the prescribed spectrum. Horn–Johnson (2013),
 Theorems 4.3.45 and 4.3.48; signed and repeated spectra and dimension zero.
-atlas: schur-horn (partial) -/
+atlas: schur-horn -/
 theorem majorized_iff_exists_orthogonal_diagonal_eq (d lam : n → ℝ) :
     Majorized d lam ↔ ∃ Q : Matrix n n ℝ, HasOrthonormalCols Q ∧
       Matrix.diag (Q * Matrix.diagonal lam * Qᵀ) = d := by
@@ -149,27 +151,5 @@ theorem majorized_iff_exists_orthogonal_diagonal_eq (d lam : n → ℝ) :
   · rintro ⟨Q, hQ, hdiag⟩
     rw [← hdiag, diagonal_conjugation_eq_sq_mulVec]
     exact majorized_mulVec_of_doublyStochastic lam (sq_entries_mem_doublyStochastic hQ)
-
-/-- The complete real Schur–Horn contract: diagonal majorization and every
-subset bound, the full real orthogonal converse for every majorized vector and
-prescribed spectrum, and Peierls' convex trace inequality. Horn–Johnson (2013),
-Theorems 4.3.45 and 4.3.48; Marshall–Olkin–Arnold (2011), 9.B.1–9.B.2.
-The converse follows the supplied compact variational rederivation. All finite
-real dimensions, negative eigenvalues and repeated eigenvalues are included.
-atlas: schur-horn -/
-theorem majorized_diagonal_and_orthogonal_converse_and_sum_convex_le_trace_cfc
-    (A : Matrix n n ℝ) (hA : A.IsHermitian) :
-    Majorized (Matrix.diag A) hA.eigenvalues ∧
-      (∀ S : Finset n, (∑ i ∈ S, A i i) ≤ sumLargest hA.eigenvalues S.card) ∧
-      (∀ d lam : n → ℝ, Majorized d lam ↔
-        ∃ Q : Matrix n n ℝ, HasOrthonormalCols Q ∧
-          Matrix.diag (Q * Matrix.diagonal lam * Qᵀ) = d) ∧
-      (∀ φ : ℝ → ℝ, ConvexOn ℝ Set.univ φ →
-        (∑ i, φ (A i i)) ≤ (cfc φ A).trace) := by
-  refine ⟨majorized_diagonal_eigenvalues hA, ?_,
-    majorized_iff_exists_orthogonal_diagonal_eq, ?_⟩
-  · exact (weaklyMajorized_iff_sum_le _ _).mp (majorized_diagonal_eigenvalues hA).1
-  · intro φ hφ
-    exact sum_convex_diagonal_le_trace_cfc hA hφ
 
 end NLAlib

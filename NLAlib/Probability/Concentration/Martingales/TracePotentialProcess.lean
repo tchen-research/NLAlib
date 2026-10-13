@@ -12,10 +12,11 @@ noncomputable section
 set_option maxHeartbeats 600000
 
 open MeasureTheory Matrix Finset Filter
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Actual adapted centered increments and actual integrable conditional second moments
 give the compensated trace-exponential supermartingale. Only an upper bound on increments
 is assumed. This is the global-second-moment intermediate used after localization, not

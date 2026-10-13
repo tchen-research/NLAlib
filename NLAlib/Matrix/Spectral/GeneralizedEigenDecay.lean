@@ -11,10 +11,11 @@ Source: Horn–Johnson (2013), §5.6.
 
 noncomputable section
 open Module Filter
-open scoped Matrix Matrix.Norms.L2Operator Topology
+open scoped Matrix Topology
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- A generalized eigenvector with eigenvalue of modulus below one has a
 power orbit tending to zero. Source: Horn–Johnson (2013), Theorem 5.6.12;
 the proof transfers matrix power decay to the restricted primary space. -/

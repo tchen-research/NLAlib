@@ -54,5 +54,5 @@ theorem NLAlib.relativeEntropy_nonneg {d : Type*} [Fintype d] [DecidableEq d]
     cfc_id' ℝ A hA.1.isSelfAdjoint, cfc_id ℝ H hH.1.isSelfAdjoint,
     cfc_const (1 : ℝ) A hA.1.isSelfAdjoint, cfc_const (1 : ℝ) H hH.1.isSelfAdjoint, map_one, mul_one, one_mul,
     neg_mul] at hk
-  simpa [relativeEntropy, matrixLog, mul_sub, mul_add, mul_neg, Matrix.trace_sub,
+  simpa [relativeEntropy_complex, matrixLog, mul_sub, mul_add, mul_neg, Matrix.trace_sub,
     Matrix.trace_neg, Matrix.trace_add, Complex.add_re, Complex.sub_re, Complex.neg_re, sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using hk

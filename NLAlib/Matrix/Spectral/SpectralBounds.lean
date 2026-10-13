@@ -4,65 +4,21 @@ import NLAlib.Matrix.Norms.Reindex
 import Mathlib.Tactic
 
 /-!
-# Spectral-norm perturbation of the smallest singular value
+# Extreme singular values and the spectral norm
 
-Atlas: `norm-lipschitz`. This strengthens the Frobenius-norm bound in
-`NLAlib.Matrix.Spectral.Core` using the same infimum argument and Mathlib's actual
-Euclidean operator norm. Empty source dimensions are handled explicitly.
-
-It also identifies the extreme singular values on arbitrary finite index types:
-`singularValues_zero_eq_specNorm` (`σ₀ = ‖A‖₂`), `singularValues_le_specNorm`, and
-`sigmaMin_eq_singularValues_last` (the variational `σ_min` is `σ_{card n - 1}`), together with
-the relabeling invariance `sigmaMin_reindex`. The `Fin` cases are proved from the SVD and
-transported with `singularValues_reindex`, `specNorm_reindex` and `sigmaMin_reindex`.
+The extreme singular values on arbitrary finite index types: `singularValues_zero_eq_specNorm`
+(`σ₀ = ‖A‖₂`), `singularValues_le_specNorm`, `specNorm_sq_eq_specNorm_conjTranspose_mul_self`
+(`‖A‖₂² = ‖AᴴA‖₂`), the Gram-error identity `specNorm_gram_sub_one_eq_norm_singularValues_sq_sub_one`
+and `singularValues_last_pos_iff_rank_eq_card` (the last singular value is positive exactly at
+full column rank). Source: Horn–Johnson 2013, §2.6 and §5.6. Atlas: `svd`, `norms-frob-spec`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-
-omit [DecidableEq m] in
-/-- One-sided Weyl perturbation bound in the spectral norm, including empty
-dimensions. Atlas: `norm-lipschitz`. -/
-theorem sigmaMin_le_sigmaMin_add_specNorm (A B : Matrix m n ℝ) :
-    sigmaMin A ≤ sigmaMin B + specNorm (A - B) := by
-  have hN : 0 ≤ specNorm (A - B) := specNorm_nonneg _
-  rcases isEmpty_or_nonempty {x : n → ℝ // x ⬝ᵥ x = 1} with hE | hE
-  · unfold sigmaMin
-    rw [Real.iInf_of_isEmpty, Real.iInf_of_isEmpty]
-    linarith
-  · rw [← sub_le_iff_le_add]
-    unfold sigmaMin
-    refine le_ciInf fun x => ?_
-    have h1 := ciInf_le (bddBelow_range_sqrt_mulVec A) x
-    have h2 : Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)) ≤
-        Real.sqrt ((B *ᵥ x.1) ⬝ᵥ (B *ᵥ x.1)) +
-          Real.sqrt (((A - B) *ᵥ x.1) ⬝ᵥ ((A - B) *ᵥ x.1)) := by
-      have hsplit : A *ᵥ x.1 = B *ᵥ x.1 + (A - B) *ᵥ x.1 := by
-        rw [Matrix.sub_mulVec]
-        abel
-      rw [hsplit]
-      exact sqrt_dotProduct_add_le _ _
-    have h3 := sqrt_mulVec_dotProduct_le_specNorm_mul (A - B) x.1
-    rw [x.2, Real.sqrt_one, mul_one] at h3
-    linarith
-
-omit [DecidableEq m] in
-/-- The smallest singular value is `1`-Lipschitz for the spectral norm:
-`|σ_min(A) − σ_min(B)| ≤ ‖A − B‖₂`. Atlas: `norm-lipschitz`.
-atlas: norm-lipschitz -/
-theorem abs_sigmaMin_sub_sigmaMin_le_specNorm (A B : Matrix m n ℝ) :
-    |sigmaMin A - sigmaMin B| ≤ specNorm (A - B) := by
-  rw [abs_le]
-  have h1 := sigmaMin_le_sigmaMin_add_specNorm A B
-  have h2 := sigmaMin_le_sigmaMin_add_specNorm B A
-  have h3 : specNorm (B - A) = specNorm (A - B) := by
-    unfold specNorm
-    rw [norm_sub_rev]
-  constructor <;> linarith
 
 omit [DecidableEq m] in
 /-- The spectral norm squared is the norm of the Gram matrix `AᴴA`, over `ℝ` or `ℂ`, including
@@ -70,47 +26,19 @@ empty dimensions. Atlas: `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
 theorem specNorm_sq_eq_specNorm_conjTranspose_mul_self {𝕜 : Type*} [RCLike 𝕜]
     (A : Matrix m n 𝕜) : specNorm A ^ 2 = specNorm (Aᴴ * A) := by
-  unfold specNorm
+  open scoped Matrix.Norms.L2Operator in unfold specNorm
   rw [sq, ← Matrix.l2_opNorm_conjTranspose_mul_self]
 
-omit [DecidableEq m] in
-/-- The spectral norm squared is the norm of the Gram matrix, including
-empty dimensions (real form of `specNorm_sq_eq_specNorm_conjTranspose_mul_self`).
-Atlas: `norms-frob-spec`, `svd`.
-atlas: norms-frob-spec -/
+/-- `‖A‖₂² = ‖AᵀA‖₂` for a real matrix (`specNorm_sq_eq_specNorm_conjTranspose_mul_self` at `ℝ`).
+Kept for the real consumers of the transpose spelling. -/
 theorem specNorm_sq_eq_specNorm_transpose_mul_self (A : Matrix m n ℝ) :
-    specNorm A ^ 2 = specNorm (Aᵀ * A) :=
-  specNorm_sq_eq_specNorm_conjTranspose_mul_self A
+    specNorm A ^ 2 = specNorm (Aᵀ * A) := by
+  rw [← Matrix.conjTranspose_eq_transpose_of_trivial]
+  exact specNorm_sq_eq_specNorm_conjTranspose_mul_self A
 
 end NLAlib
 
 namespace NLAlib
-
-/-- Relabeling finite real matrix indices preserves the variational smallest
-singular value, including empty domains. The unit spheres are explicitly
-equivalent. Horn--Johnson, Section 2.6; supports `principal-angles-def`. -/
-theorem sigmaMin_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
-    (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
-    sigmaMin (A.reindex em en) = sigmaMin A := by
-  let E : {x : n → ℝ // x ⬝ᵥ x = 1} ≃ {x : q → ℝ // x ⬝ᵥ x = 1} :=
-    { toFun x := ⟨fun j => x.val (en.symm j),
-        (en.symm.sum_comp (fun j => x.val j * x.val j)).trans x.property⟩
-      invFun y := ⟨fun i => y.val (en i),
-        (en.sum_comp (fun i => y.val i * y.val i)).trans y.property⟩
-      left_inv x := by apply Subtype.ext; funext i; simp
-      right_inv y := by apply Subtype.ext; funext j; simp }
-  unfold sigmaMin
-  rw [← E.surjective.iInf_comp]
-  apply iInf_congr
-  intro x
-  have hMv : (A.reindex em en) *ᵥ (E x).val = (A *ᵥ x.val) ∘ em.symm := by
-    funext i
-    change (∑ j : q, A (em.symm i) (en.symm j) * x.val (en.symm j)) =
-      ∑ j : n, A (em.symm i) j * x.val j
-    exact en.symm.sum_comp (fun j : n => A (em.symm i) j * x.val j)
-  rw [hMv]
-  exact congrArg Real.sqrt (em.symm.sum_comp
-    (fun i => (A *ᵥ x.val) i * (A *ᵥ x.val) i))
 
 /-- The largest sorted singular value equals the spectral norm, on arbitrary finite index
 types and over `ℝ` or `ℂ`. The padded singular-value convention also covers matrices with zero
@@ -127,8 +55,8 @@ theorem singularValues_zero_eq_specNorm {m n 𝕜 : Type*} [RCLike 𝕜] [Fintyp
     have hGram : specNorm (Aᴴ * A) =
         ‖(fun j : Fin (Fintype.card n) => ((singularValues A j ^ 2 : ℝ) : 𝕜))‖ := by
       rw [hSVD.conjTranspose_mul_self,
-        specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right,
-        specNorm_mul_left_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right,
+        specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hSVD.conjTranspose_mul_right,
+        specNorm_mul_left_of_hasOrthonormalCols hSVD.conjTranspose_mul_right,
         specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
     have hMax : ‖(fun j : Fin (Fintype.card n) => ((singularValues A j ^ 2 : ℝ) : 𝕜))‖ =
         singularValues A 0 ^ 2 := by
@@ -169,8 +97,8 @@ theorem specNorm_gram_sub_one_eq_norm_singularValues_sq_sub_one {m n : ℕ}
     rw [show Aᵀ * A = V * Matrix.diagonal (fun j : Fin n => singularValues A j ^ 2) * Vᵀ from
         hSVD.conjTranspose_mul_self, hdiag, Matrix.mul_sub, Matrix.sub_mul,
       Matrix.mul_one, show V * Vᵀ = 1 from hSVD.mul_conjTranspose_right]
-  rw [hGram,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols (P := V) hSVD.conjTranspose_mul_right,
+  rw [hGram, ← Matrix.conjTranspose_eq_transpose_of_trivial V,
+    specNorm_mul_conjTranspose_right_of_hasOrthonormalCols (P := V) hSVD.conjTranspose_mul_right,
     specNorm_mul_left_of_hasOrthonormalCols (P := V) hSVD.conjTranspose_mul_right,
     specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
 
@@ -193,71 +121,17 @@ theorem IsSVD.mulVec_dotProduct_mulVec_eq_sum {m n : Type*} [Fintype m] [Fintype
   intro j _
   ring
 
-/-- The variational smallest singular value equals the last singular value
-in the list indexed by the domain dimension, on arbitrary finite index types. For wide
-matrices this list includes kernel zeros; for tall matrices it is the usual smallest singular
-value. Horn–Johnson 2013, Section 2.6. Atlas: `svd`, `norm-lipschitz`. The empty-domain value
-is handled by the existing theorem `sigmaMin_of_isEmpty`.
-atlas: norm-lipschitz -/
-theorem sigmaMin_eq_singularValues_last {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
-    (A : Matrix m n ℝ) (hn : 0 < Fintype.card n) :
-    sigmaMin A = singularValues A (Fintype.card n - 1) := by
-  classical
-  have : Nonempty n := Fintype.card_pos_iff.mp hn
-  obtain ⟨U, V, hSVD⟩ := exists_isSVD A
-  have hs : 0 ≤ singularValues A (Fintype.card n - 1) := singularValues_nonneg A _
-  apply le_antisymm
-  · let j : Fin (Fintype.card n) := ⟨Fintype.card n - 1, by omega⟩
-    let e : Fin (Fintype.card n) → ℝ := Pi.single j 1
-    let x := V *ᵥ e
-    have hx : x ⬝ᵥ x = 1 := by
-      dsimp [x]
-      rw [show (V *ᵥ e) ⬝ᵥ (V *ᵥ e) = e ⬝ᵥ ((Vᵀ * V) *ᵥ e) from
-          star_mulVec_dotProduct_mulVec_self V e, show Vᵀ * V = 1 from hSVD.conjTranspose_mul_right,
-        Matrix.one_mulVec]
-      simp [e]
-    have hy : Vᵀ *ᵥ x = e := by
-      dsimp [x]
-      rw [Matrix.mulVec_mulVec, show Vᵀ * V = 1 from hSVD.conjTranspose_mul_right,
-        Matrix.one_mulVec]
-    have hAx : (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = singularValues A (Fintype.card n - 1) ^ 2 := by
-      rw [hSVD.mulVec_dotProduct_mulVec_eq_sum, hy]
-      simp [e, Pi.single_apply, j]
-    have h := sigmaMin_le_sqrt_mulVec A hx
-    rw [hAx, Real.sqrt_sq hs] at h
-    exact h
-  · apply le_sigmaMin A
-    intro x hx
-    have hy : (Vᵀ *ᵥ x) ⬝ᵥ (Vᵀ *ᵥ x) = 1 := by
-      rw [show (Vᵀ *ᵥ x) ⬝ᵥ (Vᵀ *ᵥ x) = x ⬝ᵥ ((Vᵀᵀ * Vᵀ) *ᵥ x) from
-          star_mulVec_dotProduct_mulVec_self Vᵀ x, Matrix.transpose_transpose,
-        show V * Vᵀ = 1 from hSVD.mul_conjTranspose_right, Matrix.one_mulVec, hx]
-    have hsum : singularValues A (Fintype.card n - 1) ^ 2 ≤
-        ∑ j : Fin (Fintype.card n), singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
-      calc
-        singularValues A (Fintype.card n - 1) ^ 2 =
-            ∑ j : Fin (Fintype.card n),
-              singularValues A (Fintype.card n - 1) ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
-          rw [← Finset.mul_sum]
-          have hy' : (∑ j : Fin (Fintype.card n), ((Vᵀ *ᵥ x) j) ^ 2) = 1 := by
-            simpa only [dotProduct, sq] using hy
-          rw [hy', mul_one]
-        _ ≤ _ := Finset.sum_le_sum fun j _ =>
-          mul_le_mul_of_nonneg_right
-            (pow_le_pow_left₀ hs (singularValues_antitone A (by omega)) 2) (sq_nonneg _)
-    rw [← hSVD.mulVec_dotProduct_mulVec_eq_sum] at hsum
-    have h := Real.sqrt_le_sqrt hsum
-    rw [Real.sqrt_sq hs] at h
-    exact h
+end NLAlib
 
-/-- Positivity of the variational smallest singular value is exactly full
-column rank when there is at least one column. Atlas: `svd`,
-`randomized-kaczmarz`, `norm-lipschitz`.
-atlas: norm-lipschitz -/
-theorem sigmaMin_pos_iff_rank_eq_width {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
-    (A : Matrix m n ℝ) (hn : 0 < Fintype.card n) :
-    0 < sigmaMin A ↔ A.rank = Fintype.card n := by
-  rw [sigmaMin_eq_singularValues_last A hn, singularValues_pos_iff]
+namespace NLAlib
+
+/-- The last singular value in the list indexed by the number of columns is positive exactly
+when the matrix has full column rank (`rank A = card n`, with at least one column).
+Horn–Johnson 2013, §2.6. -/
+theorem singularValues_last_pos_iff_rank_eq_card {m n 𝕜 : Type*} [RCLike 𝕜] [Fintype m]
+    [Fintype n] [DecidableEq n] (A : Matrix m n 𝕜) (hn : 0 < Fintype.card n) :
+    0 < singularValues A (Fintype.card n - 1) ↔ A.rank = Fintype.card n := by
+  rw [singularValues_pos_iff]
   have hr := A.rank_le_card_width
   omega
 

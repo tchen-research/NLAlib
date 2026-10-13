@@ -5,13 +5,13 @@ import NLAlib.Matrix.OperatorTheory.LoewnerHeinz
 # Relative spectrum and Loewner order
 
 Whitening a definite pair identifies Loewner sandwiches with intervals
-containing the actual relative spectrum. Source: Horn--Johnson (2013),
+containing the relative spectrum. Source: Horn--Johnson (2013),
 Theorem 7.7.3 and Corollary 7.7.4; atlas `loewner-relative-spectrum`.
 -/
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -64,7 +64,7 @@ theorem loewner_sandwich_iff_relative_spectrum_subset {A B : Matrix n n ℝ}
 
 /-- Under PSD comparison with a positive definite first matrix, the relative
 spectral radius is at most one exactly when the smaller matrix is below the
-first matrix in Loewner order. The radius is Mathlib's actual supremum of
+first matrix in Loewner order. The radius is Mathlib's supremum of
 the absolute real spectrum, including empty dimensions.
 Horn--Johnson (2013), Corollary 7.7.4.
 atlas: loewner-relative-spectrum (partial) -/
@@ -117,15 +117,26 @@ theorem le_iff_exists_sqrt_congruence_contraction {A B : Matrix n n ℝ}
 
 omit [DecidableEq n] in
 /-- Matrix trace is monotone in Loewner order, with equality only for equal
-matrices. Horn--Johnson (2013), Corollary 7.7.4.
-atlas: loewner-relative-spectrum (partial) -/
-theorem trace_le_and_eq_iff_of_le {A B : Matrix n n ℝ} (hAB : A ≤ B) :
+matrices. Horn--Johnson (2013), Corollary 7.7.4. -/
+private theorem trace_le_and_eq_iff_of_le_aux {A B : Matrix n n ℝ} (hAB : A ≤ B) :
     A.trace ≤ B.trace ∧ (A.trace = B.trace ↔ A = B) := by
   have h := Matrix.le_iff.mp hAB
   constructor
   · simpa only [Matrix.trace_sub, sub_nonneg] using h.trace_nonneg
   · have hz := h.trace_eq_zero_iff
     simpa only [Matrix.trace_sub, sub_eq_zero, eq_comm] using hz
+
+/-- The trace is monotone in the Loewner order. Horn–Johnson 2013, Corollary 7.7.4.
+atlas: loewner-relative-spectrum (partial) -/
+theorem trace_le_of_le {A B : Matrix n n ℝ} (hAB : A ≤ B) :
+    A.trace ≤ B.trace :=
+  (trace_le_and_eq_iff_of_le_aux hAB).1
+
+/-- For `A ≤ B`, the traces agree only for `A = B`. Horn–Johnson 2013, Corollary 7.7.4.
+atlas: loewner-relative-spectrum (partial) -/
+theorem trace_eq_iff_of_le {A B : Matrix n n ℝ} (hAB : A ≤ B) :
+    A.trace = B.trace ↔ A = B :=
+  (trace_le_and_eq_iff_of_le_aux hAB).2
 
 /-- Determinant is monotone on the PSD cone. Horn--Johnson (2013),
 Corollary 7.7.4; arbitrary finite indices and singular matrices are included.
@@ -156,7 +167,8 @@ theorem le_one_iff_specNorm_le_one_of_posSemidef {A : Matrix n n ℝ}
     calc
       specNorm A = specNorm (U * diagonal hA.isHermitian.eigenvalues * Uᵀ) := congrArg specNorm hAU
       _ = ‖hA.isHermitian.eigenvalues‖ := by
-        rw [specNorm_mul_transpose_right_of_hasOrthonormalCols hUt,
+        rw [← Matrix.conjTranspose_eq_transpose_of_trivial,
+          specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hUt,
           specNorm_mul_left_of_hasOrthonormalCols hUt, specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
   have hord : A ≤ 1 ↔ diagonal hA.isHermitian.eigenvalues ≤ 1 := by
     calc
@@ -285,7 +297,7 @@ theorem relative_spectrum_characterizations {A B : Matrix n n ℝ}
     le_iff_relative_spectralRadius_le_one hA hB,
     le_iff_exists_sqrt_congruence_contraction hA hB,
     sq_le_sq_iff_relative_specNorm_le_one hA hB.isHermitian, fun hBA => ?_⟩
-  have ht := trace_le_and_eq_iff_of_le hBA
+  have ht := trace_le_and_eq_iff_of_le_aux hBA
   exact ⟨det_le_det_of_posSemidef_le hB hBA, det_eq_iff_eq_of_posSemidef_le_posDef hA hB hBA,
     ht.1, ht.2, Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le hB.isHermitian hA.isHermitian
       (Matrix.le_iff.mp hBA), sqrt_le_sqrt_of_posSemidef_le hB hBA,

@@ -40,7 +40,7 @@ def hilbertMatrix (n : ℕ) : Matrix (Fin n) (Fin n) ℝ :=
 
 /-- Hilbert is a Cauchy matrix with shifted row and unshifted column labels.
 Horn–Johnson 2013, §0.9.12.
-atlas: structured-matrices-def (partial) -/
+atlas: structured-matrices-def -/
 theorem hilbertMatrix_eq_cauchyMatrix (n : ℕ) :
     hilbertMatrix n = cauchyMatrix (fun i : Fin n => (i.val : ℝ) + 1)
       (fun j : Fin n => (j.val : ℝ)) := by
@@ -119,7 +119,7 @@ theorem det_cauchyMatrix_eq_vandermonde {n : ℕ} (x y : Fin n → ℝ)
 /-- The usual product-of-differences Cauchy determinant formula. The only
 hypotheses are nonzero denominators; neither list needs distinct entries.
 Horn–Johnson 2013, §0.9.12.
-atlas: structured-matrices-def (partial) -/
+atlas: structured-matrices-def -/
 theorem det_cauchyMatrix_eq_prod_differences {n : ℕ} (x y : Fin n → ℝ)
     (hDen : ∀ i j, x i + y j ≠ 0) :
     (cauchyMatrix x y).det =
@@ -144,7 +144,7 @@ theorem det_cauchyMatrix_pos_of_strictMono {n : ℕ} (x y : Fin n → ℝ)
 
 /-- Every Hilbert determinant is strictly positive, including the empty
 determinant one. Horn–Johnson 2013, §0.9.12.
-atlas: structured-matrices-def (partial) -/
+atlas: structured-matrices-def -/
 theorem det_hilbertMatrix_pos (n : ℕ) : 0 < (hilbertMatrix n).det := by
   rw [hilbertMatrix_eq_cauchyMatrix]
   apply det_cauchyMatrix_pos_of_strictMono

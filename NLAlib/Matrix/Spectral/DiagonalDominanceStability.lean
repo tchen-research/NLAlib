@@ -45,7 +45,7 @@ theorem eq_zero_of_norm_sub_real_le_of_re_nonpos {z : ℂ} {d : ℝ}
   exact Complex.ext hr hi
 
 /-- Weak row dominance about nonnegative real diagonal entries gives
-positive real parts whenever the matrix is nonsingular. Source:
+positive real parts whenever the matrix is nonsingular.
 Horn–Johnson (2013), Corollary 6.2.27; the only boundary point of a disc
 on the imaginary axis is zero. -/
 theorem re_pos_of_mem_spectrum_of_isUnit_of_weak_diagonal_dominance
@@ -70,7 +70,7 @@ theorem re_pos_of_mem_spectrum_of_isUnit_of_weak_diagonal_dominance
 strict row, imply that every complex eigenvalue has positive real part.
 Source: Horn–Johnson (2013), Corollary 6.2.27; the strict-row assumption is
 necessary and is retained explicitly.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem re_pos_of_mem_spectrum_of_irreducible_weak_diagonal_dominance
     {A : Matrix n n ℂ} (hIrred : (A.map norm).IsIrreducible)
     (hdiag : ∀ i, (A i i).im = 0) (hpos : ∀ i, 0 < (A i i).re)
@@ -107,7 +107,7 @@ theorem posDef_of_isHermitian_of_row_radius_lt_diag {A : Matrix n n ℝ}
 positive diagonal and at least one strict row is positive definite.
 Source: Horn–Johnson (2013), Corollary 6.2.27; the graph is that of the
 entrywise absolute values and the strict-row repair is explicit.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem posDef_of_isHermitian_of_irreducible_weak_diagonal_dominance
     {A : Matrix n n ℝ} (hA : A.IsHermitian) (hIrred : (A.map norm).IsIrreducible)
     (hpos : ∀ i, 0 < A i i)

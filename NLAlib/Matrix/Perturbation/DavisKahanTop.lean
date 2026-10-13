@@ -5,7 +5,7 @@ import NLAlib.Matrix.Perturbation.EigenvaluePerturbation
 /-!
 # Sorted top-eigenspace Davis–Kahan bounds
 
-The actual sorted top and complementary spectral frames give the advertised
+The sorted top and complementary spectral frames give the advertised
 mixed denominator. Weyl and the unit sine bound give the unconditional
 constant-two population spectral bound. Source: Davis–Kahan §6 and
 Yu–Wang–Samworth (2015), Theorems 1–2; atlas `davis-kahan-sin-theta`.
@@ -20,7 +20,7 @@ namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n] {A E : Matrix n n ℝ}
 
 /-- The concrete sorted top-eigenspace mixed-gap theorem in both norms,
-retaining the actual compressed perturbation residual. Davis–Kahan §6;
+retaining the compressed perturbation residual. Davis–Kahan §6;
 the denominator is exactly the population last selected eigenvalue minus
 the perturbed first complementary eigenvalue.
 atlas: davis-kahan-sin-theta (partial) -/
@@ -107,7 +107,7 @@ theorem sinePrincipalAngles_le_perturbation_div_top_gap
     · exact hFc.trans (frobNorm_mul_frame_le hQ E)
 
 /-- The unconditional population-gap spectral bound has constant two for
-the actual sorted top eigenspaces. Yu–Wang–Samworth (2015), Theorem 2;
+the sorted top eigenspaces. Yu–Wang–Samworth (2015), Theorem 2;
 small perturbations use Weyl and large perturbations use the unit sine bound.
 atlas: davis-kahan-sin-theta (partial) -/
 theorem specNorm_sinePrincipalAngles_le_two_mul_specNorm_div_population_gap

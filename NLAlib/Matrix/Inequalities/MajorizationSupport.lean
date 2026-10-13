@@ -88,7 +88,7 @@ theorem Majorized.sum_sortedVector_mul_le {ι : Type*} [Fintype ι]
     rw [sum_sortedVector x id, sum_sortedVector y id]
     exact hxy.2
 
-/-- For any real weights, a majorized vector has a pairing bounded by an actual
+/-- For any real weights, a majorized vector has a pairing bounded by a
 permutation of the comparator. This is the exact support bound used in HLP.
 Marshall–Olkin–Arnold (2011), Theorem 2.B.2. -/
 theorem Majorized.exists_perm_sum_mul_le {ι : Type*} [Fintype ι]

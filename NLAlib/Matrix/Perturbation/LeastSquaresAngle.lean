@@ -3,15 +3,16 @@ import NLAlib.Matrix.Perturbation.LeastSquaresGeometry
 /-!
 # The geometric least-squares angle
 
-The angle is derived from the actual orthogonal least-squares decomposition.
+The angle is derived from the orthogonal least-squares decomposition.
 Golub–Van Loan, Theorem 5.3.1; supports `least-squares-perturbation`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A nonzero full-rank Moore–Penrose solution has nonzero fitted value and
 nonzero data. Golub–Van Loan, Theorem 5.3.1. -/
 theorem pinv_solution_norm_pos {A : Matrix m n ℝ} (hA : A.rank=Fintype.card n)
@@ -31,7 +32,8 @@ theorem pinv_solution_norm_pos {A : Matrix m n ℝ} (hA : A.rank=Fintype.card n)
     apply hx
     rw [hz, map_zero]
 
-/-- The actual fitted value and residual form an orthogonal decomposition
+open scoped Matrix.Norms.L2Operator in
+/-- The fitted value and residual form an orthogonal decomposition
 of the data. Golub–Van Loan, Theorem 5.3.1. -/
 theorem norm_data_sq_eq_pinv_fit_sq_add_residual_sq (A : Matrix m n ℝ)
     (b : EuclideanSpace ℝ m) :
@@ -41,6 +43,7 @@ theorem norm_data_sq_eq_pinv_fit_sq_add_residual_sq (A : Matrix m n ℝ)
   simp only [map_zero, sub_zero, zero_sub, map_neg, norm_neg] at h
   linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- The least-squares fitted value has norm at most the data norm.
 Orthogonal-projector contraction; supports the first-order least-squares bound. -/
 theorem norm_pinv_fit_le_norm_data (A : Matrix m n ℝ) (b : EuclideanSpace ℝ m) :
@@ -49,7 +52,8 @@ theorem norm_pinv_fit_le_norm_data (A : Matrix m n ℝ) (b : EuclideanSpace ℝ 
   nlinarith [sq_nonneg ‖b-A.toEuclideanLin ((moorePenroseInverse A).toEuclideanLin b)‖,
     norm_nonneg b, norm_nonneg (A.toEuclideanLin ((moorePenroseInverse A).toEuclideanLin b))]
 
-/-- The actual least-squares angle lies in `[0,π/2)` and has the fitted and
+open scoped Matrix.Norms.L2Operator in
+/-- The least-squares angle lies in `[0,π/2)` and has the fitted and
 residual norm ratios as cosine and sine. Its tangent is their ratio.
 Golub–Van Loan, Theorem 5.3.1; no angle relations are assumed. -/
 theorem exists_least_squares_angle {A : Matrix m n ℝ} (hA : A.rank=Fintype.card n)

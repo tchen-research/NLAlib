@@ -5,7 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 /-!
 # Exact L1 norm of the sharp Jackson sawtooth error
 
-The sign identity is proved on every uniform grid cell, the actual interpolant is
+The sign identity is proved on every uniform grid cell, the interpolant is
 annihilated by sine orthogonality, and affine interval integrals give `π²/(n+1)` exactly.
 -/
 
@@ -17,7 +17,7 @@ open scoped Topology Interval
 namespace NLAlib
 
 /-- The full-period endpoint of the uniform sawtooth grid is exactly `2π`.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sawtoothGridAngle_two_mul (n : ℕ) :
     sawtoothGridAngle n (2 * (n + 1)) = 2 * Real.pi := by
   unfold sawtoothGridAngle
@@ -25,7 +25,7 @@ theorem sawtoothGridAngle_two_mul (n : ℕ) :
   field_simp
 
 /-- Full-period reflection reverses the uniform grid index.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sawtoothGridAngle_reflection (n j : ℕ) (hj : j ≤ 2 * (n + 1)) :
     sawtoothGridAngle n (2 * (n + 1) - j) = 2 * Real.pi - sawtoothGridAngle n j := by
   unfold sawtoothGridAngle
@@ -34,7 +34,7 @@ theorem sawtoothGridAngle_reflection (n j : ℕ) (hj : j ≤ 2 * (n + 1)) :
   field_simp
 
 /-- All full-period grid points lie in `[0,2π]`.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sawtoothGridAngle_mem_Icc_full {n j : ℕ} (hj : j ≤ 2 * (n + 1)) :
     sawtoothGridAngle n j ∈ Icc (0 : ℝ) (2 * Real.pi) := by
   constructor
@@ -43,7 +43,7 @@ theorem sawtoothGridAngle_mem_Icc_full {n j : ℕ} (hj : j ≤ 2 * (n + 1)) :
     rwa [sawtoothGridAngle_two_mul] at h
 
 /-- The proved sine-square-wave sign identity holds on every full-period grid cell.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem abs_sawtoothError_eq_sign_sin_mul_on_full_grid_cell (n j : ℕ)
     (hj : j < 2 * (n + 1)) {t : ℝ}
     (ht : t ∈ Ioo (sawtoothGridAngle n j) (sawtoothGridAngle n (j + 1))) :
@@ -79,7 +79,7 @@ theorem intervalIntegrable_sawtooth_grid_cell {f : ℝ → ℝ} {n j : ℕ}
   exact Ioc_subset_Ioc (sawtoothGridAngle_mem_Icc_full hj.le).1
     (sawtoothGridAngle_mem_Icc_full (by omega)).2
 
-/-- Splitting a full-period integral along the actual uniform grid.
+/-- Splitting a full-period integral along the uniform grid.
 Source: interval-integral additivity; helper for sharp `jackson-lipschitz`. -/
 theorem sum_integral_sawtooth_grid_eq {f : ℝ → ℝ} (n : ℕ)
     (hf : IntervalIntegrable f volume 0 (2 * Real.pi)) :
@@ -91,8 +91,8 @@ theorem sum_integral_sawtooth_grid_eq {f : ℝ → ℝ} (n : ℕ)
   rw [sawtoothGridAngle_two_mul] at h
   simpa only [sawtoothGridAngle, Nat.cast_zero, zero_mul, zero_div] using h
 
-/-- The full L1 error equals the actual square-wave signed error integral.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+/-- The full L1 error equals the square-wave signed error integral.
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem integral_abs_sawtoothError_eq_signed (n : ℕ) :
     (∫ t : ℝ in 0..2 * Real.pi, |sawtoothError n t|) =
       ∫ t : ℝ in 0..2 * Real.pi,
@@ -110,8 +110,8 @@ theorem integral_abs_sawtoothError_eq_signed (n : ℕ) :
   exact abs_sawtoothError_eq_sign_sin_mul_on_full_grid_cell n j (mem_range.mp hj) ht
 
 /-- The signed sawtooth error integral reduces to the affine sawtooth integral, because
-the actual sine interpolant is orthogonal to the square wave.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+the sine interpolant is orthogonal to the square wave.
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem integral_signed_sawtoothError_eq_affine (n : ℕ) :
     (∫ t : ℝ in 0..2 * Real.pi, Real.sign (sin (((n + 1 : ℕ) : ℝ) * t)) * sawtoothError n t) =
       ∫ t : ℝ in 0..2 * Real.pi, Real.sign (sin (((n + 1 : ℕ) : ℝ) * t)) * (Real.pi - t) := by
@@ -132,7 +132,7 @@ theorem integral_signed_sawtoothError_eq_affine (n : ℕ) :
   rw [intervalIntegral.integral_sub hB hστ, integral_sign_sin_mul_sawtoothApprox_eq_zero, sub_zero]
 
 /-- The square-wave affine integral has the exact value `π²/(n+1)`.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem integral_sign_sin_mul_pi_sub_eq (n : ℕ) :
     (∫ t : ℝ in 0..2 * Real.pi, Real.sign (sin (((n + 1 : ℕ) : ℝ) * t)) * (Real.pi - t)) =
       Real.pi ^ 2 / (n + 1) := by
@@ -168,9 +168,9 @@ theorem integral_sign_sin_mul_pi_sub_eq (n : ℕ) :
   push_cast
   field_simp
 
-/-- The actual sharp Jackson sawtooth interpolant has the exact L1 error `π²/(n+1)`.
+/-- The sharp Jackson sawtooth interpolant has the exact L1 error `π²/(n+1)`.
 Every construction, sign and orthogonality prerequisite has been proved.
-Source: Arnold, numerical analysis, Section 1.2; operator rederivations `rt:sawtooth`.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem).
 Atlas `jackson-lipschitz` (kernel-norm helper). -/
 theorem integral_abs_sawtoothError_eq (n : ℕ) :
     (∫ t : ℝ in 0..2 * Real.pi, |sawtoothError n t|) = Real.pi ^ 2 / (n + 1) := by
@@ -178,7 +178,7 @@ theorem integral_abs_sawtoothError_eq (n : ℕ) :
     integral_sign_sin_mul_pi_sub_eq]
 
 /-- The normalized sharp Jackson kernel error is exactly `π/(2(n+1))`.
-Source: Arnold, numerical analysis, Section 1.2; operator rederivations `rt:sawtooth`.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem).
 Atlas `jackson-lipschitz` (kernel-norm helper). -/
 theorem inv_two_pi_mul_integral_abs_sawtoothError_eq (n : ℕ) :
     (2 * Real.pi)⁻¹ * (∫ t : ℝ in 0..2 * Real.pi, |sawtoothError n t|) =

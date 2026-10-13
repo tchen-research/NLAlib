@@ -9,10 +9,11 @@ import NLAlib.Matrix.Factorizations.LU
   `pivotSchur A`), the success predicate `CholeskySucceeds A` (every pivot positive), the
   realisation `isCholesky_cholesky` (symmetric `A`) and the breakdown theorem
   `choleskySucceeds_iff_posDef`: Cholesky is the test for positive definiteness.
-  Existence: `exists_isCholesky_iff_posDef`.
+  Existence on any linearly ordered finite index: `exists_isCholesky_iff_posDef`.
 * Semidefinite matrices: the same recursion gives `A = L Lᵀ` with nonnegative diagonal
   (`eq_cholesky_mul_transpose_of_posSemidef`), since a zero pivot of a PSD matrix has a zero
-  column and `0⁻¹ · 0 = 0`.
+  column and `0⁻¹ · 0 = 0`; `exists_eq_mul_transpose_of_posSemidef` on any linearly ordered
+  finite index.
 * Pivoted (diagonal pivoting) Cholesky for PSD matrices: `choleskyPivoted`, `IsPivotedCholesky`
   (`PAPᵀ = LLᵀ`), never fails (`isPivotedCholesky_choleskyPivoted`), and stops at the rank
   (`choleskyPivoted_apply_self_pos_iff_lt_rank`, `choleskyPivoted_apply_eq_zero_of_rank_le`).
@@ -162,11 +163,12 @@ column vanishes when the pivot does, if the Schur complement is reproduced by it
 recursion then so is `A`. Trefethen–Bau 1997, Lect. 23, eq. (23.2); Golub–Van Loan 2013,
 §4.2.5. -/
 theorem eq_cholesky_mul_transpose_of_pivotSchur {n : ℕ}
-    {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA : A.IsSymm) (ha : 0 ≤ A 0 0)
+    {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA : A.IsHermitian) (ha : 0 ≤ A 0 0)
     (hc : A 0 0 = 0 → ∀ i : Fin n, A i.succ 0 = 0)
     (hS : pivotSchur A = cholesky (pivotSchur A) * (cholesky (pivotSchur A))ᵀ) :
     A = cholesky A * (cholesky A)ᵀ := by
-  have hsym : ∀ j : Fin n, A 0 j.succ = A j.succ 0 := fun j => hA.apply j.succ 0
+  have hsym : ∀ j : Fin n, A 0 j.succ = A j.succ 0 := fun j => by
+    simpa using hA.apply j.succ 0
   have hsq : Real.sqrt (A 0 0) * Real.sqrt (A 0 0) = A 0 0 := Real.mul_self_sqrt ha
   have hcol : ∀ i : Fin n,
       Real.sqrt (A 0 0) * ((Real.sqrt (A 0 0))⁻¹ * A i.succ 0) = A i.succ 0 := by
@@ -192,9 +194,9 @@ theorem eq_cholesky_mul_transpose_of_pivotSchur {n : ℕ}
 /-- **Realisation of the Cholesky recursion**: for symmetric `A` with all pivots positive,
 `cholesky A` is the Cholesky factor. Proof: induction on `n` with
 `eq_cholesky_mul_transpose_of_pivotSchur`; the Schur complement stays symmetric
-(`isSymm_pivotSchur`). Trefethen–Bau 1997, Alg. 23.1; Golub–Van Loan 2013, §4.2.5.
+(`isHermitian_pivotSchur`). Trefethen–Bau 1997, Alg. 23.1; Golub–Van Loan 2013, §4.2.5.
 atlas: cholesky-algorithm -/
-theorem isCholesky_cholesky {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.IsSymm)
+theorem isCholesky_cholesky {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.IsHermitian)
     (h : CholeskySucceeds A) : IsCholesky A (cholesky A) := by
   refine ⟨isLowerTriangular_cholesky A,
     (choleskySucceeds_iff_forall_cholesky_apply_self_pos A).1 h, ?_⟩
@@ -203,14 +205,14 @@ theorem isCholesky_cholesky {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.I
   | succ n ih =>
     obtain ⟨ha, hS⟩ := h
     exact eq_cholesky_mul_transpose_of_pivotSchur hA ha.le (fun h0 => absurd h0 ha.ne')
-      (ih (isSymm_pivotSchur hA) hS)
+      (ih (isHermitian_pivotSchur hA) hS)
 
 /-- **Breakdown of the Cholesky recursion**: for symmetric `A`, the recursion succeeds iff `A`
 is positive definite (Cholesky is the test for positive definiteness). Proof: induction on `n`
 with `posDef_iff_pivotSchur`. Trefethen–Bau 1997, Thm 23.1; Golub–Van Loan 2013, §4.2.5;
 Horn–Johnson 2013, Cor. 7.2.9.
 atlas: cholesky-algorithm -/
-theorem choleskySucceeds_iff_posDef {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.IsSymm) :
+theorem choleskySucceeds_iff_posDef {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.IsHermitian) :
     CholeskySucceeds A ↔ A.PosDef := by
   induction n with
   | zero =>
@@ -218,51 +220,87 @@ theorem choleskySucceeds_iff_posDef {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} (
     refine posDef_iff_dotProduct_mulVec.2 ⟨?_, fun x hx => absurd (Subsingleton.elim x 0) hx⟩
     ext i; exact i.elim0
   | succ n ih =>
-    rw [CholeskySucceeds, ih (isSymm_pivotSchur hA), posDef_iff_pivotSchur hA]
+    rw [CholeskySucceeds, ih (isHermitian_pivotSchur hA), posDef_iff_pivotSchur hA]
 
-/-- **Existence of the Cholesky factorization**: a matrix on `Fin n` has a Cholesky
-factorization iff it is positive definite; the factor is `cholesky A` and it is unique
-(`IsCholesky.unique`). Trefethen–Bau 1997, Thm 23.1; Golub–Van Loan 2013, Thm 4.2.7;
-Higham 2002, Thm 10.1. The statement for a general linearly ordered index follows by
-transport along `Fintype.orderIsoFinOfCardEq` (not formalized here).
-atlas: cholesky-decomposition (partial) -/
-theorem exists_isCholesky_iff_posDef {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    (∃ L, IsCholesky A L) ↔ A.PosDef := by
-  refine ⟨fun ⟨_, h⟩ => h.posDef, fun hA => ?_⟩
-  have hS : A.IsSymm := by
-    have := hA.isHermitian
-    rwa [IsHermitian, conjTranspose_eq_transpose_of_trivial] at this
-  exact ⟨_, isCholesky_cholesky hS ((choleskySucceeds_iff_posDef hS).2 hA)⟩
+/-- **Realisation on `Fin n`**: a positive definite matrix on `Fin n` has the Cholesky factor
+`cholesky A`. Trefethen–Bau 1997, Thm 23.1; Golub–Van Loan 2013, Thm 4.2.7. -/
+theorem isCholesky_cholesky_of_posDef {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.PosDef) :
+    IsCholesky A (cholesky A) :=
+  isCholesky_cholesky hA.isHermitian ((choleskySucceeds_iff_posDef hA.isHermitian).2 hA)
 
 /-- **Semidefinite Cholesky**: for positive semidefinite `A` the (unpivoted) recursion gives
 `A = L Lᵀ` with `L = cholesky A` lower triangular with nonnegative diagonal
 (`isLowerTriangular_cholesky`, `cholesky_apply_self_nonneg`); not unique in general. A zero
 pivot has a zero column, so `0⁻¹ · 0 = 0` is the right multiplier. Proof: induction with
 `eq_cholesky_mul_transpose_of_pivotSchur` and `posSemidef_pivotSchur`.
-Golub–Van Loan 2013, §4.2.8; Higham 2002, Thm 10.9 (label to verify).
+Golub–Van Loan 2013, §4.2.8; Higham 2002, Thm 10.9 (the pivoted form; here the pivots are
+taken in order).
 atlas: cholesky-decomposition (partial) -/
 theorem eq_cholesky_mul_transpose_of_posSemidef {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.PosSemidef) : A = cholesky A * (cholesky A)ᵀ := by
   induction n with
   | zero => ext i; exact i.elim0
   | succ n ih =>
-    have hS : A.IsSymm := by
-      have := hA.isHermitian
-      rwa [IsHermitian, conjTranspose_eq_transpose_of_trivial] at this
-    exact eq_cholesky_mul_transpose_of_pivotSchur hS (hA.diag_nonneg)
+    exact eq_cholesky_mul_transpose_of_pivotSchur hA.isHermitian (hA.diag_nonneg)
       (fun h0 i => apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hA h0 i.succ)
       (ih (posSemidef_pivotSchur hA))
 
-/-- Every positive semidefinite matrix on `Fin n` is `L Lᵀ` with `L` lower triangular with
-nonnegative diagonal. Golub–Van Loan 2013, §4.2.8; Higham 2002, Thm 10.9 (label to verify).
-atlas: cholesky-decomposition (partial) -/
-theorem exists_eq_mul_transpose_of_posSemidef {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
-    (hA : A.PosSemidef) :
-    ∃ L : Matrix (Fin n) (Fin n) ℝ, L.IsLowerTriangular ∧ (∀ i, 0 ≤ L i i) ∧ A = L * Lᵀ :=
-  ⟨cholesky A, isLowerTriangular_cholesky A, cholesky_apply_self_nonneg A,
-    eq_cholesky_mul_transpose_of_posSemidef hA⟩
-
 end Algorithm
+
+/-! ### Existence over any linearly ordered index -/
+
+section Existence
+
+variable {m n : Type*} [Fintype m] [LinearOrder m] [Fintype n] [LinearOrder n]
+
+/-- A lower-triangular factorization `A = L Lᵀ` transports along an order isomorphism of the
+index type (with any predicate `P` on the diagonal). -/
+theorem exists_eq_mul_transpose_submatrix {A L : Matrix n n ℝ} (P : ℝ → Prop)
+    (hL : L.IsLowerTriangular) (hP : ∀ i, P (L i i)) (hA : A = L * Lᵀ) (e : m ≃o n) :
+    ∃ L' : Matrix m m ℝ, L'.IsLowerTriangular ∧ (∀ i, P (L' i i)) ∧
+      A.submatrix e e = L' * L'ᵀ :=
+  ⟨L.submatrix e e, isLowerTriangular_iff.2 fun _ _ hij =>
+      isLowerTriangular_iff.1 hL _ _ (e.strictMono hij),
+    fun i => hP (e i), by
+      rw [hA, Matrix.transpose_submatrix]
+      exact (Matrix.submatrix_mul_equiv L Lᵀ e e.toEquiv e).symm⟩
+
+/-- The sorting isomorphism `Fin (card n) ≃o n` and its inverse undo each other on matrices. -/
+theorem submatrix_monoEquivOfFin_symm (A : Matrix n n ℝ) :
+    (A.submatrix (monoEquivOfFin n rfl) (monoEquivOfFin n rfl)).submatrix
+      (monoEquivOfFin n rfl).symm (monoEquivOfFin n rfl).symm = A := by
+  ext i j; simp
+
+/-- **Existence of the Cholesky factorization**: a real matrix on a linearly ordered finite index
+has a Cholesky factorization iff it is positive definite; on `Fin n` the factor is `cholesky A`
+(`isCholesky_cholesky_of_posDef`), and it is unique (`IsCholesky.unique`). Trefethen–Bau 1997,
+Thm 23.1; Golub–Van Loan 2013, Thm 4.2.7; Higham 2002, Thm 10.1.
+atlas: cholesky-decomposition -/
+theorem exists_isCholesky_iff_posDef (A : Matrix n n ℝ) : (∃ L, IsCholesky A L) ↔ A.PosDef := by
+  refine ⟨fun ⟨_, h⟩ => h.posDef, fun hA => ?_⟩
+  let e := monoEquivOfFin n rfl
+  have hA' : (A.submatrix e e).PosDef := hA.submatrix e.injective
+  obtain ⟨hlow, hpos, heq⟩ := isCholesky_cholesky_of_posDef hA'
+  obtain ⟨L, hL, hP, hLL⟩ := exists_eq_mul_transpose_submatrix (fun x => 0 < x) hlow hpos heq e.symm
+  rw [submatrix_monoEquivOfFin_symm] at hLL
+  exact ⟨L, hL, hP, hLL⟩
+
+/-- **Semidefinite Cholesky**: every positive semidefinite real matrix on a linearly ordered
+finite index is `L Lᵀ` with `L` lower triangular with nonnegative diagonal (not unique in
+general; on `Fin n` the witness is `cholesky A`, `eq_cholesky_mul_transpose_of_posSemidef`).
+Golub–Van Loan 2013, §4.2.8; Higham 2002, Thm 10.9.
+atlas: cholesky-decomposition -/
+theorem exists_eq_mul_transpose_of_posSemidef {A : Matrix n n ℝ} (hA : A.PosSemidef) :
+    ∃ L : Matrix n n ℝ, L.IsLowerTriangular ∧ (∀ i, 0 ≤ L i i) ∧ A = L * Lᵀ := by
+  let e := monoEquivOfFin n rfl
+  have hA' : (A.submatrix e e).PosSemidef := hA.submatrix e
+  obtain ⟨L, hL, hP, hLL⟩ := exists_eq_mul_transpose_submatrix (fun x => 0 ≤ x)
+    (isLowerTriangular_cholesky _) (cholesky_apply_self_nonneg _)
+    (eq_cholesky_mul_transpose_of_posSemidef hA') e.symm
+  rw [submatrix_monoEquivOfFin_symm] at hLL
+  exact ⟨L, hL, hP, hLL⟩
+
+end Existence
 
 /-! ### Pivoted Cholesky for semidefinite matrices -/
 
@@ -326,7 +364,7 @@ a pivoted Cholesky factorization. Proof: induction on `n`; `diagPivotSwap A` and
 complement stay PSD (`posSemidef_pivotSchur`), a zero pivot has a zero column
 (`apply_eq_zero_of_posSemidef_of_apply_self_eq_zero`), and the step is the computation of
 `eq_cholesky_mul_transpose_of_pivotSchur` conjugated by the trailing permutation.
-Golub–Van Loan 2013, §4.2.9; Higham 2002, Thm 10.9 (label to verify).
+Golub–Van Loan 2013, §4.2.9; Higham 2002, Thm 10.9.
 atlas: cholesky-algorithm -/
 theorem isPivotedCholesky_choleskyPivoted {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.PosSemidef) :
@@ -375,7 +413,7 @@ theorem isPivotedCholesky_choleskyPivoted {n : ℕ} {A : Matrix (Fin n) (Fin n) 
 /-- SCAFFOLD: cholesky-algorithm
 **Pivoted Cholesky stops at the rank**: for PSD `A`, the diagonal of the pivoted factor is
 positive exactly in the first `rank A` positions. Golub–Van Loan 2013, §4.2.9; Higham 2002,
-Thm 10.9 (label to verify).
+Thm 10.9.
 Proof sketch: by diagonal pivoting, `lₖₖ² = max diag` of the `k`-th Schur complement, and a PSD
 matrix with zero diagonal is zero; so once a pivot is zero all later columns vanish. The number
 of nonzero columns of the lower triangular `L` with this staircase pattern is `rank L =

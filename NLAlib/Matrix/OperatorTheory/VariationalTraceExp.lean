@@ -35,7 +35,7 @@ theorem NLAlib.isGreatest_variational_traceExp {d : ℕ} [NeZero d]
       (Matrix.trace (T * matrixLog (matrixExp (H + matrixLog A)) - T * matrixLog T + T)).re =
         (Matrix.trace (T * H)).re + (Matrix.trace A).re - relativeEntropy T A := by
     rw [hLog]
-    simp only [relativeEntropy, mul_add, mul_sub, Matrix.trace_add, Matrix.trace_sub,
+    simp only [relativeEntropy_complex, mul_add, mul_sub, Matrix.trace_add, Matrix.trace_sub,
       Complex.add_re, Complex.sub_re]
     ring
   constructor

@@ -4,16 +4,15 @@ import Mathlib.Probability.Moments.SubGaussian
 /-!
 # The spectral norm of a matrix with sub-Gaussian bilinear marginals
 
-`measure_lt_specNorm_le_of_hasSubgaussianMGF`: tail of `‖A‖₂` for a random matrix with
+`measureReal_lt_specNorm_le_of_hasSubgaussianMGF`: tail of `specNorm A` for a random matrix with
 sub-Gaussian bilinear marginals (Vershynin 2018, Thm 4.4.5, explicit constants), by a union bound
 over the 1/4-nets of `Matrix/Norms/Net` (where the deterministic ε-net lemmas live).
 
-Atlas `subgaussian-spec-norm` (new). Audit G1 B2.
+Atlas `subgaussian-spec-norm`.
 -/
 
 open MeasureTheory Metric ProbabilityTheory
-open scoped NNReal
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped NNReal Matrix
 
 noncomputable section
 
@@ -25,17 +24,28 @@ assumed), then for `t ≥ 0`,
 `P(‖A‖₂ > 2(√(2 log 9 · (m + n) c) + √c t)) ≤ e^{-t²/2}`.
 The inequality is strict: with `≤` the statement fails for `c = 0`.
 Vershynin 2018, Thm 4.4.5 (with explicit constants: 1/4-nets of size `9ⁿ`, `9ᵐ`, the bilinear
-net lemma and a union bound); audit G1 B2. Atlas `subgaussian-spec-norm` (new). No
-measurability hypothesis is needed (outer measure).
+net lemma and a union bound). No measurability hypothesis is needed (outer measure).
 atlas: subgaussian-spec-norm -/
-theorem measure_lt_specNorm_le_of_hasSubgaussianMGF {Ω : Type*} [MeasurableSpace Ω]
+theorem measureReal_lt_specNorm_le_of_hasSubgaussianMGF {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] (A : Ω → Matrix m n ℝ) (c : ℝ≥0)
-    (hA : ∀ (x : n → ℝ) (y : m → ℝ), x ⬝ᵥ x = 1 → y ⬝ᵥ y = 1 →
+    (hA : ∀ (x : n → ℝ) (y : m → ℝ), ‖WithLp.toLp 2 x‖ = 1 → ‖WithLp.toLp 2 y‖ = 1 →
       HasSubgaussianMGF (fun ω => y ⬝ᵥ (A ω *ᵥ x)) c μ) {t : ℝ} (ht : 0 ≤ t) :
-    μ {ω | 2 * (√(2 * Real.log 9 * (Fintype.card m + Fintype.card n) * c) + √c * t) <
-        specNorm (A ω)} ≤ ENNReal.ofReal (Real.exp (-t ^ 2 / 2)) := by
+    μ.real {ω | 2 * (√(2 * Real.log 9 * (Fintype.card m + Fintype.card n) * c) + √c * t) <
+        specNorm (A ω)} ≤ Real.exp (-t ^ 2 / 2) := by
   classical
+  have hunitn : ∀ (x : n → ℝ), x ⬝ᵥ x = 1 → ‖WithLp.toLp 2 x‖ = 1 := by
+    intro x hx
+    have h := norm_toLp_sq_eq_re_star_dotProduct (𝕜 := ℝ) x
+    simp only [star_trivial, RCLike.re_to_real, hx] at h
+    exact pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero |>.1 h
+  have hunitm : ∀ (y : m → ℝ), y ⬝ᵥ y = 1 → ‖WithLp.toLp 2 y‖ = 1 := by
+    intro y hy
+    have h := norm_toLp_sq_eq_re_star_dotProduct (𝕜 := ℝ) y
+    simp only [star_trivial, RCLike.re_to_real, hy] at h
+    exact pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero |>.1 h
+  replace hA := fun x y hx hy => hA x y (hunitn x hx) (hunitm y hy)
+  rw [← ENNReal.ofReal_le_ofReal_iff (by positivity), ofReal_measureReal]
   set a := √(2 * Real.log 9 * (Fintype.card m + Fintype.card n) * c) with ha
   set u := a + √c * t with hu
   have ha0 : 0 ≤ a := Real.sqrt_nonneg _

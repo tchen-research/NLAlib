@@ -13,7 +13,7 @@ import NLAlib.Matrix.Factorizations.Triangular
   `Matrix.fromBlocks` over `Fin 1 ⊕ Fin n`, so that Mathlib's block lemmas
   (`Matrix.PosSemidef.fromBlocks₁₁`, `Matrix.det_fromBlocks₁₁`) apply.
 
-The generalized Schur complement `schurComplement A B C = C − Bᵀ A⁺ B` and Albert's criterion
+The generalized Schur complement `generalizedSchurComplement A B C = C − Bᴴ A⁺ B` and Albert's criterion
 live in `Matrix/Basic/GeneralizedSchurComplement.lean`.
 
 Sources: Trefethen–Bau 1997, Lect. 20 and 23; Golub–Van Loan 2013, §3.2.10 and §4.2.
@@ -112,8 +112,9 @@ theorem det_eq_mul_det_pivotSchur (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) (
   simp
 
 /-- The pivot Schur complement of a symmetric matrix is symmetric. -/
-theorem isSymm_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA : A.IsSymm) :
-    (pivotSchur A).IsSymm := by
+theorem isHermitian_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA : A.IsHermitian) :
+    (pivotSchur A).IsHermitian := by
+  rw [Matrix.isHermitian_iff_isSymm] at hA ⊢
   ext i j
   have h1 : A i.succ j.succ = A j.succ i.succ := hA.apply j.succ i.succ
   have h2 : A i.succ 0 = A 0 i.succ := hA.apply 0 i.succ
@@ -151,11 +152,12 @@ Proof: complete the square, `xᵀAx = a (x₀ + cᵀy / a)² + yᵀ (pivotSchur 
 `x = (x₀, y)`. Golub–Van Loan 2013, §4.2.5 (proof of Thm 4.2.7); Trefethen–Bau 1997,
 Lect. 23 (proof of Thm 23.1); Horn–Johnson 2013, Thm 7.7.7. This is the step of the Cholesky
 recursion (atlas `cholesky-algorithm`); special case of `generalized-schur-complement-psd`. -/
-theorem posDef_iff_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA : A.IsSymm) :
-    A.PosDef ↔ 0 < A 0 0 ∧ (pivotSchur A).PosDef := by
+theorem posDef_iff_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ}
+    (hA : A.IsHermitian) : A.PosDef ↔ 0 < A 0 0 ∧ (pivotSchur A).PosDef := by
+  have hSh := isHermitian_pivotSchur hA
+  rw [Matrix.isHermitian_iff_isSymm] at hA
   have hsym : ∀ y : Fin n → ℝ, ∑ i, y i * A i.succ 0 = ∑ j, A 0 j.succ * y j := fun y =>
     Finset.sum_congr rfl fun i _ => by rw [hA.apply 0 i.succ, mul_comm]
-  have hSh := Matrix.isHermitian_iff_isSymm.mpr (isSymm_pivotSchur hA)
   constructor
   · intro hPD
     refine ⟨hPD.diag_pos, posDef_iff_dotProduct_mulVec.2 ⟨hSh, fun y hy => ?_⟩⟩
@@ -203,7 +205,7 @@ theorem posSemidef_pivotSchur {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ}
   have hsym : ∀ y : Fin n → ℝ, ∑ i, y i * A i.succ 0 = ∑ j, A 0 j.succ * y j := fun y =>
     Finset.sum_congr rfl fun i _ => by rw [hAs.apply 0 i.succ, mul_comm]
   refine posSemidef_iff_dotProduct_mulVec.2
-    ⟨Matrix.isHermitian_iff_isSymm.mpr (isSymm_pivotSchur hAs), fun y => ?_⟩
+    ⟨isHermitian_pivotSchur hA.isHermitian, fun y => ?_⟩
   have hx := (posSemidef_iff_dotProduct_mulVec.1 hA).2
     (vecCons (-((A 0 0)⁻¹ * ∑ j, A 0 j.succ * y j)) y)
   simp only [star_trivial] at hx ⊢

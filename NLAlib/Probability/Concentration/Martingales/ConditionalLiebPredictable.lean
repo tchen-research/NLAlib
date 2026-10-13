@@ -12,10 +12,11 @@ Lieb inequalities. Upper bounds supply all integrability; no lower bounds are re
 noncomputable section
 
 open MeasureTheory Matrix Set
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Conditional Lieb with an actual conditioning-measurable Hermitian random offset.
 The underlying probability space is arbitrary. Upper-only spectral bounds derive every
 integrability premise; positivity of the actual conditional exponential mean is the

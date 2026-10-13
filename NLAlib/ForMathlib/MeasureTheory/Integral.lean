@@ -21,7 +21,7 @@ noncomputable section
 
 open MeasureTheory
 
-namespace NLAlib
+namespace MeasureTheory
 
 /-! ### Resampling one coordinate of a product measure -/
 
@@ -31,8 +31,7 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι] {Ω : Type*} [MeasurableSpac
   (μ : ι → Measure Ω) [∀ i, IsProbabilityMeasure (μ i)]
 
 /-- Resampling one coordinate preserves a product measure: `(x, t) ↦ update x i t` maps
-`(⊗ⱼ μⱼ) ⊗ μᵢ` to `⊗ⱼ μⱼ`. Atlas: `entropy-tensorization` (helper). Ported from Prove2me
-solution `GaussianMatrix.entropy_tensorization`. -/
+`(⊗ⱼ μⱼ) ⊗ μᵢ` to `⊗ⱼ μⱼ`. Atlas: `entropy-tensorization` (helper). -/
 theorem measurePreserving_update_pi (i : ι) :
     MeasurePreserving (fun p : (ι → Ω) × Ω => Function.update p.1 i p.2)
       ((Measure.pi μ).prod (μ i)) (Measure.pi μ) := by
@@ -69,8 +68,7 @@ theorem measurePreserving_update_pi (i : ι) :
     Finset.sdiff_singleton_eq_erase]
 
 /-- Integrability of `F ∘ update` on `(⊗ⱼ μⱼ) ⊗ μᵢ` for `F ∈ L¹(⊗ⱼ μⱼ)`.
-Atlas: `entropy-tensorization` (helper). Ported from Prove2me solution
-`GaussianMatrix.entropy_tensorization`. -/
+Atlas: `entropy-tensorization` (helper). -/
 theorem integrable_comp_update_pi (i : ι) {F : (ι → Ω) → ℝ} (hF : Integrable F (Measure.pi μ)) :
     Integrable (fun p : (ι → Ω) × Ω => F (Function.update p.1 i p.2))
       ((Measure.pi μ).prod (μ i)) :=
@@ -78,7 +76,7 @@ theorem integrable_comp_update_pi (i : ι) {F : (ι → Ω) → ℝ} (hF : Integ
 
 /-- Fubini for resampling one coordinate:
 `∫ (∫ F(update x i t) dμᵢ(t)) d(⊗ⱼ μⱼ)(x) = ∫ F d(⊗ⱼ μⱼ)`. Atlas: `entropy-tensorization`
-(helper). Ported from Prove2me solution `GaussianMatrix.entropy_tensorization`. -/
+(helper).entropy_tensorization`. -/
 theorem integral_integral_update_pi (i : ι) {F : (ι → Ω) → ℝ}
     (hF : Integrable F (Measure.pi μ)) :
     ∫ x, ∫ t, F (Function.update x i t) ∂(μ i) ∂(Measure.pi μ) = ∫ x, F x ∂(Measure.pi μ) := by
@@ -92,16 +90,14 @@ theorem integral_integral_update_pi (i : ι) {F : (ι → Ω) → ℝ}
     _ = ∫ x, F x ∂(Measure.pi μ) := by rw [hmp.map_eq]
 
 /-- For `F ∈ L¹(⊗ⱼ μⱼ)`, almost every one-coordinate section `t ↦ F(update x i t)` is
-`μᵢ`-integrable. Atlas: `entropy-tensorization` (helper). Ported from Prove2me solution
-`GaussianMatrix.entropy_tensorization`. -/
+`μᵢ`-integrable. Atlas: `entropy-tensorization` (helper). -/
 theorem ae_integrable_comp_update_pi (i : ι) {F : (ι → Ω) → ℝ}
     (hF : Integrable F (Measure.pi μ)) :
     ∀ᵐ x ∂(Measure.pi μ), Integrable (fun t => F (Function.update x i t)) (μ i) :=
   (integrable_comp_update_pi μ i hF).prod_right_ae
 
 /-- For `F ∈ L¹(⊗ⱼ μⱼ)`, `x ↦ ∫ F(update x i t) dμᵢ(t)` is integrable. Atlas:
-`entropy-tensorization` (helper). Ported from Prove2me solution
-`GaussianMatrix.entropy_tensorization`. -/
+`entropy-tensorization` (helper). -/
 theorem integrable_integral_update_pi (i : ι) {F : (ι → Ω) → ℝ}
     (hF : Integrable F (Measure.pi μ)) :
     Integrable (fun x => ∫ t, F (Function.update x i t) ∂(μ i)) (Measure.pi μ) :=
@@ -112,8 +108,7 @@ end Product
 /-! ### Cauchy–Schwarz and integrability under linear growth -/
 
 /-- Cauchy–Schwarz in the form `(∫ a)² ≤ (∫ a²/b) (∫ b)` for `b ≥ δ > 0` on a probability
-space. Atlas: `gaussian-log-sobolev` (helper). Ported from Prove2me solution
-`GaussianMatrix.gaussian_logsobolev_bounded_below`. -/
+space. Atlas: `gaussian-log-sobolev` (helper). -/
 theorem sq_integral_le_integral_div_mul_integral {α : Type*} [MeasurableSpace α] (μ : Measure α)
     [IsProbabilityMeasure μ] (a b : α → ℝ) (δ : ℝ) (hδ : 0 < δ) (hb : ∀ x, δ ≤ b x)
     (ha : Integrable a μ) (hbi : Integrable b μ) (hab : Integrable (fun x => a x ^ 2 / b x) μ) :
@@ -147,7 +142,7 @@ theorem sq_integral_le_integral_div_mul_integral {α : Type*} [MeasurableSpace �
 
 /-- A function of a random vector with integrable coordinates is integrable as soon as it is
 measurable and grows at most like `∑ₜ |xₜ| + K`. Atlas: helper of `sudakov-fernique`,
-`gordon-minimax`. Ported from Prove2me solutions `GaussianMatrix.sudakov_fernique`,
+`gordon-minimax`.sudakov_fernique`,
 `GaussianMatrix.gordon_minimax` (helper `integrable_of_abs_le`). -/
 theorem integrable_comp_of_abs_le_sum_abs {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω]
     {P : Measure Ω} [IsFiniteMeasure P] (X : ι → Ω → ℝ) (hXi : ∀ t, Integrable (X t) P)
@@ -160,4 +155,4 @@ theorem integrable_comp_of_abs_le_sum_abs {ι Ω : Type*} [Fintype ι] [Measurab
   rw [Real.norm_eq_abs]
   simpa using hb (fun t => X t ω)
 
-end NLAlib
+end MeasureTheory

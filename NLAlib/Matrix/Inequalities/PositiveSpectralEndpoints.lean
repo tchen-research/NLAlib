@@ -2,7 +2,7 @@ import NLAlib.Matrix.Inequalities.RelativeSpectrum
 /-!
 # Positive extreme eigenvalues and endpoint constants
 
-The actual smallest and largest sorted eigenvalues bound a positive definite
+The smallest and largest sorted eigenvalues bound a positive definite
 matrix in Loewner order and identify its condition number.
 Source: Horn--Johnson (2013), Section 7.4.12;
 supports `kantorovich-inequality`.
@@ -10,7 +10,7 @@ supports `kantorovich-inequality`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

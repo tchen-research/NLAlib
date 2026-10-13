@@ -48,11 +48,11 @@ variable {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
 Atlas: `lanczos-orthogonal-polynomials`. -/
 theorem exists_col_eq_aeval (D : LanczosDecomp A b q) (j : Fin q) :
     ∃ p : ℝ[X], p.degree = j ∧ D.Q.col j = aeval A p *ᵥ b := by
-  obtain ⟨p, hp, hpj⟩ := (mem_krylovSpace_iff_degree A b _ _).1 (D.graded.col_mem j)
+  obtain ⟨p, hp, hpj⟩ := (mem_krylovSpace_iff A b _ _).1 (D.graded.col_mem j)
   refine ⟨p, ?_, hpj⟩
   have hnot : ¬ p.degree < j := fun hlt => by
     have h0 := D.graded.col_dotProduct_eq_zero j
-      ((mem_krylovSpace_iff_degree A b _ _).2 ⟨p, hlt, hpj⟩)
+      ((mem_krylovSpace_iff A b _ _).2 ⟨p, hlt, hpj⟩)
     rw [D.hasOrthonormalCols.col_dotProduct_col, if_pos rfl] at h0
     exact one_ne_zero h0
   by_cases hp0 : p = 0
@@ -107,7 +107,7 @@ theorem isHermitian_T (D : LanczosDecomp A b q) (hA : A.IsHermitian) : D.T.IsHer
 coefficients of the orthonormal polynomials of `μ_b`. Source: Golub–Meurant (2010) [`gm10`],
 Thm 2.1 and Thm 4.2.
 atlas: lanczos-orthogonal-polynomials (partial) -/
-theorem X_mul_poly (D : LanczosDecomp A b q) (hA : A.IsSymm) {j : ℕ} (hj : j + 1 < q) :
+theorem X_mul_poly (D : LanczosDecomp A b q) (hA : A.IsHermitian) {j : ℕ} (hj : j + 1 < q) :
     X * D.poly j = C (D.beta j) * D.poly (j - 1) + C (D.alpha j) * D.poly j +
       C (D.beta (j + 1)) * D.poly (j + 1) := by
   rw [← sub_eq_zero]
@@ -132,10 +132,9 @@ theorem X_mul_poly (D : LanczosDecomp A b q) (hA : A.IsSymm) {j : ℕ} (hj : j +
 
 /-- **Christoffel–Darboux identity** for the Lanczos polynomials: for symmetric `A` and
 `1 ≤ m < q`, `(x − y) ∑_{j<m} p_j(x) p_j(y) = β_m (p_m(x) p_{m−1}(y) − p_{m−1}(x) p_m(y))`.
-Source: Golub–Meurant (2010) [`gm10`], Ch. 2 (Christoffel–Darboux formula; label to
-verify).
+Source: Golub–Meurant (2010) [`gm10`], Ch. 2 (Christoffel–Darboux formula).
 atlas: jacobi-matrix-identities (partial) -/
-theorem sub_mul_sum_eval_poly_mul (D : LanczosDecomp A b q) (hA : A.IsSymm) {m : ℕ}
+theorem sub_mul_sum_eval_poly_mul (D : LanczosDecomp A b q) (hA : A.IsHermitian) {m : ℕ}
     (hm0 : 0 < m) (hm : m < q) (x y : ℝ) :
     (x - y) * ∑ j ∈ Finset.range m, (D.poly j).eval x * (D.poly j).eval y =
       D.beta m * ((D.poly m).eval x * (D.poly (m - 1)).eval y -
@@ -170,7 +169,7 @@ theorem integral_eval_charpoly_mul_eq_zero (D : LanczosDecomp A b q) (hA : A.IsH
   rw [integral_eval_mul_eval_spectralMeasure]
   -- `r(A) b ∈ K_q = range Q`
   obtain ⟨y, hy⟩ : aeval A r *ᵥ b ∈ LinearMap.range D.Q.mulVecLin := by
-    rw [D.range_Q]; exact (mem_krylovSpace_iff_degree A b q _).2 ⟨r, hr, rfl⟩
+    rw [D.range_Q]; exact (mem_krylovSpace_iff A b q _).2 ⟨r, hr, rfl⟩
   rw [← hy, Matrix.mulVecLin_apply, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose,
     transpose_mulVec_aeval_mulVec_eq D.hasOrthonormalCols b D.range_Q.ge
       (natDegree_le_iff_degree_le.1 (by rw [charpoly_natDegree_eq_dim, Fintype.card_fin])),
@@ -182,7 +181,7 @@ theorem charpoly_T_monic (D : LanczosDecomp A b q) :
   ⟨charpoly_monic _, by rw [charpoly_natDegree_eq_dim, Fintype.card_fin]⟩
 
 /-- Leading coefficients of the Lanczos polynomials: `lead(p_k) = β_{k+1} lead(p_{k+1})`. -/
-private lemma leadingCoeff_poly_eq (D : LanczosDecomp A b q) (hA : A.IsSymm) {k : ℕ}
+private lemma leadingCoeff_poly_eq (D : LanczosDecomp A b q) (hA : A.IsHermitian) {k : ℕ}
     (hk : k + 1 < q) :
     (D.poly k).leadingCoeff = D.beta (k + 1) * (D.poly (k + 1)).leadingCoeff := by
   have h := congrArg (fun p => coeff p (k + 1)) (D.X_mul_poly hA hk)
@@ -198,7 +197,7 @@ private lemma leadingCoeff_poly_eq (D : LanczosDecomp A b q) (hA : A.IsSymm) {k 
   rw [leadingCoeff, leadingCoeff, hdk, hdk1, h]
 
 /-- `lead(p_0) = β_1 ⋯ β_j lead(p_j)`. -/
-private lemma leadingCoeff_poly_zero_eq (D : LanczosDecomp A b q) (hA : A.IsSymm) {j : ℕ}
+private lemma leadingCoeff_poly_zero_eq (D : LanczosDecomp A b q) (hA : A.IsHermitian) {j : ℕ}
     (hj : j < q) :
     (D.poly 0).leadingCoeff = (∏ k ∈ Finset.Icc 1 j, D.beta k) * (D.poly j).leadingCoeff := by
   induction j with
@@ -212,7 +211,7 @@ private lemma leadingCoeff_poly_zero_eq (D : LanczosDecomp A b q) (hA : A.IsSymm
 `‖b‖ = 1` and the canonical signs this is `det(x I − T_j) = β_1 ⋯ β_j p_j(x)`).
 Source: Golub–Meurant (2010) [`gm10`], Ch. 3 and Thm 4.2 (labels to verify).
 atlas: lanczos-orthogonal-polynomials -/
-theorem charpoly_restrict_T_mul_poly_zero (D : LanczosDecomp A b q) (hA : A.IsSymm) {j : ℕ}
+theorem charpoly_restrict_T_mul_poly_zero (D : LanczosDecomp A b q) (hA : A.IsHermitian) {j : ℕ}
     (hj : j < q) :
     (LanczosDecomp.T (D.restrict hj.le)).charpoly * D.poly 0 =
       C (∏ k ∈ Finset.Icc 1 j, D.beta k) * D.poly j := by
@@ -224,7 +223,7 @@ theorem charpoly_restrict_T_mul_poly_zero (D : LanczosDecomp A b q) (hA : A.IsSy
       (natDegree_le_iff_degree_le.1 hχdeg.le), ← ArnoldiDecomp.H_def, aeval_self_charpoly,
       Matrix.zero_mulVec]
   have hmem : aeval A χ *ᵥ b ∈ krylovSpace A b (j + 1) := by
-    refine (mem_krylovSpace_iff_degree A b _ _).2 ⟨χ, ?_, rfl⟩
+    refine (mem_krylovSpace_iff A b _ _).2 ⟨χ, ?_, rfl⟩
     rw [degree_eq_natDegree (charpoly_monic _).ne_zero, hχdeg]
     exact_mod_cast Nat.lt_succ_self j
   -- `χ(A) b = c q_j`
@@ -292,7 +291,7 @@ private lemma hasOrthonormalCols_submatrix_one {q' : ℕ} (h : q' ≤ q) :
 
 /-- **Cauchy interlacing, upper half**: the eigenvalues of `T_{q'}` (`q' ≤ q`, a leading
 principal submatrix of `T_q`) satisfy `θ_i(T_{q'}) ≤ θ_i(T_q)` (eigenvalues in non-increasing
-order). Source: Golub–Meurant (2010) [`gm10`], Ch. 3 (interlacing; label to verify);
+order). Source: Golub–Meurant (2010) [`gm10`], Ch. 3 (interlacing);
 Horn–Johnson (2013) [`hj13`], Thm 4.3.17. Deviation: non-strict.
 atlas: jacobi-matrix-identities (partial) -/
 theorem eigenvalues₀_restrict_T_le (D : LanczosDecomp A b q) (hA : A.IsHermitian) {q' : ℕ}
@@ -308,7 +307,7 @@ theorem eigenvalues₀_restrict_T_le (D : LanczosDecomp A b q) (hA : A.IsHermiti
 
 /-- **Cauchy interlacing, lower half**: `θ_{i + (q − q')}(T_q) ≤ θ_i(T_{q'})` for `q' ≤ q`;
 with `q' = q − 1` and the upper half, the eigenvalues of `T_{q−1}` interlace those of `T_q`.
-Source: Golub–Meurant (2010) [`gm10`], Ch. 3 (label to verify); Horn–Johnson (2013) [`hj13`],
+Source: Golub–Meurant (2010) [`gm10`], Ch. 3; Horn–Johnson (2013) [`hj13`],
 Thm 4.3.17.
 Deviation: non-strict.
 atlas: jacobi-matrix-identities (partial) -/
@@ -328,8 +327,7 @@ theorem eigenvalues₀_le_eigenvalues₀_restrict_T (D : LanczosDecomp A b q) (h
 
 /-- **Golub–Welsch**: `e₁ᵀ f(T_q) e₁ = ∑ᵢ f(θᵢ) (uᵢ)₁²` with `(θᵢ, uᵢ)` the eigenpairs of
 `T_q`: the Gauss rule has the eigenvalues of `T_q` as nodes and the squared first components
-of its eigenvectors as weights. Source: Golub–Meurant (2010) [`gm10`], Ch. 6 (Golub–Welsch; label to
-verify).
+of its eigenvectors as weights. Source: Golub–Meurant (2010) [`gm10`], Ch. 6 (Golub–Welsch).
 atlas: jacobi-matrix-identities (partial) -/
 theorem cfc_T_apply_zero_zero (D : LanczosDecomp A b q) (hA : A.IsHermitian) (hq : 0 < q)
     (f : ℝ → ℝ) :

@@ -21,8 +21,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] {m : Type*} [Fintype m] [DecidableEq m]
 /-- A zero diagonal entry of a positive semidefinite matrix kills its column: `aᵢᵢ = 0` gives
 `aⱼᵢ = 0` for every `j` (from `eᵢᴴ A eᵢ = 0 ⟹ A eᵢ = 0`,
 `Matrix.PosSemidef.dotProduct_mulVec_zero_iff`). Stated over any `RCLike` field (real and complex
-matrices). Horn–Johnson 2013, Obs. 7.1.10; manuscript `sa:rp-one-step`, zero-probability pivot
-case. -/
+matrices). Horn–Johnson 2013, Obs. 7.1.10. -/
 theorem apply_eq_zero_of_posSemidef_of_apply_self_eq_zero {A : Matrix m m 𝕜}
     (hA : A.PosSemidef) {i : m} (h : A i i = 0) (j : m) : A j i = 0 := by
   have h0 : star (Pi.single i 1 : m → 𝕜) ⬝ᵥ A *ᵥ Pi.single i 1 = 0 := by
@@ -40,8 +39,7 @@ theorem apply_eq_zero_of_posSemidef_of_apply_self_eq_zero' {A : Matrix m m 𝕜}
 
 end ZeroDiagonal
 
-/-- A finite matrix of rank zero over a field is zero. Source: rank--range identity;
-manuscript `sa:rp-rank`, zero-rank termination. -/
+/-- A finite matrix of rank zero over a field is zero (`rank = finrank (range)`). -/
 theorem eq_zero_of_matrix_rank_eq_zero {K : Type*} [Field K] {m n : Type*} [Fintype m]
     [Fintype n] {R : Matrix m n K} (hR : R.rank = 0) : R = 0 := by
   have hrange : LinearMap.range R.mulVecLin = ⊥ := Submodule.finrank_eq_zero.mp hR

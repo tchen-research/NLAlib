@@ -15,7 +15,7 @@ namespace NLAlib
 variable {m n : ℕ}
 
 /-- An SVD diagonalizes every odd rectangular Gram power.
-Source: HMT (2011), §10.4; manuscript `sa:expected-power`. -/
+Source: HMT (2011), §10.4. -/
 theorem IsSVD.gram_pow_mul_eq {A : Matrix (Fin m) (Fin n) ℝ}
     {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ}
     (h : IsSVD A U V) (q : ℕ) :
@@ -43,7 +43,7 @@ theorem IsSVD.gram_pow_mul_eq {A : Matrix (Fin m) (Fin n) ℝ}
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hp, Matrix.mul_assoc U, hdiag]
 
 /-- Odd rectangular Gram powers raise every singular value to the corresponding odd
-power. Source: HMT (2011), §10.4; manuscript `sa:expected-power-theorem`.
+power. Source: HMT (2011), §10.4.
 The identity is zero-indexed and includes zero padding beyond the finite list. -/
 theorem singularValues_gram_pow_mul (A : Matrix (Fin m) (Fin n) ℝ) (q j : ℕ) :
     singularValues ((A * Aᵀ) ^ q * A) j = singularValues A j ^ (2 * q + 1) := by
@@ -58,7 +58,7 @@ theorem singularValues_gram_pow_mul (A : Matrix (Fin m) (Fin n) ℝ) (q j : ℕ)
       zero_pow (by omega)]
 
 /-- Odd rectangular Gram powers preserve rank, including rank zero.
-Source: HMT (2011), §10.4; manuscript `sa:expected-power`, exact-width branch. -/
+Source: HMT (2011), §10.4, exact-width branch. -/
 theorem rank_gram_pow_mul (A : Matrix (Fin m) (Fin n) ℝ) (q : ℕ) :
     ((A * Aᵀ) ^ q * A).rank = A.rank := by
   rw [rank_eq_card_singularValues_ne_zero, rank_eq_card_singularValues_ne_zero]

@@ -10,12 +10,13 @@ atlas `matrix-power-convergence`.
 
 noncomputable section
 open Filter
-open scoped Matrix Matrix.Norms.L2Operator Topology
+open scoped Matrix Topology
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Decaying powers force spectral radius below one. Source: Horn–Johnson
 (2013), Theorem 5.6.12; one sufficiently small positive power controls the
 spectral radius by the spectral-mapping norm bound.
@@ -38,7 +39,8 @@ theorem spectralRadius_lt_one_of_tendsto_matrix_pow_zero {A : Matrix n n ℂ}
     · exact_mod_cast hsmall
     · positivity
 
-/-- Matrix powers decay exactly for spectral radius below one. Source:
+open scoped Matrix.Norms.L2Operator in
+/-- Matrix powers decay exactly for spectral radius below one.
 Horn–Johnson (2013), Theorem 5.6.12; arbitrary finite indices may be empty.
 atlas: matrix-power-convergence (partial) -/
 theorem tendsto_matrix_pow_zero_iff_spectralRadius_lt_one (A : Matrix n n ℂ) :
@@ -46,6 +48,7 @@ theorem tendsto_matrix_pow_zero_iff_spectralRadius_lt_one (A : Matrix n n ℂ) :
   ⟨spectralRadius_lt_one_of_tendsto_matrix_pow_zero,
     tendsto_matrix_pow_zero_of_spectralRadius_lt_one⟩
 
+open scoped Matrix.Norms.L2Operator in
 /-- The sum of the convergent matrix geometric series is the inverse of
 `1-A`. Source: Horn–Johnson (2013), Corollary 5.6.13; finite geometric sums
 give the inverse identity, with no norm-below-one assumption on `A` itself.
@@ -64,7 +67,8 @@ theorem tsum_matrix_pow_eq_inv_of_spectralRadius_lt_one {A : Matrix n n ℂ}
   have hInv : (∑' k : ℕ, A ^ k) * (1 - A) = 1 := tendsto_nhds_unique hleft hright
   exact (Matrix.inv_eq_left_inv hInv).symm
 
-/-- The matrix geometric series has the stated inverse as its actual sum.
+open scoped Matrix.Norms.L2Operator in
+/-- The matrix geometric series has the stated inverse as its sum.
 Source: Horn–Johnson (2013), Corollary 5.6.13; combines absolute convergence
 and the telescoping inverse identity.
 atlas: matrix-power-convergence (partial) -/
@@ -73,6 +77,7 @@ theorem hasSum_matrix_pow_inv_of_spectralRadius_lt_one {A : Matrix n n ℂ}
   rw [← tsum_matrix_pow_eq_inv_of_spectralRadius_lt_one hA]
   exact (summable_matrix_pow_of_spectralRadius_lt_one hA).hasSum
 
+open scoped Matrix.Norms.L2Operator in
 /-- The denominator of the Neumann series is nonsingular whenever the
 spectral radius is below one. Source: Horn–Johnson (2013), Corollary 5.6.13.
 atlas: matrix-power-convergence (partial) -/

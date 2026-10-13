@@ -1,5 +1,4 @@
 import NLAlib.Probability.Rademacher.Core
-import NLAlib.Probability.Rademacher.RademacherCube
 import NLAlib.Probability.Rademacher.RademacherSymmetry
 
 /-! # `Probability/Rademacher`

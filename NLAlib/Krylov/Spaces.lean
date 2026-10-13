@@ -1,6 +1,5 @@
 import NLAlib.Krylov.Spaces.Basic
 import NLAlib.Krylov.Spaces.Block
-import NLAlib.Krylov.Spaces.ComplexBlock
 import NLAlib.Krylov.Spaces.Grade
 import NLAlib.Krylov.Spaces.Polynomial
 

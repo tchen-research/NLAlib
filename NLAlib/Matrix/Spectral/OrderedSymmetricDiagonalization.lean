@@ -5,7 +5,7 @@ import NLAlib.Matrix.Subspaces.Projections
 
 For a real symmetric matrix, the ordered real Schur form is diagonal.
 This realizes any complete characteristic-root ordering, including repeated
-roots, and supplies the actual orthogonal change of coordinates needed to
+roots, and supplies the orthogonal change of coordinates needed to
 transport converse-interlacing constructions.
 -/
 noncomputable section

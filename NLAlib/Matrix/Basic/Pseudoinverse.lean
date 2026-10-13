@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Norms.Core
+import Mathlib.LinearAlgebra.Matrix.Rank
 /-!
 # Pseudoinverses
 
@@ -40,11 +41,15 @@ namespace NLAlib
 
 variable {𝕜 : Type*} [RCLike 𝕜] {m n : Type*} [Fintype m] [Fintype n]
 
-/-- Left pseudoinverse `(Gᴴ G)⁻¹ Gᴴ` (at `𝕜 = ℝ`: `(Gᵀ G)⁻¹ Gᵀ`).
+/-- Left pseudoinverse `(Gᴴ G)⁻¹ Gᴴ` (at `𝕜 = ℝ`: `(Gᵀ G)⁻¹ Gᵀ`), the Moore–Penrose inverse of a
+matrix of full column rank. Junk value `0` when `Gᴴ G` is singular (Mathlib's `A⁻¹ = 0`); the
+theorems take `IsUnit (Gᴴ * G)`. HMT 2011, §A.2.
 atlas: pseudoinverse -/
 def pinvL [DecidableEq n] (G : Matrix m n 𝕜) : Matrix n m 𝕜 := (Gᴴ * G)⁻¹ * Gᴴ
 
-/-- Right pseudoinverse `Gᴴ (G Gᴴ)⁻¹` (at `𝕜 = ℝ`: `Gᵀ (G Gᵀ)⁻¹`).
+/-- Right pseudoinverse `Gᴴ (G Gᴴ)⁻¹` (at `𝕜 = ℝ`: `Gᵀ (G Gᵀ)⁻¹`), the Moore–Penrose inverse of a
+matrix of full row rank. Junk value `0` when `G Gᴴ` is singular (Mathlib's `A⁻¹ = 0`); the
+theorems take `IsUnit (G * Gᴴ)`. HMT 2011, §A.2.
 atlas: pseudoinverse -/
 def pinvR [DecidableEq m] (G : Matrix m n 𝕜) : Matrix n m 𝕜 := Gᴴ * (G * Gᴴ)⁻¹
 
@@ -167,6 +172,25 @@ completeness of the four Penrose identities for `pinvR`. Atlas `pseudoinverse`. 
 theorem mul_pinvR_isHermitian [DecidableEq m] {G : Matrix m n 𝕜} (h : IsUnit (G * Gᴴ)) :
     (G * pinvR G).IsHermitian := by
   rw [mul_pinvR h]; exact Matrix.isHermitian_one
+
+/-! ### Full row rank -/
+
+open scoped ComplexOrder in
+/-- Full row rank makes the row Gram matrix `G Gᴴ` invertible. HMT 2011, §A.2; Horn–Johnson 2013,
+§7.3. -/
+theorem isUnit_mul_conjTranspose_of_rank_eq_card [DecidableEq m]
+    (G : Matrix m n 𝕜) (hG : Matrix.rank G = Fintype.card m) : IsUnit (G * Gᴴ) := by
+  have htop : LinearMap.range (G * Gᴴ).mulVecLin = ⊤ := by
+    apply Submodule.eq_top_of_finrank_eq
+    change Matrix.rank (G * Gᴴ) = Module.finrank 𝕜 (m → 𝕜)
+    rw [Matrix.rank_self_mul_conjTranspose, hG, Module.finrank_fintype_fun_eq_card]
+  exact Matrix.mulVec_surjective_iff_isUnit.mp (LinearMap.range_eq_top.mp htop)
+
+/-- For a matrix of full row rank, `pinvR G = Gᴴ (G Gᴴ)⁻¹` is a right inverse: `G G⁺ = I`.
+HMT 2011, §A.2; Horn–Johnson 2013, §7.3. -/
+theorem mul_pinvR_of_rank_eq_card [DecidableEq m]
+    (G : Matrix m n 𝕜) (hG : Matrix.rank G = Fintype.card m) : G * pinvR G = 1 :=
+  mul_pinvR (isUnit_mul_conjTranspose_of_rank_eq_card G hG)
 
 /-! ### Frobenius norm of the pseudoinverse -/
 

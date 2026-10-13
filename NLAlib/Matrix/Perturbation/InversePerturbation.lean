@@ -6,27 +6,27 @@ Exact-arithmetic perturbation theory for `A⁻¹` and `A⁺ = moorePenroseInvers
 norm `specNorm` (and the Frobenius norm `frobNorm` where the bound is the same).
 
 * Neumann series (Golub–Van Loan 2013, Lemma 2.3.3): for `‖F‖₂ < 1`, `1 - F` is invertible,
-  `(1 - F)⁻¹ = ∑ₖ Fᵏ`, `‖(1 - F)⁻¹‖₂ ≤ 1 / (1 - ‖F‖₂)` and `‖(1 - F)⁻¹ - 1‖₂ ≤ ‖F‖₂ / (1 - ‖F‖₂)`.
+ `(1 - F)⁻¹ = ∑ₖ Fᵏ`, `‖(1 - F)⁻¹‖₂ ≤ 1 / (1 - ‖F‖₂)` and `‖(1 - F)⁻¹ - 1‖₂ ≤ ‖F‖₂ / (1 - ‖F‖₂)`.
 * Inverse perturbation (Golub–Van Loan 2013, Thm 2.3.4): for invertible `A` and `‖A⁻¹E‖₂ < 1`,
-  `A + E` is invertible, `‖(A + E)⁻¹‖₂ ≤ ‖A⁻¹‖₂ / (1 - ‖A⁻¹E‖₂)` and
-  `‖(A + E)⁻¹ - A⁻¹‖ ≤ ‖A⁻¹‖₂² ‖E‖ / (1 - ‖A⁻¹E‖₂)` (spectral and Frobenius), with the
-  corollaries under the cruder hypothesis `‖A⁻¹‖₂ ‖E‖₂ < 1`.
+ `A + E` is invertible, `‖(A + E)⁻¹‖₂ ≤ ‖A⁻¹‖₂ / (1 - ‖A⁻¹E‖₂)` and
+ `‖(A + E)⁻¹ - A⁻¹‖ ≤ ‖A⁻¹‖₂² ‖E‖ / (1 - ‖A⁻¹E‖₂)` (spectral and Frobenius), with the
+ corollaries under the cruder hypothesis `‖A⁻¹‖₂ ‖E‖₂ < 1`.
 * Moore–Penrose inverse at every rank, from Wedin's identity (`moorePenroseInverse_sub_eq`,
-  Wedin 1973; Stewart–Sun 1990, §III.3) term by term:
-  `‖B⁺ - A⁺‖₂ ≤ (‖B⁺‖‖A⁺‖ + ‖B⁺‖² + ‖A⁺‖²) ‖E‖₂` for `B = A + E`, hence the constant `3` form.
-  The sharp constant `(1 + √5)/2` (Stewart–Sun Thm III.3.8), the equal-rank forms, the projector
-  bound and the equal-rank inverse-norm bound are stated for a pair `(A, B)` in
-  `NLAlib.Matrix.Perturbation.Pseudoinverse*` (`specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq`,
-  `specNorm_moorePenroseInverse_sub_le_goldenRatio_mul_of_rank_eq`,
-  `specNorm_sub_columnProjector_le_min_pinv_mul_specNorm`,
-  `specNorm_moorePenroseInverse_le_div_of_rank_eq`).
+ Wedin 1973; Stewart–Sun 1990, §III.3) term by term:
+ `‖B⁺ - A⁺‖₂ ≤ (‖B⁺‖‖A⁺‖ + ‖B⁺‖² + ‖A⁺‖²) ‖E‖₂` for `B = A + E`, hence the constant `3` form.
+ The sharp constant `(1 + √5)/2` (Stewart–Sun Thm III.3.8), the equal-rank forms, the projector
+ bound and the equal-rank inverse-norm bound are stated for a pair `(A, B)` in
+ `NLAlib.Matrix.Perturbation.Pseudoinverse*` (`specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq`,
+ `specNorm_moorePenroseInverse_sub_le_goldenRatio_mul_of_rank_eq`,
+ `specNorm_sub_columnProjector_le_min_pinv_mul_specNorm`,
+ `specNorm_moorePenroseInverse_le_div_of_rank_eq`).
 
 Atlas: `inverse-perturbation`, `pseudoinverse-perturbation`.
 -/
 
 noncomputable section
 
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -36,6 +36,7 @@ section Neumann
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- If `‖F‖₂ < 1` then `1 - F` is invertible. Golub–Van Loan 2013, Lemma 2.3.3 (first clause);
 Mathlib's `Units.oneSub` in the normed ring of matrices with the `ℓ²` operator norm.
 atlas: inverse-perturbation (partial) -/
@@ -43,6 +44,7 @@ theorem isUnit_one_sub_of_specNorm_lt_one {F : Matrix n n ℝ} (hF : specNorm F 
     IsUnit (1 - F) :=
   (Units.oneSub F hF).isUnit
 
+open scoped Matrix.Norms.L2Operator in
 /-- The Neumann series: if `‖F‖₂ < 1` then `(1 - F)⁻¹ = ∑ₖ Fᵏ`, the series converging (absolutely
 in the operator norm). Golub–Van Loan 2013, Lemma 2.3.3; Mathlib's `geom_series_eq_inverse`.
 atlas: inverse-perturbation (partial) -/
@@ -50,6 +52,7 @@ theorem inv_one_sub_eq_tsum_pow {F : Matrix n n ℝ} (hF : specNorm F < 1) :
     (1 - F)⁻¹ = ∑' k : ℕ, F ^ k := by
   rw [Matrix.nonsing_inv_eq_ringInverse, geom_series_eq_inverse F hF]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The Neumann series as a `HasSum`: `∑ₖ Fᵏ` converges to `(1 - F)⁻¹` when `‖F‖₂ < 1`.
 Golub–Van Loan 2013, Lemma 2.3.3. -/
 theorem hasSum_pow_inv_one_sub {F : Matrix n n ℝ} (hF : specNorm F < 1) :
@@ -57,6 +60,7 @@ theorem hasSum_pow_inv_one_sub {F : Matrix n n ℝ} (hF : specNorm F < 1) :
   rw [Matrix.nonsing_inv_eq_ringInverse]
   exact hasSum_geom_series_inverse F hF
 
+open scoped Matrix.Norms.L2Operator in
 /-- `(1 - F)⁻¹ = 1 + F (1 - F)⁻¹` for invertible `1 - F`; the algebraic step behind the Neumann
 bounds. Golub–Van Loan 2013, proof of Lemma 2.3.3. -/
 theorem inv_one_sub_eq_one_add_mul {F : Matrix n n ℝ} (h : IsUnit (1 - F)) :
@@ -67,6 +71,7 @@ theorem inv_one_sub_eq_one_add_mul {F : Matrix n n ℝ} (h : IsUnit (1 - F)) :
   calc (1 - F)⁻¹ = ((1 - F)⁻¹ - F * (1 - F)⁻¹) + F * (1 - F)⁻¹ := by abel
     _ = 1 + F * (1 - F)⁻¹ := by rw [h1]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The Neumann norm bound `‖(1 - F)⁻¹‖₂ ≤ 1 / (1 - ‖F‖₂)` for `‖F‖₂ < 1`.
 Golub–Van Loan 2013, Lemma 2.3.3 (bound (2.3.10)).
 atlas: inverse-perturbation (partial) -/
@@ -81,6 +86,7 @@ theorem specNorm_inv_one_sub_le {F : Matrix n n ℝ} (hF : specNorm F < 1) :
   rw [le_div_iff₀ (by linarith)]
   nlinarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- The Neumann bound for the correction: `‖(1 - F)⁻¹ - 1‖₂ ≤ ‖F‖₂ / (1 - ‖F‖₂)` for
 `‖F‖₂ < 1`, since `(1 - F)⁻¹ - 1 = F (1 - F)⁻¹`. Golub–Van Loan 2013, Lemma 2.3.3 (bound
 (2.3.11)).
@@ -105,6 +111,7 @@ section Inverse
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- If `A` is invertible and `‖A⁻¹E‖₂ < 1` then `A + E` is invertible, being
 `A (1 - (-A⁻¹E))`. Golub–Van Loan 2013, Thm 2.3.4 (first clause).
 atlas: inverse-perturbation (partial) -/
@@ -120,6 +127,7 @@ theorem isUnit_add_of_specNorm_inv_mul_lt_one {A E : Matrix n n ℝ} (hA : IsUni
   rw [heq]
   exact hA.mul h1
 
+open scoped Matrix.Norms.L2Operator in
 /-- Inverse-norm bound under perturbation: for invertible `A` and `‖A⁻¹E‖₂ < 1`,
 `‖(A + E)⁻¹‖₂ ≤ ‖A⁻¹‖₂ / (1 - ‖A⁻¹E‖₂)`. Golub–Van Loan 2013, Thm 2.3.4; Stewart–Sun 1990,
 §III.2.
@@ -141,6 +149,7 @@ theorem specNorm_inv_add_le {A E : Matrix n n ℝ} (hA : IsUnit A)
         mul_le_mul_of_nonneg_right (specNorm_inv_one_sub_le hF) (specNorm_nonneg _)
     _ = specNorm A⁻¹ / (1 - specNorm (A⁻¹ * E)) := by rw [hFdef, specNorm_neg]; ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- Perturbation of the inverse in the spectral norm: for invertible `A` and `‖A⁻¹E‖₂ < 1`,
 `‖(A + E)⁻¹ - A⁻¹‖₂ ≤ ‖A⁻¹‖₂² ‖E‖₂ / (1 - ‖A⁻¹E‖₂)`. Golub–Van Loan 2013, Thm 2.3.4;
 Stewart–Sun 1990, Thm III.2.5.
@@ -163,6 +172,7 @@ theorem specNorm_inv_add_sub_inv_le {A E : Matrix n n ℝ} (hA : IsUnit A)
     _ = specNorm A⁻¹ ^ 2 * specNorm E / (1 - specNorm (A⁻¹ * E)) := by
         field_simp
 
+open scoped Matrix.Norms.L2Operator in
 /-- Perturbation of the inverse in the Frobenius norm: for invertible `A` and `‖A⁻¹E‖₂ < 1`,
 `‖(A + E)⁻¹ - A⁻¹‖_F ≤ ‖A⁻¹‖₂² ‖E‖_F / (1 - ‖A⁻¹E‖₂)`. Golub–Van Loan 2013, Thm 2.3.4 (the
 proof is norm-agnostic once `‖XYZ‖_F ≤ ‖X‖₂‖Y‖_F‖Z‖₂`); Stewart–Sun 1990, §III.2.
@@ -187,11 +197,13 @@ theorem frobNorm_inv_add_sub_inv_le {A E : Matrix n n ℝ} (hA : IsUnit A)
     _ = specNorm A⁻¹ ^ 2 * frobNorm E / (1 - specNorm (A⁻¹ * E)) := by
         field_simp
 
+open scoped Matrix.Norms.L2Operator in
 /-- The cruder hypothesis `‖A⁻¹‖₂ ‖E‖₂ < 1` implies `‖A⁻¹E‖₂ < 1`. -/
 theorem specNorm_inv_mul_lt_one {A E : Matrix n n ℝ}
     (hE : specNorm A⁻¹ * specNorm E < 1) : specNorm (A⁻¹ * E) < 1 :=
   lt_of_le_of_lt (specNorm_mul_le _ _) hE
 
+open scoped Matrix.Norms.L2Operator in
 /-- Perturbation of the inverse under `‖A⁻¹‖₂ ‖E‖₂ < 1` (the form usually quoted):
 `A + E` is invertible and `‖(A + E)⁻¹ - A⁻¹‖₂ ≤ ‖A⁻¹‖₂² ‖E‖₂ / (1 - ‖A⁻¹‖₂ ‖E‖₂)`.
 Golub–Van Loan 2013, Thm 2.3.4 with `‖A⁻¹E‖ ≤ ‖A⁻¹‖‖E‖`; Higham 2002, Problem 6.14.
@@ -207,6 +219,7 @@ theorem specNorm_inv_add_sub_inv_le_of_mul_lt_one {A E : Matrix n n ℝ} (hA : I
   apply div_le_div_of_nonneg_left _ hpos (by linarith)
   exact mul_nonneg (sq_nonneg _) (specNorm_nonneg _)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Inverse-norm bound under `‖A⁻¹‖₂ ‖E‖₂ < 1`:
 `‖(A + E)⁻¹‖₂ ≤ ‖A⁻¹‖₂ / (1 - ‖A⁻¹‖₂ ‖E‖₂)`. Golub–Van Loan 2013, Thm 2.3.4.
 atlas: inverse-perturbation (partial) -/
@@ -226,6 +239,7 @@ section MoorePenrose
 
 variable {m n : Type*} [Fintype m] [Fintype n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- `‖I - A A'‖₂ ≤ 1` for a Moore–Penrose pair: `I - A A'` is a symmetric idempotent. -/
 theorem IsMoorePenroseInverse.specNorm_one_sub_mul_le [DecidableEq m]
     {A : Matrix m n ℝ} {A' : Matrix n m ℝ} (h : IsMoorePenroseInverse A A') :
@@ -236,12 +250,14 @@ theorem IsMoorePenroseInverse.specNorm_one_sub_mul_le [DecidableEq m]
       show (A * A')ᵀ = A * A' from h.conjTranspose_mul_eq]
   · exact h.mul_isIdempotentElem.one_sub
 
+open scoped Matrix.Norms.L2Operator in
 /-- `‖I - A' A‖₂ ≤ 1` for a Moore–Penrose pair: `I - A' A` is a symmetric idempotent. -/
 theorem IsMoorePenroseInverse.specNorm_one_sub_inv_mul_le [DecidableEq n]
     {A : Matrix m n ℝ} {A' : Matrix n m ℝ} (h : IsMoorePenroseInverse A A') :
     specNorm (1 - A' * A) ≤ 1 :=
   h.swap.specNorm_one_sub_mul_le
 
+open scoped Matrix.Norms.L2Operator in
 /-- Pseudoinverse perturbation bound at every rank, from Wedin's identity term by term:
 `‖(A + E)⁺ - A⁺‖₂ ≤ (‖(A + E)⁺‖₂ ‖A⁺‖₂ + ‖(A + E)⁺‖₂² + ‖A⁺‖₂²) ‖E‖₂`.
 Wedin 1973, §4; Stewart–Sun 1990, Thm III.3.8 with the crude constant (each of the three
@@ -304,6 +320,7 @@ theorem specNorm_moorePenroseInverse_add_sub_le [DecidableEq m] [DecidableEq n]
         specNorm A' ^ 2 * specNorm E := add_le_add (add_le_add t1 t2) t3
     _ = _ := by ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- Pseudoinverse perturbation bound with the constant `3` and no rank assumption:
 `‖(A + E)⁺ - A⁺‖₂ ≤ 3 max(‖A⁺‖₂², ‖(A + E)⁺‖₂²) ‖E‖₂`. Wedin 1973, Thm 4.1 with `μ = 3`;
 Stewart–Sun 1990, Thm III.3.8 (the constant for a general unitarily invariant norm; the sharp

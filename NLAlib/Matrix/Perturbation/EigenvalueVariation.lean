@@ -12,13 +12,14 @@ Lemma (15), the operator route to Bhatia 1997, Theorem III.4.1. Supports `lidski
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.Elementwise
+open scoped Matrix
 open Filter Topology
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.Elementwise in
 /-- An eigenframe sequence along any real symmetric pencil has a convergent
 orthogonal subsequence. Finite unit-vector compactness; Lidskii variation step.
 -/
@@ -44,6 +45,7 @@ theorem exists_subseq_eigenvectorUnitary_pencil_tendsto {C B : Matrix n n ℝ}
   refine ⟨U, tendsto_nhds_unique hmul hmulone, φ, hφ, ?_⟩
   exact hlim
 
+open scoped Matrix.Norms.Elementwise in
 omit [Fintype n] [DecidableEq n] in
 private theorem continuous_col (j : n) : Continuous (fun U : Matrix n n ℝ => fun i => U i j) :=
   continuous_pi fun i => continuous_id.matrix_elem i j
@@ -58,18 +60,19 @@ private theorem eigenvalues₀_pencil_zero {C B : Matrix n n ℝ}
     (isHermitian_add_smul hC hB 0).eigenvalues₀ i = hC.eigenvalues₀ i := by
   exact congrFun (eigenvalues₀_eq_of_matrix_eq _ hC (by simp)) i
 
+open scoped Matrix.Norms.Elementwise in
 set_option maxHeartbeats 2000000 in
 /-- Any positive perturbation sequence tending to zero admits a subsequence of
 the selected eigenvalue difference quotients converging to a value bounded by
 the exact top-`|J|` eigenvalue sum of the perturbation. The compact-eigenframe
 argument treats repeated and negative eigenvalues without extra hypotheses.
-Source: manuscript Lemma (15), Bhatia 1997, Theorem III.4.1 proof route.
+Source: Bhatia 1997, Theorem III.4.1 proof route.
 -/
 theorem exists_subseq_eigenvalues₀_sum_difference_quotient_tendsto
     {C B : Matrix n n ℝ} (hC : C.IsHermitian) (hB : B.IsHermitian)
     (J : Finset (Fin (Fintype.card n))) (h : ℕ → ℝ) (hhpos : ∀ ν, 0 < h ν)
     (hh : Tendsto h atTop (𝓝 0)) :
-    ∃ c : ℝ, c ≤ eigenvaluePrefix hB (k := J.card) (by simpa using Finset.card_le_univ J) ∧
+    ∃ c : ℝ, c ≤ eigenvaluePrefix hB J.card ∧
       ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto
         (fun ν => ((∑ j ∈ J, (isHermitian_add_smul hC hB (h (φ ν))).eigenvalues₀ j) -
           ∑ j ∈ J, hC.eigenvalues₀ j) / h (φ ν)) atTop (𝓝 c) := by
@@ -146,7 +149,7 @@ theorem exists_subseq_eigenvalues₀_sum_difference_quotient_tendsto
     HasOrthonormalCols.submatrix_cols hU
       ⟨fun j : J => e j, fun i j hij => Subtype.ext (e.injective hij)⟩
   let c : ℝ := ∑ j ∈ J, quadForm B (u j)
-  have hc : c ≤ eigenvaluePrefix hB (k := J.card) (by simpa using Finset.card_le_univ J) := by
+  have hc : c ≤ eigenvaluePrefix hB J.card := by
     have htrace : (Qᵀ * B * Q).trace = c := by
       calc
         _ = ∑ j : J, quadForm B (u j) := by
@@ -159,6 +162,7 @@ theorem exists_subseq_eigenvalues₀_sum_difference_quotient_tendsto
           exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
         _ = c := Finset.sum_coe_sort J (fun j => quadForm B (u j))
     have hbound := trace_compression_le_eigenvaluePrefix hB hQ
+    simp only [RCLike.re_to_real, Matrix.conjTranspose_eq_transpose_of_trivial] at hbound
     rw [htrace] at hbound
     have hcard : Fintype.card J = J.card := Fintype.card_coe J
     simpa only [hcard] using hbound

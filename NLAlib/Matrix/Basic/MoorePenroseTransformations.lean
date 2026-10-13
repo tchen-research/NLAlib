@@ -14,12 +14,12 @@ Source: Horn--Johnson 2013, Problem 7.3.P7; supports `condition-number-def` and
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped Matrix MatrixOrder ComplexOrder
 namespace NLAlib
 
 variable {𝕜 : Type*} [RCLike 𝕜] {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
 
-/-- Scaling the actual Moore--Penrose inverse by the inverse scalar: `(c A)⁺ = c⁻¹ A⁺`.
+/-- Scaling the Moore–Penrose inverse by the inverse scalar: `(c A)⁺ = c⁻¹ A⁺`.
 Horn--Johnson 2013, Problem 7.3.P7; supports `condition-number-def`, including rank zero. -/
 theorem moorePenroseInverse_smul (c : 𝕜) (A : Matrix m n 𝕜) :
     moorePenroseInverse (c • A) = c⁻¹ • moorePenroseInverse A := by
@@ -85,9 +85,9 @@ theorem moorePenroseInverse_mul_left_of_hasOrthonormalCols [DecidableEq m]
   · rw [hBA]
     exact h.conjTranspose_inv_mul_eq
 
-/-- The actual Moore--Penrose inverse of a positive-semidefinite matrix
-is positive semidefinite, including singular matrices. Horn--Johnson,
-Section 7.3; supports `generalized-schur-complement-psd`. -/
+/-- The Moore–Penrose inverse of a positive-semidefinite matrix is positive semidefinite,
+including singular matrices. Horn–Johnson 2013, §7.3; supports
+`generalized-schur-complement-psd`. -/
 theorem _root_.Matrix.PosSemidef.moorePenroseInverse [DecidableEq n]
     {A : Matrix n n 𝕜} (hA : A.PosSemidef) : (NLAlib.moorePenroseInverse A).PosSemidef := by
   have hB := hA.isHermitian.moorePenroseInverse

@@ -1,16 +1,11 @@
 import NLAlib.ForMathlib.Probability.BoundedDifferences
 import NLAlib.ForMathlib.Probability.ExponentialTailMoments
 import NLAlib.ForMathlib.Probability.FiniteProductEvents
+import NLAlib.ForMathlib.Probability.HasLaw
 import NLAlib.ForMathlib.Probability.IndepExpSum
 import NLAlib.ForMathlib.Probability.Independence
 import NLAlib.ForMathlib.Probability.NonnegativeSupermartingale
 import NLAlib.ForMathlib.Probability.SampleAverage
-import NLAlib.ForMathlib.Probability.UniformCollision
-import NLAlib.ForMathlib.Probability.UniformProduct
-import NLAlib.ForMathlib.Probability.UniformSamplingCounts
-import NLAlib.ForMathlib.Probability.UniformSamplingCoupling
-import NLAlib.ForMathlib.Probability.UniformSamplingJensen
-import NLAlib.ForMathlib.Probability.UniformSamplingMarginals
 
 /-! # `ForMathlib/Probability`
 

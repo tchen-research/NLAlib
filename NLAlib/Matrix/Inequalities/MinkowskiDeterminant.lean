@@ -11,16 +11,15 @@ Corollary 7.6.8 and Theorem 7.6.10; atlas `log-det-concavity`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- Minkowski's determinant inequality for positive definite matrices, with
 equality exactly at positive proportionality. Positive dimension is essential;
 all repeated spectra are allowed. Horn--Johnson (2013), Corollary 7.6.8 and
-Theorem 7.6.10.
-atlas: log-det-concavity (partial) -/
-theorem det_add_rpow_inv_card_ge_and_eq_iff {A B : Matrix n n ℝ}
+Theorem 7.6.10. -/
+private theorem det_add_rpow_inv_card_ge_and_eq_iff_aux {A B : Matrix n n ℝ}
     (hA : A.PosDef) (hB : B.PosDef) (hN : 0 < Fintype.card n) :
     A.det ^ (1 / (Fintype.card n : ℝ)) + B.det ^ (1 / (Fintype.card n : ℝ)) ≤
       (A + B).det ^ (1 / (Fintype.card n : ℝ)) ∧
@@ -87,6 +86,23 @@ theorem det_add_rpow_inv_card_ge_and_eq_iff {A B : Matrix n n ℝ}
       det_smul_rpow_inv_card hB hN hc.le]
     ring
 
+/-- **Minkowski's determinant inequality.** `det(A)^{1/n} + det(B)^{1/n} ≤ det(A + B)^{1/n}` for positive definite `A`, `B` (`n = card n > 0`). Horn–Johnson 2013, Corollary 7.6.8.
+atlas: log-det-concavity (partial) -/
+theorem det_rpow_inv_card_add_le {A B : Matrix n n ℝ}
+    (hA : A.PosDef) (hB : B.PosDef) (hN : 0 < Fintype.card n) :
+    A.det ^ (1 / (Fintype.card n : ℝ)) + B.det ^ (1 / (Fintype.card n : ℝ)) ≤
+      (A + B).det ^ (1 / (Fintype.card n : ℝ)) :=
+  (det_add_rpow_inv_card_ge_and_eq_iff_aux hA hB hN).1
+
+/-- Equality in Minkowski's determinant inequality holds exactly at positive proportionality `A = c • B`. Horn–Johnson 2013, Theorem 7.6.10.
+atlas: log-det-concavity (partial) -/
+theorem det_add_rpow_inv_card_eq_iff {A B : Matrix n n ℝ}
+    (hA : A.PosDef) (hB : B.PosDef) (hN : 0 < Fintype.card n) :
+    (A + B).det ^ (1 / (Fintype.card n : ℝ)) =
+      A.det ^ (1 / (Fintype.card n : ℝ)) + B.det ^ (1 / (Fintype.card n : ℝ)) ↔
+      ∃ c : ℝ, 0 < c ∧ A = c • B :=
+  (det_add_rpow_inv_card_ge_and_eq_iff_aux hA hB hN).2
+
 /-- The positive determinant root is concave on the positive definite cone
 in every positive dimension. Both endpoint weights are included.
 Horn--Johnson (2013), Theorem 7.6.10.
@@ -98,7 +114,7 @@ theorem concaveOn_det_rpow_inv_card (hN : 0 < Fintype.card n) :
   intro A hA B hB a b ha hb hab
   rcases lt_or_eq_of_le ha with ha | ha
   · rcases lt_or_eq_of_le hb with hb | hb
-    · have h := (det_add_rpow_inv_card_ge_and_eq_iff (hA.smul ha) (hB.smul hb) hN).1
+    · have h := det_rpow_inv_card_add_le (hA.smul ha) (hB.smul hb) hN
       simpa only [det_smul_rpow_inv_card hA hN ha.le, det_smul_rpow_inv_card hB hN hb.le,
         smul_eq_mul] using h
     · have ha1 : a = 1 := by linarith
@@ -116,7 +132,7 @@ theorem det_smul_add_rpow_inv_card_eq_iff {A B : Matrix n n ℝ}
     (a • A + b • B).det ^ (1 / (Fintype.card n : ℝ)) =
       a * A.det ^ (1 / (Fintype.card n : ℝ)) + b * B.det ^ (1 / (Fintype.card n : ℝ)) ↔
       ∃ c : ℝ, 0 < c ∧ A = c • B := by
-  have h := (det_add_rpow_inv_card_ge_and_eq_iff (hA.smul ha) (hB.smul hb) hN).2
+  have h := det_add_rpow_inv_card_eq_iff (hA.smul ha) (hB.smul hb) hN
   rw [det_smul_rpow_inv_card hA hN ha.le, det_smul_rpow_inv_card hB hN hb.le] at h
   rw [h]
   constructor

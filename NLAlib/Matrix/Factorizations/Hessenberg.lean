@@ -68,14 +68,15 @@ theorem transpose_mul_mul_eq (h : IsHessenbergForm A Q H) : Qᵀ * A * Q = H := 
     ← Matrix.mul_assoc, show Qᵀ * Q = 1 from h.orth, Matrix.one_mul]
 
 /-- For symmetric `A` the Hessenberg form is symmetric. Golub–Van Loan 2013, §8.3.1. -/
-theorem isSymm (h : IsHessenbergForm A Q H) (hA : A.IsSymm) : H.IsSymm := by
-  rw [← h.transpose_mul_mul_eq]; exact isSymm_transpose_mul_mul hA Q
+theorem isHermitian (h : IsHessenbergForm A Q H) (hA : A.IsHermitian) : H.IsHermitian := by
+  rw [← h.transpose_mul_mul_eq, ← Matrix.conjTranspose_eq_transpose_of_trivial]
+  exact Matrix.isHermitian_conjTranspose_mul_mul Q hA
 
 /-- **Symmetric ⇒ tridiagonal**: a Hessenberg form of a symmetric matrix is (symmetric)
 tridiagonal. Trefethen–Bau 1997, Lect. 26 (the Hermitian case); Golub–Van Loan 2013, §8.3.1.
 atlas: hessenberg-reduction -/
-theorem isTridiagonal (h : IsHessenbergForm A Q H) (hA : A.IsSymm) : IsTridiagonal H :=
-  h.hess.isTridiagonal_of_isSymm (h.isSymm hA)
+theorem isTridiagonal (h : IsHessenbergForm A Q H) (hA : A.IsHermitian) : IsTridiagonal H :=
+  h.hess.isTridiagonal_of_isHermitian (h.isHermitian hA)
 
 end IsHessenbergForm
 
@@ -156,11 +157,17 @@ theorem hessenbergQ_mulVec_single_zero (A : Matrix (Fin (n + 1)) (Fin (n + 1)) �
   exact key _ (apply_zero_of_mem_hessenbergReflectors A)
 
 /-- The Hessenberg `Q` is orthogonal (no hypothesis). Trefethen–Bau 1997, Lect. 26. -/
-theorem hessenbergQ_transpose_mul_self (A : Matrix (Fin n) (Fin n) ℝ) :
-    (hessenbergQ A)ᵀ * hessenbergQ A = 1 :=
-  transpose_list_prod_mul_self _ fun M hM => by
+theorem hasOrthonormalCols_hessenbergQ (A : Matrix (Fin n) (Fin n) ℝ) :
+    HasOrthonormalCols (hessenbergQ A) :=
+  hasOrthonormalCols_list_prod _ fun M hM => by
     obtain ⟨v, -, rfl⟩ := List.mem_map.1 hM
-    exact householder_transpose_mul_self v
+    exact hasOrthonormalCols_householder v
+
+/-- `QᵀQ = I` for the Hessenberg `Q` (proof-helper form of `hasOrthonormalCols_hessenbergQ`). -/
+theorem hessenbergQ_transpose_mul_self (A : Matrix (Fin n) (Fin n) ℝ) :
+    (hessenbergQ A)ᵀ * hessenbergQ A = 1 := by
+  have h := (hasOrthonormalCols_hessenbergQ A).conjTranspose_mul_self
+  rwa [Matrix.conjTranspose_eq_transpose_of_trivial] at h
 
 /-- SCAFFOLD: hessenberg-reduction
 **The reduction produces a Hessenberg matrix**: `QᵀAQ` is upper Hessenberg for the Householder

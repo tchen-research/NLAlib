@@ -12,8 +12,6 @@ Horn–Johnson 2013, §§0.7.6 and 0.8.4; complementary-nullities.
 noncomputable section
 open scoped Matrix
 namespace NLAlib
-set_option backward.isDefEq.respectTransparency false
-
 /-- Two coordinate bijections change a determinant by their relative
 permutation sign. This is the cofactor orientation convention for Jacobi's
 identity. Horn–Johnson 2013, §0.8.4. -/
@@ -29,7 +27,7 @@ theorem det_submatrix_equiv_eq_sign_mul {n r : Type*}
 
 /-- Jacobi's full inverse-minor identity for arbitrary ordered finite
 coordinates. The first summand gives equal-sized selected row and column
-sets; the second gives their complements. The sign is the actual relative
+sets; the second gives their complements. The sign is the relative
 coordinate permutation sign, equal to the usual cofactor parity for the
 increasing-coordinate convention. No selected minor is assumed invertible.
 Horn–Johnson 2013, §0.8.4.

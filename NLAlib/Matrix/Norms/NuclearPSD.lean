@@ -3,7 +3,7 @@ import NLAlib.Matrix.Functions.FunctionalCalculusEigenvalues
 /-!
 # Nuclear norm of positive semidefinite matrices
 
-The actual singular values of a positive semidefinite matrix are its sorted
+The singular values of a positive semidefinite matrix are its sorted
 nonnegative eigenvalues, including zeros and repeats; their sum is its trace.
 Source: Horn–Johnson (1991), Corollary 3.4.4; Bhatia (1997), §IV.2.
 Atlas: `ky-fan-norms-def`.
@@ -21,7 +21,7 @@ norm definition bundle. Horn–Johnson (1991), Corollary 3.4.4.
 atlas: ky-fan-norms-def (partial) -/
 theorem nuclearNorm_eq_trace_of_posSemidef {n : Type*} [Fintype n] [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.PosSemidef) : nuclearNorm A = A.trace := by
-  unfold nuclearNorm kyFanNorm
+  rw [nuclearNorm, kyFanNorm_eq_sum_range]
   simp only [← singularValues_eq_linearMap]
   rw [min_self, ← Fin.sum_univ_eq_sum_range (fun i => singularValues A i)]
   calc

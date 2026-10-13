@@ -17,8 +17,7 @@ namespace NLAlib
 variable {R ι : Type*} [CommRing R] [Fintype ι] [DecidableEq ι]
 
 /-- Similarity preserves the determinant polynomial `det(I+tG)` over any
-commutative ring. Source: the determinant coefficient proof of
-manuscript `sa:volume-theorem`; no reality assumption is needed. -/
+commutative ring. Source: the determinant coefficient proof of; no reality assumption is needed. -/
 theorem det_one_add_X_smul_eq_of_diagonalization {G U V : Matrix ι ι R} {d : ι → R}
     (hVU : V * U = 1) (hG : G = U * Matrix.diagonal d * V) :
     Matrix.det (1 + (X : R[X]) • G.map C) =
@@ -46,7 +45,6 @@ theorem det_one_add_X_smul_eq_of_diagonalization {G U V : Matrix ι ι R} {d : �
 /-- The sum of order-`k` principal minors of a diagonalizable matrix `G = U diag(d) V`
 (`VU = 1`, any commutative ring) equals the elementary symmetric sum of the diagonal spectrum.
 Orthogonal (`V = Uᵀ`) and unitary (`V = Uᴴ`) diagonalizations are instances.
-Source: manuscript `sa:volume`, the normalizer identity;
 Deshpande--Rademacher--Vempala--Wang (2006), volume-sampling proof. -/
 theorem sum_det_principal_minors_eq_sum_prod_of_diagonalization
     {G U V : Matrix ι ι R} {d : ι → R} (hVU : V * U = 1)

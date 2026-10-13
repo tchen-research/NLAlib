@@ -10,7 +10,7 @@ supports `schur-product-inequalities` and finite exponential certificates.
 
 noncomputable section
 open Matrix
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n]
 

@@ -32,11 +32,13 @@ the sharp golden-ratio operator norm bound. Wedin (1973), Stewart–Sun §III.3.
 The projectors and zero block specify structure, not a perturbation conclusion. -/
 theorem specNorm_le_goldenRatio_mul_of_zero_complement_block {Z : Matrix m n ℝ}
     {P : Matrix n n ℝ} {Q : Matrix m m ℝ}
-    (hPs : P.IsSymm) (hPi : IsIdempotentElem P)
-    (hQs : Q.IsSymm) (hQi : IsIdempotentElem Q)
+    (hPh : P.IsHermitian) (hPi : IsIdempotentElem P)
+    (hQh : Q.IsHermitian) (hQi : IsIdempotentElem Q)
     {d : ℝ} (hd : 0 ≤ d) (h00 : (1-Q)*Z*(1-P)=0)
     (h11 : specNorm (Q*Z*P) ≤ d) (h12 : specNorm (Q*Z*(1-P)) ≤ d)
     (h21 : specNorm ((1-Q)*Z*P) ≤ d) : specNorm Z ≤ Real.goldenRatio*d := by
+  have hPs : P.IsSymm := Matrix.isHermitian_iff_isSymm.mp hPh
+  have hQs : Q.IsSymm := Matrix.isHermitian_iff_isSymm.mp hQh
   have hPP : P*P=P := hPi
   have hPc : (1-P)*(1-P)=1-P := by
     simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one, hPP]

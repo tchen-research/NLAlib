@@ -75,9 +75,9 @@ theorem rootMultiplicity_eq_one_of_finrank_eigenspace_eq_one_of_pairing_ne_zero
   exact hm.symm
 
 /-- When geometric multiplicity is one, algebraic simplicity is equivalent
-to nonzero pairing of nonzero left and right eigenvectors. Source:
+to nonzero pairing of nonzero left and right eigenvectors.
 Horn–Johnson (2013), Theorem 1.4.12.
-atlas: left-right-eigenvectors (partial) -/
+atlas: left-right-eigenvectors -/
 theorem rootMultiplicity_eq_one_iff_pairing_ne_zero_of_finrank_eigenspace_eq_one
     [IsAlgClosed K] {A : Matrix n n K} {x y : n → K} {μ : K}
     (hx : x ≠ 0) (hy : y ≠ 0) (hAx : A *ᵥ x = μ • x) (hyA : y ᵥ* A = μ • y)

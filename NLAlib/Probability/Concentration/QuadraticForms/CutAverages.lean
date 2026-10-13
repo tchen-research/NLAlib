@@ -3,7 +3,7 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
@@ -15,11 +15,11 @@ import NLAlib.Probability.Concentration.QuadraticForms.Geometry
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
 `NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
-Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
 set_option maxRecDepth 5000
@@ -28,8 +28,9 @@ namespace NLAlib
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `four_mul_card_powerset_filter_mem_notMem` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma four_mul_card_powerset_filter_mem_notMem {n : ℕ} {i j : Fin n} (hij : i ≠ j) :
     4 * (((Finset.univ : Finset (Fin n)).powerset.filter
       (fun s => i ∈ s ∧ j ∉ s)).card) =
@@ -61,7 +62,7 @@ lemma four_mul_card_powerset_filter_mem_notMem {n : ℕ} {i j : Fin n} (hij : i 
   rw [Nat.mul_comm]
 
 /-- Source-transport helper `sum_powerset_cut_indicator` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma sum_powerset_cut_indicator {n : ℕ} (i j : Fin n) (a : ℝ) :
     (∑ s ∈ (Finset.univ : Finset (Fin n)).powerset,
       (if i ∈ s ∧ j ∉ s then a else 0)) =
@@ -72,7 +73,7 @@ lemma sum_powerset_cut_indicator {n : ℕ} (i j : Fin n) (a : ℝ) :
   simp
 
 /-- Source-transport helper `four_mul_sum_cut_quadraticForm_eq_card_mul_offDiagonal` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma four_mul_sum_cut_quadraticForm_eq_card_mul_offDiagonal {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
     4 * (∑ s ∈ (Finset.univ : Finset (Fin n)).powerset,
@@ -152,7 +153,7 @@ lemma four_mul_sum_cut_quadraticForm_eq_card_mul_offDiagonal {n : ℕ}
             ring
 
 /-- Source-transport helper `quadraticForm_offDiagonal_eq_average_cut` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma quadraticForm_offDiagonal_eq_average_cut {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
     quadForm (offDiagonalMatrix A) x =
@@ -177,8 +178,9 @@ lemma quadraticForm_offDiagonal_eq_average_cut {n : ℕ}
     _ = (4 / (P.card : ℝ)) * ∑ s ∈ P, quadForm (cutMatrix A s) x := by
             field_simp [ne_of_gt hP_pos]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `exp_mul_quadraticForm_offDiagonal_le_average_cut` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma exp_mul_quadraticForm_offDiagonal_le_average_cut {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) (l : ℝ) :
     exp (l * quadForm (offDiagonalMatrix A) x) ≤
@@ -220,8 +222,9 @@ lemma exp_mul_quadraticForm_offDiagonal_le_average_cut {n : ℕ}
   rw [harg, hrhs] at hconv
   simpa [P] using hconv
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `quadraticForm_eq_inner_toEuclideanCLM` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma quadraticForm_eq_inner_toEuclideanCLM {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
     quadForm A x =
@@ -239,8 +242,9 @@ lemma quadraticForm_eq_inner_toEuclideanCLM {n : ℕ}
   intro j _
   ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `abs_quadraticForm_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma abs_quadraticForm_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {x : Fin n → ℝ} {K : ℝ} (hK : 0 ≤ K) (hx : ∀ i, |x i| ≤ K) :
     |quadForm A x| ≤ K ^ 2 * entrywiseL1Norm A := by
@@ -273,7 +277,7 @@ lemma abs_quadraticForm_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
         ring
 
 /-- Source-transport helper `randomQuadraticForm_aemeasurable` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma randomQuadraticForm_aemeasurable {μ : Measure Ω} {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) {X : Fin n → Ω → ℝ}
     (hX_meas : ∀ i, AEMeasurable (X i) μ) :
@@ -287,8 +291,9 @@ lemma randomQuadraticForm_aemeasurable {μ : Measure Ω} {n : ℕ}
           change A i j * (X i ω * X j ω) = X i ω * A i j * X j ω
           ring)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `randomQuadraticForm_mem_Icc_of_ae_coord_bound` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma randomQuadraticForm_mem_Icc_of_ae_coord_bound {μ : Measure Ω} {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) {X : Fin n → Ω → ℝ} {K : ℝ}
     (hK : 0 ≤ K) (hX_bound : ∀ i, ∀ᵐ ω ∂μ, |X i ω| ≤ K) :
@@ -299,8 +304,9 @@ lemma randomQuadraticForm_mem_Icc_of_ae_coord_bound {μ : Measure Ω} {n : ℕ}
   have h_abs := abs_quadraticForm_le A hK (fun i => hω i)
   exact abs_le.mp h_abs
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `bounded_hansonWright_cgf_constant_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma bounded_hansonWright_cgf_constant_le {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) {K C : ℝ}
     (hC_bound : 2 * entrywiseL1Norm A ^ 2 ≤ C * frobNorm A ^ 2) (l : ℝ) :
@@ -313,6 +319,7 @@ lemma bounded_hansonWright_cgf_constant_le {n : ℕ}
         exact mul_le_mul_of_nonneg_right hC_bound hmul
     _ = C * l ^ 2 * K ^ 4 * frobNorm A ^ 2 := by ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- The local quadratic CGF estimate used in the Hanson-Wright proof.
 
 For `Y = Xᵀ A X - E Xᵀ A X`, this records

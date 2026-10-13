@@ -53,7 +53,7 @@ theorem WeaklyMajorized.sum_sortedVector_mul_le {ι : Type*} [Fintype ι]
     (sortedVector_antitone a) hxy
 
 /-- Every nonnegative coordinate pairing of a weakly majorized vector is
-dominated by an actual permutation of the comparator. -/
+dominated by a permutation of the comparator. -/
 theorem WeaklyMajorized.exists_perm_sum_mul_le {ι : Type*} [Fintype ι]
     {x y : ι → ℝ} (hxy : WeaklyMajorized x y) (a : ι → ℝ) (ha0 : ∀ i, 0 ≤ a i) :
     ∃ σ : Equiv.Perm ι, (∑ i, a i * x i) ≤ ∑ i, a i * y (σ i) := by

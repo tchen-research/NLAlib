@@ -119,7 +119,7 @@ theorem det_smul_one_sub_jacobiMatrix (a β : ℕ → ℝ) (m : ℕ) (x : ℝ) :
 /-- **The `(1,1)` entry of the resolvent of a Jacobi matrix is a continued fraction**: if
 `x − J` is positive definite (so every trailing block is nonsingular), then
 `((x − J)⁻¹)₀₀ = 1/(x − a₀ − β₁²/(x − a₁ − ⋯ − β_m²/(x − a_m)))`.
-Source: Golub–Meurant (2010) [`gm10`], Ch. 3 (continued fractions; label to verify);
+Source: Golub–Meurant (2010) [`gm10`], Ch. 3 (continued fractions);
 Wall (1948), Ch. XI. -/
 theorem inv_smul_one_sub_jacobiMatrix_apply_zero_zero (a β : ℕ → ℝ) (m : ℕ) {x : ℝ}
     (hx : (x • (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) ℝ) - jacobiMatrix a β (m + 1)).PosDef) :
@@ -147,7 +147,7 @@ variable {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
 /-- For symmetric `A`, `T_q` is the Jacobi matrix of its recurrence coefficients:
 `T_q = jacobiMatrix α β q`. Source: Golub–Meurant (2010) [`gm10`], Thm 4.2.
 Atlas: `jacobi-matrix-identities`. -/
-theorem T_eq_jacobiMatrix (D : LanczosDecomp A b q) (hA : A.IsSymm) :
+theorem T_eq_jacobiMatrix (D : LanczosDecomp A b q) (hA : A.IsHermitian) :
     D.T = jacobiMatrix D.alpha D.beta q := by
   have hS : D.T.IsSymm := D.isSymm_T hA
   ext i j
@@ -209,7 +209,7 @@ theorem posDef_smul_one_sub_T (D : LanczosDecomp A b q) (hA : A.IsHermitian) {x 
 `x` above the spectrum of `A`, `e₁ᵀ (x I − T_q)⁻¹ e₁ = 1/(x − α₀ − β₁²/(x − α₁ − ⋯ −
 β_{q−1}²/(x − α_{q−1})))`, the `q`-th convergent of the continued fraction of the Stieltjes
 transform `∫ dμ_b(t)/(x − t)` (for `‖b‖ = 1`). Source: Golub–Meurant (2010) [`gm10`], Ch. 3
-(continued fractions; label to verify) and Thm 4.2. Deviation: real `x` above the spectrum
+(continued fractions) and Thm 4.2. Deviation: real `x` above the spectrum
 (so every trailing block is nonsingular); complex `x` off the real axis is not covered.
 atlas: jacobi-matrix-identities (partial) -/
 theorem inv_smul_one_sub_T_apply_zero_zero (D : LanczosDecomp A b q) (hA : A.IsHermitian)

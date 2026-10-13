@@ -4,7 +4,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 -/
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.Residual
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
-import NLAlib.Matrix.Structured.Measurable
+import NLAlib.Matrix.Measurability.Measurable
 import NLAlib.Probability.ChiSquare.ChiSquare
 /-!
 # Diagonal entries of the inverse Wishart matrix

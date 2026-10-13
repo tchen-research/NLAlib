@@ -13,7 +13,7 @@ For `ProbabilityTheory.HasSubgaussianMGF X c μ` and a real proxy `C₀ ≥ c`, 
 * `integrable_exp_mul_sq_of_hasSubgaussianMGF{,_of_le}`: integrability of `e^{θ X²}`.
 
 Vershynin 2018, Prop 2.5.2 (iii). Ported from HighDimProb commit
-c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae (Hanson–Wright proof, Apache-2.0, authors Yuanhe Zhang,
+(Hanson–Wright proof, Apache-2.0, authors Yuanhe Zhang,
 Jason D. Lee, Fanghui Liu); atlas `hanson-wright` (helpers), `subgaussian-def`.
 -/
 

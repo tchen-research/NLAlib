@@ -3,7 +3,7 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
@@ -19,11 +19,11 @@ import NLAlib.Matrix.Basic.QuadForm
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
 `NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
-Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
 set_option maxRecDepth 5000
@@ -31,8 +31,9 @@ set_option maxRecDepth 5000
 namespace NLAlib
 
 variable {Ω : Type*} [MeasurableSpace Ω]
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `mgf_innerSL_stdGaussian` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma mgf_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] (v : E) (t : ℝ) :
     mgf (fun x : E => inner ℝ v x) (stdGaussian E) t =
@@ -51,7 +52,7 @@ lemma mgf_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E] [InnerProductSp
   ring_nf
 
 /-- Source-transport helper `integrable_exp_innerSL_stdGaussian` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integrable_exp_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
     (v : E) (t : ℝ) :
@@ -60,8 +61,9 @@ lemma integrable_exp_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E]
   rw [mgf_innerSL_stdGaussian v t]
   exact exp_pos _
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integral_exp_innerSL_stdGaussian` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integral_exp_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
     (v : E) (t : ℝ) :
@@ -69,8 +71,9 @@ lemma integral_exp_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E]
       exp (‖v‖ ^ 2 * t ^ 2 / 2) := by
   exact mgf_innerSL_stdGaussian v t
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `symmetric_inner_apply_eq_sum_eigenvalues_repr` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma symmetric_inner_apply_eq_sum_eigenvalues_repr {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (T : E →ₗ[ℝ] E) (hT : T.IsSymmetric) (x : E) :
@@ -98,7 +101,7 @@ lemma symmetric_inner_apply_eq_sum_eigenvalues_repr {E : Type*} [NormedAddCommGr
       simp only [Real.norm_eq_abs, sq_abs, b]
 
 /-- Source-transport helper `orthonormalBasis_repr_sum_smul` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma orthonormalBasis_repr_sum_smul {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis (Fin (Module.finrank ℝ E)) ℝ E)
@@ -124,13 +127,13 @@ def randomVector {n : ℕ} (X : Fin n → Ω → ℝ) : Ω → EuclideanSpace �
 
 omit [MeasurableSpace Ω] in
 /-- Source-transport helper `randomVector_apply` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 @[simp]
 lemma randomVector_apply {n : ℕ} (X : Fin n → Ω → ℝ) (ω : Ω) (i : Fin n) :
     randomVector X ω i = X i ω := rfl
 
 /-- Source-transport helper `randomVector_aemeasurable` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma randomVector_aemeasurable {μ : Measure Ω} {n : ℕ} {X : Fin n → Ω → ℝ}
     (hX_meas : ∀ i, AEMeasurable (X i) μ) :
     AEMeasurable (randomVector X) μ := by
@@ -142,6 +145,7 @@ def centeredQuadraticForm {n : ℕ} (μ : Measure Ω) (A : Matrix (Fin n) (Fin n
     (X : Fin n → Ω → ℝ) : Ω → ℝ :=
   fun ω => randomQuadraticForm A X ω - ∫ ω, randomQuadraticForm A X ω ∂μ
 
+open scoped Matrix.Norms.L2Operator in
 /-- The entrywise `ℓ¹` norm of a finite real matrix. -/
 def entrywiseL1Norm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
   ∑ i, ∑ j, |A i j|
@@ -162,7 +166,7 @@ def coordinateMask {n : ℕ} (s : Finset (Fin n))
   WithLp.toLp 2 fun i => if i ∈ s then x i else 0
 
 /-- Source-transport helper `coordinateMask_apply` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 @[simp]
 lemma coordinateMask_apply {n : ℕ} (s : Finset (Fin n))
     (x : EuclideanSpace ℝ (Fin n)) (i : Fin n) :
@@ -174,13 +178,13 @@ def subtypeMask {n : ℕ} (s : Finset (Fin n)) (x : s → ℝ) :
   WithLp.toLp 2 fun i => if h : i ∈ s then x ⟨i, h⟩ else 0
 
 /-- Source-transport helper `subtypeMask_apply` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 @[simp]
 lemma subtypeMask_apply {n : ℕ} (s : Finset (Fin n)) (x : s → ℝ) (i : Fin n) :
     subtypeMask s x i = if h : i ∈ s then x ⟨i, h⟩ else 0 := rfl
 
 /-- Source-transport helper `measurable_subtypeMask` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma measurable_subtypeMask {n : ℕ} (s : Finset (Fin n)) :
     Measurable (subtypeMask (n := n) s) := by
   exact (MeasurableEquiv.toLp 2 (Fin n → ℝ)).measurable.comp
@@ -192,7 +196,7 @@ lemma measurable_subtypeMask {n : ℕ} (s : Finset (Fin n)) :
 
 omit [MeasurableSpace Ω] in
 /-- Source-transport helper `subtypeMask_subtype_randomVector` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma subtypeMask_subtype_randomVector {n : ℕ} (s : Finset (Fin n))
     (X : Fin n → Ω → ℝ) :
     (fun ω => subtypeMask s (fun i : s => X i ω)) =
@@ -203,7 +207,7 @@ lemma subtypeMask_subtype_randomVector {n : ℕ} (s : Finset (Fin n))
   · simp [hi]
 
 /-- Source-transport helper `coordinateMask_aemeasurable` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma coordinateMask_aemeasurable {μ : Measure Ω} {n : ℕ} (s : Finset (Fin n))
     {X : Fin n → Ω → ℝ} (hX_meas : ∀ i, AEMeasurable (X i) μ) :
     AEMeasurable (fun ω => coordinateMask s (randomVector X ω)) μ := by
@@ -212,9 +216,9 @@ lemma coordinateMask_aemeasurable {μ : Measure Ω} {n : ℕ} (s : Finset (Fin n
     (aemeasurable_pi_lambda _ fun i => hX_meas i)
 
 /-- Source-transport helper `coordinateMask_indepFun_compl` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma coordinateMask_indepFun_compl {μ : Measure Ω} {n : ℕ} {X : Fin n → Ω → ℝ}
-    (h_indep : iIndepFun X μ) (hX_meas : ∀ i, AEMeasurable (X i) μ)
+    (hind : iIndepFun X μ) (hX_meas : ∀ i, AEMeasurable (X i) μ)
     (s : Finset (Fin n)) :
     (fun ω => coordinateMask ((Finset.univ : Finset (Fin n)) \ s) (randomVector X ω))
       ⟂ᵢ[μ]
@@ -226,7 +230,7 @@ lemma coordinateMask_indepFun_compl {μ : Measure Ω} {n : ℕ} {X : Fin n → �
     exact Finset.sdiff_disjoint
   have hblocks :
       (fun ω (i : t) => X i ω) ⟂ᵢ[μ] (fun ω (i : s) => X i ω) :=
-    h_indep.indepFun_finset₀ t s hdisj hX_meas
+    hind.indepFun_finset₀ t s hdisj hX_meas
   have hcomp :
       ((subtypeMask t) ∘ fun ω (i : t) => X i ω) ⟂ᵢ[μ]
         ((subtypeMask s) ∘ fun ω (i : s) => X i ω) :=
@@ -243,15 +247,17 @@ lemma coordinateMask_indepFun_compl {μ : Measure Ω} {n : ℕ} {X : Fin n → �
     · simp [coordinateMask, subtypeMask, hi]
     · simp [coordinateMask, subtypeMask, hi]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `entrywiseL1Norm_nonneg` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma entrywiseL1Norm_nonneg {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
     0 ≤ entrywiseL1Norm A := by
   unfold entrywiseL1Norm
   exact Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => abs_nonneg _
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `coordinateMask_norm_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma coordinateMask_norm_le {n : ℕ} (s : Finset (Fin n))
     (x : EuclideanSpace ℝ (Fin n)) :
     ‖coordinateMask s x‖ ≤ ‖x‖ := by
@@ -268,8 +274,9 @@ lemma coordinateMask_norm_le {n : ℕ} (s : Finset (Fin n))
     _ = ‖x‖ ^ 2 := by
         rw [EuclideanSpace.real_norm_sq_eq]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `toEuclideanCLM_cutMatrix_apply` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma toEuclideanCLM_cutMatrix_apply {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) (x : EuclideanSpace ℝ (Fin n)) :
     Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) x =
@@ -281,8 +288,9 @@ lemma toEuclideanCLM_cutMatrix_apply {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
   · simp [Matrix.toEuclideanCLM_toLp, coordinateMask, cutMatrix, Matrix.mulVec, dotProduct, hi]
   · simp [Matrix.toEuclideanCLM_toLp, coordinateMask, cutMatrix, Matrix.mulVec, dotProduct, hi]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `inner_toEuclideanCLM_cutMatrix_eq_inner_masks` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma inner_toEuclideanCLM_cutMatrix_eq_inner_masks {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (s : Finset (Fin n))
     (x y : EuclideanSpace ℝ (Fin n)) :
@@ -300,8 +308,9 @@ lemma inner_toEuclideanCLM_cutMatrix_eq_inner_masks {n : ℕ}
   · simp [hi]
   · simp [hi]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `specNorm_cutMatrix_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma specNorm_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) :
     specNorm (cutMatrix A s) ≤ specNorm A := by
@@ -322,7 +331,7 @@ lemma specNorm_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
             (coordinateMask_norm_le ((Finset.univ : Finset (Fin n)) \ s) x) (norm_nonneg T)
 
 /-- Source-transport helper `frobSq_cutMatrix_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma frobSq_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) :
     frobSq (cutMatrix A s) ≤ frobSq A := by
@@ -333,8 +342,9 @@ lemma frobSq_cutMatrix_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
   · simp [h]
   · simp [h, sq_nonneg]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `frobNorm_cutMatrix_sq_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma frobNorm_cutMatrix_sq_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) :
     frobNorm (cutMatrix A s) ^ 2 ≤ frobNorm A ^ 2 := by
@@ -342,7 +352,7 @@ lemma frobNorm_cutMatrix_sq_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
   exact frobSq_cutMatrix_le A s
 
 /-- Source-transport helper `card_powerset_filter_mem_notMem_eq` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma card_powerset_filter_mem_notMem_eq {n : ℕ} {i j : Fin n} (hij : i ≠ j) :
     (((Finset.univ : Finset (Fin n)).powerset.filter
       (fun s => i ∈ s ∧ j ∉ s)).card) =

@@ -11,13 +11,14 @@ square. Their sum dominates the operator norm square, with coefficient one.
 noncomputable section
 
 open MeasureTheory Matrix Finset Filter
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder ENNReal
+open scoped MatrixOrder ComplexOrder ENNReal
 
 namespace NLAlib
 
 variable {Ω n : Type*} {m mΩ : MeasurableSpace Ω} [Fintype n] [DecidableEq n]
 variable {μ : Measure Ω} [IsFiniteMeasure μ]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A finite deterministic trace budget makes the genuine local variance and actual
 increment square integrable. The equality of extended moments is the only second-moment
 assumption. Source: supplied audit `audit:combined`, coordinate-basis reduction;

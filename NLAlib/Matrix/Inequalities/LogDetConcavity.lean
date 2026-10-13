@@ -10,7 +10,7 @@ atlas `log-det-concavity`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -91,9 +91,8 @@ theorem log_det_smul_add_eq_iff {A B : Matrix n n ℝ} (hA : A.PosDef) (hB : B.P
     rw [← add_smul, hab, one_smul, ← add_mul, hab, one_mul]
 
 /-- The multiplicative determinant Jensen inequality, with real powers and
-its exact interior equality case. Horn--Johnson (2013), Theorem 7.6.6.
-atlas: log-det-concavity (partial) -/
-theorem det_smul_add_ge_rpow_mul_and_eq_iff {A B : Matrix n n ℝ}
+its exact interior equality case. Horn--Johnson (2013), Theorem 7.6.6. -/
+private theorem det_smul_add_ge_rpow_mul_and_eq_iff_aux {A B : Matrix n n ℝ}
     (hA : A.PosDef) (hB : B.PosDef) {a b : ℝ} (ha : 0 < a) (hb : 0 < b)
     (hab : a + b = 1) :
     A.det ^ a * B.det ^ b ≤ (a • A + b • B).det ∧
@@ -110,5 +109,21 @@ theorem det_smul_add_ge_rpow_mul_and_eq_iff {A B : Matrix n n ℝ}
     exact log_det_smul_add_ge hA hB ha.le hb.le hab
   · rw [← Real.log_injOn_pos.eq_iff hC.det_pos hprod, hlog]
     exact log_det_smul_add_eq_iff hA hB ha hb hab
+
+/-- **Multiplicative determinant Jensen inequality.** `det(A)^a det(B)^b ≤ det(aA + bB)` for positive definite `A`, `B` and `a + b = 1`, `a, b > 0`. Horn–Johnson 2013, Theorem 7.6.6.
+atlas: log-det-concavity (partial) -/
+theorem det_rpow_mul_le_det_smul_add {A B : Matrix n n ℝ}
+    (hA : A.PosDef) (hB : B.PosDef) {a b : ℝ} (ha : 0 < a) (hb : 0 < b)
+    (hab : a + b = 1) :
+    A.det ^ a * B.det ^ b ≤ (a • A + b • B).det :=
+  (det_smul_add_ge_rpow_mul_and_eq_iff_aux hA hB ha hb hab).1
+
+/-- Equality in the multiplicative determinant Jensen inequality holds exactly for `A = B`. Horn–Johnson 2013, Theorem 7.6.6.
+atlas: log-det-concavity (partial) -/
+theorem det_smul_add_eq_rpow_mul_iff {A B : Matrix n n ℝ}
+    (hA : A.PosDef) (hB : B.PosDef) {a b : ℝ} (ha : 0 < a) (hb : 0 < b)
+    (hab : a + b = 1) :
+    (a • A + b • B).det = A.det ^ a * B.det ^ b ↔ A = B :=
+  (det_smul_add_ge_rpow_mul_and_eq_iff_aux hA hB ha hb hab).2
 
 end NLAlib

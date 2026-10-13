@@ -42,9 +42,10 @@ theorem specNorm_fromRows_zero_sq {m n p : Type*}
     [Fintype m] [Fintype n] [Fintype p] [DecidableEq m] [DecidableEq n] [DecidableEq p]
     (A : Matrix m p ℝ) :
     specNorm (Matrix.fromRows A (0 : Matrix n p ℝ)) ^ 2 = specNorm A ^ 2 := by
-  rw [specNorm_sq_eq_specNorm_transpose_mul_self, Matrix.transpose_fromRows,
-    Matrix.fromCols_mul_fromRows, Matrix.transpose_zero, Matrix.zero_mul, add_zero,
-    ← specNorm_sq_eq_specNorm_transpose_mul_self]
+  rw [specNorm_sq_eq_specNorm_conjTranspose_mul_self, Matrix.conjTranspose_eq_transpose_of_trivial,
+    Matrix.transpose_fromRows, Matrix.fromCols_mul_fromRows, Matrix.transpose_zero,
+    Matrix.zero_mul, add_zero, ← Matrix.conjTranspose_eq_transpose_of_trivial,
+    ← specNorm_sq_eq_specNorm_conjTranspose_mul_self]
 
 /-- The Frobenius square of vertical blocks is the sum of their squares.
 Horn–Johnson 2013, Section 5.6. -/

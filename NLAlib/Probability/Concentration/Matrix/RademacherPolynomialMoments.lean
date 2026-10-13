@@ -11,12 +11,13 @@ Source: operator manuscript, Rademacher branch of `noncommutative-khintchine`.
 
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
-open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
+open scoped Matrix ComplexOrder
 open MeasureTheory Matrix
 namespace NLAlib
 
 variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every trace product of a finite Rademacher matrix series is absolutely
 integrable under its actual product law. Source: bounded sign support;
 supports `noncommutative-khintchine`. -/
@@ -24,11 +25,12 @@ theorem integrable_re_trace_rademacherSeries_product
     (A : κ → Matrix ι ι ℂ) (B C : Matrix ι ι ℂ) (r s : ℕ) :
     Integrable (fun x : κ → ℝ =>
       (B * (∑ i, x i • A i) ^ r * C * (∑ i, x i • A i) ^ s).trace.re)
-      (Measure.pi fun _ => rademacherMeasure) := by
-  apply integrable_pi_rademacherMeasure_of_polynomial_growth _
+      (rademacherVector _) := by
+  apply integrable_rademacherVector_of_polynomial_growth _
     (continuous_re_trace_series_product A B C r s).measurable _ (r + s)
   exact abs_re_trace_series_product_le A B C r s
 
+open scoped Matrix.Norms.L2Operator in
 /-- A coordinate times a Rademacher-series trace polynomial is integrable
 under its actual product law. Source: bounded sign support;
 supports the sign-flip argument for `noncommutative-khintchine`. -/
@@ -36,10 +38,10 @@ theorem integrable_coordinate_mul_re_trace_rademacherSeries_product
     (A : κ → Matrix ι ι ℂ) (B C : Matrix ι ι ℂ) (r s : ℕ) (i : κ) :
     Integrable (fun x : κ → ℝ => x i *
       (B * (∑ j, x j • A j) ^ r * C * (∑ j, x j • A j) ^ s).trace.re)
-      (Measure.pi fun _ => rademacherMeasure) := by
+      (rademacherVector _) := by
   let D := ‖(reTraceCLM : Matrix ι ι ℂ →L[ℝ] ℝ)‖ * ‖B‖ * ‖C‖ *
     (∑ j, ‖A j‖) ^ (r + s)
-  apply integrable_pi_rademacherMeasure_of_polynomial_growth _
+  apply integrable_rademacherVector_of_polynomial_growth _
     ((continuous_apply i).mul (continuous_re_trace_series_product A B C r s)).measurable
     D (r + s + 1)
   intro x
@@ -54,21 +56,23 @@ theorem integrable_coordinate_mul_re_trace_rademacherSeries_product
         (abs_nonneg _) (by positivity)
     _ = _ := by ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- A constant matrix times one Rademacher-series power has integrable real
 trace. Source: bounded sign support; supports `noncommutative-khintchine`. -/
 theorem integrable_re_trace_mul_rademacherSeries_pow
     (A : κ → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (q : ℕ) :
     Integrable (fun x : κ → ℝ => (B * (∑ i, x i • A i) ^ q).trace.re)
-      (Measure.pi fun _ => rademacherMeasure) := by
+      (rademacherVector _) := by
   simpa only [pow_zero, mul_one] using integrable_re_trace_rademacherSeries_product A B 1 q 0
 
+open scoped Matrix.Norms.L2Operator in
 /-- A signed coefficient times a one-power trace is integrable under the
 actual product Rademacher law. Source: bounded sign support; supports
 `noncommutative-khintchine`. -/
 theorem integrable_coordinate_mul_re_trace_mul_rademacherSeries_pow
     (A : κ → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (q : ℕ) (i : κ) :
     Integrable (fun x : κ → ℝ => x i * (B * (∑ j, x j • A j) ^ q).trace.re)
-      (Measure.pi fun _ => rademacherMeasure) := by
+      (rademacherVector _) := by
   simpa only [pow_zero, mul_one] using
     integrable_coordinate_mul_re_trace_rademacherSeries_product A B 1 q 0 i
 

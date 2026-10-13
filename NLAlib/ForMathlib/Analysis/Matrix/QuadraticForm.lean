@@ -4,7 +4,7 @@ import Mathlib.Analysis.CStarAlgebra.Matrix
 /-!
 # Continuous matrix quadratic forms and complex polarization
 
-Quadratic forms commute with actual integrals and conditional expectations through
+Quadratic forms commute with integrals and conditional expectations through
 continuous linear maps. Mathlib's complex polarization identifies Hermitian matrices.
 -/
 
@@ -13,7 +13,7 @@ noncomputable section
 open Matrix
 open scoped Matrix.Norms.L2Operator
 
-namespace NLAlib
+namespace Matrix
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -27,7 +27,7 @@ def matrixQuadraticFormCLM (u : n → ℂ) : Matrix n n ℂ →L[ℂ] ℂ :=
       map_smul' := by intros; simp [Matrix.smul_mulVec, dotProduct_smul] }).toContinuousLinearMap
 
 omit [DecidableEq n] in
-/-- The complex quadratic-form linear map evaluates the actual finite vector action.
+/-- The complex quadratic-form linear map evaluates the finite vector action.
 Source: the exact construction; `matrix-freedman` (partial). -/
 @[simp] theorem matrixQuadraticFormCLM_apply (u : n → ℂ) (A : Matrix n n ℂ) :
     matrixQuadraticFormCLM u A = star u ⬝ᵥ (A *ᵥ u) := rfl
@@ -38,12 +38,12 @@ def matrixRealQuadraticFormCLM (u : n → ℂ) : Matrix n n ℂ →L[ℝ] ℝ :=
   Complex.reCLM.comp ((matrixQuadraticFormCLM u).restrictScalars ℝ)
 
 omit [DecidableEq n] in
-/-- The real quadratic-form linear map is the real part of the actual complex form.
+/-- The real quadratic-form linear map is the real part of the complex form.
 Source: the exact construction; `matrix-freedman` (partial). -/
 @[simp] theorem matrixRealQuadraticFormCLM_apply (u : n → ℂ) (A : Matrix n n ℂ) :
     matrixRealQuadraticFormCLM u A = (star u ⬝ᵥ (A *ᵥ u)).re := rfl
 
-/-- The actual Hermitian squared quadratic form is the squared Euclidean norm of the
+/-- The Hermitian squared quadratic form is the squared Euclidean norm of the
 matrix-vector image. Source: the Gram identity and complex scalar norm squares;
 supports `audit:local-moment`, `matrix-freedman` (partial). -/
 theorem re_star_dotProduct_sq_mulVec_eq_sum_sq_norm_of_isHermitian
@@ -77,4 +77,4 @@ theorem matrix_eq_of_isHermitian_of_re_dotProduct_mulVec_eq
   have hconj := congrArg star hinner
   simpa only [RCLike.star_def, inner_conj_symm] using hconj
 
-end NLAlib
+end Matrix

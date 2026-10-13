@@ -4,17 +4,17 @@ import Mathlib.Probability.Moments.Variance
 # Variance of a finite sample average
 
 Exact second moments for independent copies under a finite product law.
-Source: operator re-derivation `sa:amm-variance`.
+Source: Drineas–Kannan–Mahoney 2006, Lemma 4.
 -/
 
 noncomputable section
 open MeasureTheory ProbabilityTheory
-namespace NLAlib
+namespace MeasureTheory
 
 /-- The centered squared error of an average of independent real samples is
 the one-sample variance divided by the sample count. No moment hypotheses are
 needed for the finite probability space.
-Source: operator re-derivation `sa:amm-variance`. -/
+Source: Drineas–Kannan–Mahoney 2006, Lemma 4. -/
 theorem integral_centered_average_sq_pi
     {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (ν : Measure ι) [IsProbabilityMeasure ν] (f : ι → ℝ) {c : ℕ} (hc : 0 < c) :
@@ -54,7 +54,7 @@ theorem integral_centered_average_sq_pi
 
 /-- The squared complex absolute error of an independent sample average is
 the complex one-sample variance divided by the sample count. Source:
-operator re-derivation `sa:amm-variance`, by real and imaginary variances. -/
+Drineas–Kannan–Mahoney 2006, Lemma 4, by real and imaginary variances. -/
 theorem integral_centered_average_norm_sq_pi
     {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (ν : Measure ι) [IsProbabilityMeasure ν] (f : ι → ℂ) {c : ℕ} (hc : 0 < c) :
@@ -77,4 +77,4 @@ theorem integral_centered_average_norm_sq_pi
   rw [hre, him, hr, hi]
   ring
 
-end NLAlib
+end MeasureTheory

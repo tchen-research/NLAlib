@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Basic.LeadingMinor
 import Mathlib.LinearAlgebra.QuadraticForm.Signature
 import NLAlib.Matrix.Functions.PolynomialCalculus
 /-!
@@ -9,18 +10,18 @@ The inertia of a real square matrix `A` is read off its quadratic form `x ↦ x�
 positive/negative definite). Basis-free, so no symmetry hypothesis is needed to state them.
 
 * `inertiaPos_transpose_mul_mul`, `inertiaNeg_transpose_mul_mul`: **Sylvester's law of
-  inertia**, `In(XᵀAX) = In(A)` for invertible `X` (from Mathlib's
-  `QuadraticMap.Equivalent.sigPos_eq`).
+ inertia**, `In(XᵀAX) = In(A)` for invertible `X` (from Mathlib's
+ `QuadraticMap.Equivalent.sigPos_eq`).
 * `inertiaPos_diagonal`, `inertiaNeg_diagonal`: for a diagonal matrix, the number of positive
-  (negative) diagonal entries (Mathlib's `sigPos_weightedSumSquares`).
+ (negative) diagonal entries (Mathlib's `sigPos_weightedSumSquares`).
 * `inertiaPos_eq_card_eigenvalues_pos`, `inertiaNeg_eq_card_eigenvalues_neg`: for symmetric
-  `A`, the numbers of positive and negative eigenvalues.
+ `A`, the numbers of positive and negative eigenvalues.
 * `card_eigenvalues_lt_eq_card_neg_of_eq_mul_diagonal_mul`: the `LDLᵀ` count, if
-  `A − xI = L D Lᵀ` with `L` invertible then `#{i : λᵢ < x} = #{i : dᵢ < 0}` (spectrum slicing).
+ `A − xI = L D Lᵀ` with `L` invertible then `#{i : λᵢ < x} = #{i : dᵢ < 0}` (spectrum slicing).
 * `card_eigenvalues_lt_eq_card_sign_changes` (scaffold): the leading-principal-minor (Sturm)
-  count, `#{λᵢ < x}` = number of sign changes in `1, det(A − xI)_{1:1}, …, det(A − xI)`, when
-  every leading minor is nonzero; for symmetric tridiagonal `A` these minors satisfy the
-  three-term Sturm recurrence used by bisection.
+ count, `#{λᵢ < x}` = number of sign changes in `1, det(A − xI)_{1:1}, …, det(A − xI)`, when
+ every leading minor is nonzero; for symmetric tridiagonal `A` these minors satisfy the
+ three-term Sturm recurrence used by bisection.
 
 Source: Horn–Johnson (2013) [`hj13`], Thm 4.5.8; Golub–Van Loan (2013) [`gvl13`], §8.4.1,
 §8.5.2 (Thm 8.5.1); Parlett (1998) [`parlett98`], Ch. 3.
@@ -100,7 +101,7 @@ theorem toQuadraticForm'_diagonal (d : n → ℝ) :
   simp only [dotProduct, Matrix.mulVec_diagonal, smul_eq_mul]
   exact Finset.sum_congr rfl fun i _ => by ring
 
-/-- The positive index of a diagonal matrix is the number of positive diagonal entries. Source:
+/-- The positive index of a diagonal matrix is the number of positive diagonal entries.
 Horn–Johnson (2013) [`hj13`], §4.5.
 atlas: sylvester-inertia -/
 theorem inertiaPos_diagonal (d : n → ℝ) :
@@ -111,7 +112,7 @@ theorem inertiaPos_diagonal (d : n → ℝ) :
   ext i
   simp
 
-/-- The negative index of a diagonal matrix is the number of negative diagonal entries. Source:
+/-- The negative index of a diagonal matrix is the number of negative diagonal entries.
 Horn–Johnson (2013) [`hj13`], §4.5.
 atlas: sylvester-inertia -/
 theorem inertiaNeg_diagonal (d : n → ℝ) :
@@ -166,14 +167,14 @@ theorem inertiaNeg_sub_smul_one_eq_card {A : Matrix n n ℝ} (hA : A.IsHermitian
     inertiaNeg_transpose_mul_mul _ (isUnit_transpose_eigenvectorUnitary hA), inertiaNeg_diagonal]
   simp_rw [sub_neg]
 
-/-- For real symmetric `A`, `inertiaPos A` is the number of positive eigenvalues. Source:
+/-- For real symmetric `A`, `inertiaPos A` is the number of positive eigenvalues.
 Horn–Johnson (2013) [`hj13`], §4.5.
 atlas: sylvester-inertia -/
 theorem inertiaPos_eq_card_eigenvalues_pos {A : Matrix n n ℝ} (hA : A.IsHermitian) :
     inertiaPos A = (Finset.univ.filter fun i => 0 < hA.eigenvalues i).card := by
   simpa using inertiaPos_sub_smul_one_eq_card hA 0
 
-/-- For real symmetric `A`, `inertiaNeg A` is the number of negative eigenvalues. Source:
+/-- For real symmetric `A`, `inertiaNeg A` is the number of negative eigenvalues.
 Horn–Johnson (2013) [`hj13`], §4.5.
 atlas: sylvester-inertia -/
 theorem inertiaNeg_eq_card_eigenvalues_neg {A : Matrix n n ℝ} (hA : A.IsHermitian) :
@@ -197,19 +198,13 @@ theorem card_eigenvalues_lt_eq_card_neg_of_eq_mul_diagonal_mul {A : Matrix n n �
   rw [← inertiaNeg_sub_smul_one_eq_card hA x, h, ← inertiaNeg_diagonal,
     ← inertiaNeg_transpose_mul_mul (diagonal d) hLt, Matrix.transpose_transpose]
 
-/-- The `k`-th leading principal minor `det M_{1:k, 1:k}` of `M : Fin n × Fin n` (`1` for
-`k = 0`, `0` for `k > n`). Source: Golub–Van Loan (2013) [`gvl13`], §8.4.1. Helper for
-`sylvester-inertia`. -/
-def leadingMinor {m : ℕ} (M : Matrix (Fin m) (Fin m) ℝ) (k : ℕ) : ℝ :=
-  if h : k ≤ m then (M.submatrix (Fin.castLE h) (Fin.castLE h)).det else 0
-
 /-- SCAFFOLD: sylvester-inertia
 **Eigenvalue count from the leading principal minors (Sturm / Jacobi).** Let `A : Fin m × Fin m`
 be real symmetric and `p_k = det (A − xI)_{1:k, 1:k}` (`p_0 = 1`). If every `p_k` (`1 ≤ k ≤ m`)
 is nonzero, then the number of eigenvalues of `A` below `x` equals the number of sign changes
 in `p_0, p_1, …, p_m`, i.e. `#{k < m : p_k p_{k+1} < 0}`. For an unreduced symmetric
 tridiagonal `A` the `p_k` obey the Sturm three-term recurrence
-`p_{k+1} = (a_{k+1} − x) p_k − b_k² p_{k−1}`, and this count drives bisection. Source:
+`p_{k+1} = (a_{k+1} − x) p_k − b_k² p_{k−1}`, and this count drives bisection.
 Golub–Van Loan (2013) [`gvl13`], Thm 8.5.1 and §8.4.1; Parlett (1998) [`parlett98`], Ch. 3;
 Horn–Johnson (2013) [`hj13`], §4.5. Proof sketch: nonzero leading minors give `LU` of `A − xI`
 (`luSucceeds_iff_forall_det_ne_zero`, D-A's `Matrix/Factorizations/LU.lean`), symmetric so

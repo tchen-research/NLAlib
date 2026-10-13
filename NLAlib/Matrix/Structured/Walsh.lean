@@ -33,22 +33,19 @@ import Mathlib.Tactic.Ring
 /-!
 # Concrete normalized Walsh–Hadamard matrices
 
-The actual transform on `(ZMod 2)^b` has order `2^b`, constant-magnitude
+The transform on `(ZMod 2)^b` has order `2^b`, constant-magnitude
 entries and orthonormal rows and columns. Only Walsh algebra is ported;
-the classical one-sign SRHT law is constructed separately.
-Source: operator re-derivation `sh:srht`; supports atlas `srht-ose`.
+the classical one-sign SRHT law is constructed separately. supports atlas `srht-ose`.
 -/
 
 noncomputable section
 open scoped Matrix
 namespace NLAlib
 
-/-- The binary group indexing a Walsh matrix of order `2^b`.
-Source: operator re-derivation `sh:srht`. -/
+/-- The binary group indexing a Walsh matrix of order `2^b`. -/
 abbrev WalshIndex (b : ℕ) := Fin b → ZMod 2
 
-/-- The Walsh row and column index set has `2^b` elements.
-Source: operator re-derivation `sh:srht`. -/
+/-- The Walsh row and column index set has `2^b` elements. -/
 @[simp] theorem card_walshIndex (b : ℕ) : Fintype.card (WalshIndex b) = 2 ^ b := by
   simp [WalshIndex]
 
@@ -81,8 +78,7 @@ theorem sum_walshBitSign_mul (a : ZMod 2) :
   · rw [show (Finset.univ : Finset (ZMod 2)) = {0, 1} by decide]
     norm_num [walshBitSign]
 
-/-- The actual unnormalized real Walsh character.
-Source: operator re-derivation `sh:srht`. -/
+/-- The unnormalized real Walsh character. -/
 def walshCharacter {b : ℕ} (a c : WalshIndex b) : ℝ :=
   ∏ i, walshBitSign (a i * c i)
 
@@ -143,8 +139,7 @@ theorem sum_mul_walshCharacter {b : ℕ} (a c : WalshIndex b) :
   rw [sum_walshCharacter]
   simp only [walshIndex_add_eq_zero_iff]
 
-/-- The actual normalized symmetric Walsh–Hadamard matrix.
-Source: operator re-derivation `sh:srht`. -/
+/-- The normalized symmetric Walsh–Hadamard matrix. -/
 def walshMatrix (b : ℕ) : Matrix (WalshIndex b) (WalshIndex b) ℝ := fun a c =>
   (Real.sqrt (Fintype.card (WalshIndex b) : ℝ))⁻¹ * walshCharacter a c
 
@@ -179,13 +174,11 @@ theorem walshMatrix_mul_self (b : ℕ) : walshMatrix b * walshMatrix b = 1 := by
     exact hs2.symm
   · simp
 
-/-- The actual normalized Walsh matrix has orthonormal columns.
-Source: operator re-derivation `sh:srht`. -/
+/-- The normalized Walsh matrix has orthonormal columns. -/
 @[simp] theorem walshMatrix_transpose_mul_self (b : ℕ) : (walshMatrix b)ᵀ * walshMatrix b = 1 := by
   rw [walshMatrix_transpose, walshMatrix_mul_self]
 
-/-- Every normalized Walsh entry has squared magnitude `1/2^b`.
-Source: operator re-derivation `sh:srht`; the literal flatness hypothesis. -/
+/-- Every normalized Walsh entry has squared magnitude `1/2^b`. the literal flatness hypothesis. -/
 theorem walshMatrix_apply_sq (b : ℕ) (a c : WalshIndex b) :
     walshMatrix b a c ^ 2 = 1 / (2 ^ b : ℝ) := by
   rw [walshMatrix, mul_pow, walshCharacter_sq, mul_one, inv_pow,

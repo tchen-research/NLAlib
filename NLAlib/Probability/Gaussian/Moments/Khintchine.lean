@@ -12,11 +12,12 @@ Source: operator manuscript `eq:recursion`, `thm:khintchine`.
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
 open MeasureTheory ProbabilityTheory Matrix
-open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
+open scoped Matrix ComplexOrder
 namespace NLAlib
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι] {n : ℕ}
 
+open scoped Matrix.Norms.L2Operator in
 /-- The exact Gaussian matrix-series moment obeys the polynomial lower-moment
 recursion at every odd exponent. Source: manuscript `eq:recursion`, derived by
 coordinate Stein and mixed traces; supports `noncommutative-khintchine`. -/
@@ -24,12 +25,12 @@ theorem integral_re_trace_gaussianSeries_even_pow_le_recursion
     (A : Fin n → Matrix ι ι ℂ) (hA : ∀ i, (A i).IsHermitian)
     {p : ℕ} (hp : 1 ≤ p) :
     (∫ x : Fin n → ℝ, ((∑ i, x i • A i) ^ (2 * p)).trace.re
-        ∂Measure.pi (fun _ => gaussianReal 0 1)) ≤
+        ∂(gaussianVector _)) ≤
       (2 * p - 1 : ℕ) *
         ∫ x : Fin n → ℝ,
           ((∑ i, A i ^ 2) * (∑ j, x j • A j) ^ (2 * p - 2)).trace.re
-          ∂Measure.pi (fun _ => gaussianReal 0 1) := by
-  let γ := Measure.pi fun _ : Fin n => gaussianReal 0 1
+          ∂(gaussianVector _) := by
+  let γ := (gaussianVector (Fin n))
   let Y := fun x : Fin n → ℝ => ∑ i, x i • A i
   let q := 2 * p - 1
   let m := 2 * p - 2
@@ -79,6 +80,7 @@ theorem integral_re_trace_gaussianSeries_even_pow_le_recursion
   rw [hM, hW]
   simpa only [Finset.mul_sum] using hsum
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Integer noncommutative Khintchine, Gaussian polynomial form.** For the
 actual standard Gaussian coefficients and fixed complex Hermitian matrices,
 the `2p` trace moment is at most `(2p-1)^p tr((∑ Aᵢ²)^p)`. Empty coefficient
@@ -89,7 +91,7 @@ theorem integral_re_trace_gaussianSeries_pow_le
     (A : Fin n → Matrix ι ι ℂ) (hA : ∀ i, (A i).IsHermitian)
     {p : ℕ} (hp : 1 ≤ p) :
     (∫ x : Fin n → ℝ, ((∑ i, x i • A i) ^ (2 * p)).trace.re
-        ∂Measure.pi (fun _ => gaussianReal 0 1)) ≤
+        ∂(gaussianVector _)) ≤
       (2 * p - 1 : ℕ) ^ p * ((∑ i, A i ^ 2) ^ p).trace.re := by
   apply integral_re_trace_pow_le_of_polynomial_recursion
     (∑ i, A i ^ 2) (posSemidef_sum_sq_of_isHermitian A hA)

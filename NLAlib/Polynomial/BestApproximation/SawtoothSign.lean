@@ -1,7 +1,7 @@
 import NLAlib.Polynomial.BestApproximation.SawtoothZeros
 
 /-!
-# Alternating sign of the actual sawtooth interpolation error
+# Alternating sign of the sawtooth interpolation error
 
 The exhausted root count gives a root-free grid cell. The intermediate value theorem
 propagates a sign throughout a cell, and Fermat excludes equal signs on adjacent cells
@@ -16,7 +16,7 @@ open scoped Topology
 namespace NLAlib
 
 /-- The sawtooth error is nonzero strictly inside every half-period grid cell.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sawtoothError_ne_zero_of_between_grid {n j : ℕ} (hj : j ≤ n) {t : ℝ}
     (ht : t ∈ Ioo (sawtoothGridAngle n j) (sawtoothGridAngle n (j + 1))) :
     sawtoothError n t ≠ 0 := by
@@ -32,8 +32,8 @@ theorem sawtoothError_ne_zero_of_between_grid {n j : ℕ} (hj : j ≤ n) {t : �
   omega
 
 /-- A scaled sawtooth error with positive value at one point has positive value throughout
-the same root-free cell. This is the actual intermediate-value argument, not a sign premise.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+the same root-free cell. This is the intermediate-value argument, not a sign premise.
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem mul_sawtoothError_pos_of_pos_on_cell {n j : ℕ} (hj : j ≤ n) {s x y : ℝ}
     (hs : s ≠ 0) (hx : x ∈ Ioo (sawtoothGridAngle n j) (sawtoothGridAngle n (j + 1)))
     (hy : y ∈ Ioo (sawtoothGridAngle n j) (sawtoothGridAngle n (j + 1)))
@@ -45,9 +45,9 @@ theorem mul_sawtoothError_pos_of_pos_on_cell {n j : ℕ} (hj : j ≤ n) {s x y :
   obtain ⟨z, hz, hzero⟩ := isPreconnected_Ioo.intermediate_value hy hx hc.continuousOn ⟨hn, hpos.le⟩
   exact mul_ne_zero hs (sawtoothError_ne_zero_of_between_grid hj hz) hzero
 
-/-- The actual sawtooth error is positive in the first half-period grid cell, because
+/-- The sawtooth error is positive in the first half-period grid cell, because
 its origin value is pi and there are no extra zeros.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sawtoothError_pos_on_first_cell (n : ℕ) {t : ℝ}
     (ht : t ∈ Ioo (sawtoothGridAngle n 0) (sawtoothGridAngle n 1)) : 0 < sawtoothError n t := by
   have ht0 : 0 < t := by simpa [sawtoothGridAngle] using ht.1
@@ -65,10 +65,10 @@ theorem sawtoothError_pos_on_first_cell (n : ℕ) {t : ℝ}
     ⟨by simpa [sawtoothGridAngle] using hzpos, hz.2.trans_lt ht.2⟩
   exact sawtoothError_ne_zero_of_between_grid (Nat.zero_le n) hcell hzero
 
-/-- The actual sawtooth-error sign alternates on successive grid cells: the scaled error
+/-- The sawtooth-error sign alternates on successive grid cells: the scaled error
 `(-1)^j(B-τ_n)` is strictly positive. A failed sign flip would give a local extremum at a
 simple interpolation zero, contradicting Fermat's theorem.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem mul_sawtoothError_pos_on_grid_cell (n j : ℕ) (hj : j ≤ n) {t : ℝ}
     (ht : t ∈ Ioo (sawtoothGridAngle n j) (sawtoothGridAngle n (j + 1))) :
     0 < (-1 : ℝ) ^ j * sawtoothError n t := by
@@ -113,7 +113,7 @@ theorem mul_sawtoothError_pos_on_grid_cell (n j : ℕ) (hj : j ≤ n) {t : ℝ}
   exact hall j hj t ht
 
 /-- The absolute interpolation error equals its alternating signed value on each cell.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem abs_sawtoothError_eq_mul_on_grid_cell (n j : ℕ) (hj : j ≤ n) {t : ℝ}
     (ht : t ∈ Ioo (sawtoothGridAngle n j) (sawtoothGridAngle n (j + 1))) :
     |sawtoothError n t| = (-1 : ℝ) ^ j * sawtoothError n t := by
@@ -122,13 +122,13 @@ theorem abs_sawtoothError_eq_mul_on_grid_cell (n j : ℕ) (hj : j ≤ n) {t : �
   exact h
 
 /-- The odd sine interpolant has the required full-period reflection symmetry.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sawtoothApprox_two_pi_sub (n : ℕ) (t : ℝ) :
     sawtoothApprox n (2 * Real.pi - t) = -sawtoothApprox n t := by
   simp [sawtoothApprox, sin_two_pi_sub, cos_two_pi_sub]
 
 /-- The unwrapped sawtooth error changes sign under reflection about pi.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sawtoothError_two_pi_sub (n : ℕ) (t : ℝ) :
     sawtoothError n (2 * Real.pi - t) = -sawtoothError n t := by
   unfold sawtoothError

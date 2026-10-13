@@ -5,13 +5,11 @@ import NLAlib.Probability.Gaussian.Calculus.PolynomialGrowthIntegrationByParts
 /-!
 # Polynomial-growth domains of the Mehler operator
 
-Atlas: `ornstein-uhlenbeck`. Affine Gaussian moment bounds provide actual
+Atlas: `ornstein-uhlenbeck`. Affine Gaussian moment bounds provide
 integrability and polynomial spatial bounds for the existing Mehler
 operator. Its commutation relation extends to C1 functions with
 polynomially bounded values and derivatives.
 Source: Bakry--Gentil--Ledoux 2014, §2.7.1; Ledoux, §5.1.
-The differentiation-under-the-integral pattern is adapted from NLAlib
-commit `d4d0a69f38f309825f228917b75f9a2a33a91faa`.
 -/
 
 noncomputable section
@@ -63,18 +61,20 @@ theorem one_add_abs_mul_add_mul_pow_le (a b x y : ℝ) (ha : |a| ≤ 1) (hb : |b
     nlinarith [abs_nonneg x, abs_nonneg y]
   simpa only [mul_pow] using pow_le_pow_left₀ (by positivity) h2 d
 
-/-- The two nonnegative-time Mehler coefficients have absolute value at
-most one. Source: the defining exponential/square-root identity.
-Atlas: `ornstein-uhlenbeck`. -/
-theorem ornsteinUhlenbeck_coefficients_le_one {t : ℝ} (ht : 0 ≤ t) :
-    |Real.exp (-t)| ≤ 1 ∧ |Real.sqrt (1 - Real.exp (-(2 * t)))| ≤ 1 := by
-  constructor
-  · rw [abs_of_pos (Real.exp_pos _)]
-    exact Real.exp_le_one_iff.2 (by linarith)
-  · rw [abs_of_nonneg (Real.sqrt_nonneg _)]
-    have he : Real.exp (-(2 * t)) ≤ 1 := Real.exp_le_one_iff.2 (by linarith)
-    have hs := Real.sq_sqrt (by linarith : 0 ≤ 1 - Real.exp (-(2 * t)))
-    nlinarith [Real.sqrt_nonneg (1 - Real.exp (-(2 * t))), Real.exp_pos (-(2 * t))]
+/-- The first Mehler coefficient `e^{-t}` has absolute value at most one for `t ≥ 0`.
+Bakry–Gentil–Ledoux 2014, §2.7.1. -/
+theorem abs_exp_neg_le_one {t : ℝ} (ht : 0 ≤ t) : |Real.exp (-t)| ≤ 1 := by
+  rw [abs_of_pos (Real.exp_pos _)]
+  exact Real.exp_le_one_iff.2 (by linarith)
+
+/-- The second Mehler coefficient `√(1 - e^{-2t})` has absolute value at most one for `t ≥ 0`.
+Bakry–Gentil–Ledoux 2014, §2.7.1. -/
+theorem abs_sqrt_one_sub_exp_neg_le_one {t : ℝ} (ht : 0 ≤ t) :
+    |Real.sqrt (1 - Real.exp (-(2 * t)))| ≤ 1 := by
+  rw [abs_of_nonneg (Real.sqrt_nonneg _)]
+  have he : Real.exp (-(2 * t)) ≤ 1 := Real.exp_le_one_iff.2 (by linarith)
+  have hs := Real.sq_sqrt (by linarith : 0 ≤ 1 - Real.exp (-(2 * t)))
+  nlinarith [Real.sqrt_nonneg (1 - Real.exp (-(2 * t))), Real.exp_pos (-(2 * t))]
 
 /-- A polynomial spatial majorant for the Mehler conditional expectation,
 with a literal finite Gaussian moment rather than a moment hypothesis.
@@ -89,7 +89,8 @@ theorem abs_ornsteinUhlenbeck_le_polynomial {f : ℝ → ℝ} (hf : Measurable f
     have h := hValue 0
     simp only [abs_zero, add_zero, one_pow, mul_one] at h
     exact (abs_nonneg _).trans h
-  obtain ⟨ha, hb⟩ := ornsteinUhlenbeck_coefficients_le_one ht
+  have ha := abs_exp_neg_le_one ht
+  have hb := abs_sqrt_one_sub_exp_neg_le_one ht
   unfold ornsteinUhlenbeck
   have hdom : Integrable (fun y : ℝ => C * (1 + |x|) ^ d * (1 + |y|) ^ d)
       (gaussianReal 0 1) := (integrable_one_add_abs_pow_gaussianReal d).const_mul _
@@ -235,21 +236,22 @@ theorem continuousAt_ornsteinUhlenbeck_time_of_polynomial_growth {f : ℝ → �
   filter_upwards [hnear] with s hs
   exact ae_of_all _ fun y => by
     rw [Real.norm_eq_abs]
-    obtain ⟨ha, hb⟩ := ornsteinUhlenbeck_coefficients_le_one hs.le
+    have ha := abs_exp_neg_le_one hs.le
+    have hb := abs_sqrt_one_sub_exp_neg_le_one hs.le
     exact (hValue _).trans (by
       have h := mul_le_mul_of_nonneg_left
         (one_add_abs_mul_add_mul_pow_le _ _ x y ha hb d) hC
       simpa only [mul_assoc] using h)
 
 /-- Fisher integrand of the Mehler operator, written using its explicit
-commutation relation. The next bridge identifies it with the actual
+commutation relation. The next bridge identifies it with the
 spatial derivative on the polynomial-growth domain.
 Source: Bakry--Gentil--Ledoux, §5.7. Atlas: `ornstein-uhlenbeck`.
 atlas: ornstein-uhlenbeck -/
 def ornsteinUhlenbeckFisherIntegrand (t : ℝ) (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   (Real.exp (-t) * ornsteinUhlenbeck t (deriv f) x) ^ 2 / ornsteinUhlenbeck t f x
 
-/-- The commutation form of the Fisher integrand equals its actual
+/-- The commutation form of the Fisher integrand equals its
 derivative form. Source: the proved polynomial-growth commutation
 relation. Atlas: `ornstein-uhlenbeck`. -/
 theorem ornsteinUhlenbeckFisherIntegrand_eq (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f)
@@ -387,7 +389,7 @@ theorem integrable_ornsteinUhlenbeck_mul_log_of_polynomial_growth {f : ℝ → �
   nlinarith
 
 /-- A time-uniform finite bound on integrated Fisher information for
-nonnegative times. All moments are actual Gaussian integrals, and
+nonnegative times. All moments are Gaussian integrals, and
 their finiteness is derived. Source: the Gaussian polynomial dominator.
 Atlas: `ornstein-uhlenbeck`. -/
 theorem abs_integral_ornsteinUhlenbeckFisherIntegrand_le {f : ℝ → ℝ} (hf : Measurable f)

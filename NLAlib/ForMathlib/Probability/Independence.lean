@@ -15,7 +15,7 @@ If `X` and `Y` are independent, `E g(X, Y) = ∫ (∫ g(x, y) d(law Y)(y)) d(law
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
-namespace NLAlib
+namespace ProbabilityTheory
 
 variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
 
@@ -58,4 +58,4 @@ theorem integral_of_indepFun {α β : Type*} [MeasurableSpace α] [MeasurableSpa
     _ = ∫ p : α × β, g p.1 p.2 ∂((μ.map X).prod (μ.map Y)) := by rw [h]
     _ = _ := integral_prod _ hg
 
-end NLAlib
+end ProbabilityTheory

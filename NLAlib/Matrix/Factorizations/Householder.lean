@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Factorizations.QR
+import NLAlib.Matrix.Norms.Core
 /-!
 # Householder reflectors and Householder QR
 
@@ -34,6 +35,12 @@ open Matrix
 
 namespace NLAlib
 
+/-- `‖x‖₂ = √(x ⬝ x)` for real vectors (proof helper; the squared bridge is
+`norm_toLp_sq_eq_dotProduct_self`). -/
+private theorem norm_toLp_eq_sqrt_dotProduct_self {ι : Type*} [Fintype ι] (x : ι → ℝ) :
+    ‖(WithLp.toLp 2 x : EuclideanSpace ℝ ι)‖ = √(x ⬝ᵥ x) := by
+  rw [← norm_toLp_sq_eq_dotProduct_self, Real.sqrt_sq (norm_nonneg _)]
+
 /-! ### Reflectors -/
 
 section Reflector
@@ -51,10 +58,11 @@ def householder (v : m → ℝ) : Matrix m m ℝ := 1 - (2 / (v ⬝ᵥ v)) • v
 theorem householder_zero : householder (0 : m → ℝ) = 1 := by
   simp [householder]
 
-/-- `H_v x = x − (2 vᵀx / vᵀv) v`. Trefethen–Bau 1997, Lect. 10. -/
+/-- `H_v x = x − (2 vᵀx / ‖v‖²) v`. Trefethen–Bau 1997, Lect. 10. -/
 theorem householder_mulVec (v x : m → ℝ) :
-    householder v *ᵥ x = x - (2 * (v ⬝ᵥ x) / (v ⬝ᵥ v)) • v := by
-  rw [householder, sub_mulVec, one_mulVec, smul_mulVec, vecMulVec_mulVec]
+    householder v *ᵥ x = x - (2 * (v ⬝ᵥ x) / ‖(WithLp.toLp 2 v : EuclideanSpace ℝ m)‖ ^ 2) • v := by
+  rw [norm_toLp_sq_eq_dotProduct_self, householder, sub_mulVec, one_mulVec, smul_mulVec,
+    vecMulVec_mulVec]
   ext i
   simp only [Pi.sub_apply, Pi.smul_apply, MulOpposite.smul_eq_mul_unop, MulOpposite.unop_op,
     smul_eq_mul]
@@ -97,7 +105,7 @@ theorem hasOrthonormalCols_householder (v : m → ℝ) : HasOrthonormalCols (hou
 /-- `H_v v = −v`. Trefethen–Bau 1997, Lect. 10; Golub–Van Loan 2013, §5.1.2.
 atlas: householder-reflector-def -/
 theorem householder_mulVec_self (v : m → ℝ) : householder v *ᵥ v = -v := by
-  rw [householder_mulVec]
+  rw [householder_mulVec, norm_toLp_sq_eq_dotProduct_self]
   by_cases hv : v ⬝ᵥ v = 0
   · rw [dotProduct_self_eq_zero.1 hv]; simp
   · rw [mul_div_assoc, div_self hv, mul_one, two_smul]; abel
@@ -138,7 +146,8 @@ Trefethen–Bau 1997, Lect. 10 (eq. (10.5) and Fig. 10.2); Golub–Van Loan 2013
 atlas: householder-reflector-def -/
 theorem householder_mulVec_householderVector (x : m → ℝ) (i₀ : m) :
     householder (householderVector x i₀) *ᵥ x =
-      (-(householderSign (x i₀) * √(x ⬝ᵥ x))) • Pi.single i₀ 1 := by
+      (-(householderSign (x i₀) * ‖(WithLp.toLp 2 x : EuclideanSpace ℝ m)‖)) • Pi.single i₀ 1 := by
+  rw [norm_toLp_eq_sqrt_dotProduct_self]
   set σ := householderSign (x i₀)
   set ν := √(x ⬝ᵥ x)
   set v := householderVector x i₀
@@ -155,7 +164,7 @@ theorem householder_mulVec_householderVector (x : m → ℝ) (i₀ : m) :
       single_dotProduct, dotProduct_single, smul_eq_mul, one_mul, mul_one, Pi.add_apply,
       Pi.smul_apply, Pi.single_eq_same]
     linear_combination ha
-  rw [householder_mulVec]
+  rw [householder_mulVec, norm_toLp_sq_eq_dotProduct_self]
   by_cases h0 : v ⬝ᵥ x = 0
   · have hv0 : v = 0 := dotProduct_self_eq_zero.1 (by rw [hvv, h0, mul_zero])
     have hx : x = (-(σ * ν)) • Pi.single i₀ 1 := by
@@ -229,23 +238,35 @@ theorem length_householderQR_fst (A : Matrix (Fin m) (Fin n) ℝ) :
     | zero => simp [householderQR]
     | succ n => simp [householderQR, ih, Nat.succ_min_succ]
 
-/-- A product of orthogonal matrices is orthogonal. -/
-theorem transpose_list_prod_mul_self {k : Type*} [Fintype k] [DecidableEq k]
-    (l : List (Matrix k k ℝ)) (hl : ∀ M ∈ l, Mᵀ * M = 1) : l.prodᵀ * l.prod = 1 := by
+/-- A product of matrices with orthonormal columns (square, so orthogonal) is orthogonal. -/
+theorem hasOrthonormalCols_list_prod {k : Type*} [Fintype k] [DecidableEq k]
+    (l : List (Matrix k k ℝ)) (hl : ∀ M ∈ l, HasOrthonormalCols M) :
+    HasOrthonormalCols l.prod := by
   induction l with
-  | nil => simp
+  | nil => simp [HasOrthonormalCols]
   | cons M l ih =>
-    rw [List.prod_cons, Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Mᵀ,
-      hl M (List.mem_cons_self), Matrix.one_mul,
-      ih fun N hN => hl N (List.mem_cons_of_mem _ hN)]
+    have hM : Mᵀ * M = 1 := by
+      have h := (hl M List.mem_cons_self).conjTranspose_mul_self
+      rwa [Matrix.conjTranspose_eq_transpose_of_trivial] at h
+    have hl' : l.prodᵀ * l.prod = 1 := by
+      have h := (ih fun N hN => hl N (List.mem_cons_of_mem _ hN)).conjTranspose_mul_self
+      rwa [Matrix.conjTranspose_eq_transpose_of_trivial] at h
+    rw [HasOrthonormalCols, Matrix.conjTranspose_eq_transpose_of_trivial, List.prod_cons,
+      Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Mᵀ, hM, Matrix.one_mul, hl']
 
 /-- The Householder `Q` is orthogonal (no hypothesis). Trefethen–Bau 1997, Lect. 10.
 atlas: householder-qr -/
-theorem householderQ_transpose_mul_self (A : Matrix (Fin m) (Fin n) ℝ) :
-    (householderQ A)ᵀ * householderQ A = 1 :=
-  transpose_list_prod_mul_self _ fun M hM => by
+theorem hasOrthonormalCols_householderQ (A : Matrix (Fin m) (Fin n) ℝ) :
+    HasOrthonormalCols (householderQ A) :=
+  hasOrthonormalCols_list_prod _ fun M hM => by
     obtain ⟨v, -, rfl⟩ := List.mem_map.1 hM
-    exact householder_transpose_mul_self v
+    exact hasOrthonormalCols_householder v
+
+/-- `QᵀQ = I` for the Householder `Q` (proof-helper form of `hasOrthonormalCols_householderQ`). -/
+theorem householderQ_transpose_mul_self (A : Matrix (Fin m) (Fin n) ℝ) :
+    (householderQ A)ᵀ * householderQ A = 1 := by
+  have h := (hasOrthonormalCols_householderQ A).conjTranspose_mul_self
+  rwa [Matrix.conjTranspose_eq_transpose_of_trivial] at h
 
 /-- The Householder `R` is upper trapezoidal (no hypothesis). Trefethen–Bau 1997, Alg. 10.1.
 atlas: householder-qr -/
@@ -294,7 +315,7 @@ theorem isFullQR_householderQR : ∀ {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ
       householderQ_transpose_mul_self A, isUpperTrapezoidal_householderR A⟩
   | m + 1, n + 1, A => by
     set H := householder (householderVector (A.col 0) 0) with hHdef
-    have hW : Hᵀ * H = 1 := householder_transpose_mul_self _
+    have hW : HasOrthonormalCols H := hasOrthonormalCols_householder _
     have hB : ∀ i : Fin m, (Hᵀ * A) i.succ 0 = 0 := by
       intro i
       rw [hHdef, householder_transpose]

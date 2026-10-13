@@ -23,7 +23,7 @@ def IsUpperQuasiTriangular {k : ℕ} {K : Type*} [Zero K]
   (∀ i j, j.val + 1 < i.val → T i j = 0) ∧
   (∀ i j l, j.val + 1 = i.val → l.val + 1 = j.val → T i j = 0 ∨ T j l = 0)
 
-/-- Every upper triangular matrix is upper quasitriangular. Source:
+/-- Every upper triangular matrix is upper quasitriangular.
 Horn–Johnson (2013), §2.3; all diagonal blocks may be taken scalar. -/
 theorem isUpperQuasiTriangular_of_isUpperTriangular
     {k : ℕ} {K : Type*} [Zero K] {T : Matrix (Fin k) (Fin k) K}

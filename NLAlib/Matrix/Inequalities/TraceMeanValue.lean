@@ -5,20 +5,19 @@ import NLAlib.Matrix.Inequalities.TraceYoung
 The overlap of two separate Hermitian eigenbases reduces the trace inequality
 to an odd-power scalar inequality. This is the deterministic input to the
 individual sign-flip proof for integer noncommutative Khintchine moments.
-Source: operator manuscript `lem:meanvalue`.
+Source: Tropp 2015, §4.8 (polynomial trace method); Buchholz 2001.
 -/
 
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
-open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
+open scoped Matrix ComplexOrder
 open Matrix
 namespace NLAlib
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The quadratic trace of a Hermitian difference expands into three
-polynomial traces. Source: cyclicity in manuscript `lem:meanvalue`;
-supports `noncommutative-khintchine`. -/
+polynomial traces, by cyclicity of the trace; supports `noncommutative-khintchine`. -/
 theorem re_trace_sub_sq_mul_pow (H K : Matrix ι ι ℂ) (m : ℕ) :
     ((H - K) ^ 2 * H ^ m).trace.re =
       (H ^ (m + 2)).trace.re + (H ^ m * K ^ 2).trace.re -
@@ -40,8 +39,8 @@ theorem re_trace_sub_sq_mul_pow (H K : Matrix ι ι ℂ) (m : ℕ) :
 
 /-- **Polynomial trace mean-value inequality.** At every odd power `m+1`,
 where `m` is even, the Hermitian difference is bounded by the average of
-the two endpoint quadratic traces. Source: manuscript `lem:meanvalue`;
-supports `noncommutative-khintchine`. The matrices may fail to commute. -/
+the two endpoint quadratic traces; the matrices need not commute. Tropp 2015, §4.8;
+supports `noncommutative-khintchine`. -/
 theorem re_trace_sub_mul_sub_pow_le
     (H K : Matrix ι ι ℂ) (hH : H.IsHermitian) (hK : K.IsHermitian)
     {m : ℕ} (hm : Even m) :

@@ -13,11 +13,12 @@ Source: operator manuscript `eq:recursion`, `thm:khintchine`.
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
 open MeasureTheory Matrix
-open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
+open scoped Matrix ComplexOrder
 namespace NLAlib
 
 variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A single coordinate sign flip gives the exact odd-power trace recursion
 for that Hermitian coefficient. Source: manuscript Rademacher sign-flip
 argument; supports `noncommutative-khintchine`. -/
@@ -25,11 +26,11 @@ theorem integral_coordinate_mul_re_trace_mul_rademacherSeries_pow_le
     (A : κ → Matrix ι ι ℂ) (hA : ∀ j, (A j).IsHermitian)
     (i : κ) {m : ℕ} (hm : Even m) :
     (∫ x : κ → ℝ, x i * (A i * (∑ j, x j • A j) ^ (m + 1)).trace.re
-        ∂Measure.pi (fun _ => rademacherMeasure)) ≤
+        ∂(rademacherVector _)) ≤
       (m + 1 : ℕ) *
         ∫ x : κ → ℝ, (A i ^ 2 * (∑ j, x j • A j) ^ m).trace.re
-          ∂Measure.pi (fun _ => rademacherMeasure) := by
-  let μ := Measure.pi fun _ : κ => rademacherMeasure
+          ∂(rademacherVector _) := by
+  let μ := (rademacherVector κ)
   let Y := fun x : κ → ℝ => ∑ j, x j • A j
   let T := fun x : κ → ℝ => Function.update x i (-x i)
   let f := fun x : κ → ℝ => x i * (A i * Y x ^ (m + 1)).trace.re
@@ -50,7 +51,7 @@ theorem integral_coordinate_mul_re_trace_mul_rademacherSeries_pow_le
   have hfi : Integrable f μ :=
     integrable_coordinate_mul_re_trace_mul_rademacherSeries_pow A (A i) (m + 1) i
   have hgi : Integrable g μ := integrable_re_trace_mul_rademacherSeries_pow A (A i ^ 2) m
-  have hmp := measurePreserving_update_neg_pi_rademacherMeasure i
+  have hmp := measurePreserving_update_neg_rademacherVector i
   have hTfi : Integrable (fun x => f (T x)) μ := hmp.integrable_comp_of_integrable hfi
   have hTgi : Integrable (fun x => g (T x)) μ := hmp.integrable_comp_of_integrable hgi
   have hYi (x) : (Y x).IsHermitian := isHermitian_sum_smul_real A hA x
@@ -85,10 +86,11 @@ theorem integral_coordinate_mul_re_trace_mul_rademacherSeries_pow_le
     ((hgi.add hTgi).const_mul (2 * (m + 1 : ℕ))) hpoint
   simp only [Pi.add_apply] at hi
   rw [integral_const_mul, integral_const_mul, integral_add hfi hTfi,
-    integral_add hgi hTgi, integral_update_neg_pi_rademacherMeasure i f hf.measurable,
-    integral_update_neg_pi_rademacherMeasure i g hg.measurable] at hi
+    integral_add hgi hTgi, integral_update_neg_rademacherVector i f hf.measurable,
+    integral_update_neg_rademacherVector i g hg.measurable] at hi
   linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- The exact Rademacher matrix-series even moment obeys the polynomial
 lower-moment recursion. Source: individual sign flips in manuscript
 `eq:recursion`; supports `noncommutative-khintchine`. -/
@@ -96,12 +98,12 @@ theorem integral_re_trace_rademacherSeries_even_pow_le_recursion
     (A : κ → Matrix ι ι ℂ) (hA : ∀ i, (A i).IsHermitian)
     {p : ℕ} (hp : 1 ≤ p) :
     (∫ x : κ → ℝ, ((∑ i, x i • A i) ^ (2 * p)).trace.re
-        ∂Measure.pi (fun _ => rademacherMeasure)) ≤
+        ∂(rademacherVector _)) ≤
       (2 * p - 1 : ℕ) *
         ∫ x : κ → ℝ,
           ((∑ i, A i ^ 2) * (∑ j, x j • A j) ^ (2 * p - 2)).trace.re
-          ∂Measure.pi (fun _ => rademacherMeasure) := by
-  let μ := Measure.pi fun _ : κ => rademacherMeasure
+          ∂(rademacherVector _) := by
+  let μ := (rademacherVector κ)
   let Y := fun x : κ → ℝ => ∑ i, x i • A i
   let q := 2 * p - 1
   let m := 2 * p - 2
@@ -132,6 +134,7 @@ theorem integral_re_trace_rademacherSeries_even_pow_le_recursion
   rw [hM, hW]
   simpa only [Finset.mul_sum] using hsum
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Integer noncommutative Khintchine, Rademacher polynomial form.** Fixed
 complex Hermitian coefficient matrices under the actual product sign law
 obey the exact `(2p-1)^p` trace-moment bound. Source: manuscript
@@ -142,7 +145,7 @@ theorem integral_re_trace_rademacherSeries_pow_le
     (A : κ → Matrix ι ι ℂ) (hA : ∀ i, (A i).IsHermitian)
     {p : ℕ} (hp : 1 ≤ p) :
     (∫ x : κ → ℝ, ((∑ i, x i • A i) ^ (2 * p)).trace.re
-        ∂Measure.pi (fun _ => rademacherMeasure)) ≤
+        ∂(rademacherVector _)) ≤
       (2 * p - 1 : ℕ) ^ p * ((∑ i, A i ^ 2) ^ p).trace.re := by
   apply integral_re_trace_pow_le_of_polynomial_recursion
     (∑ i, A i ^ 2) (posSemidef_sum_sq_of_isHermitian A hA)

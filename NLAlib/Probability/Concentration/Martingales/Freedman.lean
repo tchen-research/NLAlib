@@ -14,10 +14,11 @@ The original crossing is retained without a limit or a loss in the constant.
 noncomputable section
 
 open MeasureTheory Matrix Finset Filter Set
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder ENNReal
+open scoped MatrixOrder ComplexOrder ENNReal
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- The arbitrary-time upper matrix Freedman inequality on an arbitrary probability
 space. Increments are adapted integrable Hermitian matrices, actually conditionally
 centered, and bounded only above by `L I`. Predictable finite PSD variance increments
@@ -39,8 +40,8 @@ theorem matrix_freedman
     (hLocal : ∀ j, HasLocalMatrixSecondMoment μ (ℱ j) (X j) (V j))
     {L t v : ℝ} (hL : 0 ≤ L) (ht : 0 ≤ t) (hv : 0 < v)
     (hBound : ∀ j, ∀ᵐ ω ∂μ, X j ω ≤ algebraMap ℝ (Matrix n n ℂ) L) :
-    (μ {ω | ∃ k, t ≤ lambdaMax (matrixIncrementSum X k ω) ∧
-        ‖matrixIncrementSum V k ω‖ ≤ v}).toReal ≤
+    μ.real {ω | ∃ k, t ≤ lambdaMax (matrixIncrementSum X k ω) ∧
+        ‖matrixIncrementSum V k ω‖ ≤ v} ≤
       Fintype.card n * Real.exp (-(t ^ 2 / (2 * (v + L * t / 3)))) := by
   by_cases htp : 0 < t
   · obtain ⟨θ, hθ, hθL, hopt⟩ := exists_pos_mul_lt_three_bernstein_exponent_eq htp hv hL

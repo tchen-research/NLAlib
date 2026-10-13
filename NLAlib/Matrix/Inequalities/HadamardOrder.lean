@@ -11,7 +11,7 @@ atlas `schur-product-inequalities`.
 
 noncomputable section
 open Matrix
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -43,12 +43,12 @@ theorem posDef_hadamard_of_posDef_of_diag_pos {A B : Matrix n n ℝ}
     exact posDef_of_posDef_le ((Matrix.PosDef.diagonal hdiag).smul ha) hle
 
 omit [DecidableEq n] in
-/-- For symmetric real comparands, absolute quadratic dominance is equivalent
-to positivity of their sum and difference. Horn--Johnson (2013),
-Lemma 7.8.15; helper for Hadamard dominance preservation. -/
-theorem abs_quadForm_le_iff_add_sub_posSemidef {A B : Matrix n n ℝ}
+/-- For Hermitian `A`, `B`: `|xᵀ B x| ≤ xᵀ A x` for every `x` iff `-A ≤ B ≤ A` in the Loewner
+order. Horn–Johnson 2013, Lemma 7.8.15. -/
+theorem abs_quadForm_le_iff_neg_le_and_le {A B : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) :
-    (∀ x, |quadForm B x| ≤ quadForm A x) ↔ (A + B).PosSemidef ∧ (A - B).PosSemidef := by
+    (∀ x, |quadForm B x| ≤ quadForm A x) ↔ -A ≤ B ∧ B ≤ A := by
+  rw [Matrix.le_iff, Matrix.le_iff, sub_neg_eq_add, add_comm]
   constructor
   · intro h
     constructor
@@ -70,41 +70,59 @@ theorem abs_quadForm_le_iff_add_sub_posSemidef {A B : Matrix n n ℝ}
     constructor <;> linarith
 
 omit [Fintype n] [DecidableEq n] in
-/-- Hadamard products preserve the sum-and-difference PSD dominance of two
-Hermitian pairs. Hermitian comparands are the necessary scope of the source
-quadratic-dominance refinement. Horn--Johnson (2013), Theorem 7.8.16.
+/-- **Hadamard products preserve Loewner sandwiches, lower bound.** If `-A ≤ B ≤ A` and
+`-C ≤ D ≤ C` then `-(A ⊙ C) ≤ B ⊙ D`. Horn–Johnson 2013, Theorem 7.8.16.
 atlas: schur-product-inequalities (partial) -/
-theorem hadamard_add_sub_posSemidef_of_add_sub_posSemidef
-    {A B C D : Matrix n n ℝ} (hABp : (A + B).PosSemidef) (hABm : (A - B).PosSemidef)
-    (hCDp : (C + D).PosSemidef) (hCDm : (C - D).PosSemidef) :
-    (A ⊙ C + B ⊙ D).PosSemidef ∧ (A ⊙ C - B ⊙ D).PosSemidef := by
-  constructor
-  · have he : (1 / 2 : ℝ) • ((A + B) ⊙ (C + D) + (A - B) ⊙ (C - D)) = A ⊙ C + B ⊙ D := by
-      ext i j
-      simp only [Matrix.hadamard_apply, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, smul_eq_mul]
-      ring
-    rw [← he]
-    exact ((hABp.hadamard hCDp).add (hABm.hadamard hCDm)).smul (by norm_num : (0 : ℝ) ≤ 1 / 2)
-  · have he : (1 / 2 : ℝ) • ((A + B) ⊙ (C - D) + (A - B) ⊙ (C + D)) = A ⊙ C - B ⊙ D := by
-      ext i j
-      simp only [Matrix.hadamard_apply, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, smul_eq_mul]
-      ring
-    rw [← he]
-    exact ((hABp.hadamard hCDm).add (hABm.hadamard hCDp)).smul (by norm_num : (0 : ℝ) ≤ 1 / 2)
+theorem neg_hadamard_le_hadamard_of_neg_le_of_le {A B C D : Matrix n n ℝ}
+    (hAB : -A ≤ B) (hBA : B ≤ A) (hCD : -C ≤ D) (hDC : D ≤ C) : -(A ⊙ C) ≤ B ⊙ D := by
+  have hABp : (A + B).PosSemidef := by
+    rw [Matrix.le_iff, sub_neg_eq_add, add_comm] at hAB; exact hAB
+  have hABm : (A - B).PosSemidef := Matrix.le_iff.mp hBA
+  have hCDp : (C + D).PosSemidef := by
+    rw [Matrix.le_iff, sub_neg_eq_add, add_comm] at hCD; exact hCD
+  have hCDm : (C - D).PosSemidef := Matrix.le_iff.mp hDC
+  rw [Matrix.le_iff, sub_neg_eq_add]
+  have he : (1 / 2 : ℝ) • ((A + B) ⊙ (C + D) + (A - B) ⊙ (C - D)) = B ⊙ D + A ⊙ C := by
+    ext i j
+    simp only [Matrix.hadamard_apply, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply,
+      smul_eq_mul]
+    ring
+  rw [← he]
+  exact ((hABp.hadamard hCDp).add (hABm.hadamard hCDm)).smul (by norm_num : (0 : ℝ) ≤ 1 / 2)
+
+omit [Fintype n] [DecidableEq n] in
+/-- **Hadamard products preserve Loewner sandwiches, upper bound.** If `-A ≤ B ≤ A` and
+`-C ≤ D ≤ C` then `B ⊙ D ≤ A ⊙ C`. Horn–Johnson 2013, Theorem 7.8.16.
+atlas: schur-product-inequalities (partial) -/
+theorem hadamard_le_hadamard_of_neg_le_of_le {A B C D : Matrix n n ℝ}
+    (hAB : -A ≤ B) (hBA : B ≤ A) (hCD : -C ≤ D) (hDC : D ≤ C) : B ⊙ D ≤ A ⊙ C := by
+  have hABp : (A + B).PosSemidef := by
+    rw [Matrix.le_iff, sub_neg_eq_add, add_comm] at hAB; exact hAB
+  have hABm : (A - B).PosSemidef := Matrix.le_iff.mp hBA
+  have hCDp : (C + D).PosSemidef := by
+    rw [Matrix.le_iff, sub_neg_eq_add, add_comm] at hCD; exact hCD
+  have hCDm : (C - D).PosSemidef := Matrix.le_iff.mp hDC
+  rw [Matrix.le_iff]
+  have he : (1 / 2 : ℝ) • ((A + B) ⊙ (C - D) + (A - B) ⊙ (C + D)) = A ⊙ C - B ⊙ D := by
+    ext i j
+    simp only [Matrix.hadamard_apply, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply,
+      smul_eq_mul]
+    ring
+  rw [← he]
+  exact ((hABp.hadamard hCDm).add (hABm.hadamard hCDp)).smul (by norm_num : (0 : ℝ) ≤ 1 / 2)
 
 omit [DecidableEq n] in
-/-- Absolute quadratic dominance is preserved by Hadamard multiplication
-of two real symmetric pairs. The symmetry hypotheses repair the invalid
-extension to arbitrary nonsymmetric comparands.
-Horn--Johnson (2013), Theorem 7.8.16.
+/-- Absolute quadratic dominance `|xᵀ B x| ≤ xᵀ A x` is preserved by the Hadamard product of
+two Hermitian pairs. Horn–Johnson 2013, Theorem 7.8.16.
 atlas: schur-product-inequalities (partial) -/
 theorem abs_quadForm_hadamard_le_of_abs_quadForm_le {A B C D : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) (hC : C.IsHermitian) (hD : D.IsHermitian)
     (hAB : ∀ x, |quadForm B x| ≤ quadForm A x) (hCD : ∀ x, |quadForm D x| ≤ quadForm C x) :
     ∀ x, |quadForm (B ⊙ D) x| ≤ quadForm (A ⊙ C) x := by
-  have hp := (abs_quadForm_le_iff_add_sub_posSemidef hA hB).mp hAB
-  have hq := (abs_quadForm_le_iff_add_sub_posSemidef hC hD).mp hCD
-  exact (abs_quadForm_le_iff_add_sub_posSemidef (hA.hadamard hC) (hB.hadamard hD)).mpr
-    (hadamard_add_sub_posSemidef_of_add_sub_posSemidef hp.1 hp.2 hq.1 hq.2)
+  have hp := (abs_quadForm_le_iff_neg_le_and_le hA hB).mp hAB
+  have hq := (abs_quadForm_le_iff_neg_le_and_le hC hD).mp hCD
+  exact (abs_quadForm_le_iff_neg_le_and_le (hA.hadamard hC) (hB.hadamard hD)).mpr
+    ⟨neg_hadamard_le_hadamard_of_neg_le_of_le hp.1 hp.2 hq.1 hq.2,
+      hadamard_le_hadamard_of_neg_le_of_le hp.1 hp.2 hq.1 hq.2⟩
 
 end NLAlib

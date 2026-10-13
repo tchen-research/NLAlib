@@ -14,10 +14,11 @@ Atlas: `matrix-chernoff`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Lemma 5.4.1, printed p. 70.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Scalar chord bound: `exp (θ x) ≤ 1 + g x` on `[0, L]`. -/
 private lemma scalar_bound (L θ x : ℝ) (hL : 0 ≤ L) (hx0 : 0 ≤ x) (hxL : x ≤ L) :
     Real.exp (θ * x) ≤ 1 + chernoffCgfCoefficient L θ * x := by
@@ -37,6 +38,7 @@ private lemma scalar_bound (L θ x : ℝ) (hL : 0 ≤ L) (hx0 : 0 ≤ x) (hxL : 
       _ ≤ (1 - t) + t * Real.exp (θ * L) := hc
       _ = 1 + (Real.exp (θ * L) - 1) / L * x := by rw [hxe]; field_simp; ring
 
+open scoped Matrix.Norms.L2Operator in
 private lemma spec_mem {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
     (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) : ∀ x ∈ spectrum ℝ A, 0 ≤ x ∧ x ≤ L := by
   intro x hx
@@ -44,11 +46,13 @@ private lemma spec_mem {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHerm
     rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
   exact ⟨hB.1.trans (csInf_le hfin.bddBelow hx), (le_csSup hfin.bddAbove hx).trans hB.2⟩
 
+open scoped Matrix.Norms.L2Operator in
 private lemma affine_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (c : ℝ) :
     (1 : Matrix (Fin d) (Fin d) ℂ) + c • A = cfc (fun x : ℝ => 1 + c * x) A := by
   rw [cfc_const_add 1 (fun x : ℝ => c * x) A (by fun_prop) hA.isSelfAdjoint,
     cfc_const_mul_id c A hA.isSelfAdjoint, map_one]
 
+open scoped Matrix.Norms.L2Operator in
 private lemma pointwise {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L θ : ℝ)
     (hL : 0 ≤ L) (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) :
     matrixExp (θ • A) ≤ 1 + chernoffCgfCoefficient L θ • A := by
@@ -57,6 +61,7 @@ private lemma pointwise {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHer
   have := spec_mem A hA L hB x hx
   exact scalar_bound L θ x hL this.1 this.2
 
+open scoped Matrix.Norms.L2Operator in
 private lemma norm_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
     (hL : 0 ≤ L) (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) : ‖A‖ ≤ L := by
   have h := norm_cfc_le (a := A) (f := fun x : ℝ => x) hL (fun x hx => by
@@ -64,6 +69,7 @@ private lemma norm_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA 
     rw [Real.norm_eq_abs, abs_of_nonneg this.1]; exact this.2)
   rwa [cfc_id' ℝ A hA.isSelfAdjoint] at h
 
+open scoped Matrix.Norms.L2Operator in
 private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
     (L θ : ℝ) (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) :
     ‖matrixExp (θ • A)‖ ≤ Real.exp (|θ| * L) := by
@@ -77,12 +83,14 @@ private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) 
     _ = |θ| * x := by rw [abs_mul, abs_of_nonneg this.1]
     _ ≤ |θ| * L := mul_le_mul_of_nonneg_left this.2 (abs_nonneg θ)
 
+open scoped Matrix.Norms.L2Operator in
 private lemma nonneg {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) (L : ℝ)
     (hB : 0 ≤ lambdaMin A ∧ lambdaMax A ≤ L) : (0 : Matrix (Fin d) (Fin d) ℂ) ≤ A := by
   have h : (0 : Matrix (Fin d) (Fin d) ℂ) ≤ cfc (fun x : ℝ => x) A :=
     cfc_nonneg (fun x hx => (spec_mem A hA L hB x hx).1)
   rwa [cfc_id' ℝ A hA.isSelfAdjoint] at h
 
+open scoped Matrix.Norms.L2Operator in
 private lemma one_add_le_exp {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.IsHermitian) :
     1 + B ≤ matrixExp B := by
   have e1 : (1 : Matrix (Fin d) (Fin d) ℂ) + B = cfc (fun x : ℝ => 1 + x) B := by
@@ -92,6 +100,7 @@ private lemma one_add_le_exp {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.
   refine cfc_mono (fun x _ => ?_) (by fun_prop) (by fun_prop)
   linarith [Real.add_one_le_exp x]
 
+open scoped Matrix.Norms.L2Operator in
 private lemma log_one_add_le {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hpd : (1 + B).PosDef) :
     matrixLog (1 + B) ≤ B := by
   have hH : (1 + B).IsHermitian := hpd.isHermitian
@@ -109,10 +118,19 @@ private lemma log_one_add_le {d : ℕ} (B : Matrix (Fin d) (Fin d) ℂ) (hpd : (
         exact Real.continuousOn_log.mono (fun y hy => (hspec y hy).ne')
     _ = B := e2
 
+
+open scoped Matrix.Norms.L2Operator in
+/-- The smallest eigenvalue of a positive semidefinite matrix is nonnegative. -/
+theorem lambdaMin_nonneg_of_posSemidef {d : ℕ} [NeZero d] (P : Matrix (Fin d) (Fin d) ℂ)
+    (hP : P.PosSemidef) : 0 ≤ lambdaMin P := by
+  unfold lambdaMin
+  rw [hP.isHermitian.spectrum_real_eq_range_eigenvalues]
+  exact le_csInf (Set.range_nonempty _) (by rintro _ ⟨i, rfl⟩; exact hP.eigenvalues_nonneg i)
 end NLAlib
 
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- For a random positive semidefinite `X` with `λmax X ≤ L`, `𝔼 matrixExp (θ • X) ≼ matrixExp (g(θ) •
 𝔼 X)` and `matrixLog 𝔼 matrixExp (θ • X) ≼ g(θ) • 𝔼 X`, where `g = chernoffCgfCoefficient L`.
 

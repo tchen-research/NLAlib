@@ -3,7 +3,7 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
@@ -16,11 +16,11 @@ import NLAlib.Probability.Concentration.Scalar.ScalarBernstein
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
 `NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
-Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
 set_option maxRecDepth 5000
@@ -29,6 +29,7 @@ namespace NLAlib
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Hanson-Wright MGF certificate from independent sub-Gaussian coordinates. -/
 theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
@@ -38,13 +39,13 @@ theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasur
     (hC_offdiag_domain : 16 * exp 1 ≤ C ^ 2)
     (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
     (hOp : 0 < specNorm A)
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
     HasHansonWrightMGF μ A X K C := by
   let D : Ω → ℝ := diagonalCenteredQuadraticForm μ A X
   let O : Ω → ℝ := fun ω => quadForm (offDiagonalMatrix A) (fun i => X i ω)
   let B : ℝ → ℝ := fun l => C * l ^ 2 * K ^ 4 * frobNorm A ^ 2
-  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
+  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hmgf i).aemeasurable
   have hKsq_op_pos : 0 < K ^ 2 * specNorm A := by positivity
   have hCq_pos : 0 < C / 4 := by positivity
   have hCq_domain : exp 1 ≤ C / 4 := by linarith
@@ -52,7 +53,7 @@ theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasur
   have hcenter_eq :
       centeredQuadraticForm μ A X = fun ω => D ω + O ω := by
     dsimp [D, O]
-    exact centeredQuadraticForm_eq_diagonal_add_offDiagonal A h_indep hX_subG
+    exact centeredQuadraticForm_eq_diagonal_add_offDiagonal A hind hmgf
   have hD_ae : AEMeasurable D μ := by
     dsimp [D, diagonalCenteredQuadraticForm]
     exact Finset.aemeasurable_fun_sum _ fun i _ =>
@@ -80,13 +81,13 @@ theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasur
       dsimp [D]
       exact diagonalCenteredQuadraticForm_integrable_exp
         (A := A) (X := X) (K := K) (C := C / 4) (θ := 2 * l)
-        hK hCq_pos hCq_domain hOp h_indep hX_subG hdiag_domain
+        hK hCq_pos hCq_domain hOp hind hmgf hdiag_domain
     have hD_cgf :
         cgf D μ (2 * l) ≤ B l := by
       have hbase :=
         diagonalCenteredQuadraticForm_cgf_le
           (A := A) (X := X) (K := K) (C := C / 4) (θ := 2 * l)
-          hK hCq_pos hCq_domain hCq_quad hOp h_indep hX_subG hdiag_domain
+          hK hCq_pos hCq_domain hCq_quad hOp hind hmgf hdiag_domain
       dsimp [D, B] at hbase ⊢
       calc
         cgf (diagonalCenteredQuadraticForm μ A X) μ (2 * l)
@@ -105,12 +106,12 @@ theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasur
         quadForm (offDiagonalMatrix A) (fun i => X i ω))) μ
       exact integrable_exp_quadraticForm_offDiagonal
         (A := A) (X := X) (K := K) (l := 2 * l)
-        h_indep hX_subG (lt_of_le_of_lt hsmall_offdiag (by norm_num))
+        hind hmgf (lt_of_le_of_lt hsmall_offdiag (by norm_num))
     have hO_mgf_le : ∫ ω, exp ((2 * l) * O ω) ∂μ ≤ exp (B l) := by
       have hbase :=
         integral_exp_quadraticForm_offDiagonal_le
           (A := A) (X := X) (K := K) (l := 2 * l)
-          h_indep hX_subG hsmall_offdiag
+          hind hmgf hsmall_offdiag
       have hexp_le :
           exp (exp 1 ^ 2 * (4 * (2 * l)) ^ 2 * K ^ 4 *
               frobNorm A ^ 2) ≤ exp (B l) := by
@@ -194,6 +195,7 @@ theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasur
   · intro l hl
     exact (hmain l hl).1
 
+open scoped Matrix.Norms.L2Operator in
 /-- A proved Hanson-Wright MGF certificate for bounded coordinates.
 
 If each coordinate satisfies `|Xᵢ| ≤ K` almost surely, then the quadratic form lies

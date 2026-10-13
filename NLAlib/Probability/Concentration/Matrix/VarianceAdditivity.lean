@@ -9,10 +9,10 @@ Atlas: `matrix-bernstein` (variance of an independent sum).
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Section 2.2.7, equation (2.2.5), printed pp. 27–28.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator
 
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- The matrix variance of an independent sum of square-integrable random matrices is the sum of their
 variances.
 

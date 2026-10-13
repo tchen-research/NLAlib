@@ -246,7 +246,7 @@ theorem col_dotProduct_vec (D : LanczosDecomp A b q) (i : Fin q) (k : ℕ) :
 Source: Golub–Meurant (2010) [`gm10`], Thm 4.2; Trefethen–Bau (1997) [`tb97`], Lect. 36,
 eq. (36.3).
 atlas: lanczos-recurrence, arnoldi-relation (partial) -/
-theorem mulVec_vec_eq (D : LanczosDecomp A b q) (hA : A.IsSymm) {j : ℕ} (hj : j + 1 < q) :
+theorem mulVec_vec_eq (D : LanczosDecomp A b q) (hA : A.IsHermitian) {j : ℕ} (hj : j + 1 < q) :
     A *ᵥ D.vec j =
       D.beta j • D.vec (j - 1) + D.alpha j • D.vec j + D.beta (j + 1) • D.vec (j + 1) := by
   have hmemA : A *ᵥ D.vec j ∈ krylovSpace A b q := by
@@ -325,17 +325,11 @@ theorem beta_arnoldiDecomp_pos (A : Matrix n n ℝ) (b : n → ℝ) {q : ℕ} (h
 and §7.1; Chen–Trogdon–Ubaru (2021) [`ctu21`], Thm 2.1. Deviation: the degree bound is
 `p.degree < 2 * q` (no `natDegree`, no truncated subtraction).
 atlas: lanczos-gauss-quadrature -/
-theorem dotProduct_aeval_mulVec_eq (D : LanczosDecomp A b q) (hA : A.IsSymm) (hq : 0 < q)
+theorem dotProduct_aeval_mulVec_eq (D : LanczosDecomp A b q) (hA : A.IsHermitian) (hq : 0 < q)
     {p : Polynomial ℝ} (hp : p.degree < 2 * q) :
     b ⬝ᵥ (Polynomial.aeval A p *ᵥ b) =
       (b ⬝ᵥ b) * Polynomial.aeval D.T p ⟨0, hq⟩ ⟨0, hq⟩ := by
-  have hp' : p.natDegree ≤ 2 * q - 1 := by
-    by_cases hp0 : p = 0
-    · simp [hp0]
-    · have hp2 : p.degree < ((2 * q : ℕ) : WithBot ℕ) := by exact_mod_cast hp
-      have := (Polynomial.natDegree_lt_iff_degree_lt hp0).2 hp2
-      omega
-  rw [dotProduct_aeval_mulVec_eq_of_krylovSpace_le hA D.hasOrthonormalCols b hq D.range_Q.ge hp',
+  rw [dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul hA D.hasOrthonormalCols b D.range_Q.ge hp,
     dotProduct_mulVec_eq_of_apply_eq_zero _ (⟨0, hq⟩ : Fin q) fun i hi =>
       D.transpose_Q_mulVec_apply_eq_zero (Nat.pos_of_ne_zero fun h => hi (Fin.ext h)),
     D.sq_transpose_Q_mulVec_apply_zero hq]

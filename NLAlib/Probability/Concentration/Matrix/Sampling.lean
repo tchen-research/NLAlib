@@ -21,7 +21,6 @@ Atlas `matrix-chernoff-sampling`.
 
 open MeasureTheory ProbabilityTheory Real
 open scoped Pointwise
-open scoped Matrix.Norms.L2Operator
 
 noncomputable section
 
@@ -33,6 +32,7 @@ section Sampling
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Common reduction: the rescaled summands `N⁻¹ Mₖ` satisfy the hypotheses of
 `matrix_chernoff` with `L/N`, their mean sum is `I`, and both tails of the conclusion hold
 at `a = b = 1`. -/
@@ -43,10 +43,10 @@ private lemma matrix_chernoff_sampling_aux (μ : Measure Ω) [IsProbabilityMeasu
     (hBound : ∀ k, ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (M k ω) ∧ lambdaMax (M k ω) ≤ L)
     (hMean : ∀ k, ∫ ω, M k ω ∂μ = 1) :
     (∀ ε : ℝ, 0 ≤ ε → ε < 1 →
-      (μ {ω | lambdaMin ((1 / (N : ℝ)) • ∑ k, M k ω) ≤ 1 - ε}).toReal ≤
+      μ.real {ω | lambdaMin ((1 / (N : ℝ)) • ∑ k, M k ω) ≤ 1 - ε} ≤
         chernoffLowerTail d 1 (L / N) ε) ∧
     (∀ ε : ℝ, 0 ≤ ε →
-      (μ {ω | 1 + ε ≤ lambdaMax ((1 / (N : ℝ)) • ∑ k, M k ω)}).toReal ≤
+      μ.real {ω | 1 + ε ≤ lambdaMax ((1 / (N : ℝ)) • ∑ k, M k ω)} ≤
         chernoffUpperTail d 1 (L / N) ε) := by
   have hNr : (0 : ℝ) < N := by exact_mod_cast hN
   have hc : (0 : ℝ) < 1 / (N : ℝ) := by positivity
@@ -82,6 +82,7 @@ private lemma matrix_chernoff_sampling_aux (μ : Measure Ω) [IsProbabilityMeasu
     rw [hb, mul_one] at this
     simpa only [hY] using this
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Matrix Chernoff for sampling, lower tail.** Let `M₁, …, M_N` be independent random
 Hermitian `d × d` matrices with `0 ≤ λmin(Mₖ)`, `λmax(Mₖ) ≤ L` and `𝔼 Mₖ = I`. Then for
 `0 ≤ ε < 1`, `P(λmin(N⁻¹ ∑ₖ Mₖ) ≤ 1 - ε) ≤ d e^{-ε² N/(2L)}`.
@@ -95,7 +96,7 @@ theorem matrix_chernoff_sampling_lower (μ : Measure Ω) [IsProbabilityMeasure �
     (hHerm : ∀ k, ∀ᵐ ω ∂μ, (M k ω).IsHermitian)
     (hBound : ∀ k, ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (M k ω) ∧ lambdaMax (M k ω) ≤ L)
     (hMean : ∀ k, ∫ ω, M k ω ∂μ = 1) {ε : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε < 1) :
-    (μ {ω | lambdaMin ((1 / (N : ℝ)) • ∑ k, M k ω) ≤ 1 - ε}).toReal
+    μ.real {ω | lambdaMin ((1 / (N : ℝ)) • ∑ k, M k ω) ≤ 1 - ε}
       ≤ d * exp (-(ε ^ 2) * N / (2 * L)) := by
   refine ((matrix_chernoff_sampling_aux μ hN M L hL hMeas hIndep hHerm hBound hMean).1
     ε hε0 hε1).trans ?_
@@ -114,6 +115,7 @@ theorem matrix_chernoff_sampling_lower (μ : Measure Ω) [IsProbabilityMeasure �
         mul_le_mul_of_nonneg_right (by linarith) hNL
     _ = -(ε ^ 2) * N / (2 * L) := by field_simp
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Matrix Chernoff for sampling, upper tail.** Under the hypotheses of
 `matrix_chernoff_sampling_lower`, for `0 ≤ ε ≤ 1`,
 `P(λmax(N⁻¹ ∑ₖ Mₖ) ≥ 1 + ε) ≤ d e^{-ε² N/(3L)}`.
@@ -127,7 +129,7 @@ theorem matrix_chernoff_sampling_upper (μ : Measure Ω) [IsProbabilityMeasure �
     (hHerm : ∀ k, ∀ᵐ ω ∂μ, (M k ω).IsHermitian)
     (hBound : ∀ k, ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (M k ω) ∧ lambdaMax (M k ω) ≤ L)
     (hMean : ∀ k, ∫ ω, M k ω ∂μ = 1) {ε : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1) :
-    (μ {ω | 1 + ε ≤ lambdaMax ((1 / (N : ℝ)) • ∑ k, M k ω)}).toReal
+    μ.real {ω | 1 + ε ≤ lambdaMax ((1 / (N : ℝ)) • ∑ k, M k ω)}
       ≤ d * exp (-(ε ^ 2) * N / (3 * L)) := by
   refine ((matrix_chernoff_sampling_aux μ hN M L hL hMeas hIndep hHerm hBound hMean).2
     ε hε0).trans ?_
@@ -146,6 +148,7 @@ theorem matrix_chernoff_sampling_upper (μ : Measure Ω) [IsProbabilityMeasure �
         mul_le_mul_of_nonneg_right (by linarith) hNL
     _ = -(ε ^ 2) * N / (3 * L) := by field_simp
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Matrix Chernoff for sampling** (both tails, the audit G1 C4 statement): for `0 ≤ ε < 1`,
 `P(λmin(N⁻¹∑Mₖ) ≤ 1 - ε) ≤ d e^{-ε²N/(2L)}` and `P(λmax(N⁻¹∑Mₖ) ≥ 1 + ε) ≤ d e^{-ε²N/(3L)}`.
 Tropp 2015, Thm 5.1.1 with Tropp 2012, Rem 5.3; Tropp 2011, Thm 2.2.
@@ -158,9 +161,9 @@ theorem matrix_chernoff_sampling (μ : Measure Ω) [IsProbabilityMeasure μ] {d 
     (hHerm : ∀ k, ∀ᵐ ω ∂μ, (M k ω).IsHermitian)
     (hBound : ∀ k, ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (M k ω) ∧ lambdaMax (M k ω) ≤ L)
     (hMean : ∀ k, ∫ ω, M k ω ∂μ = 1) {ε : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε < 1) :
-    (μ {ω | lambdaMin ((1 / (N : ℝ)) • ∑ k, M k ω) ≤ 1 - ε}).toReal
+    μ.real {ω | lambdaMin ((1 / (N : ℝ)) • ∑ k, M k ω) ≤ 1 - ε}
         ≤ d * exp (-(ε ^ 2) * N / (2 * L)) ∧
-      (μ {ω | 1 + ε ≤ lambdaMax ((1 / (N : ℝ)) • ∑ k, M k ω)}).toReal
+      μ.real {ω | 1 + ε ≤ lambdaMax ((1 / (N : ℝ)) • ∑ k, M k ω)}
         ≤ d * exp (-(ε ^ 2) * N / (3 * L)) :=
   ⟨matrix_chernoff_sampling_lower μ hN M L hL hMeas hIndep hHerm hBound hMean hε0 hε1,
     matrix_chernoff_sampling_upper μ hN M L hL hMeas hIndep hHerm hBound hMean hε0 hε1.le⟩

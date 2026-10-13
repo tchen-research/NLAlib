@@ -2,14 +2,14 @@ import NLAlib.Matrix.Inequalities.RelativeSpectrum
 /-!
 # Strict relative-spectrum bounds
 
-The actual finite relative spectrum detects strict positive definiteness of
+The finite relative spectrum detects strict positive definiteness of
 a Schur complement. Source: Horn--Johnson (2013), Theorem 7.7.7;
 supports `psd-block-contraction`.
 -/
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -63,7 +63,8 @@ theorem spectralRadius_eq_specNorm_of_posSemidef {A : Matrix n n ℝ} (hA : A.Po
           (hA.isHermitian.eigenvectorUnitary : Matrix n n ℝ)ᵀ) :=
         congrArg specNorm (eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA.isHermitian)
       _ = ‖hA.isHermitian.eigenvalues‖ := by
-        rw [specNorm_mul_transpose_right_of_hasOrthonormalCols
+        rw [← Matrix.conjTranspose_eq_transpose_of_trivial,
+          specNorm_mul_conjTranspose_right_of_hasOrthonormalCols
           (transpose_eigenvectorUnitary_mul_self hA.isHermitian),
           specNorm_mul_left_of_hasOrthonormalCols (transpose_eigenvectorUnitary_mul_self hA.isHermitian),
           specNorm_eq_norm, Matrix.l2_opNorm_diagonal]

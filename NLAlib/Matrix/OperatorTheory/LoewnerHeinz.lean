@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Spectral.Core
+import NLAlib.Matrix.Spectral.Complexification
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 
 /-!

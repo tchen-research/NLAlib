@@ -1,6 +1,6 @@
 import NLAlib.Sketching.Structured.SRHTFlattening
 import NLAlib.Matrix.Basic.Selection
-import NLAlib.ForMathlib.Probability.UniformSamplingCoupling
+import NLAlib.Sketching.Sampling.UniformSamplingCoupling
 
 /-!
 # The literal classical SRHT sketch and its Gram matrix

@@ -3,57 +3,61 @@ import NLAlib.Matrix.Norms.RankNorm
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-!
-# Continuity of the actual best-rank Frobenius error
+# Continuity of the best-rank Frobenius error
 
 The optimal Frobenius distance is 1-Lipschitz in Frobenius distance by the
 triangle inequality and the proved Frobenius minimizer. The rank-norm
-comparison yields a `sqrt(card n)` Lipschitz bound in the actual operator norm.
+comparison yields a `sqrt(card n)` Lipschitz bound in the operator norm.
 This proves continuity of the squared optimum without asserting that an
 arbitrary classical SVD selector is measurable.
 Atlas: `eckart-young`, `rsvd-expected-error`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator NNReal
+open scoped Matrix NNReal
 namespace NLAlib
 
-variable {m n : Type*} [Fintype m] [Fintype n]
+variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
 
-/-- The actual optimal squared Frobenius error is nonnegative.
+/-- The optimal squared Frobenius error is nonnegative.
 Atlas `eckart-young` (optimal-value API). -/
 theorem bestRankFrobSq_nonneg (A : Matrix m n ℝ) (k : ℕ) :
-    0 ≤ bestRankFrobSq k A := by
-  obtain ⟨B, hB⟩ := exists_isBestRankApprox A k
+    0 ≤ bestRankFrobSq A k := by
+  obtain ⟨B, hB⟩ := exists_isBestFrobRankApprox A k
   rw [← hB.frobSq_sub_eq_bestRankFrobSq]
   exact frobSq_nonneg _
 
+open scoped Matrix.Norms.L2Operator in
 private theorem sqrt_bestRankFrobSq_eq {A B : Matrix m n ℝ} {k : ℕ}
-    (h : IsBestRankApprox k A B) :
-    Real.sqrt (bestRankFrobSq k A) = frobNorm (A - B) := by
+    (h : IsBestFrobRankApprox A k B) :
+    Real.sqrt (bestRankFrobSq A k) = frobNorm (A - B) := by
   rw [← h.frobSq_sub_eq_bestRankFrobSq]
   rfl
 
+open scoped Matrix.Norms.L2Operator in
 private theorem sqrt_bestRankFrobSq_le_sub
     (A B : Matrix m n ℝ) (k : ℕ) (hB : B.rank ≤ k) :
-    Real.sqrt (bestRankFrobSq k A) ≤ frobNorm (A - B) := by
-  obtain ⟨C, hC⟩ := exists_isBestRankApprox A k
+    Real.sqrt (bestRankFrobSq A k) ≤ frobNorm (A - B) := by
+  obtain ⟨C, hC⟩ := exists_isBestFrobRankApprox A k
   rw [sqrt_bestRankFrobSq_eq hC, frobNorm, frobNorm]
   exact Real.sqrt_le_sqrt (hC.2 B hB)
 
+open scoped Matrix.Norms.L2Operator in
 private theorem sqrt_bestRankFrobSq_le_add (A B : Matrix m n ℝ) (k : ℕ) :
-    Real.sqrt (bestRankFrobSq k A) ≤ Real.sqrt (bestRankFrobSq k B) + frobNorm (A - B) := by
-  obtain ⟨C, hC⟩ := exists_isBestRankApprox B k
+    Real.sqrt (bestRankFrobSq A k) ≤ Real.sqrt (bestRankFrobSq B k) + frobNorm (A - B) := by
+  obtain ⟨C, hC⟩ := exists_isBestFrobRankApprox B k
   have hbest := sqrt_bestRankFrobSq_le_sub A C k hC.1
   have hsplit : A - C = (A - B) + (B - C) := by abel
   have htri := frobNorm_add_le (A - B) (B - C)
   rw [← hsplit, ← sqrt_bestRankFrobSq_eq hC] at htri
   linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- The optimal rank-constrained Frobenius distance is 1-Lipschitz in
 Frobenius distance, with no restrictions on rank or matrix dimensions.
 Atlas `eckart-young` (optimal-value API). -/
 theorem abs_sqrt_bestRankFrobSq_sub_le_frobNorm (A B : Matrix m n ℝ) (k : ℕ) :
-    |Real.sqrt (bestRankFrobSq k A) - Real.sqrt (bestRankFrobSq k B)| ≤ frobNorm (A - B) := by
+    |Real.sqrt (bestRankFrobSq A k) - Real.sqrt (bestRankFrobSq B k)| ≤ frobNorm (A - B) := by
   have h1 := sqrt_bestRankFrobSq_le_add A B k
   have h2 := sqrt_bestRankFrobSq_le_add B A k
   have hnorm : frobNorm (B - A) = frobNorm (A - B) := by
@@ -63,12 +67,13 @@ theorem abs_sqrt_bestRankFrobSq_sub_le_frobNorm (A B : Matrix m n ℝ) (k : ℕ)
   rw [abs_le]
   constructor <;> linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- The optimal Frobenius distance is Lipschitz for the operator-norm matrix
 metric. Its constant is `sqrt(card n)`; empty index types are included.
 Atlas `eckart-young` (measurability foundation). -/
-theorem lipschitz_sqrt_bestRankFrobSq [DecidableEq m] [DecidableEq n] (k : ℕ) :
+theorem lipschitz_sqrt_bestRankFrobSq [DecidableEq m] (k : ℕ) :
     LipschitzWith ⟨Real.sqrt (Fintype.card n : ℝ), Real.sqrt_nonneg _⟩
-      (fun A : Matrix m n ℝ => Real.sqrt (bestRankFrobSq k A)) := by
+      (fun A : Matrix m n ℝ => Real.sqrt (bestRankFrobSq A k)) := by
   apply LipschitzWith.of_dist_le_mul
   intro A B
   have hcompare : frobNorm (A - B) ≤ Real.sqrt (Fintype.card n : ℝ) * specNorm (A - B) := by
@@ -76,31 +81,33 @@ theorem lipschitz_sqrt_bestRankFrobSq [DecidableEq m] [DecidableEq n] (k : ℕ) 
     exact (frobNorm_le_sqrt_rank_mul_specNorm (A - B)).trans
       (mul_le_mul_of_nonneg_right (Real.sqrt_le_sqrt hr) (specNorm_nonneg _))
   calc
-    dist (Real.sqrt (bestRankFrobSq k A)) (Real.sqrt (bestRankFrobSq k B)) =
-        |Real.sqrt (bestRankFrobSq k A) - Real.sqrt (bestRankFrobSq k B)| := Real.dist_eq _ _
+    dist (Real.sqrt (bestRankFrobSq A k)) (Real.sqrt (bestRankFrobSq B k)) =
+        |Real.sqrt (bestRankFrobSq A k) - Real.sqrt (bestRankFrobSq B k)| := Real.dist_eq _ _
     _ ≤ frobNorm (A - B) := abs_sqrt_bestRankFrobSq_sub_le_frobNorm A B k
     _ ≤ Real.sqrt (Fintype.card n : ℝ) * specNorm (A - B) := hcompare
     _ = (⟨Real.sqrt (Fintype.card n : ℝ), Real.sqrt_nonneg _⟩ : ℝ≥0) * dist A B := by
       rw [dist_eq_norm]
       rfl
 
-/-- The actual squared best-rank Frobenius error is continuous. This uses
+open scoped Matrix.Norms.L2Operator in
+/-- The squared best-rank Frobenius error is continuous. This uses
 only its value and does not require measurability of chosen singular vectors.
 Atlas `eckart-young`, `rsvd-expected-error`. -/
-theorem continuous_bestRankFrobSq [DecidableEq m] [DecidableEq n] (k : ℕ) :
-    Continuous (fun A : Matrix m n ℝ => bestRankFrobSq k A) := by
+theorem continuous_bestRankFrobSq [DecidableEq m] (k : ℕ) :
+    Continuous (fun A : Matrix m n ℝ => bestRankFrobSq A k) := by
   have hc := (lipschitz_sqrt_bestRankFrobSq (m := m) (n := n) k).continuous.pow 2
-  have he : (fun A : Matrix m n ℝ => Real.sqrt (bestRankFrobSq k A)) ^ 2 =
-      (fun A : Matrix m n ℝ => bestRankFrobSq k A) := by
+  have he : (fun A : Matrix m n ℝ => Real.sqrt (bestRankFrobSq A k)) ^ 2 =
+      (fun A : Matrix m n ℝ => bestRankFrobSq A k) := by
     funext A
     exact Real.sq_sqrt (bestRankFrobSq_nonneg A k)
   rw [he] at hc
   exact hc
 
-/-- The actual optimal squared Frobenius error is measurable in the entries.
+open scoped Matrix.Norms.L2Operator in
+/-- The optimal squared Frobenius error is measurable in the entries.
 Atlas `rsvd-expected-error` (no SVD-selector measurability assumption). -/
-theorem measurable_bestRankFrobSq [DecidableEq m] [DecidableEq n] (k : ℕ) :
-    Measurable (fun G : m → n → ℝ => bestRankFrobSq k (Matrix.of G)) := by
+theorem measurable_bestRankFrobSq [DecidableEq m] (k : ℕ) :
+    Measurable (fun G : m → n → ℝ => bestRankFrobSq (Matrix.of G) k) := by
   have hOf : Continuous (fun G : m → n → ℝ => Matrix.of G) := continuous_id
   exact ((continuous_bestRankFrobSq k).comp hOf).measurable
 

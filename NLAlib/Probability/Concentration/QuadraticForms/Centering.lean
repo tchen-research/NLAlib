@@ -3,7 +3,7 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
@@ -15,11 +15,11 @@ import NLAlib.Probability.Concentration.QuadraticForms.DiagonalCGF
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
 `NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
-Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
 set_option maxRecDepth 5000
@@ -28,14 +28,15 @@ namespace NLAlib
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `diagonalCenteredQuadraticForm_integrable_exp` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
     (hC_domain : exp 1 ≤ C) (hOp : 0 < specNorm A)
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hθ : |θ| ≤ (2 * C * K ^ 2 * specNorm A)⁻¹) :
     Integrable (fun ω => exp (θ * diagonalCenteredQuadraticForm μ A X ω)) μ := by
   let Y : Fin n → Ω → ℝ :=
@@ -82,14 +83,14 @@ lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabil
             _ = 1 / 2 := by norm_num
   have hZ_indep : iIndepFun Z μ := by
     have hY_indep : iIndepFun Y μ := by
-      simpa only [Y] using iIndepFun_centered_sq (μ := μ) (X := X) h_indep
+      simpa only [Y] using iIndepFun_centered_sq (μ := μ) (X := X) hind
     simpa only [Z, Function.comp_def] using
       hY_indep.comp (fun i x => A i i * x) (fun _ => by fun_prop)
   have hZ_meas : ∀ i, AEMeasurable (Z i) μ := by
     intro i
     change AEMeasurable
       (fun ω => A i i * (X i ω ^ 2 - ∫ ω, X i ω ^ 2 ∂μ)) μ
-    exact (((hX_subG i).aemeasurable.pow_const 2).sub_const _).const_mul _
+    exact (((hmgf i).aemeasurable.pow_const 2).sub_const _).const_mul _
   have hZ_int :
       ∀ i ∈ (Finset.univ : Finset (Fin n)),
         Integrable (fun ω => exp (θ * Z i ω)) μ := by
@@ -98,7 +99,7 @@ lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabil
       linarith [hhalf_i i]
     have hint :=
       integrable_exp_centered_sq_of_hasSubgaussianMGF_of_le
-        (hX_subG i) hKsq_pos hC0_le hsmall_lt
+        (hmgf i) hKsq_pos hC0_le hsmall_lt
     convert hint using 1
     ext ω
     change exp (θ * (A i i * (X i ω ^ 2 - ∫ x, X i x ^ 2 ∂μ))) = _
@@ -112,7 +113,7 @@ lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabil
   simp only [diagonalCenteredQuadraticForm, Z, Y, Finset.sum_apply]
 
 /-- Source-transport helper `quadraticForm_eq_sum_diag_of_offdiag_eq_zero` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma quadraticForm_eq_sum_diag_of_offdiag_eq_zero {n : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {x : Fin n → ℝ}
     (hA_diag : ∀ i j, i ≠ j → A i j = 0) :
@@ -130,20 +131,20 @@ lemma quadraticForm_eq_sum_diag_of_offdiag_eq_zero {n : ℕ}
     _ = A i i * x i ^ 2 := by ring_nf
 
 /-- Source-transport helper `centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero
     {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K : ℝ}
     (hA_diag : ∀ i j, i ≠ j → A i j = 0)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
     centeredQuadraticForm μ A X = diagonalCenteredQuadraticForm μ A X := by
   have hterm_int : ∀ i, Integrable (fun ω => A i i * X i ω ^ 2) μ := by
     intro i
     exact ((integrable_pow_of_integrable_exp_mul
       (X := X i) (t := 1) one_ne_zero
-      ((hX_subG i).integrable_exp_mul 1)
-      ((hX_subG i).integrable_exp_mul (-1)) 2).const_mul (A i i))
+      ((hmgf i).integrable_exp_mul 1)
+      ((hmgf i).integrable_exp_mul (-1)) 2).const_mul (A i i))
   ext ω
   unfold centeredQuadraticForm randomQuadraticForm diagonalCenteredQuadraticForm
   have hqfun :
@@ -171,6 +172,7 @@ lemma centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero
         rw [integral_const_mul]
         ring_nf
 
+open scoped Matrix.Norms.L2Operator in
 /-- Hanson-Wright MGF certificate for diagonal quadratic forms with sub-Gaussian coordinates. -/
 theorem hasHansonWrightMGF_diagonal_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
@@ -178,22 +180,22 @@ theorem hasHansonWrightMGF_diagonal_of_subgaussian {μ : Measure Ω} [IsProbabil
     (hC_domain : exp 1 ≤ C) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
     (hOp : 0 < specNorm A)
     (hA_diag : ∀ i j, i ≠ j → A i j = 0)
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
     HasHansonWrightMGF μ A X K C := by
   have hcenter_eq :
       centeredQuadraticForm μ A X = diagonalCenteredQuadraticForm μ A X :=
-    centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero hA_diag hX_subG
+    centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero hA_diag hmgf
   refine ⟨?_, ?_⟩
   · intro l hl
     rw [hcenter_eq]
-    exact diagonalCenteredQuadraticForm_cgf_le hK hC hC_domain hC_quad hOp h_indep hX_subG hl
+    exact diagonalCenteredQuadraticForm_cgf_le hK hC hC_domain hC_quad hOp hind hmgf hl
   · intro l hl
     rw [hcenter_eq]
-    exact diagonalCenteredQuadraticForm_integrable_exp hK hC hC_domain hOp h_indep hX_subG hl
+    exact diagonalCenteredQuadraticForm_integrable_exp hK hC hC_domain hOp hind hmgf hl
 
 /-- Source-transport helper `quadraticForm_eq_diag_add_offDiagonal` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma quadraticForm_eq_diag_add_offDiagonal {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
     quadForm A x =
@@ -238,12 +240,12 @@ lemma quadraticForm_eq_diag_add_offDiagonal {n : ℕ}
           rw [Finset.sum_add_distrib]
 
 /-- Source-transport helper `integrable_randomQuadraticForm_offDiagonal_of_subgaussian` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integrable_randomQuadraticForm_offDiagonal_of_subgaussian {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K : ℝ}
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
     Integrable (randomQuadraticForm (offDiagonalMatrix A) X) μ := by
   classical
   have hterm : ∀ i j,
@@ -253,8 +255,8 @@ lemma integrable_randomQuadraticForm_offDiagonal_of_subgaussian {μ : Measure Ω
     · subst j
       simp [offDiagonalMatrix]
     · have hmul : Integrable ((X i) * (X j)) μ :=
-        (h_indep.indepFun hij).integrable_mul (hX_subG i).integrable
-          (hX_subG j).integrable
+        (hind.indepFun hij).integrable_mul (hmgf i).integrable
+          (hmgf j).integrable
       convert hmul.const_mul (A i j) using 1
       ext ω
       simp [offDiagonalMatrix, hij]
@@ -265,12 +267,12 @@ lemma integrable_randomQuadraticForm_offDiagonal_of_subgaussian {μ : Measure Ω
     MeasureTheory.integrable_finsetSum _ fun j _ => hterm i j
 
 /-- Source-transport helper `integral_randomQuadraticForm_offDiagonal_eq_zero` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integral_randomQuadraticForm_offDiagonal_eq_zero {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K : ℝ}
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
     ∫ ω, randomQuadraticForm (offDiagonalMatrix A) X ω ∂μ = 0 := by
   classical
   have hterm_int : ∀ i j,
@@ -280,8 +282,8 @@ lemma integral_randomQuadraticForm_offDiagonal_eq_zero {μ : Measure Ω}
     · subst j
       simp [offDiagonalMatrix]
     · have hmul : Integrable ((X i) * (X j)) μ :=
-        (h_indep.indepFun hij).integrable_mul (hX_subG i).integrable
-          (hX_subG j).integrable
+        (hind.indepFun hij).integrable_mul (hmgf i).integrable
+          (hmgf j).integrable
       convert hmul.const_mul (A i j) using 1
       ext ω
       simp [offDiagonalMatrix, hij]
@@ -308,11 +310,11 @@ lemma integral_randomQuadraticForm_offDiagonal_eq_zero {μ : Measure Ω}
           by_cases hij : i = j
           · subst j
             simp [offDiagonalMatrix]
-          · have hpair := h_indep.indepFun hij
+          · have hpair := hind.indepFun hij
             have hmeas_i : AEStronglyMeasurable (X i) μ :=
-              (hX_subG i).integrable.aestronglyMeasurable
+              (hmgf i).integrable.aestronglyMeasurable
             have hmeas_j : AEStronglyMeasurable (X j) μ :=
-              (hX_subG j).integrable.aestronglyMeasurable
+              (hmgf j).integrable.aestronglyMeasurable
             have hmul_eq :
                 ∫ ω, X i ω * X j ω ∂μ =
                   (∫ ω, X i ω ∂μ) * (∫ ω, X j ω ∂μ) :=
@@ -329,7 +331,7 @@ lemma integral_randomQuadraticForm_offDiagonal_eq_zero {μ : Measure Ω}
               _ = A i j * ((∫ ω, X i ω ∂μ) * (∫ ω, X j ω ∂μ)) := by
                     rw [hmul_eq]
               _ = 0 := by
-                    rw [integral_eq_zero_of_hasSubgaussianMGF (hX_subG i)]
+                    rw [integral_eq_zero_of_hasSubgaussianMGF (hmgf i)]
                     ring
 
 end NLAlib

@@ -11,12 +11,13 @@ Their extended quadratic moment identities are inherited on intersections of set
 noncomputable section
 
 open MeasureTheory Matrix Set Filter
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder ENNReal
+open scoped MatrixOrder ComplexOrder ENNReal
 
 namespace NLAlib
 
 variable {Ω n : Type*} {m mΩ : MeasurableSpace Ω} [Fintype n] {μ : Measure Ω}
 
+open scoped Matrix.Norms.L2Operator in
 /-- Predictable indicator localization preserves the full extended local second-moment
 interface, with no integrability assumption on the original square or variance.
 Source: supplied audit `audit:combined`; atlas `matrix-freedman` (partial). -/
@@ -48,6 +49,7 @@ theorem HasLocalMatrixSecondMoment.indicator {X V : Ω → Matrix n n ℂ}
       Measure.restrict_restrict (hm _ hC)]
     exact h.setLIntegral_eq u (C ∩ B) (hC.inter hB)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Predictable localization of an integrable centered matrix remains integrable and
 actually conditionally centered, by the conditional indicator pull-out identity.
 Source: supplied audit `audit:combined`; atlas `matrix-freedman` (partial). -/

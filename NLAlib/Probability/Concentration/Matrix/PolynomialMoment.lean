@@ -12,12 +12,13 @@ Source: operator manuscript, final proof of `thm:khintchine`.
 
 noncomputable section
 open MeasureTheory
-open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
+open scoped Matrix ComplexOrder
 namespace NLAlib
 
 variable {ι Ω : Type*} [Fintype ι] [DecidableEq ι] [MeasurableSpace Ω]
 variable {μ : Measure Ω} [IsProbabilityMeasure μ]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A genuine lower-moment trace recursion and polynomial trace Young give
 the exact integer Khintchine moment constant. Source: the final absorption
 argument in manuscript `thm:khintchine`. This is a helper; consumers must

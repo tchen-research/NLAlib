@@ -28,11 +28,9 @@ import NLAlib.Probability.Concentration.Matrix.RademacherKhintchine
 import NLAlib.Probability.Concentration.Matrix.RademacherMgfCgf
 import NLAlib.Probability.Concentration.Matrix.RademacherPolynomialMoments
 import NLAlib.Probability.Concentration.Matrix.Sampling
-import NLAlib.Probability.Concentration.Matrix.SamplingWithoutReplacement
-import NLAlib.Probability.Concentration.Matrix.SamplingWithoutReplacementTails
+import NLAlib.Probability.Concentration.Matrix.SubgaussianMgfCgf
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
 import NLAlib.Probability.Concentration.Matrix.TraceIntegrability
-import NLAlib.Probability.Concentration.Matrix.UniformIidSampling
 import NLAlib.Probability.Concentration.Matrix.VarianceAdditivity
 
 /-! # `Probability/Concentration/Matrix`

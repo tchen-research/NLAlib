@@ -87,8 +87,7 @@ private theorem traceExp_add_matrixLog_diagonal_endpoint
   have hl : matrixLog (diagonal fun i => X i i) =
       diagonal (fun i => (Real.log (X i i).re : ℂ)) := by
     rw [hd, matrixLog, cfc_diagonal_real]
-  unfold traceExp
-  rw [hl, diagonal_add]
+  rw [traceExp_complex, hl, diagonal_add]
   simp only [← Complex.ofReal_add]
   rw [matrixExp_diagonal_real, matrixExp_diagonal_real]
   simp only [Matrix.trace, Matrix.diag_apply, Matrix.diagonal_apply_eq,
@@ -150,7 +149,7 @@ theorem golden_thompson {ι : Type*} [Fintype ι] [DecidableEq ι]
   | inr hi =>
     let := hi
     let e := Fintype.equivFin ι
-    let E := reindexStarAlgEquiv e
+    let E := reindexStarAlgEquiv (𝕜 := ℂ) e
     have hf := golden_thompson_fin (E H) (E K) (hH.reindex e) (hK.reindex e)
     have ha : E H + E K = E (H + K) := (map_add E H K).symm
     have he : matrixExp (E H) = E (matrixExp H) := matrixExp_reindex e H

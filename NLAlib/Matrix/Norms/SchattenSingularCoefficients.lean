@@ -8,7 +8,7 @@ attainer ingredients for Schatten duality, Bhatia (1997), §IV.2.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -51,6 +51,7 @@ theorem frobInner_rectDiag_rectDiag {m n : ℕ} (a b : ℕ → ℝ) :
   ext i
   simp only [Finset.mem_filter, Finset.mem_range, lt_min_iff]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Prescribed decreasing nonnegative singular coefficients have their exact
 Schatten power norm in any fixed orthogonal frames.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/

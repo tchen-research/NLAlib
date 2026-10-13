@@ -89,7 +89,7 @@ theorem dotProduct_complement_eigenvalueProjector_eq_sum {A : Matrix n n ℝ}
 /-- The separated-eigenspace one-vector sine estimate. Parlett §11.7;
 the positive lower bound on the complementary spectral distances includes
 the empty-complement case without introducing an undefined minimum.
-atlas: eigenvalue-residual-bounds (partial) -/
+atlas: eigenvalue-residual-bounds -/
 theorem sqrt_complement_eigenvalueProjector_le_residual_div {A : Matrix n n ℝ}
     (hA : A.IsHermitian) (x : n → ℝ) {ℓ δ : ℝ} (hδ : 0 < δ)
     (hsep : ∀ i, hA.eigenvalues i ≠ ℓ → δ ≤ |hA.eigenvalues i-quadForm A x|) :
@@ -162,7 +162,7 @@ theorem eigenvalueProjector_mulVec_eq_self {A : Matrix n n ℝ}
 
 /-- The projector range is exactly the entire eigenspace of the matrix.
 Parlett §11.7; this is the bridge from the functional-calculus definition to
-Mathlib's actual eigenspace, with all multiplicities and empty cases. -/
+Mathlib's eigenspace, with all multiplicities and empty cases. -/
 theorem range_eigenvalueProjector_eq_eigenspace {A : Matrix n n ℝ}
     (hA : A.IsHermitian) (ℓ : ℝ) :
     LinearMap.range (eigenvalueProjector hA ℓ).mulVecLin =

@@ -11,7 +11,7 @@ Atlas: `operator-monotone-convex`; `loewner-order` (trace monotonicity).
 
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Example 8.3.4, printed p. 125.
 -/
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 open Matrix
 private theorem trace_mul_nonneg {d : Type*} [Fintype d] [DecidableEq d] (A B : Matrix d d ℂ)
     (hA : A.PosSemidef) (hB : B.PosSemidef) :
@@ -31,8 +31,7 @@ open NLAlib
 `H`, on any finite index type (including the empty one). Here `≤` is the Loewner order under
 `MatrixOrder` (`Matrix.le_iff`).
 
-Tropp 2015, Example 8.3.4. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 8*. -/
+Tropp 2015, Example 8.3.4. Atlas: `operator-monotone-convex`. -/
 theorem NLAlib.traceExp_le_traceExp {d : Type*} [Fintype d] [DecidableEq d]
     (A H : Matrix d d ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
     (hAH : A ≤ H) :
@@ -41,7 +40,7 @@ theorem NLAlib.traceExp_le_traceExp {d : Type*} [Fintype d] [DecidableEq d]
   obtain ⟨hEH, hLH⟩ := posDef_matrixExp_and_matrixLog_matrixExp H hH
   have he := relativeEntropy_nonneg (matrixExp A) (matrixExp H) hEA hEH
   have hp := trace_mul_nonneg (matrixExp A) (H - A) hEA.posSemidef hAH
-  simp only [relativeEntropy, hLA, hLH, mul_sub, Matrix.trace_sub,
+  simp only [relativeEntropy_complex, hLA, hLH, mul_sub, Matrix.trace_sub,
     Complex.sub_re] at he hp
-  unfold traceExp
+  rw [traceExp_complex, traceExp_complex]
   linarith

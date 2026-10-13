@@ -1,5 +1,5 @@
 import NLAlib.RandomMatrix.Gaussian.Wishart.SimpleSpectrum
-import NLAlib.Matrix.Calculus.InversePowerLaplacianLimit
+import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.InversePowerLaplacianLimit
 /-!
 # Sharp almost-sure resolvent Laplacian limit
 

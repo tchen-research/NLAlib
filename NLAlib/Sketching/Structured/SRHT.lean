@@ -1,6 +1,6 @@
 import NLAlib.Sketching.Structured.SRHTCore
 import NLAlib.Sketching.Structured.SRHTParameters
-import NLAlib.Probability.Concentration.Matrix.SamplingWithoutReplacementTails
+import NLAlib.Sketching.Sampling.SamplingWithoutReplacementTails
 import NLAlib.ForMathlib.Probability.FiniteProductEvents
 import NLAlib.Matrix.Structured.WalshFin
 import NLAlib.Matrix.Norms.Core
@@ -129,7 +129,7 @@ theorem measure_srht_gram_failure_le_of_sharp_sample_size
       exact hξ ⟨j, lt_of_not_ge hnot⟩
     exact (measure_srht_gram_failure_le_of_flat_rows hk0 hk H hH U hU ξ hL hrows hε hε1).trans
       (srht_tail_le_half_of_sample_size (Nat.pos_of_ne_zero (NeZero.ne d)) hL hε hδ hsize)
-  have hh := measureReal_prod_le_bad_add (rademacherCubePMF (Fin n)).toMeasure
+  have hh := measureReal_prod_le_measureReal_add_of_sections_le (rademacherCubePMF (Fin n)).toMeasure
     (uniformExactRowSubsetPMF (show k ≤ Fintype.card (Fin n) by simpa using hk)).toMeasure E
     {ω | ε < specNorm ((srhtSketch H ω.1 ω.2 * U)ᵀ * (srhtSketch H ω.1 ω.2 * U) - 1)}
     (show 0 ≤ δ / 2 by positivity) hcond

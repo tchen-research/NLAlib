@@ -8,13 +8,14 @@ support the Sylvester separation and subspace perturbation results.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
   [DecidableEq m] [DecidableEq n] [DecidableEq p]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] [DecidableEq n] in
 /-- A lower Euclidean length bound for a matrix passes to left multiplication
 in the spectral norm. Source: centered Sylvester proof, toolkit derivations §5.3. -/

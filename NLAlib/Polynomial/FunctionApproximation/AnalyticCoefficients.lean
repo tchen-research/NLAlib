@@ -27,7 +27,7 @@ For a function real on `[-1,1]` these are the usual real Chebyshev expansion coe
 Source: Trefethen, ATAP, Chapter 8, Theorem 8.1 (`chebyshev-coeff-analytic-decay`). -/
 def chebyshevAnalyticCoeff (F : ℂ → ℂ) (k : ℕ) : ℝ := (chebyshevComplexCoeff F k).re
 
-/-- A genuine open-ellipse bound is necessarily nonnegative, since the ellipse contains zero.
+/-- A open-ellipse bound is necessarily nonnegative, since the ellipse contains zero.
 Source: Trefethen, ATAP, Chapter 8; helper for analytic coefficient and SLQ rates. -/
 theorem nonneg_of_norm_le_on_open_bernsteinEllipse {F : ℂ → ℂ} {ρ M : ℝ} (hρ : 1 < ρ)
     (hM : ∀ z ∈ openBernsteinEllipse ρ, ‖F z‖ ≤ M) : 0 ≤ M := by
@@ -91,8 +91,7 @@ theorem norm_normalized_circleIntegral_chebyshevCoeff_le {F : ℂ → ℂ} {ρ M
 
 /-- Positive Chebyshev coefficients of a function holomorphic in the filled Bernstein
 ellipse interior and continuous on its closure decay as `2M/ρ^k`.
-Source: Trefethen, ATAP, Chapter 8, Theorem 8.1; operator rederivations
-`rt:analytic-approx`. The contour coefficients are explicitly defined and no decay bound
+Source: Trefethen, ATAP, Chapter 8, Theorem 8.1. The contour coefficients are explicitly defined and no decay bound
 or polynomial-approximation property is assumed.
 atlas: chebyshev-coeff-analytic-decay (partial) -/
 theorem norm_chebyshevComplexCoeff_le {F : ℂ → ℂ} {ρ M : ℝ} (hρ : 1 < ρ)
@@ -119,8 +118,7 @@ theorem norm_chebyshevComplexCoeff_zero_le {F : ℂ → ℂ} {ρ M : ℝ} (hρ :
     norm_normalized_circleIntegral_chebyshevCoeff_le hρ hFc hFd hM 0
 
 /-- Real Chebyshev coefficients obey the exact Bernstein ellipse decay constant.
-Source: Trefethen, ATAP, Chapter 8, Theorem 8.1; operator rederivations
-`rt:analytic-approx`. This real-part version also applies to complex-valued extensions.
+Source: Trefethen, ATAP, Chapter 8, Theorem 8.1. This real-part version also applies to complex-valued extensions.
 atlas: chebyshev-coeff-analytic-decay (partial) -/
 theorem abs_chebyshevAnalyticCoeff_le {F : ℂ → ℂ} {ρ M : ℝ} (hρ : 1 < ρ)
     (hFc : ContinuousOn F (filledBernsteinEllipse ρ))

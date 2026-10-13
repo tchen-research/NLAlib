@@ -8,7 +8,7 @@ import NLAlib.Matrix.Functions.PolynomialIntertwining
 
 Facts about `NLAlib.krylovSpace A b q = span {b, A b, …, A^(q−1) b}`:
 
-* `mem_krylovSpace_iff_degree`, `mem_krylovSpace_iff`: `K_q(A,b) = {p(A) b : deg p < q}`;
+* `mem_krylovSpace_iff`: `K_q(A,b) = {p(A) b : deg p < q}` (no hypothesis on `q`);
 * `pow_mulVec_mem_krylovSpace`, `self_mem_krylovSpace_succ`: the generators lie in it;
 * `krylovSpace_zero`, `krylovSpace_succ`: `K_0 = 0` and `K_{q+1} = K_q ⊔ span {A^q b}`;
 * `krylovSpace_mono`: monotonicity in `q`;
@@ -40,12 +40,12 @@ private lemma aeval_sum_fin_mulVec (A : Matrix n n ℝ) (b : n → ℝ) {q : ℕ
       ∑ i : Fin q, c i • ((A ^ (i : ℕ)) *ᵥ b) := by
   simp [map_sum, Matrix.sum_mulVec, Algebra.algebraMap_eq_smul_one, Matrix.smul_mulVec]
 
-/-- Polynomial characterisation of the Krylov space, degree form (valid for every `q`, including
-`q = 0` where both sides are `{0}`): `x ∈ K_q(A,b) ↔ x = p(A) b` for some `p` with `deg p < q`.
+/-- Polynomial characterisation of the Krylov space (valid for every `q`, including `q = 0`
+where both sides are `{0}`): `x ∈ K_q(A,b) ↔ x = p(A) b` for some `p` with `deg p < q`, i.e.
+`K_q` is spanned by `q − 1` matvecs.
 Source: Golub–Meurant (2010) [`gm10`], Ch. 4; Martinsson–Tropp (2020) [`mt20`], §11.7.
-Atlas: `krylov-subspace`.
 atlas: krylov-subspace -/
-theorem mem_krylovSpace_iff_degree (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) (x : n → ℝ) :
+theorem mem_krylovSpace_iff (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) (x : n → ℝ) :
     x ∈ krylovSpace A b q ↔
       ∃ p : ℝ[X], p.degree < q ∧ x = Polynomial.aeval A p *ᵥ b := by
   constructor
@@ -62,23 +62,6 @@ theorem mem_krylovSpace_iff_degree (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ
       (fun i => Polynomial.C (p.coeff i) * Polynomial.X ^ i), aeval_sum_fin_mulVec]
     exact Submodule.sum_mem _ fun i _ =>
       Submodule.smul_mem _ _ (pow_mulVec_mem_krylovSpace A b i.isLt)
-
-/-- Polynomial characterisation of the Krylov space, `natDegree` form:
-for `0 < q`, `x ∈ K_q(A,b) ↔ ∃ p, natDeg p < q ∧ x = p(A) b`.
-Source: Golub–Meurant (2010) [`gm10`], Ch. 4. Atlas: `krylov-subspace`.
-Deviation: needs `0 < q` (for `q = 0` no polynomial has `natDegree < 0`; use
-`mem_krylovSpace_iff_degree`).
-atlas: krylov-subspace -/
-theorem mem_krylovSpace_iff (A : Matrix n n ℝ) (b : n → ℝ) {q : ℕ} (hq : 0 < q) (x : n → ℝ) :
-    x ∈ krylovSpace A b q ↔
-      ∃ p : ℝ[X], p.natDegree < q ∧ x = Polynomial.aeval A p *ᵥ b := by
-  rw [mem_krylovSpace_iff_degree]
-  refine exists_congr fun p => and_congr_left fun _ => ?_
-  by_cases hp0 : p = 0
-  · subst hp0
-    simp only [Polynomial.degree_zero, Polynomial.natDegree_zero, hq, iff_true]
-    exact WithBot.bot_lt_coe q
-  · exact (Polynomial.natDegree_lt_iff_degree_lt hp0).symm
 
 /-- The zeroth Krylov space is trivial: `K_0(A,b) = 0`. Atlas: `krylov-subspace`. -/
 @[simp] theorem krylovSpace_zero (A : Matrix n n ℝ) (b : n → ℝ) : krylovSpace A b 0 = ⊥ := by

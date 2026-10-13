@@ -4,14 +4,15 @@ import NLAlib.Matrix.Basic.Pseudoinverse
 /-!
 # Moore–Penrose inverses of rectangular matrices over `ℝ` or `ℂ`
 
-The inverse constructed here (`moorePenroseInverse`, characterised by the Penrose identities
-`IsMoorePenroseInverse` of `Matrix/Basic/PenroseIdentities.lean`) is stated over `[RCLike 𝕜]` and is
-distinct from the full-rank formulas `pinvL` and `pinvR`. It exists for arbitrary finite row and
-column types, including empty types, and for rank-deficient matrices. The construction uses the
-SVD `A = U Σ Vᴴ` (`exists_isSVD`) and scalar reciprocals of the singular values, with zero singular
-values sent to zero, transported by `IsMoorePenroseInverse.unitary_transform`. The four Penrose
-identities characterize it uniquely and identify it with the full-rank formulas when their Gram
-matrices are invertible.
+`moorePenroseInverse A` is *the* matrix satisfying the four Penrose identities
+(`IsMoorePenroseInverse`, `Matrix/Basic/PenroseIdentities.lean`), stated over `[RCLike 𝕜]`: it is
+defined by choice from `exists_isMoorePenroseInverse` and well defined because the identities
+determine it uniquely. The textbook formula is `moorePenroseInverse_eq_svd`: for every SVD
+`A = U Σ Vᴴ`, `A⁺ = V Σ⁺ Uᴴ` with the nonzero singular values reciprocated (scalar `0⁻¹ = 0`
+handles the zero ones). It exists for arbitrary finite row and column types, including empty
+types, and for rank-deficient matrices, and it is distinct from the full-rank formulas `pinvL`
+and `pinvR`, with which it agrees when the Gram matrices are invertible
+(`moorePenroseInverse_eq_pinvL`, `moorePenroseInverse_eq_pinvR`).
 
 Every statement is written with `ᴴ` (F1: no real twins; over `ℝ` the `@[simp]` lemma
 `Matrix.conjTranspose_eq_transpose_of_trivial` gives the `ᵀ` forms). The real row projector
@@ -22,7 +23,7 @@ Source: Horn–Johnson, Matrix Analysis, §7.3. Atlas: `pseudoinverse`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -103,10 +104,14 @@ theorem exists_isMoorePenroseInverse {m n : Type*} [Fintype m] [Fintype n]
   obtain ⟨U, V, h⟩ := exists_isSVD A
   exact ⟨_, h.isMoorePenroseInverse⟩
 
-/-- The unique Moore–Penrose inverse of a rectangular matrix over `ℝ` or `ℂ`. This is
-defined for rank-deficient and empty matrices and preserves the existing
-full-rank formulas `pinvL` and `pinvR` as separate definitions.
-Horn–Johnson §7.3; atlas `pseudoinverse`.
+/-- The **Moore–Penrose inverse** `A⁺` of a rectangular matrix over `ℝ` or `ℂ`: the matrix
+satisfying the four Penrose identities (`isMoorePenroseInverse`), chosen by
+`exists_isMoorePenroseInverse` and well defined because the identities determine it uniquely
+(`IsMoorePenroseInverse.unique`). For every SVD `A = U Σ Vᴴ` it is the textbook formula
+`V Σ⁺ Uᴴ`, with `Σ⁺` the reciprocals of the nonzero singular values
+(`moorePenroseInverse_eq_svd`). Defined for rank-deficient and empty matrices; the full-rank
+formulas `pinvL`, `pinvR` are separate definitions (`moorePenroseInverse_eq_pinvL`,
+`moorePenroseInverse_eq_pinvR`). Horn–Johnson 2013, §7.3.
 atlas: pseudoinverse -/
 def moorePenroseInverse {m n : Type*} [Fintype m] [Fintype n]
     (A : Matrix m n 𝕜) : Matrix n m 𝕜 := (exists_isMoorePenroseInverse A).choose
@@ -263,9 +268,10 @@ theorem moorePenroseInverse_reindex {p q : Type*} [Fintype p] [Fintype q] (A : M
 
 end General
 
-/-- Any SVD `A = U Σ Vᴴ` computes the same Moore–Penrose inverse `V Σ⁺ Uᴴ`, independently of
-the choice of singular vectors. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem IsSVD.moorePenroseInverse_eq {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
+/-- **`A⁺ = V Σ⁺ Uᴴ`**: any SVD `A = U Σ Vᴴ` computes the Moore–Penrose inverse as
+`V Σ⁺ Uᴴ` with `Σ⁺ = rectDiag (σ⁻¹)` (scalar `0⁻¹ = 0`), independently of the choice of singular
+vectors. Horn–Johnson 2013, §7.3; atlas `pseudoinverse`. -/
+theorem moorePenroseInverse_eq_svd {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
     [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}
     {V : Matrix n (Fin q) 𝕜} (h : IsSVD A U V) :
     moorePenroseInverse A =

@@ -3,7 +3,7 @@ import NLAlib.Matrix.Spectral.EigenvectorDeflationSpectrum
 /-!
 # Block coordinates for a paired eigenline and its perturbation
 
-The distinguished coordinate and its complement give the actual scalar/block
+The distinguished coordinate and its complement give the scalar/block
 split used by the Schur-complement eigenvalue equation. The leading perturbed
 entry is the normalized left–right pairing. Source: Horn–Johnson (2013),
 Lemmas 6.3.10 and Theorem 6.3.12; atlas `simple-eigenvalue-perturbation`.
@@ -17,8 +17,7 @@ namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n] {K : Type*} [Field K]
 
 omit [Fintype n] in
-/-- Splitting an isolated coordinate from its complement gives an actual
-scalar/direct-sum block matrix. Source: Horn–Johnson (2013), Lemma 6.3.10;
+/-- Splitting an isolated coordinate from its complement gives a scalar/direct-sum block matrix. Source: Horn–Johnson (2013), Lemma 6.3.10;
 the two subtype blocks are the distinguished coordinate and all others. -/
 theorem submatrix_eq_fromBlocks_of_isolated_coordinate (M : Matrix n n K) (i : n) (μ : K)
     (hcol : ∀ j, M j i = if j = i then μ else 0)
@@ -50,7 +49,7 @@ theorem submatrix_eq_fromBlocks_of_isolated_coordinate (M : Matrix n n K) (i : n
 
 omit [Fintype n] in
 /-- Any perturbation matrix decomposes into its leading scalar, row,
-column and trailing block in the isolated-coordinate split. Source:
+column and trailing block in the isolated-coordinate split.
 Horn–Johnson (2013), proof of Theorem 6.3.12. -/
 theorem submatrix_eq_fromBlocks_scalar_row_col (F : Matrix n n K) (i : n) :
     F.submatrix (Equiv.sumCompl (fun j => j = i)) (Equiv.sumCompl (fun j => j = i)) =

@@ -9,7 +9,7 @@ determinant derivative. Horn–Johnson §0.8.10; atlas `determinant-derivative`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.Elementwise
+open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
@@ -56,6 +56,7 @@ theorem adjugate_apply_self_eq_det_complement (A : Matrix n n ℝ) (i : n) :
   rw [← Matrix.det_reindex_self e.symm B, hBlock,
     Matrix.det_fromBlocks_zero₂₁, Matrix.det_one, mul_one]
 
+open scoped Matrix.Norms.Elementwise in
 /-- The characteristic determinant derivative is the sum of all principal
 codimension-one minors, for arbitrary finite labels and every dimension.
 At dimension zero the sum is empty and the derivative is zero.

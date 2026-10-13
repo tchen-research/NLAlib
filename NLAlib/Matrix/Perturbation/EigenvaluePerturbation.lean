@@ -8,12 +8,13 @@ Atlas: `eigenvalue-perturbation-symmetric`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every signed eigenvalue of a real symmetric matrix is bounded in absolute
 value by its spectral norm. Horn–Johnson 2013, Section 5.6.
 -/
@@ -27,6 +28,7 @@ theorem abs_eigenvalues_le_specNorm {A : Matrix n n ℝ} (hA : A.IsHermitian) (i
   simpa only [hm, norm_smul, Real.norm_eq_abs, hA.eigenvectorBasis.orthonormal.1 i,
     mul_one, specNorm] using h
 
+open scoped Matrix.Norms.L2Operator in
 /-- Sorted signed eigenvalues have absolute value at most the spectral norm.
 Horn–Johnson 2013, Section 5.6; supports `eigenvalue-perturbation-symmetric`.
 -/
@@ -62,20 +64,22 @@ theorem eigenvalues₀_last_mul_le_dotProduct_mulVec {A : Matrix n n ℝ}
   apply hA.eigenvalues₀_antitone
   exact Nat.le_pred_of_lt ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i).isLt
 
+open scoped Matrix.Norms.L2Operator in
 /-- Weyl's signed eigenvalue perturbation bound, upper side.
 Horn–Johnson 2013, Theorem 4.3.1. Indices are decreasing and zero-indexed.
-atlas: eigenvalue-perturbation-symmetric (partial) -/
+atlas: eigenvalue-perturbation-symmetric -/
 theorem eigenvalues₀_add_le_add_eigenvalues₀_zero {A E : Matrix n n ℝ}
     (hA : A.IsHermitian) (hE : E.IsHermitian) (i : Fin (Fintype.card n)) :
     (hA.add hE).eigenvalues₀ i ≤ hA.eigenvalues₀ i +
       hE.eigenvalues₀ ⟨0, by have := i.isLt; omega⟩ := by
   simpa only [Nat.add_zero, Fin.eta] using
-    Matrix.IsHermitian.eigenvalues₀_add_le hA hE (hA.add hE) i ⟨0, by have := i.isLt; omega⟩
+    Matrix.IsHermitian.eigenvalues₀_add_le hA hE i ⟨0, by have := i.isLt; omega⟩
       (by have := i.isLt; omega)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Weyl's signed eigenvalue perturbation bound, lower side.
 Horn–Johnson 2013, Theorem 4.3.1. No positivity or simple-spectrum assumption.
-atlas: eigenvalue-perturbation-symmetric (partial) -/
+atlas: eigenvalue-perturbation-symmetric -/
 theorem add_eigenvalues₀_last_le_eigenvalues₀_add {A E : Matrix n n ℝ}
     (hA : A.IsHermitian) (hE : E.IsHermitian) (i : Fin (Fintype.card n)) :
     hA.eigenvalues₀ i + hE.eigenvalues₀ ⟨Fintype.card n - 1, by have := i.isLt; omega⟩ ≤
@@ -88,9 +92,10 @@ theorem add_eigenvalues₀_last_le_eigenvalues₀_add {A E : Matrix n n ℝ}
   rw [Matrix.add_mulVec, dotProduct_add]
   nlinarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- Signed sorted eigenvalues are 1-Lipschitz for the spectral norm.
 Horn–Johnson 2013, Corollary 4.3.15; arbitrary finite real symmetric matrices.
-atlas: eigenvalue-perturbation-symmetric (partial) -/
+atlas: eigenvalue-perturbation-symmetric -/
 theorem abs_eigenvalues₀_add_sub_le_specNorm {A E : Matrix n n ℝ}
     (hA : A.IsHermitian) (hE : E.IsHermitian) (i : Fin (Fintype.card n)) :
     |(hA.add hE).eigenvalues₀ i - hA.eigenvalues₀ i| ≤ specNorm E := by
@@ -102,6 +107,7 @@ theorem abs_eigenvalues₀_add_sub_le_specNorm {A E : Matrix n n ℝ}
   rw [abs_le] at hmax hmin ⊢
   constructor <;> linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- Eigenvalues at the same decreasing index differ by at most the spectral norm
 of the matrix difference. Horn–Johnson 2013, Corollary 4.3.15.
 atlas: eigenvalue-perturbation-symmetric (partial) -/

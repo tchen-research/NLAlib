@@ -18,17 +18,17 @@ namespace NLAlib
 open scoped NLAlib.TwoPi
 
 /-- The periodic sine square wave on the additive circle.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 def jacksonSquareWaveCircle (N : ℕ) (t : AddCircle (2 * Real.pi)) : ℝ :=
   Real.sign ((fourier (N : ℤ) t).im)
 
 /-- At a real angle the square wave is exactly `sign(sin(Nt))`.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 theorem jacksonSquareWaveCircle_coe_eq (N : ℕ) (t : ℝ) :
     jacksonSquareWaveCircle N (t : AddCircle (2 * Real.pi)) = Real.sign (Real.sin ((N : ℝ) * t)) := by
   rw [jacksonSquareWaveCircle, im_fourier_nat_coe_eq_sin]
 
-/-- The actual square wave is measurable.
+/-- The square wave is measurable.
 Source: the piecewise real sign function; helper for sharp `jackson-lipschitz`. -/
 theorem measurable_jacksonSquareWaveCircle (N : ℕ) : Measurable (jacksonSquareWaveCircle N) := by
   have hm : Measurable (fun t : AddCircle (2 * Real.pi) => (fourier (N : ℤ) t).im) :=
@@ -54,8 +54,8 @@ theorem integrable_jacksonSquareWaveCircle (N : ℕ) :
       (ae_of_all _ fun t => by simpa only [Real.norm_eq_abs] using abs_jacksonSquareWaveCircle_le_one N t)
   exact hm.integrable le_rfl
 
-/-- A uniform `N`-grid shift leaves the actual square wave unchanged.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+/-- A uniform `N`-grid shift leaves the square wave unchanged.
+Helper for `jackson-lipschitz`. -/
 theorem jacksonSquareWaveCircle_add_div_period (N : ℕ) (hN : 0 < N)
     (t : AddCircle (2 * Real.pi)) :
     jacksonSquareWaveCircle N (t + ((2 * Real.pi / N : ℝ) : AddCircle (2 * Real.pi))) =
@@ -63,8 +63,8 @@ theorem jacksonSquareWaveCircle_add_div_period (N : ℕ) (hN : 0 < N)
   rw [jacksonSquareWaveCircle, fourier_apply_add, fourier_nat_div_period_eq_one N hN, mul_one]
   rfl
 
-/-- Low nonzero Fourier coefficients of the actual square wave vanish exactly.
-Source: operator rederivations `rt:sawtooth`; Haar shift invariance and roots of unity.
+/-- Low nonzero Fourier coefficients of the square wave vanish exactly.
+Haar shift invariance and roots of unity.
 Atlas `jackson-lipschitz` (orthogonality helper). -/
 theorem fourierCoeff_jacksonSquareWaveCircle_eq_zero {N k : ℕ} (hk : 0 < k) (hkN : k < N) :
     fourierCoeff (fun t : AddCircle (2 * Real.pi) => (jacksonSquareWaveCircle N t : ℂ)) (k : ℤ) = 0 := by
@@ -111,7 +111,7 @@ theorem intervalIntegrable_fourier_mul_jacksonSquareWaveCircle (N : ℕ) (k : �
     simpa [Complex.norm_real, Real.norm_eq_abs] using
       abs_jacksonSquareWaveCircle_le_one N (t : AddCircle (2 * Real.pi))
 
-/-- The actual real sine square wave is interval integrable over a full period.
+/-- The real sine square wave is interval integrable over a full period.
 Source: bounded measurable functions on a finite interval; helper for sharp `jackson-lipschitz`. -/
 theorem intervalIntegrable_sign_sin (N : ℕ) :
     IntervalIntegrable (fun t : ℝ => Real.sign (Real.sin ((N : ℝ) * t))) volume 0 (2 * Real.pi) := by
@@ -123,10 +123,10 @@ theorem intervalIntegrable_sign_sin (N : ℕ) :
     ⟨Complex.reCLM.integrable_comp h.1, Complex.reCLM.integrable_comp h.2⟩
   simpa only [fourier_zero, one_mul, Complex.ofReal_re, jacksonSquareWaveCircle_coe_eq] using hreal
 
-/-- The actual sine square wave is orthogonal on a full period to every positive sine
+/-- The sine square wave is orthogonal on a full period to every positive sine
 frequency below `N`. The proof transports the proved Fourier cancellation through its
 normalized interval integral and imaginary-part projection.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem integral_sign_sin_mul_sin_eq_zero {N k : ℕ} (hk : 0 < k) (hkN : k < N) :
     (∫ t : ℝ in 0..2 * Real.pi, Real.sign (Real.sin ((N : ℝ) * t)) * Real.sin ((k : ℝ) * t)) = 0 := by
   let f : ℝ → ℂ := fun t => fourier (-(k : ℤ)) (t : AddCircle (2 * Real.pi)) *

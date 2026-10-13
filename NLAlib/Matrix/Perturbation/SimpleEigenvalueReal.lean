@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Perturbation.SimpleEigenvaluePerturbation
 
 /-!
@@ -5,13 +6,13 @@ import NLAlib.Matrix.Perturbation.SimpleEigenvaluePerturbation
 
 For a real unit eigenvector of a symmetric matrix, the left–right derivative
 reduces to the quadratic form in the perturbation. The locally unique branch
-is an actual eigenvalue of the complexification for real parameters.
+is an eigenvalue of the complexification for real parameters.
 Source: Horn–Johnson (2013), Theorem 6.3.12.
 -/
 
 noncomputable section
 open Filter
-open scoped Matrix Matrix.Norms.L2Operator Topology
+open scoped Matrix Topology
 
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
@@ -19,6 +20,7 @@ set_option backward.isDefEq.respectTransparency.types false
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Restricting the complex simple-eigenvalue branch to real parameters
 preserves its local spectral uniqueness and its left–right derivative.
 Source: Horn–Johnson (2013), Theorem 6.3.12.
@@ -51,15 +53,16 @@ theorem exists_real_parameter_eigenvalue_branch_of_simple
       simpa using (hcont.continuousAt (x := ((0 : ℝ), μ))).tendsto
     exact hmap.eventually hφunique
 
+open scoped Matrix.Norms.L2Operator in
 /-- A real symmetric matrix's simple eigenvalue has derivative `xᵀEx`
 along every real perturbation when its eigenvector has unit Euclidean norm.
 The real parameter branch is locally unique in the complex spectrum, which
 also includes all possible nearby real eigenvalues. Source: Horn–Johnson
-(2013), Theorem 6.3.12; unit norm is written `x ⬝ᵥ x = 1`.
-atlas: simple-eigenvalue-perturbation (partial) -/
-theorem exists_eigenvalue_branch_of_simple_of_isSymm
-    {A : Matrix n n ℝ} (E : Matrix n n ℝ) (hA : A.IsSymm)
-    {x : n → ℝ} {μ : ℝ} (hx : x ⬝ᵥ x = 1) (hAx : A *ᵥ x = μ • x)
+(2013), Theorem 6.3.12.
+atlas: simple-eigenvalue-perturbation -/
+theorem exists_eigenvalue_branch_of_simple_of_isHermitian
+    {A : Matrix n n ℝ} (E : Matrix n n ℝ) (hAh : A.IsHermitian)
+    {x : n → ℝ} {μ : ℝ} (hxn : ‖WithLp.toLp 2 x‖ = 1) (hAx : A *ᵥ x = μ • x)
     (hμ : A.charpoly.rootMultiplicity μ = 1) :
     ∃ φ : ℝ → ℂ, φ 0 = μ ∧ ContinuousAt φ 0 ∧
       HasDerivAt φ (Complex.ofReal (x ⬝ᵥ (E *ᵥ x))) 0 ∧
@@ -67,6 +70,8 @@ theorem exists_eigenvalue_branch_of_simple_of_isSymm
       (∀ᶠ t : ℝ in 𝓝 (0 : ℝ), φ t ∈ spectrum ℂ ((A + t • E).map Complex.ofReal)) ∧
       (∀ᶠ p : ℝ × ℂ in 𝓝 (0, (μ : ℂ)),
         p.2 ∈ spectrum ℂ ((A + p.1 • E).map Complex.ofReal) ↔ φ p.1 = p.2) := by
+  have hA : A.IsSymm := Matrix.isHermitian_iff_isSymm.mp hAh
+  have hx : x ⬝ᵥ x = 1 := by rw [← norm_toLp_sq_eq_dotProduct_self, hxn, one_pow]
   let z : n → ℂ := Complex.ofReal ∘ x
   have hzz : z ⬝ᵥ z = 1 := by
     simpa [z, hx, Complex.ofRealHom] using (Complex.ofRealHom.map_dotProduct x x).symm

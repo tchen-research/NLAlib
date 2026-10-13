@@ -1,10 +1,10 @@
 import NLAlib.Matrix.Norms.InvariantNormRepresentation
-import NLAlib.Matrix.Inequalities.Mirsky
+import NLAlib.Matrix.Inequalities.SingularValueMajorization
 /-!
 # Fan dominance and invariant-norm perturbation bounds
 
-All invariant norms are represented by actual symmetric gauges. Conversely,
-testing the genuine Ky Fan norms recovers every weak-majorization prefix.
+All invariant norms are represented by symmetric gauges. Conversely,
+testing the Ky Fan norms recovers every weak-majorization prefix.
 Mirsky's proved thin singular-value majorization gives its full fixed-shape
 invariant-norm consequence. Source: Bhatia (1997), Theorem IV.2.2; Mirsky (1960).
 Atlas: `unitarily-invariant-norm-def`, `lidskii`.
@@ -17,8 +17,8 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
-/-- Every positive Ky Fan prefix is a genuine orthogonally invariant matrix norm. -/
-def kyFanInvariantNorm (k : ℕ) (hk : 1 ≤ k) : OrthogonallyInvariantNorm m n where
+/-- Every positive Ky Fan prefix is a orthogonally invariant matrix norm. -/
+def kyFanInvariantNorm (k : ℕ) (hk : 1 ≤ k) : UnitarilyInvariantNorm ℝ m n where
   seminorm := kyFanSeminorm k
   eq_zero_of_map_eq_zero A hA := (kyFanNorm_eq_zero_iff A hk).mp hA
   left_invariant A _U hU := kyFanNorm_orthogonal_mul A hU k
@@ -35,12 +35,12 @@ theorem sumLargest_singularValues_eq_kyFanNorm (A : Matrix m n ℝ) {k : ℕ}
   rw [sum_fin_ite_lt_eq_sum_range hk (singularValues A)]
   rfl
 
-/-- Fan dominance in both directions for all genuine invariant norms on a fixed
+/-- Fan dominance in both directions for all invariant norms on a fixed
 rectangular matrix space. This has no gauge-representation or dominance premise.
 Bhatia (1997), Theorem IV.2.2.
-atlas: unitarily-invariant-norm-def (partial) -/
+atlas: unitarily-invariant-norm-def -/
 theorem forall_invariantNorm_le_iff_weaklyMajorized (A B : Matrix m n ℝ) :
-    (∀ ν : OrthogonallyInvariantNorm m n, ν.seminorm A ≤ ν.seminorm B) ↔
+    (∀ ν : UnitarilyInvariantNorm ℝ m n, ν.seminorm A ≤ ν.seminorm B) ↔
       WeaklyMajorized (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i)
         (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues B i) := by
   constructor
@@ -56,23 +56,23 @@ theorem forall_invariantNorm_le_iff_weaklyMajorized (A B : Matrix m n ℝ) :
     exact ν.toSymmetricGauge.value_le_of_weaklyMajorized
       (fun i => singularValues_nonneg _ i) h
 
-/-- Every invariant norm has a fixed actual symmetric gauge representation,
+/-- Every invariant norm has a fixed symmetric gauge representation,
 valid simultaneously for every matrix of that shape.
 Bhatia (1997), Theorem IV.2.1.
-atlas: unitarily-invariant-norm-def (partial) -/
-theorem OrthogonallyInvariantNorm.exists_symmetricGauge_representation
-    (ν : OrthogonallyInvariantNorm m n) :
+atlas: unitarily-invariant-norm-def -/
+theorem UnitarilyInvariantNorm.exists_symmetricGauge_representation
+    (ν : UnitarilyInvariantNorm ℝ m n) :
     ∃ Φ : SymmetricGauge (Fin (min (Fintype.card m) (Fintype.card n))),
       ∀ A : Matrix m n ℝ, ν.seminorm A = Φ.matrixValue A :=
   ⟨ν.toSymmetricGauge, ν.seminorm_eq_toSymmetricGauge_matrixValue⟩
 
-/-- Mirsky's perturbation bound in every invariant norm on the actual fixed
+/-- Mirsky's perturbation bound in every invariant norm on the fixed
 rectangular matrix space, with sharp constant one. The diagonal embedding has
 the same shape as `E`, avoiding application of a rectangular norm to a different
 square space. Includes every zero/degenerate dimension and repeated singular value.
 atlas: lidskii (partial) -/
 theorem invariantNorm_rectangularDiagonal_singularValues_add_sub_le
-    (ν : OrthogonallyInvariantNorm m n) (A E : Matrix m n ℝ) :
+    (ν : UnitarilyInvariantNorm ℝ m n) (A E : Matrix m n ℝ) :
     ν.seminorm (rectangularDiagonalMatrix (fun i : Fin (min (Fintype.card m) (Fintype.card n)) =>
       singularValues (A + E) i - singularValues A i)) ≤ ν.seminorm E := by
   let d : Fin (min (Fintype.card m) (Fintype.card n)) → ℝ := fun i =>

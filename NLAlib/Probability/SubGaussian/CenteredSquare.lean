@@ -13,7 +13,7 @@ For `ProbabilityTheory.HasSubgaussianMGF X c μ` and a real proxy `C₀ ≥ c`, 
 * `cgf_const_mul`, `iIndepFun_centered_sq`: bookkeeping for sums of centred squares.
 
 Vershynin 2018, Lemma 2.7.6 and §6.2 (diagonal and decoupled steps of Hanson–Wright). Ported from
-HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae (Hanson–Wright proof, Apache-2.0,
+HighDimProb (Hanson–Wright proof, Apache-2.0,
 authors Yuanhe Zhang, Jason D. Lee, Fanghui Liu); atlas `hanson-wright` (helpers).
 -/
 
@@ -315,10 +315,10 @@ theorem cgf_const_mul {μ : Measure Ω} {Y : Ω → ℝ} (a θ : ℝ) :
 /-- Centring the squares of independent variables keeps them independent. Atlas
 `hanson-wright` (helper). -/
 theorem iIndepFun_centered_sq {μ : Measure Ω} {ι : Type*} {X : ι → Ω → ℝ}
-    (h_indep : iIndepFun X μ) :
+    (hind : iIndepFun X μ) :
     iIndepFun (fun i => fun ω => X i ω ^ 2 - ∫ ω, X i ω ^ 2 ∂μ) μ := by
   simpa only [Function.comp_def] using
-    h_indep.comp
+    hind.comp
       (fun i x => x ^ 2 - ∫ ω, X i ω ^ 2 ∂μ)
       (fun _ => by fun_prop)
 
@@ -444,7 +444,7 @@ theorem integral_exp_mul_snd_fst_prod_le_of_hasSubgaussianMGF_of_le
 `(C₀ θ²/2) C₀ e ≤ 1/2`. Atlas `hanson-wright` (helper). -/
 theorem integrable_exp_mul_prod_of_indepFun_hasSubgaussianMGF_of_le
     {μ : Measure Ω} [IsProbabilityMeasure μ] {X Y : Ω → ℝ}
-    (h_indep : X ⟂ᵢ[μ] Y)
+    (hind : X ⟂ᵢ[μ] Y)
     {cX cY : ℝ≥0} (hX : HasSubgaussianMGF X cX μ)
     (hY : HasSubgaussianMGF Y cY μ) {C0 θ : ℝ}
     (hC0 : 0 < C0) (hcX : (cX : ℝ) ≤ C0) (hcY : (cY : ℝ) ≤ C0)
@@ -472,7 +472,7 @@ theorem integrable_exp_mul_prod_of_indepFun_hasSubgaussianMGF_of_le
       μ.map φ = (μ.map Y).prod (μ.map X) := by
     simpa [φ] using
       (ProbabilityTheory.indepFun_iff_map_prod_eq_prod_map_map
-        hY.aemeasurable hX.aemeasurable).mp h_indep.symm
+        hY.aemeasurable hX.aemeasurable).mp hind.symm
   have hmap_int : Integrable g (μ.map φ) := by
     rwa [hmap_eq]
   have hcomp := (integrable_map_measure hg hφ).1 hmap_int
@@ -483,7 +483,7 @@ theorem integrable_exp_mul_prod_of_indepFun_hasSubgaussianMGF_of_le
 `(C₀ θ²/2) C₀ e ≤ 1/2`. Vershynin 2018, §6.2 (decoupled step); atlas `hanson-wright` (helper). -/
 theorem integral_exp_mul_prod_le_of_indepFun_hasSubgaussianMGF_of_le
     {μ : Measure Ω} [IsProbabilityMeasure μ] {X Y : Ω → ℝ}
-    (h_indep : X ⟂ᵢ[μ] Y)
+    (hind : X ⟂ᵢ[μ] Y)
     {cX cY : ℝ≥0} (hX : HasSubgaussianMGF X cX μ)
     (hY : HasSubgaussianMGF Y cY μ) {C0 θ : ℝ}
     (hC0 : 0 < C0) (hcX : (cX : ℝ) ≤ C0) (hcY : (cY : ℝ) ≤ C0)
@@ -504,7 +504,7 @@ theorem integral_exp_mul_prod_le_of_indepFun_hasSubgaussianMGF_of_le
       μ.map φ = (μ.map Y).prod (μ.map X) := by
     simpa [φ] using
       (ProbabilityTheory.indepFun_iff_map_prod_eq_prod_map_map
-        hY.aemeasurable hX.aemeasurable).mp h_indep.symm
+        hY.aemeasurable hX.aemeasurable).mp hind.symm
   have hprod_bound :
       ∫ p : ℝ × ℝ, g p ∂((μ.map Y).prod (μ.map X)) ≤
         exp (exp 1 ^ 2 * C0 ^ 2 * θ ^ 2) :=

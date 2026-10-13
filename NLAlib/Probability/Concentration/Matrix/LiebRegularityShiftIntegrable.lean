@@ -14,9 +14,10 @@ Atlas: `matrix-laplace` (regularity lemma).
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Auxiliary regularity lemma for Corollary 3.4.2 and the proof of Lemma 3.5.1, printed pp. 35–36; standing regularity convention in Section 2.2.1, printed p. 25.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder
+open scoped MatrixOrder
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- If `matrixExp X` is integrable for a Hermitian random matrix `X`, then so are `matrixExp (H + X)`
 and `traceExp (H + X)` for every fixed Hermitian `H`.
 

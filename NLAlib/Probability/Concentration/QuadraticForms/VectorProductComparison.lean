@@ -3,7 +3,7 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
@@ -16,11 +16,11 @@ import NLAlib.ForMathlib.MeasureTheory.MapProd
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
 `NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
-Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
 set_option maxRecDepth 5000
@@ -29,13 +29,14 @@ namespace NLAlib
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integrable_exp_norm_toEuclideanCLM_randomVector_sq` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K θ : ℝ} (hθ : 0 ≤ θ)
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hsmall : θ * K ^ 2 * specNorm A ^ 2 * exp 1 < 1) :
     Integrable (fun ω =>
       exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2)) μ := by
@@ -75,7 +76,7 @@ lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
     integrable_exp_quadratic_stdGaussian S hSpos hKθ_nonneg hsmall_eig_lt
   have hf_aesm : AEStronglyMeasurable f (γ.prod μ) := by
     have hX_aemeas : AEMeasurable (randomVector X) μ :=
-      randomVector_aemeasurable fun i => (hX_subG i).aemeasurable
+      randomVector_aemeasurable fun i => (hmgf i).aemeasurable
     have hU_aemeas :
         AEMeasurable (fun p : E × Ω => U p.1) (γ.prod μ) :=
       AEMeasurable.comp_fst (μ := γ) (ν := μ) U.continuous.aemeasurable
@@ -90,7 +91,7 @@ lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
   have hinner_bound : (fun g : E => ∫ ω, f (g, ω) ∂μ) ≤ᵐ[γ]
       fun g : E => exp ((K ^ 2 * θ) * inner ℝ (S g) g) := by
     filter_upwards with g
-    have hlin := inner_randomVector_hasSubgaussianMGF_of_iIndepFun h_indep hX_subG (U g)
+    have hlin := inner_randomVector_hasSubgaussianMGF_of_iIndepFun hind hmgf (U g)
     have hmgf := hlin.mgf_le s
     have hnorm_sq : ‖U g‖ ^ 2 = inner ℝ (S g) g := by
       simpa [S] using ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_left U g
@@ -117,7 +118,7 @@ lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
     constructor
     · filter_upwards with g
       exact
-        (inner_randomVector_hasSubgaussianMGF_of_iIndepFun h_indep hX_subG (U g)).integrable_exp_mul s
+        (inner_randomVector_hasSubgaussianMGF_of_iIndepFun hind hmgf (U g)).integrable_exp_mul s
     · have hnorm_outer_bound :
           (fun g : E => ‖∫ ω, ‖f (g, ω)‖ ∂μ‖) ≤ᵐ[γ]
             fun g : E => exp ((K ^ 2 * θ) * inner ℝ (S g) g) := by
@@ -146,13 +147,14 @@ lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
   rw [hleft_eq]
   exact hprod_inner_int
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integrable_exp_inner_toEuclideanCLM_randomVector_prod` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integrable_exp_inner_toEuclideanCLM_randomVector_prod {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K l : ℝ}
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hsmall : (K ^ 2 * l ^ 2 / 2) * K ^ 2 * specNorm A ^ 2 * exp 1 < 1) :
     Integrable
       (fun p : Ω × Ω =>
@@ -165,7 +167,7 @@ lemma integrable_exp_inner_toEuclideanCLM_randomVector_prod {μ : Measure Ω}
   let f : Ω × Ω → ℝ :=
     fun p => exp (l * inner ℝ (T (randomVector X p.1)) (randomVector X p.2))
   have hX_aemeas : AEMeasurable (randomVector X) μ :=
-    randomVector_aemeasurable fun i => (hX_subG i).aemeasurable
+    randomVector_aemeasurable fun i => (hmgf i).aemeasurable
   have hf_aesm : AEStronglyMeasurable f (μ.prod μ) := by
     have hleft :
         AEMeasurable (fun p : Ω × Ω => T (randomVector X p.1)) (μ.prod μ) :=
@@ -187,12 +189,12 @@ lemma integrable_exp_inner_toEuclideanCLM_randomVector_prod {μ : Measure Ω}
       Integrable (fun ω =>
         exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2)) μ :=
     integrable_exp_norm_toEuclideanCLM_randomVector_sq A hθ_nonneg
-      h_indep hX_subG (by simpa [θ, T] using hsmall)
+      hind hmgf (by simpa [θ, T] using hsmall)
   rw [integrable_prod_iff hf_aesm]
   constructor
   · filter_upwards with ω₁
     exact
-      (inner_randomVector_hasSubgaussianMGF_of_iIndepFun h_indep hX_subG
+      (inner_randomVector_hasSubgaussianMGF_of_iIndepFun hind hmgf
         (T (randomVector X ω₁))).integrable_exp_mul l
   · have hinner_norm_bound :
         (fun ω₁ => ∫ ω₂, ‖f (ω₁, ω₂)‖ ∂μ) ≤ᵐ[μ]
@@ -205,7 +207,7 @@ lemma integrable_exp_inner_toEuclideanCLM_randomVector_prod {μ : Measure Ω}
         dsimp [f]
         rw [abs_of_nonneg (exp_nonneg _)]
       have hlin :=
-        inner_randomVector_hasSubgaussianMGF_of_iIndepFun h_indep hX_subG
+        inner_randomVector_hasSubgaussianMGF_of_iIndepFun hind hmgf
           (T (randomVector X ω₁))
       have hmgf := hlin.mgf_le l
       rw [hnorm_eq]
@@ -234,13 +236,14 @@ lemma integrable_exp_inner_toEuclideanCLM_randomVector_prod {μ : Measure Ω}
     exact Integrable.mono' hsquare_int'
       hf_aesm.norm.integral_prod_right' houter_bound
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integral_exp_inner_toEuclideanCLM_randomVector_prod_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K l : ℝ}
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hsmall : (K ^ 2 * l ^ 2 / 2) * K ^ 2 * specNorm A ^ 2 * exp 1 ≤ 1 / 2) :
     ∫ p : Ω × Ω,
         exp (l * inner ℝ
@@ -253,7 +256,7 @@ lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
   let f : Ω × Ω → ℝ :=
     fun p => exp (l * inner ℝ (T (randomVector X p.1)) (randomVector X p.2))
   have hf_int : Integrable f (μ.prod μ) :=
-    integrable_exp_inner_toEuclideanCLM_randomVector_prod A h_indep hX_subG (by
+    integrable_exp_inner_toEuclideanCLM_randomVector_prod A hind hmgf (by
       exact lt_of_le_of_lt hsmall (by norm_num))
   have hθ_nonneg : 0 ≤ θ := by
     dsimp [θ]
@@ -263,7 +266,7 @@ lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
           exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2) ∂μ ≤
         exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobNorm A ^ 2) :=
     integral_exp_norm_toEuclideanCLM_randomVector_sq_le A hθ_nonneg
-      h_indep hX_subG (by simpa [θ, T] using hsmall)
+      hind hmgf (by simpa [θ, T] using hsmall)
   have hsquare_int :
       Integrable (fun ω =>
         exp (θ * ‖T (randomVector X ω)‖ ^ 2)) μ := by
@@ -272,14 +275,14 @@ lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
         ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2)) μ
     exact integrable_exp_norm_toEuclideanCLM_randomVector_sq
       (μ := μ) (A := A) (X := X) (K := K) (θ := θ)
-      hθ_nonneg h_indep hX_subG (by
+      hθ_nonneg hind hmgf (by
         exact lt_of_le_of_lt hsmall (by norm_num))
   have hinner_bound :
       (fun ω₁ => ∫ ω₂, f (ω₁, ω₂) ∂μ) ≤ᵐ[μ]
         fun ω₁ => exp (θ * ‖T (randomVector X ω₁)‖ ^ 2) := by
     filter_upwards with ω₁
     have hlin :=
-      inner_randomVector_hasSubgaussianMGF_of_iIndepFun h_indep hX_subG
+      inner_randomVector_hasSubgaussianMGF_of_iIndepFun hind hmgf
         (T (randomVector X ω₁))
     have hmgf := hlin.mgf_le l
     calc
@@ -306,12 +309,13 @@ lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
             dsimp [θ]
             ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integral_exp_quadraticForm_cutMatrix_eq_prod` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) {X : Fin n → Ω → ℝ} {l : ℝ}
-    (h_indep : iIndepFun X μ) (hX_meas : ∀ i, AEMeasurable (X i) μ)
+    (hind : iIndepFun X μ) (hX_meas : ∀ i, AEMeasurable (X i) μ)
     (hprod_int :
       Integrable
         (fun p : Ω × Ω =>
@@ -349,7 +353,7 @@ lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
       (AEMeasurable.comp_snd (μ := μ) (ν := μ) hV_meas)
   have hUV_indep : U ⟂ᵢ[μ] V := by
     dsimp [U, V]
-    exact coordinateMask_indepFun_compl h_indep hX_meas s
+    exact coordinateMask_indepFun_compl hind hX_meas s
   have hmap_same : μ.map ψ = (μ.map U).prod (μ.map V) := by
     simpa [ψ] using
       (ProbabilityTheory.indepFun_iff_map_prod_eq_prod_map_map

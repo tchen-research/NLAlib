@@ -10,7 +10,7 @@ import Mathlib.MeasureTheory.Integral.Prod
 
 open MeasureTheory
 
-namespace NLAlib
+namespace MeasureTheory
 
 /-- A one-coordinate conditional mean is measurable. Source: Mathlib's
 `StronglyMeasurable.integral_prod_right'` applied to coordinate resampling.
@@ -23,4 +23,4 @@ theorem measurable_integral_update_pi {ι : Type*} [DecidableEq ι] {Ω : Type*}
     (f := fun p : (ι → Ω) × Ω => f (Function.update p.1 i p.2))
     (hfm.comp measurable_update').stronglyMeasurable).measurable
 
-end NLAlib
+end MeasureTheory

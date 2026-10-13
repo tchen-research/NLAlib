@@ -3,7 +3,7 @@ import Mathlib.MeasureTheory.Function.ConditionalExpectation.Indicator
 /-!
 # Conditional comparison on measurable cuts
 
-The actual pull-out property of indicators preserves an integrable scalar comparison
+The pull-out property of indicators preserves an integrable scalar comparison
 on any event measurable with respect to the conditioning sigma-algebra.
 -/
 
@@ -11,12 +11,12 @@ noncomputable section
 
 open MeasureTheory Set Filter
 
-namespace NLAlib
+namespace MeasureTheory
 
 /-- An integrable real comparison on a conditioning-measurable cut remains true for
-the actual conditional expectations on that cut.
+the conditional expectations on that cut.
 Source: Mathlib conditional indicator pull-out and conditional monotonicity;
-helper for operator rederivations `eq:condlieb`, atlas `matrix-freedman` (partial). -/
+helper for Tropp 2011 (matrix Freedman), atlas `matrix-freedman` (partial). -/
 theorem ae_condExp_le_condExp_on_of_ae_le_on {Ω : Type*}
     {m mΩ : MeasurableSpace Ω} {μ : Measure Ω} (hm : m ≤ mΩ)
     {X Y : Ω → ℝ} (hX : Integrable X μ) (hY : Integrable Y μ)
@@ -33,4 +33,4 @@ theorem ae_condExp_le_condExp_on_of_ae_le_on {Ω : Type*}
   rw [h₁, h₂] at hω
   simpa only [Set.indicator_of_mem hsω] using hω
 
-end NLAlib
+end MeasureTheory

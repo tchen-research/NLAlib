@@ -1,6 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.Basic.PolynomialGrowth
-import NLAlib.Matrix.Calculus.InversePowerGrowth
-import NLAlib.Matrix.Structured.GramSoftMinMeasurable
+import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.InversePowerGrowth
+import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.GramSoftMinMeasurable
 /-!
 # Gaussian integrability of regularized Gram derivatives
 

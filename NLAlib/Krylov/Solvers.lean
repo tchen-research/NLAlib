@@ -2,7 +2,7 @@ import NLAlib.Krylov.Solvers.CG
 import NLAlib.Krylov.Solvers.CGRecurrence
 import NLAlib.Krylov.Solvers.GMRES
 import NLAlib.Krylov.Solvers.GMRESArnoldi
-import NLAlib.Krylov.Solvers.Minimiser
+import NLAlib.Krylov.Solvers.Minimizer
 import NLAlib.Krylov.Solvers.PolynomialMethods
 import NLAlib.Krylov.Solvers.Preconditioned
 

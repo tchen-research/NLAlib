@@ -52,7 +52,7 @@ theorem dotProduct_eq_zero_of_mem_maxGenEigenspace_of_left_eigenvalue_ne
 /-- Algebraic simplicity forces nonzero left–right eigenvector pairing.
 Source: Horn–Johnson (2013), Lemma 1.4.11; algebraic multiplicity one is
 expressed by the characteristic polynomial's root multiplicity.
-atlas: left-right-eigenvectors (partial), simple-eigenvalue-perturbation (partial) -/
+atlas: left-right-eigenvectors, simple-eigenvalue-perturbation (partial) -/
 theorem dotProduct_ne_zero_of_simple_eigenvalue [IsAlgClosed K] {A : Matrix n n K}
     {x y : n → K} {μ : K} (hx : x ≠ 0) (hy : y ≠ 0)
     (hAx : A *ᵥ x = μ • x) (hyA : y ᵥ* A = μ • y)

@@ -51,7 +51,7 @@ theorem exists_orthonormalBasis_pencil_of_quasi_basis
   exact hT.upperTriangular_mul hR
 
 /-- A singular second pencil map gives unit domain and image vectors with
-its image zero and the first map's image on the chosen image line. Source:
+its image zero and the first map's image on the chosen image line.
 Horn–Johnson (2013), Theorem 2.6.2; a common zero image is allowed. -/
 theorem exists_unit_pencil_image_line_of_not_injective
     {𝕜 E F : Type*} [RCLike 𝕜]

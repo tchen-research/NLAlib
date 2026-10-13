@@ -13,7 +13,7 @@ assemblies (atlas `rsvd-expected-error`, `rsvd-spectral-expected`, `gordon`, `ch
 
 open MeasureTheory ProbabilityTheory
 
-namespace NLAlib
+namespace MeasureTheory
 
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
 
@@ -34,8 +34,7 @@ theorem integral_le_sqrt_integral_sq {Y : Ω → ℝ} (hYi : Integrable Y μ)
     _ ≤ Real.sqrt (∫ ω, Y ω ^ 2 ∂μ) := Real.sqrt_le_sqrt h2
 
 /-- Jensen (Cauchy–Schwarz) in the form used for first moments: if `𝔼 X² ≤ c²` with `c ≥ 0`,
-then `𝔼 X ≤ c`. Corollary of `integral_le_sqrt_integral_sq`. Ported from Prove2me solution
-`GaussianMatrix.gordon_upper` (helper `gu_integral_le_of_integral_sq_le`). Atlas: helper of
+then `𝔼 X ≤ c`. Corollary of `integral_le_sqrt_integral_sq`. Atlas: helper of
 `gordon`, `chevet`. -/
 theorem integral_le_of_integral_sq_le (μ : Measure Ω) [IsProbabilityMeasure μ] (X : Ω → ℝ)
     (hX : Integrable X μ) (hX2 : Integrable (fun ω => X ω ^ 2) μ) (c : ℝ) (hc : 0 ≤ c)
@@ -43,4 +42,4 @@ theorem integral_le_of_integral_sq_le (μ : Measure Ω) [IsProbabilityMeasure μ
   (integral_le_sqrt_integral_sq hX hX2).trans
     ((Real.sqrt_le_sqrt h).trans_eq (Real.sqrt_sq hc))
 
-end NLAlib
+end MeasureTheory

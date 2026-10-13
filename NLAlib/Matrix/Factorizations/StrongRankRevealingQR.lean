@@ -6,7 +6,7 @@ import NLAlib.Matrix.Inequalities.KyFanNorms
 # Strong rank-revealing QR with the exact Gu–Eisenstat constants
 
 A finite maximum-volume selection proves all three strong RRQR guarantees.
-The leading inverse is genuine under `k ≤ rank A`. Setting `k = rank A`
+The leading block is invertible under `k ≤ rank A`. Setting `k = rank A`
 gives the rank-adapted branch with exactly zero projResidual, including rank zero.
 Gu–Eisenstat 1996, Theorem 3.2; derivations §alg:rrqr.
 -/
@@ -19,7 +19,7 @@ set_option maxHeartbeats 800000
 
 /-- Strong rank-revealing QR exists with the exact constants
 `sqrt(1 + f² k(n-k))` and interpolation bound `f`, for every `f ≥ 1`.
-The column equivalence is an actual reordering of all input columns; the
+The column equivalence is a reordering of all input columns; the
 full orthogonal factor has both Gram identities; the leading block is
 invertible and upper triangular and the trailing block is upper trapezoidal.
 Every leading and every zero-padded trailing singular value is controlled.

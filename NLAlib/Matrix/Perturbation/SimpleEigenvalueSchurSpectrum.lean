@@ -4,13 +4,13 @@ import Mathlib.LinearAlgebra.Matrix.SchurComplement
 # Spectrum and the scalar Schur eigenvalue equation
 
 For a scalar leading block and an invertible trailing resolvent block, the
-actual matrix spectral equation is exactly the scalar Schur equation.
+matrix spectral equation is exactly the scalar Schur equation.
 The trailing coordinate type is arbitrary finite, including empty.
-Horn–Johnson 2013, Theorem 6.3.12; operator derivations §gen:simple-branch.
+Horn–Johnson 2013, Theorem 6.3.12.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
@@ -56,8 +56,9 @@ theorem det_scalar_block_eigenvalue_pencil_eq_schur
       dotProduct, Matrix.mulVec, Finset.mul_sum]
   rw [hCouple, pow_two]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Under invertibility of the trailing pencil block, a spectral point of
-the actual perturbed scalar/block matrix is exactly a zero of the scalar
+the perturbed scalar/block matrix is exactly a zero of the scalar
 Schur function. One common arbitrary finite trailing type is used throughout.
 Horn–Johnson 2013, Theorem 6.3.12; supports `simple-eigenvalue-perturbation`. -/
 theorem mem_spectrum_scalar_block_iff_schur_eq_zero

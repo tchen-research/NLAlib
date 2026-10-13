@@ -13,12 +13,13 @@ Source: Horn–Johnson (2013), Theorems 1.3.21 and 2.4.8.1.
 
 noncomputable section
 open Polynomial
-open scoped Matrix Matrix.Norms.Frobenius
+open scoped Matrix
 
 namespace NLAlib
 
 variable {n ι : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.Frobenius in
 /-- Every commuting family of complex normal matrices has one common
 unitary diagonalization. Source: Horn–Johnson (2013), Theorem 2.4.8.1;
 the family may be infinite or empty, and zero-dimensional shapes are included.
@@ -33,20 +34,21 @@ theorem exists_simultaneous_unitary_diagonalization_of_normal_of_commute
     (Fintype.equivFin n).symm
   refine ⟨U, fun a => (T a).diag, fun a => ?_⟩
   obtain ⟨hrep, _, hchar⟩ := hT a
-  have hnorm := frobenius_norm_sq_eq_sum_norm_sq_of_normal (hA a) (T a).diag hchar
-  rw [hrep, frobenius_norm_sq_unitary_similarity] at hnorm
+  have hnorm := frobSq_eq_sum_norm_sq_of_normal (hA a) (T a).diag hchar
+  rw [hrep, frobSq_unitary_similarity] at hnorm
   simp only [Matrix.diag_apply] at hnorm
-  have hmass := frobenius_norm_sq_eq_diagonal_add_off_diagonal (T a)
-  have hzero : ‖T a - Matrix.diagonal (T a).diag‖ ^ 2 = 0 := by linarith
+  have hmass := frobSq_eq_sum_diag_add_frobSq_sub_diagonal (T a)
+  have hzero : frobSq (T a - Matrix.diagonal (T a).diag) = 0 := by linarith
   have hdiag : T a = Matrix.diagonal (T a).diag :=
-    sub_eq_zero.mp (norm_eq_zero.mp (sq_eq_zero_iff.mp hzero))
+    sub_eq_zero.mp ((frobSq_eq_zero_iff _).mp hzero)
   rw [hdiag] at hrep
   exact hrep
 
+open scoped Matrix.Norms.Frobenius in
 /-- A family of normal matrices commutes exactly when it shares a unitary
 diagonalization. Source: Horn–Johnson (2013), Theorem 2.4.8.1; arbitrary
 families and finite matrix shapes are allowed.
-atlas: simultaneous-diagonalization (partial) -/
+atlas: simultaneous-diagonalization -/
 theorem pairwise_commute_iff_exists_simultaneous_unitary_diagonalization
     (A : ι → Matrix n n ℂ) (hA : ∀ a, A a * (A a)ᴴ = (A a)ᴴ * A a) :
     (Pairwise fun a b => Commute (A a) (A b)) ↔
@@ -62,10 +64,11 @@ theorem pairwise_commute_iff_exists_simultaneous_unitary_diagonalization
     · rw [hrep, Matrix.mul_assoc, hUt, Matrix.mul_one]
     · rw [hrep, Matrix.mul_assoc, hUt, Matrix.mul_one]
 
+open scoped Matrix.Norms.Frobenius in
 /-- A common invertible eigenvector basis can put one selected member's
-eigenvalues in any prescribed complete characteristic order. Source:
+eigenvalues in any prescribed complete characteristic order.
 Horn–Johnson (2013), Theorem 1.3.21; repeated eigenvalues are retained.
-atlas: simultaneous-diagonalization (partial) -/
+atlas: simultaneous-diagonalization -/
 theorem exists_simultaneous_diagonalization_with_charpoly
     (A : ι → Matrix n n ℂ) (hdiag : ∀ a, IsDiagonalizable (A a))
     (hcomm : Pairwise fun a b => Commute (A a) (A b)) (a₀ : ι) (d₀ : n → ℂ)
@@ -91,11 +94,12 @@ theorem exists_simultaneous_diagonalization_with_charpoly
     rw [Matrix.mul_diagonal] at h ⊢
     exact h
 
+open scoped Matrix.Norms.Frobenius in
 /-- A commuting normal family's common unitary eigenbasis can put one
 selected member's eigenvalues in any prescribed characteristic order.
 Source: Horn–Johnson (2013), Theorem 2.4.8.1; repeated values, arbitrary
 families, and empty matrix shapes are included.
-atlas: simultaneous-diagonalization (partial) -/
+atlas: simultaneous-diagonalization -/
 theorem exists_simultaneous_unitary_diagonalization_with_charpoly
     (A : ι → Matrix n n ℂ) (hA : ∀ a, A a * (A a)ᴴ = (A a)ᴴ * A a)
     (hcomm : Pairwise fun a b => Commute (A a) (A b)) (a₀ : ι) (d₀ : n → ℂ)

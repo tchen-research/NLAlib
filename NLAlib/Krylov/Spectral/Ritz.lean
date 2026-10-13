@@ -3,19 +3,26 @@ import NLAlib.Polynomial.FunctionApproximation.Approximation
 /-!
 # Ritz values: gap-free and gap-dependent Lanczos eigenvalue bounds
 
-**Gap-free.** For a symmetric positive semidefinite `A` with top eigenvalue `λ₁` (eigenvector
-`u₁`) and a starting vector `b` with `u₁ ⬝ b ≠ 0`, the Krylov space `K_q(A, b)` contains a vector
-`y = p(A) b` whose Rayleigh quotient is within `ε λ₁ + λ₁ (2/(1 + √(2γ))^{q−1})² ‖b‖²/(u₁ ⬝ b)²`
-of `λ₁`, `γ = ε/(1 − ε)`; `p` is the Chebyshev amplifier (`NLAlib.chebyshevAmplifier`).
-Consequently the largest Ritz value (largest eigenvalue of `QᵀAQ` for an orthonormal `Q` whose
-range contains `K_q`) obeys the same bound. No eigenvalue gap is assumed. This is Musco–Musco's
-bound (MM15, Lem. 4 and Thm 1); it is not Saad's Thm 6.4.
+Statements take a unit eigenvector `u` for the eigenvalue at a sorted position
+(`A *ᵥ u = hA.eigenvalues₀ i₀ • u`, `‖WithLp.toLp 2 u‖ = 1`); the top eigenvalue is
+`hA.eigenvalues₀ 0`. "The other eigenvalues" are the other sorted positions, so repeated top
+eigenvalues are handled correctly (an eigenvector of a repeated eigenvalue is bounded by its
+copies).
 
-**Gap-dependent (Kaniel–Paige–Saad).** If every eigenvalue other than `λ₁` lies in `[a, c]`,
-`a < c < λ₁`, then `K_{q+1}(A, b)` contains `x` with
-`tan² ∠(u₁, x) ≤ tan² ∠(u₁, b) / T_q(1 + 2γ)²`, `γ = (λ₁ − c)/(c − a)`, and the largest Ritz
-value satisfies `0 ≤ λ₁ − θ₁ ≤ (λ₁ − a) tan² ∠(u₁, b) / T_q(1 + 2γ)²` (Saad 2011, Thm 6.4).
-Both are corollaries of polynomial forms that take any `p` and a bound `M` on `|p(λᵢ)|`, `i ≠ i₁`.
+**Gap-free.** For a positive semidefinite `A` with top eigenvalue `λ₁ = λ₀(A)` (unit eigenvector
+`u`) and a starting vector `b` with `u ⬝ b ≠ 0`, the Krylov space `K_{q+1}(A, b)` (`q` matvecs)
+contains a vector `y = p(A) b` whose Rayleigh quotient is within
+`ε λ₁ + λ₁ (2/(1 + √(2γ)))^{2q} ‖b‖²/(u ⬝ b)²` of `λ₁`, `γ = ε/(1 − ε)`; `p` is the Chebyshev
+amplifier (`NLAlib.chebyshevAmplifier`). Consequently the largest Ritz value (largest eigenvalue of
+`QᵀAQ` for an orthonormal `Q` whose range contains `K_{q+1}`) obeys the same bound. No eigenvalue
+gap is assumed. This is Musco–Musco's bound (MM15, Lem. 4 and Thm 1); it is not Saad's Thm 6.4.
+
+**Gap-dependent (Kaniel–Paige–Saad).** If every eigenvalue other than `λ₁` (every sorted position
+`≠ 0`) lies in `[a, c]`, `a < c < λ₁`, then `K_{q+1}(A, b)` contains `x` with
+`tan² ∠(u, x) ≤ tan² ∠(u, b) / T_q(1 + 2γ)²`, `γ = (λ₁ − c)/(c − a)`, and the largest Ritz
+value satisfies `0 ≤ λ₁ − θ₁ ≤ (λ₁ − a) tan² ∠(u, b) / T_q(1 + 2γ)²` (Saad 2011, Thm 6.4).
+Both are corollaries of polynomial forms that take any `p` and a bound `M` on `|p(λᵢ)|` over
+the other sorted positions.
 
 ## Main results
 
@@ -24,7 +31,8 @@ Both are corollaries of polynomial forms that take any `p` and a bound `M` on `|
   any upper bound on the Ritz values.
 * `NLAlib.exists_eigenvalues_transpose_mul_mul_ge`: the gap-free Ritz-value bound.
 * `NLAlib.tanSqAngle`, `NLAlib.tanSqAngle_aeval_mulVec_le`: the squared tangent of an angle and
-  the polynomial form of the eigenvector-angle bound.
+  the polynomial form of the eigenvector-angle bound (`tanSqAngle_le_of_forall_eigenvectorBasis_dotProduct_eq`
+  is the spectral-multiplier form shared with the power method).
 * `NLAlib.exists_mem_krylovSpace_tanSqAngle_le` (and `…_two_div_pow`): the Chebyshev angle bound.
 * `NLAlib.eigenvalues_transpose_mul_mul_le`,
   `NLAlib.eigenvalues_sub_eigenvalues_transpose_mul_mul_le` (and `…_of_poly`): the
@@ -45,31 +53,277 @@ namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-/-- **A Krylov vector with near-maximal Rayleigh quotient (gap-free).** Let `A` be symmetric
-with eigenvalues in `[0, λ₁]`, `λ₁ = λ_{i₁}`, let `0 < ε < 1`, `q ≥ 1`, and `c₁ = u_{i₁} ⬝ b ≠ 0`.
-Then there is a nonzero `y ∈ K_q(A, b)` with
-`λ₁ ‖y‖² − yᵀAy ≤ (ε λ₁ + λ₁ (2/(1 + √(2γ))^{q−1})² ‖b‖²/c₁²) ‖y‖²`, `γ = ε/(1 − ε)`.
+/-! ### Vector-norm bridges and the eigenvector coordinates (helpers) -/
+
+/-- A unit vector has `u ⬝ u = 1`. -/
+private lemma dotProduct_self_eq_one {u : n → ℝ} (hu : ‖WithLp.toLp 2 u‖ = 1) : u ⬝ᵥ u = 1 := by
+  rw [← norm_toLp_sq_eq_dotProduct_self, hu, one_pow]
+
+omit [DecidableEq n] in
+/-- Cauchy–Schwarz for the dot product: `(u ⬝ v)² ≤ (u ⬝ u)(v ⬝ v)`. -/
+theorem sq_dotProduct_le_dotProduct_mul_dotProduct (u v : n → ℝ) :
+    (u ⬝ᵥ v) ^ 2 ≤ (u ⬝ᵥ u) * (v ⬝ᵥ v) := by
+  have h := real_inner_mul_inner_self_le (WithLp.toLp 2 u : EuclideanSpace ℝ n)
+    (WithLp.toLp 2 v)
+  simp only [EuclideanSpace.inner_eq_star_dotProduct, star_trivial, WithLp.ofLp_toLp] at h
+  rw [sq, dotProduct_comm v u]
+  exact h
+
+/-- The eigenvalue at sorted position `i₀` is the eigenvalue of the label
+`Fintype.equivOfCardEq (Fintype.card_fin _) i₀` (the bridge between `eigenvalues₀` and
+`eigenvalues`). Helper. -/
+theorem _root_.Matrix.IsHermitian.eigenvalues_equivOfCardEq {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) (i₀ : Fin (Fintype.card n)) :
+    hA.eigenvalues (Fintype.equivOfCardEq (Fintype.card_fin _) i₀) = hA.eigenvalues₀ i₀ := by
+  unfold Matrix.IsHermitian.eigenvalues
+  rw [Equiv.symm_apply_apply]
+
+/-- Every eigenvalue is at most the one at sorted position `0`. Helper. -/
+theorem _root_.Matrix.IsHermitian.eigenvalues_le_eigenvalues₀_zero [Nonempty n]
+    {A : Matrix n n ℝ} (hA : A.IsHermitian) (i : n) :
+    hA.eigenvalues i ≤ hA.eigenvalues₀ 0 :=
+  hA.eigenvalues₀_antitone (Fin.zero_le _)
+
+section EigenvectorCoordinates
+
+variable {A : Matrix n n ℝ} (hA : A.IsHermitian)
+
+/-- Eigen-coordinates of an eigenvector: `(λᵢ − L)(uᵢ ⬝ u) = 0` when `A u = L u`. Helper for
+`krylov-eigenvector-angle`. -/
+theorem eigenvalues_sub_mul_eigenvectorBasis_dotProduct_eq_zero {u : n → ℝ} {L : ℝ}
+    (hu : A *ᵥ u = L • u) (i : n) :
+    (hA.eigenvalues i - L) * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ u) = 0 := by
+  have h := eigenvectorBasis_dotProduct_aeval_mulVec hA X u i
+  rw [aeval_X, hu, dotProduct_smul, eval_X, smul_eq_mul] at h
+  rw [sub_mul]; linarith
+
+/-- Parseval for a pair: `v ⬝ w = ∑ᵢ (uᵢ ⬝ v)(uᵢ ⬝ w)`. Helper. -/
+theorem dotProduct_eq_sum_eigenvectorBasis_dotProduct_mul (v w : n → ℝ) :
+    v ⬝ᵥ w = ∑ i, ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v) *
+      ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w) := by
+  have h1 := sum_sq_eigenvectorBasis_dotProduct hA (v + w)
+  have h2 := sum_sq_eigenvectorBasis_dotProduct hA v
+  have h3 := sum_sq_eigenvectorBasis_dotProduct hA w
+  simp only [dotProduct_add, add_sq, Finset.sum_add_distrib, add_dotProduct] at h1
+  rw [dotProduct_comm w v] at h1
+  have h4 : ∑ i, 2 * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v) *
+      ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w) = 2 * ∑ i, ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v) *
+      ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w) := by
+    rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun i _ => by ring
+  rw [h4] at h1
+  linarith
+
+/-- For an eigenvector `u` with `A u = L u`, `uᵢ ⬝ u` vanishes unless `λᵢ = L`, so any `g` acts
+as `g(L)` on these coordinates: `(uᵢ ⬝ u) g(λᵢ) = (uᵢ ⬝ u) g(L)`. Helper. -/
+theorem eigenvectorBasis_dotProduct_mul_eq {u : n → ℝ} {L : ℝ} (hu : A *ᵥ u = L • u)
+    (g : ℝ → ℝ) (i : n) :
+    ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ u) * g (hA.eigenvalues i) =
+      ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ u) * g L := by
+  rcases mul_eq_zero.1 (eigenvalues_sub_mul_eigenvectorBasis_dotProduct_eq_zero hA hu i) with
+    h | h
+  · rw [sub_eq_zero.1 h]
+  · rw [h, zero_mul, zero_mul]
+
+/-- **A spectral multiplier commutes with an eigenvector**: if `uᵢ ⬝ w = g(λᵢ)(uᵢ ⬝ v)` for
+every `i` (e.g. `w = g(A) v`) and `A u = L u`, then `u ⬝ w = g(L)(u ⬝ v)`. Helper for
+`krylov-eigenvector-angle`, `power-iteration`. -/
+theorem dotProduct_eq_mul_dotProduct_of_forall_eigenvectorBasis_dotProduct_eq {u v w : n → ℝ}
+    {L : ℝ} (hu : A *ᵥ u = L • u) {g : ℝ → ℝ}
+    (hw : ∀ i, (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w =
+      g (hA.eigenvalues i) * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v)) :
+    u ⬝ᵥ w = g L * (u ⬝ᵥ v) := by
+  rw [dotProduct_eq_sum_eigenvectorBasis_dotProduct_mul hA u w,
+    dotProduct_eq_sum_eigenvectorBasis_dotProduct_mul hA u v, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [hw i, ← mul_assoc, eigenvectorBasis_dotProduct_mul_eq hA hu g i]
+  ring
+
+/-- **Angle contraction under a spectral multiplier, numerator form.** Let `u` be a unit
+eigenvector for the eigenvalue at sorted position `i₀`, let `|g| ≤ M` at every other sorted
+position, and let `uᵢ ⬝ w = g(λᵢ)(uᵢ ⬝ v)` for every `i`. Then the component of `w`
+orthogonal to `u` is at most `M` times that of `v`: `‖w‖² − (u ⬝ w)² ≤ M² (‖v‖² − (u ⬝ v)²)`.
+Source: Trefethen–Bau (1997) [`tb97`], proof of Thm 27.1; Saad (2011) [`saad11`], §6.6.1.
+Helper for `krylov-eigenvector-angle`, `power-iteration`, `inverse-iteration`. -/
+theorem sub_sq_dotProduct_le_of_forall_eigenvectorBasis_dotProduct_eq
+    {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {g : ℝ → ℝ} {M : ℝ}
+    (hM : ∀ i, i ≠ i₀ → |g (hA.eigenvalues₀ i)| ≤ M) {v w : n → ℝ}
+    (hw : ∀ i, (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w =
+      g (hA.eigenvalues i) * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v)) :
+    w ⬝ᵥ w - (u ⬝ᵥ w) ^ 2 ≤ M ^ 2 * (v ⬝ᵥ v - (u ⬝ᵥ v) ^ 2) := by
+  set e := Fintype.equivOfCardEq (Fintype.card_fin (Fintype.card n)) with he
+  set L := hA.eigenvalues₀ i₀
+  set a : n → ℝ := fun i => (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ u with ha
+  set c : n → ℝ := fun i => (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v with hc
+  set d : n → ℝ := fun i => c i - (u ⬝ᵥ v) * a i with hd
+  have huu : u ⬝ᵥ u = 1 := dotProduct_self_eq_one hu1
+  have haa : ∑ i, a i ^ 2 = 1 := by rw [sum_sq_eigenvectorBasis_dotProduct hA u, huu]
+  have huv : u ⬝ᵥ v = ∑ i, a i * c i := dotProduct_eq_sum_eigenvectorBasis_dotProduct_mul hA u v
+  have huw : u ⬝ᵥ w = g L * (u ⬝ᵥ v) :=
+    dotProduct_eq_mul_dotProduct_of_forall_eigenvectorBasis_dotProduct_eq hA hu hw
+  have hag : ∀ i, a i * g (hA.eigenvalues i) = a i * g L := fun i =>
+    eigenvectorBasis_dotProduct_mul_eq hA hu g i
+  -- the orthogonal components in eigen-coordinates
+  have hwd : ∀ i, (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w - (u ⬝ᵥ w) * a i =
+      g (hA.eigenvalues i) * d i := fun i => by
+    rw [hw i, huw, hd]; dsimp only
+    have := hag i
+    linear_combination (-(u ⬝ᵥ v)) * this
+  have hsq_v : v ⬝ᵥ v - (u ⬝ᵥ v) ^ 2 = ∑ i, d i ^ 2 := by
+    have h1 : ∑ i, d i ^ 2 = ∑ i, c i ^ 2 - 2 * (u ⬝ᵥ v) * ∑ i, a i * c i +
+        (u ⬝ᵥ v) ^ 2 * ∑ i, a i ^ 2 := by
+      simp only [hd, Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
+      exact Finset.sum_congr rfl fun i _ => by ring
+    rw [h1, ← huv, haa, sum_sq_eigenvectorBasis_dotProduct hA v]; ring
+  have hsq_w : w ⬝ᵥ w - (u ⬝ᵥ w) ^ 2 = ∑ i, (g (hA.eigenvalues i) * d i) ^ 2 := by
+    have huw' : u ⬝ᵥ w = ∑ i, a i * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w) :=
+      dotProduct_eq_sum_eigenvectorBasis_dotProduct_mul hA u w
+    have h1 : ∑ i, (g (hA.eigenvalues i) * d i) ^ 2 =
+        ∑ i, ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w) ^ 2 -
+          2 * (u ⬝ᵥ w) * ∑ i, a i * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w) +
+            (u ⬝ᵥ w) ^ 2 * ∑ i, a i ^ 2 := by
+      simp only [← hwd, Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
+      exact Finset.sum_congr rfl fun i _ => by ring
+    rw [h1, ← huw', haa, sum_sq_eigenvectorBasis_dotProduct hA w]; ring
+  rw [hsq_v, hsq_w, Finset.mul_sum]
+  refine Finset.sum_le_sum fun i _ => ?_
+  rw [mul_pow]
+  by_cases hi : e.symm i = i₀
+  · -- the position of `u`: either `L` is repeated (then `|g L| ≤ M`) or `d i = 0`
+    have hLi : hA.eigenvalues i = L := by
+      change hA.eigenvalues₀ (e.symm i) = L; rw [hi]
+    by_cases hrep : ∃ j, j ≠ i₀ ∧ hA.eigenvalues₀ j = L
+    · obtain ⟨j, hj, hjL⟩ := hrep
+      have := hM j hj
+      rw [hjL, ← hLi] at this
+      exact mul_le_mul_of_nonneg_right (sq_le_sq' (by linarith [neg_abs_le
+        (g (hA.eigenvalues i))]) ((le_abs_self _).trans this)) (sq_nonneg _)
+    · push Not at hrep
+      -- `u` is a multiple of the `i`-th eigenvector
+      have hzero : ∀ j, j ≠ i → a j = 0 := fun j hj => by
+        have hne : hA.eigenvalues j ≠ L := fun hjL => by
+          apply hj
+          have := hrep (e.symm j) hjL
+          rw [← hi] at this
+          exact e.symm.injective this
+        rcases mul_eq_zero.1 (eigenvalues_sub_mul_eigenvectorBasis_dotProduct_eq_zero hA hu j)
+          with h | h
+        · exact absurd (sub_eq_zero.1 h) hne
+        · exact h
+      have hai : a i ^ 2 = 1 := by
+        rw [← haa, Finset.sum_eq_single i (fun j _ hj => by rw [hzero j hj, sq, mul_zero])
+          (fun h => absurd (Finset.mem_univ i) h)]
+      have huv' : u ⬝ᵥ v = a i * c i := by
+        rw [huv, Finset.sum_eq_single i (fun j _ hj => by rw [hzero j hj, zero_mul])
+          (fun h => absurd (Finset.mem_univ i) h)]
+      have hdi : d i = 0 := by
+        simp only [hd, huv']
+        linear_combination (-(c i)) * hai
+      rw [hdi]; simp
+  · have := hM (e.symm i) hi
+    exact mul_le_mul_of_nonneg_right (sq_le_sq' (by linarith [neg_abs_le
+      (g (hA.eigenvalues i))]) ((le_abs_self _).trans this)) (sq_nonneg _)
+
+end EigenvectorCoordinates
+
+/-! ### The squared tangent and the spectral-multiplier bound -/
+
+omit [DecidableEq n] in
+/-- The squared tangent of the angle between `u` and `x`,
+`tan² ∠(u, x) = (‖u‖² ‖x‖² − ⟨u, x⟩²)/⟨u, x⟩²`. For a unit `u` this is
+`‖(I − u uᵀ) x‖²/⟨u, x⟩²`. Junk value `0` when `⟨u, x⟩ = 0` (the angle is `π/2`).
+Source: Saad (2011) [`saad11`], §6.6.1 (where `tan θ(u, x)` is used with `‖u‖ = 1`).
+Helper for `krylov-eigenvector-angle` (the one-column case of `tanThetaMax`,
+`sq_tanThetaMax_replicateCol_eq_tanSqAngle`). -/
+def tanSqAngle (u x : n → ℝ) : ℝ := ((u ⬝ᵥ u) * (x ⬝ᵥ x) - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2
+
+omit [DecidableEq n] in
+/-- `tan² ∠(u, x) ≥ 0` (Cauchy–Schwarz). Helper for `krylov-eigenvector-angle`. -/
+theorem tanSqAngle_nonneg (u x : n → ℝ) : 0 ≤ tanSqAngle u x :=
+  div_nonneg (sub_nonneg.2 (sq_dotProduct_le_dotProduct_mul_dotProduct u x)) (sq_nonneg _)
+
+omit [DecidableEq n] in
+/-- For a unit vector `u`, `tan² ∠(u, x) = (‖x‖² − (u ⬝ x)²)/(u ⬝ x)²`. Helper. -/
+theorem tanSqAngle_of_norm_eq_one {u : n → ℝ} (hu : ‖WithLp.toLp 2 u‖ = 1) (x : n → ℝ) :
+    tanSqAngle u x = (x ⬝ᵥ x - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2 := by
+  rw [tanSqAngle, dotProduct_self_eq_one hu, one_mul]
+
+/-- **Angle contraction under a spectral multiplier.** Let `u` be a unit eigenvector for the
+eigenvalue at sorted position `i₀`, `|g| ≤ M` at every other sorted position, and
+`uᵢ ⬝ w = g(λᵢ)(uᵢ ⬝ v)` for every `i` (e.g. `w = p(A) v`, `w = (A − μI)⁻¹ v`). Then
+`tan² ∠(u, w) ≤ (M/g(λ_{i₀}))² tan² ∠(u, v)`. Source: Trefethen–Bau (1997) [`tb97`], proof of
+Thm 27.1. Helper for `krylov-eigenvector-angle`, `power-iteration`, `inverse-iteration`. -/
+theorem tanSqAngle_le_of_forall_eigenvectorBasis_dotProduct_eq {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) {i₀ : Fin (Fintype.card n)} {u : n → ℝ}
+    (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u) (hu1 : ‖WithLp.toLp 2 u‖ = 1) {g : ℝ → ℝ} {M : ℝ}
+    (hM : ∀ i, i ≠ i₀ → |g (hA.eigenvalues₀ i)| ≤ M) {v w : n → ℝ}
+    (hw : ∀ i, (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ w =
+      g (hA.eigenvalues i) * ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v)) :
+    tanSqAngle u w ≤ (M / g (hA.eigenvalues₀ i₀)) ^ 2 * tanSqAngle u v := by
+  have huw : u ⬝ᵥ w = g (hA.eigenvalues₀ i₀) * (u ⬝ᵥ v) :=
+    dotProduct_eq_mul_dotProduct_of_forall_eigenvectorBasis_dotProduct_eq hA hu hw
+  have hnum := sub_sq_dotProduct_le_of_forall_eigenvectorBasis_dotProduct_eq hA hu hu1 hM hw
+  rw [tanSqAngle_of_norm_eq_one hu1, tanSqAngle_of_norm_eq_one hu1, huw, mul_pow, div_pow,
+    div_mul_div_comm]
+  exact div_le_div_of_nonneg_right hnum (by positivity)
+
+/-- **Eigenvector angle, polynomial form.** Let `u` be a unit eigenvector for the eigenvalue
+`λ_{i₀}` at sorted position `i₀`, and `p` a polynomial with `|p(λᵢ)| ≤ M` at every other sorted
+position. Then `tan² ∠(u, p(A) b) ≤ (M/p(λ_{i₀}))² tan² ∠(u, b)`. With `deg p < q`,
+`p(A) b ∈ K_q(A, b)`. No hypothesis on `b` or `p(λ_{i₀})` is needed (both sides use the junk
+value `0` for a right angle). Source: Saad (2011) [`saad11`], §6.6.1, proof of the angle bound
+(`i = 1`).
+atlas: krylov-eigenvector-angle (partial) -/
+theorem tanSqAngle_aeval_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {p : ℝ[X]} {M : ℝ}
+    (hM : ∀ i, i ≠ i₀ → |p.eval (hA.eigenvalues₀ i)| ≤ M) (b : n → ℝ) :
+    tanSqAngle u (aeval A p *ᵥ b) ≤
+      (M / p.eval (hA.eigenvalues₀ i₀)) ^ 2 * tanSqAngle u b :=
+  tanSqAngle_le_of_forall_eigenvectorBasis_dotProduct_eq hA hu hu1 (g := fun x => p.eval x) hM
+    (fun i => eigenvectorBasis_dotProduct_aeval_mulVec hA p b i)
+
+/-- An eigenvector pairs with `p(A) b` through `p(λ)`: `u ⬝ p(A) b = p(λ)(u ⬝ b)` when
+`A u = λ u`. Helper for `krylov-eigenvector-angle`, `ritz-value-bounds`. -/
+theorem dotProduct_aeval_mulVec_of_mulVec_eq_smul {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    {u : n → ℝ} {L : ℝ} (hu : A *ᵥ u = L • u) (p : ℝ[X]) (b : n → ℝ) :
+    u ⬝ᵥ (aeval A p *ᵥ b) = p.eval L * (u ⬝ᵥ b) :=
+  dotProduct_eq_mul_dotProduct_of_forall_eigenvectorBasis_dotProduct_eq hA hu
+    (g := fun x => p.eval x) (fun i => eigenvectorBasis_dotProduct_aeval_mulVec hA p b i)
+
+/-! ### Gap-free bounds -/
+
+/-- **A Krylov vector with near-maximal Rayleigh quotient (gap-free).** Let `A` be positive
+semidefinite with top eigenvalue `λ₁ = λ₀(A)` and unit eigenvector `u`, let `0 < ε < 1`, and
+`u ⬝ b ≠ 0`. Then there is a nonzero `y ∈ K_{q+1}(A, b)` (`q` matvecs) with
+`λ₁ ‖y‖² − yᵀAy ≤ (ε λ₁ + λ₁ (2/(1 + √(2γ)))^{2q} ‖b‖²/(u ⬝ b)²) ‖y‖²`, `γ = ε/(1 − ε)`.
 Source: Musco–Musco (2015) [`mm15`], Lem. 4–5 and proof of Thm 1 (single-vector case).
-Atlas: `ritz-value-bounds`; uses `chebyshev-amplifier`, `polynomial-spectral-bound`,
-`krylov-subspace`.
+Deviation: `K_{q+1}` and the exponent `q` (the source counts the Krylov dimension).
 atlas: ritz-value-bounds -/
-theorem exists_mem_krylovSpace_sub_rayleigh_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    (hpsd : ∀ i, 0 ≤ hA.eigenvalues i) {i₁ : n} (htop : ∀ i, hA.eigenvalues i ≤ hA.eigenvalues i₁)
-    {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) (b : n → ℝ) {q : ℕ} (hq : 0 < q)
-    (hb : (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b ≠ 0) :
-    ∃ y ∈ krylovSpace A b q, y ≠ 0 ∧
-      hA.eigenvalues i₁ * (y ⬝ᵥ y) - y ⬝ᵥ (A *ᵥ y) ≤
-        (ε * hA.eigenvalues i₁ + hA.eigenvalues i₁ *
-          (2 / (1 + √(2 * (ε / (1 - ε)))) ^ (q - 1)) ^ 2 * (b ⬝ᵥ b) /
-            ((hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b) ^ 2) * (y ⬝ᵥ y) := by
-  set L := hA.eigenvalues i₁
-  set c : n → ℝ := fun i => (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ b with hcdef
-  have hc1 : 0 < c i₁ ^ 2 := by positivity
-  have hbb : b ⬝ᵥ b = ∑ i, c i ^ 2 := (sum_sq_eigenvectorBasis_dotProduct hA b).symm
-  have hL : 0 ≤ L := hpsd i₁
-  set M := 2 / (1 + √(2 * (ε / (1 - ε)))) ^ (q - 1)
+theorem exists_mem_krylovSpace_sub_rayleigh_le [Nonempty n] {A : Matrix n n ℝ}
+    (hA : A.PosSemidef) {u : n → ℝ} (hu : A *ᵥ u = hA.isHermitian.eigenvalues₀ 0 • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) {b : n → ℝ}
+    (hb : u ⬝ᵥ b ≠ 0) (q : ℕ) :
+    ∃ y ∈ krylovSpace A b (q + 1), y ≠ 0 ∧
+      hA.isHermitian.eigenvalues₀ 0 * ‖WithLp.toLp 2 y‖ ^ 2 - y ⬝ᵥ (A *ᵥ y) ≤
+        (ε * hA.isHermitian.eigenvalues₀ 0 + hA.isHermitian.eigenvalues₀ 0 *
+          (2 / (1 + √(2 * (ε / (1 - ε)))) ^ q) ^ 2 * ‖WithLp.toLp 2 b‖ ^ 2 / (u ⬝ᵥ b) ^ 2) *
+            ‖WithLp.toLp 2 y‖ ^ 2 := by
+  simp only [norm_toLp_sq_eq_dotProduct_self]
+  have hH := hA.isHermitian
+  set L := hH.eigenvalues₀ 0 with hLdef
+  have htop : ∀ i, hH.eigenvalues i ≤ L := hH.eigenvalues_le_eigenvalues₀_zero
+  have hpsd : ∀ i, 0 ≤ hH.eigenvalues i := hA.eigenvalues_nonneg
+  set c : n → ℝ := fun i => (hH.eigenvectorBasis i : n → ℝ) ⬝ᵥ b with hcdef
+  have hc1 : 0 < (u ⬝ᵥ b) ^ 2 := by positivity
+  have hbb : b ⬝ᵥ b = ∑ i, c i ^ 2 := (sum_sq_eigenvectorBasis_dotProduct hH b).symm
+  have huu : u ⬝ᵥ u = 1 := dotProduct_self_eq_one hu1
+  have hL : 0 ≤ L := by
+    obtain ⟨i⟩ := ‹Nonempty n›
+    exact (hpsd i).trans (htop i)
+  set M := 2 / (1 + √(2 * (ε / (1 - ε)))) ^ q
   rcases hL.lt_or_eq with hLpos | hL0
-  · -- the amplifier `p = T_{q-1}(x/α)/T_{q-1}(1+γ)`, `α = (1-ε)L`, `γ = ε/(1-ε)`
+  · -- the amplifier `p = T_q(x/α)/T_q(1+γ)`, `α = (1-ε)L`, `γ = ε/(1-ε)`
     set α := (1 - ε) * L
     set γ := ε / (1 - ε)
     have hα : 0 < α := mul_pos (by linarith) hLpos
@@ -77,43 +331,43 @@ theorem exists_mem_krylovSpace_sub_rayleigh_le {A : Matrix n n ℝ} (hA : A.IsHe
     have h1ε : 1 - ε ≠ 0 := (by linarith : (0 : ℝ) < 1 - ε).ne'
     have hαγ : α * (1 + γ) = L := by
       simp only [α, γ]; field_simp; ring
-    set p := chebyshevAmplifier α γ (q - 1)
+    set p := chebyshevAmplifier α γ q
     have hp1 : p.eval L = 1 := by rw [← hαγ]; exact eval_chebyshevAmplifier_self _ hα hγ
     set y := aeval A p *ᵥ b
-    have hy : y ∈ krylovSpace A b q := (mem_krylovSpace_iff_degree A b q y).2
-      ⟨p, (degree_chebyshevAmplifier_le α γ (q - 1)).trans_lt (by exact_mod_cast (by omega)),
+    have hy : y ∈ krylovSpace A b (q + 1) := (mem_krylovSpace_iff A b (q + 1) y).2
+      ⟨p, (degree_chebyshevAmplifier_le α γ q).trans_lt (by exact_mod_cast Nat.lt_succ_self q),
         rfl⟩
-    have hyy : y ⬝ᵥ y = ∑ i, p.eval (hA.eigenvalues i) ^ 2 * c i ^ 2 :=
-      dotProduct_aeval_mulVec_self_eq_sum hA p b
-    have hyAy : y ⬝ᵥ (A *ᵥ y) = ∑ i, hA.eigenvalues i * p.eval (hA.eigenvalues i) ^ 2 * c i ^ 2 :=
-      quadForm_aeval_mulVec_eq_sum hA p b
-    have hylow : c i₁ ^ 2 ≤ y ⬝ᵥ y := by
-      rw [hyy]
-      have := Finset.single_le_sum (f := fun i => p.eval (hA.eigenvalues i) ^ 2 * c i ^ 2)
-        (fun i _ => by positivity) (Finset.mem_univ i₁)
-      simpa [L, hp1] using this
+    have hyy : y ⬝ᵥ y = ∑ i, p.eval (hH.eigenvalues i) ^ 2 * c i ^ 2 :=
+      dotProduct_aeval_mulVec_self_eq_sum hH p b
+    have hyAy : y ⬝ᵥ (A *ᵥ y) = ∑ i, hH.eigenvalues i * p.eval (hH.eigenvalues i) ^ 2 * c i ^ 2 :=
+      quadForm_aeval_mulVec_eq_sum hH p b
+    have huy : u ⬝ᵥ y = u ⬝ᵥ b := by
+      rw [dotProduct_aeval_mulVec_of_mulVec_eq_smul hH hu p b, hp1, one_mul]
+    have hylow : (u ⬝ᵥ b) ^ 2 ≤ y ⬝ᵥ y := by
+      have := sq_dotProduct_le_dotProduct_mul_dotProduct u y
+      rwa [huy, huu, one_mul] at this
     refine ⟨y, hy, fun h0 => ?_, ?_⟩
     · rw [h0, dotProduct_zero] at hylow; linarith
     -- termwise bound
-    have hterm : ∀ i, (L - hA.eigenvalues i) * (p.eval (hA.eigenvalues i) ^ 2 * c i ^ 2) ≤
-        ε * L * (p.eval (hA.eigenvalues i) ^ 2 * c i ^ 2) + L * M ^ 2 * c i ^ 2 := fun i => by
+    have hterm : ∀ i, (L - hH.eigenvalues i) * (p.eval (hH.eigenvalues i) ^ 2 * c i ^ 2) ≤
+        ε * L * (p.eval (hH.eigenvalues i) ^ 2 * c i ^ 2) + L * M ^ 2 * c i ^ 2 := fun i => by
       have hl0 := hpsd i
       have hlL := htop i
-      have hpc : 0 ≤ p.eval (hA.eigenvalues i) ^ 2 * c i ^ 2 := by positivity
-      rcases lt_or_ge α (hA.eigenvalues i) with hbig | hsmall
-      · have : L - hA.eigenvalues i ≤ ε * L := by simp only [α] at hbig; linarith
+      have hpc : 0 ≤ p.eval (hH.eigenvalues i) ^ 2 * c i ^ 2 := by positivity
+      rcases lt_or_ge α (hH.eigenvalues i) with hbig | hsmall
+      · have : L - hH.eigenvalues i ≤ ε * L := by simp only [α] at hbig; linarith
         have h1 := mul_le_mul_of_nonneg_right this hpc
         have h2 : 0 ≤ L * M ^ 2 * c i ^ 2 := by positivity
         linarith
-      · have hmem : hA.eigenvalues i ∈ Set.Icc (-α) α := ⟨by linarith, hsmall⟩
-        have hpM := abs_eval_chebyshevAmplifier_le (q - 1) hα hγ hmem
+      · have hmem : hH.eigenvalues i ∈ Set.Icc (-α) α := ⟨by linarith, hsmall⟩
+        have hpM := abs_eval_chebyshevAmplifier_le q hα hγ hmem
         have hM0 : 0 ≤ M := by positivity
-        have hsq : p.eval (hA.eigenvalues i) ^ 2 ≤ M ^ 2 := by
+        have hsq : p.eval (hH.eigenvalues i) ^ 2 ≤ M ^ 2 := by
           rw [← sq_abs]; exact pow_le_pow_left₀ (abs_nonneg _) hpM 2
-        have h1 : (L - hA.eigenvalues i) * (p.eval (hA.eigenvalues i) ^ 2 * c i ^ 2) ≤
+        have h1 : (L - hH.eigenvalues i) * (p.eval (hH.eigenvalues i) ^ 2 * c i ^ 2) ≤
             L * (M ^ 2 * c i ^ 2) := by
           apply mul_le_mul (by linarith) (mul_le_mul_of_nonneg_right hsq (sq_nonneg _)) hpc hL
-        have h2 : 0 ≤ ε * L * (p.eval (hA.eigenvalues i) ^ 2 * c i ^ 2) := by positivity
+        have h2 : 0 ≤ ε * L * (p.eval (hH.eigenvalues i) ^ 2 * c i ^ 2) := by positivity
         nlinarith
     have hsum : L * (y ⬝ᵥ y) - y ⬝ᵥ (A *ᵥ y) ≤ ε * L * (y ⬝ᵥ y) + L * M ^ 2 * (b ⬝ᵥ b) := by
       rw [hyy, hyAy, hbb, Finset.mul_sum, Finset.mul_sum, Finset.mul_sum, ← Finset.sum_sub_distrib,
@@ -121,23 +375,21 @@ theorem exists_mem_krylovSpace_sub_rayleigh_le {A : Matrix n n ℝ} (hA : A.IsHe
       refine Finset.sum_le_sum fun i _ => ?_
       have := hterm i
       linarith
-    have hbound : L * M ^ 2 * (b ⬝ᵥ b) ≤ L * M ^ 2 * (b ⬝ᵥ b) / c i₁ ^ 2 * (y ⬝ᵥ y) := by
+    have hbound : L * M ^ 2 * (b ⬝ᵥ b) ≤ L * M ^ 2 * (b ⬝ᵥ b) / (u ⬝ᵥ b) ^ 2 * (y ⬝ᵥ y) := by
       rw [div_mul_eq_mul_div, le_div_iff₀ hc1]
       exact mul_le_mul_of_nonneg_left hylow
         (mul_nonneg (mul_nonneg hL (sq_nonneg M)) (dotProduct_self_nonneg b))
     calc L * (y ⬝ᵥ y) - y ⬝ᵥ (A *ᵥ y) ≤ ε * L * (y ⬝ᵥ y) + L * M ^ 2 * (b ⬝ᵥ b) := hsum
-      _ ≤ ε * L * (y ⬝ᵥ y) + L * M ^ 2 * (b ⬝ᵥ b) / c i₁ ^ 2 * (y ⬝ᵥ y) := by linarith
-      _ = (ε * L + L * M ^ 2 * (b ⬝ᵥ b) / c i₁ ^ 2) * (y ⬝ᵥ y) := by ring
+      _ ≤ ε * L * (y ⬝ᵥ y) + L * M ^ 2 * (b ⬝ᵥ b) / (u ⬝ᵥ b) ^ 2 * (y ⬝ᵥ y) := by linarith
+      _ = (ε * L + L * M ^ 2 * (b ⬝ᵥ b) / (u ⬝ᵥ b) ^ 2) * (y ⬝ᵥ y) := by ring
   · -- `λ₁ = 0`: every eigenvalue vanishes; take `y = b`
-    have hall : ∀ i, hA.eigenvalues i = 0 := fun i =>
+    have hall : ∀ i, hH.eigenvalues i = 0 := fun i =>
       le_antisymm (hL0 ▸ htop i) (hpsd i)
     have hbAb : b ⬝ᵥ (A *ᵥ b) = 0 := by
-      have := quadForm_eq_sum_eigenvalues hA b
+      have := quadForm_eq_sum_eigenvalues hH b
       simp only [quadForm_def, star_trivial, hall, zero_mul, Finset.sum_const_zero] at this
       exact this
-    refine ⟨b, ?_, fun h0 => ?_, ?_⟩
-    · obtain ⟨q', rfl⟩ : ∃ q', q = q' + 1 := ⟨q - 1, by omega⟩
-      exact self_mem_krylovSpace_succ A b q'
+    refine ⟨b, self_mem_krylovSpace_succ A b q, fun h0 => ?_, ?_⟩
     · exact hb (by rw [h0, dotProduct_zero])
     · rw [← hL0, hbAb]; simp
 
@@ -147,13 +399,15 @@ omit [DecidableEq n] in
 /-- Rayleigh quotients over `range Q` are bounded by any upper bound `θ` on the eigenvalues of
 `QᵀAQ` (the Ritz values), for `Q` with orthonormal columns: `yᵀAy ≤ θ ‖y‖²` for `y ∈ range Q`.
 Source: Parlett (1998), Thm 11.4.1 (Rayleigh–Ritz). Atlas: `ritz-value-bounds` (helper). -/
-theorem dotProduct_mulVec_le_of_mem_range {A : Matrix n n ℝ} {Q : Matrix n k ℝ}
-    (hQ : HasOrthonormalCols Q) (hT : (Qᵀ * A * Q).IsHermitian) {θ : ℝ}
-    (hθ : ∀ j, hT.eigenvalues j ≤ θ) {y : n → ℝ} (hy : y ∈ LinearMap.range Q.mulVecLin) :
+theorem dotProduct_mulVec_le_of_mem_range {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) {θ : ℝ}
+    (hθ : ∀ j, (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j ≤ θ) {y : n → ℝ}
+    (hy : y ∈ LinearMap.range Q.mulVecLin) :
     y ⬝ᵥ (A *ᵥ y) ≤ θ * (y ⬝ᵥ y) := by
   obtain ⟨z, rfl⟩ := hy
   simp only [Matrix.mulVecLin_apply]
-  have h := dotProduct_mulVec_le_mul_dotProduct_of_eigenvalues hT hθ z
+  have h := dotProduct_mulVec_le_mul_dotProduct_of_eigenvalues (Matrix.isHermitian_conjTranspose_mul_mul Q hA)
+    hθ z
   have hQz := star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ z
   simp only [star_trivial] at hQz
   rw [hQz]
@@ -162,29 +416,26 @@ theorem dotProduct_mulVec_le_of_mem_range {A : Matrix n n ℝ} {Q : Matrix n k �
           Matrix.vecMul_transpose]
     _ ≤ θ * (z ⬝ᵥ z) := h
 
-/-- **Gap-free Ritz-value bound.** Let `A` be symmetric with eigenvalues in `[0, λ₁]`,
-`λ₁ = λ_{i₁}`, `0 < ε < 1`, `q ≥ 1`, `u_{i₁} ⬝ b ≠ 0`, and `Q` with orthonormal columns and
-`K_q(A, b) ⊆ range Q` (e.g. the Lanczos basis). Then some Ritz value `θ_j` (eigenvalue of
-`QᵀAQ`) satisfies
-`λ₁ − θ_j ≤ ε λ₁ + λ₁ (2/(1 + √(2γ))^{q−1})² ‖b‖²/(u_{i₁} ⬝ b)²`, `γ = ε/(1 − ε)`.
+/-- **Gap-free Ritz-value bound.** Let `A` be positive semidefinite with top eigenvalue
+`λ₁ = λ₀(A)` and unit eigenvector `u`, `0 < ε < 1`, `u ⬝ b ≠ 0`, and `Q` with orthonormal
+columns and `K_{q+1}(A, b) ⊆ range Q` (e.g. the Lanczos basis after `q` matvecs). Then some Ritz
+value `θ_j` (eigenvalue of `QᵀAQ`) satisfies
+`λ₁ − θ_j ≤ ε λ₁ + λ₁ (2/(1 + √(2γ)))^{2q} ‖b‖²/(u ⬝ b)²`, `γ = ε/(1 − ε)`.
 Source: Musco–Musco (2015) [`mm15`], Thm 1 (single-vector, gap-free); Kuczyński–Woźniakowski
-(1992) [`kw92`] for the random-start analysis. Atlas: `ritz-value-bounds`; uses
-`chebyshev-amplifier`, `polynomial-spectral-bound`, `krylov-subspace`.
-Label note: this is the gap-free bound (MM15); the gap-dependent bound of Saad (2011), Thm 6.4,
+(1992) [`kw92`] for the random-start analysis. The gap-dependent bound of Saad (2011), Thm 6.4,
 is `eigenvalues_sub_eigenvalues_transpose_mul_mul_le` (`kaniel-paige-saad`).
+Deviation: `K_{q+1}` and the exponent `q` (the source counts the Krylov dimension).
 atlas: ritz-value-bounds -/
-theorem exists_eigenvalues_transpose_mul_mul_ge {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    (hpsd : ∀ i, 0 ≤ hA.eigenvalues i) {i₁ : n} (htop : ∀ i, hA.eigenvalues i ≤ hA.eigenvalues i₁)
-    {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) (b : n → ℝ) {q : ℕ} (hq : 0 < q)
-    (hb : (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b ≠ 0) {Q : Matrix n k ℝ}
-    (hQ : HasOrthonormalCols Q) (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin)
-    (hT : (Qᵀ * A * Q).IsHermitian) :
-    ∃ j, hA.eigenvalues i₁ - hT.eigenvalues j ≤
-      ε * hA.eigenvalues i₁ + hA.eigenvalues i₁ *
-        (2 / (1 + √(2 * (ε / (1 - ε)))) ^ (q - 1)) ^ 2 * (b ⬝ᵥ b) /
-          ((hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b) ^ 2 := by
-  obtain ⟨y, hyK, hy0, hy⟩ :=
-    exists_mem_krylovSpace_sub_rayleigh_le hA hpsd htop hε0 hε1 b hq hb
+theorem exists_eigenvalues_transpose_mul_mul_ge [Nonempty n] {A : Matrix n n ℝ}
+    (hA : A.PosSemidef) {u : n → ℝ} (hu : A *ᵥ u = hA.isHermitian.eigenvalues₀ 0 • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) {b : n → ℝ}
+    (hb : u ⬝ᵥ b ≠ 0) (q : ℕ) {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
+    (hK : krylovSpace A b (q + 1) ≤ LinearMap.range Q.mulVecLin) :
+    ∃ j, hA.isHermitian.eigenvalues₀ 0 -
+        (Matrix.isHermitian_conjTranspose_mul_mul Q hA.isHermitian).eigenvalues j ≤
+      ε * hA.isHermitian.eigenvalues₀ 0 + hA.isHermitian.eigenvalues₀ 0 *
+        (2 / (1 + √(2 * (ε / (1 - ε)))) ^ q) ^ 2 * ‖WithLp.toLp 2 b‖ ^ 2 / (u ⬝ᵥ b) ^ 2 := by
+  obtain ⟨y, hyK, hy0, hy⟩ := exists_mem_krylovSpace_sub_rayleigh_le hA hu hu1 hε0 hε1 hb q
   obtain ⟨z, hz⟩ := hK hyK
   have hk : Nonempty k := by
     by_contra h
@@ -193,45 +444,21 @@ theorem exists_eigenvalues_transpose_mul_mul_ge {A : Matrix n n ℝ} (hA : A.IsH
     rw [← hz]
     ext r
     simp [Matrix.mulVec, dotProduct]
+  set hT := (Matrix.isHermitian_conjTranspose_mul_mul Q hA.isHermitian)
   obtain ⟨j, -, hj⟩ := Finset.exists_max_image Finset.univ hT.eigenvalues Finset.univ_nonempty
   refine ⟨j, ?_⟩
-  have hR := dotProduct_mulVec_le_of_mem_range hQ hT (θ := hT.eigenvalues j)
+  have hR := dotProduct_mulVec_le_of_mem_range hA.isHermitian hQ (θ := hT.eigenvalues j)
     (fun j' => hj j' (Finset.mem_univ _)) (hK hyK)
+  rw [norm_toLp_sq_eq_dotProduct_self] at hy
   have hpos : 0 < y ⬝ᵥ y := lt_of_le_of_ne (dotProduct_self_nonneg y)
     (Ne.symm fun h => hy0 (dotProduct_self_eq_zero.mp h))
-  set B := ε * hA.eigenvalues i₁ + hA.eigenvalues i₁ *
-    (2 / (1 + √(2 * (ε / (1 - ε)))) ^ (q - 1)) ^ 2 * (b ⬝ᵥ b) /
-      ((hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b) ^ 2
-  have : (hA.eigenvalues i₁ - hT.eigenvalues j) * (y ⬝ᵥ y) ≤ B * (y ⬝ᵥ y) := by nlinarith
+  set B := ε * hA.isHermitian.eigenvalues₀ 0 + hA.isHermitian.eigenvalues₀ 0 *
+    (2 / (1 + √(2 * (ε / (1 - ε)))) ^ q) ^ 2 * ‖WithLp.toLp 2 b‖ ^ 2 / (u ⬝ᵥ b) ^ 2
+  have : (hA.isHermitian.eigenvalues₀ 0 - hT.eigenvalues j) * (y ⬝ᵥ y) ≤ B * (y ⬝ᵥ y) := by
+    nlinarith
   exact le_of_mul_le_mul_right this hpos
 
 /-! ### Gap-dependent bounds: the eigenvector angle and Kaniel–Paige–Saad -/
-
-omit [DecidableEq n] in
-/-- The squared tangent of the angle between `u` and `x`,
-`tan² ∠(u, x) = (‖u‖² ‖x‖² − ⟨u, x⟩²)/⟨u, x⟩²`. For a unit `u` this is
-`‖(I − u uᵀ) x‖²/⟨u, x⟩²`. Junk value `0` when `⟨u, x⟩ = 0` (the angle is `π/2`).
-Source: Saad (2011) [`saad11`], §6.6.1 (where `tan θ(u, x)` is used with `‖u‖ = 1`).
-Helper for `krylov-eigenvector-angle` (belongs with principal angles in `NLAlib.Matrix.Spectral.Core`). -/
-def tanSqAngle (u x : n → ℝ) : ℝ := ((u ⬝ᵥ u) * (x ⬝ᵥ x) - (u ⬝ᵥ x) ^ 2) / (u ⬝ᵥ x) ^ 2
-
-/-- The squared tangent to an eigenvector in eigen-coordinates:
-`tan² ∠(u_{i₁}, v) = (∑_{i ≠ i₁} (uᵢ ⬝ v)²)/(u_{i₁} ⬝ v)²`.
-Helper for `krylov-eigenvector-angle`. -/
-theorem tanSqAngle_eigenvectorBasis_eq {A : Matrix n n ℝ} (hA : A.IsHermitian) (i₁ : n)
-    (v : n → ℝ) :
-    tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) v =
-      (∑ i ∈ Finset.univ.erase i₁, ((hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ v) ^ 2) /
-        ((hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ v) ^ 2 := by
-  rw [tanSqAngle, eigenvectorBasis_dotProduct_eigenvectorBasis hA i₁ i₁, if_pos rfl, one_mul,
-    ← sum_sq_eigenvectorBasis_dotProduct hA v,
-    ← Finset.add_sum_erase _ _ (Finset.mem_univ i₁), add_sub_cancel_left]
-
-/-- `tan² ∠(u_{i₁}, v) ≥ 0`. Helper for `krylov-eigenvector-angle`. -/
-theorem tanSqAngle_eigenvectorBasis_nonneg {A : Matrix n n ℝ} (hA : A.IsHermitian) (i₁ : n)
-    (v : n → ℝ) : 0 ≤ tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) v := by
-  rw [tanSqAngle_eigenvectorBasis_eq]
-  exact div_nonneg (Finset.sum_nonneg fun _ _ => sq_nonneg _) (sq_nonneg _)
 
 /-- **The shifted Chebyshev amplifier.** For `a < c < L` and every `q` there is a polynomial
 `p` of degree at most `q` with `p(L) = 1` and `|p| ≤ 1/T_q(1 + 2γ)` on `[a, c]`,
@@ -267,55 +494,30 @@ theorem exists_degree_le_eval_eq_one_abs_eval_le {a c L : ℝ} (hac : a < c) (hc
     rw [abs_div, abs_of_pos hα, div_le_one hα, abs_le]
     constructor <;> simp only [hαdef, hmdef] <;> linarith [hx.1, hx.2]
 
-/-- **Eigenvector angle, polynomial form.** For real symmetric `A`, an index `i₁`, and any
-polynomial `p` with `|p(λᵢ)| ≤ M` for every `i ≠ i₁`,
-`tan² ∠(u_{i₁}, p(A) b) ≤ (M/p(λ_{i₁}))² tan² ∠(u_{i₁}, b)`. With `deg p < q`, `p(A) b ∈ K_q(A, b)`.
-No hypothesis on `b` or `p(λ_{i₁})` is needed (both sides use the junk value `0` for a right
-angle). Source: Saad (2011) [`saad11`], §6.6.1, proof of the angle bound (`i = 1`).
-atlas: krylov-eigenvector-angle (partial) -/
-theorem tanSqAngle_aeval_mulVec_le {A : Matrix n n ℝ} (hA : A.IsHermitian) (i₁ : n)
-    {p : ℝ[X]} {M : ℝ} (hM : ∀ i, i ≠ i₁ → |p.eval (hA.eigenvalues i)| ≤ M) (b : n → ℝ) :
-    tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) (aeval A p *ᵥ b) ≤
-      (M / p.eval (hA.eigenvalues i₁)) ^ 2 * tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) b := by
-  set c : n → ℝ := fun i => (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ b with hc
-  set P := p.eval (hA.eigenvalues i₁)
-  rw [tanSqAngle_eigenvectorBasis_eq, tanSqAngle_eigenvectorBasis_eq]
-  simp only [eigenvectorBasis_dotProduct_aeval_mulVec hA]
-  set N := ∑ i ∈ Finset.univ.erase i₁, c i ^ 2
-  have hN : ∑ i ∈ Finset.univ.erase i₁, (p.eval (hA.eigenvalues i) * c i) ^ 2 ≤ M ^ 2 * N := by
-    rw [Finset.mul_sum]
-    refine Finset.sum_le_sum fun i hi => ?_
-    have h := hM i (Finset.ne_of_mem_erase hi)
-    have hsq : p.eval (hA.eigenvalues i) ^ 2 ≤ M ^ 2 :=
-      sq_le_sq' (by linarith [neg_abs_le (p.eval (hA.eigenvalues i))]) ((le_abs_self _).trans h)
-    rw [mul_pow]
-    exact mul_le_mul_of_nonneg_right hsq (sq_nonneg _)
-  rw [show (M / P) ^ 2 * (N / c i₁ ^ 2) = M ^ 2 * N / (P * c i₁) ^ 2 by ring]
-  exact div_le_div_of_nonneg_right hN (sq_nonneg _)
-
 /-- **Angle between the top eigenvector and the Krylov space (Chebyshev bound).** Let `A` be
-real symmetric, `λ₁ = λ_{i₁}`, and suppose every other eigenvalue lies in `[a, c]` with
-`a < c < λ₁` (e.g. `a = λₙ`, `c = λ₂`). If `u₁ ⬝ b ≠ 0` then `K_{q+1}(A, b)` contains `x` with
-`u₁ ⬝ x ≠ 0` and `tan² ∠(u₁, x) ≤ tan² ∠(u₁, b) / T_q(1 + 2γ)²`, `γ = (λ₁ − c)/(c − a)`.
+real symmetric with top eigenvalue `λ₁ = λ₀(A)` and unit eigenvector `u`, and suppose every other
+eigenvalue (every sorted position `≠ 0`) lies in `[a, c]` with `a < c < λ₁` (e.g. `a = λₙ`,
+`c = λ₂`). If `u ⬝ b ≠ 0` then `K_{q+1}(A, b)` contains `x` with `u ⬝ x ≠ 0` and
+`tan² ∠(u, x) ≤ tan² ∠(u, b) / T_q(1 + 2γ)²`, `γ = (λ₁ − c)/(c − a)`.
 The witness is `x = T_q((2A − (c + a)I)/(c − a)) b`, written through `chebyshevAmplifier`.
 Source: Saad (2011) [`saad11`], §6.6.1 (case `i = 1`); Saad (2003), §6.11.
 Deviation: squared tangents; Krylov dimension `q + 1` (Saad's `m`) so that the degree is `q`;
 an arbitrary enclosure `[a, c]` of the other eigenvalues instead of `[λₙ, λ₂]`.
 atlas: krylov-eigenvector-angle -/
-theorem exists_mem_krylovSpace_tanSqAngle_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {i₁ : n}
-    {a c : ℝ} (hac : a < c) (hc : c < hA.eigenvalues i₁)
-    (hspec : ∀ i, i ≠ i₁ → hA.eigenvalues i ∈ Set.Icc a c) (b : n → ℝ)
-    (hb : (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b ≠ 0) (q : ℕ) :
-    ∃ x ∈ krylovSpace A b (q + 1), (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ x ≠ 0 ∧
-      tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) x ≤
-        tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) b /
-          (Chebyshev.T ℝ q).eval (1 + 2 * ((hA.eigenvalues i₁ - c) / (c - a))) ^ 2 := by
+theorem exists_mem_krylovSpace_tanSqAngle_le [Nonempty n] {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ 0 • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {a c : ℝ} (hac : a < c) (hc : c < hA.eigenvalues₀ 0)
+    (hspec : ∀ i, i ≠ 0 → hA.eigenvalues₀ i ∈ Set.Icc a c) {b : n → ℝ} (hb : u ⬝ᵥ b ≠ 0)
+    (q : ℕ) :
+    ∃ x ∈ krylovSpace A b (q + 1), u ⬝ᵥ x ≠ 0 ∧
+      tanSqAngle u x ≤ tanSqAngle u b /
+        (Chebyshev.T ℝ q).eval (1 + 2 * ((hA.eigenvalues₀ 0 - c) / (c - a))) ^ 2 := by
   obtain ⟨p, hpdeg, hp1, hM⟩ := exists_degree_le_eval_eq_one_abs_eval_le hac hc q
-  replace hM : ∀ i, i ≠ i₁ → |p.eval (hA.eigenvalues i)| ≤ _ := fun i hi => hM _ (hspec i hi)
-  refine ⟨aeval A p *ᵥ b, (mem_krylovSpace_iff_degree A b (q + 1) _).2
+  replace hM : ∀ i, i ≠ 0 → |p.eval (hA.eigenvalues₀ i)| ≤ _ := fun i hi => hM _ (hspec i hi)
+  refine ⟨aeval A p *ᵥ b, (mem_krylovSpace_iff A b (q + 1) _).2
     ⟨p, hpdeg.trans_lt (by exact_mod_cast Nat.lt_succ_self q), rfl⟩, ?_, ?_⟩
-  · rw [eigenvectorBasis_dotProduct_aeval_mulVec, hp1, one_mul]; exact hb
-  · refine (tanSqAngle_aeval_mulVec_le hA i₁ hM b).trans (le_of_eq ?_)
+  · rw [dotProduct_aeval_mulVec_of_mulVec_eq_smul hA hu, hp1, one_mul]; exact hb
+  · refine (tanSqAngle_aeval_mulVec_le hA hu hu1 hM b).trans (le_of_eq ?_)
     rw [hp1, div_one, div_pow, one_pow, one_div_mul_eq_div]
 
 /-- The growth of `T_q` in gap form: for `γ ≥ 0`,
@@ -331,137 +533,171 @@ theorem pow_div_two_le_eval_T_real_one_add_two_mul {γ : ℝ} (hγ : 0 ≤ γ) (
   rwa [hs] at h
 
 /-- **Eigenvector angle, explicit rate.** Under the hypotheses of
-`exists_mem_krylovSpace_tanSqAngle_le`, `K_{q+1}(A, b)` contains `x` with `u₁ ⬝ x ≠ 0` and
-`tan² ∠(u₁, x) ≤ (2/(1 + 2γ + 2√(γ + γ²))^q)² tan² ∠(u₁, b)`, `γ = (λ₁ − c)/(c − a)`.
+`exists_mem_krylovSpace_tanSqAngle_le`, `K_{q+1}(A, b)` contains `x` with `u ⬝ x ≠ 0` and
+`tan² ∠(u, x) ≤ (2/(1 + 2γ + 2√(γ + γ²))^q)² tan² ∠(u, b)`, `γ = (λ₁ − c)/(c − a)`.
 Source: Saad (2011) [`saad11`], §6.6.1.
 atlas: krylov-eigenvector-angle -/
-theorem exists_mem_krylovSpace_tanSqAngle_le_two_div_pow {A : Matrix n n ℝ}
-    (hA : A.IsHermitian) {i₁ : n} {a c : ℝ} (hac : a < c) (hc : c < hA.eigenvalues i₁)
-    (hspec : ∀ i, i ≠ i₁ → hA.eigenvalues i ∈ Set.Icc a c) (b : n → ℝ)
-    (hb : (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b ≠ 0) (q : ℕ) :
-    ∃ x ∈ krylovSpace A b (q + 1), (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ x ≠ 0 ∧
-      tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) x ≤
-        (2 / (1 + 2 * ((hA.eigenvalues i₁ - c) / (c - a)) +
-          2 * √((hA.eigenvalues i₁ - c) / (c - a) + ((hA.eigenvalues i₁ - c) / (c - a)) ^ 2))
-            ^ q) ^ 2 * tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) b := by
-  obtain ⟨x, hxK, hx0, hx⟩ := exists_mem_krylovSpace_tanSqAngle_le hA hac hc hspec b hb q
+theorem exists_mem_krylovSpace_tanSqAngle_le_two_div_pow [Nonempty n] {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ 0 • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {a c : ℝ} (hac : a < c) (hc : c < hA.eigenvalues₀ 0)
+    (hspec : ∀ i, i ≠ 0 → hA.eigenvalues₀ i ∈ Set.Icc a c) {b : n → ℝ} (hb : u ⬝ᵥ b ≠ 0)
+    (q : ℕ) :
+    ∃ x ∈ krylovSpace A b (q + 1), u ⬝ᵥ x ≠ 0 ∧
+      tanSqAngle u x ≤
+        (2 / (1 + 2 * ((hA.eigenvalues₀ 0 - c) / (c - a)) +
+          2 * √((hA.eigenvalues₀ 0 - c) / (c - a) + ((hA.eigenvalues₀ 0 - c) / (c - a)) ^ 2))
+            ^ q) ^ 2 * tanSqAngle u b := by
+  obtain ⟨x, hxK, hx0, hx⟩ := exists_mem_krylovSpace_tanSqAngle_le hA hu hu1 hac hc hspec hb q
   refine ⟨x, hxK, hx0, hx.trans ?_⟩
-  set γ := (hA.eigenvalues i₁ - c) / (c - a)
+  set γ := (hA.eigenvalues₀ 0 - c) / (c - a)
   have hγ : 0 ≤ γ := div_nonneg (by linarith) (by linarith)
   have hT := pow_div_two_le_eval_T_real_one_add_two_mul hγ q
   set ρ := (1 + 2 * γ + 2 * √(γ + γ ^ 2)) ^ q
   have hρ : 0 < ρ := by positivity
-  have htan := tanSqAngle_eigenvectorBasis_nonneg hA i₁ b
+  have htan := tanSqAngle_nonneg u b
   rw [div_eq_mul_inv, mul_comm, ← inv_pow]
   refine mul_le_mul_of_nonneg_right
     (pow_le_pow_left₀ (inv_nonneg.2 (by linarith [div_pos hρ two_pos])) ?_ 2) htan
   have := inv_anti₀ (by positivity : 0 < ρ / 2) hT
   rwa [inv_div] at this
 
-/-- The Ritz values are at most the top eigenvalue: `θⱼ ≤ λ_{i₁}` for every eigenvalue `θⱼ` of
+/-- The Ritz values are at most the top eigenvalue: `θⱼ ≤ λ₀(A)` for every eigenvalue `θⱼ` of
 `Qᵀ A Q`, `Q` with orthonormal columns. This is the lower half `0 ≤ λ₁ − θ₁` of the
 Kaniel–Paige–Saad bound. Source: Saad (2011) [`saad11`], Thm 6.4 (left inequality; Cauchy
 interlacing).
 atlas: kaniel-paige-saad (partial) -/
-theorem eigenvalues_transpose_mul_mul_le {A : Matrix n n ℝ} (hA : A.IsHermitian) {i₁ : n}
-    (htop : ∀ i, hA.eigenvalues i ≤ hA.eigenvalues i₁) {Q : Matrix n k ℝ}
-    (hQ : HasOrthonormalCols Q) (hT : (Qᵀ * A * Q).IsHermitian) (j : k) :
-    hT.eigenvalues j ≤ hA.eigenvalues i₁ := by
+theorem eigenvalues_transpose_mul_mul_le [Nonempty n] {A : Matrix n n ℝ} (hA : A.IsHermitian)
+    {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (j : k) :
+    (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j ≤ hA.eigenvalues₀ 0 := by
   have hlow : ∀ i, -∑ i', |hA.eigenvalues i'| ≤ hA.eigenvalues i := fun i => by
     have := Finset.single_le_sum (f := fun i' => |hA.eigenvalues i'|)
       (fun _ _ => abs_nonneg _) (Finset.mem_univ i)
     linarith [neg_abs_le (hA.eigenvalues i)]
-  exact (eigenvalues_transpose_mul_mul_mem_Icc hA hQ hT (fun i => ⟨hlow i, htop i⟩) j).2
+  exact (eigenvalues_transpose_mul_mul_mem_Icc hA hQ
+    (fun i => ⟨hlow i, hA.eigenvalues_le_eigenvalues₀_zero i⟩) j).2
 
 /-- **Rayleigh–Ritz step of Kaniel–Paige–Saad.** Let `A` be real symmetric with every
-eigenvalue `≥ a`, `Q` with orthonormal columns, `θ₁ = θ_{j₁}` the largest eigenvalue of `Qᵀ A Q`,
-and `x ∈ range Q` with `u₁ ⬝ x ≠ 0` (`u₁ = u_{i₁}`). Then
-`λ₁ − θ₁ ≤ (λ₁ − a) tan² ∠(u₁, x)` (from `λ₁ − xᵀAx/xᵀx ≤ (λ₁ − a) sin² ∠(u₁, x)`).
-Source: Saad (2011) [`saad11`], proof of Thm 6.4. Helper for `kaniel-paige-saad`. -/
+eigenvalue `≥ a`, `u` a unit eigenvector for the eigenvalue `λ` at sorted position `i₀`, `Q`
+with orthonormal columns, `θ₁ = θ_{j₁}` the largest eigenvalue of `Qᵀ A Q`, and `x ∈ range Q`
+with `u ⬝ x ≠ 0`. Then `λ − θ₁ ≤ (λ − a) tan² ∠(u, x)` (from
+`λ − xᵀAx/xᵀx ≤ (λ − a) sin² ∠(u, x)`). Source: Saad (2011) [`saad11`], proof of Thm 6.4.
+Helper for `kaniel-paige-saad`. -/
 theorem eigenvalues_sub_eigenvalues_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    {i₁ : n} {a : ℝ}
-    (ha : ∀ i, a ≤ hA.eigenvalues i) {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
-    (hT : (Qᵀ * A * Q).IsHermitian) {j₁ : k} (hj₁ : ∀ j, hT.eigenvalues j ≤ hT.eigenvalues j₁)
-    {x : n → ℝ} (hxQ : x ∈ LinearMap.range Q.mulVecLin)
-    (hx : (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ x ≠ 0) :
-    hA.eigenvalues i₁ - hT.eigenvalues j₁ ≤
-      (hA.eigenvalues i₁ - a) * tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) x := by
-  set c : n → ℝ := fun i => (hA.eigenvectorBasis i : n → ℝ) ⬝ᵥ x with hc
-  set L := hA.eigenvalues i₁
-  set θ := hT.eigenvalues j₁
-  set N := ∑ i ∈ Finset.univ.erase i₁, c i ^ 2
-  set S := ∑ i ∈ Finset.univ.erase i₁, hA.eigenvalues i * c i ^ 2
-  have hR := dotProduct_mulVec_le_of_mem_range hQ hT hj₁ hxQ
-  have hxx : x ⬝ᵥ x = c i₁ ^ 2 + N := by
-    rw [← sum_sq_eigenvectorBasis_dotProduct hA x,
-      ← Finset.add_sum_erase _ _ (Finset.mem_univ i₁)]
-  have hxAx : x ⬝ᵥ (A *ᵥ x) = L * c i₁ ^ 2 + S := by
-    have h := quadForm_eq_sum_eigenvalues hA x
-    rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i₁)] at h
-    exact h
-  have hS : a * N ≤ S := by
-    rw [Finset.mul_sum]
-    exact Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_right (ha i) (sq_nonneg _)
-  have hN : 0 ≤ N := Finset.sum_nonneg fun _ _ => sq_nonneg _
-  have hc1 : 0 < c i₁ ^ 2 := by positivity
-  have haL : 0 ≤ L - a := by linarith [ha i₁]
-  rw [tanSqAngle_eigenvectorBasis_eq, ← mul_div_assoc, le_div_iff₀ hc1]
+    {i₀ : Fin (Fintype.card n)} {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {a : ℝ} (ha : ∀ i, a ≤ hA.eigenvalues i)
+    {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) {j₁ : k}
+    (hj₁ : ∀ j, (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j ≤
+      (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁)
+    {x : n → ℝ} (hxQ : x ∈ LinearMap.range Q.mulVecLin) (hx : u ⬝ᵥ x ≠ 0) :
+    hA.eigenvalues₀ i₀ - (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁ ≤
+      (hA.eigenvalues₀ i₀ - a) * tanSqAngle u x := by
+  set L := hA.eigenvalues₀ i₀ with hLdef
+  set θ := (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁
+  set c := u ⬝ᵥ x with hcdef
+  set w := x - c • u with hwdef
+  have huu : u ⬝ᵥ u = 1 := dotProduct_self_eq_one hu1
+  have hR := dotProduct_mulVec_le_of_mem_range hA hQ hj₁ hxQ
+  have huw : u ⬝ᵥ w = 0 := by
+    simp only [hwdef, dotProduct_sub, dotProduct_smul, huu, smul_eq_mul, mul_one, sub_self]
+  set N := w ⬝ᵥ w with hNdef
+  have hxx : x ⬝ᵥ x = c ^ 2 + N := by
+    have : x = c • u + w := by simp [hwdef]
+    rw [this, add_dotProduct, dotProduct_add, dotProduct_add, dotProduct_smul, smul_dotProduct,
+      dotProduct_smul, smul_dotProduct, huu, dotProduct_comm w u, huw]
+    simp only [smul_eq_mul, mul_one, mul_zero, add_zero, zero_add]
+    ring
+  have hsymm : ∀ y z : n → ℝ, y ⬝ᵥ (A *ᵥ z) = (A *ᵥ y) ⬝ᵥ z := fun y z => by
+    rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose,
+      (Matrix.isHermitian_iff_isSymm.mp hA).eq]
+  have hAu : ∀ z : n → ℝ, u ⬝ᵥ (A *ᵥ z) = L * (u ⬝ᵥ z) := fun z => by
+    rw [hsymm, hu, smul_dotProduct, smul_eq_mul]
+  have hxAx : x ⬝ᵥ (A *ᵥ x) = L * c ^ 2 + w ⬝ᵥ (A *ᵥ w) := by
+    have : x = c • u + w := by simp [hwdef]
+    rw [this, Matrix.mulVec_add, Matrix.mulVec_smul, add_dotProduct, dotProduct_add,
+      dotProduct_add, dotProduct_smul, smul_dotProduct, dotProduct_smul, smul_dotProduct,
+      hsymm w (c • u), Matrix.mulVec_smul, dotProduct_smul, hu, smul_dotProduct, huu,
+      dotProduct_comm u w, huw]
+    simp only [smul_eq_mul, mul_one, mul_zero, add_zero, zero_add]
+    ring
+  have hS : a * N ≤ w ⬝ᵥ (A *ᵥ w) := mul_dotProduct_le_dotProduct_mulVec_of_eigenvalues hA ha w
+  have hN : 0 ≤ N := dotProduct_self_nonneg w
+  have hc1 : 0 < c ^ 2 := by positivity
+  have haL : 0 ≤ L - a := by
+    have := ha (Fintype.equivOfCardEq (Fintype.card_fin _) i₀)
+    rw [hA.eigenvalues_equivOfCardEq] at this
+    linarith
+  rw [tanSqAngle_of_norm_eq_one hu1, hxx, ← hcdef, show c ^ 2 + N - c ^ 2 = N by ring,
+    ← mul_div_assoc, le_div_iff₀ hc1]
   rw [hxx, hxAx] at hR
-  have key : (L - θ) * (c i₁ ^ 2 + N) ≤ (L - a) * N := by nlinarith
+  have key : (L - θ) * (c ^ 2 + N) ≤ (L - a) * N := by nlinarith
   rcases le_or_gt (L - θ) 0 with hneg | hpos
   · nlinarith
   · nlinarith
 
 /-- **Kaniel–Paige–Saad, polynomial form.** Let `A` be real symmetric with every eigenvalue
-`≥ a`, `u₁ ⬝ b ≠ 0`, `Q` with orthonormal columns and `K_q(A, b) ⊆ range Q`, and `θ₁` the
-largest eigenvalue of `Qᵀ A Q`. For every polynomial `p` with `deg p < q`, `p(λ₁) ≠ 0` and
-`|p(λᵢ)| ≤ M` for `i ≠ i₁`: `λ₁ − θ₁ ≤ (λ₁ − a) (M/p(λ₁))² tan² ∠(u₁, b)`.
+`≥ a`, `u` a unit eigenvector for the eigenvalue `λ` at sorted position `i₀`, `u ⬝ b ≠ 0`, `Q`
+with orthonormal columns and `K_q(A, b) ⊆ range Q`, and `θ₁` the largest eigenvalue of `Qᵀ A Q`.
+For every polynomial `p` with `deg p < q`, `p(λ) ≠ 0` and `|p| ≤ M` at every other sorted
+position: `λ − θ₁ ≤ (λ − a) (M/p(λ))² tan² ∠(u, b)`.
 Source: Saad (2011) [`saad11`], proof of Thm 6.4 (`i = 1`).
 atlas: kaniel-paige-saad (partial) -/
 theorem eigenvalues_sub_eigenvalues_transpose_mul_mul_le_of_poly {A : Matrix n n ℝ}
-    (hA : A.IsHermitian) {i₁ : n} {a : ℝ}
-    (ha : ∀ i, a ≤ hA.eigenvalues i) (b : n → ℝ)
-    (hb : (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b ≠ 0) {q : ℕ} {p : ℝ[X]} (hp : p.degree < q)
-    (hp1 : p.eval (hA.eigenvalues i₁) ≠ 0) {M : ℝ}
-    (hM : ∀ i, i ≠ i₁ → |p.eval (hA.eigenvalues i)| ≤ M) {Q : Matrix n k ℝ}
+    (hA : A.IsHermitian) {i₀ : Fin (Fintype.card n)} {u : n → ℝ}
+    (hu : A *ᵥ u = hA.eigenvalues₀ i₀ • u) (hu1 : ‖WithLp.toLp 2 u‖ = 1) {a : ℝ}
+    (ha : ∀ i, a ≤ hA.eigenvalues i) {b : n → ℝ} (hb : u ⬝ᵥ b ≠ 0) {q : ℕ} {p : ℝ[X]}
+    (hp : p.degree < q) (hp1 : p.eval (hA.eigenvalues₀ i₀) ≠ 0) {M : ℝ}
+    (hM : ∀ i, i ≠ i₀ → |p.eval (hA.eigenvalues₀ i)| ≤ M) {Q : Matrix n k ℝ}
     (hQ : HasOrthonormalCols Q) (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin)
-    (hT : (Qᵀ * A * Q).IsHermitian) {j₁ : k} (hj₁ : ∀ j, hT.eigenvalues j ≤ hT.eigenvalues j₁) :
-    hA.eigenvalues i₁ - hT.eigenvalues j₁ ≤ (hA.eigenvalues i₁ - a) *
-      ((M / p.eval (hA.eigenvalues i₁)) ^ 2 * tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) b) := by
+    {j₁ : k} (hj₁ : ∀ j, (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j ≤
+      (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁) :
+    hA.eigenvalues₀ i₀ - (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁ ≤
+      (hA.eigenvalues₀ i₀ - a) *
+        ((M / p.eval (hA.eigenvalues₀ i₀)) ^ 2 * tanSqAngle u b) := by
   have hxK : aeval A p *ᵥ b ∈ krylovSpace A b q :=
-    (mem_krylovSpace_iff_degree A b q _).2 ⟨p, hp, rfl⟩
-  have hx0 : (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ (aeval A p *ᵥ b) ≠ 0 := by
-    rw [eigenvectorBasis_dotProduct_aeval_mulVec]; exact mul_ne_zero hp1 hb
-  refine (eigenvalues_sub_eigenvalues_le_mul_tanSqAngle hA ha hQ hT hj₁ (hK hxK) hx0).trans ?_
-  exact mul_le_mul_of_nonneg_left (tanSqAngle_aeval_mulVec_le hA i₁ hM b)
-    (by linarith [ha i₁])
+    (mem_krylovSpace_iff A b q _).2 ⟨p, hp, rfl⟩
+  have hx0 : u ⬝ᵥ (aeval A p *ᵥ b) ≠ 0 := by
+    rw [dotProduct_aeval_mulVec_of_mulVec_eq_smul hA hu]; exact mul_ne_zero hp1 hb
+  have haL : 0 ≤ hA.eigenvalues₀ i₀ - a := by
+    have := ha (Fintype.equivOfCardEq (Fintype.card_fin _) i₀)
+    rw [hA.eigenvalues_equivOfCardEq] at this
+    linarith
+  refine (eigenvalues_sub_eigenvalues_le_mul_tanSqAngle hA hu hu1 ha hQ hj₁ (hK hxK)
+    hx0).trans ?_
+  exact mul_le_mul_of_nonneg_left (tanSqAngle_aeval_mulVec_le hA hu hu1 hM b) haL
 
-/-- **Kaniel–Paige–Saad bound for the largest Ritz value.** Let `A` be real symmetric,
-`λ₁ = λ_{i₁}`, every other eigenvalue in `[a, c]` with `a < c < λ₁` (e.g. `a = λₙ`, `c = λ₂`),
-`u₁ ⬝ b ≠ 0`, `Q` with orthonormal columns and `K_{q+1}(A, b) ⊆ range Q` (e.g. a Lanczos basis),
-and `θ₁` the largest eigenvalue of `Qᵀ A Q`. Then
-`λ₁ − θ₁ ≤ (λ₁ − a) tan² ∠(u₁, b) / T_q(1 + 2γ)²`, `γ = (λ₁ − c)/(c − a)`; the lower bound
+/-- **Kaniel–Paige–Saad bound for the largest Ritz value.** Let `A` be real symmetric with top
+eigenvalue `λ₁ = λ₀(A)` and unit eigenvector `u`, every other eigenvalue (sorted position `≠ 0`)
+in `[a, c]` with `a < c < λ₁` (e.g. `a = λₙ`, `c = λ₂`), `u ⬝ b ≠ 0`, `Q` with orthonormal
+columns and `K_{q+1}(A, b) ⊆ range Q` (e.g. a Lanczos basis after `q` matvecs), and `θ₁` the
+largest eigenvalue of `Qᵀ A Q`. Then
+`λ₁ − θ₁ ≤ (λ₁ − a) tan² ∠(u, b) / T_q(1 + 2γ)²`, `γ = (λ₁ − c)/(c − a)`; the lower bound
 `0 ≤ λ₁ − θ₁` is `eigenvalues_transpose_mul_mul_le`.
 Source: Saad (2011) [`saad11`], Thm 6.4 (`i = 1`); Golub–Meurant (2010) [`gm10`], Ch. 4.
 Deviation: Krylov dimension `q + 1` (Saad's `m`, so `T_{m−1} = T_q`); `[a, c]` any enclosure
 of the other eigenvalues (Saad: `a = λₙ`, `c = λ₂`, factor `λ₁ − λₙ`); any orthonormal `Q`
 whose range contains the Krylov space.
 atlas: kaniel-paige-saad -/
-theorem eigenvalues_sub_eigenvalues_transpose_mul_mul_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
-    {i₁ : n} {a c : ℝ} (hac : a < c)
-    (hc : c < hA.eigenvalues i₁) (hspec : ∀ i, i ≠ i₁ → hA.eigenvalues i ∈ Set.Icc a c)
-    (b : n → ℝ) (hb : (hA.eigenvectorBasis i₁ : n → ℝ) ⬝ᵥ b ≠ 0) (q : ℕ) {Q : Matrix n k ℝ}
-    (hQ : HasOrthonormalCols Q) (hK : krylovSpace A b (q + 1) ≤ LinearMap.range Q.mulVecLin)
-    (hT : (Qᵀ * A * Q).IsHermitian) {j₁ : k} (hj₁ : ∀ j, hT.eigenvalues j ≤ hT.eigenvalues j₁) :
-    hA.eigenvalues i₁ - hT.eigenvalues j₁ ≤ (hA.eigenvalues i₁ - a) *
-      (tanSqAngle (hA.eigenvectorBasis i₁ : n → ℝ) b /
-        (Chebyshev.T ℝ q).eval (1 + 2 * ((hA.eigenvalues i₁ - c) / (c - a))) ^ 2) := by
+theorem eigenvalues_sub_eigenvalues_transpose_mul_mul_le [Nonempty n] {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) {u : n → ℝ} (hu : A *ᵥ u = hA.eigenvalues₀ 0 • u)
+    (hu1 : ‖WithLp.toLp 2 u‖ = 1) {a c : ℝ} (hac : a < c) (hc : c < hA.eigenvalues₀ 0)
+    (hspec : ∀ i, i ≠ 0 → hA.eigenvalues₀ i ∈ Set.Icc a c) {b : n → ℝ} (hb : u ⬝ᵥ b ≠ 0)
+    (q : ℕ) {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
+    (hK : krylovSpace A b (q + 1) ≤ LinearMap.range Q.mulVecLin) {j₁ : k}
+    (hj₁ : ∀ j, (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j ≤
+      (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁) :
+    hA.eigenvalues₀ 0 - (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j₁ ≤
+      (hA.eigenvalues₀ 0 - a) * (tanSqAngle u b /
+        (Chebyshev.T ℝ q).eval (1 + 2 * ((hA.eigenvalues₀ 0 - c) / (c - a))) ^ 2) := by
   have ha : ∀ i, a ≤ hA.eigenvalues i := fun i => by
-    by_cases hi : i = i₁
-    · subst hi; linarith
-    · exact (hspec i hi).1
-  obtain ⟨x, hxK, hx0, hx⟩ := exists_mem_krylovSpace_tanSqAngle_le hA hac hc hspec b hb q
-  exact (eigenvalues_sub_eigenvalues_le_mul_tanSqAngle hA ha hQ hT hj₁ (hK hxK) hx0).trans
-    (mul_le_mul_of_nonneg_left hx (by linarith [ha i₁]))
+    set e := Fintype.equivOfCardEq (Fintype.card_fin (Fintype.card n))
+    have hi : hA.eigenvalues i = hA.eigenvalues₀ (e.symm i) := rfl
+    rw [hi]
+    by_cases h0 : e.symm i = 0
+    · rw [h0]; linarith
+    · exact (hspec _ h0).1
+  obtain ⟨x, hxK, hx0, hx⟩ := exists_mem_krylovSpace_tanSqAngle_le hA hu hu1 hac hc hspec hb q
+  exact (eigenvalues_sub_eigenvalues_le_mul_tanSqAngle hA hu hu1 ha hQ hj₁ (hK hxK) hx0).trans
+    (mul_le_mul_of_nonneg_left hx (by linarith [ha (Fintype.equivOfCardEq (Fintype.card_fin _) 0),
+      hA.eigenvalues_equivOfCardEq (0 : Fin (Fintype.card n))]))
 
 end NLAlib

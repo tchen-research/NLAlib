@@ -14,7 +14,7 @@ Vershynin 2018, Theorem 6.2.1. Supports atlas `jl-subgaussian` and
 noncomputable section
 
 open MeasureTheory ProbabilityTheory
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -23,16 +23,16 @@ proxy `K²` and unit second moments satisfy the explicit Hanson–Wright tail fo
 `|∑ Yᵢ² - card ι|`. Integrability follows from the MGF assumptions. The family
 is nonempty so the identity matrix has spectral norm one.
 
-Source: operator re-derivation Lemma `pg:squares`, specializing the proved
-`hanson_wright_mgf`; supports atlas `jl-subgaussian` and
-`subgaussian-matrix-norm`. -/
-theorem measure_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF
+Vershynin 2018, Theorem 6.3.2 (via `hanson_wright_mgf` at `A = 1`); supports atlas
+`jl-subgaussian` and `subgaussian-matrix-norm`. -/
+open scoped Matrix.Norms.L2Operator in
+theorem measureReal_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     (Y : ι → Ω → ℝ) (K : ℝ) (hK : 0 < K) (hind : iIndepFun Y μ)
     (hmgf : ∀ i, HasSubgaussianMGF (Y i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hsq : ∀ i, ∫ ω, Y i ω ^ 2 ∂μ = 1) {u : ℝ} (hu : 0 ≤ u) :
-    (μ {ω | u ≤ |∑ i, Y i ω ^ 2 - (Fintype.card ι : ℝ)|}).toReal ≤
+    μ.real {ω | u ≤ |∑ i, Y i ω ^ 2 - (Fintype.card ι : ℝ)|} ≤
       2 * Real.exp (-(1 / (256 * Real.exp 1 ^ 2)) *
         min (u ^ 2 / ((Fintype.card ι : ℝ) * K ^ 4)) (u / K ^ 2)) := by
   have hquad (y : ι → ℝ) : quadForm (1 : Matrix ι ι ℝ) y = ∑ i, y i ^ 2 := by

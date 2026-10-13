@@ -19,8 +19,6 @@ nonincreasing on `[0, π/2]` by Gaussian integration by parts (equal variances k
 terms); then `Q(max Y ≤ τ) ≤ 𝔼 F_δ(Y) ≤ 𝔼 F_δ(X) ≤ P(max X ≤ τ + δ)` and `δ ↓ 0` by right
 continuity of the distribution function of `max X`.
 
-Ported from the Prove2me solution `GaussianMatrix.slepian_tail_comparison`.
-
 Atlas: `slepian`.
 -/
 
@@ -311,8 +309,7 @@ section Main
 processes indexed by a finite set, with equal variances `𝔼 Xₜ² = 𝔼 Yₜ²` and dominated
 increments `𝔼 (Xₛ - Xₜ)² ≤ 𝔼 (Yₛ - Yₜ)²`. Then for every `τ`,
 `P(τ < maxₜ Xₜ) ≤ Q(τ < maxₜ Yₜ)`.
-Source: Slepian 1962; Vershynin 2018, Thm 7.2.1. Atlas: `slepian`. Ported from Prove2me solution
-`GaussianMatrix.slepian_tail_comparison`.
+Source: Slepian 1962; Vershynin 2018, Thm 7.2.1. Atlas: `slepian`.
 atlas: slepian -/
 theorem slepian_inequality {ι Ω Ω' : Type*} [Fintype ι] [MeasurableSpace Ω]
     [MeasurableSpace Ω'] {P : Measure Ω} {Q : Measure Ω'} (X : ι → Ω → ℝ) (Y : ι → Ω' → ℝ)

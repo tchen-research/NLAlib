@@ -6,7 +6,7 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 Uniformly lower-bounded integrable functions with nonnegative pointwise limits
 cannot have a negative limit of their integrals. The proof applies dominated
 convergence only to negative parts, so the pointwise limit need not be integrable.
-Source: the Fatou step in operator rederivations, Section 5;
+Source: the Fatou step of the smallest-eigenvalue density argument (Edelman 1988);
 atlas wishart-lambda-min-tail.
 -/
 
@@ -15,12 +15,12 @@ noncomputable section
 open MeasureTheory Filter
 open scoped Topology
 
-namespace NLAlib
+namespace MeasureTheory
 
 /-- The limit of integrals of a uniformly lower-bounded sequence is nonnegative
 when almost every point has a nonnegative pointwise limit. No integrability of
 those pointwise limits is assumed. Source: the one-sided Fatou argument in
-operator rederivations, Section 5; atlas wishart-lambda-min-tail (helper). -/
+Edelman 1988; atlas wishart-lambda-min-tail (helper). -/
 theorem nonneg_of_tendsto_integral_of_uniform_lower_bound
     {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ]
     (R : ℕ → Ω → ℝ) (hRi : ∀ n, Integrable (R n) μ)
@@ -52,7 +52,7 @@ theorem nonneg_of_tendsto_integral_of_uniform_lower_bound
 derivative term has a uniform upper bound and a limiting upper bound by the shift.
 The left-hand side uses ordinary domination; the right-hand side uses only the
 one-sided negative-part argument. In particular its pointwise limit need not be
-integrable. Source: operator rederivations, Section 5;
+integrable. Source: Edelman 1988;
 atlas wishart-lambda-min-tail (helper). -/
 theorem integral_nonneg_of_shift_identity_limit
     {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ]
@@ -109,7 +109,7 @@ theorem integral_nonneg_of_shift_identity_limit
 /-- Positive translations in the scalar test can be removed by dominated
 convergence. This handles the second regularization limit after a fixed positive
 Gram shift: the test sees the shifted minimum while the derivative aggregates
-see the unshifted minimum. Source: operator rederivations, Section 5;
+see the unshifted minimum. Source: Edelman 1988;
 atlas wishart-lambda-min-tail (helper). -/
 theorem integral_nonneg_of_positive_translates
     {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
@@ -139,4 +139,4 @@ theorem integral_nonneg_of_positive_translates
     (fun n => hmeas (ε n) (hε n)) hboundi (fun n => hbound (ε n) (hε n)) hlim
   exact ge_of_tendsto hi (Eventually.of_forall fun n => hweak (ε n) (hε n))
 
-end NLAlib
+end MeasureTheory

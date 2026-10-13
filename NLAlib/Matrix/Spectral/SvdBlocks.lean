@@ -1,11 +1,11 @@
 import NLAlib.Matrix.Spectral.EckartYoung
 /-!
-# SVD-derived right-space blocks with genuine optimal tail
+# SVD-derived right-space blocks with optimal tail
 
 The first `k` right singular vectors and their complement give the blocks used
 by the HMT range-finder theorem. The head singular values are absorbed into
 `U₁ = A V₁`, so its head factor is the identity. The tail is obtained from the
-actual SVD and has squared Frobenius norm equal to the rank-constrained optimum.
+SVD and has squared Frobenius norm equal to the rank-constrained optimum.
 HMT 2011, Theorems 9.1 and 10.5; atlas `rsvd-expected-error`, `gn-expected-error`.
 -/
 
@@ -16,9 +16,9 @@ namespace NLAlib
 /-- The padded squared singular-value tail has the same value when summed over
 the input width as over its height. Source: HMT (2011), §2.1 and Theorem 10.5;
 used by volume-sampling Frobenius error. Empty matrix dimensions are included. -/
-theorem singularValueTailSq_eq_sum_width {m n : ℕ}
+theorem bestRankFrobSq_eq_sum_width {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
-    singularValueTailSq A k =
+    bestRankFrobSq A k =
       ∑ i : Fin n, if k ≤ (i : ℕ) then singularValues A i ^ 2 else 0 := by
   let f : ℕ → ℝ := fun i => if k ≤ i then singularValues A i ^ 2 else 0
   have hsum (d : ℕ) (hd : min m n ≤ d) :
@@ -35,8 +35,8 @@ theorem singularValueTailSq_eq_sum_width {m n : ℕ}
   rw [Fintype.card_fin, Fin.sum_univ_eq_sum_range f]
   exact hm.trans hn.symm
 
-/-- Every actual real matrix has an SVD-derived right-space block split whose
-tail is the genuine optimal squared rank-`k` error. The head singular values
+/-- Every real matrix has an SVD-derived right-space block split whose
+tail is the optimal squared rank-`k` error. The head singular values
 are absorbed into `U₁=A V₁`, as permitted by HMT's structural lemma.
 Only `k≤n` is needed; `k>m` is handled by the padded zero singular values.
 HMT 2011, Theorem 9.1; atlas `rsvd-expected-error`, `gn-expected-error`. -/
@@ -47,7 +47,7 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
       (S₂ : Matrix (Fin m) (Fin r) ℝ),
       A = U₁ * (1 : Matrix (Fin k) (Fin k) ℝ) * V₁ᵀ + U₂ * S₂ * V₂ᵀ ∧
       HasOrthonormalCols U₂ ∧ HasOrthonormalCols V₁ ∧ HasOrthonormalCols V₂ ∧
-      V₁ᵀ * V₂ = 0 ∧ frobSq S₂ = bestRankFrobSq k A := by
+      V₁ᵀ * V₂ = 0 ∧ frobSq S₂ = bestRankFrobSq A k := by
   obtain ⟨r, rfl⟩ : ∃ r, n = k + r := ⟨n - k, by omega⟩
   obtain ⟨U, V, h⟩ := exists_isSVD A
   let V₁ : Matrix (Fin (k + r)) (Fin k) ℝ := V.submatrix id (Fin.castAdd r)
@@ -111,9 +111,9 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
   have hF : frobSq S₂ = ∑ j : Fin r, singularValues A (k + (j : ℕ)) ^ 2 := by
     rw [frobSq_eq_sum_sq, Finset.sum_comm]
     exact Finset.sum_congr rfl (fun j _ => hcolumn j)
-  have htail : singularValueTailSq A k =
+  have htail : bestRankFrobSq A k =
       ∑ j : Fin r, singularValues A (k + (j : ℕ)) ^ 2 := by
-    rw [singularValueTailSq_eq_sum_width, Fin.sum_univ_add]
+    rw [bestRankFrobSq_eq_sum_width, Fin.sum_univ_add]
     have hhead : (∑ i : Fin k, if k ≤ ((Fin.castAdd r i : Fin (k + r)) : ℕ)
         then singularValues A (Fin.castAdd r i) ^ 2 else 0) = 0 := by
       apply Finset.sum_eq_zero
@@ -124,6 +124,6 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     intro j _
     simp
   refine ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.conjTranspose_mul_left, hV₁, hV₂, hcross, ?_⟩
-  rw [hF, bestRankFrobSq_eq_singularValueTailSq, htail]
+  rw [hF, bestRankFrobSq_eq_bestRankFrobSq, htail]
 
 end NLAlib

@@ -17,7 +17,7 @@ open scoped Matrix InnerProductSpace
 namespace NLAlib
 
 /-- Every real square pencil has two orthonormal bases in which the first
-factor is upper quasitriangular and the second is upper triangular. Source:
+factor is upper quasitriangular and the second is upper triangular.
 Horn–Johnson (2013), Theorem 2.6.2; singular and identically singular pencils,
 common zero images and dimension zero are included. -/
 theorem exists_orthonormalBases_real_pencil_upper_quasi_triangular

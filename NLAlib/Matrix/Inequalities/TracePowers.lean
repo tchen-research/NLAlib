@@ -7,22 +7,20 @@ import NLAlib.ForMathlib.Analysis.PowerInequalities
 
 Real parts of complex traces reduce to nonnegative squared entry weights.
 These identities support the deterministic mixed-power and trace Young steps
-of the integer noncommutative Khintchine proof.
-Source: operator manuscript `lem:mixed`, `lem:meanvalue`, `lem:traceyoung`.
+of the integer noncommutative Khintchine proof. Tropp 2015, §4.8; Buchholz 2001.
 -/
 
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 open Matrix
 namespace NLAlib
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- Every natural Hermitian power has real trace equal to the corresponding
-power sum of its real eigenvalues. Source: spectral theorem; supports the
-integer trace method for `noncommutative-khintchine` and manuscript `sa:rp-recursion`
-(complex trace tails). -/
+power sum of its real eigenvalues (spectral theorem); supports the integer trace method for
+`noncommutative-khintchine` and the complex trace tails of `rpcholesky`. -/
 theorem re_trace_pow_eq_sum_eigenvalues_pow
     (A : Matrix ι ι ℂ) (hA : A.IsHermitian) (r : ℕ) :
     (A ^ r).trace.re = ∑ i, hA.eigenvalues i ^ r := by
@@ -35,8 +33,8 @@ theorem re_trace_pow_eq_sum_eigenvalues_pow
   rw [← Complex.ofReal_pow, Complex.ofReal_re]
 
 /-- Two powers of a real diagonal matrix, separated by a Hermitian matrix,
-have real trace equal to a sum weighted by squared complex entry norms.
-Source: the eigenbasis expansion in manuscript `lem:mixed`. -/
+have real trace equal to a sum weighted by squared complex entry norms (eigenbasis
+expansion). -/
 theorem re_trace_mul_diagonal_pow_mul_mul_diagonal_pow
     (C : Matrix ι ι ℂ) (hC : C.IsHermitian) (ev : ι → ℝ) (a b : ℕ) :
     (C * (Matrix.diagonal (fun i => (ev i : ℂ))) ^ a * C *
@@ -79,8 +77,8 @@ theorem trace_mul_pow_mul_mul_pow_conjStarAlgAut
     trace_conjStarAlgAut]
 
 /-- Even mixed powers in a Hermitian diagonal basis are bounded by the endpoint
-quadratic trace. Negative eigenvalues and exponent zero are included.
-Source: manuscript `lem:mixed`; supports `noncommutative-khintchine`. -/
+quadratic trace. Negative eigenvalues and exponent zero are included. Tropp 2015, §4.8;
+supports `noncommutative-khintchine`. -/
 theorem re_trace_mul_diagonal_pow_mul_le
     (C : Matrix ι ι ℂ) (hC : C.IsHermitian) (ev : ι → ℝ)
     {m l : ℕ} (hm : Even m) (hl : l ≤ m) :
@@ -123,8 +121,8 @@ theorem re_trace_mul_diagonal_pow_mul_le
   exact hscalar
 
 /-- **Mixed-power trace inequality.** For Hermitian `C,H`, even `m` and `l≤m`,
-`re tr(C Hˡ C H^(m-l))≤re tr(C² Hᵐ)`. Source: manuscript `lem:mixed`;
-Tropp's polynomial trace method, supporting `noncommutative-khintchine`. -/
+`re tr(C Hˡ C H^(m-l))≤re tr(C² Hᵐ)`. Tropp 2015, §4.8 (polynomial trace method);
+supports `noncommutative-khintchine`. -/
 theorem re_trace_mul_pow_mul_le_trace_sq_mul_pow
     (C H : Matrix ι ι ℂ) (hC : C.IsHermitian) (hH : H.IsHermitian)
     {m l : ℕ} (hm : Even m) (hl : l ≤ m) :

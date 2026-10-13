@@ -20,8 +20,9 @@ namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The Krylov subspace `K_q(A, b) = span {A^i b : i < q}`, over any field `K` (the
-theorems about it are stated over `ℝ`). Source: Golub–Meurant (2010) [`gm10`], Ch. 4.
-Atlas: `krylov-subspace`.
+theorems about it are stated over `ℝ`). The index `q` is the number of generators (a bound on
+the dimension): `K_q` contains `p(A) b` for every `deg p < q`, i.e. it is built from `q − 1`
+matvecs. Source: Golub–Meurant (2010) [`gm10`], Ch. 4.
 atlas: krylov-subspace -/
 def krylovSpace {K : Type*} [Field K] (A : Matrix n n K) (b : n → K) (q : ℕ) :
     Submodule K (n → K) :=

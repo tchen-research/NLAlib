@@ -14,9 +14,9 @@ vector `z`.
 * `NLAlib.variance_quadForm` (`hutchinson-variance`): if the coordinates are (mutually)
   independent, centred, with unit variance and common fourth moment `m₄`, then
   `Var[zᵀ A z] = ∑ᵢⱼ A_ij² + ∑ᵢⱼ A_ij A_ji + (m₄ − 3) ∑ᵢ A_ii²`.
-  Specialisations: symmetric `A` (`variance_quadForm_of_isSymm`), Gaussian-like `m₄ = 3`
-  (`variance_quadForm_of_isSymm_of_fourth_moment_eq_three`, `= 2‖A‖_F²`) and Rademacher-like
-  `m₄ = 1` (`variance_quadForm_of_isSymm_of_fourth_moment_eq_one`, `= 2(‖A‖_F² − ∑ A_ii²)`).
+  Specialisations: symmetric `A` (`variance_quadForm_of_isHermitian`), Gaussian-like `m₄ = 3`
+  (`variance_quadForm_of_isHermitian_of_fourth_moment_eq_three`, `= 2‖A‖_F²`) and Rademacher-like
+  `m₄ = 1` (`variance_quadForm_of_isHermitian_of_fourth_moment_eq_one`, `= 2(‖A‖_F² − ∑ A_ii²)`).
 
 Helpers: second and fourth mixed moments of the coordinates
 (`integral_coord_mul_coord`, `integral_coord_mul_coord_mul_coord_mul_coord`) and the index
@@ -89,7 +89,7 @@ theorem integral_coord_mul_coord [DecidableEq n] {z : Ω → n → ℝ}
 
 /-- An isotropic second-moment matrix implies integrable quadratic forms and
 Hutchinson unbiasedness for every real square matrix. The diagonal second moments
-force square integrability, so the cross moments and quadratic form are genuine
+force square integrability, so the cross moments and quadratic form are Bochner
 integrals. Independence and zero means are unnecessary; arbitrary measures and empty
 index types are included. Source: Hutchinson 1989; Avron–Toledo 2011, §2;
 atlas `hutchinson-unbiased` (general second-moment form).
@@ -336,7 +336,7 @@ theorem variance_quadForm [DecidableEq n] (A : Matrix n n ℝ) {z : Ω → n →
 Source: Avron–Toledo (2011) [`at11`], Lem 5, 6; Hutchinson (1989) [`hutch89`].
 Atlas: `hutchinson-variance`.
 atlas: hutchinson-variance -/
-theorem variance_quadForm_of_isSymm [DecidableEq n] {A : Matrix n n ℝ} (hA : A.IsSymm)
+theorem variance_quadForm_of_isHermitian [DecidableEq n] {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
@@ -347,7 +347,10 @@ theorem variance_quadForm_of_isSymm [DecidableEq n] {A : Matrix n n ℝ} (hA : A
       2 * (frobSq A - ∑ i, A i i ^ 2) + (m₄ - 1) * ∑ i, A i i ^ 2 := by
   rw [variance_quadForm A hmeas hindep hmean hsq h4 hm4]
   have h1 : ∑ i, ∑ j, A i j * A j i = ∑ i, ∑ j, A i j ^ 2 :=
-    Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by rw [hA.apply, sq]
+    Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by
+      have h := hA.apply i j
+      rw [star_trivial] at h
+      rw [h, sq]
   have h2 : frobSq A = ∑ i, ∑ j, A i j ^ 2 := by
     simp only [frobSq, frobInner_eq_sum_mul, sq]
   rw [h1, h2]
@@ -358,15 +361,15 @@ theorem variance_quadForm_of_isSymm [DecidableEq n] {A : Matrix n n ℝ} (hA : A
 Deviation: only `m₄ = 3` is assumed of the coordinates, not Gaussianity.
 Atlas: `hutchinson-variance`.
 atlas: hutchinson-variance -/
-theorem variance_quadForm_of_isSymm_of_fourth_moment_eq_three [DecidableEq n]
-    {A : Matrix n n ℝ} (hA : A.IsSymm) {z : Ω → n → ℝ}
+theorem variance_quadForm_of_isHermitian_of_fourth_moment_eq_three [DecidableEq n]
+    {A : Matrix n n ℝ} (hA : A.IsHermitian) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hmean : ∀ i, ∫ ω, z ω i ∂μ = 0) (hsq : ∀ i, ∫ ω, z ω i ^ 2 ∂μ = 1)
     (h4 : ∀ i, Integrable (fun ω => z ω i ^ 4) μ)
     (hm4 : ∀ i, ∫ ω, z ω i ^ 4 ∂μ = 3) :
     Var[fun ω => quadForm A (z ω); μ] = 2 * frobSq A := by
-  rw [variance_quadForm_of_isSymm hA hmeas hindep hmean hsq h4 hm4]
+  rw [variance_quadForm_of_isHermitian hA hmeas hindep hmean hsq h4 hm4]
   ring
 
 /-- Hutchinson variance for symmetric `A` and Rademacher-like coordinates (`m₄ = 1`):
@@ -375,15 +378,15 @@ Avron–Toledo (2011) [`at11`], Lem 6.
 Deviation: only `m₄ = 1` is assumed of the coordinates, not the Rademacher law.
 Atlas: `hutchinson-variance`.
 atlas: hutchinson-variance -/
-theorem variance_quadForm_of_isSymm_of_fourth_moment_eq_one [DecidableEq n]
-    {A : Matrix n n ℝ} (hA : A.IsSymm) {z : Ω → n → ℝ}
+theorem variance_quadForm_of_isHermitian_of_fourth_moment_eq_one [DecidableEq n]
+    {A : Matrix n n ℝ} (hA : A.IsHermitian) {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hmean : ∀ i, ∫ ω, z ω i ∂μ = 0) (hsq : ∀ i, ∫ ω, z ω i ^ 2 ∂μ = 1)
     (h4 : ∀ i, Integrable (fun ω => z ω i ^ 4) μ)
     (hm4 : ∀ i, ∫ ω, z ω i ^ 4 ∂μ = 1) :
     Var[fun ω => quadForm A (z ω); μ] = 2 * (frobSq A - ∑ i, A i i ^ 2) := by
-  rw [variance_quadForm_of_isSymm hA hmeas hindep hmean hsq h4 hm4]
+  rw [variance_quadForm_of_isHermitian hA hmeas hindep hmean hsq h4 hm4]
   ring
 
 end Variance

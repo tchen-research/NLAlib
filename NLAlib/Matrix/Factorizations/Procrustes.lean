@@ -9,7 +9,7 @@ positive semidefiniteness. Horn–Johnson 2013, §§7.4.4–7.4.6.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
@@ -71,7 +71,7 @@ theorem frobSq_add_frobSq_sub_two_nuclearNorm_le_sub_mul
   linarith
 
 omit [DecidableEq n] in
-/-- One-sided Procrustes has the advertised minimum, attained by a genuine
+/-- One-sided Procrustes has the advertised minimum, attained by an
 orthogonal polar factor of the cross-product. Horn–Johnson 2013, §7.4.4.
 atlas: orthogonal-procrustes (partial) -/
 theorem isLeast_frobSq_sub_orthogonal_mul (A B : Matrix m n ℝ) :

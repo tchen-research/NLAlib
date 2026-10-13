@@ -3,17 +3,18 @@ import NLAlib.Matrix.Perturbation.ConditionNumber
 /-!
 # Quantitative full-rank least-squares perturbation
 
-The actual Moore–Penrose solutions are used with Euclidean vector norms.
+The Moore–Penrose solutions are used with Euclidean vector norms.
 Higham, Theorem 20.1; Wedin §5; Golub–Van Loan, Theorem 5.3.1.
 Atlas target: `least-squares-perturbation`.
 -/
 
 noncomputable section
 set_option maxHeartbeats 800000
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The orthogonal range projector annihilates its Moore–Penrose residual.
 Penrose idempotence; supports least-squares perturbation. -/
 theorem columnProjector_apply_pinv_residual_eq_zero (A : Matrix m n ℝ)
@@ -24,6 +25,7 @@ theorem columnProjector_apply_pinv_residual_eq_zero (A : Matrix m n ℝ)
   change (A*moorePenroseInverse A)*(A*moorePenroseInverse A)=A*moorePenroseInverse A at h
   rw [← toEuclideanLin_mul_apply, map_sub, ← toEuclideanLin_mul_apply, h, sub_self]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The perturbed inverse applied to the old residual is controlled by the
 equal-rank projector gap. Higham, Theorem 20.1; Wedin §5. -/
 theorem norm_pinv_apply_pinv_residual_le {A B : Matrix m n ℝ}
@@ -57,8 +59,9 @@ theorem norm_pinv_apply_pinv_residual_le {A B : Matrix m n ℝ}
         (specNorm_nonneg _)
     _ = _ := by ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- A direct finite perturbation estimate retaining the old residual and the
-actual perturbed pseudoinverse. Higham, Theorem 20.1; Wedin §5. -/
+perturbed pseudoinverse. Higham, Theorem 20.1; Wedin §5. -/
 theorem norm_least_squares_sub_le_pinv {A E : Matrix m n ℝ}
     (hA : A.rank=Fintype.card n)
     (hE : specNorm (moorePenroseInverse A)*specNorm E < 1)
@@ -95,6 +98,7 @@ theorem norm_least_squares_sub_le_pinv {A E : Matrix m n ℝ}
         (mul_le_mul_of_nonneg_left hf (specNorm_nonneg _))) hr
     _ = _ := by ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- The residual perturbation uses only the projector gap and the perturbed
 right-hand side. Higham, Theorem 20.1; a stronger constant follows. -/
 theorem norm_least_squares_residual_sub_le {A B : Matrix m n ℝ}
@@ -134,6 +138,7 @@ theorem norm_least_squares_residual_sub_le {A B : Matrix m n ℝ}
     exact hbound.trans (by simpa only [one_mul] using hcontract)
   exact (norm_sub_le _ _).trans (add_le_add h1 h2)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Relative matrix perturbations below the condition-number threshold
 preserve full column rank. Higham, Theorem 20.1. -/
 theorem rank_add_eq_card_of_moorePenroseConditionNumber_mul_lt_one {A E : Matrix m n ℝ}
@@ -146,6 +151,7 @@ theorem rank_add_eq_card_of_moorePenroseConditionNumber_mul_lt_one {A E : Matrix
     _ = moorePenroseConditionNumber A*ε := by unfold moorePenroseConditionNumber; ring
     _ < 1 := hsmall
 
+open scoped Matrix.Norms.L2Operator in
 /-- The perturbed pseudoinverse norm retains the condition-number
 denominator under the source's relative data hypothesis. Higham, Theorem 20.1. -/
 theorem specNorm_pinv_add_le_of_moorePenroseConditionNumber_mul_lt_one {A E : Matrix m n ℝ}
@@ -162,6 +168,7 @@ theorem specNorm_pinv_add_le_of_moorePenroseConditionNumber_mul_lt_one {A E : Ma
     (div_le_div_of_nonneg_left (specNorm_nonneg _) (sub_pos.mpr hsmall)
       (sub_le_sub_left hp 1))
 
+open scoped Matrix.Norms.L2Operator in
 /-- The direct solution error with both relative perturbations substituted,
 before dividing by the nonzero solution. Higham, Theorem 20.1; Wedin §5. -/
 theorem norm_least_squares_sub_le_relative_data {A E : Matrix m n ℝ} {ε : ℝ}
@@ -194,6 +201,7 @@ theorem norm_least_squares_sub_le_relative_data {A E : Matrix m n ℝ} {ε : ℝ
           (mul_nonneg (mul_nonneg (specNorm_nonneg _) (specNorm_nonneg E)) (norm_nonneg r)))
       (div_nonneg (specNorm_nonneg _) (sub_pos.mpr hsmall).le))
 
+open scoped Matrix.Norms.L2Operator in
 /-- The residual perturbation has the stronger coefficient `1+κ` under the
 relative data hypotheses. Higham, Theorem 20.1; Wedin §5. -/
 theorem norm_least_squares_residual_sub_le_relative_data {A E : Matrix m n ℝ} {ε : ℝ}

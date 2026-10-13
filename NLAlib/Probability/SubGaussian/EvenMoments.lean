@@ -17,7 +17,7 @@ Scalar consequences of Mathlib's `ProbabilityTheory.HasSubgaussianMGF X c μ`:
 
 The square-exponential bounds built from these are in
 `NLAlib.Probability.SubGaussian.ExpSquare`. Vershynin 2018, Prop 2.5.2. Ported from HighDimProb
-commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae (Hanson–Wright proof, Apache-2.0, authors
+(Hanson–Wright proof, Apache-2.0, authors
 Yuanhe Zhang, Jason D. Lee, Fanghui Liu); atlas `hanson-wright` (helpers), `subgaussian-def`.
 -/
 
@@ -50,7 +50,7 @@ theorem hasSubgaussianMGF_mono {μ : Measure Ω} {X : Ω → ℝ} {c d : ℝ≥0
 sub-Gaussian with proxy `∑_{i ∈ s} aᵢ² cᵢ`. Vershynin 2018, Prop 2.6.1; atlas `hanson-wright`
 (helper). -/
 theorem hasSubgaussianMGF_finset_sum_mul_of_iIndepFun {ι : Type*} {μ : Measure Ω}
-    {X : ι → Ω → ℝ} (h_indep : iIndepFun X μ) {c : ι → ℝ≥0}
+    {X : ι → Ω → ℝ} (hind : iIndepFun X μ) {c : ι → ℝ≥0}
     {s : Finset ι} (h_subG : ∀ i ∈ s, HasSubgaussianMGF (X i) (c i) μ)
     (a : ι → ℝ) :
     HasSubgaussianMGF (fun ω => ∑ i ∈ s, a i * X i ω)
@@ -58,7 +58,7 @@ theorem hasSubgaussianMGF_finset_sum_mul_of_iIndepFun {ι : Type*} {μ : Measure
   have h_indep_mul :
       iIndepFun (fun i => fun ω => a i * X i ω) μ := by
     simpa [Function.comp_def] using
-      h_indep.comp (fun i x => a i * x) (fun i => by fun_prop)
+      hind.comp (fun i x => a i * x) (fun i => by fun_prop)
   have h_subG_mul :
       ∀ i ∈ s, HasSubgaussianMGF (fun ω => a i * X i ω)
       (Real.toNNReal (a i ^ 2) * c i) μ := by

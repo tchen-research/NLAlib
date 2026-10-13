@@ -4,7 +4,7 @@ import NLAlib.Probability.Gaussian.Concentration.LogSobolevCoverage
 import Mathlib.Probability.Moments.SubGaussian
 
 /-!
-# Concentration from a genuine Euclidean logarithmic Sobolev inequality
+# Concentration from a Euclidean logarithmic Sobolev inequality
 
 The hypothesis is the usual Dirichlet-form inequality for arbitrary `C¹` test functions,
 not an exponential-entropy assumption for the particular observable. Applying the inequality
@@ -54,7 +54,7 @@ private theorem integrable_exp_mul_of_abs_bound {Ω : Type*} [MeasurableSpace Ω
     rw [abs_mul]
     exact mul_le_mul_of_nonneg_left (hM x) (abs_nonneg s))
 
-/-- A genuine LSI gives the exponential-entropy bound for a bounded smooth Lipschitz
+/-- A LSI gives the exponential-entropy bound for a bounded smooth Lipschitz
 observable, by the chain rule applied to `g=exp(s f/2)`. All three LSI integrability
 requirements are proved from boundedness. Ledoux 2001, proof of Theorem 5.3;
 atlas `herbst`. -/
@@ -144,7 +144,7 @@ theorem entropy_exp_mul_le_of_logSobolev_of_bounded
         (by positivity [hLSI.constant_nonneg])
     _ = _ := by rw [integral_const_mul]; ring
 
-/-- A bounded smooth Lipschitz observable under a measure satisfying a genuine LSI has
+/-- A bounded smooth Lipschitz observable under a measure satisfying a LSI has
 the centered sub-Gaussian MGF with variance proxy `cL²`. Exponential integrability is
 derived from boundedness. Ledoux 2001, Theorem 5.3; atlas `herbst`. -/
 theorem hasSubgaussianMGF_of_logSobolev_of_bounded
@@ -376,7 +376,7 @@ private theorem abs_le_exp_add_exp_neg (u : ℝ) : |u| ≤ Real.exp u + Real.exp
   · rw [abs_of_nonpos hu]
     linarith [Real.add_one_le_exp (-u), Real.exp_pos u]
 
-/-- A genuine Euclidean LSI already forces integrability of every Lipschitz observable.
+/-- A Euclidean LSI already forces integrability of every Lipschitz observable.
 No moment or exponential-integrability hypothesis is assumed. Bounded approximants have
 uniformly bounded means, using any positive-mass bounded-value event; Fatou then bounds
 the first absolute moment. Ledoux 2001, proof of Theorem 5.3; atlas `herbst`. -/
@@ -443,18 +443,18 @@ theorem integrable_of_logSobolev_of_lipschitz
   exact hAbsInt.mono' hfcont.aestronglyMeasurable (ae_of_all _ fun x => by
     simpa only [Real.norm_eq_abs] using (le_refl |f x|))
 
-/-- **General LSI-to-Herbst concentration, with automatic integrability.** Under a genuine
-Euclidean LSI with constant `c`, every `L`-Lipschitz real observable is integrable and its
-centered MGF is sub-Gaussian with variance proxy `cL²`. No smoothness, finite-moment or
-exponential-integrability assumption is imposed on the observable.
-Ledoux 2001, Theorem 5.3; atlas `herbst`.
+/-- **Herbst's argument.** Under a Euclidean log-Sobolev inequality with constant `c`, the
+centred MGF of every `L`-Lipschitz observable is sub-Gaussian with variance proxy `cL²`. No
+smoothness, finite-moment or exponential-integrability assumption is imposed on the observable
+(integrability is `integrable_of_logSobolev_of_lipschitz`).
+Ledoux 2001, Theorem 5.3.
 atlas: herbst -/
-theorem integrable_and_hasSubgaussianMGF_of_logSobolev
+theorem hasSubgaussianMGF_of_logSobolev
     {ι : Type*} [Fintype ι] [DecidableEq ι] {μ : Measure (ι → ℝ)}
     [IsProbabilityMeasure μ] {c : ℝ} (hLSI : HasEuclideanLogSobolev μ c)
     (f : (ι → ℝ) → ℝ) (L : ℝ) (hL : 0 ≤ L)
     (hLip : ∀ x y, |f x - f y| ≤ L * Real.sqrt (∑ i, (x i - y i) ^ 2)) :
-    Integrable f μ ∧ HasSubgaussianMGF (fun x => f x - ∫ y, f y ∂μ)
+    HasSubgaussianMGF (fun x => f x - ∫ y, f y ∂μ)
       ⟨c * L ^ 2, mul_nonneg hLSI.constant_nonneg (sq_nonneg L)⟩ μ := by
   have hfInt := integrable_of_logSobolev_of_lipschitz hLSI f L hL hLip
   have hfcont := continuous_of_abs_sub_le_mul_sqrt_sum_sq f L hL hLip
@@ -494,7 +494,6 @@ theorem integrable_and_hasSubgaussianMGF_of_logSobolev
     change ENNReal.ofReal (∫ x, Real.exp (s * f x) ∂μ) ≤ _
     rw [ofReal_integral_eq_lintegral_ofReal hfi hnonneg]
     exact hFatou
-  refine ⟨hfInt, ?_⟩
   let E := ∫ y, f y ∂μ
   refine ⟨?_, ?_⟩
   · intro s
@@ -524,37 +523,34 @@ theorem integrable_and_hasSubgaussianMGF_of_logSobolev
 and all exponential moments are proved by the preceding theorem.
 Ledoux 2001, Theorem 5.3; atlas `herbst`.
 atlas: herbst -/
-theorem measure_ge_le_of_logSobolev
+theorem measureReal_ge_le_of_logSobolev
     {ι : Type*} [Fintype ι] [DecidableEq ι] {μ : Measure (ι → ℝ)}
     [IsProbabilityMeasure μ] {c : ℝ} (hLSI : HasEuclideanLogSobolev μ c)
     (f : (ι → ℝ) → ℝ) (L : ℝ) (hL : 0 ≤ L)
     (hLip : ∀ x y, |f x - f y| ≤ L * Real.sqrt (∑ i, (x i - y i) ^ 2))
     (t : ℝ) (ht : 0 ≤ t) :
-    μ {x | (∫ y, f y ∂μ) + t ≤ f x} ≤
-      ENNReal.ofReal (Real.exp (-t ^ 2 / (2 * (c * L ^ 2)))) := by
-  have hSG := (integrable_and_hasSubgaussianMGF_of_logSobolev hLSI f L hL hLip).2
+    μ.real {x | (∫ y, f y ∂μ) + t ≤ f x} ≤ Real.exp (-t ^ 2 / (2 * (c * L ^ 2))) := by
+  have hSG := hasSubgaussianMGF_of_logSobolev hLSI f L hL hLip
   have htBound := hSG.measure_ge_le ht
   have hSet : {x | t ≤ f x - ∫ y, f y ∂μ} = {x | (∫ y, f y ∂μ) + t ≤ f x} := by
     ext x
     change (t ≤ f x - ∫ y, f y ∂μ) ↔ ((∫ y, f y ∂μ) + t ≤ f x)
     constructor <;> intro h <;> linarith
-  rw [hSet] at htBound
-  rw [← ofReal_measureReal (μ := μ)]
-  exact ENNReal.ofReal_le_ofReal htBound
+  rwa [hSet] at htBound
 
-/-- The product standard Gaussian measure satisfies the genuine Euclidean LSI premise
+/-- The product standard Gaussian measure satisfies the Euclidean LSI premise
 with constant one. This bridge uses the already proved Dirichlet inequality; the generic
 Herbst proof above does not use Gaussian exponential-integrability facts.
 Gross 1975; Ledoux 2001, Theorem 5.1; atlas `gaussian-log-sobolev`, `herbst`.
 atlas: herbst -/
-theorem hasEuclideanLogSobolev_pi_gaussianReal {ι : Type*} [Fintype ι] [DecidableEq ι] :
-    HasEuclideanLogSobolev (Measure.pi fun _ : ι => gaussianReal 0 1) 1 := by
+theorem hasEuclideanLogSobolev_gaussianVector {ι : Type*} [Fintype ι] [DecidableEq ι] :
+    HasEuclideanLogSobolev (gaussianVector ι) 1 := by
   refine ⟨by norm_num, ?_⟩
   intro g hg hg2 hglog hdg
   simpa only [mul_one] using
     entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian g hg hg2 hglog hdg
 
-/-- A genuine Euclidean LSI forces entropy integrability whenever the square and
+/-- A Euclidean LSI forces entropy integrability whenever the square and
 Dirichlet energy are integrable. Thus the finite-entropy testing convention in the
 premise loses no `C¹` functions of finite energy. The proof uses bounded sine value
 truncations and Fatou. Ledoux 2001, Theorem 5.1; atlas `gaussian-log-sobolev`, `herbst`. -/

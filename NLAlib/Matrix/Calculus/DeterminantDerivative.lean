@@ -10,12 +10,13 @@ This includes singular and empty matrices. Atlas `determinant-derivative`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.Elementwise
+open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.Elementwise in
 private def detRowsContinuous : ContinuousMultilinearMap ℝ (fun _ : n => n → ℝ) ℝ :=
   { Matrix.detRowAlternating.toMultilinearMap with
     cont := continuous_id.matrix_det }
@@ -30,6 +31,7 @@ theorem sum_det_updateRow_eq_trace_adjugate_mul (A H : Matrix n n ℝ) :
     Matrix.mul_apply]
   exact Finset.sum_comm
 
+open scoped Matrix.Norms.Elementwise in
 /-- Jacobi's formula for a differentiable matrix path applies at every matrix,
 including singular matrices and empty indices. Horn–Johnson 2013, §0.8.10.
 atlas: determinant-derivative -/
@@ -42,6 +44,7 @@ theorem hasDerivAt_det {A : ℝ → Matrix n n ℝ} {H : Matrix n n ℝ} {t : �
   change HasDerivAt (fun s => (A s).det) (∑ i : n, ((A t).updateRow i (H i)).det) t at h
   rwa [sum_det_updateRow_eq_trace_adjugate_mul] at h
 
+open scoped Matrix.Norms.Elementwise in
 /-- The logarithmic determinant derivative is the inverse trace pairing when
 the determinant is positive. Horn–Johnson 2013, §0.8.10. The proof only needs
 nonzero determinant for the derivative of the real logarithm.
@@ -55,6 +58,7 @@ theorem hasDerivAt_log_det {A : ℝ → Matrix n n ℝ} {H : Matrix n n ℝ} {t 
       smul_eq_mul, div_eq_inv_mul]
   rwa [← hTrace] at h
 
+open scoped Matrix.Norms.Elementwise in
 /-- The derivative of `det(t I - A)` is the trace of its adjugate, including
 the empty matrix. Horn–Johnson 2013, §0.8.10.
 atlas: determinant-derivative -/
@@ -65,6 +69,7 @@ theorem hasDerivAt_det_smul_one_sub (A : Matrix n n ℝ) (t : ℝ) :
     simpa using ((hasDerivAt_id t).smul_const (1 : Matrix n n ℝ)).sub_const A
   simpa only [Matrix.mul_one] using hasDerivAt_det hA
 
+open scoped Matrix.Norms.Elementwise in
 /-- On `Fin (n+1)`, the characteristic determinant derivative is the sum of
 the principal minors obtained by deleting one index. At size one these are
 the empty determinants; size zero is covered by the adjugate trace theorem.

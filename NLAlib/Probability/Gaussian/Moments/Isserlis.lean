@@ -5,7 +5,7 @@ import NLAlib.Probability.Gaussian.Basic.CovarianceRepresentation
 
 All centered Gaussian vector laws, including correlated and singular covariance,
 have the finite pairing formula for arbitrary moments and repeated indices.
-Source: Isserlis 1918; operator re-derivation `pg:wick`.
+Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28.
 Atlas: `isserlis`.
 -/
 
@@ -15,8 +15,7 @@ open scoped Matrix MatrixOrder
 namespace NLAlib
 
 /-- For a centered Gaussian vector, covariance entries are exactly its
-coordinate product expectations. Source: operator re-derivation
-`pg:gaussian-linear-image`; supports `isserlis`. -/
+coordinate product expectations. Source: Vershynin 2018, §3.3.2; supports `isserlis`. -/
 theorem gaussianCovarianceMatrix_apply_eq_integral_mul_of_centered {n : ℕ}
     (μ : Measure (EuclideanSpace ℝ (Fin n))) [IsGaussian μ]
     (hmean : ∫ x, x ∂μ = 0) (i j : Fin n) :
@@ -37,7 +36,7 @@ theorem gaussianCovarianceMatrix_apply_eq_integral_mul_of_centered {n : ℕ}
 The covariance can be correlated or singular, and index positions may repeat.
 The canonical finite pairing type matches each first remaining position with
 one partner and covers every position exactly once.
-Source: Isserlis 1918; operator re-derivation `pg:wick`.
+Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28.
 atlas: isserlis -/
 theorem integral_prod_eval_gaussian_eq_sum_pairings {n m : ℕ}
     (μ : Measure (EuclideanSpace ℝ (Fin n))) [IsGaussian μ]
@@ -54,12 +53,12 @@ theorem integral_prod_eval_gaussian_eq_sum_pairings {n m : ℕ}
     intro i j
     change (L * Lᵀ) i j = C i j
     rw [hL.eq, hsq]
-  have hrep := gaussian_eq_map_pi_sqrt_covariance_of_centered μ hmean
+  have hrep := gaussian_eq_map_gaussianVector_sqrt_covariance_of_centered μ hmean
   have h := integral_prod_dotProduct_eq_sum_gaussianPairingWeight
     (fun r : Fin m => fun a => L (idx r) a)
   have hmap : (∫ x, ∏ r, x (idx r) ∂μ) =
       ∫ x : Fin n → ℝ, ∏ r, (fun a => L (idx r) a) ⬝ᵥ x
-        ∂Measure.pi (fun _ => gaussianReal 0 1) := by
+        ∂(gaussianVector _) := by
     rw [hrep, integral_map (by fun_prop) (by fun_prop)]
     rfl
   rw [hmap]
@@ -67,7 +66,7 @@ theorem integral_prod_eval_gaussian_eq_sum_pairings {n m : ℕ}
 
 /-- The Isserlis formula with covariance spelled directly as coordinate product
 expectations, including singular laws and repeated indices.
-Source: Isserlis 1918; operator re-derivation `pg:wick`.
+Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28.
 atlas: isserlis -/
 theorem integral_prod_eval_gaussian_eq_sum_integral_mul_pairings {n m : ℕ}
     (μ : Measure (EuclideanSpace ℝ (Fin n))) [IsGaussian μ]
@@ -79,33 +78,33 @@ theorem integral_prod_eval_gaussian_eq_sum_integral_mul_pairings {n m : ℕ}
     integral_prod_eval_gaussian_eq_sum_pairings μ hmean idx
 
 /-- Every odd product of coordinates of any centered Gaussian vector has
-expectation zero. Source: operator re-derivation `pg:wick`.
+expectation zero. Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28.
 atlas: isserlis -/
 theorem integral_prod_eval_gaussian_eq_zero_of_odd {n m : ℕ}
     (μ : Measure (EuclideanSpace ℝ (Fin n))) [IsGaussian μ]
     (hmean : ∫ x, x ∂μ = 0) (idx : Fin m → Fin n) (hm : Odd m) :
     ∫ x, ∏ r, x (idx r) ∂μ = 0 := by
-  have hrep := gaussian_eq_map_pi_sqrt_covariance_of_centered μ hmean
+  have hrep := gaussian_eq_map_gaussianVector_sqrt_covariance_of_centered μ hmean
   rw [hrep, integral_map (by fun_prop) (by fun_prop)]
   exact integral_prod_dotProduct_eq_zero_of_odd hm
     (fun r a => CFC.sqrt (gaussianCovarianceMatrix μ) (idx r) a)
 
 /-- Every product in the general centered Gaussian Wick formula is absolutely
 integrable, including correlated and singular covariance and repeated indices.
-Source: operator re-derivation `pg:polynomial-stein`, `pg:gaussian-linear-image`. -/
+Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28. -/
 theorem integrable_prod_eval_gaussian_of_centered {n m : ℕ}
     (μ : Measure (EuclideanSpace ℝ (Fin n))) [IsGaussian μ]
     (hmean : ∫ x, x ∂μ = 0) (idx : Fin m → Fin n) :
     Integrable (fun x : EuclideanSpace ℝ (Fin n) => ∏ r, x (idx r)) μ := by
-  rw [gaussian_eq_map_pi_sqrt_covariance_of_centered μ hmean]
+  rw [gaussian_eq_map_gaussianVector_sqrt_covariance_of_centered μ hmean]
   apply (integrable_map_measure (by fun_prop) (by fun_prop)).mpr
-  exact integrable_prod_dotProduct_pi_gaussianReal Finset.univ
+  exact integrable_prod_dotProduct_gaussianVector Finset.univ
     (fun r a => CFC.sqrt (gaussianCovarianceMatrix μ) (idx r) a)
 
 /-- The full Isserlis formula for a centered Gaussian vector on an arbitrary
-probability space, with covariance written as its actual coordinate product
+probability space, with covariance written as its coordinate product
 expectations. Correlated/singular laws and repeated coordinate positions are
-included. Source: Isserlis 1918; operator re-derivation `pg:wick`.
+included. Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28.
 atlas: isserlis -/
 theorem integral_prod_gaussianVector_eq_sum_pairings
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -129,7 +128,7 @@ theorem integral_prod_gaussianVector_eq_sum_pairings
   simpa only [hout, hcov] using hh
 
 /-- Abstract centered Gaussian-vector product moments are absolutely integrable.
-Source: operator re-derivation `pg:wick`, transport of the canonical Gaussian law. -/
+Source: Isserlis 1918; Janson 1997, Thm 1.28 (transport of the canonical Gaussian law). -/
 theorem integrable_prod_gaussianVector_of_centered
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {n m : ℕ} (G : Ω → EuclideanSpace ℝ (Fin n)) (hG : HasGaussianLaw G P)

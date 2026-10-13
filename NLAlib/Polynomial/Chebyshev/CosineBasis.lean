@@ -3,7 +3,7 @@ import NLAlib.Polynomial.Chebyshev.Core
 /-!
 # Finite cosine expansions through the Chebyshev first-kind basis
 
-Mathlib's actual degree-indexed Chebyshev polynomial sequence spans every finite degree
+Mathlib's degree-indexed Chebyshev polynomial sequence spans every finite degree
 space, supplying the coefficients of the fixed Jackson convolution polynomial.
 -/
 
@@ -15,7 +15,7 @@ namespace NLAlib
 
 /-- Every real polynomial of degree at most `n` has a finite first-kind Chebyshev expansion.
 Source: Rivlin, Chebyshev Polynomials, Chapter 1; Mathlib polynomial-sequence spanning.
-This is the genuine cosine-basis construction used by sharp `jackson-lipschitz`. -/
+This is the cosine-basis construction used by sharp `jackson-lipschitz`. -/
 theorem exists_sum_smul_T_eq_of_degree_le {p : ℝ[X]} {n : ℕ} (hp : p.degree ≤ n) :
     ∃ c : ℕ → ℝ, (∑ j ∈ range (n + 1), c j • T ℝ (j : ℤ)) = p := by
   let S := chebyshevTsequence ℝ
@@ -29,7 +29,7 @@ theorem exists_sum_smul_T_eq_of_degree_le {p : ℝ[X]} {n : ℕ} (hp : p.degree 
   obtain ⟨c, hc⟩ := (Submodule.mem_span_image_finset_iff_exists_fun' ℝ).mp hmem
   exact ⟨c, hc⟩
 
-/-- Evaluating the actual finite first-kind expansion gives a finite cosine series.
+/-- Evaluating the finite first-kind expansion gives a finite cosine series.
 Source: Rivlin, Chebyshev Polynomials, Chapter 1; helper for sharp `jackson-lipschitz`. -/
 theorem exists_cosine_expansion_of_degree_le {p : ℝ[X]} {n : ℕ} (hp : p.degree ≤ n) :
     ∃ c : ℕ → ℝ, ∀ t : ℝ,

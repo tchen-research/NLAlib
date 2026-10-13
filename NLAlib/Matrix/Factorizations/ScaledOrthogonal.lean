@@ -8,7 +8,7 @@ matrix case is stated separately. Horn–Johnson 2013, §7.4.6.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]

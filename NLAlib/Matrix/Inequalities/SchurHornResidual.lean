@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Inequalities.Majorization
+import NLAlib.Matrix.Basic.PlaneRotation
 /-!
 # Maximal residual subsets and positive separation
 
@@ -35,10 +36,10 @@ theorem exists_pos_max_residual (r : n → ℝ) (hsum : ∑ i, r i = 0)
     simp
 
 /-- A unit vector supported where a residual equals its maximum has weighted
-squared residual average exactly that maximum. Schur–Horn variational
-rederivation, equation (6). -/
+squared residual average exactly that maximum. Horn–Johnson 2013, proof of
+Theorem 4.3.48. -/
 theorem sum_mul_sq_eq_of_support (r u : n → ℝ) (ρ : ℝ) (S : Finset n)
-    (hS : ∀ i ∈ S, r i = ρ) (hu : u ⬝ᵥ u = 1)
+    (hS : ∀ i ∈ S, r i = ρ) (hu : ‖(WithLp.toLp 2 u : EuclideanSpace ℝ n)‖ = 1)
     (hsupport : ∀ i ∉ S, u i = 0) :
     (∑ i, r i * u i ^ 2) = ρ := by
   have heq : ∀ i, r i * u i ^ 2 = ρ * u i ^ 2 := by
@@ -48,18 +49,20 @@ theorem sum_mul_sq_eq_of_support (r u : n → ℝ) (ρ : ℝ) (S : Finset n)
     · simp [hsupport i hi]
   simp_rw [heq]
   rw [← Finset.mul_sum]
-  have hu' : ∑ i, u i ^ 2 = 1 := by simpa only [dotProduct, pow_two] using hu
+  have hu' : ∑ i, u i ^ 2 = 1 := by
+    simpa only [dotProduct, pow_two] using dotProduct_self_eq_one_of_norm_toLp_eq_one hu
   rw [hu', mul_one]
 
 omit [DecidableEq n] in
 /-- A unit vector supported away from the maximal residual coordinates has
-strictly smaller weighted squared average. Schur–Horn variational rederivation,
-equation (6), with no positivity condition on the individual residuals. -/
+strictly smaller weighted squared average. Horn–Johnson 2013, proof of Theorem 4.3.48;
+no positivity condition on the individual residuals. -/
 theorem sum_mul_sq_lt_of_support_compl (r v : n → ℝ) (ρ : ℝ) (S : Finset n)
     (hmax : ∀ i, r i ≤ ρ) (hstrict : ∀ i ∉ S, r i < ρ)
-    (hv : v ⬝ᵥ v = 1) (hsupport : ∀ i ∈ S, v i = 0) :
+    (hv : ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = 1) (hsupport : ∀ i ∈ S, v i = 0) :
     (∑ i, r i * v i ^ 2) < ρ := by
-  have hv' : ∑ i, v i ^ 2 = 1 := by simpa only [dotProduct, pow_two] using hv
+  have hv' : ∑ i, v i ^ 2 = 1 := by
+    simpa only [dotProduct, pow_two] using dotProduct_self_eq_one_of_norm_toLp_eq_one hv
   have hnonzero : ∃ i, v i ≠ 0 := by
     by_contra hnot
     have hzero : ∀ i, v i = 0 := by simpa only [not_exists, not_not] using hnot
@@ -77,11 +80,12 @@ theorem sum_mul_sq_lt_of_support_compl (r v : n → ℝ) (ρ : ℝ) (S : Finset 
   linarith
 
 /-- Disjoint unit vectors on the maximal residual subset and its complement
-have positive residual-weighted squared separation. Schur–Horn variational
-rederivation, equation (6). -/
+have positive residual-weighted squared separation. Horn–Johnson 2013, proof of
+Theorem 4.3.48. -/
 theorem sum_mul_sub_sq_pos_of_max_support (r u v : n → ℝ) (ρ : ℝ) (S : Finset n)
     (hS : ∀ i, i ∈ S ↔ r i = ρ) (hmax : ∀ i, r i ≤ ρ)
-    (hu : u ⬝ᵥ u = 1) (hv : v ⬝ᵥ v = 1)
+    (hu : ‖(WithLp.toLp 2 u : EuclideanSpace ℝ n)‖ = 1)
+    (hv : ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = 1)
     (hsu : ∀ i ∉ S, u i = 0) (hsv : ∀ i ∈ S, v i = 0) :
     0 < ∑ i, r i * (u i ^ 2 - v i ^ 2) := by
   have hstrict : ∀ i ∉ S, r i < ρ := by

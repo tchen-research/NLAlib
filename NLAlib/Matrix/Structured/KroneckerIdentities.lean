@@ -31,7 +31,7 @@ theorem frobSq_kronecker (A : Matrix m n ℝ) (B : Matrix p q ℝ) :
 
 /-- Frobenius norms multiply under the Kronecker product.
 Horn–Johnson 1991, Section 4.2; no nonzero or nonempty assumptions.
-atlas: kronecker-spectral (partial) -/
+atlas: kronecker-spectral -/
 theorem frobNorm_kronecker (A : Matrix m n ℝ) (B : Matrix p q ℝ) :
     frobNorm (A ⊗ₖ B) = frobNorm A * frobNorm B := by
   rw [frobNorm, frobNorm, frobNorm, frobSq_kronecker, Real.sqrt_mul (frobSq_nonneg A)]
@@ -61,7 +61,7 @@ theorem IsMoorePenroseInverse.kronecker {A : Matrix m n ℝ} {A' : Matrix n m �
 /-- The Moore–Penrose inverse of a Kronecker product is the product of the two
 Moore–Penrose inverses. Horn–Johnson 1991, Section 4.2; arbitrary finite rectangular
 matrices and all zero singular values are included.
-atlas: kronecker-spectral (partial) -/
+atlas: kronecker-spectral -/
 theorem moorePenroseInverse_kronecker (A : Matrix m n ℝ) (B : Matrix p q ℝ) :
     moorePenroseInverse (A ⊗ₖ B) = moorePenroseInverse A ⊗ₖ moorePenroseInverse B :=
   (isMoorePenroseInverse _).unique ((isMoorePenroseInverse A).kronecker

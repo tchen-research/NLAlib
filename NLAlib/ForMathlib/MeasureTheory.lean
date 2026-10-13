@@ -6,16 +6,11 @@ import NLAlib.ForMathlib.MeasureTheory.Integral
 import NLAlib.ForMathlib.MeasureTheory.IntegralConvergence
 import NLAlib.ForMathlib.MeasureTheory.IntegralSqrt
 import NLAlib.ForMathlib.MeasureTheory.IntegralUpdate
-import NLAlib.ForMathlib.MeasureTheory.LocalWeakDensity
 import NLAlib.ForMathlib.MeasureTheory.MapProd
 import NLAlib.ForMathlib.MeasureTheory.Matrix
 import NLAlib.ForMathlib.MeasureTheory.MatrixConditionalExpectation
 import NLAlib.ForMathlib.MeasureTheory.MomentInterpolation
-import NLAlib.ForMathlib.MeasureTheory.MonotoneDensity
-import NLAlib.ForMathlib.MeasureTheory.SmoothMeasureComparison
 import NLAlib.ForMathlib.MeasureTheory.TailComparison
-import NLAlib.ForMathlib.MeasureTheory.WeakDensity
-import NLAlib.ForMathlib.MeasureTheory.WeightedWeakDensity
 
 /-! # `ForMathlib/MeasureTheory`
 

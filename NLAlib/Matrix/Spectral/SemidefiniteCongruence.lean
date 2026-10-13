@@ -11,7 +11,7 @@ Section 7.6; atlas `simultaneous-diagonalization-congruence`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
@@ -40,6 +40,7 @@ theorem commute_of_posSemidef_add_eq_diagonal_projection {A B : Matrix n n ℝ}
   have hright : A * A + B * A = A := by rw [← Matrix.add_mul, hAB, hPA]
   exact add_left_cancel (hleft.trans hright.symm)
 
+open scoped Matrix.Norms.L2Operator in
 /-- A pair of real PSD matrices, including singular pairs with a common
 kernel, has an invertible simultaneous diagonal congruence with nonnegative
 diagonal entries. Horn--Johnson (2013), Section 7.6.
@@ -114,6 +115,7 @@ theorem exists_diagonal_congruence_of_posSemidef {A B : Matrix n n ℝ}
     rw [← hVB]
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hB'.conjTranspose_mul_mul_same V
 
+open scoped Matrix.Norms.L2Operator in
 /-- Singular PSD pairs have normalized diagonal congruences: the first
 diagonal contains only zero and one; the second is nonnegative and contains
 only zero and one wherever the first is zero. These are exactly the three
@@ -227,7 +229,7 @@ by `a=b=0`; thus coordinate reordering gives `(I_r,0_s,0_t)` and
 `(diag(beta),I_s,0_t)`. The identities identify `r=rank A`,
 `r+s=rank(A+B)`, and `t=dim(ker A ∩ ker B)`, including all empty blocks.
 Horn--Johnson (2013), Section 7.6.
-atlas: simultaneous-diagonalization-congruence (partial) -/
+atlas: simultaneous-diagonalization-congruence -/
 theorem semidefinite_pair_congruence_normal_form {A B : Matrix n n ℝ}
     (hA : A.PosSemidef) (hB : B.PosSemidef) :
     ∃ (S : Matrix n n ℝ) (a b : n → ℝ), IsUnit S ∧

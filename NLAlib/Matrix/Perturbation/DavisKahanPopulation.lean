@@ -3,7 +3,7 @@ import NLAlib.Matrix.Basic.RankBounds
 /-!
 # Population-gap Davis–Kahan Frobenius bounds
 
-The finite trace deficit bounds genuine top eigenspaces without a smallness
+The finite trace deficit bounds top eigenspaces without a smallness
 assumption. Frobenius Cauchy–Schwarz gives the sharper `sqrt 2` branch and the
 rank trace inequality gives `2 * sqrt k` in spectral perturbation norm.
 Source: Yu–Wang–Samworth (2015), Theorem 2; atlas `davis-kahan-sin-theta`.
@@ -46,7 +46,7 @@ theorem rank_sub_frame_projector_le_two_mul {k : ℕ} (P Q : Matrix n (Fin k) �
 /-- The unconditional top-cluster Frobenius bound retains both perturbation
 norms and improves the Frobenius branch to `sqrt 2`. Yu–Wang–Samworth (2015),
 Theorem 2, via the finite trace deficit. The perturbed frame may be any
-orthonormal maximizer of the actual top-`k` compression trace, including
+orthonormal maximizer of the top-`k` compression trace, including
 arbitrary choices at repeated eigenvalues.
 atlas: davis-kahan-sin-theta (partial) -/
 theorem frobNorm_sinePrincipalAngles_le_min_div_population_gap
@@ -54,7 +54,7 @@ theorem frobNorm_sinePrincipalAngles_le_min_div_population_gap
     (hk0 : 0 < k) (hkN : k < Fintype.card n)
     (hg : 0 < hA.eigenvalues₀ ⟨k-1, by omega⟩-hA.eigenvalues₀ ⟨k, hkN⟩)
     {Q : Matrix n (Fin k) ℝ} (hQ : HasOrthonormalCols Q)
-    (htop : (Qᵀ*(A+E)*Q).trace=eigenvaluePrefix (hA.add hE) hkN.le) :
+    (htop : (Qᵀ*(A+E)*Q).trace=eigenvaluePrefix (hA.add hE) k) :
     frobNorm (sinePrincipalAngles (topEigenframe hA hkN.le) Q) ≤
       min (2*Real.sqrt k*specNorm E) (Real.sqrt 2*frobNorm E)/
         (hA.eigenvalues₀ ⟨k-1, by omega⟩-hA.eigenvalues₀ ⟨k, hkN⟩) := by
@@ -104,7 +104,7 @@ theorem frobNorm_sinePrincipalAngles_le_two_mul_min_div_population_gap
     (hk0 : 0 < k) (hkN : k < Fintype.card n)
     (hg : 0 < hA.eigenvalues₀ ⟨k-1, by omega⟩-hA.eigenvalues₀ ⟨k, hkN⟩)
     {Q : Matrix n (Fin k) ℝ} (hQ : HasOrthonormalCols Q)
-    (htop : (Qᵀ*(A+E)*Q).trace=eigenvaluePrefix (hA.add hE) hkN.le) :
+    (htop : (Qᵀ*(A+E)*Q).trace=eigenvaluePrefix (hA.add hE) k) :
     frobNorm (sinePrincipalAngles (topEigenframe hA hkN.le) Q) ≤
       2*min (Real.sqrt k*specNorm E) (frobNorm E)/
         (hA.eigenvalues₀ ⟨k-1, by omega⟩-hA.eigenvalues₀ ⟨k, hkN⟩) := by

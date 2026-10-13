@@ -24,7 +24,7 @@ private lemma operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι]
   let e := Fintype.equivFin ι
   let R : Matrix ι ι ℂ → Matrix (Fin (Fintype.card ι)) (Fin (Fintype.card ι)) ℂ :=
     Matrix.reindex e e
-  have h := hf.2 (Fintype.card ι) inferInstance (R A) (R H)
+  have h := hf.2 (Fintype.card ι) (R A) (R H)
     (hA.reindex e) (hH.reindex e) (by rwa [spectrum_reindex]) (by rwa [spectrum_reindex])
     t ht₀ ht₁
   have hmix : (t • A + (1-t) • H).IsHermitian :=

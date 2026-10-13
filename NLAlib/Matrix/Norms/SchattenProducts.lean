@@ -10,7 +10,7 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator ENNReal
+open scoped Matrix ENNReal
 
 namespace NLAlib
 
@@ -26,6 +26,7 @@ theorem sum_range_singularValues_rpow_eq_of_min_le {m n : Type*}
   rw [singularValues_eq_zero_of_min_le A (by
     simpa only [Finset.mem_range, not_lt] using hi), Real.zero_rpow hp.ne']
 
+open scoped Matrix.Norms.L2Operator in
 /-- Schatten norms may be written with any sufficiently long zero-padded
 singular-value list, including empty shapes. -/
 theorem schattenNorm_eq_sum_range_rpow_of_min_le {m n : Type*}
@@ -35,8 +36,9 @@ theorem schattenNorm_eq_sum_range_rpow_of_min_le {m n : Type*}
   rw [sum_range_singularValues_rpow_eq_of_min_le A hN hp]
   rfl
 
+open scoped Matrix.Norms.L2Operator in
 /-- Finite-exponent Schatten product Hölder with sharp constant one, on
-arbitrary finite compatible shapes. This actually covers every positive real
+arbitrary finite compatible shapes. This covers every positive real
 Hölder triple, including the usual norm exponents at least one.
 atlas: schatten-norms-def (partial) -/
 theorem schattenNorm_mul_le_mul {m n q : Type*} [Fintype m] [Fintype n] [Fintype q]

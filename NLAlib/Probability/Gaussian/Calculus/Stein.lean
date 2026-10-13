@@ -29,14 +29,14 @@ theorem integral_coordinate_mul_eq_integral_gaussian_of_hasDerivAt_update
     (df : (ι → ℝ) → ℝ) (i : ι)
     (hupdate : ∀ x t, HasDerivAt (fun y => f (Function.update x i y))
       (df (Function.update x i t)) t)
-    (hfi : Integrable f (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hfi : Integrable f (gaussianVector ι))
     (hxfi : Integrable (fun x => x i * f x)
-      (Measure.pi fun _ : ι => gaussianReal 0 1))
+      (gaussianVector ι))
     (hdfi : Integrable (fun x => df x)
-      (Measure.pi fun _ : ι => gaussianReal 0 1)) :
-    (∫ x : ι → ℝ, x i * f x ∂(Measure.pi fun _ => gaussianReal 0 1)) =
+      (gaussianVector ι)) :
+    (∫ x : ι → ℝ, x i * f x ∂(gaussianVector _)) =
       ∫ x : ι → ℝ, df x
-        ∂(Measure.pi fun _ => gaussianReal 0 1) := by
+        ∂(gaussianVector _) := by
   let γ : ι → Measure ℝ := fun _ => gaussianReal 0 1
   have hleft :=
     integral_integral_update_pi γ i hxfi
@@ -84,14 +84,14 @@ atlas: gaussian-integration-by-parts -/
 theorem integral_coordinate_mul_eq_integral_fderiv_gaussian
     {ι : Type*} [Fintype ι] [DecidableEq ι] (f : (ι → ℝ) → ℝ)
     (hf : Differentiable ℝ f) (i : ι)
-    (hfi : Integrable f (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hfi : Integrable f (gaussianVector ι))
     (hxfi : Integrable (fun x => x i * f x)
-      (Measure.pi fun _ : ι => gaussianReal 0 1))
+      (gaussianVector ι))
     (hdfi : Integrable (fun x => fderiv ℝ f x (Pi.single i 1))
-      (Measure.pi fun _ : ι => gaussianReal 0 1)) :
-    (∫ x : ι → ℝ, x i * f x ∂(Measure.pi fun _ => gaussianReal 0 1)) =
+      (gaussianVector ι)) :
+    (∫ x : ι → ℝ, x i * f x ∂(gaussianVector _)) =
       ∫ x : ι → ℝ, fderiv ℝ f x (Pi.single i 1)
-        ∂(Measure.pi fun _ => gaussianReal 0 1) := by
+        ∂(gaussianVector _) := by
   apply integral_coordinate_mul_eq_integral_gaussian_of_hasDerivAt_update f
     (fun x => fderiv ℝ f x (Pi.single i 1)) i _ hfi hxfi hdfi
   intro x t

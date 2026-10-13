@@ -30,14 +30,15 @@ theorem compression_submatrix_cols_eq_diagonal {n r : Type*} [Fintype n] [Fintyp
   rw [Matrix.transpose_submatrix, h1, h2, hwhole,
     Matrix.submatrix_diagonal_embedding]
 
-/-- The top eigenvectors attain the top eigenvalue sum. This supplies an actual
-orthonormal optimizing frame for every admissible dimension, also zero.
-Fan (1949), Theorem 1.
-atlas: ky-fan-maximum-principle (partial) -/
+/-- **Ky Fan maximum principle, attainment.** The top `k` eigenvectors form an orthonormal
+frame whose compression trace is the sum of the `k` largest eigenvalues, for every
+`k ≤ card n` (also `k = 0`). Fan (1949), Theorem 1.
+atlas: ky-fan-maximum-principle -/
 theorem exists_trace_compression_eq_eigenvaluePrefix {n : Type*} [Fintype n]
     [DecidableEq n] {A : Matrix n n ℝ} (hA : A.IsHermitian) {k : ℕ}
     (hk : k ≤ Fintype.card n) : ∃ Q : Matrix n (Fin k) ℝ,
-      HasOrthonormalCols Q ∧ (Qᵀ * A * Q).trace = eigenvaluePrefix hA hk := by
+      HasOrthonormalCols Q ∧ (Qᵀ * A * Q).trace = eigenvaluePrefix hA k := by
+  rw [eigenvaluePrefix_eq_sum_castLE hA hk]
   let e : Fin (Fintype.card n) ≃ n := Fintype.equivOfCardEq (Fintype.card_fin _)
   let f : Fin k ↪ n := (Fin.castLEEmb hk).trans e.toEmbedding
   let P : Matrix n n ℝ := hA.eigenvectorUnitary
@@ -69,7 +70,7 @@ theorem exists_trace_compression_eq_bottom_eigenvalues {n : Type*} [Fintype n]
   simp [Matrix.IsHermitian.eigenvalues, f, e, Fin.natAdd_castLEEmb]
   congr 1
 
-/-- Actual top singular frames attain the Ky Fan singular-value sum on arbitrary finite
+/-- Top singular frames attain the Ky Fan singular-value sum on arbitrary finite
 row and column types, for every admissible prefix including zero and full prefixes.
 Fan (1949), Theorem 1; Horn–Johnson (1991), Theorem 3.4.1.
 atlas: ky-fan-maximum-principle (partial) -/
@@ -97,7 +98,6 @@ theorem exists_trace_twoSided_compression_eq_kyFanNorm {m n : Type*}
     simp only [Matrix.submatrix_apply, rectDiag_apply, Matrix.diagonal_apply,
       em, en, Fin.coe_castLEEmb, Fin.val_castLE]
     simp [Fin.val_inj]
-  rw [hd, Matrix.trace_diagonal, kyFanNorm, Fin.sum_univ_eq_sum_range]
-  rfl
+  rw [hd, Matrix.trace_diagonal, kyFanNorm_eq_sum_range, Fin.sum_univ_eq_sum_range]
 
 end NLAlib

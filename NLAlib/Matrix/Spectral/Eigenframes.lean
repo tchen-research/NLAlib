@@ -2,7 +2,7 @@ import NLAlib.Matrix.Inequalities.KyFanAttainment
 /-!
 # Sorted spectral frames
 
-Named top and complementary eigenframes expose the actual spectral bases used
+Named top and complementary eigenframes expose the spectral bases used
 in the Ky Fan variational optimizers and in gap-based projector comparisons.
 Source: Horn–Johnson (2013), §4.3.
 -/

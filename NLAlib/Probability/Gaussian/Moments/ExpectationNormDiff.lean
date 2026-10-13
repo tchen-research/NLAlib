@@ -16,8 +16,6 @@ recursion `J_{k+2} = (k+1) J_k` gives `a_m a_{m+1} = m`, log-convexity of `k ↦
 `a_m² ≤ m`, and an elementary sequence argument (with the comparison function
 `m - 1/2 + 3/(20m)`) turns these into `a_{m+1} - a_m ≥ √(m+1) - √m`.
 
-Ported from the Prove2me solution `GaussianMatrix.expectation_norm_gaussian_diff`.
-
 Atlas: helper of `gordon`.
 -/
 
@@ -60,10 +58,10 @@ private theorem enJ_rec (k : ℕ) : enJ (k + 2) = (k + 1) * enJ k := by
 
 /-- `𝔼‖g_m‖ = J m / J (m - 1)` for a standard Gaussian vector `g_m ∈ ℝ^m`, `m ≥ 1`. -/
 private theorem en_norm_eq (m : ℕ) (hm : 1 ≤ m) :
-    ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1)
+    ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(gaussianVector (Fin m))
       = enJ m / enJ (m - 1) := by
-  have h1 := integral_radial_pi_gaussianReal m hm (fun _ => 1)
-  have h2 := integral_radial_pi_gaussianReal m hm (fun y => y)
+  have h1 := integral_radial_gaussianVector m hm (fun _ => 1)
+  have h2 := integral_radial_gaussianVector m hm (fun y => y)
   simp only [integral_const, smul_eq_mul, mul_one] at h1
   rw [measureReal_def, measure_univ, ENNReal.toReal_one] at h1
   have e1 : ∫ y in Ioi (0 : ℝ), y ^ (m - 1) * Real.exp (-y ^ 2 / 2) = enJ (m - 1) := rfl
@@ -292,7 +290,7 @@ private theorem en_seq_diff (a : ℕ → ℝ) (hpos : ∀ m, 1 ≤ m → 0 < a m
 /-- The four properties of `a m = 𝔼‖g_m‖` used by the sequence argument. -/
 private theorem en_props :
     let a : ℕ → ℝ := fun m =>
-      ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1)
+      ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(gaussianVector (Fin m))
     (∀ m, 1 ≤ m → 0 < a m) ∧ (∀ m, 1 ≤ m → a m * a (m + 1) = m) ∧
       (∀ m, 1 ≤ m → a m ^ 2 ≤ m) := by
   intro a
@@ -325,14 +323,14 @@ private theorem en_props :
 /-- For standard Gaussian vectors `g_N ∈ ℝ^N`, `g_n ∈ ℝ^n` with `1 ≤ n ≤ N`,
 `√N - √n ≤ 𝔼‖g_N‖₂ - 𝔼‖g_n‖₂`. Source: Vershynin 2012, proof of Thm 5.32 (Gordon's lower bound
 `𝔼 σ_min ≥ √N - √n` reduces to this comparison); Davidson–Szarek 2001, Thm II.13. Atlas: helper
-of `gordon`. Ported from Prove2me solution `GaussianMatrix.expectation_norm_gaussian_diff`. -/
+of `gordon`. -/
 theorem sqrt_sub_sqrt_le_integral_sqrt_sum_sq_sub {N n : ℕ} (hn : 1 ≤ n) (hnN : n ≤ N) :
     Real.sqrt N - Real.sqrt n ≤
-      ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin N => gaussianReal 0 1)
-        - ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1) := by
+      ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(gaussianVector (Fin N))
+        - ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(gaussianVector (Fin n)) := by
   obtain ⟨hpos, hrec, hsq⟩ := en_props
   exact en_seq_diff (fun m =>
-      ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1))
+      ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(gaussianVector (Fin m)))
     hpos hrec hsq hn hnN
 
 end NLAlib

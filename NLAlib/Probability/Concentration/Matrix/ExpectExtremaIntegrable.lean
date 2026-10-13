@@ -10,10 +10,11 @@ Atlas: `matrix-laplace` (regularity lemma).
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Auxiliary regularity lemma for Proposition 3.2.2, printed p. 33; uses spectral norm relation (2.1.22), printed p. 24, and the standing regularity convention of Section 2.2.1, printed p. 25.
 -/
 open MeasureTheory Set Filter
-open scoped Matrix.Norms.L2Operator Topology
+open scoped Topology
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 private lemma extrema_mem {d : ℕ} [NeZero d]
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
     lambdaMax A ∈ spectrum ℝ A ∧ lambdaMin A ∈ spectrum ℝ A := by
@@ -21,6 +22,7 @@ private lemma extrema_mem {d : ℕ} [NeZero d]
     ContinuousFunctionalCalculus.spectrum_nonempty A hA
   exact ⟨(spectrum.isCompact (𝕜 := ℝ) A).sSup_mem hn, (spectrum.isCompact (𝕜 := ℝ) A).sInf_mem hn⟩
 
+open scoped Matrix.Norms.L2Operator in
 private lemma max_measurable_projection {d : ℕ} [NeZero d] :
     Measurable (fun A : Matrix (Fin d) (Fin d) ℂ =>
       lambdaMax (selfAdjointPart ℝ A : Matrix (Fin d) (Fin d) ℂ)) := by
@@ -39,6 +41,7 @@ private lemma max_measurable_projection {d : ℕ} [NeZero d] :
     exact subset_of_mem_nhdsSet hB (extrema_mem (p B) (selfAdjointPart ℝ B).property).1
   exact hupper.measurable
 
+open scoped Matrix.Norms.L2Operator in
 private lemma min_measurable_projection {d : ℕ} [NeZero d] :
     Measurable (fun A : Matrix (Fin d) (Fin d) ℂ =>
       lambdaMin (selfAdjointPart ℝ A : Matrix (Fin d) (Fin d) ℂ)) := by
@@ -61,6 +64,7 @@ end NLAlib
 
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- If a Hermitian random matrix is integrable, so are its largest and smallest eigenvalues.
 
 Tropp 2015, regularity lemma for Proposition 3.2.2. Atlas: `matrix-laplace`. Ported from the

@@ -72,7 +72,7 @@ theorem exists_common_eigenbasis_of_commute (A : ι → Matrix n n K)
 /-- A commuting diagonalizable family shares one invertible eigenvector
 matrix. Source: Horn–Johnson (2013), Theorem 1.3.21; real diagonalizable
 families are handled over the real field directly.
-atlas: simultaneous-diagonalization (partial) -/
+atlas: simultaneous-diagonalization -/
 theorem exists_simultaneous_diagonalization_of_commute (A : ι → Matrix n n K)
     (hdiag : ∀ i, IsDiagonalizable (A i))
     (hcomm : Pairwise fun i j => Commute (A i) (A j)) :
@@ -105,7 +105,7 @@ theorem commute_of_simultaneous_diagonalization {A B V : Matrix n n K}
 /-- A diagonalizable family commutes exactly when it has one common
 diagonalizing similarity. Source: Horn–Johnson (2013), Theorems 1.3.12
 and 1.3.21; no finiteness assumption on the family is imposed.
-atlas: simultaneous-diagonalization (partial) -/
+atlas: simultaneous-diagonalization -/
 theorem pairwise_commute_iff_exists_simultaneous_diagonalization
     (A : ι → Matrix n n K) (hdiag : ∀ i, IsDiagonalizable (A i)) :
     (Pairwise fun i j => Commute (A i) (A j)) ↔

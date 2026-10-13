@@ -6,19 +6,19 @@ import NLAlib.ForMathlib.Analysis.LogPowerMean
 
 Mathlib's Rayleigh quotient is bridged to the matrix quadratic quotient. Finite
 spectral power means then give the exact deterministic logarithmic-overlap bound.
-Source: manuscript `rt:power`.
 -/
 
 noncomputable section
 open Polynomial
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Mathlib's Rayleigh quotient of a real matrix is the matrix Rayleigh quotient
 `rayleighQuotient A b = bᵀAb / bᵀb`.
-Source: Mathlib's `ContinuousLinearMap.rayleighQuotient`; manuscript `rt:power`.
+Source: Mathlib's `ContinuousLinearMap.rayleighQuotient`.
 The zero-vector convention is totalized division by zero. -/
 theorem rayleighQuotient_toEuclideanCLM_eq (A : Matrix n n ℝ) (b : n → ℝ) :
     (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient (WithLp.toLp 2 b) =
@@ -30,8 +30,9 @@ theorem rayleighQuotient_toEuclideanCLM_eq (A : Matrix n n ℝ) (b : n → ℝ) 
     real_inner_comm, Matrix.inner_toEuclideanCLM, hn]
   rfl
 
+open scoped Matrix.Norms.L2Operator in
 /-- A PSD matrix's totalized Rayleigh quotient lies between zero and its spectral
-norm, even at a zero vector. Source: the spectral theorem; manuscript `rt:power`. -/
+norm, even at a zero vector. Source: the spectral theorem. -/
 theorem rayleighQuotient_toEuclideanCLM_bounds {A : Matrix n n ℝ} (hA : A.PosSemidef)
     (b : n → ℝ) :
     0 ≤ (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient (WithLp.toLp 2 b) ∧
@@ -44,8 +45,9 @@ theorem rayleighQuotient_toEuclideanCLM_bounds {A : Matrix n n ℝ} (hA : A.PosS
   · have h := (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient_le_norm (WithLp.toLp 2 b)
     exact (le_abs_self _).trans (by simpa only [Matrix.l2_opNorm_toEuclideanCLM, specNorm_eq_norm] using h)
 
+open scoped Matrix.Norms.L2Operator in
 /-- The relative power-method Rayleigh error is bounded by logarithmic inverse top
-overlap divided by `2q+1`. Source: manuscript `rt:power`; finite concave-power Jensen.
+overlap divided by `2q+1`. finite concave-power Jensen.
 The chosen eigenvector is deterministic; no eigenvalue gap is assumed.
 atlas: random-start-power (partial) -/
 theorem sub_rayleighQuotient_pow_div_specNorm_le_log_overlap_div

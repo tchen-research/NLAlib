@@ -21,7 +21,7 @@ are Mathlib's `Polynomial.Chebyshev.T ℝ n` and `Polynomial.Chebyshev.U ℝ n`.
 * `exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one`,
   `degree_le_and_eval_zero_eq_one_iff`: the residual-polynomial factorisation `1 − p = X s`,
   `deg s < q`, for `deg p ≤ q`, `p(0) = 1` (atlas `residual-polynomial`; the Krylov side is in
-  `NLAlib.Krylov.Solvers.Minimiser`).
+  `NLAlib.Krylov.Solvers.Minimizer`).
 
 Atlas: `chebyshev-minimax`, `chebyshev-amplifier`, `chebyshev-interpolation-error` (definitions),
 `residual-polynomial` (the polynomial algebra).
@@ -38,7 +38,7 @@ namespace NLAlib
 it has the smallest maximum modulus on `[a, b]` among polynomials of degree at most `q` with
 value `1` at `0` (the residual polynomial of Chebyshev iteration and the model for CG).
 Source: Golub–Meurant (2010) [`gm10`], App.; Atlas: `chebyshev-minimax`.
-atlas: inverse-polynomial-approx -/
+atlas: chebyshev-minimax -/
 def chebyshevResidual (a b : ℝ) (q : ℕ) : ℝ[X] :=
   C (1 / (Chebyshev.T ℝ q).eval ((b + a) / (b - a))) *
     (Chebyshev.T ℝ q).comp (C ((b + a) / (b - a)) - C (2 / (b - a)) * X)

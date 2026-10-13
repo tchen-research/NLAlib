@@ -13,12 +13,13 @@ Source: operator manuscript `thm:khintchine`.
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
 open MeasureTheory ProbabilityTheory Matrix
-open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
+open scoped Matrix ComplexOrder
 namespace NLAlib
 
 variable {ι Ω : Type*} [Fintype ι] [DecidableEq ι] [MeasurableSpace Ω]
 variable {μ : Measure Ω} [IsProbabilityMeasure μ] {n : ℕ}
 
+open scoped Matrix.Norms.L2Operator in
 omit [IsProbabilityMeasure μ] in
 /-- Independent actual Gaussian or Rademacher coefficients on an arbitrary
 probability space obey the exact integer noncommutative trace-moment bound.
@@ -45,19 +46,20 @@ theorem integral_re_trace_independent_series_pow_le
   have hm : (∫ x, f x ∂μ.map X) = ∫ ω, f (X ω) ∂μ :=
     integral_map hX.aemeasurable hf.aestronglyMeasurable
   rcases hlaw with hlaw | hlaw
-  · have hprod : μ.map X = Measure.pi (fun _ : Fin n => gaussianReal 0 1) := by
+  · have hprod : μ.map X = (gaussianVector (Fin n)) := by
       rw [hjoint]
       exact congrArg Measure.pi (funext fun i => (hlaw i).map_eq)
     rw [hprod] at hm
     rw [← hm]
     exact integral_re_trace_gaussianSeries_pow_le A hA hp
-  · have hprod : μ.map X = Measure.pi (fun _ : Fin n => rademacherMeasure) := by
+  · have hprod : μ.map X = (rademacherVector (Fin n)) := by
       rw [hjoint]
       exact congrArg Measure.pi (funext fun i => (hlaw i).map_eq)
     rw [hprod] at hm
     rw [← hm]
     exact integral_re_trace_rademacherSeries_pow_le A hA hp
 
+open scoped Matrix.Norms.L2Operator in
 omit [IsProbabilityMeasure μ] in
 /-- **Integer noncommutative Khintchine, rooted form.** The exact nonnegative
 `2p`-th root of the trace moment is bounded by `sqrt(2p-1)` times the variance

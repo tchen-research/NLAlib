@@ -11,13 +11,14 @@ logarithmic bounds. Only an upper bound on the increments is used; `L=0` is incl
 noncomputable section
 
 open MeasureTheory Set Matrix
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
 variable {Ω n : Type*} {m mΩ : MeasurableSpace Ω} [Fintype n] [DecidableEq n]
 variable {μ : Measure Ω}
 
+open scoped Matrix.Norms.L2Operator in
 /-- An upper spectral bound alone makes the Hermitian matrix exponential integrable on
 a finite measure space, even when the negative eigenvalues have no deterministic bound.
 Source: scalar functional calculus and `exp(θx) ≤ exp(θL)` for `θ≥0`;
@@ -40,6 +41,7 @@ theorem integrable_matrixExp_smul_of_ae_le_algebraMap [IsFiniteMeasure μ]
   exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left
     ((le_algebraMap_iff_spectrum_le hHerm).mp hBound x hx) hθ)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Actual conditional centering and an integrable actual second moment yield
 `I≤M`, `V≥0`, and `log M≤gV`, where `M=E[exp(θX)|m]`, `V=E[X²|m]`, and
 `g=(θ²/2)/(1-θL/3)`. The one-sided bound permits arbitrarily negative increments.

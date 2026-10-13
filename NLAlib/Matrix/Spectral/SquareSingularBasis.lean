@@ -6,7 +6,7 @@ import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Square singular bases on finite coordinate types
 
-The actual singular values diagonalize any square real matrix by independent
+The singular values diagonalize any square real matrix by independent
 orthogonal row and column bases. Horn–Johnson 2013, Theorem 2.6.3.
 -/
 
@@ -16,7 +16,7 @@ namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
 /-- A square real matrix on arbitrary finite labels admits orthogonal singular
-bases, with diagonal entries the actual ordered singular values assigned by
+bases, with diagonal entries the ordered singular values assigned by
 `Fintype.equivFin`. Empty dimensions are included. Horn–Johnson 2013,
 Theorem 2.6.3; supports `cs-decomposition`. -/
 theorem exists_orthogonal_transpose_mul_mul_eq_diagonal_singularValues

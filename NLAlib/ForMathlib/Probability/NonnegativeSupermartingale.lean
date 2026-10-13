@@ -3,7 +3,7 @@ import Mathlib.Probability.Martingale.OptionalStopping
 /-!
 # Bounded stopping and the anytime bound for nonnegative supermartingales
 
-Actual bounded hitting times and optional stopping give Ville's inequality. Passing
+Bounded hitting times and optional stopping give Ville's inequality. Passing
 from finite horizons to the increasing union preserves the exact initial-mean constant.
 
 Upstreaming note: `integral_stoppedValue_le_integral_zero_of_supermartingale` is Mathlib's
@@ -16,11 +16,11 @@ noncomputable section
 open MeasureTheory ProbabilityTheory Set Filter
 open scoped ENNReal
 
-namespace NLAlib
+namespace MeasureTheory
 
-/-- Bounded optional stopping for a real supermartingale, obtained from Mathlib's actual
+/-- Bounded optional stopping for a real supermartingale, obtained from Mathlib's
 submartingale theorem by negation.
-Source: bounded optional stopping; operator rederivations Section 3.4;
+Source: bounded optional stopping; Tropp 2011 (matrix Freedman);
 atlas `matrix-freedman` (partial). -/
 theorem integral_stoppedValue_le_integral_zero_of_supermartingale
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {ℱ : Filtration ℕ ‹MeasurableSpace Ω›}
@@ -34,10 +34,10 @@ theorem integral_stoppedValue_le_integral_zero_of_supermartingale
   rw [integral_neg, integral_neg, neg_le_neg_iff] at h
   exact h
 
-/-- The actual finite-horizon hitting event of a nonnegative supermartingale has measure
+/-- The finite-horizon hitting event of a nonnegative supermartingale has measure
 at most its initial mean divided by the positive threshold.
 Source: bounded optional stopping and Markov's inequality;
-operator rederivations Section 3.4, atlas `matrix-freedman` (partial). -/
+Tropp 2011 (matrix Freedman), atlas `matrix-freedman` (partial). -/
 theorem measure_exists_le_nat_le_supermartingale_le
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {ℱ : Filtration ℕ ‹MeasurableSpace Ω›} {S : ℕ → Ω → ℝ} (hS : Supermartingale S ℱ μ)
@@ -67,10 +67,10 @@ theorem measure_exists_le_nat_le_supermartingale_le
   rw [le_div_iff₀ hc]
   simpa only [mul_comm] using hbound
 
-/-- Ville's exact anytime inequality for an actual nonnegative real supermartingale:
+/-- Ville's exact anytime inequality for a nonnegative real supermartingale:
 `P(∃k, S_k≥c) ≤ E[S_0]/c`. No union bound over individual times is used.
 Source: bounded optional stopping and continuity of measure on an increasing union;
-operator rederivations `eq:freedmanparameter`, atlas `matrix-freedman` (partial). -/
+Tropp 2011 (matrix Freedman), atlas `matrix-freedman` (partial). -/
 theorem measure_exists_le_supermartingale_le
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {ℱ : Filtration ℕ ‹MeasurableSpace Ω›} {S : ℕ → Ω → ℝ} (hS : Supermartingale S ℱ μ)
@@ -100,4 +100,4 @@ theorem measure_exists_le_supermartingale_le
   have h0 : 0 ≤ (∫ ω, S 0 ω ∂μ) / c := div_nonneg (integral_nonneg_of_ae (hNonneg 0)) hc.le
   simpa only [ENNReal.toReal_ofReal h0] using ENNReal.toReal_mono (by simp) hbound
 
-end NLAlib
+end MeasureTheory

@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Perturbation.LeastSquaresToolkit
+import NLAlib.Matrix.Perturbation.LeastSquaresAngleRatios
 /-!
 # Least-squares angle ratios and coordinate perturbation bounds
 
@@ -9,10 +9,11 @@ Supports atlas `least-squares-perturbation`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- `cos θ = ‖y‖/‖b‖` for the least-squares fit `y = A A⁺ b`: `θ` is the angle between `b` and
 `range A`. Trefethen–Bau 1997, Lecture 18 (eq. (18.3)); `0` when `b = 0` (total convention).
 atlas: least-squares-perturbation (partial) -/
@@ -20,6 +21,7 @@ def leastSquaresCos (A : Matrix m n ℝ) (b : m → ℝ) : ℝ :=
   Real.sqrt (((A * moorePenroseInverse A) *ᵥ b) ⬝ᵥ ((A * moorePenroseInverse A) *ᵥ b)) /
     Real.sqrt (b ⬝ᵥ b)
 
+open scoped Matrix.Norms.L2Operator in
 /-- `tan θ = ‖b - y‖/‖y‖` for the least-squares fit `y = A A⁺ b`. Trefethen–Bau 1997,
 Lecture 18; `0` when `y = 0` (total convention, `θ = π/2` is excluded in the source).
 atlas: least-squares-perturbation (partial) -/
@@ -27,6 +29,7 @@ def leastSquaresTan (A : Matrix m n ℝ) (b : m → ℝ) : ℝ :=
   Real.sqrt ((b - (A * moorePenroseInverse A) *ᵥ b) ⬝ᵥ (b - (A * moorePenroseInverse A) *ᵥ b)) /
     Real.sqrt (((A * moorePenroseInverse A) *ᵥ b) ⬝ᵥ ((A * moorePenroseInverse A) *ᵥ b))
 
+open scoped Matrix.Norms.L2Operator in
 /-- `η = ‖A‖‖x‖/‖y‖` for `x = A⁺ b`, `y = A x`; `1 ≤ η ≤ κ(A)` when `y ≠ 0`. Trefethen–Bau 1997,
 Lecture 18 (eq. (18.4)); `0` when `y = 0`.
 atlas: least-squares-perturbation (partial) -/
@@ -34,6 +37,7 @@ def leastSquaresEta (A : Matrix m n ℝ) (b : m → ℝ) : ℝ :=
   specNorm A * Real.sqrt ((moorePenroseInverse A *ᵥ b) ⬝ᵥ (moorePenroseInverse A *ᵥ b)) /
     Real.sqrt (((A * moorePenroseInverse A) *ᵥ b) ⬝ᵥ ((A * moorePenroseInverse A) *ᵥ b))
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Wedin's least-squares bound (solution).** Higham's finite relative least-squares solution
 bound in ordinary coordinates, with total division covering a zero old solution: for full column
 rank `A`, `x = A⁺ b`, `r = b - A x`, `‖E‖₂ ≤ ε‖A‖₂`, `‖f‖ ≤ ε‖b‖` and `κ(A) ε < 1`,
@@ -72,6 +76,7 @@ theorem sqrt_pinv_solution_sub_div_le (A E : Matrix m n ℝ)
   simpa only [norm_sub_rev, norm_eq_sqrt_dotProduct, WithLp.ofLp_sub, WithLp.ofLp_add,
     Matrix.toEuclideanLin, Matrix.ofLp_toLpLin, Matrix.toLin'_apply, WithLp.ofLp_toLp] using h
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Wedin's least-squares bound (residual).** Higham's finite residual bound in ordinary
 coordinates, including zero data: under the hypotheses of `sqrt_pinv_solution_sub_div_le`,
 `‖r - s‖/‖b‖ ≤ (1 + 2κ(A)) ε`. Higham 2002, Theorem 20.1; Wedin 1973, §5. Transports the

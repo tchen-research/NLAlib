@@ -34,7 +34,7 @@ Atlas: `subspace-iteration-convergence`.
 
 noncomputable section
 
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 open Matrix
 
 namespace NLAlib

@@ -67,7 +67,7 @@ theorem eigenvalues₀_add_le_of_card_pos {A B : Matrix n n ℝ}
   let p := (Finset.univ.filter fun j => 0 < hB.eigenvalues₀ j).card
   have hp : p < Fintype.card n := by dsimp [p]; omega
   have hb := eigenvalues₀_le_zero_of_card_pos_le hB ⟨p, hp⟩ (by rfl)
-  have h := Matrix.IsHermitian.eigenvalues₀_add_le hA hB (hA.add hB) i ⟨p, hp⟩ hi
+  have h := Matrix.IsHermitian.eigenvalues₀_add_le hA hB i ⟨p, hp⟩ hi
   exact h.trans (by linarith)
 
 /-- An update with `ν` negative eigenvalues gives the matching lower

@@ -23,6 +23,27 @@ The process (`arnoldiBasis`, the canonical witness `arnoldiDecomp`) is in
 `NLAlib.Krylov.Processes.ArnoldiProcess`; the Arnoldi relation and the Lanczos recurrence in
 `NLAlib.Krylov.Processes.Lanczos`; Jacobi-matrix identities in `NLAlib.Krylov.Quadrature.Jacobi`.
 
+## Three spellings of the Krylov process, and what each is
+
+| object | ℕ-indexed process (Gram–Schmidt, no hypothesis) | bundled predicate (`D : ArnoldiDecomp A b q`) | three-term recursion (algorithm) |
+|---|---|---|---|
+| basis vectors | `arnoldiBasis A b j` (zero after the grade) | `D.Q.col j`, `D.vec j` (Lanczos name) | `lanczosRecurrence A b j` |
+| basis matrix | `arnoldiMatrix A b q` | `D.Q` | `Matrix.of fun r j => lanczosRecurrence A b j r` |
+| Hessenberg / Jacobi matrix | `arnoldiHessenberg A b q = Q_qᵀ A Q_q` | `D.H`, `D.T` (Lanczos name) | — |
+| coefficients | entries of `arnoldiHessenberg` | `D.alpha j = t_jj`, `D.beta j = t_{j,j−1}` | `lanczosAlpha A b j`, `lanczosBeta A b j` |
+| existence / bridge | `arnoldiDecomp A b q h` (`q ≤ krylovGrade A b`) | `ArnoldiDecomp.Q_eq_arnoldiMatrix` (unique with positive subdiagonal) | `lanczosRecurrence_eq_arnoldiBasis` (realisation theorem) |
+
+`LanczosDecomp A b q` is an abbreviation of `ArnoldiDecomp A b q` (one object; the symmetric
+layer is the hypothesis `hA : A.IsHermitian` on the theorems), with the Lanczos names `T`,
+`vec`, `alpha`, `beta`. The off-diagonal coefficient is one quantity in all spellings:
+`β_j = t_{j,j−1} = q_jᵀ A q_{j−1} = ‖w_{j−1}‖` where `w_{j−1} = A q_{j−1} − α_{j−1} q_{j−1} −
+β_{j−1} q_{j−2}` is the recursion's unnormalised vector (`β_0 = 0`; the recursion's definition is
+the norm, `lanczosBeta_succ_eq_dotProduct` is the identity with the entry). Beyond the range of
+a decomposition (`j ≥ q`) `D.beta j` is `0` by convention, never by theorem: the coefficient
+`β_q` multiplying `q_q e_qᵀ` in `A Q_q = Q_q T_q + β_q q_q e_qᵀ` is read off from a decomposition
+of size `q + 1` (`LanczosDecomp.mul_restrict_Q_eq_add_beta_smul`); at the grade the relation is
+`ArnoldiDecomp.mul_Q_eq_mul_H_iff`.
+
 Source: Saad (2003) [`saad03`], §6.3 (Alg. 6.1, Props 6.4–6.6); Saad (2011) [`saad11`],
 §6.3, §6.6; Trefethen–Bau (1997) [`tb97`], Lect. 33, 36; Golub–Meurant (2010) [`gm10`], Ch. 4.
 Atlas: `graded-krylov-basis-def`, `arnoldi-def`; `lanczos-recurrence` (tridiagonality).
@@ -36,6 +57,25 @@ open Matrix
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
+
+/-! ### Real forms of the orthonormal-column helpers -/
+
+/-- `‖WithLp.toLp 2 w‖ = √(w ⬝ᵥ w)` for real vectors (bridge of STANDARDS §3). Helper. -/
+theorem norm_toLp_eq_sqrt_dotProduct (w : n → ℝ) : ‖WithLp.toLp 2 w‖ = √(w ⬝ᵥ w) := by
+  rw [← norm_toLp_sq_eq_dotProduct_self, Real.sqrt_sq (norm_nonneg _)]
+
+/-- `(Qᵀ Q)_ij = q_i ⬝ q_j` for a real matrix (real form of `conjTranspose_mul_self_apply`).
+Helper for `arnoldi-def`. -/
+theorem transpose_mul_self_apply {k : Type*} (Q : Matrix n k ℝ) (i j : k) :
+    (Qᵀ * Q) i j = Q.col i ⬝ᵥ Q.col j := by
+  simp [Matrix.mul_apply, dotProduct, Matrix.col]
+
+/-- Columns of a real matrix with orthonormal columns: `q_i ⬝ q_j = δ_ij` (real form of
+`HasOrthonormalCols.star_col_dotProduct_col`). Helper for `arnoldi-def`. -/
+theorem HasOrthonormalCols.col_dotProduct_col {k : Type*} [Fintype k] [DecidableEq k]
+    {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (i j : k) :
+    Q.col i ⬝ᵥ Q.col j = if i = j then 1 else 0 := by
+  simpa using hQ.star_col_dotProduct_col i j
 
 /-! ### Graded Krylov bases -/
 
@@ -394,13 +434,13 @@ atlas: lanczos-recurrence -/
 abbrev T (D : LanczosDecomp A b q) : Matrix (Fin q) (Fin q) ℝ := ArnoldiDecomp.H D
 
 /-- For symmetric `A`, `T_q` is symmetric. Atlas: `lanczos-recurrence`. -/
-theorem isSymm_T (D : LanczosDecomp A b q) (hA : A.IsSymm) : D.T.IsSymm :=
-  isSymm_transpose_mul_mul hA D.Q
+theorem isSymm_T (D : LanczosDecomp A b q) (hA : A.IsHermitian) : D.T.IsSymm :=
+  Matrix.isHermitian_iff_isSymm.mp (Matrix.isHermitian_conjTranspose_mul_mul D.Q hA)
 
 /-- **For symmetric `A`, `T_q` is tridiagonal**: `t_ij = 0` whenever `|i − j| > 1`.
 Source: Golub–Meurant (2010) [`gm10`], Thm 4.2; Trefethen–Bau (1997) [`tb97`], Lect. 36.
 atlas: lanczos-recurrence, graded-krylov-basis-def (partial) -/
-theorem T_apply_eq_zero_of_one_lt_dist (D : LanczosDecomp A b q) (hA : A.IsSymm) {i j : Fin q}
+theorem T_apply_eq_zero_of_one_lt_dist (D : LanczosDecomp A b q) (hA : A.IsHermitian) {i j : Fin q}
     (hij : 1 < |(i : ℤ) - j|) : D.T i j = 0 := by
   rcases lt_abs.1 hij with h | h
   · exact D.H_apply_eq_zero_of_add_one_lt (by omega)

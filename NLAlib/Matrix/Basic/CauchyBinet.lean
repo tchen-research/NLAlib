@@ -15,8 +15,6 @@ noncomputable section
 open scoped Matrix
 open Polynomial
 namespace NLAlib
-set_option backward.isDefEq.respectTransparency false
-
 variable {r k R : Type*} [Fintype r] [Fintype k] [DecidableEq r] [DecidableEq k]
   [CommRing R]
 
@@ -76,7 +74,7 @@ variable {m n : Type*}
 /-- A compound matrix consists of all minors of a fixed size. Each finite
 subset receives a fixed coordinate order; every product uses that same order
 on its shared middle subsets. Horn–Johnson 2013, §0.8.7.
-atlas: cauchy-binet (partial) -/
+atlas: cauchy-binet -/
 def compoundMatrix (r : Type*) [Fintype r] [DecidableEq r] (A : Matrix m n R) :
     Matrix (SizedSubset m r) (SizedSubset n r) R := fun S T =>
   (A.submatrix (sizedSubsetIndex S) (sizedSubsetIndex T)).det

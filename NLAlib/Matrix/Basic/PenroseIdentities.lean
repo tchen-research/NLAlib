@@ -1,6 +1,7 @@
 import Mathlib.Analysis.RCLike.Basic
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.LinearAlgebra.Matrix.ToLin
+import NLAlib.Matrix.Basic.Orthonormal
 /-!
 # The Penrose identities
 
@@ -134,13 +135,15 @@ theorem submatrix (h : IsMoorePenroseInverse A B) (em : p ≃ m) (en : q ≃ n) 
   · simpa only [Matrix.submatrix_mul_equiv, Matrix.conjTranspose_submatrix] using
       congrArg (fun M : Matrix n n 𝕜 => M.submatrix en en) h.conjTranspose_inv_mul_eq
 
-/-- Changes of row and column coordinates with orthonormal columns (`Uᴴ U = 1`, `Vᴴ V = 1`;
-`U : Matrix p m 𝕜`, `V : Matrix q n 𝕜`, e.g. unitary) transport a Moore–Penrose inverse by the
-reversed changes. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
+/-- Changes of row and column coordinates with orthonormal columns (`HasOrthonormalCols U`,
+`HasOrthonormalCols V`; `U : Matrix p m 𝕜`, `V : Matrix q n 𝕜`, e.g. unitary) transport a
+Moore–Penrose inverse by the reversed changes. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
 theorem unitary_transform [DecidableEq m] [DecidableEq n]
     (h : IsMoorePenroseInverse A B) (U : Matrix p m 𝕜) (V : Matrix q n 𝕜)
-    (hU : Uᴴ * U = 1) (hV : Vᴴ * V = 1) :
+    (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) :
     IsMoorePenroseInverse (U * A * Vᴴ) (V * B * Uᴴ) := by
+  have hU : Uᴴ * U = 1 := hU
+  have hV : Vᴴ * V = 1 := hV
   constructor
   · calc
       (U * A * Vᴴ) * (V * B * Uᴴ) * (U * A * Vᴴ) =

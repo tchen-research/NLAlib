@@ -4,7 +4,7 @@ import NLAlib.Polynomial.Chebyshev.Growth
 # Even second-kind Chebyshev filters
 
 The normalized even second-kind polynomial is contracted from the variable
-`sqrt(x)` to a genuine polynomial in `x`. Its weighted squared bound is the
+`sqrt(x)` to a polynomial in `x`. Its weighted squared bound is the
 deterministic filter used in the logarithmic random-start Lanczos argument.
 -/
 
@@ -15,7 +15,7 @@ open Polynomial Polynomial.Chebyshev
 namespace NLAlib
 
 /-- Even second-kind Chebyshev polynomials have no odd coefficients.
-Source: manuscript `rt:even-filter`, parity of `U_{2k}`. -/
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3; parity of `U_{2k}`. -/
 theorem coeff_U_two_mul_eq_zero_of_not_two_dvd (k j : ℕ) (hj : ¬ 2 ∣ j) :
     (U ℝ (2 * k : ℕ)).coeff j = 0 := by
   have he : (U ℝ (2 * k : ℕ)).comp (-X) = U ℝ (2 * k : ℕ) := by
@@ -33,8 +33,8 @@ theorem coeff_U_two_mul_eq_zero_of_not_two_dvd (k j : ℕ) (hj : ¬ 2 ∣ j) :
     comp_C_mul_X_coeff, hOdd.neg_one_pow] at hCoeff
   linarith
 
-/-- Expanding the contracted even polynomial recovers the actual `U_{2k}`.
-Source: manuscript `rt:even-filter`, polynomiality in the squared variable. -/
+/-- Expanding the contracted even polynomial recovers the `U_{2k}`.
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3; polynomiality in the squared variable. -/
 theorem expand_contract_U_two_mul (k : ℕ) :
     expand ℝ 2 (contract 2 (U ℝ (2 * k : ℕ))) = U ℝ (2 * k : ℕ) := by
   ext j
@@ -44,13 +44,13 @@ theorem expand_contract_U_two_mul (k : ℕ) :
       Nat.div_mul_cancel hj]
   · rw [if_neg hj, coeff_U_two_mul_eq_zero_of_not_two_dvd k j hj]
 
-/-- The source's filter `b_k(x)=U_{2k}(sqrt(x))/(2k+1)`, as a genuine polynomial.
-Source: manuscript `rt:even-filter`; helper for atlas `random-start-power`. -/
+/-- The source's filter `b_k(x)=U_{2k}(sqrt(x))/(2k+1)`, as a polynomial.
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3. Helper for `random-start-power`. -/
 def evenChebyshevFilter (k : ℕ) : ℝ[X] :=
   C (((2 * k + 1 : ℕ) : ℝ)⁻¹) * contract 2 (U ℝ (2 * k : ℕ))
 
 /-- The even second-kind filter has degree at most `k`.
-Source: manuscript `rt:even-filter`. -/
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3 (the even Chebyshev filter). -/
 theorem natDegree_evenChebyshevFilter_le (k : ℕ) :
     (evenChebyshevFilter k).natDegree ≤ k := by
   apply (natDegree_mul_le ..).trans
@@ -62,8 +62,8 @@ theorem natDegree_evenChebyshevFilter_le (k : ℕ) :
   rw [natDegree_U_natCast]
   omega
 
-/-- Evaluation of the actual polynomial equals its square-root expression.
-Source: manuscript `rt:even-filter`, valid throughout the nonnegative axis. -/
+/-- Evaluation of the polynomial equals its square-root expression.
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3; valid throughout the nonnegative axis. -/
 theorem eval_evenChebyshevFilter {x : ℝ} (hx : 0 ≤ x) (k : ℕ) :
     (evenChebyshevFilter k).eval x =
       (U ℝ (2 * k : ℕ)).eval (Real.sqrt x) / ((2 * k + 1 : ℕ) : ℝ) := by
@@ -74,7 +74,7 @@ theorem eval_evenChebyshevFilter {x : ℝ} (hx : 0 ≤ x) (k : ℕ) :
   ring
 
 /-- The filter is normalized at the top of the spectral interval.
-Source: manuscript `rt:even-filter`. -/
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3 (the even Chebyshev filter). -/
 theorem eval_evenChebyshevFilter_one (k : ℕ) : (evenChebyshevFilter k).eval 1 = 1 := by
   rw [eval_evenChebyshevFilter (by norm_num : (0 : ℝ) ≤ 1)]
   simp only [Real.sqrt_one, U_eval_one]
@@ -83,7 +83,7 @@ theorem eval_evenChebyshevFilter_one (k : ℕ) : (evenChebyshevFilter k).eval 1 
   positivity
 
 /-- The even second-kind filter has absolute value at most one on `[0,1]`.
-Source: manuscript `rt:even-filter`. -/
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3 (the even Chebyshev filter). -/
 theorem abs_eval_evenChebyshevFilter_le_one {x : ℝ} (hx : x ∈ Set.Icc 0 1) (k : ℕ) :
     |(evenChebyshevFilter k).eval x| ≤ 1 := by
   have hs : |Real.sqrt x| ≤ 1 := by
@@ -96,7 +96,7 @@ theorem abs_eval_evenChebyshevFilter_le_one {x : ℝ} (hx : x ∈ Set.Icc 0 1) (
   simpa only [Nat.cast_add, Nat.cast_one] using h
 
 /-- The sine identity gives the weighted squared second-kind bound on `[-1,1]`.
-Source: manuscript `rt:even-filter`, `sin(θ) U_j(cos θ)=sin((j+1)θ)`. -/
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3; `sin(θ) U_j(cos θ)=sin((j+1)θ)`. -/
 theorem one_sub_sq_mul_eval_U_sq_le_one {x : ℝ} (hx : |x| ≤ 1) (j : ℕ) :
     (1 - x ^ 2) * (U ℝ j).eval x ^ 2 ≤ 1 := by
   have hx' := abs_le.mp hx
@@ -111,7 +111,7 @@ theorem one_sub_sq_mul_eval_U_sq_le_one {x : ℝ} (hx : |x| ≤ 1) (j : ℕ) :
   nlinarith
 
 /-- The weighted square of the normalized polynomial is at most `(2k+1)⁻²`.
-Source: manuscript `rt:even-filter`; deterministic prerequisite of `rt:lanczos`.
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3 (the deterministic filter bound).
 atlas: random-start-power (partial) -/
 theorem one_sub_mul_eval_evenChebyshevFilter_sq_le {x : ℝ}
     (hx : x ∈ Set.Icc 0 1) (k : ℕ) :
@@ -124,5 +124,49 @@ theorem one_sub_mul_eval_evenChebyshevFilter_sq_le {x : ℝ}
   rw [Real.sq_sqrt hx.1] at h
   rw [eval_evenChebyshevFilter hx.1, div_pow, ← mul_div_assoc]
   exact (div_le_div_of_nonneg_right h (sq_nonneg _)).trans_eq (one_div _)
+
+/-! ### Powers of the even Chebyshev filter -/
+
+/-- **Growth of a power of the even Chebyshev filter**: raising `evenChebyshevFilter k` to the
+power `ℓ` suppresses `(1 − x)` outside its transition interval,
+`(1 − x) f_k(x)^{2ℓ} ≤ (2/(2k+1)²) f_k(x)^{2ℓ} + (2/(2k+1)²) 2^{−ℓ}` on `[0, 1]`.
+Source: Kuczyński–Woźniakowski (1992) [`kw92`], §3. Helper for `random-start-power`
+(random-start Lanczos). -/
+theorem one_sub_mul_eval_evenChebyshevFilter_pow_sq_le {x : ℝ}
+    (hx : x ∈ Set.Icc 0 1) (k : ℕ) {ℓ : ℕ} (hℓ : 1 ≤ ℓ) :
+    (1 - x) * ((evenChebyshevFilter k).eval x ^ ℓ) ^ 2 ≤
+      (2 / (((2 * k + 1 : ℕ) : ℝ) ^ 2)) * ((evenChebyshevFilter k).eval x ^ ℓ) ^ 2 +
+      (2 / (((2 * k + 1 : ℕ) : ℝ) ^ 2)) * (1 / 2 : ℝ) ^ ℓ := by
+  let C := ((2 * k + 1 : ℕ) : ℝ) ^ 2
+  let u := (evenChebyshevFilter k).eval x ^ 2
+  have hC : 0 < C := by dsimp only [C]; positivity
+  have hu : 0 ≤ u := sq_nonneg _
+  have hw : (1 - x) * u ≤ 1 / C := by
+    simpa only [u, C, one_div] using one_sub_mul_eval_evenChebyshevFilter_sq_le hx k
+  have he : ((evenChebyshevFilter k).eval x ^ ℓ) ^ 2 = u ^ ℓ := by
+    dsimp only [u]
+    rw [← pow_mul, ← pow_mul, Nat.mul_comm]
+  rw [he]
+  change (1 - x) * u ^ ℓ ≤ 2 / C * u ^ ℓ + 2 / C * (1 / 2 : ℝ) ^ ℓ
+  by_cases hs : 1 - x ≤ 2 / C
+  · have ht := mul_le_mul_of_nonneg_right hs (pow_nonneg hu ℓ)
+    have hz : 0 ≤ 2 / C * (1 / 2 : ℝ) ^ ℓ := by positivity
+    linarith
+  · have hs' : 0 < 1 - x := lt_trans (by positivity : (0 : ℝ) < 2 / C) (lt_of_not_ge hs)
+    have huHalf : u ≤ (1 / 2 : ℝ) := by
+      have ht := mul_le_mul_of_nonneg_right (le_of_not_ge hs) hu
+      have hh : 2 / C * u ≤ 1 / C := ht.trans hw
+      apply (mul_le_mul_iff_right₀ hC).mp
+      have := mul_le_mul_of_nonneg_left hh hC.le
+      field_simp [hC.ne'] at this ⊢
+      linarith
+    have hPow := pow_le_pow_left₀ hu huHalf (ℓ - 1)
+    have hBound : (1 - x) * u ^ ℓ ≤ 2 / C * (1 / 2 : ℝ) ^ ℓ := by
+      rw [show ℓ = 1 + (ℓ - 1) by omega, pow_add, pow_one, ← mul_assoc]
+      have ht := mul_le_mul hw hPow (pow_nonneg hu _) (by positivity : (0 : ℝ) ≤ 1 / C)
+      refine ht.trans_eq ?_
+      rw [pow_add, pow_one]
+      ring
+    exact hBound.trans (le_add_of_nonneg_left (mul_nonneg (by positivity) (pow_nonneg hu ℓ)))
 
 end NLAlib

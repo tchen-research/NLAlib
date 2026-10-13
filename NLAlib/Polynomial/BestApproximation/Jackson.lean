@@ -12,9 +12,9 @@ open Polynomial Real Set
 
 namespace NLAlib
 
-/-- Every Lipschitz function on a nondegenerate interval has an actual degree-`n` real
+/-- Every Lipschitz function on a nondegenerate interval has an degree-`n` real
 polynomial with the sharp error `πL(c-a)/(4(n+1))`, for every `n ≥ 0`.
-Source: Arnold, numerical analysis, Section 1.2; operator rederivations `rt:jackson-theorem`.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem).
 The sawtooth interpolation, sharp norm, periodic error, cosine-polynomial representation,
 and affine rescaling are all proved without an approximation certificate.
 atlas: jackson-lipschitz -/

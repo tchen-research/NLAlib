@@ -4,7 +4,7 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 import Mathlib.Analysis.Calculus.ContDiff.Polynomial
 
 /-!
-# Sharp periodic approximation through the actual sawtooth convolution
+# Sharp periodic approximation through the sawtooth convolution
 
 Lipschitz functions are absolutely continuous in Mathlib. Integration by parts against
 the proved sawtooth error yields the precise `π/(2(n+1))` approximation constant directly.
@@ -17,15 +17,15 @@ open scoped Topology
 
 namespace NLAlib
 
-/-- The fixed periodic approximant obtained by convolving with the actual derivative
+/-- The fixed periodic approximant obtained by convolving with the derivative
 polynomial of the sawtooth interpolant, including the mean term.
-Source: Arnold, numerical analysis, Section 1.2; operator rederivations `rt:periodic-jackson`.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem).
 Atlas `jackson-lipschitz` (construction helper). -/
 def jacksonPeriodicApprox (n : ℕ) (g : ℝ → ℝ) (x : ℝ) : ℝ :=
   (2 * Real.pi)⁻¹ * ∫ t : ℝ in 0..2 * Real.pi,
     (sawtoothErrorDerivativePolynomial n).eval (cos t) * g (x - t)
 
-/-- The actual unwrapped sawtooth error is smooth, hence absolutely continuous on the
+/-- The unwrapped sawtooth error is smooth, hence absolutely continuous on the
 integration interval.
 Source: the explicit polynomial-sine construction; helper for sharp `jackson-lipschitz`. -/
 theorem absolutelyContinuousOnInterval_sawtoothError (n : ℕ) :
@@ -38,9 +38,9 @@ theorem absolutelyContinuousOnInterval_sawtoothError (n : ℕ) :
   exact (hB.sub hτ).contDiffOn.absolutelyContinuousOnInterval
 
 /-- Integration by parts gives the exact error of the fixed convolution approximant.
-The periodic endpoint contribution is `-2π g(x)` and the polynomial kernel is the actual
+The periodic endpoint contribution is `-2π g(x)` and the polynomial kernel is the
 negative derivative of the proved sawtooth error.
-Source: operator rederivations `rt:periodic-jackson` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (periodic Jackson theorem). -/
 theorem sub_jacksonPeriodicApprox_eq_integral {g : ℝ → ℝ} {L : NNReal} (hg : LipschitzWith L g)
     (hper : Function.Periodic g (2 * Real.pi)) (n : ℕ) (x : ℝ) :
     g x - jacksonPeriodicApprox n g x = -(2 * Real.pi)⁻¹ *
@@ -70,10 +70,10 @@ theorem sub_jacksonPeriodicApprox_eq_integral {g : ℝ → ℝ} {L : NNReal} (hg
   field_simp [hπ]
   nlinarith [hIB]
 
-/-- The actual fixed periodic convolution approximant has the exact sharp error constant
+/-- The fixed periodic convolution approximant has the exact sharp error constant
 `π L/(2(n+1))` for every periodic `L`-Lipschitz real function. All kernel norm and
 absolute-continuity inputs are proved rather than assumed.
-Source: Arnold, numerical analysis, Section 1.2; operator rederivations `rt:periodic-jackson`.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem).
 Atlas `jackson-lipschitz` (periodic error helper). -/
 theorem abs_sub_jacksonPeriodicApprox_le {g : ℝ → ℝ} {L : NNReal} (hg : LipschitzWith L g)
     (hper : Function.Periodic g (2 * Real.pi)) (n : ℕ) (x : ℝ) :

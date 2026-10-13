@@ -47,7 +47,7 @@ theorem cholesky_first_col_eq_div {n : ℕ}
   exact (eq_div_iff hDiag.ne').mpr h
 
 /-- The trailing block of a positive-diagonal factor is the Cholesky factor
-of the actual Schur residual. Higham, Theorem 10.1; supports
+of the Schur complement. Higham, Theorem 10.1; supports
 `cholesky-decomposition`. -/
 theorem cholesky_trailing_mul_transpose {n : ℕ}
     (A L : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ)

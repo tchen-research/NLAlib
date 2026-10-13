@@ -2,6 +2,15 @@ import NLAlib.Sketching.Sampling.Leverage
 import NLAlib.Sketching.Sampling.LeverageSampling
 import NLAlib.Sketching.Sampling.SamplingMultiplication
 import NLAlib.Sketching.Sampling.SamplingMultiplicationBounds
+import NLAlib.Sketching.Sampling.SamplingWithoutReplacement
+import NLAlib.Sketching.Sampling.SamplingWithoutReplacementTails
+import NLAlib.Sketching.Sampling.UniformCollision
+import NLAlib.Sketching.Sampling.UniformIidSampling
+import NLAlib.Sketching.Sampling.UniformProduct
+import NLAlib.Sketching.Sampling.UniformSamplingCounts
+import NLAlib.Sketching.Sampling.UniformSamplingCoupling
+import NLAlib.Sketching.Sampling.UniformSamplingJensen
+import NLAlib.Sketching.Sampling.UniformSamplingMarginals
 
 /-! # `Sketching/Sampling`
 

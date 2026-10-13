@@ -288,7 +288,7 @@ exponential; atlas `golden-thompson` (finite-index transport helper). -/
 theorem matrixExp_reindex {κ : Type*} [Fintype κ] [DecidableEq κ]
     (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
     matrixExp (Matrix.reindex e e A) = Matrix.reindex e e (matrixExp A) := by
-  let E := reindexStarAlgEquiv e
+  let E := reindexStarAlgEquiv (𝕜 := ℂ) e
   symm
   change E (NormedSpace.exp A) = NormedSpace.exp (E A)
   exact NormedSpace.map_exp_of_mem_ball (𝕂 := ℂ) E
@@ -333,7 +333,7 @@ theorem cfc_reindex_of_isHermitian {n : Type*} [Fintype n] [DecidableEq n] {r : 
       have : IsEmpty r := e.symm.isEmpty
       exact Subsingleton.elim _ _
   | inr h =>
-      let E := reindexStarAlgEquiv e
+      let E := reindexStarAlgEquiv (𝕜 := ℂ) e
       have hc : Continuous E :=
         E.toAlgEquiv.toLinearEquiv.toLinearMap.continuous_of_finiteDimensional
       symm
@@ -347,7 +347,7 @@ operator rederivations `eq:condlieb` and atlas `matrix-freedman`. -/
 theorem matrixLog_reindex_of_isHermitian {n : Type*} [Fintype n] [DecidableEq n] {r : Type*} [Fintype r] [DecidableEq r]
     (e : n ≃ r) (A : Matrix n n ℂ) (hA : A.IsHermitian) :
     matrixLog (Matrix.reindex e e A) = Matrix.reindex e e (matrixLog A) := by
-  let E := reindexStarAlgEquiv e
+  let E := reindexStarAlgEquiv (𝕜 := ℂ) e
   have hc : Continuous E := E.toAlgEquiv.toLinearEquiv.toLinearMap.continuous_of_finiteDimensional
   have hf : ContinuousOn Real.log (spectrum ℝ A) := by
     rw [hA.spectrum_real_eq_range_eigenvalues]

@@ -10,7 +10,6 @@ import NLAlib.Probability.Concentration.QuadraticForms.QuadraticMoments
 import NLAlib.Probability.Concentration.QuadraticForms.RademacherQuadraticMoments
 import NLAlib.Probability.Concentration.QuadraticForms.SquaredProjections
 import NLAlib.Probability.Concentration.QuadraticForms.TailAssembly
-import NLAlib.Probability.Concentration.QuadraticForms.UniversalBound
 import NLAlib.Probability.Concentration.QuadraticForms.VectorProductComparison
 
 /-! # `Probability/Concentration/QuadraticForms`

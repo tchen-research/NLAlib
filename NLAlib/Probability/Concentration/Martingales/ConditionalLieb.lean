@@ -11,10 +11,11 @@ integrability are explicit foundations to be derived in the martingale applicati
 noncomputable section
 
 open MeasureTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Conditional Lieb for a fixed Hermitian offset, using the actual conditional mean of
 the matrix exponential. This is a genuine conditional Jensen theorem, not the existing
 unconditional inequality or an assumed conditional-mgf certificate. Its conditional-mean

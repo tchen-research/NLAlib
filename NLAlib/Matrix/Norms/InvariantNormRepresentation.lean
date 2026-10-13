@@ -3,8 +3,8 @@ import NLAlib.Matrix.Norms.RectangularDiagonalPermutation
 /-!
 # Every invariant norm is a singular-value gauge
 
-Restriction to the injective rectangular diagonal gives an actual scalar norm.
-Actual orthogonal matrices implement its signs/permutations, and the SVD proves
+Restriction to the injective rectangular diagonal gives a scalar norm.
+ orthogonal matrices implement its signs/permutations, and the SVD proves
 the representation on every matrix. Source: Bhatia (1997), Theorem IV.2.1.
 Atlas: `unitarily-invariant-norm-def`.
 -/
@@ -13,11 +13,11 @@ noncomputable section
 open scoped Matrix
 
 namespace NLAlib
-namespace OrthogonallyInvariantNorm
+namespace UnitarilyInvariantNorm
 
 /-- Restrict a fixed-shape invariant matrix norm to its thin rectangular
-diagonal. The permutation/sign symmetries are implemented by actual matrices. -/
-def toSymmetricGaugeFin {m n : ℕ} (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) :
+diagonal. The permutation/sign symmetries are implemented by matrices. -/
+def toSymmetricGaugeFin {m n : ℕ} (ν : UnitarilyInvariantNorm ℝ (Fin m) (Fin n)) :
     SymmetricGauge (Fin (min m n)) where
   seminorm := ν.seminorm.comp (rectangularDiagonalLinear m n)
   eq_zero_of_map_eq_zero x hx := by
@@ -37,14 +37,14 @@ def toSymmetricGaugeFin {m n : ℕ} (ν : OrthogonallyInvariantNorm (Fin m) (Fin
 /-- The restricted gauge evaluates exactly to the original norm of the
 fixed-shape rectangular diagonal, including signed vectors and empty shapes. -/
 @[simp] theorem value_toSymmetricGaugeFin {m n : ℕ}
-    (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) (x : Fin (min m n) → ℝ) :
+    (ν : UnitarilyInvariantNorm ℝ (Fin m) (Fin n)) (x : Fin (min m n) → ℝ) :
     ν.toSymmetricGaugeFin.value x = ν.seminorm (rectangularDiagonal x) := rfl
 
 /-- An invariant norm is exactly its restricted diagonal gauge evaluated on
 the singular values. No norm representation hypothesis is assumed.
 Bhatia (1997), Theorem IV.2.1. -/
 theorem seminorm_eq_toSymmetricGaugeFin_singularValues {m n : ℕ}
-    (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) (A : Matrix (Fin m) (Fin n) ℝ) :
+    (ν : UnitarilyInvariantNorm ℝ (Fin m) (Fin n)) (A : Matrix (Fin m) (Fin n) ℝ) :
     ν.seminorm A = ν.toSymmetricGaugeFin.value (fun i : Fin (min m n) => singularValues A i) := by
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
   have hU : HasOrthonormalCols U := hSVD.conjTranspose_mul_left
@@ -62,7 +62,7 @@ theorem seminorm_eq_toSymmetricGaugeFin_singularValues {m n : ℕ}
 linear equivalence. This preserves all norm properties and orthogonal symmetries. -/
 def reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
     [DecidableEq m] [DecidableEq n] [DecidableEq p] [DecidableEq q]
-    (ν : OrthogonallyInvariantNorm m n) (em : m ≃ p) (en : n ≃ q) : OrthogonallyInvariantNorm p q where
+    (ν : UnitarilyInvariantNorm ℝ m n) (em : m ≃ p) (en : n ≃ q) : UnitarilyInvariantNorm ℝ p q where
   seminorm := ν.seminorm.comp (Matrix.reindexLinearEquiv ℝ ℝ em.symm en.symm).toLinearMap
   eq_zero_of_map_eq_zero A hA := by
     have h := ν.eq_zero_of_map_eq_zero (A.reindex em.symm en.symm) hA
@@ -86,21 +86,21 @@ def reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
 /-- The reindexed norm is the original norm of the inverse-reindexed matrix. -/
 @[simp] theorem reindex_seminorm_apply {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
     [DecidableEq m] [DecidableEq n] [DecidableEq p] [DecidableEq q]
-    (ν : OrthogonallyInvariantNorm m n) (em : m ≃ p) (en : n ≃ q) (A : Matrix p q ℝ) :
+    (ν : UnitarilyInvariantNorm ℝ m n) (em : m ≃ p) (en : n ≃ q) (A : Matrix p q ℝ) :
     (ν.reindex em en).seminorm A = ν.seminorm (A.reindex em.symm en.symm) := rfl
 
 /-- The symmetric gauge associated to an arbitrary finite rectangular invariant
 norm, obtained by restriction after finite-coordinate transport. -/
 def toSymmetricGauge {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (ν : OrthogonallyInvariantNorm m n) : SymmetricGauge (Fin (min (Fintype.card m) (Fintype.card n))) :=
+    (ν : UnitarilyInvariantNorm ℝ m n) : SymmetricGauge (Fin (min (Fintype.card m) (Fintype.card n))) :=
   (ν.reindex (Fintype.equivFin m) (Fintype.equivFin n)).toSymmetricGaugeFin
 
-/-- Every invariant norm has its actual symmetric-gauge representation on the
+/-- Every invariant norm has its symmetric-gauge representation on the
 native singular-value vector, for arbitrary finite matrix indices.
 Bhatia (1997), Theorem IV.2.1.
 atlas: unitarily-invariant-norm-def (partial) -/
 theorem seminorm_eq_toSymmetricGauge_matrixValue {m n : Type*} [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n] (ν : OrthogonallyInvariantNorm m n) (A : Matrix m n ℝ) :
+    [DecidableEq m] [DecidableEq n] (ν : UnitarilyInvariantNorm ℝ m n) (A : Matrix m n ℝ) :
     ν.seminorm A = ν.toSymmetricGauge.matrixValue A := by
   let em := Fintype.equivFin m
   let en := Fintype.equivFin n
@@ -118,7 +118,7 @@ theorem seminorm_eq_toSymmetricGauge_matrixValue {m n : Type*} [Fintype m] [Fint
       funext i
       exact congrFun (singularValues_reindex A em en) i
 
-end OrthogonallyInvariantNorm
+end UnitarilyInvariantNorm
 
 /-- Rectangular diagonal embedding on arbitrary finite matrix index types. Its
 shape is the original matrix space, rather than an unrelated square thin space. -/
@@ -128,8 +128,8 @@ def rectangularDiagonalMatrix {m n : Type*} [Fintype m] [Fintype n]
 
 /-- The restricted gauge is exactly the original invariant norm of a signed
 thin vector in the corresponding fixed-shape rectangular diagonal. -/
-theorem OrthogonallyInvariantNorm.value_toSymmetricGauge {m n : Type*} [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n] (ν : OrthogonallyInvariantNorm m n)
+theorem UnitarilyInvariantNorm.value_toSymmetricGauge {m n : Type*} [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] (ν : UnitarilyInvariantNorm ℝ m n)
     (x : Fin (min (Fintype.card m) (Fintype.card n)) → ℝ) :
     ν.toSymmetricGauge.value x = ν.seminorm (rectangularDiagonalMatrix x) := rfl
 

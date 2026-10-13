@@ -17,7 +17,7 @@ two orthonormal eigenvectors have disjoint supports. Schur–Horn variational
 rederivation, equation (6). -/
 theorem sum_sq_diagonal_error_planeRotation_eq
     (A : Matrix n n ℝ) (hA : Aᵀ = A) (d u v : n → ℝ)
-    (hu : u ⬝ᵥ u = 1) (hv : v ⬝ᵥ v = 1) (huv : u ⬝ᵥ v = 0)
+    (hu : ‖(WithLp.toLp 2 u : EuclideanSpace ℝ n)‖ = 1) (hv : ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = 1) (huv : u ⬝ᵥ v = 0)
     (α β : ℝ) (hAu : A *ᵥ u = α • u) (hAv : A *ᵥ v = β • v)
     (hdisjoint : ∀ i, u i * v i = 0) (c s : ℝ) (hcs : c ^ 2 + s ^ 2 = 1) :
     (∑ i, ((planeRotation u v c s * A * (planeRotation u v c s)ᵀ) i i - d i) ^ 2) -
@@ -56,11 +56,11 @@ minimum. The contradiction uses an explicit finite decreasing rotation.
 Schur–Horn variational rederivation, equation (6). -/
 theorem eigenvalue_le_of_diagonal_error_min
     (A : Matrix n n ℝ) (hA : Aᵀ = A) (d u v : n → ℝ)
-    (hu : u ⬝ᵥ u = 1) (hv : v ⬝ᵥ v = 1) (huv : u ⬝ᵥ v = 0)
+    (hu : ‖(WithLp.toLp 2 u : EuclideanSpace ℝ n)‖ = 1) (hv : ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = 1) (huv : u ⬝ᵥ v = 0)
     (α β : ℝ) (hAu : A *ᵥ u = α • u) (hAv : A *ᵥ v = β • v)
     (hdisjoint : ∀ i, u i * v i = 0)
     (hη : 0 < ∑ i, (A i i - d i) * (u i ^ 2 - v i ^ 2))
-    (hmin : ∀ R : Matrix n n ℝ, Rᵀ * R = 1 →
+    (hmin : ∀ R : Matrix n n ℝ, HasOrthonormalCols R →
       (∑ i, (A i i - d i) ^ 2) ≤ ∑ i, ((R * A * Rᵀ) i i - d i) ^ 2) :
     α ≤ β := by
   by_contra hnot
@@ -74,7 +74,7 @@ theorem eigenvalue_le_of_diagonal_error_min
   have hc : c ^ 2 = 1 - h := Real.sq_sqrt (sub_nonneg.mpr hh1)
   have hs : s ^ 2 = h := Real.sq_sqrt hh0.le
   have hcs : c ^ 2 + s ^ 2 = 1 := by rw [hc, hs]; ring
-  have horth := transpose_planeRotation_mul_self u v hu hv huv c s hcs
+  have horth := hasOrthonormalCols_planeRotation u v hu hv huv c s hcs
   have hbound := hmin (planeRotation u v c s) horth
   have hdiff := sum_sq_diagonal_error_planeRotation_eq
     A hA d u v hu hv huv α β hAu hAv hdisjoint c s hcs

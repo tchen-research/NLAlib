@@ -12,7 +12,7 @@ noncomputable section
 open scoped Matrix
 namespace NLAlib
 
-/-- Every actual thin QR extends to a full QR with the same triangular
+/-- Every thin QR extends to a full QR with the same triangular
 factor in the specified coordinate corner and zero rows outside it. The
 orthogonal completion agrees with the supplied frame in its chosen columns.
 Trefethen--Bau, Theorem 7.1; supports `qr-decomposition`. -/
@@ -43,7 +43,7 @@ theorem exists_full_qr_completion {m n : Type*} [Fintype m] [Fintype n]
 
 /-- Full QR over arbitrary finite indices with the triangular corner located
 by a specified column embedding. All rows outside the corner vanish, so this
-is an actual full factorization, including singular and empty inputs.
+is a full factorization, including singular and empty inputs.
 Trefethen--Bau, Theorem 7.1; Golub--Van Loan, Theorem 5.2.1.
 atlas: qr-decomposition (partial) -/
 theorem exists_full_qr_of_embedding {m n : Type*} [Fintype m] [Fintype n]

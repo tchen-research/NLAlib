@@ -2,6 +2,8 @@ import Mathlib.Analysis.RCLike.Basic
 import Mathlib.Data.Matrix.Mul
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Analysis.Matrix.Spectrum
+import NLAlib.Matrix.Basic.Orthonormal
 
 /-!
 # Quadratic forms
@@ -192,6 +194,8 @@ theorem _root_.Matrix.PosSemidef.re_quadForm_nonneg {A : Matrix n n 𝕜} (hA : 
 end Order
 
 /-- The Rayleigh quotient `ρ(x) = re (xᴴAx) / re (xᴴx)` (real-valued; junk value `0` at `x = 0`).
+It is the quantity of the Rayleigh–Ritz theory only for Hermitian `A` (then `xᴴAx` is real and
+`λ_min ≤ ρ(x) ≤ λ_max`); for other `A` it is the real part of the numerical-range value.
 Over `ℝ` it is `xᵀAx / xᵀx` (`simp only [rayleighQuotient_def, quadForm_def, star_trivial,
 RCLike.re_to_real]`). Source: Trefethen–Bau
 (1997) [`tb97`], Lect. 27. Helper for `power-iteration`; Mathlib's
@@ -203,5 +207,78 @@ def rayleighQuotient (A : Matrix n n 𝕜) (x : n → 𝕜) : ℝ :=
 /-- Unfolding lemma for `rayleighQuotient` (`rfl`). -/
 theorem rayleighQuotient_def (A : Matrix n n 𝕜) (x : n → 𝕜) :
     rayleighQuotient A x = RCLike.re (quadForm A x) / RCLike.re (star x ⬝ᵥ x) := rfl
+
+/-! ### Rayleigh bounds from an eigenvalue enclosure -/
+
+section Rayleigh
+
+variable [DecidableEq n]
+
+/-- **Rayleigh bounds.** For Hermitian `A` whose eigenvalues all lie in `[a, c]`,
+`a ‖x‖² ≤ re (xᴴ A x) ≤ c ‖x‖²` with `‖x‖² = re (xᴴ x)`. Horn–Johnson 2013, Thm 4.2.2;
+Parlett 1998, §1.4. -/
+theorem _root_.Matrix.IsHermitian.re_quadForm_mem_Icc {A : Matrix n n 𝕜} (hA : A.IsHermitian)
+    {a c : ℝ} (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c) (x : n → 𝕜) :
+    RCLike.re (quadForm A x) ∈
+      Set.Icc (a * RCLike.re (star x ⬝ᵥ x)) (c * RCLike.re (star x ⬝ᵥ x)) := by
+  set U : Matrix n n 𝕜 := (hA.eigenvectorUnitary : Matrix n n 𝕜) with hUdef
+  have hD : Uᴴ * A * U = Matrix.diagonal (RCLike.ofReal ∘ hA.eigenvalues) := by
+    have h := hA.conjStarAlgAut_star_eigenvectorUnitary
+    rwa [Unitary.conjStarAlgAut_star_apply, Matrix.star_eq_conjTranspose] at h
+  have hUU : U * Uᴴ = 1 := by
+    rw [← Matrix.star_eq_conjTranspose]; exact Unitary.coe_mul_star_self hA.eigenvectorUnitary
+  set y : n → 𝕜 := Uᴴ *ᵥ x with hy
+  have hx : U *ᵥ y = x := by
+    rw [hy, Matrix.mulVec_mulVec, hUU, Matrix.one_mulVec]
+  have hq : quadForm A x = ∑ i, (hA.eigenvalues i : 𝕜) * (star (y i) * y i) := by
+    rw [← hx, ← quadForm_conjTranspose_mul_mul, hD, quadForm_def, dotProduct]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    simp only [Matrix.mulVec_diagonal, Pi.star_apply, Function.comp_apply]
+    ring
+  have hyy : star y ⬝ᵥ y = star x ⬝ᵥ x := by
+    rw [hy, Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec,
+      Matrix.conjTranspose_conjTranspose, hUU, Matrix.one_mulVec]
+  have hre : RCLike.re (quadForm A x) = ∑ i, hA.eigenvalues i * ‖y i‖ ^ 2 := by
+    rw [hq, map_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [RCLike.re_ofReal_mul, RCLike.star_def, RCLike.conj_mul, ← RCLike.ofReal_pow,
+      RCLike.ofReal_re]
+  have hnorm : RCLike.re (star x ⬝ᵥ x) = ∑ i, ‖y i‖ ^ 2 := by
+    rw [← hyy, dotProduct, map_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [Pi.star_apply, RCLike.star_def, RCLike.conj_mul, ← RCLike.ofReal_pow, RCLike.ofReal_re]
+  rw [hre, hnorm, Finset.mul_sum, Finset.mul_sum]
+  exact ⟨Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_right (hspec i).1 (sq_nonneg _),
+    Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_right (hspec i).2 (sq_nonneg _)⟩
+
+/-- The eigenvalues of the compression `Qᴴ A Q` (`Q` with orthonormal columns) lie in every
+interval `[a, c]` containing the eigenvalues of `A`. Parlett 1998, Thm 10.1.1 (weak form);
+Horn–Johnson 2013, Thm 4.3.28 (Cauchy interlacing, outer bounds). -/
+theorem _root_.Matrix.IsHermitian.eigenvalues_conjTranspose_mul_mul_same_mem_Icc
+    {k : Type*} [Fintype k] [DecidableEq k] {A : Matrix n n 𝕜} (hA : A.IsHermitian)
+    {Q : Matrix n k 𝕜} (hQ : HasOrthonormalCols Q) {a c : ℝ}
+    (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c) (j : k) :
+    (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j ∈ Set.Icc a c := by
+  set hB : (Qᴴ * A * Q).IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q hA with hBdef
+  let v : k → 𝕜 := (hB.eigenvectorBasis j).ofLp
+  have hBv : (Qᴴ * A * Q) *ᵥ v = (hB.eigenvalues j : 𝕜) • v := by
+    rw [← RCLike.real_smul_eq_coe_smul (K := 𝕜)]
+    exact hB.mulVec_eigenvectorBasis j
+  have hvv : star v ⬝ᵥ v = 1 := by
+    have h1 := hB.eigenvectorBasis.orthonormal.1 j
+    have h2 : (inner 𝕜 (hB.eigenvectorBasis j) (hB.eigenvectorBasis j) : 𝕜) = 1 := by
+      rw [inner_self_eq_norm_sq_to_K, h1]; simp
+    rwa [EuclideanSpace.inner_eq_star_dotProduct, dotProduct_comm] at h2
+  have hQv : star (Q *ᵥ v) ⬝ᵥ (Q *ᵥ v) = star v ⬝ᵥ v := by
+    rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec,
+      hQ.conjTranspose_mul_self, Matrix.one_mulVec]
+  have h1 : quadForm (Qᴴ * A * Q) v = (hB.eigenvalues j : 𝕜) := by
+    rw [quadForm_def, hBv, dotProduct_smul, hvv, smul_eq_mul, mul_one]
+  have h := hA.re_quadForm_mem_Icc hspec (Q *ᵥ v)
+  rw [← quadForm_conjTranspose_mul_mul, h1, RCLike.ofReal_re, hQv, hvv, RCLike.one_re, mul_one,
+    mul_one] at h
+  exact h
+
+end Rayleigh
 
 end NLAlib

@@ -8,23 +8,22 @@ import Mathlib.Tactic
 # Eckart–Young theorem
 
 For `A : Matrix m n 𝕜` over `ℝ` or `ℂ` (`[RCLike 𝕜]`) on arbitrary finite index types:
-Frobenius form (`bestRankFrobSq_eq_singularValueTailSq`, `isBestRankApprox_truncatedSVD`) and
+Frobenius form (`bestRankFrobSq_eq_bestRankFrobSq`, `isBestFrobRankApprox_truncatedSVD`) and
 the spectral attainment `specNorm_sub_truncatedSVD_eq` (`‖A − A_k‖₂ = σ_k`).
 
-The Frobenius proof compares an arbitrary rank-bounded competitor with its actual
-Moore–Penrose column-space projector. In singular-vector coordinates the
+The Frobenius proof compares an arbitrary rank-bounded competitor with its Moore–Penrose column-space projector. In singular-vector coordinates the
 projector has diagonal weights in `[0,1]` with total mass equal to its rank.
 The finite weighted top-k inequality then gives the optimal singular-value tail.
 
 Source: Horn–Johnson, Matrix Analysis, Theorem 7.4.9; HMT 2011, §2.1.
 The SVD factors are `U : Matrix m (Fin p) 𝕜`, `V : Matrix n (Fin q) 𝕜` (`IsSVD`), and the
-tail `singularValueTailSq A k = ∑_{k ≤ i < card m} σ_i²` is a sum over `Finset.range (card m)`;
+tail `bestRankFrobSq A k = ∑_{k ≤ i < card m} σ_i²` is a sum over `Finset.range (card m)`;
 at `m = Fin a` the `Fin a` sum is recovered with `Fin.sum_univ_eq_sum_range`.
 Atlas: `eckart-young`. No probabilistic or inverse-Wishart bounds enter this proof.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -40,8 +39,7 @@ private theorem card_fin_head {m k : ℕ} (hk : k < m) :
 /-- **Weighted top-`k` inequality.** For nonnegative non-increasing `a` and weights
 `0 ≤ wᵢ ≤ 1` with total mass at most `k`, `∑ᵢ aᵢ wᵢ ≤ ∑_{i<k} aᵢ`. The finite core of
 Eckart–Young and of Ky Fan's maximum principle (Horn–Johnson 2013, proof of Thm 7.4.9;
-Bhatia 1997, Lemma III.1.1 / Ky Fan). Audit G0 A2 (made public for the von Neumann trace
-inequality); atlas `eckart-young`, `von-neumann-trace`. -/
+Bhatia 1997, Lemma III.1.1 / Ky Fan) atlas `eckart-young`, `von-neumann-trace`. -/
 theorem sum_mul_le_sum_ite_lt_of_antitone {m k : ℕ} (a w : Fin m → ℝ)
     (ha0 : ∀ i, 0 ≤ a i) (ha : Antitone a)
     (hw0 : ∀ i, 0 ≤ w i) (hw1 : ∀ i, w i ≤ 1)
@@ -114,13 +112,16 @@ private theorem frobSq_projection_residual_le [DecidableEq m]
 
 variable [DecidableEq n]
 
-/-- The squared singular-value tail after deleting the first `k` singular
-values: `∑_{k ≤ i < card m} σ_i²`. Padding includes rectangular null directions and zero
-dimensions. Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
+open scoped Matrix.Norms.L2Operator in
+/-- The optimal squared Frobenius error of a rank-`≤ k` approximation of `A`: the squared
+singular-value tail `∑_{k ≤ i < card m} σ_i²` (Eckart–Young; the infimum form is
+`bestRankFrobSq_eq_sInf`, attained by `truncatedSVD A k`). Padding includes rectangular null
+directions and zero dimensions. Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
 atlas: best-rank-approx-def -/
-def singularValueTailSq (A : Matrix m n 𝕜) (k : ℕ) : ℝ :=
+def bestRankFrobSq (A : Matrix m n 𝕜) (k : ℕ) : ℝ :=
   ∑ i ∈ Finset.range (Fintype.card m), if k ≤ i then singularValues A i ^ 2 else 0
 
+open scoped Matrix.Norms.L2Operator in
 /-- `‖Σ‖_F² = ∑_{i < min p q} σ_i²` for a rectangular diagonal matrix, written as a sum over
 the rows `Fin p`. -/
 private theorem frobSq_rectDiag {p q : ℕ} (σ : ℕ → ℝ) :
@@ -142,9 +143,9 @@ private theorem IsSVD.frobSq_eq_sum {p q : ℕ} [DecidableEq m] {A : Matrix m n 
 
 /-- **Frobenius Eckart–Young lower bound.** Every rank-at-most-`k` competitor has squared
 error at least the singular-value tail. Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
-theorem singularValueTailSq_le_frobSq_sub_of_rank_le [DecidableEq m]
+theorem bestRankFrobSq_le_frobSq_sub_of_rank_le [DecidableEq m]
     (A B : Matrix m n 𝕜) (k : ℕ) (hB : B.rank ≤ k) :
-    singularValueTailSq A k ≤ frobSq (A - B) := by
+    bestRankFrobSq A k ≤ frobSq (A - B) := by
   let P := B * moorePenroseInverse B
   have hs : P.IsHermitian := mul_moorePenroseInverse_isHermitian B
   have hp : IsIdempotentElem P := mul_moorePenroseInverse_isIdempotentElem B
@@ -203,8 +204,8 @@ theorem singularValueTailSq_le_frobSq_sub_of_rank_le [DecidableEq m]
     · exact hbudget
   have hsplit : frobSq A =
       (∑ i : Fin (Fintype.card m), if (i : ℕ) < k then singularValues A i ^ 2 else 0) +
-      singularValueTailSq A k := by
-    rw [hSVD.frobSq_eq_sum, singularValueTailSq,
+      bestRankFrobSq A k := by
+    rw [hSVD.frobSq_eq_sum, bestRankFrobSq,
       ← Fin.sum_univ_eq_sum_range (fun i => if k ≤ i then singularValues A i ^ 2 else 0),
       ← Finset.sum_add_distrib]
     apply Finset.sum_congr rfl
@@ -264,7 +265,7 @@ Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
 theorem IsSVD.frobSq_sub_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
     {U : Matrix m (Fin p) 𝕜} {V : Matrix n (Fin q) 𝕜}
     (h : IsSVD A U V) (k : ℕ) :
-    frobSq (A - h.truncatedMatrix k) = singularValueTailSq A k := by
+    frobSq (A - h.truncatedMatrix k) = bestRankFrobSq A k := by
   have hp := h.card_left
   have hq := h.card_right
   let T : Matrix (Fin p) (Fin q) 𝕜 :=
@@ -277,7 +278,7 @@ theorem IsSVD.frobSq_sub_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
       _ = _ := by abel
   rw [he, frobSq_mul_right_of_orthonormal h.conjTranspose_mul_right,
     frobSq_mul_left_of_orthonormal h.conjTranspose_mul_left, frobSq_rectDiag,
-    singularValueTailSq, hp,
+    bestRankFrobSq, hp,
     ← Fin.sum_univ_eq_sum_range (fun i => if k ≤ i then singularValues A i ^ 2 else 0)]
   apply Finset.sum_congr rfl
   intro i _
@@ -289,16 +290,16 @@ theorem IsSVD.frobSq_sub_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
   · rw [if_neg hin, singularValues_eq_zero_of_width_le A (by rw [hq]; exact not_lt.mp hin)]
     simp
 
-/-- **Frobenius Eckart–Young minimizer.** Truncating any actual SVD gives a
+/-- **Frobenius Eckart–Young minimizer.** Truncating any SVD gives a
 best rank-at-most-`k` approximation, rather than assuming a best-approximation
 predicate. Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
-theorem IsSVD.isBestRankApprox_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
+theorem IsSVD.isBestFrobRankApprox_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
     {U : Matrix m (Fin p) 𝕜} {V : Matrix n (Fin q) 𝕜}
-    (h : IsSVD A U V) (k : ℕ) : IsBestRankApprox k A (h.truncatedMatrix k) := by
+    (h : IsSVD A U V) (k : ℕ) : IsBestFrobRankApprox A k (h.truncatedMatrix k) := by
   refine ⟨h.rank_truncatedMatrix_le k, ?_⟩
   intro B hB
   rw [h.frobSq_sub_truncatedMatrix k]
-  exact singularValueTailSq_le_frobSq_sub_of_rank_le A B k hB
+  exact bestRankFrobSq_le_frobSq_sub_of_rank_le A B k hB
 
 /-- A concrete rank-`k` truncated SVD, using an SVD chosen from the proved
 existence theorem. No best-approximation assumption enters the definition.
@@ -310,77 +311,59 @@ def truncatedSVD (A : Matrix m n 𝕜) (k : ℕ) : Matrix m n 𝕜 :=
 /-- The constructed truncated SVD is a best rank-at-most-`k` approximation.
 Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
 atlas: eckart-young-frobenius -/
-theorem isBestRankApprox_truncatedSVD (A : Matrix m n 𝕜) (k : ℕ) :
-    IsBestRankApprox k A (truncatedSVD A k) := by
+theorem isBestFrobRankApprox_truncatedSVD (A : Matrix m n 𝕜) (k : ℕ) :
+    IsBestFrobRankApprox A k (truncatedSVD A k) := by
   unfold truncatedSVD
-  exact (exists_isSVD A).choose_spec.choose_spec.isBestRankApprox_truncatedMatrix k
+  exact (exists_isSVD A).choose_spec.choose_spec.isBestFrobRankApprox_truncatedMatrix k
 
 omit [DecidableEq m] [DecidableEq n] in
-/-- An actual Frobenius best rank-at-most-`k` approximation exists for every
+/-- A Frobenius best rank-at-most-`k` approximation exists for every
 finite rectangular matrix, including empty indices and every target rank.
 Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
 atlas: eckart-young-frobenius -/
-theorem exists_isBestRankApprox (A : Matrix m n 𝕜) (k : ℕ) :
-    ∃ B : Matrix m n 𝕜, IsBestRankApprox k A B := by
+theorem exists_isBestFrobRankApprox (A : Matrix m n 𝕜) (k : ℕ) :
+    ∃ B : Matrix m n 𝕜, IsBestFrobRankApprox A k B := by
   classical
-  exact ⟨_, isBestRankApprox_truncatedSVD A k⟩
+  exact ⟨_, isBestFrobRankApprox_truncatedSVD A k⟩
 
 /-- The chosen truncated SVD attains the exact singular-value-tail error.
 Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
-theorem frobSq_sub_truncatedSVD_eq_singularValueTailSq (A : Matrix m n 𝕜) (k : ℕ) :
-    frobSq (A - truncatedSVD A k) = singularValueTailSq A k := by
+theorem frobSq_sub_truncatedSVD_eq_bestRankFrobSq (A : Matrix m n 𝕜) (k : ℕ) :
+    frobSq (A - truncatedSVD A k) = bestRankFrobSq A k := by
   unfold truncatedSVD
   exact (exists_isSVD A).choose_spec.choose_spec.frobSq_sub_truncatedMatrix k
 
-omit [DecidableEq m] [DecidableEq n] in
-/-- The actual rank-constrained optimal squared Frobenius error, as an
-infimum over all feasible matrices. Eckart–Young proves it is attained.
-Atlas `eckart-young`; intended for relative RSVD/GN error statements.
-atlas: best-rank-approx-def -/
-def bestRankFrobSq (k : ℕ) (A : Matrix m n 𝕜) : ℝ :=
-  sInf {v : ℝ | ∃ B : Matrix m n 𝕜, B.rank ≤ k ∧ v = frobSq (A - B)}
-
-omit [DecidableEq m] [DecidableEq n] in
-/-- Every best Frobenius rank-`k` approximation attains the genuine infimum.
-Horn–Johnson Theorem 7.4.9; atlas `eckart-young`. -/
-theorem IsBestRankApprox.frobSq_sub_eq_bestRankFrobSq {k : ℕ} {A B : Matrix m n 𝕜}
-    (h : IsBestRankApprox k A B) : frobSq (A - B) = bestRankFrobSq k A := by
-  let S := {v : ℝ | ∃ Z : Matrix m n 𝕜, Z.rank ≤ k ∧ v = frobSq (A - Z)}
-  have hbdd : BddBelow S := by
-    refine ⟨0, ?_⟩
-    rintro v ⟨Z, _, rfl⟩
-    exact frobSq_nonneg _
-  have hmem : frobSq (A - B) ∈ S := ⟨B, h.1, rfl⟩
-  change frobSq (A - B) = sInf S
-  apply le_antisymm
-  · apply le_csInf ⟨_, hmem⟩
-    rintro v ⟨Z, hZ, rfl⟩
-    exact h.2 Z hZ
-  · exact csInf_le hbdd hmem
-
-/-- The genuine optimal rank-`k` squared Frobenius error equals the spectral
-tail. All ranks, rectangular shapes and zero dimensions are included.
+omit [DecidableEq m] in
+/-- Every best Frobenius rank-`k` approximation attains the optimal error `bestRankFrobSq A k`.
 Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
 atlas: eckart-young-frobenius -/
-theorem bestRankFrobSq_eq_singularValueTailSq (A : Matrix m n 𝕜) (k : ℕ) :
-    bestRankFrobSq k A = singularValueTailSq A k := by
-  rw [← (isBestRankApprox_truncatedSVD A k).frobSq_sub_eq_bestRankFrobSq,
-    frobSq_sub_truncatedSVD_eq_singularValueTailSq]
+theorem IsBestFrobRankApprox.frobSq_sub_eq_bestRankFrobSq {k : ℕ} {A B : Matrix m n 𝕜}
+    (h : IsBestFrobRankApprox A k B) : frobSq (A - B) = bestRankFrobSq A k := by
+  classical
+  rw [← frobSq_sub_truncatedSVD_eq_bestRankFrobSq A k]
+  exact le_antisymm (h.2 _ (isBestFrobRankApprox_truncatedSVD A k).1)
+    ((isBestFrobRankApprox_truncatedSVD A k).2 _ h.1)
 
-/-- The explicit truncated SVD attains the actual rank-constrained optimum.
-Atlas `eckart-young`; a direct bridge to relative best-rank error bounds.
+omit [DecidableEq m] in
+/-- The optimal rank-`k` squared Frobenius error is the infimum over all matrices of rank at
+most `k` (attained by `truncatedSVD A k`). Horn–Johnson Theorem 7.4.9; atlas `eckart-young`.
 atlas: eckart-young-frobenius -/
-theorem frobSq_sub_truncatedSVD_eq_bestRankFrobSq (A : Matrix m n 𝕜) (k : ℕ) :
-    frobSq (A - truncatedSVD A k) = bestRankFrobSq k A :=
-  (isBestRankApprox_truncatedSVD A k).frobSq_sub_eq_bestRankFrobSq
+theorem bestRankFrobSq_eq_sInf (A : Matrix m n 𝕜) (k : ℕ) :
+    bestRankFrobSq A k = sInf {v : ℝ | ∃ B : Matrix m n 𝕜, B.rank ≤ k ∧ v = frobSq (A - B)} := by
+  classical
+  have hT := isBestFrobRankApprox_truncatedSVD A k
+  rw [← hT.frobSq_sub_eq_bestRankFrobSq]
+  apply le_antisymm
+  · exact le_csInf ⟨_, truncatedSVD A k, hT.1, rfl⟩ (by rintro v ⟨Z, hZ, rfl⟩; exact hT.2 Z hZ)
+  · exact csInf_le ⟨0, by rintro v ⟨Z, _, rfl⟩; exact frobSq_nonneg _⟩ ⟨truncatedSVD A k, hT.1, rfl⟩
 
 /-! ### Spectral-norm attainment -/
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Spectral Eckart–Young, attainment for a given SVD.** The spectral error of truncating an
 SVD after `k` terms is the `(k+1)`-st singular value (zero-indexed `σ_k`):
 `‖A − U Σ_{<k} Vᴴ‖₂ = σ_k(A)`. All shapes and cutoffs are allowed (`σ_k = 0` for
-`k ≥ min m n`). Horn–Johnson 2013, Thm 7.4.9.1 (spectral case); HMT 2011, eq. (2.3);
-audit G0 C3; atlas `eckart-young`. -/
+`k ≥ min m n`). Horn–Johnson 2013, Thm 7.4.9.1 (spectral case); HMT 2011, eq. (2.3) atlas `eckart-young`. -/
 theorem IsSVD.specNorm_sub_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
     {U : Matrix m (Fin p) 𝕜} {V : Matrix n (Fin q) 𝕜}
     (h : IsSVD A U V) (k : ℕ) :
@@ -395,8 +378,8 @@ theorem IsSVD.specNorm_sub_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
       _ = (h.truncatedMatrix k + U * T * Vᴴ) - h.truncatedMatrix k :=
         congrArg (fun M => M - h.truncatedMatrix k) hsplit
       _ = _ := by abel
-  rw [he, specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self h.conjTranspose_mul_right,
-    specNorm_mul_left_of_conjTranspose_mul_self h.conjTranspose_mul_left]
+  rw [he, specNorm_mul_conjTranspose_right_of_hasOrthonormalCols h.conjTranspose_mul_right,
+    specNorm_mul_left_of_hasOrthonormalCols h.conjTranspose_mul_left]
   have hσk := singularValues_nonneg A k
   have hsq : specNorm T ^ 2 = singularValues A k ^ 2 := by
     rw [specNorm_sq_eq_specNorm_conjTranspose_mul_self, conjTranspose_rectDiag_mul_rectDiag,
@@ -422,9 +405,9 @@ theorem IsSVD.specNorm_sub_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
         simp
   exact (sq_eq_sq₀ (specNorm_nonneg T) hσk).1 hsq
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Spectral Eckart–Young, attainment.** `‖A − truncatedSVD A k‖₂ = σ_k(A)` (zero-indexed;
-`0` when `k ≥ min m n`). Horn–Johnson 2013, Thm 7.4.9.1 (spectral case); HMT 2011, eq. (2.3);
-audit G0 C3; atlas `eckart-young`.
+`0` when `k ≥ min m n`). Horn–Johnson 2013, Thm 7.4.9.1 (spectral case); HMT 2011, eq. (2.3) atlas `eckart-young`.
 atlas: eckart-young -/
 theorem specNorm_sub_truncatedSVD_eq (A : Matrix m n 𝕜) (k : ℕ) :
     specNorm (A - truncatedSVD A k) = singularValues A k := by

@@ -17,28 +17,19 @@ open scoped Matrix
 
 namespace NLAlib
 
-/-- Transposition preserves the singular values of a `Fin`-indexed real matrix (base case of
-`singularValues_transpose`, via the uniqueness of the SVD). -/
-private theorem singularValues_transpose_fin {a b : ℕ} (A : Matrix (Fin a) (Fin b) ℝ) :
-    singularValues Aᵀ = singularValues A := by
-  funext k
-  by_cases hk : k < min b a
-  · obtain ⟨U, V, h⟩ := exists_isSVD A
-    exact singularValues_eq_of_eq_mul_rectDiag_mul h.transpose_mul_right h.transpose_mul_left
-      (singularValues_nonneg A) (singularValues_antitone A) h.transpose_eq hk
-  · rw [singularValues_eq_zero_of_min_le _ (by simpa only [Fintype.card_fin] using not_lt.1 hk),
-      singularValues_eq_zero_of_min_le _
-        (by simp only [Fintype.card_fin]; rw [min_comm]; exact not_lt.1 hk)]
-
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
 
 /-- `σ(Aᵀ) = σ(A)`: transposition preserves every singular value, including the padded zeros
 (Horn–Johnson 2013, §2.6). Atlas `svd`. -/
 theorem singularValues_transpose [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) :
     singularValues Aᵀ = singularValues A := by
-  rw [← singularValues_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
-    ← singularValues_reindex Aᵀ (Fintype.equivFin n) (Fintype.equivFin m),
-    ← Matrix.transpose_reindex, singularValues_transpose_fin]
+  funext k
+  by_cases hk : k < min (Fintype.card n) (Fintype.card m)
+  · obtain ⟨U, V, h⟩ := exists_isSVD A
+    exact singularValues_eq_of_eq_mul_rectDiag_mul h.transpose_mul_right h.transpose_mul_left
+      (singularValues_nonneg A) (singularValues_antitone A) h.transpose_eq hk
+  · rw [singularValues_eq_zero_of_min_le _ (not_lt.1 hk),
+      singularValues_eq_zero_of_min_le _ (by rw [min_comm]; exact not_lt.1 hk)]
 
 /-- Left multiplication by a column isometry `H` (`HᵀH = 1`; e.g. a square orthogonal matrix)
 preserves every singular value, including the padded zeros (Horn–Johnson 2013, §2.6): the

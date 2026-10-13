@@ -85,12 +85,12 @@ private theorem isMoorePenroseInverse_rectDiag (m n : ℕ) (σ : ℕ → ℝ) :
 /-- An SVD `A = U Σ Vᴴ` produces the Moore–Penrose inverse `V Σ⁺ Uᴴ` by reciprocating the
 singular values; scalar `0⁻¹ = 0` handles zero singular values.
 Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem IsSVD.isMoorePenroseInverse {m n : ℕ} {A : Matrix (Fin m) (Fin n) 𝕜}
-    {U : Matrix (Fin m) (Fin m) 𝕜} {V : Matrix (Fin n) (Fin n) 𝕜}
-    (h : IsSVD A U V) :
+theorem IsSVD.isMoorePenroseInverse {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
+    [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}
+    {V : Matrix n (Fin q) 𝕜} (h : IsSVD A U V) :
     IsMoorePenroseInverse A
-      (V * (rectDiag (fun k => (singularValues A k)⁻¹) : Matrix (Fin n) (Fin m) 𝕜) * Uᴴ) := by
-  have hP := (isMoorePenroseInverse_rectDiag (𝕜 := 𝕜) m n (singularValues A)).unitary_transform
+      (V * (rectDiag (fun k => (singularValues A k)⁻¹) : Matrix (Fin q) (Fin p) 𝕜) * Uᴴ) := by
+  have hP := (isMoorePenroseInverse_rectDiag (𝕜 := 𝕜) p q (singularValues A)).unitary_transform
     U V h.conjTranspose_mul_left h.conjTranspose_mul_right
   rwa [← h.eq] at hP
 
@@ -100,23 +100,8 @@ Horn–Johnson §7.3; atlas `pseudoinverse`. -/
 theorem exists_isMoorePenroseInverse {m n : Type*} [Fintype m] [Fintype n]
     (A : Matrix m n 𝕜) : ∃ B : Matrix n m 𝕜, IsMoorePenroseInverse A B := by
   classical
-  let em := Fintype.equivFin m
-  let en := Fintype.equivFin n
-  let A' : Matrix (Fin (Fintype.card m)) (Fin (Fintype.card n)) 𝕜 :=
-    A.submatrix em.symm en.symm
-  obtain ⟨U, V, h⟩ := exists_isSVD A'
-  let B' : Matrix (Fin (Fintype.card n)) (Fin (Fintype.card m)) 𝕜 :=
-    V * (rectDiag (fun k => (singularValues A' k)⁻¹) :
-      Matrix (Fin (Fintype.card n)) (Fin (Fintype.card m)) 𝕜) * Uᴴ
-  have hB' : IsMoorePenroseInverse A' B' := h.isMoorePenroseInverse
-  refine ⟨B'.submatrix en em, ?_⟩
-  have hAA : A'.submatrix em en = A := by
-    ext i j
-    change A (em.symm (em i)) (en.symm (en j)) = A i j
-    simp only [Equiv.symm_apply_apply]
-  have hTransport := hB'.submatrix em en
-  rw [hAA] at hTransport
-  exact hTransport
+  obtain ⟨U, V, h⟩ := exists_isSVD A
+  exact ⟨_, h.isMoorePenroseInverse⟩
 
 /-- The unique Moore–Penrose inverse of a rectangular matrix over `ℝ` or `ℂ`. This is
 defined for rank-deficient and empty matrices and preserves the existing
@@ -276,14 +261,23 @@ theorem specNorm_moorePenroseInverse_sq [DecidableEq m] (A : Matrix m n 𝕜) :
   unfold specNorm
   rw [sq, ← Matrix.l2_opNorm_conjTranspose_mul_self]
 
+/-- Reindexing commutes with the general Moore–Penrose inverse (over `ℝ` or `ℂ`), reversing
+row and column labels. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
+theorem moorePenroseInverse_reindex {p q : Type*} [Fintype p] [Fintype q] (A : Matrix m n 𝕜)
+    (em : m ≃ p) (en : n ≃ q) :
+    moorePenroseInverse (A.reindex em en) = (moorePenroseInverse A).reindex en em :=
+  (isMoorePenroseInverse (A.reindex em en)).unique
+    ((isMoorePenroseInverse A).submatrix em.symm en.symm)
+
 end General
 
 /-- Any SVD `A = U Σ Vᴴ` computes the same Moore–Penrose inverse `V Σ⁺ Uᴴ`, independently of
 the choice of singular vectors. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem IsSVD.moorePenroseInverse_eq {m n : ℕ} {A : Matrix (Fin m) (Fin n) 𝕜}
-    {U : Matrix (Fin m) (Fin m) 𝕜} {V : Matrix (Fin n) (Fin n) 𝕜} (h : IsSVD A U V) :
+theorem IsSVD.moorePenroseInverse_eq {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
+    [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}
+    {V : Matrix n (Fin q) 𝕜} (h : IsSVD A U V) :
     moorePenroseInverse A =
-      V * (rectDiag (fun k => (singularValues A k)⁻¹) : Matrix (Fin n) (Fin m) 𝕜) * Uᴴ :=
+      V * (rectDiag (fun k => (singularValues A k)⁻¹) : Matrix (Fin q) (Fin p) 𝕜) * Uᴴ :=
   (NLAlib.isMoorePenroseInverse A).unique h.isMoorePenroseInverse
 
 /-- Deprecated alias (F1, transpose twins removed): use `IsSVD.moorePenroseInverse_eq`. -/

@@ -45,11 +45,16 @@ theorem singularValues_reindex {m n p q 𝕜 : Type*} [RCLike 𝕜]
     · simpa only [finrank_euclideanSpace] using Nat.le_of_not_gt hk
     · simpa only [finrank_euclideanSpace, ← Fintype.card_congr en] using Nat.le_of_not_gt hk
 
-private theorem frobSq_eq_sum_sq_singularValues_fin {𝕜 : Type*} [RCLike 𝕜] {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) 𝕜) :
-    frobSq A = ∑ k ∈ Finset.range (min m n), singularValues A k ^ 2 := by
+/-- `‖A‖_F² = ∑_{k < min m n} σ_k²` on arbitrary finite index types, over `ℝ` or `ℂ`
+(Horn–Johnson 2013, §2.6 / 5.6; HMT 2011, §2.1). Atlas `svd`.
+atlas: svd -/
+theorem frobSq_eq_sum_sq_singularValues {m n 𝕜 : Type*} [RCLike 𝕜] [Fintype m] [Fintype n]
+    [DecidableEq n] (A : Matrix m n 𝕜) :
+    frobSq A = ∑ k ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
+      singularValues A k ^ 2 := by
+  classical
   obtain ⟨U, V, h⟩ := exists_isSVD A
-  rw [frobSq, frobInner_eq_re_trace, h.conjTranspose_mul_self, Matrix.trace_mul_cycle,
+  rw [frobSq, frobInner_eq_trace, h.conjTranspose_mul_self, Matrix.trace_mul_cycle,
     h.conjTranspose_mul_right, Matrix.one_mul, Matrix.trace_diagonal, map_sum]
   simp only [RCLike.ofReal_re]
   rw [Fin.sum_univ_eq_sum_range (fun k => singularValues A k ^ 2)]
@@ -58,16 +63,6 @@ private theorem frobSq_eq_sum_sq_singularValues_fin {𝕜 : Type*} [RCLike 𝕜]
   · intro k hk; simp at hk ⊢; omega
   · intro k _ hk
     rw [singularValues_eq_zero_of_min_le A
-      (by simp only [Finset.mem_range, min_le_iff, Fintype.card_fin] at hk ⊢; omega)]; simp
-
-/-- `‖A‖_F² = ∑_{k < min m n} σ_k²` on arbitrary finite index types, over `ℝ` or `ℂ`
-(Horn–Johnson 2013, §2.6 / 5.6; HMT 2011, §2.1). Atlas `svd`.
-atlas: svd -/
-theorem frobSq_eq_sum_sq_singularValues {m n 𝕜 : Type*} [RCLike 𝕜] [Fintype m] [Fintype n]
-    [DecidableEq n] (A : Matrix m n 𝕜) :
-    frobSq A = ∑ k ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      singularValues A k ^ 2 := by
-  rw [← frobSq_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
-    frobSq_eq_sum_sq_singularValues_fin, singularValues_reindex]
+      (by simp only [Finset.mem_range, min_le_iff] at hk ⊢; omega)]; simp
 
 end NLAlib

@@ -146,7 +146,7 @@ theorem rank_mul_rectDiag_polarSingularCoefficients_mul_transpose {m n r : ℕ}
     {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ}
     (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) (hr : r ≤ min m n) :
     (U * (rectDiag (polarSingularCoefficients r) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ).rank = r := by
-  rw [rank_eq_card_singularValues_ne_zero]
+  rw [rank_eq_card_singularValues_ne_zero, Fintype.card_fin, Fintype.card_fin]
   have hfilter : ((Finset.range (min m n)).filter fun i =>
       singularValues (U * (rectDiag (polarSingularCoefficients r) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) i ≠ 0) =
       Finset.range r := by

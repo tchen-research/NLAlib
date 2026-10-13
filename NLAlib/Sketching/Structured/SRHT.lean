@@ -3,7 +3,7 @@ import NLAlib.Sketching.Structured.SRHTParameters
 import NLAlib.Probability.Concentration.Matrix.SamplingWithoutReplacementTails
 import NLAlib.ForMathlib.Probability.FiniteProductEvents
 import NLAlib.Matrix.Structured.WalshFin
-import NLAlib.Matrix.Norms.RealComplexNorm
+import NLAlib.Matrix.Norms.Core
 /-!
 # Classical SRHT with one shared diagonal and actual distinct-row sampling
 
@@ -66,8 +66,10 @@ theorem measure_srht_gram_failure_le_of_flat_rows
       congr 1
       ext a b
       by_cases hab : a = b <;> simp [Matrix.map_apply, Matrix.one_apply, hab]
-    have hnorm := specNorm_le_norm_map_ofReal
-      ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1)
+    have hnorm : specNorm ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1) ≤
+        ‖((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1).map Complex.ofReal‖ :=
+      specNorm_le_norm_map_ofReal (𝕜 := ℂ)
+        ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1)
     rw [hm] at hnorm
     exact hT.le.trans hnorm
   exact (measureReal_mono hsub).trans hc

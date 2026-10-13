@@ -412,6 +412,86 @@ theorem specNorm_add_sq_le_of_conjTranspose_mul_eq_zero {X Y : Matrix m n 𝕜} 
   rwa [← Matrix.conjTranspose_add, specNorm_conjTranspose, specNorm_conjTranspose,
     specNorm_conjTranspose] at this
 
+/-! ### Euclidean quadratic forms and Gram errors (over `𝕜`) -/
+
+omit [DecidableEq n] in
+/-- The squared Euclidean norm is the real part of the self dot product:
+`‖x‖² = Re (x̄ ⬝ x)` over `ℝ` or `ℂ`. Source: the Euclidean inner product definition; supports
+`leverage-sampling-ose`. -/
+theorem norm_toLp_sq_eq_re_star_dotProduct (x : n → 𝕜) :
+    ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 = RCLike.re (star x ⬝ᵥ x) := by
+  rw [norm_sq_eq_re_inner (𝕜 := 𝕜), EuclideanSpace.inner_toLp_toLp, dotProduct_comm]
+
+/-- A square matrix's quadratic form is bounded by its operator norm times the vector's squared
+Euclidean norm: `|Re (x̄ ⬝ Hx)| ≤ ‖H‖ ‖x‖²`. Source: Cauchy–Schwarz and the operator norm
+definition; supports `leverage-sampling-ose`. -/
+theorem abs_re_star_dotProduct_mulVec_le_norm (H : Matrix n n 𝕜) (x : n → 𝕜) :
+    |RCLike.re (star x ⬝ᵥ (H *ᵥ x))| ≤ ‖H‖ *
+      ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 := by
+  have hin : inner 𝕜 (WithLp.toLp 2 x : EuclideanSpace 𝕜 n)
+      (WithLp.toLp 2 (H *ᵥ x) : EuclideanSpace 𝕜 n) = star x ⬝ᵥ (H *ᵥ x) := by
+    rw [EuclideanSpace.inner_toLp_toLp, dotProduct_comm]
+  have hh := norm_inner_le_norm (𝕜 := 𝕜) (WithLp.toLp 2 x : EuclideanSpace 𝕜 n)
+    (WithLp.toLp 2 (H *ᵥ x) : EuclideanSpace 𝕜 n)
+  rw [hin] at hh
+  calc _ ≤ ‖star x ⬝ᵥ (H *ᵥ x)‖ := RCLike.abs_re_le_norm _
+    _ ≤ _ := hh
+    _ ≤ ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ *
+        (‖H‖ * ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖) := by
+      gcongr
+      exact H.l2_opNorm_mulVec (WithLp.toLp 2 x)
+    _ = _ := by ring
+
+/-- A Gram error bounded by `ε`, `‖TᴴT − I‖ ≤ ε`, keeps every squared Euclidean norm
+`‖Tx‖²` between `(1−ε)‖x‖²` and `(1+ε)‖x‖²`, over `ℝ` or `ℂ`. Source: operator re-derivation
+`sa:leverage-theorem`. -/
+theorem norm_mulVec_sq_bounds_of_norm_gram_sub_one_le (T : Matrix m n 𝕜) {ε : ℝ}
+    (h : ‖Tᴴ * T - 1‖ ≤ ε) (x : n → 𝕜) :
+    (1 - ε) * ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 ≤
+        ‖(WithLp.toLp 2 (T *ᵥ x) : EuclideanSpace 𝕜 m)‖ ^ 2 ∧
+      ‖(WithLp.toLp 2 (T *ᵥ x) : EuclideanSpace 𝕜 m)‖ ^ 2 ≤
+        (1 + ε) * ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 := by
+  have hq : RCLike.re (star x ⬝ᵥ ((Tᴴ * T - 1) *ᵥ x)) =
+      ‖(WithLp.toLp 2 (T *ᵥ x) : EuclideanSpace 𝕜 m)‖ ^ 2 -
+        ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 := by
+    rw [Matrix.sub_mulVec, dotProduct_sub, Matrix.one_mulVec, map_sub,
+      norm_toLp_sq_eq_re_star_dotProduct, norm_toLp_sq_eq_re_star_dotProduct,
+      ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, Matrix.vecMul_conjTranspose, star_star]
+  have hh := (abs_re_star_dotProduct_mulVec_le_norm (Tᴴ * T - 1) x).trans
+    (mul_le_mul_of_nonneg_right h (sq_nonneg _))
+  rw [hq, abs_le] at hh
+  constructor <;> nlinarith
+
+omit [DecidableEq n] in
+/-- Real vectors embedded in `𝕜` coordinates (`ℝ` or `ℂ`) have the same Euclidean norm.
+Source: entrywise squared norms; supports atlas `srht-ose`. -/
+theorem norm_toLp_ofReal_eq (x : n → ℝ) :
+    ‖(WithLp.toLp 2 (fun j => algebraMap ℝ 𝕜 (x j)) : EuclideanSpace 𝕜 n)‖ =
+      ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖ := by
+  rw [EuclideanSpace.norm_eq, EuclideanSpace.norm_eq]
+  simp only [RCLike.algebraMap_eq_ofReal, RCLike.norm_ofReal, Real.norm_eq_abs]
+
+/-- The real operator norm is bounded by the operator norm of the extension of the matrix to
+`𝕜` (`ℝ` or `ℂ`): `‖A‖₂ ≤ ‖A.map (algebraMap ℝ 𝕜)‖`. Source: restricting the extended operator
+to real vectors; supports `srht-ose`. -/
+theorem specNorm_le_norm_map_ofReal (A : Matrix m n ℝ) :
+    specNorm A ≤ ‖A.map (algebraMap ℝ 𝕜)‖ := by
+  rw [specNorm_eq_norm, Matrix.l2_opNorm_def]
+  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _)
+  intro x
+  have h := (A.map (algebraMap ℝ 𝕜)).l2_opNorm_mulVec
+    (WithLp.toLp 2 (fun j => algebraMap ℝ 𝕜 (x.ofLp j)) : EuclideanSpace 𝕜 n)
+  have hv : A.map (algebraMap ℝ 𝕜) *ᵥ (fun j => algebraMap ℝ 𝕜 (x.ofLp j)) =
+      fun i => algebraMap ℝ 𝕜 ((A *ᵥ x.ofLp) i) := by
+    ext i
+    simp only [Matrix.mulVec, dotProduct, Matrix.map_apply, map_sum, map_mul]
+  rw [hv] at h
+  change ‖(WithLp.toLp 2 (fun i => algebraMap ℝ 𝕜 ((A *ᵥ x.ofLp) i)) : EuclideanSpace 𝕜 m)‖ ≤
+    ‖A.map (algebraMap ℝ 𝕜)‖ *
+      ‖(WithLp.toLp 2 (fun j => algebraMap ℝ 𝕜 (x.ofLp j)) : EuclideanSpace 𝕜 n)‖ at h
+  rw [norm_toLp_ofReal_eq, norm_toLp_ofReal_eq] at h
+  exact h
+
 end Spectral
 
 end NLAlib

@@ -1,5 +1,5 @@
 import NLAlib.LowRank.RangeFinding.ComplexSubspaceConvergence
-import NLAlib.Matrix.Perturbation.ComplexEmbedding
+import NLAlib.Matrix.Norms.Core
 /-!
 # Individual complex subspace-iteration angles
 

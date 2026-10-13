@@ -70,7 +70,7 @@ theorem eigenvalues₀_add_le_add_eigenvalues₀_zero {A E : Matrix n n ℝ}
     (hA.add hE).eigenvalues₀ i ≤ hA.eigenvalues₀ i +
       hE.eigenvalues₀ ⟨0, by have := i.isLt; omega⟩ := by
   simpa only [Nat.add_zero, Fin.eta] using
-    eigenvalues₀_add_le hA hE (hA.add hE) i ⟨0, by have := i.isLt; omega⟩
+    Matrix.IsHermitian.eigenvalues₀_add_le hA hE (hA.add hE) i ⟨0, by have := i.isLt; omega⟩
       (by have := i.isLt; omega)
 
 /-- Weyl's signed eigenvalue perturbation bound, lower side.
@@ -80,10 +80,11 @@ theorem add_eigenvalues₀_last_le_eigenvalues₀_add {A E : Matrix n n ℝ}
     (hA : A.IsHermitian) (hE : E.IsHermitian) (i : Fin (Fintype.card n)) :
     hA.eigenvalues₀ i + hE.eigenvalues₀ ⟨Fintype.card n - 1, by have := i.isLt; omega⟩ ≤
       (hA.add hE).eigenvalues₀ i := by
-  obtain ⟨S, hS, hAS⟩ := exists_submodule_eigenvalues₀_mul_le hA i
-  refine le_eigenvalues₀_of_forall_mem (hA.add hE) i S hS fun x hx => ?_
+  obtain ⟨S, hS, hAS⟩ := Matrix.IsHermitian.exists_submodule_eigenvalues₀_mul_le hA i
+  refine Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem (hA.add hE) i S hS fun x hx => ?_
   have h₁ := hAS x hx
   have h₂ := eigenvalues₀_last_mul_le_dotProduct_mulVec hE (by have := i.isLt; omega) x
+  simp only [quadForm_def, RCLike.re_to_real, star_trivial] at h₁ ⊢
   rw [Matrix.add_mulVec, dotProduct_add]
   nlinarith
 

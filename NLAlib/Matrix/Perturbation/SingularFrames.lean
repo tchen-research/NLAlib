@@ -68,7 +68,8 @@ variable {m n k : ℕ} {A : Matrix (Fin m) (Fin n) ℝ}
 /-- Transposing an actual real SVD exchanges its paired orthogonal frames.
 Horn–Johnson 2013, Section 2.6; Wedin frame helper. -/
 theorem transpose (h : IsSVD A U V) : IsSVD Aᵀ V U := by
-  refine ⟨h.transpose_mul_right, h.transpose_mul_left, ?_⟩
+  refine ⟨h.transpose_mul_right, h.transpose_mul_left, ?_, h.mul_transpose_right,
+    h.mul_transpose_left⟩
   rw [singularValues_transpose]
   exact h.transpose_eq
 
@@ -111,7 +112,7 @@ theorem headColumns_projector_mul (h : IsSVD A U V) (hkm : k ≤ m) :
   simp only [Matrix.mul_assoc]
   rw [← Matrix.mul_assoc Uᵀ U, h.transpose_mul_left, Matrix.one_mul,
     ← Matrix.mul_assoc (Matrix.diagonal _) (rectDiag _), diagonal_prefix_mul_rectDiag]
-  simp only [truncatedMatrix, Matrix.mul_assoc]
+  simp only [truncatedMatrix, Matrix.mul_assoc, Matrix.conjTranspose_eq_transpose_of_trivial]
 
 /-- The right leading-frame projector gives the same matched truncation.
 Wedin (1972), Section 3; all rectangular null directions remain in the tail. -/
@@ -122,7 +123,7 @@ theorem mul_headColumns_projector (h : IsSVD A U V) (hkn : k ≤ n) :
   simp only [Matrix.mul_assoc]
   rw [← Matrix.mul_assoc Vᵀ V, h.transpose_mul_right, Matrix.one_mul,
     ← Matrix.mul_assoc (rectDiag _) (Matrix.diagonal _), rectDiag_mul_diagonal_prefix]
-  simp only [truncatedMatrix, Matrix.mul_assoc]
+  simp only [truncatedMatrix, Matrix.mul_assoc, Matrix.conjTranspose_eq_transpose_of_trivial]
 
 /-- The left leading-frame residual is exactly the matched SVD tail.
 Wedin (1972), Section 3. -/

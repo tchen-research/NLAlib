@@ -31,8 +31,8 @@ theorem singularValueTailSq_eq_sum_width {m n : ℕ}
     simp [f, hz]
   have hm := hsum m (min_le_left m n)
   have hn := hsum n (min_le_right m n)
-  change (∑ i : Fin m, f i) = ∑ i : Fin n, f i
-  rw [Fin.sum_univ_eq_sum_range f, Fin.sum_univ_eq_sum_range f]
+  change (∑ i ∈ Finset.range (Fintype.card (Fin m)), f i) = ∑ i : Fin n, f i
+  rw [Fintype.card_fin, Fin.sum_univ_eq_sum_range f]
   exact hm.trans hn.symm
 
 /-- Every actual real matrix has an SVD-derived right-space block split whose

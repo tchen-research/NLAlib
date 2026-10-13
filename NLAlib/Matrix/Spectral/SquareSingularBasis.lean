@@ -1,5 +1,8 @@
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
+import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.Matrix.Norms.RankNorm
+import NLAlib.Matrix.Norms.Reindex
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Square singular bases on finite coordinate types
 

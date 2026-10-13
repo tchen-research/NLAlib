@@ -300,10 +300,11 @@ theorem eigenvalues₀_restrict_T_le (D : LanczosDecomp A b q) (hA : A.IsHermiti
     (isHermitian_T (D.restrict h) hA).eigenvalues₀ i ≤
       (D.isHermitian_T hA).eigenvalues₀ (Fin.castLE (by simpa using h) i) := by
   have hE := hasOrthonormalCols_submatrix_one h
-  have key := eigenvalues₀_compression_le (D.isHermitian_T hA) hE
-    (by rw [← restrict_T_eq]; exact isHermitian_T (D.restrict h) hA) i
+  have key := Matrix.IsHermitian.eigenvalues₀_compression_le (D.isHermitian_T hA) hE
+    (by rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← restrict_T_eq]
+        exact isHermitian_T (D.restrict h) hA) i
   convert key using 2
-  rw [restrict_T_eq]
+  rw [restrict_T_eq, Matrix.conjTranspose_eq_transpose_of_trivial]
 
 /-- **Cauchy interlacing, lower half**: `θ_{i + (q − q')}(T_q) ≤ θ_i(T_{q'})` for `q' ≤ q`;
 with `q' = q − 1` and the upper half, the eigenvalues of `T_{q−1}` interlace those of `T_q`.
@@ -317,10 +318,11 @@ theorem eigenvalues₀_le_eigenvalues₀_restrict_T (D : LanczosDecomp A b q) (h
       by have := i.isLt; simp only [Fintype.card_fin] at this ⊢; omega⟩ ≤
       (isHermitian_T (D.restrict h) hA).eigenvalues₀ i := by
   have hE := hasOrthonormalCols_submatrix_one h
-  have key := eigenvalues₀_le_eigenvalues₀_compression (D.isHermitian_T hA) hE
-    (by rw [← restrict_T_eq]; exact isHermitian_T (D.restrict h) hA) i
+  have key := Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression (D.isHermitian_T hA) hE
+    (by rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← restrict_T_eq]
+        exact isHermitian_T (D.restrict h) hA) i
   convert key using 2
-  rw [restrict_T_eq]
+  rw [restrict_T_eq, Matrix.conjTranspose_eq_transpose_of_trivial]
 
 /-! ### Gauss nodes and weights (Golub–Welsch) -/
 

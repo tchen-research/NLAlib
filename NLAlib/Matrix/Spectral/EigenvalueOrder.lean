@@ -23,21 +23,23 @@ atlas: eigenvalue-order-and-counting (partial) -/
 theorem eigenvalues₀_neg {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (k : Fin (Fintype.card n)) : hA.neg.eigenvalues₀ k = -hA.eigenvalues₀ k.rev := by
   apply le_antisymm
-  · obtain ⟨S, hS, hAS⟩ := exists_submodule_eigenvalues₀_mul_le hA k.rev
-    apply eigenvalues₀_le_of_forall_mem hA.neg k S
+  · obtain ⟨S, hS, hAS⟩ := Matrix.IsHermitian.exists_submodule_eigenvalues₀_mul_le hA k.rev
+    apply Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem hA.neg k S
     · simp only [Fin.val_rev] at hS
       omega
     · intro x hx
       have h := hAS x hx
-      simp only [Matrix.neg_mulVec, dotProduct_neg]
+      simp only [quadForm_def, RCLike.re_to_real, star_trivial, Matrix.neg_mulVec,
+        dotProduct_neg] at h ⊢
       nlinarith
-  · obtain ⟨S, hS, hAS⟩ := exists_submodule_le_eigenvalues₀_mul hA k.rev
-    apply le_eigenvalues₀_of_forall_mem hA.neg k S
+  · obtain ⟨S, hS, hAS⟩ := Matrix.IsHermitian.exists_submodule_le_eigenvalues₀_mul hA k.rev
+    apply Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem hA.neg k S
     · simp only [Fin.val_rev] at hS
       omega
     · intro x hx
       have h := hAS x hx
-      simp only [Matrix.neg_mulVec, dotProduct_neg]
+      simp only [quadForm_def, RCLike.re_to_real, star_trivial, Matrix.neg_mulVec,
+        dotProduct_neg] at h ⊢
       nlinarith
 
 omit [DecidableEq n] in
@@ -64,7 +66,7 @@ theorem lt_eigenvalues₀_of_forall_mem {A : Matrix n n ℝ} (hA : A.IsHermitian
     (hS : (k : ℕ) + 1 ≤ finrank ℝ S) {c : ℝ}
     (hAS : ∀ x ∈ S, x ≠ 0 → c * (x ⬝ᵥ x) < quadForm A x) :
     c < hA.eigenvalues₀ k := by
-  obtain ⟨W, hW, hAW⟩ := exists_submodule_le_eigenvalues₀_mul hA k
+  obtain ⟨W, hW, hAW⟩ := Matrix.IsHermitian.exists_submodule_le_eigenvalues₀_mul hA k
   obtain ⟨x, hxS, hxW, hx0⟩ :=
     exists_ne_zero_mem_inf_of_card_lt_finrank_add S W (by omega)
   have h₁ := hAS x hxS hx0
@@ -84,7 +86,7 @@ theorem eigenvalues₀_lt_of_forall_mem {A : Matrix n n ℝ} (hA : A.IsHermitian
     (hW : Fintype.card n ≤ finrank ℝ W + k) {c : ℝ}
     (hAW : ∀ x ∈ W, x ≠ 0 → quadForm A x < c * (x ⬝ᵥ x)) :
     hA.eigenvalues₀ k < c := by
-  obtain ⟨S, hS, hAS⟩ := exists_submodule_eigenvalues₀_mul_le hA k
+  obtain ⟨S, hS, hAS⟩ := Matrix.IsHermitian.exists_submodule_eigenvalues₀_mul_le hA k
   obtain ⟨x, hxS, hxW, hx0⟩ :=
     exists_ne_zero_mem_inf_of_card_lt_finrank_add S W (by omega)
   have h₁ := hAS x hxS
@@ -106,7 +108,7 @@ theorem finrank_le_card_eigenvalues₀_nonneg {A : Matrix n n ℝ} (hA : A.IsHer
     simpa [Module.finrank_fintype_fun_eq_card] using S.finrank_le
   let f : Fin (finrank ℝ S) → {i : Fin (Fintype.card n) // 0 ≤ hA.eigenvalues₀ i} := fun i =>
     ⟨⟨i, i.isLt.trans_le hd⟩,
-      le_eigenvalues₀_of_forall_mem hA _ S (Nat.succ_le_of_lt i.isLt)
+      Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem hA _ S (Nat.succ_le_of_lt i.isLt)
         (by simpa [quadForm] using hAS)⟩
   have hf : Function.Injective f := by
     intro i j h

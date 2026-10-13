@@ -70,11 +70,12 @@ theorem schattenNorm_mul_rectDiag_mul_transpose {m n : ℕ}
 /-- Pairing a matrix with prescribed coefficients in its own SVD frames gives
 the exact singular-value dot product.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem IsSVD.frobInner_mul_rectDiag_mul_transpose {m n : ℕ}
-    {A : Matrix (Fin m) (Fin n) ℝ} {U : Matrix (Fin m) (Fin m) ℝ}
-    {V : Matrix (Fin n) (Fin n) ℝ} (h : IsSVD A U V) (b : ℕ → ℝ) :
-    frobInner A (U * (rectDiag b : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) =
-      ∑ i ∈ Finset.range (min m n), singularValues A i * b i := by
+theorem IsSVD.frobInner_mul_rectDiag_mul_transpose {m n : Type*} [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] {p q : ℕ}
+    {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ}
+    {V : Matrix n (Fin q) ℝ} (h : IsSVD A U V) (b : ℕ → ℝ) :
+    frobInner A (U * (rectDiag b : Matrix (Fin p) (Fin q) ℝ) * Vᵀ) =
+      ∑ i ∈ Finset.range (min p q), singularValues A i * b i := by
   conv_lhs => rw [h.eq_mul_transpose]
   rw [frobInner_mul_transpose_right_of_orthonormal h.transpose_mul_right,
     frobInner_mul_left_of_orthonormal h.transpose_mul_left, frobInner_rectDiag_rectDiag]

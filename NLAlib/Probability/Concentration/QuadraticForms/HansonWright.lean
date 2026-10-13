@@ -11,7 +11,10 @@ vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimPr
 import NLAlib.Probability.Concentration.QuadraticForms.UniversalBound
 import NLAlib.Probability.SubGaussian.OrliczMGF
 import NLAlib.Matrix.Basic.QuadForm
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
+import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.Matrix.Norms.RankNorm
+import NLAlib.Matrix.Norms.Reindex
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Hanson–Wright in NLAlib's matrix vocabulary
 

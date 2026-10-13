@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Subspaces.ComplexObliqueBlocks
-import NLAlib.Matrix.Spectral.ComplexRectangularSVD
+import NLAlib.Matrix.Spectral.SVD
 /-!
 # Complex unitary canonical form of an oblique projection
 
@@ -26,11 +26,15 @@ theorem exists_unitary_idempotent_canonical {n : Type*}
       Hᴴ * H = 1 ∧ H * Hᴴ = 1 ∧
       Hᴴ * P * H = Matrix.fromBlocks 1 ((rectDiag t).map Complex.ofReal) 0 0 := by
   obtain ⟨H, T, hH, hHt, hBlock⟩ := exists_unitary_idempotent_range_blocks P hP
-  obtain ⟨V₀, W₀, hSVD⟩ := exists_complex_rectangular_svd T
-  let V := (V₀ : Matrix (Fin P.rank) (Fin P.rank) ℂ)
-  let W := (W₀ : Matrix (Fin (Fintype.card n - P.rank)) (Fin (Fintype.card n - P.rank)) ℂ)
-  have hV : Vᴴ * V = 1 := Unitary.coe_star_mul_self V₀
-  have hW : Wᴴ * W = 1 := Unitary.coe_star_mul_self W₀
+  obtain ⟨V, W, hVW⟩ := exists_isSVD T
+  have hV : Vᴴ * V = 1 := hVW.conjTranspose_mul_left
+  have hW : Wᴴ * W = 1 := hVW.conjTranspose_mul_right
+  have hSVD : Vᴴ * T * W =
+      (rectDiag (fun i => singularValues T i) : Matrix _ _ ℝ).map Complex.ofReal := by
+    rw [hVW.conjTranspose_mul_mul]
+    ext i j
+    simp only [rectDiag, Matrix.of_apply, Matrix.map_apply]
+    split_ifs <;> simp
   let K := Matrix.fromBlocks V 0 0 W
   have hK : Kᴴ * K = 1 := by
     simp only [K, Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_zero,

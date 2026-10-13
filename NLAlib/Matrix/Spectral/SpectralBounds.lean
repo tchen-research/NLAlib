@@ -112,21 +112,25 @@ theorem sigmaMin_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [
   exact congrArg Real.sqrt (em.symm.sum_comp
     (fun i => (A *ᵥ x.val) i * (A *ᵥ x.val) i))
 
-private theorem singularValues_zero_eq_specNorm_fin {𝕜 : Type*} [RCLike 𝕜] {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) 𝕜) : singularValues A 0 = specNorm A := by
-  by_cases hn : n = 0
-  · subst n
-    have hA : A = 0 := by ext i j; exact Fin.elim0 j
-    rw [singularValues_eq_zero_of_width_le A (by simp), hA, specNorm_zero]
-  · have hnpos : 0 < n := Nat.pos_of_ne_zero hn
+/-- The largest sorted singular value equals the spectral norm, on arbitrary finite index
+types and over `ℝ` or `ℂ`. The padded singular-value convention also covers matrices with zero
+rows or columns. Horn–Johnson 2013, §5.6. Atlas: `svd`, `norms-frob-spec`.
+atlas: norm-lipschitz -/
+theorem singularValues_zero_eq_specNorm {m n 𝕜 : Type*} [RCLike 𝕜] [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) : singularValues A 0 = specNorm A := by
+  by_cases hn : Fintype.card n = 0
+  · have : IsEmpty n := Fintype.card_eq_zero_iff.mp hn
+    have hA : A = 0 := by ext i j; exact isEmptyElim j
+    rw [singularValues_eq_zero_of_width_le A (by omega), hA, specNorm_zero]
+  · have hnpos : 0 < Fintype.card n := Nat.pos_of_ne_zero hn
     obtain ⟨U, V, hSVD⟩ := exists_isSVD A
     have hGram : specNorm (Aᴴ * A) =
-        ‖(fun j : Fin n => ((singularValues A j ^ 2 : ℝ) : 𝕜))‖ := by
+        ‖(fun j : Fin (Fintype.card n) => ((singularValues A j ^ 2 : ℝ) : 𝕜))‖ := by
       rw [hSVD.conjTranspose_mul_self,
         specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right,
         specNorm_mul_left_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right,
         specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
-    have hMax : ‖(fun j : Fin n => ((singularValues A j ^ 2 : ℝ) : 𝕜))‖ =
+    have hMax : ‖(fun j : Fin (Fintype.card n) => ((singularValues A j ^ 2 : ℝ) : 𝕜))‖ =
         singularValues A 0 ^ 2 := by
       apply le_antisymm
       · apply (pi_norm_le_iff_of_nonneg (sq_nonneg _)).2
@@ -135,23 +139,13 @@ private theorem singularValues_zero_eq_specNorm_fin {𝕜 : Type*} [RCLike 𝕜]
         exact pow_le_pow_left₀ (singularValues_nonneg A j)
           (singularValues_antitone A (Nat.zero_le _)) 2
       · have h0 := norm_le_pi_norm
-          (fun j : Fin n => ((singularValues A j ^ 2 : ℝ) : 𝕜)) ⟨0, hnpos⟩
+          (fun j : Fin (Fintype.card n) => ((singularValues A j ^ 2 : ℝ) : 𝕜)) ⟨0, hnpos⟩
         change ‖((singularValues A 0 ^ 2 : ℝ) : 𝕜)‖ ≤ _ at h0
         rw [RCLike.norm_ofReal, abs_of_nonneg (sq_nonneg (singularValues A 0))] at h0
         exact h0
     have hSq := specNorm_sq_eq_specNorm_conjTranspose_mul_self A
     rw [hGram, hMax] at hSq
     nlinarith [singularValues_nonneg A 0, specNorm_nonneg A]
-
-/-- The largest sorted singular value equals the spectral norm, on arbitrary finite index
-types and over `ℝ` or `ℂ`. The padded singular-value convention also covers matrices with zero
-rows or columns. Horn–Johnson 2013, §5.6. Atlas: `svd`, `norms-frob-spec`.
-atlas: norm-lipschitz -/
-theorem singularValues_zero_eq_specNorm {m n 𝕜 : Type*} [RCLike 𝕜] [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) : singularValues A 0 = specNorm A := by
-  rw [← singularValues_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
-    ← specNorm_reindex A (Fintype.equivFin m) (Fintype.equivFin n)]
-  exact singularValues_zero_eq_specNorm_fin _
 
 /-- Every padded singular value is bounded by the spectral norm, on arbitrary finite index
 types and over `ℝ` or `ℂ`. Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`. -/
@@ -181,11 +175,12 @@ theorem specNorm_gram_sub_one_eq_norm_singularValues_sq_sub_one {m n : ℕ}
 
 /-- The SVD gives the squared length as a weighted sum in right-singular
 coordinates. Atlas: `svd`, `norm-lipschitz`. -/
-theorem IsSVD.mulVec_dotProduct_mulVec_eq_sum {m n : ℕ}
-    {A : Matrix (Fin m) (Fin n) ℝ} {U : Matrix (Fin m) (Fin m) ℝ}
-    {V : Matrix (Fin n) (Fin n) ℝ} (hSVD : IsSVD A U V) (x : Fin n → ℝ) :
+theorem IsSVD.mulVec_dotProduct_mulVec_eq_sum {m n : Type*} [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] {p q : ℕ}
+    {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ}
+    {V : Matrix n (Fin q) ℝ} (hSVD : IsSVD A U V) (x : n → ℝ) :
     (A *ᵥ x) ⬝ᵥ (A *ᵥ x) =
-      ∑ j : Fin n, singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
+      ∑ j : Fin q, singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
   rw [show (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) from
       star_mulVec_dotProduct_mulVec_self A x, hSVD.transpose_mul_self,
     ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
@@ -195,15 +190,22 @@ theorem IsSVD.mulVec_dotProduct_mulVec_eq_sum {m n : ℕ}
   intro j _
   ring
 
-private theorem sigmaMin_eq_singularValues_last_fin {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) (hn : 0 < n) :
-    sigmaMin A = singularValues A (n - 1) := by
-  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+/-- The variational smallest singular value equals the last singular value
+in the list indexed by the domain dimension, on arbitrary finite index types. For wide
+matrices this list includes kernel zeros; for tall matrices it is the usual smallest singular
+value. Horn–Johnson 2013, Section 2.6. Atlas: `svd`, `norm-lipschitz`. The empty-domain value
+is handled by the existing theorem `sigmaMin_of_isEmpty`.
+atlas: norm-lipschitz -/
+theorem sigmaMin_eq_singularValues_last {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
+    (A : Matrix m n ℝ) (hn : 0 < Fintype.card n) :
+    sigmaMin A = singularValues A (Fintype.card n - 1) := by
+  classical
+  have : Nonempty n := Fintype.card_pos_iff.mp hn
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
-  have hs : 0 ≤ singularValues A (n - 1) := singularValues_nonneg A _
+  have hs : 0 ≤ singularValues A (Fintype.card n - 1) := singularValues_nonneg A _
   apply le_antisymm
-  · let j : Fin n := ⟨n - 1, by omega⟩
-    let e : Fin n → ℝ := Pi.single j 1
+  · let j : Fin (Fintype.card n) := ⟨Fintype.card n - 1, by omega⟩
+    let e : Fin (Fintype.card n) → ℝ := Pi.single j 1
     let x := V *ᵥ e
     have hx : x ⬝ᵥ x = 1 := by
       dsimp [x]
@@ -214,7 +216,7 @@ private theorem sigmaMin_eq_singularValues_last_fin {m n : ℕ}
     have hy : Vᵀ *ᵥ x = e := by
       dsimp [x]
       rw [Matrix.mulVec_mulVec, hSVD.transpose_mul_right, Matrix.one_mulVec]
-    have hAx : (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = singularValues A (n - 1) ^ 2 := by
+    have hAx : (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = singularValues A (Fintype.card n - 1) ^ 2 := by
       rw [hSVD.mulVec_dotProduct_mulVec_eq_sum, hy]
       simp [e, Pi.single_apply, j]
     have h := sigmaMin_le_sqrt_mulVec A hx
@@ -226,13 +228,14 @@ private theorem sigmaMin_eq_singularValues_last_fin {m n : ℕ}
       rw [show (Vᵀ *ᵥ x) ⬝ᵥ (Vᵀ *ᵥ x) = x ⬝ᵥ ((Vᵀᵀ * Vᵀ) *ᵥ x) from
           star_mulVec_dotProduct_mulVec_self Vᵀ x, Matrix.transpose_transpose,
         hSVD.mul_transpose_right, Matrix.one_mulVec, hx]
-    have hsum : singularValues A (n - 1) ^ 2 ≤
-        ∑ j : Fin n, singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
+    have hsum : singularValues A (Fintype.card n - 1) ^ 2 ≤
+        ∑ j : Fin (Fintype.card n), singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
       calc
-        singularValues A (n - 1) ^ 2 =
-            ∑ j : Fin n, singularValues A (n - 1) ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
+        singularValues A (Fintype.card n - 1) ^ 2 =
+            ∑ j : Fin (Fintype.card n),
+              singularValues A (Fintype.card n - 1) ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
           rw [← Finset.mul_sum]
-          have hy' : (∑ j : Fin n, ((Vᵀ *ᵥ x) j) ^ 2) = 1 := by
+          have hy' : (∑ j : Fin (Fintype.card n), ((Vᵀ *ᵥ x) j) ^ 2) = 1 := by
             simpa only [dotProduct, sq] using hy
           rw [hy', mul_one]
         _ ≤ _ := Finset.sum_le_sum fun j _ =>
@@ -242,18 +245,6 @@ private theorem sigmaMin_eq_singularValues_last_fin {m n : ℕ}
     have h := Real.sqrt_le_sqrt hsum
     rw [Real.sqrt_sq hs] at h
     exact h
-
-/-- The variational smallest singular value equals the last singular value
-in the list indexed by the domain dimension, on arbitrary finite index types. For wide
-matrices this list includes kernel zeros; for tall matrices it is the usual smallest singular
-value. Horn–Johnson 2013, Section 2.6. Atlas: `svd`, `norm-lipschitz`. The empty-domain value
-is handled by the existing theorem `sigmaMin_of_isEmpty`.
-atlas: norm-lipschitz -/
-theorem sigmaMin_eq_singularValues_last {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
-    (A : Matrix m n ℝ) (hn : 0 < Fintype.card n) :
-    sigmaMin A = singularValues A (Fintype.card n - 1) := by
-  rw [← sigmaMin_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
-    sigmaMin_eq_singularValues_last_fin _ hn, singularValues_reindex]
 
 /-- Positivity of the variational smallest singular value is exactly full
 column rank when there is at least one column. Atlas: `svd`,

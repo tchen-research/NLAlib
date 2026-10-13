@@ -67,7 +67,7 @@ theorem eigenvalues₀_add_le_of_card_pos {A B : Matrix n n ℝ}
   let p := (Finset.univ.filter fun j => 0 < hB.eigenvalues₀ j).card
   have hp : p < Fintype.card n := by dsimp [p]; omega
   have hb := eigenvalues₀_le_zero_of_card_pos_le hB ⟨p, hp⟩ (by rfl)
-  have h := eigenvalues₀_add_le hA hB (hA.add hB) i ⟨p, hp⟩ hi
+  have h := Matrix.IsHermitian.eigenvalues₀_add_le hA hB (hA.add hB) i ⟨p, hp⟩ hi
   exact h.trans (by linarith)
 
 /-- An update with `ν` negative eigenvalues gives the matching lower
@@ -92,17 +92,17 @@ theorem eigenvalues₀_add_le_of_rank_le {A B : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) {r : ℕ} (hBr : B.rank ≤ r)
     (i : Fin (Fintype.card n)) (hi : i.val + r < Fintype.card n) :
     (hA.add hB).eigenvalues₀ ⟨i.val + r, hi⟩ ≤ hA.eigenvalues₀ i := by
-  obtain ⟨W, hW, hAW⟩ := exists_submodule_le_eigenvalues₀_mul hA i
+  obtain ⟨W, hW, hAW⟩ := Matrix.IsHermitian.exists_submodule_le_eigenvalues₀_mul hA i
   have hker : Fintype.card n ≤ finrank ℝ (LinearMap.ker B.mulVecLin) + r := by
     have h := LinearMap.finrank_range_add_finrank_ker B.mulVecLin
     rw [Module.finrank_fintype_fun_eq_card] at h
     change finrank ℝ (LinearMap.range B.mulVecLin) ≤ r at hBr
     omega
-  apply eigenvalues₀_le_of_forall_mem (hA.add hB) _ (W ⊓ LinearMap.ker B.mulVecLin)
+  apply Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem (hA.add hB) _ (W ⊓ LinearMap.ker B.mulVecLin)
     (card_le_finrank_inf_add hW hker)
   intro x hx
   have hxB : B *ᵥ x = 0 := hx.2
-  simpa only [Matrix.add_mulVec, hxB, add_zero] using hAW x hx.1
+  simpa only [quadForm_def, Matrix.add_mulVec, hxB, add_zero] using hAW x hx.1
 
 /-- A rank-`r` symmetric update has the matching lower eigenvalue bound.
 Horn--Johnson (2013), Corollary 4.3.5.
@@ -130,9 +130,10 @@ theorem eigenvalues₀_rank_one_add_interlacing {A : Matrix n n ℝ} (hA : A.IsH
     (∀ hi : i.val + 1 < Fintype.card n,
       (hA.add (posSemidef_vecMulVec_self_star z).isHermitian).eigenvalues₀
         ⟨i.val + 1, hi⟩ ≤ hA.eigenvalues₀ i) := by
-  refine ⟨eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub hA
+  refine ⟨Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le hA
     (hA.add (posSemidef_vecMulVec_self_star z).isHermitian) ?_ i, ?_⟩
-  · simpa only [add_sub_cancel_left] using posSemidef_vecMulVec_self_star z
+  · exact Matrix.le_iff.mpr
+      (by simpa only [add_sub_cancel_left] using posSemidef_vecMulVec_self_star z)
   · intro hi
     exact eigenvalues₀_add_le_of_rank_le hA (posSemidef_vecMulVec_self_star z).isHermitian
       (r := 1) (Matrix.rank_vecMulVec_le _ _) i hi

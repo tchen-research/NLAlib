@@ -38,15 +38,10 @@ theorem singularValues_eq_one_of_hasOrthonormalCols {m n : ℕ}
   have h := singularValues_eq_of_gram_eq U J hGram k
   change singularValues U k = singularValues J k at h
   rw [h]
-  apply singularValues_eq_of_eq_mul_rectDiag_mul
+  exact singularValues_eq_of_eq_mul_rectDiag_mul
     (U := (1 : Matrix (Fin m) (Fin m) ℝ)) (V := (1 : Matrix (Fin n) (Fin n) ℝ))
-    (τ := fun _ => 1)
-  · simp
-  · simp
-  · intro _; exact zero_le_one
-  · intro _ _ _; exact le_rfl
-  · simp [J]
-  · simpa only [min_eq_right hCard] using hk
+    (τ := fun _ => 1) (by simp) (by simp) (fun _ => zero_le_one) (fun _ _ _ => le_rfl)
+    (by simp [J]) (by simpa only [min_eq_right hCard] using hk)
 
 private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     (hCard : n ≤ m) (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) :

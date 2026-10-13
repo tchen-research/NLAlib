@@ -2391,7 +2391,7 @@
     "weyl-mirsky"
    ],
    "decls": [
-    "NLAlib.eigenvalues₀_add_le"
+    "Matrix.IsHermitian.eigenvalues₀_add_le"
    ],
    "note": "NLAlib has the Hermitian case quantitatively (Weyl); the general complex case is missing"
   },
@@ -3639,9 +3639,9 @@
     "courant-fischer"
    ],
    "decls": [
-    "NLAlib.isGreatest_complexUnitQuadFormValues_top",
-    "NLAlib.isLeast_complexUnitQuadFormValues_top",
-    "NLAlib.lamMin_eq_iInf_rayleigh",
+    "Matrix.IsHermitian.eigenvalues₀_eq_iInf_iSup",
+    "Matrix.IsHermitian.eigenvalues₀_eq_iSup_iInf",
+    "Matrix.IsHermitian.eigenvalues₀_last_eq_iInf",
     "NLAlib.dotProduct_mulVec_le_mul_dotProduct_of_eigenvalues",
     "NLAlib.mul_dotProduct_le_dotProduct_mulVec_of_eigenvalues"
    ],
@@ -3702,11 +3702,11 @@
     "courant-fischer"
    ],
    "decls": [
-    "NLAlib.complex_eigenvalues₀_variational_extrema",
-    "NLAlib.isGreatest_eigenvalues₀_min_complexUnitQuadFormValues",
-    "NLAlib.isLeast_eigenvalues₀_max_complexUnitQuadFormValues",
-    "NLAlib.le_eigenvalues₀_of_forall_mem",
-    "NLAlib.eigenvalues₀_le_of_forall_mem"
+    "Matrix.IsHermitian.eigenvalues₀_eq_iSup_iInf",
+    "Matrix.IsHermitian.eigenvalues₀_eq_iSup_iInf",
+    "Matrix.IsHermitian.eigenvalues₀_eq_iInf_iSup",
+    "Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem",
+    "Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem"
    ],
    "note": ""
   },
@@ -3721,10 +3721,10 @@
     "courant-fischer"
    ],
    "decls": [
-    "NLAlib.le_eigenvalues₀_of_forall_mem",
-    "NLAlib.eigenvalues₀_le_of_forall_mem",
-    "NLAlib.complex_le_eigenvalues₀_of_forall_mem",
-    "NLAlib.complex_eigenvalues₀_le_of_forall_mem"
+    "Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem",
+    "Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem",
+    "Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem",
+    "Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem"
    ],
    "note": "Non-strict versions proved (real and complex); the strict-inequality versions are not stated."
   },
@@ -3739,7 +3739,7 @@
     "courant-fischer"
    ],
    "decls": [
-    "NLAlib.le_eigenvalues₀_of_forall_mem"
+    "Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem"
    ],
    "note": "Nonnegative case is the $c=0$ instance of `le_eigenvalues₀_of_forall_mem`; the counting form and the strict case are not stated (candidate `eigenvalue-order-and-counting`)."
   },
@@ -3756,7 +3756,7 @@
     "eigenvalue-perturbation-symmetric"
    ],
    "decls": [
-    "NLAlib.eigenvalues₀_add_le",
+    "Matrix.IsHermitian.eigenvalues₀_add_le",
     "NLAlib.eigenvalues₀_add_le_add_eigenvalues₀_zero",
     "NLAlib.add_eigenvalues₀_last_le_eigenvalues₀_add"
    ],
@@ -3825,8 +3825,8 @@
     "weyl-mirsky"
    ],
    "decls": [
-    "NLAlib.eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub",
-    "NLAlib.complex_eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub"
+    "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le",
+    "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le"
    ],
    "note": "Monotonicity proved (real and complex); strict version for $B\\succ0$ and equality cases missing."
   },
@@ -3859,8 +3859,8 @@
     "cauchy-interlacing"
    ],
    "decls": [
-    "NLAlib.eigenvalues₀_compression_le",
-    "NLAlib.eigenvalues₀_le_eigenvalues₀_compression"
+    "Matrix.IsHermitian.eigenvalues₀_compression_le",
+    "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression"
    ],
    "note": "Inequalities proved for compressions $Q^TAQ$ (real symmetric), which include principal submatrices; equality and strictness clauses missing."
   },
@@ -3901,8 +3901,8 @@
     "cauchy-interlacing"
    ],
    "decls": [
-    "NLAlib.eigenvalues₀_compression_le",
-    "NLAlib.eigenvalues₀_le_eigenvalues₀_compression"
+    "Matrix.IsHermitian.eigenvalues₀_compression_le",
+    "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression"
    ],
    "note": "Inequalities proved (compression form); equality analysis (4.3.31) missing."
   },
@@ -3935,8 +3935,8 @@
     "cauchy-interlacing"
    ],
    "decls": [
-    "NLAlib.eigenvalues₀_compression_le",
-    "NLAlib.eigenvalues₀_le_eigenvalues₀_compression"
+    "Matrix.IsHermitian.eigenvalues₀_compression_le",
+    "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression"
    ],
    "note": "Real symmetric form, decreasing indexing."
   },
@@ -7302,8 +7302,8 @@
    "decls": [
     "NLAlib.inv_le_inv_of_posDef",
     "NLAlib.cfc_rpow_le_cfc_rpow",
-    "NLAlib.eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub",
-    "NLAlib.complex_eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub",
+    "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le",
+    "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le",
     "NLAlib.re_trace_le_re_trace_of_le",
     "Mathlib:CStarAlgebra.inv_le_inv_iff",
     "Mathlib:CFC.sqrt_le_sqrt"

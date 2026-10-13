@@ -35,7 +35,7 @@ theorem trace_compression_le_eigenvaluePrefix {n r : Type*} [Fintype n] [Fintype
   rw [hB.trace_eq_sum_eigenvalues]
   change (∑ i, id (hB.eigenvalues i)) ≤ _
   rw [sum_eigenvalues_eq_sum_sorted hB id]
-  exact Finset.sum_le_sum fun i _ => eigenvalues₀_compression_le hA hQ hB i
+  exact Finset.sum_le_sum fun i _ => Matrix.IsHermitian.eigenvalues₀_compression_le hA hQ hB i
 
 /-- The bottom eigenvalue sum bounds every orthonormal compression trace from
 below, including zero columns. Fan (1949), the minimum principle.
@@ -50,7 +50,7 @@ theorem sum_bottom_eigenvalues_le_trace_compression {n r : Type*} [Fintype n] [F
   rw [hB.trace_eq_sum_eigenvalues]
   change _ ≤ ∑ i, id (hB.eigenvalues i)
   rw [sum_eigenvalues_eq_sum_sorted hB id]
-  exact Finset.sum_le_sum fun i _ => eigenvalues₀_le_eigenvalues₀_compression hA hQ hB i
+  exact Finset.sum_le_sum fun i _ => Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression hA hQ hB i
 
 /-- A spectral contraction of rank at most `k` pairs with a matrix at most its
 Ky Fan `k` sum. Source: von Neumann trace inequality and the singular-value rank

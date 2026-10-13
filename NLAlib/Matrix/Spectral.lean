@@ -1,17 +1,7 @@
 import NLAlib.Matrix.Spectral.AdjugateRankOne
 import NLAlib.Matrix.Spectral.CharpolySimplicity
 import NLAlib.Matrix.Spectral.CommutingSpectra
-import NLAlib.Matrix.Spectral.ComplexBestRankApproximation
-import NLAlib.Matrix.Spectral.ComplexEckartYoung
-import NLAlib.Matrix.Spectral.ComplexGramTruncation
 import NLAlib.Matrix.Spectral.ComplexQZ
-import NLAlib.Matrix.Spectral.ComplexRayleigh
-import NLAlib.Matrix.Spectral.ComplexRectangularSVD
-import NLAlib.Matrix.Spectral.ComplexSingularTransport
-import NLAlib.Matrix.Spectral.ComplexSquareSingularBasis
-import NLAlib.Matrix.Spectral.ComplexVariationalExtrema
-import NLAlib.Matrix.Spectral.ComplexVariationalPrinciple
-import NLAlib.Matrix.Spectral.ComplexVolumeSpectrum
 import NLAlib.Matrix.Spectral.CongruenceToolkit
 import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Spectral.CourantFischer
@@ -34,7 +24,6 @@ import NLAlib.Matrix.Spectral.EigenvectorDeflationBlocks
 import NLAlib.Matrix.Spectral.EigenvectorDeflationConverse
 import NLAlib.Matrix.Spectral.EigenvectorDeflationSpectrum
 import NLAlib.Matrix.Spectral.EigenvectorPairing
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
 import NLAlib.Matrix.Spectral.GeneralizedEigenDecay
 import NLAlib.Matrix.Spectral.GeneralizedEigenPairing
 import NLAlib.Matrix.Spectral.GershgorinBasic

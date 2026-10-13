@@ -1,6 +1,6 @@
 import NLAlib.Sketching.Sampling.SamplingMultiplication
 import NLAlib.Probability.Concentration.Matrix.Sampling
-import NLAlib.Matrix.Perturbation.ComplexEmbedding
+import NLAlib.Matrix.Norms.Core
 /-!
 # Leverage sampling with replacement
 

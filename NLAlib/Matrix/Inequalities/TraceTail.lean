@@ -109,9 +109,8 @@ theorem spectralTraceTail_le_trace {A : Matrix n n 𝕜} (hA : A.PosSemidef) (r 
 /-- If the sorted spectrum of a positive semidefinite `R` is dominated by that of a
 positive semidefinite `A`, then `R` has enough trace-square energy to pay the relative
 trace drift above the spectral tail of `A`. The field-independent core of
-`sq_max_trace_sub_spectralTraceTail_le_mul_trace_sq` (ℝ) and
-`complex_sq_max_trace_sub_spectralTraceTail_le_mul_trace_sq` (ℂ), which supply the
-domination from Loewner monotonicity of eigenvalues. Source: manuscript `sa:rp-recursion`;
+`sq_max_trace_sub_spectralTraceTail_le_mul_trace_sq` (ℝ); over any `𝕜` the domination is
+`Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le` (Loewner monotonicity of eigenvalues). Source: manuscript `sa:rp-recursion`;
 CETW (2025), eigenvalue monotonicity and Cauchy--Schwarz. -/
 theorem sq_max_re_trace_sub_spectralTraceTail_le_of_eigenvalues₀_le
     {A R : Matrix n n 𝕜} (hA : A.PosSemidef) (hR : R.PosSemidef)
@@ -150,7 +149,7 @@ theorem sq_max_trace_sub_spectralTraceTail_le_mul_trace_sq
     (max (R.trace - spectralTraceTail A hA.isHermitian r) 0) ^ 2 ≤
       (r : ℝ) * (R * R).trace :=
   sq_max_re_trace_sub_spectralTraceTail_le_of_eigenvalues₀_le hA hR
-    (eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub hR.isHermitian hA.isHermitian hAR) r
+    (Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le hR.isHermitian hA.isHermitian hAR) r
 
 /-- A zero optimal trace tail of a positive semidefinite matrix implies rank at most
 the requested head size. Source: manuscript `sa:rp-theorem`, exact-rank branch;

@@ -74,7 +74,8 @@ theorem exists_complex_range_kernel_frames_norm_eq_secant {n : Type*}
       hU, Matrix.one_mul, conjTranspose_map_ofReal, ← map_ofReal_mul]
   have hAngle (i : Fin (Fintype.card (Fin R.rank))) :
       complexPrincipalAnglesFintype W Q i = principalAnglesFintype W₀ Q₀ i := by
-    simp only [complexPrincipalAnglesFintype, principalAnglesFintype, hOverlap,
+    simp only [complexPrincipalAnglesFintype, principalAnglesFintype, hOverlap]
+    rw [show (W₀ᵀ * Q₀).map Complex.ofReal = (W₀ᵀ * Q₀).map (algebraMap ℝ ℂ) from rfl,
       singularValues_map_ofReal]
     simp only [singularValues_reindex]
   have hFinal : ∃ Q W : Matrix n (Fin R.rank) ℂ,

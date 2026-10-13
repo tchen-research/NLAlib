@@ -47,7 +47,7 @@ theorem det_transpose_mul_mul_le_prod_eigenvalues₀ {n r : Type*}
   · intro i _
     exact eigenvalues₀_nonneg_of_posSemidef hC i
   · intro i _
-    exact eigenvalues₀_compression_le hG.isHermitian hQ hC.isHermitian i
+    exact Matrix.IsHermitian.eigenvalues₀_compression_le hG.isHermitian hQ hC.isHermitian i
 
 /-- The Gram determinant of the image of an orthonormal frame is bounded by the
 product of the squared top singular values. Horn–Johnson 1991, Theorem 3.3.4,

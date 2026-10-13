@@ -81,9 +81,10 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
   rw [hND, hD, singularValues_reindex]
   change singularValues (rectDiag d : Matrix (Fin (r + s)) (Fin (r + s)) ℝ) k = d k
   by_cases hk : k < r + s
-  · apply singularValues_eq_of_eq_mul_rectDiag_mul (U := 1) (V := 1)
-      (by simp) (by simp) hd0 hd (by simp)
-    simpa using hk
+  · exact singularValues_eq_of_eq_mul_rectDiag_mul
+      (U := (1 : Matrix (Fin (r + s)) (Fin (r + s)) ℝ))
+      (V := (1 : Matrix (Fin (r + s)) (Fin (r + s)) ℝ))
+      (by simp) (by simp) hd0 hd (by simp) (by simpa using hk)
   · rw [singularValues_eq_zero_of_width_le _
       (by simpa only [Fintype.card_fin] using Nat.le_of_not_gt hk)]
     simp only [d, if_neg (show ¬k < r by omega)]

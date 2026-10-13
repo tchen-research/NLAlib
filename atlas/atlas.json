@@ -780,17 +780,15 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "Loewner monotonicity of sorted eigenvalues: `(B - A).PosSemidef → λ_k(A) ≤ λ_k(B)`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_add_le",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_add_le",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "Eigenvalue Weyl for Hermitian `A`, `B`: `λ_{i+j}(A + B) ≤ λ_i(A) + λ_j(B)`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -842,7 +840,7 @@
     "perturbation",
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "courant-fischer",
@@ -872,65 +870,39 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.isGreatest_eigenvalues₀_min_complexUnitQuadFormValues",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
-     "status": "proved",
-     "partial": true
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.isLeast_eigenvalues₀_max_complexUnitQuadFormValues",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
-     "status": "proved",
-     "partial": true
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.complex_eigenvalues₀_variational_extrema",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem",
+     "module": "NLAlib.Matrix.Spectral.CourantFischer",
      "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.isGreatest_complexUnitQuadFormValues_top",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
-     "status": "proved",
-     "partial": true
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.isLeast_complexUnitQuadFormValues_top",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
-     "status": "proved",
-     "partial": true
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_le_of_forall_mem",
+     "decl": "Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "From `hA : A.IsHermitian`, `hW : card n ≤ finrank W + k`, `hAW : ∀ x ∈ W, x ⬝ᵥ A *ᵥ x ≤ c * (x ⬝ᵥ x)`; gives `hA.eigenvalues₀ k ≤ c`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.le_eigenvalues₀_of_forall_mem",
+     "decl": "Matrix.IsHermitian.exists_submodule_eigenvalues₀_mul_le",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "From `hS : k + 1 ≤ finrank S`, `hAS : ∀ x ∈ S, c * (x ⬝ᵥ x) ≤ x ⬝ᵥ A *ᵥ x`; gives `c ≤ hA.eigenvalues₀ k`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.exists_submodule_eigenvalues₀_mul_le",
+     "decl": "Matrix.IsHermitian.exists_submodule_le_eigenvalues₀_mul",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "Attaining subspace of dimension ≥ k+1 on which `λ_k ‖x‖² ≤ xᵀAx`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.exists_submodule_le_eigenvalues₀_mul",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_eq_iSup_iInf",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "Attaining subspace of codimension ≤ k on which `xᵀAx ≤ λ_k ‖x‖²`."
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_eq_iInf_iSup",
+     "module": "NLAlib.Matrix.Spectral.CourantFischer",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -952,7 +924,8 @@
     "svd"
    ],
    "uses_defs": [
-    "NLAlib.complexUnitQuadFormValues",
+    "NLAlib.quadForm",
+    "NLAlib.rayleighQuotient",
     "NLAlib.singularValues"
    ],
    "variants": [
@@ -976,7 +949,7 @@
     "done"
    ],
    "notes": "The existing real threshold/witness APIs are retained. The complex Hermitian interface uses real parts of complex Euclidean inner products, exact complex subspace dimensions, and both attained variational halves. Lean sorted eigenvalue indices are zero-based, so natural-language index k corresponds to Lean index k-1. Negative and repeated eigenvalues are included; empty matrices have no valid eigenvalue index.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "cauchy-interlacing",
@@ -1006,17 +979,27 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_compression_le",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_compression_le",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "`λ_i(QᵀAQ) ≤ λ_i(A)` for `Qᵀ Q = 1` (index cast into the larger range)."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_le_eigenvalues₀_compression",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "`λ_{i + (n - r)}(A) ≤ λ_i(QᵀAQ)` (Poincaré separation)."
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_submatrix_le",
+     "module": "NLAlib.Matrix.Spectral.CourantFischer",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_submatrix",
+     "module": "NLAlib.Matrix.Spectral.CourantFischer",
+     "status": "proved"
     }
    ],
    "depends_on": [
@@ -1035,7 +1018,7 @@
     "foundation",
     "done"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "notes": "The compression form QᵀAQ is the Poincaré separation theorem (HJ13 Cor 4.3.37); verify the label."
   },
   {
@@ -1203,6 +1186,13 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.specNorm_moorePenroseInverse_eq_fintype",
+     "module": "NLAlib.Matrix.Norms.RankNorm",
+     "status": "proved",
+     "usage": "Apply on arbitrary finite indices at any rank; obtain the zero-rank branch or reciprocal of the last positive singular value of the explicit Fin(card) reindex."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.specNorm_inv_self_mul_transpose_eq",
      "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
@@ -1214,13 +1204,6 @@
      "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "Apply to the total full-row formula pinvR G; obtain specNorm(pinvR G)^2=specNorm((GGᵀ)⁻¹). It agrees with the general Moore-Penrose inverse under IsUnit(GGᵀ); both total-inverse sides vanish for singular Gram."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.specNorm_moorePenroseInverse_eq_fintype",
-     "module": "NLAlib.Matrix.Spectral.FiniteIndexTransport",
-     "status": "proved",
-     "usage": "Apply on arbitrary finite indices at any rank; obtain the zero-rank branch or reciprocal of the last positive singular value of the explicit Fin(card) reindex."
     },
     {
      "library": "gaussian-facts",
@@ -5929,6 +5912,22 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.complexGramElementary_pos_iff",
+     "module": "NLAlib.LowRank.Sampling.ComplexVolumeSamplingLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual complex volume spectral normalizer is positive exactly at feasible ranks, including rank zero."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_re_det_complex_gram_principal_minors_eq",
+     "module": "NLAlib.LowRank.Sampling.ComplexVolumeSamplingLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "The real complex Gram principal-minor normalizer equals its actual elementary spectral sum."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.complexVolumeSamplingNormalizer_pos_iff",
      "module": "NLAlib.LowRank.Sampling.ComplexVolumeSamplingLaw",
      "status": "proved",
@@ -5969,46 +5968,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.complexBestRankFrobSq_eq_complexGramTail",
-     "module": "NLAlib.Matrix.Spectral.ComplexBestRankApproximation",
-     "status": "proved",
-     "partial": true,
-     "usage": "The actual complex best rank-constrained Frobenius error equals the sorted Gram eigenvalue tail, at every rank and rectangular shape."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.complexGramTail_le_frobenius_norm_sq_sub_of_rank_le",
-     "module": "NLAlib.Matrix.Spectral.ComplexEckartYoung",
-     "status": "proved",
-     "partial": true,
-     "usage": "Every actual complex rank-at-most-`k` competitor has squared Frobenius error at least the genuine sorted Gram spectral tail."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobenius_norm_sq_sub_complexTruncatedSVD_eq_tail",
-     "module": "NLAlib.Matrix.Spectral.ComplexGramTruncation",
-     "status": "proved",
-     "partial": true,
-     "usage": "The literal complex singular-vector truncation attains the exact sorted Gram Frobenius tail."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.complexGramElementary_pos_iff",
-     "module": "NLAlib.Matrix.Spectral.ComplexVolumeSpectrum",
-     "status": "proved",
-     "partial": true,
-     "usage": "The actual complex volume spectral normalizer is positive exactly at feasible ranks, including rank zero."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.sum_re_det_complex_gram_principal_minors_eq",
-     "module": "NLAlib.Matrix.Spectral.ComplexVolumeSpectrum",
-     "status": "proved",
-     "partial": true,
-     "usage": "The real complex Gram principal-minor normalizer equals its actual elementary spectral sum."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.det_gram_fromCols_eq_mul_frobenius_norm_sq_sub_complexColumnProjector",
      "module": "NLAlib.Matrix.Subspaces.ComplexGramColumnDeterminant",
      "status": "proved",
@@ -6021,15 +5980,14 @@
    ],
    "uses_defs": [
     "NLAlib.bestRankFrobSq",
-    "NLAlib.complexBestRankFrobSq",
     "NLAlib.complexColumnProjector",
     "NLAlib.complexGramElementary",
     "NLAlib.complexGramTail",
-    "NLAlib.complexTruncatedSVD",
     "NLAlib.complexVolumeSamplingLaw",
     "NLAlib.complexVolumeSamplingNormalizer",
     "NLAlib.complexVolumeSamplingResidual",
     "NLAlib.moorePenroseInverse",
+    "NLAlib.truncatedSVD",
     "NLAlib.volumeSampleColumns",
     "NLAlib.volumeSamplingExpectedFrobSq",
     "NLAlib.volumeSamplingNormalizer",
@@ -6042,7 +6000,7 @@
    "tags": [
     "sampling"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "hmt-9-1-frobenius",
@@ -11004,6 +10962,13 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.exists_isBestRankApprox",
+     "module": "NLAlib.Matrix.Spectral.EckartYoung",
+     "status": "proved",
+     "usage": "Apply to any real matrix over arbitrary finite row and column types and any k; obtain a genuine best rank-at-most-k Frobenius approximant."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.bestRankFrobSq_eq_singularValueTailSq",
      "module": "NLAlib.Matrix.Spectral.EckartYoung",
      "status": "proved",
@@ -11015,23 +10980,9 @@
      "module": "NLAlib.Matrix.Spectral.EckartYoung",
      "status": "proved",
      "usage": "Apply to any A,k; rewrite the constructed approximation's squared error as the actual optimum."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.exists_isBestRankApprox",
-     "module": "NLAlib.Matrix.Spectral.FiniteIndexTransport",
-     "status": "proved",
-     "usage": "Apply to any real matrix over arbitrary finite row and column types and any k; obtain a genuine best rank-at-most-k Frobenius approximant."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.bestRankFrobSq_eq_singularValueTailSq_reindex",
-     "module": "NLAlib.Matrix.Spectral.FiniteIndexTransport",
-     "status": "proved",
-     "usage": "Apply over arbitrary finite indices; identify the actual optimum with the singular-value tail of the explicit Fin(card) normalization."
     }
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "truncation-lemma-projected",

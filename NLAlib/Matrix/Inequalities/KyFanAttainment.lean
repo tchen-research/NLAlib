@@ -69,40 +69,6 @@ theorem exists_trace_compression_eq_bottom_eigenvalues {n : Type*} [Fintype n]
   simp [Matrix.IsHermitian.eigenvalues, f, e, Fin.natAdd_castLEEmb]
   congr 1
 
-/-- `Fin` step of `exists_trace_twoSided_compression_eq_kyFanNorm`: the top singular
-vectors of an SVD attain the Ky Fan sum. -/
-private theorem exists_trace_twoSided_compression_eq_kyFanNorm_fin {m n k : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) (hk : k ≤ min m n) :
-    ∃ (U : Matrix (Fin m) (Fin k) ℝ) (V : Matrix (Fin n) (Fin k) ℝ),
-      HasOrthonormalCols U ∧ HasOrthonormalCols V ∧ (Uᵀ * A * V).trace = kyFanNorm A k := by
-  obtain ⟨P, R, hSVD⟩ := exists_isSVD A
-  let em := Fin.castLEEmb (hk.trans (min_le_left m n))
-  let en := Fin.castLEEmb (hk.trans (min_le_right m n))
-  have hP : HasOrthonormalCols P := hSVD.transpose_mul_left
-  have hR : HasOrthonormalCols R := hSVD.transpose_mul_right
-  refine ⟨P.submatrix id em, R.submatrix id en, hP.submatrix_cols em,
-    hR.submatrix_cols en, ?_⟩
-  have hwhole : Pᵀ * A * R = rectDiag (singularValues A) := by
-    calc
-      Pᵀ * A * R = (Pᵀ * P) *
-          (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) * (Rᵀ * R) := by
-        conv_lhs => rw [hSVD.eq_mul_transpose]
-        simp only [Matrix.mul_assoc]
-      _ = rectDiag (singularValues A) := by
-          rw [(show Pᵀ * P = 1 from hP), (show Rᵀ * R = 1 from hR), Matrix.one_mul, Matrix.mul_one]
-  have h1 := Matrix.submatrix_mul_equiv Pᵀ A em (Equiv.refl (Fin m)) id
-  have h2 := Matrix.submatrix_mul_equiv (Pᵀ * A) R em (Equiv.refl (Fin n)) en
-  simp only [Equiv.coe_refl, Matrix.submatrix_id_id] at h1 h2
-  rw [Matrix.transpose_submatrix, h1, h2, hwhole]
-  have hd : (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ).submatrix em en =
-      Matrix.diagonal (fun i : Fin k => singularValues A i.val) := by
-    ext i j
-    simp only [Matrix.submatrix_apply, rectDiag_apply, Matrix.diagonal_apply,
-      em, en, Fin.coe_castLEEmb, Fin.val_castLE]
-    simp [Fin.val_inj]
-  rw [hd, Matrix.trace_diagonal, kyFanNorm, Fin.sum_univ_eq_sum_range]
-  rfl
-
 /-- Actual top singular frames attain the Ky Fan singular-value sum on arbitrary finite
 row and column types, for every admissible prefix including zero and full prefixes.
 Fan (1949), Theorem 1; Horn–Johnson (1991), Theorem 3.4.1.
@@ -112,18 +78,26 @@ theorem exists_trace_twoSided_compression_eq_kyFanNorm {m n : Type*}
     (hk : k ≤ min (Fintype.card m) (Fintype.card n)) :
     ∃ (U : Matrix m (Fin k) ℝ) (V : Matrix n (Fin k) ℝ),
       HasOrthonormalCols U ∧ HasOrthonormalCols V ∧ (Uᵀ * A * V).trace = kyFanNorm A k := by
-  let em := Fintype.equivFin m
-  let en := Fintype.equivFin n
-  let Af := A.reindex em en
-  obtain ⟨Uf, Vf, hUf, hVf, ht⟩ := exists_trace_twoSided_compression_eq_kyFanNorm_fin Af hk
-  let er := Equiv.refl (Fin k)
-  refine ⟨Uf.reindex em.symm er, Vf.reindex en.symm er,
-    hUf.reindex em.symm er, hVf.reindex en.symm er, ?_⟩
-  have hback : Af.reindex em.symm en.symm = A := by
+  classical
+  obtain ⟨P, R, hSVD⟩ := exists_isSVD A
+  let em := Fin.castLEEmb (hk.trans (min_le_left _ _))
+  let en := Fin.castLEEmb (hk.trans (min_le_right _ _))
+  have hP : HasOrthonormalCols P := hSVD.transpose_mul_left
+  have hR : HasOrthonormalCols R := hSVD.transpose_mul_right
+  refine ⟨P.submatrix id em, R.submatrix id en, hP.submatrix_cols em,
+    hR.submatrix_cols en, ?_⟩
+  have hwhole : Pᵀ * A * R = rectDiag (singularValues A) := hSVD.transpose_mul_mul
+  have h1 := Matrix.submatrix_mul_equiv Pᵀ A em (Equiv.refl m) id
+  have h2 := Matrix.submatrix_mul_equiv (Pᵀ * A) R em (Equiv.refl n) en
+  simp only [Equiv.coe_refl, Matrix.submatrix_id_id] at h1 h2
+  rw [Matrix.transpose_submatrix, h1, h2, hwhole]
+  have hd : (rectDiag (singularValues A) : Matrix _ _ ℝ).submatrix em en =
+      Matrix.diagonal (fun i : Fin k => singularValues A i.val) := by
     ext i j
-    simp [Af, Matrix.reindex_apply]
-  have h := twoSided_compression_trace_reindex Af Uf Vf em.symm en.symm er
-  rw [hback, ht, kyFanNorm_reindex] at h
-  exact h
+    simp only [Matrix.submatrix_apply, rectDiag_apply, Matrix.diagonal_apply,
+      em, en, Fin.coe_castLEEmb, Fin.val_castLE]
+    simp [Fin.val_inj]
+  rw [hd, Matrix.trace_diagonal, kyFanNorm, Fin.sum_univ_eq_sum_range]
+  rfl
 
 end NLAlib

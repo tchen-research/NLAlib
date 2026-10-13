@@ -73,4 +73,13 @@ theorem specNorm_reindex [DecidableEq m] [DecidableEq n] [DecidableEq p] [Decida
     specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hQ,
     specNorm_mul_left_of_conjTranspose_mul_self hP]
 
+/-- Equivalent row, middle, and column labels commute with rectangular matrix
+multiplication. Mathlib's submatrix multiplication transport; supports
+`wedin-sin-theta` on arbitrary finite coordinate labels. -/
+theorem mul_reindex {m n p m' n' p' : Type*} [Fintype n] [Fintype n']
+    (A : Matrix m n ℝ) (B : Matrix n p ℝ)
+    (em : m ≃ m') (en : n ≃ n') (ep : p ≃ p') :
+    (A * B).reindex em ep = A.reindex em en * B.reindex en ep := by
+  simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv]
+
 end NLAlib

@@ -17,7 +17,6 @@ import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Norms.NuclearPSD
 import NLAlib.Matrix.Norms.RankNorm
 import NLAlib.Matrix.Norms.RayleighNorm
-import NLAlib.Matrix.Norms.RealComplexNorm
 import NLAlib.Matrix.Norms.RectangularDiagonal
 import NLAlib.Matrix.Norms.RectangularDiagonalPermutation
 import NLAlib.Matrix.Norms.Reindex

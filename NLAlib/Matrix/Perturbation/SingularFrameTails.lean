@@ -19,7 +19,8 @@ witnesses are paired also at singular-value ties. -/
 theorem truncatedMatrix_transpose (h : IsSVD A U V) (k : ℕ) :
     h.transpose.truncatedMatrix k = (h.truncatedMatrix k)ᵀ := by
   simp only [truncatedMatrix, singularValues_transpose, Matrix.transpose_mul,
-    Matrix.transpose_transpose, transpose_rectDiag, Matrix.mul_assoc]
+    Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose, transpose_rectDiag,
+    Matrix.mul_assoc]
 
 /-- The matched SVD tail annihilates the selected right singular frame.
 Wedin (1972), Section 3. -/

@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Subspaces.ComplexIdempotentRealForm
 import NLAlib.Matrix.Subspaces.ObliqueProjectionNorms
+import NLAlib.Matrix.Functions.ComplexDiagonalFilter
 /-!
 # Actual singular coefficients and norms of complex idempotents
 

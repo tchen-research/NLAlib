@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Spectral.MatrixPowerConvergence
-import NLAlib.Matrix.Norms.RealComplexNorm
+import NLAlib.Matrix.Norms.Core
 /-!
 # Real matrix powers with complex spectral radius
 
@@ -57,7 +57,8 @@ theorem exists_prefix_specNorm_real_matrix_pow_le_complex_spectralRadius_add
             ((spectralRadius ℂ (A.map Complex.ofReal)).toReal + ε) ^ k := by
   obtain ⟨N, hN⟩ := exists_prefix_norm_matrix_pow_le_spectralRadius_add (A.map Complex.ofReal) hε
   refine ⟨N, fun k => ?_⟩
-  have hh := specNorm_le_norm_map_ofReal (A ^ k)
+  have hh : specNorm (A ^ k) ≤ ‖(A ^ k).map Complex.ofReal‖ :=
+    specNorm_le_norm_map_ofReal (𝕜 := ℂ) (A ^ k)
   rw [map_ofReal_matrix_pow] at hh
   exact hh.trans (hN k)
 
@@ -78,7 +79,8 @@ theorem summable_real_matrix_pow_of_complex_spectralRadius_lt_one {A : Matrix n 
     (matrixPowerBoundConstant C r N))
   intro k
   rw [← specNorm_eq_norm]
-  have hh := specNorm_le_norm_map_ofReal (A ^ k)
+  have hh : specNorm (A ^ k) ≤ ‖(A ^ k).map Complex.ofReal‖ :=
+    specNorm_le_norm_map_ofReal (𝕜 := ℂ) (A ^ k)
   rw [map_ofReal_matrix_pow] at hh
   exact hh.trans (hN k)
 

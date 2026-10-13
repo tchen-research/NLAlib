@@ -30,7 +30,8 @@ theorem hasOrthonormalCols_sortedEigenframe (hA : A.IsHermitian) :
 theorem compression_sortedEigenframe_eq_diagonal (hA : A.IsHermitian) :
     (sortedEigenframe hA)ᵀ * A * sortedEigenframe hA = Matrix.diagonal hA.eigenvalues₀ := by
   have h := compression_submatrix_cols_eq_diagonal
-    (transpose_eigenvectorUnitary_mul_self hA) hA.eigenvalues
+    (show HasOrthonormalCols (hA.eigenvectorUnitary : Matrix n n ℝ) from
+      transpose_eigenvectorUnitary_mul_self hA) hA.eigenvalues
     (eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA)
     (Fintype.equivOfCardEq (Fintype.card_fin _)).toEmbedding
   simpa [sortedEigenframe, Matrix.IsHermitian.eigenvalues, Function.comp_def] using h

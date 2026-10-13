@@ -37,11 +37,11 @@ theorem subspaceTangent_range_graph_eq_specNorm
   have hU' : U₂ᵀ * U₁ = 0 := transpose_mul_eq_zero_comm.1 hU
   have hhead : ∀ z : k → ℝ, U₁ᵀ *ᵥ ((U₁ + U₂ * F) *ᵥ z) = z := by
     intro z
-    rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, hU₁, hU,
+    rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, hU₁.transpose_mul_self, hU,
       Matrix.zero_mul, add_zero, Matrix.one_mulVec]
   have htail : ∀ z : k → ℝ, U₂ᵀ *ᵥ ((U₁ + U₂ * F) *ᵥ z) = F *ᵥ z := by
     intro z
-    rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, hU', hU₂,
+    rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, hU', hU₂.transpose_mul_self,
       Matrix.one_mul, zero_add]
   let f := (Matrix.toEuclideanLin (𝕜 := ℝ)).trans LinearMap.toContinuousLinearMap F
   have he : ((fun x : n → ℝ => ‖WithLp.toLp 2 (U₂ᵀ *ᵥ x)‖) ''

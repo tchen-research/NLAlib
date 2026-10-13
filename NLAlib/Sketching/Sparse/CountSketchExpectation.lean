@@ -34,7 +34,7 @@ theorem measurable_frobSq_countSketch_gram_error (U : Matrix ι d ℝ) :
   have hentry (i : ι) (r : ρ) (y : ι → ℝ) :
       (if h i = r then y i else 0) = (if h i = r then (1 : ℝ) else 0) * y i := by
     split_ifs <;> simp
-  simp only [frobSq, frobInner, Matrix.sub_apply, Matrix.mul_apply,
+  simp only [frobSq, frobInner_eq_sum_mul, Matrix.sub_apply, Matrix.mul_apply,
     Matrix.transpose_apply, countSketchMatrix, Matrix.of_apply]
   simp_rw [hentry]
   fun_prop
@@ -50,7 +50,7 @@ theorem integrable_frobSq_countSketch_gram_error
   unfold countSketchLaw
   apply (integrable_prod_iff (measurable_frobSq_countSketch_gram_error U).aestronglyMeasurable).2
   refine ⟨ae_of_all _ (fun h => ?_), Integrable.of_finite⟩
-  simp only [frobSq, frobInner, ← pow_two]
+  simp only [frobSq, frobInner_eq_sum_mul, ← pow_two]
   exact integrable_finsetSum _ fun a _ => integrable_finsetSum _ fun b _ =>
     integrable_countSketch_gram_error_apply_sq h U hU a b
 

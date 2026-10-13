@@ -279,7 +279,8 @@ def restrict (D : ArnoldiDecomp A b q) {q' : ℕ} (h : q' ≤ q) : ArnoldiDecomp
   Q := D.Q.submatrix id (Fin.castLE h)
   graded := by
     refine IsGradedKrylovBasis.of_mem ?_ fun j => ?_
-    · ext i j
+    · rw [hasOrthonormalCols_iff_transpose_mul_self]
+      ext i j
       rw [transpose_mul_self_apply]
       change D.Q.col (Fin.castLE h i) ⬝ᵥ D.Q.col (Fin.castLE h j) = _
       rw [D.hasOrthonormalCols.col_dotProduct_col, Matrix.one_apply]

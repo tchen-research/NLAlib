@@ -92,9 +92,11 @@ theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matri
     rw [← frobInner_transpose]
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose]
     exact frobInner_mul_mul_eq_zero _ _ _ _ (transpose_mul_eq_zero_comm.1 hV)
-  rw [sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit, frobSq_mul_left_of_orthonormal hU₂,
+  rw [sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit,
+    frobSq_mul_left_of_orthonormal hU₂.transpose_mul_self,
     frobSq_sub_of_frobInner_eq_zero _ _ horth,
-    frobSq_mul_right_of_orthonormal hV₂, frobSq_mul_right_of_orthonormal hV₁]
+    frobSq_mul_right_of_orthonormal hV₂.transpose_mul_self,
+    frobSq_mul_right_of_orthonormal hV₁.transpose_mul_self]
 
 omit [DecidableEq q] in
 /-- The competitor `Z = AΩΩ₁†V₁ᵀ` of the range-finder proof lies in `range Q` when

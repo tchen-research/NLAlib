@@ -66,7 +66,7 @@ theorem abs_quadForm_le_iff_add_sub_posSemidef {A B : Matrix n n ℝ}
     have hm' := hm.dotProduct_mulVec_nonneg x
     simp only [star_trivial, Matrix.add_mulVec, Matrix.sub_mulVec, dotProduct_add, dotProduct_sub] at hp' hm'
     rw [abs_le]
-    simp only [quadForm]
+    simp only [quadForm_eq_dotProduct]
     constructor <;> linarith
 
 omit [Fintype n] [DecidableEq n] in

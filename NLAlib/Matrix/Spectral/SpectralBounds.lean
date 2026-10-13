@@ -62,14 +62,21 @@ theorem abs_sigmaMin_sub_sigmaMin_le_specNorm (A B : Matrix m n ℝ) :
     rw [norm_sub_rev]
   constructor <;> linarith
 
-/-- The spectral norm squared is the norm of the Gram matrix, including
+/-- The spectral norm squared is the norm of the Gram matrix `AᴴA`, over `ℝ` or `ℂ`, including
 empty dimensions. Atlas: `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
-theorem specNorm_sq_eq_specNorm_transpose_mul_self (A : Matrix m n ℝ) :
-    specNorm A ^ 2 = specNorm (Aᵀ * A) := by
+theorem specNorm_sq_eq_specNorm_conjTranspose_mul_self {𝕜 : Type*} [RCLike 𝕜]
+    (A : Matrix m n 𝕜) : specNorm A ^ 2 = specNorm (Aᴴ * A) := by
   unfold specNorm
-  rw [sq, ← Matrix.l2_opNorm_conjTranspose_mul_self,
-    Matrix.conjTranspose_eq_transpose_of_trivial]
+  rw [sq, ← Matrix.l2_opNorm_conjTranspose_mul_self]
+
+/-- The spectral norm squared is the norm of the Gram matrix, including
+empty dimensions (real form of `specNorm_sq_eq_specNorm_conjTranspose_mul_self`).
+Atlas: `norms-frob-spec`, `svd`.
+atlas: norms-frob-spec -/
+theorem specNorm_sq_eq_specNorm_transpose_mul_self (A : Matrix m n ℝ) :
+    specNorm A ^ 2 = specNorm (Aᵀ * A) :=
+  specNorm_sq_eq_specNorm_conjTranspose_mul_self A
 
 end NLAlib
 
@@ -101,49 +108,52 @@ theorem sigmaMin_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [
   exact congrArg Real.sqrt (em.symm.sum_comp
     (fun i => (A *ᵥ x.val) i * (A *ᵥ x.val) i))
 
-private theorem singularValues_zero_eq_specNorm_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
-    singularValues A 0 = specNorm A := by
+private theorem singularValues_zero_eq_specNorm_fin {𝕜 : Type*} [RCLike 𝕜] {m n : ℕ}
+    (A : Matrix (Fin m) (Fin n) 𝕜) : singularValues A 0 = specNorm A := by
   by_cases hn : n = 0
   · subst n
     have hA : A = 0 := by ext i j; exact Fin.elim0 j
     rw [singularValues_eq_zero_of_width_le A (by simp), hA, specNorm_zero]
   · have hnpos : 0 < n := Nat.pos_of_ne_zero hn
     obtain ⟨U, V, hSVD⟩ := exists_isSVD A
-    have hGram : specNorm (Aᵀ * A) =
-        ‖(fun j : Fin n => singularValues A j ^ 2)‖ := by
-      rw [hSVD.transpose_mul_self,
-        specNorm_mul_transpose_right_of_hasOrthonormalCols hSVD.transpose_mul_right,
-        specNorm_mul_left_of_hasOrthonormalCols hSVD.transpose_mul_right,
+    have hGram : specNorm (Aᴴ * A) =
+        ‖(fun j : Fin n => ((singularValues A j ^ 2 : ℝ) : 𝕜))‖ := by
+      rw [hSVD.conjTranspose_mul_self,
+        specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right,
+        specNorm_mul_left_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right,
         specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
-    have hMax : ‖(fun j : Fin n => singularValues A j ^ 2)‖ = singularValues A 0 ^ 2 := by
+    have hMax : ‖(fun j : Fin n => ((singularValues A j ^ 2 : ℝ) : 𝕜))‖ =
+        singularValues A 0 ^ 2 := by
       apply le_antisymm
       · apply (pi_norm_le_iff_of_nonneg (sq_nonneg _)).2
         intro j
-        rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+        rw [RCLike.norm_ofReal, abs_of_nonneg (sq_nonneg _)]
         exact pow_le_pow_left₀ (singularValues_nonneg A j)
           (singularValues_antitone A (Nat.zero_le _)) 2
-      · have h0 := norm_le_pi_norm (fun j : Fin n => singularValues A j ^ 2) ⟨0, hnpos⟩
-        change ‖(singularValues A 0 ^ 2 : ℝ)‖ ≤ _ at h0
-        rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (singularValues A 0))] at h0
+      · have h0 := norm_le_pi_norm
+          (fun j : Fin n => ((singularValues A j ^ 2 : ℝ) : 𝕜)) ⟨0, hnpos⟩
+        change ‖((singularValues A 0 ^ 2 : ℝ) : 𝕜)‖ ≤ _ at h0
+        rw [RCLike.norm_ofReal, abs_of_nonneg (sq_nonneg (singularValues A 0))] at h0
         exact h0
-    have hSq := specNorm_sq_eq_specNorm_transpose_mul_self A
+    have hSq := specNorm_sq_eq_specNorm_conjTranspose_mul_self A
     rw [hGram, hMax] at hSq
     nlinarith [singularValues_nonneg A 0, specNorm_nonneg A]
 
 /-- The largest sorted singular value equals the spectral norm, on arbitrary finite index
-types. The padded singular-value convention also covers matrices with zero rows or columns.
-Horn–Johnson 2013, §5.6. Atlas: `svd`, `norms-frob-spec`.
+types and over `ℝ` or `ℂ`. The padded singular-value convention also covers matrices with zero
+rows or columns. Horn–Johnson 2013, §5.6. Atlas: `svd`, `norms-frob-spec`.
 atlas: norm-lipschitz -/
-theorem singularValues_zero_eq_specNorm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
-    [DecidableEq n] (A : Matrix m n ℝ) : singularValues A 0 = specNorm A := by
+theorem singularValues_zero_eq_specNorm {m n 𝕜 : Type*} [RCLike 𝕜] [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) : singularValues A 0 = specNorm A := by
   rw [← singularValues_reindex A (Fintype.equivFin m) (Fintype.equivFin n),
     ← specNorm_reindex A (Fintype.equivFin m) (Fintype.equivFin n)]
   exact singularValues_zero_eq_specNorm_fin _
 
 /-- Every padded singular value is bounded by the spectral norm, on arbitrary finite index
-types. Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`. -/
-theorem singularValues_le_specNorm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
-    [DecidableEq n] (A : Matrix m n ℝ) (k : ℕ) : singularValues A k ≤ specNorm A :=
+types and over `ℝ` or `ℂ`. Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`. -/
+theorem singularValues_le_specNorm {m n 𝕜 : Type*} [RCLike 𝕜] [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) (k : ℕ) :
+    singularValues A k ≤ specNorm A :=
   (singularValues_antitone A (Nat.zero_le k)).trans_eq (singularValues_zero_eq_specNorm A)
 
 /-- A Gram error has the norm of the list `σᵢ² − 1`, for every domain

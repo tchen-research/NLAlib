@@ -37,7 +37,7 @@ theorem rayleighQuotient_toEuclideanCLM_bounds {A : Matrix n n ℝ} (hA : A.PosS
     0 ≤ (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient (WithLp.toLp 2 b) ∧
       (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient (WithLp.toLp 2 b) ≤ specNorm A := by
   constructor
-  · rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient, quadForm]
+  · rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_eq_div, quadForm_eq_dotProduct]
     apply div_nonneg _ (dotProduct_self_nonneg _)
     simpa only [star_trivial] using hA.dotProduct_mulVec_nonneg b
   · have h := (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient_le_norm (WithLp.toLp 2 b)
@@ -96,7 +96,7 @@ theorem sub_rayleighQuotient_pow_div_specNorm_le_log_overlap_div
     ring
   have hR : (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient (WithLp.toLp 2 ((A ^ q) *ᵥ b)) =
       L * (M (2 * q + 1) / M (2 * q)) := by
-    rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient, quadForm, hN, hD, pow_succ]
+    rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_eq_div, quadForm_eq_dotProduct, hN, hD, pow_succ]
     field_simp [hLp.ne', pow_ne_zero _ hLp.ne', hMe.ne']
   have hScalar := one_sub_sum_pow_div_sum_pow_le_log_div d c hd i₀ hd0 hb q
   have hEq : (L - L * (M (2 * q + 1) / M (2 * q))) / L =

@@ -29,7 +29,7 @@ theorem frobInner_eq_nuclearNorm_of_polar {M U : Matrix n n ℝ}
   have hPair : frobInner M U = Q.trace := by
     rw [frobInner_eq_trace]
     nth_rw 1 [← hMQ]
-    rw [Matrix.transpose_mul, Matrix.mul_assoc, hU, Matrix.mul_one, hQs]
+    rw [Matrix.transpose_mul, Matrix.mul_assoc, hU.transpose_mul_self, Matrix.mul_one, hQs]
   exact hPair.trans (nuclearNorm_eq_trace_sqrt_gram M).symm
 
 omit [DecidableEq m] [DecidableEq n] in
@@ -49,7 +49,7 @@ theorem frobSq_sub_mul_eq_of_cross_polar (A B : Matrix m n ℝ) (U : Matrix m m 
     (hU : HasOrthonormalCols U)
     (hPolar : U * CFC.sqrt ((A * Bᵀ)ᵀ * (A * Bᵀ)) = A * Bᵀ) :
     frobSq (A - U * B) = frobSq A + frobSq B - 2 * nuclearNorm (A * Bᵀ) := by
-  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU,
+  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU.transpose_mul_self,
     frobInner_mul_eq_frobInner_mul_transpose, frobInner_eq_nuclearNorm_of_polar hU hPolar]
   ring
 
@@ -62,7 +62,8 @@ theorem frobSq_add_frobSq_sub_two_nuclearNorm_le_sub_mul
     frobSq A + frobSq B - 2 * nuclearNorm (A * Bᵀ) ≤ frobSq (A - U * B) := by
   have h := frobInner_le_nuclearNorm_of_specNorm_le_one (A * Bᵀ) U
     (specNorm_le_one_of_orthonormal hU)
-  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU, frobInner_mul_eq_frobInner_mul_transpose]
+  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU.transpose_mul_self,
+    frobInner_mul_eq_frobInner_mul_transpose]
   linarith
 
 omit [DecidableEq n] in
@@ -100,7 +101,7 @@ theorem trace_eq_nuclearNorm_iff_posSemidef (M : Matrix n n ℝ) :
       rw [frobInner_eq_trace, hHs, ← Matrix.mul_assoc,
         Matrix.trace_mul_cycle, hHH, Matrix.trace_mul_comm, hMQ]
     have hFrob : frobSq (H - U * H) = 0 := by
-      rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU, hNorm, hPair,
+      rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU.transpose_mul_self, hNorm, hPair,
         hTrace, nuclearNorm_eq_trace_sqrt_gram]
       change Q.trace - 2 * Q.trace + Q.trace = 0
       ring

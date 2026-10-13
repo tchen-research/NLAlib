@@ -105,7 +105,7 @@ theorem countSketch_gram_error_eq
     (h : ι → ρ) (σ : ι → ℝ) (U : Matrix ι d ℝ) (hU : HasOrthonormalCols U) :
     (countSketchMatrix h σ * U)ᵀ * (countSketchMatrix h σ * U) - 1 =
       Uᵀ * ((countSketchMatrix h σ)ᵀ * countSketchMatrix h σ - 1) * U := by
-  rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, hU,
+  rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, hU.transpose_mul_self,
     Matrix.transpose_mul]
   simp only [Matrix.mul_assoc]
 

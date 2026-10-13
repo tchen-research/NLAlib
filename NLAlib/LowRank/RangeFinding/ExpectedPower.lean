@@ -139,7 +139,8 @@ theorem integral_specNorm_residual_gram_pow_gaussian_le
     have hproj := ae_gaussian_projection_reproduces_of_rank_le C G hG Q hQr hCt
     have hzero : (fun ω => specNorm (residual (Q ω) A)) =ᵐ[μ] fun _ => 0 := by
       filter_upwards [hproj, hQo] with ω hω ho
-      have hc : residual (Q ω) C = 0 := by simp only [residual, hω, sub_self]
+      have hc : residual (Q ω) C = 0 := by
+        simp only [residual_eq_sub_mul_transpose_mul, hω, sub_self]
       have hpow := specNorm_residual_pow_le ho A q
       change specNorm (residual (Q ω) A) ^ (2 * q + 1) ≤ specNorm (residual (Q ω) C) at hpow
       rw [hc, specNorm_zero] at hpow

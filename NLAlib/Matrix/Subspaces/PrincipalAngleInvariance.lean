@@ -39,8 +39,8 @@ theorem exists_orthogonal_frame_transition {P P' : Matrix m n ℝ}
   have hTT : Tᵀ*T=1 := by
     have hgram : (P*T)ᵀ*(P*T)=Tᵀ*T := by
       rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Pᵀ P,
-        hP, Matrix.one_mul]
-    rw [hPT, hP'] at hgram
+        hP.transpose_mul_self, Matrix.one_mul]
+    rw [hPT, hP'.transpose_mul_self] at hgram
     exact hgram.symm
   exact ⟨T, hTT, mul_eq_one_comm.mp hTT, hPT⟩
 
@@ -58,7 +58,7 @@ theorem principalAngles_eq_of_range_eq_left {P P' : Matrix m n ℝ}
   have hTt : Tᵀᵀ*Tᵀ=1 := by simpa only [Matrix.transpose_transpose] using hT
   have hh : singularValues ((Tᵀ*(Pᵀ*Q)).reindex (Fintype.equivFin n) (Fintype.equivFin n)) =
       singularValues ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) := by
-    rw [singularValues_reindex, singularValues_reindex, singularValues_isometry_mul hTt]
+    rw [singularValues_reindex, singularValues_reindex, singularValues_isometry_mul (H := Tᵀ) hTt]
   funext i
   simp only [principalAnglesFintype, heq]
   rw [hh]

@@ -35,7 +35,7 @@ theorem dotProduct_cfc_mulVec_self_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermiti
   have heq : hA.cfc f = U*Matrix.diagonal (fun i => f (hA.eigenvalues i))*Uᵀ := by
     exact cfc_eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA f
   rw [heq, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
-    mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU]
+    mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols (U := U) hU]
   simp only [dotProduct, Matrix.mulVec_diagonal]
   apply Finset.sum_congr rfl
   intro i _

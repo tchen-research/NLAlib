@@ -107,7 +107,7 @@ theorem exists_orthogonal_real_normal_form {n : Type*} [Fintype n] [DecidableEq 
     rw [hAT]
     calc
       _ = (Qᵀ * Q) * T * (Qᵀ * Q) := by simp only [Matrix.mul_assoc]
-      _ = T := by rw [hQ, Matrix.one_mul, Matrix.mul_one]
+      _ = T := by rw [hQ.transpose_mul_self, Matrix.one_mul, Matrix.mul_one]
   have hN : T * Tᵀ = Tᵀ * T := by
     simpa only [hconj] using real_normal_orthogonal_conjugate hA hQ
   refine ⟨Q, T, hQ, hAT, isRealNormalForm_of_isRealSchurForm hT ?_⟩

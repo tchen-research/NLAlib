@@ -680,7 +680,7 @@ Ported from Prove2me solution `GaussianMatrix.specNorm_pinvR_sq`.
 atlas: pseudoinverse -/
 theorem specNorm_pinvR_sq [DecidableEq n] (A : Matrix m n ℝ) :
     specNorm (pinvR A) ^ 2 = specNorm (A * Aᵀ)⁻¹ := by
-  unfold specNorm pinvR
+  unfold specNorm; rw [pinvR_eq_transpose_mul_inv]
   have hsym : (A * Aᵀ)ᵀ = A * Aᵀ := by rw [Matrix.transpose_mul, Matrix.transpose_transpose]
   have key : (Aᵀ * (A * Aᵀ)⁻¹)ᴴ * (Aᵀ * (A * Aᵀ)⁻¹) = (A * Aᵀ)⁻¹ := by
     rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul,

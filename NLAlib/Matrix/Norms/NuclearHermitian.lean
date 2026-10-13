@@ -31,7 +31,7 @@ theorem gram_orthogonal_diagonalization {n : Type*} [Fintype n] [DecidableEq n]
       simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.diagonal_transpose,
         Matrix.mul_assoc]
     _ = P * (Matrix.diagonal d * Matrix.diagonal d) * Pᵀ := by
-      rw [hP, Matrix.mul_one]
+      rw [hP.transpose_mul_self, Matrix.mul_one]
       simp only [Matrix.mul_assoc]
     _ = _ := by
       rw [Matrix.diagonal_mul_diagonal]
@@ -43,7 +43,8 @@ theorem gram_cfc_abs_eq {n : Type*} [Fintype n] [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.IsHermitian) :
     (cfc (abs : ℝ → ℝ) A)ᴴ * cfc (abs : ℝ → ℝ) A = Aᴴ * A := by
   rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.conjTranspose_eq_transpose_of_trivial]
-  have hP := transpose_eigenvectorUnitary_mul_self hA
+  have hP : HasOrthonormalCols (hA.eigenvectorUnitary : Matrix n n ℝ) :=
+    transpose_eigenvectorUnitary_mul_self hA
   rw [hA.cfc_eq, cfc_eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA (abs : ℝ → ℝ),
     gram_orthogonal_diagonalization hP]
   conv_rhs => rw [eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA]

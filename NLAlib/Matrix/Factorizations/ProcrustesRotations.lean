@@ -105,7 +105,7 @@ private theorem exists_orthogonal_pair_attaining_fin {a b : ℕ}
   have hAligned : U * B * T = LA *
       (rectDiag (singularValues B) : Matrix (Fin a) (Fin b) ℝ) * RAᵀ := by
     dsimp [U, T]
-    nth_rw 1 [hB.eq]
+    nth_rw 1 [hB.eq_mul_transpose]
     simp only [Matrix.mul_assoc]
     rw [← Matrix.mul_assoc LBᵀ LB _, hB.transpose_mul_left, Matrix.one_mul,
       ← Matrix.mul_assoc RBᵀ RB _, hB.transpose_mul_right, Matrix.one_mul]

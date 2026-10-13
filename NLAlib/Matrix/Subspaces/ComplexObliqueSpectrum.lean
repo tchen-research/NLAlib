@@ -37,7 +37,8 @@ theorem exists_unitary_idempotent_canonical_spectrum {n : Type*}
   have hUt : (U : Matrix n n ℂ) * (U : Matrix n n ℂ)ᴴ = 1 := Unitary.coe_mul_star_self U
   let LC := L.map Complex.ofReal
   have hLC : LCᴴ * LC = 1 := by
-    rw [show LCᴴ = Lᵀ.map Complex.ofReal from conjTranspose_map_ofReal _, ← map_ofReal_mul, hL]
+    rw [show LCᴴ = Lᵀ.map Complex.ofReal from conjTranspose_map_ofReal _, ← map_ofReal_mul,
+      hL.transpose_mul_self]
     simp
   have hLCt : LC * LCᴴ = 1 := by
     rw [show LCᴴ = Lᵀ.map Complex.ofReal from conjTranspose_map_ofReal _, ← map_ofReal_mul, hLt]

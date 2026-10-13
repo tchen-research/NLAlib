@@ -6,6 +6,7 @@ import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Norms.EntryBounds
 import NLAlib.Matrix.Norms.EuclideanOperatorBounds
 import NLAlib.Matrix.Norms.FanDominance
+import NLAlib.Matrix.Norms.Frobenius
 import NLAlib.Matrix.Norms.InvariantNorm
 import NLAlib.Matrix.Norms.InvariantNormRepresentation
 import NLAlib.Matrix.Norms.InvariantNormToolkit

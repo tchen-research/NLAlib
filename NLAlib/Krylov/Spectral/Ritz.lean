@@ -133,7 +133,7 @@ theorem exists_mem_krylovSpace_sub_rayleigh_le {A : Matrix n n ℝ} (hA : A.IsHe
       le_antisymm (hL0 ▸ htop i) (hpsd i)
     have hbAb : b ⬝ᵥ (A *ᵥ b) = 0 := by
       have := quadForm_eq_sum_eigenvalues hA b
-      simp only [quadForm, hall, zero_mul, Finset.sum_const_zero] at this
+      simp only [quadForm_eq_dotProduct, hall, zero_mul, Finset.sum_const_zero] at this
       exact this
     refine ⟨b, ?_, fun h0 => ?_, ?_⟩
     · obtain ⟨q', rfl⟩ : ∃ q', q = q' + 1 := ⟨q - 1, by omega⟩

@@ -25,7 +25,7 @@ theorem sum_sq_overlap_row_le_one {U : Matrix m n ℝ} {Q : Matrix m r ℝ}
     (∑ j, (Uᵀ*Q) i j^2) ≤ 1 := by
   let u : m → ℝ := fun s => U s i
   have hcol : u ⬝ᵥ u=1 := by
-    have hh := congrArg (fun T : Matrix n n ℝ => T i i) hU
+    have hh := congrArg (fun T : Matrix n n ℝ => T i i) hU.transpose_mul_self
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply_eq, u, dotProduct] using hh
   have hb := transpose_mulVec_dotProduct_self_le hQ u
   rw [hcol] at hb

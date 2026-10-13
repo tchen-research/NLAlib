@@ -24,7 +24,7 @@ theorem isHermitian_of_invariant_orthonormal_frame {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
     {L : Matrix k k ℝ} (hAQ : A*Q=Q*L) : L.IsHermitian := by
   have heq : Qᵀ*A*Q=L := by
-    rw [Matrix.mul_assoc, hAQ, ← Matrix.mul_assoc Qᵀ Q, hQ, Matrix.one_mul]
+    rw [Matrix.mul_assoc, hAQ, ← Matrix.mul_assoc Qᵀ Q, hQ.transpose_mul_self, Matrix.one_mul]
   exact heq ▸ isHermitian_transpose_mul_mul hA Q
 
 omit [DecidableEq n] [DecidableEq k] [DecidableEq r] in

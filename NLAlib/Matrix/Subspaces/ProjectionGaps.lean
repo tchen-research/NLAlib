@@ -154,7 +154,7 @@ theorem transpose_residual_mul_residual_eq_one_sub_overlap {p : Type*} [Decidabl
     show (1-P*Pᵀ)ᵀ = 1-P*Pᵀ by simp,
     Matrix.mul_assoc, ← Matrix.mul_assoc (1-P*Pᵀ),
     one_sub_mul_transpose_idem hP, Matrix.sub_mul, Matrix.mul_sub,
-    Matrix.one_mul, hQ]
+    Matrix.one_mul, hQ.transpose_mul_self]
   simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
 
 /-- **Symmetry of `θ_max` for equal dimensions.** The two residuals between equal-width
@@ -190,8 +190,8 @@ theorem specNorm_sub_frame_projector_eq_residual {P Q : Matrix m n ℝ}
     rw [residual_eq_one_sub_mul]
     simp [Matrix.transpose_mul, Matrix.transpose_sub, Matrix.mul_assoc]
   rw [hleft, hright, specNorm_transpose,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hP,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hQ,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols hP.transpose_mul_self,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols hQ.transpose_mul_self,
     specNorm_residual_comm hQ hP, max_self]
 
 omit [DecidableEq m] [DecidableEq n] in
@@ -211,8 +211,8 @@ atlas: principal-angles-def (partial) -/
 theorem frobSq_sub_frame_projector_eq_two_mul_residual {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     frobSq (P*Pᵀ-Q*Qᵀ) = 2 * frobSq (residual P Q) := by
-  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hP,
-    frobSq_mul_left_of_orthonormal hQ, frobSq_transpose, frobSq_transpose,
+  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hP.transpose_mul_self,
+    frobSq_mul_left_of_orthonormal hQ.transpose_mul_self, frobSq_transpose, frobSq_transpose,
     frobSq_residual_eq_sub hP, frobSq_frame_eq_card hP, frobSq_frame_eq_card hQ,
     frobInner_frame_projectors_eq_frobSq_overlap]
   ring
@@ -267,8 +267,9 @@ theorem specNorm_complement_mul_projector_eq_of_rank_eq {P Q : Matrix n n ℝ}
       _ = (1-P)*(V'*V'ᵀ) := congrArg (fun T => (1-P)*T) hQV'
       _ = (1-U*Uᵀ)*(V'*V'ᵀ) := congrArg (fun T => (1-T)*(V'*V'ᵀ)) hPU
       _ = _ := by rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
-  rw [hleft, hright, specNorm_mul_transpose_right_of_hasOrthonormalCols hU,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hV', specNorm_residual_comm hV' hU]
+  rw [hleft, hright,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols hU.transpose_mul_self,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols hV'.transpose_mul_self, specNorm_residual_comm hV' hU]
 
 /-- For equal-rank orthogonal projections, the projector distance is one
 one-sided gap norm. Stewart–Sun §I.5, with no positive-rank restriction. -/

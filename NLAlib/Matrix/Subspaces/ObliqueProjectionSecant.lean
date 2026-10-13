@@ -36,8 +36,8 @@ theorem specNorm_idempotent_eq_secant_of_range_frames {n r : Type*}
     rw [Matrix.rank_reindex, hRank]
     omega
   refine ⟨Real.arccos_lt_pi_div_two.mpr hpos, ?_⟩
-  rw [hForm, specNorm_mul_transpose_right_of_hasOrthonormalCols hW,
-    specNorm_mul_left_of_hasOrthonormalCols hQ,
+  rw [hForm, specNorm_mul_transpose_right_of_hasOrthonormalCols hW.transpose_mul_self,
+    specNorm_mul_left_of_hasOrthonormalCols hQ.transpose_mul_self,
     specNorm_inv_eq_inv_singularValues_last _ hC hr,
     cos_principalAngles hW hQ, singularValues_reindex,
     singularValues_eq_linearMap]

@@ -52,7 +52,7 @@ theorem exists_maximum_volume_triangular_qr_blocks {m n : Type*}
     simp only [K, Matrix.fromBlocks_multiply, Matrix.one_mul, Matrix.mul_zero,
       Matrix.zero_mul, add_zero, zero_add, ← hQR.eq]
   · have hD : frobSq D = frobSq D' := by
-      rw [hQR.eq, frobSq_mul_left_of_orthonormal hQR.orth]
+      rw [hQR.eq, frobSq_mul_left_of_orthonormal hQR.orth.transpose_mul_self]
     rwa [hD] at hBudget
 
 end NLAlib

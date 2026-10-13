@@ -53,7 +53,7 @@ theorem posDef_sum_inv_factorial_map_pow_vecMulVec_of_injective (b : n → ℝ)
     simp only [Matrix.sum_mulVec, dotProduct_sum, Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul]
     apply Finset.sum_congr rfl
     intro k _
-    rw [← quadForm, quadForm_map_pow_vecMulVec_self]
+    rw [← quadForm_eq_dotProduct, quadForm_map_pow_vecMulVec_self]
   apply Matrix.PosDef.of_dotProduct_mulVec_pos hH.isHermitian
   intro x hx
   simp only [star_trivial]

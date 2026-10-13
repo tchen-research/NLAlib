@@ -1,0 +1,8011 @@
+{
+ "generated": "2026-10-13",
+ "scope": "NLAlib RCLike round design (read-only analysis)",
+ "vocabulary": [
+  {
+   "name": "frobInner",
+   "module": "Matrix/Norms/Core",
+   "current": "(A B : Matrix m n ℝ) : ℝ := ∑ i, ∑ j, A i j * B i j",
+   "proposed": "{𝕜} [RCLike 𝕜] (A B : Matrix m n 𝕜) : ℝ := RCLike.re (∑ i, ∑ j, star (A i j) * B i j)",
+   "real_specialisation": "definitional (rfl, tested)",
+   "stage": "A1",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "frobInner_eq_re_trace (general): frobInner A B = RCLike.re (Aᴴ * B).trace",
+    "frobInner_eq_trace (ℝ, old name/statement, `simpa using`)",
+    "frobInner_eq_sum_mul (ℝ, rfl): = ∑ i, ∑ j, A i j * B i j"
+   ],
+   "notes": "Real-valued (real part) by design: every downstream statement is real-valued (≤, |·|, IsGreatest/sSup duality, Pythagoras) and stays true over ℂ with Re; the 𝕜-valued pairing is (Aᴴ * B).trace and needs no def. frobInner_smul_left/right keep a real scalar c : ℝ.",
+   "files_referencing": 44,
+   "refs_by_area": {
+    "LowRank": 2,
+    "Matrix/Calculus": 6,
+    "Matrix/Factorizations": 4,
+    "Matrix/Inequalities": 3,
+    "Matrix/Norms": 9,
+    "Matrix/Perturbation": 4,
+    "Matrix/Spectral": 1,
+    "Matrix/Structured": 1,
+    "Matrix/Subspaces": 3,
+    "Probability": 2,
+    "RandomMatrix": 7,
+    "Sketching": 2
+   },
+   "files_unfolding": 16,
+   "unfold_sites": 34,
+   "unfold_files": [
+    "NLAlib/Matrix/Calculus/GramCutoffCalculus.lean",
+    "NLAlib/Matrix/Calculus/GramTrace.lean",
+    "NLAlib/Matrix/Inequalities/VonNeumann.lean",
+    "NLAlib/Matrix/Norms/ColumnNorms.lean",
+    "NLAlib/Matrix/Norms/Core.lean",
+    "NLAlib/Matrix/Norms/Reindex.lean",
+    "NLAlib/Matrix/Norms/SchattenSingularCoefficients.lean",
+    "NLAlib/Matrix/Perturbation/SpectralContinuity.lean",
+    "NLAlib/Matrix/Structured/Measurable.lean",
+    "NLAlib/Probability/Concentration/QuadraticForms/QuadraticMoments.lean",
+    "NLAlib/RandomMatrix/Gaussian/Basic/PolynomialGrowth.lean",
+    "NLAlib/RandomMatrix/Gaussian/InverseMoments/CutoffIntegrability.lean",
+    "NLAlib/RandomMatrix/Gaussian/InverseMoments/GaussianWeakInequality.lean",
+    "NLAlib/RandomMatrix/Gaussian/InverseMoments/UnshiftedWeakInequality.lean",
+    "NLAlib/Sketching/Sparse/CountSketchExpectation.lean",
+    "NLAlib/Sketching/Sparse/CountSketchMoments.lean"
+   ]
+  },
+  {
+   "name": "frobSq",
+   "module": "Matrix/Norms/Core",
+   "current": "frobInner A A",
+   "proposed": "frobInner A A (body unchanged, A : Matrix m n 𝕜)",
+   "real_specialisation": "definitional",
+   "stage": "A1",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [
+    "frobSq_eq_sum_norm_sq (general): = ∑ i, ∑ j, ‖A i j‖ ^ 2 (prototype-proved)",
+    "frobSq_eq_sum_sq (ℝ, old)",
+    "frobSq_eq_frobenius_norm_sq (general, under open scoped Matrix.Norms.Frobenius) — replaces ComplexFrobenius bridges"
+   ],
+   "notes": "`rw [frobSq, frobInner_eq_trace]` (the common unfold) keeps working with the ℝ corollary; only sites that also unfold frobInner change form. frobSq_smul keeps (c : ℝ); the 𝕜-scalar version has ‖c‖ ^ 2.",
+   "files_referencing": 93,
+   "refs_by_area": {
+    "Estimation": 2,
+    "LowRank": 12,
+    "Matrix/Basic": 3,
+    "Matrix/Calculus": 5,
+    "Matrix/Factorizations": 10,
+    "Matrix/Norms": 7,
+    "Matrix/Perturbation": 7,
+    "Matrix/Spectral": 6,
+    "Matrix/Structured": 2,
+    "Matrix/Subspaces": 9,
+    "Probability": 5,
+    "RandomMatrix": 15,
+    "Sketching": 6,
+    "Solvers": 4
+   },
+   "files_unfolding": 29,
+   "unfold_sites": 43,
+   "unfold_files": [
+    "NLAlib/LowRank/Nystrom/Structural.lean",
+    "NLAlib/Matrix/Basic/MoorePenrose.lean",
+    "NLAlib/Matrix/Basic/MoorePenroseProjector.lean",
+    "NLAlib/Matrix/Basic/Pseudoinverse.lean",
+    "NLAlib/Matrix/Calculus/GramCutoffCalculus.lean",
+    "NLAlib/Matrix/Calculus/GramSoftMin.lean",
+    "NLAlib/Matrix/Calculus/InversePowerGrowth.lean",
+    "NLAlib/Matrix/Factorizations/MaximumVolumeQR.lean",
+    "NLAlib/Matrix/Factorizations/Procrustes.lean",
+    "NLAlib/Matrix/Norms/ColumnNorms.lean",
+    "NLAlib/Matrix/Norms/Core.lean",
+    "NLAlib/Matrix/Perturbation/SpectralContinuity.lean",
+    "NLAlib/Matrix/Spectral/EckartYoung.lean",
+    "NLAlib/Matrix/Spectral/SingularValueSpectrum.lean",
+    "NLAlib/Matrix/Structured/Measurable.lean",
+    "NLAlib/Matrix/Subspaces/FrameContractions.lean",
+    "NLAlib/Matrix/Subspaces/GramColumnDeterminant.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngleDefinitions.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngles.lean",
+    "NLAlib/Matrix/Subspaces/ProjectionGaps.lean",
+    "NLAlib/Matrix/Subspaces/Projections.lean",
+    "NLAlib/Matrix/Subspaces/ProjectorBlocks.lean",
+    "NLAlib/Probability/Concentration/QuadraticForms/QuadraticMoments.lean",
+    "NLAlib/RandomMatrix/Gaussian/Basic/PolynomialGrowth.lean",
+    "NLAlib/RandomMatrix/Gaussian/InverseMoments/CutoffIntegrability.lean",
+    "NLAlib/RandomMatrix/Gaussian/InverseMoments/GaussianWeakInequality.lean",
+    "NLAlib/RandomMatrix/Gaussian/InverseMoments/UnshiftedWeakInequality.lean",
+    "NLAlib/Sketching/Sparse/CountSketchExpectation.lean",
+    "NLAlib/Sketching/Sparse/CountSketchMoments.lean"
+   ]
+  },
+  {
+   "name": "frobNorm",
+   "module": "Matrix/Norms/Core",
+   "current": "Real.sqrt (frobSq A)",
+   "proposed": "Real.sqrt (frobSq A), A : Matrix m n 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "A1",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Unfolding gives frobSq: no form change.",
+   "files_referencing": 61,
+   "refs_by_area": {
+    "Estimation": 6,
+    "LowRank": 1,
+    "Matrix/Calculus": 2,
+    "Matrix/Inequalities": 2,
+    "Matrix/Norms": 7,
+    "Matrix/Perturbation": 19,
+    "Matrix/Spectral": 2,
+    "Matrix/Structured": 2,
+    "Matrix/Subspaces": 3,
+    "Probability": 11,
+    "RandomMatrix": 5,
+    "Solvers": 1
+   },
+   "files_unfolding": 11,
+   "unfold_sites": 27,
+   "unfold_files": [
+    "NLAlib/LowRank/RangeFinding/SpectralRangeFinder.lean",
+    "NLAlib/Matrix/Calculus/InversePowerGrowth.lean",
+    "NLAlib/Matrix/Norms/Core.lean",
+    "NLAlib/Matrix/Norms/Reindex.lean",
+    "NLAlib/Matrix/Perturbation/OptimalErrorContinuity.lean",
+    "NLAlib/Matrix/Perturbation/SpectralContinuity.lean",
+    "NLAlib/Matrix/Structured/KroneckerIdentities.lean",
+    "NLAlib/Matrix/Subspaces/FrameContractions.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngleDefinitions.lean",
+    "NLAlib/RandomMatrix/Gaussian/Basic/Lipschitz.lean",
+    "NLAlib/RandomMatrix/Gaussian/Basic/LipschitzConcentration.lean"
+   ]
+  },
+  {
+   "name": "specNorm",
+   "module": "Matrix/Norms/Core",
+   "current": "[DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) : ℝ := ‖A‖ (L2 op norm)",
+   "proposed": "same body over 𝕜; instance Matrix.instL2OpNormedAddCommGroup is already [RCLike 𝕜]",
+   "real_specialisation": "syntactically identical term at ℝ (rfl, tested)",
+   "stage": "A1",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [
+    "specNorm_eq_norm (general)",
+    "specNorm_conjTranspose (new, Matrix.l2_opNorm_conjTranspose)",
+    "specNorm_transpose (general; needs a proof: Mathlib has no l2_opNorm_transpose)"
+   ],
+   "notes": "Free. API lemmas with ᵀ-hypotheses (`Pᵀ * P = 1`) become HasOrthonormalCols P hypotheses (callers passing ᵀ proofs still elaborate by defeq).",
+   "files_referencing": 156,
+   "refs_by_area": {
+    "Estimation": 9,
+    "Krylov": 3,
+    "LowRank": 7,
+    "Matrix/Basic": 1,
+    "Matrix/Calculus": 4,
+    "Matrix/Factorizations": 1,
+    "Matrix/Functions": 2,
+    "Matrix/Inequalities": 9,
+    "Matrix/Norms": 17,
+    "Matrix/Perturbation": 35,
+    "Matrix/Spectral": 14,
+    "Matrix/Structured": 4,
+    "Matrix/Subspaces": 16,
+    "Probability": 13,
+    "RandomMatrix": 11,
+    "Sketching": 8,
+    "Solvers": 2
+   },
+   "files_unfolding": 13,
+   "unfold_sites": 19,
+   "unfold_files": [
+    "NLAlib/Matrix/Basic/MoorePenrose.lean",
+    "NLAlib/Matrix/Norms/Core.lean",
+    "NLAlib/Matrix/Norms/SpectralNormBounds.lean",
+    "NLAlib/Matrix/Perturbation/ConditionNumber.lean",
+    "NLAlib/Matrix/Perturbation/EigenvaluePencil.lean",
+    "NLAlib/Matrix/Perturbation/EigenvaluePerturbation.lean",
+    "NLAlib/Matrix/Perturbation/MapConditioning.lean",
+    "NLAlib/Matrix/Spectral/Core.lean",
+    "NLAlib/Matrix/Spectral/QuadraticProbe.lean",
+    "NLAlib/Matrix/Spectral/SpectralBounds.lean",
+    "NLAlib/Probability/Concentration/QuadraticForms/Geometry.lean",
+    "NLAlib/RandomMatrix/Gaussian/Basic/Lipschitz.lean",
+    "NLAlib/RandomMatrix/Gaussian/InverseMoments/SpectralTail.lean"
+   ]
+  },
+  {
+   "name": "HasOrthonormalCols",
+   "module": "Matrix/Subspaces/Projections",
+   "current": "[DecidableEq q] (Q : Matrix m q ℝ) : Prop := Qᵀ * Q = 1",
+   "proposed": "(Q : Matrix m q 𝕜) : Prop := Qᴴ * Q = 1",
+   "real_specialisation": "definitional (rfl both directions, tested): `exact hQ`, `have h : Qᵀ * Q = 1 := hQ`, `show Qᵀ * Q = 1 from hQ` keep working; `rw [hQ]`/`simp only [hQ]` on ᵀ-goals break (tested)",
+   "stage": "A2",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "HasOrthonormalCols.conjTranspose_mul_self (general)",
+    "HasOrthonormalCols.transpose_mul_self (ℝ): Qᵀ * Q = 1",
+    "hasOrthonormalCols_iff_transpose_mul_self (ℝ, Iff.rfl)"
+   ],
+   "notes": "Raw form: 76 files spell `Xᵀ * X = 1` (180 occurrences), 32 of them never mention HasOrthonormalCols; they keep compiling. Direct breakage: rw/simp with the hypothesis in 30 files (55 sites) + unfold/rw [HasOrthonormalCols] in 12 files.",
+   "files_referencing": 165,
+   "refs_by_area": {
+    "Estimation": 7,
+    "Krylov": 13,
+    "LowRank": 14,
+    "Matrix/Basic": 3,
+    "Matrix/Factorizations": 19,
+    "Matrix/Inequalities": 12,
+    "Matrix/Norms": 11,
+    "Matrix/Perturbation": 13,
+    "Matrix/Spectral": 20,
+    "Matrix/Subspaces": 34,
+    "RandomMatrix": 1,
+    "Sketching": 18
+   },
+   "files_unfolding": 12,
+   "unfold_sites": 15,
+   "unfold_files": [
+    "NLAlib/LowRank/Nystrom/RawGaussianNystrom.lean",
+    "NLAlib/Matrix/Factorizations/GramSchmidt.lean",
+    "NLAlib/Matrix/Factorizations/NearestPolar.lean",
+    "NLAlib/Matrix/Factorizations/PolarDecomposition.lean",
+    "NLAlib/Matrix/Inequalities/SchurHorn.lean",
+    "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean",
+    "NLAlib/Matrix/Spectral/OrderedSymmetricDiagonalization.lean",
+    "NLAlib/Matrix/Spectral/RealQZ.lean",
+    "NLAlib/Matrix/Spectral/RealSchurSimilarity.lean",
+    "NLAlib/Matrix/Spectral/RealSpectrumSchur.lean",
+    "NLAlib/Matrix/Spectral/SingularValueInvariance.lean",
+    "NLAlib/Matrix/Subspaces/Projections.lean"
+   ],
+   "decision": "D4",
+   "raw_form": {
+    "files_with_raw_transpose_mul_self_eq_one": 76,
+    "occurrences": 180,
+    "raw_only_files": 32,
+    "rw_with_hypothesis_files": 30,
+    "rw_with_hypothesis_sites": 55
+   }
+  },
+  {
+   "name": "residual",
+   "module": "Matrix/Subspaces/Projections",
+   "current": "(Q : Matrix m q ℝ) (A : Matrix m n ℝ) := A - Q * (Qᵀ * A)",
+   "proposed": "A - Q * (Qᴴ * A)",
+   "real_specialisation": "definitional",
+   "stage": "A2",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "residual_eq_sub_mul_transpose_mul (ℝ, rfl)",
+    "conjTranspose_mul_residual (general) + transpose_mul_residual (ℝ, old name) — prototype-proved"
+   ],
+   "notes": "`rw [residual]` in real files → `rw [residual_eq_sub_mul_transpose_mul]`.",
+   "files_referencing": 25,
+   "refs_by_area": {
+    "LowRank": 11,
+    "Matrix/Perturbation": 3,
+    "Matrix/Spectral": 1,
+    "Matrix/Structured": 2,
+    "Matrix/Subspaces": 8
+   },
+   "files_unfolding": 11,
+   "unfold_sites": 20,
+   "unfold_files": [
+    "NLAlib/LowRank/Nystrom/GaussianNystrom.lean",
+    "NLAlib/LowRank/Nystrom/SketchedRegression.lean",
+    "NLAlib/LowRank/PolynomialMethods/PolynomialFilter.lean",
+    "NLAlib/LowRank/RangeFinding/ExpectedPower.lean",
+    "NLAlib/LowRank/RangeFinding/SpectralRangeFinder.lean",
+    "NLAlib/Matrix/Perturbation/SingularFrameTails.lean",
+    "NLAlib/Matrix/Perturbation/SingularFrames.lean",
+    "NLAlib/Matrix/Perturbation/WedinResidual.lean",
+    "NLAlib/Matrix/Structured/Measurable.lean",
+    "NLAlib/Matrix/Structured/SpectralMeasurable.lean",
+    "NLAlib/Matrix/Subspaces/Projections.lean"
+   ]
+  },
+  {
+   "name": "IsBestRankApprox",
+   "module": "Matrix/Subspaces/Projections",
+   "current": "(k) (C Y : Matrix m n ℝ) := Y.rank ≤ k ∧ ∀ Z, Z.rank ≤ k → frobSq (C - Y) ≤ frobSq (C - Z)",
+   "proposed": "same body over 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "A2",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Free.",
+   "files_referencing": 8,
+   "refs_by_area": {
+    "LowRank": 4,
+    "Matrix/Perturbation": 1,
+    "Matrix/Spectral": 2,
+    "Matrix/Subspaces": 1
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": []
+  },
+  {
+   "name": "quadForm",
+   "module": "Matrix/Basic/QuadForm",
+   "current": "(A : Matrix n n ℝ) (z : n → ℝ) : ℝ := z ⬝ᵥ (A *ᵥ z)",
+   "proposed": "(A : Matrix n n 𝕜) (z : n → 𝕜) : 𝕜 := star z ⬝ᵥ (A *ᵥ z)",
+   "real_specialisation": "definitional (rfl, tested: star x ⬝ᵥ v ≡ x ⬝ᵥ v over ℝ)",
+   "stage": "A1",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "quadForm_eq_dotProduct (ℝ, rfl): = z ⬝ᵥ (A *ᵥ z)",
+    "quadForm_nonneg (general, open scoped ComplexOrder): from PosSemidef.dotProduct_mulVec_nonneg (tested; usable by linarith at ℝ)",
+    "RCLike.re (quadForm A u) replaces matrixQuadraticFormReal (Probability) by rfl"
+   ],
+   "notes": "𝕜-valued to match Mathlib: PosSemidef/PosDef are characterised by `0 ≤ star x ⬝ᵥ (M *ᵥ x)` in 𝕜 (posSemidef_iff_dotProduct_mulVec, dotProduct_mulVec_nonneg); congruence/rank-one identities hold in 𝕜; real-valued consumers take RCLike.re, as Mathlib does for Rayleigh quotients (reApplyInnerSelf). Polarisation lemma quadForm_smul_add_smul stays ℝ.",
+   "files_referencing": 60,
+   "refs_by_area": {
+    "Estimation": 8,
+    "Krylov": 9,
+    "Matrix/Basic": 1,
+    "Matrix/Functions": 1,
+    "Matrix/Inequalities": 11,
+    "Matrix/Norms": 1,
+    "Matrix/Perturbation": 6,
+    "Matrix/Spectral": 5,
+    "Probability": 11,
+    "RandomMatrix": 1,
+    "Sketching": 6
+   },
+   "files_unfolding": 29,
+   "unfold_sites": 55,
+   "unfold_files": [
+    "NLAlib/Estimation/Diagonal/DiagonalEstimator.lean",
+    "NLAlib/Estimation/Spectral/RandomStartEndpoints.lean",
+    "NLAlib/Estimation/Spectral/RandomStartLanczos.lean",
+    "NLAlib/Estimation/Spectral/RandomStartPower.lean",
+    "NLAlib/Krylov/Solvers/CG.lean",
+    "NLAlib/Krylov/Solvers/GMRES.lean",
+    "NLAlib/Krylov/Spectral/MeasurableRitz.lean",
+    "NLAlib/Krylov/Spectral/PowerMethod.lean",
+    "NLAlib/Krylov/Spectral/Ritz.lean",
+    "NLAlib/Matrix/Basic/QuadForm.lean",
+    "NLAlib/Matrix/Functions/PolynomialCalculus.lean",
+    "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean",
+    "NLAlib/Matrix/Inequalities/BlockQuadratic.lean",
+    "NLAlib/Matrix/Inequalities/FiniteExponentialGram.lean",
+    "NLAlib/Matrix/Inequalities/HadamardOrder.lean",
+    "NLAlib/Matrix/Inequalities/Kantorovich.lean",
+    "NLAlib/Matrix/Inequalities/SeparatingPSDVector.lean",
+    "NLAlib/Matrix/Inequalities/Wielandt.lean",
+    "NLAlib/Matrix/Norms/Net.lean",
+    "NLAlib/Matrix/Perturbation/EigenvaluePerturbation.lean",
+    "NLAlib/Matrix/Perturbation/EigenvalueTrace.lean",
+    "NLAlib/Matrix/Perturbation/EigenvalueVariation.lean",
+    "NLAlib/Matrix/Perturbation/ResidualBounds.lean",
+    "NLAlib/Matrix/Spectral/CourantFischer.lean",
+    "NLAlib/Matrix/Spectral/Inertia.lean",
+    "NLAlib/Matrix/Spectral/PowerRayleigh.lean",
+    "NLAlib/Sketching/Sparse/Bands/Heavy/PreservingBound.lean",
+    "NLAlib/Sketching/Sparse/Bands/Light/SynthesisBounds.lean",
+    "NLAlib/Sketching/Sparse/Bands/Light/ZeroBlock.lean"
+   ],
+   "decision": "D3"
+  },
+  {
+   "name": "rayleighQuotient",
+   "module": "Matrix/Basic/QuadForm",
+   "current": "quadForm A x / (x ⬝ᵥ x)",
+   "proposed": "(A : Matrix n n 𝕜) (x : n → 𝕜) : ℝ := RCLike.re (quadForm A x) / RCLike.re (star x ⬝ᵥ x)",
+   "real_specialisation": "definitional",
+   "stage": "A1",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "rayleighQuotient_eq_div (ℝ, rfl)"
+   ],
+   "notes": "Mirrors ContinuousLinearMap.rayleighQuotient (re ⟪T x, x⟫ / ‖x‖²).",
+   "files_referencing": 10,
+   "refs_by_area": {
+    "Estimation": 3,
+    "Krylov": 2,
+    "Matrix/Basic": 1,
+    "Matrix/Norms": 1,
+    "Matrix/Perturbation": 2,
+    "Matrix/Spectral": 1
+   },
+   "files_unfolding": 6,
+   "unfold_sites": 10,
+   "unfold_files": [
+    "NLAlib/Estimation/Spectral/RandomStartEndpoints.lean",
+    "NLAlib/Estimation/Spectral/RandomStartLanczos.lean",
+    "NLAlib/Estimation/Spectral/RandomStartPower.lean",
+    "NLAlib/Krylov/Spectral/MeasurableRitz.lean",
+    "NLAlib/Krylov/Spectral/PowerMethod.lean",
+    "NLAlib/Matrix/Spectral/PowerRayleigh.lean"
+   ]
+  },
+  {
+   "name": "IsMoorePenroseInverse",
+   "module": "Matrix/Basic/PenroseIdentities",
+   "current": "structure, fields A*B*A = A, B*A*B = B, (A*B)ᵀ = A*B, (B*A)ᵀ = B*A",
+   "proposed": "same with ᴴ in the two symmetry fields",
+   "real_specialisation": "definitional (Prop fields; anonymous constructors with ᵀ proofs elaborate)",
+   "stage": "A1",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "IsMoorePenroseInverse.mul_transpose_symm-style ℝ corollaries for the two ᵀ fields under their old names"
+   ],
+   "notes": "refs 5 files.",
+   "files_referencing": 5,
+   "refs_by_area": {
+    "Matrix/Basic": 3,
+    "Matrix/Perturbation": 1,
+    "Matrix/Structured": 1
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": []
+  },
+  {
+   "name": "moorePenroseInverse",
+   "module": "Matrix/Basic/MoorePenrose",
+   "current": "(A : Matrix m n ℝ) : Matrix n m ℝ := (exists_isMoorePenroseInverse A).choose",
+   "proposed": "same over 𝕜; exists_isMoorePenroseInverse needs the general exists_isSVD",
+   "real_specialisation": "definitional up to proof irrelevance of the existence proof; no site unfolds it (0 fragile files)",
+   "stage": "A3",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [
+    "moorePenroseInverse_eq_pinvL/_pinvR (general)",
+    "ℝ corollaries for ᵀ-shaped API (moorePenroseInverse_transpose stays true over 𝕜; add _conjTranspose versions)"
+   ],
+   "notes": "MoorePenrose.lean depends on SVD.lean (real SVD) → generalise after A2/SVD.",
+   "files_referencing": 45,
+   "refs_by_area": {
+    "LowRank": 4,
+    "Matrix/Basic": 7,
+    "Matrix/Factorizations": 4,
+    "Matrix/Inequalities": 1,
+    "Matrix/Norms": 1,
+    "Matrix/Perturbation": 17,
+    "Matrix/Spectral": 2,
+    "Matrix/Structured": 2,
+    "Matrix/Subspaces": 3,
+    "Sketching": 1,
+    "Solvers": 3
+   },
+   "files_unfolding": 0,
+   "unfold_sites": 0,
+   "unfold_files": []
+  },
+  {
+   "name": "pinvL",
+   "module": "Matrix/Basic/Pseudoinverse",
+   "current": "(Gᵀ * G)⁻¹ * Gᵀ",
+   "proposed": "(Gᴴ * G)⁻¹ * Gᴴ",
+   "real_specialisation": "definitional",
+   "stage": "A2",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "pinvL_eq_inv_transpose_mul_mul_transpose (ℝ, rfl)"
+   ],
+   "notes": "ComplexFullRowInverse merges into pinvR lemmas (stage C2).",
+   "files_referencing": 13,
+   "refs_by_area": {
+    "LowRank": 5,
+    "Matrix/Basic": 3,
+    "Matrix/Factorizations": 1,
+    "Matrix/Structured": 1,
+    "Matrix/Subspaces": 1,
+    "RandomMatrix": 1,
+    "Solvers": 1
+   },
+   "files_unfolding": 4,
+   "unfold_sites": 8,
+   "unfold_files": [
+    "NLAlib/Matrix/Basic/Pseudoinverse.lean",
+    "NLAlib/Matrix/Factorizations/QR.lean",
+    "NLAlib/Matrix/Structured/Measurable.lean",
+    "NLAlib/Matrix/Subspaces/GramColumnDeterminant.lean"
+   ]
+  },
+  {
+   "name": "pinvR",
+   "module": "Matrix/Basic/Pseudoinverse",
+   "current": "Gᵀ * (G * Gᵀ)⁻¹",
+   "proposed": "Gᴴ * (G * Gᴴ)⁻¹",
+   "real_specialisation": "definitional",
+   "stage": "A2",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "pinvR_eq_transpose_mul_inv (ℝ, rfl)"
+   ],
+   "notes": "",
+   "files_referencing": 16,
+   "refs_by_area": {
+    "LowRank": 7,
+    "Matrix/Basic": 2,
+    "Matrix/Spectral": 1,
+    "Matrix/Structured": 1,
+    "RandomMatrix": 5
+   },
+   "files_unfolding": 3,
+   "unfold_sites": 8,
+   "unfold_files": [
+    "NLAlib/Matrix/Basic/Pseudoinverse.lean",
+    "NLAlib/Matrix/Spectral/Core.lean",
+    "NLAlib/Matrix/Structured/Measurable.lean"
+   ]
+  },
+  {
+   "name": "IsSVD",
+   "module": "Matrix/Spectral/SVD",
+   "current": "(A : Matrix (Fin m) (Fin n) ℝ) U V: fields transpose_mul_left : Uᵀ*U = 1, transpose_mul_right : Vᵀ*V = 1, eq : A = U * rectDiag (singularValues A) * Vᵀ",
+   "proposed": "over 𝕜 with fields conjTranspose_mul_left : Uᴴ*U = 1, conjTranspose_mul_right : Vᴴ*V = 1, eq : A = U * rectDiag (singularValues A) * Vᴴ; Fin indices kept (D10)",
+   "real_specialisation": "definitional",
+   "stage": "A2",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [
+    "ℝ theorems IsSVD.transpose_mul_left/right (old names, now theorems)",
+    "IsSVD.eq_mul_transpose (ℝ): A = U * rectDiag σ * Vᵀ",
+    "exists_isSVD general: same proof with inner 𝕜 and (σ : 𝕜) casts (~80 lines touched); subsumes ComplexSquareSingularBasis/ComplexRectangularSVD existence"
+   ],
+   "notes": "Users of `h.eq` in real files switch to the ℝ corollary (≈15 files).",
+   "files_referencing": 17,
+   "refs_by_area": {
+    "Matrix/Basic": 1,
+    "Matrix/Norms": 2,
+    "Matrix/Perturbation": 6,
+    "Matrix/Spectral": 5,
+    "Matrix/Structured": 2,
+    "Matrix/Subspaces": 1
+   },
+   "files_unfolding": 0,
+   "unfold_sites": 0,
+   "unfold_files": []
+  },
+  {
+   "name": "rectDiag",
+   "module": "Matrix/Spectral/SVD",
+   "current": "(σ : ℕ → ℝ) : Matrix (Fin m) (Fin n) ℝ := of fun i j => if (i:ℕ) = j then σ i else 0",
+   "proposed": "(σ : ℕ → ℝ) : Matrix (Fin m) (Fin n) 𝕜 := of fun i j => if (i:ℕ) = j then (σ i : 𝕜) else 0",
+   "real_specialisation": "definitional (rfl and simp [rectDiag] tested)",
+   "stage": "A2",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Removes `.map Complex.ofReal` around rectDiag in ComplexRectangularSVD/ComplexDiagonalFilter. 12 named-argument sites `rectDiag (m := _) (n := _)` without a type ascription must add 𝕜.",
+   "files_referencing": 37,
+   "refs_by_area": {
+    "LowRank": 3,
+    "Matrix/Basic": 1,
+    "Matrix/Factorizations": 2,
+    "Matrix/Functions": 2,
+    "Matrix/Inequalities": 2,
+    "Matrix/Norms": 6,
+    "Matrix/Perturbation": 1,
+    "Matrix/Spectral": 7,
+    "Matrix/Structured": 2,
+    "Matrix/Subspaces": 11
+   },
+   "files_unfolding": 1,
+   "unfold_sites": 1,
+   "unfold_files": [
+    "NLAlib/Matrix/Spectral/SVD.lean"
+   ]
+  },
+  {
+   "name": "kyFanNorm",
+   "module": "Matrix/Norms/KyFanNorm",
+   "current": "∑ i ∈ range k, A.toEuclideanLin.singularValues i (A real)",
+   "proposed": "same over 𝕜 (singularValues already RCLike)",
+   "real_specialisation": "definitional",
+   "stage": "A3",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Free; respell with singularValues (DEDUP follow-up).",
+   "files_referencing": 13,
+   "refs_by_area": {
+    "Matrix/Inequalities": 5,
+    "Matrix/Norms": 8
+   },
+   "files_unfolding": 8,
+   "unfold_sites": 14,
+   "unfold_files": [
+    "NLAlib/Matrix/Inequalities/KyFan.lean",
+    "NLAlib/Matrix/Inequalities/KyFanAttainment.lean",
+    "NLAlib/Matrix/Inequalities/KyFanNorms.lean",
+    "NLAlib/Matrix/Norms/NuclearGram.lean",
+    "NLAlib/Matrix/Norms/NuclearHermitian.lean",
+    "NLAlib/Matrix/Norms/NuclearPSD.lean",
+    "NLAlib/Matrix/Norms/SchattenComparison.lean",
+    "NLAlib/Matrix/Norms/SchattenDuality.lean"
+   ]
+  },
+  {
+   "name": "nuclearNorm",
+   "module": "Matrix/Norms/KyFanNorm",
+   "current": "kyFanNorm A (min (card m) (card n))",
+   "proposed": "same over 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "A3",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Free.",
+   "files_referencing": 15,
+   "refs_by_area": {
+    "Matrix/Factorizations": 4,
+    "Matrix/Inequalities": 2,
+    "Matrix/Norms": 9
+   },
+   "files_unfolding": 5,
+   "unfold_sites": 9,
+   "unfold_files": [
+    "NLAlib/Matrix/Norms/NuclearGram.lean",
+    "NLAlib/Matrix/Norms/NuclearHermitian.lean",
+    "NLAlib/Matrix/Norms/NuclearNorm.lean",
+    "NLAlib/Matrix/Norms/NuclearPSD.lean",
+    "NLAlib/Matrix/Norms/SchattenDuality.lean"
+   ]
+  },
+  {
+   "name": "schattenNorm",
+   "module": "Matrix/Norms/Schatten",
+   "current": "(∑ i ∈ range (min …), σ i ^ p) ^ (1/p)",
+   "proposed": "same over 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "A3",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Free.",
+   "files_referencing": 9,
+   "refs_by_area": {
+    "Matrix/Norms": 9
+   },
+   "files_unfolding": 5,
+   "unfold_sites": 11,
+   "unfold_files": [
+    "NLAlib/Matrix/Norms/Schatten.lean",
+    "NLAlib/Matrix/Norms/SchattenComparison.lean",
+    "NLAlib/Matrix/Norms/SchattenDuality.lean",
+    "NLAlib/Matrix/Norms/SchattenNorms.lean",
+    "NLAlib/Matrix/Norms/SchattenSingularCoefficients.lean"
+   ]
+  },
+  {
+   "name": "schattenNormExtended",
+   "module": "Matrix/Norms/Schatten",
+   "current": "if p = ∞ then specNorm A else schattenNorm A p.toReal",
+   "proposed": "same over 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "A3",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Free.",
+   "files_referencing": 6,
+   "refs_by_area": {
+    "Matrix/Norms": 6
+   },
+   "files_unfolding": 1,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Matrix/Norms/Schatten.lean"
+   ]
+  },
+  {
+   "name": "conditionNumber",
+   "module": "Matrix/Perturbation/ConditionNumber",
+   "current": "specNorm A * specNorm (moorePenroseInverse A)",
+   "proposed": "same over 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "A3",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Free after moorePenroseInverse.",
+   "files_referencing": 12,
+   "refs_by_area": {
+    "Matrix/Factorizations": 2,
+    "Matrix/Inequalities": 1,
+    "Matrix/Perturbation": 9
+   },
+   "files_unfolding": 4,
+   "unfold_sites": 17,
+   "unfold_files": [
+    "NLAlib/Matrix/Perturbation/ConditionNumber.lean",
+    "NLAlib/Matrix/Perturbation/Conditioning.lean",
+    "NLAlib/Matrix/Perturbation/LeastSquaresPerturbation.lean",
+    "NLAlib/Matrix/Perturbation/LeastSquaresPurePerturbation.lean"
+   ]
+  },
+  {
+   "name": "schurComplement",
+   "module": "Matrix/Basic/GeneralizedSchurComplement",
+   "current": "C - Bᵀ * moorePenroseInverse A * B",
+   "proposed": "C - Bᴴ * moorePenroseInverse A * B",
+   "real_specialisation": "definitional",
+   "stage": "B (optional)",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [],
+   "notes": "1 file.",
+   "files_referencing": 1,
+   "refs_by_area": {
+    "Matrix/Basic": 1
+   },
+   "files_unfolding": 1,
+   "unfold_sites": 4,
+   "unfold_files": [
+    "NLAlib/Matrix/Basic/GeneralizedSchurComplement.lean"
+   ]
+  },
+  {
+   "name": "bestRankFrobSq",
+   "module": "Matrix/Spectral/EckartYoung",
+   "current": "sInf {v | ∃ B, B.rank ≤ k ∧ v = frobSq (A - B)}",
+   "proposed": "same over 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "C6",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "= complexBestRankFrobSq at ℂ: merge.",
+   "files_referencing": 8,
+   "refs_by_area": {
+    "LowRank": 4,
+    "Matrix/Perturbation": 1,
+    "Matrix/Spectral": 3
+   },
+   "files_unfolding": 1,
+   "unfold_sites": 1,
+   "unfold_files": [
+    "NLAlib/Matrix/Spectral/FiniteIndexTransport.lean"
+   ]
+  },
+  {
+   "name": "singularValueTailSq",
+   "module": "Matrix/Spectral/EckartYoung",
+   "current": "∑ i : Fin m, if k ≤ i then σ i ^ 2 else 0 (A real, Fin)",
+   "proposed": "same over 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "C6",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "= complexGramTail: merge.",
+   "files_referencing": 7,
+   "refs_by_area": {
+    "LowRank": 4,
+    "Matrix/Spectral": 3
+   },
+   "files_unfolding": 4,
+   "unfold_sites": 5,
+   "unfold_files": [
+    "NLAlib/LowRank/RandomizedSVD/OptimalError.lean",
+    "NLAlib/LowRank/RangeFinding/ExpectedPower.lean",
+    "NLAlib/LowRank/Sampling/VolumeSampling.lean",
+    "NLAlib/Matrix/Spectral/EckartYoung.lean"
+   ]
+  },
+  {
+   "name": "principalAnglesFintype",
+   "module": "Matrix/Subspaces/PrincipalAngleDefinitions",
+   "current": "arccos (singularValues ((Pᵀ*Q).reindex …) i)",
+   "proposed": "arccos (singularValues ((Pᴴ*Q).reindex …) i), P Q over 𝕜, angles real",
+   "real_specialisation": "definitional",
+   "stage": "C7",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [],
+   "notes": "Merge complexPrincipalAnglesFintype.",
+   "files_referencing": 10,
+   "refs_by_area": {
+    "Matrix/Subspaces": 10
+   },
+   "files_unfolding": 3,
+   "unfold_sites": 4,
+   "unfold_files": [
+    "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngleDefinitions.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean"
+   ]
+  },
+  {
+   "name": "sinePrincipalAngles",
+   "module": "Matrix/Subspaces/PrincipalAngleDefinitions",
+   "current": "diagonal (sin θ_i) : real matrix",
+   "proposed": "P Q over 𝕜; result stays a real diagonal matrix",
+   "real_specialisation": "definitional",
+   "stage": "C7",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 15,
+   "refs_by_area": {
+    "Matrix/Perturbation": 11,
+    "Matrix/Subspaces": 4
+   },
+   "files_unfolding": 6,
+   "unfold_sites": 8,
+   "unfold_files": [
+    "NLAlib/Matrix/Perturbation/DavisKahan.lean",
+    "NLAlib/Matrix/Perturbation/DavisKahanFrames.lean",
+    "NLAlib/Matrix/Perturbation/DavisKahanTop.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngleDefinitions.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngleMaximum.lean"
+   ]
+  },
+  {
+   "name": "tangentPrincipalAngles",
+   "module": "Matrix/Subspaces/PrincipalAngleTangent",
+   "current": "diagonal (tan θ_i)",
+   "proposed": "P Q over 𝕜; real diagonal",
+   "real_specialisation": "definitional",
+   "stage": "C7",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 3,
+   "refs_by_area": {
+    "Matrix/Subspaces": 3
+   },
+   "files_unfolding": 2,
+   "unfold_sites": 2,
+   "unfold_files": [
+    "NLAlib/Matrix/Subspaces/PrincipalAngleBridges.lean",
+    "NLAlib/Matrix/Subspaces/PrincipalAngleTangent.lean"
+   ]
+  },
+  {
+   "name": "sinThetaMax",
+   "module": "Matrix/Subspaces/PrincipalAngles",
+   "current": "specNorm (residual Q X)",
+   "proposed": "same over 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "C7",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Vocabulary question in DEDUP_FOLLOWUP (retire?).",
+   "files_referencing": 1,
+   "refs_by_area": {
+    "Matrix/Subspaces": 1
+   },
+   "files_unfolding": 1,
+   "unfold_sites": 5,
+   "unfold_files": [
+    "NLAlib/Matrix/Subspaces/PrincipalAngles.lean"
+   ]
+  },
+  {
+   "name": "tanThetaMax",
+   "module": "Matrix/Subspaces/PrincipalAngles",
+   "current": "specNorm (residual Q X * (Qᵀ * X)⁻¹)",
+   "proposed": "with Qᴴ",
+   "real_specialisation": "definitional",
+   "stage": "C7",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [],
+   "notes": "Krylov uses (2 files).",
+   "files_referencing": 3,
+   "refs_by_area": {
+    "Krylov": 2,
+    "Matrix/Subspaces": 1
+   },
+   "files_unfolding": 1,
+   "unfold_sites": 5,
+   "unfold_files": [
+    "NLAlib/Matrix/Subspaces/PrincipalAngles.lean"
+   ]
+  },
+  {
+   "name": "subspaceTangent",
+   "module": "Matrix/Subspaces/GraphTangent",
+   "current": "sSup ‖U₂ᵀ x‖ over {x ∈ S, ‖U₁ᵀ x‖ ≤ 1} (real)",
+   "proposed": "with ᴴ, S : Submodule 𝕜 (n → 𝕜)",
+   "real_specialisation": "definitional",
+   "stage": "C11",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [],
+   "notes": "Merge complexSubspaceTangent.",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "LowRank": 1,
+    "Matrix/Subspaces": 1
+   },
+   "files_unfolding": 1,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Matrix/Subspaces/GraphTangent.lean"
+   ]
+  },
+  {
+   "name": "Stiefel",
+   "module": "Matrix/Subspaces/Stiefel",
+   "current": "{Q : Fin n → Fin k → ℝ // HasOrthonormalCols (of Q)}",
+   "proposed": "stays real",
+   "real_specialisation": "unchanged (HasOrthonormalCols at ℝ is definitional)",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Orthogonal-group Haar measure; RandomMatrix.",
+   "files_referencing": 5,
+   "refs_by_area": {
+    "Matrix/Inequalities": 1,
+    "Matrix/Subspaces": 2,
+    "RandomMatrix": 2
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": [],
+   "decision": "stays real"
+  },
+  {
+   "name": "sigmaMin",
+   "module": "Matrix/Spectral/Core",
+   "current": "⨅ x : {x // x ⬝ᵥ x = 1}, √((A x) ⬝ᵥ (A x))",
+   "proposed": "stays real this round (could be generalised definitionally with star/re)",
+   "real_specialisation": "—",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [
+    "sigmaMin_eq_singularValues_last is the general spelling"
+   ],
+   "notes": "RandomMatrix (11 files) consumers are real Gaussian.",
+   "files_referencing": 24,
+   "refs_by_area": {
+    "Matrix/Calculus": 2,
+    "Matrix/Perturbation": 3,
+    "Matrix/Spectral": 5,
+    "Matrix/Subspaces": 2,
+    "RandomMatrix": 11,
+    "Sketching": 1
+   },
+   "files_unfolding": 4,
+   "unfold_sites": 9,
+   "unfold_files": [
+    "NLAlib/Matrix/Spectral/Core.lean",
+    "NLAlib/Matrix/Spectral/SpectralBounds.lean",
+    "NLAlib/RandomMatrix/Gaussian/InverseMoments/LambdaMinTail.lean",
+    "NLAlib/RandomMatrix/Gaussian/Spectral/Gordon.lean"
+   ],
+   "decision": "D6"
+  },
+  {
+   "name": "lamMin",
+   "module": "Matrix/Spectral/Core",
+   "current": "⨅ x : {x // x ⬝ᵥ x = 1}, x ⬝ᵥ M x",
+   "proposed": "stays real this round",
+   "real_specialisation": "—",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "Matrix/Spectral": 2
+   },
+   "files_unfolding": 2,
+   "unfold_sites": 4,
+   "unfold_files": [
+    "NLAlib/Matrix/Spectral/Core.lean",
+    "NLAlib/Matrix/Spectral/SpectralMinimum.lean"
+   ],
+   "decision": "D6"
+  },
+  {
+   "name": "sigmaMinSq",
+   "module": "Matrix/Spectral/Core",
+   "current": "lamMin (Aᵀ * A)",
+   "proposed": "stays real this round",
+   "real_specialisation": "—",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 1,
+   "refs_by_area": {
+    "Matrix/Spectral": 1
+   },
+   "files_unfolding": 1,
+   "unfold_sites": 3,
+   "unfold_files": [
+    "NLAlib/Matrix/Spectral/Core.lean"
+   ],
+   "decision": "D6"
+  },
+  {
+   "name": "IsQR",
+   "module": "Matrix/Factorizations/QR",
+   "current": "A = Q * R ∧ HasOrthonormalCols Q ∧ R.IsUpperTriangular",
+   "proposed": "stays real this round (free later: no sign convention in the predicate)",
+   "real_specialisation": "HasOrthonormalCols field definitional",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "exists_isQR carries R_ii ≥ 0; algorithms (Gram–Schmidt, Householder, Givens) real.",
+   "files_referencing": 9,
+   "refs_by_area": {
+    "Krylov": 1,
+    "Matrix/Basic": 1,
+    "Matrix/Factorizations": 7
+   },
+   "files_unfolding": 0,
+   "unfold_sites": 0,
+   "unfold_files": [],
+   "decision": "D9"
+  },
+  {
+   "name": "IsFullQR",
+   "module": "Matrix/Factorizations/QR",
+   "current": "Fin, HasOrthonormalCols Q, IsUpperTrapezoidal R",
+   "proposed": "stays real",
+   "real_specialisation": "—",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 3,
+   "refs_by_area": {
+    "Matrix/Factorizations": 3
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": [],
+   "decision": "D9"
+  },
+  {
+   "name": "IsLU",
+   "module": "Matrix/Factorizations/LU",
+   "current": "unit lower L, upper U, A = L U",
+   "proposed": "stays real (partial pivoting by |·|)",
+   "real_specialisation": "—",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 3,
+   "refs_by_area": {
+    "Matrix/Factorizations": 3
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": [],
+   "decision": "D9"
+  },
+  {
+   "name": "IsCholesky",
+   "module": "Matrix/Factorizations/Cholesky",
+   "current": "L lower, 0 < L i i, A = L Lᵀ",
+   "proposed": "stays real (positive real diagonal; choleskyStep already [Field K])",
+   "real_specialisation": "—",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "Matrix/Factorizations": 2
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": [],
+   "decision": "D9"
+  },
+  {
+   "name": "IsSubspaceEmbedding",
+   "module": "Sketching/Properties/SubspaceEmbedding/Basic",
+   "current": "(S : Matrix k m ℝ) (U : Matrix m d ℝ) ε : ∀ x, (1-ε)‖Ux‖² ≤ ‖SUx‖² ≤ (1+ε)‖Ux‖² (raw dot products)",
+   "proposed": "stays real",
+   "real_specialisation": "unaffected (no vocabulary in the body)",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "18 Sketching files use HasOrthonormalCols; 7 need repair.",
+   "files_referencing": 21,
+   "refs_by_area": {
+    "Sketching": 21
+   },
+   "files_unfolding": 1,
+   "unfold_sites": 1,
+   "unfold_files": [
+    "NLAlib/Sketching/Properties/SubspaceEmbedding/SubspaceEmbedding.lean"
+   ],
+   "decision": "D7"
+  },
+  {
+   "name": "IsLeastSquaresSolution",
+   "module": "Matrix/Basic/LeastSquares",
+   "current": "∀ y, ‖b - A x‖² ≤ ‖b - A y‖² (raw dot)",
+   "proposed": "stays real (low value)",
+   "real_specialisation": "—",
+   "stage": "none",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 3,
+   "refs_by_area": {
+    "Matrix/Basic": 1,
+    "Matrix/Perturbation": 2
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": []
+  },
+  {
+   "name": "polarFrame",
+   "module": "Matrix/Subspaces/PolarFrame",
+   "current": "Y * (CFC.sqrt (Yᵀ * Y))⁻¹",
+   "proposed": "optional: Yᴴ (CFC.sqrt works for RCLike under MatrixOrder)",
+   "real_specialisation": "definitional",
+   "stage": "B (optional)",
+   "unfolding_changes_form_over_R": true,
+   "bridges": [],
+   "notes": "PolarFrame file also carries measurability (real).",
+   "files_referencing": 9,
+   "refs_by_area": {
+    "LowRank": 1,
+    "Matrix/Factorizations": 3,
+    "Matrix/Spectral": 3,
+    "Matrix/Subspaces": 1,
+    "RandomMatrix": 1
+   },
+   "files_unfolding": 1,
+   "unfold_sites": 1,
+   "unfold_files": [
+    "NLAlib/Matrix/Factorizations/PolarDecomposition.lean"
+   ]
+  },
+  {
+   "name": "orthonormalBasisMatrix",
+   "module": "Matrix/Subspaces/OrthonormalBasisMatrix",
+   "current": "Submodule ℝ (m → ℝ) → Matrix m (Fin r) ℝ",
+   "proposed": "optional: Submodule 𝕜, EuclideanSpace 𝕜",
+   "real_specialisation": "definitional",
+   "stage": "B (optional)",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 5,
+   "refs_by_area": {
+    "Krylov": 1,
+    "Matrix/Subspaces": 4
+   },
+   "files_unfolding": 1,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Matrix/Subspaces/OrthonormalBasisMatrix.lean"
+   ]
+  },
+  {
+   "name": "topEigenframe",
+   "module": "Matrix/Spectral/Eigenframes",
+   "current": "sorted eigenvector columns of a real Hermitian A",
+   "proposed": "optional (Mathlib eigenvectorBasis is RCLike)",
+   "real_specialisation": "definitional",
+   "stage": "B (optional)",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Davis–Kahan family consumers (Perturbation).",
+   "files_referencing": 10,
+   "refs_by_area": {
+    "Matrix/Inequalities": 1,
+    "Matrix/Perturbation": 7,
+    "Matrix/Spectral": 2
+   },
+   "files_unfolding": 3,
+   "unfold_sites": 3,
+   "unfold_files": [
+    "NLAlib/Matrix/Perturbation/PopulationTraceGap.lean",
+    "NLAlib/Matrix/Spectral/EigenframeDecomposition.lean",
+    "NLAlib/Matrix/Spectral/Eigenframes.lean"
+   ]
+  },
+  {
+   "name": "complexColumnProjector",
+   "module": "Matrix/Subspaces/ComplexVolumeProjection",
+   "current": "toEuclideanLin.symm (complexColumnSpace B).starProjection",
+   "proposed": "delete: canonical spelling B * moorePenroseInverse B (bridge lemma first)",
+   "real_specialisation": "—",
+   "stage": "C2",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "31 declaration uses in 10 files.",
+   "files_referencing": 10,
+   "refs_by_area": {
+    "LowRank": 5,
+    "Matrix/Spectral": 1,
+    "Matrix/Subspaces": 4
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": [],
+   "decision": "D11"
+  },
+  {
+   "name": "complexPrincipalAnglesFintype",
+   "module": "Matrix/Subspaces/ComplexObliqueSecant",
+   "current": "complex principal angles",
+   "proposed": "delete → principalAnglesFintype (𝕜 := ℂ)",
+   "real_specialisation": "—",
+   "stage": "C7",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "Matrix/Subspaces": 2
+   },
+   "files_unfolding": 1,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean"
+   ]
+  },
+  {
+   "name": "complexSubspaceIterate",
+   "module": "LowRank/RangeFinding/ComplexSubspaceConvergence",
+   "current": "range (A^t * Ω) over ℂ",
+   "proposed": "delete → subspaceIterate over [Field K]",
+   "real_specialisation": "rfl",
+   "stage": "C11",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "LowRank": 2
+   },
+   "files_unfolding": 1,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/LowRank/RangeFinding/ComplexSubspaceConvergence.lean"
+   ]
+  },
+  {
+   "name": "complexSubspaceTangent",
+   "module": "LowRank/RangeFinding/ComplexSubspaceConvergence",
+   "current": "ᴴ-version of subspaceTangent",
+   "proposed": "delete → subspaceTangent (𝕜 := ℂ)",
+   "real_specialisation": "rfl",
+   "stage": "C11",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "LowRank": 2
+   },
+   "files_unfolding": 1,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/LowRank/RangeFinding/ComplexSubspaceConvergence.lean"
+   ]
+  },
+  {
+   "name": "complexBlockKrylovSpace",
+   "module": "Krylov/Spaces/ComplexBlock",
+   "current": "span of (A^i Ω) columns over ℂ",
+   "proposed": "delete → blockKrylovSpace over [Field K]",
+   "real_specialisation": "rfl",
+   "stage": "C11",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 3,
+   "refs_by_area": {
+    "Krylov": 1,
+    "LowRank": 2
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": []
+  },
+  {
+   "name": "complexBestRankFrobSq",
+   "module": "Matrix/Spectral/ComplexBestRankApproximation",
+   "current": "complex best rank-k Frobenius error (‖·‖ Frobenius scope)",
+   "proposed": "delete → bestRankFrobSq (𝕜 := ℂ)",
+   "real_specialisation": "propositional (Frobenius norm vs frobSq)",
+   "stage": "C6",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "LowRank": 1,
+    "Matrix/Spectral": 1
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": []
+  },
+  {
+   "name": "complexGramTail",
+   "module": "Matrix/Spectral/ComplexVolumeSpectrum",
+   "current": "tail of complex Gram eigenvalues",
+   "proposed": "delete → singularValueTailSq / spectral tail",
+   "real_specialisation": "propositional",
+   "stage": "C6",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 5,
+   "refs_by_area": {
+    "LowRank": 1,
+    "Matrix/Spectral": 4
+   },
+   "files_unfolding": 4,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/LowRank/Sampling/ComplexVolumeSamplingError.lean",
+    "NLAlib/Matrix/Spectral/ComplexBestRankApproximation.lean",
+    "NLAlib/Matrix/Spectral/ComplexEckartYoung.lean",
+    "NLAlib/Matrix/Spectral/ComplexGramTruncation.lean"
+   ]
+  },
+  {
+   "name": "complexCholeskyResidualStep",
+   "module": "Matrix/Factorizations/ComplexCholeskyPivot",
+   "current": "one Cholesky residual step over ℂ",
+   "proposed": "delete → choleskyStep (K := ℂ) (rfl per P_randnla)",
+   "real_specialisation": "rfl",
+   "stage": "C9",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "LowRank": 1,
+    "Matrix/Factorizations": 1
+   },
+   "files_unfolding": 1,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Matrix/Factorizations/ComplexCholeskyPivot.lean"
+   ]
+  },
+  {
+   "name": "matrixQuadraticFormReal",
+   "module": "Probability/Concentration/Martingales/LocalSecondMoment",
+   "current": "(star u ⬝ᵥ A *ᵥ u).re on Matrix n n ℂ",
+   "proposed": "delete → RCLike.re (quadForm A u) (rfl)",
+   "real_specialisation": "rfl",
+   "stage": "C12",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "4 files.",
+   "files_referencing": 3,
+   "refs_by_area": {
+    "Probability": 3
+   },
+   "files_unfolding": 2,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Probability/Concentration/Martingales/LocalSecondMoment.lean",
+    "NLAlib/Probability/Concentration/Martingales/LocalSecondMomentIndicator.lean"
+   ]
+  },
+  {
+   "name": "krylovSpace",
+   "module": "Krylov/Spaces/Basic",
+   "current": "Submodule.span ℝ {A^i b : i < q}",
+   "proposed": "[Field K] (span-based); stays ℝ in all statements",
+   "real_specialisation": "definitional at ℝ",
+   "stage": "C11",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "Only the space definitions generalise; Lanczos/Arnoldi/CG/GMRES/quadrature stay real (D8).",
+   "files_referencing": 33,
+   "refs_by_area": {
+    "Estimation": 8,
+    "Krylov": 25
+   },
+   "files_unfolding": 5,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Krylov/Processes/Arnoldi.lean",
+    "NLAlib/Krylov/Processes/ArnoldiProcess.lean",
+    "NLAlib/Krylov/Solvers/Preconditioned.lean",
+    "NLAlib/Krylov/Spaces/Grade.lean",
+    "NLAlib/Krylov/Spaces/Polynomial.lean"
+   ],
+   "decision": "D8"
+  },
+  {
+   "name": "blockKrylovSpace",
+   "module": "Krylov/Spaces/Block",
+   "current": "span of (A^i Ω) columns over ℝ",
+   "proposed": "[Field K]",
+   "real_specialisation": "definitional at ℝ",
+   "stage": "C11",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 2,
+   "refs_by_area": {
+    "Krylov": 1,
+    "LowRank": 1
+   },
+   "files_unfolding": 0,
+   "unfold_sites": null,
+   "unfold_files": [],
+   "decision": "D8"
+  },
+  {
+   "name": "subspaceIterate",
+   "module": "Krylov/Spaces/Block",
+   "current": "range (A^k * Ω).mulVecLin over ℝ",
+   "proposed": "[CommRing R]",
+   "real_specialisation": "definitional at ℝ",
+   "stage": "C11",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 5,
+   "refs_by_area": {
+    "Krylov": 4,
+    "LowRank": 1
+   },
+   "files_unfolding": 3,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Krylov/Spaces/Block.lean",
+    "NLAlib/Krylov/Spectral/PowerMethod.lean",
+    "NLAlib/LowRank/RangeFinding/SubspaceConvergence.lean"
+   ],
+   "decision": "D8"
+  },
+  {
+   "name": "krylovGrade",
+   "module": "Krylov/Spaces/Grade",
+   "current": "finrank ℝ (span {A^i b})",
+   "proposed": "[Field K]",
+   "real_specialisation": "definitional at ℝ",
+   "stage": "C11 (optional)",
+   "unfolding_changes_form_over_R": false,
+   "bridges": [],
+   "notes": "",
+   "files_referencing": 11,
+   "refs_by_area": {
+    "Krylov": 11
+   },
+   "files_unfolding": 1,
+   "unfold_sites": null,
+   "unfold_files": [
+    "NLAlib/Krylov/Spaces/Grade.lean"
+   ],
+   "decision": "D8"
+  }
+ ],
+ "stays_real": [
+  {
+   "topic": "Real canonical forms",
+   "files": "Spectral/Real* (RealSchur, RealSchurCanonical, RealSchurPlane, RealSchurSimilarity, RealNormalForm, RealNormalBlocks, RealNormalSpecializations, RealQZ, RealPlaneSchur, RealInvariantPlane, RealInvariantSubspace, RealOrthogonalDescent, RealSimilarityDescent, RealSpectrumSchur, RealPencilTriangularization, RealDilation, RealDilationSpectrum), Spectral/MatrixPowerReal, Perturbation/SimpleEigenvalueReal",
+   "reason": "statements about real quasi-triangular/real normal forms, real invariant planes"
+  },
+  {
+   "topic": "Direct algorithms",
+   "files": "Factorizations/{LU, LULeadingRank, LURowInclusion, Cholesky*, Householder, Givens, GramSchmidt, Hessenberg, QR, QRExistence, QRDecomposition, QRCompletion, QRConsequences, MaximumVolume*, RankRevealing*, StrongRankRevealingQR, Triangular, ScaledOrthogonal}",
+   "reason": "sign conventions (R_ii ≥ 0, householderSign), pivoting by |·|, positive real diagonals, Fin-ordered recursions (ALGORITHM_CONVENTIONS)"
+  },
+  {
+   "topic": "Entrywise order, determinants of real matrices, majorization of real vectors",
+   "files": "Inequalities/{Hadamard*, Majorization*, Fischer/Minkowski/Overlapping/PrincipalOverlap determinants, ColumnDeterminantBound, LogDetConcavity, DeterminantConvexity/InequalityToolkit, KyFanSums, SeparatingPSDVector, VonNeumann}",
+   "reason": "order on entries, real determinant inequalities; many PSD determinant results are true over ℂ but stated with real det order"
+  },
+  {
+   "topic": "Real analysis and calculus",
+   "files": "Calculus/* (GramSoftMin, InversePower*, DeterminantDerivative*), Inequalities/PlaneRotation*, Perturbation/MapConditioning, Functions/TracePowerConvexity",
+   "reason": "derivatives in real parameters of real matrices; RandomMatrix consumers"
+  },
+  {
+   "topic": "Measure, Haar, Gaussian",
+   "files": "Subspaces/Stiefel, Subspaces/CanonicalQR, Subspaces/PolarFrame (measurability half), Structured/{Measurable, SpectralMeasurable, GramSoftMinMeasurable}, Spectral/Core (sigmaMin/lamMin), all of Probability, RandomMatrix, Sketching",
+   "reason": "real Gaussian/Rademacher laws, orthogonal-group Haar measure"
+  },
+  {
+   "topic": "Structured real matrices",
+   "files": "Structured/{Walsh, WalshFin, StructuredMatrices (Cauchy/Hilbert/Toeplitz/Hankel), CirculantCharacterization}",
+   "reason": "±1 and real-valued constructions"
+  },
+  {
+   "topic": "Krylov methods",
+   "files": "Krylov/** except Spaces/{Basic, Block, Grade}",
+   "reason": "Lanczos/CG/GMRES/Gauss quadrature on real symmetric matrices, spectral measures on ℝ (D8)"
+  }
+ ],
+ "matrix_file_classification": {
+  "legend": {
+   "C": "already complex/RCLike (incl. Complex* twins)",
+   "N": "no scalar field in statements",
+   "R": "real-essential statement markers (entry order, sign, trig, measure, orthogonal group, det order)",
+   "W": "real-only proof idioms or IsSymm/realSpan markers: general with work",
+   "F": "no markers: likely general for free"
+  },
+  "by_area": {
+   "Basic": {
+    "N": 6,
+    "W": 4,
+    "F": 13,
+    "C": 5,
+    "R": 3
+   },
+   "Calculus": {
+    "F": 6,
+    "R": 1,
+    "W": 4
+   },
+   "Factorizations": {
+    "R": 15,
+    "F": 8,
+    "W": 13,
+    "C": 1
+   },
+   "Functions": {
+    "F": 9,
+    "R": 4,
+    "C": 4,
+    "W": 4
+   },
+   "Inequalities": {
+    "R": 31,
+    "W": 10,
+    "F": 36,
+    "C": 4
+   },
+   "Norms": {
+    "W": 14,
+    "R": 4,
+    "F": 15,
+    "C": 2
+   },
+   "OperatorTheory": {
+    "F": 6,
+    "C": 6,
+    "W": 4,
+    "R": 2,
+    "N": 1
+   },
+   "Perturbation": {
+    "R": 9,
+    "W": 22,
+    "F": 27,
+    "C": 6,
+    "N": 1
+   },
+   "Spectral": {
+    "C": 35,
+    "F": 54,
+    "W": 11,
+    "N": 21,
+    "R": 18
+   },
+   "Structured": {
+    "F": 9,
+    "W": 1,
+    "R": 5
+   },
+   "Subspaces": {
+    "F": 15,
+    "W": 8,
+    "R": 15,
+    "C": 17
+   }
+  },
+  "files": [
+   {
+    "file": "NLAlib/Matrix/Spectral/OrderedSimultaneousTriangularization.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 77,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexBestRankApproximation.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 1,
+    "lines": 46,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SmallTriangularSimilarity.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 114,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/TraceEigenvalues.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 56,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealNormalBlocks.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 88,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/Inertia.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 149,
+    "ndecl": 20
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/IndefiniteCongruence.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 86,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/IrreducibleDiagonalDominance.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 91,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealInvariantSubspace.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 85,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SchurTriangularization.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 82,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/MatrixPowerBounded.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 75,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenvectorDeflationSpectrum.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 58,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SingularValueScaling.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 2,
+    "lines": 60,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexVolumeSpectrum.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 141,
+    "ndecl": 15
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealSpectrumSchur.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 77,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SylvesterSimilarity.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 56,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/PowerBoundedOrbits.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 86,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ProductSingularValues.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 3,
+    "lines": 151,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EckartYoung.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 10,
+    "lines": 340,
+    "ndecl": 15
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealOrthogonalDescent.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 70,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SylvesterCriterion.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "IsSymm",
+     "detOrder",
+     "posEntries"
+    ],
+    "proofR": 3,
+    "lines": 151,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexQZ.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 69,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SimultaneousToolkit.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 69,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingConverseToolkit.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 33,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SchurDensity.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 45,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SvdBlocks.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 115,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/DiagonalizablePrincipal.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 71,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SquareSingularBasis.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 43,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenvectorDeflationBlocks.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 95,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/GershgorinToolkit.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "detOrder",
+     "posEntries"
+    ],
+    "proofR": 3,
+    "lines": 66,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/GershgorinCounting.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 2,
+    "lines": 80,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenframeDecomposition.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 121,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexVariationalPrinciple.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 2,
+    "lines": 160,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealDilationSpectrum.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 97,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/PrimaryTriangularization.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 107,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SimultaneousTriangularBasis.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 75,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/LeftRightEigenvectorToolkit.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 48,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexSingularTransport.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 5,
+    "lines": 110,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealSimilarityDescent.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 108,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/TracePowerBounds.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 41,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/Core.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs",
+     "realSpan"
+    ],
+    "proofR": 155,
+    "lines": 602,
+    "ndecl": 27
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealSchurSimilarity.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 52,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/OrderedSchur.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 56,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/NormalIntertwining.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 31,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SchurToolkit.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 70,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/DefiniteCongruence.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 158,
+    "ndecl": 12
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/CommutingSpectra.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 52,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealPencilTriangularization.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 89,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/OstrowskiCongruence.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 6,
+    "lines": 204,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RankOneEigenvalue.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 92,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/PrincipalMinorPSD.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 85,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealNormalForm.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 98,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SingularInterlacing.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 128,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexVariationalExtrema.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 8,
+    "lines": 214,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/GershgorinBounds.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 14,
+    "lines": 89,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexRayleigh.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 47,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingSymmetricConverse.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 101,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/Weyl.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 27,
+    "lines": 159,
+    "ndecl": 10
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/HaynsworthInertia.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 212,
+    "ndecl": 13
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SpectralMinimum.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 108,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealSchurCanonical.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 135,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/DiagonalizableToolkit.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 42,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SingularValueSpectrum.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 57,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/LowRankInterlacing.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 157,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/NormalBlocks.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 37,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/CourantFischer.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 4,
+    "lines": 317,
+    "ndecl": 14
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SylvesterToolkit.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 49,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SVD.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "entryOrder",
+     "vecOrder",
+     "realSpan"
+    ],
+    "proofR": 7,
+    "lines": 433,
+    "ndecl": 39
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 83,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/MatrixPowerConvergence.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 1,
+    "lines": 79,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexGramTruncation.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 133,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/QuasiTriangular.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 88,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SylvesterQualitative.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 119,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ProductWeyl.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 46,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenvectorDeflation.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 94,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/AdjugateRankOne.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 111,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SeparableCharpolyDensity.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 72,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/Eigenframes.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 87,
+    "ndecl": 10
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SylvesterCriterionToolkit.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 23,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SimultaneousNormal.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 113,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/Diagonalizable.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 173,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealNormalSpecializations.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 100,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/PowerRayleigh.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 3,
+    "lines": 96,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/DiagonalizableBlocks.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 100,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/NormalToolkit.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 92,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingTrace.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 49,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingStrictConstruction.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 4,
+    "lines": 86,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/NormalSimilarity.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 90,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingRestoration.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 73,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/GramSingularValues.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 1,
+    "lines": 34,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealQZ.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 73,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SingularInterlacingToolkit.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 26,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/CharpolySimplicity.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 72,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/QuasiPencilBasis.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 2,
+    "lines": 75,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexSquareSingularBasis.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 69,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SylvesterBlocks.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 105,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingReindex.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 33,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SvdPowers.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 61,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/MatrixPowerBounds.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 9,
+    "lines": 107,
+    "ndecl": 10
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/QuadraticProbe.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 5,
+    "lines": 76,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenvectorPairing.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 106,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/NormalSpectral.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 2,
+    "lines": 112,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 58,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexRectangularSVD.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 75,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealSchur.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 101,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SpectrumCountContinuity.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 115,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealSchurPlane.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 105,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingDeterminants.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 130,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SpectrumCount.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 55,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SchurFrobenius.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 1,
+    "lines": 98,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SpectralBounds.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 21,
+    "lines": 217,
+    "ndecl": 10
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SimultaneousDiagonalization.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 100,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealPlaneSchur.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 6,
+    "lines": 52,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SemidefiniteCongruence.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 13,
+    "lines": 266,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/CongruenceToolkit.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 40,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/DiagonalDominanceStability.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 13,
+    "lines": 106,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/OrderedSymmetricDiagonalization.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 43,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/DiagonalDominanceCorollaries.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 4,
+    "lines": 58,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SigmaMinTransport.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 25,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenvectorDeflationConverse.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 61,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SingularValueInvariance.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 58,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealInvariantPlane.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 91,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SimultaneousTriangularization.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 78,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/PrincipalMinors.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 56,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SimultaneousOrthogonal.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 62,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenvalueEquality.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 50,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/GeneralizedEigenPairing.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 75,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/GeneralizedEigenDecay.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 57,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ComplexEckartYoung.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 1,
+    "lines": 121,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingInduction.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 79,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenvalueOrder.lean",
+    "area": "Spectral",
+    "cls": "W",
+    "marks": [
+     "abs",
+     "realSpan"
+    ],
+    "proofR": 8,
+    "lines": 128,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/GershgorinBasic.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 72,
+    "ndecl": 12
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/MatrixPowerToolkit.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 30,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EigenvalueSimplicity.lean",
+    "area": "Spectral",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 76,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/MatrixPowerReal.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 85,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealDilation.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 5,
+    "lines": 175,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/DefinitePairCalculus.lean",
+    "area": "Spectral",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "posEntries"
+    ],
+    "proofR": 5,
+    "lines": 67,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/NormalRectangularIntertwining.lean",
+    "area": "Spectral",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 27,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/FiniteIndexTransport.lean",
+    "area": "Spectral",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 107,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/IntrinsicDimension.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 149,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/TraceExpBounds.lean",
+    "area": "Functions",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 47,
+    "lines": 214,
+    "ndecl": 12
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/ExtremeEigenvalues.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 93,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/FunctionalCalculusEigenvalues.lean",
+    "area": "Functions",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 57,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/JensenBlockCalculus.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 56,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/HermitianCalculus.lean",
+    "area": "Functions",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "abs"
+    ],
+    "proofR": 11,
+    "lines": 279,
+    "ndecl": 25
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/RealComplexCFC.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 79,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/ExpLogPosDef.lean",
+    "area": "Functions",
+    "cls": "C",
+    "marks": [],
+    "proofR": 2,
+    "lines": 17,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/DiagonalFilter.lean",
+    "area": "Functions",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "entryOrder"
+    ],
+    "proofR": 11,
+    "lines": 63,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/DilationIdentities.lean",
+    "area": "Functions",
+    "cls": "C",
+    "marks": [],
+    "proofR": 4,
+    "lines": 109,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/ExpLog.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 36,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/TracePowerConvexity.lean",
+    "area": "Functions",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 6,
+    "lines": 314,
+    "ndecl": 15
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/CFCQuadratic.lean",
+    "area": "Functions",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 7,
+    "lines": 125,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/PolynomialCalculus.lean",
+    "area": "Functions",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 4,
+    "lines": 213,
+    "ndecl": 19
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/InverseCalculus.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 141,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/ComplexDiagonalFilter.lean",
+    "area": "Functions",
+    "cls": "C",
+    "marks": [
+     "abs",
+     "entryOrder"
+    ],
+    "proofR": 11,
+    "lines": 106,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/PolynomialSeries.lean",
+    "area": "Functions",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 5,
+    "lines": 148,
+    "ndecl": 10
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/CFCTrace.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 49,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/PolynomialIntertwining.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 48,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/UnitaryCalculus.lean",
+    "area": "Functions",
+    "cls": "F",
+    "marks": [],
+    "proofR": 5,
+    "lines": 289,
+    "ndecl": 28
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/PerspectiveSqrtNormalization.lean",
+    "area": "Functions",
+    "cls": "C",
+    "marks": [],
+    "proofR": 11,
+    "lines": 36,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/ComplementaryRank.lean",
+    "area": "Basic",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 22,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/GeneralizedSchurComplement.lean",
+    "area": "Basic",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 2,
+    "lines": 242,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/MoorePenroseProjector.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 54,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/Pseudoinverse.lean",
+    "area": "Basic",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 6,
+    "lines": 136,
+    "ndecl": 19
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/Dilation.lean",
+    "area": "Basic",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 21,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/SchurRank.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 81,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/CauchyBinetAdjoint.lean",
+    "area": "Basic",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 76,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/RankBounds.lean",
+    "area": "Basic",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 23,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/MoorePenroseTransformations.lean",
+    "area": "Basic",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 2,
+    "lines": 88,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/DeterminantDiagonalUpdate.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 55,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/SingletonInverse.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 32,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/SchurComplement.lean",
+    "area": "Basic",
+    "cls": "R",
+    "marks": [
+     "IsSymm",
+     "posEntries"
+    ],
+    "proofR": 8,
+    "lines": 183,
+    "ndecl": 13
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/LeastSquares.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 11,
+    "lines": 285,
+    "ndecl": 21
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/GramVanishing.lean",
+    "area": "Basic",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 42,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/PositiveDefiniteClosure.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 30,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/MoorePenrose.lean",
+    "area": "Basic",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 7,
+    "lines": 295,
+    "ndecl": 29
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/ComplexFullRowInverse.lean",
+    "area": "Basic",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 26,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/PenroseIdentities.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 197,
+    "ndecl": 17
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/ComplexPosSemidefTrace.lean",
+    "area": "Basic",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 38,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/QuadForm.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 88,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/PSDDuality.lean",
+    "area": "Basic",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 93,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/RankInequalities.lean",
+    "area": "Basic",
+    "cls": "N",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 126,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/Gram.lean",
+    "area": "Basic",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "entryOrder"
+    ],
+    "proofR": 3,
+    "lines": 50,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/PositiveSemidefiniteSeries.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 46,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/JacobiMinor.lean",
+    "area": "Basic",
+    "cls": "R",
+    "marks": [
+     "sign"
+    ],
+    "proofR": 0,
+    "lines": 78,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/JacobiBlockMinor.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 79,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/MoorePenroseRank.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 14,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/CoordinateUpdates.lean",
+    "area": "Basic",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 26,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/CauchyBinet.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 108,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/ComplementaryNullities.lean",
+    "area": "Basic",
+    "cls": "N",
+    "marks": [],
+    "proofR": 0,
+    "lines": 124,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/Selection.lean",
+    "area": "Basic",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 32,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardDeterminantLower.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 84,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MinkowskiDeterminant.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "detOrder"
+    ],
+    "proofR": 13,
+    "lines": 121,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/LidskiiToolkit.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 52,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/FischerDeterminant.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 88,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/BlockQuadratic.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 12,
+    "lines": 164,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/TraceTail.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 159,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/KyFanAttainment.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 112,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SeparatingPSDVector.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 5,
+    "lines": 56,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/BlockContraction.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 100,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationStochastic.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 70,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationWeights.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 104,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/KyFan.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 120,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HermitianPartConverse.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 72,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/QuadraticConditionBounds.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 9,
+    "lines": 71,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/TraceYoung.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 154,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/ComplexTraceTail.lean",
+    "area": "Inequalities",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 39,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SchurHornProjection.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 9,
+    "lines": 225,
+    "ndecl": 25
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationConvex.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 1,
+    "lines": 108,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/Majorization.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "vecOrder"
+    ],
+    "proofR": 1,
+    "lines": 124,
+    "ndecl": 19
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/TraceInverseConvexity.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 80,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/ColumnDeterminantBound.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "detOrder"
+    ],
+    "proofR": 11,
+    "lines": 47,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/TraceMeanValue.lean",
+    "area": "Inequalities",
+    "cls": "C",
+    "marks": [],
+    "proofR": 1,
+    "lines": 109,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/FiniteExponentialGram.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 77,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/CompressionDeterminant.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 60,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardToolkit.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "abs",
+     "entryOrder",
+     "detOrder",
+     "posEntries"
+    ],
+    "proofR": 4,
+    "lines": 50,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/Lidskii.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 80,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/Schur.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 53,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/PrincipalMinorProducts.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 77,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/Mirsky.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 2,
+    "lines": 107,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HermitianPart.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 85,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SchurHornWeights.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 91,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/PrincipalMinorProductBounds.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 93,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationProperties.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 1,
+    "lines": 90,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MirskyPadded.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 78,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/VonNeumann.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 17,
+    "lines": 248,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/StrictRelativeSpectrum.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 68,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardExponential.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 7,
+    "lines": 53,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationSupport.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 96,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/BlockContractionToolkit.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 53,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/PlaneRotationSpectrum.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 49,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HornPowerSums.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 18,
+    "lines": 102,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/PrincipalOverlapDeterminant.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 107,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/OverlappingBlockDeterminant.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 3,
+    "lines": 62,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/DeterminantRoot.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 7,
+    "lines": 32,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationWeakSupport.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 62,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationHinges.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 0,
+    "lines": 110,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardDeterminant.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 3,
+    "lines": 104,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/PlaneRotationDerivative.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 132,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SchurHornResidual.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 83,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/PositiveSpectralEndpoints.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 5,
+    "lines": 44,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/DeterminantConvexityToolkit.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "abs",
+     "detOrder"
+    ],
+    "proofR": 1,
+    "lines": 40,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationToolkit.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 25,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/BlockStrictContraction.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 89,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 96,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/KyFanToolkit.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 68,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardDominanceCounterexample.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 4,
+    "lines": 27,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/Wielandt.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 14,
+    "lines": 84,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HornProductToolkit.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 29,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardInverse.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 43,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/PlaneRotationCoordinates.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 82,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SzaszDeterminant.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 43,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/DeterminantInequalityToolkit.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "detOrder"
+    ],
+    "proofR": 3,
+    "lines": 52,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HermitianPartToolkit.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 49,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardPowerOrder.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 4,
+    "lines": 48,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/MajorizationHLP.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 79,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/KyFanSums.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 0,
+    "lines": 73,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/InverseDiagonalMinor.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 71,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardPowerSeries.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 6,
+    "lines": 82,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardMinimumSpectrum.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 53,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/PlaneRotation.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 71,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/TraceExpMonotone.lean",
+    "area": "Inequalities",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 35,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardOrder.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 8,
+    "lines": 89,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/ComplexDiagonalMajorization.lean",
+    "area": "Inequalities",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 67,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/Kantorovich.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 7,
+    "lines": 61,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/KyFanNormToolkit.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 84,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/KyFanNorms.lean",
+    "area": "Inequalities",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 127,
+    "ndecl": 15
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SchurHorn.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 0,
+    "lines": 148,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/RelativeSpectrum.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 4,
+    "lines": 247,
+    "ndecl": 15
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SchurHornDescent.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 11,
+    "lines": 78,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/TracePowers.lean",
+    "area": "Inequalities",
+    "cls": "F",
+    "marks": [],
+    "proofR": 7,
+    "lines": 130,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/LogDetConcavity.lean",
+    "area": "Inequalities",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "abs",
+     "detOrder"
+    ],
+    "proofR": 38,
+    "lines": 96,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/GramSchmidt.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "entryOrder"
+    ],
+    "proofR": 10,
+    "lines": 460,
+    "ndecl": 45
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/GramColumnExchange.lean",
+    "area": "Factorizations",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 64,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/Cholesky.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "IsSymm",
+     "abs",
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 27,
+    "lines": 309,
+    "ndecl": 35
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/Hessenberg.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "IsSymm",
+     "abs"
+    ],
+    "proofR": 3,
+    "lines": 149,
+    "ndecl": 23
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/Givens.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "IsSymm",
+     "abs"
+    ],
+    "proofR": 17,
+    "lines": 311,
+    "ndecl": 38
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/Procrustes.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 96,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/LU.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "detOrder"
+    ],
+    "proofR": 26,
+    "lines": 466,
+    "ndecl": 44
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/CholeskyDefinite.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 0,
+    "lines": 49,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/CholeskySemidefinite.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 0,
+    "lines": 30,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/PolarToolkit.lean",
+    "area": "Factorizations",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 44,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/PolarDecomposition.lean",
+    "area": "Factorizations",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 194,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/ComplexCholeskyPivot.lean",
+    "area": "Factorizations",
+    "cls": "C",
+    "marks": [],
+    "proofR": 1,
+    "lines": 270,
+    "ndecl": 18
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/ScaledOrthogonal.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 5,
+    "lines": 94,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/RankRevealingTrailing.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [],
+    "proofR": 16,
+    "lines": 95,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/MaximumVolumeColumns.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 69,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/LULeadingRank.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 118,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/MaximumVolumeTriangularQR.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 48,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/Triangular.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 337,
+    "ndecl": 50
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/MaximumVolumeRankAdapted.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 44,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/Householder.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 6,
+    "lines": 255,
+    "ndecl": 30
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/LURowInclusion.lean",
+    "area": "Factorizations",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 95,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/QRCompletion.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 0,
+    "lines": 67,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/StrongRankRevealingQR.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 10,
+    "lines": 82,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/ProcrustesRotations.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 140,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/PolarIntertwining.lean",
+    "area": "Factorizations",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 48,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/RankRevealingLeading.lean",
+    "area": "Factorizations",
+    "cls": "F",
+    "marks": [],
+    "proofR": 8,
+    "lines": 60,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/CholeskyToolkit.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 1,
+    "lines": 28,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/MaximumVolumeQR.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 108,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/QR.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 5,
+    "lines": 376,
+    "ndecl": 41
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/CholeskyStep.lean",
+    "area": "Factorizations",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 184,
+    "ndecl": 15
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/MaximumVolumeBudget.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "detOrder"
+    ],
+    "proofR": 4,
+    "lines": 65,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/CholeskyCharacterization.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "posEntries"
+    ],
+    "proofR": 2,
+    "lines": 72,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/ProcrustesToolkit.lean",
+    "area": "Factorizations",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 40,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/QRConsequences.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 0,
+    "lines": 92,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/NearestPolar.lean",
+    "area": "Factorizations",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 206,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/QRExistence.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 0,
+    "lines": 50,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/QRDecomposition.lean",
+    "area": "Factorizations",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "posEntries"
+    ],
+    "proofR": 0,
+    "lines": 44,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/InversePowerConcavity.lean",
+    "area": "Calculus",
+    "cls": "F",
+    "marks": [],
+    "proofR": 15,
+    "lines": 246,
+    "ndecl": 16
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/DeterminantDerivative.lean",
+    "area": "Calculus",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "detOrder"
+    ],
+    "proofR": 1,
+    "lines": 72,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/GramSoftMinSpectral.lean",
+    "area": "Calculus",
+    "cls": "F",
+    "marks": [],
+    "proofR": 13,
+    "lines": 393,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/GramCutoffCalculus.lean",
+    "area": "Calculus",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 13,
+    "lines": 170,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/UnshiftedGramSoftMin.lean",
+    "area": "Calculus",
+    "cls": "W",
+    "marks": [],
+    "proofR": 25,
+    "lines": 398,
+    "ndecl": 22
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/InversePowerGrowth.lean",
+    "area": "Calculus",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 37,
+    "lines": 332,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/GramSoftMin.lean",
+    "area": "Calculus",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 6,
+    "lines": 368,
+    "ndecl": 33
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/GramTrace.lean",
+    "area": "Calculus",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 142,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/DeterminantDerivativeFinite.lean",
+    "area": "Calculus",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 61,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/InversePowerLimit.lean",
+    "area": "Calculus",
+    "cls": "F",
+    "marks": [],
+    "proofR": 15,
+    "lines": 427,
+    "ndecl": 14
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/InversePowerLaplacianLimit.lean",
+    "area": "Calculus",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 110,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SymmetricGauge.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 2,
+    "lines": 90,
+    "ndecl": 20
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenNorms.lean",
+    "area": "Norms",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "vecOrder"
+    ],
+    "proofR": 21,
+    "lines": 116,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/InvariantNormRepresentation.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 118,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenTrace.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 12,
+    "lines": 59,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/Reindex.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 63,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/ComplexFrobenius.lean",
+    "area": "Norms",
+    "cls": "C",
+    "marks": [],
+    "proofR": 8,
+    "lines": 37,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/NuclearPSD.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 22,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SpectralNormBounds.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 10,
+    "lines": 117,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenToolkit.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 81,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenInvariant.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 2,
+    "lines": 86,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/ColumnNorms.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 13,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenSingularCoefficients.lean",
+    "area": "Norms",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 68,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenComparison.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 13,
+    "lines": 117,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/Core.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "IsSymm",
+     "abs",
+     "realSpan"
+    ],
+    "proofR": 49,
+    "lines": 600,
+    "ndecl": 89
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/RectangularDiagonal.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 104,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/NuclearGram.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 47,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/BlockNormBounds.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 66,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/Net.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "IsSymm",
+     "abs"
+    ],
+    "proofR": 74,
+    "lines": 313,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenProducts.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 13,
+    "lines": 61,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/RealComplexNorm.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 37,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/InvariantNormToolkit.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 34,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/NuclearNorm.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 8,
+    "lines": 164,
+    "ndecl": 19
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/FanDominance.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 68,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/ComplexFrobeniusTrace.lean",
+    "area": "Norms",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 33,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/EntryBounds.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 4,
+    "lines": 26,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenEndpoints.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 22,
+    "lines": 125,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/NuclearHermitian.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 2,
+    "lines": 73,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/RankNorm.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 11,
+    "lines": 140,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/Schatten.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 4,
+    "lines": 86,
+    "ndecl": 12
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/InvariantNorm.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 3,
+    "lines": 89,
+    "ndecl": 23
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/EuclideanOperatorBounds.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 4,
+    "lines": 47,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenDuality.lean",
+    "area": "Norms",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "entryOrder",
+     "posEntries",
+     "vecOrder"
+    ],
+    "proofR": 26,
+    "lines": 291,
+    "ndecl": 18
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/RectangularDiagonalPermutation.lean",
+    "area": "Norms",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 0,
+    "lines": 91,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/KyFanNorm.lean",
+    "area": "Norms",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 21,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/RayleighNorm.lean",
+    "area": "Norms",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 11,
+    "lines": 46,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/CoupledNormBounds.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 10,
+    "lines": 41,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SimpleEigenvalueToolkit.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 1,
+    "lines": 43,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/RayleighDerivative.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 4,
+    "lines": 35,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/DavisKahanPopulation.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [],
+    "proofR": 31,
+    "lines": 103,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/DavisKahanFrames.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 15,
+    "lines": 193,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/LeastSquaresToolkit.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "realSpan"
+    ],
+    "proofR": 26,
+    "lines": 158,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SimpleEigenvalueReal.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 1,
+    "lines": 88,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SpectralFrameWeights.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 122,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SimpleEigenvaluePerturbation.lean",
+    "area": "Perturbation",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 126,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/PseudoinverseSpectralPerturbation.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 15,
+    "lines": 143,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SimpleEigenvalueSchurFunction.lean",
+    "area": "Perturbation",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 83,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SimpleEigenvalueSchurSpectrum.lean",
+    "area": "Perturbation",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 65,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/LeastSquaresAngle.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "realSpan"
+    ],
+    "proofR": 22,
+    "lines": 77,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/WedinCoupled.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 93,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/Conditioning.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [],
+    "proofR": 84,
+    "lines": 276,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/DavisKahanBounds.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 85,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/GoldenRatioBlock.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 38,
+    "lines": 82,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/DavisKahanToolkit.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 148,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/WedinBounds.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 2,
+    "lines": 67,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/LeastSquaresCoordinateBounds.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [],
+    "proofR": 24,
+    "lines": 86,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/PseudoinverseNormControl.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 52,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/PseudoinverseDifference.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 74,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/BauerFike.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 134,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvalueResidualToolkit.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "abs",
+     "realSpan"
+    ],
+    "proofR": 7,
+    "lines": 42,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/PopulationTraceGap.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 81,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SpectralWeightGap.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 1,
+    "lines": 75,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SpectralContinuity.lean",
+    "area": "Perturbation",
+    "cls": "N",
+    "marks": [],
+    "proofR": 2,
+    "lines": 44,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/BauerFikeAbsolute.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 5,
+    "lines": 116,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/PseudoinversePerturbation.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 42,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvaluePencil.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 5,
+    "lines": 57,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/DavisKahan.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 119,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/LeastSquaresGeometry.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 19,
+    "lines": 186,
+    "ndecl": 13
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/GramSingularBounds.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [],
+    "proofR": 26,
+    "lines": 66,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/LeastSquaresScalar.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 8,
+    "lines": 79,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SimpleEigenvalueImplicitBranch.lean",
+    "area": "Perturbation",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 57,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/ComplexEmbedding.lean",
+    "area": "Perturbation",
+    "cls": "C",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 6,
+    "lines": 54,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/WedinResidual.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 11,
+    "lines": 129,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/PseudoinverseProjectors.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 85,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/InversePerturbation.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 4,
+    "lines": 278,
+    "ndecl": 17
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/ResidualBounds.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 33,
+    "lines": 202,
+    "ndecl": 10
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/OptimalErrorContinuity.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "measure"
+    ],
+    "proofR": 25,
+    "lines": 89,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/Wedin.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "entryOrder"
+    ],
+    "proofR": 6,
+    "lines": 136,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/LeastSquaresPurePerturbation.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [],
+    "proofR": 27,
+    "lines": 182,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/ConditionNumberToolkit.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 41,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvaluePerturbationToolkit.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 41,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SimpleEigenvaluePersistence.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 1,
+    "lines": 81,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/DavisKahanTop.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 9,
+    "lines": 122,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvaluePerturbation.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 13,
+    "lines": 91,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenspaceProjector.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "IsSymm",
+     "abs"
+    ],
+    "proofR": 18,
+    "lines": 159,
+    "ndecl": 10
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/WedinFiniteIndex.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 4,
+    "lines": 133,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/PseudoinverseBlocks.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 92,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/DistanceToSingularity.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 103,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SingularFrames.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 128,
+    "ndecl": 12
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvalueVariation.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 154,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/HoffmanWielandtNormal.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 113,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/PseudoinverseFrobeniusPerturbation.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 15,
+    "lines": 152,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/Sylvester.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 14,
+    "lines": 207,
+    "ndecl": 12
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/LeastSquaresEuclidean.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 8,
+    "lines": 50,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/InversePerturbationBounds.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 47,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/ConditionNumber.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 4,
+    "lines": 94,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/LeastSquaresPerturbation.lean",
+    "area": "Perturbation",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 10,
+    "lines": 202,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvalueTrace.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 134,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SimpleEigenvalueContinuousBranch.lean",
+    "area": "Perturbation",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 51,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SingularFrameTails.lean",
+    "area": "Perturbation",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 44,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/MapConditioning.lean",
+    "area": "Perturbation",
+    "cls": "R",
+    "marks": [
+     "abs",
+     "entryOrder",
+     "realSpan"
+    ],
+    "proofR": 47,
+    "lines": 209,
+    "ndecl": 21
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/JointTensor.lean",
+    "area": "OperatorTheory",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 30,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/VariationalTraceExp.lean",
+    "area": "OperatorTheory",
+    "cls": "C",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 32,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/GeneralizedKlein.lean",
+    "area": "OperatorTheory",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 63,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/LiebConcavity.lean",
+    "area": "OperatorTheory",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 72,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/LiebTraceFunction.lean",
+    "area": "OperatorTheory",
+    "cls": "C",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 28,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/LoewnerHeinz.lean",
+    "area": "OperatorTheory",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "abs",
+     "vecOrder"
+    ],
+    "proofR": 4,
+    "lines": 101,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/EntropyJointConvex.lean",
+    "area": "OperatorTheory",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 2,
+    "lines": 71,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/VariationalTrace.lean",
+    "area": "OperatorTheory",
+    "cls": "C",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 0,
+    "lines": 21,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/GoldenThompson.lean",
+    "area": "OperatorTheory",
+    "cls": "F",
+    "marks": [],
+    "proofR": 6,
+    "lines": 173,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/JointTensorRepresentation.lean",
+    "area": "OperatorTheory",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 24,
+    "lines": 250,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/JensenReflectionAlgebra.lean",
+    "area": "OperatorTheory",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 38,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/JensenIsometricCompression.lean",
+    "area": "OperatorTheory",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 133,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/EntropyNonnegative.lean",
+    "area": "OperatorTheory",
+    "cls": "C",
+    "marks": [],
+    "proofR": 5,
+    "lines": 48,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/Basic.lean",
+    "area": "OperatorTheory",
+    "cls": "F",
+    "marks": [],
+    "proofR": 2,
+    "lines": 31,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/TraceExpConvex.lean",
+    "area": "OperatorTheory",
+    "cls": "W",
+    "marks": [
+     "abs"
+    ],
+    "proofR": 1,
+    "lines": 47,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/CoordinatePinching.lean",
+    "area": "OperatorTheory",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 96,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/OperatorJensen.lean",
+    "area": "OperatorTheory",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 34,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/PerspectiveConvex.lean",
+    "area": "OperatorTheory",
+    "cls": "W",
+    "marks": [],
+    "proofR": 17,
+    "lines": 112,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/OperatorTheory/LogOperatorConcave.lean",
+    "area": "OperatorTheory",
+    "cls": "N",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 4,
+    "lines": 25,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/KroneckerIdentities.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 50,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/Hessenberg.lean",
+    "area": "Structured",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 2,
+    "lines": 72,
+    "ndecl": 9
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/Measurable.lean",
+    "area": "Structured",
+    "cls": "R",
+    "marks": [
+     "measure"
+    ],
+    "proofR": 0,
+    "lines": 148,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/GramSoftMinMeasurable.lean",
+    "area": "Structured",
+    "cls": "R",
+    "marks": [
+     "measure"
+    ],
+    "proofR": 0,
+    "lines": 111,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/WalshFin.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 40,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/StructuredMatrices.lean",
+    "area": "Structured",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 1,
+    "lines": 133,
+    "ndecl": 10
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/CauchyDeterminantFinite.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 26,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/KroneckerSpectrum.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 98,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/StructuredToolkit.lean",
+    "area": "Structured",
+    "cls": "R",
+    "marks": [
+     "detOrder"
+    ],
+    "proofR": 0,
+    "lines": 33,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/KroneckerSingularValues.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 9,
+    "lines": 88,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/CirculantCharacterization.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 111,
+    "ndecl": 7
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/SpectralMeasurable.lean",
+    "area": "Structured",
+    "cls": "R",
+    "marks": [
+     "measure"
+    ],
+    "proofR": 0,
+    "lines": 32,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/KroneckerToolkit.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 78,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/KroneckerNormRank.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 1,
+    "lines": 94,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/Walsh.lean",
+    "area": "Structured",
+    "cls": "F",
+    "marks": [],
+    "proofR": 9,
+    "lines": 146,
+    "ndecl": 18
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/OrthogonalSumCompletion.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 28,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/Projections.lean",
+    "area": "Subspaces",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 8,
+    "lines": 400,
+    "ndecl": 42
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ProjectionGaps.lean",
+    "area": "Subspaces",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 19,
+    "lines": 259,
+    "ndecl": 13
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/Stiefel.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "orthogonalGroup",
+     "abs"
+    ],
+    "proofR": 18,
+    "lines": 170,
+    "ndecl": 8
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/FrameContractions.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 3,
+    "lines": 58,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexVolumeProjectorTrace.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 38,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ProjectorTrace.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 6,
+    "lines": 48,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexObliqueBlocks.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 78,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/CSToolkit.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "vecOrder"
+    ],
+    "proofR": 4,
+    "lines": 61,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexFrameTransport.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 73,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ObliqueProjectionCanonical.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 42,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ObliqueProjectionSpectrum.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 10,
+    "lines": 63,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/InverseOverlapGram.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 73,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PrincipalAngleDefinitions.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "vecOrder"
+    ],
+    "proofR": 14,
+    "lines": 190,
+    "ndecl": 18
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexIdempotentRealForm.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 75,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 7,
+    "lines": 90,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/RectangularGramIsometry.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 38,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/FrameFourthContractions.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 86,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ObliqueCanonicalSpectrum.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 9,
+    "lines": 82,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PrincipalAngleBridges.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 28,
+    "lines": 122,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ObliqueProjectionNorms.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 7,
+    "lines": 88,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexObliqueCanonical.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 0,
+    "lines": 47,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ObliqueProjectionSecant.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 5,
+    "lines": 79,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexGramIsometry.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 62,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/CanonicalCS.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 4,
+    "lines": 93,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexProjectionBounds.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 3,
+    "lines": 142,
+    "ndecl": 12
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ProjectionFrobeniusGaps.lean",
+    "area": "Subspaces",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 4,
+    "lines": 56,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexVolumeProjection.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 98,
+    "ndecl": 12
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ObliqueProjectionBlocks.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 62,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ObliqueFrameInverse.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 62,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexGramColumnDeterminant.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 1,
+    "lines": 117,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PolarFrame.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "measure"
+    ],
+    "proofR": 0,
+    "lines": 79,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/GramIsometry.lean",
+    "area": "Subspaces",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 6,
+    "lines": 120,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PrincipalAngles.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 3,
+    "lines": 224,
+    "ndecl": 20
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/OrthogonalProducts.lean",
+    "area": "Subspaces",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 6,
+    "lines": 105,
+    "ndecl": 11
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PrincipalAngleMaximum.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "vecOrder"
+    ],
+    "proofR": 16,
+    "lines": 53,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/OrthonormalBasisMatrix.lean",
+    "area": "Subspaces",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 2,
+    "lines": 58,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexCSRank.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 78,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexProjectionComposition.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 89,
+    "ndecl": 4
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/OrthogonalBasisChange.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 42,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/CanonicalQR.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "orthogonalGroup",
+     "abs",
+     "measure",
+     "realSpan"
+    ],
+    "proofR": 16,
+    "lines": 221,
+    "ndecl": 21
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PrincipalAngleTangent.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "trig"
+    ],
+    "proofR": 10,
+    "lines": 107,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexCSToolkit.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [
+     "trig",
+     "vecOrder"
+    ],
+    "proofR": 4,
+    "lines": 58,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexCSDecomposition.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 6,
+    "lines": 140,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ObliqueComplementSpectrum.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "entryOrder",
+     "vecOrder"
+    ],
+    "proofR": 1,
+    "lines": 44,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexObliqueSpectrum.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [
+     "vecOrder"
+    ],
+    "proofR": 2,
+    "lines": 69,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/CSDecomposition.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 5,
+    "lines": 128,
+    "ndecl": 3
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/OrthogonalBlockCompletion.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 62,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/GramColumnDeterminant.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 72,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/UnitaryBlockCompletion.lean",
+    "area": "Subspaces",
+    "cls": "C",
+    "marks": [],
+    "proofR": 0,
+    "lines": 63,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PrincipalAngleToolkit.lean",
+    "area": "Subspaces",
+    "cls": "R",
+    "marks": [
+     "trig",
+     "vecOrder"
+    ],
+    "proofR": 4,
+    "lines": 64,
+    "ndecl": 1
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 74,
+    "ndecl": 5
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/CSRank.lean",
+    "area": "Subspaces",
+    "cls": "F",
+    "marks": [],
+    "proofR": 0,
+    "lines": 78,
+    "ndecl": 2
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ProjectorBlocks.lean",
+    "area": "Subspaces",
+    "cls": "W",
+    "marks": [
+     "IsSymm"
+    ],
+    "proofR": 10,
+    "lines": 76,
+    "ndecl": 6
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/GraphTangent.lean",
+    "area": "Subspaces",
+    "cls": "W",
+    "marks": [
+     "realSpan"
+    ],
+    "proofR": 5,
+    "lines": 150,
+    "ndecl": 5
+   }
+  ],
+  "caveat": "heuristic from statement signatures (atlas/declarations.json) and proof tokens; indicative only"
+ },
+ "stageA": [
+  {
+   "step": "A-1",
+   "parallel": true,
+   "items": [
+    {
+     "agent": "α",
+     "files": [
+      "NLAlib/Matrix/Norms/Core.lean"
+     ],
+     "defs": [
+      "frobInner",
+      "frobSq",
+      "frobNorm",
+      "specNorm"
+     ],
+     "build": "lake build NLAlib.Matrix.Norms.Core",
+     "dependents": 570
+    },
+    {
+     "agent": "β",
+     "files": [
+      "NLAlib/Matrix/Basic/QuadForm.lean"
+     ],
+     "defs": [
+      "quadForm",
+      "rayleighQuotient"
+     ],
+     "build": "lake build NLAlib.Matrix.Basic.QuadForm",
+     "dependents": 261
+    },
+    {
+     "agent": "γ",
+     "files": [
+      "NLAlib/Matrix/Basic/PenroseIdentities.lean"
+     ],
+     "defs": [
+      "IsMoorePenroseInverse"
+     ],
+     "build": "lake build NLAlib.Matrix.Basic.PenroseIdentities",
+     "dependents": 241
+    }
+   ]
+  },
+  {
+   "step": "A-2",
+   "parallel": true,
+   "after": "A-1 Norms/Core",
+   "items": [
+    {
+     "agent": "α",
+     "files": [
+      "NLAlib/Matrix/Subspaces/Projections.lean"
+     ],
+     "defs": [
+      "HasOrthonormalCols",
+      "residual",
+      "IsBestRankApprox"
+     ],
+     "dependents": 422
+    },
+    {
+     "agent": "β",
+     "files": [
+      "NLAlib/Matrix/Basic/Pseudoinverse.lean"
+     ],
+     "defs": [
+      "pinvL",
+      "pinvR"
+     ],
+     "dependents": 428
+    },
+    {
+     "agent": "γ",
+     "files": [
+      "NLAlib/Matrix/Spectral/SVD.lean"
+     ],
+     "defs": [
+      "rectDiag",
+      "IsSVD",
+      "exists_isSVD"
+     ],
+     "dependents": 341
+    }
+   ]
+  },
+  {
+   "step": "A-3",
+   "parallel": true,
+   "after": "A-2",
+   "items": [
+    {
+     "agent": "γ",
+     "files": [
+      "NLAlib/Matrix/Basic/MoorePenrose.lean",
+      "NLAlib/Matrix/Basic/MoorePenroseProjector.lean",
+      "NLAlib/Matrix/Basic/MoorePenroseRank.lean",
+      "NLAlib/Matrix/Basic/MoorePenroseTransformations.lean"
+     ],
+     "defs": [
+      "moorePenroseInverse"
+     ],
+     "dependents": 240
+    },
+    {
+     "agent": "β",
+     "files": [
+      "NLAlib/Matrix/Norms/KyFanNorm.lean",
+      "NLAlib/Matrix/Norms/Schatten.lean"
+     ],
+     "defs": [
+      "kyFanNorm",
+      "nuclearNorm",
+      "schattenNorm",
+      "schattenNormExtended"
+     ],
+     "dependents": 67
+    },
+    {
+     "agent": "α",
+     "files": [
+      "NLAlib/Matrix/Perturbation/ConditionNumber.lean (definition + statements only, after γ)"
+     ],
+     "defs": [
+      "conditionNumber"
+     ],
+     "dependents": 16
+    }
+   ]
+  },
+  {
+   "step": "A-4",
+   "parallel": false,
+   "items": [
+    {
+     "agent": "coordinator",
+     "files": [],
+     "note": "one full `lake build`, record failures, compare with stageA_breakage; regenerate aggregators not needed (no files moved)"
+    }
+   ]
+  }
+ ],
+ "stageA_predicted_breakage": {
+  "strategy": "D1 recommended (ℝ corollaries keep names)",
+  "files": 100,
+  "by_area": {
+   "Krylov": 6,
+   "LowRank": 7,
+   "Matrix/Basic": 1,
+   "Matrix/Calculus": 2,
+   "Matrix/Factorizations": 5,
+   "Matrix/Norms": 6,
+   "Matrix/Spectral": 16,
+   "Matrix/Structured": 4,
+   "Matrix/Subspaces": 12,
+   "Probability": 1,
+   "RandomMatrix": 4,
+   "Estimation": 5,
+   "Matrix/Perturbation": 12,
+   "Sketching": 7,
+   "Matrix/Functions": 1,
+   "Matrix/Inequalities": 11
+  },
+  "waves": [
+   {
+    "file": "NLAlib/Krylov/Spaces/Block.lean",
+    "area": "Krylov",
+    "wave": 0,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/LowRank/Nystrom/SketchedRegression.lean",
+    "area": "LowRank",
+    "wave": 0,
+    "reasons": [
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Basic/MoorePenroseProjector.lean",
+    "area": "Matrix/Basic",
+    "wave": 0,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/GramTrace.lean",
+    "area": "Matrix/Calculus",
+    "wave": 0,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/QR.lean",
+    "area": "Matrix/Factorizations",
+    "wave": 0,
+    "reasons": [
+     "pinvL",
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/ColumnNorms.lean",
+    "area": "Matrix/Norms",
+    "wave": 0,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/Reindex.lean",
+    "area": "Matrix/Norms",
+    "wave": 0,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/Core.lean",
+    "area": "Matrix/Spectral",
+    "wave": 0,
+    "reasons": [
+     "pinvR"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/OrderedSymmetricDiagonalization.lean",
+    "area": "Matrix/Spectral",
+    "wave": 0,
+    "reasons": [
+     "HasOrthonormalCols"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealQZ.lean",
+    "area": "Matrix/Spectral",
+    "wave": 0,
+    "reasons": [
+     "HasOrthonormalCols"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealSpectrumSchur.lean",
+    "area": "Matrix/Spectral",
+    "wave": 0,
+    "reasons": [
+     "HasOrthonormalCols"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SvdPowers.lean",
+    "area": "Matrix/Spectral",
+    "wave": 0,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/Measurable.lean",
+    "area": "Matrix/Structured",
+    "wave": 0,
+    "reasons": [
+     "frobInner",
+     "pinvL",
+     "pinvR",
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/FrameContractions.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 0,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/GramColumnDeterminant.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 0,
+    "reasons": [
+     "pinvL"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/GraphTangent.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 0,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/OrthogonalProducts.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 0,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Probability/Concentration/QuadraticForms/QuadraticMoments.lean",
+    "area": "Probability",
+    "wave": 0,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/RandomMatrix/Gaussian/Basic/PolynomialGrowth.lean",
+    "area": "RandomMatrix",
+    "wave": 0,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Estimation/Diagonal/DiagonalEstimator.lean",
+    "area": "Estimation",
+    "wave": 1,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/LowRank/Nystrom/GaussianNystrom.lean",
+    "area": "LowRank",
+    "wave": 1,
+    "reasons": [
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/GramSchmidt.lean",
+    "area": "Matrix/Factorizations",
+    "wave": 1,
+    "reasons": [
+     "HasOrthonormalCols"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/PolarDecomposition.lean",
+    "area": "Matrix/Factorizations",
+    "wave": 1,
+    "reasons": [
+     "HasOrthonormalCols",
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/Net.lean",
+    "area": "Matrix/Norms",
+    "wave": 1,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SpectralContinuity.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 1,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean",
+    "area": "Matrix/Spectral",
+    "wave": 1,
+    "reasons": [
+     "HasOrthonormalCols",
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SingularValueInvariance.lean",
+    "area": "Matrix/Spectral",
+    "wave": 1,
+    "reasons": [
+     "HasOrthonormalCols"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/SpectralBounds.lean",
+    "area": "Matrix/Spectral",
+    "wave": 1,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/SpectralMeasurable.lean",
+    "area": "Matrix/Structured",
+    "wave": 1,
+    "reasons": [
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/CSRank.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 1,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/OrthogonalBlockCompletion.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 1,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/RandomMatrix/Gaussian/InverseMoments/GaussianWeakInequality.lean",
+    "area": "RandomMatrix",
+    "wave": 1,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Sketching/Sparse/Bands/Heavy/PreservingBound.lean",
+    "area": "Sketching",
+    "wave": 1,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Sketching/Sparse/Bands/Light/SynthesisBounds.lean",
+    "area": "Sketching",
+    "wave": 1,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Sketching/Sparse/CountSketch.lean",
+    "area": "Sketching",
+    "wave": 1,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Calculus/GramCutoffCalculus.lean",
+    "area": "Matrix/Calculus",
+    "wave": 2,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Functions/PolynomialCalculus.lean",
+    "area": "Matrix/Functions",
+    "wave": 2,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/EckartYoung.lean",
+    "area": "Matrix/Spectral",
+    "wave": 2,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/InverseOverlapGram.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 2,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Sketching/Sparse/Bands/Light/ZeroBlock.lean",
+    "area": "Sketching",
+    "wave": 2,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Sketching/Sparse/CountSketchMoments.lean",
+    "area": "Sketching",
+    "wave": 2,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Krylov/Solvers/CG.lean",
+    "area": "Krylov",
+    "wave": 3,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Krylov/Solvers/GMRES.lean",
+    "area": "Krylov",
+    "wave": 3,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Krylov/Spectral/Ritz.lean",
+    "area": "Krylov",
+    "wave": 3,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/LowRank/Nystrom/RawGaussianNystrom.lean",
+    "area": "LowRank",
+    "wave": 3,
+    "reasons": [
+     "HasOrthonormalCols"
+    ]
+   },
+   {
+    "file": "NLAlib/LowRank/PolynomialMethods/PolynomialFilter.lean",
+    "area": "LowRank",
+    "wave": 3,
+    "reasons": [
+     "residual",
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/VonNeumann.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 3,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/ResidualBounds.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 3,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/CourantFischer.lean",
+    "area": "Matrix/Spectral",
+    "wave": 3,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/Inertia.lean",
+    "area": "Matrix/Spectral",
+    "wave": 3,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/PowerRayleigh.lean",
+    "area": "Matrix/Spectral",
+    "wave": 3,
+    "reasons": [
+     "quadForm",
+     "rayleighQuotient"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealSchurSimilarity.lean",
+    "area": "Matrix/Spectral",
+    "wave": 3,
+    "reasons": [
+     "HasOrthonormalCols"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/KroneckerSingularValues.lean",
+    "area": "Matrix/Structured",
+    "wave": 3,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ProjectionGaps.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 3,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/RandomMatrix/Gaussian/InverseMoments/CutoffIntegrability.lean",
+    "area": "RandomMatrix",
+    "wave": 3,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Sketching/Sampling/Leverage.lean",
+    "area": "Sketching",
+    "wave": 3,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Estimation/Spectral/RandomStartPower.lean",
+    "area": "Estimation",
+    "wave": 4,
+    "reasons": [
+     "quadForm",
+     "rayleighQuotient"
+    ]
+   },
+   {
+    "file": "NLAlib/Krylov/Spectral/MeasurableRitz.lean",
+    "area": "Krylov",
+    "wave": 4,
+    "reasons": [
+     "quadForm",
+     "rayleighQuotient"
+    ]
+   },
+   {
+    "file": "NLAlib/LowRank/Nystrom/Structural.lean",
+    "area": "LowRank",
+    "wave": 4,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/BlockQuadratic.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 4,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/HadamardOrder.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 4,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/KyFanAttainment.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 4,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SchurHornProjection.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 4,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/DavisKahan.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 4,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvaluePerturbation.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 4,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SingularFrames.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 4,
+    "reasons": [
+     "IsSVD",
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/ProductSingularValues.lean",
+    "area": "Matrix/Spectral",
+    "wave": 4,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealNormalForm.lean",
+    "area": "Matrix/Spectral",
+    "wave": 4,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Structured/KroneckerToolkit.lean",
+    "area": "Matrix/Structured",
+    "wave": 4,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 4,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/RandomMatrix/Gaussian/InverseMoments/UnshiftedWeakInequality.lean",
+    "area": "RandomMatrix",
+    "wave": 4,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Sketching/Sparse/CountSketchExpectation.lean",
+    "area": "Sketching",
+    "wave": 4,
+    "reasons": [
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Estimation/Spectral/RandomStartLanczos.lean",
+    "area": "Estimation",
+    "wave": 5,
+    "reasons": [
+     "quadForm",
+     "rayleighQuotient"
+    ]
+   },
+   {
+    "file": "NLAlib/Krylov/Spectral/PowerMethod.lean",
+    "area": "Krylov",
+    "wave": 5,
+    "reasons": [
+     "quadForm",
+     "rayleighQuotient"
+    ]
+   },
+   {
+    "file": "NLAlib/LowRank/RangeFinding/SpectralRangeFinder.lean",
+    "area": "LowRank",
+    "wave": 5,
+    "reasons": [
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/Procrustes.lean",
+    "area": "Matrix/Factorizations",
+    "wave": 5,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 5,
+    "reasons": [
+     "quadForm",
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SchurHorn.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 5,
+    "reasons": [
+     "HasOrthonormalCols"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenSingularCoefficients.lean",
+    "area": "Matrix/Norms",
+    "wave": 5,
+    "reasons": [
+     "IsSVD",
+     "frobInner"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvalueTrace.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 5,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/EigenvalueVariation.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 5,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/SingularFrameTails.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 5,
+    "reasons": [
+     "IsSVD",
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Spectral/RealNormalSpecializations.lean",
+    "area": "Matrix/Spectral",
+    "wave": 5,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 5,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Estimation/Spectral/RandomStartEndpoints.lean",
+    "area": "Estimation",
+    "wave": 6,
+    "reasons": [
+     "quadForm",
+     "rayleighQuotient"
+    ]
+   },
+   {
+    "file": "NLAlib/Estimation/Trace/Unbiased.lean",
+    "area": "Estimation",
+    "wave": 6,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/LowRank/RangeFinding/ExpectedPower.lean",
+    "area": "LowRank",
+    "wave": 6,
+    "reasons": [
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Factorizations/NearestPolar.lean",
+    "area": "Matrix/Factorizations",
+    "wave": 6,
+    "reasons": [
+     "HasOrthonormalCols",
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/Kantorovich.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 6,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/SeparatingPSDVector.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 6,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/NuclearHermitian.lean",
+    "area": "Matrix/Norms",
+    "wave": 6,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Norms/SchattenDuality.lean",
+    "area": "Matrix/Norms",
+    "wave": 6,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/WedinResidual.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 6,
+    "reasons": [
+     "IsSVD",
+     "residual"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/FiniteExponentialGram.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 7,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Inequalities/Wielandt.lean",
+    "area": "Matrix/Inequalities",
+    "wave": 7,
+    "reasons": [
+     "quadForm"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/Wedin.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 7,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/CanonicalCS.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 7,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/WedinBounds.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 8,
+    "reasons": [
+     "IsSVD"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Subspaces/CSDecomposition.lean",
+    "area": "Matrix/Subspaces",
+    "wave": 8,
+    "reasons": [
+     "rw[hQ]"
+    ]
+   },
+   {
+    "file": "NLAlib/Matrix/Perturbation/WedinFiniteIndex.lean",
+    "area": "Matrix/Perturbation",
+    "wave": 9,
+    "reasons": [
+     "IsSVD"
+    ]
+   }
+  ],
+  "estimate_range": "100–130 files (heuristic misses: show/conv/decide sites, unascribed rectDiag, IsSVD field names)",
+  "alternative_rename_strategy_files": 172
+ },
+ "stageB": {
+  "B0": "one agent, no Lean: apply recipe substitutions to the predicted files (hQ ↦ hQ.transpose_mul_self in rw/simp lists; quadForm/frobInner/residual/pinvL/pinvR/rayleighQuotient in real rule lists ↦ their ℝ bridge lemmas; h.eq for IsSVD ↦ h.eq_mul_transpose).",
+  "B1": "Matrix repair, waves 0–9 by import depth among broken files, ≤3 agents by subdirectory group: {Basic, Norms, Spectral}, {Subspaces, Factorizations, Structured, Calculus, Functions}, {Inequalities, Perturbation, OperatorTheory}; a file is claimed when its broken ancestors are green.",
+  "B2": "Downstream repair after Matrix is green: Krylov 6, Probability 1, RandomMatrix 4, Sketching 7, LowRank 7, Estimation 5 (2 agents: {Krylov, Probability, RandomMatrix, Sketching} then {LowRank, Estimation, Solvers}).",
+  "B3": "Selective conversion of real statements to 𝕜 only where a stage-C keeper needs it (listed per family) or where the file is vocabulary API (Norms/{Reindex, RankNorm, Schatten*, NuclearGram, NuclearPSD, KyFanNorm}, Basic/MoorePenrose*, Spectral/{SingularValueInvariance, SquareSingularBasis, SvdBlocks, SvdPowers, SingularValueSpectrum, FiniteIndexTransport}). Everything else keeps its real statement and is only repaired."
+ },
+ "stageC": [
+  {
+   "id": "C1",
+   "family": "Frobenius norm",
+   "keeper": "Matrix/Norms/Core (frobSq/frobNorm over 𝕜)",
+   "losers": [
+    "Matrix/Norms/ComplexFrobenius",
+    "Matrix/Norms/ComplexFrobeniusTrace"
+   ],
+   "also": "23 files using `‖A‖` under Matrix.Norms.Frobenius switch statements to frobSq/frobNorm when touched (bridge frobSq_eq_frobenius_norm_sq)",
+   "difficulty": "easy",
+   "prereq": [
+    "A1"
+   ]
+  },
+  {
+   "id": "C2",
+   "family": "Projections / projection bounds / column projector / full-row inverse",
+   "keeper": "Matrix/Subspaces/{Projections, ProjectorTrace, ProjectionGaps}, Basic/Pseudoinverse, Subspaces/GramColumnDeterminant (generalised)",
+   "losers": [
+    "Matrix/Subspaces/ComplexProjectionBounds",
+    "Matrix/Subspaces/ComplexProjectionComposition",
+    "Matrix/Subspaces/ComplexVolumeProjection",
+    "Matrix/Subspaces/ComplexVolumeProjectorTrace",
+    "Matrix/Basic/ComplexFullRowInverse",
+    "Matrix/Subspaces/ComplexGramColumnDeterminant"
+   ],
+   "external_importers": [
+    "Perturbation/HoffmanWielandtNormal",
+    "Spectral/NormalBlocks",
+    "Spectral/SchurFrobenius"
+   ],
+   "difficulty": "medium",
+   "prereq": [
+    "A2",
+    "A3",
+    "C1"
+   ],
+   "decision": "D11"
+  },
+  {
+   "id": "C3",
+   "family": "Gram isometry and block completion",
+   "keeper": "Matrix/Subspaces/{GramIsometry, RectangularGramIsometry, OrthogonalBlockCompletion} over 𝕜 with unitaryGroup (orthogonalGroup is an abbrev of unitaryGroup)",
+   "losers": [
+    "Matrix/Subspaces/ComplexGramIsometry",
+    "Matrix/Subspaces/UnitaryBlockCompletion"
+   ],
+   "difficulty": "easy-medium",
+   "prereq": [
+    "A2",
+    "A3"
+   ]
+  },
+  {
+   "id": "C4",
+   "family": "SVD and singular-value transport",
+   "keeper": "Matrix/Spectral/{SVD (A-2), SquareSingularBasis, SingularValueInvariance}",
+   "losers": [
+    "Matrix/Spectral/ComplexSquareSingularBasis",
+    "Matrix/Spectral/ComplexRectangularSVD",
+    "Matrix/Spectral/ComplexSingularTransport (keep only the map-ofReal bridges, moved to FiniteIndexTransport or a RealComplex file)"
+   ],
+   "merges": [
+    "complex_singularValues_isometry_mul → singularValues_isometry_mul",
+    "complex_singularValues_mul_unitary → singularValues_mul_orthogonal (unitary)",
+    "complex_singularValues_zero_eq_norm → singularValues_zero_eq_specNorm",
+    "three singular-basis existence statements → one RCLike statement"
+   ],
+   "difficulty": "medium",
+   "prereq": [
+    "A2"
+   ]
+  },
+  {
+   "id": "C5",
+   "family": "Courant–Fischer / variational principle / trace tail",
+   "keeper": "Matrix/Spectral/CourantFischer over 𝕜 (statements with RCLike.re (quadForm A x) and Submodule 𝕜; ℝ corollaries keep names for Weyl/interlacing consumers)",
+   "losers": [
+    "Matrix/Spectral/ComplexRayleigh",
+    "Matrix/Spectral/ComplexVariationalPrinciple",
+    "Matrix/Spectral/ComplexVariationalExtrema",
+    "Matrix/Inequalities/ComplexTraceTail (wrapper collapses into TraceTail)"
+   ],
+   "difficulty": "hard (~650 lines, P_spectral #35)",
+   "prereq": [
+    "A1"
+   ]
+  },
+  {
+   "id": "C6",
+   "family": "Eckart–Young / best rank approximation",
+   "keeper": "Matrix/Spectral/EckartYoung over 𝕜 (bestRankFrobSq, singularValueTailSq, truncatedSVD general)",
+   "losers": [
+    "Matrix/Spectral/ComplexEckartYoung",
+    "Matrix/Spectral/ComplexGramTruncation",
+    "Matrix/Spectral/ComplexBestRankApproximation",
+    "Matrix/Spectral/ComplexVolumeSpectrum (complexGramTail/complexGramEigenvalues/complexGramElementary → general or delete)"
+   ],
+   "difficulty": "medium-hard",
+   "prereq": [
+    "C1",
+    "C2",
+    "C4"
+   ]
+  },
+  {
+   "id": "C7",
+   "family": "CS decomposition, oblique projections, complex principal angles",
+   "keeper": "Matrix/Subspaces/{CSDecomposition, CSRank, CSToolkit, CanonicalCS, ObliqueProjectionBlocks, ObliqueProjectionCanonical, ObliqueProjectionSecant, ObliqueProjectionSpectrum, ObliqueProjectionNorms, ObliqueCanonicalSpectrum, ObliqueComplementSpectrum, ObliqueFrameInverse, PrincipalAngle*} over 𝕜",
+   "losers": [
+    "Matrix/Subspaces/ComplexCSDecomposition",
+    "Matrix/Subspaces/ComplexCSRank",
+    "Matrix/Subspaces/ComplexCSToolkit",
+    "Matrix/Subspaces/ComplexObliqueBlocks",
+    "Matrix/Subspaces/ComplexObliqueCanonical",
+    "Matrix/Subspaces/ComplexObliqueSecant",
+    "Matrix/Subspaces/ComplexObliqueSpectrum",
+    "Matrix/Subspaces/ComplexIdempotentRealForm",
+    "Matrix/Subspaces/ComplexFrameTransport"
+   ],
+   "difficulty": "hard",
+   "prereq": [
+    "C3",
+    "C4"
+   ]
+  },
+  {
+   "id": "C8",
+   "family": "Diagonal filter",
+   "keeper": "Matrix/Functions/DiagonalFilter over 𝕜 (rectDiag 𝕜)",
+   "losers": [
+    "Matrix/Functions/ComplexDiagonalFilter (map_ofReal_mul, aeval_map_ofReal, conjTranspose_map_ofReal move to ForMathlib/LinearAlgebra/Matrix)"
+   ],
+   "difficulty": "easy",
+   "prereq": [
+    "A2"
+   ]
+  },
+  {
+   "id": "C9",
+   "family": "RPCholesky",
+   "keeper": "RCLike versions of LowRank/Cholesky/{ComplexCholeskyHistories, ComplexRandomPivotedCholesky} (renamed without Complex), CholeskyStep ([Field K]) for the step",
+   "losers": [
+    "Matrix/Factorizations/ComplexCholeskyPivot (complexCholeskyResidualStep = choleskyStep, rfl)",
+    "LowRank/Cholesky/CholeskyHistories (~45 real decls become corollaries or deleted)"
+   ],
+   "difficulty": "medium-hard (plan in docs/dedup/P_randnla.md)",
+   "prereq": [
+    "C5"
+   ]
+  },
+  {
+   "id": "C10",
+   "family": "Volume sampling",
+   "keeper": "LowRank/Sampling complex stack generalised to RCLike (VolumeSampling* names)",
+   "losers": [
+    "LowRank/Sampling/VolumeSampling (real) or the Complex* files after renaming"
+   ],
+   "difficulty": "medium",
+   "prereq": [
+    "C6",
+    "C2"
+   ]
+  },
+  {
+   "id": "C11",
+   "family": "Subspace iteration, block Krylov, polynomial filter",
+   "keeper": "Krylov/Spaces/{Basic, Block, Grade} over [Field K]; Matrix/Subspaces/GraphTangent (subspaceTangent over 𝕜); LowRank/RangeFinding/SubspaceConvergence; LowRank/PolynomialMethods/PolynomialFilter",
+   "losers": [
+    "Krylov/Spaces/ComplexBlock",
+    "LowRank/RangeFinding/ComplexSubspaceConvergence",
+    "LowRank/RangeFinding/ComplexSubspaceAngles",
+    "LowRank/PolynomialMethods/ComplexPolynomialFilter",
+    "LowRank/PolynomialMethods/ComplexPolynomialFilterBounds"
+   ],
+   "difficulty": "medium-hard",
+   "prereq": [
+    "C2",
+    "C8"
+   ]
+  },
+  {
+   "id": "C12",
+   "family": "Complex Hermitian quadratic form in Probability",
+   "keeper": "quadForm (𝕜-valued) with RCLike.re",
+   "losers": [
+    "matrixQuadraticFormReal, matrixVectorSqNorm (Probability/Concentration/Martingales/LocalSecondMoment*)"
+   ],
+   "difficulty": "easy",
+   "prereq": [
+    "A1"
+   ]
+  },
+  {
+   "id": "C13",
+   "family": "Misc pairs",
+   "keeper": "Inequalities/Schur (majorized_diagonal_eigenvalues with RCLike.re (A i i)); Norms/Core abs_dotProduct_mulVec_le_specNorm (general with RCLike.re (quadForm M x)); Basic PSD trace lemmas over RCLike",
+   "losers": [
+    "Matrix/Inequalities/ComplexDiagonalMajorization (importer: HermitianPart)",
+    "Matrix/Perturbation/ComplexEmbedding (importer: Sketching/Sampling/LeverageSampling)",
+    "Matrix/Basic/ComplexPosSemidefTrace"
+   ],
+   "difficulty": "easy",
+   "prereq": [
+    "A1"
+   ]
+  },
+  {
+   "id": "—",
+   "family": "ComplexQZ",
+   "keeper": "Matrix/Spectral/ComplexQZ stays (RealQZ is a different theorem)",
+   "losers": [],
+   "difficulty": "none"
+  }
+ ],
+ "decisions": [
+  {
+   "id": "D1",
+   "question": "Real ᵀ-shaped API lemmas: keep them as one-line ℝ corollaries under their current names (general lemma takes the conjTranspose name), or rename everything?",
+   "recommendation": "Keep ℝ corollaries (Mathlib precedent: real_inner_* / conjTranspose_eq_transpose_of_trivial). ~70 thin lemmas; stage-A breakage ≈100 files of mechanical edits instead of ≈170 (rename map). Delete corollaries whose users all became general at the end of stage B/C."
+  },
+  {
+   "id": "D2",
+   "question": "frobInner real-valued (RCLike.re) or 𝕜-valued?",
+   "recommendation": "Real-valued; 𝕜-valued pairing is (Aᴴ * B).trace."
+  },
+  {
+   "id": "D3",
+   "question": "quadForm 𝕜-valued (star z ⬝ᵥ A *ᵥ z) or real part?",
+   "recommendation": "𝕜-valued (Mathlib PosSemidef shape); rayleighQuotient real-valued with RCLike.re."
+  },
+  {
+   "id": "D4",
+   "question": "HasOrthonormalCols hypotheses written raw as `Qᵀ * Q = 1` (76 files, 180 occurrences, 32 files never mention the predicate): fix all, or keep a real abbreviation?",
+   "recommendation": "Neither: they compile unchanged (definitional). No `HasOrthonormalColsReal` abbreviation (second spelling). Normalise to HasOrthonormalCols only in files that are generalised or otherwise touched."
+  },
+  {
+   "id": "D5",
+   "question": "Complex statements using ‖A‖ (L2Operator: ~87 complex-matrix files in Functions/OperatorTheory/Perturbation/Probability; Frobenius scope: 23 files): switch to specNorm/frobNorm?",
+   "recommendation": "Switch in the twin merges (Matrix/LowRank) and the 23 Frobenius-scope files; keep ‖A‖ where the C*-/normed-algebra structure is used (CFC, exp/log, Tropp port, Probability). Update STANDARDS §3 accordingly."
+  },
+  {
+   "id": "D6",
+   "question": "sigmaMin / lamMin / sigmaMinSq",
+   "recommendation": "Stay real this round; general spelling is singularValues A (card n - 1)."
+  },
+  {
+   "id": "D7",
+   "question": "IsSubspaceEmbedding",
+   "recommendation": "Stays real (real random sketches, raw dot products, no vocabulary in the body). Only repairs in Sketching."
+  },
+  {
+   "id": "D8",
+   "question": "Krylov real vs general",
+   "recommendation": "Generalise only krylovSpace/blockKrylovSpace/subspaceIterate (/krylovGrade) to [Field K] (definitional at ℝ, needed for C11). Lanczos/Arnoldi/Golub–Kahan/CG/GMRES/quadrature stay real."
+  },
+  {
+   "id": "D9",
+   "question": "Factorization predicates IsQR/IsFullQR/IsLU/IsCholesky",
+   "recommendation": "Stay real this round; IsQR is free to generalise later if a complex consumer appears."
+  },
+  {
+   "id": "D10",
+   "question": "IsSVD / rectDiag index types",
+   "recommendation": "Keep Fin this round; Fintype generalisation is the separate rectangularDiagonal follow-up."
+  },
+  {
+   "id": "D11",
+   "question": "Column projector spelling",
+   "recommendation": "B * moorePenroseInverse B is canonical; prove complexColumnProjector B = B * B⁺ then delete complexColumnProjector/complexColumnSpace."
+  },
+  {
+   "id": "D12",
+   "question": "Merge direction for RPCholesky and volume sampling",
+   "recommendation": "RCLike keeper (built from the complex stacks), real statements as corollaries; real copies deleted, tags moved."
+  },
+  {
+   "id": "D13",
+   "question": "Atlas",
+   "recommendation": "Tags stay on the generalised definitions; edit the informal text of orthonormal-columns-def, residual-def, quadform-def, matrix-norms-def, pseudoinverse, svd-def, svd, best-rank-approx-def, condition-number-def, principal-angles-def, ky-fan-norms-def, schatten-norms-def to \"over ℝ or ℂ\". Stage C moves tags from loser declarations (courant-fischer, cs-decomposition, volume-sampling, rpcholesky, subspace-iteration-convergence, polynomial-filter-range-finder, block-krylov-subspace) to keepers; ComplexCSToolkit carries the full cs-decomposition tag (toolkit-tag policy question in DEDUP_FOLLOWUP)."
+  },
+  {
+   "id": "D14",
+   "question": "Real theorem statements keep ᵀ?",
+   "recommendation": "Yes (owner: real theorems keep their statements); ᵀ is the simp normal form over ℝ (conjTranspose_eq_transpose_of_trivial is @[simp])."
+  }
+ ],
+ "tests": [
+  "T1/T2 (Mathlib-only scratch): star x ⬝ᵥ v = x ⬝ᵥ v over ℝ by rfl; Qᴴ = Qᵀ over ℝ by rfl; `exact`/term coercions between HasOrthonormalCols (ᴴ) and Qᵀ * Q = 1 both ways; rw [h] with the old def-typed hypothesis works, with the new one fails on ᵀ goals; frobInner (Re form) and quadForm (star form) are rfl to the old bodies over ℝ; `simp [frobInner]`, `simp only [frobInner, RCLike.re_to_real, star_trivial]`, `simp [quadForm]`, `simp only [quadForm, star_trivial]` close the real unfoldings; specNorm over ℝ is rfl to ‖A‖.",
+  "T3: `0 ≤ x` for x : 𝕜 needs open scoped ComplexOrder; quadForm_nonneg from PosSemidef.dotProduct_mulVec_nonneg, used at ℝ, is accepted by linarith; rectDiag over 𝕜 at ℝ is rfl to the old one and simp [rectDiag] works; Mathlib has no Matrix.l2_opNorm_transpose.",
+  "T4: a general lemma with a real scalar (c : ℝ) • A, A : Matrix m n 𝕜, rewrites at ℝ despite the Algebra-vs-Mul smul path.",
+  "Proto.lean (compiles): general frobInner/frobSq/frobNorm/specNorm/HasOrthonormalCols/residual/quadForm, ported general proofs of frobInner_comm, frobInner_eq_re_trace, frobSq_eq_sum_norm_sq, frobSq_nonneg, frobSq_eq_zero_iff, frobSq_smul (𝕜), conjTranspose_mul_residual, frobInner_mul_residual, specNorm_conjTranspose, specNorm_mul_le, quadForm_nonneg; ℝ corollaries frobInner_eq_trace, frobSq_eq_sum_sq, transpose_mul_residual by `simpa using`; verbatim NLAlib downstream proofs (mul_transpose_mul_mul_transpose, residual_residual, a FrameContractions-style `rw [frobSq, frobInner_eq_trace, hQ, trace_one]`) compile unchanged; the two broken patterns compile after the recipe edits (hQ ↦ hQ.transpose_mul_self, quadForm ↦ quadForm_eq_dotProduct)."
+ ],
+ "data_files": [
+  "tools/scan.json",
+  "tools/fragile.json",
+  "tools/hoc.json",
+  "tools/api.json",
+  "tools/breakage.json",
+  "tools/stageA_breakage.json",
+  "tools/stageA_waves.json",
+  "tools/classify.json",
+  "scan2.json"
+ ],
+ "summary": {
+  "stageA": {
+   "files": 13,
+   "definitions": 20,
+   "agents": 3,
+   "steps": 3
+  },
+  "stageB": {
+   "repair_files_predicted": 100,
+   "repair_range": "100-130",
+   "conversions_optional": 20,
+   "waves": 10
+  },
+  "stageC": {
+   "families": 13,
+   "loser_files": 45,
+   "loser_lines": 5393,
+   "keeper_files_approx": 55,
+   "external_importers": 7,
+   "optional_frobenius_scope_files": 23
+  },
+  "total_files_touched_approx": 230,
+  "share_of_tree": "~21% of 1106",
+  "decisions_needed": [
+   "D1",
+   "D3",
+   "D4",
+   "D5",
+   "D8",
+   "D11",
+   "D12",
+   "D13"
+  ],
+  "nod_only": [
+   "D2",
+   "D6",
+   "D7",
+   "D9",
+   "D10",
+   "D14"
+  ]
+ }
+}

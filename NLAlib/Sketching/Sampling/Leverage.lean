@@ -77,10 +77,10 @@ theorem leverageScore_eq_sum_sq_of_hasOrthonormalCols [DecidableEq m] [Decidable
 Woodruff 2014, §2.4; atlas `leverage-scores`. -/
 theorem leverageScore_eq_sum_sq_of_self [DecidableEq m] [DecidableEq q] {U : Matrix m q ℝ}
     (hU : HasOrthonormalCols U) (i : m) : leverageScore U i = ∑ j, U i j ^ 2 := by
-  have hUU : U * (Uᵀ * U) = U := by rw [hU, Matrix.mul_one]
+  have hUU : U * (Uᵀ * U) = U := by rw [hU.transpose_mul_self, Matrix.mul_one]
   have hr : Fintype.card q ≤ U.rank := by
     have h1 : (Uᵀ * U).rank ≤ U.rank := Matrix.rank_mul_le_right _ _
-    rw [hU, Matrix.rank_one] at h1
+    rw [hU.transpose_mul_self, Matrix.rank_one] at h1
     exact h1
   exact leverageScore_eq_sum_sq_of_hasOrthonormalCols hU hUU hr i
 

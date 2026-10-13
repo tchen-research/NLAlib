@@ -79,7 +79,7 @@ theorem cgObjective_add {A : Matrix n n ℝ} (hA : A.IsHermitian) (c u d : n →
     cgObjective A c (u + d) =
       cgObjective A c u + d ⬝ᵥ (A *ᵥ u - c) + quadForm A d / 2 := by
   have h := dotProduct_mulVec_comm_of_isHermitian hA u d
-  simp only [cgObjective, quadForm, Matrix.mulVec_add, dotProduct_add, add_dotProduct,
+  simp only [cgObjective, quadForm_eq_dotProduct, Matrix.mulVec_add, dotProduct_add, add_dotProduct,
     dotProduct_sub]
   rw [dotProduct_comm d c]
   linarith

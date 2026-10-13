@@ -53,25 +53,43 @@ theorem abs_specNorm_sub_specNorm_le_frobNorm (A B : Matrix m n ℝ) :
     |specNorm A - specNorm B| ≤ frobNorm (A - B) :=
   (abs_specNorm_sub_specNorm_le A B).trans (specNorm_le_frobNorm (A - B))
 
-/-- Multiplication by an orthonormal frame preserves the spectral norm.
-Atlas: `norms-frob-spec`, `svd`.
+/-- Multiplication by a frame with orthonormal columns (`PᴴP = 1`) preserves the spectral
+norm, over `ℝ` or `ℂ`. Atlas: `norms-frob-spec`, `svd`.
+atlas: norms-frob-spec -/
+theorem specNorm_mul_left_of_conjTranspose_mul_self {𝕜 : Type*} [RCLike 𝕜] {p : Type*}
+    [Fintype p] [DecidableEq p] {P : Matrix m n 𝕜} (hP : Pᴴ * P = 1) (A : Matrix n p 𝕜) :
+    specNorm (P * A) = specNorm A := by
+  have hPA : P * A = P * (Pᴴ * (P * A)) := by
+    rw [← Matrix.mul_assoc Pᴴ P, hP, Matrix.one_mul]
+  have h := specNorm_conjTranspose_mul_of_eq_mul hP hPA
+  simpa only [← Matrix.mul_assoc, hP, Matrix.one_mul] using h.symm
+
+/-- Right multiplication by the conjugate transpose of a frame with orthonormal columns
+(`PᴴP = 1`) preserves the spectral norm, over `ℝ` or `ℂ`. Atlas: `norms-frob-spec`, `svd`.
+atlas: norms-frob-spec -/
+theorem specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self {𝕜 : Type*} [RCLike 𝕜]
+    {p : Type*} [Fintype p] [DecidableEq p] {P : Matrix m n 𝕜} (hP : Pᴴ * P = 1)
+    (A : Matrix p n 𝕜) : specNorm (A * Pᴴ) = specNorm A := by
+  rw [← specNorm_conjTranspose (A * Pᴴ), Matrix.conjTranspose_mul,
+    Matrix.conjTranspose_conjTranspose, specNorm_mul_left_of_conjTranspose_mul_self hP,
+    specNorm_conjTranspose]
+
+/-- Multiplication by an orthonormal frame preserves the spectral norm (real form of
+`specNorm_mul_left_of_conjTranspose_mul_self`). Atlas: `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
 theorem specNorm_mul_left_of_hasOrthonormalCols {p : Type*} [Fintype p]
     [DecidableEq p] {P : Matrix m n ℝ} (hP : Pᵀ * P = 1) (A : Matrix n p ℝ) :
-    specNorm (P * A) = specNorm A := by
-  have hPA : P * A = P * (Pᵀ * (P * A)) := by
-    rw [← Matrix.mul_assoc Pᵀ P, hP, Matrix.one_mul]
-  have h := specNorm_transpose_mul_of_eq_mul hP hPA
-  simpa only [← Matrix.mul_assoc, hP, Matrix.one_mul] using h.symm
+    specNorm (P * A) = specNorm A :=
+  specNorm_mul_left_of_conjTranspose_mul_self hP A
 
 /-- Right multiplication by the transpose of an orthonormal frame preserves
-the spectral norm. Atlas: `norms-frob-spec`, `svd`.
+the spectral norm (real form of `specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self`).
+Atlas: `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
 theorem specNorm_mul_transpose_right_of_hasOrthonormalCols {p : Type*}
     [Fintype p] [DecidableEq p] {P : Matrix m n ℝ} (hP : Pᵀ * P = 1)
-    (A : Matrix p n ℝ) : specNorm (A * Pᵀ) = specNorm A := by
-  rw [← specNorm_transpose (A * Pᵀ), Matrix.transpose_mul, Matrix.transpose_transpose,
-    specNorm_mul_left_of_hasOrthonormalCols hP, specNorm_transpose]
+    (A : Matrix p n ℝ) : specNorm (A * Pᵀ) = specNorm A :=
+  specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hP A
 
 /-- A squared Euclidean vector bound controls the spectral norm: if `0 ≤ c` and
 `(Ax) ⬝ (Ax) ≤ c² (x ⬝ x)` for every `x`, then `‖A‖₂ ≤ c`. This is the defining operator

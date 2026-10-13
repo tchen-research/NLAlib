@@ -1,0 +1,22 @@
+NLAlib/Matrix/Subspaces/OrthogonalProducts.lean:30: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Matrix/Factorizations/QR.lean:333: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Probability/Concentration/QuadraticForms/QuadraticMoments.lean:351: unsolved goals
+NLAlib/LowRank/Nystrom/SketchedRegression.lean:145: unsolved goals
+NLAlib/Matrix/Spectral/SingularValueInvariance.lean:70: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/LowRank/Structural/RangeFinder.lean:95: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Matrix/Basic/SingletonInverse.lean:28: unsolved goals
+NLAlib/Matrix/Structured/Measurable.lean:97: `fun_prop` was unable to prove `Measurable fun z => ((f z)ᴴ * f z).det⁻¹ * ((f z)ᴴ * f z).adjugate i l * (f z)
+NLAlib/Matrix/Spectral/Core.lean:691: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Matrix/Calculus/GramTrace.lean:50: unsolved goals
+NLAlib/RandomMatrix/Gaussian/Basic/PolynomialGrowth.lean:32: unsolved goals
+NLAlib/Matrix/Norms/ColumnNorms.lean:11: unsolved goals
+NLAlib/Matrix/Subspaces/GramColumnDeterminant.lean:38: unsolved goals
+NLAlib/Matrix/Spectral/SvdPowers.lean:23: unsolved goals
+NLAlib/Matrix/Subspaces/GraphTangent.lean:40: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Matrix/Spectral/RealDilation.lean:171: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Matrix/Subspaces/Stiefel.lean:78: Type mismatch: After simplification, term
+NLAlib/Matrix/Subspaces/FrameContractions.lean:58: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Matrix/Structured/KroneckerIdentities.lean:51: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Matrix/Spectral/RealSpectrumSchur.lean:86: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+NLAlib/Matrix/Subspaces/FrameFourthContractions.lean:26: Type mismatch: After simplification, term
+NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean:20: Tactic `rewrite` failed: Did not find an occurrence of the pattern

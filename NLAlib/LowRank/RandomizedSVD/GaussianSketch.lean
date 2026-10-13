@@ -230,7 +230,7 @@ theorem completion_reduction_gaussian_integrable [IsProbabilityMeasure μ] {m s 
     Integrable (fun ω => frobSq (A - sketchedOutput Q (Ψ ω) A)) μ ∧
     ∫ ω, frobSq (A - sketchedOutput Q (Ψ ω) A) ∂μ
       = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) := by
-  have hQQp := transpose_mul_eq_zero_of_completion hQ hQp hcomp
+  have hQQp := transpose_mul_eq_zero_of_completion hQ.transpose_mul_self hQp hcomp
   obtain ⟨hG₁, hG₁m, hGi⟩ :=
     completion_gaussian_inputs hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A) hqs
   have hG₂ := integral_frobSq_pinvL_block_mul_block_mul hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A)

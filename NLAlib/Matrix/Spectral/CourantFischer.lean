@@ -56,7 +56,7 @@ private theorem eigenvalues_e (j : Fin (Fintype.card n)) :
 private theorem dotProduct_mulVec_eq_sum (x : n → ℝ) :
     x ⬝ᵥ (A *ᵥ x) = ∑ j, hA.eigenvalues₀ j * coord hA j x ^ 2 := by
   have h := quadForm_eq_sum_eigenvalues hA x
-  rw [quadForm] at h
+  rw [quadForm_eq_dotProduct] at h
   rw [h, ← (e (n := n)).sum_comp]
   simp only [coord, eigenvalues_e]
 

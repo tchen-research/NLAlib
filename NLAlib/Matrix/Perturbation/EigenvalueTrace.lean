@@ -36,7 +36,7 @@ theorem trace_mul_eq_sum_eigenvalues_mul_quadForm {A : Matrix n n ℝ}
   intro i _
   congr 1
   simp only [Matrix.mul_apply, Matrix.transpose_apply, U,
-    Matrix.IsHermitian.eigenvectorUnitary_apply, quadForm, Matrix.mulVec, dotProduct,
+    Matrix.IsHermitian.eigenvectorUnitary_apply, quadForm_eq_dotProduct, Matrix.mulVec, dotProduct,
     Finset.mul_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring

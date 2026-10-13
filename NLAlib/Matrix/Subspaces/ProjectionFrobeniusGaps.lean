@@ -49,8 +49,8 @@ theorem frobSq_complement_mul_projector_eq_of_rank_eq {P Q : Matrix n n ℝ}
       _ = (1-P)*(V'*V'ᵀ) := congrArg (fun T => (1-P)*T) hQV'
       _ = (1-U*Uᵀ)*(V'*V'ᵀ) := congrArg (fun T => (1-T)*(V'*V'ᵀ)) hPU
       _ = _ := by rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
-  rw [hleft, hright, frobSq_mul_right_of_orthonormal hU,
-    frobSq_mul_right_of_orthonormal hV', frobSq_residual_comm hV' hU]
+  rw [hleft, hright, frobSq_mul_right_of_orthonormal hU.transpose_mul_self,
+    frobSq_mul_right_of_orthonormal hV'.transpose_mul_self, frobSq_residual_comm hV' hU]
 
 /-- Equal-rank one-sided Frobenius gaps agree also after placing the
 projector on the left. Stewart–Sun §III.3, by transpose invariance. -/

@@ -50,6 +50,13 @@ first layer is fixed.
 
 ## First layer of failures (full build at handoff)
 
+Update after the build below was taken: a Probability sub-stream that was still running
+finished and its 18 files are committed on top (`SubGaussian`, `Concentration/Scalar`,
+`ChiSquare`, `Concentration/QuadraticForms`; its own build of those modules passed, 3789 jobs).
+That removes the `HansonWright.lean:65` failure from the log. `docs/f4/P.md` ends with an
+"Addendum after the handoff commit" that corrects its "State at handoff" section and lists the
+call sites outside Probability that its renames break, per owner.
+
 Log: `docs/f4/build_at_handoff.log` (`lake build`, filtered to `✖` and `error:` lines).
 
 Real errors, one per module:
@@ -67,8 +74,7 @@ Real errors, one per module:
 | `Matrix/Subspaces/ObliqueProjectionBlocks.lean:44` | `exists_orthogonal_sum_completion` → `exists_unitary_sum_completion` |
 | `Matrix/Subspaces/Stiefel.lean:135` | `simp` made no progress |
 | `Krylov/Processes/ArnoldiProcess.lean:160` | `inner_eq_dotProduct_ofLp` → `inner_eq_star_dotProduct_ofLp` + `star_trivial` |
-| `Probability/Concentration/Matrix/SubgaussianMgfCgf.lean:56` | `hcont` declared after the `cfc_mono` step that needs it |
-| `Probability/Concentration/QuadraticForms/HansonWright.lean:65` | `frobNorm_eq_zero_iff` now takes `A` explicitly |
+| `Probability/Concentration/Matrix/SubgaussianMgfCgf.lean:55` | autoparam of `cfc_comp'` cannot be synthesised (`hcont` is declared too late) |
 | `Probability/Gaussian/Moments/SeriesKhintchine.lean:35` | `IsStandardGaussian`/`IsRademacher` deleted; disjunction not converted |
 | `Probability/Concentration/Matrix/IntrinsicHermitianBernstein.lean:114` | `simp only [specNorm_eq_norm] at *` no progress |
 | `Probability/Concentration/Matrix/MatrixChernoff.lean:245` | `master_bounds` was split; call sites not updated |

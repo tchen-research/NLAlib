@@ -104,7 +104,8 @@ theorem integral_nonpos_of_hasSubgaussianMGF {μ : Measure Ω} [IsProbabilityMea
   have ht_pos : 0 < t := by
     rw [ht_def]
     positivity
-  have hmean := integral_le_one_div_mul_log_integral_exp_mul h.integrable ht_pos (h.integrable_exp_mul t)
+  have hmean := integral_le_one_div_mul_log_integral_exp_mul h.integrable ht_pos
+    (h.integrable_exp_mul t)
   have hmgf_pos : 0 < mgf X μ t := mgf_pos (h.integrable_exp_mul t)
   have hlog_le : log (mgf X μ t) ≤ (c : ℝ) * t ^ 2 / 2 := by
     calc

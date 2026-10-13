@@ -226,7 +226,8 @@ theorem hasSubgaussianMGF_of_independent_coordinate_oscillation
   let Y (ω : Ω) : ∀ i, S i := fun i => X i ω
   have hY : Measurable Y := measurable_pi_lambda _ hX
   let ν (i : ι) := μ.map (X i)
-  let : ∀ i, IsProbabilityMeasure (ν i) := fun i => Measure.isProbabilityMeasure_map (hX i).aemeasurable
+  let : ∀ i, IsProbabilityMeasure (ν i) := fun i =>
+    Measure.isProbabilityMeasure_map (hX i).aemeasurable
   have hlaw : μ.map Y = Measure.pi ν := hind.map_fun_eq_pi_map (fun i => (hX i).aemeasurable)
   have hsg := hasSubgaussianMGF_pi_of_coordinate_oscillation ν f hf c hc hcoord
   have hm : (∫ x, f x ∂Measure.pi ν) = ∫ ω, f (Y ω) ∂μ := by

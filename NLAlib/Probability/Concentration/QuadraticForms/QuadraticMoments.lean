@@ -87,37 +87,53 @@ theorem integral_coord_mul_coord [DecidableEq n] {z : Ω → n → ℝ}
       (hz j).aestronglyMeasurable]
     rw [hmean i, zero_mul]
 
-/-- An isotropic second-moment matrix implies integrable quadratic forms and
-Hutchinson unbiasedness for every real square matrix. The diagonal second moments
-force square integrability, so the cross moments and quadratic form are Bochner
-integrals. Independence and zero means are unnecessary; arbitrary measures and empty
-index types are included. Source: Hutchinson 1989; Avron–Toledo 2011, §2;
-atlas `hutchinson-unbiased` (general second-moment form).
-atlas: hutchinson-unbiased -/
-theorem integrable_and_integral_quadForm_eq_trace_of_second_moments [DecidableEq n]
-    (A : Matrix n n ℝ) {z : Ω → n → ℝ}
+omit [Fintype n] in
+/-- Coordinates with second-moment matrix the identity have integrable pairwise products. -/
+private lemma integrable_coord_mul_coord_of_second_moments [DecidableEq n] {z : Ω → n → ℝ}
     (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
-    (hsecond : ∀ i j, ∫ ω, z ω i * z ω j ∂μ = if i = j then 1 else 0) :
-    Integrable (fun ω => quadForm A (z ω)) μ ∧
-      (∫ ω, quadForm A (z ω) ∂μ) = A.trace := by
+    (hsecond : ∀ i j, ∫ ω, z ω i * z ω j ∂μ = if i = j then 1 else 0) (i j : n) :
+    Integrable (fun ω => z ω i * z ω j) μ := by
   have hL2 (i : n) : MemLp (fun ω => z ω i) 2 μ := by
     apply (memLp_two_iff_integrable_sq (hmeas i).aestronglyMeasurable).2
     apply integrable_of_integral_eq_one
     simpa [pow_two] using hsecond i i
-  have hprod (i j : n) : Integrable (fun ω => z ω i * z ω j) μ :=
-    (hL2 i).integrable_mul (hL2 j)
-  constructor
-  · simp_rw [quadForm_eq_sum]
-    exact integrable_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
-      (hprod i j).const_mul (A i j)
-  · simp_rw [quadForm_eq_sum, star_trivial]
-    rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
-      (hprod i j).const_mul (A i j)]
-    rw [Matrix.trace]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    rw [integral_finsetSum _ fun j _ => (hprod i j).const_mul (A i j)]
-    simp_rw [integral_const_mul, hsecond]
-    simp
+  exact (hL2 i).integrable_mul (hL2 j)
+
+/-- A vector with isotropic second-moment matrix has integrable quadratic forms, for every real
+square matrix. The diagonal second moments force square integrability; independence and zero
+means are unnecessary, and arbitrary measures and empty index types are included.
+Hutchinson 1989; Avron–Toledo 2011, §2.
+atlas: hutchinson-unbiased -/
+theorem integrable_quadForm_of_second_moments [DecidableEq n]
+    (A : Matrix n n ℝ) {z : Ω → n → ℝ}
+    (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
+    (hsecond : ∀ i j, ∫ ω, z ω i * z ω j ∂μ = if i = j then 1 else 0) :
+    Integrable (fun ω => quadForm A (z ω)) μ := by
+  have hprod := integrable_coord_mul_coord_of_second_moments hmeas hsecond
+  simp_rw [quadForm_eq_sum]
+  exact integrable_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
+    (hprod i j).const_mul (A i j)
+
+/-- **Hutchinson unbiasedness from second moments.** A vector with isotropic second-moment matrix
+`𝔼[z_i z_j] = δ_ij` satisfies `𝔼[zᵀ A z] = tr A` for every real square matrix. Independence and
+zero means are unnecessary; arbitrary measures and empty index types are included
+(integrability: `integrable_quadForm_of_second_moments`).
+Hutchinson 1989; Avron–Toledo 2011, §2.
+atlas: hutchinson-unbiased -/
+theorem integral_quadForm_eq_trace_of_second_moments [DecidableEq n]
+    (A : Matrix n n ℝ) {z : Ω → n → ℝ}
+    (hmeas : ∀ i, AEMeasurable (fun ω => z ω i) μ)
+    (hsecond : ∀ i j, ∫ ω, z ω i * z ω j ∂μ = if i = j then 1 else 0) :
+    (∫ ω, quadForm A (z ω) ∂μ) = A.trace := by
+  have hprod := integrable_coord_mul_coord_of_second_moments hmeas hsecond
+  simp_rw [quadForm_eq_sum, star_trivial]
+  rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
+    (hprod i j).const_mul (A i j)]
+  rw [Matrix.trace]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [integral_finsetSum _ fun j _ => (hprod i j).const_mul (A i j)]
+  simp_rw [integral_const_mul, hsecond]
+  simp
 
 /-- **Hutchinson's estimator is unbiased.** If the coordinates `z_i` of a random vector are
 square-integrable, pairwise independent, centred and have unit second moment, then
@@ -133,9 +149,9 @@ theorem integral_quadForm_eq_trace [IsProbabilityMeasure μ] (A : Matrix n n ℝ
     (hmean : ∀ i, ∫ ω, z ω i ∂μ = 0) (hsq : ∀ i, ∫ ω, z ω i ^ 2 ∂μ = 1) :
     ∫ ω, quadForm A (z ω) ∂μ = A.trace := by
   classical
-  exact (integrable_and_integral_quadForm_eq_trace_of_second_moments A
+  exact integral_quadForm_eq_trace_of_second_moments A
     (fun i => (hz i).aestronglyMeasurable.aemeasurable)
-    (integral_coord_mul_coord hz hind hmean hsq)).2
+    (integral_coord_mul_coord hz hind hmean hsq)
 
 /-! ### Fourth moments and the variance identity -/
 

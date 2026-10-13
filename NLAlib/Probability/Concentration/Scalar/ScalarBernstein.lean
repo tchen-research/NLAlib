@@ -21,38 +21,48 @@ open scoped ENNReal
 
 namespace NLAlib
 
-/-- Independent `ψ₁` bounds give the local MGF bound for the sum, with quadratic
-proxy `16ΣKᵢ²` and radius `1/(2B)`. Exponential integrability is included in the conclusion.
-Vershynin 2018, proof of Theorem 2.8.4; atlas `bernstein-scalar` (MGF assembly). -/
-theorem integrable_and_local_mgf_sum_le_of_lintegral_exp_abs_le_two
+/-- Independent `ψ₁` bounds give exponential integrability of the sum for tilts of radius
+`1/(2B)`, where `B` dominates the scales. Vershynin 2018, proof of Theorem 2.8.4. -/
+theorem integrable_exp_mul_sum_of_lintegral_exp_abs_le_two
     {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω] {μ : Measure Ω}
     [IsProbabilityMeasure μ] (X : ι → Ω → ℝ) (K : ι → ℝ)
-    (hX : ∀ i, Measurable (X i)) (hindep : iIndepFun X μ)
+    (hX : ∀ i, Measurable (X i)) (hind : iIndepFun X μ) (hK : ∀ i, 0 < K i)
+    (hpsi : ∀ i, ∫⁻ ω, ENNReal.ofReal (Real.exp (|X i ω| / K i)) ∂μ ≤ 2)
+    (B : ℝ) (hKB : ∀ i, K i ≤ B) (s : ℝ) (hs : |s| ≤ 1 / (2 * B)) :
+    Integrable (fun ω => Real.exp (s * ∑ i, X i ω)) μ := by
+  have hdomain : ∀ i, |s| ≤ 1 / (2 * K i) := fun i => hs.trans
+    (one_div_le_one_div_of_le (mul_pos (by norm_num) (hK i)) (by nlinarith [hKB i]))
+  simpa only [Finset.sum_apply] using hind.integrable_exp_mul_sum
+    (t := s) hX (s := Finset.univ) (fun i _ => integrable_exp_mul_of_lintegral_exp_abs_le_two
+      (hX i).aemeasurable (K i) (hK i) (hpsi i) (hdomain i))
+
+/-- Independent centered `ψ₁` bounds give the local MGF bound for the sum, with quadratic
+proxy `16ΣKᵢ²` and radius `1/(2B)` (integrability:
+`integrable_exp_mul_sum_of_lintegral_exp_abs_le_two`).
+Vershynin 2018, proof of Theorem 2.8.4; atlas `bernstein-scalar` (MGF assembly). -/
+theorem mgf_sum_le_of_lintegral_exp_abs_le_two
+    {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω] {μ : Measure Ω}
+    [IsProbabilityMeasure μ] (X : ι → Ω → ℝ) (K : ι → ℝ)
+    (hX : ∀ i, Measurable (X i)) (hind : iIndepFun X μ)
     (hK : ∀ i, 0 < K i) (hmean : ∀ i, ∫ ω, X i ω ∂μ = 0)
     (hpsi : ∀ i, ∫⁻ ω, ENNReal.ofReal (Real.exp (|X i ω| / K i)) ∂μ ≤ 2)
     (B : ℝ) (hKB : ∀ i, K i ≤ B) (s : ℝ) (hs : |s| ≤ 1 / (2 * B)) :
-    Integrable (fun ω => Real.exp (s * ∑ i, X i ω)) μ ∧
-      mgf (fun ω => ∑ i, X i ω) μ s ≤ Real.exp (16 * (∑ i, K i ^ 2) * s ^ 2) := by
+    mgf (fun ω => ∑ i, X i ω) μ s ≤ Real.exp (16 * (∑ i, K i ^ 2) * s ^ 2) := by
   classical
   have hdomain : ∀ i, |s| ≤ 1 / (2 * K i) := fun i => hs.trans
     (one_div_le_one_div_of_le (mul_pos (by norm_num) (hK i)) (by nlinarith [hKB i]))
-  have hf := fun i => integrable_and_local_mgf_le_of_lintegral_exp_abs_le_two
-    (hX i).aemeasurable (K i) (hK i) (hmean i) (hpsi i)
-  have hexp : Integrable (fun ω => Real.exp (s * ∑ i, X i ω)) μ := by
-    simpa only [Finset.sum_apply] using hindep.integrable_exp_mul_sum
-      (t := s) hX (s := Finset.univ) (fun i _ => ((hf i).2 s (hdomain i)).1)
-  refine ⟨hexp, ?_⟩
   have heq : mgf (fun ω => ∑ i, X i ω) μ s = ∏ i, mgf (X i) μ s := by
     have hfun : (∑ i, X i) = fun ω => ∑ i, X i ω := by
       funext ω
       simp only [Finset.sum_apply]
     rw [← hfun]
-    exact hindep.mgf_sum (t := s) hX Finset.univ
+    exact hind.mgf_sum (t := s) hX Finset.univ
   rw [heq]
   calc
     ∏ i, mgf (X i) μ s ≤ ∏ i, Real.exp (16 * K i ^ 2 * s ^ 2) :=
       Finset.prod_le_prod (fun _ _ => mgf_nonneg)
-        (fun i _ => ((hf i).2 s (hdomain i)).2)
+        (fun i _ => mgf_le_of_lintegral_exp_abs_le_two (hX i).aemeasurable (K i) (hK i)
+          (hmean i) (hpsi i) (hdomain i))
     _ = Real.exp (∑ i, 16 * K i ^ 2 * s ^ 2) := (Real.exp_sum _ _).symm
     _ = Real.exp (16 * (∑ i, K i ^ 2) * s ^ 2) := by
       congr 1
@@ -64,7 +74,8 @@ theorem integrable_and_local_mgf_sum_le_of_lintegral_exp_abs_le_two
 step, sub-exponential regime); atlas `hanson-wright`, `bernstein-scalar` (tail step). Ported from
 Ported from HighDimProb (Zhang–Lee–Liu, Apache-2.0). -/
 theorem measureReal_ge_le_exp_of_cgf_le {Ω : Type*} [MeasurableSpace Ω]
-    {μ : Measure Ω} [IsProbabilityMeasure μ] {Y : Ω → ℝ} {v b C t : ℝ} (hC : 0 < C) (hv : 0 < v) (hb : 0 < b)
+    {μ : Measure Ω} [IsProbabilityMeasure μ] {Y : Ω → ℝ} {v b C t : ℝ} (hC : 0 < C) (hv : 0 < v)
+    (hb : 0 < b)
     (hcgf : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ → cgf Y μ l ≤ C * l ^ 2 * v)
     (hint : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ →
       Integrable (fun ω => exp (l * Y ω)) μ) (ht : 0 ≤ t) :
@@ -195,7 +206,7 @@ atlas: bernstein-scalar -/
 theorem bernstein_sum_of_lintegral_exp_abs_le_two
     {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω] {μ : Measure Ω}
     [IsProbabilityMeasure μ] (X : ι → Ω → ℝ) (K : ι → ℝ)
-    (hX : ∀ i, Measurable (X i)) (hindep : iIndepFun X μ)
+    (hX : ∀ i, Measurable (X i)) (hind : iIndepFun X μ)
     (hK : ∀ i, 0 < K i) (hmean : ∀ i, ∫ ω, X i ω ∂μ = 0)
     (hpsi : ∀ i, ∫⁻ ω, ENNReal.ofReal (Real.exp (|X i ω| / K i)) ∂μ ≤ 2)
     (B : ℝ) (hB : 0 < B) (hKB : ∀ i, K i ≤ B) (t : ℝ) (ht : 0 ≤ t) :
@@ -214,9 +225,10 @@ theorem bernstein_sum_of_lintegral_exp_abs_le_two
       simpa [measureReal_def] using
         (measureReal_mono (μ := μ) (Set.subset_univ {ω | t ≤ |∑ i, X i ω|}))
     linarith
-  · have hloc := fun s (hs : |s| ≤ 1 / (2 * B)) =>
-      integrable_and_local_mgf_sum_le_of_lintegral_exp_abs_le_two
-        X K hX hindep hK hmean hpsi B hKB s hs
+  · have hint := fun s (hs : |s| ≤ 1 / (2 * B)) =>
+      integrable_exp_mul_sum_of_lintegral_exp_abs_le_two X K hX hind hK hpsi B hKB s hs
+    have hloc := fun s (hs : |s| ≤ 1 / (2 * B)) =>
+      mgf_sum_le_of_lintegral_exp_abs_le_two X K hX hind hK hmean hpsi B hKB s hs
     have hdom : ∀ l : ℝ, |l| ≤ (2 * 16 * (B / 16))⁻¹ → |l| ≤ 1 / (2 * B) := by
       intro l hl
       convert hl using 1
@@ -225,11 +237,11 @@ theorem bernstein_sum_of_lintegral_exp_abs_le_two
       (Y := fun ω => ∑ i, X i ω) (C := 16) (v := V) (b := B / 16)
       (by norm_num) hV (by positivity)
       (fun l hl => by
-        obtain ⟨hint, hmgf⟩ := hloc l (hdom l hl)
         calc cgf (fun ω => ∑ i, X i ω) μ l
-            ≤ Real.log (Real.exp (16 * V * l ^ 2)) := Real.log_le_log (mgf_pos hint) hmgf
+            ≤ Real.log (Real.exp (16 * V * l ^ 2)) :=
+              Real.log_le_log (mgf_pos (hint l (hdom l hl))) (hloc l (hdom l hl))
           _ = 16 * l ^ 2 * V := by rw [Real.log_exp]; ring)
-      (fun l hl => (hloc l (hdom l hl)).1) ht
+      (fun l hl => hint l (hdom l hl)) ht
     refine htail.trans ?_
     gcongr 2 * Real.exp ?_
     have hmin : min (t ^ 2 / V) (t / B) ≤ min (t ^ 2 / V) (t / (B / 16)) := by
@@ -247,14 +259,14 @@ corollary of `bernstein_sum_of_lintegral_exp_abs_le_two`). -/
 theorem bernstein_sum_of_lintegral_exp_abs_le_two_uniform
     {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω] {μ : Measure Ω}
     [IsProbabilityMeasure μ] (X : ι → Ω → ℝ) (K : ℝ)
-    (hX : ∀ i, Measurable (X i)) (hindep : iIndepFun X μ)
+    (hX : ∀ i, Measurable (X i)) (hind : iIndepFun X μ)
     (hK : 0 < K) (hmean : ∀ i, ∫ ω, X i ω ∂μ = 0)
     (hpsi : ∀ i, ∫⁻ ω, ENNReal.ofReal (Real.exp (|X i ω| / K)) ∂μ ≤ 2)
     (t : ℝ) (ht : 0 ≤ t) :
     μ.real {ω | t ≤ |∑ i, X i ω|} ≤
       2 * Real.exp (-(1 / 64 : ℝ) * min (t ^ 2 / ((Fintype.card ι : ℝ) * K ^ 2)) (t / K)) := by
   simpa only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] using
-    bernstein_sum_of_lintegral_exp_abs_le_two X (fun _ => K) hX hindep
+    bernstein_sum_of_lintegral_exp_abs_le_two X (fun _ => K) hX hind
       (fun _ => hK) hmean hpsi K hK (fun _ => le_rfl) t ht
 
 end NLAlib

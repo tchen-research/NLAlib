@@ -18,11 +18,12 @@ open MeasureTheory ProbabilityTheory
 open scoped Matrix ENNReal NNReal
 namespace NLAlib
 
-/-- The exponential integral of a standard Gaussian linear form: `𝔼 e^{a ⬝ g} = e^{a ⬝ a / 2}`
+/-- The exponential integral of a standard Gaussian linear form: `𝔼 e^{a ⬝ g} = e^{‖a‖₂² / 2}`
 for `g ∼ gaussianVector (Fin d)`. -/
-theorem integral_exp_dotProduct_pi_gaussianReal {d : ℕ} (a : Fin d → ℝ) :
+theorem integral_exp_dotProduct_gaussianVector {d : ℕ} (a : Fin d → ℝ) :
     ∫ g : Fin d → ℝ, Real.exp (a ⬝ᵥ g) ∂(gaussianVector (Fin d)) =
-      Real.exp ((a ⬝ᵥ a) / 2) := by
+      Real.exp (‖WithLp.toLp 2 a‖ ^ 2 / 2) := by
+  rw [norm_toLp_sq_eq_dotProduct_self]
   have hs : ∀ t : ℝ, ∫ x : ℝ, Real.exp (t * x) ∂gaussianReal 0 1 = Real.exp (t ^ 2 / 2) := by
     intro t
     simpa only [mgf, id_eq, zero_mul, NNReal.coe_one, one_mul, zero_add] using
@@ -35,46 +36,64 @@ theorem integral_exp_dotProduct_pi_gaussianReal {d : ℕ} (a : Fin d → ℝ) :
   rw [Finset.sum_div]
   simp only [pow_two]
 
-/-- Gaussian linearization: `e^{θ (v ⬝ v)} = 𝔼 e^{√(2θ) (g ⬝ v)}` for `g ∼ gaussianVector (Fin d)`,
+/-- Gaussian linearization: `e^{θ ‖v‖₂²} = 𝔼 e^{√(2θ) (g ⬝ v)}` for `g ∼ gaussianVector (Fin d)`,
 including `θ = 0`. -/
-theorem integral_exp_sqrt_mul_dotProduct_pi_gaussianReal {d : ℕ}
+theorem integral_exp_sqrt_mul_dotProduct_gaussianVector {d : ℕ}
     (v : Fin d → ℝ) {θ : ℝ} (hθ : 0 ≤ θ) :
     ∫ g : Fin d → ℝ, Real.exp (Real.sqrt (2 * θ) * (g ⬝ᵥ v))
-        ∂(gaussianVector (Fin d)) = Real.exp (θ * (v ⬝ᵥ v)) := by
+        ∂(gaussianVector (Fin d)) = Real.exp (θ * ‖WithLp.toLp 2 v‖ ^ 2) := by
   have heq : (fun g : Fin d → ℝ => Real.exp (Real.sqrt (2 * θ) * (g ⬝ᵥ v))) =
       (fun g => Real.exp ((Real.sqrt (2 * θ) • v) ⬝ᵥ g)) := by
     funext g
     rw [smul_dotProduct, smul_eq_mul, dotProduct_comm g v]
-  rw [heq, integral_exp_dotProduct_pi_gaussianReal, smul_dotProduct, dotProduct_smul,
-    smul_eq_mul, smul_eq_mul]
+  rw [heq, integral_exp_dotProduct_gaussianVector, norm_toLp_sq_eq_dotProduct_self,
+    norm_toLp_sq_eq_dotProduct_self, smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul]
   congr 1
   have hs := Real.sq_sqrt (show 0 ≤ 2 * θ by positivity)
   rw [← mul_assoc, ← sq, hs]
   ring
 
-/-- A finite random vector with directional sub-Gaussian proxy `u ⬝ u` in every direction `u`
-has squared-norm MGF at most the chi-square MGF `(1−2θ)^(-d/2)`, by Gaussian linearization.
+/-- The directional proxy `‖u‖₂²` written as the self dot product, for the proofs below. -/
+private lemma hasSubgaussianMGF_dotProduct_self {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    {d : ℕ} {X : Ω → Fin d → ℝ}
+    (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u) (‖WithLp.toLp 2 u‖₊ ^ 2) μ)
+    (u : Fin d → ℝ) :
+    HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u) ⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ μ := by
+  have h : (⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ : ℝ≥0) = ‖WithLp.toLp 2 u‖₊ ^ 2 :=
+    NNReal.eq (by
+      show u ⬝ᵥ u = ((‖WithLp.toLp 2 u‖₊ ^ 2 : ℝ≥0) : ℝ)
+      rw [NNReal.coe_pow, coe_nnnorm, norm_toLp_sq_eq_dotProduct_self])
+  rw [h]
+  exact hmgf u
+
+/-- A finite random vector with directional sub-Gaussian proxy `‖u‖₂²` in every direction `u`
+has squared-norm MGF at most the chi-square MGF `(1−2θ)^(-d/2)`, by Gaussian linearization:
+`𝔼 exp(θ ‖X‖₂²) ≤ (1 − 2θ)^{-d/2}` for `0 ≤ θ < 1/2`.
 Tropp 2011, Lemma 3.3 (SRHT row norms). -/
 theorem integral_exp_sq_norm_le_chi_square_mgf
     {Ω : Type*} [Fintype Ω] [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
     (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
     (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
-      ⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ p.toMeasure)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
     {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ < 1 / 2) :
-    ∫ ω, Real.exp (θ * (X ω ⬝ᵥ X ω)) ∂p.toMeasure ≤
+    ∫ ω, Real.exp (θ * ‖WithLp.toLp 2 (X ω)‖ ^ 2) ∂p.toMeasure ≤
       (1 - 2 * θ) ^ (-((d : ℝ) / 2)) := by
+  replace hmgf := hasSubgaussianMGF_dotProduct_self hmgf
+  simp only [norm_toLp_sq_eq_dotProduct_self]
+  have hlin : ∀ v : Fin d → ℝ, ∫ g : Fin d → ℝ, Real.exp (Real.sqrt (2 * θ) * (g ⬝ᵥ v))
+      ∂(gaussianVector (Fin d)) = Real.exp (θ * (v ⬝ᵥ v)) := fun v => by
+    rw [integral_exp_sqrt_mul_dotProduct_gaussianVector v hθ0, norm_toLp_sq_eq_dotProduct_self]
   let γ := gaussianVector (Fin d)
   let F : Ω → (Fin d → ℝ) → ℝ := fun ω g =>
     Real.exp (Real.sqrt (2 * θ) * (g ⬝ᵥ X ω))
   have hF : ∀ ω, Integrable (F ω) γ := by
     intro ω
     apply Integrable.of_integral_ne_zero
-    rw [show (∫ g, F ω g ∂γ) = Real.exp (θ * (X ω ⬝ᵥ X ω)) from
-      integral_exp_sqrt_mul_dotProduct_pi_gaussianReal (X ω) hθ0]
+    rw [show (∫ g, F ω g ∂γ) = Real.exp (θ * (X ω ⬝ᵥ X ω)) from hlin (X ω)]
     exact (Real.exp_pos _).ne'
   have hgauss : (∫ g : Fin d → ℝ, Real.exp (θ * (g ⬝ᵥ g)) ∂γ) =
       (1 - 2 * θ) ^ (-((d : ℝ) / 2)) := by
-    have hh := integral_exp_neg_mul_sum_sq_pi_gaussianReal (ι := Fin d) (1 - 2 * θ)
+    have hh := integral_exp_neg_mul_sum_sq_gaussianVector (ι := Fin d) (1 - 2 * θ)
       (show 0 < 1 - 2 * θ by linarith)
     rw [show -((1 - 2 * θ - 1) / 2) = θ by ring, Fintype.card_fin] at hh
     simpa only [dotProduct, ← sq] using hh
@@ -108,8 +127,7 @@ theorem integral_exp_sq_norm_le_chi_square_mgf
     _ = ∑ ω, (p ω).toReal * ∫ g, F ω g ∂γ := by
       apply Finset.sum_congr rfl
       intro ω _
-      rw [show (∫ g, F ω g ∂γ) = Real.exp (θ * (X ω ⬝ᵥ X ω)) from
-        integral_exp_sqrt_mul_dotProduct_pi_gaussianReal (X ω) hθ0]
+      rw [show (∫ g, F ω g ∂γ) = Real.exp (θ * (X ω ⬝ᵥ X ω)) from hlin (X ω)]
     _ = ∫ g, ∑ ω, (p ω).toReal * F ω g ∂γ := by
       rw [integral_finsetSum _ (fun ω _ => (hF ω).const_mul (p ω).toReal)]
       simp only [integral_const_mul]
@@ -122,12 +140,12 @@ theorem measureReal_sq_norm_ge_le_chi_square_mgf
     {Ω : Type*} [Fintype Ω] [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
     (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
     (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
-      ⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ p.toMeasure)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
     (u θ : ℝ) (hθ0 : 0 ≤ θ) (hθ1 : θ < 1 / 2) :
-    p.toMeasure.real {ω | u ≤ X ω ⬝ᵥ X ω} ≤
+    p.toMeasure.real {ω | u ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
       Real.exp (-θ * u) * (1 - 2 * θ) ^ (-((d : ℝ) / 2)) := by
   have hh := measure_ge_le_exp_mul_mgf (μ := p.toMeasure)
-    (X := fun ω => X ω ⬝ᵥ X ω) u hθ0 (show Integrable _ _ from .of_finite)
+    (X := fun ω => ‖WithLp.toLp 2 (X ω)‖ ^ 2) u hθ0 (show Integrable _ _ from .of_finite)
   apply hh.trans
   apply mul_le_mul_of_nonneg_left _ (Real.exp_pos _).le
   exact integral_exp_sq_norm_le_chi_square_mgf p X hmgf hθ0 hθ1
@@ -138,9 +156,9 @@ theorem measureReal_sq_norm_ge_one_add_mul_le
     {Ω : Type*} [Fintype Ω] [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
     (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
     (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
-      ⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ p.toMeasure)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
     {ε : ℝ} (hε : 0 ≤ ε) :
-    p.toMeasure.real {ω | (1 + ε) * d ≤ X ω ⬝ᵥ X ω} ≤
+    p.toMeasure.real {ω | (1 + ε) * d ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
       Real.exp (-((d : ℝ) / 2) * (ε - Real.log (1 + ε))) := by
   have h1ε : 0 < 1 + ε := by linarith
   let θ := ε / (2 * (1 + ε))
@@ -166,19 +184,21 @@ theorem measureReal_sq_norm_ge_add_two_sqrt_mul_add_le
     {Ω : Type*} [Fintype Ω] [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
     (p : PMF Ω) {d : ℕ} (X : Ω → Fin d → ℝ)
     (hmgf : ∀ u : Fin d → ℝ, HasSubgaussianMGF (fun ω => X ω ⬝ᵥ u)
-      ⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ p.toMeasure)
+      (‖WithLp.toLp 2 u‖₊ ^ 2) p.toMeasure)
     {x : ℝ} (hx : 0 ≤ x) :
-    p.toMeasure.real {ω | d + 2 * Real.sqrt (d * x) + 2 * x ≤ X ω ⬝ᵥ X ω} ≤ Real.exp (-x) := by
+    p.toMeasure.real {ω | d + 2 * Real.sqrt (d * x) + 2 * x ≤ ‖WithLp.toLp 2 (X ω)‖ ^ 2} ≤
+      Real.exp (-x) := by
   rw [← ENNReal.ofReal_le_ofReal_iff (by positivity), ofReal_measureReal]
   rcases Nat.eq_zero_or_pos d with rfl | hd
   · rcases hx.eq_or_lt with rfl | hx0
-    · simp [dotProduct]
+    · rw [neg_zero, Real.exp_zero, ENNReal.ofReal_one]
+      exact prob_le_one
     · have heq : {ω | ((0 : ℕ) : ℝ) + 2 * Real.sqrt (((0 : ℕ) : ℝ) * x) + 2 * x ≤
-          X ω ⬝ᵥ X ω} = ∅ := by
+          ‖WithLp.toLp 2 (X ω)‖ ^ 2} = ∅ := by
         ext ω
-        simp only [dotProduct, Finset.univ_eq_empty, Finset.sum_empty, Nat.cast_zero,
-          zero_mul, Real.sqrt_zero, mul_zero, zero_add, Set.mem_ofPred_eq, Set.mem_empty_iff_false,
-          iff_false]
+        simp only [norm_toLp_sq_eq_dotProduct_self, dotProduct, Finset.univ_eq_empty,
+          Finset.sum_empty, Nat.cast_zero, zero_mul, Real.sqrt_zero, mul_zero, zero_add,
+          Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         linarith
       rw [heq, measure_empty]
       exact zero_le

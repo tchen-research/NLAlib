@@ -15,7 +15,8 @@ import NLAlib.ForMathlib.MeasureTheory.MapProd
 
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
-`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in
+`NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
 Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 

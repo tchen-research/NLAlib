@@ -47,7 +47,7 @@ private theorem hanson_wright_of_constants {Ω : Type*} [MeasurableSpace Ω]
     (hC_diag_quad : 8 * exp 1 ^ 3 ≤ C)
     (hC_offdiag_domain : 16 * exp 1 ≤ C ^ 2)
     (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
-    (hOp : 0 < specNorm A)
+    (hF : 0 < frobNorm A) (hOp : 0 < specNorm A)
     (hind : iIndepFun X μ)
     (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (ht : 0 ≤ t) :
@@ -58,15 +58,7 @@ private theorem hanson_wright_of_constants {Ω : Type*} [MeasurableSpace Ω]
   have hHW : HasHansonWrightMGF μ A X K C :=
     hasHansonWrightMGF_of_subgaussian hK hC hC_domain hC_diag_quad
       hC_offdiag_domain hC_offdiag_quad hOp hind hmgf
-  have hv : 0 < K ^ 4 * frobNorm A ^ 2 := by
-    have hF : 0 < frobNorm A := by
-      rcases (frobNorm_nonneg A).eq_or_lt with h | h
-      · exfalso
-        have : A = 0 := frobNorm_eq_zero_iff.1 h.symm
-        subst this
-        simp at hOp
-      · exact h
-    positivity
+  have hv : 0 < K ^ 4 * frobNorm A ^ 2 := by positivity
   have hb : 0 < K ^ 2 * specNorm A := by positivity
   exact measureReal_abs_ge_le_two_mul_exp_of_cgf_le hC hv hb
     (Y := centeredQuadraticForm μ A X)
@@ -134,7 +126,7 @@ private theorem hanson_wright_mgf_fin {Ω : Type*} [MeasurableSpace Ω]
     · exact
         hanson_wright_of_constants (μ := μ) (A := A) (X := X)
           (K := K) (C := C0) (t := t) hK hC0_pos hC0_domain
-          hC0_diag_quad hC0_offdiag_domain hC0_offdiag_quad hOp
+          hC0_diag_quad hC0_offdiag_domain hC0_offdiag_quad hF hOp
           hind hmgf ht
     · have hOp_nonneg : 0 ≤ specNorm A := specNorm_nonneg A
       have hOp_zero : specNorm A = 0 := le_antisymm (le_of_not_gt hOp) hOp_nonneg

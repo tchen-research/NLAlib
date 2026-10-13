@@ -6,8 +6,7 @@ The identity-matrix specialization of Hanson–Wright, with its expectation,
 Frobenius norm and spectral norm evaluated explicitly. This is the reusable
 probabilistic input for sub-Gaussian JL and independent isotropic row bounds.
 
-Source: `open_problems_operator_rederivations.tex`, Lemma `pg:squares`;
-Vershynin 2018, Theorem 6.2.1. Supports atlas `jl-subgaussian` and
+Vershynin 2018, Theorem 6.2.1 and Theorem 6.3.2. Supports atlas `jl-subgaussian` and
 `subgaussian-matrix-norm`.
 -/
 
@@ -18,6 +17,7 @@ open scoped Matrix
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Squared projection concentration.** Independent random variables with MGF
 proxy `K²` and unit second moments satisfy the explicit Hanson–Wright tail for
 `|∑ Yᵢ² - card ι|`. Integrability follows from the MGF assumptions. The family
@@ -25,7 +25,6 @@ is nonempty so the identity matrix has spectral norm one.
 
 Vershynin 2018, Theorem 6.3.2 (via `hanson_wright_mgf` at `A = 1`); supports atlas
 `jl-subgaussian` and `subgaussian-matrix-norm`. -/
-open scoped Matrix.Norms.L2Operator in
 theorem measureReal_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]

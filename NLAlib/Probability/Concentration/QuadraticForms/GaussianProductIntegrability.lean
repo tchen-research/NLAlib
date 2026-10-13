@@ -17,7 +17,8 @@ import Mathlib.Analysis.InnerProductSpace.Trace
 
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
-`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in
+`NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
 Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
@@ -182,13 +183,13 @@ lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
       (by rfl : Module.finrank ℝ E = Module.finrank ℝ E) i
   have hsynth_aemeas :
       AEMeasurable (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-        (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1) := by
+        (gaussianVector (Fin (Module.finrank ℝ E))) := by
     exact (continuous_finsetSum _ fun i _ =>
       (continuous_apply i).smul continuous_const).aemeasurable
   have hf_aesm :
       AEStronglyMeasurable (fun x : E => exp (θ * inner ℝ (T x) x))
         (Measure.map (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-          (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1)) := by
+          (gaussianVector (Fin (Module.finrank ℝ E)))) := by
     fun_prop
   rw [stdGaussian_eq_map_pi_orthonormalBasis b]
   rw [integral_map hsynth_aemeas hf_aesm]
@@ -223,10 +224,10 @@ lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
   calc
     ∫ (x : Fin (Module.finrank ℝ E) → ℝ),
         exp (θ * inner ℝ (T (∑ i, x i • b i)) (∑ i, x i • b i))
-        ∂Measure.pi (fun x => gaussianReal 0 1)
+        ∂(gaussianVector (Fin (Module.finrank ℝ E)))
         = ∫ (x : Fin (Module.finrank ℝ E) → ℝ),
           ∏ i : Fin (Module.finrank ℝ E), exp ((θ * lam i) * x i ^ 2)
-        ∂Measure.pi (fun x => gaussianReal 0 1) := by
+        ∂(gaussianVector (Fin (Module.finrank ℝ E))) := by
           apply integral_congr_ae
           filter_upwards with z
           exact hpoint z
@@ -275,13 +276,13 @@ lemma integrable_exp_quadratic_stdGaussian {E : Type*} [NormedAddCommGroup E]
       (by rfl : Module.finrank ℝ E = Module.finrank ℝ E) i
   have hsynth_aemeas :
       AEMeasurable (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-        (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1) := by
+        (gaussianVector (Fin (Module.finrank ℝ E))) := by
     exact (continuous_finsetSum _ fun i _ =>
       (continuous_apply i).smul continuous_const).aemeasurable
   have hf_aesm :
       AEStronglyMeasurable (fun x : E => exp (θ * inner ℝ (T x) x))
         (Measure.map (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-          (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1)) := by
+          (gaussianVector (Fin (Module.finrank ℝ E)))) := by
     fun_prop
   have hpoint : ∀ z : Fin (Module.finrank ℝ E) → ℝ,
       exp (θ * inner ℝ (T (∑ i, z i • b i)) (∑ i, z i • b i)) =

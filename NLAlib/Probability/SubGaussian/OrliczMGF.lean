@@ -5,8 +5,10 @@ import NLAlib.ForMathlib.Analysis.ExpBounds
 # From Orlicz exponential moments to centered moment-generating bounds
 
 A centered variable with `E exp((X/K)^2) ≤ 2` has a sub-Gaussian MGF with variance proxy
-`9 K²`. A centered variable with `E exp(|X|/K) ≤ 2` has the local bound
-`E exp(tX) ≤ exp(16 K² t²)` for `|t| ≤ 1/(2K)`.
+`9 K²` (`hasSubgaussianMGF_of_lintegral_exp_sq_le_two`). A centered variable with
+`E exp(|X|/K) ≤ 2` has the local bound `E exp(tX) ≤ exp(16 K² t²)` for `|t| ≤ 1/(2K)`
+(`mgf_le_of_lintegral_exp_abs_le_two`, with `integrable_of_lintegral_exp_abs_le_two` and
+`integrable_exp_mul_of_lintegral_exp_abs_le_two`).
 
 The input bounds are nonnegative lower Lebesgue integrals. Their finiteness proves all
 integrability needed below, so divergent Bochner integrals cannot satisfy the assumptions
@@ -168,32 +170,63 @@ theorem hasSubgaussianMGF_of_lintegral_exp_sq_le_two {Ω : Type*} [MeasurableSpa
         ring
   exact ⟨fun t => (hbound t).1, fun t => (hbound t).2⟩
 
-/-- **Orlicz absolute-exponential bound implies a centered local MGF bound.** If `K>0`,
-`EX=0` and the nonnegative expectation of `exp(|X|/K)` is at most two, then `X` and
-every tilt in `|t|≤1/(2K)` are integrable, and `E exp(tX)≤exp(16K²t²)` there.
-Vershynin 2018, Proposition 2.7.1; atlas `bernstein-scalar` (Orlicz-to-local-MGF bridge).
+/-- If `K > 0` and the nonnegative expectation of `exp(|X|/K)` is at most two, then `X` is
+integrable. Vershynin 2018, Proposition 2.7.1.
 atlas: bernstein-scalar -/
-theorem integrable_and_local_mgf_le_of_lintegral_exp_abs_le_two {Ω : Type*}
+theorem integrable_of_lintegral_exp_abs_le_two {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    {X : Ω → ℝ} (hX : AEMeasurable X μ) (K : ℝ) (hK : 0 < K)
+    (hpsi : ∫⁻ ω, ENNReal.ofReal (Real.exp (|X ω| / K)) ∂μ ≤ 2) :
+    Integrable X μ := by
+  obtain ⟨hFi, -⟩ := integrable_and_integral_le_two_of_lintegral_le
+    (F := fun ω => Real.exp (|X ω| / K)) (by fun_prop)
+    (fun _ => (Real.exp_pos _).le) hpsi
+  apply (hFi.const_mul K).mono' hX.aestronglyMeasurable
+  apply Filter.Eventually.of_forall
+  intro ω
+  rw [Real.norm_eq_abs]
+  have hy : |X ω| / K ≤ Real.exp (|X ω| / K) := by
+    linarith [Real.add_one_le_exp (|X ω| / K)]
+  simpa only [mul_comm] using (div_le_iff₀ hK).mp hy
+
+/-- If `K > 0` and the nonnegative expectation of `exp(|X|/K)` is at most two, then every tilt
+`exp(tX)` with `|t| ≤ 1/(2K)` is integrable. Vershynin 2018, Proposition 2.7.1.
+atlas: bernstein-scalar -/
+theorem integrable_exp_mul_of_lintegral_exp_abs_le_two {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {X : Ω → ℝ} (hX : AEMeasurable X μ) (K : ℝ) (hK : 0 < K)
+    (hpsi : ∫⁻ ω, ENNReal.ofReal (Real.exp (|X ω| / K)) ∂μ ≤ 2) {t : ℝ}
+    (ht : |t| ≤ 1 / (2 * K)) :
+    Integrable (fun ω => Real.exp (t * X ω)) μ := by
+  obtain ⟨hFi, -⟩ := integrable_and_integral_le_two_of_lintegral_le
+    (F := fun ω => Real.exp (|X ω| / K)) (by fun_prop)
+    (fun _ => (Real.exp_pos _).le) hpsi
+  refine hFi.mono' (Real.measurable_exp.comp_aemeasurable (hX.const_mul t)).aestronglyMeasurable
+    (Filter.Eventually.of_forall fun ω => ?_)
+  rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
+  apply Real.exp_le_exp.mpr
+  calc t * X ω ≤ |t * X ω| := le_abs_self _
+    _ = |t| * |X ω| := abs_mul _ _
+    _ ≤ 1 / (2 * K) * |X ω| := mul_le_mul_of_nonneg_right ht (abs_nonneg _)
+    _ ≤ |X ω| / K := by
+        rw [div_mul_eq_mul_div, one_mul]
+        exact div_le_div_of_nonneg_left (abs_nonneg _) hK (by linarith)
+
+/-- **Orlicz absolute-exponential bound implies a centered local MGF bound.** If `K>0`,
+`EX=0` and the nonnegative expectation of `exp(|X|/K)` is at most two, then
+`E exp(tX)≤exp(16K²t²)` for `|t|≤1/(2K)` (integrability of `X` and of the tilts:
+`integrable_of_lintegral_exp_abs_le_two`, `integrable_exp_mul_of_lintegral_exp_abs_le_two`).
+Vershynin 2018, Proposition 2.7.1 (Orlicz-to-local-MGF bridge).
+atlas: bernstein-scalar -/
+theorem mgf_le_of_lintegral_exp_abs_le_two {Ω : Type*}
     [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ] {X : Ω → ℝ}
     (hX : AEMeasurable X μ) (K : ℝ) (hK : 0 < K)
     (hmean : ∫ ω, X ω ∂μ = 0)
-    (hpsi : ∫⁻ ω, ENNReal.ofReal (Real.exp (|X ω| / K)) ∂μ ≤ 2) :
-    Integrable X μ ∧ ∀ t : ℝ, |t| ≤ 1 / (2 * K) →
-      Integrable (fun ω => Real.exp (t * X ω)) μ ∧
-        mgf X μ t ≤ Real.exp (16 * K ^ 2 * t ^ 2) := by
+    (hpsi : ∫⁻ ω, ENNReal.ofReal (Real.exp (|X ω| / K)) ∂μ ≤ 2) {t : ℝ}
+    (ht : |t| ≤ 1 / (2 * K)) :
+    mgf X μ t ≤ Real.exp (16 * K ^ 2 * t ^ 2) := by
   obtain ⟨hFi, hFb⟩ := integrable_and_integral_le_two_of_lintegral_le
     (F := fun ω => Real.exp (|X ω| / K)) (by fun_prop)
     (fun _ => (Real.exp_pos _).le) hpsi
-  have hXi : Integrable X μ := by
-    apply (hFi.const_mul K).mono' hX.aestronglyMeasurable
-    apply Filter.Eventually.of_forall
-    intro ω
-    rw [Real.norm_eq_abs]
-    have hy : |X ω| / K ≤ Real.exp (|X ω| / K) := by
-      linarith [Real.add_one_le_exp (|X ω| / K)]
-    simpa only [mul_comm] using (div_le_iff₀ hK).mp hy
-  refine ⟨hXi, ?_⟩
-  intro t ht
+  have hXi : Integrable X μ := integrable_of_lintegral_exp_abs_le_two hX K hK hpsi
   let u := t * K
   have hu : |u| ≤ 1 / 2 := by
     have ht' := (le_div_iff₀ (by positivity : 0 < 2 * K)).mp ht
@@ -209,9 +242,9 @@ theorem integrable_and_local_mgf_le_of_lintegral_exp_abs_le_two {Ω : Type*}
     rw [abs_div, abs_of_pos hK] at h2
     rw [← hid] at h2
     linarith
-  obtain ⟨hexp, hb⟩ := mgf_le_of_remainder_bound hX hXi hmean hFi hFb t
+  obtain ⟨-, hb⟩ := mgf_le_of_remainder_bound hX hXi hmean hFi hFb t
     (8 * u ^ 2) (by positivity) hrem
-  refine ⟨hexp, hb.trans ?_⟩
+  refine hb.trans ?_
   have hh := Real.add_one_le_exp (16 * u ^ 2)
   have heq : 16 * u ^ 2 = 16 * K ^ 2 * t ^ 2 := by dsimp [u]; ring
   rw [heq] at hh

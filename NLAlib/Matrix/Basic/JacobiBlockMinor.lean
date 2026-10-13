@@ -14,8 +14,6 @@ Horn–Johnson 2013, §§0.7.5–0.7.6 and 0.8.4.
 noncomputable section
 open scoped Matrix
 namespace NLAlib
-set_option backward.isDefEq.respectTransparency false
-
 private def complementEquiv (p q : Type*) : {s : p ⊕ q // ¬s.isLeft} ≃ q :=
   (Equiv.subtypeEquivRight (fun s : p ⊕ q => by cases s <;> simp)).trans Equiv.sumIsRight
 

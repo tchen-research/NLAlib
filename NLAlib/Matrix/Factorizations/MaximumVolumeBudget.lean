@@ -42,7 +42,7 @@ theorem frobSq_add_trace_inv_gram_mul_frobSq_le_of_maximum_volume
       exact hh
     have hReplace : C *ᵥ T.col j + D.col j = (C * T + D).col j := rfl
     have hx := det_gram_updateCol_eq_det_mul C hUnit i (T.col j) (D.col j) hd
-    rw [hReplace] at hx
+    rw [hReplace, norm_toLp_sq_eq_dotProduct_self] at hx
     have hle := hMax i j
     rw [hx] at hle
     have he := (mul_le_mul_iff_right₀ hC).mp (show

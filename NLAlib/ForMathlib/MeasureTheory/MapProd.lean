@@ -13,7 +13,7 @@ Moved from the Hanson–Wright proof (ported from HighDimProb commit c0cb8d9) in
 
 open MeasureTheory
 
-namespace NLAlib
+namespace MeasureTheory
 
 /-- `(μ.map f).prod (ν.map g) = (μ.prod ν).map (fun p => (f p.1, g p.2))` for a.e.-measurable
 `f`, `g` and s-finite `μ`, `ν`; the `AEMeasurable` version of `Measure.map_prod_map`.
@@ -42,4 +42,4 @@ theorem measure_map_prod_map_of_aemeasurable {α β γ δ : Type*}
     _ = (μ.prod ν).map (fun p : α × β => (f p.1, g p.2)) :=
         Measure.map_congr hpair.symm
 
-end NLAlib
+end MeasureTheory

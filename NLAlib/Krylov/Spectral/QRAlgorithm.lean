@@ -22,7 +22,7 @@ The (shifted) QR algorithm, driven by any QR routine `qr` and any shift sequence
   and the leading columns of `Q^{(k)}` span the subspace iterates of the leading columns of `I`
   (`range_qrAlgorithmQ_castLE_eq_subspaceIterate`, scaffold).
 * One shifted step is an orthogonal similarity (`add_smul_one_eq_transpose_mul_mul_of_isQR`).
-* Structure: symmetry is preserved (`isSymm_qrAlgorithm`); upper Hessenberg form is preserved
+* Structure: symmetry is preserved (`isHermitian_qrAlgorithm`); upper Hessenberg form is preserved
   when every `R_j` is invertible (`isUpperHessenberg_qrAlgorithm`, e.g. when no shift is an
   eigenvalue, `qrAlgorithmFactors_snd_apply_self_ne_zero`), hence symmetric tridiagonal form
   too (`isTridiagonal_qrAlgorithm`); with the Givens routine no invertibility is needed
@@ -245,10 +245,10 @@ theorem range_qrAlgorithmQ_castLE_eq_subspaceIterate (hA : IsUnit A.det) {k : �
 /-- **Symmetry is preserved**: if `A` is symmetric then so is every `A_k`. Source:
 Trefethen–Bau (1997) [`tb97`], Lect. 28; Golub–Van Loan (2013) [`gvl13`], §8.3.
 atlas: qr-algorithm-simultaneous-iteration -/
-theorem isSymm_qrAlgorithm (hA : A.IsSymm) {k : ℕ} (h : QRAlgorithmSucceeds qr μ A k) :
-    (qrAlgorithm qr μ A k).IsSymm := by
+theorem isHermitian_qrAlgorithm (hA : A.IsHermitian) {k : ℕ} (h : QRAlgorithmSucceeds qr μ A k) :
+    (qrAlgorithm qr μ A k).IsHermitian := by
   rw [qrAlgorithm_eq_transpose_mul_mul h]
-  exact isSymm_transpose_mul_mul hA _
+  exact Matrix.isHermitian_conjTranspose_mul_mul _ hA
 
 /-- If no shift is an eigenvalue (`det (A − μ_j I) ≠ 0` for `j < k`), every `R_{j+1}` has a
 nonzero diagonal (`A_j − μ_j I` is orthogonally similar to `A − μ_j I`). Source: Golub–Van Loan
@@ -292,11 +292,11 @@ theorem isUpperHessenberg_qrAlgorithm (hA : IsUpperHessenberg A) {k : ℕ}
 /-- **Symmetric tridiagonal form is preserved** when every `R_j` is invertible. Source:
 Trefethen–Bau (1997) [`tb97`], Lect. 28–29; Golub–Van Loan (2013) [`gvl13`], §8.3.
 atlas: qr-algorithm-simultaneous-iteration -/
-theorem isTridiagonal_qrAlgorithm (hS : A.IsSymm) (hA : IsTridiagonal A) {k : ℕ}
+theorem isTridiagonal_qrAlgorithm (hS : A.IsHermitian) (hA : IsTridiagonal A) {k : ℕ}
     (h : QRAlgorithmSucceeds qr μ A k)
     (hR : ∀ j < k, ∀ i, (qrAlgorithmFactors qr μ A j).2 i i ≠ 0) :
     IsTridiagonal (qrAlgorithm qr μ A k) :=
-  (isUpperHessenberg_qrAlgorithm hA.1 h hR).isTridiagonal_of_isSymm (isSymm_qrAlgorithm hS h)
+  (isUpperHessenberg_qrAlgorithm hA.1 h hR).isTridiagonal_of_isHermitian (isHermitian_qrAlgorithm hS h)
 
 /-! ### The Hessenberg QR algorithm with Givens rotations -/
 
@@ -325,9 +325,9 @@ theorem qrAlgorithmSucceeds_givensQR (hA : IsUpperHessenberg A) (k : ℕ) :
 tridiagonal then so is every `A_k` computed with `qr = givensQR`. Source: Golub–Van Loan (2013)
 [`gvl13`], §8.3.2–8.3.3; Trefethen–Bau (1997) [`tb97`], Lect. 28–29.
 atlas: qr-algorithm-simultaneous-iteration -/
-theorem isTridiagonal_qrAlgorithm_givensQR (hS : A.IsSymm) (hA : IsTridiagonal A) (k : ℕ) :
+theorem isTridiagonal_qrAlgorithm_givensQR (hS : A.IsHermitian) (hA : IsTridiagonal A) (k : ℕ) :
     IsTridiagonal (qrAlgorithm givensQR μ A k) :=
-  (isUpperHessenberg_qrAlgorithm_givensQR hA.1 k).isTridiagonal_of_isSymm
-    (isSymm_qrAlgorithm hS (qrAlgorithmSucceeds_givensQR hA.1 k))
+  (isUpperHessenberg_qrAlgorithm_givensQR hA.1 k).isTridiagonal_of_isHermitian
+    (isHermitian_qrAlgorithm hS (qrAlgorithmSucceeds_givensQR hA.1 k))
 
 end NLAlib

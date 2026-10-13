@@ -16,10 +16,11 @@ moment. Atlas: `inverse-wishart-spectral-moment` (helper).
 
 noncomputable section
 
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- The spectral norm of a real symmetric matrix is the supremum norm of
 its eigenvalue list. Source: Mathlib's spectral theorem and unitary norm
 invariance. Atlas: `inverse-wishart-spectral-moment` (helper).
@@ -32,6 +33,7 @@ theorem specNorm_eq_norm_eigenvalues {ι : Type*} [Fintype ι] [DecidableEq ι]
     CStarRing.norm_coe_unitary_mul, Matrix.l2_opNorm_diagonal]
   rfl
 
+open scoped Matrix.Norms.L2Operator in
 /-- The spectral norm of a positive semidefinite matrix is bounded by
 its trace. Source: nonnegative eigenvalues and the spectral theorem;
 atlas `norms-frob-spec` (helper). -/
@@ -48,6 +50,7 @@ theorem specNorm_le_trace_of_posSemidef {ι : Type*} [Fintype ι] [DecidableEq �
       Real.norm_of_nonneg (hA.eigenvalues_nonneg i), hA.isHermitian.trace_eq_sum_eigenvalues]
     exact Finset.single_le_sum (fun j _ => hA.eigenvalues_nonneg j) (Finset.mem_univ i)
 
+open scoped Matrix.Norms.L2Operator in
 /-- A positive semidefinite real matrix has a unit eigenvector with
 eigenvalue equal to its spectral norm. Source: finite-dimensional spectral
 theorem. Atlas: `inverse-wishart-spectral-moment` (helper).
@@ -69,6 +72,7 @@ theorem exists_unit_mulVec_eq_specNorm_smul {ι : Type*} [Fintype ι] [Decidable
   refine ⟨v, hv, ?_⟩
   simpa only [heig] using hA.isHermitian.mulVec_eigenvectorBasis i
 
+open scoped Matrix.Norms.L2Operator in
 /-- The quadratic form of a positive semidefinite matrix dominates a
 unit rank-one probe scaled by its spectral norm. Source: direct
 quadratic-probe proof; expand positivity at `z - (v ⋅ z) v` for a top

@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Functions.CFCQuadratic
 import NLAlib.Matrix.Functions.CFCTrace
-import NLAlib.Matrix.Functions.ComplexDiagonalFilter
 import NLAlib.Matrix.Functions.DiagonalFilter
 import NLAlib.Matrix.Functions.DilationIdentities
 import NLAlib.Matrix.Functions.ExpLog

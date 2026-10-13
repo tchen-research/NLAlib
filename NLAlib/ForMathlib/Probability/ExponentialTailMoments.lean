@@ -4,12 +4,12 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 # First and second moments from a half-rate exponential tail
 
 Nonnegative tail integration gives moments two and eight before asserting
-integrability. Source: manuscript `rt:log-moments`, scalar tail integration.
+integrability. Layer-cake integration (Vershynin 2018, Lemma 1.2.1).
 -/
 
 noncomputable section
 open MeasureTheory Set
-namespace NLAlib
+namespace MeasureTheory
 
 private theorem lintegral_ofReal_exp_neg_half_Ioi_eq_two :
     (∫⁻ t : ℝ in Ioi 0, ENNReal.ofReal (Real.exp (-t / 2))) = ENNReal.ofReal 2 := by
@@ -53,10 +53,7 @@ private theorem lintegral_ofReal_two_mul_mul_exp_neg_half_Ioi_eq_eight :
   · filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht
     exact mul_nonneg (mul_nonneg (by norm_num) ht.le) (Real.exp_pos _).le
 
-/-- A nonnegative measurable variable with tail `P{f>t} ≤ exp(-t/2)` has integrable
-first and second moments, bounded by two and eight. Source: manuscript `rt:log-moments`;
-layer-cake integration is applied before integrability is claimed. -/
-theorem integrable_and_integral_sq_le_of_exp_neg_half_tail
+private theorem integrable_and_integral_sq_le_of_exp_neg_half_tail
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} (f : Ω → ℝ)
     (hf : Measurable f) (hf0 : ∀ ω, 0 ≤ f ω)
     (htail : ∀ t : ℝ, 0 < t → μ {ω | t < f ω} ≤ ENNReal.ofReal (Real.exp (-t / 2))) :
@@ -111,4 +108,33 @@ theorem integrable_and_integral_sq_le_of_exp_neg_half_tail
       (hf.pow_const 2).aestronglyMeasurable]
     exact ENNReal.toReal_le_of_le_ofReal (by norm_num) hL2
 
-end NLAlib
+section
+
+variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {f : Ω → ℝ}
+  (hf : Measurable f) (hf0 : ∀ ω, 0 ≤ f ω)
+  (htail : ∀ t : ℝ, 0 < t → μ {ω | t < f ω} ≤ ENNReal.ofReal (Real.exp (-t / 2)))
+include hf hf0 htail
+
+/-- A nonnegative measurable variable with tail `P{f > t} ≤ exp(-t/2)` is integrable
+(layer-cake integration; Vershynin 2018, Lemma 1.2.1). -/
+theorem integrable_of_exp_neg_half_tail : Integrable f μ :=
+  (integrable_and_integral_sq_le_of_exp_neg_half_tail f hf hf0 htail).1
+
+/-- A nonnegative variable with tail `P{f > t} ≤ exp(-t/2)` has mean at most `2`
+(Vershynin 2018, Lemma 1.2.1). -/
+theorem integral_le_two_of_exp_neg_half_tail : (∫ ω, f ω ∂μ) ≤ 2 :=
+  (integrable_and_integral_sq_le_of_exp_neg_half_tail f hf hf0 htail).2.1
+
+/-- A nonnegative measurable variable with tail `P{f > t} ≤ exp(-t/2)` is square integrable
+(Vershynin 2018, Lemma 1.2.1). -/
+theorem integrable_sq_of_exp_neg_half_tail : Integrable (fun ω => f ω ^ 2) μ :=
+  (integrable_and_integral_sq_le_of_exp_neg_half_tail f hf hf0 htail).2.2.1
+
+/-- A nonnegative variable with tail `P{f > t} ≤ exp(-t/2)` has second moment at most `8`
+(Vershynin 2018, Lemma 1.2.1). -/
+theorem integral_sq_le_eight_of_exp_neg_half_tail : (∫ ω, f ω ^ 2 ∂μ) ≤ 8 :=
+  (integrable_and_integral_sq_le_of_exp_neg_half_tail f hf hf0 htail).2.2.2
+
+end
+
+end MeasureTheory

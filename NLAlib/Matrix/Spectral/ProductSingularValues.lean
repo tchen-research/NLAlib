@@ -8,9 +8,8 @@ import NLAlib.Matrix.Inequalities.KyFan
 
 Orthogonal compression determinants and a polar normalization of the intermediate
 image give every prefix-product inequality. A singular intermediate Gram matrix
-is treated by its actual kernel, with no positivity or full-rank assumptions.
-Source: Horn–Johnson 1991, Theorem 3.3.4, and the operator derivation manuscript,
-Section 4. Atlas: `horn-product-inequality`.
+is treated by its kernel, with no positivity or full-rank assumptions.
+Source: Horn–Johnson 1991, Theorem 3.3.4,. Atlas: `horn-product-inequality`.
 -/
 
 noncomputable section

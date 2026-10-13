@@ -29,7 +29,7 @@ theorem apply_eq_sum_mul_single (f : (ι → ℝ) →ₗ[ℝ] ℝ) (x : ι → �
     by_cases hij : j = i <;> simp [hij]
   rw [h, map_smul, smul_eq_mul, mul_comm]
 
-/-- A majorized vector belongs to the convex hull of the comparator's actual
+/-- A majorized vector belongs to the convex hull of the comparator's
 permutations. The proof separates the compact convex hull and contradicts the
 signed support bound. Marshall–Olkin–Arnold (2011), Theorem 2.B.2.
 atlas: majorization-def (partial) -/
@@ -49,7 +49,7 @@ theorem Majorized.mem_convexHull_permutations {x y : ι → ℝ} (hxy : Majorize
   exact (hle.trans_lt (hu _ hmem)).not_gt hux
 
 /-- Convex-hull membership in the permutation orbit is equivalent to being an
-actual doubly stochastic image. This is Birkhoff transported by the linear map
+doubly stochastic image. This is Birkhoff transported by the linear map
 `D ↦ D y`. Marshall–Olkin–Arnold (2011), Theorem 2.B.2. -/
 theorem mem_convexHull_permutations_iff_exists_doublyStochastic (x y : ι → ℝ) :
     x ∈ convexHull ℝ (Set.range fun σ : Equiv.Perm ι => y ∘ σ) ↔
@@ -68,7 +68,7 @@ theorem mem_convexHull_permutations_iff_exists_doublyStochastic (x y : ι → �
   rfl
 
 /-- Full HLP equivalence between ordinary majorization and the existence of an
-actual doubly stochastic matrix, including empty index types and signed vectors.
+doubly stochastic matrix, including empty index types and signed vectors.
 Marshall–Olkin–Arnold (2011), Theorem 2.B.2.
 atlas: majorization-def (partial) -/
 theorem majorized_iff_exists_doublyStochastic (x y : ι → ℝ) :

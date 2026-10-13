@@ -5,7 +5,7 @@ import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Rank-adapted maximum-volume QR
 
-Choosing the actual rank as the leading size makes the trailing residual
+Choosing the rank as the leading size makes the trailing residual
 exactly zero, including rank zero. This is the necessary deficient-rank branch
 of strong RRQR; no singular leading block is assigned an ordinary inverse.
 Gu–Eisenstat 1996, maximum-volume argument; derivations §alg:rrqr.
@@ -16,7 +16,7 @@ open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
-/-- At the actual rank, maximum-volume QR has an invertible triangular
+/-- At the rank, maximum-volume QR has an invertible triangular
 leading block and an exactly zero trailing residual. Its interpolation
 entries are bounded by one and their Frobenius square by `r(n-r)`, including
 `r=0`, where the empty basis reconstructs the zero matrix. This is the

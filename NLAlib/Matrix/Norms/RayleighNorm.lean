@@ -6,26 +6,21 @@ import Mathlib.Tactic
 /-!
 # Spectral norm and symmetric quadratic forms
 
-Atlas: `ose-def`, `norms-frob-spec`. The Rayleigh quotient argument is adapted
-from `SparseFock.MatrixTail.opNorm_le_iff_quadraticForm` in
-Nelson-Nguyen-conjecture-upper-bound-palomar, commit
-`3fdbf2cbb26c10c18bc799fa63fbd3a768f6f0e2` (MIT, Diar Heidary).
-Only Mathlib and NLAlib are imported; the donor probability development is
+Atlas: `ose-def`, `norms-frob-spec`.MatrixTail.Only Mathlib and NLAlib are imported; the donor probability development is
 not needed. All finite index types, including empty types, are covered.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator InnerProductSpace
+open scoped Matrix InnerProductSpace
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A real symmetric matrix has spectral norm at most a nonnegative `ε`
 exactly when its quadratic form is bounded by `ε ‖x‖²` for every vector.
-Atlas: `ose-def`, `norms-frob-spec`. Adapted from the MIT-licensed donor
-`SparseFock.MatrixTail.opNorm_le_iff_quadraticForm`, commit
-`3fdbf2cbb26c10c18bc799fa63fbd3a768f6f0e2`. -/
+Atlas: `ose-def`, `norms-frob-spec`.MatrixTail.-/
 theorem specNorm_le_iff_abs_dotProduct_mulVec_le (A : Matrix n n ℝ)
     (hA : A.IsHermitian) (ε : ℝ) (hε : 0 ≤ ε) :
     specNorm A ≤ ε ↔ ∀ x : n → ℝ, |x ⬝ᵥ (A *ᵥ x)| ≤ ε * (x ⬝ᵥ x) := by

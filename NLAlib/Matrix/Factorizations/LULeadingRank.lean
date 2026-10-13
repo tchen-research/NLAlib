@@ -5,7 +5,7 @@ import NLAlib.Matrix.Inequalities.MajorizationProperties
 
 An invertible leading rank-sized block identifies a basis of the full row
 space. Earlier leading blocks span every earlier coordinate space.
-Horn–Johnson 2013, Corollary 3.5.4; atlas `lu-row-inclusion`.
+Horn–Johnson 2013, Corollary 3.5.4. Atlas: `lu-row-inclusion`.
 -/
 
 noncomputable section
@@ -35,13 +35,15 @@ property, including rank zero. Horn–Johnson 2013, Corollary 3.5.4.
 atlas: lu-row-inclusion (partial) -/
 theorem rowInclusion_of_leading_minors_through_rank {n k : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (hRank : A.rank = k)
-    (hMinors : ∀ j (hj : j ≤ n), j ≤ k → (leadingSubmatrix A j hj).det ≠ 0) :
+    (hMinors : ∀ j ≤ k, leadingMinor A j ≠ 0) :
     HasRowInclusion A := by
   have hk : k ≤ n := by simpa only [hRank] using A.rank_le_width
   have hRows : LinearIndependent ℝ (fun j : Fin k => A (Fin.castLE hk j)) := by
     let restrict : (Fin n → ℝ) →ₗ[ℝ] (Fin k → ℝ) := LinearMap.funLeft ℝ ℝ (Fin.castLE hk)
     apply LinearIndependent.of_comp restrict
-    exact Matrix.linearIndependent_rows_of_det_ne_zero (hMinors k hk le_rfl)
+    have hdet : (A.submatrix (Fin.castLE hk) (Fin.castLE hk)).det ≠ 0 := by
+      rw [← leadingMinor_fin A hk]; exact hMinors k le_rfl
+    exact Matrix.linearIndependent_rows_of_det_ne_zero hdet
   let S := Submodule.span ℝ (Set.range (fun j : Fin k => A (Fin.castLE hk j)))
   let T := Submodule.span ℝ (Set.range A.row)
   have hST : S ≤ T := Submodule.span_mono (by rintro _ ⟨j, rfl⟩; exact ⟨Fin.castLE hk j, rfl⟩)
@@ -56,11 +58,12 @@ theorem rowInclusion_of_leading_minors_through_rank {n k : ℕ}
   by_cases hik : i.val < k
   · let j := i.val
     have hj : j ≤ n := i.isLt.le
-    let M := leadingSubmatrix A j hj
+    let M := A.submatrix (Fin.castLE hj) (Fin.castLE hj)
     have hM : IsUnit Mᵀ := by
       apply (Matrix.isUnit_iff_isUnit_det _).mpr
       rw [Matrix.det_transpose]
-      exact isUnit_iff_ne_zero.mpr (hMinors j hj (by omega))
+      refine isUnit_iff_ne_zero.mpr ?_
+      rw [← leadingMinor_fin A hj]; exact hMinors j (by omega)
     obtain ⟨a, ha⟩ := Matrix.mulVec_surjective_iff_isUnit.mpr hM
       (fun t : Fin j => A i (Fin.castLE hj t))
     obtain ⟨c, hc, hSum⟩ := exists_coefficients_supported_prefix hj a
@@ -71,7 +74,7 @@ theorem rowInclusion_of_leading_minors_through_rank {n k : ℕ}
       rw [hSum]
       have h := congrFun ha (⟨t.val, by simpa only [j, Fin.lt_def] using hti⟩ : Fin j)
       simp only [Matrix.mulVec, dotProduct, Matrix.transpose_apply,
-        M, leadingSubmatrix, Matrix.submatrix_apply] at h
+        M, Matrix.submatrix_apply] at h
       simpa only [Fin.castLE, mul_comm] using h.symm
   · have hiRow : A i ∈ S := by
       rw [hEq]
@@ -95,39 +98,22 @@ Horn–Johnson 2013, Corollary 3.5.4.
 atlas: lu-row-inclusion (partial) -/
 theorem exists_unit_triangular_factorizations_of_leading_minors_through_rank {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ)
-    (hMinors : ∀ j (hj : j ≤ n), 0 < j → j ≤ A.rank →
-      (leadingSubmatrix A j hj).det ≠ 0) :
+    (hMinors : ∀ j, 0 < j → j ≤ A.rank → leadingMinor A j ≠ 0) :
     (∃ L U : Matrix (Fin n) (Fin n) ℝ, IsLU A L U) ∧
       (∃ L U : Matrix (Fin n) (Fin n) ℝ,
         L.IsLowerTriangular ∧ IsUnitUpperTriangular U ∧ A = L * U) := by
-  have hAll : ∀ j (hj : j ≤ n), j ≤ A.rank → (leadingSubmatrix A j hj).det ≠ 0 := by
-    intro j hj hr
+  have hAll : ∀ j ≤ A.rank, leadingMinor A j ≠ 0 := by
+    intro j hr
     by_cases h0 : j = 0
     · subst j; simp
-    · exact hMinors j hj (Nat.pos_of_ne_zero h0) hr
+    · exact hMinors j (Nat.pos_of_ne_zero h0) hr
   have hRows := rowInclusion_of_leading_minors_through_rank A rfl hAll
-  have hAllT : ∀ j (hj : j ≤ n), j ≤ Aᵀ.rank → (leadingSubmatrix Aᵀ j hj).det ≠ 0 := by
-    intro j hj hr
-    have h := hAll j hj (by simpa only [Matrix.rank_transpose] using hr)
-    change (Aᵀ.submatrix (Fin.castLE hj) (Fin.castLE hj)).det ≠ 0
-    rw [← Matrix.transpose_submatrix, Matrix.det_transpose]
-    exact h
+  have hAllT : ∀ j ≤ Aᵀ.rank, leadingMinor Aᵀ j ≠ 0 := by
+    intro j hr
+    rw [leadingMinor_transpose]
+    exact hAll j (by simpa only [Matrix.rank_transpose] using hr)
   have hCols := rowInclusion_of_leading_minors_through_rank Aᵀ rfl hAllT
   exact ⟨(exists_isLU_iff_rowInclusion A).mpr hRows,
     (exists_lower_unitUpper_iff_columnInclusion A).mpr hCols⟩
-
-/-- All singular-LU row/column inclusion equivalences and the leading-minors-
-through-rank sufficiency result. Empty and rank-zero matrices are included.
-Horn–Johnson 2013, Theorem 3.5.3 and Corollary 3.5.4.
-atlas: lu-row-inclusion -/
-theorem lu_row_inclusion_properties {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    ((∃ L U, IsLU A L U) ↔ HasRowInclusion A) ∧
-    ((∃ L U, L.IsLowerTriangular ∧ IsUnitUpperTriangular U ∧ A = L * U) ↔
-      HasColumnInclusion A) ∧
-    ((∀ j (hj : j ≤ n), 0 < j → j ≤ A.rank → (leadingSubmatrix A j hj).det ≠ 0) →
-      (∃ L U, IsLU A L U) ∧
-        (∃ L U, L.IsLowerTriangular ∧ IsUnitUpperTriangular U ∧ A = L * U)) :=
-  ⟨exists_isLU_iff_rowInclusion A, exists_lower_unitUpper_iff_columnInclusion A,
-    exists_unit_triangular_factorizations_of_leading_minors_through_rank A⟩
 
 end NLAlib

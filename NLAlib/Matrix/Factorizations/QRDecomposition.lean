@@ -4,7 +4,7 @@ import NLAlib.Matrix.Factorizations.QRConsequences
 # Complete thin and full QR contract
 
 Thin and full existence, a nonnegative triangular corner, uniqueness at
-full column rank, the actual range projector, and preservation of the
+full column rank, the range projector, and preservation of the
 native singular spectrum and spectral condition number. Source:
 Trefethen--Bau, Theorems 7.1--7.2; Golub--Van Loan, Theorems 5.2.1 and 5.2.3.
 Atlas: `qr-decomposition`.
@@ -16,11 +16,11 @@ namespace NLAlib
 
 /-- Complete QR factorization for real matrices with at least as many rows
 as columns, in the canonical form `IsQR A Q R`. The thin factor (existence alone is
-`exists_isQR`) has nonnegative upper diagonal and the actual
+`exists_isQR`) has nonnegative upper diagonal and the
 Gram, native singular values and Moore--Penrose condition number of the
 input. For every coordinate embedding the same frame and triangular factor
 extend to a full orthogonal factorization with a zero-padded corner. At full
-column rank the diagonal is positive, the actual range projector agrees
+column rank the diagonal is positive, the range projector agrees
 with the Moore--Penrose projector, and the pair is unique among positive
 diagonal QR pairs (`IsQR.eq_of_diag_pos`). Arbitrary finite row indices, ordered finite column
 indices, singular inputs and empty spaces are covered.

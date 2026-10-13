@@ -7,14 +7,14 @@ import NLAlib.Matrix.Norms.SchattenTrace
 
 * `singularValues_add_add_le`: Weyl's inequality `σ_{i+j}(A + B) ≤ σ_i(A) + σ_j(B)`;
 * `singularValues_add_le_add_specNorm`, `singularValues_le_singularValues_add_add_specNorm`,
-  `abs_singularValues_add_sub_le_specNorm`: perturbation `|σ_k(A + E) − σ_k(A)| ≤ ‖E‖₂`;
+ `abs_singularValues_add_sub_le_specNorm`: perturbation `|σ_k(A + E) − σ_k(A)| ≤ ‖E‖₂`;
 * `singularValues_mul_le_specNorm_mul`, `singularValues_mul_le_mul_specNorm`,
-  `singularValues_residual_le`: `σ_k(BA) ≤ ‖B‖₂ σ_k(A)`, `σ_k(AC) ≤ σ_k(A) ‖C‖₂`,
-  `σ_k((I − QQᴴ)A) ≤ σ_k(A)`;
+ `singularValues_residual_le`: `σ_k(BA) ≤ ‖B‖₂ σ_k(A)`, `σ_k(AC) ≤ σ_k(A) ‖C‖₂`,
+ `σ_k((I − QQᴴ)A) ≤ σ_k(A)`;
 * `singularValues_le_specNorm_sub_of_rank_le`, `isLeast_specNorm_sub_of_rank_le`: the spectral
-  Eckart–Young theorem `min_{rank B ≤ k} ‖A − B‖₂ = σ_k(A)`, attained by `truncatedSVD A k`;
+ Eckart–Young theorem `min_{rank B ≤ k} ‖A − B‖₂ = σ_k(A)`, attained by `truncatedSVD A k`;
 * `sum_sq_singularValues_add_sub_le_frobSq`: Mirsky's inequality
-  `∑ₖ (σ_k(A + E) − σ_k(A))² ≤ ‖E‖_F²`, from the von Neumann trace inequality.
+ `∑ₖ (σ_k(A + E) − σ_k(A))² ≤ ‖E‖_F²`, from the von Neumann trace inequality.
 
 All singular values are zero-indexed (`σ 0 = ‖A‖₂`) and padded with zeros, so no index side
 conditions are needed. Everything is stated on arbitrary finite index types, and everything
@@ -22,12 +22,10 @@ except Mirsky's inequality over `[RCLike 𝕜]`; Mirsky's inequality is real (it
 von Neumann trace inequality).
 
 Source: Horn–Johnson 2013, §7.3 (Weyl inequalities for singular values) and §7.4.9
-(Eckart–Young–Mirsky); Mirsky 1960; Bhatia 1997, §III.2 and §IV.3. Theorem labels marked
-"verify" were not checked against the printed edition. Audit G0 B2, B3, B4, B5, B6.
-Atlas: `weyl-mirsky`, `eckart-young`.
-Deviation from the audit's file plan: the spectral Eckart–Young lower bound (B5) lives here
-rather than in `EckartYoung`, because it needs Weyl's inequality and this file imports
-`EckartYoung` (for `truncatedSVD`).
+(Eckart–Young–Mirsky); Mirsky 1960; Bhatia 1997, §III.2 and §IV.3.
+Atlas: `weyl-mirsky`, `eckart-young`, `norm-lipschitz`.
+The spectral Eckart–Young lower bound lives here rather than in `EckartYoung`, because it needs
+Weyl's inequality and this file imports `EckartYoung` (for `truncatedSVD`).
 -/
 
 noncomputable section
@@ -74,8 +72,8 @@ private theorem norm_mulVec_le_specNorm_mul (B : Matrix m n 𝕜) (x : n → �
 
 omit [DecidableEq m] in
 /-- **Weyl's inequality for singular values.** `σ_{i+j}(A + B) ≤ σ_i(A) + σ_j(B)` for
-`m × n` matrices over `𝕜` (zero-indexed). Horn–Johnson 2013, §7.3 (Cor 7.3.5, label to verify);
-Bhatia 1997, Thm III.2.1 (Hermitian eigenvalue form). Audit G0 B2; atlas `weyl-mirsky`.
+`m × n` matrices over `𝕜` (zero-indexed). Horn–Johnson 2013, §7.3 (Cor 7.3.5);
+Bhatia 1997, Thm III.2.1 (Hermitian eigenvalue form). Atlas `weyl-mirsky`.
 atlas: weyl-mirsky -/
 theorem singularValues_add_add_le (A B : Matrix m n 𝕜) (i j : ℕ) :
     singularValues (A + B) (i + j) ≤ singularValues A i + singularValues B j := by
@@ -94,21 +92,21 @@ theorem singularValues_add_add_le (A B : Matrix m n 𝕜) (i j : ℕ) :
     _ ≤ (singularValues A i + singularValues B j) * ‖WithLp.toLp 2 x‖ := by linarith
 
 /-- **Weyl perturbation bound, upper side.** `σ_k(A + E) ≤ σ_k(A) + ‖E‖₂`. Horn–Johnson 2013,
-§7.3 (Cor 7.3.5, label to verify). Audit G0 B3; atlas `weyl-mirsky`. -/
+§7.3 (Cor 7.3.5). Atlas `weyl-mirsky`. -/
 theorem singularValues_add_le_add_specNorm (A E : Matrix m n 𝕜) (k : ℕ) :
     singularValues (A + E) k ≤ singularValues A k + specNorm E := by
   have h := singularValues_add_add_le A E k 0
   rwa [Nat.add_zero, singularValues_zero_eq_specNorm] at h
 
 /-- **Weyl perturbation bound, lower side.** `σ_k(A) ≤ σ_k(A + E) + ‖E‖₂`. Horn–Johnson 2013,
-§7.3 (Cor 7.3.5, label to verify). Audit G0 B3; atlas `weyl-mirsky`. -/
+§7.3 (Cor 7.3.5). Atlas `weyl-mirsky`. -/
 theorem singularValues_le_singularValues_add_add_specNorm (A E : Matrix m n 𝕜)
     (k : ℕ) : singularValues A k ≤ singularValues (A + E) k + specNorm E := by
   have h := singularValues_add_le_add_specNorm (A + E) (-E) k
   rwa [add_neg_cancel_right, specNorm_neg] at h
 
 /-- **Weyl perturbation bound.** `|σ_k(A + E) − σ_k(A)| ≤ ‖E‖₂` for every `k`. Horn–Johnson
-2013, §7.3 (Cor 7.3.5, label to verify); Bhatia 1997, §III.2. Audit G0 B3; atlas `weyl-mirsky`.
+2013, Cor 7.3.5; Bhatia 1997, §III.2. Atlas `weyl-mirsky`.
 atlas: weyl-mirsky -/
 theorem abs_singularValues_add_sub_le_specNorm (A E : Matrix m n 𝕜) (k : ℕ) :
     |singularValues (A + E) k - singularValues A k| ≤ specNorm E := by
@@ -116,10 +114,25 @@ theorem abs_singularValues_add_sub_le_specNorm (A E : Matrix m n 𝕜) (k : ℕ)
   have h2 := singularValues_le_singularValues_add_add_specNorm A E k
   rw [abs_le]; constructor <;> linarith
 
+/-- **Weyl perturbation bound, difference form.** `|σ_k(A) − σ_k(B)| ≤ ‖A − B‖₂` for every `k`.
+Horn–Johnson 2013, Cor 7.3.5. Atlas `weyl-mirsky`. -/
+theorem abs_singularValues_sub_le_specNorm (A B : Matrix m n 𝕜) (k : ℕ) :
+    |singularValues A k - singularValues B k| ≤ specNorm (A - B) := by
+  have h := abs_singularValues_add_sub_le_specNorm B (A - B) k
+  rwa [add_sub_cancel] at h
+
+/-- **Singular values are `1`-Lipschitz for the Frobenius norm.** `|σ_k(A) − σ_k(B)| ≤ ‖A − B‖_F`
+for every `k` (Weyl's bound and `‖·‖₂ ≤ ‖·‖_F`); at `k = card n - 1` this is the Lipschitz bound
+for the smallest singular value used by the Gaussian concentration arguments (Vershynin 2012,
+proof of Cor. 5.35).
+atlas: norm-lipschitz -/
+theorem abs_singularValues_sub_le_frobNorm (A B : Matrix m n 𝕜) (k : ℕ) :
+    |singularValues A k - singularValues B k| ≤ frobNorm (A - B) :=
+  (abs_singularValues_sub_le_specNorm A B k).trans (specNorm_le_frobNorm _)
+
 omit [DecidableEq p] in
 /-- **Left multiplication.** `σ_k(BA) ≤ ‖B‖₂ σ_k(A)`. Horn–Johnson 2013, §7.3; Bhatia 1997,
-§III.6 (the special case `i = 0` of `σ_{i+j}(BA) ≤ σ_i(B) σ_j(A)`). Audit G0 B6;
-atlas `weyl-mirsky` (new corollary `singularValues_mul_le`).
+§III.6 (the special case `i = 0` of `σ_{i+j}(BA) ≤ σ_i(B) σ_j(A)`). Atlas `weyl-mirsky`.
 atlas: weyl-mirsky -/
 theorem singularValues_mul_le_specNorm_mul (B : Matrix p m 𝕜) (A : Matrix m n 𝕜) (k : ℕ) :
     singularValues (B * A) k ≤ specNorm B * singularValues A k := by
@@ -138,8 +151,7 @@ theorem singularValues_mul_le_specNorm_mul (B : Matrix p m 𝕜) (A : Matrix m n
 
 omit [DecidableEq m] in
 /-- **Right multiplication.** `σ_k(AC) ≤ σ_k(A) ‖C‖₂`. Horn–Johnson 2013, §7.3. Proof: the
-preimage under `C` of the min-max subspace of `A` has codimension at most `k`.
-Audit G0 B6; atlas `weyl-mirsky`. -/
+preimage under `C` of the min-max subspace of `A` has codimension at most `k` atlas `weyl-mirsky`. -/
 theorem singularValues_mul_le_mul_specNorm (A : Matrix m n 𝕜) (C : Matrix n p 𝕜) (k : ℕ) :
     singularValues (A * C) k ≤ singularValues A k * specNorm C := by
   obtain ⟨W, hW, hA⟩ := exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul A k
@@ -169,7 +181,7 @@ theorem singularValues_mul_le_mul_specNorm (A : Matrix m n 𝕜) (C : Matrix n p
 
 omit [DecidableEq m] in
 /-- **Projection does not increase singular values.** For `Q` with orthonormal columns,
-`σ_k((I − QQᴴ)A) ≤ σ_k(A)`. HMT 2011, §8.4 (used in Prop 8.6 and Thm 9.2). Audit G0 B6;
+`σ_k((I − QQᴴ)A) ≤ σ_k(A)`. HMT 2011, §8.4 (used in Prop 8.6 and Thm 9.2)
 atlas `weyl-mirsky`, `projection-facts`.
 atlas: projection-facts -/
 theorem singularValues_residual_le {q : Type*} [Fintype q] [DecidableEq q]
@@ -189,7 +201,7 @@ theorem singularValues_residual_le {q : Type*} [Fintype q] [DecidableEq q]
 
 /-- **Spectral Eckart–Young, lower bound.** Every competitor of rank at most `k` has spectral
 error at least `σ_k(A)` (zero-indexed): `σ_k(A) ≤ ‖A − B‖₂`. Horn–Johnson 2013, Thm 7.4.9.1
-(spectral case); HMT 2011, eq. (2.3). Audit G0 B5; atlas `eckart-young`.
+(spectral case); HMT 2011, eq. (2.3) atlas `eckart-young`.
 atlas: eckart-young -/
 theorem singularValues_le_specNorm_sub_of_rank_le (A B : Matrix m n 𝕜) {k : ℕ}
     (hB : B.rank ≤ k) : singularValues A k ≤ specNorm (A - B) := by
@@ -199,12 +211,12 @@ theorem singularValues_le_specNorm_sub_of_rank_le (A B : Matrix m n 𝕜) {k : �
 
 /-- **Spectral Eckart–Young theorem.** `σ_k(A)` is the least spectral error of a rank-`≤ k`
 approximation, attained by `truncatedSVD A k`. Horn–Johnson 2013, Thm 7.4.9.1; HMT 2011,
-eq. (2.3). Audit G0 B5 + C3; atlas `eckart-young`.
+eq. (2.3) atlas `eckart-young`.
 atlas: eckart-young -/
 theorem isLeast_specNorm_sub_of_rank_le (A : Matrix m n 𝕜) (k : ℕ) :
     IsLeast {v : ℝ | ∃ B : Matrix m n 𝕜, B.rank ≤ k ∧ v = specNorm (A - B)}
       (singularValues A k) := by
-  refine ⟨⟨truncatedSVD A k, (isBestRankApprox_truncatedSVD A k).1,
+  refine ⟨⟨truncatedSVD A k, (isBestFrobRankApprox_truncatedSVD A k).1,
     (specNorm_sub_truncatedSVD_eq A k).symm⟩, ?_⟩
   rintro v ⟨B, hB, rfl⟩
   exact singularValues_le_specNorm_sub_of_rank_le A B hB
@@ -213,8 +225,8 @@ theorem isLeast_specNorm_sub_of_rank_le (A : Matrix m n 𝕜) (k : ℕ) :
 `∑_{k < min m n} (σ_k(A + E) − σ_k(A))² ≤ ‖E‖_F²`, on arbitrary finite index types. Proof:
 expand `‖E‖_F² = ‖A + E‖_F² − 2⟨A + E, A⟩_F + ‖A‖_F²` and bound the inner product by the von
 Neumann trace inequality (`abs_frobInner_le_sum_singularValues_mul`). Mirsky 1960 (Q. J. Math.
-11); Horn–Johnson 2013, §7.4.9 (label to verify); Bhatia 1997, §IV.3 (unitarily invariant
-form). Audit G0 B4; atlas `weyl-mirsky`. Real only: the von Neumann trace inequality in the
+11); Horn–Johnson 2013, §7.4.9; Bhatia 1997, §IV.3 (unitarily invariant
+form) atlas `weyl-mirsky`. Real only: the von Neumann trace inequality in the
 library is real.
 atlas: weyl-mirsky -/
 theorem sum_sq_singularValues_add_sub_le_frobSq (A E : Matrix m n ℝ) :

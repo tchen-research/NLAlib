@@ -5,7 +5,7 @@ import NLAlib.ForMathlib.Analysis.FourierConvolution
 /-!
 # Algebraic polynomials from the sharp Jackson convolution
 
-The actual even circle pullback has real Fourier coefficients. Its convolution with
+The even circle pullback has real Fourier coefficients. Its convolution with
 the proved finite cosine kernel is therefore an algebraic Chebyshev polynomial.
 -/
 
@@ -19,7 +19,7 @@ namespace NLAlib
 open scoped NLAlib.TwoPi
 
 /-- The real cosine pullback to the circle of period `2π`.
-Source: operator rederivations `rt:jackson`; construction for `jackson-lipschitz`. -/
+Construction for `jackson-lipschitz`. -/
 def realChebyshevCircleFunction (f : ℝ → ℝ) (t : AddCircle (2 * Real.pi)) : ℝ :=
   f ((fourier 1 t).re)
 
@@ -32,14 +32,14 @@ theorem re_fourier_one_mem_Icc (t : AddCircle (2 * Real.pi)) :
       Complex.abs_re_le_norm (fourier 1 t)
   exact abs_le.mp h
 
-/-- The actual cosine pullback of a continuous interval function is continuous.
-Source: cosine-circle substitution in `rt:jackson`; helper for `jackson-lipschitz`. -/
+/-- The cosine pullback of a continuous interval function is continuous.
+Helper for `jackson-lipschitz` (cosine substitution). -/
 theorem continuous_realChebyshevCircleFunction {f : ℝ → ℝ}
     (hf : ContinuousOn f (Icc (-1 : ℝ) 1)) : Continuous (realChebyshevCircleFunction f) :=
   hf.comp_continuous (Complex.continuous_re.comp (fourier 1).continuous)
     re_fourier_one_mem_Icc
 
-/-- The actual cosine pullback is even.
+/-- The cosine pullback is even.
 Source: conjugation of Fourier characters; helper for `jackson-lipschitz`. -/
 theorem even_realChebyshevCircleFunction (f : ℝ → ℝ) (t : AddCircle (2 * Real.pi)) :
     realChebyshevCircleFunction f (-t) = realChebyshevCircleFunction f t := by
@@ -67,10 +67,10 @@ theorem eval_T_re_fourier_one (k : ℕ) (t : AddCircle (2 * Real.pi)) :
       re_fourier_nat_coe_eq_cos k t]
     simpa only [Nat.cast_one, one_mul, Int.cast_natCast] using T_real_cos t (k : ℤ)
 
-/-- A polynomial cosine kernel convolved with an actual even continuous circle function
-is an actual algebraic polynomial of the same degree. The coefficients are its genuine
+/-- A polynomial cosine kernel convolved with an even continuous circle function
+is an algebraic polynomial of the same degree. The coefficients are its
 Fourier coefficients rather than an assumed polynomial representation.
-Source: finite cosine expansion and Fourier convolution in `rt:jackson`;
+Finite cosine expansion and Fourier convolution;
 construction for atlas `jackson-lipschitz`. -/
 theorem exists_polynomial_circle_convolution {K : ℝ[X]} {n : ℕ} (hK : K.degree ≤ n)
     {g : AddCircle (2 * Real.pi) → ℝ} (hg : Continuous g) (heven : ∀ t, g (-t) = g t) :
@@ -123,8 +123,8 @@ theorem lipschitzWith_comp_cos {f : ℝ → ℝ} {L : NNReal}
         Real.lipschitzWith_cos.dist_le_mul x y) L.coe_nonneg)
 
 /-- The fixed sharp periodic convolution for a cosine pullback is represented by an
-actual algebraic polynomial with degree at most `n`.
-Source: Arnold, numerical analysis, Section 1.2; operator rederivations `rt:jackson`;
+algebraic polynomial with degree at most `n`.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem);
 construction for atlas `jackson-lipschitz`. -/
 theorem exists_polynomial_jacksonPeriodicApprox {f : ℝ → ℝ}
     (hf : ContinuousOn f (Icc (-1 : ℝ) 1)) (n : ℕ) :
@@ -151,7 +151,7 @@ theorem exists_polynomial_jacksonPeriodicApprox {f : ℝ → ℝ}
 
 /-- The required sharp Jackson theorem on the unit interval: a degree-`n` algebraic
 polynomial approximates every `L`-Lipschitz function with error at most `πL/(2(n+1))`.
-Source: Arnold, numerical analysis, Section 1.2; operator rederivations `rt:jackson-theorem`.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem).
 Atlas `jackson-lipschitz` (unit-interval form). -/
 theorem exists_degree_le_abs_sub_eval_le_jackson_unit {f : ℝ → ℝ} {L : NNReal}
     (hf : LipschitzOnWith L f (Icc (-1 : ℝ) 1)) (n : ℕ) :

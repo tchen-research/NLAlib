@@ -5,10 +5,15 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 /-!
 # Polynomial traces of matrix series
 
-Continuity, polynomial growth and coordinate derivatives for finite real
-coefficient series of complex matrices. These are deterministic prerequisites
-for the Gaussian Stein proof of integer noncommutative Khintchine moments.
-Source: operator manuscript `eq:recursion`.
+Continuity, polynomial growth and coordinate derivatives of `x ↦ Re tr (B Y(x)^r C Y(x)^s)` for
+a finite real-coefficient series `Y(x) = ∑ᵢ xᵢ Aᵢ` of complex matrices (`reTraceCLM`,
+`continuous_re_trace_series_product`, `abs_re_trace_series_product_le`,
+`hasDerivAt_re_trace_mul_series_pow_update`), and the sign-flip identity
+`sum_smul_sub_sum_smul_update_neg`. These are the deterministic prerequisites of the Gaussian
+Stein-identity proof of the integer-moment noncommutative Khintchine inequality
+(Tropp 2015, §4.8 and Thm 4.1.1; Buchholz 2001). Stated over `ℂ`: the real-linear structure
+`NormedSpace ℝ (Matrix ι ι 𝕜)` used by `reTraceCLM` and the derivatives is a Mathlib instance
+only at `ℝ` and `ℂ`.
 -/
 
 noncomputable section
@@ -19,20 +24,19 @@ namespace NLAlib
 
 variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
 
-/-- Real part of complex matrix trace as a continuous real-linear map.
-Source: trace linearity; supports `noncommutative-khintchine`. -/
+/-- `M ↦ Re tr M` as a continuous real-linear map on `Matrix ι ι ℂ`.
+Supports `noncommutative-khintchine`. -/
 def reTraceCLM : Matrix ι ι ℂ →L[ℝ] ℝ :=
   Complex.reCLM.comp (Matrix.traceLinearMap ι ℝ ℂ).toContinuousLinearMap
 
 omit [DecidableEq ι] in
-/-- The continuous trace map computes the usual real trace.
-Source: trace linearity; supports `noncommutative-khintchine`. -/
+/-- `reTraceCLM M = Re tr M`. -/
 @[simp] theorem reTraceCLM_apply (M : Matrix ι ι ℂ) :
     reTraceCLM M = M.trace.re := rfl
 
 omit [Fintype ι] [DecidableEq ι] [DecidableEq κ] in
-/-- A finite real-coefficient Hermitian series remains Hermitian.
-Source: linearity of the adjoint; supports `noncommutative-khintchine`. -/
+/-- A finite real-coefficient series of Hermitian matrices is Hermitian.
+Supports `noncommutative-khintchine`. -/
 theorem isHermitian_sum_smul_real (A : κ → Matrix ι ι ℂ)
     (hA : ∀ i, (A i).IsHermitian) (x : κ → ℝ) :
     (∑ i, x i • A i).IsHermitian := by
@@ -41,8 +45,8 @@ theorem isHermitian_sum_smul_real (A : κ → Matrix ι ι ℂ)
   exact (hA i).smul (isSelfAdjoint_iff.mpr (by simp))
 
 omit [DecidableEq κ] in
-/-- The matrix variance `∑ Aᵢ²` of Hermitian coefficients is PSD.
-Source: the Gram identity; supports `noncommutative-khintchine`. -/
+/-- The matrix variance `∑ Aᵢ²` of Hermitian coefficients is positive semidefinite.
+Supports `noncommutative-khintchine`. -/
 theorem posSemidef_sum_sq_of_isHermitian (A : κ → Matrix ι ι ℂ)
     (hA : ∀ i, (A i).IsHermitian) : (∑ i, A i ^ 2).PosSemidef := by
   apply Matrix.posSemidef_sum
@@ -50,9 +54,8 @@ theorem posSemidef_sum_sq_of_isHermitian (A : κ → Matrix ι ι ℂ)
   simpa only [(hA i).eq, pow_two] using Matrix.posSemidef_conjTranspose_mul_self (A i)
 
 omit [DecidableEq κ] in
-/-- A finite matrix series is bounded explicitly by a linear polynomial
-in its real coefficient-vector norm. Source: triangle inequality;
-supports `noncommutative-khintchine`. -/
+/-- `‖∑ᵢ xᵢ Aᵢ‖ ≤ (∑ᵢ ‖Aᵢ‖)(1 + ‖x‖)` (triangle inequality).
+Supports `noncommutative-khintchine`. -/
 theorem norm_sum_smul_le_sum_norm_mul_one_add_norm
     (A : κ → Matrix ι ι ℂ) (x : κ → ℝ) :
     ‖∑ i, x i • A i‖ ≤ (∑ i, ‖A i‖) * (1 + ‖x‖) := by
@@ -67,9 +70,7 @@ theorem norm_sum_smul_le_sum_norm_mul_one_add_norm
     _ = _ := by rw [Finset.sum_mul]
 
 omit [DecidableEq κ] in
-/-- Matrix-series polynomial traces are continuous scalar functions.
-Source: finite sums, matrix products and continuous trace;
-supports `noncommutative-khintchine`. -/
+/-- `x ↦ Re tr (B Y(x)^r C Y(x)^s)` is continuous. Supports `noncommutative-khintchine`. -/
 theorem continuous_re_trace_series_product
     (A : κ → Matrix ι ι ℂ) (B C : Matrix ι ι ℂ) (r s : ℕ) :
     Continuous (fun x : κ → ℝ =>
@@ -80,9 +81,8 @@ theorem continuous_re_trace_series_product
   fun_prop
 
 omit [DecidableEq κ] in
-/-- Polynomial traces of matrix series have an explicit polynomial-growth
-majorant. Source: submultiplicativity and continuous trace;
-supports Gaussian integrability for `noncommutative-khintchine`. -/
+/-- `|Re tr (B Y(x)^r C Y(x)^s)| ≤ ‖reTraceCLM‖ ‖B‖ ‖C‖ (∑ᵢ ‖Aᵢ‖)^{r+s} (1 + ‖x‖)^{r+s}`
+(polynomial growth; gives Gaussian integrability). Supports `noncommutative-khintchine`. -/
 theorem abs_re_trace_series_product_le
     (A : κ → Matrix ι ι ℂ) (B C : Matrix ι ι ℂ) (r s : ℕ) (x : κ → ℝ) :
     |(B * (∑ i, x i • A i) ^ r * C * (∑ i, x i • A i) ^ s).trace.re| ≤
@@ -113,9 +113,7 @@ theorem abs_re_trace_series_product_le
           ((∑ i, ‖A i‖) * (1 + ‖x‖)) ^ s) := by gcongr
     _ = _ := by rw [mul_pow, mul_pow, pow_add, pow_add]; ring
 
-/-- Replacing one real coefficient differentiates a finite matrix series
-by its coefficient matrix. Source: the polynomial product rule in manuscript
-`eq:recursion`; supports `noncommutative-khintchine`. -/
+/-- `y ↦ ∑ⱼ (x with xᵢ := y)ⱼ Aⱼ` has derivative `Aᵢ`. Supports `noncommutative-khintchine`. -/
 theorem hasDerivAt_sum_smul_update
     (A : κ → Matrix ι ι ℂ) (x : κ → ℝ) (i : κ) (t : ℝ) :
     HasDerivAt (fun y => ∑ j, Function.update x i y j • A j) (A i) t := by
@@ -128,9 +126,8 @@ theorem hasDerivAt_sum_smul_update
       ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.proj_apply]
   · simp [L, Pi.single_apply]
 
-/-- Coordinate derivative of a coefficient times a matrix-series power,
-followed by real trace. Source: the noncommutative product rule in manuscript
-`eq:recursion`; supports `noncommutative-khintchine`. -/
+/-- Coordinate derivative of `y ↦ Re tr (B Y(x, xᵢ := y)^q)`: the noncommutative product rule
+`∑ₗ Re tr (B Y^{q−1−l} Aᵢ Y^l)`. Supports `noncommutative-khintchine`. -/
 theorem hasDerivAt_re_trace_mul_series_pow_update
     (A : κ → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (x : κ → ℝ)
     (i : κ) (t : ℝ) (q : ℕ) :
@@ -148,9 +145,7 @@ theorem hasDerivAt_re_trace_mul_series_pow_update
       Matrix.trace_sum, Complex.re_sum, Matrix.mul_assoc]
 
 omit [Fintype ι] [DecidableEq ι] in
-/-- A single sign flip changes a finite matrix series by twice its signed
-coefficient. Source: manuscript individual sign-flip identity; supports
-`noncommutative-khintchine`. -/
+/-- Flipping one sign changes the series by `2 xᵢ Aᵢ`. Supports `noncommutative-khintchine`. -/
 theorem sum_smul_sub_sum_smul_update_neg
     (A : κ → Matrix ι ι ℂ) (x : κ → ℝ) (i : κ) :
     (∑ j, x j • A j) - (∑ j, Function.update x i (-x i) j • A j) =

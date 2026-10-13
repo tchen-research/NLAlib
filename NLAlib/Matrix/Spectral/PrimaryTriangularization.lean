@@ -39,9 +39,9 @@ theorem eq_of_hasEigenvalue_restrict_maxGenEigenspace
 /-- Every complex matrix is similar to the direct sum of single-eigenvalue
 upper triangular primary blocks. The block index is the scalar itself;
 zero-size blocks are permitted, and the equivalence with the original index
-type certifies that only finitely many nonempty blocks occur. Source:
+type certifies that only finitely many nonempty blocks occur.
 Horn–Johnson (2013), §2.4; empty matrices are included.
-atlas: sylvester-equation (partial) -/
+atlas: sylvester-equation -/
 theorem exists_similarity_primary_upperTriangular
     {n : Type*} [Fintype n] [DecidableEq n] (A : Matrix n n ℂ) :
     ∃ (d : ℂ → ℕ) (e : (Σ μ : ℂ, Fin (d μ)) ≃ n)

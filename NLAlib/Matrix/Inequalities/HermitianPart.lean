@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.ComplexDiagonalMajorization
+import NLAlib.Matrix.Inequalities.Schur
 import NLAlib.Matrix.Spectral.SchurTriangularization
 import NLAlib.Matrix.Spectral.NormalSimilarity
 /-!
@@ -36,7 +36,7 @@ theorem selfAdjointPart_mul_mul_conjTranspose (U A : Matrix n n ℂ) :
     Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc]
 
 /-- The complete real-part eigenvalue list of a complex matrix is majorized
-by the actual Hermitian-part eigenvalues. Eigenvalue multiplicities are
+by the Hermitian-part eigenvalues. Eigenvalue multiplicities are
 specified by the characteristic factorization; the list may be in any order.
 Horn--Johnson (2013), Theorem 4.3.50.
 atlas: real-part-eigenvalue-majorization (partial) -/
@@ -58,7 +58,8 @@ theorem majorized_real_parts_eigenvalues_selfAdjointPart
       ← Matrix.star_eq_conjTranspose, Unitary.coe_star_mul_self, Matrix.one_mul]
   have hmajor : Majorized (fun i => (T i i).re) hH.eigenvalues := by
     rw [hHK]
-    simpa only [real_diagonal_selfAdjointPart] using majorized_real_diagonal_eigenvalues hK
+    simpa only [RCLike.re_to_complex, real_diagonal_selfAdjointPart] using
+      majorized_diagonal_eigenvalues hK
   obtain ⟨σ, hσ⟩ := exists_perm_eq_of_prod_X_sub_C_eq z (fun i => T i i)
     (hz.symm.trans hTchar)
   have hperm := majorized_comp_perm (fun i => (T i i).re) σ
@@ -98,7 +99,7 @@ theorem real_part_eigenvalue_mem_Icc_selfAdjointPart
     simpa only [Matrix.IsHermitian.eigenvalues, e, Equiv.symm_apply_apply] using hh
   obtain ⟨σ, hσ⟩ := exists_perm_eq_of_prod_X_sub_C_eq z (fun j => T j j)
     (hz.symm.trans hTchar)
-  have hb := real_diagonal_mem_Icc_eigenvalues₀ hK (σ i) (Fintype.card_pos_iff.mpr ⟨i⟩)
-  simpa only [real_diagonal_selfAdjointPart, hσ, ← hsorted] using hb
+  have hb := re_diagonal_mem_Icc_eigenvalues₀ hK (σ i) (Fintype.card_pos_iff.mpr ⟨i⟩)
+  simpa only [RCLike.re_to_complex, real_diagonal_selfAdjointPart, hσ, ← hsorted] using hb
 
 end NLAlib

@@ -4,11 +4,10 @@ import NLAlib.ForMathlib.Probability.BoundedDifferences
 # Sharp bounded-differences concentration by coordinate averaging
 
 Finite product averaging preserves remaining coordinate oscillations. Peeling
-off one coordinate and using Hoeffding with its actual range diameter yields
+off one coordinate and using Hoeffding's lemma with its range diameter yields
 the exponent `θ² ∑ cᵢ²/8`, including heterogeneous measurable coordinates.
 
-Source: operator manuscript `thm:mcdiarmidmgf` and `cor:mcdiarmid`;
-Boucheron–Lugosi–Massart 2013, Theorem 6.2.
+Source: McDiarmid 1989; Boucheron–Lugosi–Massart 2013, Theorem 6.2.
 -/
 
 noncomputable section
@@ -18,10 +17,10 @@ open MeasureTheory ProbabilityTheory
 
 namespace NLAlib
 
-/-- The bounded finite-coordinate averaging calculation before centring.
-The auxiliary uniform bound is discharged from coordinate oscillation in the
-public product theorem. Source: manuscript `thm:mcdiarmidmgf`. -/
-theorem integral_exp_mul_le_exp_of_fin_coordinate_oscillation
+/-- The bounded finite-coordinate averaging calculation before centring, by induction on the
+number of coordinates. The auxiliary uniform bound is discharged from coordinate oscillation in
+the public product theorem. McDiarmid 1989, Lemma 3.3. -/
+private theorem integral_exp_mul_le_exp_of_fin_coordinate_oscillation
     (N : ℕ) {S : Fin N → Type*} [∀ i, MeasurableSpace (S i)]
     (μ : ∀ i, Measure (S i)) [∀ i, IsProbabilityMeasure (μ i)]
     (f : (∀ i, S i) → ℝ) (hf : Measurable f) {M : ℝ} (hM : ∀ x, |f x| ≤ M)
@@ -141,9 +140,9 @@ theorem integral_exp_mul_le_exp_of_fin_coordinate_oscillation
       _ = Real.exp (θ * (∫ y, g y ∂ν) + θ ^ 2 * (c 0 ^ 2 + ∑ i : Fin N, c i.succ ^ 2) / 8) := by
             rw [← Real.exp_add]; congr 1; ring
 
-/-- Relabelled finite-product averaging retains the sharp bounded-differences
-MGF constant for arbitrary finite coordinate labels and heterogeneous spaces.
-Source: manuscript `thm:mcdiarmidmgf`; auxiliary boundedness is derived below. -/
+/-- Bounded-differences MGF bound on a finite product with arbitrary finite coordinate labels
+and heterogeneous spaces: `𝔼 e^{θ f} ≤ exp (θ 𝔼 f + θ² ∑ cᵢ² / 8)` for a bounded measurable `f`
+with coordinate oscillations `cᵢ`. McDiarmid 1989, Lemma 3.3. -/
 theorem integral_exp_mul_le_exp_of_coordinate_oscillation
     {ι : Type*} [Fintype ι] [DecidableEq ι] {S : ι → Type*}
     [∀ i, MeasurableSpace (S i)] (μ : ∀ i, Measure (S i))
@@ -174,8 +173,7 @@ theorem integral_exp_mul_le_exp_of_coordinate_oscillation
 bounded coordinate oscillations give the centred MGF proxy `∑ cᵢ²/4`, with no
 integrability hypotheses. All coordinate spaces may differ; no standard-Borel
 assumption is used, and an empty product is included.
-Source: operator manuscript `thm:mcdiarmidmgf`, coordinate averaging and sharp
-fibre Hoeffding; Boucheron–Lugosi–Massart 2013, Theorem 6.2.
+McDiarmid 1989, Lemma 3.3; Boucheron–Lugosi–Massart 2013, Theorem 6.2.
 atlas: mcdiarmid (partial) -/
 theorem hasSubgaussianMGF_pi_of_coordinate_oscillation
     {ι : Type*} [Fintype ι] [DecidableEq ι] {S : ι → Type*}
@@ -215,7 +213,7 @@ theorem hasSubgaussianMGF_pi_of_coordinate_oscillation
 /-- The centred bounded-differences MGF transports along the joint law of
 independent measurable coordinates on an arbitrary probability space.
 The original space and the coordinate spaces need no standard-Borel instances.
-Source: the abstract-space paragraph following manuscript `cor:mcdiarmid`.
+McDiarmid 1989, Theorem 3.1 (transport along the joint law).
 atlas: mcdiarmid (partial) -/
 theorem hasSubgaussianMGF_of_independent_coordinate_oscillation
     {Ω ι : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
@@ -228,7 +226,8 @@ theorem hasSubgaussianMGF_of_independent_coordinate_oscillation
   let Y (ω : Ω) : ∀ i, S i := fun i => X i ω
   have hY : Measurable Y := measurable_pi_lambda _ hX
   let ν (i : ι) := μ.map (X i)
-  let : ∀ i, IsProbabilityMeasure (ν i) := fun i => Measure.isProbabilityMeasure_map (hX i).aemeasurable
+  let : ∀ i, IsProbabilityMeasure (ν i) := fun i =>
+    Measure.isProbabilityMeasure_map (hX i).aemeasurable
   have hlaw : μ.map Y = Measure.pi ν := hind.map_fun_eq_pi_map (fun i => (hX i).aemeasurable)
   have hsg := hasSubgaussianMGF_pi_of_coordinate_oscillation ν f hf c hc hcoord
   have hm : (∫ x, f x ∂Measure.pi ν) = ∫ ω, f (Y ω) ∂μ := by
@@ -240,14 +239,13 @@ theorem hasSubgaussianMGF_of_independent_coordinate_oscillation
   rw [hm] at h
   simpa only [Function.comp_def, Y] using h
 
-/-- The sharp McDiarmid tail, with the positive-threshold zero-oscillation
-case written explicitly. Source: manuscript `cor:mcdiarmid`; supports the atlas
-result `mcdiarmid`. -/
+/-- The McDiarmid tail `exp (-2 t² / C)`, with the zero-oscillation case `C = 0` written
+explicitly (`0` for a positive threshold, `1` otherwise). McDiarmid 1989, Theorem 3.1. -/
 def mcdiarmidTail (C t : ℝ) : ℝ :=
   if C = 0 then (if 0 < t then 0 else 1) else Real.exp (-2 * t ^ 2 / C)
 
-/-- The sharp tail follows from proxy `C/4`, including the zero-proxy branch.
-Source: manuscript `cor:mcdiarmid`; helper for the actual independent-coordinate result. -/
+/-- A variable with sub-Gaussian proxy `C/4` has the McDiarmid tail `mcdiarmidTail C t`,
+including the zero-proxy branch. McDiarmid 1989, Theorem 3.1 (helper). -/
 theorem measure_ge_le_mcdiarmidTail
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {Z : Ω → ℝ} {C : ℝ} (hC : 0 ≤ C)
@@ -277,8 +275,8 @@ theorem measure_ge_le_mcdiarmidTail
 /-- **McDiarmid's upper tail with exact constant two.** Independent measurable
 coordinates and global coordinate bounds give `P(f(X)-E f(X)≥t)≤exp(-2t²/∑cᵢ²)`.
 For zero total oscillation and a positive threshold the probability is zero.
-No integrability assumptions are required. Source: operator manuscript
-`cor:mcdiarmid`; Boucheron–Lugosi–Massart 2013, Theorem 6.2.
+No integrability assumptions are required. McDiarmid 1989, Theorem 3.1;
+Boucheron–Lugosi–Massart 2013, Theorem 6.2.
 atlas: mcdiarmid -/
 theorem mcdiarmid_upper_tail
     {Ω ι : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
@@ -293,8 +291,8 @@ theorem mcdiarmid_upper_tail
     (hasSubgaussianMGF_of_independent_coordinate_oscillation X hX hind f hf c hc hcoord) ht
 
 /-- **McDiarmid's matching lower tail.** The same explicit tail controls
-`P(E f(X)-f(X)≥t)`, including zero total oscillation. Source: operator manuscript
-`cor:mcdiarmid`, applied to the negative centred variable.
+`P(E f(X)-f(X)≥t)`, including zero total oscillation. McDiarmid 1989, Theorem 3.1, applied to
+the negative centred variable.
 atlas: mcdiarmid -/
 theorem mcdiarmid_lower_tail
     {Ω ι : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]

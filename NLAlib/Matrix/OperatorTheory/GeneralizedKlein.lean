@@ -2,68 +2,65 @@ import NLAlib.Matrix.OperatorTheory.Basic
 import Mathlib.Tactic.Ring
 
 /-!
-# Proposition 8.3.5 — Generalized Klein inequality
+# Generalized Klein inequality
 
-Main declaration: `NLAlib.generalized_klein`.
-
-Atlas: `operator-monotone-convex`.
-
-Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Proposition 8.3.5, printed p. 126.
+`generalized_klein`: if `∑ᵢ fᵢ(a) gᵢ(h) ≥ 0` for all `a, h ∈ I`, then
+`∑ᵢ Re tr (fᵢ(A) gᵢ(H)) ≥ 0` for Hermitian `A`, `H` (over `[RCLike 𝕜]`) with spectra in `I`.
+Tropp 2015, Prop. 8.3.5. Atlas: `operator-monotone-convex`.
 -/
 open scoped Matrix.Norms.L2Operator ComplexOrder
 open Matrix
-private theorem trace_pair {d : Type*} [Fintype d] [DecidableEq d] (U V : Matrix d d ℂ)
-    (a b : d → ℝ) :
-    (trace ((U * diagonal (fun j => (a j : ℂ)) * Uᴴ) *
-      (V * diagonal (fun k => (b k : ℂ)) * Vᴴ))).re =
-    ∑ j, ∑ k, a j * b k * Complex.normSq ((Uᴴ * V) j k) := by
+
+namespace NLAlib
+
+variable {𝕜 : Type*} [RCLike 𝕜] {d : Type*} [Fintype d] [DecidableEq d]
+
+/-- `Re tr (U diag(a) Uᴴ · V diag(b) Vᴴ) = ∑ⱼₖ aⱼ bₖ |(Uᴴ V)ⱼₖ|²`. -/
+private theorem re_trace_pair (U V : Matrix d d 𝕜) (a b : d → ℝ) :
+    RCLike.re (trace ((U * diagonal (fun j => (a j : 𝕜)) * Uᴴ) *
+      (V * diagonal (fun k => (b k : 𝕜)) * Vᴴ))) =
+    ∑ j, ∑ k, a j * b k * ‖(Uᴴ * V) j k‖ ^ 2 := by
   let W := Uᴴ * V
   have hw : Vᴴ * U = Wᴴ := by simp [W, conjTranspose_mul]
   calc
-    _ = (trace (diagonal (fun j => (a j : ℂ)) * W *
-       diagonal (fun k => (b k : ℂ)) * Wᴴ)).re := by
+    _ = RCLike.re (trace (diagonal (fun j => (a j : 𝕜)) * W *
+       diagonal (fun k => (b k : 𝕜)) * Wᴴ)) := by
       simp only [W, ← hw]
       congr 1
       simp only [mul_assoc]
       rw [trace_mul_comm U]
       simp only [mul_assoc]
     _ = _ := by
-      change (trace (diagonal (fun j => (a j : ℂ)) * W *
-        diagonal (fun k => (b k : ℂ)) * Wᴴ)).re = ∑ j, ∑ k, a j * b k * Complex.normSq (W j k)
-      simp only [trace, diag_apply]
-      simp only [mul_apply, diagonal, of_apply, ite_mul, mul_ite, zero_mul, mul_zero,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true, conjTranspose_apply, Complex.re_sum]
-      apply Finset.sum_congr rfl
-      intro j _
-      apply Finset.sum_congr rfl
-      intro k _
-      simp [Complex.mul_re, Complex.mul_im, Complex.normSq_apply]
-      ring
+      change RCLike.re (trace (diagonal (fun j => (a j : 𝕜)) * W *
+        diagonal (fun k => (b k : 𝕜)) * Wᴴ)) = ∑ j, ∑ k, a j * b k * ‖W j k‖ ^ 2
+      simp only [trace, diag_apply, mul_apply, diagonal, of_apply, ite_mul, mul_ite, zero_mul,
+        mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+        conjTranspose_apply, map_sum]
+      refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun k _ => ?_
+      rw [show (a j : 𝕜) * W j k * (b k : 𝕜) * star (W j k)
+          = ((a j * b k : ℝ) : 𝕜) * (W j k * star (W j k)) by push_cast; ring,
+        RCLike.star_def, RCLike.mul_conj, ← RCLike.ofReal_pow, ← RCLike.ofReal_mul,
+        RCLike.ofReal_re, mul_assoc]
 
-open NLAlib
-
-/-- Generalized Klein inequality: if `∑ i, f i a * g i h ≥ 0` on `I`, then `∑ i, tr (f i (A) g i (H))
-≥ 0` for Hermitian `A`, `H` with spectra in `I`.
-
-Tropp 2015, Prop. 8.3.5. Atlas: `operator-monotone-convex`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 8*. Stated on any finite index type.
-
-The convexity hypothesis on `I` is not used by the proof; it is kept to match the source. -/
-theorem NLAlib.generalized_klein {d : Type*} [Fintype d] [DecidableEq d] {N : ℕ}
+/-- **Generalized Klein inequality**: if `∑ i, f i a * g i h ≥ 0` for all `a, h ∈ I`, then
+`∑ i, Re tr (f i (A) · g i (H)) ≥ 0` for Hermitian `A`, `H` with spectra in `I`.
+Tropp 2015, Prop. 8.3.5. The convexity hypothesis on `I` is not used by the proof; it is kept to
+match the source.
+atlas: operator-monotone-convex -/
+theorem generalized_klein {N : ℕ}
     (I : Set ℝ) (_hI : Convex ℝ I) (f g : Fin N → ℝ → ℝ)
     (hfg : ∀ a ∈ I, ∀ h ∈ I, 0 ≤ ∑ i, f i a * g i h)
-    (A H : Matrix d d ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)
+    (A H : Matrix d d 𝕜) (hA : A.IsHermitian) (hH : H.IsHermitian)
     (hAI : spectrum ℝ A ⊆ I) (hHI : spectrum ℝ H ⊆ I) :
-    0 ≤ ∑ i, (Matrix.trace (cfc (f i) A *
-      cfc (g i) H)).re := by
+    0 ≤ ∑ i, RCLike.re (Matrix.trace (cfc (f i) A * cfc (g i) H)) := by
   have heq (i : Fin N) :
-      (trace (cfc (f i) A * cfc (g i) H)).re =
+      RCLike.re (trace (cfc (f i) A * cfc (g i) H)) =
       ∑ j, ∑ k, f i (hA.eigenvalues j) * g i (hH.eigenvalues k) *
-        Complex.normSq (((hA.eigenvectorUnitary : Matrix d d ℂ)ᴴ *
-          (hH.eigenvectorUnitary : Matrix d d ℂ)) j k) := by
+        ‖(((hA.eigenvectorUnitary : Matrix d d 𝕜)ᴴ *
+          (hH.eigenvectorUnitary : Matrix d d 𝕜)) j k)‖ ^ 2 := by
     simp only [hA.cfc_eq, hH.cfc_eq, Matrix.IsHermitian.cfc,
       Unitary.conjStarAlgAut_apply, Function.comp_def, Matrix.star_eq_conjTranspose]
-    exact trace_pair _ _ _ _
+    exact re_trace_pair _ _ _ _
   simp_rw [heq]
   rw [Finset.sum_comm]
   apply Finset.sum_nonneg
@@ -73,4 +70,6 @@ theorem NLAlib.generalized_klein {d : Type*} [Fintype d] [DecidableEq d] {N : �
   intro k _
   rw [← Finset.sum_mul]
   exact mul_nonneg (hfg _ (hAI (hA.eigenvalues_mem_spectrum_real j)) _
-    (hHI (hH.eigenvalues_mem_spectrum_real k))) (Complex.normSq_nonneg _)
+    (hHI (hH.eigenvalues_mem_spectrum_real k))) (by positivity)
+
+end NLAlib

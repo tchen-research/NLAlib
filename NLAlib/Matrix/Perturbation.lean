@@ -1,21 +1,17 @@
 import NLAlib.Matrix.Perturbation.BauerFike
 import NLAlib.Matrix.Perturbation.BauerFikeAbsolute
 import NLAlib.Matrix.Perturbation.ConditionNumber
-import NLAlib.Matrix.Perturbation.ConditionNumberToolkit
 import NLAlib.Matrix.Perturbation.Conditioning
 import NLAlib.Matrix.Perturbation.CoupledNormBounds
 import NLAlib.Matrix.Perturbation.DavisKahan
 import NLAlib.Matrix.Perturbation.DavisKahanBounds
 import NLAlib.Matrix.Perturbation.DavisKahanFrames
 import NLAlib.Matrix.Perturbation.DavisKahanPopulation
-import NLAlib.Matrix.Perturbation.DavisKahanToolkit
 import NLAlib.Matrix.Perturbation.DavisKahanTop
 import NLAlib.Matrix.Perturbation.DistanceToSingularity
 import NLAlib.Matrix.Perturbation.EigenspaceProjector
 import NLAlib.Matrix.Perturbation.EigenvaluePencil
 import NLAlib.Matrix.Perturbation.EigenvaluePerturbation
-import NLAlib.Matrix.Perturbation.EigenvaluePerturbationToolkit
-import NLAlib.Matrix.Perturbation.EigenvalueResidualToolkit
 import NLAlib.Matrix.Perturbation.EigenvalueTrace
 import NLAlib.Matrix.Perturbation.EigenvalueVariation
 import NLAlib.Matrix.Perturbation.GoldenRatioBlock
@@ -24,13 +20,13 @@ import NLAlib.Matrix.Perturbation.HoffmanWielandtNormal
 import NLAlib.Matrix.Perturbation.InversePerturbation
 import NLAlib.Matrix.Perturbation.InversePerturbationBounds
 import NLAlib.Matrix.Perturbation.LeastSquaresAngle
+import NLAlib.Matrix.Perturbation.LeastSquaresAngleRatios
 import NLAlib.Matrix.Perturbation.LeastSquaresCoordinateBounds
 import NLAlib.Matrix.Perturbation.LeastSquaresEuclidean
 import NLAlib.Matrix.Perturbation.LeastSquaresGeometry
 import NLAlib.Matrix.Perturbation.LeastSquaresPerturbation
 import NLAlib.Matrix.Perturbation.LeastSquaresPurePerturbation
 import NLAlib.Matrix.Perturbation.LeastSquaresScalar
-import NLAlib.Matrix.Perturbation.LeastSquaresToolkit
 import NLAlib.Matrix.Perturbation.MapConditioning
 import NLAlib.Matrix.Perturbation.OptimalErrorContinuity
 import NLAlib.Matrix.Perturbation.PopulationTraceGap
@@ -50,7 +46,6 @@ import NLAlib.Matrix.Perturbation.SimpleEigenvaluePerturbation
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueReal
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueSchurFunction
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueSchurSpectrum
-import NLAlib.Matrix.Perturbation.SimpleEigenvalueToolkit
 import NLAlib.Matrix.Perturbation.SingularFrameTails
 import NLAlib.Matrix.Perturbation.SingularFrames
 import NLAlib.Matrix.Perturbation.SpectralContinuity
@@ -60,7 +55,6 @@ import NLAlib.Matrix.Perturbation.Sylvester
 import NLAlib.Matrix.Perturbation.Wedin
 import NLAlib.Matrix.Perturbation.WedinBounds
 import NLAlib.Matrix.Perturbation.WedinCoupled
-import NLAlib.Matrix.Perturbation.WedinFiniteIndex
 import NLAlib.Matrix.Perturbation.WedinResidual
 
 /-! # `Matrix/Perturbation`

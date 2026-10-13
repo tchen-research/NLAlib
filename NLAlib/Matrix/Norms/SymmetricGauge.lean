@@ -3,7 +3,7 @@ import NLAlib.Matrix.Inequalities.MajorizationConvex
 /-!
 # Symmetric gauges and majorization dominance
 
-A symmetric gauge is a genuine real-vector norm invariant under permutations
+A symmetric gauge is a real-vector norm invariant under permutations
 and coordinate signs. The dominance proof uses the full HLP permutation hull
 and the convex hull of the sign vertices of a coordinate box. No norming
 functional, gauge dominance or matrix norm theorem is assumed.
@@ -22,7 +22,7 @@ atlas: unitarily-invariant-norm-def (partial) -/
 structure SymmetricGauge (ι : Type*) [Fintype ι] [DecidableEq ι] where
   /-- The underlying absolutely homogeneous, subadditive real seminorm. -/
   seminorm : Seminorm ℝ (ι → ℝ)
-  /-- The seminorm separates zero, so it is a genuine norm. -/
+  /-- The seminorm separates zero, so it is a norm. -/
   eq_zero_of_map_eq_zero : ∀ x, seminorm x = 0 → x = 0
   /-- Coordinate permutations preserve the norm. -/
   permutation_invariant : ∀ (x : ι → ℝ) (σ : Equiv.Perm ι), seminorm (x ∘ σ) = seminorm x
@@ -42,7 +42,7 @@ theorem convex_sublevel (c : ℝ) : Convex ℝ {x : ι → ℝ | Φ.value x ≤ 
   simpa only [Set.sep_univ, value] using Φ.seminorm.convexOn.convex_le c
 
 /-- A symmetric gauge decreases under ordinary majorization. The proof uses
-the actual permutation convex hull from the full HLP characterization. -/
+the permutation convex hull from the full HLP characterization. -/
 theorem value_le_of_majorized {x y : ι → ℝ} (hxy : Majorized x y) : Φ.value x ≤ Φ.value y := by
   apply convexHull_min (s := Set.range fun σ : Equiv.Perm ι => y ∘ σ)
     (t := {x : ι → ℝ | Φ.value x ≤ Φ.value y}) _ (Φ.convex_sublevel _) hxy.mem_convexHull_permutations
@@ -50,7 +50,7 @@ theorem value_le_of_majorized {x y : ι → ℝ} (hxy : Majorized x y) : Φ.valu
   exact (Φ.permutation_invariant y σ).le
 
 /-- A gauge norm is monotone on the nonnegative coordinate orthant. The box
-between independent sign vertices is their actual convex hull. -/
+between independent sign vertices is their convex hull. -/
 theorem value_le_of_nonneg_of_le {x y : ι → ℝ} (hx : ∀ i, 0 ≤ x i)
     (hy : ∀ i, 0 ≤ y i) (hxy : x ≤ y) : Φ.value x ≤ Φ.value y := by
   classical

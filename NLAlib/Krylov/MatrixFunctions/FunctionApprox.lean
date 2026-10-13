@@ -5,7 +5,7 @@ import NLAlib.Polynomial.FunctionApproximation.Approximation
 
 For a matrix `Q` with orthonormal columns whose range contains the Krylov space `K_q(A, b)` and
 the compression `T = Qᵀ A Q`, the Krylov (Lanczos-FA) approximation of `f(A) b` is
-`krylovFunApprox Q A f b = Q f(T) Qᵀ b` (`f(T) = cfc f T`). Three faces
+`krylovFunApprox A f b Q = Q f(T) Qᵀ b` (`f(T) = cfc f T`). Three faces
 (`docs/KRYLOV_DEFINITIONS.md` §3.7, §3.9):
 
 * **Exactness on polynomials** (`mulVec_aeval_transpose_mul_mul_mulVec_eq`,
@@ -60,7 +60,7 @@ private lemma dotProduct_cfc_sub_aeval_mulVec_self_le {A : Matrix n n ℝ} (hA :
 and this is `‖b‖ Q f(T_q) e₁`. Source: Saad (1992) [`saad92`], eq. (3.2); Higham (2008)
 [`higham08`], §13.2. Deviation: any `Q` (the theorems assume orthonormal columns and
 `K_q(A,b) ⊆ range Q`). Atlas: `lanczos-fa-error` (definition). -/
-def krylovFunApprox (Q : Matrix n k ℝ) (A : Matrix n n ℝ) (f : ℝ → ℝ) (b : n → ℝ) : n → ℝ :=
+def krylovFunApprox (A : Matrix n n ℝ) (f : ℝ → ℝ) (b : n → ℝ) (Q : Matrix n k ℝ) : n → ℝ :=
   Q *ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b))
 
 /-- **Krylov projection is exact on polynomials of degree `< q`.** If `Q` has orthonormal
@@ -83,7 +83,7 @@ theorem mulVec_aeval_transpose_mul_mul_mulVec_eq {A : Matrix n n ℝ} {Q : Matri
       (lt_of_le_of_lt (Nat.lt_succ_iff.1 (Finset.mem_range.1 hj)) hnat)]
 
 /-- **Lanczos-FA is exact on polynomials.** For symmetric `A`, `Q` with orthonormal columns and
-`K_q(A,b) ⊆ range Q`, `krylovFunApprox Q A p b = p(A) b` for every `p` with `deg p < q`.
+`K_q(A,b) ⊆ range Q`, `krylovFunApprox A p b Q = p(A) b` for every `p` with `deg p < q`.
 Source: Saad (1992) [`saad92`], Lemma 3.1.
 Deviation: the matrix-function form needs `A` symmetric (so that `QᵀAQ` is self-adjoint and
 `cfc` is the polynomial calculus); `mulVec_aeval_transpose_mul_mul_mulVec_eq` is the form for
@@ -92,16 +92,15 @@ atlas: krylov-polynomial-exactness (partial) -/
 theorem krylovFunApprox_eval_eq_aeval {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {p : ℝ[X]} (hp : p.degree < q) :
-    krylovFunApprox Q A (fun x => p.eval x) b = aeval A p *ᵥ b := by
-  rw [krylovFunApprox, cfc_polynomial p _ (show (Qᵀ * A * Q).IsHermitian from
-    Matrix.isHermitian_conjTranspose_mul_mul Q hA).isSelfAdjoint]
+    krylovFunApprox A (fun x => p.eval x) b Q = aeval A p *ᵥ b := by
+  rw [krylovFunApprox, cfc_polynomial p _ (Matrix.isHermitian_conjTranspose_mul_mul Q hA).isSelfAdjoint]
   exact mulVec_aeval_transpose_mul_mul_mulVec_eq hQ b hK hp
 
 /-! ### Interpolation at the Ritz values -/
 
 /-- **Lanczos-FA interpolates at the Ritz values (general form).** If `p` has `deg p < q` and
 agrees with `f` at the eigenvalues of `T = QᵀAQ` (the Ritz values), then
-`krylovFunApprox Q A f b = p(A) b`. Source: Saad (1992) [`saad92`], Thm 3.3.
+`krylovFunApprox A f b Q = p(A) b`. Source: Saad (1992) [`saad92`], Thm 3.3.
 Deviation: any orthonormal `Q` with `K_q(A,b) ⊆ range Q`; Lagrange (not Hermite)
 interpolation, the agreement being only required at the Ritz values.
 Atlas: proposed id `lanczos-fa-interpolation`; uses `krylov-polynomial-exactness`.
@@ -111,16 +110,14 @@ theorem krylovFunApprox_eq_aeval_of_forall_eval_eq {A : Matrix n n ℝ} (hA : A.
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {f : ℝ → ℝ} {p : ℝ[X]}
     (hp : p.degree < q)
     (hpf : ∀ j,
-      p.eval ((show (Qᵀ * A * Q).IsHermitian from
-        Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j) =
-      f ((show (Qᵀ * A * Q).IsHermitian from
-        Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j)) :
-    krylovFunApprox Q A f b = aeval A p *ᵥ b := by
+      p.eval ((Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j) =
+      f ((Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j)) :
+    krylovFunApprox A f b Q = aeval A p *ᵥ b := by
   rw [krylovFunApprox, cfc_eq_aeval_of_forall_eval_eq _ hpf]
   exact mulVec_aeval_transpose_mul_mul_mulVec_eq hQ b hK hp
 
 /-- **Lanczos-FA is the interpolant at the Ritz values.** If `Q` has at most `q` columns, then
-`krylovFunApprox Q A f b = p(A) b` for the Lagrange interpolant `p` of `f` at the distinct
+`krylovFunApprox A f b Q = p(A) b` for the Lagrange interpolant `p` of `f` at the distinct
 eigenvalues of `QᵀAQ`. Source: Saad (1992) [`saad92`], Thm 3.3.
 Deviation: `Q` is any orthonormal matrix with at most `q` columns and `K_q(A,b) ⊆ range Q` (the
 source takes the Lanczos basis, `range Q = K_q`); the Ritz values are interpolated without
@@ -131,10 +128,9 @@ theorem krylovFunApprox_eq_aeval_interpolate {A : Matrix n n ℝ} (hA : A.IsHerm
     {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) (hk : Fintype.card k ≤ q)
     (f : ℝ → ℝ) :
-    krylovFunApprox Q A f b =
+    krylovFunApprox A f b Q =
       aeval A (Lagrange.interpolate
-        (Finset.univ.image (show (Qᵀ * A * Q).IsHermitian from
-          Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues) id f) *ᵥ b := by
+        (Finset.univ.image (Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues) id f) *ᵥ b := by
   refine krylovFunApprox_eq_aeval_of_forall_eval_eq hA hQ b hK ?_
     (eval_interpolate_eigenvalues _ f)
   refine (Lagrange.degree_interpolate_lt f (Set.injOn_id _)).trans_le ?_
@@ -168,9 +164,9 @@ theorem krylovFunApprox_congr {A : Matrix n n ℝ} (hA : A.IsHermitian) {k' : Ty
     [DecidableEq k'] {Q : Matrix n k ℝ} {Q' : Matrix n k' ℝ} (hQ : HasOrthonormalCols Q)
     (hQ' : HasOrthonormalCols Q')
     (hR : LinearMap.range Q.mulVecLin = LinearMap.range Q'.mulVecLin) (f : ℝ → ℝ) (b : n → ℝ) :
-    krylovFunApprox Q A f b = krylovFunApprox Q' A f b := by
-  set hT : (Qᵀ * A * Q).IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q hA
-  set hT' : (Q'ᵀ * A * Q').IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q' hA
+    krylovFunApprox A f b Q = krylovFunApprox A f b Q' := by
+  set hT : (Qᵀ * A * Q).IsHermitian := (Matrix.isHermitian_conjTranspose_mul_mul Q hA)
+  set hT' : (Q'ᵀ * A * Q').IsHermitian := (Matrix.isHermitian_conjTranspose_mul_mul Q' hA)
   set s := Finset.univ.image hT.eigenvalues ∪ Finset.univ.image hT'.eigenvalues
   set p := Lagrange.interpolate s id f
   have hnode : ∀ x ∈ s, p.eval x = f x := fun x hx =>
@@ -201,29 +197,30 @@ orthonormal columns and `K_q(A,b) ⊆ range Q`, and `p` a polynomial with `deg p
 `‖f(A) b − Q f(T) Qᵀ b‖ ≤ 2E ‖b‖`. Source: Saad (1992) [`saad92`], Thm 3.4 (with Lemma 3.1);
 Druskin–Knizhnerman (1989) [`dk89`]; Higham (2008) [`higham08`], §13.2.
 Deviation: an arbitrary approximant `p` in place of the best one (minimise over `p` to get the
-printed form); squared Euclidean norms as dot products; no `q ≥ 1` (at `q = 0`, `p = 0`).
+printed form); squared norms; no `q ≥ 1` (at `q = 0`, `p = 0`).
 atlas: lanczos-fa-error -/
 theorem dotProduct_cfc_mulVec_sub_krylovFunApprox_self_le {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {f : ℝ → ℝ} {p : ℝ[X]}
     (hp : p.degree < q) {a c E : ℝ} (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c)
     (hfp : ∀ x ∈ Set.Icc a c, |f x - p.eval x| ≤ E) :
-    (cfc f A *ᵥ b - krylovFunApprox Q A f b) ⬝ᵥ (cfc f A *ᵥ b - krylovFunApprox Q A f b) ≤
-      (2 * E) ^ 2 * (b ⬝ᵥ b) := by
+    ‖WithLp.toLp 2 (cfc f A *ᵥ b - krylovFunApprox A f b Q)‖ ^ 2 ≤
+      (2 * E) ^ 2 * ‖WithLp.toLp 2 b‖ ^ 2 := by
+  rw [norm_toLp_sq_eq_dotProduct_self, norm_toLp_sq_eq_dotProduct_self]
   set T := Qᵀ * A * Q
-  have hT : T.IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q hA
+  have hT : T.IsHermitian := (Matrix.isHermitian_conjTranspose_mul_mul Q hA)
   set c' := Qᵀ *ᵥ b
   set x := (cfc f A - aeval A p) *ᵥ b
   set w := (cfc f T - aeval T p) *ᵥ c'
   have hexact := mulVec_aeval_transpose_mul_mul_mulVec_eq hQ b hK hp
-  have he : cfc f A *ᵥ b - krylovFunApprox Q A f b = x - Q *ᵥ w := by
+  have he : cfc f A *ᵥ b - krylovFunApprox A f b Q = x - Q *ᵥ w := by
     simp only [x, w, T, c', krylovFunApprox, Matrix.sub_mulVec, Matrix.mulVec_sub, hexact]
     abel
   have hx : x ⬝ᵥ x ≤ E ^ 2 * (b ⬝ᵥ b) :=
     dotProduct_cfc_sub_aeval_mulVec_self_le hA (fun i => hfp _ (hspec i)) b
   have hw : w ⬝ᵥ w ≤ E ^ 2 * (c' ⬝ᵥ c') :=
     dotProduct_cfc_sub_aeval_mulVec_self_le hT
-      (fun j => hfp _ (eigenvalues_transpose_mul_mul_mem_Icc hA hQ hT hspec j)) c'
+      (fun j => hfp _ (eigenvalues_transpose_mul_mul_mem_Icc hA hQ hspec j)) c'
   have hc : c' ⬝ᵥ c' ≤ b ⬝ᵥ b := by
     have h := sum_norm_sq_conjTranspose_mulVec_le hQ b
     simp only [Matrix.conjTranspose_eq_transpose_of_trivial, Real.norm_eq_abs, sq_abs] at h
@@ -247,9 +244,9 @@ theorem dotProduct_cfc_inv_mulVec_sub_krylovFunApprox_self_le {A : Matrix n n �
     (hspec : ∀ i, hA.eigenvalues i ∈ Set.Icc a c) {Q : Matrix n k ℝ}
     (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) :
-    (cfc (fun x : ℝ => 1 / x) A *ᵥ b - krylovFunApprox Q A (fun x : ℝ => 1 / x) b) ⬝ᵥ
-        (cfc (fun x : ℝ => 1 / x) A *ᵥ b - krylovFunApprox Q A (fun x : ℝ => 1 / x) b) ≤
-      (2 * ((2 / a) * ((√c - √a) / (√c + √a)) ^ q)) ^ 2 * (b ⬝ᵥ b) := by
+    ‖WithLp.toLp 2 (cfc (fun x : ℝ => 1 / x) A *ᵥ b -
+        krylovFunApprox A (fun x : ℝ => 1 / x) b Q)‖ ^ 2 ≤
+      (2 * ((2 / a) * ((√c - √a) / (√c + √a)) ^ q)) ^ 2 * ‖WithLp.toLp 2 b‖ ^ 2 := by
   obtain ⟨p, hpdeg, hpE⟩ := exists_degree_lt_abs_eval_sub_inv_le q ha hac
   exact dotProduct_cfc_mulVec_sub_krylovFunApprox_self_le hA hQ b hK hpdeg hspec
     fun x hx => by rw [abs_sub_comm]; exact hpE x hx

@@ -7,8 +7,7 @@ The full domain-side singular-value list is the pairwise product of the two
 domain-side lists. Each list includes its domain zero padding. This is a faithful
 multiplicity-aware formulation for arbitrary rectangular shapes: unlike the
 unqualified thin-list formula, it includes the necessary extra zero singular values.
-Source: Horn–Johnson 1991, Theorem 4.2.15; the operator derivation manuscript,
-Section 4, rectangular zero-multiplicity correction. Atlas: `kronecker-spectral`.
+Source: Horn–Johnson 1991, Theorem 4.2.15. Atlas: `kronecker-spectral`.
 -/
 
 noncomputable section
@@ -19,7 +18,7 @@ namespace NLAlib
 /-- Tensoring two SVD factorizations gives a full orthogonal factorization of the
 Kronecker product. Horn–Johnson 1991, Theorem 4.2.15. The rectangular middle
 factor need not be sorted in the lexicographic product-coordinate order.
-atlas: kronecker-spectral (partial) -/
+atlas: kronecker-spectral -/
 theorem IsSVD.kronecker_factorization {m n p q : ℕ}
     {A : Matrix (Fin m) (Fin n) ℝ} {B : Matrix (Fin p) (Fin q) ℝ}
     {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ}
@@ -65,7 +64,7 @@ products of the two native domain-side singular-value lists, with multiplicities
 Horn–Johnson 1991, Theorem 4.2.15. Domain lists have `card n`, `card q`, and
 `card n * card q` entries; each includes its full domain-side zero padding.
 This covers empty dimensions and the additional rectangular zeros automatically.
-atlas: kronecker-spectral (partial) -/
+atlas: kronecker-spectral -/
 theorem multiset_singularValues_kronecker {m n p q : Type*}
     [Fintype m] [Fintype n] [Fintype p] [Fintype q] [DecidableEq n] [DecidableEq q]
     (A : Matrix m n ℝ) (B : Matrix p q ℝ) :

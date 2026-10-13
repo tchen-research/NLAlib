@@ -10,7 +10,7 @@ an improper integral. Source: Bhatia §VII.2; atlas `sylvester-separation-bound`
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 open Polynomial
 
 namespace NLAlib
@@ -32,6 +32,7 @@ theorem mulVec_shift_sq_ge_of_eigenvalue_abs_sub_ge {A : Matrix n n ℝ}
     nlinarith [hsep i, sq_abs (hA.eigenvalues i-c), abs_nonneg (hA.eigenvalues i-c)]
   exact mul_le_mul_of_nonneg_right hh (sq_nonneg _)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Spectral interval containment bounds the norm of the centered matrix by
 the interval half-width. Bhatia §VII.2; empty spectra cause no exception. -/
 theorem specNorm_shift_le_half_width {A : Matrix n n ℝ} (hA : A.IsHermitian)
@@ -42,6 +43,7 @@ theorem specNorm_shift_le_half_width {A : Matrix n n ℝ} (hA : A.IsHermitian)
         have hi := hinterval i; constructor <;> linarith)
   simpa only [map_sub, aeval_X, aeval_C, Algebra.algebraMap_eq_smul_one] using hh
 
+open scoped Matrix.Norms.L2Operator in
 /-- Interval/complement separation expands centered left multiplication
 in spectral norm. Bhatia §VII.2, including empty row or column spaces. -/
 theorem mul_specNorm_le_specNorm_shift_mul {L : Matrix m m ℝ} (hL : L.IsHermitian)
@@ -58,6 +60,7 @@ theorem mul_specNorm_le_specNorm_shift_mul {L : Matrix m m ℝ} (hL : L.IsHermit
   · right; linarith
   · left; linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- Interval/complement spectral separation bounds the Sylvester operator
 in spectral norm with constant one. Bhatia §VII.2; interval structure is
 essential and arbitrary interlaced spectra are not claimed.
@@ -79,6 +82,7 @@ theorem mul_specNorm_le_specNorm_sylvester {L : Matrix m m ℝ} {M : Matrix n n 
   have hmul := mul_le_mul_of_nonneg_left hm (specNorm_nonneg X)
   nlinarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- A positive interval/complement gap yields the usual solution bound
 for a Sylvester equation. Bhatia §VII.2; no invertibility assumption is added.
 atlas: sylvester-separation-bound (partial) -/
@@ -90,6 +94,7 @@ theorem specNorm_le_specNorm_sylvester_div {L : Matrix m m ℝ} {M : Matrix n n 
   apply (le_div_iff₀ hδ).2
   simpa only [mul_comm] using mul_specNorm_le_specNorm_sylvester hL hM hab hδ hinterval hout X
 
+open scoped Matrix.Norms.L2Operator in
 /-- Pairwise spectral separation controls the squared Frobenius norm of
 the Sylvester operator. Bhatia §VII.2; both eigenspaces may be empty.
 atlas: sylvester-separation-bound (partial) -/
@@ -142,6 +147,7 @@ theorem mul_frobSq_le_frobSq_sylvester {L : Matrix m m ℝ} {M : Matrix n n ℝ}
   rw [← heq] at hb
   simpa only [Z, hnorm] using hb
 
+open scoped Matrix.Norms.L2Operator in
 /-- Pairwise spectral separation controls the Frobenius norm with constant
 one. Bhatia §VII.2; unlike the operator bound, arbitrary spectra are allowed.
 atlas: sylvester-separation-bound (partial) -/
@@ -153,6 +159,7 @@ theorem mul_frobNorm_le_frobNorm_sylvester {L : Matrix m m ℝ} {M : Matrix n n 
   rw [← frobNorm_sq X, ← frobNorm_sq (L*X-X*M), ← mul_pow] at hh
   exact le_of_pow_le_pow_left₀ two_ne_zero (frobNorm_nonneg _) hh
 
+open scoped Matrix.Norms.L2Operator in
 /-- The Frobenius solution bound corresponding to pairwise spectral
 separation. Bhatia §VII.2, including zero-dimensional matrix spaces.
 atlas: sylvester-separation-bound (partial) -/
@@ -177,6 +184,7 @@ theorem eigenvalue_separation_of_interval_complement {L : Matrix m m ℝ}
   · right; linarith
   · left; linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- One-sided spectral separation gives constant-one spectral norm control.
 Bhatia §VII.2; an empty right space is discharged before choosing an eigenvalue. -/
 theorem mul_specNorm_le_specNorm_sylvester_of_one_sided {L : Matrix m m ℝ}
@@ -195,6 +203,7 @@ theorem mul_specNorm_le_specNorm_sylvester_of_one_sided {L : Matrix m m ℝ}
     exact mul_specNorm_le_specNorm_sylvester hL hM hab hδ
       (fun j => ⟨hmin j, hupper j⟩) (fun i => Or.inl (hmax i)) X
 
+open scoped Matrix.Norms.L2Operator in
 /-- Interval/complement separation without an extra endpoint-order
 assumption: a nonempty interval spectrum forces it, and empty source spaces
 have zero matrices. Bhatia §VII.2. -/
@@ -211,6 +220,7 @@ theorem mul_specNorm_le_specNorm_sylvester_of_interval {L : Matrix m m ℝ}
     have hi := hinterval (Classical.arbitrary n)
     exact mul_specNorm_le_specNorm_sylvester hL hM (hi.1.trans hi.2) hδ hinterval hout X
 
+open scoped Matrix.Norms.L2Operator in
 /-- All Sylvester separation conclusions: arbitrary pairwise gaps in
 Frobenius norm and interval/complement gaps in both norms. Bhatia §VII.2,
 Davis–Kahan §5–6. Indices are arbitrary finite types and may be empty.

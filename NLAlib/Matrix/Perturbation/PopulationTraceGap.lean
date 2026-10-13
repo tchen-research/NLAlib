@@ -3,7 +3,7 @@ import NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions
 import NLAlib.Matrix.Inequalities.Lidskii
 import NLAlib.Matrix.Perturbation.SpectralWeightGap
 /-!
-# The actual top-cluster trace deficit
+# The top-cluster trace deficit
 
 Finite overlap weights and the signed boundary-gap budget give the matrix
 trace deficit controlling population eigenspace perturbation. This is the
@@ -26,7 +26,7 @@ theorem trace_mul_sub_frame_projector_eq_sub_compressions {k : Type*} [Fintype k
   congr 1 <;> rw [← Matrix.mul_assoc, Matrix.trace_mul_cycle]
 
 /-- The positive top-cluster boundary gap times squared sine distance is
-bounded by the actual compression trace deficit, for any competing frame.
+bounded by the compression trace deficit, for any competing frame.
 Yu–Wang–Samworth, Theorem 2; no small perturbation hypothesis or principal-vector
 normalization is used.
 atlas: davis-kahan-sin-theta (partial) -/
@@ -56,14 +56,14 @@ theorem mul_frobSq_sinePrincipalAngles_le_trace_deficit (hA : A.IsHermitian)
   have htrace : (A*(topEigenframe hA hkN.le*(topEigenframe hA hkN.le)ᵀ-Q*Qᵀ)).trace =
       (∑ i : Fin k, hA.eigenvalues₀ (Fin.castLE hkN.le i))-∑ i, hA.eigenvalues₀ i*w i := by
     rw [trace_mul_sub_frame_projector_eq_sub_compressions,
-      trace_topEigenframe_compression_eq_prefix, eigenvaluePrefix,
+      trace_topEigenframe_compression_eq_prefix, eigenvaluePrefix_eq_sum_castLE hA hkN.le,
       trace_compression_eq_sum_mul_overlap_row_sq U Q hA.eigenvalues₀
         (eq_sortedEigenframe_mul_diagonal_mul_transpose hA)]
   rw [hs, htrace]
   exact hgap
 
 /-- Trace optimality for the perturbed matrix turns the population trace
-deficit into an actual perturbation pairing. Yu–Wang–Samworth, Theorem 2.
+deficit into a perturbation pairing. Yu–Wang–Samworth, Theorem 2.
 The competing frame's exact top-trace equality allows arbitrary choices at
 a repeated perturbed boundary eigenvalue.
 atlas: davis-kahan-sin-theta (partial) -/
@@ -71,7 +71,7 @@ theorem mul_frobSq_sinePrincipalAngles_le_frobInner_perturbation
     (hA : A.IsHermitian) (hE : E.IsHermitian) {k : ℕ}
     (hk0 : 0 < k) (hkN : k < Fintype.card n) {Q : Matrix n (Fin k) ℝ}
     (hQ : HasOrthonormalCols Q)
-    (htop : (Qᵀ*(A+E)*Q).trace=eigenvaluePrefix (hA.add hE) hkN.le) :
+    (htop : (Qᵀ*(A+E)*Q).trace=eigenvaluePrefix (hA.add hE) k) :
     (hA.eigenvalues₀ ⟨k-1, by omega⟩-hA.eigenvalues₀ ⟨k, hkN⟩)*
       frobSq (sinePrincipalAngles (topEigenframe hA hkN.le) Q) ≤
       frobInner (Q*Qᵀ-topEigenframe hA hkN.le*(topEigenframe hA hkN.le)ᵀ) E := by

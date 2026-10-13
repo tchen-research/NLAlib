@@ -7,7 +7,7 @@ import NLAlib.Matrix.Spectral.SingularValueInvariance
 Selecting rows splits the column Gram matrix into the selected and omitted
 row Grams. Low-rank eigenvalue interlacing gives the lower shift and PSD
 order gives the upper bound. Transposition treats columns, and combining
-the two gives arbitrary submatrix interlacing on the actual padded singular
+the two gives arbitrary submatrix interlacing on the padded singular
 list. Source: Horn--Johnson (2013), Corollary 7.3.6.
 Atlas: `singular-value-interlacing`.
 -/
@@ -127,7 +127,7 @@ theorem singularValues_le_submatrix_cols (A : Matrix m n ℝ)
 /-- Arbitrary row and column deletion gives the full singular-value
 interlacing interval, with the total number of deleted coordinates as the
 lower shift. Taking one omitted coordinate gives the one-step interlacing
-chain; all statements use the actual padded singular values.
+chain; all statements use the padded singular values.
 Horn--Johnson (2013), Corollary 7.3.6.
 atlas: singular-value-interlacing -/
 theorem singularValues_submatrix_interlacing

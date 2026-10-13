@@ -1,4 +1,3 @@
-import NLAlib.Estimation.Spectral.RandomStartEndpoints
 import NLAlib.Estimation.Spectral.RandomStartLanczos
 import NLAlib.Estimation.Spectral.RandomStartPower
 

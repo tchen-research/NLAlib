@@ -6,7 +6,7 @@ import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Deriv
 
 The filled Bernstein ellipse is the image of `1 ≤ |w| ≤ ρ` under
 `J(w)=(w+w⁻¹)/2`. Interior points with `1<|w|<ρ` are transported by a local inverse,
-so the original holomorphic-ellipse hypothesis yields the genuine annular analytic interface.
+so the original holomorphic-ellipse hypothesis yields the annular analytic interface.
 This is scalar infrastructure for `chebyshev-coeff-analytic-decay`.
 -/
 
@@ -152,7 +152,7 @@ theorem continuousOn_comp_joukowski_closed_annulus {F : ℂ → ℂ} {ρ : ℝ}
   simp only [Set.mem_sdiff, mem_closedBall, mem_ball, dist_zero_right, not_lt] at hw
   exact ⟨hw.2, hw.1⟩
 
-/-- The genuine holomorphic-ellipse hypothesis yields complex differentiability at all
+/-- The holomorphic-ellipse hypothesis yields complex differentiability at all
 interior points of the outer Joukowski annulus.
 Source: Trefethen, ATAP, Chapter 8 (`chebyshev-coeff-analytic-decay`, helper). -/
 theorem differentiableAt_comp_joukowski_open_annulus {F : ℂ → ℂ} {ρ : ℝ}

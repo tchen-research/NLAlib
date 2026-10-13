@@ -50,6 +50,7 @@ import NLAlib.Matrix.Subspaces.ProjectionGaps
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Subspaces.ProjectorBlocks
 import NLAlib.Matrix.Subspaces.ProjectorTrace
+import NLAlib.Matrix.Subspaces.RangeProjector
 import NLAlib.Matrix.Subspaces.RectangularGramIsometry
 import NLAlib.Matrix.Subspaces.Stiefel
 import NLAlib.Matrix.Subspaces.UnitaryBlockCompletion

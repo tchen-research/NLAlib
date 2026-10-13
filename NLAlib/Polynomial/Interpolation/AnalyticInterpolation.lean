@@ -3,7 +3,7 @@ import NLAlib.Polynomial.Chebyshev.ChebyshevAliasing
 /-!
 # Analytic interpolation on the canonical Chebyshev grid
 
-The interpolant is Mathlib's actual Lagrange polynomial at `cos(jπ/N)`, `0≤j≤N`.
+The interpolant is Mathlib's Lagrange polynomial at `cos(jπ/N)`, `0≤j≤N`.
 Aliasing controls each interpolated Chebyshev frequency and yields the factor-four rate.
 -/
 
@@ -14,13 +14,13 @@ open scoped Topology
 
 namespace NLAlib
 
-/-- The actual Lagrange interpolant on the `(N+1)`-point canonical Chebyshev extrema grid.
+/-- The Lagrange interpolant on the `(N+1)`-point canonical Chebyshev extrema grid.
 Mathlib totalizes the `N=0` grid at the point `1`; this convention is made explicit.
 Source: Trefethen, ATAP, Chapters 2 and 8 (`chebyshev-approx-analytic`, definition). -/
 def chebyshevAnalyticInterpolant (F : ℂ → ℂ) (N : ℕ) : ℝ[X] :=
   Lagrange.interpolate (range (N + 1)) (node N) (fun j => (F (node N j)).re)
 
-/-- The actual canonical grid interpolant has degree at most `N`.
+/-- The canonical grid interpolant has degree at most `N`.
 Source: Trefethen, ATAP, Chapters 2 and 8 (`chebyshev-approx-analytic`, helper). -/
 theorem degree_chebyshevAnalyticInterpolant_le (F : ℂ → ℂ) (N : ℕ) :
     (chebyshevAnalyticInterpolant F N).degree ≤ N := by
@@ -58,7 +58,7 @@ theorem abs_eval_interpolate_eval_T_node_le_one_all (N k : ℕ) {x : ℝ}
   · simp [range_one, node]
   · exact abs_eval_interpolate_eval_T_node_le_one hN k hx
 
-/-- The actual interpolant is obtained by interpolating the genuinely reconstructed
+/-- The interpolant is obtained by interpolating the genuinely reconstructed
 Chebyshev series term by term; there are only finitely many nodal values.
 Source: Trefethen, ATAP, Theorems 3.1(a) and 4.2 (`chebyshev-approx-analytic`, helper). -/
 theorem hasSum_chebyshevAnalyticCoeff_mul_eval_interpolate_T_of_open_ellipse
@@ -84,7 +84,7 @@ theorem hasSum_chebyshevAnalyticCoeff_mul_eval_interpolate_T_of_open_ellipse
     ring
   · simp only [chebyshevAnalyticInterpolant, Lagrange.interpolate_apply, eval_finsetSum, eval_mul, eval_C]
 
-/-- The actual canonical Chebyshev-grid interpolant has the sharp analytic factor-four
+/-- The canonical Chebyshev-grid interpolant has the sharp analytic factor-four
 geometric error bound, from original open-ellipse holomorphy without a boundary extension.
 Source: Trefethen, ATAP, Theorem 8.2; the finite frequency folding is Theorem 4.1.
 atlas: chebyshev-approx-analytic (partial) -/
@@ -150,7 +150,7 @@ theorem abs_re_sub_eval_chebyshevAnalyticInterpolant_le_of_open_ellipse
   field_simp [ne_of_gt (zero_lt_one.trans hρ)]
 
 /-- Both canonical analytic Chebyshev approximations satisfy their exact source constants:
-the coefficient truncation has error `2Mρ⁻ᴺ/(ρ-1)`, and the actual `(N+1)`-point grid
+the coefficient truncation has error `2Mρ⁻ᴺ/(ρ-1)`, and the `(N+1)`-point grid
 interpolant has error `4Mρ⁻ᴺ/(ρ-1)`. Both polynomials have degree at most `N`.
 Source: Trefethen, ATAP, Theorem 8.2; original open-ellipse assumptions, with the `N=0`
 grid convention inherited explicitly from Mathlib's `node`.

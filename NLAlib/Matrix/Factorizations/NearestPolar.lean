@@ -10,7 +10,7 @@ for every competing isometry. Atlas `polar-decomposition`.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
@@ -100,10 +100,10 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
     rw [hDiff, ν.right_invariant _ Rᵀ hRt, ν.left_invariant _ L hL, hDiag]
 
 /-- Every polar isometry minimizes the distance to a tall real matrix in
-every orthogonally invariant norm, including empty and deficient-rank shapes.
-Horn–Johnson 2013, Theorem 7.3.1; uses the full rectangular Mirsky inequality.
-atlas: polar-decomposition (partial) -/
-theorem invariantNorm_sub_polar_le_sub_isometry_fin {m n : ℕ}
+every orthogonally invariant norm (the `Fin`-indexed step of
+`invariantNorm_sub_polar_le_sub_isometry`). Horn–Johnson 2013, Theorem 7.3.1; uses the full
+rectangular Mirsky inequality. -/
+private theorem invariantNorm_sub_polar_le_sub_isometry_fin {m n : ℕ}
     (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) (A U V : Matrix (Fin m) (Fin n) ℝ)
     (hCard : n ≤ m) (hU : HasOrthonormalCols U)
     (hA : U * CFC.sqrt (Aᵀ * A) = A) (hV : HasOrthonormalCols V) :

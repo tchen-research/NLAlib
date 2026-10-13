@@ -27,6 +27,6 @@ theorem NLAlib.isGreatest_variational_trace {d : ℕ} [NeZero d]
   · exact ⟨M, hM, by simp⟩
   · rintro r ⟨T, hT, rfl⟩
     have h := relativeEntropy_nonneg T M hT hM
-    simp only [relativeEntropy, mul_sub, Matrix.trace_sub, Complex.sub_re] at h
+    simp only [relativeEntropy_complex, mul_sub, Matrix.trace_sub, Complex.sub_re] at h
     simp only [Matrix.trace_add, Matrix.trace_sub, Complex.add_re, Complex.sub_re]
     linarith

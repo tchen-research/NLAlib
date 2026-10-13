@@ -16,7 +16,7 @@ inverse-Wishart moments enter these deterministic identities.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -67,20 +67,23 @@ theorem frobNorm_le_sqrt_rank_mul_specNorm (A : Matrix m n 𝕜) :
 
 end FiniteIndex
 
-private theorem specNorm_inverse_rectDiag_sq {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) 𝕜) :
+section MoorePenrose
+
+variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
+
+open scoped Matrix.Norms.L2Operator in
+private theorem specNorm_inverse_rectDiag_sq (A : Matrix m n 𝕜) :
     specNorm (rectDiag (fun k => (singularValues A k)⁻¹) :
-        Matrix (Fin n) (Fin m) 𝕜) ^ 2 =
-      ‖(fun i : Fin m => (singularValues A i)⁻¹ ^ 2)‖ := by
+        Matrix (Fin (Fintype.card n)) (Fin (Fintype.card m)) 𝕜) ^ 2 =
+      ‖(fun i : Fin (Fintype.card m) => (singularValues A i)⁻¹ ^ 2)‖ := by
   rw [specNorm_sq_eq_specNorm_conjTranspose_mul_self, conjTranspose_rectDiag_mul_rectDiag]
-  have he : (fun i : Fin m =>
-      if (i : ℕ) < n then (((singularValues A i)⁻¹ ^ 2 : ℝ) : 𝕜) else 0) =
-      (fun i : Fin m => (((singularValues A i)⁻¹ ^ 2 : ℝ) : 𝕜)) := by
+  have he : (fun i : Fin (Fintype.card m) =>
+      if (i : ℕ) < Fintype.card n then (((singularValues A i)⁻¹ ^ 2 : ℝ) : 𝕜) else 0) =
+      (fun i : Fin (Fintype.card m) => (((singularValues A i)⁻¹ ^ 2 : ℝ) : 𝕜)) := by
     funext i
-    by_cases hin : (i : ℕ) < n
+    by_cases hin : (i : ℕ) < Fintype.card n
     · simp only [if_pos hin]
-    · rw [if_neg hin,
-        singularValues_eq_zero_of_width_le A (by simpa only [Fintype.card_fin] using not_lt.mp hin)]
+    · rw [if_neg hin, singularValues_eq_zero_of_width_le A (not_lt.mp hin)]
       simp
   rw [he, specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
   simp only [Pi.norm_def]
@@ -89,18 +92,18 @@ private theorem specNorm_inverse_rectDiag_sq {m n : ℕ}
   ext
   simp only [coe_nnnorm, RCLike.norm_ofReal, Real.norm_eq_abs]
 
-/-- For positive rank, the spectral norm of the general inverse is the
-reciprocal of the smallest positive singular value, at index `rank A - 1`.
-This is the correct formula for rank-deficient matrices as well as full-rank
-matrices. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
+/-- For positive rank, the spectral norm of the Moore–Penrose inverse is the reciprocal of the
+smallest positive singular value, at index `rank A - 1`, for rank-deficient as well as full-rank
+matrices on arbitrary finite index types. Horn–Johnson §7.3; atlas `pseudoinverse`.
+atlas: pseudoinverse -/
 theorem specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive
-    {m n : ℕ} (A : Matrix (Fin m) (Fin n) 𝕜) (hr : 0 < A.rank) :
+    (A : Matrix m n 𝕜) (hr : 0 < A.rank) :
     specNorm (moorePenroseInverse A) = 1 / singularValues A (A.rank - 1) := by
   let r := A.rank - 1
   have hrrank : r < A.rank := by dsimp [r]; omega
-  have hrm : r < m := lt_of_lt_of_le hrrank A.rank_le_height
+  have hrm : r < Fintype.card m := lt_of_lt_of_le hrrank A.rank_le_card_height
   have hs : 0 < singularValues A r := (singularValues_pos_iff A r).mpr hrrank
-  have hmax : ‖(fun i : Fin m => (singularValues A i)⁻¹ ^ 2)‖ =
+  have hmax : ‖(fun i : Fin (Fintype.card m) => (singularValues A i)⁻¹ ^ 2)‖ =
       (singularValues A r)⁻¹ ^ 2 := by
     apply le_antisymm
     · apply (pi_norm_le_iff_of_nonneg (sq_nonneg _)).mpr
@@ -115,45 +118,42 @@ theorem specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive
       · rw [singularValues_eq_zero_of_rank_le A (not_lt.mp hir), inv_zero, zero_pow (by decide)]
         exact sq_nonneg _
     · have hlower := norm_le_pi_norm
-        (fun i : Fin m => (singularValues A i)⁻¹ ^ 2) ⟨r, hrm⟩
+        (fun i : Fin (Fintype.card m) => (singularValues A i)⁻¹ ^ 2) ⟨r, hrm⟩
       change ‖(singularValues A r)⁻¹ ^ 2‖ ≤
-        ‖(fun i : Fin m => (singularValues A i)⁻¹ ^ 2)‖ at hlower
+        ‖(fun i : Fin (Fintype.card m) => (singularValues A i)⁻¹ ^ 2)‖ at hlower
       rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg ((singularValues A r)⁻¹))] at hlower
       exact hlower
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
   have hn : specNorm (moorePenroseInverse A) =
       specNorm (rectDiag (fun k => (singularValues A k)⁻¹) :
-        Matrix (Fin n) (Fin m) 𝕜) := by
-    rw [hSVD.moorePenroseInverse_eq,
-      specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hSVD.conjTranspose_mul_left,
-      specNorm_mul_left_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right]
+        Matrix (Fin (Fintype.card n)) (Fin (Fintype.card m)) 𝕜) := by
+    rw [moorePenroseInverse_eq_svd hSVD,
+      specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hSVD.conjTranspose_mul_left,
+      specNorm_mul_left_of_hasOrthonormalCols hSVD.conjTranspose_mul_right]
   have hsq : specNorm (moorePenroseInverse A) ^ 2 = (singularValues A r)⁻¹ ^ 2 := by
     rw [hn, specNorm_inverse_rectDiag_sq, hmax]
   have he := (sq_eq_sq₀ (specNorm_nonneg (moorePenroseInverse A))
     (inv_nonneg.mpr hs.le)).mp hsq
   simpa only [r, one_div] using he
 
-/-- At rank zero the general Moore–Penrose inverse is zero; no division by a
-nonexistent positive singular value is used. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem moorePenroseInverse_eq_zero_of_rank_eq_zero {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) 𝕜) (hr : A.rank = 0) :
+/-- At rank zero the Moore–Penrose inverse is zero. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
+theorem moorePenroseInverse_eq_zero_of_rank_eq_zero (A : Matrix m n 𝕜) (hr : A.rank = 0) :
     moorePenroseInverse A = 0 := by
   have hσ : ∀ k : ℕ, singularValues A k = 0 := fun k =>
     singularValues_eq_zero_of_rank_le A (by rw [hr]; exact Nat.zero_le k)
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
-  rw [hSVD.moorePenroseInverse_eq]
+  rw [moorePenroseInverse_eq_svd hSVD]
   have hd : (rectDiag (fun k => (singularValues A k)⁻¹) :
-      Matrix (Fin n) (Fin m) 𝕜) = 0 := by
+      Matrix (Fin (Fintype.card n)) (Fin (Fintype.card m)) 𝕜) = 0 := by
     ext i j
     simp [rectDiag_apply_ofReal, hσ]
   rw [hd, Matrix.mul_zero, Matrix.zero_mul]
 
-/-- The complete spectral-norm formula for the general Moore–Penrose inverse:
-zero at rank zero and the reciprocal of the smallest positive singular value
-otherwise. Empty dimensions are covered by the rank-zero branch.
-Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem specNorm_moorePenroseInverse_eq {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) 𝕜) :
+/-- The spectral norm of the Moore–Penrose inverse on arbitrary finite index types: zero at rank
+zero and the reciprocal of the smallest positive singular value otherwise (empty dimensions are
+the rank-zero branch). Horn–Johnson §7.3; atlas `pseudoinverse`.
+atlas: pseudoinverse -/
+theorem specNorm_moorePenroseInverse_eq (A : Matrix m n 𝕜) :
     specNorm (moorePenroseInverse A) =
       if A.rank = 0 then 0 else 1 / singularValues A (A.rank - 1) := by
   by_cases hr : A.rank = 0
@@ -163,16 +163,6 @@ theorem specNorm_moorePenroseInverse_eq {m n : ℕ}
     exact specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A
       (Nat.pos_of_ne_zero hr)
 
-/-- The Moore–Penrose norm on general indices (over `ℝ` or `ℂ`) is zero at rank zero and the
-reciprocal of the last positive singular value otherwise. Horn–Johnson §7.3;
-atlas `pseudoinverse`. The list uses explicit `Fin(card)` normalization.
-atlas: pseudoinverse -/
-theorem specNorm_moorePenroseInverse_eq_fintype {m n : Type*} [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) :
-    specNorm (moorePenroseInverse A) = if A.rank = 0 then 0 else
-      1 / singularValues (A.reindex (Fintype.equivFin m) (Fintype.equivFin n)) (A.rank - 1) := by
-  have h := specNorm_moorePenroseInverse_eq
-    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-  simpa only [moorePenroseInverse_reindex, specNorm_reindex, Matrix.rank_reindex] using h
+end MoorePenrose
 
 end NLAlib

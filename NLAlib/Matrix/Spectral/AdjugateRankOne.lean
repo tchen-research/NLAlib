@@ -73,7 +73,7 @@ theorem adjugate_ne_zero_of_finrank_ker_eq_one (M : Matrix n n K)
   exact one_ne_zero (hdiag.symm.trans hj')
 
 /-- With one-dimensional nullspace, the adjugate is a nonzero scalar times
-the outer product of arbitrary nonzero right and left nullvectors. Source:
+the outer product of arbitrary nonzero right and left nullvectors.
 Horn–Johnson (2013), Theorem 1.4.12; no algebraic simplicity is required. -/
 theorem exists_adjugate_eq_smul_vecMulVec_of_finrank_ker_eq_one
     (M : Matrix n n K) {x y : n → K} (hx : x ≠ 0) (hy : y ≠ 0)

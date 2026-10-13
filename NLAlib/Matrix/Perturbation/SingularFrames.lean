@@ -3,7 +3,7 @@ import NLAlib.Matrix.Inequalities.MajorizationProperties
 /-!
 # Leading singular-vector frames and matched truncations
 
-First-column selection in an actual SVD gives orthonormal paired singular
+First-column selection in a SVD gives orthonormal paired singular
 frames. Their projectors produce the truncation from that same SVD, including
 singular-value ties. Source: Wedin (1972), Section 3; supports `wedin-sin-theta`.
 -/
@@ -65,7 +65,7 @@ namespace IsSVD
 variable {m n k : ℕ} {A : Matrix (Fin m) (Fin n) ℝ}
   {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ}
 
-/-- Transposing an actual real SVD exchanges its paired orthogonal frames.
+/-- Transposing a real SVD exchanges its paired orthogonal frames.
 Horn–Johnson 2013, Section 2.6; Wedin frame helper. -/
 theorem transpose (h : IsSVD A U V) : IsSVD Aᵀ V U := by
   refine ⟨h.conjTranspose_mul_right, h.conjTranspose_mul_left, ?_, h.mul_conjTranspose_right,
@@ -73,7 +73,7 @@ theorem transpose (h : IsSVD A U V) : IsSVD Aᵀ V U := by
   rw [singularValues_transpose]
   exact h.conjTranspose_eq
 
-/-- The actual leading right singular frame maps to the leading left frame
+/-- The leading right singular frame maps to the leading left frame
 through its ordered diagonal singular coefficient. Wedin (1972), Section 3. -/
 theorem mul_headColumns (h : IsSVD A U V) (hkm : k ≤ m) (hkn : k ≤ n) :
     A * headColumns V hkn = headColumns U hkm *
@@ -96,7 +96,7 @@ theorem mul_headColumns (h : IsSVD A U V) (hkm : k ≤ m) (hkn : k ≤ n) :
     rw [if_neg hlv, mul_zero]
   · simp
 
-/-- The actual leading left singular frame satisfies the paired transpose
+/-- The leading left singular frame satisfies the paired transpose
 singular equation. Wedin (1972), Section 3. -/
 theorem transpose_mul_headColumns (h : IsSVD A U V) (hkm : k ≤ m) (hkn : k ≤ n) :
     Aᵀ * headColumns U hkm = headColumns V hkn *

@@ -6,14 +6,14 @@ import Mathlib.Analysis.Complex.Polynomial.Basic
 # The local branch of a simple eigenvalue
 
 The scalar implicit branch is transported through a left–right normalized
-similarity to an actual, locally unique eigenvalue of the original perturbed
+similarity to an locally unique eigenvalue of the original perturbed
 matrix. Its derivative is the normalized left–right perturbation pairing.
 Source: Horn–Johnson (2013), Theorem 6.3.12; atlas `simple-eigenvalue-perturbation`.
 -/
 
 noncomputable section
 open Filter
-open scoped Matrix Matrix.Norms.L2Operator Topology
+open scoped Matrix Topology
 
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
@@ -21,6 +21,7 @@ set_option backward.isDefEq.respectTransparency.types false
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The trailing resolvent remains invertible near a separated scalar
 eigenvalue. Source: Horn–Johnson (2013), proof of Theorem 6.3.12. -/
 theorem eventually_isUnit_shifted_pencil (μ : ℂ) (B F : Matrix n n ℂ)
@@ -32,8 +33,9 @@ theorem eventually_isUnit_shifted_pencil (μ : ℂ) (B F : Matrix n n ℂ)
       (μ + p.2) • (1 : Matrix n n ℂ) - B - p.1 • F) := by fun_prop
   exact (hcont.continuousAt (x := 0)).preimage_mem_nhds (by simpa using Units.isOpen.mem_nhds hunit)
 
-/-- A separated scalar block has an actual locally unique eigenvalue branch,
-with derivative equal to the leading perturbation entry. Source:
+open scoped Matrix.Norms.L2Operator in
+/-- A separated scalar block has a locally unique eigenvalue branch,
+with derivative equal to the leading perturbation entry.
 Horn–Johnson (2013), Theorem 6.3.12; the parameter is complex. -/
 theorem exists_eigenvalue_branch_of_scalar_block
     {l : Type*} [Unique l] (μ a : ℂ)
@@ -72,11 +74,12 @@ theorem exists_eigenvalue_branch_of_scalar_block
     rw [add_sub_cancel] at hs
     exact hs.trans (hpψ.trans (by dsimp [φ]; constructor <;> intro h <;> linear_combination h))
 
+open scoped Matrix.Norms.L2Operator in
 /-- A simple eigenvalue has a locally unique continuous branch, complex
 differentiable at zero with derivative the normalized left–right pairing.
 The left eigenvector is supplied as its row (use the conjugate of a left
 column). Source: Horn–Johnson (2013), Theorem 6.3.12.
-atlas: simple-eigenvalue-perturbation (partial) -/
+atlas: simple-eigenvalue-perturbation -/
 theorem exists_eigenvalue_branch_of_simple
     {A : Matrix n n ℂ} (E : Matrix n n ℂ) {x y : n → ℂ} {μ : ℂ}
     (hx : x ≠ 0) (hy : y ≠ 0) (hAx : A *ᵥ x = μ • x) (hyA : y ᵥ* A = μ • y)

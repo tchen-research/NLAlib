@@ -13,8 +13,6 @@ Horn–Johnson 2013, §§0.7.5–0.7.6; atlas `complementary-nullities`, `cs-dec
 noncomputable section
 open scoped Matrix
 namespace NLAlib
-set_option backward.isDefEq.respectTransparency false
-
 variable {K : Type*} [Field K]
 
 private def firstBlockMap {R E F G H : Type*} [CommRing R]

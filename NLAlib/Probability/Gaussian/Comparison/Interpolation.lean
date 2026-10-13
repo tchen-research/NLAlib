@@ -21,10 +21,6 @@ The integrability criterion `integrable_comp_of_abs_le_sum_abs` (`g(X)` is integ
 Gaussian integration by parts itself is `NLAlib.integral_mul_eq_sum_covariance_mul_integral`
 (`NLAlib.Probability.Gaussian.Calculus.IntegrationByParts`).
 
-Ported from the Prove2me solutions `GaussianMatrix.slepian_tail_comparison`,
-`GaussianMatrix.sudakov_fernique` and `GaussianMatrix.gordon_minimax` (identical helper
-sections, deduplicated).
-
 Atlas: helpers of `slepian`, `sudakov-fernique`, `gordon-minimax`.
 -/
 
@@ -42,8 +38,7 @@ variable {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω] {P : Measure Ω}
 process `Z(θ) = cos θ X + sin θ Y`, for jointly Gaussian centred `X, Y` with vanishing cross
 moments: `Cov(Z'(θ)ᵢ, Z(θ)ⱼ) = sin θ cos θ (𝔼 YᵢYⱼ - 𝔼 XᵢXⱼ)`. Standard step of the
 interpolation proofs (Vershynin 2018, proof of Thm 7.2.1). Atlas: helper of `slepian`,
-`sudakov-fernique`, `gordon-minimax`. Ported from Prove2me solution
-`GaussianMatrix.slepian_tail_comparison` (helper `sl_cov_DZ`). -/
+`sudakov-fernique`, `gordon-minimax`. -/
 theorem covariance_rotation_eq (X Y : ι → Ω → ℝ)
     (hXY : HasGaussianLaw (fun ω => (fun t => X t ω, fun t => Y t ω)) P)
     (hX0 : ∀ t, ∫ ω, X t ω ∂P = 0) (hY0 : ∀ t, ∫ ω, Y t ω ∂P = 0)
@@ -85,8 +80,7 @@ theorem covariance_rotation_eq (X Y : ι → Ω → ℝ)
 
 omit [Fintype ι] in
 /-- Expansion of the squared increment: `𝔼 (Xᵢ - Xⱼ)² = 𝔼 XᵢXᵢ + 𝔼 XⱼXⱼ - 𝔼 XᵢXⱼ - 𝔼 XⱼXᵢ` for
-square-integrable `X`. Atlas: helper of `slepian`, `sudakov-fernique`, `gordon-minimax`. Ported
-from Prove2me solution `GaussianMatrix.slepian_tail_comparison` (helper `sl_sq_sub`). -/
+square-integrable `X`. Atlas: helper of `slepian`, `sudakov-fernique`, `gordon-minimax`. -/
 theorem integral_sub_sq_eq (X : ι → Ω → ℝ) (hXm : ∀ t, MemLp (X t) 2 P) (i j : ι) :
     ∫ ω, (X i ω - X j ω) ^ 2 ∂P = ∫ ω, X i ω * X i ω ∂P + ∫ ω, X j ω * X j ω ∂P
       - ∫ ω, X i ω * X j ω ∂P - ∫ ω, X j ω * X i ω ∂P := by
@@ -108,8 +102,7 @@ centred vectors on one probability space with vanishing cross moments `𝔼 Xₛ
 `F : ℝ^ι → ℝ` have gradient `g` and Hessian `H`, with `g, H` bounded, `H` continuous and
 `|F x| ≤ ∑ₜ |xₜ| + K`. If `∑ᵢⱼ (𝔼 YᵢYⱼ - 𝔼 XᵢXⱼ) Hᵢⱼ(x) ≥ 0` for all `x`, then
 `𝔼 F(X) ≤ 𝔼 F(Y)`. Source: Kahane 1986; Vershynin 2018, §7.2 (proof of Thm 7.2.1). Atlas: helper
-of `gordon-minimax`. Ported from Prove2me solution `GaussianMatrix.gordon_minimax` (helper
-`gmm_interp`).
+of `gordon-minimax`.
 atlas: gordon-minimax -/
 theorem integral_le_integral_of_covariance_hessian_nonneg {ι Ω : Type*} [Fintype ι]
     [MeasurableSpace Ω] {P : Measure Ω}

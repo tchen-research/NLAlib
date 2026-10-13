@@ -1,11 +1,11 @@
 import NLAlib.Matrix.Spectral.Eigenframes
 import NLAlib.Matrix.Subspaces.ProjectionGaps
 /-!
-# Actual overlap weights in a sorted eigenframe
+# overlap weights in a sorted eigenframe
 
 Overlap row squares lie in `[0,1]`, have exactly the selected frame width as
 total mass, and express compression traces and residual squares. This connects
-the finite signed weight budget to actual population eigenspace perturbation.
+the finite signed weight budget to population eigenspace perturbation.
 Source: Yu–Wang–Samworth, Theorem 2, trace proof.
 -/
 
@@ -53,7 +53,7 @@ theorem sum_sum_sq_overlap_eq_card {U : Matrix m n ℝ} {Q : Matrix m r ℝ}
     frobSq_frame_eq_card hQ]
 
 omit [DecidableEq m] [DecidableEq r] in
-/-- A spectral diagonalization turns an actual compression trace into
+/-- A spectral diagonalization turns a compression trace into
 its eigenvalue-weighted overlap row squares. Yu–Wang–Samworth trace proof. -/
 theorem trace_compression_eq_sum_mul_overlap_row_sq {A : Matrix m m ℝ}
     (U : Matrix m n ℝ) (Q : Matrix m r ℝ) (a : n → ℝ)
@@ -95,7 +95,7 @@ theorem sortedEigenframe_mul_transpose_eq_one (hA : A.IsHermitian) :
     (A := (sortedEigenframe hA)ᵀ) (B := sortedEigenframe hA) (eq := by simp)).mp
       (hasOrthonormalCols_sortedEigenframe hA)
 
-/-- The real symmetric matrix is diagonalized by its actual sorted frame.
+/-- The real symmetric matrix is diagonalized by its sorted frame.
 Yu–Wang–Samworth trace proof, with the signed decreasing eigenvalue list. -/
 theorem eq_sortedEigenframe_mul_diagonal_mul_transpose (hA : A.IsHermitian) :
     A=sortedEigenframe hA*Matrix.diagonal hA.eigenvalues₀*(sortedEigenframe hA)ᵀ := by
@@ -109,12 +109,13 @@ theorem eq_sortedEigenframe_mul_diagonal_mul_transpose (hA : A.IsHermitian) :
     A=U*(Uᵀ*A*U)*Uᵀ := heq.symm
     _ = _ := by rw [compression_sortedEigenframe_eq_diagonal]
 
-/-- The named top frame attains the actual Ky Fan trace sum.
+/-- The named top frame attains the Ky Fan trace sum.
 Yu–Wang–Samworth, Theorem 2, spectral projector optimality. -/
 theorem trace_topEigenframe_compression_eq_prefix (hA : A.IsHermitian)
     {k : ℕ} (hk : k ≤ Fintype.card m) :
-    ((topEigenframe hA hk)ᵀ*A*topEigenframe hA hk).trace=eigenvaluePrefix hA hk := by
-  rw [compression_topEigenframe_eq_diagonal, Matrix.trace_diagonal]
+    ((topEigenframe hA hk)ᵀ*A*topEigenframe hA hk).trace=eigenvaluePrefix hA k := by
+  rw [compression_topEigenframe_eq_diagonal, Matrix.trace_diagonal,
+    eigenvaluePrefix_eq_sum_castLE hA hk]
   rfl
 
 /-- Every competing width-`k` frame has no larger compression trace than
@@ -124,17 +125,9 @@ theorem trace_compression_le_trace_topEigenframe (hA : A.IsHermitian)
     (hQ : HasOrthonormalCols Q) :
     (Qᵀ*A*Q).trace ≤ ((topEigenframe hA hk)ᵀ*A*topEigenframe hA hk).trace := by
   have hh := trace_compression_le_eigenvaluePrefix hA hQ
+  simp only [RCLike.re_to_real, Matrix.conjTranspose_eq_transpose_of_trivial,
+    Fintype.card_fin] at hh
   rw [trace_topEigenframe_compression_eq_prefix hA hk]
-  have hpref : eigenvaluePrefix hA (card_le_card_of_hasOrthonormalCols hQ)=eigenvaluePrefix hA hk := by
-    unfold eigenvaluePrefix
-    let e : Fin (Fintype.card (Fin k)) ≃ Fin k := finCongr (Fintype.card_fin k)
-    calc
-      _ = ∑ i : Fin (Fintype.card (Fin k)), hA.eigenvalues₀ (Fin.castLE hk (e i)) := by
-        apply Finset.sum_congr rfl
-        intro i _
-        apply congrArg hA.eigenvalues₀
-        exact Fin.ext rfl
-      _ = _ := e.sum_comp (fun j : Fin k => hA.eigenvalues₀ (Fin.castLE hk j))
-  exact hh.trans hpref.le
+  exact hh
 
 end NLAlib

@@ -107,7 +107,7 @@ theorem exists_toeplitzMatrix_eq_circulant {n : ℕ} [NeZero n] (v : Fin n → �
 /-- In dimension zero the unique matrix is both Toeplitz and circulant.
 This endpoint needs no named coordinate zero or cyclic group instance.
 Horn–Johnson 2013, §0.9.7.
-atlas: structured-matrices-def (partial) -/
+atlas: structured-matrices-def -/
 theorem exists_toeplitz_circulant_of_empty (A : Matrix (Fin 0) (Fin 0) ℝ) :
     (∃ t : ℤ → ℝ, A = toeplitzMatrix t) ∧
       (∃ v : Fin 0 → ℝ, A = Matrix.circulant v) := by
@@ -116,7 +116,7 @@ theorem exists_toeplitz_circulant_of_empty (A : Matrix (Fin 0) (Fin 0) ℝ) :
 /-- Circulants are exactly the ordinary Toeplitz matrices commuting with the
 cyclic shift. Commutation alone already forces the circulant formula.
 Horn–Johnson 2013, §0.9.7.
-atlas: structured-matrices-def (partial) -/
+atlas: structured-matrices-def -/
 theorem exists_circulant_iff_toeplitz_and_commute {n : ℕ} [NeZero n]
     (A : Matrix (Fin n) (Fin n) ℝ) :
     (∃ v : Fin n → ℝ, A = Matrix.circulant v) ↔

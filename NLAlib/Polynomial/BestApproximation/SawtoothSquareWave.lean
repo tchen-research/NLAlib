@@ -5,7 +5,7 @@ import NLAlib.Polynomial.BestApproximation.SineBasis
 # The square-wave dual identity for sawtooth interpolation
 
 The sign on every uniform grid cell is explicit, and low-frequency sine orthogonality
-annihilates the actual finite sine interpolant. These are the finite integral ingredients
+annihilates the finite sine interpolant. These are the finite integral ingredients
 for the exact sharp Jackson kernel norm.
 -/
 
@@ -17,7 +17,7 @@ open scoped Topology
 namespace NLAlib
 
 /-- The sine square wave is the alternating constant on every uniform grid cell.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sign_sin_mul_eq_neg_one_pow_of_between_grid (n j : ℕ) {t : ℝ}
     (ht : t ∈ Set.Ioo (sawtoothGridAngle n j) (sawtoothGridAngle n (j + 1))) :
     Real.sign (sin (((n + 1 : ℕ) : ℝ) * t)) = (-1 : ℝ) ^ j := by
@@ -41,7 +41,7 @@ theorem sign_sin_mul_eq_neg_one_pow_of_between_grid (n j : ℕ) {t : ℝ}
 
 /-- The absolute sawtooth error equals its sine-square-wave signed value on the positive
 half-period cells.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem abs_sawtoothError_eq_sign_sin_mul_on_grid_cell (n j : ℕ) (hj : j ≤ n) {t : ℝ}
     (ht : t ∈ Set.Ioo (sawtoothGridAngle n j) (sawtoothGridAngle n (j + 1))) :
     |sawtoothError n t| = Real.sign (sin (((n + 1 : ℕ) : ℝ) * t)) * sawtoothError n t := by
@@ -49,7 +49,7 @@ theorem abs_sawtoothError_eq_sign_sin_mul_on_grid_cell (n j : ℕ) (hj : j ≤ n
   exact abs_sawtoothError_eq_mul_on_grid_cell n j hj ht
 
 /-- The sine square wave changes sign under full-period reflection.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem sign_sin_nat_two_pi_sub (N : ℕ) (t : ℝ) :
     Real.sign (sin ((N : ℝ) * (2 * Real.pi - t))) = -Real.sign (sin ((N : ℝ) * t)) := by
   rw [mul_sub, sin_nat_mul_two_pi_sub, Real.sign_neg]
@@ -80,9 +80,9 @@ theorem intervalIntegrable_sign_sin_mul_sin (N k : ℕ) :
     volume 0 (2 * Real.pi) at hneg
   simpa only [neg_neg] using hneg
 
-/-- The actual sawtooth sine interpolant is orthogonal to the sine square wave of its
+/-- The sawtooth sine interpolant is orthogonal to the sine square wave of its
 next frequency. Its finite sine expansion is proved, not assumed.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 theorem integral_sign_sin_mul_sawtoothApprox_eq_zero (n : ℕ) :
     (∫ t : ℝ in 0..2 * Real.pi, Real.sign (sin (((n + 1 : ℕ) : ℝ) * t)) * sawtoothApprox n t) = 0 := by
   obtain ⟨c, hc⟩ := exists_sine_expansion_sawtoothApprox n

@@ -63,7 +63,7 @@ theorem norm_eq_max_of_mulVec_eq_zero_of_entry_ne_zero
 strict row is nonsingular. Source: Horn–Johnson (2013), Theorem 6.2.27
 (Taussky); irreducibility uses Mathlib's strongly connected graph of the
 entrywise norms, so no sign condition is imposed on the original matrix.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem det_ne_zero_of_irreducible_weak_diagonal_dominance
     (A : Matrix n n K) (hIrred : (A.map norm).IsIrreducible)
     (hweak : ∀ i, gershgorinRowRadius A i ≤ ‖A i i‖)

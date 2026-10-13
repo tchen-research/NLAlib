@@ -3,7 +3,7 @@ import NLAlib.Polynomial.BestApproximation.SawtoothInterpolation
 /-!
 # Finite sine expansions through the Chebyshev second-kind basis
 
-Mathlib's polynomial-sequence spanning theorem supplies the actual coefficients of
+Mathlib's polynomial-sequence spanning theorem supplies the coefficients of
 `sin(t) p(cos(t))`, with frequencies bounded by the degree of `p` plus one.
 -/
 
@@ -13,7 +13,7 @@ open Polynomial Polynomial.Chebyshev Finset Real
 
 namespace NLAlib
 
-/-- Chebyshev second-kind polynomials form a genuine degree-indexed polynomial sequence.
+/-- Chebyshev second-kind polynomials form a degree-indexed polynomial sequence.
 Source: Rivlin, Chebyshev Polynomials, Chapter 1; helper for sharp `jackson-lipschitz`. -/
 def chebyshevUSequence : Polynomial.Sequence ℝ where
   elems' n := U ℝ (n : ℤ)
@@ -21,7 +21,7 @@ def chebyshevUSequence : Polynomial.Sequence ℝ where
 
 /-- Every real polynomial of degree below `n` has a finite second-kind Chebyshev expansion.
 Source: Rivlin, Chebyshev Polynomials, Chapter 1; Mathlib polynomial-sequence spanning.
-This is the genuine sine-basis construction needed by sharp `jackson-lipschitz`. -/
+This is the sine-basis construction needed by sharp `jackson-lipschitz`. -/
 theorem exists_sum_smul_U_eq_of_degree_lt {p : ℝ[X]} {n : ℕ} (hp : p.degree < n) :
     ∃ c : ℕ → ℝ, (∑ j ∈ range n, c j • U ℝ (j : ℤ)) = p := by
   let S := chebyshevUSequence
@@ -53,8 +53,8 @@ theorem exists_sine_expansion_of_degree_lt {p : ℝ[X]} {n : ℕ} (hp : p.degree
   rw [heq, h]
   norm_cast
 
-/-- The actual odd sawtooth interpolant has a finite sine expansion of degree at most `n`.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+/-- The odd sawtooth interpolant has a finite sine expansion of degree at most `n`.
+Helper for `jackson-lipschitz`. -/
 theorem exists_sine_expansion_sawtoothApprox (n : ℕ) :
     ∃ c : ℕ → ℝ, ∀ t : ℝ,
       sawtoothApprox n t = ∑ j ∈ range n, c j * sin (((j + 1 : ℕ) : ℝ) * t) :=

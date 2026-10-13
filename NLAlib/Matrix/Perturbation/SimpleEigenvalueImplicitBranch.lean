@@ -6,18 +6,18 @@ import Mathlib.Analysis.Calculus.ImplicitFunction.ProdDomain
 
 The partial shift derivative is the identity, so the product-domain implicit
 function theorem supplies a locally unique branch with derivative equal to
-the leading perturbation entry. Source: Horn–Johnson (2013), Theorem 6.3.12;
-operator re-derivation §gen:simple-branch.
+the leading perturbation entry. Source: Horn–Johnson (2013), Theorem 6.3.12.
 -/
 
 noncomputable section
 open Filter
-open scoped Matrix Matrix.Norms.L2Operator Topology
+open scoped Matrix Topology
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The separated scalar Schur equation has a locally unique continuous
 differentiable shift branch with derivative equal to its leading perturbation
 entry. Source: Horn–Johnson (2013), Theorem 6.3.12; the parameter may be complex,

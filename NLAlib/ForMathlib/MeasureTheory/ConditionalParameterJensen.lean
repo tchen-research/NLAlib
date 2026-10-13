@@ -14,13 +14,13 @@ noncomputable section
 open MeasureTheory Set Filter TopologicalSpace
 open scoped Topology
 
-namespace NLAlib
+namespace MeasureTheory
 
-/-- Actual conditional Jensen with a conditioning-measurable parameter for a concave
+/-- Conditional Jensen with a conditioning-measurable parameter for a concave
 continuous family whose parameter perturbations satisfy an exponential comparison.
-Countable dense fixed parameters and actual conditional comparison on measurable cuts
+Countable dense fixed parameters and conditional comparison on measurable cuts
 prove this from scalar hypotheses, without assuming a conditional Jensen inequality.
-Source: operator rederivations `eq:condlieb`, predictable-offset passage;
+Source: Tropp 2011 (matrix Freedman), predictable-offset passage;
 atlas `matrix-freedman` (partial). -/
 theorem condExp_family_le_family_condExp_of_exponential_comparison
     {Ω E P : Type*} {m mΩ : MeasurableSpace Ω}
@@ -98,4 +98,4 @@ theorem condExp_family_le_family_condExp_of_exponential_comparison
       ((Real.continuous_exp.tendsto (0 : ℝ)).comp htwo).mul_const (g (U ω) (μ[f | m] ω))
   exact le_of_tendsto_of_tendsto' tendsto_const_nhds hlim hbound
 
-end NLAlib
+end MeasureTheory

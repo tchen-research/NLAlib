@@ -1,4 +1,5 @@
-import NLAlib.Matrix.Inequalities.PlaneRotation
+import NLAlib.Matrix.Basic.PlaneRotation
+import NLAlib.Matrix.Subspaces.Projections
 /-!
 # Coordinate plane rotations and exact diagonal error
 

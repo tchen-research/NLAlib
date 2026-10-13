@@ -16,7 +16,7 @@ namespace NLAlib
 real Schur form. In the supplied coordinate order, the nonscalar blocks
 are exactly `[[a,b],[c,a]]` with `bc<0`; empty matrices are included.
 Horn–Johnson 2013, Theorem 2.3.1; derivations equation (G1).
-atlas: schur-triangularization (partial) -/
+atlas: schur-triangularization -/
 theorem exists_orthogonal_real_schur {n : Type*} [Fintype n] [DecidableEq n]
     (A : Matrix n n ℝ) (order : Fin (Fintype.card n) ≃ n) :
     ∃ Q T : Matrix n n ℝ, HasOrthonormalCols Q ∧

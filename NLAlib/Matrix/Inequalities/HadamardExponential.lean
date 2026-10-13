@@ -11,7 +11,7 @@ atlas `schur-product-inequalities`.
 
 noncomputable section
 open Matrix
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -54,21 +54,5 @@ theorem posDef_sum_inv_factorial_map_pow_iff_rows_injective {A : Matrix n n ℝ}
     exact rows_injective_of_posDef_map_exp (posDef_of_posDef_le h
       (sum_inv_factorial_smul_map_pow_le_map_exp hA (Fintype.card n)))
   · exact posDef_sum_inv_factorial_map_pow_of_rows_injective hA
-
-/-- The complete entrywise exponential certificate includes PSD membership,
-both exact positive-definiteness criteria, and the PSD infinite tail beyond
-the finite Gram certificate. Horn--Johnson (2013), Theorem 7.5.9.
-atlas: schur-product-inequalities (partial) -/
-theorem entrywise_exponential_positivity_characterizations {A : Matrix n n ℝ}
-    (hA : A.PosSemidef) :
-    (A.map Real.exp).PosSemidef ∧
-    ((A.map Real.exp).PosDef ↔ Function.Injective A.row) ∧
-    ((∑ k ∈ Finset.range (Fintype.card n), (k.factorial : ℝ)⁻¹ • A.map (fun t => t ^ k)).PosDef ↔
-      Function.Injective A.row) ∧
-    (A.map Real.exp - ∑ k ∈ Finset.range (Fintype.card n),
-      (k.factorial : ℝ)⁻¹ • A.map (fun t => t ^ k)).PosSemidef :=
-  ⟨posSemidef_map_exp hA, posDef_map_exp_iff_rows_injective hA,
-    posDef_sum_inv_factorial_map_pow_iff_rows_injective hA,
-    sum_inv_factorial_smul_map_pow_le_map_exp hA (Fintype.card n)⟩
 
 end NLAlib

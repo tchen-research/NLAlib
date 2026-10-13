@@ -6,7 +6,7 @@ import Mathlib.Analysis.Normed.Algebra.Spectrum
 # Row, column and weighted Gershgorin spectral-radius bounds
 
 The suprema are in the nonnegative reals, so the empty maximum is zero.
-Positive real weights are handled by an actual diagonal similarity.
+Positive real weights are handled by a diagonal similarity.
 Source: Horn–Johnson (2013), Corollaries 6.1.3 and 6.1.5.
 -/
 
@@ -63,7 +63,7 @@ theorem spectralRadius_le_max_column_sum (A : Matrix n n ℂ) :
 /-- The spectral radius is bounded by the smaller of the maximum absolute
 row and column sums. Source: Horn–Johnson (2013), Corollary 6.1.5;
 the finite nonnegative suprema include dimension zero.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem spectralRadius_le_min_max_row_column_sum (A : Matrix n n ℂ) :
     spectralRadius ℂ A ≤ min
       (Finset.univ.sup (fun i => Real.toNNReal (∑ j, ‖A i j‖)) : ENNReal)
@@ -73,7 +73,7 @@ theorem spectralRadius_le_min_max_row_column_sum (A : Matrix n n ℂ) :
 /-- Positive real diagonal weights give the maximum weighted absolute row
 sum bound on spectral radius. Source: Horn–Johnson (2013), Corollary 6.1.5;
 the right side is `max_i p_i⁻¹ ∑_j p_j |a_ij|`, with empty maximum zero.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem spectralRadius_le_max_weighted_row_sum
     (A : Matrix n n ℂ) (p : n → ℝ) (hp : ∀ i, 0 < p i) :
     spectralRadius ℂ A ≤

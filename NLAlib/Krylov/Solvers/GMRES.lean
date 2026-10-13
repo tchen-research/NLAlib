@@ -1,12 +1,12 @@
 import NLAlib.Krylov.Spaces.Grade
-import NLAlib.Krylov.Solvers.Minimiser
+import NLAlib.Krylov.Solvers.Minimizer
 import NLAlib.Matrix.Subspaces.OrthonormalBasisMatrix
 import NLAlib.Polynomial.FunctionApproximation.Approximation
 /-!
 # GMRES and MINRES: residual minimisation over the Krylov space
 
 `IsGMRESIterate A c x₀ q x` says that `x ∈ x₀ + K_q(A, r₀)`, `r₀ = c − A x₀`, minimises the
-residual `‖c − A y‖²` over `x₀ + K_q(A, r₀)` (an instance of `IsAffineMinimiser`,
+residual `‖c − A y‖²` over `x₀ + K_q(A, r₀)` (an instance of `IsAffineMinimizer`,
 `docs/KRYLOV_DEFINITIONS.md` §3.3). MINRES is the same predicate for symmetric `A`.
 
 ## Main results
@@ -22,7 +22,7 @@ residual `‖c − A y‖²` over `x₀ + K_q(A, r₀)` (an instance of `IsAffin
 * `IsGMRESIterate.sub_mulVec_eq_zero_of_krylovGrade_le`: finite termination at the grade.
 * MINRES: `IsGMRESIterate.dotProduct_le_sq_mul_of_isHermitian`
   (`‖r_q‖² ≤ M² ‖r₀‖²` for any residual polynomial with `|p(λᵢ)| ≤ M`) and the Chebyshev rate
-  `IsGMRESIterate.dotProduct_le_of_eigenvalues_mem_Icc`; `isGMRESIterate_iff_isAffineMinimiser`
+  `IsGMRESIterate.dotProduct_le_of_eigenvalues_mem_Icc`; `isGMRESIterate_iff_isAffineMinimizer`
   identifies MINRES with the class theorem's weighted minimiser for `g = X²`.
 * Real diagonalisable `A = V diag(d) V⁻¹`: `IsGMRESIterate.dotProduct_le_of_eq_mul_diagonal_mul`
   (`‖r_q‖ ≤ ‖V‖ ‖V⁻¹‖ max |p(dᵢ)| ‖r₀‖`).
@@ -44,11 +44,15 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- `x` is a GMRES iterate: `x − x₀ ∈ K_q(A, r₀)` (`r₀ = c − A x₀`) and `x` minimises
 `‖c − A y‖²` over `x₀ + K_q(A, r₀)`. MINRES is this predicate for symmetric `A`.
+Why a predicate: the method is its least-squares optimality condition (existence
+`exists_isGMRESIterate`, uniqueness for invertible `A` `IsGMRESIterate.eq_of_isUnit`); the
+Arnoldi realisation is `NLAlib.Krylov.Solvers.GMRESArnoldi`. The system is `A x = c` (see
+`IsCGIterate`).
 Source: Saad–Schultz (1986) [`ss86`], §2; Saad (2003) [`saad03`], §6.5;
 KRYLOV_DEFINITIONS §3.3.
 atlas: gmres-def (partial) -/
 def IsGMRESIterate (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
-  IsAffineMinimiser (fun y => (c - A *ᵥ y) ⬝ᵥ (c - A *ᵥ y)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x
+  IsAffineMinimizer (fun y => (c - A *ᵥ y) ⬝ᵥ (c - A *ᵥ y)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x
 
 variable {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {q : ℕ}
 
@@ -171,7 +175,7 @@ theorem IsGMRESIterate.le_aeval (hx : IsGMRESIterate A c x₀ q x) {p : ℝ[X]}
     (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) :
     (c - A *ᵥ x) ⬝ᵥ (c - A *ᵥ x) ≤
       (aeval A p *ᵥ (c - A *ᵥ x₀)) ⬝ᵥ (aeval A p *ᵥ (c - A *ᵥ x₀)) :=
-  IsAffineMinimiser.le_aeval_residual (F := fun r => r ⬝ᵥ r) hx hp hp0
+  IsAffineMinimizer.le_aeval_residual (F := fun r => r ⬝ᵥ r) hx hp hp0
 
 /-- **`‖r_q‖² = min_{p ∈ 𝒫_q⁰} ‖p(A) r₀‖²`**: the squared GMRES residual is the least value of
 `‖p(A) r₀‖²` over residual polynomials. Source: Saad (2003) [`saad03`], §6.5.6;
@@ -193,7 +197,7 @@ atlas: gmres-def (partial) -/
 theorem IsGMRESIterate.le_of_le {q' : ℕ} {x' : n → ℝ} (hx : IsGMRESIterate A c x₀ q x)
     (hx' : IsGMRESIterate A c x₀ q' x') (h : q ≤ q') :
     (c - A *ᵥ x') ⬝ᵥ (c - A *ᵥ x') ≤ (c - A *ᵥ x) ⬝ᵥ (c - A *ᵥ x) :=
-  IsAffineMinimiser.le_of_le hx hx' (krylovSpace_mono A _ h)
+  IsAffineMinimizer.le_of_le hx hx' (krylovSpace_mono A _ h)
 
 /-- **Finite termination.** For invertible `A`, a GMRES iterate with `q` at least the grade
 `ν = krylovGrade A r₀` solves the system: `c − A x = 0`. Source: Saad (2003) [`saad03`],
@@ -242,13 +246,13 @@ theorem IsGMRESIterate.dotProduct_le_of_eigenvalues_mem_Icc (hA : A.IsHermitian)
 
 /-- **MINRES is the class theorem's minimiser with weight `g = X²`.** For symmetric `A` and
 `A x⋆ = c`, `x` is a GMRES iterate iff it minimises `‖· − x⋆‖²_{A²} = quadForm (A²) (· − x⋆)`
-over `x₀ + K_q(A, r₀)`; so `quadForm_sub_le_of_isAffineMinimiser` with `g = X²` applies.
+over `x₀ + K_q(A, r₀)`; so `quadForm_sub_le_of_isAffineMinimizer` with `g = X²` applies.
 Source: Greenbaum (1997) [`greenbaum97`], §3.2; KRYLOV_DEFINITIONS §3.2.
 Atlas: `minres-bound` (helper). -/
-theorem isGMRESIterate_iff_isAffineMinimiser (hA : A.IsHermitian) {xs : n → ℝ}
+theorem isGMRESIterate_iff_isAffineMinimizer (hA : A.IsHermitian) {xs : n → ℝ}
     (hxs : A *ᵥ xs = c) :
     IsGMRESIterate A c x₀ q x ↔
-      IsAffineMinimiser (fun y => quadForm (aeval A (X ^ 2 : ℝ[X])) (y - xs)) x₀
+      IsAffineMinimizer (fun y => quadForm (aeval A (X ^ 2 : ℝ[X])) (y - xs)) x₀
         (krylovSpace A (c - A *ᵥ x₀) q) x := by
   have hAs : Aᵀ = A := by
     rw [← Matrix.conjTranspose_eq_transpose_of_trivial]; exact hA
@@ -276,7 +280,9 @@ private lemma mulVec_dotProduct_self_le_specNorm_sq (M : Matrix n n ℝ) (v : n 
 Source: Saad (2003) [`saad03`], Prop 6.32; Trefethen–Bau (1997) [`tb97`], Thm 35.2;
 Saad–Schultz (1986) [`ss86`], §3.4.
 Deviation: real eigenvalues and a real eigenvector matrix only (the printed statement allows a
-complex diagonalisation, which is not available over `ℝ`).
+complex diagonalisation, `κ(V) max |p(λᵢ)|` over the complex spectrum, which is the nonnormal
+case of interest; it is not available over `ℝ` and enters as a hypothesis on
+`A.map (algebraMap ℝ ℂ)` when a consumer needs it). The constant `‖V‖₂ ‖V⁻¹‖₂` is the source's.
 atlas: gmres-diagonalizable (partial) -/
 theorem IsGMRESIterate.dotProduct_le_of_eq_mul_diagonal_mul {V W : Matrix n n ℝ}
     {d : n → ℝ} (hVW : V * W = 1) (hAd : A = V * Matrix.diagonal d * W)

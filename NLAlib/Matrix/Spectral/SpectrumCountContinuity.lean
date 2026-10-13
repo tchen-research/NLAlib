@@ -19,7 +19,7 @@ namespace NLAlib
 variable {n Ω : Type*} [Fintype n] [DecidableEq n] [TopologicalSpace Ω]
 
 /-- A continuous matrix family confined spectrally to two disjoint compact
-sets has closed algebraic root-count fibers in either set. Source:
+sets has closed algebraic root-count fibers in either set.
 Horn–Johnson (2013), Theorem 6.1.1; compact images of finite root boxes prove
 this without contour integration or a continuous eigenvalue labeling. -/
 theorem isClosed_setOf_charpolyRootCountIn_eq
@@ -95,7 +95,7 @@ theorem isClosed_setOf_charpolyRootCountIn_eq
 
 /-- Along a continuous family over a preconnected parameter space, the
 number of characteristic roots in either of two disjoint compact spectral
-sets is constant, including algebraic multiplicities. Source:
+sets is constant, including algebraic multiplicities.
 Horn–Johnson (2013), Theorem 6.1.1; the finite closed root-count fibers are
 clopen, so no root tracking or analytic projector is required. -/
 theorem charpolyRootCountIn_eq_of_preconnected [PreconnectedSpace Ω]

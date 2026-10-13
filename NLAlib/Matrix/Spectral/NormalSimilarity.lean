@@ -73,7 +73,7 @@ theorem exists_unitary_diagonalization_of_normal_with_charpoly {A : Matrix n n �
     _ = _ := by rw [← Matrix.mul_assoc, hAV]
 
 /-- Two complex normal matrices are unitarily similar exactly when they
-have the same characteristic eigenvalues with multiplicity. Source:
+have the same characteristic eigenvalues with multiplicity.
 Horn–Johnson (2013), Theorem 2.5.8; equality of characteristic polynomials
 is the precise multiplicity-sensitive equality of eigenvalue lists.
 atlas: normal-matrices (partial) -/

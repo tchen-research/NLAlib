@@ -4,7 +4,7 @@ import NLAlib.Matrix.Subspaces.FrameContractions
 /-!
 # Wedin perturbation and population-gap bounds
 
-Actual perturbed SVD residuals are perturbation times the paired leading frames.
+ perturbed SVD residuals are perturbation times the paired leading frames.
 The exact mixed-gap bounds imply the perturbation bound, and Weyl plus the unit
 sine bound gives the unconditional population-gap estimate. Source: Wedin (1972),
 Section 3; Stewart–Sun, Theorem V.4.4. Atlas: `wedin-sin-theta`.
@@ -15,7 +15,7 @@ namespace NLAlib
 namespace IsSVD
 
 /-- The leading right-frame singular residual equals minus perturbation times
-that frame. Wedin (1972), Section 3; the frames are from an actual SVD of `A+E`. -/
+that frame. Wedin (1972), Section 3; the frames are from a SVD of `A+E`. -/
 theorem headColumns_left_residual_eq_neg_mul {m n k : ℕ}
     {A E : Matrix (Fin m) (Fin n) ℝ} {Uhat : Matrix (Fin m) (Fin m) ℝ}
     {Vhat : Matrix (Fin n) (Fin n) ℝ} (hhat : IsSVD (A + E) Uhat Vhat)
@@ -40,7 +40,7 @@ theorem headColumns_right_residual_eq_neg_mul {m n k : ℕ}
 
 end IsSVD
 
-/-- Wedin's exact operator bound measured by the two actual perturbation-frame
+/-- Wedin's exact operator bound measured by the two perturbation-frame
 products. Wedin (1972), Section 3; all admissible rectangular endpoints are allowed.
 atlas: wedin-sin-theta (partial) -/
 theorem max_specNorm_sinePrincipalAngles_le_max_perturbation_frame_div
@@ -84,7 +84,7 @@ theorem sqrt_add_sq_frobNorm_sinePrincipalAngles_le_sqrt_add_sq_perturbation_fra
   exact h
 
 /-- Wedin's mixed-gap sine operator norms are both at most the perturbation
-operator norm divided by the actual mixed gap. Wedin (1972), Section 3.
+operator norm divided by the mixed gap. Wedin (1972), Section 3.
 atlas: wedin-sin-theta (partial) -/
 theorem max_specNorm_sinePrincipalAngles_le_specNorm_div
     {m n k : ℕ} {A E : Matrix (Fin m) (Fin n) ℝ}

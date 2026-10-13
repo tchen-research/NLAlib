@@ -16,9 +16,8 @@ namespace NLAlib
 /-- Every complex square pencil admits a simultaneous two-sided unitary
 upper triangular form. The common row and column order may be any enumeration
 of the finite labels. Singular and identically singular pencils, common zero
-images and the empty pencil are included. Horn–Johnson 2013, Theorem 2.6.1;
-derivations §gen:schur, Theorem gen:qz.
-atlas: schur-triangularization (partial) -/
+images and the empty pencil are included. Horn–Johnson 2013, Theorem 2.6.1, Theorem.
+atlas: schur-triangularization -/
 theorem exists_unitary_qz_triangularization {n : Type*} [Fintype n] [DecidableEq n]
     (A B : Matrix n n ℂ) (order : Fin (Fintype.card n) ≃ n) :
     ∃ V W : Matrix.unitaryGroup n ℂ, ∃ T₁ T₂ : Matrix n n ℂ,

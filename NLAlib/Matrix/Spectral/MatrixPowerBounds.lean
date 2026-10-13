@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Norms.Core
 import Mathlib.Analysis.Normed.Algebra.GelfandFormula
 import Mathlib.Analysis.CStarAlgebra.Matrix
 
@@ -12,12 +13,13 @@ atlas `matrix-power-convergence`.
 
 noncomputable section
 open Filter
-open scoped Matrix Matrix.Norms.L2Operator Topology
+open scoped Matrix Topology
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The complex matrix spectral radius is finite, including for empty
 matrices. Source: Gelfand's spectral-radius bound, Horn–Johnson (2013),
 §5.6; the bound retains the norm of the identity for a zero-dimensional ring. -/
@@ -27,24 +29,28 @@ theorem matrix_spectralRadius_ne_top (A : Matrix n n ℂ) : spectralRadius ℂ A
   exact ne_top_of_le_ne_top
     (ENNReal.mul_ne_top ENNReal.coe_ne_top ENNReal.coe_ne_top) h
 
+open scoped Matrix.Norms.L2Operator in
 /-- The real-valued root norms of matrix powers converge to the real spectral
 radius. Source: Gelfand's formula, Horn–Johnson (2013), §5.6; empty matrices
 are included, and the zero exponent is interpreted by total real division. -/
 theorem tendsto_norm_matrix_pow_rpow_spectralRadius (A : Matrix n n ℂ) :
-    Tendsto (fun k : ℕ => ‖A ^ k‖ ^ (1 / k : ℝ)) atTop
+    Tendsto (fun k : ℕ => specNorm (A ^ k) ^ (1 / k : ℝ)) atTop
       (𝓝 (spectralRadius ℂ A).toReal) := by
+  unfold specNorm
   have h := (ENNReal.tendsto_toReal (matrix_spectralRadius_ne_top A)).comp
     (spectrum.pow_norm_pow_one_div_tendsto_nhds_spectralRadius A)
   convert h using 1
   ext k
   exact (ENNReal.toReal_ofReal (Real.rpow_nonneg (norm_nonneg _) _)).symm
 
+open scoped Matrix.Norms.L2Operator in
 /-- An explicit constant absorbing the powers before a geometric bound
 starts. Source: Horn–Johnson (2013), Lemma 5.6.10; for positive `r`, every
 term is nonnegative and the constant is at least one. -/
 def matrixPowerBoundConstant (A : Matrix n n ℂ) (r : ℝ) (N : ℕ) : ℝ :=
   1 + ∑ k ∈ Finset.range N, ‖A ^ k‖ / r ^ k
 
+open scoped Matrix.Norms.L2Operator in
 /-- A positive growth rate gives a finite-prefix constant at least one.
 Source: Horn–Johnson (2013), Lemma 5.6.10, explicit constant construction. -/
 theorem one_le_matrixPowerBoundConstant (A : Matrix n n ℂ) {r : ℝ}
@@ -52,11 +58,13 @@ theorem one_le_matrixPowerBoundConstant (A : Matrix n n ℂ) {r : ℝ}
   apply le_add_of_nonneg_right
   exact Finset.sum_nonneg fun k _ => div_nonneg (norm_nonneg _) (pow_nonneg hr.le k)
 
+open scoped Matrix.Norms.L2Operator in
 /-- An eventual geometric power bound extends to all exponents with the
 defined finite-prefix constant. Source: Horn–Johnson (2013), Lemma 5.6.10. -/
 theorem norm_matrix_pow_le_matrixPowerBoundConstant_mul_pow (A : Matrix n n ℂ)
-    {r : ℝ} (hr : 0 < r) (N : ℕ) (hN : ∀ k, N ≤ k → ‖A ^ k‖ ≤ r ^ k) (k : ℕ) :
-    ‖A ^ k‖ ≤ matrixPowerBoundConstant A r N * r ^ k := by
+    {r : ℝ} (hr : 0 < r) (N : ℕ) (hN : ∀ k, N ≤ k → specNorm (A ^ k) ≤ r ^ k) (k : ℕ) :
+    specNorm (A ^ k) ≤ matrixPowerBoundConstant A r N * r ^ k := by
+  unfold specNorm at hN ⊢
   by_cases hk : k < N
   · have hsum : ‖A ^ k‖ / r ^ k ≤ ∑ j ∈ Finset.range N, ‖A ^ j‖ / r ^ j :=
       Finset.single_le_sum (fun j _ => div_nonneg (norm_nonneg _) (pow_nonneg hr.le j))
@@ -66,14 +74,16 @@ theorem norm_matrix_pow_le_matrixPowerBoundConstant_mul_pow (A : Matrix n n ℂ)
   · exact (hN k (le_of_not_gt hk)).trans
       (le_mul_of_one_le_left (pow_nonneg hr.le k) (one_le_matrixPowerBoundConstant A hr N))
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every growth rate strictly greater than the spectral radius controls
-all matrix powers with an explicit finite-prefix constant. Source:
+all matrix powers with an explicit finite-prefix constant.
 Horn–Johnson (2013), Lemma 5.6.10 and Theorem 5.6.12; Gelfand's formula
 supplies the prefix length, and the constant is a defined finite sum.
 atlas: matrix-power-convergence (partial) -/
 theorem exists_prefix_norm_matrix_pow_le_growth (A : Matrix n n ℂ) {r : ℝ}
     (hr : 0 < r) (hρr : (spectralRadius ℂ A).toReal < r) :
-    ∃ N : ℕ, ∀ k : ℕ, ‖A ^ k‖ ≤ matrixPowerBoundConstant A r N * r ^ k := by
+    ∃ N : ℕ, ∀ k : ℕ, specNorm (A ^ k) ≤ matrixPowerBoundConstant A r N * r ^ k := by
+  unfold specNorm
   have hevent := (tendsto_norm_matrix_pow_rpow_spectralRadius A).eventually
     (gt_mem_nhds hρr)
   obtain ⟨N, hN⟩ := eventually_atTop.mp hevent
@@ -87,23 +97,26 @@ theorem exists_prefix_norm_matrix_pow_le_growth (A : Matrix n n ℂ) {r : ℝ}
     exact hp
   exact ⟨N + 1, norm_matrix_pow_le_matrixPowerBoundConstant_mul_pow A hr (N + 1) hbound⟩
 
+open scoped Matrix.Norms.L2Operator in
 /-- The source's spectral-radius-plus-epsilon estimate, with an explicit
 finite-prefix constant and no omitted finite exponents. Source: Horn–Johnson
 (2013), Lemma 5.6.10; any positive epsilon is admitted.
 atlas: matrix-power-convergence (partial) -/
 theorem exists_prefix_norm_matrix_pow_le_spectralRadius_add (A : Matrix n n ℂ)
     {ε : ℝ} (hε : 0 < ε) : ∃ N : ℕ, ∀ k : ℕ,
-      ‖A ^ k‖ ≤ matrixPowerBoundConstant A ((spectralRadius ℂ A).toReal + ε) N *
+      specNorm (A ^ k) ≤ matrixPowerBoundConstant A ((spectralRadius ℂ A).toReal + ε) N *
         ((spectralRadius ℂ A).toReal + ε) ^ k :=
   exists_prefix_norm_matrix_pow_le_growth A
     (add_pos_of_nonneg_of_pos ENNReal.toReal_nonneg hε) (lt_add_of_pos_right _ hε)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Powers decay to zero whenever the complex spectral radius is below one.
 Source: Horn–Johnson (2013), Theorem 5.6.12; the proof uses the explicit
 geometric growth bound and includes empty matrix spaces.
 atlas: matrix-power-convergence (partial) -/
 theorem tendsto_matrix_pow_zero_of_spectralRadius_lt_one {A : Matrix n n ℂ}
     (hA : spectralRadius ℂ A < 1) : Tendsto (fun k : ℕ => A ^ k) atTop (𝓝 0) := by
+  unfold specNorm
   have hρ : (spectralRadius ℂ A).toReal < 1 := by
     exact (ENNReal.toReal_lt_toReal (matrix_spectralRadius_ne_top A) ENNReal.one_ne_top).mpr hA
   let r : ℝ := ((spectralRadius ℂ A).toReal + 1) / 2
@@ -116,7 +129,8 @@ theorem tendsto_matrix_pow_zero_of_spectralRadius_lt_one {A : Matrix n n ℂ}
     (by simpa using ((tendsto_pow_atTop_nhds_zero_of_lt_one hr.le hr1).const_mul
       (matrixPowerBoundConstant A r N)))
 
-/-- Powers are summable when the spectral radius is below one. Source:
+open scoped Matrix.Norms.L2Operator in
+/-- Powers are summable when the spectral radius is below one.
 Horn–Johnson (2013), Corollary 5.6.13; the same explicit geometric majorant
 establishes absolute convergence.
 atlas: matrix-power-convergence (partial) -/

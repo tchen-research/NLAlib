@@ -214,8 +214,8 @@ theorem arnoldiHessenberg_apply_eq_zero_of_add_one_lt (A : Matrix n n ℝ) (b : 
 `j > i + 1` (the Lanczos case). Source: Golub–Meurant (2010) [`gm10`], Thm 4.2;
 Trefethen–Bau (1997) [`tb97`], Lect. 36.
 atlas: lanczos-recurrence -/
-theorem arnoldiHessenberg_apply_eq_zero_of_add_one_lt_of_isSymm {A : Matrix n n ℝ}
-    (hA : A.IsSymm) (b : n → ℝ) {q : ℕ} {i j : Fin q} (hij : (i : ℕ) + 1 < j) :
+theorem arnoldiHessenberg_apply_eq_zero_of_add_one_lt_of_isHermitian {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) (b : n → ℝ) {q : ℕ} {i j : Fin q} (hij : (i : ℕ) + 1 < j) :
     arnoldiHessenberg A b q i j = 0 := by
   rw [arnoldiHessenberg, ← (isSymm_transpose_mul_mul hA (arnoldiMatrix A b q)).apply i j]
   exact arnoldiHessenberg_apply_eq_zero_of_add_one_lt A b hij

@@ -47,7 +47,7 @@ private theorem diagonal_reindex_dilationOrdering {m n : ℕ}
     apply congrArg (singularValues A)
     have hj := j.isLt
     omega
-/-- Every sorted eigenvalue of the actual real dilation equals the corresponding
+/-- Every sorted eigenvalue of the real dilation equals the corresponding
 explicit paired singular value. Bhatia 1997, Section III.4; all rectangular
 shapes, multiplicities and zero padding are included. -/
 theorem eigenvalues₀_dilation {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)

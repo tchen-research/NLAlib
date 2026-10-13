@@ -12,24 +12,24 @@ stated with `dotProduct` so that the Euclidean geometry is explicit (`ι → ℝ
 * `abs_dotProduct_mulVec_le`: `|uᵀAx| ≤ ‖u‖₂ ‖A‖₂ ‖x‖₂`;
 * `specNorm_le_of_forall_sqrt_le`: `‖A‖ ≤ K` from `‖Ay‖ ≤ K` on unit vectors;
 * `exists_unit_abs_quadForm_eq_specNorm`: a symmetric matrix attains `‖B‖₂` as `|vᵀBv|` at a
-  unit vector;
+ unit vector;
 * `specNorm_le_div_of_net`: `‖A‖ ≤ M/(1-ε)` from `‖Ax‖ ≤ M` on an ε-net;
 * `specNorm_le_div_of_net_bilinear`: `‖A‖ ≤ M/(1-2ε)` from `yᵀAx ≤ M` on two ε-nets;
 * `specNorm_le_div_of_net_quadForm`: `‖B‖ ≤ M/(1-2ε)` from `|xᵀBx| ≤ M` on an ε-net, `B`
-  symmetric;
+ symmetric;
 * `exists_finset_sphere_net`: the unit sphere of `ℝ^ι` has an ε-net of at most
-  `(1 + 2/ε)^{card ι}` unit vectors (volumetric argument; Vershynin 2018, Cor 4.2.13);
+ `(1 + 2/ε)^{card ι}` unit vectors (volumetric argument; Vershynin 2018, Cor 4.2.13);
 * `exists_finset_net_specNorm_le`: the full `epsilon-net-norm` statement.
 
 The probabilistic consequence (tail of `‖A‖₂` for sub-Gaussian bilinear marginals) is
 `measure_lt_specNorm_le_of_hasSubgaussianMGF` in `Probability/Concentration/Basic/Net`. Moved
 from there (dedup round 2026-10-12).
 
-Atlas `epsilon-net-norm`. Audit G1 C8, A1, B1.
+Atlas `epsilon-net-norm`.
 -/
 
 open MeasureTheory Metric
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 noncomputable section
 
@@ -39,12 +39,14 @@ variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-! ### Euclidean-norm bridges -/
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 private lemma norm_toLp_mulVec_le (A : Matrix m n ℝ) (x : n → ℝ) :
     ‖(WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace ℝ m)‖ ≤
       specNorm A * ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖ := by
   simpa [specNorm_eq_norm] using A.l2_opNorm_mulVec (WithLp.toLp 2 x)
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- `|uᵀ A x| ≤ ‖u‖₂ ‖A‖₂ ‖x‖₂`. Atlas `norms-frob-spec`. -/
 theorem abs_dotProduct_mulVec_le (A : Matrix m n ℝ) (u : m → ℝ) (x : n → ℝ) :
@@ -62,6 +64,7 @@ theorem abs_dotProduct_mulVec_le (A : Matrix m n ℝ) (u : m → ℝ) (x : n →
         exact norm_toLp_mulVec_le A x
     _ = _ := by rw [← sqrt_dotProduct_self_eq_norm, ← sqrt_dotProduct_self_eq_norm]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- The spectral norm is at most `K ≥ 0` as soon as `‖A y‖₂ ≤ K` for every unit vector `y`.
 Atlas `epsilon-net-norm` (helper). -/
@@ -89,12 +92,14 @@ theorem specNorm_le_of_forall_sqrt_le (A : Matrix m n ℝ) {K : ℝ} (hK : 0 ≤
   rw [hscale, norm_smul, norm_inv, norm_norm, inv_mul_le_iff₀ hxn] at hAy
   linarith [mul_comm K ‖x‖]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A symmetric matrix on a nonempty index type has a unit vector `v` (an eigenvector of the
 eigenvalue of largest modulus) with `|vᵀ B v| = ‖B‖₂`. Horn–Johnson Thm 4.2.2 (Rayleigh);
 atlas `epsilon-net-norm` (helper). -/
-theorem exists_unit_abs_quadForm_eq_specNorm [Nonempty n] {B : Matrix n n ℝ} (hB : B.IsSymm) :
-    ∃ v : n → ℝ, v ⬝ᵥ v = 1 ∧ |quadForm B v| = specNorm B := by
-  have hH : B.IsHermitian := Matrix.isHermitian_iff_isSymm.mpr hB
+theorem exists_unit_abs_quadForm_eq_specNorm [Nonempty n] {B : Matrix n n ℝ}
+    (hB : B.IsHermitian) :
+    ∃ v : n → ℝ, ‖WithLp.toLp 2 v‖ = 1 ∧ |quadForm B v| = specNorm B := by
+  have hH : B.IsHermitian := hB
   obtain ⟨i, hi⟩ := (IsGreatest.pi_norm hH.eigenvalues).1
   dsimp only at hi
   let v : n → ℝ := (hH.eigenvectorBasis i).ofLp
@@ -103,19 +108,20 @@ theorem exists_unit_abs_quadForm_eq_specNorm [Nonempty n] {B : Matrix n n ℝ} (
     have hs := congrArg (fun t : ℝ => t ^ 2) hn
     rw [norm_eq_sqrt_dotProduct, Real.sq_sqrt (dotProduct_self_nonneg _), one_pow] at hs
     exact hs
-  refine ⟨v, hv, ?_⟩
+  refine ⟨v, by rw [← sqrt_dotProduct_self_eq_norm, hv, Real.sqrt_one], ?_⟩
   have hBv : B *ᵥ v = hH.eigenvalues i • v := hH.mulVec_eigenvectorBasis i
   rw [quadForm_def, star_trivial, hBv, dotProduct_smul, hv, smul_eq_mul, mul_one, specNorm_eq_norm_eigenvalues hH,
     ← hi, Real.norm_eq_abs]
 
 /-! ### Deterministic net lemmas -/
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- **Spectral norm from a net (operator form).** If `N` is an `ε`-net of the unit sphere
 (`∀ y` unit, `∃ x ∈ N`, `‖x - y‖₂ ≤ ε`) with `0 ≤ ε < 1`, and `‖Ax‖₂ ≤ M` for every `x ∈ N`
 (`M ≥ 0`), then `‖A‖₂ ≤ M/(1-ε)`. The net points need not be unit vectors. `hM0` is needed:
 for an empty index type `N` may be empty and `M` negative.
-Vershynin 2012, Lem 5.3 (i); Vershynin 2018, Ex 4.4.3; audit G1 C8. Atlas `epsilon-net-norm`
+Vershynin 2012, Lem 5.3 (i); Vershynin 2018, Ex 4.4.3. Atlas `epsilon-net-norm`
 (deterministic half).
 atlas: epsilon-net-norm -/
 theorem specNorm_le_div_of_net (A : Matrix m n ℝ) (N : Finset (n → ℝ)) {ε M : ℝ}
@@ -145,11 +151,12 @@ theorem specNorm_le_div_of_net (A : Matrix m n ℝ) (N : Finset (n → ℝ)) {ε
   rw [le_div_iff₀ (by linarith)]
   linarith
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- **Spectral norm from two nets (bilinear form).** If `N` and `N'` are `ε`-nets of the unit
 spheres of `ℝⁿ` and `ℝᵐ`, the points of `N'` being unit vectors, `0 ≤ ε < 1/2`, and `yᵀ A x ≤ M` for all
 `x ∈ N`, `y ∈ N'` (`M ≥ 0`), then `‖A‖₂ ≤ M/(1-2ε)`.
-Vershynin 2012, Lem 5.4 (bilinear form); Vershynin 2018, Ex 4.4.3 (b); audit G1 C8.
+Vershynin 2012, Lem 5.4 (bilinear form); Vershynin 2018, Ex 4.4.3 (b).
 Atlas `epsilon-net-norm` (deterministic half).
 atlas: epsilon-net-norm -/
 theorem specNorm_le_div_of_net_bilinear (A : Matrix m n ℝ) (N : Finset (n → ℝ))
@@ -201,29 +208,36 @@ theorem specNorm_le_div_of_net_bilinear (A : Matrix m n ℝ) (N : Finset (n → 
   rw [le_div_iff₀ (by linarith)]
   linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Spectral norm of a symmetric matrix from a net (quadratic form).** If `B` is symmetric,
 `N` is an `ε`-net of the unit sphere made of unit vectors, `0 ≤ ε < 1/2`, and
 `|xᵀ B x| ≤ M` for every `x ∈ N`, then `‖B‖₂ ≤ M/(1-2ε)`.
-Vershynin 2012, Lem 5.4; Vershynin 2018, Ex 4.4.3 (c); audit G1 C8. Atlas `epsilon-net-norm`
+Vershynin 2012, Lem 5.4; Vershynin 2018, Ex 4.4.3 (c). Atlas `epsilon-net-norm`
 (deterministic half).
 atlas: epsilon-net-norm -/
-theorem specNorm_le_div_of_net_quadForm {B : Matrix n n ℝ} (hB : B.IsSymm)
+theorem specNorm_le_div_of_net_quadForm {B : Matrix n n ℝ} (hB : B.IsHermitian)
     (N : Finset (n → ℝ)) {ε M : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε < 1 / 2) (hM0 : 0 ≤ M)
-    (hNunit : ∀ x ∈ N, x ⬝ᵥ x = 1)
-    (hN : ∀ y : n → ℝ, y ⬝ᵥ y = 1 → ∃ x ∈ N, (x - y) ⬝ᵥ (x - y) ≤ ε ^ 2)
+    (hNunit : ∀ x ∈ N, ‖WithLp.toLp 2 x‖ = 1)
+    (hN : ∀ y : n → ℝ, ‖WithLp.toLp 2 y‖ = 1 → ∃ x ∈ N, ‖WithLp.toLp 2 (x - y)‖ ≤ ε)
     (hM : ∀ x ∈ N, |quadForm B x| ≤ M) :
     specNorm B ≤ M / (1 - 2 * ε) := by
+  have hNunit' : ∀ x ∈ N, x ⬝ᵥ x = 1 := fun x hx => by
+    rw [← norm_toLp_sq_eq_dotProduct_self, hNunit x hx, one_pow]
+  have hN' : ∀ y : n → ℝ, y ⬝ᵥ y = 1 → ∃ x ∈ N, (x - y) ⬝ᵥ (x - y) ≤ ε ^ 2 := fun y hy => by
+    obtain ⟨x, hxN, hxy⟩ := hN y (by rw [← sqrt_dotProduct_self_eq_norm, hy, Real.sqrt_one])
+    exact ⟨x, hxN, by
+      rw [← norm_toLp_sq_eq_dotProduct_self]; exact pow_le_pow_left₀ (norm_nonneg _) hxy 2⟩
   have hBn := specNorm_nonneg B
   have hunit : ∀ y : n → ℝ, y ⬝ᵥ y = 1 → |quadForm B y| ≤ M + 2 * ε * specNorm B := by
     intro y hy
-    obtain ⟨x, hxN, hxy⟩ := hN y hy
+    obtain ⟨x, hxN, hxy⟩ := hN' y hy
     have hd : √((x - y) ⬝ᵥ (x - y)) ≤ ε := by rw [Real.sqrt_le_left hε0]; exact hxy
     have hsplit : quadForm B y = quadForm B x - (x - y) ⬝ᵥ (B *ᵥ x) - y ⬝ᵥ (B *ᵥ (x - y)) := by
       simp only [quadForm_def, star_trivial, Matrix.mulVec_sub, sub_dotProduct, dotProduct_sub]
       ring
     have h1 := abs_dotProduct_mulVec_le B (x - y) x
     have h2 := abs_dotProduct_mulVec_le B y (x - y)
-    rw [hNunit x hxN, Real.sqrt_one, mul_one] at h1
+    rw [hNunit' x hxN, Real.sqrt_one, mul_one] at h1
     rw [hy, Real.sqrt_one, one_mul] at h2
     have h1' : |(x - y) ⬝ᵥ (B *ᵥ x)| ≤ ε * specNorm B := h1.trans (by nlinarith)
     have h2' : |y ⬝ᵥ (B *ᵥ (x - y))| ≤ ε * specNorm B := h2.trans (by nlinarith)
@@ -237,12 +251,13 @@ theorem specNorm_le_div_of_net_quadForm {B : Matrix n n ℝ} (hB : B.IsSymm)
     · have : B = 0 := Subsingleton.elim _ _
       rw [this, specNorm_eq_norm, norm_zero]; positivity
     obtain ⟨v, hv, heig⟩ := exists_unit_abs_quadForm_eq_specNorm hB
-    exact heig.symm.le.trans (hunit v hv)
+    exact heig.symm.le.trans (hunit v (by rw [← norm_toLp_sq_eq_dotProduct_self, hv, one_pow]))
   rw [le_div_iff₀ (by linarith)]
   linarith
 
 /-! ### Volumetric ε-net of the sphere -/
 
+open scoped Matrix.Norms.L2Operator in
 /-- Volumetric packing bound: an `ε`-separated finite subset of the unit sphere of
 `EuclideanSpace ℝ ι` has at most `(1 + 2/ε)^{card ι}` points (the disjoint balls of radius `ε/2`
 fit in the ball of radius `1 + ε/2`). -/
@@ -281,12 +296,13 @@ private theorem card_le_of_separated {ι : Type*} [Fintype ι] [Nonempty ι]
   calc (S.card : ℝ) ≤ ((1 + ε / 2) / (ε / 2)) ^ d := h2
     _ = (1 + 2 / ε) ^ d := by congr 1; field_simp; ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Volumetric ε-net of the sphere.** For `ε > 0`, the unit sphere of `ℝ^ι` (Euclidean) has an
 `ε`-net contained in the sphere with at most `(1 + 2/ε)^{card ι}` points:
 `∀ y` with `yᵀy = 1`, `∃ x ∈ N`, `(x - y)ᵀ(x - y) ≤ ε²`. For an empty index type the sphere is
 empty and `N = ∅`. Proof: a maximal `ε`-separated subset of the sphere is an `ε`-net, and the
 volumetric packing bound caps the size of every separated subset.
-Vershynin 2012, Lem 5.2; Vershynin 2018, Cor 4.2.13; audit G1 A1. Atlas `epsilon-net-norm`
+Vershynin 2012, Lem 5.2; Vershynin 2018, Cor 4.2.13. Atlas `epsilon-net-norm`
 (covering half). Deviation: index type any `[Fintype ι]` (audit: `Fin n`).
 atlas: epsilon-net-norm -/
 theorem exists_finset_sphere_net (ι : Type*) [Fintype ι] {ε : ℝ} (hε : 0 < ε) :
@@ -354,10 +370,11 @@ theorem exists_finset_sphere_net (ι : Type*) [Fintype ι] {ε : ℝ} (hε : 0 <
 
 /-! ### The ε-net bound for the spectral norm -/
 
+open scoped Matrix.Norms.L2Operator in
 /-- **ε-net bound for the spectral norm.** For `0 < ε < 1` there is a set `N` of at most
 `(1 + 2/ε)^{card n}` unit vectors of `ℝ^n` such that for every real matrix `A` with `n` columns
 and every `M ≥ 0`, `‖Ax‖₂ ≤ M` on `N` implies `‖A‖₂ ≤ M/(1-ε)`.
-Vershynin 2012, Lem 5.2–5.3; Vershynin 2018, Cor 4.2.13 and Ex 4.4.3; audit G1 B1.
+Vershynin 2012, Lem 5.2–5.3; Vershynin 2018, Cor 4.2.13 and Ex 4.4.3.
 Atlas `epsilon-net-norm`. Deviation: the atlas states `(1-2ε)⁻¹`; the standard (and stronger)
 operator form `(1-ε)⁻¹` is used here, the `(1-2ε)⁻¹` forms being
 `specNorm_le_div_of_net_bilinear` and `specNorm_le_div_of_net_quadForm`.

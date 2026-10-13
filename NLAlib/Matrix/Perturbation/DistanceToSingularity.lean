@@ -5,18 +5,18 @@ import NLAlib.Matrix.Perturbation.InversePerturbationBounds
 
 For nonsingular square matrices of positive dimension, the absolute spectral
 distance is the reciprocal inverse norm and the relative distance is the
-reciprocal condition number. A truncated SVD supplies an actual attaining
-perturbation. Source: Higham, Theorem 6.5; Golub--Van Loan, Section 2.6.2.
+reciprocal condition number. A truncated SVD supplies an attaining perturbation. Source: Higham, Theorem 6.5; Golub--Van Loan, Section 2.6.2.
 Supports `condition-number-def`; empty dimensions are deliberately excluded
 because their singular set is empty.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A nonsingular matrix in positive dimension has a nonzero inverse norm.
 Source: the inverse identity; supports `condition-number-def`. -/
 theorem specNorm_inv_pos_of_isUnit {A : Matrix n n ℝ} (hA : IsUnit A) :
@@ -27,6 +27,7 @@ theorem specNorm_inv_pos_of_isUnit {A : Matrix n n ℝ} (hA : IsUnit A) :
   rw [hZero, Matrix.zero_mul] at h
   exact one_ne_zero h.symm
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every perturbation producing a singular matrix has spectral norm at least
 the reciprocal inverse norm; equivalently (Gastinel–Kahan lower bound) `‖E‖₂ < 1/‖A⁻¹‖₂` keeps
 `A + E` invertible, i.e. relative distance to singularity `≥ 1/κ(A)`. Higham 2002, Thm 6.5 (lower
@@ -44,7 +45,8 @@ theorem inv_specNorm_inv_le_specNorm_of_not_isUnit_add
   exact hAE (isUnit_add_of_specNorm_inv_mul_lt_one hA
     ((specNorm_mul_le A⁻¹ E).trans_lt hProd))
 
-/-- An actual singular perturbation attains the reciprocal inverse norm (Gastinel–Kahan): with
+open scoped Matrix.Norms.L2Operator in
+/-- A singular perturbation attains the reciprocal inverse norm (Gastinel–Kahan): with
 `inv_specNorm_inv_le_specNorm_of_not_isUnit_add` this gives
 `min {‖E‖₂ : A + E singular} = 1/‖A⁻¹‖₂`. Higham 2002, Thm 6.5; Golub–Van Loan 2013, §2.6.2.
 The construction uses spectral Eckart--Young rather
@@ -67,15 +69,16 @@ theorem exists_not_isUnit_add_specNorm_eq_inv_specNorm_inv
   · intro hUnit
     have hr := Matrix.rank_of_isUnit (A + E) hUnit
     rw [hE, Matrix.rank_reindex] at hr
-    have hBound := (isBestRankApprox_truncatedSVD A' (Fintype.card n - 1)).1
+    have hBound := (isBestFrobRankApprox_truncatedSVD A' (Fintype.card n - 1)).1
     have hPos : 0 < Fintype.card n := Fintype.card_pos
     change T.rank ≤ Fintype.card n - 1 at hBound
     omega
   · have hN := specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A' hRankPos
     rw [hRank] at hN
     have hInv : specNorm A⁻¹ = 1 / singularValues A' (Fintype.card n - 1) := by
-      simpa only [A', moorePenroseInverse_reindex, specNorm_reindex,
-        moorePenroseInverse_eq_inv_of_isUnit A hA] using hN
+      rw [← moorePenroseInverse_eq_inv_of_isUnit A hA, ← specNorm_reindex _ e e,
+        ← moorePenroseInverse_reindex]
+      exact hN
     calc
       specNorm E = specNorm (T - A') := specNorm_reindex _ _ _
       _ = singularValues A' (Fintype.card n - 1) := by
@@ -83,9 +86,10 @@ theorem exists_not_isUnit_add_specNorm_eq_inv_specNorm_inv
         exact specNorm_sub_truncatedSVD_eq A' _
       _ = 1 / specNorm A⁻¹ := by rw [hInv, one_div_one_div]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The absolute distance to the singular set is an attained minimum.
 Higham, Theorem 6.5.
-atlas: condition-number-def (partial) -/
+atlas: condition-number-def -/
 theorem isLeast_specNorm_singular_perturbations (A : Matrix n n ℝ) (hA : IsUnit A) :
     IsLeast (specNorm '' {E : Matrix n n ℝ | ¬ IsUnit (A + E)})
       (1 / specNorm A⁻¹) := by
@@ -94,6 +98,7 @@ theorem isLeast_specNorm_singular_perturbations (A : Matrix n n ℝ) (hA : IsUni
   rintro _ ⟨F, hF, rfl⟩
   exact inv_specNorm_inv_le_specNorm_of_not_isUnit_add hA hF
 
+open scoped Matrix.Norms.L2Operator in
 /-- The original matrix has positive spectral norm on the nonsingular,
 positive-dimensional branch. Source: the inverse identity; supports
 `condition-number-def`. -/
@@ -104,16 +109,17 @@ theorem specNorm_pos_of_isUnit {A : Matrix n n ℝ} (hA : IsUnit A) : 0 < specNo
   rw [hZero, Matrix.zero_mul] at h
   exact one_ne_zero h.symm
 
-/-- The relative distance to singularity is the attained reciprocal condition
-number. Higham, Theorem 6.5.
-atlas: condition-number-def (partial) -/
+open scoped Matrix.Norms.L2Operator in
+/-- The relative distance to singularity is the attained reciprocal condition number
+`1/κ₂(A)`. Higham 2002, Theorem 6.5.
+atlas: condition-number-def -/
 theorem isLeast_relative_singular_perturbations (A : Matrix n n ℝ) (hA : IsUnit A) :
     IsLeast ((fun E : Matrix n n ℝ => specNorm E / specNorm A) ''
-      {E | ¬ IsUnit (A + E)}) (1 / moorePenroseConditionNumber A) := by
+      {E | ¬ IsUnit (A + E)}) (1 / (conditionNumber A).toReal) := by
   have hNorm := specNorm_pos_of_isUnit hA
   obtain ⟨E, hE, hNormE⟩ := exists_not_isUnit_add_specNorm_eq_inv_specNorm_inv A hA
-  have hRel : (1 / specNorm A⁻¹) / specNorm A = 1 / moorePenroseConditionNumber A := by
-    rw [moorePenroseConditionNumber_eq_mul_specNorm_inv hA]
+  have hRel : (1 / specNorm A⁻¹) / specNorm A = 1 / (conditionNumber A).toReal := by
+    rw [conditionNumber_toReal_of_isUnit hA]
     ring
   constructor
   · refine ⟨E, hE, ?_⟩

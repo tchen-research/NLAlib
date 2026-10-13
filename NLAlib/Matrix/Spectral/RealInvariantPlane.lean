@@ -49,8 +49,7 @@ theorem linearIndependent_real_imag_of_nonreal_eigen_equations {n : Type*}
 /-- Every nonempty real square matrix has a real eigenline or an independent
 real invariant two-plane carrying a nonreal conjugate pair. The two-plane
 coordinates here need not be orthonormal; later orthonormalization produces
-the general real Schur block. Horn–Johnson 2013, Theorem 2.3.1;
-derivations §gen:schur. -/
+the general real Schur block. Horn–Johnson 2013, Theorem 2.3.1. -/
 theorem exists_real_eigenvector_or_invariant_plane {n : Type*}
     [Fintype n] [DecidableEq n] [Nonempty n] (A : Matrix n n ℝ) :
     (∃ a : ℝ, ∃ u : n → ℝ, u ≠ 0 ∧ A *ᵥ u = a • u) ∨

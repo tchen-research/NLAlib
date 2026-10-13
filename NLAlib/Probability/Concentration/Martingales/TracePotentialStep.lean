@@ -10,10 +10,11 @@ noncomputable section
 set_option maxHeartbeats 600000
 
 open MeasureTheory Matrix
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- The actual trace-exponential potential decreases conditionally after one centered
 Hermitian increment. Its variance update is the actual conditional second moment.
 The predictable previous sum has only an upper spectral bound and the previous variance

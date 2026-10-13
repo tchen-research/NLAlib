@@ -10,10 +10,11 @@ Supports atlas `least-squares-perturbation`.
 
 noncomputable section
 set_option maxHeartbeats 800000
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Least squares, `y` under perturbation of `A` (first order).** The fitted-value sensitivity
 under a pure matrix perturbation has coefficient `κ/cos θ`, in epsilon–delta form: for full column
 rank `A` and `y = A A⁺ b`, `‖Δy‖/‖y‖ ≤ (κ(A)/cos θ + ε) ‖ΔA‖/‖A‖` once `‖ΔA‖₂ < δ`.
@@ -95,6 +96,7 @@ theorem exists_pos_forall_sqrt_pinv_fit_sub_div_le (A : Matrix m n ℝ)
     _ ≤ (moorePenroseConditionNumber A / leastSquaresCos A b + ε) * (specNorm E / specNorm A) :=
       mul_le_mul_of_nonneg_right (by linarith) (div_nonneg he hM.le)
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Least squares, `x` under perturbation of `A` (first order).** The solution sensitivity
 under a pure matrix perturbation has coefficient `κ+κ² tan θ/η`, in epsilon–delta form.
 Trefethen–Bau 1997, Theorem 18.1 (fourth entry); Golub–Van Loan 2013, Thm 5.3.1 (first-order

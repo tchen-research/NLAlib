@@ -7,7 +7,9 @@ Main declaration: `NLAlib.posDef_matrixExp_and_matrixLog_matrixExp`.
 
 Atlas: `loewner-order` (matrix exponential and logarithm); supports `matrix-laplace`.
 
-Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Sections 2.1.11–12, especially equation (2.1.17), printed pp. 22–23; used in Corollary 3.4.2, printed p. 35.
+Stated over `ℂ`: the proof uses `CFC.log_exp` and `CFC.real_exp_eq_normedSpace_exp`, which need
+`NormedAlgebra ℝ (Matrix d d ℂ)` (the C*-algebra structure); the generic-`𝕜` CFC instance of
+Mathlib does not provide it. Tropp 2015, §2.1.11–12, eq. (2.1.17).
 -/
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 open NLAlib
@@ -16,8 +18,7 @@ open NLAlib
 A).PosDef ∧ matrixLog (matrixExp A) = A`, on any finite index type (including the empty one).
 The second conjunct is Mathlib's `CFC.log_exp` (`matrixLog = CFC.log`, `matrixLog_eq_log`).
 
-Tropp 2015, §2.1.11–12, eq. (2.1.17). Atlas: `loewner-order`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 3*.
+Tropp 2015, §2.1.11–12, eq. (2.1.17).
 atlas: matrix-calculus-def -/
 theorem NLAlib.posDef_matrixExp_and_matrixLog_matrixExp {d : Type*} [Fintype d] [DecidableEq d]
     (A : Matrix d d ℂ) (hA : A.IsHermitian) :

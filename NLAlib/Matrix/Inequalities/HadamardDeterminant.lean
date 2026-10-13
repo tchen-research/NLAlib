@@ -43,7 +43,8 @@ theorem det_le_prod_diag_of_posSemidef {A : Matrix n n ℝ} (hA : A.PosSemidef) 
         @compareOfLessAndEq n a b O.toLT (O.toDecidableLT a b) ‹DecidableEq n›
       rw [← he]
       exact @LinearOrder.compare_eq_compareOfLessAndEq n O a b }
-  obtain ⟨L, hL, -, hLA⟩ := exists_cholesky_of_posSemidef_fintype A hA
+  obtain ⟨L, hL, -, hLA'⟩ := exists_eq_mul_transpose_of_posSemidef hA
+  have hLA := hLA'.symm
   rw [det_eq_prod_sq_diag_of_cholesky A L hL hLA]
   apply Finset.prod_le_prod (fun i _ => sq_nonneg (L i i))
   intro i _

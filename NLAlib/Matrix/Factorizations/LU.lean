@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Permutation
 import NLAlib.Matrix.Basic.SchurComplement
+import NLAlib.Matrix.Basic.LeadingMinor
 /-!
 # LU factorization and Gaussian elimination
 
@@ -8,11 +9,13 @@ The factorization predicate, the algorithm as a total recursion, and the realisa
 
 * `IsLU A L U`: `A = L U` with `L` unit lower triangular and `U` upper triangular (any linearly
   ordered index). `IsLU.unique` (invertible `A`), `IsLU.det_eq_prod`, and the restriction to
-  leading blocks `IsLU.leadingSubmatrix`. Existence: `exists_isLU_of_forall_det_ne_zero`
-  (leading minors `1, …, n − 1` nonzero) and `exists_isLU_iff_forall_det_ne_zero` (invertible `A`).
+  leading blocks `IsLU.leadingSubmatrix` (`leadingSubmatrix`, `leadingMinor` from
+  `NLAlib.Matrix.Basic.LeadingMinor`). Existence, over any linearly ordered finite index:
+  `exists_isLU_of_forall_leadingMinor_ne_zero` (leading minors `1, …, n − 1` nonzero) and
+  `exists_isLU_iff_forall_leadingMinor_ne_zero` (invertible `A`).
 * Gaussian elimination without pivoting: `lu A`, a recursion on the leading pivot through
   `pivotSchur` (the elimination step `eq_borderedMatrix_mul_borderedMatrix_pivotSchur`);
-  `LUSucceeds A` (every pivot nonzero); `luSucceeds_iff_forall_det_ne_zero`; `isLU_lu`.
+  `LUSucceeds A` (every pivot nonzero); `luSucceeds_iff_forall_leadingMinor_ne_zero`; `isLU_lu`.
 * Partial pivoting: `IsPLU A σ L U` (`PA = LU` with `P = σ.permMatrix`, written
   `A.submatrix σ id`), `luPartialPivot A` (pivot on the first entry of largest modulus in the
   current column, `absArgmax`), `isPLU_luPartialPivot` with no hypothesis on `A`,
@@ -94,25 +97,20 @@ section Leading
 
 variable {n : ℕ}
 
-/-- The **leading principal `k × k` submatrix** `A(1:k, 1:k)` of a matrix on `Fin n`.
-Golub–Van Loan 2013, §3.2 (notation `A(1:k,1:k)`). -/
-def leadingSubmatrix (A : Matrix (Fin n) (Fin n) ℝ) (k : ℕ) (hk : k ≤ n) :
-    Matrix (Fin k) (Fin k) ℝ :=
-  A.submatrix (Fin.castLE hk) (Fin.castLE hk)
-
 /-- Leading blocks of an LU factorization form an LU factorization of the leading block:
 `A(1:k,1:k) = L(1:k,1:k) U(1:k,1:k)`, since `L` vanishes above and `U` below the diagonal.
 Golub–Van Loan 2013, proof of Thm 3.2.1. -/
 theorem IsLU.leadingSubmatrix {A L U : Matrix (Fin n) (Fin n) ℝ} (h : IsLU A L U) (k : ℕ)
     (hk : k ≤ n) :
-    IsLU (leadingSubmatrix A k hk) (leadingSubmatrix L k hk) (leadingSubmatrix U k hk) := by
+    IsLU (leadingSubmatrix A k) (leadingSubmatrix L k) (leadingSubmatrix U k) := by
+  rw [leadingSubmatrix_fin A hk, leadingSubmatrix_fin L hk, leadingSubmatrix_fin U hk]
   have hL := isLowerTriangular_iff.1 h.isUnitLowerTriangular.isLowerTriangular
   have hU := isUpperTriangular_iff.1 h.isUpperTriangular
   refine ⟨⟨isLowerTriangular_iff.2 fun i j hij => hL _ _ ((Fin.castLE_lt_castLE_iff hk).2 hij),
     fun i => h.isUnitLowerTriangular.apply_self _⟩,
     isUpperTriangular_iff.2 fun i j hij => hU _ _ ((Fin.castLE_lt_castLE_iff hk).2 hij), ?_⟩
   ext i j
-  simp only [NLAlib.leadingSubmatrix, submatrix_apply, Matrix.mul_apply, h.eq_mul]
+  simp only [submatrix_apply, Matrix.mul_apply, h.eq_mul]
   symm
   have hmap : (∑ l : Fin k, L (Fin.castLE hk i) (Fin.castLE hk l) * U (Fin.castLE hk l)
       (Fin.castLE hk j)) = ∑ l ∈ Finset.univ.map (Fin.castLEEmb hk),
@@ -127,27 +125,37 @@ theorem IsLU.leadingSubmatrix {A L U : Matrix (Fin n) (Fin n) ℝ} (h : IsLU A L
 
 /-- For an LU factorization the leading principal minors are the partial products of the
 pivots: `det A(1:k,1:k) = ∏_{i<k} uᵢᵢ`. Golub–Van Loan 2013, proof of Thm 3.2.1. -/
-theorem IsLU.det_leadingSubmatrix {A L U : Matrix (Fin n) (Fin n) ℝ} (h : IsLU A L U) (k : ℕ)
+theorem IsLU.leadingMinor_eq_prod {A L U : Matrix (Fin n) (Fin n) ℝ} (h : IsLU A L U) (k : ℕ)
     (hk : k ≤ n) :
-    (NLAlib.leadingSubmatrix A k hk).det = ∏ i : Fin k, U (Fin.castLE hk i) (Fin.castLE hk i) :=
-  (h.leadingSubmatrix k hk).det_eq_prod
+    leadingMinor A k = ∏ i : Fin k, U (Fin.castLE hk i) (Fin.castLE hk i) := by
+  have := (h.leadingSubmatrix k hk).det_eq_prod
+  rwa [leadingSubmatrix_fin U hk] at this
 
 /-- The pivot Schur complement commutes with taking leading blocks:
 `pivotSchur (A(1:k+1, 1:k+1)) = (pivotSchur A)(1:k, 1:k)`. -/
-theorem pivotSchur_leadingSubmatrix (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) (k : ℕ)
+theorem pivotSchur_leadingSubmatrix (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) {k : ℕ}
     (hk : k + 1 ≤ n + 1) :
-    pivotSchur (leadingSubmatrix A (k + 1) hk) =
-      leadingSubmatrix (pivotSchur A) k (Nat.le_of_succ_le_succ hk) := by
+    pivotSchur (leadingSubmatrix A (k + 1)) = leadingSubmatrix (pivotSchur A) k := by
+  rw [leadingSubmatrix_fin A hk, leadingSubmatrix_fin (pivotSchur A) (Nat.le_of_succ_le_succ hk)]
   have h0 : Fin.castLE hk 0 = 0 := rfl
   have hs : ∀ i : Fin k, Fin.castLE hk i.succ = (Fin.castLE (Nat.le_of_succ_le_succ hk) i).succ :=
     fun i => rfl
   ext i j
-  simp [NLAlib.leadingSubmatrix, h0, hs]
+  simp [h0, hs]
 
 /-- The `1 × 1` leading minor is the pivot. -/
-theorem det_leadingSubmatrix_one (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) :
-    (leadingSubmatrix A 1 (Nat.succ_le_succ (Nat.zero_le n))).det = A 0 0 := by
-  rw [det_fin_one]; rfl
+theorem leadingMinor_one (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) :
+    leadingMinor A 1 = A 0 0 := by
+  rw [leadingMinor_fin A (Nat.succ_le_succ (Nat.zero_le n)), det_fin_one]; rfl
+
+/-- A first-pivot Schur step factors every larger leading minor by the pivot:
+`det A(1:k+1,1:k+1) = a₁₁ · det (pivotSchur A)(1:k,1:k)`. Horn–Johnson 2013, proof of
+Thm 7.2.5; Golub–Van Loan 2013, Thm 3.2.1 (proof). -/
+theorem leadingMinor_succ_eq_mul_leadingMinor_pivotSchur
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) (ha : A 0 0 ≠ 0) {k : ℕ} (hk : k + 1 ≤ n + 1) :
+    leadingMinor A (k + 1) = A 0 0 * leadingMinor (pivotSchur A) k := by
+  rw [leadingMinor, leadingMinor, ← pivotSchur_leadingSubmatrix A hk, leadingSubmatrix_fin A hk]
+  exact det_eq_mul_det_pivotSchur _ ha
 
 end Leading
 
@@ -235,11 +243,11 @@ theorem isLU_lu {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} (h : LUSucceeds A) :
 /-- **Breakdown of Gaussian elimination**: elimination without pivoting succeeds iff every
 leading principal minor `det A(1:k,1:k)`, `k = 1, …, n`, is nonzero. Proof: induction on `n`
 with `det A(1:k+1,1:k+1) = a₁₁ det (pivotSchur A)(1:k,1:k)` (`det_eq_mul_det_pivotSchur`,
-`pivotSchur_leadingSubmatrix`); the case `k = 1` gives `a₁₁ ≠ 0`.
+`leadingMinor_succ_eq_mul_leadingMinor_pivotSchur`); the case `k = 1` gives `a₁₁ ≠ 0`.
 Trefethen–Bau 1997, Lect. 20 (Ex. 20.1); Golub–Van Loan 2013, Thm 3.2.1.
 atlas: lu-algorithm -/
-theorem luSucceeds_iff_forall_det_ne_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
-    LUSucceeds A ↔ ∀ k (hk : k ≤ n), (leadingSubmatrix A k hk).det ≠ 0 := by
+theorem luSucceeds_iff_forall_leadingMinor_ne_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
+    LUSucceeds A ↔ ∀ k ≤ n, leadingMinor A k ≠ 0 := by
   induction n with
   | zero =>
     simp only [LUSucceeds, true_iff]
@@ -247,37 +255,31 @@ theorem luSucceeds_iff_forall_det_ne_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) 
     obtain rfl : k = 0 := by omega
     simp
   | succ n ih =>
-    have hdet : ∀ k (hk : k + 1 ≤ n + 1), A 0 0 ≠ 0 →
-        (leadingSubmatrix A (k + 1) hk).det =
-          A 0 0 * (leadingSubmatrix (pivotSchur A) k (Nat.le_of_succ_le_succ hk)).det := by
-      intro k hk ha
-      rw [det_eq_mul_det_pivotSchur (leadingSubmatrix A (k + 1) hk) ha,
-        pivotSchur_leadingSubmatrix]
-      rfl
     rw [LUSucceeds, ih]
     constructor
     · rintro ⟨ha, hS⟩ k hk
       rcases k with _ | k
       · simp
-      · rw [hdet k hk ha]; exact mul_ne_zero ha (hS k _)
+      · rw [leadingMinor_succ_eq_mul_leadingMinor_pivotSchur A ha hk]
+        exact mul_ne_zero ha (hS k (Nat.le_of_succ_le_succ hk))
     · intro h
       have ha : A 0 0 ≠ 0 := by
         have := h 1 (Nat.succ_le_succ (Nat.zero_le n))
-        rwa [det_leadingSubmatrix_one] at this
+        rwa [leadingMinor_one] at this
       refine ⟨ha, fun k hk => ?_⟩
       have := h (k + 1) (Nat.succ_le_succ hk)
-      rw [hdet k _ ha] at this
+      rw [leadingMinor_succ_eq_mul_leadingMinor_pivotSchur A ha (Nat.succ_le_succ hk)] at this
       exact right_ne_zero_of_mul this
 
 /-- **Realisation of Gaussian elimination under the minimal hypothesis**: if the leading
 principal minors of orders `1, …, n − 1` are nonzero, `lu A` is an LU factorization (the last
 pivot is never divided by, so `det A` may vanish). Proof: induction on `n`; the `1 × 1` case is
 trivial, otherwise the pivot is `det A(1:1,1:1) ≠ 0` and the Schur complement inherits the
-hypothesis through `det_eq_mul_det_pivotSchur` and `pivotSchur_leadingSubmatrix`.
+hypothesis through `leadingMinor_succ_eq_mul_leadingMinor_pivotSchur`.
 Golub–Van Loan 2013, Thm 3.2.1; Trefethen–Bau 1997, Alg. 20.1.
 atlas: lu-algorithm -/
-theorem isLU_lu_of_forall_det_ne_zero {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
-    (h : ∀ k (hk : k < n), (leadingSubmatrix A k hk.le).det ≠ 0) :
+theorem isLU_lu_of_forall_leadingMinor_ne_zero {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
+    (h : ∀ k < n, leadingMinor A k ≠ 0) :
     IsLU A (lu A).1 (lu A).2 := by
   induction n with
   | zero =>
@@ -291,12 +293,11 @@ theorem isLU_lu_of_forall_det_ne_zero {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
       simp [lu, Matrix.mul_apply]
     · have ha : A 0 0 ≠ 0 := by
         have := h 1 (by omega)
-        rwa [det_leadingSubmatrix_one] at this
-      have hS : ∀ k (hk : k < n), (leadingSubmatrix (pivotSchur A) k hk.le).det ≠ 0 := by
+        rwa [leadingMinor_one] at this
+      have hS : ∀ k < n, leadingMinor (pivotSchur A) k ≠ 0 := by
         intro k hk
         have := h (k + 1) (by omega)
-        rw [det_eq_mul_det_pivotSchur (leadingSubmatrix A (k + 1) _) ha,
-          pivotSchur_leadingSubmatrix] at this
+        rw [leadingMinor_succ_eq_mul_leadingMinor_pivotSchur A ha (by omega)] at this
         exact right_ne_zero_of_mul this
       have hLU := (ih hS).eq_mul
       simp only [lu]
@@ -308,34 +309,80 @@ theorem isLU_lu_of_forall_det_ne_zero {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
       · ext i; simp [ha]
       · ext i j; simp [pivotSchur, vecMulVec_apply]
 
+end Algorithm
+
+/-! ### Existence over any linearly ordered index -/
+
+section Existence
+
+variable {m n : Type*} [Fintype m] [LinearOrder m] [Fintype n] [LinearOrder n]
+
+/-- An LU factorization transports along an order isomorphism of the index type. -/
+theorem IsLU.submatrix {A L U : Matrix n n ℝ} (h : IsLU A L U) (e : m ≃o n) :
+    IsLU (A.submatrix e e) (L.submatrix e e) (U.submatrix e e) where
+  isUnitLowerTriangular :=
+    ⟨isLowerTriangular_iff.2 fun _ _ hij =>
+        isLowerTriangular_iff.1 h.isUnitLowerTriangular.isLowerTriangular _ _ (e.strictMono hij),
+      fun i => h.isUnitLowerTriangular.apply_self (e i)⟩
+  isUpperTriangular := isUpperTriangular_iff.2 fun _ _ hij =>
+    isUpperTriangular_iff.1 h.isUpperTriangular _ _ (e.strictMono hij)
+  eq_mul := by rw [h.eq_mul]; exact (Matrix.submatrix_mul_equiv L U e e.toEquiv e).symm
+
+/-- The leading minors of `A` are those of its reindexing along the sorting isomorphism
+`Fin (card n) ≃o n`. -/
+theorem leadingMinor_submatrix_monoEquivOfFin (A : Matrix n n ℝ) (k : ℕ) :
+    leadingMinor (A.submatrix (monoEquivOfFin n rfl) (monoEquivOfFin n rfl)) k =
+      leadingMinor A k := by
+  unfold leadingMinor
+  congr 1
+  ext i j
+  by_cases h : (i : ℕ) < Fintype.card n ∧ (j : ℕ) < Fintype.card n
+  · have hi' : (i : ℕ) < Fintype.card (Fin (Fintype.card n)) := by simpa using h.1
+    have hj' : (j : ℕ) < Fintype.card (Fin (Fintype.card n)) := by simpa using h.2
+    rw [leadingSubmatrix_apply _ i j hi' hj', leadingSubmatrix_apply A i j h.1 h.2]
+    have e : monoEquivOfFin (Fin (Fintype.card n)) rfl =
+        Fin.castOrderIso (Fintype.card_fin _) := Subsingleton.elim _ _
+    rw [e]
+    rfl
+  · have h' : Fintype.card (Fin (Fintype.card n)) ≤ i ∨ Fintype.card (Fin (Fintype.card n)) ≤ j := by
+      rw [not_and_or, not_lt, not_lt] at h; simpa using h
+    rw [not_and_or, not_lt, not_lt] at h
+    rw [leadingSubmatrix_apply_of_card_le _ _ _ h', leadingSubmatrix_apply_of_card_le _ _ _ h]
+
 /-- **Existence of LU** when the leading principal minors of orders `1, …, n − 1` are nonzero (no
-condition on `det A` itself); witnessed by `lu A` (`isLU_lu_of_forall_det_ne_zero`).
-Golub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.6.
+condition on `det A` itself), on any linearly ordered finite index; on `Fin n` the witness is
+`lu A` (`isLU_lu_of_forall_leadingMinor_ne_zero`). Golub–Van Loan 2013, Thm 3.2.1;
+Horn–Johnson 2013, Cor. 3.5.6.
 atlas: lu-decomposition -/
-theorem exists_isLU_of_forall_det_ne_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
-    (h : ∀ k (hk : k < n), (leadingSubmatrix A k hk.le).det ≠ 0) :
-    ∃ L U, IsLU A L U :=
-  ⟨_, _, isLU_lu_of_forall_det_ne_zero h⟩
+theorem exists_isLU_of_forall_leadingMinor_ne_zero (A : Matrix n n ℝ)
+    (h : ∀ k < Fintype.card n, leadingMinor A k ≠ 0) : ∃ L U, IsLU A L U := by
+  let e := monoEquivOfFin n rfl
+  have h' : ∀ k < Fintype.card n, leadingMinor (A.submatrix e e) k ≠ 0 := fun k hk => by
+    rw [leadingMinor_submatrix_monoEquivOfFin]; exact h k hk
+  have hLU := (isLU_lu_of_forall_leadingMinor_ne_zero h').submatrix e.symm
+  have hA : (A.submatrix e e).submatrix e.symm e.symm = A := by ext i j; simp
+  rw [hA] at hLU
+  exact ⟨_, _, hLU⟩
 
 /-- **Existence of LU for invertible matrices**: an invertible `A` has an LU factorization iff
 all its leading principal minors are nonzero (and it is then unique, `IsLU.unique`).
 Trefethen–Bau 1997, Lect. 20; Golub–Van Loan 2013, Thm 3.2.1; Horn–Johnson 2013, Cor. 3.5.6.
 atlas: lu-decomposition -/
-theorem exists_isLU_iff_forall_det_ne_zero {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
-    (hA : IsUnit A.det) :
-    (∃ L U, IsLU A L U) ↔ ∀ k (hk : k ≤ n), (leadingSubmatrix A k hk).det ≠ 0 := by
+theorem exists_isLU_iff_forall_leadingMinor_ne_zero {A : Matrix n n ℝ} (hA : IsUnit A.det) :
+    (∃ L U, IsLU A L U) ↔ ∀ k ≤ Fintype.card n, leadingMinor A k ≠ 0 := by
   constructor
   · rintro ⟨L, U, h⟩ k hk
     have hd : ∀ i, U i i ≠ 0 := by
       intro i hi
       rw [h.det_eq_prod, Finset.prod_eq_zero (f := fun j => U j j) (Finset.mem_univ i) hi] at hA
       exact not_isUnit_zero hA
-    rw [h.det_leadingSubmatrix]
+    rw [← leadingMinor_submatrix_monoEquivOfFin,
+      (h.submatrix (monoEquivOfFin n rfl)).leadingMinor_eq_prod k hk]
     exact Finset.prod_ne_zero_iff.2 fun i _ => hd _
   · intro h
-    exact ⟨_, _, isLU_lu ((luSucceeds_iff_forall_det_ne_zero A).2 h)⟩
+    exact exists_isLU_of_forall_leadingMinor_ne_zero A fun k hk => h k hk.le
 
-end Algorithm
+end Existence
 
 /-! ### Partial pivoting -/
 
@@ -519,8 +566,8 @@ theorem exists_isPLU_abs_le_one {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
 
 /-- **Growth bound for partial pivoting, row form**: if `|aᵢⱼ| ≤ M` for all entries then row
 `i` of `U` satisfies `|uᵢⱼ| ≤ 2^i M` (each elimination step at most doubles the entries, since
-the multipliers are bounded by one). Trefethen–Bau 1997, Lect. 22; Higham 2002, §9.3
-(Wilkinson's bound; label to verify). Exact arithmetic.
+the multipliers are bounded by one). Trefethen–Bau 1997, Lect. 22; Higham 2002, §9.3,
+eq. (9.13) (Wilkinson's bound). Exact arithmetic.
 atlas: lu-growth-factor -/
 theorem abs_luPartialPivot_upper_le {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {M : ℝ}
     (hM : ∀ i j, |A i j| ≤ M) (i j : Fin n) :
@@ -553,7 +600,7 @@ theorem abs_luPartialPivot_upper_le {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {
 
 /-- **Growth factor of partial pivoting**: `max |uᵢⱼ| ≤ 2^{n−1} max |aᵢⱼ|`, stated with an
 entrywise bound `M` on `A`. The bound is attained (Wilkinson's example), which is not
-formalized. Trefethen–Bau 1997, Lect. 22, eq. (22.4); Higham 2002, §9.3 (label to verify).
+formalized. Trefethen–Bau 1997, Lect. 22, eq. (22.4); Higham 2002, §9.3, eq. (9.13).
 atlas: lu-growth-factor -/
 theorem abs_luPartialPivot_upper_le_two_pow {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {M : ℝ}
     (hM : ∀ i j, |A i j| ≤ M) (i j : Fin n) :

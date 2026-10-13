@@ -35,7 +35,7 @@ theorem re_fourier_pair_eq_chebyshevAnalyticCoeff_mul_eval_T (F : ℂ → ℂ)
 
 set_option maxHeartbeats 800000 in
 /-- The Chebyshev series on a real cosine argument reconstructs the original function's
-real part from the genuine open-ellipse holomorphy and bound assumptions.
+real part from the open-ellipse holomorphy and bound assumptions.
 Source: Trefethen, ATAP, Theorems 3.1(a), 8.1 and 8.2.
 Atlas `chebyshev-approx-analytic` (helper). -/
 theorem hasSum_chebyshevAnalyticCoeff_mul_eval_T_cos_of_open_ellipse
@@ -103,7 +103,7 @@ theorem degree_chebyshevAnalyticTrunc_le (F : ℂ → ℂ) (N : ℕ) :
   rw [degree_T, Int.natAbs_natCast]
   exact_mod_cast Nat.le_of_lt_succ (mem_range.mp hk)
 
-/-- The genuine Chebyshev series reconstructs the function on every point of `[-1,1]`.
+/-- The Chebyshev series reconstructs the function on every point of `[-1,1]`.
 Source: Trefethen, ATAP, Theorems 3.1(a), 8.1 and 8.2.
 Atlas `chebyshev-approx-analytic` (helper). -/
 theorem hasSum_chebyshevAnalyticCoeff_mul_eval_T_of_open_ellipse
@@ -165,7 +165,7 @@ theorem abs_re_sub_eval_chebyshevAnalyticTrunc_le_of_open_ellipse
 
 /-- A bounded holomorphic extension on the open Bernstein ellipse supplies a real polynomial
 of degree at most `N` with the exact error `2M ρ⁻ᴺ/(ρ-1)` on `[-1,1]`.
-Source: Trefethen, ATAP, Theorem 8.2; operator rederivations `rt:analytic-approx`.
+Source: Trefethen, ATAP, Theorem 8.2.
 No boundary continuity or coefficient/approximation conclusion is assumed.
 atlas: bernstein-ellipse-approx -/
 theorem exists_degree_le_abs_sub_eval_le_of_open_bernsteinEllipse
@@ -183,7 +183,7 @@ theorem exists_degree_le_abs_sub_eval_le_of_open_bernsteinEllipse
 
 /-- Affine transplantation of the Bernstein-ellipse polynomial rate to any real interval.
 The analytic extension is of `t ↦ f(((c-a)t+c+a)/2)` on the original open ellipse.
-Source: Trefethen, ATAP, Theorem 8.2; operator rederivations `rt:analytic-approx`.
+Source: Trefethen, ATAP, Theorem 8.2.
 atlas: bernstein-ellipse-approx -/
 theorem exists_degree_le_abs_sub_eval_le_of_open_bernsteinEllipse_interval
     {f : ℝ → ℝ} {F : ℂ → ℂ} {a c ρ M : ℝ} (hac : a < c) (hρ : 1 < ρ)

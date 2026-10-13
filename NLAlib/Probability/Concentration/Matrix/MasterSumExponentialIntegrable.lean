@@ -14,9 +14,10 @@ Atlas: `matrix-laplace` (regularity lemma).
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Auxiliary regularity lemma for the proof of Theorem 3.6.1, printed p. 36; Section 2.2.1, printed p. 25, states the standing regularity convention. This is explicit analytic groundwork, not a separately numbered theorem in the book.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder
+open scoped MatrixOrder
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- For independent Hermitian random matrices with integrable `matrixExp (θ • X k)`, the exponential
 `matrixExp (θ • ∑ k, X k)` of the sum is integrable.
 

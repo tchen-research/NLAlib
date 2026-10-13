@@ -14,10 +14,11 @@ Atlas: `intrinsic-dimension` (intrinsic matrix Chernoff; variant of `matrix-cher
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 7.2.1, equations (7.2.1–2), printed pp. 106–107; standing independence confirmed in proof, Section 7.6, printed p. 113.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 private lemma lambdaMax_mem {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hB : B.IsHermitian) : ∃ i, hB.eigenvalues i = lambdaMax B := by
   have hn : (Set.range hB.eigenvalues).Nonempty := Set.range_nonempty _
@@ -26,12 +27,14 @@ private lemma lambdaMax_mem {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ
     simpa only [lambdaMax, hB.spectrum_real_eq_range_eigenvalues] using hn.csSup_mem hf
   exact hmax
 
+open scoped Matrix.Norms.L2Operator in
 private lemma eig_le_lambdaMax {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hB : B.IsHermitian) (i : Fin d) : hB.eigenvalues i ≤ lambdaMax B := by
   unfold lambdaMax
   rw [hB.spectrum_real_eq_range_eigenvalues]
   exact le_csSup (Set.finite_range _).bddAbove (Set.mem_range_self i)
 
+open scoped Matrix.Norms.L2Operator in
 /-- For a PSD matrix, the maximum eigenvalue equals the spectral norm. -/
 private lemma lambdaMax_eq_norm {d : ℕ} [NeZero d] (P : Matrix (Fin d) (Fin d) ℂ)
     (hP : P.PosSemidef) : lambdaMax P = ‖P‖ := by
@@ -53,12 +56,7 @@ private lemma lambdaMax_eq_norm {d : ℕ} [NeZero d] (P : Matrix (Fin d) (Fin d)
       rw [h3] at h1 ⊢
       linarith
 
-private lemma lambdaMin_nonneg {d : ℕ} [NeZero d] (P : Matrix (Fin d) (Fin d) ℂ)
-    (hP : P.PosSemidef) : 0 ≤ lambdaMin P := by
-  unfold lambdaMin
-  rw [hP.isHermitian.spectrum_real_eq_range_eigenvalues]
-  exact le_csInf (Set.range_nonempty _) (by rintro _ ⟨i, rfl⟩; exact hP.eigenvalues_nonneg i)
-
+open scoped Matrix.Norms.L2Operator in
 private lemma intrinsic_ge_one {d : ℕ} [NeZero d] (M : Matrix (Fin d) (Fin d) ℂ)
     (hP : M.PosSemidef) (hM : M ≠ 0) : 1 ≤ intrinsicDimension M := by
   have hA := hP.isHermitian
@@ -73,6 +71,7 @@ private lemma intrinsic_ge_one {d : ℕ} [NeZero d] (M : Matrix (Fin d) (Fin d) 
   rw [htr, le_div_iff₀ hn, one_mul]
   exact hle
 
+open scoped Matrix.Norms.L2Operator in
 private lemma W_facts {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hP : B.PosSemidef) {c : ℝ} (hc : 0 ≤ c) :
     0 ≤ traceExp (c • B) - d ∧ Real.exp (c * lambdaMax B) - 1 ≤ traceExp (c • B) - d := by
@@ -87,6 +86,7 @@ private lemma W_facts {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
   rw [← hi]
   exact Finset.single_le_sum (fun j _ => hnn j) (Finset.mem_univ i)
 
+open scoped Matrix.Norms.L2Operator in
 private lemma traceFunction_psi {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hP : B.PosSemidef) {c : ℝ} (hc : 0 ≤ c) :
     traceFunction (fun x => max 0 (Real.exp (c * x) - 1)) B = traceExp (c • B) - d := by
@@ -96,12 +96,14 @@ private lemma traceFunction_psi {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d)
     (sub_nonneg.2 (Real.one_le_exp (mul_nonneg hc (hP.eigenvalues_nonneg i)))))]
   rw [Finset.sum_sub_distrib]; simp
 
+open scoped Matrix.Norms.L2Operator in
 private lemma traceFunction_expm1 {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hA : B.IsHermitian) (c : ℝ) :
     traceFunction (fun x => Real.exp (c * x) - 1) B = traceExp (c • B) - d := by
   rw [traceFunction_eq_sum _ B hA, traceExp_smul_eq_sum B hA c, Finset.sum_sub_distrib]
   simp
 
+open scoped Matrix.Norms.L2Operator in
 private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
     (hA : A.IsHermitian) (s : ℝ) : ‖matrixExp (s • A)‖ ≤ Real.exp (|s| * ‖A‖) := by
   have hsA : (s • A).IsHermitian := hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))
@@ -114,6 +116,7 @@ private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
     _ ≤ ‖s • A‖ := abs_le_norm_of_mem_spectrum _ hx
     _ = |s| * ‖A‖ := by rw [norm_smul, Real.norm_eq_abs]
 
+open scoped Matrix.Norms.L2Operator in
 private lemma expm1_convex (g : ℝ) :
     ConvexOn ℝ (Set.Ici 0) (fun x : ℝ => Real.exp (g * x) - 1) := by
   refine ⟨convex_Ici 0, fun x _ y _ a b ha hb hab => ?_⟩
@@ -125,6 +128,7 @@ private lemma expm1_convex (g : ℝ) :
       ≤ a * Real.exp (g * x) + b * Real.exp (g * y) - 1 := by linarith
     _ = a * (Real.exp (g * x) - 1) + b * (Real.exp (g * y) - 1) := by linear_combination hab
 
+open scoped Matrix.Norms.L2Operator in
 private lemma log1p_concave :
     ConcaveOn ℝ (Set.Ici (0 : ℝ)) (fun u : ℝ => Real.log (1 + u)) := by
   refine ⟨convex_Ici 0, fun x hx y hy a b ha hb hab => ?_⟩
@@ -142,14 +146,9 @@ end NLAlib
 
 open NLAlib
 
-/-- Intrinsic-dimension matrix Chernoff inequality: for an independent sum of random PSD matrices with
-`λmax ≤ L` and `𝔼 Y ≼ M`, the expectation of `λmax` and the upper tail are bounded with `d`
-replaced by `2 intdim M`.
-
-Tropp 2015, Thm 7.2.1. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 7*.
-atlas: intrinsic-dimension -/
-theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
+open scoped Matrix.Norms.L2Operator in
+/-- Tropp's intrinsic matrix Chernoff inequality, bundled with the mean identity for the proof. -/
+private lemma NLAlib.intrinsic_matrix_chernoff_package {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ)
     (L : ℝ) (hL : 0 < L) (M : Matrix (Fin d) (Fin d) ℂ) (hM : M ≠ 0)
@@ -164,7 +163,7 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
     (∀ θ : ℝ, 0 < θ → (∫ ω, lambdaMax (Y ω) ∂μ) ≤
       (Real.exp θ - 1) / θ * a + L / θ * Real.log (2 * r)) ∧
     ∀ ε : ℝ, L / a ≤ ε →
-      (μ {ω | (1 + ε) * a ≤ lambdaMax (Y ω)}).toReal ≤
+      μ.real {ω | (1 + ε) * a ≤ lambdaMax (Y ω)} ≤
         2 * r * Real.exp (a / L * (ε - (1 + ε) * Real.log (1 + ε))) := by
   intro Y r a
   -- preliminaries
@@ -257,7 +256,7 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
       intro k
       have hb : ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (X k ω) ∧ lambdaMax (X k ω) ≤ L := by
         filter_upwards [hPSD k, hBound k] with ω h1 h2
-        exact ⟨lambdaMin_nonneg _ h1, h2⟩
+        exact ⟨lambdaMin_nonneg_of_posSemidef _ h1, h2⟩
       exact (chernoff_matrix_mgf_cgf_le μ (X k) L hL.le (hMeas k) (hXHerm k) hb θ').2
     have hsum : (cumulantSum μ X θ') ≤ (g • ∑ k, ∫ ω, X k ω ∂μ) := by
       unfold cumulantSum
@@ -408,7 +407,7 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
     set E := Real.exp (ε / L * a) with hE_def
     set Xs := Real.exp (θ' * t) with hXs_def
     have hXpos : 0 < Xs := by linarith
-    calc (μ {ω | (1 + ε) * a ≤ lambdaMax (Y ω)}).toReal
+    calc μ.real {ω | (1 + ε) * a ≤ lambdaMax (Y ω)}
         ≤ (∫ ω, (traceExp (θ' • Y ω) - d) ∂μ) / (Xs - 1) := hlap
       _ ≤ r * E / (Xs - 1) := div_le_div_of_nonneg_right hWle (by linarith)
       _ ≤ 2 * r * (E / Xs) := by
@@ -421,3 +420,45 @@ theorem NLAlib.intrinsic_matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
           congr 2
           rw [hθ'_def, ht_def]
           ring
+
+namespace NLAlib
+
+section IntrinsicChernoff
+
+variable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ}
+  [NeZero d] (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ)
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Intrinsic-dimension matrix Chernoff, expectation bound**: for independent PSD summands with
+`λmax (X k) ≤ L` a.e. and `𝔼 ∑ k, X k ≼ M ≠ 0`, for every `θ > 0`,
+`𝔼 λmax(∑ k, X k) ≤ (e^θ - 1)/θ · λmax M + L/θ · log (2 intdim M)`. Tropp 2015, Thm 7.2.1
+(before the optimisation of `θ`).
+atlas: intrinsic-dimension -/
+theorem integral_lambdaMax_sum_le_of_intrinsicDimension {L : ℝ} (hL : 0 < L)
+    {M : Matrix (Fin d) (Fin d) ℂ} (hM : M ≠ 0) (hMeas : ∀ k, Measurable (X k))
+    (hIndep : iIndepFun X μ) (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).PosSemidef)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) (hMeanBound : (∫ ω, ∑ k, X k ω ∂μ) ≤ M)
+    {θ : ℝ} (hθ : 0 < θ) :
+    (∫ ω, lambdaMax (∑ k, X k ω) ∂μ) ≤
+      (Real.exp θ - 1) / θ * lambdaMax M + L / θ * Real.log (2 * intrinsicDimension M) :=
+  (intrinsic_matrix_chernoff_package μ X L hL M hM hMeas hIndep hPSD hBound hMeanBound).2.1 θ hθ
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Intrinsic-dimension matrix Chernoff, tail bound**: for independent PSD summands with
+`λmax (X k) ≤ L` a.e. and `𝔼 ∑ k, X k ≼ M ≠ 0`, for `ε ≥ L / λmax M`,
+`P{λmax(∑ k, X k) ≥ (1 + ε) λmax M} ≤ 2 intdim(M) exp(λmax M / L · (ε - (1 + ε) log (1 + ε)))`.
+Tropp 2015, Thm 7.2.1, eq. (7.2.2).
+atlas: intrinsic-dimension -/
+theorem measureReal_lambdaMax_sum_ge_le_intrinsicDimension_mul_exp_chernoff {L : ℝ} (hL : 0 < L)
+    {M : Matrix (Fin d) (Fin d) ℂ} (hM : M ≠ 0) (hMeas : ∀ k, Measurable (X k))
+    (hIndep : iIndepFun X μ) (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).PosSemidef)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) (hMeanBound : (∫ ω, ∑ k, X k ω ∂μ) ≤ M)
+    {ε : ℝ} (hε : L / lambdaMax M ≤ ε) :
+    μ.real {ω | (1 + ε) * lambdaMax M ≤ lambdaMax (∑ k, X k ω)} ≤
+      2 * intrinsicDimension M *
+        Real.exp (lambdaMax M / L * (ε - (1 + ε) * Real.log (1 + ε))) :=
+  (intrinsic_matrix_chernoff_package μ X L hL M hM hMeas hIndep hPSD hBound hMeanBound).2.2 ε hε
+
+end IntrinsicChernoff
+
+end NLAlib

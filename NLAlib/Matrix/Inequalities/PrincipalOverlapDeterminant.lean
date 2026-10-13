@@ -11,7 +11,7 @@ atlas `hadamard-fischer-inequalities`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [DecidableEq n]
 
@@ -37,7 +37,7 @@ theorem det_principal_union_eq_det_fromBlocks {A : Matrix n n ℝ} (hA : A.IsHer
 determinant inequality; positive definite equality is the exact zero cross
 Schur block after eliminating the shared set.
 Horn--Johnson (2013), Theorem 7.8.9; helper for union/intersection notation. -/
-theorem det_principal_three_sets_le_and_eq_iff {A : Matrix n n ℝ} (hA : A.PosDef)
+private theorem det_principal_three_sets_le_and_eq_iff_aux {A : Matrix n n ℝ} (hA : A.PosDef)
     (I J K : Finset n) (hIJ : Disjoint I J) (hIK : Disjoint I K) (hJK : Disjoint J K) :
     (A.toBlock (· ∈ I ∪ (J ∪ K)) (· ∈ I ∪ (J ∪ K))).det * (A.toBlock (· ∈ I) (· ∈ I)).det ≤
       (A.toBlock (· ∈ I ∪ J) (· ∈ I ∪ J)).det * (A.toBlock (· ∈ I ∪ K) (· ∈ I ∪ K)).det ∧
@@ -73,18 +73,37 @@ theorem det_principal_three_sets_le_and_eq_iff {A : Matrix n n ℝ} (hA : A.PosD
   have hUt : Uᵀ = A.toBlock (· ∈ J) (· ∈ I) := by
     ext i j
     exact hsym _ _
-  have h := det_overlapping_blocks_le_and_eq_iff P U V D E F hH
+  have h := And.intro (det_overlapping_blocks_le P U V D E F hH)
+    (det_overlapping_blocks_eq_iff P U V D E F hH)
   change (H.det * P.det ≤ _ ∧ (H.det * P.det = _ ↔ _)) at h
   rw [hDetH, ← det_principal_union_eq_det_fromBlocks hA.isHermitian I J hIJ,
     ← det_principal_union_eq_det_fromBlocks hA.isHermitian I K hIK, hUt] at h
   exact h
 
+/-- Three pairwise disjoint principal index sets satisfy the overlapping determinant inequality. Horn–Johnson 2013, Theorem 7.8.9.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem det_principal_three_sets_le {A : Matrix n n ℝ} (hA : A.PosDef)
+    (I J K : Finset n) (hIJ : Disjoint I J) (hIK : Disjoint I K) (hJK : Disjoint J K) :
+    (A.toBlock (· ∈ I ∪ (J ∪ K)) (· ∈ I ∪ (J ∪ K))).det * (A.toBlock (· ∈ I) (· ∈ I)).det ≤
+      (A.toBlock (· ∈ I ∪ J) (· ∈ I ∪ J)).det * (A.toBlock (· ∈ I ∪ K) (· ∈ I ∪ K)).det :=
+  (det_principal_three_sets_le_and_eq_iff_aux hA I J K hIJ hIK hJK).1
+
+/-- Equality in the three-set overlapping determinant inequality holds exactly when the cross Schur block after eliminating the shared set vanishes. Horn–Johnson 2013, Theorem 7.8.9.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem det_principal_three_sets_eq_iff {A : Matrix n n ℝ} (hA : A.PosDef)
+    (I J K : Finset n) (hIJ : Disjoint I J) (hIK : Disjoint I K) (hJK : Disjoint J K) :
+    (A.toBlock (· ∈ I ∪ (J ∪ K)) (· ∈ I ∪ (J ∪ K))).det * (A.toBlock (· ∈ I) (· ∈ I)).det =
+      (A.toBlock (· ∈ I ∪ J) (· ∈ I ∪ J)).det * (A.toBlock (· ∈ I ∪ K) (· ∈ I ∪ K)).det ↔
+      A.toBlock (· ∈ J) (· ∈ K) -
+        A.toBlock (· ∈ J) (· ∈ I) * (A.toBlock (· ∈ I) (· ∈ I))⁻¹ *
+          A.toBlock (· ∈ I) (· ∈ K) = 0 :=
+  (det_principal_three_sets_le_and_eq_iff_aux hA I J K hIJ hIK hJK).2
+
 /-- Koteljanski's principal-minor inequality and its exact positive-definite
 equality case: eliminate the intersection, then the cross block between
 the two exclusive index sets must vanish. Empty intersections are included.
-Horn--Johnson (2013), Theorem 7.8.9.
-atlas: hadamard-fischer-inequalities (partial) -/
-theorem det_principal_union_mul_inter_le_and_eq_iff_of_posDef
+Horn--Johnson (2013), Theorem 7.8.9. -/
+private theorem det_principal_union_mul_inter_le_and_eq_iff_of_posDef_aux
     {A : Matrix n n ℝ} (hA : A.PosDef) (α β : Finset n) :
     (A.toBlock (· ∈ α ∪ β) (· ∈ α ∪ β)).det * (A.toBlock (· ∈ α ∩ β) (· ∈ α ∩ β)).det ≤
       (A.toBlock (· ∈ α) (· ∈ α)).det * (A.toBlock (· ∈ β) (· ∈ β)).det ∧
@@ -100,7 +119,7 @@ theorem det_principal_union_mul_inter_le_and_eq_iff_of_posDef
   have ha : (α ∩ β) ∪ (α \ β) = α := by ext i; simp; tauto
   have hb : (α ∩ β) ∪ (β \ α) = β := by ext i; simp; tauto
   let D (s : Finset n) : ℝ := (A.toBlock (· ∈ s) (· ∈ s)).det
-  have hh := det_principal_three_sets_le_and_eq_iff hA
+  have hh := det_principal_three_sets_le_and_eq_iff_aux hA
     (α ∩ β) (α \ β) (β \ α) hij hik hjk
   change D ((α ∩ β) ∪ ((α \ β) ∪ (β \ α))) * D (α ∩ β) ≤
       D ((α ∩ β) ∪ (α \ β)) * D ((α ∩ β) ∪ (β \ α)) ∧
@@ -108,6 +127,25 @@ theorem det_principal_union_mul_inter_le_and_eq_iff_of_posDef
       D ((α ∩ β) ∪ (α \ β)) * D ((α ∩ β) ∪ (β \ α)) ↔ _) at hh
   rw [hu, ha, hb] at hh
   exact hh
+
+/-- **Koteljanski's inequality** for positive definite matrices: `det A[α ∪ β] · det A[α ∩ β] ≤ det A[α] · det A[β]`. Horn–Johnson 2013, Theorem 7.8.9.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem det_principal_union_mul_inter_le_of_posDef
+    {A : Matrix n n ℝ} (hA : A.PosDef) (α β : Finset n) :
+    (A.toBlock (· ∈ α ∪ β) (· ∈ α ∪ β)).det * (A.toBlock (· ∈ α ∩ β) (· ∈ α ∩ β)).det ≤
+      (A.toBlock (· ∈ α) (· ∈ α)).det * (A.toBlock (· ∈ β) (· ∈ β)).det :=
+  (det_principal_union_mul_inter_le_and_eq_iff_of_posDef_aux hA α β).1
+
+/-- Equality in Koteljanski's inequality holds exactly when the cross block between `α \\ β` and `β \\ α`, after eliminating `α ∩ β`, vanishes. Horn–Johnson 2013, Theorem 7.8.9.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem det_principal_union_mul_inter_eq_iff_of_posDef
+    {A : Matrix n n ℝ} (hA : A.PosDef) (α β : Finset n) :
+    (A.toBlock (· ∈ α ∪ β) (· ∈ α ∪ β)).det * (A.toBlock (· ∈ α ∩ β) (· ∈ α ∩ β)).det =
+      (A.toBlock (· ∈ α) (· ∈ α)).det * (A.toBlock (· ∈ β) (· ∈ β)).det ↔
+      A.toBlock (· ∈ α \ β) (· ∈ β \ α) -
+        A.toBlock (· ∈ α \ β) (· ∈ α ∩ β) * (A.toBlock (· ∈ α ∩ β) (· ∈ α ∩ β))⁻¹ *
+          A.toBlock (· ∈ α ∩ β) (· ∈ β \ α) = 0 :=
+  (det_principal_union_mul_inter_le_and_eq_iff_of_posDef_aux hA α β).2
 
 /-- Koteljanski's principal-minor inequality extends to all PSD matrices by
 positive identity perturbation and determinant continuity. Its SPD equality
@@ -122,6 +160,6 @@ theorem det_principal_union_mul_inter_le_of_posSemidef
     (M.toBlock (· ∈ α ∪ β) (· ∈ α ∪ β)).det * (M.toBlock (· ∈ α ∩ β) (· ∈ α ∩ β)).det)
     (g := fun M : Matrix n n ℝ => (M.toBlock (· ∈ α) (· ∈ α)).det * (M.toBlock (· ∈ β) (· ∈ β)).det)
     (by unfold Matrix.toBlock; fun_prop) (by unfold Matrix.toBlock; fun_prop)
-    (fun M hM => (det_principal_union_mul_inter_le_and_eq_iff_of_posDef hM α β).1) hA
+    (fun M hM => det_principal_union_mul_inter_le_of_posDef hM α β) hA
 
 end NLAlib

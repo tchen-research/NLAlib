@@ -117,7 +117,7 @@ theorem sylvesterLinearMap_injective_iff_disjoint_spectrum [IsAlgClosed K]
 /-- The Sylvester operator is invertible exactly for disjoint spectra.
 Source: Horn–Johnson (2013), Theorem 2.4.4.1; formulated as bijectivity to
 avoid choosing an inverse and valid in dimension zero.
-atlas: sylvester-equation (partial) -/
+atlas: sylvester-equation -/
 theorem sylvesterLinearMap_bijective_iff_disjoint_spectrum [IsAlgClosed K]
     (A : Matrix m m K) (B : Matrix n n K) :
     Function.Bijective (sylvesterLinearMap A B) ↔
@@ -127,7 +127,7 @@ theorem sylvesterLinearMap_bijective_iff_disjoint_spectrum [IsAlgClosed K]
 
 /-- Disjoint spectra give exactly one solution for each Sylvester right-hand
 side. Source: Horn–Johnson (2013), Theorem 2.4.4.1; indices may be empty.
-atlas: sylvester-equation (partial) -/
+atlas: sylvester-equation -/
 theorem existsUnique_sylvester_of_disjoint_spectrum [IsAlgClosed K]
     (A : Matrix m m K) (B : Matrix n n K)
     (hdisj : Disjoint (spectrum K A) (spectrum K B)) (C : Matrix m n K) :

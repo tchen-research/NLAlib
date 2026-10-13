@@ -72,7 +72,7 @@ theorem posDef_of_leadingMinor_pos {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
 
 /-- Sylvester's leading-principal-minor criterion for a real symmetric
 matrix. Horn--Johnson (2013), Theorem 7.2.5.
-atlas: sylvester-criterion (partial) -/
+atlas: sylvester-criterion -/
 theorem posDef_iff_leadingMinor_pos {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.IsHermitian) :
     A.PosDef ↔ ∀ k, 1 ≤ k → k ≤ n → 0 < leadingMinor A k :=
@@ -80,7 +80,7 @@ theorem posDef_iff_leadingMinor_pos {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
 
 /-- Sylvester's equivalent trailing-principal-minor criterion.
 Horn--Johnson (2013), Theorem 7.2.5 and Corollary 7.2.4.
-atlas: sylvester-criterion (partial) -/
+atlas: sylvester-criterion -/
 theorem posDef_iff_trailingMinor_pos {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.IsHermitian) :
     A.PosDef ↔ ∀ k, 1 ≤ k → k ≤ n → 0 < trailingMinor A k := by
@@ -108,8 +108,9 @@ theorem leadingMinor_eq_det {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
 whole symmetric matrix PSD. Completion of squares;
 helper for `sylvester-criterion`. -/
 theorem posSemidef_of_pivotSchur_posSemidef {n : ℕ}
-    {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hA : A.IsSymm)
+    {A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ} (hAh : A.IsHermitian)
     (ha : 0 < A 0 0) (hP : (pivotSchur A).PosSemidef) : A.PosSemidef := by
+  have hA : A.IsSymm := Matrix.isHermitian_iff_isSymm.mp hAh
   have hsym : ∀ y : Fin n → ℝ,
       ∑ i, y i * A i.succ 0 = ∑ j, A 0 j.succ * y j := fun y =>
     Finset.sum_congr rfl fun i _ => by rw [hA.apply 0 i.succ, mul_comm]
@@ -132,7 +133,7 @@ theorem posSemidef_of_pivotSchur_posSemidef {n : ℕ}
 /-- If the first `n-1` leading minors are positive and the determinant is
 nonnegative, a real symmetric matrix is PSD. This includes dimensions zero
 and one. Horn--Johnson (2013), Corollary 7.2.4.
-atlas: sylvester-criterion (partial) -/
+atlas: sylvester-criterion -/
 theorem posSemidef_of_leadingMinor_pos_and_det_nonneg {n : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.IsHermitian)
     (hminor : ∀ k, 1 ≤ k → k < n → 0 < leadingMinor A k) (hdet : 0 ≤ A.det) :
@@ -161,7 +162,7 @@ theorem posSemidef_of_leadingMinor_pos_and_det_nonneg {n : ℕ}
       have ha : 0 < A 0 0 := by
         have h := hminor 1 (by rfl) (by omega)
         simpa [leadingMinor] using h
-      apply posSemidef_of_pivotSchur_posSemidef (Matrix.isHermitian_iff_isSymm.mp hA) ha
+      apply posSemidef_of_pivotSchur_posSemidef ( hA) ha
       apply ih (Matrix.isHermitian_iff_isSymm.mpr
         (isSymm_pivotSchur (Matrix.isHermitian_iff_isSymm.mp hA)))
       · intro k hk hkn

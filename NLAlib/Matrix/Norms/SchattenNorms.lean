@@ -15,7 +15,7 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -54,8 +54,9 @@ theorem WeaklyMajorized.sum_rpow_le {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every finite Schatten norm at exponent at least one obeys the matrix
-triangle inequality. It follows from actual singular-value weak majorization
+triangle inequality. It follows from singular-value weak majorization
 and scalar Minkowski, without assuming a gauge or a matrix norm property.
 atlas: schatten-norms-def (partial) -/
 theorem schattenNorm_add_le (A B : Matrix m n ℝ) {p : ℝ} (hp : 1 ≤ p) :
@@ -76,6 +77,7 @@ theorem schattenNorm_add_le (A B : Matrix m n ℝ) {p : ℝ} (hp : 1 ≤ p) :
     Fin.sum_univ_eq_sum_range (fun i => singularValues B i ^ p) N] at h
   exact h
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- Absolute homogeneity of every positive-exponent finite Schatten norm. -/
 theorem schattenNorm_smul (A : Matrix m n ℝ) (c : ℝ) {p : ℝ} (hp : 0 < p) :
@@ -89,12 +91,14 @@ theorem schattenNorm_smul (A : Matrix m n ℝ) (c : ℝ) {p : ℝ} (hp : 0 < p) 
   rw [Real.mul_rpow (Real.rpow_nonneg (abs_nonneg c) p) hsum,
     one_div, Real.rpow_rpow_inv (abs_nonneg c) hp.ne']
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- At every positive exponent, the Schatten norm vanishes on the zero matrix. -/
 theorem schattenNorm_zero {p : ℝ} (hp : 0 < p) : schattenNorm (0 : Matrix m n ℝ) p = 0 := by
   simp [schattenNorm, singularValues_eq_linearMap, Real.zero_rpow hp.ne',
     Real.zero_rpow (show p⁻¹ ≠ 0 from inv_ne_zero hp.ne')]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- At every positive exponent, the finite Schatten power sum separates zero,
 including empty matrix spaces. -/
@@ -117,14 +121,16 @@ theorem schattenNorm_eq_zero_iff (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
   · rintro rfl
     exact schattenNorm_zero hp
 
+open scoped Matrix.Norms.L2Operator in
 /-- The bundled Schatten seminorm for every finite norm exponent. Its
-separating zero criterion is proved above, so this is a genuine norm.
+separating zero criterion is proved above, so this is a norm.
 atlas: schatten-norms-def (partial) -/
 def schattenSeminorm (p : ℝ) (hp : 1 ≤ p) : Seminorm ℝ (Matrix m n ℝ) :=
   Seminorm.of (fun A => schattenNorm A p) (fun A B => schattenNorm_add_le A B hp)
     (fun c A => by simpa only [Real.norm_eq_abs] using
       schattenNorm_smul A c (lt_of_lt_of_le zero_lt_one hp))
 
+open scoped Matrix.Norms.L2Operator in
 /-- The bundled Schatten seminorm agrees with the native singular-value formula. -/
 @[simp] theorem schattenSeminorm_apply (A : Matrix m n ℝ) (p : ℝ) (hp : 1 ≤ p) :
     schattenSeminorm p hp A = schattenNorm A p := rfl

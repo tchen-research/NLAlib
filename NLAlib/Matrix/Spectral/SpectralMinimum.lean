@@ -1,55 +1,68 @@
-import NLAlib.Matrix.Calculus.GramSoftMinSpectral
+import NLAlib.Matrix.Spectral.Core
 
 /-!
-# Identifying the Rayleigh minimum from a diagonalization
+# Identifying the smallest eigenvalue from an eigenvector or a diagonalization
 
-Finite deterministic helpers identify the spectral minimum used by NLAlib
-with a smallest diagonal eigenvalue. These connect inverse-power limits to
-the exact smallest-singular-value vocabulary of the Gaussian theorems.
+Two finite deterministic facts about the smallest sorted eigenvalue
+`hA.eigenvalues₀ ⟨card n - 1, _⟩` of a real symmetric matrix:
 
-Atlas: wishart-lambda-min-tail and norm-lipschitz.
+* `Matrix.IsHermitian.eigenvalues₀_last_eq_of_unit_eigenvector_of_le`: a unit eigenvector with
+ eigenvalue `a` and the Loewner bound `a • 1 ≤ A` identify `λ_min(A) = a`;
+* `Matrix.IsHermitian.eigenvalues₀_last_eq_of_conjTranspose_mul_mul_eq_diagonal`: an orthogonal
+ diagonalization `Uᵀ A U = diag l` gives `λ_min(A) = min l`.
+
+They connect inverse-power limits to the smallest-singular-value vocabulary of the Gaussian
+theorems. Source: Horn–Johnson 2013, Thm 4.2.2 (Rayleigh–Ritz).
+Atlas: `wishart-lambda-min-tail`, `norm-lipschitz` (helpers).
 -/
 
 noncomputable section
 
-open scoped Matrix
+open scoped Matrix MatrixOrder
 
 namespace NLAlib
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-/-- A unit eigenvector and positivity above its eigenvalue identify the
-Rayleigh minimum. Source: the finite spectral variational principle;
-atlas norm-lipschitz and wishart-lambda-min-tail (operator bridge). -/
-theorem lamMin_eq_of_unit_eigenvector_of_posSemidef_sub {A : Matrix ι ι ℝ}
-    {a : ℝ} (hpos : (A - a • 1).PosSemidef) (v : ι → ℝ)
-    (hv : v ⬝ᵥ v = 1) (heig : A *ᵥ v = a • v) :
-    (⨅ x : {x : ι → ℝ // x ⬝ᵥ x = 1}, x.1 ⬝ᵥ A *ᵥ x.1) = a := by
-  have hu : Nonempty {x : ι → ℝ // x ⬝ᵥ x = 1} := ⟨⟨v, hv⟩⟩
-  apply le_antisymm
-  · have h := ciInf_le (bddBelow_range_rayleigh A) ⟨v, hv⟩
-    simpa only [heig, dotProduct_smul, smul_eq_mul, hv, mul_one] using h
-  · apply le_ciInf
-    intro x
-    have hp := hpos.dotProduct_mulVec_nonneg x.val
-    simp only [star_trivial, Matrix.sub_mulVec, Matrix.smul_mulVec,
-      Matrix.one_mulVec, dotProduct_sub, dotProduct_smul, smul_eq_mul, x.property,
-      mul_one] at hp
+/-- A unit eigenvector `v` of `A` with eigenvalue `a`, together with the Loewner bound
+`a • 1 ≤ A`, identifies the smallest sorted eigenvalue: `λ_min(A) = a`. Horn–Johnson 2013,
+Thm 4.2.2; helper for `wishart-lambda-min-tail`. -/
+theorem _root_.Matrix.IsHermitian.eigenvalues₀_last_eq_of_unit_eigenvector_of_le [Nonempty ι]
+    {A : Matrix ι ι ℝ} (hA : A.IsHermitian) {a : ℝ} (hle : a • (1 : Matrix ι ι ℝ) ≤ A)
+    {v : ι → ℝ} (hv : ‖WithLp.toLp 2 v‖ = 1) (heig : A *ᵥ v = a • v) :
+    hA.eigenvalues₀ ⟨Fintype.card ι - 1, Nat.sub_one_lt_of_lt Fintype.card_pos⟩ = a := by
+  rw [hA.eigenvalues₀_last_eq_iInf Fintype.card_pos]
+  have hpos : (A - a • (1 : Matrix ι ι ℝ)).PosSemidef := Matrix.le_iff.mp hle
+  have hlow : ∀ x : ι → ℝ, ‖WithLp.toLp 2 x‖ = 1 → a ≤ RCLike.re (star x ⬝ᵥ (A *ᵥ x)) := by
+    intro x hx
+    have hx' : x ⬝ᵥ x = 1 := by rw [← norm_toLp_sq_eq_dotProduct_self, hx, one_pow]
+    have hp := hpos.dotProduct_mulVec_nonneg x
+    simp only [star_trivial, Matrix.sub_mulVec, Matrix.smul_mulVec, Matrix.one_mulVec,
+      dotProduct_sub, dotProduct_smul, smul_eq_mul, hx', mul_one, RCLike.re_to_real] at hp ⊢
     linarith
+  have hbdd : BddBelow (Set.range fun x : {x : ι → ℝ // ‖WithLp.toLp 2 x‖ = 1} =>
+      RCLike.re (star x.1 ⬝ᵥ (A *ᵥ x.1))) := ⟨a, by rintro _ ⟨x, rfl⟩; exact hlow x.1 x.2⟩
+  apply le_antisymm
+  · refine (ciInf_le hbdd (⟨v, hv⟩ : {x : ι → ℝ // ‖WithLp.toLp 2 x‖ = 1})).trans_eq ?_
+    show RCLike.re (star v ⬝ᵥ (A *ᵥ v)) = a
+    have hvv : v ⬝ᵥ v = 1 := by rw [← norm_toLp_sq_eq_dotProduct_self, hv, one_pow]
+    simp only [star_trivial, heig, dotProduct_smul, smul_eq_mul, hvv, mul_one, RCLike.re_to_real]
+  · have : Nonempty {x : ι → ℝ // ‖WithLp.toLp 2 x‖ = 1} := ⟨⟨v, hv⟩⟩
+    exact le_ciInf fun x => hlow x.1 x.2
 
-/-- The minimum of an orthogonally diagonalized real matrix is the smallest
-diagonal entry. Source: Rayleigh minimum and finite diagonal positivity;
-atlas wishart-lambda-min-tail and norm-lipschitz (operator bridge). -/
-theorem lamMin_eq_of_orthogonal_diagonalization
-    (A U : Matrix ι ι ℝ) (hU : Uᵀ * U = 1) (l : ι → ℝ)
-    (hdiag : Uᵀ * A * U = Matrix.diagonal l) (i₀ : ι)
-    (hmin : ∀ i, l i₀ ≤ l i) :
-    (⨅ x : {x : ι → ℝ // x ⬝ᵥ x = 1}, x.1 ⬝ᵥ A *ᵥ x.1) = l i₀ := by
-  have hU' : U * Uᵀ = 1 := mul_eq_one_comm.mp hU
-  have hA : A = U * Matrix.diagonal l * Uᵀ := by
+/-- The smallest sorted eigenvalue of an orthogonally diagonalized real matrix `Uᵀ A U = diag l`
+is the smallest diagonal entry. Horn–Johnson 2013, Thm 4.2.2; helper for
+`wishart-lambda-min-tail`. -/
+theorem _root_.Matrix.IsHermitian.eigenvalues₀_last_eq_of_conjTranspose_mul_mul_eq_diagonal
+    [Nonempty ι] {A U : Matrix ι ι ℝ} (hA : A.IsHermitian) (hU : HasOrthonormalCols U)
+    (l : ι → ℝ) (hdiag : Uᵀ * A * U = Matrix.diagonal l) (i₀ : ι) (hmin : ∀ i, l i₀ ≤ l i) :
+    hA.eigenvalues₀ ⟨Fintype.card ι - 1, Nat.sub_one_lt_of_lt Fintype.card_pos⟩ = l i₀ := by
+  have hU' : Uᵀ * U = 1 := hU
+  have hUU : U * Uᵀ = 1 := mul_eq_one_comm.mp hU'
+  have hA' : A = U * Matrix.diagonal l * Uᵀ := by
     rw [← hdiag]
-    simp only [← Matrix.mul_assoc, hU', Matrix.one_mul]
-    rw [Matrix.mul_assoc A U Uᵀ, hU']
+    simp only [← Matrix.mul_assoc, hUU, Matrix.one_mul]
+    rw [Matrix.mul_assoc A U Uᵀ, hUU]
     simp
   have hdif : Matrix.diagonal (fun i => l i - l i₀) =
       Matrix.diagonal l - l i₀ • (1 : Matrix ι ι ℝ) := by
@@ -62,65 +75,24 @@ theorem lamMin_eq_of_orthogonal_diagonalization
     Matrix.posSemidef_diagonal_iff.mpr fun i => sub_nonneg.mpr (hmin i)
   have hpos := hpd.mul_mul_conjTranspose_same U
   rw [Matrix.conjTranspose_eq_transpose_of_trivial, hdif, Matrix.mul_sub,
-    Matrix.sub_mul, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, hU'] at hpos
-  rw [← hA] at hpos
+    Matrix.sub_mul, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, hUU] at hpos
+  rw [← hA'] at hpos
   let e : ι → ℝ := Pi.single i₀ 1
   let v : ι → ℝ := U *ᵥ e
   have hv : v ⬝ᵥ v = 1 := by
     dsimp [v]
     rw [show (U *ᵥ e) ⬝ᵥ (U *ᵥ e) = e ⬝ᵥ ((Uᵀ * U) *ᵥ e) from
-        star_mulVec_dotProduct_mulVec_self U e, hU, Matrix.one_mulVec]
+        star_mulVec_dotProduct_mulVec_self U e, hU', Matrix.one_mulVec]
     simp [e, dotProduct, Pi.single_apply]
+  have hv' : ‖WithLp.toLp 2 v‖ = 1 := by
+    rw [← sqrt_dotProduct_self_eq_norm, hv, Real.sqrt_one]
   have heig : A *ᵥ v = l i₀ • v := by
-    rw [hA]
+    rw [hA']
     dsimp [v]
     rw [Matrix.mulVec_mulVec]
-    simp only [Matrix.mul_assoc, hU, Matrix.mul_one]
+    simp only [Matrix.mul_assoc, hU', Matrix.mul_one]
     rw [← Matrix.mulVec_mulVec]
     simp [e]
-  exact lamMin_eq_of_unit_eigenvector_of_posSemidef_sub hpos v hv heig
-
-/-- The maximal inverse regularized-Gram eigenvalue identifies the unregularized
-smallest singular value exactly. Source: orthogonal diagonalization and the
-Rayleigh minimum; atlas wishart-lambda-min-tail (operator limit bridge). -/
-theorem sigmaMin_transpose_sq_eq_inv_inverse_eigenvalue_sub
-    {κ : Type*} [Fintype κ] [DecidableEq κ]
-    (ε : ℝ) (G : Matrix ι κ ℝ) (hpd : (regularizedGram ε G).PosDef) (i₀ : ι)
-    (hmax : ∀ i, hpd.inv.isHermitian.eigenvalues i ≤
-      hpd.inv.isHermitian.eigenvalues i₀) :
-    sigmaMin Gᵀ ^ 2 = (hpd.inv.isHermitian.eigenvalues i₀)⁻¹ - ε := by
-  let hR := hpd.inv.isHermitian
-  let U : Matrix ι ι ℝ := hR.eigenvectorUnitary
-  let b := hR.eigenvalues
-  have hU : Uᵀ * U = 1 := by
-    simpa only [U, Matrix.star_eq_conjTranspose,
-      Matrix.conjTranspose_eq_transpose_of_trivial] using
-      Unitary.coe_star_mul_self hR.eigenvectorUnitary
-  have hdiag : Uᵀ * (G * Gᵀ) * U =
-      Matrix.diagonal (fun i => (b i)⁻¹ - ε) := by
-    have h := regularizedGram_inv_basis_conj_eq ε G hpd
-    simpa only [Unitary.conjStarAlgAut_apply, Unitary.coe_star, star_star,
-      Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial,
-      Matrix.transpose_transpose,
-      U, hR, b] using h
-  have hmin : ∀ i, (b i₀)⁻¹ - ε ≤ (b i)⁻¹ - ε := by
-    intro i
-    have hbi : 0 < b i := hpd.inv.eigenvalues_pos i
-    have h := one_div_le_one_div_of_le hbi (hmax i)
-    simpa only [one_div] using sub_le_sub_right h ε
-  rw [sigmaMin_transpose_sq]
-  exact lamMin_eq_of_orthogonal_diagonalization (G * Gᵀ) U hU
-    (fun i => (b i)⁻¹ - ε) hdiag i₀ hmin
-
-/-- The squared smallest singular value of the transposed rectangular matrix
-is bounded by its squared Frobenius size. Source: spectral versus Frobenius
-norm comparison; atlas wishart-lambda-min-tail (dominated limit helper). -/
-theorem sigmaMin_transpose_sq_le_frobSq {κ : Type*} [Fintype κ] [DecidableEq κ]
-    [Nonempty ι] (G : Matrix ι κ ℝ) : sigmaMin Gᵀ ^ 2 ≤ frobSq G := by
-  have h : sigmaMin Gᵀ ≤ frobNorm G := calc
-    _ ≤ specNorm Gᵀ := sigmaMin_le_specNorm Gᵀ
-    _ = specNorm G := specNorm_transpose G
-    _ ≤ frobNorm G := specNorm_le_frobNorm G
-  simpa only [frobNorm_sq] using pow_le_pow_left₀ (sigmaMin_nonneg Gᵀ) h 2
+  exact hA.eigenvalues₀_last_eq_of_unit_eigenvector_of_le (Matrix.le_iff.mpr hpos) hv' heig
 
 end NLAlib

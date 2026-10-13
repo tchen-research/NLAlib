@@ -90,7 +90,7 @@ simultaneously diagonal under real congruence exactly when their relative
 operator is diagonalizable over the real field. This formulation includes
 the real-spectrum requirement in real diagonalizability itself.
 Horn--Johnson (2013), Theorem 4.5.17.
-atlas: simultaneous-diagonalization-congruence (partial) -/
+atlas: simultaneous-diagonalization-congruence -/
 theorem exists_diagonal_congruence_iff_isDiagonalizable_inverse_mul
     {A B : Matrix n n ℝ} (hA : A.IsHermitian) (hAu : IsUnit A) (hB : B.IsHermitian) :
     (∃ (X : Matrix n n ℝ) (a b : n → ℝ), IsUnit X ∧

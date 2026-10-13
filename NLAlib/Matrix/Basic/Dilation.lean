@@ -8,9 +8,7 @@ matrices for matrix concentration, real matrices, where `Aᴴ = Aᵀ`, for the M
 arguments), with its immediate API: it is Hermitian (`isHermitian_dilation`) and additive
 (`dilation_add`).
 
-Atlas: `hermitian-dilation`.
-
-Ported from the Prove2me missions *An Introduction to Matrix Concentration Inequalities, Ch 3–8* (Tropp 2015).
+Tropp 2015, §2.1.17. Atlas: `hermitian-dilation`.
 -/
 
 namespace NLAlib

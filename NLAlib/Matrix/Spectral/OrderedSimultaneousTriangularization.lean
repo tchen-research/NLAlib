@@ -19,7 +19,7 @@ family member, including an infinite family; every member's diagonal lists
 its characteristic roots with multiplicity. Repetitions and empty matrix
 dimension are allowed, without normality or diagonalizability assumptions.
 Horn–Johnson 2013, Theorem 2.3.3; prescribed-order strengthening in
-derivations Section gen:simultaneous.
+derivations Section.
 atlas: simultaneous-diagonalization (partial) -/
 theorem exists_simultaneous_unitary_schur_triangularization_with_charpoly
     {n ι : Type*} [Fintype n] [DecidableEq n]

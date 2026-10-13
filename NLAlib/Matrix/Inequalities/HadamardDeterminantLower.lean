@@ -12,7 +12,7 @@ atlas `schur-product-inequalities`.
 
 noncomputable section
 open Matrix
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
@@ -25,7 +25,7 @@ private theorem det_mul_prod_diag_le_det_hadamard_fin (N : ℕ) :
     intro A B hA hB hdiag
     have ha : 0 < A 0 0 := hA.diag_pos
     have hb : 0 < B 0 0 := hdiag 0
-    have hS := ((posDef_iff_pivotSchur (Matrix.isHermitian_iff_isSymm.mp hA.isHermitian)).mp hA).2
+    have hS := ((posDef_iff_pivotSchur hA.isHermitian).mp hA).2
     let B₂ := B.submatrix Fin.succ Fin.succ
     have hB₂ : B₂.PosSemidef := hB.submatrix Fin.succ
     let u : Fin N → ℝ := fun i => A i.succ 0

@@ -12,12 +12,13 @@ Atlas: `intrinsic-dimension`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Corollary 7.3.2, equation (7.3.3), printed p. 109; Section 7.7.4, printed pp. 117–118.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
 open Matrix
 
+open scoped Matrix.Norms.L2Operator in
 /-- A matrix dominating `∫ Z Zᴴ` (or any integral of PSD matrices) in the Loewner order is PSD. -/
 private lemma posSemidef_of_loewnerLE {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     {d : Type*} [Fintype d] [DecidableEq d]
@@ -30,6 +31,7 @@ private lemma posSemidef_of_loewnerLE {Ω : Type*} [MeasurableSpace Ω] {μ : Me
   rw [this]
   exact PosSemidef.add h hI
 
+open scoped Matrix.Norms.L2Operator in
 /-- For a PSD matrix, the spectral norm is at most the trace. -/
 private lemma norm_le_trace {d : Type*} [Fintype d] [DecidableEq d] [Nonempty d]
     {P : Matrix d d ℂ} (hP : P.PosSemidef) : ‖P‖ ≤ (trace P).re := by
@@ -53,6 +55,7 @@ private lemma norm_le_trace {d : Type*} [Fintype d] [DecidableEq d] [Nonempty d]
   rw [htr]
   exact hi.trans (Finset.single_le_sum (fun j _ => hnn j) (Finset.mem_univ i))
 
+open scoped Matrix.Norms.L2Operator in
 /-- The intrinsic dimension of a nonzero PSD matrix is at least one. -/
 private lemma one_le_intrinsicDimension {d : Type*} [Fintype d] [DecidableEq d]
     {P : Matrix d d ℂ} (hP : P.PosSemidef) (hne : P ≠ 0) : 1 ≤ intrinsicDimension P := by
@@ -65,6 +68,7 @@ private lemma one_le_intrinsicDimension {d : Type*} [Fintype d] [DecidableEq d]
   rw [le_div_iff₀ hpos, one_mul]
   exact norm_le_trace hP
 
+open scoped Matrix.Norms.L2Operator in
 /-- Exponent comparison: for `τ ≥ μ₀ > 0`, the Bernstein exponent dominates a linear one. -/
 private lemma exponent_le {v L μ₀ τ : ℝ} (hv : 0 < v) (hL : 0 ≤ L) (hμ : 0 < μ₀) (hτ : μ₀ ≤ τ) :
     -(τ ^ 2 / 2) / (v + L * τ / 3) ≤ -((μ₀ / 2) / (v + L * μ₀ / 3)) * τ := by
@@ -74,6 +78,7 @@ private lemma exponent_le {v L μ₀ τ : ℝ} (hv : 0 < v) (hL : 0 ≤ L) (hμ 
   have : 0 < τ := hμ.trans_le hτ
   nlinarith [mul_le_mul_of_nonneg_left hτ (le_of_lt (mul_pos this hv))]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The tail integral of an exponential. -/
 private lemma integral_exp {K c : ℝ} (hc : 0 < c) :
     ∫ t in Set.Ioi (0 : ℝ), K * Real.exp (-c * t) = K / c := by
@@ -81,10 +86,12 @@ private lemma integral_exp {K c : ℝ} (hc : 0 < c) :
   simp
   field_simp
 
+open scoped Matrix.Norms.L2Operator in
 private lemma integrable_exp {K c : ℝ} (hc : 0 < c) :
     IntegrableOn (fun t : ℝ => K * Real.exp (-c * t)) (Set.Ioi 0) :=
   (exp_neg_integrableOn_Ioi 0 hc).const_mul K
 
+open scoped Matrix.Norms.L2Operator in
 /-- The final scalar bookkeeping. -/
 private lemma scalar {v L ℓ r : ℝ} (hv : 0 < v) (hL : 0 ≤ L) (hℓ : 1 / 2 ≤ ℓ) (hr : 0 ≤ r)
     (hexp : Real.exp (-ℓ) = 1 / (1 + r)) :
@@ -147,18 +154,9 @@ end NLAlib
 
 open NLAlib
 
-/-- Intrinsic-dimension matrix Bernstein expectation bound: there is an absolute constant `C` with `𝔼
-‖Z‖ ≤ C (√(v log (1 + r)) + L log (1 + r))`, where `r` is the intrinsic dimension of the variance
-proxy.
-
-Tropp 2015, Cor. 7.3.2, eq. (7.3.3). Atlas: `intrinsic-dimension`. Ported from the Prove2me
-mission *An Introduction to Matrix Concentration Inequalities, Ch 7*.
-
-The constant is existential, as in the source ("Const"). OPEN ITEM (atlas `intrinsic-dimension`):
-this `∃ C` is a deliberate exception to STANDARDS §3 ("constants explicit, never `∃ C`"); the
-explicit constant from the proof is still to be extracted and stated. -/
-theorem NLAlib.intrinsic_matrix_bernstein_expectation :
-    ∃ C : ℝ, 0 < C ∧
+open scoped Matrix.Norms.L2Operator in
+/-- Tropp's intrinsic Bernstein expectation bound with the constant `20`, in the binder shape of the proof. -/
+private lemma NLAlib.intrinsic_matrix_bernstein_expectation_package :
     ∀ {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
       {m n N : ℕ} [NeZero m] [NeZero n]
       (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) (L : ℝ), 0 ≤ L →
@@ -166,15 +164,15 @@ theorem NLAlib.intrinsic_matrix_bernstein_expectation :
       (V₁ ≠ 0 ∨ V₂ ≠ 0) →
       (∀ k, Measurable (S k)) → iIndepFun S μ →
       (∀ k, (∫ ω, S k ω ∂μ) = 0) →
-      (∀ k, ∀ᵐ ω ∂μ, ‖S k ω‖ ≤ L) →
+      (∀ k, ∀ᵐ ω ∂μ, specNorm (S k ω) ≤ L) →
       (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) ≤ V₁ →
       (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) ≤ V₂ →
       let r := intrinsicDimension (Matrix.fromBlocks V₁ 0 0 V₂)
-      let v := max (‖V₁‖) (‖V₂‖)
-      (∫ ω, ‖∑ k, S k ω‖ ∂μ) ≤
-        C * (Real.sqrt (v * Real.log (1 + r)) + L * Real.log (1 + r)) := by
-  refine ⟨20, by norm_num, ?_⟩
+      let v := max (specNorm V₁) (specNorm V₂)
+      (∫ ω, specNorm (∑ k, S k ω) ∂μ) ≤
+        20 * (Real.sqrt (v * Real.log (1 + r)) + L * Real.log (1 + r)) := by
   intro Ω _ μ _ m n N _ _ S L hL V₁ V₂ hV hMeas hIndep hMean hBound hVar₁ hVar₂ r v
+  simp only [specNorm_eq_norm] at hBound ⊢
   -- PSD-ness of the variance proxies
   have hV₁ : V₁.PosSemidef := posSemidef_of_loewnerLE _
     (fun ω => Matrix.posSemidef_self_mul_conjTranspose _) V₁ hVar₁
@@ -251,3 +249,29 @@ theorem NLAlib.intrinsic_matrix_bernstein_expectation :
   calc (∫ ω, ‖∑ k, S k ω‖ ∂μ) ≤ μ₀ + 4 * r * Real.exp (-c * μ₀) / c := by
         linarith
     _ ≤ 20 * (Real.sqrt (v * ℓ) + L * ℓ) := hfinal
+
+namespace NLAlib
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Intrinsic-dimension matrix Bernstein, expectation bound**: for independent, centred summands
+with `‖S k‖ ≤ L` a.e. and variance proxies `V₁`, `V₂` (not both zero),
+`𝔼 ‖∑ k, S k‖ ≤ 20 (√(v log (1 + r)) + L log (1 + r))` with `v = max ‖V₁‖ ‖V₂‖` and
+`r = intdim(diag(V₁, V₂))`. Tropp 2015, Cor. 7.3.2, eq. (7.3.3), whose unspecified absolute
+constant is `20` here.
+atlas: intrinsic-dimension -/
+theorem integral_specNorm_sum_le_of_intrinsicDimension {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
+    (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) {L : ℝ} (hL : 0 ≤ L)
+    {V₁ : Matrix (Fin m) (Fin m) ℂ} {V₂ : Matrix (Fin n) (Fin n) ℂ} (hV : V₁ ≠ 0 ∨ V₂ ≠ 0)
+    (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
+    (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0) (hBound : ∀ k, ∀ᵐ ω ∂μ, specNorm (S k ω) ≤ L)
+    (hVariance₁ : (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) ≤ V₁)
+    (hVariance₂ : (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) ≤ V₂) :
+    (∫ ω, specNorm (∑ k, S k ω) ∂μ) ≤
+      20 * (Real.sqrt (max (specNorm V₁) (specNorm V₂) *
+        Real.log (1 + intrinsicDimension (Matrix.fromBlocks V₁ 0 0 V₂))) +
+        L * Real.log (1 + intrinsicDimension (Matrix.fromBlocks V₁ 0 0 V₂))) :=
+  intrinsic_matrix_bernstein_expectation_package μ S L hL V₁ V₂ hV hMeas hIndep hMean hBound
+    hVariance₁ hVariance₂
+
+end NLAlib

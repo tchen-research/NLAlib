@@ -6,21 +6,13 @@ import NLAlib.Matrix.Norms.Core
 # Entries are bounded by the spectral norm
 
 `|A i j| ≤ ‖A‖₂` for a real matrix (`abs_apply_le_specNorm`): the entry is a coordinate of
-`A *ᵥ eⱼ`, whose Euclidean norm is at most `‖A‖₂`.
+`A *ᵥ eⱼ`, whose Euclidean norm is at most `‖A‖₂`.ConcreteLadderIteration.-/
 
-Source: ported from `SparseFockFormal.ConcreteLadderIteration.abs_entry_le_l2_opNorm`, commit
-b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
--/
-
-open scoped Matrix.Norms.L2Operator
 
 namespace NLAlib
 
-/-- A single entry of a real matrix is bounded by its spectral norm.
-
-Source: ported from `SparseFockFormal.ConcreteLadderIteration.abs_entry_le_l2_opNorm`
-(generalised to rectangular matrices), b9da2b5d96e5fd70252e9c6551aefc92643e7d0b;
-supports `sparse-ose`. -/
+open scoped Matrix.Norms.L2Operator in
+/-- A single entry of a real matrix is bounded by its spectral norm.ConcreteLadderIteration.-/
 theorem abs_apply_le_specNorm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
     [DecidableEq n] (A : Matrix m n ℝ) (i : m) (j : n) : |A i j| ≤ specNorm A := by
   rw [specNorm_eq_norm]

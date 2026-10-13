@@ -3,7 +3,7 @@ import NLAlib.Polynomial.Chebyshev.ChebyshevAliasing
 /-!
 # Odd trigonometric interpolation of the sawtooth
 
-The odd interpolant is constructed as `sin(t) r(cos(t))`, where `r` is the actual Lagrange
+The odd interpolant is constructed as `sin(t) r(cos(t))`, where `r` is the Lagrange
 interpolant of the divided sawtooth values at the interior canonical Chebyshev nodes.
 This avoids an unproved trigonometric interpolation-existence premise in sharp Jackson.
 -/
@@ -15,14 +15,14 @@ open Polynomial Polynomial.Chebyshev Finset Real
 namespace NLAlib
 
 /-- The sine-divided Lagrange polynomial underlying the sharp Jackson sawtooth interpolant.
-Source: operator rederivations `rt:sawtooth`; Arnold, numerical analysis, Section 1.2.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem). Helper for `jackson-lipschitz`.
 Atlas `jackson-lipschitz` (construction helper). -/
 def sawtoothSineInterp (n : ℕ) : ℝ[X] :=
   Lagrange.interpolate (range n) (fun j => node (n + 1) (j + 1))
     (fun j => (Real.pi - (j + 1 : ℕ) * Real.pi / (n + 1)) / sin ((j + 1 : ℕ) * Real.pi / (n + 1)))
 
 /-- The explicit odd trigonometric interpolant `τ_n(t)=sin(t) r_n(cos(t))`.
-Source: operator rederivations `rt:sawtooth`; Arnold, numerical analysis, Section 1.2.
+Source: Arnold, *Numerical Analysis* lecture notes, §1.2 (Jackson's theorem). Helper for `jackson-lipschitz`.
 Atlas `jackson-lipschitz` (construction helper). -/
 def sawtoothApprox (n : ℕ) (t : ℝ) : ℝ := sin t * (sawtoothSineInterp n).eval (cos t)
 
@@ -62,7 +62,7 @@ theorem degree_sawtoothSineInterp_lt (n : ℕ) : (sawtoothSineInterp n).degree <
 
 /-- The explicit odd trigonometric polynomial takes the sawtooth value at every positive
 interior half-period grid point.
-Source: operator rederivations `rt:sawtooth`; helper for sharp Jackson (`jackson-lipschitz`). -/
+Helper for `jackson-lipschitz`. -/
 theorem sawtoothApprox_grid_eq {n j : ℕ} (hj : j < n) :
     sawtoothApprox n (((j + 1 : ℕ) : ℝ) * Real.pi / (n + 1)) =
       Real.pi - ((j + 1 : ℕ) : ℝ) * Real.pi / (n + 1) := by
@@ -76,16 +76,16 @@ theorem sawtoothApprox_grid_eq {n j : ℕ} (hj : j < n) :
   exact mul_div_cancel₀ _ (by simpa only [Nat.cast_add, Nat.cast_one] using (sin_sawtooth_angle_pos hj).ne')
 
 /-- The zero-degree sawtooth interpolant vanishes identically.
-Source: operator rederivations `rt:sawtooth`, degenerate case (`jackson-lipschitz`). -/
+Helper for `jackson-lipschitz` (degenerate case). -/
 @[simp] theorem sawtoothApprox_zero (t : ℝ) : sawtoothApprox 0 t = 0 := by
   simp [sawtoothApprox, sawtoothSineInterp]
 
 /-- The odd sawtooth interpolant vanishes at the origin.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 @[simp] theorem sawtoothApprox_at_zero (n : ℕ) : sawtoothApprox n 0 = 0 := by simp [sawtoothApprox]
 
 /-- The odd sawtooth interpolant vanishes at Real.pi.
-Source: operator rederivations `rt:sawtooth` (`jackson-lipschitz`, helper). -/
+Helper for `jackson-lipschitz` (Jackson's theorem through the sawtooth function). -/
 @[simp] theorem sawtoothApprox_at_pi (n : ℕ) : sawtoothApprox n Real.pi = 0 := by simp [sawtoothApprox]
 
 end NLAlib

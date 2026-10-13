@@ -6,8 +6,7 @@ import NLAlib.Matrix.Basic.Dilation
 
 The real dilation `dilation A = [0 A; Aᵀ 0]` (`Matrix/Basic/Dilation`) has the paired singular
 spectrum,
-including every rectangular padded zero. Source: Bhatia 1997, Section III.4;
-the matrix-toolkit operator manuscript, dilation argument for `lidskii`.
+including every rectangular padded zero. Source: Bhatia 1997, Section III.4.
 -/
 
 noncomputable section

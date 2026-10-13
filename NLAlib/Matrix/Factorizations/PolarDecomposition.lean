@@ -11,7 +11,7 @@ Theorem 7.3.1; atlas `polar-decomposition`.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 

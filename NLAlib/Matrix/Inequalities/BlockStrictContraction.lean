@@ -5,14 +5,14 @@ import NLAlib.Matrix.Spectral.HaynsworthInertia
 # Strict block contractions and relative spectral radius
 
 For positive definite diagonal blocks, strict contraction is equivalent to
-block positive definiteness. The actual relative spectral radius supplies
+block positive definiteness. The relative spectral radius supplies
 both the weak and strict criteria. Source: Horn--Johnson (2013),
 Theorems 7.7.7--7.7.9; atlas `psd-block-contraction`.
 -/
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
@@ -27,7 +27,8 @@ theorem posDef_identity_fromBlocks_iff_specNorm_lt_one (X : Matrix m n ℝ) :
   have hG : (Xᵀ * X).PosSemidef := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using Matrix.posSemidef_conjTranspose_mul_self X
   rw [posDef_one_sub_iff_specNorm_lt_one_of_posSemidef hG,
-    ← specNorm_sq_eq_specNorm_transpose_mul_self]
+    ← Matrix.conjTranspose_eq_transpose_of_trivial X,
+    ← specNorm_sq_eq_specNorm_conjTranspose_mul_self]
   exact sq_lt_one_iff₀ (specNorm_nonneg X)
 
 /-- For positive definite diagonal blocks, every square-root factorization
@@ -73,7 +74,7 @@ theorem posDef_fromBlocks_iff_exists_strict_sqrt_contraction_factor
   · rintro ⟨X, hnorm, hX⟩
     exact (posDef_fromBlocks_iff_specNorm_lt_one_of_sqrt_factor hA hC hX).mpr hnorm
 
-/-- Reversing a product of two real square matrices preserves its actual
+/-- Reversing a product of two real square matrices preserves its
 real spectral radius, by the characteristic-polynomial identity.
 Horn--Johnson (2013), Section 1.3; helper for block relative-radius tests. -/
 theorem spectralRadius_mul_comm (A B : Matrix n n ℝ) :

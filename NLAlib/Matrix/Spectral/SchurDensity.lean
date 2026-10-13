@@ -3,7 +3,7 @@ import NLAlib.Matrix.Spectral.SchurTriangularization
 /-!
 # Dense distinct characteristic-root lists over the real and complex fields
 
-The separability density theorem yields actual injective complex eigenvalue
+The separability density theorem yields injective complex eigenvalue
 lists, with real matrices perturbed within the real matrix space.
 Source: Horn–Johnson (2013), §2.3.
 -/
@@ -19,7 +19,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 /-- Complex matrices admitting a complete list of pairwise distinct
 characteristic eigenvalues are dense. Source: Horn–Johnson (2013), §2.3;
 the characteristic factorization explicitly certifies multiplicities.
-atlas: schur-triangularization (partial) -/
+atlas: schur-triangularization -/
 theorem dense_exists_injective_charpoly_factors_complex :
     Dense {A : Matrix n n ℂ | ∃ d : n → ℂ, Function.Injective d ∧
       A.charpoly = ∏ i, (X - C (d i))} := by
@@ -33,10 +33,10 @@ theorem dense_exists_injective_charpoly_factors_complex :
   exact hA
 
 /-- Real matrices admitting a complete list of pairwise distinct complex
-characteristic eigenvalues are dense among real matrices. Source:
+characteristic eigenvalues are dense among real matrices.
 Horn–Johnson (2013), §2.3; complexification records possible nonreal conjugate
 pairs and imposes no real-spectrum restriction.
-atlas: schur-triangularization (partial) -/
+atlas: schur-triangularization -/
 theorem dense_exists_injective_charpoly_factors_real :
     Dense {A : Matrix n n ℝ | ∃ d : n → ℂ, Function.Injective d ∧
       (A.map Complex.ofReal).charpoly = ∏ i, (X - C (d i))} := by

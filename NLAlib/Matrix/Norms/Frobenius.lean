@@ -5,22 +5,22 @@ import Mathlib.LinearAlgebra.Matrix.DotProduct
 # The Frobenius inner product and norm
 
 * `NLAlib.frobInner`, `NLAlib.frobSq`, `NLAlib.frobNorm`: the Frobenius inner product, its
-  squared norm and the norm, over any `RCLike` field `𝕜`. The inner product is the real part
-  `⟨A, B⟩_F = Re ∑ᵢⱼ conj(Aᵢⱼ) Bᵢⱼ = Re tr(AᴴB)`, the inner product of the underlying real
-  Hilbert space (Mathlib's `real_inner`); the `𝕜`-valued pairing is `(Aᴴ * B).trace`. Over `ℝ`
-  every definition is the old explicit sum by `rfl` (`frobInner_eq_sum_mul`).
+ squared norm and the norm, over any `RCLike` field `𝕜`. The inner product is the real part
+ `⟨A, B⟩_F = Re ∑ᵢⱼ conj(Aᵢⱼ) Bᵢⱼ = Re tr(AᴴB)`, the inner product of the underlying real
+ Hilbert space (Mathlib's `real_inner`); the `𝕜`-valued pairing is `(Aᴴ * B).trace`. Over `ℝ`
+ every definition is the old explicit sum by `rfl` (`frobInner_eq_sum_mul`).
 
 ## Contents
 
 * Algebra of `frobInner` (bilinearity over real scalars, symmetry, trace forms
-  `Re tr(AᴴB) = Re tr(ABᴴ)`, transpose and conjugate transpose).
+ `Re tr(AᴴB) = Re tr(ABᴴ)`, transpose and conjugate transpose).
 * `frobSq` / `frobNorm`: `‖A‖_F² = ∑ᵢⱼ |Aᵢⱼ|²`, nonnegativity, definiteness, expansion of
-  `frobSq (A ± B)`, Pythagoras, Cauchy–Schwarz, triangle inequality, transpose, `‖I‖_F² = n`.
+ `frobSq (A ± B)`, Pythagoras, Cauchy–Schwarz, triangle inequality, transpose, `‖I‖_F² = n`.
 * Rows: `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`, `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, `‖Av‖² = v*(AᴴA)v`, `v ⬝ v ≥ 0`,
-  `‖Bx‖² ≤ ‖B‖_F² ‖x‖²`.
+ `‖Bx‖² ≤ ‖B‖_F² ‖x‖²`.
 * Products: `⟨PX, QY⟩_F = ⟨X, PᴴQY⟩_F` and invariance under multiplication by matrices with
-  orthonormal columns (stated with the raw hypothesis `Qᴴ * Q = 1`, which is
-  `NLAlib.HasOrthonormalCols Q` by definition).
+ orthonormal columns (stated with the raw hypothesis `Qᴴ * Q = 1`, which is
+ `NLAlib.HasOrthonormalCols Q` by definition).
 
 Statements are written with `ᴴ` and `star`; real users get `ᵀ` from the simp lemma
 `Matrix.conjTranspose_eq_transpose_of_trivial` (foundation change F1; the real `ᵀ` corollaries of
@@ -330,6 +330,30 @@ theorem star_mulVec_dotProduct_mulVec_self (A : Matrix m n 𝕜) (x : n → 𝕜
     star (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = star x ⬝ᵥ ((Aᴴ * A) *ᵥ x) := by
   rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec (star x) Aᴴ, Matrix.star_mulVec]
 
+/-- The squared Frobenius norm is the real part of the Gram trace: `‖A‖_F² = Re tr(AᴴA)`.
+Horn–Johnson 2013, §5.6; supports `volume-sampling`. -/
+theorem frobSq_eq_re_trace_conjTranspose_mul_self (A : Matrix m n 𝕜) :
+    frobSq A = RCLike.re (Aᴴ * A).trace := by
+  simp only [frobSq, frobInner, Matrix.trace, Matrix.diag, Matrix.mul_apply,
+    Matrix.conjTranspose_apply]
+  rw [Finset.sum_comm]
+
+/-- The squared Frobenius norm is the sum of the squared Frobenius norms of the columns
+(as `m × Fin 1` matrices). Supports `volume-sampling`. -/
+theorem frobSq_eq_sum_frobSq_col (A : Matrix m n 𝕜) :
+    frobSq A = ∑ j, frobSq (A.submatrix id (fun _ : Fin 1 => j)) := by
+  simp only [frobSq_eq_sum_norm_sq, Matrix.submatrix_apply, id_eq, Fin.sum_univ_one]
+  rw [Finset.sum_comm]
+
+/-- The squared Frobenius norm of a diagonal matrix is the sum of the squared moduli of its
+entries. -/
+theorem frobSq_diagonal [DecidableEq n] (d : n → 𝕜) :
+    frobSq (Matrix.diagonal d) = ∑ i, ‖d i‖ ^ 2 := by
+  simp only [frobSq_eq_sum_norm_sq, Matrix.diagonal_apply]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [Finset.sum_eq_single i (fun j _ hj => by simp [Ne.symm hj]) (fun h => (h (Finset.mem_univ i)).elim)]
+  simp
+
 /-- Row-wise Cauchy–Schwarz: `‖Ax‖₂² ≤ ‖A‖_F² ‖x‖₂²`, written with explicit sums.
 Atlas `norms-frob-spec`. -/
 theorem sum_norm_sq_mulVec_le_frobSq (A : Matrix m n 𝕜) (x : n → 𝕜) :
@@ -448,8 +472,7 @@ section MathlibFrobenius
 open scoped Matrix.Norms.Frobenius
 
 /-- The squared Frobenius norm (Mathlib's scoped `Matrix.frobeniusNormedAddCommGroup`) is the sum
-of the squared norms of the entries. Source: the Frobenius definition, supporting operator
-re-derivation `sa:amm`. -/
+of the squared norms of the entries. Source: the Frobenius definition, supporting. -/
 theorem frobenius_norm_sq_eq_sum_norm_sq {m n 𝕜 : Type*} [Fintype m] [Fintype n]
     [NormedAddCommGroup 𝕜] (A : Matrix m n 𝕜) :
     ‖A‖ ^ 2 = ∑ i, ∑ j, ‖A i j‖ ^ 2 := by

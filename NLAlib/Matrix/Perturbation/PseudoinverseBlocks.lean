@@ -83,7 +83,7 @@ theorem neg_complement_rowProjector_mul_moorePenroseInverse_eq (A B : Matrix m n
 
 omit [DecidableEq n] in
 /-- The one-sided column-space gap contains the perturbation and the first
-pseudoinverse as actual factors. Stewart–Sun §III.3, all ranks. -/
+pseudoinverse as factors. Stewart–Sun §III.3, all ranks. -/
 theorem complement_columnProjector_mul_columnProjector_eq (A B : Matrix m n ℝ) :
     (1-B*moorePenroseInverse B)*(A*moorePenroseInverse A) =
       -((1-B*moorePenroseInverse B)*(B-A)*moorePenroseInverse A) := by
@@ -93,7 +93,7 @@ theorem complement_columnProjector_mul_columnProjector_eq (A B : Matrix m n ℝ)
 
 omit [DecidableEq m] in
 /-- The one-sided row-space gap contains the second pseudoinverse and the
-perturbation as actual factors. Stewart–Sun §III.3, all ranks. -/
+perturbation as factors. Stewart–Sun §III.3, all ranks. -/
 theorem rowProjector_mul_complement_rowProjector_eq (A B : Matrix m n ℝ) :
     (moorePenroseInverse B*B)*(1-moorePenroseInverse A*A) =
       moorePenroseInverse B*(B-A)*(1-moorePenroseInverse A*A) := by

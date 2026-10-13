@@ -9,12 +9,13 @@ spectral bounds or integrability of a predictable offset are unnecessary.
 noncomputable section
 
 open MeasureTheory Matrix Set
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Actual upper bounds on two Hermitian random matrices give integrability of their
 trace-exponential sum. The offsets may have arbitrarily negative eigenvalues.
 Source: operator rederivations `eq:potentialbound` and `eq:condlieb` domination;

@@ -1,6 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
-import NLAlib.Matrix.Structured.Measurable
+import NLAlib.Matrix.Measurability.Measurable
 import NLAlib.ForMathlib.Probability.Independence
 
 /-!

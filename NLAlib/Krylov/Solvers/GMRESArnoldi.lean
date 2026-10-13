@@ -69,8 +69,8 @@ theorem transpose_Q_mulVec_eq_smul_single (D : ArnoldiDecomp A b q) (hq : 0 < q)
 Lect. 35; Saad (2011) [`saad11`], §6.5.3. Atlas: `gmres-arnoldi-form`. -/
 theorem transpose_Q_mulVec_eq_sqrt_smul_single (D : ArnoldiDecomp A b q) (hq : 0 < q)
     (hD : 0 < D.Q.col ⟨0, hq⟩ ⬝ᵥ b) :
-    D.Qᵀ *ᵥ b = √(b ⬝ᵥ b) • Pi.single (⟨0, hq⟩ : Fin q) 1 := by
-  rw [D.transpose_Q_mulVec_eq_smul_single hq]
+    D.Qᵀ *ᵥ b = ‖WithLp.toLp 2 b‖ • Pi.single (⟨0, hq⟩ : Fin q) 1 := by
+  rw [norm_toLp_eq_sqrt_dotProduct, D.transpose_Q_mulVec_eq_smul_single hq]
   congr 1
   have h := D.sq_transpose_Q_mulVec_apply_zero hq
   have h1 : (D.Qᵀ *ᵥ b) ⟨0, hq⟩ = D.Q.col ⟨0, hq⟩ ⬝ᵥ b := by
@@ -130,7 +130,7 @@ theorem isGMRESIterate_add_mulVec_iff (D : ArnoldiDecomp A (c - A *ᵥ x₀) (q 
       ∀ y' : Fin q → ℝ,
         (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y) ⬝ᵥ (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y) ≤
           (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y') ⬝ᵥ (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y') := by
-  rw [IsGMRESIterate, IsAffineMinimiser, add_sub_cancel_left]
+  rw [IsGMRESIterate, IsAffineMinimizer, add_sub_cancel_left]
   simp only [D.restrict_Q_mulVec_mem y, true_and]
   constructor
   · intro h y'

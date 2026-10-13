@@ -3,7 +3,7 @@ import NLAlib.Matrix.Perturbation.CoupledNormBounds
 # Coupled rectangular residual norm bounds
 
 A diagonal coefficient bounded below and a rectangular coupling bounded above
-produce the exact maximum-operator and paired-Frobenius estimates. Source:
+produce the exact maximum-operator and paired-Frobenius estimates.
 Wedin (1972), Section 3; toolkit derivations, two coupled inequalities.
 -/
 noncomputable section

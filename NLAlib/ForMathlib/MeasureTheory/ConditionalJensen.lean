@@ -3,7 +3,7 @@ import Mathlib.MeasureTheory.Function.ConditionalExpectation.CondJensen
 /-!
 # Conditional Jensen on a nonclosed convex domain
 
-The conditional mean lies in the closure of the actual hypograph. Continuity at that
+The conditional mean lies in the closure of the hypograph. Continuity at that
 mean then gives conditional Jensen whenever mean membership in the domain is proved.
 This keeps the probability space arbitrary and avoids boundary regularization.
 -/
@@ -13,14 +13,14 @@ noncomputable section
 open MeasureTheory Set Filter
 open scoped Topology
 
-namespace NLAlib
+namespace MeasureTheory
 
 /-- Conditional Jensen for a concave continuous function on a possibly nonclosed convex
-domain, provided its actual conditional mean lies in that domain almost everywhere.
+domain, provided its conditional mean lies in that domain almost everywhere.
 The closed hypograph argument proves the inequality without assuming conditional Jensen.
 Source: Mathlib conditional Jensen and closed convex conditional-mean membership;
-operator rederivations Section 3.2 (`eq:condlieb`), foundation for `matrix-freedman`. -/
-theorem ConcaveOn.condExp_map_le_of_condExp_mem {Ω E : Type*}
+Tropp 2011 (matrix Freedman), foundation for `matrix-freedman`. -/
+theorem _root_.ConcaveOn.condExp_map_le_of_condExp_mem {Ω E : Type*}
     {m mΩ : MeasurableSpace Ω} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     {μ : Measure Ω} (hm : m ≤ mΩ) [SigmaFinite (μ.trim hm)]
     {s : Set E} {g : E → ℝ} {f : Ω → E} (hg : ConcaveOn ℝ s g) (hgc : ContinuousOn g s)
@@ -46,4 +46,4 @@ theorem ConcaveOn.condExp_map_le_of_condExp_mem {Ω E : Type*}
       ⟨(continuous_fst.tendsto _).comp hlim, Eventually.of_forall fun n => (hu n).1⟩)
   exact le_of_tendsto_of_tendsto' ((continuous_snd.tendsto _).comp hlim) hglim (fun n => (hu n).2)
 
-end NLAlib
+end MeasureTheory

@@ -21,7 +21,7 @@ atlas: operator-monotone-convex -/
 theorem NLAlib.operatorConvexOn_neg_log :
     OperatorConvexOn (Set.Ioi 0) (fun x => -Real.log x) := by
   refine ⟨convex_Ioi 0, ?_⟩
-  intro d hd A H hA hH hAsp hHsp t ht₀ ht₁
+  intro d A H hA hH hAsp hHsp t ht₀ ht₁
   have hAp : IsStrictlyPositive A :=
     CStarAlgebra.isStrictlyPositive_iff_isSelfAdjoint_and_spectrum_pos.mpr
       ⟨hA, hAsp⟩

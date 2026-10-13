@@ -12,7 +12,7 @@ Source: Horn--Johnson (2013), Theorem 7.5.4. Atlas: `psd-cone-self-dual`.
 noncomputable section
 
 open Matrix
-open scoped MatrixOrder ComplexOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 

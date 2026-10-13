@@ -23,7 +23,7 @@ projector. Source: Horn–Johnson (2013), Theorem 1.4.7; the distinguished
 coordinate may be relabeled as the first coordinate. For complex columns
 `y₀`, take the left row `y = star y₀`; conjugating the displayed inverse row
 gives the source's inverse-adjoint column `y₀/(x* y₀)`.
-atlas: left-right-eigenvectors (partial) -/
+atlas: left-right-eigenvectors -/
 theorem exists_isolated_eigenvector_similarity {A : Matrix n n K} {x y : n → K} {μ : K}
     (hAx : A *ᵥ x = μ • x) (hyA : y ᵥ* A = μ • y) (hpair : y ⬝ᵥ x ≠ 0) :
     ∃ (S : Matrix n n K) (i : n), IsUnit S ∧ Matrix.col S i = x ∧

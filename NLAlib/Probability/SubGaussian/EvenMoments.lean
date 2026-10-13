@@ -17,7 +17,7 @@ Scalar consequences of Mathlib's `ProbabilityTheory.HasSubgaussianMGF X c μ`:
 
 The square-exponential bounds built from these are in
 `NLAlib.Probability.SubGaussian.ExpSquare`. Vershynin 2018, Prop 2.5.2. Ported from HighDimProb
-commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae (Hanson–Wright proof, Apache-2.0, authors
+(Hanson–Wright proof, Apache-2.0, authors
 Yuanhe Zhang, Jason D. Lee, Fanghui Liu); atlas `hanson-wright` (helpers), `subgaussian-def`.
 -/
 
@@ -50,23 +50,23 @@ theorem hasSubgaussianMGF_mono {μ : Measure Ω} {X : Ω → ℝ} {c d : ℝ≥0
 sub-Gaussian with proxy `∑_{i ∈ s} aᵢ² cᵢ`. Vershynin 2018, Prop 2.6.1; atlas `hanson-wright`
 (helper). -/
 theorem hasSubgaussianMGF_finset_sum_mul_of_iIndepFun {ι : Type*} {μ : Measure Ω}
-    {X : ι → Ω → ℝ} (h_indep : iIndepFun X μ) {c : ι → ℝ≥0}
-    {s : Finset ι} (h_subG : ∀ i ∈ s, HasSubgaussianMGF (X i) (c i) μ)
+    {X : ι → Ω → ℝ} (hind : iIndepFun X μ) {c : ι → ℝ≥0}
+    {s : Finset ι} (hmgf : ∀ i ∈ s, HasSubgaussianMGF (X i) (c i) μ)
     (a : ι → ℝ) :
     HasSubgaussianMGF (fun ω => ∑ i ∈ s, a i * X i ω)
       (∑ i ∈ s, Real.toNNReal (a i ^ 2) * c i) μ := by
-  have h_indep_mul :
+  have hind_mul :
       iIndepFun (fun i => fun ω => a i * X i ω) μ := by
     simpa [Function.comp_def] using
-      h_indep.comp (fun i x => a i * x) (fun i => by fun_prop)
-  have h_subG_mul :
+      hind.comp (fun i x => a i * x) (fun i => by fun_prop)
+  have hmgf_mul :
       ∀ i ∈ s, HasSubgaussianMGF (fun ω => a i * X i ω)
       (Real.toNNReal (a i ^ 2) * c i) μ := by
     intro i hi
-    convert (h_subG i hi).const_mul (a i) using 1
+    convert (hmgf i hi).const_mul (a i) using 1
     rw [Real.toNNReal_of_nonneg (sq_nonneg (a i))]
     rfl
-  exact HasSubgaussianMGF.sum_of_iIndepFun h_indep_mul h_subG_mul
+  exact HasSubgaussianMGF.sum_of_iIndepFun hind_mul hmgf_mul
 
 /-- Jensen's inequality for the exponential, in logarithmic form: `𝔼 X ≤ t⁻¹ log 𝔼 e^{tX}` for
 `t > 0` when `X` and `e^{tX}` are integrable. Atlas `hanson-wright` (helper). -/
@@ -104,7 +104,8 @@ theorem integral_nonpos_of_hasSubgaussianMGF {μ : Measure Ω} [IsProbabilityMea
   have ht_pos : 0 < t := by
     rw [ht_def]
     positivity
-  have hmean := integral_le_one_div_mul_log_integral_exp_mul h.integrable ht_pos (h.integrable_exp_mul t)
+  have hmean := integral_le_one_div_mul_log_integral_exp_mul h.integrable ht_pos
+    (h.integrable_exp_mul t)
   have hmgf_pos : 0 < mgf X μ t := mgf_pos (h.integrable_exp_mul t)
   have hlog_le : log (mgf X μ t) ≤ (c : ℝ) * t ^ 2 / 2 := by
     calc

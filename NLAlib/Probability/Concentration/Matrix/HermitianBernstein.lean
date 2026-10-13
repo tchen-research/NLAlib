@@ -14,10 +14,11 @@ Atlas: `matrix-bernstein`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 6.6.1, equations (6.6.1–3), printed pp. 96–99.
 -/
 open MeasureTheory ProbabilityTheory Filter Topology
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Scalar optimization for the expectation bound. -/
 private lemma scalar_expect {x a b L : ℝ} (hL : 0 < L) (ha : 0 ≤ a) (hb : 0 ≤ b)
     (h : ∀ θ : ℝ, 0 < θ → θ < 3 / L →
@@ -88,6 +89,7 @@ private lemma scalar_expect {x a b L : ℝ} (hL : 0 < L) (ha : 0 ≤ a) (hb : 0 
     rw [e, e2, e3] at h3
     linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- Scalar optimization for the tail bound. -/
 private lemma scalar_tail {P c v L t : ℝ} (hL : 0 < L) (hv : 0 ≤ v) (ht : 0 < t)
     (h : ∀ θ : ℝ, 0 < θ → θ < 3 / L →
@@ -122,14 +124,9 @@ end NLAlib
 
 open NLAlib
 
-/-- Matrix Bernstein inequality, Hermitian case: for an independent sum of centered Hermitian random
-matrices with `λmax ≤ L`, `𝔼 λmax(Y) ≤ √(2 v log d) + L log d / 3` and `P{λmax(Y) ≥ t} ≤
-bernsteinTail d v L t`.
-
-Tropp 2015, Thm 6.6.1. Atlas: `matrix-bernstein`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 6*.
-atlas: matrix-bernstein -/
-theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
+open scoped Matrix.Norms.L2Operator in
+/-- The three conclusions of Tropp's Hermitian Bernstein inequality, bundled for the proof. -/
+private lemma NLAlib.hermitian_bernstein_package {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 ≤ L)
     (hMeas : ∀ k, Measurable (X k))
@@ -139,10 +136,10 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) :
     let Y := fun ω => ∑ k, X k ω
     let v := hermitianSecondMoment μ Y
-    v = ‖∑ k, ∫ ω, X k ω ^ 2 ∂μ‖ ∧
+    v = specNorm (∑ k, ∫ ω, X k ω ^ 2 ∂μ) ∧
     (∫ ω, lambdaMax (Y ω) ∂μ) ≤
       Real.sqrt (2 * v * Real.log d) + L * Real.log d / 3 ∧
-    ∀ t : ℝ, 0 ≤ t → (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
+    ∀ t : ℝ, 0 ≤ t → μ.real {ω | t ≤ lambdaMax (Y ω)} ≤
       bernsteinTail d v L t := by
   intro Y v
   have hd : (1 : ℝ) ≤ d := by
@@ -155,10 +152,10 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
 
     simp only [Y, sq]
     exact h
-  have hv : v = ‖∑ k, ∫ ω, X k ω ^ 2 ∂μ‖ := by
-    show ‖∫ ω, Y ω ^ 2 ∂μ‖ = _
+  have hv : v = specNorm (∑ k, ∫ ω, X k ω ^ 2 ∂μ) := by
+    show specNorm (∫ ω, Y ω ^ 2 ∂μ) = _
     rw [hsm]
-  have hv0 : 0 ≤ v := hv ▸ norm_nonneg _
+  have hv0 : 0 ≤ v := hv ▸ specNorm_nonneg _
   have hBpsd : (∑ k, ∫ ω, X k ω ^ 2 ∂μ).PosSemidef := by
     apply Matrix.posSemidef_sum
     intro k _
@@ -169,7 +166,7 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     rw [Pi.zero_apply, this]
     exact (Matrix.posSemidef_conjTranspose_mul_self _).nonneg
   have hBH : (∑ k, ∫ ω, X k ω ^ 2 ∂μ).IsHermitian := hBpsd.isHermitian
-  have hP1 : ∀ t : ℝ, (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤ d := fun t =>
+  have hP1 : ∀ t : ℝ, μ.real {ω | t ≤ lambdaMax (Y ω)} ≤ d := fun t =>
     (measureReal_le_one (μ := μ)).trans hd
   have htail0 : bernsteinTail d v L 0 = d := by
     unfold bernsteinTail
@@ -215,7 +212,7 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
           filter_upwards [hY] with ω hω
           simp only [not_le]
           linarith
-        rw [hnull, ENNReal.toReal_zero]
+        rw [measureReal_def, hnull, ENNReal.toReal_zero]
         exact htailNonneg t
   · -- `L > 0`
     set B := ∑ k, ∫ ω, X k ω ^ 2 ∂μ with hBdef
@@ -259,12 +256,12 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
             traceExp_le_traceExp _ _ (hcumH θ)
               (hBH.smul (isSelfAdjoint_iff.mpr (star_trivial _))) hsum
         _ ≤ d * Real.exp ((θ ^ 2 / 2) / (1 - θ * L / 3) * ‖B‖) := traceExp_smul_le_mul_exp_mul_norm _ hBH hg
-        _ = _ := by rw [hv]
+        _ = _ := by rw [hv, specNorm_eq_norm]
     have hE : ∀ θ : ℝ, 0 < θ → θ < 3 / L →
         (∫ ω, lambdaMax (Y ω) ∂μ) ≤
           (Real.log d + (θ ^ 2 / 2) / (1 - θ * L / 3) * v) / θ := by
       intro θ hθ hθL
-      have h1 := ((master_bounds μ X θ hMeas hHerm hInt hIndep (hExp θ hθ)).1 hθ).1
+      have h1 := (integral_lambdaMax_sum_le_log_traceExp_cumulantSum_div μ X hθ hMeas hHerm hInt hIndep (hExp θ hθ))
       have hpos : 0 < traceExp (cumulantSum μ X θ) := traceExp_pos_of_isHermitian _ (hcumH θ)
       have hlog : Real.log (traceExp (cumulantSum μ X θ)) ≤
           Real.log d + (θ ^ 2 / 2) / (1 - θ * L / 3) * v := by
@@ -273,10 +270,10 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
           _ = _ := by rw [Real.log_mul hd0.ne' (Real.exp_pos _).ne', Real.log_exp]
       exact h1.trans (div_le_div_of_nonneg_right hlog hθ.le)
     have hT : ∀ t : ℝ, ∀ θ : ℝ, 0 < θ → θ < 3 / L →
-        (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
+        μ.real {ω | t ≤ lambdaMax (Y ω)} ≤
           d * Real.exp (-θ * t + (θ ^ 2 / 2) / (1 - θ * L / 3) * v) := by
       intro t θ hθ hθL
-      have h1 := ((master_bounds μ X θ hMeas hHerm hInt hIndep (hExp θ hθ)).1 hθ).2 t
+      have h1 := (measureReal_lambdaMax_sum_ge_le_exp_mul_traceExp_cumulantSum μ X hθ hMeas hHerm hIndep (hExp θ hθ) t)
       calc _ ≤ Real.exp (-θ * t) * traceExp (cumulantSum μ X θ) := h1
         _ ≤ Real.exp (-θ * t) * (d * Real.exp ((θ ^ 2 / 2) / (1 - θ * L / 3) * v)) :=
             mul_le_mul_of_nonneg_left (hcgf θ hθ hθL) (Real.exp_pos _).le
@@ -296,3 +293,60 @@ theorem NLAlib.hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
         unfold bernsteinTail
         rw [if_neg hD]
         exact scalar_tail hLpos hv0 htp (hT t)
+
+namespace NLAlib
+
+section HermitianBernstein
+
+variable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ}
+  [NeZero d] (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ)
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Variance of an independent Hermitian sum**: for independent, centred, square-integrable
+summands, `hermitianSecondMoment μ (∑ k, X k) = ‖∑ k, 𝔼 (X k)²‖`. Tropp 2015, eq. (6.2.1).
+atlas: matrix-bernstein -/
+theorem hermitianSecondMoment_sum_eq (hMeas : ∀ k, Measurable (X k))
+    (hL2 : ∀ k, MemLp (X k) 2 μ) (hIndep : iIndepFun X μ)
+    (hMean : ∀ k, (∫ ω, X k ω ∂μ) = 0) :
+    hermitianSecondMoment μ (fun ω => ∑ k, X k ω) = specNorm (∑ k, ∫ ω, X k ω ^ 2 ∂μ) := by
+  have h := integral_sum_mul_sum_eq_sum_integral_mul μ X id id measurable_id measurable_id hMeas
+    hIndep (fun k => hL2 k) (fun k => hL2 k) hMean
+  unfold hermitianSecondMoment
+  simp only [sq]
+  exact congrArg specNorm h
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Matrix Bernstein, Hermitian case, expectation bound**: for independent, centred,
+square-integrable Hermitian summands with `λmax (X k) ≤ L` a.e.,
+`𝔼 λmax(∑ k, X k) ≤ √(2 v log d) + L log d / 3` with `v = ‖∑ k, 𝔼 (X k)²‖`. Tropp 2015,
+Thm 6.6.1, eq. (6.6.2).
+atlas: matrix-bernstein -/
+theorem integral_lambdaMax_sum_le_of_lambdaMax_le {L : ℝ} (hL : 0 ≤ L)
+    (hMeas : ∀ k, Measurable (X k)) (hHerm : ∀ k, ∀ᵐ ω ∂μ, (X k ω).IsHermitian)
+    (hL2 : ∀ k, MemLp (X k) 2 μ) (hIndep : iIndepFun X μ)
+    (hMean : ∀ k, (∫ ω, X k ω ∂μ) = 0) (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) :
+    (∫ ω, lambdaMax (∑ k, X k ω) ∂μ) ≤
+      Real.sqrt (2 * specNorm (∑ k, ∫ ω, X k ω ^ 2 ∂μ) * Real.log d) + L * Real.log d / 3 := by
+  obtain ⟨hv, hE, -⟩ := hermitian_bernstein_package μ X L hL hMeas hHerm hL2 hIndep hMean hBound
+  rwa [hv] at hE
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Matrix Bernstein, Hermitian case, tail bound**: for independent, centred, square-integrable
+Hermitian summands with `λmax (X k) ≤ L` a.e. and `t ≥ 0`,
+`P{λmax(∑ k, X k) ≥ t} ≤ bernsteinTail d v L t` with `v = ‖∑ k, 𝔼 (X k)²‖`. Tropp 2015,
+Thm 6.6.1, eq. (6.6.3).
+atlas: matrix-bernstein -/
+theorem measureReal_lambdaMax_sum_ge_le_bernsteinTail {L : ℝ} (hL : 0 ≤ L)
+    (hMeas : ∀ k, Measurable (X k)) (hHerm : ∀ k, ∀ᵐ ω ∂μ, (X k ω).IsHermitian)
+    (hL2 : ∀ k, MemLp (X k) 2 μ) (hIndep : iIndepFun X μ)
+    (hMean : ∀ k, (∫ ω, X k ω ∂μ) = 0) (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L)
+    {t : ℝ} (ht : 0 ≤ t) :
+    μ.real {ω | t ≤ lambdaMax (∑ k, X k ω)} ≤
+      bernsteinTail d (specNorm (∑ k, ∫ ω, X k ω ^ 2 ∂μ)) L t := by
+  obtain ⟨hv, -, hT⟩ := hermitian_bernstein_package μ X L hL hMeas hHerm hL2 hIndep hMean hBound
+  have := hT t ht
+  rwa [hv] at this
+
+end HermitianBernstein
+
+end NLAlib

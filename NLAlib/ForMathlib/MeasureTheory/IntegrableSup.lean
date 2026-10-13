@@ -12,10 +12,10 @@ inequality (atlas `gordon`).
 
 open MeasureTheory
 
-namespace NLAlib
+namespace MeasureTheory
 
 /-- The pointwise maximum of finitely many (nonempty index) measurable integrable functions is
-integrable. Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper
+integrable.gordon_upper` (helper
 `gu_integrable_iSup`). Atlas: helper of `gordon`. -/
 theorem integrable_iSup_of_fintype {Ω ι : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [Fintype ι]
     [Nonempty ι] (f : ι → Ω → ℝ) (hf : ∀ t, Integrable (f t) μ) (hm : ∀ t, Measurable (f t)) :
@@ -35,7 +35,7 @@ theorem integrable_iSup_of_fintype {Ω ι : Type*} [MeasurableSpace Ω] {μ : Me
   · exact ciSup_le fun t => (le_abs_self _).trans (hs t)
 
 /-- The pointwise minimum of finitely many (nonempty index) measurable integrable functions is
-integrable. Ported from Prove2me solution `GaussianMatrix.gordon_lower` (helper
+integrable.gordon_lower` (helper
 `gl_integrable_iInf`). Atlas: helper of `gordon`. -/
 theorem integrable_iInf_of_fintype {Ω ι : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [Fintype ι]
     [Nonempty ι] (f : ι → Ω → ℝ) (hf : ∀ t, Integrable (f t) μ) (hm : ∀ t, Measurable (f t)) :
@@ -57,4 +57,4 @@ theorem integrable_iInf_of_fintype {Ω ι : Type*} [MeasurableSpace Ω] {μ : Me
     have := le_abs_self (f t0 ω)
     linarith
 
-end NLAlib
+end MeasureTheory

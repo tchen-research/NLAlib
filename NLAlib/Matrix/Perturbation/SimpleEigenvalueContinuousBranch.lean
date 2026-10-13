@@ -10,14 +10,15 @@ Source: Horn–Johnson (2013), Theorem 6.3.12.
 
 noncomputable section
 open Filter
-open scoped Matrix Matrix.Norms.L2Operator Topology
+open scoped Matrix Topology
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The locally unique scalar Schur branch is continuous throughout a
-neighborhood and has the expected derivative at zero. Source:
+neighborhood and has the expected derivative at zero.
 Horn–Johnson (2013), Theorem 6.3.12. -/
 theorem exists_continuous_simpleEigenvalueSchurFunction_branch (μ a : ℂ)
     (B F : Matrix n n ℂ) (b c : n → ℂ) (hμ : μ ∉ spectrum ℂ B) :

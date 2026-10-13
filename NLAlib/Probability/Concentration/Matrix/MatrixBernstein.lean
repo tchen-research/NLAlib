@@ -12,49 +12,57 @@ Atlas: `matrix-bernstein`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 6.1.1, equations (6.1.1–4), printed pp. 76.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator
 
 namespace NLAlib
 
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- The conjugate transpose is real-linear. -/
 private noncomputable def ctLin (m n : Type*) : Matrix m n ℂ →ₗ[ℝ] Matrix n m ℂ where
   toFun := Matrix.conjTranspose
   map_add' X Y := Matrix.conjTranspose_add X Y
   map_smul' c X := by simp [Matrix.conjTranspose_smul]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The reindexed dilation `A ↦ reindex (dilation A)` on `Fin (m + n)`. -/
 private noncomputable def phiLin (m n : ℕ) :
     Matrix (Fin m) (Fin n) ℂ →ₗ[ℝ] Matrix (Fin (m + n)) (Fin (m + n)) ℂ :=
   (Matrix.reindexLinearEquiv ℝ ℂ finSumFinEquiv finSumFinEquiv).toLinearMap ∘ₗ
     dilationLinearMap (Fin m) (Fin n)
 
+open scoped Matrix.Norms.L2Operator in
 private lemma phiLin_apply {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℂ) :
     phiLin m n A = Matrix.reindex finSumFinEquiv finSumFinEquiv (dilation A) := rfl
 
+open scoped Matrix.Norms.L2Operator in
 private lemma measurable_phiLin (m n : ℕ) : Measurable (phiLin m n) :=
   (phiLin m n).continuous_of_finiteDimensional.measurable
 
+open scoped Matrix.Norms.L2Operator in
 private lemma measurable_ct (m n : ℕ) :
     Measurable (fun A : Matrix (Fin m) (Fin n) ℂ => A.conjTranspose) :=
   (continuous_id.matrix_conjTranspose).measurable
 
+open scoped Matrix.Norms.L2Operator in
 private lemma integral_phiLin {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {m n : ℕ}
     (X : Ω → Matrix (Fin m) (Fin n) ℂ) (hX : Integrable X μ) :
     ∫ ω, phiLin m n (X ω) ∂μ = phiLin m n (∫ ω, X ω ∂μ) :=
   (LinearMap.toContinuousLinearMap (phiLin m n)).integral_comp_comm hX
 
+open scoped Matrix.Norms.L2Operator in
 private lemma integral_ct {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) {m n : ℕ}
     (X : Ω → Matrix (Fin m) (Fin n) ℂ) (hX : Integrable X μ) :
     ∫ ω, (X ω).conjTranspose ∂μ = (∫ ω, X ω ∂μ).conjTranspose :=
   (LinearMap.toContinuousLinearMap (ctLin (Fin m) (Fin n))).integral_comp_comm hX
 
+open scoped Matrix.Norms.L2Operator in
 private lemma lambdaMax_phiLin {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
     lambdaMax (phiLin m n A) = ‖A‖ := by
   rw [phiLin_apply, lambdaMax_reindex]
   exact (dilation_identities A).2.2.1.trans (dilation_identities A).2.2.2
 
+open scoped Matrix.Norms.L2Operator in
 private lemma norm_phiLin {m n : ℕ} [NeZero m] [NeZero n] (A : Matrix (Fin m) (Fin n) ℂ) :
     ‖phiLin m n A‖ = ‖A‖ := by
   rw [phiLin_apply, norm_reindex]
@@ -64,28 +72,24 @@ end NLAlib
 
 open NLAlib
 
-/-- Matrix Bernstein inequality, rectangular case: for an independent sum `Z` of centered random `m ×
-n` matrices with `‖S k‖ ≤ L`, `𝔼 ‖Z‖ ≤ √(2 v log (m + n)) + L log (m + n) / 3` and `P{‖Z‖ ≥ t} ≤
-bernsteinTail (m + n) v L t`.
-
-Tropp 2015, Thm 6.1.1. Atlas: `matrix-bernstein`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 6*.
-atlas: matrix-bernstein -/
-theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
+open scoped Matrix.Norms.L2Operator in
+/-- The three conclusions of Tropp's rectangular Bernstein inequality, bundled for the proof. -/
+private lemma NLAlib.matrix_bernstein_package {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
     (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) (L : ℝ) (hL : 0 ≤ L)
     (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
     (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0)
-    (hBound : ∀ k, ∀ᵐ ω ∂μ, ‖S k ω‖ ≤ L) :
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, specNorm (S k ω) ≤ L) :
     let Z := fun ω => ∑ k, S k ω
     let v := rectSecondMoment μ Z
-    v = max (‖∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ‖)
-      (‖∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ‖) ∧
-    (∫ ω, ‖Z ω‖ ∂μ) ≤
+    v = max (specNorm (∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ))
+      (specNorm (∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ)) ∧
+    (∫ ω, specNorm (Z ω) ∂μ) ≤
       Real.sqrt (2 * v * Real.log (m + n)) + L * Real.log (m + n) / 3 ∧
-    ∀ t : ℝ, 0 ≤ t → (μ {ω | t ≤ ‖Z ω‖}).toReal ≤
+    ∀ t : ℝ, 0 ≤ t → μ.real {ω | t ≤ specNorm (Z ω)} ≤
       bernsteinTail (m + n) v L t := by
   intro Z v
+  simp only [specNorm_eq_norm] at hBound
   -- Square integrability of the summands and their adjoints.
   have hSL2 : ∀ k, MemLp (S k) 2 μ := fun k =>
     MemLp.of_bound (hMeas k).aestronglyMeasurable L (hBound k)
@@ -113,10 +117,10 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     simp_rw [hZh]
     exact integral_sum_mul_sum_eq_sum_integral_mul μ S Matrix.conjTranspose id
       (measurable_ct m n) measurable_id hMeas hIndep hSL2h hSL2 hSmeanh
-  have hv1 : v = max (‖∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ‖)
-      (‖∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ‖) := by
-    show max (‖∫ ω, Z ω * (Z ω).conjTranspose ∂μ‖)
-      (‖∫ ω, (Z ω).conjTranspose * Z ω ∂μ‖) = _
+  have hv1 : v = max (specNorm (∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ))
+      (specNorm (∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ)) := by
+    show max (specNorm (∫ ω, Z ω * (Z ω).conjTranspose ∂μ))
+      (specNorm (∫ ω, (Z ω).conjTranspose * Z ω ∂μ)) = _
     rw [hZZ, hZhZ]
   -- Step 2: `Z` is centered, measurable and square integrable.
   have hZint : ∫ ω, Z ω ∂μ = 0 := by
@@ -125,7 +129,7 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
     simp [hMean]
   have hZmeas : Measurable Z := Finset.measurable_sum _ (fun k _ => hMeas k)
   have hZL2 : MemLp Z 2 μ := memLp_finsetSum _ (fun k _ => hSL2 k)
-  have hdv := hermitianSecondMoment_dilation_eq_rectSecondMoment μ Z hZmeas hZL2
+  have hdv := hermitianSecondMoment_dilation_eq_rectSecondMoment μ Z hZL2
   rw [hZint] at hdv
   simp only [sub_zero] at hdv
   -- Step 3: the Hermitian dilations on `Fin (m + n)`.
@@ -157,9 +161,9 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
   have hY : ∀ ω, ∑ k, phiLin m n (S k ω) = phiLin m n (Z ω) := by
     intro ω
     simp only [Z, map_sum]
-  have hlam : ∀ ω, lambdaMax (∑ k, phiLin m n (S k ω)) = ‖Z ω‖ := by
+  have hlam : ∀ ω, lambdaMax (∑ k, phiLin m n (S k ω)) = specNorm (Z ω) := by
     intro ω
-    rw [hY ω, lambdaMax_phiLin]
+    rw [hY ω, lambdaMax_phiLin, specNorm_eq_norm]
   have hvY : hermitianSecondMoment μ (fun ω => ∑ k, phiLin m n (S k ω)) = v := by
     have hsq : ∀ ω, (phiLin m n (Z ω)) ^ 2 =
         Matrix.reindex finSumFinEquiv finSumFinEquiv (dilation (Z ω) ^ 2) := by
@@ -167,14 +171,73 @@ theorem NLAlib.matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
       rw [phiLin_apply, ← Matrix.coe_reindexAlgEquiv ℝ, map_pow]
     unfold hermitianSecondMoment
     simp_rw [hY, hsq]
-    rw [integral_reindex, norm_reindex]
+    rw [integral_reindex, specNorm_reindex]
     exact hdv
-  have H := hermitian_bernstein μ X L hL hXmeas hXherm hXL2 hXindep hXmean hXbound
-  obtain ⟨-, H2, H3⟩ := H
+  have hvX : specNorm (∑ k, ∫ ω, X k ω ^ 2 ∂μ) = v := by
+    rw [← hermitianSecondMoment_sum_eq μ X hXmeas hXL2 hXindep hXmean]
+    exact hvY
+  have H2 := integral_lambdaMax_sum_le_of_lambdaMax_le μ X hL hXmeas hXherm hXL2 hXindep hXmean
+    hXbound
   refine ⟨hv1, ?_, ?_⟩
-  · simp only [X, hlam, hvY] at H2
+  · simp only [X, hlam] at H2
+    rw [hvX] at H2
     simpa [Nat.cast_add] using H2
   · intro t ht
-    have := H3 t ht
-    simp only [X, hlam, hvY] at this
-    exact this
+    have := measureReal_lambdaMax_sum_ge_le_bernsteinTail μ X hL hXmeas hXherm hXL2 hXindep hXmean
+      hXbound ht
+    simp only [X, hlam] at this
+    rwa [hvX] at this
+
+namespace NLAlib
+
+section MatrixBernstein
+
+variable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ}
+  [NeZero m] [NeZero n] (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ)
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Variance of an independent rectangular sum**: for independent, centred, bounded summands,
+`rectSecondMoment μ (∑ k, S k) = max ‖∑ k, 𝔼 S k S kᴴ‖ ‖∑ k, 𝔼 S kᴴ S k‖`. Tropp 2015, eq. (6.1.2).
+atlas: matrix-bernstein -/
+theorem rectSecondMoment_sum_eq {L : ℝ} (hL : 0 ≤ L) (hMeas : ∀ k, Measurable (S k))
+    (hIndep : iIndepFun S μ) (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, specNorm (S k ω) ≤ L) :
+    rectSecondMoment μ (fun ω => ∑ k, S k ω) =
+      max (specNorm (∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ))
+        (specNorm (∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ)) :=
+  (matrix_bernstein_package μ S L hL hMeas hIndep hMean hBound).1
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Matrix Bernstein, rectangular case, expectation bound**: for independent, centred summands
+with `‖S k‖ ≤ L` a.e., `𝔼 ‖∑ k, S k‖ ≤ √(2 v log (m + n)) + L log (m + n) / 3` with
+`v = max ‖∑ k, 𝔼 S k S kᴴ‖ ‖∑ k, 𝔼 S kᴴ S k‖`. Tropp 2015, Thm 6.1.1, eq. (6.1.3).
+atlas: matrix-bernstein -/
+theorem integral_specNorm_sum_le_of_specNorm_le {L : ℝ} (hL : 0 ≤ L)
+    (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
+    (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0) (hBound : ∀ k, ∀ᵐ ω ∂μ, specNorm (S k ω) ≤ L) :
+    (∫ ω, specNorm (∑ k, S k ω) ∂μ) ≤
+      Real.sqrt (2 * max (specNorm (∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ))
+        (specNorm (∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ)) * Real.log (m + n)) +
+        L * Real.log (m + n) / 3 := by
+  obtain ⟨hv, hE, -⟩ := matrix_bernstein_package μ S L hL hMeas hIndep hMean hBound
+  rwa [hv] at hE
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Matrix Bernstein, rectangular case, tail bound**: for independent, centred summands with
+`‖S k‖ ≤ L` a.e. and `t ≥ 0`, `P{‖∑ k, S k‖ ≥ t} ≤ bernsteinTail (m + n) v L t`. Tropp 2015,
+Thm 6.1.1, eq. (6.1.4).
+atlas: matrix-bernstein -/
+theorem measureReal_specNorm_sum_ge_le_bernsteinTail {L : ℝ} (hL : 0 ≤ L)
+    (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
+    (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0) (hBound : ∀ k, ∀ᵐ ω ∂μ, specNorm (S k ω) ≤ L)
+    {t : ℝ} (ht : 0 ≤ t) :
+    μ.real {ω | t ≤ specNorm (∑ k, S k ω)} ≤
+      bernsteinTail (m + n) (max (specNorm (∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ))
+        (specNorm (∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ))) L t := by
+  obtain ⟨hv, -, hT⟩ := matrix_bernstein_package μ S L hL hMeas hIndep hMean hBound
+  have := hT t ht
+  rwa [hv] at this
+
+end MatrixBernstein
+
+end NLAlib

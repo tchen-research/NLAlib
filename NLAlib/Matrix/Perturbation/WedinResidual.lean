@@ -2,9 +2,9 @@ import NLAlib.Matrix.Perturbation.SingularFrameTails
 import NLAlib.Matrix.Perturbation.WedinCoupled
 import NLAlib.Matrix.Subspaces.PrincipalAngleDefinitions
 /-!
-# Wedin bounds for actual paired singular-vector frames
+# Wedin bounds for paired singular-vector frames
 
-Leading frames from two actual SVDs obey the coupled residual equations. The
+Leading frames from two SVDs obey the coupled residual equations. The
 exact mixed singular gap gives constant-one maximum-operator and paired
 Frobenius bounds. Source: Wedin (1972), Section 3; atlas `wedin-sin-theta`.
 -/
@@ -51,8 +51,8 @@ private theorem frobNorm_residual_le {m n k : Type*} [Fintype m] [Fintype n] [Fi
     frobNorm (projResidual Q R) ≤ frobNorm R := Real.sqrt_le_sqrt (frobSq_residual_le hQ R)
 
 /-- Wedin's exact maximum-residual operator bound for the leading left and
-right singular spaces of actual SVDs. Wedin (1972), Section 3. The denominator
-is `σ_(k-1)(A+E)-σ_k(A)`; the endpoint `k=min(m,n)` uses the actual zero-padded
+right singular spaces of SVDs. Wedin (1972), Section 3. The denominator
+is `σ_(k-1)(A+E)-σ_k(A)`; the endpoint `k=min(m,n)` uses the zero-padded
 next value. Empty selected frames are included whenever the displayed gap is positive.
 atlas: wedin-sin-theta (partial) -/
 theorem max_specNorm_sinePrincipalAngles_le_max_residual_div
@@ -93,7 +93,7 @@ theorem max_specNorm_sinePrincipalAngles_le_max_residual_div
   apply (le_div_iff₀ hδ).2
   simpa only [mul_comm] using hb
 
-/-- Wedin's exact paired Frobenius residual bound for actual leading singular
+/-- Wedin's exact paired Frobenius residual bound for leading singular
 frames. Wedin (1972), Section 3; the two residuals are combined by their Euclidean
 norm with constant one and rectangular zero directions are included.
 atlas: wedin-sin-theta (partial) -/

@@ -12,9 +12,9 @@ Atlas: `matrix-laplace` (step of Lemma 3.5.1).
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Proof of Lemma 3.5.1, printed pp. 35–36, applying Corollary 3.4.2.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- For independent Hermitian random matrices `H`, `X`, replacing `X` by `matrixLog 𝔼 matrixExp X`
 does not decrease `𝔼 traceExp (H + X)`.
 

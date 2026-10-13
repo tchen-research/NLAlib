@@ -12,7 +12,7 @@ atlas `schur-product-inequalities`.
 
 noncomputable section
 open Matrix
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator Kronecker
+open scoped Matrix MatrixOrder Kronecker
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

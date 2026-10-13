@@ -2,7 +2,7 @@ import NLAlib.Matrix.Basic.PositiveDefiniteClosure
 /-!
 # Principal minors and their fixed-cardinality products
 
-The definitions are the actual subtype-indexed determinants and finite
+The definitions are the subtype-indexed determinants and finite
 products; their immediate positivity and continuity API supports Szász's
 inequality. Source: Horn--Johnson (2013), Section 7.8;
 supports `hadamard-fischer-inequalities`.
@@ -10,13 +10,13 @@ supports `hadamard-fischer-inequalities`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [DecidableEq n]
 
-/-- The principal minor on a finite coordinate set, using Mathlib's actual
-principal block determinant. Horn--Johnson (2013), Section 7.8;
-supports `hadamard-fischer-inequalities`. -/
+/-- The principal minor `det A[S, S]` on a finite coordinate set `S` (Mathlib's block
+determinant). The leading principal minors are `leadingMinor` (`Matrix/Basic/LeadingMinor.lean`).
+Horn–Johnson 2013, §0.7.1 and §7.8; supports `hadamard-fischer-inequalities`. -/
 def principalMinor (A : Matrix n n ℝ) (S : Finset n) : ℝ :=
   (A.toBlock (· ∈ S) (· ∈ S)).det
 
@@ -52,7 +52,7 @@ def principalMinorProduct (A : Matrix n n ℝ) (k : ℕ) : ℝ :=
   ∏ S ∈ (Finset.univ : Finset n).powersetCard k, principalMinor A S
 
 /-- The fixed-cardinality principal-minor product is its defining finite
-product of actual determinants. Horn--Johnson (2013), Theorem 7.8.11. -/
+product of determinants. Horn--Johnson (2013), Theorem 7.8.11. -/
 theorem principalMinorProduct_eq_prod (A : Matrix n n ℝ) (k : ℕ) :
     principalMinorProduct A k = ∏ S ∈ (Finset.univ : Finset n).powersetCard k, principalMinor A S := rfl
 

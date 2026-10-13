@@ -16,7 +16,7 @@ namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n] {K : Type*} [Field K]
 
 /-- An eigenvalue survives principal compression whenever its geometric
-multiplicity exceeds the number of removed coordinates. Source:
+multiplicity exceeds the number of removed coordinates.
 Horn–Johnson (2013), Theorem 1.4.10; the field and finite index type are
 arbitrary and no diagonalizability hypothesis is needed.
 atlas: diagonalizable-def (partial) -/
@@ -73,7 +73,7 @@ theorem mem_spectrum_principal_submatrix_of_finrank_eigenspace_gt
 principal submatrix of order at least `n-k+1`. Source: Horn–Johnson (2013),
 Theorem 1.4.10; the equivalent natural-number condition `n < |s| + k`
 avoids truncated subtraction and includes all edge cases.
-atlas: diagonalizable-def (partial) -/
+atlas: diagonalizable-def -/
 theorem mem_spectrum_principal_submatrix_of_le_finrank_eigenspace
     (A : Matrix n n K) (μ : K) (s : Finset n) (k : ℕ)
     (hk : k ≤ Module.finrank K (Module.End.eigenspace A.toLin' μ))

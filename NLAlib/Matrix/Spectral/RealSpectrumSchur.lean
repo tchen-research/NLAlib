@@ -51,7 +51,7 @@ theorem exists_real_charpoly_factors_of_complex_spectrum_real
 /-- A real matrix with real complex spectrum has a real orthogonal upper
 triangular Schur form. Source: Horn–Johnson (2013), Theorem 2.3.1;
 the diagonal factorization records every characteristic root with multiplicity.
-atlas: schur-triangularization (partial) -/
+atlas: schur-triangularization -/
 theorem exists_orthogonal_triangularization_of_complex_spectrum_real
     (A : Matrix n n ℝ) (e : Fin (Fintype.card n) ≃ n)
     (hreal : ∀ μ ∈ spectrum ℂ (A.map Complex.ofReal), μ.im = 0) :
@@ -68,9 +68,9 @@ theorem exists_orthogonal_triangularization_of_complex_spectrum_real
   · simpa only [hdiag] using hd
 
 /-- When a real matrix has real complex spectrum, a real similarity can
-make all strict upper entries smaller than any positive epsilon. Source:
+make all strict upper entries smaller than any positive epsilon.
 Horn–Johnson (2013), §2.3; this retains the real scalar field of the similarity.
-atlas: schur-triangularization (partial) -/
+atlas: schur-triangularization -/
 theorem exists_real_similarity_upper_triangular_small_entries
     (A : Matrix n n ℝ) (e : Fin (Fintype.card n) ≃ n)
     (hreal : ∀ μ ∈ spectrum ℂ (A.map Complex.ofReal), μ.im = 0)

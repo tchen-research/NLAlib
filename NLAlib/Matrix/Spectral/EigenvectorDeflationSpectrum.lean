@@ -44,7 +44,7 @@ theorem not_mem_spectrum_submatrix_of_isolated_coordinate_of_simple
   exact (Nat.lt_irrefl 0) hpos
 
 /-- A simple eigenvalue admits a left–right normalized isolated similarity,
-and the remaining principal block excludes that eigenvalue. Source:
+and the remaining principal block excludes that eigenvalue.
 Horn–Johnson (2013), Lemmas 1.4.11 and 6.3.10; the distinguished coordinate
 can be relabeled as the first coordinate of the scalar/direct-sum split.
 atlas: left-right-eigenvectors (partial), simple-eigenvalue-perturbation (partial) -/

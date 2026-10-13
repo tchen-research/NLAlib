@@ -11,34 +11,39 @@ nor a Bochner conditional expectation of a nonintegrable square.
 noncomputable section
 
 open MeasureTheory Matrix
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder ENNReal
+open scoped MatrixOrder ComplexOrder ENNReal
 
 namespace NLAlib
 
 variable {Ω n : Type*} {m mΩ : MeasurableSpace Ω} [Fintype n] {μ : Measure Ω}
 
+open scoped Matrix.Norms.L2Operator in
 /-- The actual squared Euclidean norm of the image of a deterministic vector, written
 as a finite coordinate sum to avoid the default supremum norm on a function type.
 Source: audited local-moment identity `audit:local-moment`; `matrix-freedman` (partial). -/
 def matrixVectorSqNorm (A : Matrix n n ℂ) (u : n → ℂ) : ℝ :=
   ∑ i, ‖(A *ᵥ u) i‖ ^ 2
 
+open scoped Matrix.Norms.L2Operator in
 /-- The real Hermitian quadratic form of a matrix at a deterministic vector.
 Source: audited local-moment identity `audit:local-moment`; `matrix-freedman` (partial). -/
 def matrixQuadraticFormReal (A : Matrix n n ℂ) (u : n → ℂ) : ℝ :=
   (star u ⬝ᵥ (A *ᵥ u)).re
 
+open scoped Matrix.Norms.L2Operator in
 /-- The actual squared vector-image norm is nonnegative.
 Source: finite sum of squared norms; `audit:local-moment`, `matrix-freedman` (partial). -/
 theorem matrixVectorSqNorm_nonneg (A : Matrix n n ℂ) (u : n → ℂ) :
     0 ≤ matrixVectorSqNorm A u := Finset.sum_nonneg (fun _i _ => sq_nonneg _)
 
+open scoped Matrix.Norms.L2Operator in
 /-- A coordinate vector extracts the squared Euclidean column norm.
 Source: the coordinate-basis sum in `audit:combined`; `matrix-freedman` (partial). -/
 @[simp] theorem matrixVectorSqNorm_single [DecidableEq n] (A : Matrix n n ℂ) (j : n) :
     matrixVectorSqNorm A (Pi.single j 1) = ∑ i, ‖A i j‖ ^ 2 := by
   simp only [matrixVectorSqNorm, Matrix.mulVec_single_one, Matrix.col_apply]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A coordinate quadratic form is exactly the real diagonal entry.
 Source: the coordinate-basis sum in `audit:combined`; `matrix-freedman` (partial). -/
 @[simp] theorem matrixQuadraticFormReal_single [DecidableEq n] (A : Matrix n n ℂ) (j : n) :
@@ -48,6 +53,7 @@ Source: the coordinate-basis sum in `audit:combined`; `matrix-freedman` (partial
   rw [matrixQuadraticFormReal, hstar, single_one_dotProduct, Matrix.mulVec_single_one]
   rfl
 
+open scoped Matrix.Norms.L2Operator in
 /-- A finite predictable PSD matrix is a genuine local conditional second moment when
 its quadratic forms have exactly the same nonnegative extended set integrals as the
 squared images of the increment, for every deterministic vector and every set measurable
@@ -60,16 +66,19 @@ def HasLocalMatrixSecondMoment (μ : Measure Ω) (m : MeasurableSpace Ω)
       (∫⁻ ω in B, ENNReal.ofReal (matrixVectorSqNorm (X ω) u) ∂μ) =
         ∫⁻ ω in B, ENNReal.ofReal (matrixQuadraticFormReal (V ω) u) ∂μ
 
+open scoped Matrix.Norms.L2Operator in
 /-- Genuine local conditional moment matrices are predictable.
 Source: the exact `audit:local-moment` interface; `matrix-freedman` (partial). -/
 theorem HasLocalMatrixSecondMoment.measurable {X V : Ω → Matrix n n ℂ}
     (h : HasLocalMatrixSecondMoment μ m X V) : Measurable[m] V := h.1
 
+open scoped Matrix.Norms.L2Operator in
 /-- Genuine local conditional moment matrices are PSD almost everywhere.
 Source: the exact `audit:local-moment` interface; `matrix-freedman` (partial). -/
 theorem HasLocalMatrixSecondMoment.ae_posSemidef {X V : Ω → Matrix n n ℂ}
     (h : HasLocalMatrixSecondMoment μ m X V) : ∀ᵐ ω ∂μ, (V ω).PosSemidef := h.2.1
 
+open scoped Matrix.Norms.L2Operator in
 /-- The actual extended quadratic-form identity on every conditioning-measurable set.
 Source: `audit:local-moment`; immediate API for `matrix-freedman` (partial). -/
 theorem HasLocalMatrixSecondMoment.setLIntegral_eq {X V : Ω → Matrix n n ℂ}

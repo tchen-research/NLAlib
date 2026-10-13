@@ -2,7 +2,7 @@ import NLAlib.Matrix.Perturbation.DavisKahanBounds
 /-!
 # Davis--Kahan bounds for arbitrary top spectral frames
 
-The top-gap and population-gap spectral corollaries accept the actual supplied
+The top-gap and population-gap spectral corollaries accept the supplied
 invariant frames, including every valid choice at a tied perturbed boundary.
 The population bound has no perturbation smallness hypothesis. Empty and full
 widths and zero perturbations are explicit. Source: Davis--Kahan, Section 6;
@@ -10,14 +10,15 @@ Yu--Wang--Samworth (2015), Theorem 2. Supports `davis-kahan-sin-theta`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 namespace NLAlib
 
 variable {n k r : Type*} [Fintype n] [Fintype k] [Fintype r]
   [DecidableEq n] [DecidableEq k] [DecidableEq r]
 
+open scoped Matrix.Norms.L2Operator in
 /-- One-sided spectral separation gives both exact compressed residual bounds
-for the actual invariant frames; Davis--Kahan, Section 6. -/
+for the invariant frames; Davis--Kahan, Section 6. -/
 theorem sinePrincipalAngles_le_compressed_residual_div_of_one_sided_frames
     {A E : Matrix n n ℝ} (hA : A.IsHermitian) (hE : E.IsHermitian)
     {Q Qhat : Matrix n k ℝ} {R : Matrix n r ℝ}
@@ -60,8 +61,9 @@ theorem sinePrincipalAngles_eq_zero_of_empty_or_full_frames
     omega
   · exact sinePrincipalAngles_eq_zero_of_full_width hQ hQhat hfull
 
+open scoped Matrix.Norms.L2Operator in
 omit [Fintype k] [DecidableEq k] in
-/-- Actual supplied top invariant frames satisfy the exact mixed-gap residual
+/-- Supplied top invariant frames satisfy the exact mixed-gap residual
 bounds and unconditional population spectral bound, including tied perturbed
 choices and zero perturbations; Davis--Kahan, Section 6, and Yu--Wang--Samworth,
 Theorem 2. The spectral hypotheses describe the selected/complementary cluster
@@ -137,7 +139,8 @@ theorem davis_kahan_top_frame_bounds
     rw [← specNorm_eq_norm]
     exact le_antisymm h (specNorm_nonneg S)
 
-/-- Every actual width-`j` invariant frame above the positive population
+open scoped Matrix.Norms.L2Operator in
+/-- Every width-`j` invariant frame above the positive population
 boundary gap has the canonical top spectral projector, independently of its
 basis; Davis--Kahan, Section 6, at zero perturbation. -/
 theorem mul_transpose_eq_topEigenframe_projector_of_lower_spectral_bound
@@ -179,6 +182,7 @@ theorem mul_transpose_eq_topEigenframe_projector_of_lower_spectral_bound
     exact le_antisymm hs (specNorm_nonneg _)
   exact sub_eq_zero.mp hz
 
+open scoped Matrix.Norms.L2Operator in
 /-- The sharp unconditional population Frobenius minimum accepts arbitrary
 original top invariant frames and arbitrary perturbed top-trace maximizers,
 including tied boundary choices; Yu--Wang--Samworth, Theorem 2. -/
@@ -191,7 +195,7 @@ theorem frobNorm_sinePrincipalAngles_le_min_div_population_gap_of_frames
     {L : Matrix (Fin j) (Fin j) ℝ} (hAQ : A * Q = Q * L)
     (hmin : ∀ t, hA.eigenvalues₀ ⟨j - 1, by omega⟩ ≤
       (isHermitian_of_invariant_orthonormal_frame hA hQ hAQ).eigenvalues t)
-    (htop : (Qhatᵀ * (A + E) * Qhat).trace = eigenvaluePrefix (hA.add hE) hjN.le) :
+    (htop : (Qhatᵀ * (A + E) * Qhat).trace = eigenvaluePrefix (hA.add hE) j) :
     frobNorm (sinePrincipalAngles Q Qhat) ≤
       min (2 * Real.sqrt j * specNorm E) (Real.sqrt 2 * frobNorm E) /
         (hA.eigenvalues₀ ⟨j - 1, by omega⟩ - hA.eigenvalues₀ ⟨j, hjN⟩) := by

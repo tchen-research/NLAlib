@@ -6,20 +6,21 @@ import Mathlib.Analysis.CStarAlgebra.Matrix
 
 For a separated scalar/block decomposition, the eigenvalue equation reduces
 to a scalar implicit equation with derivative `(t,s) ↦ s-a t` at the origin.
-Source: Horn–Johnson (2013), Theorem 6.3.12; operator re-derivation §gen:simple-branch.
+Source: Horn–Johnson (2013), Theorem 6.3.12.
 This supplies the analytic part of `simple-eigenvalue-perturbation`.
 -/
 
 noncomputable section
 open Filter
-open scoped Matrix Matrix.Norms.L2Operator Topology
+open scoped Matrix Topology
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The scalar row/resolvent/column coupling as a continuous linear map on
-matrices. Source: operator re-derivation §gen:simple-branch, formula (G18). -/
+matrices. -/
 def schurResolventCoupling (b c : n → ℂ) : Matrix n n ℂ →L[ℂ] ℂ :=
   ({ toFun M := b ⬝ᵥ (M *ᵥ c)
      map_add' M N := by rw [Matrix.add_mulVec, dotProduct_add]
@@ -27,13 +28,13 @@ def schurResolventCoupling (b c : n → ℂ) : Matrix n n ℂ →L[ℂ] ℂ :=
       Matrix n n ℂ →ₗ[ℂ] ℂ).toContinuousLinearMap
 
 /-- The scalar Schur-complement eigenvalue equation, with `s` measuring the
-eigenvalue shift and `t` the perturbation parameter. Source: operator
-re-derivation §gen:simple-branch, formula (G18). -/
+eigenvalue shift and `t` the perturbation parameter. -/
 def simpleEigenvalueSchurFunction (μ a : ℂ) (B F : Matrix n n ℂ) (b c : n → ℂ)
     (p : ℂ × ℂ) : ℂ :=
   p.2 - p.1 * a - p.1 ^ 2 * schurResolventCoupling b c
     (Ring.inverse ((μ + p.2) • 1 - B - p.1 • F))
 
+open scoped Matrix.Norms.L2Operator in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The scalar Schur equation has the expected strict derivative at the
 origin whenever the remaining block excludes the original eigenvalue.

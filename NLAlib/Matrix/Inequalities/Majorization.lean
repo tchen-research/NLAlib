@@ -27,20 +27,20 @@ def sortedVector (x : ι → ℝ) : Fin (Fintype.card ι) → ℝ := x ∘ sorti
 
 /-- The sum of the largest `k` entries. When `k` exceeds the dimension this is
 the full sum, and `k = 0` gives zero. Marshall–Olkin–Arnold, Definitions 1.A.1–1.A.2.
-atlas: majorization-def (partial) -/
+atlas: majorization-def -/
 def sumLargest (x : ι → ℝ) (k : ℕ) : ℝ :=
   ∑ i : Fin (Fintype.card ι), if i.val < k then sortedVector x i else 0
 
 /-- Weak majorization compares every nonempty prefix of the descending value
 lists; the equivalent subset formulation is index independent.
 Marshall–Olkin–Arnold, Definition 1.A.2.
-atlas: majorization-def (partial) -/
+atlas: majorization-def -/
 def WeaklyMajorized (x y : ι → ℝ) : Prop :=
   ∀ k ≤ Fintype.card ι, sumLargest x k ≤ sumLargest y k
 
 /-- Ordinary majorization is weak majorization together with equality of the
 full coordinate totals. Marshall–Olkin–Arnold, Definition 1.A.1.
-atlas: majorization-def (partial) -/
+atlas: majorization-def -/
 def Majorized (x y : ι → ℝ) : Prop :=
   WeaklyMajorized x y ∧ (∑ i, x i) = ∑ i, y i
 

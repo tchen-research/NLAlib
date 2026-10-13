@@ -10,7 +10,7 @@ an arbitrary family of operators. Horn–Johnson §2.5; real-similarity descent.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 
 /-- The explicit polar frame of a full-column-rank real intertwiner also

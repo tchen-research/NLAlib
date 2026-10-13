@@ -12,12 +12,13 @@ gives the actual matrix conditional second moment, rather than an assumed covari
 noncomputable section
 
 open MeasureTheory Matrix Set Filter
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder ENNReal
+open scoped MatrixOrder ComplexOrder ENNReal
 
 namespace NLAlib
 
 variable {Ω n : Type*} {m mΩ : MeasurableSpace Ω} [Fintype n] [DecidableEq n] {μ : Measure Ω}
 
+open scoped Matrix.Norms.L2Operator in
 /-- Under actual integrability, the genuine extended quadratic moment identities determine
 every matrix set integral. This is the complex polarization step in the supplied audit;
 integrability is derived separately after localization, not imposed on the final theorem.
@@ -67,6 +68,7 @@ theorem HasLocalMatrixSecondMoment.setIntegral_sq_eq {X V : Ω → Matrix n n �
   simpa only [ENNReal.toReal_ofReal (integral_nonneg_of_ae (ae_restrict_of_ae hX0)),
     ENNReal.toReal_ofReal (integral_nonneg_of_ae (ae_restrict_of_ae hV0))] using hreal
 
+open scoped Matrix.Norms.L2Operator in
 /-- Once integrability is derived, the original extended local quadratic identities give
 the actual Bochner conditional square. No conditional covariance equality is an input.
 Source: supplied audit `audit:combined`, conditional uniqueness after polarization;

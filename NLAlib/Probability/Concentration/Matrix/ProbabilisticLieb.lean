@@ -13,7 +13,7 @@ Atlas: `matrix-laplace`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Corollary 3.4.2, printed p. 35.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator ComplexOrder
+open scoped ComplexOrder
 
 namespace NLAlib
 
@@ -21,6 +21,7 @@ end NLAlib
 
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Probabilistic Lieb inequality: `𝔼 traceExp (H + X) ≤ traceExp (H + matrixLog (𝔼 matrixExp X))` for
 fixed Hermitian `H` and a Hermitian random matrix `X`.
 

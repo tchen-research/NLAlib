@@ -3,7 +3,7 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
@@ -14,12 +14,13 @@ import NLAlib.Probability.Concentration.QuadraticForms.VectorProductComparison
 
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
-`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
-Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in
+`NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
 set_option maxRecDepth 5000
@@ -28,13 +29,14 @@ namespace NLAlib
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integrable_exp_quadraticForm_cutMatrix` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integrable_exp_quadraticForm_cutMatrix {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) {X : Fin n → Ω → ℝ} {K l : ℝ}
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hsmall :
       (K ^ 2 * l ^ 2 / 2) * K ^ 2 * specNorm (cutMatrix A s) ^ 2 * exp 1 < 1) :
     Integrable
@@ -52,11 +54,11 @@ lemma integrable_exp_quadraticForm_cutMatrix {μ : Measure Ω}
       (randomVector X p.2))
   let H : Ω → ℝ :=
     fun ω => exp (l * quadForm (cutMatrix A s) (fun i => X i ω))
-  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
+  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hmgf i).aemeasurable
   have hprod_int : Integrable F (μ.prod μ) := by
     dsimp [F]
     exact integrable_exp_inner_toEuclideanCLM_randomVector_prod (cutMatrix A s)
-      h_indep hX_subG hsmall
+      hind hmgf hsmall
   have hU_meas : AEMeasurable U μ := by
     dsimp [U]
     exact coordinateMask_aemeasurable _ hX_meas
@@ -70,7 +72,7 @@ lemma integrable_exp_quadraticForm_cutMatrix {μ : Measure Ω}
       (AEMeasurable.comp_snd (μ := μ) (ν := μ) hV_meas)
   have hUV_indep : U ⟂ᵢ[μ] V := by
     dsimp [U, V]
-    exact coordinateMask_indepFun_compl h_indep hX_meas s
+    exact coordinateMask_indepFun_compl hind hX_meas s
   have hmap_same : μ.map ψ = (μ.map U).prod (μ.map V) := by
     simpa [ψ] using
       (ProbabilityTheory.indepFun_iff_map_prod_eq_prod_map_map
@@ -112,18 +114,19 @@ lemma integrable_exp_quadraticForm_cutMatrix {μ : Measure Ω}
   rw [hH_eq]
   exact hcomp_same
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integral_exp_quadraticForm_cutMatrix_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integral_exp_quadraticForm_cutMatrix_le {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) {X : Fin n → Ω → ℝ} {K l : ℝ}
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hsmall :
       (K ^ 2 * l ^ 2 / 2) * K ^ 2 * specNorm (cutMatrix A s) ^ 2 * exp 1 ≤ 1 / 2) :
     ∫ ω, exp (l * quadForm (cutMatrix A s) (fun i => X i ω)) ∂μ ≤
       exp (exp 1 ^ 2 * l ^ 2 * K ^ 4 * frobNorm (cutMatrix A s) ^ 2) := by
-  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
+  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hmgf i).aemeasurable
   have hprod_int :
       Integrable
         (fun p : Ω × Ω =>
@@ -131,20 +134,21 @@ lemma integral_exp_quadraticForm_cutMatrix_le {μ : Measure Ω}
             (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
             (randomVector X p.2))) (μ.prod μ) :=
     integrable_exp_inner_toEuclideanCLM_randomVector_prod (cutMatrix A s)
-      h_indep hX_subG (lt_of_le_of_lt hsmall (by norm_num))
+      hind hmgf (lt_of_le_of_lt hsmall (by norm_num))
   have heq :=
-    integral_exp_quadraticForm_cutMatrix_eq_prod A s h_indep hX_meas hprod_int
+    integral_exp_quadraticForm_cutMatrix_eq_prod A s hind hX_meas hprod_int
   rw [heq]
   exact integral_exp_inner_toEuclideanCLM_randomVector_prod_le (cutMatrix A s)
-    h_indep hX_subG hsmall
+    hind hmgf hsmall
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integrable_exp_quadraticForm_offDiagonal` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integrable_exp_quadraticForm_offDiagonal {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K l : ℝ}
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hsmall :
       (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * specNorm A ^ 2 * exp 1 < 1) :
     Integrable
@@ -154,7 +158,7 @@ lemma integrable_exp_quadraticForm_offDiagonal {μ : Measure Ω}
   let R : Ω → ℝ := fun ω =>
     (P.card : ℝ)⁻¹ *
       ∑ s ∈ P, exp (4 * l * quadForm (cutMatrix A s) (fun i => X i ω))
-  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
+  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hmgf i).aemeasurable
   have hsmall_cut : ∀ s ∈ P,
       (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 *
           specNorm (cutMatrix A s) ^ 2 * exp 1 < 1 := by
@@ -178,7 +182,7 @@ lemma integrable_exp_quadraticForm_offDiagonal {μ : Measure Ω}
   have hR_int : Integrable R μ := by
     dsimp [R]
     refine (MeasureTheory.integrable_finsetSum P fun s hs => ?_).const_mul _
-    exact integrable_exp_quadraticForm_cutMatrix A s h_indep hX_subG (hsmall_cut s hs)
+    exact integrable_exp_quadraticForm_cutMatrix A s hind hmgf (hsmall_cut s hs)
   have hleft_aesm :
       AEStronglyMeasurable
         (fun ω => exp (l * quadForm (offDiagonalMatrix A) (fun i => X i ω))) μ := by
@@ -198,13 +202,14 @@ lemma integrable_exp_quadraticForm_offDiagonal {μ : Measure Ω}
   rw [Real.norm_eq_abs, abs_of_nonneg (exp_nonneg _)]
   exact hω
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `integral_exp_quadraticForm_offDiagonal_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K l : ℝ}
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hsmall :
       (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * specNorm A ^ 2 * exp 1 ≤ 1 / 2) :
     ∫ ω, exp (l * quadForm (offDiagonalMatrix A) (fun i => X i ω)) ∂μ ≤
@@ -215,7 +220,7 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
     (P.card : ℝ)⁻¹ *
       ∑ s ∈ P, exp (4 * l * quadForm (cutMatrix A s) (fun i => X i ω))
   let B : ℝ := exp (exp 1 ^ 2 * (4 * l) ^ 2 * K ^ 4 * frobNorm A ^ 2)
-  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
+  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hmgf i).aemeasurable
   have hP_pos : 0 < (P.card : ℝ) := by
     exact_mod_cast Finset.card_pos.mpr ⟨∅, Finset.empty_mem_powerset _⟩
   have hsmall_cut : ∀ s ∈ P,
@@ -242,7 +247,7 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
       Integrable (fun ω =>
         exp (4 * l * quadForm (cutMatrix A s) (fun i => X i ω))) μ := by
     intro s hs
-    exact integrable_exp_quadraticForm_cutMatrix A s h_indep hX_subG
+    exact integrable_exp_quadraticForm_cutMatrix A s hind hmgf
       (lt_of_le_of_lt (hsmall_cut s hs) (by norm_num))
   have hR_int : Integrable R μ := by
     dsimp [R]
@@ -250,7 +255,7 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
   have hleft_int :
       Integrable
         (fun ω => exp (l * quadForm (offDiagonalMatrix A) (fun i => X i ω))) μ :=
-    integrable_exp_quadraticForm_offDiagonal A h_indep hX_subG
+    integrable_exp_quadraticForm_offDiagonal A hind hmgf
       (lt_of_le_of_lt hsmall (by norm_num))
   have hpoint :
       (fun ω => exp (l * quadForm (offDiagonalMatrix A) (fun i => X i ω)))
@@ -262,7 +267,7 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
       ∫ ω, exp (4 * l * quadForm (cutMatrix A s) (fun i => X i ω)) ∂μ ≤ B := by
     intro s hs
     have hbase :=
-      integral_exp_quadraticForm_cutMatrix_le A s h_indep hX_subG (hsmall_cut s hs)
+      integral_exp_quadraticForm_cutMatrix_le A s hind hmgf (hsmall_cut s hs)
     have hfrob := frobNorm_cutMatrix_sq_le A s
     have hcoef_nonneg : 0 ≤ exp 1 ^ 2 * (4 * l) ^ 2 * K ^ 4 := by positivity
     have hexp_le :
@@ -299,8 +304,9 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
           simp
           field_simp [ne_of_gt hP_pos]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `abs_two_mul_le_inv_quarter_of_abs_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma abs_two_mul_le_inv_quarter_of_abs_le {a C l : ℝ}
     (ha : 0 < a) (hC : 0 < C)
     (hl : |l| ≤ (2 * C * a)⁻¹) :
@@ -322,7 +328,7 @@ lemma abs_two_mul_le_inv_quarter_of_abs_le {a C l : ℝ}
     _ = (2 * (C / 4) * a)⁻¹ := hright.symm
 
 /-- Source-transport helper `abs_mul_le_inv_two_of_abs_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma abs_mul_le_inv_two_of_abs_le {a C l : ℝ}
     (ha : 0 < a) (hC : 0 < C)
     (hl : |l| ≤ (2 * C * a)⁻¹) :
@@ -334,7 +340,7 @@ lemma abs_mul_le_inv_two_of_abs_le {a C l : ℝ}
       field_simp [hC.ne', ha.ne']
 
 /-- Source-transport helper `offDiagonal_small_two_mul_of_abs_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma offDiagonal_small_two_mul_of_abs_le {K C op l : ℝ}
     (hK : 0 < K) (hC : 0 < C) (hop : 0 < op)
     (hC_sq : 16 * exp 1 ≤ C ^ 2)
@@ -376,7 +382,7 @@ lemma offDiagonal_small_two_mul_of_abs_le {K C op l : ℝ}
       nlinarith [hC_sq]
 
 /-- Source-transport helper `offDiagonal_exponent_two_mul_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma offDiagonal_exponent_two_mul_le {K C F l : ℝ}
     (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C) :
     exp 1 ^ 2 * (4 * (2 * l)) ^ 2 * K ^ 4 * F ^ 2 ≤

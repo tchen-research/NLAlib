@@ -203,7 +203,7 @@ first column, and `B(1:, 1:) = Q'R'` is a full QR, then
 orthogonal triangularisation (Householder, Givens, orthogonal completion).
 Trefethen–Bau 1997, Lect. 10, eq. (10.1)–(10.3); Golub–Van Loan 2013, §5.2.2. -/
 theorem isFullQR_mul_borderedUpper {A : Matrix (Fin (m + 1)) (Fin (n + 1)) ℝ}
-    {W : Matrix (Fin (m + 1)) (Fin (m + 1)) ℝ} (hW : Wᵀ * W = 1)
+    {W : Matrix (Fin (m + 1)) (Fin (m + 1)) ℝ} (hW : HasOrthonormalCols W)
     (hB : ∀ i : Fin m, (Wᵀ * A) i.succ 0 = 0) {Q' : Matrix (Fin m) (Fin m) ℝ}
     {R' : Matrix (Fin m) (Fin n) ℝ} (h' : IsFullQR ((Wᵀ * A).submatrix Fin.succ Fin.succ) Q' R') :
     IsFullQR A (W * borderedUpper (vecCons 1 0) Q') (borderedUpper ((Wᵀ * A) 0) R') where
@@ -217,10 +217,12 @@ theorem isFullQR_mul_borderedUpper {A : Matrix (Fin (m + 1)) (Fin (n + 1)) ℝ}
         induction j using Fin.cases with
         | zero => rw [borderedUpper_succ_zero, hB]
         | succ j => rw [borderedUpper_succ_succ]; rfl
-    rw [Matrix.mul_assoc, hblock, ← Matrix.mul_assoc, mul_eq_one_comm.mp hW, Matrix.one_mul]
+    rw [Matrix.mul_assoc, hblock, ← Matrix.mul_assoc, mul_eq_one_comm.mp (show Wᵀ * W = 1 from hW),
+      Matrix.one_mul]
   orth := by
     change (W * borderedUpper (vecCons 1 0) Q')ᵀ * (W * borderedUpper (vecCons 1 0) Q') = 1
-    rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Wᵀ, hW, Matrix.one_mul,
+    rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Wᵀ, show Wᵀ * W = 1 from hW,
+      Matrix.one_mul,
       transpose_borderedUpper_one, borderedUpper_one_mul_borderedUpper,
       show Q'ᵀ * Q' = 1 from h'.orth, borderedUpper_one_one]
   upper := isUpperTrapezoidal_borderedUpper _ h'.upper
@@ -360,10 +362,10 @@ its first column: `W` completes `a₀ / ‖a₀‖` to an orthonormal basis
 Householder step. Golub–Van Loan 2013, §5.2.2. -/
 theorem exists_transpose_mul_apply_succ_zero_eq_zero {m n : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (n + 1)) ℝ) :
-    ∃ W : Matrix (Fin (m + 1)) (Fin (m + 1)) ℝ, Wᵀ * W = 1 ∧
+    ∃ W : Matrix (Fin (m + 1)) (Fin (m + 1)) ℝ, HasOrthonormalCols W ∧
       ∀ i : Fin m, (Wᵀ * A) i.succ 0 = 0 := by
   by_cases ha : A.col 0 ⬝ᵥ A.col 0 = 0
-  · refine ⟨1, by simp, fun i => ?_⟩
+  · refine ⟨1, by simp [HasOrthonormalCols], fun i => ?_⟩
     have h0 := congrFun (dotProduct_self_eq_zero.1 ha) i.succ
     simpa using h0
   · have hnn : 0 ≤ A.col 0 ⬝ᵥ A.col 0 := by

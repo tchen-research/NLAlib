@@ -3,7 +3,7 @@ import NLAlib.Matrix.Basic.LeastSquares
 /-!
 # Existence of a maximum-volume independent column selection
 
-When the requested size is at most the actual rank, a finite maximizer of the
+When the requested size is at most the rank, a finite maximizer of the
 column Gram determinant has positive volume and distinct selected indices.
 Gu–Eisenstat 1996, Theorem 3.2; derivations §alg:rrqr.
 -/
@@ -14,7 +14,7 @@ namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
 /-- A real finite matrix has a positive-volume selection of any number of
-columns up to its actual rank, including the empty selection. This is basis
+columns up to its rank, including the empty selection. This is basis
 extraction from its own columns, with no generic-position hypothesis.
 Supports `rank-revealing-qr`. -/
 theorem exists_column_embedding_gram_det_pos {m n : Type*}

@@ -4,7 +4,7 @@ import NLAlib.Matrix.Perturbation.DavisKahanPopulation
 # Complete Davis–Kahan perturbation toolkit
 
 Mixed interval/complement bounds retain all compressed residual contractions.
-The sorted top-eigenspace corollary has the actual mixed eigenvalue denominator;
+The sorted top-eigenspace corollary has the mixed eigenvalue denominator;
 the population theorem retains both Frobenius branches without a smallness
 condition. Empty and full subspace endpoints are explicit.
 Source: Davis–Kahan §6; Yu–Wang–Samworth (2015), Theorems 1–2.
@@ -31,13 +31,12 @@ theorem sinePrincipalAngles_eq_zero_of_full_width {P Q : Matrix n k ℝ}
   rw [frobNorm_sinePrincipalAngles_eq_residual hP hQ, residual_eq_one_sub_mul,
     Matrix.conjTranspose_eq_transpose_of_trivial, hfull, sub_self, Matrix.zero_mul, frobNorm_zero]
 
-/-- All requested Davis–Kahan bounds for actual invariant frames and actual
-sorted spectral subspaces. Davis–Kahan §6 and Yu–Wang–Samworth (2015),
+/-- All requested Davis–Kahan bounds for invariant frames and sorted spectral subspaces. Davis–Kahan §6 and Yu–Wang–Samworth (2015),
 Theorems 1–2. The generic interval theorem includes empty selected or
 complementary frames and needs no endpoint-order assumption. The population
 Frobenius minimum is unconditional and is proved by the finite trace deficit;
 zero and full top-frame widths have zero sine matrices.
-atlas: davis-kahan-sin-theta (partial) -/
+atlas: davis-kahan-sin-theta -/
 theorem davis_kahan_bounds {A E : Matrix n n ℝ}
     (hA : A.IsHermitian) (hE : E.IsHermitian)
     {Q Qhat : Matrix n k ℝ} {R : Matrix n r ℝ}

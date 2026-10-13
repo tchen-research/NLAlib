@@ -9,21 +9,20 @@ diameter gives Hoeffding's sharp MGF proxy `c²/4` without requiring an attained
 `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc` (Hoeffding's lemma); upstreaming candidate).
 These are general prerequisites for the operator averaging proof of McDiarmid.
 
-Source: `open_problems_operator_rederivations.tex`, `eq:bd` and
-`eq:fiberhoeffding`; Boucheron–Lugosi–Massart 2013, Theorem 6.2.
+Source: Boucheron–Lugosi–Massart 2013, Theorem 6.2.
 -/
 
 noncomputable section
 
 open MeasureTheory ProbabilityTheory
 
-namespace NLAlib
+namespace ProbabilityTheory
 
 /-- Coordinate oscillations bound the diameter of a function on a finite product,
 including heterogeneous coordinate types and the empty product.
-Source: the coordinate replacement argument following manuscript `eq:bd`;
+Boucheron–Lugosi–Massart 2013, §6.1;
 supports atlas `mcdiarmid`. -/
-theorem abs_sub_le_sum_of_coordinate_oscillation
+theorem _root_.abs_sub_le_sum_of_coordinate_oscillation
     {ι : Type*} [Fintype ι] [DecidableEq ι] {S : ι → Type*}
     (f : (∀ i, S i) → ℝ) (c : ι → ℝ)
     (h : ∀ i (x : ∀ j, S j) (y : S i), |f (Function.update x i y) - f x| ≤ c i)
@@ -45,7 +44,7 @@ theorem abs_sub_le_sum_of_coordinate_oscillation
 
 /-- A measurable scalar function of range diameter at most `c≥0` has centred
 MGF proxy `c²/4`. The infimum of its range need not be attained.
-Source: sharp fibre Hoeffding argument `eq:fiberhoeffding`; supports `mcdiarmid`. -/
+Hoeffding's lemma (Boucheron–Lugosi–Massart 2013, Lemma 2.2); supports `mcdiarmid`. -/
 theorem hasSubgaussianMGF_of_range_oscillation
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     (g : Ω → ℝ) (hg : AEMeasurable g μ) {c : ℝ} (hc : 0 ≤ c)
@@ -77,4 +76,4 @@ theorem hasSubgaussianMGF_of_range_oscillation
   rw [hproxy] at hsg
   exact hsg
 
-end NLAlib
+end ProbabilityTheory

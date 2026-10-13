@@ -2,8 +2,7 @@ import NLAlib.Matrix.Spectral.InterlacingOrthogonalTransport
 /-!
 # Relabeling diagonal interlacing constructions
 
-Finite root lists and arbitrary finite matrix labels are connected by actual
-matrix reindexing; characteristic polynomials are unchanged. These helpers
+Finite root lists and arbitrary finite matrix labels are connected by matrix reindexing; characteristic polynomials are unchanged. These helpers
 retain empty shapes and do not require a chosen ordering on matrix labels.
 -/
 noncomputable section

@@ -1,0 +1,231 @@
+✖ [4003/4091] Running NLAlib.Matrix.Spectral.SigmaMinTransport
+error: no such file or directory (error code: 4294967294)
+✖ [4004/4091] Running NLAlib.Matrix.Subspaces.PrincipalAngleBridges
+error: NLAlib/Matrix/Subspaces/PrincipalAngleBridges.lean: bad import 'NLAlib.Matrix.Spectral.SigmaMinTransport'
+✖ [4005/4091] Running NLAlib.Matrix.Subspaces.PrincipalAngles
+error: NLAlib/Matrix/Subspaces/PrincipalAngles.lean: bad import 'NLAlib.Matrix.Subspaces.PrincipalAngleBridges'
+✖ [4006/4091] Running NLAlib.Krylov.Spectral.PowerMethod
+error: NLAlib/Krylov/Spectral/PowerMethod.lean: bad import 'NLAlib.Matrix.Subspaces.PrincipalAngles'
+✖ [4011/4091] Running NLAlib.Krylov.Spectral.SubspaceIteration
+error: NLAlib/Krylov/Spectral/SubspaceIteration.lean: bad import 'NLAlib.Matrix.Subspaces.PrincipalAngles'
+✖ [4012/4091] Running NLAlib.Krylov.Spectral
+error: NLAlib/Krylov/Spectral.lean: bad import 'NLAlib.Krylov.Spectral.PowerMethod'
+error: NLAlib/Krylov/Spectral.lean: bad import 'NLAlib.Krylov.Spectral.SubspaceIteration'
+✖ [4013/4091] Running NLAlib.Krylov
+error: NLAlib/Krylov.lean: bad import 'NLAlib.Krylov.Spectral'
+✖ [4017/4091] Building NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix (11s)
+error: NLAlib/RandomMatrix/Gaussian/Basic/GaussianMatrix.lean:240:15: Unknown identifier `hasGaussianLaw_id_pi_gaussianReal`
+error: NLAlib/RandomMatrix/Gaussian/Basic/GaussianMatrix.lean:237:51: unsolved goals
+✖ [4032/4117] Building NLAlib.Matrix.Spectral.SvdBlocks (12s)
+error: NLAlib/Matrix/Spectral/SvdBlocks.lean:127:10: Unknown identifier `bestRankFrobSq_eq_bestRankFrobSq`
+error: NLAlib/Matrix/Spectral/SvdBlocks.lean:50:55: unsolved goals
+✖ [4054/4165] Running NLAlib.Matrix.Factorizations.CholeskyStep
+error: no such file or directory (error code: 4294967294)
+✖ [4055/4165] Running NLAlib.LowRank.Cholesky.CholeskyPivot
+error: NLAlib/LowRank/Cholesky/CholeskyPivot.lean: bad import 'NLAlib.Matrix.Factorizations.CholeskyStep'
+✖ [4059/4165] Running NLAlib.LowRank.Cholesky.PartialCholesky
+error: NLAlib/LowRank/Cholesky/PartialCholesky.lean: bad import 'NLAlib.Matrix.Factorizations.CholeskyStep'
+✖ [4060/4165] Running NLAlib.LowRank.Cholesky.CholeskyHistories
+error: NLAlib/LowRank/Cholesky/CholeskyHistories.lean: bad import 'NLAlib.LowRank.Cholesky.CholeskyPivot'
+error: NLAlib/LowRank/Cholesky/CholeskyHistories.lean: bad import 'NLAlib.LowRank.Cholesky.PartialCholesky'
+✖ [4061/4165] Running NLAlib.Matrix.Factorizations.ComplexCholeskyPivot
+error: no such file or directory (error code: 4294967294)
+✖ [4062/4165] Running NLAlib.LowRank.Cholesky.ComplexCholeskyHistories
+error: NLAlib/LowRank/Cholesky/ComplexCholeskyHistories.lean: bad import 'NLAlib.Matrix.Factorizations.ComplexCholeskyPivot'
+✖ [4065/4165] Running NLAlib.LowRank.Cholesky.ComplexRandomPivotedCholesky
+error: NLAlib/LowRank/Cholesky/ComplexRandomPivotedCholesky.lean: bad import 'NLAlib.LowRank.Cholesky.ComplexCholeskyHistories'
+✖ [4066/4165] Running NLAlib.LowRank.Cholesky.RandomPivotedCholesky
+error: NLAlib/LowRank/Cholesky/RandomPivotedCholesky.lean: bad import 'NLAlib.LowRank.Cholesky.CholeskyHistories'
+✖ [4067/4165] Running NLAlib.LowRank.Cholesky
+error: NLAlib/LowRank/Cholesky.lean: bad import 'NLAlib.LowRank.Cholesky.CholeskyHistories'
+error: NLAlib/LowRank/Cholesky.lean: bad import 'NLAlib.LowRank.Cholesky.CholeskyPivot'
+error: NLAlib/LowRank/Cholesky.lean: bad import 'NLAlib.LowRank.Cholesky.ComplexCholeskyHistories'
+error: NLAlib/LowRank/Cholesky.lean: bad import 'NLAlib.LowRank.Cholesky.ComplexRandomPivotedCholesky'
+error: NLAlib/LowRank/Cholesky.lean: bad import 'NLAlib.LowRank.Cholesky.PartialCholesky'
+error: NLAlib/LowRank/Cholesky.lean: bad import 'NLAlib.LowRank.Cholesky.RandomPivotedCholesky'
+✖ [4069/4165] Running NLAlib.Matrix.Norms.ComplexFrobeniusTrace
+error: no such file or directory (error code: 4294967294)
+✖ [4070/4165] Running NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace
+error: NLAlib/Matrix/Subspaces/ComplexVolumeProjectorTrace.lean: bad import 'NLAlib.Matrix.Norms.ComplexFrobeniusTrace'
+✖ [4071/4165] Running NLAlib.Matrix.Subspaces.ComplexProjectionBounds
+error: NLAlib/Matrix/Subspaces/ComplexProjectionBounds.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace'
+✖ [4072/4165] Running NLAlib.Krylov.Spaces.ComplexBlock
+error: no such file or directory (error code: 4294967294)
+✖ [4073/4165] Running NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter
+error: NLAlib/LowRank/PolynomialMethods/ComplexPolynomialFilter.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexProjectionBounds'
+error: NLAlib/LowRank/PolynomialMethods/ComplexPolynomialFilter.lean: bad import 'NLAlib.Krylov.Spaces.ComplexBlock'
+✖ [4074/4165] Running NLAlib.Matrix.Subspaces.ComplexProjectionComposition
+error: NLAlib/Matrix/Subspaces/ComplexProjectionComposition.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexProjectionBounds'
+✖ [4075/4165] Running NLAlib.Matrix.Functions.ComplexDiagonalFilter
+error: no such file or directory (error code: 4294967294)
+✖ [4076/4165] Running NLAlib.Matrix.Basic.ComplexFullRowInverse
+error: no such file or directory (error code: 4294967294)
+✖ [4077/4165] Running NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilterBounds
+error: NLAlib/LowRank/PolynomialMethods/ComplexPolynomialFilterBounds.lean: bad import 'NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter'
+error: NLAlib/LowRank/PolynomialMethods/ComplexPolynomialFilterBounds.lean: bad import 'NLAlib.Matrix.Functions.ComplexDiagonalFilter'
+error: NLAlib/LowRank/PolynomialMethods/ComplexPolynomialFilterBounds.lean: bad import 'NLAlib.Matrix.Basic.ComplexFullRowInverse'
+error: NLAlib/LowRank/PolynomialMethods/ComplexPolynomialFilterBounds.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexProjectionComposition'
+✖ [4078/4165] Running NLAlib.LowRank.PolynomialMethods
+error: NLAlib/LowRank/PolynomialMethods.lean: bad import 'NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter'
+error: NLAlib/LowRank/PolynomialMethods.lean: bad import 'NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilterBounds'
+✖ [4079/4165] Running NLAlib.LowRank.RangeFinding.ComplexSubspaceConvergence
+error: NLAlib/LowRank/RangeFinding/ComplexSubspaceConvergence.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexProjectionBounds'
+✖ [4080/4165] Running NLAlib.LowRank.RangeFinding.ComplexSubspaceAngles
+error: NLAlib/LowRank/RangeFinding/ComplexSubspaceAngles.lean: bad import 'NLAlib.LowRank.RangeFinding.ComplexSubspaceConvergence'
+✖ [4151/4263] Running NLAlib.LowRank.RangeFinding
+error: NLAlib/LowRank/RangeFinding.lean: bad import 'NLAlib.LowRank.RangeFinding.ComplexSubspaceAngles'
+error: NLAlib/LowRank/RangeFinding.lean: bad import 'NLAlib.LowRank.RangeFinding.ComplexSubspaceConvergence'
+✖ [4153/4263] Building NLAlib.Krylov.Processes.ArnoldiProcess (13s)
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:160:36: Unknown identifier `inner_eq_dotProduct_ofLp`
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:159:73: unsolved goals
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:173:36: Unknown identifier `inner_eq_dotProduct_ofLp`
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:172:52: unsolved goals
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:205:6: Unknown identifier `inner_eq_dotProduct_ofLp`
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:202:79: unsolved goals
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:220:25: Invalid rewrite argument: Expected an equality or iff proof or definition name, but `?m.27` is a value of type
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:234:48: Unknown identifier `inner_eq_dotProduct_ofLp`
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:227:76: unsolved goals
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:287:44: Unknown identifier `inner_eq_dotProduct_ofLp`
+error: NLAlib/Krylov/Processes/ArnoldiProcess.lean:308:10: Unknown identifier `inner_eq_dotProduct_ofLp`
+✖ [4155/4264] Building NLAlib.Matrix.Functions.PolynomialCalculus (14s)
+error: NLAlib/Matrix/Functions/PolynomialCalculus.lean:209:38: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+✖ [4168/4264] Building NLAlib.LowRank.Structural.RangeFinder (17s)
+error: NLAlib/LowRank/Structural/RangeFinder.lean:154:29: Unknown identifier `IsBestRankApprox`
+error: NLAlib/LowRank/Structural/RangeFinder.lean:160:8: Unknown identifier `frobSq_sub_mul_le_of_isBestRankApprox`
+✖ [4169/4264] Building NLAlib.Matrix.Subspaces.ProjectionGaps (18s)
+error: NLAlib/Matrix/Subspaces/ProjectionGaps.lean:234:53: unsolved goals
+error: NLAlib/Matrix/Subspaces/ProjectionGaps.lean:295:40: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+✖ [4179/4266] Building NLAlib.Probability.Concentration.QuadraticForms.HansonWright (19s)
+error: NLAlib/Probability/Concentration/QuadraticForms/HansonWright.lean:65:24: Invalid projection: Projections cannot be used on functions, and
+error: NLAlib/Probability/Concentration/QuadraticForms/HansonWright.lean:67:8: `simp` made no progress
+✖ [4225/4398] Running NLAlib.Matrix.Subspaces.ComplexGramColumnDeterminant
+error: NLAlib/Matrix/Subspaces/ComplexGramColumnDeterminant.lean: bad import 'NLAlib.Matrix.Norms.ComplexFrobeniusTrace'
+✖ [4227/4398] Running NLAlib.LowRank.Sampling.ComplexVolumeSamplingError
+error: NLAlib/LowRank/Sampling/ComplexVolumeSamplingError.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexGramColumnDeterminant'
+✖ [4228/4398] Running NLAlib.LowRank.Sampling.ComplexVolumeSampling
+error: NLAlib/LowRank/Sampling/ComplexVolumeSampling.lean: bad import 'NLAlib.LowRank.Sampling.ComplexVolumeSamplingError'
+✖ [4229/4398] Running NLAlib.LowRank.Sampling.ComplexVolumeSamplingEndpoints
+error: NLAlib/LowRank/Sampling/ComplexVolumeSamplingEndpoints.lean: bad import 'NLAlib.LowRank.Sampling.ComplexVolumeSamplingError'
+✖ [4232/4398] Running NLAlib.LowRank.Sampling
+error: NLAlib/LowRank/Sampling.lean: bad import 'NLAlib.LowRank.Sampling.ComplexVolumeSampling'
+error: NLAlib/LowRank/Sampling.lean: bad import 'NLAlib.LowRank.Sampling.ComplexVolumeSamplingEndpoints'
+error: NLAlib/LowRank/Sampling.lean: bad import 'NLAlib.LowRank.Sampling.ComplexVolumeSamplingError'
+✖ [4234/4398] Running NLAlib.LowRank
+error: NLAlib/LowRank.lean: bad import 'NLAlib.LowRank.Cholesky'
+error: NLAlib/LowRank.lean: bad import 'NLAlib.LowRank.PolynomialMethods'
+error: NLAlib/LowRank.lean: bad import 'NLAlib.LowRank.RangeFinding'
+error: NLAlib/LowRank.lean: bad import 'NLAlib.LowRank.Sampling'
+✖ [4414/4516] Building NLAlib.Matrix.Norms.KyFanNorm (10s)
+error: NLAlib/Matrix/Norms/KyFanNorm.lean:55:2: Tactic `apply` failed: could not unify the conclusion of `Finset.sum_subset
+✖ [4514/4776] Building NLAlib.Matrix.Perturbation.ConditionNumber (11s)
+error: NLAlib/Matrix/Perturbation/ConditionNumber.lean:37:30: unexpected token 'open'; expected 'lemma'
+✖ [4579/4776] Running NLAlib.Matrix.Subspaces.ComplexCSDecomposition
+error: NLAlib/Matrix/Subspaces/ComplexCSDecomposition.lean: bad import 'NLAlib.Matrix.Functions.ComplexDiagonalFilter'
+✖ [4580/4776] Running NLAlib.Matrix.Subspaces.ComplexObliqueSpectrum
+error: NLAlib/Matrix/Subspaces/ComplexObliqueSpectrum.lean: bad import 'NLAlib.Matrix.Functions.ComplexDiagonalFilter'
+✖ [4581/4776] Running NLAlib.Matrix.Subspaces.ComplexFrameTransport
+error: NLAlib/Matrix/Subspaces/ComplexFrameTransport.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace'
+error: NLAlib/Matrix/Subspaces/ComplexFrameTransport.lean: bad import 'NLAlib.Matrix.Functions.ComplexDiagonalFilter'
+error: NLAlib/Matrix/Subspaces/ComplexFrameTransport.lean: bad import 'NLAlib.Matrix.Subspaces.PrincipalAngles'
+✖ [4582/4776] Running NLAlib.Matrix.Subspaces.ComplexObliqueSecant
+error: NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexFrameTransport'
+✖ [4583/4776] Running NLAlib.Matrix.Subspaces.ComplexCSToolkit
+error: NLAlib/Matrix/Subspaces/ComplexCSToolkit.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexCSDecomposition'
+error: NLAlib/Matrix/Subspaces/ComplexCSToolkit.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexObliqueSpectrum'
+error: NLAlib/Matrix/Subspaces/ComplexCSToolkit.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexObliqueSecant'
+✖ [4585/4776] Running NLAlib.Matrix.Subspaces
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexCSDecomposition'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexCSToolkit'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexFrameTransport'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexGramColumnDeterminant'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexObliqueSecant'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexObliqueSpectrum'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexProjectionBounds'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexProjectionComposition'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.PrincipalAngleBridges'
+error: NLAlib/Matrix/Subspaces.lean: bad import 'NLAlib.Matrix.Subspaces.PrincipalAngles'
+✖ [4586/4776] Running NLAlib.Matrix
+error: NLAlib/Matrix.lean: bad import 'NLAlib.Matrix.Subspaces'
+✖ [4635/4786] Building NLAlib.Matrix.Perturbation.BauerFike (7.6s)
+error: NLAlib/Matrix/Perturbation/BauerFike.lean:114:4: Type mismatch: After simplification, term
+✖ [4661/4829] Building NLAlib.Matrix.Subspaces.Stiefel (8.9s)
+error: NLAlib/Matrix/Subspaces/Stiefel.lean:135:2: `simp` made no progress
+✖ [4668/4829] Building NLAlib.Matrix.Subspaces.OrthogonalBlockCompletion (6.6s)
+error: NLAlib/Matrix/Subspaces/OrthogonalBlockCompletion.lean:27:39: Invalid field `transpose`: The environment does not contain `Eq.transpose`, so it is not possible to project the field `transpose` from an expression
+✖ [4669/4829] Building NLAlib.Matrix.Subspaces.ObliqueProjectionBlocks (5.5s)
+error: NLAlib/Matrix/Subspaces/ObliqueProjectionBlocks.lean:44:30: Unknown identifier `exists_orthogonal_sum_completion`
+error: NLAlib/Matrix/Subspaces/ObliqueProjectionBlocks.lean:44:9: Tactic `rcases` failed: `x✝ : ?m.190` is not an inductive datatype
+✖ [4692/4829] Building NLAlib.Matrix.Spectral.MatrixPowerBounds (7.4s)
+error: NLAlib/Matrix/Spectral/MatrixPowerBounds.lean:119:9: Tactic `unfold` failed to unfold `specNorm` in
+✖ [4710/4829] Running NLAlib.Matrix.Inequalities.PlaneRotation
+error: no such file or directory (error code: 4294967294)
+✖ [4711/4829] Running NLAlib.RandomMatrix.Gaussian.InverseMoments.OffDiagonal
+error: NLAlib/RandomMatrix/Gaussian/InverseMoments/OffDiagonal.lean: bad import 'NLAlib.Matrix.Inequalities.PlaneRotation'
+✖ [4712/4829] Running NLAlib.RandomMatrix.Gaussian.InverseMoments.FrobeniusMoments
+error: NLAlib/RandomMatrix/Gaussian/InverseMoments/FrobeniusMoments.lean: bad import 'NLAlib.RandomMatrix.Gaussian.InverseMoments.OffDiagonal'
+✖ [4713/4829] Running NLAlib.RandomMatrix.Gaussian.InverseMoments
+error: NLAlib/RandomMatrix/Gaussian/InverseMoments.lean: bad import 'NLAlib.RandomMatrix.Gaussian.InverseMoments.FrobeniusMoments'
+error: NLAlib/RandomMatrix/Gaussian/InverseMoments.lean: bad import 'NLAlib.RandomMatrix.Gaussian.InverseMoments.OffDiagonal'
+✖ [4728/4842] Building NLAlib.Probability.Concentration.Matrix.SubgaussianMgfCgf (6.8s)
+error: NLAlib/Probability/Concentration/Matrix/SubgaussianMgfCgf.lean:56:6: could not synthesize default value for parameter 'hf' using tactics
+error: NLAlib/Probability/Concentration/Matrix/SubgaussianMgfCgf.lean:56:6: unsolved goals
+✖ [4744/4887] Running NLAlib.RandomMatrix.Gaussian
+error: NLAlib/RandomMatrix/Gaussian.lean: bad import 'NLAlib.RandomMatrix.Gaussian.InverseMoments'
+✖ [4747/4887] Running NLAlib.RandomMatrix
+error: NLAlib/RandomMatrix.lean: bad import 'NLAlib.RandomMatrix.Gaussian'
+✖ [4775/5021] Running job computation
+error: NLAlib: some modules have bad imports
+✖ [4796/5021] Running NLAlib.Probability.Rademacher.RademacherCube
+error: no such file or directory (error code: 4294967294)
+✖ [4797/5021] Running NLAlib.Sketching.Structured.SRHTFlattening
+error: NLAlib/Sketching/Structured/SRHTFlattening.lean: bad import 'NLAlib.Probability.Rademacher.RademacherCube'
+✖ [4798/5021] Running NLAlib.Sketching.Structured.SRHTCore
+error: NLAlib/Sketching/Structured/SRHTCore.lean: bad import 'NLAlib.Sketching.Structured.SRHTFlattening'
+✖ [4799/5021] Running NLAlib.Sketching.Structured.SRHTParameters
+error: NLAlib/Sketching/Structured/SRHTParameters.lean: bad import 'NLAlib.Sketching.Structured.SRHTFlattening'
+✖ [4800/5021] Running NLAlib.Sketching.Structured.SRHT
+error: NLAlib/Sketching/Structured/SRHT.lean: bad import 'NLAlib.Sketching.Structured.SRHTCore'
+error: NLAlib/Sketching/Structured/SRHT.lean: bad import 'NLAlib.Sketching.Structured.SRHTParameters'
+✖ [4801/5021] Running NLAlib.Sketching.Structured.SRHTWithReplacement
+error: NLAlib/Sketching/Structured/SRHTWithReplacement.lean: bad import 'NLAlib.Sketching.Structured.SRHT'
+✖ [4802/5021] Running NLAlib.Sketching.Structured
+error: NLAlib/Sketching/Structured.lean: bad import 'NLAlib.Sketching.Structured.SRHT'
+error: NLAlib/Sketching/Structured.lean: bad import 'NLAlib.Sketching.Structured.SRHTCore'
+error: NLAlib/Sketching/Structured.lean: bad import 'NLAlib.Sketching.Structured.SRHTFlattening'
+error: NLAlib/Sketching/Structured.lean: bad import 'NLAlib.Sketching.Structured.SRHTParameters'
+error: NLAlib/Sketching/Structured.lean: bad import 'NLAlib.Sketching.Structured.SRHTWithReplacement'
+✖ [4803/5021] Running NLAlib.Sketching
+error: NLAlib/Sketching.lean: bad import 'NLAlib.Sketching.Structured'
+✖ [4824/5021] Running NLAlib
+error: NLAlib.lean: bad import 'NLAlib.Krylov'
+error: NLAlib.lean: bad import 'NLAlib.LowRank'
+error: NLAlib.lean: bad import 'NLAlib.Matrix'
+error: NLAlib.lean: bad import 'NLAlib.RandomMatrix'
+error: NLAlib.lean: bad import 'NLAlib.Sketching'
+✖ [4827/5021] Building NLAlib.Probability.Gaussian.Moments.SeriesKhintchine (7.1s)
+error: NLAlib/Probability/Gaussian/Moments/SeriesKhintchine.lean:35:18: Unknown identifier `IsStandardGaussian`
+error: NLAlib/Probability/Gaussian/Moments/SeriesKhintchine.lean:35:54: Unknown identifier `IsRademacher`
+error: NLAlib/Probability/Gaussian/Moments/SeriesKhintchine.lean:74:18: Unknown identifier `IsStandardGaussian`
+error: NLAlib/Probability/Gaussian/Moments/SeriesKhintchine.lean:74:54: Unknown identifier `IsRademacher`
+✖ [4856/5021] Building NLAlib.Probability.Concentration.Matrix.IntrinsicHermitianBernstein (12s)
+error: NLAlib/Probability/Concentration/Matrix/IntrinsicHermitianBernstein.lean:114:2: `simp` made no progress
+✖ [4865/5021] Building NLAlib.Probability.Concentration.Matrix.MatrixChernoff (14s)
+error: NLAlib/Probability/Concentration/Matrix/MatrixChernoff.lean:245:21: Unknown identifier `master_bounds`
+error: NLAlib/Probability/Concentration/Matrix/MatrixChernoff.lean:257:21: Unknown identifier `master_bounds`
+error: NLAlib/Probability/Concentration/Matrix/MatrixChernoff.lean:282:17: Unknown identifier `master_bounds`
+error: NLAlib/Probability/Concentration/Matrix/MatrixChernoff.lean:318:17: Unknown identifier `master_bounds`
+✖ [4897/5021] Building NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.UnshiftedGramSoftMin (15s)
+error: NLAlib/RandomMatrix/Gaussian/Wishart/SoftMin/UnshiftedGramSoftMin.lean:321:37: Unknown identifier `sigmaMin`
+error: NLAlib/RandomMatrix/Gaussian/Wishart/SoftMin/UnshiftedGramSoftMin.lean:331:15: Unknown identifier `sigmaMin_transpose_sq_eq_inv_inverse_eigenvalue_sub`
+error: NLAlib/RandomMatrix/Gaussian/Wishart/SoftMin/UnshiftedGramSoftMin.lean:419:32: Unknown identifier `sigmaMin`
+error: NLAlib/RandomMatrix/Gaussian/Wishart/SoftMin/UnshiftedGramSoftMin.lean:422:25: Invalid field `symm`: The environment does not contain `Function.symm`, so it is not possible to project the field `symm` from an expression
+✖ [4926/5021] Building NLAlib.Sketching.Sparse.CountSketchMoments (8.0s)
+error: NLAlib/Sketching/Sparse/CountSketchMoments.lean:49:9: Unknown identifier `integrable_quadForm_sq_pi_rademacherMeasure`
+error: NLAlib/Sketching/Sparse/CountSketchMoments.lean:50:2: No goals to be solved
+error: NLAlib/Sketching/Sparse/CountSketchMoments.lean:66:6: Unknown identifier `integral_quadForm_sq_pi_rademacherMeasure_of_diag_zero`
+error: NLAlib/Sketching/Sparse/CountSketchMoments.lean:63:74: unsolved goals
+error: NLAlib/Sketching/Sparse/CountSketchMoments.lean:92:4: Unknown identifier `integral_quadForm_pi_rademacherMeasure`
+error: NLAlib/Sketching/Sparse/CountSketchMoments.lean:90:57: unsolved goals
+error: build failed
+BUILD_DONE

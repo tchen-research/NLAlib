@@ -212,11 +212,11 @@ Atlas: `gaussian-log-sobolev`.
 atlas: gaussian-log-sobolev -/
 theorem integrable_sq_mul_log_sq_gaussian {ι : Type*} [Fintype ι] [DecidableEq ι]
     (f : (ι → ℝ) → ℝ) (hf : ContDiff ℝ 1 f)
-    (hf2 : Integrable (fun x => f x ^ 2) (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hf2 : Integrable (fun x => f x ^ 2) (gaussianVector ι))
     (hdf : Integrable (fun x => ∑ i, fderiv ℝ f x (Pi.single i 1) ^ 2)
-      (Measure.pi fun _ : ι => gaussianReal 0 1)) :
+      (gaussianVector ι)) :
     Integrable (fun x => f x ^ 2 * Real.log (f x ^ 2))
-      (Measure.pi fun _ : ι => gaussianReal 0 1) := by
+      (gaussianVector ι) := by
   apply integrable_sq_mul_log_sq_of_logSobolev_bound (fun i : ι => Pi.single i 1) 2 (by norm_num)
     (fun h hcd h2 hlog hd => entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian h hcd h2 hlog hd)
     f hf hf2 hdf
@@ -228,14 +228,14 @@ Atlas: `gaussian-log-sobolev`. Constant `2`, including empty dimensions.
 atlas: gaussian-log-sobolev -/
 theorem entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian_of_integrable
     {ι : Type*} [Fintype ι] [DecidableEq ι] (f : (ι → ℝ) → ℝ) (hf : ContDiff ℝ 1 f)
-    (hf2 : Integrable (fun x => f x ^ 2) (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hf2 : Integrable (fun x => f x ^ 2) (gaussianVector ι))
     (hdf : Integrable (fun x => ∑ i, fderiv ℝ f x (Pi.single i 1) ^ 2)
-      (Measure.pi fun _ : ι => gaussianReal 0 1)) :
-    ∫ x, f x ^ 2 * Real.log (f x ^ 2) ∂(Measure.pi fun _ : ι => gaussianReal 0 1)
-      - (∫ x, f x ^ 2 ∂(Measure.pi fun _ : ι => gaussianReal 0 1)) *
-        Real.log (∫ x, f x ^ 2 ∂(Measure.pi fun _ : ι => gaussianReal 0 1)) ≤
+      (gaussianVector ι)) :
+    ∫ x, f x ^ 2 * Real.log (f x ^ 2) ∂(gaussianVector ι)
+      - (∫ x, f x ^ 2 ∂(gaussianVector ι)) *
+        Real.log (∫ x, f x ^ 2 ∂(gaussianVector ι)) ≤
       2 * ∫ x, ∑ i, fderiv ℝ f x (Pi.single i 1) ^ 2
-        ∂(Measure.pi fun _ : ι => gaussianReal 0 1) :=
+        ∂(gaussianVector ι) :=
   entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian f hf hf2
     (integrable_sq_mul_log_sq_gaussian f hf hf2 hdf) hdf
 

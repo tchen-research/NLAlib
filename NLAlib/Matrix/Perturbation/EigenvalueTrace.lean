@@ -71,7 +71,7 @@ theorem frobNorm_le_trace_of_posSemidef {A : Matrix n n ℝ} (hA : A.PosSemidef)
 /-- Richter's signed trace inequality for arbitrary finite real symmetric
 matrices. Both lists are decreasing, and negative eigenvalues retain their signs.
 Horn–Johnson 2013, Section 4.3; Bhatia 1997, Corollary III.2.6.
-atlas: eigenvalue-perturbation-symmetric (partial) -/
+atlas: eigenvalue-perturbation-symmetric -/
 theorem trace_mul_le_sum_eigenvalues₀_mul {A B : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) :
     (A * B).trace ≤ ∑ i, hA.eigenvalues₀ i * hB.eigenvalues₀ i := by
@@ -150,7 +150,7 @@ theorem sum_sq_eigenvalues₀_sub_le_frobSq_sub {A B : Matrix n n ℝ}
 
 /-- The Hoffman–Wielandt perturbation form with perturbation `E`.
 Horn–Johnson 2013, Corollary 6.3.8; no nonemptiness, positivity, or simple eigenvalues.
-atlas: eigenvalue-perturbation-symmetric (partial) -/
+atlas: eigenvalue-perturbation-symmetric -/
 theorem sum_sq_eigenvalues₀_add_sub_le_frobSq {A E : Matrix n n ℝ}
     (hA : A.IsHermitian) (hE : E.IsHermitian) :
     ∑ i, ((hA.add hE).eigenvalues₀ i - hA.eigenvalues₀ i) ^ 2 ≤ frobSq E := by

@@ -1,5 +1,5 @@
 import NLAlib.Sketching.Sparse.CountSketchMoments
-import NLAlib.ForMathlib.Probability.UniformCollision
+import NLAlib.Sketching.Sampling.UniformCollision
 import NLAlib.Matrix.Subspaces.FrameFourthContractions
 import NLAlib.Sketching.Sampling.Leverage
 

@@ -23,12 +23,13 @@ Atlas: `intrinsic-dimension`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 7.3.1, equations (7.3.1–2), printed p. 108; independence confirmed in Section 7.7.3, printed p. 117.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator ComplexOrder MatrixOrder
+open scoped ComplexOrder MatrixOrder
 
 namespace NLAlib
 
 open NLAlib Matrix
 
+open scoped Matrix.Norms.L2Operator in
 /-- Reindexing preserves the intrinsic dimension. -/
 private lemma intrinsicDimension_reindex {ι κ : Type*} [Fintype ι] [Fintype κ]
     [DecidableEq ι] [DecidableEq κ] (e : ι ≃ κ) (A : Matrix ι ι ℂ) :
@@ -38,12 +39,14 @@ private lemma intrinsicDimension_reindex {ι κ : Type*} [Fintype ι] [Fintype �
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 omit [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] in
 private lemma fromBlocks_diag_sub (A A' : Matrix m m ℂ) (B B' : Matrix n n ℂ) :
     fromBlocks A 0 0 B - fromBlocks A' 0 0 B' = fromBlocks (A - A') 0 0 (B - B') := by
   rw [sub_eq_add_neg, fromBlocks_neg, fromBlocks_add]
   simp [sub_eq_add_neg]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Conjugate transposition as a real-linear continuous map. -/
 private noncomputable def ctCLM (m n : Type*) [Fintype m] [Fintype n] :
     Matrix m n ℂ →L[ℝ] Matrix n m ℂ :=
@@ -52,9 +55,11 @@ private noncomputable def ctCLM (m n : Type*) [Fintype m] [Fintype n] :
       map_add' := Matrix.conjTranspose_add
       map_smul' := fun c A => by simp [Matrix.conjTranspose_smul] }
 
+open scoped Matrix.Norms.L2Operator in
 private lemma ctCLM_apply {m n : Type*} [Fintype m] [Fintype n] (A : Matrix m n ℂ) :
     ctCLM m n A = Aᴴ := rfl
 
+open scoped Matrix.Norms.L2Operator in
 /-- The transported dilation `A ↦ reindex (dilation A)` as a real-linear continuous map. -/
 private noncomputable def Φ (p q : ℕ) :
     Matrix (Fin p) (Fin q) ℂ →L[ℝ] Matrix (Fin (p + q)) (Fin (p + q)) ℂ :=
@@ -62,6 +67,7 @@ private noncomputable def Φ (p q : ℕ) :
     ((Matrix.reindexLinearEquiv ℝ ℂ finSumFinEquiv finSumFinEquiv).toLinearMap ∘ₗ
       dilationLinearMap (Fin p) (Fin q))
 
+open scoped Matrix.Norms.L2Operator in
 private lemma Φ_apply {p q : ℕ} (A : Matrix (Fin p) (Fin q) ℂ) :
     Φ p q A = Matrix.reindex finSumFinEquiv finSumFinEquiv (dilation A) := rfl
 
@@ -69,33 +75,30 @@ end NLAlib
 
 open NLAlib
 
-/-- Intrinsic-dimension matrix Bernstein inequality, rectangular case: for `t ≥ √v + L/3`, `P{‖Z‖ ≥ t}
-≤ 4 r exp (-(t²/2)/(v + L t/3))` with `r` the intrinsic dimension of `fromBlocks V₁ 0 0 V₂`.
-
-Tropp 2015, Thm 7.3.1. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 7*.
-atlas: intrinsic-dimension -/
-theorem NLAlib.intrinsic_matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
+open scoped Matrix.Norms.L2Operator in
+/-- Tropp's intrinsic rectangular Bernstein inequality, bundled with the second-moment identities for the proof. -/
+private lemma NLAlib.intrinsic_matrix_bernstein_package {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m] [NeZero n]
     (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) (L : ℝ) (hL : 0 ≤ L)
     (V₁ : Matrix (Fin m) (Fin m) ℂ) (V₂ : Matrix (Fin n) (Fin n) ℂ)
     (hV : V₁ ≠ 0 ∨ V₂ ≠ 0)
     (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
     (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0)
-    (hBound : ∀ k, ∀ᵐ ω ∂μ, ‖S k ω‖ ≤ L)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, specNorm (S k ω) ≤ L)
     (hVariance₁ : (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) ≤ V₁)
     (hVariance₂ : (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) ≤ V₂) :
     let Z := fun ω => ∑ k, S k ω
     let r := intrinsicDimension (Matrix.fromBlocks V₁ 0 0 V₂)
-    let v := max (‖V₁‖) (‖V₂‖)
+    let v := max (specNorm V₁) (specNorm V₂)
     (∫ ω, Z ω * (Z ω).conjTranspose ∂μ) =
       ∑ k, ∫ ω, S k ω * (S k ω).conjTranspose ∂μ ∧
     (∫ ω, (Z ω).conjTranspose * Z ω ∂μ) =
       ∑ k, ∫ ω, (S k ω).conjTranspose * S k ω ∂μ ∧
     ∀ t : ℝ, Real.sqrt v + L / 3 ≤ t →
-      (μ {ω | t ≤ ‖Z ω‖}).toReal ≤
+      μ.real {ω | t ≤ specNorm (Z ω)} ≤
         4 * r * Real.exp (-(t ^ 2 / 2) / (v + L * t / 3)) := by
   intro Z r v
+  simp only [specNorm_eq_norm] at hBound ⊢
   -- Step 0: integrability and centering of the summands and their adjoints.
   have hSL2 : ∀ k, MemLp (S k) 2 μ := fun k =>
     MemLp.of_bound (hMeas k).aestronglyMeasurable L (by
@@ -218,3 +221,28 @@ theorem NLAlib.intrinsic_matrix_bernstein {Ω : Type*} [MeasurableSpace Ω]
   have := H t (by rw [hvV]; exact ht)
   simp only [hY, hlam, hvV, hrV] at this
   exact this
+
+namespace NLAlib
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Intrinsic-dimension matrix Bernstein, rectangular case**: for independent, centred summands
+with `‖S k‖ ≤ L` a.e. and variance proxies `𝔼 Z Zᴴ ≼ V₁`, `𝔼 Zᴴ Z ≼ V₂` (not both zero), for
+`t ≥ √v + L/3` with `v = max ‖V₁‖ ‖V₂‖`,
+`P{‖∑ k, S k‖ ≥ t} ≤ 4 intdim(diag(V₁, V₂)) exp(-(t²/2)/(v + L t/3))`. Tropp 2015, Thm 7.3.1.
+atlas: intrinsic-dimension -/
+theorem measureReal_specNorm_sum_ge_le_intrinsicDimension_mul_exp {Ω : Type*}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ] {m n N : ℕ} [NeZero m]
+    [NeZero n] (S : Fin N → Ω → Matrix (Fin m) (Fin n) ℂ) {L : ℝ} (hL : 0 ≤ L)
+    {V₁ : Matrix (Fin m) (Fin m) ℂ} {V₂ : Matrix (Fin n) (Fin n) ℂ} (hV : V₁ ≠ 0 ∨ V₂ ≠ 0)
+    (hMeas : ∀ k, Measurable (S k)) (hIndep : iIndepFun S μ)
+    (hMean : ∀ k, (∫ ω, S k ω ∂μ) = 0) (hBound : ∀ k, ∀ᵐ ω ∂μ, specNorm (S k ω) ≤ L)
+    (hVariance₁ : (∫ ω, (∑ k, S k ω) * (∑ k, S k ω).conjTranspose ∂μ) ≤ V₁)
+    (hVariance₂ : (∫ ω, (∑ k, S k ω).conjTranspose * (∑ k, S k ω) ∂μ) ≤ V₂) {t : ℝ}
+    (ht : Real.sqrt (max (specNorm V₁) (specNorm V₂)) + L / 3 ≤ t) :
+    μ.real {ω | t ≤ specNorm (∑ k, S k ω)} ≤
+      4 * intrinsicDimension (Matrix.fromBlocks V₁ 0 0 V₂) *
+        Real.exp (-(t ^ 2 / 2) / (max (specNorm V₁) (specNorm V₂) + L * t / 3)) :=
+  (intrinsic_matrix_bernstein_package μ S L hL V₁ V₂ hV hMeas hIndep hMean hBound hVariance₁
+    hVariance₂).2.2 t ht
+
+end NLAlib

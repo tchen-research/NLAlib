@@ -13,10 +13,11 @@ Atlas: `matrix-chernoff`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 5.1.1, equations (5.1.1–6), printed p. 60.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 private lemma mem_spec_bounds {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
     (hA : A.IsHermitian) {x : ℝ} (hx : x ∈ spectrum ℝ A) :
     lambdaMin A ≤ x ∧ x ≤ lambdaMax A := by
@@ -24,11 +25,13 @@ private lemma mem_spec_bounds {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) �
     rw [hA.spectrum_real_eq_range_eigenvalues]; exact Set.finite_range _
   exact ⟨csInf_le hf.bddBelow hx, le_csSup hf.bddAbove hx⟩
 
+open scoped Matrix.Norms.L2Operator in
 private lemma eig_bounds {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
     (hA : A.IsHermitian) (i : Fin d) :
     lambdaMin A ≤ hA.eigenvalues i ∧ hA.eigenvalues i ≤ lambdaMax A :=
   mem_spec_bounds A hA (hA.eigenvalues_mem_spectrum_real i)
 
+open scoped Matrix.Norms.L2Operator in
 private lemma norm_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
     (hA : A.IsHermitian) {L : ℝ} (hL : 0 ≤ L) (h0 : 0 ≤ lambdaMin A)
     (h1 : lambdaMax A ≤ L) : ‖A‖ ≤ L := by
@@ -40,6 +43,7 @@ private lemma norm_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ)
     constructor <;> linarith
   rwa [cfc_id' ℝ A hA.isSelfAdjoint] at h
 
+open scoped Matrix.Norms.L2Operator in
 private lemma traceExp_le_max {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hB : B.IsHermitian) {c : ℝ} (hc : 0 ≤ c) :
     traceExp (c • B) ≤ d * Real.exp (c * lambdaMax B) := by
@@ -50,6 +54,7 @@ private lemma traceExp_le_max {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) �
         exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left (eig_bounds B hB i).2 hc)
     _ = d * Real.exp (c * lambdaMax B) := by simp
 
+open scoped Matrix.Norms.L2Operator in
 private lemma traceExp_le_min {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) ℂ)
     (hB : B.IsHermitian) {c : ℝ} (hc : c ≤ 0) :
     traceExp (c • B) ≤ d * Real.exp (c * lambdaMin B) := by
@@ -60,6 +65,7 @@ private lemma traceExp_le_min {d : ℕ} [NeZero d] (B : Matrix (Fin d) (Fin d) �
         exact Real.exp_le_exp.mpr (mul_le_mul_of_nonpos_left (eig_bounds B hB i).1 hc)
     _ = d * Real.exp (c * lambdaMin B) := by simp
 
+open scoped Matrix.Norms.L2Operator in
 private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
     (s : ℝ) : ‖matrixExp (s • A)‖ ≤ Real.exp (|s| * ‖A‖) := by
   have hsA : (s • A).IsHermitian := hA.smul (isSelfAdjoint_iff.mpr (star_trivial s))
@@ -72,12 +78,14 @@ private lemma norm_exp_le {d : ℕ} [NeZero d] (A : Matrix (Fin d) (Fin d) ℂ) 
     _ ≤ ‖s • A‖ := abs_le_norm_of_mem_spectrum _ hx
     _ = |s| * ‖A‖ := by rw [norm_smul, Real.norm_eq_abs]
 
+open scoped Matrix.Norms.L2Operator in
 private lemma lambda_zero {d : ℕ} [NeZero d] :
     lambdaMax (0 : Matrix (Fin d) (Fin d) ℂ) = 0 ∧ lambdaMin (0 : Matrix (Fin d) (Fin d) ℂ) = 0 := by
   unfold lambdaMax lambdaMin
   rw [spectrum.zero_eq]
   simp
 
+open scoped Matrix.Norms.L2Operator in
 private lemma g_nonneg {L θ : ℝ} (hL : 0 ≤ L) (hθ : 0 ≤ θ) : 0 ≤ chernoffCgfCoefficient L θ := by
   unfold chernoffCgfCoefficient
   split_ifs with h
@@ -87,6 +95,7 @@ private lemma g_nonneg {L θ : ℝ} (hL : 0 ≤ L) (hθ : 0 ≤ θ) : 0 ≤ cher
     have : 1 ≤ Real.exp (θ * L) := Real.one_le_exp (mul_nonneg hθ hL)
     linarith
 
+open scoped Matrix.Norms.L2Operator in
 private lemma g_nonpos {L θ : ℝ} (hL : 0 ≤ L) (hθ : θ ≤ 0) : chernoffCgfCoefficient L θ ≤ 0 := by
   unfold chernoffCgfCoefficient
   split_ifs with h
@@ -96,6 +105,7 @@ private lemma g_nonpos {L θ : ℝ} (hL : 0 ≤ L) (hθ : θ ≤ 0) : chernoffCg
     have : Real.exp (θ * L) ≤ 1 := Real.exp_le_one_iff.mpr (mul_nonpos_of_nonpos_of_nonneg hθ hL)
     linarith
 
+open scoped Matrix.Norms.L2Operator in
 private lemma g_pos {L θ : ℝ} (hL : 0 < L) :
     chernoffCgfCoefficient L θ = (Real.exp (θ * L) - 1) / L := by
   unfold chernoffCgfCoefficient
@@ -105,17 +115,9 @@ end NLAlib
 
 open NLAlib
 
-/-- Matrix Chernoff inequality: for an independent sum of random positive semidefinite matrices with
-`λmax ≤ L`, expectation bounds on `λmin` and `λmax` for every `θ > 0` and the lower and upper
-tails `chernoffLowerTail`, `chernoffUpperTail`.
-
-Tropp 2015, Thm 5.1.1, eqs (5.1.1–6). Atlas: `matrix-chernoff`. Ported from the Prove2me mission
-*An Introduction to Matrix Concentration Inequalities, Ch 5*.
-
-The expectation bounds are stated for every `θ > 0` before optimisation; degenerate `L = 0`
-follows the piecewise tail definitions.
-atlas: matrix-chernoff -/
-theorem NLAlib.matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
+open scoped Matrix.Norms.L2Operator in
+/-- Tropp's matrix Chernoff inequality, bundled with the mean identities for the proof. -/
+private lemma NLAlib.matrix_chernoff_package {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) (L : ℝ) (hL : 0 ≤ L)
     (hMeas : ∀ k, Measurable (X k)) (hIndep : iIndepFun X μ)
@@ -132,10 +134,10 @@ theorem NLAlib.matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
       (∫ ω, lambdaMax (Y ω) ∂μ) ≤
         (Real.exp θ - 1) / θ * b + L * Real.log d / θ) ∧
     (∀ ε : ℝ, 0 ≤ ε → ε < 1 →
-      (μ {ω | lambdaMin (Y ω) ≤ (1 - ε) * a}).toReal ≤
+      μ.real {ω | lambdaMin (Y ω) ≤ (1 - ε) * a} ≤
         chernoffLowerTail d a L ε) ∧
     (∀ ε : ℝ, 0 ≤ ε →
-      (μ {ω | (1 + ε) * b ≤ lambdaMax (Y ω)}).toReal ≤
+      μ.real {ω | (1 + ε) * b ≤ lambdaMax (Y ω)} ≤
         chernoffUpperTail d b L ε) := by
   intro Y a b
   have hd : (1 : ℝ) ≤ d := by
@@ -204,7 +206,7 @@ theorem NLAlib.matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
     intro θ c h
     calc _ ≤ Real.log (d * Real.exp c) := Real.log_le_log (traceExp_pos_of_isHermitian _ (hcumH θ)) h
       _ = _ := by rw [Real.log_mul hd0.ne' (Real.exp_pos _).ne', Real.log_exp]
-  have hP1 : ∀ s : Set Ω, (μ s).toReal ≤ d := fun s =>
+  have hP1 : ∀ s : Set Ω, μ.real s ≤ d := fun s =>
     (measureReal_le_one (μ := μ)).trans hd
   have hYdef : ∀ ω, Y ω = ∑ k, X k ω := fun ω => rfl
   clear_value Y a b
@@ -335,3 +337,87 @@ theorem NLAlib.matrix_chernoff {Ω : Type*} [MeasurableSpace Ω]
     calc _ ≤ _ := h1
       _ ≤ _ := mul_le_mul_of_nonneg_left h2 (Real.exp_pos _).le
       _ = _ := by ring
+
+namespace NLAlib
+
+section MatrixChernoff
+
+variable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ}
+  [NeZero d] (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ)
+
+open scoped Matrix.Norms.L2Operator in
+private lemma chernoff_hyp {L : ℝ} (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).PosSemidef)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) :
+    (∀ k, ∀ᵐ ω ∂μ, (X k ω).IsHermitian) ∧
+    (∀ k, ∀ᵐ ω ∂μ, 0 ≤ lambdaMin (X k ω) ∧ lambdaMax (X k ω) ≤ L) :=
+  ⟨fun k => (hPSD k).mono fun ω h => h.isHermitian, fun k => by
+    filter_upwards [hPSD k, hBound k] with ω h1 h2
+    exact ⟨lambdaMin_nonneg_of_posSemidef _ h1, h2⟩⟩
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Matrix Chernoff, expectation lower bound**: for independent PSD summands with
+`λmax (X k) ≤ L` a.e. and every `θ > 0`,
+`(1 - e^{-θ})/θ · λmin(∑ k, 𝔼 X k) - L log d / θ ≤ 𝔼 λmin(∑ k, X k)`. Tropp 2015, Thm 5.1.1
+(before the optimisation of `θ`; the source's `(1 - e⁻¹)` is `θ = 1`).
+atlas: matrix-chernoff -/
+theorem integral_lambdaMin_sum_ge_chernoff {L : ℝ} (hL : 0 ≤ L) (hMeas : ∀ k, Measurable (X k))
+    (hIndep : iIndepFun X μ) (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).PosSemidef)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) {θ : ℝ} (hθ : 0 < θ) :
+    (1 - Real.exp (-θ)) / θ * lambdaMin (∑ k, ∫ ω, X k ω ∂μ) - L * Real.log d / θ ≤
+      (∫ ω, lambdaMin (∑ k, X k ω) ∂μ) := by
+  obtain ⟨hHerm, hB⟩ := chernoff_hyp μ X hPSD hBound
+  obtain ⟨ha, -, hE, -, -⟩ := matrix_chernoff_package μ X L hL hMeas hIndep hHerm hB
+  have := (hE θ hθ).1
+  rwa [ha] at this
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Matrix Chernoff, expectation upper bound**: for independent PSD summands with
+`λmax (X k) ≤ L` a.e. and every `θ > 0`,
+`𝔼 λmax(∑ k, X k) ≤ (e^θ - 1)/θ · λmax(∑ k, 𝔼 X k) + L log d / θ`. Tropp 2015, Thm 5.1.1
+(before the optimisation of `θ`; the source's `(e - 1)` is `θ = 1`).
+atlas: matrix-chernoff -/
+theorem integral_lambdaMax_sum_le_chernoff {L : ℝ} (hL : 0 ≤ L) (hMeas : ∀ k, Measurable (X k))
+    (hIndep : iIndepFun X μ) (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).PosSemidef)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) {θ : ℝ} (hθ : 0 < θ) :
+    (∫ ω, lambdaMax (∑ k, X k ω) ∂μ) ≤
+      (Real.exp θ - 1) / θ * lambdaMax (∑ k, ∫ ω, X k ω ∂μ) + L * Real.log d / θ := by
+  obtain ⟨hHerm, hB⟩ := chernoff_hyp μ X hPSD hBound
+  obtain ⟨-, hb, hE, -, -⟩ := matrix_chernoff_package μ X L hL hMeas hIndep hHerm hB
+  have := (hE θ hθ).2
+  rwa [hb] at this
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Matrix Chernoff, lower tail**: for independent PSD summands with `λmax (X k) ≤ L` a.e. and
+`0 ≤ ε < 1`, `P{λmin(∑ k, X k) ≤ (1 - ε) μmin} ≤ chernoffLowerTail d μmin L ε` with
+`μmin = λmin(∑ k, 𝔼 X k)`. Tropp 2015, Thm 5.1.1, eq. (5.1.5).
+atlas: matrix-chernoff -/
+theorem measureReal_lambdaMin_sum_le_le_chernoffLowerTail {L : ℝ} (hL : 0 ≤ L)
+    (hMeas : ∀ k, Measurable (X k)) (hIndep : iIndepFun X μ)
+    (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).PosSemidef)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) {ε : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε < 1) :
+    μ.real {ω | lambdaMin (∑ k, X k ω) ≤ (1 - ε) * lambdaMin (∑ k, ∫ ω, X k ω ∂μ)} ≤
+      chernoffLowerTail d (lambdaMin (∑ k, ∫ ω, X k ω ∂μ)) L ε := by
+  obtain ⟨hHerm, hB⟩ := chernoff_hyp μ X hPSD hBound
+  obtain ⟨ha, -, -, hT, -⟩ := matrix_chernoff_package μ X L hL hMeas hIndep hHerm hB
+  have := hT ε hε0 hε1
+  rwa [ha] at this
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Matrix Chernoff, upper tail**: for independent PSD summands with `λmax (X k) ≤ L` a.e. and
+`ε ≥ 0`, `P{λmax(∑ k, X k) ≥ (1 + ε) μmax} ≤ chernoffUpperTail d μmax L ε` with
+`μmax = λmax(∑ k, 𝔼 X k)`. Tropp 2015, Thm 5.1.1, eq. (5.1.6).
+atlas: matrix-chernoff -/
+theorem measureReal_lambdaMax_sum_ge_le_chernoffUpperTail {L : ℝ} (hL : 0 ≤ L)
+    (hMeas : ∀ k, Measurable (X k)) (hIndep : iIndepFun X μ)
+    (hPSD : ∀ k, ∀ᵐ ω ∂μ, (X k ω).PosSemidef)
+    (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L) {ε : ℝ} (hε0 : 0 ≤ ε) :
+    μ.real {ω | (1 + ε) * lambdaMax (∑ k, ∫ ω, X k ω ∂μ) ≤ lambdaMax (∑ k, X k ω)} ≤
+      chernoffUpperTail d (lambdaMax (∑ k, ∫ ω, X k ω ∂μ)) L ε := by
+  obtain ⟨hHerm, hB⟩ := chernoff_hyp μ X hPSD hBound
+  obtain ⟨-, hb, -, -, hT⟩ := matrix_chernoff_package μ X L hL hMeas hIndep hHerm hB
+  have := hT ε hε0
+  rwa [hb] at this
+
+end MatrixChernoff
+
+end NLAlib

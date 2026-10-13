@@ -79,7 +79,7 @@ theorem eval_charpoly_add_vecMulVec_mul_sub {A : Matrix n n K} {x : n → K}
   field_simp
 
 /-- The rank-one eigenvalue update satisfies a polynomial cross-product
-identity, including every value of the polynomial variable. Source:
+identity, including every value of the polynomial variable.
 Horn–Johnson (2013), Theorem 2.4.10.1; the infinite-field proof extends the
 determinant-lemma computation across the finite old spectrum. -/
 theorem charpoly_add_vecMulVec_mul_X_sub_C [Infinite K] {A : Matrix n n K}

@@ -3,21 +3,22 @@ import NLAlib.ForMathlib.Analysis.FinitePowerSums
 /-!
 # Sharp Schatten exponent comparisons
 
-The support is the actual matrix rank. Extended reciprocal exponents include
+The support is the matrix rank. Extended reciprocal exponents include
 infinity exactly, and all comparisons cover rank zero and empty shapes.
 Source: Bhatia (1997), §IV.2; matrix toolkit derivations, (12).
 Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator ENNReal
+open scoped Matrix ENNReal
 
 namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
-/-- Every positive-exponent Schatten power sum uses exactly the actual rank
+/-- Every positive-exponent Schatten power sum uses exactly the rank
 prefix; zero rank yields an empty sum.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem schattenNorm_eq_sum_rank_rpow (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
@@ -32,13 +33,14 @@ theorem schattenNorm_eq_sum_rank_rpow (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p
   rw [singularValues_eq_zero_of_rank_le A (by
     simpa only [Finset.mem_range, not_lt] using hi), Real.zero_rpow hp.ne']
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every positive-exponent Schatten norm dominates the spectral norm,
 including the zero and empty matrix cases.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem specNorm_le_schattenNorm (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
     specNorm A ≤ schattenNorm A p := by
   have hfirst : singularValues A 0 = specNorm A := by
-    simpa only [kyFanNorm, Finset.sum_range_one, singularValues_eq_linearMap] using
+    simpa only [kyFanNorm_eq_sum_range, Finset.sum_range_one] using
       kyFanNorm_one_eq_specNorm A
   have hsum : specNorm A ^ p ≤ ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
       singularValues A i ^ p := by
@@ -56,6 +58,7 @@ theorem specNorm_le_schattenNorm (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
   rw [one_div, Real.rpow_rpow_inv (specNorm_nonneg A) hp.ne'] at h
   simpa only [schattenNorm, one_div] using h
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- Finite Schatten norms decrease with their positive real exponent.
 The source norm-exponent range is included as a special case.
@@ -65,8 +68,9 @@ theorem schattenNorm_le_schattenNorm_of_le (A : Matrix m n ℝ) {p q : ℝ}
     (hp : 0 < p) (hpq : p ≤ q) : schattenNorm A q ≤ schattenNorm A p :=
   sum_rpow_root_le_sum_rpow_root _ _ (fun i _ => singularValues_nonneg _ i) hp hpq
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
-/-- The sharp finite-exponent comparison uses the actual matrix rank, with
+/-- The sharp finite-exponent comparison uses the matrix rank, with
 coefficient `rank(A)^(1/p - 1/q)`. The zero rank is covered without division.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def (partial) -/
@@ -78,7 +82,8 @@ theorem schattenNorm_le_rank_rpow_mul_schattenNorm (A : Matrix m n ℝ) {p q : �
   simpa only [Finset.card_range] using sum_rpow_root_le_card_rpow_mul (Finset.range A.rank)
     (singularValues A) (fun i _ => singularValues_nonneg _ i) hp hpq
 
-/-- The sharp finite-to-infinite exponent bound uses the actual rank,
+open scoped Matrix.Norms.L2Operator in
+/-- The sharp finite-to-infinite exponent bound uses the rank,
 including rank zero and empty matrix shapes.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def (partial) -/
@@ -98,9 +103,10 @@ theorem schattenNorm_le_rank_rpow_mul_specNorm (A : Matrix m n ℝ) {p : ℝ} (h
     one_div, Real.rpow_rpow_inv (specNorm_nonneg A) hp.ne'] at h
   simpa only [one_div] using h
 
+open scoped Matrix.Norms.L2Operator in
 /-- Extended Schatten norms decrease for `1 ≤ p ≤ q ≤ ∞`.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
-atlas: schatten-norms-def (partial) -/
+atlas: schatten-norms-def -/
 theorem schattenNormExtended_le_of_le (A : Matrix m n ℝ) {p q : ℝ≥0∞}
     (hp : 1 ≤ p) (hpq : p ≤ q) : schattenNormExtended A q ≤ schattenNormExtended A p := by
   by_cases hpTop : p = ∞
@@ -116,10 +122,11 @@ theorem schattenNormExtended_le_of_le (A : Matrix m n ℝ) {p q : ℝ≥0∞}
     · rw [schattenNormExtended_eq_of_ne_top _ hpTop, schattenNormExtended_eq_of_ne_top _ hqTop]
       exact schattenNorm_le_schattenNorm_of_le A hp0 (ENNReal.toReal_mono hqTop hpq)
 
-/-- The sharp actual-rank comparison for all `1 ≤ p ≤ q ≤ ∞`, using
+open scoped Matrix.Norms.L2Operator in
+/-- The sharp -rank comparison for all `1 ≤ p ≤ q ≤ ∞`, using
 extended reciprocals so that `1/∞ = 0`. Rank zero obeys the same formula.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
-atlas: schatten-norms-def (partial) -/
+atlas: schatten-norms-def -/
 theorem schattenNormExtended_le_rank_rpow_mul (A : Matrix m n ℝ) {p q : ℝ≥0∞}
     (hp : 1 ≤ p) (hpq : p ≤ q) :
     schattenNormExtended A p ≤ (A.rank : ℝ) ^ (p⁻¹.toReal - q⁻¹.toReal) * schattenNormExtended A q := by

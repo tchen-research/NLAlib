@@ -97,38 +97,58 @@ theorem variance_mul_mulVec_apply (A : Matrix n n ℝ) {z : Ω → n → ℝ}
   simp_rw [← quadForm_rowSelector]
   rw [variance_quadForm _ hmeas hindep hmean hsq h4 hm4, variance_contraction_rowSelector]
 
-/-- Diagonal estimator with independent standard Gaussian coordinates: unbiased, with
-variance `∑ⱼ A_ij² + A_ii²`. Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2.
-Atlas: `diagonal-estimator`.
+/-- **The diagonal estimator is unbiased for a standard Gaussian vector**: `𝔼[zᵢ (A z)ᵢ] = A_ii`.
+Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2.
 atlas: diagonal-estimator -/
-theorem integral_and_variance_mul_mulVec_apply_of_standardGaussian (A : Matrix n n ℝ) {z : Ω → n → ℝ}
-    (hindep : iIndepFun (fun i ω => z ω i) μ)
-    (hlaw : ∀ i, IsStandardGaussian μ (fun ω => z ω i)) (i : n) :
-    (∫ ω, z ω i * (A *ᵥ z ω) i ∂μ) = A i i ∧
-      Var[fun ω => z ω i * (A *ᵥ z ω) i; μ] = ∑ j, A i j ^ 2 + A i i ^ 2 := by
-  have hmeas := fun i => aemeasurable_of_isStandardGaussian (hlaw i)
-  have hf := fun i => memLp_two_and_moments_of_isStandardGaussian (hlaw i)
-  refine ⟨integral_mul_mulVec_apply_eq A (fun i => (hf i).1)
-    (fun _ _ hij => hindep.indepFun hij) (fun i => (hf i).2.1) (fun i => (hf i).2.2.1) i, ?_⟩
-  rw [variance_mul_mulVec_apply A hmeas hindep (fun i => (hf i).2.1) (fun i => (hf i).2.2.1)
-    (fun i => (hf i).2.2.2.1) (fun i => (hf i).2.2.2.2) i]
+theorem integral_mul_mulVec_apply_eq_of_hasLaw_gaussianVector (A : Matrix n n ℝ) {z : Ω → n → ℝ}
+    (hz : HasLaw z (gaussianVector n) μ) (i : n) :
+    ∫ ω, z ω i * (A *ᵥ z ω) i ∂μ = A i i := by
+  have hl := fun j => hz.hasLaw_eval_gaussianReal j
+  exact integral_mul_mulVec_apply_eq A (fun j => memLp_two_of_hasLaw_gaussianReal (hl j))
+    (fun _ _ hij => hz.iIndepFun_eval_of_gaussianVector.indepFun hij)
+    (fun j => integral_eq_zero_of_hasLaw_gaussianReal (hl j))
+    (fun j => integral_sq_eq_one_of_hasLaw_gaussianReal (hl j)) i
+
+/-- **Variance of the diagonal estimator for a standard Gaussian vector**:
+`Var[zᵢ (A z)ᵢ] = ∑ⱼ A_ij² + A_ii²` (`m₄ = 3`). Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2.
+atlas: diagonal-estimator -/
+theorem variance_mul_mulVec_apply_of_hasLaw_gaussianVector (A : Matrix n n ℝ) {z : Ω → n → ℝ}
+    (hz : HasLaw z (gaussianVector n) μ) (i : n) :
+    Var[fun ω => z ω i * (A *ᵥ z ω) i; μ] = ∑ j, A i j ^ 2 + A i i ^ 2 := by
+  have hl := fun j => hz.hasLaw_eval_gaussianReal j
+  rw [variance_mul_mulVec_apply A (fun j => (hl j).aemeasurable) hz.iIndepFun_eval_of_gaussianVector
+    (fun j => integral_eq_zero_of_hasLaw_gaussianReal (hl j))
+    (fun j => integral_sq_eq_one_of_hasLaw_gaussianReal (hl j))
+    (fun j => integrable_pow_four_of_hasLaw_gaussianReal (hl j))
+    (fun j => integral_pow_four_eq_three_of_hasLaw_gaussianReal (hl j)) i]
   ring
 
-/-- Diagonal estimator with independent Rademacher coordinates: unbiased, with variance
-`∑ⱼ A_ij² − A_ii² = ∑_{j ≠ i} A_ij²`. Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2.
-Atlas: `diagonal-estimator`.
+/-- **The diagonal estimator is unbiased for a Rademacher vector**: `𝔼[zᵢ (A z)ᵢ] = A_ii`.
+Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2.
 atlas: diagonal-estimator -/
-theorem integral_and_variance_mul_mulVec_apply_of_rademacher (A : Matrix n n ℝ) {z : Ω → n → ℝ}
-    (hindep : iIndepFun (fun i ω => z ω i) μ)
-    (hlaw : ∀ i, IsRademacher μ (fun ω => z ω i)) (i : n) :
-    (∫ ω, z ω i * (A *ᵥ z ω) i ∂μ) = A i i ∧
-      Var[fun ω => z ω i * (A *ᵥ z ω) i; μ] = ∑ j, A i j ^ 2 - A i i ^ 2 := by
-  have hmeas := fun i => aemeasurable_of_isRademacher (hlaw i)
-  have hf := fun i => memLp_two_and_moments_of_isRademacher (hlaw i)
-  refine ⟨integral_mul_mulVec_apply_eq A (fun i => (hf i).1)
-    (fun _ _ hij => hindep.indepFun hij) (fun i => (hf i).2.1) (fun i => (hf i).2.2.1) i, ?_⟩
-  rw [variance_mul_mulVec_apply A hmeas hindep (fun i => (hf i).2.1) (fun i => (hf i).2.2.1)
-    (fun i => (hf i).2.2.2.1) (fun i => (hf i).2.2.2.2) i]
+theorem integral_mul_mulVec_apply_eq_of_hasLaw_rademacherVector (A : Matrix n n ℝ)
+    {z : Ω → n → ℝ} (hz : HasLaw z (rademacherVector n) μ) (i : n) :
+    ∫ ω, z ω i * (A *ᵥ z ω) i ∂μ = A i i := by
+  have hl := fun j => hz.hasLaw_eval_rademacherMeasure j
+  exact integral_mul_mulVec_apply_eq A (fun j => memLp_two_of_hasLaw_rademacherMeasure (hl j))
+    (fun _ _ hij => hz.iIndepFun_eval_of_rademacherVector.indepFun hij)
+    (fun j => integral_eq_zero_of_hasLaw_rademacherMeasure (hl j))
+    (fun j => integral_sq_eq_one_of_hasLaw_rademacherMeasure (hl j)) i
+
+/-- **Variance of the diagonal estimator for a Rademacher vector**:
+`Var[zᵢ (A z)ᵢ] = ∑ⱼ A_ij² − A_ii² = ∑_{j ≠ i} A_ij²` (`m₄ = 1`).
+Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2.
+atlas: diagonal-estimator -/
+theorem variance_mul_mulVec_apply_of_hasLaw_rademacherVector (A : Matrix n n ℝ)
+    {z : Ω → n → ℝ} (hz : HasLaw z (rademacherVector n) μ) (i : n) :
+    Var[fun ω => z ω i * (A *ᵥ z ω) i; μ] = ∑ j, A i j ^ 2 - A i i ^ 2 := by
+  have hl := fun j => hz.hasLaw_eval_rademacherMeasure j
+  rw [variance_mul_mulVec_apply A (fun j => (hl j).aemeasurable)
+    hz.iIndepFun_eval_of_rademacherVector
+    (fun j => integral_eq_zero_of_hasLaw_rademacherMeasure (hl j))
+    (fun j => integral_sq_eq_one_of_hasLaw_rademacherMeasure (hl j))
+    (fun j => integrable_pow_four_of_hasLaw_rademacherMeasure (hl j))
+    (fun j => integral_pow_four_eq_one_of_hasLaw_rademacherMeasure (hl j)) i]
   ring
 
 end Probability

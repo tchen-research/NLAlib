@@ -1,10 +1,11 @@
 import NLAlib.Matrix.Inequalities.Schur
 import NLAlib.Matrix.Subspaces.Stiefel
+import NLAlib.Matrix.Norms.Core
 
 /-!
 # Projected eigenvector certificates for Schur–Horn
 
-Columns of the actual orthogonal diagonalizer supply the needed eigenvectors.
+Columns of the orthogonal diagonalizer supply the needed eigenvectors.
 Projection to a reducing coordinate set gives masses in `[0,1]`, an exact
 integer budget and the exact weighted diagonal sum; normalization gives unit
 eigenvectors in the set and its complement. No block diagonalization is assumed.
@@ -13,7 +14,7 @@ Supports atlas `schur-horn`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -26,7 +27,7 @@ def columnProjectionMass (Q : Matrix n n ℝ) (S : Finset n) (j : n) : ℝ := �
 def projectedColumn (Q : Matrix n n ℝ) (S : Finset n) (j : n) : n → ℝ :=
   fun i => if i ∈ S then Q i j else 0
 
-/-- The normalized projected column, using the actual square root of its mass.
+/-- The normalized projected column, using the square root of its mass.
 The unit-vector theorem assumes that this mass is positive. -/
 def normalizedProjectedColumn (Q : Matrix n n ℝ) (S : Finset n) (j : n) : n → ℝ :=
   (Real.sqrt (columnProjectionMass Q S j))⁻¹ • projectedColumn Q S j
@@ -67,10 +68,17 @@ theorem projectedColumn_dotProduct_self (Q : Matrix n n ℝ) (S : Finset n) (j :
     projectedColumn Q S j ⬝ᵥ projectedColumn Q S j = columnProjectionMass Q S j := by
   simp [projectedColumn, dotProduct, columnProjectionMass, pow_two]
 
-/-- A positive-mass projected column normalizes to an actual unit vector. -/
-theorem normalizedProjectedColumn_dotProduct_self (Q : Matrix n n ℝ) (S : Finset n) (j : n)
+/-- `‖x‖ = 1` iff `x ⬝ᵥ x = 1`, for real vectors (bridge between the vector-norm spelling and
+the dot product; `norm_toLp_sq_eq_dotProduct_self`). -/
+theorem norm_toLp_eq_one_iff_dotProduct_self_eq_one (x : n → ℝ) :
+    ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖ = 1 ↔ x ⬝ᵥ x = 1 := by
+  rw [← norm_toLp_sq_eq_dotProduct_self, pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero]
+
+/-- A positive-mass projected column normalizes to a unit vector. -/
+theorem norm_toLp_normalizedProjectedColumn (Q : Matrix n n ℝ) (S : Finset n) (j : n)
     (hj : 0 < columnProjectionMass Q S j) :
-    normalizedProjectedColumn Q S j ⬝ᵥ normalizedProjectedColumn Q S j = 1 := by
+    ‖(WithLp.toLp 2 (normalizedProjectedColumn Q S j) : EuclideanSpace ℝ n)‖ = 1 := by
+  rw [norm_toLp_eq_one_iff_dotProduct_self_eq_one]
   have hs : Real.sqrt (columnProjectionMass Q S j) ≠ 0 := (Real.sqrt_pos.mpr hj).ne'
   have hsq := Real.sq_sqrt (columnProjectionMass_nonneg Q S j)
   unfold normalizedProjectedColumn
@@ -98,7 +106,7 @@ theorem normalizedProjectedColumn_dotProduct_compl_eq_zero (Q : Matrix n n ℝ) 
   Finset.sum_eq_zero (fun i _ => normalizedProjectedColumn_mul_compl_eq_zero Q S j k i)
 
 /-- Spectral factorization turns every orthogonal diagonalizer column into an
-actual eigenvector at the given coefficient. -/
+eigenvector at the given coefficient. -/
 theorem mulVec_column_eq_smul_of_orthogonal_diagonalization {A Q : Matrix n n ℝ}
     (hQ : HasOrthonormalCols Q) (lam : n → ℝ) (hA : A = Q * Matrix.diagonal lam * Qᵀ) (j : n) :
     A *ᵥ (fun i => Q i j) = lam j • (fun i => Q i j) := by
@@ -125,10 +133,10 @@ theorem sum_mul_columnProjectionMass_eq_sum_diagonal {A Q : Matrix n n ℝ}
   simp_rw [columnProjectionMass, Finset.mul_sum, hdiag]
   exact Finset.sum_comm
 
-/-- The coordinate-set selector is its actual diagonal orthogonal projection. -/
+/-- The coordinate-set selector is its diagonal orthogonal projection. -/
 def coordinateSelector (S : Finset n) : Matrix n n ℝ := Matrix.diagonal (fun i => if i ∈ S then 1 else 0)
 
-/-- A reducing cross-zero coordinate set commutes with the actual Hermitian matrix. -/
+/-- A reducing cross-zero coordinate set commutes with the Hermitian matrix. -/
 theorem coordinateSelector_commute_of_cross_eq_zero {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (S : Finset n) (hcross : ∀ i ∈ S, ∀ k ∉ S, A i k = 0) :
     A * coordinateSelector S = coordinateSelector S * A := by
@@ -143,14 +151,14 @@ theorem coordinateSelector_commute_of_cross_eq_zero {A : Matrix n n ℝ} (hA : A
   · simp [hi, hk, hs i k, hcross k hk i hi]
   · simp [hi, hk]
 
-/-- Multiplying by the coordinate selector gives the actual projected column. -/
+/-- Multiplying by the coordinate selector gives the projected column. -/
 theorem coordinateSelector_mulVec_column (Q : Matrix n n ℝ) (S : Finset n) (j : n) :
     coordinateSelector S *ᵥ (fun i => Q i j) = projectedColumn Q S j := by
   funext i
   rw [coordinateSelector, Matrix.mulVec_diagonal]
   simp [projectedColumn]
 
-/-- A column projected onto a reducing coordinate set is still an actual
+/-- A column projected onto a reducing coordinate set is still a
 eigenvector, without a nonzero-mass or simple-spectrum hypothesis. -/
 theorem mulVec_projectedColumn_eq_smul {A Q : Matrix n n ℝ} (hQ : HasOrthonormalCols Q)
     (lam : n → ℝ) (hA : A = Q * Matrix.diagonal lam * Qᵀ) (S : Finset n)
@@ -161,7 +169,7 @@ theorem mulVec_projectedColumn_eq_smul {A Q : Matrix n n ℝ} (hQ : HasOrthonorm
     Matrix.mulVec_smul]
 
 /-- A normalized projected column is an eigenvector with the same eigenvalue,
-derived from actual orthogonal factorization and reduction. -/
+derived from orthogonal factorization and reduction. -/
 theorem mulVec_normalizedProjectedColumn_eq_smul {A Q : Matrix n n ℝ} (hQ : HasOrthonormalCols Q)
     (lam : n → ℝ) (hA : A = Q * Matrix.diagonal lam * Qᵀ) (S : Finset n)
     (hcomm : A * coordinateSelector S = coordinateSelector S * A) (j : n) :
@@ -184,14 +192,15 @@ theorem coordinateSelector_compl_commute {A : Matrix n n ℝ} (S : Finset n)
     A * coordinateSelector Sᶜ = coordinateSelector Sᶜ * A := by
   rw [coordinateSelector_compl, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, Matrix.one_mul, hcomm]
 
-/-- Positive inside mass and non-full outside mass give an actual pair of
+/-- Positive inside mass and non-full outside mass give a pair of
 disjoint unit eigenvectors, using the given orthogonal diagonalizer columns.
-Every norm, eigenvalue and support condition is derived from the actual matrix. -/
+Every norm, eigenvalue and support condition is derived from the matrix. -/
 theorem exists_projectedColumn_pair {A Q : Matrix n n ℝ} (hQ : HasOrthonormalCols Q)
     (lam : n → ℝ) (hFactor : A = Q * Matrix.diagonal lam * Qᵀ) (hA : A.IsHermitian)
     (S : Finset n) (hcross : ∀ i ∈ S, ∀ k ∉ S, A i k = 0) (j k : n)
     (hj : 0 < columnProjectionMass Q S j) (hk : columnProjectionMass Q S k < 1) :
-    ∃ u v : n → ℝ, u ⬝ᵥ u = 1 ∧ v ⬝ᵥ v = 1 ∧ u ⬝ᵥ v = 0 ∧
+    ∃ u v : n → ℝ, ‖(WithLp.toLp 2 u : EuclideanSpace ℝ n)‖ = 1 ∧
+      ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = 1 ∧ u ⬝ᵥ v = 0 ∧
       A *ᵥ u = lam j • u ∧ A *ᵥ v = lam k • v ∧ (∀ i, u i * v i = 0) ∧
       (∀ i ∉ S, u i = 0) ∧ (∀ i ∈ S, v i = 0) := by
   have hcomm := coordinateSelector_commute_of_cross_eq_zero hA S hcross
@@ -200,8 +209,8 @@ theorem exists_projectedColumn_pair {A Q : Matrix n n ℝ} (hQ : HasOrthonormalC
     rw [columnProjectionMass_compl hQ]
     linarith
   refine ⟨normalizedProjectedColumn Q S j, normalizedProjectedColumn Q Sᶜ k,
-    normalizedProjectedColumn_dotProduct_self Q S j hj,
-    normalizedProjectedColumn_dotProduct_self Q Sᶜ k hkc,
+    norm_toLp_normalizedProjectedColumn Q S j hj,
+    norm_toLp_normalizedProjectedColumn Q Sᶜ k hkc,
     normalizedProjectedColumn_dotProduct_compl_eq_zero Q S j k,
     mulVec_normalizedProjectedColumn_eq_smul hQ lam hFactor S hcomm j,
     mulVec_normalizedProjectedColumn_eq_smul hQ lam hFactor Sᶜ hcommc k,
@@ -230,7 +239,7 @@ theorem isCompact_orthogonalMatrices : IsCompact {Q : Matrix n n ℝ | HasOrthon
   rw [← heq]
   exact isCompact_range hF
 
-/-- Every continuous real objective has an actual global minimizer over all
+/-- Every continuous real objective has a global minimizer over all
 real orthogonal matrices, including empty dimensions. -/
 theorem exists_orthogonal_isMinOn_of_continuous (F : Matrix n n ℝ → ℝ) (hF : Continuous F) :
     ∃ Q : Matrix n n ℝ, HasOrthonormalCols Q ∧

@@ -13,14 +13,15 @@ atlas `normal-matrices`.
 
 noncomputable section
 set_option maxHeartbeats 800000
-open scoped Matrix ComplexStarModule Matrix.Norms.L2Operator
+open scoped Matrix ComplexStarModule
 open Complex
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-/-- Every complex normal matrix has an orthonormal eigenbasis. Source:
+open scoped Matrix.Norms.L2Operator in
+/-- Every complex normal matrix has an orthonormal eigenbasis.
 Horn–Johnson (2013), Theorem 2.5.3; the proof uses joint eigenspaces of the
 Hermitian real and imaginary parts and includes an empty index type.
 atlas: normal-matrices (partial) -/
@@ -70,7 +71,8 @@ theorem exists_orthonormalBasis_eigenvectors_of_normal {A : Matrix n n ℂ}
       hHj, hKj, smul_smul, ← add_smul]
   exact congrArg (fun v : EuclideanSpace ℂ n => ⇑v) heig
 
-/-- Every complex normal matrix is unitarily diagonalizable. Source:
+open scoped Matrix.Norms.L2Operator in
+/-- Every complex normal matrix is unitarily diagonalizable.
 Horn–Johnson (2013), Theorem 2.5.3; the unitary and eigenvalue list are
 constructed from the orthonormal joint eigenbasis, including empty matrices.
 atlas: normal-matrices (partial) -/
@@ -96,6 +98,7 @@ theorem exists_unitary_diagonalization_of_normal {A : Matrix n n ℂ}
       rw [hUU, Matrix.mul_one]
     _ = _ := by rw [← Matrix.mul_assoc, hAU]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A unitary diagonalization implies normality. Source: Horn–Johnson
 (2013), Theorem 2.5.3; diagonal entries may be arbitrary complex numbers.
 atlas: normal-matrices (partial) -/
@@ -117,6 +120,7 @@ theorem mul_conjTranspose_eq_conjTranspose_mul_of_unitary_diagonalization
     (U : Matrix n n ℂ) * (Matrix.diagonal (star d * d) * (U : Matrix n n ℂ)ᴴ)
   rw [hD]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A complex matrix is normal exactly when it is unitarily diagonalizable.
 Source: Horn–Johnson (2013), Theorem 2.5.3.
 atlas: normal-matrices (partial) -/

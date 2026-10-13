@@ -11,45 +11,45 @@ HMT 2011, §2.1). Over `ℝ`, `Vᴴ` is definitionally `Vᵀ` and `U`, `V` are o
 ## Conventions
 
 * `NLAlib.singularValues A : ℕ → ℝ` is Mathlib's `LinearMap.singularValues` of the Euclidean
-  linear map of `A`, defined for `A : Matrix m n 𝕜` with `𝕜` `RCLike` and `m`, `n` arbitrary
-  finite types: **zero-indexed** (`σ 0` is the largest), nonnegative, antitone, and
-  `σ k ≠ 0 ↔ k < A.rank`; in particular `σ k = 0` for `k ≥ min m n`. Indexing by `ℕ` (rather
-  than `Fin (min m n)`) means the singular values of matrices of different shapes are compared
-  without casts, a rank-`k` split is `k < ·` vs `k ≤ ·`, and the truncated SVD is
-  `rectDiag (fun i => if i < k then σ i else 0)`.
+ linear map of `A`, defined for `A : Matrix m n 𝕜` with `𝕜` `RCLike` and `m`, `n` arbitrary
+ finite types: **zero-indexed** (`σ 0` is the largest), nonnegative, antitone, and
+ `σ k ≠ 0 ↔ k < A.rank`; in particular `σ k = 0` for `k ≥ min m n`. Indexing by `ℕ` (rather
+ than `Fin (min m n)`) means the singular values of matrices of different shapes are compared
+ without casts, a rank-`k` split is `k < ·` vs `k ≤ ·`, and the truncated SVD is
+ `rectDiag (fun i => if i < k then σ i else 0)`.
 * The singular values are a *function of `A`*, not an existential witness: `exists_isSVD` only
-  chooses the singular vectors `U`, `V`.
+ chooses the singular vectors `U`, `V`.
 * `NLAlib.rectDiag σ : Matrix (Fin p) (Fin q) 𝕜` has entry `(σ i : 𝕜)` at `(i, i)` and `0`
-  elsewhere (`rectDiag_apply_ofReal`); over `ℝ` the entry is `σ i` (`rectDiag_apply`). It is
-  *positional*: its rows and columns are the sorted singular directions, like Mathlib's
-  `Matrix.IsHermitian.eigenvalues₀ : Fin (card n) → ℝ`.
+ elsewhere (`rectDiag_apply_ofReal`); over `ℝ` the entry is `σ i` (`rectDiag_apply`). It is
+ *positional*: its rows and columns are the sorted singular directions, like Mathlib's
+ `Matrix.IsHermitian.eigenvalues₀ : Fin (card n) → ℝ`.
 * Index shapes of `IsSVD A U V` for `A : Matrix m n 𝕜`: `U : Matrix m (Fin p) 𝕜`,
-  `V : Matrix n (Fin q) 𝕜`, unitary (`UᴴU = 1`, `UUᴴ = 1`, so `p = card m`, `IsSVD.card_left`),
-  the `k`-th column being the `k`-th singular vector. `exists_isSVD A` fills `p = card m`
-  automatically; for `A : Matrix (Fin a) (Fin b) 𝕜` it gives `U : Matrix (Fin a) (Fin a) 𝕜`
-  (`Fintype.card_fin`), so `Fin` statements need no casts. (`Fintype.equivFin (Fin a)` is an
-  unspecified permutation, so a `rectDiag : Matrix m n 𝕜` built from `equivFin` would not be the
-  positional diagonal at `Fin`; see `docs/rclike/F1b-alpha.md`.)
+ `V : Matrix n (Fin q) 𝕜`, unitary (`UᴴU = 1`, `UUᴴ = 1`, so `p = card m`, `IsSVD.card_left`),
+ the `k`-th column being the `k`-th singular vector. `exists_isSVD A` fills `p = card m`
+ automatically; for `A : Matrix (Fin a) (Fin b) 𝕜` it gives `U : Matrix (Fin a) (Fin a) 𝕜`
+ (`Fintype.card_fin`), so `Fin` statements need no casts. (`Fintype.equivFin (Fin a)` is an
+ unspecified permutation, so a `rectDiag : Matrix m n 𝕜` built from `equivFin` would not be the
+ positional diagonal at `Fin`; see `docs/rclike/F1b-alpha.md`.)
 * Real matrices. Lemmas are stated once, with `ᴴ` (no `ᵀ` twins, `docs/STANDARDS.md` §2): at `ℝ`
-  a term of the general statement elaborates against the `ᵀ` form, and a `rw` on a `ᵀ` goal uses
-  `show Uᵀ * U = 1 from h.conjTranspose_mul_left` or
-  `simp only [Matrix.conjTranspose_eq_transpose_of_trivial]`. The one real entry lemma kept is
-  `rectDiag_apply` (cast-free entries of a real `rectDiag`).
+ a term of the general statement elaborates against the `ᵀ` form, and a `rw` on a `ᵀ` goal uses
+ `show Uᵀ * U = 1 from h.conjTranspose_mul_left` or
+ `simp only [Matrix.conjTranspose_eq_transpose_of_trivial]`. The one real entry lemma kept is
+ `rectDiag_apply` (cast-free entries of a real `rectDiag`).
 
 ## Main results
 
 * `NLAlib.exists_isSVD`: `∃ U V, IsSVD A U V` (atlas `svd`).
 * `NLAlib.IsSVD.conjTranspose_mul_self`, `NLAlib.IsSVD.mul_conjTranspose_self`:
-  `AᴴA = V Σ² Vᴴ`, `AAᴴ = U Σ² Uᴴ`.
+ `AᴴA = V Σ² Vᴴ`, `AAᴴ = U Σ² Uᴴ`.
 * `NLAlib.IsSVD.apply`: the entrywise outer-product expansion
-  `A i j = ∑_{k < min m n} σ_k U_{ik} conj(V_{jk})`.
+ `A i j = ∑_{k < min m n} σ_k U_{ik} conj(V_{jk})`.
 * `NLAlib.frobSq_eq_sum_sq_singularValues` (in `SingularValueSpectrum`):
-  `‖A‖_F² = ∑_{k < min m n} σ_k²`.
+ `‖A‖_F² = ∑_{k < min m n} σ_k²`.
 * `NLAlib.singularValues_ne_zero_iff`, `NLAlib.rank_eq_card_singularValues_ne_zero`: rank.
 * `NLAlib.sq_singularValues_eq_eigenvalues₀`: `σ_k²` is the `k`-th largest eigenvalue of `AᴴA`.
 * `NLAlib.IsSVD.eq_head_add_tail`: block split `A = U Σ_{<k} Vᴴ + U Σ_{≥k} Vᴴ`.
 * `NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul`: uniqueness of the singular values (used for
-  `singularValues_transpose` and the isometry invariances in `SingularValueInvariance.lean`).
+ `singularValues_transpose` and the isometry invariances in `SingularValueInvariance.lean`).
 
 The orthonormal completion of `{A vⱼ / σⱼ : σⱼ ≠ 0}` (atlas `orthonormal-completion`) is
 Mathlib's `Orthonormal.exists_orthonormalBasis_extension_of_card_eq`.

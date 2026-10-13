@@ -1,5 +1,5 @@
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.HardEdgeEndpoint
-import NLAlib.ForMathlib.MeasureTheory.WeightedWeakDensity
+import NLAlib.RandomMatrix.Gaussian.Wishart.WeightedWeakDensity
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.UnshiftedWeakInequality
 /-!
 # Closing the operator hard-edge argument

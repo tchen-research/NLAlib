@@ -1,4 +1,5 @@
-import NLAlib.Matrix.Inequalities.PlaneRotation
+import NLAlib.Matrix.Basic.PlaneRotation
+import NLAlib.Matrix.Subspaces.Projections
 import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.Calculus.LocalExtr.Basic
 import Mathlib.Analysis.Calculus.Deriv.Pow
@@ -80,7 +81,7 @@ coordinate stationarity equation `(rᵢ-rⱼ)Aᵢⱼ=0`. Schur–Horn variationa
 rederivation, equation (2); only ordinary real scalar differentiation is used. -/
 theorem diagonal_error_stationarity_of_min
     (A : Matrix n n ℝ) (hA : Aᵀ = A) (d : n → ℝ)
-    (hmin : ∀ R : Matrix n n ℝ, Rᵀ * R = 1 →
+    (hmin : ∀ R : Matrix n n ℝ, HasOrthonormalCols R →
       (∑ i, (A i i - d i) ^ 2) ≤ ∑ i, ((R * A * Rᵀ) i i - d i) ^ 2)
     (i j : n) : ((A i i - d i) - (A j j - d j)) * A i j = 0 := by
   by_cases hij : i = j
@@ -91,10 +92,13 @@ theorem diagonal_error_stationarity_of_min
   let R (t : ℝ) := planeRotation u v ((1 - t ^ 2) / (1 + t ^ 2))
     (2 * t / (1 + t ^ 2))
   have hR0 : R 0 = 1 := by simp [R, planeRotation]
-  have horth (t : ℝ) : (R t)ᵀ * R t = 1 := by
-    apply transpose_planeRotation_mul_self
-    · simp [u, dotProduct_single]
-    · simp [v, dotProduct_single]
+  have hsingle (a : n) : ‖(WithLp.toLp 2 (Pi.single a (1 : ℝ)) : EuclideanSpace ℝ n)‖ = 1 := by
+    rw [show (WithLp.toLp 2 (Pi.single a (1 : ℝ)) : EuclideanSpace ℝ n) =
+      EuclideanSpace.single a 1 from rfl, EuclideanSpace.norm_single, norm_one]
+  have horth (t : ℝ) : HasOrthonormalCols (R t) := by
+    apply hasOrthonormalCols_planeRotation
+    · exact hsingle i
+    · exact hsingle j
     · simp [u, v, dotProduct_single, hij]
     · exact sq_rational_rotation_coefficients t
   let f (t : ℝ) : ℝ := ∑ k, ((R t * A * (R t)ᵀ) k k - d k) ^ 2

@@ -3,51 +3,52 @@ import NLAlib.Matrix.Spectral.SingularValueSpectrum
 /-!
 # Ordered eigenvalues of matrix functional calculus
 
-A scalar function preserving the ordering of a finite Hermitian spectrum acts
-entrywise on its decreasing eigenvalue list. Applied to nonnegative squares,
-this identifies PSD eigenvalues with actual singular values. Source:
-Horn--Johnson, spectral theorem; supports `condition-number-def` and nuclear
-norm trace identities.
+A scalar function that keeps the decreasing order of a finite Hermitian spectrum acts
+entrywise on the sorted eigenvalue list `eigenvalues₀` (`eigenvalues₀_cfc_of_antitone`); applied
+to `x ↦ x²` this identifies the singular values of a PSD matrix with its sorted eigenvalues
+(`singularValues_eq_eigenvalues₀_of_posSemidef`). Over `[RCLike 𝕜]`. Horn–Johnson 2013,
+Thm 2.5.6 and §7.3; supports `condition-number-def` and the nuclear-norm trace identities.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder Matrix.Norms.L2Operator ComplexOrder
 namespace NLAlib
 
 set_option backward.isDefEq.respectTransparency false
 
-variable {n : Type*} [Fintype n] [DecidableEq n]
+variable {𝕜 : Type*} [RCLike 𝕜] {n : Type*} [Fintype n] [DecidableEq n]
 
-/-- A scalar functional calculus with decreasing transformed eigenvalues has
-exactly that decreasing eigenvalue list, with multiplicities. Source:
-Horn--Johnson, spectral theorem; supports `condition-number-def`. -/
-theorem eigenvalues₀_cfc_of_antitone (f : ℝ → ℝ) {A : Matrix n n ℝ}
+/-- If `i ↦ f(λᵢ)` is decreasing along the sorted eigenvalues of the Hermitian `A`, then the
+sorted eigenvalues of `f(A)` are `f(λᵢ)`, with multiplicities. Horn–Johnson 2013, Thm 2.5.6;
+supports `condition-number-def`. -/
+theorem eigenvalues₀_cfc_of_antitone (f : ℝ → ℝ) {A : Matrix n n 𝕜}
     (hA : A.IsHermitian) (hf : Antitone (fun i => f (hA.eigenvalues₀ i)))
     (i : Fin (Fintype.card n)) :
     (show (cfc f A).IsHermitian from cfc_predicate f A).eigenvalues₀ i = f (hA.eigenvalues₀ i) := by
   have hC : (cfc f A).IsHermitian := cfc_predicate f A
   have hMult : Finset.univ.val.map hA.eigenvalues = Finset.univ.val.map hA.eigenvalues₀ := by
-    have h := hA.roots_charpoly_eq_eigenvalues.symm.trans hA.roots_charpoly_eq_eigenvalues₀
-    simpa [Function.comp_def] using h
+    have h := congrArg (Multiset.map (RCLike.re : 𝕜 → ℝ))
+      (hA.roots_charpoly_eq_eigenvalues.symm.trans hA.roots_charpoly_eq_eigenvalues₀)
+    simpa [Multiset.map_map, Function.comp_def] using h
   have hRoots : (cfc f A).charpoly.roots =
-      Finset.univ.val.map (fun j => f (hA.eigenvalues₀ j)) := by
+      Finset.univ.val.map (fun j => (f (hA.eigenvalues₀ j) : 𝕜)) := by
     rw [hA.charpoly_cfc_eq f, Polynomial.roots_prod]
-    · simpa [Multiset.map_map, Function.comp_def] using congrArg (Multiset.map f) hMult
+    · simpa [Multiset.map_map, Function.comp_def] using
+        congrArg (Multiset.map (fun x : ℝ => (f x : 𝕜))) hMult
     · simp [Finset.prod_ne_zero_iff, Polynomial.X_sub_C_ne_zero]
   have hList : List.ofFn hC.eigenvalues₀ = List.ofFn (fun j => f (hA.eigenvalues₀ j)) := by
     rw [← hC.sort_roots_charpoly_eq_eigenvalues₀, hRoots]
-    simp only [Function.comp_def, RCLike.re_to_real, Fin.univ_val_map,
+    simp only [Function.comp_def, RCLike.ofReal_re, Fin.univ_val_map,
       Multiset.map_coe, List.map_ofFn, Multiset.coe_sort]
     apply List.mergeSort_of_pairwise
     simpa only [decide_eq_true_eq, ← List.sortedGE_iff_pairwise] using hf.sortedGE_ofFn
   exact congrFun (List.ofFn_inj.mp hList) i
 
-/-- Actual native singular values of a PSD real matrix coincide with its
-decreasing eigenvalues at every in-dimension index, including zeros and repeated
-values. Horn--Johnson, spectral theorem; supports `condition-number-def`.
--/
+/-- The singular values of a PSD matrix are its sorted eigenvalues, at every index below the
+dimension (zeros and repeated values included). Horn–Johnson 2013, Thm 7.3.1; supports
+`condition-number-def`. -/
 theorem singularValues_eq_eigenvalues₀_of_posSemidef
-    {A : Matrix n n ℝ} (hA : A.PosSemidef) (i : Fin (Fintype.card n)) :
+    {A : Matrix n n 𝕜} (hA : A.PosSemidef) (i : Fin (Fintype.card n)) :
     singularValues A (i : ℕ) = hA.isHermitian.eigenvalues₀ i := by
   have hNonneg (j : Fin (Fintype.card n)) : 0 ≤ hA.isHermitian.eigenvalues₀ j := by
     let e : Fin (Fintype.card n) ≃ n := Fintype.equivOfCardEq (Fintype.card_fin _)

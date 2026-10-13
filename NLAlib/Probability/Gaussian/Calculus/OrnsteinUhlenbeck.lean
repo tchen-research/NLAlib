@@ -25,8 +25,7 @@ open MeasureTheory ProbabilityTheory
 namespace NLAlib
 
 /-- The image of `γ ⊗ γ` under `(x, y) ↦ a x + b y` is `γ = N(0,1)` when `a² + b² = 1`.
-Atlas: `ornstein-uhlenbeck` (helper). Ported from Prove2me solution
-`GaussianMatrix.ou_semigroup_invariant`. -/
+Atlas: `ornstein-uhlenbeck` (helper). -/
 theorem map_add_mul_prod_gaussianReal (a b : ℝ) (hab : a ^ 2 + b ^ 2 = 1) :
     ((gaussianReal 0 1).prod (gaussianReal 0 1)).map (fun p : ℝ × ℝ => a * p.1 + b * p.2)
       = gaussianReal 0 1 := by
@@ -42,8 +41,7 @@ theorem map_add_mul_prod_gaussianReal (a b : ℝ) (hab : a ^ 2 + b ^ 2 = 1) :
   · apply NNReal.eq; simp [hab]
 
 /-- For `h ∈ L¹(γ)` and `a² + b² = 1`, `∫∫ h(a x + b y) dγ(y) dγ(x) = ∫ h dγ`.
-Atlas: `ornstein-uhlenbeck` (helper). Ported from Prove2me solution
-`GaussianMatrix.ou_semigroup_invariant`. -/
+Atlas: `ornstein-uhlenbeck` (helper). -/
 theorem integral_integral_comp_add_mul_gaussianReal (h : ℝ → ℝ)
     (hh : Integrable h (gaussianReal 0 1)) (a b : ℝ) (hab : a ^ 2 + b ^ 2 = 1) :
     ∫ x, (∫ y, h (a * x + b * y) ∂(gaussianReal 0 1)) ∂(gaussianReal 0 1)
@@ -60,19 +58,15 @@ theorem integral_integral_comp_add_mul_gaussianReal (h : ℝ → ℝ)
   rw [← integral_map hF (by rw [hmap]; exact hh.aestronglyMeasurable), hmap]
 
 /-- The **Ornstein–Uhlenbeck semigroup** on the standard Gaussian line (Mehler's formula):
-`P_t h(x) = ∫ h(e^{-t} x + √(1 - e^{-2t}) y) dγ(y)`, `γ = N(0,1)`. Unfolds by `rfl` to the
-integral written out in the Prove2me statements. Source: Bakry–Gentil–Ledoux 2014, (2.7.1).
-Atlas: `ornstein-uhlenbeck`. Ported from the Prove2me solutions
-`GaussianMatrix.ou_entropy_hasDerivAt` (`ouP`) and
-`GaussianMatrix.gaussian_logsobolev_bounded_below` (`ouSG`).
+`P_t h(x) = ∫ h(e^{-t} x + √(1 - e^{-2t}) y) dγ(y)`, `γ = N(0,1)`. Source: Bakry–Gentil–Ledoux 2014, (2.7.1).
+Atlas: `ornstein-uhlenbeck`.
 atlas: ornstein-uhlenbeck -/
 def ornsteinUhlenbeck (t : ℝ) (h : ℝ → ℝ) (x : ℝ) : ℝ :=
   ∫ y, h (Real.exp (-t) * x + Real.sqrt (1 - Real.exp (-(2 * t))) * y) ∂(gaussianReal 0 1)
 
 /-- **Invariance of the Gaussian measure** under the Ornstein–Uhlenbeck semigroup:
 `∫ P_t h dγ = ∫ h dγ` for `h ∈ L¹(γ)` and `t ≥ 0`. Source: Bakry–Gentil–Ledoux 2014, §2.7.1;
-Ledoux, *Concentration of Measure*, §5.1. Atlas: `ornstein-uhlenbeck`. Ported from Prove2me
-solution `GaussianMatrix.ou_semigroup_invariant`.
+Ledoux, *Concentration of Measure*, §5.1. Atlas: `ornstein-uhlenbeck`.
 atlas: ornstein-uhlenbeck -/
 theorem integral_ornsteinUhlenbeck (h : ℝ → ℝ) (hh : Integrable h (gaussianReal 0 1)) (t : ℝ)
     (ht : 0 ≤ t) :
@@ -83,8 +77,7 @@ theorem integral_ornsteinUhlenbeck (h : ℝ → ℝ) (hh : Integrable h (gaussia
   ring_nf
 
 /-- A `C¹`-function with bounded derivative composed with an affine map is `γ`-integrable.
-Atlas: `ornstein-uhlenbeck` (helper). Ported from Prove2me solution
-`GaussianMatrix.ou_semigroup_commutation`. -/
+Atlas: `ornstein-uhlenbeck` (helper). -/
 theorem integrable_comp_add_mul_of_abs_deriv_le (f : ℝ → ℝ) (hf : Differentiable ℝ f) (C : ℝ)
     (hdf : ∀ x, |deriv f x| ≤ C) (c d : ℝ) :
     Integrable (fun y => f (c + d * y)) (gaussianReal 0 1) := by
@@ -102,8 +95,7 @@ theorem integrable_comp_add_mul_of_abs_deriv_le (f : ℝ → ℝ) (hf : Differen
 
 /-- **Commutation relation** of the Ornstein–Uhlenbeck semigroup: for `f ∈ C¹` with
 `|f'| ≤ C`, `(P_t f)'(x) = e^{-t} P_t f'(x)`. Source: Bakry–Gentil–Ledoux 2014, §2.7.1
-(`∇P_t = e^{-t} P_t ∇`). Atlas: `ornstein-uhlenbeck`. Ported from Prove2me solution
-`GaussianMatrix.ou_semigroup_commutation`.
+(`∇P_t = e^{-t} P_t ∇`). Atlas: `ornstein-uhlenbeck`.
 atlas: ornstein-uhlenbeck -/
 theorem hasDerivAt_ornsteinUhlenbeck (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f) (C : ℝ)
     (hdf : ∀ x, |deriv f x| ≤ C) (t x : ℝ) :

@@ -24,7 +24,7 @@ theorem norm_eq_re_of_im_eq_zero_of_re_pos {z : ℂ} (hi : z.im = 0) (hr : 0 < z
 /-- Strict absolute row dominance and positive real diagonal place every
 complex eigenvalue in the open right half-plane. Source: Horn–Johnson
 (2013), Corollary 6.1.8; arbitrary nonsymmetric matrices are allowed.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem re_pos_of_mem_spectrum_of_strict_diagonal_dominance
     {A : Matrix n n ℂ} (hdiag : ∀ i, (A i i).im = 0)
     (hpos : ∀ i, 0 < (A i i).re)
@@ -37,7 +37,7 @@ theorem re_pos_of_mem_spectrum_of_strict_diagonal_dominance
 /-- Strict absolute row dominance with positive diagonal makes a real
 symmetric matrix positive definite. Source: Horn–Johnson (2013),
 Corollary 7.2.3; no nonempty-dimension assumption is needed.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem posDef_of_isHermitian_of_strict_diagonal_dominance
     {A : Matrix n n ℝ} (hA : A.IsHermitian) (hpos : ∀ i, 0 < A i i)
     (hstrict : ∀ i, gershgorinRowRadius A i < ‖A i i‖) : A.PosDef := by
@@ -48,7 +48,7 @@ theorem posDef_of_isHermitian_of_strict_diagonal_dominance
 /-- Strict absolute row dominance and positive real diagonal also make a
 complex Hermitian matrix positive definite. Source: Horn–Johnson (2013),
 Corollary 7.2.3; the real-symmetric conclusion extends verbatim.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem posDef_of_isHermitian_of_strict_diagonal_dominance_complex
     {A : Matrix n n ℂ} (hA : A.IsHermitian)
     (hdiag : ∀ i, (A i i).im = 0) (hpos : ∀ i, 0 < (A i i).re)
@@ -63,7 +63,7 @@ theorem posDef_of_isHermitian_of_strict_diagonal_dominance_complex
 and a strict row makes a complex Hermitian matrix positive definite.
 Source: Horn–Johnson (2013), Corollary 6.2.27; the strict-row hypothesis
 is necessary and is explicit.
-atlas: gershgorin-diagonal-dominance (partial) -/
+atlas: gershgorin-diagonal-dominance -/
 theorem posDef_of_isHermitian_of_irreducible_weak_diagonal_dominance_complex
     {A : Matrix n n ℂ} (hA : A.IsHermitian) (hIrred : (A.map norm).IsIrreducible)
     (hdiag : ∀ i, (A i i).im = 0) (hpos : ∀ i, 0 < (A i i).re)

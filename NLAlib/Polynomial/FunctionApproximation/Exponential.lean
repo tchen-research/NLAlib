@@ -35,7 +35,7 @@ theorem tsum_pow_div_factorial_nat_add_le_exp {x : ℝ} (hx : 0 ≤ x) (t : ℕ)
 
 /-- Exponential tilting with parameter two bounds the factorial series tail by `exp(-t)`
 when `t ≥ exp(2) ℓ`; this avoids any probability-space construction.
-Source: Sachdeva–Vishnoi, Theorem 4.1; operator rederivations `pg:exp-series-tail`.
+Source: Sachdeva–Vishnoi, Theorem 4.1.
 The displayed bound is the second inequality of that lemma.
 Atlas `exp-polynomial-approx` (helper). -/
 theorem exp_neg_mul_tsum_pow_div_factorial_nat_add_le {ℓ : ℝ} (hℓ : 0 ≤ ℓ)
@@ -116,7 +116,7 @@ theorem degree_exponentialChebyshevApprox_le (ℓ : ℝ) (t d : ℕ) :
 
 /-- The Chebyshev-compressed exponential has error at most the factorial tail plus the
 uniform monomial-compression error.
-Source: Sachdeva–Vishnoi, Theorem 4.1; operator rederivations `pg:exponential`.
+Source: Sachdeva–Vishnoi, Theorem 4.1.
 Atlas `exp-polynomial-approx` (helper). -/
 theorem abs_exp_sub_eval_exponentialChebyshevApprox_le {ℓ : ℝ} (hℓ : 0 ≤ ℓ)
     {t : ℕ} (_ht0 : 0 < t) (ht : exp 2 * ℓ ≤ (t : ℝ)) (d : ℕ) {y : ℝ}
@@ -177,19 +177,18 @@ theorem abs_exp_sub_eval_exponentialChebyshevApprox_le {ℓ : ℝ} (hℓ : 0 ≤
   nlinarith
 
 /-- The explicit Taylor cutoff `ceil(max(e² b/2, log(2/δ)))` for approximating `exp(-x)`.
-Source: Sachdeva–Vishnoi, Theorem 4.1; explicit constants in operator rederivations
-`pg:exponential`. Atlas `exp-polynomial-approx` (definition). -/
+Source: Sachdeva–Vishnoi, Theorem 4.1; explicit constants. Atlas `exp-polynomial-approx` (definition). -/
 def exponentialApproxCutoff (b δ : ℝ) : ℕ :=
   ⌈max (exp 1 ^ 2 * b / 2) (log (2 / δ))⌉₊
 
 /-- The explicit compressed degree `ceil(sqrt(2t log(4/δ)))`.
-Source: Sachdeva–Vishnoi, Theorem 4.1; operator rederivations `pg:exponential`.
+Source: Sachdeva–Vishnoi, Theorem 4.1.
 Atlas `exp-polynomial-approx` (definition). -/
 def exponentialApproxDegree (b δ : ℝ) : ℕ :=
   ⌈sqrt (2 * exponentialApproxCutoff b δ * log (4 / δ))⌉₊
 
 /-- The explicitly defined polynomial approximating `exp(-x)` on `[0,b]`.
-Source: Sachdeva–Vishnoi, Theorem 4.1; operator rederivations `pg:exponential`.
+Source: Sachdeva–Vishnoi, Theorem 4.1.
 Atlas `exp-polynomial-approx` (definition). -/
 def exponentialApprox (b δ : ℝ) : ℝ[X] :=
   (exponentialChebyshevApprox (b / 2) (exponentialApproxCutoff b δ)
@@ -213,8 +212,8 @@ theorem degree_exponentialApprox_le (b δ : ℝ) :
 
 /-- The explicit polynomial with the source's two ceiling parameters approximates `exp(-x)`
 within `δ` on `[0,b]`, for `b>0` and `0<δ≤1`.
-Source: Sachdeva–Vishnoi, Theorem 4.1; operator rederivations `pg:exponential` supplies the
-displayed ceilings. Its proof uses only the genuine finite monomial approximation and
+Source: Sachdeva–Vishnoi, Theorem 4.1 supplies the
+displayed ceilings. Its proof uses only the finite monomial approximation and
 factorial exponential series, with no assumed approximation or coefficient-decay premise.
 atlas: exp-polynomial-approx -/
 theorem abs_exp_neg_sub_eval_exponentialApprox_le {b δ : ℝ} (hb : 0 < b)
@@ -270,7 +269,7 @@ theorem abs_exp_neg_sub_eval_exponentialApprox_le {b δ : ℝ} (hb : 0 < b)
 
 /-- Exponential approximation in the existential polynomial interface, with the exact source
 degree `ceil(sqrt(2t log(4/δ)))` and `t=ceil(max(e²b/2,log(2/δ)))`.
-Source: Sachdeva–Vishnoi, Theorem 4.1; operator rederivations `pg:exponential`.
+Source: Sachdeva–Vishnoi, Theorem 4.1.
 atlas: exp-polynomial-approx -/
 theorem exists_degree_le_abs_exp_neg_sub_eval_le {b δ : ℝ} (hb : 0 < b)
     (hδ : 0 < δ) (hδ1 : δ ≤ 1) :

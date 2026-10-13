@@ -49,23 +49,24 @@ structure LanczosState (n : Type*) where
   prev : n → ℝ
   /-- The current Lanczos vector `q_j`. -/
   cur : n → ℝ
-  /-- The coefficient `β_j = q_jᵀ A q_{j−1}`. -/
+  /-- The coefficient `β_j = ‖w_{j−1}‖` (`= q_jᵀ A q_{j−1}` in exact arithmetic for symmetric
+  `A`, `lanczosBeta_succ_eq_dotProduct`). -/
   beta : ℝ
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- One Lanczos step: `w = A q_j − α_j q_j − β_j q_{j−1}` with `α_j = q_jᵀ A q_j`, then
-`β_{j+1} = ‖w‖ = √(wᵀw)` and `q_{j+1} = β_{j+1}⁻¹ w` (`0` at breakdown, since `0⁻¹ = 0`).
+`β_{j+1} = ‖w‖` and `q_{j+1} = β_{j+1}⁻¹ w` (`0` at breakdown, since `0⁻¹ = 0`).
 Source: Trefethen–Bau (1997) [`tb97`], Alg. 36.1; Saad (2011) [`saad11`], Alg. 6.15.
 Atlas: `lanczos-recurrence-algorithm`. -/
 def lanczosStep (A : Matrix n n ℝ) (s : LanczosState n) : LanczosState n :=
   let w := A *ᵥ s.cur - (s.cur ⬝ᵥ (A *ᵥ s.cur)) • s.cur - s.beta • s.prev
-  ⟨s.cur, (√(w ⬝ᵥ w))⁻¹ • w, √(w ⬝ᵥ w)⟩
+  ⟨s.cur, ‖WithLp.toLp 2 w‖⁻¹ • w, ‖WithLp.toLp 2 w‖⟩
 
 /-- The initial state `(0, b/‖b‖, 0)` (`q_0 = 0` when `b = 0`). Source: Trefethen–Bau (1997)
 [`tb97`], Alg. 36.1. Atlas: `lanczos-recurrence-algorithm`. -/
 def lanczosInit (b : n → ℝ) : LanczosState n :=
-  ⟨0, (√(b ⬝ᵥ b))⁻¹ • b, 0⟩
+  ⟨0, ‖WithLp.toLp 2 b‖⁻¹ • b, 0⟩
 
 /-- The state after `j` Lanczos steps, as `Nat.iterate`. Source: Trefethen–Bau (1997)
 [`tb97`], Alg. 36.1. Atlas: `lanczos-recurrence-algorithm`. -/
@@ -103,7 +104,7 @@ theorem lanczosState_succ (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) :
 omit [DecidableEq n] in
 /-- `q_0 = b/‖b‖`. Atlas: `lanczos-recurrence-algorithm`. -/
 theorem lanczosRecurrence_zero (A : Matrix n n ℝ) (b : n → ℝ) :
-    lanczosRecurrence A b 0 = (√(b ⬝ᵥ b))⁻¹ • b := rfl
+    lanczosRecurrence A b 0 = ‖WithLp.toLp 2 b‖⁻¹ • b := rfl
 
 omit [DecidableEq n] in
 /-- `β_0 = 0`. Atlas: `lanczos-recurrence-algorithm`. -/
@@ -116,11 +117,11 @@ theorem lanczosState_succ_prev (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) :
   rw [lanczosState_succ]; rfl
 
 omit [DecidableEq n] in
-/-- `β_j = √(wᵀw) ≥ 0`. Atlas: `lanczos-recurrence-algorithm`. -/
+/-- `β_j = ‖w_{j−1}‖ ≥ 0`. Atlas: `lanczos-recurrence-algorithm`. -/
 theorem lanczosBeta_nonneg (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) : 0 ≤ lanczosBeta A b j := by
   cases j with
   | zero => exact le_rfl
-  | succ j => rw [lanczosBeta, lanczosState_succ]; exact Real.sqrt_nonneg _
+  | succ j => rw [lanczosBeta, lanczosState_succ]; exact norm_nonneg _
 
 omit [DecidableEq n] in
 /-- `‖w‖ • (‖w‖⁻¹ • w) = w`, including `w = 0`. -/
@@ -149,7 +150,8 @@ Source: Trefethen–Bau (1997) [`tb97`], Alg. 36.1. Atlas: `lanczos-recurrence-a
 theorem lanczosBeta_one_smul (A : Matrix n n ℝ) (b : n → ℝ) :
     lanczosBeta A b 1 • lanczosRecurrence A b 1 =
       A *ᵥ lanczosRecurrence A b 0 - lanczosAlpha A b 0 • lanczosRecurrence A b 0 := by
-  simp only [lanczosBeta, lanczosRecurrence, lanczosAlpha, lanczosState_succ, lanczosStep]
+  simp only [lanczosBeta, lanczosRecurrence, lanczosAlpha, lanczosState_succ, lanczosStep,
+    norm_toLp_eq_sqrt_dotProduct]
   rw [sqrt_smul_inv_smul]
   simp [lanczosInit]
 
@@ -165,7 +167,7 @@ theorem lanczosBeta_add_two_smul (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) 
   have hp := lanczosState_succ_prev A b j
   simp only [lanczosBeta, lanczosRecurrence, lanczosAlpha] at hp ⊢
   rw [lanczosState_succ A b (j + 1)]
-  simp only [lanczosStep]
+  simp only [lanczosStep, norm_toLp_eq_sqrt_dotProduct]
   rw [sqrt_smul_inv_smul, hp]
 
 omit [DecidableEq n] in
@@ -175,7 +177,8 @@ theorem lanczosBeta_succ_eq (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) :
     lanczosBeta A b (j + 1) = lanczosRecurrence A b (j + 1) ⬝ᵥ
       (A *ᵥ lanczosRecurrence A b j - lanczosAlpha A b j • lanczosRecurrence A b j -
         lanczosBeta A b j • (lanczosState A b j).prev) := by
-  simp only [lanczosBeta, lanczosRecurrence, lanczosAlpha, lanczosState_succ A b j, lanczosStep]
+  simp only [lanczosBeta, lanczosRecurrence, lanczosAlpha, lanczosState_succ A b j, lanczosStep,
+    norm_toLp_eq_sqrt_dotProduct]
   rw [smul_dotProduct, smul_eq_mul, inv_sqrt_mul_self]
 
 /-! ### Realisation: the recursion is the Arnoldi process (symmetric `A`) -/
@@ -198,7 +201,7 @@ its coordinates in `arnoldiDecomp A b ν` are those of `α_j q_j + β_j q_{j−1
 `q_ν = 0 = arnoldiBasis ν` (`arnoldiBasis_eq_zero_of_krylovGrade_le`). Case `j + 1 > ν`: the
 state is `(0, 0, 0)` or `(q_{ν−1}, 0, 0)`, so `w_j = 0`. Base: `q_0 = b/‖b‖ = arnoldiBasis 0`
 (`gramSchmidtNormed` of `b`). Uses atlas `lanczos-recurrence`, `graded-krylov-basis-def`. -/
-theorem lanczosRecurrence_eq_arnoldiBasis {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ)
+theorem lanczosRecurrence_eq_arnoldiBasis {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ)
     (j : ℕ) : lanczosRecurrence A b j = arnoldiBasis A b j := by
   sorry
 
@@ -207,7 +210,7 @@ theorem lanczosRecurrence_eq_arnoldiBasis {A : Matrix n n ℝ} (hA : A.IsSymm) (
 `lanczosRecurrence_eq_arnoldiBasis` and orthogonality (`arnoldiBasis_dotProduct_of_ne`).
 Source: Trefethen–Bau (1997) [`tb97`], Lect. 36. Atlas: `lanczos-recurrence-algorithm`
 (partial). -/
-theorem lanczosBeta_succ_eq_dotProduct {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ)
+theorem lanczosBeta_succ_eq_dotProduct {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ)
     (j : ℕ) : lanczosBeta A b (j + 1) = arnoldiBasis A b (j + 1) ⬝ᵥ (A *ᵥ arnoldiBasis A b j) := by
   have hprev : arnoldiBasis A b (j + 1) ⬝ᵥ (lanczosState A b j).prev = 0 := by
     cases j with
@@ -224,7 +227,7 @@ theorem lanczosBeta_succ_eq_dotProduct {A : Matrix n n ℝ} (hA : A.IsSymm) (b :
 Source: Trefethen–Bau (1997) [`tb97`], Lect. 36; Golub–Meurant (2010) [`gm10`], Alg. 4.1.
 Proof: `lanczosBeta_succ_eq_dotProduct` and `arnoldiDecomp_H_subdiag_pos`.
 atlas: lanczos-recurrence-algorithm (partial) -/
-theorem lanczosBeta_pos {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ) {j : ℕ} (h0 : 0 < j)
+theorem lanczosBeta_pos {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ) {j : ℕ} (h0 : 0 < j)
     (hj : j < krylovGrade A b) : 0 < lanczosBeta A b j := by
   obtain ⟨j, rfl⟩ : ∃ j', j = j' + 1 := ⟨j - 1, by omega⟩
   rw [lanczosBeta_succ_eq_dotProduct hA]
@@ -236,7 +239,7 @@ theorem lanczosBeta_pos {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ) {j 
 Source: Trefethen–Bau (1997) [`tb97`], Lect. 36; Saad (2003) [`saad03`], Prop. 6.6.
 Proof: `lanczosBeta_succ_eq_dotProduct` and `arnoldiBasis_eq_zero_of_krylovGrade_le`.
 atlas: lanczos-recurrence-algorithm (partial) -/
-theorem lanczosBeta_eq_zero_of_krylovGrade_le {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ)
+theorem lanczosBeta_eq_zero_of_krylovGrade_le {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ)
     {j : ℕ} (hj : krylovGrade A b ≤ j) : lanczosBeta A b j = 0 := by
   cases j with
   | zero => rfl
@@ -247,7 +250,7 @@ theorem lanczosBeta_eq_zero_of_krylovGrade_le {A : Matrix n n ℝ} (hA : A.IsSym
 /-- **Breakdown characterisation**: for symmetric `A` and `j > 0`, `β_j = 0 ↔ ν(A, b) ≤ j`.
 Source: Trefethen–Bau (1997) [`tb97`], Lect. 36; Saad (2003) [`saad03`], Prop. 6.6.
 atlas: lanczos-recurrence-algorithm (partial) -/
-theorem lanczosBeta_eq_zero_iff {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ) {j : ℕ}
+theorem lanczosBeta_eq_zero_iff {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ) {j : ℕ}
     (h0 : 0 < j) : lanczosBeta A b j = 0 ↔ krylovGrade A b ≤ j := by
   refine ⟨fun h => ?_, lanczosBeta_eq_zero_of_krylovGrade_le hA b⟩
   by_contra hlt
@@ -255,7 +258,7 @@ theorem lanczosBeta_eq_zero_iff {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → 
 
 /-- The recursion's vectors vanish from the grade on: `q_j = 0` for `j ≥ ν(A, b)` (symmetric `A`).
 Source: Trefethen–Bau (1997) [`tb97`], Lect. 36. Atlas: `lanczos-recurrence-algorithm`. -/
-theorem lanczosRecurrence_eq_zero_of_krylovGrade_le {A : Matrix n n ℝ} (hA : A.IsSymm)
+theorem lanczosRecurrence_eq_zero_of_krylovGrade_le {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (b : n → ℝ) {j : ℕ} (hj : krylovGrade A b ≤ j) : lanczosRecurrence A b j = 0 := by
   rw [lanczosRecurrence_eq_arnoldiBasis hA, arnoldiBasis_eq_zero_of_krylovGrade_le A b hj]
 
@@ -263,7 +266,7 @@ theorem lanczosRecurrence_eq_zero_of_krylovGrade_le {A : Matrix n n ℝ} (hA : A
 `q ≤ ν(A, b)` and `j < q`, `α_j = (arnoldiDecomp A b q h).alpha j`. Source: Trefethen–Bau (1997)
 [`tb97`], Lect. 36; Golub–Meurant (2010) [`gm10`], Alg. 4.1.
 atlas: lanczos-recurrence-algorithm (partial) -/
-theorem lanczosAlpha_eq_alpha {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ) {q : ℕ}
+theorem lanczosAlpha_eq_alpha {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ) {q : ℕ}
     (h : q ≤ krylovGrade A b) {j : ℕ} (hj : j < q) :
     lanczosAlpha A b j = LanczosDecomp.alpha (arnoldiDecomp A b q h) j := by
   rw [LanczosDecomp.alpha, dif_pos hj, LanczosDecomp.T, ArnoldiDecomp.H_apply, arnoldiDecomp_Q,
@@ -273,7 +276,7 @@ theorem lanczosAlpha_eq_alpha {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → �
 `A`, `q ≤ ν(A, b)` and `j < q`, `β_j = (arnoldiDecomp A b q h).beta j` (both `0` at `j = 0`).
 Source: Trefethen–Bau (1997) [`tb97`], Lect. 36; Golub–Meurant (2010) [`gm10`], Alg. 4.1.
 atlas: lanczos-recurrence-algorithm (partial) -/
-theorem lanczosBeta_eq_beta {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ) {q : ℕ}
+theorem lanczosBeta_eq_beta {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ) {q : ℕ}
     (h : q ≤ krylovGrade A b) {j : ℕ} (hj : j < q) :
     lanczosBeta A b j = LanczosDecomp.beta (arnoldiDecomp A b q h) j := by
   cases j with
@@ -288,7 +291,7 @@ matrix with columns `q_0, …, q_{q−1}` of the recursion is a graded orthonorm
 is `arnoldiMatrix A b q`). Source: Trefethen–Bau (1997) [`tb97`], Lect. 36; Saad (2011)
 [`saad11`], Prop. 6.14. Uses atlas `graded-krylov-basis-def`.
 atlas: lanczos-recurrence-algorithm -/
-theorem isGradedKrylovBasis_lanczosRecurrence {A : Matrix n n ℝ} (hA : A.IsSymm) (b : n → ℝ)
+theorem isGradedKrylovBasis_lanczosRecurrence {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ)
     {q : ℕ} (h : q ≤ krylovGrade A b) :
     IsGradedKrylovBasis A b (Matrix.of fun r (j : Fin q) => lanczosRecurrence A b j r) := by
   have hQ : (Matrix.of fun r (j : Fin q) => lanczosRecurrence A b j r) = arnoldiMatrix A b q := by

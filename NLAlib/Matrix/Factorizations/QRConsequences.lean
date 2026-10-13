@@ -5,9 +5,9 @@ import NLAlib.Matrix.Basic.Gram
 /-!
 # QR uniqueness and spectral identities
 
-QR preserves the actual Gram matrix, native singular-value sequence and
+QR preserves the Gram matrix, native singular-value sequence and
 Moore--Penrose condition number. Full column rank gives a positive diagonal,
-a unique pair and the actual orthogonal range projector. Source:
+a unique pair and the orthogonal range projector. Source:
 Trefethen--Bau, Theorems 7.1--7.2; Golub--Van Loan, Theorems 5.2.1 and 5.2.3.
 Atlas: `qr-decomposition`.
 -/
@@ -18,7 +18,7 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [LinearOrder n]
 
-/-- Full column rank makes the actual Gram matrix positive definite,
+/-- Full column rank makes the Gram matrix positive definite,
 including empty column spaces. Rank identity and the PSD invertibility
 criterion; supports `qr-decomposition`. -/
 theorem posDef_transpose_mul_self_of_rank_eq_card {A : Matrix m n ℝ}
@@ -57,7 +57,7 @@ theorem diag_pos_of_qr_of_rank_eq_card {A Q : Matrix m n ℝ} {R : Matrix n n �
     (isUnit_of_mul_transpose_eq_posDef hGram hFactorT) hDiag
 
 /-- Full column rank gives a unique thin QR pair with positive upper diagonal.
-This is uniqueness of both actual matrices, not only of their Grams.
+This is uniqueness of both matrices, not only of their Grams.
 Trefethen--Bau, Theorem 7.2; Golub--Van Loan, Theorem 5.2.3.
 atlas: qr-decomposition (partial) -/
 theorem existsUnique_qr_of_rank_eq_card (A : Matrix m n ℝ)
@@ -89,7 +89,7 @@ theorem singularValues_eq_of_qr {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
   simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
     transpose_mul_self_eq_of_qr hQ hFactor
 
-/-- QR preserves the total spectral condition number built from the actual
+/-- QR preserves the total spectral condition number built from the
 Moore--Penrose inverse, including singular and zero-rank matrices.
 Golub--Van Loan, Section 2.6.2; supports `qr-decomposition`.
 atlas: qr-decomposition (partial) -/
@@ -97,7 +97,7 @@ theorem moorePenroseConditionNumber_eq_of_qr [DecidableEq m] {A Q : Matrix m n �
     (hQ : HasOrthonormalCols Q) (hFactor : Q * R = A) : moorePenroseConditionNumber R = moorePenroseConditionNumber A := by
   rw [← hFactor, moorePenroseConditionNumber_mul_left_of_hasOrthonormalCols Q R hQ]
 
-/-- Under full column rank, the QR frame projector is the actual
+/-- Under full column rank, the QR frame projector is the
 Moore--Penrose orthogonal range projector. Trefethen--Bau, Theorem 7.2;
 Golub--Van Loan, Theorem 5.2.3.
 atlas: qr-decomposition (partial) -/

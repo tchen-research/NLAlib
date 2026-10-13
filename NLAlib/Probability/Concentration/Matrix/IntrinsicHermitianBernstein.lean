@@ -14,20 +14,23 @@ Atlas: `intrinsic-dimension`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Theorem 7.7.1, equation (7.7.1), printed p. 115; proof in Section 7.7.2, printed pp. 115–117.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
 variable {d : ℕ}
 
+open scoped Matrix.Norms.L2Operator in
 private lemma trace_re_eq_sum (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian) :
     (Matrix.trace A).re = ∑ i, hA.eigenvalues i := by
   rw [hA.trace_eq_sum_eigenvalues]
   simp
 
+open scoped Matrix.Norms.L2Operator in
 private lemma lambdaMax_zero [NeZero d] : lambdaMax (0 : Matrix (Fin d) (Fin d) ℂ) = 0 := by
   rw [lambdaMax, spectrum.zero_eq, csSup_singleton]
 
+open scoped Matrix.Norms.L2Operator in
 private lemma neg_posSemidef (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
     (hb : lambdaMax A ≤ 0) : (-A).PosSemidef := by
   have h1 : cfc (fun x : ℝ => x) A ≤ cfc (fun _ : ℝ => (0 : ℝ)) A :=
@@ -35,12 +38,14 @@ private lemma neg_posSemidef (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitia
   rw [cfc_id' ℝ A hA.isSelfAdjoint, cfc_const_zero] at h1
   simpa using Matrix.le_iff.mp h1
 
+open scoped Matrix.Norms.L2Operator in
 private lemma trace_re_integrable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (Z : Ω → Matrix (Fin d) (Fin d) ℂ) (hZ : Integrable Z μ) :
     Integrable (fun ω => (Matrix.trace (Z ω)).re) μ :=
   Complex.reCLM.integrable_comp
     ((Matrix.traceLinearMap (Fin d) ℂ ℂ).toContinuousLinearMap.integrable_comp hZ)
 
+open scoped Matrix.Norms.L2Operator in
 private lemma integral_trace_re {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (Z : Ω → Matrix (Fin d) (Fin d) ℂ) (hZ : Integrable Z μ) :
     ∫ ω, (Matrix.trace (Z ω)).re ∂μ = (Matrix.trace (∫ ω, Z ω ∂μ)).re := by
@@ -51,16 +56,19 @@ private lemma integral_trace_re {Ω : Type*} [MeasurableSpace Ω] (μ : Measure 
     Matrix.traceLinearMap_apply] at h1 h2
   rw [h1, h2]
 
+open scoped Matrix.Norms.L2Operator in
 private lemma exp_cubic_le {a : ℝ} (ha : 0 ≤ a) : 1 + a + a ^ 2 / 2 + a ^ 3 / 6 ≤ Real.exp a := by
   have h := Real.sum_le_exp_of_nonneg ha 4
   simp [Finset.sum_range_succ, Nat.factorial] at h
   linarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- For `a ≥ 1`: `eᵃ ≤ 4 (eᵃ - a - 1)`, i.e. `eᵃ/(eᵃ - a - 1) ≤ 4`. -/
 private lemma exp_le_four {a : ℝ} (ha : 1 ≤ a) : Real.exp a ≤ 4 * (Real.exp a - a - 1) := by
   have h := exp_cubic_le (by linarith : (0 : ℝ) ≤ a)
   nlinarith [mul_nonneg (by linarith : (0 : ℝ) ≤ a - 1) (by nlinarith : (0 : ℝ) ≤ a ^ 2 + 4 * a + 2)]
 
+open scoped Matrix.Norms.L2Operator in
 private lemma exp_integrable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
     [NeZero d] (X : Ω → Matrix (Fin d) (Fin d) ℂ) (hMeas : Measurable X)
     (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian) {L θ : ℝ} (hθ : 0 ≤ θ)
@@ -84,12 +92,9 @@ end NLAlib
 
 open NLAlib
 
-/-- Intrinsic-dimension matrix Bernstein inequality, Hermitian case: for `t ≥ √v + L/3`, `P{λmax(Y) ≥
-t} ≤ 4 intdim V · exp (-(t²/2)/(v + L t/3))`.
-
-Tropp 2015, Thm 7.7.1. Atlas: `intrinsic-dimension`. Ported from the Prove2me mission *An
-Introduction to Matrix Concentration Inequalities, Ch 7*. -/
-theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
+open scoped Matrix.Norms.L2Operator in
+/-- Tropp's intrinsic Hermitian Bernstein inequality, bundled with the second-moment identity for the proof. -/
+private lemma NLAlib.intrinsic_hermitian_bernstein_package {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
     (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ)
     (L : ℝ) (hL : 0 ≤ L) (V : Matrix (Fin d) (Fin d) ℂ) (hV : V ≠ 0)
@@ -100,12 +105,13 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
     (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L)
     (hVarianceBound : (∫ ω, (∑ k, X k ω) ^ 2 ∂μ) ≤ V) :
     let Y := fun ω => ∑ k, X k ω
-    let v := ‖V‖
+    let v := specNorm V
     (∫ ω, Y ω ^ 2 ∂μ) = ∑ k, ∫ ω, X k ω ^ 2 ∂μ ∧
     ∀ t : ℝ, Real.sqrt v + L / 3 ≤ t →
-      (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
+      μ.real {ω | t ≤ lambdaMax (Y ω)} ≤
         4 * intrinsicDimension V * Real.exp (-(t ^ 2 / 2) / (v + L * t / 3)) := by
   intro Y v
+  simp only [specNorm_eq_norm] at *
   -- second moment of the sum
   have hsecond : (∫ ω, Y ω ^ 2 ∂μ) = ∑ k, ∫ ω, X k ω ^ 2 ∂μ := by
     have h := integral_sum_mul_sum_eq_sum_integral_mul μ X id id measurable_id measurable_id
@@ -169,7 +175,7 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
       filter_upwards [hY0] with ω h
       simp only [h, lambdaMax_zero, not_le]
       exact htpos
-    rw [hnull, ENNReal.toReal_zero]
+    rw [measureReal_def, hnull, ENNReal.toReal_zero]
     exact mul_nonneg (mul_nonneg (by norm_num) hr) (Real.exp_pos _).le
   · ------------------------------------------------------------ case L > 0
     have htpos : 0 < t := by linarith [div_pos hLpos (by norm_num : (0 : ℝ) < 3)]
@@ -298,7 +304,7 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
       linarith [hφeq ▸ hID]
     have hfour := exp_le_four ha
     have hE := Real.exp_pos (-(t ^ 2 / 2) / (v + L * t / 3))
-    calc (μ {ω | t ≤ lambdaMax (Y ω)}).toReal
+    calc μ.real {ω | t ≤ lambdaMax (Y ω)}
         ≤ (∫ ω, traceFunction ψ (Y ω) ∂μ) / ψ t := hLap
       _ ≤ intrinsicDimension V * Real.exp (g * v) / ψ t :=
           div_le_div_of_nonneg_right hnum hψt.le
@@ -307,3 +313,27 @@ theorem NLAlib.intrinsic_hermitian_bernstein {Ω : Type*} [MeasurableSpace Ω]
           simp only [hψdef]
           have hrE := mul_nonneg hr hE.le
           nlinarith [mul_le_mul_of_nonneg_left hfour hrE]
+
+namespace NLAlib
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Intrinsic-dimension matrix Bernstein, Hermitian case**: for independent, centred,
+square-integrable Hermitian summands with `λmax (X k) ≤ L` a.e. and a variance proxy
+`𝔼 (∑ k, X k)² ≼ V ≠ 0`, for `t ≥ √‖V‖ + L/3`,
+`P{λmax(∑ k, X k) ≥ t} ≤ 4 intdim(V) exp(-(t²/2)/(‖V‖ + L t/3))`. Tropp 2015, Thm 7.7.1.
+atlas: intrinsic-dimension -/
+theorem measureReal_lambdaMax_sum_ge_le_intrinsicDimension_mul_exp {Ω : Type*}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]
+    (X : Fin N → Ω → Matrix (Fin d) (Fin d) ℂ) {L : ℝ} (hL : 0 ≤ L)
+    {V : Matrix (Fin d) (Fin d) ℂ} (hV : V ≠ 0)
+    (hMeas : ∀ k, Measurable (X k)) (hIndep : iIndepFun X μ)
+    (hHerm : ∀ k, ∀ᵐ ω ∂μ, (X k ω).IsHermitian) (hL2 : ∀ k, MemLp (X k) 2 μ)
+    (hMean : ∀ k, (∫ ω, X k ω ∂μ) = 0) (hBound : ∀ k, ∀ᵐ ω ∂μ, lambdaMax (X k ω) ≤ L)
+    (hVarianceBound : (∫ ω, (∑ k, X k ω) ^ 2 ∂μ) ≤ V) {t : ℝ}
+    (ht : Real.sqrt (specNorm V) + L / 3 ≤ t) :
+    μ.real {ω | t ≤ lambdaMax (∑ k, X k ω)} ≤
+      4 * intrinsicDimension V * Real.exp (-(t ^ 2 / 2) / (specNorm V + L * t / 3)) :=
+  (intrinsic_hermitian_bernstein_package μ X L hL V hV hMeas hIndep hHerm hL2 hMean hBound
+    hVarianceBound).2 t ht
+
+end NLAlib

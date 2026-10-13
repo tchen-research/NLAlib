@@ -7,7 +7,7 @@ import Mathlib.Data.Fintype.Card
 sample space of uniform sampling without replacement (`uniformExactRowSubsetPMF`) and the index
 type of compound matrices in Cauchy–Binet (`SizedSubset k r` is `ExactRowSubset k (card r)`).
 Mathlib has the finset `Finset.powersetCard k s` but no named subtype. Moved from
-`NLAlib.ForMathlib.Probability.UniformSamplingCoupling` (adapted from
+`NLAlib.Sketching.Sampling.UniformSamplingCoupling` (adapted from
 Rerandomized-Subsampled-Trigonometric-Transforms, MIT licence, Diar Heidary).
 -/
 

@@ -30,7 +30,7 @@ namespace NLAlib
 /-! ### Integrability under the standard Gaussian -/
 
 /-- `|y|` is integrable for the standard Gaussian. Atlas: `gaussian-integration-by-parts`
-(helper). Ported from Prove2me solution `GaussianMatrix.gaussian_ibp_one_dim`. -/
+(helper). -/
 theorem integrable_abs_gaussianReal : Integrable (fun y : ℝ => |y|) (gaussianReal 0 1) :=
   (memLp_one_iff_integrable.1 (memLp_id_gaussianReal 1)).abs
 
@@ -45,8 +45,7 @@ theorem integrable_gaussianReal_iff (g : ℝ → ℝ) :
   simp [smul_eq_mul]
 
 /-- The derivative of the centred Gaussian density: `φ_v'(x) = -(x / v) φ_v(x)`.
-Atlas: `gaussian-integration-by-parts` (helper). Ported from Prove2me solution
-`GaussianMatrix.gaussian_integration_by_parts`. -/
+Atlas: `gaussian-integration-by-parts` (helper). -/
 theorem hasDerivAt_gaussianPDFReal_zero (v : NNReal) (hv : v ≠ 0) (x : ℝ) :
     HasDerivAt (gaussianPDFReal 0 v) (-(x / v) * gaussianPDFReal 0 v x) x := by
   have h1 : HasDerivAt (fun x : ℝ => -(x - 0) ^ 2 / (2 * v)) (-(2 * (x - 0)) / (2 * v)) x := by
@@ -102,8 +101,7 @@ theorem integral_mul_eq_integral_deriv_gaussianReal_of_integrable
 /-- **Gaussian integration by parts** (Stein's identity) in dimension one: for `h`
 differentiable with `|h'| ≤ C`, `∫ x h(x) dγ(x) = ∫ h'(x) dγ(x)` with `γ = N(0,1)`.
 Source: Stein 1981, Lemma 1; Vershynin 2018, Lemma 7.2.3 (one-dimensional case). Atlas:
-`gaussian-integration-by-parts`. Ported from Prove2me solution
-`GaussianMatrix.gaussian_ibp_one_dim`.
+`gaussian-integration-by-parts`.
 atlas: gaussian-integration-by-parts -/
 theorem integral_mul_eq_integral_deriv_gaussianReal (h : ℝ → ℝ) (hh : Differentiable ℝ h)
     (C : ℝ) (hdh : ∀ x, |deriv h x| ≤ C) :
@@ -132,8 +130,7 @@ theorem integral_mul_eq_integral_deriv_gaussianReal (h : ℝ → ℝ) (hh : Diff
 
 /-- Stein's identity for a centred Gaussian of variance `v`: for `h` bounded with bounded
 continuous derivative `h'`, `∫ x h(x) dN(0,v) = v ∫ h'(x) dN(0,v)` (both sides vanish when
-`v = 0`). Source: Stein 1981, Lemma 1. Atlas: `gaussian-integration-by-parts`. Ported from
-Prove2me solution `GaussianMatrix.gaussian_integration_by_parts`. -/
+`v = 0`). Source: Stein 1981, Lemma 1. Atlas: `gaussian-integration-by-parts`. -/
 theorem integral_mul_eq_mul_integral_deriv_gaussianReal (v : NNReal) (h h' : ℝ → ℝ)
     (hh : ∀ x, HasDerivAt h (h' x) x) (hc : Continuous h') (M M' : ℝ) (hb : ∀ x, |h x| ≤ M)
     (hb' : ∀ x, |h' x| ≤ M') :
@@ -189,8 +186,7 @@ theorem integral_mul_eq_mul_integral_deriv_gaussianReal (v : NNReal) (h h' : ℝ
 
 /-- For a jointly Gaussian pair `(U, W)` with `U` real and `W` vector-valued, if `U` is
 uncorrelated with every coordinate of `W` then `U` and `W` are independent. Atlas:
-`gaussian-integration-by-parts` (helper). Ported from Prove2me solution
-`GaussianMatrix.gaussian_integration_by_parts`. -/
+`gaussian-integration-by-parts` (helper). -/
 theorem indepFun_of_hasGaussianLaw_of_covariance_eq_zero {ι Ω : Type*} [Fintype ι]
     [MeasurableSpace Ω] {P : Measure Ω} (U : Ω → ℝ) (W : ι → Ω → ℝ)
     (hUW : HasGaussianLaw (fun ω => (U ω, fun j => W j ω)) P)
@@ -211,8 +207,7 @@ derivatives `G' j = ∂ⱼG`,
 `𝔼[U G(V)] = ∑ⱼ Cov(U, Vⱼ) 𝔼[∂ⱼG(V)]`.
 Source: Vershynin 2018, Lemma 7.2.3; Talagrand, *Mean Field Models for Spin Glasses*, Lemma
 1.3.1. Proof: regress `V` on `U` (`V = c U + W` with `W ⫫ U`), apply the one-dimensional
-identity in `U` and integrate over `W`. Atlas: `gaussian-integration-by-parts`. Ported from
-Prove2me solution `GaussianMatrix.gaussian_integration_by_parts`.
+identity in `U` and integrate over `W`. Atlas: `gaussian-integration-by-parts`.
 atlas: gaussian-integration-by-parts -/
 theorem integral_mul_eq_sum_covariance_mul_integral {ι Ω : Type*} [Fintype ι]
     [MeasurableSpace Ω] {P : Measure Ω} (U : Ω → ℝ) (V : ι → Ω → ℝ)

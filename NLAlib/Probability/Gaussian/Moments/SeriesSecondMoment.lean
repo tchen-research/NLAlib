@@ -10,11 +10,12 @@ Source: operator manuscript, endpoint following `thm:khintchine`.
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
 open MeasureTheory ProbabilityTheory Matrix
-open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
+open scoped Matrix ComplexOrder
 namespace NLAlib
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι] {n : ℕ}
 
+open scoped Matrix.Norms.L2Operator in
 /-- The actual standard Gaussian matrix series has exact second trace moment
 equal to the sum of coefficient square traces. Hermiticity is unnecessary
 for this identity. Source: coordinate Stein at exponent one; the order-one
@@ -22,7 +23,7 @@ endpoint of manuscript `thm:khintchine`. -/
 theorem integral_re_trace_gaussianSeries_sq
     (A : Fin n → Matrix ι ι ℂ) :
     (∫ x : Fin n → ℝ, ((∑ i, x i • A i) ^ 2).trace.re
-        ∂Measure.pi (fun _ => gaussianReal 0 1)) = (∑ i, A i ^ 2).trace.re := by
+        ∂(gaussianVector _)) = (∑ i, A i ^ 2).trace.re := by
   have hpoint (x : Fin n → ℝ) : ((∑ i, x i • A i) ^ 2).trace.re =
       ∑ i, x i * (A i * (∑ j, x j • A j) ^ 1).trace.re := by
     rw [pow_two, Matrix.sum_mul, Matrix.trace_sum, Complex.re_sum]
@@ -35,6 +36,7 @@ theorem integral_re_trace_gaussianSeries_sq
   simp only [Finset.sum_range_one, show Nat.pred 1 = 0 by rfl, Nat.sub_zero, pow_zero, mul_one]
   simp only [integral_const, probReal_univ, one_smul, Matrix.trace_sum, Complex.re_sum, pow_two]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The actual finite product Rademacher matrix series has exact second
 trace moment equal to the sum of coefficient square traces. Source: actual
 two-coordinate sign moments; the order-one endpoint of manuscript
@@ -42,7 +44,7 @@ two-coordinate sign moments; the order-one endpoint of manuscript
 theorem integral_re_trace_rademacherSeries_sq
     {κ : Type*} [Fintype κ] [DecidableEq κ] (A : κ → Matrix ι ι ℂ) :
     (∫ x : κ → ℝ, ((∑ i, x i • A i) ^ 2).trace.re
-        ∂Measure.pi (fun _ => rademacherMeasure)) = (∑ i, A i ^ 2).trace.re := by
+        ∂(rademacherVector _)) = (∑ i, A i ^ 2).trace.re := by
   have hpoint (x : κ → ℝ) : ((∑ i, x i • A i) ^ 2).trace.re =
       ∑ i, x i * (A i * (∑ j, x j • A j) ^ 1).trace.re := by
     rw [pow_two, Matrix.sum_mul, Matrix.trace_sum, Complex.re_sum]
@@ -50,7 +52,7 @@ theorem integral_re_trace_rademacherSeries_sq
     rw [Matrix.smul_mul, Matrix.trace_smul, Complex.smul_re, smul_eq_mul, pow_one]
   have hcoord (i : κ) :
       (∫ x : κ → ℝ, x i * (A i * (∑ j, x j • A j) ^ 1).trace.re
-          ∂Measure.pi (fun _ => rademacherMeasure)) = (A i ^ 2).trace.re := by
+          ∂(rademacherVector _)) = (A i ^ 2).trace.re := by
     have he (x : κ → ℝ) : x i * (A i * (∑ j, x j • A j) ^ 1).trace.re =
         ∑ j, (x i * x j) * (A i * A j).trace.re := by
       rw [pow_one, Matrix.mul_sum, Matrix.trace_sum, Complex.re_sum, Finset.mul_sum]
@@ -59,8 +61,8 @@ theorem integral_re_trace_rademacherSeries_sq
       ring
     simp_rw [he]
     rw [integral_finsetSum _ fun j _ =>
-      (integrable_coordinate_mul_coordinate_pi_rademacherMeasure i j).mul_const _]
-    simp_rw [integral_mul_const, integral_coordinate_mul_coordinate_pi_rademacherMeasure]
+      (integrable_coordinate_mul_coordinate_rademacherVector i j).mul_const _]
+    simp_rw [integral_mul_const, integral_coordinate_mul_coordinate_rademacherVector]
     simp only [ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, pow_two]
   simp_rw [hpoint]
   rw [integral_finsetSum _ fun i _ =>
@@ -68,6 +70,7 @@ theorem integral_re_trace_rademacherSeries_sq
   simp_rw [hcoord]
   rw [Matrix.trace_sum, Complex.re_sum]
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Exact order-one endpoint.** Independent actual Gaussian or Rademacher
 coefficients on any probability space have second trace moment exactly
 `re tr(∑ Aᵢ²)`. Source: endpoint following manuscript `thm:khintchine`.
@@ -90,13 +93,13 @@ theorem integral_re_trace_independent_series_sq
   have hm : (∫ x, f x ∂μ.map X) = ∫ ω, f (X ω) ∂μ :=
     integral_map hX.aemeasurable hf.aestronglyMeasurable
   rcases hlaw with hlaw | hlaw
-  · have hprod : μ.map X = Measure.pi (fun _ : Fin n => gaussianReal 0 1) := by
+  · have hprod : μ.map X = (gaussianVector (Fin n)) := by
       rw [hjoint]
       exact congrArg Measure.pi (funext fun i => (hlaw i).map_eq)
     rw [hprod] at hm
     rw [← hm]
     exact integral_re_trace_gaussianSeries_sq A
-  · have hprod : μ.map X = Measure.pi (fun _ : Fin n => rademacherMeasure) := by
+  · have hprod : μ.map X = (rademacherVector (Fin n)) := by
       rw [hjoint]
       exact congrArg Measure.pi (funext fun i => (hlaw i).map_eq)
     rw [hprod] at hm

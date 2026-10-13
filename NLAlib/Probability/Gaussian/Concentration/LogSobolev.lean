@@ -78,12 +78,12 @@ private lemma local_step {ι : Type*} [Fintype ι] [DecidableEq ι] (g : (ι →
 
 private lemma integrable_shift_mul_log {ι : Type*} [Fintype ι] (g : (ι → ℝ) → ℝ)
     (hg : Continuous g)
-    (hg2 : Integrable (fun x => g x ^ 2) (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hg2 : Integrable (fun x => g x ^ 2) (gaussianVector ι))
     (hglog : Integrable (fun x => g x ^ 2 * Real.log (g x ^ 2))
-      (Measure.pi fun _ : ι => gaussianReal 0 1))
+      (gaussianVector ι))
     (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
     Integrable (fun x => (g x ^ 2 + δ) * Real.log (g x ^ 2 + δ))
-      (Measure.pi fun _ : ι => gaussianReal 0 1) := by
+      (gaussianVector ι) := by
   refine Integrable.mono' ((hglog.abs.add hg2).add (integrable_const (2 : ℝ)))
     ((Real.continuous_mul_log.comp ((hg.pow 2).add continuous_const)).aestronglyMeasurable)
     (ae_of_all _ fun x => ?_)
@@ -93,18 +93,18 @@ private lemma integrable_shift_mul_log {ι : Type*} [Fintype ι] (g : (ι → �
 /-- The regularized inequality: `Ent(g² + δ) ≤ 2 ∫ |∇g|²` for `0 < δ ≤ 1`. -/
 private lemma ent_delta_le {ι : Type*} [Fintype ι] [DecidableEq ι] (g : (ι → ℝ) → ℝ)
     (hg : ContDiff ℝ 1 g)
-    (hg2 : Integrable (fun x => g x ^ 2) (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hg2 : Integrable (fun x => g x ^ 2) (gaussianVector ι))
     (hglog : Integrable (fun x => g x ^ 2 * Real.log (g x ^ 2))
-      (Measure.pi fun _ : ι => gaussianReal 0 1))
+      (gaussianVector ι))
     (hdg : Integrable (fun x => ∑ i, fderiv ℝ g x (Pi.single i 1) ^ 2)
-      (Measure.pi fun _ : ι => gaussianReal 0 1))
+      (gaussianVector ι))
     (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
-    ∫ x, (g x ^ 2 + δ) * Real.log (g x ^ 2 + δ) ∂(Measure.pi fun _ : ι => gaussianReal 0 1)
-      - (∫ x, g x ^ 2 ∂(Measure.pi fun _ : ι => gaussianReal 0 1) + δ)
-        * Real.log (∫ x, g x ^ 2 ∂(Measure.pi fun _ : ι => gaussianReal 0 1) + δ)
+    ∫ x, (g x ^ 2 + δ) * Real.log (g x ^ 2 + δ) ∂(gaussianVector ι)
+      - (∫ x, g x ^ 2 ∂(gaussianVector ι) + δ)
+        * Real.log (∫ x, g x ^ 2 ∂(gaussianVector ι) + δ)
       ≤ 2 * ∫ x, ∑ i, fderiv ℝ g x (Pi.single i 1) ^ 2
-        ∂(Measure.pi fun _ : ι => gaussianReal 0 1) := by
-  set P := Measure.pi fun _ : ι => gaussianReal 0 1 with hP
+        ∂(gaussianVector ι) := by
+  set P := (gaussianVector ι) with hP
   have hgc : Continuous g := hg.continuous
   have hmeas : Measurable (fun x => g x ^ 2 + δ) :=
     ((hgc.pow 2).add continuous_const).measurable
@@ -117,7 +117,7 @@ private lemma ent_delta_le {ι : Type*} [Fintype ι] [DecidableEq ι] (g : (ι �
   have hintc : ∫ x, (g x ^ 2 + δ) ∂P = ∫ x, g x ^ 2 ∂P + δ := by
     rw [integral_add hg2 (integrable_const δ)]
     simp
-  rw [← hP, hintc] at htens
+  simp only [show (Measure.pi fun _ : ι => gaussianReal 0 1) = P from rfl, hintc] at htens
   refine htens.trans ?_
   -- partial derivatives
   have hDc : ∀ i, Continuous (fun x => fderiv ℝ g x (Pi.single i 1)) := fun i =>
@@ -168,22 +168,21 @@ private lemma ent_delta_le {ι : Type*} [Fintype ι] [DecidableEq ι] (g : (ι �
 `∫ g² log g² dγₙ - (∫ g² dγₙ) log ∫ g² dγₙ ≤ 2 ∫ |∇g|² dγₙ`, where
 `|∇g(x)|² = ∑ i, fderiv ℝ g x (Pi.single i 1) ^ 2`.
 Source: Gross 1975, Thm 5; Ledoux, *The Concentration of Measure Phenomenon*, Thm 5.1;
-Boucheron–Lugosi–Massart 2013, Thm 5.4. Atlas: `gaussian-log-sobolev`. Ported from Prove2me
-solution `GaussianMatrix.gaussian_logsobolev`.
+Boucheron–Lugosi–Massart 2013, Thm 5.4. Atlas: `gaussian-log-sobolev`.
 atlas: gaussian-log-sobolev -/
 theorem entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian {ι : Type*} [Fintype ι]
     [DecidableEq ι] (g : (ι → ℝ) → ℝ) (hg : ContDiff ℝ 1 g)
-    (hg2 : Integrable (fun x => g x ^ 2) (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hg2 : Integrable (fun x => g x ^ 2) (gaussianVector ι))
     (hglog : Integrable (fun x => g x ^ 2 * Real.log (g x ^ 2))
-      (Measure.pi fun _ : ι => gaussianReal 0 1))
+      (gaussianVector ι))
     (hdg : Integrable (fun x => ∑ i, fderiv ℝ g x (Pi.single i 1) ^ 2)
-      (Measure.pi fun _ : ι => gaussianReal 0 1)) :
-    ∫ x, g x ^ 2 * Real.log (g x ^ 2) ∂(Measure.pi fun _ : ι => gaussianReal 0 1)
-      - (∫ x, g x ^ 2 ∂(Measure.pi fun _ : ι => gaussianReal 0 1))
-        * Real.log (∫ x, g x ^ 2 ∂(Measure.pi fun _ : ι => gaussianReal 0 1))
+      (gaussianVector ι)) :
+    ∫ x, g x ^ 2 * Real.log (g x ^ 2) ∂(gaussianVector ι)
+      - (∫ x, g x ^ 2 ∂(gaussianVector ι))
+        * Real.log (∫ x, g x ^ 2 ∂(gaussianVector ι))
       ≤ 2 * ∫ x, ∑ i, fderiv ℝ g x (Pi.single i 1) ^ 2
-        ∂(Measure.pi fun _ : ι => gaussianReal 0 1) := by
-  set P := Measure.pi fun _ : ι => gaussianReal 0 1 with hP
+        ∂(gaussianVector ι) := by
+  set P := (gaussianVector ι) with hP
   set c := ∫ x, g x ^ 2 ∂P with hc
   set δ : ℕ → ℝ := fun n => 1 / ((n : ℝ) + 1) with hδ_def
   have hδpos : ∀ n, 0 < δ n := fun n => by positivity

@@ -28,7 +28,7 @@ theorem dotProduct_shifted_residual_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermit
 
 /-- Every real shift is within its residual norm of an eigenvalue.
 Parlett §4.5. The unit-vector assumption excludes an empty spectrum.
-atlas: eigenvalue-residual-bounds (partial) -/
+atlas: eigenvalue-residual-bounds -/
 theorem exists_eigenvalue_abs_sub_le_residual {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {x : n → ℝ} (hx : x ⬝ᵥ x = 1) (μ : ℝ) :
     ∃ i, |hA.eigenvalues i - μ| ≤
@@ -87,7 +87,7 @@ theorem dotProduct_shifted_residual_eq_rayleigh_add_sq (A : Matrix n n ℝ)
 omit [DecidableEq n] in
 /-- The Rayleigh quotient uniquely minimizes the squared residual over real
 shifts. Parlett §4.5; no nonzero-eigenvalue hypothesis is needed.
-atlas: eigenvalue-residual-bounds (partial) -/
+atlas: eigenvalue-residual-bounds -/
 theorem rayleigh_residual_le_shifted_residual (A : Matrix n n ℝ)
     {x : n → ℝ} (hx : x ⬝ᵥ x = 1) (μ : ℝ) :
     Real.sqrt ((A *ᵥ x - quadForm A x • x) ⬝ᵥ (A *ᵥ x - quadForm A x • x)) ≤
@@ -197,7 +197,7 @@ theorem kato_temple_le_eigenvalue {A : Matrix n n ℝ} (hA : A.IsHermitian)
 /-- Symmetric-interval Kato–Temple bound with the exact variance-over-gap
 constant. Parlett §10.6; existence and isolation are explicit and no residual
 smallness assumption is required.
-atlas: eigenvalue-residual-bounds (partial) -/
+atlas: eigenvalue-residual-bounds -/
 theorem abs_eigenvalue_sub_rayleigh_le_residual_sq_div {A : Matrix n n ℝ}
     (hA : A.IsHermitian) {x : n → ℝ} (hx : x ⬝ᵥ x = 1) {ℓ δ : ℝ} (hδ : 0 < δ)
     (hℓ : |ℓ-quadForm A x| < δ)

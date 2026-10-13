@@ -11,7 +11,7 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -38,6 +38,7 @@ theorem abs_frobInner_le_sum_singularValues_mul {m n : Type*}
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Schatten trace Hölder for all finite conjugate real exponents, with sharp
 constant one and arbitrary finite matrix indices.
 atlas: schatten-norms-def (partial) -/
@@ -49,6 +50,7 @@ theorem abs_frobInner_le_schattenNorm_mul (A B : Matrix m n ℝ) {p q : ℝ}
     (f := singularValues A) (g := singularValues B) hpq
     (fun i _ => singularValues_nonneg _ i) (fun i _ => singularValues_nonneg _ i)
 
+open scoped Matrix.Norms.L2Operator in
 /-- The `(1,∞)` Schatten trace Hölder endpoint, expressed in nuclear and
 spectral norms. The constant is exactly one.
 atlas: schatten-norms-def (partial) -/
@@ -64,6 +66,7 @@ theorem abs_frobInner_le_nuclearNorm_mul_specNorm (A B : Matrix m n ℝ) :
         (singularValues_le_specNorm B i) (singularValues_nonneg _ i)
     _ = nuclearNorm A * specNorm B := by rw [← Finset.sum_mul]; rfl
 
+open scoped Matrix.Norms.L2Operator in
 /-- The `(∞,1)` Schatten trace Hölder endpoint, with exact constant one. -/
 theorem abs_frobInner_le_specNorm_mul_nuclearNorm (A B : Matrix m n ℝ) :
     |frobInner A B| ≤ specNorm A * nuclearNorm B := by

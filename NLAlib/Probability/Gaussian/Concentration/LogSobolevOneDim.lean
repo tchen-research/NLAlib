@@ -34,8 +34,7 @@ namespace NLAlib
 `f ∈ C¹` with `δ ≤ f ≤ C` (`δ > 0`) and `|f'| ≤ C`,
 `∫ f log f dγ - (∫ f dγ) log ∫ f dγ ≤ ½ ∫ f'²/f dγ`.
 Source: Bakry–Gentil–Ledoux 2014, Prop 5.5.1 (semigroup proof); Ledoux, *Concentration of
-Measure*, §5.1. Atlas: `gaussian-log-sobolev`. Ported from Prove2me solution
-`GaussianMatrix.gaussian_logsobolev_bounded_below`.
+Measure*, §5.1. Atlas: `gaussian-log-sobolev`.
 atlas: gaussian-log-sobolev -/
 theorem entropy_le_half_integral_sq_deriv_div_gaussianReal (f : ℝ → ℝ) (hf : ContDiff ℝ 1 f)
     (δ C : ℝ) (hδ : 0 < δ) (hlow : ∀ x, δ ≤ f x) (hup : ∀ x, f x ≤ C)
@@ -237,8 +236,7 @@ theorem entropy_le_half_integral_sq_deriv_div_gaussianReal (f : ℝ → ℝ) (hf
 /-- **Gaussian log-Sobolev inequality** for compactly supported `g ∈ C¹` (one dimension):
 `∫ g² log g² dγ - (∫ g² dγ) log ∫ g² dγ ≤ 2 ∫ g'² dγ`.
 Source: Gross 1975; Ledoux, *Concentration of Measure*, Thm 5.1 (`n = 1`). Atlas:
-`gaussian-log-sobolev`. Ported from Prove2me solution
-`GaussianMatrix.gaussian_logsobolev_one_dim_compact_support`. -/
+`gaussian-log-sobolev`. -/
 theorem entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal_of_hasCompactSupport (g : ℝ → ℝ)
     (hg : ContDiff ℝ 1 g) (hgc : HasCompactSupport g) :
     ∫ t, g t ^ 2 * Real.log (g t ^ 2) ∂(gaussianReal 0 1)
@@ -358,8 +356,7 @@ private lemma abs_mul_mul_log_le (G s : ℝ) (hG : 0 ≤ G) (hs0 : 0 ≤ s) (hs1
 `g², g² log g², g'² ∈ L¹(γ)`,
 `∫ g² log g² dγ - (∫ g² dγ) log ∫ g² dγ ≤ 2 ∫ g'² dγ`.
 Source: Gross 1975, Thm 5; Ledoux, *Concentration of Measure*, Thm 5.1 (`n = 1`). Atlas:
-`gaussian-log-sobolev`. Ported from Prove2me solution
-`GaussianMatrix.gaussian_logsobolev_one_dim`.
+`gaussian-log-sobolev`.
 atlas: gaussian-log-sobolev -/
 theorem entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal (g : ℝ → ℝ) (hg : ContDiff ℝ 1 g)
     (hg2 : Integrable (fun t => g t ^ 2) (gaussianReal 0 1))

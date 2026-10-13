@@ -11,7 +11,7 @@ iterate minimises `φ(x) = ½ xᵀAx − cᵀx` over `x₀ + K_q(P⁻¹A, P⁻¹
 `K_q(P⁻¹A, P⁻¹r₀) = W K_q(WᵀAW, Wᵀr₀)` (`krylovSpace_mul_mulVec_eq_map`) and PCG is CG on
 `WᵀAW` in the variable `W⁻¹x` (`isPCGIterate_iff_isCGIterate`). Under the Loewner sandwich
 `a P ≼ A ≼ b P` the spectrum of `WᵀAW` lies in `[a, b]`, and the CG bound (through the class
-theorem `quadForm_sub_le_of_isAffineMinimiser`) gives the `√(b/a)` rate
+theorem `quadForm_sub_le_of_isAffineMinimizer`) gives the `√(b/a)` rate
 (`quadForm_sub_le_of_isPCGIterate`).
 
 **CGLS/LSQR.** For rectangular `A`, the iterate minimising `‖b − Ay‖²` over
@@ -51,11 +51,11 @@ theorem krylovSpace_mul_mulVec_eq_map (W B : Matrix n n ℝ) (v : n → ℝ) (q 
 
 /-- **Affine minimisers under an invertible change of variables:** `x` minimises `E` over
 `x₀ + W S` iff `W⁻¹x` minimises `E ∘ W` over `W⁻¹x₀ + S`. Helper for `preconditioned-cg`
-(belongs in `NLAlib.Krylov.Solvers.Minimiser`). -/
-theorem isAffineMinimiser_map_iff {W : Matrix n n ℝ} (hW : IsUnit W) {E : (n → ℝ) → ℝ}
+(belongs in `NLAlib.Krylov.Solvers.Minimizer`). -/
+theorem isAffineMinimizer_map_iff {W : Matrix n n ℝ} (hW : IsUnit W) {E : (n → ℝ) → ℝ}
     {x₀ x : n → ℝ} {S : Submodule ℝ (n → ℝ)} :
-    IsAffineMinimiser E x₀ (S.map W.mulVecLin) x ↔
-      IsAffineMinimiser (fun y => E (W *ᵥ y)) (W⁻¹ *ᵥ x₀) S (W⁻¹ *ᵥ x) := by
+    IsAffineMinimizer E x₀ (S.map W.mulVecLin) x ↔
+      IsAffineMinimizer (fun y => E (W *ᵥ y)) (W⁻¹ *ᵥ x₀) S (W⁻¹ *ᵥ x) := by
   have hd := (Matrix.isUnit_iff_isUnit_det W).1 hW
   have hWW : ∀ v, W *ᵥ (W⁻¹ *ᵥ v) = v := fun v => by
     rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv W hd, Matrix.one_mulVec]
@@ -67,7 +67,7 @@ theorem isAffineMinimiser_map_iff {W : Matrix n n ℝ} (hW : IsUnit W) {E : (n �
       simpa [hWW'] using hs
     · intro hv
       exact ⟨_, hv, by simp [hWW]⟩
-  unfold IsAffineMinimiser
+  unfold IsAffineMinimizer
   rw [hmem, Matrix.mulVec_sub]
   refine and_congr_right fun _ => ⟨fun h y hy => ?_, fun h y hy => ?_⟩
   · have := h (W *ᵥ y) ((hmem _).2 (by rwa [hWW']))
@@ -93,7 +93,7 @@ theorem cgObjective_mulVec (A W : Matrix n n ℝ) (c y : n → ℝ) :
 Greenbaum (1997) [`greenbaum97`], Ch. 8. Deviation: a predicate, not the recurrence.
 atlas: preconditioned-cg -/
 def IsPCGIterate (A P : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
-  IsAffineMinimiser (cgObjective A c) x₀ (krylovSpace (P⁻¹ * A) (P⁻¹ *ᵥ (c - A *ᵥ x₀)) q) x
+  IsAffineMinimizer (cgObjective A c) x₀ (krylovSpace (P⁻¹ * A) (P⁻¹ *ᵥ (c - A *ᵥ x₀)) q) x
 
 /-- If `Wᵀ P W = I` then `W` is invertible. Helper for `preconditioned-cg`. -/
 theorem isUnit_of_transpose_mul_mul_eq_one {P W : Matrix n n ℝ} (hW : Wᵀ * P * W = 1) :
@@ -156,7 +156,7 @@ theorem isPCGIterate_iff_isCGIterate {A P W : Matrix n n ℝ} (hW : Wᵀ * P * W
         ← Matrix.mulVec_mulVec, ← Matrix.mulVec_sub]
     rw [hr, inv_eq_mul_transpose_of_transpose_mul_mul_eq_one hW, Matrix.mul_assoc,
       ← Matrix.mulVec_mulVec, krylovSpace_mul_mulVec_eq_map]
-  rw [IsPCGIterate, hK, isAffineMinimiser_map_iff hU, IsCGIterate]
+  rw [IsPCGIterate, hK, isAffineMinimizer_map_iff hU, IsCGIterate]
   simp only [cgObjective_mulVec]
 
 /-- **Preconditioned CG bound under a Loewner sandwich.** Let `P` be positive definite, `A` with
@@ -226,7 +226,7 @@ Source: Saad (2003) [`saad03`], §8.3 (CGNR); Paige–Saunders (1982) [`ps82`]. 
 predicate, not the Golub–Kahan recurrence.
 atlas: cgls-lsqr-bound -/
 def IsCGLSIterate (A : Matrix m n ℝ) (b : m → ℝ) (x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
-  IsAffineMinimiser (fun y => (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y)) x₀
+  IsAffineMinimizer (fun y => (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y)) x₀
     (krylovSpace (Aᵀ * A) (Aᵀ *ᵥ (b - A *ᵥ x₀)) q) x
 
 omit [DecidableEq n] in
@@ -250,7 +250,7 @@ theorem isCGLSIterate_iff_isCGIterate {A : Matrix m n ℝ} {b : m → ℝ} {x₀
     IsCGLSIterate A b x₀ q x ↔ IsCGIterate (Aᵀ * A) (Aᵀ *ᵥ b) x₀ q x := by
   have hr : Aᵀ *ᵥ b - (Aᵀ * A) *ᵥ x₀ = Aᵀ *ᵥ (b - A *ᵥ x₀) := by
     rw [Matrix.mulVec_sub, Matrix.mulVec_mulVec]
-  rw [IsCGLSIterate, IsCGIterate, hr, IsAffineMinimiser, IsAffineMinimiser]
+  rw [IsCGLSIterate, IsCGIterate, hr, IsAffineMinimizer, IsAffineMinimizer]
   refine and_congr_right fun _ => forall₂_congr fun y _ => ?_
   rw [dotProduct_sub_mulVec_self_eq, dotProduct_sub_mulVec_self_eq]
   constructor <;> intro h <;> linarith

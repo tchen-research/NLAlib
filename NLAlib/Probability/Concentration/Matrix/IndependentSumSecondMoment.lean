@@ -12,16 +12,17 @@ Atlas: `matrix-bernstein` (variance of an independent sum).
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Section 2.2.3, equations (2.2.5)-(2.2.6), printed pp. 27-28 (additivity of the variance of an independent sum; the cross terms vanish by independence and zero mean); used in Theorem 6.1.1 eq. (6.1.2), Theorem 6.6.1, and Theorem 7.3.1 eq. (7.3.2).
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Matrix multiplication as a continuous real-bilinear map (L2 operator norms). -/
 private noncomputable def mulCLM (p q r : ℕ) :
     Matrix (Fin p) (Fin q) ℂ →L[ℝ] Matrix (Fin q) (Fin r) ℂ →L[ℝ] Matrix (Fin p) (Fin r) ℂ :=
   LinearMap.mkContinuous₂ (mulLinearMap ℝ) 1
     (fun A B => by simpa using Matrix.l2_opNorm_mul A B)
 
+open scoped Matrix.Norms.L2Operator in
 private lemma mulCLM_apply (p q r : ℕ) (A : Matrix (Fin p) (Fin q) ℂ) (B : Matrix (Fin q) (Fin r) ℂ) :
     mulCLM p q r A B = A * B := by
   simp [mulCLM]
@@ -30,6 +31,7 @@ end NLAlib
 
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- For independent random matrices with `𝔼 f(X k) = 0`, the cross terms vanish: `𝔼 (∑ f(X k)) (∑ g(X
 k)) = ∑ 𝔼 f(X k) g(X k)`.
 

@@ -6,7 +6,7 @@ import NLAlib.Matrix.Spectral.ProductSingularValues
 
 Logarithmic weak majorization and the increasing convex function
 `u ↦ exp (p u)` turn all prefix-product comparisons into power-sum comparisons.
-Zero singular values are handled by the actual rank support, rather than by a
+Zero singular values are handled by the rank support, rather than by a
 full-rank assumption or an unjustified logarithm of zero.
 Source: Horn–Johnson (1991), §3.3; Bhatia (1997), §IV.2.
 Atlas: `horn-product-inequality`, `schatten-norms-def`.
@@ -59,7 +59,7 @@ theorem sum_range_rpow_le_of_pos_of_prod_le (x y : ℕ → ℝ) {N : ℕ}
   exact h
 
 /-- Nonnegative decreasing sequences obey the power-sum comparison even when
-the left sequence has zeros. The support hypotheses merely specify its actual
+the left sequence has zeros. The support hypotheses merely specify its
 positive prefix and permit zero padding. -/
 theorem sum_range_rpow_le_of_nonneg_of_prod_le (x y : ℕ → ℝ) {r : ℕ}
     (_hx0 : ∀ i, 0 ≤ x i) (hy0 : ∀ i, 0 ≤ y i)

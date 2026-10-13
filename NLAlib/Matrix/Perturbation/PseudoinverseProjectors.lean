@@ -9,12 +9,13 @@ atlas `pseudoinverse-perturbation`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The column projector distance at equal rank is controlled by the first
 pseudoinverse norm. Stewart–Sun §III.3, with arbitrary finite indices.
 atlas: pseudoinverse-perturbation (partial) -/
@@ -56,6 +57,7 @@ theorem specNorm_sub_columnProjector_le_pinv_mul_specNorm {A B : Matrix m n ℝ}
         (mul_le_mul_of_nonneg_right hc (specNorm_nonneg (B-A))) (specNorm_nonneg _)
     _ = _ := by ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- Equal-rank column-space projector perturbation with the sharp minimum
 pseudoinverse coefficient. Stewart–Sun 1990, §III.3, Thm III.3.8; Wedin 1973, Lemma 4.2
 (projector form); both zero matrices are included.
@@ -71,6 +73,7 @@ theorem specNorm_sub_columnProjector_le_min_pinv_mul_specNorm {A B : Matrix m n 
   · simpa only [min_eq_left h] using ha
   · simpa only [min_eq_right h] using hb
 
+open scoped Matrix.Norms.L2Operator in
 /-- Equal-rank row-space projectors obey the same sharp minimum coefficient,
 by taking transposes. Stewart–Sun §III.3.
 atlas: pseudoinverse-perturbation (partial) -/

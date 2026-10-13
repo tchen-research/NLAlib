@@ -10,7 +10,7 @@ diagonal basis is a weighted sum of squared entries.
 * `trace_conjStarAlgAut`: `tr (U A U⋆) = tr A`;
 * `trace_pow_eq_sum_eigenvalues`: `tr (Rⁿ) = ∑ᵢ λᵢⁿ` for real symmetric `R`;
 * `trace_mul_diagonal_pow_mul_mul_diagonal_pow`: `tr (B Λᵃ B Λᶜ) = ∑ᵢⱼ Bᵢⱼ² λⱼᵃ λᵢᶜ` for
-  symmetric `B`.
+ symmetric `B`.
 
 The complex real-part form `re tr (Aʳ) = ∑ᵢ λᵢʳ` is `re_trace_pow_eq_sum_eigenvalues_pow`
 (`NLAlib.Matrix.Inequalities.TracePowers`).
@@ -28,9 +28,7 @@ namespace NLAlib
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- Trace is invariant under unitary conjugation, over any commutative star ring (in particular
-`ℝ` and `ℂ`), including empty matrices. Source: matrix trace cyclicity; atlas
-`wishart-lambda-min-tail` (operator calculus helper), `noncommutative-khintchine` and
-`sparse-ose` (ported from `SparseFockFormal.TracePowerConvexity.trace_conjStarAlgAut`). -/
+`ℝ` and `ℂ`), including empty matrices.TracePowerConvexity.trace_conjStarAlgAut`). -/
 theorem trace_conjStarAlgAut {R : Type*} [CommRing R] [StarRing R]
     (U : Matrix.unitaryGroup ι R) (A : Matrix ι ι R) :
     Matrix.trace (Unitary.conjStarAlgAut R _ U A) = Matrix.trace A := by
@@ -38,9 +36,7 @@ theorem trace_conjStarAlgAut {R : Type*} [CommRing R] [StarRing R]
     Unitary.coe_star_mul_self, one_mul]
 
 /-- Natural trace powers of a Hermitian real matrix are the power sums of
-its eigenvalues. Source: finite spectral theorem and unitary trace
-invariance; atlas `wishart-lambda-min-tail` (limit helper); also ported from
-`SparseFockFormal.MatrixTail.trace_pow_eq_sum_eigenvalues` (`sparse-ose`). -/
+its eigenvalues.MatrixTail.trace_pow_eq_sum_eigenvalues` (`sparse-ose`). -/
 theorem trace_pow_eq_sum_eigenvalues {R : Matrix ι ι ℝ} (hR : R.IsHermitian) (n : ℕ) :
     Matrix.trace (R ^ n) = ∑ i, hR.eigenvalues i ^ n := by
   conv_lhs => rw [hR.spectral_theorem, ← map_pow]
@@ -49,8 +45,7 @@ theorem trace_pow_eq_sum_eigenvalues {R : Matrix ι ι ℝ} (hR : R.IsHermitian)
   rfl
 
 /-- A symmetric matrix quadratic trace in a diagonal basis is a weighted
-sum of squares. Source: ported from SparseFockFormal,
-`TracePowerConvexity.trace_mul_diagonal_pow_mul_mul_diagonal_pow`;
+sum of squares.trace_mul_diagonal_pow_mul_mul_diagonal_pow`;
 atlas `wishart-lambda-min-tail` (operator calculus helper). -/
 theorem trace_mul_diagonal_pow_mul_mul_diagonal_pow (B : Matrix ι ι ℝ)
     (hB : Bᵀ = B) (ev : ι → ℝ) (a c : ℕ) :

@@ -6,8 +6,7 @@ import Mathlib.LinearAlgebra.Matrix.Permutation
 # Rectangular diagonal embeddings
 
 Finite thin vectors embed linearly and injectively into a matrix of a specified
-rectangular shape. Independent signs and permutations are implemented by actual
-left and right orthogonal matrices. Source: Bhatia (1997), Theorem IV.2.1.
+rectangular shape. Independent signs and permutations are implemented by left and right orthogonal matrices. Source: Bhatia (1997), Theorem IV.2.1.
 -/
 
 noncomputable section
@@ -67,7 +66,7 @@ theorem hasOrthonormalCols_diagonal_of_abs_eq_one {ι : Type*} [Fintype ι] [Dec
     simpa only [pow_two] using hsq
   · simp [hij]
 
-/-- Independent signs on a thin vector are implemented by an actual left
+/-- Independent signs on a thin vector are implemented by a left
 orthogonal diagonal matrix, extended by ones on unused row coordinates. -/
 theorem exists_orthogonal_rectangularDiagonal_sign {m n : ℕ}
     (x ε : Fin (min m n) → ℝ) (hε : ∀ i, |ε i| = 1) :

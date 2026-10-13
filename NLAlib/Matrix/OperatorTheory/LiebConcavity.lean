@@ -69,7 +69,7 @@ theorem lieb_concavity {n : Type*} [Fintype n] [DecidableEq n]
       ← add_mul, hab, one_mul]
   let e := Fintype.equivFin n
   have : NeZero (Fintype.card n) := ⟨Fintype.card_ne_zero⟩
-  let E := reindexStarAlgEquiv e
+  let E := reindexStarAlgEquiv (𝕜 := ℂ) e
   let L := (Matrix.reindexLinearEquiv ℝ ℂ e e).toLinearMap
   have h := (lieb_concavity_fin (E H) (hH.reindex e)).comp_linearMap L
   have hdomain : L ⁻¹' {A | A.PosDef} = {A : Matrix n n ℂ | A.PosDef} := by

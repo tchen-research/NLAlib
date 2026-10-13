@@ -1,6 +1,6 @@
 import NLAlib.Sketching.Structured.SRHT
 import NLAlib.Matrix.Basic.Selection
-import NLAlib.Probability.Concentration.Matrix.UniformIidSampling
+import NLAlib.Sketching.Sampling.UniformIidSampling
 /-!
 # Classical one-diagonal SRHT with actual sampling with replacement
 
@@ -157,7 +157,7 @@ theorem measure_srhtWithReplacement_gram_failure_le_of_sharp_sample_size
     exact (measure_srhtWithReplacement_gram_failure_le_of_flat_rows hk H hH U hU ξ
       hL hrows hε hε1).trans
       (srht_tail_le_half_of_sample_size (Nat.pos_of_ne_zero (NeZero.ne d)) hL hε hδ hsize)
-  have hh := measureReal_prod_le_bad_add (rademacherCubePMF (Fin n)).toMeasure
+  have hh := measureReal_prod_le_measureReal_add_of_sections_le (rademacherCubePMF (Fin n)).toMeasure
     (PMF.uniformOfFintype (Fin k → Fin n)).toMeasure E
     {ω | ε < specNorm ((srhtWithReplacementSketch H ω.1 ω.2 * U)ᵀ *
       (srhtWithReplacementSketch H ω.1 ω.2 * U) - 1)}

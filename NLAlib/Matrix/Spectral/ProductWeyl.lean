@@ -28,8 +28,8 @@ theorem singularValues_mul_add_le {m p n : Type*}
   let C := truncatedSVD A i * B + (A - truncatedSVD A i) * truncatedSVD B j
   have hC : C.rank ≤ i + j :=
     (rank_add_le _ _).trans (Nat.add_le_add
-      ((Matrix.rank_mul_le_left _ _).trans (isBestRankApprox_truncatedSVD A i).1)
-      ((Matrix.rank_mul_le_right _ _).trans (isBestRankApprox_truncatedSVD B j).1))
+      ((Matrix.rank_mul_le_left _ _).trans (isBestFrobRankApprox_truncatedSVD A i).1)
+      ((Matrix.rank_mul_le_right _ _).trans (isBestFrobRankApprox_truncatedSVD B j).1))
   have hdiff : A * B - C = (A - truncatedSVD A i) * (B - truncatedSVD B j) := by
     simp only [C, Matrix.sub_mul, Matrix.mul_sub]
     abel

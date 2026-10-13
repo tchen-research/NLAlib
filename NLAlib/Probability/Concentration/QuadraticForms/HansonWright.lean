@@ -3,12 +3,13 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
 -/
-import NLAlib.Probability.Concentration.QuadraticForms.UniversalBound
+import Mathlib.Analysis.Complex.ExponentialBounds
+import NLAlib.Probability.Concentration.QuadraticForms.TailAssembly
 import NLAlib.Probability.SubGaussian.OrliczMGF
 import NLAlib.Matrix.Basic.QuadForm
 import NLAlib.Matrix.Spectral.EckartYoung
@@ -18,27 +19,67 @@ import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Hanson–Wright in NLAlib's matrix vocabulary
 
-The complete independent-coordinate MGF proof is split into focused leaves.
-This module fixes the universal constant `1/(256 e²)` (the private `Fin n` leaf), relabels an
-arbitrary finite index type `ι` through `Fintype.equivFin ι` (the leaf proof is over `Fin n`),
-then uses the proved Orlicz-to-MGF bridge for the centered ψ₂ formulation.
-Atlas: `hanson-wright`. Vershynin 2018, Theorem 6.2.1.
+The complete independent-coordinate MGF proof is split into focused leaves
+(`Centering`, `Decoupling`, `DiagonalCGF`, `CutAverages`, `Geometry`, `LinearFormComparison`,
+`VectorProductComparison`, `TailAssembly`). This module fixes the universal constant
+`1/(256 e²)` (the private `Fin n` leaves), relabels an arbitrary finite index type `ι` through
+`Fintype.equivFin ι`, then uses the Orlicz-to-MGF bridge for the centered ψ₂ formulation.
+Atlas: `hanson-wright`. Vershynin 2018, Theorem 6.2.1; Rudelson–Vershynin 2013.
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
+set_option maxRecDepth 5000
 
 namespace NLAlib
+
+/-- Hanson–Wright tail with a general constant `C` satisfying the four leaf conditions, for a
+matrix with nonzero Frobenius and spectral norms: the MGF certificate `HasHansonWrightMGF` is
+proved from independence and coordinate sub-Gaussian bounds, then the Chernoff bound is
+optimised. -/
+private theorem hanson_wright_of_constants {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
+    {K C t : ℝ} (hK : 0 < K) (hC : 0 < C)
+    (hC_domain : 4 * exp 1 ≤ C)
+    (hC_diag_quad : 8 * exp 1 ^ 3 ≤ C)
+    (hC_offdiag_domain : 16 * exp 1 ≤ C ^ 2)
+    (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
+    (hF : 0 < frobNorm A) (hOp : 0 < specNorm A)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (ht : 0 ≤ t) :
+    μ.real {ω | t ≤ |centeredQuadraticForm μ A X ω|} ≤
+      2 * exp (-(1 / (4 * C)) *
+        min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
+          (t / (K ^ 2 * specNorm A))) := by
+  have hHW : HasHansonWrightMGF μ A X K C :=
+    hasHansonWrightMGF_of_subgaussian hK hC hC_domain hC_diag_quad
+      hC_offdiag_domain hC_offdiag_quad hOp hind hmgf
+  have hv : 0 < K ^ 4 * frobNorm A ^ 2 := by positivity
+  have hb : 0 < K ^ 2 * specNorm A := by positivity
+  exact measureReal_abs_ge_le_two_mul_exp_of_cgf_le hC hv hb
+    (Y := centeredQuadraticForm μ A X)
+    (fun l hl => by
+      have hl' : |l| ≤ (2 * C * K ^ 2 * specNorm A)⁻¹ := by
+        convert hl using 2
+        ring
+      simpa [mul_assoc, mul_left_comm, mul_comm] using hHW.1 l hl')
+    (fun l hl => by
+      have hl' : |l| ≤ (2 * C * K ^ 2 * specNorm A)⁻¹ := by
+        convert hl using 2
+        ring
+      exact hHW.2 l hl') ht
 
 /-- The `Fin n` leaf of `hanson_wright_mgf`, with the constant `1/(4 · 64 e²)`. -/
 private theorem hanson_wright_mgf_fin {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {n : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ} {K : ℝ} (hK : 0 < K)
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) (t : ℝ) (ht : 0 ≤ t) :
-    (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) (t : ℝ) (ht : 0 ≤ t) :
+    μ.real {ω | t ≤ |centeredQuadraticForm μ A X ω|} ≤
       2 * exp (-(1 / (4 * (64 * exp 1 ^ 2))) *
         min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2)) (t / (K ^ 2 * specNorm A))) := by
   let C0 : ℝ := 64 * exp 1 ^ 2
@@ -76,17 +117,17 @@ private theorem hanson_wright_mgf_fin {Ω : Type*} [MeasurableSpace Ω]
   have hC0_offdiag_quad : 64 * exp 1 ^ 2 ≤ C0 := by
     dsimp [C0]
     rfl
-  change (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤
+  change μ.real {ω | t ≤ |centeredQuadraticForm μ A X ω|} ≤
     2 * exp (-(1 / (4 * C0)) *
       min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
         (t / (K ^ 2 * specNorm A)))
   by_cases hF : 0 < frobNorm A
   · by_cases hOp : 0 < specNorm A
     · exact
-        hanson_wright_inequality (μ := μ) (A := A) (X := X)
+        hanson_wright_of_constants (μ := μ) (A := A) (X := X)
           (K := K) (C := C0) (t := t) hK hC0_pos hC0_domain
           hC0_diag_quad hC0_offdiag_domain hC0_offdiag_quad hF hOp
-          h_indep hX_subG ht
+          hind hmgf ht
     · have hOp_nonneg : 0 ≤ specNorm A := specNorm_nonneg A
       have hOp_zero : specNorm A = 0 := le_antisymm (le_of_not_gt hOp) hOp_nonneg
       have hfirst_nonneg :
@@ -98,8 +139,7 @@ private theorem hanson_wright_mgf_fin {Ω : Type*} [MeasurableSpace Ω]
               (t / (K ^ 2 * specNorm A)) = 0 := by
         rw [hsecond_zero, min_eq_right hfirst_nonneg]
       calc
-        (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤ (1 : ℝ) :=
-          ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
+        μ.real {ω | t ≤ |centeredQuadraticForm μ A X ω|} ≤ (1 : ℝ) := measureReal_le_one
         _ ≤ 2 * exp (-(1 / (4 * C0)) *
             min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
               (t / (K ^ 2 * specNorm A))) := by
@@ -119,8 +159,7 @@ private theorem hanson_wright_mgf_fin {Ω : Type*} [MeasurableSpace Ω]
             (t / (K ^ 2 * specNorm A)) = 0 := by
       rw [hfirst_zero, min_eq_left hsecond_nonneg]
     calc
-      (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤ (1 : ℝ) :=
-        ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
+      μ.real {ω | t ≤ |centeredQuadraticForm μ A X ω|} ≤ (1 : ℝ) := measureReal_le_one
       _ ≤ 2 * exp (-(1 / (4 * C0)) *
           min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2))
             (t / (K ^ 2 * specNorm A))) := by
@@ -132,10 +171,10 @@ variance proxy `K²` satisfy the quadratic-form tail bound with the explicit
 constant `1/(256 exp(1)²)`. The matrix is arbitrary, and zero matrix/dimension
 cases use Lean's total real division convention. The MGF assumption also implies
 coordinate centering; no quadratic-form MGF certificate is assumed.
-Vershynin 2018, Theorem 6.2.1; atlas `hanson-wright`. Deviation: none in the statement;
-the index type is an arbitrary `[Fintype ι]` (the ported leaf proof is over `Fin n` and is
-transported through `Fintype.equivFin ι`).
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+Vershynin 2018, Theorem 6.2.1; Rudelson–Vershynin 2013, Theorem 1.1; atlas `hanson-wright`.
+Deviation: the constant `1/(256 e²)` is explicit (the sources' `c` is unspecified); the index
+type is an arbitrary `[Fintype ι]` (the leaf proof is over `Fin n` and is transported through
+`Fintype.equivFin ι`). Ported from HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 atlas: hanson-wright -/
 theorem hanson_wright_mgf {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -143,8 +182,8 @@ theorem hanson_wright_mgf {Ω : Type*} [MeasurableSpace Ω]
     (hind : iIndepFun X μ)
     (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (t : ℝ) (ht : 0 ≤ t) :
-    (μ {ω | t ≤ |quadForm A (fun i => X i ω) -
-      ∫ ω', quadForm A (fun i => X i ω') ∂μ|}).toReal ≤
+    μ.real {ω | t ≤ |quadForm A (fun i => X i ω) -
+      ∫ ω', quadForm A (fun i => X i ω') ∂μ|} ≤
       2 * exp (-(1 / (256 * exp 1 ^ 2)) *
         min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2)) (t / (K ^ 2 * specNorm A))) := by
   let e := Fintype.equivFin ι
@@ -173,8 +212,8 @@ theorem hanson_wright_of_lintegral_exp_sq_le_two {Ω : Type*} [MeasurableSpace �
     (hmean : ∀ i, ∫ ω, X i ω ∂μ = 0)
     (hpsi : ∀ i, ∫⁻ ω, ENNReal.ofReal (exp ((X i ω / K) ^ 2)) ∂μ ≤ 2)
     (t : ℝ) (ht : 0 ≤ t) :
-    (μ {ω | t ≤ |quadForm A (fun i => X i ω) -
-      ∫ ω', quadForm A (fun i => X i ω') ∂μ|}).toReal ≤
+    μ.real {ω | t ≤ |quadForm A (fun i => X i ω) -
+      ∫ ω', quadForm A (fun i => X i ω') ∂μ|} ≤
       2 * exp (-(1 / (20736 * exp 1 ^ 2)) *
         min (t ^ 2 / (K ^ 4 * frobNorm A ^ 2)) (t / (K ^ 2 * specNorm A))) := by
   have hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨(3 * K) ^ 2, sq_nonneg (3 * K)⟩ μ := by

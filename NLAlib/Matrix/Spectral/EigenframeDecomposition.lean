@@ -27,8 +27,7 @@ theorem mul_sortedEigenframe_eq_mul_diagonal (hA : A.IsHermitian) :
       Matrix.mul_one]
 
 omit [DecidableEq n] in
-/-- Selecting any columns from an invariant diagonal frame gives the actual
-selected diagonal invariant equation. Horn–Johnson (2013), §4.3. -/
+/-- Selecting any columns from an invariant diagonal frame gives the selected diagonal invariant equation. Horn–Johnson (2013), §4.3. -/
 theorem mul_submatrix_cols_eq_mul_diagonal {N r : Type*} [Fintype N] [Fintype r]
     [DecidableEq N] [DecidableEq r] (U : Matrix n N ℝ) (d : N → ℝ)
     (e : r → N) (hU : A*U=U*Matrix.diagonal d) :
@@ -40,7 +39,7 @@ theorem mul_submatrix_cols_eq_mul_diagonal {N r : Type*} [Fintype N] [Fintype r]
   ext i j
   simp only [Matrix.submatrix_apply, Matrix.mul_diagonal, Function.comp_apply, id_eq]
 
-/-- Top eigenframes satisfy the invariant equation with their actual sorted
+/-- Top eigenframes satisfy the invariant equation with their sorted
 prefix eigenvalues. Horn–Johnson (2013), §4.3. -/
 theorem mul_topEigenframe_eq_mul_diagonal (hA : A.IsHermitian) {k : ℕ}
     (hk : k ≤ Fintype.card n) :
@@ -49,8 +48,7 @@ theorem mul_topEigenframe_eq_mul_diagonal (hA : A.IsHermitian) {k : ℕ}
   exact mul_submatrix_cols_eq_mul_diagonal (sortedEigenframe hA) hA.eigenvalues₀
     (Fin.castLEEmb hk) (mul_sortedEigenframe_eq_mul_diagonal hA)
 
-/-- Complementary eigenframes satisfy the invariant equation with the actual
-remaining sorted eigenvalues. Horn–Johnson (2013), §4.3. -/
+/-- Complementary eigenframes satisfy the invariant equation with the remaining sorted eigenvalues. Horn–Johnson (2013), §4.3. -/
 theorem mul_complementaryEigenframe_eq_mul_diagonal (hA : A.IsHermitian) {k : ℕ}
     (hk : k ≤ Fintype.card n) :
     A*complementaryEigenframe hA hk=complementaryEigenframe hA hk*
@@ -68,7 +66,7 @@ theorem mul_complementaryEigenframe_eq_mul_diagonal (hA : A.IsHermitian) {k : �
   rw [heq] at hh
   exact hh
 
-/-- A finite suffix indicator sum equals the sum over its actual suffix
+/-- A finite suffix indicator sum equals the sum over its suffix
 coordinates. Finite spectral-frame bookkeeping, including empty suffixes. -/
 theorem sum_fin_ite_ge_eq_sum_suffix {N k : ℕ} (hk : k ≤ N) (f : Fin N → ℝ) :
     (∑ i : Fin N, if k ≤ i.val then f i else 0)=
@@ -125,7 +123,7 @@ theorem topEigenframe_projector_add_complementary_eq_one (hA : A.IsHermitian)
   · have hge : k ≤ a.val := by omega
     simp [ha, hge]
 
-/-- Each eigenvalue of a real diagonal matrix is an actual diagonal entry.
+/-- Each eigenvalue of a real diagonal matrix is a diagonal entry.
 Mathlib's diagonal spectrum theorem; supports spectral interval bounds. -/
 theorem exists_eq_eigenvalues_diagonal {r : Type*} [Fintype r] [DecidableEq r]
     (d : r → ℝ) (i : r) :

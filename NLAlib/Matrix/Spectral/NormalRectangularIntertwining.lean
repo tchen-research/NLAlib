@@ -8,10 +8,11 @@ compatible unequal-size result to the square C⋆-algebra theorem.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Rectangular intertwining of complex normal matrices is equivalent to
 intertwining their adjoints. Source: Horn–Johnson (2013), Theorem 2.5.15;
 the two normal matrices may have different sizes, including empty shapes.

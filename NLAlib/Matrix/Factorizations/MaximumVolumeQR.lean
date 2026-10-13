@@ -1,12 +1,13 @@
 import NLAlib.ForMathlib.Logic.Equiv
 import NLAlib.Matrix.Factorizations.MaximumVolumeColumns
 import NLAlib.Matrix.Factorizations.MaximumVolumeBudget
+import NLAlib.Matrix.Factorizations.QRExistence
 import NLAlib.Matrix.Subspaces.OrthogonalSumCompletion
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 /-!
 # Maximum-volume QR blocks and their shared budget
 
-A maximizing independent column selection yields a genuine full orthogonal
+A maximizing independent column selection yields a full orthogonal
 factorization with an invertible triangular leading block, entrywise bounded
 interpolation, and the exact shared Frobenius budget. Arbitrary finite input
 labels and rank endpoints are supported. Gu–Eisenstat 1996, Theorem 3.2.
@@ -22,7 +23,7 @@ set_option maxHeartbeats 800000
 invertible upper-triangular leading block, interpolation entries bounded by
 one, and the joint budget `‖T‖F² + ‖R⁻¹‖F² ‖D‖F² ≤ k(n-k)`.
 The requested leading size may be any `k ≤ rank A`, including zero and full
-rank. The column equivalence is an actual permutation into the selected and
+rank. The column equivalence is a permutation into the selected and
 remaining coordinate blocks. Gu–Eisenstat 1996, Theorem 3.2; derivations
 equations alg:rrqr-block through alg:rrqr-budget.
 Supports `rank-revealing-qr`. -/
@@ -63,8 +64,9 @@ theorem exists_maximum_volume_qr_blocks {m n : Type*}
     rw [hGram, Matrix.det_mul, Matrix.det_transpose, hz, zero_mul] at hCpos
     exact lt_irrefl 0 hCpos
   have hR : IsUnit R := (Matrix.isUnit_iff_isUnit_det R).mpr hRdet
-  obtain ⟨Q, hQ, hQt, hFirst⟩ := exists_orthogonal_sum_completion
+  obtain ⟨Q, hQ, hQt, hFirst⟩ := exists_unitary_sum_completion
     (q := Fin (Fintype.card m - k)) L hL (by simpa using Nat.add_sub_of_le hkm)
+  rw [Matrix.conjTranspose_eq_transpose_of_trivial] at hQt
   let K := Q.submatrix id Sum.inr
   have hQform : Q = Matrix.fromCols L K := by
     ext i j

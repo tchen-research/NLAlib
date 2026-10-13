@@ -91,14 +91,14 @@ theorem mem_blockKrylovSpace_iff (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q :
   · intro hx
     obtain ⟨f, hf, rfl⟩ := (Submodule.mem_iSup_iff_exists_finsupp _ x).1 hx
     have h : ∀ j, ∃ p : ℝ[X], p.degree < q ∧ f j = aeval A p *ᵥ Ω.col j := fun j =>
-      (mem_krylovSpace_iff_degree A _ q _).1 (hf j)
+      (mem_krylovSpace_iff A _ q _).1 (hf j)
     choose p hpdeg hp using h
     refine ⟨p, hpdeg, ?_⟩
     rw [Finsupp.sum_fintype _ _ (fun _ => rfl)]
     exact Finset.sum_congr rfl fun j _ => hp j
   · rintro ⟨p, hp, rfl⟩
     refine Submodule.sum_mem _ fun j _ => Submodule.mem_iSup_of_mem j ?_
-    exact (mem_krylovSpace_iff_degree A _ q _).2 ⟨p j, hp j, rfl⟩
+    exact (mem_krylovSpace_iff A _ q _).2 ⟨p j, hp j, rfl⟩
 
 /-- `range (p(A) Ω) ⊆ K_q(A, Ω)` for every scalar polynomial `p` with `deg p < q`: the form used
 by block Krylov low-rank approximation. Source: Musco–Musco (2015) [`mm15`], proof of Thm 1;
@@ -111,7 +111,7 @@ theorem range_aeval_mul_le_blockKrylovSpace (A : Matrix n n ℝ) (Ω : Matrix n 
   rintro _ ⟨j, rfl⟩
   rw [col_mul_eq_mulVec_col]
   exact krylovSpace_col_le_blockKrylovSpace A Ω q j
-    ((mem_krylovSpace_iff_degree A _ q _).2 ⟨p, hp, rfl⟩)
+    ((mem_krylovSpace_iff A _ q _).2 ⟨p, hp, rfl⟩)
 
 omit [Fintype s] in
 /-- Block Krylov spaces are nested: `q ≤ q' → K_q(A, Ω) ⊆ K_{q'}(A, Ω)`.

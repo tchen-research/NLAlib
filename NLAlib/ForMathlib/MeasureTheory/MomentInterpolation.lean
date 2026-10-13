@@ -16,12 +16,11 @@ noncomputable section
 
 open MeasureTheory
 
-namespace NLAlib
+namespace MeasureTheory
 
 /-- A lower positive real moment is integrable whenever a higher one is.
 Source: moment monotonicity in the direct quadratic-probe proof.
-Atlas: `inverse-wishart-spectral-moment` (helper); allows exponents below one.
-atlas: positive-real-moment-comparison -/
+Atlas: `inverse-wishart-spectral-moment` (helper); allows exponents below one. -/
 theorem integrable_rpow_of_nonneg_of_le {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsFiniteMeasure μ] {f : Ω → ℝ} {p q : ℝ}
     (hf : AEStronglyMeasurable f μ) (hfnn : ∀ ω, 0 ≤ f ω)
@@ -34,8 +33,7 @@ theorem integrable_rpow_of_nonneg_of_le {Ω : Type*} [MeasurableSpace Ω]
 
 /-- Rooted moments are monotone for all positive real exponents on a
 probability space. Source: moment monotonicity in the direct quadratic-probe
-proof. Atlas: `inverse-wishart-spectral-moment` (helper); includes `p < 1`.
-atlas: positive-real-moment-comparison -/
+proof. Atlas: `inverse-wishart-spectral-moment` (helper); includes `p < 1`. -/
 theorem integral_rpow_root_le_of_nonneg_of_le {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {f : Ω → ℝ} {p q : ℝ}
     (hf : AEStronglyMeasurable f μ) (hfnn : ∀ ω, 0 ≤ f ω)
@@ -60,8 +58,7 @@ theorem integral_rpow_root_le_of_nonneg_of_le {Ω : Type*} [MeasurableSpace Ω]
 /-- A bound on one positive real moment bounds every lower rooted moment.
 Source: moment monotonicity in the direct quadratic-probe proof.
 Atlas: `inverse-wishart-spectral-moment`, `pinv-spectral-expectation`
-(helper); neither exponent needs to be at least one.
-atlas: positive-real-moment-comparison -/
+(helper); neither exponent needs to be at least one. -/
 theorem integral_rpow_root_le_of_integral_rpow_le {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {f : Ω → ℝ} {p q C : ℝ}
     (hf : AEStronglyMeasurable f μ) (hfnn : ∀ ω, 0 ≤ f ω)
@@ -78,20 +75,17 @@ theorem integral_rpow_root_le_of_integral_rpow_le {Ω : Type*} [MeasurableSpace 
 /-- A bound `E[f^q] ≤ C^q` implies integrability and `E[f^p] ≤ C^p`
 for every real `0 < p ≤ q`. Source: moment monotonicity in the direct
 quadratic-probe proof. Atlas: `inverse-wishart-spectral-moment`,
-`pinv-spectral-expectation` (helper); includes exponents below one.
-atlas: positive-real-moment-comparison -/
-theorem integrable_and_integral_rpow_le_of_integral_rpow_le {Ω : Type*}
+`pinv-spectral-expectation` (helper); includes exponents below one. -/
+theorem integral_rpow_le_of_integral_rpow_le {Ω : Type*}
     [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {f : Ω → ℝ} {p q C : ℝ}
     (hf : AEStronglyMeasurable f μ) (hfnn : ∀ ω, 0 ≤ f ω)
     (hp : 0 < p) (hpq : p ≤ q) (hC : 0 ≤ C)
     (hfq : Integrable (fun ω => f ω ^ q) μ) (hqbound : (∫ ω, f ω ^ q ∂μ) ≤ C ^ q) :
-    Integrable (fun ω => f ω ^ p) μ ∧ (∫ ω, f ω ^ p ∂μ) ≤ C ^ p := by
-  have hq : 0 < q := hp.trans_le hpq
-  refine ⟨integrable_rpow_of_nonneg_of_le hf hfnn hp.le hq.le hpq hfq, ?_⟩
+    (∫ ω, f ω ^ p ∂μ) ≤ C ^ p := by
   have hroot := integral_rpow_root_le_of_integral_rpow_le hf hfnn hp hpq hC hfq hqbound
   have hpint : 0 ≤ ∫ ω, f ω ^ p ∂μ := integral_nonneg fun ω => Real.rpow_nonneg (hfnn ω) _
   have h := Real.rpow_le_rpow (Real.rpow_nonneg hpint _) hroot hp.le
   rwa [Real.rpow_inv_rpow hpint hp.ne'] at h
 
-end NLAlib
+end MeasureTheory

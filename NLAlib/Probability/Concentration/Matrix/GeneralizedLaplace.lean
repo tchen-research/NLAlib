@@ -11,10 +11,11 @@ Atlas: `intrinsic-dimension`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Proposition 7.4.1, printed p. 112.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator ComplexOrder
+open scoped ComplexOrder
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- For Hermitian `B`, `ψ ≥ 0`, `ψ` monotone on `[0,∞)`, `0 ≤ t ≤ λmax B`:
 `ψ t ≤ tr ψ(B)`. -/
 private lemma pointwise_bound {d : ℕ} [NeZero d] (ψ : ℝ → ℝ)
@@ -37,6 +38,7 @@ end NLAlib
 
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Generalized matrix Laplace transform bound: for `ψ ≥ 0` nondecreasing on `[0, ∞)` and `ψ t > 0`,
 `P{λmax(Y) ≥ t} ≤ 𝔼 tr ψ(Y) / ψ t`.
 
@@ -52,7 +54,7 @@ theorem NLAlib.measure_lambdaMax_ge_le_integral_traceFunction_div {Ω : Type*} [
     (hNonneg : ∀ x, 0 ≤ ψ x) (hMono : MonotoneOn ψ (Set.Ici 0))
     (hInt : Integrable (fun ω => traceFunction ψ (Y ω)) μ)
     (t : ℝ) (ht : 0 ≤ t) (hψt : 0 < ψ t) :
-    (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
+    μ.real {ω | t ≤ lambdaMax (Y ω)} ≤
       (∫ ω, traceFunction ψ (Y ω) ∂μ) / ψ t := by
   have hpos : ∀ᵐ ω ∂μ, (0 : ℝ) ≤ traceFunction ψ (Y ω) := by
     filter_upwards [hHerm] with ω hω
@@ -64,8 +66,8 @@ theorem NLAlib.measure_lambdaMax_ge_le_integral_traceFunction_div {Ω : Type*} [
     exact pointwise_bound ψ hNonneg hMono _ hω t ht h
   have hsub : μ {ω | t ≤ lambdaMax (Y ω)} ≤ μ {ω | ψ t ≤ traceFunction ψ (Y ω)} :=
     measure_mono_ae hs
-  have hreal : (μ {ω | t ≤ lambdaMax (Y ω)}).toReal ≤
-      (μ {ω | ψ t ≤ traceFunction ψ (Y ω)}).toReal :=
+  have hreal : μ.real {ω | t ≤ lambdaMax (Y ω)} ≤
+      μ.real {ω | ψ t ≤ traceFunction ψ (Y ω)} :=
     ENNReal.toReal_mono (measure_ne_top _ _) hsub
   have hmarkov := mul_meas_ge_le_integral_of_nonneg hpos hInt (ψ t)
   rw [measureReal_def] at hmarkov

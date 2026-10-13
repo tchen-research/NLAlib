@@ -14,10 +14,11 @@ Atlas: `matrix-bernstein`.
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015); https://arxiv.org/abs/1501.01571v1; Lemma 6.6.2, printed pp. 97–98.
 -/
 open MeasureTheory ProbabilityTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
+open scoped MatrixOrder ComplexOrder
 
 open NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- For a centered Hermitian random matrix with `λmax X ≤ L` and `0 < θ < 3/L`, `𝔼 matrixExp (θ • X) ≼
 matrixExp (c • 𝔼 X²)` and `matrixLog 𝔼 matrixExp (θ • X) ≼ c • 𝔼 X²`, where `c = (θ²/2)/(1 -
 θL/3)`.

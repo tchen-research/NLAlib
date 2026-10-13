@@ -2,8 +2,6 @@ import NLAlib.Matrix.Basic.CauchyBinet
 import NLAlib.Matrix.Basic.CauchyBinetAdjoint
 import NLAlib.Matrix.Basic.ComplementaryNullities
 import NLAlib.Matrix.Basic.ComplementaryRank
-import NLAlib.Matrix.Basic.ComplexFullRowInverse
-import NLAlib.Matrix.Basic.ComplexPosSemidefTrace
 import NLAlib.Matrix.Basic.CoordinateUpdates
 import NLAlib.Matrix.Basic.DeterminantDiagonalUpdate
 import NLAlib.Matrix.Basic.Dilation
@@ -12,6 +10,7 @@ import NLAlib.Matrix.Basic.Gram
 import NLAlib.Matrix.Basic.GramVanishing
 import NLAlib.Matrix.Basic.JacobiBlockMinor
 import NLAlib.Matrix.Basic.JacobiMinor
+import NLAlib.Matrix.Basic.LeadingMinor
 import NLAlib.Matrix.Basic.LeastSquares
 import NLAlib.Matrix.Basic.MoorePenrose
 import NLAlib.Matrix.Basic.MoorePenroseProjector
@@ -20,6 +19,8 @@ import NLAlib.Matrix.Basic.MoorePenroseTransformations
 import NLAlib.Matrix.Basic.Orthonormal
 import NLAlib.Matrix.Basic.PSDDuality
 import NLAlib.Matrix.Basic.PenroseIdentities
+import NLAlib.Matrix.Basic.PlaneRotation
+import NLAlib.Matrix.Basic.PosSemidefTrace
 import NLAlib.Matrix.Basic.PositiveDefiniteClosure
 import NLAlib.Matrix.Basic.PositiveSemidefiniteSeries
 import NLAlib.Matrix.Basic.Pseudoinverse

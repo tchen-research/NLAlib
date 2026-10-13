@@ -1,28 +1,25 @@
 import NLAlib.Matrix.Structured.Walsh
 
 /-!
-# The actual normalized Walsh transform on ordinary finite labels
+# The normalized Walsh transform on ordinary finite labels
 
 The binary character construction is relabeled to `Fin (2^b)` so it applies
-directly to the classical SRHT law. Source: `sh:srht`, atlas `srht-ose`.
+directly to the classical SRHT law. atlas `srht-ose`.
 -/
 
 noncomputable section
 open scoped Classical Matrix
 namespace NLAlib
 
-/-- A fixed relabeling of the binary Walsh group by ordinary row labels.
-Source: the genuine binary character construction, `sh:srht`. -/
+/-- A fixed relabeling of the binary Walsh group by ordinary row labels. -/
 def walshIndexEquivFin (b : ℕ) : WalshIndex b ≃ Fin (2 ^ b) :=
   Fintype.equivOfCardEq (by simp only [card_walshIndex, Fintype.card_fin])
 
-/-- The actual normalized Walsh matrix, now on ordinary finite row labels.
-Source: operator re-derivation `sh:srht`. -/
+/-- The normalized Walsh matrix, now on ordinary finite row labels. -/
 def walshMatrixFin (b : ℕ) : Matrix (Fin (2 ^ b)) (Fin (2 ^ b)) ℝ :=
   fun i j => walshMatrix b ((walshIndexEquivFin b).symm i) ((walshIndexEquivFin b).symm j)
 
-/-- The actual finite-label Walsh transform is orthogonal.
-Source: binary character orthogonality, `sh:srht`. -/
+/-- The finite-label Walsh transform is orthogonal. -/
 theorem walshMatrixFin_transpose_mul_self (b : ℕ) :
     (walshMatrixFin b)ᵀ * walshMatrixFin b = 1 := by
   ext a c
@@ -38,8 +35,7 @@ theorem walshMatrixFin_transpose_mul_self (b : ℕ) :
     _ = (1 : Matrix (WalshIndex b) (WalshIndex b) ℝ) (e.symm a) (e.symm c) := hh
     _ = _ := by simp only [Matrix.one_apply, e.symm.injective.eq_iff]
 
-/-- Every actual finite-label Walsh entry is flat.
-Source: normalized binary characters, `sh:srht`. -/
+/-- Every finite-label Walsh entry is flat. -/
 theorem walshMatrixFin_apply_sq (b : ℕ) (i j : Fin (2 ^ b)) :
     walshMatrixFin b i j ^ 2 = 1 / ((2 ^ b : ℕ) : ℝ) := by
   simpa only [walshMatrixFin, Nat.cast_pow, Nat.cast_ofNat] using

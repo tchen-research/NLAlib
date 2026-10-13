@@ -67,7 +67,7 @@ theorem polyIterate_sub {A : Matrix n n ℝ} {c xs : n → ℝ} (hxs : A *ᵥ xs
 Source: Saad (2003) [`saad03`], §12.1. -/
 theorem polyIterate_sub_mem_krylovSpace (A : Matrix n n ℝ) (c x₀ : n → ℝ) {s : ℝ[X]} {q : ℕ}
     (hs : s.degree < q) : polyIterate A c x₀ s - x₀ ∈ krylovSpace A (c - A *ᵥ x₀) q :=
-  (mem_krylovSpace_iff_degree _ _ _ _).2 ⟨s, hs, by rw [polyIterate, add_sub_cancel_left]⟩
+  (mem_krylovSpace_iff _ _ _ _).2 ⟨s, hs, by rw [polyIterate, add_sub_cancel_left]⟩
 
 /-- **Error bound for a polynomial method, weighted norm.** For symmetric `A` with spectrum in
 `S`, a weight `g ≥ 0` on `S` and `|1 − x s(x)| ≤ M` on `S`,

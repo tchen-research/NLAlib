@@ -14,11 +14,12 @@ Atlas: `ky-fan-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
-/-- Only the actual positive singular-value rank prefix contributes to the
+open scoped Matrix.Norms.L2Operator in
+/-- Only the positive singular-value rank prefix contributes to the
 nuclear norm, including the zero rank. -/
 theorem nuclearNorm_eq_sum_rank_singularValues {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
     nuclearNorm A = ∑ i ∈ Finset.range A.rank, singularValues A i := by
@@ -29,10 +30,13 @@ theorem nuclearNorm_eq_sum_rank_singularValues {m n : ℕ} (A : Matrix (Fin m) (
   intro i _ hi
   exact singularValues_eq_zero_of_rank_le A (by simpa only [Finset.mem_range, not_lt] using hi)
 
-/-- The nuclear norm is nonnegative. -/
+open scoped Matrix.Norms.L2Operator in
+/-- The nuclear norm is nonnegative.
+atlas: ky-fan-norms-def -/
 theorem nuclearNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) : 0 ≤ nuclearNorm A := kyFanNorm_nonneg A _
 
+open scoped Matrix.Norms.L2Operator in
 /-- `Fin` step of `nuclearNorm_le_rank_mul_specNorm`. -/
 private theorem nuclearNorm_le_rank_mul_specNorm_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
     nuclearNorm A ≤ (A.rank : ℝ) * specNorm A := by
@@ -42,6 +46,7 @@ private theorem nuclearNorm_le_rank_mul_specNorm_fin {m n : ℕ} (A : Matrix (Fi
       Finset.sum_le_sum fun i _ => singularValues_le_specNorm A i
     _ = (A.rank : ℝ) * specNorm A := by simp
 
+open scoped Matrix.Norms.L2Operator in
 /-- `Fin` step of `frobNorm_le_nuclearNorm`. -/
 private theorem frobNorm_le_nuclearNorm_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
     frobNorm A ≤ nuclearNorm A := by
@@ -52,6 +57,7 @@ private theorem frobNorm_le_nuclearNorm_fin {m n : ℕ} (A : Matrix (Fin m) (Fin
   rw [← hf, ← nuclearNorm_eq_sum_rank_singularValues A] at hs
   nlinarith [frobNorm_nonneg A, nuclearNorm_nonneg A]
 
+open scoped Matrix.Norms.L2Operator in
 /-- `Fin` step of `nuclearNorm_le_sqrt_rank_mul_frobNorm`. -/
 private theorem nuclearNorm_le_sqrt_rank_mul_frobNorm_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
     nuclearNorm A ≤ Real.sqrt A.rank * frobNorm A := by
@@ -65,6 +71,7 @@ private theorem nuclearNorm_le_sqrt_rank_mul_frobNorm_fin {m n : ℕ} (A : Matri
   have hn : 0 ≤ Real.sqrt A.rank * frobNorm A := mul_nonneg (Real.sqrt_nonneg _) (frobNorm_nonneg A)
   nlinarith [nuclearNorm_nonneg A]
 
+open scoped Matrix.Norms.L2Operator in
 /-- `Fin` step of `frobInner_le_nuclearNorm_of_specNorm_le_one`. -/
 private theorem frobInner_le_nuclearNorm_of_specNorm_le_one_fin {m n : ℕ}
     (A B : Matrix (Fin m) (Fin n) ℝ) (hB : specNorm B ≤ 1) :
@@ -72,7 +79,9 @@ private theorem frobInner_le_nuclearNorm_of_specNorm_le_one_fin {m n : ℕ}
   exact frobInner_le_kyFanNorm_of_rank_le_of_specNorm_le_one A B
     (by simpa using le_min B.rank_le_height B.rank_le_width) hB
 
-/-- Relabeling rows and columns preserves the nuclear norm. -/
+open scoped Matrix.Norms.L2Operator in
+/-- Relabeling rows and columns preserves the nuclear norm.
+atlas: ky-fan-norms-def -/
 theorem nuclearNorm_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
     [DecidableEq n] [DecidableEq q] (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
     nuclearNorm (A.reindex em en) = nuclearNorm A := by
@@ -80,47 +89,61 @@ theorem nuclearNorm_reindex {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- The Frobenius norm is at most the nuclear norm on every finite matrix space,
-including rank zero. -/
+including rank zero.
+atlas: ky-fan-norms-def -/
 theorem frobNorm_le_nuclearNorm (A : Matrix m n ℝ) : frobNorm A ≤ nuclearNorm A := by
   have h := frobNorm_le_nuclearNorm_fin (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
   rwa [frobNorm_reindex, nuclearNorm_reindex] at h
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
-/-- The spectral norm is at most the nuclear norm, including empty matrix spaces. -/
+/-- The spectral norm is at most the nuclear norm, including empty matrix spaces.
+atlas: ky-fan-norms-def -/
 theorem specNorm_le_nuclearNorm (A : Matrix m n ℝ) : specNorm A ≤ nuclearNorm A :=
   (specNorm_le_frobNorm A).trans (frobNorm_le_nuclearNorm A)
 
+open scoped Matrix.Norms.L2Operator in
 /-- A rank-`r` matrix has nuclear norm at most `r` times its spectral norm, on arbitrary
-finite matrix indices. The coefficient is the actual rank, with no positivity assumption. -/
+finite matrix indices. The coefficient is the rank, with no positivity assumption.
+atlas: ky-fan-norms-def -/
 theorem nuclearNorm_le_rank_mul_specNorm (A : Matrix m n ℝ) :
     nuclearNorm A ≤ (A.rank : ℝ) * specNorm A := by
   have h := nuclearNorm_le_rank_mul_specNorm_fin (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
   rwa [nuclearNorm_reindex, Matrix.rank_reindex, specNorm_reindex] at h
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
-/-- The nuclear norm is bounded by the square root of the actual rank times the
-Frobenius norm, on arbitrary finite indices; the zero matrix is covered with constant zero. -/
+/-- The nuclear norm is bounded by the square root of the rank times the
+Frobenius norm, on arbitrary finite indices; the zero matrix is covered with constant zero.
+atlas: ky-fan-norms-def -/
 theorem nuclearNorm_le_sqrt_rank_mul_frobNorm (A : Matrix m n ℝ) :
     nuclearNorm A ≤ Real.sqrt A.rank * frobNorm A := by
   have h := nuclearNorm_le_sqrt_rank_mul_frobNorm_fin
     (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
   rwa [nuclearNorm_reindex, Matrix.rank_reindex, frobNorm_reindex] at h
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
-/-- The nuclear norm is subadditive. -/
+/-- The nuclear norm is subadditive.
+atlas: ky-fan-norms-def -/
 theorem nuclearNorm_add_le (A B : Matrix m n ℝ) :
     nuclearNorm (A + B) ≤ nuclearNorm A + nuclearNorm B := kyFanNorm_add_le A B _
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
-/-- The nuclear norm is absolutely homogeneous. -/
+/-- The nuclear norm is absolutely homogeneous.
+atlas: ky-fan-norms-def -/
 theorem nuclearNorm_smul (A : Matrix m n ℝ) (c : ℝ) : nuclearNorm (c • A) = |c| * nuclearNorm A :=
   kyFanNorm_smul A c _
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
-/-- The nuclear norm is a genuine norm, including the unique norm on an empty
-matrix space. -/
+/-- The nuclear norm is a norm, including the unique norm on an empty
+matrix space.
+atlas: ky-fan-norms-def -/
 theorem nuclearNorm_eq_zero_iff (A : Matrix m n ℝ) : nuclearNorm A = 0 ↔ A = 0 := by
   constructor
   · intro h
@@ -130,19 +153,24 @@ theorem nuclearNorm_eq_zero_iff (A : Matrix m n ℝ) : nuclearNorm A = 0 ↔ A =
   · rintro rfl
     exact kyFanNorm_zero_matrix _
 
+open scoped Matrix.Norms.L2Operator in
 /-- Orthogonal multiplication on the left preserves the nuclear norm. -/
 theorem nuclearNorm_orthogonal_mul (A : Matrix m n ℝ) {U : Matrix m m ℝ}
     (hU : HasOrthonormalCols U) : nuclearNorm (U * A) = nuclearNorm A := kyFanNorm_orthogonal_mul A hU _
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- Orthogonal multiplication on the right preserves the nuclear norm. -/
 theorem nuclearNorm_mul_orthogonal (A : Matrix m n ℝ) {V : Matrix n n ℝ}
     (hV : HasOrthonormalCols V) : nuclearNorm (A * V) = nuclearNorm A := kyFanNorm_mul_orthogonal A hV _
 
-/-- Transposition preserves the nuclear norm. -/
+open scoped Matrix.Norms.L2Operator in
+/-- Transposition preserves the nuclear norm.
+atlas: ky-fan-norms-def -/
 theorem nuclearNorm_transpose (A : Matrix m n ℝ) : nuclearNorm Aᵀ = nuclearNorm A := by
   rw [nuclearNorm, nuclearNorm, kyFanNorm_transpose, min_comm]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every spectral contraction has Frobenius pairing at most the nuclear norm, on
 arbitrary finite matrix indices, with no rank or nonempty dimension assumption. -/
 theorem frobInner_le_nuclearNorm_of_specNorm_le_one (A B : Matrix m n ℝ) (hB : specNorm B ≤ 1) :
@@ -153,21 +181,23 @@ theorem frobInner_le_nuclearNorm_of_specNorm_le_one (A B : Matrix m n ℝ) (hB :
   have h := frobInner_le_nuclearNorm_of_specNorm_le_one_fin (A.reindex em en) (B.reindex em en) hBn
   rwa [frobInner_reindex, nuclearNorm_reindex] at h
 
-/-- An actual spectral contraction attains nuclear–spectral duality on arbitrary
+open scoped Matrix.Norms.L2Operator in
+/-- A spectral contraction attains nuclear–spectral duality on arbitrary
 finite index types, including empty shapes: the partial isometry `U Vᵀ` built from the
 top singular frames. Horn–Johnson (1991), Corollary 3.4.4. -/
 theorem exists_specNorm_le_one_frobInner_eq_nuclearNorm (A : Matrix m n ℝ) :
     ∃ B : Matrix m n ℝ, specNorm B ≤ 1 ∧ frobInner A B = nuclearNorm A := by
   obtain ⟨U, V, hU, hV, htrace⟩ := exists_trace_twoSided_compression_eq_kyFanNorm A le_rfl
   refine ⟨U * Vᵀ, ?_, ?_⟩
-  · rw [specNorm_mul_transpose_right_of_hasOrthonormalCols (show Vᵀ * V = 1 from hV)]
+  · rw [specNorm_mul_conjTranspose_right_of_hasOrthonormalCols (show Vᵀ * V = 1 from hV)]
     exact specNorm_le_one_of_orthonormal hU
   · rw [frobInner_comm, frobInner_eq_trace, RCLike.re_to_real,
       Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, Matrix.transpose_transpose,
       ← Matrix.trace_mul_cycle Uᵀ A V]
     simpa only [nuclearNorm] using htrace
 
-/-- Nuclear–spectral duality with an actual attained greatest value over all
+open scoped Matrix.Norms.L2Operator in
+/-- Nuclear–spectral duality with an attained greatest value over all
 spectral contractions. Horn–Johnson (1991), Corollary 3.4.4.
 atlas: ky-fan-norms-def (partial) -/
 theorem isGreatest_nuclearNorm_frobInner (A : Matrix m n ℝ) :
@@ -181,6 +211,7 @@ above for every finite matrix shape. -/
 def nuclearSeminorm : Seminorm ℝ (Matrix m n ℝ) :=
   kyFanSeminorm (min (Fintype.card m) (Fintype.card n))
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- The bundled nuclear seminorm agrees with the singular-value sum. -/
 @[simp] theorem nuclearSeminorm_apply (A : Matrix m n ℝ) : nuclearSeminorm A = nuclearNorm A := rfl

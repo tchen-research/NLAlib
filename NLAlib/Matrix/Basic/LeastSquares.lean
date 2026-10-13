@@ -1,9 +1,10 @@
 import NLAlib.Matrix.Factorizations.QR
+import NLAlib.Matrix.Norms.Core
 /-!
 # Linear least squares in exact arithmetic
 
 For `A : Matrix m n ℝ` and `b : m → ℝ`, `IsLeastSquaresSolution A b x` says that `x` minimises
-`‖b - A x‖₂²` (written `(b - A x) ⬝ᵥ (b - A x)`). This file proves the classical
+`‖b - A x‖₂` (the Euclidean norm `‖WithLp.toLp 2 (b - A x)‖`). This file proves the classical
 characterisations (Trefethen–Bau 1997, Lecture 11, Thm 11.1; Golub–Van Loan 2013, §5.3):
 
 * `isLeastSquaresSolution_iff_transpose_mulVec_mulVec_eq`: minimiser iff the normal equations
@@ -15,12 +16,16 @@ characterisations (Trefethen–Bau 1997, Lecture 11, Thm 11.1; Golub–Van Loan 
   is the same for every solution;
 * `existsUnique_isLeastSquaresSolution_iff`: the solution is unique iff `rank A = card n`
   (full column rank), and then it is `A⁺ b = (AᵀA)⁻¹Aᵀb`;
-* `dotProduct_self_moorePenroseInverse_mulVec_le`: `A⁺ b` is the minimum-norm solution;
-* the residual identities `‖b - A x‖² = ‖b‖² - ‖A x‖²` and `b - A x = (I - A A⁺) b`;
+* `IsLeastSquaresSolution.norm_moorePenroseInverse_mulVec_le`: `A⁺ b` is the minimum-norm solution;
+* the residual identities `‖b - A x‖² = ‖b‖² - ‖A x‖²` (`IsLeastSquaresSolution.norm_sub_mulVec_sq_eq`)
+  and `b - A x = (I - A A⁺) b`;
 * the thin-QR corollary: if `A = Q R` with `QᵀQ = I` and `R` invertible then the solution is
   `R⁻¹ Qᵀ b` and `‖r‖² = ‖b‖² - ‖Qᵀ b‖²` (stated with explicit hypotheses, so it applies to any
   thin QR factorization), and its `IsQR` form (`IsQR.isLeastSquaresSolution_iff`,
-  `IsQR.dotProduct_sub_mulVec_eq`) for `NLAlib.Matrix.Factorizations.QR`.
+  `IsQR.norm_sub_mulVec_sq_eq`) for `NLAlib.Matrix.Factorizations.QR`.
+
+Squared norms are `‖WithLp.toLp 2 v‖ ^ 2`; the bridge to `v ⬝ᵥ v` is
+`norm_toLp_sq_eq_dotProduct_self` (`Matrix/Norms/Core.lean`).
 
 Atlas: `least-squares-normal-equations`.
 -/
@@ -33,13 +38,22 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n]
 
-/-- `x` is a (linear) least-squares solution of `A x ≈ b`: it minimises the squared residual
-`‖b - A y‖₂² = (b - A y) ⬝ᵥ (b - A y)` over all `y`. Trefethen–Bau 1997, Lecture 11 (problem
-(11.2)); Golub–Van Loan 2013, §5.3.1. Every `A` admits one
-(`isLeastSquaresSolution_moorePenroseInverse_mulVec`).
-atlas: least-squares-normal-equations (partial) -/
+/-- `x` is a (linear) least-squares solution of `A x ≈ b`: it minimises the Euclidean residual
+`‖b - A y‖₂` over all `y`. Trefethen–Bau 1997, Lecture 11 (problem (11.2)); Golub–Van Loan 2013,
+§5.3.1. Every `A` admits one (`isLeastSquaresSolution_moorePenroseInverse_mulVec`).
+atlas: least-squares-normal-equations -/
 def IsLeastSquaresSolution (A : Matrix m n ℝ) (b : m → ℝ) (x : n → ℝ) : Prop :=
-  ∀ y : n → ℝ, (b - A *ᵥ x) ⬝ᵥ (b - A *ᵥ x) ≤ (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y)
+  ∀ y : n → ℝ, ‖(WithLp.toLp 2 (b - A *ᵥ x) : EuclideanSpace ℝ m)‖ ≤
+    ‖(WithLp.toLp 2 (b - A *ᵥ y) : EuclideanSpace ℝ m)‖
+
+/-- The dot-product form of `IsLeastSquaresSolution`: `x` minimises `(b - A y) ⬝ᵥ (b - A y)`. -/
+theorem isLeastSquaresSolution_iff_dotProduct (A : Matrix m n ℝ) (b : m → ℝ) (x : n → ℝ) :
+    IsLeastSquaresSolution A b x ↔
+      ∀ y : n → ℝ, (b - A *ᵥ x) ⬝ᵥ (b - A *ᵥ x) ≤ (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y) := by
+  unfold IsLeastSquaresSolution
+  simp only [← norm_toLp_sq_eq_dotProduct_self]
+  exact ⟨fun h y => pow_le_pow_left₀ (norm_nonneg _) (h y) 2,
+    fun h y => (pow_le_pow_iff_left₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).mp (h y)⟩
 
 /-- The residual is orthogonal to `range A` iff `Aᵀ (b - A x) = 0`. Trefethen–Bau 1997,
 Thm 11.1. -/
@@ -53,9 +67,7 @@ theorem transpose_mulVec_eq_zero_iff_forall_dotProduct_mulVec_eq_zero (A : Matri
     rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose] at h1
     exact dotProduct_self_eq_zero.mp h1
 
-/-- Pythagoras for least squares: if the residual `r = b - A x` satisfies `Aᵀ r = 0` then
-`‖b - A y‖² = ‖b - A x‖² + ‖A (x - y)‖²` for every `y`. Trefethen–Bau 1997, proof of Thm 11.1. -/
-theorem dotProduct_sub_mulVec_eq_add_of_transpose_mulVec_eq_zero {A : Matrix m n ℝ}
+private theorem dotProduct_sub_mulVec_eq_add_of_transpose_mulVec_eq_zero {A : Matrix m n ℝ}
     {b : m → ℝ} {x : n → ℝ} (h : Aᵀ *ᵥ (b - A *ᵥ x) = 0) (y : n → ℝ) :
     (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y) =
       (b - A *ᵥ x) ⬝ᵥ (b - A *ᵥ x) + (A *ᵥ (x - y)) ⬝ᵥ (A *ᵥ (x - y)) := by
@@ -66,6 +78,16 @@ theorem dotProduct_sub_mulVec_eq_add_of_transpose_mulVec_eq_zero {A : Matrix m n
     horth]
   ring
 
+/-- Pythagoras for least squares: if the residual `r = b - A x` satisfies `Aᵀ r = 0` then
+`‖b - A y‖² = ‖b - A x‖² + ‖A (x - y)‖²` for every `y`. Trefethen–Bau 1997, proof of Thm 11.1. -/
+theorem norm_sub_mulVec_sq_eq_add_of_transpose_mulVec_eq_zero {A : Matrix m n ℝ}
+    {b : m → ℝ} {x : n → ℝ} (h : Aᵀ *ᵥ (b - A *ᵥ x) = 0) (y : n → ℝ) :
+    ‖(WithLp.toLp 2 (b - A *ᵥ y) : EuclideanSpace ℝ m)‖ ^ 2 =
+      ‖(WithLp.toLp 2 (b - A *ᵥ x) : EuclideanSpace ℝ m)‖ ^ 2 +
+        ‖(WithLp.toLp 2 (A *ᵥ (x - y)) : EuclideanSpace ℝ m)‖ ^ 2 := by
+  simp only [norm_toLp_sq_eq_dotProduct_self]
+  exact dotProduct_sub_mulVec_eq_add_of_transpose_mulVec_eq_zero h y
+
 /-- **Normal equations.** `x` is a least-squares solution iff `Aᵀ A x = Aᵀ b`.
 Trefethen–Bau 1997, Lecture 11, Thm 11.1; Golub–Van Loan 2013, §5.3.1. Proof: `(⇐)` Pythagoras
 (`dotProduct_sub_mulVec_eq_add_of_transpose_mulVec_eq_zero`); `(⇒)` perturb `x` along
@@ -74,6 +96,7 @@ Trefethen–Bau 1997, Lecture 11, Thm 11.1; Golub–Van Loan 2013, §5.3.1. Proo
 atlas: least-squares-normal-equations -/
 theorem isLeastSquaresSolution_iff_transpose_mulVec_mulVec_eq (A : Matrix m n ℝ) (b : m → ℝ)
     (x : n → ℝ) : IsLeastSquaresSolution A b x ↔ Aᵀ *ᵥ (A *ᵥ x) = Aᵀ *ᵥ b := by
+  rw [isLeastSquaresSolution_iff_dotProduct]
   have hiff : Aᵀ *ᵥ (A *ᵥ x) = Aᵀ *ᵥ b ↔ Aᵀ *ᵥ (b - A *ᵥ x) = 0 := by
     rw [Matrix.mulVec_sub, sub_eq_zero, eq_comm]
   rw [hiff]
@@ -178,11 +201,7 @@ theorem IsLeastSquaresSolution.sub_mulVec_eq [DecidableEq m] {A : Matrix m n ℝ
     b - A *ᵥ x = (1 - A * moorePenroseInverse A) *ᵥ b := by
   rw [(isLeastSquaresSolution_iff_mulVec_eq A b x).mp h, Matrix.sub_mulVec, Matrix.one_mulVec]
 
-/-- **Residual identity.** For a least-squares solution, `‖b - A x‖² = ‖b‖² - ‖A x‖²`
-(Pythagoras, `b = A x + r` with `r ⟂ A x`). Trefethen–Bau 1997, Lecture 11; Golub–Van Loan
-2013, §5.3.
-atlas: least-squares-normal-equations (partial) -/
-theorem IsLeastSquaresSolution.dotProduct_sub_mulVec_eq {A : Matrix m n ℝ} {b : m → ℝ}
+private theorem IsLeastSquaresSolution.dotProduct_sub_mulVec_eq {A : Matrix m n ℝ} {b : m → ℝ}
     {x : n → ℝ} (h : IsLeastSquaresSolution A b x) :
     (b - A *ᵥ x) ⬝ᵥ (b - A *ᵥ x) = b ⬝ᵥ b - (A *ᵥ x) ⬝ᵥ (A *ᵥ x) := by
   have horth := (isLeastSquaresSolution_iff_forall_dotProduct_mulVec_eq_zero A b x).mp h x
@@ -190,6 +209,18 @@ theorem IsLeastSquaresSolution.dotProduct_sub_mulVec_eq {A : Matrix m n ℝ} {b 
   conv_rhs => rw [hb]
   rw [add_dotProduct, dotProduct_add, dotProduct_add, horth, dotProduct_comm (A *ᵥ x), horth]
   ring
+
+/-- **Residual identity.** For a least-squares solution, `‖b - A x‖² = ‖b‖² - ‖A x‖²`
+(Pythagoras, `b = A x + r` with `r ⟂ A x`). Trefethen–Bau 1997, Lecture 11; Golub–Van Loan
+2013, §5.3.
+atlas: least-squares-normal-equations (partial) -/
+theorem IsLeastSquaresSolution.norm_sub_mulVec_sq_eq {A : Matrix m n ℝ} {b : m → ℝ}
+    {x : n → ℝ} (h : IsLeastSquaresSolution A b x) :
+    ‖(WithLp.toLp 2 (b - A *ᵥ x) : EuclideanSpace ℝ m)‖ ^ 2 =
+      ‖(WithLp.toLp 2 b : EuclideanSpace ℝ m)‖ ^ 2 -
+        ‖(WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace ℝ m)‖ ^ 2 := by
+  simp only [norm_toLp_sq_eq_dotProduct_self]
+  exact h.dotProduct_sub_mulVec_eq
 
 omit [Fintype m] in
 /-- Full column rank as a kernel condition: `rank A = card n` iff `A v = 0 → v = 0`.
@@ -262,12 +293,15 @@ theorem isLeastSquaresSolution_iff_eq_pinvL_mulVec [DecidableEq n] {A : Matrix m
     moorePenroseInverse_eq_pinvL A (isUnit_transpose_mul_self_of_rank_eq hA)]
 
 /-- **Minimum-norm solution.** Among all least-squares solutions, `A⁺ b` has the smallest
-Euclidean norm: `‖A⁺ b‖² ≤ ‖x‖²`, since `x = A⁺ b + z` with `A z = 0` and `A⁺ b ⟂ ker A`.
+Euclidean norm: `‖A⁺ b‖ ≤ ‖x‖`, since `x = A⁺ b + z` with `A z = 0` and `A⁺ b ⟂ ker A`.
 Golub–Van Loan 2013, §5.5.2 (eq. (5.5.6)); Trefethen–Bau 1997, Exercise 11.2.
 atlas: least-squares-normal-equations (partial) -/
-theorem IsLeastSquaresSolution.dotProduct_self_moorePenroseInverse_mulVec_le
+theorem IsLeastSquaresSolution.norm_moorePenroseInverse_mulVec_le
     {A : Matrix m n ℝ} {b : m → ℝ} {x : n → ℝ} (h : IsLeastSquaresSolution A b x) :
-    (moorePenroseInverse A *ᵥ b) ⬝ᵥ (moorePenroseInverse A *ᵥ b) ≤ x ⬝ᵥ x := by
+    ‖(WithLp.toLp 2 (moorePenroseInverse A *ᵥ b) : EuclideanSpace ℝ n)‖ ≤
+      ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖ := by
+  rw [← pow_le_pow_iff_left₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero,
+    norm_toLp_sq_eq_dotProduct_self, norm_toLp_sq_eq_dotProduct_self]
   set A' := moorePenroseInverse A
   set x₀ := A' *ᵥ b
   set z := x - x₀ with hzdef
@@ -327,11 +361,14 @@ theorem isLeastSquaresSolution_iff_eq_inv_mulVec_of_eq_mul [DecidableEq n]
 residual satisfies `‖b - A x‖² = ‖b‖² - ‖Qᵀ b‖²`. Trefethen–Bau 1997, Lecture 11; Golub–Van Loan
 2013, §5.3.3 (eq. (5.3.6)).
 atlas: least-squares-normal-equations (partial) -/
-theorem IsLeastSquaresSolution.dotProduct_sub_mulVec_eq_of_eq_mul [DecidableEq n]
+theorem IsLeastSquaresSolution.norm_sub_mulVec_sq_eq_of_eq_mul [DecidableEq n]
     {A : Matrix m n ℝ} {Q : Matrix m n ℝ} {R : Matrix n n ℝ} (hQ : HasOrthonormalCols Q)
     (hA : A = Q * R) (hR : IsUnit R) {b : m → ℝ} {x : n → ℝ}
     (h : IsLeastSquaresSolution A b x) :
-    (b - A *ᵥ x) ⬝ᵥ (b - A *ᵥ x) = b ⬝ᵥ b - (Qᵀ *ᵥ b) ⬝ᵥ (Qᵀ *ᵥ b) := by
+    ‖(WithLp.toLp 2 (b - A *ᵥ x) : EuclideanSpace ℝ m)‖ ^ 2 =
+      ‖(WithLp.toLp 2 b : EuclideanSpace ℝ m)‖ ^ 2 -
+        ‖(WithLp.toLp 2 (Qᵀ *ᵥ b) : EuclideanSpace ℝ n)‖ ^ 2 := by
+  simp only [norm_toLp_sq_eq_dotProduct_self]
   have hd : IsUnit R.det := (Matrix.isUnit_iff_isUnit_det R).mp hR
   have hx := (isLeastSquaresSolution_iff_eq_inv_mulVec_of_eq_mul hQ hA hR b x).mp h
   have hAx : A *ᵥ x = Q *ᵥ (Qᵀ *ᵥ b) := by
@@ -354,11 +391,13 @@ theorem IsQR.isLeastSquaresSolution_iff {n : ℕ} {A Q : Matrix m (Fin n) ℝ}
 /-- **Residual via `IsQR`.** For `IsQR A Q R` with nonzero diagonal and a least-squares solution
 `x`, `‖b - A x‖² = ‖b‖² - ‖Qᵀ b‖²`. Trefethen–Bau 1997, Lecture 11; Golub–Van Loan 2013, §5.3.3.
 atlas: least-squares-normal-equations (partial) -/
-theorem IsQR.dotProduct_sub_mulVec_eq {n : ℕ} {A Q : Matrix m (Fin n) ℝ}
+theorem IsQR.norm_sub_mulVec_sq_eq {n : ℕ} {A Q : Matrix m (Fin n) ℝ}
     {R : Matrix (Fin n) (Fin n) ℝ} (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) {b : m → ℝ}
     {x : Fin n → ℝ} (hx : IsLeastSquaresSolution A b x) :
-    (b - A *ᵥ x) ⬝ᵥ (b - A *ᵥ x) = b ⬝ᵥ b - (Qᵀ *ᵥ b) ⬝ᵥ (Qᵀ *ᵥ b) :=
-  hx.dotProduct_sub_mulVec_eq_of_eq_mul h.orth h.eq
+    ‖(WithLp.toLp 2 (b - A *ᵥ x) : EuclideanSpace ℝ m)‖ ^ 2 =
+      ‖(WithLp.toLp 2 b : EuclideanSpace ℝ m)‖ ^ 2 -
+        ‖(WithLp.toLp 2 (Qᵀ *ᵥ b) : EuclideanSpace ℝ (Fin n))‖ ^ 2 :=
+  hx.norm_sub_mulVec_sq_eq_of_eq_mul h.orth h.eq
     ((Matrix.isUnit_iff_isUnit_det R).mpr (h.isUnit_det_iff.mpr hR))
 
 end NLAlib

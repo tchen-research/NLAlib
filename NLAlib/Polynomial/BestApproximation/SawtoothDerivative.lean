@@ -16,16 +16,16 @@ open Polynomial Polynomial.Chebyshev Finset Real
 namespace NLAlib
 
 /-- The derivative polynomial of the explicit odd trigonometric sawtooth interpolant.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 def sawtoothDerivativePolynomial (n : ℕ) : ℝ[X] :=
   X * sawtoothSineInterp n - (1 - X ^ 2) * (sawtoothSineInterp n).derivative
 
 /-- The polynomial controlling the negative sawtooth-error derivative.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 def sawtoothErrorDerivativePolynomial (n : ℕ) : ℝ[X] := 1 + sawtoothDerivativePolynomial n
 
 /-- The odd sawtooth approximant has its explicit derivative polynomial at every real angle.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 theorem hasDerivAt_sawtoothApprox (n : ℕ) (t : ℝ) :
     HasDerivAt (sawtoothApprox n) ((sawtoothDerivativePolynomial n).eval (cos t)) t := by
   have h := (hasDerivAt_sin t).mul
@@ -36,7 +36,7 @@ theorem hasDerivAt_sawtoothApprox (n : ℕ) (t : ℝ) :
   linear_combination (sawtoothSineInterp n).derivative.eval (cos t) * sin_sq_add_cos_sq t
 
 /-- The error `pi-t-τ_n(t)` has the negative of the nonzero polynomial derivative.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 theorem hasDerivAt_sawtoothError (n : ℕ) (t : ℝ) :
     HasDerivAt (fun t : ℝ => Real.pi - t - sawtoothApprox n t)
       (-(sawtoothErrorDerivativePolynomial n).eval (cos t)) t := by
@@ -47,7 +47,7 @@ theorem hasDerivAt_sawtoothError (n : ℕ) (t : ℝ) :
   ring
 
 /-- The derivative polynomial has degree at most the trigonometric cutoff.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 theorem degree_sawtoothDerivativePolynomial_le (n : ℕ) :
     (sawtoothDerivativePolynomial n).degree ≤ n := by
   apply degree_le_of_natDegree_le
@@ -72,7 +72,7 @@ theorem degree_sawtoothDerivativePolynomial_le (n : ℕ) :
       exact (natDegree_sub_le _ _).trans (max_le (by omega) (by omega))
 
 /-- The polynomial controlling error zeros has degree at most `n`.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 theorem degree_sawtoothErrorDerivativePolynomial_le (n : ℕ) :
     (sawtoothErrorDerivativePolynomial n).degree ≤ n := by
   unfold sawtoothErrorDerivativePolynomial
@@ -82,7 +82,7 @@ theorem degree_sawtoothErrorDerivativePolynomial_le (n : ℕ) :
 /-- The sawtooth-error derivative polynomial is nonzero: Rolle's theorem on the odd
 approximant itself provides a point where its derivative is zero, hence this polynomial
 takes value one. No mean or zero-count premise is assumed.
-Source: operator rederivations `rt:sawtooth`; helper for sharp `jackson-lipschitz`. -/
+Helper for `jackson-lipschitz`. -/
 theorem sawtoothErrorDerivativePolynomial_ne_zero (n : ℕ) :
     sawtoothErrorDerivativePolynomial n ≠ 0 := by
   have hc : Continuous (sawtoothApprox n) := continuous_iff_continuousAt.mpr

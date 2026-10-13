@@ -5,17 +5,18 @@ import Mathlib.Tactic.FieldSimp
 /-!
 # Full-column-rank least-squares geometry
 
-Actual Moore–Penrose solutions, their unique minimizing property, and
+ Moore–Penrose solutions, their unique minimizing property, and
 Neumann stability of full column rank. Higham, Theorem 20.1; Wedin §5.
 Supports atlas `least-squares-perturbation`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator InnerProductSpace RealInnerProductSpace
+open scoped Matrix InnerProductSpace RealInnerProductSpace
 namespace NLAlib
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
   [DecidableEq m] [DecidableEq n] [DecidableEq p]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- Rectangular Euclidean matrix action is bounded by the spectral norm.
 Mathlib's operator-norm inequality; supports least-squares perturbation. -/
@@ -23,6 +24,7 @@ theorem norm_toEuclideanLin_apply_le (A : Matrix m n ℝ) (x : EuclideanSpace �
     ‖A.toEuclideanLin x‖ ≤ specNorm A * ‖x‖ :=
   A.l2_opNorm_mulVec x
 
+open scoped Matrix.Norms.L2Operator in
 omit [Fintype m] [DecidableEq m] in
 /-- Euclidean action transports rectangular matrix multiplication.
 Mathlib's matrix action; supports least-squares perturbation. -/
@@ -33,6 +35,7 @@ theorem toEuclideanLin_mul_apply (A : Matrix m n ℝ) (B : Matrix n p ℝ)
   change (A*B)*ᵥx.ofLp = A*ᵥ(B*ᵥx.ofLp)
   rw [Matrix.mulVec_mulVec]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The identity matrix acts identically on Euclidean vectors.
 Mathlib's matrix action; supports least-squares perturbation. -/
 @[simp] theorem toEuclideanLin_one_apply (x : EuclideanSpace ℝ n) :
@@ -78,8 +81,9 @@ theorem moorePenroseInverse_eq_left_inverse_mul_projector
     moorePenroseInverse A = L*(A*moorePenroseInverse A) := by
   rw [← Matrix.mul_assoc, hL, Matrix.one_mul]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Neumann perturbations of full-column-rank matrices retain full column rank.
-Higham, Theorem 20.1; the proof constructs a genuine left inverse. -/
+Higham, Theorem 20.1; the proof constructs a left inverse. -/
 theorem rank_add_eq_card_of_pinv_mul_specNorm_lt_one {A E : Matrix m n ℝ}
     (hA : A.rank = Fintype.card n)
     (hE : specNorm (moorePenroseInverse A)*specNorm E < 1) :
@@ -94,6 +98,7 @@ theorem rank_add_eq_card_of_pinv_mul_specNorm_lt_one {A E : Matrix m n ℝ}
     moorePenroseInverse_mul_eq_one_of_rank_eq_card hA,
     Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det _).mp hU)]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The perturbed Moore–Penrose norm has the same denominator as the
 Neumann left inverse. Higham, Theorem 20.1. -/
 theorem specNorm_pinv_add_le_of_rank_eq_card {A E : Matrix m n ℝ}
@@ -128,6 +133,7 @@ theorem specNorm_pinv_add_le_of_rank_eq_card {A E : Matrix m n ℝ}
       exact mul_le_mul_of_nonneg_left (sub_le_sub_left (specNorm_mul_le _ _) 1)
         (specNorm_nonneg _)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Transposition is the adjoint of real Euclidean matrix action.
 Mathlib's adjoint transport; supports least-squares perturbation. -/
 theorem inner_toEuclideanLin_eq_inner_transpose (A : Matrix m n ℝ)
@@ -139,7 +145,8 @@ theorem inner_toEuclideanLin_eq_inner_transpose (A : Matrix m n ℝ)
       Matrix.toEuclideanLin_conjTranspose_eq_adjoint A
   rw [h, LinearMap.adjoint_inner_right]
 
-/-- The actual Moore–Penrose residual satisfies the normal equation at every
+open scoped Matrix.Norms.L2Operator in
+/-- The Moore–Penrose residual satisfies the normal equation at every
 rank. Higham, Theorem 20.1; supports least-squares perturbation. -/
 theorem transpose_apply_pinv_residual_eq_zero (A : Matrix m n ℝ)
     (b : EuclideanSpace ℝ m) :
@@ -150,6 +157,7 @@ theorem transpose_apply_pinv_residual_eq_zero (A : Matrix m n ℝ)
   simpa only [toEuclideanLin_mul_apply, map_sub, LinearMap.sub_apply,
     toEuclideanLin_one_apply, map_zero, LinearMap.zero_apply] using hv
 
+open scoped Matrix.Norms.L2Operator in
 /-- Pythagoras splits every least-squares objective into its Moore–Penrose
 minimum and the squared fitted error. Higham, Theorem 20.1. -/
 theorem norm_pinv_residual_sq_add_eq (A : Matrix m n ℝ)
@@ -170,6 +178,7 @@ theorem norm_pinv_residual_sq_add_eq (A : Matrix m n ℝ)
   have h := norm_sub_sq_eq_norm_sq_add_norm_sq_real hi
   simpa only [pow_two] using h
 
+open scoped Matrix.Norms.L2Operator in
 /-- Full-column-rank Moore–Penrose solutions are unique least-squares
 minimizers. Higham, Theorem 20.1; arbitrary finite indices. -/
 theorem pinv_least_squares_unique {A : Matrix m n ℝ}

@@ -81,7 +81,7 @@ has isotropic second moments, `𝔼[Z_ik Z_jk] = δ_ij`, then `𝔼[tr_m(A)] = t
 No independence is needed. Source: Hutchinson (1989) [`hutch89`]; Avron–Toledo (2011) [`at11`],
 §2. Atlas: `hutchinson-unbiased`. -/
 theorem integral_hutchinsonEstimate_eq_trace [DecidableEq n] [Nonempty κ] (A : Matrix n n ℝ)
-    {Z : Ω → n → κ → ℝ} (hmeas : ∀ i k, AEMeasurable (fun ω => Z ω i k) μ)
+    {Z : Ω → Matrix n κ ℝ} (hmeas : ∀ i k, AEMeasurable (fun ω => Z ω i k) μ)
     (hsecond : ∀ k i j, ∫ ω, Z ω i k * Z ω j k ∂μ = if i = j then 1 else 0) :
     ∫ ω, hutchinsonEstimate A (Z ω) ∂μ = A.trace := by
   have hm : (Fintype.card κ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -97,7 +97,7 @@ theorem integral_hutchinsonEstimate_eq_trace [DecidableEq n] [Nonempty κ] (A : 
 Alg. 1. Atlas: `hutchpp`, `hutchpp-unbiased`. Deviation: `Q` is any matrix (the algorithm uses
 an orthonormal basis of `A S`).
 atlas: trace-estimators-def -/
-def hutchPlusPlusEstimate (A : Matrix n n ℝ) (Q : Matrix n r ℝ) (Z : n → κ → ℝ) : ℝ :=
+def hutchPlusPlusEstimate (A : Matrix n n ℝ) (Q : Matrix n r ℝ) (Z : Matrix n κ ℝ) : ℝ :=
   (Qᵀ * A * Q).trace + hutchinsonEstimate ((1 - Q * Qᵀ) * A * (1 - Q * Qᵀ)) Z
 
 omit [DecidableEq κ] in
@@ -108,7 +108,7 @@ Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], proof of Thm 1 (unbiasedness
 atlas: hutchpp-unbiased -/
 theorem integral_hutchPlusPlusEstimate_eq_trace [Nonempty κ] [IsProbabilityMeasure μ]
     (A : Matrix n n ℝ) {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q)
-    {Z : Ω → n → κ → ℝ} (hmeas : ∀ i k, AEMeasurable (fun ω => Z ω i k) μ)
+    {Z : Ω → Matrix n κ ℝ} (hmeas : ∀ i k, AEMeasurable (fun ω => Z ω i k) μ)
     (hsecond : ∀ k i j, ∫ ω, Z ω i k * Z ω j k ∂μ = if i = j then 1 else 0) :
     ∫ ω, hutchPlusPlusEstimate A Q (Z ω) ∂μ = A.trace := by
   have hk := fun k => integrable_and_integral_quadForm_eq_trace_of_second_moments
@@ -161,13 +161,13 @@ atlas: hutchpp-unbiased -/
 theorem integral_hutchPlusPlusEstimate_comp_eq_trace [Nonempty κ] {α : Type*}
     [MeasurableSpace α] (A : Matrix n n ℝ) {r : Type*} [Fintype r] [DecidableEq r]
     {Q : α → Matrix n r ℝ} (hQ : ∀ s, HasOrthonormalCols (Q s)) {S : Ω → α}
-    {G : Ω → n → κ → ℝ} (hS : AEMeasurable S μ) (hG : AEMeasurable G μ) (hSG : IndepFun S G μ)
+    {G : Ω → Matrix n κ ℝ} (hS : AEMeasurable S μ) (hG : AEMeasurable G μ) (hSG : IndepFun S G μ)
     (hsecond : ∀ k i j, ∫ ω, G ω i k * G ω j k ∂μ = if i = j then 1 else 0)
-    (hint : Integrable (fun p : α × (n → κ → ℝ) => hutchPlusPlusEstimate A (Q p.1) p.2)
+    (hint : Integrable (fun p : α × Matrix n κ ℝ => hutchPlusPlusEstimate A (Q p.1) p.2)
       ((μ.map S).prod (μ.map G))) :
     ∫ ω, hutchPlusPlusEstimate A (Q (S ω)) (G ω) ∂μ = A.trace := by
   have hmeas : ∀ i k, AEMeasurable (fun ω => G ω i k) μ := fun i k =>
-    (measurable_pi_apply k).comp_aemeasurable ((measurable_pi_apply i).comp_aemeasurable hG)
+    (Matrix.measurable_entry i k).comp_aemeasurable hG
   exact integral_comp_of_indepFun_of_forall_integral_eq (g := fun s Z =>
     hutchPlusPlusEstimate A (Q s) Z) hS hG hSG hint
     (fun s => integral_hutchPlusPlusEstimate_eq_trace A (hQ s) hmeas hsecond)
@@ -177,7 +177,7 @@ theorem integral_hutchPlusPlusEstimate_comp_eq_trace [Nonempty κ] {α : Type*}
 vectors. Source: Epperly–Tropp–Webber (2024) [`etw24`], eq. (1.6) (basic form, before the
 normalisation refinements of §2). Atlas: `xtrace-unbiased`. -/
 def xtraceEstimate (A : Matrix n n ℝ) {r : Type*} [Fintype r] (Q : κ → Matrix n r ℝ)
-    (W : n → κ → ℝ) : ℝ :=
+    (W : Matrix n κ ℝ) : ℝ :=
   (∑ i, (((Q i)ᵀ * A * Q i).trace +
     quadForm ((1 - Q i * (Q i)ᵀ) * A * (1 - Q i * (Q i)ᵀ)) (fun j => W j i))) / Fintype.card κ
 
@@ -193,7 +193,7 @@ atlas: xtrace-unbiased (partial) -/
 theorem integral_xtraceEstimate_eq_trace [Nonempty κ] (A : Matrix n n ℝ) {r : Type*}
     [Fintype r] [DecidableEq r] {α : κ → Type*} [∀ i, MeasurableSpace (α i)]
     {Qf : ∀ i, α i → Matrix n r ℝ} (hQ : ∀ i s, HasOrthonormalCols (Qf i s))
-    {S : ∀ i, Ω → α i} {W : Ω → n → κ → ℝ} (hS : ∀ i, AEMeasurable (S i) μ)
+    {S : ∀ i, Ω → α i} {W : Ω → Matrix n κ ℝ} (hS : ∀ i, AEMeasurable (S i) μ)
     (hW : ∀ i, AEMeasurable (fun ω j => W ω j i) μ)
     (hind : ∀ i, IndepFun (S i) (fun ω j => W ω j i) μ)
     (hsecond : ∀ i j j', ∫ ω, W ω j i * W ω j' i ∂μ = if j = j' then 1 else 0)

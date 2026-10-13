@@ -7,7 +7,7 @@ import Mathlib.Tactic
 The derivative of the characteristic polynomial depends continuously on
 the affine pencil parameter and evaluation point. Its nonvanishing makes
 every nearby continuous eigenvalue branch algebraically simple.
-Source: Horn--Johnson (2013), Theorem 6.3.12; derivations Section gen:simple.
+Source: Horn--Johnson (2013), Theorem 6.3.12; derivations Section.
 -/
 
 noncomputable section
@@ -38,7 +38,7 @@ theorem rootMultiplicity_eq_one_iff_isRoot_and_derivative_ne_zero
 /-- Evaluating the characteristic-polynomial derivative of an affine
 complex pencil is jointly continuous in the parameter and root coordinate.
 This uses the fixed bivariate characteristic polynomial, including the
-constant characteristic polynomial in dimension zero. Source:
+constant characteristic polynomial in dimension zero.
 Horn--Johnson (2013), Theorem 6.3.12; simple-root persistence helper. -/
 theorem continuous_eval_derivative_charpoly_affine
     {n : Type*} [Fintype n] [DecidableEq n] (A E : Matrix n n ℂ) :
@@ -67,7 +67,7 @@ eigenvalue of an affine pencil stays algebraically simple near its base
 point. The parameter space is arbitrary, so both complex and real branches
 are covered. There is no nonempty-dimension assumption; the simplicity
 hypothesis is impossible for the empty matrix. Source: Horn--Johnson
-(2013), Theorem 6.3.12; derivations gen:simple.
+(2013), Theorem 6.3.12.
 atlas: simple-eigenvalue-perturbation (partial)
 -/
 theorem eventually_rootMultiplicity_eq_one_of_continuous_eigenvalue

@@ -71,7 +71,7 @@ theorem exists_diagonal_similarity_small_upper_entries
       _ < ε := hMδ
 
 /-- Any real or complex triangularizing similarity can be refined to make
-its strict upper entries arbitrarily small over the same field. Source:
+its strict upper entries arbitrarily small over the same field.
 Horn–Johnson (2013), §2.3; this supplies the real small-entry clause whenever
 a real triangular form exists. -/
 theorem exists_similarity_small_entries_of_triangular_similarity
@@ -99,7 +99,7 @@ theorem exists_similarity_small_entries_of_triangular_similarity
 strictly upper entries are smaller than any prescribed positive epsilon.
 Source: Horn–Johnson (2013), §2.3; arbitrary finite labels are ordered by
 the supplied enumeration, and zero-dimensional matrices are included.
-atlas: schur-triangularization (partial) -/
+atlas: schur-triangularization -/
 theorem exists_similarity_upper_triangular_small_entries
     {n : Type*} [Fintype n] [DecidableEq n] (A : Matrix n n ℂ)
     (e : Fin (Fintype.card n) ≃ n) {ε : ℝ} (hε : 0 < ε) :

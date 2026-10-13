@@ -136,7 +136,7 @@ theorem finrank_le_card_eigenvalues₀_pos {A : Matrix n n ℝ} (hA : A.IsHermit
   simpa only [Fintype.card_fin, Fintype.card_subtype] using Fintype.card_le_of_injective f hf
 
 /-- Negation, strict subspace testing, and nonnegative/positive eigenvalue
-counts hold for the actual sorted spectral list. Horn--Johnson (2013),
+counts hold for the sorted spectral list. Horn--Johnson (2013),
 Observation 4.2.5, Theorem 4.2.10, Corollary 4.2.12.
 atlas: eigenvalue-order-and-counting -/
 theorem eigenvalue_order_and_counting {A : Matrix n n ℝ} (hA : A.IsHermitian) :

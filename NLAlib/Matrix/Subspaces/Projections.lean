@@ -10,9 +10,9 @@ Stated over `{𝕜 : Type*} [RCLike 𝕜]` with `conjTranspose` (RCLike round, d
 
 * `NLAlib.HasOrthonormalCols Q`: `Qᴴ Q = I` (at `ℝ`: `Qᵀ Q = I`).
 * `NLAlib.projResidual Q A = A − Q (Qᴴ A) = (I − QQᴴ) A`, the part of `A` outside `range Q`.
-* `NLAlib.IsBestRankApprox k C Y`: `Y` has rank `≤ k` and minimises the Frobenius distance to
-  `C` among rank-`≤ k` matrices. Until Eckart–Young is proved (atlas `eckart-young`) this
-  optimality property is how `⟦C⟧ₖ` enters statements.
+* `NLAlib.IsBestFrobRankApprox A k Y`: `Y` has rank `≤ k` and minimises the Frobenius distance
+  to `A` among rank-`≤ k` matrices (the Frobenius-norm optimality property of `⟦A⟧ₖ`; the
+  truncated SVD attains it, `Matrix/Spectral/EckartYoung.lean`).
 
 ## Contents
 
@@ -24,33 +24,28 @@ Stated over `{𝕜 : Type*} [RCLike 𝕜]` with `conjTranspose` (RCLike round, d
   monotonicity of the residual under range inclusion (HMT 2011, Prop. 8.5, Frobenius case).
 * Range-finder fact: `range(AΩ) ⊆ range(Q)` (written `Q (Qᴴ (A Ω)) = A Ω`) gives
   `(I − QQᴴ) A Ω = 0`.
-* Orthogonal completions: a matrix with orthonormal columns has at most as many columns as
-  rows (`card_le_card_of_hasOrthonormalCols`) and extends to a unitary matrix
-  (`exists_unitary_completion`) or, with the complementary block, to `QQᴴ + Q⊥Q⊥ᴴ = I`
-  (`exists_unitary_complement`); for such a completion `QᴴQ⊥ = 0` and
-  `(I − QQᴴ)A = Q⊥Q⊥ᴴ(I − QQᴴ)A`.
+* Unitary completions: a matrix with orthonormal columns has at most as many columns as
+  rows (`card_le_card_of_hasOrthonormalCols`) and extends to a unitary matrix on any finite
+  row type (`exists_unitary_completion`) or, with the complementary block, to
+  `QQᴴ + Q⊥Q⊥ᴴ = I` (`exists_unitary_complement`, `Q⊥` with `card m − card q` columns); for
+  such a completion `QᴴQ⊥ = 0` and `(I − QQᴴ)A = Q⊥Q⊥ᴴ(I − QQᴴ)A`.
 * Vectors and compressions: `QQᴴx = x` on `range Q`, `‖Qᴴx‖² ≤ ‖x‖²` (equality on `range Q`),
-  `Q'Q'ᴴQ = Q` under range inclusion, `QQᴴ = Q'Q'ᴴ` for equal ranges, and symmetry of the
-  compression `QᵀAQ` of a symmetric `A` (`isSymm_transpose_mul_mul`; the Hermitian form is
-  Mathlib's `Matrix.isHermitian_conjTranspose_mul_mul`).
+  `Q'Q'ᴴQ = Q` under range inclusion, `QQᴴ = Q'Q'ᴴ` for equal ranges. (The compression `QᴴAQ`
+  of a Hermitian `A` is Hermitian: Mathlib's `Matrix.isHermitian_conjTranspose_mul_mul`.)
 
 ## Real statements
 
-Every statement is written with `ᴴ` and `star` (F1, transpose twins removed). Over `ℝ` the
-`@[simp]` lemmas `Matrix.conjTranspose_eq_transpose_of_trivial` and `star_trivial` turn them into
-the `ᵀ` / plain dot-product forms; e.g.
-`rw [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial]` unfolds a real projResidual, and
-`rw [← Matrix.conjTranspose_eq_transpose_of_trivial, hQ.conjTranspose_mul_self]` rewrites
-`Qᵀ * Q` to `1`. The pre-F1 real names that leaf files still use in term position are deprecated
-aliases (`docs/renames/2026-10-F1.json`).
+Every statement is written with `ᴴ` and `star`. Over `ℝ` the `@[simp]` lemmas
+`Matrix.conjTranspose_eq_transpose_of_trivial` and `star_trivial` turn them into the `ᵀ` /
+plain dot-product forms; e.g. `rw [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial]`
+unfolds a real projResidual, and `rw [← Matrix.conjTranspose_eq_transpose_of_trivial,
+hQ.conjTranspose_mul_self]` rewrites `Qᵀ * Q` to `1`.
 
 The canonical orthonormal basis matrix `orthonormalBasisMatrix S` of a subspace is in
-`Matrix/Subspaces/OrthonormalBasisMatrix.lean`.
+`Matrix/Subspaces/OrthonormalBasisMatrix.lean`; the projector onto the range of an arbitrary
+matrix is `rangeProjector` (`Matrix/Subspaces/RangeProjector.lean`).
 
-Proofs ported from the LRA project (`LRA/Basic.lean`, `LRA/Deterministic/RangeFinder.lean`,
-Chen–Persson formalization), namespace renamed and statements generalised from `Fin` to
-arbitrary `Fintype` index types.
-
+Sources: Golub–Van Loan 2013, §2.4 and §5.4; Stewart–Sun 1990, §I.5; HMT 2011, §8.4 and §9.
 Atlas: `projection-facts`, `eckart-young`, `orthonormal-completion`.
 -/
 
@@ -64,15 +59,17 @@ variable {𝕜 : Type*} [RCLike 𝕜] {m n q : Type*} [Fintype m] [Fintype n] [F
 
 /-! ### Definitions -/
 
-/-- `Y` is a best rank-`k` Frobenius approximation of `C`.
+/-- `Y` is a **best rank-`k` approximation of `A` in the Frobenius norm**: `rank Y ≤ k` and
+`‖A − Y‖_F ≤ ‖A − Z‖_F` for every `Z` of rank at most `k`. Golub–Van Loan 2013, Thm 2.4.8
+(Eckart–Young); HMT 2011, §2.1.
 atlas: best-rank-approx-def -/
-def IsBestRankApprox (k : ℕ) (C Y : Matrix m n 𝕜) : Prop :=
-  Y.rank ≤ k ∧ ∀ Z : Matrix m n 𝕜, Z.rank ≤ k → frobSq (C - Y) ≤ frobSq (C - Z)
+def IsBestFrobRankApprox (A : Matrix m n 𝕜) (k : ℕ) (Y : Matrix m n 𝕜) : Prop :=
+  Y.rank ≤ k ∧ ∀ Z : Matrix m n 𝕜, Z.rank ≤ k → frobSq (A - Y) ≤ frobSq (A - Z)
 
 /-! ### Isometry -/
 
-/-- If `U` has orthonormal columns (`Uᴴ U = 1`) then `‖Ux‖² = ‖x‖²`, written with dot products.
-Helper for `ose-def`; atlas `projection-facts`. -/
+/-- If `U` has orthonormal columns then `‖Ux‖² = ‖x‖²`, written with dot products.
+Golub–Van Loan 2013, §2.4; atlas `projection-facts`. -/
 theorem star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols [DecidableEq q]
     {U : Matrix m q 𝕜} (hU : HasOrthonormalCols U) (x : q → 𝕜) :
     star (U *ᵥ x) ⬝ᵥ (U *ᵥ x) = star x ⬝ᵥ x := by
@@ -218,8 +215,8 @@ theorem frobSq_proj_le [DecidableEq q] {Q : Matrix m q 𝕜} (hQ : HasOrthonorma
 /-! ### Best approximation in a range and monotonicity -/
 
 /-- Pythagoras in `range Q`: for every `B`,
-`‖A − QB‖_F² = ‖(I − QQᴴ)A‖_F² + ‖QᴴA − B‖_F²` (proof of HMT 2011, Thm 9.1; LRA
-`pythagoras_range`). Atlas `projection-facts`.
+`‖A − QB‖_F² = ‖(I − QQᴴ)A‖_F² + ‖QᴴA − B‖_F²` (proof of HMT 2011, Thm 9.1).
+Atlas `projection-facts`.
 atlas: projection-facts -/
 theorem frobSq_sub_mul_eq [DecidableEq q]
     {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) (B : Matrix q n 𝕜) :
@@ -253,12 +250,11 @@ theorem frobSq_residual_le_of_eq_mul [DecidableEq q] {q₁ : Type*} [Fintype q�
   exact frobSq_residual_le_frobSq_sub_mul hQ₂ A _
 
 /-- `Q ⟦QᴴA⟧ₖ` is a best rank-`k` Frobenius approximation of `A` among matrices `QB` with
-`rank B ≤ k` (HMT 2011, proof of Thm 9.1; LRA `best_in_range`). Over `ℝ` the hypothesis may be
-given as `IsBestRankApprox k (Qᵀ * A) Y`. Atlas `projection-facts`.
+`rank B ≤ k` (HMT 2011, proof of Thm 9.1). Atlas `projection-facts`.
 atlas: projection-facts -/
-theorem frobSq_sub_mul_le_of_isBestRankApprox [DecidableEq q] {k : ℕ} {Q : Matrix m q 𝕜}
+theorem frobSq_sub_mul_le_of_isBestFrobRankApprox [DecidableEq q] {k : ℕ} {Q : Matrix m q 𝕜}
     (hQ : HasOrthonormalCols Q) {A : Matrix m n 𝕜} {Y : Matrix q n 𝕜}
-    (hY : IsBestRankApprox k (Qᴴ * A) Y) (B : Matrix q n 𝕜) (hB : B.rank ≤ k) :
+    (hY : IsBestFrobRankApprox (Qᴴ * A) k Y) (B : Matrix q n 𝕜) (hB : B.rank ≤ k) :
     frobSq (A - Q * Y) ≤ frobSq (A - Q * B) := by
   rw [frobSq_sub_mul_eq hQ A Y,
     frobSq_sub_mul_eq hQ A B]
@@ -281,21 +277,20 @@ theorem gram_conjTranspose_mul_eq (P : Matrix m n 𝕜) (Q : Matrix m q 𝕜) :
   rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.conjTranspose_mul,
     Matrix.conjTranspose_conjTranspose]
 
-/-- If `QᴴQ = I`, `QpᴴQp = I` and `QQᴴ + QpQpᴴ = I`, then `QᴴQp = 0`.
-Atlas `orthonormal-completion`. -/
+/-- If `Q`, `Qp` have orthonormal columns and `QQᴴ + QpQpᴴ = I`, then `QᴴQp = 0`.
+Golub–Van Loan 2013, §2.4; atlas `orthonormal-completion`. -/
 theorem conjTranspose_mul_eq_zero_of_completion [DecidableEq m] [DecidableEq n] [DecidableEq q]
-    {Q : Matrix m q 𝕜} {Qp : Matrix m n 𝕜} (hQ : Qᴴ * Q = 1) (hQp : Qpᴴ * Qp = 1)
-    (hcomp : Q * Qᴴ + Qp * Qpᴴ = 1) : Qᴴ * Qp = 0 := by
+    {Q : Matrix m q 𝕜} {Qp : Matrix m n 𝕜} (hQ : HasOrthonormalCols Q)
+    (hQp : HasOrthonormalCols Qp) (hcomp : Q * Qᴴ + Qp * Qpᴴ = 1) : Qᴴ * Qp = 0 := by
   have h := congrArg (fun M => Qᴴ * M * Qp) hcomp
   simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_one] at h
-  rw [← Matrix.mul_assoc, hQ, Matrix.one_mul, Matrix.mul_assoc, Matrix.mul_assoc, hQp,
-    Matrix.mul_one] at h
+  rw [← Matrix.mul_assoc, hQ.conjTranspose_mul_self, Matrix.one_mul, Matrix.mul_assoc,
+    Matrix.mul_assoc, hQp.conjTranspose_mul_self, Matrix.mul_one] at h
   simpa using h
 
 omit [Fintype n] in
 /-- For a completion `QQᴴ + QpQpᴴ = I` of `Q`, the residual lies in `range Qp`:
-`(I − QQᴴ)A = Qp (Qpᴴ (I − QQᴴ)A)` (Chen–Persson, proof of `lem:completion`, item 1).
-Atlas `projection-facts`. -/
+`(I − QQᴴ)A = Qp (Qpᴴ (I − QQᴴ)A)`. Golub–Van Loan 2013, §2.4; atlas `projection-facts`. -/
 theorem residual_eq_mul_conjTranspose_mul_residual [DecidableEq m] [DecidableEq q] {r : Type*}
     [Fintype r] {Q : Matrix m q 𝕜} {Qp : Matrix m r 𝕜} (hQ : HasOrthonormalCols Q)
     (hcomp : Q * Qᴴ + Qp * Qpᴴ = 1) (A : Matrix m n 𝕜) :
@@ -307,15 +302,14 @@ theorem residual_eq_mul_conjTranspose_mul_residual [DecidableEq m] [DecidableEq 
   exact h.symm
 
 /-- Columns of a matrix as vectors of Euclidean space. -/
-private def col {k : ℕ} {ι : Type*} (V : Matrix (Fin k) ι 𝕜) (j : ι) :
-    EuclideanSpace 𝕜 (Fin k) :=
+private def col {ι : Type*} (V : Matrix m ι 𝕜) (j : ι) : EuclideanSpace 𝕜 m :=
   WithLp.toLp 2 (fun i => V i j)
 
-private lemma col_orthonormal {k : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (V : Matrix (Fin k) ι 𝕜) (hV : Vᴴ * V = 1) : Orthonormal 𝕜 (col V) := by
+private lemma col_orthonormal {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : Matrix m ι 𝕜) (hV : HasOrthonormalCols V) : Orthonormal 𝕜 (col V) := by
   rw [orthonormal_iff_ite]
   intro a b
-  have := congrFun (congrFun hV a) b
+  have := congrFun (congrFun hV.conjTranspose_mul_self a) b
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply] at this
   simp only [col, PiLp.inner_apply, RCLike.inner_apply]
   rw [← this]
@@ -334,16 +328,16 @@ theorem card_le_card_of_hasOrthonormalCols {r : Type*} [Fintype r] [DecidableEq 
   simpa [Module.finrank_fintype_fun_eq_card] using
     LinearMap.finrank_le_finrank_of_injective hinj
 
-/-- **Unitary completion.** A matrix `V` with orthonormal columns indexed by `ι` (`VᴴV = I`),
-placed in the columns `e '' ι` of `Fin k`, extends to a unitary `k × k` matrix `W`
-(`WᴴW = I`). Helper for HMT 2011 §10.2. Ported from the Prove2me workspace (Gaussian Random
-Matrices series). Atlas `orthonormal-completion`.
+/-- **Unitary completion.** A matrix `V` with orthonormal columns indexed by `ι`, placed in
+the columns `e '' ι` of the finite row type `m`, extends to a unitary `m × m` matrix `W`
+(`WᴴW = I`). Golub–Van Loan 2013, §2.4 (completion of an orthonormal set); HMT 2011, §10.2.
+Atlas `orthonormal-completion`.
 atlas: orthonormal-completion -/
-theorem exists_unitary_completion {k : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (V : Matrix (Fin k) ι 𝕜) (hV : Vᴴ * V = 1) (e : ι ↪ Fin k) :
-    ∃ W : Matrix (Fin k) (Fin k) 𝕜, Wᴴ * W = 1 ∧ ∀ i j, W i (e j) = V i j := by
+theorem exists_unitary_completion [DecidableEq m] {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : Matrix m ι 𝕜) (hV : HasOrthonormalCols V) (e : ι ↪ m) :
+    ∃ W : Matrix m m 𝕜, HasOrthonormalCols W ∧ ∀ i j, W i (e j) = V i j := by
   classical
-  let v : Fin k → EuclideanSpace 𝕜 (Fin k) := Function.extend e (col V) 0
+  let v : m → EuclideanSpace 𝕜 m := Function.extend e (col V) 0
   have hv : Orthonormal 𝕜 ((Set.range e).domRestrict v) := by
     have h1 : (Set.range e).domRestrict v =
         col V ∘ (Equiv.ofInjective e e.injective).symm := by
@@ -369,32 +363,43 @@ theorem exists_unitary_completion {k : ℕ} {ι : Type*} [Fintype ι] [Decidable
     rw [hb (e j) ⟨j, rfl⟩]
     simp only [v, e.injective.extend_apply, col]
 
-/-- **Unitary complement.** A matrix `Q` with orthonormal columns has a complement `Qp` with
-orthonormal columns and `QQᴴ + QpQpᴴ = I` (here `Qp` has `k − q` columns). From
-`exists_unitary_completion`. Atlas `orthonormal-completion`.
+/-- **Unitary complement.** A matrix `Q : m × q` with orthonormal columns has a complement
+`Qp` with `card m − card q` orthonormal columns and `QQᴴ + QpQpᴴ = I`. From
+`exists_unitary_completion`. Golub–Van Loan 2013, §2.4; atlas `orthonormal-completion`.
 atlas: orthonormal-completion -/
-theorem exists_unitary_complement {k q : ℕ} (Q : Matrix (Fin k) (Fin q) 𝕜)
+theorem exists_unitary_complement [DecidableEq m] [DecidableEq q] (Q : Matrix m q 𝕜)
     (hQ : HasOrthonormalCols Q) :
-    ∃ r : ℕ, ∃ Qp : Matrix (Fin k) (Fin r) 𝕜,
+    ∃ Qp : Matrix m (Fin (Fintype.card m - Fintype.card q)) 𝕜,
       HasOrthonormalCols Qp ∧ Q * Qᴴ + Qp * Qpᴴ = 1 := by
-  have hqk : q ≤ k := by simpa using card_le_card_of_hasOrthonormalCols hQ
-  obtain ⟨r, rfl⟩ : ∃ r, k = q + r := ⟨k - q, by omega⟩
-  obtain ⟨W, hW, hWQ⟩ := exists_unitary_completion Q hQ (Fin.castAddEmb r)
-  have hWW : W * Wᴴ = 1 := mul_eq_one_comm.mp hW
-  refine ⟨r, Matrix.of fun i j => W i (Fin.natAdd q j), ?_, ?_⟩
+  classical
+  obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le (card_le_card_of_hasOrthonormalCols hQ)
+  obtain ⟨W, hW, hWQ⟩ := exists_unitary_completion Q hQ e
+  have hWW : W * Wᴴ = 1 := mul_eq_one_comm.mp hW.conjTranspose_mul_self
+  let s : Finset m := (Finset.univ.map e)ᶜ
+  have hs : s.card = Fintype.card m - Fintype.card q := by
+    simp [s, Finset.card_compl, Finset.card_map]
+  let g : Fin (Fintype.card m - Fintype.card q) → m :=
+    fun j => (s.equivFin.symm (Fin.cast hs.symm j)).1
+  have hg : Function.Injective g := fun a b h => by
+    have := s.equivFin.symm.injective (Subtype.ext h)
+    simpa [Fin.ext_iff] using congrArg Fin.val this
+  have hgs : ∀ j, g j ∈ s := fun j => (s.equivFin.symm _).2
+  have hsum (F : m → 𝕜) : ∑ j, F (g j) = ∑ a ∈ s, F a := by
+    rw [← Finset.sum_coe_sort s]
+    exact (Fintype.sum_equiv ((finCongr hs.symm).trans s.equivFin.symm) _ _ fun j => rfl)
+  refine ⟨Matrix.of fun i j => W i (g j), ?_, ?_⟩
   · ext a b
-    have := congrFun (congrFun hW (Fin.natAdd q a)) (Fin.natAdd q b)
-    simpa [HasOrthonormalCols, Matrix.mul_apply, Matrix.one_apply, Fin.natAdd_inj] using this
+    have := congrFun (congrFun hW.conjTranspose_mul_self (g a)) (g b)
+    simpa [HasOrthonormalCols, Matrix.mul_apply, Matrix.one_apply, hg.eq_iff] using this
   · ext a b
     have := congrFun (congrFun hWW a) b
-    rw [Matrix.mul_apply, Fin.sum_univ_add] at this
+    rw [Matrix.mul_apply, ← Finset.sum_add_sum_compl (Finset.univ.map e), Finset.sum_map] at this
     simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.of_apply]
-    rw [← this]
+    rw [← this, hsum (fun c => W a c * star (W b c))]
     congr 1
     refine Finset.sum_congr rfl fun j _ => ?_
-    simp only [Matrix.conjTranspose_apply]
+    simp only [Function.Embedding.coeFn_mk, Matrix.conjTranspose_apply]
     rw [← hWQ a j, ← hWQ b j]
-    rfl
 
 /-! ### Projected matrices and vectors in a range -/
 
@@ -408,14 +413,6 @@ theorem mulVec_conjTranspose_mulVec_of_mem_range [Fintype m] [DecidableEq q]
   have h : Qᴴ *ᵥ (Q *ᵥ y) = y := by
     rw [Matrix.mulVec_mulVec, hQ.conjTranspose_mul_self, Matrix.one_mulVec]
   simp only [Matrix.mulVecLin_apply, h]
-
-omit [Fintype q] in
-/-- The compression `Qᵀ A Q` of a symmetric `A` is symmetric (any `Q`).
-Atlas `projection-facts` (moved from `NLAlib.Krylov.Quadrature.GaussQuadrature`). -/
-theorem isSymm_transpose_mul_mul {A : Matrix m m 𝕜} (hA : A.IsSymm) (Q : Matrix m q 𝕜) :
-    (Qᵀ * A * Q).IsSymm := by
-  rw [Matrix.IsSymm, Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose,
-    hA.eq, Matrix.mul_assoc]
 
 /-- `Qᴴ` is a contraction for `Q` with orthonormal columns: `‖Qᴴ x‖² ≤ ‖x‖²` (Bessel), written
 with explicit sums. Atlas `projection-facts`. -/

@@ -20,12 +20,12 @@ variable {ι : Type*} [Fintype ι]
 
 /-- Finite-dimensional Gaussian polynomial majorants are integrable.
 Source: Gaussian moments; atlas `gaussian-integration-by-parts`. -/
-theorem integrable_one_add_norm_pow_pi_gaussianReal (d : ℕ) :
+theorem integrable_one_add_norm_pow_gaussianVector (d : ℕ) :
     Integrable (fun x : ι → ℝ => (1 + ‖x‖) ^ d)
-      (Measure.pi fun _ : ι => gaussianReal 0 1) := by
+      (gaussianVector ι) := by
   have hX : MemLp (fun x : ι → ℝ => x) (d : ENNReal)
-      (Measure.pi fun _ : ι => gaussianReal 0 1) :=
-    (hasGaussianLaw_id_pi_gaussianReal ι).memLp (by simp)
+      (gaussianVector ι) :=
+    (hasGaussianLaw_id_gaussianVector ι).memLp (by simp)
   have h := ((memLp_const (1 : ℝ)).add hX.norm).integrable_norm_pow'
   simp only [Pi.add_apply, Real.norm_eq_abs] at h
   convert h using 1
@@ -34,25 +34,25 @@ theorem integrable_one_add_norm_pow_pi_gaussianReal (d : ℕ) :
 
 /-- Polynomial growth provides integrability under any finite standard
 Gaussian product. Source: Gaussian moments; atlas `gaussian-integration-by-parts`. -/
-theorem integrable_pi_gaussianReal_of_polynomial_growth
+theorem integrable_gaussianVector_of_polynomial_growth
     {f : (ι → ℝ) → ℝ}
-    (hf : AEMeasurable f (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hf : AEMeasurable f (gaussianVector ι))
     (C : ℝ) (d : ℕ) (hBound : ∀ x, |f x| ≤ C * (1 + ‖x‖) ^ d) :
-    Integrable f (Measure.pi fun _ : ι => gaussianReal 0 1) := by
-  refine Integrable.mono' ((integrable_one_add_norm_pow_pi_gaussianReal d).const_mul C)
+    Integrable f (gaussianVector ι) := by
+  refine Integrable.mono' ((integrable_one_add_norm_pow_gaussianVector d).const_mul C)
     hf.aestronglyMeasurable ?_
   exact ae_of_all _ fun x => by simpa only [Real.norm_eq_abs] using hBound x
 
 /-- Polynomial-growth scalar functions on Gaussian space have finite second
 moments. Source: Gaussian moments; atlas `gaussian-integration-by-parts`. -/
-theorem memLp_two_pi_gaussianReal_of_polynomial_growth
+theorem memLp_two_gaussianVector_of_polynomial_growth
     {f : (ι → ℝ) → ℝ}
-    (hf : AEMeasurable f (Measure.pi fun _ : ι => gaussianReal 0 1))
+    (hf : AEMeasurable f (gaussianVector ι))
     (C : ℝ) (d : ℕ) (hBound : ∀ x, |f x| ≤ C * (1 + ‖x‖) ^ d) :
-    MemLp f 2 (Measure.pi fun _ : ι => gaussianReal 0 1) := by
+    MemLp f 2 (gaussianVector ι) := by
   apply (memLp_two_iff_integrable_sq hf.aestronglyMeasurable).2
   refine Integrable.mono'
-    ((integrable_one_add_norm_pow_pi_gaussianReal (d * 2)).const_mul (C ^ 2))
+    ((integrable_one_add_norm_pow_gaussianVector (d * 2)).const_mul (C ^ 2))
     (hf.pow_const 2).aestronglyMeasurable ?_
   refine ae_of_all _ fun x => ?_
   have h := pow_le_pow_left₀ (abs_nonneg (f x)) (hBound x) 2
@@ -100,14 +100,14 @@ All moments and integrability needed for Fubini and the derivative identity
 are proved. Source: Vershynin 2018, Lemma 7.2.3;
 atlas `gaussian-integration-by-parts`.
 atlas: gaussian-integration-by-parts -/
-theorem integral_coord_mul_eq_integral_fderiv_pi_gaussianReal
+theorem integral_coord_mul_eq_integral_fderiv_gaussianVector
     (f : (ι → ℝ) → ℝ) (hf : ContDiff ℝ 1 f)
     (C D : ℝ) (d e : ℕ)
     (hValue : ∀ x, |f x| ≤ C * (1 + ‖x‖) ^ d)
     (hPartial : ∀ i x, |fderiv ℝ f x (Pi.single i 1)| ≤ D * (1 + ‖x‖) ^ e)
     (i : ι) :
-    ∫ x, x i * f x ∂(Measure.pi fun _ : ι => gaussianReal 0 1) =
-      ∫ x, fderiv ℝ f x (Pi.single i 1) ∂(Measure.pi fun _ : ι => gaussianReal 0 1) := by
+    ∫ x, x i * f x ∂(gaussianVector ι) =
+      ∫ x, fderiv ℝ f x (Pi.single i 1) ∂(gaussianVector ι) := by
   let μ : ι → Measure ℝ := fun _ => gaussianReal 0 1
   have hC : 0 ≤ C := by
     have h := hValue 0
@@ -118,7 +118,7 @@ theorem integral_coord_mul_eq_integral_fderiv_pi_gaussianReal
     simp only [norm_zero, add_zero, one_pow, mul_one] at h
     exact (abs_nonneg _).trans h
   have hFm : AEMeasurable f (Measure.pi μ) := hf.continuous.measurable.aemeasurable
-  have hF2 := memLp_two_pi_gaussianReal_of_polynomial_growth hFm C d hValue
+  have hF2 := memLp_two_gaussianVector_of_polynomial_growth hFm C d hValue
   have hXi : MemLp (fun x : ι → ℝ => x i) 2 (Measure.pi μ) := by
     simpa using (memLp_id_gaussianReal (μ := 0) (v := 1) (2 : NNReal)).comp_measurePreserving
       (measurePreserving_eval μ i)
@@ -126,7 +126,7 @@ theorem integral_coord_mul_eq_integral_fderiv_pi_gaussianReal
     hXi.integrable_mul hF2
   have hDc : Continuous (fun x => fderiv ℝ f x (Pi.single i 1)) :=
     (hf.continuous_fderiv one_ne_zero).clm_apply continuous_const
-  have hRightInt := integrable_pi_gaussianReal_of_polynomial_growth
+  have hRightInt := integrable_gaussianVector_of_polynomial_growth
     hDc.measurable.aemeasurable D e (hPartial i)
   rw [← integral_integral_update_pi μ i hLeftInt,
     ← integral_integral_update_pi μ i hRightInt]

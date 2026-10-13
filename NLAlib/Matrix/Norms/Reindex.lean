@@ -12,7 +12,7 @@ Source: Horn–Johnson §5.6. Atlas: `norms-frob-spec`.
 
 noncomputable section
 
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -37,12 +37,14 @@ theorem frobSq_reindex (A : Matrix m n 𝕜) (em : m ≃ p) (en : n ≃ q) :
     frobSq (A.reindex em en) = frobSq A :=
   frobInner_reindex A A em en
 
+open scoped Matrix.Norms.L2Operator in
 /-- Relabeling rows and columns preserves the Frobenius norm, over `ℝ` or `ℂ`.
 Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
 theorem frobNorm_reindex (A : Matrix m n 𝕜) (em : m ≃ p) (en : n ≃ q) :
     frobNorm (A.reindex em en) = frobNorm A := by
   rw [frobNorm, frobNorm, frobSq_reindex]
 
+open scoped Matrix.Norms.L2Operator in
 private theorem reindex_frame_orth [DecidableEq m] (em : m ≃ p) :
     ((1 : Matrix m m 𝕜).submatrix em.symm id)ᴴ *
       (1 : Matrix m m 𝕜).submatrix em.symm id = 1 := by
@@ -51,6 +53,7 @@ private theorem reindex_frame_orth [DecidableEq m] (em : m ≃ p) :
     Matrix.submatrix_mul_equiv (1 : Matrix m m 𝕜) (1 : Matrix m m 𝕜)
       id em.symm id
 
+open scoped Matrix.Norms.L2Operator in
 /-- Equivalent row and column labels preserve the spectral norm, by
 unitary permutation frames; over `ℝ` or `ℂ`. Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
 theorem specNorm_reindex [DecidableEq m] [DecidableEq n] [DecidableEq p] [DecidableEq q]
@@ -70,8 +73,8 @@ theorem specNorm_reindex [DecidableEq m] [DecidableEq n] [DecidableEq p] [Decida
       Function.id_comp, Function.comp_id] using
       Matrix.mul_submatrix_one (Equiv.refl n) en.symm (A.submatrix em.symm id)
   rw [← hright, ← hleft,
-    specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hQ,
-    specNorm_mul_left_of_conjTranspose_mul_self hP]
+    specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hQ,
+    specNorm_mul_left_of_hasOrthonormalCols hP]
 
 /-- Equivalent row, middle, and column labels commute with rectangular matrix
 multiplication. Mathlib's submatrix multiplication transport; supports

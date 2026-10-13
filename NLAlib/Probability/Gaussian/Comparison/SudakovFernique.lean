@@ -15,8 +15,6 @@ copies of `X` and `Y` on the product of their laws; for the soft-max
 weights, `θ ↦ 𝔼 F_β(cos θ X + sin θ Y)` has nonnegative derivative on `[0, π/2]` by Gaussian
 integration by parts; since `max x ≤ F_β(x) ≤ max x + log |ι| / β`, let `β → ∞`.
 
-Ported from the Prove2me solution `GaussianMatrix.sudakov_fernique`.
-
 Atlas: `sudakov-fernique`.
 -/
 
@@ -277,7 +275,6 @@ section Main
 Gaussian processes indexed by a finite set with dominated increments
 `𝔼 (Xₛ - Xₜ)² ≤ 𝔼 (Yₛ - Yₜ)²`. Then `𝔼 maxₜ Xₜ ≤ 𝔼 maxₜ Yₜ`.
 Source: Sudakov 1971, Fernique 1975; Vershynin 2018, Thm 7.2.11. Atlas: `sudakov-fernique`.
-Ported from Prove2me solution `GaussianMatrix.sudakov_fernique`.
 atlas: sudakov-fernique -/
 theorem sudakov_fernique_inequality {ι Ω Ω' : Type*} [Fintype ι] [MeasurableSpace Ω]
     [MeasurableSpace Ω']

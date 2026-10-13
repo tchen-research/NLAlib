@@ -1,3 +1,4 @@
+import NLAlib.Probability.Gaussian.Basic.StandardGaussian
 import Mathlib.Probability.Distributions.Gaussian.Real
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.MeasureTheory.Integral.Gamma
@@ -19,7 +20,7 @@ namespace NLAlib
 
 /-- The product of `m` standard Gaussians has density `∏ᵢ φ(xᵢ)` w.r.t. Lebesgue measure. -/
 private lemma pi_gaussianReal_eq_withDensity (m : ℕ) :
-    Measure.pi (fun _ : Fin m => gaussianReal 0 1)
+    (gaussianVector (Fin m))
       = volume.withDensity
           (fun x : Fin m → ℝ => ENNReal.ofReal (∏ i, gaussianPDFReal 0 1 (x i))) := by
   refine Measure.pi_eq (μ := fun _ : Fin m => gaussianReal 0 1) fun s hs => ?_
@@ -73,8 +74,8 @@ private lemma sum_sq_ofLp {m : ℕ} (y : EuclideanSpace ℝ (Fin m)) :
 Source: Gaussian polar integration; atlas `gaussian-positive-moments`.
 This is only a scalar Gaussian identity, with no matrix eigenvalue density.
 atlas: gaussian-positive-moments -/
-theorem integral_radial_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m) (φ : ℝ → ℝ) :
-    ∫ x, φ (Real.sqrt (∑ i, x i ^ 2)) ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1)
+theorem integral_radial_gaussianVector (m : ℕ) (hm : 1 ≤ m) (φ : ℝ → ℝ) :
+    ∫ x, φ (Real.sqrt (∑ i, x i ^ 2)) ∂(gaussianVector (Fin m))
       = m * (volume : Measure (EuclideanSpace ℝ (Fin m))).real (Metric.ball 0 1)
         * ((Real.sqrt (2 * π))⁻¹ ^ m
           * ∫ y in Ioi (0 : ℝ), y ^ (m - 1) * (Real.exp (-y ^ 2 / 2) * φ y)) := by
@@ -121,10 +122,10 @@ theorem integral_rpow_mul_exp_neg_sq_div_two (s : ℝ) (hs : -1 < s) :
 /-- Every nonnegative real power of the squared Gaussian radius is integrable.
 Source: Gaussian finite moments; atlas `gaussian-positive-moments`.
 atlas: gaussian-positive-moments -/
-theorem integrable_rpow_sum_sq_pi_gaussianReal (m : ℕ) (q : ℝ) (hq : 0 ≤ q) :
+theorem integrable_rpow_sum_sq_gaussianVector (m : ℕ) (q : ℝ) (hq : 0 ≤ q) :
     Integrable (fun x : Fin m → ℝ => (∑ i, x i ^ 2) ^ q)
-      (Measure.pi fun _ : Fin m => gaussianReal 0 1) := by
-  let μ := Measure.pi fun _ : Fin m => gaussianReal 0 1
+      (gaussianVector (Fin m)) := by
+  let μ := (gaussianVector (Fin m))
   have hLp : MemLp (fun x : Fin m → ℝ => WithLp.toLp 2 x)
       (ENNReal.ofReal (2 * q)) μ := by
     rw [memLp_piLp_iff]
@@ -147,17 +148,17 @@ theorem integrable_rpow_sum_sq_pi_gaussianReal (m : ℕ) (q : ℝ) (hq : 0 ≤ q
 Source: scalar Gaussian radial integration; atlas `gaussian-positive-moments`.
 This identity is the radial input to the operator inverse-Wishart probe bound.
 atlas: gaussian-positive-moments -/
-theorem integral_rpow_sum_sq_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m)
+theorem integral_rpow_sum_sq_gaussianVector (m : ℕ) (hm : 1 ≤ m)
     (q : ℝ) (hq : 0 ≤ q) :
     ∫ x : Fin m → ℝ, (∑ i, x i ^ 2) ^ q
-      ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1)
+      ∂(gaussianVector (Fin m))
       = 2 ^ q * Real.Gamma ((m : ℝ) / 2 + q) / Real.Gamma ((m : ℝ) / 2) := by
   have hmR : (1 : ℝ) ≤ m := by exact_mod_cast hm
   have hcast : ((m - 1 : ℕ) : ℝ) = (m : ℝ) - 1 := by
     rw [Nat.cast_sub hm, Nat.cast_one]
   let K : ℝ := m * (volume : Measure (EuclideanSpace ℝ (Fin m))).real (Metric.ball 0 1)
     * (Real.sqrt (2 * π))⁻¹ ^ m
-  have hnorm := integral_radial_pi_gaussianReal m hm (fun _ => 1)
+  have hnorm := integral_radial_gaussianVector m hm (fun _ => 1)
   simp only [integral_const, smul_eq_mul, mul_one] at hnorm
   rw [measureReal_def, measure_univ, ENNReal.toReal_one] at hnorm
   have hbase : (∫ y in Ioi (0 : ℝ), y ^ (m - 1) * Real.exp (-y ^ 2 / 2))
@@ -170,7 +171,7 @@ theorem integral_rpow_sum_sq_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m)
   rw [hbase] at hnorm
   have hnorm' : 1 = K * (2 ^ ((m : ℝ) / 2) * (1 / 2) * Real.Gamma ((m : ℝ) / 2)) := by
     simpa only [K, mul_assoc] using hnorm
-  have hmoment := integral_radial_pi_gaussianReal m hm (fun y => y ^ (2 * q))
+  have hmoment := integral_radial_gaussianVector m hm (fun y => y ^ (2 * q))
   have hleft : (fun x : Fin m → ℝ => (Real.sqrt (∑ i, x i ^ 2)) ^ (2 * q))
       = (fun x : Fin m → ℝ => (∑ i, x i ^ 2) ^ q) := by
     funext x
@@ -191,7 +192,7 @@ theorem integral_rpow_sum_sq_pi_gaussianReal (m : ℕ) (hm : 1 ≤ m)
     congr 2 <;> congr 1 <;> ring
   rw [hright] at hmoment
   have hmoment' : (∫ x : Fin m → ℝ, (∑ i, x i ^ 2) ^ q
-      ∂(Measure.pi fun _ : Fin m => gaussianReal 0 1))
+      ∂(gaussianVector (Fin m)))
       = K * (2 ^ ((m : ℝ) / 2 + q) * (1 / 2) * Real.Gamma ((m : ℝ) / 2 + q)) := by
     rw [hmoment]
     simp [K]
@@ -213,7 +214,7 @@ atlas: gaussian-positive-moments -/
 theorem integral_abs_rpow_gaussianReal (q : ℝ) (hq : 0 ≤ q) :
     (∫ z : ℝ, |z| ^ (2 * q) ∂(gaussianReal 0 1))
       = 2 ^ q * Real.Gamma (q + 1 / 2) / Real.sqrt Real.pi := by
-  have h := integral_rpow_sum_sq_pi_gaussianReal 1 (by omega) q hq
+  have h := integral_rpow_sum_sq_gaussianVector 1 (by omega) q hq
   have hfun : (fun x : Fin 1 → ℝ => (∑ i, x i ^ 2) ^ q)
       = (fun z : ℝ => |z| ^ (2 * q)) ∘ (fun x : Fin 1 → ℝ => x 0) := by
     funext x
@@ -222,14 +223,14 @@ theorem integral_abs_rpow_gaussianReal (q : ℝ) (hq : 0 ≤ q) :
     congr 1
   rw [hfun] at h
   have heval : (∫ x : Fin 1 → ℝ, |x 0| ^ (2 * q)
-      ∂(Measure.pi fun _ : Fin 1 => gaussianReal 0 1))
+      ∂(gaussianVector (Fin 1)))
       = ∫ z : ℝ, |z| ^ (2 * q) ∂(gaussianReal 0 1) := by
-    rw [← integral_map (μ := Measure.pi fun _ : Fin 1 => gaussianReal 0 1)
+    rw [← integral_map (μ := (gaussianVector (Fin 1)))
       (φ := fun x : Fin 1 → ℝ => x 0) (f := fun z : ℝ => |z| ^ (2 * q))
       (measurable_pi_apply 0).aemeasurable
       (by fun_prop : Measurable (fun z : ℝ => |z| ^ (2 * q))).aestronglyMeasurable,
       (measurePreserving_eval (fun _ : Fin 1 => gaussianReal 0 1) 0).map_eq]
-  change (∫ x : Fin 1 → ℝ, |x 0| ^ (2 * q) ∂(Measure.pi fun _ : Fin 1 => gaussianReal 0 1)) = _ at h
+  change (∫ x : Fin 1 → ℝ, |x 0| ^ (2 * q) ∂(gaussianVector (Fin 1))) = _ at h
   rw [heval] at h
   simpa only [Nat.cast_one, add_comm, Real.Gamma_one_half_eq] using h
 

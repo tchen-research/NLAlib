@@ -44,7 +44,7 @@ omit [DecidableEq m] [DecidableEq n] in
 /-- Left and right eigenvectors at different eigenvalues are biorthogonal.
 Source: Horn–Johnson (2013), Observation 1.4.6a; `y` denotes the left row,
 which may be `star y₀` for a complex column eigenvector `y₀`.
-atlas: left-right-eigenvectors (partial) -/
+atlas: left-right-eigenvectors -/
 theorem dotProduct_eq_zero_of_left_right_eigenvalues_ne {A : Matrix n n K}
     {x y : n → K} {α μ : K} (hx : A *ᵥ x = α • x)
     (hy : y ᵥ* A = μ • y) (hαμ : α ≠ μ) : y ⬝ᵥ x = 0 := by
@@ -114,7 +114,7 @@ theorem mul_normalized_vecMulVec_eq_smul {A : Matrix n n K} {x y : n → K}
 omit [DecidableEq m] [DecidableEq n] in
 /-- Similarity transports a right eigenvector by the similarity matrix.
 Source: Horn–Johnson (2013), Theorem 2.4.11.1.
-atlas: left-right-eigenvectors (partial) -/
+atlas: left-right-eigenvectors -/
 theorem mulVec_eigenvector_of_intertwines {A B S : Matrix n n K} {x : n → K}
     {μ : K} (hS : A * S = S * B) (hx : B *ᵥ x = μ • x) :
     A *ᵥ (S *ᵥ x) = μ • (S *ᵥ x) := by
@@ -124,7 +124,7 @@ omit [DecidableEq m] [DecidableEq n] in
 /-- Similarity transports a left row eigenvector by right multiplication
 with the inverse similarity matrix. Source: Horn–Johnson (2013),
 Theorem 2.4.11.1; for complex columns this is inverse conjugate transpose.
-atlas: left-right-eigenvectors (partial) -/
+atlas: left-right-eigenvectors -/
 theorem vecMul_eigenvector_of_intertwines {A B S : Matrix n n K} {y : n → K}
     {μ : K} (hS : S * A = B * S) (hy : y ᵥ* B = μ • y) :
     (y ᵥ* S) ᵥ* A = μ • (y ᵥ* S) := by

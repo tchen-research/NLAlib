@@ -1,27 +1,30 @@
-import NLAlib.Matrix.Inequalities.PlaneRotation
+import NLAlib.Matrix.Basic.PlaneRotation
+import NLAlib.Matrix.Subspaces.Projections
 /-!
 # Spectral effect of a real plane rotation
 
-Rotating two orthonormal eigenvectors with disjoint coordinate supports gives
-an exact linear diagonal increment. Source: Schur–Horn variational rederivation,
-equation (6), supporting the atlas result `schur-horn`.
+Rotating two orthonormal eigenvectors with disjoint coordinate supports gives an exact
+linear diagonal increment. Horn–Johnson 2013, proof of Theorem 4.3.48 (the variational
+argument for Schur–Horn); supports the atlas result `schur-horn`.
 -/
 noncomputable section
 open scoped Matrix
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-/-- Conjugating a symmetric matrix by a rotation of two of its eigenvectors
-changes only their two-dimensional spectral block. Schur–Horn variational
-rederivation, equation (6); no restriction on signed or repeated eigenvalues. -/
+/-- Conjugating a symmetric matrix by a rotation of two of its eigenvectors changes only their
+two-dimensional spectral block; no restriction on signed or repeated eigenvalues.
+Horn–Johnson 2013, proof of Theorem 4.3.48. -/
 theorem planeRotation_mul_mul_transpose_of_eigenvectors
     (A : Matrix n n ℝ) (hA : Aᵀ = A) (u v : n → ℝ)
-    (hu : u ⬝ᵥ u = 1) (hv : v ⬝ᵥ v = 1) (huv : u ⬝ᵥ v = 0)
+    (hu : ‖(WithLp.toLp 2 u : EuclideanSpace ℝ n)‖ = 1) (hv : ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = 1) (huv : u ⬝ᵥ v = 0)
     (α β : ℝ) (hAu : A *ᵥ u = α • u) (hAv : A *ᵥ v = β • v)
     (c s : ℝ) (hcs : c ^ 2 + s ^ 2 = 1) :
     planeRotation u v c s * A * (planeRotation u v c s)ᵀ =
       A + (s ^ 2 * (β - α)) • (Matrix.vecMulVec u u - Matrix.vecMulVec v v) +
         (c * s * (β - α)) • (Matrix.vecMulVec u v + Matrix.vecMulVec v u) := by
+  have hu := dotProduct_self_eq_one_of_norm_toLp_eq_one hu
+  have hv := dotProduct_self_eq_one_of_norm_toLp_eq_one hv
   have hvu : v ⬝ᵥ u = 0 := by rw [dotProduct_comm, huv]
   have huA : u ᵥ* A = α • u := by rw [← Matrix.mulVec_transpose, hA, hAu]
   have hvA : v ᵥ* A = β • v := by rw [← Matrix.mulVec_transpose, hA, hAv]
@@ -40,12 +43,12 @@ theorem planeRotation_mul_mul_transpose_of_eigenvectors
     Matrix.vecMulVec_apply, Pi.add_apply, Pi.neg_apply, Pi.smul_apply, smul_eq_mul]
   linear_combination (α * u i * u j + β * v i * v j) * hcs
 
-/-- The diagonal increment from rotating eigenvectors with disjoint coordinate
-supports is exactly `s²(β-α)(uᵢ²-vᵢ²)`. Schur–Horn variational rederivation,
-equation (6), including repeated and negative eigenvalues. -/
+/-- The diagonal increment from rotating eigenvectors with disjoint coordinate supports is
+exactly `s²(β-α)(uᵢ²-vᵢ²)`, including repeated and negative eigenvalues. Horn–Johnson 2013,
+proof of Theorem 4.3.48. -/
 theorem planeRotation_mul_mul_transpose_apply_diag_of_disjoint_eigenvectors
     (A : Matrix n n ℝ) (hA : Aᵀ = A) (u v : n → ℝ)
-    (hu : u ⬝ᵥ u = 1) (hv : v ⬝ᵥ v = 1) (huv : u ⬝ᵥ v = 0)
+    (hu : ‖(WithLp.toLp 2 u : EuclideanSpace ℝ n)‖ = 1) (hv : ‖(WithLp.toLp 2 v : EuclideanSpace ℝ n)‖ = 1) (huv : u ⬝ᵥ v = 0)
     (α β : ℝ) (hAu : A *ᵥ u = α • u) (hAv : A *ᵥ v = β • v)
     (hdisjoint : ∀ i, u i * v i = 0) (c s : ℝ) (hcs : c ^ 2 + s ^ 2 = 1)
     (i : n) :

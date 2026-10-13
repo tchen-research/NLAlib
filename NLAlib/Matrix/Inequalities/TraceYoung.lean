@@ -6,21 +6,20 @@ import Mathlib.Analysis.Matrix.PosDef
 
 Separate Hermitian eigenbases give nonnegative overlap weights whose rows
 and columns sum to one. Integer scalar Young inequalities therefore lift to
-traces without assuming the two matrices commute.
-Source: operator manuscript `lem:traceyoung`, for `noncommutative-khintchine`.
+traces without assuming the two matrices commute. Tropp 2015, §4.8; Buchholz 2001; for
+`noncommutative-khintchine`.
 -/
 
 noncomputable section
 set_option backward.isDefEq.respectTransparency false
-open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
+open scoped Matrix ComplexOrder
 open Matrix
 namespace NLAlib
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- Every row of a complex unitary matrix has squared norm one.
-Source: the unitary identity; supports the overlap proof of
-`noncommutative-khintchine`. -/
+Unitary identity `U U* = I`; supports the overlap proof of `noncommutative-khintchine`. -/
 theorem sum_norm_sq_unitary_row (U : Matrix.unitaryGroup ι ℂ) (i : ι) :
     ∑ j, ‖(U : Matrix ι ι ℂ) i j‖ ^ 2 = 1 := by
   have h := congrFun (congrFun (Unitary.coe_mul_star_self U) i) i
@@ -32,16 +31,15 @@ theorem sum_norm_sq_unitary_row (U : Matrix.unitaryGroup ι ℂ) (i : ι) :
     hs, Matrix.one_apply_eq, Complex.re_sum, Complex.ofReal_re, Complex.one_re] using congrArg Complex.re h
 
 /-- Every column of a complex unitary matrix has squared norm one.
-Source: the unitary identity; supports the overlap proof of
-`noncommutative-khintchine`. -/
+Unitary identity `U* U = I`; supports the overlap proof of `noncommutative-khintchine`. -/
 theorem sum_norm_sq_unitary_col (U : Matrix.unitaryGroup ι ℂ) (j : ι) :
     ∑ i, ‖(U : Matrix ι ι ℂ) i j‖ ^ 2 = 1 := by
   simpa only [Unitary.coe_star, Matrix.star_apply, Matrix.conjTranspose_apply, norm_star]
     using sum_norm_sq_unitary_row (star U) j
 
 /-- A diagonal matrix times a conjugated diagonal matrix has trace given by
-the squared unitary overlap weights. Source: separate eigenbases in
-manuscript `lem:traceyoung`; supports `noncommutative-khintchine`. -/
+the squared unitary overlap weights (two separate eigenbases); supports
+`noncommutative-khintchine`. -/
 theorem re_trace_diagonal_mul_conj_diagonal
     (U : Matrix.unitaryGroup ι ℂ) (a b : ι → ℝ) :
     (diagonal (fun i => (a i : ℂ)) *
@@ -68,8 +66,7 @@ theorem re_trace_diagonal_mul_conj_diagonal
   ring
 
 /-- Products of natural Hermitian powers have real trace given by the
-overlap weights of their two eigenbases. Source: separate spectral
-decompositions in manuscript `lem:traceyoung`; supports
+overlap weights of their two eigenbases (two spectral decompositions); supports
 `noncommutative-khintchine`. -/
 theorem re_trace_pow_mul_pow_eq_sum_overlap
     (A B : Matrix ι ι ℂ) (hA : A.IsHermitian) (hB : B.IsHermitian)
@@ -124,8 +121,8 @@ theorem re_trace_pow_nonneg_of_posSemidef (A : Matrix ι ι ℂ) (hA : A.PosSemi
 
 /-- **Polynomial trace Young inequality.** For PSD `V`, Hermitian `H` and
 integer `p≥1`, the factor `q=2p-1` can be absorbed into the two endpoint
-trace moments. No commutativity hypothesis is used. Source: manuscript
-`lem:traceyoung`; supports `noncommutative-khintchine`. -/
+trace moments. No commutativity hypothesis is used. Tropp 2015, §4.8;
+supports `noncommutative-khintchine`. -/
 theorem nat_mul_mul_re_trace_mul_pow_le
     (V H : Matrix ι ι ℂ) (hV : V.PosSemidef) (hH : H.IsHermitian)
     {p : ℕ} (hp : 1 ≤ p) :

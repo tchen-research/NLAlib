@@ -14,12 +14,13 @@ Atlas target: `inverse-perturbation`.
 
 noncomputable section
 
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The same inverse estimate for an additive perturbation of the identity.
 Golub--Van Loan, Lemma 2.3.3; supports `inverse-perturbation`. -/
 theorem specNorm_inv_one_add_le {F : Matrix n n ℝ} (hF : specNorm F < 1) :
@@ -34,8 +35,8 @@ theorem add_eq_mul_one_add_inv_mul (A E : Matrix n n ℝ) (hA : IsUnit A) :
   rw [Matrix.mul_add, Matrix.mul_one, ← Matrix.mul_assoc,
     Matrix.mul_nonsing_inv _ ((Matrix.isUnit_iff_isUnit_det _).mp hA), Matrix.one_mul]
 
-/-- Complete quantitative Neumann and inverse perturbation contract. The actual
-matrix inverses are used throughout, and both the spectral and Frobenius
+open scoped Matrix.Norms.L2Operator in
+/-- Complete quantitative Neumann and inverse perturbation contract. The matrix inverses are used throughout, and both the spectral and Frobenius
 difference estimates retain the product-scale denominator. Empty dimensions
 are included. Golub--Van Loan, Lemma 2.3.3 and Theorem 2.3.4.
 atlas: inverse-perturbation -/

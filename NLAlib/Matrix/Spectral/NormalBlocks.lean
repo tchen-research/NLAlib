@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Subspaces.ComplexProjectionBounds
+import NLAlib.Matrix.Norms.Frobenius
 
 /-!
 # Normal block triangular matrices are block diagonal
@@ -9,7 +9,7 @@ atlas `normal-matrices`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.Frobenius
+open scoped Matrix
 
 namespace NLAlib
 
@@ -30,10 +30,10 @@ theorem eq_zero_of_normal_upper_fromBlocks {A : Matrix m m ℂ} {B : Matrix n n 
   have htr : (C * Cᴴ).trace = 0 := by
     rw [Matrix.trace_mul_comm A Aᴴ] at h
     exact add_left_cancel (by simpa only [add_zero] using h)
-  have hsq : ‖C‖ ^ 2 = 0 := by
-    rw [frobenius_norm_sq_eq_re_trace_mul_conjTranspose, htr]
+  have hsq : frobSq C = 0 := by
+    rw [frobSq_eq_re_trace_conjTranspose_mul_self, Matrix.trace_mul_comm, htr]
     rfl
-  exact norm_eq_zero.mp (sq_eq_zero_iff.mp hsq)
+  exact (frobSq_eq_zero_iff C).mp hsq
 
 /-- An upper block triangular normal matrix equals its block diagonal part.
 Source: Horn–Johnson (2013), Lemma 2.5.2.

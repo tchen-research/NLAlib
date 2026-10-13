@@ -12,7 +12,6 @@ noncomputable section
 
 open scoped Matrix
 open MeasureTheory ProbabilityTheory Real Set
-open scoped Matrix.Norms.L2Operator
 
 namespace NLAlib
 
@@ -22,14 +21,13 @@ variable {μ : Measure Ω} [IsProbabilityMeasure μ]
 
 /-- A positive lower bound `f_min` on the spectral interval makes the condition
 `E ≤ ε f_min/4` sufficient for relative SLQ with `m ≥ 1024e² ε⁻² log(2/δ)` probes.
-Positivity of the matrix function and the positive trace are derived from the actual
+Positivity of the matrix function and the positive trace are derived from the
 scalar lower bound. This general transfer keeps its polynomial approximation explicit.
-Source: operator rederivations `rt:slq-relative`, computable-condition paragraph.
+Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 (computable form).
 atlas: slq-error (partial) -/
-theorem measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lower_bound
-    {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → n → κ → ℝ}
-    (hind : iIndepFun (fun (e : n × κ) ω => G ω e.1 e.2) μ)
-    (hlaw : ∀ e : n × κ, IsRademacher μ (fun ω => G ω e.1 e.2))
+theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
+    {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
+    (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ}
     (hK : ∀ ω k, krylovSpace A (fun i => G ω i k) q ≤ LinearMap.range (Q ω k).mulVecLin)
     {f : ℝ → ℝ} {p : Polynomial ℝ} (hp : p.degree < 2 * q) {a c E b : ℝ}
@@ -38,14 +36,14 @@ theorem measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lower_bo
     {ε δ : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) (hδ : 0 < δ)
     (hbudget : E ≤ ε * b / 4)
     (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
-    (μ {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (Q ω) (G ω) - (cfc f A).trace|}).toReal ≤ δ := by
+    μ.real {ω | ε * (cfc f A).trace <
+      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
   have hF := posSemidef_cfc_of_nonneg_eigenvalues hA (fun i => hb.le.trans (hmin _ (hspec i)))
   have htrle := mul_card_le_trace_cfc_of_le hA (fun i => hmin _ (hspec i))
   have hn : 0 < (Fintype.card n : ℝ) := by exact_mod_cast Fintype.card_pos
   have htr : 0 < (cfc f A).trace := (mul_pos hb hn).trans_le htrle
-  apply measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_card_ge_rademacher
-    hA hF htr hind hlaw hQ hK hp hspec hfp hε hε1 hδ _ hm
+  apply measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card
+    hA hF htr hG hQ hK hp hspec hfp hε hε1 hδ _ hm
   calc 2 * (Fintype.card n : ℝ) * E ≤ 2 * (Fintype.card n : ℝ) * (ε * b / 4) := by
         gcongr
     _ = (ε / 2) * (b * Fintype.card n) := by ring
@@ -54,12 +52,11 @@ theorem measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lower_bo
 /-- A positive scalar lower bound gives the computable Lipschitz step count
 `q ≥ πL(c-a)/(2ε f_min)` and sample count `m ≥ 1024e² ε⁻² log(2/δ)` for relative SLQ.
 All approximation, positivity, and trace premises are derived from the scalar hypotheses.
-Source: operator rederivations `rt:slq-relative` and `rt:lipschitz-quad`.
+Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1, with Jackson's theorem.
 atlas: slq-error -/
-theorem measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lipschitz_lower_bound
-    {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → n → κ → ℝ}
-    (hind : iIndepFun (fun (e : n × κ) ω => G ω e.1 e.2) μ)
-    (hlaw : ∀ e : n × κ, IsRademacher μ (fun ω => G ω e.1 e.2))
+theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_lower_bound
+    {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
+    (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ} (hq : 0 < q)
     (hK : ∀ ω k, krylovSpace A (fun i => G ω i k) q ≤ LinearMap.range (Q ω k).mulVecLin)
     {f : ℝ → ℝ} {a c b : ℝ} {L : NNReal} (hac : a < c)
@@ -68,12 +65,12 @@ theorem measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lipschit
     {ε δ : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) (hδ : 0 < δ)
     (hsteps : Real.pi * (L : ℝ) * (c - a) / (2 * ε * b) ≤ q)
     (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
-    (μ {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (Q ω) (G ω) - (cfc f A).trace|}).toReal ≤ δ := by
+    μ.real {ω | ε * (cfc f A).trace <
+      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
   obtain ⟨p, hp, hfp⟩ := exists_degree_le_abs_sub_eval_le_jackson_interval hac hf (2 * q - 1)
   have hdeg : p.degree < 2 * q := hp.trans_lt (by exact_mod_cast (show 2 * q - 1 < 2 * q by omega))
-  apply measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lower_bound
-    hA hind hlaw hQ hK hdeg hspec hb hmin hfp hε hε1 hδ _ hm
+  apply measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
+    hA hG hQ hK hdeg hspec hb hmin hfp hε hε1 hδ _ hm
   have hcast : ((2 * q - 1 : ℕ) : ℝ) + 1 = 2 * (q : ℝ) := by
     exact_mod_cast (show 2 * q - 1 + 1 = 2 * q by omega)
   rw [hcast, div_le_iff₀ (by exact_mod_cast (show 0 < 4 * (2 * q) by omega))]
@@ -81,15 +78,14 @@ theorem measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lipschit
   nlinarith
 
 /-- A positive scalar lower bound gives the computable analytic step count
-`q ≥ (1+log(8M/(ε f_min(ρ-1)))/log ρ)/2` and the exact Rademacher sample count
+`q ≥ (1+log(8M/(ε f_min(ρ-1)))/log ρ)/2` and the Rademacher sample count
 `m ≥ 1024e² ε⁻² log(2/δ)` for relative SLQ. Holomorphy and boundedness are on the
 original open Bernstein ellipse, and the case `M=0` is included.
-Source: operator rederivations `rt:slq-relative` and `rt:analytic-quad`.
+Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1, with Trefethen (2019) [`atap`], Thm 8.2.
 atlas: slq-error -/
-theorem measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_analytic_lower_bound
-    {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → n → κ → ℝ}
-    (hind : iIndepFun (fun (e : n × κ) ω => G ω e.1 e.2) μ)
-    (hlaw : ∀ e : n × κ, IsRademacher μ (fun ω => G ω e.1 e.2))
+theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_lower_bound
+    {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
+    (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ} (hq : 0 < q)
     (hK : ∀ ω k, krylovSpace A (fun i => G ω i k) q ≤ LinearMap.range (Q ω k).mulVecLin)
     {f : ℝ → ℝ} {F : ℂ → ℂ} {a c ρ M b : ℝ} (hac : a < c) (hρ : 1 < ρ)
@@ -101,13 +97,13 @@ theorem measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_analytic
     {ε δ : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) (hδ : 0 < δ)
     (hsteps : (1 + log (8 * M / (ε * b * (ρ - 1))) / log ρ) / 2 ≤ q)
     (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
-    (μ {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (Q ω) (G ω) - (cfc f A).trace|}).toReal ≤ δ := by
+    μ.real {ω | ε * (cfc f A).trace <
+      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
   obtain ⟨p, hp, hfp⟩ := exists_degree_le_abs_sub_eval_le_of_open_bernsteinEllipse_interval
     hac hρ hFd hM hmatch (2 * q - 1)
   have hdeg : p.degree < 2 * q := hp.trans_lt (by exact_mod_cast (show 2 * q - 1 < 2 * q by omega))
-  apply measure_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_rademacher_lower_bound
-    hA hind hlaw hQ hK hdeg hspec hb hmin hfp hε hε1 hδ _ hm
+  apply measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
+    hA hG hQ hK hdeg hspec hb hmin hfp hε hε1 hδ _ hm
   have hM0 : 0 ≤ M := nonneg_of_norm_le_on_open_bernsteinEllipse hρ hM
   rcases hM0.eq_or_lt with hzero | hpos
   · simp only [← hzero, mul_zero, zero_div]

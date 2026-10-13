@@ -14,7 +14,7 @@ atlas `schur-product-inequalities`.
 
 noncomputable section
 open Matrix Filter
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator Topology
+open scoped Matrix MatrixOrder Topology
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 variable {n : Type*} [Fintype n]
@@ -50,7 +50,7 @@ theorem hasSum_smul_map_pow_of_hasSum_entries (A : Matrix n n ℝ) (c : ℕ → 
   simpa only [Matrix.map_apply, Matrix.smul_apply, smul_eq_mul] using h i j
 
 /-- Any entrywise convergent power series with nonnegative coefficients
-maps PSD real matrices to PSD matrices. The hypotheses state the actual
+maps PSD real matrices to PSD matrices. The hypotheses state the
 scalar series at each entry. Horn--Johnson (2013), Theorem 7.5.3.
 atlas: schur-product-inequalities (partial) -/
 theorem posSemidef_map_of_nonneg_powerSeries {A : Matrix n n ℝ} (hA : A.PosSemidef)
@@ -61,7 +61,7 @@ theorem posSemidef_map_of_nonneg_powerSeries {A : Matrix n n ℝ} (hA : A.PosSem
     (hasSum_smul_map_pow_of_hasSum_entries A c f h)
 
 /-- A scalar formal power series with nonnegative coefficients preserves
-PSD membership whenever each matrix entry lies strictly inside its actual
+PSD membership whenever each matrix entry lies strictly inside its
 radius of convergence. This is the source radius condition without a
 nonempty maximum convention. Horn--Johnson (2013), Theorem 7.5.3.
 atlas: schur-product-inequalities (partial) -/

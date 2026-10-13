@@ -31,7 +31,7 @@ def IsDiagonalizable (A : Matrix n n K) : Prop :=
 
 /-- The intertwining definition equals the usual invertible diagonal
 similarity. Source: Horn–Johnson (2013), Definition 1.3.6.
-atlas: diagonalizable-def (partial) -/
+atlas: diagonalizable-def -/
 theorem isDiagonalizable_iff_exists_similarity (A : Matrix n n K) :
     IsDiagonalizable A ↔ ∃ (V : Matrix n n K) (d : n → K),
       IsUnit V ∧ A = V * Matrix.diagonal d * V⁻¹ := by
@@ -50,7 +50,7 @@ theorem isDiagonalizable_iff_exists_similarity (A : Matrix n n K) :
 /-- Diagonalizability is equivalent to a full independent family of
 eigenvectors. Source: Horn–Johnson (2013), Theorem 1.3.7; finite index types
 are arbitrary and may be empty.
-atlas: diagonalizable-def (partial) -/
+atlas: diagonalizable-def -/
 theorem isDiagonalizable_iff_exists_independent_eigenvectors (A : Matrix n n K) :
     IsDiagonalizable A ↔ ∃ (v : n → n → K) (d : n → K),
       LinearIndependent K v ∧ ∀ j, A *ᵥ v j = d j • v j := by
@@ -72,7 +72,7 @@ theorem isDiagonalizable_iff_exists_independent_eigenvectors (A : Matrix n n K) 
     simpa only [Matrix.mulVec, dotProduct,
       Pi.smul_apply, smul_eq_mul, mul_comm] using congrFun (hAv j) i
 
-/-- A full eigenvector basis is equivalent to diagonalizability. Source:
+/-- A full eigenvector basis is equivalent to diagonalizability.
 Horn–Johnson (2013), Theorem 1.3.7.
 atlas: diagonalizable-def (partial) -/
 theorem isDiagonalizable_iff_exists_eigenbasis (A : Matrix n n K) :
@@ -91,7 +91,7 @@ theorem isDiagonalizable_iff_exists_eigenbasis (A : Matrix n n K) :
 /-- A full list of distinct eigenvalues makes a matrix diagonalizable.
 Source: Horn–Johnson (2013), Theorem 1.3.9; eigenvectors at distinct
 eigenvalues are independent by Mathlib's eigenspace theorem.
-atlas: diagonalizable-def (partial) -/
+atlas: diagonalizable-def -/
 theorem isDiagonalizable_of_distinct_eigenvalues {A : Matrix n n K} (d : n → K)
     (hd : Function.Injective d) (hroots : ∀ j, d j ∈ spectrum K A) :
     IsDiagonalizable A := by
@@ -194,7 +194,7 @@ theorem IsDiagonalizable.finrank_eigenspace_eq_rootMultiplicity {A : Matrix n n 
 /-- Over an algebraically closed field diagonalizability is equivalent to
 equality of all geometric and algebraic multiplicities. Source: Horn–Johnson
 (2013), Theorem 1.4.10; empty spectra and zero multiplicities are included.
-atlas: diagonalizable-def (partial) -/
+atlas: diagonalizable-def -/
 theorem isDiagonalizable_iff_finrank_eigenspace_eq_rootMultiplicity [IsAlgClosed K]
     (A : Matrix n n K) : IsDiagonalizable A ↔
       ∀ μ : K, Module.finrank K (Module.End.eigenspace A.toLin' μ) =

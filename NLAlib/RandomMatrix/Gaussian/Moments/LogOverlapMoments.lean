@@ -58,8 +58,10 @@ theorem integrable_and_integral_gaussianLogOverlap_le (n : ℕ) :
     have h := pi_gaussianReal_logOverlap_gt_le n (t := T + t) (by dsimp only [T]; linarith)
     rw [he]
     simpa only [hExp] using h
-  obtain ⟨hZI, hZv, hZI2, hZv2⟩ :=
-    integrable_and_integral_sq_le_of_exp_neg_half_tail Z hZm hZ0 hZtail
+  have hZI := integrable_of_exp_neg_half_tail hZm hZ0 hZtail
+  have hZv := integral_le_two_of_exp_neg_half_tail hZm hZ0 hZtail
+  have hZI2 := integrable_sq_of_exp_neg_half_tail hZm hZ0 hZtail
+  have hZv2 := integral_sq_le_eight_of_exp_neg_half_tail hZm hZ0 hZtail
   have hLm := measurable_gaussianLogOverlap n
   have hL0 := @gaussianLogOverlap_nonneg n
   have hLbound : ∀ g : Fin (n + 1) → ℝ, gaussianLogOverlap g ≤ T + Z g := by

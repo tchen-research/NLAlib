@@ -18,7 +18,7 @@ noncomputable section
 open MeasureTheory Filter
 open scoped Topology
 
-namespace NLAlib
+namespace MeasureTheory
 
 private def approachingThreshold (τ : ℝ) (k : ℕ) : ℝ := τ - 1 / ((k : ℝ) + 1)
 
@@ -69,4 +69,4 @@ theorem measure_ge_le_of_measure_gt_le {Ω Ω' : Type*} [MeasurableSpace Ω]
       (fun _ => nullMeasurableSet_lt aemeasurable_const hY) ⟨0, measure_ne_top _ _⟩]
   exact iInf_mono fun k => hcomp (approachingThreshold τ k)
 
-end NLAlib
+end MeasureTheory

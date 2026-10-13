@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Factorizations.CholeskySemidefinite
+import NLAlib.Matrix.Factorizations.Cholesky
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
 /-!
 # Unique positive-diagonal Cholesky factorization
@@ -45,7 +45,8 @@ Theorem 10.1; Trefethen--Bau, Theorem 23.1.
 atlas: cholesky-decomposition (partial) -/
 theorem existsUnique_cholesky_of_posDef (A : Matrix n n ℝ) (hA : A.PosDef) :
     ∃! L : Matrix n n ℝ, L.IsLowerTriangular ∧ (∀ i, 0 < L i i) ∧ L * Lᵀ = A := by
-  obtain ⟨L, hLower, hDiag, hFactor⟩ := exists_cholesky_of_posSemidef_fintype A hA.posSemidef
+  obtain ⟨L, hLower, hDiag, hFactor'⟩ := exists_eq_mul_transpose_of_posSemidef hA.posSemidef
+  have hFactor := hFactor'.symm
   have hPositive := diag_pos_of_isLowerTriangular_of_isUnit hLower
     (isUnit_of_mul_transpose_eq_posDef hA hFactor) hDiag
   refine ⟨L, ⟨hLower, hPositive, hFactor⟩, ?_⟩

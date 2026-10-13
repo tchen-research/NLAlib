@@ -1,4 +1,10 @@
+import NLAlib.RandomMatrix.Gaussian.Wishart.LocalWeakDensity
+import NLAlib.RandomMatrix.Gaussian.Wishart.MonotoneDensity
 import NLAlib.RandomMatrix.Gaussian.Wishart.SimpleSpectrum
+import NLAlib.RandomMatrix.Gaussian.Wishart.SmoothMeasureComparison
+import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin
+import NLAlib.RandomMatrix.Gaussian.Wishart.WeakDensity
+import NLAlib.RandomMatrix.Gaussian.Wishart.WeightedWeakDensity
 
 /-! # `RandomMatrix/Gaussian/Wishart`
 

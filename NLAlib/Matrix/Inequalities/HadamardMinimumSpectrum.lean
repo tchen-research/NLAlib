@@ -4,22 +4,22 @@ import NLAlib.Matrix.Inequalities.HadamardOrder
 # Minimum spectrum of a positive Hadamard product
 
 Relative spectral order and `A ⊙ A⁻¹ ≥ I` give the lower bound by the
-actual minimum real spectrum of the ordinary product.
+minimum real spectrum of the ordinary product.
 Source: Horn--Johnson (2013), Theorem 7.7.18;
 atlas `schur-product-inequalities`.
 -/
 
 noncomputable section
 open Matrix
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
+open scoped Matrix MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The product of two real positive definite matrices has a nonempty
 positive real spectrum in positive dimension, and its infimum is its
-smallest actual eigenvalue. Horn--Johnson (2013), Section 7.6;
+smallest eigenvalue. Horn--Johnson (2013), Section 7.6;
 helper for Schur-product spectral bounds. -/
-theorem spectrum_mul_nonempty_and_sInf_nonneg_of_posDef [Nonempty n]
+private theorem spectrum_mul_nonempty_and_sInf_nonneg_of_posDef_aux [Nonempty n]
     {A B : Matrix n n ℝ} (hA : A.PosDef) (hB : B.PosDef) :
     (spectrum ℝ (A * B)).Nonempty ∧ 0 ≤ sInf (spectrum ℝ (A * B)) := by
   let : Invertible A := hA.isUnit.invertible
@@ -31,6 +31,20 @@ theorem spectrum_mul_nonempty_and_sInf_nonneg_of_posDef [Nonempty n]
   refine ⟨hne, le_csInf hne ?_⟩
   intro z hz
   exact spectrum_mul_subset_nonneg_of_posDef hA hB.posSemidef hz
+
+/-- The product of two positive definite matrices has a nonempty real spectrum in positive dimension. Horn–Johnson 2013, §7.6.
+atlas: schur-product-inequalities (partial) -/
+theorem spectrum_mul_nonempty_of_posDef [Nonempty n]
+    {A B : Matrix n n ℝ} (hA : A.PosDef) (hB : B.PosDef) :
+    (spectrum ℝ (A * B)).Nonempty :=
+  (spectrum_mul_nonempty_and_sInf_nonneg_of_posDef_aux hA hB).1
+
+/-- The real spectrum of a product of two positive definite matrices has nonnegative infimum. Horn–Johnson 2013, §7.6.
+atlas: schur-product-inequalities (partial) -/
+theorem sInf_spectrum_mul_nonneg_of_posDef [Nonempty n]
+    {A B : Matrix n n ℝ} (hA : A.PosDef) (hB : B.PosDef) :
+    0 ≤ sInf (spectrum ℝ (A * B)) :=
+  (spectrum_mul_nonempty_and_sInf_nonneg_of_posDef_aux hA hB).2
 
 /-- The smallest eigenvalue of the Hadamard product of two real SPD matrices
 is at least the smallest eigenvalue of their ordinary product. The second
@@ -46,7 +60,7 @@ theorem max_sInf_spectrum_mul_le_sInf_spectrum_hadamard [Nonempty n]
   have hBt : Bᵀ = B := by simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hB.isHermitian.eq
   rw [hBt, max_self]
   let c := sInf (spectrum ℝ (A * B))
-  have hc := (spectrum_mul_nonempty_and_sInf_nonneg_of_posDef hA hB).2
+  have hc := sInf_spectrum_mul_nonneg_of_posDef hA hB
   have hlow : c • A⁻¹ ≤ B := by
     apply (smul_le_iff_relative_spectrum_lower hA.inv hB.isHermitian c).mpr
     intro z hz

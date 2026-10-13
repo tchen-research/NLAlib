@@ -8,7 +8,7 @@ import NLAlib.Polynomial.Chebyshev.Core
 # Fourier reconstruction of analytic Chebyshev series
 
 This module identifies the Joukowski contour coefficients with the Fourier coefficients of
-the continuous circle pullback. It connects the proved analytic decay to Mathlib's genuine
+the continuous circle pullback. It connects the proved analytic decay to Mathlib's
 uniform Fourier reconstruction theorem, rather than assuming a Chebyshev expansion.
 -/
 
@@ -142,9 +142,9 @@ theorem norm_fourierCoeff_chebyshevCircleFunction_nat_le_of_open_ellipse
     rw [mul_div_assoc] at h
     linarith
 
-/-- The actual zeroth Chebyshev coefficient has the sharp norm bound on the original
+/-- The zeroth Chebyshev coefficient has the sharp norm bound on the original
 open Bernstein ellipse, without any outer-boundary continuity premise.
-Source: Trefethen, ATAP, Theorem 8.1; operator rederivations `rt:analytic-approx`.
+Source: Trefethen, ATAP, Theorem 8.1.
 atlas: chebyshev-coeff-analytic-decay (partial) -/
 theorem norm_chebyshevComplexCoeff_zero_le_of_open_ellipse
     {F : ℂ → ℂ} {ρ M : ℝ} (hρ : 1 < ρ)
@@ -154,9 +154,9 @@ theorem norm_chebyshevComplexCoeff_zero_le_of_open_ellipse
   simpa [chebyshevComplexCoeff_eq_fourierCoeff] using
     norm_fourierCoeff_chebyshevCircleFunction_nat_le_of_open_ellipse hρ hFd hM 0
 
-/-- The real zeroth Chebyshev coefficient has absolute value at most the actual
+/-- The real zeroth Chebyshev coefficient has absolute value at most the
 open-ellipse function bound.
-Source: Trefethen, ATAP, Theorem 8.1; operator rederivations `rt:analytic-approx`.
+Source: Trefethen, ATAP, Theorem 8.1.
 atlas: chebyshev-coeff-analytic-decay (partial) -/
 theorem abs_chebyshevAnalyticCoeff_zero_le_of_open_ellipse
     {F : ℂ → ℂ} {ρ M : ℝ} (hρ : 1 < ρ)
@@ -166,7 +166,7 @@ theorem abs_chebyshevAnalyticCoeff_zero_le_of_open_ellipse
   (Complex.abs_re_le_norm _).trans
     (norm_chebyshevComplexCoeff_zero_le_of_open_ellipse hρ hFd hM)
 
-/-- Genuine analytic decay makes the full two-sided Fourier coefficient sequence summable.
+/-- Analytic decay makes the full two-sided Fourier coefficient sequence summable.
 Source: Trefethen, ATAP, Theorems 8.1 and 3.1(a); helper for `chebyshev-approx-analytic`. -/
 theorem summable_fourierCoeff_chebyshevCircleFunction_of_open_ellipse
     {F : ℂ → ℂ} {ρ M : ℝ} (hρ : 1 < ρ)
@@ -191,7 +191,7 @@ theorem summable_fourierCoeff_chebyshevCircleFunction_of_open_ellipse
   exact Summable.of_nat_of_neg_add_one hs_nat hs_neg
 
 /-- The Fourier series of the circle pullback reconstructs the original function pointwise,
-under the genuine open-ellipse analytic assumptions.
+under the open-ellipse analytic assumptions.
 Source: Trefethen, ATAP, Theorems 8.1 and 3.1(a); Mathlib's uniform Fourier reconstruction.
 Atlas `chebyshev-approx-analytic` (helper). -/
 theorem hasSum_fourier_chebyshevCircleFunction_of_open_ellipse

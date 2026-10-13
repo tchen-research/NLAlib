@@ -6,7 +6,7 @@ import NLAlib.Probability.Gaussian.Moments.PolynomialLinearMoments
 A pairing matches the first remaining position with its unique partner and
 recursively pairs the remaining positions. This is a finite data type, not a
 moment or Stein hypothesis. Odd families are empty and the empty family has
-the single empty pairing. Source: operator re-derivation `pg:wick`.
+the single empty pairing. Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28.
 Supports atlas `isserlis`.
 -/
 
@@ -17,7 +17,7 @@ namespace NLAlib
 
 /-- All unordered complete pairings of `m` labelled positions, in canonical
 order: choose the partner of the smallest remaining position, then recurse.
-Source: Isserlis 1918 and operator re-derivation `pg:wick`. -/
+Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28. -/
 def GaussianPairings : ℕ → Type
   | 0 => Unit
   | 1 => Empty
@@ -35,7 +35,7 @@ re-derivation `pg:wick`; the construction includes odd and empty lengths. -/
 attribute [instance] gaussianPairingsFintype
 
 /-- The product of covariance entries over the unordered pairs of a canonical
-complete pairing. Source: operator re-derivation `pg:wick`. -/
+complete pairing. Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28. -/
 def gaussianPairingWeight : {m : ℕ} →
     (Fin m → Fin m → ℝ) → GaussianPairings m → ℝ
   | 0, _, _ => 1
@@ -44,7 +44,7 @@ def gaussianPairingWeight : {m : ℕ} →
       (fun a b => C (j.succAbove a).succ (j.succAbove b).succ) π
 
 /-- The positions covered by a pairing, listed pair by pair. Source:
-operator re-derivation `pg:wick`; this records its literal combinatorial scope. -/
+Janson 1997, §1.5; this records its combinatorial scope. -/
 def gaussianPairingPositions : {m : ℕ} → GaussianPairings m → List (Fin m)
   | 0, _ => []
   | 1, π => Empty.elim π
@@ -52,7 +52,7 @@ def gaussianPairingPositions : {m : ℕ} → GaussianPairings m → List (Fin m)
       (gaussianPairingPositions π).map (fun a => (j.succAbove a).succ)
 
 /-- A complete pairing covers exactly its number of labelled positions.
-Source: the finite pairing construction in operator re-derivation `pg:wick`. -/
+Source: Janson 1997, *Gaussian Hilbert Spaces*, §1.5 (Feynman diagrams / pairings). -/
 theorem gaussianPairingPositions_length {m : ℕ} (π : GaussianPairings m) :
     (gaussianPairingPositions π).length = m := by
   induction m using Nat.twoStepInduction with
@@ -64,7 +64,7 @@ theorem gaussianPairingPositions_length {m : ℕ} (π : GaussianPairings m) :
 
 /-- Every position appears in a canonical complete pairing. Together with the
 exact length, this says each position appears once.
-Source: operator re-derivation `pg:wick`. -/
+Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28. -/
 theorem gaussianPairingPositions_toFinset {m : ℕ} (π : GaussianPairings m) :
     (gaussianPairingPositions π).toFinset = Finset.univ := by
   induction m using Nat.twoStepInduction with
@@ -90,7 +90,7 @@ theorem gaussianPairingPositions_toFinset {m : ℕ} (π : GaussianPairings m) :
             exact Or.inr (Or.inr ⟨a, htail a, rfl⟩)
 
 /-- A complete pairing uses every labelled position exactly once.
-Source: operator re-derivation `pg:wick`; this rules out reused positions. -/
+Source: Janson 1997, §1.5; this rules out reused positions. -/
 theorem gaussianPairingPositions_nodup {m : ℕ} (π : GaussianPairings m) :
     (gaussianPairingPositions π).Nodup := by
   apply (Multiset.toFinset_card_eq_card_iff_nodup
@@ -101,11 +101,11 @@ theorem gaussianPairingPositions_nodup {m : ℕ} (π : GaussianPairings m) :
 
 /-- Gaussian Wick's finite pairing sum for arbitrary products of linear forms
 under independent standard coordinates, including singular images and repeated
-coefficient vectors. Source: operator re-derivation `pg:wick`.
+coefficient vectors. Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28.
 atlas: isserlis (partial) -/
 theorem integral_prod_dotProduct_eq_sum_gaussianPairingWeight
     {n m : ℕ} (a : Fin m → Fin n → ℝ) :
-    ∫ x : Fin n → ℝ, ∏ j, a j ⬝ᵥ x ∂Measure.pi (fun _ => gaussianReal 0 1) =
+    ∫ x : Fin n → ℝ, ∏ j, a j ⬝ᵥ x ∂(gaussianVector _) =
       ∑ π : GaussianPairings m, gaussianPairingWeight (fun i j => a i ⬝ᵥ a j) π := by
   induction m using Nat.twoStepInduction with
   | zero =>
@@ -117,7 +117,7 @@ theorem integral_prod_dotProduct_eq_sum_gaussianPairingWeight
       rw [hsum]
       simp
   | one =>
-      have hh := integral_dotProduct_mul_prod_pi_gaussianReal
+      have hh := integral_dotProduct_mul_prod_gaussianVector
         (∅ : Finset (Fin 0)) (fun j => Fin.elim0 j) (a 0)
       have : IsEmpty (GaussianPairings 1) := inferInstanceAs (IsEmpty Empty)
       have hsum : (∑ π : GaussianPairings 1,
@@ -125,7 +125,7 @@ theorem integral_prod_dotProduct_eq_sum_gaussianPairingWeight
       rw [hsum]
       simpa using hh
   | more m ih _ =>
-      have hrec := integral_dotProduct_mul_prod_pi_gaussianReal
+      have hrec := integral_dotProduct_mul_prod_gaussianVector
         (Finset.univ : Finset (Fin (m + 1))) (fun j => a j.succ) (a 0)
       have hprod : ∀ x : Fin n → ℝ,
           (∏ j : Fin (m + 2), a j ⬝ᵥ x) =
@@ -152,7 +152,7 @@ re-derivation `pg:wick`.
 atlas: isserlis (partial) -/
 theorem integral_prod_dotProduct_eq_zero_of_odd
     {n m : ℕ} (hm : Odd m) (a : Fin m → Fin n → ℝ) :
-    ∫ x : Fin n → ℝ, ∏ j, a j ⬝ᵥ x ∂Measure.pi (fun _ => gaussianReal 0 1) = 0 := by
+    ∫ x : Fin n → ℝ, ∏ j, a j ⬝ᵥ x ∂(gaussianVector _) = 0 := by
   rw [integral_prod_dotProduct_eq_sum_gaussianPairingWeight]
   have hEmpty : ∀ m : ℕ, Odd m → IsEmpty (GaussianPairings m) := by
     intro m

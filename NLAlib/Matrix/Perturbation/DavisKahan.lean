@@ -3,14 +3,14 @@ import NLAlib.Matrix.Perturbation.Sylvester
 /-!
 # Davis–Kahan residual bounds
 
-The mixed-gap theorem follows from the actual invariant-subspace equations
+The mixed-gap theorem follows from the invariant-subspace equations
 and the interval/complement Sylvester bound. It keeps the compressed residual
 and both spectral and Frobenius norms. Source: Davis–Kahan §6;
 atlas `davis-kahan-sin-theta`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -47,6 +47,7 @@ theorem sylvester_complement_overlap_eq {A E : Matrix n n ℝ}
   rw [hQQ, ← Matrix.mul_assoc M Rᵀ Q, ← hRT, Matrix.mul_add, Matrix.add_mul]
   abel
 
+open scoped Matrix.Norms.L2Operator in
 /-- Davis–Kahan with the full compressed residual and the spectral
 interval/complement gap. Davis–Kahan §6; empty selected or complementary frames
 are allowed. This is the constant-one mixed-gap form.
@@ -74,8 +75,9 @@ theorem specNorm_sinePrincipalAngles_le_compressed_residual_div
   rw [hangles, specNorm_sinePrincipalAngles_eq_complement_overlap hQhat hQ hR hcomp]
   exact hh
 
+open scoped Matrix.Norms.L2Operator in
 /-- Davis–Kahan's corresponding compressed Frobenius residual bound.
-Davis–Kahan §6; the actual separation, not a desired norm bound, is assumed.
+Davis–Kahan §6; the separation, not a desired norm bound, is assumed.
 atlas: davis-kahan-sin-theta (partial) -/
 theorem frobNorm_sinePrincipalAngles_le_compressed_residual_div
     {A E : Matrix n n ℝ} (hA : A.IsHermitian) (hE : E.IsHermitian)
@@ -101,9 +103,10 @@ theorem frobNorm_sinePrincipalAngles_le_compressed_residual_div
   rw [hangles, frobNorm_sinePrincipalAngles_eq_complement_overlap hQhat hQ hR hcomp]
   exact hh
 
+open scoped Matrix.Norms.L2Operator in
 /-- Interval/complement separation gives both compressed residual bounds
 without requiring an endpoint order in empty selected spaces. Davis–Kahan §6;
-Hermitian coefficient matrices are derived from the actual invariant frames.
+Hermitian coefficient matrices are derived from the invariant frames.
 atlas: davis-kahan-sin-theta (partial) -/
 theorem sinePrincipalAngles_le_compressed_residual_div_of_interval
     {A E : Matrix n n ℝ} (hA : A.IsHermitian) (hE : E.IsHermitian)

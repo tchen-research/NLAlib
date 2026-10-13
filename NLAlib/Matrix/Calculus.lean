@@ -1,14 +1,5 @@
 import NLAlib.Matrix.Calculus.DeterminantDerivative
 import NLAlib.Matrix.Calculus.DeterminantDerivativeFinite
-import NLAlib.Matrix.Calculus.GramCutoffCalculus
-import NLAlib.Matrix.Calculus.GramSoftMin
-import NLAlib.Matrix.Calculus.GramSoftMinSpectral
-import NLAlib.Matrix.Calculus.GramTrace
-import NLAlib.Matrix.Calculus.InversePowerConcavity
-import NLAlib.Matrix.Calculus.InversePowerGrowth
-import NLAlib.Matrix.Calculus.InversePowerLaplacianLimit
-import NLAlib.Matrix.Calculus.InversePowerLimit
-import NLAlib.Matrix.Calculus.UnshiftedGramSoftMin
 
 /-! # `Matrix/Calculus`
 

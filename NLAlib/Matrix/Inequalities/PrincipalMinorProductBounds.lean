@@ -13,7 +13,7 @@ atlas `hadamard-fischer-inequalities`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -21,19 +21,37 @@ omit [Fintype n] in
 /-- The local one-element-deletion inequality and exact equality inside
 each nonempty principal block. Horn--Johnson (2013), Lemma 7.8.8;
 helper for Szász's inequality. -/
-theorem principalMinor_pow_pred_le_prod_erase_and_eq_iff {A : Matrix n n ℝ}
+private theorem principalMinor_pow_pred_le_prod_erase_and_eq_iff_aux {A : Matrix n n ℝ}
     (hA : A.PosDef) (T : Finset n) (hT : T.Nonempty) :
     principalMinor A T ^ (T.card - 1) ≤ ∏ i ∈ T, principalMinor A (T.erase i) ∧
     (principalMinor A T ^ (T.card - 1) = (∏ i ∈ T, principalMinor A (T.erase i)) ↔
       (A.toBlock (· ∈ T) (· ∈ T)).IsDiag) := by
   let : Nonempty T := ⟨⟨hT.choose, hT.choose_spec⟩⟩
   have hM : (A.toBlock (· ∈ T) (· ∈ T)).PosDef := hA.submatrix Subtype.val_injective
-  have h := det_pow_card_pred_le_prod_complement_singleton_and_eq_iff hM
-  simp only [Fintype.card_coe, det_toBlock_complement_eq_principalMinor_erase] at h
+  have h1 := det_pow_card_pred_le_prod_complement_singleton hM
+  have h2 := det_pow_card_pred_eq_prod_complement_singleton_iff hM
+  simp only [Fintype.card_coe, det_toBlock_complement_eq_principalMinor_erase] at h1 h2
   have hp : (∏ i : T, principalMinor A (T.erase i.val)) = ∏ i ∈ T, principalMinor A (T.erase i) :=
     Finset.prod_coe_sort T (fun i => principalMinor A (T.erase i))
-  rw [hp] at h
-  exact h
+  rw [hp] at h1 h2
+  exact ⟨h1, h2⟩
+
+omit [Fintype n] in
+/-- The local one-element-deletion inequality inside a nonempty principal block (Szász step). Horn–Johnson 2013, Lemma 7.8.8.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem principalMinor_pow_pred_le_prod_erase {A : Matrix n n ℝ}
+    (hA : A.PosDef) (T : Finset n) (hT : T.Nonempty) :
+    principalMinor A T ^ (T.card - 1) ≤ ∏ i ∈ T, principalMinor A (T.erase i) :=
+  (principalMinor_pow_pred_le_prod_erase_and_eq_iff_aux hA T hT).1
+
+omit [Fintype n] in
+/-- Equality in the one-element-deletion inequality holds exactly for a diagonal principal block. Horn–Johnson 2013, Lemma 7.8.8.
+atlas: hadamard-fischer-inequalities (partial) -/
+theorem principalMinor_pow_pred_eq_prod_erase_iff {A : Matrix n n ℝ}
+    (hA : A.PosDef) (T : Finset n) (hT : T.Nonempty) :
+    principalMinor A T ^ (T.card - 1) = (∏ i ∈ T, principalMinor A (T.erase i)) ↔
+      (A.toBlock (· ∈ T) (· ∈ T)).IsDiag :=
+  (principalMinor_pow_pred_le_prod_erase_and_eq_iff_aux hA T hT).2
 
 /-- The product at order `k+1`, raised to `k`, is bounded by the product at
 order `k`, raised to `card n-k`. The integer-power form is valid at all
@@ -47,7 +65,7 @@ theorem principalMinorProduct_succ_pow_le_of_posDef {A : Matrix n n ℝ}
       principalMinor A T ^ k ≤ ∏ i ∈ T, principalMinor A (T.erase i) := by
     have hc := (Finset.mem_powersetCard.mp hT).2
     have hne : T.Nonempty := Finset.card_pos.mp (by omega)
-    simpa only [hc, Nat.add_sub_cancel] using (principalMinor_pow_pred_le_prod_erase_and_eq_iff hA T hne).1
+    simpa only [hc, Nat.add_sub_cancel] using principalMinor_pow_pred_le_prod_erase hA T hne
   have hp := Finset.prod_le_prod
     (s := (Finset.univ : Finset n).powersetCard (k + 1))
     (fun T _ => pow_nonneg (principalMinor_pos hA T).le k) hlocal
@@ -79,7 +97,7 @@ theorem principalMinorProduct_succ_pow_eq_iff_isDiag {A : Matrix n n ℝ}
         (A.toBlock (· ∈ T) (· ∈ T)).IsDiag) := by
     have hc := (Finset.mem_powersetCard.mp hT).2
     have hne : T.Nonempty := Finset.card_pos.mp (by omega)
-    simpa only [hc, Nat.add_sub_cancel] using principalMinor_pow_pred_le_prod_erase_and_eq_iff hA T hne
+    simpa only [hc, Nat.add_sub_cancel] using (principalMinor_pow_pred_le_prod_erase_and_eq_iff_aux hA T hne)
   constructor
   · intro heq
     have hAll (T : Finset n) (hT : T ∈ (Finset.univ : Finset n).powersetCard (k + 1)) :

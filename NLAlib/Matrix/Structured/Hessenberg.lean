@@ -1,6 +1,8 @@
+import Mathlib.LinearAlgebra.Matrix.Hermitian
 import Mathlib.LinearAlgebra.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.Symmetric
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Real.Star
 
 /-!
 # Hessenberg and tridiagonal shapes
@@ -8,10 +10,10 @@ import Mathlib.Data.Real.Basic
 Shape predicates on square matrices indexed by `Fin n`:
 
 * `IsUpperHessenberg H` (`H i j = 0` for `j + 1 < i`), `IsTridiagonal T` (`T` and `Tᵀ` upper
-  Hessenberg) and `IsUnreducedHessenberg H` (upper Hessenberg with no zero subdiagonal entry);
+ Hessenberg) and `IsUnreducedHessenberg H` (upper Hessenberg with no zero subdiagonal entry);
 * closure lemmas: upper triangular ⇒ Hessenberg, Hessenberg × upper triangular and
-  upper triangular × Hessenberg are Hessenberg, shifts `H ∓ μI` are Hessenberg
-  (`IsUpperHessenberg.sub_smul_one`, `.add_smul_one`), symmetric Hessenberg ⇒ tridiagonal.
+ upper triangular × Hessenberg are Hessenberg, shifts `H ∓ μI` are Hessenberg
+ (`IsUpperHessenberg.sub_smul_one`, `.add_smul_one`), symmetric Hessenberg ⇒ tridiagonal.
 
 They are used by Givens QR (`NLAlib.Matrix.Factorizations.Givens`), Hessenberg reduction
 (`NLAlib.Matrix.Factorizations.Hessenberg`) and the QR algorithm.
@@ -68,9 +70,9 @@ theorem IsUpperHessenberg.isUpperTriangular_mul {H U : Matrix (Fin n) (Fin n) �
 
 /-- **A symmetric upper Hessenberg matrix is tridiagonal.** Golub–Van Loan 2013, §8.3.1;
 Trefethen–Bau 1997, Lect. 26. -/
-theorem IsUpperHessenberg.isTridiagonal_of_isSymm {H : Matrix (Fin n) (Fin n) ℝ}
-    (hH : IsUpperHessenberg H) (hS : H.IsSymm) : IsTridiagonal H :=
-  ⟨hH, by rw [hS.eq]; exact hH⟩
+theorem IsUpperHessenberg.isTridiagonal_of_isHermitian {H : Matrix (Fin n) (Fin n) ℝ}
+    (hH : IsUpperHessenberg H) (hS : H.IsHermitian) : IsTridiagonal H :=
+  ⟨hH, by rw [(Matrix.isHermitian_iff_isSymm.mp hS).eq]; exact hH⟩
 
 /-- Subtracting a multiple of the identity keeps upper Hessenberg form. Helper for
 `qr-algorithm-simultaneous-iteration`. -/

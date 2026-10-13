@@ -24,25 +24,28 @@ theorem trace_eq_sum_eigenvalues₀ {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- Every top eigenvalue sum of a sum is bounded by the sum of the two top
 eigenvalue sums. Fan (1949), Theorem 1, including empty and full prefixes.
-atlas: ky-fan-maximum-principle (partial) -/
+atlas: ky-fan-maximum-principle -/
 theorem eigenvaluePrefix_add_le {n : Type*} [Fintype n] [DecidableEq n]
     {A B : Matrix n n ℝ} (hA : A.IsHermitian) (hB : B.IsHermitian)
     (hAB : (A + B).IsHermitian) {k : ℕ} (hk : k ≤ Fintype.card n) :
-    eigenvaluePrefix hAB hk ≤ eigenvaluePrefix hA hk + eigenvaluePrefix hB hk := by
+    eigenvaluePrefix hAB k ≤ eigenvaluePrefix hA k + eigenvaluePrefix hB k := by
   let Q := topEigenframe hAB hk
   have hQ : HasOrthonormalCols Q := hasOrthonormalCols_topEigenframe hAB hk
-  have ht : (Qᵀ * (A + B) * Q).trace = eigenvaluePrefix hAB hk := by
-    rw [compression_topEigenframe_eq_diagonal hAB hk, Matrix.trace_diagonal]
+  have ht : (Qᵀ * (A + B) * Q).trace = eigenvaluePrefix hAB k := by
+    rw [compression_topEigenframe_eq_diagonal hAB hk, Matrix.trace_diagonal,
+      eigenvaluePrefix_eq_sum_castLE hAB hk]
     rfl
   rw [← ht, Matrix.mul_add, Matrix.add_mul, Matrix.trace_add]
   have h1 := trace_compression_le_eigenvaluePrefix hA hQ
   have h2 := trace_compression_le_eigenvaluePrefix hB hQ
-  simpa only [Fintype.card_fin] using add_le_add h1 h2
+  simp only [RCLike.re_to_real, Matrix.conjTranspose_eq_transpose_of_trivial,
+    Fintype.card_fin] at h1 h2
+  exact add_le_add h1 h2
 
 /-- The spectrum of a real symmetric sum is majorized by the coordinatewise
 sum of the two decreasing spectra. Equality of totals follows from trace.
 Fan (1949), Theorem 1; Horn–Johnson (2013), Corollary 4.3.39.
-atlas: ky-fan-maximum-principle (partial) -/
+atlas: ky-fan-maximum-principle -/
 theorem majorized_eigenvalues₀_add {n : Type*} [Fintype n] [DecidableEq n]
     {A B : Matrix n n ℝ} (hA : A.IsHermitian) (hB : B.IsHermitian) :
     Majorized (hA.add hB).eigenvalues₀ (hA.eigenvalues₀ + hB.eigenvalues₀) := by
@@ -63,7 +66,7 @@ theorem majorized_eigenvalues₀_add {n : Type*} [Fintype n] [DecidableEq n]
 /-- Singular values of a sum are weakly majorized by the coordinatewise sum
 of its two decreasing singular-value lists, for arbitrary finite matrix indices.
 Fan (1949), Theorem 1; includes empty matrix shapes.
-atlas: ky-fan-maximum-principle (partial) -/
+atlas: ky-fan-maximum-principle -/
 theorem weaklyMajorized_singularValues_add {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] (A B : Matrix m n ℝ) :
     WeaklyMajorized

@@ -30,8 +30,8 @@ theorem exists_isQR (A : Matrix m n ℝ) (hCard : Fintype.card n ≤ Fintype.car
   have hGramPSD : (Aᵀ * A).PosSemidef := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
       Matrix.posSemidef_conjTranspose_mul_self A
-  obtain ⟨L, hLower, hDiag, hFactor⟩ :=
-    exists_cholesky_of_posSemidef_fintype (Aᵀ * A) hGramPSD
+  obtain ⟨L, hLower, hDiag, hFactor'⟩ := exists_eq_mul_transpose_of_posSemidef hGramPSD
+  have hFactor := hFactor'.symm
   let R := Lᵀ
   obtain ⟨J, hJ⟩ := exists_hasOrthonormalCols_of_card_le hCard
   have hJGram : Jᵀ * J = 1 := hJ

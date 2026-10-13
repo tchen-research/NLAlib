@@ -6,7 +6,7 @@ import NLAlib.Matrix.Spectral.Diagonalizable
 
 Whitening a positive definite matrix and orthogonally diagonalizing the
 whitened symmetric second matrix gives one invertible congruence factor.
-The diagonal entries are the actual eigenvalues of the relative operator,
+The diagonal entries are the eigenvalues of the relative operator,
 and inherit the second matrix's inertia and positivity.
 Source: Horn--Johnson (2013), Theorem 7.6.1 and Corollary 7.6.2.
 This is the definite part of `simultaneous-diagonalization-congruence`.
@@ -14,12 +14,13 @@ This is the definite part of `simultaneous-diagonalization-congruence`.
 
 noncomputable section
 open Matrix Polynomial
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- A positive definite and symmetric pair is simultaneously congruent to
 the identity and a real diagonal, in factor form. The diagonal entries are
 nonnegative whenever the second matrix is PSD.
@@ -84,6 +85,7 @@ theorem inverse_mul_eq_inv_transpose_mul_diagonal_mul_transpose
   simp only [Matrix.mul_assoc]
   rw [← Matrix.mul_assoc S⁻¹ S, Matrix.nonsing_inv_mul S hSd, Matrix.one_mul]
 
+open scoped Matrix.Norms.L2Operator in
 /-- The diagonal of a definite-pair congruence enumerates the relative
 operator's eigenvalues with full characteristic multiplicity.
 Horn--Johnson (2013), Theorem 7.6.1;
@@ -97,6 +99,7 @@ theorem charpoly_inverse_mul_eq_prod_of_congruence
   have h := Matrix.charpoly_units_conj' hSt.unit (diagonal d)
   simpa only [Matrix.coe_units_inv, hSt.unit_spec, Matrix.charpoly_diagonal] using h
 
+open scoped Matrix.Norms.L2Operator in
 /-- The real relative spectrum of a definite-pair congruence is exactly
 the diagonal range. Horn--Johnson (2013), Theorem 7.6.1;
 helper for `simultaneous-diagonalization-congruence`. -/
@@ -142,6 +145,7 @@ theorem isDiagonalizable_inverse_mul_of_posDef {A B : Matrix n n ℝ}
   obtain ⟨S, d, hS, hAA, hBB, -⟩ := exists_definite_pair_congruence_diagonal hA hB
   exact isDiagonalizable_inverse_mul_of_congruence hS hAA hBB
 
+open scoped Matrix.Norms.L2Operator in
 /-- The product of a positive definite real matrix and a symmetric real
 matrix is diagonalizable over the real field.
 Horn--Johnson (2013), Corollary 7.6.2.
@@ -152,6 +156,7 @@ theorem isDiagonalizable_mul_of_posDef {A B : Matrix n n ℝ}
   simpa only [Matrix.inv_inv_of_invertible] using
     isDiagonalizable_inverse_mul_of_posDef hA.inv hB
 
+open scoped Matrix.Norms.L2Operator in
 /-- The relative operator of a positive definite and PSD pair has
 nonnegative real spectrum. Horn--Johnson (2013), Corollary 7.6.2.
 atlas: simultaneous-diagonalization-congruence (partial) -/
@@ -162,6 +167,7 @@ theorem spectrum_inverse_mul_subset_nonneg_of_posDef {A B : Matrix n n ℝ}
   rintro _ ⟨i, rfl⟩
   exact hd hB i
 
+open scoped Matrix.Norms.L2Operator in
 /-- The product of a positive definite and PSD real pair has nonnegative
 real spectrum. Horn--Johnson (2013), Corollary 7.6.2.
 atlas: simultaneous-diagonalization-congruence (partial) -/
@@ -171,12 +177,13 @@ theorem spectrum_mul_subset_nonneg_of_posDef {A B : Matrix n n ℝ}
   simpa only [Matrix.inv_inv_of_invertible] using
     spectrum_inverse_mul_subset_nonneg_of_posDef hA.inv hB
 
+open scoped Matrix.Norms.L2Operator in
 /-- The full definite-pair congruence clause gives the exact relative
 eigenvalue list, its inertia and PSD signs, and real diagonalizability of
 both relative and ordinary products. The general indefinite and PSD-pair
 variants are separate parts of the atlas bundle.
 Horn--Johnson (2013), Theorem 7.6.1 and Corollary 7.6.2.
-atlas: simultaneous-diagonalization-congruence (partial) -/
+atlas: simultaneous-diagonalization-congruence -/
 theorem definite_pair_congruence_characterizations {A B : Matrix n n ℝ}
     (hA : A.PosDef) (hB : B.IsHermitian) :
     (∃ (S : Matrix n n ℝ) (d : n → ℝ), IsUnit S ∧ A = S * Sᵀ ∧

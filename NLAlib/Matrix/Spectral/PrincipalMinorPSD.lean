@@ -71,7 +71,7 @@ theorem posSemidef_of_signed_charpoly_coeff_nonneg {A : Matrix n n ℝ}
 degree, with zero coefficients allowed. Horn--Johnson (2013), Theorem 7.2.5;
 frontier equation `herm:coefficient-correct` repairs the catalogue's
 nonzero-coefficient wording.
-atlas: sylvester-criterion (partial) -/
+atlas: sylvester-criterion -/
 theorem posSemidef_iff_signed_charpoly_coeff_nonneg {A : Matrix n n ℝ}
     (hA : A.IsHermitian) :
     A.PosSemidef ↔ ∀ k, k ≤ Fintype.card n →
@@ -82,7 +82,7 @@ theorem posSemidef_iff_signed_charpoly_coeff_nonneg {A : Matrix n n ℝ}
 /-- PSD membership is equivalent to nonnegativity of every principal
 minor, including the empty principal minor. Horn--Johnson (2013),
 Theorem 7.2.5 and Corollary 7.2.4.
-atlas: sylvester-criterion (partial) -/
+atlas: sylvester-criterion -/
 theorem posSemidef_iff_principal_minors_nonneg {A : Matrix n n ℝ} (hA : A.IsHermitian) :
     A.PosSemidef ↔ ∀ S : Finset n,
       0 ≤ (A.submatrix (Subtype.val : S → n) (Subtype.val : S → n)).det := by

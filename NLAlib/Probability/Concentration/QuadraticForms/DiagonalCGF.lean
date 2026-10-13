@@ -3,7 +3,7 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
@@ -16,12 +16,13 @@ import NLAlib.ForMathlib.Probability.IndepExpSum
 
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
-`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
-Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in
+`NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
 set_option maxRecDepth 5000
@@ -35,15 +36,16 @@ def diagonalCenteredQuadraticForm {n : ℕ} (μ : Measure Ω)
     (A : Matrix (Fin n) (Fin n) ℝ) (X : Fin n → Ω → ℝ) : Ω → ℝ :=
   fun ω => ∑ i, A i i * (X i ω ^ 2 - ∫ ω, X i ω ^ 2 ∂μ)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `diagonalCenteredQuadraticForm_cgf_le` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
     (hC_domain : exp 1 ≤ C) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
     (hOp : 0 < specNorm A)
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hind : iIndepFun X μ)
+    (hmgf : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hθ : |θ| ≤ (2 * C * K ^ 2 * specNorm A)⁻¹) :
     cgf (diagonalCenteredQuadraticForm μ A X) μ θ ≤
       C * θ ^ 2 * K ^ 4 * frobNorm A ^ 2 := by
@@ -91,14 +93,14 @@ lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasu
             _ = 1 / 2 := by norm_num
   have hZ_indep : iIndepFun Z μ := by
     have hY_indep : iIndepFun Y μ := by
-      simpa only [Y] using iIndepFun_centered_sq (μ := μ) (X := X) h_indep
+      simpa only [Y] using iIndepFun_centered_sq (μ := μ) (X := X) hind
     simpa only [Z, Function.comp_def] using
       hY_indep.comp (fun i x => A i i * x) (fun _ => by fun_prop)
   have hZ_meas : ∀ i, AEMeasurable (Z i) μ := by
     intro i
     change AEMeasurable
       (fun ω => A i i * (X i ω ^ 2 - ∫ ω, X i ω ^ 2 ∂μ)) μ
-    exact (((hX_subG i).aemeasurable.pow_const 2).sub_const _).const_mul _
+    exact (((hmgf i).aemeasurable.pow_const 2).sub_const _).const_mul _
   have hZ_int :
       ∀ i ∈ (Finset.univ : Finset (Fin n)),
         Integrable (fun ω => exp (θ * Z i ω)) μ := by
@@ -107,7 +109,7 @@ lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasu
       linarith [hhalf_i i]
     have hint :=
       integrable_exp_centered_sq_of_hasSubgaussianMGF_of_le
-        (hX_subG i) hKsq_pos hC0_le hsmall_lt
+        (hmgf i) hKsq_pos hC0_le hsmall_lt
     convert hint using 1
     ext ω
     change exp (θ * (A i i * (X i ω ^ 2 - ∫ x, X i x ^ 2 ∂μ))) = _
@@ -125,7 +127,7 @@ lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasu
     intro i
     have hbase :=
       centered_sq_cgf_le_of_hasSubgaussianMGF_of_le
-        (hX_subG i) hKsq_pos hC0_le (hhalf_i i)
+        (hmgf i) hKsq_pos hC0_le (hhalf_i i)
     calc
       cgf (Z i) μ θ
           = cgf (Y i) μ (A i i * θ) := by

@@ -1,6 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
 import Mathlib.RingTheory.Polynomial.Resultant.Basic
-import NLAlib.Matrix.Calculus.GramSoftMinSpectral
+import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.GramSoftMinSpectral
 /-!
 # Almost-sure simple spectrum of a Gaussian Gram matrix
 

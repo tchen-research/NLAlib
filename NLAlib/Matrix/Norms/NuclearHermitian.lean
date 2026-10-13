@@ -16,7 +16,7 @@ Atlas: `lidskii`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
@@ -37,7 +37,8 @@ theorem gram_orthogonal_diagonalization {n : Type*} [Fintype n] [DecidableEq n]
       rw [Matrix.diagonal_mul_diagonal]
       simp only [pow_two]
 
-/-- The absolute functional calculus has the same actual Gram matrix as a real
+open scoped Matrix.Norms.L2Operator in
+/-- The absolute functional calculus has the same Gram matrix as a real
 Hermitian matrix, including zero and repeated eigenvalues. -/
 theorem gram_cfc_abs_eq {n : Type*} [Fintype n] [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.IsHermitian) :
@@ -51,6 +52,7 @@ theorem gram_cfc_abs_eq {n : Type*} [Fintype n] [DecidableEq n]
   rw [gram_orthogonal_diagonalization hP]
   simp only [sq_abs]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Absolute functional calculus preserves every native singular value of a
 real Hermitian matrix. -/
 theorem singularValues_cfc_abs {n : Type*} [Fintype n] [DecidableEq n]
@@ -58,6 +60,7 @@ theorem singularValues_cfc_abs {n : Type*} [Fintype n] [DecidableEq n]
     singularValues (cfc (abs : ℝ → ℝ) A) k = singularValues A k :=
   singularValues_eq_of_gram_eq _ _ (gram_cfc_abs_eq hA) k
 
+open scoped Matrix.Norms.L2Operator in
 /-- The nuclear norm of a real Hermitian matrix is the sum of the absolute
 values of its full decreasing eigenvalue list. Empty dimensions are included. -/
 theorem nuclearNorm_eq_sum_abs_eigenvalues₀ {n : Type*} [Fintype n] [DecidableEq n]
@@ -67,7 +70,7 @@ theorem nuclearNorm_eq_sum_abs_eigenvalues₀ {n : Type*} [Fintype n] [Decidable
     posSemidef_cfc_of_nonneg_eigenvalues hA (fun i => abs_nonneg _)
   calc
     nuclearNorm A = nuclearNorm (cfc (abs : ℝ → ℝ) A) := by
-      unfold nuclearNorm kyFanNorm
+      rw [nuclearNorm, kyFanNorm_eq_sum_range]
       simp only [← singularValues_eq_linearMap]
       simp_rw [singularValues_cfc_abs hA]
     _ = (cfc (abs : ℝ → ℝ) A).trace := nuclearNorm_eq_trace_of_posSemidef hAbs
@@ -75,8 +78,9 @@ theorem nuclearNorm_eq_sum_abs_eigenvalues₀ {n : Type*} [Fintype n] [Decidable
       rw [trace_cfc_eq_sum_eigenvalues hA (abs : ℝ → ℝ)]
       exact sum_eigenvalues_eq_sum_sorted hA (abs : ℝ → ℝ)
 
+open scoped Matrix.Norms.L2Operator in
 /-- Full Hermitian spectral variation in nuclear norm, with constant one.
-Lidskii ordinary majorization and the genuine convex absolute-value test imply
+Lidskii ordinary majorization and the convex absolute-value test imply
 this for arbitrary finite dimensions and all repeated/zero/signed spectra.
 Bhatia (1997), Theorem III.4.1.
 atlas: lidskii (partial) -/

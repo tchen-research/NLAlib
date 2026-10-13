@@ -3,7 +3,7 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 
-Ported from HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae,
+Ported from HighDimProb (Y. Zhang, J. D. Lee, F. Liu; Apache-2.0),
 HighDimProb/Concentration/HansonWright.lean, to Lean 4.33.1.
 The original Apache-2.0 copyright notice is retained. The proof is stated in NLAlib's matrix
 vocabulary (`quadForm`, `frobSq`, `frobNorm`, `specNorm`); there is no HighDimProb dependency.
@@ -17,20 +17,22 @@ import Mathlib.Analysis.InnerProductSpace.Trace
 
 A focused leaf of the transported independent-coordinate proof.
 Its declarations live in namespace `NLAlib` (generic scalar sub-Gaussian facts are in
-`NLAlib.Probability.SubGaussian.*`); the public bounds are in `NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
-Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0232e4673bae.
+`NLAlib.Probability.SubGaussian.*`); the public bounds are in
+`NLAlib.Probability.Concentration.QuadraticForms.HansonWright`.
+Atlas: `hanson-wright`. Source: HighDimProb (Zhang–Lee–Liu, Apache-2.0).
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped NNReal Matrix.Norms.L2Operator
+open scoped NNReal
 
 noncomputable section
 set_option maxRecDepth 5000
 
 namespace NLAlib
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `toEuclideanCLM_adjoint` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma toEuclideanCLM_adjoint {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
     ContinuousLinearMap.adjoint (Matrix.toEuclideanCLM (𝕜 := ℝ) A) =
       Matrix.toEuclideanCLM (𝕜 := ℝ) A.conjTranspose := by
@@ -39,8 +41,9 @@ lemma toEuclideanCLM_adjoint {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
   congr 1
   exact (Matrix.toEuclideanLin_conjTranspose_eq_adjoint A).symm
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `trace_adjoint_comp_toEuclideanCLM_eq_frobSq` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma trace_adjoint_comp_toEuclideanCLM_eq_frobSq {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) :
     (LinearMap.trace ℝ (EuclideanSpace ℝ (Fin n)))
@@ -127,8 +130,9 @@ lemma trace_adjoint_comp_toEuclideanCLM_eq_frobSq {n : ℕ}
   · intro hj
     exact (hj (Finset.mem_univ j)).elim
 
+open scoped Matrix.Norms.L2Operator in
 /-- Source-transport helper `eigenvalue_adjoint_comp_le_opNorm_sq` for Hanson–Wright.
-HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
+Atlas `hanson-wright` (helper). -/
 lemma eigenvalue_adjoint_comp_le_opNorm_sq {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (T : E →L[ℝ] E) (i : Fin (Module.finrank ℝ E)) :
@@ -159,6 +163,7 @@ lemma eigenvalue_adjoint_comp_le_opNorm_sq {E : Type*} [NormedAddCommGroup E]
     lam = ‖T e‖ ^ 2 := by rw [← hinner, ← hnorm_sq]
     _ ≤ ‖T‖ ^ 2 := by nlinarith
 
+open scoped Matrix.Norms.L2Operator in
 /-- Gaussian square-form bound for a positive symmetric operator, proved by spectral
 diagonalization and one-dimensional square-exponential estimates. -/
 lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
@@ -178,13 +183,13 @@ lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
       (by rfl : Module.finrank ℝ E = Module.finrank ℝ E) i
   have hsynth_aemeas :
       AEMeasurable (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-        (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1) := by
+        (gaussianVector (Fin (Module.finrank ℝ E))) := by
     exact (continuous_finsetSum _ fun i _ =>
       (continuous_apply i).smul continuous_const).aemeasurable
   have hf_aesm :
       AEStronglyMeasurable (fun x : E => exp (θ * inner ℝ (T x) x))
         (Measure.map (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-          (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1)) := by
+          (gaussianVector (Fin (Module.finrank ℝ E)))) := by
     fun_prop
   rw [stdGaussian_eq_map_pi_orthonormalBasis b]
   rw [integral_map hsynth_aemeas hf_aesm]
@@ -219,10 +224,10 @@ lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
   calc
     ∫ (x : Fin (Module.finrank ℝ E) → ℝ),
         exp (θ * inner ℝ (T (∑ i, x i • b i)) (∑ i, x i • b i))
-        ∂Measure.pi (fun x => gaussianReal 0 1)
+        ∂(gaussianVector (Fin (Module.finrank ℝ E)))
         = ∫ (x : Fin (Module.finrank ℝ E) → ℝ),
           ∏ i : Fin (Module.finrank ℝ E), exp ((θ * lam i) * x i ^ 2)
-        ∂Measure.pi (fun x => gaussianReal 0 1) := by
+        ∂(gaussianVector (Fin (Module.finrank ℝ E))) := by
           apply integral_congr_ae
           filter_upwards with z
           exact hpoint z
@@ -253,6 +258,7 @@ lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
           intro i _
           ring
 
+open scoped Matrix.Norms.L2Operator in
 /-- Gaussian square-form integrability for a positive symmetric operator, under the
 strict version of the same coordinate smallness condition. -/
 lemma integrable_exp_quadratic_stdGaussian {E : Type*} [NormedAddCommGroup E]
@@ -270,13 +276,13 @@ lemma integrable_exp_quadratic_stdGaussian {E : Type*} [NormedAddCommGroup E]
       (by rfl : Module.finrank ℝ E = Module.finrank ℝ E) i
   have hsynth_aemeas :
       AEMeasurable (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-        (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1) := by
+        (gaussianVector (Fin (Module.finrank ℝ E))) := by
     exact (continuous_finsetSum _ fun i _ =>
       (continuous_apply i).smul continuous_const).aemeasurable
   have hf_aesm :
       AEStronglyMeasurable (fun x : E => exp (θ * inner ℝ (T x) x))
         (Measure.map (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-          (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1)) := by
+          (gaussianVector (Fin (Module.finrank ℝ E)))) := by
     fun_prop
   have hpoint : ∀ z : Fin (Module.finrank ℝ E) → ℝ,
       exp (θ * inner ℝ (T (∑ i, z i • b i)) (∑ i, z i • b i)) =
@@ -321,6 +327,7 @@ lemma integrable_exp_quadratic_stdGaussian {E : Type*} [NormedAddCommGroup E]
   · filter_upwards with z
     exact (hpoint z).symm
 
+open scoped Matrix.Norms.L2Operator in
 /-- Integrability of the exponential of a Gaussian bilinear form. -/
 lemma integrable_exp_inner_toEuclideanCLM_prod_stdGaussian {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) {l : ℝ}
@@ -382,6 +389,7 @@ lemma integrable_exp_inner_toEuclideanCLM_prod_stdGaussian {n : ℕ}
       ring_nf
     exact hquad_int.congr houter_eq.symm
 
+open scoped Matrix.Norms.L2Operator in
 /-- A Frobenius-scale bound for the exponential moment of a Gaussian bilinear form. -/
 lemma integral_exp_inner_toEuclideanCLM_prod_stdGaussian_le {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) {l : ℝ}

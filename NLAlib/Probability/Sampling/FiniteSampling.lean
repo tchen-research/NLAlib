@@ -3,9 +3,9 @@ import Mathlib.Probability.ProbabilityMassFunction.Integrals
 /-!
 # Finite probability laws for sampling with replacement
 
-A nonnegative finite probability vector defines an actual probability measure,
+A nonnegative finite probability vector defines a probability measure,
 whose expectations are weighted finite sums. Product laws give independent draws.
-Sources: operator re-derivations `sa:leverage` and `sa:amm`.
+Source: Drineas–Kannan–Mahoney 2006, *SIAM J. Comput.* 36 (sampling-based matrix multiplication).
 -/
 
 noncomputable section
@@ -14,12 +14,12 @@ open scoped NNReal ENNReal
 namespace NLAlib
 
 /-- The probability mass function specified by a finite nonnegative vector
-summing to one. Source: operator re-derivations `sa:leverage`, `sa:amm`. -/
+summing to one. Source: Drineas–Kannan–Mahoney 2006, §4. -/
 def finiteSamplingPMF {ι : Type*} [Fintype ι] (p : ι → ℝ≥0) (hp : ∑ i, p i = 1) : PMF ι :=
   PMF.ofFintype (fun i => (p i : ℝ≥0∞)) (by exact_mod_cast hp)
 
 /-- The discrete probability measure with masses `p i`.
-Source: operator re-derivations `sa:leverage`, `sa:amm`. -/
+Source: Drineas–Kannan–Mahoney 2006, §4. -/
 def finiteSamplingLaw {ι : Type*} [Fintype ι] [MeasurableSpace ι]
     (p : ι → ℝ≥0) (hp : ∑ i, p i = 1) : Measure ι :=
   (finiteSamplingPMF p hp).toMeasure
@@ -33,7 +33,7 @@ instance finiteSamplingLaw_isProbabilityMeasure {ι : Type*} [Fintype ι]
   infer_instance
 
 /-- Sampling expectations are the weighted finite sum, with zero masses
-contributing zero. Source: operator re-derivations `sa:leverage`, `sa:amm`. -/
+contributing zero. Source: Drineas–Kannan–Mahoney 2006, §4. -/
 theorem integral_finiteSamplingLaw {ι E : Type*} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (p : ι → ℝ≥0) (hp : ∑ i, p i = 1) (f : ι → E) :
@@ -42,7 +42,7 @@ theorem integral_finiteSamplingLaw {ι E : Type*} [Fintype ι] [MeasurableSpace 
   simp [finiteSamplingPMF]
 
 /-- The mass of a sampled index is precisely its specified probability.
-Source: operator re-derivations `sa:leverage`, `sa:amm`. -/
+Source: Drineas–Kannan–Mahoney 2006, §4. -/
 theorem finiteSamplingLaw_singleton {ι : Type*} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] (p : ι → ℝ≥0) (hp : ∑ i, p i = 1) (i : ι) :
     finiteSamplingLaw p hp {i} = p i := by

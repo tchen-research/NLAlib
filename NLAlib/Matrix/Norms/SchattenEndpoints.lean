@@ -10,13 +10,14 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator ENNReal
+open scoped Matrix ENNReal
 
 namespace NLAlib
 
 variable {m n q : Type*} [Fintype m] [Fintype n] [Fintype q]
   [DecidableEq m] [DecidableEq n] [DecidableEq q]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- The `(p,∞,p)` Schatten product endpoint for every positive finite exponent,
 with exact constant one and all rank/empty-dimension cases. -/
@@ -47,6 +48,7 @@ theorem schattenNorm_mul_le_mul_specNorm (A : Matrix m n ℝ) (B : Matrix n q �
       rw [Real.mul_rpow (Real.rpow_nonneg (specNorm_nonneg B) p) hSA, one_div,
         Real.rpow_rpow_inv (specNorm_nonneg B) hp.ne', mul_comm]
 
+open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- The `(∞,p,p)` Schatten product endpoint for every positive finite exponent,
 with exact constant one and all rank/empty-dimension cases. -/
@@ -77,9 +79,10 @@ theorem schattenNorm_mul_le_specNorm_mul (A : Matrix m n ℝ) (B : Matrix n q �
       rw [Real.mul_rpow (Real.rpow_nonneg (specNorm_nonneg A) p) hSB, one_div,
         Real.rpow_rpow_inv (specNorm_nonneg A) hp.ne']
 
+open scoped Matrix.Norms.L2Operator in
 /-- Full Schatten product Hölder for extended norm exponents, including all
 infinity endpoints. The reciprocal identity is Mathlib's `HolderTriple`.
-atlas: schatten-norms-def (partial) -/
+atlas: schatten-norms-def -/
 theorem schattenNormExtended_mul_le_mul (A : Matrix m n ℝ) (B : Matrix n q ℝ)
     {p s r : ℝ≥0∞} [ENNReal.HolderTriple p s r] (hp : 1 ≤ p) (hs : 1 ≤ s) (_hr : 1 ≤ r) :
     schattenNormExtended (A * B) r ≤ schattenNormExtended A p * schattenNormExtended B s := by
@@ -111,10 +114,11 @@ theorem schattenNormExtended_mul_le_mul (A : Matrix m n ℝ) (B : Matrix n q ℝ
         schattenNormExtended_eq_of_ne_top _ hsTop]
       exact schattenNorm_mul_le_mul A B hreal
 
+open scoped Matrix.Norms.L2Operator in
 omit [Fintype q] [DecidableEq q] in
 /-- Full trace Hölder for extended conjugate Schatten exponents, including
 both `(1,∞)` and `(∞,1)` endpoints and every empty matrix shape.
-atlas: schatten-norms-def (partial) -/
+atlas: schatten-norms-def -/
 theorem abs_frobInner_le_schattenNormExtended_mul (A B : Matrix m n ℝ)
     {p s : ℝ≥0∞} [ENNReal.HolderConjugate p s] :
     |frobInner A B| ≤ schattenNormExtended A p * schattenNormExtended B s := by

@@ -14,7 +14,7 @@ import NLAlib.Matrix.Spectral.SingularValueInvariance
 * `frobInner_le_sum_singularValues_mul`: the von Neumann trace inequality
   `⟨X, E⟩_F ≤ ∑ₖ σ_k(X) σ_k(E)`, through Ky Fan's maximum principle and Abel summation.
 
-Audit G0 C4, A2. Atlas: `von-neumann-trace` (rank corollary and full inequality).
+Atlas: `von-neumann-trace` (rank corollary and full inequality).
 -/
 
 noncomputable section
@@ -29,8 +29,8 @@ variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 `⟨X, E⟩_F = ⟨X, P E⟩_F ≤ ‖X‖_F ‖P E‖_F ≤ ‖X‖_F √(rank P E) ‖P E‖₂ ≤ √r ‖X‖_F ‖E‖₂`.
 It follows from Horn–Johnson 2013, Thm 7.4.1.1 (von Neumann) and Cauchy–Schwarz over the top
 `r` singular values; this is the `VonNeumannRankBound` hypothesis of the Chen–Persson LRA
-formalization. Audit G0 C4; atlas `von-neumann-trace` (rank corollary). Deviation: arbitrary
-finite index types, no full-rank or nonemptiness condition.
+formalization. Atlas `von-neumann-trace` (rank corollary); arbitrary finite index types, no
+full-rank or nonemptiness condition.
 atlas: von-neumann-rank-bound -/
 theorem frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le {r : ℕ} (X E : Matrix m n ℝ)
     (hX : X.rank ≤ r) : frobInner X E ≤ Real.sqrt r * frobNorm X * specNorm E := by
@@ -149,9 +149,10 @@ theorem sum_fin_ite_lt_eq_sum_range {N k : ℕ} (hk : k ≤ N) (g : ℕ → ℝ)
   simp only [Finset.mem_filter, Finset.mem_range]
   omega
 
-private theorem sum_sq_col_eq_one {m : ℕ} {P : Matrix (Fin m) (Fin m) ℝ} (hP : Pᵀ * P = 1)
-    (c : Fin m) : ∑ j, P j c ^ 2 = 1 := by
-  have := congrArg (fun M => M c c) hP
+private theorem sum_sq_col_eq_one {m : ℕ} {P : Matrix (Fin m) (Fin m) ℝ}
+    (hP : HasOrthonormalCols P) (c : Fin m) : ∑ j, P j c ^ 2 = 1 := by
+  have := congrArg (fun M => M c c) hP.conjTranspose_mul_self
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at this
   simpa [Matrix.mul_apply, sq] using this
 
 private theorem sum_sq_row_eq_one {m : ℕ} {P : Matrix (Fin m) (Fin m) ℝ} (hP : P * Pᵀ = 1)
@@ -250,14 +251,9 @@ theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) �
     _ = ∑ i ∈ Finset.range k, singularValues D i :=
         sum_fin_ite_lt_eq_sum_range hk (singularValues D)
 
-/-- **Von Neumann trace inequality.** For real `m × n` matrices,
-`⟨X, E⟩_F = tr(XᵀE) ≤ ∑_{k < min m n} σ_k(X) σ_k(E)`. Horn–Johnson 2013, Thm 7.4.1.1 (real case,
-`Re tr(X E*) = frobInner X E`); Mirsky 1975. Proof: Ky Fan's maximum principle for the diagonal
-of `UᵀEV` (through the weighted top-`k` inequality `sum_mul_le_sum_ite_lt_of_antitone`) and
-Abel summation over `σ(X)`; no Birkhoff theorem is needed. Audit G0 A2;
-atlas `von-neumann-trace`.
-atlas: von-neumann-trace -/
-theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (Fin n) ℝ) :
+/-- `Fin` step of `frobInner_le_sum_singularValues_mul`. -/
+private theorem frobInner_le_sum_singularValues_mul_fin {m n : ℕ}
+    (X E : Matrix (Fin m) (Fin n) ℝ) :
     frobInner X E ≤ ∑ k ∈ Finset.range (min m n), singularValues X k * singularValues E k := by
   obtain ⟨U, V, h⟩ := exists_isSVD X
   set D : Matrix (Fin m) (Fin n) ℝ := Uᵀ * E * V with hDdef
@@ -266,7 +262,7 @@ theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (F
       rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
         Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
       exact h.mul_conjTranspose_left
-    rw [hDdef, singularValues_mul_orthogonal _ h.conjTranspose_mul_right,
+    rw [hDdef, singularValues_mul_unitary _ h.conjTranspose_mul_right,
       singularValues_isometry_mul hU]
   have hinner : frobInner X E =
       frobInner (rectDiag (singularValues X) : Matrix (Fin m) (Fin n) ℝ) D := by
@@ -282,6 +278,22 @@ theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (F
     fun k hk => ?_
   rw [← hD]
   exact sum_range_diagonalSequence_le D hk
+
+/-- **Von Neumann trace inequality.** For real matrices,
+`⟨X, E⟩_F = tr(XᵀE) ≤ ∑_{k < min (card m) (card n)} σ_k(X) σ_k(E)`. Horn–Johnson 2013,
+Thm 7.4.1.1 (real case, `Re tr(X E*) = frobInner X E`); Mirsky 1975. Proof: Ky Fan's maximum
+principle for the diagonal of `UᵀEV` (through the weighted top-`k` inequality
+`sum_mul_le_sum_ite_lt_of_antitone`) and Abel summation over `σ(X)`; no Birkhoff theorem is
+needed. Stated over `ℝ` because the singular-value invariances `singularValues_isometry_mul`,
+`singularValues_mul_unitary` are real.
+atlas: von-neumann-trace -/
+theorem frobInner_le_sum_singularValues_mul (X E : Matrix m n ℝ) :
+    frobInner X E ≤ ∑ k ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
+      singularValues X k * singularValues E k := by
+  have h := frobInner_le_sum_singularValues_mul_fin
+    (X.reindex (Fintype.equivFin m) (Fintype.equivFin n))
+    (E.reindex (Fintype.equivFin m) (Fintype.equivFin n))
+  rwa [frobInner_reindex, singularValues_reindex, singularValues_reindex] at h
 
 end TraceInequality
 

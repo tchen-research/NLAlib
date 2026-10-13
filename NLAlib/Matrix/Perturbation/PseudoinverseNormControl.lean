@@ -22,34 +22,27 @@ theorem specNorm_moorePenroseInverse_le_div_of_rank_eq {A B : Matrix m n ℝ}
     (hr : A.rank=B.rank) (hsmall : specNorm (moorePenroseInverse A)*specNorm (B-A) < 1) :
     specNorm (moorePenroseInverse B) ≤ specNorm (moorePenroseInverse A)/
       (1-specNorm (moorePenroseInverse A)*specNorm (B-A)) := by
-  let AF := A.reindex (Fintype.equivFin m) (Fintype.equivFin n)
-  let BF := B.reindex (Fintype.equivFin m) (Fintype.equivFin n)
-  let EF := (B-A).reindex (Fintype.equivFin m) (Fintype.equivFin n)
   by_cases hz : A.rank=0
   · have hbz : B.rank=0 := hr ▸ hz
-    rw [specNorm_moorePenroseInverse_eq_fintype A, if_pos hz,
-      specNorm_moorePenroseInverse_eq_fintype B, if_pos hbz]
+    rw [specNorm_moorePenroseInverse_eq A, if_pos hz,
+      specNorm_moorePenroseInverse_eq B, if_pos hbz]
     simp
   have hbnz : B.rank ≠ 0 := fun h => hz (hr.trans h)
-  let sa := singularValues AF (A.rank-1)
-  let sb := singularValues BF (A.rank-1)
+  let sa := singularValues A (A.rank-1)
+  let sb := singularValues B (A.rank-1)
   have hsa : 0 < sa := by
-    apply (singularValues_pos_iff AF _).mpr
-    simp only [AF, Matrix.rank_reindex]
+    apply (singularValues_pos_iff A _).mpr
     omega
   have hsb : 0 < sb := by
-    apply (singularValues_pos_iff BF _).mpr
-    simp only [BF, Matrix.rank_reindex]
+    apply (singularValues_pos_iff B _).mpr
     omega
   have ha : specNorm (moorePenroseInverse A)=1/sa := by
-    rw [specNorm_moorePenroseInverse_eq_fintype A, if_neg hz]
+    rw [specNorm_moorePenroseInverse_eq A, if_neg hz]
   have hb : specNorm (moorePenroseInverse B)=1/sb := by
-    rw [specNorm_moorePenroseInverse_eq_fintype B, if_neg hbnz, ← hr]
-  have hadd : AF+EF=BF := by ext i j; simp [AF, BF, EF]
+    rw [specNorm_moorePenroseInverse_eq B, if_neg hbnz, ← hr]
   have hw : sa ≤ sb+specNorm (B-A) := by
-    have hh := singularValues_le_singularValues_add_add_specNorm AF EF (A.rank-1)
-    rw [hadd, specNorm_reindex] at hh
-    exact hh
+    have hh := singularValues_le_singularValues_add_add_specNorm A (B-A) (A.rank-1)
+    rwa [add_sub_cancel] at hh
   have haid : specNorm (moorePenroseInverse A)*sa=1 := by rw [ha]; field_simp
   have hbid : specNorm (moorePenroseInverse B)*sb=1 := by rw [hb]; field_simp
   have hmul := mul_le_mul_of_nonneg_left hw

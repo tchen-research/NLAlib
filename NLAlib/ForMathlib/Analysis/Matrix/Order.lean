@@ -16,13 +16,13 @@ noncomputable section
 open Matrix
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 
-namespace NLAlib
+namespace Matrix
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 omit [Fintype n] [DecidableEq n] in
 /-- Nonnegative real scaling preserves complex matrix Loewner order.
-Source: scaling the actual PSD difference; supports `audit:combined` and
+Source: scaling the PSD difference; supports
 atlas `matrix-freedman` (partial). -/
 theorem matrix_smul_le_smul_of_nonneg {A B : Matrix n n ℂ} (hAB : A ≤ B)
     {c : ℝ} (hc : 0 ≤ c) : c • A ≤ c • B := by
@@ -30,7 +30,7 @@ theorem matrix_smul_le_smul_of_nonneg {A B : Matrix n n ℂ} (hAB : A ≤ B)
   rw [← smul_sub]
   exact (Matrix.le_iff.mp hAB).smul hc
 
-/-- The actual operator norm of a PSD complex matrix is at most its real trace.
+/-- The operator norm of a PSD complex matrix is at most its real trace.
 Source: the finite spectral theorem and nonnegative eigenvalues; supports the audited
 variance-budget localization `audit:combined`, atlas `matrix-freedman` (partial). -/
 theorem norm_le_re_trace_of_posSemidef (A : Matrix n n ℂ) (hA : A.PosSemidef) :
@@ -48,7 +48,7 @@ theorem norm_le_re_trace_of_posSemidef (A : Matrix n n ℂ) (hA : A.PosSemidef) 
   exact Finset.single_le_sum (fun j _ => hA.eigenvalues_nonneg j) (Finset.mem_univ i)
 
 omit [DecidableEq n] in
-/-- The real trace of the actual complex Gram matrix is the sum of squared entry norms.
+/-- The real trace of the complex Gram matrix is the sum of squared entry norms.
 Source: finite Gram expansion; supports `audit:combined`, `matrix-freedman` (partial). -/
 theorem re_trace_conjTranspose_mul_self_eq_sum_sq_norm {m : Type*} [Fintype m]
     (A : Matrix m n ℂ) : (Aᴴ * A).trace.re = ∑ i, ∑ j, ‖A i j‖ ^ 2 := by
@@ -61,7 +61,7 @@ theorem re_trace_conjTranspose_mul_self_eq_sum_sq_norm {m : Type*} [Fintype m]
   intro j hj
   simp only [RCLike.star_def, Complex.conj_mul', ← Complex.ofReal_pow, Complex.ofReal_re]
 
-/-- The squared complex matrix operator norm is bounded by the actual Hilbert-Schmidt
+/-- The squared complex matrix operator norm is bounded by the Hilbert-Schmidt
 coordinate sum, with exact coefficient one.
 Source: PSD Gram norm versus trace; supports `audit:combined`, `matrix-freedman` (partial). -/
 theorem norm_sq_le_sum_sq_norm_entries {m : Type*} [Fintype m] [DecidableEq m]
@@ -98,4 +98,4 @@ theorem re_trace_le_card_mul_norm_of_isHermitian [Nonempty n] (A : Matrix n n �
       exact (le_abs_self _).trans hnorm
     _ = Fintype.card n * ‖A‖ := by simp
 
-end NLAlib
+end Matrix

@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Perturbation.BauerFikeAbsolute
 import NLAlib.Matrix.Spectral.RankOneEigenvalue
 import NLAlib.Matrix.Spectral.NormalSpectral
@@ -11,12 +12,13 @@ atlas `bauer-fike`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator
+open scoped Matrix
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every entry of a diagonalized spectrum is a spectral point of the
 original matrix. Source: Horn–Johnson (2013), Theorem 1.3.7; invertibility
 ensures that the corresponding eigenvector column is nonzero. -/
@@ -32,6 +34,7 @@ theorem mem_spectrum_of_diagonal_intertwining {A V : Matrix n n ℂ} {d : n → 
       Pi.smul_apply, smul_eq_mul, mul_comm] using h
   exact Matrix.mem_spectrum_of_isRoot_charpoly (isRoot_charpoly_of_mulVec_eq_smul hcol hAi)
 
+open scoped Matrix.Norms.L2Operator in
 /-- The Euclidean projResidual Bauer–Fike bound in a form without division.
 Source: Horn–Johnson (2013), Corollary 6.3.4; the norm on matrices is the
 Euclidean operator norm, and the vector norm is explicitly Euclidean.
@@ -40,7 +43,8 @@ theorem exists_eigenvalue_distance_mul_euclidean_norm_le_residual
     {A V : Matrix n n ℂ} {d : n → ℂ} (hV : IsUnit V)
     (hA : A * V = V * Matrix.diagonal d) (x : n → ℂ) (hx : x ≠ 0) (μ : ℂ) :
     ∃ i, ‖d i - μ‖ * ‖(WithLp.toLp 2 x : EuclideanSpace ℂ n)‖ ≤
-      ‖V‖ * ‖V⁻¹‖ * ‖(WithLp.toLp 2 (A *ᵥ x - μ • x) : EuclideanSpace ℂ n)‖ := by
+      specNorm V * specNorm V⁻¹ * ‖(WithLp.toLp 2 (A *ᵥ x - μ • x) : EuclideanSpace ℂ n)‖ := by
+  unfold specNorm
   let N : AddGroupNorm (n → ℂ) :=
     { toFun x := ‖(WithLp.toLp 2 x : EuclideanSpace ℂ n)‖
       map_zero' := by simp
@@ -67,21 +71,24 @@ theorem exists_eigenvalue_distance_mul_euclidean_norm_le_residual
   exact exists_eigenvalue_distance_mul_norm_le_residual_of_absolute_norm
     N hhom habs (fun M => ‖M‖) norm_nonneg haction hV hA x hx μ
 
-/-- Euclidean Bauer–Fike residual inclusion in quotient form. Source:
+open scoped Matrix.Norms.L2Operator in
+/-- Euclidean Bauer–Fike residual inclusion in quotient form.
 Horn–Johnson (2013), Corollary 6.3.4; nonzero vectors make the denominator
 strictly positive.
 atlas: bauer-fike (partial) -/
 theorem exists_eigenvalue_distance_le_euclidean_residual_div
     {A V : Matrix n n ℂ} {d : n → ℂ} (hV : IsUnit V)
     (hA : A * V = V * Matrix.diagonal d) (x : n → ℂ) (hx : x ≠ 0) (μ : ℂ) :
-    ∃ i, ‖d i - μ‖ ≤ (‖V‖ * ‖V⁻¹‖) *
+    ∃ i, ‖d i - μ‖ ≤ (specNorm V * specNorm V⁻¹) *
       ‖(WithLp.toLp 2 (A *ᵥ x - μ • x) : EuclideanSpace ℂ n)‖ /
         ‖(WithLp.toLp 2 x : EuclideanSpace ℂ n)‖ := by
+  unfold specNorm
   obtain ⟨i, hi⟩ := exists_eigenvalue_distance_mul_euclidean_norm_le_residual hV hA x hx μ
   have hxnorm : 0 < ‖(WithLp.toLp 2 x : EuclideanSpace ℂ n)‖ :=
     norm_pos_iff.mpr (fun h => hx (congrArg WithLp.ofLp h))
   exact ⟨i, (le_div_iff₀ hxnorm).mpr hi⟩
 
+open scoped Matrix.Norms.L2Operator in
 /-- A complex normal matrix satisfies residual spectral inclusion with
 constant one. Source: Horn–Johnson (2013), Theorem 6.3.14; this is valid for
 every nonzero approximate eigenvector and arbitrary complex approximate
@@ -107,6 +114,7 @@ theorem exists_mem_spectrum_distance_le_euclidean_residual_div_of_normal
     simpa only [hUinv, Matrix.l2_opNorm_conjTranspose, CStarRing.norm_coe_unitary,
       one_mul] using hi
 
+open scoped Matrix.Norms.L2Operator in
 /-- Every perturbed eigenvalue of a complex normal matrix is within its
 perturbation's spectral norm of the original spectrum. Source: Horn–Johnson
 (2013), Theorem 6.3.14; the perturbed matrix may be nonnormal.
@@ -114,7 +122,8 @@ atlas: bauer-fike (partial) -/
 theorem exists_mem_spectrum_distance_le_norm_perturbation_of_normal
     {A E : Matrix n n ℂ} (hA : A * Aᴴ = Aᴴ * A) {μ : ℂ}
     (hμ : μ ∈ spectrum ℂ (A + E)) :
-    ∃ ν ∈ spectrum ℂ A, ‖ν - μ‖ ≤ ‖E‖ := by
+    ∃ ν ∈ spectrum ℂ A, ‖ν - μ‖ ≤ specNorm E := by
+  unfold specNorm
   obtain ⟨x, hx, hAx⟩ := exists_mulVec_eq_smul_of_mem_spectrum hμ
   obtain ⟨ν, hν, hbound⟩ := exists_mem_spectrum_distance_le_euclidean_residual_div_of_normal hA x hx μ
   have hres : A *ᵥ x - μ • x = -(E *ᵥ x) := by
@@ -127,36 +136,5 @@ theorem exists_mem_spectrum_distance_le_norm_perturbation_of_normal
   have hxnorm : 0 < ‖(WithLp.toLp 2 x : EuclideanSpace ℂ n)‖ :=
     norm_pos_iff.mpr (fun h => hx (congrArg WithLp.ofLp h))
   exact (div_le_iff₀ hxnorm).mpr (E.l2_opNorm_mulVec (WithLp.toLp 2 x : EuclideanSpace ℂ n))
-
-/-- The full Bauer–Fike contract: perturbation and residual inclusion for
-every induced absolute vector norm, together with constant-one Euclidean
-perturbation and residual bounds for normal matrices. Source: Horn–Johnson
-(2013), Theorem 6.3.2, Corollary 6.3.4 and Theorem 6.3.14. Homogeneity and
-coordinate-magnitude monotonicity express the absolute vector norm; the
-matrix-action bound is the defining induced-norm inequality.
-atlas: bauer-fike -/
-theorem bauer_fike_properties (N : AddGroupNorm (n → ℂ))
-    (hhom : ∀ (c : ℂ) (x : n → ℂ), N (c • x) = ‖c‖ * N x)
-    (habs : ∀ (x y : n → ℂ), (∀ i, ‖x i‖ ≤ ‖y i‖) → N x ≤ N y)
-    (Φ : Matrix n n ℂ → ℝ) (hΦ : ∀ M, 0 ≤ Φ M)
-    (haction : ∀ M x, N (M *ᵥ x) ≤ Φ M * N x)
-    (A V : Matrix n n ℂ) (d : n → ℂ) (hV : IsUnit V)
-    (hAV : A * V = V * Matrix.diagonal d) :
-    (∀ (E : Matrix n n ℂ) (μ : ℂ), μ ∈ spectrum ℂ (A + E) →
-      ∃ i, ‖d i - μ‖ ≤ (Φ V * Φ V⁻¹) * Φ E) ∧
-    (∀ (x : n → ℂ), x ≠ 0 → ∀ μ : ℂ,
-      ∃ i, ‖d i - μ‖ ≤ (Φ V * Φ V⁻¹) * N (A *ᵥ x - μ • x) / N x) ∧
-    (A * Aᴴ = Aᴴ * A → ∀ (x : n → ℂ), x ≠ 0 → ∀ μ : ℂ,
-      ∃ ν ∈ spectrum ℂ A, ‖ν - μ‖ ≤
-        ‖(WithLp.toLp 2 (A *ᵥ x - μ • x) : EuclideanSpace ℂ n)‖ /
-          ‖(WithLp.toLp 2 x : EuclideanSpace ℂ n)‖) ∧
-    (A * Aᴴ = Aᴴ * A → ∀ (E : Matrix n n ℂ) (μ : ℂ), μ ∈ spectrum ℂ (A + E) →
-      ∃ ν ∈ spectrum ℂ A, ‖ν - μ‖ ≤ ‖E‖) :=
-  ⟨fun _ _ hμ => exists_eigenvalue_distance_le_perturbation_of_absolute_norm
-      N hhom habs Φ hΦ haction hV hAV hμ,
-    fun x hx μ => exists_eigenvalue_distance_le_residual_div_of_absolute_norm
-      N hhom habs Φ hΦ haction hV hAV x hx μ,
-    fun hA x hx μ => exists_mem_spectrum_distance_le_euclidean_residual_div_of_normal hA x hx μ,
-    fun hA _ _ hμ => exists_mem_spectrum_distance_le_norm_perturbation_of_normal hA hμ⟩
 
 end NLAlib

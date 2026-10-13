@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Inequalities.BlockOrderConsequences
+import NLAlib.Matrix.Norms.Core
 /-!
 # Kantorovich's inequality from spectral endpoints
 
@@ -10,7 +11,7 @@ atlas `kantorovich-inequality`.
 
 noncomputable section
 open Matrix
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped MatrixOrder
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 variable {n : Type*} [Fintype n] [DecidableEq n]
@@ -50,9 +51,8 @@ theorem add_smul_inv_le_smul_one_of_sandwich {A : Matrix n n ℝ}
 /-- Kantorovich's quadratic-form inequality with arbitrary positive spectral
 endpoints. The squared Euclidean length is `x ⬝ᵥ x`, so the final factor is
 the fourth power of the Euclidean norm. Empty dimensions and the zero vector
-are included. Horn--Johnson (2013), Section 7.4.12.
-atlas: kantorovich-inequality (partial) -/
-theorem quadForm_mul_quadForm_inv_le_of_sandwich {A : Matrix n n ℝ}
+are included. Horn--Johnson (2013), Section 7.4.12. -/
+private theorem quadForm_mul_quadForm_inv_le_of_sandwich_dotProduct {A : Matrix n n ℝ}
     (hA : A.PosDef) {a b : ℝ} (ha : 0 < a) (hab : a ≤ b)
     (hlo : a • (1 : Matrix n n ℝ) ≤ A) (hhi : A ≤ b • (1 : Matrix n n ℝ))
     (x : n → ℝ) :
@@ -70,5 +70,18 @@ theorem quadForm_mul_quadForm_inv_le_of_sandwich {A : Matrix n n ℝ}
   rw [div_mul_eq_mul_div]
   apply (le_div_iff₀ (show 0 < 4 * a * b by positivity)).mpr
   nlinarith [sq_nonneg (quadForm A x - a * b * quadForm A⁻¹ x)]
+
+/-- **Kantorovich's inequality** with spectral endpoints: if `a I ≤ A ≤ b I` with `0 < a ≤ b`,
+then `(xᵀ A x)(xᵀ A⁻¹ x) ≤ ((a + b)² / 4ab) ‖x‖⁴`. Empty dimensions and `x = 0` are included.
+Horn–Johnson 2013, §7.4.12.
+atlas: kantorovich-inequality -/
+theorem quadForm_mul_quadForm_inv_le_of_sandwich {A : Matrix n n ℝ}
+    (hA : A.PosDef) {a b : ℝ} (ha : 0 < a) (hab : a ≤ b)
+    (hlo : a • (1 : Matrix n n ℝ) ≤ A) (hhi : A ≤ b • (1 : Matrix n n ℝ))
+    (x : n → ℝ) :
+    quadForm A x * quadForm A⁻¹ x ≤
+      ((a + b) ^ 2 / (4 * a * b)) * ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖ ^ 4 := by
+  have h := quadForm_mul_quadForm_inv_le_of_sandwich_dotProduct hA ha hab hlo hhi x
+  rwa [← norm_toLp_sq_eq_dotProduct_self, ← pow_mul] at h
 
 end NLAlib

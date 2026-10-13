@@ -42,9 +42,21 @@ theorem NLAlib.matrixPerspective_jointly_operatorConvex {d : ℕ} [NeZero d]
   let R₁ := cfc (fun x => (Real.sqrt x)⁻¹) A₁
   let S₂ := cfc Real.sqrt A₂
   let R₂ := cfc (fun x => (Real.sqrt x)⁻¹) A₂
-  obtain ⟨hS, hR, hSS, hRS, hSR⟩ := cfc_sqrt_identities A hA
-  obtain ⟨hS₁, hR₁, hSS₁, hRS₁, hSR₁⟩ := cfc_sqrt_identities A₁ hA₁
-  obtain ⟨hS₂, hR₂, hSS₂, hRS₂, hSR₂⟩ := cfc_sqrt_identities A₂ hA₂
+  have hS : S.IsHermitian := cfc_predicate _ A
+  have hR : R.IsHermitian := cfc_predicate _ A
+  have hSS := cfc_sqrt_mul_self hA
+  have hRS := cfc_inv_sqrt_mul_sqrt hA
+  have hSR := cfc_sqrt_mul_inv_sqrt hA
+  have hS₁ : S₁.IsHermitian := cfc_predicate _ A₁
+  have hR₁ : R₁.IsHermitian := cfc_predicate _ A₁
+  have hSS₁ := cfc_sqrt_mul_self hA₁
+  have hRS₁ := cfc_inv_sqrt_mul_sqrt hA₁
+  have hSR₁ := cfc_sqrt_mul_inv_sqrt hA₁
+  have hS₂ : S₂.IsHermitian := cfc_predicate _ A₂
+  have hR₂ : R₂.IsHermitian := cfc_predicate _ A₂
+  have hSS₂ := cfc_sqrt_mul_self hA₂
+  have hRS₂ := cfc_inv_sqrt_mul_sqrt hA₂
+  have hSR₂ := cfc_sqrt_mul_inv_sqrt hA₂
   change S.IsHermitian at hS
   change R.IsHermitian at hR
   change S * S = A at hSS

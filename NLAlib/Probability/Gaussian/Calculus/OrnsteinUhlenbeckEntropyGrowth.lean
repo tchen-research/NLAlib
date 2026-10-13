@@ -11,9 +11,7 @@ constant. Uniform polynomial dominators pass entropy and Fisher
 information through the Mehler operator and the outer Gaussian integral.
 FTC then transfers the derivative identity.
 
-Source: Bakry--Gentil--Ledoux 2014, §5.7; Ledoux, §5.1. The smooth cutoff
-construction is adapted from NLAlib's `LogSobolevOneDim.lean`, commit
-`d4d0a69f38f309825f228917b75f9a2a33a91faa`. This is a concrete
+Source: Bakry--Gentil--Ledoux 2014, §5.7; Ledoux, §5.1. This is a concrete
 polynomial-growth class, not an assertion about every C1 function merely
 bounded below.
 -/

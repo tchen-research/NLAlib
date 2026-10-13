@@ -11,12 +11,13 @@ At any original finite-budget crossing all preceding cuts equal one.
 noncomputable section
 
 open MeasureTheory Matrix Finset Filter Set
-open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder ENNReal
+open scoped MatrixOrder ComplexOrder ENNReal
 
 namespace NLAlib
 
 variable {Ω n : Type*} [MeasurableSpace Ω] [Fintype n] [DecidableEq n]
 
+open scoped Matrix.Norms.L2Operator in
 omit [MeasurableSpace Ω] [Fintype n] [DecidableEq n] in
 /-- Cumulative sums of PSD variance increments remain PSD.
 Source: finite sum of positive matrices; helper for `matrix-freedman`. -/
@@ -25,6 +26,7 @@ theorem matrixIncrementSum_posSemidef (V : ℕ → Ω → Matrix n n ℂ)
     (matrixIncrementSum V k ω).PosSemidef :=
   Matrix.posSemidef_sum (range k) (fun j _ => hV j)
 
+open scoped Matrix.Norms.L2Operator in
 omit [MeasurableSpace Ω] [Fintype n] [DecidableEq n] in
 /-- Cumulative PSD variance sums increase in Loewner order.
 Source: finite sum of positive matrices; helper for `matrix-freedman`. -/
@@ -34,6 +36,7 @@ theorem matrixIncrementSum_le_matrixIncrementSum (V : ℕ → Ω → Matrix n n 
   exact Finset.sum_le_sum_of_subset_of_nonneg (range_mono hab)
     (fun j _ _ => (hV j).nonneg)
 
+open scoped Matrix.Norms.L2Operator in
 omit [MeasurableSpace Ω] [Fintype n] [DecidableEq n] in
 /-- Each PSD variance increment is bounded by the cumulative variance including it.
 Source: finite sum of positive matrices; helper for `matrix-freedman`. -/
@@ -42,12 +45,14 @@ theorem le_matrixIncrementSum_succ (V : ℕ → Ω → Matrix n n ℂ)
     V j ω ≤ matrixIncrementSum V (j + 1) ω :=
   Finset.single_le_sum (fun i _ => (hV i).nonneg) (mem_range.mpr (Nat.lt_succ_self j))
 
+open scoped Matrix.Norms.L2Operator in
 /-- The predictable cut for increment `j` keeps exactly the samples whose cumulative
 variance including `V j` has real trace at most `card(n) v`.
 Source: supplied audit `audit:combined`; helper for `matrix-freedman`. -/
 def matrixVarianceBudgetSet (V : ℕ → Ω → Matrix n n ℂ) (v : ℝ) (j : ℕ) : Set Ω :=
   {ω | (matrixIncrementSum V (j + 1) ω).trace.re ≤ Fintype.card n * v}
 
+open scoped Matrix.Norms.L2Operator in
 /-- The variance-budget cut is measurable before its increment is taken.
 Source: predictable variance increments; supplied audit `audit:combined`;
 helper for `matrix-freedman`. -/
@@ -64,6 +69,7 @@ theorem measurableSet_matrixVarianceBudgetSet
       (Matrix.traceLinearMap n ℂ ℂ).toContinuousLinearMap.continuous).measurable.comp hW.measurable
   exact measurableSet_le hT measurable_const
 
+open scoped Matrix.Norms.L2Operator in
 /-- Localized finite local moments acquire integrable variance and actual square from
 the finite trace budget. The original unlocalized variance needs no integrability.
 Source: supplied audit `audit:combined`; helper for `matrix-freedman`. -/
@@ -93,6 +99,7 @@ theorem integrable_matrixVarianceBudget_indicator_and_sq
     simp only [Matrix.trace_zero, Complex.zero_re]
     exact mul_nonneg (Nat.cast_nonneg _) hv
 
+open scoped Matrix.Norms.L2Operator in
 omit [MeasurableSpace Ω] in
 /-- At an original crossing with variance norm at most `v`, every earlier predictable
 budget cut keeps its increment. Thus both actual partial sums agree exactly.

@@ -1,5 +1,5 @@
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.RegularizedIntegrability
-import NLAlib.Matrix.Calculus.GramCutoffCalculus
+import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.GramCutoffCalculus
 /-!
 # Integrability of unshifted Gram cutoff vector fields
 

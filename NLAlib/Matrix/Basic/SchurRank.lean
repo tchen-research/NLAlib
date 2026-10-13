@@ -13,8 +13,6 @@ Horn–Johnson 2013, §0.8.4; atlas `complementary-nullities`.
 noncomputable section
 open scoped Matrix
 namespace NLAlib
-set_option backward.isDefEq.respectTransparency false
-
 /-- A rectangular block diagonal matrix has rank equal to the sum of its
 two block ranks. Horn–Johnson §0.4; Schur-rank helper. -/
 theorem rank_fromBlocks_zero_zero_eq {m n p q : Type*}

@@ -2,7 +2,7 @@ import NLAlib.Matrix.Perturbation.Wedin
 /-!
 # Complete leading singular-subspace perturbation interface
 
-All catalogue Wedin conclusions are supplied for actual paired SVD frames:
+All catalogue Wedin conclusions are supplied for paired SVD frames:
 exact residual identities, constant-one mixed-gap maximum and paired-Frobenius
 bounds, unconditional population-gap constant two, and empty-frame endpoints.
 Source: Wedin (1972), Section 3; Stewart–Sun, Theorem V.4.4.
@@ -20,7 +20,7 @@ theorem sinePrincipalAngles_eq_zero_of_card_eq_zero {m n : Type*}
   have hi := i.isLt
   omega
 
-/-- Every Wedin conclusion for actual leading singular-vector frames, including
+/-- Every Wedin conclusion for leading singular-vector frames, including
 the exact perturbation residuals, constant-one mixed-gap operator and paired
 Frobenius bounds, constant-two population-gap operator bound without a
 perturbation smallness premise, and the zero-width endpoint. Wedin (1972),

@@ -1,5 +1,5 @@
 import NLAlib.RandomMatrix.Gaussian.Wishart.SimpleSpectrum
-import NLAlib.Matrix.Calculus.InversePowerLimit
+import NLAlib.RandomMatrix.Gaussian.Wishart.SoftMin.InversePowerLimit
 import NLAlib.Matrix.Spectral.SpectralMinimum
 /-!
 # Gaussian regularized soft minimum and derivative aggregate limits

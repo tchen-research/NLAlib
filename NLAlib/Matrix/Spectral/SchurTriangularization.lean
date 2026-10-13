@@ -3,7 +3,7 @@ import NLAlib.ForMathlib.Analysis.SchurTriangularization
 /-!
 # Complex unitary Schur triangularization
 
-An orthonormal triangularizing basis gives an actual unitary matrix factor,
+An orthonormal triangularizing basis gives an unitary matrix factor,
 whose triangular diagonal lists the characteristic roots with multiplicity.
 Source: Horn–Johnson (2013), Theorem 2.3.1;
 atlas `schur-triangularization`.

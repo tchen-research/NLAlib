@@ -27,6 +27,7 @@ import NLAlib.Matrix.Norms.SchattenNorms
 import NLAlib.Matrix.Norms.SchattenProducts
 import NLAlib.Matrix.Norms.SchattenSingularCoefficients
 import NLAlib.Matrix.Norms.SchattenTrace
+import NLAlib.Matrix.Norms.SingleColumn
 import NLAlib.Matrix.Norms.SpectralNormBounds
 import NLAlib.Matrix.Norms.SymmetricGauge
 

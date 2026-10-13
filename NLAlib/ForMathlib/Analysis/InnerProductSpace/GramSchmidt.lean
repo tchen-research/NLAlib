@@ -18,6 +18,20 @@ noncomputable section
 open MeasureTheory InnerProductSpace
 namespace NLAlib
 
+/-- Projection onto a real vector is the inner-product projection onto its
+normalized vector, including the zero vector under totalized inverse norms.
+Source: Mathlib's singleton orthogonal projection formula; supports the
+Gram–Schmidt recursion comparison in Trefethen–Bau, Algorithm 7.1. -/
+theorem starProjection_singleton_eq_inner_normalized_smul
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] (u w : E) :
+    (ℝ ∙ u).starProjection w =
+      (inner ℝ ((‖u‖ : ℝ)⁻¹ • u) w) • ((‖u‖ : ℝ)⁻¹ • u) := by
+  rw [Submodule.starProjection_singleton, real_inner_smul_left, smul_smul]
+  congr 1
+  simp only [RCLike.ofReal_real_eq_id, id_eq]
+  rw [div_eq_mul_inv, ← inv_pow]
+  ring
+
 /-- Gram–Schmidt residuals commute with every real linear isometry.
 Source: operator re-derivation `sh:qr-equiv`, using the literal recursion. -/
 theorem gramSchmidt_map_linearIsometry

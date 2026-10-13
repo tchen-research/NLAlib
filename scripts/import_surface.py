@@ -75,7 +75,7 @@ def generate(check=False):
             if not path.exists() or path.read_text() != content:
                 stale.append(str(path.relative_to(ROOT)))
         else:
-            path.write_text(content)
+            path.write_text(content, encoding="utf-8", newline="\n")
     if stale:
         raise ValueError("Import surface is stale: " + ", ".join(stale) +
                          "; run python3 scripts/reorg.py --gen-aggregators")

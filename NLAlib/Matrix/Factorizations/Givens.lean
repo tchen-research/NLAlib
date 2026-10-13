@@ -413,17 +413,72 @@ theorem isQR_givensQR {H : Matrix (Fin n) (Fin n) ℝ} (hH : IsUpperHessenberg H
   orth := hasOrthonormalCols_givensQRQ H (n - 1)
   upper := isUpperTriangular_givensQR_snd hH
 
-/-- SCAFFOLD: givens-rotation-def. The invariant of the accumulated Givens factor: `Q_k` is upper
+/-- The invariant of the accumulated Givens factor: `Q_k` is upper
 Hessenberg and its columns beyond `k` are those of the identity. Golub–Van Loan 2013, §7.4.2.
-Proof sketch (difficulty 2): induction on `k`; the step `Q_{k+1} = Q_k G_k` multiplies column-wise
-by the rotation in the plane `(k, k+1)`: columns other than `k, k+1` are unchanged
-(`givens_apply` off the plane), columns `> k + 1` stay identity columns by the second clause, and
-the new columns `k, k+1` are combinations of the old columns `k, k+1`, which vanish below row
-`k + 1` (identity column `k+1` and the Hessenberg clause for column `k`). -/
+Source: matrix toolkit rederivations `thm:givens`; right multiplication mixes only
+columns `k,k+1`, whose old supports are contained in the first `k+2` coordinates.
+atlas: givens-rotation-def -/
 theorem givensQRQ_invariant (H : Matrix (Fin n) (Fin n) ℝ) (k : ℕ) :
     IsUpperHessenberg (givensQRQ H k) ∧
       ∀ a b : Fin n, k < (b : ℕ) → givensQRQ H k a b = if a = b then 1 else 0 := by
-  sorry
+  induction k with
+  | zero =>
+    refine ⟨?_, ?_⟩
+    · intro a b hab
+      simp only [givensQRQ, Matrix.one_apply]
+      rw [if_neg (by intro h; subst b; omega)]
+    · intro a b _
+      simp only [givensQRQ, Matrix.one_apply]
+  | succ k ih =>
+    obtain ⟨ihH, ihI⟩ := ih
+    by_cases hk : k + 1 < n
+    · let K : Fin n := ⟨k, by omega⟩
+      let K1 : Fin n := ⟨k + 1, hk⟩
+      let W := givensQRState H k
+      let Q := givensQRQ H k
+      have hKK : K ≠ K1 := by simp [K, K1, Fin.ext_iff]
+      have happ (a b : Fin n) : givensQRQ H (k + 1) a b =
+          ((givensRotation K K1 (W.col K))ᵀ *ᵥ Q.row a) b := by
+        simp only [givensQRQ, givensQRStep, dif_pos hk, Matrix.mul_apply, Matrix.transpose_apply,
+          Matrix.mulVec, dotProduct, Matrix.row]
+        apply Finset.sum_congr rfl
+        intro l _
+        exact mul_comm _ _
+      have hunchanged (a b : Fin n) (hbK : b ≠ K) (hbK1 : b ≠ K1) :
+          givensQRQ H (k + 1) a b = Q a b := by
+        rw [happ, givensRotation_transpose_mulVec_apply_of_ne hbK hbK1]
+        rfl
+      have hzeros (a : Fin n) (ha : k + 1 < a.val) : Q a K = 0 ∧ Q a K1 = 0 := by
+        refine ⟨ihH a K (by simpa [K] using ha), ?_⟩
+        change givensQRQ H k a K1 = 0
+        rw [ihI a K1 (by simp [K1])]
+        rw [if_neg (by intro he; have := congrArg Fin.val he; simp [K1] at this; omega)]
+      refine ⟨?_, ?_⟩
+      · intro a b hab
+        by_cases hbK : b = K
+        · subst b
+          have hz := hzeros a (by simpa [K] using hab)
+          rw [happ, givensRotation, givens_transpose_mulVec_of_apply_eq_zero hKK]
+          · exact hz.1
+          · exact hz.1
+          · exact hz.2
+        by_cases hbK1 : b = K1
+        · subst b
+          have hz := hzeros a (by simp [K1] at hab; omega)
+          rw [happ, givensRotation, givens_transpose_mulVec_of_apply_eq_zero hKK]
+          · exact hz.2
+          · exact hz.1
+          · exact hz.2
+        · rw [hunchanged a b hbK hbK1]
+          exact ihH a b hab
+      · intro a b hb
+        rw [hunchanged a b (by intro h; subst b; simp [K] at hb)
+          (by intro h; subst b; simp [K1] at hb)]
+        exact ihI a b (by omega)
+    · have hsame : givensQRQ H (k + 1) = givensQRQ H k := by
+        simp only [givensQRQ, givensQRStep, dif_neg hk, Matrix.mul_one]
+      rw [hsame]
+      exact ⟨ihH, fun a b hb => ihI a b (by omega)⟩
 
 /-- **The Givens `Q` is upper Hessenberg** (for every `H`): a product `G_0 G_1 ⋯ G_{n−2}` of
 rotations in consecutive planes `(k, k+1)` is upper Hessenberg. Golub–Van Loan 2013, §7.4.2

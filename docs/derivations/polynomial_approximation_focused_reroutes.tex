@@ -1,0 +1,1312 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=23mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,array}
+\usepackage{fontspec,microtype,xurl}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\newcommand{\R}{\mathbb R}
+\newcommand{\PP}{\mathcal P}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\setlength{\emergencystretch}{3em}
+\title{Four focused re-derivations in polynomial approximation}
+\author{Mathematical handoff for NLAlib}
+\date{13 October 2026}
+\begin{document}
+\maketitle
+\noindent This document contains only rational equioscillation, sharp logarithmic
+Lebesgue estimates (including the universal interpolation lower bound), and
+bounded-variation coefficient and quadrature estimates. All functions and
+polynomials are real unless stated otherwise. Write $\PP_d$ for the real
+polynomials of degree at most $d$, including zero, and use the uniform norm
+on $[-1,1]$.
+
+\paragraph{What has and has not been simplified.}
+The rational proof separates compactness, cancellation, degree defects, and
+a finite signed annihilator. The logarithmic estimates use explicit finite
+cotangent sums and ordinary scalar integrals. The variation proof uses step
+functions and a finite coefficient recurrence. Quadrature uses exact folded
+moments and gives an explicit eventual threshold smaller than the earlier
+$14\nu4^\nu$ threshold.
+For arbitrary interpolation nodes, a purely finite replacement for the
+global comparison theorem has \emph{not} been established here. Instead,
+Section~\ref{sec:universal} supplies a complete shorter continuation argument:
+compactness and finitely many local inverse charts replace the general
+proper-map/global-inverse theorem. It is still a global argument. No Lean
+formalization or tested Lean implementation is claimed.
+\tableofcontents
+
+\section{Rational equioscillation with exceptional cases separated}
+\label{sec:rational}
+Fix integers $m,n\ge0$. Let $\mathcal R_{m,n}$ consist of rational functions
+representable by $p/q$, with $p\in\PP_m$, $0\ne q\in\PP_n$, after removal of
+removable singularities, and with no pole on $[-1,1]$. Every such function has
+a reduced representative with $q>0$ on this interval. Uniqueness below is
+uniqueness of the function, not of its numerator and denominator.
+
+\subsection{Compactness and cancellation, before alternation}
+\begin{lemma}[A fixed evaluation map controls coefficients]\label{lem:vander}
+For $d+1$ fixed distinct points $z_0,\ldots,z_d$ in $[-1,1]$, a uniform bound
+on $|p(z_i)|$ for $p\in\PP_d$ bounds the coefficient vector of $p$.
+Coefficient convergence in $\PP_d$ implies uniform convergence on $[-1,1]$.
+\end{lemma}
+\begin{proof}
+The evaluation matrix is the Vandermonde matrix $(z_i^j)_{i,j=0}^d$, whose
+determinant is $\prod_{i<j}(z_j-z_i)\ne0$. Apply its fixed inverse. For the
+second assertion, $\norm{\sum_{j=0}^d c_jx^j}_\infty\le\sum_{j=0}^d|c_j|$.
+\end{proof}
+
+\begin{lemma}[Local boundedness forces cancellation]\label{lem:cancel}
+Suppose $q\ne0$ and $|p(x)|\le C|q(x)|$ throughout $[-1,1]$. If $p\ne0$,
+every zero of $q$ in the interval has multiplicity at most its multiplicity
+as a zero of $p$. Consequently canceling the polynomial gcd gives a fraction
+whose denominator has no zero on the interval. Degrees do not increase.
+If $p=0$, use the reduced representative $0/1$ instead.
+\end{lemma}
+\begin{proof}
+At a zero $z$ factor $p=(X-z)^u p_0$ and $q=(X-z)^v q_0$, with
+$p_0(z)q_0(z)\ne0$. If $u<v$, then $|p(x)/q(x)|$ tends to infinity as
+$x\to z$ through interval points different from $z$, contrary to its bound.
+This uses a one-sided limit at $z=\pm1$. Polynomial gcd cancellation removes
+all these denominator zeros. The remaining denominator is continuous and
+nonzero, hence has a constant sign; reverse both signs if necessary.
+\end{proof}
+
+\begin{theorem}[Existence]\label{thm:rexist}
+Every $f\in C[-1,1]$ has a best approximant in $\mathcal R_{m,n}$.
+\end{theorem}
+\begin{proof}
+Let $E=\inf_{r\in\mathcal R_{m,n}}\norm{f-r}_\infty$. It is finite and
+$0\le E\le\norm f_\infty$, since zero is admissible. Choose a minimizing
+sequence $p_j/q_j$, with $q_j>0$, errors at most $\norm f_\infty+1$, and
+normalize the Euclidean norm of the coefficient vector of $q_j$ to one.
+Compactness gives a subsequence converging coefficientwise to $q$ with the
+same coefficient norm. Thus $q\ne0$ and $q\ge0$ on the interval.
+
+The normalization gives $\norm{q_j}_\infty\le\sqrt{n+1}$ and
+$\norm{p_j/q_j}_\infty\le2\norm f_\infty+1$. Hence the $p_j$ are uniformly
+bounded. Lemma~\ref{lem:vander} and another subsequence give $p_j\to p$
+coefficientwise. Passing to the limit gives
+\begin{equation}\label{eq:limit}
+ |f(x)q(x)-p(x)|\le E q(x),\qquad
+ |p(x)|\le(\norm f_\infty+E)|q(x)|.
+\end{equation}
+If $p\ne0$, apply Lemma~\ref{lem:cancel}; if $p=0$, take $0/1$.
+Off the finitely many zeros of $q$, the resulting continuous rational
+function has error at most $E$ by \eqref{eq:limit}. These points are dense,
+so the same inequality holds at the canceled zeros by continuity.
+\end{proof}
+
+\subsection{Degree defects are exactly a finite rank calculation}
+For nonzero reduced $r=p/q$, put $\mu=\deg p$, $\eta=\deg q$, and
+\begin{equation}\label{eq:defect}
+ d=\min(m-\mu,n-\eta),\qquad
+ D=m+n-d=\max(m+\eta,n+\mu).
+\end{equation}
+For $r=0$, use $p=0,q=1$ and \emph{define $D=m$}. In particular, do not
+substitute degree zero for the zero polynomial in \eqref{eq:defect}.
+
+\begin{lemma}[Surjectivity of the cross-numerator map]\label{lem:rank}
+For a nonzero reduced fraction, the map
+\[
+ \mathcal L:\PP_m\times\PP_n\longrightarrow\PP_D,
+ \qquad (P,Q)\longmapsto Pq-pQ
+\]
+is onto. Its kernel is precisely $\{(ph,qh):h\in\PP_d\}$.
+For the zero fraction the needed onto map is simply $P\mapsto P$ on $\PP_m$.
+\end{lemma}
+\begin{proof}
+Coprimality and $Pq=pQ$ give $P=ph,Q=qh$ with the same polynomial $h$.
+The degree constraints give exactly $h\in\PP_d$. This parameterization is
+injective since $q\ne0$. Rank--nullity gives image dimension
+$(m+1)+(n+1)-(d+1)=D+1$, the dimension of $\PP_D$.
+\end{proof}
+
+\subsection{Two scalar lemmas for necessity}
+\begin{lemma}[Separate the extremal sign blocks]\label{lem:signs}
+Let $e\in C[-1,1]$, $E=\norm e_\infty>0$. If the sets
+$K_\pm=\{x:e(x)=\pm E\}$ contain no increasing alternating list of length
+$D+2$, there is $h\in\PP_D$ with $e(x)h(x)>0$ on $K_+\cup K_-$.
+\end{lemma}
+\begin{proof}
+The two compact sign sets are disjoint, so their distance is positive when
+both are nonempty. Starting at their smallest point, repeatedly select the
+first later point of the opposite sign. Compactness gives each first point;
+positive separation makes the process finite. The hypothesis limits it to
+$D+1$ points. Between two successive selected points, the extremal points
+of the first sign have a supremum strictly below the next selected point.
+Choose a separator in this gap. The product of $X-z$ over all separators,
+with its overall sign chosen suitably, has the required signs. Its degree
+is the number of separators, at most $D$. A single sign block uses a
+constant polynomial.
+\end{proof}
+
+\begin{lemma}[A uniform signed descent]\label{lem:descent}
+Let $v_t\to v$ uniformly as $t\downarrow0$, with continuous functions.
+If $e(x)v(x)>0$ whenever $|e(x)|=E=\norm e_\infty>0$, then
+$\norm{e-tv_t}_\infty<E$ for all sufficiently small $t>0$.
+\end{lemma}
+\begin{proof}
+On the compact extremal set, $|v|$ has positive minimum $c$. Choose a
+neighborhood $U$ of this set on which $e,v$ have the same sign,
+$|v|\ge3c/4$, and $|e|>E/2$. Require $\norm{v_t-v}_\infty<c/4$ and a
+uniform bound $\norm{v_t}_\infty\le B$. On the compact complement there
+is a margin $|e|\le E-\varepsilon$; omit this condition if the complement
+is empty. For $tB<\min(E/2,\varepsilon/2)$ there is no sign overshoot on
+$U$, where $|e-tv_t|\le E-tc/2$; outside $U$, the bound is
+$E-\varepsilon/2$.
+\end{proof}
+
+\subsection{One finite annihilator proves optimality and uniqueness}
+For $x_0<\cdots<x_{D+1}$ set
+\[
+ w_i=\frac1{\prod_{j\ne i}(x_i-x_j)},\qquad
+ b_i=\frac{|w_i|}{\sum_j|w_j|}>0.
+\]
+Leading-coefficient comparison in the Lagrange formula gives
+\begin{equation}\label{eq:annihilator}
+ \sum_i w_i H(x_i)=0\quad(H\in\PP_D),\qquad
+ \sum_i b_i\sigma(-1)^i H(x_i)=0\quad(\sigma=\pm1).
+\end{equation}
+Indeed $\operatorname{sgn}w_i=(-1)^{D+1-i}$.
+
+\begin{theorem}[Rational equioscillation, including zero]\label{thm:rational}
+For $r\in\mathcal R_{m,n}$ define $D$ as above. Then $r$ is best for $f$
+if and only if there are $D+2$ ordered points and $\sigma=\pm1$ such that
+\[
+ (f-r)(x_i)=\sigma(-1)^i\norm{f-r}_\infty.
+\]
+The best function is unique. More generally, $D+2$ alternating errors
+of magnitudes at least $\varepsilon>0$ certify that every competitor has
+uniform error at least $\varepsilon$.
+\end{theorem}
+\begin{proof}
+For necessity at positive error, a failure of alternation supplies $h$
+from Lemma~\ref{lem:signs}. For $r\ne0$, Lemma~\ref{lem:rank} supplies
+$P,Q$ with $Pq-pQ=h$. For small $t>0$, $q+tQ$ stays strictly positive,
+and
+\[
+ r_t-r=\frac{p+tP}{q+tQ}-\frac pq
+       =t\frac{h}{q(q+tQ)}.
+\]
+The quotient after $t$ converges uniformly to $h/q^2$, so
+Lemma~\ref{lem:descent} contradicts optimality. For $r=0$, use the
+admissible polynomial perturbation $r_t=th$. Zero error permits any
+$D+2$ distinct interval points.
+
+For sufficiency compare $r=p/q$ with $s=P/Q$, where $q,Q>0$. Its
+cross-numerator $H=Pq-pQ$ has degree at most $D$, even when the competitor
+has a different defect; for the zero baseline it is $P\in\PP_m$.
+An error strictly less than $\varepsilon$ forces
+$\sigma(-1)^i(s-r)(x_i)>0$. Positive denominators transfer the signs to
+$H$, contradicting \eqref{eq:annihilator}.
+
+For uniqueness let $r$ be best with positive error $E$ and use its
+alternating list. Another best $s$ satisfies
+$\sigma(-1)^i H(x_i)\ge0$. Equation~\eqref{eq:annihilator} is a sum
+of nonnegative quantities with strictly positive weights; hence every
+$H(x_i)=0$. A polynomial of degree at most $D$ with $D+2$ distinct roots
+is zero. Therefore $s=r$. At error zero both functions already equal $f$.
+Together with Theorem~\ref{thm:rexist}, this proves existence and uniqueness.
+\end{proof}
+
+\begin{remark}
+This uniqueness proof needs neither a midpoint of rational functions nor
+an additional defect argument for that midpoint. For $r=0$, the correct
+alternation count is always $m+2$, independently of the denominator budget
+$n$. All degree budgets $m=0$ or $n=0$ are included.
+\end{remark}
+
+\section{Sharp logarithmic bounds from finite kernels}
+\label{sec:kernels}
+Write $T_k(\cos\theta)=\cos(k\theta)$. The coefficient convention used
+throughout the document is
+\begin{equation}\label{eq:coeff}
+ a_0(f)=\frac1\pi\int_0^\pi f(\cos\theta)\,d\theta,\qquad
+ a_k(f)=\frac2\pi\int_0^\pi f(\cos\theta)\cos(k\theta)\,d\theta\quad(k\ge1).
+\end{equation}
+Let $I_n$ interpolate at $\cos(j\pi/n)$, $0\le j\le n$, for $n\ge1$,
+and let $S_nf=\sum_{k=0}^n a_k(f)T_k$.
+
+\subsection{The finite cotangent inequality for Lobatto interpolation}
+\begin{theorem}\label{thm:lobatto}
+For $n\ge1$,
+\[
+ \norm{I_n}=\Lambda_n\le
+ C_n:=\frac1n\sum_{j=0}^{n-1}\cot\frac{(j+1/2)\pi}{2n}
+ \le1+\frac2\pi\log(n+1).
+\]
+\end{theorem}
+\begin{proof}
+Define the finite trigonometric cardinal kernel
+\[
+ K_n(t)=\frac1{2n}\left(1+2\sum_{k=1}^{n-1}\cos kt+\cos nt\right)
+       =\frac{\sin(nt)\cot(t/2)}{2n}.
+\]
+The trigonometric polynomial defines the removable values. Its translates
+at $t_j=j\pi/n$, $0\le j<2n$, satisfy $K_n(t_i-t_j)=\delta_{ij}$.
+For symmetric data, their interpolation sum is even, hence a polynomial
+of degree at most $n$ in $\cos t$, and equals $I_n$. Thus
+$\Lambda_n\le\max_t\sum_j|K_n(t-t_j)|$.
+
+By translation and reflection take $t=\alpha\pi/n$, $0<\alpha<1$.
+With $h=\pi/(2n)$ the last sum is
+\begin{equation}\label{eq:cotpair}
+ \frac{\sin\pi\alpha}{2n}\sum_{j=0}^{n-1}
+ \{\cot(h(j+\alpha))+\cot(h(j+1-\alpha))\}.
+\end{equation}
+Each summand, including its sine multiplier, is bounded by
+$2\cot(h(j+1/2))$. To prove this set $s=|\alpha-1/2|$,
+$u=h(j+1/2)$, $v=hs$. The addition formula
+\[
+ \cot(u+v)+\cot(u-v)=\frac{\sin2u}{\sin^2u-\sin^2v}
+\]
+reduces the assertion to
+$\sin^2(hs)\le2\sin^2(\pi s/2)\sin^2u$.
+For $s>0$, the ratio $\sin(hs)/\sin(\pi s/2)$ is increasing in $s$:
+its logarithmic derivative is nonnegative because $z\cot z$ is decreasing
+on $(0,\pi/2]$. The latter follows from $\sin z\cos z\le z$.
+At $s=1/2$ the ratio is $\sqrt2\sin(h/2)\le\sqrt2\sin u$, proving
+the claim. At $s=0$ it is immediate. Equality in \eqref{eq:cotpair}
+holds at $\alpha=1/2$, so its maximum is $C_n$. At grid points it is one,
+which is no larger: the cardinal functions sum to one.
+
+Convexity of $\cot$ on $(0,\pi/2]$, applied on the cells
+$[jh,(j+1)h]$, $1\le j<n$, gives
+\[
+ C_n\le\frac1n\cot(h/2)+\frac1{nh}\int_h^{\pi/2}\cot u\,du
+ \le\frac4\pi+\frac2\pi\log\frac1{\sin h}.
+\]
+Furthermore $\sin h\ge h-h^3/6\ge\pi/[2(n+1)]$; the last inequality
+is $\pi^2(n+1)\le24n^2$. Hence
+\[
+ C_n\le\frac2\pi\log(n+1)+\frac2\pi(2+\log(2/\pi))
+       \le\frac2\pi\log(n+1)+1.
+\]
+For the numerical inequality, $\log x\ge2(x-1)/(x+1)$ for $x\ge1$
+by differentiation. At $x=\pi/2$ it suffices that
+$\pi^2+2\pi-16>0$, which follows from $\pi>25/8$.
+The case $n=1$ also has $C_1=1$.
+\end{proof}
+
+\subsection{The finite Dirichlet kernel and the sharp logarithmic coefficient}
+\begin{theorem}\label{thm:projection}
+Let $H_n=\sum_{j=1}^n1/j$. For $n\ge1$,
+\[
+ \frac4{\pi^2}H_n\le\norm{S_n}
+ =\frac1{2\pi}\int_{-\pi}^{\pi}|D_n(t)|\,dt
+ \le3+\frac4{\pi^2}\log(n+1),
+ \qquad D_n(t)=1+2\sum_{k=1}^n\cos kt.
+\]
+For $n=0$, $\norm{S_0}=1$.
+\end{theorem}
+\begin{proof}
+The finite product-to-sum formula gives, for $g(t)=f(\cos t)$,
+\[
+ (S_nf)(\cos\theta)=\frac1{2\pi}\int_{-\pi}^\pi D_n(\theta-t)g(t)\,dt.
+\]
+This proves the norm upper estimate by the integral. For the reverse
+inequality put $d_n(x)=1+2\sum_{k=1}^nT_k(x)$ and
+$f_\varepsilon=d_n/\sqrt{d_n^2+\varepsilon^2}$. This is a continuous
+function bounded by one. Its image at $x=1$ differs from the kernel
+integral by at most $\varepsilon$, because
+$0\le |u|-u^2/\sqrt{u^2+\varepsilon^2}\le\varepsilon$.
+
+The finite geometric identity gives
+$D_n(t)=\sin((n+1/2)t)/\sin(t/2)$ away from its removable points.
+For $0<t\le\pi$,
+\[
+ \frac2t\le\frac1{\sin(t/2)}\le\frac2t+\frac t4.
+\]
+For the upper bound use $\sin u\ge u-u^3/6\ge u/(1+u^2/2)$ on
+$0\le u\le\pi/2<2$; multiplying the second inequality leaves
+$u^3(4-u^2)/12\ge0$. Write $M=n+1/2$. Then
+\[
+ \norm{S_n}\le\frac2\pi\int_0^{M\pi}\frac{|\sin u|}{u}\,du+\frac\pi8,
+ \qquad
+ \int_0^{M\pi}\frac{|\sin u|}{u}\,du\le\pi+\frac2\pi H_n.
+\]
+The first full period is bounded by $\pi$ and each later full period
+$[j\pi,(j+1)\pi]$ by $2/(j\pi)$; extending the final half period is
+harmless. Now $H_n\le1+\log(n+1)$ and
+$\pi/8+4/\pi^2<11/28+4/9<1$.
+
+For the lower bound retain the first $n$ complete periods and use
+$1/u\ge1/((j+1)\pi)$ on period $j$. Their sine integrals are two, so
+$\norm{S_n}\ge(4/\pi^2)H_n$. This also proves sharpness of the
+logarithmic coefficient, rather than only an upper estimate.
+\end{proof}
+
+\begin{corollary}[Operator consequences]
+With $E_n(f)=\inf_{p\in\PP_n}\norm{f-p}_\infty$,
+\[
+ \norm{f-I_nf}_\infty\le(2+(2/\pi)\log(n+1))E_n(f),\qquad
+ \norm{f-S_nf}_\infty\le(4+(4/\pi^2)\log(n+1))E_n(f).
+\]
+\end{corollary}
+\begin{proof}
+Both operators fix $\PP_n$. For any such operator $A$ and polynomial $p$,
+$f-Af=(f-p)-A(f-p)$; take the infimum after the triangle inequality.
+\end{proof}
+
+\section{The exact universal lower bound: finite certificates and a smaller global lemma}
+\label{sec:universal}
+For distinct nodes $X=(x_0,\ldots,x_n)$ in $[-1,1]$, let
+\[
+ \ell_j^X(x)=\prod_{r\ne j}\frac{x-x_r}{x_j-x_r},\quad
+ \mathcal L_X(x)=\sum_j|\ell_j^X(x)|,\quad
+ \Lambda_n(X)=\max_{x\in[-1,1]}\mathcal L_X(x).
+\]
+The interpolation operator has norm $\Lambda_n(X)$: the upper bound is the
+triangle inequality, and the reverse bound follows by assigning at the
+nodes the signs of $\ell_j^X(x_*)$ at a maximizing point, then extending
+those data piecewise affinely with uniform norm one.
+We prove
+\[
+ \Lambda_n(X)\ge\frac2\pi\bigl(\log(n+1)+\gamma+\log(4/\pi)\bigr).
+\]
+The finite estimates below preserve the additive constant as well as
+$2/\pi$. The passage from one grid to every grid still uses compactness
+and local inverses. The last subsection proves exactly that passage;
+it neither assumes a general global inverse theorem nor claims that
+local Jacobian signs alone imply the result.
+
+Write $N=n+1$ for the number of nodes and put
+\[
+ B_N=\frac2\pi\left(\log N+\gamma+\log\frac4\pi\right),
+ \qquad H_m=\sum_{j=1}^{m}\frac1j,
+\]
+where $\gamma=\lim_m(H_m-\log m)$.
+For the $N$ Chebyshev roots
+$\xi_j=\cos((j+\tfrac12)\pi/N)$, $0\le j<N$, let
+$\mathcal L_N(x)$ denote their Lebesgue function.  Its order of indexing
+does not affect the function.
+
+\subsection{Evaluate at extrema instead of finding the local maxima}
+\label{polyretry:cotangent-samples}
+
+For $N\ge2$ and $1\le k<N$ set $y_k=\cos(k\pi/N)$ and
+$S_k=\mathcal L_N(y_k)$.  There is exactly one such point strictly
+between each pair of consecutive roots.  The cardinal formula obtained
+by differentiating $T_N$ gives
+\begin{equation}\label{polyretry:sample}
+ S_k=\frac1N\sum_{j=0}^{N-1}
+ \frac{\sin((j+\tfrac12)\pi/N)}
+ {|\cos(k\pi/N)-\cos((j+\tfrac12)\pi/N)|}.
+\end{equation}
+Indeed $|T_N(y_k)|=1$ and
+$|T_N'(\xi_j)|=N/\sin((j+\tfrac12)\pi/N)$.
+
+Here is a finite calculation locating the smallest \emph{sample},
+which is enough for a lower bound on all interval maxima.  Put
+$h=\pi/(2N)$ and
+$C_r=\sum_{j=0}^{r-1}\cot((j+\tfrac12)h)$, $0\le r\le2N$.
+The identity
+\[
+ \frac{\sin\theta}{\cos\phi-\cos\theta}
+ =\frac12\left(\cot\frac{\theta-\phi}{2}
+                  +\cot\frac{\theta+\phi}{2}\right)
+\]
+and $C_{N+r}=C_{N-r}$ give, by splitting the sum at $j=k$,
+\begin{equation}\label{polyretry:sample-C}
+ S_k=\frac{C_{N-k}+C_k-C_{2k}}N.
+\end{equation}
+Consequently
+\[
+ N(S_{k+1}-S_k)=2\cot((2k+1)h)
+ -\cot((2k+\tfrac12)h)-\cot((2k+\tfrac32)h).
+\]
+For $1\le k<\lfloor N/2\rfloor$ this is nonpositive, since
+$\cot''x=2\cot x\csc^2x>0$ on $(0,\pi/2)$.
+Also $S_k=S_{N-k}$ by reflection.  Thus the smallest sample is
+$S_m$, where $m=\lfloor N/2\rfloor$.
+Using $\cot u-\tan u=2\cot(2u)$ in
+\eqref{polyretry:sample-C} gives the explicit formula
+\begin{equation}\label{polyretry:central-cot}
+ S_m=\frac2N\sum_{j=0}^{m-1}
+       \cot\frac{(j+\tfrac12)\pi}{N}
+ +\begin{cases}
+ 0,&N=2m,\\[2pt]
+ N^{-1}\tan\dfrac{\pi}{4N},&N=2m+1.
+ \end{cases}
+\end{equation}
+In particular no theorem about the locations or monotonicity of the
+\emph{true} local maxima is needed.
+
+\subsection{The exact logarithmic constant by midpoint concavity}
+
+Define $g(x)=\cot x-1/x$ on $(0,\pi/2]$, with $g(0)=0$.
+This function is concave.  To check the only nontrivial sign,
+\[
+ g''(x)=\frac{2\cos x}{\sin^3x}-\frac2{x^3}\le0
+ \quad\Longleftrightarrow\quad
+ \sin^3x\ge x^3\cos x.
+\]
+For $0<x<\pi/2$, differentiate
+$3\log(\sin x/x)-\log\cos x$.  The sign of its derivative is
+the sign of
+\[
+ K(x)=x(2+\cos2x)-\tfrac32\sin2x.
+\]
+But $K(0)=0$ and
+$K'(x)=4\sin x(\sin x-x\cos x)\ge0$, because
+$(\sin x-x\cos x)'=x\sin x\ge0$.  Taking the limit at zero
+proves the claim; continuity handles $\pi/2$.
+
+The following explicit harmonic remainder will also be useful:
+\begin{equation}\label{polyretry:harmonic-remainder}
+ D_m:=2H_{2m}-H_m-\log m-\gamma-2\log2
+ \ge\frac1{6(2m+1)^2}>0\qquad(m\ge1).
+\end{equation}
+Indeed $D_m\to0$ and
+\[
+ D_k-D_{k+1}
+ =\log\frac{k+1}{k}-\frac2{2k+1}
+ \ge\frac{2}{3(2k+1)^3}.
+\]
+The inequality follows without a logarithm power-series theorem:
+for $0\le t<1$,
+$\log((1+t)/(1-t))-2t$ has derivative
+$2t^2/(1-t^2)\ge2t^2$, so its value is at least $2t^3/3$.
+Telescope from $k=m$ to infinity, and bound the decreasing positive
+sum below by its integral:
+$\int_m^\infty2/[3(2x+1)^3]\,dx=1/[6(2m+1)^2]$.
+
+Let $L=m\pi/N$.  Midpoint concavity on the $m$ equal subintervals
+of $[0,L]$, together with
+$\int_0^L g(x)\,dx=\log(\sin L/L)$, gives
+\begin{align}
+ \frac2N\sum_{j=0}^{m-1}\cot\frac{(j+\tfrac12)\pi}{N}
+ &\ge\frac2\pi\left(2H_{2m}-H_m+
+                  \log\frac{\sin L}{L}\right)\notag\\
+ &=B_N+\frac2\pi\bigl(D_m+\log\sin L\bigr).
+ \label{polyretry:midpoint-bound}
+\end{align}
+For even $N$, $L=\pi/2$, so this proves $S_m>B_N$ immediately.
+
+For odd $N\ge3$, put $a=\pi/(2N)$; then $L=\pi/2-a$.
+The extra tangent in \eqref{polyretry:central-cot} shows that it is
+enough to prove
+\[
+ D_m\ge E(a):=-\log\cos a-a\tan(a/2).
+\]
+This small correction has a direct bound.  On $0\le a\le\pi/6$,
+\[
+ E'(a)=\tfrac12\sec^2(a/2)(\tan a-a),\qquad
+ \tan a-a=\int_0^a\tan^2t\,dt\le\frac{a^3}{3\cos^2a}.
+\]
+Using $\cos^2a,\cos^2(a/2)\ge3/4$ and integrating gives
+$E(a)\le2a^4/27<a^4/8$.  Since $\pi^4<192$ and $N\ge3$,
+\[
+ E(a)<\frac{\pi^4}{128N^4}<\frac1{6N^2}\le D_m.
+\]
+This completes the odd case as well.  We have proved, for every $N\ge2$,
+\begin{equation}\label{polyretry:all-intervals}
+ \min_{1\le k<N}S_k>B_N,
+ \qquad
+ \min_{\text{consecutive root intervals }J}
+            \max_{x\in J}\mathcal L_N(x)>B_N.
+\end{equation}
+For $N=2$ the single sample is $1$; the formula and proof include this
+case.  For $N=1$ the Lebesgue constant is $1>B_1$: for example,
+$\gamma<1$, $\log(4/\pi)<1/3$, and $\pi>8/3$ suffice.
+
+\subsection{Reduce arbitrary nodes to interval peak comparison}
+
+Call a node set canonical if its first and last nodes are $-1,1$.
+For such a set $X$ with $N\ge2$ nodes, write
+$M_i(X)=\max_{[x_{i-1},x_i]}\sum_j|\ell_j^X(x)|$.
+The comparison theorem proved in the following subsections is
+\begin{equation}\label{polyretry:comparison}
+ \min_i M_i(Y)\le\max_i M_i(X)
+ \quad\text{for any two canonical sets $X,Y$ of the same size.}
+\end{equation}
+This is a theorem of Bernstein--Erd\H{o}s type, established by
+Kilgore and de Boor--Pinkus.  It does not follow merely from the standard
+alternation theorem for best polynomial approximation: here the nodes,
+and hence the interpolation operator, vary.
+
+Here is the exact reduction, with no loss of constants.  Affinely
+stretch the extreme nodes of any arbitrary set $X\subset[-1,1]$ to
+$-1,1$.  Its original Lebesgue constant is at least the norm on its
+smaller node hull, which equals the norm of the stretched canonical
+set.  For $Y$, stretch the Chebyshev roots by
+$1/\cos(\pi/(2N))$.  This affine change preserves all the interval
+peak values in \eqref{polyretry:all-intervals}.  Therefore
+\eqref{polyretry:comparison} and the already proved finite cotangent
+estimate yield the catalogue's exact bound $\Lambda_n\ge B_{n+1}$.
+For $N=2$ there is only one canonical set, $\{-1,1\}$, so the
+comparison is immediate; the case $N=1$ was handled separately.
+The following arguments cover $N\ge3$.
+
+For implementation planning, the comparison theorem has a useful
+finite algebraic entry point.  Let $n=N-1\ge2$, let
+$t_0=-1<t_1<\cdots<t_n=1$, and define the polynomial $F_i$,
+$1\le i\le n$, by its nodal values
+\[
+ F_i(t_j)=
+ \begin{cases}(-1)^{i-1-j},&j<i,\\(-1)^{j-i},&j\ge i.\end{cases}
+\]
+Then $F_i$ equals the Lebesgue function on $(t_{i-1},t_i)$.
+Each $F_i$ has a simple real root in every other nodal gap.  Its
+degree is $n-1$ or $n$; in the latter case the remaining root is
+real, simple, and outside $[-1,1]$.  These statements follow from
+the $n-1$ sign changes, the degree bound, and the fact that $F_i>0$
+on its own gap.  Rolle's theorem then gives a unique nondegenerate
+maximum $\tau_i$ in its own gap.  The positivity on that gap follows
+directly from its cardinal representation; since $n\ge2$, at least
+one cardinal function there is negative, so the Lebesgue function
+is strictly greater than its endpoint value $1$.
+
+Let $\omega(x)=\prod_{j=0}^n(x-t_j)$ and
+$q_i(x)=F_i'(x)/(x-\tau_i)$, so $\deg q_i\le n-2$.
+Differentiating the nodal equations and using interpolation
+uniqueness gives
+\[
+ \frac{\partial F_i(x)}{\partial t_j}
+       =-F_i'(t_j)\ell_j(x),
+ \qquad
+ \frac{\partial M_i}{\partial t_j}
+       =-F_i'(t_j)\ell_j(\tau_i)
+       =\frac{\omega(\tau_i)}{\omega'(t_j)}q_i(t_j)
+       \quad(1\le j<n).
+\]
+Thus every maximal minor of the peak Jacobian is, up to explicit
+nonzero diagonal factors, an evaluation determinant for $n-1$
+polynomials in the $(n-1)$-dimensional space $\mathcal P_{n-2}$.
+The following subsections prove the signs and nonsingularity of
+these minors by a finite positive-matrix argument, establish
+properness of $t\mapsto(M_{i+1}(t)-M_i(t))_{i=1}^{n-1}$ by
+explicit cardinal-product estimates, and supply a continuation argument through finite inverse charts.
+A single radial path then
+proves \eqref{polyretry:comparison}.  Thus each step beyond the
+Jacobian identity is supplied rather than assumed.
+
+\subsection{Closing the finite comparison step: a positive Wronskian certificate}
+\label{polyretry:finite-comparison}
+
+The remaining finite determinant calculation admits a useful
+simplification: a sum of squares replaces differentiation of
+interlacing polynomials, and a matrix with positive off-diagonal
+entries replaces the sign-variation argument.  We keep
+$n\ge2$, $-1=t_0<\cdots<t_n=1$, and the polynomials $F_i$ and
+their unique nondegenerate interval maxima $\tau_i$ from above.
+Thus $\tau_1<\cdots<\tau_n$,
+$F_i(\tau_i)>1$, and $F_i''(\tau_i)<0$.
+
+\paragraph{A finite rational identity.}
+Fix $1\le i<j\le n$, and put
+\[
+ s=(-1)^{j-i},\qquad
+ u=\frac{F_i+sF_j}{2},\qquad
+ v=\frac{F_i-sF_j}{2}.
+\]
+The nodal values are particularly simple:
+\[
+ \begin{array}{c|cc}
+ &k<i\text{ or }k\ge j&i\le k<j\\ \hline
+ u(t_k)&F_i(t_k)&0\\
+ v(t_k)&0&F_i(t_k).
+ \end{array}
+\]
+The polynomial $v$ vanishes at
+$t_0,\ldots,t_{i-1},t_j,\ldots,t_n$ and changes sign in each
+of the $j-i-1$ gaps between $t_i,\ldots,t_{j-1}$.
+These give exactly $n$ distinct real roots.  Since $\deg v\le n$
+and $v(t_i)=1$, its degree is $n$ and all these roots are simple.
+Call them $\beta_1<\cdots<\beta_n$; in particular $\beta_1=t_0$.
+
+The polynomial $u$ has the $j-i$ roots
+$t_i,\ldots,t_{j-1}$ and a sign-changing root in each gap
+$(t_{r-1},t_r)$ with $r<i$ or $r>j$.  These are $n-1$
+distinct roots, exactly one between every consecutive pair of
+the $\beta_r$.  They are simple and there are no further roots
+inside $[t_0,t_n]$.  Here are the multiplicity details: in each
+outer gap the endpoint values have opposite signs, so the total
+root multiplicity there is odd.  In $(t_{i-1},t_j)$ the endpoint
+values of $u$ have sign ratio $(-1)^{j-i}$, so the total root
+multiplicity there has parity $j-i$.  We already have $n-1$
+distinct roots and degree at most $n$; putting an additional root
+or multiplicity in any of these regions would violate its parity.
+The other nodes have nonzero values.  Thus any remaining root,
+if $\deg u=n$, lies outside $[t_0,t_n]$.
+
+Polynomial interpolation, or division followed by interpolation,
+now gives the exact finite partial-fraction identity
+\begin{equation}\label{polyretry:positive-residues}
+ \frac{u(x)}{v(x)}
+   =c+\sum_{r=1}^n\frac{a_r}{x-\beta_r},
+ \qquad a_r=\frac{u(\beta_r)}{v'(\beta_r)}>0.
+\end{equation}
+To verify the signs, $u$ has one simple root between successive
+$\beta_r$, so the signs of $u(\beta_r)$ alternate, just as those
+of $v'(\beta_r)$ do.  Hence all residues have the same sign.
+At $t_i$, precisely $i$ roots of $v$ lie to the left; since
+$v(t_i)=1$, its leading coefficient has sign $(-1)^{n-i}$.
+Therefore $v'(t_0)$ has sign $(-1)^{i-1}$, which is also the
+sign of $u(t_0)=F_i(t_0)$.  This proves strict positivity of
+every $a_r$.  The constant $c$ is the ratio of leading
+coefficients when $\deg u=n$, and zero otherwise.
+
+Put $v_r(x)=v(x)/(x-\beta_r)$, a polynomial.  Differentiating
+\eqref{polyretry:positive-residues} and clearing denominators
+gives the polynomial identity
+\begin{equation}\label{polyretry:wronskian-sos}
+ s\bigl(F_i'(x)F_j(x)-F_i(x)F_j'(x)\bigr)
+       =2\sum_{r=1}^n a_r v_r(x)^2>0
+       \qquad(x\in\R).
+\end{equation}
+For the identity it suffices to check points where $v\ne0$,
+then use polynomial equality.  Strict positivity holds at all
+real points: away from the roots every $v_r$ is nonzero; at
+$\beta_r$ the term $v_r(\beta_r)=v'(\beta_r)$ is nonzero.
+This is a finite Gram certificate for the Wronskian sign.
+
+\paragraph{Signs of the divided derivative polynomials.}
+Recall $q_i(x)=F_i'(x)/(x-\tau_i)$, with $\deg q_i\le n-2$.
+Evaluation of \eqref{polyretry:wronskian-sos} at $\tau_j$
+and at $\tau_i$, using $F_j(\tau_j),F_i(\tau_i)>0$, gives
+\[
+ \operatorname{sgn}F_i'(\tau_j)=(-1)^{j-i},\qquad
+ \operatorname{sgn}F_j'(\tau_i)=-(-1)^{j-i}
+       \quad(i<j).
+\]
+Dividing by the sign of $\tau_j-\tau_i$ yields
+\begin{equation}\label{polyretry:q-signs}
+ (-1)^{i+j}q_i(\tau_j)>0\quad(i\ne j),
+ \qquad q_i(\tau_i)=F_i''(\tau_i)<0.
+\end{equation}
+In particular, this calculation does not require a separate
+theorem saying that derivatives preserve strict interlacing.
+
+\paragraph{A finite matrix proves rank and a positive normal.}
+\label{polyretry:peak-laplacian}
+Let
+\[
+ b_r=\frac1{\prod_{k\ne r}|\tau_r-\tau_k|}>0,\qquad
+ B_{ri}=(-1)^{r+i}q_i(\tau_r),\qquad A=\diag(b)B.
+\]
+The off-diagonal entries of $A$ are strictly positive, and its
+diagonal entries are strictly negative.  For every polynomial
+$q$ of degree at most $n-2$, comparison of leading coefficients
+in its Lagrange formula at the $n$ points $\tau_r$ gives
+\[
+ \sum_{r=1}^n
+ \frac{q(\tau_r)}{\prod_{k\ne r}(\tau_r-\tau_k)}=0.
+\]
+The denominator has sign $(-1)^{n-r}$.  Applying this identity
+to each $q_i$ proves that every column of $A$ sums to zero.
+
+Delete the same row and column $k$ from $A$.  Each remaining
+column $i$ satisfies strict diagonal dominance:
+\[
+ |A_{ii}|=\sum_{r\ne i}A_{ri}
+          >\sum_{r\ne i,k}A_{ri}.
+\]
+The resulting square matrix is invertible.  Indeed its
+transpose is strictly row diagonally dominant; for a nonzero
+kernel vector choose a coordinate of maximum absolute value,
+and the triangle inequality contradicts the strict dominance
+in that row.  It follows that any $n-1$ columns of $B$ are
+linearly independent, and hence any $n-1$ of the polynomials
+$q_1,\ldots,q_n$ are linearly independent.
+
+The same matrix gives a positive nullvector explicitly.
+Let $A^{(k)}$ denote its $k$th deleted principal submatrix.
+Hold its negative diagonal fixed and multiply its off-diagonal
+entries by $s\in[0,1]$.  Strict diagonal dominance persists,
+so the determinant never vanishes.  At $s=0$ its sign is
+$(-1)^{n-1}$.  Therefore
+\begin{equation}\label{polyretry:laplacian-cofactor}
+ \pi_k:=(-1)^{n-1}\det A^{(k)}>0\qquad(1\le k\le n).
+\end{equation}
+Since $A$ has rank $n-1$ and zero column sums, its left
+nullspace is the span of $(1,\ldots,1)$.  The identities
+$A\operatorname{adj}(A)=\operatorname{adj}(A)A=0$ show that
+every row of its adjugate is constant.  The constant in row
+$i$ is its diagonal entry $\det A^{(i)}$.  Thus every column
+of the adjugate is $(-1)^{n-1}\pi$, and $A\pi=0$.
+Undoing the row scalings gives
+$\sum_i(-1)^i\pi_iq_i(\tau_r)=0$ for every $r$.
+This polynomial has degree at most $n-2$ and $n$ distinct
+zeros, so
+\begin{equation}\label{polyretry:positive-q-relation}
+ \sum_{i=1}^n(-1)^i\pi_iq_i=0.
+\end{equation}
+
+Evaluation at the $n-1$ distinct interior nodes
+$t_1,\ldots,t_{n-1}$ is an isomorphism on
+$\mathcal P_{n-2}$.  Consequently every maximal minor of
+$(q_i(t_j))_{1\le i\le n,\,1\le j<n}$ is nonzero.
+The explicit diagonal factors in the earlier peak-Jacobian
+formula then prove the same fact for
+\begin{equation}\label{polyretry:peak-jacobian}
+ J_{ij}=\frac{\partial M_i}{\partial t_j}
+       =\frac{\omega(\tau_i)}{\omega'(t_j)}q_i(t_j).
+\end{equation}
+In particular $\rank J=n-1$.  Since
+$\operatorname{sgn}\omega(\tau_i)=(-1)^{n-i+1}$,
+\eqref{polyretry:positive-q-relation} proves directly that
+\[
+ \widetilde w_i=\frac{\pi_i}{|\omega(\tau_i)|}>0,
+ \qquad \widetilde w^TJ=0.
+\]
+Indeed
+$\widetilde w_i\omega(\tau_i)=(-1)^{n+1}(-1)^i\pi_i$,
+with a common sign independent of $i$.  Normalizing gives
+the explicit positive normal
+\begin{equation}\label{polyretry:positive-normal}
+ w_i=\frac{\widetilde w_i}{\sum_r\widetilde w_r}>0,
+ \qquad\sum_iw_i=1,\qquad w^TJ=0.
+\end{equation}
+This argument uses no extremization over node sets.
+
+\paragraph{A quantitative boundary estimate.}
+The following properness argument uses only products of
+distances.  Let $\delta$ be the smallest node gap and let $y$
+be the midpoint of a largest gap.  Since the total length is
+$2$, every node has distance at least $1/n$ from $y$.
+For $x$ in a gap of length $\delta$, every cardinal numerator
+$\prod_{r\ne j}(x-t_r)$ includes at least one endpoint of
+that small gap.  That factor has absolute value at most
+$\delta$, and each of the other $n-1$ factors is at most $2$.
+Cancellation of the cardinal denominators gives
+\[
+ |\ell_j(x)|\le C_n\delta\,|\ell_j(y)|,
+ \qquad C_n=2^{n-1}n^n.
+\]
+If $M_{\mathrm{s}}$ and $M_{\mathrm{l}}$ are the peaks in
+the chosen smallest and largest gaps, respectively, summing
+and maximizing yields
+\[
+ 1\le M_{\mathrm{s}}\le C_n\delta M_{\mathrm{l}}.
+\]
+Whenever $C_n\delta<1$, therefore,
+\begin{equation}\label{polyretry:properness}
+ \max_i M_i\ge\frac1{C_n\delta},\qquad
+ \max_i M_i-\min_i M_i\ge\frac1{C_n\delta}-1.
+\end{equation}
+Thus $\max_i M_i$ tends to infinity at the boundary of the
+open node simplex.  So does the norm of
+$\Gamma(t)=(M_{i+1}(t)-M_i(t))_{i=1}^{n-1}$, because the
+range of the $M_i$ is at most the sum of the absolute adjacent
+differences.  In particular these functions have compact
+sublevel sets, and $\Gamma$ is proper.
+
+
+\subsection{Only radial continuation is needed}
+\label{polyretry:global-comparison}
+\label{polyretry:proper-inverse}
+Here is a replacement for the earlier full proper-map theorem. It does
+not need surjectivity onto every vector of peak differences, nor a
+two-parameter homotopy or covering-space theorem.
+
+\begin{lemma}[Radial continuation and a discrete endpoint map]
+\label{lem:radial}
+Let $U\subset\R^d$ be nonempty, open and connected, and let
+$M:U\to\R^{d+1}$ be $C^1$. Suppose $DM$ has rank $d$ everywhere and
+has a strictly positive left nullvector. Set
+\[
+ \Gamma(u)=(M_{i+1}(u)-M_i(u))_{i=1}^d.
+\]
+Assume $\{u\in U:\norm{\Gamma(u)}\le R\}$ is compact for every
+$R\ge0$. Then there is one equal-peak point $u_*$, and, writing its
+common peak as $\lambda_*$,
+\[
+ \min_i M_i(u)\le\lambda_*\le\max_i M_i(u)\qquad(u\in U).
+\]
+In particular $\min_iM_i(v)\le\max_iM_i(u)$ for all $u,v\in U$.
+\end{lemma}
+\begin{proof}
+Normalize the positive left nullvector to $w_i>0$, $\sum_iw_i=1$.
+Rank $d$ makes it unique and continuous, for example by the nonzero
+maximal-minor formulas. If $D\Gamma(u)z=0$, then $DM(u)z=c\mathbf1$.
+Multiplication by $w^T$ gives $c=0$ and rank gives $z=0$. Thus
+$D\Gamma$ is invertible and the ordinary inverse function theorem gives
+local $C^1$ inverse charts.
+
+\emph{Existence of one lifted segment.} Fix $u\in U$, put $h=\Gamma(u)$,
+and lift $s\mapsto sh$, starting at $z(1)=u$, toward $s=0$, using a local
+inverse. Two lifts with the same starting value agree wherever both
+exist: equality is open by local injectivity and closed by continuity.
+Consequently the local lifts concatenate uniquely on a maximal interval.
+On this interval they lie in the compact set
+$K=\{v:\norm{\Gamma(v)}\le\norm h\}$. There is a finite bound
+$C=\max_K\norm{D\Gamma(v)^{-1}}$. Differentiating gives
+\[
+ z'(s)=D\Gamma(z(s))^{-1}h,\qquad\norm{z'(s)}\le C\norm h.
+\]
+Thus $z$ is Lipschitz and has a limit at any finite left endpoint of its
+domain. The limit lies in $K\subset U$, and its inverse chart extends
+the lift. A positive left endpoint is therefore impossible, and the lift
+exists on $[0,1]$. Its endpoint $R(u)=z(0)$ lies in $\Gamma^{-1}(0)$.
+
+\emph{The endpoint map is locally constant.} Fix this lifted path.
+Its compact image is covered by inverse charts. Partition $[0,1]$ into
+finitely many closed subintervals, each carried by $z$ into one chart
+and by $s\mapsto sh$ into its open image. Such a partition follows by
+first taking slightly smaller chart neighborhoods and then a Lebesgue
+number for their inverse images in $[0,1]$. At a shared endpoint the two
+chosen charts overlap around the lifted point.
+
+For a sufficiently close starting point $u'$, the target segment
+$s\Gamma(u')$ is uniformly close to $sh$. In the first chart (starting
+from $s=1$) its inverse branch starts at $u'$. Each compact segment stays
+in the corresponding chart image for sufficiently small perturbations.
+Continuity of the inverse branch at the shared endpoint keeps it in the
+overlap with the next chart. Shrink the neighborhood of $u$ successively
+for these finitely many transitions. This constructs the entire perturbed
+lift using the same finite chart chain. At $s=0$ its target is exactly
+zero, so its value is the same inverse-branch value $R(u)$.
+Uniqueness of lifting shows $R(u')=R(u)$.
+
+Connectedness of $U$ makes this locally constant map constant. Every
+point $v$ with $\Gamma(v)=0$ has the constant radial lift, hence $R(v)=v$.
+Since at least one such point was constructed, the fiber consists of
+exactly one point $u_*$.
+
+\emph{The scalar identity giving the bound.} For the lift from $u$ put
+$a_i=M_i(u)$. Its adjacent differences imply
+$M_i(z(s))=c(s)+sa_i$ for a common $C^1$ function $c$, with
+$c(1)=0,c(0)=\lambda_*$. Differentiate and multiply by the positive
+normal:
+\[
+ c'(s)=-\sum_iw_i(z(s))a_i,\qquad
+ \lambda_*=\int_0^1\sum_iw_i(z(s))a_i\,ds.
+\]
+The integrand is a convex combination of the original peaks. This proves
+both inequalities.
+\end{proof}
+
+\paragraph{Application and exact scope.}
+Take the open node simplex
+$U=\{-1<t_1<\cdots<t_{n-1}<1\}$, with $d=n-1$. The simple critical
+points $\tau_i$ vary $C^1$ by the implicit function theorem, so $M$ is
+$C^1$. The polynomial and matrix identities above prove its rank and
+positive normal. The collision estimate shows that bounded $\Gamma$
+keeps the smallest gap bounded away from zero. Such a locus is closed
+inside a compact closed simplex with this positive gap bound, and hence
+compact. Lemma~\ref{lem:radial} therefore proves
+\eqref{polyretry:comparison}. Together with the explicit Chebyshev-root
+samples it proves the universal bound, including $n=0,1$ as treated above.
+
+The analytic work left to implement is a local inverse theorem, continuation
+of a single segment in a compact set, and a finite chart-chain argument.
+The document does not substitute a weaker projection lower bound or an
+unspecified $O(1)$ term. A purely finite proof for \emph{arbitrary} grids
+would still be a further improvement.
+
+
+\section{Bounded variation, finite integral identities, and quadrature}
+\label{sec:bv}
+\subsection{Precise regularity and a step-function identity}
+Let $\nu\ge0$ be an integer. The regularity hypothesis is the existence
+of functions $f_0=f,f_1,\ldots,f_\nu$ on $[-1,1]$ such that
+\begin{equation}\label{eq:regularity}
+ f_j\text{ is absolutely continuous and }f_j'=f_{j+1}
+ \text{ a.e. for }j<\nu,
+ \qquad \Var_{[-1,1]}(f_\nu)\le V<\infty.
+\end{equation}
+The last function is an actual bounded-variation representative. Values
+at exceptional derivative points are irrelevant to integration; $V$ is
+the variation of the representative chosen. If $\nu=0$, $f$ may be
+discontinuous, and only the coefficient bound below is asserted.
+For $\nu\ge1$, $f$ is continuous. No global classical derivative of the
+BV function is assumed.
+
+\begin{lemma}[Finite summation by parts for a BV function]\label{lem:bvbase}
+If $h$ has variation at most $V$ on $[0,\pi]$ and $k\ge1$ is an integer,
+\[
+ \left|\int_0^\pi h(\theta)\cos(k\theta)\,d\theta\right|\le V/k.
+\]
+\end{lemma}
+\begin{proof}
+For an integer $J\ge1$ put $t_j=j\pi/J$ and let $h_J=h(t_j)$ on
+$[t_j,t_{j+1})$. Additivity of variation on adjacent intervals gives
+\[
+ \int_0^\pi|h-h_J|\le\frac\pi J
+       \sum_{j=0}^{J-1}\Var_{[t_j,t_{j+1}]}h\le\frac{\pi V}{J}.
+\]
+BV functions are bounded and measurable, so these are ordinary integrals.
+Writing $s_j=\sin(kt_j)$, a finite identity gives
+\begin{equation}\label{eq:sbp}
+ \int_0^\pi h_J(\theta)\cos(k\theta)\,d\theta
+ =\frac1k\sum_{j=0}^{J-1}h(t_j)(s_{j+1}-s_j)
+ =-\frac1k\sum_{j=1}^{J-1}(h(t_j)-h(t_{j-1}))s_j.
+\end{equation}
+The boundary terms vanish since $s_0=s_J=0$. The last absolute value is
+at most $V/k$. The displayed $L^1$ error tends to zero, proving the claim.
+\end{proof}
+Composition with the decreasing map $\cos:[0,\pi]\to[-1,1]$ does not
+increase variation. Thus \eqref{eq:coeff} gives, without Stieltjes integration,
+\begin{equation}\label{eq:bvzero}
+ |a_k(g)|\le\frac{2\Var(g)}{\pi k}\qquad(k\ge1).
+\end{equation}
+
+\subsection{One ordinary integration by parts gives the recursion}
+\begin{lemma}\label{lem:recurrence}
+If $u$ is absolutely continuous and $u'=v$ a.e. with a bounded measurable
+representative $v$, then
+\begin{align}
+ a_k(u)&=\frac2{\pi k}\int_{-1}^1v(x)\sin(k\arccos x)\,dx,
+                  &&k\ge1,\label{eq:finite-ibp}\\
+ a_k(u)&=\frac{a_{k-1}(v)-a_{k+1}(v)}{2k},&&k\ge2,\label{eq:recurrence}\\
+ a_1(u)&=a_0(v)-\tfrac12a_2(v).&&\label{eq:recurrence-one}
+\end{align}
+\end{lemma}
+\begin{proof}
+Put $F_k(x)=\sin(k\arccos x)$. It vanishes at $\pm1$, and in the
+interior $F_k'=-kT_k(x)/\sqrt{1-x^2}$. This derivative is integrable.
+The fundamental theorem on trimmed intervals, followed by a limit to the
+endpoints, gives $F_k(x)=\int_{-1}^x F_k'(t)\,dt$. Thus $F_k$ is
+absolutely continuous. Ordinary integration by parts with $u$ gives
+\eqref{eq:finite-ibp}, with no endpoint term. Substitute $x=\cos\theta$
+and use $2\sin\theta\sin(k\theta)=\cos((k-1)\theta)-\cos((k+1)\theta)$.
+The constant coefficient has half the normalization of positive modes,
+which explains the separate formula \eqref{eq:recurrence-one}.
+\end{proof}
+
+\begin{theorem}[Coefficient decay with the original constant]\label{thm:bv}
+Under \eqref{eq:regularity},
+\begin{equation}\label{eq:bvdecay}
+ |a_k(f)|\le\frac{2V}{\pi\,k(k-1)\cdots(k-\nu)}\qquad(k\ge\nu+1).
+\end{equation}
+\end{theorem}
+\begin{proof}
+At $\nu=0$ this is \eqref{eq:bvzero}. For $\nu\ge1$ use
+\eqref{eq:recurrence} and apply induction to $f_1$ at $k-1$ and $k+1$.
+Both bounds are no larger than
+$2V/[\pi(k-1)(k-2)\cdots(k-\nu)]$. Divide their sum by $2k$.
+Every derivative representative in this argument is bounded: it is AC,
+hence continuous, until the final BV level. The recurrence at $k=1$ is
+never used in this induction, since $k\ge\nu+1\ge2$ at a recursive step.
+\end{proof}
+
+\subsection{An exact tail telescope and identification of the series}
+For $\nu\ge1$ the scalar identity
+\[
+ \frac1{k(k-1)\cdots(k-\nu)}
+ =\frac1\nu\left(\frac1{(k-1)\cdots(k-\nu)}
+                 -\frac1{k\cdots(k-\nu+1)}\right)
+\]
+gives, first for a finite sum and then by its explicit remainder,
+\begin{equation}\label{eq:tail}
+ \sum_{k=n+1}^\infty |a_k(f)|
+ \le\frac{2V}{\pi\nu\,n(n-1)\cdots(n-\nu+1)}\qquad(n\ge\nu).
+\end{equation}
+In particular the series $g=\sum_{k\ge0}a_k(f)T_k$ converges absolutely
+and uniformly. Here is the identification $g=f$, so that the estimate is
+not merely a bound on a formal series. Cosine orthogonality shows that
+$f-g$ has all Chebyshev coefficients zero. The $T_k$ span the polynomials,
+so
+\[
+ \int_{-1}^1\frac{(f-g)(x)p(x)}{\sqrt{1-x^2}}\,dx=0
+ \quad\text{for every polynomial }p.
+\]
+Approximate the continuous function $f-g$ uniformly by polynomials.
+The weight has finite integral $\pi$, and passing to the limit gives a
+zero integral of $(f-g)^2$ against this positive weight. Continuity gives
+$f=g$ throughout $[-1,1]$.
+
+For $n\ge\nu\ge1$, the tail and the finite aliasing identity at the
+Lobatto nodes consequently yield
+\[
+ \norm{f-S_nf}_\infty\le\frac{2V}{\pi\nu\,n(n-1)\cdots(n-\nu+1)},
+ \qquad
+ \norm{f-I_nf}_\infty\le\frac{4V}{\pi\nu\,n(n-1)\cdots(n-\nu+1)}.
+\]
+Indeed $I_nT_k=T_{r_n(k)}$, where $r_n$ is the fold defined below,
+and $\norm{T_k-T_{r_n(k)}}_\infty\le2$.
+
+\subsection{Quadrature as a finite functional on coefficients}
+Write $I(f)=\int_{-1}^1f(x)\,dx$. Let $C_n=I\circ I_n$ be the
+$(n+1)$-point Clenshaw--Curtis rule ($n\ge1$), and let $G_n$ be the
+$(n+1)$-point Gauss--Legendre rule ($n\ge0$). The symbol $C_n$ in this
+subsection denotes the rule, not the cotangent constant of
+Theorem~\ref{thm:lobatto}. All following quadrature bounds are for
+Lebesgue measure $dx$ on $[-1,1]$.
+
+\paragraph{The exact moment vector.}
+Direct integration gives
+\begin{equation}\label{eq:moments}
+ m_k:=I(T_k)=
+ \begin{cases}2/(1-k^2),&k\text{ even},\\0,&k\text{ odd}.
+ \end{cases}
+\end{equation}
+For $k\ge2$ an antiderivative is
+$T_{k+1}/[2(k+1)]-T_{k-1}/[2(k-1)]$; differentiating it in cosine
+coordinates verifies the identity. The cases $k=0,1$ are direct.
+For every finite coefficient vector $a$, therefore,
+\begin{equation}\label{eq:functional}
+ (I-Q)\left(\sum_{k=0}^K a_kT_k\right)
+    =\sum_{k=0}^K a_k\bigl(m_k-Q(T_k)\bigr).
+\end{equation}
+For absolutely summable coefficients the same formula follows by uniform
+convergence whenever $Q$ is a finite evaluation rule.
+
+\paragraph{Gauss exactness and positivity need only a finite Gram matrix.}
+Put $N=n+1$. The inner product $\langle p,q\rangle=\int_{-1}^1pq$
+is positive definite on $\PP_{N-1}$. Project $X^N$ onto this space and
+subtract the projection to obtain the unique monic degree-$N$ polynomial
+$q_N$ orthogonal to $\PP_{N-1}$. It has $N$ distinct roots in $(-1,1)$:
+otherwise multiply it by the product of its interior sign-changing
+roots. This product has degree less than $N$, while its product with
+$q_N$ has one constant nonzero sign except at finitely many zeros,
+contradicting orthogonality. Degree $N$ then forces exactly $N$ simple
+interior roots.
+
+At these nodes take weights $w_j=I(\ell_j)$. Division of a polynomial
+of degree at most $2N-1$ by $q_N$ writes it as $q_Ns+r$ with
+$s,r\in\PP_{N-1}$. Both integration and the rule annihilate $q_Ns$ and
+agree on $r$. Thus the rule is exact through degree $2N-1=2n+1$.
+In particular $w_j=G_n(\ell_j^2)=I(\ell_j^2)>0$. Reflection and uniqueness
+give $q_N(-x)=(-1)^Nq_N(x)$ and paired equal weights. The weights sum
+to two, and the rule annihilates odd polynomials.
+
+\paragraph{Clenshaw--Curtis positivity is a finite telescope.}
+Set $\theta_j=j\pi/n$ and let $\delta_j=1/2$ at $j=0,n$ and $1$
+otherwise. Finite cosine orthogonality gives
+\[
+ \ell_j(x)=\frac{2\delta_j}{n}
+ \left(\frac12+\sum_{k=1}^{n-1}\cos(k\theta_j)T_k(x)
+                     +\frac12\cos(n\theta_j)T_n(x)\right).
+\]
+This identity can be checked at the $n+1$ nodes by a finite geometric
+sum, then by polynomial interpolation uniqueness. Integrating gives,
+for $n\ge2$,
+\begin{equation}\label{eq:ccweights}
+ w_j=\frac{2\delta_j}{n}\left[
+ 1-\sum_{k=1}^{\lfloor(n-1)/2\rfloor}\frac{2\cos(2k\theta_j)}{4k^2-1}
+ -\boldsymbol1_{2\mid n}\frac{\cos(n\theta_j)}{n^2-1}\right].
+\end{equation}
+Because $2/(4k^2-1)=1/(2k-1)-1/(2k+1)$, the bracket is at least $1/n$
+for odd $n$, and at least $n/(n^2-1)$ for even $n$. Thus all weights
+are positive. For $n=1$ they are $1,1$. The rule is symmetric, exact
+through degree $n$, and its weights sum to two.
+
+\paragraph{Fold the frequencies, not the functions.}
+For $n\ge1$ let $s$ be the remainder of $k$ modulo $2n$ and set
+\[
+ r_n(k)=\min(s,2n-s)\in\{0,\ldots,n\}.
+\]
+Then $T_k(\cos\theta_j)=T_{r_n(k)}(\cos\theta_j)$, whence
+\begin{equation}\label{eq:fold}
+ C_n(T_k)=m_{r_n(k)}.
+\end{equation}
+The fold preserves parity. For even $k>n$, $n\ge2$, one has $k\ge4$,
+so $|m_k|\le2/15$ and $|m_{r_n(k)}|\le2$. For even $k>2n+1$,
+$n\ge1$, positivity similarly gives $|G_n(T_k)|\le2$. Therefore
+\begin{equation}\label{eq:master}
+ \begin{aligned}
+ |(I-C_n)f|&\le\frac{32}{15}\sum_{\substack{k>n\\k\ {
+m even}}}|a_k|,
+                      &&n\ge2,\\
+ |(I-G_n)f|&\le\frac{32}{15}\sum_{\substack{k>2n+1\\k\ {
+m even}}}|a_k|,
+                      &&n\ge1.
+ \end{aligned}
+\end{equation}
+These bounds follow from \eqref{eq:functional} and exactness; every odd
+mode contributes zero. The restrictions on small $n$ ensure $k\ge4$ and
+are part of the statements.
+
+\subsection{Sharp stated constants, with the corrected denominator}
+\begin{theorem}[Variation bounds]\label{thm:quad-bv}
+Under \eqref{eq:regularity} with $\nu\ge1$,
+\begin{align}
+ |(I-C_n)f|&\le\frac{32V}{15\pi\nu(n-\nu)^\nu},
+                  &&n>\nu,\ n\ge2,\label{eq:cc-bv}\\
+ |(I-G_n)f|&\le\frac{32V}{15\pi\nu(2n+1-\nu)^\nu},
+                  &&2n+1>\nu,\ n\ge1.\label{eq:g-bv}
+\end{align}
+\end{theorem}
+\begin{proof}
+Equation~\eqref{eq:bvdecay} bounds the coefficients by
+$2V/[\pi(k-\nu)^{\nu+1}]$. Let $m$ be the first even integer strictly
+greater than a cutoff $s$. For $s>\nu$, convexity of
+$g(t)=(t-\nu)^{-\nu-1}$ and integration over the length-two intervals
+centered at $m,m+2,\ldots$ give
+\[
+ \sum_{j=0}^J g(m+2j)
+ \le\frac12\int_{m-1}^{m+2J+1}g(t)\,dt
+ \le\frac1{2\nu(m-1-\nu)^\nu}.
+\]
+Take $J\to\infty$ and use $m-1\ge s$. Substitute the two cutoffs
+$s=n$ and $s=2n+1$ into \eqref{eq:master}.
+\end{proof}
+
+\begin{remark}[The denominator is an audited correction]
+The denominator in the Gauss bound and the eventual Clenshaw--Curtis
+bound is $(2n+1-\nu)^\nu$. The expression
+$(n-2\nu-1)^{2\nu+1}$ in the 2013 printing is erroneous, as recorded
+in Trefethen's \href{https://people.maths.ox.ac.uk/trefethen/ATAP/}{official
+errata} for equations (19.10) and (19.12). Here the corrected denominator
+also follows directly from the even-mode cutoff in the proof.
+\end{remark}
+
+\begin{corollary}[Geometric coefficient input]
+If $f=\sum a_kT_k$ and $|a_k|\le2M\rho^{-k}$ for $k\ge1$, with $\rho>1$,
+then
+\[
+ |(I-C_n)f|\le\frac{64M\rho^{1-n}}{15(\rho^2-1)}\quad(n\ge2),
+ \qquad
+ |(I-G_n)f|\le\frac{64M\rho^{-2n}}{15(\rho^2-1)}\quad(n\ge1).
+\]
+If $n$ is even, the first numerator can be replaced by $64M\rho^{-n}$.
+\end{corollary}
+\begin{proof}
+Sum the even geometric tails in \eqref{eq:master}. If the first even
+index is $m$, their sum is at most $2M\rho^{2-m}/(\rho^2-1)$.
+\end{proof}
+This corollary isolates exactly the analytic input: a function bounded
+by $M$ and holomorphic in the open Bernstein ellipse $E_\rho$ has the
+stated coefficient bound. One can reuse NLAlib's open-ellipse coefficient
+and series theorems. Alternatively apply the Laurent coefficient estimate
+to $f((z+z^{-1})/2)$ on circles $|z|=r<\rho$ and let $r\uparrow\rho$;
+the Laurent symmetry makes $a_k$ twice the positive Laurent coefficient.
+
+\subsection{An explicit eventual threshold from finite alias blocks}
+The point of the next argument is that the eventual Clenshaw--Curtis
+bound needs no separate asymptotic quadrature theorem.
+
+\begin{lemma}[Block estimate for a coefficient envelope]\label{lem:block}
+If $\nu\ge1$, $n\ge2$, and $|a_k|\le A k^{-\nu-1}$ for all $k>n$, then
+\begin{equation}\label{eq:blockrate}
+ |(I-C_n)f|\le 7A n^{-\nu-1}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+In any block $2\ell n<k\le2(\ell+1)n$ restricted to even $k$, the
+folded residue zero appears once and each positive even residue at most
+twice. The same upper bound holds for the initial half-block $n<k\le2n$.
+Thus the finite telescope in \eqref{eq:moments} gives
+\[
+ \sum_{k\text{ in one block, even}}|m_{r_n(k)}|
+ \le2+2\sum_{j=1}^\infty\frac2{4j^2-1}=4.
+\]
+Equivalently first use the finite sum $1-1/(2J+1)\le1$ and then let
+$J\to\infty$. Since $\sum_{\ell\ge1}\ell^{-\nu-1}\le1+1/\nu\le2$,
+\[
+ \sum_{\substack{k>n\\k\ {
+m even}}}k^{-\nu-1}|m_{r_n(k)}|
+ \le\frac4{n^{\nu+1}}+
+       \frac4{(2n)^{\nu+1}}\sum_{\ell\ge1}\ell^{-\nu-1}
+ \le\frac6{n^{\nu+1}}.
+\]
+For the unfurled moments, $|m_k|\le(8/3)k^{-2}$ for $k\ge2$, so
+\[
+ \sum_{k>n}k^{-\nu-1}|m_k|
+ \le\frac8{3(\nu+2)n^{\nu+2}}\le\frac1{n^{\nu+1}}.
+\]
+Combine these estimates with \eqref{eq:fold} and \eqref{eq:functional}.
+\end{proof}
+
+\begin{lemma}[A finite product replaces an exponential loss]\label{lem:product}
+Let $s_\nu=\nu(\nu+1)/2$. If $n\ge\nu$ and $n+1>s_\nu$, then the BV
+coefficient envelope for every $k>n$ is
+\begin{equation}\label{eq:envelope}
+ |a_k(f)|\le
+ \frac{2V}{\pi(1-s_\nu/(n+1))}\,k^{-\nu-1}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+For $0\le u_j\le1$, finite induction gives
+$\prod_j(1-u_j)\ge1-\sum_j u_j$. Apply this with $u_j=j/k$,
+$0\le j\le\nu$. Then
+\[
+ k(k-1)\cdots(k-\nu)
+ =k^{\nu+1}\prod_{j=0}^\nu(1-j/k)
+ \ge k^{\nu+1}(1-s_\nu/k)
+ \ge k^{\nu+1}(1-s_\nu/(n+1))>0.
+\]
+Use \eqref{eq:bvdecay}. This avoids replacing every factor by $k/2$.
+\end{proof}
+
+\begin{theorem}[An explicit eventual bound, with a smaller threshold]
+\label{thm:threshold}
+Under \eqref{eq:regularity}, for $\nu\ge1$ put
+\begin{equation}\label{eq:threshold}
+ n_0(\nu)=\frac{\nu(\nu+1)}2+
+            \left\lceil\frac{105}{16}\nu2^\nu\right\rceil.
+\end{equation}
+For every integer $n\ge n_0(\nu)$,
+\begin{equation}\label{eq:eventual}
+ |(I-C_n)f|\le\frac{32V}{15\pi\nu(2n+1-\nu)^\nu}.
+\end{equation}
+More explicitly, whenever $n\ge\max(2,\nu)$ and $n+1>s_\nu$,
+\begin{equation}\label{eq:strongrate}
+ |(I-C_n)f|\le
+ \frac{14V}{\pi(1-s_\nu/(n+1))n^{\nu+1}}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Combine Lemmas~\ref{lem:block} and \ref{lem:product} to obtain
+\eqref{eq:strongrate}. The threshold \eqref{eq:threshold} implies all
+its hypotheses and
+\[
+ n(1-s_\nu/(n+1))=n-s_\nu+\frac{s_\nu}{n+1}
+ \ge\frac{105}{16}\nu2^\nu.
+\]
+This is exactly the inequality needed to bound the right side of
+\eqref{eq:strongrate} by $32V/[15\pi\nu(2n)^\nu]$.
+Since $0<2n+1-\nu\le2n$, this is at most the desired right side of
+\eqref{eq:eventual}. No division by $V$ is needed, so $V=0$ is included.
+\end{proof}
+For illustration, $n_0(1)=15$, $n_0(2)=56$, $n_0(3)=164$, and
+$n_0(4)=430$. These are sufficient thresholds, not assertions of optimal
+thresholds. The constants $32/15$ and the corrected denominator of the
+target bound are unchanged. The stronger-rate estimate
+\eqref{eq:strongrate} additionally displays an explicit $n^{-\nu-1}$
+bound.
+
+\subsection{Interfaces for a later formalization}
+The natural handoff consists of four short dependency chains:
+\begin{enumerate}
+\item Fixed Vandermonde inverse $\to$ coefficient compactness $\to$ local
+root multiplicity and cancellation; separately, rank--nullity and the
+signed Lagrange annihilator $\to$ rational alternation and uniqueness.
+\item Finite trigonometric cardinal identities $\to$ the cotangent
+pair inequality $\to$ the $2/\pi$ bound; finite cosine convolution and
+period-by-period integration $\to$ the $4/\pi^2$ bound.
+\item For the universal lower bound: polynomial partial fractions and
+a positive matrix $\to$ rank and a positive normal; the finite collision
+estimate $\to$ compact continuation. The last step remains global.
+\item Finite summation by parts and one AC integration by parts $\to$
+the coefficient recurrence; exact moment/fold vectors $\to$ the quadrature
+bounds and the explicit threshold.
+\end{enumerate}
+Existing interfaces worth reusing are Lagrange interpolation and
+leading-coefficient sums, polynomial gcd and root counting, matrix
+adjugates and strict diagonal dominance, variation on adjacent intervals,
+and the existing Chebyshev alias and analytic coefficient interfaces.
+The requested mathematical statements are proved here, but assembling
+these interfaces still requires Lean work; a finite-looking proof is
+not by itself evidence that the formalization will be short.
+
+\begin{thebibliography}{9}
+\bibitem{dp} C. de Boor and A. Pinkus,
+\emph{Proof of the conjectures of Bernstein and Erd\H{o}s concerning the
+optimal nodes for polynomial interpolation}, J. Approx. Theory 24 (1978),
+289--303. \url{https://doi.org/10.1016/0021-9045(78)90014-X}.
+The peak-comparison architecture motivates Section~\ref{sec:universal};
+the finite certificates and the radial-continuation lemma are supplied
+explicitly in this document.
+\bibitem{brutman} L. Brutman, \emph{On the Lebesgue Function for Polynomial
+Interpolation}, SIAM J. Numer. Anal. 15 (1978), 694--704.
+\url{https://doi.org/10.1137/0715046}.
+\bibitem{ez} H. Ehlich and K. Zeller, \emph{Auswertung der Normen von
+Interpolationsoperatoren}, Math. Ann. 164 (1966), 105--112.
+\url{https://doi.org/10.1007/BF01429047}.
+\bibitem{atap} L. N. Trefethen, \emph{Approximation Theory and Approximation
+Practice}, SIAM; author's errata for the 2013 edition, equations (19.10)
+and (19.12): \url{https://people.maths.ox.ac.uk/trefethen/ATAP/}.
+\end{thebibliography}
+
+\end{document}

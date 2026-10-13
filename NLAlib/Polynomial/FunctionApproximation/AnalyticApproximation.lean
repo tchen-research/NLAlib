@@ -223,4 +223,26 @@ theorem exists_degree_le_abs_sub_eval_le_of_open_bernsteinEllipse_interval
     rw [heq] at h
     simpa only [eval_comp, s, eval_sub, eval_mul, eval_C, eval_X, t] using h
 
+/-- The actual analytic Chebyshev coefficients are absolutely summable under
+open-ellipse holomorphy and boundedness. Source: Trefethen, ATAP, Theorem 8.1;
+geometric coefficient decay, including the degree-zero coefficient. -/
+theorem summable_abs_chebyshevAnalyticCoeff_of_open_ellipse
+    {F : ℂ → ℂ} {ρ M : ℝ} (hρ : 1 < ρ)
+    (hFd : DifferentiableOn ℂ F (openBernsteinEllipse ρ))
+    (hM : ∀ z ∈ openBernsteinEllipse ρ, ‖F z‖ ≤ M) :
+    Summable (fun k => |chebyshevAnalyticCoeff F k|) := by
+  have hM0 : 0 ≤ M := (abs_nonneg _).trans
+    (abs_chebyshevAnalyticCoeff_zero_le_of_open_ellipse hρ hFd hM)
+  have hρ0 : 0 < ρ := by linarith
+  have hq0 : 0 < ρ⁻¹ := inv_pos.mpr hρ0
+  have hq1 : ρ⁻¹ < 1 := (inv_lt_one₀ hρ0).mpr hρ
+  apply Summable.of_nonneg_of_le (fun k => abs_nonneg _) ?_
+    ((summable_geometric_of_lt_one hq0.le hq1).mul_left (2 * M))
+  intro k
+  rcases Nat.eq_zero_or_pos k with rfl | hk
+  · have h := abs_chebyshevAnalyticCoeff_zero_le_of_open_ellipse hρ hFd hM
+    simpa only [pow_zero, mul_one] using h.trans (by linarith : M ≤ 2 * M)
+  · have h := abs_chebyshevAnalyticCoeff_le_of_open_ellipse hρ hFd hM hk
+    simpa only [div_eq_mul_inv, inv_pow] using h
+
 end NLAlib

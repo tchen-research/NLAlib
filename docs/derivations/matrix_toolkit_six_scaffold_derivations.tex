@@ -1,0 +1,777 @@
+% !TEX program = xelatex
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=23mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,array,longtable}
+\usepackage{fontspec,microtype,xurl}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\newcommand{\R}{\mathbb R}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\ip}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\negind}{\operatorname{n}_{-}}
+\newcommand{\code}[1]{\ifmmode\text{\small\nolinkurl{#1}}\else{\small\nolinkurl{#1}}\fi}
+\newcommand{\src}[2]{\href{https://github.com/tchen-research/NLAlib/blob/b7a96fd6ade2aad77a1a9a038ddf2791deea440e/#1}{#2}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+\setlength{\emergencystretch}{3em}
+\setcounter{tocdepth}{2}
+\title{The six remaining matrix toolkit entries\\Operator derivations for their eight scaffold lemmas}
+\author{Mathematical handoff for NLAlib}
+\date{13 October 2026}
+\begin{document}
+\maketitle
+
+\noindent The refreshed public catalogue at commit
+\code{b7a96fd6ade2aad77a1a9a038ddf2791deea440e} has 108 matrix-toolkit
+entries: 102 marked proved and six marked scaffold. These are not six
+unproved mathematical theories: most of their constituent Lean theorems
+are already present. This note targets the eight declarations still
+containing a deferred proof, and derives their stated consequences.
+It contains mathematics, not a new Lean implementation.
+
+\begin{center}\small
+\begin{tabular}{@{}p{.30\linewidth}p{.61\linewidth}@{}}
+\toprule Catalogue entry & Remaining mathematical bridge\\\midrule
+Principal angles & One-column totalized tangent identity.\\
+Cholesky recursion & Positive-pivot prefix, zero trailing columns, then rank.\\
+Gram--Schmidt & Normalized rank-one projections identify the two recursions.\\
+Givens rotations & A column-support invariant for the accumulated factor.\\
+Hessenberg reduction & A block recursion; implicit-Q uniqueness by oriented intertwining.\\
+Sylvester inertia/Sturm & Symmetric LU becomes LDL$^\top$; signs of pivot products count inertia.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All matrices are real, transposes are Euclidean adjoints, and matrix norms
+are Euclidean operator norms. Indices start at zero to match the Lean
+statements. A span over no vectors is zero, an empty product is one, and
+an empty matrix has rank zero. Whenever total division is used, we state
+explicitly the convention $0^{-1}=0$. It is a library convention, not a
+geometric assertion about an infinite tangent.
+
+\paragraph{Source and reuse boundary.}
+The \src{atlas/atlas.json}{pinned catalogue} and
+\src{atlas/declarations.json}{declaration index} were checked against the
+source files linked in each section. Named reuse results below have
+\code{sorry: false} in that public index; this is a source-level check,
+not a fresh kernel audit. The local working checkout predates these
+modules, so public availability does not imply that a theorem can be
+imported into that checkout without updating it. The public snapshot
+uses Lean 4.33.1 and Mathlib commit
+\code{0df444a360eaa60ab8c11dca51a86af692955474}.
+
+\tableofcontents
+
+\section{Principal angles: reduce the remaining bridge to one scalar}
+\label{sec:angle}
+\paragraph{Exact remaining target.}
+\code{NLAlib.sq_tanThetaMax_replicateCol_eq_tanSqAngle}, in
+\src{NLAlib/Krylov/Spectral/PowerMethod.lean}{PowerMethod.lean}.
+The full principal-angle characterization is already recorded as proved;
+there is no reason to reconstruct an SVD or a CS decomposition for this
+one-column bridge.
+
+Let $u,x\in\R^N$, $\ip uu=1$, and $\alpha=\ip ux$. Write $[v]$ for
+the one-column matrix associated with a vector $v$. The definitions are
+\[
+ \operatorname{tanThetaMax}([u],[x])
+ =\norm{(I-uu^\top)[x]\,[\alpha]^{-1}},\qquad
+ \operatorname{tanSqAngle}(u,x)
+ =\frac{\ip uu\ip xx-\ip ux^2}{\ip ux^2}.
+\]
+Both use total inversion at zero.
+
+\begin{lemma}[The one-column operator norm]\label{lem:column}
+For every vector $v$, $\norm{[v]}=\norm v_2$.
+\end{lemma}
+\begin{proof}
+As a linear map from $\R$ to $\R^N$, the matrix $[v]$ sends $t$ to $tv$.
+Thus $\norm{tv}_2=|t|\norm v_2$, giving the upper bound. Evaluate at
+$t=1$ for the reverse bound. This includes $v=0$ and $N=0$.
+\end{proof}
+
+\begin{theorem}[The exact totalized identity]
+For $\ip uu=1$ and every $x$,
+\[
+ \operatorname{tanThetaMax}([u],[x])^2
+     =\operatorname{tanSqAngle}(u,x).
+\]
+\end{theorem}
+\begin{proof}
+Put $r=x-\alpha u$. Finite bilinear expansion gives
+\[
+ \ip ur=0,\qquad \norm r_2^2=\norm x_2^2-\alpha^2.
+\]
+The overlap matrix is the $1\times1$ matrix $[\alpha]$ and its total
+matrix inverse is $[\alpha^{-1}]$, also at $\alpha=0$. The residual
+product is therefore $[\alpha^{-1}r]$. By Lemma~\ref{lem:column},
+\[
+ \operatorname{tanThetaMax}([u],[x])^2
+ =|\alpha^{-1}|^2\norm r_2^2
+ =\frac{\norm x_2^2-\alpha^2}{\alpha^2}
+ =\operatorname{tanSqAngle}(u,x).
+\]
+For $\alpha=0$ both sides equal zero by total inversion; this branch
+uses no cancellation of $\alpha$. For $\alpha\ne0$ it is ordinary division.
+\end{proof}
+
+\paragraph{Interpretation and edge cases.}
+For $x\ne0$ and $\alpha\ne0$ this is the usual squared tangent of the
+acute angle between the two lines. When $\alpha=0$ and $x\ne0$, the
+geometric angle is $\pi/2$; the zero value is only the chosen totalization.
+When $x=0$, both expressions still equal zero but there is no nonzero
+second line. If $N=0$, the hypothesis $\ip uu=1$ is impossible, so the
+theorem is vacuous rather than requiring an invented unit vector.
+
+\paragraph{Reuse.}
+The exact definitions are in
+\src{NLAlib/Matrix/Subspaces/PrincipalAngles.lean}{PrincipalAngles.lean}
+and \src{NLAlib/Krylov/Spectral/Ritz.lean}{Ritz.lean}. The general angle
+package is \code{NLAlib.principal_angle_characterizations}.
+For the remaining bridge prove or reuse the one-column operator norm,
+the $1\times1$ inverse, and the displayed residual identity. Be careful:
+Mathlib's unqualified \code{Matrix.norm_replicateCol} is a theorem about
+its ambient matrix norm instance and is not automatically the Euclidean
+operator-norm statement. Working with the map $t\mapsto tv$ avoids that
+ambiguity completely.
+
+\section{Pivoted Cholesky: establish the zero pattern before counting rank}
+\label{sec:chol}
+\paragraph{Exact remaining targets.}
+\code{NLAlib.choleskyPivoted_apply_self_pos_iff_lt_rank} and
+\code{NLAlib.choleskyPivoted_apply_eq_zero_of_rank_le}, in
+\src{NLAlib/Matrix/Factorizations/Cholesky.lean}{Cholesky.lean}.
+The factorization identity and positive-semidefinite correctness of the
+recursion are already proved. The missing assertion is the precise number
+and location of its nonzero columns.
+
+\subsection{The scalar PSD observation behind stopping}
+\begin{lemma}[A zero diagonal entry has a zero row and column]\label{lem:psdzero}
+If $A\succeq0$ and $a_{ii}=0$, then $a_{ij}=a_{ji}=0$ for every $j$.
+Consequently a PSD matrix with all diagonal entries zero is zero.
+\end{lemma}
+\begin{proof}
+For all $t\in\R$,
+\[
+ 0\le (e_i+t e_j)^\top A(e_i+t e_j)=2t a_{ij}+t^2a_{jj}.
+\]
+If $a_{ij}\ne0$, choose a sufficiently small nonzero $t$ with opposite
+sign to $a_{ij}$; the linear term makes this expression negative.
+Thus $a_{ij}=0$. Symmetry supplies the row/column equality.
+\end{proof}
+In particular, the largest diagonal of a nonzero PSD matrix is strictly
+positive. Since all its diagonal entries are nonnegative, maximizing
+their absolute values is the same pivot rule.
+
+\subsection{One block step and a stronger induction invariant}
+After the first symmetric swap, write
+\[
+ B=\begin{pmatrix}a&b^\top\\b&C\end{pmatrix},\qquad
+ S=C-a^{-1}bb^\top.
+\]
+If $B\ne0$, the pivot rule makes $a>0$. Completing the square gives
+\begin{equation}\label{eq:squares}
+ \begin{pmatrix}t\\y\end{pmatrix}^{\!\top}
+ B\begin{pmatrix}t\\y\end{pmatrix}
+ =a(t+a^{-1}b^\top y)^2+y^\top S y.
+\end{equation}
+Hence $S\succeq0$. If $a=0$, maximality of the pivot forces $B=0$,
+and the recursion continues on zero matrices with zero columns.
+
+Suppose the recursive factorization of $S$ uses a trailing permutation
+$P$ and lower triangular factor $L_S$, so $PSP^\top=L_SL_S^\top$.
+The assembled factor is
+\begin{equation}\label{eq:pivotL}
+ L=\begin{pmatrix}\sqrt a&0\\Pb/\sqrt a&L_S\end{pmatrix}.
+\end{equation}
+This formula explains why subsequent pivots permute the lower part of
+the already computed first column. It preserves the factorization:
+\[
+ \begin{pmatrix}1&0\\0&P\end{pmatrix}B
+ \begin{pmatrix}1&0\\0&P^\top\end{pmatrix}=LL^\top.
+\]
+The equality follows by multiplying the four blocks. The zero case is
+valid as well because $b=C=0$ and the total quotient is zero.
+
+\begin{lemma}[Positive prefix and zero tail, without mentioning rank]
+\label{lem:prefix}
+For the pivoted Cholesky output of every PSD $N\times N$ matrix, there
+is an integer $r\in\{0,\ldots,N\}$ such that
+\[
+ L_{jj}>0\ (j<r),\qquad L_{ij}=0\ (j\ge r,\ 0\le i<N).
+\]
+The factor is lower triangular and its diagonal is nonnegative.
+\end{lemma}
+\begin{proof}
+Induct on $N$. At $N=0$ take $r=0$. At positive dimension, a zero maximal
+pivot makes the whole matrix zero by Lemma~\ref{lem:psdzero}; induction
+and the block formula give $L=0$, so take $r=0$.
+Otherwise $a>0$. The PSD Schur complement has a recursive prefix length
+$s$. Formula~\eqref{eq:pivotL} has positive first diagonal entry and
+the positive diagonal entries of $L_S$ next, while every column after
+column $s$ is zero (its top entry is zero and its trailing column is
+zero). Take $r=1+s$. Lower triangularity and nonnegative diagonal also
+follow from the same formula. No rank identity is used in the induction.
+\end{proof}
+
+\subsection{A finite rank certificate identifies the prefix length}
+\begin{lemma}[Rank of the factor and of its Gram matrix]\label{lem:rankL}
+A lower triangular matrix satisfying Lemma~\ref{lem:prefix} has rank $r$.
+Every real matrix $L$ satisfies $\rank(LL^\top)=\rank L$.
+\end{lemma}
+\begin{proof}
+Only its first $r$ columns can be nonzero, so the rank is at most $r$.
+The first $r\times r$ principal block is triangular with determinant
+$\prod_{j<r}L_{jj}>0$, so those columns are independent and the rank
+is at least $r$. For $r=0$ the matrix is zero and the conclusion is direct.
+Finally
+\[
+ LL^\top z=0\quad\Longleftrightarrow\quad L^\top z=0,
+\]
+because $z^\top LL^\top z=\norm{L^\top z}_2^2$. Rank--nullity and
+$\rank L^\top=\rank L$ give the Gram-rank identity.
+\end{proof}
+
+\begin{theorem}[Both remaining Cholesky conclusions]
+If $A\succeq0$ and the pivoted recursion returns $(\sigma,L)$, then
+\[
+ L_{ii}>0\quad\Longleftrightarrow\quad i<\rank A,
+ \qquad
+ j\ge\rank A\quad\Longrightarrow\quad L_{ij}=0\quad\text{for all }i.
+\]
+Thus it takes exactly $\rank A$ positive-pivot steps, and the first
+$\rank A$ columns alone give the permuted Gram factorization of $A$.
+\end{theorem}
+\begin{proof}
+The existing recursion theorem gives $P_\sigma A P_\sigma^\top=LL^\top$.
+Permutations preserve rank. By Lemma~\ref{lem:rankL},
+$\rank A=\rank(LL^\top)=\rank L=r$. Substitute this into
+Lemma~\ref{lem:prefix}.
+\end{proof}
+
+\paragraph{Reuse and edge cases.}
+Reuse \code{NLAlib.isPivotedCholesky_choleskyPivoted},
+\code{NLAlib.abs_le_abs_absArgmax},
+\code{NLAlib.posSemidef_pivotSchur}, and
+\code{NLAlib.apply_eq_zero_of_posSemidef_of_apply_self_eq_zero}.
+Mathlib has \code{Matrix.rank_self_mul_transpose} in
+\code{Mathlib/LinearAlgebra/Matrix/Rank.lean}.
+The useful new induction lemma is \emph{the prefix statement before rank}.
+No rank-of-Schur-complement theorem is necessary. Ties in the maximum
+diagonal can be broken arbitrarily. The zero matrix has $r=0$; a positive
+definite matrix has $r=N$; dimension zero has no pivot and no exceptional
+index to handle.
+
+\section{Gram--Schmidt: identify the recursions through one rank-one projector}
+\label{sec:gs}
+\paragraph{Exact remaining target.}
+\code{NLAlib.gramSchmidtCol_eq_gramSchmidtNormed}, in
+\src{NLAlib/Matrix/Factorizations/GramSchmidt.lean}{GramSchmidt.lean}.
+This target has \emph{no linear-independence hypothesis}. Both definitions
+continue after a zero residual by assigning the zero vector.
+
+\subsection{A normalization identity valid also at zero}
+For $v$ in a real finite-dimensional inner-product space define
+$\mathcal N(v)=\norm v^{-1}v$, with $\mathcal N(0)=0$.
+\begin{lemma}\label{lem:rankone}
+For every $v,y$,
+\begin{equation}\label{eq:rankone}
+ \ip{\mathcal N(v)}y\mathcal N(v)
+ =\frac{\ip vy}{\norm v^2}v
+ =P_{\R v}y.
+\end{equation}
+\end{lemma}
+\begin{proof}
+If $v=0$, every expression is zero, including projection onto the zero
+subspace. Otherwise put $q=v/\norm v$. Then $\norm q=1$;
+$\ip qyq$ belongs to $\R v$, and $y-\ip qyq$ is orthogonal to $v$.
+These two properties uniquely characterize the orthogonal projection.
+Bilinearity gives the scalar quotient in \eqref{eq:rankone}.
+\end{proof}
+
+Let $a_j$ be the columns of $A$. The normalized recursion in NLAlib is
+\begin{equation}\label{eq:cgs}
+ v_j=a_j-\sum_{i<j}\ip{q_i}{a_j}q_i,\qquad q_j=\mathcal N(v_j).
+\end{equation}
+Mathlib first defines the unnormalized recursion
+\begin{equation}\label{eq:mathgs}
+ g_j=a_j-\sum_{i<j}P_{\R g_i}a_j,
+ \qquad \widehat q_j=\mathcal N(g_j).
+\end{equation}
+
+\begin{theorem}[Equality of the two recursions, including breakdown]
+For every matrix $A$ and every column $j$, $v_j=g_j$ and $q_j=\widehat q_j$.
+\end{theorem}
+\begin{proof}
+Use strong induction on $j$. Assuming $q_i=\mathcal N(g_i)$ for every
+$i<j$, Lemma~\ref{lem:rankone} identifies each summand in
+\eqref{eq:cgs} with its counterpart in \eqref{eq:mathgs}. Hence $v_j=g_j$.
+Apply the same normalization map to obtain $q_j=\widehat q_j$.
+The argument includes an empty predecessor sum and zero earlier vectors.
+\end{proof}
+
+\paragraph{The coordinate bridge.}
+The map taking a coordinate vector $v:m\to\R$ to
+\code{WithLp.toLp 2 v} preserves addition, finite sums, scalar
+multiplication and inner products, and its norm is
+$\sqrt{\sum_i v_i^2}$. Thus the theorem gives exactly
+\[
+ \code{gramSchmidtCol A j}
+ =\bigl(\code{InnerProductSpace.gramSchmidtNormed}
+       \ \R\ (a_i)_i\ j\bigr)\text{ in coordinates}.
+\]
+There is no need to prove QR uniqueness to identify the two definitions.
+
+\subsection{Why the classical and modified algorithms agree}
+This is already proved in the source, but the operator identity explains
+the reuse. The nonzero earlier $q_i$ are orthonormal. Put $P_i=q_iq_i^\top$;
+when $q_i=0$ this is the zero operator. For $i\ne j$, $P_iP_j=0$, so
+finite induction gives
+\begin{equation}\label{eq:projectorproduct}
+ (I-P_{j-1})\cdots(I-P_0)=I-\sum_{i<j}P_i.
+\end{equation}
+The left side is the modified Gram--Schmidt residual operator and the
+right side the classical one. Moreover
+$\ip{q_i}{(I-P_{i-1})\cdots(I-P_0)a_j}=\ip{q_i}{a_j}$, so their stored
+coefficients agree as well. This proves equality in exact arithmetic,
+including the convention at breakdown.
+
+The sum $\sum_{i<j}P_i$ projects onto the span of the earlier columns:
+inductively, $a_i=v_i+\sum_{h<i}\ip{q_h}{a_i}q_h$ and $q_i$ is a scalar
+multiple of $v_i$, so the two successive column spans agree. Consequently
+$v_j=0$ exactly when $a_j$ is in the earlier column span. If no residual
+vanishes, the $q_j$ form the graded orthonormal basis and the positive
+diagonal entries of $R$ are $\norm{v_j}$.
+
+\paragraph{Reuse.}
+Mathlib's
+\code{InnerProductSpace.gramSchmidt_def},
+\code{InnerProductSpace.gramSchmidtNormed}, and
+\code{Submodule.starProjection_singleton} expose precisely
+\eqref{eq:mathgs} and \eqref{eq:rankone}.
+The NLAlib results \code{gramSchmidtCol_eq},
+\code{gramSchmidtResidual_eq_zero_iff}, and
+\code{modifiedGramSchmidt_eq} already cover the other interfaces.
+Empty column sets require no induction step. With an empty row set all
+residuals and normalized vectors are zero; the bridge still holds.
+
+\section{Givens QR: prove a column-support invariant}
+\label{sec:givens}
+\paragraph{Exact remaining target.}
+\code{NLAlib.givensQRQ_invariant}, in
+\src{NLAlib/Matrix/Factorizations/Givens.lean}{Givens.lean}.
+Its three dependent structure-preservation results are already written
+against this scaffold. The invariant holds for every input matrix,
+not just Hessenberg inputs.
+
+Write $F_j=\Span(e_0,\ldots,e_j)$. A matrix is upper Hessenberg exactly
+when its column $j$ belongs to $F_{j+1}$ (truncated at the full ambient
+space). Let $G_k$ be any orthogonal rotation acting only in the plane
+$\Span(e_k,e_{k+1})$, and set $G_k=I$ when $k+1\ge N$. Define
+\[
+ Q_0=I,\qquad Q_{k+1}=Q_kG_k^\top.
+\]
+The rotations may depend on all previous steps; the support proof does
+not depend on their angles or on how they were chosen.
+
+\begin{theorem}[The exact accumulated-factor invariant]\label{thm:givens}
+For every $k\ge0$, $Q_k$ is upper Hessenberg and
+$Q_ke_j=e_j$ for every coordinate index $j>k$.
+\end{theorem}
+\begin{proof}
+At $k=0$ the statement is immediate. If $k+1\ge N$, the next multiplier
+is the identity. Upper Hessenberg shape persists, and the new condition
+on $j>k+1$ follows from the old one.
+
+Otherwise right multiplication changes only columns $k,k+1$. Write the
+two columns of the $2\times2$ block of $G_k^\top$ as $(c,s)$ and
+$(-s,c)$, so
+\begin{align*}
+ Q_{k+1}e_k&=cQ_ke_k+sQ_ke_{k+1},\\
+ Q_{k+1}e_{k+1}&=-sQ_ke_k+cQ_ke_{k+1}.
+\end{align*}
+The old Hessenberg condition gives $Q_ke_k\in F_{k+1}$, and the old
+identity-column condition gives $Q_ke_{k+1}=e_{k+1}\in F_{k+1}$.
+Both new columns therefore belong to $F_{k+1}$. This is the exact
+Hessenberg requirement for column $k$ and a stronger requirement than
+needed for column $k+1$. Every other column is unchanged. In particular,
+all columns $j>k+1$ are still identity columns. This closes the induction.
+\end{proof}
+
+\paragraph{Equivalent entrywise induction.}
+If $a>k+1$, the two entries mixed in row $a$ are zero:
+$(Q_k)_{ak}=0$ by Hessenberg shape and
+$(Q_k)_{a,k+1}=\delta_{a,k+1}=0$ by the identity-column condition.
+The transformed entries are therefore zero. All untouched columns use
+the old invariant. This proves the exact pair of clauses in the Lean
+statement using only finite sums with two surviving terms; it avoids
+transporting a row lemma through transposes.
+
+\begin{corollary}[The QR step preserves shape even at singular matrices]
+Let $H$ be upper Hessenberg and let $H=QR$ be the output of the ordered
+Givens recursion. Then $RQ$ is upper Hessenberg. If $H$ is symmetric,
+$RQ$ is symmetric tridiagonal. No invertibility hypothesis on $R$ is needed.
+\end{corollary}
+\begin{proof}
+The recursion already gives upper triangular $R$ and orthogonal $Q$;
+Theorem~\ref{thm:givens} gives upper Hessenberg $Q$. For $i>j+1$,
+\[
+ (RQ)_{ij}=\sum_\ell R_{i\ell}Q_{\ell j}=0:
+\]
+terms with $\ell<i$ have $R_{i\ell}=0$, and those with $\ell\ge i>j+1$
+have $Q_{\ell j}=0$. Also $RQ=Q^\top H Q$, so it is symmetric when
+$H$ is. A symmetric upper Hessenberg matrix is tridiagonal.
+\end{proof}
+
+\paragraph{Reuse and small dimensions.}
+Use \code{NLAlib.isQR_givensQR},
+\code{NLAlib.isUpperTriangular_givensQR_snd},
+\code{NLAlib.IsUpperHessenberg.isUpperTriangular_mul}, and
+\code{NLAlib.isSymm_mul_of_isQR}. For $N=0,1$ the rotation list is empty
+and $Q=I$. A zero two-entry pivot gives an identity rotation, so no
+division-by-zero assumption enters the support argument.
+
+\section{Hessenberg reduction: block recursion and oriented intertwining}
+\label{sec:hess}
+\paragraph{Exact remaining targets.}
+\code{NLAlib.isUpperHessenberg_hessenbergH} and
+\code{NLAlib.IsHessenbergForm.exists_sign}, in
+\src{NLAlib/Matrix/Factorizations/Hessenberg.lean}{Hessenberg.lean}.
+Orthogonality of the constructed factor, its fixed first column, and the
+number of reflectors are already proved. Preserve this actual algorithm;
+an unrelated existential Schur factorization would not prove its scaffold.
+
+\subsection{One padding identity handles the recursive algorithm}
+For $v\in\R^N$, the total Householder map is
+\[
+ H_v=I-2\frac{vv^\top}{v^\top v},\qquad H_0=I.
+\]
+It is symmetric and orthogonal. If $v=(0,w)$, direct block multiplication
+gives
+\begin{equation}\label{eq:padding}
+ H_{(0,w)}=\diag(1,H_w).
+\end{equation}
+Consequently products of padded reflectors equal the padded product;
+this follows by induction from
+$\diag(1,U)\diag(1,V)=\diag(1,UV)$, including the empty product.
+
+For completeness, the usual reflector taking $x$ to a multiple of $e_0$
+works with zero tails as well. Put $r=\norm x_2$,
+$s=1$ if $x_0\ge0$ and $s=-1$ otherwise, and $w=x+sr e_0$.
+If $x=0$, $w=0$ and the reflector is the identity. Otherwise
+\[
+ w^\top x=r(r+sx_0),\qquad w^\top w=2r(r+sx_0)>0,
+\]
+so $H_wx=x-w=-sr e_0$. This is the scalar algebra used by the
+existing \code{householderVector} interface.
+
+\begin{theorem}[Correctness of the concrete Hessenberg recursion]
+Let $Q(A)$ be the product of the reflectors in the existing recursion.
+Then $Q(A)^\top A Q(A)$ is upper Hessenberg for every square $A$.
+The construction uses $\max(N-2,0)$ reflectors in dimension $N$.
+\end{theorem}
+\begin{proof}
+Use induction on $N$. Dimensions $0,1,2$ already have Hessenberg shape
+and the product is the identity. For $N\ge3$, write
+\[
+ A=\begin{pmatrix}a&z^\top\\x&C\end{pmatrix},\quad
+ P=\diag(1,H_w),\quad H_wx=\beta e_0,\quad B=PAP.
+\]
+Since $Pe_0=e_0$, the first column of $B$ is
+$(a,\beta,0,\ldots,0)^\top$. Let $C'$ be the trailing $(N-1)\times(N-1)$
+block of $B$, and put $U=Q(C')$. The recursive reflector-list definition
+and \eqref{eq:padding} give the exact factor identity
+\begin{equation}\label{eq:hessrec}
+ Q(A)=P\diag(1,U).
+\end{equation}
+Every recursive reflector fixes its first coordinate, so $Ue_0=e_0$.
+Orthogonality then also gives $U^\top e_0=e_0$. Consequently
+\[
+ Q(A)^\top A Q(A)
+ =\diag(1,U^\top)B\diag(1,U)
+ =\begin{pmatrix}a&*\\\beta e_0&U^\top C'U\end{pmatrix}.
+\]
+The trailing block is Hessenberg by induction and the first column has
+the required support. Those two assertions are exactly upper Hessenberg
+shape for the whole matrix. Counting the first reflector plus those in
+dimension $N-1$ gives $1+(N-3)=N-2$.
+\end{proof}
+
+\paragraph{Immediate consequences and reuse.}
+The displayed factor is orthogonal, so $A=QHQ^\top$. If $A=A^\top$,
+then $H=H^\top$, and upper Hessenberg shape makes it tridiagonal.
+Use \code{NLAlib.householder_vecCons_zero},
+\code{NLAlib.householder_mulVec_householderVector},
+\code{NLAlib.hessenbergQ_mulVec_single_zero}, and
+\code{NLAlib.hessenbergQ_transpose_mul_self}.
+The only list lemma required beyond these is the finite product identity
+behind \eqref{eq:hessrec}. No continuity, spectral theorem, or nonzero-tail
+assumption is involved.
+
+\subsection{The implicit-Q theorem: put the known unreduced matrix on the right}
+\begin{lemma}[Triangularity from an oriented intertwining equation]
+\label{lem:intertwine}
+Suppose $H,G\in\R^{N\times N}$ are upper Hessenberg, with
+$h_{k+1,k}\ne0$ for $0\le k<N-1$. If
+\[
+ GW=WH,\qquad We_0=e_0,
+\]
+then $W$ is upper triangular. Here $N\ge1$.
+\end{lemma}
+\begin{proof}
+Write $w_j=We_j$. Inductively prove $w_j\in F_j$.
+The base is $w_0=e_0$. Comparing column $k$ in the intertwining equation
+gives
+\begin{equation}\label{eq:intertwine}
+ h_{k+1,k}w_{k+1}=Gw_k-\sum_{i=0}^k h_{ik}w_i.
+\end{equation}
+Because $G$ is upper Hessenberg, $G F_k\subseteq F_{k+1}$. Every term
+on the right therefore lies in $F_{k+1}$. Divide only by the known
+nonzero number $h_{k+1,k}$. It follows that $w_{k+1}\in F_{k+1}$.
+\end{proof}
+
+\begin{lemma}[Orthogonal and upper triangular means diagonal signs]
+\label{lem:orthtri}
+If $W^\top W=I$ and $W$ is square upper triangular, then
+$W=\diag(d)$ with $d_j\in\{1,-1\}$.
+\end{lemma}
+\begin{proof}
+Column zero is $d_0e_0$ and its norm is one. Orthogonality with the later
+columns makes their zeroth entries zero. The trailing block is again
+upper triangular and orthogonal. Induct on dimension. At dimension zero
+there is just the empty diagonal matrix.
+\end{proof}
+
+\begin{theorem}[Implicit Q under exactly the scaffold hypotheses]
+Let $N\ge1$ and
+\[
+ A=Q_1H_1Q_1^\top=Q_2H_2Q_2^\top,
+\]
+where both $Q_i$ are orthogonal and both $H_i$ upper Hessenberg. Assume
+only $H_1$ is unreduced, and $Q_1e_0=Q_2e_0$. Then there is a diagonal
+sign matrix $D$, with $D_{00}=1$, such that
+\[
+ Q_2=Q_1D,\qquad H_2=DH_1D.
+\]
+\end{theorem}
+\begin{proof}
+Choose $W=Q_2^\top Q_1$. Then $H_2W=WH_1$, $We_0=e_0$, and $W$ is
+orthogonal. Lemmas~\ref{lem:intertwine} and \ref{lem:orthtri} give
+$W=D$. Since $D^2=I$ and its first column is $e_0$, $D_{00}=1$.
+Now $Q_1=Q_2D$ gives $Q_2=Q_1D$, and conjugating $A$ gives the asserted
+formula for $H_2$.
+\end{proof}
+
+\paragraph{Why this orientation matters.}
+If one instead writes $W=Q_1^\top Q_2$ and compares columns of
+$H_1W=WH_2$, the multiplier of $w_{k+1}$ is $(H_2)_{k+1,k}$, which
+was not assumed nonzero. The source's informal sketch mixes these two
+orientations. Choosing $W=Q_2^\top Q_1$ fixes the argument without
+strengthening the theorem. In fact the conclusion implies that $H_2$
+is unreduced as well.
+
+\subsection{The Arnoldi interpretation stays a consequence}
+Write $q_j=Q_1e_j$ and
+$\mathcal K_{j+1}=\Span(q_0,Aq_0,\ldots,A^jq_0)$. Since $AQ_1=Q_1H_1$,
+\[
+ Aq_j=\sum_{i=0}^{j+1}(H_1)_{ij}q_i.
+\]
+Induction, solving for $q_{j+1}$ using the nonzero subdiagonal, gives
+$\mathcal K_{j+1}=\Span(q_0,\ldots,q_j)$. Thus these columns are the
+graded orthonormal Krylov basis, up to the chosen signs. A convention
+of positive subdiagonal entries removes those signs once $q_0$ is fixed.
+The already-proved \code{NLAlib.ArnoldiDecomp.exists_sign} expresses
+related uniqueness, but importing the Krylov layer into the matrix layer
+would violate the dependency direction. Lemma~\ref{lem:intertwine}
+is the short matrix-only proof needed here. If a subdiagonal vanishes,
+the induction stops at that index; unrestricted uniqueness of the
+remaining columns is not claimed.
+
+\section{Sturm counting: symmetric LU and signs of finite products}
+\label{sec:sturm}
+\paragraph{Exact remaining target.}
+\code{NLAlib.card_eigenvalues_lt_eq_card_sign_changes}, in
+\src{NLAlib/Matrix/Spectral/Inertia.lean}{Inertia.lean}.
+This is stated for \emph{every real symmetric matrix} whose shifted
+leading principal minors are nonzero, not only for tridiagonal matrices.
+The law of inertia and the eigenvalue count from an LDL$^\top$
+factorization are already proved.
+
+Let $A=A^\top\in\R^{N\times N}$, $x\in\R$, and $M=A-xI$. Define
+\[
+ p_0=1,\qquad p_k=\det M_{0:k-1,\,0:k-1}\quad(1\le k\le N).
+\]
+The exact scaffold assumes $p_k\ne0$ for $1\le k\le N$.
+
+\subsection{Extract LDL from the already available LU}
+\begin{lemma}[Symmetric LU needs no second elimination algorithm]
+\label{lem:luld}
+If $M=M^\top=LU$, with $L$ unit lower triangular and $U$ upper triangular,
+then $M=LDL^\top$ with $D=\diag(U_{00},\ldots,U_{N-1,N-1})$.
+\end{lemma}
+\begin{proof}
+The unit lower triangular matrix $L$ is invertible. Set
+\[
+ B=L^{-1}ML^{-\top}=UL^{-\top}.
+\]
+The left expression is symmetric and the right expression is upper
+triangular. Hence $B$ is diagonal. In the diagonal entry of the product
+$UL^{-\top}$, upper triangularity forces the intermediate index to equal
+the diagonal index, and $L^{-\top}$ has diagonal one. Therefore
+$B_{ii}=U_{ii}$. Multiplying back gives the factorization.
+\end{proof}
+
+\begin{theorem}[The nonzero-leading-minor sign count]\label{thm:sturm}
+If $p_k\ne0$ for all $1\le k\le N$, then, with eigenvalues counted
+with multiplicity,
+\begin{equation}\label{eq:sturm}
+ \#\{i:\lambda_i(A)<x\}
+    =\#\{k\in\{0,\ldots,N-1\}:p_kp_{k+1}<0\}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Nonzero leading minors give successful ordinary LU elimination and
+$M=LU$. Lemma~\ref{lem:luld} gives $M=LDL^\top$ with $d_k=U_{kk}$.
+The already-established law of inertia gives
+\[
+ \#\{i:\lambda_i(A)<x\}=\negind(M)=\#\{k:d_k<0\}.
+\]
+The leading block of $LU$ is the product of its leading blocks, since
+the triangular factors eliminate all terms beyond the block. Taking
+determinants yields the finite products
+\[
+ p_k=\prod_{i<k}d_i,\qquad p_{k+1}=p_kd_k.
+\]
+Thus
+\begin{equation}\label{eq:pivotsign}
+ p_kp_{k+1}=p_k^2d_k,
+ \qquad p_k^2>0,
+ \qquad d_k<0\ \Longleftrightarrow\ p_kp_{k+1}<0.
+\end{equation}
+Counting identical finite predicates proves \eqref{eq:sturm}. This uses
+no rational inequality: division by $p_k$ can be omitted entirely.
+For $N=0$ both counts are zero and $p_0=1$.
+\end{proof}
+
+\paragraph{Minimal reusable ingredients.}
+Use \code{NLAlib.luSucceeds_iff_forall_det_ne_zero} and
+\code{NLAlib.isLU_lu} in
+\src{NLAlib/Matrix/Factorizations/LU.lean}{LU.lean}, followed by
+\code{NLAlib.IsLU.det_leadingSubmatrix} and
+\code{NLAlib.card_eigenvalues_lt_eq_card_neg_of_eq_mul_diagonal_mul}.
+The one definition bridge says that \code{leadingMinor M k} equals
+the determinant of \code{leadingSubmatrix M k hk} when $k\le N$.
+The only additional matrix lemma is Lemma~\ref{lem:luld}.
+Repeated eigenvalues cause no problem: the inertia theorem already
+counts multiplicities. Under these hypotheses $p_N\ne0$, so $x$ is
+not an eigenvalue of $A$.
+
+\subsection{Tridiagonal recurrence is a finite determinant identity}
+For a symmetric tridiagonal matrix with diagonal $a_0,\ldots,a_{N-1}$
+and off-diagonal $b_0,\ldots,b_{N-2}$, expansion along the last row gives
+\begin{equation}\label{eq:three}
+ p_0(x)=1,\quad p_1(x)=a_0-x,\quad
+ p_{k+1}(x)=(a_k-x)p_k(x)-b_{k-1}^2p_{k-1}(x).
+\end{equation}
+Indeed the diagonal term is $(a_k-x)p_k$; the only other cofactor
+contains another factor $b_{k-1}$ and determinant $p_{k-1}$, with the
+negative cofactor sign. Thus evaluating the list by the three-term
+recursion and counting sign changes gives the spectral count whenever
+the terms are nonzero. No root separation or eigenvalue continuity
+theorem is needed.
+
+\subsection{A stronger zero-safe Sturm rule by two-by-two elimination}
+This optional extension supplies the boundary cases used in bisection.
+It is not needed to prove the current nonzero-minor scaffold.
+For a finite real list $z$, let $V(z)$ be its number of sign changes
+\emph{after deleting all zero terms}.
+
+\begin{theorem}[Unreduced tridiagonal count at every shift]\label{thm:zerosturm}
+If $T=T^\top$ is tridiagonal and every $b_j\ne0$, then for every real $x$,
+\[
+ \#\{i:\lambda_i(T)<x\}=V(p_0(x),p_1(x),\ldots,p_N(x)).
+\]
+This includes $x$ equal to an eigenvalue and any vanishing interior minor.
+\end{theorem}
+\begin{proof}
+We prove by dimension induction that for any such tridiagonal matrix
+$M$, $\negind(M)$ equals the variation of its leading determinants.
+Dimension zero gives the list $(1)$ and negative index zero. In
+dimension one, the list $(1,a)$ has one sign change exactly when $a<0$;
+it has zero changes if $a=0$, as required for a zero eigenvalue.
+
+In higher dimension write $a=M_{00}$. If $a\ne0$, eliminate the first
+coordinate by a unit triangular congruence:
+\[
+ M\ \sim\ \diag(a,S),
+\]
+where $S$ is tridiagonal with first diagonal changed by $-b_0^2/a$,
+and all remaining off-diagonal entries unchanged. It is again unreduced.
+If $q_0=1,q_1,\ldots,q_{N-1}$ are its leading determinants, block
+elimination on each leading block gives
+\[
+ (p_0,p_1,\ldots,p_N)=(1,a,aq_1,\ldots,aq_{N-1}).
+\]
+After deleting zeros, its variation is
+$\boldsymbol1_{a<0}+V(q_0,\ldots,q_{N-1})$: the initial jump contributes
+$\boldsymbol1_{a<0}$, and multiplying every later nonzero term by $a$
+does not change successive sign comparisons. Congruence and induction
+give the same recurrence for the negative index.
+
+If $a=0$, unreducedness gives $b=b_0\ne0$. Use the first two coordinates
+as one pivot block:
+\[
+ B=\begin{pmatrix}0&b\\b&c\end{pmatrix},\qquad
+ B^{-1}=\begin{pmatrix}-c/b^2&1/b\\1/b&0\end{pmatrix}.
+\]
+The coupling to the remaining coordinates has zero first row, so
+$E^\top B^{-1}E=0$. The block Schur complement is exactly the trailing
+matrix $C=M_{2:,2:}$, without any update, and $M\sim\diag(B,C)$.
+The block $B$ has one positive and one negative direction: its quadratic
+form $2bst+ct^2$ becomes $2buv$ after $u=s+c t/(2b)$, $v=t$, and then
+becomes a nonzero scalar times the difference of two squares.
+Thus $\negind(M)=1+\negind(C)$.
+
+If $q_0=1,q_1,\ldots,q_{N-2}$ are the leading determinants of $C$, the
+same block elimination on every leading block gives
+\[
+ (p_0,p_1,\ldots,p_N)=(1,0,-b^2,-b^2q_1,\ldots,-b^2q_{N-2}).
+\]
+Deleting the zero contributes exactly one initial sign change, followed
+by $V(q_0,\ldots,q_{N-2})$. Induction therefore gives the negative index
+again. This includes the case of an empty trailing block. Finally apply
+the conclusion to $M=T-xI$ and use the spectral interpretation of inertia.
+\end{proof}
+
+\paragraph{Why the unreduced assumption matters for deleting zeros.}
+For $M=\diag(0,-1)$ the leading determinants are $(1,0,0)$, whose
+zero-deleted variation is zero although $\negind(M)=1$. For a reduced
+tridiagonal matrix, first split at each zero off-diagonal entry and add
+the counts of its unreduced diagonal blocks. The finite block-diagonal
+inertia identity justifies this procedure. This gives a zero-safe rule
+without asserting an invalid zero-deletion rule for arbitrary matrices.
+
+\section*{Handoff priorities}
+\addcontentsline{toc}{section}{Handoff priorities}
+All eight scaffold statements identified in this snapshot have complete
+mathematical proofs above. The shortest bridges are the one-column norm
+identity, the normalized rank-one projection identity, and the Givens
+support invariant. Pivoted Cholesky should first establish its positive
+prefix independently of rank. Hessenberg reduction should first expose
+the padded-product identity. For the current Sturm scaffold, symmetric
+LU followed by the existing inertia theorem is the shortest route;
+the zero-safe block argument is a stronger optional extension.
+
+The implicit-Q proof deliberately stays in the matrix layer. Its correct
+intertwining orientation avoids an unjustified assumption on the second
+matrix's subdiagonal. Every proof includes its zero or empty-dimensional
+case where the statement permits one. No new statement has been marked
+proved in the atlas, and no Lean source has been changed by this handoff.
+\end{document}

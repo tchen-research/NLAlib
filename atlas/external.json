@@ -1697,6 +1697,28 @@
   "sorry":
   false,
   "signature":
+  "Complex.norm_le_of_forall_mem_frontier_norm_le.{u, v} {E : Type u} [NormedAddCommGroup E] [NormedSpace ℂ E] {F : Type v}\n  [NormedAddCommGroup F] [NormedSpace ℂ F] [Nontrivial E] {f : E → F} {U : Set E} (hU : Bornology.IsBounded U)\n  (hd : DiffContOnCl ℂ f U) {C : ℝ} (hC : ∀ z ∈ frontier U, ‖f z‖ ≤ C) {z : E} (hz : z ∈ closure U) : ‖f z‖ ≤ C",
+  "name":
+  "Complex.norm_le_of_forall_mem_frontier_norm_le",
+  "module":
+  "Mathlib.Analysis.Complex.AbsMax",
+  "line":
+  403,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "**Maximum modulus principle**: if `f : E → F` is complex differentiable on a bounded set `U` and\n`‖f z‖ ≤ C` for any `z ∈ frontier U`, then the same is true for any `z ∈ closure U`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.charpoly.{u_1, u_4} {R : Type u_1} [CommRing R] {n : Type u_4} [DecidableEq n] [Fintype n] (M : Matrix n n R) :\n  Polynomial R",
   "name":
   "Matrix.charpoly",
@@ -2348,6 +2370,28 @@
   "def",
   "doc":
   "The (extended-real-valued) variation of a function `f` on a set `s` inside a linear order is\nthe supremum of the sum of `edist (f (u (i+1))) (f (u i))` over all finite increasing\nsequences `u` in `s`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le.{u_3} {E : Type u_3} [NormedAddCommGroup E] [NormedSpace ℝ E]\n  {a b : ℝ} [CompleteSpace E] {f f' : ℝ → E} (hab : a ≤ b) (hcont : ContinuousOn f (Set.Icc a b))\n  (hderiv : ∀ x ∈ Set.Ioo a b, HasDerivAt f (f' x) x) (hint : IntervalIntegrable f' MeasureTheory.volume a b) :\n  ∫ (y : ℝ) in a..b, f' y = f b - f a",
+  "name":
+  "intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le",
+  "module":
+  "Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus",
+  "line":
+  1137,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "Fundamental theorem of calculus-2: If `f : ℝ → E` is continuous on `[a, b]` (where `a ≤ b`) and\nhas a derivative at `f' x` for all `x` in `(a, b)`, and `f'` is integrable on `[a, b]`, then\n`∫ y in a..b, f' y` equals `f b - f a`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -7870,6 +7914,28 @@
   "theorem",
   "doc":
   "Change of variables, most common version. If `f` has continuous derivative `f'` on `[a, b]`,\nand `g` is continuous, then we can substitute `u = f x` to get\n`∫ x in a..b, (g ∘ f) x * f' x = ∫ u in f a..f b, g u`.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "TendstoLocallyUniformlyOn.differentiableOn.{u_1, u_2} {E : Type u_1} {ι : Type u_2} [NormedAddCommGroup E]\n  [NormedSpace ℂ E] {U : Set ℂ} {φ : Filter ι} {F : ι → ℂ → E} {f : ℂ → E} [CompleteSpace E] [φ.NeBot]\n  (hf : TendstoLocallyUniformlyOn F f φ U) (hF : ∀ᶠ (n : ι) in φ, DifferentiableOn ℂ (F n) U) (hU : IsOpen U) :\n  DifferentiableOn ℂ f U",
+  "name":
+  "TendstoLocallyUniformlyOn.differentiableOn",
+  "module":
+  "Mathlib.Analysis.Complex.LocallyUniformLimit",
+  "line":
+  133,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "A locally uniform limit of holomorphic functions on an open domain of the complex plane is\nholomorphic (the derivatives converge locally uniformly to that of the limit, which is proved\nas `TendstoLocallyUniformlyOn.deriv`). ",
   "atlas_partial":
   [],
   "atlas":

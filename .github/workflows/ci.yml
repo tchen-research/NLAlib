@@ -29,6 +29,7 @@ jobs:
         run: |
           lake env lean Examples/Downstream.lean
           lake env lean Examples/Probability.lean
+          lake env lean Examples/PolynomialApproximation.lean
           lake env lean scripts/AuditRitz.lean
           lake env lean scripts/AuditSubspaces.lean
       - name: Experimental development axiom inventory
@@ -49,6 +50,7 @@ jobs:
         run: |
           pip install --quiet jsonschema
           python3 scripts/check_atlas.py
+          python3 scripts/check_polynomial_matrix_scope.py
       - name: Book coverage references and proof status
         run: python3 scripts/coverage.py
       - name: Site builds

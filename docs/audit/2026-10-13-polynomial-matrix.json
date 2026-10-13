@@ -1,0 +1,59 @@
+{
+ "base_commit": "704d2f4",
+ "polynomial_ids": [
+  "bernstein-converse",
+  "bernstein-ellipse-def",
+  "bernstein-walsh-ellipse",
+  "best-approximant-interpolates",
+  "chebyshev-aliasing",
+  "chebyshev-approx-differentiable",
+  "chebyshev-barycentric-weights",
+  "chebyshev-coeff-bv-decay",
+  "chebyshev-coefficients-def",
+  "chebyshev-integral-formula",
+  "chebyshev-projection-lebesgue-constant",
+  "chebyshev-series-abs-sign",
+  "chebyshev-series-convergence",
+  "chebyshev-series-exp-bessel",
+  "clenshaw-recurrence",
+  "colleague-matrix",
+  "de-la-vallee-poussin",
+  "equioscillation",
+  "exp-approx-lower-bound",
+  "fejer-chebyshev-means",
+  "gauss-clenshaw-curtis-quadrature-error",
+  "gauss-quadrature-general-measure",
+  "hermite-integral-formula",
+  "inverse-approx-lower-bound",
+  "lebesgue-constant-chebyshev",
+  "lebesgue-constant-def",
+  "lebesgue-constant-lower-bound",
+  "minimax-error-def",
+  "rational-equioscillation",
+  "sign-approx-lower-bound",
+  "sign-polynomial-approx",
+  "slit-plane-analytic-approx",
+  "two-interval-minimax"
+ ],
+ "matrix_ids": [
+  "cholesky-algorithm",
+  "givens-rotation-def",
+  "gram-schmidt",
+  "hessenberg-reduction",
+  "principal-angles-def",
+  "sylvester-inertia"
+ ],
+ "excluded_ids": [
+  "abs-best-approx-asymptotics",
+  "exp-rational-halfline"
+ ],
+ "verification": "scripts/check_polynomial_matrix_scope.py checks generated declarations and atlas statuses; AuditTrusted.lean checks the entire default import.",
+ "verified_counts": {
+  "requested_proved": 39,
+  "requested_remaining": 0,
+  "default_import_declarations_without_sorry_or_extra_axioms": 13570,
+  "complete_build_targets": 5211,
+  "public_declaration_index": 7603,
+  "existing_experimental_sorry_dependent_theorems": 23
+ }
+}

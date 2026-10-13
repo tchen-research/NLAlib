@@ -1,6 +1,7 @@
 import NLAlib.Krylov.Spectral.Ritz
 import NLAlib.Krylov.Spaces.Block
 import NLAlib.Matrix.Subspaces.PrincipalAngles
+import NLAlib.Matrix.Norms.SingleColumn
 /-!
 # Power iteration and inverse iteration
 
@@ -49,10 +50,6 @@ open Matrix Polynomial
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
-
-/-- `‖WithLp.toLp 2 x‖ = √(x ⬝ᵥ x)` for real vectors (bridge of STANDARDS §3). -/
-private lemma norm_toLp_eq_sqrt (x : n → ℝ) : ‖WithLp.toLp 2 x‖ = √(x ⬝ᵥ x) := by
-  rw [← Real.sqrt_sq (norm_nonneg _), norm_toLp_sq_eq_re_star_dotProduct]; simp
 
 /-! ### The iterates -/
 
@@ -119,10 +116,9 @@ omit [DecidableEq n] in
 `power-iteration`. -/
 theorem inv_norm_smul_smul (w : n → ℝ) {c : ℝ} (hc : 0 < c) :
     ‖WithLp.toLp 2 (c • w)‖⁻¹ • (c • w) = ‖WithLp.toLp 2 w‖⁻¹ • w := by
-  classical
-  rw [norm_toLp_eq_sqrt, norm_toLp_eq_sqrt, dotProduct_smul, smul_dotProduct, smul_eq_mul,
-    smul_eq_mul, ← mul_assoc, Real.sqrt_mul (by positivity) (w ⬝ᵥ w), Real.sqrt_mul_self hc.le,
-    smul_smul, mul_inv, mul_comm c⁻¹ (√(w ⬝ᵥ w))⁻¹, mul_assoc, inv_mul_cancel₀ hc.ne', mul_one]
+  rw [WithLp.toLp_smul, norm_smul, Real.norm_eq_abs, abs_of_pos hc,
+    smul_smul, mul_inv, mul_comm c⁻¹ ‖WithLp.toLp 2 w‖⁻¹,
+    mul_assoc, inv_mul_cancel₀ hc.ne', mul_one]
 
 /-- Normalisation is bookkeeping: `k + 1` normalised power steps from `x₀` give
 `A^{k+1} x₀/‖A^{k+1} x₀‖` (both sides `0` if `A^{k+1} x₀ = 0`). Source: Trefethen–Bau (1997)
@@ -226,11 +222,7 @@ theorem abs_rayleighQuotient_sub_le_mul_overlapTangentSq {A : Matrix n n ℝ} (h
   set c := u ⬝ᵥ x with hcdef
   set w := x - c • u with hwdef
   have huu : u ⬝ᵥ u = 1 := by
-    have := norm_toLp_eq_sqrt u
-    rw [hu1] at this
-    have h2 := congrArg (· ^ 2) this
-    simp only [one_pow, Real.sq_sqrt (dotProduct_self_nonneg u)] at h2
-    exact h2.symm
+    rw [← norm_toLp_sq_eq_dotProduct_self, hu1, one_pow]
   have huw : u ⬝ᵥ w = 0 := by
     simp only [hwdef, dotProduct_sub, dotProduct_smul, huu, smul_eq_mul, mul_one, ← hcdef, sub_self]
   set N := w ⬝ᵥ w with hNdef
@@ -422,18 +414,40 @@ theorem abs_rayleighQuotient_inverseIterate_sub_le {A : Matrix n n ℝ} (hA : A.
 
 /-! ### Bridge to principal angles -/
 
-/-- SCAFFOLD: principal-angles-def
-**`overlapTangentSq` is the one-column `tan² θ_max`.** For a unit vector `u` and any `x`,
-`tan θ_max(range u, range x)² = tan² ∠(u, x)`, both sides `0` when `u ⬝ x = 0`. Source:
-Saad (2011) [`saad11`], §5.2 and §6.6.1. Proof sketch: `uᵀx` is the `1 × 1` matrix `(u ⬝ x)`, its
-inverse is `(u ⬝ x)⁻¹`; `(I − uuᵀ)x (u ⬝ x)⁻¹` is a single column whose spectral norm is its
-Euclidean norm (`specNorm` of an `n × 1` matrix: `‖M‖² = ‖MᵀM‖` = the `1 × 1` entry,
-`Matrix.l2_opNorm_conjTranspose_mul_self`), and `‖(I − uuᵀ)x‖² = ‖x‖² − (u ⬝ x)²`.
+omit [DecidableEq n] in
+/-- The total one-column inverse-overlap norm squared is the vector's total
+squared overlap tangent. Both algebraic expressions are zero when the overlap
+vanishes. Source: Saad (2011), §5.2 and §6.6.1; matrix-toolkit derivations, §1.
 atlas: principal-angles-def (partial) -/
-theorem sq_overlapTangentNorm_replicateCol_eq_overlapTangentSq {u : n → ℝ} (hu : ‖WithLp.toLp 2 u‖ = 1)
-    (x : n → ℝ) :
+theorem sq_overlapTangentNorm_replicateCol_eq_overlapTangentSq {u : n → ℝ}
+    (hu : ‖WithLp.toLp 2 u‖ = 1) (x : n → ℝ) :
     overlapTangentNorm (Matrix.replicateCol Unit u) (Matrix.replicateCol Unit x) ^ 2 =
       overlapTangentSq u x := by
-  sorry
+  have hu1 : u ⬝ᵥ u = 1 := by rw [← norm_toLp_sq_eq_dotProduct_self, hu, one_pow]
+  let a : ℝ := u ⬝ᵥ x
+  have hG : (Matrix.replicateCol Unit u)ᵀ * Matrix.replicateCol Unit x =
+      Matrix.diagonal (fun _ : Unit => a) := by
+    ext i j
+    cases i
+    cases j
+    simp [Matrix.mul_apply, dotProduct, a]
+  have hR : projResidual (Matrix.replicateCol Unit u) (Matrix.replicateCol Unit x) *
+      ((Matrix.replicateCol Unit u)ᵀ * Matrix.replicateCol Unit x)⁻¹ =
+      Matrix.replicateCol Unit (a⁻¹ • (x - a • u)) := by
+    rw [hG, Matrix.inv_subsingleton]
+    ext i j
+    cases j
+    simp [projResidual, Matrix.mul_apply, dotProduct, a, Ring.inverse_eq_inv]
+    ring
+  have hr : (x - a • u) ⬝ᵥ (x - a • u) = x ⬝ᵥ x - a ^ 2 := by
+    simp only [sub_dotProduct, dotProduct_sub, smul_dotProduct, dotProduct_smul,
+      smul_eq_mul, hu1, dotProduct_comm x u]
+    change x ⬝ᵥ x - a * a - a * (a - a * 1) = x ⬝ᵥ x - a ^ 2
+    ring
+  rw [overlapTangentNorm, hR, specNorm_sq_replicateCol, norm_toLp_sq_eq_dotProduct_self]
+  simp only [smul_dotProduct, dotProduct_smul, smul_eq_mul, hr, overlapTangentSq, hu1]
+  change a⁻¹ * (a⁻¹ * (x ⬝ᵥ x - a ^ 2)) = (1 * (x ⬝ᵥ x) - a ^ 2) / a ^ 2
+  simp only [div_eq_mul_inv]
+  ring
 
 end NLAlib

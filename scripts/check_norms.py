@@ -46,7 +46,7 @@ def main(paths):
         files += [p] if p.is_file() else sorted(p.rglob("*.lean"))
     hits = []
     for f in files:
-        rel = str(f.relative_to(ROOT)) if f.is_absolute() else str(f)
+        rel = f.relative_to(ROOT).as_posix() if f.is_absolute() else f.as_posix()
         text = f.read_text()
         exempt = rel.startswith(EXEMPT) or rel in BRIDGES
         if not exempt:

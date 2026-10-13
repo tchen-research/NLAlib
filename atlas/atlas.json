@@ -601,22 +601,10 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.IsSVD.eq_head_add_tail_mul_conjTranspose",
-     "module": "NLAlib.Matrix.Spectral.SVD",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.IsSVD.eq_head_add_tail",
      "module": "NLAlib.Matrix.Spectral.SVD",
      "status": "proved",
      "usage": "From `h : IsSVD A U V` and a split index `k`; rewrites `A` as the head `U * rectDiag (σ masked to i < k) * Vᵀ` (the truncated SVD) plus the tail `U * rectDiag (σ masked to i ≥ k) * Vᵀ`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose",
-     "module": "NLAlib.Matrix.Spectral.SVD",
-     "status": "proved"
     },
     {
      "library": "nlalib",

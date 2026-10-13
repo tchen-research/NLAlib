@@ -322,18 +322,18 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
   have hV₁ : HasOrthonormalCols V₁ := by
     change V₁ᵀ * V₁ = 1
     have he : V₁ᵀ * V₁ = (Vᵀ * V).submatrix (Fin.castAdd r) (Fin.castAdd r) := rfl
-    rw [he, h.transpose_mul_right]
+    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
     ext i j
     simp [Matrix.one_apply, Fin.castAdd_inj]
   have hV₂ : HasOrthonormalCols V₂ := by
     change V₂ᵀ * V₂ = 1
     have he : V₂ᵀ * V₂ = (Vᵀ * V).submatrix (Fin.natAdd k) (Fin.natAdd k) := rfl
-    rw [he, h.transpose_mul_right]
+    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
     ext i j
     simp [Matrix.one_apply, Fin.natAdd_inj]
   have hcross : V₁ᵀ * V₂ = 0 := by
     have he : V₁ᵀ * V₂ = (Vᵀ * V).submatrix (Fin.castAdd r) (Fin.natAdd k) := rfl
-    rw [he, h.transpose_mul_right]
+    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
     ext i j
     have hij : Fin.castAdd r i ≠ Fin.natAdd k j := by
       intro heq
@@ -344,7 +344,7 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
   have hcomplete : V₁ * V₁ᵀ + V₂ * V₂ᵀ = 1 := by
     ext i j
     have he := congrArg (fun M : Matrix (Fin (k + r)) (Fin (k + r)) ℝ => M i j)
-      h.mul_transpose_right
+      (show V * Vᵀ = 1 from h.mul_conjTranspose_right)
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_add,
       Matrix.add_apply, V₁, V₂, Matrix.submatrix_apply, id_eq] using he
   have hAV₂ : A * V₂ = U * S₂ := by
@@ -382,7 +382,7 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
   have hspec : specNorm S₂ = singularValues A k := by
     rw [← h.specNorm_sub_truncatedMatrix k, ← htail,
       specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂t,
-      specNorm_mul_left_of_hasOrthonormalCols h.transpose_mul_left]
+      specNorm_mul_left_of_hasOrthonormalCols (P := U) h.conjTranspose_mul_left]
   have hfrob : frobSq S₂ = singularValueTailSq A k := by
     rw [← h.frobSq_sub_truncatedMatrix k, ← htail,
       ← Matrix.conjTranspose_eq_transpose_of_trivial V₂,

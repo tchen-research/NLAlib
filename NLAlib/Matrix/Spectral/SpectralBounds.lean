@@ -166,11 +166,12 @@ theorem specNorm_gram_sub_one_eq_norm_singularValues_sq_sub_one {m n : ℕ}
     rw [← Matrix.diagonal_one, ← Matrix.diagonal_sub]
   have hGram : Aᵀ * A - 1 =
       V * Matrix.diagonal (fun j : Fin n => singularValues A j ^ 2 - 1) * Vᵀ := by
-    rw [hSVD.transpose_mul_self, hdiag, Matrix.mul_sub, Matrix.sub_mul,
-      Matrix.mul_one, hSVD.mul_transpose_right]
+    rw [show Aᵀ * A = V * Matrix.diagonal (fun j : Fin n => singularValues A j ^ 2) * Vᵀ from
+        hSVD.conjTranspose_mul_self, hdiag, Matrix.mul_sub, Matrix.sub_mul,
+      Matrix.mul_one, show V * Vᵀ = 1 from hSVD.mul_conjTranspose_right]
   rw [hGram,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hSVD.transpose_mul_right,
-    specNorm_mul_left_of_hasOrthonormalCols hSVD.transpose_mul_right,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols (P := V) hSVD.conjTranspose_mul_right,
+    specNorm_mul_left_of_hasOrthonormalCols (P := V) hSVD.conjTranspose_mul_right,
     specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
 
 /-- The SVD gives the squared length as a weighted sum in right-singular
@@ -182,7 +183,9 @@ theorem IsSVD.mulVec_dotProduct_mulVec_eq_sum {m n : Type*} [Fintype m] [Fintype
     (A *ᵥ x) ⬝ᵥ (A *ᵥ x) =
       ∑ j : Fin q, singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
   rw [show (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) from
-      star_mulVec_dotProduct_mulVec_self A x, hSVD.transpose_mul_self,
+      star_mulVec_dotProduct_mulVec_self A x,
+    show Aᵀ * A = V * Matrix.diagonal (fun j : Fin q => singularValues A j ^ 2) * Vᵀ from
+      hSVD.conjTranspose_mul_self,
     ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
     Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose]
   simp only [dotProduct, Matrix.mulVec_diagonal]
@@ -210,12 +213,13 @@ theorem sigmaMin_eq_singularValues_last {m n : Type*} [Fintype m] [Fintype n] [D
     have hx : x ⬝ᵥ x = 1 := by
       dsimp [x]
       rw [show (V *ᵥ e) ⬝ᵥ (V *ᵥ e) = e ⬝ᵥ ((Vᵀ * V) *ᵥ e) from
-          star_mulVec_dotProduct_mulVec_self V e, hSVD.transpose_mul_right,
+          star_mulVec_dotProduct_mulVec_self V e, show Vᵀ * V = 1 from hSVD.conjTranspose_mul_right,
         Matrix.one_mulVec]
       simp [e]
     have hy : Vᵀ *ᵥ x = e := by
       dsimp [x]
-      rw [Matrix.mulVec_mulVec, hSVD.transpose_mul_right, Matrix.one_mulVec]
+      rw [Matrix.mulVec_mulVec, show Vᵀ * V = 1 from hSVD.conjTranspose_mul_right,
+        Matrix.one_mulVec]
     have hAx : (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = singularValues A (Fintype.card n - 1) ^ 2 := by
       rw [hSVD.mulVec_dotProduct_mulVec_eq_sum, hy]
       simp [e, Pi.single_apply, j]
@@ -227,7 +231,7 @@ theorem sigmaMin_eq_singularValues_last {m n : Type*} [Fintype m] [Fintype n] [D
     have hy : (Vᵀ *ᵥ x) ⬝ᵥ (Vᵀ *ᵥ x) = 1 := by
       rw [show (Vᵀ *ᵥ x) ⬝ᵥ (Vᵀ *ᵥ x) = x ⬝ᵥ ((Vᵀᵀ * Vᵀ) *ᵥ x) from
           star_mulVec_dotProduct_mulVec_self Vᵀ x, Matrix.transpose_transpose,
-        hSVD.mul_transpose_right, Matrix.one_mulVec, hx]
+        show V * Vᵀ = 1 from hSVD.mul_conjTranspose_right, Matrix.one_mulVec, hx]
     have hsum : singularValues A (Fintype.card n - 1) ^ 2 ≤
         ∑ j : Fin (Fintype.card n), singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
       calc

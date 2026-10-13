@@ -65,7 +65,8 @@ theorem schattenNorm_mul_rectDiag_mul_transpose {m n : ℕ}
   congr 1
   apply Finset.sum_congr rfl
   intro i hi
-  rw [singularValues_eq_of_eq_mul_rectDiag_mul (show Uᵀ * U = 1 from hU) (show Vᵀ * V = 1 from hV) hb0 hb rfl (Finset.mem_range.mp hi)]
+  rw [singularValues_eq_of_eq_mul_rectDiag_mul
+    (A := U * (rectDiag b : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) (show Uᵀ * U = 1 from hU) (show Vᵀ * V = 1 from hV) hb0 hb rfl (Finset.mem_range.mp hi)]
 
 /-- Pairing a matrix with prescribed coefficients in its own SVD frames gives
 the exact singular-value dot product.
@@ -76,7 +77,7 @@ theorem IsSVD.frobInner_mul_rectDiag_mul_transpose {m n : Type*} [Fintype m] [Fi
     {V : Matrix n (Fin q) ℝ} (h : IsSVD A U V) (b : ℕ → ℝ) :
     frobInner A (U * (rectDiag b : Matrix (Fin p) (Fin q) ℝ) * Vᵀ) =
       ∑ i ∈ Finset.range (min p q), singularValues A i * b i := by
-  conv_lhs => rw [h.eq_mul_transpose]
+  conv_lhs => rw [h.eq, Matrix.conjTranspose_eq_transpose_of_trivial]
   rw [frobInner_mul_transpose_right_of_orthonormal h.transpose_mul_right,
     frobInner_mul_left_of_orthonormal h.transpose_mul_left, frobInner_rectDiag_rectDiag]
 

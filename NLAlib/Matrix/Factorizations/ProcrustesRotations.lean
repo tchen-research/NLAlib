@@ -119,10 +119,11 @@ theorem exists_orthogonal_pair_attaining_singularValue_pairing (A B : Matrix m n
       (rectDiag (singularValues B) :
         Matrix (Fin (Fintype.card m)) (Fin (Fintype.card n)) ℝ) * RAᵀ := by
     dsimp [U, T]
-    nth_rw 1 [hB.eq_mul_transpose]
-    simp only [Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc LBᵀ LB _, hB.transpose_mul_left, Matrix.one_mul,
-      ← Matrix.mul_assoc RBᵀ RB _, hB.transpose_mul_right, Matrix.one_mul]
+    nth_rw 1 [hB.eq]
+    simp only [Matrix.mul_assoc, Matrix.conjTranspose_eq_transpose_of_trivial]
+    rw [← Matrix.mul_assoc LBᵀ LB _, show LBᵀ * LB = 1 from hB.conjTranspose_mul_left,
+      Matrix.one_mul, ← Matrix.mul_assoc RBᵀ RB _,
+      show RBᵀ * RB = 1 from hB.conjTranspose_mul_right, Matrix.one_mul]
   rw [hAligned, hA.frobInner_mul_rectDiag_mul_transpose]
 
 /-- Two-sided orthogonal Procrustes has the exact singular-value squared

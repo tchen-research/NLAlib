@@ -40,7 +40,9 @@ theorem IsSVD.one_sub_transpose_mul_self {k : ℕ} {C U V : Matrix (Fin k) (Fin 
       (1 : Matrix (Fin k) (Fin k) ℝ)-Matrix.diagonal (fun i : Fin k => singularValues C i^2) := by
     rw [← Matrix.diagonal_one, Matrix.diagonal_sub]
   rw [hd, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one,
-    h.mul_transpose_right, h.transpose_mul_self]
+    show V * Vᵀ = 1 from h.mul_conjTranspose_right,
+    show Cᵀ * C = V * Matrix.diagonal (fun i : Fin k => singularValues C i ^ 2) * Vᵀ from
+      h.conjTranspose_mul_self]
 
 /-- The inverse-overlap Gram has precisely the squared tangent ratio
 coefficients in the left singular basis. Stewart–Sun §I.5. -/
@@ -53,7 +55,7 @@ theorem IsSVD.transpose_inv_mul_one_sub_gram_mul_inv {k : ℕ}
   have hi : C⁻¹=V*D*Uᵀ := h.inv_eq hC
   have hg : 1-Cᵀ*C=V*H*Vᵀ := h.one_sub_transpose_mul_self
   have hcancel (T : Matrix (Fin k) (Fin k) ℝ) : Vᵀ*(V*T)=T := by
-    rw [← Matrix.mul_assoc, h.transpose_mul_right, Matrix.one_mul]
+    rw [← Matrix.mul_assoc, show Vᵀ * V = 1 from h.conjTranspose_mul_right, Matrix.one_mul]
   have hd : D*H*D=Matrix.diagonal
       (fun i : Fin k => (singularValues C i)⁻¹^2*(1-singularValues C i^2)) := by
     dsimp only [D, H]
@@ -77,8 +79,8 @@ theorem specNorm_mul_inv_sq_eq_norm_singular_ratio {m : Type*} [Fintype m]
   rw [specNorm_sq_eq_specNorm_transpose_mul_self, Matrix.transpose_mul,
     Matrix.mul_assoc, ← Matrix.mul_assoc Rᵀ R, hR, ← Matrix.mul_assoc,
     h.transpose_inv_mul_one_sub_gram_mul_inv hC,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols h.transpose_mul_left,
-    specNorm_mul_left_of_hasOrthonormalCols h.transpose_mul_left,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols (P := U) h.conjTranspose_mul_left,
+    specNorm_mul_left_of_hasOrthonormalCols (P := U) h.conjTranspose_mul_left,
     specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
 
 end NLAlib

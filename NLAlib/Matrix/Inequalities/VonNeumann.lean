@@ -177,6 +177,7 @@ theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) �
     by_cases hi : i < m ∧ i < n
     · simp only [diagonalSequence, dif_pos hi, p, r, dif_pos hi.1, dif_pos hi.2, t]
       rw [h.apply]
+      simp only [RCLike.ofReal_real_eq_id, id_eq, star_trivial]
       exact Finset.sum_congr rfl fun l _ => by ring
     · simp only [diagonalSequence, dif_neg hi]
       symm
@@ -272,7 +273,7 @@ theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (F
     rw [frobInner_eq_trace, RCLike.re_to_real,
       Matrix.conjTranspose_eq_transpose_of_trivial, frobInner_eq_trace, RCLike.re_to_real,
       Matrix.conjTranspose_eq_transpose_of_trivial]
-    conv_lhs => rw [h.eq_mul_transpose]
+    conv_lhs => rw [h.eq, Matrix.conjTranspose_eq_transpose_of_trivial]
     simp only [hDdef, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
     rw [Matrix.trace_mul_comm V]
     simp only [Matrix.mul_assoc]

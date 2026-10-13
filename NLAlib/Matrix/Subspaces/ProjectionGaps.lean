@@ -121,16 +121,20 @@ theorem specNorm_one_sub_transpose_mul_eq_one_sub_mul_transpose (C : Matrix n n 
     have hleft : 1 - CFᵀ * CF =
         V * Matrix.diagonal (fun j : Fin (Fintype.card n) => 1 - singularValues CF j ^ 2) * Vᵀ := by
       rw [← hdiag, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one,
-        h.mul_transpose_right, h.transpose_mul_self]
+        show V * Vᵀ = 1 from h.mul_conjTranspose_right,
+        show CFᵀ * CF = V * Matrix.diagonal (fun j : Fin (Fintype.card n) =>
+          singularValues CF j ^ 2) * Vᵀ from h.conjTranspose_mul_self]
     have hright : 1 - CF * CFᵀ =
         U * Matrix.diagonal (fun j : Fin (Fintype.card n) => 1 - singularValues CF j ^ 2) * Uᵀ := by
       rw [← hdiag, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one,
-        h.mul_transpose_left, h.mul_transpose_self]
+        show U * Uᵀ = 1 from h.mul_conjTranspose_left,
+        show CF * CFᵀ = U * Matrix.diagonal (fun j : Fin (Fintype.card n) =>
+          singularValues CF j ^ 2) * Uᵀ from h.mul_conjTranspose_self]
     rw [hleft, hright,
-      specNorm_mul_transpose_right_of_hasOrthonormalCols h.transpose_mul_right,
-      specNorm_mul_left_of_hasOrthonormalCols h.transpose_mul_right,
-      specNorm_mul_transpose_right_of_hasOrthonormalCols h.transpose_mul_left,
-      specNorm_mul_left_of_hasOrthonormalCols h.transpose_mul_left]
+      specNorm_mul_transpose_right_of_hasOrthonormalCols (P := V) h.conjTranspose_mul_right,
+      specNorm_mul_left_of_hasOrthonormalCols (P := V) h.conjTranspose_mul_right,
+      specNorm_mul_transpose_right_of_hasOrthonormalCols (P := U) h.conjTranspose_mul_left,
+      specNorm_mul_left_of_hasOrthonormalCols (P := U) h.conjTranspose_mul_left]
   have hleft : 1 - CFᵀ * CF = (1 - Cᵀ*C).reindex e e := by
     simp only [CF, Matrix.reindex_apply, Matrix.transpose_submatrix,
       Matrix.submatrix_mul_equiv]

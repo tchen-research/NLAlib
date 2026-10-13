@@ -32,7 +32,8 @@ theorem exists_orthogonal_transpose_mul_mul_eq_diagonal_singularValues
     HasOrthonormalCols.reindex h.transpose_mul_right _ _, ?_⟩
   have hBack : AF.reindex e.symm e.symm = A := by ext i j; simp [AF]
   have hEq := congrArg (fun M : Matrix (Fin (Fintype.card p))
-      (Fin (Fintype.card p)) ℝ => M.reindex e.symm e.symm) h.transpose_mul_mul
+      (Fin (Fintype.card p)) ℝ => M.reindex e.symm e.symm)
+    (show Vᵀ * AF * W = rectDiag (singularValues AF) from h.conjTranspose_mul_mul)
   rw [mul_reindex _ _ e.symm e.symm e.symm,
     mul_reindex _ _ e.symm e.symm e.symm, hBack] at hEq
   have hTr : Vᵀ.reindex e.symm e.symm = (V.reindex e.symm e.symm)ᵀ := rfl

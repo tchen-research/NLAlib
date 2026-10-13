@@ -64,7 +64,9 @@ theorem volumeSamplingNormalizer_eq_sum_prod_singularValues_sq
       ∑ S ∈ (Finset.univ : Finset (Fin n)).powersetCard k, ∏ i ∈ S, singularValues A i ^ 2 := by
   obtain ⟨U, V, h⟩ := exists_isSVD A
   have hn := sum_det_principal_minors_eq_sum_prod_of_diagonalization
-    h.transpose_mul_right h.transpose_mul_self k
+    (show Vᵀ * V = 1 from h.conjTranspose_mul_right)
+    (show Aᵀ * A = V * Matrix.diagonal (fun j : Fin n => singularValues A j ^ 2) * Vᵀ from
+      h.conjTranspose_mul_self) k
   simpa only [volumeSamplingNormalizer, volumeSamplingWeight,
     transpose_volumeSampleColumns_mul_eq_submatrix] using hn
 

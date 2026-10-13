@@ -6863,11 +6863,11 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  349,
+  327,
   "kind":
   "inductive",
   "doc":
-  "`IsSVD A U V` for `A : Matrix m n 𝕜`: `U : Matrix m (Fin p) 𝕜` and `V : Matrix n (Fin q) 𝕜`\nare unitary (orthogonal over `ℝ`; so `p = card m`, `q = card n`) and `A = U Σ Vᴴ` with\n`Σ = rectDiag (singularValues A)` (Horn–Johnson 2013, Thm 2.6.3; HMT 2011, §2.1). The `k`-th\ncolumns of `U` and `V` are the left/right singular vectors for `σ_k`. At `m = Fin a`, `n = Fin b`\nthe factors are square, `U : Matrix (Fin a) (Fin a) 𝕜`. Over `ℝ`, the real forms of the fields are\n`IsSVD.transpose_mul_left`, `IsSVD.transpose_mul_right` and `IsSVD.eq_mul_transpose`.\nAtlas `svd`.\natlas: svd-def ",
+  "`IsSVD A U V` for `A : Matrix m n 𝕜`: `U : Matrix m (Fin p) 𝕜` and `V : Matrix n (Fin q) 𝕜`\nare unitary (orthogonal over `ℝ`; so `p = card m`, `q = card n`) and `A = U Σ Vᴴ` with\n`Σ = rectDiag (singularValues A)` (Horn–Johnson 2013, Thm 2.6.3; HMT 2011, §2.1). The `k`-th\ncolumns of `U` and `V` are the left/right singular vectors for `σ_k`. At `m = Fin a`, `n = Fin b`\nthe factors are square, `U : Matrix (Fin a) (Fin a) 𝕜`. Over `ℝ`, `Uᴴ` is definitionally `Uᵀ`,\nso the fields elaborate against the `ᵀ` forms. Atlas `svd`.\natlas: svd-def ",
   "atlas_partial":
   [],
   "atlas":
@@ -6878,34 +6878,13 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.IsSVD.apply.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]\n  {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ} (h : NLAlib.IsSVD A U V) (i : m)\n  (j : n) : A i j = ∑ k, NLAlib.singularValues A ↑k * U i (Fin.castLE ⋯ k) * V j (Fin.castLE ⋯ k)",
+  "NLAlib.IsSVD.apply.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜} {V : Matrix n (Fin q) 𝕜}\n  (h : NLAlib.IsSVD A U V) (i : m) (j : n) :\n  A i j = ∑ k, ↑(NLAlib.singularValues A ↑k) * U i (Fin.castLE ⋯ k) * star (V j (Fin.castLE ⋯ k))",
   "name":
   "NLAlib.IsSVD.apply",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  649,
-  "kind":
-  "theorem",
-  "doc":
-  "Thin-SVD / outer-product expansion, entrywise:\n`A i j = ∑_{k < min p q} σ_k U_{ik} V_{jk}`, i.e. `A = ∑_k σ_k u_k v_kᵀ`\n(Horn–Johnson 2013, §2.6; HMT 2011, §2.1). Atlas `svd`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.IsSVD",
-   "NLAlib.singularValues"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.IsSVD.apply_eq_sum_mul_star.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (h : NLAlib.IsSVD A U V) (i : m) (j : n) :\n  A i j = ∑ k, ↑(NLAlib.singularValues A ↑k) * U i (Fin.castLE ⋯ k) * star (V j (Fin.castLE ⋯ k))",
-  "name":
-  "NLAlib.IsSVD.apply_eq_sum_mul_star",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  548,
+  525,
   "kind":
   "theorem",
   "doc":
@@ -6925,7 +6904,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  480,
+  457,
   "kind":
   "theorem",
   "doc":
@@ -6945,7 +6924,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  484,
+  461,
   "kind":
   "theorem",
   "doc":
@@ -6967,7 +6946,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  349,
+  327,
   "kind":
   "def",
   "doc":
@@ -7009,7 +6988,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  503,
+  480,
   "kind":
   "theorem",
   "doc":
@@ -7031,7 +7010,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  493,
+  470,
   "kind":
   "theorem",
   "doc":
@@ -7051,7 +7030,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  360,
+  337,
   "kind":
   "theorem",
   "doc":
@@ -7073,7 +7052,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  498,
+  475,
   "kind":
   "theorem",
   "doc":
@@ -7093,7 +7072,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  362,
+  339,
   "kind":
   "theorem",
   "doc":
@@ -7114,7 +7093,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  510,
+  487,
   "kind":
   "theorem",
   "doc":
@@ -7203,7 +7182,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  364,
+  341,
   "kind":
   "theorem",
   "doc":
@@ -7219,35 +7198,13 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.IsSVD.eq_head_add_tail.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) (k : ℕ) :\n  A =\n    (U * NLAlib.rectDiag fun i => if i < k then NLAlib.singularValues A i else 0) * V.transpose +\n      (U * NLAlib.rectDiag fun i => if i < k then 0 else NLAlib.singularValues A i) * V.transpose",
+  "NLAlib.IsSVD.eq_head_add_tail.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (h : NLAlib.IsSVD A U V) (k : ℕ) :\n  A =\n    (U * NLAlib.rectDiag fun i => if i < k then NLAlib.singularValues A i else 0) * V.conjTranspose +\n      (U * NLAlib.rectDiag fun i => if i < k then 0 else NLAlib.singularValues A i) * V.conjTranspose",
   "name":
   "NLAlib.IsSVD.eq_head_add_tail",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  657,
-  "kind":
-  "theorem",
-  "doc":
-  "Block SVD split at index `k` (HMT 2011, §2.1, `A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ`): the head\n`U Σ_{<k} Vᵀ` (the truncated SVD) plus the tail `U Σ_{≥k} Vᵀ`. Atlas `svd`.\natlas: svd ",
-  "atlas_partial":
-  [],
-  "atlas":
-  ["svd"]},
- {"uses":
-  ["NLAlib.IsSVD",
-   "NLAlib.rectDiag",
-   "NLAlib.singularValues"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.IsSVD.eq_head_add_tail_mul_conjTranspose.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3}\n  [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (h : NLAlib.IsSVD A U V) (k : ℕ) :\n  A =\n    (U * NLAlib.rectDiag fun i => if i < k then NLAlib.singularValues A i else 0) * V.conjTranspose +\n      (U * NLAlib.rectDiag fun i => if i < k then 0 else NLAlib.singularValues A i) * V.conjTranspose",
-  "name":
-  "NLAlib.IsSVD.eq_head_add_tail_mul_conjTranspose",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  581,
+  558,
   "kind":
   "theorem",
   "doc":
@@ -7256,28 +7213,6 @@
   [],
   "atlas":
   ["svd"]},
- {"uses":
-  ["NLAlib.IsSVD",
-   "NLAlib.rectDiag",
-   "NLAlib.singularValues"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.IsSVD.eq_mul_transpose.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) : A = U * NLAlib.rectDiag (NLAlib.singularValues A) * V.transpose",
-  "name":
-  "NLAlib.IsSVD.eq_mul_transpose",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  613,
-  "kind":
-  "theorem",
-  "doc":
-  "The factorization `A = U Σ Vᵀ` (real form of the field `eq`). Atlas `svd`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
  {"uses":
   ["NLAlib.IsSVD",
    "NLAlib.frobInner",
@@ -7292,7 +7227,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenSingularCoefficients",
   "line":
-  70,
+  71,
   "kind":
   "theorem",
   "doc":
@@ -7516,7 +7451,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenDuality",
   "line":
-  184,
+  186,
   "kind":
   "theorem",
   "doc":
@@ -7538,7 +7473,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  357,
+  334,
   "kind":
   "constructor",
   "doc":
@@ -7605,7 +7540,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SpectralBounds",
   "line":
-  176,
+  177,
   "kind":
   "theorem",
   "doc":
@@ -7625,7 +7560,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  366,
+  343,
   "kind":
   "theorem",
   "doc":
@@ -7645,7 +7580,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  368,
+  345,
   "kind":
   "theorem",
   "doc":
@@ -7666,7 +7601,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  529,
+  506,
   "kind":
   "theorem",
   "doc":
@@ -7732,7 +7667,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  488,
+  465,
   "kind":
   "theorem",
   "doc":
@@ -7746,17 +7681,17 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.IsSVD.mul_transpose_left.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) : U * U.transpose = 1",
+  "NLAlib.IsSVD.mul_transpose_left.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (self : NLAlib.IsSVD A U V) : U * U.conjTranspose = 1",
   "name":
   "NLAlib.IsSVD.mul_transpose_left",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  617,
+  576,
   "kind":
   "theorem",
   "doc":
-  "`U Uᵀ = I`. Atlas `svd`. ",
+  "**Alias** of `NLAlib.IsSVD.mul_conjTranspose_left`.\n\n---\n\n`U` is unitary: `UUᴴ = I`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -7766,38 +7701,17 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.IsSVD.mul_transpose_right.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) : V * V.transpose = 1",
+  "NLAlib.IsSVD.mul_transpose_right.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (self : NLAlib.IsSVD A U V) : V * V.conjTranspose = 1",
   "name":
   "NLAlib.IsSVD.mul_transpose_right",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  620,
+  577,
   "kind":
   "theorem",
   "doc":
-  "`V Vᵀ = I`. Atlas `svd`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.IsSVD",
-   "NLAlib.singularValues"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.IsSVD.mul_transpose_self.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) :\n  A * A.transpose = (U * Matrix.diagonal fun i => NLAlib.singularValues A ↑i ^ 2) * U.transpose",
-  "name":
-  "NLAlib.IsSVD.mul_transpose_self",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  643,
-  "kind":
-  "theorem",
-  "doc":
-  "`AAᵀ = U diag(σ₀², …, σ_{p-1}²) Uᵀ`: the left singular vectors diagonalize `AAᵀ`.\nAtlas `svd`. ",
+  "**Alias** of `NLAlib.IsSVD.mul_conjTranspose_right`.\n\n---\n\n`V` is unitary: `VVᴴ = I`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -7857,7 +7771,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  349,
+  327,
   "kind":
   "def",
   "doc":
@@ -8054,17 +7968,17 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.IsSVD.transpose_eq.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) : A.transpose = V * NLAlib.rectDiag (NLAlib.singularValues A) * U.transpose",
+  "NLAlib.IsSVD.transpose_eq.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (h : NLAlib.IsSVD A U V) :\n  A.conjTranspose = V * NLAlib.rectDiag (NLAlib.singularValues A) * U.conjTranspose",
   "name":
   "NLAlib.IsSVD.transpose_eq",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  631,
+  579,
   "kind":
   "theorem",
   "doc":
-  "`Aᵀ = V Σᵀ Uᵀ`: an SVD of the transpose (the singular values agree by\n`singularValues_transpose`). Atlas `svd`. ",
+  "**Alias** of `NLAlib.IsSVD.conjTranspose_eq`.\n\n---\n\n`Aᴴ = V Σᴴ Uᴴ`: an SVD of the conjugate transpose. Atlas `svd`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -8081,33 +7995,11 @@
   "module":
   "NLAlib.Matrix.Subspaces.InverseOverlapGram",
   "line":
-  45,
+  47,
   "kind":
   "theorem",
   "doc":
   "The inverse-overlap Gram has precisely the squared tangent ratio\ncoefficients in the left singular basis. Stewart–Sun §I.5. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.IsSVD",
-   "NLAlib.rectDiag",
-   "NLAlib.singularValues"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.IsSVD.transpose_mul.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) : U.transpose * A = NLAlib.rectDiag (NLAlib.singularValues A) * V.transpose",
-  "name":
-  "NLAlib.IsSVD.transpose_mul",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  623,
-  "kind":
-  "theorem",
-  "doc":
-  "`Uᵀ A = Σ Vᵀ`, i.e. `Aᵀ uₖ = σₖ vₖ`. Atlas `svd`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -8139,17 +8031,17 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.IsSVD.transpose_mul_left.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) : U.transpose * U = 1",
+  "NLAlib.IsSVD.transpose_mul_left.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (self : NLAlib.IsSVD A U V) : U.conjTranspose * U = 1",
   "name":
   "NLAlib.IsSVD.transpose_mul_left",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  605,
+  574,
   "kind":
   "theorem",
   "doc":
-  "`U` has orthonormal columns: `UᵀU = I` (real form of the field `conjTranspose_mul_left`).\nAtlas `svd`. ",
+  "**Alias** of `NLAlib.IsSVD.conjTranspose_mul_left`.\n\n---\n\n`U` has orthonormal columns: `UᴴU = I`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -8161,17 +8053,17 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.IsSVD.transpose_mul_mul.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) : U.transpose * A * V = NLAlib.rectDiag (NLAlib.singularValues A)",
+  "NLAlib.IsSVD.transpose_mul_mul.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (h : NLAlib.IsSVD A U V) :\n  U.conjTranspose * A * V = NLAlib.rectDiag (NLAlib.singularValues A)",
   "name":
   "NLAlib.IsSVD.transpose_mul_mul",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  627,
+  578,
   "kind":
   "theorem",
   "doc":
-  "`Uᵀ A V = Σ`. Atlas `svd`. ",
+  "**Alias** of `NLAlib.IsSVD.conjTranspose_mul_mul`.\n\n---\n\n`Uᴴ A V = Σ`. Atlas `svd`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -8181,38 +8073,17 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.IsSVD.transpose_mul_right.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) : V.transpose * V = 1",
+  "NLAlib.IsSVD.transpose_mul_right.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} (self : NLAlib.IsSVD A U V) : V.conjTranspose * V = 1",
   "name":
   "NLAlib.IsSVD.transpose_mul_right",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  609,
+  575,
   "kind":
   "theorem",
   "doc":
-  "`V` has orthonormal columns: `VᵀV = I` (real form of the field `conjTranspose_mul_right`).\nAtlas `svd`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.IsSVD",
-   "NLAlib.singularValues"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.IsSVD.transpose_mul_self.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq m]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}\n  (h : NLAlib.IsSVD A U V) :\n  A.transpose * A = (V * Matrix.diagonal fun j => NLAlib.singularValues A ↑j ^ 2) * V.transpose",
-  "name":
-  "NLAlib.IsSVD.transpose_mul_self",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  637,
-  "kind":
-  "theorem",
-  "doc":
-  "`AᵀA = V diag(σ₀², …, σ_{q-1}²) Vᵀ`: the right singular vectors diagonalize the Gram matrix\n(Horn–Johnson 2013, §2.6). Atlas `svd`. ",
+  "**Alias** of `NLAlib.IsSVD.conjTranspose_mul_right`.\n\n---\n\n`V` has orthonormal columns: `VᴴV = I`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -11351,7 +11222,7 @@
   "module":
   "NLAlib.Matrix.Factorizations.NearestPolar",
   "line":
-  170,
+  172,
   "kind":
   "def",
   "doc":
@@ -61109,7 +60980,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  332,
+  310,
   "kind":
   "theorem",
   "doc":
@@ -67614,7 +67485,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  312,
+  290,
   "kind":
   "theorem",
   "doc":
@@ -67654,7 +67525,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  242,
+  234,
   "kind":
   "theorem",
   "doc":
@@ -67674,7 +67545,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  254,
+  246,
   "kind":
   "theorem",
   "doc":
@@ -71226,7 +71097,7 @@
   "module":
   "NLAlib.Matrix.Functions.ComplexDiagonalFilter",
   "line":
-  81,
+  84,
   "kind":
   "theorem",
   "doc":
@@ -71306,7 +71177,7 @@
   "module":
   "NLAlib.Matrix.Functions.DiagonalFilter",
   "line":
-  47,
+  52,
   "kind":
   "theorem",
   "doc":
@@ -73332,7 +73203,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  670,
+  584,
   "kind":
   "theorem",
   "doc":
@@ -76748,7 +76619,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.ProjectionGaps",
   "line":
-  229,
+  233,
   "kind":
   "theorem",
   "doc":
@@ -77292,7 +77163,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  370,
+  347,
   "kind":
   "theorem",
   "doc":
@@ -78063,7 +77934,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenDuality",
   "line":
-  254,
+  256,
   "kind":
   "theorem",
   "doc":
@@ -79676,7 +79547,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenDuality",
   "line":
-  281,
+  283,
   "kind":
   "theorem",
   "doc":
@@ -79697,7 +79568,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenDuality",
   "line":
-  235,
+  237,
   "kind":
   "theorem",
   "doc":
@@ -82575,7 +82446,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.ProjectionGaps",
   "line":
-  203,
+  207,
   "kind":
   "theorem",
   "doc":
@@ -82772,7 +82643,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.VonNeumann",
   "line":
-  252,
+  253,
   "kind":
   "theorem",
   "doc":
@@ -85447,7 +85318,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.ProjectionGaps",
   "line":
-  215,
+  219,
   "kind":
   "theorem",
   "doc":
@@ -102447,7 +102318,7 @@
   "module":
   "NLAlib.Matrix.Factorizations.NearestPolar",
   "line":
-  195,
+  197,
   "kind":
   "theorem",
   "doc":
@@ -102469,7 +102340,7 @@
   "module":
   "NLAlib.Matrix.Factorizations.NearestPolar",
   "line":
-  139,
+  141,
   "kind":
   "theorem",
   "doc":
@@ -102491,7 +102362,7 @@
   "module":
   "NLAlib.Matrix.Factorizations.NearestPolar",
   "line":
-  100,
+  102,
   "kind":
   "theorem",
   "doc":
@@ -103858,7 +103729,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenDuality",
   "line":
-  309,
+  311,
   "kind":
   "theorem",
   "doc":
@@ -104456,7 +104327,7 @@
   "module":
   "NLAlib.Matrix.Factorizations.ProcrustesRotations",
   "line":
-  128,
+  129,
   "kind":
   "theorem",
   "doc":
@@ -117711,7 +117582,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  321,
+  299,
   "kind":
   "theorem",
   "doc":
@@ -119010,7 +118881,7 @@
   "module":
   "NLAlib.Matrix.Structured.KroneckerSingularValues",
   "line":
-  34,
+  35,
   "kind":
   "theorem",
   "doc":
@@ -119030,7 +118901,7 @@
   "module":
   "NLAlib.Matrix.Structured.KroneckerSingularValues",
   "line":
-  62,
+  63,
   "kind":
   "theorem",
   "doc":
@@ -120272,7 +120143,7 @@
   "module":
   "NLAlib.Matrix.Functions.ComplexDiagonalFilter",
   "line":
-  70,
+  73,
   "kind":
   "theorem",
   "doc":
@@ -126350,7 +126221,7 @@
   "module":
   "NLAlib.Matrix.Spectral.ProductSingularValues",
   "line":
-  153,
+  154,
   "kind":
   "theorem",
   "doc":
@@ -128617,7 +128488,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  158,
+  157,
   "kind":
   "theorem",
   "doc":
@@ -128717,7 +128588,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SvdPowers",
   "line":
-  59,
+  60,
   "kind":
   "theorem",
   "doc":
@@ -128899,7 +128770,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenDuality",
   "line":
-  171,
+  173,
   "kind":
   "theorem",
   "doc":
@@ -130287,7 +130158,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  208,
+  207,
   "kind":
   "def",
   "doc":
@@ -130307,7 +130178,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  296,
+  274,
   "kind":
   "theorem",
   "doc":
@@ -130327,7 +130198,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  219,
+  218,
   "kind":
   "theorem",
   "doc":
@@ -130347,31 +130218,11 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  215,
+  214,
   "kind":
   "theorem",
   "doc":
   "Entries of `rectDiag` over `𝕜`: `(σ i : 𝕜)` on the diagonal, `0` elsewhere. Atlas `svd`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.rectDiag"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.rectDiag_eq_of {m n : ℕ} (σ : ℕ → ℝ) : NLAlib.rectDiag σ = Matrix.of fun i j => if ↑i = ↑j then σ ↑i else 0",
-  "name":
-  "NLAlib.rectDiag_eq_of",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  224,
-  "kind":
-  "theorem",
-  "doc":
-  "A real `rectDiag` unfolds to the cast-free matrix (definitional bridge for real files that\nunfold `rectDiag`). Atlas `svd`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -130387,7 +130238,7 @@
   "module":
   "NLAlib.Matrix.Functions.ComplexDiagonalFilter",
   "line":
-  58,
+  61,
   "kind":
   "theorem",
   "doc":
@@ -130407,7 +130258,7 @@
   "module":
   "NLAlib.Matrix.Functions.DiagonalFilter",
   "line":
-  32,
+  35,
   "kind":
   "theorem",
   "doc":
@@ -130427,7 +130278,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  282,
+  267,
   "kind":
   "theorem",
   "doc":
@@ -130452,26 +130303,6 @@
   "theorem",
   "doc":
   "Mixed rectangular diagonal multiplication gives the coordinate products,\nwith zeros beyond the intermediate dimension. Horn–Johnson 2013, Section 2.6. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.rectDiag"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.rectDiag_mul_transpose_rectDiag {m n : ℕ} (σ : ℕ → ℝ) :\n  NLAlib.rectDiag σ * (NLAlib.rectDiag σ).transpose = Matrix.diagonal fun i => if ↑i < n then σ ↑i ^ 2 else 0",
-  "name":
-  "NLAlib.rectDiag_mul_transpose_rectDiag",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  289,
-  "kind":
-  "theorem",
-  "doc":
-  "`Σ Σᵀ` is diagonal with entries `σ_i²` for `i < n` and `0` beyond (real form of\n`rectDiag_mul_conjTranspose_rectDiag`). Atlas `svd`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -131782,7 +131613,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenDuality",
   "line":
-  327,
+  329,
   "kind":
   "theorem",
   "doc":
@@ -132857,7 +132688,7 @@
   "module":
   "NLAlib.Matrix.Norms.SchattenDuality",
   "line":
-  271,
+  273,
   "kind":
   "theorem",
   "doc":
@@ -133762,7 +133593,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SpectralBounds",
   "line":
-  193,
+  196,
   "kind":
   "theorem",
   "doc":
@@ -133945,7 +133776,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SpectralBounds",
   "line":
-  249,
+  253,
   "kind":
   "theorem",
   "doc":
@@ -134880,7 +134711,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  74,
+  73,
   "kind":
   "def",
   "doc":
@@ -134961,7 +134792,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  92,
+  91,
   "kind":
   "theorem",
   "doc":
@@ -135061,7 +134892,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  83,
+  82,
   "kind":
   "theorem",
   "doc":
@@ -135076,34 +134907,13 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul.{u_2, u_3} {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n]\n  [DecidableEq n] {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ} {τ : ℕ → ℝ}\n  (hU : U.transpose * U = 1) (hV : V.transpose * V = 1) (hτ0 : ∀ (k : ℕ), 0 ≤ τ k) (hτ : Antitone τ)\n  (hA : A = U * NLAlib.rectDiag τ * V.transpose) {k : ℕ} (hk : k < min p q)\n  (hq : Fintype.card n = q := by\n    first\n    | exact Fintype.card_fin _\n    | rfl) :\n  NLAlib.singularValues A k = τ k",
+  "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3}\n  [Fintype m] [Fintype n] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜} {V : Matrix n (Fin q) 𝕜}\n  {τ : ℕ → ℝ} (hU : U.conjTranspose * U = 1) (hV : V.conjTranspose * V = 1) (hτ0 : ∀ (k : ℕ), 0 ≤ τ k) (hτ : Antitone τ)\n  (hA : A = U * NLAlib.rectDiag τ * V.conjTranspose) {k : ℕ} (hk : k < min p q)\n  (hq : Fintype.card n = q := by\n    first\n    | exact Fintype.card_fin _\n    | rfl) :\n  NLAlib.singularValues A k = τ k",
   "name":
   "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul",
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  738,
-  "kind":
-  "theorem",
-  "doc":
-  "**Uniqueness of singular values**, real form of\n`singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose`: if `A = U Σ_τ Vᵀ` with `U`, `V`\nhaving orthonormal columns, `V` square and `τ` nonnegative and non-increasing, then\n`τ k = σ_k(A)` for every `k < min p q`. Atlas `svd`.\natlas: svd ",
-  "atlas_partial":
-  [],
-  "atlas":
-  ["svd"]},
- {"uses":
-  ["NLAlib.rectDiag",
-   "NLAlib.singularValues"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2}\n  {n : Type u_3} [Fintype m] [Fintype n] [DecidableEq n] {p q : ℕ} {A : Matrix m n 𝕜} {U : Matrix m (Fin p) 𝕜}\n  {V : Matrix n (Fin q) 𝕜} {τ : ℕ → ℝ} (hU : U.conjTranspose * U = 1) (hV : V.conjTranspose * V = 1)\n  (hτ0 : ∀ (k : ℕ), 0 ≤ τ k) (hτ : Antitone τ) (hA : A = U * NLAlib.rectDiag τ * V.conjTranspose) {k : ℕ}\n  (hk : k < min p q)\n  (hq : Fintype.card n = q := by\n    first\n    | exact Fintype.card_fin _\n    | rfl) :\n  NLAlib.singularValues A k = τ k",
-  "name":
-  "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  700,
+  614,
   "kind":
   "theorem",
   "doc":
@@ -135185,7 +134995,7 @@
   "module":
   "NLAlib.Matrix.Factorizations.NearestPolar",
   "line":
-  28,
+  27,
   "kind":
   "theorem",
   "doc":
@@ -135205,7 +135015,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  141,
+  140,
   "kind":
   "theorem",
   "doc":
@@ -135225,7 +135035,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  151,
+  150,
   "kind":
   "theorem",
   "doc":
@@ -135245,7 +135055,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  111,
+  110,
   "kind":
   "theorem",
   "doc":
@@ -135265,7 +135075,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  146,
+  145,
   "kind":
   "theorem",
   "doc":
@@ -135285,7 +135095,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SvdPowers",
   "line":
-  44,
+  45,
   "kind":
   "theorem",
   "doc":
@@ -135449,7 +135259,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  172,
+  171,
   "kind":
   "theorem",
   "doc":
@@ -135573,7 +135383,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  97,
+  96,
   "kind":
   "theorem",
   "doc":
@@ -135613,7 +135423,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  87,
+  86,
   "kind":
   "theorem",
   "doc":
@@ -135675,7 +135485,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  106,
+  105,
   "kind":
   "theorem",
   "doc":
@@ -137143,7 +136953,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.ProjectionGaps",
   "line":
-  252,
+  256,
   "kind":
   "theorem",
   "doc":
@@ -138435,7 +138245,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.InverseOverlapGram",
   "line":
-  70,
+  72,
   "kind":
   "theorem",
   "doc":
@@ -138903,7 +138713,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.ProjectionGaps",
   "line":
-  164,
+  168,
   "kind":
   "theorem",
   "doc":
@@ -139430,7 +139240,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.ProjectionGaps",
   "line":
-  181,
+  185,
   "kind":
   "theorem",
   "doc":
@@ -139532,7 +139342,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.ProjectionGaps",
   "line":
-  285,
+  289,
   "kind":
   "theorem",
   "doc":
@@ -140690,7 +140500,7 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  126,
+  125,
   "kind":
   "theorem",
   "doc":
@@ -142395,7 +142205,7 @@
   "module":
   "NLAlib.LowRank.Sampling.VolumeSampling",
   "line":
-  219,
+  221,
   "kind":
   "theorem",
   "doc":
@@ -149524,31 +149334,11 @@
   "module":
   "NLAlib.Matrix.Spectral.SVD",
   "line":
-  231,
+  223,
   "kind":
   "theorem",
   "doc":
   "The transpose of a rectangular diagonal matrix is rectangular diagonal. Atlas `svd`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.rectDiag"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.transpose_rectDiag_mul_rectDiag {m n : ℕ} (σ : ℕ → ℝ) :\n  (NLAlib.rectDiag σ).transpose * NLAlib.rectDiag σ = Matrix.diagonal fun j => if ↑j < m then σ ↑j ^ 2 else 0",
-  "name":
-  "NLAlib.transpose_rectDiag_mul_rectDiag",
-  "module":
-  "NLAlib.Matrix.Spectral.SVD",
-  "line":
-  275,
-  "kind":
-  "theorem",
-  "doc":
-  "`ΣᵀΣ` is diagonal with entries `σ_j²` for `j < m` and `0` beyond (real form of\n`conjTranspose_rectDiag_mul_rectDiag`). Atlas `svd`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -149565,7 +149355,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.ProjectionGaps",
   "line":
-  149,
+  153,
   "kind":
   "theorem",
   "doc":
@@ -150687,7 +150477,7 @@
   "module":
   "NLAlib.LowRank.Sampling.VolumeSampling",
   "line":
-  154,
+  156,
   "kind":
   "theorem",
   "doc":
@@ -150708,7 +150498,7 @@
   "module":
   "NLAlib.LowRank.Sampling.VolumeSampling",
   "line":
-  171,
+  173,
   "kind":
   "theorem",
   "doc":
@@ -150728,7 +150518,7 @@
   "module":
   "NLAlib.LowRank.Sampling.VolumeSampling",
   "line":
-  192,
+  194,
   "kind":
   "theorem",
   "doc":
@@ -150748,7 +150538,7 @@
   "module":
   "NLAlib.LowRank.Sampling.VolumeSampling",
   "line":
-  201,
+  203,
   "kind":
   "theorem",
   "doc":
@@ -150809,7 +150599,7 @@
   "module":
   "NLAlib.LowRank.Sampling.VolumeSampling",
   "line":
-  71,
+  73,
   "kind":
   "theorem",
   "doc":
@@ -150852,7 +150642,7 @@
   "module":
   "NLAlib.LowRank.Sampling.VolumeSampling",
   "line":
-  96,
+  98,
   "kind":
   "theorem",
   "doc":
@@ -150875,7 +150665,7 @@
   "module":
   "NLAlib.LowRank.Sampling.VolumeSampling",
   "line":
-  129,
+  131,
   "kind":
   "theorem",
   "doc":

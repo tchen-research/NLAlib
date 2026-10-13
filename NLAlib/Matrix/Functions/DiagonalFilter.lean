@@ -18,7 +18,10 @@ theorem specNorm_rectDiag_le {m n : ℕ} {s : ℕ → ℝ} {b : ℝ} (hb : 0 ≤
     (hs : ∀ i, i < min m n → |s i| ≤ b) :
     specNorm (rectDiag s : Matrix (Fin m) (Fin n) ℝ) ≤ b := by
   apply (sq_le_sq₀ (specNorm_nonneg _) hb).mp
-  rw [specNorm_sq_eq_specNorm_transpose_mul_self, transpose_rectDiag_mul_rectDiag,
+  rw [specNorm_sq_eq_specNorm_transpose_mul_self,
+    show (rectDiag s : Matrix (Fin m) (Fin n) ℝ)ᵀ * rectDiag s =
+      Matrix.diagonal (fun j : Fin n => if (j : ℕ) < m then s j ^ 2 else 0) from
+      conjTranspose_rectDiag_mul_rectDiag s,
     specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
   apply (pi_norm_le_iff_of_nonneg (sq_nonneg b)).2
   intro j
@@ -36,7 +39,9 @@ theorem rectDiag_mul_aeval_gram (s : ℕ → ℝ) (p : ℝ[X]) {m n : ℕ} :
       aeval ((rectDiag s : Matrix (Fin m) (Fin n) ℝ)ᵀ *
         (rectDiag s : Matrix (Fin m) (Fin n) ℝ)) p =
       rectDiag (fun i => s i * p.eval (s i ^ 2)) := by
-  rw [transpose_rectDiag_mul_rectDiag, aeval_diagonal]
+  rw [show (rectDiag s : Matrix (Fin m) (Fin n) ℝ)ᵀ * rectDiag s =
+      Matrix.diagonal (fun j : Fin n => if (j : ℕ) < m then s j ^ 2 else 0) from
+      conjTranspose_rectDiag_mul_rectDiag s, aeval_diagonal]
   ext i j
   rw [Matrix.mul_diagonal]
   simp only [rectDiag_apply]

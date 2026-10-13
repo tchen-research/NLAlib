@@ -269,7 +269,7 @@ theorem IsSVD.frobSq_sub_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
   have hq := h.card_right
   let T : Matrix (Fin p) (Fin q) 𝕜 :=
     rectDiag (fun i => if i < k then 0 else singularValues A i)
-  have hsplit : A = h.truncatedMatrix k + U * T * Vᴴ := h.eq_head_add_tail_mul_conjTranspose k
+  have hsplit : A = h.truncatedMatrix k + U * T * Vᴴ := h.eq_head_add_tail k
   have he : A - h.truncatedMatrix k = U * T * Vᴴ := by
     calc
       _ = (h.truncatedMatrix k + U * T * Vᴴ) - h.truncatedMatrix k :=
@@ -389,7 +389,7 @@ theorem IsSVD.specNorm_sub_truncatedMatrix {p q : ℕ} {A : Matrix m n 𝕜}
   have hq := h.card_right
   set τ : ℕ → ℝ := fun i => if i < k then 0 else singularValues A i with hτ
   let T : Matrix (Fin p) (Fin q) 𝕜 := rectDiag τ
-  have hsplit : A = h.truncatedMatrix k + U * T * Vᴴ := h.eq_head_add_tail_mul_conjTranspose k
+  have hsplit : A = h.truncatedMatrix k + U * T * Vᴴ := h.eq_head_add_tail k
   have he : A - h.truncatedMatrix k = U * T * Vᴴ := by
     calc
       _ = (h.truncatedMatrix k + U * T * Vᴴ) - h.truncatedMatrix k :=

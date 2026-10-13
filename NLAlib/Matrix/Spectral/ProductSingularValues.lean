@@ -84,7 +84,7 @@ theorem IsSVD.det_gram_mul_submatrix_eq_prod_sq_singularValues {m n k : ℕ}
   have hVE : Vᵀ * V.submatrix id (Fin.castLE hkn) = E := by
     have h := Matrix.submatrix_mul_equiv Vᵀ V id (Equiv.refl (Fin n)) (Fin.castLE hkn)
     simp only [Equiv.coe_refl, Matrix.submatrix_id_id] at h
-    rw [h, hT.transpose_mul_right]
+    rw [h, show Vᵀ * V = 1 from hT.conjTranspose_mul_right]
   have hEV : (V.submatrix id (Fin.castLE hkn))ᵀ * V = Eᵀ := by
     simpa only [Matrix.transpose_mul, Matrix.transpose_transpose] using congrArg Matrix.transpose hVE
   have hGram : ((T * V.submatrix id (Fin.castLE hkn))ᵀ *
@@ -95,7 +95,8 @@ theorem IsSVD.det_gram_mul_submatrix_eq_prod_sq_singularValues {m n k : ℕ}
       _ = (V.submatrix id (Fin.castLE hkn))ᵀ * (Tᵀ * T) *
           V.submatrix id (Fin.castLE hkn) := by simp only [Matrix.mul_assoc]
       _ = _ := by
-        rw [hT.transpose_mul_self]
+        rw [show Tᵀ * T = V * Matrix.diagonal (fun i : Fin n => singularValues T i ^ 2) * Vᵀ from
+          hT.conjTranspose_mul_self]
         simp only [Matrix.mul_assoc]
         rw [hVE, ← Matrix.mul_assoc, hEV]
   have hDiag : Eᵀ * Matrix.diagonal (fun i : Fin n => singularValues T i ^ 2) * E =

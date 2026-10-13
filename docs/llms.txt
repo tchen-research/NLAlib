@@ -17,14 +17,26 @@ Lean v4.33.1, Mathlib pinned in lake-manifest.json. Namespace `NLAlib`.
 1. Search atlas.json aliases/title/informal for the mathematical name; read `formalizations`
    for the Lean declaration and `usage` for how to apply it.
 2. Look the declaration up in declarations.json for its exact signature and module; import the
-   module (`import NLAlib.Matrix.SVD`).
-3. Statement conventions: real matrices `Matrix (Fin m) (Fin n) ℝ` when a Gaussian law is
-   involved, `[Fintype ι]` otherwise; norms `NLAlib.frobSq`/`frobNorm`/`specNorm`
-   (= Mathlib's ℓ₂ operator norm, bridge `specNorm_eq_norm`); orthonormal columns as
-   `Qᵀ * Q = 1` (`HasOrthonormalCols`); `residual Q A = A - Q * (Qᵀ * A)`; full-rank
-   pseudoinverses `pinvL G = (GᵀG)⁻¹Gᵀ`, `pinvR G = Gᵀ(GGᵀ)⁻¹` with `IsUnit` side conditions;
-   Gaussian matrices `gaussianMatrix p m : Measure (Fin p → Fin m → ℝ)` with `Matrix.of` as the
-   matrix view; expectations as Bochner integrals on an abstract probability space.
+   module (`import NLAlib.Matrix.Spectral.SVD`).
+3. Statement conventions (docs/STANDARDS.md §3): the matrix layer is stated once over
+   `{𝕜} [RCLike 𝕜]` (ℝ or ℂ) and arbitrary finite index types, `A : Matrix m n 𝕜` with
+   `[Fintype m] [Fintype n]`; `Fin` appears only as a sorted position (`rectDiag σ :
+   Matrix (Fin p) (Fin q) 𝕜`, Mathlib's `IsHermitian.eigenvalues₀ : Fin (card n) → ℝ`, the
+   column index of SVD factors) and where a Gaussian law needs it. Lemmas use `ᴴ`, never a `ᵀ`
+   twin: at ℝ a term elaborates against the `ᵀ` form, and a `rw` on a `ᵀ` goal goes through
+   `Matrix.conjTranspose_eq_transpose_of_trivial` or `show Uᵀ * U = 1 from h.…`.
+   Vocabulary: norms `NLAlib.frobSq`/`frobNorm`/`frobInner` (real part of the pairing) and
+   `specNorm` (= Mathlib's ℓ₂ operator norm, bridge `specNorm_eq_norm`); orthonormal columns as
+   `HasOrthonormalCols Q := Qᴴ * Q = 1`; `residual Q A = A - Q * (Qᴴ * A)`;
+   `quadForm A z = star z ⬝ᵥ (A *ᵥ z)` and `rayleighQuotient`; the Moore–Penrose inverse
+   `moorePenroseInverse A` (any matrix; the default), full-rank pseudoinverses
+   `pinvL A = (AᴴA)⁻¹Aᴴ`, `pinvR A = Aᴴ(AAᴴ)⁻¹` with `IsUnit` side conditions;
+   `singularValues A : ℕ → ℝ` (zero-indexed, zero-padded, antitone) and
+   `IsSVD A U V` (`U : Matrix m (Fin p) 𝕜`, `A = U * rectDiag (singularValues A) * Vᴴ`) from
+   `obtain ⟨U, V, h⟩ := exists_isSVD A`; smallest eigenvalue `hA.eigenvalues₀ ⟨card n - 1, _⟩`;
+   the Loewner order `A ≤ B` under `open scoped MatrixOrder`; Gaussian matrices
+   `gaussianMatrix p m : Measure (Fin p → Fin m → ℝ)` with `Matrix.of` as the matrix view
+   (real); expectations as Bochner integrals on an abstract probability space.
 4. Status `scaffold` means the statement exists with a `sorry`; you may use it, and the atlas
    says what it waits on (`depends_on`).
 

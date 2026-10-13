@@ -30,26 +30,25 @@ HMT 2011, §2.1). Over `ℝ`, `Vᴴ` is definitionally `Vᵀ` and `U`, `V` are o
   (`Fintype.card_fin`), so `Fin` statements need no casts. (`Fintype.equivFin (Fin a)` is an
   unspecified permutation, so a `rectDiag : Matrix m n 𝕜` built from `equivFin` would not be the
   positional diagonal at `Fin`; see `docs/rclike/F1b-alpha.md`.)
-* Real forms. Every lemma whose statement has `ᴴ` has a real form with `ᵀ` under the name real
-  files use (`IsSVD.transpose_mul_left`, `IsSVD.eq_mul_transpose`, `IsSVD.transpose_mul_self`,
-  `transpose_rectDiag_mul_rectDiag`, `singularValues_eq_of_eq_mul_rectDiag_mul`, …), each
-  holding definitionally.
+* Real matrices. Lemmas are stated once, with `ᴴ` (no `ᵀ` twins, `docs/STANDARDS.md` §2): at `ℝ`
+  a term of the general statement elaborates against the `ᵀ` form, and a `rw` on a `ᵀ` goal uses
+  `show Uᵀ * U = 1 from h.conjTranspose_mul_left` or
+  `simp only [Matrix.conjTranspose_eq_transpose_of_trivial]`. The one real entry lemma kept is
+  `rectDiag_apply` (cast-free entries of a real `rectDiag`).
 
 ## Main results
 
 * `NLAlib.exists_isSVD`: `∃ U V, IsSVD A U V` (atlas `svd`).
 * `NLAlib.IsSVD.conjTranspose_mul_self`, `NLAlib.IsSVD.mul_conjTranspose_self`:
-  `AᴴA = V Σ² Vᴴ`, `AAᴴ = U Σ² Uᴴ` (real forms `transpose_mul_self`, `mul_transpose_self`).
-* `NLAlib.IsSVD.apply_eq_sum_mul_star`: the entrywise outer-product expansion
-  `A i j = ∑_{k < min m n} σ_k U_{ik} conj(V_{jk})` (real form `IsSVD.apply`).
+  `AᴴA = V Σ² Vᴴ`, `AAᴴ = U Σ² Uᴴ`.
+* `NLAlib.IsSVD.apply`: the entrywise outer-product expansion
+  `A i j = ∑_{k < min m n} σ_k U_{ik} conj(V_{jk})`.
 * `NLAlib.frobSq_eq_sum_sq_singularValues` (in `SingularValueSpectrum`):
   `‖A‖_F² = ∑_{k < min m n} σ_k²`.
 * `NLAlib.singularValues_ne_zero_iff`, `NLAlib.rank_eq_card_singularValues_ne_zero`: rank.
 * `NLAlib.sq_singularValues_eq_eigenvalues₀`: `σ_k²` is the `k`-th largest eigenvalue of `AᴴA`.
-* `NLAlib.IsSVD.eq_head_add_tail_mul_conjTranspose`: block split
-  `A = U Σ_{<k} Vᴴ + U Σ_{≥k} Vᴴ` (real form `IsSVD.eq_head_add_tail`).
-* `NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose`: uniqueness of the singular
-  values (real form `singularValues_eq_of_eq_mul_rectDiag_mul`, used for
+* `NLAlib.IsSVD.eq_head_add_tail`: block split `A = U Σ_{<k} Vᴴ + U Σ_{≥k} Vᴴ`.
+* `NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul`: uniqueness of the singular values (used for
   `singularValues_transpose` and the isometry invariances in `SingularValueInvariance.lean`).
 
 The orthonormal completion of `{A vⱼ / σⱼ : σⱼ ≠ 0}` (atlas `orthonormal-completion`) is
@@ -221,13 +220,6 @@ Atlas `svd`. -/
 theorem rectDiag_apply (σ : ℕ → ℝ) (i : Fin m) (j : Fin n) :
     (rectDiag σ : Matrix (Fin m) (Fin n) ℝ) i j = if (i : ℕ) = j then σ i else 0 := rfl
 
-/-- A real `rectDiag` unfolds to the cast-free matrix (definitional bridge for real files that
-unfold `rectDiag`). Atlas `svd`. -/
-theorem rectDiag_eq_of (σ : ℕ → ℝ) :
-    (rectDiag σ : Matrix (Fin m) (Fin n) ℝ) =
-      Matrix.of fun (i : Fin m) (j : Fin n) => if (i : ℕ) = j then σ i else 0 :=
-  rfl
-
 /-- The transpose of a rectangular diagonal matrix is rectangular diagonal. Atlas `svd`. -/
 theorem transpose_rectDiag (σ : ℕ → ℝ) :
     (rectDiag σ : Matrix (Fin m) (Fin n) 𝕜)ᵀ = rectDiag σ := by
@@ -272,26 +264,12 @@ theorem conjTranspose_rectDiag_mul_rectDiag (σ : ℕ → ℝ) :
     · intro i _
       rw [if_neg (fun (h : (j : ℕ) = i) => hjm (h ▸ i.isLt)), zero_mul]
 
-/-- `ΣᵀΣ` is diagonal with entries `σ_j²` for `j < m` and `0` beyond (real form of
-`conjTranspose_rectDiag_mul_rectDiag`). Atlas `svd`. -/
-theorem transpose_rectDiag_mul_rectDiag (σ : ℕ → ℝ) :
-    (rectDiag σ : Matrix (Fin m) (Fin n) ℝ)ᵀ * rectDiag σ =
-      Matrix.diagonal fun j : Fin n => if (j : ℕ) < m then σ j ^ 2 else 0 :=
-  conjTranspose_rectDiag_mul_rectDiag σ
-
 /-- `Σ Σᴴ` is diagonal with entries `σ_i²` for `i < n` and `0` beyond. Atlas `svd`. -/
 theorem rectDiag_mul_conjTranspose_rectDiag (σ : ℕ → ℝ) :
     (rectDiag σ : Matrix (Fin m) (Fin n) 𝕜) * (rectDiag σ)ᴴ =
       Matrix.diagonal fun i : Fin m => if (i : ℕ) < n then ((σ i ^ 2 : ℝ) : 𝕜) else 0 := by
   rw [← conjTranspose_rectDiag (𝕜 := 𝕜) (m := n) (n := m) σ, Matrix.conjTranspose_conjTranspose,
     conjTranspose_rectDiag_mul_rectDiag]
-
-/-- `Σ Σᵀ` is diagonal with entries `σ_i²` for `i < n` and `0` beyond (real form of
-`rectDiag_mul_conjTranspose_rectDiag`). Atlas `svd`. -/
-theorem rectDiag_mul_transpose_rectDiag (σ : ℕ → ℝ) :
-    (rectDiag σ : Matrix (Fin m) (Fin n) ℝ) * (rectDiag σ)ᵀ =
-      Matrix.diagonal fun i : Fin m => if (i : ℕ) < n then σ i ^ 2 else 0 :=
-  rectDiag_mul_conjTranspose_rectDiag σ
 
 /-- `rectDiag` is additive. Atlas `svd`. -/
 theorem rectDiag_add (σ τ : ℕ → ℝ) :
@@ -350,9 +328,8 @@ variable {𝕜 : Type*} [RCLike 𝕜] {m n : Type*} [Fintype m] [Fintype n] [Dec
 are unitary (orthogonal over `ℝ`; so `p = card m`, `q = card n`) and `A = U Σ Vᴴ` with
 `Σ = rectDiag (singularValues A)` (Horn–Johnson 2013, Thm 2.6.3; HMT 2011, §2.1). The `k`-th
 columns of `U` and `V` are the left/right singular vectors for `σ_k`. At `m = Fin a`, `n = Fin b`
-the factors are square, `U : Matrix (Fin a) (Fin a) 𝕜`. Over `ℝ`, the real forms of the fields are
-`IsSVD.transpose_mul_left`, `IsSVD.transpose_mul_right` and `IsSVD.eq_mul_transpose`.
-Atlas `svd`.
+the factors are square, `U : Matrix (Fin a) (Fin a) 𝕜`. Over `ℝ`, `Uᴴ` is definitionally `Uᵀ`,
+so the fields elaborate against the `ᵀ` forms. Atlas `svd`.
 atlas: svd-def -/
 structure IsSVD {p q : ℕ} (A : Matrix m n 𝕜) (U : Matrix m (Fin p) 𝕜)
     (V : Matrix n (Fin q) 𝕜) : Prop where
@@ -548,7 +525,7 @@ theorem mul_conjTranspose_self (h : IsSVD A U V) :
 /-- Thin-SVD / outer-product expansion, entrywise:
 `A i j = ∑_{k < min p q} σ_k U_{ik} conj(V_{jk})`, i.e. `A = ∑_k σ_k u_k v_kᴴ`
 (Horn–Johnson 2013, §2.6; HMT 2011, §2.1). Atlas `svd`. -/
-theorem apply_eq_sum_mul_star (h : IsSVD A U V) (i : m) (j : n) :
+theorem apply (h : IsSVD A U V) (i : m) (j : n) :
     A i j = ∑ k : Fin (min p q), (singularValues A k : 𝕜) *
       U i (Fin.castLE (min_le_left p q) k) * star (V j (Fin.castLE (min_le_right p q) k)) := by
   let g : ℕ → 𝕜 := fun k => if h : k < p ∧ k < q then
@@ -581,7 +558,7 @@ theorem apply_eq_sum_mul_star (h : IsSVD A U V) (i : m) (j : n) :
 /-- Block SVD split at index `k` (HMT 2011, §2.1, `A = U₁Σ₁V₁ᴴ + U₂Σ₂V₂ᴴ`): the head
 `U Σ_{<k} Vᴴ` (the truncated SVD) plus the tail `U Σ_{≥k} Vᴴ`. Atlas `svd`.
 atlas: svd -/
-theorem eq_head_add_tail_mul_conjTranspose (h : IsSVD A U V) (k : ℕ) :
+theorem eq_head_add_tail (h : IsSVD A U V) (k : ℕ) :
     A = U * (rectDiag (fun i => if i < k then singularValues A i else 0) :
         Matrix (Fin p) (Fin q) 𝕜) * Vᴴ +
       U * (rectDiag (fun i => if i < k then 0 else singularValues A i) :
@@ -591,78 +568,15 @@ theorem eq_head_add_tail_mul_conjTranspose (h : IsSVD A U V) (k : ℕ) :
   funext i
   simp only [Pi.add_apply]; split_ifs <;> simp
 
-end IsSVD
+/-! Deprecated real (`ᵀ`) names of the `IsSVD` API (F1, transpose twins removed); leaf files still
+use them in term position, where the general statement elaborates at `ℝ`. -/
 
-/-! ### Real forms of the `IsSVD` API
-
-Over `ℝ` the conjugate transpose is the transpose. These are the general statements above with
-`ᵀ` in place of `ᴴ`, under the names real files use; each holds definitionally. -/
-
-namespace IsSVD
-
-variable {p q : ℕ} {A : Matrix m n ℝ} {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ}
-
-/-- `U` has orthonormal columns: `UᵀU = I` (real form of the field `conjTranspose_mul_left`).
-Atlas `svd`. -/
-theorem transpose_mul_left (h : IsSVD A U V) : Uᵀ * U = 1 := h.conjTranspose_mul_left
-
-/-- `V` has orthonormal columns: `VᵀV = I` (real form of the field `conjTranspose_mul_right`).
-Atlas `svd`. -/
-theorem transpose_mul_right (h : IsSVD A U V) : Vᵀ * V = 1 := h.conjTranspose_mul_right
-
-/-- The factorization `A = U Σ Vᵀ` (real form of the field `eq`). Atlas `svd`. -/
-theorem eq_mul_transpose (h : IsSVD A U V) :
-    A = U * (rectDiag (singularValues A) : Matrix (Fin p) (Fin q) ℝ) * Vᵀ := h.eq
-
-/-- `U Uᵀ = I`. Atlas `svd`. -/
-theorem mul_transpose_left (h : IsSVD A U V) : U * Uᵀ = 1 := h.mul_conjTranspose_left
-
-/-- `V Vᵀ = I`. Atlas `svd`. -/
-theorem mul_transpose_right (h : IsSVD A U V) : V * Vᵀ = 1 := h.mul_conjTranspose_right
-
-/-- `Uᵀ A = Σ Vᵀ`, i.e. `Aᵀ uₖ = σₖ vₖ`. Atlas `svd`. -/
-theorem transpose_mul (h : IsSVD A U V) : Uᵀ * A = rectDiag (singularValues A) * Vᵀ :=
-  h.conjTranspose_mul
-
-/-- `Uᵀ A V = Σ`. Atlas `svd`. -/
-theorem transpose_mul_mul (h : IsSVD A U V) : Uᵀ * A * V = rectDiag (singularValues A) :=
-  h.conjTranspose_mul_mul
-
-/-- `Aᵀ = V Σᵀ Uᵀ`: an SVD of the transpose (the singular values agree by
-`singularValues_transpose`). Atlas `svd`. -/
-theorem transpose_eq (h : IsSVD A U V) :
-    Aᵀ = V * (rectDiag (singularValues A) : Matrix (Fin q) (Fin p) ℝ) * Uᵀ :=
-  h.conjTranspose_eq
-
-/-- `AᵀA = V diag(σ₀², …, σ_{q-1}²) Vᵀ`: the right singular vectors diagonalize the Gram matrix
-(Horn–Johnson 2013, §2.6). Atlas `svd`. -/
-theorem transpose_mul_self (h : IsSVD A U V) :
-    Aᵀ * A = V * Matrix.diagonal (fun j : Fin q => singularValues A j ^ 2) * Vᵀ :=
-  h.conjTranspose_mul_self
-
-/-- `AAᵀ = U diag(σ₀², …, σ_{p-1}²) Uᵀ`: the left singular vectors diagonalize `AAᵀ`.
-Atlas `svd`. -/
-theorem mul_transpose_self (h : IsSVD A U V) :
-    A * Aᵀ = U * Matrix.diagonal (fun i : Fin p => singularValues A i ^ 2) * Uᵀ :=
-  h.mul_conjTranspose_self
-
-/-- Thin-SVD / outer-product expansion, entrywise:
-`A i j = ∑_{k < min p q} σ_k U_{ik} V_{jk}`, i.e. `A = ∑_k σ_k u_k v_kᵀ`
-(Horn–Johnson 2013, §2.6; HMT 2011, §2.1). Atlas `svd`. -/
-theorem apply (h : IsSVD A U V) (i : m) (j : n) :
-    A i j = ∑ k : Fin (min p q), singularValues A k * U i (Fin.castLE (min_le_left p q) k) *
-      V j (Fin.castLE (min_le_right p q) k) :=
-  h.apply_eq_sum_mul_star i j
-
-/-- Block SVD split at index `k` (HMT 2011, §2.1, `A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ`): the head
-`U Σ_{<k} Vᵀ` (the truncated SVD) plus the tail `U Σ_{≥k} Vᵀ`. Atlas `svd`.
-atlas: svd -/
-theorem eq_head_add_tail (h : IsSVD A U V) (k : ℕ) :
-    A = U * (rectDiag (fun i => if i < k then singularValues A i else 0) :
-        Matrix (Fin p) (Fin q) ℝ) * Vᵀ +
-      U * (rectDiag (fun i => if i < k then 0 else singularValues A i) :
-        Matrix (Fin p) (Fin q) ℝ) * Vᵀ :=
-  h.eq_head_add_tail_mul_conjTranspose k
+@[deprecated (since := "2026-10-13")] alias transpose_mul_left := IsSVD.conjTranspose_mul_left
+@[deprecated (since := "2026-10-13")] alias transpose_mul_right := IsSVD.conjTranspose_mul_right
+@[deprecated (since := "2026-10-13")] alias mul_transpose_left := IsSVD.mul_conjTranspose_left
+@[deprecated (since := "2026-10-13")] alias mul_transpose_right := IsSVD.mul_conjTranspose_right
+@[deprecated (since := "2026-10-13")] alias transpose_mul_mul := IsSVD.conjTranspose_mul_mul
+@[deprecated (since := "2026-10-13")] alias transpose_eq := IsSVD.conjTranspose_eq
 
 end IsSVD
 
@@ -702,7 +616,7 @@ omit [DecidableEq m] in
 `V : Matrix (Fin b) (Fin b) 𝕜` and `V : Matrix n (Fin (card n)) 𝕜`) and `τ` nonnegative and
 non-increasing, then `τ k = σ_k(A)` for every `k < min p q`. Atlas `svd`.
 atlas: svd -/
-theorem singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose {p q : ℕ} {A : Matrix m n 𝕜}
+theorem singularValues_eq_of_eq_mul_rectDiag_mul {p q : ℕ} {A : Matrix m n 𝕜}
     {U : Matrix m (Fin p) 𝕜} {V : Matrix n (Fin q) 𝕜} {τ : ℕ → ℝ}
     (hU : Uᴴ * U = 1) (hV : Vᴴ * V = 1) (hτ0 : ∀ k, 0 ≤ τ k) (hτ : Antitone τ)
     (hA : A = U * (rectDiag τ : Matrix (Fin p) (Fin q) 𝕜) * Vᴴ) {k : ℕ} (hk : k < min p q)
@@ -733,20 +647,6 @@ theorem singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose {p q : ℕ} {A : 
   rw [eigenvalues₀_eq_of_eq_mul_diagonal_mul hH hμ hV hq hAA] at e1
   simp only [μ, if_pos hkm] at e1
   exact (sq_eq_sq₀ (singularValues_nonneg A k) (hτ0 k)).1 e1
-
-omit [DecidableEq m] in
-/-- **Uniqueness of singular values**, real form of
-`singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose`: if `A = U Σ_τ Vᵀ` with `U`, `V`
-having orthonormal columns, `V` square and `τ` nonnegative and non-increasing, then
-`τ k = σ_k(A)` for every `k < min p q`. Atlas `svd`.
-atlas: svd -/
-theorem singularValues_eq_of_eq_mul_rectDiag_mul {p q : ℕ} {A : Matrix m n ℝ}
-    {U : Matrix m (Fin p) ℝ} {V : Matrix n (Fin q) ℝ} {τ : ℕ → ℝ}
-    (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1) (hτ0 : ∀ k, 0 ≤ τ k) (hτ : Antitone τ)
-    (hA : A = U * (rectDiag τ : Matrix (Fin p) (Fin q) ℝ) * Vᵀ) {k : ℕ} (hk : k < min p q)
-    (hq : Fintype.card n = q := by first | exact Fintype.card_fin _ | rfl) :
-    singularValues A k = τ k :=
-  singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose hU hV hτ0 hτ hA hk hq
 
 end Decomposition
 

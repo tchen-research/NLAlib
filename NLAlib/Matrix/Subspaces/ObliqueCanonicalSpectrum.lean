@@ -43,7 +43,10 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
     simp only [Matrix.fromBlocks_transpose, Matrix.transpose_one, Matrix.transpose_zero,
       Matrix.diagonal_transpose, Matrix.fromBlocks_multiply,
       Matrix.mul_one, Matrix.mul_zero, Matrix.zero_mul,
-      add_zero, Matrix.diagonal_mul_diagonal, rectDiag_mul_transpose_rectDiag]
+      add_zero, Matrix.diagonal_mul_diagonal,
+      show (rectDiag t : Matrix (Fin r) (Fin s) ℝ) * (rectDiag t)ᵀ =
+        Matrix.diagonal (fun i : Fin r => if (i : ℕ) < s then t i ^ 2 else 0) from
+        rectDiag_mul_conjTranspose_rectDiag t]
     congr 1
     ext i j
     by_cases hij : i = j

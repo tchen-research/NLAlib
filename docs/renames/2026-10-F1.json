@@ -156,5 +156,21 @@
   "NLAlib.frobenius_norm_sq_sub_complexTruncatedSVD_eq_tail": "NLAlib.frobSq_sub_truncatedSVD_eq_singularValueTailSq",
   "NLAlib.IsBestRankApprox.reindex": "(removed: Eckart–Young is Fintype-indexed; NLAlib.exists_isBestRankApprox)",
   "NLAlib.bestRankFrobSq_reindex": "(removed: Eckart–Young is Fintype-indexed)",
-  "NLAlib.bestRankFrobSq_eq_singularValueTailSq_reindex": "NLAlib.bestRankFrobSq_eq_singularValueTailSq"
+  "NLAlib.bestRankFrobSq_eq_singularValueTailSq_reindex": "NLAlib.bestRankFrobSq_eq_singularValueTailSq",
+  "NLAlib.IsSVD.transpose_mul_left": "NLAlib.IsSVD.conjTranspose_mul_left",
+  "NLAlib.IsSVD.transpose_mul_right": "NLAlib.IsSVD.conjTranspose_mul_right",
+  "NLAlib.IsSVD.eq_mul_transpose": "NLAlib.IsSVD.eq",
+  "NLAlib.IsSVD.mul_transpose_left": "NLAlib.IsSVD.mul_conjTranspose_left",
+  "NLAlib.IsSVD.mul_transpose_right": "NLAlib.IsSVD.mul_conjTranspose_right",
+  "NLAlib.IsSVD.transpose_mul": "NLAlib.IsSVD.conjTranspose_mul",
+  "NLAlib.IsSVD.transpose_mul_mul": "NLAlib.IsSVD.conjTranspose_mul_mul",
+  "NLAlib.IsSVD.transpose_eq": "NLAlib.IsSVD.conjTranspose_eq",
+  "NLAlib.IsSVD.transpose_mul_self": "NLAlib.IsSVD.conjTranspose_mul_self",
+  "NLAlib.IsSVD.mul_transpose_self": "NLAlib.IsSVD.mul_conjTranspose_self",
+  "NLAlib.IsSVD.apply_eq_sum_mul_star": "NLAlib.IsSVD.apply",
+  "NLAlib.IsSVD.eq_head_add_tail_mul_conjTranspose": "NLAlib.IsSVD.eq_head_add_tail",
+  "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose": "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul",
+  "NLAlib.transpose_rectDiag_mul_rectDiag": "NLAlib.conjTranspose_rectDiag_mul_rectDiag",
+  "NLAlib.rectDiag_mul_transpose_rectDiag": "NLAlib.rectDiag_mul_conjTranspose_rectDiag",
+  "NLAlib.rectDiag_eq_of": "unfold NLAlib.rectDiag"
 }

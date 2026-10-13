@@ -18,8 +18,7 @@ set_option backward.isDefEq.respectTransparency false
 Horn–Johnson 2013, Theorem 7.3.1; polar-decomposition helper. -/
 theorem hasOrthonormalCols_rectDiag_one {m n : ℕ} (hCard : n ≤ m) :
     HasOrthonormalCols (rectDiag (fun _ => 1) : Matrix (Fin m) (Fin n) ℝ) := by
-  rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
-      Matrix.conjTranspose_eq_transpose_of_trivial, transpose_rectDiag_mul_rectDiag]
+  rw [hasOrthonormalCols_iff_conjTranspose_mul_self, conjTranspose_rectDiag_mul_rectDiag]
   ext i j
   simp only [one_pow]
   have hi : (i : ℕ) < m := i.isLt.trans_le hCard
@@ -64,7 +63,7 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
     rw [← Matrix.mul_assoc Lᵀ L (J * Rᵀ), (show Lᵀ * L = 1 from hL), Matrix.one_mul,
       ← Matrix.mul_assoc Jᵀ J Rᵀ, (show Jᵀ * J = 1 from hJ), Matrix.one_mul,
-      hSVD.mul_transpose_right]
+      show R * Rᵀ = 1 from hSVD.mul_conjTranspose_right]
   have hQ : Q.PosSemidef := by
     have hD : (Matrix.diagonal (fun i : Fin n => singularValues A i)).PosSemidef :=
       Matrix.posSemidef_diagonal_iff.mpr (fun i => singularValues_nonneg A i)
@@ -78,9 +77,11 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
   have hA : U * Q = A := by
     dsimp [U, Q]
     simp only [Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc Rᵀ R (Matrix.diagonal _ * Rᵀ), hSVD.transpose_mul_right,
+    rw [← Matrix.mul_assoc Rᵀ R (Matrix.diagonal _ * Rᵀ),
+      show Rᵀ * R = 1 from hSVD.conjTranspose_mul_right,
       Matrix.one_mul, ← Matrix.mul_assoc J _ Rᵀ, hJD]
-    simpa only [Matrix.mul_assoc] using hSVD.eq_mul_transpose.symm
+    simpa only [Matrix.mul_assoc] using
+      (show A = L * (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) * Rᵀ from hSVD.eq).symm
   have hRoot := eq_sqrt_gram_of_isometry_mul_eq hU hQ hA
   refine ⟨U, hU, ?_, ?_⟩
   · rwa [← hRoot]
@@ -94,7 +95,8 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
         simp [hij, hj]
       · simp [hij]
     have hDiff : A - U = L * (rectDiag (singularValues A) - J) * Rᵀ := by
-      rw [Matrix.mul_sub, Matrix.sub_mul, ← hSVD.eq_mul_transpose]
+      rw [Matrix.mul_sub, Matrix.sub_mul,
+        ← show A = L * (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) * Rᵀ from hSVD.eq]
     rw [hDiff, ν.right_invariant _ Rᵀ hRt, ν.left_invariant _ L hL, hDiag]
 
 /-- Every polar isometry minimizes the distance to a tall real matrix in

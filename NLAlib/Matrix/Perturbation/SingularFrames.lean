@@ -108,9 +108,9 @@ Wedin (1972), Section 3; the witness matching matters at singular-value ties. -/
 theorem headColumns_projector_mul (h : IsSVD A U V) (hkm : k ≤ m) :
     (headColumns U hkm * (headColumns U hkm)ᵀ) * A = h.truncatedMatrix k := by
   rw [headColumns_mul_transpose]
-  conv_lhs => rw [h.eq_mul_transpose]
+  conv_lhs => rw [h.eq, Matrix.conjTranspose_eq_transpose_of_trivial]
   simp only [Matrix.mul_assoc]
-  rw [← Matrix.mul_assoc Uᵀ U, h.transpose_mul_left, Matrix.one_mul,
+  rw [← Matrix.mul_assoc Uᵀ U, show Uᵀ * U = 1 from h.conjTranspose_mul_left, Matrix.one_mul,
     ← Matrix.mul_assoc (Matrix.diagonal _) (rectDiag _), diagonal_prefix_mul_rectDiag]
   simp only [truncatedMatrix, Matrix.mul_assoc, Matrix.conjTranspose_eq_transpose_of_trivial]
 
@@ -119,9 +119,9 @@ Wedin (1972), Section 3; all rectangular null directions remain in the tail. -/
 theorem mul_headColumns_projector (h : IsSVD A U V) (hkn : k ≤ n) :
     A * (headColumns V hkn * (headColumns V hkn)ᵀ) = h.truncatedMatrix k := by
   rw [headColumns_mul_transpose]
-  conv_lhs => rw [h.eq_mul_transpose]
+  conv_lhs => rw [h.eq, Matrix.conjTranspose_eq_transpose_of_trivial]
   simp only [Matrix.mul_assoc]
-  rw [← Matrix.mul_assoc Vᵀ V, h.transpose_mul_right, Matrix.one_mul,
+  rw [← Matrix.mul_assoc Vᵀ V, show Vᵀ * V = 1 from h.conjTranspose_mul_right, Matrix.one_mul,
     ← Matrix.mul_assoc (rectDiag _) (Matrix.diagonal _), rectDiag_mul_diagonal_prefix]
   simp only [truncatedMatrix, Matrix.mul_assoc, Matrix.conjTranspose_eq_transpose_of_trivial]
 

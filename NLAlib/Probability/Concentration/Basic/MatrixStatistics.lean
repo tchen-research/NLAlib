@@ -1,10 +1,11 @@
 import NLAlib.Matrix.Functions.ExpLog
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import NLAlib.ForMathlib.MeasureTheory.Matrix
 
 /-!
 # Random-matrix statistics
 
-Borel structure on complex matrices, variance statistics, the cumulant sum of the matrix Laplace method, and the Bernstein tail.
+Variance statistics, the cumulant sum of the matrix Laplace method, and the Bernstein tail.
 
 Atlas: `matrix-laplace`, `matrix-bernstein`.
 
@@ -16,27 +17,6 @@ open scoped Matrix.Norms.L2Operator
 
 noncomputable section
 namespace NLAlib
-
-/-- The Borel σ-algebra on complex matrices (for the norm topology), used to state measurability of
-random matrices.
-
-This global instance is a deliberate exception to STANDARDS §3, which states measurability of
-matrix-valued maps entrywise because Mathlib has no `MeasurableSpace (Matrix m n ℂ)`. The matrix
-concentration development (ported from the Tropp 2015 Prove2me missions) treats random matrices as
-`Measurable` maps into a normed space and integrates them as Bochner integrals in the operator
-norm; every statement in `NLAlib/Concentration/Matrix/` that mentions `Measurable`, `iIndepFun` or
-`Integrable` for a matrix-valued map elaborates through this instance, so removing it would mean
-restating the whole development. Mathlib declares no competing instance (`Matrix` is a
-non-reducible `def`, so the product σ-algebra on `m → n → ℂ` is not found), hence no diamond. It
-could be made `scoped`: checked 2026-10-09, wrapping it in `namespace MatrixBorel` as a `scoped
-instance` and adding `open scoped NLAlib.MatrixBorel` to the 35 modules under
-`Concentration/Matrix/` that import this one (directly or not) builds cleanly, at the price of
-every downstream user opening the scope to state the hypotheses of the public theorems. -/
-instance matrixMeasurableSpace {m n : Type*} : MeasurableSpace (Matrix m n ℂ) :=
-  borel (Matrix m n ℂ)
-
-/-- Complex matrices with `matrixMeasurableSpace` form a Borel space. -/
-instance matrixBorelSpace {m n : Type*} : BorelSpace (Matrix m n ℂ) := ⟨rfl⟩
 
 /-- The matrix variance statistic of a rectangular random matrix: `max ‖𝔼 Z Zᴴ‖ ‖𝔼 Zᴴ Z‖`. Tropp 2015,
 eq. (2.2.9).

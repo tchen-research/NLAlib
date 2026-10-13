@@ -1,0 +1,6 @@
+{
+  "NLAlib.matrixMeasurableSpace": "Matrix.instMeasurableSpace",
+  "NLAlib.matrixBorelSpace": "Matrix.instBorelSpace",
+  "NLAlib.orthogonalGroupMeasurableSpace": "Subtype.instMeasurableSpace",
+  "NLAlib.orthogonalGroupBorelSpace": "Subtype.borelSpace"
+}

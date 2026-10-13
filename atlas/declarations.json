@@ -479,6 +479,208 @@
   "atlas":
   []},
  {"uses":
+  ["Matrix.instMeasurableSpace",
+   "Matrix.ofMeasurableEquiv"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.coe_ofMeasurableEquiv.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [MeasurableSpace α] :\n  ⇑Matrix.ofMeasurableEquiv = ⇑Matrix.of",
+  "name":
+  "Matrix.coe_ofMeasurableEquiv",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  69,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "Matrix.ofMeasurableEquiv"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.coe_ofMeasurableEquiv_symm.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [MeasurableSpace α] :\n  ⇑Matrix.ofMeasurableEquiv.symm = ⇑Matrix.of.symm",
+  "name":
+  "Matrix.coe_ofMeasurableEquiv_symm",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.instBorelSpace.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [Fintype m] [Fintype n]\n  [TopologicalSpace α] [MeasurableSpace α] [SecondCountableTopology α] [BorelSpace α] : BorelSpace (Matrix m n α)",
+  "name":
+  "Matrix.instBorelSpace",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  40,
+  "kind":
+  "instance",
+  "doc":
+  "For finite index types and a second-countable Borel space `α`, the product σ-algebra on\n`Matrix m n α` is the Borel σ-algebra of its (product) topology. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.instMeasurableSpace.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [MeasurableSpace α] :\n  MeasurableSpace (Matrix m n α)",
+  "name":
+  "Matrix.instMeasurableSpace",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  36,
+  "kind":
+  "instance",
+  "doc":
+  "The product σ-algebra on `Matrix m n α`, that of the array type `m → n → α`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.measurable_conjTranspose.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [MeasurableSpace α]\n  [Star α] [TopologicalSpace α] [ContinuousStar α] [BorelSpace α] : Measurable Matrix.conjTranspose",
+  "name":
+  "Matrix.measurable_conjTranspose",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  83,
+  "kind":
+  "theorem",
+  "doc":
+  "Conjugate transposition is measurable when `star` is continuous on a Borel space. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.measurable_entry.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [MeasurableSpace α] (i : m)\n  (j : n) : Measurable fun A => A i j",
+  "name":
+  "Matrix.measurable_entry",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  48,
+  "kind":
+  "theorem",
+  "doc":
+  "Each entry `A ↦ A i j` is measurable. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.measurable_iff_entries.{u_1, u_3, u_4, u_5} {β : Type u_1} {m : Type u_3} {n : Type u_4} {α : Type u_5}\n  [MeasurableSpace α] [MeasurableSpace β] {f : β → Matrix m n α} :\n  Measurable f ↔ ∀ (i : m) (j : n), Measurable fun x => f x i j",
+  "name":
+  "Matrix.measurable_iff_entries",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  57,
+  "kind":
+  "theorem",
+  "doc":
+  "A matrix-valued map is measurable iff all its entries are. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.measurable_of.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [MeasurableSpace α] :\n  Measurable ⇑Matrix.of",
+  "name":
+  "Matrix.measurable_of",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  52,
+  "kind":
+  "theorem",
+  "doc":
+  "`Matrix.of` is measurable from the array type. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.measurable_transpose.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [MeasurableSpace α] :\n  Measurable Matrix.transpose",
+  "name":
+  "Matrix.measurable_transpose",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  78,
+  "kind":
+  "theorem",
+  "doc":
+  "Transposition is measurable. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.ofMeasurableEquiv.{u_3, u_4, u_5} {m : Type u_3} {n : Type u_4} {α : Type u_5} [MeasurableSpace α] :\n  (m → n → α) ≃ᵐ Matrix m n α",
+  "name":
+  "Matrix.ofMeasurableEquiv",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  63,
+  "kind":
+  "def",
+  "doc":
+  "`Matrix.of` as a measurable equivalence between the array type and `Matrix m n α`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -494,6 +696,26 @@
   "theorem",
   "doc":
   "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace"],
+  "sorry":
+  false,
+  "signature":
+  "Measurable.matrix_mul.{u_1, u_2, u_3, u_4, u_5} {β : Type u_1} {l : Type u_2} {m : Type u_3} {n : Type u_4}\n  {α : Type u_5} [MeasurableSpace α] [MeasurableSpace β] [Fintype m] [NonUnitalNonAssocSemiring α] [MeasurableMul₂ α]\n  [MeasurableAdd₂ α] {f : β → Matrix l m α} {g : β → Matrix m n α} (hf : Measurable f) (hg : Measurable g) :\n  Measurable fun x => f x * g x",
+  "name":
+  "Measurable.matrix_mul",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.Matrix",
+  "line":
+  91,
+  "kind":
+  "theorem",
+  "doc":
+  "The product of measurable matrix-valued maps is measurable. ",
   "atlas_partial":
   [],
   "atlas":
@@ -3354,8 +3576,8 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.HasLocalMatrixSecondMoment",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.HasLocalMatrixSecondMoment"],
   "sorry":
   false,
   "signature":
@@ -3375,8 +3597,8 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.HasLocalMatrixSecondMoment",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.HasLocalMatrixSecondMoment"],
   "sorry":
   false,
   "signature":
@@ -54801,7 +55023,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  45,
+  36,
   "kind":
   "def",
   "doc":
@@ -59775,7 +59997,7 @@
   "module":
   "NLAlib.Probability.Concentration.Basic.MatrixStatistics",
   "line":
-  64,
+  44,
   "kind":
   "def",
   "doc":
@@ -59785,10 +60007,10 @@
   "atlas":
   ["matrix-bernstein"]},
  {"uses":
-  ["NLAlib.lambdaMax",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.lambdaMax",
    "NLAlib.matrixExp",
-   "NLAlib.matrixLog",
-   "NLAlib.matrixMeasurableSpace"],
+   "NLAlib.matrixLog"],
   "sorry":
   false,
   "signature":
@@ -63028,12 +63250,12 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.chernoffCgfCoefficient",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.chernoffCgfCoefficient",
    "NLAlib.lambdaMax",
    "NLAlib.lambdaMin",
    "NLAlib.matrixExp",
-   "NLAlib.matrixLog",
-   "NLAlib.matrixMeasurableSpace"],
+   "NLAlib.matrixLog"],
   "sorry":
   false,
   "signature":
@@ -66900,9 +67122,9 @@
   "atlas":
   ["matrix-freedman"]},
  {"uses":
-  ["NLAlib.matrixExp",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.matrixExp",
    "NLAlib.matrixLog",
-   "NLAlib.matrixMeasurableSpace",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -66923,7 +67145,7 @@
   "atlas":
   ["matrix-freedman"]},
  {"uses":
-  ["NLAlib.matrixMeasurableSpace",
+  ["Matrix.instMeasurableSpace",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -67868,7 +68090,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  102,
+  93,
   "kind":
   "theorem",
   "doc":
@@ -68735,7 +68957,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  94,
+  85,
   "kind":
   "def",
   "doc":
@@ -69107,7 +69329,7 @@
   "module":
   "NLAlib.Probability.Concentration.Basic.MatrixStatistics",
   "line":
-  56,
+  36,
   "kind":
   "def",
   "doc":
@@ -77955,7 +78177,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  165,
+  156,
   "kind":
   "theorem",
   "doc":
@@ -86919,9 +87141,9 @@
   "atlas":
   ["haar-orthogonal"]},
  {"uses":
-  ["NLAlib.canonicalQRFrame",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.canonicalQRFrame",
    "NLAlib.gaussianMatrix",
-   "NLAlib.orthogonalGroupMeasurableSpace",
    "NLAlib.orthogonalHaar",
    "NLAlib.stiefelSquareToOrthogonal"],
   "sorry":
@@ -89629,10 +89851,10 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.HasOrthonormalCols",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.HasOrthonormalCols",
    "NLAlib.Stiefel",
    "NLAlib.haarFrameLaw",
-   "NLAlib.orthogonalGroupMeasurableSpace",
    "NLAlib.orthogonalHaar",
    "NLAlib.stiefelSquareToOrthogonal"],
   "sorry":
@@ -91818,7 +92040,7 @@
   "module":
   "NLAlib.Probability.Concentration.Basic.MatrixStatistics",
   "line":
-  50,
+  30,
   "kind":
   "def",
   "doc":
@@ -91848,9 +92070,9 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.dilation",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.dilation",
    "NLAlib.hermitianSecondMoment",
-   "NLAlib.matrixMeasurableSpace",
    "NLAlib.rectSecondMoment"],
   "sorry":
   false,
@@ -91871,10 +92093,10 @@
   "atlas":
   ["hermitian-dilation"]},
  {"uses":
-  ["NLAlib.bernsteinTail",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.bernsteinTail",
    "NLAlib.hermitianSecondMoment",
-   "NLAlib.lambdaMax",
-   "NLAlib.matrixMeasurableSpace"],
+   "NLAlib.lambdaMax"],
   "sorry":
   false,
   "signature":
@@ -95987,9 +96209,9 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.lambdaMax",
-   "NLAlib.lambdaMin",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.lambdaMax",
+   "NLAlib.lambdaMin"],
   "sorry":
   false,
   "signature":
@@ -96072,8 +96294,8 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.matrixExp",
-   "NLAlib.matrixMeasurableSpace",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.matrixExp",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -96114,8 +96336,8 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.matrixExp",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.matrixExp"],
   "sorry":
   false,
   "signature":
@@ -96135,8 +96357,8 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.HasLocalMatrixSecondMoment",
-   "NLAlib.matrixMeasurableSpace",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.HasLocalMatrixSecondMoment",
    "NLAlib.matrixVarianceBudgetSet"],
   "sorry":
   false,
@@ -99068,10 +99290,10 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.lambdaMax",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.lambdaMax",
    "NLAlib.lambdaMin",
    "NLAlib.matrixExp",
-   "NLAlib.matrixMeasurableSpace",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -101156,7 +101378,7 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace"],
   "sorry":
   false,
   "signature":
@@ -101176,9 +101398,9 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.matrixExp",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.matrixExp",
    "NLAlib.matrixLog",
-   "NLAlib.matrixMeasurableSpace",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -101199,9 +101421,9 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.matrixExp",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.matrixExp",
    "NLAlib.matrixLog",
-   "NLAlib.matrixMeasurableSpace",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -101595,9 +101817,9 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.intrinsicDimension",
-   "NLAlib.lambdaMax",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.intrinsicDimension",
+   "NLAlib.lambdaMax"],
   "sorry":
   false,
   "signature":
@@ -101617,8 +101839,8 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.intrinsicDimension",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.intrinsicDimension"],
   "sorry":
   false,
   "signature":
@@ -101638,8 +101860,8 @@
   "atlas":
   ["intrinsic-dimension"]},
  {"uses":
-  ["NLAlib.intrinsicDimension",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.intrinsicDimension"],
   "sorry":
   false,
   "signature":
@@ -101659,9 +101881,9 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.intrinsicDimension",
-   "NLAlib.lambdaMax",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.intrinsicDimension",
+   "NLAlib.lambdaMax"],
   "sorry":
   false,
   "signature":
@@ -103109,7 +103331,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  49,
+  40,
   "kind":
   "theorem",
   "doc":
@@ -111014,11 +111236,11 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.cumulantSum",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.cumulantSum",
    "NLAlib.lambdaMax",
    "NLAlib.lambdaMin",
    "NLAlib.matrixExp",
-   "NLAlib.matrixMeasurableSpace",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -111038,26 +111260,6 @@
   [],
   "atlas":
   ["matrix-laplace"]},
- {"uses":
-  ["NLAlib.matrixMeasurableSpace"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.matrixBorelSpace.{u_1, u_2} {m : Type u_1} {n : Type u_2} : BorelSpace (Matrix m n ℂ)",
-  "name":
-  "NLAlib.matrixBorelSpace",
-  "module":
-  "NLAlib.Probability.Concentration.Basic.MatrixStatistics",
-  "line":
-  38,
-  "kind":
-  "instance",
-  "doc":
-  "Complex matrices with `matrixMeasurableSpace` form a Borel space. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
  {"uses":
   [],
   "sorry":
@@ -111544,26 +111746,6 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.matrixMeasurableSpace.{u_1, u_2} {m : Type u_1} {n : Type u_2} : MeasurableSpace (Matrix m n ℂ)",
-  "name":
-  "NLAlib.matrixMeasurableSpace",
-  "module":
-  "NLAlib.Probability.Concentration.Basic.MatrixStatistics",
-  "line":
-  20,
-  "kind":
-  "instance",
-  "doc":
-  "The Borel σ-algebra on complex matrices (for the norm topology), used to state measurability of\nrandom matrices.\n\nThis global instance is a deliberate exception to STANDARDS §3, which states measurability of\nmatrix-valued maps entrywise because Mathlib has no `MeasurableSpace (Matrix m n ℂ)`. The matrix\nconcentration development (ported from the Tropp 2015 Prove2me missions) treats random matrices as\n`Measurable` maps into a normed space and integrates them as Bochner integrals in the operator\nnorm; every statement in `NLAlib/Concentration/Matrix/` that mentions `Measurable`, `iIndepFun` or\n`Integrable` for a matrix-valued map elaborates through this instance, so removing it would mean\nrestating the whole development. Mathlib declares no competing instance (`Matrix` is a\nnon-reducible `def`, so the product σ-algebra on `m → n → ℂ` is not found), hence no diamond. It\ncould be made `scoped`: checked 2026-10-09, wrapping it in `namespace MatrixBorel` as a `scoped\ninstance` and adding `open scoped NLAlib.MatrixBorel` to the 35 modules under\n`Concentration/Matrix/` that import this one (directly or not) builds cleanly, at the price of\nevery downstream user opening the scope to state the hypotheses of the public theorems. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  [],
-  "sorry":
-  false,
-  "signature":
   "NLAlib.matrixOf_curry_update_eq_add_single.{u_1, u_2, u_3} {ι : Type u_1} {κ : Type u_2} {R : Type u_3} [DecidableEq ι]\n  [DecidableEq κ] [CommRing R] (x : ι × κ → R) (i : ι) (j : κ) (t : R) :\n  (Matrix.of fun a b => Function.update x (i, j) t (a, b)) =\n    (Matrix.of fun a b => x (a, b)) + (t - x (i, j)) • Matrix.single i j 1",
   "name":
   "NLAlib.matrixOf_curry_update_eq_add_single",
@@ -111881,8 +112063,8 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.bernsteinTail",
-   "NLAlib.matrixMeasurableSpace",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.bernsteinTail",
    "NLAlib.rectSecondMoment"],
   "sorry":
   false,
@@ -111903,11 +112085,11 @@
   "atlas":
   ["matrix-bernstein"]},
  {"uses":
-  ["NLAlib.chernoffLowerTail",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.chernoffLowerTail",
    "NLAlib.chernoffUpperTail",
    "NLAlib.lambdaMax",
-   "NLAlib.lambdaMin",
-   "NLAlib.matrixMeasurableSpace"],
+   "NLAlib.lambdaMin"],
   "sorry":
   false,
   "signature":
@@ -111927,9 +112109,9 @@
   "atlas":
   ["matrix-chernoff"]},
  {"uses":
-  ["NLAlib.lambdaMax",
-   "NLAlib.lambdaMin",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.lambdaMax",
+   "NLAlib.lambdaMin"],
   "sorry":
   false,
   "signature":
@@ -111949,9 +112131,9 @@
   "atlas":
   ["matrix-chernoff-sampling"]},
  {"uses":
-  ["NLAlib.lambdaMax",
-   "NLAlib.lambdaMin",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.lambdaMax",
+   "NLAlib.lambdaMin"],
   "sorry":
   false,
   "signature":
@@ -111971,9 +112153,9 @@
   "atlas":
   ["matrix-chernoff-sampling"]},
  {"uses":
-  ["NLAlib.lambdaMax",
-   "NLAlib.lambdaMin",
-   "NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.lambdaMax",
+   "NLAlib.lambdaMin"],
   "sorry":
   false,
   "signature":
@@ -112059,10 +112241,10 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.HasLocalMatrixSecondMoment",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.HasLocalMatrixSecondMoment",
    "NLAlib.lambdaMax",
-   "NLAlib.matrixIncrementSum",
-   "NLAlib.matrixMeasurableSpace"],
+   "NLAlib.matrixIncrementSum"],
   "sorry":
   false,
   "signature":
@@ -112758,7 +112940,7 @@
   "module":
   "NLAlib.Matrix.Structured.Measurable",
   "line":
-  47,
+  49,
   "kind":
   "theorem",
   "doc":
@@ -112959,7 +113141,7 @@
   "module":
   "NLAlib.Matrix.Structured.Measurable",
   "line":
-  38,
+  40,
   "kind":
   "theorem",
   "doc":
@@ -113220,7 +113402,7 @@
   "module":
   "NLAlib.Matrix.Structured.Measurable",
   "line":
-  178,
+  173,
   "kind":
   "theorem",
   "doc":
@@ -114221,10 +114403,10 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.lambdaMax",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.lambdaMax",
    "NLAlib.lambdaMin",
    "NLAlib.matrixExp",
-   "NLAlib.matrixMeasurableSpace",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -114245,8 +114427,8 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.lambdaMax",
-   "NLAlib.matrixMeasurableSpace",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.lambdaMax",
    "NLAlib.traceFunction"],
   "sorry":
   false,
@@ -119222,7 +119404,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  67,
+  58,
   "kind":
   "theorem",
   "doc":
@@ -122053,26 +122235,6 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.orthogonalGroupMeasurableSpace"],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.orthogonalGroupBorelSpace (n : ℕ) : BorelSpace ↥(Matrix.orthogonalGroup (Fin n) ℝ)",
-  "name":
-  "NLAlib.orthogonalGroupBorelSpace",
-  "module":
-  "NLAlib.Matrix.Subspaces.Stiefel",
-  "line":
-  25,
-  "kind":
-  "instance",
-  "doc":
-  "The orthogonal group carries its Borel sigma algebra.\nSource: operator re-derivation `sh:haar`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
   [],
   "sorry":
   false,
@@ -122083,7 +122245,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  30,
+  21,
   "kind":
   "instance",
   "doc":
@@ -122093,27 +122255,7 @@
   "atlas":
   []},
  {"uses":
-  [],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.orthogonalGroupMeasurableSpace (n : ℕ) : MeasurableSpace ↥(Matrix.orthogonalGroup (Fin n) ℝ)",
-  "name":
-  "NLAlib.orthogonalGroupMeasurableSpace",
-  "module":
-  "NLAlib.Matrix.Subspaces.Stiefel",
-  "line":
-  20,
-  "kind":
-  "instance",
-  "doc":
-  "The Borel structure of the actual orthogonal group, inherited from its\nfinite-dimensional matrix topology. Source: operator re-derivation `sh:haar`. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
-  ["NLAlib.orthogonalGroupMeasurableSpace"],
+  ["Matrix.instMeasurableSpace"],
   "sorry":
   false,
   "signature":
@@ -122133,7 +122275,7 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.orthogonalGroupMeasurableSpace",
+  ["Matrix.instMeasurableSpace",
    "NLAlib.orthogonalHaar"],
   "sorry":
   false,
@@ -122154,7 +122296,7 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.orthogonalGroupMeasurableSpace",
+  ["Matrix.instMeasurableSpace",
    "NLAlib.orthogonalHaar"],
   "sorry":
   false,
@@ -122175,7 +122317,7 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.orthogonalGroupMeasurableSpace",
+  ["Matrix.instMeasurableSpace",
    "NLAlib.orthogonalHaar"],
   "sorry":
   false,
@@ -122196,10 +122338,10 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.HasOrthonormalCols",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.HasOrthonormalCols",
    "NLAlib.Stiefel",
    "NLAlib.haarFrameLaw",
-   "NLAlib.orthogonalGroupMeasurableSpace",
    "NLAlib.orthogonalHaar",
    "NLAlib.stiefelMulAction"],
   "sorry":
@@ -130358,7 +130500,7 @@
   "module":
   "NLAlib.Probability.Concentration.Basic.MatrixStatistics",
   "line":
-  41,
+  21,
   "kind":
   "def",
   "doc":
@@ -141548,7 +141690,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  119,
+  110,
   "kind":
   "def",
   "doc":
@@ -141569,7 +141711,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  87,
+  78,
   "kind":
   "instance",
   "doc":
@@ -141591,7 +141733,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  146,
+  137,
   "kind":
   "instance",
   "doc":
@@ -141611,7 +141753,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  131,
+  122,
   "kind":
   "instance",
   "doc":
@@ -147667,9 +147809,9 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.cumulantSum",
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.cumulantSum",
    "NLAlib.matrixExp",
-   "NLAlib.matrixMeasurableSpace",
    "NLAlib.traceExp"],
   "sorry":
   false,
@@ -149253,7 +149395,7 @@
   "module":
   "NLAlib.Matrix.Subspaces.Stiefel",
   "line":
-  112,
+  103,
   "kind":
   "theorem",
   "doc":
@@ -150028,7 +150170,7 @@
   "atlas":
   []},
  {"uses":
-  ["NLAlib.matrixMeasurableSpace"],
+  ["Matrix.instMeasurableSpace"],
   "sorry":
   false,
   "signature":

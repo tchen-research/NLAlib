@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Subspaces.Projections
 import Mathlib.Topology.Algebra.Star.Unitary
 import Mathlib.MeasureTheory.Measure.Haar.Basic
+import NLAlib.ForMathlib.MeasureTheory.Matrix
 
 /-!
 # The compact orthogonal group and Stiefel frame space
@@ -16,16 +17,6 @@ set_option autoImplicit false
 open MeasureTheory Metric
 open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
-
-/-- The Borel structure of the actual orthogonal group, inherited from its
-finite-dimensional matrix topology. Source: operator re-derivation `sh:haar`. -/
-instance orthogonalGroupMeasurableSpace (n : ℕ) :
-    MeasurableSpace (Matrix.orthogonalGroup (Fin n) ℝ) := borel _
-
-/-- The orthogonal group carries its Borel sigma algebra.
-Source: operator re-derivation `sh:haar`. -/
-instance orthogonalGroupBorelSpace (n : ℕ) :
-    BorelSpace (Matrix.orthogonalGroup (Fin n) ℝ) := ⟨rfl⟩
 
 /-- The real orthogonal group is compact, including dimension zero.
 Source: closed unitary equations and the bounded operator norm;

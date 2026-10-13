@@ -1,4 +1,4 @@
-import NLAlib.Matrix.OperatorTheory.VariationalTrace
+import NLAlib.Matrix.Functions.VariationalTrace
 import NLAlib.Matrix.Functions.ExpLogPosDef
 import Mathlib.Tactic.Ring
 

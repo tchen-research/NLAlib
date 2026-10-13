@@ -26,6 +26,7 @@ import NLAlib.Matrix.Factorizations.QRCompletion
 import NLAlib.Matrix.Factorizations.QRConsequences
 import NLAlib.Matrix.Factorizations.QRDecomposition
 import NLAlib.Matrix.Factorizations.QRExistence
+import NLAlib.Matrix.Factorizations.QRSpectral
 import NLAlib.Matrix.Factorizations.RankRevealingLeading
 import NLAlib.Matrix.Factorizations.RankRevealingTrailing
 import NLAlib.Matrix.Factorizations.ScaledOrthogonal

@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.LogDetConcavity
+import NLAlib.Matrix.Functions.LogDetConcavity
 import NLAlib.ForMathlib.Analysis.InverseConvexity
 /-!
 # Strict convexity of inverse trace

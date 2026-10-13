@@ -7,6 +7,39 @@ open MeasureTheory ProbabilityTheory NLAlib
 
 noncomputable section
 
+open scoped Matrix
+
+-- Full QR is a unitary factorization over either scalar field, including rectangular inputs.
+example {𝕜 : Type*} [RCLike 𝕜] {m n : ℕ}
+    {A R : Matrix (Fin m) (Fin n) 𝕜} {Q : Matrix (Fin m) (Fin m) 𝕜}
+    (h : IsFullQR A Q R) : Qᴴ * A = R :=
+  h.conjTranspose_mul_eq
+
+example {m n : ℕ} {A R : Matrix (Fin m) (Fin n) ℂ}
+    {Q : Matrix (Fin m) (Fin m) ℂ} (h : IsFullQR A Q R) (hnm : n ≤ m) :
+    IsQR A (Q.submatrix id (Fin.castLE hnm)) (R.submatrix (Fin.castLE hnm) id) :=
+  h.isQR_castLE hnm
+
+-- A genuinely complex phase checks that QR uses the adjoint rather than the transpose.
+example : IsFullQR (!![Complex.I; 0] : Matrix (Fin 2) (Fin 1) ℂ)
+    (!![Complex.I, 0; 0, 1]) (!![1; 0]) := by
+  refine ⟨?_, ?_, ?_⟩
+  · ext i j
+    fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+  · change (!![Complex.I, 0; 0, 1] : Matrix (Fin 2) (Fin 2) ℂ)ᴴ *
+      !![Complex.I, 0; 0, 1] = 1
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [Matrix.mul_apply, Matrix.conjTranspose_apply, Fin.sum_univ_two]
+  · intro i j hij
+    fin_cases i <;> fin_cases j <;> simp_all
+
+-- Thin QR preserves singular values on arbitrary finite row/column labels over ℂ.
+example {m n : Type*} [Fintype m] [Fintype n] [LinearOrder n]
+    {A Q : Matrix m n ℂ} {R : Matrix n n ℂ} (h : IsQR A Q R) :
+    singularValues R = singularValues A :=
+  singularValues_eq_of_qr h.orth h.eq.symm
+
 -- Finite index types need not be `Fin`; complex matrices use the same norm API.
 example {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
     [DecidableEq n] [DecidableEq p] (A : Matrix m n ℂ) (B : Matrix n p ℂ) :

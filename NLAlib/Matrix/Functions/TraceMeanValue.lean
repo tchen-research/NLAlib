@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.TraceYoung
+import NLAlib.Matrix.Functions.TraceYoung
 /-!
 # Polynomial trace mean-value inequality
 

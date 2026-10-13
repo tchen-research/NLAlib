@@ -14,9 +14,10 @@ Progress map: **https://research.chen.pw/NLAlib/** (built from `atlas/atlas.json
 NLAlib/
   ForMathlib/     general facts headed upstream                                        (layer −1)
   Matrix/         norms, projections, pseudoinverse, SVD, spectral, measurability      (layer 0)
+    Functions/    functional calculus, exp/log, operator convexity, entropy, trace inequalities
   Polynomial/     Chebyshev growth and minimax, Markov, interpolation                  (layer 0)
-  Probability/    Gaussian/ (scalar and vector facts), Concentration/ (Scalar, Matrix = Tropp
-                  2015 Ch. 3–8, QuadraticForms, Entropy, Martingales), SubGaussian/, Rademacher/,
+  Probability/    Gaussian/ (scalar and vector facts), Concentration/ (Scalar, Matrix,
+                  QuadraticForms, Entropy, Martingales), SubGaussian/, Rademacher/,
                   ChiSquare/, Sampling/                                                (layer 1)
   RandomMatrix/   Gaussian/ (Basic, Invariance, Moments, Spectral, Wishart, InverseMoments),
                   SubGaussian/, Haar/                                                     (layer 2)
@@ -30,6 +31,12 @@ scripts/                    trust audits, declaration lint, import/layer/name/at
 
 A module may import only its own layer and lower; `scripts/check_layers.py` enforces it.
 Definitions and foundational theorems live together in each topic's API.
+
+`import NLAlib.Matrix.Functions` brings in deterministic matrix-function theory, including
+Golden–Thompson and Lieb concavity. Probability-specific integral, MGF and tail-bound results
+live under `Probability/Concentration` and import this theory. See the
+[module migration map](docs/renames/2026-10-13-matrix-functions-modules.json) for former
+`Matrix/OperatorTheory` and trace-function module paths.
 
 ## Using the library
 
@@ -71,6 +78,11 @@ arbitrary probability space. Public probability bounds should be applied through
 law/integral statements; weighted sums and recurrences provide computational identities. Algorithm
 specifications and compression theorems are distinct from correctness or cost guarantees for a
 particular recurrence.
+
+The broader public API review is still in progress. Some foundational interfaces remain
+real-only despite generic underlying machinery, and some public statements still use older
+norm conventions. See the [public contract review](docs/review/PUBLIC_CONTRACT_REVIEW_2026-10-13.md)
+for concrete gaps and the repair order. A successful proof audit does not certify API completeness.
 
 ## Building
 

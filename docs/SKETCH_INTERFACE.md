@@ -30,7 +30,7 @@ per column. Below, `G = (S U)ᵀ (S U) − I_d`.
    - `Sparse/MomentMethod/GramTail.lean:38` (`FiniteLaw.prob_le_norm_le_expect_trace_pow_div`) and
      its instance at `:82`;
    - exact-s copies at `Sparse/MomentMethod/UniformSparseTail.lean:33,51`;
-   - deterministic core at `NLAlib/Matrix/Spectral/TracePowerBounds.lean:44`
+   - deterministic core at `NLAlib/Matrix/Functions/TracePowerBounds.lean:44`
      (`specNorm_pow_two_mul_le_trace_pow`).
 2. **Comparison of the sparse sketch with an iid model.** The iid model has entries
    `η ∈ {0, ±√b}`. The statement is `E tr G_sparse^{2q} ≤ c^{4q} E tr G_iid^{2q}` with `c ≤ c*`.
@@ -212,7 +212,7 @@ The proof has three steps:
 1. `{¬ IsSubspaceEmbedding} ⊆ {ε < specNorm G}`, the contrapositive of
    `isSubspaceEmbedding_of_specNorm_transpose_mul_self_sub_one_le`
    (`Properties/SubspaceEmbedding/SubspaceEmbedding.lean:95`).
-2. `specNorm G ^ (2q) ≤ tr G^{2q}` (`NLAlib/Matrix/Spectral/TracePowerBounds.lean:44`), with
+2. `specNorm G ^ (2q) ≤ tr G^{2q}` (`NLAlib/Matrix/Functions/TracePowerBounds.lean:44`), with
    nonnegativity from `:34`.
 3. Mathlib's `mul_meas_ge_le_integral_of_nonneg`.
 

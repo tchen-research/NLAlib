@@ -1,7 +1,7 @@
 import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.BernsteinMgfCgf
 import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
-import NLAlib.Matrix.Inequalities.TraceExpMonotone
+import NLAlib.Matrix.Functions.TraceExpMonotone
 import NLAlib.Matrix.Functions.TraceExpBounds
 
 /-!

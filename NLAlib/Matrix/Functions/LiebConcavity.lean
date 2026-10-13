@@ -1,5 +1,5 @@
-import NLAlib.Matrix.OperatorTheory.EntropyJointConvex
-import NLAlib.Matrix.OperatorTheory.VariationalTraceExp
+import NLAlib.Matrix.Functions.EntropyJointConvex
+import NLAlib.Matrix.Functions.VariationalTraceExp
 import NLAlib.Matrix.Functions.UnitaryCalculus
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring

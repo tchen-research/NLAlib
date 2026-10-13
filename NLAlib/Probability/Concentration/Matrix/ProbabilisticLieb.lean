@@ -1,5 +1,5 @@
-import NLAlib.Matrix.OperatorTheory.LiebTraceFunction
-import NLAlib.Probability.Concentration.Matrix.LiebJensen
+import NLAlib.Matrix.Functions.LiebTraceFunction
+import NLAlib.ForMathlib.Analysis.Convex.Integral
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
 import NLAlib.Probability.Concentration.Matrix.LiebRegularityShiftIntegrable
 

@@ -12,7 +12,7 @@
   "NLAlib.Matrix.Factorizations.Givens",
   "NLAlib.Matrix.Factorizations.GramSchmidt",
   "NLAlib.Matrix.Factorizations.Hessenberg",
-  "NLAlib.Matrix.Spectral.Inertia"
+  "NLAlib.Matrix.Spectral.InertiaSturm"
  ],
  "default_modules": [
   "NLAlib.Estimation",
@@ -246,35 +246,77 @@
   "NLAlib.Matrix.Factorizations.Procrustes",
   "NLAlib.Matrix.Factorizations.ProcrustesRotations",
   "NLAlib.Matrix.Factorizations.QR",
+  "NLAlib.Matrix.Factorizations.QRSpectral",
   "NLAlib.Matrix.Factorizations.RankRevealingLeading",
   "NLAlib.Matrix.Factorizations.RankRevealingTrailing",
   "NLAlib.Matrix.Factorizations.ScaledOrthogonal",
   "NLAlib.Matrix.Factorizations.Triangular",
   "NLAlib.Matrix.Functions",
+  "NLAlib.Matrix.Functions.Basic",
   "NLAlib.Matrix.Functions.CFCQuadratic",
   "NLAlib.Matrix.Functions.CFCTrace",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "NLAlib.Matrix.Functions.DiagonalFilter",
   "NLAlib.Matrix.Functions.DilationIdentities",
+  "NLAlib.Matrix.Functions.EntropyJointConvex",
+  "NLAlib.Matrix.Functions.EntropyNonnegative",
   "NLAlib.Matrix.Functions.ExpLog",
   "NLAlib.Matrix.Functions.ExpLogPosDef",
   "NLAlib.Matrix.Functions.ExtremeEigenvalues",
   "NLAlib.Matrix.Functions.FunctionalCalculusEigenvalues",
+  "NLAlib.Matrix.Functions.GeneralizedKlein",
+  "NLAlib.Matrix.Functions.GoldenThompson",
   "NLAlib.Matrix.Functions.HermitianCalculus",
   "NLAlib.Matrix.Functions.IntrinsicDimension",
   "NLAlib.Matrix.Functions.InverseCalculus",
   "NLAlib.Matrix.Functions.JensenBlockCalculus",
+  "NLAlib.Matrix.Functions.JensenIsometricCompression",
+  "NLAlib.Matrix.Functions.JensenReflectionAlgebra",
+  "NLAlib.Matrix.Functions.JointTensor",
+  "NLAlib.Matrix.Functions.JointTensorRepresentation",
+  "NLAlib.Matrix.Functions.LiebConcavity",
+  "NLAlib.Matrix.Functions.LiebTraceFunction",
+  "NLAlib.Matrix.Functions.LoewnerHeinz",
+  "NLAlib.Matrix.Functions.LogDetConcavity",
+  "NLAlib.Matrix.Functions.LogOperatorConcave",
+  "NLAlib.Matrix.Functions.OperatorJensen",
+  "NLAlib.Matrix.Functions.PerspectiveConvex",
   "NLAlib.Matrix.Functions.PerspectiveSqrtNormalization",
   "NLAlib.Matrix.Functions.PolynomialCalculus",
   "NLAlib.Matrix.Functions.PolynomialIntertwining",
   "NLAlib.Matrix.Functions.PolynomialSeries",
   "NLAlib.Matrix.Functions.TraceExpBounds",
+  "NLAlib.Matrix.Functions.TraceExpConvex",
+  "NLAlib.Matrix.Functions.TraceExpMonotone",
+  "NLAlib.Matrix.Functions.TraceInverseConvexity",
+  "NLAlib.Matrix.Functions.TraceMeanValue",
+  "NLAlib.Matrix.Functions.TracePowerBounds",
   "NLAlib.Matrix.Functions.TracePowerConvexity",
+  "NLAlib.Matrix.Functions.TracePowers",
+  "NLAlib.Matrix.Functions.TraceYoung",
   "NLAlib.Matrix.Functions.UnitaryCalculus",
+  "NLAlib.Matrix.Functions.VariationalTrace",
+  "NLAlib.Matrix.Functions.VariationalTraceExp",
+  "NLAlib.Matrix.Inequalities.BlockContraction",
+  "NLAlib.Matrix.Inequalities.BlockOrderConsequences",
+  "NLAlib.Matrix.Inequalities.BlockQuadratic",
+  "NLAlib.Matrix.Inequalities.BlockStrictContraction",
   "NLAlib.Matrix.Inequalities.CompressionDeterminant",
+  "NLAlib.Matrix.Inequalities.DeterminantRoot",
+  "NLAlib.Matrix.Inequalities.FiniteExponentialGram",
+  "NLAlib.Matrix.Inequalities.FischerDeterminant",
+  "NLAlib.Matrix.Inequalities.HadamardDeterminantLower",
+  "NLAlib.Matrix.Inequalities.HadamardDominanceCounterexample",
+  "NLAlib.Matrix.Inequalities.HadamardExponential",
+  "NLAlib.Matrix.Inequalities.HadamardInverse",
+  "NLAlib.Matrix.Inequalities.HadamardMinimumSpectrum",
+  "NLAlib.Matrix.Inequalities.HadamardOrder",
+  "NLAlib.Matrix.Inequalities.HadamardPowerOrder",
   "NLAlib.Matrix.Inequalities.HadamardPowerSeries",
   "NLAlib.Matrix.Inequalities.HermitianPart",
   "NLAlib.Matrix.Inequalities.HermitianPartConverse",
   "NLAlib.Matrix.Inequalities.HornPowerSums",
+  "NLAlib.Matrix.Inequalities.Kantorovich",
   "NLAlib.Matrix.Inequalities.KyFan",
   "NLAlib.Matrix.Inequalities.KyFanAttainment",
   "NLAlib.Matrix.Inequalities.KyFanNorms",
@@ -289,24 +331,29 @@
   "NLAlib.Matrix.Inequalities.MajorizationSupport",
   "NLAlib.Matrix.Inequalities.MajorizationWeakSupport",
   "NLAlib.Matrix.Inequalities.MajorizationWeights",
+  "NLAlib.Matrix.Inequalities.MinkowskiDeterminant",
+  "NLAlib.Matrix.Inequalities.OverlappingBlockDeterminant",
   "NLAlib.Matrix.Inequalities.PlaneRotationCoordinates",
   "NLAlib.Matrix.Inequalities.PlaneRotationDerivative",
   "NLAlib.Matrix.Inequalities.PlaneRotationSpectrum",
+  "NLAlib.Matrix.Inequalities.PositiveSpectralEndpoints",
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
+  "NLAlib.Matrix.Inequalities.PrincipalOverlapDeterminant",
+  "NLAlib.Matrix.Inequalities.QuadraticConditionBounds",
   "NLAlib.Matrix.Inequalities.RealPartMajorization",
+  "NLAlib.Matrix.Inequalities.RelativeSpectrum",
   "NLAlib.Matrix.Inequalities.Schur",
   "NLAlib.Matrix.Inequalities.SchurHorn",
   "NLAlib.Matrix.Inequalities.SchurHornDescent",
   "NLAlib.Matrix.Inequalities.SchurHornProjection",
   "NLAlib.Matrix.Inequalities.SchurHornResidual",
   "NLAlib.Matrix.Inequalities.SchurHornWeights",
+  "NLAlib.Matrix.Inequalities.SeparatingPSDVector",
   "NLAlib.Matrix.Inequalities.SingularValueMajorization",
-  "NLAlib.Matrix.Inequalities.TraceExpMonotone",
-  "NLAlib.Matrix.Inequalities.TraceMeanValue",
-  "NLAlib.Matrix.Inequalities.TracePowers",
+  "NLAlib.Matrix.Inequalities.StrictRelativeSpectrum",
   "NLAlib.Matrix.Inequalities.TraceTail",
-  "NLAlib.Matrix.Inequalities.TraceYoung",
   "NLAlib.Matrix.Inequalities.VonNeumann",
+  "NLAlib.Matrix.Inequalities.Wielandt",
   "NLAlib.Matrix.Measurability",
   "NLAlib.Matrix.Measurability.Measurable",
   "NLAlib.Matrix.Measurability.SpectralMeasurable",
@@ -342,26 +389,6 @@
   "NLAlib.Matrix.Norms.SchattenTrace",
   "NLAlib.Matrix.Norms.SpectralNormBounds",
   "NLAlib.Matrix.Norms.SymmetricGauge",
-  "NLAlib.Matrix.OperatorTheory",
-  "NLAlib.Matrix.OperatorTheory.Basic",
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
-  "NLAlib.Matrix.OperatorTheory.EntropyJointConvex",
-  "NLAlib.Matrix.OperatorTheory.EntropyNonnegative",
-  "NLAlib.Matrix.OperatorTheory.GeneralizedKlein",
-  "NLAlib.Matrix.OperatorTheory.GoldenThompson",
-  "NLAlib.Matrix.OperatorTheory.JensenIsometricCompression",
-  "NLAlib.Matrix.OperatorTheory.JensenReflectionAlgebra",
-  "NLAlib.Matrix.OperatorTheory.JointTensor",
-  "NLAlib.Matrix.OperatorTheory.JointTensorRepresentation",
-  "NLAlib.Matrix.OperatorTheory.LiebConcavity",
-  "NLAlib.Matrix.OperatorTheory.LiebTraceFunction",
-  "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
-  "NLAlib.Matrix.OperatorTheory.LogOperatorConcave",
-  "NLAlib.Matrix.OperatorTheory.OperatorJensen",
-  "NLAlib.Matrix.OperatorTheory.PerspectiveConvex",
-  "NLAlib.Matrix.OperatorTheory.TraceExpConvex",
-  "NLAlib.Matrix.OperatorTheory.VariationalTrace",
-  "NLAlib.Matrix.OperatorTheory.VariationalTraceExp",
   "NLAlib.Matrix.Perturbation",
   "NLAlib.Matrix.Perturbation.BauerFike",
   "NLAlib.Matrix.Perturbation.BauerFikeAbsolute",
@@ -428,6 +455,8 @@
   "NLAlib.Matrix.Spectral.Complexification",
   "NLAlib.Matrix.Spectral.Core",
   "NLAlib.Matrix.Spectral.CourantFischer",
+  "NLAlib.Matrix.Spectral.DefiniteCongruence",
+  "NLAlib.Matrix.Spectral.DefinitePairCalculus",
   "NLAlib.Matrix.Spectral.DiagonalDominanceCorollaries",
   "NLAlib.Matrix.Spectral.DiagonalDominanceStability",
   "NLAlib.Matrix.Spectral.Diagonalizable",
@@ -450,7 +479,9 @@
   "NLAlib.Matrix.Spectral.GershgorinBounds",
   "NLAlib.Matrix.Spectral.GershgorinCounting",
   "NLAlib.Matrix.Spectral.GramSingularValues",
+  "NLAlib.Matrix.Spectral.HaynsworthInertia",
   "NLAlib.Matrix.Spectral.IndefiniteCongruence",
+  "NLAlib.Matrix.Spectral.Inertia",
   "NLAlib.Matrix.Spectral.InterlacingConverse",
   "NLAlib.Matrix.Spectral.InterlacingDeterminants",
   "NLAlib.Matrix.Spectral.InterlacingInduction",
@@ -530,10 +561,10 @@
   "NLAlib.Matrix.Spectral.SvdBlocks",
   "NLAlib.Matrix.Spectral.SvdPowers",
   "NLAlib.Matrix.Spectral.SylvesterBlocks",
+  "NLAlib.Matrix.Spectral.SylvesterCriterion",
   "NLAlib.Matrix.Spectral.SylvesterQualitative",
   "NLAlib.Matrix.Spectral.SylvesterSimilarity",
   "NLAlib.Matrix.Spectral.TraceEigenvalues",
-  "NLAlib.Matrix.Spectral.TracePowerBounds",
   "NLAlib.Matrix.Spectral.Weyl",
   "NLAlib.Matrix.Structured",
   "NLAlib.Matrix.Structured.CauchyDeterminantFinite",
@@ -684,7 +715,6 @@
   "NLAlib.Probability.Concentration.Matrix.LaplaceExpectations",
   "NLAlib.Probability.Concentration.Matrix.LaplaceTails",
   "NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef",
-  "NLAlib.Probability.Concentration.Matrix.LiebJensen",
   "NLAlib.Probability.Concentration.Matrix.LiebRegularityShiftIntegrable",
   "NLAlib.Probability.Concentration.Matrix.MasterBounds",
   "NLAlib.Probability.Concentration.Matrix.MasterSumExponentialIntegrable",
@@ -1076,7 +1106,7 @@
    "NLAlib.Matrix.Factorizations.Givens",
    "NLAlib.Matrix.Factorizations.GramSchmidt",
    "NLAlib.Matrix.Factorizations.Hessenberg",
-   "NLAlib.Matrix.Spectral.Inertia"
+   "NLAlib.Matrix.Spectral.InertiaSturm"
   ],
   "NLAlib.Matrix.Factorizations": [
    "NLAlib.Matrix.Factorizations.Cholesky",
@@ -1127,119 +1157,28 @@
    "NLAlib.Matrix.Factorizations.Cholesky"
   ],
   "NLAlib.Matrix.Inequalities": [
-   "NLAlib.Matrix.Factorizations.Cholesky",
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.BlockContraction": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.BlockOrderConsequences": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.BlockQuadratic": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.BlockStrictContraction": [
-   "NLAlib.Matrix.Spectral.Inertia"
+   "NLAlib.Matrix.Factorizations.Cholesky"
   ],
   "NLAlib.Matrix.Inequalities.ColumnDeterminantBound": [
    "NLAlib.Matrix.Factorizations.Cholesky"
   ],
-  "NLAlib.Matrix.Inequalities.DeterminantRoot": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.FiniteExponentialGram": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.FischerDeterminant": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
   "NLAlib.Matrix.Inequalities.HadamardDeterminant": [
    "NLAlib.Matrix.Factorizations.Cholesky"
-  ],
-  "NLAlib.Matrix.Inequalities.HadamardDeterminantLower": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.HadamardDominanceCounterexample": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.HadamardExponential": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.HadamardInverse": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.HadamardMinimumSpectrum": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.HadamardOrder": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.HadamardPowerOrder": [
-   "NLAlib.Matrix.Spectral.Inertia"
   ],
   "NLAlib.Matrix.Inequalities.InverseDiagonalMinor": [
    "NLAlib.Matrix.Factorizations.Cholesky"
   ],
-  "NLAlib.Matrix.Inequalities.Kantorovich": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.LogDetConcavity": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.MinkowskiDeterminant": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.OverlappingBlockDeterminant": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.PositiveSpectralEndpoints": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
   "NLAlib.Matrix.Inequalities.PrincipalMinorProductBounds": [
    "NLAlib.Matrix.Factorizations.Cholesky"
-  ],
-  "NLAlib.Matrix.Inequalities.PrincipalOverlapDeterminant": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.QuadraticConditionBounds": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.RelativeSpectrum": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.SeparatingPSDVector": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.StrictRelativeSpectrum": [
-   "NLAlib.Matrix.Spectral.Inertia"
   ],
   "NLAlib.Matrix.Inequalities.SzaszDeterminant": [
    "NLAlib.Matrix.Factorizations.Cholesky"
   ],
-  "NLAlib.Matrix.Inequalities.TraceInverseConvexity": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Inequalities.Wielandt": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
   "NLAlib.Matrix.Spectral": [
-   "NLAlib.Matrix.Spectral.Inertia"
+   "NLAlib.Matrix.Spectral.InertiaSturm"
   ],
-  "NLAlib.Matrix.Spectral.DefiniteCongruence": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Spectral.DefinitePairCalculus": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Spectral.HaynsworthInertia": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Spectral.Inertia": [
-   "NLAlib.Matrix.Spectral.Inertia"
-  ],
-  "NLAlib.Matrix.Spectral.SylvesterCriterion": [
-   "NLAlib.Matrix.Spectral.Inertia"
+  "NLAlib.Matrix.Spectral.InertiaSturm": [
+   "NLAlib.Matrix.Spectral.InertiaSturm"
   ]
  }
 }

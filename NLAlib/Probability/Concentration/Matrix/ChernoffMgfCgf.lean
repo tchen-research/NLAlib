@@ -1,7 +1,7 @@
 import NLAlib.Probability.Concentration.Basic.ChernoffFunctions
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
-import NLAlib.Matrix.OperatorTheory.Basic
+import NLAlib.Matrix.Functions.Basic
 import NLAlib.Matrix.Functions.ExtremeEigenvalues
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 

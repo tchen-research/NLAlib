@@ -32,6 +32,7 @@ import NLAlib.Matrix.Spectral.GramSingularValues
 import NLAlib.Matrix.Spectral.HaynsworthInertia
 import NLAlib.Matrix.Spectral.IndefiniteCongruence
 import NLAlib.Matrix.Spectral.Inertia
+import NLAlib.Matrix.Spectral.InertiaSturm
 import NLAlib.Matrix.Spectral.InterlacingConverse
 import NLAlib.Matrix.Spectral.InterlacingDeterminants
 import NLAlib.Matrix.Spectral.InterlacingInduction
@@ -115,7 +116,6 @@ import NLAlib.Matrix.Spectral.SylvesterCriterion
 import NLAlib.Matrix.Spectral.SylvesterQualitative
 import NLAlib.Matrix.Spectral.SylvesterSimilarity
 import NLAlib.Matrix.Spectral.TraceEigenvalues
-import NLAlib.Matrix.Spectral.TracePowerBounds
 import NLAlib.Matrix.Spectral.Weyl
 
 /-! # `Matrix/Spectral`

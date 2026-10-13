@@ -1,4 +1,4 @@
-import NLAlib.Matrix.OperatorTheory.LiebConcavity
+import NLAlib.Matrix.Functions.LiebConcavity
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 
 /-!
@@ -6,7 +6,7 @@ import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 
 `A ↦ traceExp (H + matrixLog A)` on the positive-definite cone: continuity
 (`continuousOn_traceExp_add_matrixLog`, any finite index type). Its concavity is
-`lieb_concavity` (OperatorTheory/LiebConcavity, any finite index type), re-exported by the import.
+`lieb_concavity` (Functions/LiebConcavity, any finite index type), re-exported by the import.
 
 Tropp 2015, Theorem 3.4.1 and Corollary 3.4.2. Moved from
 `NLAlib.Probability.Concentration.Matrix.{ProbabilisticLieb,LiebReindex}` (dedup round

@@ -234,7 +234,9 @@ variable {n : ℕ}
 orthogonal similarity). -/
 theorem IsQR.mul_eq_transpose_mul_mul {H Q R : Matrix (Fin n) (Fin n) ℝ} (h : IsQR H Q R) :
     R * Q = Qᵀ * H * Q := by
-  rw [h.transpose_mul_eq]
+  have hR : Qᵀ * H = R := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial Q] using h.conjTranspose_mul_eq
+  rw [hR]
 
 /-- **`RQ` of a Hessenberg matrix is Hessenberg**: if `H` is upper Hessenberg and `H = QR` is a
 QR factorization with `R` invertible, then `RQ` is upper Hessenberg. (`Q = HR⁻¹` is

@@ -336,7 +336,10 @@ theorem gramSchmidtSucceeds_iff_linearIndependent (A : Matrix m (Fin n) ℝ) :
     have hdet : IsUnit (gramSchmidtR A).det :=
       hQR.isUnit_det_iff.2 fun j => (gramSchmidtR_apply_self_pos h j).ne'
     have key : ((gramSchmidtR A)⁻¹ * (gramSchmidtQ A)ᵀ) * A = 1 := by
-      rw [Matrix.mul_assoc, hQR.transpose_mul_eq, Matrix.nonsing_inv_mul _ hdet]
+      have hR : (gramSchmidtQ A)ᵀ * A = gramSchmidtR A := by
+        simpa only [Matrix.conjTranspose_eq_transpose_of_trivial (gramSchmidtQ A)] using
+          hQR.conjTranspose_mul_eq
+      rw [Matrix.mul_assoc, hR, Matrix.nonsing_inv_mul _ hdet]
     rw [← Matrix.mulVec_injective_iff]
     intro x y hxy
     have := congrArg (fun z => ((gramSchmidtR A)⁻¹ * (gramSchmidtQ A)ᵀ) *ᵥ z) hxy

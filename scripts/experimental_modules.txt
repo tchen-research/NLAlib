@@ -11,4 +11,4 @@ NLAlib.Matrix.Factorizations.Cholesky
 NLAlib.Matrix.Factorizations.Givens
 NLAlib.Matrix.Factorizations.GramSchmidt
 NLAlib.Matrix.Factorizations.Hessenberg
-NLAlib.Matrix.Spectral.Inertia
+NLAlib.Matrix.Spectral.InertiaSturm

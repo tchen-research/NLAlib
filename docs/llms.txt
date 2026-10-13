@@ -39,6 +39,12 @@ Read CONTRIBUTING.md and the authoritative docs/STANDARDS.md. First settle the m
 statement and its domain/edge cases, then choose its proof. Reuse Mathlib objects; give useful
 domain definitions constructors and bridges. Basic.lean may contain foundational theorems.
 Generic algebraic APIs should not force real scalars or Fin indices without a mathematical reason.
+
+Matrix/Functions is the deterministic matrix-function group: functional calculus, exp/log,
+operator convexity, entropy, Lieb and trace-function inequalities. Matrix/OperatorTheory has
+been consolidated into it. Probability/Concentration owns expectations, MGFs, independence and
+tail bounds built on this theory; a matrix exponential inside a probability statement belongs
+there. Import individual function modules or NLAlib.Matrix.Functions.
 Historical migration briefs do not override current standards.
 
 For catalogued results, update source tags and hand-authored atlas statements, then build and run

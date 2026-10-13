@@ -67,8 +67,9 @@ an experimental module is excluded even when some individual declarations are in
 of its unfinished proofs. Consult each declaration's `sorry` field for that finer distinction.
 
 This inventory is not a claim that every public contract has been individually reviewed.
-See the [compatibility audit](../review/MATHLIB_COMPATIBILITY_AUDIT_2026-10-13.md) and its
-implementation follow-up for the changes and remaining mathematical scope. The scripts in
+See the [public contract review](../review/PUBLIC_CONTRACT_REVIEW_2026-10-13.md) for open API
+families and repair order, and the [compatibility audit](../review/MATHLIB_COMPATIBILITY_AUDIT_2026-10-13.md)
+for the earlier changes and proof validation. The scripts in
 `tools/` are historical inputs to the retired plan; they are not the current generator.
 """
 (ROOT / "docs/port/MANIFEST.md").write_text(text)

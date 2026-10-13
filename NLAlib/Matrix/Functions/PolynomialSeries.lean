@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.TraceYoung
+import NLAlib.Matrix.Functions.TraceYoung
 import Mathlib.Analysis.Calculus.Deriv.Pi
 import Mathlib.Analysis.Calculus.Deriv.Mul
 

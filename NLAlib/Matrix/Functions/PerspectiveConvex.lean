@@ -1,4 +1,4 @@
-import NLAlib.Matrix.OperatorTheory.OperatorJensen
+import NLAlib.Matrix.Functions.OperatorJensen
 import NLAlib.Matrix.Functions.PerspectiveSqrtNormalization
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Linarith

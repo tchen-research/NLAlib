@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Factorizations.QRExistence
-import NLAlib.Matrix.Spectral.GramSingularValues
-import NLAlib.Matrix.Perturbation.ConditionNumber
+import NLAlib.Matrix.Factorizations.QRSpectral
 import NLAlib.Matrix.Basic.Gram
 /-!
 # QR uniqueness and spectral identities
@@ -40,7 +39,11 @@ theorem isUnit_of_qr_of_rank_eq_card {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
   apply (Matrix.isUnit_iff_isUnit_det R).mpr
   apply isUnit_iff_ne_zero.mpr
   apply det_ne_zero_of_rank_eq
-  rw [← Matrix.rank_transpose_mul_self R, transpose_mul_self_eq_of_qr hQ hFactor,
+  have hGram : Rᵀ * R = Aᵀ * A := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial R,
+      Matrix.conjTranspose_eq_transpose_of_trivial A] using
+      conjTranspose_mul_self_eq_of_qr hQ hFactor
+  rw [← Matrix.rank_transpose_mul_self R, hGram,
     Matrix.rank_transpose_mul_self A, hRank]
 
 /-- A nonnegative upper-triangular QR diagonal is strictly positive under
@@ -50,9 +53,14 @@ theorem diag_pos_of_qr_of_rank_eq_card {A Q : Matrix m n ℝ} {R : Matrix n n �
     (hQ : HasOrthonormalCols Q) (hUpper : R.IsUpperTriangular)
     (hDiag : ∀ i, 0 ≤ R i i) (hFactor : Q * R = A)
     (hRank : A.rank = Fintype.card n) : ∀ i, 0 < R i i := by
-  have hGram := posDef_transpose_mul_self_of_rank_eq_card hRank
+  have hGram : (Aᵀ * A).PosDef := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial A] using
+      posDef_transpose_mul_self_of_rank_eq_card hRank
   have hFactorT : Rᵀ * (Rᵀ)ᵀ = Aᵀ * A := by
-    simpa only [Matrix.transpose_transpose] using transpose_mul_self_eq_of_qr hQ hFactor
+    simpa only [Matrix.transpose_transpose,
+      Matrix.conjTranspose_eq_transpose_of_trivial R,
+      Matrix.conjTranspose_eq_transpose_of_trivial A] using
+      conjTranspose_mul_self_eq_of_qr hQ hFactor
   exact diag_pos_of_isLowerTriangular_of_isUnit (L := Rᵀ) hUpper.transpose
     (isUnit_of_mul_transpose_eq_posDef hGram hFactorT) hDiag
 
@@ -76,26 +84,6 @@ theorem existsUnique_qr_of_rank_eq_card (A : Matrix m n ℝ)
   obtain ⟨hQEq, hREq⟩ :=
     IsQR.eq_of_diag_pos ⟨hFactor'.symm, hQ', hUpper'⟩ ⟨hFactor.symm, hQ, hUpper⟩ hDiag' hPositive
   exact Prod.ext hQEq hREq
-
-/-- The zero-padded singular values of the triangular QR factor are exactly those of the
-original matrix at every index, on arbitrary finite indices.
-Trefethen--Bau, Theorem 7.1; Golub--Van Loan, Theorem 5.2.1.
-atlas: qr-decomposition (partial) -/
-theorem singularValues_eq_of_qr {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
-    (hQ : HasOrthonormalCols Q) (hFactor : Q * R = A) :
-    singularValues R = singularValues A := by
-  funext k
-  apply singularValues_eq_of_gram_eq R A
-  simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-    transpose_mul_self_eq_of_qr hQ hFactor
-
-/-- QR preserves the total spectral condition number built from the
-Moore--Penrose inverse, including singular and zero-rank matrices.
-Golub--Van Loan, Section 2.6.2; supports `qr-decomposition`.
-atlas: qr-decomposition (partial) -/
-theorem moorePenroseConditionNumber_eq_of_qr [DecidableEq m] {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
-    (hQ : HasOrthonormalCols Q) (hFactor : Q * R = A) : moorePenroseConditionNumber R = moorePenroseConditionNumber A := by
-  rw [← hFactor, moorePenroseConditionNumber_mul_left_of_hasOrthonormalCols Q R hQ]
 
 /-- Under full column rank, the QR frame projector is the
 Moore--Penrose orthogonal range projector. Trefethen--Bau, Theorem 7.2;

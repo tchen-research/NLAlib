@@ -2,7 +2,7 @@ import NLAlib.Matrix.Functions.IntrinsicDimension
 import NLAlib.Probability.Concentration.Matrix.GeneralizedLaplace
 import NLAlib.Probability.Concentration.Matrix.ChernoffMgfCgf
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
-import NLAlib.Matrix.Inequalities.TraceExpMonotone
+import NLAlib.Matrix.Functions.TraceExpMonotone
 
 /-!
 # Theorem 7.2.1 — Intrinsic matrix Chernoff

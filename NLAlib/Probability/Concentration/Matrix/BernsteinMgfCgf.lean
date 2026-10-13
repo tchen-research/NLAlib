@@ -1,6 +1,6 @@
 import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
-import NLAlib.Matrix.OperatorTheory.Basic
+import NLAlib.Matrix.Functions.Basic
 import NLAlib.ForMathlib.Analysis.ExpBounds
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 

@@ -1,4 +1,4 @@
-import NLAlib.Matrix.OperatorTheory.GeneralizedKlein
+import NLAlib.Matrix.Functions.GeneralizedKlein
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.FieldSimp

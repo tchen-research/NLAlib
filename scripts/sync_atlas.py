@@ -84,6 +84,6 @@ if check:
     if changes or errors: print("atlas is out of sync with the Lean sources: run scripts/sync_atlas.py"); sys.exit(1)
     print("atlas in sync"); sys.exit(0)
 if changes:
-    with open(ATLAS, "w") as fh: json.dump(atlas, fh, ensure_ascii=False, indent=1); fh.write("\n")
+    with open(ATLAS, "w", encoding="utf-8", newline="\n") as fh: json.dump(atlas, fh, ensure_ascii=False, indent=1); fh.write("\n")
 print(f"synced {len(tagged)} tagged results, {sum(len(v) for v in tagged.values())} formalizations; {len(changes)} results changed")
 sys.exit(1 if errors else 0)

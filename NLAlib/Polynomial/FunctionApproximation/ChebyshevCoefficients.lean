@@ -1,41 +1,23 @@
+import NLAlib.Polynomial.FunctionApproximation.Basic
 import NLAlib.Polynomial.FunctionApproximation.AnalyticFourier
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Orthogonality
+import NLAlib.Polynomial.Chebyshev.CosineBasis
 import NLAlib.ForMathlib.Analysis.FourierConvolution
-/-!
-# Real Chebyshev coefficients
 
-The weighted integral and cosine integral definitions agree with the existing Joukowski
-contour coefficients whenever the complex function restricts to the continuous real function
-on `[-1,1]`. Coefficient identification needs no analyticity assumption.
+/-!
+# Chebyshev coefficient functionals
+
+The canonical arcsine-measure coefficients agree with the weighted, cosine, and Joukowski
+contour interfaces. Linearity, orthogonality, exact polynomial reconstruction, and sharp
+individual coefficient bounds use that one coefficient function.
+Atlas: `chebyshev-coefficients-def`.
 -/
 
 noncomputable section
 
-open MeasureTheory Polynomial Polynomial.Chebyshev Set
-open scoped Real NLAlib.TwoPi
+open Polynomial Polynomial.Chebyshev Finset Real MeasureTheory Set
+open scoped NLAlib.TwoPi
 
 namespace NLAlib
-
-/-- Real Chebyshev coefficient with zeroth normalization `1/π` and positive normalization
-`2/π`, using the arcsine weight. Source: Trefethen, ATAP, Chapter 3. -/
-def chebyshevCoeff (f : ℝ → ℝ) (k : ℕ) : ℝ :=
-  (if k = 0 then 1 else 2) / Real.pi *
-    ∫ x, f x * (T ℝ (k : ℤ)).eval x ∂measureT
-
-/-- The arcsine-measure coefficient is the classical weighted integral on `[-1,1]`.
-Source: Trefethen, ATAP, Chapter 3. -/
-theorem chebyshevCoeff_eq_weighted_integral (f : ℝ → ℝ) (k : ℕ) :
-    chebyshevCoeff f k = (if k = 0 then 1 else 2) / Real.pi *
-      ∫ x in (-1 : ℝ)..1, (f x * (T ℝ (k : ℤ)).eval x) * Real.sqrt (1 - x ^ 2)⁻¹ := by
-  rw [chebyshevCoeff, integral_measureT]
-
-/-- The weighted coefficient is the usual cosine coefficient, including the zeroth
-normalization. Source: the cosine substitution for the Chebyshev weight. -/
-theorem chebyshevCoeff_eq_cosine_integral (f : ℝ → ℝ) (k : ℕ) :
-    chebyshevCoeff f k = (if k = 0 then 1 else 2) / Real.pi *
-      ∫ θ in 0..Real.pi, f (Real.cos θ) * Real.cos ((k : ℝ) * θ) := by
-  rw [chebyshevCoeff, integral_measureT_eq_integral_cos]
-  simp_rw [T_real_cos, Int.cast_natCast]
 
 /-- Reflection of the cosine pullback halves its full-period integral. Source: the
 symmetry `cos (2π - θ) = cos θ` and adjacent interval additivity. -/
@@ -133,5 +115,142 @@ theorem chebyshevComplexCoeff_eq_ofReal_chebyshevCoeff {F : ℂ → ℂ} {f : �
       chebyshevAnalyticCoeff_eq_chebyshevCoeff hf hF k
   · rw [chebyshevComplexCoeff_eq_fourierCoeff, hreal]
     split_ifs <;> simp [Complex.mul_im, him]
+
+/-- Chebyshev coefficient functionals preserve addition of continuous functions.
+Source: Trefethen, ATAP, Chapter 3.
+atlas: chebyshev-coefficients-def (partial) -/
+theorem chebyshevCoeff_add {f g : ℝ → ℝ}
+    (hf : ContinuousOn f (Icc (-1 : ℝ) 1)) (hg : ContinuousOn g (Icc (-1 : ℝ) 1))
+    (k : ℕ) : chebyshevCoeff (fun x => f x + g x) k = chebyshevCoeff f k + chebyshevCoeff g k := by
+  simp only [chebyshevCoeff, add_mul]
+  rw [integral_add (f := fun x => f x * (T ℝ (k : ℤ)).eval x)
+    (g := fun x => g x * (T ℝ (k : ℤ)).eval x)
+    (integrable_measureT (hf.mul (by fun_prop)))
+    (integrable_measureT (hg.mul (by fun_prop))), mul_add]
+
+/-- Chebyshev coefficient functionals preserve scalar multiplication.
+Source: Trefethen, ATAP, Chapter 3.
+atlas: chebyshev-coefficients-def (partial) -/
+theorem chebyshevCoeff_const_mul (f : ℝ → ℝ) (c : ℝ) (k : ℕ) :
+    chebyshevCoeff (fun x => c * f x) k = c * chebyshevCoeff f k := by
+  simp only [chebyshevCoeff]
+  simp_rw [mul_assoc]
+  rw [integral_const_mul]
+  ring
+
+/-- Chebyshev coefficient functionals preserve subtraction of continuous functions.
+Source: Trefethen, ATAP, Chapter 3; helper for `chebyshev-series-convergence`. -/
+theorem chebyshevCoeff_sub {f g : ℝ → ℝ}
+    (hf : ContinuousOn f (Icc (-1 : ℝ) 1)) (hg : ContinuousOn g (Icc (-1 : ℝ) 1))
+    (k : ℕ) : chebyshevCoeff (fun x => f x - g x) k = chebyshevCoeff f k - chebyshevCoeff g k := by
+  have h := chebyshevCoeff_add (g := fun x => (-1 : ℝ) * g x) hf
+    (continuousOn_const.mul hg) k
+  rw [chebyshevCoeff_const_mul] at h
+  simpa only [neg_one_mul, ← sub_eq_add_neg] using h
+
+/-- The coefficient of a Chebyshev basis polynomial is its Kronecker delta.
+Source: Trefethen, ATAP, Chapter 3; Mathlib Chebyshev orthogonality.
+atlas: chebyshev-coefficients-def (partial) -/
+@[simp] theorem chebyshevCoeff_eval_T (j k : ℕ) :
+    chebyshevCoeff (fun x => (T ℝ (j : ℤ)).eval x) k = if j = k then 1 else 0 := by
+  rw [chebyshevCoeff]
+  by_cases hjk : j = k
+  · subst j
+    by_cases hk : k = 0
+    · subst k
+      simp only [Nat.cast_zero]
+      rw [integral_eval_T_real_mul_self_measureT_zero]
+      simp [Real.pi_ne_zero]
+    · rw [if_neg hk, integral_T_real_mul_self_measureT_of_ne_zero hk, if_pos rfl]
+      field_simp
+  · rw [integral_eval_T_real_mul_eval_T_real_measureT_of_ne hjk, if_neg hjk, mul_zero]
+
+/-- The Chebyshev coefficient of a finite Chebyshev expansion is its corresponding entry.
+Source: finite orthogonal projection, Trefethen ATAP, Chapter 3.
+Helper for `chebyshev-coefficients-def`. -/
+theorem chebyshevCoeff_eval_sum_smul_T (c : ℕ → ℝ) (n k : ℕ) :
+    chebyshevCoeff (fun x => (∑ j ∈ range (n + 1), c j • T ℝ (j : ℤ)).eval x) k =
+      if k ≤ n then c k else 0 := by
+  simp only [chebyshevCoeff, eval_finsetSum, eval_smul,
+    smul_eq_mul, Finset.sum_mul]
+  rw [integral_finsetSum _ (fun j hj =>
+    integrable_measureT (by fun_prop))]
+  simp_rw [mul_assoc, integral_const_mul]
+  rw [Finset.mul_sum]
+  have hterm : ∀ j, (if k = 0 then 1 else 2) / Real.pi *
+      (c j * ∫ x, (T ℝ (j : ℤ)).eval x * (T ℝ (k : ℤ)).eval x ∂measureT) =
+        c j * (if j = k then 1 else 0) := by
+    intro j
+    rw [← mul_assoc, mul_comm ((if k = 0 then 1 else 2) / Real.pi) (c j), mul_assoc,
+      ← chebyshevCoeff, chebyshevCoeff_eval_T]
+  simp_rw [hterm]
+  simp [Finset.sum_ite_eq']
+
+/-- Coefficients above the degree of a polynomial vanish.
+Source: Trefethen, ATAP, Chapter 3, finite Chebyshev basis.
+atlas: chebyshev-coefficients-def (partial) -/
+theorem chebyshevCoeff_eval_eq_zero_of_degree_lt {p : ℝ[X]} {n k : ℕ}
+    (hp : p.degree ≤ n) (hnk : n < k) : chebyshevCoeff p.eval k = 0 := by
+  obtain ⟨c, hc⟩ := exists_sum_smul_T_eq_of_degree_le hp
+  rw [← hc, chebyshevCoeff_eval_sum_smul_T, if_neg (by omega)]
+
+/-- Chebyshev truncation reproduces every polynomial of degree at most its cutoff.
+Source: Trefethen, ATAP, Chapter 3, finite Chebyshev basis.
+atlas: chebyshev-coefficients-def (partial) -/
+theorem chebyshevTrunc_eval_eq_of_degree_le {p : ℝ[X]} {n : ℕ}
+    (hp : p.degree ≤ n) : chebyshevTrunc p.eval n = p := by
+  obtain ⟨c, hc⟩ := exists_sum_smul_T_eq_of_degree_le hp
+  unfold chebyshevTrunc
+  rw [← hc]
+  apply Finset.sum_congr rfl
+  intro k hk
+  rw [chebyshevCoeff_eval_sum_smul_T, if_pos (Nat.le_of_lt_succ (mem_range.mp hk)), C_mul']
+
+/-- Every Chebyshev truncation has degree at most its cutoff.
+Source: Trefethen, ATAP, Chapter 3; helper for `chebyshev-coefficients-def`. -/
+theorem degree_chebyshevTrunc_le (f : ℝ → ℝ) (n : ℕ) : (chebyshevTrunc f n).degree ≤ n := by
+  unfold chebyshevTrunc
+  refine (degree_sum_le _ _).trans (Finset.sup_le fun k hk => ?_)
+  rw [C_mul']
+  refine (degree_smul_le _ _).trans ?_
+  rw [degree_T, Int.natAbs_natCast]
+  exact_mod_cast Nat.le_of_lt_succ (mem_range.mp hk)
+
+/-- The undoubled constant coefficient is bounded by the function bound on the interval.
+Source: Trefethen, ATAP, Chapter 3.
+atlas: chebyshev-coefficients-def (partial) -/
+theorem abs_chebyshevCoeff_zero_le {f : ℝ → ℝ} {M : ℝ}
+    (hM : ∀ x ∈ Icc (-1 : ℝ) 1, |f x| ≤ M) : |chebyshevCoeff f 0| ≤ M := by
+  have hI := intervalIntegral.norm_integral_le_of_norm_le_const
+    (a := 0) (b := Real.pi) (f := fun θ => f (cos θ) * cos ((0 : ℝ) * θ))
+    (C := M) (fun θ hθ => by
+      simpa only [zero_mul, cos_zero, mul_one, Real.norm_eq_abs] using
+        hM (cos θ) ⟨neg_one_le_cos θ, cos_le_one θ⟩)
+  simp only [chebyshevCoeff_eq_cosine_integral, if_true, Nat.cast_zero, zero_mul, cos_zero, mul_one]
+  rw [abs_mul, abs_of_pos (by positivity : 0 < (1 : ℝ) / Real.pi)]
+  simp only [sub_zero, abs_of_pos Real.pi_pos, Real.norm_eq_abs, zero_mul, cos_zero,
+    mul_one] at hI
+  calc 1 / Real.pi * |∫ θ in 0..Real.pi, f (cos θ)| ≤ 1 / Real.pi * (M * Real.pi) :=
+      mul_le_mul_of_nonneg_left hI (by positivity)
+    _ = M := by field_simp
+
+/-- Every positive Chebyshev coefficient is bounded by twice the function bound.
+Source: Trefethen, ATAP, Chapter 3.
+atlas: chebyshev-coefficients-def -/
+theorem abs_chebyshevCoeff_le_two_mul {f : ℝ → ℝ} {M : ℝ}
+    (hM : ∀ x ∈ Icc (-1 : ℝ) 1, |f x| ≤ M) {k : ℕ} (hk : 0 < k) :
+    |chebyshevCoeff f k| ≤ 2 * M := by
+  have hI := intervalIntegral.norm_integral_le_of_norm_le_const
+    (a := 0) (b := Real.pi) (f := fun θ => f (cos θ) * cos ((k : ℝ) * θ))
+    (C := M) (fun θ hθ => by
+      rw [Real.norm_eq_abs, abs_mul]
+      exact (mul_le_mul_of_nonneg_left (abs_cos_le_one _) (abs_nonneg _)).trans
+        (by simpa only [mul_one] using hM (cos θ) ⟨neg_one_le_cos θ, cos_le_one θ⟩))
+  simp only [chebyshevCoeff_eq_cosine_integral, if_neg hk.ne']
+  rw [abs_mul, abs_of_pos (by positivity : 0 < (2 : ℝ) / Real.pi)]
+  simp only [sub_zero, abs_of_pos Real.pi_pos, Real.norm_eq_abs] at hI
+  calc 2 / Real.pi * |∫ θ in 0..Real.pi, f (cos θ) * cos ((k : ℝ) * θ)| ≤
+      2 / Real.pi * (M * Real.pi) := mul_le_mul_of_nonneg_left hI (by positivity)
+    _ = 2 * M := by field_simp
 
 end NLAlib

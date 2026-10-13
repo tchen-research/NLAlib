@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Factorizations.LU
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.TriangularRank
 /-!
 # Cholesky factorization and the Cholesky recursion
 
@@ -410,31 +411,99 @@ theorem isPivotedCholesky_choleskyPivoted {n : ℕ} {A : Matrix (Fin n) (Fin n) 
           A (Equiv.swap 0 p ((choleskyPivoted (pivotSchur (A.submatrix (Equiv.swap 0 p)
             (Equiv.swap 0 p)))).1 j).succ) p) * hinv.symm
 
-/-- SCAFFOLD: cholesky-algorithm
-**Pivoted Cholesky stops at the rank**: for PSD `A`, the diagonal of the pivoted factor is
-positive exactly in the first `rank A` positions. Golub–Van Loan 2013, §4.2.9; Higham 2002,
-Thm 10.9.
-Proof sketch: by diagonal pivoting, `lₖₖ² = max diag` of the `k`-th Schur complement, and a PSD
-matrix with zero diagonal is zero; so once a pivot is zero all later columns vanish. The number
-of nonzero columns of the lower triangular `L` with this staircase pattern is `rank L =
-rank (L Lᵀ) = rank A` (`Matrix.rank_mul_transpose`-type lemma, `Matrix.rank_submatrix`).
+/-- Pivoted Cholesky has a positive diagonal prefix and entirely zero trailing columns.
+Source: matrix toolkit rederivations, `lem:prefix`, the rank-free recursion invariant.
 atlas: cholesky-algorithm (partial) -/
+theorem exists_choleskyPivoted_positive_prefix {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
+    (hA : A.PosSemidef) :
+    ∃ r ≤ n, (∀ i : Fin n, i.val < r → 0 < (choleskyPivoted A).2 i i) ∧
+      (∀ i j : Fin n, r ≤ j.val → (choleskyPivoted A).2 i j = 0) := by
+  induction n with
+  | zero => exact ⟨0, le_rfl, fun i => i.elim0, fun i => i.elim0⟩
+  | succ n ih =>
+    let B := diagPivotSwap A
+    have hB : B.PosSemidef := hA.submatrix _
+    by_cases hpos : 0 < B 0 0
+    · obtain ⟨r, hr, hprefix, hzero⟩ := ih (posSemidef_pivotSchur hB)
+      refine ⟨r + 1, by omega, ?_, ?_⟩
+      · intro i
+        refine Fin.cases ?_ (fun i => ?_) i
+        · intro hi
+          simpa only [choleskyPivoted, borderedMatrix_zero_zero] using Real.sqrt_pos.mpr hpos
+        · intro hi
+          simpa only [choleskyPivoted, borderedMatrix_succ_succ] using hprefix i (by simpa using hi)
+      · intro i j
+        refine Fin.cases ?_ (fun j => ?_) j
+        · intro hj
+          simp only [Fin.val_zero] at hj
+          omega
+        · intro hj
+          refine Fin.cases ?_ (fun i => ?_) i
+          · simp only [choleskyPivoted, borderedMatrix_zero_succ, Pi.zero_apply]
+          · simpa only [choleskyPivoted, borderedMatrix_succ_succ] using hzero i j (by simpa using hj)
+    · let p := absArgmax (fun i => A i i)
+      have hpivot : B 0 0 = A p p := by simp only [p, B, diagPivotSwap, submatrix_apply, Equiv.swap_apply_left]
+      have hp : A p p = 0 := by have hnonneg := hA.diag_nonneg (i := p); linarith
+      have hA0 : A = 0 := by
+        ext i j
+        have hmax := abs_le_abs_absArgmax (fun k => A k k) j
+        change |A j j| ≤ |A p p| at hmax
+        rw [hp, abs_zero] at hmax
+        have hj : A j j = 0 := abs_eq_zero.mp (le_antisymm hmax (abs_nonneg _))
+        exact apply_eq_zero_of_posSemidef_of_apply_self_eq_zero hA hj i
+      have hfactor := isPivotedCholesky_choleskyPivoted hA
+      have hgram : (choleskyPivoted A).2 * (choleskyPivoted A).2ᵀ = 0 := by
+        rw [← hfactor.submatrix_eq, hA0]
+        simp
+      have hL0 : (choleskyPivoted A).2 = 0 := by
+        ext i j
+        have h := congrFun (congrFun hgram i) i
+        have hrow : (fun k => (choleskyPivoted A).2 i k) ⬝ᵥ (fun k => (choleskyPivoted A).2 i k) = 0 := by
+          simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.zero_apply, dotProduct] using h
+        exact congrFun (dotProduct_self_eq_zero.mp hrow) j
+      refine ⟨0, Nat.zero_le _, fun i hi => False.elim (Nat.not_lt_zero _ hi), ?_⟩
+      intro i j hj
+      rw [hL0]
+      rfl
+
+/-- The positive prefix length of the pivoted Cholesky recursion is the input matrix rank.
+Source: its triangular-prefix rank certificate and exact permuted Gram factorization. -/
+theorem rank_choleskyPivoted_eq_prefix {n r : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
+    (hA : A.PosSemidef) (hr : r ≤ n)
+    (hpos : ∀ i : Fin n, i.val < r → 0 < (choleskyPivoted A).2 i i)
+    (hzero : ∀ i j : Fin n, r ≤ j.val → (choleskyPivoted A).2 i j = 0) : A.rank = r := by
+  have hfactor := isPivotedCholesky_choleskyPivoted hA
+  calc
+    A.rank = (A.submatrix (choleskyPivoted A).1 (choleskyPivoted A).1).rank :=
+      (Matrix.rank_submatrix _ _ _).symm
+    _ = ((choleskyPivoted A).2 * (choleskyPivoted A).2ᵀ).rank := by rw [hfactor.submatrix_eq]
+    _ = (choleskyPivoted A).2.rank := Matrix.rank_self_mul_transpose _
+    _ = r := Matrix.rank_eq_of_lowerTriangular_positive_prefix hr _ hfactor.isLowerTriangular hpos hzero
+/-- **Pivoted Cholesky stops at the rank**: its diagonal is positive exactly in the first
+`rank A` positions for every positive semidefinite input.
+Source: Golub–Van Loan 2013, §4.2.9; Higham 2002, §10.3; matrix toolkit rederivations, `lem:prefix`.
+atlas: cholesky-algorithm -/
 theorem choleskyPivoted_apply_self_pos_iff_lt_rank {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.PosSemidef) (i : Fin n) : 0 < (choleskyPivoted A).2 i i ↔ (i : ℕ) < A.rank := by
-  sorry
+  obtain ⟨r, hr, hpos, hzero⟩ := exists_choleskyPivoted_positive_prefix hA
+  rw [rank_choleskyPivoted_eq_prefix hA hr hpos hzero]
+  constructor
+  · intro hi
+    by_contra hnot
+    have hz := hzero i i (Nat.le_of_not_gt hnot)
+    rw [hz] at hi
+    exact lt_irrefl _ hi
+  · exact hpos i
 
-/-- SCAFFOLD: cholesky-algorithm
-**Pivoted Cholesky terminates at the rank**: for PSD `A`, the columns of the pivoted factor
-with index `≥ rank A` vanish, so the factor has exactly `rank A` nonzero columns and
-`P A Pᵀ = L₁ L₁ᵀ` with `L₁` its first `rank A` columns. Golub–Van Loan 2013, §4.2.9;
-Higham 2002, §10.3.
-Proof sketch: as for `choleskyPivoted_apply_self_pos_iff_lt_rank`: after the first zero pivot
-the remaining Schur complement is zero (zero maximal diagonal of a PSD matrix), so the
-recursion produces zero columns.
-atlas: cholesky-algorithm (partial) -/
+/-- **Pivoted Cholesky terminates at the rank**: all columns with index at least `rank A`
+vanish for every positive semidefinite input.
+Source: Golub–Van Loan 2013, §4.2.9; Higham 2002, §10.3; matrix toolkit rederivations, `lem:rankL`.
+atlas: cholesky-algorithm -/
 theorem choleskyPivoted_apply_eq_zero_of_rank_le {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.PosSemidef) (i j : Fin n) (hj : A.rank ≤ (j : ℕ)) : (choleskyPivoted A).2 i j = 0 := by
-  sorry
+  obtain ⟨r, hr, hpos, hzero⟩ := exists_choleskyPivoted_positive_prefix hA
+  rw [rank_choleskyPivoted_eq_prefix hA hr hpos hzero] at hj
+  exact hzero i j hj
 
 end Pivoted
 

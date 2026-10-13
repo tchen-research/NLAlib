@@ -52,8 +52,10 @@ private lemma sin_angle_eq_sqrt {q : ℕ} (k : Fin q) :
     sin ((2 * ((k : ℕ) : ℝ) + 1) * π / (2 * q)) = √(1 - chebyshevZero q k ^ 2) :=
   sin_eq_sqrt_one_sub_cos_sq (angle_mem k.isLt).1.le (angle_mem k.isLt).2.le
 
-/-- At a zero `ξ_k = cos θ_k` of `T_q`, `|T_q'(ξ_k)| · sin θ_k = q`. -/
-private lemma abs_eval_derivative_T_zero_mul_sqrt {q : ℕ} (k : Fin q) :
+/-- At a zero `ξ_k = cos θ_k` of `T_q`, `|T_q'(ξ_k)| · sin θ_k = q`.
+Source: Rivlin, Chebyshev Polynomials, Chapter 1; Mathlib's `U_real_cos` identity.
+This helper is shared by Markov's inequality and the sharp interpolation root samples. -/
+lemma abs_eval_derivative_T_zero_mul_sqrt {q : ℕ} (k : Fin q) :
     |(derivative (T ℝ q)).eval (chebyshevZero q k)| * √(1 - chebyshevZero q k ^ 2) = q := by
   set θ := (2 * ((k : ℕ) : ℝ) + 1) * π / (2 * q) with hθ
   have hU := U_real_cos θ ((q : ℤ) - 1)

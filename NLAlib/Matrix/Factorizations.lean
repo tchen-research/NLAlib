@@ -6,6 +6,7 @@ import NLAlib.Matrix.Factorizations.EliminationStep
 import NLAlib.Matrix.Factorizations.Givens
 import NLAlib.Matrix.Factorizations.GramColumnExchange
 import NLAlib.Matrix.Factorizations.GramSchmidt
+import NLAlib.Matrix.Factorizations.GramSchmidtClassical
 import NLAlib.Matrix.Factorizations.Hessenberg
 import NLAlib.Matrix.Factorizations.Householder
 import NLAlib.Matrix.Factorizations.LU
@@ -31,6 +32,7 @@ import NLAlib.Matrix.Factorizations.RankRevealingLeading
 import NLAlib.Matrix.Factorizations.RankRevealingTrailing
 import NLAlib.Matrix.Factorizations.ScaledOrthogonal
 import NLAlib.Matrix.Factorizations.StrongRankRevealingQR
+import NLAlib.Matrix.Factorizations.SymmetricLU
 import NLAlib.Matrix.Factorizations.Triangular
 
 /-! # `Matrix/Factorizations`

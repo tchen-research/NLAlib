@@ -1,4 +1,7 @@
 import NLAlib.Polynomial.Interpolation.AnalyticInterpolation
+import NLAlib.Polynomial.Interpolation.Basic
+import NLAlib.Polynomial.Interpolation.ChebyshevSeriesInterpolation
+import NLAlib.Polynomial.Interpolation.HermiteIntegral
 import NLAlib.Polynomial.Interpolation.Lagrange
 
 /-! # `Polynomial/Interpolation`

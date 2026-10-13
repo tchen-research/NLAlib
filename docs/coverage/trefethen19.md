@@ -239,4 +239,5 @@ Legend: ✓ in NLAlib · ◐ partially in NLAlib · ◧ unfinished proof depende
 - `Ch. 8` ← bernstein-ellipse-def
 - `Ch. 10` ← minimax-error-def
 - `Thm 8.2 (transplanted to [a,b])` ← slit-plane-analytic-approx
+- `Author errata: corrected (19.10), (19.12) denominators` ← gauss-clenshaw-curtis-quadrature-error
 - `Def 23 (rational functions of type (m,n))` ← rational-equioscillation

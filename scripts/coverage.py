@@ -87,7 +87,7 @@ for p in sorted(q for q in (ROOT / "docs/coverage").glob("*.json") if not q.name
         out.append("")
     if unmatched:
         out += ["## Atlas labels for this source not found in the index (verify)", ""] + [f"- `{l}` ← {', '.join(ids)}" for l, ids in unmatched] + [""]
-    (ROOT / f"docs/coverage/{src}.md").write_text("\n".join(out))
+    (ROOT / f"docs/coverage/{src}.md").write_text("\n".join(out), encoding="utf-8", newline="\n")
     print(f"{src}: {len(items)} items; " + ", ".join(f"{s} {tot[s]}" for s in STATUSES) + f"; {len(unmatched)} atlas labels unmatched")
 if warnings:
     print(f"warnings ({len(warnings)}; item status disagrees with the atlas):\n  " + "\n  ".join(warnings))

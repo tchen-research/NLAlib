@@ -1,7 +1,12 @@
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Adjugate
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.ColumnLaplacian
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.ColumnLaplacianKernel
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.ContinuousEquiv
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.PeakDifference
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.PosSemidef
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.TriangularRank
 
 /-! # `ForMathlib/LinearAlgebra/Matrix`
 

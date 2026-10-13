@@ -1,11 +1,35 @@
+import NLAlib.Polynomial.FunctionApproximation.AbsoluteChebyshevSeries
 import NLAlib.Polynomial.FunctionApproximation.AnalyticApproximation
 import NLAlib.Polynomial.FunctionApproximation.AnalyticCoefficients
 import NLAlib.Polynomial.FunctionApproximation.AnalyticFourier
 import NLAlib.Polynomial.FunctionApproximation.Approximation
+import NLAlib.Polynomial.FunctionApproximation.Basic
+import NLAlib.Polynomial.FunctionApproximation.BernsteinConverse
 import NLAlib.Polynomial.FunctionApproximation.BernsteinEllipse
+import NLAlib.Polynomial.FunctionApproximation.BernsteinWalsh
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevBoundedVariation
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevCoefficientBounds
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevCoefficients
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevDifferentiable
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevFourier
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevIntegrationByParts
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevLipschitz
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevPrimitive
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevProjection
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevSeries
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevSeriesUniqueness
+import NLAlib.Polynomial.FunctionApproximation.Clenshaw
+import NLAlib.Polynomial.FunctionApproximation.EllipseCompact
+import NLAlib.Polynomial.FunctionApproximation.EllipseGeometry
 import NLAlib.Polynomial.FunctionApproximation.Exponential
+import NLAlib.Polynomial.FunctionApproximation.ExponentialChebyshevSeries
+import NLAlib.Polynomial.FunctionApproximation.FejerChebyshev
+import NLAlib.Polynomial.FunctionApproximation.HalfPlane
+import NLAlib.Polynomial.FunctionApproximation.LowerBounds
 import NLAlib.Polynomial.FunctionApproximation.Monomial
+import NLAlib.Polynomial.FunctionApproximation.Sign
+import NLAlib.Polynomial.FunctionApproximation.SignChebyshevSeries
+import NLAlib.Polynomial.FunctionApproximation.TwoIntervals
 
 /-! # `Polynomial/FunctionApproximation`
 

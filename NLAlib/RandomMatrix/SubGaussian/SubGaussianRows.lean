@@ -49,9 +49,10 @@ theorem measure_lt_specNorm_gram_sub_card_le_of_independent_isotropic_rows
     intro ω x
     change x ⬝ᵥ ((H ω) *ᵥ x) = _
     dsimp only [H]
+    have hM := star_mulVec_dotProduct_mulVec_self (Matrix.of (fun i => A i ω)) x
+    simp only [star_trivial, Matrix.conjTranspose_eq_transpose_of_trivial] at hM
     rw [Matrix.sub_mulVec, dotProduct_sub, Matrix.smul_mulVec,
-      Matrix.one_mulVec, dotProduct_smul, smul_eq_mul,
-      ← mulVec_dotProduct_mulVec_self]
+      Matrix.one_mulVec, dotProduct_smul, smul_eq_mul, ← hM]
     simp only [dotProduct, Matrix.mulVec, Matrix.of_apply, pow_two]
   have hsub : {ω | v < specNorm (H ω)} ⊆
       ⋃ x ∈ N, {ω | v / 2 < |quadForm (H ω) x|} := by

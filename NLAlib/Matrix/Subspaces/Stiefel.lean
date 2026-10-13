@@ -74,7 +74,8 @@ theorem norm_array_le_one_of_hasOrthonormalCols {n k : ℕ}
   apply (pi_norm_le_iff_of_nonneg (by norm_num)).mpr
   intro j
   have hc : ∑ a, Q a j ^ 2 = 1 := by
-    have hh := congrArg (fun M : Matrix (Fin k) (Fin k) ℝ => M j j) hQ.transpose_mul_self
+    have hh := congrArg (fun M : Matrix (Fin k) (Fin k) ℝ => M j j)
+      (show (Matrix.of Q)ᵀ * Matrix.of Q = 1 from hQ)
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply,
       Matrix.one_apply_eq, ← sq] using hh
   have he : Q i j ^ 2 ≤ 1 := by
@@ -170,6 +171,7 @@ theorem exists_orthogonalGroup_smul_eq {n k : ℕ} (hkn : k ≤ n)
   let e := Fin.castLEEmb hkn
   obtain ⟨W, hW, hWQ⟩ := exists_orthogonal_completion (Matrix.of Q.val) Q.property e
   obtain ⟨V, hV, hVQ⟩ := exists_orthogonal_completion (Matrix.of Q'.val) Q'.property e
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hW hV
   have hWt : W * Wᵀ = 1 := mul_eq_one_comm.mp hW
   let O := V * Wᵀ
   have hO : O ∈ Matrix.orthogonalGroup (Fin n) ℝ := by

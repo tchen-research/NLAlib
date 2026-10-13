@@ -117,7 +117,7 @@ lemma quadraticForm_eq_sum_diag_of_offdiag_eq_zero {n : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {x : Fin n → ℝ}
     (hA_diag : ∀ i j, i ≠ j → A i j = 0) :
     quadForm A x = ∑ i, A i i * x i ^ 2 := by
-  simp only [quadForm_eq_sum_mul_mul]
+  simp only [quadForm_eq_sum_mul_mul, star_trivial]
   apply Finset.sum_congr rfl
   intro i _
   calc
@@ -199,7 +199,7 @@ lemma quadraticForm_eq_diag_add_offDiagonal {n : ℕ}
     quadForm A x =
       (∑ i, A i i * x i ^ 2) + quadForm (offDiagonalMatrix A) x := by
   classical
-  simp only [quadForm_eq_sum_mul_mul]
+  simp only [quadForm_eq_sum_mul_mul, star_trivial]
   unfold offDiagonalMatrix
   calc
     ∑ i, ∑ j, x i * A i j * x j
@@ -260,7 +260,7 @@ lemma integrable_randomQuadraticForm_offDiagonal_of_subgaussian {μ : Measure Ω
       simp [offDiagonalMatrix, hij]
       ring
   unfold randomQuadraticForm
-  simp only [quadForm_eq_sum_mul_mul]
+  simp only [quadForm_eq_sum_mul_mul, star_trivial]
   exact MeasureTheory.integrable_finsetSum _ fun i _ =>
     MeasureTheory.integrable_finsetSum _ fun j _ => hterm i j
 
@@ -295,7 +295,7 @@ lemma integral_randomQuadraticForm_offDiagonal_eq_zero {μ : Measure Ω}
         = ∑ i, ∑ j,
             ∫ ω, X i ω * offDiagonalMatrix A i j * X j ω ∂μ := by
           unfold randomQuadraticForm
-          simp only [quadForm_eq_sum_mul_mul]
+          simp only [quadForm_eq_sum_mul_mul, star_trivial]
           rw [MeasureTheory.integral_finsetSum _ (fun i _ => hrow_int i)]
           apply Finset.sum_congr rfl
           intro i _

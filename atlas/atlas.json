@@ -457,16 +457,16 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_mul_left_of_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Norms.Frobenius",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.frobSq_mul_left_of_orthonormal",
      "module": "NLAlib.Matrix.Norms.Frobenius",
      "status": "proved",
      "usage": "Pass `hQ : Q.transpose * Q = 1` and any `X`; gives `frobSq (Q * X) = frobSq X`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_mul_left_of_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1092,31 +1092,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.moorePenroseInverse_eq_pinvL_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.moorePenroseInverse_eq_pinvR_of_isUnit_mul_conjTranspose_self",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.moorePenroseInverse_moorePenroseInverse",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved",
-     "usage": "Apply to any A; recover A by taking its general pseudoinverse twice."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobSq_moorePenroseInverse_eq_re_trace_moorePenroseInverse",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.moorePenroseInverse_eq_pinvL",
      "module": "NLAlib.Matrix.Basic.MoorePenrose",
      "status": "proved",
@@ -1128,6 +1103,13 @@
      "module": "NLAlib.Matrix.Basic.MoorePenrose",
      "status": "proved",
      "usage": "Pass A and IsUnit(AAᵀ); identify the general inverse with pinvR."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.moorePenroseInverse_moorePenroseInverse",
+     "module": "NLAlib.Matrix.Basic.MoorePenrose",
+     "status": "proved",
+     "usage": "Apply to any A; recover A by taking its general pseudoinverse twice."
     },
     {
      "library": "nlalib",
@@ -1166,18 +1148,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.pinvL_mul_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.mul_pinvR_of_isUnit_mul_conjTranspose_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.pinvL_mul",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -1197,18 +1167,6 @@
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
      "usage": "No hypotheses; rewrites `(pinvL G)ᵀ = pinvR Gᵀ`, converting left-pseudoinverse statements into right-pseudoinverse ones."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.mul_pinvL_mul_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.pinvL_mul_pinvL_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1232,19 +1190,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.mul_pinvL_isSymm",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved",
-     "usage": "No hypotheses (Mathlib's total inverse); gives `(G * pinvL G).IsSymm`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.mul_pinvL_isIdempotentElem_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.mul_pinvL_isIdempotentElem",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -1252,16 +1197,9 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_pinvR_eq_re_trace_inv",
+     "decl": "NLAlib.frobSq_pinvR_eq_trace_inv",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobSq_pinvR",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved",
-     "usage": "Apply with `h : IsUnit (G * Gᵀ)`; gives `frobSq (pinvR G) = (G * Gᵀ)⁻¹.trace` (use `frobSq_pinvR_eq_trace_inv` to drop `h`)."
     },
     {
      "library": "nlalib",
@@ -1359,7 +1297,7 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.specNorm_le_one_of_isHermitian_of_isIdempotentElem",
+     "decl": "Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved"
     },
@@ -1385,13 +1323,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.transpose_mul_residual",
-     "module": "NLAlib.Matrix.Subspaces.Projections",
-     "status": "proved",
-     "usage": "Pass `hQ : HasOrthonormalCols Q`; gives `Qᵀ * residual Q A = 0`."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.residual_mul_eq_zero_of_range",
      "module": "NLAlib.Matrix.Subspaces.Projections",
      "status": "proved",
@@ -1411,12 +1342,6 @@
      "module": "NLAlib.Matrix.Subspaces.Projections",
      "status": "proved",
      "usage": "Pass `hQ : HasOrthonormalCols Q`; gives `frobSq (residual Q A) ≤ frobSq A`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobSq_sub_mul_eq_frobSq_residual_add_frobSq_conjTranspose_mul_sub",
-     "module": "NLAlib.Matrix.Subspaces.Projections",
-     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1510,24 +1435,9 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.exists_orthogonal_completion",
-     "module": "NLAlib.Matrix.Subspaces.Projections",
-     "status": "proved",
-     "usage": "Pass `V : Matrix (Fin n) ι ℝ` with `hV : Vᵀ * V = 1` and a column placement `e : ι ↪ Fin n`; gives an orthogonal `W` (`Wᵀ * W = 1`) with `W i (e j) = V i j`, whose remaining columns are the completion `Q⊥`.",
-     "note": "matrix form: V with orthonormal columns along an embedding ι ↪ Fin n extends to an orthogonal W; lives in Gaussian/Invariance.lean, to move to Matrix/Projections"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.exists_unitary_complement",
      "module": "NLAlib.Matrix.Subspaces.Projections",
      "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.exists_orthonormal_complement",
-     "module": "NLAlib.Matrix.Subspaces.Projections",
-     "status": "proved",
-     "usage": "Pass `hQ : HasOrthonormalCols Q` for `Q : Matrix (Fin m) (Fin q) ℝ`; gives `∃ r Qp, HasOrthonormalCols Qp ∧ Q * Qᵀ + Qp * Qpᵀ = 1`."
     },
     {
      "library": "lra",
@@ -2806,12 +2716,6 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_pinvR_eq_re_trace_inv",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.frobSq_pinvR_eq_trace_inv",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -3318,13 +3222,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.lamMin",
-     "module": "NLAlib.Matrix.Spectral.Core",
-     "status": "proved",
-     "usage": "The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty)."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.sigmaMin",
      "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
@@ -3385,7 +3282,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "notes": "The extension proves the stronger spectral-norm perturbation bound and relates the domain minimum singular value to the singular-value API; the Frobenius bound follows from norm comparison."
   },
   {
@@ -13293,24 +13190,10 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.lamMin",
-     "module": "NLAlib.Matrix.Spectral.Core",
-     "status": "proved",
-     "usage": "The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty)."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.sigmaMin",
      "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The smallest singular value of a tall matrix `A : Matrix m n ℝ`: `σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention `inf ∅ = 0`)."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.sigmaMinSq",
-     "module": "NLAlib.Matrix.Spectral.Core",
-     "status": "proved",
-     "usage": "The squared smallest singular value of a tall matrix, `σ_min(A)² = λ_min(AᵀA)` (`sigmaMinSq_eq_sigmaMin_sq`)."
     },
     {
      "library": "nlalib",
@@ -13343,7 +13226,7 @@
    "tags": [
     "definition"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "best-rank-approx-def",

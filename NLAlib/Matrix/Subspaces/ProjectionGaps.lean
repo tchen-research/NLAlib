@@ -21,7 +21,7 @@ orthogonal complement. Stewart–Sun §I.5, used for principal angles. -/
 theorem dotProduct_projector_add_complement {P : Matrix n n ℝ}
     (hs : P.IsSymm) (hp : IsIdempotentElem P) (x : n → ℝ) :
     (P *ᵥ x) ⬝ᵥ (P *ᵥ x) + ((1 - P) *ᵥ x) ⬝ᵥ ((1 - P) *ᵥ x) = x ⬝ᵥ x := by
-  have hP := mulVec_dotProduct_mulVec_self P x
+  have hP : (P *ᵥ x) ⬝ᵥ (P *ᵥ x) = x ⬝ᵥ ((Pᵀ * P) *ᵥ x) := star_mulVec_dotProduct_mulVec_self P x
   rw [hs.eq, show P * P = P from hp] at hP
   rw [Matrix.sub_mulVec, Matrix.one_mulVec, sub_dotProduct, dotProduct_sub,
     dotProduct_sub, dotProduct_comm (P *ᵥ x) x, hP]
@@ -99,7 +99,7 @@ theorem specNorm_sub_projector_eq_max {P Q : Matrix n n ℝ}
       rw [heq]
       have hPcs : (1-P).IsSymm := by simp [Matrix.IsSymm, hPs.eq]
       exact (specNorm_mul_le _ _).trans (by
-        have hh := specNorm_le_one_of_isSymm_of_isIdempotentElem hPcs hPc
+        have hh : specNorm (1 - P) ≤ 1 := specNorm_le_one_of_isSymm_of_isIdempotentElem hPcs hPc
         rw [specNorm_neg]
         nlinarith [specNorm_nonneg (P-Q)])
 
@@ -150,11 +150,12 @@ theorem transpose_residual_mul_residual_eq_one_sub_overlap {p : Type*} [Decidabl
     {P : Matrix m n ℝ} {Q : Matrix m p ℝ} (hP : HasOrthonormalCols P)
     (hQ : HasOrthonormalCols Q) :
     (residual P Q)ᵀ * residual P Q = 1 - (Pᵀ*Q)ᵀ*(Pᵀ*Q) := by
-  rw [residual_eq_one_sub_mul, Matrix.transpose_mul,
+  rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul,
     show (1-P*Pᵀ)ᵀ = 1-P*Pᵀ by simp,
     Matrix.mul_assoc, ← Matrix.mul_assoc (1-P*Pᵀ),
-    one_sub_mul_transpose_idem hP, Matrix.sub_mul, Matrix.mul_sub,
-    Matrix.one_mul, hQ.transpose_mul_self]
+    show (1 - P*Pᵀ) * (1 - P*Pᵀ) = 1 - P*Pᵀ from one_sub_mul_conjTranspose_idem hP, Matrix.sub_mul,
+    Matrix.mul_sub,
+    Matrix.one_mul, (show Qᵀ * Q = 1 from hQ)]
   simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
 
 /-- **Symmetry of `θ_max` for equal dimensions.** The two residuals between equal-width
@@ -182,16 +183,17 @@ theorem specNorm_sub_frame_projector_eq_residual {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     specNorm (P*Pᵀ - Q*Qᵀ) = specNorm (residual P Q) := by
   rw [specNorm_sub_projector_eq_max (by simp [Matrix.IsSymm])
-    (mul_transpose_mul_mul_transpose hP) (by simp [Matrix.IsSymm])
-    (mul_transpose_mul_mul_transpose hQ)]
+    (show P*Pᵀ*(P*Pᵀ) = P*Pᵀ from mul_conjTranspose_mul_mul_conjTranspose hP)
+    (by simp [Matrix.IsSymm])
+    (show Q*Qᵀ*(Q*Qᵀ) = Q*Qᵀ from mul_conjTranspose_mul_mul_conjTranspose hQ)]
   have hleft : (1-Q*Qᵀ)*(P*Pᵀ) = residual Q P * Pᵀ := by
-    rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
+    rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_assoc]
   have hright : (Q*Qᵀ)*(1-P*Pᵀ) = (residual P Q * Qᵀ)ᵀ := by
-    rw [residual_eq_one_sub_mul]
+    rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial]
     simp [Matrix.transpose_mul, Matrix.transpose_sub, Matrix.mul_assoc]
   rw [hleft, hright, specNorm_transpose,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hP.transpose_mul_self,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hQ.transpose_mul_self,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols (show Pᵀ * P = 1 from hP),
+    specNorm_mul_transpose_right_of_hasOrthonormalCols (show Qᵀ * Q = 1 from hQ),
     specNorm_residual_comm hQ hP, max_self]
 
 omit [DecidableEq m] [DecidableEq n] in
@@ -199,7 +201,9 @@ omit [DecidableEq m] [DecidableEq n] in
 Frobenius norm of the overlap. Stewart–Sun §I.5. -/
 theorem frobInner_frame_projectors_eq_frobSq_overlap (P Q : Matrix m n ℝ) :
     frobInner (P*Pᵀ) (Q*Qᵀ) = frobSq (Pᵀ*Q) := by
-  rw [frobInner_eq_trace, frobSq, frobInner_eq_trace]
+  rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial]
   simp only [Matrix.transpose_mul, Matrix.transpose_transpose]
   rw [← Matrix.mul_assoc (P*Pᵀ) Q Qᵀ, Matrix.trace_mul_cycle (P*Pᵀ) Q Qᵀ]
   simp only [Matrix.mul_assoc]
@@ -211,9 +215,10 @@ atlas: principal-angles-def (partial) -/
 theorem frobSq_sub_frame_projector_eq_two_mul_residual {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     frobSq (P*Pᵀ-Q*Qᵀ) = 2 * frobSq (residual P Q) := by
-  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hP.transpose_mul_self,
-    frobSq_mul_left_of_orthonormal hQ.transpose_mul_self, frobSq_transpose, frobSq_transpose,
-    frobSq_residual_eq_sub hP, frobSq_frame_eq_card hP, frobSq_frame_eq_card hQ,
+  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hP,
+    frobSq_mul_left_of_orthonormal hQ, frobSq_transpose, frobSq_transpose,
+    frobSq_residual_eq_sub hP, Matrix.conjTranspose_eq_transpose_of_trivial,
+    frobSq_frame_eq_card hP, frobSq_frame_eq_card hQ,
     frobInner_frame_projectors_eq_frobSq_overlap]
   ring
 
@@ -261,15 +266,18 @@ theorem specNorm_complement_mul_projector_eq_of_rank_eq {P Q : Matrix n n ℝ}
     calc
       _ = (1-Q)*(U*Uᵀ) := congrArg (fun T => (1-Q)*T) hPU
       _ = (1-V'*V'ᵀ)*(U*Uᵀ) := congrArg (fun T => (1-T)*(U*Uᵀ)) hQV'
-      _ = _ := by rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
+      _ = _ := by
+        rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_assoc]
   have hright : (1-P)*Q = residual U V'*V'ᵀ := by
     calc
       _ = (1-P)*(V'*V'ᵀ) := congrArg (fun T => (1-P)*T) hQV'
       _ = (1-U*Uᵀ)*(V'*V'ᵀ) := congrArg (fun T => (1-T)*(V'*V'ᵀ)) hPU
-      _ = _ := by rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
+      _ = _ := by
+        rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_assoc]
   rw [hleft, hright,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hU.transpose_mul_self,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hV'.transpose_mul_self, specNorm_residual_comm hV' hU]
+    specNorm_mul_transpose_right_of_hasOrthonormalCols (show Uᵀ * U = 1 from hU),
+    specNorm_mul_transpose_right_of_hasOrthonormalCols (show V'ᵀ * V' = 1 from hV'),
+    specNorm_residual_comm hV' hU]
 
 /-- For equal-rank orthogonal projections, the projector distance is one
 one-sided gap norm. Stewart–Sun §I.5, with no positive-rank restriction. -/

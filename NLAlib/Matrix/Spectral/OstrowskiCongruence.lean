@@ -47,8 +47,9 @@ theorem eigenvalues₀_congruence_bounds_of_nonneg {A : Matrix n n ℝ}
     intro x hx
     change Sᵀ *ᵥ x ∈ V at hx
     change _ ≤ quadForm (S * A * Sᵀ) x
-    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
-      quadForm_transpose_mul_mul]
+    rw [show S * A * Sᵀ = (Sᵀ)ᴴ * A * Sᵀ by
+        rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose],
+      quadForm_conjTranspose_mul_mul]
     calc
       _ = hA.eigenvalues₀ k * (sigmaMin S ^ 2 * (x ⬝ᵥ x)) := by ring
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) :=
@@ -61,8 +62,9 @@ theorem eigenvalues₀_congruence_bounds_of_nonneg {A : Matrix n n ℝ}
     intro x hx
     change Sᵀ *ᵥ x ∈ W at hx
     change quadForm (S * A * Sᵀ) x ≤ _
-    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
-      quadForm_transpose_mul_mul]
+    rw [show S * A * Sᵀ = (Sᵀ)ᴴ * A * Sᵀ by
+        rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose],
+      quadForm_conjTranspose_mul_mul]
     calc
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) := hAW _ hx
       _ ≤ hA.eigenvalues₀ k * (specNorm S ^ 2 * (x ⬝ᵥ x)) :=
@@ -95,8 +97,9 @@ theorem eigenvalues₀_congruence_bounds_of_nonpos {A : Matrix n n ℝ}
     intro x hx
     change Sᵀ *ᵥ x ∈ V at hx
     change _ ≤ quadForm (S * A * Sᵀ) x
-    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
-      quadForm_transpose_mul_mul]
+    rw [show S * A * Sᵀ = (Sᵀ)ᴴ * A * Sᵀ by
+        rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose],
+      quadForm_conjTranspose_mul_mul]
     calc
       _ = hA.eigenvalues₀ k * (specNorm S ^ 2 * (x ⬝ᵥ x)) := by ring
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) :=
@@ -109,8 +112,9 @@ theorem eigenvalues₀_congruence_bounds_of_nonpos {A : Matrix n n ℝ}
     intro x hx
     change Sᵀ *ᵥ x ∈ W at hx
     change quadForm (S * A * Sᵀ) x ≤ _
-    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
-      quadForm_transpose_mul_mul]
+    rw [show S * A * Sᵀ = (Sᵀ)ᴴ * A * Sᵀ by
+        rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose],
+      quadForm_conjTranspose_mul_mul]
     calc
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) := hAW _ hx
       _ ≤ hA.eigenvalues₀ k * (sigmaMin S ^ 2 * (x ⬝ᵥ x)) :=

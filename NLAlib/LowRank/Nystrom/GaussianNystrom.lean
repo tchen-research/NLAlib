@@ -104,7 +104,7 @@ theorem integrable_and_integral_frobSq_sub_sketchedOutput_le_rank_factor_gaussia
   have hRange := rsvd_main_gaussian hA hU₂ hV₁ hV₂ hV hkt Ω hΩ
     (fun ω => Qf (Matrix.of.symm (Ω ω))) hQo hQr
   apply mul_le_mul_of_nonneg_left _ hc0
-  simpa only [residual_eq_sub_mul_transpose_mul] using hRange
+  simpa only [residual, Matrix.conjTranspose_eq_transpose_of_trivial] using hRange
 
 /-- **Generalized Nyström with Gaussian sketches** (Chen–Persson, Theorem `thm:GN`; Tropp–Webber
 2023, Thm 5.1). `Ω` (`n × t`) and `Ψ` (`m × s`) independent standard Gaussian matrices,

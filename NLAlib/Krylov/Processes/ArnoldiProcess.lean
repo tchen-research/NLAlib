@@ -188,7 +188,7 @@ theorem range_arnoldiMatrix (A : Matrix n n ℝ) (b : n → ℝ) (q : ℕ) :
 atlas: arnoldi-def (partial) -/
 theorem hasOrthonormalCols_arnoldiMatrix {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
     (h : q ≤ krylovGrade A b) : HasOrthonormalCols (arnoldiMatrix A b q) := by
-  rw [hasOrthonormalCols_iff_transpose_mul_self]
+  rw [hasOrthonormalCols_iff_conjTranspose_mul_self, Matrix.conjTranspose_eq_transpose_of_trivial]
   ext i j
   rw [transpose_mul_self_apply, arnoldiMatrix_col, arnoldiMatrix_col,
     arnoldiBasis_dotProduct A b (by omega) (by omega), Matrix.one_apply]

@@ -176,7 +176,8 @@ theorem mul_transpose_le_one_iff_specNorm_le_one {m : Type*} [Fintype m]
   have hM : (M * Mᵀ).PosSemidef := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
       Matrix.posSemidef_self_mul_conjTranspose M
-  rw [le_one_iff_specNorm_le_one_of_posSemidef hM, specNorm_mul_transpose_self]
+  rw [le_one_iff_specNorm_le_one_of_posSemidef hM,
+    ← Matrix.conjTranspose_eq_transpose_of_trivial M, specNorm_mul_conjTranspose_self]
   exact sq_le_one_iff₀ (specNorm_nonneg M)
 
 /-- A square comparison of symmetric matrices is equivalent to a relative

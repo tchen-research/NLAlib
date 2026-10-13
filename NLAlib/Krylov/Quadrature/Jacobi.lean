@@ -100,7 +100,7 @@ theorem integral_poly_mul_poly (D : LanczosDecomp A b q) (hA : A.IsHermitian) {i
 
 /-- The Jacobi matrix of a symmetric `A` is Hermitian. Atlas: `lanczos-recurrence`. -/
 theorem isHermitian_T (D : LanczosDecomp A b q) (hA : A.IsHermitian) : D.T.IsHermitian :=
-  isHermitian_transpose_mul_mul hA D.Q
+  Matrix.isHermitian_conjTranspose_mul_mul D.Q hA
 
 /-- **Three-term recurrence of the Lanczos polynomials**: for symmetric `A` and `j + 1 < q`,
 `X p_j = β_j p_{j−1} + α_j p_j + β_{j+1} p_{j+1}`, so the Jacobi matrix `T` holds the recurrence

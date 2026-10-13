@@ -40,11 +40,13 @@ variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-! ### Euclidean-norm bridges -/
 
+omit [DecidableEq m] in
 private lemma norm_toLp_mulVec_le (A : Matrix m n ℝ) (x : n → ℝ) :
     ‖(WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace ℝ m)‖ ≤
       specNorm A * ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖ := by
   simpa [specNorm_eq_norm] using A.l2_opNorm_mulVec (WithLp.toLp 2 x)
 
+omit [DecidableEq m] in
 /-- `|uᵀ A x| ≤ ‖u‖₂ ‖A‖₂ ‖x‖₂`. Atlas `norms-frob-spec`. -/
 theorem abs_dotProduct_mulVec_le (A : Matrix m n ℝ) (u : m → ℝ) (x : n → ℝ) :
     |u ⬝ᵥ (A *ᵥ x)| ≤ √(u ⬝ᵥ u) * (specNorm A * √(x ⬝ᵥ x)) := by
@@ -61,6 +63,7 @@ theorem abs_dotProduct_mulVec_le (A : Matrix m n ℝ) (u : m → ℝ) (x : n →
         exact norm_toLp_mulVec_le A x
     _ = _ := by rw [← sqrt_dotProduct_self_eq_norm, ← sqrt_dotProduct_self_eq_norm]
 
+omit [DecidableEq m] in
 /-- The spectral norm is at most `K ≥ 0` as soon as `‖A y‖₂ ≤ K` for every unit vector `y`.
 Atlas `epsilon-net-norm` (helper). -/
 theorem specNorm_le_of_forall_sqrt_le (A : Matrix m n ℝ) {K : ℝ} (hK : 0 ≤ K)
@@ -103,11 +106,12 @@ theorem exists_unit_abs_quadForm_eq_specNorm [Nonempty n] {B : Matrix n n ℝ} (
     exact hs
   refine ⟨v, hv, ?_⟩
   have hBv : B *ᵥ v = hH.eigenvalues i • v := hH.mulVec_eigenvectorBasis i
-  rw [quadForm_eq_dotProduct, hBv, dotProduct_smul, hv, smul_eq_mul, mul_one, specNorm_eq_norm_eigenvalues hH,
+  rw [quadForm_def, star_trivial, hBv, dotProduct_smul, hv, smul_eq_mul, mul_one, specNorm_eq_norm_eigenvalues hH,
     ← hi, Real.norm_eq_abs]
 
 /-! ### Deterministic net lemmas -/
 
+omit [DecidableEq m] in
 /-- **Spectral norm from a net (operator form).** If `N` is an `ε`-net of the unit sphere
 (`∀ y` unit, `∃ x ∈ N`, `‖x - y‖₂ ≤ ε`) with `0 ≤ ε < 1`, and `‖Ax‖₂ ≤ M` for every `x ∈ N`
 (`M ≥ 0`), then `‖A‖₂ ≤ M/(1-ε)`. The net points need not be unit vectors. `hM0` is needed:
@@ -142,6 +146,7 @@ theorem specNorm_le_div_of_net (A : Matrix m n ℝ) (N : Finset (n → ℝ)) {ε
   rw [le_div_iff₀ (by linarith)]
   linarith
 
+omit [DecidableEq m] in
 /-- **Spectral norm from two nets (bilinear form).** If `N` and `N'` are `ε`-nets of the unit
 spheres of `ℝⁿ` and `ℝᵐ`, the points of `N'` being unit vectors, `0 ≤ ε < 1/2`, and `yᵀ A x ≤ M` for all
 `x ∈ N`, `y ∈ N'` (`M ≥ 0`), then `‖A‖₂ ≤ M/(1-2ε)`.
@@ -215,7 +220,7 @@ theorem specNorm_le_div_of_net_quadForm {B : Matrix n n ℝ} (hB : B.IsSymm)
     obtain ⟨x, hxN, hxy⟩ := hN y hy
     have hd : √((x - y) ⬝ᵥ (x - y)) ≤ ε := by rw [Real.sqrt_le_left hε0]; exact hxy
     have hsplit : quadForm B y = quadForm B x - (x - y) ⬝ᵥ (B *ᵥ x) - y ⬝ᵥ (B *ᵥ (x - y)) := by
-      simp only [quadForm_eq_dotProduct, Matrix.mulVec_sub, sub_dotProduct, dotProduct_sub]
+      simp only [quadForm_def, star_trivial, Matrix.mulVec_sub, sub_dotProduct, dotProduct_sub]
       ring
     have h1 := abs_dotProduct_mulVec_le B (x - y) x
     have h2 := abs_dotProduct_mulVec_le B y (x - y)

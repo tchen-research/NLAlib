@@ -184,7 +184,9 @@ theorem hardCoreCompressedG_coordinateQuadratic_nonneg
     (F : Frame n d) (T : Finset (Site m n)) (ell : ℕ)
     (x : BlockIndex d T ell → ℝ) :
     0 ≤ quadForm (hardCoreCompressedG F T ell) x := by
-  rw [hardCoreCompressedG, quadForm_transpose_mul_mul]
+  rw [hardCoreCompressedG,
+    ← Matrix.conjTranspose_eq_transpose_of_trivial (hardCoreEmbedding (d := d) T ell),
+    quadForm_conjTranspose_mul_mul]
   exact labelledG_coordinateQuadratic_nonneg F ell _
 
 /-- Sharp concrete bound on the explicitly normalized hard-core
@@ -197,7 +199,9 @@ theorem hardCoreCompressedG_coordinateQuadratic_le
     (x : BlockIndex d T ell → ℝ) (hell : 1 ≤ ell) :
     quadForm (hardCoreCompressedG F T ell) x ≤
       ((d : ℝ) + (ell : ℝ) - 1) * sumSq x := by
-  rw [hardCoreCompressedG, quadForm_transpose_mul_mul,
+  rw [hardCoreCompressedG,
+    ← Matrix.conjTranspose_eq_transpose_of_trivial (hardCoreEmbedding (d := d) T ell),
+    quadForm_conjTranspose_mul_mul,
     ← hardCoreEmbedding_energy T ell x]
   exact labelledG_coordinateQuadratic_le F ell _ hell
 

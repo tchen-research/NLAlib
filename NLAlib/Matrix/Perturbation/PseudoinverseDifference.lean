@@ -20,7 +20,8 @@ expressed using transposes. Stewart–Sun §III.3, Penrose identities. -/
 theorem moorePenroseInverse_mul_transpose_mul_transpose (A : Matrix m n ℝ) :
     moorePenroseInverse A*(moorePenroseInverse A)ᵀ*Aᵀ = moorePenroseInverse A := by
   rw [Matrix.mul_assoc, ← Matrix.transpose_mul,
-    (isMoorePenroseInverse A).transpose_mul_eq, ← Matrix.mul_assoc,
+    (show (A * moorePenroseInverse A)ᵀ = A * moorePenroseInverse A from
+      (isMoorePenroseInverse A).conjTranspose_mul_eq), ← Matrix.mul_assoc,
     moorePenroseInverse_mul_moorePenroseInverse]
 
 omit [DecidableEq n] in
@@ -45,7 +46,8 @@ theorem transpose_mul_complement_columnProjector_eq_zero (A : Matrix m n ℝ) :
     Aᵀ*(1-A*moorePenroseInverse A) = 0 := by
   have hh := congrArg Matrix.transpose (complement_columnProjector_mul_eq_zero A)
   simpa only [Matrix.transpose_mul, Matrix.transpose_sub, Matrix.transpose_one,
-    (isMoorePenroseInverse A).transpose_mul_eq, Matrix.transpose_zero] using hh
+    (show (A * moorePenroseInverse A)ᵀ = A * moorePenroseInverse A from
+      (isMoorePenroseInverse A).conjTranspose_mul_eq), Matrix.transpose_zero] using hh
 
 omit [DecidableEq m] in
 /-- The complementary row projector annihilates the adjoint matrix.
@@ -54,7 +56,8 @@ theorem complement_rowProjector_mul_transpose_eq_zero (A : Matrix m n ℝ) :
     (1-moorePenroseInverse A*A)*Aᵀ = 0 := by
   have hh := congrArg Matrix.transpose (mul_complement_rowProjector_eq_zero A)
   simpa only [Matrix.transpose_mul, Matrix.transpose_sub, Matrix.transpose_one,
-    (isMoorePenroseInverse A).transpose_inv_mul_eq, Matrix.transpose_zero] using hh
+    (show (moorePenroseInverse A * A)ᵀ = moorePenroseInverse A * A from
+      (isMoorePenroseInverse A).conjTranspose_inv_mul_eq), Matrix.transpose_zero] using hh
 
 /-- The exact Moore–Penrose difference identity with its three signs and
 complementary range projectors (Wedin's identity):
@@ -72,7 +75,8 @@ theorem moorePenroseInverse_sub_eq (A B : Matrix m n ℝ) :
   let b := moorePenroseInverse B
   have hb : b*bᵀ*Bᵀ = b := moorePenroseInverse_mul_transpose_mul_transpose B
   have ha : Aᵀ*aᵀ*a = a := by
-    rw [← Matrix.transpose_mul, (isMoorePenroseInverse A).transpose_inv_mul_eq]
+    rw [← Matrix.transpose_mul, (show (moorePenroseInverse A * A)ᵀ = moorePenroseInverse A * A from
+      (isMoorePenroseInverse A).conjTranspose_inv_mul_eq)]
     exact moorePenroseInverse_mul_moorePenroseInverse A
   have ha0 : Aᵀ*(1-A*a)=0 := transpose_mul_complement_columnProjector_eq_zero A
   have hb0 : (1-b*B)*Bᵀ=0 := complement_rowProjector_mul_transpose_eq_zero B

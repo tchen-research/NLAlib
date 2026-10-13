@@ -36,13 +36,14 @@ theorem det_gram_fromCols_eq_mul_frobSq_sub_projector
       rw [Matrix.sub_mul, Matrix.one_mul]
     have hf : frobSq (v - P * v) =
         (vᵀ * v - vᵀ * B * G⁻¹ * (Bᵀ * v)).trace := by
-      rw [hleft, frobSq, frobInner_eq_trace, Matrix.transpose_mul]
+      rw [hleft, frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul]
       simp only [Matrix.mul_assoc]
       rw [← Matrix.mul_assoc (1 - P)ᵀ, hcomp]
       rw [← Matrix.mul_assoc vᵀ, Matrix.mul_sub, Matrix.mul_one, Matrix.sub_mul]
       dsimp only [P, G]
       rw [moorePenroseInverse_eq_pinvL B hG]
-      simp only [pinvL_eq_inv_transpose_mul_mul_transpose, Matrix.mul_assoc]
+      simp only [pinvL, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_assoc]
     have hdet : ((Matrix.fromCols B v)ᵀ * Matrix.fromCols B v).det =
         G.det * (vᵀ * v - vᵀ * B * G⁻¹ * (Bᵀ * v)).det := by
       rw [Matrix.transpose_fromCols, Matrix.fromRows_mul_fromCols,

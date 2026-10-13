@@ -128,7 +128,7 @@ theorem mul_headColumns_projector (h : IsSVD A U V) (hkn : k ≤ n) :
 Wedin (1972), Section 3. -/
 theorem residual_headColumns_eq_sub_truncatedMatrix (h : IsSVD A U V) (hkm : k ≤ m) :
     residual (headColumns U hkm) A = A - h.truncatedMatrix k := by
-  rw [residual_eq_sub_mul_transpose_mul, ← Matrix.mul_assoc, h.headColumns_projector_mul hkm]
+  rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc, h.headColumns_projector_mul hkm]
 
 /-- The right leading-frame residual of the transpose is the transposed tail.
 Wedin (1972), Section 3. -/
@@ -137,7 +137,7 @@ theorem residual_headColumns_transpose_eq_sub_truncatedMatrix_transpose
     residual (headColumns V hkn) Aᵀ = (A - h.truncatedMatrix k)ᵀ := by
   have hp := congrArg Matrix.transpose (h.mul_headColumns_projector hkn)
   simp only [Matrix.transpose_mul, Matrix.transpose_transpose] at hp
-  rw [residual_eq_sub_mul_transpose_mul, ← Matrix.mul_assoc, hp, Matrix.transpose_sub]
+  rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc, hp, Matrix.transpose_sub]
 
 end IsSVD
 end NLAlib

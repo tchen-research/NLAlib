@@ -37,7 +37,8 @@ theorem frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le {r : ℕ} (X E : 
   have hp : IsIdempotentElem P := mul_moorePenroseInverse_isIdempotentElem X
   have hinner : frobInner X E = frobInner X (P * E) := by
     have h := frobInner_mul_mul P X (1 : Matrix m m ℝ) E
-    rw [hPX, Matrix.one_mul, Matrix.mul_one, hs.eq] at h
+    rw [hPX, Matrix.one_mul, Matrix.mul_one, Matrix.conjTranspose_eq_transpose_of_trivial,
+      hs.eq] at h
     exact h
   have hrank : ((P * E).rank : ℝ) ≤ r := by
     have h1 : (P * E).rank ≤ P.rank := Matrix.rank_mul_le_left P E
@@ -258,13 +259,16 @@ theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (F
   set D : Matrix (Fin m) (Fin n) ℝ := Uᵀ * E * V with hDdef
   have hD : singularValues D = singularValues E := by
     have hU : HasOrthonormalCols Uᵀ := by
-      rw [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose]
+      rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
+        Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
       exact h.mul_transpose_left
     rw [hDdef, singularValues_mul_orthogonal _ h.transpose_mul_right,
       singularValues_isometry_mul hU]
   have hinner : frobInner X E =
       frobInner (rectDiag (singularValues X) : Matrix (Fin m) (Fin n) ℝ) D := by
-    rw [frobInner_eq_trace, frobInner_eq_trace]
+    rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial]
     conv_lhs => rw [h.eq_mul_transpose]
     simp only [hDdef, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
     rw [Matrix.trace_mul_comm V]

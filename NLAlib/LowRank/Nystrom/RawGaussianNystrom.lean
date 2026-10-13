@@ -29,7 +29,8 @@ theorem measurableSet_hasOrthonormalCols_of_entries
   have hEq : {x | HasOrthonormalCols (Q x)} =
       ⋂ i, ⋂ j, {x | ((Q x)ᵀ * Q x) i j = (1 : Matrix q q ℝ) i j} := by
     ext x
-    simp only [hasOrthonormalCols_iff_transpose_mul_self, Matrix.ext_iff, Set.mem_iInter,
+    simp only [hasOrthonormalCols_iff_conjTranspose_mul_self,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.ext_iff, Set.mem_iInter,
       Set.mem_ofPred_eq]
   rw [hEq]
   exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun j =>
@@ -154,7 +155,7 @@ theorem sketchedOutput_eq_of_projector_eq
     _ = Q * pinvL (Ψᵀ * Q) * (Ψᵀ * (Q * (Qᵀ * A))) := by rw [hProj]
     _ = Q * (pinvL (Ψᵀ * Q) * (Ψᵀ * Q)) * (Qᵀ * A) := by
       simp only [Matrix.mul_assoc]
-    _ = A := by rw [pinvL_mul hΨ, Matrix.mul_one, hProj]
+    _ = A := by rw [pinvL_mul (G := Ψᵀ * Q) hΨ, Matrix.mul_one, hProj]
 
 /-- **Raw Gaussian Nyström exact recovery in the rank-deficient sketch regime.**
 If both Gaussian sketches have at least `rank A` columns, the actual raw Moore–Penrose

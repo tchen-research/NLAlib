@@ -151,7 +151,7 @@ theorem exists_subseq_eigenvalues₀_sum_difference_quotient_tendsto
       calc
         _ = ∑ j : J, quadForm B (u j) := by
           simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.transpose_apply,
-            Q, Matrix.submatrix_apply, id_eq, quadForm_eq_dotProduct, u, Matrix.mulVec, dotProduct,
+            Q, Matrix.submatrix_apply, id_eq, quadForm_def, star_trivial, u, Matrix.mulVec, dotProduct,
             Finset.sum_mul, Finset.mul_sum]
           apply Finset.sum_congr rfl
           intro j _

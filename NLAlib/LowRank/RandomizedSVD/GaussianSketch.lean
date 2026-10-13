@@ -205,7 +205,9 @@ theorem completion_gaussian_inputs [IsProbabilityMeasure μ] {m s q rp : ℕ} {�
     rw [← frobSq_transpose, pinvL_transpose, Matrix.transpose_mul, Matrix.transpose_transpose]
   refine ⟨?_, ?_, ?_⟩
   · filter_upwards [ae_isUnit_block hΨ Q hQ (by omega)] with ω h
-    rwa [gram_transpose_mul_eq]
+    have hg := gram_conjTranspose_mul_eq (Matrix.of (Ψ ω)) Q
+    simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hg
+    rwa [hg]
   · simp_rw [h2]
     exact integral_pinvR_block hΨ Q hQ hqs
   · simp_rw [h1]
@@ -230,7 +232,9 @@ theorem completion_reduction_gaussian_integrable [IsProbabilityMeasure μ] {m s 
     Integrable (fun ω => frobSq (A - sketchedOutput Q (Ψ ω) A)) μ ∧
     ∫ ω, frobSq (A - sketchedOutput Q (Ψ ω) A) ∂μ
       = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) := by
-  have hQQp := transpose_mul_eq_zero_of_completion hQ.transpose_mul_self hQp hcomp
+  have hQQp : Qᵀ * Qp = 0 :=
+    conjTranspose_mul_eq_zero_of_completion hQ.conjTranspose_mul_self hQp.conjTranspose_mul_self
+      hcomp
   obtain ⟨hG₁, hG₁m, hGi⟩ :=
     completion_gaussian_inputs hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A) hqs
   have hG₂ := integral_frobSq_pinvL_block_mul_block_mul hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A)
@@ -299,7 +303,7 @@ theorem completion_gaussian_of_orthonormal {ι : Type*} [Fintype ι] [DecidableE
     Integrable (fun y => frobSq (A - sketchedOutput Q (Matrix.of y) A)) (gaussianMatrix m s) ∧
     ∫ y, frobSq (A - sketchedOutput Q (Matrix.of y) A) ∂gaussianMatrix m s
       = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) := by
-  obtain ⟨r, Qp, hQp, hcomp⟩ := exists_orthonormal_complement Q hQ
+  obtain ⟨r, Qp, hQp, hcomp⟩ := exists_unitary_complement Q hQ
   exact completion_reduction_gaussian_integrable (μ := gaussianMatrix m s) Q Qp A hQ hQp hcomp
     hq hqs (fun y => Matrix.of y) Measure.map_id
 

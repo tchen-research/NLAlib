@@ -28,7 +28,10 @@ theorem quadForm_map_pow_vecMulVec_self (b x : n → ℝ) (k : ℕ) :
       vecMulVec (fun i => b i ^ k) (fun i => b i ^ k) := by
     ext i j
     simp only [Matrix.map_apply, Matrix.vecMulVec_apply, mul_pow]
-  rw [he, quadForm_vecMulVec_self]
+  rw [he]
+  have h := quadForm_vecMulVec_star_self (fun i => b i ^ k) x
+  simp only [star_trivial, RCLike.ofReal_real_eq_id, id_eq, Real.norm_eq_abs, sq_abs] at h
+  rw [h]
   rfl
 
 omit [DecidableEq n] in
@@ -53,7 +56,8 @@ theorem posDef_sum_inv_factorial_map_pow_vecMulVec_of_injective (b : n → ℝ)
     simp only [Matrix.sum_mulVec, dotProduct_sum, Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul]
     apply Finset.sum_congr rfl
     intro k _
-    rw [← quadForm_eq_dotProduct, quadForm_map_pow_vecMulVec_self]
+    rw [← quadForm_map_pow_vecMulVec_self b x k]
+    rfl
   apply Matrix.PosDef.of_dotProduct_mulVec_pos hH.isHermitian
   intro x hx
   simp only [star_trivial]

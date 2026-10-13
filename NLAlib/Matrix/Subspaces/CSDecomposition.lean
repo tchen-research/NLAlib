@@ -69,7 +69,7 @@ theorem exists_cs_decomposition {p q : Type*}
     exact ((orthogonal_blockDiagonal hV.transpose hOneQ).mul hU).mul
       (orthogonal_blockDiagonal hW hOneQ)
   have hGram : C * C + Dᵀ * D = 1 := by
-    have h := congrArg Matrix.toBlocks₁₁ hM.transpose_mul_self
+    have h := congrArg Matrix.toBlocks₁₁ (show Mᵀ * M = 1 from hM)
     simpa only [M, Matrix.fromBlocks_transpose, Matrix.fromBlocks_multiply,
       Matrix.toBlocks_fromBlocks₁₁, show Cᵀ = C from Matrix.diagonal_transpose _,
       show (1 : Matrix (p ⊕ q) (p ⊕ q) ℝ).toBlocks₁₁ = 1 by
@@ -96,7 +96,7 @@ theorem exists_cs_decomposition {p q : Type*}
     simp only [Matrix.transpose_mul, Matrix.transpose_neg,
       show Sᵀ = S from Matrix.diagonal_transpose _, Matrix.neg_mul,
       Matrix.mul_neg, neg_neg, Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc Eᵀ E S, hE.transpose_mul_self, Matrix.one_mul]
+    rw [← Matrix.mul_assoc Eᵀ E S, (show Eᵀ * E = 1 from hE), Matrix.one_mul]
     exact add_left_cancel (hCS.trans hGram.symm)
   obtain ⟨O, hO, hOD⟩ := exists_orthogonal_mul_eq_of_gram_eq (-E * S) D hSD
   let N := Matrix.fromBlocks (1 : Matrix p p ℝ) 0 0 O * M

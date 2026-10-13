@@ -215,7 +215,7 @@ theorem gaussianMatrix_map_block {n k t : ℕ} (V₁ : Matrix (Fin n) (Fin k) �
   have hk : Fintype.card (Fin k) ≤ Fintype.card (Fin n) := by
     simpa using card_le_card_of_hasOrthonormalCols (Q := V₁) hV₁
   obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le hk
-  obtain ⟨W, hW, hWe⟩ := exists_orthogonal_completion V₁ hV₁ e
+  obtain ⟨W, hW, hWe⟩ := exists_unitary_completion V₁ hV₁ e
   let H : (Fin n → Fin t → ℝ) → (Fin n → Fin t → ℝ) :=
     fun G => Matrix.of.symm (Wᵀ * Matrix.of G * (1 : Matrix (Fin t) (Fin t) ℝ))
   have hHm : Measurable H := by
@@ -257,7 +257,7 @@ theorem gaussianMatrix_indepFun_block {n k r t : ℕ} (V₁ : Matrix (Fin n) (Fi
   have hk : Fintype.card (Fin k ⊕ Fin r) ≤ Fintype.card (Fin n) := by
     simpa using card_le_card_of_hasOrthonormalCols (Q := V) hV
   obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le hk
-  obtain ⟨W, hW, hWe⟩ := exists_orthogonal_completion V hV e
+  obtain ⟨W, hW, hWe⟩ := exists_unitary_completion V hV e
   let H : (Fin n → Fin t → ℝ) → (Fin n → Fin t → ℝ) :=
     fun G => Matrix.of.symm (Wᵀ * Matrix.of G * (1 : Matrix (Fin t) (Fin t) ℝ))
   have hHm : Measurable H := by

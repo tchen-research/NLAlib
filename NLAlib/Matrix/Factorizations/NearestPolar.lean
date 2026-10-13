@@ -18,7 +18,8 @@ set_option backward.isDefEq.respectTransparency false
 Horn–Johnson 2013, Theorem 7.3.1; polar-decomposition helper. -/
 theorem hasOrthonormalCols_rectDiag_one {m n : ℕ} (hCard : n ≤ m) :
     HasOrthonormalCols (rectDiag (fun _ => 1) : Matrix (Fin m) (Fin n) ℝ) := by
-  rw [hasOrthonormalCols_iff_transpose_mul_self, transpose_rectDiag_mul_rectDiag]
+  rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
+      Matrix.conjTranspose_eq_transpose_of_trivial, transpose_rectDiag_mul_rectDiag]
   ext i j
   simp only [one_pow]
   have hi : (i : ℕ) < m := i.isLt.trans_le hCard
@@ -33,7 +34,7 @@ theorem singularValues_eq_one_of_hasOrthonormalCols {m n : ℕ}
   have hJ := hasOrthonormalCols_rectDiag_one hCard
   have hGram : Uᴴ * U = Jᴴ * J := by
     simp only [Matrix.conjTranspose_eq_transpose_of_trivial]
-    rw [hU.transpose_mul_self, hJ.transpose_mul_self]
+    rw [(show Uᵀ * U = 1 from hU), (show Jᵀ * J = 1 from hJ)]
   have h := singularValues_eq_of_gram_eq U J hGram k
   change singularValues U k = singularValues J k at h
   rw [h]
@@ -66,8 +67,9 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
   have hU : HasOrthonormalCols U := by
     change (L * J * Rᵀ)ᵀ * (L * J * Rᵀ) = 1
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc Lᵀ L (J * Rᵀ), hL.transpose_mul_self, Matrix.one_mul,
-      ← Matrix.mul_assoc Jᵀ J Rᵀ, hJ.transpose_mul_self, Matrix.one_mul, hSVD.mul_transpose_right]
+    rw [← Matrix.mul_assoc Lᵀ L (J * Rᵀ), (show Lᵀ * L = 1 from hL), Matrix.one_mul,
+      ← Matrix.mul_assoc Jᵀ J Rᵀ, (show Jᵀ * J = 1 from hJ), Matrix.one_mul,
+      hSVD.mul_transpose_right]
   have hQ : Q.PosSemidef := by
     have hD : (Matrix.diagonal (fun i : Fin n => singularValues A i)).PosSemidef :=
       Matrix.posSemidef_diagonal_iff.mpr (fun i => singularValues_nonneg A i)
@@ -117,8 +119,8 @@ theorem invariantNorm_sub_polar_le_sub_isometry_fin {m n : ℕ}
       rw [Matrix.mul_sub, hA₀, Matrix.mul_one]
     rw [hDiff, hDiff₀, Matrix.transpose_mul, Matrix.transpose_mul]
     simp only [Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc Uᵀ U _, hU.transpose_mul_self, Matrix.one_mul,
-      ← Matrix.mul_assoc U₀ᵀ U₀ _, hU₀.transpose_mul_self, Matrix.one_mul]
+    rw [← Matrix.mul_assoc Uᵀ U _, (show Uᵀ * U = 1 from hU), Matrix.one_mul,
+      ← Matrix.mul_assoc U₀ᵀ U₀ _, (show U₀ᵀ * U₀ = 1 from hU₀), Matrix.one_mul]
   obtain ⟨O, hO, hEq⟩ := exists_orthogonal_mul_eq_of_gram_eq (A - U) (A - U₀) hGram
   have hNorm : ν.seminorm (A - U) = ν.seminorm (A - U₀) := by
     rw [← hEq, ν.left_invariant _ O hO]
@@ -205,9 +207,11 @@ theorem invariantNorm_sub_polar_le_sub_coisometry {m n : Type*}
     (hA : CFC.sqrt (A * Aᵀ) * U = A) (hV : V * Vᵀ = 1) :
     ν.seminorm (A - U) ≤ ν.seminorm (A - V) := by
   have hUt : HasOrthonormalCols Uᵀ := by
-    simpa only [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose] using hU
+    simpa only [hasOrthonormalCols_iff_conjTranspose_mul_self,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hU
   have hVt : HasOrthonormalCols Vᵀ := by
-    simpa only [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose] using hV
+    simpa only [hasOrthonormalCols_iff_conjTranspose_mul_self,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hV
   have hSym : (CFC.sqrt (A * Aᵀ))ᵀ = CFC.sqrt (A * Aᵀ) := by
     simpa only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial] using
       (CFC.sqrt_nonneg (A * Aᵀ)).star_eq

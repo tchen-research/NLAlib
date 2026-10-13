@@ -95,6 +95,7 @@ theorem schattenNorm_zero {p : ℝ} (hp : 0 < p) : schattenNorm (0 : Matrix m n 
   simp [schattenNorm, singularValues_eq_linearMap, Real.zero_rpow hp.ne',
     Real.zero_rpow (show p⁻¹ ≠ 0 from inv_ne_zero hp.ne')]
 
+omit [DecidableEq m] in
 /-- At every positive exponent, the finite Schatten power sum separates zero,
 including empty matrix spaces. -/
 theorem schattenNorm_eq_zero_iff (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :

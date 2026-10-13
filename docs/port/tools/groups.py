@@ -1,0 +1,98 @@
+# per-directory topic groups: dir -> list of (label, regex on short module name)
+# files in the same group may merge; files with no group merge only along import edges
+G={
+'Matrix.Spectral':[
+ ('svdcore',r'^(SVD|Core|CourantFischer|EckartYoung)$'),
+ ('singval',r'^(SvdBlocks|SvdPowers|SquareSingularBasis|GramSingularValues|SingularValueSpectrum|SingularValueInvariance|SingularValueScaling)$'),
+ ('weyl',r'^(Weyl|ProductWeyl|ProductSingularValues)$'),
+ ('bounds',r'^(SpectralBounds|SpectralMinimum|TraceEigenvalues|TracePowerBounds|EigenvalueEquality|EigenvalueOrder|SpectrumCount|SpectrumCountContinuity)$'),
+ ('interlace',r'^(Interlacing.*|LowRankInterlacing|SingularInterlacing)$'),
+ ('gersh',r'^(Gershgorin.*|DiagonalDominance.*|IrreducibleDiagonalDominance)$'),
+ ('diag',r'^(Diagonalizable.*|CommutingSpectra|Simultaneous.*|OrderedSimultaneousTriangularization)$'),
+ ('normal',r'^(Normal.*|RealNormal.*)$'),
+ ('schur',r'^(SchurTriangularization|SchurDensity|SchurFrobenius|OrderedSchur|PrimaryTriangularization|SmallTriangularSimilarity|QuasiTriangular|RealSpectrumSchur|SeparableCharpolyDensity|CharpolySimplicity|EigenvalueSimplicity)$'),
+ ('realschur',r'^(RealSchur.*|RealPlaneSchur|RealInvariant.*|RealPencilTriangularization|RealQZ|ComplexQZ|QuasiPencilBasis|Real.*Descent)$'),
+ ('sylv',r'^(Sylvester.*|PrincipalMinor.*)$'),
+ ('inertia',r'^(Inertia|HaynsworthInertia|.*Congruence|DefinitePairCalculus|GeneralizedEigen.*|QuadraticProbe)$'),
+ ('deflate',r'^(EigenvectorDeflation.*|EigenvectorPairing|AdjugateRankOne|RankOneEigenvalue)$'),
+ ('power',r'^(MatrixPower.*|PowerBoundedOrbits|PowerRayleigh)$'),
+ ('frame',r'^(Eigenframe.*|OrderedSymmetricDiagonalization|RealDilation.*)$'),
+],
+'Matrix.Inequalities':[
+ ('major',r'^(Majorization.*)$'),
+ ('kyfan',r'^(KyFan.*|Lidskii|HornPowerSums|Mirsky.*|VonNeumann)$'),
+ ('schurhorn',r'^(SchurHorn.*|Schur|PlaneRotation.*)$'),
+ ('hadamard',r'^(Hadamard.*)$'),
+ ('det',r'^(.*Determinant.*|DeterminantRoot|LogDetConcavity|PrincipalMinorProduct.*|InverseDiagonalMinor|CompressionDeterminant|SzaszDeterminant)$'),
+ ('block',r'^(Block.*)$'),
+ ('herm',r'^(HermitianPart.*)$'),
+ ('trace',r'^(Trace.*|FiniteExponentialGram|Kantorovich|QuadraticConditionBounds)$'),
+ ('relspec',r'^(RelativeSpectrum|StrictRelativeSpectrum|PositiveSpectralEndpoints|SeparatingPSDVector|Wielandt)$'),
+],
+'Matrix.Perturbation':[
+ ('ls',r'^(LeastSquares.*)$'),
+ ('pinv',r'^(Pseudoinverse.*)$'),
+ ('simple',r'^(SimpleEigenvalue.*)$'),
+ ('dk',r'^(DavisKahan.*|PopulationTraceGap|SpectralWeightGap|SpectralFrameWeights|EigenspaceProjector)$'),
+ ('wedin',r'^(Wedin.*|SingularFrame.*|CoupledNormBounds|GramSingularBounds)$'),
+ ('bf',r'^(BauerFike.*|HoffmanWielandtNormal|EigenvaluePencil|SpectralContinuity|RayleighDerivative)$'),
+ ('eig',r'^(Eigenvalue(Perturbation|Trace|Variation).*|ResidualBounds|GoldenRatioBlock)$'),
+ ('cond',r'^(ConditionNumber.*|Conditioning|MapConditioning|DistanceToSingularity|InversePerturbation.*|OptimalErrorContinuity)$'),
+],
+'Matrix.Norms':[
+ ('schatten',r'^(Schatten.*)$'),
+ ('nuclear',r'^(Nuclear.*|KyFanNorm|RankNorm)$'),
+ ('invariant',r'^(InvariantNorm.*|SymmetricGauge|FanDominance|RectangularDiagonal.*)$'),
+ ('core',r'^(Core|Frobenius|SpectralNormBounds|ColumnNorms|EntryBounds|EuclideanOperatorBounds|BlockNormBounds|RayleighNorm|Reindex)$'),
+],
+'Matrix.Subspaces':[
+ ('cs',r'^(CS.*|CanonicalCS|ComplexCS.*|UnitaryBlockCompletion|OrthogonalBlockCompletion|OrthogonalSumCompletion)$'),
+ ('oblique',r'^(Oblique.*|ComplexOblique.*|ProjectorBlocks|InverseOverlapGram)$'),
+ ('angles',r'^(PrincipalAngle.*|GraphTangent)$'),
+ ('proj',r'^(Projections|ProjectionGaps|ProjectionFrobeniusGaps|ProjectorTrace|ComplexProjection.*)$'),
+ ('gram',r'^(Gram.*|ComplexGram.*|RectangularGramIsometry|OrthogonalProducts|OrthogonalBasisChange|OrthonormalBasisMatrix|PolarFrame|FrameContractions|FrameFourthContractions|CanonicalQR|Stiefel)$'),
+],
+'Matrix.Factorizations':[
+ ('chol',r'^(Cholesky.*|ComplexCholeskyPivot)$'),
+ ('qr',r'^(QR.*|Householder|Givens|GramSchmidt|GramColumnExchange|CanonicalQR)$'),
+ ('rrqr',r'^(RankRevealing.*|StrongRankRevealingQR|MaximumVolume.*)$'),
+ ('polar',r'^(Polar.*|NearestPolar|Procrustes.*|ScaledOrthogonal)$'),
+ ('lu',r'^(LU.*|Triangular|Hessenberg)$'),
+],
+'Matrix.Basic':[
+ ('mp',r'^(MoorePenrose.*|PenroseIdentities|Pseudoinverse|SingletonInverse|LeastSquares)$'),
+ ('schur',r'^(.*SchurComplement|SchurRank|JacobiMinor|JacobiBlockMinor|DeterminantDiagonalUpdate)$'),
+ ('rank',r'^(Rank.*|Complementary.*|GramVanishing|Gram|Selection|CoordinateUpdates)$'),
+ ('psd',r'^(PSDDuality|PositiveDefiniteClosure|PositiveSemidefiniteSeries|QuadForm|Dilation)$'),
+ ('cb',r'^(CauchyBinet.*)$'),
+],
+'Matrix.Functions':[
+ ('poly',r'^(Polynomial.*|DiagonalFilter)$'),
+ ('cfc',r'^(CFC.*|HermitianCalculus|FunctionalCalculusEigenvalues|ExtremeEigenvalues|DilationIdentities|UnitaryCalculus)$'),
+ ('explog',r'^(ExpLog.*|TraceExpBounds|IntrinsicDimension|InverseCalculus|JensenBlockCalculus|PerspectiveSqrtNormalization|TracePowerConvexity)$'),
+],
+'Matrix.Calculus':[
+ ('gram',r'^(Gram.*|UnshiftedGramSoftMin)$'),
+ ('inv',r'^(InversePower.*)$'),
+ ('det',r'^(Determinant.*)$'),
+],
+'Matrix.Structured':[
+ ('kron',r'^(Kronecker.*)$'),
+ ('meas',r'^(.*Measurable)$'),
+ ('struct',r'^(StructuredMatrices|CirculantCharacterization|Hessenberg|Walsh.*|CauchyDeterminantFinite)$'),
+],
+'Matrix.OperatorTheory':[
+ ('jensen',r'^(Jensen.*|OperatorJensen|LoewnerHeinz|LogOperatorConcave|Basic|CoordinatePinching)$'),
+ ('lieb',r'^(Lieb.*|JointTensor.*|PerspectiveConvex|GeneralizedKlein|Entropy.*)$'),
+ ('trace',r'^(GoldenThompson|TraceExpConvex|VariationalTrace.*)$'),
+],
+}
+G['ForMathlib.Analysis']=[
+ ('schur',r'^(OrderedSchur|OrderedSimultaneousSchur|PencilTriangularization|SchurTriangularization|SimultaneousTriangularization|TriangularBasis|InvariantCompression|PowerBoundedEigen)$'),
+ ('orth',r'^(Orthonormal.*|RangeIsometry|BlockCauchySchwarz|GramSchmidt|FinitePairNorm|NormSumSq|Order|QuadraticForm)$'),
+ ('fourier',r'^(Fourier.*)$'),
+ ('real',r'^(BernsteinParameter|BinomialRootComparison|ExpBounds|GeometricRate|LogPowerMean|PowerInequalities|Real|InverseConvexity|FinitePowerSums|Gamma)$'),
+ ('calc',r'^(DerivativeLimit|ImplicitFunction|OneSidedVariation|Lipschitz|LipschitzApprox|CompactTestSupport|IteratedDeriv|MeanValue|Integral)$'),
+]
+G['Sketching']=[('props',r'^Properties\.'),('sampling',r'^Sampling\.'),('srht',r'^Structured\.'),('gauss',r'^Gaussian\.')]
+G['Estimation']=[('trace',r'^(Trace|Quadrature|QuadraticForms|Diagonal)\.'),('spectral',r'^Spectral\.')]

@@ -93,7 +93,7 @@ theorem specNorm_tangentPrincipalAngles_eq_complement_overlap_mul_inv {r : Type*
     specNorm (tangentPrincipalAngles P Q)=specNorm ((Rᵀ*Q)*(Pᵀ*Q)⁻¹) := by
   rw [specNorm_tangentPrincipalAngles_eq_residual_mul_inv hP hQ hC,
     residual_eq_complement_mul_overlap hcomp, Matrix.mul_assoc,
-    specNorm_mul_left_of_hasOrthonormalCols hR.transpose_mul_self]
+    specNorm_mul_left_of_hasOrthonormalCols (show Rᵀ * R = 1 from hR)]
 
 omit [DecidableEq m] in
 /-- A last principal angle strictly below `π/2` makes the overlap

@@ -97,6 +97,7 @@ theorem abs_singularValues_add_sub_le_specNorm (A E : Matrix m n ℝ) (k : ℕ) 
   have h2 := singularValues_le_singularValues_add_add_specNorm A E k
   rw [abs_le]; constructor <;> linarith
 
+omit [DecidableEq p] in
 /-- **Left multiplication.** `σ_k(BA) ≤ ‖B‖₂ σ_k(A)`. Horn–Johnson 2013, §7.3; Bhatia 1997,
 §III.6 (the special case `i = 0` of `σ_{i+j}(BA) ≤ σ_i(B) σ_j(A)`). Audit G0 B6;
 atlas `weyl-mirsky` (new corollary `singularValues_mul_le`).

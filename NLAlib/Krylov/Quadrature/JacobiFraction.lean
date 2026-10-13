@@ -197,7 +197,7 @@ theorem posDef_smul_one_sub_T (D : LanczosDecomp A b q) (hA : A.IsHermitian) {x 
       have := congrArg (fun u => D.Qᵀ *ᵥ u) h0
       simpa [Matrix.mulVec_mulVec, show D.Qᵀ * D.Q = 1 from hQ] using this)
     have hvv : v ⬝ᵥ v = (D.Q *ᵥ v) ⬝ᵥ (D.Q *ᵥ v) :=
-      (mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ v).symm
+      (star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ v).symm
     have hvT : v ⬝ᵥ (D.T *ᵥ v) = (D.Q *ᵥ v) ⬝ᵥ (A *ᵥ (D.Q *ᵥ v)) := by
       rw [T, ArnoldiDecomp.H_def, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
         Matrix.dotProduct_mulVec, Matrix.vecMul_transpose]

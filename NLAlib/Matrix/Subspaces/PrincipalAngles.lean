@@ -216,12 +216,13 @@ theorem sinThetaMax_eq_specNorm_transpose_mul {r : Type*} [Fintype r] [Decidable
     (hc : Q * Qᵀ + Qp * Qpᵀ = 1) (X : Matrix n k' ℝ) :
     sinThetaMax Q X = specNorm (Qpᵀ * X) := by
   have hres : residual Q X = Qp * (Qpᵀ * X) := by
-    rw [residual_eq_one_sub_mul, ← hc, add_sub_cancel_left, Matrix.mul_assoc]
+    rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, ← hc,
+      add_sub_cancel_left, Matrix.mul_assoc]
   have hQp' : Qpᵀ * Qp = 1 := hQp
   rw [sinThetaMax, hres]
   refine (specNorm_transpose_mul_of_eq_mul hQp' ?_).symm.trans ?_
-  · rw [← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
-  · rw [← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
+  · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
+  · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
 
 /-- With an orthonormal complement `Q⊥`: `tan θ_max = ‖Q⊥ᵀ X (QᵀX)⁻¹‖₂`, the form of Saad and
 Golub–Van Loan. Source: Saad (2011) [`saad11`], §5.2; Golub–Van Loan (2013) [`gvl13`], §8.2.4.
@@ -231,12 +232,14 @@ theorem tanThetaMax_eq_specNorm_transpose_mul_mul {r : Type*} [Fintype r] [Decid
     (hc : Q * Qᵀ + Qp * Qpᵀ = 1) (X : Matrix n k ℝ) :
     tanThetaMax Q X = specNorm (Qpᵀ * X * (Qᵀ * X)⁻¹) := by
   have hres : residual Q X = Qp * (Qpᵀ * X) := by
-    rw [residual_eq_one_sub_mul, ← hc, add_sub_cancel_left, Matrix.mul_assoc]
+    rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, ← hc,
+      add_sub_cancel_left, Matrix.mul_assoc]
   have hQp' : Qpᵀ * Qp = 1 := hQp
   rw [tanThetaMax, hres, Matrix.mul_assoc Qp]
   refine (specNorm_transpose_mul_of_eq_mul hQp' ?_).symm.trans ?_
-  · rw [← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
-  · rw [← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul, Matrix.mul_assoc]
+  · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
+  · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul,
+      Matrix.mul_assoc]
 
 omit [DecidableEq n] in
 /-- Frobenius form: `‖sin Θ‖_F² = ‖(I − QQᵀ) Q'‖_F² = k' − ‖QᵀQ'‖_F²` for `Q'` with `k'`
@@ -247,7 +250,9 @@ theorem frobSq_residual_eq_card_sub {Q : Matrix n k ℝ} {Q' : Matrix n k' ℝ}
     (hQ : HasOrthonormalCols Q) (hQ' : HasOrthonormalCols Q') :
     frobSq (residual Q Q') = Fintype.card k' - frobSq (Qᵀ * Q') := by
   have hQ'' : Q'ᵀ * Q' = 1 := hQ'
-  rw [frobSq_residual_eq_sub hQ, frobSq, frobInner_eq_trace, hQ'', Matrix.trace_one]
+  rw [frobSq_residual_eq_sub hQ, Matrix.conjTranspose_eq_transpose_of_trivial, frobSq,
+      frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, hQ'', Matrix.trace_one]
 
 /-! ### Singular values, symmetry, projectors, `sin`–`tan` -/
 

@@ -54,7 +54,7 @@ theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
     exact h.submatrix_cols e
   have hE : Eᴴ * E = 1 := by
     rw [show Eᴴ = E₀ᵀ.map Complex.ofReal from conjTranspose_map_ofReal E₀,
-      ← map_ofReal_mul, hE₀.transpose_mul_self]
+      ← map_ofReal_mul, (show E₀ᵀ * E₀ = 1 from hE₀)]
     simp
   obtain ⟨V₀, W₀, hVW⟩ := exists_unitary_conjTranspose_mul_mul_eq_diagonal_singularValues U.toBlocks₁₁
   let V := (V₀ : Matrix p p ℂ)
@@ -119,7 +119,8 @@ theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
   let K := (csCanonicalMatrix c E₀).map Complex.ofReal
   have hK : Kᴴ * K = 1 := by
     rw [show Kᴴ = (csCanonicalMatrix c E₀)ᵀ.map Complex.ofReal from conjTranspose_map_ofReal _,
-      ← map_ofReal_mul, (hasOrthonormalCols_csCanonicalMatrix c E₀ hE₀ hc).transpose_mul_self]
+      ← map_ofReal_mul, show (csCanonicalMatrix c E₀)ᵀ * csCanonicalMatrix c E₀ = 1 from
+        hasOrthonormalCols_csCanonicalMatrix c E₀ hE₀ hc]
     simp
   have hFirst : N.submatrix id Sum.inl = K.submatrix id Sum.inl := by
     dsimp [N, M, K, csCanonicalMatrix]

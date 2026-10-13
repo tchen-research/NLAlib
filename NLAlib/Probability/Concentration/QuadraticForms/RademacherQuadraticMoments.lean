@@ -101,7 +101,7 @@ theorem abs_quadForm_le_sum_abs_mul_one_add_norm_sq
     (A : Matrix κ κ ℝ) (x : κ → ℝ) :
     |quadForm A x| ≤ (∑ i, ∑ j, |A i j|) * (1 + ‖x‖) ^ 2 := by
   rw [quadForm_eq_sum]
-  simp only [← mul_assoc]
+  simp only [← mul_assoc, star_trivial]
   calc _ ≤ ∑ i, ∑ j, |A i j * x i * x j| :=
       (Finset.abs_sum_le_sum_abs _ _).trans
         (Finset.sum_le_sum fun i _ => Finset.abs_sum_le_sum_abs _ _)
@@ -127,7 +127,7 @@ theorem integrable_quadForm_sq_pi_rademacherMeasure
     Integrable (fun x : κ → ℝ => quadForm A x ^ 2)
       (Measure.pi fun _ => rademacherMeasure) := by
   apply integrable_pi_rademacherMeasure_of_polynomial_growth _
-    (by simp only [quadForm_eq_sum]; fun_prop) ((∑ i, ∑ j, |A i j|) ^ 2) 4
+    (by simp only [quadForm_eq_sum, star_trivial]; fun_prop) ((∑ i, ∑ j, |A i j|) ^ 2) 4
   intro x
   rw [abs_of_nonneg (sq_nonneg _), ← sq_abs]
   have h := abs_quadForm_le_sum_abs_mul_one_add_norm_sq A x

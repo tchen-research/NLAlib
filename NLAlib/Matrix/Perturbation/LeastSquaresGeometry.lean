@@ -16,6 +16,7 @@ namespace NLAlib
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
   [DecidableEq m] [DecidableEq n] [DecidableEq p]
 
+omit [DecidableEq m] in
 /-- Rectangular Euclidean matrix action is bounded by the spectral norm.
 Mathlib's operator-norm inequality; supports least-squares perturbation. -/
 theorem norm_toEuclideanLin_apply_le (A : Matrix m n ℝ) (x : EuclideanSpace ℝ n) :

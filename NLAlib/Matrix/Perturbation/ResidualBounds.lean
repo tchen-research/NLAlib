@@ -81,7 +81,7 @@ theorem dotProduct_shifted_residual_eq_rayleigh_add_sq (A : Matrix n n ℝ)
       (A *ᵥ x - quadForm A x • x) ⬝ᵥ (A *ᵥ x - quadForm A x • x) +
         (μ - quadForm A x) ^ 2 := by
   simp only [sub_dotProduct, dotProduct_sub, dotProduct_smul, smul_dotProduct,
-    smul_eq_mul, hx, dotProduct_comm (A *ᵥ x) x, quadForm_eq_dotProduct]
+    smul_eq_mul, hx, dotProduct_comm (A *ᵥ x) x, quadForm_def, star_trivial]
   ring
 
 omit [DecidableEq n] in

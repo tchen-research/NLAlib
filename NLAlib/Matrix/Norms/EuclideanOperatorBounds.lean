@@ -15,6 +15,7 @@ namespace NLAlib
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
   [DecidableEq m] [DecidableEq n] [DecidableEq p]
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- A lower Euclidean length bound for a matrix passes to left multiplication
 in the spectral norm. Source: centered Sylvester proof, toolkit derivations §5.3. -/
 theorem mul_specNorm_le_specNorm_mul_of_mulVec_sq_le {T : Matrix m n ℝ} {c : ℝ}

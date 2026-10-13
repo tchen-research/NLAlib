@@ -25,6 +25,7 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+omit [DecidableEq m] in
 /-- Spectral-norm control of the Euclidean length of a matrix-vector product.
 Atlas: `norms-frob-spec`, `norm-lipschitz`. -/
 theorem sqrt_mulVec_dotProduct_le_specNorm_mul (A : Matrix m n ℝ) (x : n → ℝ) :
@@ -37,6 +38,7 @@ theorem sqrt_mulVec_dotProduct_le_specNorm_mul (A : Matrix m n ℝ) (x : n → �
     simp [dotProduct, sq]
   simpa only [hnAx, ← sqrt_dotProduct_self_eq_norm, specNorm] using h
 
+omit [DecidableEq m] in
 /-- Reverse triangle inequality for the spectral norm: `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖₂`.
 Ported from Prove2me solution `GaussianMatrix.specNorm_lipschitz` (helper `specNorm_sub_le`).
 Atlas `norm-lipschitz`. -/
@@ -44,6 +46,7 @@ theorem abs_specNorm_sub_specNorm_le (A B : Matrix m n ℝ) :
     |specNorm A - specNorm B| ≤ specNorm (A - B) :=
   abs_norm_sub_norm_le A B
 
+omit [DecidableEq m] in
 /-- The spectral norm is `1`-Lipschitz for the Frobenius norm: `|‖A‖₂ − ‖B‖₂| ≤ ‖A − B‖_F`
 (Vershynin 2012, proof of Cor. 5.35). Generalised from `Fin N × Fin n` to arbitrary finite index
 types. Ported from Prove2me solution `GaussianMatrix.specNorm_lipschitz`.
@@ -53,6 +56,7 @@ theorem abs_specNorm_sub_specNorm_le_frobNorm (A B : Matrix m n ℝ) :
     |specNorm A - specNorm B| ≤ frobNorm (A - B) :=
   (abs_specNorm_sub_specNorm_le A B).trans (specNorm_le_frobNorm (A - B))
 
+omit [DecidableEq m] in
 /-- Multiplication by a frame with orthonormal columns (`PᴴP = 1`) preserves the spectral
 norm, over `ℝ` or `ℂ`. Atlas: `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
@@ -74,6 +78,7 @@ theorem specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self {𝕜 : Type*
     Matrix.conjTranspose_conjTranspose, specNorm_mul_left_of_conjTranspose_mul_self hP,
     specNorm_conjTranspose]
 
+omit [DecidableEq m] in
 /-- Multiplication by an orthonormal frame preserves the spectral norm (real form of
 `specNorm_mul_left_of_conjTranspose_mul_self`). Atlas: `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
@@ -91,6 +96,7 @@ theorem specNorm_mul_transpose_right_of_hasOrthonormalCols {p : Type*}
     (A : Matrix p n ℝ) : specNorm (A * Pᵀ) = specNorm A :=
   specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hP A
 
+omit [DecidableEq m] in
 /-- A squared Euclidean vector bound controls the spectral norm: if `0 ≤ c` and
 `(Ax) ⬝ (Ax) ≤ c² (x ⬝ x)` for every `x`, then `‖A‖₂ ≤ c`. This is the defining operator
 supremum; used for Sylvester separation, projection gaps and block-diagonal bounds.

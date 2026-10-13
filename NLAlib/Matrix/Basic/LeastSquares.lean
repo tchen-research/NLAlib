@@ -132,7 +132,8 @@ theorem isLeastSquaresSolution_iff_forall_dotProduct_mulVec_eq_zero (A : Matrix 
 Stewart–Sun 1990, §III.1. -/
 theorem transpose_mul_mul_moorePenroseInverse (A : Matrix m n ℝ) :
     Aᵀ * (A * moorePenroseInverse A) = Aᵀ := by
-  rw [← (mul_moorePenroseInverse_isSymm A).eq, ← Matrix.transpose_mul,
+  rw [← (mul_moorePenroseInverse_isSymm A).eq, Matrix.conjTranspose_eq_transpose_of_trivial,
+    ← Matrix.transpose_mul,
     mul_moorePenroseInverse_mul]
 
 /-- **Pseudoinverse solution.** `A⁺ b` is a least-squares solution for every `A` (any rank,
@@ -275,7 +276,8 @@ theorem IsLeastSquaresSolution.dotProduct_self_moorePenroseInverse_mulVec_le
     rw [Matrix.mulVec_sub, hx, Matrix.mulVec_mulVec, sub_self]
   have horth : x₀ ⬝ᵥ z = 0 := by
     have hA' : A' = Aᵀ * A'ᵀ * A' := by
-      rw [← Matrix.transpose_mul, (moorePenroseInverse_mul_isSymm A).eq,
+      rw [← Matrix.transpose_mul, ← Matrix.conjTranspose_eq_transpose_of_trivial,
+        (moorePenroseInverse_mul_isSymm A).eq,
         moorePenroseInverse_mul_moorePenroseInverse]
     have hx₀ : x₀ = Aᵀ *ᵥ ((A'ᵀ * A') *ᵥ b) := by
       change A' *ᵥ b = _
@@ -335,7 +337,9 @@ theorem IsLeastSquaresSolution.dotProduct_sub_mulVec_eq_of_eq_mul [DecidableEq n
   have hAx : A *ᵥ x = Q *ᵥ (Qᵀ *ᵥ b) := by
     rw [hx, hA, Matrix.mulVec_mulVec, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hd,
       Matrix.mul_one]
-  rw [h.dotProduct_sub_mulVec_eq, hAx, mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ]
+  rw [h.dotProduct_sub_mulVec_eq, hAx,
+    show (Q *ᵥ (Qᵀ *ᵥ b)) ⬝ᵥ (Q *ᵥ (Qᵀ *ᵥ b)) = (Qᵀ *ᵥ b) ⬝ᵥ (Qᵀ *ᵥ b) from
+      star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ _]
 
 /-- **Least squares via `IsQR`.** For a thin QR factorization `IsQR A Q R` with nonzero diagonal
 (`R_ii ≠ 0`, i.e. full column rank), the least-squares solution is `x = R⁻¹ Qᵀ b`.

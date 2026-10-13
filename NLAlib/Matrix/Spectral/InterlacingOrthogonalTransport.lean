@@ -17,7 +17,7 @@ Source: similarity invariance, used by the converse-interlacing transports. -/
 theorem charpoly_mul_mul_transpose_of_hasOrthonormalCols
     (Q A : Matrix n n ℝ) (hQ : HasOrthonormalCols Q) :
     (Q * A * Qᵀ).charpoly = A.charpoly := by
-  rw [Matrix.charpoly_mul_comm, ← Matrix.mul_assoc, hQ.transpose_mul_self, Matrix.one_mul]
+  rw [Matrix.charpoly_mul_comm, ← Matrix.mul_assoc, (show Qᵀ * Q = 1 from hQ), Matrix.one_mul]
 
 omit [DecidableEq n] in
 /-- Orthogonal conjugation transports a symmetric rank-one update by
@@ -67,7 +67,8 @@ theorem exists_bordered_charpoly_of_diagonal_construction
   let P : Matrix (n ⊕ Fin 1) (n ⊕ Fin 1) ℝ := Matrix.fromBlocks Q 0 0 1
   change Qᵀ * Q = 1 at hQ
   have hP : HasOrthonormalCols P := by
-    rw [hasOrthonormalCols_iff_transpose_mul_self]
+    rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
+        Matrix.conjTranspose_eq_transpose_of_trivial]
     dsimp only [P]
     simp only [Matrix.fromBlocks_transpose, Matrix.transpose_zero, Matrix.transpose_one,
       Matrix.fromBlocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero,

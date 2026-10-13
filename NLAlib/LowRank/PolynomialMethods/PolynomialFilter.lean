@@ -38,28 +38,36 @@ theorem aeval_gram_mul_mul_eq_of_block_decomposition
     aeval (A * Aᵀ) p * A * Ω =
       U₁ * S₁ * aeval (S₁ᵀ * S₁) p * (V₁ᵀ * Ω) +
       U₂ * S₂ * aeval (S₂ᵀ * S₂) p * (V₂ᵀ * Ω) := by
-  have hU' : U₂ᵀ * U₁ = 0 := transpose_mul_eq_zero_comm.1 hU
-  have hV' : V₂ᵀ * V₁ = 0 := transpose_mul_eq_zero_comm.1 hV
+  have hU' : U₂ᵀ * U₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hU
+  have hV' : V₂ᵀ * V₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hV
+  have hU₁t : U₁ᵀ * U₁ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hU₁.conjTranspose_mul_self
+  have hU₂t : U₂ᵀ * U₂ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hU₂.conjTranspose_mul_self
+  have hV₁t : V₁ᵀ * V₁ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₁.conjTranspose_mul_self
+  have hV₂t : V₂ᵀ * V₂ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₂.conjTranspose_mul_self
   have hAtU₁ : Aᵀ * U₁ = V₁ * S₁ᵀ := by
     rw [hA, Matrix.transpose_add, Matrix.transpose_mul, Matrix.transpose_mul,
       Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose,
       Matrix.transpose_transpose, Matrix.add_mul]
     simp only [Matrix.mul_assoc]
-    rw [hU₁.transpose_mul_self, hU', Matrix.mul_one, Matrix.mul_zero, Matrix.mul_zero, add_zero]
+    rw [hU₁t, hU', Matrix.mul_one, Matrix.mul_zero, Matrix.mul_zero, add_zero]
   have hAtU₂ : Aᵀ * U₂ = V₂ * S₂ᵀ := by
     rw [hA, Matrix.transpose_add, Matrix.transpose_mul, Matrix.transpose_mul,
       Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose,
       Matrix.transpose_transpose, Matrix.add_mul]
     simp only [Matrix.mul_assoc]
-    rw [hU, hU₂.transpose_mul_self, Matrix.mul_zero, Matrix.mul_zero, Matrix.mul_one, zero_add]
+    rw [hU, hU₂t, Matrix.mul_zero, Matrix.mul_zero, Matrix.mul_one, zero_add]
   have hAV₁ : A * V₁ = U₁ * S₁ := by
     rw [hA, Matrix.add_mul]
     simp only [Matrix.mul_assoc]
-    rw [hV₁.transpose_mul_self, hV', Matrix.mul_one, Matrix.mul_zero, Matrix.mul_zero, add_zero]
+    rw [hV₁t, hV', Matrix.mul_one, Matrix.mul_zero, Matrix.mul_zero, add_zero]
   have hAV₂ : A * V₂ = U₂ * S₂ := by
     rw [hA, Matrix.add_mul]
     simp only [Matrix.mul_assoc]
-    rw [hV, hV₂.transpose_mul_self, Matrix.mul_zero, Matrix.mul_zero, Matrix.mul_one, zero_add]
+    rw [hV, hV₂t, Matrix.mul_zero, Matrix.mul_zero, Matrix.mul_one, zero_add]
   have hB₁ : (A * Aᵀ) * U₁ = U₁ * (S₁ * S₁ᵀ) := by
     rw [Matrix.mul_assoc, hAtU₁, ← Matrix.mul_assoc, hAV₁, Matrix.mul_assoc]
   have hB₂ : (A * Aᵀ) * U₂ = U₂ * (S₂ * S₂ᵀ) := by
@@ -103,6 +111,7 @@ theorem sub_mul_mul_mul_transpose_eq_of_filtered_blocks
   simp only [Matrix.mul_assoc]
   abel
 
+omit [DecidableEq m] in
 /-- The filtered one-competitor argument bounds both squared norms, with the same exact
 tail correction. Source: manuscript `sa:filter-theorem`. This algebraic form is the reusable
 core; the next theorem supplies the filtered blocks by polynomial calculus. -/
@@ -131,34 +140,43 @@ theorem residual_sq_le_of_filtered_blocks
   have hdiff : A - Z = U₂ * (S₂ * V₂ᵀ - T * V₁ᵀ) :=
     sub_mul_mul_mul_transpose_eq_of_filtered_blocks hA hY hR hC
   have hres : residual Q A = residual Q (A - Z) := by
-    simp only [residual_eq_sub_mul_transpose_mul, Matrix.mul_sub, hQZ]
+    simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub, hQZ]
     abel
   have horth : (S₂ * V₂ᵀ) * (-(T * V₁ᵀ))ᵀ = 0 := by
-    have hV' : V₂ᵀ * V₁ = 0 := transpose_mul_eq_zero_comm.1 hV
+    have hV' : V₂ᵀ * V₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hV
     rw [Matrix.transpose_neg, Matrix.mul_neg, Matrix.transpose_mul,
       Matrix.transpose_transpose, Matrix.mul_assoc S₂, ← Matrix.mul_assoc V₂ᵀ,
       hV', Matrix.zero_mul, Matrix.mul_zero, neg_zero]
-  have hs := specNorm_add_sq_le_of_mul_transpose_eq_zero horth
-  rw [specNorm_neg, specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂.transpose_mul_self,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hV₁.transpose_mul_self] at hs
+  have hs :=
+    specNorm_add_sq_le_of_mul_conjTranspose_eq_zero (X := S₂ * V₂ᵀ) (Y := -(T * V₁ᵀ)) horth
+  have hU₂t : U₂ᵀ * U₂ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hU₂.conjTranspose_mul_self
+  have hV₁t : V₁ᵀ * V₁ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₁.conjTranspose_mul_self
+  have hV₂t : V₂ᵀ * V₂ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₂.conjTranspose_mul_self
+  rw [specNorm_neg, specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂t,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols hV₁t] at hs
   have hforth : frobInner (S₂ * V₂ᵀ) (T * V₁ᵀ) = 0 := by
     rw [← frobInner_transpose]
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose]
-    exact frobInner_mul_mul_eq_zero _ _ _ _ (transpose_mul_eq_zero_comm.1 hV)
+    exact frobInner_mul_mul_eq_zero _ _ _ _ (conjTranspose_mul_eq_zero_comm.1 hV)
   constructor
   · calc specNorm (residual Q A) ^ 2 ≤ specNorm (A - Z) ^ 2 :=
           pow_le_pow_left₀ (specNorm_nonneg _) (by
-            rw [hres]; exact specNorm_sub_mul_transpose_mul_le hQo.transpose_mul_self _) 2
+            rw [hres]; exact specNorm_sub_mul_conjTranspose_mul_le hQo.conjTranspose_mul_self _) 2
       _ ≤ _ := by
-          rw [hdiff, specNorm_mul_left_of_hasOrthonormalCols hU₂.transpose_mul_self, sub_eq_add_neg]
+          rw [hdiff, specNorm_mul_left_of_hasOrthonormalCols hU₂t, sub_eq_add_neg]
           exact hs
   · calc frobSq (residual Q A) ≤ frobSq (A - Z) := by
           rw [hres]; exact frobSq_residual_le hQo _
       _ = _ := by
-          rw [hdiff, frobSq_mul_left_of_orthonormal hU₂.transpose_mul_self,
+          rw [hdiff, frobSq_mul_left_of_orthonormal hU₂.conjTranspose_mul_self,
             frobSq_sub_of_frobInner_eq_zero _ _ hforth,
-            frobSq_mul_right_of_orthonormal hV₂.transpose_mul_self,
-            frobSq_mul_right_of_orthonormal hV₁.transpose_mul_self]
+            ← Matrix.conjTranspose_eq_transpose_of_trivial V₂,
+            ← Matrix.conjTranspose_eq_transpose_of_trivial V₁,
+            frobSq_mul_right_of_orthonormal hV₂.conjTranspose_mul_self,
+            frobSq_mul_right_of_orthonormal hV₁.conjTranspose_mul_self]
 
 /-- Polynomial-filter range finding has the manuscript's exact spectral and Frobenius
 constants. Source: manuscript `sa:filter-theorem`; HMT (2011), the one-competitor argument.
@@ -197,7 +215,7 @@ theorem mul_transpose_aeval_gram_mul_mul_eq_of_blockKrylovSpace_le
     (hK : blockKrylovSpace (A * Aᵀ) (A * Ω) order ≤ LinearMap.range Q.mulVecLin)
     {p : ℝ[X]} (hp : p.degree < order) :
     Q * (Qᵀ * (aeval (A * Aᵀ) p * A * Ω)) = aeval (A * Aᵀ) p * A * Ω := by
-  apply mul_transpose_mul_eq_of_range_le hQo
+  apply mul_conjTranspose_mul_eq_of_range_le hQo
   rw [Matrix.mul_assoc]
   exact (range_aeval_mul_le_blockKrylovSpace _ _ hp).trans hK
 

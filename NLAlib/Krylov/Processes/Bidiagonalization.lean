@@ -105,7 +105,8 @@ theorem range_mul_V_le (D : GolubKahanDecomp A b k) :
 [`gvl13`], §10.4.1 (eq. 10.4.4); Trefethen–Bau (1997) [`tb97`], Lect. 31.
 atlas: golub-kahan-bidiagonalization -/
 theorem mul_V_eq_U_mul_B (D : GolubKahanDecomp A b k) : A * D.V = D.U * D.B := by
-  rw [B, Matrix.mul_assoc, mul_transpose_mul_eq_of_range_le D.gradedU.orth D.range_mul_V_le]
+  rw [B, Matrix.mul_assoc, ← Matrix.conjTranspose_eq_transpose_of_trivial D.U,
+    mul_conjTranspose_mul_eq_of_range_le D.gradedU.orth D.range_mul_V_le]
 
 /-- `B` is **lower bidiagonal**, upper part: `B_{ij} = 0` for `i < j` (`vⱼ ⟂ K_j(AᵀA, Aᵀb)`,
 which contains `Aᵀuᵢ`). Source: Golub–Van Loan (2013) [`gvl13`], §10.4.1.

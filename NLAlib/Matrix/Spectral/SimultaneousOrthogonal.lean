@@ -68,8 +68,8 @@ theorem exists_orthogonal_congruence_diagonal_of_commute {A B : Matrix n n ℝ}
     exists_simultaneous_orthogonal_diagonalization_of_commute F hF hComm
   refine ⟨U, d true, d false, hU, ?_, ?_⟩
   · rw [Matrix.mul_assoc, show A * U = U * diagonal (d true) from hUF true,
-      ← Matrix.mul_assoc, hU.transpose_mul_self, Matrix.one_mul]
+      ← Matrix.mul_assoc, (show Uᵀ * U = 1 from hU), Matrix.one_mul]
   · rw [Matrix.mul_assoc, show B * U = U * diagonal (d false) from hUF false,
-      ← Matrix.mul_assoc, hU.transpose_mul_self, Matrix.one_mul]
+      ← Matrix.mul_assoc, (show Uᵀ * U = 1 from hU), Matrix.one_mul]
 
 end NLAlib

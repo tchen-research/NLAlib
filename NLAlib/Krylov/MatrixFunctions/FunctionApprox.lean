@@ -93,7 +93,8 @@ theorem krylovFunApprox_eval_eq_aeval {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {p : ℝ[X]} (hp : p.degree < q) :
     krylovFunApprox Q A (fun x => p.eval x) b = aeval A p *ᵥ b := by
-  rw [krylovFunApprox, cfc_polynomial p _ (isHermitian_transpose_mul_mul hA Q).isSelfAdjoint]
+  rw [krylovFunApprox, cfc_polynomial p _ (show (Qᵀ * A * Q).IsHermitian from
+    Matrix.isHermitian_conjTranspose_mul_mul Q hA).isSelfAdjoint]
   exact mulVec_aeval_transpose_mul_mul_mulVec_eq hQ b hK hp
 
 /-! ### Interpolation at the Ritz values -/
@@ -109,8 +110,11 @@ theorem krylovFunApprox_eq_aeval_of_forall_eval_eq {A : Matrix n n ℝ} (hA : A.
     {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {f : ℝ → ℝ} {p : ℝ[X]}
     (hp : p.degree < q)
-    (hpf : ∀ j, p.eval ((isHermitian_transpose_mul_mul hA Q).eigenvalues j) =
-      f ((isHermitian_transpose_mul_mul hA Q).eigenvalues j)) :
+    (hpf : ∀ j,
+      p.eval ((show (Qᵀ * A * Q).IsHermitian from
+        Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j) =
+      f ((show (Qᵀ * A * Q).IsHermitian from
+        Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j)) :
     krylovFunApprox Q A f b = aeval A p *ᵥ b := by
   rw [krylovFunApprox, cfc_eq_aeval_of_forall_eval_eq _ hpf]
   exact mulVec_aeval_transpose_mul_mul_mulVec_eq hQ b hK hp
@@ -129,7 +133,8 @@ theorem krylovFunApprox_eq_aeval_interpolate {A : Matrix n n ℝ} (hA : A.IsHerm
     (f : ℝ → ℝ) :
     krylovFunApprox Q A f b =
       aeval A (Lagrange.interpolate
-        (Finset.univ.image (isHermitian_transpose_mul_mul hA Q).eigenvalues) id f) *ᵥ b := by
+        (Finset.univ.image (show (Qᵀ * A * Q).IsHermitian from
+          Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues) id f) *ᵥ b := by
   refine krylovFunApprox_eq_aeval_of_forall_eval_eq hA hQ b hK ?_
     (eval_interpolate_eigenvalues _ f)
   refine (Lagrange.degree_interpolate_lt f (Set.injOn_id _)).trans_le ?_
@@ -164,8 +169,8 @@ theorem krylovFunApprox_congr {A : Matrix n n ℝ} (hA : A.IsHermitian) {k' : Ty
     (hQ' : HasOrthonormalCols Q')
     (hR : LinearMap.range Q.mulVecLin = LinearMap.range Q'.mulVecLin) (f : ℝ → ℝ) (b : n → ℝ) :
     krylovFunApprox Q A f b = krylovFunApprox Q' A f b := by
-  set hT := isHermitian_transpose_mul_mul hA Q
-  set hT' := isHermitian_transpose_mul_mul hA Q'
+  set hT : (Qᵀ * A * Q).IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q hA
+  set hT' : (Q'ᵀ * A * Q').IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q' hA
   set s := Finset.univ.image hT.eigenvalues ∪ Finset.univ.image hT'.eigenvalues
   set p := Lagrange.interpolate s id f
   have hnode : ∀ x ∈ s, p.eval x = f x := fun x hx =>
@@ -174,7 +179,7 @@ theorem krylovFunApprox_congr {A : Matrix n n ℝ} (hA : A.IsHermitian) {k' : Ty
     fun i => hnode _ (Finset.mem_union_left _ (Finset.mem_image_of_mem _ (Finset.mem_univ i)))
   have h2 : cfc f (Q'ᵀ * A * Q') = aeval (Q'ᵀ * A * Q') p := cfc_eq_aeval_of_forall_eval_eq hT'
     fun i => hnode _ (Finset.mem_union_right _ (Finset.mem_image_of_mem _ (Finset.mem_univ i)))
-  have hP := mul_transpose_eq_of_range_eq hQ hQ' hR
+  have hP : Q * Qᵀ = Q' * Q'ᵀ := mul_conjTranspose_eq_of_range_eq hQ hQ' hR
   simp only [krylovFunApprox, Matrix.mulVec_mulVec, h1, h2]
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, mul_aeval_transpose_mul_mul_mul_transpose,
     mul_aeval_transpose_mul_mul_mul_transpose, hP]
@@ -206,7 +211,7 @@ theorem dotProduct_cfc_mulVec_sub_krylovFunApprox_self_le {A : Matrix n n ℝ}
     (cfc f A *ᵥ b - krylovFunApprox Q A f b) ⬝ᵥ (cfc f A *ᵥ b - krylovFunApprox Q A f b) ≤
       (2 * E) ^ 2 * (b ⬝ᵥ b) := by
   set T := Qᵀ * A * Q
-  have hT : T.IsHermitian := isHermitian_transpose_mul_mul hA Q
+  have hT : T.IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q hA
   set c' := Qᵀ *ᵥ b
   set x := (cfc f A - aeval A p) *ᵥ b
   set w := (cfc f T - aeval T p) *ᵥ c'
@@ -219,9 +224,12 @@ theorem dotProduct_cfc_mulVec_sub_krylovFunApprox_self_le {A : Matrix n n ℝ}
   have hw : w ⬝ᵥ w ≤ E ^ 2 * (c' ⬝ᵥ c') :=
     dotProduct_cfc_sub_aeval_mulVec_self_le hT
       (fun j => hfp _ (eigenvalues_transpose_mul_mul_mem_Icc hA hQ hT hspec j)) c'
-  have hc : c' ⬝ᵥ c' ≤ b ⬝ᵥ b := transpose_mulVec_dotProduct_self_le hQ b
+  have hc : c' ⬝ᵥ c' ≤ b ⬝ᵥ b := by
+    have h := sum_norm_sq_conjTranspose_mulVec_le hQ b
+    simp only [Matrix.conjTranspose_eq_transpose_of_trivial, Real.norm_eq_abs, sq_abs] at h
+    simpa only [c', dotProduct, ← sq] using h
   have hQw : (Q *ᵥ w) ⬝ᵥ (Q *ᵥ w) = w ⬝ᵥ w :=
-    mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ w
+    star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ w
   rw [he]
   refine (dotProduct_sub_self_le x (Q *ᵥ w)).trans ?_
   rw [hQw]

@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Norms.ComplexFrobenius
+import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Spectral.PrincipalMinors
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff

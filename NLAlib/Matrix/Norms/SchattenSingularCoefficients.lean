@@ -20,7 +20,7 @@ theorem frobInner_mul_transpose_right_of_orthonormal {m n k : Type*}
     {V : Matrix n k ℝ} (hV : HasOrthonormalCols V) (A B : Matrix m k ℝ) :
     frobInner (A * Vᵀ) (B * Vᵀ) = frobInner A B := by
   rw [← frobInner_transpose, Matrix.transpose_mul, Matrix.transpose_mul,
-    Matrix.transpose_transpose, frobInner_mul_left_of_orthonormal hV.transpose_mul_self, frobInner_transpose]
+    Matrix.transpose_transpose, frobInner_mul_left_of_orthonormal (show Vᵀ * V = 1 from hV), frobInner_transpose]
 
 /-- Pairing two rectangular diagonals is exactly the thin coordinate dot
 product, including an empty diagonal.
@@ -65,7 +65,7 @@ theorem schattenNorm_mul_rectDiag_mul_transpose {m n : ℕ}
   congr 1
   apply Finset.sum_congr rfl
   intro i hi
-  rw [singularValues_eq_of_eq_mul_rectDiag_mul hU.transpose_mul_self hV.transpose_mul_self hb0 hb rfl (Finset.mem_range.mp hi)]
+  rw [singularValues_eq_of_eq_mul_rectDiag_mul (show Uᵀ * U = 1 from hU) (show Vᵀ * V = 1 from hV) hb0 hb rfl (Finset.mem_range.mp hi)]
 
 /-- Pairing a matrix with prescribed coefficients in its own SVD frames gives
 the exact singular-value dot product.

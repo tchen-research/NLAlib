@@ -131,7 +131,8 @@ theorem frobSq_truncatedRsvdOutput_eq {m n q : ℕ}
     frobSq (A - truncatedRsvdOutput Q A k) =
       frobSq (residual Q A) + bestRankFrobSq k (Qᵀ * A) := by
   unfold truncatedRsvdOutput
-  rw [frobSq_sub_mul_eq hQ, frobSq_sub_truncatedSVD_eq_bestRankFrobSq]
+  rw [frobSq_sub_mul_eq hQ, Matrix.conjTranspose_eq_transpose_of_trivial,
+    frobSq_sub_truncatedSVD_eq_bestRankFrobSq]
 
 /-- Every best rank-`k` approximation of the compressed matrix has lifted
 squared error at most the actual global optimum plus projection error.
@@ -147,9 +148,10 @@ theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual
   obtain ⟨B, hB⟩ := exists_isBestRankApprox A k
   have hRank : (Qᵀ * B).rank ≤ k := (Matrix.rank_mul_le_right Qᵀ B).trans hB.1
   have hBest := hY.2 (Qᵀ * B) hRank
-  have hContraction := frobSq_transpose_mul_le hQ (A - B)
+  have hContraction := frobSq_conjTranspose_mul_le hQ (A - B)
   rw [Matrix.mul_sub, hB.frobSq_sub_eq_bestRankFrobSq] at hContraction
   rw [frobSq_sub_mul_eq hQ]
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hContraction ⊢
   linarith
 
 /-- The two-residual ordinary projected-truncation bound for a compressed
@@ -222,8 +224,9 @@ theorem integrable_frobSq_truncatedRsvdOutput_of_measurable_frame
   have hbest := (isBestRankApprox_truncatedSVD ((Qf (X ω))ᵀ * A) k).2
     (0 : Matrix (Fin q) (Fin n) ℝ) (by simp)
   rw [sub_zero] at hbest
-  have hpyth := frobSq_eq_frobSq_transpose_mul_add_residual hω A
+  have hpyth := frobSq_eq_frobSq_conjTranspose_mul_add_residual hω A
   rw [truncatedRsvdOutput, frobSq_sub_mul_eq hω]
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hpyth ⊢
   linarith
 
 /-- **Standard rank-`k` postprocessed Gaussian RSVD, actual relative optimum.**

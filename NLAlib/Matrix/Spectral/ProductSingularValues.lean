@@ -27,7 +27,8 @@ theorem det_gram_mul_eq_zero_of_det_gram_eq_zero {m p k : Type*}
     ((A * Y)ᵀ * (A * Y)).det = 0 := by
   obtain ⟨x, hx, hYx⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr hY
   have hnorm : (Y *ᵥ x) ⬝ᵥ (Y *ᵥ x) = 0 := by
-    rw [mulVec_dotProduct_mulVec_self, hYx]
+    rw [show (Y *ᵥ x) ⬝ᵥ (Y *ᵥ x) = x ⬝ᵥ ((Yᵀ * Y) *ᵥ x) from
+      star_mulVec_dotProduct_mulVec_self Y x, hYx]
     simp
   have hy : Y *ᵥ x = 0 := dotProduct_self_eq_zero.mp hnorm
   apply Matrix.exists_mulVec_eq_zero_iff.mp

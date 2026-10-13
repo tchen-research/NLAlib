@@ -19,7 +19,8 @@ are symmetric. Stewart–Sun §I.5, by the overlap trace identity. -/
 theorem frobSq_residual_comm {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     frobSq (residual P Q)=frobSq (residual Q P) := by
-  rw [frobSq_residual_eq_sub hP, frobSq_residual_eq_sub hQ,
+  rw [frobSq_residual_eq_sub hP, Matrix.conjTranspose_eq_transpose_of_trivial,
+    frobSq_residual_eq_sub hQ, Matrix.conjTranspose_eq_transpose_of_trivial,
     frobSq_frame_eq_card hP, frobSq_frame_eq_card hQ]
   congr 1
   rw [← frobSq_transpose (Pᵀ*Q), Matrix.transpose_mul, Matrix.transpose_transpose]
@@ -43,14 +44,19 @@ theorem frobSq_complement_mul_projector_eq_of_rank_eq {P Q : Matrix n n ℝ}
     calc
       _ = (1-Q)*(U*Uᵀ) := congrArg (fun T => (1-Q)*T) hPU
       _ = (1-V'*V'ᵀ)*(U*Uᵀ) := congrArg (fun T => (1-T)*(U*Uᵀ)) hQV'
-      _ = _ := by rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
+      _ = _ := by
+        rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_assoc]
   have hright : (1-P)*Q=residual U V'*V'ᵀ := by
     calc
       _ = (1-P)*(V'*V'ᵀ) := congrArg (fun T => (1-P)*T) hQV'
       _ = (1-U*Uᵀ)*(V'*V'ᵀ) := congrArg (fun T => (1-T)*(V'*V'ᵀ)) hPU
-      _ = _ := by rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
-  rw [hleft, hright, frobSq_mul_right_of_orthonormal hU.transpose_mul_self,
-    frobSq_mul_right_of_orthonormal hV'.transpose_mul_self, frobSq_residual_comm hV' hU]
+      _ = _ := by
+        rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_assoc]
+  rw [hleft, hright,
+    show frobSq (residual V' U * Uᵀ) = frobSq (residual V' U) from
+      frobSq_mul_right_of_orthonormal hU _,
+    show frobSq (residual U V' * V'ᵀ) = frobSq (residual U V') from
+      frobSq_mul_right_of_orthonormal hV' _, frobSq_residual_comm hV' hU]
 
 /-- Equal-rank one-sided Frobenius gaps agree also after placing the
 projector on the left. Stewart–Sun §III.3, by transpose invariance. -/

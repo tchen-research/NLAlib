@@ -341,7 +341,6 @@ run_cmd do
     `NLAlib.Matrix.Functions.ComplexDiagonalFilter,
     `NLAlib.Matrix.Spectral.ComplexEckartYoung,
     `NLAlib.Matrix.Perturbation.ComplexEmbedding,
-    `NLAlib.Matrix.Norms.ComplexFrobenius,
     `NLAlib.Matrix.Norms.ComplexFrobeniusTrace,
     `NLAlib.Matrix.Basic.ComplexFullRowInverse,
     `NLAlib.Matrix.Subspaces.ComplexGramColumnDeterminant,

@@ -54,6 +54,7 @@ variable {m n r r' t q : Type*} [Fintype m] [Fintype n] [Fintype r] [Fintype r']
   [Fintype q] [DecidableEq m] [DecidableEq n] [DecidableEq r] [DecidableEq r']
   [DecidableEq q] {k : ℕ}
 
+omit [DecidableEq m] in
 /-- **Deterministic range-finder bound, spectral form** (HMT 2011, Thm 9.1, spectral case): if
 `A = U₁Σ₁V₁ᵀ + U₂Σ₂V₂ᵀ`, `Ω₁ = V₁ᵀΩ` has full row rank, `Ω₂ = V₂ᵀΩ`, `QᵀQ = I` and
 `range(AΩ) ⊆ range(Q)`, then `‖(I − QQᵀ)A‖² ≤ ‖Σ₂‖² + ‖Σ₂Ω₂Ω₁†‖²`.
@@ -80,27 +81,35 @@ theorem specNorm_residual_sq_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Mat
     have : Z = A * Ω * (pinvR Ω₁ * V₁ᵀ) := Matrix.mul_assoc _ _ _
     rw [this, ← Matrix.mul_assoc Qᵀ, ← Matrix.mul_assoc Q, hQ]
   have hres : residual Q A = (A - Z) - Q * (Qᵀ * (A - Z)) := by
-    rw [residual_eq_sub_mul_transpose_mul, Matrix.mul_sub, Matrix.mul_sub, hQZ]
+    rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub, Matrix.mul_sub, hQZ]
     abel
   have h1 : specNorm (residual Q A) ≤ specNorm (A - Z) := by
-    rw [hres]; exact specNorm_sub_mul_transpose_mul_le hQo.transpose_mul_self _
+    rw [hres]; exact specNorm_sub_mul_conjTranspose_mul_le hQo.conjTranspose_mul_self _
   -- Step 2: `A − Z = U₂ W`, and `U₂` is an isometry.
+  have hU₂t : U₂ᵀ * U₂ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hU₂.conjTranspose_mul_self
+  have hV₁t : V₁ᵀ * V₁ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₁.conjTranspose_mul_self
+  have hV₂t : V₂ᵀ * V₂ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₂.conjTranspose_mul_self
   have h2 : specNorm (A - Z) =
       specNorm (S₂ * V₂ᵀ + -(S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ)) := by
     rw [hZdef, sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit,
-      specNorm_mul_left_of_hasOrthonormalCols hU₂.transpose_mul_self, sub_eq_add_neg]
+      specNorm_mul_left_of_hasOrthonormalCols hU₂t, sub_eq_add_neg]
   -- Step 3: the two summands have orthogonal rows.
   have horth : (S₂ * V₂ᵀ) * (-(S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ))ᵀ = 0 := by
-    have hV' : V₂ᵀ * V₁ = 0 := transpose_mul_eq_zero_comm.1 hV
+    have hV' : V₂ᵀ * V₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hV
     rw [Matrix.transpose_neg, Matrix.mul_neg, Matrix.transpose_mul, Matrix.transpose_transpose,
       Matrix.mul_assoc S₂, ← Matrix.mul_assoc V₂ᵀ, hV', Matrix.zero_mul, Matrix.mul_zero, neg_zero]
-  have h3 := specNorm_add_sq_le_of_mul_transpose_eq_zero horth
-  rw [specNorm_neg, specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂.transpose_mul_self,
-    specNorm_mul_transpose_right_of_hasOrthonormalCols hV₁.transpose_mul_self] at h3
+  have h3 := specNorm_add_sq_le_of_mul_conjTranspose_eq_zero (X := S₂ * V₂ᵀ)
+    (Y := -(S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ)) horth
+  rw [specNorm_neg, specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂t,
+    specNorm_mul_transpose_right_of_hasOrthonormalCols hV₁t] at h3
   calc specNorm (residual Q A) ^ 2 ≤ specNorm (A - Z) ^ 2 :=
         pow_le_pow_left₀ (specNorm_nonneg _) h1 2
     _ ≤ _ := by rw [h2]; exact h3
 
+omit [DecidableEq m] in
 /-- **Range-finder bound, unsquared spectral form**: under the hypotheses of
 `specNorm_residual_sq_le_of_range_subset`, `‖(I − QQᵀ)A‖ ≤ ‖Σ₂‖ + ‖Σ₂Ω₂Ω₁†‖`
 (from `√(a² + b²) ≤ a + b`). This is the form used in HMT 2011, proof of Thm 10.6.
@@ -368,14 +377,17 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
     calc U * S₂ * V₂ᵀ = U * T * Vᵀ := by rw [Matrix.mul_assoc, hST, ← Matrix.mul_assoc]
       _ = (h.truncatedMatrix k + U * T * Vᵀ) - h.truncatedMatrix k := by abel
       _ = A - h.truncatedMatrix k := by rw [← hsplit]
+  have hV₂t : V₂ᵀ * V₂ = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₂.conjTranspose_mul_self
   have hspec : specNorm S₂ = singularValues A k := by
     rw [← h.specNorm_sub_truncatedMatrix k, ← htail,
-      specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂.transpose_mul_self,
+      specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂t,
       specNorm_mul_left_of_hasOrthonormalCols h.transpose_mul_left]
   have hfrob : frobSq S₂ = singularValueTailSq A k := by
     rw [← h.frobSq_sub_truncatedMatrix k, ← htail,
-      frobSq_mul_right_of_orthonormal hV₂.transpose_mul_self,
-      frobSq_mul_left_of_orthonormal h.transpose_mul_left]
+      ← Matrix.conjTranspose_eq_transpose_of_trivial V₂,
+      frobSq_mul_right_of_orthonormal hV₂.conjTranspose_mul_self,
+      frobSq_mul_left_of_orthonormal h.conjTranspose_mul_left]
   exact ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.transpose_mul_left, hV₁, hV₂, hcross, hspec, hfrob⟩
 
 /-- **Expected spectral error of the randomized range finder, singular-value form**

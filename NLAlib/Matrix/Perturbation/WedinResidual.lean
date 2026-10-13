@@ -25,7 +25,7 @@ theorem coupled_residual_headColumns_left (h : IsSVD A U V) (hkm : k ≤ m) (hkn
       residual (headColumns U hkm) Uhat * T =
         residual (headColumns U hkm) (A * Vhat - Uhat * T) := by
   rw [h.sub_truncatedMatrix_mul_residual_headColumns hkm hkn Vhat, residual_mul]
-  simp only [residual_eq_sub_mul_transpose_mul, Matrix.mul_sub]
+  simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub]
   abel
 
 /-- The second ambient complementary singular residual equation is exact.
@@ -37,7 +37,7 @@ theorem coupled_residual_headColumns_right (h : IsSVD A U V) (hkm : k ≤ m) (hk
       residual (headColumns V hkn) Vhat * T =
         residual (headColumns V hkn) (Aᵀ * Uhat - Vhat * T) := by
   rw [h.sub_truncatedMatrix_transpose_mul_residual_headColumns hkm hkn Uhat, residual_mul]
-  simp only [residual_eq_sub_mul_transpose_mul, Matrix.mul_sub]
+  simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub]
   abel
 
 end IsSVD

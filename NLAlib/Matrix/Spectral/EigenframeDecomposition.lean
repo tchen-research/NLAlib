@@ -23,7 +23,7 @@ theorem mul_sortedEigenframe_eq_mul_diagonal (hA : A.IsHermitian) :
   calc
     _ = (sortedEigenframe hA*Matrix.diagonal hA.eigenvalues₀*(sortedEigenframe hA)ᵀ)*sortedEigenframe hA :=
       congrArg (fun T => T*sortedEigenframe hA) (eq_sortedEigenframe_mul_diagonal_mul_transpose hA)
-    _ = _ := by rw [Matrix.mul_assoc, (hasOrthonormalCols_sortedEigenframe hA).transpose_mul_self,
+    _ = _ := by rw [Matrix.mul_assoc, (show (sortedEigenframe hA)ᵀ * sortedEigenframe hA = 1 from hasOrthonormalCols_sortedEigenframe hA),
       Matrix.mul_one]
 
 omit [DecidableEq n] in

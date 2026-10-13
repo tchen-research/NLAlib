@@ -29,7 +29,7 @@ theorem IsSVD.inv_eq {k : ℕ} {C U V : Matrix (Fin k) (Fin k) ℝ}
     (h : IsSVD C U V) (hC : IsUnit C) :
     C⁻¹=V*Matrix.diagonal (fun i : Fin k => (singularValues C i)⁻¹)*Uᵀ := by
   rw [← moorePenroseInverse_eq_inv_of_isUnit C hC, h.moorePenroseInverse_eq,
-    rectDiag_square_eq_diagonal]
+    Matrix.conjTranspose_eq_transpose_of_trivial, rectDiag_square_eq_diagonal]
 
 /-- The centered overlap Gram is diagonal in the right singular basis.
 Stewart–Sun §I.5. -/

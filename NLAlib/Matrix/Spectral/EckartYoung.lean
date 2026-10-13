@@ -105,7 +105,8 @@ private theorem frobSq_projection_residual_le {m n : Type*}
     rw [Matrix.sub_mul, Matrix.one_mul, Matrix.mul_sub, hPB]
     abel
   rw [← hsplit, frobSq_add_of_frobInner_eq_zero _ _
-    (frobInner_mul_mul_eq_zero (1 - P) A P (A - B) horth)]
+    (frobInner_mul_mul_eq_zero (1 - P) A P (A - B)
+      (by simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using horth))]
   exact le_add_of_nonneg_right (frobSq_nonneg _)
 
 /-- The squared singular-value tail after deleting the first `k` singular
@@ -150,7 +151,8 @@ theorem singularValueTailSq_le_frobSq_sub_of_rank_le {m n : ℕ}
       calc
         _ = Aᵀ * (Pᵀ * P) * A := by simp only [Matrix.transpose_mul, Matrix.mul_assoc]
         _ = _ := by rw [hs, show P * P = P from hp]
-    rw [frobSq, frobInner_eq_trace, hgram, Matrix.trace_mul_cycle, hSVD.mul_transpose_self]
+    rw [frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, hgram, Matrix.trace_mul_cycle, hSVD.mul_transpose_self]
     calc
       _ = (U * (Matrix.diagonal (fun i : Fin m => singularValues A i ^ 2) * (Uᵀ * P))).trace := by
         congr 1
@@ -172,7 +174,8 @@ theorem singularValueTailSq_le_frobSq_sub_of_rank_le {m n : ℕ}
     · intro i; exact (hweights i).2
     · exact hbudget
   have htotal : frobSq A = ∑ i : Fin m, singularValues A i ^ 2 := by
-    rw [← frobSq_transpose A, frobSq, frobInner_eq_trace, Matrix.transpose_transpose,
+    rw [← frobSq_transpose A, frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose,
       hSVD.mul_transpose_self, Matrix.trace_mul_cycle, hSVD.transpose_mul_left,
       Matrix.one_mul, Matrix.trace_diagonal]
   have hsplit : frobSq A =
@@ -243,9 +246,11 @@ theorem IsSVD.frobSq_sub_truncatedMatrix {m n : ℕ} {A : Matrix (Fin m) (Fin n)
       _ = (h.truncatedMatrix k + U * T * Vᵀ) - h.truncatedMatrix k :=
         congrArg (fun M => M - h.truncatedMatrix k) hsplit
       _ = _ := by abel
-  rw [he, frobSq_mul_right_of_orthonormal h.transpose_mul_right,
+  rw [he, ← Matrix.conjTranspose_eq_transpose_of_trivial V,
+    frobSq_mul_right_of_orthonormal h.transpose_mul_right,
     frobSq_mul_left_of_orthonormal h.transpose_mul_left]
-  rw [← frobSq_transpose T, frobSq, frobInner_eq_trace, Matrix.transpose_transpose]
+  rw [← frobSq_transpose T, frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
   dsimp only [T]
   rw [rectDiag_mul_transpose_rectDiag, Matrix.trace_diagonal, singularValueTailSq]
   apply Finset.sum_congr rfl

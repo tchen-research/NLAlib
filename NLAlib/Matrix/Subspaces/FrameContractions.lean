@@ -55,7 +55,8 @@ omit [DecidableEq m] in
 Stewart–Sun §I.5. -/
 theorem frobNorm_frame_eq_sqrt_card {Q : Matrix m r ℝ} (hQ : HasOrthonormalCols Q) :
     frobNorm Q = Real.sqrt (Fintype.card r) := by
-  rw [frobNorm, frobSq, frobInner_eq_trace, hQ.transpose_mul_self, Matrix.trace_one]
+  rw [frobNorm, frobSq, frobInner_eq_trace, hQ.conjTranspose_mul_self, Matrix.trace_one,
+    RCLike.re_to_real]
 
 /-- Multiplication by a width-`k` orthonormal frame has Frobenius norm at
 most `sqrt(k)` times the original spectral norm. Stewart–Sun §V.3. -/

@@ -67,7 +67,8 @@ theorem singularValues_mul_orthogonal [DecidableEq n] (A : Matrix m n ℝ)
     {V : Matrix n n ℝ} (hV : HasOrthonormalCols V) :
     singularValues (A * V) = singularValues A := by
   have hVt : HasOrthonormalCols Vᵀ := by
-    rw [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose]
+    rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
+        Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
     exact mul_eq_one_comm.1 hV
   simpa only [Matrix.transpose_transpose] using singularValues_mul_isometry_transpose hVt A
 

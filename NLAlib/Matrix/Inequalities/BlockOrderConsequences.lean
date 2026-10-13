@@ -35,7 +35,7 @@ theorem posSemidef_equal_diagonal_fromBlocks_iff_le
     simp only [star_trivial] at h ⊢
     change 0 ≤ quadForm (fromBlocks A B Bᵀ A) (Sum.elim x (-x)) at h
     rw [quadForm_fromBlocks] at h
-    simp only [quadForm_eq_dotProduct, Matrix.mulVec_neg, dotProduct_neg, neg_dotProduct, neg_neg,
+    simp only [quadForm_def, star_trivial, Matrix.mulVec_neg, dotProduct_neg, neg_dotProduct, neg_neg,
       Matrix.sub_mulVec, dotProduct_sub] at h ⊢
     linarith
   · intro hBA

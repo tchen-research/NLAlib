@@ -138,7 +138,8 @@ atlas: principal-angles-def (partial) -/
 theorem frobSq_sinePrincipalAngles_eq_card_sub_overlap {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     frobSq (sinePrincipalAngles P Q) = (Fintype.card n : ℝ)-frobSq (Pᵀ*Q) := by
-  rw [frobSq, frobInner_eq_trace, transpose_sinePrincipalAngles_mul_self hP hQ,
+  rw [frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, transpose_sinePrincipalAngles_mul_self hP hQ,
     Matrix.trace_diagonal, Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ,
     Fintype.card_fin, nsmul_eq_mul, mul_one]
   congr 1
@@ -154,7 +155,8 @@ theorem frobNorm_sinePrincipalAngles_eq_residual {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     frobNorm (sinePrincipalAngles P Q) = frobNorm (residual P Q) := by
   rw [frobNorm, frobNorm, frobSq_sinePrincipalAngles_eq_card_sub_overlap hP hQ,
-    frobSq_residual_eq_sub hP, frobSq_frame_eq_card hQ]
+    frobSq_residual_eq_sub hP, Matrix.conjTranspose_eq_transpose_of_trivial,
+    frobSq_frame_eq_card hQ]
 
 /-- The sine-angle operator norm is exactly the equal-rank projector distance.
 Stewart–Sun §I.5.
@@ -172,7 +174,8 @@ theorem frobSq_projector_distance_eq_two_mul_sinePrincipalAngles {P Q : Matrix m
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     frobSq (P*Pᵀ-Q*Qᵀ) = 2*frobSq (sinePrincipalAngles P Q) := by
   rw [frobSq_sub_frame_projector_eq_two_mul_residual hP hQ,
-    frobSq_residual_eq_sub hP, frobSq_sinePrincipalAngles_eq_card_sub_overlap hP hQ,
+    frobSq_residual_eq_sub hP, Matrix.conjTranspose_eq_transpose_of_trivial,
+    frobSq_sinePrincipalAngles_eq_card_sub_overlap hP hQ,
     frobSq_frame_eq_card hQ]
 
 omit [DecidableEq m] [DecidableEq n] in
@@ -195,7 +198,7 @@ theorem residual_eq_complement_mul_overlap {r : Type*} [Fintype r]
   have heq : (1 : Matrix m m ℝ)-P*Pᵀ=R*Rᵀ := by
     rw [← hcomp]
     abel
-  rw [residual_eq_one_sub_mul, heq, Matrix.mul_assoc]
+  rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, heq, Matrix.mul_assoc]
 
 /-- The sine-angle norm equals the complementary overlap norm.
 Stewart–Sun §I.5; no ambient dimension subtraction or nonempty assumption.
@@ -206,7 +209,7 @@ theorem specNorm_sinePrincipalAngles_eq_complement_overlap {r : Type*} [Fintype 
     (hcomp : P*Pᵀ+R*Rᵀ=1) : specNorm (sinePrincipalAngles P Q)=specNorm (Rᵀ*Q) := by
   rw [specNorm_sinePrincipalAngles_eq_residual hP hQ,
     residual_eq_complement_mul_overlap hcomp,
-    specNorm_mul_left_of_hasOrthonormalCols hR.transpose_mul_self]
+    specNorm_mul_left_of_hasOrthonormalCols (show Rᵀ * R = 1 from hR)]
 
 /-- The Frobenius sine-angle norm equals the complementary overlap norm.
 Stewart–Sun §I.5.
@@ -217,7 +220,7 @@ theorem frobNorm_sinePrincipalAngles_eq_complement_overlap {r : Type*} [Fintype 
     (hcomp : P*Pᵀ+R*Rᵀ=1) : frobNorm (sinePrincipalAngles P Q)=frobNorm (Rᵀ*Q) := by
   rw [frobNorm_sinePrincipalAngles_eq_residual hP hQ,
     residual_eq_complement_mul_overlap hcomp, frobNorm, frobNorm,
-    frobSq_mul_left_of_orthonormal hR.transpose_mul_self]
+    frobSq_mul_left_of_orthonormal hR]
 
 /-- The sine-angle norm is at most one, for all widths including zero.
 Stewart–Sun §I.5. -/

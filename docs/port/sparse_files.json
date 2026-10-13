@@ -1,0 +1,922 @@
+[
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.BandAssembly",
+  "lines": 191,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): assembly of the three band estimates from sector components",
+  "on_headline_path": true,
+  "decls_reached_approx": "7/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.BandEnvelope",
+  "lines": 108,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): band envelope 3+sqrt2 (concrete_band_envelope :32, concrete_band_bound_le_beta :96)",
+  "on_headline_path": true,
+  "decls_reached_approx": "2/2"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.CoefficientBounds",
+  "lines": 200,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): scalar coefficient bounds for normalized bands (m = s*b)",
+  "on_headline_path": true,
+  "decls_reached_approx": "7/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Directional.MarkedCoefficients",
+  "lines": 414,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Directional sector: Directional marked coefficient formulas",
+  "on_headline_path": true,
+  "decls_reached_approx": "21/21"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Directional.MarkedReindexing",
+  "lines": 407,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Directional sector: Directional marked-pair reindexing",
+  "on_headline_path": true,
+  "decls_reached_approx": "24/25"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Directional.NormalizedBands",
+  "lines": 343,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Directional sector: Normalized directional mixed-band estimates",
+  "on_headline_path": true,
+  "decls_reached_approx": "15/16"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Directional.OccupationEnergy",
+  "lines": 315,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Directional sector: Directional supported occupation energy",
+  "on_headline_path": true,
+  "decls_reached_approx": "14/15"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Directional.OccupationProfiles",
+  "lines": 281,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Directional sector: Directional occupation profiles",
+  "on_headline_path": true,
+  "decls_reached_approx": "4/28"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Directional.OutputEnergy",
+  "lines": 441,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Directional sector: Directional output synthesis energy",
+  "on_headline_path": true,
+  "decls_reached_approx": "12/12"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Directional.RestrictedBounds",
+  "lines": 195,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Directional sector: Directional exact-grade operator bounds",
+  "on_headline_path": true,
+  "decls_reached_approx": "10/10"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Directional.SiteTransitions",
+  "lines": 310,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Directional sector: Directional two-site transitions",
+  "on_headline_path": true,
+  "decls_reached_approx": "15/17"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.EnvelopeArithmetic",
+  "lines": 184,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): scalar assembly of the uniform band envelope",
+  "on_headline_path": true,
+  "decls_reached_approx": "10/11"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.GlobalBands",
+  "lines": 323,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): global bands as sums over rows and ordered distinct column pairs, nine-cell partition",
+  "on_headline_path": true,
+  "decls_reached_approx": "20/21"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.AnalysisOperators",
+  "lines": 194,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Concrete heavy analysis operators",
+  "on_headline_path": true,
+  "decls_reached_approx": "15/15"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.CreationEnergy",
+  "lines": 116,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Heavy creation occupation-energy estimate",
+  "on_headline_path": true,
+  "decls_reached_approx": "1/1"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.DemotionEnergy",
+  "lines": 156,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Heavy demotion occupation-energy estimate",
+  "on_headline_path": true,
+  "decls_reached_approx": "3/3"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.DiagonalEnergy",
+  "lines": 234,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Heavy same-site diagonal energy",
+  "on_headline_path": true,
+  "decls_reached_approx": "4/6"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.GradeProjections",
+  "lines": 183,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Heavy middle-grade projections",
+  "on_headline_path": true,
+  "decls_reached_approx": "9/9"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.LoweringBound",
+  "lines": 171,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Restricted heavy lowering operator bound",
+  "on_headline_path": true,
+  "decls_reached_approx": "7/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.MarkedSites",
+  "lines": 341,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Marked heavy-site transitions",
+  "on_headline_path": true,
+  "decls_reached_approx": "21/22"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.NormalizedBands",
+  "lines": 132,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Normalized heavy-band estimates",
+  "on_headline_path": true,
+  "decls_reached_approx": "4/4"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.OccupationIdentity",
+  "lines": 185,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Exact heavy diagonal occupation identities",
+  "on_headline_path": true,
+  "decls_reached_approx": "3/3"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.PreservingBound",
+  "lines": 243,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Restricted heavy preserving operator bound",
+  "on_headline_path": true,
+  "decls_reached_approx": "11/11"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.PreservingGram",
+  "lines": 254,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Heavy preserving Gram factorization",
+  "on_headline_path": true,
+  "decls_reached_approx": "12/12"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.RaisingBound",
+  "lines": 179,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Restricted heavy raising operator bound",
+  "on_headline_path": true,
+  "decls_reached_approx": "8/9"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Heavy.RowFactorization",
+  "lines": 243,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Heavy sector: Heavy raising row factorization",
+  "on_headline_path": true,
+  "decls_reached_approx": "17/17"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Ladder",
+  "lines": 255,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): multiplication operator = sum of the three grade bands",
+  "on_headline_path": true,
+  "decls_reached_approx": "11/13"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.LadderIteration",
+  "lines": 407,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): ladder iteration: E tr G_iid^{2q} <= d(3 beta)^{2q} from band bounds (:392)",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/17"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.AbstractContraction",
+  "lines": 154,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Light-sector contraction estimate",
+  "on_headline_path": true,
+  "decls_reached_approx": "3/5"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.AnalysisGram",
+  "lines": 387,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Light creation analysis Gram estimates",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/14"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.BlockDecomposition",
+  "lines": 240,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: The finite direct sum of exact heavy/light pattern blocks",
+  "on_headline_path": true,
+  "decls_reached_approx": "14/15"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.CrossContraction",
+  "lines": 307,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Concrete cross-map contractions on common spectator fibers",
+  "on_headline_path": true,
+  "decls_reached_approx": "12/14"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.CrossCoordinates",
+  "lines": 176,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Common spectator coordinates for two particle slots",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/13"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.GradeNorm",
+  "lines": 289,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: The shared-leg norm bound on a fixed grade",
+  "on_headline_path": true,
+  "decls_reached_approx": "6/13"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.GramQuadratic",
+  "lines": 140,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: The dimension-plus-particle-count shared-leg quadratic estimate",
+  "on_headline_path": true,
+  "decls_reached_approx": "9/9"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.HardCoreEmbedding",
+  "lines": 247,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Normalized hard-core symmetrization and compression bounds",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/14"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.LabelledSlots",
+  "lines": 282,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Labelled particle slots and their individual synthesis matrices",
+  "on_headline_path": true,
+  "decls_reached_approx": "17/18"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.LegalTransitions",
+  "lines": 247,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Legal physical light moves and fixed-block preservation",
+  "on_headline_path": true,
+  "decls_reached_approx": "11/11"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.MixedFactorization",
+  "lines": 159,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Light synthesis and mixed row factors",
+  "on_headline_path": true,
+  "decls_reached_approx": "3/3"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.MoveOrbits",
+  "lines": 242,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Correspondence between labelled spectators and legal physical moves",
+  "on_headline_path": true,
+  "decls_reached_approx": "2/2"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.NormalizedBands",
+  "lines": 326,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Normalized light-band estimates",
+  "on_headline_path": true,
+  "decls_reached_approx": "15/15"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.OrbitCompression",
+  "lines": 340,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: The exact orbit-sum and physical compression identity",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/15"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.PatternWords",
+  "lines": 362,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Canonical pattern words and permutation orbits",
+  "on_headline_path": true,
+  "decls_reached_approx": "24/27"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.PreservingDiagonal",
+  "lines": 418,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Light preserving diagonal energy",
+  "on_headline_path": true,
+  "decls_reached_approx": "17/17"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.RowFactorization",
+  "lines": 359,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Light raising row factorization",
+  "on_headline_path": true,
+  "decls_reached_approx": "21/22"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.SharedLegOperators",
+  "lines": 364,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: Creation, annihilation, and one-particle shared-leg operators",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/29"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.SynthesisBounds",
+  "lines": 382,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Light sector: The combined synthesis matrix and its two Gram bounds",
+  "on_headline_path": true,
+  "decls_reached_approx": "19/24"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Light.ZeroBlock",
+  "lines": 110,
+  "action": "drop",
+  "reason": "dead code: none of its 6 declarations is used anywhere (imported by Light/RowFactorization only)",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/6"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Mixed.NormalizedBands",
+  "lines": 373,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Mixed sector: Normalized mixed-band estimates",
+  "on_headline_path": true,
+  "decls_reached_approx": "11/11"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Mixed.RestrictedBounds",
+  "lines": 199,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Mixed sector: Mixed exact-grade operator bounds",
+  "on_headline_path": true,
+  "decls_reached_approx": "7/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.Mixed.RowFactorization",
+  "lines": 439,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6), Mixed sector: Mixed light-heavy row factorizations",
+  "on_headline_path": true,
+  "decls_reached_approx": "22/23"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.NamedBands",
+  "lines": 227,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): named band families L/X/Y/H",
+  "on_headline_path": true,
+  "decls_reached_approx": "27/27"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.Bands.ScalarBounds",
+  "lines": 158,
+  "action": "rebuild",
+  "reason": "iid-model band bound (H6): square-root/scalar envelope inequalities",
+  "on_headline_path": true,
+  "decls_reached_approx": "1/8"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.CountSketch",
+  "lines": 112,
+  "action": "keep",
+  "reason": "not part of the sparse-stack proof: separate countsketch-ose endpoint, already Measure + library vocabulary; port as Sketching/CountSketch",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/8"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.CountSketchExpectation",
+  "lines": 106,
+  "action": "keep",
+  "reason": "exact CountSketch second moment (d^2+d-2 sum lev^2)/m; separate endpoint",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/4"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.CountSketchMoments",
+  "lines": 113,
+  "action": "keep",
+  "reason": "CountSketch conditional second moment (Rademacher quadratic forms); separate endpoint, already library vocabulary",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/5"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.CountSketchTail",
+  "lines": 96,
+  "action": "keep",
+  "reason": "CountSketch endpoint, already in the target failure shape (:83); q=1 instance of the Markov step",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/4"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FiniteLaw.BinaryProduct",
+  "lines": 112,
+  "action": "drop",
+  "reason": "binary product law, only used by the independent-frame corollary (off the headline path): Measure.prod",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/6"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FiniteLaw.Expectation",
+  "lines": 282,
+  "action": "drop",
+  "reason": "D1 real-weighted finite law (expect, prob, markov, prob_compl): replaced by Mathlib PMF/Measure, integral, measureReal",
+  "on_headline_path": true,
+  "decls_reached_approx": "14/22"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FiniteLaw.IndependentProduct",
+  "lines": 189,
+  "action": "drop",
+  "reason": "finite independent product law: replaced by Measure.pi / PMF product",
+  "on_headline_path": true,
+  "decls_reached_approx": "5/10"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FiniteLaw.LocalMoments",
+  "lines": 262,
+  "action": "drop",
+  "reason": "MatchesUpTo/HasLocalDegree k-wise matching; only used by the limited-independence side results (off the headline path). Idea survives as interface hypothesis H4",
+  "on_headline_path": false,
+  "decls_reached_approx": "7/16"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FiniteLaw.ToMeasure",
+  "lines": 78,
+  "action": "drop",
+  "reason": "FiniteLaw -> PMF/Measure bridge; disappears when laws are PMFs from the start",
+  "on_headline_path": true,
+  "decls_reached_approx": "5/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FiniteLaw.Uniform",
+  "lines": 126,
+  "action": "drop",
+  "reason": "uniform/map finite laws: replaced by PMF.uniformOfFintype and PMF.map",
+  "on_headline_path": true,
+  "decls_reached_approx": "3/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.FockSpace",
+  "lines": 366,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): Euclidean realization and exact-grade projections",
+  "on_headline_path": true,
+  "decls_reached_approx": "20/26"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.LadderMatrices",
+  "lines": 207,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): three-level creation/annihilation matrices of the ternary Jacobi operator",
+  "on_headline_path": true,
+  "decls_reached_approx": "15/26"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.LadderWords",
+  "lines": 343,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): typed ladder-word inventory (shift x heaviness cells)",
+  "on_headline_path": true,
+  "decls_reached_approx": "21/44"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.OccupationPattern",
+  "lines": 241,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): Level/Site/Pattern and total occupation grade of the product basis",
+  "on_headline_path": true,
+  "decls_reached_approx": "19/28"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.ProductBasis",
+  "lines": 385,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): iid product law iidLaw (:35) and its orthonormal product basis",
+  "on_headline_path": true,
+  "decls_reached_approx": "18/18"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.SiteKernels",
+  "lines": 252,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): one-site and pair kernels on the pattern basis",
+  "on_headline_path": true,
+  "decls_reached_approx": "17/20"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.TensorOperators",
+  "lines": 102,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): external rank-one (vecMulVec) factors tensored with pattern kernels",
+  "on_headline_path": true,
+  "decls_reached_approx": "9/9"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.TernaryJacobi",
+  "lines": 336,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): ternary law eta in {0, +-sqrt b}, mean 0 (:160), variance 1 (:168), orthonormal polynomial basis",
+  "on_headline_path": true,
+  "decls_reached_approx": "17/30"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.VacuumMoment",
+  "lines": 185,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): E tr G_iid^k = vacuum diagonal of the multiplication operator^k (:62)",
+  "on_headline_path": true,
+  "decls_reached_approx": "9/10"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.FockModel.WeightedBasis",
+  "lines": 258,
+  "action": "rebuild",
+  "reason": "iid-model trace moment (H6): weighted orthonormal basis and multiplication operators (vacuum moment identity behind VacuumMoment)",
+  "on_headline_path": true,
+  "decls_reached_approx": "15/15"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ConditionalBarycenter",
+  "lines": 354,
+  "action": "rebuild",
+  "reason": "one-column conditional barycenter E[c_b Y | X] = X (:347), from sign flips (:159, :177): hypothesis H5",
+  "on_headline_path": true,
+  "decls_reached_approx": "20/24"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ConvexOrder",
+  "lines": 193,
+  "action": "rebuild",
+  "reason": "unconditional convex order sparse <= iid (:166) via mixture = iid law (:102, :131); hosts R3",
+  "on_headline_path": true,
+  "decls_reached_approx": "11/11"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.DistributionBridges",
+  "lines": 273,
+  "action": "rebuild",
+  "reason": "needed identities sparseVectorError_eq_gramError (:56) and iidVectorError_eq_flattened_iidGramError (:210); the law/flatten bridges (:33, :78-:159) disappear if the iid model is indexed by Fin s x Fin b",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/13"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactColumnMarginals",
+  "lines": 168,
+  "action": "rebuild",
+  "reason": "uniform exact-s column marginal of the coupling",
+  "on_headline_path": true,
+  "decls_reached_approx": "9/9"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactConditionalBarycenter",
+  "lines": 194,
+  "action": "rebuild",
+  "reason": "exact-s conditional barycenter (:181): H5 for OSNAP",
+  "on_headline_path": true,
+  "decls_reached_approx": "7/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactConditionalMatrixTransfer",
+  "lines": 239,
+  "action": "rebuild",
+  "reason": "exact-s mixture = iid column law (:76) and matrix barycenter transfer (:197, :227)",
+  "on_headline_path": true,
+  "decls_reached_approx": "10/10"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactConditionalSupport",
+  "lines": 323,
+  "action": "rebuild",
+  "reason": "conditional support moments of the exact-s coupling",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/15"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactCoordinateSymmetry",
+  "lines": 269,
+  "action": "rebuild",
+  "reason": "coordinate-flip identities for exact-s conditional moments",
+  "on_headline_path": true,
+  "decls_reached_approx": "16/17"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactIIDMatrixError",
+  "lines": 329,
+  "action": "rebuild",
+  "reason": "exact-s iid matrix error and its flattening to the product-Fock model",
+  "on_headline_path": true,
+  "decls_reached_approx": "16/22"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactMomentTransfer",
+  "lines": 234,
+  "action": "rebuild",
+  "reason": "exact-s convex order (:95) and trace-moment comparison (:216); instance of R3 with R2",
+  "on_headline_path": true,
+  "decls_reached_approx": "11/11"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactSelectionSymmetry",
+  "lines": 270,
+  "action": "rebuild",
+  "reason": "signed-permutation invariance of the exact-s selection kernel",
+  "on_headline_path": true,
+  "decls_reached_approx": "10/11"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.ExactSignActions",
+  "lines": 291,
+  "action": "rebuild",
+  "reason": "signed coordinate actions on exact-s columns used by the exact-s symmetry arguments",
+  "on_headline_path": true,
+  "decls_reached_approx": "13/29"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.FillThinCoupling",
+  "lines": 445,
+  "action": "rebuild",
+  "reason": "exact-s fill/thin coupling (jointColumnLaw :432), exactScale <= c_b (:259): H5 for OSNAP",
+  "on_headline_path": true,
+  "decls_reached_approx": "32/32"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.IndependentCopyLift",
+  "lines": 374,
+  "action": "rebuild",
+  "reason": "lifts the coupling to all sites; off-diagonal matrix barycenter (:229) via independence at distinct sites (:134); Jensen (:323, :362); hosts part of R3",
+  "on_headline_path": true,
+  "decls_reached_approx": "30/30"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.MomentTransfer",
+  "lines": 171,
+  "action": "rebuild",
+  "reason": "trace-moment comparison E tr G_sparse^{2q} <= c_b^{4q} E tr G_iid^{2q} (:135); instance of R3 with R2",
+  "on_headline_path": true,
+  "decls_reached_approx": "6/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.SelectionKernel",
+  "lines": 116,
+  "action": "rebuild",
+  "reason": "support-selection kernel of the SparseStack martingale coupling",
+  "on_headline_path": true,
+  "decls_reached_approx": "6/7"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.SelectorMarginals",
+  "lines": 269,
+  "action": "rebuild",
+  "reason": "identifies the selector marginal of the joint coupling law (sign/swap symmetry)",
+  "on_headline_path": true,
+  "decls_reached_approx": "22/22"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.IIDComparison.TernaryCoordinateLaws",
+  "lines": 226,
+  "action": "rebuild",
+  "reason": "iid ternary vector law, p0 = (1-1/b)^b, c_b = (1-p0)^{-1} <= c* (:201, :219)",
+  "on_headline_path": true,
+  "decls_reached_approx": "23/26"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.Assembly",
+  "lines": 130,
+  "action": "drop",
+  "reason": "MainConclusions bundle (bundles are deleted at port time); canonicalS_pos/canonicalB_pos fold into MomentParameters",
+  "on_headline_path": true,
+  "decls_reached_approx": "4/4"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.Endgame",
+  "lines": 286,
+  "action": "rebuild",
+  "reason": "moment chain sparse <= c_b^{4q} iid <= d(3c_b^2 beta)^{2q}, Markov and rounding (:35, :83, :115); on the headline path",
+  "on_headline_path": true,
+  "decls_reached_approx": "5/5"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.Frame",
+  "lines": 284,
+  "action": "rebuild",
+  "reason": "Parseval-frame analysis/synthesis identities used throughout the band proofs; rebuild as lemmas on the rows of U with HasOrthonormalCols U, dropping the Frame structure (D2)",
+  "on_headline_path": true,
+  "decls_reached_approx": "22/23"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.FrameOfMatrix",
+  "lines": 101,
+  "action": "drop",
+  "reason": "Frame <-> matrix representation bridge; disappears once Frame is replaced by HasOrthonormalCols",
+  "on_headline_path": true,
+  "decls_reached_approx": "2/8"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.GramError",
+  "lines": 106,
+  "action": "drop",
+  "reason": "sketchGram/embeddedGram/gramError wrappers; replaced by (S*U)^T*(S*U)-1 and isSubspaceEmbedding_iff_specNorm_transpose_mul_self_sub_one_le (Properties/SubspaceEmbedding/Gram.lean:46)",
+  "on_headline_path": true,
+  "decls_reached_approx": "8/8"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.GramTail",
+  "lines": 140,
+  "action": "rebuild",
+  "reason": "hosts reusable lemma R1 (Markov step, :38/:82); rebuild once, generically, in Sketching/Properties; the SparseStack instances drop",
+  "on_headline_path": true,
+  "decls_reached_approx": "3/4"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.IndependentFrame",
+  "lines": 89,
+  "action": "drop",
+  "reason": "random-frame-independent-of-sketch corollary, off the headline path; Fubini in the Measure world",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/2"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.MomentOrder",
+  "lines": 108,
+  "action": "rebuild",
+  "reason": "q = max 1 ceil(log2(d/delta)) facts used by the final rounding",
+  "on_headline_path": true,
+  "decls_reached_approx": "5/6"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.MomentParameters",
+  "lines": 225,
+  "action": "rebuild",
+  "reason": "rounded envelope and moment base < 1/2; rounded_scalar_failure_le_delta (:170), main_parameter_package (:205)",
+  "on_headline_path": true,
+  "decls_reached_approx": "8/9"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.ParameterConstants",
+  "lines": 204,
+  "action": "rebuild",
+  "reason": "explicit constants q, s, b, m, c*, 3+sqrt2, L=90c*^2 of the headline statements",
+  "on_headline_path": true,
+  "decls_reached_approx": "23/25"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.RoundedScales",
+  "lines": 315,
+  "action": "rebuild",
+  "reason": "ceiling estimates for s, b, m; s<1356q/eps, m<306456(d+q)/eps^2",
+  "on_headline_path": true,
+  "decls_reached_approx": "18/19"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.SparseStackLimitedIndependence",
+  "lines": 423,
+  "action": "drop",
+  "reason": "4q-wise SparseStack side result, off the headline path; candidate atlas sparse-limited-independence, re-derive from interface hypothesis H4 (trace moment has local degree 4q, :160/:183)",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/11"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.SparseStackTheorem",
+  "lines": 159,
+  "action": "rebuild",
+  "reason": "only rounded_band_bound (:33) is needed (band envelope at rounded parameters); the MainConclusions/MatrixMainConclusions bundles and frame transport drop",
+  "on_headline_path": true,
+  "decls_reached_approx": "4/5"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.UniformSparseLimitedIndependence",
+  "lines": 383,
+  "action": "drop",
+  "reason": "whole-column 4q-wise OSNAP side result, off the headline path; same remark as SparseStackLimitedIndependence (:139/:161)",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/10"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.UniformSparseRoundedBounds",
+  "lines": 223,
+  "action": "rebuild",
+  "reason": "exact-s rounding to <= delta (:31, :206); merges with Endgame rounding once the moment bound is the interface hypothesis",
+  "on_headline_path": true,
+  "decls_reached_approx": "4/5"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.UniformSparseTail",
+  "lines": 167,
+  "action": "rebuild",
+  "reason": "exact-s moment bound trace_moment_le_of_band_bounds (:82) is needed; its Markov instances (:33, :51) are duplicates of R1 and drop",
+  "on_headline_path": true,
+  "decls_reached_approx": "4/4"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.MomentMethod.UniformSparseTheorem",
+  "lines": 145,
+  "action": "drop",
+  "reason": "UniformExactSMainConclusions bundle and Frame-to-matrix transport; the content is UniformSparseRoundedBounds + the endpoint in SparseEmbedding",
+  "on_headline_path": true,
+  "decls_reached_approx": "1/5"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.SparseEmbedding",
+  "lines": 147,
+  "action": "rebuild",
+  "reason": "hosts the two headline theorems (:35, :86); restate in the failure shape mu.real {not IsSubspaceEmbedding} <= delta",
+  "on_headline_path": true,
+  "decls_reached_approx": "3/6"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.SparseEmbeddingTransport",
+  "lines": 79,
+  "action": "drop",
+  "reason": "_of_map_eq transport to arbitrary probability spaces; superseded by the HasLaw corollary convention of F2 (re-home its 2 sparse-ose tags)",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/2"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.SparseFiniteIndex",
+  "lines": 114,
+  "action": "drop",
+  "reason": "Fintype-index restatement via reindexing; the rebuild states the headline over arbitrary Fintype indices directly (re-home its 2 sparse-ose tags)",
+  "on_headline_path": false,
+  "decls_reached_approx": "0/5"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.SparseLaws",
+  "lines": 64,
+  "action": "rebuild",
+  "reason": "sparseStackMeasure/uniformSparseMeasure are the measures in the headline statements; becomes the PMF.toMeasure definitions",
+  "on_headline_path": true,
+  "decls_reached_approx": "2/8"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.SparseStack",
+  "lines": 424,
+  "action": "rebuild",
+  "reason": "SparseStack model (sparseStackMatrix, signed basis, hollow Gram identity gramError_eq_hollow :373); appears in the headline statement",
+  "on_headline_path": true,
+  "decls_reached_approx": "29/33"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.SparseStackLaw",
+  "lines": 159,
+  "action": "rebuild",
+  "reason": "selector law of the headline; restate as PMF.uniformOfFintype product / Measure.pi instead of FiniteLaw",
+  "on_headline_path": true,
+  "decls_reached_approx": "8/14"
+ },
+ {
+  "module": "NLAlib.Sketching.Sparse.UniformSparse",
+  "lines": 319,
+  "action": "rebuild",
+  "reason": "OSNAP/exact-s model (uniformSparseMatrix, hollow Gram :278); appears in the headline statement; law becomes a PMF",
+  "on_headline_path": true,
+  "decls_reached_approx": "18/24"
+ }
+]

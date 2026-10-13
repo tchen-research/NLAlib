@@ -101,7 +101,7 @@ Atlas: `graded-krylov-basis-def`. -/
 theorem eq_sum_of_mem (hQ : IsGradedKrylovBasis A b Q) {x : n → ℝ}
     (hx : x ∈ krylovSpace A b q) : x = ∑ i, (Q.col i ⬝ᵥ x) • Q.col i := by
   rw [← hQ.range_mulVecLin] at hx
-  conv_lhs => rw [← mulVec_transpose_mulVec_of_mem_range hQ.orth hx]
+  conv_lhs => rw [← mulVec_conjTranspose_mulVec_of_mem_range hQ.orth hx]
   rw [mulVec_eq_sum_smul_col]
   rfl
 
@@ -279,7 +279,8 @@ def restrict (D : ArnoldiDecomp A b q) {q' : ℕ} (h : q' ≤ q) : ArnoldiDecomp
   Q := D.Q.submatrix id (Fin.castLE h)
   graded := by
     refine IsGradedKrylovBasis.of_mem ?_ fun j => ?_
-    · rw [hasOrthonormalCols_iff_transpose_mul_self]
+    · rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
+        Matrix.conjTranspose_eq_transpose_of_trivial]
       ext i j
       rw [transpose_mul_self_apply]
       change D.Q.col (Fin.castLE h i) ⬝ᵥ D.Q.col (Fin.castLE h j) = _

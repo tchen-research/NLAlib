@@ -24,6 +24,7 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+omit [DecidableEq m] in
 /-- One-sided Weyl perturbation bound in the spectral norm, including empty
 dimensions. Atlas: `norm-lipschitz`. -/
 theorem sigmaMin_le_sigmaMin_add_specNorm (A B : Matrix m n ℝ) :
@@ -49,6 +50,7 @@ theorem sigmaMin_le_sigmaMin_add_specNorm (A B : Matrix m n ℝ) :
     rw [x.2, Real.sqrt_one, mul_one] at h3
     linarith
 
+omit [DecidableEq m] in
 /-- The smallest singular value is `1`-Lipschitz for the spectral norm:
 `|σ_min(A) − σ_min(B)| ≤ ‖A − B‖₂`. Atlas: `norm-lipschitz`.
 atlas: norm-lipschitz -/
@@ -62,6 +64,7 @@ theorem abs_sigmaMin_sub_sigmaMin_le_specNorm (A B : Matrix m n ℝ) :
     rw [norm_sub_rev]
   constructor <;> linarith
 
+omit [DecidableEq m] in
 /-- The spectral norm squared is the norm of the Gram matrix `AᴴA`, over `ℝ` or `ℂ`, including
 empty dimensions. Atlas: `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
@@ -70,6 +73,7 @@ theorem specNorm_sq_eq_specNorm_conjTranspose_mul_self {𝕜 : Type*} [RCLike �
   unfold specNorm
   rw [sq, ← Matrix.l2_opNorm_conjTranspose_mul_self]
 
+omit [DecidableEq m] in
 /-- The spectral norm squared is the norm of the Gram matrix, including
 empty dimensions (real form of `specNorm_sq_eq_specNorm_conjTranspose_mul_self`).
 Atlas: `norms-frob-spec`, `svd`.
@@ -182,7 +186,8 @@ theorem IsSVD.mulVec_dotProduct_mulVec_eq_sum {m n : ℕ}
     {V : Matrix (Fin n) (Fin n) ℝ} (hSVD : IsSVD A U V) (x : Fin n → ℝ) :
     (A *ᵥ x) ⬝ᵥ (A *ᵥ x) =
       ∑ j : Fin n, singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by
-  rw [mulVec_dotProduct_mulVec_self, hSVD.transpose_mul_self,
+  rw [show (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) from
+      star_mulVec_dotProduct_mulVec_self A x, hSVD.transpose_mul_self,
     ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
     Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose]
   simp only [dotProduct, Matrix.mulVec_diagonal]
@@ -202,7 +207,9 @@ private theorem sigmaMin_eq_singularValues_last_fin {m n : ℕ}
     let x := V *ᵥ e
     have hx : x ⬝ᵥ x = 1 := by
       dsimp [x]
-      rw [mulVec_dotProduct_mulVec_self, hSVD.transpose_mul_right, Matrix.one_mulVec]
+      rw [show (V *ᵥ e) ⬝ᵥ (V *ᵥ e) = e ⬝ᵥ ((Vᵀ * V) *ᵥ e) from
+          star_mulVec_dotProduct_mulVec_self V e, hSVD.transpose_mul_right,
+        Matrix.one_mulVec]
       simp [e]
     have hy : Vᵀ *ᵥ x = e := by
       dsimp [x]
@@ -216,7 +223,8 @@ private theorem sigmaMin_eq_singularValues_last_fin {m n : ℕ}
   · apply le_sigmaMin A
     intro x hx
     have hy : (Vᵀ *ᵥ x) ⬝ᵥ (Vᵀ *ᵥ x) = 1 := by
-      rw [mulVec_dotProduct_mulVec_self, Matrix.transpose_transpose,
+      rw [show (Vᵀ *ᵥ x) ⬝ᵥ (Vᵀ *ᵥ x) = x ⬝ᵥ ((Vᵀᵀ * Vᵀ) *ᵥ x) from
+          star_mulVec_dotProduct_mulVec_self Vᵀ x, Matrix.transpose_transpose,
         hSVD.mul_transpose_right, Matrix.one_mulVec, hx]
     have hsum : singularValues A (n - 1) ^ 2 ≤
         ∑ j : Fin n, singularValues A j ^ 2 * ((Vᵀ *ᵥ x) j) ^ 2 := by

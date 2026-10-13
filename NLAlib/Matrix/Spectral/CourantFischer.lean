@@ -56,7 +56,7 @@ private theorem eigenvalues_e (j : Fin (Fintype.card n)) :
 private theorem dotProduct_mulVec_eq_sum (x : n → ℝ) :
     x ⬝ᵥ (A *ᵥ x) = ∑ j, hA.eigenvalues₀ j * coord hA j x ^ 2 := by
   have h := quadForm_eq_sum_eigenvalues hA x
-  rw [quadForm_eq_dotProduct] at h
+  rw [quadForm_def, star_trivial] at h
   rw [h, ← (e (n := n)).sum_comp]
   simp only [coord, eigenvalues_e]
 
@@ -332,7 +332,10 @@ theorem singularValues_le_of_forall_mem {m n : Type*} [Fintype m] [Fintype n] [D
   by_cases hk : k < Fintype.card n
   · have h := eigenvalues₀_le_of_forall_mem (isHermitian_transpose_mul_self A)
       ⟨k, hk⟩ W hW (c := c ^ 2)
-      fun x hx => by rw [← mulVec_dotProduct_mulVec_self]; exact hAW x hx
+      fun x hx => by
+        rw [← show (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) from
+            star_mulVec_dotProduct_mulVec_self A x]
+        exact hAW x hx
     rw [← sq_singularValues_eq A hk] at h
     exact (pow_le_pow_iff_left₀ (singularValues_nonneg A k) hc two_ne_zero).1 h
   · rw [singularValues_eq_zero_of_width_le A (not_lt.1 hk)]
@@ -352,7 +355,10 @@ theorem le_singularValues_of_forall_mem {m n : Type*} [Fintype m] [Fintype n] [D
   · exact hc.trans (singularValues_nonneg A k)
   have h := le_eigenvalues₀_of_forall_mem (isHermitian_transpose_mul_self A)
     ⟨k, hk⟩ S hS (c := c ^ 2)
-    fun x hx => by rw [← mulVec_dotProduct_mulVec_self]; exact hAS x hx
+    fun x hx => by
+      rw [← show (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) from
+          star_mulVec_dotProduct_mulVec_self A x]
+      exact hAS x hx
   rw [← sq_singularValues_eq A hk] at h
   exact (pow_le_pow_iff_left₀ hc.le (singularValues_nonneg A k) two_ne_zero).1 h
 
@@ -367,7 +373,8 @@ theorem exists_submodule_mulVec_dotProduct_le_sq_singularValues_mul {m n : Type*
   · obtain ⟨W, hW, hAW⟩ := exists_submodule_le_eigenvalues₀_mul
       (isHermitian_transpose_mul_self A) ⟨k, hk⟩
     refine ⟨W, hW, fun x hx => ?_⟩
-    rw [sq_singularValues_eq A hk, mulVec_dotProduct_mulVec_self]
+    rw [sq_singularValues_eq A hk,
+      show (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) from star_mulVec_dotProduct_mulVec_self A x]
     exact hAW x hx
   · refine ⟨⊥, by simp; omega, fun x hx => ?_⟩
     rw [(Submodule.mem_bot ℝ).1 hx]
@@ -384,7 +391,8 @@ theorem exists_submodule_sq_singularValues_mul_le_mulVec_dotProduct {m n : Type*
   obtain ⟨S, hS, hAS⟩ := exists_submodule_eigenvalues₀_mul_le
     (isHermitian_transpose_mul_self A) ⟨k, hk⟩
   refine ⟨S, hS, fun x hx => ?_⟩
-  rw [sq_singularValues_eq A hk, mulVec_dotProduct_mulVec_self]
+  rw [sq_singularValues_eq A hk,
+      show (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) from star_mulVec_dotProduct_mulVec_self A x]
   exact hAS x hx
 
 end NLAlib

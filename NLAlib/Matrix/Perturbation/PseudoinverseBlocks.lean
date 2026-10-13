@@ -72,7 +72,8 @@ theorem neg_complement_rowProjector_mul_moorePenroseInverse_eq (A B : Matrix m n
       (1-moorePenroseInverse B*B)*(B-A)ᵀ*(moorePenroseInverse A)ᵀ*moorePenroseInverse A := by
   let a := moorePenroseInverse A
   have ha : Aᵀ*aᵀ*a=a := by
-    rw [← Matrix.transpose_mul, (isMoorePenroseInverse A).transpose_inv_mul_eq]
+    rw [← Matrix.transpose_mul, (show (moorePenroseInverse A * A)ᵀ = moorePenroseInverse A * A from
+      (isMoorePenroseInverse A).conjTranspose_inv_mul_eq)]
     exact moorePenroseInverse_mul_moorePenroseInverse A
   rw [Matrix.transpose_sub, Matrix.mul_sub,
     complement_rowProjector_mul_transpose_eq_zero B, zero_sub]

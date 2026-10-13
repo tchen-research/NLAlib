@@ -63,9 +63,11 @@ theorem posSemidef_mul_transpose_of_frobInner_eq_sum_singularValues_mul
   have hLower := frobInner_le_nuclearNorm_of_specNorm_le_one (A * Bᵀ)
     (1 : Matrix m m ℝ) (specNorm_le_one_of_orthonormal (by simp))
   have hTrace : frobInner (A * Bᵀ) (1 : Matrix m m ℝ) = (A * Bᵀ).trace := by
-    rw [frobInner_eq_trace, Matrix.mul_one, Matrix.trace_transpose]
+    rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_one, Matrix.trace_transpose]
   rw [hTrace] at hLower
-  rw [frobInner_eq_trace_mul_transpose] at hEq
+  rw [frobInner_eq_re_trace_mul_conjTranspose, RCLike.re_to_real,
+    Matrix.conjTranspose_eq_transpose_of_trivial] at hEq
   linarith
 
 /-- Equality in the Frobenius Mirsky bound forces both rectangular

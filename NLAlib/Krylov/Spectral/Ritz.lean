@@ -133,7 +133,7 @@ theorem exists_mem_krylovSpace_sub_rayleigh_le {A : Matrix n n ℝ} (hA : A.IsHe
       le_antisymm (hL0 ▸ htop i) (hpsd i)
     have hbAb : b ⬝ᵥ (A *ᵥ b) = 0 := by
       have := quadForm_eq_sum_eigenvalues hA b
-      simp only [quadForm_eq_dotProduct, hall, zero_mul, Finset.sum_const_zero] at this
+      simp only [quadForm_def, star_trivial, hall, zero_mul, Finset.sum_const_zero] at this
       exact this
     refine ⟨b, ?_, fun h0 => ?_, ?_⟩
     · obtain ⟨q', rfl⟩ : ∃ q', q = q' + 1 := ⟨q - 1, by omega⟩
@@ -154,7 +154,9 @@ theorem dotProduct_mulVec_le_of_mem_range {A : Matrix n n ℝ} {Q : Matrix n k �
   obtain ⟨z, rfl⟩ := hy
   simp only [Matrix.mulVecLin_apply]
   have h := dotProduct_mulVec_le_mul_dotProduct_of_eigenvalues hT hθ z
-  rw [mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ]
+  have hQz := star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ z
+  simp only [star_trivial] at hQz
+  rw [hQz]
   calc (Q *ᵥ z) ⬝ᵥ (A *ᵥ (Q *ᵥ z)) = z ⬝ᵥ ((Qᵀ * A * Q) *ᵥ z) := by
         rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec z Qᵀ,
           Matrix.vecMul_transpose]

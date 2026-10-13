@@ -69,13 +69,16 @@ theorem one_sub_mul_moorePenroseInverse_mul_eq_zero_of_fromBlocks_posSemidef
   have hAt : Aᵀ = A := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hA.isHermitian.eq
   have hAd := moorePenroseInverse_isSymm (A := A) hA.isHermitian
+  have hAdt : (moorePenroseInverse A)ᵀ = moorePenroseInverse A := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hAd.eq
   have hRowCol : moorePenroseInverse A * A = A * moorePenroseInverse A := by
-    simpa only [Matrix.transpose_mul, hAt, hAd.eq] using
-      (mul_moorePenroseInverse_isSymm A).eq
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, hAt,
+      hAdt] using (mul_moorePenroseInverse_isSymm A).eq
   let F : Matrix m m ℝ := 1 - moorePenroseInverse A * A
   have hFs : Fᵀ = F := by
     dsimp [F]
-    rw [Matrix.transpose_sub, Matrix.transpose_one, (moorePenroseInverse_mul_isSymm A).eq]
+    rw [Matrix.transpose_sub, Matrix.transpose_one, ← Matrix.conjTranspose_eq_transpose_of_trivial,
+      (moorePenroseInverse_mul_isSymm A).eq]
   have hAF : A * F = 0 := by
     dsimp [F]
     rw [Matrix.mul_sub, Matrix.mul_one, ← Matrix.mul_assoc, mul_moorePenroseInverse_mul, sub_self]

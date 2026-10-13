@@ -129,7 +129,8 @@ theorem aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (p : ℝ[X
 theorem sum_sq_eigenvectorBasis_dotProduct {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (v : n → ℝ) : ∑ i, (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2 = v ⬝ᵥ v := by
   set U : Matrix n n ℝ := ↑hA.eigenvectorUnitary
-  have h := mulVec_dotProduct_mulVec_self Uᵀ v
+  have h : (Uᵀ *ᵥ v) ⬝ᵥ (Uᵀ *ᵥ v) = v ⬝ᵥ ((Uᵀᵀ * Uᵀ) *ᵥ v) :=
+    star_mulVec_dotProduct_mulVec_self Uᵀ v
   rw [Matrix.transpose_transpose, eigenvectorUnitary_mul_transpose_self hA,
     Matrix.one_mulVec] at h
   rw [← h, mulVec_dotProduct_mulVec_eq_sum_sq]
@@ -170,7 +171,8 @@ theorem dotProduct_aeval_mulVec_self_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermi
     (v : n → ℝ) :
     (aeval A p *ᵥ v) ⬝ᵥ (aeval A p *ᵥ v) =
       ∑ i, p.eval (hA.eigenvalues i) ^ 2 * (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2 := by
-  rw [mulVec_dotProduct_mulVec_self, transpose_aeval hA, ← map_mul,
+  rw [show (aeval A p *ᵥ v) ⬝ᵥ (aeval A p *ᵥ v) = v ⬝ᵥ (((aeval A p)ᵀ * aeval A p) *ᵥ v) from
+      star_mulVec_dotProduct_mulVec_self _ v, transpose_aeval hA, ← map_mul,
     dotProduct_aeval_mulVec_eq_sum hA]
   simp [sq]
 
@@ -182,7 +184,7 @@ theorem quadForm_aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermitian) (
       ∑ i, hA.eigenvalues i * p.eval (hA.eigenvalues i) ^ 2 *
         (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2 := by
   have hP : quadForm A (aeval A p *ᵥ v) = v ⬝ᵥ (aeval A (p * X * p) *ᵥ v) := by
-    rw [quadForm_eq_dotProduct, map_mul, map_mul, aeval_X, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
+    rw [quadForm_def, star_trivial, map_mul, map_mul, aeval_X, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
       Matrix.dotProduct_mulVec v (aeval A p), ← Matrix.mulVec_transpose, transpose_aeval hA p]
   rw [hP, dotProduct_aeval_mulVec_eq_sum hA]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -231,7 +233,7 @@ theorem quadForm_aeval_aeval_mulVec_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermit
       ∑ i, g.eval (hA.eigenvalues i) * p.eval (hA.eigenvalues i) ^ 2 *
         (⇑(hA.eigenvectorBasis i) ⬝ᵥ v) ^ 2 := by
   have hP : quadForm (aeval A g) (aeval A p *ᵥ v) = v ⬝ᵥ (aeval A (p * g * p) *ᵥ v) := by
-    rw [quadForm_eq_dotProduct, map_mul, map_mul, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
+    rw [quadForm_def, star_trivial, map_mul, map_mul, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
       Matrix.dotProduct_mulVec v (aeval A p), ← Matrix.mulVec_transpose, transpose_aeval hA p]
   rw [hP, dotProduct_aeval_mulVec_eq_sum hA]
   refine Finset.sum_congr rfl fun i _ => ?_

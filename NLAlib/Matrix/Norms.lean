@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Norms.BlockNormBounds
 import NLAlib.Matrix.Norms.ColumnNorms
-import NLAlib.Matrix.Norms.ComplexFrobenius
 import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
 import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Norms.EntryBounds

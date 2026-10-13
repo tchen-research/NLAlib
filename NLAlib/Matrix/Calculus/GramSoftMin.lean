@@ -88,7 +88,8 @@ matrix. Source: operator tail proof; atlas `wishart-lambda-min-tail` (helper). -
 theorem frobInner_gramSoftMinGradient_eq_trace (n : ℕ) (ε : ℝ) (G : Matrix ι κ ℝ) :
     frobInner G (gramSoftMinGradient n ε G) =
       2 * Matrix.trace (inversePowerSoftMinWeight n (regularizedGram ε G) * (G * Gᵀ)) := by
-  rw [gramSoftMinGradient, frobInner_smul_right, frobInner_eq_trace]
+  rw [gramSoftMinGradient, frobInner_smul_right, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial]
   congr 1
   calc _ = Matrix.trace ((Gᵀ * inversePowerSoftMinWeight n (regularizedGram ε G)) * G) := by
         congr 1; simp only [Matrix.mul_assoc]
@@ -112,7 +113,8 @@ theorem frobSq_gramSoftMinGradient_eq_trace (n : ℕ) (ε : ℝ) (G : Matrix ι 
   rw [gramSoftMinGradient, frobSq_smul]
   norm_num only
   congr 1
-  rw [frobSq, frobInner_eq_trace, Matrix.transpose_mul, hP, pow_two]
+  rw [frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, hP, pow_two]
   calc _ = Matrix.trace (Gᵀ * (inversePowerSoftMinWeight n (regularizedGram ε G) *
         inversePowerSoftMinWeight n (regularizedGram ε G) * G)) := by
         congr 1; simp only [Matrix.mul_assoc]

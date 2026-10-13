@@ -76,7 +76,7 @@ theorem integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_unit_gaus
     change (∑ a, u a * u a) = 1
     exact hu
   let e : Fin 1 ↪ Fin r := ⟨fun _ => i, fun a b _ => Subsingleton.elim a b⟩
-  obtain ⟨U, hU, hUcol⟩ := exists_orthogonal_completion V hV e
+  obtain ⟨U, hU, hUcol⟩ := exists_unitary_completion V hV e
   have hUi : ∀ a, U a i = u a := fun a => hUcol a 0
   let T : (Fin r → Fin k → ℝ) → (Fin r → Fin k → ℝ) :=
     fun G => Matrix.of.symm (Uᵀ * Matrix.of G * (1 : Matrix (Fin k) (Fin k) ℝ))

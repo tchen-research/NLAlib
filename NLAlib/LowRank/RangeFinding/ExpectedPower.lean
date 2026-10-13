@@ -31,7 +31,7 @@ theorem integrable_specNorm_residual_of_measurable_frame
     (measurable_specNorm_residual_of A hQ).aestronglyMeasurable ?_
   filter_upwards [hQo] with ω hω
   rw [Real.norm_of_nonneg (specNorm_nonneg _)]
-  exact specNorm_sub_mul_transpose_mul_le hω A
+  exact specNorm_sub_mul_conjTranspose_mul_le hω A
 
 /-- Scalar Jensen transfers the deterministic odd-power inequality to expectation.
 Source: HMT (2011), proof of Theorem 10.7; manuscript `sa:power-inequality`.
@@ -56,7 +56,7 @@ theorem integral_specNorm_residual_le_rpow_integral
       ((measurable_specNorm_residual_of A hQ).pow_const r).aestronglyMeasurable ?_
     filter_upwards [hQo] with ω hω
     rw [Real.norm_of_nonneg (pow_nonneg (specNorm_nonneg _) _)]
-    exact pow_le_pow_left₀ (specNorm_nonneg _) (specNorm_sub_mul_transpose_mul_le hω A) r
+    exact pow_le_pow_left₀ (specNorm_nonneg _) (specNorm_sub_mul_conjTranspose_mul_le hω A) r
   have hJ := (convexOn_pow r (𝕜 := ℝ)).map_integral_le (continuous_pow r).continuousOn
     isClosed_Ici (ae_of_all _ fun ω => specNorm_nonneg (residual (Q ω) A)) hfi hfpi
   have hfg : (fun ω => f ω ^ r) ≤ᵐ[μ] g := by
@@ -140,7 +140,7 @@ theorem integral_specNorm_residual_gram_pow_gaussian_le
     have hzero : (fun ω => specNorm (residual (Q ω) A)) =ᵐ[μ] fun _ => 0 := by
       filter_upwards [hproj, hQo] with ω hω ho
       have hc : residual (Q ω) C = 0 := by
-        simp only [residual_eq_sub_mul_transpose_mul, hω, sub_self]
+        simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, hω, sub_self]
       have hpow := specNorm_residual_pow_le ho A q
       change specNorm (residual (Q ω) A) ^ (2 * q + 1) ≤ specNorm (residual (Q ω) C) at hpow
       rw [hc, specNorm_zero] at hpow

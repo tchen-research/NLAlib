@@ -88,6 +88,7 @@ theorem euclideanJacobian_apply
   simp [Matrix.toLpLin_eq_toLin,
     Matrix.toLin_symm, LinearMap.toMatrix_apply, PiLp.basisFun_apply]
 
+omit [DecidableEq n] in
 /-- The spectral norm of the Euclidean Jacobian is absolute conditioning.
 Gautschi (2004), Definition 2.3.
 atlas: condition-number-of-map-def (partial) -/

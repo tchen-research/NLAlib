@@ -24,6 +24,7 @@ theorem mul_le_max_sq_of_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
   · exact (by nlinarith : a*b ≤ b^2).trans (le_max_right _ _)
   · exact (by nlinarith : a*b ≤ a^2).trans (le_max_left _ _)
 
+omit [DecidableEq m] in
 /-- Spectral norm of a three-factor product, used to expose the exact
 inverse coefficients in Wedin's block estimates. -/
 theorem specNorm_mul_mul_le {p q : Type*} [Fintype p] [Fintype q]

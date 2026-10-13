@@ -24,13 +24,13 @@ theorem exists_isometry_mul_eq_of_gram_eq (A : Matrix m n ℝ) (B : Matrix p n �
   obtain ⟨J, hJ⟩ := exists_hasOrthonormalCols_of_card_le hCard
   have hPad : Bᵀ * B = (J * A)ᵀ * (J * A) := by
     rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Jᵀ J A,
-      hJ.transpose_mul_self, Matrix.one_mul]
+      (show Jᵀ * J = 1 from hJ), Matrix.one_mul]
     exact hGram.symm
   obtain ⟨O, hO, hEq⟩ := exists_orthogonal_mul_eq_of_gram_eq B (J * A) hPad
   refine ⟨O * J, ?_, ?_⟩
   · change (O * J)ᵀ * (O * J) = 1
     rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Oᵀ O J,
-      hO.transpose_mul_self, Matrix.one_mul, hJ.transpose_mul_self]
+      (show Oᵀ * O = 1 from hO), Matrix.one_mul, (show Jᵀ * J = 1 from hJ)]
   · simpa only [Matrix.mul_assoc] using hEq
 
 /-- A rectangular isometry transporting one matrix to another preserves its
@@ -45,6 +45,6 @@ theorem gram_eq_iff_exists_isometry_mul_eq (A : Matrix m n ℝ) (B : Matrix p n 
   · exact exists_isometry_mul_eq_of_gram_eq A B hCard
   · rintro ⟨V, hV, rfl⟩
     rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Vᵀ V A,
-      hV.transpose_mul_self, Matrix.one_mul]
+      (show Vᵀ * V = 1 from hV), Matrix.one_mul]
 
 end NLAlib

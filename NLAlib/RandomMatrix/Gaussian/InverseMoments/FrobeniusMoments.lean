@@ -118,7 +118,7 @@ theorem integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix {r k : ℕ} (hrk 
   have hfun : (fun G : Fin r → Fin k → ℝ => frobSq (pinvR (Matrix.of G)) ^ 2)
       = fun G => ∑ i, ∑ j, M G i i * M G j j := by
     funext G
-    rw [frobSq_pinvR_eq_trace_inv, Matrix.trace, sq, Finset.sum_mul_sum]
+    rw [frobSq_pinvR_eq_trace_inv, RCLike.re_to_real, Matrix.trace, sq, Finset.sum_mul_sum]
     rfl
   have hterm : ∀ i j : Fin r, Integrable (fun G => M G i i * M G j j) (gaussianMatrix r k) ∧
       ∫ G, M G i i * M G j j ∂(gaussianMatrix r k)
@@ -219,7 +219,7 @@ theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : �
   have hDm : ∀ i, Measurable (D i) := fun i => measurable_inv_self_mul_transpose_apply i i
   have hZ : ∀ G : Fin r → Fin k → ℝ, frobSq (pinvR (Matrix.of G)) = (∑ i, D i) G := by
     intro G
-    rw [frobSq_pinvR_eq_trace_inv, Finset.sum_apply]
+    rw [frobSq_pinvR_eq_trace_inv, RCLike.re_to_real, Finset.sum_apply]
     rfl
   have hdcast : ((k - r + 1 : ℕ) : ℝ) = (k : ℝ) - r + 1 := by
     rw [Nat.cast_add, Nat.cast_sub (by omega), Nat.cast_one]

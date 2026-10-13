@@ -239,7 +239,7 @@ theorem integrable_and_integral_frobSq_pinvR_gaussianMatrix {r k : ℕ} (hrk : r
   obtain ⟨hint, hval⟩ := integrable_and_integral_inv_self_mul_transpose_gaussianMatrix hrk
   have hfun : (fun G : Fin r → Fin k → ℝ => frobSq (pinvR (Matrix.of G)))
       = fun G => ∑ i, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i := by
-    funext G; rw [frobSq_pinvR_eq_trace_inv]; rfl
+    funext G; rw [frobSq_pinvR_eq_trace_inv, RCLike.re_to_real]; rfl
   rw [hfun]
   refine ⟨integrable_finsetSum _ fun i _ => hint i i, ?_⟩
   rw [integral_finsetSum _ fun i _ => hint i i]

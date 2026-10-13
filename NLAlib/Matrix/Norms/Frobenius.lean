@@ -22,9 +22,12 @@ import Mathlib.LinearAlgebra.Matrix.DotProduct
   orthonormal columns (stated with the raw hypothesis `Qᴴ * Q = 1`, which is
   `NLAlib.HasOrthonormalCols Q` by definition).
 
-Real statements written with `ᵀ` or real dot products keep their names as corollaries of the
-general `conjTranspose` lemmas (RCLike round, decision D1). The spectral norm and the mixed
-inequalities are in `NLAlib.Matrix.Norms.Core`, which imports this file.
+Statements are written with `ᴴ` and `star`; real users get `ᵀ` from the simp lemma
+`Matrix.conjTranspose_eq_transpose_of_trivial` (foundation change F1; the real `ᵀ` corollaries of
+the RCLike round are removed, see `docs/renames/2026-10-F1.json`). Mathlib's Frobenius norm
+(`Matrix.frobeniusNormedAddCommGroup`, scope `Matrix.Norms.Frobenius`) is `frobNorm` by
+`frobNorm_eq_norm`. The spectral norm and the mixed inequalities are in
+`NLAlib.Matrix.Norms.Core`, which imports this file.
 
 The Frobenius algebra is ported from the LRA project (`LRA/Basic.lean`,
 `LRA/Deterministic/RangeFinder.lean`, Chen–Persson formalization), namespace renamed.
@@ -73,28 +76,21 @@ theorem frobInner_comm (A B : Matrix m n 𝕜) : frobInner A B = frobInner B A :
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   rw [← RCLike.conj_re (star (B i j) * A i j), ← RCLike.star_def, star_mul, star_star]
 
-/-- Trace form `⟨A, B⟩_F = Re tr(AᴴB)`. Standard; atlas `norms-frob-spec`. -/
-theorem frobInner_eq_re_trace (A B : Matrix m n 𝕜) :
+/-- Trace form `⟨A, B⟩_F = Re tr(AᴴB)` (over `ℝ`, `tr(AᵀB)` after `simp`). Standard; atlas
+`norms-frob-spec`. -/
+theorem frobInner_eq_trace (A B : Matrix m n 𝕜) :
     frobInner A B = RCLike.re (Aᴴ * B).trace := by
   unfold frobInner Matrix.trace
   simp only [Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply]
   rw [Finset.sum_comm]
 
-/-- Trace form `⟨A, B⟩_F = tr(AᵀB)` over `ℝ`. Standard; atlas `norms-frob-spec`. -/
-theorem frobInner_eq_trace (A B : Matrix m n ℝ) : frobInner A B = (Aᵀ * B).trace := by
-  simpa using frobInner_eq_re_trace A B
+@[deprecated (since := "2026-10-13")] alias frobInner_eq_re_trace := frobInner_eq_trace
 
 /-- The Frobenius pairing is also the real part of the trace of the row cross-product,
 `⟨A, B⟩_F = Re tr(ABᴴ)`. Horn–Johnson §7.4. -/
 theorem frobInner_eq_re_trace_mul_conjTranspose (A B : Matrix m n 𝕜) :
     frobInner A B = RCLike.re (A * Bᴴ).trace := by
-  rw [frobInner_comm, frobInner_eq_re_trace, Matrix.trace_mul_comm]
-
-/-- The Frobenius pairing is also the trace of the row cross-product, `⟨A, B⟩_F = tr(ABᵀ)`
-over `ℝ`. Horn–Johnson §7.4; Procrustes equality helper. -/
-theorem frobInner_eq_trace_mul_transpose (A B : Matrix m n ℝ) :
-    frobInner A B = (A * Bᵀ).trace := by
-  simpa using frobInner_eq_re_trace_mul_conjTranspose A B
+  rw [frobInner_comm, frobInner_eq_trace, Matrix.trace_mul_comm]
 
 /-- Additivity in the first argument. Atlas `norms-frob-spec`. -/
 theorem frobInner_add_left (A B C : Matrix m n 𝕜) :
@@ -161,7 +157,7 @@ theorem frobInner_transpose (A B : Matrix m n 𝕜) : frobInner Aᵀ Bᵀ = frob
 
 /-- `⟨Aᴴ, Bᴴ⟩_F = ⟨A, B⟩_F`. Atlas `norms-frob-spec`. -/
 theorem frobInner_conjTranspose (A B : Matrix m n 𝕜) : frobInner Aᴴ Bᴴ = frobInner A B := by
-  rw [frobInner_eq_re_trace, Matrix.conjTranspose_conjTranspose,
+  rw [frobInner_eq_trace, Matrix.conjTranspose_conjTranspose,
     frobInner_eq_re_trace_mul_conjTranspose]
 
 /-! ### Squared Frobenius norm and Frobenius norm -/
@@ -322,11 +318,6 @@ theorem frobSq_eq_sum_re_star_dotProduct_self (A : Matrix m n 𝕜) :
     frobSq A = ∑ i, RCLike.re (star (A i) ⬝ᵥ A i) := by
   simp [frobSq, frobInner, dotProduct]
 
-/-- `‖A‖_F² = ∑ᵢ ‖Aᵢ‖²`, the sum of the squared norms of the rows, over `ℝ`.
-Atlas `norms-frob-spec`. -/
-theorem frobSq_eq_sum_dotProduct_self (A : Matrix m n ℝ) : frobSq A = ∑ i, A i ⬝ᵥ A i := by
-  simpa using frobSq_eq_sum_re_star_dotProduct_self A
-
 omit [Fintype m] in
 /-- `‖Av‖² = ∑ᵢ (Aᵢ ⬝ v)²`, written with dot products. Atlas `norms-frob-spec`. -/
 theorem mulVec_dotProduct_mulVec_eq_sum_sq [Fintype m] (A : Matrix m n ℝ) (v : n → ℝ) :
@@ -334,16 +325,11 @@ theorem mulVec_dotProduct_mulVec_eq_sum_sq [Fintype m] (A : Matrix m n ℝ) (v :
   simp only [dotProduct, sq]
   rfl
 
-/-- `‖Ax‖² = x* (AᴴA) x`, written with dot products. Atlas `norms-frob-spec`. -/
+/-- `‖Ax‖² = x* (AᴴA) x`, written with dot products (over `ℝ`, `(Ax) ⬝ (Ax) = x ⬝ (AᵀA) x`
+after `simp`). Atlas `norms-frob-spec`. -/
 theorem star_mulVec_dotProduct_mulVec_self (A : Matrix m n 𝕜) (x : n → 𝕜) :
     star (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = star x ⬝ᵥ ((Aᴴ * A) *ᵥ x) := by
   rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec (star x) Aᴴ, Matrix.star_mulVec]
-
-/-- `‖Ax‖² = xᵀ (AᵀA) x` over `ℝ`. Helper for the Gram forms of `ose-def`; atlas
-`norms-frob-spec`. -/
-theorem mulVec_dotProduct_mulVec_self (A : Matrix m n ℝ) (x : n → ℝ) :
-    (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) := by
-  simpa using star_mulVec_dotProduct_mulVec_self A x
 
 /-- Row-wise Cauchy–Schwarz: `‖Ax‖₂² ≤ ‖A‖_F² ‖x‖₂²`, written with explicit sums.
 Atlas `norms-frob-spec`. -/
@@ -423,69 +409,65 @@ theorem frobNorm_sub_le (A B : Matrix m n 𝕜) : frobNorm (A - B) ≤ frobNorm 
 /-! ### Interaction with matrix products -/
 
 /-- `⟨P X, Q Y⟩_F = ⟨X, (Pᴴ Q) Y⟩_F`. Atlas `norms-frob-spec`. -/
-theorem frobInner_mul_mul_conjTranspose (P : Matrix m p 𝕜) (X : Matrix p n 𝕜)
+theorem frobInner_mul_mul (P : Matrix m p 𝕜) (X : Matrix p n 𝕜)
     (Q : Matrix m p 𝕜) (Y : Matrix p n 𝕜) :
     frobInner (P * X) (Q * Y) = frobInner X (Pᴴ * Q * Y) := by
-  rw [frobInner_eq_re_trace, frobInner_eq_re_trace, Matrix.conjTranspose_mul]
+  rw [frobInner_eq_trace, frobInner_eq_trace, Matrix.conjTranspose_mul]
   simp only [Matrix.mul_assoc]
-
-/-- `⟨P X, Q Y⟩_F = ⟨X, (Pᵀ Q) Y⟩_F` over `ℝ`. Atlas `norms-frob-spec`. -/
-theorem frobInner_mul_mul (P : Matrix m p ℝ) (X : Matrix p n ℝ) (Q : Matrix m p ℝ)
-    (Y : Matrix p n ℝ) : frobInner (P * X) (Q * Y) = frobInner X (Pᵀ * Q * Y) := by
-  simpa using frobInner_mul_mul_conjTranspose P X Q Y
 
 /-- Matrices with orthogonal column spaces (`Pᴴ Q = 0`) are Frobenius-orthogonal.
 Atlas `norms-frob-spec`. -/
-theorem frobInner_mul_mul_eq_zero_of_conjTranspose_mul_eq_zero {p' : Type*} [Fintype p']
+theorem frobInner_mul_mul_eq_zero {p' : Type*} [Fintype p']
     (P : Matrix m p 𝕜) (X : Matrix p n 𝕜) (Q : Matrix m p' 𝕜) (Y : Matrix p' n 𝕜)
     (h : Pᴴ * Q = 0) : frobInner (P * X) (Q * Y) = 0 := by
-  rw [frobInner_eq_re_trace, Matrix.conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Pᴴ, h]
+  rw [frobInner_eq_trace, Matrix.conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Pᴴ, h]
   simp
 
-/-- Real matrices with orthogonal column spaces (`Pᵀ Q = 0`) are Frobenius-orthogonal.
-Atlas `norms-frob-spec`. -/
-theorem frobInner_mul_mul_eq_zero {p' : Type*} [Fintype p'] (P : Matrix m p ℝ)
-    (X : Matrix p n ℝ) (Q : Matrix m p' ℝ) (Y : Matrix p' n ℝ) (h : Pᵀ * Q = 0) :
-    frobInner (P * X) (Q * Y) = 0 :=
-  frobInner_mul_mul_eq_zero_of_conjTranspose_mul_eq_zero P X Q Y (by simpa using h)
-
-/-- Left multiplication by `Q` with `QᴴQ = I` preserves `⟨·,·⟩_F`. The hypothesis is
-`NLAlib.HasOrthonormalCols Q` unfolded. Atlas `norms-frob-spec`. -/
-theorem frobInner_mul_left_of_conjTranspose_mul_self [DecidableEq p] {Q : Matrix m p 𝕜}
+/-- Left multiplication by `Q` with orthonormal columns (`QᴴQ = I`, i.e.
+`NLAlib.HasOrthonormalCols Q` unfolded) preserves `⟨·,·⟩_F`. Atlas `norms-frob-spec`. -/
+theorem frobInner_mul_left_of_orthonormal [DecidableEq p] {Q : Matrix m p 𝕜}
     (hQ : Qᴴ * Q = 1) (X Y : Matrix p n 𝕜) :
     frobInner (Q * X) (Q * Y) = frobInner X Y := by
-  rw [frobInner_mul_mul_conjTranspose, hQ, Matrix.one_mul]
-
-/-- Left multiplication by a real `Q` with `QᵀQ = I` preserves `⟨·,·⟩_F`.
-Atlas `norms-frob-spec`. -/
-theorem frobInner_mul_left_of_orthonormal [DecidableEq p] {Q : Matrix m p ℝ}
-    (hQ : Qᵀ * Q = 1) (X Y : Matrix p n ℝ) :
-    frobInner (Q * X) (Q * Y) = frobInner X Y :=
-  frobInner_mul_left_of_conjTranspose_mul_self (by simpa using hQ) X Y
+  rw [frobInner_mul_mul, hQ, Matrix.one_mul]
 
 /-- Unitary invariance, left: `‖Q X‖_F² = ‖X‖_F²` when `QᴴQ = I`. Atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/
-theorem frobSq_mul_left_of_conjTranspose_mul_self [DecidableEq p] {Q : Matrix m p 𝕜}
+theorem frobSq_mul_left_of_orthonormal [DecidableEq p] {Q : Matrix m p 𝕜}
     (hQ : Qᴴ * Q = 1) (X : Matrix p n 𝕜) : frobSq (Q * X) = frobSq X :=
-  frobInner_mul_left_of_conjTranspose_mul_self hQ X X
+  frobInner_mul_left_of_orthonormal hQ X X
 
-/-- Orthogonal invariance, left: `‖Q X‖_F² = ‖X‖_F²` when `QᵀQ = I` over `ℝ`.
-Atlas `norms-frob-spec`.
-atlas: norms-frob-spec -/
-theorem frobSq_mul_left_of_orthonormal [DecidableEq p] {Q : Matrix m p ℝ}
-    (hQ : Qᵀ * Q = 1) (X : Matrix p n ℝ) : frobSq (Q * X) = frobSq X :=
-  frobSq_mul_left_of_conjTranspose_mul_self (by simpa using hQ) X
+@[deprecated (since := "2026-10-13")]
+alias frobSq_mul_left_of_conjTranspose_mul_self := frobSq_mul_left_of_orthonormal
 
 /-- Unitary invariance, right: `‖X Vᴴ‖_F² = ‖X‖_F²` when `VᴴV = I`. Atlas `norms-frob-spec`. -/
-theorem frobSq_mul_right_of_conjTranspose_mul_self [DecidableEq p] {V : Matrix n p 𝕜}
+theorem frobSq_mul_right_of_orthonormal [DecidableEq p] {V : Matrix n p 𝕜}
     (hV : Vᴴ * V = 1) (X : Matrix m p 𝕜) : frobSq (X * Vᴴ) = frobSq X := by
   rw [← frobSq_conjTranspose, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose,
-    frobSq_mul_left_of_conjTranspose_mul_self hV, frobSq_conjTranspose]
+    frobSq_mul_left_of_orthonormal hV, frobSq_conjTranspose]
 
-/-- Orthogonal invariance, right: `‖X Vᵀ‖_F² = ‖X‖_F²` when `VᵀV = I` over `ℝ`.
-Atlas `norms-frob-spec`. -/
-theorem frobSq_mul_right_of_orthonormal [DecidableEq p] {V : Matrix n p ℝ}
-    (hV : Vᵀ * V = 1) (X : Matrix m p ℝ) : frobSq (X * Vᵀ) = frobSq X := by
-  simpa using frobSq_mul_right_of_conjTranspose_mul_self (V := V) (by simpa using hV) X
+/-! ### Mathlib's Frobenius norm -/
+
+section MathlibFrobenius
+
+open scoped Matrix.Norms.Frobenius
+
+/-- The squared Frobenius norm (Mathlib's scoped `Matrix.frobeniusNormedAddCommGroup`) is the sum
+of the squared norms of the entries. Source: the Frobenius definition, supporting operator
+re-derivation `sa:amm`. -/
+theorem frobenius_norm_sq_eq_sum_norm_sq {m n 𝕜 : Type*} [Fintype m] [Fintype n]
+    [NormedAddCommGroup 𝕜] (A : Matrix m n 𝕜) :
+    ‖A‖ ^ 2 = ∑ i, ∑ j, ‖A i j‖ ^ 2 := by
+  rw [Matrix.frobenius_norm_def]
+  simp_rw [Real.rpow_two, ← Real.sqrt_eq_rpow]
+  exact Real.sq_sqrt (Finset.sum_nonneg fun _ _ =>
+    Finset.sum_nonneg fun _ _ => sq_nonneg _)
+
+/-- `frobNorm` is Mathlib's Frobenius norm `‖A‖` (`Matrix.frobeniusNormedAddCommGroup`, under
+`open scoped Matrix.Norms.Frobenius`). Atlas `norms-frob-spec`. -/
+theorem frobNorm_eq_norm (A : Matrix m n 𝕜) : frobNorm A = ‖A‖ := by
+  rw [frobNorm, frobSq_eq_sum_norm_sq, ← frobenius_norm_sq_eq_sum_norm_sq,
+    Real.sqrt_sq (norm_nonneg A)]
+
+end MathlibFrobenius
 
 end NLAlib

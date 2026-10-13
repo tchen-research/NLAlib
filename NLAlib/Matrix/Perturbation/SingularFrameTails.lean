@@ -29,7 +29,7 @@ theorem sub_truncatedMatrix_mul_headColumns_eq_zero (h : IsSVD A U V) (hkn : k �
     hasOrthonormalCols_headColumns h.transpose_mul_right hkn
   rw [← h.mul_headColumns_projector hkn, Matrix.sub_mul,
     Matrix.mul_assoc A (headColumns V hkn * (headColumns V hkn)ᵀ),
-    Matrix.mul_assoc (headColumns V hkn), hV.transpose_mul_self, Matrix.mul_one, sub_self]
+    Matrix.mul_assoc (headColumns V hkn), (show (headColumns V hkn)ᵀ * headColumns V hkn = 1 from hV), Matrix.mul_one, sub_self]
 
 /-- Tail multiplication on the complementary right coordinates is exactly the
 left projected original multiplication. Wedin (1972), Section 3; the ambient
@@ -38,7 +38,7 @@ theorem sub_truncatedMatrix_mul_residual_headColumns (h : IsSVD A U V)
     (hkm : k ≤ m) (hkn : k ≤ n) (Z : Matrix (Fin n) (Fin p) ℝ) :
     (A - h.truncatedMatrix k) * residual (headColumns V hkn) Z =
       residual (headColumns U hkm) (A * Z) := by
-  rw [residual_eq_sub_mul_transpose_mul, Matrix.mul_sub, ← Matrix.mul_assoc (A - h.truncatedMatrix k),
+  rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub, ← Matrix.mul_assoc (A - h.truncatedMatrix k),
     h.sub_truncatedMatrix_mul_headColumns_eq_zero hkn, Matrix.zero_mul, sub_zero,
     ← h.residual_headColumns_eq_sub_truncatedMatrix hkm, residual_mul]
 

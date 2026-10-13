@@ -73,7 +73,7 @@ theorem exists_maximum_volume_qr_blocks {m n : Type*}
     | inr j => rfl
   have hK : HasOrthonormalCols K := hQ.submatrix_cols ⟨Sum.inr, Sum.inr_injective⟩
   have hCross : Lᵀ * K = 0 := by
-    have hh := congrArg Matrix.toBlocks₁₂ hQ.transpose_mul_self
+    have hh := congrArg Matrix.toBlocks₁₂ (show Qᵀ * Q = 1 from hQ)
     rw [hQform, Matrix.transpose_fromCols, Matrix.fromRows_mul_fromCols] at hh
     simpa only [Matrix.toBlocks_fromBlocks₁₂,
       show (1 : Matrix (Fin k ⊕ Fin (Fintype.card m - k))
@@ -112,8 +112,9 @@ theorem exists_maximum_volume_qr_blocks {m n : Type*}
     C T (K * D) hCpos hOrth hExchange
   have hInvTrace : (Cᵀ * C)⁻¹.trace = frobSq R⁻¹ := by
     rw [hGram, Matrix.mul_inv_rev, ← Matrix.transpose_nonsing_inv,
-      frobSq, frobInner_eq_trace, Matrix.trace_mul_comm]
-  rw [hInvTrace, frobSq_mul_left_of_orthonormal hK.transpose_mul_self] at hBudget
+      frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.trace_mul_comm]
+  rw [hInvTrace, frobSq_mul_left_of_orthonormal hK] at hBudget
   refine ⟨π, Q, R, T, D, hQ, hQt, hR, hUpper, ?_, hEntry, ?_⟩
   · rw [hA, hQform, Matrix.fromCols_mul_fromBlocks, Matrix.mul_zero, add_zero,
       hLR, ← Matrix.mul_assoc L R T, hLR, hReconstruct]

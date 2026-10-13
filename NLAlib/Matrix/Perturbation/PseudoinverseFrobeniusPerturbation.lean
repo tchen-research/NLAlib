@@ -134,6 +134,7 @@ theorem frobSq_moorePenroseInverse_sub_le_two_mul_of_rank_eq {A B : Matrix m n â
   have h12 := frobSq_pinv_mul_complement_columnProjector_le hr
   have h21 := frobSq_complement_rowProjector_mul_pinv_le hr
   have hthree := frobSq_three_compressed_blocks_le_two_mul
+    (Q := B * moorePenroseInverse B) (P := moorePenroseInverse A * A)
     (mul_moorePenroseInverse_isSymm B) (mul_moorePenroseInverse_isIdempotentElem B)
     (moorePenroseInverse_mul_isSymm A) (moorePenroseInverse_mul_isIdempotentElem A) (B-A)
   have hcoeff : 0 â‰¤ specNorm a^2*specNorm b^2 := mul_nonneg (sq_nonneg _) (sq_nonneg _)

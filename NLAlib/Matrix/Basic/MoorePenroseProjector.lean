@@ -10,8 +10,7 @@ Over `ℝ` or `ℂ` (`[RCLike 𝕜]`):
 * `trace_mul_moorePenroseInverse`: `tr(A A⁺) = rank A`;
 * `mul_conjTranspose_eq_mul_moorePenroseInverse`: uniqueness of the orthogonal projector onto a
   range: if `Q` has orthonormal columns, `range Y ⊆ range Q` and `rank Y ≥` the number of
-  columns of `Q`, then `QQᴴ = Y Y⁺`. The real form `mul_transpose_eq_mul_moorePenroseInverse`
-  (`QQᵀ = Y Y⁺`) keeps its name.
+  columns of `Q`, then `QQᴴ = Y Y⁺`.
 
 Used by leverage scores (`NLAlib.Sketching.Sampling.Leverage`) and the randomized Nyström bound
 (`NLAlib.LowRank.Nystrom.Structural`). Source: Horn–Johnson 2013, §7.3; Golub–Van Loan 2013,
@@ -65,7 +64,7 @@ theorem mul_conjTranspose_eq_mul_moorePenroseInverse [DecidableEq m] [DecidableE
     rw [hP₁, Matrix.trace_mul_comm, hQ.conjTranspose_mul_self, Matrix.trace_one]
   have htr2 : P₂.trace = (Y.rank : 𝕜) := trace_mul_moorePenroseInverse Y
   have hfrob : frobSq M = (Fintype.card q : ℝ) - Y.rank := by
-    rw [frobSq, frobInner_eq_re_trace, hMs, hMi, hM, Matrix.trace_sub, htr1, htr2, map_sub,
+    rw [frobSq, frobInner_eq_trace, hMs, hMi, hM, Matrix.trace_sub, htr1, htr2, map_sub,
       RCLike.natCast_re, RCLike.natCast_re]
   have hle : frobSq M ≤ 0 := by
     rw [hfrob]
@@ -74,14 +73,9 @@ theorem mul_conjTranspose_eq_mul_moorePenroseInverse [DecidableEq m] [DecidableE
   have hM0 : M = 0 := (frobSq_eq_zero_iff M).1 (le_antisymm hle (frobSq_nonneg M))
   exact sub_eq_zero.1 hM0
 
-/-- Real form of `mul_conjTranspose_eq_mul_moorePenroseInverse`: if `Q` has orthonormal
-columns, `Q (Qᵀ Y) = Y` and `rank Y ≥` the number of columns of `Q`, then `QQᵀ = Y Y⁺`.
-Golub–Van Loan, 4th ed., §2.5.1. Atlas `leverage-scores` (basis independence),
-`projection-facts`. -/
-theorem mul_transpose_eq_mul_moorePenroseInverse [DecidableEq m] [DecidableEq q]
-    {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q) {Y : Matrix m n ℝ}
-    (hQY : Q * (Qᵀ * Y) = Y) (hr : Fintype.card q ≤ Y.rank) :
-    Q * Qᵀ = Y * moorePenroseInverse Y :=
-  mul_conjTranspose_eq_mul_moorePenroseInverse hQ hQY hr
+/-- Deprecated alias (F1, transpose twins removed): use
+`mul_conjTranspose_eq_mul_moorePenroseInverse`. -/
+@[deprecated (since := "2026-10-13")]
+alias mul_transpose_eq_mul_moorePenroseInverse := mul_conjTranspose_eq_mul_moorePenroseInverse
 
 end NLAlib

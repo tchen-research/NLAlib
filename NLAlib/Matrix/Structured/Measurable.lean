@@ -89,7 +89,8 @@ theorem measurable_pinvL_entry_of {a b : Type*} [Fintype a] [Fintype b] [Decidab
   have hdet : Measurable fun z => ((f z)ᵀ * f z).det := hc.matrix_det.measurable.comp hF
   have hadj : ∀ a' b', Measurable fun z => ((f z)ᵀ * f z).adjugate a' b' := fun a' b' =>
     (hc.matrix_adjugate.matrix_elem a' b').measurable.comp hF
-  simp only [pinvL_eq_inv_transpose_mul_mul_transpose, Matrix.mul_apply, Matrix.transpose_apply,
+  simp only [pinvL, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_apply,
+      Matrix.transpose_apply,
     Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul]
   refine Finset.measurable_sum _ fun l _ => ?_
   have h1 := hadj i l
@@ -105,7 +106,7 @@ theorem measurable_frobSq_residual_of {m n q : Type*} [Fintype m] [Fintype n] [F
   have hA : ∀ i j, Measurable fun _ : γ => A i j := fun _ _ => measurable_const
   have hD := measurable_mul_entry_of hQ (measurable_mul_entry_of hQt hA)
   have hR : ∀ i j, Measurable fun z => residual (Qf z) A i j := fun i j => by
-    simp only [residual_eq_sub_mul_transpose_mul, Matrix.sub_apply]
+    simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.sub_apply]
     exact measurable_const.sub (hD i j)
   unfold frobSq; simp only [frobInner_eq_sum_mul]
   exact Finset.measurable_sum _ fun i _ => Finset.measurable_sum _ fun j _ =>
@@ -133,7 +134,8 @@ theorem measurable_pinvR_entry {k t : Type*} [Fintype k] [Fintype t] [DecidableE
   have hadj : ∀ a b, Measurable fun G : k → t → ℝ =>
       (Matrix.of G * (Matrix.of G)ᵀ).adjugate a b := fun a b =>
     (hc.matrix_adjugate.matrix_elem a b).measurable
-  simp only [pinvR_eq_transpose_mul_inv, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply,
+  simp only [pinvR, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_apply,
+      Matrix.transpose_apply, Matrix.of_apply,
     Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_apply, smul_eq_mul]
   refine Finset.measurable_sum _ fun l _ => ?_
   have := hadj l j
@@ -183,7 +185,8 @@ theorem measurable_specNorm_pinvR {r k : Type*} [Fintype r] [Fintype k] [Decidab
     Measurable (fun G : r → k → ℝ => specNorm (pinvR (Matrix.of G))) := by
   have h1 : Measurable (fun G : r → k → ℝ => Matrix.of.symm (pinvR (Matrix.of G))) := by
     refine measurable_pi_lambda _ fun j => measurable_pi_lambda _ fun i => ?_
-    simp only [Matrix.of_symm_apply, pinvR_eq_transpose_mul_inv, Matrix.mul_apply,
+    simp only [Matrix.of_symm_apply, pinvR, Matrix.conjTranspose_eq_transpose_of_trivial,
+        Matrix.mul_apply,
       Matrix.transpose_apply, Matrix.of_apply]
     refine Finset.measurable_sum _ fun a _ => ?_
     refine Measurable.mul ?_ (measurable_inv_self_mul_transpose_apply a i)

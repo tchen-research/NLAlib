@@ -6,8 +6,9 @@ import NLAlib.Matrix.Subspaces.Projections
 
 Over `ℝ` or `ℂ` (`[RCLike 𝕜]`): scalar multiplication, nonsingular square matrices, Hermitian and
 positive-semidefinite matrices, and left isometries (`HasOrthonormalCols`). The identities hold
-at deficient and zero rank. The real `ᵀ` forms keep their names
-(`moorePenroseInverse_isSymm`, `moorePenroseInverse_mul_left_of_hasOrthonormalCols`).
+at deficient and zero rank. Statements are written with `ᴴ` (F1); the Hermitian and
+positive-semidefinite facts are in the `Matrix.IsHermitian` / `Matrix.PosSemidef` namespaces
+(`hA.moorePenroseInverse`).
 Source: Horn--Johnson 2013, Problem 7.3.P7; supports `condition-number-def` and
 `generalized-schur-complement-psd`.
 -/
@@ -48,22 +49,18 @@ theorem moorePenroseInverse_eq_inv_of_isUnit [DecidableEq n]
 
 /-- The general inverse of a Hermitian matrix is Hermitian.
 Horn--Johnson 2013, Problem 7.3.P7; supports `generalized-schur-complement-psd`. -/
-theorem moorePenroseInverse_isHermitian {A : Matrix n n 𝕜} (hA : A.IsHermitian) :
-    (moorePenroseInverse A).IsHermitian := by
+theorem _root_.Matrix.IsHermitian.moorePenroseInverse {A : Matrix n n 𝕜} (hA : A.IsHermitian) :
+    (NLAlib.moorePenroseInverse A).IsHermitian := by
   rw [Matrix.IsHermitian, ← moorePenroseInverse_conjTranspose, hA.eq]
 
-/-- The general inverse of a symmetric real matrix is symmetric (real form of
-`moorePenroseInverse_isHermitian`).
-Horn--Johnson 2013, Problem 7.3.P7; supports `generalized-schur-complement-psd`. -/
-theorem moorePenroseInverse_isSymm {A : Matrix n n ℝ} (hA : A.IsSymm) :
-    (moorePenroseInverse A).IsSymm := by
-  show (moorePenroseInverse A).transpose = moorePenroseInverse A
-  rw [← moorePenroseInverse_transpose, hA.eq]
+/-- Deprecated alias (F1, transpose twins removed): use `Matrix.IsHermitian.moorePenroseInverse`. -/
+@[deprecated (since := "2026-10-13")]
+alias moorePenroseInverse_isSymm := Matrix.IsHermitian.moorePenroseInverse
 
 /-- The general inverse of a left-isometric product is the reverse adjoint product:
 `(Q A)⁺ = A⁺ Qᴴ` when `Qᴴ Q = 1`.
 Horn--Johnson 2013, Problem 7.3.P7; supports `condition-number-def` for rectangular frames. -/
-theorem moorePenroseInverse_mul_left_eq_mul_conjTranspose [DecidableEq m]
+theorem moorePenroseInverse_mul_left_of_hasOrthonormalCols [DecidableEq m]
     (Q : Matrix p m 𝕜) (A : Matrix m n 𝕜) (hQ : HasOrthonormalCols Q) :
     moorePenroseInverse (Q * A) = moorePenroseInverse A * Qᴴ := by
   apply (isMoorePenroseInverse (Q * A)).unique
@@ -92,21 +89,23 @@ theorem moorePenroseInverse_mul_left_eq_mul_conjTranspose [DecidableEq m]
   · rw [hBA]
     exact h.conjTranspose_inv_mul_eq
 
-/-- Real form of `moorePenroseInverse_mul_left_eq_mul_conjTranspose`: `(Q A)⁺ = A⁺ Qᵀ` when
-`Qᵀ Q = 1`. Horn--Johnson 2013, Problem 7.3.P7; supports `condition-number-def` for
-rectangular frames. -/
-theorem moorePenroseInverse_mul_left_of_hasOrthonormalCols [DecidableEq m]
-    (Q : Matrix p m ℝ) (A : Matrix m n ℝ) (hQ : HasOrthonormalCols Q) :
-    moorePenroseInverse (Q * A) = moorePenroseInverse A * Qᵀ :=
-  moorePenroseInverse_mul_left_eq_mul_conjTranspose Q A hQ
+/-- Deprecated alias (F1, transpose twins removed): use
+`moorePenroseInverse_mul_left_of_hasOrthonormalCols`. -/
+@[deprecated (since := "2026-10-13")]
+alias moorePenroseInverse_mul_left_eq_mul_conjTranspose :=
+  moorePenroseInverse_mul_left_of_hasOrthonormalCols
 
 /-- The actual Moore--Penrose inverse of a positive-semidefinite matrix
 is positive semidefinite, including singular matrices. Horn--Johnson,
 Section 7.3; supports `generalized-schur-complement-psd`. -/
-theorem moorePenroseInverse_posSemidef [DecidableEq n]
-    {A : Matrix n n 𝕜} (hA : A.PosSemidef) : (moorePenroseInverse A).PosSemidef := by
-  have hB := moorePenroseInverse_isHermitian hA.isHermitian
-  have h := hA.mul_mul_conjTranspose_same (moorePenroseInverse A)
+theorem _root_.Matrix.PosSemidef.moorePenroseInverse [DecidableEq n]
+    {A : Matrix n n 𝕜} (hA : A.PosSemidef) : (NLAlib.moorePenroseInverse A).PosSemidef := by
+  have hB := hA.isHermitian.moorePenroseInverse
+  have h := hA.mul_mul_conjTranspose_same (NLAlib.moorePenroseInverse A)
   simpa only [hB.eq, moorePenroseInverse_mul_moorePenroseInverse] using h
+
+/-- Deprecated alias (F1, transpose twins removed): use `Matrix.PosSemidef.moorePenroseInverse`. -/
+@[deprecated (since := "2026-10-13")]
+alias moorePenroseInverse_posSemidef := Matrix.PosSemidef.moorePenroseInverse
 
 end NLAlib

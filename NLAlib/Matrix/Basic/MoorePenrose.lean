@@ -13,12 +13,10 @@ values sent to zero, transported by `IsMoorePenroseInverse.unitary_transform`. T
 identities characterize it uniquely and identify it with the full-rank formulas when their Gram
 matrices are invertible.
 
-Over `ℝ` the conjugate transpose is the transpose, and the real `ᵀ` statements keep their names as
-corollaries (`mul_moorePenroseInverse_isSymm`, `IsSVD.moorePenroseInverse_eq`,
-`moorePenroseInverse_eq_pinvL`, `moorePenroseInverse_transpose_mul_self`, …); the general forms
-carry `conjTranspose`/`isHermitian` names. The real row projector `A⁺A` is a quadratic-form
-contraction (`dotProduct_self_sub_moorePenroseInverse_mul_mulVec`), and `‖A⁺‖⁻¹` bounds `A` below
-on `range Aᵀ` (`inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le`).
+Every statement is written with `ᴴ` (F1: no real twins; over `ℝ` the `@[simp]` lemma
+`Matrix.conjTranspose_eq_transpose_of_trivial` gives the `ᵀ` forms). The real row projector
+`A⁺A` is a quadratic-form contraction (`dotProduct_self_sub_moorePenroseInverse_mul_mulVec`), and
+`‖A⁺‖⁻¹` bounds `A` below on `range Aᵀ` (`inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le`).
 
 Source: Horn–Johnson, Matrix Analysis, §7.3. Atlas: `pseudoinverse`.
 -/
@@ -154,10 +152,18 @@ theorem mul_moorePenroseInverse_isHermitian (A : Matrix m n 𝕜) :
     (A * moorePenroseInverse A).IsHermitian :=
   (isMoorePenroseInverse A).conjTranspose_mul_eq
 
+/-- Deprecated alias (F1, transpose twins removed): use `mul_moorePenroseInverse_isHermitian`. -/
+@[deprecated (since := "2026-10-13")]
+alias mul_moorePenroseInverse_isSymm := mul_moorePenroseInverse_isHermitian
+
 /-- The row-space projector `A⁺ A` is Hermitian. -/
 theorem moorePenroseInverse_mul_isHermitian (A : Matrix m n 𝕜) :
     (moorePenroseInverse A * A).IsHermitian :=
   (isMoorePenroseInverse A).conjTranspose_inv_mul_eq
+
+/-- Deprecated alias (F1, transpose twins removed): use `moorePenroseInverse_mul_isHermitian`. -/
+@[deprecated (since := "2026-10-13")]
+alias moorePenroseInverse_mul_isSymm := moorePenroseInverse_mul_isHermitian
 
 /-- The Moore–Penrose column-space projector is idempotent at every rank. -/
 theorem mul_moorePenroseInverse_isIdempotentElem (A : Matrix m n 𝕜) :
@@ -178,33 +184,33 @@ theorem range_mul_moorePenroseInverse_eq (A : Matrix m n 𝕜) :
 
 /-- The left full-rank formula `pinvL A = (AᴴA)⁻¹Aᴴ` satisfies the four Penrose identities
 when the column Gram matrix is invertible. -/
-theorem isMoorePenroseInverse_pinvL_of_isUnit_conjTranspose_mul_self [DecidableEq n]
+theorem isMoorePenroseInverse_pinvL [DecidableEq n]
     (A : Matrix m n 𝕜) (h : IsUnit (Aᴴ * A)) : IsMoorePenroseInverse A (pinvL A) :=
-  ⟨mul_pinvL_mul_of_isUnit_conjTranspose_mul_self h,
-    pinvL_mul_pinvL_of_isUnit_conjTranspose_mul_self h, mul_pinvL_isHermitian A,
+  ⟨mul_pinvL_mul h,
+    pinvL_mul_pinvL h, mul_pinvL_isHermitian A,
     pinvL_mul_isHermitian h⟩
 
 /-- The right full-rank formula `pinvR A = Aᴴ(AAᴴ)⁻¹` satisfies the four Penrose identities
 when the row Gram matrix is invertible. -/
-theorem isMoorePenroseInverse_pinvR_of_isUnit_mul_conjTranspose_self [DecidableEq m]
+theorem isMoorePenroseInverse_pinvR [DecidableEq m]
     (A : Matrix m n 𝕜) (h : IsUnit (A * Aᴴ)) : IsMoorePenroseInverse A (pinvR A) :=
-  ⟨mul_pinvR_mul_of_isUnit_mul_conjTranspose_self h,
-    pinvR_mul_pinvR_of_isUnit_mul_conjTranspose_self h, mul_pinvR_isHermitian h,
+  ⟨mul_pinvR_mul h,
+    pinvR_mul_pinvR h, mul_pinvR_isHermitian h,
     pinvR_mul_isHermitian A⟩
 
 /-- The general Moore–Penrose inverse agrees with `pinvL` for full column rank.
 atlas: pseudoinverse -/
-theorem moorePenroseInverse_eq_pinvL_of_isUnit_conjTranspose_mul_self [DecidableEq n]
+theorem moorePenroseInverse_eq_pinvL [DecidableEq n]
     (A : Matrix m n 𝕜) (h : IsUnit (Aᴴ * A)) : moorePenroseInverse A = pinvL A :=
   (isMoorePenroseInverse A).unique
-    (isMoorePenroseInverse_pinvL_of_isUnit_conjTranspose_mul_self A h)
+    (isMoorePenroseInverse_pinvL A h)
 
 /-- The general Moore–Penrose inverse agrees with `pinvR` for full row rank.
 atlas: pseudoinverse -/
-theorem moorePenroseInverse_eq_pinvR_of_isUnit_mul_conjTranspose_self [DecidableEq m]
+theorem moorePenroseInverse_eq_pinvR [DecidableEq m]
     (A : Matrix m n 𝕜) (h : IsUnit (A * Aᴴ)) : moorePenroseInverse A = pinvR A :=
   (isMoorePenroseInverse A).unique
-    (isMoorePenroseInverse_pinvR_of_isUnit_mul_conjTranspose_self A h)
+    (isMoorePenroseInverse_pinvR A h)
 
 /-- Transpose commutes with the general Moore–Penrose inverse. -/
 theorem moorePenroseInverse_transpose (A : Matrix m n 𝕜) :
@@ -257,14 +263,14 @@ theorem moorePenroseInverse_self_mul_conjTranspose (A : Matrix m n 𝕜) :
 general inverse of the row Gram matrix: `‖A⁺‖_F² = re tr (A Aᴴ)⁺`.
 Horn–Johnson §7.3; atlas `pseudoinverse`.
 atlas: pseudoinverse -/
-theorem frobSq_moorePenroseInverse_eq_re_trace_moorePenroseInverse (A : Matrix m n 𝕜) :
+theorem frobSq_moorePenroseInverse_eq_trace_moorePenroseInverse (A : Matrix m n 𝕜) :
     frobSq (moorePenroseInverse A) = RCLike.re (moorePenroseInverse (A * Aᴴ)).trace := by
-  rw [frobSq, frobInner_eq_re_trace, moorePenroseInverse_self_mul_conjTranspose]
+  rw [frobSq, frobInner_eq_trace, moorePenroseInverse_self_mul_conjTranspose]
 
 /-- The squared spectral norm of the general inverse equals the spectral
 norm of the general inverse of the row Gram matrix `A Aᴴ`, at every rank.
 Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem specNorm_moorePenroseInverse_sq [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) :
+theorem specNorm_moorePenroseInverse_sq [DecidableEq m] (A : Matrix m n 𝕜) :
     specNorm (moorePenroseInverse A) ^ 2 = specNorm (moorePenroseInverse (A * Aᴴ)) := by
   rw [moorePenroseInverse_self_mul_conjTranspose]
   unfold specNorm
@@ -274,82 +280,15 @@ end General
 
 /-- Any SVD `A = U Σ Vᴴ` computes the same Moore–Penrose inverse `V Σ⁺ Uᴴ`, independently of
 the choice of singular vectors. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem IsSVD.moorePenroseInverse_eq_mul_conjTranspose {m n : ℕ} {A : Matrix (Fin m) (Fin n) 𝕜}
+theorem IsSVD.moorePenroseInverse_eq {m n : ℕ} {A : Matrix (Fin m) (Fin n) 𝕜}
     {U : Matrix (Fin m) (Fin m) 𝕜} {V : Matrix (Fin n) (Fin n) 𝕜} (h : IsSVD A U V) :
     moorePenroseInverse A =
       V * (rectDiag (fun k => (singularValues A k)⁻¹) : Matrix (Fin n) (Fin m) 𝕜) * Uᴴ :=
   (NLAlib.isMoorePenroseInverse A).unique h.isMoorePenroseInverse
 
-/-! ### Real corollaries under the transpose names -/
-
-section Real
-
-variable {m n : Type*} [Fintype m] [Fintype n]
-
-/-- Over `ℝ`, the column-space projector obtained from the Moore–Penrose inverse is symmetric. -/
-theorem mul_moorePenroseInverse_isSymm (A : Matrix m n ℝ) :
-    (A * moorePenroseInverse A).IsSymm :=
-  (isMoorePenroseInverse A).transpose_mul_eq
-
-/-- Over `ℝ`, the row-space projector obtained from the Moore–Penrose inverse is symmetric. -/
-theorem moorePenroseInverse_mul_isSymm (A : Matrix m n ℝ) :
-    (moorePenroseInverse A * A).IsSymm :=
-  (isMoorePenroseInverse A).transpose_inv_mul_eq
-
-/-- Any real SVD `A = U Σ Vᵀ` computes the same Moore–Penrose inverse `V Σ⁺ Uᵀ` (real form of
-`IsSVD.moorePenroseInverse_eq_mul_conjTranspose`). Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem IsSVD.moorePenroseInverse_eq {m n : ℕ} {A : Matrix (Fin m) (Fin n) ℝ}
-    {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ} (h : IsSVD A U V) :
-    moorePenroseInverse A =
-      V * (rectDiag (fun k => (singularValues A k)⁻¹) : Matrix (Fin n) (Fin m) ℝ) * Uᵀ :=
-  h.moorePenroseInverse_eq_mul_conjTranspose
-
-/-- The real left full-rank formula satisfies the four Penrose identities
-when its column Gram matrix is invertible. -/
-theorem isMoorePenroseInverse_pinvL [DecidableEq n]
-    (A : Matrix m n ℝ) (h : IsUnit (Aᵀ * A)) : IsMoorePenroseInverse A (pinvL A) :=
-  isMoorePenroseInverse_pinvL_of_isUnit_conjTranspose_mul_self A h
-
-/-- The real right full-rank formula satisfies the four Penrose identities
-when its row Gram matrix is invertible. -/
-theorem isMoorePenroseInverse_pinvR [DecidableEq m]
-    (A : Matrix m n ℝ) (h : IsUnit (A * Aᵀ)) : IsMoorePenroseInverse A (pinvR A) :=
-  isMoorePenroseInverse_pinvR_of_isUnit_mul_conjTranspose_self A h
-
-/-- The real Moore–Penrose inverse agrees with `pinvL` for full column rank.
-atlas: pseudoinverse -/
-theorem moorePenroseInverse_eq_pinvL [DecidableEq n]
-    (A : Matrix m n ℝ) (h : IsUnit (Aᵀ * A)) : moorePenroseInverse A = pinvL A :=
-  (isMoorePenroseInverse A).unique (isMoorePenroseInverse_pinvL A h)
-
-/-- The real Moore–Penrose inverse agrees with `pinvR` for full row rank.
-atlas: pseudoinverse -/
-theorem moorePenroseInverse_eq_pinvR [DecidableEq m]
-    (A : Matrix m n ℝ) (h : IsUnit (A * Aᵀ)) : moorePenroseInverse A = pinvR A :=
-  (isMoorePenroseInverse A).unique (isMoorePenroseInverse_pinvR A h)
-
-/-- The real general inverse of `Aᵀ A` is `A⁺ (A⁺)ᵀ`, including singular Gram
-matrices. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem moorePenroseInverse_transpose_mul_self (A : Matrix m n ℝ) :
-    moorePenroseInverse (Aᵀ * A) = moorePenroseInverse A * (moorePenroseInverse A)ᵀ :=
-  moorePenroseInverse_conjTranspose_mul_self A
-
-/-- The real general inverse of `A Aᵀ` is `(A⁺)ᵀ A⁺`, including singular Gram
-matrices. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem moorePenroseInverse_self_mul_transpose (A : Matrix m n ℝ) :
-    moorePenroseInverse (A * Aᵀ) = (moorePenroseInverse A)ᵀ * moorePenroseInverse A :=
-  moorePenroseInverse_self_mul_conjTranspose A
-
-/-- The squared Frobenius norm of the real general inverse equals the trace of
-the general inverse of the row Gram matrix. Unlike an ordinary inverse of a
-singular Gram matrix, this preserves all positive singular-value contributions.
-Horn–Johnson §7.3; atlas `pseudoinverse`.
-atlas: pseudoinverse -/
-theorem frobSq_moorePenroseInverse_eq_trace_moorePenroseInverse (A : Matrix m n ℝ) :
-    frobSq (moorePenroseInverse A) = (moorePenroseInverse (A * Aᵀ)).trace := by
-  rw [frobSq, frobInner_eq_trace, moorePenroseInverse_self_mul_transpose]
-
-end Real
+/-- Deprecated alias (F1, transpose twins removed): use `IsSVD.moorePenroseInverse_eq`. -/
+@[deprecated (since := "2026-10-13")]
+alias IsSVD.moorePenroseInverse_eq_mul_conjTranspose := IsSVD.moorePenroseInverse_eq
 
 /-! ### The row projector `A⁺A` and the smallest positive singular value -/
 
@@ -364,7 +303,7 @@ theorem dotProduct_self_sub_moorePenroseInverse_mul_mulVec (M : Matrix m n ℝ) 
     (d - (moorePenroseInverse M * M) *ᵥ d) ⬝ᵥ (d - (moorePenroseInverse M * M) *ᵥ d) =
       d ⬝ᵥ d - d ⬝ᵥ ((moorePenroseInverse M * M) *ᵥ d) := by
   set Z := moorePenroseInverse M * M
-  have hsym : Zᵀ = Z := moorePenroseInverse_mul_isSymm M
+  have hsym : Zᵀ = Z := (moorePenroseInverse_mul_isHermitian M).eq
   have hidem : Z * Z = Z := (moorePenroseInverse_mul_isIdempotentElem M).eq
   have hZZ : (Z *ᵥ d) ⬝ᵥ (Z *ᵥ d) = d ⬝ᵥ (Z *ᵥ d) := by
     rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hsym, Matrix.mulVec_mulVec,
@@ -385,7 +324,7 @@ theorem dotProduct_moorePenroseInverse_mul_mulVec_le_dotProduct_self (M : Matrix
 /-- The Moore–Penrose lower bound on the row space: for `v ∈ range Aᵀ`,
 `‖A⁺‖⁻² ‖v‖² ≤ ‖Av‖²`. Source: Zouzias–Freris (2013) [`zf13`], §2 (`σ_min⁺ = ‖A⁺‖⁻¹`).
 Helper for atlas `kaczmarz-rank-deficient`. -/
-theorem inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le [DecidableEq m] [DecidableEq n]
+theorem inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le [DecidableEq m]
     (A : Matrix m n ℝ) {v : n → ℝ} (hv : v ∈ LinearMap.range Aᵀ.mulVecLin) :
     (specNorm (moorePenroseInverse A))⁻¹ ^ 2 * (v ⬝ᵥ v) ≤ (A *ᵥ v) ⬝ᵥ (A *ᵥ v) := by
   set B := moorePenroseInverse A
@@ -396,7 +335,7 @@ theorem inv_specNorm_moorePenroseInverse_sq_mul_dotProduct_le [DecidableEq m] [D
   obtain ⟨w, rfl⟩ := hv
   simp only [Matrix.mulVecLin_apply]
   have hfix : B *ᵥ (A *ᵥ (Aᵀ *ᵥ w)) = Aᵀ *ᵥ w := by
-    have hsym : (B * A)ᵀ = B * A := moorePenroseInverse_mul_isSymm A
+    have hsym : (B * A)ᵀ = B * A := (moorePenroseInverse_mul_isHermitian A).eq
     have h : B * A * Aᵀ = Aᵀ := by
       calc B * A * Aᵀ = (B * A)ᵀ * Aᵀ := by rw [hsym]
         _ = (A * (B * A))ᵀ := (Matrix.transpose_mul _ _).symm

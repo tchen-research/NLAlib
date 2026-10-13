@@ -30,7 +30,7 @@ theorem sq_entries_mem_doublyStochastic {P : Matrix n n ℝ} (hP : HasOrthonorma
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply, ite_true,
       Matrix.of_apply, pow_two] using h
   · intro j
-    have h := congrArg (fun M : Matrix n n ℝ => M j j) hP.transpose_mul_self
+    have h := congrArg (fun M : Matrix n n ℝ => M j j) (show Pᵀ * P = 1 from hP)
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply, ite_true,
       Matrix.of_apply, pow_two] using h
 

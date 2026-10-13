@@ -64,7 +64,8 @@ theorem hasSubgaussianMGF_srhtNormalizedRow_dotProduct {n d : ℕ} [NeZero n]
     rw [mul_pow, Real.sq_sqrt (Nat.cast_nonneg n), hflat]
     field_simp
   have ha : a ⬝ᵥ a = u ⬝ᵥ u := by
-    have hUnorm := mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU u
+    have hUnorm := star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU u
+    simp only [star_trivial] at hUnorm
     calc
       _ = ∑ i, ((Real.sqrt (n : ℝ) * H j i) * (U *ᵥ u) i) ^ 2 := by
         simp only [a, dotProduct, ← sq]

@@ -39,8 +39,8 @@ theorem exists_orthogonal_frame_transition {P P' : Matrix m n ℝ}
   have hTT : Tᵀ*T=1 := by
     have hgram : (P*T)ᵀ*(P*T)=Tᵀ*T := by
       rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Pᵀ P,
-        hP.transpose_mul_self, Matrix.one_mul]
-    rw [hPT, hP'.transpose_mul_self] at hgram
+        (show Pᵀ * P = 1 from hP), Matrix.one_mul]
+    rw [hPT, (show P'ᵀ * P' = 1 from hP')] at hgram
     exact hgram.symm
   exact ⟨T, hTT, mul_eq_one_comm.mp hTT, hPT⟩
 

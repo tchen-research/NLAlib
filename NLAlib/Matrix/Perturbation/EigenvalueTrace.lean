@@ -36,7 +36,7 @@ theorem trace_mul_eq_sum_eigenvalues_mul_quadForm {A : Matrix n n ℝ}
   intro i _
   congr 1
   simp only [Matrix.mul_apply, Matrix.transpose_apply, U,
-    Matrix.IsHermitian.eigenvectorUnitary_apply, quadForm_eq_dotProduct, Matrix.mulVec, dotProduct,
+    Matrix.IsHermitian.eigenvectorUnitary_apply, quadForm_def, star_trivial, Matrix.mulVec, dotProduct,
     Finset.mul_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
@@ -47,8 +47,11 @@ squares of its signed eigenvalues. Horn–Johnson 2013, Section 4.1.
 theorem frobSq_eq_sum_sq_eigenvalues {A : Matrix n n ℝ} (hA : A.IsHermitian) :
     frobSq A = ∑ i, hA.eigenvalues i ^ 2 := by
   conv_lhs => rw [eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA,
-    frobSq_mul_right_of_orthonormal (transpose_eigenvectorUnitary_mul_self hA),
-    frobSq_mul_left_of_orthonormal (transpose_eigenvectorUnitary_mul_self hA)]
+    ← Matrix.conjTranspose_eq_transpose_of_trivial (hA.eigenvectorUnitary : Matrix n n ℝ),
+    frobSq_mul_right_of_orthonormal (V := (hA.eigenvectorUnitary : Matrix n n ℝ))
+      (transpose_eigenvectorUnitary_mul_self hA),
+    frobSq_mul_left_of_orthonormal (Q := (hA.eigenvectorUnitary : Matrix n n ℝ))
+      (transpose_eigenvectorUnitary_mul_self hA)]
   simp [frobSq_eq_sum_sq, Matrix.diagonal_apply]
 
 /-- `‖A‖_F ≤ tr A` for positive semidefinite `A`. Source: Cortinovis–Kressner (2021) [`ck21`],
@@ -133,7 +136,8 @@ theorem sum_sq_eigenvalues₀_sub_le_frobSq_sub {A B : Matrix n n ℝ}
     simp only [Matrix.IsHermitian.eigenvalues, e, Equiv.symm_apply_apply]
   have ht := trace_mul_le_sum_eigenvalues₀_mul hB hA
   have htrans : Bᵀ = B := by simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hB.eq
-  have hinner : frobInner B A = (B * A).trace := by rw [frobInner_eq_trace, htrans]
+  have hinner : frobInner B A = (B * A).trace := by rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, htrans]
   rw [← hinner] at ht
   rw [frobSq_sub, hFA, hFB]
   have hexp : (∑ i, (hB.eigenvalues₀ i - hA.eigenvalues₀ i) ^ 2) =

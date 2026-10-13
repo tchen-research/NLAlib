@@ -31,7 +31,8 @@ theorem sigmaMin_specNorm_bounds_of_gram_error
     have hh := abs_dotProduct_mulVec_le_specNorm (Aᵀ * A - N • 1) x
     rw [Matrix.sub_mulVec, dotProduct_sub, Matrix.smul_mulVec, Matrix.one_mulVec,
       dotProduct_smul, smul_eq_mul, hx, mul_one, mul_one,
-      ← mulVec_dotProduct_mulVec_self] at hh
+      ← show (A *ᵥ x) ⬝ᵥ (A *ᵥ x) = x ⬝ᵥ ((Aᵀ * A) *ᵥ x) from
+        star_mulVec_dotProduct_mulVec_self A x] at hh
     exact hh.trans h
   constructor
   · rcases le_or_gt α 1 with hα1 | hα1
@@ -52,8 +53,9 @@ theorem sigmaMin_specNorm_bounds_of_gram_error
         (by linarith)).trans (sigmaMin_nonneg A)
   · have hh : specNorm A ^ 2 ≤ N * max α (α ^ 2) + N := by
       have hsq : specNorm A ^ 2 = specNorm (Aᵀ * A) := by
-        simpa only [Matrix.transpose_transpose, specNorm_transpose] using
-          (specNorm_mul_transpose_self Aᵀ).symm
+        simpa only [Matrix.transpose_transpose, specNorm_transpose,
+          Matrix.conjTranspose_eq_transpose_of_trivial] using
+          (specNorm_mul_conjTranspose_self Aᵀ).symm
       rw [hsq]
       have hdecomp : Aᵀ * A = (Aᵀ * A - N • 1) + N • 1 := (sub_add_cancel _ _).symm
       calc _ = specNorm ((Aᵀ * A - N • 1) + N • 1) := congrArg specNorm hdecomp

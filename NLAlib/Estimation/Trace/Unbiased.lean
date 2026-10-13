@@ -60,7 +60,7 @@ atlas: hutchpp-unbiased -/
 theorem trace_eq_trace_transpose_mul_mul_add {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q)
     (A : Matrix n n ℝ) :
     A.trace = (Qᵀ * A * Q).trace + ((1 - Q * Qᵀ) * A * (1 - Q * Qᵀ)).trace := by
-  have hPP : Q * Qᵀ * (Q * Qᵀ) = Q * Qᵀ := mul_transpose_mul_mul_transpose hQ
+  have hPP : Q * Qᵀ * (Q * Qᵀ) = Q * Qᵀ := mul_conjTranspose_mul_mul_conjTranspose hQ
   have h1 : (Q * Qᵀ * A * (Q * Qᵀ)).trace = (Qᵀ * A * Q).trace := by
     rw [show Q * Qᵀ * A * (Q * Qᵀ) = Q * (Qᵀ * A * Q * Qᵀ) by simp only [Matrix.mul_assoc],
       Matrix.trace_mul_comm,

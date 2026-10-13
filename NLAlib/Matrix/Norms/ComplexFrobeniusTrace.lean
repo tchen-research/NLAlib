@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Norms.ComplexFrobenius
+import NLAlib.Matrix.Norms.Core
 
 /-!
 # Complex Frobenius trace and column identities

@@ -83,8 +83,10 @@ theorem prob_nonneg (A : Matrix m n ℝ) (i : m) : 0 ≤ prob A i :=
 /-- The selection probabilities sum to one when `A ≠ 0`. Atlas `randomized-kaczmarz`. -/
 theorem sum_prob (A : Matrix m n ℝ) (hA : A ≠ 0) : ∑ i, prob A i = 1 := by
   have hF : frobSq A ≠ 0 := (frobSq_eq_zero_iff A).not.mpr hA
+  have hS := frobSq_eq_sum_re_star_dotProduct_self A
+  simp only [star_trivial, RCLike.re_to_real] at hS
   unfold prob
-  rw [← Finset.sum_div, ← frobSq_eq_sum_dotProduct_self, div_self hF]
+  rw [← Finset.sum_div, ← hS, div_self hF]
 
 omit [Fintype m] in
 /-- Error recursion of one Kaczmarz step when `A *ᵥ xs = b`:

@@ -43,16 +43,20 @@ theorem IsMoorePenroseInverse.kronecker {A : Matrix m n ℝ} {A' : Matrix n m �
     {B : Matrix p q ℝ} {B' : Matrix q p ℝ}
     (hA : IsMoorePenroseInverse A A') (hB : IsMoorePenroseInverse B B') :
     IsMoorePenroseInverse (A ⊗ₖ B) (A' ⊗ₖ B') := by
-  rw [isMoorePenroseInverse_iff_transpose]
+  have hA3 := hA.conjTranspose_mul_eq
+  have hB3 := hB.conjTranspose_mul_eq
+  have hA4 := hA.conjTranspose_inv_mul_eq
+  have hB4 := hB.conjTranspose_inv_mul_eq
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hA3 hB3 hA4 hB4
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul,
       hA.mul_mul_eq, hB.mul_mul_eq]
   · rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul,
       hA.inv_mul_inv_eq, hB.inv_mul_inv_eq]
-  · rw [← Matrix.mul_kronecker_mul, ← Matrix.kroneckerMap_transpose,
-      hA.transpose_mul_eq, hB.transpose_mul_eq]
-  · rw [← Matrix.mul_kronecker_mul, ← Matrix.kroneckerMap_transpose,
-      hA.transpose_inv_mul_eq, hB.transpose_inv_mul_eq]
+  · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_kronecker_mul,
+      ← Matrix.kroneckerMap_transpose, hA3, hB3]
+  · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_kronecker_mul,
+      ← Matrix.kroneckerMap_transpose, hA4, hB4]
 
 /-- The Moore–Penrose inverse of a Kronecker product is the product of the two
 Moore–Penrose inverses. Horn–Johnson 1991, Section 4.2; arbitrary finite rectangular

@@ -15,23 +15,13 @@ namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
-/-- The actual complex projector of a zero column operator is zero.
-Source: `sa:volume`, empty-span convention. -/
-@[simp] theorem complexColumnProjector_zero :
-    complexColumnProjector (0 : Matrix m n ℂ) = 0 := by
-  have hspace : complexColumnSpace (0 : Matrix m n ℂ) = ⊥ := by
-    simp only [complexColumnSpace, map_zero, LinearMap.range_zero]
-  apply Matrix.toEuclideanLin.injective
-  rw [toEuclideanLin_complexColumnProjector, hspace, Submodule.starProjection_bot, map_zero]
-  rfl
-
 omit [Fintype n] in
 /-- The actual empty complex sample has zero orthogonal projector.
 Source: `sa:volume`, its projector `P_∅=0`. -/
-@[simp] theorem complexColumnProjector_complexVolumeSampleColumns_empty (A : Matrix m n ℂ) :
-    complexColumnProjector (complexVolumeSampleColumns A ∅) = 0 := by
+@[simp] theorem rangeProjector_complexVolumeSampleColumns_empty (A : Matrix m n ℂ) :
+    rangeProjector (complexVolumeSampleColumns A ∅) = 0 := by
   rw [show complexVolumeSampleColumns A ∅ = 0 from Subsingleton.elim _ _]
-  exact complexColumnProjector_zero
+  exact rangeProjector_zero
 
 omit [Fintype n] in
 /-- The actual complex residual of the empty sample is the whole input.
@@ -39,7 +29,7 @@ Source: `sa:volume`, empty-sample endpoint. -/
 @[simp] theorem complexVolumeSamplingResidual_empty (A : Matrix m n ℂ) :
     complexVolumeSamplingResidual A ∅ = A := by
   simp only [complexVolumeSamplingResidual,
-    complexColumnProjector_complexVolumeSampleColumns_empty, Matrix.zero_mul, sub_zero]
+    rangeProjector_complexVolumeSampleColumns_empty, Matrix.zero_mul, sub_zero]
 
 omit [DecidableEq m] in
 /-- Sampling zero columns gives the literal deterministic empty-subset law.

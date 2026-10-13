@@ -21,9 +21,9 @@ omit [DecidableEq m] in
 /-- Every positive-exponent Schatten power sum uses exactly the rank
 prefix; zero rank yields an empty sum.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem schattenNorm_eq_sum_rank_rpow (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
-    schattenNorm A p = (∑ i ∈ Finset.range A.rank, singularValues A i ^ p) ^ (1 / p) := by
-  unfold schattenNorm
+theorem schattenNormReal_eq_sum_rank_rpow (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
+    schattenNormReal A p = (∑ i ∈ Finset.range A.rank, singularValues A i ^ p) ^ (1 / p) := by
+  unfold schattenNormReal
   congr 1
   symm
   have hr : A.rank ≤ min (Fintype.card m) (Fintype.card n) :=
@@ -37,8 +37,8 @@ open scoped Matrix.Norms.L2Operator in
 /-- Every positive-exponent Schatten norm dominates the spectral norm,
 including the zero and empty matrix cases.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
-theorem specNorm_le_schattenNorm (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
-    specNorm A ≤ schattenNorm A p := by
+theorem specNorm_le_schattenNormReal (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
+    specNorm A ≤ schattenNormReal A p := by
   have hfirst : singularValues A 0 = specNorm A := by
     simpa only [kyFanNorm_eq_sum_range, Finset.sum_range_one] using
       kyFanNorm_one_eq_specNorm A
@@ -56,7 +56,7 @@ theorem specNorm_le_schattenNorm (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
   have h := Real.rpow_le_rpow (Real.rpow_nonneg (specNorm_nonneg A) p) hsum
     (one_div_nonneg.mpr hp.le)
   rw [one_div, Real.rpow_rpow_inv (specNorm_nonneg A) hp.ne'] at h
-  simpa only [schattenNorm, one_div] using h
+  simpa only [schattenNormReal, one_div] using h
 
 open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
@@ -64,8 +64,8 @@ omit [DecidableEq m] in
 The source norm-exponent range is included as a special case.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def (partial) -/
-theorem schattenNorm_le_schattenNorm_of_le (A : Matrix m n ℝ) {p q : ℝ}
-    (hp : 0 < p) (hpq : p ≤ q) : schattenNorm A q ≤ schattenNorm A p :=
+theorem schattenNormReal_le_schattenNormReal_of_le (A : Matrix m n ℝ) {p q : ℝ}
+    (hp : 0 < p) (hpq : p ≤ q) : schattenNormReal A q ≤ schattenNormReal A p :=
   sum_rpow_root_le_sum_rpow_root _ _ (fun i _ => singularValues_nonneg _ i) hp hpq
 
 open scoped Matrix.Norms.L2Operator in
@@ -74,11 +74,11 @@ omit [DecidableEq m] in
 coefficient `rank(A)^(1/p - 1/q)`. The zero rank is covered without division.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def (partial) -/
-theorem schattenNorm_le_rank_rpow_mul_schattenNorm (A : Matrix m n ℝ) {p q : ℝ}
+theorem schattenNormReal_le_rank_rpow_mul_schattenNormReal (A : Matrix m n ℝ) {p q : ℝ}
     (hp : 0 < p) (hpq : p ≤ q) :
-    schattenNorm A p ≤ (A.rank : ℝ) ^ (1 / p - 1 / q) * schattenNorm A q := by
-  rw [schattenNorm_eq_sum_rank_rpow A hp,
-    schattenNorm_eq_sum_rank_rpow A (hp.trans_le hpq)]
+    schattenNormReal A p ≤ (A.rank : ℝ) ^ (1 / p - 1 / q) * schattenNormReal A q := by
+  rw [schattenNormReal_eq_sum_rank_rpow A hp,
+    schattenNormReal_eq_sum_rank_rpow A (hp.trans_le hpq)]
   simpa only [Finset.card_range] using sum_rpow_root_le_card_rpow_mul (Finset.range A.rank)
     (singularValues A) (fun i _ => singularValues_nonneg _ i) hp hpq
 
@@ -87,9 +87,9 @@ open scoped Matrix.Norms.L2Operator in
 including rank zero and empty matrix shapes.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def (partial) -/
-theorem schattenNorm_le_rank_rpow_mul_specNorm (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
-    schattenNorm A p ≤ (A.rank : ℝ) ^ (1 / p) * specNorm A := by
-  rw [schattenNorm_eq_sum_rank_rpow A hp]
+theorem schattenNormReal_le_rank_rpow_mul_specNorm (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
+    schattenNormReal A p ≤ (A.rank : ℝ) ^ (1 / p) * specNorm A := by
+  rw [schattenNormReal_eq_sum_rank_rpow A hp]
   have hsum : (∑ i ∈ Finset.range A.rank, singularValues A i ^ p) ≤
       (A.rank : ℝ) * specNorm A ^ p := by
     calc
@@ -107,8 +107,8 @@ open scoped Matrix.Norms.L2Operator in
 /-- Extended Schatten norms decrease for `1 ≤ p ≤ q ≤ ∞`.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def -/
-theorem schattenNormExtended_le_of_le (A : Matrix m n ℝ) {p q : ℝ≥0∞}
-    (hp : 1 ≤ p) (hpq : p ≤ q) : schattenNormExtended A q ≤ schattenNormExtended A p := by
+theorem schattenNorm_le_of_le (A : Matrix m n ℝ) {p q : ℝ≥0∞}
+    (hp : 1 ≤ p) (hpq : p ≤ q) : schattenNorm A q ≤ schattenNorm A p := by
   by_cases hpTop : p = ∞
   · subst p
     have hq : q = ∞ := top_le_iff.mp hpq
@@ -117,19 +117,19 @@ theorem schattenNormExtended_le_of_le (A : Matrix m n ℝ) {p q : ℝ≥0∞}
   · have hp0 : 0 < p.toReal := ENNReal.toReal_pos (ne_of_gt (zero_lt_one.trans_le hp)) hpTop
     by_cases hqTop : q = ∞
     · subst q
-      rw [schattenNormExtended_top, schattenNormExtended_eq_of_ne_top _ hpTop]
-      exact specNorm_le_schattenNorm A hp0
-    · rw [schattenNormExtended_eq_of_ne_top _ hpTop, schattenNormExtended_eq_of_ne_top _ hqTop]
-      exact schattenNorm_le_schattenNorm_of_le A hp0 (ENNReal.toReal_mono hqTop hpq)
+      rw [schattenNorm_top, schattenNorm_eq_of_ne_top _ hpTop]
+      exact specNorm_le_schattenNormReal A hp0
+    · rw [schattenNorm_eq_of_ne_top _ hpTop, schattenNorm_eq_of_ne_top _ hqTop]
+      exact schattenNormReal_le_schattenNormReal_of_le A hp0 (ENNReal.toReal_mono hqTop hpq)
 
 open scoped Matrix.Norms.L2Operator in
 /-- The sharp -rank comparison for all `1 ≤ p ≤ q ≤ ∞`, using
 extended reciprocals so that `1/∞ = 0`. Rank zero obeys the same formula.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def -/
-theorem schattenNormExtended_le_rank_rpow_mul (A : Matrix m n ℝ) {p q : ℝ≥0∞}
+theorem schattenNorm_le_rank_rpow_mul (A : Matrix m n ℝ) {p q : ℝ≥0∞}
     (hp : 1 ≤ p) (hpq : p ≤ q) :
-    schattenNormExtended A p ≤ (A.rank : ℝ) ^ (p⁻¹.toReal - q⁻¹.toReal) * schattenNormExtended A q := by
+    schattenNorm A p ≤ (A.rank : ℝ) ^ (p⁻¹.toReal - q⁻¹.toReal) * schattenNorm A q := by
   by_cases hpTop : p = ∞
   · subst p
     have hq : q = ∞ := top_le_iff.mp hpq
@@ -139,11 +139,11 @@ theorem schattenNormExtended_le_rank_rpow_mul (A : Matrix m n ℝ) {p q : ℝ≥
     by_cases hqTop : q = ∞
     · subst q
       simp only [ENNReal.inv_top, ENNReal.toReal_zero, sub_zero, ENNReal.toReal_inv,
-        schattenNormExtended_top]
-      rw [schattenNormExtended_eq_of_ne_top _ hpTop]
-      simpa only [one_div] using schattenNorm_le_rank_rpow_mul_specNorm A hp0
-    · rw [schattenNormExtended_eq_of_ne_top _ hpTop, schattenNormExtended_eq_of_ne_top _ hqTop]
+        schattenNorm_top]
+      rw [schattenNorm_eq_of_ne_top _ hpTop]
+      simpa only [one_div] using schattenNormReal_le_rank_rpow_mul_specNorm A hp0
+    · rw [schattenNorm_eq_of_ne_top _ hpTop, schattenNorm_eq_of_ne_top _ hqTop]
       simpa only [ENNReal.toReal_inv, one_div] using
-        schattenNorm_le_rank_rpow_mul_schattenNorm A hp0 (ENNReal.toReal_mono hqTop hpq)
+        schattenNormReal_le_rank_rpow_mul_schattenNormReal A hp0 (ENNReal.toReal_mono hqTop hpq)
 
 end NLAlib

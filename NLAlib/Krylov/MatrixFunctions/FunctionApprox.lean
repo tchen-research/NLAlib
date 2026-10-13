@@ -93,7 +93,7 @@ theorem krylovFunApprox_eval_eq_aeval {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {Q : Matrix n k ℝ} (hQ : HasOrthonormalCols Q) (b : n → ℝ) {q : ℕ}
     (hK : krylovSpace A b q ≤ LinearMap.range Q.mulVecLin) {p : ℝ[X]} (hp : p.degree < q) :
     krylovFunApprox A (fun x => p.eval x) b Q = aeval A p *ᵥ b := by
-  rw [krylovFunApprox, cfc_polynomial p _ (Matrix.isHermitian_conjTranspose_mul_mul Q hA).isSelfAdjoint]
+  rw [krylovFunApprox, ← Matrix.conjTranspose_eq_transpose_of_trivial Q, cfc_polynomial p _ (Matrix.isHermitian_conjTranspose_mul_mul Q hA).isSelfAdjoint]
   exact mulVec_aeval_transpose_mul_mul_mulVec_eq hQ b hK hp
 
 /-! ### Interpolation at the Ritz values -/
@@ -113,7 +113,7 @@ theorem krylovFunApprox_eq_aeval_of_forall_eval_eq {A : Matrix n n ℝ} (hA : A.
       p.eval ((Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j) =
       f ((Matrix.isHermitian_conjTranspose_mul_mul Q hA).eigenvalues j)) :
     krylovFunApprox A f b Q = aeval A p *ᵥ b := by
-  rw [krylovFunApprox, cfc_eq_aeval_of_forall_eval_eq _ hpf]
+  rw [krylovFunApprox, ← Matrix.conjTranspose_eq_transpose_of_trivial Q, cfc_eq_aeval_of_forall_eval_eq _ hpf]
   exact mulVec_aeval_transpose_mul_mul_mulVec_eq hQ b hK hp
 
 /-- **Lanczos-FA is the interpolant at the Ritz values.** If `Q` has at most `q` columns, then

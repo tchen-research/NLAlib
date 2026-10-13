@@ -35,12 +35,14 @@ theorem specNorm_idempotent_eq_secant_of_range_frames {n r : Type*}
     apply (singularValues_pos_iff _ _).mpr
     rw [Matrix.rank_reindex, hRank]
     omega
-  refine ⟨Real.arccos_lt_pi_div_two.mpr hpos, ?_⟩
-  rw [hForm, specNorm_mul_transpose_right_of_hasOrthonormalCols (show Wᵀ * W = 1 from hW),
-    specNorm_mul_left_of_hasOrthonormalCols (show Qᵀ * Q = 1 from hQ),
-    specNorm_inv_eq_inv_singularValues_last _ hC hr,
-    cos_principalAngles hW hQ, singularValues_reindex,
-    singularValues_eq_linearMap]
+  refine ⟨?_, ?_⟩
+  · simpa only [principalAnglesFintype, singularValues_reindex,
+      Matrix.conjTranspose_eq_transpose_of_trivial] using Real.arccos_lt_pi_div_two.mpr hpos
+  · rw [hForm, specNorm_mul_transpose_right_of_hasOrthonormalCols (show Wᵀ * W = 1 from hW),
+      specNorm_mul_left_of_hasOrthonormalCols (show Qᵀ * Q = 1 from hQ),
+      specNorm_inv_eq_inv_singularValues_last _ hC hr,
+      cos_principalAngles hW hQ, singularValues_reindex,
+      Matrix.conjTranspose_eq_transpose_of_trivial, singularValues_eq_linearMap]
 
 /-- Every positive-rank real idempotent has orthonormal frames for its
 actual range and the orthogonal complement of its actual kernel whose

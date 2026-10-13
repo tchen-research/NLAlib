@@ -22,7 +22,7 @@ theorem sin_principalAngles_monotone {P Q : Matrix m n ℝ}
   rw [sin_principalAngles, sin_principalAngles]
   apply Real.sqrt_le_sqrt
   have horder := singularValues_antitone
-    ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) hij
+    ((Pᴴ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) hij
   have hi := overlap_singularValues_mem_Icc hP hQ i
   have hj := overlap_singularValues_mem_Icc hP hQ j
   nlinarith [hi.1, hj.1]
@@ -57,7 +57,7 @@ atlas: principal-angles-def (partial) -/
 theorem specNorm_sinePrincipalAngles_eq_sqrt_one_sub_last_sq {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) (hn : 0 < Fintype.card n) :
     specNorm (sinePrincipalAngles P Q) = Real.sqrt (1-singularValues
-      ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) (Fintype.card n-1)^2) := by
+      ((Pᴴ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) (Fintype.card n-1)^2) := by
   rw [specNorm_sinePrincipalAngles_eq_sin_last hP hQ hn, sin_principalAngles]
 
 end NLAlib

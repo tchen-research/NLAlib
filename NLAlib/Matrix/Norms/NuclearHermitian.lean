@@ -46,11 +46,15 @@ theorem gram_cfc_abs_eq {n : Type*} [Fintype n] [DecidableEq n]
   rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.conjTranspose_eq_transpose_of_trivial]
   have hP : HasOrthonormalCols (hA.eigenvectorUnitary : Matrix n n ℝ) :=
     transpose_eigenvectorUnitary_mul_self hA
-  rw [hA.cfc_eq, cfc_eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA (abs : ℝ → ℝ),
+  rw [hA.cfc_eq, cfc_eq_eigenvectorUnitary_mul_diagonal_mul_conjTranspose hA (abs : ℝ → ℝ),
+    Matrix.conjTranspose_eq_transpose_of_trivial,
     gram_orthogonal_diagonalization hP]
   conv_rhs => rw [eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA]
   rw [gram_orthogonal_diagonalization hP]
-  simp only [sq_abs]
+  congr 2
+  apply congrArg Matrix.diagonal
+  funext i
+  exact sq_abs (hA.eigenvalues i)
 
 open scoped Matrix.Norms.L2Operator in
 /-- Absolute functional calculus preserves every native singular value of a
@@ -70,8 +74,7 @@ theorem nuclearNorm_eq_sum_abs_eigenvalues₀ {n : Type*} [Fintype n] [Decidable
     posSemidef_cfc_of_nonneg_eigenvalues hA (fun i => abs_nonneg _)
   calc
     nuclearNorm A = nuclearNorm (cfc (abs : ℝ → ℝ) A) := by
-      rw [nuclearNorm, kyFanNorm_eq_sum_range]
-      simp only [← singularValues_eq_linearMap]
+      simp only [nuclearNorm_eq_sum_range]
       simp_rw [singularValues_cfc_abs hA]
     _ = (cfc (abs : ℝ → ℝ) A).trace := nuclearNorm_eq_trace_of_posSemidef hAbs
     _ = ∑ i : Fin (Fintype.card n), |hA.eigenvalues₀ i| := by

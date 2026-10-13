@@ -26,11 +26,6 @@ namespace NLAlib
 variable {𝕜 : Type*} [RCLike 𝕜] {m n k l : Type*} [Fintype m] [Fintype n] [Fintype k]
   [Fintype l] [DecidableEq m] [DecidableEq n] [DecidableEq k] [DecidableEq l]
 
-omit [DecidableEq m] in
-/-- The column space `range B` of `B : Matrix m n 𝕜` as a subspace of `EuclideanSpace 𝕜 m`. -/
-def columnSpace (B : Matrix m n 𝕜) : Submodule 𝕜 (EuclideanSpace 𝕜 m) :=
-  LinearMap.range (Matrix.toEuclideanLin B)
-
 omit [DecidableEq m] [DecidableEq n] in
 /-- The **orthogonal projector onto `range B`**: `B B⁺` with the Moore–Penrose inverse, defined at
 every rank and shape (the zero matrix for `B = 0`). Golub–Van Loan 2013, §5.5.2. -/
@@ -39,6 +34,11 @@ def rangeProjector (B : Matrix m n 𝕜) : Matrix m m 𝕜 := B * moorePenroseIn
 omit [DecidableEq m] [DecidableEq n] in
 theorem rangeProjector_eq_mul_moorePenroseInverse (B : Matrix m n 𝕜) :
     rangeProjector B = B * moorePenroseInverse B := rfl
+
+omit [DecidableEq m] [DecidableEq n] in
+/-- The projector onto the zero matrix's column range is zero, including empty shapes. -/
+@[simp] theorem rangeProjector_zero : rangeProjector (0 : Matrix m n 𝕜) = 0 := by
+  simp [rangeProjector]
 
 omit [DecidableEq m] [DecidableEq n] in
 /-- The range projector is Hermitian. -/
@@ -93,7 +93,7 @@ theorem rangeProjector_mul_of_range_le {B : Matrix m n 𝕜} {Y : Matrix m k �
   rw [← Matrix.mulVec_mulVec, ← hy, Matrix.mulVecLin_apply, Matrix.mulVec_mulVec,
     rangeProjector_mul_self]
 
-omit [DecidableEq m] [DecidableEq n] [DecidableEq k] in
+omit [DecidableEq m] [DecidableEq n] [DecidableEq k] [DecidableEq l] in
 /-- Nested ranges make the projectors compose: if `rangeProjector Q` fixes `Y` then
 `rangeProjector Q · rangeProjector Y = rangeProjector Y`. -/
 theorem rangeProjector_mul_rangeProjector_of_mul_eq {Q : Matrix m k 𝕜} {Y : Matrix m l 𝕜}
@@ -105,8 +105,11 @@ omit [DecidableEq m] in
 /-- For a frame `Q` with orthonormal columns the range projector is `QQᴴ`. -/
 theorem rangeProjector_eq_mul_conjTranspose_of_hasOrthonormalCols {Q : Matrix m n 𝕜}
     (hQ : HasOrthonormalCols Q) : rangeProjector Q = Q * Qᴴ := by
-  rw [rangeProjector, moorePenroseInverse_eq_pinvL Q (by rw [hQ.conjTranspose_mul_self];
-    exact isUnit_one), pinvL, hQ.conjTranspose_mul_self, Matrix.inv_one, Matrix.one_mul]
+  have hG : IsUnit (Qᴴ * Q) := by
+    rw [hQ.conjTranspose_mul_self]
+    exact isUnit_one
+  rw [rangeProjector, moorePenroseInverse_eq_pinvL Q hG, pinvL,
+    hQ.conjTranspose_mul_self, inv_one, Matrix.one_mul]
 
 omit [DecidableEq m] in
 /-- For full column rank the range projector is the inverse-Gram formula `B(BᴴB)⁻¹Bᴴ`.
@@ -117,7 +120,6 @@ theorem rangeProjector_eq_mul_inv_gram_conjTranspose (B : Matrix m n 𝕜)
 
 /-! ### The Hilbert-space projector -/
 
-omit [DecidableEq m] [DecidableEq n] in
 /-- The range projector is Mathlib's orthogonal projection onto `columnSpace B`. -/
 theorem toEuclideanLin_rangeProjector (B : Matrix m n 𝕜) :
     Matrix.toEuclideanLin (rangeProjector B) = (columnSpace B).starProjection.toLinearMap := by
@@ -132,7 +134,7 @@ theorem toEuclideanLin_rangeProjector (B : Matrix m n 𝕜) :
     rintro u ⟨y, rfl⟩
     have hadj : Matrix.toEuclideanLin B = LinearMap.adjoint (Matrix.toEuclideanLin Bᴴ) := by
       rw [← Matrix.toEuclideanLin_conjTranspose_eq_adjoint, Matrix.conjTranspose_conjTranspose]
-    rw [hadj, LinearMap.adjoint_inner_left, ← LinearMap.adjoint_inner_right, ← hadj]
+    rw [hadj, LinearMap.adjoint_inner_left]
     have hzero : Matrix.toEuclideanLin Bᴴ (x - Matrix.toEuclideanLin (rangeProjector B) x) = 0 := by
       rw [map_sub, ← LinearMap.comp_apply, ← Matrix.toLpLin_mul_same]
       change Matrix.toEuclideanLin Bᴴ x - Matrix.toEuclideanLin (Bᴴ * rangeProjector B) x = 0
@@ -140,32 +142,22 @@ theorem toEuclideanLin_rangeProjector (B : Matrix m n 𝕜) :
         have hh := congrArg Matrix.conjTranspose (rangeProjector_mul B)
         simpa only [Matrix.conjTranspose_mul, (rangeProjector_isHermitian B).eq] using hh
       rw [h, sub_self]
-    rw [← LinearMap.adjoint_inner_right, ← hadj]
     simp [hzero]
 
-omit [DecidableEq m] [DecidableEq n] in
+/-- Transporting Mathlib's Hilbert orthogonal projection back to a matrix gives
+exactly the Moore–Penrose range projector, at every rank and rectangular shape.
+This identifies the Hilbert and algebraic constructions over real and complex scalars. -/
+theorem toEuclideanLin_symm_starProjection_eq_rangeProjector (B : Matrix m n 𝕜) :
+    Matrix.toEuclideanLin.symm (columnSpace B).starProjection.toLinearMap =
+      rangeProjector B := by
+  apply Matrix.toEuclideanLin.injective
+  rw [Matrix.toEuclideanLin.apply_symm_apply, toEuclideanLin_rangeProjector]
+
 /-- The range of the projector is the column space (Hilbert form). -/
 theorem range_toEuclideanLin_rangeProjector (B : Matrix m n 𝕜) :
     LinearMap.range (Matrix.toEuclideanLin (rangeProjector B)) = columnSpace B := by
   rw [toEuclideanLin_rangeProjector]
   exact Submodule.range_starProjection _
-
-omit [DecidableEq m] in
-/-- The column space is the span of the columns. -/
-theorem columnSpace_eq_span_columns (B : Matrix m n 𝕜) :
-    columnSpace B = Submodule.span 𝕜
-      (Set.range (fun j => (WithLp.toLp 2 (B.col j) : EuclideanSpace 𝕜 m))) := by
-  change LinearMap.range (Matrix.toEuclideanLin B) = _
-  rw [← Submodule.map_top, ← (EuclideanSpace.basisFun n 𝕜).toBasis.span_eq,
-    Submodule.map_span, ← Set.range_comp]
-  have hf : (Matrix.toEuclideanLin B) ∘ (EuclideanSpace.basisFun n 𝕜).toBasis =
-      (fun j => (WithLp.toLp 2 (B.col j) : EuclideanSpace 𝕜 m)) := by
-    funext j
-    simp only [Function.comp_def, OrthonormalBasis.coe_toBasis, EuclideanSpace.basisFun_apply,
-      Matrix.toLpLin_apply, EuclideanSpace.single, PiLp.ofLp_single,
-      Matrix.mulVec_single]
-    simp
-  exact congrArg (Submodule.span 𝕜) (congrArg Set.range hf)
 
 omit [DecidableEq m] in
 /-- The rank is the dimension of the column space. -/
@@ -185,7 +177,7 @@ theorem specNorm_one_sub_rangeProjector_le_one (B : Matrix m n 𝕜) :
   specNorm_one_sub_projector_le_one (rangeProjector_isHermitian B)
     (rangeProjector_isIdempotentElem B)
 
-omit [DecidableEq n] [DecidableEq k] in
+omit [DecidableEq k] in
 /-- The range residual contracts the spectral norm: `‖A − (BB⁺)A‖₂ ≤ ‖A‖₂`. -/
 theorem specNorm_sub_rangeProjector_mul_le (B : Matrix m k 𝕜) (A : Matrix m n 𝕜) :
     specNorm (A - rangeProjector B * A) ≤ specNorm A := by
@@ -204,7 +196,7 @@ theorem frobSq_sub_rangeProjector_mul_le (B : Matrix m k 𝕜) (A : Matrix m n �
   exact frobSq_one_sub_projector_mul_le (rangeProjector_isHermitian B)
     (rangeProjector_isIdempotentElem B) A
 
-omit [DecidableEq n] [DecidableEq k] [DecidableEq l] in
+omit [DecidableEq k] [DecidableEq l] in
 /-- A larger range has no larger spectral residual: if `rangeProjector Q` fixes `Y` then
 `‖A − (QQ⁺)A‖₂ ≤ ‖A − (YY⁺)A‖₂`. -/
 theorem specNorm_sub_rangeProjector_mul_le_of_mul_eq {Q : Matrix m k 𝕜} {Y : Matrix m l 𝕜}

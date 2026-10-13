@@ -61,11 +61,12 @@ theorem ae_tendsto_regularizedGram_softMin_aggregates_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ε : ℝ) (hε : 0 < ε) :
     ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)),
       Tendsto (fun n : ℕ => inversePowerSoftMin n (regularizedGram ε G))
-        atTop (𝓝 (sigmaMin Gᵀ ^ 2 + ε)) ∧
+        atTop (𝓝 (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 + ε)) ∧
       Tendsto (fun n : ℕ => frobSq (gramSoftMinGradient n ε G))
-        atTop (𝓝 (4 * sigmaMin Gᵀ ^ 2)) ∧
+        atTop (𝓝 (4 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)) ∧
       Tendsto (fun n : ℕ => frobInner G (gramSoftMinGradient n ε G))
-        atTop (𝓝 (2 * sigmaMin Gᵀ ^ 2)) := by
+        atTop (𝓝 (2 * singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)) := by
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   filter_upwards [ae_exists_unique_max_eigenvalues_inv_regularizedGram_gaussianMatrix
     hr hrk ε hε] with G hG
   obtain ⟨i₀, hmax⟩ := hG
@@ -75,10 +76,10 @@ theorem ae_tendsto_regularizedGram_softMin_aggregates_gaussianMatrix
     by_cases hi : i = i₀
     · simpa only [hi] using le_rfl
     · exact (hmax i hi).le
-  have hX := sigmaMin_transpose_sq_eq_inv_inverse_eigenvalue_sub ε G hpd i₀ hle
+  have hX := sq_singularValues_transpose_last_eq_inv_inverse_eigenvalue_sub ε G hpd i₀ hle
   obtain ⟨hF, hA, hB⟩ :=
     tendsto_regularizedGram_softMin_aggregates_of_unique_max ε G hpd i₀ hmax
-  have hXadd : (hpd.inv.isHermitian.eigenvalues i₀)⁻¹ = sigmaMin Gᵀ ^ 2 + ε := by
+  have hXadd : (hpd.inv.isHermitian.eigenvalues i₀)⁻¹ = singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 + ε := by
     linarith
   rw [hXadd] at hF
   rw [← hX] at hA hB

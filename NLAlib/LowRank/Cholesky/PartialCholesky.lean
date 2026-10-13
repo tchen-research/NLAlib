@@ -1,6 +1,6 @@
 import NLAlib.Matrix.Basic.SchurComplement
 import NLAlib.Matrix.Basic.Selection
-import NLAlib.Matrix.Factorizations.CholeskyStep
+import NLAlib.Matrix.Factorizations.EliminationStep
 import NLAlib.LowRank.Nystrom.Structural
 /-!
 # Partial (pivoted) Cholesky and the column Nyström approximation
@@ -9,7 +9,7 @@ import NLAlib.LowRank.Nystrom.Structural
 advance or adaptively by the caller: greedy, uniform, RPCholesky; the pivot rule is not part of
 the recursion):
 
-* the step `choleskyStep A t = A − A(:,t) A(t,:) / A(t,t)` (Matrix/Factorizations/CholeskyStep;
+* the step `eliminationStep A t = A − A(:,t) A(t,:) / A(t,t)` (Matrix/Factorizations/EliminationStep;
   total: a zero pivot leaves `A` unchanged);
 * `partialCholeskyResidual A s`: the residual after eliminating `s 0, …, s (k−1)` in order;
 * `partialCholeskyFactor A s : Matrix n (Fin k) ℝ`: column `j` is
@@ -44,7 +44,7 @@ CETW 2023, Alg. 1 (residual update); Golub–Van Loan 2013, §4.2.9.
 atlas: partial-cholesky-nystrom (partial) -/
 def partialCholeskyResidual (A : Matrix n n ℝ) : {k : ℕ} → (Fin k → n) → Matrix n n ℝ
   | 0, _ => A
-  | k + 1, s => choleskyStep (partialCholeskyResidual A (Fin.init s)) (s (Fin.last k))
+  | k + 1, s => eliminationStep (partialCholeskyResidual A (Fin.init s)) (s (Fin.last k))
 
 /-- The **partial Cholesky factor** `F ∈ ℝ^{n×k}`: column `j` is `R(:, s j) / √R(s j, s j)` with
 `R` the residual after the first `j` pivots. CETW 2023, Alg. 1; Golub–Van Loan 2013, §4.2.9.
@@ -86,7 +86,7 @@ theorem posSemidef_partialCholeskyResidual {A : Matrix n n ℝ} (hA : A.PosSemid
     (s : Fin k → n) : (partialCholeskyResidual A s).PosSemidef := by
   induction k with
   | zero => exact hA
-  | succ k ih => exact posSemidef_choleskyStep (ih _) _
+  | succ k ih => exact posSemidef_eliminationStep (ih _) _
 
 /-- Every partial Cholesky residual of a PSD matrix is bounded above by the matrix:
 `A − R` is PSD. Source: manuscript `sa:rp-one-step`; CETW (2025), PSD order invariant. -/
@@ -97,8 +97,8 @@ theorem posSemidef_sub_partialCholeskyResidual {A : Matrix n n ℝ} (hA : A.PosS
     simpa only [partialCholeskyResidual, sub_self] using (Matrix.PosSemidef.zero (n := n) (R := ℝ))
   | succ k ih =>
     have h := (ih (Fin.init s)).add
-      (posSemidef_sub_choleskyStep (posSemidef_partialCholeskyResidual hA (Fin.init s))
-        (s (Fin.last k)))
+      (Matrix.le_iff.mp (eliminationStep_le (posSemidef_partialCholeskyResidual hA (Fin.init s))
+        (s (Fin.last k))))
     convert h using 1
     dsimp only [partialCholeskyResidual]
     abel
@@ -113,9 +113,9 @@ theorem partialCholeskyResidual_apply_pivot_left {A : Matrix n n ℝ} (hA : A.Po
   | succ k ih =>
     simp only [partialCholeskyResidual]
     induction j using Fin.lastCases with
-    | last => exact choleskyStep_apply_pivot_left (posSemidef_partialCholeskyResidual hA _) _ _
+    | last => exact eliminationStep_apply_pivot_left (posSemidef_partialCholeskyResidual hA _) _ _
     | cast j =>
-      exact choleskyStep_apply_eq_zero_of_row (fun i => ih (Fin.init s) j i) _ _
+      exact eliminationStep_apply_eq_zero_of_row (fun i => ih (Fin.init s) j i) _ _
 
 /-- The partial Cholesky residual of a PSD matrix vanishes on the pivot columns.
 CETW 2023, §2.
@@ -127,9 +127,9 @@ theorem partialCholeskyResidual_apply_pivot_right {A : Matrix n n ℝ} (hA : A.P
   | succ k ih =>
     simp only [partialCholeskyResidual]
     induction j using Fin.lastCases with
-    | last => exact choleskyStep_apply_pivot_right (posSemidef_partialCholeskyResidual hA _) _ _
+    | last => exact eliminationStep_apply_pivot_right (posSemidef_partialCholeskyResidual hA _) _ _
     | cast j =>
-      exact choleskyStep_apply_eq_zero_of_col (fun i => ih (Fin.init s) j i) _ _
+      exact eliminationStep_apply_eq_zero_of_col (fun i => ih (Fin.init s) j i) _ _
 
 /-- **Partial Cholesky residual identity**: `A − F Fᵀ` is the projResidual, for PSD `A` and any pivot
 sequence. Proof: induction on `k`; the new column `f` satisfies
@@ -157,7 +157,7 @@ theorem sub_partialCholeskyFactor_mul_transpose {A : Matrix n n ℝ} (hA : A.Pos
     simp only [Matrix.sub_apply, Matrix.mul_apply, transpose_apply] at hij ⊢
     rw [Fin.sum_univ_castSucc]
     simp only [partialCholeskyFactor_castSucc, partialCholeskyFactor_last, ← hR, ← ht,
-      partialCholeskyResidual, choleskyStep_apply]
+      partialCholeskyResidual, eliminationStep_apply]
     rw [← sub_sub, hij, div_mul_div_comm, hsq, hsym t j]
     ring
 

@@ -301,19 +301,57 @@ theorem residual_eq_mul_conjTranspose_mul_residual [DecidableEq m] [DecidableEq 
     Matrix.mul_zero, zero_add] at h
   exact h.symm
 
+/-- The column space `range B` of `B : Matrix m n 𝕜` as a subspace of `EuclideanSpace 𝕜 m`. -/
+def columnSpace [DecidableEq n] (B : Matrix m n 𝕜) : Submodule 𝕜 (EuclideanSpace 𝕜 m) :=
+  LinearMap.range (Matrix.toEuclideanLin B)
+
+/-- The column space is the span of the columns. -/
+theorem columnSpace_eq_span_columns [DecidableEq n] (B : Matrix m n 𝕜) :
+    columnSpace B = Submodule.span 𝕜
+      (Set.range (fun j => (WithLp.toLp 2 (B.col j) : EuclideanSpace 𝕜 m))) := by
+  change LinearMap.range (Matrix.toEuclideanLin B) = _
+  rw [← Submodule.map_top, ← (EuclideanSpace.basisFun n 𝕜).toBasis.span_eq,
+    Submodule.map_span, ← Set.range_comp]
+  have hf : (Matrix.toEuclideanLin B) ∘ (EuclideanSpace.basisFun n 𝕜).toBasis =
+      (fun j => (WithLp.toLp 2 (B.col j) : EuclideanSpace 𝕜 m)) := by
+    funext j
+    simp only [Function.comp_def, OrthonormalBasis.coe_toBasis, EuclideanSpace.basisFun_apply,
+      Matrix.toLpLin_apply, EuclideanSpace.single, PiLp.ofLp_single,
+      Matrix.mulVec_single]
+    simp
+  exact congrArg (Submodule.span 𝕜) (congrArg Set.range hf)
+
 /-- Columns of a matrix as vectors of Euclidean space. -/
 private def col {ι : Type*} (V : Matrix m ι 𝕜) (j : ι) : EuclideanSpace 𝕜 m :=
   WithLp.toLp 2 (fun i => V i j)
 
-private lemma col_orthonormal {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (V : Matrix m ι 𝕜) (hV : HasOrthonormalCols V) : Orthonormal 𝕜 (col V) := by
+/-- A matrix has orthonormal columns exactly when its Euclidean columns form a
+Mathlib `Orthonormal` family, over either the real or complex field. -/
+theorem hasOrthonormalCols_iff_orthonormal {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : Matrix m ι 𝕜) :
+    HasOrthonormalCols V ↔ Orthonormal 𝕜 (fun j => WithLp.toLp 2 (V.col j)) := by
   rw [orthonormal_iff_ite]
-  intro a b
-  have := congrFun (congrFun hV.conjTranspose_mul_self a) b
-  simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply] at this
-  simp only [col, PiLp.inner_apply, RCLike.inner_apply]
-  rw [← this]
-  exact Finset.sum_congr rfl fun i _ => by rw [mul_comm]; rfl
+  constructor
+  · intro hV a b
+    have h := congrFun (congrFun hV.conjTranspose_mul_self a) b
+    simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply] at h
+    simp only [PiLp.inner_apply, RCLike.inner_apply, Matrix.col_apply]
+    rw [← h]
+    exact Finset.sum_congr rfl fun i _ => by rw [mul_comm]; rfl
+  · intro hV
+    ext a b
+    have h := hV a b
+    simp only [PiLp.inner_apply, RCLike.inner_apply, Matrix.col_apply] at h
+    simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply]
+    rw [← h]
+    exact Finset.sum_congr rfl fun i _ => by rw [mul_comm]; rfl
+
+/-- The Euclidean columns of a matrix with orthonormal columns are a Mathlib
+`Orthonormal` family. -/
+theorem HasOrthonormalCols.orthonormal {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {V : Matrix m ι 𝕜} (hV : HasOrthonormalCols V) :
+    Orthonormal 𝕜 (fun j => WithLp.toLp 2 (V.col j)) :=
+  (hasOrthonormalCols_iff_orthonormal V).mp hV
 
 /-- A matrix with orthonormal columns has at most as many columns as rows (general finite
 index types). Atlas `orthonormal-completion`.
@@ -348,7 +386,7 @@ theorem exists_unitary_completion [DecidableEq m] {ι : Type*} [Fintype ι] [Dec
       simp only [Set.domRestrict_apply, Function.comp_apply, this, v]
       exact e.injective.extend_apply _ _ _
     rw [h1]
-    exact (col_orthonormal V hV).comp _ (Equiv.injective _)
+    exact (hV.orthonormal).comp _ (Equiv.injective _)
   obtain ⟨b, hb⟩ := hv.exists_orthonormalBasis_extension_of_card_eq
     (by simp [finrank_euclideanSpace])
   refine ⟨Matrix.of fun i a => b a i, ?_, ?_⟩

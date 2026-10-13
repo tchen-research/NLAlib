@@ -2,12 +2,13 @@
 
 Indexed from the extracted text of an ATAP PDF supplied as the 2013 SIAM edition (its pages carry the draft date January 30, 2018). The atlas source `trefethen19` is the 2019 Extended Edition, whose Chapters 1–28 have the same chapter, theorem and exercise numbering; the Extended Edition's added chapters are not indexed. Page numbers are those of this PDF and may be off by a few pages in the 2019 print. The book has 41 numbered theorems (no lemmas, corollaries or numbered definitions; Chapters 1, 2, 13, 14, 26 and 28 state no theorem). Unnumbered definitions from the prose are labelled `Def <chapter> (<name>)`. Exercises are indexed only when they state a named classical result (orthogonality, Bernstein polynomials, Fejér, Bernstein's inequality and theorem, de la Vallée Poussin, Chebyshev monic minimality, …).
 
-Legend: ✓ in NLAlib · ◐ partially in NLAlib · M in Mathlib (not an atlas result by policy) · ○ candidate (to add) · – out of scope
+Legend: ✓ in NLAlib · ◐ partially in NLAlib · ◧ unfinished proof dependency · M in Mathlib · ○ candidate (to add) · – out of scope
 
 | status | count |
 |---|---|
 | ✓ nlalib | 8 |
 | ◐ partial | 8 |
+| ◧ scaffold | 0 |
 | M mathlib | 11 |
 | ○ candidate | 34 |
 | – out-of-scope | 27 |

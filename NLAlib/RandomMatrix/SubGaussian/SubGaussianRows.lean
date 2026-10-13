@@ -58,8 +58,17 @@ theorem measure_lt_specNorm_gram_sub_card_le_of_independent_isotropic_rows
     intro ω hω
     by_contra hnot
     simp only [Set.mem_iUnion, Set.mem_ofPred_eq, not_exists, not_lt] at hnot
+    have hunit : ∀ x ∈ N, ‖WithLp.toLp 2 x‖ = 1 := fun x hx => by
+      rw [norm_toLp_eq_sqrt_dotProduct_self, hNunit x hx, Real.sqrt_one]
+    have hnet : ∀ y : n → ℝ, ‖WithLp.toLp 2 y‖ = 1 →
+        ∃ x ∈ N, ‖WithLp.toLp 2 (x - y)‖ ≤ (1 / 4 : ℝ) := by
+      intro y hy
+      have hy' : y ⬝ᵥ y = 1 := by rw [← norm_toLp_sq_eq_dotProduct_self, hy, one_pow]
+      obtain ⟨x, hx, hxy⟩ := hNnet y hy'
+      refine ⟨x, hx, ?_⟩
+      nlinarith [norm_toLp_sq_eq_dotProduct_self (x - y)]
     have h := specNorm_le_div_of_net_quadForm (hsym ω) N
-      (by norm_num) (by norm_num) (by positivity) hNunit hNnet hnot
+      (by norm_num) (by norm_num) (by positivity) hunit hnet hnot
     have heq : (v / 2) / (1 - 2 * (1 / 4 : ℝ)) = v := by ring
     rw [heq] at h
     exact (not_lt_of_ge h) hω
@@ -78,7 +87,7 @@ theorem measure_lt_specNorm_gram_sub_card_le_of_independent_isotropic_rows
     have hYsq : ∀ i, ∫ ω, Y i ω ^ 2 ∂μ = 1 := by
       intro i
       exact hiso i x (hNunit x hx)
-    have h := measure_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF Y K hK hYind
+    have h := measureReal_le_abs_sum_sq_sub_card_of_hasSubgaussianMGF Y K hK hYind
       hYmgf hYsq (show 0 ≤ v / 2 by positivity)
     calc μ {ω | v / 2 < |quadForm (H ω) x|}
         ≤ μ {ω | v / 2 ≤ |∑ i, Y i ω ^ 2 - (Fintype.card m : ℝ)|} := by
@@ -121,7 +130,7 @@ theorem measure_extreme_singular_failure_le_of_independent_isotropic_rows
       ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hiso : ∀ i u, u ⬝ᵥ u = 1 → ∫ ω, (A i ω ⬝ᵥ u) ^ 2 ∂μ = 1)
     {t : ℝ} (ht : 0 ≤ t) :
-    μ {ω | sigmaMin (Matrix.of (fun i => A i ω)) <
+    μ {ω | singularValues (Matrix.of (fun i => A i ω)) (Fintype.card n - 1) <
         Real.sqrt (Fintype.card m : ℝ) -
           (32 * Real.exp 1 * K ^ 2 * Real.sqrt (Real.log 9) *
             Real.sqrt (Fintype.card n : ℝ) + t) ∨
@@ -208,7 +217,7 @@ theorem measure_extreme_singular_failure_le_of_independent_isotropic_rows
           rw [Real.exp_nat_mul, Real.exp_log (by norm_num)]
         rw [hp9, ← mul_assoc, mul_assoc 2, ← Real.exp_add, add_neg_cancel,
           Real.exp_zero, mul_one]
-  have hsub : {ω | sigmaMin (Matrix.of (fun i => A i ω)) <
+  have hsub : {ω | singularValues (Matrix.of (fun i => A i ω)) (Fintype.card n - 1) <
         Real.sqrt (Fintype.card m : ℝ) - D ∨
         Real.sqrt (Fintype.card m : ℝ) + D < specNorm (Matrix.of (fun i => A i ω))} ⊆
       {ω | v < specNorm ((Matrix.of (fun i => A i ω))ᵀ *
@@ -229,7 +238,9 @@ theorem measure_extreme_singular_failure_le_of_independent_isotropic_rows
       · rw [div_pow, hs2]
         field_simp
     rw [← heq] at hnot
-    obtain ⟨hlow, hhigh⟩ := sigmaMin_specNorm_bounds_of_gram_error
+    have hlow := sqrt_mul_one_sub_le_singularValues_last_of_gram_error
+      (Matrix.of (fun i => A i ω)) hN.le (div_nonneg hD hs.le) hnot
+    have hhigh := specNorm_le_sqrt_mul_one_add_of_gram_error
       (Matrix.of (fun i => A i ω)) hN.le (div_nonneg hD hs.le) hnot
     have hl : Real.sqrt (Fintype.card m : ℝ) *
         (1 - D / Real.sqrt (Fintype.card m : ℝ)) =

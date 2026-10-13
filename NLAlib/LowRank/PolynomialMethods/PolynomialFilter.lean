@@ -272,11 +272,13 @@ theorem specNorm_residual_sq_le_of_polynomial_filter_envelopes
   let S₂ : Matrix (Fin a) (Fin b) ℝ := rectDiag s₂
   let D := aeval (S₂ᵀ * S₂) p
   let Cinv := Matrix.diagonal fun i => (p.eval ((s₁ i) ^ 2))⁻¹
-  obtain ⟨hC, hCi⟩ := diagonal_filter_right_inverse_and_specNorm_le s₁ p hc hmin
+  have hC := aeval_gram_diagonal_mul_diagonal_inv_eq_one (𝕜 := ℝ) s₁ p
+    (fun i => abs_pos.mp (hc.trans_le (hmin i)))
+  have hCi := specNorm_diagonal_inv_le (𝕜 := ℝ) s₁ p hc hmin
   have htail : specNorm (S₂ * D) ≤ τ := by
     change specNorm ((rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ) *
       aeval ((rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ)ᵀ * rectDiag s₂) p) ≤ τ
-    rw [rectDiag_mul_aeval_gram]
+    rw [← Matrix.conjTranspose_eq_transpose_of_trivial, rectDiag_mul_aeval_gram]
     exact specNorm_rectDiag_le hτ hmax
   have hcore := (residual_sq_le_of_polynomial_filter hA hU₁ hU₂ hU hV₁ hV₂ hV
     p Ω R Cinv hR hC hQo hQ).1

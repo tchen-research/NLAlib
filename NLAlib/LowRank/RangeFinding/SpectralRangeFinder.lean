@@ -90,8 +90,6 @@ theorem specNorm_residual_sq_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Mat
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hU₂.conjTranspose_mul_self
   have hV₁t : V₁ᵀ * V₁ = 1 := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₁.conjTranspose_mul_self
-  have hV₂t : V₂ᵀ * V₂ = 1 := by
-    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₂.conjTranspose_mul_self
   have h2 : specNorm (A - Z) =
       specNorm (S₂ * V₂ᵀ + -(S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ)) := by
     rw [hZdef, sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit,
@@ -103,7 +101,7 @@ theorem specNorm_residual_sq_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Mat
       Matrix.mul_assoc S₂, ← Matrix.mul_assoc V₂ᵀ, hV', Matrix.zero_mul, Matrix.mul_zero, neg_zero]
   have h3 := specNorm_add_sq_le_of_mul_conjTranspose_eq_zero (X := S₂ * V₂ᵀ)
     (Y := -(S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ)) horth
-  rw [specNorm_neg, specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂t,
+  rw [specNorm_neg, specNorm_mul_transpose_right_of_hasOrthonormalCols (P := V₂) hV₂,
     specNorm_mul_transpose_right_of_hasOrthonormalCols hV₁t] at h3
   calc specNorm (projResidual Q A) ^ 2 ≤ specNorm (A - Z) ^ 2 :=
         pow_le_pow_left₀ (specNorm_nonneg _) h1 2
@@ -296,7 +294,7 @@ theorem integral_specNorm_residual_le_of_gaussian
 
 /-- **SVD right blocks with spectral tail.** For `k ≤ n` every real `A` splits as
 `A = U₁V₁ᵀ + U₂Σ₂V₂ᵀ` with `U₂`, `V₁`, `V₂` orthonormal, `V₁ᵀV₂ = 0`, `‖Σ₂‖ = σ_{k+1}` and
-`‖Σ₂‖_F² = ∑_{j>k} σ_j²` (zero-indexed `singularValues A k`, `singularValueTailSq A k`). The
+`‖Σ₂‖_F² = ∑_{j>k} σ_j²` (zero-indexed `singularValues A k`, `bestRankFrobSq A k`). The
 blocks are those of `exists_svd_right_blocks` (`U₁ = AV₁`, `U₂ = U`), with the spectral tail
 identified through `IsSVD.specNorm_sub_truncatedMatrix`. HMT 2011, §2.1 and Thm 9.1.
 Atlas `rsvd-spectral-expected` (helper; uses `svd`, `eckart-young`; belongs in
@@ -309,7 +307,7 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
       A = U₁ * (1 : Matrix (Fin k) (Fin k) ℝ) * V₁ᵀ + U₂ * S₂ * V₂ᵀ ∧
       HasOrthonormalCols U₂ ∧ HasOrthonormalCols V₁ ∧ HasOrthonormalCols V₂ ∧
       V₁ᵀ * V₂ = 0 ∧ specNorm S₂ = singularValues A k ∧
-      frobSq S₂ = singularValueTailSq A k := by
+      frobSq S₂ = bestRankFrobSq A k := by
   obtain ⟨r, rfl⟩ : ∃ r, n = k + r := ⟨n - k, by omega⟩
   obtain ⟨U, V, h⟩ := exists_isSVD A
   let V₁ : Matrix (Fin (k + r)) (Fin k) ℝ := V.submatrix id (Fin.castAdd r)
@@ -376,13 +374,11 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
     calc U * S₂ * V₂ᵀ = U * T * Vᵀ := by rw [Matrix.mul_assoc, hST, ← Matrix.mul_assoc]
       _ = (h.truncatedMatrix k + U * T * Vᵀ) - h.truncatedMatrix k := by abel
       _ = A - h.truncatedMatrix k := by rw [← hsplit]
-  have hV₂t : V₂ᵀ * V₂ = 1 := by
-    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₂.conjTranspose_mul_self
   have hspec : specNorm S₂ = singularValues A k := by
     rw [← h.specNorm_sub_truncatedMatrix k, ← htail,
-      specNorm_mul_transpose_right_of_hasOrthonormalCols hV₂t,
+      specNorm_mul_transpose_right_of_hasOrthonormalCols (P := V₂) hV₂,
       specNorm_mul_left_of_hasOrthonormalCols (P := U) h.conjTranspose_mul_left]
-  have hfrob : frobSq S₂ = singularValueTailSq A k := by
+  have hfrob : frobSq S₂ = bestRankFrobSq A k := by
     rw [← h.frobSq_sub_truncatedMatrix k, ← htail,
       ← Matrix.conjTranspose_eq_transpose_of_trivial V₂,
       frobSq_mul_right_of_orthonormal hV₂.conjTranspose_mul_self,
@@ -393,7 +389,7 @@ theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n)
 (HMT 2011, Thm 10.6): for `A ∈ ℝ^{m×n}`, `k ≥ 1`, `p ≥ 2`, `k ≤ n`, an `n × (k+p)` standard Gaussian
 `Ω` and any `Q ω` with a.s. orthonormal columns and `range(AΩ) ⊆ range(Q)`,
 `E‖(I − QQᵀ)A‖ ≤ (1 + √(k/(p−1)))σ_{k+1} + (e√(k+p)/p)(Σ_{j>k} σ_j²)^{1/2}`
-(zero-indexed: `singularValues A k`, `singularValueTailSq A k`).
+(zero-indexed: `singularValues A k`, `bestRankFrobSq A k`).
 Deviations: `k ≥ 1` (HMT: `k ≥ 2`; manuscript `sa:expected-power`, one-row endpoint); `Q` is
 any a.s. orthonormal frame containing `range(AΩ)` (HMT: `Q = orth(AΩ)`),
 no measurability of `Q` required; `k ≤ n` is assumed (for `k > n` the error is `0` a.s.).
@@ -408,7 +404,7 @@ theorem integral_specNorm_residual_le_singularValues_of_gaussian
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω) :
     ∫ ω, specNorm (projResidual (Q ω) A) ∂μ ≤
       (1 + Real.sqrt (k / ((p : ℝ) - 1))) * singularValues A k +
-        Real.exp 1 * Real.sqrt (k + p) / p * Real.sqrt (singularValueTailSq A k) := by
+        Real.exp 1 * Real.sqrt (k + p) / p * Real.sqrt (bestRankFrobSq A k) := by
   obtain ⟨r, U₁, U₂, V₁, V₂, S₂, hA, hU₂, hV₁, hV₂, hV, hspec, hfrob⟩ :=
     exists_svd_right_blocks_specNorm A k hkn
   have h := integral_specNorm_residual_le_of_gaussian hA hU₂ hV₁ hV₂ hV hk hp Ω hΩ Q hQo hQr
@@ -427,7 +423,7 @@ theorem integral_specNorm_residual_gaussianRangeFrame_le
     (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin (k + p))) μ) :
     ∫ ω, specNorm (projResidual (gaussianRangeFrame A (k + p) (Ω ω)) A) ∂μ ≤
       (1 + Real.sqrt (k / ((p : ℝ) - 1))) * singularValues A k +
-        Real.exp 1 * Real.sqrt (k + p) / p * Real.sqrt (singularValueTailSq A k) :=
+        Real.exp 1 * Real.sqrt (k + p) / p * Real.sqrt (bestRankFrobSq A k) :=
   integral_specNorm_residual_le_singularValues_of_gaussian A hk hp hkn Ω hΩ _
     (ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw A Ω hΩ)
     (ae_project_gaussianRangeFrame_of_hasLaw A Ω hΩ)

@@ -103,7 +103,7 @@ theorem exists_orthogonal_real_orthogonal_normal_form {n : Type*}
       _ = T := by rw [(show Qᵀ * Q = 1 from hQ), Matrix.one_mul, Matrix.mul_one]
   have hT : HasOrthonormalCols T := by
     rw [← hconj]
-    exact (hQ.transpose.mul hA).mul hQ
+    exact ((show HasOrthonormalCols Q from hQ).conjTranspose.mul hA).mul hQ
   have hTe : HasOrthonormalCols (T.submatrix order order) := by
     change Tᵀ.submatrix order order * T.submatrix order order = 1
     rw [Matrix.submatrix_mul_equiv, (show Tᵀ * T = 1 from hT)]

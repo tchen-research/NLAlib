@@ -39,7 +39,9 @@ theorem integrable_and_integral_rpow_inv_self_mul_transpose_apply_self_gaussianM
   have hS : Measurable (fun x : Fin (k - r + 1) → ℝ => (∑ j, x j ^ 2)⁻¹) := by
     fun_prop
   have hφ : Measurable (fun s : ℝ => s ^ q) := by fun_prop
-  obtain ⟨hint, hval⟩ := integrable_and_integral_rpow_inv_sum_sq_gaussianReal
+  have hint := integrable_rpow_inv_sum_sq_gaussianVector
+    (d := k - r + 1) q hq (by simpa [hdcast] using hqd)
+  have hval := integral_rpow_inv_sum_sq_gaussianVector
     (d := k - r + 1) q hq (by simpa [hdcast] using hqd)
   constructor
   · have h := (integrable_map_measure hφ.aestronglyMeasurable hS.aemeasurable).mpr hint
@@ -176,7 +178,9 @@ theorem lintegral_rpow_sq_dotProduct_unit_pi_gaussianReal {r : ℕ}
   have hm : Measurable (fun z : Fin r → ℝ => v ⬝ᵥ z) := by
     unfold dotProduct
     fun_prop
-  rw [← lintegral_map hφ hm, pi_gaussianReal_map_dotProduct_unit v hv]
+  have hvnorm : ‖WithLp.toLp 2 v‖ = 1 := by
+    rw [norm_toLp_eq_sqrt_dotProduct_self, hv, Real.sqrt_one]
+  rw [← lintegral_map hφ hm, (hasLaw_dotProduct_gaussianVector v hvnorm).map_eq]
   have hint := (memLp_id_gaussianReal' (μ := 0) (v := 1)
     (ENNReal.ofReal (2 * q)) ENNReal.ofReal_ne_top).integrable_norm_rpow'
   rw [ENNReal.toReal_ofReal (by positivity : 0 ≤ 2 * q)] at hint
@@ -239,12 +243,12 @@ theorem lintegral_lintegral_rpow_dotProduct_inv_self_mul_transpose_gaussianMatri
   change (∫⁻ v : Fin r → ℝ, (∫⁻ G : Matrix (Fin r) (Fin k) ℝ,
     ENNReal.ofReal (v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v)) ^ q ∂μ) ∂ν) = _
   simp_rw [hinner]
-  have hint := (integrable_rpow_sum_sq_pi_gaussianReal r q hq.le).mul_const a
+  have hint := (integrable_rpow_sum_sq_gaussianVector r q hq.le).mul_const a
   simp_rw [dotProduct, ← sq]
   rw [← ofReal_integral_eq_lintegral_ofReal hint
     (ae_of_all _ fun v => mul_nonneg
       (Real.rpow_nonneg (Finset.sum_nonneg fun _ _ => sq_nonneg _) _) ha0),
-    integral_mul_const, integral_rpow_sum_sq_pi_gaussianReal r hr q hq.le]
+    integral_mul_const, integral_rpow_sum_sq_gaussianVector r hr q hq.le]
 
 /-- A Gaussian quadratic probe detects the spectral norm of a fixed positive semidefinite
 matrix at every nonnegative real exponent. Source: direct operator-probe route;

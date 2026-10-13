@@ -21,6 +21,9 @@ The file holds the definition and its unfolding-level API:
   product measure on `m → n → ℝ` to `gaussianMatrix m n`; `integral_gaussianMatrix_eq`,
   `integrable_gaussianMatrix_iff`: integrals and integrability move to the product measure;
 * `measurePreserving_gaussianMatrix_entry`, `memLp_gaussianMatrix_entry`: each entry is `N(0,1)`;
+* `hasLaw_gaussianMatrix_of_iIndepFun`: jointly independent standard Gaussian entries
+  construct the matrix law, and `HasLaw.hasLaw_entry_gaussianReal` /
+  `HasLaw.iIndepFun_entry_of_gaussianMatrix` project it back to entries;
 * `iIndepFun_gaussianMatrix_entry`: the entries are independent;
   `measurePreserving_gaussianMatrix_row`, `iIndepFun_gaussianMatrix_row`: the rows are independent
   standard Gaussian vectors;
@@ -31,7 +34,7 @@ The file holds the definition and its unfolding-level API:
   `gaussianMatrix_eq_map_curry`: flattening gives the product measure on `m × n → ℝ`, and
   conversely;
 * the instance `isGaussian_gaussianMatrix` and `hasGaussianLaw_id_gaussianMatrix`: the law is a
-  Gaussian measure (from `hasGaussianLaw_id_pi_gaussianReal`,
+  Gaussian measure (from `hasGaussianLaw_id_gaussianVector`,
   `NLAlib.Probability.Gaussian.Basic.StandardVector`);
 * `linForm c G = ∑ᵢⱼ cᵢⱼ Gᵢⱼ`, the linear forms of a Gaussian matrix, with `linForm_eq_frobInner`
   and `continuous_linForm`;
@@ -175,6 +178,40 @@ theorem iIndepFun_gaussianMatrix_entry :
   funext ab
   exact (measurePreserving_gaussianMatrix_entry ab.1 ab.2).map_eq.symm
 
+/-- Jointly independent standard Gaussian entries give the standard Gaussian matrix law.
+Source: Vershynin (2018), Section 4.4, independent-entry Gaussian matrices. -/
+theorem hasLaw_gaussianMatrix_of_iIndepFun {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {X : Ω → Matrix m n ℝ}
+    (hx : ∀ ab : m × n, HasLaw (fun ω => X ω ab.1 ab.2) (gaussianReal 0 1) μ)
+    (hind : iIndepFun (fun (ab : m × n) ω => X ω ab.1 ab.2) μ) :
+    HasLaw X (gaussianMatrix m n) μ := by
+  have hf := hasLaw_gaussianVector_of_iIndepFun hx hind
+  have hc : HasLaw ((MeasurableEquiv.curry m n ℝ).trans Matrix.ofMeasurableEquiv)
+      (gaussianMatrix m n) (gaussianVector (m × n)) :=
+    ⟨((MeasurableEquiv.curry m n ℝ).trans Matrix.ofMeasurableEquiv).measurable.aemeasurable,
+      gaussianMatrix_eq_map_curry.symm⟩
+  exact hc.comp hf
+
+/-- Each entry of a matrix with the standard Gaussian law is standard Gaussian. -/
+theorem _root_.ProbabilityTheory.HasLaw.hasLaw_entry_gaussianReal
+    {Ω m n : Type*} [MeasurableSpace Ω] [Fintype m] [Fintype n]
+    {μ : Measure Ω} {X : Ω → Matrix m n ℝ}
+    (hX : HasLaw X (gaussianMatrix m n) μ) (i : m) (j : n) :
+    HasLaw (fun ω => X ω i j) (gaussianReal 0 1) μ :=
+  (measurePreserving_gaussianMatrix_entry i j).hasLaw.comp hX
+
+/-- Entries of a matrix with the standard Gaussian law are jointly independent. -/
+theorem _root_.ProbabilityTheory.HasLaw.iIndepFun_entry_of_gaussianMatrix
+    {Ω m n : Type*} [MeasurableSpace Ω] [Fintype m] [Fintype n]
+    {μ : Measure Ω} {X : Ω → Matrix m n ℝ}
+    (hX : HasLaw X (gaussianMatrix m n) μ) :
+    iIndepFun (fun (ab : m × n) ω => X ω ab.1 ab.2) μ := by
+  have hf : HasLaw (fun G : Matrix m n ℝ => fun ab : m × n => G ab.1 ab.2)
+      (gaussianVector (m × n)) (gaussianMatrix m n) :=
+    ⟨(measurable_pi_lambda _ fun (ab : m × n) => Matrix.measurable_entry ab.1 ab.2).aemeasurable,
+      gaussianMatrix_map_uncurry⟩
+  exact (hf.comp hX).iIndepFun_eval_of_gaussianVector
+
 /-! ### Moments of the entries -/
 
 /-- `𝔼 f(Gᵢⱼ) = ∫ f dN(0,1)` for measurable `f`. Ported from Prove2me solution
@@ -237,7 +274,7 @@ instance isGaussian_gaussianMatrix (m n : Type*) [Fintype m] [Fintype n] :
     (X := fun i (G : m → n → ℝ) => G i) (fun i => ⟨by
       rw [(measurePreserving_eval
         (fun _ : m => Measure.pi fun _ : n => gaussianReal (0 : ℝ) 1) i).map_eq]
-      have := (hasGaussianLaw_id_pi_gaussianReal n).isGaussian_map
+      have := (hasGaussianLaw_id_gaussianVector n).isGaussian_map
       rwa [Measure.map_id'] at this⟩)
     (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
   have hpi := h.isGaussian_map

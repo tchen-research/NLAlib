@@ -2,6 +2,7 @@ import NLAlib.Sketching.Sparse.FiniteLaw.BinaryProduct
 import NLAlib.Sketching.Sparse.FiniteLaw.Expectation
 import NLAlib.Sketching.Sparse.FiniteLaw.IndependentProduct
 import NLAlib.Sketching.Sparse.FiniteLaw.LocalMoments
+import NLAlib.Sketching.Sparse.FiniteLaw.Marginals
 import NLAlib.Sketching.Sparse.FiniteLaw.ToMeasure
 import NLAlib.Sketching.Sparse.FiniteLaw.Uniform
 

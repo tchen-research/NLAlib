@@ -173,7 +173,7 @@ theorem exists_orthonormal_ker_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) 
   refine ⟨V, ?_, fun j => hbK j, ?_⟩
   · ext j j'
     have h1 : (Vᵀ * V) j j' = inner ℝ ((b j : K) : E) ((b j' : K) : E) := by
-      rw [inner_eq_dotProduct_ofLp]; simp [hV, Matrix.mul_apply, dotProduct]
+      rw [inner_eq_star_dotProduct_ofLp, star_trivial]; simp [hV, Matrix.mul_apply, dotProduct]
     rw [h1, ← Submodule.coe_inner, orthonormal_iff_ite.mp b.orthonormal, Matrix.one_apply]
   · intro g
     set M := H * Hᵀ with hM
@@ -205,9 +205,9 @@ theorem exists_orthonormal_ker_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) 
     rw [hq]
     simp_rw [hcoord]
     have hrr : inner ℝ rK rK = r ⬝ᵥ r := by
-      rw [Submodule.coe_inner, inner_eq_dotProduct_ofLp]
+      rw [Submodule.coe_inner, inner_eq_star_dotProduct_ofLp, star_trivial]
     have hbj : ∀ j, inner ℝ (b j) rK = ((b j : K) : E).ofLp ⬝ᵥ r := by
-      intro j; rw [Submodule.coe_inner, inner_eq_dotProduct_ofLp]
+      intro j; rw [Submodule.coe_inner, inner_eq_star_dotProduct_ofLp, star_trivial]
     rw [← hrr, ← hpars]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [real_inner_comm, hbj, sq]
@@ -248,16 +248,16 @@ theorem indepFun_mulVec_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) (Fin k)
     have h1 := covariance_map_fun (μ := P) (X := fun x : E => ⟪hrow a, x⟫)
       (Y := fun x : E => ⟪vcol j, x⟫) (by fun_prop) (by fun_prop) hm.aemeasurable
     rw [← h1, hP, map_pi_eq_stdGaussian, ← covarianceBilin_apply_eq_cov IsGaussian.memLp_two_id,
-      covarianceBilin_stdGaussian, innerSL_apply_apply, inner_eq_dotProduct_ofLp]
+      covarianceBilin_stdGaussian, innerSL_apply_apply, inner_eq_star_dotProduct_ofLp, star_trivial]
     have := congrFun (hHV j) a
     simpa [hhrow, hvcol, Matrix.mulVec, dotProduct] using this
   have hind := hpair.indepFun_of_covariance_eval hcov
   have h1 : (fun g : Fin k → ℝ => fun a => ⟪hrow a, WithLp.toLp 2 g⟫) = fun g => H *ᵥ g := by
     funext g a
-    rw [inner_eq_dotProduct_ofLp]; rfl
+    rw [inner_eq_star_dotProduct_ofLp, star_trivial]; rfl
   have h2 : (fun g : Fin k → ℝ => fun j => ⟪vcol j, WithLp.toLp 2 g⟫) = fun g => Vᵀ *ᵥ g := by
     funext g j
-    rw [inner_eq_dotProduct_ofLp]; rfl
+    rw [inner_eq_star_dotProduct_ofLp, star_trivial]; rfl
   rw [h1, h2] at hind
   have hS : Measurable (fun y : Fin (k - n) → ℝ => ∑ j, y j ^ 2) := by fun_prop
   have := hind.comp measurable_id hS

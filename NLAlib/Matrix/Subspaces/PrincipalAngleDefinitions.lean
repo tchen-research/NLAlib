@@ -14,41 +14,40 @@ open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 
-variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
+variable {𝕜 : Type*} [RCLike 𝕜] {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
-/-- The **principal angles** `θ_i = arccos σ_i(PᵀQ)` between `range P` and `range Q` (frames of
+/-- The **principal angles** `θ_i = arccos σ_i(PᴴQ)` between `range P` and `range Q` (frames of
 the same width): arccosines of the overlap singular values in descending order, so the angles
-are nondecreasing in `i` (`principalAngles_monotone`); row and column labels are temporarily
-normalized to `Fin`. Stewart–Sun §I.5 (Def I.5.3); Golub–Van Loan 2013, §6.4.3. For frames of
-unequal widths the largest angle is reached through `sinThetaMax` and
-`sinThetaMax_eq_sqrt_one_sub_sq_singularValues`.
+are nondecreasing in `i` (`principalAngles_monotone`). Both real and complex
+frames use this shared definition; only the ordered angle positions are indexed by `Fin`. Stewart–Sun §I.5 (Def I.5.3); Golub–Van Loan 2013, §6.4.3. For unequal widths, `directedSubspaceGap` measures a directed residual; it
+is not a symmetric principal-angle list.
 atlas: principal-angles-def (partial) -/
-def principalAnglesFintype (P Q : Matrix m n ℝ) : Fin (Fintype.card n) → ℝ :=
-  fun i => Real.arccos (singularValues
-    ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i)
+def principalAnglesFintype
+    (P Q : Matrix m n 𝕜) : Fin (Fintype.card n) → ℝ :=
+  fun i => Real.arccos (singularValues (Pᴴ * Q) i)
 
 /-- The diagonal sine matrix of the principal angles. Stewart–Sun §I.5;
 the matrix is empty when the frames have no columns.
 atlas: principal-angles-def (partial) -/
-def sinePrincipalAngles (P Q : Matrix m n ℝ) :
+def sinePrincipalAngles (P Q : Matrix m n 𝕜) :
     Matrix (Fin (Fintype.card n)) (Fin (Fintype.card n)) ℝ :=
   Matrix.diagonal (fun i => Real.sin (principalAnglesFintype P Q i))
 
 /-- Overlap singular values lie between zero and one for orthonormal
 frames. Stewart–Sun §I.5, since both frame maps are contractions. -/
-theorem overlap_singularValues_mem_Icc {P Q : Matrix m n ℝ}
+theorem overlap_singularValues_mem_Icc {P Q : Matrix m n 𝕜}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) (i : ℕ) :
-    singularValues ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i ∈
+    singularValues ((Pᴴ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i ∈
       Set.Icc (0 : ℝ) 1 := by
   constructor
   · exact singularValues_nonneg _ _
   · have hh := singularValues_le_specNorm
-      ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i
+      ((Pᴴ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i
     rw [specNorm_reindex] at hh
     have hp := specNorm_le_one_of_orthonormal hP
     have hq := specNorm_le_one_of_orthonormal hQ
-    have hm := specNorm_mul_le Pᵀ Q
-    rw [specNorm_transpose] at hm
+    have hm := specNorm_mul_le Pᴴ Q
+    rw [specNorm_conjTranspose] at hm
     have hb : specNorm P * specNorm Q ≤ 1 := by
       calc
         _ ≤ 1*specNorm Q := mul_le_mul_of_nonneg_right hp (specNorm_nonneg _)
@@ -57,37 +56,44 @@ theorem overlap_singularValues_mem_Icc {P Q : Matrix m n ℝ}
 
 /-- Every principal angle lies between zero and `π/2`. Stewart–Sun §I.5.
 atlas: principal-angles-def (partial) -/
-theorem principalAngles_mem_Icc {P Q : Matrix m n ℝ}
+theorem principalAngles_mem_Icc {P Q : Matrix m n 𝕜}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) (i : Fin (Fintype.card n)) :
     principalAnglesFintype P Q i ∈ Set.Icc (0 : ℝ) (Real.pi/2) :=
-  ⟨Real.arccos_nonneg _, Real.arccos_le_pi_div_two.mpr (overlap_singularValues_mem_Icc hP hQ i).1⟩
+  by
+    constructor
+    · exact Real.arccos_nonneg _
+    · apply Real.arccos_le_pi_div_two.mpr
+      simpa only [singularValues_reindex] using (overlap_singularValues_mem_Icc hP hQ i).1
 
-omit [DecidableEq m] [DecidableEq n] in
+omit [DecidableEq m] in
 /-- Principal angles increase because overlap singular values decrease.
 Stewart–Sun §I.5.
 atlas: principal-angles-def (partial) -/
-theorem principalAngles_monotone (P Q : Matrix m n ℝ) : Monotone (principalAnglesFintype P Q) := by
+theorem principalAngles_monotone (P Q : Matrix m n 𝕜) : Monotone (principalAnglesFintype P Q) := by
   intro i j hij
   exact Real.antitone_arccos (singularValues_antitone _ hij)
 
 /-- The cosine of a principal angle is its overlap singular value.
 Stewart–Sun §I.5.
 atlas: principal-angles-def (partial) -/
-theorem cos_principalAngles {P Q : Matrix m n ℝ}
+theorem cos_principalAngles {P Q : Matrix m n 𝕜}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) (i : Fin (Fintype.card n)) :
     Real.cos (principalAnglesFintype P Q i) =
-      singularValues ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i := by
+      singularValues ((Pᴴ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i := by
   have hh := overlap_singularValues_mem_Icc hP hQ i
-  exact Real.cos_arccos (by linarith [hh.1]) hh.2
+  simpa only [principalAnglesFintype, singularValues_reindex] using
+    Real.cos_arccos (by linarith [hh.1]) hh.2
 
-omit [DecidableEq m] [DecidableEq n] in
+omit [DecidableEq m] in
 /-- The sine is the nonnegative square root of one minus the cosine square.
 Stewart–Sun §I.5. -/
-theorem sin_principalAngles (P Q : Matrix m n ℝ) (i : Fin (Fintype.card n)) :
+theorem sin_principalAngles (P Q : Matrix m n 𝕜) (i : Fin (Fintype.card n)) :
     Real.sin (principalAnglesFintype P Q i) =
       Real.sqrt (1-singularValues
-        ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i ^ 2) :=
-  Real.sin_arccos _
+        ((Pᴴ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i ^ 2) :=
+  by
+    simpa only [principalAnglesFintype, singularValues_reindex] using
+      Real.sin_arccos (singularValues (Pᴴ * Q) i)
 
 /-- The principal-angle sine Gram is the diagonal overlap Gram defect.
 Stewart–Sun §I.5. -/
@@ -99,8 +105,9 @@ theorem transpose_sinePrincipalAngles_mul_self {P Q : Matrix m n ℝ}
   rw [sinePrincipalAngles, Matrix.diagonal_transpose, Matrix.diagonal_mul_diagonal]
   apply congrArg Matrix.diagonal
   funext i
-  rw [← sq, sin_principalAngles, Real.sq_sqrt]
+  rw [← sq, sin_principalAngles, Matrix.conjTranspose_eq_transpose_of_trivial, Real.sq_sqrt]
   have hh := overlap_singularValues_mem_Icc hP hQ i
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hh
   nlinarith [hh.1, hh.2]
 
 /-- The residual operator norm equals the norm of the genuine sine-angle
@@ -114,7 +121,9 @@ theorem specNorm_sinePrincipalAngles_eq_residual {P Q : Matrix m n ℝ}
   rw [transpose_sinePrincipalAngles_mul_self hP hQ] at hs
   simp only [specNorm_eq_norm, Matrix.l2_opNorm_diagonal] at hs
   have hr := specNorm_sq_eq_specNorm_transpose_mul_self (projResidual P Q)
-  rw [transpose_residual_mul_residual_eq_one_sub_overlap hP hQ] at hr
+  have hGram := conjTranspose_residual_mul_residual_eq_one_sub_overlap hP hQ
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hGram
+  rw [hGram] at hr
   have hc := specNorm_gram_sub_one_eq_norm_singularValues_sq_sub_one C
   have heq : Cᵀ*C-1 = ((Pᵀ*Q)ᵀ*(Pᵀ*Q)-1).reindex
       (Fintype.equivFin n) (Fintype.equivFin n) := by
@@ -164,6 +173,7 @@ atlas: principal-angles-def (partial) -/
 theorem specNorm_sinePrincipalAngles_eq_projector_distance {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     specNorm (sinePrincipalAngles P Q) = specNorm (P*Pᵀ-Q*Qᵀ) := by
+  change specNorm (sinePrincipalAngles P Q) = specNorm (P * Pᴴ - Q * Qᴴ)
   rw [specNorm_sinePrincipalAngles_eq_residual hP hQ,
     specNorm_sub_frame_projector_eq_residual hP hQ]
 
@@ -173,21 +183,21 @@ atlas: principal-angles-def (partial) -/
 theorem frobSq_projector_distance_eq_two_mul_sinePrincipalAngles {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     frobSq (P*Pᵀ-Q*Qᵀ) = 2*frobSq (sinePrincipalAngles P Q) := by
+  change frobSq (P * Pᴴ - Q * Qᴴ) = 2 * frobSq (sinePrincipalAngles P Q)
   rw [frobSq_sub_frame_projector_eq_two_mul_residual hP hQ,
     frobSq_residual_eq_sub hP, Matrix.conjTranspose_eq_transpose_of_trivial,
     frobSq_sinePrincipalAngles_eq_card_sub_overlap hP hQ,
     frobSq_frame_eq_card hQ]
 
-omit [DecidableEq m] [DecidableEq n] in
+omit [DecidableEq m] in
 /-- Principal angles are symmetric under exchanging frames. Stewart–Sun §I.5.
 atlas: principal-angles-def (partial) -/
-theorem principalAngles_comm (P Q : Matrix m n ℝ) : principalAnglesFintype P Q = principalAnglesFintype Q P := by
-  have heq : ((Qᵀ*P).reindex (Fintype.equivFin n) (Fintype.equivFin n)) =
-      ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n))ᵀ := by
-    simp only [Matrix.reindex_apply, Matrix.transpose_submatrix,
-      Matrix.transpose_mul, Matrix.transpose_transpose]
+theorem principalAngles_comm {𝕜 : Type*} [RCLike 𝕜]
+    (P Q : Matrix m n 𝕜) : principalAnglesFintype P Q = principalAnglesFintype Q P := by
   funext i
-  simp only [principalAnglesFintype, heq, singularValues_transpose]
+  simp only [principalAnglesFintype]
+  rw [← singularValues_conjTranspose (Pᴴ * Q), Matrix.conjTranspose_mul,
+    Matrix.conjTranspose_conjTranspose]
 
 omit [DecidableEq n] in
 /-- Completeness expresses a residual through orthonormal complementary

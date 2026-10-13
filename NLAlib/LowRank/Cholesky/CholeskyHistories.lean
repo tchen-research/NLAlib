@@ -1,10 +1,14 @@
+import Mathlib.Probability.ProbabilityMassFunction.Integrals
+import Mathlib.Probability.HasLaw
 import NLAlib.LowRank.Cholesky.CholeskyPivot
 import NLAlib.LowRank.Cholesky.PartialCholesky
 
 /-!
 # Finite adaptive Cholesky histories
 
-Every finite-time RPCholesky expectation is a finite weighted sum over pivot
+`choleskyHistoryLaw` is the canonical adaptive law;
+`integral_trace_choleskyHistoryLaw` computes its trace expectation.
+The finite weighted formula sums over pivot
 histories `h : Fin t → n`, whose residuals are `partialCholeskyResidual A h`. The transition
 identity supplies conditional averaging without regular conditional probabilities or a random
 eigenbasis.
@@ -12,6 +16,7 @@ Source: manuscript `sa:rpcholesky`; CETW (2025).
 -/
 
 noncomputable section
+open MeasureTheory
 open scoped Matrix
 namespace NLAlib
 
@@ -49,12 +54,12 @@ theorem sum_choleskyHistoryWeight_mul_succ (A : Matrix n n ℝ) (t : ℕ)
       f (partialCholeskyResidual A h)) =
       ∑ h : Fin t → n, choleskyHistoryWeight A t h *
         ∑ i : n, choleskyPivotProbability (partialCholeskyResidual A h) i *
-          f (choleskyStep (partialCholeskyResidual A h) i) := by
+          f (eliminationStep (partialCholeskyResidual A h) i) := by
   calc (∑ h : Fin (t + 1) → n, choleskyHistoryWeight A (t + 1) h *
       f (partialCholeskyResidual A h)) =
       ∑ z : n × (Fin t → n), choleskyHistoryWeight A t z.2 *
         choleskyPivotProbability (partialCholeskyResidual A z.2) z.1 *
-          f (choleskyStep (partialCholeskyResidual A z.2) z.1) :=
+          f (eliminationStep (partialCholeskyResidual A z.2) z.1) :=
       Fintype.sum_equiv (Fin.snocEquiv (fun _ : Fin (t + 1) => n)).symm _ _ (fun _ => rfl)
     _ = _ := by
       rw [Fintype.sum_prod_type_right]
@@ -101,13 +106,13 @@ theorem choleskyExpectedTrace_antitone [Nonempty n] {A : Matrix n n ℝ}
   let R := partialCholeskyResidual A h
   have hR : R.PosSemidef := posSemidef_partialCholeskyResidual hA h
   calc
-    (∑ i, choleskyPivotProbability R i * (choleskyStep R i).trace) ≤
+    (∑ i, choleskyPivotProbability R i * (eliminationStep R i).trace) ≤
         ∑ i, choleskyPivotProbability R i * R.trace := by
       apply Finset.sum_le_sum
       intro i _
       apply mul_le_mul_of_nonneg_left _ (choleskyPivotProbability_nonneg hR i)
-      have hn : 0 ≤ (R - choleskyStep R i).trace :=
-        Finset.sum_nonneg fun j _ => (posSemidef_sub_choleskyStep hR i).diag_nonneg
+      have hn : 0 ≤ (R - eliminationStep R i).trace :=
+        Finset.sum_nonneg fun j _ => (Matrix.le_iff.mp (eliminationStep_le hR i)).diag_nonneg
       rw [Matrix.trace_sub] at hn
       linarith
     _ = R.trace := by rw [← Finset.sum_mul, sum_choleskyPivotProbability, one_mul]
@@ -124,8 +129,9 @@ theorem choleskyExpectedTrace_succ_eq [Nonempty n] {A : Matrix n n ℝ}
   rw [choleskyExpectedTrace, sum_choleskyHistoryWeight_mul_succ]
   apply Finset.sum_congr rfl
   intro h _
-  rw [sum_choleskyPivotProbability_mul_trace_step_eq
-    (posSemidef_partialCholeskyResidual hA h)]
+  exact congrArg (fun x => choleskyHistoryWeight A t h * x)
+    (sum_choleskyPivotProbability_mul_re_trace_eliminationStep_eq
+      (posSemidef_partialCholeskyResidual hA h))
 
 /-- Every positive-probability adaptive history has exhausted one residual rank per
 nonzero pivot. Source: manuscript `sa:rp-rank`; CETW (2025), exact-rank exhaustion.
@@ -156,18 +162,18 @@ theorem rank_partialCholeskyResidual_le_sub {A : Matrix n n ℝ} (hA : A.PosSemi
       linarith
     have hprev := ih (Fin.init h) hW
     by_cases hz : R = 0
-    · change (choleskyStep R _).rank ≤ _
-      rw [hz, choleskyStep_zero, Matrix.rank_zero]
+    · change (eliminationStep R _).rank ≤ _
+      rw [hz, eliminationStep_zero, Matrix.rank_zero]
       exact Nat.zero_le _
     · have htr : R.trace ≠ 0 := by
         intro hzero
         exact hz (hR.trace_eq_zero_iff.mp hzero)
       have hdiag : R (h (Fin.last t)) (h (Fin.last t)) ≠ 0 := by
         intro hzero
-        simp only [choleskyPivotProbability, if_neg htr, hzero, zero_div] at hP
+        simp only [choleskyPivotProbability, RCLike.re_to_real, if_neg htr, hzero, zero_div] at hP
         linarith
-      have hdrop := rank_choleskyStep_lt hdiag
-      change (choleskyStep R _).rank ≤ _
+      have hdrop := rank_eliminationStep_lt hdiag
+      change (eliminationStep R _).rank ≤ _
       change R.rank ≤ A.rank - t at hprev
       omega
 
@@ -194,5 +200,75 @@ theorem choleskyExpectedTrace_eq_zero_of_rank_le {A : Matrix n n ℝ} (hA : A.Po
   · have hp : 0 < choleskyHistoryWeight A t h :=
       (choleskyHistoryWeight_nonneg hA t h).lt_of_ne (Ne.symm hw)
     rw [partialCholeskyResidual_eq_zero_of_rank_le hA ht h hp, Matrix.trace_zero, mul_zero]
+
+/-- The probability mass function of the adaptive pivot history.
+Source: CETW (2025), RPCholesky pivot rule. -/
+def choleskyHistoryPMF [Nonempty n] (A : Matrix n n ℝ) (hA : A.PosSemidef)
+    (t : ℕ) : PMF (Fin t → n) := by
+  classical
+  refine PMF.ofFintype (fun h => ENNReal.ofReal (choleskyHistoryWeight A t h)) ?_
+  rw [← ENNReal.ofReal_sum_of_nonneg (fun h _ => choleskyHistoryWeight_nonneg hA t h),
+    sum_choleskyHistoryWeight A t]
+  simp
+
+/-- The measure of adaptive pivot histories, including absorbed zero residuals.
+Source: CETW (2025), RPCholesky pivot rule. -/
+def choleskyHistoryLaw [Nonempty n] [MeasurableSpace n] [MeasurableSingletonClass n]
+    (A : Matrix n n ℝ) (hA : A.PosSemidef) (t : ℕ) :
+    MeasureTheory.Measure (Fin t → n) := (choleskyHistoryPMF A hA t).toMeasure
+
+/-- The adaptive history law is a probability measure. -/
+instance choleskyHistoryLaw_isProbabilityMeasure [Nonempty n]
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    (A : Matrix n n ℝ) (hA : A.PosSemidef) (t : ℕ) :
+    MeasureTheory.IsProbabilityMeasure (choleskyHistoryLaw A hA t) := by
+  unfold choleskyHistoryLaw
+  infer_instance
+
+/-- Integration over adaptive histories is their transition-weighted sum.
+Source: CETW (2025), finite conditional averaging. -/
+theorem integral_choleskyHistoryLaw [Nonempty n]
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    (A : Matrix n n ℝ) (hA : A.PosSemidef) (t : ℕ) (f : (Fin t → n) → ℝ) :
+    (∫ h, f h ∂choleskyHistoryLaw A hA t) =
+      ∑ h, choleskyHistoryWeight A t h * f h := by
+  classical
+  rw [choleskyHistoryLaw, PMF.integral_eq_sum]
+  apply Finset.sum_congr rfl
+  intro h _
+  change (ENNReal.ofReal (choleskyHistoryWeight A t h)).toReal • f h = _
+  rw [ENNReal.toReal_ofReal (choleskyHistoryWeight_nonneg hA t h)]
+  rfl
+
+/-- The weighted trace formula computes the residual-trace expectation.
+Source: CETW (2025), RPCholesky trace potential. -/
+theorem integral_trace_choleskyHistoryLaw [Nonempty n]
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    (A : Matrix n n ℝ) (hA : A.PosSemidef) (t : ℕ) :
+    (∫ h, (partialCholeskyResidual A h).trace ∂choleskyHistoryLaw A hA t) =
+      choleskyExpectedTrace A t := integral_choleskyHistoryLaw A hA t _
+
+/-- A random history with the adaptive law has the same trace expectation.
+Source: CETW (2025), RPCholesky trace potential. -/
+theorem integral_trace_choleskyHistoryLaw_of_hasLaw [Nonempty n]
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    {Ω : Type*} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}
+    (A : Matrix n n ℝ) (hA : A.PosSemidef) (t : ℕ) {H : Ω → Fin t → n}
+    (hH : ProbabilityTheory.HasLaw H (choleskyHistoryLaw A hA t) μ) :
+    (∫ ω, (partialCholeskyResidual A (H ω)).trace ∂μ) =
+      choleskyExpectedTrace A t := by
+  rw [← integral_trace_choleskyHistoryLaw A hA t]
+  exact hH.integral_comp (Measurable.aestronglyMeasurable (measurable_of_finite (fun h : Fin t → n => (partialCholeskyResidual A h).trace)))
+
+/-- Each adaptive history has its product of conditional pivot probabilities as mass.
+Source: CETW (2025), RPCholesky pivot rule. -/
+theorem choleskyHistoryLaw_singleton [Nonempty n]
+    [MeasurableSpace n] [MeasurableSingletonClass n]
+    (A : Matrix n n ℝ) (hA : A.PosSemidef) (t : ℕ) (h : Fin t → n) :
+    (choleskyHistoryLaw A hA t).real {h} = choleskyHistoryWeight A t h := by
+  classical
+  rw [Measure.real, choleskyHistoryLaw,
+    PMF.toMeasure_apply_singleton _ _ (measurableSet_singleton _)]
+  exact ENNReal.toReal_ofReal (choleskyHistoryWeight_nonneg hA t h)
 
 end NLAlib

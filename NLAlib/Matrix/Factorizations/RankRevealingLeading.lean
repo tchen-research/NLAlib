@@ -49,7 +49,7 @@ theorem singularValues_upper_block_le_sqrt_budget_mul {k : ℕ} {r q : Type*}
   have hB : B.rank ≤ i := by
     rw [hBForm]
     exact (Matrix.rank_mul_le_left _ _).trans
-      ((Matrix.rank_mul_le_right _ _).trans (isBestRankApprox_truncatedSVD R i).1)
+      ((Matrix.rank_mul_le_right _ _).trans (isBestFrobRankApprox_truncatedSVD R i).1)
   have hDiff : Matrix.fromBlocks R (R * T) 0 D - B =
       Matrix.fromBlocks (R - Ri) ((R - Ri) * T) 0 D := by
     ext a c

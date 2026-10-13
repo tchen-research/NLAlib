@@ -41,7 +41,7 @@ theorem exists_orthogonal_idempotent_range_blocks {n : Type*}
     hasOrthonormalCols_orthonormalBasisMatrix (LinearMap.range P.mulVecLin)
   have hRange : LinearMap.range Q.mulVecLin = LinearMap.range P.mulVecLin :=
     range_orthonormalBasisMatrix (LinearMap.range P.mulVecLin)
-  obtain ⟨H, hH, hHt, hHQ⟩ := exists_orthogonal_sum_completion
+  obtain ⟨H, hH, hHt, hHQ⟩ := exists_unitary_sum_completion
     (q := Fin (Fintype.card n - P.rank)) Q hQ
     (by simpa using Nat.add_sub_of_le P.rank_le_card_height)
   let R := H.submatrix id Sum.inr

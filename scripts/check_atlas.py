@@ -32,12 +32,12 @@ for f in ROOT.glob("NLAlib/**/*.lean"):
             decls.add(".".join(ns + [name]) if ns else name)
             decls.add(name)
 index_file = ROOT / "atlas/declarations.json"
+index = {}
 if index_file.exists():
     index = {x["name"]: x for x in json.load(open(index_file))}
     decls |= set(index)   # exact names from the generated index take precedence
-    for x in index.values():
-        if x["sorry"]:
-            pass
+else:
+    errors.append("atlas/declarations.json is missing: run ExtractDecls.lean")
 for r in atlas["results"]:
     for v in r.get("variants", []):
         if v not in ids: errors.append(f"{r['id']}: unknown variant {v}")
@@ -57,7 +57,18 @@ for r in atlas["results"]:
         errors.append(f"{r['id']}: status proved but no proved formalization listed")
     if r["status"] == "scaffold" and not any(f["library"] in LOCAL and f["status"] == "scaffold" for f in r["formalizations"]):
         errors.append(f"{r['id']}: status scaffold but no scaffold formalization in this repo listed")
-# cross-check with the audit's sorry list, if a build has produced one
+# Every public descendant is visible in the declaration index, even when it is a
+# helper rather than a separately catalogued mathematical result.
+surface_file = ROOT / "atlas/import_surface.json"
+excluded = set()
+if surface_file.exists():
+    excluded = set(json.load(open(surface_file))["excluded_modules"])
+else:
+    errors.append("atlas/import_surface.json is missing: regenerate aggregators")
+for name, declaration in index.items():
+    if declaration["sorry"] and declaration["module"] not in excluded:
+        errors.append(f"{name}: sorry-dependent declaration is exposed by the default import")
+# An audit is required; a missing output cannot silently disable the trust check.
 sorry_file = ROOT / ".lake/sorries.txt"
 if sorry_file.exists():
     sorried = {l.strip() for l in sorry_file.read_text().splitlines() if l.strip()}
@@ -71,11 +82,26 @@ if sorry_file.exists():
     for d in scaffold_decls:
         if d not in sorried:
             errors.append(f"{d} is listed as scaffold in the atlas but no longer depends on sorry: promote it")
-    unlisted = [d for d in sorried if d not in scaffold_decls and d not in proved_decls]
-    if unlisted:
-        print("note: sorried declarations not catalogued in the atlas (add scaffold entries or they stay invisible):\n  " + "\n  ".join(sorted(unlisted)))
+    indexed_sorries = {name for name, d in index.items() if d["sorry"]}
+    for name in (sorried & set(index)) ^ indexed_sorries:
+        errors.append(f"{name}: audit and declaration index disagree about sorry dependency")
+    for name in sorried - set(index):
+        errors.append(f"{name}: audited sorry-dependent public theorem is absent from the index")
+    for name in indexed_sorries:
+        d = index[name]
+        if d["doc"].lstrip().startswith("SCAFFOLD:") and name not in scaffold_decls:
+            errors.append(f"{name}: direct scaffold has no atlas scaffold entry")
+    direct_file = ROOT / ".lake/direct-sorries.txt"
+    if direct_file.exists():
+        for name in direct_file.read_text().splitlines():
+            if name and name not in scaffold_decls:
+                errors.append(f"{name}: direct sorry must be a named, catalogued scaffold")
+    else:
+        errors.append(".lake/direct-sorries.txt is missing: run scripts/Audit.lean")
+    print(f"experimental proof inventory: {len(indexed_sorries)} sorry-dependent declarations "
+          "indexed and excluded from the default import")
 else:
-    print("note: .lake/sorries.txt not found (run the audit) — skipping sorry cross-check")
+    errors.append(".lake/sorries.txt is missing: run scripts/Audit.lean")
 if errors:
     print("Atlas problems:\n  " + "\n  ".join(errors)); sys.exit(1)
 # the Lean side of every result must agree with the `atlas:` tags in the sources

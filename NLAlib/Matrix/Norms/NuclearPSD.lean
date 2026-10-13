@@ -22,7 +22,6 @@ atlas: ky-fan-norms-def (partial) -/
 theorem nuclearNorm_eq_trace_of_posSemidef {n : Type*} [Fintype n] [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.PosSemidef) : nuclearNorm A = A.trace := by
   rw [nuclearNorm, kyFanNorm_eq_sum_range]
-  simp only [← singularValues_eq_linearMap]
   rw [min_self, ← Fin.sum_univ_eq_sum_range (fun i => singularValues A i)]
   calc
     (∑ i : Fin (Fintype.card n), singularValues A i) =

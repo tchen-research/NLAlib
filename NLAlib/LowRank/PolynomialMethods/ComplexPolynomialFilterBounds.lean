@@ -1,6 +1,6 @@
 import NLAlib.LowRank.PolynomialMethods.ComplexPolynomialFilter
-import NLAlib.Matrix.Functions.ComplexDiagonalFilter
-import NLAlib.Matrix.Basic.ComplexFullRowInverse
+import NLAlib.Matrix.Functions.DiagonalFilter
+import NLAlib.Matrix.Basic.Pseudoinverse
 import NLAlib.Matrix.Subspaces.ComplexProjectionComposition
 import NLAlib.LowRank.PolynomialMethods.PolynomialFilter
 /-!
@@ -36,24 +36,34 @@ theorem norm_complex_polynomial_filter_residual_sq_le_of_rank_eq_card
     {c τ : ℝ} (hc : 0 < c) (hmin : ∀ i, c ≤ |p.eval (s₁ i ^ 2)|)
     (hτ : 0 ≤ τ) (hmax : ∀ i, i < min a b → |s₂ i * p.eval (s₂ i ^ 2)| ≤ τ)
     (Q : Matrix m q ℂ)
-    (hQ : complexColumnProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω) :
+    (hQ : rangeProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω) :
     let S₂ := (rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ).map Complex.ofReal
     let B := V₁ᴴ * Ω
     let R := Bᴴ * (B * Bᴴ)⁻¹
-    ‖A - complexColumnProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+    ‖A - rangeProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
       (τ / c) ^ 2 * ‖V₂ᴴ * Ω‖ ^ 2 * ‖R‖ ^ 2 := by
   dsimp only
   let S₂ := (rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ).map Complex.ofReal
   let D := aeval (S₂ᴴ * S₂) p
   let R := (V₁ᴴ * Ω)ᴴ * ((V₁ᴴ * Ω) * (V₁ᴴ * Ω)ᴴ)⁻¹
   let Cinv := Matrix.diagonal fun i => Complex.ofReal ((p.eval (s₁ i ^ 2))⁻¹)
-  obtain ⟨hC, hCi⟩ := diagonal_complex_filter_right_inverse_and_norm_le s₁ p hc hmin
+  have hC := aeval_gram_diagonal_mul_diagonal_inv_eq_one (𝕜 := ℂ) s₁ p
+    (fun i => abs_pos.mp (hc.trans_le (hmin i)))
+  have hCi : ‖Cinv‖ ≤ 1 / c := by
+    exact specNorm_diagonal_inv_le (𝕜 := ℂ) s₁ p hc hmin
   have hR : (V₁ᴴ * Ω) * R = 1 :=
-    mul_conjTranspose_mul_inv_gram_eq_one_of_rank_eq_card _ (by simpa using hB)
-  have htail : ‖S₂ * D‖ ≤ τ := norm_rectDiag_map_ofReal_mul_aeval_conjGram_le s₂ p hτ hmax
+    mul_pinvR_of_rank_eq_card _ (by simpa using hB)
+  have htail : ‖S₂ * D‖ ≤ τ := by
+    have hS₂ : S₂ = (rectDiag s₂ : Matrix (Fin a) (Fin b) ℂ) := by
+      ext i j
+      by_cases hij : (i : ℕ) = j <;>
+        simp [S₂, rectDiag_apply_ofReal, Matrix.map_apply, hij]
+    change specNorm (S₂ * aeval (S₂ᴴ * S₂) p) ≤ τ
+    rw [hS₂, rectDiag_mul_aeval_gram]
+    exact specNorm_rectDiag_le hτ hmax
   have hcore := norm_complex_polynomial_filter_residual_sq_le hA hU₁ hU₂ hU hV₁ hV₂ hV
     p Ω R Cinv hR hC
-  have hmono := norm_sub_complexColumnProjector_mul_le_of_mul_eq Q
+  have hmono := norm_sub_rangeProjector_mul_le_of_mul_eq Q
     (aeval (A * Aᴴ) p * A * Ω) hQ A
   have hTR : ‖S₂ * D * (V₂ᴴ * Ω) * R‖ ≤ (‖S₂ * D‖ * ‖V₂ᴴ * Ω‖) * ‖R‖ :=
     (Matrix.l2_opNorm_mul _ _).trans
@@ -72,8 +82,8 @@ theorem norm_complex_polynomial_filter_residual_sq_le_of_rank_eq_card
         mul_le_mul_of_nonneg_left hCi
           (mul_nonneg (mul_nonneg hτ (norm_nonneg _)) (norm_nonneg _))
       _ = _ := by ring
-  calc ‖A - complexColumnProjector Q * A‖ ^ 2 ≤
-      ‖A - complexColumnProjector (aeval (A * Aᴴ) p * A * Ω) * A‖ ^ 2 :=
+  calc ‖A - rangeProjector Q * A‖ ^ 2 ≤
+      ‖A - rangeProjector (aeval (A * Aᴴ) p * A * Ω) * A‖ ^ 2 :=
         pow_le_pow_left₀ (norm_nonneg _) hmono 2
     _ ≤ ‖S₂‖ ^ 2 + ‖S₂ * D * (V₂ᴴ * Ω) * R * Cinv‖ ^ 2 := hcore
     _ ≤ ‖S₂‖ ^ 2 + ((τ / c) * ‖V₂ᴴ * Ω‖ * ‖R‖) ^ 2 :=
@@ -95,22 +105,23 @@ theorem norm_complex_polynomial_filter_residual_sq_le_exact_of_rank_eq_card
     (p : ℝ[X]) (Ω : Matrix n t ℂ) (hB : (V₁ᴴ * Ω).rank = κ)
     {c : ℝ} (hc : 0 < c) (hmin : ∀ i, c ≤ |p.eval (s₁ i ^ 2)|)
     (Q : Matrix m q ℂ)
-    (hQ : complexColumnProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω) :
+    (hQ : rangeProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω) :
     let S₂ := (rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ).map Complex.ofReal
     let B := V₁ᴴ * Ω
     let R := Bᴴ * (B * Bᴴ)⁻¹
     let Cinv := Matrix.diagonal fun i => Complex.ofReal ((p.eval (s₁ i ^ 2))⁻¹)
-    ‖A - complexColumnProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+    ‖A - rangeProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
       ‖S₂ * aeval (S₂ᴴ * S₂) p * (V₂ᴴ * Ω) * R * Cinv‖ ^ 2 := by
   dsimp only
   let R := (V₁ᴴ * Ω)ᴴ * ((V₁ᴴ * Ω) * (V₁ᴴ * Ω)ᴴ)⁻¹
   let Cinv := Matrix.diagonal fun i => Complex.ofReal ((p.eval (s₁ i ^ 2))⁻¹)
-  obtain ⟨hC, _⟩ := diagonal_complex_filter_right_inverse_and_norm_le s₁ p hc hmin
+  have hC := aeval_gram_diagonal_mul_diagonal_inv_eq_one (𝕜 := ℂ) s₁ p
+    (fun i => abs_pos.mp (hc.trans_le (hmin i)))
   have hR : (V₁ᴴ * Ω) * R = 1 :=
-    mul_conjTranspose_mul_inv_gram_eq_one_of_rank_eq_card _ (by simpa using hB)
+    mul_pinvR_of_rank_eq_card _ (by simpa using hB)
   have hcore := norm_complex_polynomial_filter_residual_sq_le
     hA hU₁ hU₂ hU hV₁ hV₂ hV p Ω R Cinv hR hC
-  have hmono := norm_sub_complexColumnProjector_mul_le_of_mul_eq Q
+  have hmono := norm_sub_rangeProjector_mul_le_of_mul_eq Q
     (aeval (A * Aᴴ) p * A * Ω) hQ A
   exact (pow_le_pow_left₀ (norm_nonneg _) hmono 2).trans hcore
 
@@ -133,22 +144,23 @@ theorem frobenius_norm_complex_polynomial_filter_residual_sq_le_of_rank_eq_card
     (p : ℝ[X]) (Ω : Matrix n t ℂ) (hB : (V₁ᴴ * Ω).rank = κ)
     {c : ℝ} (hc : 0 < c) (hmin : ∀ i, c ≤ |p.eval (s₁ i ^ 2)|)
     (Q : Matrix m q ℂ)
-    (hQ : complexColumnProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω) :
+    (hQ : rangeProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω) :
     let S₂ := (rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ).map Complex.ofReal
     let B := V₁ᴴ * Ω
     let R := Bᴴ * (B * Bᴴ)⁻¹
     let Cinv := Matrix.diagonal fun i => Complex.ofReal ((p.eval (s₁ i ^ 2))⁻¹)
-    ‖A - complexColumnProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+    ‖A - rangeProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
       ‖S₂ * aeval (S₂ᴴ * S₂) p * (V₂ᴴ * Ω) * R * Cinv‖ ^ 2 := by
   dsimp only
   let R := (V₁ᴴ * Ω)ᴴ * ((V₁ᴴ * Ω) * (V₁ᴴ * Ω)ᴴ)⁻¹
   let Cinv := Matrix.diagonal fun i => Complex.ofReal ((p.eval (s₁ i ^ 2))⁻¹)
-  obtain ⟨hC, _⟩ := diagonal_complex_filter_right_inverse_and_norm_le s₁ p hc hmin
+  have hC := aeval_gram_diagonal_mul_diagonal_inv_eq_one (𝕜 := ℂ) s₁ p
+    (fun i => abs_pos.mp (hc.trans_le (hmin i)))
   have hR : (V₁ᴴ * Ω) * R = 1 :=
-    mul_conjTranspose_mul_inv_gram_eq_one_of_rank_eq_card _ (by simpa using hB)
+    mul_pinvR_of_rank_eq_card _ (by simpa using hB)
   have hcore := frobenius_norm_complex_polynomial_filter_residual_sq_le
     hA hU₁ hU₂ hU hV₁ hV₂ hV p Ω R Cinv hR hC
-  exact (frobenius_norm_sub_complexColumnProjector_mul_sq_le_of_mul_eq Q
+  exact (frobenius_norm_sub_rangeProjector_mul_sq_le_of_mul_eq Q
     (aeval (A * Aᴴ) p * A * Ω) hQ A).trans hcore
 
 end Frobenius
@@ -170,17 +182,17 @@ theorem complex_polynomial_filter_residual_bounds
     (hV₁ : V₁ᴴ * V₁ = 1) (hV₂ : V₂ᴴ * V₂ = 1) (hV : V₁ᴴ * V₂ = 0)
     (p : ℝ[X]) (Ω : Matrix n t ℂ) (hB : (V₁ᴴ * Ω).rank = κ)
     (hc : 0 < filterHeadMinAbs s₁ p) (Q : Matrix m q ℂ)
-    (hQ : complexColumnProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω) :
+    (hQ : rangeProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω) :
     let S₂ := (rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ).map Complex.ofReal
     let B := V₁ᴴ * Ω
     let R := Bᴴ * (B * Bᴴ)⁻¹
     let Cinv := Matrix.diagonal fun i => Complex.ofReal ((p.eval (s₁ i ^ 2))⁻¹)
-    ‖A - complexColumnProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+    ‖A - rangeProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
         ‖S₂ * aeval (S₂ᴴ * S₂) p * (V₂ᴴ * Ω) * R * Cinv‖ ^ 2 ∧
-      ‖A - complexColumnProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+      ‖A - rangeProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
         (filterTailMaxAbs s₂ p a b / filterHeadMinAbs s₁ p) ^ 2 * ‖V₂ᴴ * Ω‖ ^ 2 * ‖R‖ ^ 2 ∧
       (@norm _ (Matrix.frobeniusNormedAddCommGroup (m := m) (n := n) (α := ℂ)).toNorm
-        (A - complexColumnProjector Q * A)) ^ 2 ≤
+        (A - rangeProjector Q * A)) ^ 2 ≤
       (@norm _ (Matrix.frobeniusNormedAddCommGroup (m := Fin a) (n := Fin b) (α := ℂ)).toNorm S₂) ^ 2 +
       (@norm _ (Matrix.frobeniusNormedAddCommGroup (m := Fin a) (n := Fin κ) (α := ℂ)).toNorm
         (S₂ * aeval (S₂ᴴ * S₂) p * (V₂ᴴ * Ω) * R * Cinv)) ^ 2 := by
@@ -197,7 +209,7 @@ theorem complex_polynomial_filter_residual_bounds
 bounds simultaneously for every filter below its order. Source: manuscript
 `sa:filter`, block Krylov specialization; Musco--Musco (2015).
 atlas: polynomial-filter-range-finder (partial) -/
-theorem complex_polynomial_filter_residual_bounds_of_complexBlockKrylovSpace_le
+theorem complex_polynomial_filter_residual_bounds_of_blockKrylovSpace_le
     {κ a b order : ℕ} [Nonempty (Fin κ)] {A : Matrix m n ℂ}
     {U₁ : Matrix m (Fin κ) ℂ} {U₂ : Matrix m (Fin a) ℂ}
     {V₁ : Matrix n (Fin κ) ℂ} {V₂ : Matrix n (Fin b) ℂ}
@@ -208,21 +220,21 @@ theorem complex_polynomial_filter_residual_bounds_of_complexBlockKrylovSpace_le
     (hV₁ : V₁ᴴ * V₁ = 1) (hV₂ : V₂ᴴ * V₂ = 1) (hV : V₁ᴴ * V₂ = 0)
     (p : ℝ[X]) (hp : p.degree < order) (Ω : Matrix n t ℂ)
     (hB : (V₁ᴴ * Ω).rank = κ) (hc : 0 < filterHeadMinAbs s₁ p) (Q : Matrix m q ℂ)
-    (hK : complexBlockKrylovSpace (A * Aᴴ) (A * Ω) order ≤ LinearMap.range Q.mulVecLin) :
+    (hK : blockKrylovSpace (A * Aᴴ) (A * Ω) order ≤ LinearMap.range Q.mulVecLin) :
     let S₂ := (rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ).map Complex.ofReal
     let B := V₁ᴴ * Ω
     let R := Bᴴ * (B * Bᴴ)⁻¹
     let Cinv := Matrix.diagonal fun i => Complex.ofReal ((p.eval (s₁ i ^ 2))⁻¹)
-    ‖A - complexColumnProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+    ‖A - rangeProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
         ‖S₂ * aeval (S₂ᴴ * S₂) p * (V₂ᴴ * Ω) * R * Cinv‖ ^ 2 ∧
-      ‖A - complexColumnProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+      ‖A - rangeProjector Q * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
         (filterTailMaxAbs s₂ p a b / filterHeadMinAbs s₁ p) ^ 2 * ‖V₂ᴴ * Ω‖ ^ 2 * ‖R‖ ^ 2 ∧
       (@norm _ (Matrix.frobeniusNormedAddCommGroup (m := m) (n := n) (α := ℂ)).toNorm
-        (A - complexColumnProjector Q * A)) ^ 2 ≤
+        (A - rangeProjector Q * A)) ^ 2 ≤
       (@norm _ (Matrix.frobeniusNormedAddCommGroup (m := Fin a) (n := Fin b) (α := ℂ)).toNorm S₂) ^ 2 +
       (@norm _ (Matrix.frobeniusNormedAddCommGroup (m := Fin a) (n := Fin κ) (α := ℂ)).toNorm
         (S₂ * aeval (S₂ᴴ * S₂) p * (V₂ᴴ * Ω) * R * Cinv)) ^ 2 :=
   complex_polynomial_filter_residual_bounds s₁ s₂ hA hU₁ hU₂ hU hV₁ hV₂ hV p Ω hB hc Q
-    (complexColumnProjector_aeval_conjGram_mul_mul_eq_of_complexBlockKrylovSpace_le A Ω Q hK hp)
+    (rangeProjector_aeval_conjGram_mul_mul_eq_of_blockKrylovSpace_le A Ω Q hK hp)
 
 end NLAlib

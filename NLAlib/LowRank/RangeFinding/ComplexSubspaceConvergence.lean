@@ -1,3 +1,4 @@
+import NLAlib.Krylov.Spaces.Block
 import NLAlib.Matrix.Subspaces.ComplexProjectionBounds
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 
@@ -16,11 +17,6 @@ namespace NLAlib
 
 variable {n k r : Type*} [Fintype n] [Fintype k] [Fintype r]
   [DecidableEq n] [DecidableEq k] [DecidableEq r]
-
-/-- The actual complex subspace iterate is the range of `A^t Ω`.
-Source: manuscript `sa:subspace`, subspace iteration definition. -/
-def complexSubspaceIterate (A : Matrix n n ℂ) (Ω : Matrix n k ℂ) (t : ℕ) :
-    Submodule ℂ (n → ℂ) := LinearMap.range (A ^ t * Ω).mulVecLin
 
 /-- Largest tangent to an orthogonal head block, measured using complex head and
 tail coordinates. For a transverse graph this is the usual supremum of tail/head
@@ -84,7 +80,7 @@ theorem complexSubspaceIterate_eq_range_graph
     {Ω : Matrix n k ℂ} {Ω₁ R : Matrix k k ℂ} {Ω₂ : Matrix r k ℂ}
     (hΩ : Ω = U₁ * Ω₁ + U₂ * Ω₂) (hR : Ω₁ * R = 1)
     (hL : L₁ * Linv = 1) (t : ℕ) :
-    complexSubspaceIterate A Ω t =
+    subspaceIterate A Ω t =
       LinearMap.range (U₁ + U₂ * (L₂ ^ t * Ω₂ * R * Linv ^ t)).mulVecLin := by
   have hpow : L₁ ^ t * Linv ^ t = 1 := by
     have hc : Commute L₁ Linv := by
@@ -142,7 +138,7 @@ theorem norm_pow_mul_mul_pow_complex_le
 Source: manuscript `sa:subspace-theorem`; Saad (2011), §5.1. The invariant blocks
 may be indefinite; empty tails and all times are included.
 atlas: subspace-iteration-convergence (partial) -/
-theorem complexSubspaceTangent_complexSubspaceIterate_le
+theorem complexSubspaceTangent_subspaceIterate_le
     {A : Matrix n n ℂ} {U₁ : Matrix n k ℂ} {U₂ : Matrix n r ℂ}
     (hU₁ : U₁ᴴ * U₁ = 1) (hU₂ : U₂ᴴ * U₂ = 1) (hU : U₁ᴴ * U₂ = 0)
     {L₁ Linv : Matrix k k ℂ} {L₂ : Matrix r r ℂ}
@@ -150,10 +146,10 @@ theorem complexSubspaceTangent_complexSubspaceIterate_le
     {Ω : Matrix n k ℂ} {Ω₁ R : Matrix k k ℂ} {Ω₂ : Matrix r k ℂ}
     (hΩ : Ω = U₁ * Ω₁ + U₂ * Ω₂) (hR : Ω₁ * R = 1)
     (hL : L₁ * Linv = 1) (t : ℕ) :
-    complexSubspaceTangent U₁ U₂ (complexSubspaceIterate A Ω t) ≤
+    complexSubspaceTangent U₁ U₂ (subspaceIterate A Ω t) ≤
       (‖L₂‖ * ‖Linv‖) ^ t * complexSubspaceTangent U₁ U₂ (LinearMap.range Ω.mulVecLin) := by
   have hzero := complexSubspaceIterate_eq_range_graph hA₁ hA₂ hΩ hR hL 0
-  simp only [complexSubspaceIterate, pow_zero, Matrix.one_mul, Matrix.mul_one] at hzero
+  simp only [subspaceIterate, pow_zero, Matrix.one_mul, Matrix.mul_one] at hzero
   rw [complexSubspaceIterate_eq_range_graph hA₁ hA₂ hΩ hR hL t, hzero,
     complexSubspaceTangent_range_graph_eq_norm hU₁ hU₂ hU,
     complexSubspaceTangent_range_graph_eq_norm hU₁ hU₂ hU]
@@ -163,7 +159,7 @@ theorem complexSubspaceTangent_complexSubspaceIterate_le
 the leading eigenvalue magnitudes. Real Hermitian eigenvalues may have either
 sign. Source: manuscript `sa:subspace-theorem`; Saad (2011), §5.1.
 atlas: subspace-iteration-convergence (partial) -/
-theorem complexSubspaceTangent_complexSubspaceIterate_le_of_diagonal
+theorem complexSubspaceTangent_subspaceIterate_le_of_diagonal
     {A : Matrix n n ℂ} {U₁ : Matrix n k ℂ} {U₂ : Matrix n r ℂ}
     (hU₁ : U₁ᴴ * U₁ = 1) (hU₂ : U₂ᴴ * U₂ = 1) (hU : U₁ᴴ * U₂ = 0)
     (eig₁ : k → ℂ) (eig₂ : r → ℂ)
@@ -172,7 +168,7 @@ theorem complexSubspaceTangent_complexSubspaceIterate_le_of_diagonal
     {Ω : Matrix n k ℂ} {Ω₁ R : Matrix k k ℂ} {Ω₂ : Matrix r k ℂ}
     (hΩ : Ω = U₁ * Ω₁ + U₂ * Ω₂) (hR : Ω₁ * R = 1)
     {α : ℝ} (hα : 0 < α) (hgap : ∀ i, α ≤ ‖eig₁ i‖) (t : ℕ) :
-    complexSubspaceTangent U₁ U₂ (complexSubspaceIterate A Ω t) ≤
+    complexSubspaceTangent U₁ U₂ (subspaceIterate A Ω t) ≤
       (‖Matrix.diagonal eig₂‖ / α) ^ t *
         complexSubspaceTangent U₁ U₂ (LinearMap.range Ω.mulVecLin) := by
   let Linv : Matrix k k ℂ := Matrix.diagonal fun i => (eig₁ i)⁻¹
@@ -198,11 +194,11 @@ theorem complexSubspaceTangent_complexSubspaceIterate_le_of_diagonal
     simpa only [div_eq_mul_inv, one_div, one_mul] using
       mul_le_mul_of_nonneg_left hLi (norm_nonneg (Matrix.diagonal eig₂))
   have hzero := complexSubspaceIterate_eq_range_graph hA₁ hA₂ hΩ hR hL 0
-  simp only [complexSubspaceIterate, pow_zero, Matrix.one_mul, Matrix.mul_one] at hzero
+  simp only [subspaceIterate, pow_zero, Matrix.one_mul, Matrix.mul_one] at hzero
   have htan : 0 ≤ complexSubspaceTangent U₁ U₂ (LinearMap.range Ω.mulVecLin) := by
     rw [hzero, complexSubspaceTangent_range_graph_eq_norm hU₁ hU₂ hU]
     exact norm_nonneg _
-  exact (complexSubspaceTangent_complexSubspaceIterate_le hU₁ hU₂ hU hA₁ hA₂ hΩ hR hL t).trans
+  exact (complexSubspaceTangent_subspaceIterate_le hU₁ hU₂ hU hA₁ hA₂ hΩ hR hL t).trans
     (mul_le_mul_of_nonneg_right
       (pow_le_pow_left₀ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) hrate t) htan)
 

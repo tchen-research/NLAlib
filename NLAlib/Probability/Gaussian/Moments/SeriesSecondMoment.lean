@@ -4,7 +4,7 @@ import NLAlib.Probability.Gaussian.Moments.SeriesKhintchine
 
 The order-one endpoint of noncommutative Khintchine is equality, not merely
 an upper bound. Both coefficient laws yield the exact variance trace.
-Source: operator manuscript, endpoint following `thm:khintchine`.
+Source: Tropp 2015, *An Introduction to Matrix Concentration Inequalities*, §4.7.
 -/
 
 noncomputable section
@@ -16,10 +16,9 @@ namespace NLAlib
 variable {ι : Type*} [Fintype ι] [DecidableEq ι] {n : ℕ}
 
 open scoped Matrix.Norms.L2Operator in
-/-- The actual standard Gaussian matrix series has exact second trace moment
+/-- The standard Gaussian matrix series has exact second trace moment
 equal to the sum of coefficient square traces. Hermiticity is unnecessary
-for this identity. Source: coordinate Stein at exponent one; the order-one
-endpoint of manuscript `thm:khintchine`. -/
+for this identity. Source: coordinate Stein at exponent one; Tropp 2015, §4.7. -/
 theorem integral_re_trace_gaussianSeries_sq
     (A : Fin n → Matrix ι ι ℂ) :
     (∫ x : Fin n → ℝ, ((∑ i, x i • A i) ^ 2).trace.re
@@ -37,10 +36,8 @@ theorem integral_re_trace_gaussianSeries_sq
   simp only [integral_const, probReal_univ, one_smul, Matrix.trace_sum, Complex.re_sum, pow_two]
 
 open scoped Matrix.Norms.L2Operator in
-/-- The actual finite product Rademacher matrix series has exact second
-trace moment equal to the sum of coefficient square traces. Source: actual
-two-coordinate sign moments; the order-one endpoint of manuscript
-`thm:khintchine`. Hermiticity is unnecessary for the identity. -/
+/-- The finite product Rademacher matrix series has exact second
+trace moment equal to the sum of coefficient square traces. Source: two-coordinate sign moments; Tropp 2015, §4.7. Hermiticity is unnecessary for the identity. -/
 theorem integral_re_trace_rademacherSeries_sq
     {κ : Type*} [Fintype κ] [DecidableEq κ] (A : κ → Matrix ι ι ℂ) :
     (∫ x : κ → ℝ, ((∑ i, x i • A i) ^ 2).trace.re
@@ -71,39 +68,63 @@ theorem integral_re_trace_rademacherSeries_sq
   rw [Matrix.trace_sum, Complex.re_sum]
 
 open scoped Matrix.Norms.L2Operator in
-/-- **Exact order-one endpoint.** Independent actual Gaussian or Rademacher
-coefficients on any probability space have second trace moment exactly
-`re tr(∑ Aᵢ²)`. Source: endpoint following manuscript `thm:khintchine`.
-It includes empty matrices and coefficient families; no moment assumptions
-or integrability hypotheses are added.
+/-- Independent centred unit-variance coefficients have second trace moment
+`re tr(∑ Aᵢ²)`. Hermiticity is unnecessary.
+Source: Tropp 2015, §4.7, the second-moment identity.
 atlas: noncommutative-khintchine -/
 theorem integral_re_trace_independent_series_sq
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {κ : Type*} [Fintype κ] [DecidableEq κ] (A : κ → Matrix ι ι ℂ)
+    (ξ : κ → Ω → ℝ) (hξ : ∀ i, Measurable (ξ i))
+    (hind : iIndepFun ξ μ) (h2 : ∀ i, MemLp (ξ i) 2 μ)
+    (h0 : ∀ i, ∫ ω, ξ i ω ∂μ = 0) (h1 : ∀ i, ∫ ω, ξ i ω ^ 2 ∂μ = 1) :
+    (∫ ω, ((∑ i, ξ i ω • A i) ^ 2).trace.re ∂μ) = (∑ i, A i ^ 2).trace.re := by
+  have hexp (ω) : ((∑ i, ξ i ω • A i) ^ 2).trace.re =
+      ∑ i, ∑ j, (ξ i ω * ξ j ω) * (A i * A j).trace.re := by
+    simp [sq, Finset.sum_mul_sum, Matrix.trace_sum, Matrix.trace_smul,
+      Complex.re_sum, mul_left_comm, mul_assoc]
+  have hint (i j) : Integrable (fun ω => ξ i ω * ξ j ω) μ :=
+    (h2 i).integrable_mul (h2 j)
+  have hcorr (i j) : ∫ ω, ξ i ω * ξ j ω ∂μ = if i = j then 1 else 0 := by
+    split_ifs with hij
+    · subst hij
+      simpa [sq] using h1 i
+    · rw [(hind.indepFun hij).integral_fun_mul_eq_mul_integral
+        (hξ i).aestronglyMeasurable (hξ j).aestronglyMeasurable, h0 i, zero_mul]
+  simp_rw [hexp]
+  rw [integral_finsetSum _ (fun i _ =>
+    integrable_finsetSum _ (fun j _ => (hint i j).mul_const _))]
+  simp_rw [integral_finsetSum _ (fun j _ => (hint _ j).mul_const _),
+    integral_mul_const, hcorr]
+  simp [Matrix.trace_sum, Complex.re_sum, sq]
+
+open scoped Matrix.Norms.L2Operator in
+/-- The exact second trace moment transported through a Gaussian vector law. -/
+theorem integral_re_trace_gaussianSeries_sq_of_hasLaw
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     (A : Fin n → Matrix ι ι ℂ)
-    (ξ : Fin n → Ω → ℝ) (hξ : ∀ i, Measurable (ξ i))
-    (hind : iIndepFun ξ μ)
-    (hlaw : (∀ i, IsStandardGaussian μ (ξ i)) ∨ (∀ i, IsRademacher μ (ξ i))) :
-    (∫ ω, ((∑ i, ξ i ω • A i) ^ 2).trace.re ∂μ) = (∑ i, A i ^ 2).trace.re := by
-  let X := fun ω i => ξ i ω
-  let f := fun x : Fin n → ℝ => ((∑ i, x i • A i) ^ 2).trace.re
-  have hX : Measurable X := measurable_pi_lambda _ hξ
-  have hf : Continuous f := by
+    {ξ : Ω → Fin n → ℝ} (hξ : HasLaw ξ (gaussianVector (Fin n)) μ) :
+    (∫ ω, ((∑ i, ξ ω i • A i) ^ 2).trace.re ∂μ) = (∑ i, A i ^ 2).trace.re := by
+  have hf : Continuous (fun x : Fin n → ℝ => ((∑ i, x i • A i) ^ 2).trace.re) := by
     simpa only [one_mul, pow_zero, mul_one] using continuous_re_trace_series_product A 1 1 2 0
-  have hjoint := hind.map_fun_eq_pi_map (fun i => (hξ i).aemeasurable)
-  have hm : (∫ x, f x ∂μ.map X) = ∫ ω, f (X ω) ∂μ :=
-    integral_map hX.aemeasurable hf.aestronglyMeasurable
-  rcases hlaw with hlaw | hlaw
-  · have hprod : μ.map X = (gaussianVector (Fin n)) := by
-      rw [hjoint]
-      exact congrArg Measure.pi (funext fun i => (hlaw i).map_eq)
-    rw [hprod] at hm
-    rw [← hm]
-    exact integral_re_trace_gaussianSeries_sq A
-  · have hprod : μ.map X = (rademacherVector (Fin n)) := by
-      rw [hjoint]
-      exact congrArg Measure.pi (funext fun i => (hlaw i).map_eq)
-    rw [hprod] at hm
-    rw [← hm]
-    exact integral_re_trace_rademacherSeries_sq A
+  rw [show (∫ ω, ((∑ i, ξ ω i • A i) ^ 2).trace.re ∂μ) =
+      ∫ x, ((∑ i, x i • A i) ^ 2).trace.re ∂(gaussianVector (Fin n)) from
+    hξ.integral_comp hf.aestronglyMeasurable]
+  exact integral_re_trace_gaussianSeries_sq A
+
+open scoped Matrix.Norms.L2Operator in
+/-- The exact second trace moment transported through a Rademacher vector law. -/
+theorem integral_re_trace_rademacherSeries_sq_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    {κ : Type*} [Fintype κ] [DecidableEq κ]
+    (A : κ → Matrix ι ι ℂ)
+    {ξ : Ω → κ → ℝ} (hξ : HasLaw ξ (rademacherVector (κ)) μ) :
+    (∫ ω, ((∑ i, ξ ω i • A i) ^ 2).trace.re ∂μ) = (∑ i, A i ^ 2).trace.re := by
+  have hf : Continuous (fun x : κ → ℝ => ((∑ i, x i • A i) ^ 2).trace.re) := by
+    simpa only [one_mul, pow_zero, mul_one] using continuous_re_trace_series_product A 1 1 2 0
+  rw [show (∫ ω, ((∑ i, ξ ω i • A i) ^ 2).trace.re ∂μ) =
+      ∫ x, ((∑ i, x i • A i) ^ 2).trace.re ∂(rademacherVector (κ)) from
+    hξ.integral_comp hf.aestronglyMeasurable]
+  exact integral_re_trace_rademacherSeries_sq A
 
 end NLAlib

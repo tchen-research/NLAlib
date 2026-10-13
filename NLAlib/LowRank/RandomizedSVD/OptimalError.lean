@@ -23,8 +23,8 @@ namespace NLAlib
 /-- A target rank at least the input width has zero optimal Frobenius error.
 Atlas `eckart-young`, `rsvd-expected-error` (oversized-rank API). -/
 theorem bestRankFrobSq_eq_zero_of_width_le {m n k : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) (hnk : n ≤ k) : bestRankFrobSq k A = 0 := by
-  rw [bestRankFrobSq_eq_singularValueTailSq, singularValueTailSq]
+    (A : Matrix (Fin m) (Fin n) ℝ) (hnk : n ≤ k) : bestRankFrobSq A k = 0 := by
+  rw [bestRankFrobSq]
   apply Finset.sum_eq_zero
   intro i _
   by_cases hi : k ≤ (i : ℕ)
@@ -86,7 +86,7 @@ theorem integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian
     (hQr : ∀ᵐ ω ∂μ, Qf (G ω) * ((Qf (G ω))ᵀ * (A * G ω)) = A * G ω) :
     Integrable (fun ω => frobSq (projResidual (Qf (G ω)) A)) μ ∧
       (∫ ω, frobSq (projResidual (Qf (G ω)) A) ∂μ) ≤
-        (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
+        (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq A k := by
   have hX := hG.aemeasurable
   refine ⟨integrable_frobSq_residual_of_measurable_frame A _ hX Qf hQf hQo, ?_⟩
   by_cases hkn : k ≤ n
@@ -119,7 +119,7 @@ atlas: rsvd-expected-error -/
 theorem rank_truncatedRsvdOutput_le {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) : (truncatedRsvdOutput Q A k).rank ≤ k :=
   (Matrix.rank_mul_le_right Q (truncatedSVD (Qᵀ * A) k)).trans
-    (isBestRankApprox_truncatedSVD (Qᵀ * A) k).1
+    (isBestFrobRankApprox_truncatedSVD (Qᵀ * A) k).1
 
 /-- The scalar postprocessed error is the sum of projection error and the
 actual compressed optimum. This is independent of singular-vector choices.
@@ -128,23 +128,24 @@ theorem frobSq_truncatedRsvdOutput_eq {m n q : ℕ}
     (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) =
-      frobSq (projResidual Q A) + bestRankFrobSq k (Qᵀ * A) := by
+      frobSq (projResidual Q A) + bestRankFrobSq (Qᵀ * A) k := by
   unfold truncatedRsvdOutput
   rw [frobSq_sub_mul_eq hQ, Matrix.conjTranspose_eq_transpose_of_trivial,
     frobSq_sub_truncatedSVD_eq_bestRankFrobSq]
 
+open Classical in
 /-- Every best rank-`k` approximation of the compressed matrix has lifted
 squared error at most the actual global optimum plus projection error.
 HMT 2011, §9.2; atlas `truncation-lemma` (ordinary projected component).
 This uses arbitrary finite indices, including empty types, and all target ranks.
 The full-matrix optimum is attained by the proved Eckart–Young theorem.
 atlas: truncation-lemma-projected -/
-theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual
+theorem IsBestFrobRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual
     {m n q : Type*} [Fintype m] [Fintype n] [Fintype q] [DecidableEq q]
     {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {Y : Matrix q n ℝ} {k : ℕ}
-    (hY : IsBestRankApprox k (Qᵀ * A) Y) (hQ : HasOrthonormalCols Q) :
-    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + frobSq (projResidual Q A) := by
-  obtain ⟨B, hB⟩ := exists_isBestRankApprox A k
+    (hY : IsBestFrobRankApprox (Qᵀ * A) k Y) (hQ : HasOrthonormalCols Q) :
+    frobSq (A - Q * Y) ≤ bestRankFrobSq A k + frobSq (projResidual Q A) := by
+  obtain ⟨B, hB⟩ := exists_isBestFrobRankApprox A k
   have hRank : (Qᵀ * B).rank ≤ k := (Matrix.rank_mul_le_right Qᵀ B).trans hB.1
   have hBest := hY.2 (Qᵀ * B) hRank
   have hContraction := frobSq_conjTranspose_mul_le hQ (A - B)
@@ -153,15 +154,16 @@ theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual
   simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hContraction ⊢
   linarith
 
+open Classical in
 /-- The two-residual ordinary projected-truncation bound for a compressed
 Frobenius minimizer, on arbitrary finite indices. HMT 2011, §9.2;
 atlas `truncation-lemma` (ordinary projected component).
 atlas: truncation-lemma-projected -/
-theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_two_mul_frobSq_residual
+theorem IsBestFrobRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_two_mul_frobSq_residual
     {m n q : Type*} [Fintype m] [Fintype n] [Fintype q] [DecidableEq q]
     {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {Y : Matrix q n ℝ} {k : ℕ}
-    (hY : IsBestRankApprox k (Qᵀ * A) Y) (hQ : HasOrthonormalCols Q) :
-    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + 2 * frobSq (projResidual Q A) := by
+    (hY : IsBestFrobRankApprox (Qᵀ * A) k Y) (hQ : HasOrthonormalCols Q) :
+    frobSq (A - Q * Y) ≤ bestRankFrobSq A k + 2 * frobSq (projResidual Q A) := by
   have h := hY.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual hQ
   linarith [frobSq_nonneg (projResidual Q A)]
 
@@ -175,8 +177,8 @@ theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_frobSq_residual
     {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) ≤
-      bestRankFrobSq k A + frobSq (projResidual Q A) := by
-  have hY := isBestRankApprox_truncatedSVD (Qᵀ * A) k
+      bestRankFrobSq A k + frobSq (projResidual Q A) := by
+  have hY := isBestFrobRankApprox_truncatedSVD (Qᵀ * A) k
   exact hY.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual hQ
 
 /-- The standard two-residual ordinary projected-truncation bound for the
@@ -188,7 +190,7 @@ theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_two_mul_frobSq_resi
     {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) ≤
-      bestRankFrobSq k A + 2 * frobSq (projResidual Q A) := by
+      bestRankFrobSq A k + 2 * frobSq (projResidual Q A) := by
   have h := frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_frobSq_residual Q hQ A k
   linarith [frobSq_nonneg (projResidual Q A)]
 
@@ -205,18 +207,18 @@ theorem integrable_frobSq_truncatedRsvdOutput_of_measurable_frame
   have hCompressed : Measurable fun x => (Qf x)ᵀ * A :=
     Matrix.measurable_iff_entries.mpr (measurable_mul_entry_of (f := fun x => (Qf x)ᵀ)
       (g := fun _ : α => A) (fun a b => hQf b a) (fun _ _ => measurable_const))
-  have hOpt : Measurable fun x => bestRankFrobSq k ((Qf x)ᵀ * A) :=
+  have hOpt : Measurable fun x => bestRankFrobSq ((Qf x)ᵀ * A) k :=
     (continuous_bestRankFrobSq k).measurable.comp hCompressed
   have hValue := (measurable_frobSq_residual_of A hQf).add hOpt
   have hEq : (fun ω => frobSq (A - truncatedRsvdOutput (Qf (X ω)) A k)) =ᵐ[μ]
-      fun ω => frobSq (projResidual (Qf (X ω)) A) + bestRankFrobSq k ((Qf (X ω))ᵀ * A) := by
+      fun ω => frobSq (projResidual (Qf (X ω)) A) + bestRankFrobSq ((Qf (X ω))ᵀ * A) k := by
     filter_upwards [hQo] with ω hω
     exact frobSq_truncatedRsvdOutput_eq _ hω A k
   have hMeas := (hValue.comp_aemeasurable hX).aestronglyMeasurable.congr hEq.symm
   refine (integrable_const (frobSq A)).mono' hMeas ?_
   filter_upwards [hQo] with ω hω
   rw [Real.norm_of_nonneg (frobSq_nonneg _)]
-  have hbest := (isBestRankApprox_truncatedSVD ((Qf (X ω))ᵀ * A) k).2
+  have hbest := (isBestFrobRankApprox_truncatedSVD ((Qf (X ω))ᵀ * A) k).2
     (0 : Matrix (Fin q) (Fin n) ℝ) (by simp)
   rw [sub_zero] at hbest
   have hpyth := frobSq_eq_frobSq_conjTranspose_mul_add_residual hω A
@@ -240,7 +242,7 @@ theorem integrable_and_integral_frobSq_truncatedRsvdOutput_le_bestRankFrobSq_gau
     (hQr : ∀ᵐ ω ∂μ, Qf (G ω) * ((Qf (G ω))ᵀ * (A * G ω)) = A * G ω) :
     Integrable (fun ω => frobSq (A - truncatedRsvdOutput (Qf (G ω)) A k)) μ ∧
       (∫ ω, frobSq (A - truncatedRsvdOutput (Qf (G ω)) A k) ∂μ) ≤
-        (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
+        (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq A k := by
   have hX := hG.aemeasurable
   refine ⟨integrable_frobSq_truncatedRsvdOutput_of_measurable_frame A k _ hX Qf hQf hQo, ?_⟩
   by_cases hkn : k ≤ n
@@ -249,13 +251,13 @@ theorem integrable_and_integral_frobSq_truncatedRsvdOutput_le_bestRankFrobSq_gau
     have hb := rsvd_truncated_main_gaussian hA hU₂ hV₁ hV₂ hV hkt G hG
       (fun ω => Qf (G ω))
       (fun ω => truncatedSVD ((Qf (G ω))ᵀ * A) k)
-      hQo hQr (fun _ => isBestRankApprox_truncatedSVD _ k)
+      hQo hQr (fun _ => isBestFrobRankApprox_truncatedSVD _ k)
     rw [htail] at hb
     exact hb
   · have hfull := ae_gaussian_projection_reproduces_of_width_le A G hG
       (fun ω => Qf (G ω)) hQr (by omega : n ≤ t)
-    have hOpt : bestRankFrobSq k A = 0 := bestRankFrobSq_eq_zero_of_width_le A (by omega)
-    have hcompressed (ω : Ω) : bestRankFrobSq k ((Qf (G ω))ᵀ * A) = 0 :=
+    have hOpt : bestRankFrobSq A k = 0 := bestRankFrobSq_eq_zero_of_width_le A (by omega)
+    have hcompressed (ω : Ω) : bestRankFrobSq ((Qf (G ω))ᵀ * A) k = 0 :=
       bestRankFrobSq_eq_zero_of_width_le _ (by omega)
     have hz : (fun ω => frobSq (A - truncatedRsvdOutput (Qf (G ω)) A k)) =ᵐ[μ]
         fun _ => (0 : ℝ) := by
@@ -279,7 +281,7 @@ theorem integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFr
     (hG : HasLaw G (gaussianMatrix (Fin n) (Fin t)) μ) :
     Integrable (fun ω => frobSq (projResidual (gaussianRangeFrame A t (G ω)) A)) μ ∧
       (∫ ω, frobSq (projResidual (gaussianRangeFrame A t (G ω)) A) ∂μ) ≤
-        (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
+        (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq A k := by
   exact integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian A hkt G hG
     (gaussianRangeFrame A t) (measurable_gaussianRangeFrame_entry A t)
     (ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw A G hG)
@@ -303,7 +305,7 @@ theorem integrable_and_integral_frobSq_truncatedRsvdOutput_gaussianRangeFrame_le
       (A - truncatedRsvdOutput (gaussianRangeFrame A t (G ω)) A k)) μ ∧
       (∫ ω, frobSq
         (A - truncatedRsvdOutput (gaussianRangeFrame A t (G ω)) A k) ∂μ) ≤
-        (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
+        (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq A k := by
   exact integrable_and_integral_frobSq_truncatedRsvdOutput_le_bestRankFrobSq_gaussian
     A hkt G hG (gaussianRangeFrame A t) (measurable_gaussianRangeFrame_entry A t)
     (ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw A G hG)

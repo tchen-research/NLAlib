@@ -32,10 +32,10 @@ variable {𝕜 : Type*} [RCLike 𝕜] {m n p : Type*} [Fintype m] [Fintype n] [F
 
 /-! ### The condition number of a square matrix -/
 
+open Classical in
 /-- The spectral condition number `κ₂(A) = ‖A‖₂ ‖A⁻¹‖₂` of a square matrix, `⊤` when `A` is
 singular. Golub–Van Loan 2013, §2.6.2; Trefethen–Bau 1997, eq. (12.13).
 atlas: condition-number-def -/
-open Classical in
 def conditionNumber (A : Matrix n n 𝕜) : ℝ≥0∞ :=
   if IsUnit A then ENNReal.ofReal (specNorm A * specNorm A⁻¹) else ⊤
 

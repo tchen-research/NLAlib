@@ -16,9 +16,9 @@ namespace NLAlib
 
 /-- The singular-value tail is the sorted Gram eigenvalue tail (both are padded with zeros
 beyond `min (card m) (card n)`). -/
-private theorem singularValueTailSq_eq_complexGramTail {m n : Type*} [Fintype m] [Fintype n]
+private theorem bestRankFrobSq_eq_complexGramTail {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq n] (A : Matrix m n ℂ) (k : ℕ) :
-    singularValueTailSq A k = complexGramTail A k := by
+    bestRankFrobSq A k = complexGramTail A k := by
   set f : ℕ → ℝ := fun i => if k ≤ i then singularValues A i ^ 2 else 0
   have hrange : ∀ N, min (Fintype.card m) (Fintype.card n) ≤ N →
       ∑ i ∈ Finset.range N, f i =
@@ -29,7 +29,7 @@ private theorem singularValueTailSq_eq_complexGramTail {m n : Type*} [Fintype m]
     rw [complexGramTail, ← Fin.sum_univ_eq_sum_range]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [f, complexGramEigenvalues, sq_singularValues_eq_eigenvalues₀]
-  rw [singularValueTailSq, h2, hrange _ (min_le_left _ _), hrange _ (min_le_right _ _)]
+  rw [bestRankFrobSq, h2, hrange _ (min_le_left _ _), hrange _ (min_le_right _ _)]
 
 /-- The actual normalized complex volume law has exact expected projection
 error `(k+1)e_(k+1)/e_k`, at most `k+1` times the true optimum over all
@@ -43,9 +43,9 @@ theorem integral_complexVolumeSampling_residual_norm_sq_eq_and_le_bestRank
     (∫ S, ‖complexVolumeSamplingResidual A S‖ ^ 2 ∂complexVolumeSamplingLaw A hk) =
       (k + 1 : ℝ) * complexGramElementary A (k + 1) / complexGramElementary A k ∧
     (∫ S, ‖complexVolumeSamplingResidual A S‖ ^ 2 ∂complexVolumeSamplingLaw A hk) ≤
-      (k + 1 : ℝ) * bestRankFrobSq k A := by
+      (k + 1 : ℝ) * bestRankFrobSq A k := by
   refine ⟨integral_complexVolumeSampling_residual_norm_sq_eq_elementary_ratio A hk, ?_⟩
-  rw [bestRankFrobSq_eq_singularValueTailSq, singularValueTailSq_eq_complexGramTail]
+  rw [bestRankFrobSq_eq_complexGramTail]
   exact integral_complexVolumeSampling_residual_norm_sq_le_mul_tail A hk
 
 /-- The actual complex volume law has factor-`k+1` error relative to the
@@ -58,7 +58,7 @@ theorem integral_complexVolumeSampling_residual_norm_sq_le_mul_truncatedSVD
     (∫ S, ‖complexVolumeSamplingResidual A S‖ ^ 2 ∂complexVolumeSamplingLaw A hk) ≤
       (k + 1 : ℝ) * ‖A - truncatedSVD A k‖ ^ 2 := by
   rw [frobenius_norm_sq_eq_sum_norm_sq, ← frobSq_eq_sum_norm_sq,
-    frobSq_sub_truncatedSVD_eq_singularValueTailSq, singularValueTailSq_eq_complexGramTail]
+    frobSq_sub_truncatedSVD_eq_bestRankFrobSq, bestRankFrobSq_eq_complexGramTail]
   exact integral_complexVolumeSampling_residual_norm_sq_le_mul_tail A hk
 
 end NLAlib

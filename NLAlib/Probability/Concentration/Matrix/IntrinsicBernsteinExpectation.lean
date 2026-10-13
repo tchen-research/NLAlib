@@ -202,8 +202,8 @@ private lemma NLAlib.intrinsic_matrix_bernstein_expectation_package :
   set μ₀ := 2 * Real.sqrt (ℓ * v) + 2 * ℓ * L with hμ₀def
   set c := (μ₀ / 2) / (v + L * μ₀ / 3) with hcdef
   -- the imported tail bound
-  have htail := (intrinsic_matrix_bernstein μ S L hL V₁ V₂ hV hMeas hIndep hMean hBound
-    hVar₁ hVar₂).2.2
+  have htail (t : ℝ) := measureReal_specNorm_sum_ge_le_intrinsicDimension_mul_exp
+    μ S hL hV hMeas hIndep hMean hBound hVar₁ hVar₂ (t := t)
   -- reduce to integrable case
   by_cases hint : Integrable (fun ω => ‖∑ k, S k ω‖) μ
   swap

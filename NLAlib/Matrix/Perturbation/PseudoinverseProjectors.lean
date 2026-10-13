@@ -25,9 +25,9 @@ theorem specNorm_sub_columnProjector_le_pinv_mul_specNorm {A B : Matrix m n ℝ}
       specNorm (moorePenroseInverse A)*specNorm (B-A) := by
   let PA := A*moorePenroseInverse A
   let PB := B*moorePenroseInverse B
-  have hPAs : PA.IsSymm := mul_moorePenroseInverse_isHermitian A
+  have hPAs : PA.IsHermitian := mul_moorePenroseInverse_isHermitian A
   have hPAi : IsIdempotentElem PA := mul_moorePenroseInverse_isIdempotentElem A
-  have hPBs : PB.IsSymm := mul_moorePenroseInverse_isHermitian B
+  have hPBs : PB.IsHermitian := mul_moorePenroseInverse_isHermitian B
   have hPBi : IsIdempotentElem PB := mul_moorePenroseInverse_isIdempotentElem B
   have hpr : PA.rank=PB.rank := by
     rw [rank_mul_moorePenroseInverse, rank_mul_moorePenroseInverse]
@@ -43,7 +43,7 @@ theorem specNorm_sub_columnProjector_le_pinv_mul_specNorm {A B : Matrix m n ℝ}
   rw [heq, specNorm_neg]
   have hc : specNorm (1-PB) ≤ 1 := by
     apply Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem
-    · simp [Matrix.IsSymm, hPBs.eq]
+    · exact Matrix.isHermitian_one.sub hPBs
     · change (1-PB)*(1-PB)=1-PB
       have hi : PB*PB=PB := hPBi
       simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one, hi]

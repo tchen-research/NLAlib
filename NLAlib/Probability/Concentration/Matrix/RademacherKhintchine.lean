@@ -5,9 +5,9 @@ import NLAlib.Matrix.Inequalities.TraceMeanValue
 # Integer noncommutative Khintchine: Rademacher coefficients
 
 Individual measure-preserving coordinate flips and the polynomial trace
-mean-value inequality prove the exact lower-moment recursion on the actual
+mean-value inequality prove the exact lower-moment recursion on the
 finite product Rademacher law. Polynomial trace Young closes the recursion.
-Source: operator manuscript `eq:recursion`, `thm:khintchine`.
+Source: Tropp 2015, *An Introduction to Matrix Concentration Inequalities*, §4.7.
 -/
 
 noncomputable section
@@ -20,8 +20,8 @@ variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq
 
 open scoped Matrix.Norms.L2Operator in
 /-- A single coordinate sign flip gives the exact odd-power trace recursion
-for that Hermitian coefficient. Source: manuscript Rademacher sign-flip
-argument; supports `noncommutative-khintchine`. -/
+for that Hermitian coefficient. Source: the Rademacher sign-flip
+argument (Tropp 2015, §4.7); supports `noncommutative-khintchine`. -/
 theorem integral_coordinate_mul_re_trace_mul_rademacherSeries_pow_le
     (A : κ → Matrix ι ι ℂ) (hA : ∀ j, (A j).IsHermitian)
     (i : κ) {m : ℕ} (hm : Even m) :
@@ -92,8 +92,7 @@ theorem integral_coordinate_mul_re_trace_mul_rademacherSeries_pow_le
 
 open scoped Matrix.Norms.L2Operator in
 /-- The exact Rademacher matrix-series even moment obeys the polynomial
-lower-moment recursion. Source: individual sign flips in manuscript
-`eq:recursion`; supports `noncommutative-khintchine`. -/
+lower-moment recursion. Source: individual sign flips (Tropp 2015, §4.7); supports `noncommutative-khintchine`. -/
 theorem integral_re_trace_rademacherSeries_even_pow_le_recursion
     (A : κ → Matrix ι ι ℂ) (hA : ∀ i, (A i).IsHermitian)
     {p : ℕ} (hp : 1 ≤ p) :
@@ -136,11 +135,11 @@ theorem integral_re_trace_rademacherSeries_even_pow_le_recursion
 
 open scoped Matrix.Norms.L2Operator in
 /-- **Integer noncommutative Khintchine, Rademacher polynomial form.** Fixed
-complex Hermitian coefficient matrices under the actual product sign law
-obey the exact `(2p-1)^p` trace-moment bound. Source: manuscript
-`thm:khintchine`, Rademacher branch. Empty coefficient and matrix types and
+complex Hermitian coefficient matrices under the product sign law
+obey the exact `(2p-1)^p` trace-moment bound. Source: Tropp 2015, §4.7.
+Empty coefficient and matrix types and
 zero variance are included.
-atlas: noncommutative-khintchine (partial) -/
+atlas: noncommutative-khintchine -/
 theorem integral_re_trace_rademacherSeries_pow_le
     (A : κ → Matrix ι ι ℂ) (hA : ∀ i, (A i).IsHermitian)
     {p : ℕ} (hp : 1 ≤ p) :

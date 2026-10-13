@@ -66,7 +66,7 @@ theorem exists_cs_decomposition {p q : Type*}
     rfl
   have hM : HasOrthonormalCols M := by
     rw [← hMForm]
-    exact ((orthogonal_blockDiagonal hV.transpose hOneQ).mul hU).mul
+    exact ((orthogonal_blockDiagonal hV.conjTranspose hOneQ).mul hU).mul
       (orthogonal_blockDiagonal hW hOneQ)
   have hGram : C * C + Dᵀ * D = 1 := by
     have h := congrArg Matrix.toBlocks₁₁ (show Mᵀ * M = 1 from hM)
@@ -109,7 +109,7 @@ theorem exists_cs_decomposition {p q : Type*}
     cases i <;> rfl
   obtain ⟨Z, hZ, hNZ⟩ := exists_orthogonal_right_block_of_first_columns_eq
     N (csCanonicalMatrix c E) hN (hasOrthonormalCols_csCanonicalMatrix c E hE hc) hFirst
-  refine ⟨hc, V, W, Oᵀ, Z, hV, hW, hO.transpose, hZ, ?_⟩
+  refine ⟨hc, V, W, Oᵀ, Z, hV, hW, hO.conjTranspose, hZ, ?_⟩
   have hLeft : Matrix.fromBlocks (1 : Matrix p p ℝ) 0 0 O *
       Matrix.fromBlocks Vᵀ 0 0 (1 : Matrix q q ℝ) =
       (Matrix.fromBlocks V 0 0 Oᵀ)ᵀ := by

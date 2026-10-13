@@ -6,9 +6,10 @@ Gower–Richtárik's sketch-and-project method with the Euclidean metric (`B = I
 `S : Matrix m s ℝ`, one step projects the iterate onto the sketched solution set
 `{y | Sᵀ A y = Sᵀ b}`,
 `step A b S x = x − (SᵀA)⁺ Sᵀ (A x − b)`.
-With sketches `S j` drawn with probabilities `p j` from a finite family, the expected squared
-error (`NLAlib.SketchProject.expErr`, defined by first-step recursion as for randomized
-Kaczmarz) contracts by `1 − λ`, where `λ ‖v‖² ≤ vᵀ W v` and `W = ∑ⱼ pⱼ (SⱼᵀA)⁺(SⱼᵀA)` is the
+With sketches `S j` drawn with probabilities `p j` from a finite family,
+`SketchProject.pathLaw` samples independent paths and `SketchProject.run` executes them.
+`integral_sqErr_pathLaw_le_of_sub_mem_range` states convergence of the squared Euclidean
+error integral. The finite recurrence `expErr` computes this integral. It contracts by `1 − λ`, where `λ ‖v‖² ≤ vᵀ W v` and `W = ∑ⱼ pⱼ (SⱼᵀA)⁺(SⱼᵀA)` is the
 expected projector (`NLAlib.SketchProject.expErr_le`).
 
 Randomized Kaczmarz is the case `S j = e_j`, `p j = ‖A_j‖²/‖A‖_F²`, with `W = AᵀA/‖A‖_F²`
@@ -37,8 +38,8 @@ atlas: sketch-and-project -/
 def step (A : Matrix m n ℝ) (b : m → ℝ) (S : Matrix m s ℝ) (x : n → ℝ) : n → ℝ :=
   x - moorePenroseInverse (Sᵀ * A) *ᵥ (Sᵀ *ᵥ (A *ᵥ x - b))
 
-/-- Expected squared error after `k` sketch-and-project steps from `x`, sketches `S j` drawn
-i.i.d. with probabilities `p j`, by first-step recursion:
+/-- The finite weighted squared-error recurrence. With normalized nonnegative weights,
+`integral_sqErr_pathLaw` identifies it with the expectation after `k` iid sketch steps:
 `expErr 0 x = ‖x − xs‖²`, `expErr (k+1) x = ∑ⱼ pⱼ expErr k (step A b (S j) x)`.
 Atlas: `sketch-and-project`.
 atlas: sketch-and-project -/
@@ -47,7 +48,7 @@ def expErr (A : Matrix m n ℝ) (b : m → ℝ) (p : J → ℝ) (S : J → Matri
   | x, 0 => (x - xs) ⬝ᵥ (x - xs)
   | x, k + 1 => ∑ j, p j * expErr A b p S xs (step A b (S j) x) k
 
-/-- The expected projector `W = ∑ⱼ pⱼ (SⱼᵀA)⁺(SⱼᵀA)`. Source: Gower–Richtárik (2015) [`gr15`],
+/-- The finite weighted projector formula `W = ∑ⱼ pⱼ (SⱼᵀA)⁺(SⱼᵀA)`. Source: Gower–Richtárik (2015) [`gr15`],
 eq. (4.1) (`E[Z]` with `B = I`). Atlas: `sketch-and-project`.
 atlas: sketch-and-project -/
 def expectedProjector (A : Matrix m n ℝ) (p : J → ℝ) (S : J → Matrix m s ℝ) : Matrix n n ℝ :=
@@ -98,7 +99,7 @@ steps with i.i.d. sketches, `E‖x_k − xs‖² ≤ (1 − λ)^k ‖x₀ − xs
 Source: Gower–Richtárik (2015) [`gr15`], Thm 4.6 (`B = I`; the sharp `λ` is
 `λ_min⁺(W)`). Atlas: `sketch-and-project`; uses `pseudoinverse`. Deviation: finite sketch
 distribution; expectation modelled by first-step recursion.
-atlas: sketch-and-project -/
+Atlas: `sketch-and-project` (finite recurrence bound). -/
 theorem expErr_le (A : Matrix m n ℝ) (b : m → ℝ) (p : J → ℝ) (hp : ∀ j, 0 ≤ p j)
     (hp1 : ∑ j, p j = 1) (S : J → Matrix m s ℝ) {xs : n → ℝ} (hxs : A *ᵥ xs = b) {lam : ℝ}
     (hlam : ∀ v : n → ℝ, lam * (v ⬝ᵥ v) ≤ v ⬝ᵥ (expectedProjector A p S *ᵥ v)) (x : n → ℝ)
@@ -172,7 +173,7 @@ row space, the finite iid sketch distribution satisfies
 Gower–Richtárik 2015, Theorem 4.6, Euclidean case `B = I`;
 atlas `sketch-and-project`. Deviation: a finite sketch distribution, with expectation
 given by the exact first-step recursion. The initial-error membership is essential.
-atlas: sketch-and-project -/
+Atlas: `sketch-and-project` (finite recurrence bound). -/
 theorem expErr_le_of_sub_mem_range (A : Matrix m n ℝ) (b : m → ℝ)
     (p : J → ℝ) (hp : ∀ j, 0 ≤ p j) (hp1 : ∑ j, p j = 1)
     (S : J → Matrix m s ℝ) {xs : n → ℝ} (hxs : A *ᵥ xs = b) {lam : ℝ}
@@ -217,6 +218,7 @@ theorem expErr_le_of_sub_mem_range (A : Matrix m n ℝ) (b : m → ℝ)
       _ ≤ (1 - lam) ^ k * ((1 - lam) * ((x - xs) ⬝ᵥ (x - xs))) :=
           mul_le_mul_of_nonneg_left hstep (pow_nonneg hρ k)
       _ = (1 - lam) ^ (k + 1) * ((x - xs) ⬝ᵥ (x - xs)) := by ring
+
 
 end SketchProject
 

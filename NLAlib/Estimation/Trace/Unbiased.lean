@@ -1,7 +1,9 @@
 import NLAlib.Estimation.Trace.HutchinsonTail
+import NLAlib.Krylov.Quadrature.SpectralMeasure
 import NLAlib.ForMathlib.Probability.Independence
+import NLAlib.Matrix.Subspaces.OrthonormalBasisMatrix
 /-!
-# Unbiasedness of deflated trace estimators: Hutch++ and XTrace
+# Deflated trace kernels and sketch-based estimator constructions
 
 Hutch++ (Meyer–Musco–Musco–Woodruff 2021) and XTrace (Epperly–Tropp–Webber 2024) split
 `tr A = tr(QᵀAQ) + tr((I − QQᵀ)A(I − QQᵀ))` for an orthonormal `Q` built from a sketch of `A`, and
@@ -15,11 +17,11 @@ independent variables; no Gaussian law, exchangeability or low-rank error bound 
   for idempotent `P`; `NLAlib.trace_eq_trace_transpose_mul_mul_add`: the `P = QQᵀ` form.
 * `NLAlib.integral_hutchinsonEstimate_eq_trace`: multi-sample Hutchinson is unbiased for
   test matrices with isotropic columns.
-* `NLAlib.integral_hutchPlusPlusEstimate_eq_trace`: Hutch++ is unbiased for a fixed `Q`.
+* `NLAlib.integral_deflatedTraceEstimate_eq_trace`: independent deflation is unbiased for a fixed `Q`.
 * `NLAlib.integral_comp_of_indepFun_of_forall_integral_eq`: Fubini step for independent inputs.
-* `NLAlib.integral_hutchPlusPlusEstimate_comp_eq_trace`: Hutch++ is unbiased for a random `Q`
+* `NLAlib.integral_deflatedTraceEstimate_comp_eq_trace`: independent deflation is unbiased for a random `Q`
   independent of the Hutchinson test matrix.
-* `NLAlib.integral_xtraceEstimate_eq_trace`: XTrace (leave-one-out average) is unbiased.
+* `NLAlib.integral_leaveOneOutDeflatedTraceEstimate_eq_trace`: the supplied leave-one-out deflation kernel is unbiased.
 * `NLAlib.integral_integral_spectralMeasure_eq_trace`: `𝔼_z ∫ f dμ_z = tr f(A)` (the Hutchinson
   clause of `spectral-measure`).
 
@@ -56,7 +58,7 @@ variable {r : Type*} [Fintype r] [DecidableEq r]
 `tr A = tr(QᵀAQ) + tr((I − QQᵀ) A (I − QQᵀ))`. Source: Meyer–Musco–Musco–Woodruff (2021)
 [`mmmw21`], eq. (3); Epperly–Tropp–Webber (2024) [`etw24`], eq. (1.4). Atlas: `hutchpp-unbiased`
 (helper).
-atlas: hutchpp-unbiased -/
+atlas: hutchpp-unbiased (partial) -/
 theorem trace_eq_trace_transpose_mul_mul_add {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q)
     (A : Matrix n n ℝ) :
     A.trace = (Qᵀ * A * Q).trace + ((1 - Q * Qᵀ) * A * (1 - Q * Qᵀ)).trace := by
@@ -85,43 +87,105 @@ theorem integral_hutchinsonEstimate_eq_trace [DecidableEq n] [Nonempty κ] (A : 
     (hsecond : ∀ k i j, ∫ ω, Z ω i k * Z ω j k ∂μ = if i = j then 1 else 0) :
     ∫ ω, hutchinsonEstimate A (Z ω) ∂μ = A.trace := by
   have hm : (Fintype.card κ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
-  have hk := fun k => integrable_and_integral_quadForm_eq_trace_of_second_moments A
+  have hkI := fun k => integrable_quadForm_of_second_moments A
+    (z := fun ω i => Z ω i k) (fun i => hmeas i k) (hsecond k)
+  have hkE := fun k => integral_quadForm_eq_trace_of_second_moments A
     (z := fun ω i => Z ω i k) (fun i => hmeas i k) (hsecond k)
   simp only [hutchinsonEstimate]
-  rw [integral_div, integral_finsetSum _ fun k _ => (hk k).1]
-  simp only [fun k => (hk k).2, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+  rw [integral_div, integral_finsetSum _ fun k _ => hkI k]
+  simp only [hkE, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp
 
-/-- The Hutch++ estimator with deflation basis `Q` and Hutchinson test matrix `Z`:
+/-- The deflated trace kernel with a supplied basis `Q` and Hutchinson test matrix `Z`:
 `tr(QᵀAQ) + tr_m((I − QQᵀ)A(I − QQᵀ))`. Source: Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`],
-Alg. 1. Atlas: `hutchpp`, `hutchpp-unbiased`. Deviation: `Q` is any matrix (the algorithm uses
-an orthonormal basis of `A S`).
+Alg. 1. Atlas: `hutchpp`, `hutchpp-unbiased`. `Q` is arbitrary here; unbiasedness requires orthonormality. The sketch-based
+`hutchPlusPlusEstimate` below constructs its basis from `range (A S)`. An empty test family
+has a zero residual average, leaving the compressed trace.
 atlas: trace-estimators-def -/
-def hutchPlusPlusEstimate (A : Matrix n n ℝ) (Q : Matrix n r ℝ) (Z : Matrix n κ ℝ) : ℝ :=
+def deflatedTraceEstimate (A : Matrix n n ℝ) (Q : Matrix n r ℝ) (Z : Matrix n κ ℝ) : ℝ :=
   (Qᵀ * A * Q).trace + hutchinsonEstimate ((1 - Q * Qᵀ) * A * (1 - Q * Qᵀ)) Z
 
+/-- The orthonormal sketch-image basis used by Hutch++.
+Its columns span `range (A S)` exactly and their number is the rank of the sketch image.
+Source: Meyer–Musco–Musco–Woodruff (2021), Alg. 1. -/
+def hutchPlusPlusBasis {s : Type*} [Fintype s] (A : Matrix n n ℝ) (S : Matrix n s ℝ) :
+    Matrix n (Fin (Module.finrank ℝ (LinearMap.range (A * S).mulVecLin))) ℝ :=
+  orthonormalBasisMatrix (LinearMap.range (A * S).mulVecLin)
+
+/-- The constructed Hutch++ sketch-image basis has orthonormal columns. -/
+theorem hasOrthonormalCols_hutchPlusPlusBasis {s : Type*} [Fintype s]
+    (A : Matrix n n ℝ) (S : Matrix n s ℝ) : HasOrthonormalCols (hutchPlusPlusBasis A S) :=
+  hasOrthonormalCols_orthonormalBasisMatrix _
+
+/-- The constructed Hutch++ basis spans the sketch image, including rank-deficient sketches. -/
+theorem range_hutchPlusPlusBasis {s : Type*} [Fintype s]
+    (A : Matrix n n ℝ) (S : Matrix n s ℝ) :
+    LinearMap.range (hutchPlusPlusBasis A S).mulVecLin = LinearMap.range (A * S).mulVecLin :=
+  range_orthonormalBasisMatrix _
+
+/-- The sketch-image basis has at most as many columns as the sketch. -/
+theorem card_hutchPlusPlusBasis_le {s : Type*} [Fintype s]
+    (A : Matrix n n ℝ) (S : Matrix n s ℝ) :
+    Fintype.card (Fin (Module.finrank ℝ (LinearMap.range (A * S).mulVecLin))) ≤ Fintype.card s := by
+  rw [Fintype.card_fin, Matrix.range_mulVecLin]
+  exact finrank_range_le_card (R := ℝ) _
+
+/-- Hutch++ with a basis constructed from the sketch image and a separate residual test matrix.
+Source: Meyer–Musco–Musco–Woodruff (2021), Alg. 1. Rank-deficient and zero sketches use their
+actual image dimension. This definition supplies the sketch-span relation; random-sketch
+measurability, independence and complexity guarantees require separate theorems. -/
+def hutchPlusPlusEstimate {s : Type*} [Fintype s]
+    (A : Matrix n n ℝ) (S : Matrix n s ℝ) (Z : Matrix n κ ℝ) : ℝ :=
+  deflatedTraceEstimate A (hutchPlusPlusBasis A S) Z
+
 omit [DecidableEq κ] in
-/-- **Hutch++ is unbiased for a fixed deflation basis.** If `QᵀQ = I` and the columns of the
-random test matrix have isotropic second moments, then `𝔼[Hutch++] = tr A`. Source:
+/-- **Fixed orthonormal deflation is unbiased.** If `QᵀQ = I` and the columns of the
+random test matrix have isotropic second moments, then the deflated estimate has expectation `tr A`. Source:
 Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], proof of Thm 1 (unbiasedness, conditional on
 `S`). Atlas: `hutchpp-unbiased`; uses `hutchinson-unbiased`.
-atlas: hutchpp-unbiased -/
-theorem integral_hutchPlusPlusEstimate_eq_trace [Nonempty κ] [IsProbabilityMeasure μ]
+atlas: hutchpp-unbiased (partial) -/
+theorem integral_deflatedTraceEstimate_eq_trace [Nonempty κ] [IsProbabilityMeasure μ]
     (A : Matrix n n ℝ) {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q)
     {Z : Ω → Matrix n κ ℝ} (hmeas : ∀ i k, AEMeasurable (fun ω => Z ω i k) μ)
     (hsecond : ∀ k i j, ∫ ω, Z ω i k * Z ω j k ∂μ = if i = j then 1 else 0) :
-    ∫ ω, hutchPlusPlusEstimate A Q (Z ω) ∂μ = A.trace := by
-  have hk := fun k => integrable_and_integral_quadForm_eq_trace_of_second_moments
+    ∫ ω, deflatedTraceEstimate A Q (Z ω) ∂μ = A.trace := by
+  have hk := fun k => integrable_quadForm_of_second_moments
     ((1 - Q * Qᵀ) * A * (1 - Q * Qᵀ)) (z := fun ω i => Z ω i k) (fun i => hmeas i k)
       (hsecond k)
   have hint : Integrable (fun ω => hutchinsonEstimate ((1 - Q * Qᵀ) * A * (1 - Q * Qᵀ)) (Z ω))
       μ := by
     simp only [hutchinsonEstimate]
-    exact (integrable_finsetSum _ fun k _ => (hk k).1).div_const _
-  simp only [hutchPlusPlusEstimate]
+    exact (integrable_finsetSum _ fun k _ => hk k).div_const _
+  simp only [deflatedTraceEstimate]
   rw [integral_add (integrable_const _) hint, integral_const, probReal_univ, one_smul,
     integral_hutchinsonEstimate_eq_trace _ hmeas hsecond,
     ← trace_eq_trace_transpose_mul_mul_add hQ A]
+
+/-- For a fixed sketch, the constructed Hutch++ estimator is unbiased under isotropic
+residual probes. Source: Meyer–Musco–Musco–Woodruff (2021), proof of Thm 1. -/
+theorem integral_hutchPlusPlusEstimate_eq_trace [Nonempty κ] [IsProbabilityMeasure μ]
+    {s : Type*} [Fintype s] (A : Matrix n n ℝ) (S : Matrix n s ℝ)
+    {Z : Ω → Matrix n κ ℝ} (hmeas : ∀ i k, AEMeasurable (fun ω => Z ω i k) μ)
+    (hsecond : ∀ k i j, ∫ ω, Z ω i k * Z ω j k ∂μ = if i = j then 1 else 0) :
+    ∫ ω, hutchPlusPlusEstimate A S (Z ω) ∂μ = A.trace :=
+  integral_deflatedTraceEstimate_eq_trace A (hasOrthonormalCols_hutchPlusPlusBasis A S)
+    hmeas hsecond
+
+/-- The constructed estimator with a fixed sketch and Gaussian residual probes is unbiased;
+its probe moments and integrability follow from the Gaussian law.
+Source: Meyer–Musco–Musco–Woodruff (2021), proof of Thm 1 (conditional on the sketch). -/
+theorem integral_hutchPlusPlusEstimate_eq_trace_of_hasLaw_gaussianMatrix
+    [Nonempty κ] [IsProbabilityMeasure μ] {s : Type*} [Fintype s]
+    (A : Matrix n n ℝ) (S : Matrix n s ℝ) {Z : Ω → Matrix n κ ℝ}
+    (hZ : HasLaw Z (gaussianMatrix n κ) μ) :
+    ∫ ω, hutchPlusPlusEstimate A S (Z ω) ∂μ = A.trace := by
+  apply integral_hutchPlusPlusEstimate_eq_trace A S
+  · intro i k
+    exact (Matrix.measurable_entry i k).comp_aemeasurable hZ.aemeasurable
+  · intro k i j
+    have h := hZ.integral_comp ((Matrix.measurable_entry i k).mul
+      (Matrix.measurable_entry j k)).aestronglyMeasurable
+    exact h.trans (by simpa using integral_gaussianMatrix_entry_mul i j k k)
 
 end Fixed
 
@@ -149,7 +213,7 @@ theorem integral_comp_of_indepFun_of_forall_integral_eq {α β : Type*} [Measura
 
 variable {κ : Type*} [Fintype κ]
 
-/-- **Hutch++ is unbiased.** Let the deflation basis `Q(S)` be a function of a random sketch `S`
+/-- **Independent random orthonormal deflation is unbiased.** Let the deflation basis `Q(S)` be a function of a random sketch `S`
 with `Q(s)ᵀQ(s) = I` for every `s`, and let the Hutchinson test matrix `G` be independent of `S`
 with isotropic columns. If the estimator is integrable for the product of the laws, then
 `𝔼[tr(QᵀAQ) + tr_m((I − QQᵀ)A(I − QQᵀ))] = tr A`.
@@ -157,40 +221,51 @@ Source: Meyer–Musco–Musco–Woodruff (2021) [`mmmw21`], Thm 1 (unbiasedness 
 Atlas: `hutchpp-unbiased`; uses `hutchinson-unbiased`, `gaussian-conditioning`.
 Deviation: the integrability of the estimator is a hypothesis (it holds for Gaussian `G`,
 bounded `A`); `S` lives in an arbitrary measurable space.
-atlas: hutchpp-unbiased -/
-theorem integral_hutchPlusPlusEstimate_comp_eq_trace [Nonempty κ] {α : Type*}
+atlas: hutchpp-unbiased (partial) -/
+theorem integral_deflatedTraceEstimate_comp_eq_trace [Nonempty κ] {α : Type*}
     [MeasurableSpace α] (A : Matrix n n ℝ) {r : Type*} [Fintype r] [DecidableEq r]
     {Q : α → Matrix n r ℝ} (hQ : ∀ s, HasOrthonormalCols (Q s)) {S : Ω → α}
     {G : Ω → Matrix n κ ℝ} (hS : AEMeasurable S μ) (hG : AEMeasurable G μ) (hSG : IndepFun S G μ)
     (hsecond : ∀ k i j, ∫ ω, G ω i k * G ω j k ∂μ = if i = j then 1 else 0)
-    (hint : Integrable (fun p : α × Matrix n κ ℝ => hutchPlusPlusEstimate A (Q p.1) p.2)
+    (hint : Integrable (fun p : α × Matrix n κ ℝ => deflatedTraceEstimate A (Q p.1) p.2)
       ((μ.map S).prod (μ.map G))) :
-    ∫ ω, hutchPlusPlusEstimate A (Q (S ω)) (G ω) ∂μ = A.trace := by
+    ∫ ω, deflatedTraceEstimate A (Q (S ω)) (G ω) ∂μ = A.trace := by
   have hmeas : ∀ i k, AEMeasurable (fun ω => G ω i k) μ := fun i k =>
     (Matrix.measurable_entry i k).comp_aemeasurable hG
   exact integral_comp_of_indepFun_of_forall_integral_eq (g := fun s Z =>
-    hutchPlusPlusEstimate A (Q s) Z) hS hG hSG hint
-    (fun s => integral_hutchPlusPlusEstimate_eq_trace A (hQ s) hmeas hsecond)
+    deflatedTraceEstimate A (Q s) Z) hS hG hSG hint
+    (fun s => integral_deflatedTraceEstimate_eq_trace A (hQ s) hmeas hsecond)
 
-/-- The XTrace estimator: the average over `i` of the one-sample Hutch++ estimates
-`tr(Qᵢᵀ A Qᵢ) + ωᵢᵀ (I − QᵢQᵢᵀ) A (I − QᵢQᵢᵀ) ωᵢ`, where `Qᵢ` is built from the other test
-vectors. Source: Epperly–Tropp–Webber (2024) [`etw24`], eq. (1.6) (basic form, before the
+/-- The supplied leave-one-out deflated trace kernel: the average over `i` of
+`tr(Qᵢᵀ A Qᵢ) + ωᵢᵀ (I − QᵢQᵢᵀ) A (I − QᵢQᵢᵀ) ωᵢ`, where `Qᵢ` is supplied. No sketch-span condition is imposed by this kernel.
+The average is zero when there are no samples. Source: Epperly–Tropp–Webber (2024) [`etw24`], eq. (1.6) (basic form, before the
 normalisation refinements of §2). Atlas: `xtrace-unbiased`. -/
-def xtraceEstimate (A : Matrix n n ℝ) {r : Type*} [Fintype r] (Q : κ → Matrix n r ℝ)
+def leaveOneOutDeflatedTraceEstimate (A : Matrix n n ℝ) {r : Type*} [Fintype r] (Q : κ → Matrix n r ℝ)
     (W : Matrix n κ ℝ) : ℝ :=
   (∑ i, (((Q i)ᵀ * A * Q i).trace +
     quadForm ((1 - Q i * (Q i)ᵀ) * A * (1 - Q i * (Q i)ᵀ)) (fun j => W j i))) / Fintype.card κ
 
-/-- **XTrace is unbiased.** Let `W` be the test matrix with columns `ωᵢ`, and for each `i` let
+/-- The sketch formed by deleting a probe column. Source: Epperly–Tropp–Webber (2024), §2.1. -/
+def leaveOneOutSketch (W : Matrix n κ ℝ) (i : κ) : Matrix n {j : κ // j ≠ i} ℝ :=
+  W.submatrix id Subtype.val
+
+/-- The basic XTrace deflation estimate with each basis constructed from the other probes.
+Source: Epperly–Tropp–Webber (2024), eq. (1.6), before the normalization refinements of §2.
+Each summand uses the basis of `range (A W₋ᵢ)`. The empty average is zero. -/
+def xtraceEstimate [DecidableEq κ] (A : Matrix n n ℝ) (W : Matrix n κ ℝ) : ℝ :=
+  (∑ i, hutchPlusPlusEstimate A (leaveOneOutSketch W i)
+    (Matrix.replicateCol Unit (fun j => W j i))) / Fintype.card κ
+
+/-- **Independent leave-one-out deflation is unbiased.** Let `W` be the test matrix with columns `ωᵢ`, and for each `i` let
 `Qᵢ = Qf i (Sᵢ)` with `Qf i s` orthonormal for every `s`, where the leave-one-out statistic `Sᵢ`
 (in XTrace, `Ω₋ᵢ`) is independent of `ωᵢ`, and each `ωᵢ` has isotropic second moments. If each
-term is integrable for the product of the laws of `Sᵢ` and `ωᵢ`, then `𝔼[XTrace] = tr A`.
+term is integrable for the product of the laws of `Sᵢ` and `ωᵢ`, then the leave-one-out deflated estimate has expectation `tr A`.
 Source: Epperly–Tropp–Webber (2024) [`etw24`], §2.1 (unbiasedness of the exchangeable estimator).
 Atlas: `xtrace-unbiased`; uses `hutchinson-unbiased`, `gaussian-conditioning`.
 Deviation: abstract leave-one-out statistics `Sᵢ`; integrability is a hypothesis; the
 `rsvd-expected-error` dependency of the atlas entry is not needed.
 atlas: xtrace-unbiased (partial) -/
-theorem integral_xtraceEstimate_eq_trace [Nonempty κ] (A : Matrix n n ℝ) {r : Type*}
+theorem integral_leaveOneOutDeflatedTraceEstimate_eq_trace [Nonempty κ] (A : Matrix n n ℝ) {r : Type*}
     [Fintype r] [DecidableEq r] {α : κ → Type*} [∀ i, MeasurableSpace (α i)]
     {Qf : ∀ i, α i → Matrix n r ℝ} (hQ : ∀ i s, HasOrthonormalCols (Qf i s))
     {S : ∀ i, Ω → α i} {W : Ω → Matrix n κ ℝ} (hS : ∀ i, AEMeasurable (S i) μ)
@@ -200,7 +275,7 @@ theorem integral_xtraceEstimate_eq_trace [Nonempty κ] (A : Matrix n n ℝ) {r :
     (hint : ∀ i, Integrable (fun p : α i × (n → ℝ) => ((Qf i p.1)ᵀ * A * Qf i p.1).trace +
       quadForm ((1 - Qf i p.1 * (Qf i p.1)ᵀ) * A * (1 - Qf i p.1 * (Qf i p.1)ᵀ)) p.2)
       ((μ.map (S i)).prod (μ.map fun ω j => W ω j i))) :
-    ∫ ω, xtraceEstimate A (fun i => Qf i (S i ω)) (W ω) ∂μ = A.trace := by
+    ∫ ω, leaveOneOutDeflatedTraceEstimate A (fun i => Qf i (S i ω)) (W ω) ∂μ = A.trace := by
   have hm : (Fintype.card κ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   have hterm : ∀ i, ∫ ω, (((Qf i (S i ω))ᵀ * A * Qf i (S i ω)).trace +
       quadForm ((1 - Qf i (S i ω) * (Qf i (S i ω))ᵀ) * A * (1 - Qf i (S i ω) * (Qf i (S i ω))ᵀ))
@@ -211,10 +286,13 @@ theorem integral_xtraceEstimate_eq_trace [Nonempty κ] (A : Matrix n n ℝ) {r :
       (hS i) (hW i) (hind i) (hint i) fun s => ?_
     have hmeas : ∀ j, AEMeasurable (fun ω => W ω j i) μ := fun j =>
       (measurable_pi_apply j).comp_aemeasurable (hW i)
-    have hq := integrable_and_integral_quadForm_eq_trace_of_second_moments
+    have hqI := integrable_quadForm_of_second_moments
       ((1 - Qf i s * (Qf i s)ᵀ) * A * (1 - Qf i s * (Qf i s)ᵀ)) (z := fun ω j => W ω j i)
       hmeas (hsecond i)
-    rw [integral_add (integrable_const _) hq.1, integral_const, probReal_univ, one_smul, hq.2,
+    have hqE := integral_quadForm_eq_trace_of_second_moments
+      ((1 - Qf i s * (Qf i s)ᵀ) * A * (1 - Qf i s * (Qf i s)ᵀ)) (z := fun ω j => W ω j i)
+      hmeas (hsecond i)
+    rw [integral_add (integrable_const _) hqI, integral_const, probReal_univ, one_smul, hqE,
       ← trace_eq_trace_transpose_mul_mul_add (hQ i s) A]
   have hint' : ∀ i, Integrable (fun ω => ((Qf i (S i ω))ᵀ * A * Qf i (S i ω)).trace +
       quadForm ((1 - Qf i (S i ω) * (Qf i (S i ω))ᵀ) * A * (1 - Qf i (S i ω) * (Qf i (S i ω))ᵀ))
@@ -225,7 +303,7 @@ theorem integral_xtraceEstimate_eq_trace [Nonempty κ] (A : Matrix n n ℝ) {r :
     have h := hint i
     rw [← hmap] at h
     exact h.comp_aemeasurable ((hS i).prodMk (hW i))
-  simp only [xtraceEstimate]
+  simp only [leaveOneOutDeflatedTraceEstimate]
   rw [integral_div, integral_finsetSum _ fun i _ => hint' i]
   simp only [hterm, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp

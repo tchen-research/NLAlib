@@ -138,7 +138,7 @@ theorem isLeast_frobSq_sub_orthogonal_mul_mul (A B : Matrix m n ℝ) :
   have hσ (U : Matrix m m ℝ) (T : Matrix n n ℝ)
       (hU : HasOrthonormalCols U) (hT : HasOrthonormalCols T) (i : ℕ) :
       singularValues (U * B * T) i = singularValues B i := by
-    rw [singularValues_mul_orthogonal _ hT, singularValues_isometry_mul hU]
+    rw [singularValues_mul_unitary _ hT, singularValues_isometry_mul hU]
   obtain ⟨U, T, hU, hT, hPair⟩ := exists_orthogonal_pair_attaining_singularValue_pairing A B
   refine ⟨⟨U, T, hU, hT, ?_⟩, ?_⟩
   · have h := (frobSq_sub_eq_sum_singularValues_sub_sq_iff A (U * B * T)).mpr

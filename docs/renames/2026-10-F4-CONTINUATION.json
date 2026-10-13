@@ -1,0 +1,11 @@
+{
+  "_comment": "F4 compilation recovery: downstream migrations and duplicate removal on 2026-10-13. Upstream rename tables remain authoritative.",
+  "choleskyStep_eq_sub_nystrom": "eliminationStep_eq_sub_nystrom",
+  "sum_choleskyPivotProbability_smul_step_eq": "sum_choleskyPivotProbability_smul_eliminationStep_eq",
+  "sum_choleskyPivotProbability_mul_trace_step_eq": "sum_choleskyPivotProbability_mul_re_trace_eliminationStep_eq (at ℝ, the real part is the identity)",
+  "choleskyPivotProbability": "<same declaration name, now imported from Matrix/Factorizations/CholeskyPivotProbability; shared RCLike definition>",
+  "complexSubspaceIterate": "subspaceIterate (generic definition in Krylov/Spaces/Block)",
+  "complexSubspaceTangent_complexSubspaceIterate_le": "complexSubspaceTangent_subspaceIterate_le",
+  "complexSubspaceTangent_complexSubspaceIterate_le_of_diagonal": "complexSubspaceTangent_subspaceIterate_le_of_diagonal",
+  "complexVectorTangentToColumns_complexSubspaceIterate_le_of_diagonal": "complexVectorTangentToColumns_subspaceIterate_le_of_diagonal"
+}

@@ -34,7 +34,6 @@ theorem eigenvaluePrefix_add_le {n : Type*} [Fintype n] [DecidableEq n]
   have ht : (Qᵀ * (A + B) * Q).trace = eigenvaluePrefix hAB k := by
     rw [compression_topEigenframe_eq_diagonal hAB hk, Matrix.trace_diagonal,
       eigenvaluePrefix_eq_sum_castLE hAB hk]
-    rfl
   rw [← ht, Matrix.mul_add, Matrix.add_mul, Matrix.trace_add]
   have h1 := trace_compression_le_eigenvaluePrefix hA hQ
   have h2 := trace_compression_le_eigenvaluePrefix hB hQ
@@ -58,7 +57,8 @@ theorem majorized_eigenvalues₀_add {n : Type*} [Fintype n] [DecidableEq n]
       sumLargest_eq_prefix_of_antitone _ (hA.eigenvalues₀_antitone.add hB.eigenvalues₀_antitone)]
     rw [sum_fin_ite_lt_eq_sum_castLE hkN, sum_fin_ite_lt_eq_sum_castLE hkN]
     simp only [Finset.sum_add_distrib]
-    exact eigenvaluePrefix_add_le hA hB (hA.add hB) hkN
+    simpa only [eigenvaluePrefix_eq_sum_castLE _ hkN] using
+      eigenvaluePrefix_add_le hA hB (hA.add hB) hkN
   · rw [← trace_eq_sum_eigenvalues₀ (hA.add hB)]
     simp only [Pi.add_apply, Finset.sum_add_distrib]
     rw [← trace_eq_sum_eigenvalues₀ hA, ← trace_eq_sum_eigenvalues₀ hB, Matrix.trace_add]
@@ -86,6 +86,6 @@ theorem weaklyMajorized_singularValues_add {m n : Type*}
   rw [sum_fin_ite_lt_eq_sum_range hkN (fun i => singularValues (A + B) i),
     sum_fin_ite_lt_eq_sum_range hkN (fun i => singularValues A i + singularValues B i)]
   rw [Finset.sum_add_distrib]
-  exact kyFanNorm_add_le A B k
+  simpa only [kyFanNorm_eq_sum_range] using kyFanNorm_add_le A B k
 
 end NLAlib

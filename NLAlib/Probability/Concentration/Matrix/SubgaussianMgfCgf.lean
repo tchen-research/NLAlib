@@ -50,15 +50,15 @@ Hermitian `A`, `matrixLog (𝔼 matrixExp (θ g • A)) ≼ θ²/2 • A²`. Tro
 theorem matrixLog_integral_matrixExp_smul_le_of_hasSubgaussianMGF [NeZero μ]
     (A : Matrix d d ℂ) (hA : A.IsHermitian) {g : Ω → ℝ} (hg : HasSubgaussianMGF g 1 μ) (θ : ℝ) :
     matrixLog (∫ ω, matrixExp ((θ * g ω) • A) ∂μ) ≤ (θ ^ 2 / 2) • A ^ 2 := by
+  have hcont : Continuous (fun x : ℝ => mgf g μ (θ * x)) :=
+    (continuous_mgf hg.integrable_exp_mul).comp (continuous_const.mul continuous_id)
   have hpos : ∀ x : ℝ, 0 < mgf g μ (θ * x) := fun x =>
     mgf_pos' (NeZero.ne μ) (hg.integrable_exp_mul (θ * x))
   rw [integral_matrixExp_smul_eq_cfc_of_hasSubgaussianMGF A hA hg θ, smul_sq_eq_cfc A hA, matrixLog,
     ← cfc_comp' Real.log (fun x => mgf g μ (θ * x)) A
       (Real.continuousOn_log.mono (by
         rintro _ ⟨x, _, rfl⟩
-        exact (hpos x).ne'))]
-  have hcont : Continuous (fun x : ℝ => mgf g μ (θ * x)) :=
-    (continuous_mgf hg.integrable_exp_mul).comp (continuous_const.mul continuous_id)
+        exact (hpos x).ne')) hcont.continuousOn]
   refine cfc_mono (fun x _ => ?_) ?_ (by fun_prop)
   · calc Real.log (mgf g μ (θ * x)) ≤ Real.log (Real.exp (1 * (θ * x) ^ 2 / 2)) :=
           Real.log_le_log (hpos x) (by simpa using hg.mgf_le (θ * x))

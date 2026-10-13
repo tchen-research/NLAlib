@@ -78,8 +78,9 @@ private lemma integrable_and_integral_inv_sq_dist_rowSpace {n k : ℕ} (hnk : n 
     apply Continuous.measurable
     fun_prop
   have hlaw := pi_gaussianReal_map_sq_dist_rowSpace H hH
-  obtain ⟨hint, hval⟩ :=
-    integrable_and_integral_inv_sum_sq_gaussianReal_fin (d := k - n) (by omega)
+  have hint := integrable_inv_sum_sq_gaussianVector (ι := Fin (k - n)) (by simpa using (show 3 ≤ k - n by omega))
+  have hval := integral_inv_sum_sq_gaussianVector (ι := Fin (k - n)) (by simpa using (show 3 ≤ k - n by omega))
+  simp only [Fintype.card_fin] at hval
   have hφ : Measurable (fun s : ℝ => s⁻¹) := measurable_inv
   have hS : Measurable (fun x : Fin (k - n) → ℝ => ∑ j, x j ^ 2) := by fun_prop
   constructor

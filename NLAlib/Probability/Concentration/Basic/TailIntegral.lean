@@ -9,9 +9,9 @@ into moment bounds.
 
 * `lintegral_le_of_tail_le`: the nonnegative expectation is at most
   `a + ∫ₐ^∞ F(t) dt`, including an infinite tail integral.
-* `integrable_and_integral_le_of_tail_le`: an integrable nonnegative tail envelope also
-  proves integrability of the random variable and gives the Bochner expectation bound.
-* `integrable_and_integral_le_of_tail_le_rpow`: a nonnegative random variable with a
+* `integrable_of_tail_le` and `integral_le_of_tail_le`: a nonnegative integrable tail
+  envelope proves integrability and bounds the Bochner expectation.
+* `integrable_of_tail_le_rpow` and `integral_le_of_tail_le_rpow`: a nonnegative random variable with a
   polynomial tail `P(f > t) ≤ C t^{-m}` (`m > 1`) is integrable with
   `E f ≤ C^{1/m} m / (m - 1)` (layer-cake formula, split at `t = C^{1/m}`).
 * `lintegral_rpow_mul_exp_le`: `∫₀ᵗ x^a e^{-x/2} dx ≤ t^{a+1} / (a + 1)` for `a > -1`.
@@ -36,7 +36,7 @@ atlas: tail-integral -/
 theorem lintegral_le_of_tail_le {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ)
     (hnn : 0 ≤ᵐ[μ] f) {a : ℝ} (ha : 0 ≤ a) (F : ℝ → ℝ)
-    (htail : ∀ t : ℝ, a < t → μ {x | t < f x} ≤ ENNReal.ofReal (F t)) :
+    (htail : ∀ t : ℝ, a < t → μ.real {x | t < f x} ≤ F t) :
     ∫⁻ x, ENNReal.ofReal (f x) ∂μ ≤
       ENNReal.ofReal a + ∫⁻ t in Ioi a, ENNReal.ofReal (F t) := by
   rw [lintegral_eq_lintegral_meas_lt μ hnn hf, ← Ioc_union_Ioi_eq_Ioi ha,
@@ -46,7 +46,9 @@ theorem lintegral_le_of_tail_le {Ω : Type*} [MeasurableSpace Ω]
           lintegral_mono fun _ => prob_le_one
       _ = ENNReal.ofReal a := by
           rw [setLIntegral_const, one_mul, Real.volume_Ioc, sub_zero]
-  · exact setLIntegral_mono' measurableSet_Ioi fun t ht => htail t ht
+  · refine setLIntegral_mono' measurableSet_Ioi fun t ht => ?_
+    rw [← ENNReal.ofReal_toReal (measure_ne_top μ {x | t < f x})]
+    exact ENNReal.ofReal_le_ofReal (htail t ht)
 
 /-- **Expectation from a general integrable tail envelope.** A nonnegative random variable
 whose upper tail is bounded by a nonnegative integrable `F` above `a ≥ 0` is integrable,
@@ -55,12 +57,12 @@ and `E f ≤ a + ∫ₐ^∞ F(t) dt`. Integrability is derived, rather than assu
 Standard layer-cake estimate; Vershynin 2018, Lemma 1.2.1; HMT 2011, proof of
 Thm 10.8. The nonnegative integral version `lintegral_le_of_tail_le` also covers
 infinite tail envelopes.
-atlas: tail-integral -/
-theorem integrable_and_integral_le_of_tail_le {Ω : Type*} [MeasurableSpace Ω]
+-/
+private theorem integrable_and_integral_le_of_tail_le {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ)
     (hnn : 0 ≤ᵐ[μ] f) {a : ℝ} (ha : 0 ≤ a) (F : ℝ → ℝ)
     (hF : IntegrableOn F (Ioi a)) (hFnn : 0 ≤ᵐ[volume.restrict (Ioi a)] F)
-    (htail : ∀ t : ℝ, a < t → μ {x | t < f x} ≤ ENNReal.ofReal (F t)) :
+    (htail : ∀ t : ℝ, a < t → μ.real {x | t < f x} ≤ F t) :
     Integrable f μ ∧ ∫ x, f x ∂μ ≤ a + ∫ t in Ioi a, F t := by
   have hbound := lintegral_le_of_tail_le μ f hf hnn ha F htail
   rw [← ofReal_integral_eq_lintegral_ofReal hF hFnn,
@@ -77,13 +79,12 @@ theorem integrable_and_integral_le_of_tail_le {Ω : Type*} [MeasurableSpace Ω]
 
 Standard layer-cake estimate (`E f = ∫₀^∞ P(f > t) dt`, bounded by `1` below `C^{1/m}` and by
 the tail above), e.g. HMT 2011, proof of Thm 10.8 / Vershynin 2018, Lemma 1.2.1.
-Atlas: `tail-integral`. Ported from Prove2me solution
-`GaussianMatrix.integral_le_of_tail_bound`.
-atlas: tail-integral (partial) -/
-theorem integrable_and_integral_le_of_tail_le_rpow {Ω : Type*} [MeasurableSpace Ω]
+
+-/
+private theorem integrable_and_integral_le_of_tail_le_rpow {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ)
     (hnn : 0 ≤ᵐ[μ] f) (C m : ℝ) (hC : 0 < C) (hm : 1 < m)
-    (htail : ∀ t : ℝ, 0 < t → μ {x | t < f x} ≤ ENNReal.ofReal (C * t ^ (-m))) :
+    (htail : ∀ t : ℝ, 0 < t → μ.real {x | t < f x} ≤ C * t ^ (-m)) :
     Integrable f μ ∧ ∫ x, f x ∂μ ≤ C ^ (1 / m) * m / (m - 1) := by
   set a : ℝ := C ^ (1 / m) with ha_def
   have ha : 0 < a := Real.rpow_pos_of_pos hC _
@@ -113,5 +114,47 @@ theorem integrable_and_integral_le_of_tail_le_rpow {Ω : Type*} [MeasurableSpace
   dsimp only [a]
   field_simp
   ring
+
+/-- Integrability from a nonnegative integrable tail envelope.
+Source: Vershynin 2018, Lemma 1.2.1; HMT 2011, proof of Thm 10.8.
+atlas: tail-integral -/
+theorem integrable_of_tail_le {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ)
+    (hnn : 0 ≤ᵐ[μ] f) {a : ℝ} (ha : 0 ≤ a) (F : ℝ → ℝ)
+    (hF : IntegrableOn F (Ioi a)) (hFnn : 0 ≤ᵐ[volume.restrict (Ioi a)] F)
+    (htail : ∀ t : ℝ, a < t → μ.real {x | t < f x} ≤ F t) :
+    Integrable f μ :=
+  (integrable_and_integral_le_of_tail_le μ f hf hnn ha F hF hFnn htail).1
+
+/-- The expectation bound from a nonnegative integrable tail envelope.
+Source: Vershynin 2018, Lemma 1.2.1; HMT 2011, proof of Thm 10.8.
+atlas: tail-integral -/
+theorem integral_le_of_tail_le {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ)
+    (hnn : 0 ≤ᵐ[μ] f) {a : ℝ} (ha : 0 ≤ a) (F : ℝ → ℝ)
+    (hF : IntegrableOn F (Ioi a)) (hFnn : 0 ≤ᵐ[volume.restrict (Ioi a)] F)
+    (htail : ∀ t : ℝ, a < t → μ.real {x | t < f x} ≤ F t) :
+    ∫ x, f x ∂μ ≤ a + ∫ t in Ioi a, F t :=
+  (integrable_and_integral_le_of_tail_le μ f hf hnn ha F hF hFnn htail).2
+
+/-- Integrability from a polynomial tail envelope.
+Source: Vershynin 2018, Lemma 1.2.1; HMT 2011, proof of Thm 10.8.
+atlas: tail-integral -/
+theorem integrable_of_tail_le_rpow {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ)
+    (hnn : 0 ≤ᵐ[μ] f) (C m : ℝ) (hC : 0 < C) (hm : 1 < m)
+    (htail : ∀ t : ℝ, 0 < t → μ.real {x | t < f x} ≤ C * t ^ (-m)) :
+    Integrable f μ :=
+  (integrable_and_integral_le_of_tail_le_rpow μ f hf hnn C m hC hm htail).1
+
+/-- The expectation bound from a polynomial tail envelope.
+Source: Vershynin 2018, Lemma 1.2.1; HMT 2011, proof of Thm 10.8.
+atlas: tail-integral -/
+theorem integral_le_of_tail_le_rpow {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : AEMeasurable f μ)
+    (hnn : 0 ≤ᵐ[μ] f) (C m : ℝ) (hC : 0 < C) (hm : 1 < m)
+    (htail : ∀ t : ℝ, 0 < t → μ.real {x | t < f x} ≤ C * t ^ (-m)) :
+    ∫ x, f x ∂μ ≤ C ^ (1 / m) * m / (m - 1) :=
+  (integrable_and_integral_le_of_tail_le_rpow μ f hf hnn C m hC hm htail).2
 
 end NLAlib

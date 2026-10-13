@@ -23,7 +23,7 @@ open scoped Matrix.Norms.L2Operator in
 nuclear norm, including the zero rank. -/
 theorem nuclearNorm_eq_sum_rank_singularValues {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
     nuclearNorm A = ∑ i ∈ Finset.range A.rank, singularValues A i := by
-  simp only [nuclearNorm, Fintype.card_fin]
+  simp only [nuclearNorm_eq_sum_range, Fintype.card_fin]
   change (∑ i ∈ Finset.range (min m n), singularValues A i) = _
   symm
   apply Finset.sum_subset (Finset.range_subset_range.mpr (le_min A.rank_le_height A.rank_le_width))
@@ -189,7 +189,8 @@ theorem exists_specNorm_le_one_frobInner_eq_nuclearNorm (A : Matrix m n ℝ) :
     ∃ B : Matrix m n ℝ, specNorm B ≤ 1 ∧ frobInner A B = nuclearNorm A := by
   obtain ⟨U, V, hU, hV, htrace⟩ := exists_trace_twoSided_compression_eq_kyFanNorm A le_rfl
   refine ⟨U * Vᵀ, ?_, ?_⟩
-  · rw [specNorm_mul_conjTranspose_right_of_hasOrthonormalCols (show Vᵀ * V = 1 from hV)]
+  · change specNorm (U * Vᴴ) ≤ 1
+    rw [specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hV]
     exact specNorm_le_one_of_orthonormal hU
   · rw [frobInner_comm, frobInner_eq_trace, RCLike.re_to_real,
       Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, Matrix.transpose_transpose,

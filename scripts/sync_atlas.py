@@ -6,8 +6,8 @@ docstring carries an `atlas: <id>, <id>` line (or starts with `SCAFFOLD: <id>`) 
 of those results. This script rewrites, for every result,
   * `formalizations` with library `nlalib` (one per tagged declaration; `usage`/`note` written by
     hand are kept, keyed by declaration name; formalizations of other libraries are untouched),
-  * each such formalization's `status` (`proved` if sorry-free, `scaffold` if it depends on sorry
-    and its docstring starts with `SCAFFOLD:`, `stated` otherwise) and `partial: true` when the
+  * each such formalization's `status` (`proved` if sorry-free, `scaffold` if it depends on sorry)
+    and `partial: true` when the
     tag reads `atlas: <id> (partial)` (the declaration covers only part of the statement),
   * the result's `status` (`proved` only if every non-partial NLAlib formalization is sorry-free;
     otherwise `scaffold` / `stated` from its non-partial NLAlib
@@ -42,7 +42,7 @@ if errors:
 
 def f_status(d):
     if not d["sorry"]: return "proved"
-    return "scaffold" if d["doc"].lstrip().startswith("SCAFFOLD") else "stated"
+    return "scaffold"
 
 is_def = {d["name"] for d in decls if d["kind"] in ("def", "inductive", "opaque", "axiom")}
 today = datetime.date.today().isoformat()

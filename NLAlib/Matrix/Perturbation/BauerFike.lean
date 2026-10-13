@@ -111,7 +111,7 @@ theorem exists_mem_spectrum_distance_le_euclidean_residual_div_of_normal
     obtain ⟨i, hi⟩ := exists_eigenvalue_distance_le_euclidean_residual_div
       (Unitary.isUnit_coe (U := U)) hAU x hx μ
     refine ⟨d i, mem_spectrum_of_diagonal_intertwining (Unitary.isUnit_coe (U := U)) hAU i, ?_⟩
-    simpa only [hUinv, Matrix.l2_opNorm_conjTranspose, CStarRing.norm_coe_unitary,
+    simpa only [hUinv, specNorm_eq_norm, Matrix.l2_opNorm_conjTranspose, CStarRing.norm_coe_unitary,
       one_mul] using hi
 
 open scoped Matrix.Norms.L2Operator in

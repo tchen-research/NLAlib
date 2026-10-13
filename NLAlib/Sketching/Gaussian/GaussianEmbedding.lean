@@ -133,7 +133,7 @@ theorem one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix {k m d : ℕ}
   -- The good event for `G U` and the pullback.
   set φ : (Matrix (Fin k) (Fin m) ℝ) → (Matrix (Fin k) (Fin d) ℝ) := fun G => (G * U)
   have hφ : Measurable φ := measurable_id.matrix_mul measurable_const
-  set S1 := {H : Matrix (Fin k) (Fin d) ℝ | sigmaMin H ≤ Real.sqrt k - Real.sqrt d - t}
+  set S1 := {H : Matrix (Fin k) (Fin d) ℝ | singularValues H (Fintype.card (Fin d) - 1) ≤ Real.sqrt k - Real.sqrt d - t}
   set S2 := {H : Matrix (Fin k) (Fin d) ℝ | Real.sqrt k + Real.sqrt d + t ≤ specNorm H}
   have hsub : Eᶜ ⊆ φ ⁻¹' (S1 ∪ S2) := by
     intro G hG
@@ -154,13 +154,14 @@ theorem one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix {k m d : ℕ}
         Real.sqrt_mul (mul_self_nonneg _), Real.sqrt_mul_self (by positivity)]
     refine isSubspaceEmbedding_of_forall_sqrt_le hU hε1 ha0 haε (fun x => ?_) (fun x => ?_)
     · rw [hnorm]
-      have h := sigmaMin_mul_sqrt_le (G * U) x
+      have h := singularValues_last_mul_norm_le (G * U) x
+      simp only [norm_toLp_eq_sqrt_dotProduct_self] at h
       have hx := Real.sqrt_nonneg (x ⬝ᵥ x)
-      have hlo' : (1 - a) * sk ≤ sigmaMin (G * U) := by
+      have hlo' : (1 - a) * sk ≤ singularValues (G * U) (Fintype.card (Fin d) - 1) := by
         rw [ha, sub_mul, div_mul_cancel₀ _ hsk0.ne']; linarith
       calc (1 - a) * Real.sqrt (x ⬝ᵥ x)
           = ((1 - a) * sk) * Real.sqrt (x ⬝ᵥ x) / sk := by field_simp
-        _ ≤ sigmaMin (G * U) * Real.sqrt (x ⬝ᵥ x) / sk := by gcongr
+        _ ≤ singularValues (G * U) (Fintype.card (Fin d) - 1) * Real.sqrt (x ⬝ᵥ x) / sk := by gcongr
         _ ≤ Real.sqrt (((G * U) *ᵥ x) ⬝ᵥ ((G * U) *ᵥ x)) / sk := by gcongr
         _ = _ := by rw [one_div, inv_mul_eq_div]
     · rw [hnorm]

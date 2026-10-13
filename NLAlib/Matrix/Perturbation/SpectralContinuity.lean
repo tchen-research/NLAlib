@@ -28,6 +28,7 @@ Supports `wishart-lambda-min-tail` (cutoff neighbourhoods).
 atlas: norm-lipschitz -/
 theorem continuous_singularValues_array {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq κ]
     (k : ℕ) : Continuous (fun G : ι → κ → ℝ => singularValues (Matrix.of G) k) := by
+  classical
   apply continuous_iff_continuousAt.mpr
   intro G
   have hdiff : Continuous (fun H : ι → κ → ℝ =>

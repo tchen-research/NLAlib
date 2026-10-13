@@ -1,6 +1,6 @@
 import NLAlib.Matrix.Subspaces.ComplexIdempotentRealForm
 import NLAlib.Matrix.Subspaces.ObliqueProjectionNorms
-import NLAlib.Matrix.Functions.ComplexDiagonalFilter
+import NLAlib.Matrix.Functions.DiagonalFilter
 /-!
 # Actual singular coefficients and norms of complex idempotents
 
@@ -25,30 +25,31 @@ theorem exists_unitary_idempotent_canonical_spectrum {n : Type*}
     ∃ t : ℕ → ℝ, (∀ i, 0 ≤ t i) ∧ Antitone t ∧ (∀ i, 0 < t i ↔ i < g) ∧
     ∃ H : Matrix n (Fin P.rank ⊕ Fin (Fintype.card n - P.rank)) ℂ,
       Hᴴ * H = 1 ∧ H * Hᴴ = 1 ∧
-      Hᴴ * P * H = Matrix.fromBlocks 1 ((rectDiag t).map Complex.ofReal) 0 0 ∧
+      Hᴴ * P * H = Matrix.fromBlocks 1 ((rectDiag t).map Complex.ofRealHom) 0 0 ∧
       (∀ i, singularValues P i =
         if i < P.rank then Real.sqrt (1 + t i ^ 2) else 0) ∧
       (∀ i, 1 < singularValues P i ↔ i < g) ∧
       (∀ i < g, t i = Real.sqrt (singularValues P i ^ 2 - 1)) := by
   obtain ⟨U, R, hR, hPR, hspec, hRank, _, _⟩ := exists_real_idempotent_unitary_similarity P hP
+  change P = (U : Matrix n n ℂ) * R.map Complex.ofRealHom * (U : Matrix n n ℂ)ᴴ at hPR
   obtain ⟨g, hg, t, ht0, ht, htpos, L, hL, hLt, hBlock, hSpec, hGt, hCoeff⟩ :=
     exists_orthogonal_idempotent_canonical_spectrum R hR
   rw [hRank]
   have hU : (U : Matrix n n ℂ)ᴴ * (U : Matrix n n ℂ) = 1 := Unitary.coe_star_mul_self U
   have hUt : (U : Matrix n n ℂ) * (U : Matrix n n ℂ)ᴴ = 1 := Unitary.coe_mul_star_self U
-  let LC := L.map Complex.ofReal
+  let LC := L.map Complex.ofRealHom
   have hLC : LCᴴ * LC = 1 := by
-    rw [show LCᴴ = Lᵀ.map Complex.ofReal from conjTranspose_map_ofReal _, ← map_ofReal_mul,
+    rw [show LCᴴ = Lᵀ.map Complex.ofRealHom from by ext; simp [LC], ← Matrix.map_mul (f := Complex.ofRealHom) (L := Lᵀ) (M := L),
       (show Lᵀ * L = 1 from hL)]
     simp
   have hLCt : LC * LCᴴ = 1 := by
-    rw [show LCᴴ = Lᵀ.map Complex.ofReal from conjTranspose_map_ofReal _, ← map_ofReal_mul, hLt]
+    rw [show LCᴴ = Lᵀ.map Complex.ofRealHom from by ext; simp [LC], ← Matrix.map_mul (f := Complex.ofRealHom) (L := L) (M := Lᵀ), hLt]
     simp
   let H := (U : Matrix n n ℂ) * LC
-  have hconj : (U : Matrix n n ℂ)ᴴ * P * (U : Matrix n n ℂ) = R.map Complex.ofReal := by
+  have hconj : (U : Matrix n n ℂ)ᴴ * P * (U : Matrix n n ℂ) = R.map Complex.ofRealHom := by
     rw [hPR]
     calc
-      _ = ((U : Matrix n n ℂ)ᴴ * (U : Matrix n n ℂ)) * R.map Complex.ofReal *
+      _ = ((U : Matrix n n ℂ)ᴴ * (U : Matrix n n ℂ)) * R.map Complex.ofRealHom *
           ((U : Matrix n n ℂ)ᴴ * (U : Matrix n n ℂ)) := by simp only [Matrix.mul_assoc]
       _ = _ := by rw [hU, Matrix.one_mul, Matrix.mul_one]
   refine ⟨g, hg, t, ht0, ht, htpos, H, ?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -59,9 +60,10 @@ theorem exists_unitary_idempotent_canonical_spectrum {n : Type*}
   · calc
       Hᴴ * P * H = LCᴴ * ((U : Matrix n n ℂ)ᴴ * P * (U : Matrix n n ℂ)) * LC := by
         simp only [H, Matrix.conjTranspose_mul, Matrix.mul_assoc]
-      _ = (Lᵀ * R * L).map Complex.ofReal := by
-        rw [hconj, show LCᴴ = Lᵀ.map Complex.ofReal from conjTranspose_map_ofReal _,
-          ← map_ofReal_mul, ← map_ofReal_mul]
+      _ = (Lᵀ * R * L).map Complex.ofRealHom := by
+        rw [hconj, show LCᴴ = Lᵀ.map Complex.ofRealHom from by ext; simp [LC],
+          ← Matrix.map_mul (f := Complex.ofRealHom) (L := Lᵀ) (M := R),
+          ← Matrix.map_mul (f := Complex.ofRealHom) (L := Lᵀ * R) (M := L)]
       _ = _ := by rw [hBlock]; simp [Matrix.fromBlocks_map]
   · intro i; rw [hspec, hSpec]
   · intro i; rw [hspec]; exact hGt i

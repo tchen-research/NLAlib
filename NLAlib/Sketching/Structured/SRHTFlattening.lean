@@ -1,7 +1,8 @@
-import NLAlib.Probability.Rademacher.RademacherCube
+import NLAlib.Probability.Rademacher.Core
 import NLAlib.Probability.SubGaussian.Moments
 import NLAlib.Probability.ChiSquare.DirectionalSquaredNorm
 import NLAlib.Matrix.Subspaces.Projections
+import NLAlib.ForMathlib.MeasureTheory.Matrix
 /-!
 # Row flattening for a classical one-diagonal SRHT
 
@@ -19,27 +20,38 @@ namespace NLAlib
 /-- The classical fixed transform and one shared random diagonal applied to a
 fixed input frame. Source: operator re-derivation `sh:srht`. -/
 def srhtSignedFrame {n d : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
-    (U : Matrix (Fin n) (Fin d) ℝ) (ξ : Fin n → Bool) : Matrix (Fin n) (Fin d) ℝ :=
-  H * Matrix.diagonal (fun i => rademacherBoolSign (ξ i)) * U
+    (U : Matrix (Fin n) (Fin d) ℝ) (ξ : Fin n → ℝ) : Matrix (Fin n) (Fin d) ℝ :=
+  H * Matrix.diagonal ξ * U
+
+/-- The signed frame depends measurably on its real diagonal. -/
+@[fun_prop] theorem measurable_srhtSignedFrame {n d : ℕ}
+    (H : Matrix (Fin n) (Fin n) ℝ) (U : Matrix (Fin n) (Fin d) ℝ) :
+    Measurable (srhtSignedFrame H U) := by
+  have hd : Measurable (Matrix.diagonal : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) := by
+    apply Matrix.measurable_iff_entries.mpr
+    intro i j
+    by_cases hij : i = j <;> simp [Matrix.diagonal_apply, hij] <;> fun_prop
+  exact (measurable_const.matrix_mul hd).matrix_mul measurable_const
 
 /-- A row scaled by `√n`, whose directional MGF proxy is one.
 Source: operator re-derivation `sh:srht-quadratic`. -/
 def srhtNormalizedRow {n d : ℕ} (H : Matrix (Fin n) (Fin n) ℝ)
-    (U : Matrix (Fin n) (Fin d) ℝ) (j : Fin n) (ξ : Fin n → Bool) : Fin d → ℝ :=
+    (U : Matrix (Fin n) (Fin d) ℝ) (j : Fin n) (ξ : Fin n → ℝ) : Fin d → ℝ :=
   Real.sqrt (n : ℝ) • (fun a => srhtSignedFrame H U ξ j a)
 
 /-- The actual shared diagonal sign transform preserves orthonormal columns.
 Source: operator re-derivation `sh:srht`, since every sign has square one. -/
 theorem hasOrthonormalCols_srhtSignedFrame {n d : ℕ}
     (H : Matrix (Fin n) (Fin n) ℝ) (hH : Hᵀ * H = 1)
-    (U : Matrix (Fin n) (Fin d) ℝ) (hU : HasOrthonormalCols U) (ξ : Fin n → Bool) :
+    (U : Matrix (Fin n) (Fin d) ℝ) (hU : HasOrthonormalCols U) (ξ : Fin n → ℝ) (hξ : ∀ i, ξ i ^ 2 = 1) :
     HasOrthonormalCols (srhtSignedFrame H U ξ) := by
-  let D : Matrix (Fin n) (Fin n) ℝ := Matrix.diagonal (fun i => rademacherBoolSign (ξ i))
+  let D : Matrix (Fin n) (Fin n) ℝ := Matrix.diagonal ξ
   have hD : Dᵀ * D = 1 := by
     dsimp only [D]
     rw [Matrix.diagonal_transpose, Matrix.diagonal_mul_diagonal]
-    simp only [← sq, rademacherBoolSign_sq, Matrix.diagonal_one]
-  change (H * D * U)ᵀ * (H * D * U) = 1
+    simp only [← sq, hξ, Matrix.diagonal_one]
+  change (H * D * U)ᴴ * (H * D * U) = 1
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial]
   simp only [Matrix.transpose_mul, Matrix.mul_assoc]
   rw [← Matrix.mul_assoc Hᵀ, hH, Matrix.one_mul,
     ← Matrix.mul_assoc Dᵀ, hD, Matrix.one_mul]
@@ -47,7 +59,7 @@ theorem hasOrthonormalCols_srhtSignedFrame {n d : ℕ}
 
 /-- The primitive directional MGF condition for the literal one-sign SRHT row
 is derived from flatness, the input isometry and the actual independent sign
-cube law. Coordinates of the row may be dependent.
+vector law. Coordinates of the row may be dependent.
 Source: operator re-derivation `sh:srht-quadratic`. -/
 theorem hasSubgaussianMGF_srhtNormalizedRow_dotProduct {n d : ℕ} [NeZero n]
     (H : Matrix (Fin n) (Fin n) ℝ)
@@ -55,7 +67,7 @@ theorem hasSubgaussianMGF_srhtNormalizedRow_dotProduct {n d : ℕ} [NeZero n]
     (U : Matrix (Fin n) (Fin d) ℝ) (hU : HasOrthonormalCols U)
     (j : Fin n) (u : Fin d → ℝ) :
     HasSubgaussianMGF (fun ξ => srhtNormalizedRow H U j ξ ⬝ᵥ u)
-      ⟨u ⬝ᵥ u, dotProduct_self_nonneg u⟩ (rademacherCubePMF (Fin n)).toMeasure := by
+      (‖WithLp.toLp 2 u‖₊ ^ 2) (rademacherVector (Fin n)) := by
   have hn : (n : ℝ) ≠ 0 := by exact_mod_cast NeZero.ne n
   let a : Fin n → ℝ := fun i => (Real.sqrt (n : ℝ) * H j i) * (U *ᵥ u) i
   have hscale : ∀ i : Fin n, (Real.sqrt (n : ℝ) * H j i) ^ 2 = 1 := by
@@ -73,25 +85,26 @@ theorem hasSubgaussianMGF_srhtNormalizedRow_dotProduct {n d : ℕ} [NeZero n]
         intro i _
         rw [mul_pow, hscale, one_mul]
       _ = _ := by simpa only [dotProduct, ← sq] using hUnorm
-  have hlin : ∀ ξ : Fin n → Bool, srhtNormalizedRow H U j ξ ⬝ᵥ u =
-      ∑ i, a i * rademacherBoolSign (ξ i) := by
+  have hlin : ∀ ξ : Fin n → ℝ, srhtNormalizedRow H U j ξ ⬝ᵥ u =
+      ∑ i, a i * ξ i := by
     intro ξ
     dsimp only [srhtNormalizedRow]
     rw [smul_dotProduct, smul_eq_mul]
-    change Real.sqrt (n : ℝ) * ((H * Matrix.diagonal (fun i => rademacherBoolSign (ξ i)) * U)
+    change Real.sqrt (n : ℝ) * ((H * Matrix.diagonal ξ * U)
       *ᵥ u) j = _
     rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
     change Real.sqrt (n : ℝ) * (∑ i, H j i *
-      ((Matrix.diagonal (fun i => rademacherBoolSign (ξ i))) *ᵥ (U *ᵥ u)) i) = _
+      ((Matrix.diagonal ξ) *ᵥ (U *ᵥ u)) i) = _
     simp only [Matrix.mulVec_diagonal, Finset.mul_sum, a]
     apply Finset.sum_congr rfl
     intro i _
     ring
   have hh := hasSubgaussianMGF_sum_mul_rademacher a
-    (fun i (ξ : Fin n → Bool) => rademacherBoolSign (ξ i))
-    (iIndepFun_rademacherBoolSign_cube (Fin n))
-    (isRademacher_rademacherBoolSign_cube (Fin n))
-  simpa only [← hlin, ha] using hh
+    (HasLaw.id (μ := rademacherVector (Fin n)))
+  have ha' : ‖WithLp.toLp 2 a‖₊ ^ 2 = ‖WithLp.toLp 2 u‖₊ ^ 2 := by
+    apply NNReal.coe_injective
+    simpa only [NNReal.coe_pow, coe_nnnorm, norm_toLp_sq_eq_dotProduct_self] using ha
+  simpa only [id_eq, ← hlin, ha'] using hh
 
 /-- The actual row's squared norm has the sharp additive chi-square tail,
 from the shared sign law and genuine Gaussian linearization.
@@ -101,20 +114,23 @@ theorem measure_srht_row_sq_ge_add_two_sqrt_mul_add_le {n d : ℕ} [NeZero n]
     (hflat : ∀ i j, H i j ^ 2 = 1 / (n : ℝ))
     (U : Matrix (Fin n) (Fin d) ℝ) (hU : HasOrthonormalCols U)
     (j : Fin n) {t : ℝ} (ht : 0 ≤ t) :
-    (rademacherCubePMF (Fin n)).toMeasure
+    (rademacherVector (Fin n))
       {ξ | d + 2 * Real.sqrt (d * t) + 2 * t ≤
         (n : ℝ) * ((fun a => srhtSignedFrame H U ξ j a) ⬝ᵥ
           (fun a => srhtSignedFrame H U ξ j a))} ≤ ENNReal.ofReal (Real.exp (-t)) := by
-  have hh := measure_sq_norm_ge_add_two_sqrt_mul_add_le (rademacherCubePMF (Fin n))
-    (srhtNormalizedRow H U j) (hasSubgaussianMGF_srhtNormalizedRow_dotProduct H hflat U hU j) ht
-  have hsq : ∀ ξ : Fin n → Bool,
+  have hh := measureReal_sq_norm_ge_add_two_sqrt_mul_add_le
+    (rademacherVector (Fin n)) (srhtNormalizedRow H U j)
+    (hasSubgaussianMGF_srhtNormalizedRow_dotProduct H hflat U hU j) ht
+  have hsq : ∀ ξ : Fin n → ℝ,
       srhtNormalizedRow H U j ξ ⬝ᵥ srhtNormalizedRow H U j ξ =
       (n : ℝ) * ((fun a => srhtSignedFrame H U ξ j a) ⬝ᵥ
         (fun a => srhtSignedFrame H U ξ j a)) := by
     intro ξ
     rw [srhtNormalizedRow, smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul,
       ← mul_assoc, ← sq, Real.sq_sqrt (Nat.cast_nonneg n)]
-  simpa only [hsq] using hh
+  rw [← ofReal_measureReal]
+  apply ENNReal.ofReal_le_ofReal
+  simpa only [norm_toLp_sq_eq_dotProduct_self, hsq] using hh
 
 /-- The original additive SRHT row threshold, with a shared sign diagonal.
 Source: Tropp's classical SRHT analysis; atlas `srht-ose`. -/
@@ -141,7 +157,7 @@ theorem measure_srhtSharpRowBound_failure_le {n d : ℕ} [NeZero n]
     (hflat : ∀ i j, H i j ^ 2 = 1 / (n : ℝ))
     (U : Matrix (Fin n) (Fin d) ℝ) (hU : HasOrthonormalCols U)
     {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ < 1) :
-    ((rademacherCubePMF (Fin n)).toMeasure
+    ((rademacherVector (Fin n))
       {ξ | ∃ j : Fin n, srhtSharpRowBound n d δ <
         (n : ℝ) * ((fun a => srhtSignedFrame H U ξ j a) ⬝ᵥ
           (fun a => srhtSignedFrame H U ξ j a))}).toReal ≤ δ / 2 := by
@@ -150,8 +166,8 @@ theorem measure_srhtSharpRowBound_failure_le {n d : ℕ} [NeZero n]
     apply Real.log_nonneg
     rw [le_div_iff₀ hδ]
     linarith
-  let μ := (rademacherCubePMF (Fin n)).toMeasure
-  let B : Fin n → Set (Fin n → Bool) := fun j => {ξ | srhtSharpRowBound n d δ <
+  let μ := (rademacherVector (Fin n))
+  let B : Fin n → Set (Fin n → ℝ) := fun j => {ξ | srhtSharpRowBound n d δ <
     (n : ℝ) * ((fun a => srhtSignedFrame H U ξ j a) ⬝ᵥ
       (fun a => srhtSignedFrame H U ξ j a))}
   have hrow (j : Fin n) : (μ (B j)).toReal ≤ Real.exp (-Real.log (2 * n / δ)) := by

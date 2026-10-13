@@ -183,18 +183,20 @@ theorem lanczosRayleighRelativeError_nonneg (A : Matrix ι ι ℝ) (b : ι → �
   div_nonneg (sub_nonneg.mpr (lanczosRitzValue_le_specNorm A b _)) (specNorm_nonneg A)
 
 /-- The Lanczos relative error is at most `1`. Helper for `random-start-power`. -/
-theorem lanczosRayleighRelativeError_le_one (A : Matrix ι ι ℝ) (b : ι → ℝ) (q : ℕ) :
+theorem lanczosRayleighRelativeError_le_one {A : Matrix ι ι ℝ} (hA : A.PosSemidef)
+    (b : ι → ℝ) (q : ℕ) :
     lanczosRayleighRelativeError A b q ≤ 1 := by
   by_cases hL : specNorm A = 0
   · simp only [lanczosRayleighRelativeError, hL, div_zero, zero_le_one]
   · have hLp : 0 < specNorm A := (specNorm_nonneg A).lt_of_ne (Ne.symm hL)
     rw [lanczosRayleighRelativeError, div_le_one hLp]
-    linarith [lanczosRitzValue_nonneg A b (q + 1)]
+    linarith [lanczosRitzValue_nonneg hA b (q + 1)]
 
 /-- The Lanczos relative error is measurable in the start. Helper for `random-start-power`. -/
-theorem measurable_lanczosRayleighRelativeError (A : Matrix ι ι ℝ) (q : ℕ) :
+theorem measurable_lanczosRayleighRelativeError {A : Matrix ι ι ℝ} (hA : A.IsHermitian)
+    (q : ℕ) :
     Measurable (fun b : ι → ℝ => lanczosRayleighRelativeError A b q) :=
-  (measurable_const.sub (measurable_lanczosRitzValue A (q + 1))).div_const _
+  (measurable_const.sub (measurable_lanczosRitzValue hA (q + 1))).div_const _
 
 /-- **Random-start Lanczos, deterministic bound.** Let `A` be positive semidefinite with
 `‖A‖₂ > 0`, `u` a unit eigenvector of the top eigenvalue `λ₀(A)`, and `u ⬝ b ≠ 0`. Then after
@@ -237,9 +239,9 @@ theorem lanczosRayleighRelativeError_le_log_sq [Nonempty ι] {A : Matrix ι ι �
           rw [sub_eq_zero.1 h, hL0]; exact div_self hL.ne') hi
       · exact h
     have hsum : ∑ i, a i * c i = ∑ i ∈ Finset.univ.filter (fun i => d i = 1), a i * c i := by
-      rw [← Finset.sum_filter_add_sum_filter_not Finset.univ (fun i => d i = 1),
-        Finset.sum_eq_zero (fun i hi => by rw [hzero i (Finset.mem_filter.1 hi).2, zero_mul]),
-        add_zero]
+      have hz : ∑ i ∈ Finset.univ.filter (fun i => d i ≠ 1), a i * c i = 0 :=
+        Finset.sum_eq_zero fun i hi => by rw [hzero i (Finset.mem_filter.1 hi).2, zero_mul]
+      rw [← Finset.sum_filter_add_sum_filter_not Finset.univ (fun i => d i = 1), hz, add_zero]
     rw [hub, hsum]
     refine (Finset.sum_mul_sq_le_sq_mul_sq _ _ _).trans ?_
     refine mul_le_of_le_one_left (Finset.sum_nonneg fun i _ => sq_nonneg _) ?_
@@ -285,11 +287,11 @@ theorem lanczosRayleighRelativeError_le_log_sq [Nonempty ι] {A : Matrix ι ι �
   have hRQ : rayleighQuotient A y =
       L * ((∑ i, d i * p.eval (d i) ^ 2 * c i ^ 2) / (∑ i, p.eval (d i) ^ 2 * c i ^ 2)) := by
     rw [rayleighQuotient_eq_div, hN, hD, mul_div_assoc]
-  have hCompare := rayleighQuotient_le_lanczosRitzValue_of_mem A b (q + 1) hy
+  have hCompare := rayleighQuotient_le_lanczosRitzValue_of_mem hA b (q + 1) hy
   have hError : lanczosRayleighRelativeError A b q ≤
       1 - (∑ i, d i * p.eval (d i) ^ 2 * c i ^ 2) / (∑ i, p.eval (d i) ^ 2 * c i ^ 2) := by
-    rw [lanczosRayleighRelativeError, hRQ] at *
-    rw [← hLdef] at hCompare ⊢
+    rw [hRQ] at hCompare
+    rw [lanczosRayleighRelativeError, ← hLdef]
     apply (div_le_iff₀ hL).mpr
     nlinarith
   have hParseval : (∑ i, c i ^ 2) = ‖WithLp.toLp 2 b‖ ^ 2 := by
@@ -316,15 +318,15 @@ theorem integral_lanczosRayleighRelativeError_gaussianVector_le {A : Matrix ι �
   let m := (q : ℝ)
   have hh : 0 < h := Real.log_pos (by norm_num)
   have hm : 0 < m := by dsimp only [m]; exact_mod_cast (by omega : 0 < q)
-  have hfm := measurable_lanczosRayleighRelativeError A q
+  have hfm := measurable_lanczosRayleighRelativeError hA.isHermitian q
   have hfi : Integrable (fun b => lanczosRayleighRelativeError A b q) μ := by
     refine (integrable_const (1 : ℝ)).mono' hfm.aestronglyMeasurable ?_
     exact ae_of_all _ fun b => by
       rw [Real.norm_of_nonneg (lanczosRayleighRelativeError_nonneg A b q)]
-      exact lanczosRayleighRelativeError_le_one A b q
+      exact lanczosRayleighRelativeError_le_one hA b q
   have hOne : (∫ b, lanczosRayleighRelativeError A b q ∂μ) ≤ 1 := by
     have hBound := integral_mono hfi (integrable_const (1 : ℝ))
-      (fun b => lanczosRayleighRelativeError_le_one A b q)
+      (fun b => lanczosRayleighRelativeError_le_one hA b q)
     simpa only [integral_const, probReal_univ, one_smul] using hBound
   apply le_min hOne
   rcases isEmpty_or_nonempty ι with hι | hι
@@ -421,7 +423,7 @@ theorem integral_lanczosRayleighRelativeError_le_of_hasLaw
       min 1 (4 * ((Real.log (2 * (Fintype.card ι : ℝ)) + 2 + Real.log 2) ^ 2 + 4) /
         ((Real.log 2) ^ 2 * (q : ℝ) ^ 2)) := by
   have he : (∫ ω, lanczosRayleighRelativeError A (G ω) q ∂μ) = _ :=
-    hG.integral_comp (measurable_lanczosRayleighRelativeError A q).aestronglyMeasurable
+    hG.integral_comp (measurable_lanczosRayleighRelativeError hA.isHermitian q).aestronglyMeasurable
   exact he.trans_le (integral_lanczosRayleighRelativeError_gaussianVector_le hA hq)
 
 end NLAlib

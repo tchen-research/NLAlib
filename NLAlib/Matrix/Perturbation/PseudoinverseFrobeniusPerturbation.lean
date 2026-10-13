@@ -53,9 +53,9 @@ theorem frobSq_pinv_mul_complement_columnProjector_le {A B : Matrix m n ℝ}
   let b := moorePenroseInverse B
   let PA := A*a
   let PB := B*b
-  have hPAs : PA.IsSymm := mul_moorePenroseInverse_isHermitian A
+  have hPAs : PA.IsHermitian := mul_moorePenroseInverse_isHermitian A
   have hPAi : IsIdempotentElem PA := mul_moorePenroseInverse_isIdempotentElem A
-  have hPBs : PB.IsSymm := mul_moorePenroseInverse_isHermitian B
+  have hPBs : PB.IsHermitian := mul_moorePenroseInverse_isHermitian B
   have hPBi : IsIdempotentElem PB := mul_moorePenroseInverse_isIdempotentElem B
   have hpr : PA.rank=PB.rank := by
     rw [rank_mul_moorePenroseInverse, rank_mul_moorePenroseInverse]
@@ -86,9 +86,9 @@ theorem frobSq_complement_rowProjector_mul_pinv_le {A B : Matrix m n ℝ}
   let b := moorePenroseInverse B
   let QA := a*A
   let QB := b*B
-  have hQAs : QA.IsSymm := moorePenroseInverse_mul_isHermitian A
+  have hQAs : QA.IsHermitian := moorePenroseInverse_mul_isHermitian A
   have hQAi : IsIdempotentElem QA := moorePenroseInverse_mul_isIdempotentElem A
-  have hQBs : QB.IsSymm := moorePenroseInverse_mul_isHermitian B
+  have hQBs : QB.IsHermitian := moorePenroseInverse_mul_isHermitian B
   have hQBi : IsIdempotentElem QB := moorePenroseInverse_mul_isIdempotentElem B
   have hqr : QA.rank=QB.rank := by
     rw [rank_moorePenroseInverse_mul, rank_moorePenroseInverse_mul]

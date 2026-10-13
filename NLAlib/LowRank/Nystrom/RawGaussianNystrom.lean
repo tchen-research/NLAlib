@@ -298,7 +298,7 @@ theorem integrable_and_integral_frobSq_rawGeneralizedNystrom_le_bestRankFrobSq
     Integrable (fun ω => frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω))) μ ∧
       (∫ ω, frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω)) ∂μ) ≤
         (1 + ((min A.rank t : ℕ) : ℝ) / (s - min A.rank t - 1)) *
-          ((1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A) := by
+          ((1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq A k) := by
   by_cases hkn : k ≤ n
   · obtain ⟨r, U₁, U₂, V₁, V₂, S₂, hA, hU₂, hV₁, hV₂, hV, hOPT⟩ :=
       exists_svd_right_blocks A k hkn
@@ -326,7 +326,7 @@ theorem integrable_and_integral_frobSq_rawGeneralizedNystrom_le_bestRankFrobSq
     have hden2 : (0 : ℝ) < (s : ℝ) - min A.rank t - 1 := by linarith
     have hc1 : 0 ≤ 1 + (k : ℝ) / (t - k - 1) := by positivity
     have hc2 : 0 ≤ 1 + ((min A.rank t : ℕ) : ℝ) / (s - min A.rank t - 1) := by positivity
-    have hOpt : 0 ≤ bestRankFrobSq k A := by
+    have hOpt : 0 ≤ bestRankFrobSq A k := by
       rw [← frobSq_sub_truncatedSVD_eq_bestRankFrobSq A k]
       exact frobSq_nonneg _
     exact mul_nonneg hc2 (mul_nonneg hc1 hOpt)

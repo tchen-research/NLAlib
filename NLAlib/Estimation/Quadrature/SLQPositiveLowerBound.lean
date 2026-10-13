@@ -5,7 +5,10 @@ import NLAlib.Matrix.Functions.CFCTrace
 # Computable relative SLQ budgets from a positive scalar lower bound
 
 The interval lower bound supplies positivity and `tr f(A) ≥ n f_min`. The resulting
-analytic and Lipschitz step budgets do not require knowledge of the unknown trace.
+analytic and Lipschitz Krylov approximation orders do not require knowledge of the unknown trace.
+These are bounds for supplied orthonormal compression frames containing `K_q`.
+The parameter `q` is an approximation order; no relation between the frame column count
+and `q`, construction algorithm, or matvec cost is asserted.
 -/
 
 noncomputable section
@@ -25,7 +28,7 @@ Positivity of the matrix function and the positive trace are derived from the
 scalar lower bound. This general transfer keeps its polynomial approximation explicit.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 (computable form).
 atlas: slq-error (partial) -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ}
@@ -37,24 +40,26 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademach
     (hbudget : E ≤ ε * b / 4)
     (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
     μ.real {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
   have hF := posSemidef_cfc_of_nonneg_eigenvalues hA (fun i => hb.le.trans (hmin _ (hspec i)))
-  have htrle := mul_card_le_trace_cfc_of_le hA (fun i => hmin _ (hspec i))
+  have htrle : b * Fintype.card n ≤ (cfc f A).trace := by
+    simpa only [RCLike.re_to_real] using
+      mul_card_le_re_trace_cfc_of_le hA (fun i => hmin _ (hspec i))
   have hn : 0 < (Fintype.card n : ℝ) := by exact_mod_cast Fintype.card_pos
   have htr : 0 < (cfc f A).trace := (mul_pos hb hn).trans_le htrle
-  apply measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card
+  apply measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card
     hA hF htr hG hQ hK hp hspec hfp hε hε1 hδ _ hm
   calc 2 * (Fintype.card n : ℝ) * E ≤ 2 * (Fintype.card n : ℝ) * (ε * b / 4) := by
         gcongr
     _ = (ε / 2) * (b * Fintype.card n) := by ring
     _ ≤ (ε / 2) * (cfc f A).trace := mul_le_mul_of_nonneg_left htrle (by positivity)
 
-/-- A positive scalar lower bound gives the computable Lipschitz step count
+/-- A positive scalar lower bound gives the computable Lipschitz Krylov approximation order
 `q ≥ πL(c-a)/(2ε f_min)` and sample count `m ≥ 1024e² ε⁻² log(2/δ)` for relative SLQ.
 All approximation, positivity, and trace premises are derived from the scalar hypotheses.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1, with Jackson's theorem.
-atlas: slq-error -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_lower_bound
+atlas: slq-error (partial) -/
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_lower_bound
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ} (hq : 0 < q)
@@ -66,10 +71,10 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademach
     (hsteps : Real.pi * (L : ℝ) * (c - a) / (2 * ε * b) ≤ q)
     (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
     μ.real {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
   obtain ⟨p, hp, hfp⟩ := exists_degree_le_abs_sub_eval_le_jackson_interval hac hf (2 * q - 1)
   have hdeg : p.degree < 2 * q := hp.trans_lt (by exact_mod_cast (show 2 * q - 1 < 2 * q by omega))
-  apply measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
+  apply measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
     hA hG hQ hK hdeg hspec hb hmin hfp hε hε1 hδ _ hm
   have hcast : ((2 * q - 1 : ℕ) : ℝ) + 1 = 2 * (q : ℝ) := by
     exact_mod_cast (show 2 * q - 1 + 1 = 2 * q by omega)
@@ -77,13 +82,13 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademach
   rw [div_le_iff₀ (by positivity)] at hsteps
   nlinarith
 
-/-- A positive scalar lower bound gives the computable analytic step count
+/-- A positive scalar lower bound gives the computable analytic Krylov approximation order
 `q ≥ (1+log(8M/(ε f_min(ρ-1)))/log ρ)/2` and the Rademacher sample count
 `m ≥ 1024e² ε⁻² log(2/δ)` for relative SLQ. Holomorphy and boundedness are on the
 original open Bernstein ellipse, and the case `M=0` is included.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1, with Trefethen (2019) [`atap`], Thm 8.2.
-atlas: slq-error -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_lower_bound
+atlas: slq-error (partial) -/
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_lower_bound
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ} (hq : 0 < q)
@@ -98,11 +103,11 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademach
     (hsteps : (1 + log (8 * M / (ε * b * (ρ - 1))) / log ρ) / 2 ≤ q)
     (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
     μ.real {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
   obtain ⟨p, hp, hfp⟩ := exists_degree_le_abs_sub_eval_le_of_open_bernsteinEllipse_interval
     hac hρ hFd hM hmatch (2 * q - 1)
   have hdeg : p.degree < 2 * q := hp.trans_lt (by exact_mod_cast (show 2 * q - 1 < 2 * q by omega))
-  apply measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
+  apply measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound
     hA hG hQ hK hdeg hspec hb hmin hfp hε hε1 hδ _ hm
   have hM0 : 0 ≤ M := nonneg_of_norm_le_on_open_bernsteinEllipse hρ hM
   rcases hM0.eq_or_lt with hzero | hpos

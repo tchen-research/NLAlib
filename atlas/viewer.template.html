@@ -174,7 +174,7 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
 ul.forms { list-style: none; padding-left: 0; } ul.forms > li { margin-bottom: 8px; }
 .cov { display: flex; height: 10px; gap: 1px; border-radius: 3px; overflow: hidden; margin: 8px 0 4px; }
 .cov span { display: block; }
-.c-nlalib { background: var(--st-proved); } .c-partial { background: var(--st-planned); } .c-mathlib { background: var(--st-stated); } .c-candidate { background: var(--st-candidate); } .c-out-of-scope { background: var(--line-strong); }
+.c-nlalib { background: var(--st-proved); } .c-scaffold { background: var(--st-scaffold); } .c-partial { background: var(--st-planned); } .c-mathlib { background: var(--st-stated); } .c-candidate { background: var(--st-candidate); } .c-out-of-scope { background: var(--line-strong); }
 .bookcard h3 { margin-bottom: 2px; } .bookcard .big { font-size: 1.6rem; font-family: var(--font-display); line-height: 1.1; }
 .bookcard .chs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
 .bookcard .chs button { font-size: 0.74rem; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--fg); cursor: pointer; }
@@ -284,7 +284,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   const sigBlock = (name, extra) => { const x = declByName[name]; if (!x) return ''; const sl = srcLink(x); return `<div class="decl" style="border:0;padding:2px 0 0"><div class="meta"><span>${esc(x.module)}</span>${x.sorry ? '<span class="sorrytag">depends on sorry</span>' : ''}${sl ? `<a href="${sl}" target="_blank" rel="noopener">${x.library && x.library !== 'nlalib' ? 'docs' : 'source'}</a>` : ''}${extra || ''}</div><div class="sig">${esc(x.signature)}</div></div>`; };
   const STATUS = [
     { id: 'proved', label: 'Proved', glyph: '✓', def: 'machine-checked, sorry-free, somewhere listed' },
-    { id: 'scaffold', label: 'Scaffold', glyph: '◧', def: 'statement in NLAlib, proof still a sorry' },
+    { id: 'scaffold', label: 'Scaffold', glyph: '◧', def: 'proof depends on an unfinished declaration, directly or transitively' },
     { id: 'assumed', label: 'Assumed', glyph: '!', def: 'used as an explicit hypothesis by a proved result' },
     { id: 'stated', label: 'Stated', glyph: '◐', def: 'formal statement exists, proof open' },
     { id: 'planned', label: 'Planned', glyph: '○', def: 'chosen target, not yet stated' },
@@ -298,17 +298,14 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   const usedBy = {}; A.results.forEach(r => r.depends_on.forEach(d => { (usedBy[d] = usedBy[d] || []).push(r.id); }));
   const indeg = id => (usedBy[id] || []).length;
   const inLean = r => r.status === 'proved' || r.status === 'scaffold';
-  // A link dep → consumer is proved when the consumer has a Lean proof in NLAlib that is not itself a
-  // literal scaffold (a `sorry` inherited from a dependency is fine: the implication is checked) and
-  // the dependency is either stated in NLAlib or taken as an explicit hypothesis (status assumed).
+  // A proved consumer must have a complete, sorry-free formalization. Imported or inherited
+  // unfinished proofs do not become proved links merely because the consumer has a proof body.
   let COVERAGE = {}; try { COVERAGE = JSON.parse(document.getElementById('coverage-data').textContent); } catch (e) { COVERAGE = {}; }
-  const COV_ST = [['nlalib', 'in NLAlib', '✓'], ['partial', 'partial', '◐'], ['mathlib', 'in Mathlib', 'M'], ['candidate', 'candidate', '○'], ['out-of-scope', 'out of scope', '–']];
+  const COV_ST = [['nlalib', 'in NLAlib', '✓'], ['partial', 'partial', '◐'], ['scaffold', 'unfinished proof dependency', '◧'], ['mathlib', 'in Mathlib', 'M'], ['candidate', 'candidate', '○'], ['out-of-scope', 'out of scope', '–']];
   const bstate = { book: Object.keys(COVERAGE).sort((a, b) => COVERAGE[b].items.length - COVERAGE[a].items.length)[0] || null, status: new Set(), chapter: null };
-  const DECL_DOC = {}; DECLS.forEach(d => DECL_DOC[d.name] = d.doc || '');
   const defNode = {}; A.results.filter(r => r.kind === 'definition').forEach(r => r.formalizations.forEach(f => { if (f.library === 'nlalib' && f.decl && declByName[f.decl] && declByName[f.decl].kind !== 'theorem' && !defNode[f.decl]) defNode[f.decl] = r.id; }));
-  const isLiteralScaffold = decl => (DECL_DOC[decl] || '').trimStart().startsWith('SCAFFOLD');
-  const hasFormalProof = r => r.status === 'proved' || (r.formalizations || []).some(f => f.library === 'nlalib' && f.decl && (f.status === 'proved' || f.status === 'scaffold') && !isLiteralScaffold(f.decl));
-  const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; return (hasFormalProof(c) && (inLean(d) || d.status === 'assumed')) ? 'proved' : 'pending'; };
+  const hasFormalProof = r => r.status === 'proved' && (r.formalizations || []).some(f => f.library === 'nlalib' && f.decl && f.status === 'proved' && !f.partial && declByName[f.decl] && !declByName[f.decl].sorry);
+  const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; if (!(inLean(d) || d.status === 'assumed')) return 'pending'; return hasFormalProof(c) ? 'proved' : c.status === 'scaffold' ? 'scaffold' : 'pending'; };
   const LINK = { proved: 'proved', scaffold: 'scaffold', pending: 'pending' };
   const topArea = r => { let a = areaById[r.area]; while (a.parent) a = areaById[a.parent]; return a; };
   const areaPath = r => { const p = []; let a = areaById[r.area]; while (a) { p.unshift(a.name); a = a.parent ? areaById[a.parent] : null; } return p.join(' › '); };

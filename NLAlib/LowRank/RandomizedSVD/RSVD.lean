@@ -19,7 +19,7 @@ LRA `frobSq_residual_le` is `NLAlib.frobSq_residual_le_frobSq_sub_mul`
 (`NLAlib/Matrix/Projections.lean`), LRA `hmt_second_frob` / `hmt_second_residual` are
 `NLAlib.frobSq_residual_le_of_range_subset` (whose conclusion `frobSq (projResidual Q A)` is by
 definition `frobSq (A − Q(QᵀA))`), and LRA `hmt_third` is
-`NLAlib.frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset`.
+`NLAlib.frobSq_sub_mul_le_of_isBestFrobRankApprox_of_range_subset`.
 
 ## Model
 
@@ -32,7 +32,7 @@ definition `frobSq (A − Q(QᵀA))`), and LRA `hmt_third` is
   `range(AΩ) ⊆ range(Q)` (`Q ω * (Q ωᵀ * (A * Ω ω)) = A * Ω ω`), both almost surely.
   The paper's `q = rank(AΩ)` is a *random* number of columns; since the column index type
   `q` is fixed at the type level, it does not depend on `ω` (generic case `q = Fin t`).
-* `⟦C⟧ₖ` is any `Y` with `IsBestRankApprox k C Y` (Eckart–Young is not used).
+* `⟦C⟧ₖ` is any `Y` with `IsBestFrobRankApprox C k Y` (Eckart–Young is not used).
 
 ## Trust boundary
 
@@ -112,7 +112,7 @@ theorem rsvd_truncated_main [IsProbabilityMeasure μ]
     (Y : Ωs → Matrix q n ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω)
-    (hY : ∀ ω, IsBestRankApprox k ((Q ω)ᵀ * A) (Y ω))
+    (hY : ∀ ω, IsBestFrobRankApprox ((Q ω)ᵀ * A) k (Y ω))
     (hunit : ∀ᵐ ω ∂μ, IsUnit ((V₁ᵀ * Ω ω) * (V₁ᵀ * Ω ω)ᵀ))
     (hinv : ∫ ω, frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) ∂μ
       = (k : ℝ) / (t - k - 1) * frobSq S₂)
@@ -122,7 +122,7 @@ theorem rsvd_truncated_main [IsProbabilityMeasure μ]
   have hX : ∀ᵐ ω ∂μ, frobSq (A - Q ω * Y ω)
       ≤ frobSq S₂ + frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) := by
     filter_upwards [hQo, hQr, hunit] with ω h1 h2 h3
-    exact frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2
+    exact frobSq_sub_mul_le_of_isBestFrobRankApprox_of_range_subset hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2
       (hY ω)
   exact rsvd_assembly_ae hX hinv hXi hZi
 

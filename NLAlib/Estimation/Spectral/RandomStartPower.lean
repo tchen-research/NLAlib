@@ -122,7 +122,7 @@ theorem ae_eigenvectorBasis_dotProduct_ne_zero_gaussianVector {A : Matrix ι ι 
 /-- The logarithmic Gaussian overlap `log(‖c‖²/c_{i₀}²)` has first and second moments bounded by
 `T + 2` and `T² + 4T + 8`, `T = log(2 |ι|)`, on an arbitrary finite index type (transport of
 `integrable_and_integral_log_sum_div_sq_pi_gaussianReal_le` along `ι ≃ Fin (|ι|)`). -/
-private theorem log_overlap_moments_gaussianVector [Nonempty ι] (i₀ : ι) :
+theorem log_overlap_moments_gaussianVector [Nonempty ι] (i₀ : ι) :
     Integrable (fun c : ι → ℝ => Real.log ((∑ i, c i ^ 2) / (c i₀) ^ 2)) (gaussianVector ι) ∧
     (∫ c, Real.log ((∑ i, c i ^ 2) / (c i₀) ^ 2) ∂(gaussianVector ι)) ≤
       Real.log (2 * (Fintype.card ι : ℝ)) + 2 ∧
@@ -133,13 +133,14 @@ private theorem log_overlap_moments_gaussianVector [Nonempty ι] (i₀ : ι) :
   obtain ⟨m, hm⟩ : ∃ m, Fintype.card ι = m + 1 :=
     ⟨Fintype.card ι - 1, by have := Fintype.card_pos (α := ι); omega⟩
   set e : ι ≃ Fin (m + 1) := Fintype.equivFinOfCardEq hm
-  set F : (Fin (m + 1) → ℝ) → (ι → ℝ) := MeasurableEquiv.piCongrLeft (fun _ : ι => ℝ) e.symm
+  set F : (Fin (m + 1) → ℝ) → (ι → ℝ) :=
+    fun x => MeasurableEquiv.piCongrLeft (fun _ : ι => ℝ) e.symm x
   have hF : MeasurePreserving F (gaussianVector (Fin (m + 1))) (gaussianVector ι) :=
     measurePreserving_piCongrLeft (fun _ : ι => gaussianReal 0 1) e.symm
   have hFapp : ∀ (x : Fin (m + 1) → ℝ) (i : ι), F x i = x (e i) := fun x i => by
     simp only [F]
     conv_lhs => rw [show i = e.symm (e i) from (e.symm_apply_apply i).symm]
-    exact MeasurableEquiv.piCongrLeft_apply_apply e.symm x (e i)
+    exact MeasurableEquiv.piCongrLeft_apply_apply e.symm (β := fun _ : ι => ℝ) x (e i)
   have hcomp : ∀ x : Fin (m + 1) → ℝ,
       Real.log ((∑ i, F x i ^ 2) / (F x i₀) ^ 2) =
         Real.log ((∑ j, x j ^ 2) / (x (e i₀)) ^ 2) := fun x => by

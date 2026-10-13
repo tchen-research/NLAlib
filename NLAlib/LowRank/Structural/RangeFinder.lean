@@ -12,7 +12,7 @@ full row rank, `Ω₂ = V₂ᵀ Ω`, and `Q` with orthonormal columns whose rang
 
 (`frobSq_residual_le_of_range_subset`). Also the rank-`k` truncated variant
 `‖A − Q⟦QᵀA⟧ₖ‖_F² ≤ ‖Σ₂‖_F² + ‖Σ₂ Ω₂ Ω₁†‖_F²`
-(`frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset`; Chen–Persson, *One- and two-pass
+(`frobSq_sub_mul_le_of_isBestFrobRankApprox_of_range_subset`; Chen–Persson, *One- and two-pass
 algorithms for low-rank approximation*, Prop. `prop:hmt-struct`) and the singular-value tail
 inequality `σ_{ℓ+1}² ≤ (4/t) Σ_{j>k} σ_j²` (`sq_le_four_div_mul_sum_Ico_sq`; same paper,
 `eq:tGN-tail`).
@@ -143,7 +143,7 @@ rank-`k` approximation `Y` of `QᵀA`, `‖A − QY‖_F² ≤ ‖Σ₂‖_F² +
 number of columns of `V₁`. Deviation: index types other than `Fin k` are arbitrary `Fintype`s.
 Atlas `hmt-9-1-frobenius` (truncated variant).
 atlas: hmt-9-1-frobenius -/
-theorem frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset {A : Matrix m n ℝ}
+theorem frobSq_sub_mul_le_of_isBestFrobRankApprox_of_range_subset {A : Matrix m n ℝ}
     {U₁ : Matrix m (Fin k) ℝ} {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ}
     {V₂ : Matrix n r' ℝ} {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}
     (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)
@@ -151,13 +151,13 @@ theorem frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset {A : Matrix m n �
     {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}
     (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ))
     {Q : Matrix m q ℝ} (hQo : HasOrthonormalCols Q) (hQ : Q * (Qᵀ * (A * Ω)) = A * Ω)
-    {Y : Matrix q n ℝ} (hY : IsBestRankApprox k (Qᵀ * A) Y) :
+    {Y : Matrix q n ℝ} (hY : IsBestFrobRankApprox (Qᵀ * A) k Y) :
     frobSq (A - Q * Y) ≤ frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) := by
   have hZrank : (Qᵀ * (A * Ω * pinvR Ω₁ * V₁ᵀ)).rank ≤ k :=
     (Matrix.rank_mul_le_right _ _).trans <| (Matrix.rank_mul_le_right _ _).trans
       ((Matrix.rank_le_card_height _).trans (Fintype.card_fin k).le)
   calc frobSq (A - Q * Y) ≤ frobSq (A - Q * (Qᵀ * (A * Ω * pinvR Ω₁ * V₁ᵀ))) :=
-        frobSq_sub_mul_le_of_isBestRankApprox hQo hY _ hZrank
+        frobSq_sub_mul_le_of_isBestFrobRankApprox hQo hY _ hZrank
     _ = frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) := by rw [mul_transpose_mul_competitor hQ]
     _ = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) :=
         frobSq_sub_mul_pinvR_mul_transpose_eq hA hU₂ hV₁ hV₂ hV hΩ₁ hΩ₂ hunit

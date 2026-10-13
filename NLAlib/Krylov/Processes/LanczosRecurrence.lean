@@ -151,7 +151,7 @@ theorem lanczosBeta_one_smul (A : Matrix n n ℝ) (b : n → ℝ) :
     lanczosBeta A b 1 • lanczosRecurrence A b 1 =
       A *ᵥ lanczosRecurrence A b 0 - lanczosAlpha A b 0 • lanczosRecurrence A b 0 := by
   simp only [lanczosBeta, lanczosRecurrence, lanczosAlpha, lanczosState_succ, lanczosStep,
-    norm_toLp_eq_sqrt_dotProduct]
+    norm_toLp_eq_sqrt_dotProduct_self]
   rw [sqrt_smul_inv_smul]
   simp [lanczosInit]
 
@@ -167,7 +167,7 @@ theorem lanczosBeta_add_two_smul (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) 
   have hp := lanczosState_succ_prev A b j
   simp only [lanczosBeta, lanczosRecurrence, lanczosAlpha] at hp ⊢
   rw [lanczosState_succ A b (j + 1)]
-  simp only [lanczosStep, norm_toLp_eq_sqrt_dotProduct]
+  simp only [lanczosStep, norm_toLp_eq_sqrt_dotProduct_self]
   rw [sqrt_smul_inv_smul, hp]
 
 omit [DecidableEq n] in
@@ -178,7 +178,7 @@ theorem lanczosBeta_succ_eq (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) :
       (A *ᵥ lanczosRecurrence A b j - lanczosAlpha A b j • lanczosRecurrence A b j -
         lanczosBeta A b j • (lanczosState A b j).prev) := by
   simp only [lanczosBeta, lanczosRecurrence, lanczosAlpha, lanczosState_succ A b j, lanczosStep,
-    norm_toLp_eq_sqrt_dotProduct]
+    norm_toLp_eq_sqrt_dotProduct_self]
   rw [smul_dotProduct, smul_eq_mul, inv_sqrt_mul_self]
 
 /-! ### Realisation: the recursion is the Arnoldi process (symmetric `A`) -/

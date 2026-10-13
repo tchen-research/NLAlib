@@ -20,7 +20,9 @@ namespace NLAlib
 /-- Every Ky Fan sum is nonnegative, including the zero seminorm. -/
 theorem kyFanNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) (k : ℕ) :
-    0 ≤ kyFanNorm A k := Finset.sum_nonneg fun i _ => singularValues_nonneg _ i
+    0 ≤ kyFanNorm A k := by
+  rw [kyFanNorm_eq_sum_range]
+  exact Finset.sum_nonneg fun i _ => singularValues_nonneg _ i
 
 /-- The zero prefix is zero. -/
 @[simp] theorem kyFanNorm_zero {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
@@ -30,13 +32,14 @@ theorem kyFanNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
 /-- Every Ky Fan sum vanishes on the zero matrix. -/
 @[simp] theorem kyFanNorm_zero_matrix {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (k : ℕ) :
-    kyFanNorm (0 : Matrix m n ℝ) k = 0 := by simp [kyFanNorm_eq_sum_range]
+    kyFanNorm (0 : Matrix m n ℝ) k = 0 := by
+  rw [kyFanNorm_eq_sum_range]
+  exact Finset.sum_eq_zero fun i _ => singularValues_eq_zero_of_rank_le _ (by simp)
 
 /-- Prefixes beyond the smaller matrix dimension are the nuclear norm. -/
 theorem kyFanNorm_eq_min {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     kyFanNorm A k = kyFanNorm A (min k (min m n)) := by
-  change (∑ i ∈ Finset.range k, singularValues A i) =
-    ∑ i ∈ Finset.range (min k (min m n)), singularValues A i
+  simp only [kyFanNorm_eq_sum_range]
   symm
   apply Finset.sum_subset (Finset.range_subset_range.mpr (min_le_left _ _))
   intro i hi hni
@@ -92,6 +95,7 @@ omit [DecidableEq m] in
 /-- Orthogonal multiplication on the right preserves Ky Fan sums. -/
 theorem kyFanNorm_mul_orthogonal (A : Matrix m n ℝ) {V : Matrix n n ℝ}
     (hV : HasOrthonormalCols V) (k : ℕ) : kyFanNorm (A * V) k = kyFanNorm A k := by
+  classical
   simp only [kyFanNorm_eq_sum_range, singularValues_mul_unitary A hV]
 
 /-- Transposition preserves Ky Fan sums on arbitrary finite indices. -/
@@ -131,6 +135,7 @@ theorem specNorm_le_kyFanNorm {m n : Type*} [Fintype m] [Fintype n]
   exact Finset.single_le_sum (fun i _ => singularValues_nonneg _ i)
     (Finset.mem_range.mpr (by omega))
 
+open scoped Matrix.Norms.L2Operator in
 /-- A positive Ky Fan prefix vanishes exactly on the zero matrix. -/
 theorem kyFanNorm_eq_zero_iff {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) {k : ℕ} (hk : 1 ≤ k) :
@@ -139,7 +144,7 @@ theorem kyFanNorm_eq_zero_iff {m n : Type*} [Fintype m] [Fintype n]
   · intro h
     have hn : specNorm A = 0 := le_antisymm (by simpa [h] using specNorm_le_kyFanNorm A hk)
       (specNorm_nonneg A)
-    exact norm_eq_zero.mp (by simpa only [specNorm_eq_norm] using hn)
+    exact norm_eq_zero.mp (show ‖A‖ = 0 by simpa only [specNorm_eq_norm] using hn)
   · rintro rfl
     exact kyFanNorm_zero_matrix k
 

@@ -33,7 +33,7 @@ theorem dotProduct_cfc_mulVec_self_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermiti
   let U : Matrix n n ℝ := hA.eigenvectorUnitary
   have hU : Uᵀ*U=1 := transpose_eigenvectorUnitary_mul_self hA
   have heq : hA.cfc f = U*Matrix.diagonal (fun i => f (hA.eigenvalues i))*Uᵀ := by
-    exact cfc_eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA f
+    exact cfc_eq_eigenvectorUnitary_mul_diagonal_mul_conjTranspose hA f
   rw [heq, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
     show ∀ y, (U *ᵥ y) ⬝ᵥ (U *ᵥ y) = y ⬝ᵥ y from
       star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols (U := U) hU]
@@ -48,8 +48,8 @@ theorem dotProduct_cfc_mulVec_self_eq_sum {A : Matrix n n ℝ} (hA : A.IsHermiti
 theorem eigenvalueProjector_isSymm {A : Matrix n n ℝ} (hA : A.IsHermitian) (ℓ : ℝ) :
     (eigenvalueProjector hA ℓ).IsSymm := by
   change (eigenvalueProjector hA ℓ)ᵀ=eigenvalueProjector hA ℓ
-  rw [eigenvalueProjector, cfc_eq_eigenvectorUnitary_mul_diagonal_mul_transpose hA]
-  simp [Matrix.transpose_mul, Matrix.mul_assoc]
+  rw [eigenvalueProjector, cfc_eq_eigenvectorUnitary_mul_diagonal_mul_conjTranspose hA]
+  simp [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, Matrix.mul_assoc]
 
 /-- The spectral singleton indicator is idempotent, so its functional
 calculus is a projector. Parlett §11.7. -/

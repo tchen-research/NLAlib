@@ -89,10 +89,11 @@ theorem frobSq_hutchinsonBlock [Nonempty κ] (A : Matrix n n ℝ) :
   rw [← Finset.mul_sum]
   field_simp
 
+open scoped Matrix.Norms.L2Operator in
 /-- `‖B‖₂ ≤ ‖A‖₂ / m` for the Hutchinson block matrix. Atlas: `hutchinson-tail` (helper). -/
 theorem specNorm_hutchinsonBlock_le (A : Matrix n n ℝ) :
     specNorm (hutchinsonBlock (κ := κ) A) ≤ specNorm A / Fintype.card κ := by
-  rw [hutchinsonBlock, specNorm_smul, Real.norm_eq_abs,
+  rw [hutchinsonBlock, specNorm_eq_norm, norm_smul, ← specNorm_eq_norm, Real.norm_eq_abs,
     abs_of_nonneg (inv_nonneg.2 (Nat.cast_nonneg _)), div_eq_inv_mul]
   exact mul_le_mul_of_nonneg_left (specNorm_blockDiagonal_const_le A)
     (inv_nonneg.2 (Nat.cast_nonneg _))
@@ -128,7 +129,8 @@ Helper for `hutchinson-tail`. -/
 theorem hasLaw_uncurry_gaussianMatrix :
     HasLaw (fun G : Matrix n κ ℝ => fun e : n × κ => G e.1 e.2) (gaussianVector (n × κ))
       (gaussianMatrix n κ) :=
-  ⟨(measurable_pi_lambda _ fun e => Matrix.measurable_entry e.1 e.2).aemeasurable,
+  ⟨(measurable_pi_lambda (fun (G : Matrix n κ ℝ) (e : n × κ) => G e.1 e.2)
+      fun e => Matrix.measurable_entry e.1 e.2).aemeasurable,
     gaussianMatrix_map_uncurry⟩
 
 /-! ### The tail bound -/
@@ -137,6 +139,7 @@ section Tail
 
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
 
+open scoped Matrix.Norms.L2Operator in
 /-- **Hutchinson tail bound, sub-Gaussian entries.** If the entries `Z(i, k)` of the test
 matrix are independent and sub-Gaussian with variance proxy `K²`, then for `m = |κ| ≥ 1` and
 `t ≥ 0`,
@@ -176,8 +179,8 @@ theorem measureReal_le_abs_hutchinsonEstimate_sub_integral_le [Nonempty κ] (A :
   refine mul_le_mul_of_nonneg_left (min_le_min (le_of_eq ?_) ?_) (by positivity)
   · rw [frobNorm_sq, frobNorm_sq, frobSq_hutchinsonBlock, ← hmdef, mul_div_assoc',
       div_div_eq_mul_div, mul_comm m]
-  · have hB : 0 < specNorm (hutchinsonBlock (κ := κ) A) :=
-      specNorm_pos_iff.2 (hutchinsonBlock_ne_zero hA0)
+  · have hB : 0 < specNorm (hutchinsonBlock (κ := κ) A) := by
+      simpa only [specNorm_eq_norm] using norm_pos_iff.mpr (hutchinsonBlock_ne_zero hA0)
     have hle := specNorm_hutchinsonBlock_le (κ := κ) A
     rw [← hmdef] at hle
     calc m * t / (K ^ 2 * specNorm A) = t / (K ^ 2 * (specNorm A / m)) := by
@@ -250,6 +253,7 @@ section Relative
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
 
 omit [DecidableEq κ] in
+open scoped Matrix.Norms.L2Operator in
 /-- The Hanson–Wright exponent at `t = ε tr A` is at least `m ε²` for positive semidefinite
 `A` with positive trace and `0 < ε ≤ 1`.
 Source: Cortinovis–Kressner (2021), proof of Corollary 1; helper for `hutchinson-tail`
@@ -263,7 +267,8 @@ theorem mul_sq_le_min_hutchinson_exponent_of_posSemidef [Nonempty κ]
   have hA0 : A ≠ 0 := by rintro rfl; simp at htr
   have hF : 0 < frobNorm A := lt_of_le_of_ne (frobNorm_nonneg A)
     (Ne.symm fun h => hA0 ((frobNorm_eq_zero_iff A).1 h))
-  have hS : 0 < specNorm A := specNorm_pos_iff.2 hA0
+  have hS : 0 < specNorm A := by
+    simpa only [specNorm_eq_norm] using norm_pos_iff.mpr hA0
   have hFt := frobNorm_le_trace_of_posSemidef hA
   have hSt := specNorm_le_trace_of_posSemidef hA
   refine le_min ?_ ?_

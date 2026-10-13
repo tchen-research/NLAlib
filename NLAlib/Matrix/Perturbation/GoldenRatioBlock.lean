@@ -37,8 +37,6 @@ theorem specNorm_le_goldenRatio_mul_of_zero_complement_block {Z : Matrix m n ℝ
     {d : ℝ} (hd : 0 ≤ d) (h00 : (1-Q)*Z*(1-P)=0)
     (h11 : specNorm (Q*Z*P) ≤ d) (h12 : specNorm (Q*Z*(1-P)) ≤ d)
     (h21 : specNorm ((1-Q)*Z*P) ≤ d) : specNorm Z ≤ Real.goldenRatio*d := by
-  have hPs : P.IsSymm := Matrix.isHermitian_iff_isSymm.mp hPh
-  have hQs : Q.IsSymm := Matrix.isHermitian_iff_isSymm.mp hQh
   have hPP : P*P=P := hPi
   have hPc : (1-P)*(1-P)=1-P := by
     simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one, hPP]
@@ -83,9 +81,10 @@ theorem specNorm_le_goldenRatio_mul_of_zero_complement_block {Z : Matrix m n ℝ
     have hp := pow_le_pow_left₀ (Real.sqrt_nonneg _) hw' 2
     rw [Real.sq_sqrt (dotProduct_self_nonneg _), mul_pow] at hp
     exact hp
-  have hout := dotProduct_projector_add_complement hQs hQi (Z*ᵥx)
-  simp only [Matrix.mulVec_mulVec] at hout
-  have hin := dotProduct_projector_add_complement hPs hPi x
+  have hout := norm_toLp_sq_add_norm_toLp_sq_of_isHermitian_of_isIdempotentElem hQh hQi (Z*ᵥx)
+  simp only [norm_toLp_sq_eq_dotProduct_self, Matrix.mulVec_mulVec] at hout
+  have hin := norm_toLp_sq_add_norm_toLp_sq_of_isHermitian_of_isIdempotentElem hPh hPi x
+  simp only [norm_toLp_sq_eq_dotProduct_self] at hin
   rw [← hs2, ← ht2] at hin
   have hg := mul_le_mul_of_nonneg_left (add_sq_add_sq_le_goldenRatio_sq_mul s t) (sq_nonneg d)
   nlinarith [hout, hin, hg]

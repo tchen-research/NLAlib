@@ -5,7 +5,10 @@ import NLAlib.Krylov.Quadrature.LipschitzQuadrature
 
 The sharp Jackson polynomial gives the deterministic term `πLn(c-a)/(4q)`.
 The Rademacher Hanson–Wright tail then gives both absolute and relative
-error with explicit step and sample counts.
+error with explicit Krylov approximation orders and probe counts.
+These are bounds for supplied orthonormal compression frames containing `K_q`.
+The parameter `q` is an approximation order; no relation between the frame column count
+and `q`, construction algorithm, or matvec cost is asserted.
 -/
 
 noncomputable section
@@ -23,8 +26,8 @@ variable {μ : Measure Ω} [IsProbabilityMeasure μ]
 established Hanson–Wright tail constant `1/(256e²)`. The scalar approximant is
 constructed from the Lipschitz hypothesis rather than supplied as a certificate.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1.
-atlas: slq-error -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitzOnWith
+atlas: slq-error (partial) -/
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitzOnWith
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ} (hq : 0 < q)
@@ -33,13 +36,13 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_l
     (hspec : ∀ i, hA.eigenvalues i ∈ Icc a c) (hf : LipschitzOnWith L f (Icc a c))
     {η : ℝ} (hη : 0 ≤ η) :
     μ.real {ω | η + Real.pi * (L : ℝ) * (Fintype.card n : ℝ) * (c - a) / (4 * q) <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
       2 * exp (-(1 / (256 * exp 1 ^ 2)) *
         min (Fintype.card κ * η ^ 2 / frobNorm (cfc f A) ^ 2)
           (Fintype.card κ * η / specNorm (cfc f A))) := by
   obtain ⟨p, hp, hfp⟩ := exists_degree_le_abs_sub_eval_le_jackson_interval hac hf (2 * q - 1)
   have hdeg : p.degree < 2 * q := hp.trans_lt (by exact_mod_cast (show 2 * q - 1 < 2 * q by omega))
-  have h := measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector
+  have h := measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector
     hA hG hQ hK hdeg hspec hfp hη
   have hcast : ((2 * q - 1 : ℕ) : ℝ) + 1 = 2 * (q : ℝ) := by
     exact_mod_cast (show 2 * q - 1 + 1 = 2 * q by omega)
@@ -48,11 +51,11 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_l
       η + Real.pi * (L : ℝ) * (Fintype.card n : ℝ) * (c - a) / (4 * q) := by ring
   simpa only [hthresh] using h
 
-/-- The concrete Lipschitz step count `q ≥ πLn(c-a)/(2ε)` leaves half of an absolute
+/-- The concrete Lipschitz Krylov approximation order `q ≥ πLn(c-a)/(2ε)` leaves half of an absolute
 error budget for the stochastic term. No norm or polynomial approximation is assumed.
-Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 (step-count form).
-atlas: slq-error -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitz_steps
+Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1 (Krylov approximation order form).
+atlas: slq-error (partial) -/
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitz_order
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
     {Q : Ω → κ → Matrix n r ℝ} (hQ : ∀ ω k, HasOrthonormalCols (Q ω k)) {q : ℕ} (hq : 0 < q)
@@ -61,11 +64,11 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_l
     (hspec : ∀ i, hA.eigenvalues i ∈ Icc a c) (hf : LipschitzOnWith L f (Icc a c))
     {ε : ℝ} (hε : 0 < ε)
     (hsteps : Real.pi * (L : ℝ) * (Fintype.card n : ℝ) * (c - a) / (2 * ε) ≤ q) :
-    μ.real {ω | ε < |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
+    μ.real {ω | ε < |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤
       2 * exp (-(1 / (256 * exp 1 ^ 2)) *
         min (Fintype.card κ * (ε / 2) ^ 2 / frobNorm (cfc f A) ^ 2)
           (Fintype.card κ * (ε / 2) / specNorm (cfc f A))) := by
-  have hraw := measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitzOnWith
+  have hraw := measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitzOnWith
     hA hG hQ hq hK hac hspec hf (η := ε / 2) (by positivity)
   have hbudget : Real.pi * (L : ℝ) * (Fintype.card n : ℝ) * (c - a) / (4 * q) ≤ ε / 2 := by
     rw [div_le_iff₀ (by exact_mod_cast (show 0 < 4 * q by omega))]
@@ -78,11 +81,11 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_l
   linarith
 
 /-- For a positive semidefinite matrix function with trace `τ>0`, the concrete Lipschitz
-step count `q ≥ πLn(c-a)/(2ετ)` and sample count
+Krylov approximation order `q ≥ πLn(c-a)/(2ετ)` and sample count
 `m ≥ 1024e² ε⁻² log(2/δ)` give relative error at most `ε` with failure at most `δ`.
 Source: Ubaru–Chen–Saad (2017) [`ucs17`], Thm 4.1.
-atlas: slq-error -/
-theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_steps
+atlas: slq-error (partial) -/
+theorem measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_order
     {A : Matrix n n ℝ} (hA : A.IsHermitian) {f : ℝ → ℝ} (hF : (cfc f A).PosSemidef)
     (htr : 0 < (cfc f A).trace) {G : Ω → Matrix n κ ℝ}
     (hG : HasLaw (fun ω (e : n × κ) => G ω e.1 e.2) (rademacherVector (n × κ)) μ)
@@ -95,10 +98,10 @@ theorem measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademach
       (2 * ε * (cfc f A).trace) ≤ q)
     (hm : 1024 * exp 1 ^ 2 * log (2 / δ) / ε ^ 2 ≤ Fintype.card κ) :
     μ.real {ω | ε * (cfc f A).trace <
-      |slqEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
+      |compressionQuadratureEstimate A f (G ω) (Q ω) - (cfc f A).trace|} ≤ δ := by
   obtain ⟨p, hp, hfp⟩ := exists_degree_le_abs_sub_eval_le_jackson_interval hac hf (2 * q - 1)
   have hdeg : p.degree < 2 * q := hp.trans_lt (by exact_mod_cast (show 2 * q - 1 < 2 * q by omega))
-  apply measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card hA hF htr
+  apply measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card hA hF htr
     hG hQ hK hdeg hspec hfp hε hε1 hδ _ hm
   have hcast : ((2 * q - 1 : ℕ) : ℝ) + 1 = 2 * (q : ℝ) := by
     exact_mod_cast (show 2 * q - 1 + 1 = 2 * q by omega)

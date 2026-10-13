@@ -19,16 +19,16 @@ variable {n k r : Type*} [Fintype n] [Fintype k] [Fintype r]
 orthogonal residual norm divided by its projection norm.
 Source: manuscript `sa:subspace`, individual-angle clause. -/
 def complexVectorTangentToColumns (B : Matrix n k ℂ) (u : EuclideanSpace ℂ n) : ℝ :=
-  ‖u - (complexColumnSpace B).starProjection u‖ / ‖(complexColumnSpace B).starProjection u‖
+  ‖u - (columnSpace B).starProjection u‖ / ‖(columnSpace B).starProjection u‖
 
 omit [DecidableEq n] in
 /-- An orthogonal graph competitor bounds the actual complex vector-to-subspace
 tangent. Source: manuscript `sa:subspace`, individual-angle comparison. -/
 theorem complexVectorTangentToColumns_le_of_orthogonal_competitor
     (B : Matrix n k ℂ) {u w : EuclideanSpace ℂ n} (hu : ‖u‖ = 1)
-    (huw : inner ℂ u w = 0) (hw : u + w ∈ complexColumnSpace B) :
+    (huw : inner ℂ u w = 0) (hw : u + w ∈ columnSpace B) :
     complexVectorTangentToColumns B u ≤ ‖w‖ := by
-  let S := complexColumnSpace B
+  let S := columnSpace B
   have hpv : inner ℂ (S.starProjection u) (u + w) = 1 := by
     rw [S.inner_starProjection_left_eq_right,
       (Submodule.starProjection_eq_self_iff (K := S)).mpr hw,
@@ -80,7 +80,7 @@ theorem complexVectorTangentToColumns_graph_col_le
     {U₁ : Matrix n k ℂ} {U₂ : Matrix n r ℂ}
     (hU₁ : U₁ᴴ * U₁ = 1) (hU₂ : U₂ᴴ * U₂ = 1) (hU : U₁ᴴ * U₂ = 0)
     (F : Matrix r k ℂ)
-    (hRange : complexColumnSpace (U₁ + U₂ * F) ≤ complexColumnSpace B) (i : k) :
+    (hRange : columnSpace (U₁ + U₂ * F) ≤ columnSpace B) (i : k) :
     complexVectorTangentToColumns B (WithLp.toLp 2 (U₁.col i)) ≤
       ‖(WithLp.toLp 2 (F.col i) : EuclideanSpace ℂ r)‖ := by
   let e : k → ℂ := Pi.single i 1
@@ -97,7 +97,7 @@ theorem complexVectorTangentToColumns_graph_col_le
         Matrix.vecMul_conjTranspose, star_star]
     rw [← hh, hU, Matrix.zero_mulVec, dotProduct_zero]
   have hw : (WithLp.toLp 2 (U₁.col i) : EuclideanSpace ℂ n) +
-      WithLp.toLp 2 (U₂ *ᵥ F.col i) ∈ complexColumnSpace B := by
+      WithLp.toLp 2 (U₂ *ᵥ F.col i) ∈ columnSpace B := by
     apply hRange
     refine ⟨WithLp.toLp 2 e, ?_⟩
     simp only [Matrix.toLpLin_apply, Matrix.add_mulVec,
@@ -141,8 +141,8 @@ theorem norm_complex_graph_col_le_of_diagonal
 omit [Fintype n] [DecidableEq n] in
 /-- Actual complex column spaces decrease under right multiplication.
 Source: operator composition; supports manuscript `sa:subspace`. -/
-theorem complexColumnSpace_mul_le {l : Type*} [Fintype l] [DecidableEq l]
-    (B : Matrix n k ℂ) (R : Matrix k l ℂ) : complexColumnSpace (B * R) ≤ complexColumnSpace B := by
+theorem columnSpace_mul_le {l : Type*} [Fintype l] [DecidableEq l]
+    (B : Matrix n k ℂ) (R : Matrix k l ℂ) : columnSpace (B * R) ≤ columnSpace B := by
   change LinearMap.range (Matrix.toEuclideanLin (B * R)) ≤
     LinearMap.range (Matrix.toEuclideanLin B)
   rw [Matrix.toLpLin_mul_same]
@@ -151,13 +151,13 @@ theorem complexColumnSpace_mul_le {l : Type*} [Fintype l] [DecidableEq l]
 omit [Fintype n] [DecidableEq n] in
 /-- A right-invertible coordinate change preserves the actual complex column space.
 Source: manuscript `sa:graph`, right normalization. -/
-theorem complexColumnSpace_mul_eq_of_right_inverse
+theorem columnSpace_mul_eq_of_right_inverse
     (B : Matrix n k ℂ) {R T : Matrix k k ℂ} (hRT : R * T = 1) :
-    complexColumnSpace (B * R) = complexColumnSpace B := by
-  apply le_antisymm (complexColumnSpace_mul_le B R)
+    columnSpace (B * R) = columnSpace B := by
+  apply le_antisymm (columnSpace_mul_le B R)
   have he : B = (B * R) * T := by rw [Matrix.mul_assoc, hRT, Matrix.mul_one]
   conv_lhs => rw [he]
-  exact complexColumnSpace_mul_le (B * R) T
+  exact columnSpace_mul_le (B * R) T
 /-- Every leading eigenvector has the corrected complex individual magnitude-gap
 angle rate to the actual subspace iterate. The initial factor is its graph-column
 norm. Source: manuscript `sa:subspace`, final clause; Saad (2011), §5.1.
@@ -193,7 +193,7 @@ theorem complexVectorTangentToColumns_subspaceIterate_le_of_diagonal
   have hRT : (R * Linv ^ t) * ((Matrix.diagonal eig₁) ^ t * Ω₁) = 1 := by
     have hpow' : Linv ^ t * (Matrix.diagonal eig₁) ^ t = 1 := mul_eq_one_comm.1 hpow
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc (Linv ^ t), hpow', Matrix.one_mul, mul_eq_one_comm.1 hR]
-  have hSpace := complexColumnSpace_mul_eq_of_right_inverse (A ^ t * Ω) hRT
+  have hSpace := columnSpace_mul_eq_of_right_inverse (A ^ t * Ω) hRT
   rw [hN] at hSpace
   have hh := complexVectorTangentToColumns_graph_col_le (A ^ t * Ω) hU₁ hU₂ hU
     (L₂ ^ t * Ω₂ * R * Linv ^ t) hSpace.le i
@@ -215,13 +215,13 @@ theorem complexSubspaceTangent_and_complexVectorTangentToColumns_le
     {Ω : Matrix n k ℂ} {Ω₁ R : Matrix k k ℂ} {Ω₂ : Matrix r k ℂ}
     (hΩ : Ω = U₁ * Ω₁ + U₂ * Ω₂) (hR : Ω₁ * R = 1)
     {α : ℝ} (hα : 0 < α) (hgap : ∀ i, α ≤ ‖eig₁ i‖) (t : ℕ) :
-    complexSubspaceTangent U₁ U₂ (complexSubspaceIterate A Ω t) ≤
+    complexSubspaceTangent U₁ U₂ (subspaceIterate A Ω t) ≤
         (‖Matrix.diagonal eig₂‖ / α) ^ t *
           complexSubspaceTangent U₁ U₂ (LinearMap.range Ω.mulVecLin) ∧
       ∀ i, complexVectorTangentToColumns (A ^ t * Ω) (WithLp.toLp 2 (U₁.col i)) ≤
         (‖Matrix.diagonal eig₂‖ / ‖eig₁ i‖) ^ t *
           ‖(WithLp.toLp 2 ((Ω₂ * R).col i) : EuclideanSpace ℂ r)‖ := by
-  refine ⟨complexSubspaceTangent_complexSubspaceIterate_le_of_diagonal hU₁ hU₂ hU
+  refine ⟨complexSubspaceTangent_subspaceIterate_le_of_diagonal hU₁ hU₂ hU
     eig₁ eig₂ hA₁ hA₂ hΩ hR hα hgap t, ?_⟩
   have heig : ∀ i, eig₁ i ≠ 0 := by
     intro i hi

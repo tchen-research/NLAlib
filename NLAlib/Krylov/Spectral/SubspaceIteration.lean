@@ -10,12 +10,12 @@ then the subspace iterates `S_k = range (A^k Ω)` satisfy
 
   `tan θ_max(U_s, S_k) ≤ (β/α)^k tan θ_max(U_s, range Ω)`,
 
-with `tan θ_max(U, X) = ‖(I − UUᵀ) X (UᵀX)⁻¹‖₂ = ‖Vᵀ X (UᵀX)⁻¹‖₂` (`tanThetaMax`), which depends
-only on `range X` (`tanThetaMax_eq_of_range_eq`), so any basis of `S_k` (in particular any
+with `tan θ_max(U, X) = ‖(I − UUᵀ) X (UᵀX)⁻¹‖₂ = ‖Vᵀ X (UᵀX)⁻¹‖₂` (`overlapTangentNorm`), which depends
+only on `range X` (`overlapTangentNorm_eq_of_range_eq`), so any basis of `S_k` (in particular any
 orthonormal basis the algorithm carries) may be used.
 
-* `tanThetaMax_pow_mul_le`: the bound for the unorthonormalised block `A^k Ω`.
-* `tanThetaMax_le_of_range_eq_subspaceIterate`: the same for any bases `Q₀` of `range Ω` and
+* `overlapTangentNorm_pow_mul_le`: the bound for the unorthonormalised block `A^k Ω`.
+* `overlapTangentNorm_le_of_range_eq_subspaceIterate`: the same for any bases `Q₀` of `range Ω` and
   `Q_k` of `S_k` (the form of Saad, Thm 5.2).
 * `isUnit_transpose_mul_pow_mul`: `Uᵀ A^k Ω` stays invertible.
 
@@ -107,14 +107,14 @@ splitting `UUᵀ + VVᵀ = I`, `AU = U diag(d)`, `AV = V diag(e)`, `|dᵢ| ≥ �
 Source: Saad (2011) [`saad11`], Thm 5.2 (symmetric case); Golub–Van Loan (2013) [`gvl13`],
 Thm 8.2.2. Deviation: invariant splitting `(U, V, d, e)` with bounds `α, β` instead of ordered
 eigenvalues (`α = |λ_s|`, `β = |λ_{s+1}|`); the iterate is the block `A^k Ω` (any basis of `S_k`:
-`tanThetaMax_le_of_range_eq_subspaceIterate`).
+`overlapTangentNorm_le_of_range_eq_subspaceIterate`).
 atlas: subspace-iteration-convergence -/
-theorem tanThetaMax_pow_mul_le {A : Matrix n n ℝ} {U : Matrix n s ℝ} {V : Matrix n r ℝ}
+theorem overlapTangentNorm_pow_mul_le {A : Matrix n n ℝ} {U : Matrix n s ℝ} {V : Matrix n r ℝ}
     (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) (hUV : U * Uᵀ + V * Vᵀ = 1)
     {d : s → ℝ} {e : r → ℝ} (hAU : A * U = U * diagonal d) (hAV : A * V = V * diagonal e)
     {α β : ℝ} (hα : 0 < α) (hβ : 0 ≤ β) (hd : ∀ i, α ≤ |d i|) (he : ∀ j, |e j| ≤ β)
     {Ω : Matrix n s ℝ} (hΩ : IsUnit (Uᵀ * Ω)) (k : ℕ) :
-    tanThetaMax U (A ^ k * Ω) ≤ (β / α) ^ k * tanThetaMax U Ω := by
+    overlapTangentNorm U (A ^ k * Ω) ≤ (β / α) ^ k * overlapTangentNorm U Ω := by
   obtain ⟨hUk, hVk⟩ := transpose_mul_pow_eq_of_invariant hU hV hUV hAU hAV k
   have hd0 : ∀ i, d i ≠ 0 := fun i h => by
     have := hd i; rw [h, abs_zero] at this; linarith
@@ -136,10 +136,10 @@ theorem tanThetaMax_pow_mul_le {A : Matrix n n ℝ} {U : Matrix n s ℝ} {V : Ma
     refine Matrix.inv_eq_left_inv ?_
     rw [hUkΩ, Matrix.mul_assoc, ← Matrix.mul_assoc Dinv, h1, Matrix.one_mul, hΩ']
   -- the complement forms
-  have h0 : tanThetaMax U Ω = specNorm Y :=
-    tanThetaMax_eq_specNorm_transpose_mul_mul U hV hUV Ω
-  have hk : tanThetaMax U (A ^ k * Ω) = specNorm (diagonal e ^ k * Y * Dinv) := by
-    rw [tanThetaMax_eq_specNorm_transpose_mul_mul U hV hUV, hinv, hVkΩ, hY]
+  have h0 : overlapTangentNorm U Ω = specNorm Y :=
+    overlapTangentNorm_eq_specNorm_transpose_mul_mul U hV hUV Ω
+  have hk : overlapTangentNorm U (A ^ k * Ω) = specNorm (diagonal e ^ k * Y * Dinv) := by
+    rw [overlapTangentNorm_eq_specNorm_transpose_mul_mul U hV hUV, hinv, hVkΩ, hY]
     simp only [Matrix.mul_assoc]
   -- norm bounds
   have hE : specNorm (diagonal e ^ k) ≤ β ^ k := by
@@ -163,12 +163,12 @@ theorem tanThetaMax_pow_mul_le {A : Matrix n n ℝ} {U : Matrix n s ℝ} {V : Ma
     _ = (β / α) ^ k * specNorm Y := by rw [div_eq_mul_inv, mul_pow]; ring
 
 /-- **Convergence of subspace iteration, basis form.** Under the hypotheses of
-`tanThetaMax_pow_mul_le`, for any `Q₀` with `range Q₀ = range Ω` and any `Q_k` with
+`overlapTangentNorm_pow_mul_le`, for any `Q₀` with `range Q₀ = range Ω` and any `Q_k` with
 `range Q_k = S_k = subspaceIterate A Ω k` (for instance the orthonormal bases the algorithm
 carries), `tan θ_max(range U, range Q_k) ≤ (β/α)^k tan θ_max(range U, range Q₀)`.
 Source: Saad (2011) [`saad11`], Thm 5.2; Golub–Van Loan (2013) [`gvl13`], Thm 8.2.2.
 atlas: subspace-iteration-convergence -/
-theorem tanThetaMax_le_of_range_eq_subspaceIterate {A : Matrix n n ℝ} {U : Matrix n s ℝ}
+theorem overlapTangentNorm_le_of_range_eq_subspaceIterate {A : Matrix n n ℝ} {U : Matrix n s ℝ}
     {V : Matrix n r ℝ} (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V)
     (hUV : U * Uᵀ + V * Vᵀ = 1) {d : s → ℝ} {e : r → ℝ} (hAU : A * U = U * diagonal d)
     (hAV : A * V = V * diagonal e) {α β : ℝ} (hα : 0 < α) (hβ : 0 ≤ β)
@@ -176,12 +176,12 @@ theorem tanThetaMax_le_of_range_eq_subspaceIterate {A : Matrix n n ℝ} {U : Mat
     {k : ℕ} {Q₀ Qk : Matrix n s ℝ}
     (hQ₀ : LinearMap.range Q₀.mulVecLin = LinearMap.range Ω.mulVecLin)
     (hQk : LinearMap.range Qk.mulVecLin = subspaceIterate A Ω k) :
-    tanThetaMax U Qk ≤ (β / α) ^ k * tanThetaMax U Q₀ := by
+    overlapTangentNorm U Qk ≤ (β / α) ^ k * overlapTangentNorm U Q₀ := by
   have hd0 : ∀ i, d i ≠ 0 := fun i h => by
     have := hd i; rw [h, abs_zero] at this; linarith
-  rw [← tanThetaMax_eq_of_range_eq U hQk.symm
+  rw [← overlapTangentNorm_eq_of_range_eq U hQk.symm
       (isUnit_transpose_mul_pow_mul hU hV hUV hAU hAV hd0 hΩ k),
-    ← tanThetaMax_eq_of_range_eq U hQ₀.symm hΩ]
-  exact tanThetaMax_pow_mul_le hU hV hUV hAU hAV hα hβ hd he hΩ k
+    ← overlapTangentNorm_eq_of_range_eq U hQ₀.symm hΩ]
+  exact overlapTangentNorm_pow_mul_le hU hV hUV hAU hAV hα hβ hd he hΩ k
 
 end NLAlib

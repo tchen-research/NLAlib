@@ -59,8 +59,8 @@ open scoped Matrix.Norms.L2Operator in
 triangle inequality. It follows from singular-value weak majorization
 and scalar Minkowski, without assuming a gauge or a matrix norm property.
 atlas: schatten-norms-def (partial) -/
-theorem schattenNorm_add_le (A B : Matrix m n ℝ) {p : ℝ} (hp : 1 ≤ p) :
-    schattenNorm (A + B) p ≤ schattenNorm A p + schattenNorm B p := by
+theorem schattenNormReal_add_le (A B : Matrix m n ℝ) {p : ℝ} (hp : 1 ≤ p) :
+    schattenNormReal (A + B) p ≤ schattenNormReal A p + schattenNormReal B p := by
   let N := min (Fintype.card m) (Fintype.card n)
   have hsum := (weaklyMajorized_singularValues_add A B).sum_rpow_le
     (fun i => singularValues_nonneg _ i)
@@ -80,12 +80,12 @@ theorem schattenNorm_add_le (A B : Matrix m n ℝ) {p : ℝ} (hp : 1 ≤ p) :
 open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- Absolute homogeneity of every positive-exponent finite Schatten norm. -/
-theorem schattenNorm_smul (A : Matrix m n ℝ) (c : ℝ) {p : ℝ} (hp : 0 < p) :
-    schattenNorm (c • A) p = |c| * schattenNorm A p := by
+theorem schattenNormReal_smul (A : Matrix m n ℝ) (c : ℝ) {p : ℝ} (hp : 0 < p) :
+    schattenNormReal (c • A) p = |c| * schattenNormReal A p := by
   have hsum : 0 ≤ ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
       singularValues A i ^ p :=
     Finset.sum_nonneg (fun i _ => Real.rpow_nonneg (singularValues_nonneg _ i) p)
-  unfold schattenNorm
+  unfold schattenNormReal
   simp_rw [singularValues_smul, Real.mul_rpow (abs_nonneg c) (singularValues_nonneg _ _),
     ← Finset.mul_sum]
   rw [Real.mul_rpow (Real.rpow_nonneg (abs_nonneg c) p) hsum,
@@ -94,16 +94,16 @@ theorem schattenNorm_smul (A : Matrix m n ℝ) (c : ℝ) {p : ℝ} (hp : 0 < p) 
 open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- At every positive exponent, the Schatten norm vanishes on the zero matrix. -/
-theorem schattenNorm_zero {p : ℝ} (hp : 0 < p) : schattenNorm (0 : Matrix m n ℝ) p = 0 := by
-  simp [schattenNorm, singularValues_eq_linearMap, Real.zero_rpow hp.ne',
+theorem schattenNormReal_zero {p : ℝ} (hp : 0 < p) : schattenNormReal (0 : Matrix m n ℝ) p = 0 := by
+  simp [schattenNormReal, singularValues_eq_linearMap, Real.zero_rpow hp.ne',
     Real.zero_rpow (show p⁻¹ ≠ 0 from inv_ne_zero hp.ne')]
 
 open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- At every positive exponent, the finite Schatten power sum separates zero,
 including empty matrix spaces. -/
-theorem schattenNorm_eq_zero_iff (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
-    schattenNorm A p = 0 ↔ A = 0 := by
+theorem schattenNormReal_eq_zero_iff (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
+    schattenNormReal A p = 0 ↔ A = 0 := by
   constructor
   · intro h
     have hsum0 : (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
@@ -117,22 +117,29 @@ theorem schattenNorm_eq_zero_iff (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
           Real.rpow_nonneg (singularValues_nonneg _ j) p)).mp hsum0 i hi
       exact (Real.rpow_eq_zero (singularValues_nonneg _ i) hp.ne').mp hpw
     apply (nuclearNorm_eq_zero_iff A).mp
+    rw [nuclearNorm_eq_sum_range]
     exact Finset.sum_eq_zero hi
   · rintro rfl
-    exact schattenNorm_zero hp
+    exact schattenNormReal_zero hp
 
 open scoped Matrix.Norms.L2Operator in
 /-- The bundled Schatten seminorm for every finite norm exponent. Its
 separating zero criterion is proved above, so this is a norm.
 atlas: schatten-norms-def (partial) -/
 def schattenSeminorm (p : ℝ) (hp : 1 ≤ p) : Seminorm ℝ (Matrix m n ℝ) :=
-  Seminorm.of (fun A => schattenNorm A p) (fun A B => schattenNorm_add_le A B hp)
+  Seminorm.of (fun A => schattenNormReal A p) (fun A B => schattenNormReal_add_le A B hp)
     (fun c A => by simpa only [Real.norm_eq_abs] using
-      schattenNorm_smul A c (lt_of_lt_of_le zero_lt_one hp))
+      schattenNormReal_smul A c (lt_of_lt_of_le zero_lt_one hp))
 
 open scoped Matrix.Norms.L2Operator in
 /-- The bundled Schatten seminorm agrees with the native singular-value formula. -/
 @[simp] theorem schattenSeminorm_apply (A : Matrix m n ℝ) (p : ℝ) (hp : 1 ≤ p) :
-    schattenSeminorm p hp A = schattenNorm A p := rfl
+    schattenSeminorm p hp A = schattenNormReal A p := rfl
+
+open scoped Matrix.Norms.L2Operator in
+/-- The finite seminorm bundle evaluates to the main scalar Schatten norm. -/
+theorem schattenSeminorm_apply_eq_schattenNorm (A : Matrix m n ℝ) (p : ℝ) (hp : 1 ≤ p) :
+    schattenSeminorm p hp A = schattenNorm A (ENNReal.ofReal p) := by
+  rw [schattenSeminorm_apply, schattenNorm_ofReal A (le_trans zero_le_one hp)]
 
 end NLAlib

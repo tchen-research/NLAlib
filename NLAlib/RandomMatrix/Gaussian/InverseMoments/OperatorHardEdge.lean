@@ -28,16 +28,16 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality
       tsupport ψ ⊆ Ioi 0 → (∀ x, 0 ≤ ψ x) →
       0 ≤ ∫ x in Ioi 0, 4 * x * deriv ψ x +
         2 * (((k : ℝ) - r + 1) - x) * ψ x
-        ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)))
+        ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)))
     (t : ℝ) :
-    (gaussianMatrix (Fin r) (Fin k)) {G | sigmaMin Gᵀ ^ 2 ≤ t} ≤
+    (gaussianMatrix (Fin r) (Fin k)) {G | singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ t} ≤
       ∫⁻ y in Ioc (0 : ℝ) t, ENNReal.ofReal
         ((2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2) /
           (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))) *
           y ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-y / 2)) := by
   obtain ⟨h, hh, hanti, hnn, hdens⟩ :=
     exists_gamma_weighted_antitone_density_of_weak_inequality
-      ((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2))
+      ((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2))
       ((k : ℝ) - r + 1) hweak
   have he : ((k : ℝ) - r + 1) / 2 - 1 = ((k : ℝ) - r - 1) / 2 := by ring
   simp_rw [he] at hdens
@@ -54,14 +54,14 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality_
       tsupport ψ ⊆ Ioi 0 → (∀ x, 0 ≤ ψ x) →
       0 ≤ ∫ x in Ioi 0, 4 * x * deriv ψ x +
         2 * (((k : ℝ) - r + 1) - x) * ψ x
-        ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)))
+        ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)))
     (t : ℝ) :
-    μ {w | sigmaMin (X w)ᵀ ^ 2 ≤ t} ≤
+    μ {w | singularValues (X w)ᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ t} ≤
       ∫⁻ y in Ioc (0 : ℝ) t, ENNReal.ofReal
         ((2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2) /
           (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))) *
           y ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-y / 2)) := by
-  rw [hX.measure_eq (p := fun G => sigmaMin Gᵀ ^ 2 ≤ t)
+  rw [hX.measure_eq (p := fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ t)
     (measurableSet_le measurable_sigmaMin_transpose_sq measurable_const)]
   exact gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality hr hrk hweak t
 

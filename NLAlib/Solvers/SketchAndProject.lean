@@ -1,4 +1,5 @@
 import NLAlib.Solvers.SketchAndProject.Core
+import NLAlib.Solvers.SketchAndProject.Probability
 
 /-! # `Solvers/SketchAndProject`
 

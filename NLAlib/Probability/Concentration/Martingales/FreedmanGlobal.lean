@@ -50,7 +50,7 @@ theorem measure_exists_matrix_crossing_le_of_trace_supermartingale
     obtain ⟨k, ht, hv⟩ := hcross
     exact ⟨k, exp_sub_le_traceExp_compensated_of_crossing _ _
       (hω k).1 (hω k).2 hθ hg ht hv⟩
-  have hVille := measure_exists_le_supermartingale_le hS hNonneg (Real.exp_pos (θ * t - g * v))
+  have hVille := measureReal_exists_le_supermartingale_le hS hNonneg (Real.exp_pos (θ * t - g * v))
   have hzero : (∫ ω, S 0 ω ∂μ) = Fintype.card n := by
     simp [S]
   rw [hzero] at hVille

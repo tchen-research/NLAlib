@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-13",
+  "reason": "Expose supplied-compression and totalized algebraic kernels under descriptive names; reserve algorithm and geometric names for constructed or domain-valid interfaces.",
+  "renames": [
+    {
+      "old": "NLAlib.abs_rayleighQuotient_sub_le_mul_tanSqAngle",
+      "new": "NLAlib.abs_rayleighQuotient_sub_le_mul_overlapTangentSq"
+    },
+    {
+      "old": "NLAlib.abs_slqEstimate_inv_sub_hutchinsonEstimate_le",
+      "new": "NLAlib.abs_compressionQuadratureEstimate_inv_sub_hutchinsonEstimate_le"
+    },
+    {
+      "old": "NLAlib.abs_slqEstimate_sub_hutchinsonEstimate_le",
+      "new": "NLAlib.abs_compressionQuadratureEstimate_sub_hutchinsonEstimate_le"
+    },
+    {
+      "old": "NLAlib.eigenvalues_sub_eigenvalues_le_mul_tanSqAngle",
+      "new": "NLAlib.eigenvalues_sub_eigenvalues_le_mul_overlapTangentSq"
+    },
+    {
+      "old": "NLAlib.exists_mem_krylovSpace_tanSqAngle_le",
+      "new": "NLAlib.exists_mem_krylovSpace_overlapTangentSq_le"
+    },
+    {
+      "old": "NLAlib.exists_mem_krylovSpace_tanSqAngle_le_two_div_pow",
+      "new": "NLAlib.exists_mem_krylovSpace_overlapTangentSq_le_two_div_pow"
+    },
+    {
+      "old": "NLAlib.hutchPlusPlusEstimate",
+      "new": "NLAlib.deflatedTraceEstimate"
+    },
+    {
+      "old": "NLAlib.integral_hutchPlusPlusEstimate_comp_eq_trace",
+      "new": "NLAlib.integral_deflatedTraceEstimate_comp_eq_trace"
+    },
+    {
+      "old": "NLAlib.integral_hutchPlusPlusEstimate_eq_trace",
+      "new": "NLAlib.integral_deflatedTraceEstimate_eq_trace"
+    },
+    {
+      "old": "NLAlib.integral_xtraceEstimate_eq_trace",
+      "new": "NLAlib.integral_leaveOneOutDeflatedTraceEstimate_eq_trace"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_analytic_log_steps",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_analytic_log_order"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitzOnWith",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitzOnWith"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitz_steps",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitz_order"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_open_bernsteinEllipse",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_open_bernsteinEllipse"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_card_ge",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_card_ge"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_log_steps",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_log_order"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_lower_bound",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_lower_bound"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_lower_bound",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_lower_bound"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_steps",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_order"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lower_bound"
+    },
+    {
+      "old": "NLAlib.measureReal_abs_slqEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card",
+      "new": "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card"
+    },
+    {
+      "old": "NLAlib.measureReal_le_abs_slqEstimate_inv_sub_trace_le_of_hasLaw_gaussianMatrix",
+      "new": "NLAlib.measureReal_le_abs_compressionQuadratureEstimate_inv_sub_trace_le_of_hasLaw_gaussianMatrix"
+    },
+    {
+      "old": "NLAlib.slqEstimate",
+      "new": "NLAlib.compressionQuadratureEstimate"
+    },
+    {
+      "old": "NLAlib.sq_tanThetaMax_replicateCol_eq_tanSqAngle",
+      "new": "NLAlib.sq_overlapTangentNorm_replicateCol_eq_overlapTangentSq"
+    },
+    {
+      "old": "NLAlib.tanSqAngle",
+      "new": "NLAlib.overlapTangentSq"
+    },
+    {
+      "old": "NLAlib.tanSqAngle_aeval_mulVec_le",
+      "new": "NLAlib.overlapTangentSq_aeval_mulVec_le"
+    },
+    {
+      "old": "NLAlib.tanSqAngle_inverseIterate_le",
+      "new": "NLAlib.overlapTangentSq_inverseIterate_le"
+    },
+    {
+      "old": "NLAlib.tanSqAngle_le_of_forall_eigenvectorBasis_dotProduct_eq",
+      "new": "NLAlib.overlapTangentSq_le_of_forall_eigenvectorBasis_dotProduct_eq"
+    },
+    {
+      "old": "NLAlib.tanSqAngle_nonneg",
+      "new": "NLAlib.overlapTangentSq_nonneg"
+    },
+    {
+      "old": "NLAlib.tanSqAngle_of_norm_eq_one",
+      "new": "NLAlib.overlapTangentSq_of_norm_eq_one"
+    },
+    {
+      "old": "NLAlib.tanSqAngle_powerIterate_le",
+      "new": "NLAlib.overlapTangentSq_powerIterate_le"
+    },
+    {
+      "old": "NLAlib.tanSqAngle_powerStep_iterate_le",
+      "new": "NLAlib.overlapTangentSq_powerStep_iterate_le"
+    },
+    {
+      "old": "NLAlib.tanSqAngle_smul",
+      "new": "NLAlib.overlapTangentSq_smul"
+    },
+    {
+      "old": "NLAlib.tanThetaMax_le_of_range_eq_subspaceIterate",
+      "new": "NLAlib.overlapTangentNorm_le_of_range_eq_subspaceIterate"
+    },
+    {
+      "old": "NLAlib.tanThetaMax_pow_mul_le",
+      "new": "NLAlib.overlapTangentNorm_pow_mul_le"
+    },
+    {
+      "old": "NLAlib.xtraceEstimate",
+      "new": "NLAlib.leaveOneOutDeflatedTraceEstimate"
+    }
+  ],
+  "contract_changes": {
+    "NLAlib.lanczosRitzValue": "Largest sorted eigenvalue of the orthonormal Krylov compression; rank-zero and non-Hermitian convention zero. Negative Ritz values are preserved.",
+    "NLAlib.tanSqAngle": "Geometric quotient now requires nonzero dot-product overlap.",
+    "NLAlib.slqEstimate": "Constructs the stopped Arnoldi compression for each probe, using actual grade-aware dimensions.",
+    "NLAlib.hutchPlusPlusEstimate": "Constructs an orthonormal basis of the supplied sketch image A S.",
+    "NLAlib.xtraceEstimate": "Constructs the basic leave-one-out sketch-image estimator from the probe matrix."
+  }
+}

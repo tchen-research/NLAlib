@@ -127,5 +127,6 @@
   "NLAlib.integral_lanczosRayleighRelativeError_pi_gaussianReal_le_all_dims": "NLAlib.integral_lanczosRayleighRelativeError_gaussianVector_le",
   "NLAlib.integral_lanczosRayleighRelativeError_le_of_hasLaw": "same name; `[Fintype ι]`, `1 ≤ q`, `/ q ^ 2`",
   "NLAlib.isSymm_qrAlgorithm": "NLAlib.isHermitian_qrAlgorithm (conclusion `(qrAlgorithm qr μ A k).IsHermitian`)",
-  "NLAlib.isTridiagonal_qrAlgorithm / isTridiagonal_qrAlgorithm_givensQR": "same names; `(hS : A.IsHermitian)`"
+  "NLAlib.isTridiagonal_qrAlgorithm / isTridiagonal_qrAlgorithm_givensQR": "same names; `(hS : A.IsHermitian)`",
+  "NLAlib.norm_toLp_eq_sqrt_dotProduct": "NLAlib.norm_toLp_eq_sqrt_dotProduct_self"
 }

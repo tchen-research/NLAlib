@@ -132,7 +132,8 @@ theorem exists_orthogonalGroup_smul_eq {n k : ℕ} (hkn : k ≤ n)
   let e := Fin.castLEEmb hkn
   obtain ⟨W, hW, hWQ⟩ := exists_unitary_completion Q.val Q.property e
   obtain ⟨V, hV, hVQ⟩ := exists_unitary_completion Q'.val Q'.property e
-  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hW hV
+  change Wᵀ * W = 1 at hW
+  change Vᵀ * V = 1 at hV
   have hWt : W * Wᵀ = 1 := mul_eq_one_comm.mp hW
   let O := V * Wᵀ
   have hO : O ∈ Matrix.orthogonalGroup (Fin n) ℝ := by

@@ -1,0 +1,8 @@
+{
+  "NLAlib.srhtSignedFrame / srhtNormalizedRow / srhtSketch / srhtWithReplacementSketch": "same names; diagonal argument is now Fin n \u2192 \u211d, used directly in Matrix.diagonal",
+  "NLAlib.srhtLaw / srhtWithReplacementLaw": "same names; sample space has real-sign component Fin n \u2192 \u211d with canonical rademacherVector law, replacing deleted Boolean cube PMF",
+  "NLAlib.hasOrthonormalCols_srhtSignedFrame": "same name; after the real diagonal \u03be, supply h\u03be : \u2200 i, \u03be i ^ 2 = 1",
+  "NLAlib.transpose_srhtSketch_full_rows_mul_self": "same name; real \u03be followed by h\u03be : \u2200 i, \u03be i ^ 2 = 1, then the full row subset",
+  "NLAlib.measure_srht_gram_failure_le_of_flat_rows / measure_srhtWithReplacement_gram_failure_le_of_flat_rows": "same names; deterministic real diagonal \u03be followed by h\u03be : \u2200 i, \u03be i ^ 2 = 1; probabilistic endpoints derive support almost everywhere",
+  "NLAlib.hasSubgaussianMGF_srhtNormalizedRow_dotProduct": "same name; canonical rademacherVector measure and squared Euclidean nnnorm proxy"
+}

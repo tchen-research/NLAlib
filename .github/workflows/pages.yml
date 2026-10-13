@@ -2,7 +2,13 @@ name: Progress site
 on:
   push:
     branches: [main]
-    paths: ["atlas/**", "scripts/build_site.py", ".github/workflows/pages.yml"]
+    paths:
+      - "atlas/**"
+      - "docs/coverage/**"
+      - "docs/llms.txt"
+      - "scripts/build_site.py"
+      - "scripts/coverage_status.py"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 permissions:
   contents: read

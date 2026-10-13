@@ -1,6 +1,8 @@
-import NLAlib.Sketching.Sparse.FiniteLaw.IndependentProduct
+import NLAlib.Sketching.Sparse.FiniteLaw.Uniform
+import NLAlib.ForMathlib.Probability.PMF
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
 import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.Probability.HasLaw
 
 /-!
 # Native probability measures for the explicit finite-law proof interface
@@ -13,7 +15,7 @@ supports `sparse-ose`.
 -/
 
 noncomputable section
-open MeasureTheory
+open MeasureTheory ProbabilityTheory
 namespace NLAlib.SparseSketch.FiniteLaw
 
 variable {α : Type*} [Fintype α]
@@ -30,6 +32,24 @@ def toPMF (μ : FiniteLaw α) : PMF α :=
 Source: the explicit PMF construction; supports `sparse-ose`. -/
 @[simp] theorem toPMF_apply (μ : FiniteLaw α) (x : α) :
     μ.toPMF x = ENNReal.ofReal (μ.weight x) := rfl
+
+/-- View a native finite PMF through the finite-sum proof interface. No new law is chosen. -/
+def ofPMF (p : PMF α) : FiniteLaw α where
+  weight x := (p x).toReal
+  weight_nonneg _ := ENNReal.toReal_nonneg
+  sum_weight := p.sum_toReal
+
+/-- Returning to native probability preserves the original PMF. -/
+@[simp] theorem toPMF_ofPMF (p : PMF α) : (ofPMF p).toPMF = p := by
+  ext x
+  exact ENNReal.ofReal_toReal (p.apply_ne_top x)
+
+/-- Returning to the finite-sum interface preserves the original weights. -/
+@[simp] theorem ofPMF_toPMF (μ : FiniteLaw α) : ofPMF μ.toPMF = μ := by
+  have h : (ofPMF μ.toPMF).weight = μ.weight := by
+    funext x
+    exact ENNReal.toReal_ofReal (μ.weight_nonneg x)
+  exact ext_weight h
 
 /-- The actual probability measure specified by the explicit finite law.
 Source: the native PMF bridge; supports `sparse-ose`. -/
@@ -64,14 +84,13 @@ theorem real_toMeasure [MeasurableSpace α] [MeasurableSingletonClass α]
 /-- A random variable with the finite law has precisely its event masses,
 on an arbitrary underlying measurable space. Source: Mathlib's pushforward
 measure identity and the finite PMF bridge; supports `sparse-ose`. -/
-theorem real_preimage_of_map_eq_toMeasure
+theorem real_preimage_of_hasLaw
     [MeasurableSpace α] [MeasurableSingletonClass α]
     (ν : FiniteLaw α)
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
-    (Z : Ω → α) (hZ : Measurable Z) (hlaw : μ.map Z = ν.toMeasure) (s : Set α) :
+    (Z : Ω → α) (hlaw : HasLaw Z ν.toMeasure μ) (s : Set α) :
     μ.real (Z ⁻¹' s) = ν.prob s := by
   rw [← real_toMeasure]
-  change (μ (Z ⁻¹' s)).toReal = (ν.toMeasure s).toReal
-  rw [← Measure.map_apply hZ s.toFinite.measurableSet, hlaw]
+  exact hlaw.measureReal_eq s.toFinite.measurableSet
 
 end NLAlib.SparseSketch.FiniteLaw

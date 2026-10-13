@@ -1,10 +1,10 @@
 import NLAlib.Matrix.Subspaces.PrincipalAngleToolkit
-import NLAlib.Matrix.Spectral.SigmaMinTransport
+import NLAlib.Matrix.Spectral.SquareSmallestSingularValue
 /-!
 # Principal-angle bridges to variational minima and tangent ratios
 
 The largest-sine formula holds also for unequal frame widths (through the
-projResidual Gram identity `transpose_residual_mul_residual_eq_one_sub_overlap`). For equal widths the actual largest tangent has the exact
+projResidual Gram identity `conjTranspose_residual_mul_residual_eq_one_sub_overlap`). For equal widths the actual largest tangent has the exact
 sine ratio. These results connect the first-course principal-angle API to
 the native singular spectrum. Source: Stewart--Sun, Section I.5;
 Golub--Van Loan, Theorem 2.5.1. Atlas: `principal-angles-def`.
@@ -23,10 +23,10 @@ norm squared is one minus the squared variational smallest overlap singular valu
 kernel zeros (`σ_min = 0` when `Q` is wider than `P`). `Nonempty p` is needed: for an empty
 frame both norms are `0`. Golub–Van Loan 2013, Thm 2.5.1; Stewart--Sun, Theorem I.5.5.
 atlas: principal-angles-def (partial) -/
-theorem specNorm_residual_sq_eq_one_sub_sigmaMin_sq [Nonempty p]
+theorem specNorm_residual_sq_eq_one_sub_singularValues_last_sq [Nonempty p]
     {P : Matrix m n ℝ} {Q : Matrix m p ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
-    specNorm (projResidual P Q) ^ 2 = 1 - sigmaMin (Pᵀ * Q) ^ 2 := by
+    specNorm (projResidual P Q) ^ 2 = 1 - singularValues (Pᵀ * Q) (Fintype.card p - 1) ^ 2 := by
   let C := Pᵀ * Q
   let en := Fintype.equivFin n
   let ep := Fintype.equivFin p
@@ -67,10 +67,12 @@ theorem specNorm_residual_sq_eq_one_sub_sigmaMin_sq [Nonempty p]
       (1 : Matrix p p ℝ).submatrix ep.symm ep.symm
     rw [Matrix.submatrix_one_equiv]
   rw [hGramTransport, specNorm_reindex, specNorm_sub_comm, hPi] at hGramNorm
-  have hSigma : sigmaMin C = singularValues CF last := by
-    rw [sigmaMin_eq_singularValues_last C hp, ← singularValues_reindex C en ep]
+  have hSigma : singularValues C (Fintype.card p - 1) = singularValues CF last := by
+    rw [singularValues_reindex]
   have hResidual := specNorm_sq_eq_specNorm_transpose_mul_self (projResidual P Q)
-  rw [transpose_residual_mul_residual_eq_one_sub_overlap hP hQ] at hResidual
+  have hGram := conjTranspose_residual_mul_residual_eq_one_sub_overlap hP hQ
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hGram
+  rw [hGram] at hResidual
   exact hResidual.trans (hGramNorm.trans (by rw [hSigma]))
 
 /-- At positive width and invertible overlap, the norm of the genuine
@@ -90,8 +92,10 @@ theorem specNorm_tangentPrincipalAngles_eq_tan_last {P Q : Matrix m n ℝ}
   have hSigma : 0 < singularValues C last := (singularValues_pos_iff C last).mpr (by
     rw [hRank]
     exact last.isLt)
-  have hAngleLast : principalAnglesFintype P Q last < Real.pi / 2 :=
-    Real.arccos_lt_pi_div_two.mpr hSigma
+  have hAngleLast : principalAnglesFintype P Q last < Real.pi / 2 := by
+    simpa only [principalAnglesFintype, C, singularValues_reindex,
+      Matrix.conjTranspose_eq_transpose_of_trivial] using
+      Real.arccos_lt_pi_div_two.mpr hSigma
   have hRangeLast := principalAngles_mem_Icc hP hQ last
   have hTanLast : 0 ≤ Real.tan (principalAnglesFintype P Q last) :=
     Real.tan_nonneg_of_nonneg_of_le_pi_div_two hRangeLast.1 hRangeLast.2

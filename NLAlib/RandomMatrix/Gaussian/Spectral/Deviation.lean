@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Spectral.Weyl
 import NLAlib.RandomMatrix.Gaussian.Spectral.Gordon
 import NLAlib.RandomMatrix.Gaussian.Basic.LipschitzConcentration
 /-!
@@ -40,20 +41,20 @@ Atlas: `smin-lower-tail`. The source's hypothesis `n ≤ N` is not needed and is
 atlas: smin-lower-tail -/
 theorem measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) (u : ℝ)
     (hu : 0 ≤ u) :
-    (gaussianMatrix (Fin N) (Fin n)).real {A | sigmaMin A ≤ Real.sqrt N - Real.sqrt n - u}
+    (gaussianMatrix (Fin N) (Fin n)).real {A | singularValues A (Fintype.card (Fin n) - 1) ≤ Real.sqrt N - Real.sqrt n - u}
       ≤ Real.exp (-u ^ 2 / 2) := by
-  set h : (Matrix (Fin N) (Fin n) ℝ) → ℝ := fun X => -sigmaMin X with hh
+  set h : (Matrix (Fin N) (Fin n) ℝ) → ℝ := fun X => -singularValues X (Fintype.card (Fin n) - 1) with hh
   have hLip : ∀ X Y, |h X - h Y| ≤ 1 * frobNorm (X - Y) := by
     intro X Y
-    have := abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
+    have := abs_singularValues_sub_le_frobNorm X Y (Fintype.card (Fin n) - 1)
     simp only [hh, one_mul]
-    rw [show -sigmaMin X - -sigmaMin Y
-        = -(sigmaMin X - sigmaMin Y) by ring, abs_neg]
+    rw [show -singularValues X (Fintype.card (Fin n) - 1) - -singularValues Y (Fintype.card (Fin n) - 1)
+        = -(singularValues X (Fintype.card (Fin n) - 1) - singularValues Y (Fintype.card (Fin n) - 1)) by ring, abs_neg]
     exact this
   obtain ⟨-, hconc⟩ := gaussian_concentration h 1 one_pos hLip u hu
   obtain ⟨-, -, hmean, -, -⟩ := gordon_extreme_singular_values (N := N) hn
   have hint : ∫ Y, h Y ∂(gaussianMatrix (Fin N) (Fin n))
-      = -∫ Y, sigmaMin Y ∂(gaussianMatrix (Fin N) (Fin n)) := by
+      = -∫ Y, singularValues Y (Fintype.card (Fin n) - 1) ∂(gaussianMatrix (Fin N) (Fin n)) := by
     simp only [hh]
     exact integral_neg _
   refine le_trans (measureReal_mono ?_) hconc
@@ -98,12 +99,12 @@ atlas: extreme-singular-values-deviation -/
 theorem one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n)
     (t : ℝ) (ht : 0 ≤ t) :
     1 - 2 * Real.exp (-t ^ 2 / 2)
-      ≤ (gaussianMatrix (Fin N) (Fin n)).real {A | Real.sqrt N - Real.sqrt n - t ≤ sigmaMin A ∧
+      ≤ (gaussianMatrix (Fin N) (Fin n)).real {A | Real.sqrt N - Real.sqrt n - t ≤ singularValues A (Fintype.card (Fin n) - 1) ∧
           specNorm A ≤ Real.sqrt N + Real.sqrt n + t} := by
   set μ := gaussianMatrix (Fin N) (Fin n)
-  set E := {A : Matrix (Fin N) (Fin n) ℝ | Real.sqrt N - Real.sqrt n - t ≤ sigmaMin A ∧
+  set E := {A : Matrix (Fin N) (Fin n) ℝ | Real.sqrt N - Real.sqrt n - t ≤ singularValues A (Fintype.card (Fin n) - 1) ∧
           specNorm A ≤ Real.sqrt N + Real.sqrt n + t} with hE
-  set S1 := {A : Matrix (Fin N) (Fin n) ℝ | sigmaMin A ≤ Real.sqrt N - Real.sqrt n - t}
+  set S1 := {A : Matrix (Fin N) (Fin n) ℝ | singularValues A (Fintype.card (Fin n) - 1) ≤ Real.sqrt N - Real.sqrt n - t}
   set S2 := {A : Matrix (Fin N) (Fin n) ℝ | Real.sqrt N + Real.sqrt n + t ≤ specNorm A}
   have hsub : Eᶜ ⊆ S1 ∪ S2 := by
     intro X hX
@@ -131,11 +132,11 @@ theorem measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix_of_hasLaw {Ω : 
     {μ : Measure Ω}
     {N n : ℕ} {X : Ω → Matrix (Fin N) (Fin n) ℝ}
     (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ) (hn : 1 ≤ n) (u : ℝ) (hu : 0 ≤ u) :
-    μ.real {ω | sigmaMin (X ω) ≤ Real.sqrt N - Real.sqrt n - u} ≤ Real.exp (-u ^ 2 / 2) := by
-  have hc : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
-    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
-      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
-  rw [hX.measureReal_eq (p := fun A => sigmaMin A ≤ Real.sqrt N - Real.sqrt n - u)
+    μ.real {ω | singularValues (X ω) (Fintype.card (Fin n) - 1) ≤ Real.sqrt N - Real.sqrt n - u} ≤ Real.exp (-u ^ 2 / 2) := by
+  have hc : Continuous ((fun A => singularValues A (Fintype.card (Fin n) - 1)) : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm (fun A => singularValues A (Fintype.card (Fin n) - 1)) 1 fun X Y => by
+      rw [one_mul]; exact abs_singularValues_sub_le_frobNorm X Y (Fintype.card (Fin n) - 1)
+  rw [hX.measureReal_eq (p := fun A => singularValues A (Fintype.card (Fin n) - 1) ≤ Real.sqrt N - Real.sqrt n - u)
     (measurableSet_le hc.measurable measurable_const)]
   exact measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix hn u hu
 
@@ -160,15 +161,15 @@ theorem one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix_of_hasLaw {Ω : 
     {N n : ℕ} {X : Ω → Matrix (Fin N) (Fin n) ℝ}
     (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ) (hn : 1 ≤ n) (t : ℝ) (ht : 0 ≤ t) :
     1 - 2 * Real.exp (-t ^ 2 / 2)
-      ≤ μ.real {ω | Real.sqrt N - Real.sqrt n - t ≤ sigmaMin (X ω) ∧
+      ≤ μ.real {ω | Real.sqrt N - Real.sqrt n - t ≤ singularValues (X ω) (Fintype.card (Fin n) - 1) ∧
           specNorm (X ω) ≤ Real.sqrt N + Real.sqrt n + t} := by
   have hs : Continuous (specNorm : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
     continuous_of_abs_sub_le_mul_frobNorm specNorm 1 fun X Y => by
       rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y
-  have hm : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
-    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
-      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
-  rw [hX.measureReal_eq (p := fun A => Real.sqrt N - Real.sqrt n - t ≤ sigmaMin A ∧
+  have hm : Continuous ((fun A => singularValues A (Fintype.card (Fin n) - 1)) : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm (fun A => singularValues A (Fintype.card (Fin n) - 1)) 1 fun X Y => by
+      rw [one_mul]; exact abs_singularValues_sub_le_frobNorm X Y (Fintype.card (Fin n) - 1)
+  rw [hX.measureReal_eq (p := fun A => Real.sqrt N - Real.sqrt n - t ≤ singularValues A (Fintype.card (Fin n) - 1) ∧
       specNorm A ≤ Real.sqrt N + Real.sqrt n + t)
     ((measurableSet_le measurable_const hm.measurable).inter
       (measurableSet_le hs.measurable measurable_const))]

@@ -120,5 +120,6 @@
  "OperatorConvexOn": "OperatorConvexOn (no `NeZero d` binder: `hf.2 d A H hA hH hAI hHI t ht₀ ht₁`)",
  "lambdaMax/lambdaMin (Functions/ExpLog)": "lambdaMax/lambdaMin (M1's, NLAlib.Matrix.Spectral.Core, over 𝕜; the ExpLog definitions are deleted)",
  "IsBestRankApprox k A Y": "IsBestFrobRankApprox A k Y (Subspaces/Projections; `A` first)",
- "exists_orthogonal_sum_completion": "exists_unitary_sum_completion (over 𝕜, `H * Hᴴ = 1`; Subspaces/OrthogonalSumCompletion). NOTE: the call site Subspaces/ObliqueProjectionBlocks.lean:44 is not yet updated"
+ "exists_orthogonal_sum_completion": "exists_unitary_sum_completion (over 𝕜, `H * Hᴴ = 1`; Subspaces/OrthogonalSumCompletion; ObliqueProjectionBlocks consumer updated and compiled)",
+ "specNorm_residual_sq_eq_one_sub_sigmaMin_sq": "specNorm_residual_sq_eq_one_sub_singularValues_last_sq (Subspaces/PrincipalAngleBridges; RHS `1 - singularValues (Pᵀ * Q) (Fintype.card p - 1) ^ 2`)"
 }

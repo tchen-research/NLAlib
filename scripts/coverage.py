@@ -12,21 +12,23 @@ page (int), name (optional), statement (short paraphrase, never verbatim), statu
 Mathlib declaration names that state it), note (reason for out-of-scope / what is missing for partial).
 """
 import collections, json, pathlib, sys
+from coverage_status import annotate_coverage
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 atlas = json.load(open(ROOT / "atlas/atlas.json"))
 by_id = {r["id"]: r for r in atlas["results"]}
 src_ids = {s["id"] for s in atlas["sources"]}
-decls = {x["name"] for x in json.load(open(ROOT / "atlas/declarations.json"))}
+declaration_index = {x["name"]: x for x in json.load(open(ROOT / "atlas/declarations.json"))}
+decls = set(declaration_index)
 ext = {x["name"] for x in json.load(open(ROOT / "atlas/external.json"))} if (ROOT / "atlas/external.json").exists() else set()
-STATUSES = ["nlalib", "partial", "mathlib", "candidate", "out-of-scope"]
-GLYPH = {"nlalib": "✓", "partial": "◐", "mathlib": "M", "candidate": "○", "out-of-scope": "–"}
+STATUSES = ["nlalib", "partial", "scaffold", "mathlib", "candidate", "out-of-scope"]
+GLYPH = {"nlalib": "✓", "partial": "◐", "scaffold": "◧", "mathlib": "M", "candidate": "○", "out-of-scope": "–"}
 want = sys.argv[1:]
 problems = []
 warnings = []
 for p in sorted(q for q in (ROOT / "docs/coverage").glob("*.json") if not q.name.endswith(".candidates.json")):
     src = p.stem
     if want and src not in want: continue
-    idx = json.load(open(p))
+    idx = annotate_coverage(json.load(open(p)), by_id, declaration_index)
     src_field = idx.get("source", "")
     if not src.startswith(src_field): problems.append(f"{p.name}: source field {src_field!r} does not match file name")
     if src_field not in src_ids: problems.append(f"{p.name}: unknown atlas source {src_field}")
@@ -73,7 +75,7 @@ for p in sorted(q for q in (ROOT / "docs/coverage").glob("*.json") if not q.name
     tot = collections.Counter(it["status"] for it in items)
     title = next((s["title"] for s in atlas["sources"] if s["id"] == src_field), src)
     out = [f"# Coverage of {title} (`{src}`)", "", idx.get("edition_note", ""), "",
-           "Legend: ✓ in NLAlib · ◐ partially in NLAlib · M in Mathlib (not an atlas result by policy) · ○ candidate (to add) · – out of scope", "",
+           "Legend: ✓ in NLAlib · ◐ partially in NLAlib · ◧ unfinished proof dependency · M in Mathlib · ○ candidate (to add) · – out of scope", "",
            "| status | count |", "|---|---|"] + [f"| {GLYPH[s]} {s} | {tot[s]} |" for s in STATUSES] + [f"| total | {len(items)} |", ""]
     for ch, its in by_ch.items():
         c = collections.Counter(it["status"] for it in its)

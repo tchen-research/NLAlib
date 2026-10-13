@@ -31,12 +31,12 @@ theorem norm_sq_entries_mem_doublyStochastic_of_hasOrthonormalCols {P : Matrix n
   · intro i
     have h := congrArg (fun M : Matrix n n 𝕜 => RCLike.re (M i i)) hPP
     simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply_eq,
-      RCLike.star_def, RCLike.mul_conj, map_sum, RCLike.ofReal_re, RCLike.one_re] at h
+      RCLike.star_def, RCLike.mul_conj, map_sum, ← RCLike.ofReal_pow, RCLike.ofReal_re, RCLike.one_re] at h
     simpa only [Matrix.of_apply] using h
   · intro j
     have h := congrArg (fun M : Matrix n n 𝕜 => RCLike.re (M j j)) (show Pᴴ * P = 1 from hP)
     simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply_eq,
-      RCLike.star_def, RCLike.conj_mul, map_sum, RCLike.ofReal_re, RCLike.one_re] at h
+      RCLike.star_def, RCLike.conj_mul, map_sum, ← RCLike.ofReal_pow, RCLike.ofReal_re, RCLike.one_re] at h
     simpa only [Matrix.of_apply] using h
 
 /-- The eigenvector unitary of a Hermitian matrix has orthonormal columns. -/

@@ -70,7 +70,7 @@ Lect. 35; Saad (2011) [`saad11`], §6.5.3. Atlas: `gmres-arnoldi-form`. -/
 theorem transpose_Q_mulVec_eq_sqrt_smul_single (D : ArnoldiDecomp A b q) (hq : 0 < q)
     (hD : 0 < D.Q.col ⟨0, hq⟩ ⬝ᵥ b) :
     D.Qᵀ *ᵥ b = ‖WithLp.toLp 2 b‖ • Pi.single (⟨0, hq⟩ : Fin q) 1 := by
-  rw [norm_toLp_eq_sqrt_dotProduct, D.transpose_Q_mulVec_eq_smul_single hq]
+  rw [norm_toLp_eq_sqrt_dotProduct_self, D.transpose_Q_mulVec_eq_smul_single hq]
   congr 1
   have h := D.sq_transpose_Q_mulVec_apply_zero hq
   have h1 : (D.Qᵀ *ᵥ b) ⟨0, hq⟩ = D.Q.col ⟨0, hq⟩ ⬝ᵥ b := by
@@ -155,7 +155,8 @@ theorem isGMRESIterate_add_mulVec_iff_of_pos (D : ArnoldiDecomp A (c - A *ᵥ x�
           (√((c - A *ᵥ x₀) ⬝ᵥ (c - A *ᵥ x₀)) • Pi.single 0 1 - D.Hbar *ᵥ y') ⬝ᵥ
             (√((c - A *ᵥ x₀) ⬝ᵥ (c - A *ᵥ x₀)) • Pi.single 0 1 - D.Hbar *ᵥ y') := by
   rw [isGMRESIterate_add_mulVec_iff,
-    D.transpose_Q_mulVec_eq_sqrt_smul_single (Nat.succ_pos q) hD]
+    D.transpose_Q_mulVec_eq_sqrt_smul_single (Nat.succ_pos q) hD,
+    norm_toLp_eq_sqrt_dotProduct_self]
   rfl
 
 /-- **Every GMRES iterate is of Arnoldi form**: if `x` is a GMRES iterate then

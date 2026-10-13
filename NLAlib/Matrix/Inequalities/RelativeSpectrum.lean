@@ -168,8 +168,8 @@ theorem le_one_iff_specNorm_le_one_of_posSemidef {A : Matrix n n ℝ}
       specNorm A = specNorm (U * diagonal hA.isHermitian.eigenvalues * Uᵀ) := congrArg specNorm hAU
       _ = ‖hA.isHermitian.eigenvalues‖ := by
         rw [← Matrix.conjTranspose_eq_transpose_of_trivial,
-          specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hUt,
-          specNorm_mul_left_of_hasOrthonormalCols hUt, specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
+          specNorm_mul_conjTranspose_right_of_hasOrthonormalCols (P := U) hUt,
+          specNorm_mul_left_of_hasOrthonormalCols (P := U) hUt, specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
   have hord : A ≤ 1 ↔ diagonal hA.isHermitian.eigenvalues ≤ 1 := by
     calc
       A ≤ 1 ↔ U * diagonal hA.isHermitian.eigenvalues * Uᵀ ≤ U * 1 * Uᵀ := by
@@ -228,6 +228,7 @@ theorem realMatrixComplexification_sqrt {A : Matrix n n ℝ} (hA : A.PosSemidef)
     (((posSemidef_realMatrixComplexification_iff (𝕜 := ℂ)) _).mpr (CFC.sqrt_nonneg A).posSemidef).nonneg
   rw [← map_mul, CFC.sqrt_mul_sqrt_self A hA.nonneg]
 
+open scoped Matrix.Norms.L2Operator in
 /-- Square roots preserve Loewner order for real PSD matrices, including
 singular matrices. Horn--Johnson (2013), Corollary 7.7.4.
 atlas: loewner-relative-spectrum (partial) -/

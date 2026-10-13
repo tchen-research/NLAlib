@@ -52,7 +52,8 @@ theorem exists_idempotent_complement_norm_factor {n : Type*}
       _ = singularValues (H * (1 - N) * Hᵀ) 0 :=
         congrArg (fun A : Matrix n n ℝ => singularValues A 0) hForm
       _ = singularValues (1 - N) 0 := by
-        rw [singularValues_mul_isometry_transpose hH, singularValues_isometry_mul hH]
+        rw [← Matrix.conjTranspose_eq_transpose_of_trivial H,
+          singularValues_mul_isometry_conjTranspose hH, singularValues_isometry_mul hH]
       _ = _ := singularValues_one_sub_oblique_canonical t ht0 ht hz 0
   refine ⟨Real.sqrt (1 + t 0 ^ 2), ?_, ?_, ?_, ?_⟩
   · have hs := Real.sq_sqrt (show 0 ≤ 1 + t 0 ^ 2 by positivity)

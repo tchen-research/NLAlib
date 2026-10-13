@@ -27,7 +27,7 @@ variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
 Horn–Johnson §7.3; supports orthogonal-procrustes. -/
 theorem nuclearNorm_eq_of_gram_eq (A B : Matrix m n ℝ) (hGram : Aᵀ * A = Bᵀ * B) :
     nuclearNorm A = nuclearNorm B := by
-  rw [nuclearNorm, kyFanNorm_eq_sum_range]
+  simp only [nuclearNorm_eq_sum_range]
   apply Finset.sum_congr rfl
   intro i _
   exact singularValues_eq_of_gram_eq A B

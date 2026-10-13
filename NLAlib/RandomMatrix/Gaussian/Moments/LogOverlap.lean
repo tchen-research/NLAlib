@@ -96,7 +96,7 @@ theorem integrable_sqrt_sum_sq_pi_gaussianReal (n : ℕ) :
     Integrable (fun g : Fin n → ℝ => Real.sqrt (∑ i, g i ^ 2))
       (Measure.pi fun _ : Fin n => gaussianReal 0 1) := by
   simpa only [Real.sqrt_eq_rpow] using
-    integrable_rpow_sum_sq_pi_gaussianReal n (1 / 2) (by norm_num)
+    integrable_rpow_sum_sq_gaussianVector n (1 / 2) (by norm_num)
 
 /-- The expected square root of a Gaussian tail energy is at most the square root
 of its dimension. Source: manuscript `rt:log-moments`, scalar Cauchy--Schwarz;

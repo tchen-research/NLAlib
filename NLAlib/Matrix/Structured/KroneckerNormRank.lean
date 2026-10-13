@@ -23,11 +23,14 @@ theorem specNorm_kronecker_of_isHermitian {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] {A : Matrix m m ℝ} {B : Matrix n n ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) :
     specNorm (A ⊗ₖ B) = specNorm A * specNorm B := by
-  have hP := hasOrthonormalCols_kronecker
+  have hP : HasOrthonormalCols
+      ((hA.eigenvectorUnitary : Matrix m m ℝ) ⊗ₖ
+        (hB.eigenvectorUnitary : Matrix n n ℝ)) := hasOrthonormalCols_kronecker
     (transpose_eigenvectorUnitary_mul_self hA) (transpose_eigenvectorUnitary_mul_self hB)
   calc
     _ = ‖(fun ij : m × n => hA.eigenvalues ij.1 * hB.eigenvalues ij.2)‖ := by
       conv_lhs => rw [eq_eigenvectorUnitary_kronecker_mul_diagonal_mul_transpose hA hB,
+        ← Matrix.conjTranspose_eq_transpose_of_trivial,
         specNorm_mul_conjTranspose_right_of_hasOrthonormalCols hP,
         specNorm_mul_left_of_hasOrthonormalCols hP,
         specNorm_eq_norm, Matrix.l2_opNorm_diagonal]

@@ -6,7 +6,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 -/
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.DiagonalLaw
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.Mean
-import NLAlib.Matrix.Inequalities.PlaneRotation
+import NLAlib.Matrix.Basic.PlaneRotation
 import NLAlib.Probability.Gaussian.Basic.StandardVector
 /-!
 # Second moments of the inverse Wishart matrix
@@ -82,7 +82,9 @@ private lemma integrable_and_integral_coeff_sq_mul_inv_sq_dist_rowSpace_sq {n k 
       rw [hN, Matrix.transpose_nonsing_inv, Matrix.transpose_mul, Matrix.transpose_transpose]
     rw [h1, Matrix.transpose_mul, hNt, show N * H * (Hᵀ * N) = N * (H * Hᵀ) * N by
       simp [Matrix.mul_assoc], hN, Matrix.nonsing_inv_mul _ hdet, Matrix.one_mul]
-  obtain ⟨hwint, hwval⟩ := integrable_and_integral_dotProduct_sq_pi_gaussianReal (k := k) w
+  have hwint := integrable_dotProduct_sq_gaussianVector w
+  have hwval := integral_dotProduct_sq_gaussianVector w
+  rw [norm_toLp_sq_eq_dotProduct_self] at hwval
   obtain ⟨hqint, hqval⟩ := integrable_and_integral_inv_sq_dist_rowSpace_sq hnk H hH
   have hfXint : Integrable (fun g => f (X g)) μ := by simp_rw [hfX]; exact hwint
   have hhYint : Integrable (fun g => h (Y g)) μ := hqint
@@ -228,7 +230,9 @@ private lemma inv_sqrt_two_mul_self : (Real.sqrt 2)⁻¹ * (Real.sqrt 2)⁻¹ = 
 private lemma planeRotation_single_transpose_mul {r : ℕ} {i j : Fin r} (hij : i ≠ j) :
     (planeRotation (Pi.single i 1) (Pi.single j 1) (Real.sqrt 2)⁻¹ (Real.sqrt 2)⁻¹)ᵀ *
       planeRotation (Pi.single i 1) (Pi.single j 1) (Real.sqrt 2)⁻¹ (Real.sqrt 2)⁻¹ = 1 :=
-  transpose_planeRotation_mul_self _ _ (by simp) (by simp) (by simp [hij])
+  hasOrthonormalCols_planeRotation _ _
+    (by simp [norm_toLp_eq_sqrt_dotProduct_self])
+    (by simp [norm_toLp_eq_sqrt_dotProduct_self]) (by simp [hij])
     _ _ (by rw [sq, inv_sqrt_two_mul_self]; norm_num)
 
 /-- Conjugating by the 45-degree rotation averages the `(i, j)` block into the `(i, i)` entry. -/

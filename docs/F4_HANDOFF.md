@@ -1,5 +1,9 @@
 # F4 consistency round: handoff (2026-10-13)
 
+> **Continuation:** the working tree now passes `lake build` (5,012 jobs).
+> See [the recovery checkpoint](F4_RECOVERY_2026-10-13.md) for current validation and remaining
+> work. The original handoff below describes the earlier broken commit and is retained as history.
+
 The round was stopped mid-wave-1 and handed over. **The tree at this commit does not build.**
 The last green commit is `75cf87d` (F4 wave 0) on this branch; before it, `04038b8` (F2) on
 `nlalib-f2`.

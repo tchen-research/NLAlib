@@ -25,7 +25,7 @@ With `Ω` an `n × t` standard Gaussian matrix and `t ≥ k + 2`,
 `E tr(A − A⟨Ω⟩) ≤ (1 + k/(t−k−1)) · OPT_k(F)²` where `OPT_k(F)² = ‖F − ⟦F⟧ₖ‖_F²`
 (`integrable_and_integral_trace_sub_nystrom_le`). For a PSD `A = FᵀF`,
 `OPT_k(F)² = ∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*`; that identification is not formalized here, so the
-right-hand side is stated with `bestRankFrobSq k F`.
+right-hand side is stated with `bestRankFrobSq F k`.
 
 Sources: Gittens–Mahoney 2016, Lemma 1 and §3; Tropp–Webber 2023, §2 and Thm 5.1 (and the
 references there); Martinsson–Tropp 2020, §14 (eq. (14.4)), §19.2.
@@ -183,7 +183,7 @@ the Gaussian range frame `Q` of `FΩ` has `min(rank F, t) = rank(FΩ)` columns, 
 then the Gaussian RSVD bound for `F`
 (`integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq`).
 
-Deviation: the right side is `bestRankFrobSq k F`; for `A = FᵀF` this equals
+Deviation: the right side is `bestRankFrobSq F k`; for `A = FᵀF` this equals
 `∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*` (the atlas form), an identification not formalized here.
 Index types are `Fin` (Gaussian law convention). Atlas `nystrom-randomized` (uses
 `nystrom-structural`, `rsvd-expected-error`, `leverage-scores`).
@@ -193,7 +193,7 @@ theorem integrable_and_integral_trace_sub_nystrom_le {n r k t : ℕ}
     (hkt : k + 2 ≤ t) (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
     (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) :
     Integrable (fun ω => (A - nystrom A (Ω ω)).trace) μ ∧
-      ∫ ω, (A - nystrom A (Ω ω)).trace ∂μ ≤ (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k F := by
+      ∫ ω, (A - nystrom A (Ω ω)).trace ∂μ ≤ (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq F k := by
   obtain ⟨hint, hle⟩ :=
     integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq F hkt Ω hΩ
   have hae : (fun ω => frobSq (projResidual (gaussianRangeFrame F t (Ω ω)) F))

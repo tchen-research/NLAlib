@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Subspaces.ComplexProjectionBounds
-import NLAlib.Krylov.Spaces.ComplexBlock
+import NLAlib.Krylov.Spaces.Block
 /-!
 # Complex polynomial-filter range finding
 
@@ -119,16 +119,16 @@ theorem norm_complex_filter_residual_sq_le_of_filtered_blocks
     (hR : Ω₁ * R = 1) (hC : C * Cinv = 1)
     (hU₂ : U₂ᴴ * U₂ = 1) (hV₁ : V₁ᴴ * V₁ = 1)
     (hV₂ : V₂ᴴ * V₂ = 1) (hV : V₁ᴴ * V₂ = 0) :
-    ‖A - complexColumnProjector Y * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+    ‖A - rangeProjector Y * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
       ‖S₂ * D * Ω₂ * R * Cinv‖ ^ 2 := by
   let Z := Y * R * Cinv * V₁ᴴ
   let T := S₂ * D * Ω₂ * R * Cinv
-  have hPZ : complexColumnProjector Y * Z = Z := by
+  have hPZ : rangeProjector Y * Z = Z := by
     dsimp [Z]
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, ← Matrix.mul_assoc,
-      complexColumnProjector_mul]
-  have hres : A - complexColumnProjector Y * A =
-      (A - Z) - complexColumnProjector Y * (A - Z) := by
+      rangeProjector_mul]
+  have hres : A - rangeProjector Y * A =
+      (A - Z) - rangeProjector Y * (A - Z) := by
     rw [Matrix.mul_sub, hPZ]
     abel
   have hdiff : A - Z = U₂ * (S₂ * V₂ᴴ - T * V₁ᴴ) :=
@@ -141,9 +141,9 @@ theorem norm_complex_filter_residual_sq_le_of_filtered_blocks
   have hs := norm_add_sq_le_of_mul_conjTranspose_eq_zero horth
   rw [norm_neg, norm_mul_conjTranspose_right_of_conjTranspose_mul_eq_one hV₂,
     norm_mul_conjTranspose_right_of_conjTranspose_mul_eq_one hV₁] at hs
-  calc ‖A - complexColumnProjector Y * A‖ ^ 2 ≤ ‖A - Z‖ ^ 2 := by
+  calc ‖A - rangeProjector Y * A‖ ^ 2 ≤ ‖A - Z‖ ^ 2 := by
         rw [hres]
-        exact pow_le_pow_left₀ (norm_nonneg _) (norm_sub_complexColumnProjector_mul_le Y _) 2
+        exact pow_le_pow_left₀ (norm_nonneg _) (norm_sub_rangeProjector_mul_le Y _) 2
     _ ≤ _ := by
         rw [hdiff, norm_mul_left_of_conjTranspose_mul_eq_one hU₂, sub_eq_add_neg]
         exact hs
@@ -162,7 +162,7 @@ theorem norm_complex_polynomial_filter_residual_sq_le [DecidableEq t]
     (hV₂ : V₂ᴴ * V₂ = 1) (hV : V₁ᴴ * V₂ = 0)
     (p : ℝ[X]) (Ω : Matrix n t ℂ) (R : Matrix t k ℂ) (Cinv : Matrix k k ℂ)
     (hR : (V₁ᴴ * Ω) * R = 1) (hC : aeval (S₁ᴴ * S₁) p * Cinv = 1) :
-    ‖A - complexColumnProjector (aeval (A * Aᴴ) p * A * Ω) * A‖ ^ 2 ≤
+    ‖A - rangeProjector (aeval (A * Aᴴ) p * A * Ω) * A‖ ^ 2 ≤
       ‖S₂‖ ^ 2 + ‖S₂ * aeval (S₂ᴴ * S₂) p * (V₂ᴴ * Ω) * R * Cinv‖ ^ 2 :=
   norm_complex_filter_residual_sq_le_of_filtered_blocks hA
     (aeval_conjGram_mul_mul_eq_of_block_decomposition hA hU₁ hU₂ hU hV₁ hV₂ hV p Ω)
@@ -188,16 +188,16 @@ theorem frobenius_norm_complex_filter_residual_sq_le_of_filtered_blocks
     (hR : Ω₁ * R = 1) (hC : C * Cinv = 1)
     (hU₂ : U₂ᴴ * U₂ = 1) (hV₁ : V₁ᴴ * V₁ = 1)
     (hV₂ : V₂ᴴ * V₂ = 1) (hV : V₁ᴴ * V₂ = 0) :
-    ‖A - complexColumnProjector Y * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
+    ‖A - rangeProjector Y * A‖ ^ 2 ≤ ‖S₂‖ ^ 2 +
       ‖S₂ * D * Ω₂ * R * Cinv‖ ^ 2 := by
   let Z := Y * R * Cinv * V₁ᴴ
   let T := S₂ * D * Ω₂ * R * Cinv
-  have hPZ : complexColumnProjector Y * Z = Z := by
+  have hPZ : rangeProjector Y * Z = Z := by
     dsimp [Z]
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, ← Matrix.mul_assoc,
-      complexColumnProjector_mul]
-  have hres : A - complexColumnProjector Y * A =
-      (A - Z) - complexColumnProjector Y * (A - Z) := by
+      rangeProjector_mul]
+  have hres : A - rangeProjector Y * A =
+      (A - Z) - rangeProjector Y * (A - Z) := by
     rw [Matrix.mul_sub, hPZ]
     abel
   have hdiff : A - Z = U₂ * (S₂ * V₂ᴴ - T * V₁ᴴ) :=
@@ -210,9 +210,9 @@ theorem frobenius_norm_complex_filter_residual_sq_le_of_filtered_blocks
   have hs := frobenius_norm_add_sq_eq_of_mul_conjTranspose_eq_zero horth
   rw [norm_neg, frobenius_norm_sq_mul_conjTranspose_right_of_conjTranspose_mul_eq_one hV₂,
     frobenius_norm_sq_mul_conjTranspose_right_of_conjTranspose_mul_eq_one hV₁] at hs
-  calc ‖A - complexColumnProjector Y * A‖ ^ 2 ≤ ‖A - Z‖ ^ 2 := by
+  calc ‖A - rangeProjector Y * A‖ ^ 2 ≤ ‖A - Z‖ ^ 2 := by
         rw [hres]
-        exact frobenius_norm_sub_complexColumnProjector_mul_sq_le Y _
+        exact frobenius_norm_sub_rangeProjector_mul_sq_le Y _
     _ = _ := by
         rw [hdiff, frobenius_norm_sq_mul_left_of_conjTranspose_mul_eq_one hU₂,
           sub_eq_add_neg]
@@ -233,7 +233,7 @@ theorem frobenius_norm_complex_polynomial_filter_residual_sq_le [DecidableEq t]
     (hV₂ : V₂ᴴ * V₂ = 1) (hV : V₁ᴴ * V₂ = 0)
     (p : ℝ[X]) (Ω : Matrix n t ℂ) (R : Matrix t k ℂ) (Cinv : Matrix k k ℂ)
     (hR : (V₁ᴴ * Ω) * R = 1) (hC : aeval (S₁ᴴ * S₁) p * Cinv = 1) :
-    ‖A - complexColumnProjector (aeval (A * Aᴴ) p * A * Ω) * A‖ ^ 2 ≤
+    ‖A - rangeProjector (aeval (A * Aᴴ) p * A * Ω) * A‖ ^ 2 ≤
       ‖S₂‖ ^ 2 + ‖S₂ * aeval (S₂ᴴ * S₂) p * (V₂ᴴ * Ω) * R * Cinv‖ ^ 2 :=
   frobenius_norm_complex_filter_residual_sq_le_of_filtered_blocks hA
     (aeval_conjGram_mul_mul_eq_of_block_decomposition hA hU₁ hU₂ hU hV₁ hV₂ hV p Ω)
@@ -243,15 +243,15 @@ end Frobenius
 /-- The actual complex column projector reproduces every matrix whose native
 column range it contains. Source: orthogonal projection onto the actual range;
 supports manuscript `sa:filter`. -/
-theorem complexColumnProjector_mul_eq_of_range_mulVecLin_le
+theorem rangeProjector_mul_eq_of_range_mulVecLin_le
     [DecidableEq t] (Q : Matrix m q ℂ) (Y : Matrix m t ℂ)
     (h : LinearMap.range Y.mulVecLin ≤ LinearMap.range Q.mulVecLin) :
-    complexColumnProjector Q * Y = Y := by
+    rangeProjector Q * Y = Y := by
   apply Matrix.toEuclideanLin.injective
-  rw [Matrix.toLpLin_mul_same, toEuclideanLin_complexColumnProjector]
+  rw [Matrix.toLpLin_mul_same, toEuclideanLin_rangeProjector]
   apply LinearMap.ext
   intro x
-  apply (Submodule.starProjection_eq_self_iff (K := complexColumnSpace Q)).mpr
+  apply (Submodule.starProjection_eq_self_iff (K := columnSpace Q)).mpr
   obtain ⟨z, hz⟩ := h (show Y *ᵥ WithLp.ofLp x ∈ LinearMap.range Y.mulVecLin from
     ⟨WithLp.ofLp x, rfl⟩)
   refine ⟨WithLp.toLp 2 z, ?_⟩
@@ -263,14 +263,26 @@ omit [DecidableEq n] in
 filtered sketch below its order, simultaneously. Source: manuscript `sa:filter`,
 block Krylov specialization; Musco--Musco (2015), polynomial competitor.
 atlas: polynomial-filter-range-finder (partial) -/
-theorem complexColumnProjector_aeval_conjGram_mul_mul_eq_of_complexBlockKrylovSpace_le
+theorem rangeProjector_aeval_conjGram_mul_mul_eq_of_blockKrylovSpace_le
     [DecidableEq t] (A : Matrix m n ℂ) (Ω : Matrix n t ℂ) (Q : Matrix m q ℂ)
     {order : ℕ}
-    (hK : complexBlockKrylovSpace (A * Aᴴ) (A * Ω) order ≤ LinearMap.range Q.mulVecLin)
+    (hK : blockKrylovSpace (A * Aᴴ) (A * Ω) order ≤ LinearMap.range Q.mulVecLin)
     {p : ℝ[X]} (hp : p.degree < order) :
-    complexColumnProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω := by
-  apply complexColumnProjector_mul_eq_of_range_mulVecLin_le
+    rangeProjector Q * (aeval (A * Aᴴ) p * A * Ω) = aeval (A * Aᴴ) p * A * Ω := by
+  apply rangeProjector_mul_eq_of_range_mulVecLin_le
   rw [Matrix.mul_assoc]
-  exact (range_aeval_mul_le_complexBlockKrylovSpace _ _ hp).trans hK
+  refine le_trans ?_ hK
+  rw [Matrix.range_mulVecLin, Submodule.span_le]
+  rintro _ ⟨j, rfl⟩
+  rw [col_mul_eq_mulVec_col]
+  rcases eq_or_ne p 0 with rfl | hp0
+  · simp
+  rw [aeval_eq_sum_range, Matrix.sum_mulVec]
+  refine Submodule.sum_mem _ fun i hi => ?_
+  rw [Matrix.smul_mulVec, RCLike.real_smul_eq_coe_smul (K := ℂ)]
+  apply Submodule.smul_mem
+  rw [← col_mul_eq_mulVec_col]
+  exact Submodule.subset_span ⟨(⟨i, lt_of_le_of_lt (Nat.lt_succ_iff.1 (Finset.mem_range.1 hi))
+    ((natDegree_lt_iff_degree_lt hp0).2 hp)⟩, j), rfl⟩
 
 end NLAlib

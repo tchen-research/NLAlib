@@ -25,7 +25,7 @@ theorem complexVolumeSamplingWeight_mul_col_norm_sq_eq_insert
     (A : Matrix m n ℂ) (S : Finset n) {j : n} (hj : j ∉ S) :
     complexVolumeSamplingWeight A S *
       ‖A.submatrix id (fun _ : Fin 1 => j) -
-        complexColumnProjector (complexVolumeSampleColumns A S) *
+        rangeProjector (complexVolumeSampleColumns A S) *
           A.submatrix id (fun _ : Fin 1 => j)‖ ^ 2 =
       complexVolumeSamplingWeight A (insert j S) := by
   let B := complexVolumeSampleColumns A S
@@ -50,7 +50,7 @@ theorem complexVolumeSamplingWeight_mul_col_norm_sq_eq_insert
     rfl
   calc
     _ = ((Matrix.fromCols B v)ᴴ * Matrix.fromCols B v).det.re :=
-      (det_gram_fromCols_eq_mul_frobenius_norm_sq_sub_complexColumnProjector B v).symm
+      (det_gram_fromCols_eq_mul_frobenius_norm_sq_sub_rangeProjector B v).symm
     _ = _ := by rw [hGram, Matrix.det_submatrix_equiv_self]; rfl
 
 /-- The actual complex determinant-weighted Frobenius residual is the sum
@@ -60,9 +60,12 @@ theorem complexVolumeSamplingWeight_mul_residual_norm_sq_eq_sum_insert
     complexVolumeSamplingWeight A S * ‖complexVolumeSamplingResidual A S‖ ^ 2 =
       ∑ j, if j ∉ S then complexVolumeSamplingWeight A (insert j S) else 0 := by
   let B := complexVolumeSampleColumns A S
-  let P := complexColumnProjector B
+  let P := rangeProjector B
   change complexVolumeSamplingWeight A S * ‖A - P * A‖ ^ 2 = _
-  rw [frobenius_norm_sq_eq_sum_single_columns, Finset.mul_sum]
+  have hcols : ‖A - P * A‖ ^ 2 =
+      ∑ j, ‖(A - P * A).submatrix id (fun _ : Fin 1 => j)‖ ^ 2 := by
+    simpa only [← frobNorm_sq, frobNorm_eq_norm] using frobSq_eq_sum_frobSq_col (A - P * A)
+  rw [hcols, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j _
   let v := A.submatrix id (fun _ : Fin 1 => j)
@@ -71,7 +74,7 @@ theorem complexVolumeSamplingWeight_mul_residual_norm_sq_eq_sum_insert
   by_cases hj : j ∈ S
   · have hpv : P * v = v := by
       ext i c
-      exact congrArg (fun M : Matrix m S ℂ => M i ⟨j, hj⟩) (complexColumnProjector_mul B)
+      exact congrArg (fun M : Matrix m S ℂ => M i ⟨j, hj⟩) (rangeProjector_mul B)
     simp only [hpv, sub_self, norm_zero, zero_pow (by norm_num : (2 : ℕ) ≠ 0), mul_zero,
       if_neg (not_not.mpr hj)]
   · rw [if_pos hj]

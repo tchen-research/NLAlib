@@ -40,7 +40,7 @@ theorem integral_specNorm_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix 
     (fun G : Matrix (Fin p) (Fin m) ℝ => specNorm (S * G * T))
     (specNorm S * specNorm T) (mul_nonneg (specNorm_nonneg S) (specNorm_nonneg T))
     (abs_specNorm_mul_of_mul_sub_le S T)
-  refine integral_le_of_integral_sq_le (gaussianMatrix (Fin p) (Fin m)) _ hI hI2 _ ?_
+  refine MeasureTheory.integral_le_of_integral_sq_le (gaussianMatrix (Fin p) (Fin m)) _ hI hI2 _ ?_
     (integral_specNorm_sq_mul_gaussianMatrix_mul_le S T)
   exact add_nonneg (mul_nonneg (specNorm_nonneg S) (frobNorm_nonneg T))
     (mul_nonneg (frobNorm_nonneg S) (specNorm_nonneg T))

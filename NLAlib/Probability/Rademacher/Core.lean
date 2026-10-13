@@ -212,4 +212,13 @@ theorem integrable_exp_mul_of_hasLaw_rademacherMeasure (hr : HasLaw r rademacher
 
 end HasLawRademacher
 
+/-- Every coordinate of a Rademacher vector squares to one almost surely. -/
+theorem ae_forall_sq_eq_one_rademacherVector {ι : Type*} [Fintype ι] :
+    ∀ᵐ ξ ∂rademacherVector ι, ∀ i, ξ i ^ 2 = 1 := by
+  rw [ae_all_iff]
+  intro i
+  filter_upwards [ae_eq_one_or_neg_one_of_hasLaw_rademacherMeasure
+    (hasLaw_eval_rademacherVector i)] with ξ hξ
+  rcases hξ with hξ | hξ <;> simp [hξ]
+
 end NLAlib

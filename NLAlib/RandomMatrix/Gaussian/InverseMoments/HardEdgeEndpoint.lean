@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Perturbation.SpectralContinuity
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.Probe
 
 /-!
@@ -277,11 +278,9 @@ theorem measure_Ioc_le_lintegral_of_antitone_density_of_probe_moments
 operator norm. Source: reciprocal singular-value identity; atlas
 `wishart-lambda-min-tail` (scalar law helper). -/
 theorem measurable_sigmaMin_transpose_sq {r k : ℕ} :
-    Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => sigmaMin Gᵀ ^ 2) := by
-  convert measurable_specNorm_inv_self_mul_transpose.inv using 1
-  funext G
-  change sigmaMin Gᵀ ^ 2 = (specNorm (G * Gᵀ)⁻¹)⁻¹
-  rw [specNorm_inv_self_mul_transpose_eq, one_div, inv_inv]
+    Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) := by
+  exact (continuous_sq_singularValues_transpose_last_array
+    (ι := Fin r) (κ := Fin k)).measurable
 
 /-- The scalar smallest-eigenvalue law inherits every subcritical negative
 moment bound from the operator quadratic probe, also after restriction to the
@@ -291,34 +290,33 @@ theorem integrable_and_integral_rpow_neg_map_sigmaMin_transpose_sq_gaussianMatri
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (s : ℝ) (hs : 0 < s)
     (hsα : s < ((k : ℝ) - r + 1) / 2) :
     Integrable (fun y : ℝ => y ^ (-s))
-      (((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)).restrict (Ioi 0)) ∧
+      (((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)).restrict (Ioi 0)) ∧
     (∫ y in Ioi (0 : ℝ), y ^ (-s)
-      ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2))) ≤
+      ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2))) ≤
       Real.Gamma ((r : ℝ) / 2 + s) * Real.Gamma (((k : ℝ) - r + 1) / 2 - s) *
         Real.sqrt Real.pi /
         (2 ^ s * Real.Gamma ((r : ℝ) / 2) * Real.Gamma (((k : ℝ) - r + 1) / 2) *
           Real.Gamma (s + 1 / 2)) := by
-  let X : (Matrix (Fin r) (Fin k) ℝ) → ℝ := fun G => sigmaMin Gᵀ ^ 2
+  let X : (Matrix (Fin r) (Fin k) ℝ) → ℝ := fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2
   let μ := (gaussianMatrix (Fin r) (Fin k)).map X
   have hXm : Measurable X := measurable_sigmaMin_transpose_sq
   have hsm : Measurable (fun y : ℝ => y ^ (-s)) := by fun_prop
   have hpow : (fun G : Matrix (Fin r) (Fin k) ℝ => X G ^ (-s))
-      = (fun G => specNorm (G * Gᵀ)⁻¹ ^ s) := by
-    funext G
-    rw [specNorm_inv_self_mul_transpose_eq, one_div, Real.inv_rpow (sq_nonneg _),
+      =ᵐ[gaussianMatrix (Fin r) (Fin k)] (fun G => specNorm (G * Gᵀ)⁻¹ ^ s) := by
+    filter_upwards [gaussianMatrix_ae_isUnit_mul_transpose hrk] with G hG
+    rw [specNorm_inv_self_mul_transpose_eq G hG, one_div, Real.inv_rpow (sq_nonneg _),
       Real.rpow_neg (sq_nonneg _)]
   obtain ⟨hint, hbound⟩ :=
     integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMatrix_le hr hrk s hs hsα
   have hint' : Integrable (fun y : ℝ => y ^ (-s)) μ := by
     apply (integrable_map_measure hsm.aestronglyMeasurable hXm.aemeasurable).mpr
     change Integrable (fun G => X G ^ (-s)) (gaussianMatrix (Fin r) (Fin k))
-    rw [hpow]
-    exact hint
+    exact hint.congr hpow.symm
   have hval : (∫ y : ℝ, y ^ (-s) ∂μ) =
       ∫ G : Matrix (Fin r) (Fin k) ℝ, specNorm (G * Gᵀ)⁻¹ ^ s
         ∂(gaussianMatrix (Fin r) (Fin k)) := by
     rw [integral_map hXm.aemeasurable hsm.aestronglyMeasurable]
-    exact congrArg (integral (gaussianMatrix (Fin r) (Fin k))) hpow
+    exact integral_congr_ae hpow
   have hnn : 0 ≤ᵐ[μ] (fun y : ℝ => y ^ (-s)) := by
     apply (ae_map_iff hXm.aemeasurable (measurableSet_le measurable_const hsm)).2
     exact ae_of_all _ fun G => Real.rpow_nonneg (sq_nonneg _) _
@@ -334,11 +332,11 @@ theorem gaussianMatrix_map_sigmaMin_transpose_sq_Ioc_le_of_antitone_density
     (h : ℝ → ℝ) (hh : Measurable h) (hnn : ∀ y ∈ Ioi (0 : ℝ), 0 ≤ h y)
     (hanti : AntitoneOn h (Ioi 0))
     (hdens : ((gaussianMatrix (Fin r) (Fin k)).map
-        (fun G => sigmaMin Gᵀ ^ 2)).restrict (Ioi 0) =
+        (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)).restrict (Ioi 0) =
       (volume.restrict (Ioi 0)).withDensity (fun y : ℝ => ENNReal.ofReal
         (y ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-y / 2) * h y)))
     (t : ℝ) :
-    ((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)) (Ioc 0 t)
+    ((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)) (Ioc 0 t)
       ≤ ∫⁻ y in Ioc (0 : ℝ) t, ENNReal.ofReal
         ((2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2) /
           (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))) *
@@ -350,7 +348,7 @@ theorem gaussianMatrix_map_sigmaMin_transpose_sq_Ioc_le_of_antitone_density
   have he2 : (r : ℝ) / 2 + ((k : ℝ) - r + 1) / 2 = ((k : ℝ) + 1) / 2 := by ring
   have he3 : 2 * (((k : ℝ) - r + 1) / 2) = (k : ℝ) - r + 1 := by ring
   have h := measure_Ioc_le_lintegral_of_antitone_density_of_probe_moments
-    ((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2))
+    ((gaussianMatrix (Fin r) (Fin k)).map (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2))
     ((r : ℝ) / 2) (((k : ℝ) - r + 1) / 2) (by positivity) hα h hh hnn hanti
     (by simpa only [he1] using hdens)
     (fun s hs hsα => integrable_and_integral_rpow_neg_map_sigmaMin_transpose_sq_gaussianMatrix_le
@@ -363,7 +361,7 @@ full row rank and the reciprocal inverse-Gram norm; atlas
 `wishart-lambda-min-tail` (null-boundary helper). -/
 theorem ae_sigmaMin_transpose_sq_pos_gaussianMatrix {r k : ℕ}
     (hr : 1 ≤ r) (hrk : r ≤ k) :
-    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), 0 < sigmaMin Gᵀ ^ 2 := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), 0 < singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   filter_upwards [gaussianMatrix_ae_rank_eq r k] with G hG
   have hdet : IsUnit (G * Gᵀ).det :=
@@ -376,9 +374,10 @@ theorem ae_sigmaMin_transpose_sq_pos_gaussianMatrix {r k : ℕ}
     exact one_ne_zero hmul.symm
   have hnorm : 0 < specNorm (G * Gᵀ)⁻¹ := by
     exact norm_pos_iff.mpr hinv
-  have hXne : sigmaMin Gᵀ ^ 2 ≠ 0 := by
+  have hXne : singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≠ 0 := by
     intro hzero
-    rw [specNorm_inv_self_mul_transpose_eq, hzero, div_zero] at hnorm
+    rw [specNorm_inv_self_mul_transpose_eq G ((Matrix.isUnit_iff_isUnit_det _).mpr hdet),
+      hzero, div_zero] at hnorm
     exact (lt_irrefl 0) hnorm
   exact lt_of_le_of_ne (sq_nonneg _) (Ne.symm hXne)
 
@@ -391,21 +390,21 @@ theorem gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_antitone_density
     (h : ℝ → ℝ) (hh : Measurable h) (hnn : ∀ y ∈ Ioi (0 : ℝ), 0 ≤ h y)
     (hanti : AntitoneOn h (Ioi 0))
     (hdens : ((gaussianMatrix (Fin r) (Fin k)).map
-        (fun G => sigmaMin Gᵀ ^ 2)).restrict (Ioi 0) =
+        (fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2)).restrict (Ioi 0) =
       (volume.restrict (Ioi 0)).withDensity (fun y : ℝ => ENNReal.ofReal
         (y ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-y / 2) * h y)))
     (t : ℝ) :
-    (gaussianMatrix (Fin r) (Fin k)) {G | sigmaMin Gᵀ ^ 2 ≤ t}
+    (gaussianMatrix (Fin r) (Fin k)) {G | singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ t}
       ≤ ∫⁻ y in Ioc (0 : ℝ) t, ENNReal.ofReal
         ((2 ^ (((k : ℝ) - r - 1) / 2) * Real.Gamma (((k : ℝ) + 1) / 2) /
           (Real.Gamma ((r : ℝ) / 2) * Real.Gamma ((k : ℝ) - r + 1))) *
           y ^ (((k : ℝ) - r - 1) / 2) * Real.exp (-y / 2)) := by
-  have hset : (gaussianMatrix (Fin r) (Fin k)) {G | sigmaMin Gᵀ ^ 2 ≤ t}
-      = (gaussianMatrix (Fin r) (Fin k)) ((fun G => sigmaMin Gᵀ ^ 2) ⁻¹' Ioc 0 t) := by
+  have hset : (gaussianMatrix (Fin r) (Fin k)) {G | singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ t}
+      = (gaussianMatrix (Fin r) (Fin k)) ((fun G => singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2) ⁻¹' Ioc 0 t) := by
     apply measure_congr
     filter_upwards [ae_sigmaMin_transpose_sq_pos_gaussianMatrix hr hrk] with G hG
-    change (sigmaMin Gᵀ ^ 2 ≤ t) =
-      (0 < sigmaMin Gᵀ ^ 2 ∧ sigmaMin Gᵀ ^ 2 ≤ t)
+    change (singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ t) =
+      (0 < singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ∧ singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ t)
     apply propext
     simp only [hG, true_and]
   rw [hset, ← Measure.map_apply measurable_sigmaMin_transpose_sq measurableSet_Ioc]

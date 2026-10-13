@@ -4,7 +4,7 @@ import NLAlib.ForMathlib.Analysis.Convex.Integral
 /-!
 # Jensen inequality on a nonclosed convex domain
 
-Main declaration: `NLAlib.ConcaveOn.le_map_integral_of_integral_mem`.
+Main declaration: `ConcaveOn.le_map_integral_of_integral_mem`.
 
 Atlas: `matrix-laplace` (step of Corollary 3.4.2).
 

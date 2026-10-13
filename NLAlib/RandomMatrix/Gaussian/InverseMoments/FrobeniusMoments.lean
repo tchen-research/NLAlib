@@ -197,7 +197,9 @@ private lemma eLpNorm_inv_sum_sq_le {d : ℕ} (hd : 5 ≤ d) :
       (Measure.pi fun _ : Fin d => gaussianReal 0 1) ≤ ENNReal.ofReal (3 / d) := by
   have hd' : (5 : ℝ) ≤ d := by exact_mod_cast hd
   have hq : 0 < ((d : ℝ) - 1) / 2 := by linarith
-  obtain ⟨hint, hlt⟩ := integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt hd
+  have hint := integrable_rpow_inv_sum_sq_gaussianVector (d := d)
+    (((d : ℝ) - 1) / 2) hq.le (by linarith)
+  have hlt := integral_rpow_inv_sum_sq_gaussianVector_lt hd
   rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by simpa using hq) ENNReal.ofReal_ne_top,
     ENNReal.toReal_ofReal hq.le]
   have hnn : ∀ x : Fin d → ℝ, 0 ≤ (∑ j, x j ^ 2)⁻¹ :=

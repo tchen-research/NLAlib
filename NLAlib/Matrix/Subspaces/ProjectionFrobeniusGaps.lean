@@ -42,9 +42,9 @@ theorem frobSq_complement_mul_projector_eq_of_rank_eq {P Q : Matrix n n 𝕜}
       Matrix.conjTranspose_submatrix, Matrix.submatrix_mul_equiv, Matrix.submatrix_id_id]
   have hQV' : Q = V' * V'ᴴ := hQV.trans hVV.symm
   have hleft : (1 - Q) * P = projResidual V' U * Uᴴ := by
-    rw [hPU, hQV', residual_eq_one_sub_mul, Matrix.mul_assoc]
+    rw [residual_eq_one_sub_mul, Matrix.mul_assoc, ← hPU, ← hQV']
   have hright : (1 - P) * Q = projResidual U V' * V'ᴴ := by
-    rw [hQV', hPU, residual_eq_one_sub_mul, Matrix.mul_assoc]
+    rw [residual_eq_one_sub_mul, ← hPU, Matrix.mul_assoc, ← hQV']
   rw [hleft, hright, frobSq_mul_right_of_orthonormal hU, frobSq_mul_right_of_orthonormal hV',
     frobSq_residual_comm hV' hU]
 

@@ -43,7 +43,7 @@ theorem singularValues_eq_one_of_hasOrthonormalCols {m n : ℕ}
     (by simp [J]) (by simpa only [min_eq_right hCard] using hk)
 
 private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
-    (hCard : n ≤ m) (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) :
+    (hCard : n ≤ m) (ν : UnitarilyInvariantNorm ℝ (Fin m) (Fin n)) :
     ∃ U : Matrix (Fin m) (Fin n) ℝ, HasOrthonormalCols U ∧
       U * CFC.sqrt (Aᵀ * A) = A ∧
       ν.seminorm (A - U) = ν.seminorm (rectangularDiagonal
@@ -104,7 +104,7 @@ every orthogonally invariant norm (the `Fin`-indexed step of
 `invariantNorm_sub_polar_le_sub_isometry`). Horn–Johnson 2013, Theorem 7.3.1; uses the full
 rectangular Mirsky inequality. -/
 private theorem invariantNorm_sub_polar_le_sub_isometry_fin {m n : ℕ}
-    (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) (A U V : Matrix (Fin m) (Fin n) ℝ)
+    (ν : UnitarilyInvariantNorm ℝ (Fin m) (Fin n)) (A U V : Matrix (Fin m) (Fin n) ℝ)
     (hCard : n ≤ m) (hU : HasOrthonormalCols U)
     (hA : U * CFC.sqrt (Aᵀ * A) = A) (hV : HasOrthonormalCols V) :
     ν.seminorm (A - U) ≤ ν.seminorm (A - V) := by
@@ -143,7 +143,7 @@ arbitrary finite real matrix indices. Horn–Johnson 2013, Theorem 7.3.1.
 atlas: polar-decomposition (partial) -/
 theorem invariantNorm_sub_polar_le_sub_isometry {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (ν : OrthogonallyInvariantNorm m n) (A U V : Matrix m n ℝ)
+    (ν : UnitarilyInvariantNorm ℝ m n) (A U V : Matrix m n ℝ)
     (hCard : Fintype.card n ≤ Fintype.card m) (hU : HasOrthonormalCols U)
     (hA : U * CFC.sqrt (Aᵀ * A) = A) (hV : HasOrthonormalCols V) :
     ν.seminorm (A - U) ≤ ν.seminorm (A - V) := by
@@ -166,40 +166,15 @@ theorem invariantNorm_sub_polar_le_sub_isometry {m n : Type*}
       ((M.reindex em en - N.reindex em en).reindex em.symm en.symm) = M - N := by
     ext i j
     simp [Matrix.reindex_apply]
-  simpa only [OrthogonallyInvariantNorm.reindex_seminorm_apply, AF, UF, VF,
+  simpa only [UnitarilyInvariantNorm.reindex_seminorm_apply, AF, UF, VF,
     hBack] using h
-
-/-- Transposition transports an invariant norm to the transposed matrix
-space. Horn–Johnson §7.4; supports the wide polar minimization theorem. -/
-def OrthogonallyInvariantNorm.transpose {m n : Type*} [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n] (ν : OrthogonallyInvariantNorm m n) :
-    OrthogonallyInvariantNorm n m where
-  seminorm := ν.seminorm.comp (Matrix.transposeLinearEquiv n m ℝ ℝ).toLinearMap
-  eq_zero_of_map_eq_zero A hA := by
-    have h := ν.eq_zero_of_map_eq_zero Aᵀ hA
-    apply Matrix.transpose_injective
-    exact h
-  left_invariant A V hV := by
-    change ν.seminorm (V * A)ᵀ = ν.seminorm Aᵀ
-    have hVt : HasOrthonormalCols Vᵀ := by
-      change Vᵀᵀ * Vᵀ = 1
-      rw [Matrix.transpose_transpose]
-      exact mul_eq_one_comm.mp hV
-    rw [Matrix.transpose_mul, ν.right_invariant _ _ hVt]
-  right_invariant A U hU := by
-    change ν.seminorm (A * U)ᵀ = ν.seminorm Aᵀ
-    have hUt : HasOrthonormalCols Uᵀ := by
-      change Uᵀᵀ * Uᵀ = 1
-      rw [Matrix.transpose_transpose]
-      exact mul_eq_one_comm.mp hU
-    rw [Matrix.transpose_mul, ν.left_invariant _ _ hUt]
 
 /-- Every wide polar coisometry is a nearest coisometry in every invariant
 norm on arbitrary finite real matrix indices. Horn–Johnson 2013, Thm 7.3.1.
 atlas: polar-decomposition (partial) -/
 theorem invariantNorm_sub_polar_le_sub_coisometry {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (ν : OrthogonallyInvariantNorm m n) (A U V : Matrix m n ℝ)
+    (ν : UnitarilyInvariantNorm ℝ m n) (A U V : Matrix m n ℝ)
     (hCard : Fintype.card m ≤ Fintype.card n) (hU : U * Uᵀ = 1)
     (hA : CFC.sqrt (A * Aᵀ) * U = A) (hV : V * Vᵀ = 1) :
     ν.seminorm (A - U) ≤ ν.seminorm (A - V) := by

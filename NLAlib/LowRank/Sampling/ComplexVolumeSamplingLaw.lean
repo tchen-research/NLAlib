@@ -197,7 +197,7 @@ def complexVolumeSamplingNormalizer (A : Matrix m n ℂ) (k : ℕ) : ℝ :=
 /-- The actual orthogonal-projection residual for a complex column sample.
 Source: `sa:volume-theorem`, its residual `A−P_S A`. -/
 def complexVolumeSamplingResidual [DecidableEq m] (A : Matrix m n ℂ) (S : Finset n) : Matrix m n ℂ :=
-  A - complexColumnProjector (complexVolumeSampleColumns A S) * A
+  A - rangeProjector (complexVolumeSampleColumns A S) * A
 
 omit [Fintype n] [DecidableEq n] in
 /-- Selected complex Gram matrices are the corresponding full Gram minors.

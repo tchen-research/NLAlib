@@ -97,8 +97,8 @@ omit [DecidableEq n] in
 `power-iteration`. -/
 theorem rayleighQuotient_smul (A : Matrix n n ℝ) (x : n → ℝ) {c : ℝ} (hc : c ≠ 0) :
     rayleighQuotient A (c • x) = rayleighQuotient A x := by
-  simp only [rayleighQuotient, quadForm, Matrix.mulVec_smul, dotProduct_smul, smul_dotProduct,
-    smul_eq_mul]
+  simp only [rayleighQuotient_eq_div, quadForm_eq_dotProduct, Matrix.mulVec_smul, dotProduct_smul,
+    smul_dotProduct, smul_eq_mul]
   by_cases hx : x ⬝ᵥ x = 0
   · simp [hx]
   · field_simp
@@ -257,7 +257,7 @@ theorem abs_rayleighQuotient_sub_le_mul_tanSqAngle {A : Matrix n n ℝ} (hA : A.
   have hD0 : 0 ≤ D := (abs_nonneg _).trans (hD i₁)
   have hpos : 0 < x ⬝ᵥ x := by rw [hxx]; exact add_pos_of_pos_of_nonneg hc1 hN
   have hq : rayleighQuotient A x - L = (quadForm A x - L * (x ⬝ᵥ x)) / (x ⬝ᵥ x) := by
-    rw [rayleighQuotient, sub_div, mul_div_assoc, div_self hpos.ne', mul_one]
+    rw [rayleighQuotient_eq_div, sub_div, mul_div_assoc, div_self hpos.ne', mul_one]
   rw [tanSqAngle_eigenvectorBasis_eq, hq, hdiff, abs_div, abs_of_pos hpos]
   calc _ ≤ D * N / (x ⬝ᵥ x) := div_le_div_of_nonneg_right hbound hpos.le
     _ ≤ D * N / c i₁ ^ 2 :=

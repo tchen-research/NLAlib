@@ -219,8 +219,7 @@ theorem transpose_gramSchmidtQ_mul_self (A : Matrix m (Fin n) ℝ) :
 atlas: gram-schmidt -/
 theorem hasOrthonormalCols_gramSchmidtQ {A : Matrix m (Fin n) ℝ} (h : GramSchmidtSucceeds A) :
     HasOrthonormalCols (gramSchmidtQ A) := by
-  unfold HasOrthonormalCols
-  rw [transpose_gramSchmidtQ_mul_self]
+  rw [hasOrthonormalCols_iff_transpose_mul_self, transpose_gramSchmidtQ_mul_self]
   simp [h _]
 
 /-- **Realisation of classical Gram–Schmidt**: when it succeeds, `(gramSchmidtQ A,

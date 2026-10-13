@@ -168,7 +168,7 @@ theorem exists_dilation_orthogonal_diagonalization {m n : ℕ}
     simp only [W, dilation, Matrix.conjTranspose_eq_transpose_of_trivial,
       Matrix.fromBlocks_transpose, Matrix.transpose_zero,
       Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add]
-    rw [← h.eq, h.transpose_eq, transpose_rectDiag]
+    rw [← h.eq_mul_transpose, h.transpose_eq, transpose_rectDiag]
   refine ⟨W * R, ?_, ?_⟩
   · rw [Matrix.transpose_mul]
     simp only [Matrix.mul_assoc]

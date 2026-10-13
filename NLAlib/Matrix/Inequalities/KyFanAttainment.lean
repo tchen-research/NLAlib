@@ -23,7 +23,7 @@ theorem compression_submatrix_cols_eq_diagonal {n r : Type*} [Fintype n] [Fintyp
       Pᵀ * A * P = (Pᵀ * P) * Matrix.diagonal d * (Pᵀ * P) := by
         rw [hA]
         simp only [Matrix.mul_assoc]
-      _ = Matrix.diagonal d := by rw [hP, Matrix.one_mul, Matrix.mul_one]
+      _ = Matrix.diagonal d := by rw [hP.transpose_mul_self, Matrix.one_mul, Matrix.mul_one]
   have h1 := Matrix.submatrix_mul_equiv Pᵀ A e (Equiv.refl n) id
   have h2 := Matrix.submatrix_mul_equiv (Pᵀ * A) P e (Equiv.refl n) e
   simp only [Equiv.coe_refl, Matrix.submatrix_id_id] at h1 h2
@@ -86,9 +86,10 @@ private theorem exists_trace_twoSided_compression_eq_kyFanNorm_fin {m n k : ℕ}
     calc
       Pᵀ * A * R = (Pᵀ * P) *
           (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) * (Rᵀ * R) := by
-        conv_lhs => rw [hSVD.eq]
+        conv_lhs => rw [hSVD.eq_mul_transpose]
         simp only [Matrix.mul_assoc]
-      _ = rectDiag (singularValues A) := by rw [hP, hR, Matrix.one_mul, Matrix.mul_one]
+      _ = rectDiag (singularValues A) := by
+          rw [hP.transpose_mul_self, hR.transpose_mul_self, Matrix.one_mul, Matrix.mul_one]
   have h1 := Matrix.submatrix_mul_equiv Pᵀ A em (Equiv.refl (Fin m)) id
   have h2 := Matrix.submatrix_mul_equiv (Pᵀ * A) R em (Equiv.refl (Fin n)) en
   simp only [Equiv.coe_refl, Matrix.submatrix_id_id] at h1 h2

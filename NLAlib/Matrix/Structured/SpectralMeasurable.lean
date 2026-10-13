@@ -33,7 +33,8 @@ theorem measurable_specNorm_residual_of {γ m n q : Type*} [MeasurableSpace γ]
     Measurable fun z => specNorm (residual (Q z) A) := by
   apply measurable_specNorm_of_entries
   intro i j
-  simp only [residual, Matrix.sub_apply, Matrix.mul_apply, Matrix.transpose_apply]
+  simp only [residual_eq_sub_mul_transpose_mul, Matrix.sub_apply, Matrix.mul_apply,
+    Matrix.transpose_apply]
   fun_prop
 
 end NLAlib

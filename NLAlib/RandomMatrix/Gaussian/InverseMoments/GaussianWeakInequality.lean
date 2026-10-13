@@ -23,8 +23,7 @@ namespace NLAlib
 
 private lemma matrix_entry_sq_le_frobSq {ι κ : Type*} [Fintype ι] [Fintype κ]
     (G : Matrix ι κ ℝ) (i : ι) (j : κ) : G i j ^ 2 ≤ frobSq G := by
-  unfold frobSq frobInner
-  simp only [← sq]
+  simp only [frobSq, frobInner_eq_sum_mul, ← sq]
   exact (Finset.single_le_sum (fun a _ => sq_nonneg (G i a)) (Finset.mem_univ j)).trans
     (Finset.single_le_sum (fun a _ => Finset.sum_nonneg fun b _ => sq_nonneg (G a b))
       (Finset.mem_univ i))
@@ -119,9 +118,10 @@ private theorem integral_weak_shift_nonneg_gaussianMatrix
   have hDDm (n i) : Measurable (DD n i) :=
     (measurable_gramSoftMinSecond_single (n + 1) ε i.1 i.2).comp e.measurable
   have henergy (n x) : (∑ i, D n i x ^ 2) = frobSq (gramSoftMinGradient (n + 1) ε (G x)) := by
-    simp only [Fintype.sum_prod_type, D, frobSq, frobInner, ← sq]
+    simp only [Fintype.sum_prod_type, D, frobSq, frobInner_eq_sum_mul, ← sq]
   have heuler (n x) : (∑ i, x i * D n i x) = frobInner (G x) (gramSoftMinGradient (n + 1) ε (G x)) := by
-    simp only [Fintype.sum_prod_type, D, frobInner, G, e, MeasurableEquiv.curry_apply, Matrix.of_apply]
+    simp only [Fintype.sum_prod_type, D, frobInner_eq_sum_mul, G, e, MeasurableEquiv.curry_apply,
+      Matrix.of_apply]
   have hlap (n x) : (∑ i, DD n i x) = gramSoftMinLaplacian (n + 1) ε (G x) := by
     simp only [Fintype.sum_prod_type, DD, gramSoftMinLaplacian]
   have hAs (n x) : (∑ i, D n i x ^ 2) ≤ 4 * S x := by

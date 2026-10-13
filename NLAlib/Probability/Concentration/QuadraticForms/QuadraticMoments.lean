@@ -349,7 +349,7 @@ theorem variance_quadForm_of_isSymm [DecidableEq n] {A : Matrix n n ℝ} (hA : A
   have h1 : ∑ i, ∑ j, A i j * A j i = ∑ i, ∑ j, A i j ^ 2 :=
     Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by rw [hA.apply, sq]
   have h2 : frobSq A = ∑ i, ∑ j, A i j ^ 2 := by
-    simp only [frobSq, frobInner, sq]
+    simp only [frobSq, frobInner_eq_sum_mul, sq]
   rw [h1, h2]
   ring
 

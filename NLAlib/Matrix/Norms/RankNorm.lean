@@ -20,12 +20,14 @@ open scoped Matrix Matrix.Norms.L2Operator BigOperators
 
 namespace NLAlib
 
+variable {𝕜 : Type*} [RCLike 𝕜]
+
 /-- The squared Frobenius norm is the sum of the squares of precisely the
-positive singular values. Zero singular values contribute nothing.
+positive singular values, over `ℝ` or `ℂ`. Zero singular values contribute nothing.
 Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
 theorem frobSq_eq_sum_rank_singularValues_sq {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) :
+    (A : Matrix (Fin m) (Fin n) 𝕜) :
     frobSq A = ∑ k ∈ Finset.range A.rank, singularValues A k ^ 2 := by
   rw [frobSq_eq_sum_sq_singularValues]
   symm
@@ -37,7 +39,7 @@ theorem frobSq_eq_sum_rank_singularValues_sq {m n : ℕ}
 
 /-- `Fin` step of `frobSq_le_rank_mul_specNorm_sq`. -/
 private theorem frobSq_le_rank_mul_specNorm_sq_fin {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) :
+    (A : Matrix (Fin m) (Fin n) 𝕜) :
     frobSq A ≤ (A.rank : ℝ) * specNorm A ^ 2 := by
   calc
     frobSq A = ∑ k ∈ Finset.range A.rank, singularValues A k ^ 2 :=
@@ -52,19 +54,19 @@ section FiniteIndex
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- The rank-dependent squared norm comparison `‖A‖_F² ≤ rank A · ‖A‖₂²` on arbitrary
-finite index types, including rank zero and empty rectangular matrices.
+finite index types and over `ℝ` or `ℂ`, including rank zero and empty rectangular matrices.
 Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
-theorem frobSq_le_rank_mul_specNorm_sq (A : Matrix m n ℝ) :
+theorem frobSq_le_rank_mul_specNorm_sq (A : Matrix m n 𝕜) :
     frobSq A ≤ (A.rank : ℝ) * specNorm A ^ 2 := by
   have h := frobSq_le_rank_mul_specNorm_sq_fin
     (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
   simpa only [frobSq_reindex, Matrix.rank_reindex, specNorm_reindex] using h
 
 /-- The Frobenius norm is at most the spectral norm times the square root of the rank,
-on arbitrary finite index types, with no excluded zero cases.
+on arbitrary finite index types and over `ℝ` or `ℂ`, with no excluded zero cases.
 Horn–Johnson §5.6; atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/
-theorem frobNorm_le_sqrt_rank_mul_specNorm (A : Matrix m n ℝ) :
+theorem frobNorm_le_sqrt_rank_mul_specNorm (A : Matrix m n 𝕜) :
     frobNorm A ≤ Real.sqrt (A.rank : ℝ) * specNorm A := by
   apply (sq_le_sq₀ (frobNorm_nonneg A)
     (mul_nonneg (Real.sqrt_nonneg _) (specNorm_nonneg A))).mp
@@ -74,14 +76,14 @@ theorem frobNorm_le_sqrt_rank_mul_specNorm (A : Matrix m n ℝ) :
 end FiniteIndex
 
 private theorem specNorm_inverse_rectDiag_sq {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) :
+    (A : Matrix (Fin m) (Fin n) 𝕜) :
     specNorm (rectDiag (fun k => (singularValues A k)⁻¹) :
-        Matrix (Fin n) (Fin m) ℝ) ^ 2 =
+        Matrix (Fin n) (Fin m) 𝕜) ^ 2 =
       ‖(fun i : Fin m => (singularValues A i)⁻¹ ^ 2)‖ := by
-  rw [specNorm_sq_eq_specNorm_transpose_mul_self, transpose_rectDiag_mul_rectDiag]
+  rw [specNorm_sq_eq_specNorm_conjTranspose_mul_self, conjTranspose_rectDiag_mul_rectDiag]
   have he : (fun i : Fin m =>
-      if (i : ℕ) < n then (singularValues A i)⁻¹ ^ 2 else 0) =
-      (fun i : Fin m => (singularValues A i)⁻¹ ^ 2) := by
+      if (i : ℕ) < n then (((singularValues A i)⁻¹ ^ 2 : ℝ) : 𝕜) else 0) =
+      (fun i : Fin m => (((singularValues A i)⁻¹ ^ 2 : ℝ) : 𝕜)) := by
     funext i
     by_cases hin : (i : ℕ) < n
     · simp only [if_pos hin]
@@ -89,13 +91,18 @@ private theorem specNorm_inverse_rectDiag_sq {m n : ℕ}
         singularValues_eq_zero_of_width_le A (by simpa only [Fintype.card_fin] using not_lt.mp hin)]
       simp
   rw [he, specNorm_eq_norm, Matrix.l2_opNorm_diagonal]
+  simp only [Pi.norm_def]
+  congr 2
+  funext i
+  ext
+  simp only [coe_nnnorm, RCLike.norm_ofReal, Real.norm_eq_abs]
 
 /-- For positive rank, the spectral norm of the general inverse is the
 reciprocal of the smallest positive singular value, at index `rank A - 1`.
 This is the correct formula for rank-deficient matrices as well as full-rank
 matrices. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
 theorem specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive
-    {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hr : 0 < A.rank) :
+    {m n : ℕ} (A : Matrix (Fin m) (Fin n) 𝕜) (hr : 0 < A.rank) :
     specNorm (moorePenroseInverse A) = 1 / singularValues A (A.rank - 1) := by
   let r := A.rank - 1
   have hrrank : r < A.rank := by dsimp [r]; omega
@@ -124,10 +131,10 @@ theorem specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
   have hn : specNorm (moorePenroseInverse A) =
       specNorm (rectDiag (fun k => (singularValues A k)⁻¹) :
-        Matrix (Fin n) (Fin m) ℝ) := by
-    rw [hSVD.moorePenroseInverse_eq,
-      specNorm_mul_transpose_right_of_hasOrthonormalCols hSVD.transpose_mul_left,
-      specNorm_mul_left_of_hasOrthonormalCols hSVD.transpose_mul_right]
+        Matrix (Fin n) (Fin m) 𝕜) := by
+    rw [hSVD.moorePenroseInverse_eq_mul_conjTranspose,
+      specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hSVD.conjTranspose_mul_left,
+      specNorm_mul_left_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right]
   have hsq : specNorm (moorePenroseInverse A) ^ 2 = (singularValues A r)⁻¹ ^ 2 := by
     rw [hn, specNorm_inverse_rectDiag_sq, hmax]
   have he := (sq_eq_sq₀ (specNorm_nonneg (moorePenroseInverse A))
@@ -137,16 +144,16 @@ theorem specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive
 /-- At rank zero the general Moore–Penrose inverse is zero; no division by a
 nonexistent positive singular value is used. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
 theorem moorePenroseInverse_eq_zero_of_rank_eq_zero {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) (hr : A.rank = 0) :
+    (A : Matrix (Fin m) (Fin n) 𝕜) (hr : A.rank = 0) :
     moorePenroseInverse A = 0 := by
   have hσ : ∀ k : ℕ, singularValues A k = 0 := fun k =>
     singularValues_eq_zero_of_rank_le A (by rw [hr]; exact Nat.zero_le k)
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
-  rw [hSVD.moorePenroseInverse_eq]
+  rw [hSVD.moorePenroseInverse_eq_mul_conjTranspose]
   have hd : (rectDiag (fun k => (singularValues A k)⁻¹) :
-      Matrix (Fin n) (Fin m) ℝ) = 0 := by
+      Matrix (Fin n) (Fin m) 𝕜) = 0 := by
     ext i j
-    simp [rectDiag_apply, hσ]
+    simp [rectDiag_apply_ofReal, hσ]
   rw [hd, Matrix.mul_zero, Matrix.zero_mul]
 
 /-- The complete spectral-norm formula for the general Moore–Penrose inverse:
@@ -154,7 +161,7 @@ zero at rank zero and the reciprocal of the smallest positive singular value
 otherwise. Empty dimensions are covered by the rank-zero branch.
 Horn–Johnson §7.3; atlas `pseudoinverse`. -/
 theorem specNorm_moorePenroseInverse_eq {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) :
+    (A : Matrix (Fin m) (Fin n) 𝕜) :
     specNorm (moorePenroseInverse A) =
       if A.rank = 0 then 0 else 1 / singularValues A (A.rank - 1) := by
   by_cases hr : A.rank = 0

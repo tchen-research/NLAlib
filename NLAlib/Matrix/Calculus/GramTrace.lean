@@ -57,7 +57,7 @@ theorem sum_trace_mul_gram_direction_sq (X : Matrix ι ι ℝ) (hX : Xᵀ = X)
       _ = Matrix.trace ((X * X * G) * Gᵀ) := Matrix.trace_mul_comm _ _
       _ = _ := by congr 1; simp only [Matrix.mul_assoc]
   rw [← hfrob]
-  simp only [frobInner, ← Finset.mul_sum]
+  simp only [frobInner_eq_sum_mul, ← Finset.mul_sum]
   congr 1
   apply Finset.sum_congr rfl
   intro i _
@@ -144,7 +144,7 @@ theorem sum_trace_mul_gram_direction_mul_gram_direction (X Y : Matrix ι ι ℝ)
     rw [Matrix.trace_mul_cycle, ← Matrix.mul_assoc, Matrix.trace_mul_comm (G * Gᵀ) Y]
     simp only [Matrix.mul_assoc]
   rw [← hfrob, ← htraceX, ← htraceY]
-  simp only [frobInner, Matrix.trace, Matrix.diag, Finset.sum_add_distrib,
+  simp only [frobInner_eq_sum_mul, Matrix.trace, Matrix.diag, Finset.sum_add_distrib,
     Finset.mul_sum, Finset.sum_mul]
   congr 2
   apply Finset.sum_congr rfl

@@ -1,0 +1,821 @@
+[
+ {
+  "file": "NLAlib/Krylov/Spaces/Block.lean",
+  "area": "Krylov",
+  "wave": 0,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/LowRank/Nystrom/SketchedRegression.lean",
+  "area": "LowRank",
+  "wave": 0,
+  "reasons": [
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Basic/MoorePenroseProjector.lean",
+  "area": "Matrix/Basic",
+  "wave": 0,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Calculus/GramTrace.lean",
+  "area": "Matrix/Calculus",
+  "wave": 0,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Factorizations/QR.lean",
+  "area": "Matrix/Factorizations",
+  "wave": 0,
+  "reasons": [
+   "pinvL",
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Norms/ColumnNorms.lean",
+  "area": "Matrix/Norms",
+  "wave": 0,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Norms/Reindex.lean",
+  "area": "Matrix/Norms",
+  "wave": 0,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/Core.lean",
+  "area": "Matrix/Spectral",
+  "wave": 0,
+  "reasons": [
+   "pinvR"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/OrderedSymmetricDiagonalization.lean",
+  "area": "Matrix/Spectral",
+  "wave": 0,
+  "reasons": [
+   "HasOrthonormalCols"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/RealQZ.lean",
+  "area": "Matrix/Spectral",
+  "wave": 0,
+  "reasons": [
+   "HasOrthonormalCols"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/RealSpectrumSchur.lean",
+  "area": "Matrix/Spectral",
+  "wave": 0,
+  "reasons": [
+   "HasOrthonormalCols"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/SvdPowers.lean",
+  "area": "Matrix/Spectral",
+  "wave": 0,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Structured/Measurable.lean",
+  "area": "Matrix/Structured",
+  "wave": 0,
+  "reasons": [
+   "frobInner",
+   "pinvL",
+   "pinvR",
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/FrameContractions.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 0,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/GramColumnDeterminant.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 0,
+  "reasons": [
+   "pinvL"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/GraphTangent.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 0,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/OrthogonalProducts.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 0,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Probability/Concentration/QuadraticForms/QuadraticMoments.lean",
+  "area": "Probability",
+  "wave": 0,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/RandomMatrix/Gaussian/Basic/PolynomialGrowth.lean",
+  "area": "RandomMatrix",
+  "wave": 0,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Estimation/Diagonal/DiagonalEstimator.lean",
+  "area": "Estimation",
+  "wave": 1,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/LowRank/Nystrom/GaussianNystrom.lean",
+  "area": "LowRank",
+  "wave": 1,
+  "reasons": [
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Factorizations/GramSchmidt.lean",
+  "area": "Matrix/Factorizations",
+  "wave": 1,
+  "reasons": [
+   "HasOrthonormalCols"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Factorizations/PolarDecomposition.lean",
+  "area": "Matrix/Factorizations",
+  "wave": 1,
+  "reasons": [
+   "HasOrthonormalCols",
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Norms/Net.lean",
+  "area": "Matrix/Norms",
+  "wave": 1,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/SpectralContinuity.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 1,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean",
+  "area": "Matrix/Spectral",
+  "wave": 1,
+  "reasons": [
+   "HasOrthonormalCols",
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/SingularValueInvariance.lean",
+  "area": "Matrix/Spectral",
+  "wave": 1,
+  "reasons": [
+   "HasOrthonormalCols"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/SpectralBounds.lean",
+  "area": "Matrix/Spectral",
+  "wave": 1,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Structured/SpectralMeasurable.lean",
+  "area": "Matrix/Structured",
+  "wave": 1,
+  "reasons": [
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/CSRank.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 1,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/OrthogonalBlockCompletion.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 1,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/RandomMatrix/Gaussian/InverseMoments/GaussianWeakInequality.lean",
+  "area": "RandomMatrix",
+  "wave": 1,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Sketching/Sparse/Bands/Heavy/PreservingBound.lean",
+  "area": "Sketching",
+  "wave": 1,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Sketching/Sparse/Bands/Light/SynthesisBounds.lean",
+  "area": "Sketching",
+  "wave": 1,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Sketching/Sparse/CountSketch.lean",
+  "area": "Sketching",
+  "wave": 1,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Calculus/GramCutoffCalculus.lean",
+  "area": "Matrix/Calculus",
+  "wave": 2,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Functions/PolynomialCalculus.lean",
+  "area": "Matrix/Functions",
+  "wave": 2,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/EckartYoung.lean",
+  "area": "Matrix/Spectral",
+  "wave": 2,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/InverseOverlapGram.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 2,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Sketching/Sparse/Bands/Light/ZeroBlock.lean",
+  "area": "Sketching",
+  "wave": 2,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Sketching/Sparse/CountSketchMoments.lean",
+  "area": "Sketching",
+  "wave": 2,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Krylov/Solvers/CG.lean",
+  "area": "Krylov",
+  "wave": 3,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Krylov/Solvers/GMRES.lean",
+  "area": "Krylov",
+  "wave": 3,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Krylov/Spectral/Ritz.lean",
+  "area": "Krylov",
+  "wave": 3,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/LowRank/Nystrom/RawGaussianNystrom.lean",
+  "area": "LowRank",
+  "wave": 3,
+  "reasons": [
+   "HasOrthonormalCols"
+  ]
+ },
+ {
+  "file": "NLAlib/LowRank/PolynomialMethods/PolynomialFilter.lean",
+  "area": "LowRank",
+  "wave": 3,
+  "reasons": [
+   "residual",
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/VonNeumann.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 3,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/ResidualBounds.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 3,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/CourantFischer.lean",
+  "area": "Matrix/Spectral",
+  "wave": 3,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/Inertia.lean",
+  "area": "Matrix/Spectral",
+  "wave": 3,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/PowerRayleigh.lean",
+  "area": "Matrix/Spectral",
+  "wave": 3,
+  "reasons": [
+   "quadForm",
+   "rayleighQuotient"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/RealSchurSimilarity.lean",
+  "area": "Matrix/Spectral",
+  "wave": 3,
+  "reasons": [
+   "HasOrthonormalCols"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Structured/KroneckerSingularValues.lean",
+  "area": "Matrix/Structured",
+  "wave": 3,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/ProjectionGaps.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 3,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/RandomMatrix/Gaussian/InverseMoments/CutoffIntegrability.lean",
+  "area": "RandomMatrix",
+  "wave": 3,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Sketching/Sampling/Leverage.lean",
+  "area": "Sketching",
+  "wave": 3,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Estimation/Spectral/RandomStartPower.lean",
+  "area": "Estimation",
+  "wave": 4,
+  "reasons": [
+   "quadForm",
+   "rayleighQuotient"
+  ]
+ },
+ {
+  "file": "NLAlib/Krylov/Spectral/MeasurableRitz.lean",
+  "area": "Krylov",
+  "wave": 4,
+  "reasons": [
+   "quadForm",
+   "rayleighQuotient"
+  ]
+ },
+ {
+  "file": "NLAlib/LowRank/Nystrom/Structural.lean",
+  "area": "LowRank",
+  "wave": 4,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/BlockQuadratic.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 4,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/HadamardOrder.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 4,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/KyFanAttainment.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 4,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/SchurHornProjection.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 4,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/DavisKahan.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 4,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/EigenvaluePerturbation.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 4,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/SingularFrames.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 4,
+  "reasons": [
+   "IsSVD",
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/ProductSingularValues.lean",
+  "area": "Matrix/Spectral",
+  "wave": 4,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/RealNormalForm.lean",
+  "area": "Matrix/Spectral",
+  "wave": 4,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Structured/KroneckerToolkit.lean",
+  "area": "Matrix/Structured",
+  "wave": 4,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 4,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/RandomMatrix/Gaussian/InverseMoments/UnshiftedWeakInequality.lean",
+  "area": "RandomMatrix",
+  "wave": 4,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Sketching/Sparse/CountSketchExpectation.lean",
+  "area": "Sketching",
+  "wave": 4,
+  "reasons": [
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Estimation/Spectral/RandomStartLanczos.lean",
+  "area": "Estimation",
+  "wave": 5,
+  "reasons": [
+   "quadForm",
+   "rayleighQuotient"
+  ]
+ },
+ {
+  "file": "NLAlib/Krylov/Spectral/PowerMethod.lean",
+  "area": "Krylov",
+  "wave": 5,
+  "reasons": [
+   "quadForm",
+   "rayleighQuotient"
+  ]
+ },
+ {
+  "file": "NLAlib/LowRank/RangeFinding/SpectralRangeFinder.lean",
+  "area": "LowRank",
+  "wave": 5,
+  "reasons": [
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Factorizations/Procrustes.lean",
+  "area": "Matrix/Factorizations",
+  "wave": 5,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 5,
+  "reasons": [
+   "quadForm",
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/SchurHorn.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 5,
+  "reasons": [
+   "HasOrthonormalCols"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Norms/SchattenSingularCoefficients.lean",
+  "area": "Matrix/Norms",
+  "wave": 5,
+  "reasons": [
+   "IsSVD",
+   "frobInner"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/EigenvalueTrace.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 5,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/EigenvalueVariation.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 5,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/SingularFrameTails.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 5,
+  "reasons": [
+   "IsSVD",
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Spectral/RealNormalSpecializations.lean",
+  "area": "Matrix/Spectral",
+  "wave": 5,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 5,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Estimation/Spectral/RandomStartEndpoints.lean",
+  "area": "Estimation",
+  "wave": 6,
+  "reasons": [
+   "quadForm",
+   "rayleighQuotient"
+  ]
+ },
+ {
+  "file": "NLAlib/Estimation/Trace/Unbiased.lean",
+  "area": "Estimation",
+  "wave": 6,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/LowRank/RangeFinding/ExpectedPower.lean",
+  "area": "LowRank",
+  "wave": 6,
+  "reasons": [
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Factorizations/NearestPolar.lean",
+  "area": "Matrix/Factorizations",
+  "wave": 6,
+  "reasons": [
+   "HasOrthonormalCols",
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/Kantorovich.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 6,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/SeparatingPSDVector.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 6,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Norms/NuclearHermitian.lean",
+  "area": "Matrix/Norms",
+  "wave": 6,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Norms/SchattenDuality.lean",
+  "area": "Matrix/Norms",
+  "wave": 6,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/WedinResidual.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 6,
+  "reasons": [
+   "IsSVD",
+   "residual"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/FiniteExponentialGram.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 7,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Inequalities/Wielandt.lean",
+  "area": "Matrix/Inequalities",
+  "wave": 7,
+  "reasons": [
+   "quadForm"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/Wedin.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 7,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/CanonicalCS.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 7,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/WedinBounds.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 8,
+  "reasons": [
+   "IsSVD"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Subspaces/CSDecomposition.lean",
+  "area": "Matrix/Subspaces",
+  "wave": 8,
+  "reasons": [
+   "rw[hQ]"
+  ]
+ },
+ {
+  "file": "NLAlib/Matrix/Perturbation/WedinFiniteIndex.lean",
+  "area": "Matrix/Perturbation",
+  "wave": 9,
+  "reasons": [
+   "IsSVD"
+  ]
+ }
+]

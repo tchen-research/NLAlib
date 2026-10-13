@@ -48,7 +48,7 @@ theorem exists_complex_range_kernel_frames_norm_eq_secant {n : Type*}
         ((U : Matrix n n ℂ) * F.map Complex.ofReal) = 1 := by
     simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
     rw [← Matrix.mul_assoc (U : Matrix n n ℂ)ᴴ (U : Matrix n n ℂ) (F.map Complex.ofReal),
-      hU, Matrix.one_mul, conjTranspose_map_ofReal, ← map_ofReal_mul, hF]
+      hU, Matrix.one_mul, conjTranspose_map_ofReal, ← map_ofReal_mul, hF.transpose_mul_self]
     simp
   have hQrange : LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin :=
     range_unitary_mul_eq_of_similarity U P (R.map Complex.ofReal) (Q₀.map Complex.ofReal)

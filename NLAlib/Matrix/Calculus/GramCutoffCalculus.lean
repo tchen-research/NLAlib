@@ -184,7 +184,7 @@ theorem sq_gramSoftMinGradient_unshifted_single_le [Nonempty ι]
     Finset.single_le_sum (fun i' _ => Finset.sum_nonneg fun j' _ => sq_nonneg (D i' j'))
       (Finset.mem_univ i)
   have hD : D i j ^ 2 ≤ frobSq D := by
-    simpa only [frobSq, frobInner, ← pow_two] using hrow.trans hall
+    simpa only [frobSq, frobInner_eq_sum_mul, ← pow_two] using hrow.trans hall
   exact hD.trans ((frobSq_gramSoftMinGradient_unshifted_le_of_pos n hn G).trans
     (mul_le_mul_of_nonneg_left
       ((inversePowerSoftMin_gram_le_sigmaMin_sq n hn G).trans (sigmaMin_transpose_sq_le_frobSq G))

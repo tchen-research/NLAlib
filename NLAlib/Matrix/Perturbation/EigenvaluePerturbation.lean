@@ -42,7 +42,7 @@ Horn–Johnson 2013, Theorem 4.2.2; supports signed eigenvalue perturbation.
 theorem dotProduct_mulVec_le_eigenvalues₀_zero_mul {A : Matrix n n ℝ}
     (hA : A.IsHermitian) (hcard : 0 < Fintype.card n) (x : n → ℝ) :
     x ⬝ᵥ (A *ᵥ x) ≤ hA.eigenvalues₀ ⟨0, hcard⟩ * (x ⬝ᵥ x) := by
-  rw [← quadForm, quadForm_eq_sum_eigenvalues hA,
+  rw [← quadForm_eq_dotProduct, quadForm_eq_sum_eigenvalues hA,
     ← sum_sq_eigenvectorBasis_dotProduct hA x, Finset.mul_sum]
   refine Finset.sum_le_sum fun i _ => ?_
   apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
@@ -55,7 +55,7 @@ Horn–Johnson 2013, Theorem 4.2.2; no sign condition on the matrix.
 theorem eigenvalues₀_last_mul_le_dotProduct_mulVec {A : Matrix n n ℝ}
     (hA : A.IsHermitian) (hcard : 0 < Fintype.card n) (x : n → ℝ) :
     hA.eigenvalues₀ ⟨Fintype.card n - 1, by omega⟩ * (x ⬝ᵥ x) ≤ x ⬝ᵥ (A *ᵥ x) := by
-  rw [← quadForm, quadForm_eq_sum_eigenvalues hA,
+  rw [← quadForm_eq_dotProduct, quadForm_eq_sum_eigenvalues hA,
     ← sum_sq_eigenvectorBasis_dotProduct hA x, Finset.mul_sum]
   refine Finset.sum_le_sum fun i _ => ?_
   apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)

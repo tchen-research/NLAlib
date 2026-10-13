@@ -111,7 +111,7 @@ private theorem trace_twoSided_compression_le_kyFanNorm_fin {m n k : ℕ}
   have hP : (U * Vᵀ).rank ≤ k :=
     (Matrix.rank_mul_le_left U Vᵀ).trans (by simpa using U.rank_le_width)
   have hPn : specNorm (U * Vᵀ) ≤ 1 := by
-    rw [specNorm_mul_transpose_right_of_hasOrthonormalCols hV]
+    rw [specNorm_mul_transpose_right_of_hasOrthonormalCols hV.transpose_mul_self]
     exact specNorm_le_one_of_orthonormal hU
   have htrace : (Uᵀ * A * V).trace = frobInner A (U * Vᵀ) := by
     rw [frobInner_comm, frobInner_eq_trace, Matrix.transpose_mul,

@@ -257,7 +257,7 @@ theorem isGMRESIterate_iff_isAffineMinimiser (hA : A.IsHermitian) {xs : n → �
     funext y
     have hr : c - A *ᵥ y = -(A *ᵥ (y - xs)) := by
       rw [Matrix.mulVec_sub, hxs]; abel
-    rw [hr, neg_dotProduct, dotProduct_neg, neg_neg, quadForm, map_pow, aeval_X, sq,
+    rw [hr, neg_dotProduct, dotProduct_neg, neg_neg, quadForm_eq_dotProduct, map_pow, aeval_X, sq,
       ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hAs,
       dotProduct_comm]
   rw [IsGMRESIterate, hE]

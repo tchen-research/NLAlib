@@ -362,27 +362,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_eq_sum_sq",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "No hypotheses; unfolds `frobSq A = ∑ i, ∑ j, A i j ^ 2` to reach entrywise sums."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobInner_le_frobNorm_mul_frobNorm",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "Apply to `A B : Matrix m n ℝ` of the same shape (no side conditions); gives Cauchy–Schwarz `frobInner A B ≤ frobNorm A * frobNorm B`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobSq_mul_left_of_orthonormal",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "Pass `hQ : Q.transpose * Q = 1` and any `X`; gives `frobSq (Q * X) = frobSq X`."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.specNorm_mul_le",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
@@ -419,10 +398,22 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.specNorm_mul_conjTranspose_self",
+     "module": "NLAlib.Matrix.Norms.Core",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.specNorm_mul_transpose_self",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "`specNorm (A * Aᵀ) = specNorm A ^ 2`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sub_mul_conjTranspose_mul_le",
+     "module": "NLAlib.Matrix.Norms.Core",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -433,10 +424,49 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.specNorm_add_sq_le_of_mul_conjTranspose_eq_zero",
+     "module": "NLAlib.Matrix.Norms.Core",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.specNorm_add_sq_le_of_mul_transpose_eq_zero",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
      "usage": "From `h : X * Yᵀ = 0`; gives `specNorm (X + Y)^2 ≤ specNorm X^2 + specNorm Y^2`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_eq_sum_norm_sq",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_eq_sum_sq",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
+     "status": "proved",
+     "usage": "No hypotheses; unfolds `frobSq A = ∑ i, ∑ j, A i j ^ 2` to reach entrywise sums."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobInner_le_frobNorm_mul_frobNorm",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
+     "status": "proved",
+     "usage": "Apply to `A B : Matrix m n ℝ` of the same shape (no side conditions); gives Cauchy–Schwarz `frobInner A B ≤ frobNorm A * frobNorm B`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_mul_left_of_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_mul_left_of_orthonormal",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
+     "status": "proved",
+     "usage": "Pass `hQ : Q.transpose * Q = 1` and any `X`; gives `frobSq (Q * X) = frobSq X`."
     },
     {
      "library": "nlalib",
@@ -453,6 +483,18 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.specNorm_mul_left_of_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Norms.SpectralNormBounds",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Norms.SpectralNormBounds",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.specNorm_mul_left_of_hasOrthonormalCols",
      "module": "NLAlib.Matrix.Norms.SpectralNormBounds",
      "status": "proved",
@@ -464,6 +506,12 @@
      "module": "NLAlib.Matrix.Norms.SpectralNormBounds",
      "status": "proved",
      "usage": "Pass QᵀQ=I; right multiplication by Qᵀ preserves the spectral norm."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sq_eq_specNorm_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Spectral.SpectralBounds",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -511,7 +559,7 @@
     "done"
    ],
    "notes": "The extension adds the advertised rank-based Frobenius upper bound, orthonormal spectral-norm invariance, and the Gram spectral-norm square identity.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "svd",
@@ -553,10 +601,22 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.IsSVD.eq_head_add_tail_mul_conjTranspose",
+     "module": "NLAlib.Matrix.Spectral.SVD",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.IsSVD.eq_head_add_tail",
      "module": "NLAlib.Matrix.Spectral.SVD",
      "status": "proved",
      "usage": "From `h : IsSVD A U V` and a split index `k`; rewrites `A` as the head `U * rectDiag (σ masked to i < k) * Vᵀ` (the truncated SVD) plus the tail `U * rectDiag (σ masked to i ≥ k) * Vᵀ`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose",
+     "module": "NLAlib.Matrix.Spectral.SVD",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -607,7 +667,7 @@
     "foundation"
    ],
    "notes": "Done. Next lemma wanted: singularValues A 0 = specNorm A, which Weyl and Eckart–Young need.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "eckart-young",
@@ -1032,6 +1092,31 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.moorePenroseInverse_eq_pinvL_of_isUnit_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Basic.MoorePenrose",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.moorePenroseInverse_eq_pinvR_of_isUnit_mul_conjTranspose_self",
+     "module": "NLAlib.Matrix.Basic.MoorePenrose",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.moorePenroseInverse_moorePenroseInverse",
+     "module": "NLAlib.Matrix.Basic.MoorePenrose",
+     "status": "proved",
+     "usage": "Apply to any A; recover A by taking its general pseudoinverse twice."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_moorePenroseInverse_eq_re_trace_moorePenroseInverse",
+     "module": "NLAlib.Matrix.Basic.MoorePenrose",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.moorePenroseInverse_eq_pinvL",
      "module": "NLAlib.Matrix.Basic.MoorePenrose",
      "status": "proved",
@@ -1043,13 +1128,6 @@
      "module": "NLAlib.Matrix.Basic.MoorePenrose",
      "status": "proved",
      "usage": "Pass A and IsUnit(AAᵀ); identify the general inverse with pinvR."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.moorePenroseInverse_moorePenroseInverse",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved",
-     "usage": "Apply to any A; recover A by taking its general pseudoinverse twice."
     },
     {
      "library": "nlalib",
@@ -1088,6 +1166,18 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.pinvL_mul_of_isUnit_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.mul_pinvR_of_isUnit_mul_conjTranspose_self",
+     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.pinvL_mul",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -1110,6 +1200,18 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.mul_pinvL_mul_of_isUnit_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pinvL_mul_pinvL_of_isUnit_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.mul_pinvL_mul",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -1124,6 +1226,12 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.mul_pinvL_isHermitian",
+     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.mul_pinvL_isSymm",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -1131,10 +1239,22 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.mul_pinvL_isIdempotentElem_of_isUnit_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.mul_pinvL_isIdempotentElem",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
      "usage": "Apply with `h : IsUnit (Gᵀ * G)`; gives `IsIdempotentElem (G * pinvL G)`, which with `mul_pinvL_isSymm` makes `G * pinvL G` the orthogonal projector onto `range G`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_pinvR_eq_re_trace_inv",
+     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1206,7 +1326,7 @@
     "api"
    ],
    "notes": "The extension closes the general rank-deficient case. Ordinary total inverse formulas are distinct from the Moore–Penrose inverse when a Gram matrix is singular.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "projection-facts",
@@ -1239,6 +1359,12 @@
    "formalizations": [
     {
      "library": "nlalib",
+     "decl": "NLAlib.specNorm_le_one_of_isHermitian_of_isIdempotentElem",
+     "module": "NLAlib.Matrix.Norms.Core",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.specNorm_le_one_of_isSymm_of_isIdempotentElem",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved",
@@ -1250,6 +1376,12 @@
      "module": "NLAlib.Matrix.Spectral.Weyl",
      "status": "proved",
      "usage": "`singularValues (residual Q A) k ≤ singularValues A k` for orthonormal `Q`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conjTranspose_mul_residual",
+     "module": "NLAlib.Matrix.Subspaces.Projections",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1279,6 +1411,12 @@
      "module": "NLAlib.Matrix.Subspaces.Projections",
      "status": "proved",
      "usage": "Pass `hQ : HasOrthonormalCols Q`; gives `frobSq (residual Q A) ≤ frobSq A`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_sub_mul_eq_frobSq_residual_add_frobSq_conjTranspose_mul_sub",
+     "module": "NLAlib.Matrix.Subspaces.Projections",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1328,7 +1466,7 @@
     "lra",
     "done"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "notes": "Done. Includes the monotonicity result with Q₁ arbitrary (stronger than HMT Prop 8.5 as asked)."
   },
   {
@@ -1366,11 +1504,23 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.exists_unitary_completion",
+     "module": "NLAlib.Matrix.Subspaces.Projections",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.exists_orthogonal_completion",
      "module": "NLAlib.Matrix.Subspaces.Projections",
      "status": "proved",
      "usage": "Pass `V : Matrix (Fin n) ι ℝ` with `hV : Vᵀ * V = 1` and a column placement `e : ι ↪ Fin n`; gives an orthogonal `W` (`Wᵀ * W = 1`) with `W i (e j) = V i j`, whose remaining columns are the completion `Q⊥`.",
      "note": "matrix form: V with orthonormal columns along an embedding ι ↪ Fin n extends to an orthogonal W; lives in Gaussian/Invariance.lean, to move to Matrix/Projections"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_unitary_complement",
+     "module": "NLAlib.Matrix.Subspaces.Projections",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1409,7 +1559,7 @@
     "foundation",
     "done"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "notes": "Mathlib's abstract completion suffices; the matrix wrapper exists_orthogonal_completion lives in Gaussian/Invariance.lean and should move to Matrix/Projections."
   },
   {
@@ -2656,6 +2806,12 @@
    "formalizations": [
     {
      "library": "nlalib",
+     "decl": "NLAlib.frobSq_pinvR_eq_re_trace_inv",
+     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.frobSq_pinvR_eq_trace_inv",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -2696,7 +2852,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "pinv-frob-fourth-moment",
@@ -13009,31 +13165,31 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobInner",
+     "decl": "NLAlib.specNorm",
      "module": "NLAlib.Matrix.Norms.Core",
+     "status": "proved",
+     "usage": "Spectral norm `‖A‖₂`, the largest singular value: Mathlib's ℓ₂ operator norm."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobInner",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
      "status": "proved",
      "usage": "Frobenius inner product `⟨A, B⟩_F = ∑ᵢⱼ Aᵢⱼ Bᵢⱼ`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.frobSq",
-     "module": "NLAlib.Matrix.Norms.Core",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
      "status": "proved",
      "usage": "Squared Frobenius norm `‖A‖_F²`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.frobNorm",
-     "module": "NLAlib.Matrix.Norms.Core",
+     "module": "NLAlib.Matrix.Norms.Frobenius",
      "status": "proved",
      "usage": "Frobenius norm `‖A‖_F`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.specNorm",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "Spectral norm `‖A‖₂`, the largest singular value: Mathlib's ℓ₂ operator norm."
     }
    ],
    "depends_on": [],
@@ -13045,7 +13201,7 @@
    "tags": [
     "definition"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "orthonormal-columns-def",
@@ -20641,7 +20797,7 @@
     "conditioning"
    ],
    "notes": "NLAlib has NLAlib.frobConditionNumber (‖A‖_F‖A†‖, Kaczmarz) but no spectral κ; cg-convergence and Gaussian condition-number results state κ ad hoc. Define with the general moorePenroseInverse so it is total. Consumers: cg-convergence, sketch-and-precondition (κ(AR⁻¹) ≤ √((1+ε)/(1−ε))), nystrom-pcg, randomized-kaczmarz (relation κ_F ≤ √rank κ), linear-system-perturbation, least-squares-perturbation, pinv-spectral-tail (condition numbers of Gaussian matrices, cd05). Recommendation: prove. Positive dimension is required for distance to the singular set, which is empty on the zero-dimensional branch.",
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "formalizations": [
     {
      "library": "nlalib",
@@ -20661,6 +20817,13 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_conjTranspose",
+     "module": "NLAlib.Matrix.Perturbation.ConditionNumber",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.conditionNumber_transpose",
      "module": "NLAlib.Matrix.Perturbation.ConditionNumber",
      "status": "proved",
@@ -20674,6 +20837,13 @@
      "status": "proved",
      "partial": true,
      "usage": "Nonzero scalar multiplication preserves the condition number."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_conjTranspose_mul_self",
+     "module": "NLAlib.Matrix.Perturbation.ConditionNumber",
+     "status": "proved",
+     "partial": true
     },
     {
      "library": "nlalib",

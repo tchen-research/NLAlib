@@ -22,7 +22,7 @@ theorem quadForm_fromBlocks (A : Matrix m m ℝ) (B : Matrix m n ℝ)
     (C : Matrix n n ℝ) (x : m → ℝ) (y : n → ℝ) :
     quadForm (fromBlocks A B Bᵀ C) (Sum.elim x y) =
       quadForm A x + 2 * (x ⬝ᵥ B *ᵥ y) + quadForm C y := by
-  simp only [quadForm, Matrix.fromBlocks_mulVec, Function.comp_def, Sum.elim_inl, Sum.elim_inr,
+  simp only [quadForm_eq_dotProduct, Matrix.fromBlocks_mulVec, Function.comp_def, Sum.elim_inl, Sum.elim_inr,
     sumElim_dotProduct_sumElim, dotProduct_add, Matrix.dotProduct_transpose_mulVec]
   ring
 
@@ -40,7 +40,7 @@ theorem sq_bilinear_le_quadForm_mul_of_fromBlocks_posSemidef
     simp only [star_trivial] at h
     change 0 ≤ quadForm (fromBlocks A B Bᵀ C) (Sum.elim (t • x) y) at h
     rw [quadForm_fromBlocks] at h
-    simp only [quadForm, Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul, smul_eq_mul] at h ⊢
+    simp only [quadForm_eq_dotProduct, Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul, smul_eq_mul] at h ⊢
     nlinarith
   have h := discrim_le_zero hpoly
   dsimp [discrim] at h
@@ -117,7 +117,7 @@ theorem sq_bilinear_lt_quadForm_mul_of_fromBlocks_posDef
     simp only [star_trivial] at h
     change 0 < quadForm (fromBlocks A B Bᵀ C) (Sum.elim (t • x) y) at h
     rw [quadForm_fromBlocks] at h
-    simp only [quadForm, Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul, smul_eq_mul] at h ⊢
+    simp only [quadForm_eq_dotProduct, Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul, smul_eq_mul] at h ⊢
     nlinarith
   have h := discrim_lt_zero (ne_of_gt ha) hpoly
   dsimp [discrim] at h

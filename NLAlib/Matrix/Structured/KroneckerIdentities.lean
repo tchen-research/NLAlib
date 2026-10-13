@@ -43,7 +43,8 @@ theorem IsMoorePenroseInverse.kronecker {A : Matrix m n ℝ} {A' : Matrix n m �
     {B : Matrix p q ℝ} {B' : Matrix q p ℝ}
     (hA : IsMoorePenroseInverse A A') (hB : IsMoorePenroseInverse B B') :
     IsMoorePenroseInverse (A ⊗ₖ B) (A' ⊗ₖ B') := by
-  constructor
+  rw [isMoorePenroseInverse_iff_transpose]
+  refine ⟨?_, ?_, ?_, ?_⟩
   · rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul,
       hA.mul_mul_eq, hB.mul_mul_eq]
   · rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul,

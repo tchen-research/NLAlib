@@ -103,7 +103,7 @@ theorem exists_unit_abs_quadForm_eq_specNorm [Nonempty n] {B : Matrix n n ℝ} (
     exact hs
   refine ⟨v, hv, ?_⟩
   have hBv : B *ᵥ v = hH.eigenvalues i • v := hH.mulVec_eigenvectorBasis i
-  rw [quadForm, hBv, dotProduct_smul, hv, smul_eq_mul, mul_one, specNorm_eq_norm_eigenvalues hH,
+  rw [quadForm_eq_dotProduct, hBv, dotProduct_smul, hv, smul_eq_mul, mul_one, specNorm_eq_norm_eigenvalues hH,
     ← hi, Real.norm_eq_abs]
 
 /-! ### Deterministic net lemmas -/
@@ -215,7 +215,7 @@ theorem specNorm_le_div_of_net_quadForm {B : Matrix n n ℝ} (hB : B.IsSymm)
     obtain ⟨x, hxN, hxy⟩ := hN y hy
     have hd : √((x - y) ⬝ᵥ (x - y)) ≤ ε := by rw [Real.sqrt_le_left hε0]; exact hxy
     have hsplit : quadForm B y = quadForm B x - (x - y) ⬝ᵥ (B *ᵥ x) - y ⬝ᵥ (B *ᵥ (x - y)) := by
-      simp only [quadForm, Matrix.mulVec_sub, sub_dotProduct, dotProduct_sub]
+      simp only [quadForm_eq_dotProduct, Matrix.mulVec_sub, sub_dotProduct, dotProduct_sub]
       ring
     have h1 := abs_dotProduct_mulVec_le B (x - y) x
     have h2 := abs_dotProduct_mulVec_le B y (x - y)

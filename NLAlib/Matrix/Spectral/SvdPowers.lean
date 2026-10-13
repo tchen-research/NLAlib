@@ -38,7 +38,7 @@ theorem IsSVD.gram_pow_mul_eq {A : Matrix (Fin m) (Fin n) ℝ}
     split_ifs with hij
     · simp only [← pow_mul, ← pow_succ]
     · simp
-  conv_lhs => arg 2; rw [h.eq]
+  conv_lhs => arg 2; rw [h.eq_mul_transpose]
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hp, Matrix.mul_assoc U, hdiag]
 
 /-- Odd rectangular Gram powers raise every singular value to the corresponding odd

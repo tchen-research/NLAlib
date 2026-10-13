@@ -74,7 +74,7 @@ theorem norm_array_le_one_of_hasOrthonormalCols {n k : ℕ}
   apply (pi_norm_le_iff_of_nonneg (by norm_num)).mpr
   intro j
   have hc : ∑ a, Q a j ^ 2 = 1 := by
-    have hh := congrArg (fun M : Matrix (Fin k) (Fin k) ℝ => M j j) hQ
+    have hh := congrArg (fun M : Matrix (Fin k) (Fin k) ℝ => M j j) hQ.transpose_mul_self
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply,
       Matrix.one_apply_eq, ← sq] using hh
   have he : Q i j ^ 2 ≤ 1 := by

@@ -145,7 +145,7 @@ theorem error_decomp (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ + Qp * Qpᵀ 
       residual Q A - Q * (pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * residual Q A)) := by
   unfold sketchedOutput
   rw [sketchedCore_eq Q Qp Ψ A hQ hcomp hG₁, Matrix.mul_add]
-  unfold residual
+  rw [residual_eq_sub_mul_transpose_mul]
   rw [sub_add_eq_sub_sub]
 
 /-- Pythagorean identity in the proof of `lem:completion` (Chen–Persson; Tropp–Webber 2023 §5):
@@ -159,7 +159,7 @@ theorem frobSq_error [Fintype n] (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ +
   rw [error_decomp Q Qp Ψ A hQ hcomp hG₁,
     frobSq_sub_of_frobInner_eq_zero _ _ (by
       rw [frobInner_comm]; exact frobInner_mul_residual hQ _ A),
-    frobSq_mul_left_of_orthonormal hQ]
+    frobSq_mul_left_of_orthonormal hQ.transpose_mul_self]
 
 /-- `‖Q⊥ᵀ E‖_F² = ‖E‖_F²` (Chen–Persson, end of the proof of `lem:completion` and proof of
 `lem:tGN-core`, `‖B‖_F = ‖A⊥‖_F`). Atlas `sketched-regression`.
@@ -168,7 +168,7 @@ theorem frobSq_transpose_mul_residual [Fintype n] [DecidableEq r] (hQ : HasOrtho
     (hQp : HasOrthonormalCols Qp) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) :
     frobSq (Qpᵀ * residual Q A) = frobSq (residual Q A) := by
   conv_rhs => rw [residual_eq_mul_transpose_mul_residual hQ hcomp A]
-  rw [frobSq_mul_left_of_orthonormal hQp]
+  rw [frobSq_mul_left_of_orthonormal hQp.transpose_mul_self]
 
 /-- Deterministic core of `lem:tGN-core` and `eq:tGN-fitted-core` (Chen–Persson): the noise
 term `E_core = (ΨᵀQ)† Ψᵀ A⊥` equals `G₁† G₂ B` with `G₁ = ΨᵀQ`, `G₂ = ΨᵀQ⊥`, `B = Q⊥ᵀ A⊥`, where
@@ -199,6 +199,7 @@ theorem specNorm_transpose_mul_residual [Fintype n] [DecidableEq m] [DecidableEq
     {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q) {Qp : Matrix m r ℝ} (hQp : HasOrthonormalCols Qp)
     (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) (A : Matrix m n ℝ) :
     specNorm (Qpᵀ * residual Q A) = specNorm (residual Q A) :=
-  specNorm_transpose_mul_of_eq_mul hQp (residual_eq_mul_transpose_mul_residual hQ hcomp A)
+  specNorm_transpose_mul_of_eq_mul hQp.transpose_mul_self
+    (residual_eq_mul_transpose_mul_residual hQ hcomp A)
 
 end NLAlib

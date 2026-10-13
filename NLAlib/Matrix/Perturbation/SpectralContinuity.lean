@@ -20,7 +20,7 @@ Source: finite sums, products, and the continuous square root;
 atlas norm-lipschitz (cutoff helper). -/
 theorem continuous_frobNorm_array {ι κ : Type*} [Fintype ι] [Fintype κ] :
     Continuous (fun G : ι → κ → ℝ => frobNorm (Matrix.of G)) := by
-  unfold frobNorm frobSq frobInner
+  simp only [frobNorm, frobSq, frobInner_eq_sum_mul]
   fun_prop
 
 /-- The smallest singular value is continuous on finite matrix arrays.

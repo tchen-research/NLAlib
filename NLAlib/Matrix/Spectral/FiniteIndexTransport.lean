@@ -100,19 +100,20 @@ theorem IsBestRankApprox.frobSq_sub_eq_bestRankFrobSq {k : ℕ} {A B : Matrix m 
     exact h.2 Z hZ
   · exact csInf_le hbdd hmem
 
-/-- Reindexing commutes with the general Moore–Penrose inverse, reversing
+/-- Reindexing commutes with the general Moore–Penrose inverse (over `ℝ` or `ℂ`), reversing
 row and column labels. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem moorePenroseInverse_reindex (A : Matrix m n ℝ) (em : m ≃ p) (en : n ≃ q) :
+theorem moorePenroseInverse_reindex {𝕜 : Type*} [RCLike 𝕜] (A : Matrix m n 𝕜) (em : m ≃ p)
+    (en : n ≃ q) :
     moorePenroseInverse (A.reindex em en) = (moorePenroseInverse A).reindex en em :=
   (isMoorePenroseInverse (A.reindex em en)).unique
     ((isMoorePenroseInverse A).submatrix em.symm en.symm)
 
-/-- The Moore–Penrose norm on general indices is zero at rank zero and the
+/-- The Moore–Penrose norm on general indices (over `ℝ` or `ℂ`) is zero at rank zero and the
 reciprocal of the last positive singular value otherwise. Horn–Johnson §7.3;
 atlas `pseudoinverse`. The list uses explicit `Fin(card)` normalization.
 atlas: pseudoinverse -/
-theorem specNorm_moorePenroseInverse_eq_fintype [DecidableEq m] [DecidableEq n]
-    (A : Matrix m n ℝ) :
+theorem specNorm_moorePenroseInverse_eq_fintype {𝕜 : Type*} [RCLike 𝕜] [DecidableEq m]
+    [DecidableEq n] (A : Matrix m n 𝕜) :
     specNorm (moorePenroseInverse A) = if A.rank = 0 then 0 else
       1 / singularValues (A.reindex (Fintype.equivFin m) (Fintype.equivFin n)) (A.rank - 1) := by
   have h := specNorm_moorePenroseInverse_eq

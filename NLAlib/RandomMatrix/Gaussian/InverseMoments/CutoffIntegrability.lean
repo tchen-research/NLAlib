@@ -97,7 +97,7 @@ theorem integrable_coordinate_mul_test_mul_unshiftedGramGradient_single_gaussian
     Finset.single_le_sum (fun i' _ => Finset.sum_nonneg fun j' _ => sq_nonneg (G i' j'))
       (Finset.mem_univ i)
   have hEsq : G i j ^ 2 ≤ frobSq (Matrix.of G) := by
-    simpa only [frobSq, frobInner, Matrix.of_apply, ← pow_two] using hrowsq.trans hfullsq
+    simpa only [frobSq, frobInner_eq_sum_mul, Matrix.of_apply, ← pow_two] using hrowsq.trans hfullsq
   have hEabs : |G i j| ≤ 1 + frobSq (Matrix.of G) := by
     apply (sq_le_sq₀ (abs_nonneg _) (by positivity : 0 ≤ 1 + frobSq (Matrix.of G))).mp
     rw [sq_abs]

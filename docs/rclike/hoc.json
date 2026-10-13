@@ -1,0 +1,6207 @@
+{
+ "per_file": {
+  "NLAlib/Krylov/Spectral/PowerMethod.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spectral/CharacteristicPolynomial.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spectral/Ritz.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spectral/SubspaceIteration.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spectral/QRAlgorithm.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spectral/MeasurableRitz.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Solvers/GMRES.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Solvers/GMRESArnoldi.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Solvers/PolynomialMethods.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Solvers/CGRecurrence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Solvers/Preconditioned.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Solvers/Minimiser.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Solvers/CG.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Quadrature/LipschitzQuadrature.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Quadrature/GaussQuadrature.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Quadrature/SpectralMeasure.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Quadrature/JacobiFraction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Quadrature/ExponentialQuadrature.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Quadrature/AnalyticQuadrature.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Quadrature/Jacobi.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/MatrixFunctions/FunctionApprox.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Processes/Arnoldi.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Processes/ArnoldiProcess.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Processes/Bidiagonalization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Processes/LanczosRecurrence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Processes/Lanczos.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spaces/ComplexBlock.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spaces/Grade.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spaces/Block.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spaces/Polynomial.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Krylov/Spaces/Basic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/PolynomialMethods/ComplexPolynomialFilter.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/PolynomialMethods/ComplexPolynomialFilterBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/PolynomialMethods/PolynomialFilter.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 4,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Structural/PowerIteration.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Structural/RangeFinder.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RandomizedSVD/Assembly.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RandomizedSVD/RSVD.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RandomizedSVD/OptimalError.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RandomizedSVD/GaussianSketch.lean": {
+   "uses": true,
+   "raw": 5,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Nystrom/Structural.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Nystrom/RawGaussianNystrom.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Nystrom/SketchedRegression.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Nystrom/RawNystromBridge.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Nystrom/GaussianNystrom.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Nystrom/GeneralizedNystrom.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Sampling/ComplexVolumeSamplingError.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Sampling/ComplexVolumeSampling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Sampling/VolumeSampling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Sampling/ComplexVolumeSamplingLaw.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Sampling/VolumeCounting.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Sampling/ComplexVolumeSamplingEndpoints.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RangeFinding/ExpectedPower.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RangeFinding/ComplexSubspaceAngles.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RangeFinding/SubspaceConvergence.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RangeFinding/SpectralRangeFinder.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/RangeFinding/ComplexSubspaceConvergence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Cholesky/CholeskyPivot.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Cholesky/ComplexCholeskyHistories.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Cholesky/TraceDrift.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Cholesky/CholeskyHistories.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Cholesky/TracePotential.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Cholesky/PartialCholesky.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Cholesky/ComplexRandomPivotedCholesky.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/LowRank/Cholesky/RandomPivotedCholesky.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Interpolation/Lagrange.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Interpolation/AnalyticInterpolation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Chebyshev/Core.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Chebyshev/Growth.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Chebyshev/LanczosFilterMean.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Chebyshev/EvenChebyshevFilter.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Chebyshev/CosineBasis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Chebyshev/ChebyshevAliasing.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/Chebyshev/Markov.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/FunctionApproximation/BernsteinEllipse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/FunctionApproximation/Approximation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/FunctionApproximation/AnalyticCoefficients.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/FunctionApproximation/Exponential.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/FunctionApproximation/Monomial.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/FunctionApproximation/AnalyticApproximation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/FunctionApproximation/AnalyticFourier.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/Jackson.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/SawtoothZeros.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/JacksonPolynomial.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/SawtoothDerivative.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/SquareWave.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/Minimax.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/SineBasis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/JacksonPeriodic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/SawtoothSign.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/SawtoothNorm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/SawtoothSquareWave.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Polynomial/BestApproximation/SawtoothInterpolation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/OrderedSimultaneousTriangularization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexBestRankApproximation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SmallTriangularSimilarity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/TraceEigenvalues.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealNormalBlocks.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/Inertia.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/IndefiniteCongruence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/IrreducibleDiagonalDominance.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealInvariantSubspace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SchurTriangularization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/MatrixPowerBounded.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenvectorDeflationSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SingularValueScaling.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexVolumeSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealSpectrumSchur.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SylvesterSimilarity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/PowerBoundedOrbits.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ProductSingularValues.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EckartYoung.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealOrthogonalDescent.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SylvesterCriterion.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexQZ.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SimultaneousToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingConverseToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SchurDensity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SvdBlocks.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/DiagonalizablePrincipal.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SquareSingularBasis.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenvectorDeflationBlocks.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/GershgorinToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/GershgorinCounting.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenframeDecomposition.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexVariationalPrinciple.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealDilationSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/PrimaryTriangularization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SimultaneousTriangularBasis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/LeftRightEigenvectorToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexSingularTransport.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealSimilarityDescent.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/TracePowerBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/Core.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealSchurSimilarity.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/OrderedSchur.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/NormalIntertwining.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SchurToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/DefiniteCongruence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/CommutingSpectra.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealPencilTriangularization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/OstrowskiCongruence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RankOneEigenvalue.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/PrincipalMinorPSD.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealNormalForm.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SingularInterlacing.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexVariationalExtrema.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/GershgorinBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexRayleigh.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingSymmetricConverse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/Weyl.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/HaynsworthInertia.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SpectralMinimum.lean": {
+   "uses": false,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealSchurCanonical.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/DiagonalizableToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SingularValueSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/LowRankInterlacing.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/NormalBlocks.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/CourantFischer.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SylvesterToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SVD.lean": {
+   "uses": false,
+   "raw": 7,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 2,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/MatrixPowerConvergence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexGramTruncation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/QuasiTriangular.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SylvesterQualitative.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ProductWeyl.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenvectorDeflation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/AdjugateRankOne.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SeparableCharpolyDensity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/Eigenframes.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SylvesterCriterionToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SimultaneousNormal.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/Diagonalizable.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealNormalSpecializations.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 3,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/PowerRayleigh.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/DiagonalizableBlocks.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/NormalToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingStrictConstruction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/NormalSimilarity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingRestoration.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/GramSingularValues.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealQZ.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SingularInterlacingToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/CharpolySimplicity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/QuasiPencilBasis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexSquareSingularBasis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SylvesterBlocks.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingReindex.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SvdPowers.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/MatrixPowerBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/QuadraticProbe.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenvectorPairing.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/NormalSpectral.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingConverse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexRectangularSVD.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealSchur.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SpectrumCountContinuity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealSchurPlane.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingDeterminants.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SpectrumCount.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SchurFrobenius.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SpectralBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SimultaneousDiagonalization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealPlaneSchur.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SemidefiniteCongruence.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/CongruenceToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/DiagonalDominanceStability.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/OrderedSymmetricDiagonalization.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/DiagonalDominanceCorollaries.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SigmaMinTransport.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenvectorDeflationConverse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SingularValueInvariance.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealInvariantPlane.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SimultaneousTriangularization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/PrincipalMinors.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/SimultaneousOrthogonal.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenvalueEquality.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/GeneralizedEigenPairing.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/GeneralizedEigenDecay.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/ComplexEckartYoung.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/InterlacingInduction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenvalueOrder.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/GershgorinBasic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/MatrixPowerToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/EigenvalueSimplicity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/MatrixPowerReal.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/RealDilation.lean": {
+   "uses": false,
+   "raw": 3,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/DefinitePairCalculus.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/NormalRectangularIntertwining.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Spectral/FiniteIndexTransport.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/IntrinsicDimension.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/TraceExpBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/ExtremeEigenvalues.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/FunctionalCalculusEigenvalues.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/JensenBlockCalculus.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/HermitianCalculus.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/RealComplexCFC.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/ExpLogPosDef.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/DiagonalFilter.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/DilationIdentities.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/ExpLog.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/TracePowerConvexity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/CFCQuadratic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/PolynomialCalculus.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/InverseCalculus.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/ComplexDiagonalFilter.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/PolynomialSeries.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/CFCTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/PolynomialIntertwining.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/UnitaryCalculus.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Functions/PerspectiveSqrtNormalization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/ComplementaryRank.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/GeneralizedSchurComplement.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/MoorePenroseProjector.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/Pseudoinverse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/Dilation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/SchurRank.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/CauchyBinetAdjoint.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/RankBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/MoorePenroseTransformations.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/DeterminantDiagonalUpdate.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/SingletonInverse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/SchurComplement.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/LeastSquares.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/GramVanishing.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/PositiveDefiniteClosure.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/MoorePenrose.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/ComplexFullRowInverse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/PenroseIdentities.lean": {
+   "uses": false,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/ComplexPosSemidefTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/QuadForm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/PSDDuality.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/RankInequalities.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/Gram.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/PositiveSemidefiniteSeries.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/JacobiMinor.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/JacobiBlockMinor.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/MoorePenroseRank.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/CoordinateUpdates.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/CauchyBinet.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/ComplementaryNullities.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Basic/Selection.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardDeterminantLower.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MinkowskiDeterminant.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/LidskiiToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/FischerDeterminant.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/BlockQuadratic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/TraceTail.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/KyFanAttainment.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 2,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/SeparatingPSDVector.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/BlockContraction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationStochastic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationWeights.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/KyFan.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HermitianPartConverse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/QuadraticConditionBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/TraceYoung.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/ComplexTraceTail.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/SchurHornProjection.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationConvex.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/Majorization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/TraceInverseConvexity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/ColumnDeterminantBound.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/TraceMeanValue.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/FiniteExponentialGram.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/CompressionDeterminant.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/Lidskii.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/Schur.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/PrincipalMinorProducts.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/Mirsky.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HermitianPart.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/SchurHornWeights.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/PrincipalMinorProductBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationProperties.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MirskyPadded.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/VonNeumann.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/StrictRelativeSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardExponential.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationSupport.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/BlockContractionToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/PlaneRotationSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HornPowerSums.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/PrincipalOverlapDeterminant.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/OverlappingBlockDeterminant.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/DeterminantRoot.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationWeakSupport.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationHinges.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardDeterminant.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/PlaneRotationDerivative.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/SchurHornResidual.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/PositiveSpectralEndpoints.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/DeterminantConvexityToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/BlockStrictContraction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 2,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/KyFanToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardDominanceCounterexample.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/Wielandt.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HornProductToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardInverse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/PlaneRotationCoordinates.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/SzaszDeterminant.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/DeterminantInequalityToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HermitianPartToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardPowerOrder.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/MajorizationHLP.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/KyFanSums.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/InverseDiagonalMinor.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardPowerSeries.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardMinimumSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/PlaneRotation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/TraceExpMonotone.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/HadamardOrder.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/ComplexDiagonalMajorization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/Kantorovich.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/KyFanNormToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/KyFanNorms.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/SchurHorn.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 1
+  },
+  "NLAlib/Matrix/Inequalities/RelativeSpectrum.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/SchurHornDescent.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/TracePowers.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Inequalities/LogDetConcavity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/GramSchmidt.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 1
+  },
+  "NLAlib/Matrix/Factorizations/GramColumnExchange.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/Cholesky.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/Hessenberg.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/Givens.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/Procrustes.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/LU.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/CholeskyDefinite.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/CholeskySemidefinite.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/PolarToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/PolarDecomposition.lean": {
+   "uses": true,
+   "raw": 3,
+   "rw_hyp": 6,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/ComplexCholeskyPivot.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/ScaledOrthogonal.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/RankRevealingTrailing.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/MaximumVolumeColumns.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/LULeadingRank.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/MaximumVolumeTriangularQR.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/Triangular.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/MaximumVolumeRankAdapted.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/Householder.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/LURowInclusion.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/QRCompletion.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/StrongRankRevealingQR.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/ProcrustesRotations.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/PolarIntertwining.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/RankRevealingLeading.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/CholeskyToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/MaximumVolumeQR.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/QR.lean": {
+   "uses": true,
+   "raw": 9,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/CholeskyStep.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/MaximumVolumeBudget.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/CholeskyCharacterization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/ProcrustesToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/QRConsequences.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/NearestPolar.lean": {
+   "uses": true,
+   "raw": 3,
+   "rw_hyp": 2,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/QRExistence.lean": {
+   "uses": false,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Factorizations/QRDecomposition.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/InversePowerConcavity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/DeterminantDerivative.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/GramSoftMinSpectral.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/GramCutoffCalculus.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/UnshiftedGramSoftMin.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/InversePowerGrowth.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/GramSoftMin.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/GramTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/DeterminantDerivativeFinite.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/InversePowerLimit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Calculus/InversePowerLaplacianLimit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SymmetricGauge.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenNorms.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/InvariantNormRepresentation.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/Reindex.lean": {
+   "uses": false,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/ComplexFrobenius.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/NuclearPSD.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SpectralNormBounds.lean": {
+   "uses": false,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenInvariant.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/ColumnNorms.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenSingularCoefficients.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenComparison.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/Core.lean": {
+   "uses": false,
+   "raw": 6,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/RectangularDiagonal.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/NuclearGram.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/BlockNormBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/Net.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenProducts.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/RealComplexNorm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/InvariantNormToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/NuclearNorm.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/FanDominance.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/ComplexFrobeniusTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/EntryBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenEndpoints.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/NuclearHermitian.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/RankNorm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/Schatten.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/InvariantNorm.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/EuclideanOperatorBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/SchattenDuality.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/RectangularDiagonalPermutation.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/KyFanNorm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Norms/RayleighNorm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/CoupledNormBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SimpleEigenvalueToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/RayleighDerivative.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/DavisKahanPopulation.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/DavisKahanFrames.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/LeastSquaresToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SimpleEigenvalueReal.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SpectralFrameWeights.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SimpleEigenvaluePerturbation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/PseudoinverseSpectralPerturbation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SimpleEigenvalueSchurFunction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SimpleEigenvalueSchurSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/LeastSquaresAngle.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/WedinCoupled.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/Conditioning.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/DavisKahanBounds.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/GoldenRatioBlock.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/DavisKahanToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/WedinBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/LeastSquaresCoordinateBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/PseudoinverseNormControl.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/PseudoinverseDifference.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/BauerFike.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/EigenvalueResidualToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/PopulationTraceGap.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SpectralWeightGap.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SpectralContinuity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/BauerFikeAbsolute.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/PseudoinversePerturbation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/EigenvaluePencil.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/DavisKahan.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/LeastSquaresGeometry.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/GramSingularBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/LeastSquaresScalar.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SimpleEigenvalueImplicitBranch.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/ComplexEmbedding.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/WedinResidual.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/PseudoinverseProjectors.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/InversePerturbation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/ResidualBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/OptimalErrorContinuity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/Wedin.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/LeastSquaresPurePerturbation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/ConditionNumberToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/EigenvaluePerturbationToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SimpleEigenvaluePersistence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/DavisKahanTop.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/EigenvaluePerturbation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/EigenspaceProjector.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/WedinFiniteIndex.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/PseudoinverseBlocks.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/DistanceToSingularity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SingularFrames.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/EigenvalueVariation.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/HoffmanWielandtNormal.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/PseudoinverseFrobeniusPerturbation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/Sylvester.lean": {
+   "uses": false,
+   "raw": 4,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/LeastSquaresEuclidean.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/InversePerturbationBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/ConditionNumber.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/LeastSquaresPerturbation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/EigenvalueTrace.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SimpleEigenvalueContinuousBranch.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/SingularFrameTails.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Perturbation/MapConditioning.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/JointTensor.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/VariationalTraceExp.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/GeneralizedKlein.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/LiebConcavity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/LiebTraceFunction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/LoewnerHeinz.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/EntropyJointConvex.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/VariationalTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/GoldenThompson.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/JointTensorRepresentation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/JensenReflectionAlgebra.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/JensenIsometricCompression.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/EntropyNonnegative.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/Basic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/TraceExpConvex.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/CoordinatePinching.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/OperatorJensen.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/PerspectiveConvex.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/OperatorTheory/LogOperatorConcave.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/KroneckerIdentities.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/Hessenberg.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/Measurable.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/GramSoftMinMeasurable.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/WalshFin.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/StructuredMatrices.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/CauchyDeterminantFinite.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/KroneckerSpectrum.lean": {
+   "uses": false,
+   "raw": 5,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/StructuredToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/KroneckerSingularValues.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/CirculantCharacterization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/SpectralMeasurable.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/KroneckerToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/KroneckerNormRank.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Structured/Walsh.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/OrthogonalSumCompletion.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/Projections.lean": {
+   "uses": true,
+   "raw": 14,
+   "rw_hyp": 3,
+   "unfold": 1
+  },
+  "NLAlib/Matrix/Subspaces/ProjectionGaps.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 2,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/Stiefel.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/FrameContractions.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexVolumeProjectorTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ProjectorTrace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexObliqueBlocks.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/CSToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexFrameTransport.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ObliqueProjectionCanonical.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ObliqueProjectionSpectrum.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/InverseOverlapGram.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/PrincipalAngleDefinitions.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexIdempotentRealForm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/RectangularGramIsometry.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/FrameFourthContractions.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ObliqueCanonicalSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/PrincipalAngleBridges.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ObliqueProjectionNorms.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexObliqueCanonical.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ObliqueProjectionSecant.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexGramIsometry.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/CanonicalCS.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 2,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexProjectionBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ProjectionFrobeniusGaps.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexVolumeProjection.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ObliqueProjectionBlocks.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ObliqueFrameInverse.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexGramColumnDeterminant.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/PolarFrame.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/GramIsometry.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/PrincipalAngles.lean": {
+   "uses": true,
+   "raw": 4,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/OrthogonalProducts.lean": {
+   "uses": true,
+   "raw": 4,
+   "rw_hyp": 4,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/PrincipalAngleMaximum.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/OrthonormalBasisMatrix.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexCSRank.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexProjectionComposition.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/OrthogonalBasisChange.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/CanonicalQR.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/PrincipalAngleTangent.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexCSToolkit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexCSDecomposition.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ObliqueComplementSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ComplexObliqueSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/CSDecomposition.lean": {
+   "uses": true,
+   "raw": 3,
+   "rw_hyp": 3,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/OrthogonalBlockCompletion.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/GramColumnDeterminant.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/UnitaryBlockCompletion.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/PrincipalAngleToolkit.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean": {
+   "uses": true,
+   "raw": 3,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/CSRank.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/ProjectorBlocks.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Matrix/Subspaces/GraphTangent.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 2,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Concentration/LipschitzConcentration.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Concentration/LogSobolev.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Concentration/LogSobolevCoverage.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Concentration/LogSobolevOneDim.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Concentration/LogSobolevHerbst.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Basic/CovarianceRepresentation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Basic/StandardVector.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Basic/StandardGaussian.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Calculus/OrnsteinUhlenbeck.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Calculus/Stein.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Calculus/OrnsteinUhlenbeckEntropyGrowth.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Calculus/OrnsteinUhlenbeckGrowth.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Calculus/ProductIntegrationByParts.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Calculus/PolynomialGrowthIntegrationByParts.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Calculus/IntegrationByParts.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Calculus/OrnsteinUhlenbeckEntropy.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/SeriesKhintchine.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/ExpectationNormDiff.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/Khintchine.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/WickPairings.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/Isserlis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/SeriesSecondMoment.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/SeriesPolynomialMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/PolynomialLinearMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Moments/PositiveMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Comparison/GordonMinimax.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Comparison/Interpolation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Comparison/SlepianTails.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Comparison/SudakovFernique.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Gaussian/Comparison/Slepian.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Rademacher/RademacherSymmetry.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Rademacher/Core.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Rademacher/RademacherCube.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/UniversalBound.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/DiagonalCGF.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/TailAssembly.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/CutAverages.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/HansonWright.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/Geometry.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/LinearFormComparison.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/VectorProductComparison.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/SquaredProjections.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/QuadraticMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/Centering.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/GaussianProductIntegrability.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/Decoupling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/QuadraticForms/RademacherQuadraticMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/VarianceAdditivity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/IntrinsicChernoff.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/RademacherKhintchine.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/GaussianMgfCgf.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/IntrinsicHermitianBernstein.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/RademacherMgfCgf.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/SamplingWithoutReplacementTails.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/SamplingWithoutReplacement.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/IndependentSumSecondMoment.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/CgfIndependentReplacement.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/MatrixSeries.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/MatrixChernoff.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/TraceIntegrability.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/LiebJensen.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/GeneralizedLaplace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/ProbabilisticLieb.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/MasterBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/IntrinsicBernsteinExpectation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/Sampling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/HermitianSeries.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/MasterSumExponentialIntegrable.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/ExpectExtremaIntegrable.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/HermitianBernstein.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/LaplaceTails.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/PolynomialMoment.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/LaplaceExpectations.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/BernsteinMgfCgf.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/TraceCgfSubadditivity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/LiebIntegralPosDef.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/DilationVariance.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/MatrixBernstein.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/RademacherPolynomialMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/ChernoffMgfCgf.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/UniformIidSampling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/LiebRegularityShiftIntegrable.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Matrix/IntrinsicBernstein.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/TracePotentialStep.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/FreedmanGlobal.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/LocalSecondMomentBounded.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/LocalSecondMomentIntegral.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/VarianceBudget.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/TracePotential.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/ConditionalLiebPredictable.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/ConditionalCgf.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/Freedman.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/TracePotentialProcess.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/LocalSecondMoment.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/ConditionalLieb.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Martingales/LocalSecondMomentIndicator.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Basic/TailIntegral.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Basic/MatrixCalculus.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Basic/Net.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Basic/ScalarLaws.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Basic/ChernoffFunctions.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Basic/MatrixStatistics.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Entropy/EntropyTensorizationNonneg.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Entropy/Herbst.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Entropy/EntropyTensorization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Scalar/McDiarmid.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Concentration/Scalar/ScalarBernstein.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/SubGaussian/Moments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/SubGaussian/CenteredSquare.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/SubGaussian/EvenMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/SubGaussian/OrliczMGF.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/SubGaussian/ExpSquare.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/ChiSquare/ChiSquare.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/ChiSquare/DirectionalSquaredNorm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Probability/Sampling/FiniteSampling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Solvers/SketchAndProject/Core.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Solvers/Kaczmarz/Core.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Solvers/Kaczmarz/KaczmarzProbability.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Solvers/Kaczmarz/KaczmarzExtensions.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Solvers/Kaczmarz/KaczmarzRowSpace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Data/ExactRowSubset.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Data/MultisetPermutation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/UniformSamplingJensen.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/UniformProduct.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/BoundedDifferences.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/UniformSamplingCoupling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/ExponentialTailMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/NonnegativeSupermartingale.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/UniformCollision.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/UniformSamplingMarginals.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/UniformSamplingCounts.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/FiniteProductEvents.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/IndepExpSum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/SampleAverage.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Probability/Independence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Algebra/InterlacingInterpolation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Algebra/OffDiagonalSums.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Algebra/Polynomial.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Algebra/SignedCoefficients.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Algebra/DiagonalSums.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Algebra/InterlacingWeights.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Algebra/Intervals.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/PencilLine.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/OrderedCommonEigenvector.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/CommonEigenvector.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/ComapDimension.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/SeparatingRows.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/IsolatedCharpoly.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/Matrix/Mul.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/Matrix/Adjugate.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/Matrix/Triangular.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/LinearAlgebra/Matrix/PosSemidef.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Combinatorics/SubsetDeletionProduct.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Logic/Equiv.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/MonotoneDensity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/SmoothMeasureComparison.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/WeightedWeakDensity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/MapProd.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/TailComparison.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/MatrixConditionalExpectation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/WeakDensity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/ConditionalComparison.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/ConditionalParameterJensen.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/IntegrableSup.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/ConditionalJensen.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/Integral.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/MomentInterpolation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/IntegralSqrt.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/LocalWeakDensity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/IntegralUpdate.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/MeasureTheory/IntegralConvergence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Order/InterlacingDeletion.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/SchurTriangularization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/InverseConvexity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/InvariantCompression.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/ImplicitFunction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/OneSidedVariation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/LogPowerMean.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/TriangularBasis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/OrderedSchur.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/PencilTriangularization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/BernsteinParameter.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/ExpBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/FourierConvolution.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/FinitePowerSums.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/NormSumSq.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/PowerInequalities.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/OrderedSimultaneousSchur.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/RangeIsometry.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/FourierCircle.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/GeometricRate.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/OrthonormalEigenline.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/LipschitzApprox.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/Real.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/PowerBoundedEigen.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/DerivativeLimit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/FinitePairNorm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/OrthonormalCons.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/Lipschitz.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/SimultaneousTriangularization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/OrthonormalSum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/BinomialRootComparison.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/Matrix/Order.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/Matrix/QuadraticForm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/InnerProductSpace/GramSchmidt.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/InnerProductSpace/BlockCauchySchwarz.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/Calculus/IteratedDeriv.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/Calculus/MeanValue.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/Calculus/CompactTestSupport.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/SpecialFunctions/Gamma.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/ForMathlib/Analysis/Convex/Integral.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Spectral/SpectralSecondMoment.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Spectral/Deviation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Spectral/SketchRank.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Spectral/Gordon.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Spectral/SmallBall.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Spectral/Chevet.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Basic/LipschitzConcentration.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Basic/GaussianMatrix.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Basic/PolynomialGrowth.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Basic/Lipschitz.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Basic/LinearForms.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Invariance/Invariance.lean": {
+   "uses": false,
+   "raw": 14,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Invariance/LinearImage.lean": {
+   "uses": false,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Wishart/SimpleSpectrum.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Moments/ApproxMultiplication.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Moments/LogOverlap.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Moments/Conditioning.lean": {
+   "uses": false,
+   "raw": 10,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Moments/LogOverlapMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Moments/FourthMoment.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/Moments/SecondMoment.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/RegularizedApproximation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/LambdaMinTail.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/SpectralTail.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/Residual.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/OperatorHardEdge.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/SpectralProbe.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/ResolventLimit.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/SchurComplement.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/Mean.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/GaussianWeakInequality.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/CutoffIntegrability.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/Probe.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/HardEdgeEndpoint.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/WeakInequality.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/DiagonalLaw.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/GammaBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/FrobeniusMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/UnshiftedWeakInequality.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/CutoffDerivativeIntegrability.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/RegularizedIntegrability.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Gaussian/InverseMoments/OffDiagonal.lean": {
+   "uses": false,
+   "raw": 1,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/SubGaussian/SubGaussianRows.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/SubGaussian/SubGaussianJL.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Haar/HaarFrameMeasure.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/RandomMatrix/Haar/HaarQR.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/QuadraticForms/HutchinsonLaws.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Diagonal/DiagonalEstimator.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Spectral/RandomStartEndpoints.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Spectral/RandomStartLanczos.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Spectral/RandomStartPower.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Trace/HutchinsonTail.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Trace/Unbiased.lean": {
+   "uses": true,
+   "raw": 1,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Quadrature/SLQ.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Quadrature/SLQAnalytic.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Quadrature/SLQLipschitz.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Quadrature/SLQPositiveLowerBound.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Quadrature/SLQAnalyticSteps.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Estimation/Quadrature/SLQRademacher.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Gaussian/GaussianEmbedding.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/CountSketchTail.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/UniformSparse.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/CountSketchExpectation.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/CountSketch.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 1,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/SparseStack.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/SparseLaws.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/SparseEmbeddingTransport.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/SparseEmbedding.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/CountSketchMoments.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/SparseFiniteIndex.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/SparseStackLaw.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactConditionalMatrixTransfer.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactIIDMatrixError.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/DistributionBridges.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ConditionalBarycenter.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactMomentTransfer.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/SelectionKernel.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/TernaryCoordinateLaws.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/MomentTransfer.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/IndependentCopyLift.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactConditionalSupport.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactSelectionSymmetry.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactCoordinateSymmetry.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactSignActions.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactConditionalBarycenter.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ConvexOrder.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/SelectorMarginals.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/ExactColumnMarginals.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/IIDComparison/FillThinCoupling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/NamedBands.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/CoefficientBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/ScalarBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/LadderIteration.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/BandEnvelope.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Ladder.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/BandAssembly.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/EnvelopeArithmetic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/GlobalBands.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Directional/OccupationProfiles.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Directional/MarkedCoefficients.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Directional/OutputEnergy.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Directional/OccupationEnergy.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Directional/RestrictedBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Directional/SiteTransitions.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Directional/MarkedReindexing.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Directional/NormalizedBands.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Mixed/RowFactorization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Mixed/RestrictedBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Mixed/NormalizedBands.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/SynthesisBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/BlockDecomposition.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/AnalysisGram.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/MixedFactorization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/RowFactorization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/GramQuadratic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/OrbitCompression.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/SharedLegOperators.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/LabelledSlots.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/PreservingDiagonal.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/CrossContraction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/ZeroBlock.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/PatternWords.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/HardCoreEmbedding.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/MoveOrbits.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/CrossCoordinates.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/NormalizedBands.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/AbstractContraction.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/LegalTransitions.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Light/GradeNorm.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/MarkedSites.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/LoweringBound.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/RowFactorization.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/CreationEnergy.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/AnalysisOperators.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/PreservingGram.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/DemotionEnergy.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/DiagonalEnergy.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/PreservingBound.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/GradeProjections.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/RaisingBound.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/NormalizedBands.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/Bands/Heavy/OccupationIdentity.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/RoundedScales.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/IndependentFrame.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/MomentParameters.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/FrameOfMatrix.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/GramTail.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/SparseStackTheorem.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/SparseStackLimitedIndependence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/MomentOrder.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/Assembly.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/UniformSparseTheorem.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/Endgame.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/ParameterConstants.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/Frame.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/GramError.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/UniformSparseRoundedBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/UniformSparseLimitedIndependence.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/MomentMethod/UniformSparseTail.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/OccupationPattern.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/LadderMatrices.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/VacuumMoment.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/ProductBasis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/TensorOperators.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/TernaryJacobi.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/WeightedBasis.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/SiteKernels.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/FockSpace.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FockModel/LadderWords.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FiniteLaw/Expectation.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FiniteLaw/LocalMoments.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FiniteLaw/BinaryProduct.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FiniteLaw/ToMeasure.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FiniteLaw/Uniform.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sparse/FiniteLaw/IndependentProduct.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Properties/ApproxMatrixMultiplication/ApproxMultiplication.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Properties/JL/JL.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Properties/SubspaceEmbedding/Basic.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Properties/SubspaceEmbedding/Gram.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Properties/SubspaceEmbedding/SubspaceEmbedding.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Properties/SubspaceEmbedding/SingularValueEmbedding.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Properties/SubspaceEmbedding/FiniteIndexTransport.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sampling/Leverage.lean": {
+   "uses": true,
+   "raw": 0,
+   "rw_hyp": 2,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sampling/LeverageSampling.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sampling/SamplingMultiplication.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Sampling/SamplingMultiplicationBounds.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Structured/SRHTWithReplacement.lean": {
+   "uses": true,
+   "raw": 3,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Structured/SRHTFlattening.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Structured/SRHTParameters.lean": {
+   "uses": false,
+   "raw": 0,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Structured/SRHTCore.lean": {
+   "uses": true,
+   "raw": 2,
+   "rw_hyp": 0,
+   "unfold": 0
+  },
+  "NLAlib/Sketching/Structured/SRHT.lean": {
+   "uses": true,
+   "raw": 6,
+   "rw_hyp": 0,
+   "unfold": 0
+  }
+ },
+ "files": {
+  "raw": [
+   "NLAlib/Krylov/Spectral/CharacteristicPolynomial.lean",
+   "NLAlib/Krylov/Spectral/SubspaceIteration.lean",
+   "NLAlib/Krylov/Spectral/QRAlgorithm.lean",
+   "NLAlib/Krylov/Solvers/GMRES.lean",
+   "NLAlib/Krylov/Solvers/Preconditioned.lean",
+   "NLAlib/Krylov/Quadrature/GaussQuadrature.lean",
+   "NLAlib/Krylov/Spaces/Block.lean",
+   "NLAlib/LowRank/RandomizedSVD/GaussianSketch.lean",
+   "NLAlib/LowRank/RangeFinding/SpectralRangeFinder.lean",
+   "NLAlib/Matrix/Spectral/ProductSingularValues.lean",
+   "NLAlib/Matrix/Spectral/SvdBlocks.lean",
+   "NLAlib/Matrix/Spectral/SpectralMinimum.lean",
+   "NLAlib/Matrix/Spectral/CourantFischer.lean",
+   "NLAlib/Matrix/Spectral/SVD.lean",
+   "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean",
+   "NLAlib/Matrix/Spectral/SemidefiniteCongruence.lean",
+   "NLAlib/Matrix/Spectral/SingularValueInvariance.lean",
+   "NLAlib/Matrix/Spectral/SimultaneousOrthogonal.lean",
+   "NLAlib/Matrix/Spectral/RealDilation.lean",
+   "NLAlib/Matrix/Functions/PolynomialCalculus.lean",
+   "NLAlib/Matrix/Basic/MoorePenroseTransformations.lean",
+   "NLAlib/Matrix/Basic/LeastSquares.lean",
+   "NLAlib/Matrix/Basic/PenroseIdentities.lean",
+   "NLAlib/Matrix/Inequalities/VonNeumann.lean",
+   "NLAlib/Matrix/Inequalities/PlaneRotationDerivative.lean",
+   "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean",
+   "NLAlib/Matrix/Inequalities/SchurHorn.lean",
+   "NLAlib/Matrix/Inequalities/RelativeSpectrum.lean",
+   "NLAlib/Matrix/Inequalities/SchurHornDescent.lean",
+   "NLAlib/Matrix/Factorizations/Hessenberg.lean",
+   "NLAlib/Matrix/Factorizations/PolarDecomposition.lean",
+   "NLAlib/Matrix/Factorizations/MaximumVolumeTriangularQR.lean",
+   "NLAlib/Matrix/Factorizations/Householder.lean",
+   "NLAlib/Matrix/Factorizations/QRCompletion.lean",
+   "NLAlib/Matrix/Factorizations/MaximumVolumeQR.lean",
+   "NLAlib/Matrix/Factorizations/QR.lean",
+   "NLAlib/Matrix/Factorizations/NearestPolar.lean",
+   "NLAlib/Matrix/Factorizations/QRExistence.lean",
+   "NLAlib/Matrix/Norms/InvariantNormRepresentation.lean",
+   "NLAlib/Matrix/Norms/Reindex.lean",
+   "NLAlib/Matrix/Norms/SpectralNormBounds.lean",
+   "NLAlib/Matrix/Norms/SchattenInvariant.lean",
+   "NLAlib/Matrix/Norms/Core.lean",
+   "NLAlib/Matrix/Perturbation/SpectralFrameWeights.lean",
+   "NLAlib/Matrix/Perturbation/EigenspaceProjector.lean",
+   "NLAlib/Matrix/Perturbation/EigenvalueVariation.lean",
+   "NLAlib/Matrix/Perturbation/Sylvester.lean",
+   "NLAlib/Matrix/Perturbation/EigenvalueTrace.lean",
+   "NLAlib/Matrix/Structured/KroneckerSpectrum.lean",
+   "NLAlib/Matrix/Structured/KroneckerNormRank.lean",
+   "NLAlib/Matrix/Subspaces/Projections.lean",
+   "NLAlib/Matrix/Subspaces/InverseOverlapGram.lean",
+   "NLAlib/Matrix/Subspaces/CanonicalCS.lean",
+   "NLAlib/Matrix/Subspaces/ObliqueProjectionBlocks.lean",
+   "NLAlib/Matrix/Subspaces/GramIsometry.lean",
+   "NLAlib/Matrix/Subspaces/PrincipalAngles.lean",
+   "NLAlib/Matrix/Subspaces/OrthogonalProducts.lean",
+   "NLAlib/Matrix/Subspaces/CanonicalQR.lean",
+   "NLAlib/Matrix/Subspaces/PrincipalAngleTangent.lean",
+   "NLAlib/Matrix/Subspaces/CSDecomposition.lean",
+   "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean",
+   "NLAlib/ForMathlib/LinearAlgebra/Matrix/Triangular.lean",
+   "NLAlib/RandomMatrix/Gaussian/Invariance/Invariance.lean",
+   "NLAlib/RandomMatrix/Gaussian/Invariance/LinearImage.lean",
+   "NLAlib/RandomMatrix/Gaussian/Moments/Conditioning.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/Residual.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/SchurComplement.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/Mean.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/Probe.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/DiagonalLaw.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/OffDiagonal.lean",
+   "NLAlib/Estimation/Trace/Unbiased.lean",
+   "NLAlib/Sketching/Structured/SRHTWithReplacement.lean",
+   "NLAlib/Sketching/Structured/SRHTFlattening.lean",
+   "NLAlib/Sketching/Structured/SRHTCore.lean",
+   "NLAlib/Sketching/Structured/SRHT.lean"
+  ],
+  "raw_only": [
+   "NLAlib/Krylov/Spectral/QRAlgorithm.lean",
+   "NLAlib/Krylov/Solvers/Preconditioned.lean",
+   "NLAlib/Matrix/Spectral/SpectralMinimum.lean",
+   "NLAlib/Matrix/Spectral/SVD.lean",
+   "NLAlib/Matrix/Spectral/SemidefiniteCongruence.lean",
+   "NLAlib/Matrix/Spectral/RealDilation.lean",
+   "NLAlib/Matrix/Functions/PolynomialCalculus.lean",
+   "NLAlib/Matrix/Basic/PenroseIdentities.lean",
+   "NLAlib/Matrix/Inequalities/VonNeumann.lean",
+   "NLAlib/Matrix/Inequalities/PlaneRotationDerivative.lean",
+   "NLAlib/Matrix/Inequalities/RelativeSpectrum.lean",
+   "NLAlib/Matrix/Inequalities/SchurHornDescent.lean",
+   "NLAlib/Matrix/Factorizations/QRExistence.lean",
+   "NLAlib/Matrix/Norms/Reindex.lean",
+   "NLAlib/Matrix/Norms/SpectralNormBounds.lean",
+   "NLAlib/Matrix/Norms/Core.lean",
+   "NLAlib/Matrix/Perturbation/EigenspaceProjector.lean",
+   "NLAlib/Matrix/Perturbation/Sylvester.lean",
+   "NLAlib/Matrix/Perturbation/EigenvalueTrace.lean",
+   "NLAlib/Matrix/Structured/KroneckerSpectrum.lean",
+   "NLAlib/Matrix/Structured/KroneckerNormRank.lean",
+   "NLAlib/Matrix/Subspaces/InverseOverlapGram.lean",
+   "NLAlib/ForMathlib/LinearAlgebra/Matrix/Triangular.lean",
+   "NLAlib/RandomMatrix/Gaussian/Invariance/Invariance.lean",
+   "NLAlib/RandomMatrix/Gaussian/Invariance/LinearImage.lean",
+   "NLAlib/RandomMatrix/Gaussian/Moments/Conditioning.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/Residual.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/SchurComplement.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/Mean.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/Probe.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/DiagonalLaw.lean",
+   "NLAlib/RandomMatrix/Gaussian/InverseMoments/OffDiagonal.lean"
+  ],
+  "rw_hyp": [
+   "NLAlib/Krylov/Spaces/Block.lean",
+   "NLAlib/LowRank/PolynomialMethods/PolynomialFilter.lean",
+   "NLAlib/LowRank/Nystrom/Structural.lean",
+   "NLAlib/Matrix/Spectral/RealNormalForm.lean",
+   "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean",
+   "NLAlib/Matrix/Spectral/RealNormalSpecializations.lean",
+   "NLAlib/Matrix/Basic/MoorePenroseProjector.lean",
+   "NLAlib/Matrix/Inequalities/KyFanAttainment.lean",
+   "NLAlib/Matrix/Inequalities/SchurHornProjection.lean",
+   "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean",
+   "NLAlib/Matrix/Factorizations/Procrustes.lean",
+   "NLAlib/Matrix/Factorizations/PolarDecomposition.lean",
+   "NLAlib/Matrix/Factorizations/QR.lean",
+   "NLAlib/Matrix/Factorizations/NearestPolar.lean",
+   "NLAlib/Matrix/Norms/NuclearHermitian.lean",
+   "NLAlib/Matrix/Perturbation/DavisKahan.lean",
+   "NLAlib/Matrix/Subspaces/Projections.lean",
+   "NLAlib/Matrix/Subspaces/ProjectionGaps.lean",
+   "NLAlib/Matrix/Subspaces/FrameContractions.lean",
+   "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean",
+   "NLAlib/Matrix/Subspaces/CanonicalCS.lean",
+   "NLAlib/Matrix/Subspaces/OrthogonalProducts.lean",
+   "NLAlib/Matrix/Subspaces/CSDecomposition.lean",
+   "NLAlib/Matrix/Subspaces/OrthogonalBlockCompletion.lean",
+   "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean",
+   "NLAlib/Matrix/Subspaces/CSRank.lean",
+   "NLAlib/Matrix/Subspaces/GraphTangent.lean",
+   "NLAlib/Estimation/Trace/Unbiased.lean",
+   "NLAlib/Sketching/Sparse/CountSketch.lean",
+   "NLAlib/Sketching/Sampling/Leverage.lean"
+  ],
+  "break_direct": [
+   "NLAlib/Krylov/Spaces/Block.lean",
+   "NLAlib/LowRank/PolynomialMethods/PolynomialFilter.lean",
+   "NLAlib/LowRank/Nystrom/Structural.lean",
+   "NLAlib/Matrix/Spectral/RealNormalForm.lean",
+   "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean",
+   "NLAlib/Matrix/Spectral/RealNormalSpecializations.lean",
+   "NLAlib/Matrix/Basic/MoorePenroseProjector.lean",
+   "NLAlib/Matrix/Inequalities/KyFanAttainment.lean",
+   "NLAlib/Matrix/Inequalities/SchurHornProjection.lean",
+   "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean",
+   "NLAlib/Matrix/Inequalities/SchurHorn.lean",
+   "NLAlib/Matrix/Factorizations/GramSchmidt.lean",
+   "NLAlib/Matrix/Factorizations/Procrustes.lean",
+   "NLAlib/Matrix/Factorizations/PolarDecomposition.lean",
+   "NLAlib/Matrix/Factorizations/QR.lean",
+   "NLAlib/Matrix/Factorizations/NearestPolar.lean",
+   "NLAlib/Matrix/Norms/NuclearHermitian.lean",
+   "NLAlib/Matrix/Perturbation/DavisKahan.lean",
+   "NLAlib/Matrix/Subspaces/Projections.lean",
+   "NLAlib/Matrix/Subspaces/ProjectionGaps.lean",
+   "NLAlib/Matrix/Subspaces/FrameContractions.lean",
+   "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean",
+   "NLAlib/Matrix/Subspaces/CanonicalCS.lean",
+   "NLAlib/Matrix/Subspaces/OrthogonalProducts.lean",
+   "NLAlib/Matrix/Subspaces/CSDecomposition.lean",
+   "NLAlib/Matrix/Subspaces/OrthogonalBlockCompletion.lean",
+   "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean",
+   "NLAlib/Matrix/Subspaces/CSRank.lean",
+   "NLAlib/Matrix/Subspaces/GraphTangent.lean",
+   "NLAlib/Estimation/Trace/Unbiased.lean",
+   "NLAlib/Sketching/Sparse/CountSketch.lean",
+   "NLAlib/Sketching/Sampling/Leverage.lean"
+  ],
+  "unfold": [
+   "NLAlib/Matrix/Inequalities/SchurHorn.lean",
+   "NLAlib/Matrix/Factorizations/GramSchmidt.lean",
+   "NLAlib/Matrix/Subspaces/Projections.lean"
+  ]
+ }
+}

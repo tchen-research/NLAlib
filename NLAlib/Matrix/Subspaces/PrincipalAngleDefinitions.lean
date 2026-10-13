@@ -205,7 +205,8 @@ theorem specNorm_sinePrincipalAngles_eq_complement_overlap {r : Type*} [Fintype 
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) (hR : HasOrthonormalCols R)
     (hcomp : P*Pᵀ+R*Rᵀ=1) : specNorm (sinePrincipalAngles P Q)=specNorm (Rᵀ*Q) := by
   rw [specNorm_sinePrincipalAngles_eq_residual hP hQ,
-    residual_eq_complement_mul_overlap hcomp, specNorm_mul_left_of_hasOrthonormalCols hR]
+    residual_eq_complement_mul_overlap hcomp,
+    specNorm_mul_left_of_hasOrthonormalCols hR.transpose_mul_self]
 
 /-- The Frobenius sine-angle norm equals the complementary overlap norm.
 Stewart–Sun §I.5.
@@ -216,7 +217,7 @@ theorem frobNorm_sinePrincipalAngles_eq_complement_overlap {r : Type*} [Fintype 
     (hcomp : P*Pᵀ+R*Rᵀ=1) : frobNorm (sinePrincipalAngles P Q)=frobNorm (Rᵀ*Q) := by
   rw [frobNorm_sinePrincipalAngles_eq_residual hP hQ,
     residual_eq_complement_mul_overlap hcomp, frobNorm, frobNorm,
-    frobSq_mul_left_of_orthonormal hR]
+    frobSq_mul_left_of_orthonormal hR.transpose_mul_self]
 
 /-- The sine-angle norm is at most one, for all widths including zero.
 Stewart–Sun §I.5. -/

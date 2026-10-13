@@ -306,7 +306,7 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
     exact ae_of_ae_map e.measurable.aemeasurable hh
   have hAn (n x) : 0 ≤ A n x := Finset.sum_nonneg fun i _ => sq_nonneg _
   have henergy (n x) : A n x = frobSq (gramSoftMinGradient (n + 1) 0 (G x)) := by
-    simp only [A, Fintype.sum_prod_type, D, frobSq, frobInner, ← sq]
+    simp only [A, Fintype.sum_prod_type, D, frobSq, frobInner_eq_sum_mul, ← sq]
   have hAineq (n) : ∀ᵐ x ∂ν, 0 ≤ F n x ∧ A n x ≤ 4 * F n x := by
     filter_upwards [hPD] with x hx
     refine ⟨Real.rpow_nonneg (trace_pow_pos_of_posDef hx.inv _).le _, ?_⟩
@@ -334,7 +334,8 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
   have hEuler (n) : ∀ᵐ x ∂ν, (∑ i, x i * D n i x) = 2 * F n x := by
     filter_upwards [hPD] with x hx
     have he : (∑ i, x i * D n i x) = frobInner (G x) (gramSoftMinGradient (n + 1) 0 (G x)) := by
-      simp only [Fintype.sum_prod_type, D, frobInner, G, e, MeasurableEquiv.curry_apply, Matrix.of_apply]
+      simp only [Fintype.sum_prod_type, D, frobInner_eq_sum_mul, G, e,
+        MeasurableEquiv.curry_apply, Matrix.of_apply]
     rw [he]
     exact frobInner_gramSoftMinGradient_unshifted_eq (n + 1) (G x) hx
   have hLap (n) : ∀ᵐ x ∂ν, (∑ i, DD n i x) ≤ b := by

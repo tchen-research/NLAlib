@@ -14,7 +14,8 @@ namespace NLAlib
 Source: Horn--Johnson, §7.3; manuscript `sa:rp-update`, one-column core. -/
 theorem isMoorePenroseInverse_singleton (a : ℝ) :
     IsMoorePenroseInverse (Matrix.diagonal (fun _ : Fin 1 => a)) (Matrix.diagonal (fun _ : Fin 1 => a⁻¹)) := by
-  constructor
+  rw [isMoorePenroseInverse_iff_transpose]
+  refine ⟨?_, ?_, ?_, ?_⟩
   · ext i j
     simp only [Matrix.mul_apply, Fin.sum_univ_one, Matrix.diagonal_apply, Subsingleton.elim i (0 : Fin 1), Subsingleton.elim j (0 : Fin 1), ite_true]
     by_cases ha : a = 0

@@ -30,7 +30,7 @@ theorem exists_orthogonal_two_eq_diagonal (A : Matrix (Fin 2) (Fin 2) ℝ) :
         congrArg (fun M => Vᵀ * M * V) (eq_eigenvectorUnitary_mul_diagonal_mul_transpose hH)
       _ = (Vᵀ * V) * Matrix.diagonal hH.eigenvalues * (Vᵀ * V) := by
         simp only [Matrix.mul_assoc]
-      _ = _ := by rw [hV, Matrix.one_mul, Matrix.mul_one]
+      _ = _ := by rw [hV.transpose_mul_self, Matrix.one_mul, Matrix.mul_one]
   let B := Vᵀ * A * V
   have hB : B + Bᵀ = Matrix.diagonal hH.eigenvalues := by
     simpa only [H, B, Matrix.mul_add, Matrix.add_mul, Matrix.transpose_mul,

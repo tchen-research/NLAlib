@@ -26,7 +26,7 @@ theorem frobSq_of_le_card_mul_sq_norm {r k : ℕ} (G : Fin r → Fin k → ℝ) 
     have h := (norm_le_pi_norm (G i) j).trans (norm_le_pi_norm G i)
     simpa only [Real.norm_eq_abs, sq_abs] using
       pow_le_pow_left₀ (norm_nonneg (G i j)) h 2
-  simp only [frobSq, frobInner, ← sq]
+  simp only [frobSq, frobInner_eq_sum_mul, ← sq]
   calc (∑ i, ∑ j, (G i j) ^ 2) ≤ ∑ _i : Fin r, ∑ _j : Fin k, ‖G‖ ^ 2 :=
       Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => hentry i j
     _ = _ := by simp; ring

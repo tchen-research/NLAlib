@@ -35,11 +35,11 @@ theorem eigenvalues₀_eq_of_charpoly_eq {n 𝕜 : Type*} [Fintype n] [Decidable
   rw [← hA.sort_roots_charpoly_eq_eigenvalues₀,
     ← hB.sort_roots_charpoly_eq_eigenvalues₀, h]
 
-/-- Sorted eigenvalues are invariant under equivalent labels, with the canonical
-dimension cast. Horn–Johnson 2013, permutation similarity; multiplicities included.
--/
-theorem eigenvalues₀_reindex {n p : Type*} [Fintype n] [Fintype p]
-    [DecidableEq n] [DecidableEq p] {A : Matrix n n ℝ} (hA : A.IsHermitian)
+/-- Sorted eigenvalues of a Hermitian matrix (over `ℝ` or `ℂ`) are invariant under equivalent
+labels, with the canonical dimension cast. Horn–Johnson 2013, permutation similarity;
+multiplicities included. -/
+theorem eigenvalues₀_reindex {n p 𝕜 : Type*} [Fintype n] [Fintype p]
+    [DecidableEq n] [DecidableEq p] [RCLike 𝕜] {A : Matrix n n 𝕜} (hA : A.IsHermitian)
     (e : n ≃ p) (i : Fin (Fintype.card n)) :
     (hA.reindex e).eigenvalues₀ (Fin.cast (Fintype.card_congr e) i) = hA.eigenvalues₀ i := by
   have hl : List.ofFn (hA.reindex e).eigenvalues₀ = List.ofFn hA.eigenvalues₀ := by

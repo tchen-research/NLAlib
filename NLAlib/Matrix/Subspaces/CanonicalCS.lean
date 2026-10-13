@@ -59,7 +59,7 @@ theorem hasOrthonormalCols_csCanonicalMatrix {p q : Type*}
   have hRE : R * E = E * C := by
     dsimp [R]
     simp only [Matrix.sub_mul, Matrix.add_mul, Matrix.one_mul, Matrix.mul_assoc]
-    rw [hE, Matrix.mul_one, Matrix.mul_one]
+    rw [hE.transpose_mul_self, Matrix.mul_one, Matrix.mul_one]
     abel
   have hER : Eᵀ * R = C * Eᵀ := by
     have h := congrArg Matrix.transpose hRE
@@ -77,7 +77,7 @@ theorem hasOrthonormalCols_csCanonicalMatrix {p q : Type*}
   have h11 : Cᵀ * C + (-E * S)ᵀ * (-E * S) = 1 := by
     simp only [Matrix.transpose_mul, Matrix.transpose_neg, hCt, hSt,
       Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc Eᵀ E S, hE, Matrix.one_mul]
+    rw [← Matrix.mul_assoc Eᵀ E S, hE.transpose_mul_self, Matrix.one_mul]
     exact hSum
   have h12 : Cᵀ * (S * Eᵀ) + (-E * S)ᵀ * R = 0 := by
     simp only [Matrix.transpose_mul, Matrix.transpose_neg, hCt, hSt,

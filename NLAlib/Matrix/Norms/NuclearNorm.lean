@@ -158,7 +158,7 @@ theorem exists_specNorm_le_one_frobInner_eq_nuclearNorm (A : Matrix m n ℝ) :
     ∃ B : Matrix m n ℝ, specNorm B ≤ 1 ∧ frobInner A B = nuclearNorm A := by
   obtain ⟨U, V, hU, hV, htrace⟩ := exists_trace_twoSided_compression_eq_kyFanNorm A le_rfl
   refine ⟨U * Vᵀ, ?_, ?_⟩
-  · rw [specNorm_mul_transpose_right_of_hasOrthonormalCols hV]
+  · rw [specNorm_mul_transpose_right_of_hasOrthonormalCols hV.transpose_mul_self]
     exact specNorm_le_one_of_orthonormal hU
   · rw [frobInner_comm, frobInner_eq_trace, Matrix.transpose_mul, Matrix.transpose_transpose,
       ← Matrix.trace_mul_cycle Uᵀ A V]

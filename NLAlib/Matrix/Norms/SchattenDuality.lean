@@ -154,14 +154,16 @@ theorem rank_mul_rectDiag_polarSingularCoefficients_mul_transpose {m n r : ℕ}
     simp only [Finset.mem_filter, Finset.mem_range]
     constructor
     · rintro ⟨hi, hne⟩
-      rw [singularValues_eq_of_eq_mul_rectDiag_mul hU hV (polarSingularCoefficients_nonneg r)
+      rw [singularValues_eq_of_eq_mul_rectDiag_mul hU.transpose_mul_self hV.transpose_mul_self
+        (polarSingularCoefficients_nonneg r)
         (polarSingularCoefficients_antitone r) rfl hi] at hne
       by_contra hir
       simp [polarSingularCoefficients, hir] at hne
     · intro hi
       have him : i < min m n := hi.trans_le hr
       refine ⟨him, ?_⟩
-      rw [singularValues_eq_of_eq_mul_rectDiag_mul hU hV (polarSingularCoefficients_nonneg r)
+      rw [singularValues_eq_of_eq_mul_rectDiag_mul hU.transpose_mul_self hV.transpose_mul_self
+        (polarSingularCoefficients_nonneg r)
         (polarSingularCoefficients_antitone r) rfl him]
       simp [polarSingularCoefficients, hi]
   rw [hfilter, Finset.card_range]

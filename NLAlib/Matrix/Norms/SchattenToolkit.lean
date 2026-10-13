@@ -73,9 +73,9 @@ theorem schatten_toolkit_properties :
   IsGreatest
     {z : ℝ | ∃ (B : Matrix m n ℝ), NLAlib.schattenNormExtended B q ≤ 1 ∧ NLAlib.frobInner A B = z}
     (NLAlib.schattenNormExtended A p)) := by
-  exact ⟨@NLAlib.schattenNorm_one,
+  exact ⟨@NLAlib.schattenNorm_one ℝ _,
     @NLAlib.schattenNorm_two,
-    @NLAlib.schattenNormExtended_top,
+    @NLAlib.schattenNormExtended_top ℝ _,
     @NLAlib.schattenNormExtended_add_le,
     @NLAlib.schattenNormExtended_smul,
     @NLAlib.schattenNormExtended_eq_zero_iff,

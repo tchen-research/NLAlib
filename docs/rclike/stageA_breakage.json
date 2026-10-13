@@ -1,0 +1,321 @@
+{
+ "NLAlib/Estimation/Diagonal/DiagonalEstimator.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Estimation/Spectral/RandomStartEndpoints.lean": [
+  "quadForm",
+  "rayleighQuotient"
+ ],
+ "NLAlib/Estimation/Spectral/RandomStartLanczos.lean": [
+  "quadForm",
+  "rayleighQuotient"
+ ],
+ "NLAlib/Estimation/Spectral/RandomStartPower.lean": [
+  "quadForm",
+  "rayleighQuotient"
+ ],
+ "NLAlib/Estimation/Trace/Unbiased.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Krylov/Solvers/CG.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Krylov/Solvers/GMRES.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Krylov/Spaces/Block.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Krylov/Spectral/MeasurableRitz.lean": [
+  "quadForm",
+  "rayleighQuotient"
+ ],
+ "NLAlib/Krylov/Spectral/PowerMethod.lean": [
+  "quadForm",
+  "rayleighQuotient"
+ ],
+ "NLAlib/Krylov/Spectral/Ritz.lean": [
+  "quadForm"
+ ],
+ "NLAlib/LowRank/Nystrom/GaussianNystrom.lean": [
+  "residual"
+ ],
+ "NLAlib/LowRank/Nystrom/RawGaussianNystrom.lean": [
+  "HasOrthonormalCols"
+ ],
+ "NLAlib/LowRank/Nystrom/SketchedRegression.lean": [
+  "residual"
+ ],
+ "NLAlib/LowRank/Nystrom/Structural.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/LowRank/PolynomialMethods/PolynomialFilter.lean": [
+  "residual",
+  "rw[hQ]"
+ ],
+ "NLAlib/LowRank/RangeFinding/ExpectedPower.lean": [
+  "residual"
+ ],
+ "NLAlib/LowRank/RangeFinding/SpectralRangeFinder.lean": [
+  "residual"
+ ],
+ "NLAlib/Matrix/Basic/MoorePenroseProjector.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Calculus/GramCutoffCalculus.lean": [
+  "frobInner"
+ ],
+ "NLAlib/Matrix/Calculus/GramTrace.lean": [
+  "frobInner"
+ ],
+ "NLAlib/Matrix/Factorizations/GramSchmidt.lean": [
+  "HasOrthonormalCols"
+ ],
+ "NLAlib/Matrix/Factorizations/NearestPolar.lean": [
+  "HasOrthonormalCols",
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Factorizations/PolarDecomposition.lean": [
+  "HasOrthonormalCols",
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Factorizations/Procrustes.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Factorizations/QR.lean": [
+  "pinvL",
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Functions/PolynomialCalculus.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Inequalities/BlockOrderConsequences.lean": [
+  "quadForm",
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Inequalities/BlockQuadratic.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Inequalities/FiniteExponentialGram.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Inequalities/HadamardOrder.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Inequalities/Kantorovich.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Inequalities/KyFanAttainment.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Inequalities/SchurHorn.lean": [
+  "HasOrthonormalCols"
+ ],
+ "NLAlib/Matrix/Inequalities/SchurHornProjection.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Inequalities/SeparatingPSDVector.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Inequalities/VonNeumann.lean": [
+  "frobInner"
+ ],
+ "NLAlib/Matrix/Inequalities/Wielandt.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Norms/ColumnNorms.lean": [
+  "frobInner"
+ ],
+ "NLAlib/Matrix/Norms/Net.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Norms/NuclearHermitian.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Norms/Reindex.lean": [
+  "frobInner"
+ ],
+ "NLAlib/Matrix/Norms/SchattenDuality.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Norms/SchattenSingularCoefficients.lean": [
+  "IsSVD",
+  "frobInner"
+ ],
+ "NLAlib/Matrix/Perturbation/DavisKahan.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Perturbation/EigenvaluePerturbation.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Perturbation/EigenvalueTrace.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Perturbation/EigenvalueVariation.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Perturbation/ResidualBounds.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Perturbation/SingularFrameTails.lean": [
+  "IsSVD",
+  "residual"
+ ],
+ "NLAlib/Matrix/Perturbation/SingularFrames.lean": [
+  "IsSVD",
+  "residual"
+ ],
+ "NLAlib/Matrix/Perturbation/SpectralContinuity.lean": [
+  "frobInner"
+ ],
+ "NLAlib/Matrix/Perturbation/Wedin.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Perturbation/WedinBounds.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Perturbation/WedinFiniteIndex.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Perturbation/WedinResidual.lean": [
+  "IsSVD",
+  "residual"
+ ],
+ "NLAlib/Matrix/Spectral/Core.lean": [
+  "pinvR"
+ ],
+ "NLAlib/Matrix/Spectral/CourantFischer.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Spectral/EckartYoung.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Spectral/Inertia.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Matrix/Spectral/InterlacingOrthogonalTransport.lean": [
+  "HasOrthonormalCols",
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Spectral/OrderedSymmetricDiagonalization.lean": [
+  "HasOrthonormalCols"
+ ],
+ "NLAlib/Matrix/Spectral/PowerRayleigh.lean": [
+  "quadForm",
+  "rayleighQuotient"
+ ],
+ "NLAlib/Matrix/Spectral/ProductSingularValues.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Spectral/RealNormalForm.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Spectral/RealNormalSpecializations.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Spectral/RealQZ.lean": [
+  "HasOrthonormalCols"
+ ],
+ "NLAlib/Matrix/Spectral/RealSchurSimilarity.lean": [
+  "HasOrthonormalCols"
+ ],
+ "NLAlib/Matrix/Spectral/RealSpectrumSchur.lean": [
+  "HasOrthonormalCols"
+ ],
+ "NLAlib/Matrix/Spectral/SingularValueInvariance.lean": [
+  "HasOrthonormalCols"
+ ],
+ "NLAlib/Matrix/Spectral/SpectralBounds.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Spectral/SvdPowers.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Structured/KroneckerSingularValues.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Structured/KroneckerToolkit.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Structured/Measurable.lean": [
+  "frobInner",
+  "pinvL",
+  "pinvR",
+  "residual"
+ ],
+ "NLAlib/Matrix/Structured/SpectralMeasurable.lean": [
+  "residual"
+ ],
+ "NLAlib/Matrix/Subspaces/CSDecomposition.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/CSRank.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/CanonicalCS.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/ComplexObliqueSecant.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/FrameContractions.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/GramColumnDeterminant.lean": [
+  "pinvL"
+ ],
+ "NLAlib/Matrix/Subspaces/GraphTangent.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/InverseOverlapGram.lean": [
+  "IsSVD"
+ ],
+ "NLAlib/Matrix/Subspaces/OrthogonalBlockCompletion.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/OrthogonalProducts.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/PrincipalAngleInvariance.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Matrix/Subspaces/ProjectionGaps.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Probability/Concentration/QuadraticForms/QuadraticMoments.lean": [
+  "frobInner"
+ ],
+ "NLAlib/RandomMatrix/Gaussian/Basic/PolynomialGrowth.lean": [
+  "frobInner"
+ ],
+ "NLAlib/RandomMatrix/Gaussian/InverseMoments/CutoffIntegrability.lean": [
+  "frobInner"
+ ],
+ "NLAlib/RandomMatrix/Gaussian/InverseMoments/GaussianWeakInequality.lean": [
+  "frobInner"
+ ],
+ "NLAlib/RandomMatrix/Gaussian/InverseMoments/UnshiftedWeakInequality.lean": [
+  "frobInner"
+ ],
+ "NLAlib/Sketching/Sampling/Leverage.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Sketching/Sparse/Bands/Heavy/PreservingBound.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Sketching/Sparse/Bands/Light/SynthesisBounds.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Sketching/Sparse/Bands/Light/ZeroBlock.lean": [
+  "quadForm"
+ ],
+ "NLAlib/Sketching/Sparse/CountSketch.lean": [
+  "rw[hQ]"
+ ],
+ "NLAlib/Sketching/Sparse/CountSketchExpectation.lean": [
+  "frobInner"
+ ],
+ "NLAlib/Sketching/Sparse/CountSketchMoments.lean": [
+  "frobInner"
+ ]
+}

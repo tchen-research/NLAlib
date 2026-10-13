@@ -84,7 +84,7 @@ theorem coordinateQuadratic_VAll_gram_eq_sum_blocks
         ((VAllMatrix (m := m) F ell).transpose * VAllMatrix F ell) z =
       ∑ k, ∑ l, blockGramPairing F ell z k l := by
   classical
-  simp only [quadForm, Matrix.mulVec, dotProduct,
+  simp only [quadForm_eq_dotProduct, Matrix.mulVec, dotProduct,
     Matrix.mul_apply, Matrix.transpose_apply, VAllMatrix,
     blockGramPairing]
   rw [Fintype.sum_sigma]
@@ -216,7 +216,7 @@ theorem gramQuadratic_le_of_energy_le
     calc
       sumSq z = quadForm (A * A.transpose) x := hgram
       _ = ∑ i, x i * A.mulVec z i := by
-        simp only [quadForm, dotProduct]
+        simp only [quadForm_eq_dotProduct, dotProduct]
         rw [Matrix.mulVec_mulVec]
   have hcs : sumSq z ^ 2 ≤
       sumSq x * sumSq (A.mulVec z) := by

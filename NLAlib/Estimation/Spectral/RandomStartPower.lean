@@ -40,8 +40,8 @@ Source: manuscript `rt:power`, finite polynomial-vector Rayleigh quotient. -/
 theorem measurable_powerRayleighRelativeError {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℝ) (q : ℕ) : Measurable (fun b : ι → ℝ => powerRayleighRelativeError A b q) := by
   unfold powerRayleighRelativeError
-  simp only [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient, quadForm, Matrix.mulVec,
-    dotProduct]
+  simp only [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_eq_div, quadForm_eq_dotProduct,
+    Matrix.mulVec, dotProduct]
   fun_prop
 
 /-- Expected Gaussian random-start power error has the source's explicit gap-free

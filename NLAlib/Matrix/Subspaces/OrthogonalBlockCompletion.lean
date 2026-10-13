@@ -31,7 +31,7 @@ theorem exists_orthogonal_right_block_of_first_columns_eq {p q : Type*}
         Xᵀ * Z.submatrix id Sum.inl = (Xᵀ * Z).submatrix id Sum.inl := by
       simpa only [Equiv.coe_refl, Matrix.submatrix_id_id] using
         Matrix.submatrix_mul_equiv Xᵀ Z id (Equiv.refl (p ⊕ q)) Sum.inl
-    rw [hMul, hMul, hX] at h
+    rw [hMul, hMul, hX.transpose_mul_self] at h
     exact h.symm
   have h11 : T.toBlocks₁₁ = 1 := by
     ext i j

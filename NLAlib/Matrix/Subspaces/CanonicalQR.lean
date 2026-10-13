@@ -37,6 +37,7 @@ theorem hasOrthonormalCols_qrNormalizedArray {n k : ℕ} (A : Fin n → Fin k �
     (hA : LinearIndependent ℝ (qrColumnFamily A)) :
     HasOrthonormalCols (Matrix.of (qrNormalizedArray A)) := by
   have ho := orthonormal_iff_ite.mp (gramSchmidtNormed_orthonormal hA)
+  rw [hasOrthonormalCols_iff_transpose_mul_self]
   ext a b
   have hh := ho b a
   simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, Matrix.one_apply,

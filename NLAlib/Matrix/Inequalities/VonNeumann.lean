@@ -106,7 +106,7 @@ private theorem frobInner_rectDiag {m n : ℕ} (σ : ℕ → ℝ) (D : Matrix (F
       ∑ i ∈ Finset.range (min m n), σ i * diagonalSequence D i := by
   have h1 : frobInner (rectDiag σ : Matrix (Fin m) (Fin n) ℝ) D =
       ∑ i : Fin m, σ i * diagonalSequence D i := by
-    unfold frobInner
+    rw [frobInner_eq_sum_mul]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [rectDiag_apply, diagonalSequence]
     by_cases hi : (i : ℕ) < n
@@ -257,13 +257,15 @@ theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (F
   obtain ⟨U, V, h⟩ := exists_isSVD X
   set D : Matrix (Fin m) (Fin n) ℝ := Uᵀ * E * V with hDdef
   have hD : singularValues D = singularValues E := by
-    have hU : (Uᵀ)ᵀ * Uᵀ = 1 := by rw [Matrix.transpose_transpose]; exact h.mul_transpose_left
+    have hU : HasOrthonormalCols Uᵀ := by
+      rw [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose]
+      exact h.mul_transpose_left
     rw [hDdef, singularValues_mul_orthogonal _ h.transpose_mul_right,
       singularValues_isometry_mul hU]
   have hinner : frobInner X E =
       frobInner (rectDiag (singularValues X) : Matrix (Fin m) (Fin n) ℝ) D := by
     rw [frobInner_eq_trace, frobInner_eq_trace]
-    conv_lhs => rw [h.eq]
+    conv_lhs => rw [h.eq_mul_transpose]
     simp only [hDdef, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
     rw [Matrix.trace_mul_comm V]
     simp only [Matrix.mul_assoc]

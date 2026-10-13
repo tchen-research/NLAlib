@@ -42,7 +42,7 @@ theorem det_gram_fromCols_eq_mul_frobSq_sub_projector
       rw [← Matrix.mul_assoc vᵀ, Matrix.mul_sub, Matrix.mul_one, Matrix.sub_mul]
       dsimp only [P, G]
       rw [moorePenroseInverse_eq_pinvL B hG]
-      simp only [pinvL, Matrix.mul_assoc]
+      simp only [pinvL_eq_inv_transpose_mul_mul_transpose, Matrix.mul_assoc]
     have hdet : ((Matrix.fromCols B v)ᵀ * Matrix.fromCols B v).det =
         G.det * (vᵀ * v - vᵀ * B * G⁻¹ * (Bᵀ * v)).det := by
       rw [Matrix.transpose_fromCols, Matrix.fromRows_mul_fromCols,

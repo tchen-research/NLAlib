@@ -40,11 +40,12 @@ variable {n s : Type*} [Fintype n] [DecidableEq n] [Fintype s]
 /-! ### Block Krylov spaces -/
 
 /-- The block Krylov subspace `K_q(A, Ω) = span {(A^i Ω) e_j : i < q, j ∈ s}`, the range of
-`[Ω, AΩ, …, A^(q−1)Ω]`. Source: Musco–Musco (2015) [`mm15`], Alg. 2; Saad (2011) [`saad11`],
-§6.3.
+`[Ω, AΩ, …, A^(q−1)Ω]`, over any field `K`. Source: Musco–Musco (2015) [`mm15`], Alg. 2;
+Saad (2011) [`saad11`], §6.3.
 atlas: block-krylov-subspace -/
-def blockKrylovSpace (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (q : ℕ) : Submodule ℝ (n → ℝ) :=
-  Submodule.span ℝ (Set.range fun ij : Fin q × s => ((A ^ (ij.1 : ℕ)) * Ω).col ij.2)
+def blockKrylovSpace {K : Type*} [Field K] (A : Matrix n n K) (Ω : Matrix n s K) (q : ℕ) :
+    Submodule K (n → K) :=
+  Submodule.span K (Set.range fun ij : Fin q × s => ((A ^ (ij.1 : ℕ)) * Ω).col ij.2)
 
 omit [Fintype s] in
 /-- The generators `(A^i Ω) e_j` (`i < q`) lie in `K_q(A, Ω)`. Helper for
@@ -147,11 +148,12 @@ theorem finrank_blockKrylovSpace_le (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (
 /-! ### Subspace iteration -/
 
 /-- The `k`-th subspace iterate `S_k = range (A^k Ω)` of subspace (orthogonal, simultaneous)
-iteration started from the block `Ω`. Orthonormalisation is bookkeeping: any `Q` with
-`range Q = S_k` is a basis the algorithm may carry (`range_mul_eq_subspaceIterate_succ`).
+iteration started from the block `Ω`, over any field `K`. Orthonormalisation is bookkeeping: any
+`Q` with `range Q = S_k` is a basis the algorithm may carry (`range_mul_eq_subspaceIterate_succ`).
 Source: Saad (2011) [`saad11`], §5.1; Golub–Van Loan (2013) [`gvl13`], §8.2.4.
 atlas: subspace-iteration-def -/
-def subspaceIterate (A : Matrix n n ℝ) (Ω : Matrix n s ℝ) (k : ℕ) : Submodule ℝ (n → ℝ) :=
+def subspaceIterate {K : Type*} [Field K] (A : Matrix n n K) (Ω : Matrix n s K) (k : ℕ) :
+    Submodule K (n → K) :=
   LinearMap.range (A ^ k * Ω).mulVecLin
 
 /-- `S_0 = range Ω`. Helper for `subspace-iteration-def`. -/

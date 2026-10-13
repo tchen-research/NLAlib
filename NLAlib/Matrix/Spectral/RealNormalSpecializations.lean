@@ -19,7 +19,7 @@ theorem real_normal_form_orthogonal_block_coefficients {k : ℕ}
     (∀ i j, j.val + 1 = i.val → T i j ≠ 0 → (T j j) ^ 2 + (T i j) ^ 2 = 1) := by
   have hN : T * Tᵀ = Tᵀ * T := (mul_eq_one_comm.mp hT).trans hT.symm
   have hcol (i : Fin k) : ∑ l, T l i * T l i = 1 := by
-    have h := congrArg (fun M : Matrix (Fin k) (Fin k) ℝ => M i i) hT
+    have h := congrArg (fun M : Matrix (Fin k) (Fin k) ℝ => M i i) hT.transpose_mul_self
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply_eq] using h
   constructor
   · intro i hi
@@ -71,7 +71,7 @@ theorem exists_orthogonal_real_skew_normal_form {n : Type*} [Fintype n] [Decidab
     rw [hAT]
     calc
       _ = (Qᵀ * Q) * T * (Qᵀ * Q) := by simp only [Matrix.mul_assoc]
-      _ = T := by rw [hQ, Matrix.one_mul, Matrix.mul_one]
+      _ = T := by rw [hQ.transpose_mul_self, Matrix.one_mul, Matrix.mul_one]
   have hskew : Tᵀ = -T := by
     rw [← hconj, Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose, hA]
     simp only [Matrix.mul_neg, Matrix.neg_mul, Matrix.mul_assoc]
@@ -100,13 +100,13 @@ theorem exists_orthogonal_real_orthogonal_normal_form {n : Type*}
     rw [hAT]
     calc
       _ = (Qᵀ * Q) * T * (Qᵀ * Q) := by simp only [Matrix.mul_assoc]
-      _ = T := by rw [hQ, Matrix.one_mul, Matrix.mul_one]
+      _ = T := by rw [hQ.transpose_mul_self, Matrix.one_mul, Matrix.mul_one]
   have hT : HasOrthonormalCols T := by
     rw [← hconj]
     exact (hQ.transpose.mul hA).mul hQ
   have hTe : HasOrthonormalCols (T.submatrix order order) := by
     change Tᵀ.submatrix order order * T.submatrix order order = 1
-    rw [Matrix.submatrix_mul_equiv, hT]
+    rw [Matrix.submatrix_mul_equiv, hT.transpose_mul_self]
     ext i j
     simp [Matrix.one_apply, order.injective.eq_iff]
   obtain ⟨hscalar, hrotation⟩ := real_normal_form_orthogonal_block_coefficients hF hTe

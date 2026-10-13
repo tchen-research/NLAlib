@@ -103,7 +103,7 @@ theorem integral_frobSq_countSketch_gram_error
         ∂Measure.pi (fun _ => rademacherMeasure)) =
       ∑ a, ∑ b, ∑ i, ∑ j, if i = j then 0 else if h i = h j then
         (U i a * U j b) ^ 2 + (U i a * U j b) * (U j a * U i b) else 0 := by
-  simp only [frobSq, frobInner, ← pow_two]
+  simp only [frobSq, frobInner_eq_sum_mul, ← pow_two]
   rw [integral_finsetSum _ fun a _ =>
     integrable_finsetSum _ fun b _ => integrable_countSketch_gram_error_apply_sq h U hU a b]
   refine Finset.sum_congr rfl fun a _ => ?_

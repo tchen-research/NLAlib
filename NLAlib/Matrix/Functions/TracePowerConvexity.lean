@@ -6,7 +6,6 @@ import NLAlib.Matrix.Spectral.TraceEigenvalues
 import Mathlib.Analysis.Convex.Deriv
 import Mathlib.Analysis.Convex.SpecificFunctions.Deriv
 
-set_option autoImplicit false
 
 /-!
 # Convexity of even trace powers
@@ -28,7 +27,7 @@ Source: ported from `SparseFockFormal.TracePowerConvexity`, commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator
 
 namespace NLAlib
 

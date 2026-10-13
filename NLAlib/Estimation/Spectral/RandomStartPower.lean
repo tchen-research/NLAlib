@@ -40,8 +40,8 @@ Source: manuscript `rt:power`, finite polynomial-vector Rayleigh quotient. -/
 theorem measurable_powerRayleighRelativeError {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℝ) (q : ℕ) : Measurable (fun b : ι → ℝ => powerRayleighRelativeError A b q) := by
   unfold powerRayleighRelativeError
-  simp only [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_eq_div, quadForm_eq_dotProduct,
-    Matrix.mulVec, dotProduct]
+  simp only [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_def, RCLike.re_to_real,
+    quadForm_def, star_trivial, Matrix.mulVec, dotProduct]
   fun_prop
 
 /-- Expected Gaussian random-start power error has the source's explicit gap-free
@@ -133,17 +133,15 @@ theorem integral_powerRayleighRelativeError_pi_gaussianReal_le_all_dims
 law on an abstract probability space. Source: manuscript `rt:power`.
 No measurability or integrability hypothesis is left to the caller beyond that law.
 atlas: random-start-power (partial) -/
-theorem integral_powerRayleighRelativeError_le_of_map_eq_pi_gaussianReal
+theorem integral_powerRayleighRelativeError_le_of_hasLaw
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (hA : A.PosSemidef) (q : ℕ) (G : Ω → Fin n → ℝ)
-    (hG : μ.map G = Measure.pi fun _ : Fin n => gaussianReal 0 1) :
+    (hG : HasLaw G (Measure.pi fun _ : Fin n => gaussianReal 0 1) μ) :
     (∫ ω, powerRayleighRelativeError A (G ω) q ∂μ) ≤
       min 1 ((Real.log (2 * (n : ℝ)) + 2) / ((2 * q + 1 : ℕ) : ℝ)) := by
-  have hGm : AEMeasurable G μ := AEMeasurable.of_map_ne_zero
-    (by rw [hG]; exact IsProbabilityMeasure.ne_zero _)
-  have h := integral_map hGm (measurable_powerRayleighRelativeError A q).aestronglyMeasurable
-  rw [hG] at h
-  exact h.symm.trans_le (integral_powerRayleighRelativeError_pi_gaussianReal_le_all_dims A hA q)
+  have h : (∫ ω, powerRayleighRelativeError A (G ω) q ∂μ) = _ :=
+    hG.integral_comp (measurable_powerRayleighRelativeError A q).aestronglyMeasurable
+  exact h.trans_le (integral_powerRayleighRelativeError_pi_gaussianReal_le_all_dims A hA q)
 
 /-- For positive iteration count and dimension at least two, the source's explicit
 coarse power rate is `3 log(N)/q`. Source: manuscript `rt:power`, coarse corollary.
@@ -151,7 +149,7 @@ atlas: random-start-power (partial) -/
 theorem integral_powerRayleighRelativeError_le_three_log_div
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (hA : A.PosSemidef) {q : ℕ} (hq : 1 ≤ q) (hn : 2 ≤ n)
-    (G : Ω → Fin n → ℝ) (hG : μ.map G = Measure.pi fun _ : Fin n => gaussianReal 0 1) :
+    (G : Ω → Fin n → ℝ) (hG : HasLaw G (Measure.pi fun _ : Fin n => gaussianReal 0 1) μ) :
     (∫ ω, powerRayleighRelativeError A (G ω) q ∂μ) ≤ 3 * Real.log n / q := by
   have hq0 : (0 : ℝ) < q := by exact_mod_cast (by omega : 0 < q)
   have hn2 : (2 : ℝ) ≤ n := by exact_mod_cast hn
@@ -170,7 +168,7 @@ theorem integral_powerRayleighRelativeError_le_three_log_div
     have h := mul_le_mul_of_nonneg_right hT hq0.le
     push_cast
     nlinarith
-  exact ((integral_powerRayleighRelativeError_le_of_map_eq_pi_gaussianReal A hA q G hG).trans
+  exact ((integral_powerRayleighRelativeError_le_of_hasLaw A hA q G hG).trans
     (min_le_right _ _)).trans hc
 
 end NLAlib

@@ -10,7 +10,7 @@ Gu–Eisenstat 1996, maximum-volume column exchange calculation.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 
 /-- A diagonal cofactor depends only on entries outside its deleted row and

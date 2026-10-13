@@ -1,4 +1,11 @@
-import NLAlib.Matrix.Spectral.ComplexSingularTransport
+import NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace
+import NLAlib.Matrix.Subspaces.ComplexVolumeProjection
+import NLAlib.Matrix.Functions.ComplexDiagonalFilter
+import NLAlib.Matrix.Spectral.GramSingularValues
+import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.Matrix.Norms.RankNorm
+import NLAlib.Matrix.Norms.Reindex
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 import NLAlib.Matrix.Subspaces.PrincipalAngles
 /-!
 # Complexifying real range frames and applying unitary similarities

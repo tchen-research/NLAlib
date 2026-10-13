@@ -56,7 +56,7 @@ theorem singularValues_submatrix_rows_le (A : Matrix m n ℝ)
       rw [transpose_mul_eq_selected_omitted_grams A f hf, add_sub_cancel_left]
       simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
         Matrix.posSemidef_conjTranspose_mul_self D
-    have h := eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub
+    have h := Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le
       (Matrix.isHermitian_conjTranspose_mul_self (A.submatrix f id))
       (Matrix.isHermitian_conjTranspose_mul_self A) hd ⟨k, hk⟩
     rw [← sq_singularValues_eq_eigenvalues₀ (A.submatrix f id) ⟨k, hk⟩,

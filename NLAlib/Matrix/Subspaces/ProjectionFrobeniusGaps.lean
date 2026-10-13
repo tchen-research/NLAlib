@@ -14,12 +14,13 @@ namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 omit [DecidableEq m] in
-/-- The residual Frobenius squares between equal-width orthonormal frames
+/-- The projResidual Frobenius squares between equal-width orthonormal frames
 are symmetric. Stewart–Sun §I.5, by the overlap trace identity. -/
 theorem frobSq_residual_comm {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
-    frobSq (residual P Q)=frobSq (residual Q P) := by
-  rw [frobSq_residual_eq_sub hP, frobSq_residual_eq_sub hQ,
+    frobSq (projResidual P Q)=frobSq (projResidual Q P) := by
+  rw [frobSq_residual_eq_sub hP, Matrix.conjTranspose_eq_transpose_of_trivial,
+    frobSq_residual_eq_sub hQ, Matrix.conjTranspose_eq_transpose_of_trivial,
     frobSq_frame_eq_card hP, frobSq_frame_eq_card hQ]
   congr 1
   rw [← frobSq_transpose (Pᵀ*Q), Matrix.transpose_mul, Matrix.transpose_transpose]
@@ -39,18 +40,23 @@ theorem frobSq_complement_mul_projector_eq_of_rank_eq {P Q : Matrix n n ℝ}
     simp only [V', Matrix.reindex_apply, Equiv.refl_symm, Equiv.coe_refl,
       Matrix.transpose_submatrix, Matrix.submatrix_mul_equiv, Matrix.submatrix_id_id]
   have hQV' : Q=V'*V'ᵀ := hQV.trans hVV.symm
-  have hleft : (1-Q)*P=residual V' U*Uᵀ := by
+  have hleft : (1-Q)*P=projResidual V' U*Uᵀ := by
     calc
       _ = (1-Q)*(U*Uᵀ) := congrArg (fun T => (1-Q)*T) hPU
       _ = (1-V'*V'ᵀ)*(U*Uᵀ) := congrArg (fun T => (1-T)*(U*Uᵀ)) hQV'
-      _ = _ := by rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
-  have hright : (1-P)*Q=residual U V'*V'ᵀ := by
+      _ = _ := by
+        rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_assoc]
+  have hright : (1-P)*Q=projResidual U V'*V'ᵀ := by
     calc
       _ = (1-P)*(V'*V'ᵀ) := congrArg (fun T => (1-P)*T) hQV'
       _ = (1-U*Uᵀ)*(V'*V'ᵀ) := congrArg (fun T => (1-T)*(V'*V'ᵀ)) hPU
-      _ = _ := by rw [residual_eq_one_sub_mul, Matrix.mul_assoc]
-  rw [hleft, hright, frobSq_mul_right_of_orthonormal hU.transpose_mul_self,
-    frobSq_mul_right_of_orthonormal hV'.transpose_mul_self, frobSq_residual_comm hV' hU]
+      _ = _ := by
+        rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_assoc]
+  rw [hleft, hright,
+    show frobSq (projResidual V' U * Uᵀ) = frobSq (projResidual V' U) from
+      frobSq_mul_right_of_orthonormal hU _,
+    show frobSq (projResidual U V' * V'ᵀ) = frobSq (projResidual U V') from
+      frobSq_mul_right_of_orthonormal hV' _, frobSq_residual_comm hV' hU]
 
 /-- Equal-rank one-sided Frobenius gaps agree also after placing the
 projector on the left. Stewart–Sun §III.3, by transpose invariance. -/

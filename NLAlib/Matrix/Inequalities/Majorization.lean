@@ -11,7 +11,6 @@ Atlas: `majorization-def`.
 -/
 
 noncomputable section
-open scoped BigOperators
 
 namespace NLAlib
 

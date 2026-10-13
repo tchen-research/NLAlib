@@ -61,6 +61,7 @@ private theorem coupled_specNorm_component {D : Matrix m n ℝ} {t : k → ℝ}
     (mul_le_mul_of_nonneg_right hD (specNorm_nonneg Y))
   linarith
 
+omit [DecidableEq m] in
 private theorem coupled_frobNorm_component {D : Matrix m n ℝ} {t : k → ℝ}
     {α β : ℝ} (hα : 0 ≤ α) (ht : ∀ j, α ≤ t j) (hD : specNorm D ≤ β)
     (X : Matrix m k ℝ) (Y : Matrix n k ℝ) :

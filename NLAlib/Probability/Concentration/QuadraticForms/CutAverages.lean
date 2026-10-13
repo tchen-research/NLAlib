@@ -19,7 +19,7 @@ Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped BigOperators NNReal Matrix.Norms.L2Operator
+open scoped NNReal Matrix.Norms.L2Operator
 
 noncomputable section
 set_option maxRecDepth 5000
@@ -112,7 +112,7 @@ lemma four_mul_sum_cut_quadraticForm_eq_card_mul_offDiagonal {n : ℕ}
         = 4 * (∑ i, ∑ j, ∑ s ∈ P,
             (if i ∈ s ∧ j ∉ s then A i j * x i * x j else 0)) := by
             congr 1
-            simp only [quadForm_eq_sum_mul_mul]
+            simp only [quadForm_eq_sum_mul_mul, star_trivial]
             unfold cutMatrix
             rw [Finset.sum_comm]
             apply Finset.sum_congr rfl
@@ -141,7 +141,7 @@ lemma four_mul_sum_cut_quadraticForm_eq_card_mul_offDiagonal {n : ℕ}
             intro j _
             exact hpair i j
     _ = (P.card : ℝ) * quadForm (offDiagonalMatrix A) x := by
-            simp only [quadForm_eq_sum_mul_mul]
+            simp only [quadForm_eq_sum_mul_mul, star_trivial]
             unfold offDiagonalMatrix
             rw [Finset.mul_sum]
             apply Finset.sum_congr rfl
@@ -226,7 +226,7 @@ lemma quadraticForm_eq_inner_toEuclideanCLM {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
     quadForm A x =
       inner ℝ (Matrix.toEuclideanCLM (𝕜 := ℝ) A (WithLp.toLp 2 x)) (WithLp.toLp 2 x) := by
-  simp only [quadForm_eq_sum_mul_mul]
+  simp only [quadForm_eq_sum_mul_mul, star_trivial]
   rw [Matrix.toEuclideanCLM_toLp, PiLp.inner_apply]
   simp only [Matrix.mulVec, dotProduct]
   apply Finset.sum_congr rfl
@@ -244,7 +244,7 @@ HighDimProb commit c0cb8d9; atlas `hanson-wright`. -/
 lemma abs_quadraticForm_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {x : Fin n → ℝ} {K : ℝ} (hK : 0 ≤ K) (hx : ∀ i, |x i| ≤ K) :
     |quadForm A x| ≤ K ^ 2 * entrywiseL1Norm A := by
-  simp only [quadForm_eq_sum_mul_mul]
+  simp only [quadForm_eq_sum_mul_mul, star_trivial]
   unfold entrywiseL1Norm
   calc |∑ i, ∑ j, x i * A i j * x j|
       ≤ ∑ i, |∑ j, x i * A i j * x j| := Finset.abs_sum_le_sum_abs _ _
@@ -279,7 +279,7 @@ lemma randomQuadraticForm_aemeasurable {μ : Measure Ω} {n : ℕ}
     (hX_meas : ∀ i, AEMeasurable (X i) μ) :
     AEMeasurable (randomQuadraticForm A X) μ := by
   unfold randomQuadraticForm
-  simp only [quadForm_eq_sum_mul_mul]
+  simp only [quadForm_eq_sum_mul_mul, star_trivial]
   exact Finset.aemeasurable_fun_sum _ fun i _ =>
     Finset.aemeasurable_fun_sum _ fun j _ =>
       (((hX_meas i).mul (hX_meas j)).const_mul (A i j)).congr

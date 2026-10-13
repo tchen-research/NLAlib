@@ -1,5 +1,5 @@
 import NLAlib.Matrix.Inequalities.SchurHorn
-import NLAlib.Matrix.Functions.RealComplexCFC
+import NLAlib.Matrix.Spectral.Core
 /-!
 # Realizing eigenvalues and a prescribed Hermitian-part spectrum
 
@@ -47,34 +47,34 @@ theorem exists_matrix_charpoly_and_selfAdjointPart_charpoly_of_majorized
         rw [Matrix.charpoly_of_isUpperTriangular _ hTri]
         simp only [Matrix.submatrix_apply, hTd]
       _ = _ := e.prod_comp (fun i => X - C (z i))
-  have hPart : (selfAdjointPart ℝ T : Matrix n n ℂ) = realMatrixComplexification K := by
+  have hPart : (selfAdjointPart ℝ T : Matrix n n ℂ) = (realMatrixComplexification (𝕜 := ℂ)) K := by
     ext i j
     have hKji : K j i = K i j := congrArg (fun M : Matrix n n ℝ => M i j) hKt
     by_cases hij : i = j
     · subst j
       simp [selfAdjointPart_apply_coe, Matrix.star_eq_conjTranspose, T, hKd,
-        realMatrixComplexification_apply, Complex.ext_iff, Complex.real_smul]
+        (realMatrixComplexification_apply (𝕜 := ℂ)), Complex.ext_iff, Complex.real_smul]
       ring
     · have hji : j ≠ i := Ne.symm hij
       by_cases hlt : e.symm i < e.symm j
       · have hnlt : ¬e.symm j < e.symm i := not_lt.mpr hlt.le
         simp [selfAdjointPart_apply_coe, Matrix.star_eq_conjTranspose, T, hij, hji,
-          hlt, hnlt, realMatrixComplexification_apply, Complex.real_smul]
+          hlt, hnlt, (realMatrixComplexification_apply (𝕜 := ℂ)), Complex.real_smul]
       · have hgt : e.symm j < e.symm i := lt_of_le_of_ne (le_of_not_gt hlt)
           (fun he => hij (e.symm.injective he.symm))
         simp [selfAdjointPart_apply_coe, Matrix.star_eq_conjTranspose, T, hij, hji,
-          hlt, hgt, hKji, realMatrixComplexification_apply, Complex.real_smul]
-  have hQc : (realMatrixComplexification Q)ᴴ * realMatrixComplexification Q = 1 := by
+          hlt, hgt, hKji, (realMatrixComplexification_apply (𝕜 := ℂ)), Complex.real_smul]
+  have hQc : ((realMatrixComplexification (𝕜 := ℂ)) Q)ᴴ * (realMatrixComplexification (𝕜 := ℂ)) Q = 1 := by
     have hQ' : star Q * Q = 1 := hQ
     rw [← Matrix.star_eq_conjTranspose, ← map_star, ← map_mul, hQ', map_one]
-  have hKc : realMatrixComplexification K = realMatrixComplexification Q *
-      diagonal (fun i => (x i : ℂ)) * (realMatrixComplexification Q)ᴴ := by
-    have hmapT : realMatrixComplexification Qᵀ = (realMatrixComplexification Q)ᴴ := by
+  have hKc : (realMatrixComplexification (𝕜 := ℂ)) K = (realMatrixComplexification (𝕜 := ℂ)) Q *
+      diagonal (fun i => (x i : ℂ)) * ((realMatrixComplexification (𝕜 := ℂ)) Q)ᴴ := by
+    have hmapT : (realMatrixComplexification (𝕜 := ℂ)) Qᵀ = ((realMatrixComplexification (𝕜 := ℂ)) Q)ᴴ := by
       rw [← Matrix.star_eq_conjTranspose, ← map_star]
       rfl
-    have hmapD : realMatrixComplexification (diagonal x) = diagonal (fun i => (x i : ℂ)) := by
+    have hmapD : (realMatrixComplexification (𝕜 := ℂ)) (diagonal x) = diagonal (fun i => (x i : ℂ)) := by
       ext i j
-      by_cases hij : i = j <;> simp [realMatrixComplexification_apply, hij]
+      by_cases hij : i = j <;> simp [(realMatrixComplexification_apply (𝕜 := ℂ)), hij]
     dsimp only [K]
     rw [map_mul, map_mul, hmapT, hmapD]
   refine ⟨T, hChar, ?_⟩

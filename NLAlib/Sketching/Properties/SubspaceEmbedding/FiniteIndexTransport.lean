@@ -1,4 +1,7 @@
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
+import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.Matrix.Norms.RankNorm
+import NLAlib.Matrix.Norms.Reindex
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 import NLAlib.Sketching.Properties.SubspaceEmbedding.SingularValueEmbedding
 /-!
 # Relabelling invariance of subspace embeddings

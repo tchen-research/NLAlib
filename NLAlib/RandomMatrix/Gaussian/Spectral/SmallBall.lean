@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.Core
 import NLAlib.RandomMatrix.Gaussian.Invariance.Invariance
+import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
 import NLAlib.Probability.ChiSquare.ChiSquare
 import NLAlib.ForMathlib.MeasureTheory.Integral
 
@@ -158,31 +159,33 @@ Atlas: `smin-small-ball` (helper). Ported from Prove2me solution
 `GaussianMatrix.dist_col_span_small_ball` (`measurePreserving_updateCol`). -/
 theorem measurePreserving_updateCol_gaussianMatrix (N n : ℕ) (j : Fin n) :
     MeasurePreserving
-      (fun p : (Fin N → Fin n → ℝ) × (Fin N → ℝ) => fun i => Function.update (p.1 i) j (p.2 i))
-      ((gaussianMatrix N n).prod (Measure.pi fun _ : Fin N => gaussianReal 0 1))
-      (gaussianMatrix N n) := by
+      (fun p : (Matrix (Fin N) (Fin n) ℝ) × (Fin N → ℝ) =>
+        Matrix.of fun i => Function.update (p.1 i) j (p.2 i))
+      ((gaussianMatrix (Fin N) (Fin n)).prod (Measure.pi fun _ : Fin N => gaussianReal 0 1))
+      (gaussianMatrix (Fin N) (Fin n)) := by
   have h1 := MeasurePreserving.symm _ (measurePreserving_arrowProdEquivProdArrow (Fin n → ℝ) ℝ
     (Fin N) (fun _ => Measure.pi fun _ : Fin n => gaussianReal 0 1) (fun _ => gaussianReal 0 1))
   have h2 := measurePreserving_pi
     (fun _ : Fin N => (Measure.pi fun _ : Fin n => gaussianReal 0 1).prod (gaussianReal 0 1))
     (fun _ => Measure.pi fun _ : Fin n => gaussianReal 0 1)
     (fun _ => measurePreserving_update_pi (fun _ : Fin n => gaussianReal 0 1) j)
-  exact h2.comp h1
+  have hof := measurePreserving_ofMeasurableEquiv_gaussianMatrix (m := Fin N) (n := Fin n)
+  exact hof.comp ((h2.comp h1).comp (hof.symm.prod (MeasurePreserving.id _)))
 
 /-- The distance from column `j` to the span of the other columns is measurable (an infimum of
 continuous functions, hence upper semicontinuous). -/
 private lemma measurable_iInf_sqrt_mulVec {N n : ℕ} (j : Fin n) :
-    Measurable (fun A : Fin N → Fin n → ℝ => ⨅ x : {x : Fin n → ℝ // x j = 1},
-        Real.sqrt ((Matrix.of A *ᵥ x.1) ⬝ᵥ (Matrix.of A *ᵥ x.1))) := by
+    Measurable (fun A : Matrix (Fin N) (Fin n) ℝ => ⨅ x : {x : Fin n → ℝ // x j = 1},
+        Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1))) := by
   refine UpperSemicontinuous.measurable ?_
   refine upperSemicontinuous_ciInf (fun A => ⟨0, ?_⟩) fun x => ?_
   · rintro _ ⟨y, rfl⟩; exact Real.sqrt_nonneg _
   · refine Continuous.upperSemicontinuous ?_
-    simp only [Matrix.mulVec, dotProduct, Matrix.of_apply]
+    simp only [Matrix.mulVec, dotProduct]
     fun_prop
 
 /-- Zeroing one column leaves rank at most `n - 1`. -/
-private lemma rank_update_col_zero_le {N n : ℕ} (A : Fin N → Fin n → ℝ) (j : Fin n) :
+private lemma rank_update_col_zero_le {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (j : Fin n) :
     (Matrix.of fun i l => Function.update (A i) j 0 l).rank ≤ n - 1 := by
   let B' : Matrix (Fin N) {l : Fin n // l ≠ j} ℝ := Matrix.of fun i l => A i l.1
   let E : Matrix {l : Fin n // l ≠ j} (Fin n) ℝ := Matrix.of fun l k => if k = l.1 then 1 else 0
@@ -206,7 +209,7 @@ private lemma rank_update_col_zero_le {N n : ℕ} (A : Fin N → Fin n → ℝ) 
 
 /-- With `x j = 1`, `A' x = g - B (-x)` where `A'` is `A` with column `j` replaced by `g` and
 `B` is `A` with column `j` zeroed. -/
-private lemma updateCol_mulVec {N n : ℕ} (A : Fin N → Fin n → ℝ) (g : Fin N → ℝ) (j : Fin n)
+private lemma updateCol_mulVec {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (g : Fin N → ℝ) (j : Fin n)
     (x : Fin n → ℝ) (hx : x j = 1) :
     Matrix.of (fun i => Function.update (A i) j (g i)) *ᵥ x
       = g - (Matrix.of fun i l => Function.update (A i) j 0 l) *ᵥ (-x) := by
@@ -234,19 +237,21 @@ Atlas: `smin-small-ball` (step). Ported from Prove2me solution
 atlas: smin-small-ball -/
 theorem measure_sq_dist_col_span_le_le_gaussianMatrix {N n : ℕ} (hnN : n ≤ N) (j : Fin n)
     (u : ℝ) (hu : 0 ≤ u) (hud : u ≤ (N : ℝ) - n + 1) :
-    (gaussianMatrix N n) {A | (⨅ x : {x : Fin n → ℝ // x j = 1},
-        Real.sqrt ((Matrix.of A *ᵥ x.1) ⬝ᵥ (Matrix.of A *ᵥ x.1))) ^ 2 ≤ u}
-      ≤ ENNReal.ofReal ((Real.exp 1 * u / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2)) := by
-  have hS : MeasurableSet {A : Fin N → Fin n → ℝ | (⨅ x : {x : Fin n → ℝ // x j = 1},
-      Real.sqrt ((Matrix.of A *ᵥ x.1) ⬝ᵥ (Matrix.of A *ᵥ x.1))) ^ 2 ≤ u} :=
+    (gaussianMatrix (Fin N) (Fin n)).real {A | (⨅ x : {x : Fin n → ℝ // x j = 1},
+        Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1))) ^ 2 ≤ u}
+      ≤ (Real.exp 1 * u / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2) := by
+  refine ENNReal.toReal_le_of_le_ofReal (Real.rpow_nonneg (div_nonneg
+    (mul_nonneg (Real.exp_pos 1).le hu) (hu.trans hud)) _) ?_
+  have hS : MeasurableSet {A : Matrix (Fin N) (Fin n) ℝ | (⨅ x : {x : Fin n → ℝ // x j = 1},
+      Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1))) ^ 2 ≤ u} :=
     measurableSet_le ((measurable_iInf_sqrt_mulVec j).pow_const 2) measurable_const
   have hΦ := measurePreserving_updateCol_gaussianMatrix N n j
   rw [← hΦ.measure_preimage hS.nullMeasurableSet, Measure.prod_apply (hΦ.measurable hS)]
   have hd : ((N - n + 1 : ℕ) : ℝ) = (N : ℝ) - n + 1 := by
     rw [Nat.cast_add, Nat.cast_sub hnN, Nat.cast_one]
   set bound := ENNReal.ofReal ((Real.exp 1 * u / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2))
-  calc ∫⁻ A, (Measure.pi fun _ : Fin N => gaussianReal 0 1) _ ∂(gaussianMatrix N n)
-      ≤ ∫⁻ _, bound ∂(gaussianMatrix N n) := lintegral_mono fun A => ?_
+  calc ∫⁻ A, (Measure.pi fun _ : Fin N => gaussianReal 0 1) _ ∂(gaussianMatrix (Fin N) (Fin n))
+      ≤ ∫⁻ _, bound ∂(gaussianMatrix (Fin N) (Fin n)) := lintegral_mono fun A => ?_
     _ = bound := by rw [lintegral_const, measure_univ, mul_one]
   set B : Matrix (Fin N) (Fin n) ℝ := Matrix.of fun i l => Function.update (A i) j 0 l with hB
   have hrank : B.rank + (N - n + 1) ≤ N := by
@@ -282,36 +287,68 @@ column-distance estimate. Atlas: `smin-small-ball`. Ported from Prove2me solutio
 atlas: smin-small-ball -/
 theorem measure_sigmaMin_le_le_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) (hnN : n ≤ N) (s : ℝ)
     (hsd : n * s ^ 2 ≤ (N : ℝ) - n + 1) :
-    (gaussianMatrix N n) {A | sigmaMin (Matrix.of A) ≤ s}
-      ≤ ENNReal.ofReal
-          (n * (Real.exp 1 * n * s ^ 2 / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2)) := by
+    (gaussianMatrix (Fin N) (Fin n)).real {A | sigmaMin A ≤ s}
+      ≤ n * (Real.exp 1 * n * s ^ 2 / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2) := by
+  refine ENNReal.toReal_le_of_le_ofReal (mul_nonneg (Nat.cast_nonneg n) (Real.rpow_nonneg
+    (div_nonneg (by positivity) ((by positivity : (0 : ℝ) ≤ n * s ^ 2).trans hsd)) _)) ?_
   have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
-  set D : Fin n → (Fin N → Fin n → ℝ) → ℝ := fun j A =>
+  set D : Fin n → (Matrix (Fin N) (Fin n) ℝ) → ℝ := fun j A =>
     ⨅ x : {x : Fin n → ℝ // x j = 1},
-      Real.sqrt ((Matrix.of A *ᵥ x.1) ⬝ᵥ (Matrix.of A *ᵥ x.1)) with hD
+      Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)) with hD
   have hD0 : ∀ j A, 0 ≤ D j A := fun j A =>
     Real.iInf_nonneg fun x => Real.sqrt_nonneg _
-  have hsub : {A : Fin N → Fin n → ℝ | sigmaMin (Matrix.of A) ≤ s}
+  have hsub : {A : Matrix (Fin N) (Fin n) ℝ | sigmaMin A ≤ s}
       ⊆ ⋃ j : Fin n, {A | D j A ^ 2 ≤ n * s ^ 2} := by
     intro A hA
-    obtain ⟨j, hj⟩ := exists_iInf_sqrt_mulVec_le_of_sigmaMin_le (Matrix.of A) s hA
+    obtain ⟨j, hj⟩ := exists_iInf_sqrt_mulVec_le_of_sigmaMin_le A s hA
     rw [Fintype.card_fin] at hj
     refine Set.mem_iUnion.2 ⟨j, ?_⟩
     show D j A ^ 2 ≤ n * s ^ 2
     have h1 : D j A ^ 2 ≤ (Real.sqrt n * s) ^ 2 := pow_le_pow_left₀ (hD0 j A) hj 2
     rwa [mul_pow, Real.sq_sqrt (Nat.cast_nonneg n)] at h1
   have hu0 : 0 ≤ (n : ℝ) * s ^ 2 := by positivity
-  calc (gaussianMatrix N n) {A | sigmaMin (Matrix.of A) ≤ s}
-      ≤ (gaussianMatrix N n) (⋃ j : Fin n, {A | D j A ^ 2 ≤ n * s ^ 2}) := measure_mono hsub
-    _ ≤ ∑ j : Fin n, (gaussianMatrix N n) {A | D j A ^ 2 ≤ n * s ^ 2} :=
+  calc (gaussianMatrix (Fin N) (Fin n)) {A | sigmaMin A ≤ s}
+      ≤ (gaussianMatrix (Fin N) (Fin n)) (⋃ j : Fin n, {A | D j A ^ 2 ≤ n * s ^ 2}) := measure_mono hsub
+    _ ≤ ∑ j : Fin n, (gaussianMatrix (Fin N) (Fin n)) {A | D j A ^ 2 ≤ n * s ^ 2} :=
         measure_iUnion_fintype_le _ _
     _ ≤ ∑ _j : Fin n, ENNReal.ofReal
           ((Real.exp 1 * (n * s ^ 2) / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2)) :=
-        Finset.sum_le_sum fun j _ =>
-          measure_sq_dist_col_span_le_le_gaussianMatrix hnN j (n * s ^ 2) hu0 hsd
+        Finset.sum_le_sum fun j _ => by
+          rw [← ofReal_measureReal]
+          exact ENNReal.ofReal_le_ofReal
+            (measure_sq_dist_col_span_le_le_gaussianMatrix hnN j (n * s ^ 2) hu0 hsd)
     _ = ENNReal.ofReal
           (n * (Real.exp 1 * n * s ^ 2 / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2)) := by
         rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
           ENNReal.ofReal_mul (Nat.cast_nonneg n), ENNReal.ofReal_natCast, mul_assoc]
+
+/-- `measure_sq_dist_col_span_le_le_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ`. Atlas: `smin-small-ball`. -/
+theorem measure_sq_dist_col_span_le_le_gaussianMatrix_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {N n : ℕ} {X : Ω → Matrix (Fin N) (Fin n) ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ) (hnN : n ≤ N) (j : Fin n)
+    (u : ℝ) (hu : 0 ≤ u) (hud : u ≤ (N : ℝ) - n + 1) :
+    μ.real {ω | (⨅ x : {x : Fin n → ℝ // x j = 1},
+        Real.sqrt ((X ω *ᵥ x.1) ⬝ᵥ (X ω *ᵥ x.1))) ^ 2 ≤ u}
+      ≤ (Real.exp 1 * u / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2) := by
+  rw [hX.measureReal_eq (p := fun A : Matrix (Fin N) (Fin n) ℝ =>
+      (⨅ x : {x : Fin n → ℝ // x j = 1}, Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1))) ^ 2 ≤ u)
+    (measurableSet_le ((measurable_iInf_sqrt_mulVec j).pow_const 2) measurable_const)]
+  exact measure_sq_dist_col_span_le_le_gaussianMatrix hnN j u hu hud
+
+/-- `measure_sigmaMin_le_le_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ`. Atlas: `smin-small-ball`. -/
+theorem measure_sigmaMin_le_le_gaussianMatrix_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {N n : ℕ} {X : Ω → Matrix (Fin N) (Fin n) ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ) (hn : 1 ≤ n) (hnN : n ≤ N) (s : ℝ)
+    (hsd : n * s ^ 2 ≤ (N : ℝ) - n + 1) :
+    μ.real {ω | sigmaMin (X ω) ≤ s}
+      ≤ n * (Real.exp 1 * n * s ^ 2 / ((N : ℝ) - n + 1)) ^ (((N : ℝ) - n + 1) / 2) := by
+  have hc : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
+      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
+  rw [hX.measureReal_eq (p := fun A => sigmaMin A ≤ s)
+    (measurableSet_le hc.measurable measurable_const)]
+  exact measure_sigmaMin_le_le_gaussianMatrix hn hnN s hsd
 
 end NLAlib

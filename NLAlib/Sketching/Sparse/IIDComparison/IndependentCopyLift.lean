@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.IIDComparison.ConditionalBarycenter
 import NLAlib.Matrix.Functions.TracePowerConvexity
 import NLAlib.ForMathlib.Algebra.OffDiagonalSums
-set_option autoImplicit false
 
 /-!
 # Independent-copy lift of the sparse--iid coupling
@@ -14,7 +13,7 @@ the off-diagonal matrix conditional-barycenter identity from TeX lines
 237--250.  The restriction `i ≠ j` appears explicitly in the theorem.
 -/
 
-open scoped BigOperators InnerProductSpace
+open scoped InnerProductSpace
 
 namespace NLAlib.SparseSketch
 

@@ -79,16 +79,22 @@ private lemma inv_self_mul_transpose_insertNth_apply_self {n k : ℕ} (i : Fin (
 
 private lemma map_inv_self_mul_transpose_apply_self_succ {n k : ℕ} (hnk : n ≤ k)
     (i : Fin (n + 1)) :
-    Measure.map (fun G : Fin (n + 1) → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i)
-        (gaussianMatrix (n + 1) k)
+    Measure.map (fun G : Matrix (Fin (n + 1)) (Fin k) ℝ => (G * Gᵀ)⁻¹ i i)
+        (gaussianMatrix (Fin (n + 1)) (Fin k))
       = Measure.map (fun x : Fin (k - n) → ℝ => (∑ j, x j ^ 2)⁻¹)
         (Measure.pi fun _ : Fin (k - n) => gaussianReal 0 1) := by
+  rw [← (measurePreserving_ofMeasurableEquiv_gaussianMatrix (m := Fin (n + 1))
+    (n := Fin k)).map_eq, Measure.map_map (measurable_inv_self_mul_transpose_apply i i)
+    Matrix.ofMeasurableEquiv.measurable]
+  change Measure.map (fun G : Fin (n + 1) → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i)
+    (Measure.pi fun _ : Fin (n + 1) => Measure.pi fun _ : Fin k => gaussianReal 0 1) = _
   set μ : Measure (Fin k → ℝ) := Measure.pi fun _ : Fin k => gaussianReal 0 1 with hμ
   set ν : Measure (Fin n → Fin k → ℝ) := Measure.pi fun _ : Fin n => μ with hν
   set F : (Fin (n + 1) → Fin k → ℝ) → ℝ := fun G => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i with hF
-  have hFm : Measurable F := measurable_inv_self_mul_transpose_apply i i
+  have hFm : Measurable F :=
+    (measurable_inv_self_mul_transpose_apply i i).comp Matrix.measurable_of
   set e := MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => Fin k → ℝ) i with he
-  have hmp : MeasurePreserving e (gaussianMatrix (n + 1) k) (μ.prod ν) :=
+  have hmp : MeasurePreserving e (Measure.pi fun _ : Fin (n + 1) => μ) (μ.prod ν) :=
     measurePreserving_piFinSuccAbove (fun _ : Fin (n + 1) => μ) i
   set Φ : (Fin k → ℝ) × (Fin n → Fin k → ℝ) → ℝ := fun p => F (e.symm p) with hΦ
   have hΦm : Measurable Φ := hFm.comp e.symm.measurable
@@ -99,10 +105,12 @@ private lemma map_inv_self_mul_transpose_apply_self_succ {n k : ℕ} (hnk : n �
     simp only [hΦ, hF, he, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
     exact inv_self_mul_transpose_insertNth_apply_self i H hH g
   have hrank : ∀ᵐ H ∂ν, (Matrix.of H).rank = n := by
-    have := gaussianMatrix_ae_rank_eq n k
+    have := (measurePreserving_ofMeasurableEquiv_gaussianMatrix (m := Fin n)
+      (n := Fin k)).quasiMeasurePreserving.ae (gaussianMatrix_ae_rank_eq n k)
     filter_upwards [this] with H hH
+    rw [Matrix.coe_ofMeasurableEquiv] at hH
     rw [hH]; omega
-  have hmap : Measure.map F (gaussianMatrix (n + 1) k) = Measure.map Φ (μ.prod ν) := by
+  have hmap : Measure.map F (Measure.pi fun _ : Fin (n + 1) => μ) = Measure.map Φ (μ.prod ν) := by
     rw [← hmp.map_eq, Measure.map_map hΦm e.measurable]
     congr 1
     funext G
@@ -139,8 +147,8 @@ a.s. (`gaussianMatrix_ae_rank_eq`, atlas `gaussian-full-rank-ae`), and the resid
 solution `GaussianMatrix.inverse_wishart_diag_law`. -/
 theorem gaussianMatrix_map_inv_self_mul_transpose_apply_self {r k : ℕ} (hrk : r ≤ k)
     (i : Fin r) :
-    Measure.map (fun G : Fin r → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i)
-        (gaussianMatrix r k)
+    Measure.map (fun G : Matrix (Fin r) (Fin k) ℝ => (G * Gᵀ)⁻¹ i i)
+        (gaussianMatrix (Fin r) (Fin k))
       = Measure.map (fun x : Fin (k - r + 1) → ℝ => (∑ j, x j ^ 2)⁻¹)
         (Measure.pi fun _ : Fin (k - r + 1) => gaussianReal 0 1) := by
   cases r with
@@ -182,17 +190,19 @@ theorem integrable_and_integral_inv_sq_dist_rowSpace_sq {n k : ℕ} (hnk : n + 5
 
 private lemma integrable_and_integral_inv_self_mul_transpose_apply_self_sq_succ {n k : ℕ}
     (hnk : n + 5 ≤ k) (i : Fin (n + 1)) :
-    Integrable (fun G : Fin (n + 1) → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i ^ 2)
-        (gaussianMatrix (n + 1) k) ∧
-    ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i ^ 2 ∂(gaussianMatrix (n + 1) k)
+    Integrable (fun G : Matrix (Fin (n + 1)) (Fin k) ℝ => (G * Gᵀ)⁻¹ i i ^ 2)
+        (gaussianMatrix (Fin (n + 1)) (Fin k)) ∧
+    ∫ G, (G * Gᵀ)⁻¹ i i ^ 2 ∂(gaussianMatrix (Fin (n + 1)) (Fin k))
       = 1 / (((k : ℝ) - n - 2) * ((k : ℝ) - n - 4)) := by
+  rw [integrable_gaussianMatrix_iff, integral_gaussianMatrix_eq]
   set μ : Measure (Fin k → ℝ) := Measure.pi fun _ : Fin k => gaussianReal 0 1 with hμ
   set ν : Measure (Fin n → Fin k → ℝ) := Measure.pi fun _ : Fin n => μ with hν
   set F : (Fin (n + 1) → Fin k → ℝ) → ℝ :=
     fun G => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i ^ 2 with hF
-  have hFm : Measurable F := (measurable_inv_self_mul_transpose_apply i i).pow_const 2
+  have hFm : Measurable F :=
+    ((measurable_inv_self_mul_transpose_apply i i).comp Matrix.measurable_of).pow_const 2
   set e := MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => Fin k → ℝ) i with he
-  have hmp : MeasurePreserving e (gaussianMatrix (n + 1) k) (μ.prod ν) :=
+  have hmp : MeasurePreserving e (Measure.pi fun _ : Fin (n + 1) => μ) (μ.prod ν) :=
     measurePreserving_piFinSuccAbove (fun _ : Fin (n + 1) => μ) i
   set Φ : (Fin k → ℝ) × (Fin n → Fin k → ℝ) → ℝ := fun p => F (e.symm p) with hΦ
   have hΦm : Measurable Φ := hFm.comp e.symm.measurable
@@ -205,8 +215,10 @@ private lemma integrable_and_integral_inv_self_mul_transpose_apply_self_sq_succ 
     rw [← inv_self_mul_transpose_insertNth_apply_self i H hH g]
     rfl
   have hrank : ∀ᵐ H ∂ν, (Matrix.of H).rank = n := by
-    have := gaussianMatrix_ae_rank_eq n k
+    have := (measurePreserving_ofMeasurableEquiv_gaussianMatrix (m := Fin n)
+      (n := Fin k)).quasiMeasurePreserving.ae (gaussianMatrix_ae_rank_eq n k)
     filter_upwards [this] with H hH
+    rw [Matrix.coe_ofMeasurableEquiv] at hH
     rw [hH]; omega
   have hinner : ∀ᵐ H ∂ν, Integrable (fun g => Φ (g, H)) μ ∧
       ∫ g, Φ (g, H) ∂μ = 1 / (((k : ℝ) - n - 2) * ((k : ℝ) - n - 4)) := by
@@ -241,9 +253,9 @@ rows (atlas `gaussian-full-rank-ae`, `block-law-indep`) and the inverse chi-squa
 Ported from Prove2me solution `GaussianMatrix.inverse_wishart_diag_sq_moment`. -/
 theorem integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMatrix {r k : ℕ}
     (hrk : r + 4 ≤ k) (i : Fin r) :
-    Integrable (fun G : Fin r → Fin k → ℝ => (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i ^ 2)
-      (gaussianMatrix r k) ∧
-    ∫ G, (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i ^ 2 ∂(gaussianMatrix r k)
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ => (G * Gᵀ)⁻¹ i i ^ 2)
+      (gaussianMatrix (Fin r) (Fin k)) ∧
+    ∫ G, (G * Gᵀ)⁻¹ i i ^ 2 ∂(gaussianMatrix (Fin r) (Fin k))
       = 1 / (((k : ℝ) - r - 1) * ((k : ℝ) - r - 3)) := by
   cases r with
   | zero => exact i.elim0
@@ -261,10 +273,11 @@ theorem integrable_and_integral_inv_self_mul_transpose_apply_self_sq_gaussianMat
 matrices. Source: Schur/operator inverse-Wishart route; atlas `inverse-wishart-spectral-moment`.
 -/
 theorem inv_self_mul_transpose_orthogonal_mul {r k : ℕ}
-    (U : Matrix (Fin r) (Fin r) ℝ) (hU : Uᵀ * U = 1)
+    (U : Matrix (Fin r) (Fin r) ℝ) (hU : HasOrthonormalCols U)
     (G : Matrix (Fin r) (Fin k) ℝ) :
     ((U * G) * (U * G)ᵀ)⁻¹ = U * (G * Gᵀ)⁻¹ * Uᵀ := by
-  have hUinv : U⁻¹ = Uᵀ := Matrix.inv_eq_left_inv hU
+  have hU' : Uᵀ * U = 1 := hU
+  have hUinv : U⁻¹ = Uᵀ := Matrix.inv_eq_left_inv hU'
   rw [Matrix.transpose_mul]
   rw [show U * G * (Gᵀ * Uᵀ) = U * (G * Gᵀ) * Uᵀ by simp [Matrix.mul_assoc]]
   rw [Matrix.mul_inv_rev, Matrix.mul_inv_rev, ← Matrix.transpose_nonsing_inv, hUinv,

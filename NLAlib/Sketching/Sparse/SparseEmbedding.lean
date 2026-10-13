@@ -11,7 +11,6 @@ estimate. Source: manuscript `sh:sparse`, ported sparse-Fock theorem at
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib

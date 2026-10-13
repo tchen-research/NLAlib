@@ -14,7 +14,7 @@ Atlas: `ky-fan-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 
@@ -87,6 +87,7 @@ theorem frobNorm_le_nuclearNorm (A : Matrix m n ℝ) : frobNorm A ≤ nuclearNor
   have h := frobNorm_le_nuclearNorm_fin (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
   rwa [frobNorm_reindex, nuclearNorm_reindex] at h
 
+omit [DecidableEq m] in
 /-- The spectral norm is at most the nuclear norm, including empty matrix spaces. -/
 theorem specNorm_le_nuclearNorm (A : Matrix m n ℝ) : specNorm A ≤ nuclearNorm A :=
   (specNorm_le_frobNorm A).trans (frobNorm_le_nuclearNorm A)
@@ -117,6 +118,7 @@ omit [DecidableEq m] in
 theorem nuclearNorm_smul (A : Matrix m n ℝ) (c : ℝ) : nuclearNorm (c • A) = |c| * nuclearNorm A :=
   kyFanNorm_smul A c _
 
+omit [DecidableEq m] in
 /-- The nuclear norm is a genuine norm, including the unique norm on an empty
 matrix space. -/
 theorem nuclearNorm_eq_zero_iff (A : Matrix m n ℝ) : nuclearNorm A = 0 ↔ A = 0 := by
@@ -158,9 +160,10 @@ theorem exists_specNorm_le_one_frobInner_eq_nuclearNorm (A : Matrix m n ℝ) :
     ∃ B : Matrix m n ℝ, specNorm B ≤ 1 ∧ frobInner A B = nuclearNorm A := by
   obtain ⟨U, V, hU, hV, htrace⟩ := exists_trace_twoSided_compression_eq_kyFanNorm A le_rfl
   refine ⟨U * Vᵀ, ?_, ?_⟩
-  · rw [specNorm_mul_transpose_right_of_hasOrthonormalCols hV.transpose_mul_self]
+  · rw [specNorm_mul_transpose_right_of_hasOrthonormalCols (show Vᵀ * V = 1 from hV)]
     exact specNorm_le_one_of_orthonormal hU
-  · rw [frobInner_comm, frobInner_eq_trace, Matrix.transpose_mul, Matrix.transpose_transpose,
+  · rw [frobInner_comm, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, Matrix.transpose_transpose,
       ← Matrix.trace_mul_cycle Uᵀ A V]
     simpa only [nuclearNorm] using htrace
 

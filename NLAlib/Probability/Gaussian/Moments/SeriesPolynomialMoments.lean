@@ -10,7 +10,6 @@ Source: operator manuscript, Gaussian branch of `noncommutative-khintchine`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
 open MeasureTheory ProbabilityTheory Matrix

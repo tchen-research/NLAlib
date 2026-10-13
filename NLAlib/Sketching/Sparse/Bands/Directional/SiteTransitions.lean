@@ -9,7 +9,6 @@ import NLAlib.ForMathlib.Algebra.OffDiagonalSums
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Directional two-site transitions
@@ -23,7 +22,7 @@ namespace NLAlib.SparseSketch
 
 namespace Directional
 
-open scoped BigOperators Matrix.Norms.L2Operator InnerProductSpace
+open scoped Matrix.Norms.L2Operator InnerProductSpace
 
 noncomputable section
 

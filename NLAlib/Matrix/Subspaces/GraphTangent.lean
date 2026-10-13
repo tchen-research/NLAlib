@@ -34,14 +34,14 @@ theorem subspaceTangent_range_graph_eq_specNorm
     (hU₁ : HasOrthonormalCols U₁) (hU₂ : HasOrthonormalCols U₂)
     (hU : U₁ᵀ * U₂ = 0) (F : Matrix r k ℝ) :
     subspaceTangent U₁ U₂ (LinearMap.range (U₁ + U₂ * F).mulVecLin) = specNorm F := by
-  have hU' : U₂ᵀ * U₁ = 0 := transpose_mul_eq_zero_comm.1 hU
+  have hU' : U₂ᵀ * U₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hU
   have hhead : ∀ z : k → ℝ, U₁ᵀ *ᵥ ((U₁ + U₂ * F) *ᵥ z) = z := by
     intro z
-    rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, hU₁.transpose_mul_self, hU,
+    rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, show U₁ᵀ * U₁ = 1 from hU₁, hU,
       Matrix.zero_mul, add_zero, Matrix.one_mulVec]
   have htail : ∀ z : k → ℝ, U₂ᵀ *ᵥ ((U₁ + U₂ * F) *ᵥ z) = F *ᵥ z := by
     intro z
-    rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, hU', hU₂.transpose_mul_self,
+    rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, hU', show U₂ᵀ * U₂ = 1 from hU₂,
       Matrix.one_mul, zero_add]
   let f := (Matrix.toEuclideanLin (𝕜 := ℝ)).trans LinearMap.toContinuousLinearMap F
   have he : ((fun x : n → ℝ => ‖WithLp.toLp 2 (U₂ᵀ *ᵥ x)‖) ''
@@ -87,10 +87,12 @@ theorem vectorTangentToFrame_le_of_orthogonal_competitor
   have hpv : p ⬝ᵥ v = 1 := by
     change (Qᵀ *ᵥ u) ⬝ᵥ (Qᵀ *ᵥ (u + w)) = 1
     rw [dotProduct_comm, Matrix.dotProduct_mulVec, Matrix.vecMul_transpose,
-      mulVec_transpose_mulVec_of_mem_range hQ hw, dotProduct_comm,
+      show Q *ᵥ (Qᵀ *ᵥ (u + w)) = u + w from mulVec_conjTranspose_mulVec_of_mem_range hQ hw,
+      dotProduct_comm,
       dotProduct_add, hu, huw, add_zero]
   have hvv : v ⬝ᵥ v = 1 + w ⬝ᵥ w := by
-    rw [transpose_mulVec_dotProduct_self_of_mem_range hQ hw]
+    rw [show (Qᵀ *ᵥ (u + w)) ⬝ᵥ (Qᵀ *ᵥ (u + w)) = (u + w) ⬝ᵥ (u + w) from
+      star_conjTranspose_mulVec_dotProduct_self_of_mem_range hQ hw]
     rw [add_dotProduct, dotProduct_add, dotProduct_add, hu, huw, dotProduct_comm w u, huw]
     ring
   have hcs : 1 ≤ (p ⬝ᵥ p) * (1 + w ⬝ᵥ w) := by
@@ -109,7 +111,8 @@ theorem vectorTangentToFrame_le_of_orthogonal_competitor
   have hee : (u - Q *ᵥ p) ⬝ᵥ (u - Q *ᵥ p) = 1 - p ⬝ᵥ p := by
     rw [sub_dotProduct, dotProduct_sub, dotProduct_sub, hu, hcross,
       dotProduct_comm (Q *ᵥ p) u, hcross,
-      mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ]
+      show (Q *ᵥ p) ⬝ᵥ (Q *ᵥ p) = p ⬝ᵥ p from
+        star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ p]
     ring
   have hnorm : ‖WithLp.toLp 2 p‖ ^ 2 = p ⬝ᵥ p := by
     rw [EuclideanSpace.real_norm_sq_eq]
@@ -142,10 +145,11 @@ theorem vectorTangentToFrame_graph_col_le
   let e : k → ℝ := Pi.single i 1
   have he : U₁.col i = U₁ *ᵥ e := by simp [e]
   have hu : U₁.col i ⬝ᵥ U₁.col i = 1 := by
-    rw [he, mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU₁]
+    rw [he, show (U₁ *ᵥ e) ⬝ᵥ (U₁ *ᵥ e) = e ⬝ᵥ e from
+      star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU₁ e]
     simp [e]
   have horth : U₁.col i ⬝ᵥ (U₂ *ᵥ F.col i) = 0 := by
-    have hU' : U₂ᵀ * U₁ = 0 := transpose_mul_eq_zero_comm.1 hU
+    have hU' : U₂ᵀ * U₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hU
     rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, he,
       Matrix.mulVec_mulVec, hU', Matrix.zero_mulVec, zero_dotProduct]
   have hw : U₁.col i + U₂ *ᵥ F.col i ∈ LinearMap.range Q.mulVecLin := by
@@ -159,8 +163,8 @@ theorem vectorTangentToFrame_graph_col_le
   have hnorm : ‖WithLp.toLp 2 (U₂ *ᵥ F.col i)‖ = ‖WithLp.toLp 2 (F.col i)‖ := by
     apply (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp
     rw [EuclideanSpace.real_norm_sq_eq, EuclideanSpace.real_norm_sq_eq]
-    simpa only [dotProduct, pow_two] using
-      mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU₂ (F.col i)
+    simpa only [dotProduct, pow_two, star_trivial] using
+      star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU₂ (F.col i)
   exact h.trans_eq hnorm
 
 end NLAlib

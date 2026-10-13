@@ -6,7 +6,6 @@ import NLAlib.Sketching.Sparse.Bands.GlobalBands
 import NLAlib.Sketching.Sparse.FockModel.FockSpace
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Exact passage from the iid multiplication operator to concrete grade bands
@@ -19,7 +18,6 @@ literally the normalized sum of the three concrete bands.
 
 namespace NLAlib.SparseSketch
 
-open scoped BigOperators
 
 noncomputable section
 

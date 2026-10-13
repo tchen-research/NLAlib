@@ -70,7 +70,8 @@ theorem mul_restrict_Q_eq_mul (D : ArnoldiDecomp A b (q + 1)) :
     rw [D.range_Q]
     exact krylovSpace_mono A b (show (j : ℕ) + 2 ≤ q + 1 by omega)
       ((D.restrict q.le_succ).graded.mulVec_col_mem j)
-  have h := congrFun (mulVec_transpose_mulVec_of_mem_range D.hasOrthonormalCols hmem) r
+  have h := congrFun (mulVec_conjTranspose_mulVec_of_mem_range D.hasOrthonormalCols hmem) r
+  rw [Matrix.conjTranspose_eq_transpose_of_trivial] at h
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc]
   change (A * (D.restrict q.le_succ).Q).col j r =
     (D.Q * D.Qᵀ * A * (D.restrict q.le_succ).Q).col j r
@@ -122,7 +123,8 @@ theorem mul_Q_eq_of_krylovGrade_le (D : ArnoldiDecomp A b q) (h : krylovGrade A 
     have hj := krylovSpace_le_krylovSpace_krylovGrade A b _ (D.graded.col_mem j)
     rw [krylovSpace_eq_of_krylovGrade_le A b h]
     exact mulVec_mem_krylovSpace_krylovGrade A b hj
-  have h := congrFun (mulVec_transpose_mulVec_of_mem_range D.hasOrthonormalCols hmem) r
+  have h := congrFun (mulVec_conjTranspose_mulVec_of_mem_range D.hasOrthonormalCols hmem) r
+  rw [Matrix.conjTranspose_eq_transpose_of_trivial] at h
   rw [H_def, ← Matrix.mul_assoc, ← Matrix.mul_assoc]
   change (A * D.Q).col j r = (D.Q * D.Qᵀ * A * D.Q).col j r
   rw [col_mul_eq_mulVec_col, col_mul_eq_mulVec_col, ← h]
@@ -173,7 +175,8 @@ theorem sq_transpose_Q_mulVec_apply_zero (D : ArnoldiDecomp A b q) (hq : 0 < q) 
     rw [D.range_Q]; simpa using pow_mulVec_mem_krylovSpace A b (i := 0) hq
   have h1 : (D.Qᵀ *ᵥ b) ⬝ᵥ (D.Qᵀ *ᵥ b) = b ⬝ᵥ b := by
     rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose,
-      mulVec_transpose_mulVec_of_mem_range D.hasOrthonormalCols hb]
+      ← Matrix.conjTranspose_eq_transpose_of_trivial D.Q,
+      mulVec_conjTranspose_mulVec_of_mem_range D.hasOrthonormalCols hb]
   rw [← h1, dotProduct, Finset.sum_eq_single (⟨0, hq⟩ : Fin q), sq]
   · intro i _ hi
     rw [D.transpose_Q_mulVec_apply_eq_zero (Nat.pos_of_ne_zero fun h => hi (Fin.ext h)),

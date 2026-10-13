@@ -23,13 +23,13 @@ Rayleigh minimum. Source: the finite spectral variational principle;
 atlas norm-lipschitz and wishart-lambda-min-tail (operator bridge). -/
 theorem lamMin_eq_of_unit_eigenvector_of_posSemidef_sub {A : Matrix ι ι ℝ}
     {a : ℝ} (hpos : (A - a • 1).PosSemidef) (v : ι → ℝ)
-    (hv : v ⬝ᵥ v = 1) (heig : A *ᵥ v = a • v) : lamMin A = a := by
+    (hv : v ⬝ᵥ v = 1) (heig : A *ᵥ v = a • v) :
+    (⨅ x : {x : ι → ℝ // x ⬝ᵥ x = 1}, x.1 ⬝ᵥ A *ᵥ x.1) = a := by
   have hu : Nonempty {x : ι → ℝ // x ⬝ᵥ x = 1} := ⟨⟨v, hv⟩⟩
   apply le_antisymm
-  · have h := lamMin_le A hv
+  · have h := ciInf_le (bddBelow_range_rayleigh A) ⟨v, hv⟩
     simpa only [heig, dotProduct_smul, smul_eq_mul, hv, mul_one] using h
-  · unfold lamMin
-    apply le_ciInf
+  · apply le_ciInf
     intro x
     have hp := hpos.dotProduct_mulVec_nonneg x.val
     simp only [star_trivial, Matrix.sub_mulVec, Matrix.smul_mulVec,
@@ -43,7 +43,8 @@ atlas wishart-lambda-min-tail and norm-lipschitz (operator bridge). -/
 theorem lamMin_eq_of_orthogonal_diagonalization
     (A U : Matrix ι ι ℝ) (hU : Uᵀ * U = 1) (l : ι → ℝ)
     (hdiag : Uᵀ * A * U = Matrix.diagonal l) (i₀ : ι)
-    (hmin : ∀ i, l i₀ ≤ l i) : lamMin A = l i₀ := by
+    (hmin : ∀ i, l i₀ ≤ l i) :
+    (⨅ x : {x : ι → ℝ // x ⬝ᵥ x = 1}, x.1 ⬝ᵥ A *ᵥ x.1) = l i₀ := by
   have hU' : U * Uᵀ = 1 := mul_eq_one_comm.mp hU
   have hA : A = U * Matrix.diagonal l * Uᵀ := by
     rw [← hdiag]
@@ -67,7 +68,8 @@ theorem lamMin_eq_of_orthogonal_diagonalization
   let v : ι → ℝ := U *ᵥ e
   have hv : v ⬝ᵥ v = 1 := by
     dsimp [v]
-    rw [mulVec_dotProduct_mulVec_self, hU, Matrix.one_mulVec]
+    rw [show (U *ᵥ e) ⬝ᵥ (U *ᵥ e) = e ⬝ᵥ ((Uᵀ * U) *ᵥ e) from
+        star_mulVec_dotProduct_mulVec_self U e, hU, Matrix.one_mulVec]
     simp [e, dotProduct, Pi.single_apply]
   have heig : A *ᵥ v = l i₀ • v := by
     rw [hA]

@@ -83,8 +83,8 @@ theorem exists_real_similarity_upper_triangular_small_entries
   have hInv : Q⁻¹ = Qᵀ := Matrix.inv_eq_left_inv hQ
   have hsim : Q⁻¹ * A * Q = T := by
     rw [hInv, hA]
-    rw [Matrix.mul_assoc Q T Qᵀ, ← Matrix.mul_assoc Qᵀ Q, hQ.transpose_mul_self,
-      Matrix.one_mul, Matrix.mul_assoc, hQ.transpose_mul_self, Matrix.mul_one]
+    rw [Matrix.mul_assoc Q T Qᵀ, ← Matrix.mul_assoc Qᵀ Q, (show Qᵀ * Q = 1 from hQ),
+      Matrix.one_mul, Matrix.mul_assoc, (show Qᵀ * Q = 1 from hQ), Matrix.mul_one]
   exact exists_similarity_small_entries_of_triangular_similarity A Q hQu e
     (fun i j hij => by rw [hsim]; exact htri i j hij) hε
 

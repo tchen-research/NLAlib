@@ -8,7 +8,7 @@ of circulants, including empty matrices.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 
 /-- The complete structured-matrix bundle with the source indexing

@@ -13,7 +13,6 @@ Source: Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.
 -/
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 open NLAlib
-set_option autoImplicit false
 
 private lemma operatorConvexOn_finite {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     (I : Set ℝ) (f : ℝ → ℝ) (hf : OperatorConvexOn I f)

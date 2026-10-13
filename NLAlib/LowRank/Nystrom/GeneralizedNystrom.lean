@@ -39,7 +39,6 @@ Atlas: `gn-expected-error`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 -- Some size hypotheses (`k + 2 ≤ t`, `1 ≤ q`, `q + 2 ≤ s`) are needed only to make the Gaussian
 -- hypotheses true; they are kept in the statements for fidelity, hence this option.
 set_option linter.unusedVariables false
@@ -56,7 +55,7 @@ variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs}
 
 Fixed `Q` (orthonormal columns, `q ≥ 1`), its orthogonal completion `Qp = Q⊥`
 (`QQᵀ + Q⊥Q⊥ᵀ = I`), fixed `A`, random `Ψ` with `s ≥ q + 2`; `G₁ ω = Ψ ωᵀ Q`,
-`G₂ ω = Ψ ωᵀ Q⊥`, `E = residual Q A = (I − QQᵀ)A`.
+`G₂ ω = Ψ ωᵀ Q⊥`, `E = projResidual Q A = (I − QQᵀ)A`.
 * `hG₁`: `G₁` has full column rank a.s. (so `G₁†G₁ = I`), the "almost surely" of the paper;
 * `hG₂`: `E‖G₁†G₂(Q⊥ᵀE)‖_F² = E‖G₁†‖_F² · ‖Q⊥ᵀE‖_F²` — `lem:moments` for `G₂` conditionally
   on `G₁` (independence of `G₁`, `G₂`) followed by the tower property;
@@ -75,16 +74,16 @@ theorem completion_reduction {m n r : Type*} [Fintype m] [Fintype n] [Fintype r]
     (hq : 1 ≤ q) (hqs : q + 2 ≤ s)
     (Ψ : Ωs → Matrix m (Fin s) ℝ)
     (hG₁ : ∀ᵐ ω ∂μ, IsUnit (((Ψ ω)ᵀ * Q)ᵀ * ((Ψ ω)ᵀ * Q)))
-    (hG₂ : ∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * (Qpᵀ * residual Q A)) ∂μ
-      = (∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q)) ∂μ) * frobSq (Qpᵀ * residual Q A))
+    (hG₂ : ∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * (Qpᵀ * projResidual Q A)) ∂μ
+      = (∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q)) ∂μ) * frobSq (Qpᵀ * projResidual Q A))
     (hG₁m : ∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q)) ∂μ = (q : ℝ) / (s - q - 1))
     (hGi : Integrable
-      (fun ω => frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * (Qpᵀ * residual Q A))) μ) :
+      (fun ω => frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * (Qpᵀ * projResidual Q A))) μ) :
     ∫ ω, frobSq (A - sketchedOutput Q (Ψ ω) A) ∂μ
-      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) := by
+      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual Q A) := by
   have hae : (fun ω => frobSq (A - sketchedOutput Q (Ψ ω) A)) =ᵐ[μ]
-      fun ω => frobSq (residual Q A)
-        + frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * (Qpᵀ * residual Q A)) := by
+      fun ω => frobSq (projResidual Q A)
+        + frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * (Qpᵀ * projResidual Q A)) := by
     filter_upwards [hG₁] with ω h
     exact frobSq_error Q Qp (Ψ ω) A hQ hcomp h
   rw [integral_congr_ae hae, integral_add (integrable_const _) hGi, integral_const,
@@ -125,13 +124,13 @@ theorem gn_main [IsProbabilityMeasure μ]
     (hinv : ∫ ω, frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) ∂μ
       = (k : ℝ) / (t - k - 1) * frobSq S₂)
     (hcond : ∫ ω, frobSq (A - sketchedOutput (Q ω) (Ψ ω) A) ∂μ
-      = ∫ ω, (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual (Q ω) A) ∂μ)
-    (hYi : Integrable (fun ω => frobSq (residual (Q ω) A)) μ)
+      = ∫ ω, (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual (Q ω) A) ∂μ)
+    (hYi : Integrable (fun ω => frobSq (projResidual (Q ω) A)) μ)
     (hZi : Integrable (fun ω => frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω))) μ) :
     ∫ ω, frobSq (A - sketchedOutput (Q ω) (Ψ ω) A) ∂μ
       ≤ (1 + (t : ℝ) / (s - t - 1)) * ((1 + (k : ℝ) / (t - k - 1)) * frobSq S₂) := by
   -- the range-finder bound, `thm:RSVD` for `Y = ‖(I - QQᵀ)A‖_F²`
-  have hstruct : ∀ᵐ ω ∂μ, frobSq (residual (Q ω) A)
+  have hstruct : ∀ᵐ ω ∂μ, frobSq (projResidual (Q ω) A)
       ≤ frobSq S₂ + frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) := by
     filter_upwards [hQo, hQr, hunit] with ω h1 h2 h3
     exact frobSq_residual_le_of_range_subset hA hU₂ hV₁ hV₂ hV rfl rfl h3 h1 h2
@@ -179,21 +178,21 @@ theorem gn_main_of_completion [IsProbabilityMeasure μ] [DecidableEq m]
     (hG₁ : ∀ᵐ ω ∂μ, IsUnit (((Ψ ω)ᵀ * Q ω)ᵀ * ((Ψ ω)ᵀ * Q ω)))
     (hinv : ∫ ω, frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) ∂μ
       = (k : ℝ) / (t - k - 1) * frobSq S₂)
-    (hG : ∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q ω) * ((Ψ ω)ᵀ * Qp ω) * ((Qp ω)ᵀ * residual (Q ω) A)) ∂μ
-      = ∫ ω, (q : ℝ) / (s - q - 1) * frobSq (residual (Q ω) A) ∂μ)
-    (hYi : Integrable (fun ω => frobSq (residual (Q ω) A)) μ)
+    (hG : ∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q ω) * ((Ψ ω)ᵀ * Qp ω) * ((Qp ω)ᵀ * projResidual (Q ω) A)) ∂μ
+      = ∫ ω, (q : ℝ) / (s - q - 1) * frobSq (projResidual (Q ω) A) ∂μ)
+    (hYi : Integrable (fun ω => frobSq (projResidual (Q ω) A)) μ)
     (hGi : Integrable (fun ω =>
-      frobSq (pinvL ((Ψ ω)ᵀ * Q ω) * ((Ψ ω)ᵀ * Qp ω) * ((Qp ω)ᵀ * residual (Q ω) A))) μ)
+      frobSq (pinvL ((Ψ ω)ᵀ * Q ω) * ((Ψ ω)ᵀ * Qp ω) * ((Qp ω)ᵀ * projResidual (Q ω) A))) μ)
     (hZi : Integrable (fun ω => frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω))) μ) :
     ∫ ω, frobSq (A - sketchedOutput (Q ω) (Ψ ω) A) ∂μ
       ≤ (1 + (t : ℝ) / (s - t - 1)) * ((1 + (k : ℝ) / (t - k - 1)) * frobSq S₂) := by
   have hae : (fun ω => frobSq (A - sketchedOutput (Q ω) (Ψ ω) A)) =ᵐ[μ]
-      fun ω => frobSq (residual (Q ω) A)
-        + frobSq (pinvL ((Ψ ω)ᵀ * Q ω) * ((Ψ ω)ᵀ * Qp ω) * ((Qp ω)ᵀ * residual (Q ω) A)) := by
+      fun ω => frobSq (projResidual (Q ω) A)
+        + frobSq (pinvL ((Ψ ω)ᵀ * Q ω) * ((Ψ ω)ᵀ * Qp ω) * ((Qp ω)ᵀ * projResidual (Q ω) A)) := by
     filter_upwards [hQo, hcomp, hG₁] with ω h1 h2 h3
     exact frobSq_error (Q ω) (Qp ω) (Ψ ω) A h1 h2 h3
   have hcond : ∫ ω, frobSq (A - sketchedOutput (Q ω) (Ψ ω) A) ∂μ
-      = ∫ ω, (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual (Q ω) A) ∂μ := by
+      = ∫ ω, (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual (Q ω) A) ∂μ := by
     rw [integral_congr_ae hae, integral_add hYi hGi, hG, ← integral_add hYi (hYi.const_mul _)]
     congr 1
     ext ω

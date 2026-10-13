@@ -9,7 +9,7 @@ Horn–Johnson 2013, Corollary 3.5.4; atlas `lu-row-inclusion`.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 
 private theorem exists_coefficients_supported_prefix {n k : ℕ} (hk : k ≤ n)

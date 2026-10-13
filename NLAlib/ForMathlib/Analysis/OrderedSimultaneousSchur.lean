@@ -11,7 +11,6 @@ any prescribed full root order while triangularizing the entire family.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open Module Polynomial
 open scoped InnerProductSpace
 namespace NLAlib

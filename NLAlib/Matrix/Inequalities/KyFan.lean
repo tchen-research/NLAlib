@@ -14,7 +14,7 @@ Atlas: `ky-fan-maximum-principle`, `ky-fan-norms-def`. The definitions of `kyFan
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 
@@ -31,11 +31,11 @@ theorem trace_compression_le_eigenvaluePrefix {n r : Type*} [Fintype n] [Fintype
     [DecidableEq n] [DecidableEq r] {A : Matrix n n ℝ} (hA : A.IsHermitian)
     {Q : Matrix n r ℝ} (hQ : HasOrthonormalCols Q) :
     (Qᵀ * A * Q).trace ≤ eigenvaluePrefix hA (card_le_card_of_hasOrthonormalCols hQ) := by
-  let hB := isHermitian_transpose_mul_mul hA Q
+  let hB : (Qᵀ * A * Q).IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q hA
   rw [hB.trace_eq_sum_eigenvalues]
   change (∑ i, id (hB.eigenvalues i)) ≤ _
   rw [sum_eigenvalues_eq_sum_sorted hB id]
-  exact Finset.sum_le_sum fun i _ => eigenvalues₀_compression_le hA hQ hB i
+  exact Finset.sum_le_sum fun i _ => Matrix.IsHermitian.eigenvalues₀_compression_le hA hQ hB i
 
 /-- The bottom eigenvalue sum bounds every orthonormal compression trace from
 below, including zero columns. Fan (1949), the minimum principle.
@@ -46,11 +46,11 @@ theorem sum_bottom_eigenvalues_le_trace_compression {n r : Type*} [Fintype n] [F
     (∑ i : Fin (Fintype.card r), hA.eigenvalues₀
       ⟨i.val + (Fintype.card n - Fintype.card r), by
         have := card_le_card_of_hasOrthonormalCols hQ; omega⟩) ≤ (Qᵀ * A * Q).trace := by
-  let hB := isHermitian_transpose_mul_mul hA Q
+  let hB : (Qᵀ * A * Q).IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q hA
   rw [hB.trace_eq_sum_eigenvalues]
   change _ ≤ ∑ i, id (hB.eigenvalues i)
   rw [sum_eigenvalues_eq_sum_sorted hB id]
-  exact Finset.sum_le_sum fun i _ => eigenvalues₀_le_eigenvalues₀_compression hA hQ hB i
+  exact Finset.sum_le_sum fun i _ => Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression hA hQ hB i
 
 /-- A spectral contraction of rank at most `k` pairs with a matrix at most its
 Ky Fan `k` sum. Source: von Neumann trace inequality and the singular-value rank
@@ -111,10 +111,11 @@ private theorem trace_twoSided_compression_le_kyFanNorm_fin {m n k : ℕ}
   have hP : (U * Vᵀ).rank ≤ k :=
     (Matrix.rank_mul_le_left U Vᵀ).trans (by simpa using U.rank_le_width)
   have hPn : specNorm (U * Vᵀ) ≤ 1 := by
-    rw [specNorm_mul_transpose_right_of_hasOrthonormalCols hV.transpose_mul_self]
+    rw [specNorm_mul_transpose_right_of_hasOrthonormalCols (show Vᵀ * V = 1 from hV)]
     exact specNorm_le_one_of_orthonormal hU
   have htrace : (Uᵀ * A * V).trace = frobInner A (U * Vᵀ) := by
-    rw [frobInner_comm, frobInner_eq_trace, Matrix.transpose_mul,
+    rw [frobInner_comm, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul,
       Matrix.transpose_transpose]
     exact Matrix.trace_mul_cycle Uᵀ A V
   rw [htrace]

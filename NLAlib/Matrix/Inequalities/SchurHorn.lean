@@ -16,7 +16,7 @@ Theorems 4.3.45 and 4.3.48; Marshall–Olkin–Arnold (2011), 9.B.1–9.B.2.
 Atlas: `schur-horn`. All finite real dimensions, signs and multiplicities occur.
 -/
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -41,7 +41,8 @@ theorem exists_orthogonal_diagonal_eq_of_majorized (d lam : n → ℝ)
       (∑ i, (A i i - d i) ^ 2) ≤ ∑ i, ((R * A * Rᵀ) i i - d i) ^ 2 := by
     intro R hR
     have hRQ : HasOrthonormalCols (R * Q) := by
-      rw [hasOrthonormalCols_iff_transpose_mul_self]
+      rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
+        Matrix.conjTranspose_eq_transpose_of_trivial]
       rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Rᵀ R Q, hR,
         Matrix.one_mul]
       exact hQ
@@ -60,7 +61,7 @@ theorem exists_orthogonal_diagonal_eq_of_majorized (d lam : n → ℝ)
   have htrace : (∑ i, A i i) = ∑ i, lam i := by
     change A.trace = _
     dsimp [A]
-    rw [Matrix.trace_mul_cycle, hQ.transpose_mul_self, Matrix.one_mul, Matrix.trace_diagonal]
+    rw [Matrix.trace_mul_cycle, (show Qᵀ * Q = 1 from hQ), Matrix.one_mul, Matrix.trace_diagonal]
   have hsumr : ∑ i, r i = 0 := by
     simp only [r, Finset.sum_sub_distrib]
     rw [htrace, hmajor.2]

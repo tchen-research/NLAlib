@@ -12,7 +12,7 @@ coordinate labels are supported. Horn–Johnson 2013, §§0.8.1 and 0.8.7.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 open Polynomial
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false

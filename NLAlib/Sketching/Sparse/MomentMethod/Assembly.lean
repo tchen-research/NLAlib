@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.MomentMethod.Endgame
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Assembly record for the explicit SparseStack theorem

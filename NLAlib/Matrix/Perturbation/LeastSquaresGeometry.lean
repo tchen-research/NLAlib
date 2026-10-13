@@ -16,6 +16,7 @@ namespace NLAlib
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
   [DecidableEq m] [DecidableEq n] [DecidableEq p]
 
+omit [DecidableEq m] in
 /-- Rectangular Euclidean matrix action is bounded by the spectral norm.
 Mathlib's operator-norm inequality; supports least-squares perturbation. -/
 theorem norm_toEuclideanLin_apply_le (A : Matrix m n ℝ) (x : EuclideanSpace ℝ n) :
@@ -109,8 +110,8 @@ theorem specNorm_pinv_add_le_of_rank_eq_card {A E : Matrix m n ℝ}
     rw [Matrix.mul_assoc, Matrix.mul_add, moorePenroseInverse_mul_eq_one_of_rank_eq_card hA,
       Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det _).mp hU)]
   have hP : specNorm ((A+E)*moorePenroseInverse (A+E)) ≤ 1 :=
-    specNorm_le_one_of_isSymm_of_isIdempotentElem
-      (mul_moorePenroseInverse_isSymm _) (mul_moorePenroseInverse_isIdempotentElem _)
+    Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem
+      (mul_moorePenroseInverse_isHermitian _) (mul_moorePenroseInverse_isIdempotentElem _)
   rw [moorePenroseInverse_eq_left_inverse_mul_projector hL]
   calc
     _ ≤ specNorm ((1+moorePenroseInverse A*E)⁻¹*moorePenroseInverse A)*

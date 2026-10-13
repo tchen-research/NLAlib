@@ -1,3 +1,4 @@
 .lake/
 site/
 atlas/viewer.html
+__pycache__/

@@ -48,7 +48,7 @@ theorem exists_complex_range_kernel_frames_norm_eq_secant {n : Type*}
         ((U : Matrix n n ℂ) * F.map Complex.ofReal) = 1 := by
     simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
     rw [← Matrix.mul_assoc (U : Matrix n n ℂ)ᴴ (U : Matrix n n ℂ) (F.map Complex.ofReal),
-      hU, Matrix.one_mul, conjTranspose_map_ofReal, ← map_ofReal_mul, hF.transpose_mul_self]
+      hU, Matrix.one_mul, conjTranspose_map_ofReal, ← map_ofReal_mul, (show Fᵀ * F = 1 from hF)]
     simp
   have hQrange : LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin :=
     range_unitary_mul_eq_of_similarity U P (R.map Complex.ofReal) (Q₀.map Complex.ofReal)
@@ -74,7 +74,8 @@ theorem exists_complex_range_kernel_frames_norm_eq_secant {n : Type*}
       hU, Matrix.one_mul, conjTranspose_map_ofReal, ← map_ofReal_mul]
   have hAngle (i : Fin (Fintype.card (Fin R.rank))) :
       complexPrincipalAnglesFintype W Q i = principalAnglesFintype W₀ Q₀ i := by
-    simp only [complexPrincipalAnglesFintype, principalAnglesFintype, hOverlap,
+    simp only [complexPrincipalAnglesFintype, principalAnglesFintype, hOverlap]
+    rw [show (W₀ᵀ * Q₀).map Complex.ofReal = (W₀ᵀ * Q₀).map (algebraMap ℝ ℂ) from rfl,
       singularValues_map_ofReal]
     simp only [singularValues_reindex]
   have hFinal : ∃ Q W : Matrix n (Fin R.rank) ℂ,

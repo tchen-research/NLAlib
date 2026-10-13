@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.MomentMethod.MomentParameters
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Scalar assembly of the uniform band envelope

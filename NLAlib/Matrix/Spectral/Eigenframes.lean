@@ -8,7 +8,7 @@ Source: Horn–Johnson (2013), §4.3.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 

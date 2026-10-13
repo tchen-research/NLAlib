@@ -2,7 +2,6 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.IIDComparison.IndependentCopyLift
-set_option autoImplicit false
 
 /-!
 # Unconditional sparse--iid convex-order transfer
@@ -15,7 +14,6 @@ array, that the resulting mixture is exactly its iid product law.  Averaging
 the conditional Jensen inequality therefore gives unconditional convex order.
 -/
 
-open scoped BigOperators
 
 namespace NLAlib.SparseSketch
 

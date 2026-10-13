@@ -10,7 +10,7 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators ENNReal
+open scoped Matrix Matrix.Norms.L2Operator ENNReal
 
 namespace NLAlib
 
@@ -47,6 +47,7 @@ theorem schattenNorm_mul_le_mul_specNorm (A : Matrix m n ℝ) (B : Matrix n q �
       rw [Real.mul_rpow (Real.rpow_nonneg (specNorm_nonneg B) p) hSA, one_div,
         Real.rpow_rpow_inv (specNorm_nonneg B) hp.ne', mul_comm]
 
+omit [DecidableEq m] in
 /-- The `(∞,p,p)` Schatten product endpoint for every positive finite exponent,
 with exact constant one and all rank/empty-dimension cases. -/
 theorem schattenNorm_mul_le_specNorm_mul (A : Matrix m n ℝ) (B : Matrix n q ℝ)

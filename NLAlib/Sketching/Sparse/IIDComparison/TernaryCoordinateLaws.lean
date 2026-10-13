@@ -6,7 +6,6 @@ import NLAlib.Sketching.Sparse.FockModel.TernaryJacobi
 import NLAlib.Sketching.Sparse.MomentMethod.MomentParameters
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Finite iid sparse-coordinate laws
@@ -16,7 +15,7 @@ Ported from `SparseFockFormal.SparseIIDCoupling` at commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators InnerProductSpace
+open scoped InnerProductSpace
 
 namespace NLAlib.SparseSketch
 

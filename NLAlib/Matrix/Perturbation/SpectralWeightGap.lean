@@ -9,7 +9,6 @@ Davis–Kahan proof. Source: Yu–Wang–Samworth, Theorem 2.
 -/
 
 noncomputable section
-open scoped BigOperators
 namespace NLAlib
 
 /-- A finite prefix indicator sum equals the sum over the actual prefix

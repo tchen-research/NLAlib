@@ -131,7 +131,7 @@ theorem partialCholeskyResidual_apply_pivot_right {A : Matrix n n ℝ} (hA : A.P
     | cast j =>
       exact choleskyStep_apply_eq_zero_of_col (fun i => ih (Fin.init s) j i) _ _
 
-/-- **Partial Cholesky residual identity**: `A − F Fᵀ` is the residual, for PSD `A` and any pivot
+/-- **Partial Cholesky residual identity**: `A − F Fᵀ` is the projResidual, for PSD `A` and any pivot
 sequence. Proof: induction on `k`; the new column `f` satisfies
 `f fᵀ = R(:,t) R(t,:) / R(t,t)` (`√x² = x` for the PSD diagonal, symmetry of `R`).
 CETW 2023, §2; Golub–Van Loan 2013, §4.2.9.

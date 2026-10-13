@@ -17,7 +17,7 @@ Ported from the LRA project (Chen–Persson formalization, same Mathlib pin),
 `LRA/Theorems/RSVDandGN.lean`. The deterministic helpers of that file are already in NLAlib:
 LRA `frobSq_residual_le` is `NLAlib.frobSq_residual_le_frobSq_sub_mul`
 (`NLAlib/Matrix/Projections.lean`), LRA `hmt_second_frob` / `hmt_second_residual` are
-`NLAlib.frobSq_residual_le_of_range_subset` (whose conclusion `frobSq (residual Q A)` is by
+`NLAlib.frobSq_residual_le_of_range_subset` (whose conclusion `frobSq (projResidual Q A)` is by
 definition `frobSq (A − Q(QᵀA))`), and LRA `hmt_third` is
 `NLAlib.frobSq_sub_mul_le_of_isBestRankApprox_of_range_subset`.
 
@@ -50,7 +50,6 @@ Atlas: `rsvd-expected-error`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 -- `k + 2 ≤ t` is needed only to make the Gaussian hypothesis `hinv` true; it is kept in the
 -- statements for fidelity, hence this option.
 set_option linter.unusedVariables false

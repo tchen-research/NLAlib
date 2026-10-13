@@ -75,19 +75,18 @@ theorem polarFrame_mul_transpose_mul_eq {m q : Type*} [Fintype m] [Fintype q]
     _ = Y * S⁻¹ * (S⁻¹ * S) * S := by simp only [Matrix.mul_assoc]
     _ = Y := by rw [hSl]; simp only [Matrix.mul_one, hSl, Matrix.mul_assoc, Matrix.mul_one]
 
-/-- The polar frame map is entrywise measurable on all real arrays, so it defines a
+/-- The polar frame map is entrywise measurable on all real matrices, so it defines a
 valid random frame without any measurability certificate from the caller.
 Horn–Johnson §7.3; atlas `gn-expected-error`. -/
 theorem measurable_polarFrame_entry {m q : Type*} [Fintype m] [Fintype q] [DecidableEq q]
-    (i : m) (j : q) : Measurable fun Y : m → q → ℝ => polarFrame (Matrix.of Y) i j := by
-  have hcGram : Continuous fun Y : m → q → ℝ => (Matrix.of Y)ᵀ * Matrix.of Y :=
+    (i : m) (j : q) : Measurable fun Y : Matrix m q ℝ => polarFrame Y i j := by
+  have hcGram : Continuous fun Y : Matrix m q ℝ => Yᵀ * Y :=
     continuous_id.matrix_transpose.matrix_mul continuous_id
-  have hcS : Continuous fun Y : m → q → ℝ => CFC.sqrt ((Matrix.of Y)ᵀ * Matrix.of Y) :=
-    CFC.continuousOn_sqrt.comp_continuous hcGram (fun Y => gram_nonneg (Matrix.of Y))
-  have hS : ∀ a b, Measurable fun Y : m → q → ℝ =>
-      CFC.sqrt ((Matrix.of Y)ᵀ * Matrix.of Y) a b :=
+  have hcS : Continuous fun Y : Matrix m q ℝ => CFC.sqrt (Yᵀ * Y) :=
+    CFC.continuousOn_sqrt.comp_continuous hcGram (fun Y => gram_nonneg Y)
+  have hS : ∀ a b, Measurable fun Y : Matrix m q ℝ => CFC.sqrt (Yᵀ * Y) a b :=
     fun a b => (hcS.matrix_elem a b).measurable
   have hInv := measurable_inv_entry_of hS
-  exact measurable_mul_entry_of (fun a b => by simp only [Matrix.of_apply]; fun_prop) hInv i j
+  exact measurable_mul_entry_of (Matrix.measurable_iff_entries.mp measurable_id) hInv i j
 
 end NLAlib

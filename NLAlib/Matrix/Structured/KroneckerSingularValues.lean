@@ -28,7 +28,8 @@ theorem IsSVD.kronecker_factorization {m n p q : ℕ}
     A ⊗ₖ B = (U ⊗ₖ P) *
       ((rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) ⊗ₖ
         (rectDiag (singularValues B) : Matrix (Fin p) (Fin q) ℝ)) * (V ⊗ₖ Q)ᵀ := by
-  conv_lhs => rw [hA.eq_mul_transpose, hB.eq_mul_transpose]
+  conv_lhs => rw [hA.eq, hB.eq, Matrix.conjTranspose_eq_transpose_of_trivial V,
+    Matrix.conjTranspose_eq_transpose_of_trivial Q]
   rw [Matrix.mul_kronecker_mul, Matrix.mul_kronecker_mul, Matrix.kroneckerMap_transpose]
 
 /-- The domain-side multiset of native singular values is the square-root Gram

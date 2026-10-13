@@ -10,7 +10,7 @@ clauses remain available in the imported topic modules.
 
 noncomputable section
 open scoped Matrix Matrix.Norms.L2Operator
-open scoped BigOperators ENNReal
+open scoped ENNReal
 namespace NLAlib
 universe u_1 u_2
 
@@ -80,13 +80,13 @@ theorem ky_fan_norm_toolkit_properties :
     @NLAlib.kyFanNorm_one_eq_specNorm,
     (by intros; apply NLAlib.nuclearNorm_add_le),
     (by intros; apply NLAlib.nuclearNorm_smul),
-    @NLAlib.nuclearNorm_eq_zero_iff,
+    (by intros; apply NLAlib.nuclearNorm_eq_zero_iff),
     @NLAlib.nuclearNorm_orthogonal_mul,
     (by intros; apply NLAlib.nuclearNorm_mul_orthogonal; assumption),
     @NLAlib.nuclearNorm_transpose,
     @NLAlib.isGreatest_nuclearNorm_frobInner,
     @NLAlib.nuclearNorm_eq_trace_of_posSemidef,
-    @NLAlib.specNorm_le_nuclearNorm,
+    (by intros; apply NLAlib.specNorm_le_nuclearNorm),
     @NLAlib.nuclearNorm_le_rank_mul_specNorm,
     @NLAlib.frobNorm_le_nuclearNorm,
     @NLAlib.nuclearNorm_le_sqrt_rank_mul_frobNorm⟩

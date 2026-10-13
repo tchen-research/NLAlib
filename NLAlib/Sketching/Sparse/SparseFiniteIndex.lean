@@ -12,7 +12,6 @@ and `sh:exact-s`; pinned sparse-Fock commit
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Matrix
 namespace NLAlib

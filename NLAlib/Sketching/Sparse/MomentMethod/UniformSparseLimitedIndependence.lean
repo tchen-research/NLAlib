@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.FiniteLaw.LocalMoments
 import NLAlib.Sketching.Sparse.MomentMethod.UniformSparseTheorem
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Whole-column limited independence for uniform exact-s OSNAP
@@ -22,7 +21,7 @@ most `4q`.  Exact marginal matching therefore preserves that trace moment,
 with no independence premise used inside the algebraic word count.
 -/
 
-open scoped BigOperators Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator
 
 namespace NLAlib.SparseSketch.UniformSparse
 

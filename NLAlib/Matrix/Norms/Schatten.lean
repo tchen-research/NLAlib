@@ -19,7 +19,7 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators ENNReal
+open scoped Matrix Matrix.Norms.L2Operator ENNReal
 
 namespace NLAlib
 

@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.IIDComparison.FillThinCoupling
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Signed coordinate actions on exact sparse columns
@@ -14,7 +13,6 @@ Ported from `SparseFockFormal.UniformExactSSymmetry` at commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators
 
 namespace NLAlib.SparseSketch.UniformSparse
 

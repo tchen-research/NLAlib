@@ -48,7 +48,7 @@ variable {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
 [`saad11`], §6.5.3 (`r₀ = β v₁`). Atlas: `gmres-arnoldi-form`. -/
 theorem mulVec_transpose_Q_mulVec_self (D : ArnoldiDecomp A b q) (hq : 0 < q) :
     D.Q *ᵥ (D.Qᵀ *ᵥ b) = b := by
-  refine mulVec_transpose_mulVec_of_mem_range D.hasOrthonormalCols ?_
+  refine mulVec_conjTranspose_mulVec_of_mem_range D.hasOrthonormalCols ?_
   rw [D.range_Q]
   simpa using pow_mulVec_mem_krylovSpace A b (i := 0) hq
 
@@ -97,7 +97,9 @@ theorem dotProduct_sub_mulVec_add_mulVec_eq (D : ArnoldiDecomp A (c - A *ᵥ x�
       Matrix.mulVec_mulVec, ← D.mul_restrict_Q_eq_mul, ← Matrix.mulVec_mulVec,
       Matrix.mulVec_add]
     abel
-  rw [hres, mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols D.hasOrthonormalCols]
+  rw [hres]
+  simpa only [star_trivial] using
+    star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols D.hasOrthonormalCols _
 
 /-- Every vector of `K_q(A, b)` is `Q_q y` for some `y` (`range Q_q = K_q`). Source:
 Trefethen–Bau (1997) [`tb97`], Lect. 35. Atlas: `gmres-arnoldi-form`. -/

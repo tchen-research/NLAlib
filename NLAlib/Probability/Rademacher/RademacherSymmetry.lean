@@ -10,7 +10,6 @@ Source: operator manuscript, sign-flip branch of `noncommutative-khintchine`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped ENNReal
 namespace NLAlib

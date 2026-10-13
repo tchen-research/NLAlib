@@ -11,7 +11,6 @@ Source: Deshpande–Rademacher–Vempala–Wang (2006); `sa:volume-theorem`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Classical Matrix Matrix.Norms.Frobenius ComplexOrder
 namespace NLAlib

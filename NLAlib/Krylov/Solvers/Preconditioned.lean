@@ -80,7 +80,9 @@ omit [DecidableEq n] in
 Helper for `preconditioned-cg`. -/
 theorem cgObjective_mulVec (A W : Matrix n n ℝ) (c y : n → ℝ) :
     cgObjective A c (W *ᵥ y) = cgObjective (Wᵀ * A * W) (Wᵀ *ᵥ c) y := by
-  rw [cgObjective, cgObjective, quadForm_transpose_mul_mul, Matrix.dotProduct_mulVec,
+  have hq := quadForm_conjTranspose_mul_mul A W y
+  rw [Matrix.conjTranspose_eq_transpose_of_trivial] at hq
+  rw [cgObjective, cgObjective, hq, Matrix.dotProduct_mulVec,
     ← Matrix.mulVec_transpose]
 
 /-! ### Preconditioned CG -/
@@ -209,7 +211,10 @@ theorem quadForm_sub_le_of_isPCGIterate {A P : Matrix n n ℝ} (hP : P.PosDef) {
     rw [hBdef, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hWW, hxs]
   have hcg := quadForm_sub_le_of_isCGIterate hBh ha hab hspec hxs'
     ((isPCGIterate_iff_isCGIterate hW).1 hx)
-  simpa only [← Matrix.mulVec_sub, quadForm_transpose_mul_mul, hWW, hBdef] using hcg
+  have hq : ∀ v, quadForm (Wᵀ * A * W) v = quadForm A (W *ᵥ v) := fun v => by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
+      quadForm_conjTranspose_mul_mul A W v
+  simpa only [← Matrix.mulVec_sub, hq, hWW, hBdef] using hcg
 
 /-! ### CGLS / LSQR -/
 
@@ -230,7 +235,9 @@ constant: `‖b − Ay‖² = 2 φ_{AᵀA, Aᵀb}(y) + ‖b‖²`. Source: Saad 
 Helper for `cgls-lsqr-bound`. -/
 theorem dotProduct_sub_mulVec_self_eq (A : Matrix m n ℝ) (b : m → ℝ) (y : n → ℝ) :
     (b - A *ᵥ y) ⬝ᵥ (b - A *ᵥ y) = 2 * cgObjective (Aᵀ * A) (Aᵀ *ᵥ b) y + b ⬝ᵥ b := by
-  rw [cgObjective, quadForm_transpose_mul_self, Matrix.mulVec_transpose,
+  have hq := quadForm_conjTranspose_mul_self A y
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial, star_trivial] at hq
+  rw [cgObjective, hq, Matrix.mulVec_transpose,
     ← Matrix.dotProduct_mulVec]
   simp only [dotProduct_sub, sub_dotProduct, dotProduct_comm (A *ᵥ y) b]
   ring
@@ -288,11 +295,14 @@ theorem dotProduct_mulVec_sub_le_of_isCGLSIterate {A : Matrix m n ℝ} {σlo σh
   have hG : (Aᵀ * A).IsHermitian := by
     simpa [Matrix.conjTranspose_eq_transpose_of_trivial] using
       Matrix.isHermitian_conjTranspose_mul_self A
+  have hq : ∀ v : n → ℝ, quadForm (Aᵀ * A) v = (A *ᵥ v) ⬝ᵥ (A *ᵥ v) := fun v => by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, star_trivial] using
+      quadForm_conjTranspose_mul_self A v
   have hspec : ∀ i, hG.eigenvalues i ∈ Set.Icc (σlo ^ 2) (σhi ^ 2) := fun i => by
     set u : n → ℝ := (hG.eigenvectorBasis i : n → ℝ)
     have hu : u ⬝ᵥ u = 1 := by simpa using eigenvectorBasis_dotProduct_eigenvectorBasis hG i i
     have hval : hG.eigenvalues i = (A *ᵥ u) ⬝ᵥ (A *ᵥ u) := by
-      rw [eigenvalues_eq_dotProduct_mulVec hG i, ← quadForm_transpose_mul_self]; rfl
+      rw [eigenvalues_eq_dotProduct_mulVec hG i, ← hq]; rfl
     have h1 := hlow u
     have h2 := hup u
     rw [hu, mul_one] at h1 h2
@@ -300,8 +310,7 @@ theorem dotProduct_mulVec_sub_le_of_isCGLSIterate {A : Matrix m n ℝ} {σlo σh
   have hxs' : (Aᵀ * A) *ᵥ xs = Aᵀ *ᵥ b := by rw [← Matrix.mulVec_mulVec, hxs]
   have h := quadForm_sub_le_of_isCGIterate hG (by positivity)
     (pow_le_pow_left₀ hlo.le hlohi 2) hspec hxs' (isCGLSIterate_iff_isCGIterate.1 hx)
-  rwa [Real.sqrt_sq (by linarith), Real.sqrt_sq hlo.le, quadForm_transpose_mul_self,
-    quadForm_transpose_mul_self] at h
+  rwa [Real.sqrt_sq (by linarith), Real.sqrt_sq hlo.le, hq, hq] at h
 
 /-- **CGLS/LSQR residual bound.** Under the hypotheses of
 `dotProduct_mulVec_sub_le_of_isCGLSIterate`,

@@ -29,13 +29,13 @@ private theorem inverse_eq_transpose_of_orthogonal {n : Type*} [Fintype n] [Deci
     {U : Matrix n n ℝ} (hU : HasOrthonormalCols U) : IsUnit U.det ∧ U⁻¹ = Uᵀ := by
   have hDet : U.det ≠ 0 := by
     intro hz
-    have h := congrArg Matrix.det hU.transpose_mul_self
+    have h := congrArg Matrix.det (show Uᵀ * U = 1 from hU)
     rw [Matrix.det_mul, Matrix.det_transpose, hz, mul_zero, Matrix.det_one] at h
     exact zero_ne_one h
   have hUnit := isUnit_iff_ne_zero.mpr hDet
   refine ⟨hUnit, ?_⟩
   calc
-    U⁻¹ = (Uᵀ * U) * U⁻¹ := by rw [hU.transpose_mul_self, Matrix.one_mul]
+    U⁻¹ = (Uᵀ * U) * U⁻¹ := by rw [show Uᵀ * U = 1 from hU, Matrix.one_mul]
     _ = Uᵀ := by rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv U hUnit, Matrix.mul_one]
 
 /-- The two off-diagonal blocks of a real square orthogonal matrix have

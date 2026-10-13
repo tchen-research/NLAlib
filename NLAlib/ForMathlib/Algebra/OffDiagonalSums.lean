@@ -13,8 +13,6 @@ Source: ported from `SparseFockFormal` (`DirectionalConcrete.sum_erase_comm`,
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-set_option autoImplicit false
-open scoped BigOperators
 namespace NLAlib
 
 /-- Summing over ordered pairs of distinct elements of `s`, either index may be summed first.

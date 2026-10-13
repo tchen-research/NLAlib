@@ -11,7 +11,6 @@ Source: operator re-derivation `sh:srht`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped NNReal ENNReal
 namespace NLAlib

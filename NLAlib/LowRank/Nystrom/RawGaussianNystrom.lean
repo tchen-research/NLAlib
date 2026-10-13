@@ -29,7 +29,8 @@ theorem measurableSet_hasOrthonormalCols_of_entries
   have hEq : {x | HasOrthonormalCols (Q x)} =
       ⋂ i, ⋂ j, {x | ((Q x)ᵀ * Q x) i j = (1 : Matrix q q ℝ) i j} := by
     ext x
-    simp only [hasOrthonormalCols_iff_transpose_mul_self, Matrix.ext_iff, Set.mem_iInter,
+    simp only [hasOrthonormalCols_iff_conjTranspose_mul_self,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.ext_iff, Set.mem_iInter,
       Set.mem_ofPred_eq]
   rw [hEq]
   exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun j =>
@@ -39,57 +40,56 @@ private theorem measurableSet_compression_isUnit
     {α : Type*} [MeasurableSpace α] {m q s : ℕ}
     (Q : α → Matrix (Fin m) (Fin q) ℝ)
     (hQ : ∀ i j, Measurable fun x => Q x i j) :
-    MeasurableSet {p : α × (Fin m → Fin s → ℝ) |
-      IsUnit (((Matrix.of p.2)ᵀ * Q p.1)ᵀ * ((Matrix.of p.2)ᵀ * Q p.1))} := by
-  have hΨ : ∀ i j, Measurable fun p : α × (Fin m → Fin s → ℝ) => (Matrix.of p.2)ᵀ i j := by
-    intro i j
-    simp only [Matrix.transpose_apply, Matrix.of_apply]
-    fun_prop
-  have hQ' : ∀ i j, Measurable fun p : α × (Fin m → Fin s → ℝ) => Q p.1 i j :=
+    MeasurableSet {p : α × Matrix (Fin m) (Fin s) ℝ |
+      IsUnit ((p.2ᵀ * Q p.1)ᵀ * (p.2ᵀ * Q p.1))} := by
+  have hΨ : ∀ i j, Measurable fun p : α × Matrix (Fin m) (Fin s) ℝ => p.2ᵀ i j :=
+    fun i j => (Matrix.measurable_entry j i).comp measurable_snd
+  have hQ' : ∀ i j, Measurable fun p : α × Matrix (Fin m) (Fin s) ℝ => Q p.1 i j :=
     fun i j => (hQ i j).comp measurable_fst
   have hW := measurable_mul_entry_of hΨ hQ'
   have hGram := measurable_mul_entry_of (fun i j => hW j i) hW
-  have hArray : Measurable fun p : α × (Fin m → Fin s → ℝ) =>
-      (fun i j => (((Matrix.of p.2)ᵀ * Q p.1)ᵀ * ((Matrix.of p.2)ᵀ * Q p.1)) i j) :=
-    measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => hGram i j
-  have hdet : Measurable fun p : α × (Fin m → Fin s → ℝ) =>
-      (((Matrix.of p.2)ᵀ * Q p.1)ᵀ * ((Matrix.of p.2)ᵀ * Q p.1)).det := by
-    have hc : Continuous fun G : Fin q → Fin q → ℝ => (Matrix.of G).det :=
+  have hArray : Measurable fun p : α × Matrix (Fin m) (Fin s) ℝ =>
+      (p.2ᵀ * Q p.1)ᵀ * (p.2ᵀ * Q p.1) :=
+    Matrix.measurable_iff_entries.mpr hGram
+  have hdet : Measurable fun p : α × Matrix (Fin m) (Fin s) ℝ =>
+      ((p.2ᵀ * Q p.1)ᵀ * (p.2ᵀ * Q p.1)).det := by
+    have hc : Continuous fun G : Matrix (Fin q) (Fin q) ℝ => G.det :=
       continuous_id.matrix_det
     exact hc.measurable.comp hArray
   simpa only [Matrix.isUnit_iff_isUnit_det, isUnit_iff_ne_zero, Set.compl_ofPred] using
     (measurableSet_eq_fun hdet measurable_const).compl
 
 /-- **Independent Gaussian sketch has full rank on a random orthonormal frame.**
-Let `X` have any law, let the Gaussian `m×s` array `Ψ` be independent of `X`, and let
+Let `X` have any law, let the Gaussian `m×s` matrix `Ψ` be independent of `X`, and let
 `Qf(X)` be a measurable frame with a.s. orthonormal `q` columns. If `q≤s`, then
 `(ΨᵀQf(X))ᵀ(ΨᵀQf(X))` is invertible almost surely. The statement includes `q=0`.
 HMT 2011, §10.2 and Proposition A.5; atlas `gn-expected-error`, `gaussian-conditioning`. -/
 theorem ae_isUnit_gaussian_compression_of_indep
     {α Ω : Type*} [MeasurableSpace α] [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {m q s : ℕ}
-    (X : Ω → α) (hX : AEMeasurable X μ) (Ψ : Ω → Fin m → Fin s → ℝ)
-    (hΨ : μ.map Ψ = gaussianMatrix m s) (hind : IndepFun X Ψ μ)
+    (X : Ω → α) (hX : AEMeasurable X μ) (Ψ : Ω → Matrix (Fin m) (Fin s) ℝ)
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ) (hind : IndepFun X Ψ μ)
     (Qf : α → Matrix (Fin m) (Fin q) ℝ)
     (hQf : ∀ i j, Measurable fun x => Qf x i j)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (X ω))) (hqs : q ≤ s) :
-    ∀ᵐ ω ∂μ, IsUnit (((Matrix.of (Ψ ω))ᵀ * Qf (X ω))ᵀ *
-      ((Matrix.of (Ψ ω))ᵀ * Qf (X ω))) := by
-  have hYm : AEMeasurable Ψ μ := aemeasurable_of_map_eq_gaussianMatrix hΨ
+    ∀ᵐ ω ∂μ, IsUnit (((Ψ ω)ᵀ * Qf (X ω))ᵀ *
+      ((Ψ ω)ᵀ * Qf (X ω))) := by
+  have hYm : AEMeasurable Ψ μ := hΨ.aemeasurable
   have hLeft : IsProbabilityMeasure (μ.map X) := Measure.isProbabilityMeasure_map hX
   have hFrame : ∀ᵐ x ∂μ.map X, HasOrthonormalCols (Qf x) :=
     (ae_map_iff hX (measurableSet_hasOrthonormalCols_of_entries hQf)).2 hQo
-  have hProd : ∀ᵐ p ∂(μ.map X).prod (gaussianMatrix m s),
-      IsUnit (((Matrix.of p.2)ᵀ * Qf p.1)ᵀ * ((Matrix.of p.2)ᵀ * Qf p.1)) := by
+  have hProd : ∀ᵐ p ∂(μ.map X).prod (gaussianMatrix (Fin m) (Fin s)),
+      IsUnit ((p.2ᵀ * Qf p.1)ᵀ * (p.2ᵀ * Qf p.1)) := by
     apply (Measure.ae_prod_iff_ae_ae (measurableSet_compression_isUnit Qf hQf)).2
     filter_upwards [hFrame] with x hx
-    have hFixed := ae_isUnit_block (μ := gaussianMatrix m s)
-      (Ω := fun G : Fin m → Fin s → ℝ => G) (by simp) (Qf x) hx hqs
+    have hFixed := ae_isUnit_block (μ := gaussianMatrix (Fin m) (Fin s))
+      (Ω := fun G : Matrix (Fin m) (Fin s) ℝ => G) HasLaw.id (Qf x) hx hqs
     simpa only [Matrix.transpose_mul, Matrix.transpose_transpose] using hFixed
-  have hLaw : μ.map (fun ω => (X ω, Ψ ω)) = (μ.map X).prod (gaussianMatrix m s) := by
-    rw [(indepFun_iff_map_prod_eq_prod_map_map hX hYm).1 hind, hΨ]
+  have hLaw : μ.map (fun ω => (X ω, Ψ ω)) =
+      (μ.map X).prod (gaussianMatrix (Fin m) (Fin s)) := by
+    rw [(indepFun_iff_map_prod_eq_prod_map_map hX hYm).1 hind, hΨ.map_eq]
   have hMap : ∀ᵐ p ∂μ.map (fun ω => (X ω, Ψ ω)),
-      IsUnit (((Matrix.of p.2)ᵀ * Qf p.1)ᵀ * ((Matrix.of p.2)ᵀ * Qf p.1)) := by
+      IsUnit ((p.2ᵀ * Qf p.1)ᵀ * (p.2ᵀ * Qf p.1)) := by
     rw [hLaw]
     exact hProd
   exact ae_of_ae_map (hX.prodMk hYm) hMap
@@ -111,23 +111,22 @@ theorem integrable_and_integral_frobSq_rawGeneralizedNystrom_le_of_exact_rank_fr
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t) (hqs : q + 2 ≤ s) (hq : 1 ≤ q)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
-    (hΨ : μ.map (fun ω => Matrix.of.symm (Ψ ω)) = gaussianMatrix m s)
-    (hind : IndepFun (fun ω => Matrix.of.symm (Ω ω)) (fun ω => Matrix.of.symm (Ψ ω)) μ)
-    (Qf : (Fin n → Fin t → ℝ) → Matrix (Fin m) (Fin q) ℝ)
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ)
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ)
+    (hind : IndepFun Ω Ψ μ)
+    (Qf : Matrix (Fin n) (Fin t) ℝ → Matrix (Fin m) (Fin q) ℝ)
     (hQf : ∀ i j, Measurable fun x => Qf x i j)
-    (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (Matrix.of.symm (Ω ω))))
-    (hQr : ∀ᵐ ω ∂μ, Qf (Matrix.of.symm (Ω ω)) *
-      ((Qf (Matrix.of.symm (Ω ω)))ᵀ * (A * Ω ω)) = A * Ω ω)
+    (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (Ω ω)))
+    (hQr : ∀ᵐ ω ∂μ, Qf (Ω ω) *
+      ((Qf (Ω ω))ᵀ * (A * Ω ω)) = A * Ω ω)
     (hRank : ∀ᵐ ω ∂μ, (A * Ω ω).rank = q) :
     Integrable (fun ω => frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω))) μ ∧
       (∫ ω, frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω)) ∂μ) ≤
         (1 + (q : ℝ) / (s - q - 1)) *
           ((1 + (k : ℝ) / (t - k - 1)) * frobSq S₂) := by
-  let Q : Ωs → Matrix (Fin m) (Fin q) ℝ := fun ω => Qf (Matrix.of.symm (Ω ω))
+  let Q : Ωs → Matrix (Fin m) (Fin q) ℝ := fun ω => Qf (Ω ω)
   have hcompression := ae_isUnit_gaussian_compression_of_indep
-    (fun ω => Matrix.of.symm (Ω ω)) (aemeasurable_of_map_eq_gaussianMatrix hΩ)
-    (fun ω => Matrix.of.symm (Ψ ω)) hΨ hind Qf hQf hQo (by omega : q ≤ s)
+    Ω hΩ.aemeasurable Ψ hΨ hind Qf hQf hQo (by omega : q ≤ s)
   have hEq : (fun ω => frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω))) =ᵐ[μ]
       fun ω => frobSq (A - sketchedOutput (Q ω) (Ψ ω) A) := by
     filter_upwards [hQr, hRank, hcompression] with ω hproj hrank hinj
@@ -154,7 +153,7 @@ theorem sketchedOutput_eq_of_projector_eq
     _ = Q * pinvL (Ψᵀ * Q) * (Ψᵀ * (Q * (Qᵀ * A))) := by rw [hProj]
     _ = Q * (pinvL (Ψᵀ * Q) * (Ψᵀ * Q)) * (Qᵀ * A) := by
       simp only [Matrix.mul_assoc]
-    _ = A := by rw [pinvL_mul hΨ, Matrix.mul_one, hProj]
+    _ = A := by rw [pinvL_mul (G := Ψᵀ * Q) hΨ, Matrix.mul_one, hProj]
 
 /-- **Raw Gaussian Nyström exact recovery in the rank-deficient sketch regime.**
 If both Gaussian sketches have at least `rank A` columns, the actual raw Moore–Penrose
@@ -166,17 +165,17 @@ theorem ae_rawGeneralizedNystrom_eq_self_of_rank_le
     {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
     {m n t s : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
-    (hΨ : μ.map (fun ω => Matrix.of.symm (Ψ ω)) = gaussianMatrix m s)
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ)
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ)
     (hrt : A.rank ≤ t) (hrs : A.rank ≤ s) :
     ∀ᵐ ω ∂μ, rawGeneralizedNystrom A (A * Ω ω) (Ψ ω) = A := by
   obtain ⟨Q, hQo, hQA⟩ := exists_orthonormal_frame_reproducing_matrix A
   have hRank : ∀ᵐ ω ∂μ, (A * Ω ω).rank = A.rank := by
-    simpa only [min_eq_left hrt, Equiv.apply_symm_apply] using
-      ae_rank_mul_gaussian_eq_min A (fun ω => Matrix.of.symm (Ω ω)) hΩ
+    simpa only [min_eq_left hrt] using
+      ae_rank_mul_gaussian_eq_min A Ω hΩ
   have hUnit : ∀ᵐ ω ∂μ, IsUnit (((Ψ ω)ᵀ * Q)ᵀ * ((Ψ ω)ᵀ * Q)) := by
     have h := ae_isUnit_block hΨ Q hQo hrs
-    simpa only [Matrix.transpose_mul, Matrix.transpose_transpose, Equiv.apply_symm_apply] using h
+    simpa only [Matrix.transpose_mul, Matrix.transpose_transpose] using h
   filter_upwards [hRank, hUnit] with ω hrank hunit
   have hY : Q * (Qᵀ * (A * Ω ω)) = A * Ω ω := by
     calc
@@ -201,37 +200,32 @@ theorem integrable_and_integral_frobSq_rawGeneralizedNystrom_le_of_sketch_cols_l
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t) (htRank : t ≤ A.rank) (hst : t + 2 ≤ s)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
-    (hΨ : μ.map (fun ω => Matrix.of.symm (Ψ ω)) = gaussianMatrix m s)
-    (hind : IndepFun (fun ω => Matrix.of.symm (Ω ω)) (fun ω => Matrix.of.symm (Ψ ω)) μ) :
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ)
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ)
+    (hind : IndepFun Ω Ψ μ) :
     Integrable (fun ω => frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω))) μ ∧
       (∫ ω, frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω)) ∂μ) ≤
         (1 + (t : ℝ) / (s - t - 1)) *
           ((1 + (k : ℝ) / (t - k - 1)) * frobSq S₂) := by
-  let Qf : (Fin n → Fin t → ℝ) → Matrix (Fin m) (Fin t) ℝ :=
-    fun G => polarFrame (A * Matrix.of G)
+  let Qf : Matrix (Fin n) (Fin t) ℝ → Matrix (Fin m) (Fin t) ℝ :=
+    fun G => polarFrame (A * G)
   have hQf : ∀ i j, Measurable fun G => Qf G i j := by
-    have hY : ∀ a b, Measurable fun G : Fin n → Fin t → ℝ => (A * Matrix.of G) a b :=
-      measurable_mul_entry_of (fun _ _ => measurable_const)
-        (fun _ _ => by simp only [Matrix.of_apply]; fun_prop)
-    have hArray : Measurable fun G : Fin n → Fin t → ℝ => Matrix.of.symm (A * Matrix.of G) :=
-      measurable_pi_lambda _ fun a => measurable_pi_lambda _ fun b => hY a b
     intro i j
-    exact (measurable_polarFrame_entry i j).comp hArray
+    exact (measurable_polarFrame_entry i j).comp (measurable_const.matrix_mul measurable_id)
   have hGood : ∀ᵐ ω ∂μ, IsUnit ((A * Ω ω)ᵀ * (A * Ω ω)) := by
     have h := gaussianMatrix_ae_isUnit_gram_mul_of_le_rank A htRank
-    rw [← hΩ] at h
-    exact ae_of_ae_map (aemeasurable_of_map_eq_gaussianMatrix hΩ) h
-  have hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (Matrix.of.symm (Ω ω))) := by
+    rw [← hΩ.map_eq] at h
+    exact ae_of_ae_map hΩ.aemeasurable h
+  have hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (Ω ω)) := by
     filter_upwards [hGood] with ω hω
     exact hasOrthonormalCols_polarFrame (A * Ω ω) hω
-  have hQr : ∀ᵐ ω ∂μ, Qf (Matrix.of.symm (Ω ω)) *
-      ((Qf (Matrix.of.symm (Ω ω)))ᵀ * (A * Ω ω)) = A * Ω ω := by
+  have hQr : ∀ᵐ ω ∂μ, Qf (Ω ω) *
+      ((Qf (Ω ω))ᵀ * (A * Ω ω)) = A * Ω ω := by
     filter_upwards [hGood] with ω hω
     exact polarFrame_mul_transpose_mul_eq (A * Ω ω) hω
   have hRank : ∀ᵐ ω ∂μ, (A * Ω ω).rank = t := by
-    simpa only [min_eq_right htRank, Equiv.apply_symm_apply] using
-      ae_rank_mul_gaussian_eq_min A (fun ω => Matrix.of.symm (Ω ω)) hΩ
+    simpa only [min_eq_right htRank] using
+      ae_rank_mul_gaussian_eq_min A Ω hΩ
   exact integrable_and_integral_frobSq_rawGeneralizedNystrom_le_of_exact_rank_frame
     hA hU₂ hV₁ hV₂ hV hkt hst (by omega : 1 ≤ t) Ω Ψ hΩ hΨ hind Qf hQf hQo hQr hRank
 
@@ -252,9 +246,9 @@ theorem integrable_and_integral_frobSq_rawGeneralizedNystrom_le_rank_factor_gaus
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t) (hqs : min A.rank t + 2 ≤ s)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
-    (hΨ : μ.map (fun ω => Matrix.of.symm (Ψ ω)) = gaussianMatrix m s)
-    (hind : IndepFun (fun ω => Matrix.of.symm (Ω ω)) (fun ω => Matrix.of.symm (Ψ ω)) μ) :
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ)
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ)
+    (hind : IndepFun Ω Ψ μ) :
     Integrable (fun ω => frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω))) μ ∧
       (∫ ω, frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω)) ∂μ) ≤
         (1 + ((min A.rank t : ℕ) : ℝ) / (s - min A.rank t - 1)) *
@@ -298,9 +292,9 @@ theorem integrable_and_integral_frobSq_rawGeneralizedNystrom_le_bestRankFrobSq
     {m n k t s : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     (hkt : k + 2 ≤ t) (hqs : min A.rank t + 2 ≤ s)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ) (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
-    (hΨ : μ.map (fun ω => Matrix.of.symm (Ψ ω)) = gaussianMatrix m s)
-    (hind : IndepFun (fun ω => Matrix.of.symm (Ω ω)) (fun ω => Matrix.of.symm (Ψ ω)) μ) :
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ)
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ)
+    (hind : IndepFun Ω Ψ μ) :
     Integrable (fun ω => frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω))) μ ∧
       (∫ ω, frobSq (A - rawGeneralizedNystrom A (A * Ω ω) (Ψ ω)) ∂μ) ≤
         (1 + ((min A.rank t : ℕ) : ℝ) / (s - min A.rank t - 1)) *

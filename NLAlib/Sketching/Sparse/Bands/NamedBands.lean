@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.Bands.GlobalBands
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Named physical band families

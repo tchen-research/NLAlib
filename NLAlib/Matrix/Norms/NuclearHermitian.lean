@@ -16,7 +16,7 @@ Atlas: `lidskii`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 
@@ -31,7 +31,7 @@ theorem gram_orthogonal_diagonalization {n : Type*} [Fintype n] [DecidableEq n]
       simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.diagonal_transpose,
         Matrix.mul_assoc]
     _ = P * (Matrix.diagonal d * Matrix.diagonal d) * Pᵀ := by
-      rw [hP.transpose_mul_self, Matrix.mul_one]
+      rw [(show Pᵀ * P = 1 from hP), Matrix.mul_one]
       simp only [Matrix.mul_assoc]
     _ = _ := by
       rw [Matrix.diagonal_mul_diagonal]

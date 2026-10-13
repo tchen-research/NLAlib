@@ -38,7 +38,7 @@ theorem exists_orthonormalBasis_toMatrix_eq_conjugate {E n : Type*}
     rw [hchange] at hInv
     calc
       c.toBasis.toMatrix b.toBasis = c.toBasis.toMatrix b.toBasis * (Q * Qᵀ) := by
-        rw [mul_eq_one_comm.mp hQ.transpose_mul_self, Matrix.mul_one]
+        rw [mul_eq_one_comm.mp (show Qᵀ * Q = 1 from hQ), Matrix.mul_one]
       _ = Qᵀ := by rw [← Matrix.mul_assoc, hInv, Matrix.one_mul]
   refine ⟨c, fun T => ?_⟩
   have h := basis_toMatrix_mul_linearMap_toMatrix_mul_basis_toMatrix

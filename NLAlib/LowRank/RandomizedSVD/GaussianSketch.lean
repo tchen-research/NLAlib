@@ -15,8 +15,8 @@ Gaussian expectation hypothesis remains:
   `gn_main_gaussian` is a corollary of the rank-sensitive bound in
   `NLAlib.LowRank.Nystrom.GaussianNystrom`.
 
-A random matrix `Ω : Ωs → Matrix (Fin n) (Fin t) ℝ` is standard Gaussian when its array view
-has law `gaussianMatrix n t`: `μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t`.
+A random matrix `Ω : Ωs → Matrix (Fin n) (Fin t) ℝ` is standard Gaussian when
+`HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ`.
 The Gaussian inputs come from `NLAlib/Gaussian/Conditioning.lean` (block law, independence,
 tower property), `NLAlib/Gaussian/InverseMoments/Mean.lean` (`E‖G†‖_F² = r/(k−r−1)`) and
 `NLAlib/Gaussian/Moments.lean` (full rank a.s.).
@@ -28,7 +28,6 @@ Atlas: `rsvd-expected-error`, `gn-expected-error`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix ENNReal
@@ -43,36 +42,34 @@ variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs}
 row rank almost surely (`(V₁ᵀΩ)(V₁ᵀΩ)ᵀ` is invertible). HMT 2011 §10.2 (block law) with
 "a Gaussian matrix has full rank a.s."; hypothesis `hunit` of `rsvd_main`.
 Atlas `rsvd-expected-error` (uses `gaussian-conditioning`, `gaussian-full-rank-ae`). -/
-theorem ae_isUnit_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
+theorem ae_isUnit_block {n k t : ℕ} {Ω : Ωs → Matrix (Fin n) (Fin t) ℝ}
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (hV₁ : V₁ᵀ * V₁ = 1) (hkt : k ≤ t) :
-    ∀ᵐ ω ∂μ, IsUnit ((V₁ᵀ * Matrix.of (Ω ω)) * (V₁ᵀ * Matrix.of (Ω ω))ᵀ) := by
+    ∀ᵐ ω ∂μ, IsUnit ((V₁ᵀ * Ω ω) * (V₁ᵀ * Ω ω)ᵀ) := by
+  have hlaw := hasLaw_gaussianMatrix_block_of_hasLaw hΩ V₁ hV₁
   have h := gaussianMatrix_ae_isUnit_mul_transpose (k := k) hkt
-  rw [← map_block_eq_gaussianMatrix hΩ V₁ hV₁] at h
-  exact ae_of_ae_map
-    ((measurable_block V₁).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΩ)) h
+  rw [← hlaw.map_eq] at h
+  exact ae_of_ae_map hlaw.aemeasurable h
 
 /-- Integrability of `‖(V₁ᵀΩ)†‖_F²` for an `n × t` standard Gaussian `Ω`, `V₁ᵀV₁ = 1`,
 `k + 2 ≤ t`: the integrability half of the inverse moment
 (`integrable_and_integral_frobSq_pinvR_gaussianMatrix`) transported
 by the block law. HMT 2011 Prop 10.2 and §10.2. Atlas `rsvd-expected-error`
 (uses `gaussian-conditioning`, `pinv-frob-moment`). -/
-theorem integrable_pinvR_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
+theorem integrable_pinvR_block {n k t : ℕ} {Ω : Ωs → Matrix (Fin n) (Fin t) ℝ}
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (hV₁ : V₁ᵀ * V₁ = 1) (hkt : k + 2 ≤ t) :
-    Integrable (fun ω => frobSq (pinvR (V₁ᵀ * Matrix.of (Ω ω)))) μ := by
-  have h := (integrable_and_integral_frobSq_pinvR_gaussianMatrix hkt).1
-  rw [← map_block_eq_gaussianMatrix hΩ V₁ hV₁] at h
-  exact h.comp_aemeasurable
-    ((measurable_block V₁).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΩ))
+    Integrable (fun ω => frobSq (pinvR (V₁ᵀ * Ω ω))) μ := by
+  exact (integrable_and_integral_frobSq_pinvR_gaussianMatrix_of_hasLaw
+    (hasLaw_gaussianMatrix_block_of_hasLaw hΩ V₁ hV₁) hkt).1
 
 /-- `E‖(V₁ᵀΩ)†‖_F² = k/(t−k−1)` for an `n × t` standard Gaussian `Ω`, `V₁ᵀV₁ = 1`, `k + 2 ≤ t`.
 HMT 2011 Prop 10.2 and §10.2 (Chen–Persson `lem:invmom`). Atlas `rsvd-expected-error`
 (uses `gaussian-conditioning`, `pinv-frob-moment`). -/
-theorem integral_pinvR_block {n k t : ℕ} {Ω : Ωs → Fin n → Fin t → ℝ}
-    (hΩ : μ.map Ω = gaussianMatrix n t) (V₁ : Matrix (Fin n) (Fin k) ℝ)
+theorem integral_pinvR_block {n k t : ℕ} {Ω : Ωs → Matrix (Fin n) (Fin t) ℝ}
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) (V₁ : Matrix (Fin n) (Fin k) ℝ)
     (hV₁ : V₁ᵀ * V₁ = 1) (hkt : k + 2 ≤ t) :
-    ∫ ω, frobSq (pinvR (V₁ᵀ * Matrix.of (Ω ω))) ∂μ = (k : ℝ) / ((t : ℝ) - k - 1) := by
+    ∫ ω, frobSq (pinvR (V₁ᵀ * Ω ω)) ∂μ = (k : ℝ) / ((t : ℝ) - k - 1) := by
   rw [integral_frobSq_pinvR_block hΩ V₁ hV₁,
     (integrable_and_integral_frobSq_pinvR_gaussianMatrix hkt).2]
 
@@ -84,7 +81,7 @@ variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMe
 variable {m q : Type*} [Fintype m] [Fintype q] [DecidableEq q] {n k r r' t : ℕ}
 
 /-- The three Gaussian inputs of `rsvd_main` / `rsvd_truncated_main` for a standard Gaussian test
-matrix `Ω` (law `gaussianMatrix n t` of the array view `Matrix.of.symm ∘ Ω`): `hunit` (a.s.
+matrix `Ω` (`HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ`): `hunit` (a.s.
 full row rank of `V₁ᵀΩ`), `hinv` (`E‖S₂Ω₂Ω₁†‖_F² = (k/(t−k−1))‖S₂‖_F²`) and `hZi`.
 HMT 2011, proof of Thm 10.5; Chen–Persson, proof of `thm:RSVD`. Atlas `rsvd-expected-error`
 (uses `gaussian-conditioning`, `pinv-frob-moment`, `gaussian-full-rank-ae`). -/
@@ -92,7 +89,7 @@ theorem rsvd_gaussian_inputs {V₁ : Matrix (Fin n) (Fin k) ℝ}
     {V₂ : Matrix (Fin n) (Fin r') ℝ} (S₂ : Matrix (Fin r) (Fin r') ℝ)
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t) (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t) :
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) :
     (∀ᵐ ω ∂μ, IsUnit ((V₁ᵀ * Ω ω) * (V₁ᵀ * Ω ω)ᵀ)) ∧
     (∫ ω, frobSq (S₂ * (V₂ᵀ * Ω ω) * pinvR (V₁ᵀ * Ω ω)) ∂μ
       = (k : ℝ) / (t - k - 1) * frobSq S₂) ∧
@@ -134,7 +131,7 @@ theorem rsvd_main_gaussian
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ)
     (Q : Ωs → Matrix m q ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω) :
@@ -160,7 +157,7 @@ theorem rsvd_truncated_main_gaussian
     (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     (hkt : k + 2 ≤ t)
     (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t)
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ)
     (Q : Ωs → Matrix m q ℝ) (Y : Ωs → Matrix q (Fin n) ℝ)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω))
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * Ω ω)) = A * Ω ω)
@@ -181,40 +178,45 @@ variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs}
 /-- The Gaussian inputs of `completion_reduction` for an `m × s` standard Gaussian `Ψ` and fixed
 `Q`, `Qp` with orthonormal, mutually orthogonal columns, `q + 2 ≤ s`: a.s. full column rank of
 `ΨᵀQ` (`hG₁`), `E‖(ΨᵀQ)†‖_F² = q/(s−q−1)` (`hG₁m`), and integrability of the noise term
-`‖(ΨᵀQ)†(ΨᵀQp)B‖_F²` (`hGi`). `ΨᵀQ = (QᵀΨ)ᵀ` with `QᵀΨ ∼ gaussianMatrix q s` (block law).
+`‖(ΨᵀQ)†(ΨᵀQp)B‖_F²` (`hGi`). `ΨᵀQ = (QᵀΨ)ᵀ` with `QᵀΨ ∼ gaussianMatrix (Fin q) (Fin s)`
+(block law).
 Chen–Persson, proof of `lem:completion`; Tropp–Webber 2023, proof of Thm 5.1.
 Atlas `gn-expected-error` (uses `gaussian-conditioning`, `pinv-frob-moment`,
 `gaussian-full-rank-ae`). -/
 theorem completion_gaussian_inputs [IsProbabilityMeasure μ] {m s q rp : ℕ} {ι : Type*}
-    [Fintype ι] {Ψ : Ωs → Fin m → Fin s → ℝ} (hΨ : μ.map Ψ = gaussianMatrix m s)
+    [Fintype ι] {Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ}
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ)
     (Q : Matrix (Fin m) (Fin q) ℝ) (Qp : Matrix (Fin m) (Fin rp) ℝ) (hQ : Qᵀ * Q = 1)
     (hQp : Qpᵀ * Qp = 1) (hQQp : Qᵀ * Qp = 0) (B : Matrix (Fin rp) ι ℝ) (hqs : q + 2 ≤ s) :
-    (∀ᵐ ω ∂μ, IsUnit (((Matrix.of (Ψ ω))ᵀ * Q)ᵀ * ((Matrix.of (Ψ ω))ᵀ * Q))) ∧
-    (∫ ω, frobSq (pinvL ((Matrix.of (Ψ ω))ᵀ * Q)) ∂μ = (q : ℝ) / ((s : ℝ) - q - 1)) ∧
+    (∀ᵐ ω ∂μ, IsUnit (((Ψ ω)ᵀ * Q)ᵀ * ((Ψ ω)ᵀ * Q))) ∧
+    (∫ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q)) ∂μ = (q : ℝ) / ((s : ℝ) - q - 1)) ∧
     Integrable
-      (fun ω => frobSq (pinvL ((Matrix.of (Ψ ω))ᵀ * Q) * ((Matrix.of (Ψ ω))ᵀ * Qp) * B)) μ := by
-  have h1 : ∀ ω, frobSq (pinvL ((Matrix.of (Ψ ω))ᵀ * Q) * ((Matrix.of (Ψ ω))ᵀ * Qp) * B) =
-      frobSq (Bᵀ * (Qpᵀ * Matrix.of (Ψ ω)) * pinvR (Qᵀ * Matrix.of (Ψ ω))) := by
+      (fun ω => frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * B)) μ := by
+  have h1 : ∀ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q) * ((Ψ ω)ᵀ * Qp) * B) =
+      frobSq (Bᵀ * (Qpᵀ * Ψ ω) * pinvR (Qᵀ * Ψ ω)) := by
     intro ω
     rw [← frobSq_transpose]
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose, pinvL_transpose,
       Matrix.mul_assoc]
-  have h2 : ∀ ω, frobSq (pinvL ((Matrix.of (Ψ ω))ᵀ * Q)) =
-      frobSq (pinvR (Qᵀ * Matrix.of (Ψ ω))) := by
+  have h2 : ∀ ω, frobSq (pinvL ((Ψ ω)ᵀ * Q)) =
+      frobSq (pinvR (Qᵀ * Ψ ω)) := by
     intro ω
     rw [← frobSq_transpose, pinvL_transpose, Matrix.transpose_mul, Matrix.transpose_transpose]
   refine ⟨?_, ?_, ?_⟩
   · filter_upwards [ae_isUnit_block hΨ Q hQ (by omega)] with ω h
-    rwa [gram_transpose_mul_eq]
+    have hg := gram_conjTranspose_mul_eq (Ψ ω) Q
+    simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hg
+    rwa [hg]
   · simp_rw [h2]
     exact integral_pinvR_block hΨ Q hQ hqs
   · simp_rw [h1]
     exact integrable_frobSq_mul_gaussian_mul_of_indepFun
-      (X := fun ω => Matrix.of.symm (Qᵀ * Matrix.of (Ψ ω)))
-      (Y := fun ω => Matrix.of.symm (Qpᵀ * Matrix.of (Ψ ω)))
-      ((measurable_block Q).comp_aemeasurable (aemeasurable_of_map_eq_gaussianMatrix hΨ))
-      (map_block_eq_gaussianMatrix hΨ Qp hQp) (indepFun_block_of_map_eq hΨ Q Qp hQ hQp hQQp)
-      Bᵀ (T := fun x => pinvR (Matrix.of x)) measurable_pinvR_entry
+      (X := fun ω => Qᵀ * Ψ ω)
+      (Y := fun ω => Qpᵀ * Ψ ω)
+      ((measurable_block Q).comp_aemeasurable hΨ.aemeasurable)
+      (hasLaw_gaussianMatrix_block_of_hasLaw hΨ Qp hQp)
+      (gaussianMatrix_indepFun_block_of_hasLaw hΨ Q Qp hQ hQp hQQp)
+      Bᵀ (T := fun x => pinvR x) measurable_pinvR_entry
       (integrable_pinvR_block hΨ Q hQ hqs)
 
 /-- `completion_reduction_gaussian` together with integrability of the error
@@ -226,16 +228,18 @@ theorem completion_reduction_gaussian_integrable [IsProbabilityMeasure μ] {m s 
     (hQ : HasOrthonormalCols Q) (hQp : HasOrthonormalCols Qp) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1)
     (hq : 1 ≤ q) (hqs : q + 2 ≤ s)
     (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (hΨ : μ.map (fun ω => Matrix.of.symm (Ψ ω)) = gaussianMatrix m s) :
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ) :
     Integrable (fun ω => frobSq (A - sketchedOutput Q (Ψ ω) A)) μ ∧
     ∫ ω, frobSq (A - sketchedOutput Q (Ψ ω) A) ∂μ
-      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) := by
-  have hQQp := transpose_mul_eq_zero_of_completion hQ.transpose_mul_self hQp hcomp
+      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual Q A) := by
+  have hQQp : Qᵀ * Qp = 0 :=
+    conjTranspose_mul_eq_zero_of_completion hQ.conjTranspose_mul_self hQp.conjTranspose_mul_self
+      hcomp
   obtain ⟨hG₁, hG₁m, hGi⟩ :=
-    completion_gaussian_inputs hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A) hqs
-  have hG₂ := integral_frobSq_pinvL_block_mul_block_mul hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A)
+    completion_gaussian_inputs hΨ Q Qp hQ hQp hQQp (Qpᵀ * projResidual Q A) hqs
+  have hG₂ := integral_frobSq_pinvL_block_mul_block_mul hΨ Q Qp hQ hQp hQQp (Qpᵀ * projResidual Q A)
   refine ⟨?_, completion_reduction Q Qp A hQ hQp hcomp hq hqs Ψ hG₁ hG₂ hG₁m hGi⟩
-  refine ((integrable_const (frobSq (residual Q A))).add hGi).congr ?_
+  refine ((integrable_const (frobSq (projResidual Q A))).add hGi).congr ?_
   filter_upwards [hG₁] with ω h
   exact (frobSq_error Q Qp (Ψ ω) A hQ hcomp h).symm
 
@@ -254,9 +258,9 @@ theorem completion_reduction_gaussian [IsProbabilityMeasure μ] {m s q r : ℕ}
     (hQ : HasOrthonormalCols Q) (hQp : HasOrthonormalCols Qp) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1)
     (hq : 1 ≤ q) (hqs : q + 2 ≤ s)
     (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
-    (hΨ : μ.map (fun ω => Matrix.of.symm (Ψ ω)) = gaussianMatrix m s) :
+    (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ) :
     ∫ ω, frobSq (A - sketchedOutput Q (Ψ ω) A) ∂μ
-      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) :=
+      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual Q A) :=
   (completion_reduction_gaussian_integrable Q Qp A hQ hQp hcomp hq hqs Ψ hΨ).2
 
 end Completion
@@ -289,19 +293,20 @@ section GN
 variable {Ωs : Type*} [MeasurableSpace Ωs] {μ : Measure Ωs} [IsProbabilityMeasure μ]
 variable {m n k r r' t s q : ℕ}
 
-/-- `completion_reduction_gaussian` on the canonical space (`Ψ = Matrix.of` under
-`gaussianMatrix m s`) with the orthogonal completion chosen internally, plus integrability:
+/-- `completion_reduction_gaussian` on the canonical space (`Ψ = id` under
+`gaussianMatrix (Fin m) (Fin s)`) with the orthogonal completion chosen internally, plus
+integrability:
 the per-`Ω` inner integral in the conditioning step of `thm:GN`. Chen–Persson,
 `lem:completion`. Atlas `gn-expected-error` (uses `orthonormal-completion`). -/
 theorem completion_gaussian_of_orthonormal {ι : Type*} [Fintype ι] [DecidableEq ι]
     (Q : Matrix (Fin m) (Fin q) ℝ) (A : Matrix (Fin m) ι ℝ) (hQ : HasOrthonormalCols Q)
     (hq : 1 ≤ q) (hqs : q + 2 ≤ s) :
-    Integrable (fun y => frobSq (A - sketchedOutput Q (Matrix.of y) A)) (gaussianMatrix m s) ∧
-    ∫ y, frobSq (A - sketchedOutput Q (Matrix.of y) A) ∂gaussianMatrix m s
-      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) := by
-  obtain ⟨r, Qp, hQp, hcomp⟩ := exists_orthonormal_complement Q hQ
-  exact completion_reduction_gaussian_integrable (μ := gaussianMatrix m s) Q Qp A hQ hQp hcomp
-    hq hqs (fun y => Matrix.of y) Measure.map_id
+    Integrable (fun y => frobSq (A - sketchedOutput Q y A)) (gaussianMatrix (Fin m) (Fin s)) ∧
+    ∫ y, frobSq (A - sketchedOutput Q y A) ∂gaussianMatrix (Fin m) (Fin s)
+      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual Q A) := by
+  obtain ⟨r, Qp, hQp, hcomp⟩ := exists_unitary_complement Q hQ
+  exact completion_reduction_gaussian_integrable (μ := gaussianMatrix (Fin m) (Fin s)) Q Qp A hQ hQp
+    hcomp hq hqs (fun y => y) HasLaw.id
 
 end GN
 

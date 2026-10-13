@@ -12,7 +12,6 @@ Source: operator manuscript `sh:count-second`; supports `sparse-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 open MeasureTheory ProbabilityTheory
 namespace NLAlib

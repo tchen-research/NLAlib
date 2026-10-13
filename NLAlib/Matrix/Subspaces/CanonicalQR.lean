@@ -8,36 +8,35 @@ import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Canonical positive-diagonal thin QR
 
-The frame is the normalized Gram–Schmidt map on full-column-rank arrays,
+The frame is the normalized Gram–Schmidt map on full-column-rank matrices,
 with the coordinate frame on the rank-deficient set. This gives an actual
 Borel map into Stiefel space. Source: operator re-derivation `sh:gaussian-qr`.
 Supports atlas `haar-orthogonal`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory InnerProductSpace
 open scoped Matrix Matrix.Norms.L2Operator
 open scoped Classical
 namespace NLAlib
 
-/-- The Euclidean columns of an array, with the standard matrix column order.
+/-- The Euclidean columns of a matrix, with the standard matrix column order.
 Source: operator re-derivation `sh:qr-equiv`. -/
-def qrColumnFamily {n k : ℕ} (A : Fin n → Fin k → ℝ) :
+def qrColumnFamily {n k : ℕ} (A : Matrix (Fin n) (Fin k) ℝ) :
     Fin k → EuclideanSpace ℝ (Fin n) := fun j => WithLp.toLp 2 (fun i => A i j)
 
-/-- The literal positive normalized Gram–Schmidt array.
+/-- The literal positive normalized Gram–Schmidt matrix.
 Source: operator re-derivation `sh:qr-equiv`; zero residuals are totalized to zero. -/
-def qrNormalizedArray {n k : ℕ} (A : Fin n → Fin k → ℝ) : Fin n → Fin k → ℝ :=
-  fun i j => gramSchmidtNormed ℝ (qrColumnFamily A) j i
+def qrNormalizedArray {n k : ℕ} (A : Matrix (Fin n) (Fin k) ℝ) : Matrix (Fin n) (Fin k) ℝ :=
+  Matrix.of fun i j => gramSchmidtNormed ℝ (qrColumnFamily A) j i
 
 /-- Full-column-rank normalized Gram–Schmidt has orthonormal columns.
 Source: operator re-derivation `sh:gaussian-qr`. -/
-theorem hasOrthonormalCols_qrNormalizedArray {n k : ℕ} (A : Fin n → Fin k → ℝ)
+theorem hasOrthonormalCols_qrNormalizedArray {n k : ℕ} (A : Matrix (Fin n) (Fin k) ℝ)
     (hA : LinearIndependent ℝ (qrColumnFamily A)) :
-    HasOrthonormalCols (Matrix.of (qrNormalizedArray A)) := by
+    HasOrthonormalCols (qrNormalizedArray A) := by
   have ho := orthonormal_iff_ite.mp (gramSchmidtNormed_orthonormal hA)
-  rw [hasOrthonormalCols_iff_transpose_mul_self]
+  rw [hasOrthonormalCols_iff_conjTranspose_mul_self, Matrix.conjTranspose_eq_transpose_of_trivial]
   ext a b
   have hh := ho b a
   simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, Matrix.one_apply,
@@ -46,7 +45,7 @@ theorem hasOrthonormalCols_qrNormalizedArray {n k : ℕ} (A : Fin n → Fin k �
 /-- The actual canonical QR frame, using the coordinate frame on the
 rank-deficient set. On full rank its diagonal normalizations are positive.
 Source: operator re-derivation `sh:gaussian-qr`. -/
-def canonicalQRFrame (n k : ℕ) (hkn : k ≤ n) (A : Fin n → Fin k → ℝ) : Stiefel n k :=
+def canonicalQRFrame (n k : ℕ) (hkn : k ≤ n) (A : Matrix (Fin n) (Fin k) ℝ) : Stiefel n k :=
   if hA : LinearIndependent ℝ (qrColumnFamily A) then
     ⟨qrNormalizedArray A, hasOrthonormalCols_qrNormalizedArray A hA⟩
   else coordinateStiefel n k hkn
@@ -54,39 +53,39 @@ def canonicalQRFrame (n k : ℕ) (hkn : k ≤ n) (A : Fin n → Fin k → ℝ) :
 /-- The canonical frame is literal normalized Gram–Schmidt on full rank.
 Source: operator re-derivation `sh:gaussian-qr`. -/
 theorem canonicalQRFrame_val_of_linearIndependent {n k : ℕ} (hkn : k ≤ n)
-    (A : Fin n → Fin k → ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A)) :
+    (A : Matrix (Fin n) (Fin k) ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A)) :
     (canonicalQRFrame n k hkn A).val = qrNormalizedArray A := by
   simp only [canonicalQRFrame, dif_pos hA]
 
 /-- The Euclidean column Gram matrix is the ordinary matrix Gram matrix.
 Source: operator re-derivation `sh:gaussian-qr`. -/
-theorem gram_qrColumnFamily {n k : ℕ} (A : Fin n → Fin k → ℝ) :
-    Matrix.gram ℝ (qrColumnFamily A) = (Matrix.of A)ᵀ * Matrix.of A := by
+theorem gram_qrColumnFamily {n k : ℕ} (A : Matrix (Fin n) (Fin k) ℝ) :
+    Matrix.gram ℝ (qrColumnFamily A) = Aᵀ * A := by
   ext a b
   simp only [Matrix.gram_apply, qrColumnFamily, PiLp.inner_apply, RCLike.inner_apply,
-    conj_trivial, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, mul_comm]
+    conj_trivial, Matrix.mul_apply, Matrix.transpose_apply, mul_comm]
 
 /-- The full-column-rank set is open, since its Gram determinant is nonzero.
 Source: operator re-derivation `sh:gaussian-qr`. -/
 theorem isOpen_linearIndependent_qrColumnFamily (n k : ℕ) :
-    IsOpen {A : Fin n → Fin k → ℝ | LinearIndependent ℝ (qrColumnFamily A)} := by
-  have hcont : Continuous (fun A : Fin n → Fin k → ℝ =>
-      ((Matrix.of A)ᵀ * Matrix.of A).det) := by
-    simp only [Matrix.det_apply, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply]
+    IsOpen {A : Matrix (Fin n) (Fin k) ℝ | LinearIndependent ℝ (qrColumnFamily A)} := by
+  have hcont : Continuous (fun A : Matrix (Fin n) (Fin k) ℝ =>
+      (Aᵀ * A).det) := by
+    simp only [Matrix.det_apply, Matrix.mul_apply, Matrix.transpose_apply]
     fun_prop
-  have heq : {A : Fin n → Fin k → ℝ | LinearIndependent ℝ (qrColumnFamily A)} =
-      {A | ((Matrix.of A)ᵀ * Matrix.of A).det ≠ 0} := by
+  have heq : {A : Matrix (Fin n) (Fin k) ℝ | LinearIndependent ℝ (qrColumnFamily A)} =
+      {A | (Aᵀ * A).det ≠ 0} := by
     ext A
     simp only [Set.mem_ofPred_eq]
     rw [← Matrix.det_gram_ne_zero_iff_linearIndependent, gram_qrColumnFamily]
   rw [heq]
   exact (isClosed_eq hcont continuous_const).isOpen_compl
 
-/-- The literal normalized Gram–Schmidt array is measurable everywhere,
+/-- The literal normalized Gram–Schmidt matrix is measurable everywhere,
 including rank-deficient inputs. Source: operator re-derivation `sh:gaussian-qr`. -/
 theorem measurable_qrNormalizedArray (n k : ℕ) :
     Measurable (qrNormalizedArray (n := n) (k := k)) := by
-  have hc : ∀ j : Fin k, Measurable (fun A : Fin n → Fin k → ℝ => qrColumnFamily A j) := by
+  have hc : ∀ j : Fin k, Measurable (fun A : Matrix (Fin n) (Fin k) ℝ => qrColumnFamily A j) := by
     intro j
     dsimp only [qrColumnFamily]
     fun_prop
@@ -116,14 +115,14 @@ theorem measurable_canonicalQRFrame (n k : ℕ) (hkn : k ≤ n) :
 
 /-- The upper factor consists of inner products between canonical frame
 columns and original columns. Source: operator re-derivation `sh:qr-equiv`. -/
-def canonicalQRUpper {n k : ℕ} (hkn : k ≤ n) (A : Fin n → Fin k → ℝ) :
+def canonicalQRUpper {n k : ℕ} (hkn : k ≤ n) (A : Matrix (Fin n) (Fin k) ℝ) :
     Matrix (Fin k) (Fin k) ℝ := fun i j =>
   inner ℝ (qrColumnFamily (canonicalQRFrame n k hkn A).val i) (qrColumnFamily A j)
 
 /-- The canonical upper factor has zero entries strictly below its diagonal
 on full-column-rank inputs. Source: operator re-derivation `sh:qr-equiv`. -/
 theorem canonicalQRUpper_apply_eq_zero_of_lt {n k : ℕ} (hkn : k ≤ n)
-    (A : Fin n → Fin k → ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A))
+    (A : Matrix (Fin n) (Fin k) ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A))
     {i j : Fin k} (hij : j < i) : canonicalQRUpper hkn A i j = 0 := by
   change inner ℝ (qrColumnFamily (canonicalQRFrame n k hkn A).val i) (qrColumnFamily A j) = 0
   rw [canonicalQRFrame_val_of_linearIndependent hkn A hA]
@@ -132,7 +131,7 @@ theorem canonicalQRUpper_apply_eq_zero_of_lt {n k : ℕ} (hkn : k ≤ n)
 /-- Every canonical QR diagonal entry is the strictly positive residual norm
 on full-column-rank inputs. Source: operator re-derivation `sh:qr-equiv`. -/
 theorem canonicalQRUpper_apply_self_pos {n k : ℕ} (hkn : k ≤ n)
-    (A : Fin n → Fin k → ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A)) (i : Fin k) :
+    (A : Matrix (Fin n) (Fin k) ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A)) (i : Fin k) :
     0 < canonicalQRUpper hkn A i i := by
   change 0 < inner ℝ (qrColumnFamily (canonicalQRFrame n k hkn A).val i) (qrColumnFamily A i)
   rw [canonicalQRFrame_val_of_linearIndependent hkn A hA]
@@ -143,21 +142,21 @@ theorem canonicalQRUpper_apply_self_pos {n k : ℕ} (hkn : k ≤ n)
 /-- Orthogonal left multiplication carries each input column through its
 Euclidean isometry. Source: operator re-derivation `sh:qr-equiv`. -/
 theorem qrColumnFamily_orthogonal_mul {n k : ℕ}
-    (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Fin n → Fin k → ℝ) :
-    qrColumnFamily (Matrix.of.symm (O.val * Matrix.of A)) =
+    (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Matrix (Fin n) (Fin k) ℝ) :
+    qrColumnFamily (O.val * A) =
       fun j => HasOrthonormalCols.toLinearIsometry (transpose_mul_self_orthogonalGroup O)
         (qrColumnFamily A j) := by
   rfl
 
-/-- The canonical positive normalized Gram–Schmidt array is equivariant
+/-- The canonical positive normalized Gram–Schmidt matrix is equivariant
 under orthogonal multiplication, including zero residuals.
 Source: operator re-derivation `sh:qr-equiv`. -/
 theorem qrNormalizedArray_orthogonal_mul {n k : ℕ}
-    (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Fin n → Fin k → ℝ) :
-    qrNormalizedArray (Matrix.of.symm (O.val * Matrix.of A)) =
-      Matrix.of.symm (O.val * Matrix.of (qrNormalizedArray A)) := by
+    (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Matrix (Fin n) (Fin k) ℝ) :
+    qrNormalizedArray (O.val * A) =
+      O.val * qrNormalizedArray A := by
   funext i j
-  change (gramSchmidtNormed ℝ (qrColumnFamily (Matrix.of.symm (O.val * Matrix.of A))) j) i = _
+  change (gramSchmidtNormed ℝ (qrColumnFamily (O.val * A)) j) i = _
   rw [qrColumnFamily_orthogonal_mul, gramSchmidtNormed_map_linearIsometry]
   rfl
 
@@ -165,18 +164,18 @@ theorem qrNormalizedArray_orthogonal_mul {n k : ℕ}
 Source: operator re-derivation `sh:qr-equiv`; signs are fixed by positive
 Gram–Schmidt normalization rather than chosen from the data. -/
 theorem canonicalQRFrame_orthogonal_mul {n k : ℕ} (hkn : k ≤ n)
-    (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Fin n → Fin k → ℝ)
+    (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Matrix (Fin n) (Fin k) ℝ)
     (hA : LinearIndependent ℝ (qrColumnFamily A)) :
-    canonicalQRFrame n k hkn (Matrix.of.symm (O.val * Matrix.of A)) =
+    canonicalQRFrame n k hkn (O.val * A) =
       O • canonicalQRFrame n k hkn A := by
   have hOA : LinearIndependent ℝ
-      (qrColumnFamily (Matrix.of.symm (O.val * Matrix.of A))) := by
+      (qrColumnFamily (O.val * A)) := by
     rw [qrColumnFamily_orthogonal_mul]
     let L := HasOrthonormalCols.toLinearIsometry (transpose_mul_self_orthogonalGroup O)
     exact hA.map' L.toLinearMap ((LinearMap.ker_eq_bot).mpr L.injective)
   apply Subtype.ext
-  change (canonicalQRFrame n k hkn (Matrix.of.symm (O.val * Matrix.of A))).val =
-    Matrix.of.symm (O.val * Matrix.of (canonicalQRFrame n k hkn A).val)
+  change (canonicalQRFrame n k hkn (O.val * A)).val =
+    (O.val * (canonicalQRFrame n k hkn A).val)
   rw [canonicalQRFrame_val_of_linearIndependent hkn _ hOA,
     canonicalQRFrame_val_of_linearIndependent hkn A hA,
     qrNormalizedArray_orthogonal_mul]
@@ -184,17 +183,17 @@ theorem canonicalQRFrame_orthogonal_mul {n k : ℕ} (hkn : k ≤ n)
 /-- The canonical upper factor is unchanged by orthogonal left multiplication.
 Source: operator re-derivation `sh:qr-equiv`. -/
 theorem canonicalQRUpper_orthogonal_mul {n k : ℕ} (hkn : k ≤ n)
-    (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Fin n → Fin k → ℝ)
+    (O : Matrix.orthogonalGroup (Fin n) ℝ) (A : Matrix (Fin n) (Fin k) ℝ)
     (hA : LinearIndependent ℝ (qrColumnFamily A)) :
-    canonicalQRUpper hkn (Matrix.of.symm (O.val * Matrix.of A)) = canonicalQRUpper hkn A := by
+    canonicalQRUpper hkn (O.val * A) = canonicalQRUpper hkn A := by
   ext i j
   change inner ℝ
-    (qrColumnFamily (canonicalQRFrame n k hkn (Matrix.of.symm (O.val * Matrix.of A))).val i)
-    (qrColumnFamily (Matrix.of.symm (O.val * Matrix.of A)) j) = _
+    (qrColumnFamily (canonicalQRFrame n k hkn (O.val * A)).val i)
+    (qrColumnFamily (O.val * A) j) = _
   rw [canonicalQRFrame_orthogonal_mul hkn O A hA]
   change inner ℝ
-    (qrColumnFamily (Matrix.of.symm (O.val * Matrix.of (canonicalQRFrame n k hkn A).val)) i)
-    (qrColumnFamily (Matrix.of.symm (O.val * Matrix.of A)) j) = _
+    (qrColumnFamily (O.val * (canonicalQRFrame n k hkn A).val) i)
+    (qrColumnFamily (O.val * A) j) = _
   rw [qrColumnFamily_orthogonal_mul, qrColumnFamily_orthogonal_mul]
   exact (HasOrthonormalCols.toLinearIsometry
     (transpose_mul_self_orthogonalGroup O)).inner_map_map _ _
@@ -203,8 +202,8 @@ theorem canonicalQRUpper_orthogonal_mul {n k : ℕ} (hkn : k ≤ n)
 input. Together with triangularity and positive diagonal, this is an actual
 canonical thin QR decomposition. Source: operator re-derivation `sh:qr-equiv`. -/
 theorem canonicalQRFrame_mul_canonicalQRUpper {n k : ℕ} (hkn : k ≤ n)
-    (A : Fin n → Fin k → ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A)) :
-    Matrix.of (canonicalQRFrame n k hkn A).val * canonicalQRUpper hkn A = Matrix.of A := by
+    (A : Matrix (Fin n) (Fin k) ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A)) :
+    (canonicalQRFrame n k hkn A).val * canonicalQRUpper hkn A = A := by
   have hspan : Submodule.span ℝ (Set.range (gramSchmidtNormed ℝ (qrColumnFamily A))) =
       Submodule.span ℝ (Set.range (qrColumnFamily A)) := by
     calc
@@ -237,13 +236,13 @@ theorem canonicalQRFrame_mul_canonicalQRUpper {n k : ℕ} (hkn : k ≤ n)
 /-- The canonical upper factor has exactly the original column Gram matrix,
 so it preserves the singular-value data. Source: operator re-derivation `sh:qr-equiv`. -/
 theorem transpose_canonicalQRUpper_mul_self {n k : ℕ} (hkn : k ≤ n)
-    (A : Fin n → Fin k → ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A)) :
+    (A : Matrix (Fin n) (Fin k) ℝ) (hA : LinearIndependent ℝ (qrColumnFamily A)) :
     (canonicalQRUpper hkn A)ᵀ * canonicalQRUpper hkn A =
-      (Matrix.of A)ᵀ * Matrix.of A := by
-  let Q := Matrix.of (canonicalQRFrame n k hkn A).val
+      Aᵀ * A := by
+  let Q := (canonicalQRFrame n k hkn A).val
   let R := canonicalQRUpper hkn A
   have hQ : Qᵀ * Q = 1 := (canonicalQRFrame n k hkn A).property
-  have hQR : Q * R = Matrix.of A := canonicalQRFrame_mul_canonicalQRUpper hkn A hA
+  have hQR : Q * R = A := canonicalQRFrame_mul_canonicalQRUpper hkn A hA
   calc
     Rᵀ * R = Rᵀ * (Qᵀ * Q) * R := by rw [hQ, Matrix.mul_one]
     _ = (Q * R)ᵀ * (Q * R) := by rw [Matrix.transpose_mul]; simp only [Matrix.mul_assoc]

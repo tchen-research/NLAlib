@@ -91,12 +91,14 @@ theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matri
   have horth : frobInner (S₂ * V₂ᵀ) (S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ) = 0 := by
     rw [← frobInner_transpose]
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose]
-    exact frobInner_mul_mul_eq_zero _ _ _ _ (transpose_mul_eq_zero_comm.1 hV)
+    exact frobInner_mul_mul_eq_zero _ _ _ _ (conjTranspose_mul_eq_zero_comm.1 hV)
   rw [sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit,
-    frobSq_mul_left_of_orthonormal hU₂.transpose_mul_self,
+    frobSq_mul_left_of_orthonormal hU₂.conjTranspose_mul_self,
     frobSq_sub_of_frobInner_eq_zero _ _ horth,
-    frobSq_mul_right_of_orthonormal hV₂.transpose_mul_self,
-    frobSq_mul_right_of_orthonormal hV₁.transpose_mul_self]
+    ← Matrix.conjTranspose_eq_transpose_of_trivial V₂,
+    ← Matrix.conjTranspose_eq_transpose_of_trivial V₁,
+    frobSq_mul_right_of_orthonormal hV₂.conjTranspose_mul_self,
+    frobSq_mul_right_of_orthonormal hV₁.conjTranspose_mul_self]
 
 omit [DecidableEq q] in
 /-- The competitor `Z = AΩΩ₁†V₁ᵀ` of the range-finder proof lies in `range Q` when
@@ -127,8 +129,8 @@ theorem frobSq_residual_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Matrix m
     {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}
     (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ))
     {Q : Matrix m q ℝ} (hQo : HasOrthonormalCols Q) (hQ : Q * (Qᵀ * (A * Ω)) = A * Ω) :
-    frobSq (residual Q A) ≤ frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) := by
-  calc frobSq (residual Q A)
+    frobSq (projResidual Q A) ≤ frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) := by
+  calc frobSq (projResidual Q A)
       ≤ frobSq (A - Q * (Qᵀ * (A * Ω * pinvR Ω₁ * V₁ᵀ))) :=
         frobSq_residual_le_frobSq_sub_mul hQo A _
     _ = frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) := by rw [mul_transpose_mul_competitor hQ]

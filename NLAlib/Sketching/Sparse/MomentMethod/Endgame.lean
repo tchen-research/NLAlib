@@ -6,7 +6,6 @@ import NLAlib.Sketching.Sparse.Bands.LadderIteration
 import NLAlib.Sketching.Sparse.MomentMethod.GramTail
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Concrete moment and Markov endgame
@@ -21,7 +20,7 @@ namespace NLAlib.SparseSketch
 
 open SparseStackSelectors
 
-open scoped BigOperators Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator
 
 noncomputable section
 

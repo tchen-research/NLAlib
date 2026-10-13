@@ -4,7 +4,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 -/
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.SchurComplement
 /-!
-# Diagonal of the inverse Gram matrix and the law of the residual
+# Diagonal of the inverse Gram matrix and the law of the projResidual
 
 For `G` with rows indexed by `Fin (n + 1)`, `H` the matrix of the rows other than `i` and
 `g = Gᵢ`:
@@ -16,7 +16,7 @@ For `G` with rows indexed by `Fin (n + 1)`, `H` the matrix of the rows other tha
 
 Atlas: `inverse-wishart-mean` (helpers). Proof source: Prove2me workspace, Gaussian Random
 Matrices series (`schur_diag_inv`, `residual_law`), with the block law
-`NLAlib.gaussianMatrix_map_block` (atlas `block-law-indep`).
+`NLAlib.hasLaw_gaussianMatrix_block` (atlas `block-law-indep`).
 -/
 
 noncomputable section
@@ -101,33 +101,34 @@ theorem inv_self_mul_transpose_apply_self {n k : ℕ} (G : Matrix (Fin (n + 1)) 
 /-! ### Law of the residual of a Gaussian row -/
 
 /-- A standard Gaussian vector mapped by `Vᵀ`, with `V` having orthonormal columns, is a
-standard Gaussian vector (the case `t = 1` of `gaussianMatrix_map_block`, reshaped). -/
+standard Gaussian vector (the case `t = 1` of `hasLaw_gaussianMatrix_block`, reshaped). -/
 private lemma pi_gaussianReal_map_transpose_mulVec {m d : ℕ} (V : Matrix (Fin m) (Fin d) ℝ)
-    (hV : Vᵀ * V = 1) :
+    (hV : HasOrthonormalCols V) :
     Measure.map (fun g : Fin m → ℝ => Vᵀ *ᵥ g) (Measure.pi fun _ : Fin m => gaussianReal 0 1)
       = Measure.pi fun _ : Fin d => gaussianReal 0 1 := by
   have hι : ∀ p : ℕ, MeasurePreserving
-      (fun (g : Fin p → ℝ) (a : Fin p) => (MeasurableEquiv.funUnique (Fin 1) ℝ).symm (g a))
-      (Measure.pi fun _ : Fin p => gaussianReal 0 1) (gaussianMatrix p 1) := fun p =>
-    measurePreserving_pi _ _ fun _ =>
-      (measurePreserving_funUnique (gaussianReal 0 1) (Fin 1)).symm
+      (fun g : Fin p → ℝ =>
+        Matrix.of fun (a : Fin p) => (MeasurableEquiv.funUnique (Fin 1) ℝ).symm (g a))
+      (Measure.pi fun _ : Fin p => gaussianReal 0 1) (gaussianMatrix (Fin p) (Fin 1)) := fun p =>
+    measurePreserving_ofMeasurableEquiv_gaussianMatrix.comp
+      (measurePreserving_pi _ _ fun _ =>
+        (measurePreserving_funUnique (gaussianReal 0 1) (Fin 1)).symm)
   have hev : ∀ p : ℕ, MeasurePreserving
-      (fun (G : Fin p → Fin 1 → ℝ) (a : Fin p) => MeasurableEquiv.funUnique (Fin 1) ℝ (G a))
-      (gaussianMatrix p 1) (Measure.pi fun _ : Fin p => gaussianReal 0 1) := fun p =>
-    measurePreserving_pi _ _ fun _ => measurePreserving_funUnique (gaussianReal 0 1) (Fin 1)
-  have hB := gaussianMatrix_map_block (t := 1) V hV
-  have hFm : Measurable (fun G : Fin m → Fin 1 → ℝ => Matrix.of.symm (Vᵀ * Matrix.of G)) := by
-    refine measurable_pi_lambda _ fun a => measurable_pi_lambda _ fun b => ?_
-    simp only [Matrix.of_symm_apply, Matrix.mul_apply, Matrix.of_apply]
-    fun_prop
+      (fun (G : Matrix (Fin p) (Fin 1) ℝ) (a : Fin p) => MeasurableEquiv.funUnique (Fin 1) ℝ (G a))
+      (gaussianMatrix (Fin p) (Fin 1)) (Measure.pi fun _ : Fin p => gaussianReal 0 1) := fun p =>
+    (measurePreserving_pi _ _ fun _ => measurePreserving_funUnique (gaussianReal 0 1) (Fin 1)).comp
+      (measurePreserving_ofMeasurableEquiv_gaussianMatrix.symm _)
+  have hB := (hasLaw_gaussianMatrix_block (t := Fin 1) V hV).measurePreserving
+    (measurable_block (t := Fin 1) V)
   have hfun : (fun g : Fin m → ℝ => Vᵀ *ᵥ g) =
-      (fun (G : Fin d → Fin 1 → ℝ) (a : Fin d) => MeasurableEquiv.funUnique (Fin 1) ℝ (G a)) ∘
-      (fun G : Fin m → Fin 1 → ℝ => Matrix.of.symm (Vᵀ * Matrix.of G)) ∘
-      (fun (g : Fin m → ℝ) (a : Fin m) => (MeasurableEquiv.funUnique (Fin 1) ℝ).symm (g a)) := by
+      (fun (G : Matrix (Fin d) (Fin 1) ℝ) (a : Fin d) => MeasurableEquiv.funUnique (Fin 1) ℝ (G a)) ∘
+      (fun G : Matrix (Fin m) (Fin 1) ℝ => Vᵀ * G) ∘
+      (fun g : Fin m → ℝ =>
+        Matrix.of fun (a : Fin m) => (MeasurableEquiv.funUnique (Fin 1) ℝ).symm (g a)) := by
     funext g a
     simp [Matrix.mulVec, dotProduct, Matrix.mul_apply, MeasurableEquiv.funUnique]
-  rw [hfun, ← Measure.map_map (hev d).measurable (hFm.comp (hι m).measurable),
-    ← Measure.map_map hFm (hι m).measurable, (hι m).map_eq, hB, (hev d).map_eq]
+  rw [hfun]
+  exact ((hev d).comp (hB.comp (hι m))).map_eq
 
 /-- **Law of the residual of a Gaussian row.** Let `H` be a fixed `n × k` real matrix of rank
 `n` and `g` a standard Gaussian vector in `ℝᵏ`. The squared distance from `g` to the row space of
@@ -136,7 +137,7 @@ private lemma pi_gaussianReal_map_transpose_mulVec {m d : ℕ} (V : Matrix (Fin 
 
 Helper for Tropp–Webber 2023, Lemma B.2 / HMT 2011, Prop A.5. Atlas: `inverse-wishart-mean`
 (helper). Proof ported from the Prove2me solution `Sol_GaussianMatrix_residual_law`
-(orthonormal basis of `ker H` and the block law `gaussianMatrix_map_block`, atlas
+(orthonormal basis of `ker H` and the block law `hasLaw_gaussianMatrix_block`, atlas
 `block-law-indep`). -/
 theorem pi_gaussianReal_map_sq_dist_rowSpace {n k : ℕ} (H : Matrix (Fin n) (Fin k) ℝ)
     (hH : H.rank = n) :

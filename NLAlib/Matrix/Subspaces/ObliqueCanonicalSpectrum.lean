@@ -43,7 +43,10 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
     simp only [Matrix.fromBlocks_transpose, Matrix.transpose_one, Matrix.transpose_zero,
       Matrix.diagonal_transpose, Matrix.fromBlocks_multiply,
       Matrix.mul_one, Matrix.mul_zero, Matrix.zero_mul,
-      add_zero, Matrix.diagonal_mul_diagonal, rectDiag_mul_transpose_rectDiag]
+      add_zero, Matrix.diagonal_mul_diagonal,
+      show (rectDiag t : Matrix (Fin r) (Fin s) ℝ) * (rectDiag t)ᵀ =
+        Matrix.diagonal (fun i : Fin r => if (i : ℕ) < s then t i ^ 2 else 0) from
+        rectDiag_mul_conjTranspose_rectDiag t]
     congr 1
     ext i j
     by_cases hij : i = j
@@ -81,9 +84,10 @@ theorem singularValues_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
   rw [hND, hD, singularValues_reindex]
   change singularValues (rectDiag d : Matrix (Fin (r + s)) (Fin (r + s)) ℝ) k = d k
   by_cases hk : k < r + s
-  · apply singularValues_eq_of_eq_mul_rectDiag_mul (U := 1) (V := 1)
-      (by simp) (by simp) hd0 hd (by simp)
-    simpa using hk
+  · exact singularValues_eq_of_eq_mul_rectDiag_mul
+      (U := (1 : Matrix (Fin (r + s)) (Fin (r + s)) ℝ))
+      (V := (1 : Matrix (Fin (r + s)) (Fin (r + s)) ℝ))
+      (by simp) (by simp) hd0 hd (by simp) (by simpa using hk)
   · rw [singularValues_eq_zero_of_width_le _
       (by simpa only [Fintype.card_fin] using Nat.le_of_not_gt hk)]
     simp only [d, if_neg (show ¬k < r by omega)]

@@ -27,7 +27,8 @@ theorem abs_trace_pow_mul_mul_pow_mul_le (R B : Matrix ι ι ℝ) (p q : ℕ) :
   | inr hι =>
     have htrace : Matrix.trace (R ^ p * B * R ^ q * B) =
         frobInner (R ^ p * B)ᵀ (R ^ q * B) := by
-      rw [frobInner_eq_trace, Matrix.transpose_transpose]
+      rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
       simp only [Matrix.mul_assoc]
     have hp : specNorm (R ^ p) ≤ specNorm R ^ p := by
       simp only [specNorm_eq_norm]
@@ -316,7 +317,8 @@ theorem trace_regularizedGram_eq (ε : ℝ) (G : Matrix ι κ ℝ) :
   rw [Matrix.trace_add, Matrix.trace_smul]
   simp only [smul_eq_mul, Matrix.trace_one]
   have hh : Matrix.trace (G * Gᵀ) = frobSq G := by
-    rw [frobSq, frobInner_eq_trace, Matrix.trace_mul_comm]
+    rw [frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.trace_mul_comm]
   rw [hh]
 
 /-- The second Gram derivative is bounded by a fixed polynomial in the squared

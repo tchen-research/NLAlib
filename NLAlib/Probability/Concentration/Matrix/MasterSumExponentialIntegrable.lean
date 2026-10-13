@@ -16,7 +16,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator MatrixOrder
 open NLAlib
-set_option autoImplicit false
 
 /-- For independent Hermitian random matrices with integrable `matrixExp (θ • X k)`, the exponential
 `matrixExp (θ • ∑ k, X k)` of the sum is integrable.

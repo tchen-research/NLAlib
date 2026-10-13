@@ -10,7 +10,6 @@ Atlas: `loewner-order` (matrix exponential and logarithm); supports `matrix-lapl
 Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.01571v1 (7 January 2015), https://arxiv.org/abs/1501.01571v1; Sections 2.1.11–12, especially equation (2.1.17), printed pp. 22–23; used in Corollary 3.4.2, printed p. 35.
 -/
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
-set_option autoImplicit false
 open NLAlib
 
 /-- The exponential of a Hermitian matrix is positive definite and `matrixLog` inverts it: `(matrixExp

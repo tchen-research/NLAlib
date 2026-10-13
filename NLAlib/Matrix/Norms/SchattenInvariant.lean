@@ -11,7 +11,7 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators ENNReal
+open scoped Matrix Matrix.Norms.L2Operator ENNReal
 
 namespace NLAlib
 
@@ -65,7 +65,7 @@ theorem schattenNormExtended_mul_orthogonal (A : Matrix m n ℝ) {V : Matrix n n
       change Vᵀᵀ * Vᵀ = 1
       rw [Matrix.transpose_transpose]
       exact mul_eq_one_comm.mp hV
-    simpa only [Matrix.transpose_transpose] using specNorm_mul_transpose_right_of_hasOrthonormalCols hVt.transpose_mul_self A
+    simpa only [Matrix.transpose_transpose] using specNorm_mul_transpose_right_of_hasOrthonormalCols (show Vᵀᵀ * Vᵀ = 1 from hVt) A
   · rw [schattenNormExtended_eq_of_ne_top _ hpt, schattenNormExtended_eq_of_ne_top _ hpt]
     exact schattenNorm_mul_orthogonal A hV _
 

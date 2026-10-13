@@ -97,6 +97,7 @@ theorem singularValues_trailing_le_sqrt_budget_mul {k r q : ℕ}
       rw [hzSplit, Matrix.fromBlocks_mulVec]
       simp only [Function.comp_def, Sum.elim_inl, Sum.elim_inr,
         Matrix.zero_mulVec, zero_add, u, v, Matrix.mulVec_add, Matrix.mulVec_mulVec]
+    simp only [RCLike.re_to_real, star_trivial]
     rw [hImage, hzSplit, sumElim_dotProduct_sumElim, sumElim_dotProduct_sumElim,
       div_pow, Real.sq_sqrt hb1.le, div_mul_eq_mul_div, div_le_iff₀ hb1]
     nlinarith

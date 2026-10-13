@@ -12,7 +12,7 @@ orthogonal projector onto `range A`, `ℓᵢ(A) = (A A⁺)ᵢᵢ` (`NLAlib.lever
   `range A`, `ℓᵢ = ‖U_{i,:}‖²`; in particular the row norms do not depend on the basis.
 
 The basis-independence step is the projector identity
-`mul_transpose_eq_mul_moorePenroseInverse` (`NLAlib.Matrix.Basic.MoorePenroseProjector`): if `Q`
+`mul_conjTranspose_eq_mul_moorePenroseInverse` (`NLAlib.Matrix.Basic.MoorePenroseProjector`): if `Q`
 has orthonormal columns, `range Y ⊆ range Q` and `rank Y` is at least the number of columns of
 `Q`, then `QQᵀ = Y Y⁺`.
 
@@ -39,14 +39,14 @@ def leverageScore (A : Matrix m n ℝ) (i : m) : ℝ := (A * moorePenroseInverse
 atlas: leverage-scores -/
 theorem leverageScore_nonneg (A : Matrix m n ℝ) (i : m) : 0 ≤ leverageScore A i :=
   (re_diag_mem_Icc_of_isHermitian_of_isIdempotentElem _
-    (Matrix.isHermitian_iff_isSymm.mpr (mul_moorePenroseInverse_isSymm A))
+    (Matrix.isHermitian_iff_isSymm.mpr (mul_moorePenroseInverse_isHermitian A))
     (mul_moorePenroseInverse_isIdempotentElem A) i).1
 
 /-- `ℓᵢ(A) ≤ 1`. Woodruff 2014, §2.4; atlas `leverage-scores`.
 atlas: leverage-scores -/
 theorem leverageScore_le_one (A : Matrix m n ℝ) (i : m) : leverageScore A i ≤ 1 :=
   (re_diag_mem_Icc_of_isHermitian_of_isIdempotentElem _
-    (Matrix.isHermitian_iff_isSymm.mpr (mul_moorePenroseInverse_isSymm A))
+    (Matrix.isHermitian_iff_isSymm.mpr (mul_moorePenroseInverse_isHermitian A))
     (mul_moorePenroseInverse_isIdempotentElem A) i).2
 
 /-- The leverage scores sum to the rank: `∑ᵢ ℓᵢ(A) = rank A`. Woodruff 2014, §2.4
@@ -70,17 +70,20 @@ theorem leverageScore_eq_sum_sq_of_hasOrthonormalCols [DecidableEq m] [Decidable
     (hUA : U * (Uᵀ * A) = A) (hr : Fintype.card q ≤ A.rank) (i : m) :
     leverageScore A i = ∑ j, U i j ^ 2 := by
   unfold leverageScore
-  rw [← mul_transpose_eq_mul_moorePenroseInverse hU hUA hr, Matrix.mul_apply]
-  simp only [Matrix.transpose_apply, sq]
+  rw [← mul_conjTranspose_eq_mul_moorePenroseInverse hU hUA hr, Matrix.mul_apply]
+  simp only [Matrix.conjTranspose_apply, star_trivial, sq]
 
 /-- For a matrix `U` with orthonormal columns, `ℓᵢ(U) = ∑ⱼ Uᵢⱼ²`.
 Woodruff 2014, §2.4; atlas `leverage-scores`. -/
 theorem leverageScore_eq_sum_sq_of_self [DecidableEq m] [DecidableEq q] {U : Matrix m q ℝ}
     (hU : HasOrthonormalCols U) (i : m) : leverageScore U i = ∑ j, U i j ^ 2 := by
-  have hUU : U * (Uᵀ * U) = U := by rw [hU.transpose_mul_self, Matrix.mul_one]
+  have hUU : U * (Uᵀ * U) = U := by
+    rw [← Matrix.conjTranspose_eq_transpose_of_trivial U, hU.conjTranspose_mul_self,
+      Matrix.mul_one]
   have hr : Fintype.card q ≤ U.rank := by
     have h1 : (Uᵀ * U).rank ≤ U.rank := Matrix.rank_mul_le_right _ _
-    rw [hU.transpose_mul_self, Matrix.rank_one] at h1
+    rw [← Matrix.conjTranspose_eq_transpose_of_trivial U, hU.conjTranspose_mul_self,
+      Matrix.rank_one] at h1
     exact h1
   exact leverageScore_eq_sum_sq_of_hasOrthonormalCols hU hUU hr i
 

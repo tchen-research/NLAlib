@@ -26,7 +26,6 @@ private theorem trace_mul_nonneg {d : Type*} [Fintype d] [DecidableEq d] (A B : 
   exact (RCLike.nonneg_iff.mp hp).1
 
 open NLAlib
-set_option autoImplicit false
 
 /-- The trace exponential is monotone: `A ≼ H` implies `traceExp A ≤ traceExp H` for Hermitian `A`,
 `H`, on any finite index type (including the empty one). Here `≤` is the Loewner order under

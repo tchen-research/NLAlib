@@ -9,7 +9,6 @@ is zero and no positive normalization exists. Source: `sa:volume-theorem`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Classical Matrix Matrix.Norms.Frobenius ComplexOrder ENNReal
 namespace NLAlib

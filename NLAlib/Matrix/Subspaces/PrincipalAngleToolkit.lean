@@ -32,7 +32,7 @@ theorem principal_angle_characterizations {P Q : Matrix m n ℝ} {R : Matrix m r
       Real.cos (principalAnglesFintype P Q i)=singularValues
         ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) i) ∧
     (specNorm (sinePrincipalAngles P Q)=specNorm (Rᵀ*Q)) ∧
-    (specNorm (sinePrincipalAngles P Q)=specNorm (residual P Q)) ∧
+    (specNorm (sinePrincipalAngles P Q)=specNorm (projResidual P Q)) ∧
     (specNorm (sinePrincipalAngles P Q)=specNorm (P*Pᵀ-Q*Qᵀ)) ∧
     (frobSq (sinePrincipalAngles P Q)=(Fintype.card n : ℝ)-frobSq (Pᵀ*Q)) ∧
     (frobSq (P*Pᵀ-Q*Qᵀ)=2*frobSq (sinePrincipalAngles P Q)) ∧

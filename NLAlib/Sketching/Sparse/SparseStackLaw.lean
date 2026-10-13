@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.SparseStack
 import NLAlib.Sketching.Sparse.FiniteLaw.IndependentProduct
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # The SparseStack law

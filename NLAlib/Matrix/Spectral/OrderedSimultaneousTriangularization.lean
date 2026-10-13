@@ -8,7 +8,6 @@ member, with no normality or diagonalizability assumption.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open Module Polynomial
 open scoped Matrix
 namespace NLAlib

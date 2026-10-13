@@ -7,7 +7,6 @@ then find a common eigenvector within that nonzero invariant space.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open Module
 namespace NLAlib
 

@@ -24,9 +24,10 @@ theorem IsSVD.gram_pow_mul_eq {A : Matrix (Fin m) (Fin n) ℝ}
   let D : Matrix (Fin m) (Fin m) ℝ :=
     Matrix.diagonal fun i => singularValues A i ^ 2
   have hM : (A * Aᵀ) * U = U * D := by
-    rw [h.mul_transpose_self]
+    rw [show A * Aᵀ = U * Matrix.diagonal (fun i : Fin m => singularValues A i ^ 2) * Uᵀ from
+      h.mul_conjTranspose_self]
     simp only [Matrix.mul_assoc]
-    rw [h.transpose_mul_left, Matrix.mul_one]
+    rw [show Uᵀ * U = 1 from h.conjTranspose_mul_left, Matrix.mul_one]
   have hp := pow_mul_eq_mul_pow_of_mul_eq hM q
   have hdiag : D ^ q * (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) =
       rectDiag (fun j => singularValues A j ^ (2 * q + 1)) := by
@@ -38,7 +39,7 @@ theorem IsSVD.gram_pow_mul_eq {A : Matrix (Fin m) (Fin n) ℝ}
     split_ifs with hij
     · simp only [← pow_mul, ← pow_succ]
     · simp
-  conv_lhs => arg 2; rw [h.eq_mul_transpose]
+  conv_lhs => arg 2; rw [h.eq, Matrix.conjTranspose_eq_transpose_of_trivial]
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hp, Matrix.mul_assoc U, hdiag]
 
 /-- Odd rectangular Gram powers raise every singular value to the corresponding odd
@@ -48,8 +49,8 @@ theorem singularValues_gram_pow_mul (A : Matrix (Fin m) (Fin n) ℝ) (q j : ℕ)
     singularValues ((A * Aᵀ) ^ q * A) j = singularValues A j ^ (2 * q + 1) := by
   by_cases hj : j < min m n
   · obtain ⟨U, V, h⟩ := exists_isSVD A
-    exact singularValues_eq_of_eq_mul_rectDiag_mul h.transpose_mul_left
-      h.transpose_mul_right (fun i => pow_nonneg (singularValues_nonneg A i) _)
+    exact singularValues_eq_of_eq_mul_rectDiag_mul h.conjTranspose_mul_left
+      h.conjTranspose_mul_right (fun i => pow_nonneg (singularValues_nonneg A i) _)
       (fun a b hab => pow_le_pow_left₀ (singularValues_nonneg A b)
         (singularValues_antitone A hab) _) (h.gram_pow_mul_eq q) hj
   · rw [singularValues_eq_zero_of_min_le _ (by simpa only [Fintype.card_fin] using not_lt.mp hj),

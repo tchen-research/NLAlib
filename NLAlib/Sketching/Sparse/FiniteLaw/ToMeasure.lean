@@ -13,7 +13,6 @@ supports `sparse-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 namespace NLAlib.SparseSketch.FiniteLaw
 

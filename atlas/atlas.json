@@ -404,36 +404,15 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.specNorm_mul_transpose_self",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "`specNorm (A * Aᵀ) = specNorm A ^ 2`."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.specNorm_sub_mul_conjTranspose_mul_le",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.specNorm_sub_mul_transpose_mul_le",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "From `hQ : Qᵀ * Q = 1`; gives `specNorm (A - Q * (Qᵀ * A)) ≤ specNorm A` (the residual is a contraction)."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.specNorm_add_sq_le_of_mul_conjTranspose_eq_zero",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.specNorm_add_sq_le_of_mul_transpose_eq_zero",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "From `h : X * Yᵀ = 0`; gives `specNorm (X + Y)^2 ≤ specNorm X^2 + specNorm Y^2`."
     },
     {
      "library": "nlalib",
@@ -454,12 +433,6 @@
      "module": "NLAlib.Matrix.Norms.Frobenius",
      "status": "proved",
      "usage": "Apply to `A B : Matrix m n ℝ` of the same shape (no side conditions); gives Cauchy–Schwarz `frobInner A B ≤ frobNorm A * frobNorm B`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobSq_mul_left_of_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Norms.Frobenius",
-     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -601,22 +574,10 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.IsSVD.eq_head_add_tail_mul_conjTranspose",
-     "module": "NLAlib.Matrix.Spectral.SVD",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.IsSVD.eq_head_add_tail",
      "module": "NLAlib.Matrix.Spectral.SVD",
      "status": "proved",
      "usage": "From `h : IsSVD A U V` and a split index `k`; rewrites `A` as the head `U * rectDiag (σ masked to i < k) * Vᵀ` (the truncated SVD) plus the tail `U * rectDiag (σ masked to i ≥ k) * Vᵀ`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.singularValues_eq_of_eq_mul_rectDiag_mul_conjTranspose",
-     "module": "NLAlib.Matrix.Spectral.SVD",
-     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -780,17 +741,15 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "Loewner monotonicity of sorted eigenvalues: `(B - A).PosSemidef → λ_k(A) ≤ λ_k(B)`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_add_le",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_add_le",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "Eigenvalue Weyl for Hermitian `A`, `B`: `λ_{i+j}(A + B) ≤ λ_i(A) + λ_j(B)`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -842,7 +801,7 @@
     "perturbation",
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "courant-fischer",
@@ -872,65 +831,39 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.isGreatest_eigenvalues₀_min_complexUnitQuadFormValues",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
-     "status": "proved",
-     "partial": true
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.isLeast_eigenvalues₀_max_complexUnitQuadFormValues",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
-     "status": "proved",
-     "partial": true
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.complex_eigenvalues₀_variational_extrema",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem",
+     "module": "NLAlib.Matrix.Spectral.CourantFischer",
      "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.isGreatest_complexUnitQuadFormValues_top",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
-     "status": "proved",
-     "partial": true
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.isLeast_complexUnitQuadFormValues_top",
-     "module": "NLAlib.Matrix.Spectral.ComplexVariationalExtrema",
-     "status": "proved",
-     "partial": true
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_le_of_forall_mem",
+     "decl": "Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "From `hA : A.IsHermitian`, `hW : card n ≤ finrank W + k`, `hAW : ∀ x ∈ W, x ⬝ᵥ A *ᵥ x ≤ c * (x ⬝ᵥ x)`; gives `hA.eigenvalues₀ k ≤ c`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.le_eigenvalues₀_of_forall_mem",
+     "decl": "Matrix.IsHermitian.exists_submodule_eigenvalues₀_mul_le",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "From `hS : k + 1 ≤ finrank S`, `hAS : ∀ x ∈ S, c * (x ⬝ᵥ x) ≤ x ⬝ᵥ A *ᵥ x`; gives `c ≤ hA.eigenvalues₀ k`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.exists_submodule_eigenvalues₀_mul_le",
+     "decl": "Matrix.IsHermitian.exists_submodule_le_eigenvalues₀_mul",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "Attaining subspace of dimension ≥ k+1 on which `λ_k ‖x‖² ≤ xᵀAx`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.exists_submodule_le_eigenvalues₀_mul",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_eq_iSup_iInf",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "Attaining subspace of codimension ≤ k on which `xᵀAx ≤ λ_k ‖x‖²`."
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_eq_iInf_iSup",
+     "module": "NLAlib.Matrix.Spectral.CourantFischer",
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -952,7 +885,8 @@
     "svd"
    ],
    "uses_defs": [
-    "NLAlib.complexUnitQuadFormValues",
+    "NLAlib.quadForm",
+    "NLAlib.rayleighQuotient",
     "NLAlib.singularValues"
    ],
    "variants": [
@@ -976,7 +910,7 @@
     "done"
    ],
    "notes": "The existing real threshold/witness APIs are retained. The complex Hermitian interface uses real parts of complex Euclidean inner products, exact complex subspace dimensions, and both attained variational halves. Lean sorted eigenvalue indices are zero-based, so natural-language index k corresponds to Lean index k-1. Negative and repeated eigenvalues are included; empty matrices have no valid eigenvalue index.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "cauchy-interlacing",
@@ -1006,17 +940,27 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_compression_le",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_compression_le",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "`λ_i(QᵀAQ) ≤ λ_i(A)` for `Qᵀ Q = 1` (index cast into the larger range)."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.eigenvalues₀_le_eigenvalues₀_compression",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_compression",
      "module": "NLAlib.Matrix.Spectral.CourantFischer",
-     "status": "proved",
-     "usage": "`λ_{i + (n - r)}(A) ≤ λ_i(QᵀAQ)` (Poincaré separation)."
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_submatrix_le",
+     "module": "NLAlib.Matrix.Spectral.CourantFischer",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_submatrix",
+     "module": "NLAlib.Matrix.Spectral.CourantFischer",
+     "status": "proved"
     }
    ],
    "depends_on": [
@@ -1035,7 +979,7 @@
     "foundation",
     "done"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "notes": "The compression form QᵀAQ is the Poincaré separation theorem (HJ13 Cor 4.3.37); verify the label."
   },
   {
@@ -1092,31 +1036,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.moorePenroseInverse_eq_pinvL_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.moorePenroseInverse_eq_pinvR_of_isUnit_mul_conjTranspose_self",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.moorePenroseInverse_moorePenroseInverse",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved",
-     "usage": "Apply to any A; recover A by taking its general pseudoinverse twice."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobSq_moorePenroseInverse_eq_re_trace_moorePenroseInverse",
-     "module": "NLAlib.Matrix.Basic.MoorePenrose",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.moorePenroseInverse_eq_pinvL",
      "module": "NLAlib.Matrix.Basic.MoorePenrose",
      "status": "proved",
@@ -1128,6 +1047,13 @@
      "module": "NLAlib.Matrix.Basic.MoorePenrose",
      "status": "proved",
      "usage": "Pass A and IsUnit(AAᵀ); identify the general inverse with pinvR."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.moorePenroseInverse_moorePenroseInverse",
+     "module": "NLAlib.Matrix.Basic.MoorePenrose",
+     "status": "proved",
+     "usage": "Apply to any A; recover A by taking its general pseudoinverse twice."
     },
     {
      "library": "nlalib",
@@ -1166,18 +1092,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.pinvL_mul_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.mul_pinvR_of_isUnit_mul_conjTranspose_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.pinvL_mul",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -1197,18 +1111,6 @@
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
      "usage": "No hypotheses; rewrites `(pinvL G)ᵀ = pinvR Gᵀ`, converting left-pseudoinverse statements into right-pseudoinverse ones."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.mul_pinvL_mul_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.pinvL_mul_pinvL_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1232,19 +1134,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.mul_pinvL_isSymm",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved",
-     "usage": "No hypotheses (Mathlib's total inverse); gives `(G * pinvL G).IsSymm`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.mul_pinvL_isIdempotentElem_of_isUnit_conjTranspose_mul_self",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.mul_pinvL_isIdempotentElem",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -1252,16 +1141,16 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_pinvR_eq_re_trace_inv",
+     "decl": "NLAlib.frobSq_pinvR_eq_trace_inv",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_pinvR",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
+     "decl": "NLAlib.specNorm_moorePenroseInverse_eq_fintype",
+     "module": "NLAlib.Matrix.Norms.RankNorm",
      "status": "proved",
-     "usage": "Apply with `h : IsUnit (G * Gᵀ)`; gives `frobSq (pinvR G) = (G * Gᵀ)⁻¹.trace` (use `frobSq_pinvR_eq_trace_inv` to drop `h`)."
+     "usage": "Apply on arbitrary finite indices at any rank; obtain the zero-rank branch or reciprocal of the last positive singular value of the explicit Fin(card) reindex."
     },
     {
      "library": "nlalib",
@@ -1276,13 +1165,6 @@
      "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "Apply to the total full-row formula pinvR G; obtain specNorm(pinvR G)^2=specNorm((GGᵀ)⁻¹). It agrees with the general Moore-Penrose inverse under IsUnit(GGᵀ); both total-inverse sides vanish for singular Gram."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.specNorm_moorePenroseInverse_eq_fintype",
-     "module": "NLAlib.Matrix.Spectral.FiniteIndexTransport",
-     "status": "proved",
-     "usage": "Apply on arbitrary finite indices at any rank; obtain the zero-rank branch or reciprocal of the last positive singular value of the explicit Fin(card) reindex."
     },
     {
      "library": "gaussian-facts",
@@ -1359,16 +1241,9 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.specNorm_le_one_of_isHermitian_of_isIdempotentElem",
+     "decl": "Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem",
      "module": "NLAlib.Matrix.Norms.Core",
      "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.specNorm_le_one_of_isSymm_of_isIdempotentElem",
-     "module": "NLAlib.Matrix.Norms.Core",
-     "status": "proved",
-     "usage": "A symmetric idempotent has `specNorm ≤ 1`."
     },
     {
      "library": "nlalib",
@@ -1382,13 +1257,6 @@
      "decl": "NLAlib.conjTranspose_mul_residual",
      "module": "NLAlib.Matrix.Subspaces.Projections",
      "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.transpose_mul_residual",
-     "module": "NLAlib.Matrix.Subspaces.Projections",
-     "status": "proved",
-     "usage": "Pass `hQ : HasOrthonormalCols Q`; gives `Qᵀ * residual Q A = 0`."
     },
     {
      "library": "nlalib",
@@ -1411,12 +1279,6 @@
      "module": "NLAlib.Matrix.Subspaces.Projections",
      "status": "proved",
      "usage": "Pass `hQ : HasOrthonormalCols Q`; gives `frobSq (residual Q A) ≤ frobSq A`."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobSq_sub_mul_eq_frobSq_residual_add_frobSq_conjTranspose_mul_sub",
-     "module": "NLAlib.Matrix.Subspaces.Projections",
-     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -1510,24 +1372,9 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.exists_orthogonal_completion",
-     "module": "NLAlib.Matrix.Subspaces.Projections",
-     "status": "proved",
-     "usage": "Pass `V : Matrix (Fin n) ι ℝ` with `hV : Vᵀ * V = 1` and a column placement `e : ι ↪ Fin n`; gives an orthogonal `W` (`Wᵀ * W = 1`) with `W i (e j) = V i j`, whose remaining columns are the completion `Q⊥`.",
-     "note": "matrix form: V with orthonormal columns along an embedding ι ↪ Fin n extends to an orthogonal W; lives in Gaussian/Invariance.lean, to move to Matrix/Projections"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.exists_unitary_complement",
      "module": "NLAlib.Matrix.Subspaces.Projections",
      "status": "proved"
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.exists_orthonormal_complement",
-     "module": "NLAlib.Matrix.Subspaces.Projections",
-     "status": "proved",
-     "usage": "Pass `hQ : HasOrthonormalCols Q` for `Q : Matrix (Fin m) (Fin q) ℝ`; gives `∃ r Qp, HasOrthonormalCols Qp ∧ Q * Qᵀ + Qp * Qpᵀ = 1`."
     },
     {
      "library": "lra",
@@ -2015,11 +1862,9 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.gaussianMatrix_map_orthogonal",
+     "decl": "NLAlib.hasLaw_gaussianMatrix_orthogonal",
      "module": "NLAlib.RandomMatrix.Gaussian.Invariance.Invariance",
-     "status": "proved",
-     "usage": "Pass `hU : Uᵀ * U = 1` and `hV : Vᵀ * V = 1`; gives `Measure.map (fun G => Matrix.of.symm (U * Matrix.of G * V)) (gaussianMatrix p m) = gaussianMatrix p m`.",
-     "note": "ported from the Prove2me solution; proof goes through Mathlib's stdGaussian_map"
+     "status": "proved"
     },
     {
      "library": "gaussian-facts",
@@ -2036,6 +1881,7 @@
     "gaussian-matrix-def"
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.gaussianMatrix"
    ],
    "variants": [
@@ -2053,7 +1899,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "block-law-indep",
@@ -2083,10 +1929,9 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.gaussianMatrix_map_block",
+     "decl": "NLAlib.hasLaw_gaussianMatrix_block",
      "module": "NLAlib.RandomMatrix.Gaussian.Invariance.Invariance",
-     "status": "proved",
-     "usage": "Pass `V₁ : Matrix (Fin n) (Fin k) ℝ` with `hV₁ : V₁ᵀ * V₁ = 1`; gives that `G ↦ Matrix.of.symm (V₁ᵀ * Matrix.of G)` pushes `gaussianMatrix n t` to `gaussianMatrix k t`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -2110,6 +1955,7 @@
     "rotation-invariance"
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.gaussianMatrix"
    ],
    "variants": [
@@ -2122,7 +1968,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "gaussian-frob-second-moment",
@@ -2806,12 +2652,6 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.frobSq_pinvR_eq_re_trace_inv",
-     "module": "NLAlib.Matrix.Basic.Pseudoinverse",
-     "status": "proved"
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.frobSq_pinvR_eq_trace_inv",
      "module": "NLAlib.Matrix.Basic.Pseudoinverse",
      "status": "proved",
@@ -3318,13 +3158,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.lamMin",
-     "module": "NLAlib.Matrix.Spectral.Core",
-     "status": "proved",
-     "usage": "The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty)."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.sigmaMin",
      "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
@@ -3385,7 +3218,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "notes": "The extension proves the stronger spectral-norm perturbation bound and relates the domain minimum singular value to the singular-value API; the Frobenius bound follows from norm comparison."
   },
   {
@@ -6032,6 +5865,22 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.complexGramElementary_pos_iff",
+     "module": "NLAlib.LowRank.Sampling.ComplexVolumeSamplingLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual complex volume spectral normalizer is positive exactly at feasible ranks, including rank zero."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_re_det_complex_gram_principal_minors_eq",
+     "module": "NLAlib.LowRank.Sampling.ComplexVolumeSamplingLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "The real complex Gram principal-minor normalizer equals its actual elementary spectral sum."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.complexVolumeSamplingNormalizer_pos_iff",
      "module": "NLAlib.LowRank.Sampling.ComplexVolumeSamplingLaw",
      "status": "proved",
@@ -6072,46 +5921,6 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.complexBestRankFrobSq_eq_complexGramTail",
-     "module": "NLAlib.Matrix.Spectral.ComplexBestRankApproximation",
-     "status": "proved",
-     "partial": true,
-     "usage": "The actual complex best rank-constrained Frobenius error equals the sorted Gram eigenvalue tail, at every rank and rectangular shape."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.complexGramTail_le_frobenius_norm_sq_sub_of_rank_le",
-     "module": "NLAlib.Matrix.Spectral.ComplexEckartYoung",
-     "status": "proved",
-     "partial": true,
-     "usage": "Every actual complex rank-at-most-`k` competitor has squared Frobenius error at least the genuine sorted Gram spectral tail."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.frobenius_norm_sq_sub_complexTruncatedSVD_eq_tail",
-     "module": "NLAlib.Matrix.Spectral.ComplexGramTruncation",
-     "status": "proved",
-     "partial": true,
-     "usage": "The literal complex singular-vector truncation attains the exact sorted Gram Frobenius tail."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.complexGramElementary_pos_iff",
-     "module": "NLAlib.Matrix.Spectral.ComplexVolumeSpectrum",
-     "status": "proved",
-     "partial": true,
-     "usage": "The actual complex volume spectral normalizer is positive exactly at feasible ranks, including rank zero."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.sum_re_det_complex_gram_principal_minors_eq",
-     "module": "NLAlib.Matrix.Spectral.ComplexVolumeSpectrum",
-     "status": "proved",
-     "partial": true,
-     "usage": "The real complex Gram principal-minor normalizer equals its actual elementary spectral sum."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.det_gram_fromCols_eq_mul_frobenius_norm_sq_sub_complexColumnProjector",
      "module": "NLAlib.Matrix.Subspaces.ComplexGramColumnDeterminant",
      "status": "proved",
@@ -6124,15 +5933,14 @@
    ],
    "uses_defs": [
     "NLAlib.bestRankFrobSq",
-    "NLAlib.complexBestRankFrobSq",
     "NLAlib.complexColumnProjector",
     "NLAlib.complexGramElementary",
     "NLAlib.complexGramTail",
-    "NLAlib.complexTruncatedSVD",
     "NLAlib.complexVolumeSamplingLaw",
     "NLAlib.complexVolumeSamplingNormalizer",
     "NLAlib.complexVolumeSamplingResidual",
     "NLAlib.moorePenroseInverse",
+    "NLAlib.truncatedSVD",
     "NLAlib.volumeSampleColumns",
     "NLAlib.volumeSamplingExpectedFrobSq",
     "NLAlib.volumeSamplingNormalizer",
@@ -6145,7 +5953,7 @@
    "tags": [
     "sampling"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "hmt-9-1-frobenius",
@@ -8641,10 +8449,9 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.integral_lanczosRayleighRelativeError_le_of_map_eq_pi_gaussianReal",
+     "decl": "NLAlib.integral_lanczosRayleighRelativeError_le_of_hasLaw",
      "module": "NLAlib.Estimation.Spectral.RandomStartLanczos",
-     "status": "proved",
-     "usage": "The exact Lanczos constant transports through an actual Gaussian vector law on any probability space."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -8664,11 +8471,10 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.integral_powerRayleighRelativeError_le_of_map_eq_pi_gaussianReal",
+     "decl": "NLAlib.integral_powerRayleighRelativeError_le_of_hasLaw",
      "module": "NLAlib.Estimation.Spectral.RandomStartPower",
      "status": "proved",
-     "partial": true,
-     "usage": "The gap-free power bound transports through an actual Gaussian starting-vector law on an abstract probability space."
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -8754,7 +8560,7 @@
    "tags": [
     "krylov"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "slq-error",
@@ -9299,6 +9105,7 @@
     "gaussian-matrix-def"
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.frobSq",
     "NLAlib.gaussianMatrix",
     "NLAlib.pinvL",
@@ -9325,7 +9132,7 @@
     "engine"
    ],
    "notes": "Done. Mathlib gaps noted: no MeasurableSpace instance on Matrix; no lemma pulling IndepFun back along a map with a given law.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "gaussian-integration-by-parts",
@@ -11107,6 +10914,13 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.exists_isBestRankApprox",
+     "module": "NLAlib.Matrix.Spectral.EckartYoung",
+     "status": "proved",
+     "usage": "Apply to any real matrix over arbitrary finite row and column types and any k; obtain a genuine best rank-at-most-k Frobenius approximant."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.bestRankFrobSq_eq_singularValueTailSq",
      "module": "NLAlib.Matrix.Spectral.EckartYoung",
      "status": "proved",
@@ -11118,23 +10932,9 @@
      "module": "NLAlib.Matrix.Spectral.EckartYoung",
      "status": "proved",
      "usage": "Apply to any A,k; rewrite the constructed approximation's squared error as the actual optimum."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.exists_isBestRankApprox",
-     "module": "NLAlib.Matrix.Spectral.FiniteIndexTransport",
-     "status": "proved",
-     "usage": "Apply to any real matrix over arbitrary finite row and column types and any k; obtain a genuine best rank-at-most-k Frobenius approximant."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.bestRankFrobSq_eq_singularValueTailSq_reindex",
-     "module": "NLAlib.Matrix.Spectral.FiniteIndexTransport",
-     "status": "proved",
-     "usage": "Apply over arbitrary finite indices; identify the actual optimum with the singular-value tail of the explicit Fin(card) normalization."
     }
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "truncation-lemma-projected",
@@ -12494,17 +12294,15 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.gaussianMatrix_map_transpose",
+     "decl": "NLAlib.hasLaw_gaussianMatrix_transpose",
      "module": "NLAlib.RandomMatrix.Gaussian.Invariance.LinearImage",
-     "status": "proved",
-     "usage": "`(gaussianMatrix p m).map transpose = gaussianMatrix m p`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.gaussianMatrix_map_mul_right",
+     "decl": "NLAlib.hasLaw_gaussianMatrix_mul_right",
      "module": "NLAlib.RandomMatrix.Gaussian.Invariance.LinearImage",
-     "status": "proved",
-     "usage": "From `hU : Uᵀ * U = 1`; `(gaussianMatrix k m).map (· * U) = gaussianMatrix k d`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -12533,6 +12331,7 @@
     "block-law-indep"
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.gaussianMatrix"
    ],
    "variants": [
@@ -12547,7 +12346,7 @@
     "gaussian",
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "polynomial-spectral-bound",
@@ -13293,24 +13092,10 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.lamMin",
-     "module": "NLAlib.Matrix.Spectral.Core",
-     "status": "proved",
-     "usage": "The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty)."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.sigmaMin",
      "module": "NLAlib.Matrix.Spectral.Core",
      "status": "proved",
      "usage": "The smallest singular value of a tall matrix `A : Matrix m n ℝ`: `σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention `inf ∅ = 0`)."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.sigmaMinSq",
-     "module": "NLAlib.Matrix.Spectral.Core",
-     "status": "proved",
-     "usage": "The squared smallest singular value of a tall matrix, `σ_min(A)² = λ_min(AᵀA)` (`sigmaMinSq_eq_sigmaMin_sq`)."
     },
     {
      "library": "nlalib",
@@ -13343,7 +13128,7 @@
    "tags": [
     "definition"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "best-rank-approx-def",
@@ -19521,7 +19306,7 @@
    ],
    "area": "matrix-subspace-perturbation",
    "kind": "definition",
-   "status": "scaffold",
+   "status": "proved",
    "informal": "For $Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with orthonormal columns, the canonical angles $0\\le\\theta_1\\le\\dots\\le\\theta_k\\le\\pi/2$ are defined by $\\cos\\theta_i=\\sigma_i(Q^\\top\\hat Q)$ (so $\\|\\sin\\Theta\\|=\\sin\\theta_k=\\sqrt{1-\\sigma_k(Q^\\top\\hat Q)^2}$), and $\\sin\\Theta(Q,\\hat Q)=\\operatorname{diag}(\\sin\\theta_i)$. Characterisations, with $Q_\\perp$ an orthonormal complement of $Q$: $\\|\\sin\\Theta\\|=\\|Q_\\perp^\\top\\hat Q\\|=\\|(I-QQ^\\top)\\hat Q\\|=\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|$; $\\|\\sin\\Theta\\|_F^2=k-\\|Q^\\top\\hat Q\\|_F^2=\\tfrac12\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|_F^2$; $\\Theta$ depends only on the ranges, is symmetric in $(Q,\\hat Q)$; if $\\theta_k<\\pi/2$, $\\|\\tan\\Theta\\|=\\|(Q_\\perp^\\top\\hat Q)(Q^\\top\\hat Q)^{-1}\\|$.",
    "hypotheses": [
     "$Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with $Q^\\top Q=\\hat Q^\\top\\hat Q=I_k$",
@@ -19578,6 +19363,7 @@
      "decl": "NLAlib.sq_tanThetaMax_replicateCol_eq_tanSqAngle",
      "module": "NLAlib.Krylov.Spectral.PowerMethod",
      "status": "scaffold",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
     },
     {
@@ -23118,7 +22904,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "scaffold",
+   "status": "proved",
    "informal": "The Cholesky recursion ($a \\mapsto \\sqrt a$, $b \\mapsto b/\\sqrt a$, continue on the Schur complement $C - bb^\\top/a$) succeeds (every pivot $> 0$) iff $A$ is positive definite (for symmetric $A$); on success $L L^\\top = A$ with $L$ lower triangular with positive diagonal, and $L$ is unique. For positive semidefinite $A$, pivoted (diagonal-pivoting) Cholesky never fails, stops after $\\operatorname{rank} A$ steps and returns $L L^\\top = A$.",
    "hypotheses": [
     "$A$ symmetric"
@@ -23193,6 +22979,7 @@
      "decl": "NLAlib.choleskyPivoted_apply_self_pos_iff_lt_rank",
      "module": "NLAlib.Matrix.Factorizations.Cholesky",
      "status": "scaffold",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
     },
     {
@@ -23200,6 +22987,7 @@
      "decl": "NLAlib.choleskyPivoted_apply_eq_zero_of_rank_le",
      "module": "NLAlib.Matrix.Factorizations.Cholesky",
      "status": "scaffold",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
     }
    ],

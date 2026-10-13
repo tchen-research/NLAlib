@@ -5,7 +5,6 @@ import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Explicit sparse-embedding constants

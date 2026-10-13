@@ -1,6 +1,6 @@
 import NLAlib.Sketching.Sampling.SamplingMultiplication
 import NLAlib.Probability.Concentration.Matrix.Sampling
-import NLAlib.Matrix.Perturbation.ComplexEmbedding
+import NLAlib.Matrix.Norms.Core
 /-!
 # Leverage sampling with replacement
 
@@ -12,7 +12,6 @@ Atlas: `leverage-sampling-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix NNReal ENNReal ComplexOrder Matrix.Norms.L2Operator
 namespace NLAlib

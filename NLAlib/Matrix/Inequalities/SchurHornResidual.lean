@@ -8,7 +8,7 @@ separation. Source: Schur–Horn variational rederivation, steps (3)–(6), supp
 the atlas result `schur-horn`.
 -/
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

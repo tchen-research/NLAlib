@@ -7,7 +7,7 @@ import NLAlib.Matrix.Inequalities.KyFanNorms
 
 A finite maximum-volume selection proves all three strong RRQR guarantees.
 The leading inverse is genuine under `k ≤ rank A`. Setting `k = rank A`
-gives the rank-adapted branch with exactly zero residual, including rank zero.
+gives the rank-adapted branch with exactly zero projResidual, including rank zero.
 Gu–Eisenstat 1996, Theorem 3.2; derivations §alg:rrqr.
 -/
 

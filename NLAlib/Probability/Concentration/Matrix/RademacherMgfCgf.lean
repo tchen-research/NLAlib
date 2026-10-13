@@ -38,19 +38,20 @@ Introduction to Matrix Concentration Inequalities, Ch 4*. -/
 theorem NLAlib.rademacher_matrix_mgf_cgf_le {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} [NeZero d]
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
-    (g : Ω → ℝ) (hMeas : Measurable g) (hLaw : IsRademacher μ g) (θ : ℝ) :
+    (g : Ω → ℝ) (hLaw : IsRademacher μ g) (θ : ℝ) :
     (∫ ω, matrixExp ((θ * g ω) • A) ∂μ) ≤ (matrixExp ((θ ^ 2 / 2) • A ^ 2)) ∧
     (matrixLog (∫ ω, matrixExp ((θ * g ω) • A) ∂μ)) ≤ ((θ ^ 2 / 2) • A ^ 2) := by
   have hs : ∀ t, Integrable (fun ω => Real.exp (t * (θ * g ω))) μ := by
     intro t
     have h1 := integrable_twoPoint (fun x => Real.exp (t * θ * x))
-    rw [isRademacher_iff_map_eq, rademacherMeasure] at hLaw
-    rw [← hLaw] at h1
-    have h2 := (integrable_map_measure (by fun_prop) hMeas.aemeasurable).mp h1
+    have hmap := hLaw.map_eq
+    rw [rademacherMeasure] at hmap
+    rw [← hmap] at h1
+    have h2 := (integrable_map_measure (by fun_prop) hLaw.aemeasurable).mp h1
     simpa [Function.comp_def, mul_assoc] using h2
   have hmgf : ∀ t, mgf g μ t = Real.cosh t := by
     intro t
-    have h1 := integral_map (μ := μ) hMeas.aemeasurable (f := fun x => Real.exp (t * x))
+    have h1 := integral_map (μ := μ) hLaw.aemeasurable (f := fun x => Real.exp (t * x))
       (by fun_prop)
     rw [mgf, ← h1, isRademacher_iff_map_eq.mp hLaw, rademacherMeasure, integral_add_measure, integral_smul_measure, integral_smul_measure,
       integral_dirac, integral_dirac, Real.cosh_eq]

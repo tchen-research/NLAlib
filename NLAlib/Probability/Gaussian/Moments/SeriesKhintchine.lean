@@ -11,7 +11,6 @@ Source: operator manuscript `thm:khintchine`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 open MeasureTheory ProbabilityTheory Matrix
 open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
@@ -48,13 +47,13 @@ theorem integral_re_trace_independent_series_pow_le
   rcases hlaw with hlaw | hlaw
   · have hprod : μ.map X = Measure.pi (fun _ : Fin n => gaussianReal 0 1) := by
       rw [hjoint]
-      exact congrArg Measure.pi (funext fun i => hlaw i)
+      exact congrArg Measure.pi (funext fun i => (hlaw i).map_eq)
     rw [hprod] at hm
     rw [← hm]
     exact integral_re_trace_gaussianSeries_pow_le A hA hp
   · have hprod : μ.map X = Measure.pi (fun _ : Fin n => rademacherMeasure) := by
       rw [hjoint]
-      exact congrArg Measure.pi (funext fun i => hlaw i)
+      exact congrArg Measure.pi (funext fun i => (hlaw i).map_eq)
     rw [hprod] at hm
     rw [← hm]
     exact integral_re_trace_rademacherSeries_pow_le A hA hp

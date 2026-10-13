@@ -16,7 +16,6 @@ open scoped NNReal
 open scoped Matrix Matrix.Norms.L2Operator
 
 noncomputable section
-set_option autoImplicit false
 
 namespace NLAlib
 

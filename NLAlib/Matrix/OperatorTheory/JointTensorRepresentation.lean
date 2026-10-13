@@ -15,7 +15,6 @@ Source: Tropp, An Introduction to Matrix Concentration Inequalities, arXiv:1501.
 -/
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder Kronecker
 open Matrix
-set_option autoImplicit false
 noncomputable section
 private def diagHom {n : Type*} [Fintype n] [DecidableEq n] :
     (n → ℂ) →⋆ₐ[ℂ] Matrix n n ℂ where

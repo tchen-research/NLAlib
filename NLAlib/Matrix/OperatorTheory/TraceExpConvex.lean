@@ -9,7 +9,6 @@ matrix eigenvectors. Supports operator re-derivation `sh:convex-sampling`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
 namespace NLAlib
 

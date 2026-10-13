@@ -12,7 +12,6 @@ Source: Tropp–Webber 2023, Section 5. Atlas: `gn-expected-error`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Matrix
 namespace NLAlib
 
@@ -25,7 +24,7 @@ theorem moorePenroseInverse_mul_eq_pinvR_mul_pinvL
     (hM : IsUnit (Mᵀ * M)) (hR : IsUnit (R * Rᵀ)) :
     moorePenroseInverse (M * R) = pinvR R * pinvL M := by
   classical
-  have hML := pinvL_mul hM
+  have hML := pinvL_mul (G := M) hM
   have hRP := mul_pinvR hR
   apply (isMoorePenroseInverse (M * R)).unique
   constructor
@@ -43,13 +42,13 @@ theorem moorePenroseInverse_mul_eq_pinvR_mul_pinvL
         _ = M * (R * pinvR R) * pinvL M := by simp only [Matrix.mul_assoc]
         _ = M * pinvL M := by rw [hRP]; simp
     rw [hEq]
-    exact mul_pinvL_isSymm M
+    exact mul_pinvL_isHermitian M
   · have hEq : (pinvR R * pinvL M) * (M * R) = pinvR R * R := by
       calc
         _ = pinvR R * (pinvL M * M) * R := by simp only [Matrix.mul_assoc]
         _ = pinvR R * R := by rw [hML]; simp
     rw [hEq]
-    exact pinvR_mul_isSymm R
+    exact pinvR_mul_isHermitian R
 
 /-- If a frame factorization has exactly as many columns as the sketch rank,
 the coordinate matrix has invertible row Gram matrix.

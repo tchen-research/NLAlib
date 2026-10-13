@@ -1,11 +1,13 @@
 import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.Probability.HasLaw
 import Mathlib.Probability.Moments.SubGaussian
 import Mathlib.MeasureTheory.Integral.Gamma
 
 /-!
 # The standard Gaussian law
 
-* `IsStandardGaussian μ g` (`μ.map g = gaussianReal 0 1`) and `aemeasurable_of_isStandardGaussian`;
+* `IsStandardGaussian μ g` (`HasLaw g (gaussianReal 0 1) μ`, an `abbrev`) and
+  `aemeasurable_of_isStandardGaussian`;
 * `integrable_pow_gaussianReal`, `integral_pow_three_gaussianReal`,
   `integral_pow_four_gaussianReal`: moments of `N(0, 1)`;
 * `memLp_two_and_moments_of_isStandardGaussian`: the first four moments of a standard Gaussian
@@ -23,21 +25,19 @@ open MeasureTheory ProbabilityTheory
 
 namespace NLAlib
 
-/-- `g` has the standard Gaussian law under `μ`: `μ.map g = gaussianReal 0 1`. Tropp 2015, §4.1.
+/-- `g` has the standard Gaussian law under `μ`: `HasLaw g (gaussianReal 0 1) μ`, i.e. `g` is
+a.e.-measurable and `μ.map g = gaussianReal 0 1`. Tropp 2015, §4.1.
 atlas: scalar-laws-def -/
-def IsStandardGaussian {Ω : Type*} [MeasurableSpace Ω]
+abbrev IsStandardGaussian {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) (g : Ω → ℝ) : Prop :=
-  Measure.map g μ = gaussianReal 0 1
+  HasLaw g (gaussianReal 0 1) μ
 
 /-- A standard Gaussian law already forces a.e. measurability, since the law is nonzero.
 Atlas `hutchinson-variance` (law-to-measurability bridge). -/
 theorem aemeasurable_of_isStandardGaussian {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     {g : Ω → ℝ}
-    (hlaw : IsStandardGaussian μ g) : AEMeasurable g μ := by
-  apply AEMeasurable.of_map_ne_zero
-  rw [IsStandardGaussian] at hlaw
-  rw [hlaw]
-  exact IsProbabilityMeasure.ne_zero _
+    (hlaw : IsStandardGaussian μ g) : AEMeasurable g μ :=
+  hlaw.aemeasurable
 
 /-- Every monomial `x ↦ x^k` is integrable for the standard Gaussian. Atlas:
 `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
@@ -98,11 +98,11 @@ theorem integral_pow_four_gaussianReal : ∫ x, x ^ 4 ∂(gaussianReal 0 1) = 3 
 mean zero, second moment one and fourth moment three. Avron–Toledo 2011, Lemma 5;
 atlas `hutchinson-variance` (law-to-moments bridge). -/
 theorem memLp_two_and_moments_of_isStandardGaussian {Ω : Type*} [MeasurableSpace Ω]
-    {μ : Measure Ω} {g : Ω → ℝ}
-    (hg : AEMeasurable g μ) (hlaw : IsStandardGaussian μ g) :
+    {μ : Measure Ω} {g : Ω → ℝ} (hlaw : IsStandardGaussian μ g) :
     MemLp g 2 μ ∧ (∫ ω, g ω ∂μ) = 0 ∧ (∫ ω, g ω ^ 2 ∂μ) = 1 ∧
       Integrable (fun ω => g ω ^ 4) μ ∧ (∫ ω, g ω ^ 4 ∂μ) = 3 := by
-  unfold IsStandardGaussian at hlaw
+  have hg := hlaw.aemeasurable
+  replace hlaw := hlaw.map_eq
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · have h := memLp_id_gaussianReal' (μ := 0) (v := 1) 2 (by simp)
     rw [← hlaw] at h
@@ -144,7 +144,7 @@ theorem hasSubgaussianMGF_of_isStandardGaussian {Ω : Type*} [MeasurableSpace Ω
     {μ : Measure Ω} {g : Ω → ℝ} (hg : IsStandardGaussian μ g) :
     HasSubgaussianMGF g 1 μ := by
   have hm : AEMeasurable g μ := aemeasurable_of_isStandardGaussian hg
-  rw [← HasSubgaussianMGF.id_map_iff hm, show μ.map g = gaussianReal 0 1 from hg]
+  rw [← HasSubgaussianMGF.id_map_iff hm, hg.map_eq]
   exact hasSubgaussianMGF_id_gaussianReal 1
 
 end NLAlib

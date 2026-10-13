@@ -6,7 +6,6 @@ import NLAlib.Sketching.Sparse.Bands.NamedBands
 import NLAlib.Sketching.Sparse.Bands.EnvelopeArithmetic
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Exact assembly of the three concrete band estimates

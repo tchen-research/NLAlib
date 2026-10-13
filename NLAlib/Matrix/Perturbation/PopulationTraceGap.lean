@@ -84,8 +84,10 @@ theorem mul_frobSq_sinePrincipalAngles_le_frobInner_perturbation
     exact hh
   have hgap := mul_frobSq_sinePrincipalAngles_le_trace_deficit hA hk0 hkN hQ
   have heq : frobInner (Q*Qᵀ-P*Pᵀ) E=(E*(Q*Qᵀ-P*Pᵀ)).trace := by
-    rw [frobInner_eq_trace, Matrix.transpose_sub, mul_transpose_symm, mul_transpose_symm,
-      Matrix.trace_mul_comm]
+    rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_sub]
+    simp only [Matrix.transpose_mul, Matrix.transpose_transpose]
+    rw [Matrix.trace_mul_comm]
   rw [heq, trace_mul_sub_frame_projector_eq_sub_compressions]
   rw [trace_mul_sub_frame_projector_eq_sub_compressions] at hgap
   simp only [Matrix.mul_add, Matrix.add_mul, Matrix.trace_add] at hmax

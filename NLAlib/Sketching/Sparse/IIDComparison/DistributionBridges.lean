@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.IIDComparison.ConvexOrder
 import NLAlib.Sketching.Sparse.FockModel.VacuumMoment
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Exact distribution and indexing bridges
@@ -19,7 +18,7 @@ namespace NLAlib.SparseSketch
 
 open SparseStackSelectors
 
-open scoped BigOperators InnerProductSpace
+open scoped InnerProductSpace
 
 noncomputable section
 

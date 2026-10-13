@@ -15,9 +15,14 @@ atlas can show its Lean statement.
 
 Generated; do not edit. Run with `lake env lean scripts/ExtractDecls.lean` after `lake build`. -/
 
-/-- Auto-generated name components: `_x`, `match_1`, `proof_2`, `eq_1`. -/
+/-- Auto-generated name components: `_x`, `match_1`, `proof_2`, `eq_1`, and the declarations Lean
+derives for every structure/inductive (`casesOn`, `congr_simp`, `sizeOf_spec`, `injEq`, …). -/
 def isAutoComponent (s : String) : Bool :=
   s.startsWith "_" ||
+  ["casesOn", "recOn", "rec", "below", "brecOn", "binductionOn", "ibelow", "noConfusion",
+    "noConfusionType", "congr_simp", "sizeOf_spec", "eq_def", "ctorIdx", "toCtorIdx",
+    "ofNat_ctorIdx", "ctorElim", "ctorElimType", "inj", "injEq", "proxyType",
+    "proxyTypeEquiv"].contains s ||
   ["match_", "proof_", "eq_"].any fun p =>
     s.startsWith p && !(s.drop p.length).isEmpty &&
       (s.drop p.length).all (fun c => c.isDigit || c == '_')
@@ -52,14 +57,24 @@ def atlasTags (doc : String) : Array String × Array String := Id.run do
     if l.startsWith "atlas:" then
       for piece in (String.ofList (l.toList.drop "atlas:".length)).splitOn "," do
         let id := idAfter piece 0
-        if id.length > 0 && !out.contains id then
-          out := out.push id
-          if (piece.splitOn "(partial)").length > 1 then part := part.push id
+        if id.length > 0 then
+          if !out.contains id then out := out.push id
+          -- a `SCAFFOLD:` line may have recorded the id already; the `(partial)` marker still counts
+          if (piece.splitOn "(partial)").length > 1 && !part.contains id then part := part.push id
   return (out, part)
 
-def isPublicName (roots : List Name) (n : Name) : Bool :=
-  roots.any (fun r => r.isPrefixOf n) && !n.isInternal && !isPrivateName n
+/-- A declaration belongs to the library if its name is under a root namespace or it was declared
+in a library module (e.g. `_root_.Matrix.IsHermitian.foo` declared in `NLAlib/Matrix/…`). -/
+def isPublicName (env : Environment) (roots : List Name) (n : Name) : Bool :=
+  (roots.any (fun r => r.isPrefixOf n) ||
+    (match env.getModuleIdxFor? n with
+      | some i => roots.any (fun r => r.isPrefixOf env.header.moduleNames[i.toNat]!)
+      | none => false))
+    && !n.isInternal && !isPrivateName n
     && !(n.toString.splitOn ".").any isAutoComponent
+    -- deprecated aliases copy the target's docstring (and its `atlas:` line); they are not
+    -- formalizations of anything
+    && !Linter.isDeprecated env n
 
 def record (env : Environment) (n : Name) (ci : ConstantInfo) (isDef : Name → Bool)
     : CommandElabM Json := do
@@ -88,11 +103,11 @@ run_cmd do
   let env ← getEnv
   let roots : List Name := [`NLAlib]
   let names := env.constants.map₁.toList.filterMap fun (n, ci) =>
-    if isPublicName roots n then some (n, ci) else none
+    if isPublicName env roots n then some (n, ci) else none
   let names := names.toArray.qsort (fun a b => a.1.toString < b.1.toString)
   -- NLAlib definitions (not theorems, not instances, not recursors): what `uses` may contain
   let isDef : Name → Bool := fun c =>
-    isPublicName roots c && match env.find? c with
+    isPublicName env roots c && match env.find? c with
       | some (.defnInfo _) | some (.inductInfo _) | some (.opaqueInfo _)
       | some (.axiomInfo _) => true
       | _ => false

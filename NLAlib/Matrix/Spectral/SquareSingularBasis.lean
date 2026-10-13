@@ -1,5 +1,8 @@
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
+import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.Matrix.Norms.RankNorm
+import NLAlib.Matrix.Norms.Reindex
+import NLAlib.Matrix.Subspaces.OrthogonalProducts
 /-!
 # Square singular bases on finite coordinate types
 
@@ -25,11 +28,12 @@ theorem exists_orthogonal_transpose_mul_mul_eq_diagonal_singularValues
   let AF := A.reindex e e
   obtain ⟨V, W, h⟩ := exists_isSVD AF
   refine ⟨V.reindex e.symm e.symm, W.reindex e.symm e.symm,
-    HasOrthonormalCols.reindex h.transpose_mul_left _ _,
-    HasOrthonormalCols.reindex h.transpose_mul_right _ _, ?_⟩
+    HasOrthonormalCols.reindex h.conjTranspose_mul_left _ _,
+    HasOrthonormalCols.reindex h.conjTranspose_mul_right _ _, ?_⟩
   have hBack : AF.reindex e.symm e.symm = A := by ext i j; simp [AF]
   have hEq := congrArg (fun M : Matrix (Fin (Fintype.card p))
-      (Fin (Fintype.card p)) ℝ => M.reindex e.symm e.symm) h.transpose_mul_mul
+      (Fin (Fintype.card p)) ℝ => M.reindex e.symm e.symm)
+    (show Vᵀ * AF * W = rectDiag (singularValues AF) from h.conjTranspose_mul_mul)
   rw [mul_reindex _ _ e.symm e.symm e.symm,
     mul_reindex _ _ e.symm e.symm e.symm, hBack] at hEq
   have hTr : Vᵀ.reindex e.symm e.symm = (V.reindex e.symm e.symm)ᵀ := rfl

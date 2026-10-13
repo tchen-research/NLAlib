@@ -19,8 +19,10 @@ theorem specNorm_fromCols_sq_le {m n p : Type*}
     [Fintype m] [Fintype n] [Fintype p] [DecidableEq m] [DecidableEq n] [DecidableEq p]
     (A : Matrix m n ℝ) (B : Matrix m p ℝ) :
     specNorm (Matrix.fromCols A B) ^ 2 ≤ specNorm A ^ 2 + specNorm B ^ 2 := by
-  rw [← specNorm_mul_transpose_self, Matrix.transpose_fromCols, Matrix.fromCols_mul_fromRows,
-    ← specNorm_mul_transpose_self A, ← specNorm_mul_transpose_self B]
+  rw [← specNorm_mul_conjTranspose_self, Matrix.conjTranspose_eq_transpose_of_trivial,
+    Matrix.transpose_fromCols, Matrix.fromCols_mul_fromRows,
+    ← specNorm_mul_conjTranspose_self A, ← specNorm_mul_conjTranspose_self B,
+    Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.conjTranspose_eq_transpose_of_trivial]
   exact specNorm_add_le _ _
 
 /-- Concatenating row blocks bounds the squared operator norm by the sum

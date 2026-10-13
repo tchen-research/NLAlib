@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Norms.BlockNormBounds
 import NLAlib.Matrix.Norms.ColumnNorms
-import NLAlib.Matrix.Norms.ComplexFrobenius
 import NLAlib.Matrix.Norms.ComplexFrobeniusTrace
 import NLAlib.Matrix.Norms.Core
 import NLAlib.Matrix.Norms.EntryBounds
@@ -18,7 +17,6 @@ import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Norms.NuclearPSD
 import NLAlib.Matrix.Norms.RankNorm
 import NLAlib.Matrix.Norms.RayleighNorm
-import NLAlib.Matrix.Norms.RealComplexNorm
 import NLAlib.Matrix.Norms.RectangularDiagonal
 import NLAlib.Matrix.Norms.RectangularDiagonalPermutation
 import NLAlib.Matrix.Norms.Reindex

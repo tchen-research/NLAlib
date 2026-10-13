@@ -10,7 +10,6 @@ Source: operator manuscript `sa:filter`; supports `polynomial-filter-range-finde
 -/
 
 noncomputable section
-set_option autoImplicit false
 open Polynomial
 open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
@@ -44,7 +43,10 @@ theorem norm_rectDiag_map_ofReal_le {m n : ℕ} {s : ℕ → ℝ} {b : ℝ}
     ‖(rectDiag s : Matrix (Fin m) (Fin n) ℝ).map Complex.ofReal‖ ≤ b := by
   apply (sq_le_sq₀ (norm_nonneg _) hb).mp
   rw [pow_two, ← Matrix.l2_opNorm_conjTranspose_mul_self,
-    conjTranspose_map_ofReal, ← map_ofReal_mul, transpose_rectDiag_mul_rectDiag]
+    conjTranspose_map_ofReal, ← map_ofReal_mul,
+    show (rectDiag s : Matrix (Fin m) (Fin n) ℝ)ᵀ * rectDiag s =
+      Matrix.diagonal (fun j : Fin n => if (j : ℕ) < m then s j ^ 2 else 0) from
+      conjTranspose_rectDiag_mul_rectDiag s]
   rw [Matrix.diagonal_map (by simp : Complex.ofReal 0 = 0), Matrix.l2_opNorm_diagonal]
   apply (pi_norm_le_iff_of_nonneg (sq_nonneg b)).2
   intro j

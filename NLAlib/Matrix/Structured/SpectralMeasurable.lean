@@ -2,8 +2,8 @@ import NLAlib.Matrix.Structured.Measurable
 /-!
 # Measurable spectral projection residuals
 
-Entrywise measurability suffices for the spectral norm and for projection residuals.
-This avoids a global measurable-space instance for real matrices.
+Entrywise measurability suffices for the spectral norm and for projection residuals,
+through the product σ-algebra `Matrix.instMeasurableSpace`.
 -/
 
 noncomputable section
@@ -18,11 +18,7 @@ theorem measurable_specNorm_of_entries {γ m n : Type*} [MeasurableSpace γ]
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
     {f : γ → Matrix m n ℝ} (hf : ∀ i j, Measurable fun z => f z i j) :
     Measurable fun z => specNorm (f z) := by
-  have h1 : Measurable fun z => Matrix.of.symm (f z) :=
-    measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => hf i j
-  have h2 : Continuous (fun M : m → n → ℝ => ‖Matrix.of M‖) :=
-    continuous_norm.comp continuous_id
-  exact h2.measurable.comp h1
+  exact continuous_norm.measurable.comp (Matrix.measurable_iff_entries.mpr hf)
 
 /-- A projection residual has measurable spectral norm for an entrywise measurable
 frame. Source: HMT (2011), Theorems 10.6--10.7, measurability step. -/
@@ -30,10 +26,11 @@ theorem measurable_specNorm_residual_of {γ m n q : Type*} [MeasurableSpace γ]
     [Fintype m] [Fintype n] [Fintype q] [DecidableEq m] [DecidableEq n]
     (A : Matrix m n ℝ) {Q : γ → Matrix m q ℝ}
     (hQ : ∀ i j, Measurable fun z => Q z i j) :
-    Measurable fun z => specNorm (residual (Q z) A) := by
+    Measurable fun z => specNorm (projResidual (Q z) A) := by
   apply measurable_specNorm_of_entries
   intro i j
-  simp only [residual_eq_sub_mul_transpose_mul, Matrix.sub_apply, Matrix.mul_apply,
+  simp only [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.sub_apply,
+      Matrix.mul_apply,
     Matrix.transpose_apply]
   fun_prop
 

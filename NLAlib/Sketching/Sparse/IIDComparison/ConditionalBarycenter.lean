@@ -2,7 +2,6 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.IIDComparison.SelectorMarginals
-set_option autoImplicit false
 
 /-!
 # Conditional iid selector barycenter
@@ -12,7 +11,7 @@ Ported from `SparseFockFormal.SparseIIDCoupling` at commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators InnerProductSpace
+open scoped InnerProductSpace
 
 namespace NLAlib.SparseSketch
 

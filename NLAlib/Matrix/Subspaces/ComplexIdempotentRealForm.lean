@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Subspaces.ComplexObliqueCanonical
-import NLAlib.Matrix.Spectral.ComplexSingularTransport
+import NLAlib.Matrix.Spectral.GramSingularValues
+import NLAlib.Matrix.Spectral.SpectralBounds
 /-!
 # Unitary reduction of complex idempotents to real idempotents
 
@@ -62,16 +63,21 @@ theorem exists_real_idempotent_unitary_similarity {n : Type*}
       Matrix.submatrix_id_id]
   have hspec (i : ℕ) : singularValues P i = singularValues R i := by
     rw [hfactor]
-    change singularValues (((U : Matrix n n ℂ) * R.map Complex.ofReal) * ((star U : Matrix.unitaryGroup n ℂ) : Matrix n n ℂ)) i = _
-    rw [complex_singularValues_mul_unitary _ (star U),
-      complex_singularValues_isometry_mul (show (U : Matrix n n ℂ)ᴴ * (U : Matrix n n ℂ) = 1
-        from Unitary.coe_star_mul_self U), singularValues_map_ofReal]
+    have hU₁ : (U : Matrix n n ℂ)ᴴ * (U : Matrix n n ℂ) = 1 := Unitary.coe_star_mul_self U
+    rw [singularValues_eq_of_gram_charpoly_eq _ (R.map Complex.ofReal) (by
+      simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
+      rw [← Matrix.mul_assoc (U : Matrix n n ℂ)ᴴ (U : Matrix n n ℂ), hU₁, Matrix.one_mul,
+        Matrix.charpoly_mul_comm, Matrix.mul_assoc, Matrix.mul_assoc, hU₁, Matrix.mul_one])]
+    exact singularValues_map_ofReal (𝕜 := ℂ) R i
   have hnorm (A : Matrix n n ℝ) :
       ‖(U : Matrix n n ℂ) * A.map Complex.ofReal * (U : Matrix n n ℂ)ᴴ‖ = specNorm A := by
     change ‖((U : Matrix n n ℂ) * A.map Complex.ofReal) * ((star U : Matrix.unitaryGroup n ℂ) : Matrix n n ℂ)‖ = _
     rw [CStarRing.norm_mul_coe_unitary _ (star U), CStarRing.norm_coe_unitary_mul,
-      norm_map_ofReal_eq_specNorm]
-  refine ⟨U, R, hR, hfactor, hspec, rank_eq_of_complex_real_singularValues_eq P R hspec, ?_, ?_⟩
+      ← specNorm_eq_norm, ← singularValues_zero_eq_specNorm, ← singularValues_zero_eq_specNorm]
+    exact singularValues_map_ofReal (𝕜 := ℂ) A 0
+  have hrank : P.rank = R.rank := eq_of_forall_lt_iff fun k => by
+    rw [← singularValues_ne_zero_iff, ← singularValues_ne_zero_iff, hspec]
+  refine ⟨U, R, hR, hfactor, hspec, hrank, ?_, ?_⟩
   · rw [hfactor, hnorm]
   · have hcomp : 1 - P = (U : Matrix n n ℂ) * (1 - R).map Complex.ofReal * (U : Matrix n n ℂ)ᴴ := by
       have hmap : (1 - R).map Complex.ofReal = 1 - R.map Complex.ofReal := by

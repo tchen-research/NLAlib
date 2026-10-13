@@ -40,7 +40,6 @@ Source: operator re-derivation `sh:srht`; supports atlas `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Matrix
 namespace NLAlib
 

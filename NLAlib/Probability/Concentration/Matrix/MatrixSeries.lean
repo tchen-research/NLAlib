@@ -23,7 +23,7 @@ private lemma scalar_package {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
     (hLaw : (∀ k, IsStandardGaussian μ (g k)) ∨ (∀ k, IsRademacher μ (g k))) (k : Fin N) :
     MemLp (g k) 2 μ ∧ ∫ ω, g k ω ∂μ = 0 ∧ ∫ ω, g k ω * g k ω ∂μ = 1 := by
   rcases hLaw with h | h
-  · have hk : μ.map (g k) = gaussianReal 0 1 := h k
+  · have hk : μ.map (g k) = gaussianReal 0 1 := (h k).map_eq
     refine ⟨?_, ?_, ?_⟩
     · have := memLp_id_gaussianReal (μ := 0) (v := 1) 2
       rw [← hk, memLp_map_measure_iff aestronglyMeasurable_id (hMeas k).aemeasurable] at this
@@ -36,7 +36,7 @@ private lemma scalar_package {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
       rw [← hk, integral_map (hMeas k).aemeasurable (by fun_prop)] at h1
       simpa [sq] using h1
   · have hk : μ.map (g k) = (1 / 2 : ENNReal) • Measure.dirac (1 : ℝ) +
-        (1 / 2 : ENNReal) • Measure.dirac (-1 : ℝ) := h k
+        (1 / 2 : ENNReal) • Measure.dirac (-1 : ℝ) := (h k).map_eq
     have hms : MeasurableSet {x : ℝ | x = 1 ∨ x = -1} :=
       (measurableSet_singleton (1 : ℝ)).union (measurableSet_singleton (-1 : ℝ))
     have hae : ∀ᵐ x ∂(μ.map (g k)), x = 1 ∨ x = -1 := by

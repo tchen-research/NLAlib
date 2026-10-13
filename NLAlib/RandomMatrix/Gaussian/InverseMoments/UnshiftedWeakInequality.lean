@@ -23,18 +23,18 @@ open scoped Topology ContDiff Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 
 private theorem ae_posDef_gram {r k : ℕ} (hrk : r ≤ k) :
-    ∀ᵐ G ∂(gaussianMatrix r k), (Matrix.of G * (Matrix.of G)ᵀ).PosDef := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), (G * Gᵀ).PosDef := by
   filter_upwards [gaussianMatrix_ae_isUnit_mul_transpose hrk] with G hG
-  have hp : (Matrix.of G * (Matrix.of G)ᵀ).PosSemidef := by
+  have hp : (G * Gᵀ).PosSemidef := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-      Matrix.posSemidef_self_mul_conjTranspose (Matrix.of G)
+      Matrix.posSemidef_self_mul_conjTranspose G
   exact hp.posDef_iff_isUnit.mpr hG
 
 private theorem measurable_minSq {r k : ℕ} :
-    Measurable (fun G : Fin r → Fin k → ℝ => sigmaMin (Matrix.of G)ᵀ ^ 2) := by
+    Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => sigmaMin Gᵀ ^ 2) := by
   convert measurable_specNorm_inv_self_mul_transpose.inv using 1
   funext G
-  change sigmaMin (Matrix.of G)ᵀ ^ 2 = (specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹)⁻¹
+  change sigmaMin Gᵀ ^ 2 = (specNorm (G * Gᵀ)⁻¹)⁻¹
   rw [specNorm_inv_self_mul_transpose_eq, one_div, inv_inv]
 
 /-- The unshifted Gram inverse-power probes and their gradient energy
@@ -45,26 +45,26 @@ atlas `wishart-lambda-min-tail` (unshifted approximation helper).
 atlas: gaussian-hard-edge-weak-inequality -/
 theorem ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) :
-    ∀ᵐ G ∂(gaussianMatrix r k),
-      Tendsto (fun n : ℕ => inversePowerSoftMin n (regularizedGram 0 (Matrix.of G)))
-        atTop (𝓝 (sigmaMin (Matrix.of G)ᵀ ^ 2)) ∧
-      Tendsto (fun n : ℕ => frobSq (gramSoftMinGradient n 0 (Matrix.of G)))
-        atTop (𝓝 (4 * sigmaMin (Matrix.of G)ᵀ ^ 2)) := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)),
+      Tendsto (fun n : ℕ => inversePowerSoftMin n (regularizedGram 0 G))
+        atTop (𝓝 (sigmaMin Gᵀ ^ 2)) ∧
+      Tendsto (fun n : ℕ => frobSq (gramSoftMinGradient n 0 G))
+        atTop (𝓝 (4 * sigmaMin Gᵀ ^ 2)) := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   filter_upwards [gaussianMatrix_ae_isUnit_mul_transpose hrk,
     ae_charpoly_separable_self_mul_transpose_gaussianMatrix hrk] with G hunit hsep
-  have hW : (Matrix.of G * (Matrix.of G)ᵀ).PosSemidef := by
+  have hW : (G * Gᵀ).PosSemidef := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-      Matrix.posSemidef_self_mul_conjTranspose (Matrix.of G)
-  have hpd : (regularizedGram 0 (Matrix.of G)).PosDef := by
+      Matrix.posSemidef_self_mul_conjTranspose G
+  have hpd : (regularizedGram 0 G).PosDef := by
     simpa only [regularizedGram, zero_smul, add_zero] using hW.posDef_iff_isUnit.mpr hunit
   let b := hpd.inv.isHermitian.eigenvalues
   let U := star hpd.inv.isHermitian.eigenvectorUnitary
   let φ := Unitary.conjStarAlgAut ℝ (Matrix (Fin r) (Fin r) ℝ) U
-  have hdiag : φ (Matrix.of G * (Matrix.of G)ᵀ) = Matrix.diagonal (fun i => (b i)⁻¹) := by
-    simpa only [sub_zero] using regularizedGram_inv_basis_conj_eq 0 (Matrix.of G) hpd
-  have hchar : (φ (Matrix.of G * (Matrix.of G)ᵀ)).charpoly =
-      (Matrix.of G * (Matrix.of G)ᵀ).charpoly := by
+  have hdiag : φ (G * Gᵀ) = Matrix.diagonal (fun i => (b i)⁻¹) := by
+    simpa only [sub_zero] using regularizedGram_inv_basis_conj_eq 0 G hpd
+  have hchar : (φ (G * Gᵀ)).charpoly =
+      (G * Gᵀ).charpoly := by
     dsimp only [φ]
     rw [Unitary.conjStarAlgAut_apply, Matrix.charpoly_mul_comm, ← Matrix.mul_assoc,
       Unitary.coe_star_mul_self, Matrix.one_mul]
@@ -86,13 +86,28 @@ theorem ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix
     exact hn
   have hmax (i : Fin r) (hi : i ≠ i₀) : b i < b i₀ :=
     lt_of_le_of_ne (hle i) (fun h => hi (hbinj h))
-  have hX := sigmaMin_transpose_sq_eq_inv_inverse_eigenvalue_sub 0 (Matrix.of G) hpd i₀ hle
+  have hX := sigmaMin_transpose_sq_eq_inv_inverse_eigenvalue_sub 0 G hpd i₀ hle
   simp only [sub_zero] at hX
   obtain ⟨hF, hA, _⟩ :=
-    tendsto_regularizedGram_softMin_aggregates_of_unique_max 0 (Matrix.of G) hpd i₀ hmax
+    tendsto_regularizedGram_softMin_aggregates_of_unique_max 0 G hpd i₀ hmax
   simp only [sub_zero] at hA
   rw [← hX] at hF hA
   exact ⟨hF, hA⟩
+
+/-- `ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `gaussian-hard-edge-weak-inequality`. -/
+theorem ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 1 ≤ r) (hrk : r ≤ k) :
+    ∀ᵐ w ∂μ,
+      Tendsto (fun n : ℕ => inversePowerSoftMin n (regularizedGram 0 (X w)))
+        atTop (𝓝 (sigmaMin (X w)ᵀ ^ 2)) ∧
+      Tendsto (fun n : ℕ => frobSq (gramSoftMinGradient n 0 (X w)))
+        atTop (𝓝 (4 * sigmaMin (X w)ᵀ ^ 2)) := by
+  have h := ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix hr hrk
+  rw [← hX.map_eq] at h
+  exact ae_of_ae_map hX.aemeasurable h
 
 private theorem integral_cutoff_weak_nonneg_of_coordinate_stein
     {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -248,17 +263,17 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
     (hψs : tsupport ψ ⊆ Ioi (0 : ℝ)) (hψ0 : ∀ x, 0 ≤ ψ x) :
-    0 ≤ ∫ G : Fin r → Fin k → ℝ,
-      4 * sigmaMin (Matrix.of G)ᵀ ^ 2 * deriv ψ (sigmaMin (Matrix.of G)ᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin (Matrix.of G)ᵀ ^ 2) *
-          ψ (sigmaMin (Matrix.of G)ᵀ ^ 2) ∂(gaussianMatrix r k) := by
+    0 ≤ ∫ G : Matrix (Fin r) (Fin k) ℝ,
+      4 * sigmaMin Gᵀ ^ 2 * deriv ψ (sigmaMin Gᵀ ^ 2) +
+        2 * ((k : ℝ) - r + 1 - sigmaMin Gᵀ ^ 2) *
+          ψ (sigmaMin Gᵀ ^ 2) ∂(gaussianMatrix (Fin r) (Fin k)) := by
   classical
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   let ν : Measure ((Fin r × Fin k) → ℝ) := Measure.pi fun _ => gaussianReal 0 1
-  let e := MeasurableEquiv.curry (Fin r) (Fin k) ℝ
-  have hmp : MeasurePreserving e ν (gaussianMatrix r k) :=
-    ⟨e.measurable, (gaussianMatrix_eq_map_curry r k).symm⟩
-  let G : ((Fin r × Fin k) → ℝ) → Matrix (Fin r) (Fin k) ℝ := fun x => Matrix.of (e x)
+  let e := (MeasurableEquiv.curry (Fin r) (Fin k) ℝ).trans Matrix.ofMeasurableEquiv
+  have hmp : MeasurePreserving e ν (gaussianMatrix (Fin r) (Fin k)) :=
+    ⟨e.measurable, (gaussianMatrix_eq_map_curry).symm⟩
+  let G : ((Fin r × Fin k) → ℝ) → Matrix (Fin r) (Fin k) ℝ := fun x => (e x)
   let X : ((Fin r × Fin k) → ℝ) → ℝ := fun x => sigmaMin (G x)ᵀ ^ 2
   let F : ℕ → ((Fin r × Fin k) → ℝ) → ℝ :=
     fun n x => inversePowerSoftMin (n + 1) (G x * (G x)ᵀ)
@@ -302,7 +317,7 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
     (hψ1.continuous_deriv le_rfl).measurable.comp (hFm n)
   have hPD : ∀ᵐ x ∂ν, (G x * (G x)ᵀ).PosDef := by
     have hh := ae_posDef_gram hrk
-    rw [gaussianMatrix_eq_map_curry r k] at hh
+    rw [gaussianMatrix_eq_map_curry] at hh
     exact ae_of_ae_map e.measurable.aemeasurable hh
   have hAn (n x) : 0 ≤ A n x := Finset.sum_nonneg fun i _ => sq_nonneg _
   have henergy (n x) : A n x = frobSq (gramSoftMinGradient (n + 1) 0 (G x)) := by
@@ -335,7 +350,7 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
     filter_upwards [hPD] with x hx
     have he : (∑ i, x i * D n i x) = frobInner (G x) (gramSoftMinGradient (n + 1) 0 (G x)) := by
       simp only [Fintype.sum_prod_type, D, frobInner_eq_sum_mul, G, e,
-        MeasurableEquiv.curry_apply, Matrix.of_apply]
+        MeasurableEquiv.trans_apply, Matrix.coe_ofMeasurableEquiv, MeasurableEquiv.curry_apply, Matrix.of_apply]
     rw [he]
     exact frobInner_gramSoftMinGradient_unshifted_eq (n + 1) (G x) hx
   have hLap (n) : ∀ᵐ x ∂ν, (∑ i, DD n i x) ≤ b := by
@@ -359,7 +374,7 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
   have hAgg : ∀ᵐ x ∂ν, Tendsto (fun n : ℕ => F n x) atTop (𝓝 (X x)) ∧
       Tendsto (fun n : ℕ => A n x) atTop (𝓝 (4 * X x)) := by
     have hh := ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix hr hrk
-    rw [gaussianMatrix_eq_map_curry r k] at hh
+    rw [gaussianMatrix_eq_map_curry] at hh
     filter_upwards [ae_of_ae_map e.measurable.aemeasurable hh] with x hx
     refine ⟨?_, ?_⟩
     · simpa only [Function.comp_def, regularizedGram_zero, F, G, X] using hx.1.comp (tendsto_add_atTop_nat 1)
@@ -374,22 +389,47 @@ theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix
       ((measurable_const.sub (measurable_const.mul (hFm n))).mul (hψm n))).aestronglyMeasurable)
     (integrable_const C) hbound hlim
   have hweak := ge_of_tendsto hInt (Eventually.of_forall hLn)
-  have hXm : Measurable (fun H : Fin r → Fin k → ℝ => sigmaMin (Matrix.of H)ᵀ ^ 2) := measurable_minSq
-  have hφ : Measurable (fun H : Fin r → Fin k → ℝ =>
-      deriv ψ (sigmaMin (Matrix.of H)ᵀ ^ 2) * (4 * sigmaMin (Matrix.of H)ᵀ ^ 2) +
-        (b - 2 * sigmaMin (Matrix.of H)ᵀ ^ 2) * ψ (sigmaMin (Matrix.of H)ᵀ ^ 2)) :=
+  have hXm : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ => sigmaMin Hᵀ ^ 2) := measurable_minSq
+  have hφ : Measurable (fun H : Matrix (Fin r) (Fin k) ℝ =>
+      deriv ψ (sigmaMin Hᵀ ^ 2) * (4 * sigmaMin Hᵀ ^ 2) +
+        (b - 2 * sigmaMin Hᵀ ^ 2) * ψ (sigmaMin Hᵀ ^ 2)) :=
     (((hψ1.continuous_deriv le_rfl).measurable.comp hXm).mul (measurable_const.mul hXm)).add
       ((measurable_const.sub (measurable_const.mul hXm)).mul (hψ.continuous.measurable.comp hXm))
-  have heq : (fun H : Fin r → Fin k → ℝ =>
-      4 * sigmaMin (Matrix.of H)ᵀ ^ 2 * deriv ψ (sigmaMin (Matrix.of H)ᵀ ^ 2) +
-        2 * ((k : ℝ) - r + 1 - sigmaMin (Matrix.of H)ᵀ ^ 2) * ψ (sigmaMin (Matrix.of H)ᵀ ^ 2)) =
-      (fun H => deriv ψ (sigmaMin (Matrix.of H)ᵀ ^ 2) * (4 * sigmaMin (Matrix.of H)ᵀ ^ 2) +
-        (b - 2 * sigmaMin (Matrix.of H)ᵀ ^ 2) * ψ (sigmaMin (Matrix.of H)ᵀ ^ 2)) := by
+  have heq : (fun H : Matrix (Fin r) (Fin k) ℝ =>
+      4 * sigmaMin Hᵀ ^ 2 * deriv ψ (sigmaMin Hᵀ ^ 2) +
+        2 * ((k : ℝ) - r + 1 - sigmaMin Hᵀ ^ 2) * ψ (sigmaMin Hᵀ ^ 2)) =
+      (fun H => deriv ψ (sigmaMin Hᵀ ^ 2) * (4 * sigmaMin Hᵀ ^ 2) +
+        (b - 2 * sigmaMin Hᵀ ^ 2) * ψ (sigmaMin Hᵀ ^ 2)) := by
     funext H
     dsimp only [b]
     ring
-  rw [heq, gaussianMatrix_eq_map_curry r k, integral_map e.measurable.aemeasurable hφ.aestronglyMeasurable]
+  rw [heq, gaussianMatrix_eq_map_curry, integral_map e.measurable.aemeasurable hφ.aestronglyMeasurable]
   exact hweak
+
+/-- `integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix` for a random matrix
+`X` with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas:
+`gaussian-hard-edge-weak-inequality`. -/
+theorem integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
+    (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
+    (hψs : tsupport ψ ⊆ Ioi (0 : ℝ)) (hψ0 : ∀ x, 0 ≤ ψ x) :
+    0 ≤ ∫ w,
+      4 * sigmaMin (X w)ᵀ ^ 2 * deriv ψ (sigmaMin (X w)ᵀ ^ 2) +
+        2 * ((k : ℝ) - r + 1 - sigmaMin (X w)ᵀ ^ 2) *
+          ψ (sigmaMin (X w)ᵀ ^ 2) ∂μ := by
+  have hψ1 : ContDiff ℝ 1 ψ := hψ.of_le (by simp)
+  have hφ : Measurable (fun x : ℝ => 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x) :=
+    ((measurable_const.mul measurable_id).mul (hψ1.continuous_deriv le_rfl).measurable).add
+      ((measurable_const.mul (measurable_const.sub measurable_id)).mul hψ.continuous.measurable)
+  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      4 * sigmaMin Gᵀ ^ 2 * deriv ψ (sigmaMin Gᵀ ^ 2) +
+        2 * ((k : ℝ) - r + 1 - sigmaMin Gᵀ ^ 2) * ψ (sigmaMin Gᵀ ^ 2)) :=
+    hφ.comp measurable_minSq
+  exact le_of_le_of_eq
+    (integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix hr hrk ψ hψ hψc hψs hψ0)
+    (hX.integral_comp hm.aestronglyMeasurable).symm
 
 /-- The scalar squared-smallest-singular-value law satisfies the sharp
 hard-edge weak inequality by the unshifted finite-probe route.
@@ -402,15 +442,15 @@ theorem integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix
     (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
     (hψs : tsupport ψ ⊆ Ioi (0 : ℝ)) (hψ0 : ∀ x, 0 ≤ ψ x) :
     0 ≤ ∫ x in Ioi (0 : ℝ), 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x
-      ∂((gaussianMatrix r k).map (fun G => sigmaMin (Matrix.of G)ᵀ ^ 2)) := by
+      ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)) := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
-  have hm : Measurable (fun G : Fin r → Fin k → ℝ => sigmaMin (Matrix.of G)ᵀ ^ 2) := measurable_minSq
-  have hposG : ∀ᵐ G ∂(gaussianMatrix r k), 0 < sigmaMin (Matrix.of G)ᵀ ^ 2 := by
+  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ => sigmaMin Gᵀ ^ 2) := measurable_minSq
+  have hposG : ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), 0 < sigmaMin Gᵀ ^ 2 := by
     filter_upwards [ae_posDef_gram hrk] with G hG
-    have hpos : 0 < inversePowerSoftMin 1 (Matrix.of G * (Matrix.of G)ᵀ) :=
+    have hpos : 0 < inversePowerSoftMin 1 (G * Gᵀ) :=
       Real.rpow_pos_of_pos (trace_pow_pos_of_posDef hG.inv 1) _
-    exact hpos.trans_le (inversePowerSoftMin_gram_le_sigmaMin_sq 1 (by omega) (Matrix.of G))
-  have hpos : ∀ᵐ x ∂((gaussianMatrix r k).map (fun G => sigmaMin (Matrix.of G)ᵀ ^ 2)),
+    exact hpos.trans_le (inversePowerSoftMin_gram_le_sigmaMin_sq 1 (by omega) G)
+  have hpos : ∀ᵐ x ∂((gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2)),
       x ∈ Ioi (0 : ℝ) := (ae_map_iff hm.aemeasurable measurableSet_Ioi).2 hposG
   have hφ : Measurable (fun x : ℝ => 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x) := by
     have hψ1 : ContDiff ℝ 1 ψ := hψ.of_le (by simp)
@@ -418,5 +458,25 @@ theorem integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix
       ((measurable_const.mul (measurable_const.sub measurable_id)).mul hψ.continuous.measurable)
   rw [Measure.restrict_eq_self_of_ae_mem hpos, integral_map hm.aemeasurable hφ.aestronglyMeasurable]
   exact integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix hr hrk ψ hψ hψc hψs hψ0
+
+/-- `integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix` for a random matrix
+`X` with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas:
+`gaussian-hard-edge-weak-inequality`. -/
+theorem integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 1 ≤ r) (hrk : r ≤ k) (ψ : ℝ → ℝ)
+    (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ)
+    (hψs : tsupport ψ ⊆ Ioi (0 : ℝ)) (hψ0 : ∀ x, 0 ≤ ψ x) :
+    0 ≤ ∫ x in Ioi (0 : ℝ), 4 * x * deriv ψ x + 2 * ((k : ℝ) - r + 1 - x) * ψ x
+      ∂(μ.map (fun w => sigmaMin (X w)ᵀ ^ 2)) := by
+  have h : μ.map (fun w => sigmaMin (X w)ᵀ ^ 2) =
+      (gaussianMatrix (Fin r) (Fin k)).map (fun G => sigmaMin Gᵀ ^ 2) := by
+    rw [← hX.map_eq, AEMeasurable.map_map_of_aemeasurable measurable_minSq.aemeasurable
+      hX.aemeasurable]
+    rfl
+  rw [h]
+  exact integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix hr hrk ψ hψ hψc
+    hψs hψ0
 
 end NLAlib

@@ -21,23 +21,23 @@ open scoped Matrix
 namespace NLAlib
 
 private lemma eval_resultant_charpoly_self_mul_transpose (r k : ℕ)
-    (G : Fin r → Fin k → ℝ) :
+    (G : Matrix (Fin r) (Fin k) ℝ) :
     MvPolynomial.eval (fun ab : Fin r × Fin k => G ab.1 ab.2)
       (Polynomial.resultant
         (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ *
           (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ)ᵀ).charpoly
         (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ *
           (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ)ᵀ).charpoly.derivative r (r - 1))
-      = Polynomial.resultant (Matrix.of G * (Matrix.of G)ᵀ).charpoly
-        (Matrix.of G * (Matrix.of G)ᵀ).charpoly.derivative r (r - 1) := by
+      = Polynomial.resultant (G * Gᵀ).charpoly
+        (G * Gᵀ).charpoly.derivative r (r - 1) := by
   let ev : MvPolynomial (Fin r × Fin k) ℝ →+* ℝ :=
     MvPolynomial.eval fun ab : Fin r × Fin k => G ab.1 ab.2
-  have hX : (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ).map ev = Matrix.of G := by
+  have hX : (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ).map ev = G := by
     ext i j
     simp [ev]
   have hp : (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ *
       (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ)ᵀ).charpoly.map ev
-      = (Matrix.of G * (Matrix.of G)ᵀ).charpoly := by
+      = (G * Gᵀ).charpoly := by
     rw [← Matrix.charpoly_map, Matrix.map_mul, Matrix.transpose_map, hX]
   change ev _ = _
   rw [← Polynomial.resultant_map_map, ← Polynomial.derivative_map, hp]
@@ -47,7 +47,7 @@ almost surely. Source: nonzero resultant polynomial and Gaussian polynomial
 zero sets; atlas `gaussian-simple-spectrum`. Includes the empty row dimension.
 atlas: gaussian-simple-spectrum -/
 theorem ae_charpoly_separable_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r ≤ k) :
-    ∀ᵐ G ∂(gaussianMatrix r k), (Matrix.of G * (Matrix.of G)ᵀ).charpoly.Separable := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), (G * Gᵀ).charpoly.Separable := by
   classical
   let P : Polynomial (MvPolynomial (Fin r × Fin k) ℝ) :=
     (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ *
@@ -55,10 +55,10 @@ theorem ae_charpoly_separable_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk
   let f : MvPolynomial (Fin r × Fin k) ℝ :=
     Polynomial.resultant P P.derivative r (r - 1)
   have hf : f ≠ 0 := by
-    let G0 : Fin r → Fin k → ℝ := fun i j =>
+    let G0 : Matrix (Fin r) (Fin k) ℝ := Matrix.of fun i j =>
       if j = Fin.castLE hrk i then (i.val : ℝ) + 1 else 0
     let d : Fin r → ℝ := fun i => ((i.val : ℝ) + 1) ^ 2
-    have hdiag : Matrix.of G0 * (Matrix.of G0)ᵀ = Matrix.diagonal d := by
+    have hdiag : G0 * G0ᵀ = Matrix.diagonal d := by
       ext i j
       by_cases hij : i = j
       · subst j
@@ -96,38 +96,61 @@ theorem ae_charpoly_separable_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk
       (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ *
         (Matrix.mvPolynomialX (Fin r) (Fin k) ℝ)ᵀ).charpoly.derivative r (r - 1)) ≠ 0 at hG
   rw [eval_resultant_charpoly_self_mul_transpose] at hG
-  have hn : (Matrix.of G * (Matrix.of G)ᵀ).charpoly.natDegree = r := by simp
-  have hnd : (Matrix.of G * (Matrix.of G)ᵀ).charpoly.derivative.natDegree = r - 1 := by
+  have hn : (G * Gᵀ).charpoly.natDegree = r := by simp
+  have hnd : (G * Gᵀ).charpoly.derivative.natDegree = r - 1 := by
     rw [Polynomial.natDegree_derivative, hn]
-  have hG' : Polynomial.resultant (Matrix.of G * (Matrix.of G)ᵀ).charpoly
-      (Matrix.of G * (Matrix.of G)ᵀ).charpoly.derivative ≠ 0 := by
+  have hG' : Polynomial.resultant (G * Gᵀ).charpoly
+      (G * Gᵀ).charpoly.derivative ≠ 0 := by
     simpa only [hn, hnd] using hG
   apply (Polynomial.separable_def _).2
   exact (Polynomial.isUnit_resultant_iff_isCoprime (Matrix.charpoly_monic _)).1
     (isUnit_iff_ne_zero.mpr hG')
+
+/-- `ae_charpoly_separable_self_mul_transpose_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `gaussian-simple-spectrum`. -/
+theorem ae_charpoly_separable_self_mul_transpose_gaussianMatrix_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hrk : r ≤ k) :
+    ∀ᵐ ω ∂μ, (X ω * (X ω)ᵀ).charpoly.Separable := by
+  have h := ae_charpoly_separable_self_mul_transpose_gaussianMatrix hrk
+  rw [← hX.map_eq] at h
+  exact ae_of_ae_map hX.aemeasurable h
 
 /-- The eigenvalues of a wide Gaussian Gram matrix are pairwise distinct
 almost surely. Source: separable characteristic polynomial and the finite
 spectral theorem; atlas `gaussian-simple-spectrum`. No density formula is used.
 atlas: gaussian-simple-spectrum -/
 theorem ae_injective_eigenvalues_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r ≤ k) :
-    ∀ᵐ G ∂(gaussianMatrix r k), Function.Injective
-      ((Matrix.posSemidef_self_mul_conjTranspose (Matrix.of G)).isHermitian.eigenvalues) := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), Function.Injective
+      ((Matrix.posSemidef_self_mul_conjTranspose G).isHermitian.eigenvalues) := by
   filter_upwards [ae_charpoly_separable_self_mul_transpose_gaussianMatrix hrk] with G hG
-  have hG' : (Matrix.of G * (Matrix.of G)ᴴ).charpoly.Separable := by
+  have hG' : (G * Gᴴ).charpoly.Separable := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hG
-  rw [(Matrix.posSemidef_self_mul_conjTranspose (Matrix.of G)).isHermitian.charpoly_eq] at hG'
+  rw [(Matrix.posSemidef_self_mul_conjTranspose G).isHermitian.charpoly_eq] at hG'
   intro i j hij
   apply (Polynomial.separable_prod_X_sub_C_iff.1 hG')
   simpa using hij
+
+/-- `ae_injective_eigenvalues_self_mul_transpose_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `gaussian-simple-spectrum`. -/
+theorem ae_injective_eigenvalues_self_mul_transpose_gaussianMatrix_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hrk : r ≤ k) :
+    ∀ᵐ ω ∂μ, Function.Injective
+      ((Matrix.posSemidef_self_mul_conjTranspose (X ω)).isHermitian.eigenvalues) := by
+  have h := ae_injective_eigenvalues_self_mul_transpose_gaussianMatrix hrk
+  rw [← hX.map_eq] at h
+  exact ae_of_ae_map hX.aemeasurable h
 
 /-- The sorted eigenvalue list of a wide Gaussian Gram matrix is injective
 almost surely. Source: simple characteristic polynomial and reindexing of
 the Hermitian eigenvalues; atlas `gaussian-simple-spectrum`.
 This is the sorted-list interface used by the soft minimum limit. -/
 theorem ae_injective_eigenvalues₀_self_mul_transpose_gaussianMatrix {r k : ℕ} (hrk : r ≤ k) :
-    ∀ᵐ G ∂(gaussianMatrix r k), Function.Injective
-      ((Matrix.posSemidef_self_mul_conjTranspose (Matrix.of G)).isHermitian.eigenvalues₀) := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), Function.Injective
+      ((Matrix.posSemidef_self_mul_conjTranspose G).isHermitian.eigenvalues₀) := by
   filter_upwards [ae_injective_eigenvalues_self_mul_transpose_gaussianMatrix hrk] with G hG
   let e : Fin (Fintype.card (Fin r)) ≃ Fin r :=
     Fintype.equivOfCardEq (Fintype.card_fin _)
@@ -142,19 +165,19 @@ and simultaneous diagonalization of the inverse Gram matrix;
 atlas `gaussian-simple-spectrum` (resolvent interface). -/
 theorem ae_injective_eigenvalues_inv_regularizedGram_gaussianMatrix
     {r k : ℕ} (hrk : r ≤ k) (ε : ℝ) (hε : 0 < ε) :
-    ∀ᵐ G ∂(gaussianMatrix r k), Function.Injective
-      ((regularizedGram_posDef hε (Matrix.of G)).inv.isHermitian.eigenvalues) := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), Function.Injective
+      ((regularizedGram_posDef hε G).inv.isHermitian.eigenvalues) := by
   filter_upwards [ae_charpoly_separable_self_mul_transpose_gaussianMatrix hrk] with G hG
-  let hpd := regularizedGram_posDef hε (Matrix.of G)
+  let hpd := regularizedGram_posDef hε G
   let hR := hpd.inv.isHermitian
   let b := hR.eigenvalues
   let U := star hR.eigenvectorUnitary
   let φ := Unitary.conjStarAlgAut ℝ (Matrix (Fin r) (Fin r) ℝ) U
-  have hdiag : φ (Matrix.of G * (Matrix.of G)ᵀ) =
+  have hdiag : φ (G * Gᵀ) =
       Matrix.diagonal (fun i => (b i)⁻¹ - ε) :=
-    regularizedGram_inv_basis_conj_eq ε (Matrix.of G) hpd
-  have hchar : (φ (Matrix.of G * (Matrix.of G)ᵀ)).charpoly =
-      (Matrix.of G * (Matrix.of G)ᵀ).charpoly := by
+    regularizedGram_inv_basis_conj_eq ε G hpd
+  have hchar : (φ (G * Gᵀ)).charpoly =
+      (G * Gᵀ).charpoly := by
     dsimp only [φ]
     rw [Unitary.conjStarAlgAut_apply, Matrix.charpoly_mul_comm, ← Matrix.mul_assoc,
       Unitary.coe_star_mul_self, Matrix.one_mul]
@@ -175,13 +198,13 @@ simple spectrum and attainment of the finite spectral maximum; atlas
 `gaussian-simple-spectrum` (soft minimum limit interface). -/
 theorem ae_exists_unique_max_eigenvalues_inv_regularizedGram_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (ε : ℝ) (hε : 0 < ε) :
-    ∀ᵐ G ∂(gaussianMatrix r k), ∃ i₀ : Fin r, ∀ i, i ≠ i₀ →
-      (regularizedGram_posDef hε (Matrix.of G)).inv.isHermitian.eigenvalues i <
-        (regularizedGram_posDef hε (Matrix.of G)).inv.isHermitian.eigenvalues i₀ := by
+    ∀ᵐ G ∂(gaussianMatrix (Fin r) (Fin k)), ∃ i₀ : Fin r, ∀ i, i ≠ i₀ →
+      (regularizedGram_posDef hε G).inv.isHermitian.eigenvalues i <
+        (regularizedGram_posDef hε G).inv.isHermitian.eigenvalues i₀ := by
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   filter_upwards [ae_injective_eigenvalues_inv_regularizedGram_gaussianMatrix hrk ε hε]
     with G hG
-  let hpd := regularizedGram_posDef hε (Matrix.of G)
+  let hpd := regularizedGram_posDef hε G
   let b := hpd.inv.isHermitian.eigenvalues
   obtain ⟨i₀, hi₀⟩ := (IsGreatest.pi_norm b).1
   have hle (i : Fin r) : b i ≤ b i₀ := by

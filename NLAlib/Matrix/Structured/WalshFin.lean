@@ -8,7 +8,6 @@ directly to the classical SRHT law. Source: `sh:srht`, atlas `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Classical Matrix
 namespace NLAlib
 

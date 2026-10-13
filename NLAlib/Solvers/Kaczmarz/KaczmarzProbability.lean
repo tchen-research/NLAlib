@@ -14,9 +14,8 @@ Source: Strohmer–Vershynin 2009, Theorem 2. Atlas: `randomized-kaczmarz`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
-open scoped Matrix BigOperators ENNReal
+open scoped Matrix ENNReal
 namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n]

@@ -104,11 +104,11 @@ reuses the established Gaussian-row norm expectation. -/
 theorem integral_sqrt_sum_sq_pi_gaussianReal_le (n : ℕ) :
     (∫ g : Fin n → ℝ, Real.sqrt (∑ i, g i ^ 2)
       ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1)) ≤ Real.sqrt n := by
-  have hmp : MeasurePreserving (fun G : Fin 1 → Fin n → ℝ => G 0)
-      (gaussianMatrix 1 n) (Measure.pi fun _ : Fin n => gaussianReal 0 1) :=
-    measurePreserving_eval (fun _ : Fin 1 => Measure.pi fun _ : Fin n => gaussianReal 0 1) 0
+  have hmp : MeasurePreserving (fun G : Matrix (Fin 1) (Fin n) ℝ => G 0)
+      (gaussianMatrix (Fin 1) (Fin n)) (Measure.pi fun _ : Fin n => gaussianReal 0 1) :=
+    measurePreserving_gaussianMatrix_row 0
   have hm : Measurable (fun g : Fin n → ℝ => Real.sqrt (∑ i, g i ^ 2)) := by fun_prop
-  have h := integral_map (μ := gaussianMatrix 1 n) hmp.measurable.aemeasurable
+  have h := integral_map (μ := gaussianMatrix (Fin 1) (Fin n)) hmp.measurable.aemeasurable
     (f := fun g : Fin n → ℝ => Real.sqrt (∑ i, g i ^ 2)) hm.aestronglyMeasurable
   rw [hmp.map_eq] at h
   exact h.trans_le (integral_sqrt_sum_sq_gaussianMatrix_entry_le (fun i : Fin n => i))

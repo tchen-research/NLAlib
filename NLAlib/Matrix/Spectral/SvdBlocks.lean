@@ -10,7 +10,7 @@ HMT 2011, Theorems 9.1 and 10.5; atlas `rsvd-expected-error`, `gn-expected-error
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 
 /-- The padded squared singular-value tail has the same value when summed over
@@ -31,8 +31,8 @@ theorem singularValueTailSq_eq_sum_width {m n : ℕ}
     simp [f, hz]
   have hm := hsum m (min_le_left m n)
   have hn := hsum n (min_le_right m n)
-  change (∑ i : Fin m, f i) = ∑ i : Fin n, f i
-  rw [Fin.sum_univ_eq_sum_range f, Fin.sum_univ_eq_sum_range f]
+  change (∑ i ∈ Finset.range (Fintype.card (Fin m)), f i) = ∑ i : Fin n, f i
+  rw [Fintype.card_fin, Fin.sum_univ_eq_sum_range f]
   exact hm.trans hn.symm
 
 /-- Every actual real matrix has an SVD-derived right-space block split whose
@@ -57,18 +57,18 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
   have hV₁ : HasOrthonormalCols V₁ := by
     change V₁ᵀ * V₁ = 1
     have he : V₁ᵀ * V₁ = (Vᵀ * V).submatrix (Fin.castAdd r) (Fin.castAdd r) := rfl
-    rw [he, h.transpose_mul_right]
+    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
     ext i j
     simp [Matrix.one_apply, Fin.castAdd_inj]
   have hV₂ : HasOrthonormalCols V₂ := by
     change V₂ᵀ * V₂ = 1
     have he : V₂ᵀ * V₂ = (Vᵀ * V).submatrix (Fin.natAdd k) (Fin.natAdd k) := rfl
-    rw [he, h.transpose_mul_right]
+    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
     ext i j
     simp [Matrix.one_apply, Fin.natAdd_inj]
   have hcross : V₁ᵀ * V₂ = 0 := by
     have he : V₁ᵀ * V₂ = (Vᵀ * V).submatrix (Fin.castAdd r) (Fin.natAdd k) := rfl
-    rw [he, h.transpose_mul_right]
+    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
     ext i j
     have hij : Fin.castAdd r i ≠ Fin.natAdd k j := by
       intro heq
@@ -79,7 +79,7 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
   have hcomplete : V₁ * V₁ᵀ + V₂ * V₂ᵀ = 1 := by
     ext i j
     have he := congrArg (fun M : Matrix (Fin (k + r)) (Fin (k + r)) ℝ => M i j)
-      h.mul_transpose_right
+      (show V * Vᵀ = 1 from h.mul_conjTranspose_right)
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_add,
       Matrix.add_apply, V₁, V₂, Matrix.submatrix_apply, id_eq] using he
   have hAV₂ : A * V₂ = U * S₂ := by
@@ -123,7 +123,7 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     apply Finset.sum_congr rfl
     intro j _
     simp
-  refine ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.transpose_mul_left, hV₁, hV₂, hcross, ?_⟩
+  refine ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.conjTranspose_mul_left, hV₁, hV₂, hcross, ?_⟩
   rw [hF, bestRankFrobSq_eq_singularValueTailSq, htail]
 
 end NLAlib

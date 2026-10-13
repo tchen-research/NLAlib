@@ -44,7 +44,7 @@ theorem eq_sqrt_gram_of_isometry_mul_eq {A U : Matrix m n ℝ} {Q : Matrix n n �
   rw [← hA, Matrix.transpose_mul]
   have hSym : Qᵀ = Q := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hQ.isHermitian.eq
-  rw [hSym, Matrix.mul_assoc, ← Matrix.mul_assoc Uᵀ U Q, hU.transpose_mul_self, Matrix.one_mul]
+  rw [hSym, Matrix.mul_assoc, ← Matrix.mul_assoc Uᵀ U Q, (show Uᵀ * U = 1 from hU), Matrix.one_mul]
 
 /-- A wide real matrix has a coisometry on the right of its row-Gram square
 root. Orthonormal rows are the dimensionally correct wide formulation.
@@ -94,7 +94,7 @@ theorem exists_ne_isometry_mul_sqrt_gram_eq_of_rank_lt {A U : Matrix m n ℝ}
   let P := Q * moorePenroseInverse Q
   let T := P + P - 1
   have hP : P * P = P := mul_moorePenroseInverse_isIdempotentElem Q
-  have hPs : Pᵀ = P := (mul_moorePenroseInverse_isSymm Q).eq
+  have hPs : Pᵀ = P := (mul_moorePenroseInverse_isHermitian Q).eq
   have hT : Tᵀ * T = 1 := by
     dsimp [T]
     simp only [Matrix.transpose_sub, Matrix.transpose_add, Matrix.transpose_one, hPs,
@@ -109,14 +109,14 @@ theorem exists_ne_isometry_mul_sqrt_gram_eq_of_rank_lt {A U : Matrix m n ℝ}
   refine ⟨U * T, ?_, ?_, ?_⟩
   · change (U * T)ᵀ * (U * T) = 1
     rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Uᵀ U T,
-      hU.transpose_mul_self, Matrix.one_mul, hT]
+      (show Uᵀ * U = 1 from hU), Matrix.one_mul, hT]
   · change (U * T) * Q = A
     rw [Matrix.mul_assoc, hTQ]
     exact hA
   · intro hEq
     have hTI : T = 1 := by
       have h := congrArg (fun M : Matrix m n ℝ => Uᵀ * M) hEq
-      rwa [← Matrix.mul_assoc, hU.transpose_mul_self, Matrix.one_mul] at h
+      rwa [← Matrix.mul_assoc, (show Uᵀ * U = 1 from hU), Matrix.one_mul] at h
     have hPI : P = 1 := by
       ext i j
       have h := congrArg (fun M : Matrix n n ℝ => M i j) hTI
@@ -128,7 +128,7 @@ theorem exists_ne_isometry_mul_sqrt_gram_eq_of_rank_lt {A U : Matrix m n ℝ}
       rw [hPI, Matrix.rank_one] at h
       exact h.symm
     have hLeft : Q = Uᵀ * A := by
-      rw [← hA, ← Matrix.mul_assoc, hU.transpose_mul_self, Matrix.one_mul]
+      rw [← hA, ← Matrix.mul_assoc, (show Uᵀ * U = 1 from hU), Matrix.one_mul]
     have hBound : Q.rank ≤ A.rank := by
       rw [hLeft]
       exact Matrix.rank_mul_le_right _ _
@@ -171,14 +171,14 @@ theorem sqrt_rowGram_mul_eq_of_isometry_mul_sqrt_gram_eq {A U : Matrix n n ℝ}
     calc
       _ = U * Q * Q * Uᵀ := by
         simp only [Matrix.mul_assoc]
-        rw [← Matrix.mul_assoc Uᵀ U (Q * Uᵀ), hU.transpose_mul_self, Matrix.one_mul]
+        rw [← Matrix.mul_assoc Uᵀ U (Q * Uᵀ), (show Uᵀ * U = 1 from hU), Matrix.one_mul]
       _ = A * Aᵀ := by
         rw [← hAQ]
         simp only [Matrix.transpose_mul, hQs, Matrix.mul_assoc]
   have hRoot : CFC.sqrt (A * Aᵀ) = P := CFC.sqrt_unique hSq hP.nonneg
   rw [hRoot]
   change (U * Q * Uᵀ) * U = A
-  rw [Matrix.mul_assoc, hU.transpose_mul_self, Matrix.mul_one]
+  rw [Matrix.mul_assoc, (show Uᵀ * U = 1 from hU), Matrix.mul_one]
   exact hA
 
 omit [DecidableEq n] in
@@ -194,7 +194,8 @@ theorem polar_coisometry_unique_iff_rank_eq_card [DecidableEq m]
     simpa only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial] using
       (CFC.sqrt_nonneg (A * Aᵀ)).star_eq
   have hUt : HasOrthonormalCols Uᵀ := by
-    simpa only [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose]
+    simpa only [hasOrthonormalCols_iff_conjTranspose_mul_self,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
   have hAt : Uᵀ * CFC.sqrt (Aᵀᵀ * Aᵀ) = Aᵀ := by
     simpa only [Matrix.transpose_mul, hSym, Matrix.transpose_transpose] using
       congrArg Matrix.transpose hA
@@ -211,7 +212,8 @@ theorem polar_coisometry_unique_iff_rank_eq_card [DecidableEq m]
   · intro h V hV hVA
     apply Matrix.transpose_injective
     have hVt : HasOrthonormalCols Vᵀ := by
-      simpa only [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose] using hV
+      simpa only [hasOrthonormalCols_iff_conjTranspose_mul_self,
+        Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hV
     apply h Vᵀ hVt
     simpa only [Matrix.transpose_mul, Matrix.transpose_transpose, hSym] using
       congrArg Matrix.transpose hVA

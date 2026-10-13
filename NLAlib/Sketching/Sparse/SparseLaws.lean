@@ -11,7 +11,6 @@ signs. Source: manuscript `sh:sparse`, pinned sparse-Fock commit
 -/
 
 noncomputable section
-set_option autoImplicit false
 namespace NLAlib
 
 /-- The two signs carry the discrete sigma-algebra. Source: the explicit

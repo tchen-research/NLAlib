@@ -13,8 +13,7 @@ Supports the `sparse-ose` moment proof.
 -/
 
 noncomputable section
-set_option autoImplicit false
-open scoped BigOperators InnerProductSpace Matrix.Norms.L2Operator
+open scoped InnerProductSpace Matrix.Norms.L2Operator
 namespace NLAlib.SparseSketch.Light
 variable {d m n ell : ℕ}
 
@@ -29,7 +28,8 @@ theorem coordinateEnergy_mulVec_eq_gram
     (A : Matrix I J ℝ) (x : J → ℝ) :
     sumSq (A.mulVec x) =
       quadForm (A.transpose * A) x := by
-  rw [sumSq_eq_dotProduct, quadForm_transpose_mul_self]
+  rw [sumSq_eq_dotProduct, ← Matrix.conjTranspose_eq_transpose_of_trivial A,
+    quadForm_conjTranspose_mul_self, star_trivial]
 
 /-- The combined synthesis domain is the disjoint union of the individual particle domains.
 Source: ported sparse-Fock shared-leg/vacuum proof, commit
@@ -84,7 +84,7 @@ theorem coordinateQuadratic_VAll_gram_eq_sum_blocks
         ((VAllMatrix (m := m) F ell).transpose * VAllMatrix F ell) z =
       ∑ k, ∑ l, blockGramPairing F ell z k l := by
   classical
-  simp only [quadForm_eq_dotProduct, Matrix.mulVec, dotProduct,
+  simp only [quadForm_def, star_trivial, Matrix.mulVec, dotProduct,
     Matrix.mul_apply, Matrix.transpose_apply, VAllMatrix,
     blockGramPairing]
   rw [Fintype.sum_sigma]
@@ -216,7 +216,7 @@ theorem gramQuadratic_le_of_energy_le
     calc
       sumSq z = quadForm (A * A.transpose) x := hgram
       _ = ∑ i, x i * A.mulVec z i := by
-        simp only [quadForm_eq_dotProduct, dotProduct]
+        simp only [quadForm_def, star_trivial, dotProduct]
         rw [Matrix.mulVec_mulVec]
   have hcs : sumSq z ^ 2 ≤
       sumSq x * sumSq (A.mulVec z) := by

@@ -25,9 +25,11 @@ theorem sum_sq_overlap_row_le_one {U : Matrix m n ℝ} {Q : Matrix m r ℝ}
     (∑ j, (Uᵀ*Q) i j^2) ≤ 1 := by
   let u : m → ℝ := fun s => U s i
   have hcol : u ⬝ᵥ u=1 := by
-    have hh := congrArg (fun T : Matrix n n ℝ => T i i) hU.transpose_mul_self
+    have hh := congrArg (fun T : Matrix n n ℝ => T i i) (show Uᵀ * U = 1 from hU)
     simpa only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply_eq, u, dotProduct] using hh
-  have hb := transpose_mulVec_dotProduct_self_le hQ u
+  have hb : (Qᵀ *ᵥ u) ⬝ᵥ (Qᵀ *ᵥ u) ≤ u ⬝ᵥ u := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Real.norm_eq_abs, sq_abs,
+      dotProduct, ← sq] using sum_norm_sq_conjTranspose_mulVec_le hQ u
   rw [hcol] at hb
   have heq : (∑ j, (Uᵀ*Q) i j^2)=(Qᵀ*ᵥu) ⬝ᵥ (Qᵀ*ᵥu) := by
     simp only [dotProduct, Matrix.mul_apply, Matrix.transpose_apply, Matrix.mulVec, u, ← sq]
@@ -47,7 +49,8 @@ theorem sum_sum_sq_overlap_eq_card {U : Matrix m n ℝ} {Q : Matrix m r ℝ}
     (hUc : U*Uᵀ=1) (hQ : HasOrthonormalCols Q) :
     (∑ i, ∑ j, (Uᵀ*Q) i j^2)=(Fintype.card r : ℝ) := by
   have hUt : Uᵀᵀ*Uᵀ=1 := by simpa only [Matrix.transpose_transpose] using hUc
-  rw [← frobSq_eq_sum_sq, frobSq_mul_left_of_orthonormal hUt, frobSq_frame_eq_card hQ]
+  rw [← frobSq_eq_sum_sq, frobSq_mul_left_of_orthonormal (Q := Uᵀ) hUt,
+    frobSq_frame_eq_card hQ]
 
 omit [DecidableEq m] [DecidableEq r] in
 /-- A spectral diagonalization turns an actual compression trace into

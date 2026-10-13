@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.FockModel.LadderMatrices
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Typed sparse-Fock word inventory

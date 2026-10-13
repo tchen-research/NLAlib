@@ -32,7 +32,7 @@ theorem mem_spectrum_of_diagonal_intertwining {A V : Matrix n n ℂ} {d : n → 
       Pi.smul_apply, smul_eq_mul, mul_comm] using h
   exact Matrix.mem_spectrum_of_isRoot_charpoly (isRoot_charpoly_of_mulVec_eq_smul hcol hAi)
 
-/-- The Euclidean residual Bauer–Fike bound in a form without division.
+/-- The Euclidean projResidual Bauer–Fike bound in a form without division.
 Source: Horn–Johnson (2013), Corollary 6.3.4; the norm on matrices is the
 Euclidean operator norm, and the vector norm is explicitly Euclidean.
 atlas: bauer-fike (partial) -/

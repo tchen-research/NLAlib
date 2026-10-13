@@ -11,7 +11,6 @@ Source: operator manuscript `eq:recursion`, `thm:khintchine`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 open MeasureTheory Matrix
 open scoped Matrix Matrix.Norms.L2Operator ComplexOrder

@@ -112,9 +112,9 @@ theorem specNorm_mul_pow_le_specNorm_mul_gram_pow_mul (P : Matrix m m ℝ) (hPs 
       rw [hs, ← pow_succ, ← pow_add]; ring_nf
     rw [this, hMdef]; simp only [Matrix.mul_assoc]
   have hA2 : specNorm (P * A) ^ 2 = specNorm (P * M * P) := by
-    rw [← specNorm_mul_transpose_self, hH]
+    rw [← specNorm_mul_conjTranspose_self, Matrix.conjTranspose_eq_transpose_of_trivial, hH]
   have hB2 : specNorm (P * M ^ q * A) ^ 2 = specNorm (P * M ^ s * P) := by
-    rw [← specNorm_mul_transpose_self, hHs]
+    rw [← specNorm_mul_conjTranspose_self, Matrix.conjTranspose_eq_transpose_of_trivial, hHs]
   -- The key inequality `‖PMP‖^s ≤ ‖PM^sP‖`.
   have hkey : specNorm (P * M * P) ^ s ≤ specNorm (P * M ^ s * P) := by
     rcases isEmpty_or_nonempty m with hm | hm
@@ -133,11 +133,13 @@ theorem specNorm_mul_pow_le_specNorm_mul_gram_pow_mul (P : Matrix m m ℝ) (hPs 
         rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec,
           ← Matrix.mulVec_transpose, hPs]
       have hy : (P *ᵥ x) ⬝ᵥ (P *ᵥ x) ≤ 1 := by
-        rw [mulVec_dotProduct_mulVec_self, hPs, show P * P = P from hPi]
+        have hPx := star_mulVec_dotProduct_mulVec_self P x
+        simp only [star_trivial, Matrix.conjTranspose_eq_transpose_of_trivial] at hPx
+        rw [hPx, hPs, show P * P = P from hPi]
         have h := abs_dotProduct_mulVec_le_specNorm P x
         rw [hx, mul_one] at h
         exact (le_abs_self _).trans (h.trans
-          (specNorm_le_one_of_isSymm_of_isIdempotentElem hPs hPi))
+          (Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem hPs hPi))
       have hJ := dotProduct_mulVec_pow_le_dotProduct_pow_mulVec hMpsd hy (by omega : 1 ≤ s)
       rw [← hsand, ← hsand, hval] at hJ
       refine hJ.trans ?_
@@ -157,12 +159,14 @@ orthonormal columns, so that hypothesis is dropped. Atlas `power-iteration-deter
 atlas: power-iteration-deterministic -/
 theorem specNorm_residual_pow_le {q' : Type*} [Fintype q'] [DecidableEq q']
     {Q : Matrix m q' ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) (q : ℕ) :
-    specNorm (residual Q A) ^ (2 * q + 1) ≤ specNorm (residual Q ((A * Aᵀ) ^ q * A)) := by
+    specNorm (projResidual Q A) ^ (2 * q + 1) ≤ specNorm (projResidual Q ((A * Aᵀ) ^ q * A)) := by
   have hPs : (1 - Q * Qᵀ)ᵀ = 1 - Q * Qᵀ := by
-    rw [Matrix.transpose_sub, Matrix.transpose_one, mul_transpose_symm]
+    rw [Matrix.transpose_sub, Matrix.transpose_one, Matrix.transpose_mul,
+      Matrix.transpose_transpose]
   have h := specNorm_mul_pow_le_specNorm_mul_gram_pow_mul (1 - Q * Qᵀ) hPs
-    (one_sub_mul_transpose_idem hQ) A q
-  rwa [residual_eq_one_sub_mul, residual_eq_one_sub_mul, ← Matrix.mul_assoc]
+    (one_sub_mul_conjTranspose_idem hQ) A q
+  rwa [residual_eq_one_sub_mul, residual_eq_one_sub_mul, ← Matrix.mul_assoc,
+    Matrix.conjTranspose_eq_transpose_of_trivial]
 
 /-- **Deterministic power-iteration bound** (HMT 2011, Thm 9.2, as printed):
 `‖(I − QQᵀ)A‖ ≤ ‖(I − QQᵀ)(AAᵀ)^q A‖^{1/(2q+1)}` for any `Q` with orthonormal columns.
@@ -171,12 +175,12 @@ Atlas `power-iteration-deterministic`.
 atlas: power-iteration-deterministic -/
 theorem specNorm_residual_le_rpow {q' : Type*} [Fintype q'] [DecidableEq q']
     {Q : Matrix m q' ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) (q : ℕ) :
-    specNorm (residual Q A) ≤
-      specNorm (residual Q ((A * Aᵀ) ^ q * A)) ^ (1 / (2 * (q : ℝ) + 1)) := by
+    specNorm (projResidual Q A) ≤
+      specNorm (projResidual Q ((A * Aᵀ) ^ q * A)) ^ (1 / (2 * (q : ℝ) + 1)) := by
   have h := specNorm_residual_pow_le hQ A q
   have hne : 2 * q + 1 ≠ 0 := by omega
   have hcast : (1 / (2 * (q : ℝ) + 1)) = ((2 * q + 1 : ℕ) : ℝ)⁻¹ := by push_cast; ring
-  rw [hcast, ← Real.pow_rpow_inv_natCast (specNorm_nonneg (residual Q A)) hne]
+  rw [hcast, ← Real.pow_rpow_inv_natCast (specNorm_nonneg (projResidual Q A)) hne]
   exact Real.rpow_le_rpow (pow_nonneg (specNorm_nonneg _) _) h
     (inv_nonneg.2 (Nat.cast_nonneg _))
 

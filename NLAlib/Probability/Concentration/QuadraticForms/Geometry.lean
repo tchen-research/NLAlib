@@ -23,7 +23,7 @@ Atlas: `hanson-wright`. Source: HighDimProb commit c0cb8d9e0ff2c3408c92681eb8bf0
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped BigOperators NNReal Matrix.Norms.L2Operator
+open scoped NNReal Matrix.Norms.L2Operator
 
 noncomputable section
 set_option maxRecDepth 5000

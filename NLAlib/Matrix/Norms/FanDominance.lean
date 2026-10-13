@@ -11,7 +11,7 @@ Atlas: `unitarily-invariant-norm-def`, `lidskii`.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 

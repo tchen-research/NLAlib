@@ -33,7 +33,6 @@ Atlas: `rsvd-expected-error`, `gn-expected-error`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open MeasureTheory ProbabilityTheory
 

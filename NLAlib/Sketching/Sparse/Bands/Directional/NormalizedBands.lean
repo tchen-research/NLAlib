@@ -6,7 +6,6 @@ import NLAlib.Sketching.Sparse.Bands.CoefficientBounds
 import NLAlib.Matrix.Norms.Core
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Normalized directional mixed-band estimates
@@ -20,7 +19,7 @@ namespace NLAlib.SparseSketch
 
 namespace Directional
 
-open scoped BigOperators Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator
 
 noncomputable section
 

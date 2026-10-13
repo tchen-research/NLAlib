@@ -11,7 +11,7 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators ENNReal
+open scoped Matrix Matrix.Norms.L2Operator ENNReal
 
 namespace NLAlib
 
@@ -95,7 +95,7 @@ theorem IsSVD.schattenDualCoefficients_attain {m n : ℕ}
       (Real.rpow_le_rpow (singularValues_nonneg A j) (singularValues_antitone A hij) hpq.sub_one_pos.le)
       (Real.rpow_nonneg (schattenNorm_nonneg A p) _)
   constructor
-  · rw [schattenNorm_mul_rectDiag_mul_transpose h.transpose_mul_left h.transpose_mul_right
+  · rw [schattenNorm_mul_rectDiag_mul_transpose h.conjTranspose_mul_left h.conjTranspose_mul_right
       _ hb0 hb, sum_schattenDualCoefficients_rpow_eq_one A hpq hA, Real.one_rpow]
   · rw [h.frobInner_mul_rectDiag_mul_transpose,
       sum_singularValues_mul_schattenDualCoefficients_eq A hpq hA]
@@ -146,7 +146,7 @@ theorem rank_mul_rectDiag_polarSingularCoefficients_mul_transpose {m n r : ℕ}
     {U : Matrix (Fin m) (Fin m) ℝ} {V : Matrix (Fin n) (Fin n) ℝ}
     (hU : HasOrthonormalCols U) (hV : HasOrthonormalCols V) (hr : r ≤ min m n) :
     (U * (rectDiag (polarSingularCoefficients r) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ).rank = r := by
-  rw [rank_eq_card_singularValues_ne_zero]
+  rw [rank_eq_card_singularValues_ne_zero, Fintype.card_fin, Fintype.card_fin]
   have hfilter : ((Finset.range (min m n)).filter fun i =>
       singularValues (U * (rectDiag (polarSingularCoefficients r) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) i ≠ 0) =
       Finset.range r := by
@@ -154,16 +154,18 @@ theorem rank_mul_rectDiag_polarSingularCoefficients_mul_transpose {m n r : ℕ}
     simp only [Finset.mem_filter, Finset.mem_range]
     constructor
     · rintro ⟨hi, hne⟩
-      rw [singularValues_eq_of_eq_mul_rectDiag_mul hU.transpose_mul_self hV.transpose_mul_self
-        (polarSingularCoefficients_nonneg r)
+      rw [singularValues_eq_of_eq_mul_rectDiag_mul
+        (A := U * (rectDiag (polarSingularCoefficients r) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ)
+        (show Uᵀ * U = 1 from hU) (show Vᵀ * V = 1 from hV) (polarSingularCoefficients_nonneg r)
         (polarSingularCoefficients_antitone r) rfl hi] at hne
       by_contra hir
       simp [polarSingularCoefficients, hir] at hne
     · intro hi
       have him : i < min m n := hi.trans_le hr
       refine ⟨him, ?_⟩
-      rw [singularValues_eq_of_eq_mul_rectDiag_mul hU.transpose_mul_self hV.transpose_mul_self
-        (polarSingularCoefficients_nonneg r)
+      rw [singularValues_eq_of_eq_mul_rectDiag_mul
+        (A := U * (rectDiag (polarSingularCoefficients r) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ)
+        (show Uᵀ * U = 1 from hU) (show Vᵀ * V = 1 from hV) (polarSingularCoefficients_nonneg r)
         (polarSingularCoefficients_antitone r) rfl him]
       simp [polarSingularCoefficients, hi]
   rw [hfilter, Finset.card_range]
@@ -211,7 +213,7 @@ theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
       split_ifs <;> norm_num
   constructor
   · rw [← schattenNorm_one, schattenNorm_mul_rectDiag_mul_transpose
-      h.transpose_mul_left h.transpose_mul_right _ hb0 hb]
+      h.conjTranspose_mul_left h.conjTranspose_mul_right _ hb0 hb]
     simp [leadingSingularCoefficients, hN]
   · rw [h.frobInner_mul_rectDiag_mul_transpose]
     simpa [leadingSingularCoefficients, hN] using hfirst

@@ -10,7 +10,7 @@ the sketch `S = k^{-1/2} G` is an `ε`-subspace embedding for `range U` with pro
 `1 − δ` as soon as `k ≥ 18 (d + 2 log(2/δ)) / ε²`
 (`one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix`).
 
-Proof: `G U` is a `k × d` standard Gaussian matrix (`gaussianMatrix_map_mul_right`); with
+Proof: `G U` is a `k × d` standard Gaussian matrix (`hasLaw_gaussianMatrix_mul_right`); with
 `t = √(2 log(2/δ))`, with probability at least `1 − 2e^{-t²/2} = 1 − δ` its singular values lie in
 `[√k − √d − t, √k + √d + t]` (`measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix`,
 `measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix`). With `a = (√d + t)/√k`, the hypothesis
@@ -73,18 +73,18 @@ theorem one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix {k m d : ℕ}
     (U : Matrix (Fin m) (Fin d) ℝ) (hU : HasOrthonormalCols U) {ε δ : ℝ}
     (hε0 : 0 < ε) (hε1 : ε ≤ 1) (hδ0 : 0 < δ) (hδ1 : δ ≤ 1)
     (hk : 18 * ((d : ℝ) + 2 * Real.log (2 / δ)) / ε ^ 2 ≤ k) :
-    1 - ENNReal.ofReal δ ≤
-      gaussianMatrix k m {G | IsSubspaceEmbedding ((1 / Real.sqrt k) • Matrix.of G) U ε} := by
-  set μ := gaussianMatrix k m
-  set E := {G : Fin k → Fin m → ℝ | IsSubspaceEmbedding ((1 / Real.sqrt k) • Matrix.of G) U ε}
+    1 - δ ≤
+      (gaussianMatrix (Fin k) (Fin m)).real
+        {G | IsSubspaceEmbedding ((1 / Real.sqrt k) • G) U ε} := by
+  set μ := gaussianMatrix (Fin k) (Fin m)
+  set E := {G : Matrix (Fin k) (Fin m) ℝ | IsSubspaceEmbedding ((1 / Real.sqrt k) • G) U ε}
   -- It suffices to bound the complement by `δ`.
-  suffices hc : μ Eᶜ ≤ ENNReal.ofReal δ by
-    have h1 : (1 : ENNReal) ≤ μ E + μ Eᶜ := by
-      calc (1 : ENNReal) = μ Set.univ := measure_univ.symm
-        _ = μ (E ∪ Eᶜ) := by rw [Set.union_compl_self]
-        _ ≤ μ E + μ Eᶜ := measure_union_le _ _
-    rw [tsub_le_iff_right]
-    exact h1.trans (add_le_add le_rfl hc)
+  suffices hc : μ.real Eᶜ ≤ δ by
+    have h1 : (1 : ℝ) ≤ μ.real E + μ.real Eᶜ := by
+      calc (1 : ℝ) = μ.real Set.univ := by simp
+        _ = μ.real (E ∪ Eᶜ) := by rw [Set.union_compl_self]
+        _ ≤ μ.real E + μ.real Eᶜ := measureReal_union_le _ _
+    linarith
   rcases Nat.eq_zero_or_pos d with hd | hd
   · -- `d = 0`: every sketch is an embedding of the zero subspace.
     subst hd
@@ -96,8 +96,8 @@ theorem one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix {k m d : ℕ}
       have hx : x = 0 := Subsingleton.elim _ _
       subst hx
       simp
-    rw [hE, measure_empty]
-    exact bot_le
+    rw [hE, measureReal_empty]
+    exact hδ0.le
   -- Parameters.
   have hlog : 0 ≤ Real.log (2 / δ) :=
     Real.log_nonneg (by rw [le_div_iff₀ hδ0]; linarith)
@@ -131,58 +131,58 @@ theorem one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix {k m d : ℕ}
     rw [ha, mul_div_assoc', div_le_iff₀ hsk0]
     exact h4
   -- The good event for `G U` and the pullback.
-  set φ : (Fin k → Fin m → ℝ) → (Fin k → Fin d → ℝ) := fun G => Matrix.of.symm (Matrix.of G * U)
-  have hφ : Measurable φ := by
-    refine measurable_pi_lambda _ fun i => measurable_pi_lambda _ fun j => ?_
-    simp only [φ, Matrix.of_symm_apply, Matrix.mul_apply, Matrix.of_apply]
-    fun_prop
-  set S1 := {H : Fin k → Fin d → ℝ | sigmaMin (Matrix.of H) ≤ Real.sqrt k - Real.sqrt d - t}
-  set S2 := {H : Fin k → Fin d → ℝ | Real.sqrt k + Real.sqrt d + t ≤ specNorm (Matrix.of H)}
+  set φ : (Matrix (Fin k) (Fin m) ℝ) → (Matrix (Fin k) (Fin d) ℝ) := fun G => (G * U)
+  have hφ : Measurable φ := measurable_id.matrix_mul measurable_const
+  set S1 := {H : Matrix (Fin k) (Fin d) ℝ | sigmaMin H ≤ Real.sqrt k - Real.sqrt d - t}
+  set S2 := {H : Matrix (Fin k) (Fin d) ℝ | Real.sqrt k + Real.sqrt d + t ≤ specNorm H}
   have hsub : Eᶜ ⊆ φ ⁻¹' (S1 ∪ S2) := by
     intro G hG
     by_contra hgood
     simp only [Set.mem_preimage, Set.mem_union, not_or, not_le, S1, S2, Set.mem_ofPred_eq] at hgood
     obtain ⟨hlo, hhi⟩ := hgood
     apply hG
-    have hGU : Matrix.of (φ G) = Matrix.of G * U := by simp [φ]
+    have hGU : (φ G) = G * U := by simp [φ]
     rw [hGU] at hlo hhi
-    have hSU : ∀ x : Fin d → ℝ, ((1 / sk) • Matrix.of G * U) *ᵥ x =
-        (1 / sk) • ((Matrix.of G * U) *ᵥ x) := by
+    have hSU : ∀ x : Fin d → ℝ, ((1 / sk) • G * U) *ᵥ x =
+        (1 / sk) • ((G * U) *ᵥ x) := by
       intro x; rw [Matrix.smul_mul, Matrix.smul_mulVec]
-    have hnorm : ∀ x : Fin d → ℝ, Real.sqrt ((((1 / sk) • Matrix.of G * U) *ᵥ x) ⬝ᵥ
-        (((1 / sk) • Matrix.of G * U) *ᵥ x)) =
-        (1 / sk) * Real.sqrt (((Matrix.of G * U) *ᵥ x) ⬝ᵥ ((Matrix.of G * U) *ᵥ x)) := by
+    have hnorm : ∀ x : Fin d → ℝ, Real.sqrt ((((1 / sk) • G * U) *ᵥ x) ⬝ᵥ
+        (((1 / sk) • G * U) *ᵥ x)) =
+        (1 / sk) * Real.sqrt (((G * U) *ᵥ x) ⬝ᵥ ((G * U) *ᵥ x)) := by
       intro x
       rw [hSU, smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul, ← mul_assoc,
         Real.sqrt_mul (mul_self_nonneg _), Real.sqrt_mul_self (by positivity)]
     refine isSubspaceEmbedding_of_forall_sqrt_le hU hε1 ha0 haε (fun x => ?_) (fun x => ?_)
     · rw [hnorm]
-      have h := sigmaMin_mul_sqrt_le (Matrix.of G * U) x
+      have h := sigmaMin_mul_sqrt_le (G * U) x
       have hx := Real.sqrt_nonneg (x ⬝ᵥ x)
-      have hlo' : (1 - a) * sk ≤ sigmaMin (Matrix.of G * U) := by
+      have hlo' : (1 - a) * sk ≤ sigmaMin (G * U) := by
         rw [ha, sub_mul, div_mul_cancel₀ _ hsk0.ne']; linarith
       calc (1 - a) * Real.sqrt (x ⬝ᵥ x)
           = ((1 - a) * sk) * Real.sqrt (x ⬝ᵥ x) / sk := by field_simp
-        _ ≤ sigmaMin (Matrix.of G * U) * Real.sqrt (x ⬝ᵥ x) / sk := by gcongr
-        _ ≤ Real.sqrt (((Matrix.of G * U) *ᵥ x) ⬝ᵥ ((Matrix.of G * U) *ᵥ x)) / sk := by gcongr
+        _ ≤ sigmaMin (G * U) * Real.sqrt (x ⬝ᵥ x) / sk := by gcongr
+        _ ≤ Real.sqrt (((G * U) *ᵥ x) ⬝ᵥ ((G * U) *ᵥ x)) / sk := by gcongr
         _ = _ := by rw [one_div, inv_mul_eq_div]
     · rw [hnorm]
-      have h := sqrt_mulVec_dotProduct_le_specNorm_mul (Matrix.of G * U) x
+      have h := sqrt_mulVec_dotProduct_le_specNorm_mul (G * U) x
       have hx := Real.sqrt_nonneg (x ⬝ᵥ x)
-      have hhi' : specNorm (Matrix.of G * U) ≤ (1 + a) * sk := by
+      have hhi' : specNorm (G * U) ≤ (1 + a) * sk := by
         rw [ha, add_mul, div_mul_cancel₀ _ hsk0.ne']; linarith
-      calc 1 / sk * Real.sqrt (((Matrix.of G * U) *ᵥ x) ⬝ᵥ ((Matrix.of G * U) *ᵥ x))
-          ≤ 1 / sk * (specNorm (Matrix.of G * U) * Real.sqrt (x ⬝ᵥ x)) := by gcongr
+      calc 1 / sk * Real.sqrt (((G * U) *ᵥ x) ⬝ᵥ ((G * U) *ᵥ x))
+          ≤ 1 / sk * (specNorm (G * U) * Real.sqrt (x ⬝ᵥ x)) := by gcongr
         _ ≤ 1 / sk * ((1 + a) * sk * Real.sqrt (x ⬝ᵥ x)) := by gcongr
         _ = (1 + a) * Real.sqrt (x ⬝ᵥ x) := by field_simp
   have hpos : 0 ≤ Real.exp (-t ^ 2 / 2) := (Real.exp_pos _).le
-  calc μ Eᶜ ≤ μ (φ ⁻¹' (S1 ∪ S2)) := measure_mono hsub
-    _ ≤ μ.map φ (S1 ∪ S2) := Measure.le_map_apply hφ.aemeasurable _
-    _ = gaussianMatrix k d (S1 ∪ S2) := by rw [gaussianMatrix_map_mul_right U hU]
-    _ ≤ gaussianMatrix k d S1 + gaussianMatrix k d S2 := measure_union_le _ _
-    _ ≤ ENNReal.ofReal (Real.exp (-t ^ 2 / 2)) + ENNReal.ofReal (Real.exp (-t ^ 2 / 2)) :=
+  calc μ.real Eᶜ ≤ μ.real (φ ⁻¹' (S1 ∪ S2)) := measureReal_mono hsub
+    _ ≤ (μ.map φ).real (S1 ∪ S2) :=
+        ENNReal.toReal_mono (measure_ne_top _ _) (Measure.le_map_apply hφ.aemeasurable _)
+    _ = (gaussianMatrix (Fin k) (Fin d)).real (S1 ∪ S2) := by
+        rw [(hasLaw_gaussianMatrix_mul_right U hU).map_eq]
+    _ ≤ (gaussianMatrix (Fin k) (Fin d)).real S1 + (gaussianMatrix (Fin k) (Fin d)).real S2 :=
+        measureReal_union_le _ _
+    _ ≤ Real.exp (-t ^ 2 / 2) + Real.exp (-t ^ 2 / 2) :=
         add_le_add (measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix hd t ht0)
           (measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix t ht0)
-    _ = ENNReal.ofReal δ := by rw [← ENNReal.ofReal_add hpos hpos, ← two_mul, hδeq]
+    _ = δ := by rw [← two_mul, hδeq]
 
 end NLAlib

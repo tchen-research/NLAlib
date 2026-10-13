@@ -23,13 +23,13 @@ namespace NLAlib
 variable {n t : ℕ}
 
 /-- The linear form `G ↦ ∑ₑ u e * G e`. -/
-private def L {p m : ℕ} (u : Fin p × Fin m → ℝ) (G : Fin p → Fin m → ℝ) : ℝ :=
+private def L {p m : ℕ} (u : Fin p × Fin m → ℝ) (G : Matrix (Fin p) (Fin m) ℝ) : ℝ :=
   ∑ e, u e * G e.1 e.2
 
 /-- Euclidean inner product of coefficient vectors. -/
 private def ip {p m : ℕ} (u v : Fin p × Fin m → ℝ) : ℝ := ∑ e, u e * v e
 
-private lemma L_eq_linForm (u : Fin n × Fin t → ℝ) (G : Fin n → Fin t → ℝ) :
+private lemma L_eq_linForm (u : Fin n × Fin t → ℝ) (G : Matrix (Fin n) (Fin t) ℝ) :
     L u G = linForm (Function.curry u) G := by
   simp only [L, linForm, Fintype.sum_prod_type, Function.curry_apply]
 
@@ -38,22 +38,22 @@ private lemma ip_eq_sum_sum (u v : Fin n × Fin t → ℝ) :
   simp only [ip, Fintype.sum_prod_type, Function.curry_apply]
 
 private lemma integrable_L2 (u v : Fin n × Fin t → ℝ) :
-    Integrable (fun G => L u G * L v G) (gaussianMatrix n t) := by
+    Integrable (fun G => L u G * L v G) (gaussianMatrix (Fin n) (Fin t)) := by
   simp_rw [L_eq_linForm]
   exact integrable_linForm_mul_two_gaussianMatrix _ _
 
 private lemma integrable_L4 (u v w z : Fin n × Fin t → ℝ) :
-    Integrable (fun G => L u G * L v G * L w G * L z G) (gaussianMatrix n t) := by
+    Integrable (fun G => L u G * L v G * L w G * L z G) (gaussianMatrix (Fin n) (Fin t)) := by
   simp_rw [L_eq_linForm]
   exact integrable_linForm_mul_four_gaussianMatrix _ _ _ _
 
 private lemma integral_L2 (u v : Fin n × Fin t → ℝ) :
-    ∫ G, L u G * L v G ∂(gaussianMatrix n t) = ip u v := by
+    ∫ G, L u G * L v G ∂(gaussianMatrix (Fin n) (Fin t)) = ip u v := by
   simp_rw [L_eq_linForm, ip_eq_sum_sum]
   exact integral_linForm_mul_two_gaussianMatrix _ _
 
 private lemma integral_L4 (u v w z : Fin n × Fin t → ℝ) :
-    ∫ G, L u G * L v G * L w G * L z G ∂(gaussianMatrix n t)
+    ∫ G, L u G * L v G * L w G * L z G ∂(gaussianMatrix (Fin n) (Fin t))
       = ip u v * ip w z + ip u w * ip v z + ip u z * ip v w := by
   simp_rw [L_eq_linForm, ip_eq_sum_sum]
   exact integral_linForm_mul_four_gaussianMatrix _ _ _ _
@@ -62,7 +62,7 @@ private lemma integral_L4 (u v w z : Fin n × Fin t → ℝ) :
 private def col (f : Fin n → ℝ) (ℓ : Fin t) : Fin n × Fin t → ℝ :=
   fun e => if e.2 = ℓ then f e.1 else 0
 
-private lemma L_col (f : Fin n → ℝ) (ℓ : Fin t) (Ω : Fin n → Fin t → ℝ) :
+private lemma L_col (f : Fin n → ℝ) (ℓ : Fin t) (Ω : Matrix (Fin n) (Fin t) ℝ) :
     L (col f ℓ) Ω = ∑ k, f k * Ω k ℓ := by
   simp [L, col, Fintype.sum_prod_type, ite_mul]
 
@@ -73,7 +73,7 @@ private lemma ip_col (f g : Fin n → ℝ) (ℓ ℓ' : Fin t) :
   · simp [ip, col, Fintype.sum_prod_type, h]
     intro h'; exact absurd h'.symm h
 
-private lemma entry_sq_expand (f g : Fin n → ℝ) (r : ℝ) (Ω : Fin n → Fin t → ℝ) :
+private lemma entry_sq_expand (f g : Fin n → ℝ) (r : ℝ) (Ω : Matrix (Fin n) (Fin t) ℝ) :
     (r * ∑ ℓ, L (col f ℓ) Ω * L (col g ℓ) Ω - ∑ k, f k * g k) ^ 2
       = r ^ 2 * (∑ ℓ, ∑ ℓ', L (col f ℓ) Ω * L (col g ℓ) Ω * L (col f ℓ') Ω * L (col g ℓ') Ω)
         - 2 * r * (∑ k, f k * g k) * (∑ ℓ, L (col f ℓ) Ω * L (col g ℓ) Ω)
@@ -86,7 +86,7 @@ private lemma entry_sq_expand (f g : Fin n → ℝ) (r : ℝ) (Ω : Fin n → Fi
 
 private lemma integrable_entry_sq (f g : Fin n → ℝ) (r : ℝ) :
     Integrable (fun Ω => (r * ∑ ℓ, L (col f ℓ) Ω * L (col g ℓ) Ω - ∑ k, f k * g k) ^ 2)
-      (gaussianMatrix n t) := by
+      (gaussianMatrix (Fin n) (Fin t)) := by
   simp_rw [entry_sq_expand]
   refine ((Integrable.const_mul ?_ _).sub (Integrable.const_mul ?_ _)).add (integrable_const _)
   · exact integrable_finsetSum _ fun ℓ _ => integrable_finsetSum _ fun ℓ' _ =>
@@ -95,13 +95,13 @@ private lemma integrable_entry_sq (f g : Fin n → ℝ) (r : ℝ) :
 
 private lemma integral_entry_sq (ht : 1 ≤ t) (f g : Fin n → ℝ) :
     ∫ Ω, ((1 / (t : ℝ)) * ∑ ℓ, L (col f ℓ) Ω * L (col g ℓ) Ω - ∑ k, f k * g k) ^ 2
-        ∂(gaussianMatrix n t)
+        ∂(gaussianMatrix (Fin n) (Fin t))
       = ((∑ k, f k ^ 2) * (∑ k, g k ^ 2) + (∑ k, f k * g k) ^ 2) / t := by
   simp_rw [entry_sq_expand]
-  have i4 := integrable_finsetSum (μ := gaussianMatrix n t) Finset.univ fun ℓ _ =>
+  have i4 := integrable_finsetSum (μ := gaussianMatrix (Fin n) (Fin t)) Finset.univ fun ℓ _ =>
     integrable_finsetSum Finset.univ fun ℓ' _ =>
       integrable_L4 (col f ℓ) (col g ℓ) (col f ℓ') (col g ℓ')
-  have i2 := integrable_finsetSum (μ := gaussianMatrix n t) Finset.univ fun ℓ _ =>
+  have i2 := integrable_finsetSum (μ := gaussianMatrix (Fin n) (Fin t)) Finset.univ fun ℓ _ =>
       integrable_L2 (col f ℓ) (col g ℓ)
   rw [integral_add (by exact (i4.const_mul _).sub (i2.const_mul _)) (integrable_const _),
     integral_sub (by exact i4.const_mul _) (by exact i2.const_mul _), integral_const_mul,
@@ -109,7 +109,7 @@ private lemma integral_entry_sq (ht : 1 ≤ t) (f g : Fin n → ℝ) :
       integrable_L4 _ _ _ _,
     integral_finsetSum _ fun ℓ _ => integrable_L2 _ _]
   have h4 : ∀ ℓ : Fin t, ∫ Ω, ∑ ℓ' : Fin t,
-      L (col f ℓ) Ω * L (col g ℓ) Ω * L (col f ℓ') Ω * L (col g ℓ') Ω ∂(gaussianMatrix n t)
+      L (col f ℓ) Ω * L (col g ℓ) Ω * L (col f ℓ') Ω * L (col g ℓ') Ω ∂(gaussianMatrix (Fin n) (Fin t))
       = ∑ ℓ' : Fin t, ((∑ k, f k * g k) ^ 2 + (if ℓ = ℓ' then
           (∑ k, f k * f k) * (∑ k, g k * g k) + (∑ k, f k * g k) ^ 2 else 0)) := by
     intro ℓ
@@ -127,11 +127,11 @@ private lemma integral_entry_sq (ht : 1 ≤ t) (f g : Fin n → ℝ) :
   ring
 
 private lemma entry_sub_eq {a b : ℕ} (M : Matrix (Fin a) (Fin n) ℝ)
-    (N : Matrix (Fin b) (Fin n) ℝ) (Ω : Fin n → Fin t → ℝ) (i : Fin a) (j : Fin b) :
-    (M * ((1 / (t : ℝ)) • (Matrix.of Ω * (Matrix.of Ω)ᵀ)) * Nᵀ - M * Nᵀ) i j
+    (N : Matrix (Fin b) (Fin n) ℝ) (Ω : Matrix (Fin n) (Fin t) ℝ) (i : Fin a) (j : Fin b) :
+    (M * ((1 / (t : ℝ)) • (Ω * Ωᵀ)) * Nᵀ - M * Nᵀ) i j
       = (1 / (t : ℝ)) * ∑ ℓ, L (col (M i) ℓ) Ω * L (col (N j) ℓ) Ω - ∑ k, M i k * N j k := by
   simp only [Matrix.sub_apply, Matrix.mul_apply, Matrix.smul_apply, Matrix.transpose_apply,
-    Matrix.of_apply, smul_eq_mul, L_col]
+    smul_eq_mul, L_col]
   congr 1
   simp only [Finset.mul_sum, Finset.sum_mul]
   calc _ = ∑ k', ∑ ℓ, ∑ k, M i k * (1 / (t : ℝ) * (Ω k ℓ * Ω k' ℓ)) * N j k' :=
@@ -151,8 +151,8 @@ Atlas: `gaussian-amm`. Ported from Prove2me solution `GaussianMatrix.approx_mult
 atlas: gaussian-amm -/
 theorem integral_frobSq_mul_gram_mul_transpose_sub {a b n t : ℕ} (ht : 1 ≤ t)
     (M : Matrix (Fin a) (Fin n) ℝ) (N : Matrix (Fin b) (Fin n) ℝ) :
-    ∫ Ω, frobSq (M * ((1 / (t : ℝ)) • (Matrix.of Ω * (Matrix.of Ω)ᵀ)) * Nᵀ - M * Nᵀ)
-        ∂(gaussianMatrix n t)
+    ∫ Ω, frobSq (M * ((1 / (t : ℝ)) • (Ω * Ωᵀ)) * Nᵀ - M * Nᵀ)
+        ∂(gaussianMatrix (Fin n) (Fin t))
       = (frobSq M * frobSq N + frobSq (M * Nᵀ)) / t ∧
     (frobSq M * frobSq N + frobSq (M * Nᵀ)) / t ≤ 2 / t * (frobSq M * frobSq N) := by
   have hMN : frobSq (M * Nᵀ) = ∑ i, ∑ j, (∑ k, M i k * N j k) ^ 2 := by
@@ -160,8 +160,8 @@ theorem integral_frobSq_mul_gram_mul_transpose_sub {a b n t : ℕ} (ht : 1 ≤ t
   have hMN' : frobSq M * frobSq N = ∑ i, ∑ j, (∑ k, M i k ^ 2) * (∑ k, N j k ^ 2) := by
     simp only [frobSq_eq_sum_sq, Finset.sum_mul_sum]
   constructor
-  · have hX : ∀ Ω : Fin n → Fin t → ℝ,
-        frobSq (M * ((1 / (t : ℝ)) • (Matrix.of Ω * (Matrix.of Ω)ᵀ)) * Nᵀ - M * Nᵀ)
+  · have hX : ∀ Ω : Matrix (Fin n) (Fin t) ℝ,
+        frobSq (M * ((1 / (t : ℝ)) • (Ω * Ωᵀ)) * Nᵀ - M * Nᵀ)
         = ∑ i, ∑ j, ((1 / (t : ℝ)) * ∑ ℓ, L (col (M i) ℓ) Ω * L (col (N j) ℓ) Ω
             - ∑ k, M i k * N j k) ^ 2 := by
       intro Ω; simp only [frobSq_eq_sum_sq, entry_sub_eq]
@@ -169,7 +169,7 @@ theorem integral_frobSq_mul_gram_mul_transpose_sub {a b n t : ℕ} (ht : 1 ≤ t
     rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
       integrable_entry_sq (M i) (N j) _]
     have hij : ∀ i, ∫ Ω, ∑ j, ((1 / (t : ℝ)) * ∑ ℓ, L (col (M i) ℓ) Ω * L (col (N j) ℓ) Ω
-            - ∑ k, M i k * N j k) ^ 2 ∂(gaussianMatrix n t)
+            - ∑ k, M i k * N j k) ^ 2 ∂(gaussianMatrix (Fin n) (Fin t))
         = ∑ j, ((∑ k, M i k ^ 2) * (∑ k, N j k ^ 2) + (∑ k, M i k * N j k) ^ 2) / t := by
       intro i
       rw [integral_finsetSum _ fun j _ => integrable_entry_sq (M i) (N j) _]
@@ -182,5 +182,22 @@ theorem integral_frobSq_mul_gram_mul_transpose_sub {a b n t : ℕ} (ht : 1 ≤ t
     rw [show 2 / (t : ℝ) * (frobSq M * frobSq N)
       = (frobSq M * frobSq N + frobSq M * frobSq N) / t by ring]
     gcongr
+
+/-- `integral_frobSq_mul_gram_mul_transpose_sub` for a random test matrix `X` with
+`HasLaw X (gaussianMatrix (Fin n) (Fin t)) μ`. Atlas: `gaussian-amm`. -/
+theorem integral_frobSq_mul_gram_mul_transpose_sub_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {a b n t : ℕ} {X : Ω → Matrix (Fin n) (Fin t) ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin n) (Fin t)) μ) (ht : 1 ≤ t)
+    (M : Matrix (Fin a) (Fin n) ℝ) (N : Matrix (Fin b) (Fin n) ℝ) :
+    ∫ ω, frobSq (M * ((1 / (t : ℝ)) • (X ω * (X ω)ᵀ)) * Nᵀ - M * Nᵀ) ∂μ
+      = (frobSq M * frobSq N + frobSq (M * Nᵀ)) / t ∧
+    (frobSq M * frobSq N + frobSq (M * Nᵀ)) / t ≤ 2 / t * (frobSq M * frobSq N) := by
+  have hc : Continuous fun G : Matrix (Fin n) (Fin t) ℝ =>
+      frobSq (M * ((1 / (t : ℝ)) • (G * Gᵀ)) * Nᵀ - M * Nᵀ) := by
+    simp only [frobSq_eq_sum_sq]; fun_prop
+  obtain ⟨h1, h2⟩ := integral_frobSq_mul_gram_mul_transpose_sub ht M N
+  refine ⟨?_, h2⟩
+  rw [← h1]
+  exact hX.integral_comp hc.aestronglyMeasurable
 
 end NLAlib

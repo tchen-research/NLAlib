@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.Bands.Directional.MarkedCoefficients
 import NLAlib.ForMathlib.Analysis.NormSumSq
 import NLAlib.Sketching.Sparse.FockModel.FockSpace
-set_option autoImplicit false
 
 /-!
 # Directional marked-pair reindexing
@@ -18,7 +17,7 @@ namespace NLAlib.SparseSketch
 
 namespace Directional
 
-open scoped BigOperators Matrix.Norms.L2Operator InnerProductSpace
+open scoped Matrix.Norms.L2Operator InnerProductSpace
 
 noncomputable section
 

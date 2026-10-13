@@ -17,7 +17,7 @@ Atlas: `rsvd-expected-error`.
 
 noncomputable section
 open MeasureTheory ProbabilityTheory
-open scoped Matrix ENNReal BigOperators
+open scoped Matrix ENNReal
 namespace NLAlib
 
 /-- A target rank at least the input width has zero optimal Frobenius error.
@@ -43,7 +43,7 @@ theorem integrable_frobSq_residual_of_measurable_frame
     (A : Matrix m n ℝ) (X : Ω → α) (hX : AEMeasurable X μ)
     (Qf : α → Matrix m q ℝ) (hQf : ∀ i j, Measurable fun x => Qf x i j)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (X ω))) :
-    Integrable (fun ω => frobSq (residual (Qf (X ω)) A)) μ := by
+    Integrable (fun ω => frobSq (projResidual (Qf (X ω)) A)) μ := by
   refine (integrable_const (frobSq A)).mono'
     ((measurable_frobSq_residual_of A hQf).comp_aemeasurable hX).aestronglyMeasurable ?_
   filter_upwards [hQo] with ω hω
@@ -57,13 +57,13 @@ theorem ae_gaussian_projection_reproduces_of_width_le
     {Ω q : Type*} [MeasurableSpace Ω] [Fintype q] [DecidableEq q]
     {μ : Measure Ω} {m n t : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (G : Ω → Matrix (Fin n) (Fin t) ℝ)
-    (hG : μ.map (fun ω => Matrix.of.symm (G ω)) = gaussianMatrix n t)
+    (hG : HasLaw G (gaussianMatrix (Fin n) (Fin t)) μ)
     (Q : Ω → Matrix (Fin m) q ℝ)
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (A * G ω)) = A * G ω) (hnt : n ≤ t) :
     ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * A) = A := by
   have hunit := ae_isUnit_block hG (1 : Matrix (Fin n) (Fin n) ℝ) (by simp) hnt
   have hunit' : ∀ᵐ ω ∂μ, IsUnit (G ω * (G ω)ᵀ) := by
-    simpa only [Matrix.transpose_one, Matrix.one_mul, Equiv.apply_symm_apply] using hunit
+    simpa only [Matrix.transpose_one, Matrix.one_mul] using hunit
   filter_upwards [hQr, hunit'] with ω hproj hfull
   have he := congrArg (fun M : Matrix (Fin m) (Fin t) ℝ => M * pinvR (G ω)) hproj
   simpa only [Matrix.mul_assoc, mul_pinvR hfull, Matrix.mul_one] using he
@@ -79,30 +79,29 @@ theorem integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian
     {μ : Measure Ω} [IsProbabilityMeasure μ] {m n k t : ℕ}
     (A : Matrix (Fin m) (Fin n) ℝ) (hkt : k + 2 ≤ t)
     (G : Ω → Matrix (Fin n) (Fin t) ℝ)
-    (hG : μ.map (fun ω => Matrix.of.symm (G ω)) = gaussianMatrix n t)
-    (Qf : (Fin n → Fin t → ℝ) → Matrix (Fin m) q ℝ)
+    (hG : HasLaw G (gaussianMatrix (Fin n) (Fin t)) μ)
+    (Qf : Matrix (Fin n) (Fin t) ℝ → Matrix (Fin m) q ℝ)
     (hQf : ∀ i j, Measurable fun x => Qf x i j)
-    (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (Matrix.of.symm (G ω))))
-    (hQr : ∀ᵐ ω ∂μ, Qf (Matrix.of.symm (G ω)) *
-      ((Qf (Matrix.of.symm (G ω)))ᵀ * (A * G ω)) = A * G ω) :
-    Integrable (fun ω => frobSq (residual (Qf (Matrix.of.symm (G ω))) A)) μ ∧
-      (∫ ω, frobSq (residual (Qf (Matrix.of.symm (G ω))) A) ∂μ) ≤
+    (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (G ω)))
+    (hQr : ∀ᵐ ω ∂μ, Qf (G ω) * ((Qf (G ω))ᵀ * (A * G ω)) = A * G ω) :
+    Integrable (fun ω => frobSq (projResidual (Qf (G ω)) A)) μ ∧
+      (∫ ω, frobSq (projResidual (Qf (G ω)) A) ∂μ) ≤
         (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
-  have hX := aemeasurable_of_map_eq_gaussianMatrix hG
+  have hX := hG.aemeasurable
   refine ⟨integrable_frobSq_residual_of_measurable_frame A _ hX Qf hQf hQo, ?_⟩
   by_cases hkn : k ≤ n
   · obtain ⟨r, U₁, U₂, V₁, V₂, S₂, hA, hU₂, hV₁, hV₂, hV, htail⟩ :=
       exists_svd_right_blocks A k hkn
     have hb := rsvd_main_gaussian hA hU₂ hV₁ hV₂ hV hkt G hG
-      (fun ω => Qf (Matrix.of.symm (G ω))) hQo hQr
+      (fun ω => Qf (G ω)) hQo hQr
     rw [htail] at hb
     exact hb
   · have hfull := ae_gaussian_projection_reproduces_of_width_le A G hG
-      (fun ω => Qf (Matrix.of.symm (G ω))) hQr (by omega : n ≤ t)
-    have hz : (fun ω => frobSq (residual (Qf (Matrix.of.symm (G ω))) A)) =ᵐ[μ]
+      (fun ω => Qf (G ω)) hQr (by omega : n ≤ t)
+    have hz : (fun ω => frobSq (projResidual (Qf (G ω)) A)) =ᵐ[μ]
         fun _ => (0 : ℝ) := by
       filter_upwards [hfull] with ω hω
-      simp [residual, hω]
+      simp [projResidual, hω]
     rw [integral_congr_ae hz, integral_zero, bestRankFrobSq_eq_zero_of_width_le A (by omega)]
     simp
 
@@ -129,9 +128,10 @@ theorem frobSq_truncatedRsvdOutput_eq {m n q : ℕ}
     (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) =
-      frobSq (residual Q A) + bestRankFrobSq k (Qᵀ * A) := by
+      frobSq (projResidual Q A) + bestRankFrobSq k (Qᵀ * A) := by
   unfold truncatedRsvdOutput
-  rw [frobSq_sub_mul_eq hQ, frobSq_sub_truncatedSVD_eq_bestRankFrobSq]
+  rw [frobSq_sub_mul_eq hQ, Matrix.conjTranspose_eq_transpose_of_trivial,
+    frobSq_sub_truncatedSVD_eq_bestRankFrobSq]
 
 /-- Every best rank-`k` approximation of the compressed matrix has lifted
 squared error at most the actual global optimum plus projection error.
@@ -143,13 +143,14 @@ theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual
     {m n q : Type*} [Fintype m] [Fintype n] [Fintype q] [DecidableEq q]
     {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {Y : Matrix q n ℝ} {k : ℕ}
     (hY : IsBestRankApprox k (Qᵀ * A) Y) (hQ : HasOrthonormalCols Q) :
-    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + frobSq (residual Q A) := by
+    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + frobSq (projResidual Q A) := by
   obtain ⟨B, hB⟩ := exists_isBestRankApprox A k
   have hRank : (Qᵀ * B).rank ≤ k := (Matrix.rank_mul_le_right Qᵀ B).trans hB.1
   have hBest := hY.2 (Qᵀ * B) hRank
-  have hContraction := frobSq_transpose_mul_le hQ (A - B)
+  have hContraction := frobSq_conjTranspose_mul_le hQ (A - B)
   rw [Matrix.mul_sub, hB.frobSq_sub_eq_bestRankFrobSq] at hContraction
   rw [frobSq_sub_mul_eq hQ]
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hContraction ⊢
   linarith
 
 /-- The two-residual ordinary projected-truncation bound for a compressed
@@ -160,9 +161,9 @@ theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_two_mul_frobSq_res
     {m n q : Type*} [Fintype m] [Fintype n] [Fintype q] [DecidableEq q]
     {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {Y : Matrix q n ℝ} {k : ℕ}
     (hY : IsBestRankApprox k (Qᵀ * A) Y) (hQ : HasOrthonormalCols Q) :
-    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + 2 * frobSq (residual Q A) := by
+    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + 2 * frobSq (projResidual Q A) := by
   have h := hY.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual hQ
-  linarith [frobSq_nonneg (residual Q A)]
+  linarith [frobSq_nonneg (projResidual Q A)]
 
 /-- Ordinary projected truncation has squared Frobenius error at most the
 actual rank-`k` optimum plus squared projection error. The small truncated SVD
@@ -174,7 +175,7 @@ theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_frobSq_residual
     {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) ≤
-      bestRankFrobSq k A + frobSq (residual Q A) := by
+      bestRankFrobSq k A + frobSq (projResidual Q A) := by
   have hY := isBestRankApprox_truncatedSVD (Qᵀ * A) k
   exact hY.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual hQ
 
@@ -187,9 +188,9 @@ theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_two_mul_frobSq_resi
     {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) ≤
-      bestRankFrobSq k A + 2 * frobSq (residual Q A) := by
+      bestRankFrobSq k A + 2 * frobSq (projResidual Q A) := by
   have h := frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_frobSq_residual Q hQ A k
-  linarith [frobSq_nonneg (residual Q A)]
+  linarith [frobSq_nonneg (projResidual Q A)]
 
 /-- Actual postprocessed RSVD has integrable scalar squared error. This uses
 continuity of the optimum, not a measurability assumption on an arbitrary
@@ -201,18 +202,14 @@ theorem integrable_frobSq_truncatedRsvdOutput_of_measurable_frame
     (Qf : α → Matrix (Fin m) (Fin q) ℝ) (hQf : ∀ i j, Measurable fun x => Qf x i j)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (X ω))) :
     Integrable (fun ω => frobSq (A - truncatedRsvdOutput (Qf (X ω)) A k)) μ := by
-  have hCompressed : Measurable fun x => Matrix.of.symm ((Qf x)ᵀ * A) := by
-    apply measurable_pi_lambda
-    intro i
-    apply measurable_pi_lambda
-    intro j
-    exact measurable_mul_entry_of (f := fun x => (Qf x)ᵀ) (g := fun _ : α => A)
-      (fun a b => hQf b a) (fun _ _ => measurable_const) i j
+  have hCompressed : Measurable fun x => (Qf x)ᵀ * A :=
+    Matrix.measurable_iff_entries.mpr (measurable_mul_entry_of (f := fun x => (Qf x)ᵀ)
+      (g := fun _ : α => A) (fun a b => hQf b a) (fun _ _ => measurable_const))
   have hOpt : Measurable fun x => bestRankFrobSq k ((Qf x)ᵀ * A) :=
-    (measurable_bestRankFrobSq k).comp hCompressed
+    (continuous_bestRankFrobSq k).measurable.comp hCompressed
   have hValue := (measurable_frobSq_residual_of A hQf).add hOpt
   have hEq : (fun ω => frobSq (A - truncatedRsvdOutput (Qf (X ω)) A k)) =ᵐ[μ]
-      fun ω => frobSq (residual (Qf (X ω)) A) + bestRankFrobSq k ((Qf (X ω))ᵀ * A) := by
+      fun ω => frobSq (projResidual (Qf (X ω)) A) + bestRankFrobSq k ((Qf (X ω))ᵀ * A) := by
     filter_upwards [hQo] with ω hω
     exact frobSq_truncatedRsvdOutput_eq _ hω A k
   have hMeas := (hValue.comp_aemeasurable hX).aestronglyMeasurable.congr hEq.symm
@@ -222,8 +219,9 @@ theorem integrable_frobSq_truncatedRsvdOutput_of_measurable_frame
   have hbest := (isBestRankApprox_truncatedSVD ((Qf (X ω))ᵀ * A) k).2
     (0 : Matrix (Fin q) (Fin n) ℝ) (by simp)
   rw [sub_zero] at hbest
-  have hpyth := frobSq_eq_frobSq_transpose_mul_add_residual hω A
+  have hpyth := frobSq_eq_frobSq_conjTranspose_mul_add_residual hω A
   rw [truncatedRsvdOutput, frobSq_sub_mul_eq hω]
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hpyth ⊢
   linarith
 
 /-- **Standard rank-`k` postprocessed Gaussian RSVD, actual relative optimum.**
@@ -235,36 +233,35 @@ theorem integrable_and_integral_frobSq_truncatedRsvdOutput_le_bestRankFrobSq_gau
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {m n q k t : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hkt : k + 2 ≤ t)
     (G : Ω → Matrix (Fin n) (Fin t) ℝ)
-    (hG : μ.map (fun ω => Matrix.of.symm (G ω)) = gaussianMatrix n t)
-    (Qf : (Fin n → Fin t → ℝ) → Matrix (Fin m) (Fin q) ℝ)
+    (hG : HasLaw G (gaussianMatrix (Fin n) (Fin t)) μ)
+    (Qf : Matrix (Fin n) (Fin t) ℝ → Matrix (Fin m) (Fin q) ℝ)
     (hQf : ∀ i j, Measurable fun x => Qf x i j)
-    (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (Matrix.of.symm (G ω))))
-    (hQr : ∀ᵐ ω ∂μ, Qf (Matrix.of.symm (G ω)) *
-      ((Qf (Matrix.of.symm (G ω)))ᵀ * (A * G ω)) = A * G ω) :
-    Integrable (fun ω => frobSq (A - truncatedRsvdOutput (Qf (Matrix.of.symm (G ω))) A k)) μ ∧
-      (∫ ω, frobSq (A - truncatedRsvdOutput (Qf (Matrix.of.symm (G ω))) A k) ∂μ) ≤
+    (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (G ω)))
+    (hQr : ∀ᵐ ω ∂μ, Qf (G ω) * ((Qf (G ω))ᵀ * (A * G ω)) = A * G ω) :
+    Integrable (fun ω => frobSq (A - truncatedRsvdOutput (Qf (G ω)) A k)) μ ∧
+      (∫ ω, frobSq (A - truncatedRsvdOutput (Qf (G ω)) A k) ∂μ) ≤
         (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
-  have hX := aemeasurable_of_map_eq_gaussianMatrix hG
+  have hX := hG.aemeasurable
   refine ⟨integrable_frobSq_truncatedRsvdOutput_of_measurable_frame A k _ hX Qf hQf hQo, ?_⟩
   by_cases hkn : k ≤ n
   · obtain ⟨r, U₁, U₂, V₁, V₂, S₂, hA, hU₂, hV₁, hV₂, hV, htail⟩ :=
       exists_svd_right_blocks A k hkn
     have hb := rsvd_truncated_main_gaussian hA hU₂ hV₁ hV₂ hV hkt G hG
-      (fun ω => Qf (Matrix.of.symm (G ω)))
-      (fun ω => truncatedSVD ((Qf (Matrix.of.symm (G ω)))ᵀ * A) k)
+      (fun ω => Qf (G ω))
+      (fun ω => truncatedSVD ((Qf (G ω))ᵀ * A) k)
       hQo hQr (fun _ => isBestRankApprox_truncatedSVD _ k)
     rw [htail] at hb
     exact hb
   · have hfull := ae_gaussian_projection_reproduces_of_width_le A G hG
-      (fun ω => Qf (Matrix.of.symm (G ω))) hQr (by omega : n ≤ t)
+      (fun ω => Qf (G ω)) hQr (by omega : n ≤ t)
     have hOpt : bestRankFrobSq k A = 0 := bestRankFrobSq_eq_zero_of_width_le A (by omega)
-    have hcompressed (ω : Ω) : bestRankFrobSq k ((Qf (Matrix.of.symm (G ω)))ᵀ * A) = 0 :=
+    have hcompressed (ω : Ω) : bestRankFrobSq k ((Qf (G ω))ᵀ * A) = 0 :=
       bestRankFrobSq_eq_zero_of_width_le _ (by omega)
-    have hz : (fun ω => frobSq (A - truncatedRsvdOutput (Qf (Matrix.of.symm (G ω))) A k)) =ᵐ[μ]
+    have hz : (fun ω => frobSq (A - truncatedRsvdOutput (Qf (G ω)) A k)) =ᵐ[μ]
         fun _ => (0 : ℝ) := by
       filter_upwards [hfull, hQo] with ω hω horth
       rw [frobSq_truncatedRsvdOutput_eq _ horth, hcompressed]
-      simp [residual, hω]
+      simp [projResidual, hω]
     rw [integral_congr_ae hz, integral_zero, hOpt]
     simp
 
@@ -279,15 +276,15 @@ theorem integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFr
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {m n k t : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hkt : k + 2 ≤ t)
     (G : Ω → Matrix (Fin n) (Fin t) ℝ)
-    (hG : μ.map (fun ω => Matrix.of.symm (G ω)) = gaussianMatrix n t) :
-    Integrable (fun ω => frobSq (residual (gaussianRangeFrame A t (Matrix.of.symm (G ω))) A)) μ ∧
-      (∫ ω, frobSq (residual (gaussianRangeFrame A t (Matrix.of.symm (G ω))) A) ∂μ) ≤
+    (hG : HasLaw G (gaussianMatrix (Fin n) (Fin t)) μ) :
+    Integrable (fun ω => frobSq (projResidual (gaussianRangeFrame A t (G ω)) A)) μ ∧
+      (∫ ω, frobSq (projResidual (gaussianRangeFrame A t (G ω)) A) ∂μ) ≤
         (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
   exact integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian A hkt G hG
     (gaussianRangeFrame A t) (measurable_gaussianRangeFrame_entry A t)
-    (ae_hasOrthonormalCols_gaussianRangeFrame_of_map_eq A (fun ω => Matrix.of.symm (G ω)) hG)
+    (ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw A G hG)
     (by simpa only [Equiv.apply_symm_apply] using
-      ae_project_gaussianRangeFrame_of_map_eq A (fun ω => Matrix.of.symm (G ω)) hG)
+      ae_project_gaussianRangeFrame_of_hasLaw A G hG)
 
 /-- **Constructed rank-`k` Gaussian RSVD, actual relative optimum.** The
 exact Gaussian range frame followed by the proved truncated-SVD minimizer
@@ -301,16 +298,16 @@ theorem integrable_and_integral_frobSq_truncatedRsvdOutput_gaussianRangeFrame_le
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {m n k t : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hkt : k + 2 ≤ t)
     (G : Ω → Matrix (Fin n) (Fin t) ℝ)
-    (hG : μ.map (fun ω => Matrix.of.symm (G ω)) = gaussianMatrix n t) :
+    (hG : HasLaw G (gaussianMatrix (Fin n) (Fin t)) μ) :
     Integrable (fun ω => frobSq
-      (A - truncatedRsvdOutput (gaussianRangeFrame A t (Matrix.of.symm (G ω))) A k)) μ ∧
+      (A - truncatedRsvdOutput (gaussianRangeFrame A t (G ω)) A k)) μ ∧
       (∫ ω, frobSq
-        (A - truncatedRsvdOutput (gaussianRangeFrame A t (Matrix.of.symm (G ω))) A k) ∂μ) ≤
+        (A - truncatedRsvdOutput (gaussianRangeFrame A t (G ω)) A k) ∂μ) ≤
         (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
   exact integrable_and_integral_frobSq_truncatedRsvdOutput_le_bestRankFrobSq_gaussian
     A hkt G hG (gaussianRangeFrame A t) (measurable_gaussianRangeFrame_entry A t)
-    (ae_hasOrthonormalCols_gaussianRangeFrame_of_map_eq A (fun ω => Matrix.of.symm (G ω)) hG)
+    (ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw A G hG)
     (by simpa only [Equiv.apply_symm_apply] using
-      ae_project_gaussianRangeFrame_of_map_eq A (fun ω => Matrix.of.symm (G ω)) hG)
+      ae_project_gaussianRangeFrame_of_hasLaw A G hG)
 
 end NLAlib

@@ -329,7 +329,7 @@ atlas: qr-decomposition (partial) -/
 theorem pinvL_eq_of_isQR (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) : pinvL A = R⁻¹ * Qᵀ := by
   have hdet : IsUnit R.det := h.isUnit_det_iff.2 hR
   have hdetT : IsUnit Rᵀ.det := by rwa [Matrix.det_transpose]
-  rw [pinvL_eq_inv_transpose_mul_mul_transpose]
+  rw [pinvL, Matrix.conjTranspose_eq_transpose_of_trivial]
   rw [h.transpose_mul_self_eq, Matrix.mul_inv_rev]
   conv_lhs => rw [h.eq, Matrix.transpose_mul]
   rw [Matrix.mul_assoc, ← Matrix.mul_assoc Rᵀ⁻¹, Matrix.nonsing_inv_mul _ hdetT, Matrix.one_mul]
@@ -356,7 +356,7 @@ end Identities
 
 /-- For every `A : (m+1) × (n+1)` there is an orthogonal `W` with `WᵀA` zero below the pivot in
 its first column: `W` completes `a₀ / ‖a₀‖` to an orthonormal basis
-(`exists_orthogonal_completion`), or `W = I` when `a₀ = 0`. The reflector-free form of one
+(`exists_unitary_completion`), or `W = I` when `a₀ = 0`. The reflector-free form of one
 Householder step. Golub–Van Loan 2013, §5.2.2. -/
 theorem exists_transpose_mul_apply_succ_zero_eq_zero {m n : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (n + 1)) ℝ) :
@@ -381,14 +381,14 @@ theorem exists_transpose_mul_apply_succ_zero_eq_zero {m n : ℕ}
         rw [dotProduct, Finset.sum_div]
         exact Finset.sum_congr rfl fun k _ => by simp only [col_apply]; ring]
       rw [hc2, div_self ha]
-    obtain ⟨W, hW, hWV⟩ := exists_orthogonal_completion V hV
+    obtain ⟨W, hW, hWV⟩ := exists_unitary_completion V hV
       ⟨fun _ => 0, fun a b _ => Subsingleton.elim a b⟩
     refine ⟨W, hW, fun i => ?_⟩
     have hA : ∀ k, A k 0 = c * W k 0 := fun k => by
       rw [show W k 0 = V k 0 from hWV k 0]
       simp only [V, of_apply]
       field_simp
-    have hWW := congrFun (congrFun hW i.succ) 0
+    have hWW := congrFun (congrFun (show Wᵀ * W = 1 from hW) i.succ) 0
     rw [Matrix.one_apply_ne (Fin.succ_ne_zero i), Matrix.mul_apply] at hWW
     rw [Matrix.mul_apply]
     simp_rw [hA]

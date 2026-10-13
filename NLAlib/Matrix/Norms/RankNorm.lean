@@ -16,7 +16,7 @@ inverse-Wishart moments enter these deterministic identities.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 
@@ -26,8 +26,8 @@ variable {𝕜 : Type*} [RCLike 𝕜]
 positive singular values, over `ℝ` or `ℂ`. Zero singular values contribute nothing.
 Horn–Johnson §5.6; atlas `norms-frob-spec`, `svd`.
 atlas: norms-frob-spec -/
-theorem frobSq_eq_sum_rank_singularValues_sq {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) 𝕜) :
+theorem frobSq_eq_sum_rank_singularValues_sq {m n : Type*} [Fintype m] [Fintype n]
+    [DecidableEq n] (A : Matrix m n 𝕜) :
     frobSq A = ∑ k ∈ Finset.range A.rank, singularValues A k ^ 2 := by
   rw [frobSq_eq_sum_sq_singularValues]
   symm
@@ -36,18 +36,6 @@ theorem frobSq_eq_sum_rank_singularValues_sq {m n : ℕ}
   · intro k _ hk
     rw [singularValues_eq_zero_of_rank_le A (by simpa only [Finset.mem_range, not_lt] using hk)]
     simp
-
-/-- `Fin` step of `frobSq_le_rank_mul_specNorm_sq`. -/
-private theorem frobSq_le_rank_mul_specNorm_sq_fin {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) 𝕜) :
-    frobSq A ≤ (A.rank : ℝ) * specNorm A ^ 2 := by
-  calc
-    frobSq A = ∑ k ∈ Finset.range A.rank, singularValues A k ^ 2 :=
-      frobSq_eq_sum_rank_singularValues_sq A
-    _ ≤ ∑ _k ∈ Finset.range A.rank, specNorm A ^ 2 :=
-      Finset.sum_le_sum (fun k _ => pow_le_pow_left₀
-        (singularValues_nonneg A k) (singularValues_le_specNorm A k) 2)
-    _ = (A.rank : ℝ) * specNorm A ^ 2 := by simp
 
 section FiniteIndex
 
@@ -58,9 +46,13 @@ finite index types and over `ℝ` or `ℂ`, including rank zero and empty rectan
 Horn–Johnson §5.6; atlas `norms-frob-spec`. -/
 theorem frobSq_le_rank_mul_specNorm_sq (A : Matrix m n 𝕜) :
     frobSq A ≤ (A.rank : ℝ) * specNorm A ^ 2 := by
-  have h := frobSq_le_rank_mul_specNorm_sq_fin
-    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
-  simpa only [frobSq_reindex, Matrix.rank_reindex, specNorm_reindex] using h
+  calc
+    frobSq A = ∑ k ∈ Finset.range A.rank, singularValues A k ^ 2 :=
+      frobSq_eq_sum_rank_singularValues_sq A
+    _ ≤ ∑ _k ∈ Finset.range A.rank, specNorm A ^ 2 :=
+      Finset.sum_le_sum (fun k _ => pow_le_pow_left₀
+        (singularValues_nonneg A k) (singularValues_le_specNorm A k) 2)
+    _ = (A.rank : ℝ) * specNorm A ^ 2 := by simp
 
 /-- The Frobenius norm is at most the spectral norm times the square root of the rank,
 on arbitrary finite index types and over `ℝ` or `ℂ`, with no excluded zero cases.
@@ -132,7 +124,7 @@ theorem specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive
   have hn : specNorm (moorePenroseInverse A) =
       specNorm (rectDiag (fun k => (singularValues A k)⁻¹) :
         Matrix (Fin n) (Fin m) 𝕜) := by
-    rw [hSVD.moorePenroseInverse_eq_mul_conjTranspose,
+    rw [hSVD.moorePenroseInverse_eq,
       specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hSVD.conjTranspose_mul_left,
       specNorm_mul_left_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right]
   have hsq : specNorm (moorePenroseInverse A) ^ 2 = (singularValues A r)⁻¹ ^ 2 := by
@@ -149,7 +141,7 @@ theorem moorePenroseInverse_eq_zero_of_rank_eq_zero {m n : ℕ}
   have hσ : ∀ k : ℕ, singularValues A k = 0 := fun k =>
     singularValues_eq_zero_of_rank_le A (by rw [hr]; exact Nat.zero_le k)
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
-  rw [hSVD.moorePenroseInverse_eq_mul_conjTranspose]
+  rw [hSVD.moorePenroseInverse_eq]
   have hd : (rectDiag (fun k => (singularValues A k)⁻¹) :
       Matrix (Fin n) (Fin m) 𝕜) = 0 := by
     ext i j
@@ -170,5 +162,17 @@ theorem specNorm_moorePenroseInverse_eq {m n : ℕ}
   · rw [if_neg hr]
     exact specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A
       (Nat.pos_of_ne_zero hr)
+
+/-- The Moore–Penrose norm on general indices (over `ℝ` or `ℂ`) is zero at rank zero and the
+reciprocal of the last positive singular value otherwise. Horn–Johnson §7.3;
+atlas `pseudoinverse`. The list uses explicit `Fin(card)` normalization.
+atlas: pseudoinverse -/
+theorem specNorm_moorePenroseInverse_eq_fintype {m n : Type*} [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) :
+    specNorm (moorePenroseInverse A) = if A.rank = 0 then 0 else
+      1 / singularValues (A.reindex (Fintype.equivFin m) (Fintype.equivFin n)) (A.rank - 1) := by
+  have h := specNorm_moorePenroseInverse_eq
+    (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
+  simpa only [moorePenroseInverse_reindex, specNorm_reindex, Matrix.rank_reindex] using h
 
 end NLAlib

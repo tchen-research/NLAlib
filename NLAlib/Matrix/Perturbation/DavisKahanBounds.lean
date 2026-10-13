@@ -29,7 +29,7 @@ theorem sinePrincipalAngles_eq_zero_of_full_width {P Q : Matrix n k ℝ}
       (A := Pᵀ) (B := P) (eq := hcard)).mp hP
   apply (frobNorm_eq_zero_iff _).mp
   rw [frobNorm_sinePrincipalAngles_eq_residual hP hQ, residual_eq_one_sub_mul,
-    hfull, sub_self, Matrix.zero_mul, frobNorm_zero]
+    Matrix.conjTranspose_eq_transpose_of_trivial, hfull, sub_self, Matrix.zero_mul, frobNorm_zero]
 
 /-- All requested Davis–Kahan bounds for actual invariant frames and actual
 sorted spectral subspaces. Davis–Kahan §6 and Yu–Wang–Samworth (2015),

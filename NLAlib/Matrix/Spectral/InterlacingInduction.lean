@@ -8,7 +8,6 @@ pair, use induction, and restore the coordinate with zero coupling.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open Polynomial
 open scoped Matrix
 namespace NLAlib

@@ -9,7 +9,6 @@ Sources: operator re-derivations `sa:leverage` and `sa:amm`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped NNReal ENNReal
 namespace NLAlib

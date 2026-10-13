@@ -2,7 +2,6 @@
 Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.Bands.Heavy.RowFactorization
-set_option autoImplicit false
 
 /-!
 # Heavy middle-grade projections
@@ -14,7 +13,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 
 namespace NLAlib.SparseSketch.Heavy
 
-open scoped BigOperators Matrix.Norms.L2Operator InnerProductSpace
+open scoped Matrix.Norms.L2Operator InnerProductSpace
 
 noncomputable section
 

@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import NLAlib.Matrix.Norms.Frobenius
+import NLAlib.Matrix.Basic.Orthonormal
 
 /-!
 # Matrix norms
@@ -24,8 +25,11 @@ The two norms every NLAlib statement is written in, over any `RCLike` field `�
   `‖P‖₂ ≤ 1` for orthogonal projectors, `‖(I − QQᴴ)A‖₂ ≤ ‖A‖₂`, and the block bound
   `‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²` when `XYᴴ = 0` (or `XᴴY = 0`).
 
-Real statements written with `ᵀ` keep their names as corollaries of the general `conjTranspose`
-lemmas (RCLike round, decision D1).
+Statements are written with `ᴴ`; real users get `ᵀ` from the simp lemma
+`Matrix.conjTranspose_eq_transpose_of_trivial` (foundation change F1; the real `ᵀ` corollaries of
+the RCLike round are removed, see `docs/renames/2026-10-F1.json`). `specNorm` needs `DecidableEq`
+only on the column index: Mathlib's ℓ₂ operator norm is built from `Matrix.toLin'`, whose inverse
+uses `Pi.single`.
 
 Further spectral-norm bounds (orthonormal-frame invariance, Lipschitz bounds, diagonal and
 block-diagonal bounds) are in `NLAlib.Matrix.Norms.SpectralNormBounds`; invariance under
@@ -46,15 +50,15 @@ variable {𝕜 : Type*} [RCLike 𝕜] {m n p : Type*} [Fintype m] [Fintype n] [F
 
 /-- Spectral norm `‖A‖₂`, the largest singular value: Mathlib's ℓ₂ operator norm.
 atlas: matrix-norms-def -/
-def specNorm [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) : ℝ := ‖A‖
+def specNorm [DecidableEq n] (A : Matrix m n 𝕜) : ℝ := ‖A‖
 
 /-- Bridge to Mathlib's ℓ₂ operator norm (`Matrix.Norms.L2Operator`). Atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/
-theorem specNorm_eq_norm [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) :
+theorem specNorm_eq_norm [DecidableEq n] (A : Matrix m n 𝕜) :
     specNorm A = ‖A‖ := rfl
 
 /-- `‖A‖₂ ≥ 0`. Atlas `norms-frob-spec`. -/
-theorem specNorm_nonneg [DecidableEq m] [DecidableEq n] (A : Matrix m n 𝕜) : 0 ≤ specNorm A :=
+theorem specNorm_nonneg [DecidableEq n] (A : Matrix m n 𝕜) : 0 ≤ specNorm A :=
   norm_nonneg A
 
 /-! ### Euclidean length `√(v ⬝ v)` -/
@@ -103,10 +107,10 @@ theorem sqrt_dotProduct_sub_le {ι : Type*} [Fintype ι] (u v : ι → ℝ) :
 
 section Spectral
 
-variable [DecidableEq m] [DecidableEq n]
+variable [DecidableEq n]
 
 /-- `‖Aᴴ‖₂ = ‖A‖₂`. Standard; atlas `norms-frob-spec`. -/
-theorem specNorm_conjTranspose (A : Matrix m n 𝕜) : specNorm Aᴴ = specNorm A :=
+theorem specNorm_conjTranspose [DecidableEq m] (A : Matrix m n 𝕜) : specNorm Aᴴ = specNorm A :=
   Matrix.l2_opNorm_conjTranspose A
 
 /-- Operator-norm bound in coordinates: `‖Ax‖₂² ≤ ‖A‖₂² ‖x‖₂²`, written with explicit sums.
@@ -155,7 +159,7 @@ theorem specNorm_map_star (A : Matrix m n 𝕜) : specNorm (A.map star) = specNo
 
 /-- `‖Aᵀ‖₂ = ‖A‖₂`, since `Aᵀ` is the entrywise conjugate of `Aᴴ`. Standard; atlas
 `norms-frob-spec`. -/
-theorem specNorm_transpose (A : Matrix m n 𝕜) : specNorm Aᵀ = specNorm A := by
+theorem specNorm_transpose [DecidableEq m] (A : Matrix m n 𝕜) : specNorm Aᵀ = specNorm A := by
   have h : Aᵀ = Aᴴ.map star := by ext i j; simp
   rw [h, specNorm_map_star, specNorm_conjTranspose]
 
@@ -180,7 +184,6 @@ theorem frobSq_mul_le_specNorm_sq_mul_frobSq (A : Matrix m n 𝕜) (B : Matrix n
   have := sum_norm_sq_mulVec_le_specNorm_sq A (fun k => B k j)
   simpa [Matrix.mul_apply, Matrix.mulVec, dotProduct] using this
 
-omit [DecidableEq m] in
 /-- Mixed inequality `‖AB‖_F² ≤ ‖A‖_F² ‖B‖₂²` (transpose of the previous one).
 Standard (e.g. Golub–Van Loan, 4th ed., §2.3); atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/
@@ -199,7 +202,6 @@ theorem frobNorm_mul_le_specNorm_mul_frobNorm (A : Matrix m n 𝕜) (B : Matrix 
   rw [mul_pow, frobNorm_sq, frobNorm_sq]
   exact frobSq_mul_le_specNorm_sq_mul_frobSq A B
 
-omit [DecidableEq m] in
 /-- Mixed inequality `‖AB‖_F ≤ ‖A‖_F ‖B‖₂`. Atlas `norms-frob-spec`. -/
 theorem frobNorm_mul_le_frobNorm_mul_specNorm [DecidableEq p] (A : Matrix m n 𝕜)
     (B : Matrix n p 𝕜) :
@@ -217,7 +219,7 @@ theorem specNorm_one_le : specNorm (1 : Matrix n n 𝕜) ≤ 1 := by
 
 /-- A matrix with orthonormal columns (`PᴴP = I`) has spectral norm at most `1`. The hypothesis
 is `NLAlib.HasOrthonormalCols P` unfolded. Standard; atlas `norms-frob-spec`. -/
-theorem specNorm_le_one_of_conjTranspose_mul_self {P : Matrix m n 𝕜} (hP : Pᴴ * P = 1) :
+theorem specNorm_le_one_of_orthonormal {P : Matrix m n 𝕜} (hP : Pᴴ * P = 1) :
     specNorm P ≤ 1 := by
   rw [specNorm_eq_norm]
   have h : ‖P‖ * ‖P‖ ≤ 1 := by
@@ -227,19 +229,14 @@ theorem specNorm_le_one_of_conjTranspose_mul_self {P : Matrix m n 𝕜} (hP : P�
     exact specNorm_one_le
   nlinarith [norm_nonneg P]
 
-/-- A real matrix with orthonormal columns (`PᵀP = I`) has spectral norm at most `1`.
-Standard; atlas `norms-frob-spec`. -/
-theorem specNorm_le_one_of_orthonormal {P : Matrix m n ℝ} (hP : Pᵀ * P = 1) :
-    specNorm P ≤ 1 :=
-  specNorm_le_one_of_conjTranspose_mul_self (by simpa using hP)
-
 /-- Spectral isometry on the range of a matrix with orthonormal columns: if `PᴴP = I` and
 `X = P (Pᴴ X)` (i.e. `range X ⊆ range P`), then `‖PᴴX‖₂ = ‖X‖₂`. Standard (used in
 Chen–Persson, proof of `lem:tGN-core`, as `‖Q⊥ᵀA⊥‖ = ‖A⊥‖`); atlas `norms-frob-spec`. -/
 theorem specNorm_conjTranspose_mul_of_eq_mul [DecidableEq p] {P : Matrix m n 𝕜}
     (hP : Pᴴ * P = 1) {X : Matrix m p 𝕜} (hX : X = P * (Pᴴ * X)) :
     specNorm (Pᴴ * X) = specNorm X := by
-  have hP1 : specNorm P ≤ 1 := specNorm_le_one_of_conjTranspose_mul_self hP
+  classical
+  have hP1 : specNorm P ≤ 1 := specNorm_le_one_of_orthonormal hP
   have hPt : specNorm Pᴴ ≤ 1 := by rw [specNorm_conjTranspose]; exact hP1
   apply le_antisymm
   · calc specNorm (Pᴴ * X) ≤ specNorm Pᴴ * specNorm X := specNorm_mul_le _ _
@@ -249,13 +246,6 @@ theorem specNorm_conjTranspose_mul_of_eq_mul [DecidableEq p] {P : Matrix m n �
       _ ≤ specNorm P * specNorm (Pᴴ * X) := specNorm_mul_le _ _
       _ ≤ 1 * specNorm (Pᴴ * X) := by gcongr; exact specNorm_nonneg _
       _ = specNorm (Pᴴ * X) := one_mul _
-
-/-- Spectral isometry on the range of a real matrix with orthonormal columns: if `PᵀP = I` and
-`X = P (Pᵀ X)`, then `‖PᵀX‖₂ = ‖X‖₂`. Atlas `norms-frob-spec`. -/
-theorem specNorm_transpose_mul_of_eq_mul [DecidableEq p] {P : Matrix m n ℝ} (hP : Pᵀ * P = 1)
-    {X : Matrix m p ℝ} (hX : X = P * (Pᵀ * X)) : specNorm (Pᵀ * X) = specNorm X := by
-  simpa using specNorm_conjTranspose_mul_of_eq_mul (P := P) (X := X) (by simpa using hP)
-    (by simpa using hX)
 
 /-- `‖A‖₂ ≤ ‖A‖_F`. Standard (Golub–Van Loan, 4th ed., eq. (2.3.7)); atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/
@@ -327,25 +317,17 @@ theorem specNorm_sub_le (A B : Matrix m n 𝕜) : specNorm (A - B) ≤ specNorm 
 /-- `‖AAᴴ‖₂ = ‖A‖₂²`, written for the row Gram matrix. Standard (the C*-identity); atlas
 `norms-frob-spec`.
 atlas: norms-frob-spec -/
-theorem specNorm_mul_conjTranspose_self (A : Matrix m n 𝕜) :
+theorem specNorm_mul_conjTranspose_self [DecidableEq m] (A : Matrix m n 𝕜) :
     specNorm (A * Aᴴ) = specNorm A ^ 2 := by
   have h := Matrix.l2_opNorm_conjTranspose_mul_self Aᴴ
   rw [Matrix.conjTranspose_conjTranspose] at h
   rw [specNorm_eq_norm, h, sq, ← specNorm_eq_norm, specNorm_conjTranspose]
 
-/-- `‖AAᵀ‖₂ = ‖A‖₂²` over `ℝ`, written for the row Gram matrix (the column form
-`‖AᵀA‖₂ = ‖A‖₂²` is `specNorm_sq_eq_specNorm_transpose_mul_self` in
-`NLAlib.Matrix.Spectral.SpectralBounds`). Standard (the C*-identity); atlas `norms-frob-spec`.
-atlas: norms-frob-spec -/
-theorem specNorm_mul_transpose_self (A : Matrix m n ℝ) :
-    specNorm (A * Aᵀ) = specNorm A ^ 2 := by
-  simpa using specNorm_mul_conjTranspose_self A
-
 /-- An orthogonal projector (Hermitian idempotent `P`) has spectral norm at most `1`
 (it is `0` or `1`). Proof: `‖P‖₂ = ‖PᴴP‖₂ = ‖P‖₂²`. Standard (Golub–Van Loan, 4th ed., §2.5.1);
 audit G0 C1; atlas `norms-frob-spec`, `projection-facts`.
 atlas: projection-facts -/
-theorem specNorm_le_one_of_isHermitian_of_isIdempotentElem {P : Matrix n n 𝕜}
+theorem _root_.Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem {P : Matrix n n 𝕜}
     (hs : P.IsHermitian) (hp : IsIdempotentElem P) : specNorm P ≤ 1 := by
   have h := Matrix.l2_opNorm_conjTranspose_mul_self P
   rw [hs.eq, show P * P = P from hp] at h
@@ -355,20 +337,14 @@ theorem specNorm_le_one_of_isHermitian_of_isIdempotentElem {P : Matrix n n 𝕜}
   rw [not_le] at hlt
   nlinarith
 
-/-- A real orthogonal projector (symmetric idempotent `P`) has spectral norm at most `1`.
-Standard (Golub–Van Loan, 4th ed., §2.5.1); audit G0 C1; atlas `projection-facts`.
-atlas: projection-facts -/
-theorem specNorm_le_one_of_isSymm_of_isIdempotentElem {P : Matrix n n ℝ} (hs : P.IsSymm)
-    (hp : IsIdempotentElem P) : specNorm P ≤ 1 :=
-  specNorm_le_one_of_isHermitian_of_isIdempotentElem (Matrix.isHermitian_iff_isSymm.mpr hs) hp
-
-/-- The residual `A − Q(QᴴA) = (I − QQᴴ)A` (`NLAlib.residual Q A`, which unfolds to this
+/-- The residual `A − Q(QᴴA) = (I − QQᴴ)A` (`NLAlib.projResidual Q A`, which unfolds to this
 expression) has spectral norm at most `‖A‖₂` when `QᴴQ = I` (`NLAlib.HasOrthonormalCols Q`
 unfolded). Stated without `residual` because `NLAlib.Matrix.Subspaces.Projections` imports this file.
 Standard (HMT 2011, §8.4); audit G0 C1 (`specNorm_residual_le`); atlas `projection-facts`.
 atlas: norms-frob-spec -/
 theorem specNorm_sub_mul_conjTranspose_mul_le [DecidableEq p] {Q : Matrix m p 𝕜}
     (hQ : Qᴴ * Q = 1) (A : Matrix m n 𝕜) : specNorm (A - Q * (Qᴴ * A)) ≤ specNorm A := by
+  classical
   set P : Matrix m m 𝕜 := 1 - Q * Qᴴ with hP
   have hs : P.IsHermitian := by
     simp [hP, Matrix.IsHermitian, Matrix.conjTranspose_sub, Matrix.conjTranspose_mul]
@@ -384,16 +360,9 @@ theorem specNorm_sub_mul_conjTranspose_mul_le [DecidableEq p] {Q : Matrix m p �
   rw [hPA]
   calc specNorm (P * A) ≤ specNorm P * specNorm A := specNorm_mul_le P A
     _ ≤ 1 * specNorm A :=
-      mul_le_mul_of_nonneg_right (specNorm_le_one_of_isHermitian_of_isIdempotentElem hs hp)
+      mul_le_mul_of_nonneg_right (hs.specNorm_le_one_of_isIdempotentElem hp)
         (specNorm_nonneg A)
     _ = specNorm A := one_mul _
-
-/-- The real residual `A − Q(QᵀA)` has spectral norm at most `‖A‖₂` when `QᵀQ = I`.
-Standard (HMT 2011, §8.4); audit G0 C1 (`specNorm_residual_le`); atlas `projection-facts`.
-atlas: norms-frob-spec -/
-theorem specNorm_sub_mul_transpose_mul_le [DecidableEq p] {Q : Matrix m p ℝ} (hQ : Qᵀ * Q = 1)
-    (A : Matrix m n ℝ) : specNorm (A - Q * (Qᵀ * A)) ≤ specNorm A := by
-  simpa using specNorm_sub_mul_conjTranspose_mul_le (Q := Q) (by simpa using hQ) A
 
 /-- Block bound for row-orthogonal summands: if `XYᴴ = 0` then
 `‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²`, because `(X + Y)(X + Y)ᴴ = XXᴴ + YYᴴ`. Standard (used in HMT 2011,
@@ -401,6 +370,7 @@ proof of Thm 9.1); audit G0 C1; atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/
 theorem specNorm_add_sq_le_of_mul_conjTranspose_eq_zero {X Y : Matrix m n 𝕜} (h : X * Yᴴ = 0) :
     specNorm (X + Y) ^ 2 ≤ specNorm X ^ 2 + specNorm Y ^ 2 := by
+  classical
   have h' : Y * Xᴴ = 0 := by
     rw [← Matrix.conjTranspose_conjTranspose (Y * Xᴴ), Matrix.conjTranspose_mul,
       Matrix.conjTranspose_conjTranspose, h, Matrix.conjTranspose_zero]
@@ -411,29 +381,97 @@ theorem specNorm_add_sq_le_of_mul_conjTranspose_eq_zero {X Y : Matrix m n 𝕜} 
     ← specNorm_mul_conjTranspose_self, hG]
   exact specNorm_add_le _ _
 
-/-- Block bound for real row-orthogonal summands: if `XYᵀ = 0` then
-`‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²`. Standard (HMT 2011, proof of Thm 9.1); atlas `norms-frob-spec`.
-atlas: norms-frob-spec -/
-theorem specNorm_add_sq_le_of_mul_transpose_eq_zero {X Y : Matrix m n ℝ} (h : X * Yᵀ = 0) :
-    specNorm (X + Y) ^ 2 ≤ specNorm X ^ 2 + specNorm Y ^ 2 :=
-  specNorm_add_sq_le_of_mul_conjTranspose_eq_zero (by simpa using h)
-
 /-- Block bound for column-orthogonal summands: if `XᴴY = 0` then
 `‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²` (conjugate transpose of
 `specNorm_add_sq_le_of_mul_conjTranspose_eq_zero`). Standard; audit G0 C1; atlas
 `norms-frob-spec`. -/
 theorem specNorm_add_sq_le_of_conjTranspose_mul_eq_zero {X Y : Matrix m n 𝕜} (h : Xᴴ * Y = 0) :
     specNorm (X + Y) ^ 2 ≤ specNorm X ^ 2 + specNorm Y ^ 2 := by
+  classical
   have h' : Xᴴ * Yᴴᴴ = 0 := by rw [Matrix.conjTranspose_conjTranspose]; exact h
   have := specNorm_add_sq_le_of_mul_conjTranspose_eq_zero h'
   rwa [← Matrix.conjTranspose_add, specNorm_conjTranspose, specNorm_conjTranspose,
     specNorm_conjTranspose] at this
 
-/-- Block bound for real column-orthogonal summands: if `XᵀY = 0` then
-`‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²`. Standard; audit G0 C1; atlas `norms-frob-spec`. -/
-theorem specNorm_add_sq_le_of_transpose_mul_eq_zero {X Y : Matrix m n ℝ} (h : Xᵀ * Y = 0) :
-    specNorm (X + Y) ^ 2 ≤ specNorm X ^ 2 + specNorm Y ^ 2 :=
-  specNorm_add_sq_le_of_conjTranspose_mul_eq_zero (by simpa using h)
+/-! ### Euclidean quadratic forms and Gram errors (over `𝕜`) -/
+
+omit [DecidableEq n] in
+/-- The squared Euclidean norm is the real part of the self dot product:
+`‖x‖² = Re (x̄ ⬝ x)` over `ℝ` or `ℂ`. Source: the Euclidean inner product definition; supports
+`leverage-sampling-ose`. -/
+theorem norm_toLp_sq_eq_re_star_dotProduct (x : n → 𝕜) :
+    ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 = RCLike.re (star x ⬝ᵥ x) := by
+  rw [norm_sq_eq_re_inner (𝕜 := 𝕜), EuclideanSpace.inner_toLp_toLp, dotProduct_comm]
+
+/-- A square matrix's quadratic form is bounded by its operator norm times the vector's squared
+Euclidean norm: `|Re (x̄ ⬝ Hx)| ≤ ‖H‖ ‖x‖²`. Source: Cauchy–Schwarz and the operator norm
+definition; supports `leverage-sampling-ose`. -/
+theorem abs_re_star_dotProduct_mulVec_le_norm (H : Matrix n n 𝕜) (x : n → 𝕜) :
+    |RCLike.re (star x ⬝ᵥ (H *ᵥ x))| ≤ ‖H‖ *
+      ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 := by
+  have hin : inner 𝕜 (WithLp.toLp 2 x : EuclideanSpace 𝕜 n)
+      (WithLp.toLp 2 (H *ᵥ x) : EuclideanSpace 𝕜 n) = star x ⬝ᵥ (H *ᵥ x) := by
+    rw [EuclideanSpace.inner_toLp_toLp, dotProduct_comm]
+  have hh := norm_inner_le_norm (𝕜 := 𝕜) (WithLp.toLp 2 x : EuclideanSpace 𝕜 n)
+    (WithLp.toLp 2 (H *ᵥ x) : EuclideanSpace 𝕜 n)
+  rw [hin] at hh
+  calc _ ≤ ‖star x ⬝ᵥ (H *ᵥ x)‖ := RCLike.abs_re_le_norm _
+    _ ≤ _ := hh
+    _ ≤ ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ *
+        (‖H‖ * ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖) := by
+      gcongr
+      exact H.l2_opNorm_mulVec (WithLp.toLp 2 x)
+    _ = _ := by ring
+
+/-- A Gram error bounded by `ε`, `‖TᴴT − I‖ ≤ ε`, keeps every squared Euclidean norm
+`‖Tx‖²` between `(1−ε)‖x‖²` and `(1+ε)‖x‖²`, over `ℝ` or `ℂ`. Source: operator re-derivation
+`sa:leverage-theorem`. -/
+theorem norm_mulVec_sq_bounds_of_norm_gram_sub_one_le (T : Matrix m n 𝕜) {ε : ℝ}
+    (h : ‖Tᴴ * T - 1‖ ≤ ε) (x : n → 𝕜) :
+    (1 - ε) * ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 ≤
+        ‖(WithLp.toLp 2 (T *ᵥ x) : EuclideanSpace 𝕜 m)‖ ^ 2 ∧
+      ‖(WithLp.toLp 2 (T *ᵥ x) : EuclideanSpace 𝕜 m)‖ ^ 2 ≤
+        (1 + ε) * ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 := by
+  have hq : RCLike.re (star x ⬝ᵥ ((Tᴴ * T - 1) *ᵥ x)) =
+      ‖(WithLp.toLp 2 (T *ᵥ x) : EuclideanSpace 𝕜 m)‖ ^ 2 -
+        ‖(WithLp.toLp 2 x : EuclideanSpace 𝕜 n)‖ ^ 2 := by
+    rw [Matrix.sub_mulVec, dotProduct_sub, Matrix.one_mulVec, map_sub,
+      norm_toLp_sq_eq_re_star_dotProduct, norm_toLp_sq_eq_re_star_dotProduct,
+      ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, Matrix.vecMul_conjTranspose, star_star]
+  have hh := (abs_re_star_dotProduct_mulVec_le_norm (Tᴴ * T - 1) x).trans
+    (mul_le_mul_of_nonneg_right h (sq_nonneg _))
+  rw [hq, abs_le] at hh
+  constructor <;> nlinarith
+
+omit [DecidableEq n] in
+/-- Real vectors embedded in `𝕜` coordinates (`ℝ` or `ℂ`) have the same Euclidean norm.
+Source: entrywise squared norms; supports atlas `srht-ose`. -/
+theorem norm_toLp_ofReal_eq (x : n → ℝ) :
+    ‖(WithLp.toLp 2 (fun j => algebraMap ℝ 𝕜 (x j)) : EuclideanSpace 𝕜 n)‖ =
+      ‖(WithLp.toLp 2 x : EuclideanSpace ℝ n)‖ := by
+  rw [EuclideanSpace.norm_eq, EuclideanSpace.norm_eq]
+  simp only [RCLike.algebraMap_eq_ofReal, RCLike.norm_ofReal, Real.norm_eq_abs]
+
+/-- The real operator norm is bounded by the operator norm of the extension of the matrix to
+`𝕜` (`ℝ` or `ℂ`): `‖A‖₂ ≤ ‖A.map (algebraMap ℝ 𝕜)‖`. Source: restricting the extended operator
+to real vectors; supports `srht-ose`. -/
+theorem specNorm_le_norm_map_ofReal (A : Matrix m n ℝ) :
+    specNorm A ≤ ‖A.map (algebraMap ℝ 𝕜)‖ := by
+  rw [specNorm_eq_norm, Matrix.l2_opNorm_def]
+  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _)
+  intro x
+  have h := (A.map (algebraMap ℝ 𝕜)).l2_opNorm_mulVec
+    (WithLp.toLp 2 (fun j => algebraMap ℝ 𝕜 (x.ofLp j)) : EuclideanSpace 𝕜 n)
+  have hv : A.map (algebraMap ℝ 𝕜) *ᵥ (fun j => algebraMap ℝ 𝕜 (x.ofLp j)) =
+      fun i => algebraMap ℝ 𝕜 ((A *ᵥ x.ofLp) i) := by
+    ext i
+    simp only [Matrix.mulVec, dotProduct, Matrix.map_apply, map_sum, map_mul]
+  rw [hv] at h
+  change ‖(WithLp.toLp 2 (fun i => algebraMap ℝ 𝕜 ((A *ᵥ x.ofLp) i)) : EuclideanSpace 𝕜 m)‖ ≤
+    ‖A.map (algebraMap ℝ 𝕜)‖ *
+      ‖(WithLp.toLp 2 (fun j => algebraMap ℝ 𝕜 (x.ofLp j)) : EuclideanSpace 𝕜 n)‖ at h
+  rw [norm_toLp_ofReal_eq, norm_toLp_ofReal_eq] at h
+  exact h
 
 end Spectral
 

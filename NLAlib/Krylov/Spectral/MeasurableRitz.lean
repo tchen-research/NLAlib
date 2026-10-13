@@ -62,8 +62,9 @@ theorem measurable_lanczosRitzValue (A : Matrix n n ℝ) (q : ℕ) :
     Measurable (fun b : n → ℝ => lanczosRitzValue A b q) := by
   apply Measurable.iSup
   intro c
-  simp only [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_eq_div, quadForm_eq_dotProduct,
-    krylovCoefficientVector, Matrix.mulVec, dotProduct, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+  simp only [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_def, RCLike.re_to_real,
+    quadForm_def, star_trivial, krylovCoefficientVector, Matrix.mulVec, dotProduct,
+    Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
   fun_prop
 
 /-- Density of rational coefficients proves the true variational comparison for every
@@ -92,7 +93,8 @@ theorem rayleighQuotient_le_lanczosRitzValue_of_mem {A : Matrix n n ℝ}
     · have hp : 0 < v ⬝ᵥ v := lt_of_le_of_ne (dotProduct_self_nonneg _)
         (Ne.symm fun h => hv (dotProduct_self_eq_zero.mp h))
       have h := le_ciSup hB c
-      rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_eq_div, quadForm_eq_dotProduct] at h
+      rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_def, quadForm_def, star_trivial,
+        RCLike.re_to_real, RCLike.re_to_real] at h
       exact (div_le_iff₀ hp).mp h
   have hDense : DenseRange (fun c : Fin q → ℚ => fun j => (c j : ℝ)) :=
     DenseRange.piMap (fun _ => Rat.denseRange_cast)
@@ -108,7 +110,8 @@ theorem rayleighQuotient_le_lanczosRitzValue_of_mem {A : Matrix n n ℝ}
       fun_prop
     · simp only [krylovCoefficientVector, dotProduct, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
       fun_prop
-  rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_eq_div, quadForm_eq_dotProduct]
+  rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_def, quadForm_def, star_trivial,
+    RCLike.re_to_real, RCLike.re_to_real]
   by_cases hv : krylovCoefficientVector A b c = 0
   · simpa only [hv, Matrix.mulVec_zero, dotProduct_zero, div_zero] using hθ
   · have hp : 0 < krylovCoefficientVector A b c ⬝ᵥ krylovCoefficientVector A b c :=

@@ -11,7 +11,7 @@ equation for a squared diagonal error minimum. Source: Schur–Horn variational
 rederivation, equations (1)–(2), supporting atlas `schur-horn`.
 -/
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

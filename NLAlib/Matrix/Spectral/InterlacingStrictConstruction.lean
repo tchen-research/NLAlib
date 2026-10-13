@@ -12,7 +12,7 @@ couplings. Source: Horn--Johnson (2013), Section 4.3.
 
 noncomputable section
 open Polynomial
-open scoped BigOperators Matrix
+open scoped Matrix
 namespace NLAlib
 
 /-- Any weakly interlacing target list is the exact characteristic spectrum

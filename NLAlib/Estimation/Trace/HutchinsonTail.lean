@@ -72,7 +72,7 @@ theorem quadForm_hutchinsonBlock (A : Matrix n n ℝ) (Z : n → κ → ℝ) :
     simp only [if_true]; ring
   rw [quadForm_eq_sum, hutchinsonEstimate, div_eq_inv_mul]
   simp only [hutchinsonBlock, Matrix.smul_apply, Matrix.blockDiagonal_apply, smul_eq_mul,
-    Fintype.sum_prod_type, quadForm_eq_sum, h]
+    Fintype.sum_prod_type, quadForm_eq_sum, star_trivial, h]
   simp_rw [← Finset.mul_sum]
   rw [Finset.sum_comm]
 

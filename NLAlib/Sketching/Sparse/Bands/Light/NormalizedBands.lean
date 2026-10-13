@@ -3,7 +3,6 @@ Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.Bands.Light.MixedFactorization
 import NLAlib.Sketching.Sparse.Bands.Directional.NormalizedBands
-set_option autoImplicit false
 
 /-!
 # Normalized light-band estimates
@@ -13,7 +12,7 @@ Ported from `SparseFockFormal.LightBandsConcrete` at commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators InnerProductSpace Matrix.Norms.L2Operator
+open scoped InnerProductSpace Matrix.Norms.L2Operator
 
 namespace NLAlib.SparseSketch.Light
 

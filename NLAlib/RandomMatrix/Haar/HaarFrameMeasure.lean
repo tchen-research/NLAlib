@@ -11,7 +11,6 @@ Supports atlas `haar-orthogonal`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory Measure TopologicalSpace
 open scoped ENNReal Matrix Matrix.Norms.L2Operator
 namespace NLAlib

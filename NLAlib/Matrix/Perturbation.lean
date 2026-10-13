@@ -1,6 +1,5 @@
 import NLAlib.Matrix.Perturbation.BauerFike
 import NLAlib.Matrix.Perturbation.BauerFikeAbsolute
-import NLAlib.Matrix.Perturbation.ComplexEmbedding
 import NLAlib.Matrix.Perturbation.ConditionNumber
 import NLAlib.Matrix.Perturbation.ConditionNumberToolkit
 import NLAlib.Matrix.Perturbation.Conditioning

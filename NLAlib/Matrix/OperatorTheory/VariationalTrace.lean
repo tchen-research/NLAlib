@@ -12,7 +12,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open scoped Matrix.Norms.L2Operator ComplexOrder
 open NLAlib
-set_option autoImplicit false
 
 /-- Variational formula for the trace: for positive definite `M`, `tr M` is the greatest value of `tr
 (T log M - T log T + T)` over positive definite `T`.

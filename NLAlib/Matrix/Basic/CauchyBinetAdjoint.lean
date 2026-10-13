@@ -11,7 +11,7 @@ derivations Section alg:cauchy-binet.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 
 /-- The chosen enumeration of a sized subset is injective.

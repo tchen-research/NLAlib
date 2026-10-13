@@ -67,7 +67,8 @@ theorem equivalent_toQuadraticForm'_transpose_mul_mul (A : Matrix n n ℝ) {X : 
   let hXi := X.invertibleOfIsUnitDet hdet
   refine ⟨{ X.toLinearEquiv' hXi with map_app' := fun x => ?_ }⟩
   change A.toQuadraticForm' (X *ᵥ x) = (Xᵀ * A * X).toQuadraticForm' x
-  rw [toQuadraticForm'_apply, toQuadraticForm'_apply, quadForm_eq_dotProduct, quadForm_eq_dotProduct,
+  rw [toQuadraticForm'_apply, toQuadraticForm'_apply, quadForm_def, quadForm_def,
+    star_trivial, star_trivial,
     ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec x Xᵀ,
     Matrix.vecMul_transpose]
 
@@ -94,7 +95,8 @@ theorem inertiaNeg_transpose_mul_mul (A : Matrix n n ℝ) {X : Matrix n n ℝ} (
 theorem toQuadraticForm'_diagonal (d : n → ℝ) :
     (diagonal d).toQuadraticForm' = QuadraticMap.weightedSumSquares ℝ d := by
   ext x
-  rw [toQuadraticForm'_apply, QuadraticMap.weightedSumSquares_apply, quadForm_eq_dotProduct]
+  rw [toQuadraticForm'_apply, QuadraticMap.weightedSumSquares_apply, quadForm_def,
+    star_trivial]
   simp only [dotProduct, Matrix.mulVec_diagonal, smul_eq_mul]
   exact Finset.sum_congr rfl fun i _ => by ring
 

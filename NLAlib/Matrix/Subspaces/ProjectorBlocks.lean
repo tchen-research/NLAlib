@@ -30,7 +30,7 @@ Stewart–Sun §I.5. -/
 theorem specNorm_one_sub_projector_le_one {P : Matrix n n ℝ}
     (hs : P.IsSymm) (hp : IsIdempotentElem P) : specNorm (1-P) ≤ 1 := by
   have hh := one_sub_projector_isSymm_isIdempotentElem hs hp
-  exact specNorm_le_one_of_isSymm_of_isIdempotentElem hh.1 hh.2
+  exact Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem hh.1 hh.2
 
 omit [DecidableEq n] in
 /-- Left projection and its complement split the Frobenius square exactly.
@@ -40,9 +40,11 @@ theorem frobSq_projector_mul_add_complement {Q : Matrix m m ℝ}
     frobSq (Q*Z)+frobSq ((1-Q)*Z)=frobSq Z := by
   have hc := one_sub_projector_isSymm_isIdempotentElem hs hp
   have hq : frobSq (Q*Z)=frobInner Z (Q*Z) := by
-    rw [frobSq, frobInner_mul_mul, hs.eq, show Q*Q=Q from hp]
+    rw [frobSq, frobInner_mul_mul, Matrix.conjTranspose_eq_transpose_of_trivial, hs.eq,
+      show Q*Q=Q from hp]
   have hqc : frobSq ((1-Q)*Z)=frobInner Z ((1-Q)*Z) := by
-    rw [frobSq, frobInner_mul_mul, hc.1.eq, show (1-Q)*(1-Q)=1-Q from hc.2]
+    rw [frobSq, frobInner_mul_mul, Matrix.conjTranspose_eq_transpose_of_trivial, hc.1.eq,
+      show (1-Q)*(1-Q)=1-Q from hc.2]
   rw [hq, hqc, ← frobInner_add_right, ← Matrix.add_mul]
   simp only [add_sub_cancel, Matrix.one_mul]
   rfl

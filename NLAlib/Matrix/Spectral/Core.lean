@@ -1,27 +1,30 @@
+import Mathlib.Analysis.Matrix.Spectrum
+import Mathlib.Analysis.Matrix.Order
 import Mathlib.LinearAlgebra.Matrix.DotProduct
 import NLAlib.Matrix.Basic.Pseudoinverse
 import NLAlib.Matrix.Norms.SpectralNormBounds
 /-!
 # Extreme eigenvalues and singular values
 
-Variational definitions of the smallest eigenvalue of a symmetric matrix and of the smallest
-singular value of a rectangular matrix, and the perturbation bounds every probabilistic
-argument about them starts from.
+The variational definition of the smallest singular value of a rectangular matrix, its relation
+with the smallest eigenvalue, and the perturbation bounds every probabilistic argument about them
+starts from.
 
-* `NLAlib.lamMin M`: the minimum of the Rayleigh quotient, `inf { xᵀ M x : ‖x‖₂ = 1 }`
-  (`lamMin_eq_iInf_rayleigh` gives the quotient form `inf_{x ≠ 0} xᵀMx / xᵀx`);
 * `NLAlib.sigmaMin A`: the smallest singular value of a tall matrix `A : Matrix m n ℝ`,
-  `inf { ‖Ax‖₂ : ‖x‖₂ = 1 }` (for a wide matrix apply it to `Aᵀ`);
-* `NLAlib.sigmaMinSq A = lamMin (Aᵀ A)`, with `sigmaMinSq_eq_sigmaMin_sq` and
-  `sigmaMin_eq_sqrt_sigmaMinSq`.
-
-Every infimum is over the unit sphere of `n → ℝ`; when `n` is empty the sphere is empty and the
-real convention `inf ∅ = 0` makes all three equal to `0`.
+  `inf { ‖Ax‖₂ : ‖x‖₂ = 1 }` (for a wide matrix apply it to `Aᵀ`). The infimum is over the unit
+  sphere of `n → ℝ`; when `n` is empty the sphere is empty and the real convention `inf ∅ = 0`
+  makes it `0`.
+* The smallest eigenvalue of a real symmetric matrix is Mathlib's `hM.eigenvalues₀` at index
+  `Fintype.card n - 1`; `Matrix.IsHermitian.eigenvalues₀_last_eq_iInf` is its Rayleigh
+  characterisation `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }`, and `sigmaMin_transpose_sq` gives
+  `σ_min(Gᵀ)² = inf { xᵀ G Gᵀ x : xᵀ x = 1 }`. (The earlier name `lamMin` for this infimum is
+  removed by foundation change F1.)
 
 ## Contents
 
 * Basic facts: nonnegativity, `sigmaMin A ≤ ‖Ax‖₂` on the sphere and `sigmaMin A ‖x‖₂ ≤ ‖Ax‖₂`
-  everywhere, `sigmaMin A ≤ ‖A‖₂` when `n` is nonempty, the relation with `lamMin (AᵀA)`.
+  everywhere, `sigmaMin A ≤ ‖A‖₂` when `n` is nonempty, the relation with the smallest eigenvalue
+  of `G Gᵀ`.
 * Lipschitz bound (atlas `norm-lipschitz`): `σ_min` is `1`-Lipschitz for the Frobenius norm,
   `|σ_min(A) − σ_min(B)| ≤ ‖A − B‖_F` (the spectral-norm analogue
   `abs_specNorm_sub_specNorm_le_frobNorm` is in `NLAlib.Matrix.Norms.SpectralNormBounds`).
@@ -55,12 +58,6 @@ variable {m n : Type*} [Fintype m] [Fintype n]
 
 /-! ### Definitions -/
 
-/-- The smallest eigenvalue of a (symmetric) matrix, as the minimum of the Rayleigh quotient on
-the unit sphere: `λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }` (`0` when `n` is empty).
-atlas: norm-lipschitz, svd-def -/
-def lamMin (M : Matrix n n ℝ) : ℝ :=
-  ⨅ x : {x : n → ℝ // x ⬝ᵥ x = 1}, x.1 ⬝ᵥ M *ᵥ x.1
-
 /-- The smallest singular value of a tall matrix `A : Matrix m n ℝ`:
 `σ_min(A) = inf { ‖A x‖₂ : x ∈ ℝⁿ, ‖x‖₂ = 1 }` (`0` when `n` is empty, by the real convention
 `inf ∅ = 0`). For a wide matrix use `sigmaMin Aᵀ`. Same definition as the Prove2me
@@ -68,11 +65,6 @@ def lamMin (M : Matrix n n ℝ) : ℝ :=
 atlas: norm-lipschitz, svd-def -/
 def sigmaMin (A : Matrix m n ℝ) : ℝ :=
   ⨅ x : {x : n → ℝ // x ⬝ᵥ x = 1}, Real.sqrt ((A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1))
-
-/-- The squared smallest singular value of a tall matrix, `σ_min(A)² = λ_min(AᵀA)`
-(`sigmaMinSq_eq_sigmaMin_sq`). For a wide matrix `G`, `sigmaMinSq Gᵀ = lamMin (G Gᵀ)`.
-atlas: svd-def -/
-def sigmaMinSq (A : Matrix m n ℝ) : ℝ := lamMin (Aᵀ * A)
 
 /-! ### Basic facts -/
 
@@ -170,35 +162,23 @@ theorem sigmaMin_le_specNorm [DecidableEq m] [DecidableEq n] [Nonempty n] (A : M
   rw [hnAx] at hop
   exact hop
 
-/-- `λ_min(AᵀA) ≥ 0`. Atlas `norm-lipschitz`. -/
-theorem sigmaMinSq_nonneg (A : Matrix m n ℝ) : 0 ≤ sigmaMinSq A := by
-  unfold sigmaMinSq lamMin
-  rcases isEmpty_or_nonempty {x : n → ℝ // x ⬝ᵥ x = 1} with hE | hE
-  · rw [Real.iInf_of_isEmpty]
-  · refine le_ciInf fun x => ?_
-    rw [← mulVec_dotProduct_mulVec_self]
-    exact dotProduct_self_nonneg _
-
-/-- `σ_min(A) = √(λ_min(AᵀA))`. Atlas `norm-lipschitz`. -/
-theorem sigmaMin_eq_sqrt_sigmaMinSq (A : Matrix m n ℝ) :
-    sigmaMin A = Real.sqrt (sigmaMinSq A) := by
-  unfold sigmaMin sigmaMinSq lamMin
-  simp_rw [← mulVec_dotProduct_mulVec_self]
-  rcases isEmpty_or_nonempty {x : n → ℝ // x ⬝ᵥ x = 1} with hE | hE
-  · rw [Real.iInf_of_isEmpty, Real.iInf_of_isEmpty, Real.sqrt_zero]
-  · have hbdd : BddBelow (Set.range fun x : {x : n → ℝ // x ⬝ᵥ x = 1} =>
-        (A *ᵥ x.1) ⬝ᵥ (A *ᵥ x.1)) := ⟨0, by
-      rintro _ ⟨y, rfl⟩; exact dotProduct_self_nonneg _⟩
-    exact (Monotone.map_ciInf_of_continuousAt Real.continuous_sqrt.continuousAt
-      (fun _ _ h => Real.sqrt_le_sqrt h) hbdd).symm
-
-/-- `λ_min(AᵀA) = σ_min(A)²`. Atlas `norm-lipschitz`. -/
-theorem sigmaMinSq_eq_sigmaMin_sq (A : Matrix m n ℝ) : sigmaMinSq A = sigmaMin A ^ 2 := by
-  rw [sigmaMin_eq_sqrt_sigmaMinSq, Real.sq_sqrt (sigmaMinSq_nonneg A)]
-
-/-- For a wide matrix `G`, `σ_min(Gᵀ)² = λ_min(G Gᵀ)`. Atlas `norm-lipschitz`. -/
-theorem sigmaMin_transpose_sq (G : Matrix m n ℝ) : sigmaMin Gᵀ ^ 2 = lamMin (G * Gᵀ) := by
-  rw [← sigmaMinSq_eq_sigmaMin_sq, sigmaMinSq, Matrix.transpose_transpose]
+/-- For a wide matrix `G`, `σ_min(Gᵀ)² = inf { xᵀ G Gᵀ x : xᵀ x = 1 }`, the smallest eigenvalue
+of `G Gᵀ` (`Matrix.IsHermitian.eigenvalues₀_last_eq_iInf`). Atlas `norm-lipschitz`. -/
+theorem sigmaMin_transpose_sq (G : Matrix m n ℝ) :
+    sigmaMin Gᵀ ^ 2 = ⨅ x : {x : m → ℝ // x ⬝ᵥ x = 1}, x.1 ⬝ᵥ (G * Gᵀ) *ᵥ x.1 := by
+  have hq : ∀ x : m → ℝ, (Gᵀ *ᵥ x) ⬝ᵥ (Gᵀ *ᵥ x) = x ⬝ᵥ (G * Gᵀ) *ᵥ x := fun x => by
+    simpa using star_mulVec_dotProduct_mulVec_self Gᵀ x
+  unfold sigmaMin
+  simp_rw [hq]
+  rcases isEmpty_or_nonempty {x : m → ℝ // x ⬝ᵥ x = 1} with hE | hE
+  · rw [Real.iInf_of_isEmpty, Real.iInf_of_isEmpty]
+    simp
+  · have hnn : ∀ x : {x : m → ℝ // x ⬝ᵥ x = 1}, 0 ≤ x.1 ⬝ᵥ (G * Gᵀ) *ᵥ x.1 := fun x => by
+      rw [← hq]; exact dotProduct_self_nonneg _
+    have hbdd : BddBelow (Set.range fun x : {x : m → ℝ // x ⬝ᵥ x = 1} =>
+        x.1 ⬝ᵥ (G * Gᵀ) *ᵥ x.1) := ⟨0, by rintro _ ⟨y, rfl⟩; exact hnn y⟩
+    rw [← Monotone.map_ciInf_of_continuousAt Real.continuous_sqrt.continuousAt
+      (fun _ _ h => Real.sqrt_le_sqrt h) hbdd, Real.sq_sqrt (le_ciInf hnn)]
 
 /-- Unit-sphere values of the Rayleigh quotient are bounded below (by `-∑ᵢⱼ |Mᵢⱼ|`). -/
 theorem bddBelow_range_rayleigh (M : Matrix n n ℝ) :
@@ -226,60 +206,61 @@ theorem bddBelow_range_rayleigh (M : Matrix n n ℝ) :
       _ = |M i j| := by ring
   linarith [neg_abs_le (x.1 ⬝ᵥ M *ᵥ x.1)]
 
-/-- `λ_min(M) ≤ xᵀ M x` for every unit vector `x`. Atlas `norm-lipschitz`. -/
-theorem lamMin_le (M : Matrix n n ℝ) {x : n → ℝ} (hx : x ⬝ᵥ x = 1) :
-    lamMin M ≤ x ⬝ᵥ M *ᵥ x :=
-  ciInf_le (bddBelow_range_rayleigh M) ⟨x, hx⟩
-
-/-- Rayleigh-quotient form: `λ_min(M) = inf_{x ≠ 0} xᵀMx / xᵀx` (both sides `0` when `n` is
-empty). Atlas `norm-lipschitz`. -/
-theorem lamMin_eq_iInf_rayleigh (M : Matrix n n ℝ) :
-    lamMin M = ⨅ x : {x : n → ℝ // x ≠ 0}, (x.1 ⬝ᵥ M *ᵥ x.1) / (x.1 ⬝ᵥ x.1) := by
-  -- normalise a nonzero vector to the sphere
-  have hnorm : ∀ x : n → ℝ, x ≠ 0 → ∃ y : n → ℝ, y ⬝ᵥ y = 1 ∧
-      y ⬝ᵥ M *ᵥ y = (x ⬝ᵥ M *ᵥ x) / (x ⬝ᵥ x) := by
-    intro x hx
-    have hpos : 0 < x ⬝ᵥ x := by
-      rcases (dotProduct_self_nonneg x).lt_or_eq with h | h
-      · exact h
-      · exact absurd (dotProduct_self_eq_zero.1 h.symm) hx
-    set r := Real.sqrt (x ⬝ᵥ x)
-    have hrpos : 0 < r := Real.sqrt_pos.2 hpos
-    have hrsq : r * r = x ⬝ᵥ x := Real.mul_self_sqrt hpos.le
-    refine ⟨r⁻¹ • x, ?_, ?_⟩
-    · rw [smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul, ← hrsq]
-      field_simp
-    · rw [Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul,
-        ← hrsq]
-      field_simp
-  rcases isEmpty_or_nonempty n with hn | hn
-  · have h1 : IsEmpty {x : n → ℝ // x ⬝ᵥ x = 1} := ⟨fun x => by
-      have := x.2; simp [dotProduct] at this⟩
-    have h2 : IsEmpty {x : n → ℝ // x ≠ 0} := ⟨fun x => x.2 (Subsingleton.elim _ _)⟩
-    unfold lamMin
-    rw [Real.iInf_of_isEmpty, Real.iInf_of_isEmpty]
-  · have := nonempty_unitSphere (n := n)
-    have hne : Nonempty {x : n → ℝ // x ≠ 0} := by
-      obtain ⟨x⟩ := nonempty_unitSphere (n := n)
-      exact ⟨⟨x.1, fun h => by have := x.2; rw [h] at this; simp at this⟩⟩
-    have hbdd2 : BddBelow (Set.range fun x : {x : n → ℝ // x ≠ 0} =>
-        (x.1 ⬝ᵥ M *ᵥ x.1) / (x.1 ⬝ᵥ x.1)) := by
-      obtain ⟨c, hc⟩ := bddBelow_range_rayleigh M
-      refine ⟨c, ?_⟩
-      rintro _ ⟨x, rfl⟩
-      obtain ⟨y, hy, hyx⟩ := hnorm x.1 x.2
-      show c ≤ (x.1 ⬝ᵥ M *ᵥ x.1) / (x.1 ⬝ᵥ x.1)
-      rw [← hyx]
-      exact hc ⟨⟨y, hy⟩, rfl⟩
-    apply le_antisymm
-    · refine le_ciInf fun x => ?_
-      obtain ⟨y, hy, hyx⟩ := hnorm x.1 x.2
-      rw [← hyx]
-      exact lamMin_le M hy
-    · refine le_ciInf fun x => ?_
-      have hx0 : x.1 ≠ 0 := fun h => by have := x.2; rw [h] at this; simp at this
-      refine (ciInf_le hbdd2 ⟨x.1, hx0⟩).trans_eq ?_
-      simp [x.2]
+/-- **Rayleigh characterisation of the smallest eigenvalue.** For a real symmetric `M` on a
+nonempty index type, the last (smallest) of Mathlib's decreasingly sorted eigenvalues is
+`λ_min(M) = inf { xᵀ M x : xᵀ x = 1 }`. Standard (Horn–Johnson 2013, Theorem 4.2.2); this replaces
+the former definition `NLAlib.lamMin` (foundation change F1). Atlas `norm-lipschitz`. -/
+theorem _root_.Matrix.IsHermitian.eigenvalues₀_last_eq_iInf [DecidableEq n] {M : Matrix n n ℝ}
+    (hM : M.IsHermitian) (hn : 0 < Fintype.card n) :
+    hM.eigenvalues₀ ⟨Fintype.card n - 1, Nat.sub_one_lt_of_lt hn⟩ =
+      ⨅ x : {x : n → ℝ // x ⬝ᵥ x = 1}, x.1 ⬝ᵥ M *ᵥ x.1 := by
+  set e : Fin (Fintype.card n) ≃ n := Fintype.equivOfCardEq (by simp)
+  set k : Fin (Fintype.card n) := ⟨Fintype.card n - 1, Nat.sub_one_lt_of_lt hn⟩
+  have hmin : ∀ i, hM.eigenvalues₀ k ≤ hM.eigenvalues i := fun i =>
+    hM.eigenvalues₀_antitone (Nat.le_sub_one_of_lt (e.symm i).isLt)
+  -- eigen-coordinates `y = Uᵀ x`: `xᵀMx = ∑ᵢ λᵢ yᵢ²` and `∑ᵢ yᵢ² = xᵀx`
+  set U : Matrix n n ℝ := (hM.eigenvectorUnitary : Matrix n n ℝ)
+  have hUU : U * Uᵀ = 1 := by
+    simpa [U, Matrix.star_eq_conjTranspose] using Unitary.coe_mul_star_self hM.eigenvectorUnitary
+  have hD : Uᵀ * M * U = Matrix.diagonal hM.eigenvalues := by
+    have h := hM.conjStarAlgAut_star_eigenvectorUnitary
+    simpa [Unitary.conjStarAlgAut_apply, U, Matrix.star_eq_conjTranspose] using h
+  have hUy : ∀ x : n → ℝ, U *ᵥ (Uᵀ *ᵥ x) = x := fun x => by
+    rw [Matrix.mulVec_mulVec, hUU, Matrix.one_mulVec]
+  have hquad : ∀ x : n → ℝ, x ⬝ᵥ M *ᵥ x = ∑ i, hM.eigenvalues i * (Uᵀ *ᵥ x) i ^ 2 := by
+    intro x
+    calc x ⬝ᵥ M *ᵥ x = (U *ᵥ (Uᵀ *ᵥ x)) ⬝ᵥ M *ᵥ (U *ᵥ (Uᵀ *ᵥ x)) := by rw [hUy]
+      _ = (Uᵀ *ᵥ x) ⬝ᵥ (Uᵀ * M * U) *ᵥ (Uᵀ *ᵥ x) := by
+        rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec _ Uᵀ,
+          Matrix.vecMul_transpose]
+      _ = _ := by
+        rw [hD]
+        simp only [dotProduct, Matrix.mulVec_diagonal]
+        exact Finset.sum_congr rfl fun i _ => by ring
+  have hnorm : ∀ x : n → ℝ, ∑ i, (Uᵀ *ᵥ x) i ^ 2 = x ⬝ᵥ x := by
+    intro x
+    calc ∑ i, (Uᵀ *ᵥ x) i ^ 2 = (Uᵀ *ᵥ x) ⬝ᵥ Uᵀ *ᵥ x := by simp only [dotProduct, sq]
+      _ = x ⬝ᵥ x := by rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose, hUy]
+  have hlow : ∀ x : n → ℝ, hM.eigenvalues₀ k * (x ⬝ᵥ x) ≤ x ⬝ᵥ M *ᵥ x := by
+    intro x
+    rw [hquad, ← hnorm, Finset.mul_sum]
+    exact Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_right (hmin i) (sq_nonneg _)
+  -- the eigenvector of `λ_min` attains the bound
+  set v : n → ℝ := ⇑(hM.eigenvectorBasis (e k))
+  have hv : v ⬝ᵥ v = 1 := by
+    have hUv : Uᵀ *ᵥ v = Pi.single (e k) 1 := by
+      simpa [U, Matrix.star_eq_conjTranspose] using hM.star_eigenvectorUnitary_mulVec (e k)
+    rw [← hnorm, hUv]
+    simp [Pi.single_apply]
+  have hbdd : BddBelow (Set.range fun x : {x : n → ℝ // x ⬝ᵥ x = 1} => x.1 ⬝ᵥ M *ᵥ x.1) :=
+    ⟨hM.eigenvalues₀ k, by rintro _ ⟨x, rfl⟩; simpa [x.2] using hlow x.1⟩
+  apply le_antisymm
+  · have : Nonempty {x : n → ℝ // x ⬝ᵥ x = 1} := ⟨⟨v, hv⟩⟩
+    exact le_ciInf fun x => by simpa [x.2] using hlow x.1
+  · refine (ciInf_le hbdd ⟨v, hv⟩).trans_eq ?_
+    show v ⬝ᵥ M *ᵥ v = _
+    rw [hM.mulVec_eigenvectorBasis, dotProduct_smul, hv, smul_eq_mul, mul_one]
+    simp [Matrix.IsHermitian.eigenvalues, e, k]
 
 /-! ### Lipschitz bounds (atlas `norm-lipschitz`) -/
 
@@ -329,8 +310,8 @@ open scoped RealInnerProductSpace in
 /-- The bilinear form of a matrix in coordinates: `⟨v, A u⟩ = ∑ᵢⱼ vᵢ Aᵢⱼ uⱼ`.
 Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_inner_matrix`).
 Atlas `norm-lipschitz` (helper). -/
-theorem inner_toEuclideanLin_eq_sum {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ)
-    (u : EuclideanSpace ℝ (Fin n)) (v : EuclideanSpace ℝ (Fin N)) :
+theorem inner_toEuclideanLin_eq_sum [DecidableEq n] (A : Matrix m n ℝ)
+    (u : EuclideanSpace ℝ n) (v : EuclideanSpace ℝ m) :
     ⟪v, (Matrix.toEuclideanLin.trans LinearMap.toContinuousLinearMap) A u⟫
       = ∑ i, ∑ j, v i * A i j * u j := by
   simp [PiLp.inner_apply, Matrix.toEuclideanLin, Matrix.mulVec, dotProduct]
@@ -344,10 +325,10 @@ pair in the finite set `I` (whose second components are unit vectors), then
 `(1 - 2ε)‖A‖₂ ≤ max_{(u,v) ∈ I} ⟨v, A u⟩`. Standard (Vershynin 2012, Lemma 5.4 in this form).
 Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_net_bound`).
 Atlas `norm-lipschitz` (helper of `gordon`, `spectral-second-moment`). -/
-theorem one_sub_two_mul_mul_specNorm_le_iSup {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (ε : ℝ)
-    (hε : 0 ≤ ε) (I : Finset (EuclideanSpace ℝ (Fin n) × EuclideanSpace ℝ (Fin N)))
+theorem one_sub_two_mul_mul_specNorm_le_iSup [DecidableEq n] (A : Matrix m n ℝ) (ε : ℝ)
+    (hε : 0 ≤ ε) (I : Finset (EuclideanSpace ℝ n × EuclideanSpace ℝ m))
     (hI : ∀ t ∈ I, ‖t.2‖ = 1)
-    (hcov : ∀ (u : EuclideanSpace ℝ (Fin n)) (v : EuclideanSpace ℝ (Fin N)), ‖u‖ = 1 → ‖v‖ = 1 →
+    (hcov : ∀ (u : EuclideanSpace ℝ n) (v : EuclideanSpace ℝ m), ‖u‖ = 1 → ‖v‖ = 1 →
       ∃ t ∈ I, ‖u - t.1‖ ≤ ε ∧ ‖v - t.2‖ ≤ ε) :
     (1 - 2 * ε) * specNorm A ≤ ⨆ t : I, ∑ i, ∑ j, t.1.2 i * A i j * t.1.1 j := by
   set Φ := (Matrix.toEuclideanLin.trans LinearMap.toContinuousLinearMap) A with hΦ
@@ -368,7 +349,7 @@ theorem one_sub_two_mul_mul_specNorm_le_iSup {N n : ℕ} (A : Matrix (Fin N) (Fi
         simp at hrx
         linarith
       have hxpos : 0 < ‖x‖ := norm_pos_iff.2 hx0
-      set u : EuclideanSpace ℝ (Fin n) := (‖x‖⁻¹ : ℝ) • x with hu
+      set u : EuclideanSpace ℝ n := (‖x‖⁻¹ : ℝ) • x with hu
       have hu1 : ‖u‖ = 1 := norm_smul_inv_norm hx0
       have hΦu : ‖Φ x‖ ≤ ‖Φ u‖ := by
         rw [hu, map_smul, norm_smul, Real.norm_eq_abs, abs_inv, abs_norm]
@@ -378,7 +359,7 @@ theorem one_sub_two_mul_mul_specNorm_le_iSup {N n : ℕ} (A : Matrix (Fin N) (Fi
       have hrw : r < ‖w‖ := lt_of_lt_of_le hrx hΦu
       have hw0 : w ≠ 0 := by
         intro h; rw [h, norm_zero] at hrw; linarith
-      set v : EuclideanSpace ℝ (Fin N) := (‖w‖⁻¹ : ℝ) • w with hv
+      set v : EuclideanSpace ℝ m := (‖w‖⁻¹ : ℝ) • w with hv
       have hv1 : ‖v‖ = 1 := norm_smul_inv_norm hw0
       have hvw : ⟪v, w⟫ = ‖w‖ := by
         rw [hv, real_inner_smul_left, real_inner_self_eq_norm_sq]
@@ -680,7 +661,8 @@ Ported from Prove2me solution `GaussianMatrix.specNorm_pinvR_sq`.
 atlas: pseudoinverse -/
 theorem specNorm_pinvR_sq [DecidableEq n] (A : Matrix m n ℝ) :
     specNorm (pinvR A) ^ 2 = specNorm (A * Aᵀ)⁻¹ := by
-  unfold specNorm; rw [pinvR_eq_transpose_mul_inv]
+  unfold specNorm pinvR
+  simp only [Matrix.conjTranspose_eq_transpose_of_trivial]
   have hsym : (A * Aᵀ)ᵀ = A * Aᵀ := by rw [Matrix.transpose_mul, Matrix.transpose_transpose]
   have key : (Aᵀ * (A * Aᵀ)⁻¹)ᴴ * (Aᵀ * (A * Aᵀ)⁻¹) = (A * Aᵀ)⁻¹ := by
     rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul,
@@ -691,5 +673,99 @@ theorem specNorm_pinvR_sq [DecidableEq n] (A : Matrix m n ℝ) :
   rw [sq, ← Matrix.l2_opNorm_conjTranspose_mul_self, key]
 
 end InverseGram
+
+/-! ### Real matrices inside `𝕜` matrices
+
+The entrywise extension `Matrix n n ℝ →⋆ₐ[ℝ] Matrix n n 𝕜` preserves and reflects the Loewner
+order and commutes with the continuous functional calculus; real matrix results are transported
+from the C⋆-algebra `Matrix n n ℂ` through it (`loewner-heinz-real`). -/
+
+section RealExtension
+
+open scoped MatrixOrder ComplexOrder
+
+variable {𝕜 : Type*} [RCLike 𝕜] [DecidableEq n]
+
+/-- Entrywise extension of real matrices to `𝕜` (`ℝ` or `ℂ`) as a real star algebra
+homomorphism. Source: the canonical scalar embedding; supports `loewner-heinz-real`. -/
+def realMatrixComplexification : Matrix n n ℝ →⋆ₐ[ℝ] Matrix n n 𝕜 :=
+  { (Algebra.ofId ℝ 𝕜).mapMatrix with
+    map_star' := by intro A; ext i j; simp }
+
+/-- The embedding acts on each matrix entry by the canonical real scalar map.
+Source: the canonical scalar embedding; supports `loewner-heinz-real`. -/
+@[simp] theorem realMatrixComplexification_apply (A : Matrix n n ℝ) :
+    (realMatrixComplexification A : Matrix n n 𝕜) = A.map (algebraMap ℝ 𝕜) := rfl
+
+/-- The extension to `𝕜` preserves and reflects positive semidefiniteness.
+Source: the quadratic form on embedded real vectors and star-order preservation;
+supports `loewner-heinz-real`. -/
+theorem posSemidef_realMatrixComplexification_iff (A : Matrix n n ℝ) :
+    (realMatrixComplexification A : Matrix n n 𝕜).PosSemidef ↔ A.PosSemidef := by
+  constructor
+  · intro hA
+    rw [Matrix.posSemidef_iff_dotProduct_mulVec]
+    constructor
+    · exact (Matrix.isHermitian_map_iff (fun x => by simp)
+        (algebraMap ℝ 𝕜).injective).mp hA.isHermitian
+    · intro x
+      have h := hA.re_dotProduct_nonneg (fun i => algebraMap ℝ 𝕜 (x i))
+      simpa [Matrix.mulVec, dotProduct, realMatrixComplexification_apply, ← map_mul,
+        ← map_sum] using h
+  · intro hA
+    apply Matrix.nonneg_iff_posSemidef.mp
+    have h : (realMatrixComplexification (0 : Matrix n n ℝ) : Matrix n n 𝕜) ≤
+        realMatrixComplexification A :=
+      map_rel (realMatrixComplexification (𝕜 := 𝕜) (n := n)) hA.nonneg
+    rwa [map_zero] at h
+
+/-- The extension to `𝕜` preserves and reflects Loewner inequalities.
+Source: the positive-semidefinite difference criterion; supports `loewner-heinz-real`. -/
+theorem realMatrixComplexification_le_iff (A B : Matrix n n ℝ) :
+    (realMatrixComplexification A : Matrix n n 𝕜) ≤ realMatrixComplexification B ↔ A ≤ B := by
+  rw [Matrix.le_iff, ← map_sub, posSemidef_realMatrixComplexification_iff, Matrix.le_iff]
+
+/-- The entrywise extension to `𝕜` is continuous.
+Source: finite-dimensional real linearity; supports `loewner-heinz-real`. -/
+theorem continuous_realMatrixComplexification :
+    Continuous (realMatrixComplexification : Matrix n n ℝ → Matrix n n 𝕜) :=
+  (realMatrixComplexification (𝕜 := 𝕜) (n := n)).toLinearMap.continuous_of_finiteDimensional
+
+/-- Every scalar functional calculus of a real symmetric matrix commutes with the extension
+to `𝕜`. Its finite spectrum makes every scalar function continuous on the spectrum.
+Source: Mathlib `StarAlgHom.map_cfc`; supports `loewner-heinz-real`. -/
+theorem realMatrixComplexification_cfc (f : ℝ → ℝ) {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) :
+    (realMatrixComplexification (cfc f A) : Matrix n n 𝕜) =
+      cfc f (realMatrixComplexification A : Matrix n n 𝕜) := by
+  exact (realMatrixComplexification (𝕜 := 𝕜) (n := n)).map_cfc f A
+    (A.finite_real_spectrum.continuousOn f) continuous_realMatrixComplexification hA
+    (hA.map (algebraMap ℝ 𝕜) (fun x => by simp))
+
+/-- The extension to `𝕜` preserves positive definiteness, including empty dimensions.
+Source: positivity and preservation of units; supports `loewner-heinz-real`. -/
+theorem posDef_realMatrixComplexification {A : Matrix n n ℝ} (hA : A.PosDef) :
+    (realMatrixComplexification A : Matrix n n 𝕜).PosDef := by
+  apply (posSemidef_realMatrixComplexification_iff A).mpr hA.posSemidef |>.posDef_iff_isUnit.mpr
+  exact hA.isUnit.map realMatrixComplexification
+
+/-- The extension to `𝕜` commutes with the ordinary inverse on nonsingular matrices.
+Source: preservation of the two inverse identities; supports `loewner-heinz-real`. -/
+theorem realMatrixComplexification_inv {A : Matrix n n ℝ} (hA : IsUnit A) :
+    (realMatrixComplexification A⁻¹ : Matrix n n 𝕜) = (realMatrixComplexification A)⁻¹ := by
+  have hAc : IsUnit (realMatrixComplexification A : Matrix n n 𝕜) :=
+    hA.map realMatrixComplexification
+  have hCancel : (realMatrixComplexification A : Matrix n n 𝕜) *
+      realMatrixComplexification A⁻¹ = 1 := by
+    rw [← map_mul, Matrix.mul_nonsing_inv _ ((Matrix.isUnit_iff_isUnit_det _).mp hA), map_one]
+  calc
+    (realMatrixComplexification A⁻¹ : Matrix n n 𝕜) =
+        (realMatrixComplexification A)⁻¹ *
+          (realMatrixComplexification A * realMatrixComplexification A⁻¹) := by
+      rw [← Matrix.mul_assoc,
+        Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det _).mp hAc), Matrix.one_mul]
+    _ = (realMatrixComplexification A)⁻¹ := by rw [hCancel, Matrix.mul_one]
+
+end RealExtension
 
 end NLAlib

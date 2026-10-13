@@ -8,7 +8,6 @@ event and the bound for every remaining section. Supports `sh:srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Classical
 namespace NLAlib

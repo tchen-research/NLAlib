@@ -6,7 +6,6 @@ import NLAlib.Sketching.Sparse.FockModel.WeightedBasis
 import NLAlib.Sketching.Sparse.FiniteLaw.IndependentProduct
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Ternary coordinate Jacobi matrix

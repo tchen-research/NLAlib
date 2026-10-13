@@ -43,10 +43,11 @@ theorem isUnit_overlap_and_eq_mul_inv_mul_of_idempotent {n r : Type*}
   let G := Qᵀ * P * W
   let C := Wᵀ * Q
   have hPQ : P * Q = Q := mul_eq_of_range_le_of_isIdempotentElem hP hRange.le
-  have hQproj : Q * (Qᵀ * P) = P := mul_transpose_mul_eq_of_range_le hQ hRange.ge
+  have hQproj : Q * (Qᵀ * P) = P := mul_conjTranspose_mul_eq_of_range_le hQ hRange.ge
   have hWproj : P * W * Wᵀ = P := by
-    have hh := congrArg Matrix.transpose (mul_transpose_mul_eq_of_range_le hW hRow.ge)
-    simpa only [Matrix.transpose_mul, Matrix.transpose_transpose] using hh
+    have hh := congrArg Matrix.transpose (mul_conjTranspose_mul_eq_of_range_le hW hRow.ge)
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul,
+      Matrix.transpose_transpose] using hh
   have hGC : G * C = 1 := by
     calc
       _ = Qᵀ * (P * W * Wᵀ) * Q := by simp only [G, C, Matrix.mul_assoc]

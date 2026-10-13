@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.FiniteLaw.IndependentProduct
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Finite local moments and bounded interaction degree
@@ -26,7 +25,6 @@ matching transfers expectations of every observable of local degree at most
 SparseStack limited-independence theorem.
 -/
 
-open scoped BigOperators
 
 namespace NLAlib.SparseSketch
 

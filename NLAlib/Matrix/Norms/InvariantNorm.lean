@@ -14,7 +14,7 @@ Atlas: `unitarily-invariant-norm-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 
@@ -62,6 +62,7 @@ theorem matrixValue_smul (A : Matrix m n ℝ) (c : ℝ) : Φ.matrixValue (c • 
   rw [matrixValue, hσ, value, map_smul_eq_mul, Real.norm_eq_abs, abs_abs]
   rfl
 
+omit [DecidableEq m] in
 /-- A genuine scalar gauge separates the zero matrix through its singular values. -/
 theorem eq_zero_of_matrixValue_eq_zero (A : Matrix m n ℝ) (hA : Φ.matrixValue A = 0) : A = 0 := by
   have hσ : (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i) = 0 :=

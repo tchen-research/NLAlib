@@ -24,17 +24,17 @@ negative moments; atlas `inverse-wishart-spectral-moment` (directional input). -
 theorem integrable_and_integral_rpow_inv_self_mul_transpose_apply_self_gaussianMatrix
     {r k : ℕ} (hrk : r ≤ k) (i : Fin r) (q : ℝ) (hq : 0 ≤ q)
     (hqd : q < ((k : ℝ) - r + 1) / 2) :
-    Integrable (fun G : Fin r → Fin k → ℝ =>
-      ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i) ^ q) (gaussianMatrix r k) ∧
-    (∫ G : Fin r → Fin k → ℝ, ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i) ^ q
-      ∂(gaussianMatrix r k))
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      ((G * Gᵀ)⁻¹ i i) ^ q) (gaussianMatrix (Fin r) (Fin k)) ∧
+    (∫ G : Matrix (Fin r) (Fin k) ℝ, ((G * Gᵀ)⁻¹ i i) ^ q
+      ∂(gaussianMatrix (Fin r) (Fin k)))
       = Real.Gamma (((k : ℝ) - r + 1) / 2 - q) /
         (2 ^ q * Real.Gamma (((k : ℝ) - r + 1) / 2)) := by
   have hdcast : ((k - r + 1 : ℕ) : ℝ) = (k : ℝ) - r + 1 := by
     rw [Nat.cast_add, Nat.cast_sub hrk, Nat.cast_one]
   have hlaw := gaussianMatrix_map_inv_self_mul_transpose_apply_self hrk i
-  have hD : Measurable (fun G : Fin r → Fin k → ℝ =>
-      (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i) :=
+  have hD : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      (G * Gᵀ)⁻¹ i i) :=
     measurable_inv_self_mul_transpose_apply i i
   have hS : Measurable (fun x : Fin (k - r + 1) → ℝ => (∑ j, x j ^ 2)⁻¹) := by
     fun_prop
@@ -55,10 +55,10 @@ Source: Gaussian orthogonal invariance and Schur complement; atlas
 theorem integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_unit_gaussianMatrix
     {r k : ℕ} (hrk : r ≤ k) (u : Fin r → ℝ) (hu : u ⬝ᵥ u = 1)
     (q : ℝ) (hq : 0 ≤ q) (hqd : q < ((k : ℝ) - r + 1) / 2) :
-    Integrable (fun G : Fin r → Fin k → ℝ =>
-      (u ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ u)) ^ q) (gaussianMatrix r k) ∧
-    (∫ G : Fin r → Fin k → ℝ,
-      (u ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ u)) ^ q ∂(gaussianMatrix r k))
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      (u ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ u)) ^ q) (gaussianMatrix (Fin r) (Fin k)) ∧
+    (∫ G : Matrix (Fin r) (Fin k) ℝ,
+      (u ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ u)) ^ q ∂(gaussianMatrix (Fin r) (Fin k)))
       = Real.Gamma (((k : ℝ) - r + 1) / 2 - q) /
         (2 ^ q * Real.Gamma (((k : ℝ) - r + 1) / 2)) := by
   classical
@@ -68,7 +68,7 @@ theorem integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_unit_gaus
     subst r
     simp [dotProduct] at hu
   let i : Fin r := ⟨0, hr⟩
-  let V : Matrix (Fin r) (Fin 1) ℝ := fun a _ => u a
+  let V : Matrix (Fin r) (Fin 1) ℝ := Matrix.of fun a _ => u a
   have hV : Vᵀ * V = 1 := by
     ext a b
     fin_cases a
@@ -76,25 +76,25 @@ theorem integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_unit_gaus
     change (∑ a, u a * u a) = 1
     exact hu
   let e : Fin 1 ↪ Fin r := ⟨fun _ => i, fun a b _ => Subsingleton.elim a b⟩
-  obtain ⟨U, hU, hUcol⟩ := exists_orthogonal_completion V hV e
+  obtain ⟨U, hU, hUcol⟩ := exists_unitary_completion V hV e
   have hUi : ∀ a, U a i = u a := fun a => hUcol a 0
-  let T : (Fin r → Fin k → ℝ) → (Fin r → Fin k → ℝ) :=
-    fun G => Matrix.of.symm (Uᵀ * Matrix.of G * (1 : Matrix (Fin k) (Fin k) ℝ))
-  have hTm : Measurable T := by
-    refine measurable_pi_lambda _ fun a => measurable_pi_lambda _ fun b => ?_
-    simp only [T, Matrix.of_symm_apply, Matrix.mul_one, Matrix.mul_apply, Matrix.of_apply]
-    fun_prop
+  let T : (Matrix (Fin r) (Fin k) ℝ) → (Matrix (Fin r) (Fin k) ℝ) :=
+    fun G => (Uᵀ * G * (1 : Matrix (Fin k) (Fin k) ℝ))
+  have hTm : Measurable T := (measurable_const.matrix_mul measurable_id).matrix_mul measurable_const
   have hUt : U * Uᵀ = 1 := mul_eq_one_comm.mp hU
-  have hrot : MeasurePreserving T (gaussianMatrix r k) (gaussianMatrix r k) :=
-    ⟨hTm, gaussianMatrix_map_orthogonal Uᵀ 1 (by simpa using hUt) (by simp)⟩
-  let F : (Fin r → Fin k → ℝ) → ℝ := fun G =>
-    ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ i i) ^ q
+  have hUt' : HasOrthonormalCols Uᵀ := by simpa [HasOrthonormalCols] using hUt
+  have hrot : MeasurePreserving T (gaussianMatrix (Fin r) (Fin k))
+      (gaussianMatrix (Fin r) (Fin k)) :=
+    (hasLaw_gaussianMatrix_orthogonal Uᵀ 1 hUt' (by simp [HasOrthonormalCols])).measurePreserving
+      hTm
+  let F : (Matrix (Fin r) (Fin k) ℝ) → ℝ := fun G =>
+    ((G * Gᵀ)⁻¹ i i) ^ q
   have hFm : Measurable F := (measurable_inv_self_mul_transpose_apply i i).pow_const q
-  have hFT : F ∘ T = fun G : Fin r → Fin k → ℝ =>
-      (u ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ u)) ^ q := by
+  have hFT : F ∘ T = fun G : Matrix (Fin r) (Fin k) ℝ =>
+      (u ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ u)) ^ q := by
     funext G
-    simp only [Function.comp_apply, F, T, Equiv.apply_symm_apply, Matrix.mul_one]
-    rw [inv_self_mul_transpose_orthogonal_mul Uᵀ (by simpa using hUt), Matrix.transpose_transpose]
+    simp only [Function.comp_apply, F, T, Matrix.mul_one]
+    rw [inv_self_mul_transpose_orthogonal_mul Uᵀ hUt', Matrix.transpose_transpose]
     congr 1
     simp only [Matrix.mul_apply, Matrix.transpose_apply, hUi, dotProduct, Matrix.mulVec]
     simp_rw [Finset.sum_mul, Finset.mul_sum]
@@ -110,7 +110,7 @@ theorem integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_unit_gaus
   · rw [← hFT]
     exact hrot.integrable_comp_of_integrable hint
   · rw [← hFT]
-    change (∫ G, F (T G) ∂(gaussianMatrix r k)) = _
+    change (∫ G, F (T G) ∂(gaussianMatrix (Fin r) (Fin k))) = _
     rw [← integral_map hTm.aemeasurable hFm.aestronglyMeasurable, hrot.map_eq]
     exact hval
 
@@ -120,10 +120,10 @@ The fixed vector may vanish, and the exponent is any strictly positive admissibl
 theorem integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_gaussianMatrix
     {r k : ℕ} (hrk : r ≤ k) (v : Fin r → ℝ) (q : ℝ) (hq : 0 < q)
     (hqd : q < ((k : ℝ) - r + 1) / 2) :
-    Integrable (fun G : Fin r → Fin k → ℝ =>
-      (v ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ v)) ^ q) (gaussianMatrix r k) ∧
-    (∫ G : Fin r → Fin k → ℝ,
-      (v ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ v)) ^ q ∂(gaussianMatrix r k))
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      (v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v)) ^ q) (gaussianMatrix (Fin r) (Fin k)) ∧
+    (∫ G : Matrix (Fin r) (Fin k) ℝ,
+      (v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v)) ^ q ∂(gaussianMatrix (Fin r) (Fin k)))
       = (v ⬝ᵥ v) ^ q *
         (Real.Gamma (((k : ℝ) - r + 1) / 2 - q) /
           (2 ^ q * Real.Gamma (((k : ℝ) - r + 1) / 2))) := by
@@ -144,17 +144,17 @@ theorem integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_gaussianM
     change c⁻¹ * (c⁻¹ * S) = 1
     rw [← hcsq]
     field_simp
-  have hscale : ∀ G : Fin r → Fin k → ℝ,
-      (v ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ v)) ^ q
-        = S ^ q * (u ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ u)) ^ q := by
+  have hscale : ∀ G : Matrix (Fin r) (Fin k) ℝ,
+      (v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v)) ^ q
+        = S ^ q * (u ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ u)) ^ q := by
     intro G
-    have hform : v ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ v)
-        = S * (u ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ u)) := by
+    have hform : v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v)
+        = S * (u ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ u)) := by
       rw [← hcu, Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul]
       simp only [smul_eq_mul]
       rw [← mul_assoc, ← sq, hcsq]
-    have hQ : 0 ≤ u ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ u) := by
-      simpa using (posSemidef_inv_self_mul_transpose (Matrix.of G)).dotProduct_mulVec_nonneg u
+    have hQ : 0 ≤ u ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ u) := by
+      simpa using (posSemidef_inv_self_mul_transpose G).dotProduct_mulVec_nonneg u
     rw [hform, Real.mul_rpow hS0.le hQ]
   obtain ⟨hint, hval⟩ :=
     integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_unit_gaussianMatrix
@@ -197,14 +197,14 @@ All integration uses nonnegative quantities, so inverse spectral integrability i
 theorem lintegral_lintegral_rpow_dotProduct_inv_self_mul_transpose_gaussianMatrix
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (q : ℝ) (hq : 0 < q)
     (hqd : q < ((k : ℝ) - r + 1) / 2) :
-    (∫⁻ G : Fin r → Fin k → ℝ, ∫⁻ v : Fin r → ℝ,
-      ENNReal.ofReal (v ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ v)) ^ q
-      ∂(Measure.pi fun _ : Fin r => gaussianReal 0 1) ∂(gaussianMatrix r k))
+    (∫⁻ G : Matrix (Fin r) (Fin k) ℝ, ∫⁻ v : Fin r → ℝ,
+      ENNReal.ofReal (v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v)) ^ q
+      ∂(Measure.pi fun _ : Fin r => gaussianReal 0 1) ∂(gaussianMatrix (Fin r) (Fin k)))
       = ENNReal.ofReal ((2 ^ q * Real.Gamma ((r : ℝ) / 2 + q) /
           Real.Gamma ((r : ℝ) / 2)) *
         (Real.Gamma (((k : ℝ) - r + 1) / 2 - q) /
           (2 ^ q * Real.Gamma (((k : ℝ) - r + 1) / 2)))) := by
-  let μ := gaussianMatrix r k
+  let μ := gaussianMatrix (Fin r) (Fin k)
   let ν := Measure.pi fun _ : Fin r => gaussianReal 0 1
   let a : ℝ := Real.Gamma (((k : ℝ) - r + 1) / 2 - q) /
     (2 ^ q * Real.Gamma (((k : ℝ) - r + 1) / 2))
@@ -212,32 +212,32 @@ theorem lintegral_lintegral_rpow_dotProduct_inv_self_mul_transpose_gaussianMatri
     have h1 := Real.Gamma_pos_of_pos (show 0 < ((k : ℝ) - r + 1) / 2 - q by linarith)
     have h2 := Real.Gamma_pos_of_pos (show 0 < ((k : ℝ) - r + 1) / 2 by linarith)
     positivity
-  have hjoint : Measurable (fun z : (Fin r → Fin k → ℝ) × (Fin r → ℝ) =>
-      ENNReal.ofReal (z.2 ⬝ᵥ ((Matrix.of z.1 * (Matrix.of z.1)ᵀ)⁻¹ *ᵥ z.2)) ^ q) := by
-    have hm (i j : Fin r) : Measurable (fun z : (Fin r → Fin k → ℝ) × (Fin r → ℝ) =>
-        (Matrix.of z.1 * (Matrix.of z.1)ᵀ)⁻¹ i j) :=
+  have hjoint : Measurable (fun z : (Matrix (Fin r) (Fin k) ℝ) × (Fin r → ℝ) =>
+      ENNReal.ofReal (z.2 ⬝ᵥ ((z.1 * z.1ᵀ)⁻¹ *ᵥ z.2)) ^ q) := by
+    have hm (i j : Fin r) : Measurable (fun z : (Matrix (Fin r) (Fin k) ℝ) × (Fin r → ℝ) =>
+        (z.1 * z.1ᵀ)⁻¹ i j) :=
       (measurable_inv_self_mul_transpose_apply i j).comp measurable_fst
-    have hz (i : Fin r) : Measurable (fun z : (Fin r → Fin k → ℝ) × (Fin r → ℝ) =>
+    have hz (i : Fin r) : Measurable (fun z : (Matrix (Fin r) (Fin k) ℝ) × (Fin r → ℝ) =>
         z.2 i) := (measurable_pi_apply i).comp measurable_snd
     exact ((Finset.measurable_sum Finset.univ fun i _ => (hz i).mul
       (Finset.measurable_sum Finset.univ fun j _ => (hm i j).mul (hz j))).ennreal_ofReal).pow_const q
   rw [lintegral_lintegral_swap hjoint.aemeasurable]
   have hinner : ∀ v : Fin r → ℝ,
-      (∫⁻ G : Fin r → Fin k → ℝ,
-        ENNReal.ofReal (v ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ v)) ^ q ∂μ)
+      (∫⁻ G : Matrix (Fin r) (Fin k) ℝ,
+        ENNReal.ofReal (v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v)) ^ q ∂μ)
         = ENNReal.ofReal ((v ⬝ᵥ v) ^ q * a) := by
     intro v
     obtain ⟨hint, hval⟩ :=
       integrable_and_integral_rpow_dotProduct_inv_self_mul_transpose_gaussianMatrix
         hrk v q hq hqd
-    have hnonneg : ∀ G : Fin r → Fin k → ℝ,
-        0 ≤ v ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ v) := fun G => by
-      simpa using (posSemidef_inv_self_mul_transpose (Matrix.of G)).dotProduct_mulVec_nonneg v
+    have hnonneg : ∀ G : Matrix (Fin r) (Fin k) ℝ,
+        0 ≤ v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v) := fun G => by
+      simpa using (posSemidef_inv_self_mul_transpose G).dotProduct_mulVec_nonneg v
     simp_rw [ENNReal.ofReal_rpow_of_nonneg (hnonneg _) hq.le]
     rw [← ofReal_integral_eq_lintegral_ofReal hint
       (ae_of_all _ fun G => Real.rpow_nonneg (hnonneg G) _), hval]
-  change (∫⁻ v : Fin r → ℝ, (∫⁻ G : Fin r → Fin k → ℝ,
-    ENNReal.ofReal (v ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ v)) ^ q ∂μ) ∂ν) = _
+  change (∫⁻ v : Fin r → ℝ, (∫⁻ G : Matrix (Fin r) (Fin k) ℝ,
+    ENNReal.ofReal (v ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ v)) ^ q ∂μ) ∂ν) = _
   simp_rw [hinner]
   have hint := (integrable_rpow_sum_sq_pi_gaussianReal r q hq.le).mul_const a
   simp_rw [dotProduct, ← sq]
@@ -282,15 +282,15 @@ atlas: gaussian-inverse-spectral-probe-moment -/
 theorem integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMatrix_le
     {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (q : ℝ) (hq : 0 < q)
     (hqd : q < ((k : ℝ) - r + 1) / 2) :
-    Integrable (fun G : Fin r → Fin k → ℝ =>
-      specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ q) (gaussianMatrix r k) ∧
-    (∫ G : Fin r → Fin k → ℝ, specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ q
-      ∂(gaussianMatrix r k)) ≤
+    Integrable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      specNorm (G * Gᵀ)⁻¹ ^ q) (gaussianMatrix (Fin r) (Fin k)) ∧
+    (∫ G : Matrix (Fin r) (Fin k) ℝ, specNorm (G * Gᵀ)⁻¹ ^ q
+      ∂(gaussianMatrix (Fin r) (Fin k))) ≤
       Real.Gamma ((r : ℝ) / 2 + q) * Real.Gamma (((k : ℝ) - r + 1) / 2 - q) *
         Real.sqrt Real.pi /
         (2 ^ q * Real.Gamma ((r : ℝ) / 2) * Real.Gamma (((k : ℝ) - r + 1) / 2) *
           Real.Gamma (q + 1 / 2)) := by
-  let μ := gaussianMatrix r k
+  let μ := gaussianMatrix (Fin r) (Fin k)
   let c : ℝ := 2 ^ q * Real.Gamma (q + 1 / 2) / Real.sqrt Real.pi
   let a : ℝ := (2 ^ q * Real.Gamma ((r : ℝ) / 2 + q) / Real.Gamma ((r : ℝ) / 2)) *
     (Real.Gamma (((k : ℝ) - r + 1) / 2 - q) /
@@ -306,42 +306,68 @@ theorem integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMat
   have hcm0 : ENNReal.ofReal c ≠ 0 := ENNReal.ofReal_ne_zero_iff.2 hc
   have hcmT : ENNReal.ofReal c ≠ ⊤ := ENNReal.ofReal_ne_top
   have hL : ENNReal.ofReal c *
-      (∫⁻ G : Fin r → Fin k → ℝ, ENNReal.ofReal
-        (specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹) ^ q ∂μ) ≤ ENNReal.ofReal a := by
+      (∫⁻ G : Matrix (Fin r) (Fin k) ℝ, ENNReal.ofReal
+        (specNorm (G * Gᵀ)⁻¹) ^ q ∂μ) ≤ ENNReal.ofReal a := by
     rw [← lintegral_const_mul' _ _ hcmT]
-    calc (∫⁻ G : Fin r → Fin k → ℝ, ENNReal.ofReal c * ENNReal.ofReal
-        (specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹) ^ q ∂μ)
-        ≤ ∫⁻ G : Fin r → Fin k → ℝ, ∫⁻ z : Fin r → ℝ,
-          ENNReal.ofReal (z ⬝ᵥ ((Matrix.of G * (Matrix.of G)ᵀ)⁻¹ *ᵥ z)) ^ q
+    calc (∫⁻ G : Matrix (Fin r) (Fin k) ℝ, ENNReal.ofReal c * ENNReal.ofReal
+        (specNorm (G * Gᵀ)⁻¹) ^ q ∂μ)
+        ≤ ∫⁻ G : Matrix (Fin r) (Fin k) ℝ, ∫⁻ z : Fin r → ℝ,
+          ENNReal.ofReal (z ⬝ᵥ ((G * Gᵀ)⁻¹ *ᵥ z)) ^ q
           ∂(Measure.pi fun _ : Fin r => gaussianReal 0 1) ∂μ :=
           lintegral_mono fun G => ofReal_rpow_specNorm_mul_gaussian_moment_le_lintegral
-            hr (posSemidef_inv_self_mul_transpose (Matrix.of G)) q hq.le
+            hr (posSemidef_inv_self_mul_transpose G) q hq.le
     _ = ENNReal.ofReal a :=
       lintegral_lintegral_rpow_dotProduct_inv_self_mul_transpose_gaussianMatrix hr hrk q hq hqd
-  have hbound : (∫⁻ G : Fin r → Fin k → ℝ, ENNReal.ofReal
-      (specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹) ^ q ∂μ) ≤ ENNReal.ofReal (a / c) := by
+  have hbound : (∫⁻ G : Matrix (Fin r) (Fin k) ℝ, ENNReal.ofReal
+      (specNorm (G * Gᵀ)⁻¹) ^ q ∂μ) ≤ ENNReal.ofReal (a / c) := by
     have h := mul_le_mul_right hL (ENNReal.ofReal c)⁻¹
     rw [← mul_assoc, ENNReal.inv_mul_cancel hcm0 hcmT, one_mul,
       ← ENNReal.ofReal_inv_of_pos hc, ← ENNReal.ofReal_mul (inv_nonneg.mpr hc.le)] at h
     simpa only [div_eq_mul_inv, mul_comm] using h
-  have hnn : ∀ G : Fin r → Fin k → ℝ,
-      0 ≤ specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ q :=
+  have hnn : ∀ G : Matrix (Fin r) (Fin k) ℝ,
+      0 ≤ specNorm (G * Gᵀ)⁻¹ ^ q :=
     fun G => Real.rpow_nonneg (specNorm_nonneg _) _
-  have hm : Measurable (fun G : Fin r → Fin k → ℝ =>
-      specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ q) :=
+  have hm : Measurable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      specNorm (G * Gᵀ)⁻¹ ^ q) :=
     measurable_specNorm_inv_self_mul_transpose.pow_const q
   simp_rw [ENNReal.ofReal_rpow_of_nonneg (specNorm_nonneg _) hq.le] at hbound
-  have hint : Integrable (fun G : Fin r → Fin k → ℝ =>
-      specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ q) μ := by
+  have hint : Integrable (fun G : Matrix (Fin r) (Fin k) ℝ =>
+      specNorm (G * Gᵀ)⁻¹ ^ q) μ := by
     refine ⟨hm.aestronglyMeasurable, ?_⟩
     rw [hasFiniteIntegral_iff_ofReal (ae_of_all _ hnn)]
     exact hbound.trans_lt ENNReal.ofReal_lt_top
-  have hreal : (∫ G : Fin r → Fin k → ℝ,
-      specNorm (Matrix.of G * (Matrix.of G)ᵀ)⁻¹ ^ q ∂μ) ≤ a / c := by
+  have hreal : (∫ G : Matrix (Fin r) (Fin k) ℝ,
+      specNorm (G * Gᵀ)⁻¹ ^ q ∂μ) ≤ a / c := by
     rw [← ofReal_integral_eq_lintegral_ofReal hint (ae_of_all _ hnn)] at hbound
     exact (ENNReal.ofReal_le_ofReal_iff (div_nonneg ha hc.le)).1 hbound
   refine ⟨hint, hreal.trans_eq ?_⟩
   dsimp [a, c]
   field_simp
+
+/-- `integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMatrix_le` for a random
+matrix `X` with `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas:
+`gaussian-inverse-spectral-probe-moment`. -/
+theorem integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMatrix_le_of_hasLaw
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {r k : ℕ}
+    {X : Ω → Matrix (Fin r) (Fin k) ℝ} (hX : HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ)
+    (hr : 1 ≤ r) (hrk : r ≤ k) (q : ℝ) (hq : 0 < q)
+    (hqd : q < ((k : ℝ) - r + 1) / 2) :
+    Integrable (fun ω => specNorm (X ω * (X ω)ᵀ)⁻¹ ^ q) μ ∧
+    (∫ ω, specNorm (X ω * (X ω)ᵀ)⁻¹ ^ q ∂μ) ≤
+      Real.Gamma ((r : ℝ) / 2 + q) * Real.Gamma (((k : ℝ) - r + 1) / 2 - q) *
+        Real.sqrt Real.pi /
+        (2 ^ q * Real.Gamma ((r : ℝ) / 2) * Real.Gamma (((k : ℝ) - r + 1) / 2) *
+          Real.Gamma (q + 1 / 2)) := by
+  obtain ⟨hint, hval⟩ :=
+    integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMatrix_le hr hrk q hq hqd
+  have hm : Measurable fun G : Matrix (Fin r) (Fin k) ℝ => specNorm (G * Gᵀ)⁻¹ ^ q :=
+    measurable_specNorm_inv_self_mul_transpose.pow_const q
+  refine ⟨?_, ?_⟩
+  · have h : Integrable (fun G : Matrix (Fin r) (Fin k) ℝ => specNorm (G * Gᵀ)⁻¹ ^ q)
+        (μ.map X) := by
+      rw [hX.map_eq]; exact hint
+    exact h.comp_aemeasurable hX.aemeasurable
+  · refine le_of_eq_of_le ?_ hval
+    exact hX.integral_comp hm.aestronglyMeasurable
 
 end NLAlib

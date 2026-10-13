@@ -110,7 +110,7 @@ theorem integrable_and_integral_quadForm_eq_trace_of_second_moments [DecidableEq
   · simp_rw [quadForm_eq_sum]
     exact integrable_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
       (hprod i j).const_mul (A i j)
-  · simp_rw [quadForm_eq_sum]
+  · simp_rw [quadForm_eq_sum, star_trivial]
     rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
       (hprod i j).const_mul (A i j)]
     rw [Matrix.trace]
@@ -277,7 +277,7 @@ theorem integral_quadForm_sq [DecidableEq n] (A : Matrix n n ℝ) {z : Ω → n 
       A.trace ^ 2 + ∑ i, ∑ j, A i j ^ 2 + ∑ i, ∑ j, A i j * A j i +
         (m₄ - 3) * ∑ i, A i i ^ 2 := by
   have hP := integrable_coord_mul_coord_mul_coord_mul_coord hmeas h4
-  simp_rw [quadForm_sq_eq_sum]
+  simp_rw [quadForm_sq_eq_sum, star_trivial]
   rw [← sum_fourth_moment_contraction A m₄]
   rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ =>
     integrable_finsetSum _ fun k _ => integrable_finsetSum _ fun l _ =>

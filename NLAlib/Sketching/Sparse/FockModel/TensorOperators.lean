@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.FockModel.SiteKernels
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # External sparse-Fock tensor operators

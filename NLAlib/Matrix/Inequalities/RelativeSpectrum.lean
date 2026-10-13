@@ -137,7 +137,7 @@ theorem det_le_det_of_posSemidef_le {A B : Matrix n n ℝ}
   apply Finset.prod_le_prod
   · intro i _; exact hA.eigenvalues_nonneg i
   · intro i _
-    exact eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub hA.isHermitian hB.isHermitian
+    exact Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le hA.isHermitian hB.isHermitian
       (Matrix.le_iff.mp hAB) _
 
 /-- For a real PSD matrix, being bounded above by identity is equivalent to
@@ -176,7 +176,8 @@ theorem mul_transpose_le_one_iff_specNorm_le_one {m : Type*} [Fintype m]
   have hM : (M * Mᵀ).PosSemidef := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
       Matrix.posSemidef_self_mul_conjTranspose M
-  rw [le_one_iff_specNorm_le_one_of_posSemidef hM, specNorm_mul_transpose_self]
+  rw [le_one_iff_specNorm_le_one_of_posSemidef hM,
+    ← Matrix.conjTranspose_eq_transpose_of_trivial M, specNorm_mul_conjTranspose_self]
   exact sq_le_one_iff₀ (specNorm_nonneg M)
 
 /-- A square comparison of symmetric matrices is equivalent to a relative
@@ -209,10 +210,10 @@ theorem sq_le_sq_iff_relative_specNorm_le_one {A B : Matrix n n ℝ}
 Uniqueness proves the bridge without a complex norm assumption.
 Horn--Johnson (2013), Section 7.2; helper for relative-spectrum monotonicity. -/
 theorem realMatrixComplexification_sqrt {A : Matrix n n ℝ} (hA : A.PosSemidef) :
-    realMatrixComplexification (CFC.sqrt A) = CFC.sqrt (realMatrixComplexification A) := by
+    (realMatrixComplexification (𝕜 := ℂ)) (CFC.sqrt A) = CFC.sqrt ((realMatrixComplexification (𝕜 := ℂ)) A) := by
   symm
   apply CFC.sqrt_unique _
-    ((posSemidef_realMatrixComplexification_iff _).mpr (CFC.sqrt_nonneg A).posSemidef).nonneg
+    (((posSemidef_realMatrixComplexification_iff (𝕜 := ℂ)) _).mpr (CFC.sqrt_nonneg A).posSemidef).nonneg
   rw [← map_mul, CFC.sqrt_mul_sqrt_self A hA.nonneg]
 
 /-- Square roots preserve Loewner order for real PSD matrices, including
@@ -221,9 +222,9 @@ atlas: loewner-relative-spectrum (partial) -/
 theorem sqrt_le_sqrt_of_posSemidef_le {A B : Matrix n n ℝ}
     (hA : A.PosSemidef) (hAB : A ≤ B) : CFC.sqrt A ≤ CFC.sqrt B := by
   have hB := (hA.nonneg.trans hAB).posSemidef
-  apply (realMatrixComplexification_le_iff _ _).mp
+  apply ((realMatrixComplexification_le_iff (𝕜 := ℂ)) _ _).mp
   rw [realMatrixComplexification_sqrt hA, realMatrixComplexification_sqrt hB]
-  exact CFC.sqrt_le_sqrt _ _ ((realMatrixComplexification_le_iff _ _).mpr hAB)
+  exact CFC.sqrt_le_sqrt _ _ (((realMatrixComplexification_le_iff (𝕜 := ℂ)) _ _).mpr hAB)
 
 /-- Under PSD comparison with a positive definite larger matrix, determinant
 equality forces equality of the matrices. The positive-definite requirement
@@ -286,7 +287,7 @@ theorem relative_spectrum_characterizations {A B : Matrix n n ℝ}
     sq_le_sq_iff_relative_specNorm_le_one hA hB.isHermitian, fun hBA => ?_⟩
   have ht := trace_le_and_eq_iff_of_le hBA
   exact ⟨det_le_det_of_posSemidef_le hB hBA, det_eq_iff_eq_of_posSemidef_le_posDef hA hB hBA,
-    ht.1, ht.2, eigenvalues₀_le_eigenvalues₀_of_posSemidef_sub hB.isHermitian hA.isHermitian
+    ht.1, ht.2, Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le hB.isHermitian hA.isHermitian
       (Matrix.le_iff.mp hBA), sqrt_le_sqrt_of_posSemidef_le hB hBA,
     fun hBPD => inv_le_inv_of_posDef hBPD hBA⟩
 

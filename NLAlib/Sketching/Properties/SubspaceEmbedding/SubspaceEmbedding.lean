@@ -16,7 +16,7 @@ Facts about `NLAlib.IsSubspaceEmbedding S U ε` (Woodruff 2014 §2.1; Martinsson
 The converse of the Gram form is in `NLAlib.Sketching.Properties.SubspaceEmbedding.Gram`; the singular-value
 form is in `NLAlib.Sketching.Properties.SubspaceEmbedding.SingularValueEmbedding` and its finite-index transport.
 The matrix facts used here (`mulVec_dotProduct_mulVec_self`,
-`abs_dotProduct_mulVec_le_specNorm`, `mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`) are
+`abs_dotProduct_mulVec_le_specNorm`, `star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`) are
 in `NLAlib.Matrix.Norms.Core` and `NLAlib.Matrix.Subspaces.Projections`.
 
 Atlas: `ose-def`.
@@ -41,8 +41,10 @@ theorem isSubspaceEmbedding_iff_of_hasOrthonormalCols [DecidableEq d] {S : Matri
     IsSubspaceEmbedding S U ε ↔ ∀ x : d → ℝ,
       (1 - ε) * (x ⬝ᵥ x) ≤ ((S * U) *ᵥ x) ⬝ᵥ ((S * U) *ᵥ x) ∧
       ((S * U) *ᵥ x) ⬝ᵥ ((S * U) *ᵥ x) ≤ (1 + ε) * (x ⬝ᵥ x) := by
+  have hUx : ∀ x, (U *ᵥ x) ⬝ᵥ (U *ᵥ x) = x ⬝ᵥ x := fun x => by
+    simpa only [star_trivial] using star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU x
   unfold IsSubspaceEmbedding
-  simp only [mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU, Matrix.mulVec_mulVec]
+  simp only [hUx, Matrix.mulVec_mulVec]
 
 /-- Basis independence, easy direction: an embedding for `range U` is an embedding for
 `range (U C)` for any `C` (since `range (U C) ⊆ range U`).
@@ -100,7 +102,9 @@ theorem isSubspaceEmbedding_of_specNorm_transpose_mul_self_sub_one_le [Decidable
   have hb := abs_dotProduct_mulVec_le_specNorm ((S * U)ᵀ * (S * U) - 1) x
   have hq : x ⬝ᵥ (((S * U)ᵀ * (S * U) - 1) *ᵥ x) =
       ((S * U) *ᵥ x) ⬝ᵥ ((S * U) *ᵥ x) - x ⬝ᵥ x := by
-    rw [Matrix.sub_mulVec, dotProduct_sub, ← mulVec_dotProduct_mulVec_self, Matrix.one_mulVec]
+    have h := star_mulVec_dotProduct_mulVec_self (S * U) x
+    simp only [star_trivial, Matrix.conjTranspose_eq_transpose_of_trivial] at h
+    rw [Matrix.sub_mulVec, dotProduct_sub, ← h, Matrix.one_mulVec]
   rw [hq] at hb
   have hn : 0 ≤ x ⬝ᵥ x := Finset.sum_nonneg fun i _ => mul_self_nonneg (x i)
   have hε : specNorm ((S * U)ᵀ * (S * U) - 1) * (x ⬝ᵥ x) ≤ ε * (x ⬝ᵥ x) :=

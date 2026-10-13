@@ -1,6 +1,6 @@
 import NLAlib.LowRank.Cholesky.ComplexCholeskyHistories
 import NLAlib.LowRank.Cholesky.TracePotential
-import NLAlib.Matrix.Inequalities.ComplexTraceTail
+import NLAlib.Matrix.Inequalities.TraceTail
 /-!
 # Expected relative trace error of complex randomly pivoted Cholesky
 
@@ -46,9 +46,10 @@ theorem complexCholeskyExpectedTrace_succ_le_traceExcessDrift
     let R := complexCholeskyResidualHistory A t h
     have hR := posSemidef_complexCholeskyResidualHistory hA t h
     have hAR := posSemidef_sub_complexCholeskyResidualHistory hA t h
-    have he := complex_sq_max_trace_sub_spectralTraceTail_le_mul_trace_sq hA hR hAR r
+    have he := sq_max_re_trace_sub_spectralTraceTail_le_of_eigenvalues₀_le hA hR
+      (Matrix.IsHermitian.eigenvalues₀_le_eigenvalues₀_of_le hR.isHermitian hA.isHermitian hAR) r
     have hd : (max (R.trace.re - τ) 0) ^ 2 / r ≤ (R * R).trace.re :=
-      (div_le_iff₀ hr0).mpr (by simpa only [mul_comm] using he)
+      (div_le_iff₀ hr0).mpr (by simpa only [mul_comm, RCLike.re_to_complex] using he)
     have htr : 0 ≤ R.trace.re := re_trace_nonneg_of_complex_posSemidef hR
     have hdiv : traceExcessDrift τ R.trace.re / r ≤ (R * R).trace.re / R.trace.re := by
       rw [traceExcessDrift, div_right_comm]

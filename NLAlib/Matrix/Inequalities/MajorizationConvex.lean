@@ -12,7 +12,7 @@ Atlas: `majorization-def`.
 -/
 
 noncomputable section
-open scoped BigOperators Pointwise
+open scoped Pointwise
 
 namespace NLAlib
 

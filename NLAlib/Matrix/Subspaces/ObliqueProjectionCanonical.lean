@@ -35,7 +35,8 @@ theorem exists_orthogonal_idempotent_canonical {n : Type*}
     change (Matrix.fromBlocks V 0 0 W)ᵀ * Matrix.fromBlocks V 0 0 W = 1
     simp only [Matrix.fromBlocks_transpose, Matrix.transpose_zero, Matrix.fromBlocks_multiply,
       Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
-      hSVD.transpose_mul_left, hSVD.transpose_mul_right, Matrix.fromBlocks_one]
+      show Vᵀ * V = 1 from hSVD.conjTranspose_mul_left,
+      show Wᵀ * W = 1 from hSVD.conjTranspose_mul_right, Matrix.fromBlocks_one]
   refine ⟨T.rank, le_min T.rank_le_height T.rank_le_width,
     singularValues T, singularValues_nonneg T, singularValues_antitone T,
     singularValues_pos_iff T, H * K, hH.mul hK, ?_, ?_⟩
@@ -49,7 +50,7 @@ theorem exists_orthogonal_idempotent_canonical {n : Type*}
         rw [hBlock]
         simp only [K, Matrix.fromBlocks_transpose, Matrix.transpose_zero,
           Matrix.fromBlocks_multiply, Matrix.mul_zero, Matrix.zero_mul,
-          add_zero, zero_add, Matrix.mul_one, hSVD.transpose_mul_left,
-          hSVD.transpose_mul_mul]
+          add_zero, zero_add, Matrix.mul_one, show Vᵀ * V = 1 from hSVD.conjTranspose_mul_left,
+          show Vᵀ * T * W = rectDiag (singularValues T) from hSVD.conjTranspose_mul_mul]
 
 end NLAlib

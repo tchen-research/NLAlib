@@ -10,7 +10,7 @@ for every competing isometry. Atlas `polar-decomposition`.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator BigOperators
+open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
@@ -18,7 +18,7 @@ set_option backward.isDefEq.respectTransparency false
 Horn–Johnson 2013, Theorem 7.3.1; polar-decomposition helper. -/
 theorem hasOrthonormalCols_rectDiag_one {m n : ℕ} (hCard : n ≤ m) :
     HasOrthonormalCols (rectDiag (fun _ => 1) : Matrix (Fin m) (Fin n) ℝ) := by
-  rw [hasOrthonormalCols_iff_transpose_mul_self, transpose_rectDiag_mul_rectDiag]
+  rw [hasOrthonormalCols_iff_conjTranspose_mul_self, conjTranspose_rectDiag_mul_rectDiag]
   ext i j
   simp only [one_pow]
   have hi : (i : ℕ) < m := i.isLt.trans_le hCard
@@ -33,19 +33,14 @@ theorem singularValues_eq_one_of_hasOrthonormalCols {m n : ℕ}
   have hJ := hasOrthonormalCols_rectDiag_one hCard
   have hGram : Uᴴ * U = Jᴴ * J := by
     simp only [Matrix.conjTranspose_eq_transpose_of_trivial]
-    rw [hU.transpose_mul_self, hJ.transpose_mul_self]
+    rw [(show Uᵀ * U = 1 from hU), (show Jᵀ * J = 1 from hJ)]
   have h := singularValues_eq_of_gram_eq U J hGram k
   change singularValues U k = singularValues J k at h
   rw [h]
-  apply singularValues_eq_of_eq_mul_rectDiag_mul
+  exact singularValues_eq_of_eq_mul_rectDiag_mul
     (U := (1 : Matrix (Fin m) (Fin m) ℝ)) (V := (1 : Matrix (Fin n) (Fin n) ℝ))
-    (τ := fun _ => 1)
-  · simp
-  · simp
-  · intro _; exact zero_le_one
-  · intro _ _ _; exact le_rfl
-  · simp [J]
-  · simpa only [min_eq_right hCard] using hk
+    (τ := fun _ => 1) (by simp) (by simp) (fun _ => zero_le_one) (fun _ _ _ => le_rfl)
+    (by simp [J]) (by simpa only [min_eq_right hCard] using hk)
 
 private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     (hCard : n ≤ m) (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) :
@@ -58,16 +53,17 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
   let U := L * J * Rᵀ
   let Q := R * Matrix.diagonal (fun i : Fin n => singularValues A i) * Rᵀ
   have hJ := hasOrthonormalCols_rectDiag_one hCard
-  have hL : HasOrthonormalCols L := hSVD.transpose_mul_left
+  have hL : HasOrthonormalCols L := hSVD.conjTranspose_mul_left
   have hRt : HasOrthonormalCols Rᵀ := by
     change Rᵀᵀ * Rᵀ = 1
     rw [Matrix.transpose_transpose]
-    exact hSVD.mul_transpose_right
+    exact hSVD.mul_conjTranspose_right
   have hU : HasOrthonormalCols U := by
     change (L * J * Rᵀ)ᵀ * (L * J * Rᵀ) = 1
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc Lᵀ L (J * Rᵀ), hL.transpose_mul_self, Matrix.one_mul,
-      ← Matrix.mul_assoc Jᵀ J Rᵀ, hJ.transpose_mul_self, Matrix.one_mul, hSVD.mul_transpose_right]
+    rw [← Matrix.mul_assoc Lᵀ L (J * Rᵀ), (show Lᵀ * L = 1 from hL), Matrix.one_mul,
+      ← Matrix.mul_assoc Jᵀ J Rᵀ, (show Jᵀ * J = 1 from hJ), Matrix.one_mul,
+      show R * Rᵀ = 1 from hSVD.mul_conjTranspose_right]
   have hQ : Q.PosSemidef := by
     have hD : (Matrix.diagonal (fun i : Fin n => singularValues A i)).PosSemidef :=
       Matrix.posSemidef_diagonal_iff.mpr (fun i => singularValues_nonneg A i)
@@ -81,9 +77,11 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
   have hA : U * Q = A := by
     dsimp [U, Q]
     simp only [Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc Rᵀ R (Matrix.diagonal _ * Rᵀ), hSVD.transpose_mul_right,
+    rw [← Matrix.mul_assoc Rᵀ R (Matrix.diagonal _ * Rᵀ),
+      show Rᵀ * R = 1 from hSVD.conjTranspose_mul_right,
       Matrix.one_mul, ← Matrix.mul_assoc J _ Rᵀ, hJD]
-    simpa only [Matrix.mul_assoc] using hSVD.eq_mul_transpose.symm
+    simpa only [Matrix.mul_assoc] using
+      (show A = L * (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) * Rᵀ from hSVD.eq).symm
   have hRoot := eq_sqrt_gram_of_isometry_mul_eq hU hQ hA
   refine ⟨U, hU, ?_, ?_⟩
   · rwa [← hRoot]
@@ -97,7 +95,8 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
         simp [hij, hj]
       · simp [hij]
     have hDiff : A - U = L * (rectDiag (singularValues A) - J) * Rᵀ := by
-      rw [Matrix.mul_sub, Matrix.sub_mul, ← hSVD.eq_mul_transpose]
+      rw [Matrix.mul_sub, Matrix.sub_mul,
+        ← show A = L * (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) * Rᵀ from hSVD.eq]
     rw [hDiff, ν.right_invariant _ Rᵀ hRt, ν.left_invariant _ L hL, hDiag]
 
 /-- Every polar isometry minimizes the distance to a tall real matrix in
@@ -117,8 +116,8 @@ theorem invariantNorm_sub_polar_le_sub_isometry_fin {m n : ℕ}
       rw [Matrix.mul_sub, hA₀, Matrix.mul_one]
     rw [hDiff, hDiff₀, Matrix.transpose_mul, Matrix.transpose_mul]
     simp only [Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc Uᵀ U _, hU.transpose_mul_self, Matrix.one_mul,
-      ← Matrix.mul_assoc U₀ᵀ U₀ _, hU₀.transpose_mul_self, Matrix.one_mul]
+    rw [← Matrix.mul_assoc Uᵀ U _, (show Uᵀ * U = 1 from hU), Matrix.one_mul,
+      ← Matrix.mul_assoc U₀ᵀ U₀ _, (show U₀ᵀ * U₀ = 1 from hU₀), Matrix.one_mul]
   obtain ⟨O, hO, hEq⟩ := exists_orthogonal_mul_eq_of_gram_eq (A - U) (A - U₀) hGram
   have hNorm : ν.seminorm (A - U) = ν.seminorm (A - U₀) := by
     rw [← hEq, ν.left_invariant _ O hO]
@@ -205,9 +204,11 @@ theorem invariantNorm_sub_polar_le_sub_coisometry {m n : Type*}
     (hA : CFC.sqrt (A * Aᵀ) * U = A) (hV : V * Vᵀ = 1) :
     ν.seminorm (A - U) ≤ ν.seminorm (A - V) := by
   have hUt : HasOrthonormalCols Uᵀ := by
-    simpa only [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose] using hU
+    simpa only [hasOrthonormalCols_iff_conjTranspose_mul_self,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hU
   have hVt : HasOrthonormalCols Vᵀ := by
-    simpa only [hasOrthonormalCols_iff_transpose_mul_self, Matrix.transpose_transpose] using hV
+    simpa only [hasOrthonormalCols_iff_conjTranspose_mul_self,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hV
   have hSym : (CFC.sqrt (A * Aᵀ))ᵀ = CFC.sqrt (A * Aᵀ) := by
     simpa only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial] using
       (CFC.sqrt_nonneg (A * Aᵀ)).star_eq

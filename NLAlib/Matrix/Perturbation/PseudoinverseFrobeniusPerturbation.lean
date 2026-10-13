@@ -53,9 +53,9 @@ theorem frobSq_pinv_mul_complement_columnProjector_le {A B : Matrix m n ℝ}
   let b := moorePenroseInverse B
   let PA := A*a
   let PB := B*b
-  have hPAs : PA.IsSymm := mul_moorePenroseInverse_isSymm A
+  have hPAs : PA.IsSymm := mul_moorePenroseInverse_isHermitian A
   have hPAi : IsIdempotentElem PA := mul_moorePenroseInverse_isIdempotentElem A
-  have hPBs : PB.IsSymm := mul_moorePenroseInverse_isSymm B
+  have hPBs : PB.IsSymm := mul_moorePenroseInverse_isHermitian B
   have hPBi : IsIdempotentElem PB := mul_moorePenroseInverse_isIdempotentElem B
   have hpr : PA.rank=PB.rank := by
     rw [rank_mul_moorePenroseInverse, rank_mul_moorePenroseInverse]
@@ -86,9 +86,9 @@ theorem frobSq_complement_rowProjector_mul_pinv_le {A B : Matrix m n ℝ}
   let b := moorePenroseInverse B
   let QA := a*A
   let QB := b*B
-  have hQAs : QA.IsSymm := moorePenroseInverse_mul_isSymm A
+  have hQAs : QA.IsSymm := moorePenroseInverse_mul_isHermitian A
   have hQAi : IsIdempotentElem QA := moorePenroseInverse_mul_isIdempotentElem A
-  have hQBs : QB.IsSymm := moorePenroseInverse_mul_isSymm B
+  have hQBs : QB.IsSymm := moorePenroseInverse_mul_isHermitian B
   have hQBi : IsIdempotentElem QB := moorePenroseInverse_mul_isIdempotentElem B
   have hqr : QA.rank=QB.rank := by
     rw [rank_moorePenroseInverse_mul, rank_moorePenroseInverse_mul]
@@ -124,8 +124,8 @@ theorem frobSq_moorePenroseInverse_sub_le_two_mul_of_rank_eq {A B : Matrix m n �
   change QB*(b-a)*PA= -b*(B-A)*a ∧ QB*(b-a)*(1-PA)=b*(1-PA) ∧
     (1-QB)*(b-a)*PA= -(1-QB)*a ∧ (1-QB)*(b-a)*(1-PA)=0 at hblk
   have hfour := frobSq_eq_four_projector_blocks
-    (moorePenroseInverse_mul_isSymm B) (moorePenroseInverse_mul_isIdempotentElem B)
-    (mul_moorePenroseInverse_isSymm A) (mul_moorePenroseInverse_isIdempotentElem A) (b-a)
+    (moorePenroseInverse_mul_isHermitian B) (moorePenroseInverse_mul_isIdempotentElem B)
+    (mul_moorePenroseInverse_isHermitian A) (mul_moorePenroseInverse_isIdempotentElem A) (b-a)
   change frobSq (b-a)=frobSq (QB*(b-a)*PA)+frobSq (QB*(b-a)*(1-PA))+
     frobSq ((1-QB)*(b-a)*PA)+frobSq ((1-QB)*(b-a)*(1-PA)) at hfour
   rw [hblk.1, Matrix.neg_mul, Matrix.neg_mul, frobSq_neg, hblk.2.1,
@@ -134,8 +134,9 @@ theorem frobSq_moorePenroseInverse_sub_le_two_mul_of_rank_eq {A B : Matrix m n �
   have h12 := frobSq_pinv_mul_complement_columnProjector_le hr
   have h21 := frobSq_complement_rowProjector_mul_pinv_le hr
   have hthree := frobSq_three_compressed_blocks_le_two_mul
-    (mul_moorePenroseInverse_isSymm B) (mul_moorePenroseInverse_isIdempotentElem B)
-    (moorePenroseInverse_mul_isSymm A) (moorePenroseInverse_mul_isIdempotentElem A) (B-A)
+    (Q := B * moorePenroseInverse B) (P := moorePenroseInverse A * A)
+    (mul_moorePenroseInverse_isHermitian B) (mul_moorePenroseInverse_isIdempotentElem B)
+    (moorePenroseInverse_mul_isHermitian A) (moorePenroseInverse_mul_isIdempotentElem A) (B-A)
   have hcoeff : 0 ≤ specNorm a^2*specNorm b^2 := mul_nonneg (sq_nonneg _) (sq_nonneg _)
   have hm := mul_le_mul_of_nonneg_left hthree hcoeff
   change frobSq (b-a) ≤ 2*specNorm a^2*specNorm b^2*frobSq (B-A)

@@ -11,7 +11,6 @@ count used in Szász's determinant inequality.
 -/
 
 noncomputable section
-open scoped BigOperators
 namespace NLAlib
 variable {n M : Type*} [Fintype n] [DecidableEq n] [CommMonoid M]
 

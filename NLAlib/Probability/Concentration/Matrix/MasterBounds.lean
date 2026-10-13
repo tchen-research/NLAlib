@@ -14,7 +14,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator
 open NLAlib
-set_option autoImplicit false
 
 /-- Master bounds for an independent sum of Hermitian random matrices: the expectation and tail of
 `λmax` (for `θ > 0`) and of `λmin` (for `θ < 0`) are controlled by `traceExp (cumulantSum μ X θ)`.

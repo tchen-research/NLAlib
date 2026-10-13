@@ -15,7 +15,6 @@ import NLAlib.Matrix.Functions.PerspectiveSqrtNormalization
 import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Functions.PolynomialSeries
-import NLAlib.Matrix.Functions.RealComplexCFC
 import NLAlib.Matrix.Functions.TraceExpBounds
 import NLAlib.Matrix.Functions.TracePowerConvexity
 import NLAlib.Matrix.Functions.UnitaryCalculus

@@ -12,7 +12,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator
 open NLAlib
-set_option autoImplicit false
 
 private lemma finite_tensorization {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d N : ℕ} [NeZero d]

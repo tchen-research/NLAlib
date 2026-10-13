@@ -12,13 +12,13 @@ Gu–Eisenstat 1996, Theorem 3.2; derivations §alg:rrqr.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
 /-- A maximum-volume selection bounds each interpolation entry and, jointly,
 the interpolation Frobenius square plus the inverse-Gram trace times the
-residual Frobenius square. The columns of `D` are perpendicular to `C` and
+projResidual Frobenius square. The columns of `D` are perpendicular to `C` and
 `C T + D` are the columns offered for exchange. Gu–Eisenstat 1996,
 Theorem 3.2; derivations equations alg:swap and alg:rrqr-budget.
 Supports `rank-revealing-qr`. -/

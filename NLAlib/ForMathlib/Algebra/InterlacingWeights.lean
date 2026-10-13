@@ -11,7 +11,6 @@ supports `interlacing-converse`.
 -/
 
 noncomputable section
-open scoped BigOperators
 namespace NLAlib
 
 /-- Weakly interlacing bordered targets give nonnegative interpolation

@@ -9,7 +9,6 @@ Deleting the associated forced common root preserves weak interlacing.
 -/
 
 noncomputable section
-set_option autoImplicit false
 namespace NLAlib
 
 /-- A non-strict monotone finite real list has an equal adjacent pair.

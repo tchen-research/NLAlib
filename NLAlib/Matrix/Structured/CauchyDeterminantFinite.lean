@@ -7,7 +7,7 @@ its denominator product. Horn–Johnson §0.9.12; structured-matrices-def.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 
 /-- Cauchy's determinant formula on arbitrary finite labels, with the two

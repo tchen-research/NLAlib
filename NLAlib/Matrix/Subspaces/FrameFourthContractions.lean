@@ -9,7 +9,6 @@ energies. Source: operator manuscript `sh:parseval`, `sh:count-second`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 open Matrix
 open scoped Matrix
@@ -22,7 +21,7 @@ omit [Fintype d] [DecidableEq ι] in
 Source: the Gram identity; supports `sparse-ose` fourth-order contractions. -/
 theorem sum_mul_columns_eq_one_apply (U : Matrix ι d ℝ) (hU : HasOrthonormalCols U)
     (a b : d) : ∑ i, U i a * U i b = (1 : Matrix d d ℝ) a b := by
-  have h := congrFun (congrFun hU.transpose_mul_self a) b
+  have h := congrFun (congrFun (show Uᵀ * U = 1 from hU) a) b
   simpa only [Matrix.mul_apply, Matrix.transpose_apply] using h
 
 omit [Fintype d] [DecidableEq ι] in

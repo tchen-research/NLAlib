@@ -3,7 +3,6 @@ Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.Bands.Directional.OutputEnergy
 import NLAlib.Sketching.Sparse.Bands.Directional.OccupationProfiles
-set_option autoImplicit false
 
 /-!
 # Directional exact-grade operator bounds
@@ -17,7 +16,7 @@ namespace NLAlib.SparseSketch
 
 namespace Directional
 
-open scoped BigOperators Matrix.Norms.L2Operator InnerProductSpace
+open scoped Matrix.Norms.L2Operator InnerProductSpace
 
 noncomputable section
 

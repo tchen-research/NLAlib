@@ -1,5 +1,5 @@
 import NLAlib.Probability.Sampling.FiniteSampling
-import NLAlib.Matrix.Norms.ComplexFrobenius
+import NLAlib.Matrix.Norms.Core
 import NLAlib.ForMathlib.Probability.SampleAverage
 /-!
 # Sampled approximate matrix multiplication
@@ -11,10 +11,26 @@ Atlas: `amm-sampling`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix NNReal ENNReal Matrix.Norms.Frobenius
 namespace NLAlib
+
+/-- A complex outer product has Frobenius norm squared equal to the product of
+the two squared Euclidean norms. Source: operator re-derivation `sa:amm-variance`.
+(Moved from the deleted `NLAlib.Matrix.Norms.ComplexFrobenius`, foundation change F1.) -/
+theorem frobenius_norm_sq_vecMulVec {m n : Type*} [Fintype m] [Fintype n]
+    (a : m → ℂ) (b : n → ℂ) :
+    ‖Matrix.vecMulVec a b‖ ^ 2 = (∑ i, ‖a i‖ ^ 2) * ∑ j, ‖b j‖ ^ 2 := by
+  rw [frobenius_norm_sq_eq_sum_norm_sq, Finset.sum_mul_sum]
+  simp only [Matrix.vecMulVec_apply, norm_mul, mul_pow]
+
+/-- Embedding a real matrix into complex entries identifies its complex
+Frobenius norm squared with `frobSq`. Source: operator re-derivation `sa:amm`.
+(Moved from the deleted `NLAlib.Matrix.Norms.ComplexFrobenius`, foundation change F1.) -/
+theorem frobenius_norm_sq_map_ofReal_eq_frobSq {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m n ℝ) : ‖A.map Complex.ofReal‖ ^ 2 = frobSq A := by
+  rw [frobenius_norm_sq_eq_sum_norm_sq, frobSq_eq_sum_sq]
+  simp only [Matrix.map_apply, Complex.norm_real, Real.norm_eq_abs, sq_abs]
 
 /-- The squared Frobenius error of a finite matrix sample average is exactly
 the one-sample variance divided by the sample count. Every expectation is

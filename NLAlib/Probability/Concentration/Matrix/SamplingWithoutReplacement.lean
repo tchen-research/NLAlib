@@ -12,7 +12,6 @@ re-derivation `sh:convex-sampling` and `sh:srht-ose`; atlas `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option maxHeartbeats 600000
 open MeasureTheory ProbabilityTheory
 open scoped MatrixOrder

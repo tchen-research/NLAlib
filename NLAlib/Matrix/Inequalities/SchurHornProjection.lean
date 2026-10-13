@@ -13,7 +13,7 @@ Supports atlas `schur-horn`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 
@@ -105,7 +105,7 @@ theorem mulVec_column_eq_smul_of_orthogonal_diagonalization {A Q : Matrix n n �
   have hAQ : A * Q = Q * Matrix.diagonal lam := by
     calc
       A * Q = Q * Matrix.diagonal lam * (Qᵀ * Q) := by rw [hA]; simp only [Matrix.mul_assoc]
-      _ = Q * Matrix.diagonal lam := by rw [hQ.transpose_mul_self, Matrix.mul_one]
+      _ = Q * Matrix.diagonal lam := by rw [(show Qᵀ * Q = 1 from hQ), Matrix.mul_one]
   funext i
   have h := congrArg (fun M : Matrix n n ℝ => M i j) hAQ
   rw [Matrix.mul_diagonal] at h

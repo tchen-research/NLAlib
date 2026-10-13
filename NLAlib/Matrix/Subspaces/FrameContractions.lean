@@ -38,7 +38,7 @@ omit [DecidableEq m] [DecidableEq n] in
 Stewart–Sun §I.5. -/
 theorem frobNorm_transpose_frame_mul_le {Q : Matrix m r ℝ}
     (hQ : HasOrthonormalCols Q) (E : Matrix m n ℝ) : frobNorm (Qᵀ*E) ≤ frobNorm E := by
-  have hh := frobSq_transpose_mul_le hQ E
+  have hh := frobSq_conjTranspose_mul_le hQ E
   exact Real.sqrt_le_sqrt hh
 
 omit [DecidableEq m] [DecidableEq n] in
@@ -55,7 +55,8 @@ omit [DecidableEq m] in
 Stewart–Sun §I.5. -/
 theorem frobNorm_frame_eq_sqrt_card {Q : Matrix m r ℝ} (hQ : HasOrthonormalCols Q) :
     frobNorm Q = Real.sqrt (Fintype.card r) := by
-  rw [frobNorm, frobSq, frobInner_eq_trace, hQ.transpose_mul_self, Matrix.trace_one]
+  rw [frobNorm, frobSq, frobInner_eq_trace, hQ.conjTranspose_mul_self, Matrix.trace_one,
+    RCLike.re_to_real]
 
 /-- Multiplication by a width-`k` orthonormal frame has Frobenius norm at
 most `sqrt(k)` times the original spectral norm. Stewart–Sun §V.3. -/

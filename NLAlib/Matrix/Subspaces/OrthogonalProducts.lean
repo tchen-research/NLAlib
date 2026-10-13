@@ -27,7 +27,7 @@ theorem HasOrthonormalCols.mul {m n p : Type*} [Fintype m] [Fintype n]
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) : HasOrthonormalCols (P * Q) := by
   change (P * Q)ᵀ * (P * Q) = 1
   rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Pᵀ P Q,
-    hP.transpose_mul_self, Matrix.one_mul, hQ.transpose_mul_self]
+    show Pᵀ * P = 1 from hP, Matrix.one_mul, show Qᵀ * Q = 1 from hQ]
 
 /-- The transpose of a square orthogonal matrix is orthogonal, including
 empty matrices. Horn–Johnson 2013, §2.1. -/
@@ -46,7 +46,7 @@ theorem HasOrthonormalCols.submatrix_cols {m n r : Type*} [Fintype m] [Fintype n
   rw [Matrix.transpose_submatrix]
   have h := Matrix.submatrix_mul_equiv Qᵀ Q e (Equiv.refl m) e
   simp only [Equiv.coe_refl] at h
-  rw [h, hQ.transpose_mul_self]
+  rw [h, show Qᵀ * Q = 1 from hQ]
   ext i j
   simp [Matrix.one_apply, e.injective.eq_iff]
 
@@ -58,7 +58,7 @@ theorem HasOrthonormalCols.reindex {m n p q : Type*} [Fintype m] [Fintype p] [De
     HasOrthonormalCols (U.reindex em en) := by
   change (U.reindex em en)ᵀ * (U.reindex em en) = 1
   simp only [Matrix.reindex_apply, Matrix.transpose_submatrix, Matrix.submatrix_mul_equiv]
-  rw [hU.transpose_mul_self, Matrix.submatrix_one_equiv]
+  rw [show Uᵀ * U = 1 from hU, Matrix.submatrix_one_equiv]
 
 /-- A column isometry preserves matrix rank, including rectangular and empty
 isometries. Horn–Johnson 2013, Section 0.4; RRQR transport helper. -/
@@ -83,7 +83,8 @@ def HasOrthonormalCols.toLinearIsometry {m n : Type*} [Fintype m] [Fintype n] [D
   norm_map' x := by
     rw [norm_eq_sqrt_dotProduct, norm_eq_sqrt_dotProduct]
     change Real.sqrt ((Q *ᵥ x.ofLp) ⬝ᵥ (Q *ᵥ x.ofLp)) = Real.sqrt (x.ofLp ⬝ᵥ x.ofLp)
-    rw [mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ]
+    rw [show (Q *ᵥ x.ofLp) ⬝ᵥ (Q *ᵥ x.ofLp) = x.ofLp ⬝ᵥ x.ofLp from
+      star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ _]
 
 /-! ### Columns of a frame -/
 

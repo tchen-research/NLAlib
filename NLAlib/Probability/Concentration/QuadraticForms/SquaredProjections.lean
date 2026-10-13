@@ -12,7 +12,6 @@ Vershynin 2018, Theorem 6.2.1. Supports atlas `jl-subgaussian` and
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix Matrix.Norms.L2Operator

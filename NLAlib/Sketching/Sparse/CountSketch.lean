@@ -13,7 +13,6 @@ Source: operator manuscript `sh:count-hollow`, `sh:count-second`, `sparse-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory Matrix
 open scoped Matrix
 namespace NLAlib
@@ -92,7 +91,7 @@ theorem mul_countSketchGram_sub_one_mul_apply_eq_quadForm
       simp only [if_true, Matrix.one_apply_eq, ← pow_two, hσ, sub_self]
     · simp only [hij, if_false, Matrix.one_apply_ne hij, sub_zero]
   rw [Matrix.mul_assoc, Matrix.mul_apply, quadForm_eq_sum]
-  simp only [Matrix.transpose_apply, Matrix.mul_apply, hgram, Finset.mul_sum]
+  simp only [Matrix.transpose_apply, Matrix.mul_apply, hgram, Finset.mul_sum, star_trivial]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   by_cases hij : i = j <;> by_cases hh : h i = h j <;>
     simp only [hij, hh, if_true, if_false, countSketchHollowCoefficient, Matrix.of_apply,
@@ -105,7 +104,9 @@ theorem countSketch_gram_error_eq
     (h : ι → ρ) (σ : ι → ℝ) (U : Matrix ι d ℝ) (hU : HasOrthonormalCols U) :
     (countSketchMatrix h σ * U)ᵀ * (countSketchMatrix h σ * U) - 1 =
       Uᵀ * ((countSketchMatrix h σ)ᵀ * countSketchMatrix h σ - 1) * U := by
-  rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, hU.transpose_mul_self,
+  have hUt : Uᵀ * U = 1 := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hU.conjTranspose_mul_self
+  rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, hUt,
     Matrix.transpose_mul]
   simp only [Matrix.mul_assoc]
 

@@ -40,29 +40,33 @@ theorem eigenvalues₀_congruence_bounds_of_nonneg {A : Matrix n n ℝ}
       specNorm S ^ 2 * (x ⬝ᵥ x) := by
     simpa only [specNorm_transpose, dotProduct, pow_two] using sum_sq_mulVec_le_specNorm_sq Sᵀ x
   constructor
-  · obtain ⟨V, hV, hAV⟩ := exists_submodule_eigenvalues₀_mul_le hA k
+  · obtain ⟨V, hV, hAV⟩ := Matrix.IsHermitian.exists_submodule_eigenvalues₀_mul_le hA k
     have hdim := finrank_le_finrank_comap_endomorphism V Sᵀ.mulVecLin
-    apply le_eigenvalues₀_of_forall_mem
+    apply Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem
       (Matrix.isHermitian_mul_mul_conjTranspose S hA) k (V.comap Sᵀ.mulVecLin) (by omega)
     intro x hx
     change Sᵀ *ᵥ x ∈ V at hx
+    simp only [RCLike.re_to_real, star_trivial] at *
     change _ ≤ quadForm (S * A * Sᵀ) x
-    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
-      quadForm_transpose_mul_mul]
+    rw [show S * A * Sᵀ = (Sᵀ)ᴴ * A * Sᵀ by
+        rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose],
+      quadForm_conjTranspose_mul_mul]
     calc
       _ = hA.eigenvalues₀ k * (sigmaMin S ^ 2 * (x ⬝ᵥ x)) := by ring
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) :=
         mul_le_mul_of_nonneg_left (hlo x) hk
       _ ≤ _ := hAV _ hx
-  · obtain ⟨W, hW, hAW⟩ := exists_submodule_le_eigenvalues₀_mul hA k
+  · obtain ⟨W, hW, hAW⟩ := Matrix.IsHermitian.exists_submodule_le_eigenvalues₀_mul hA k
     have hdim := finrank_le_finrank_comap_endomorphism W Sᵀ.mulVecLin
-    apply eigenvalues₀_le_of_forall_mem
+    apply Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem
       (Matrix.isHermitian_mul_mul_conjTranspose S hA) k (W.comap Sᵀ.mulVecLin) (by omega)
     intro x hx
     change Sᵀ *ᵥ x ∈ W at hx
+    simp only [RCLike.re_to_real, star_trivial] at *
     change quadForm (S * A * Sᵀ) x ≤ _
-    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
-      quadForm_transpose_mul_mul]
+    rw [show S * A * Sᵀ = (Sᵀ)ᴴ * A * Sᵀ by
+        rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose],
+      quadForm_conjTranspose_mul_mul]
     calc
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) := hAW _ hx
       _ ≤ hA.eigenvalues₀ k * (specNorm S ^ 2 * (x ⬝ᵥ x)) :=
@@ -88,29 +92,33 @@ theorem eigenvalues₀_congruence_bounds_of_nonpos {A : Matrix n n ℝ}
       specNorm S ^ 2 * (x ⬝ᵥ x) := by
     simpa only [specNorm_transpose, dotProduct, pow_two] using sum_sq_mulVec_le_specNorm_sq Sᵀ x
   constructor
-  · obtain ⟨V, hV, hAV⟩ := exists_submodule_eigenvalues₀_mul_le hA k
+  · obtain ⟨V, hV, hAV⟩ := Matrix.IsHermitian.exists_submodule_eigenvalues₀_mul_le hA k
     have hdim := finrank_le_finrank_comap_endomorphism V Sᵀ.mulVecLin
-    apply le_eigenvalues₀_of_forall_mem
+    apply Matrix.IsHermitian.le_eigenvalues₀_of_forall_mem
       (Matrix.isHermitian_mul_mul_conjTranspose S hA) k (V.comap Sᵀ.mulVecLin) (by omega)
     intro x hx
     change Sᵀ *ᵥ x ∈ V at hx
+    simp only [RCLike.re_to_real, star_trivial] at *
     change _ ≤ quadForm (S * A * Sᵀ) x
-    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
-      quadForm_transpose_mul_mul]
+    rw [show S * A * Sᵀ = (Sᵀ)ᴴ * A * Sᵀ by
+        rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose],
+      quadForm_conjTranspose_mul_mul]
     calc
       _ = hA.eigenvalues₀ k * (specNorm S ^ 2 * (x ⬝ᵥ x)) := by ring
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) :=
         mul_le_mul_of_nonpos_left (hup x) hk
       _ ≤ _ := hAV _ hx
-  · obtain ⟨W, hW, hAW⟩ := exists_submodule_le_eigenvalues₀_mul hA k
+  · obtain ⟨W, hW, hAW⟩ := Matrix.IsHermitian.exists_submodule_le_eigenvalues₀_mul hA k
     have hdim := finrank_le_finrank_comap_endomorphism W Sᵀ.mulVecLin
-    apply eigenvalues₀_le_of_forall_mem
+    apply Matrix.IsHermitian.eigenvalues₀_le_of_forall_mem
       (Matrix.isHermitian_mul_mul_conjTranspose S hA) k (W.comap Sᵀ.mulVecLin) (by omega)
     intro x hx
     change Sᵀ *ᵥ x ∈ W at hx
+    simp only [RCLike.re_to_real, star_trivial] at *
     change quadForm (S * A * Sᵀ) x ≤ _
-    rw [show S * A * Sᵀ = Sᵀᵀ * A * Sᵀ by rw [Matrix.transpose_transpose],
-      quadForm_transpose_mul_mul]
+    rw [show S * A * Sᵀ = (Sᵀ)ᴴ * A * Sᵀ by
+        rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose],
+      quadForm_conjTranspose_mul_mul]
     calc
       _ ≤ hA.eigenvalues₀ k * ((Sᵀ *ᵥ x) ⬝ᵥ (Sᵀ *ᵥ x)) := hAW _ hx
       _ ≤ hA.eigenvalues₀ k * (sigmaMin S ^ 2 * (x ⬝ᵥ x)) :=

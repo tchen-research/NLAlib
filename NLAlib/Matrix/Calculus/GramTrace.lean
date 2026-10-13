@@ -51,7 +51,8 @@ theorem sum_trace_mul_gram_direction_sq (X : Matrix ι ι ℝ) (hX : Xᵀ = X)
   simp_rw [trace_mul_gram_direction X hX G, mul_pow]
   norm_num only
   have hfrob : frobInner (X * G) (X * G) = Matrix.trace (X ^ 2 * (G * Gᵀ)) := by
-    rw [frobInner_eq_trace, Matrix.transpose_mul, hX, pow_two]
+    rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, hX, pow_two]
     calc Matrix.trace ((Gᵀ * X) * (X * G)) = Matrix.trace (Gᵀ * (X * X * G)) := by
           congr 1; simp only [Matrix.mul_assoc]
       _ = Matrix.trace ((X * X * G) * Gᵀ) := Matrix.trace_mul_comm _ _
@@ -132,7 +133,8 @@ theorem sum_trace_mul_gram_direction_mul_gram_direction (X Y : Matrix ι ι ℝ)
         Matrix.trace Y * Matrix.trace (X * (G * Gᵀ)) := by
   simp_rw [trace_mul_gram_direction_mul_gram_direction X Y hX hY G]
   have hfrob : frobInner (X * G) (Y * G) = Matrix.trace (X * Y * (G * Gᵀ)) := by
-    rw [frobInner_eq_trace, Matrix.transpose_mul, hX]
+    rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, hX]
     calc Matrix.trace ((Gᵀ * X) * (Y * G)) = Matrix.trace (Gᵀ * (X * Y * G)) := by
           congr 1; simp only [Matrix.mul_assoc]
       _ = Matrix.trace ((X * Y * G) * Gᵀ) := Matrix.trace_mul_comm _ _

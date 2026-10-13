@@ -35,8 +35,9 @@ theorem specNorm_transpose_mul_self_sub_one_le_of_isSubspaceEmbedding
   obtain ⟨hlo, hup⟩ := (isSubspaceEmbedding_iff_of_hasOrthonormalCols hU).1 h x
   have hq : x ⬝ᵥ ((((S * U)ᵀ * (S * U) - 1) : Matrix d d ℝ) *ᵥ x) =
       ((S * U) *ᵥ x) ⬝ᵥ ((S * U) *ᵥ x) - x ⬝ᵥ x := by
-    rw [Matrix.sub_mulVec, dotProduct_sub,
-      ← mulVec_dotProduct_mulVec_self, Matrix.one_mulVec]
+    have hM := star_mulVec_dotProduct_mulVec_self (S * U) x
+    simp only [star_trivial, Matrix.conjTranspose_eq_transpose_of_trivial] at hM
+    rw [Matrix.sub_mulVec, dotProduct_sub, ← hM, Matrix.one_mulVec]
   rw [hq, abs_le]
   constructor <;> nlinarith
 

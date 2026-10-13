@@ -34,7 +34,7 @@ theorem frobSq_sub_nuclearNorm_sq_div_card_le_sub_smul
   have hPos := frobInner_le_nuclearNorm_of_specNorm_le_one A U
     (specNorm_le_one_of_orthonormal hU)
   have hNeg := frobInner_le_nuclearNorm_of_specNorm_le_one A (-U)
-    (by simpa only [specNorm_neg] using specNorm_le_one_of_orthonormal hU.transpose_mul_self)
+    (by simpa only [specNorm_neg] using specNorm_le_one_of_orthonormal hU)
   have hAbs : |frobInner A U| ≤ nuclearNorm A := by
     rw [frobInner_neg_right] at hNeg
     exact abs_le.mpr ⟨by linarith, hPos⟩

@@ -62,7 +62,9 @@ theorem exists_injective_vecMulVec_le_of_posSemidef_rows_injective
     nlinarith
   simp only [star_trivial, Matrix.sub_mulVec, dotProduct_sub]
   change 0 ≤ quadForm A x - quadForm (vecMulVec b b) x
-  rw [quadForm_vecMulVec_self, sub_nonneg]
+  have h := quadForm_vecMulVec_star_self b x
+  simp only [star_trivial, RCLike.ofReal_real_eq_id, id_eq, Real.norm_eq_abs, sq_abs] at h
+  rw [h, sub_nonneg]
   exact hbound
 
 end NLAlib

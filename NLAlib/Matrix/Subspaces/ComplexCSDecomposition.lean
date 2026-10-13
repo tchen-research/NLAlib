@@ -1,4 +1,5 @@
-import NLAlib.Matrix.Spectral.ComplexSquareSingularBasis
+import NLAlib.Matrix.Spectral.SVD
+import NLAlib.Matrix.Subspaces.ComplexGramIsometry
 import NLAlib.Matrix.Subspaces.UnitaryBlockCompletion
 import NLAlib.Matrix.Subspaces.CanonicalCS
 import NLAlib.Matrix.Functions.ComplexDiagonalFilter
@@ -54,15 +55,31 @@ theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
     exact h.submatrix_cols e
   have hE : Eᴴ * E = 1 := by
     rw [show Eᴴ = E₀ᵀ.map Complex.ofReal from conjTranspose_map_ofReal E₀,
-      ← map_ofReal_mul, hE₀.transpose_mul_self]
+      ← map_ofReal_mul, (show E₀ᵀ * E₀ = 1 from hE₀)]
     simp
-  obtain ⟨V₀, W₀, hVW⟩ := exists_unitary_conjTranspose_mul_mul_eq_diagonal_singularValues U.toBlocks₁₁
-  let V := (V₀ : Matrix p p ℂ)
-  let W := (W₀ : Matrix p p ℂ)
-  have hV : Vᴴ * V = 1 := Unitary.coe_star_mul_self V₀
-  have hW : Wᴴ * W = 1 := Unitary.coe_star_mul_self W₀
-  have hVt : V * Vᴴ = 1 := Unitary.coe_mul_star_self V₀
-  change Vᴴ * U.toBlocks₁₁ * W = C at hVW
+  obtain ⟨V₀, W₀, hSVD⟩ := exists_isSVD U.toBlocks₁₁
+  let ep := Fintype.equivFin p
+  let V : Matrix p p ℂ := V₀.submatrix id ep
+  let W : Matrix p p ℂ := W₀.submatrix id ep
+  have hsq {X : Matrix p (Fin (Fintype.card p)) ℂ} (hX : Xᴴ * X = 1) :
+      (X.submatrix id ep)ᴴ * X.submatrix id ep = 1 := by
+    rw [Matrix.conjTranspose_submatrix, ← Equiv.coe_refl, Matrix.submatrix_mul_equiv, hX,
+      Matrix.submatrix_one_equiv]
+  have hV : Vᴴ * V = 1 := hsq hSVD.conjTranspose_mul_left
+  have hW : Wᴴ * W = 1 := hsq hSVD.conjTranspose_mul_right
+  have hVt : V * Vᴴ = 1 := mul_eq_one_comm.1 hV
+  have hVW : Vᴴ * U.toBlocks₁₁ * W = C := by
+    have h := hSVD.conjTranspose_mul_mul
+    ext i j
+    have hij := congrArg (fun M => M (ep i) (ep j)) h
+    simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, rectDiag_apply_ofReal] at hij
+    simp only [V, W, C, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.submatrix_apply,
+      id_eq, Matrix.diagonal_apply, c]
+    rw [hij]
+    by_cases hij' : i = j
+    · subst hij'; simp [ep]
+    · have : ((ep i : ℕ) = ep j) ↔ False := ⟨fun h => hij' (ep.injective (Fin.ext h)), False.elim⟩
+      simp [hij', this]
   let D := U.toBlocks₂₁ * W
   let M := Matrix.fromBlocks C (Vᴴ * U.toBlocks₁₂) D U.toBlocks₂₂
   have hMForm : Matrix.fromBlocks Vᴴ 0 0 (1 : Matrix q q ℂ) * U *
@@ -119,7 +136,8 @@ theorem exists_complex_cs_decomposition_of_embedding {p q : Type*}
   let K := (csCanonicalMatrix c E₀).map Complex.ofReal
   have hK : Kᴴ * K = 1 := by
     rw [show Kᴴ = (csCanonicalMatrix c E₀)ᵀ.map Complex.ofReal from conjTranspose_map_ofReal _,
-      ← map_ofReal_mul, (hasOrthonormalCols_csCanonicalMatrix c E₀ hE₀ hc).transpose_mul_self]
+      ← map_ofReal_mul, show (csCanonicalMatrix c E₀)ᵀ * csCanonicalMatrix c E₀ = 1 from
+        hasOrthonormalCols_csCanonicalMatrix c E₀ hE₀ hc]
     simp
   have hFirst : N.submatrix id Sum.inl = K.submatrix id Sum.inl := by
     dsimp [N, M, K, csCanonicalMatrix]

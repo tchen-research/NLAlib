@@ -27,7 +27,8 @@ theorem det_gram_mul_eq_zero_of_det_gram_eq_zero {m p k : Type*}
     ((A * Y)ᵀ * (A * Y)).det = 0 := by
   obtain ⟨x, hx, hYx⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr hY
   have hnorm : (Y *ᵥ x) ⬝ᵥ (Y *ᵥ x) = 0 := by
-    rw [mulVec_dotProduct_mulVec_self, hYx]
+    rw [show (Y *ᵥ x) ⬝ᵥ (Y *ᵥ x) = x ⬝ᵥ ((Yᵀ * Y) *ᵥ x) from
+      star_mulVec_dotProduct_mulVec_self Y x, hYx]
     simp
   have hy : Y *ᵥ x = 0 := dotProduct_self_eq_zero.mp hnorm
   apply Matrix.exists_mulVec_eq_zero_iff.mp
@@ -83,7 +84,7 @@ theorem IsSVD.det_gram_mul_submatrix_eq_prod_sq_singularValues {m n k : ℕ}
   have hVE : Vᵀ * V.submatrix id (Fin.castLE hkn) = E := by
     have h := Matrix.submatrix_mul_equiv Vᵀ V id (Equiv.refl (Fin n)) (Fin.castLE hkn)
     simp only [Equiv.coe_refl, Matrix.submatrix_id_id] at h
-    rw [h, hT.transpose_mul_right]
+    rw [h, show Vᵀ * V = 1 from hT.conjTranspose_mul_right]
   have hEV : (V.submatrix id (Fin.castLE hkn))ᵀ * V = Eᵀ := by
     simpa only [Matrix.transpose_mul, Matrix.transpose_transpose] using congrArg Matrix.transpose hVE
   have hGram : ((T * V.submatrix id (Fin.castLE hkn))ᵀ *
@@ -94,7 +95,8 @@ theorem IsSVD.det_gram_mul_submatrix_eq_prod_sq_singularValues {m n k : ℕ}
       _ = (V.submatrix id (Fin.castLE hkn))ᵀ * (Tᵀ * T) *
           V.submatrix id (Fin.castLE hkn) := by simp only [Matrix.mul_assoc]
       _ = _ := by
-        rw [hT.transpose_mul_self]
+        rw [show Tᵀ * T = V * Matrix.diagonal (fun i : Fin n => singularValues T i ^ 2) * Vᵀ from
+          hT.conjTranspose_mul_self]
         simp only [Matrix.mul_assoc]
         rw [hVE, ← Matrix.mul_assoc, hEV]
   have hDiag : Eᵀ * Matrix.diagonal (fun i : Fin n => singularValues T i ^ 2) * E =
@@ -119,7 +121,7 @@ private theorem prod_singularValues_mul_le_fin {m p n : ℕ}
     have hkn : k ≤ n := hk.trans ((min_le_right m (min p n)).trans (min_le_right p n))
     let Q := V.submatrix id (Fin.castLE hkn)
     have hQ : HasOrthonormalCols Q :=
-      HasOrthonormalCols.submatrix_cols hT.transpose_mul_right
+      HasOrthonormalCols.submatrix_cols hT.conjTranspose_mul_right
         ⟨Fin.castLE hkn, Fin.castLE_injective hkn⟩
     have hdetT := hT.det_gram_mul_submatrix_eq_prod_sq_singularValues hkn
     have hA := det_gram_mul_le_det_gram_mul_prod_sq_singularValues A (B * Q)

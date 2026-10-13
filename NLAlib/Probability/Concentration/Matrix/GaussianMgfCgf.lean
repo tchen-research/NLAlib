@@ -28,21 +28,21 @@ Introduction to Matrix Concentration Inequalities, Ch 4*. -/
 theorem NLAlib.gaussian_matrix_mgf_cgf_eq {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {d : ℕ} [NeZero d]
     (A : Matrix (Fin d) (Fin d) ℂ) (hA : A.IsHermitian)
-    (g : Ω → ℝ) (hMeas : Measurable g) (hLaw : IsStandardGaussian μ g) (θ : ℝ) :
+    (g : Ω → ℝ) (hLaw : IsStandardGaussian μ g) (θ : ℝ) :
     (∫ ω, matrixExp ((θ * g ω) • A) ∂μ) = matrixExp ((θ ^ 2 / 2) • A ^ 2) ∧
     matrixLog (∫ ω, matrixExp ((θ * g ω) • A) ∂μ) = ((θ ^ 2 / 2) • A ^ 2) := by
   have hs : ∀ t, Integrable (fun ω => Real.exp (t * (θ * g ω))) μ := by
     intro t
     have h1 := integrable_exp_mul_gaussianReal (μ := 0) (v := 1) (t * θ)
-    rw [← hLaw] at h1
-    have h2 := (integrable_map_measure (by fun_prop) hMeas.aemeasurable).mp h1
+    rw [← hLaw.map_eq] at h1
+    have h2 := (integrable_map_measure (by fun_prop) hLaw.aemeasurable).mp h1
     simpa [Function.comp_def, mul_assoc] using h2
   have hint := (integrable_and_integral_matrixExp_smul_eq_cfc_mgf μ A hA (fun ω => θ * g ω) hs).2
   have hmain : (∫ ω, matrixExp ((θ * g ω) • A) ∂μ) = matrixExp ((θ ^ 2 / 2) • A ^ 2) := by
     rw [hint, matrixExp_smul_sq_eq_cfc A hA]
     congr 1
     funext x
-    rw [mgf_const_mul, mgf_gaussianReal hLaw]
+    rw [mgf_const_mul, mgf_gaussianReal hLaw.map_eq]
     congr 1
     simp only [NNReal.coe_one]
     ring

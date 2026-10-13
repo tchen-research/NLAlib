@@ -63,7 +63,8 @@ theorem lanczosRayleighRelativeError_singleton_eq_zero {A : Matrix (Fin 1) (Fin 
     simpa only [Fin.sum_univ_one] using hs.symm
   have hbb : b ⬝ᵥ b ≠ 0 := by rw [hp]; exact pow_ne_zero 2 hb
   have hRQ : (Matrix.toEuclideanCLM (𝕜 := ℝ) A).rayleighQuotient (WithLp.toLp 2 b) = specNorm A := by
-    rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_eq_div, quadForm_eq_dotProduct]
+    rw [rayleighQuotient_toEuclideanCLM_eq, rayleighQuotient_def, quadForm_def, star_trivial,
+      RCLike.re_to_real, RCLike.re_to_real]
     have hs := quadForm_eq_sum_eigenvalues hA.isHermitian b
     simp only [Fin.sum_univ_one, singleton_top_eigenvalue hA] at hs
     change b ⬝ᵥ (A *ᵥ b) = specNorm A *

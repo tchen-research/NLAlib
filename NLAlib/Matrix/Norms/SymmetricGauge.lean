@@ -12,7 +12,6 @@ Atlas: `unitarily-invariant-norm-def`.
 -/
 
 noncomputable section
-open scoped BigOperators
 
 namespace NLAlib
 

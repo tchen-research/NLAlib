@@ -63,11 +63,14 @@ theorem nystrom_eq_of_eq_transpose_mul {F : Matrix r n ℝ} {A : Matrix n n ℝ}
   have h3 : Ωᵀ * A = Yᵀ * F := by
     rw [hA, hY, Matrix.transpose_mul]; simp only [Matrix.mul_assoc]
   have hP : (moorePenroseInverse Y)ᵀ * Yᵀ = Y * moorePenroseInverse Y := by
-    rw [← Matrix.transpose_mul]; exact (mul_moorePenroseInverse_isSymm Y).eq
+    rw [← Matrix.transpose_mul]; exact (mul_moorePenroseInverse_isHermitian Y).eq
   have hPP : Y * moorePenroseInverse Y * (Y * moorePenroseInverse Y) =
       Y * moorePenroseInverse Y := mul_moorePenroseInverse_isIdempotentElem Y
   unfold nystrom
-  rw [h1, h2, h3, moorePenroseInverse_transpose_mul_self]
+  have hMP : moorePenroseInverse (Yᵀ * Y) = moorePenroseInverse Y * (moorePenroseInverse Y)ᵀ := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
+      moorePenroseInverse_conjTranspose_mul_self Y
+  rw [h1, h2, h3, hMP]
   calc Fᵀ * Y * (moorePenroseInverse Y * (moorePenroseInverse Y)ᵀ) * (Yᵀ * F)
       = Fᵀ * (Y * moorePenroseInverse Y * ((moorePenroseInverse Y)ᵀ * Yᵀ)) * F := by
         simp only [Matrix.mul_assoc]
@@ -84,7 +87,7 @@ theorem sub_nystrom_eq_of_eq_transpose_mul [DecidableEq r] {F : Matrix r n ℝ}
       ((1 - F * Ω * moorePenroseInverse (F * Ω)) * F)ᵀ *
         ((1 - F * Ω * moorePenroseInverse (F * Ω)) * F) := by
   set P := F * Ω * moorePenroseInverse (F * Ω) with hPdef
-  have hPs : Pᵀ = P := (mul_moorePenroseInverse_isSymm (F * Ω)).eq
+  have hPs : Pᵀ = P := (mul_moorePenroseInverse_isHermitian (F * Ω)).eq
   have hPi : P * P = P := mul_moorePenroseInverse_isIdempotentElem (F * Ω)
   have hQ : (1 - P)ᵀ * (1 - P) = 1 - P := by
     rw [Matrix.transpose_sub, Matrix.transpose_one, hPs, Matrix.sub_mul, Matrix.mul_sub,
@@ -109,7 +112,7 @@ Gittens–Mahoney 2016, Lemma 1; Martinsson–Tropp 2020, §14. Atlas `nystrom-s
 theorem posSemidef_nystrom_of_eq_transpose_mul {F : Matrix r n ℝ} {A : Matrix n n ℝ}
     (hA : A = Fᵀ * F) (Ω : Matrix n t ℝ) : (nystrom A Ω).PosSemidef := by
   set P := F * Ω * moorePenroseInverse (F * Ω)
-  have hPs : Pᵀ = P := (mul_moorePenroseInverse_isSymm (F * Ω)).eq
+  have hPs : Pᵀ = P := (mul_moorePenroseInverse_isHermitian (F * Ω)).eq
   have hPi : P * P = P := mul_moorePenroseInverse_isIdempotentElem (F * Ω)
   have h : nystrom A Ω = (P * F)ᵀ * (P * F) := by
     rw [nystrom_eq_of_eq_transpose_mul hA Ω, Matrix.transpose_mul, hPs]
@@ -124,7 +127,8 @@ atlas: nystrom-structural -/
 theorem trace_sub_nystrom_eq_of_eq_transpose_mul [DecidableEq r] {F : Matrix r n ℝ}
     {A : Matrix n n ℝ} (hA : A = Fᵀ * F) (Ω : Matrix n t ℝ) :
     (A - nystrom A Ω).trace = frobSq ((1 - F * Ω * moorePenroseInverse (F * Ω)) * F) := by
-  rw [sub_nystrom_eq_of_eq_transpose_mul hA Ω, frobSq, frobInner_eq_trace]
+  rw [sub_nystrom_eq_of_eq_transpose_mul hA Ω, frobSq, frobInner_eq_trace, RCLike.re_to_real,
+    Matrix.conjTranspose_eq_transpose_of_trivial]
 
 /-- `‖A − A⟨Ω⟩‖₂ = ‖(I − P)F‖₂²` for `A = FᵀF`, `P = (FΩ)(FΩ)⁺`. Gittens–Mahoney 2016, Lemma 1
 (stated there as `≤` with `F = A^{1/2}`). Atlas `nystrom-structural`. Deviation: equality.
@@ -159,8 +163,8 @@ projector uniqueness). -/
 theorem one_sub_mul_moorePenroseInverse_mul_eq_residual {m q p : Type*} [Fintype m]
     [Fintype q] [DecidableEq m] [DecidableEq q] {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q)
     {Y : Matrix m t ℝ} (hQY : Q * (Qᵀ * Y) = Y) (hr : Fintype.card q ≤ Y.rank)
-    (F : Matrix m p ℝ) : (1 - Y * moorePenroseInverse Y) * F = residual Q F := by
-  rw [← mul_transpose_eq_mul_moorePenroseInverse hQ hQY hr, residual_eq_one_sub_mul]
+    (F : Matrix m p ℝ) : (1 - Y * moorePenroseInverse Y) * F = projResidual Q F := by
+  rw [← mul_conjTranspose_eq_mul_moorePenroseInverse hQ hQY hr, residual_eq_one_sub_mul]
 
 end Structural
 
@@ -187,19 +191,17 @@ atlas: nystrom-randomized (partial) -/
 theorem integrable_and_integral_trace_sub_nystrom_le {n r k t : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {F : Matrix (Fin r) (Fin n) ℝ} (hA : A = Fᵀ * F)
     (hkt : k + 2 ≤ t) (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
-    (hΩ : μ.map (fun ω => Matrix.of.symm (Ω ω)) = gaussianMatrix n t) :
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) :
     Integrable (fun ω => (A - nystrom A (Ω ω)).trace) μ ∧
       ∫ ω, (A - nystrom A (Ω ω)).trace ∂μ ≤ (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k F := by
   obtain ⟨hint, hle⟩ :=
     integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq F hkt Ω hΩ
-  have hae : (fun ω => frobSq (residual (gaussianRangeFrame F t (Matrix.of.symm (Ω ω))) F))
+  have hae : (fun ω => frobSq (projResidual (gaussianRangeFrame F t (Ω ω)) F))
       =ᵐ[μ] fun ω => (A - nystrom A (Ω ω)).trace := by
-    have ho := ae_hasOrthonormalCols_gaussianRangeFrame_of_map_eq F
-      (fun ω => Matrix.of.symm (Ω ω)) hΩ
-    have hp := ae_project_gaussianRangeFrame_of_map_eq F (fun ω => Matrix.of.symm (Ω ω)) hΩ
-    have hrk := ae_rank_mul_gaussian_eq_min F (fun ω => Matrix.of.symm (Ω ω)) hΩ
+    have ho := ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw F Ω hΩ
+    have hp := ae_project_gaussianRangeFrame_of_hasLaw F Ω hΩ
+    have hrk := ae_rank_mul_gaussian_eq_min F Ω hΩ
     filter_upwards [ho, hp, hrk] with ω hω hpω hrω
-    simp only [Equiv.apply_symm_apply] at hpω hrω
     rw [trace_sub_nystrom_eq_of_eq_transpose_mul hA,
       one_sub_mul_moorePenroseInverse_mul_eq_residual hω hpω (by rw [hrω, Fintype.card_fin]) F]
   exact ⟨hint.congr hae, (integral_congr_ae hae).symm.le.trans hle⟩

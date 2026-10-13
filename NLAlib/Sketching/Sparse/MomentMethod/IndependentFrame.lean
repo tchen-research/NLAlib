@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.MomentMethod.Assembly
 import NLAlib.Sketching.Sparse.FiniteLaw.BinaryProduct
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Conditioning corollary for a frame independent of the sketch

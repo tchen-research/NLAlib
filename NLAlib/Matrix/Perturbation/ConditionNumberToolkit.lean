@@ -21,29 +21,29 @@ positive-dimension condition is explicit. Golub--Van Loan, Section 2.6.2;
 Higham, Theorem 6.5.
 atlas: condition-number-def -/
 theorem condition_number_characterizations (A : Matrix m n ℝ) :
-    conditionNumber (0 : Matrix m n ℝ) = 0 ∧
-    (A ≠ 0 → 1 ≤ conditionNumber A) ∧
-    (0 < A.rank → conditionNumber A = singularValues A 0 /
+    moorePenroseConditionNumber (0 : Matrix m n ℝ) = 0 ∧
+    (A ≠ 0 → 1 ≤ moorePenroseConditionNumber A) ∧
+    (0 < A.rank → moorePenroseConditionNumber A = singularValues A 0 /
       singularValues A (A.rank - 1)) ∧
-    (∀ c : ℝ, c ≠ 0 → conditionNumber (c • A) = conditionNumber A) ∧
-    conditionNumber Aᵀ = conditionNumber A ∧
-    conditionNumber (Aᵀ * A) = conditionNumber A ^ 2 ∧
-    (∀ Q : Matrix p m ℝ, HasOrthonormalCols Q → conditionNumber (Q * A) = conditionNumber A) ∧
+    (∀ c : ℝ, c ≠ 0 → moorePenroseConditionNumber (c • A) = moorePenroseConditionNumber A) ∧
+    moorePenroseConditionNumber Aᵀ = moorePenroseConditionNumber A ∧
+    moorePenroseConditionNumber (Aᵀ * A) = moorePenroseConditionNumber A ^ 2 ∧
+    (∀ Q : Matrix p m ℝ, HasOrthonormalCols Q → moorePenroseConditionNumber (Q * A) = moorePenroseConditionNumber A) ∧
     (∀ B : Matrix n n ℝ, ∀ hB : B.PosDef, ∀ hDim : 0 < Fintype.card n,
-      conditionNumber B = hB.isHermitian.eigenvalues₀ ⟨0, hDim⟩ /
+      moorePenroseConditionNumber B = hB.isHermitian.eigenvalues₀ ⟨0, hDim⟩ /
         hB.isHermitian.eigenvalues₀ ⟨Fintype.card n - 1, Nat.sub_lt hDim (by decide : 0 < 1)⟩) ∧
     (∀ B : Matrix n n ℝ, IsUnit B → 0 < Fintype.card n →
       IsLeast (specNorm '' {E : Matrix n n ℝ | ¬ IsUnit (B + E)}) (1 / specNorm B⁻¹) ∧
       IsLeast ((fun E : Matrix n n ℝ => specNorm E / specNorm B) ''
-        {E | ¬ IsUnit (B + E)}) (1 / conditionNumber B)) := by
-  refine ⟨conditionNumber_zero, fun hA => one_le_conditionNumber hA,
-    fun hr => conditionNumber_eq_singularValues_ratio A hr,
-    fun c hc => conditionNumber_smul (c := c) hc A, conditionNumber_transpose A,
-    conditionNumber_transpose_mul_self A,
-    fun Q hQ => conditionNumber_mul_left_of_hasOrthonormalCols Q A hQ, ?_, ?_⟩
+        {E | ¬ IsUnit (B + E)}) (1 / moorePenroseConditionNumber B)) := by
+  refine ⟨moorePenroseConditionNumber_zero, fun hA => one_le_moorePenroseConditionNumber hA,
+    fun hr => moorePenroseConditionNumber_eq_singularValues_ratio A hr,
+    fun c hc => moorePenroseConditionNumber_smul (c := c) hc A, moorePenroseConditionNumber_transpose A,
+    moorePenroseConditionNumber_transpose_mul_self A,
+    fun Q hQ => moorePenroseConditionNumber_mul_left_of_hasOrthonormalCols Q A hQ, ?_, ?_⟩
   · intro B hB hDim
     let : Nonempty n := Fintype.card_pos_iff.mp hDim
-    exact conditionNumber_eq_eigenvalues₀_ratio B hB
+    exact moorePenroseConditionNumber_eq_eigenvalues₀_ratio B hB
   · intro B hB hDim
     let : Nonempty n := Fintype.card_pos_iff.mp hDim
     exact ⟨isLeast_specNorm_singular_perturbations B hB,

@@ -22,7 +22,7 @@ hypothesis `A.PosDef` plays that role.
 * `CGState`, `cgStep`, `cgInit`, `cgRecurrence A c x₀ k = (cgStep A)^[k] (cgInit A c x₀)`.
 * Hypothesis-free facts (proved): the residual identity `cgRecurrence_r_eq`
   (`r_k = c − A x_k`), the Krylov memberships `cgRecurrence_mem_krylovSpace`
-  (`x_k − x₀ ∈ K_k`, `r_k, p_k ∈ K_{k+1}`), freezing after a zero residual,
+  (`x_k − x₀ ∈ K_k`, `r_k, p_k ∈ K_{k+1}`), freezing after a zero projResidual,
   `span_cgRecurrence_p_eq_span_r`, and no breakdown before the grade
   `cgRecurrence_r_ne_zero_of_lt_krylovGrade`.
 * The classical invariants for `A ≻ 0` (scaffolds): `dotProduct_cgRecurrence_r_eq_zero`

@@ -10,7 +10,6 @@ width. Source: `sh:srht-ose`; atlas `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option maxHeartbeats 600000
 open MeasureTheory ProbabilityTheory
 open scoped Classical Matrix Matrix.Norms.L2Operator ENNReal ComplexOrder
@@ -116,8 +115,12 @@ theorem measure_srhtWithReplacement_gram_failure_le_of_flat_rows
       congr 1
       ext a b
       by_cases hab : a = b <;> simp [Matrix.map_apply, Matrix.one_apply, hab]
-    have hn := specNorm_le_norm_map_ofReal
-      ((srhtWithReplacementSketch H ξ I * U)ᵀ * (srhtWithReplacementSketch H ξ I * U) - 1)
+    have hn : specNorm ((srhtWithReplacementSketch H ξ I * U)ᵀ *
+          (srhtWithReplacementSketch H ξ I * U) - 1) ≤
+        ‖((srhtWithReplacementSketch H ξ I * U)ᵀ *
+          (srhtWithReplacementSketch H ξ I * U) - 1).map Complex.ofReal‖ :=
+      specNorm_le_norm_map_ofReal (𝕜 := ℂ)
+        ((srhtWithReplacementSketch H ξ I * U)ᵀ * (srhtWithReplacementSketch H ξ I * U) - 1)
     rw [hm] at hn
     exact hI.le.trans hn
   exact (measureReal_mono hsub).trans hc

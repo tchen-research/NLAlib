@@ -9,7 +9,7 @@ provides the dual unit-upper statement. Horn–Johnson 2013, Theorem 3.5.3.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [LinearOrder n]

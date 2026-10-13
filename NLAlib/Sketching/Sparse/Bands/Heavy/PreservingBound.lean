@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.Bands.Heavy.OccupationIdentity
 import NLAlib.Matrix.Basic.QuadForm
 import NLAlib.Sketching.Sparse.MomentMethod.GramTail
-set_option autoImplicit false
 
 /-!
 # Restricted heavy preserving operator bound
@@ -16,7 +15,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 
 namespace NLAlib.SparseSketch.Heavy
 
-open scoped BigOperators Matrix.Norms.L2Operator InnerProductSpace
+open scoped Matrix.Norms.L2Operator InnerProductSpace
 
 noncomputable section
 
@@ -30,7 +29,8 @@ theorem quadratic_gram
     (A : Matrix I J ℝ) (x : J → ℝ) :
     quadForm (A.transpose * A) x =
       sumSq (Matrix.mulVec A x) := by
-  rw [quadForm_transpose_mul_self, sumSq_eq_dotProduct]
+  rw [← Matrix.conjTranspose_eq_transpose_of_trivial A, quadForm_conjTranspose_mul_self,
+    star_trivial, sumSq_eq_dotProduct]
 
 /-- The creation diagonal quadratic form is the sum of same-site creation-analysis energies.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,
@@ -106,9 +106,9 @@ theorem quadratic_gradeConj (M : FullOp d m n) (nu : ℕ)
     (x : Fin d × Pattern m n → ℝ) :
     quadForm (gradeProjection (d := d) nu * M * gradeProjection nu) x =
       quadForm M (Matrix.mulVec (gradeProjection (d := d) nu) x) := by
-  have h := quadForm_transpose_mul_mul M
+  have h := quadForm_conjTranspose_mul_mul M
     (gradeProjection (d := d) (m := m) (n := n) nu) x
-  rwa [gradeProjection_transpose] at h
+  rwa [Matrix.conjTranspose_eq_transpose_of_trivial, gradeProjection_transpose] at h
 
 /-- The grade-preserving heavy band is symmetric.
 Source: ported from `SparseFockFormal.HeavyBandsConcrete`,

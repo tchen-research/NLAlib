@@ -8,7 +8,7 @@ Atlas: `majorization-def`.
 -/
 
 noncomputable section
-open scoped BigOperators Matrix
+open scoped Matrix
 
 namespace NLAlib
 

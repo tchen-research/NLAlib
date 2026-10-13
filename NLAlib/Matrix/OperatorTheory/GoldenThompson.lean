@@ -16,7 +16,6 @@ Atlas: `golden-thompson`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 

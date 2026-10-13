@@ -11,7 +11,7 @@ Horn–Johnson 2013, §§7.4.4–7.4.6 and Corollary 7.4.1.5.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -63,9 +63,11 @@ theorem posSemidef_mul_transpose_of_frobInner_eq_sum_singularValues_mul
   have hLower := frobInner_le_nuclearNorm_of_specNorm_le_one (A * Bᵀ)
     (1 : Matrix m m ℝ) (specNorm_le_one_of_orthonormal (by simp))
   have hTrace : frobInner (A * Bᵀ) (1 : Matrix m m ℝ) = (A * Bᵀ).trace := by
-    rw [frobInner_eq_trace, Matrix.mul_one, Matrix.trace_transpose]
+    rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_one, Matrix.trace_transpose]
   rw [hTrace] at hLower
-  rw [frobInner_eq_trace_mul_transpose] at hEq
+  rw [frobInner_eq_re_trace_mul_conjTranspose, RCLike.re_to_real,
+    Matrix.conjTranspose_eq_transpose_of_trivial] at hEq
   linarith
 
 /-- Equality in the Frobenius Mirsky bound forces both rectangular
@@ -87,30 +89,6 @@ theorem posSemidef_cross_products_of_frobSq_sub_eq_sum_singularValues_sub_sq
   simpa only [Matrix.transpose_transpose] using
     posSemidef_mul_transpose_of_frobInner_eq_sum_singularValues_mul Bᵀ Aᵀ hPairT
 
-private theorem exists_orthogonal_pair_attaining_fin {a b : ℕ}
-    (A B : Matrix (Fin a) (Fin b) ℝ) :
-    ∃ (U : Matrix (Fin a) (Fin a) ℝ) (T : Matrix (Fin b) (Fin b) ℝ),
-      HasOrthonormalCols U ∧ HasOrthonormalCols T ∧
-      frobInner A (U * B * T) = ∑ i ∈ Finset.range (min a b),
-        singularValues A i * singularValues B i := by
-  obtain ⟨LA, RA, hA⟩ := exists_isSVD A
-  obtain ⟨LB, RB, hB⟩ := exists_isSVD B
-  let U := LA * LBᵀ
-  let T := RB * RAᵀ
-  have hLA : HasOrthonormalCols LA := hA.transpose_mul_left
-  have hRA : HasOrthonormalCols RA := hA.transpose_mul_right
-  have hLB : HasOrthonormalCols LB := hB.transpose_mul_left
-  have hRB : HasOrthonormalCols RB := hB.transpose_mul_right
-  refine ⟨U, T, hLA.mul hLB.transpose, hRB.mul hRA.transpose, ?_⟩
-  have hAligned : U * B * T = LA *
-      (rectDiag (singularValues B) : Matrix (Fin a) (Fin b) ℝ) * RAᵀ := by
-    dsimp [U, T]
-    nth_rw 1 [hB.eq_mul_transpose]
-    simp only [Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc LBᵀ LB _, hB.transpose_mul_left, Matrix.one_mul,
-      ← Matrix.mul_assoc RBᵀ RB _, hB.transpose_mul_right, Matrix.one_mul]
-  rw [hAligned, hA.frobInner_mul_rectDiag_mul_transpose]
-
 /-- Genuine orthogonal rotations on both sides attain von Neumann's
 singular-value pairing, on arbitrary finite rectangular indices.
 Horn–Johnson 2013, §7.4.5.
@@ -119,22 +97,34 @@ theorem exists_orthogonal_pair_attaining_singularValue_pairing (A B : Matrix m n
     ∃ (U : Matrix m m ℝ) (T : Matrix n n ℝ), HasOrthonormalCols U ∧ HasOrthonormalCols T ∧
       frobInner A (U * B * T) = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
         singularValues A i * singularValues B i := by
-  let em := Fintype.equivFin m
-  let en := Fintype.equivFin n
-  obtain ⟨UF, TF, hUF, hTF, hPair⟩ := exists_orthogonal_pair_attaining_fin
-    (A.reindex em en) (B.reindex em en)
-  let U := UF.reindex em.symm em.symm
-  let T := TF.reindex en.symm en.symm
-  refine ⟨U, T, hUF.reindex em.symm em.symm, hTF.reindex en.symm en.symm, ?_⟩
-  have hBack : (U * B * T).reindex em en = UF * B.reindex em en * TF := by
-    have hUBack : U.reindex em em = UF := by
-      ext i j; simp [U, Matrix.reindex_apply]
-    have hTBack : T.reindex en en = TF := by
-      ext i j; simp [T, Matrix.reindex_apply]
-    rw [mul_reindex (U * B) T em en en, mul_reindex U B em em en, hUBack, hTBack]
-  rw [← frobInner_reindex A (U * B * T) em en, hBack]
-  simp only [em, en, singularValues_reindex] at hPair
-  exact hPair
+  classical
+  obtain ⟨LA, RA, hA⟩ := exists_isSVD A
+  obtain ⟨LB, RB, hB⟩ := exists_isSVD B
+  let U := LA * LBᵀ
+  let T := RB * RAᵀ
+  have hLA : HasOrthonormalCols LA := hA.conjTranspose_mul_left
+  have hRA : HasOrthonormalCols RA := hA.conjTranspose_mul_right
+  have hLB : HasOrthonormalCols LB := hB.conjTranspose_mul_left
+  have hRB : HasOrthonormalCols RB := hB.conjTranspose_mul_right
+  have hLBt : HasOrthonormalCols LBᵀ := by
+    change LBᵀᴴ * LBᵀ = 1
+    rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
+    exact hB.mul_conjTranspose_left
+  have hRAt : HasOrthonormalCols RAᵀ := by
+    change RAᵀᴴ * RAᵀ = 1
+    rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
+    exact hA.mul_conjTranspose_right
+  refine ⟨U, T, hLA.mul hLBt, hRB.mul hRAt, ?_⟩
+  have hAligned : U * B * T = LA *
+      (rectDiag (singularValues B) :
+        Matrix (Fin (Fintype.card m)) (Fin (Fintype.card n)) ℝ) * RAᵀ := by
+    dsimp [U, T]
+    nth_rw 1 [hB.eq]
+    simp only [Matrix.mul_assoc, Matrix.conjTranspose_eq_transpose_of_trivial]
+    rw [← Matrix.mul_assoc LBᵀ LB _, show LBᵀ * LB = 1 from hB.conjTranspose_mul_left,
+      Matrix.one_mul, ← Matrix.mul_assoc RBᵀ RB _,
+      show RBᵀ * RB = 1 from hB.conjTranspose_mul_right, Matrix.one_mul]
+  rw [hAligned, hA.frobInner_mul_rectDiag_mul_transpose]
 
 /-- Two-sided orthogonal Procrustes has the exact singular-value squared
 distance as its minimum. SVD alignment supplies genuine attained rotations,

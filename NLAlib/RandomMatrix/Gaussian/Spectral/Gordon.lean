@@ -87,7 +87,7 @@ private theorem gu_coeffY_sq {N n : ℕ} (u u' : EuclideanSpace ℝ (Fin n))
   simp
 
 private theorem gu_Y_le {N n : ℕ} (u : EuclideanSpace ℝ (Fin n)) (v : EuclideanSpace ℝ (Fin N))
-    (hu : ‖u‖ = 1) (hv : ‖v‖ = 1) (H : Fin 1 → Fin (n + N) → ℝ) :
+    (hu : ‖u‖ = 1) (hv : ‖v‖ = 1) (H : Matrix (Fin 1) (Fin (n + N)) ℝ) :
     linForm (fun _ k => Fin.append (fun j => u j) (fun i => v i) k) H
       ≤ Real.sqrt (∑ j, H 0 (Fin.castAdd N j) ^ 2) + Real.sqrt (∑ i, H 0 (Fin.natAdd n i) ^ 2) := by
   unfold linForm
@@ -108,7 +108,7 @@ private theorem gu_Y_le {N n : ℕ} (u : EuclideanSpace ℝ (Fin n)) (v : Euclid
 open scoped Matrix.Norms.L2Operator in
 /-- The comparison bound for a fixed net scale: `(1 - 2ε) 𝔼‖G‖ ≤ √N + √n`. -/
 private theorem gu_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ) (hε : 0 < ε) :
-    (1 - 2 * ε) * ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n)
+    (1 - 2 * ε) * ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n))
       ≤ Real.sqrt N + Real.sqrt n := by
   -- finite `ε`-nets of the two unit spheres
   obtain ⟨Fu, hFuS, hFufin, hFucov⟩ := Metric.finite_approx_of_totallyBounded
@@ -145,8 +145,8 @@ private theorem gu_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
   set b : I → Fin 1 → Fin (n + N) → ℝ :=
     fun t _ k => Fin.append (fun j => t.1.1 j) (fun i => t.1.2 i) k with hb
   have hinc : ∀ s t : I,
-      ∫ G, (linForm (a s) G - linForm (a t) G) ^ 2 ∂(gaussianMatrix N n)
-        ≤ ∫ H, (linForm (b s) H - linForm (b t) H) ^ 2 ∂(gaussianMatrix 1 (n + N)) := by
+      ∫ G, (linForm (a s) G - linForm (a t) G) ^ 2 ∂(gaussianMatrix (Fin N) (Fin n))
+        ≤ ∫ H, (linForm (b s) H - linForm (b t) H) ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (n + N))) := by
     intro s t
     simp_rw [linForm_sub_linForm]
     rw [integral_linForm_sq_gaussianMatrix, integral_linForm_sq_gaussianMatrix]
@@ -157,27 +157,27 @@ private theorem gu_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
     (hasGaussianLaw_linForm_gaussianMatrix a) (hasGaussianLaw_linForm_gaussianMatrix b)
     (fun t => integral_linForm_gaussianMatrix _) (fun t => integral_linForm_gaussianMatrix _) hinc
   -- integrability
-  have hspec : Integrable (fun A : Fin N → Fin n → ℝ => specNorm (Matrix.of A))
-      (gaussianMatrix N n) :=
+  have hspec : Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A)
+      (gaussianMatrix (Fin N) (Fin n)) :=
     (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-      (fun A : Fin N → Fin n → ℝ => specNorm (Matrix.of A)) 1 zero_le_one
+      (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A) 1 zero_le_one
       fun X Y => by
-        rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm (Matrix.of X) (Matrix.of Y)).1
-  have hXsup := integrable_iSup_of_fintype (μ := gaussianMatrix N n) (fun t G => linForm (a t) G)
+        rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y).1
+  have hXsup := integrable_iSup_of_fintype (μ := gaussianMatrix (Fin N) (Fin n)) (fun t G => linForm (a t) G)
     (fun t => integrable_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable)
-  have hYsup := integrable_iSup_of_fintype (μ := gaussianMatrix 1 (n + N))
+  have hYsup := integrable_iSup_of_fintype (μ := gaussianMatrix (Fin 1) (Fin (n + N)))
     (fun t H => linForm (b t) H)
     (fun t => integrable_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable)
   have hsq : ∀ {k : ℕ} (σ : Fin k → Fin (n + N)), Integrable
-      (fun H : Fin 1 → Fin (n + N) → ℝ => Real.sqrt (∑ j, H 0 (σ j) ^ 2))
-      (gaussianMatrix 1 (n + N)) := by
+      (fun H : Matrix (Fin 1) (Fin (n + N)) ℝ => Real.sqrt (∑ j, H 0 (σ j) ^ 2))
+      (gaussianMatrix (Fin 1) (Fin (n + N))) := by
     intro k σ
-    have hQ : Integrable (fun H : Fin 1 → Fin (n + N) → ℝ => ∑ j, H 0 (σ j) ^ 2)
-        (gaussianMatrix 1 (n + N)) :=
+    have hQ : Integrable (fun H : Matrix (Fin 1) (Fin (n + N)) ℝ => ∑ j, H 0 (σ j) ^ 2)
+        (gaussianMatrix (Fin 1) (Fin (n + N))) :=
       integrable_finsetSum _ fun j _ =>
         (memLp_gaussianMatrix_entry 0 (σ j) 2 (by simp)).integrable_sq
     refine Integrable.mono' ((integrable_const 1).add hQ) (by fun_prop : Continuous
-      (fun H : Fin 1 → Fin (n + N) → ℝ => Real.sqrt (∑ j, H 0 (σ j) ^ 2))).aestronglyMeasurable
+      (fun H : Matrix (Fin 1) (Fin (n + N)) ℝ => Real.sqrt (∑ j, H 0 (σ j) ^ 2))).aestronglyMeasurable
       (Filter.Eventually.of_forall fun H => ?_)
     have hQ0 : 0 ≤ ∑ j, H 0 (σ j) ^ 2 := Finset.sum_nonneg fun _ _ => sq_nonneg _
     rw [Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg _)]
@@ -186,25 +186,25 @@ private theorem gu_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
     simp only [Pi.add_apply]
     nlinarith [sq_nonneg (Real.sqrt (∑ j, H 0 (σ j) ^ 2) - 1)]
   -- chain of inequalities
-  calc (1 - 2 * ε) * ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n)
-      = ∫ A, (1 - 2 * ε) * specNorm (Matrix.of A) ∂(gaussianMatrix N n) :=
+  calc (1 - 2 * ε) * ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n))
+      = ∫ A, (1 - 2 * ε) * specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) :=
         (integral_const_mul _ _).symm
-    _ ≤ ∫ G, (⨆ t, linForm (a t) G) ∂(gaussianMatrix N n) := by
+    _ ≤ ∫ G, (⨆ t, linForm (a t) G) ∂(gaussianMatrix (Fin N) (Fin n)) := by
         refine integral_mono (hspec.const_mul _) hXsup fun G => ?_
-        refine (one_sub_two_mul_mul_specNorm_le_iSup (Matrix.of G) ε hε.le I hI2 hcov).trans
+        refine (one_sub_two_mul_mul_specNorm_le_iSup G ε hε.le I hI2 hcov).trans
           (le_of_eq ?_)
         congr 1
         funext t
-        simp only [linForm, ha, Matrix.of_apply]
+        simp only [linForm, ha]
         refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
         ring
-    _ ≤ ∫ H, (⨆ t, linForm (b t) H) ∂(gaussianMatrix 1 (n + N)) := hSF
+    _ ≤ ∫ H, (⨆ t, linForm (b t) H) ∂(gaussianMatrix (Fin 1) (Fin (n + N))) := hSF
     _ ≤ ∫ H, (Real.sqrt (∑ j, H 0 (Fin.castAdd N j) ^ 2)
-          + Real.sqrt (∑ i, H 0 (Fin.natAdd n i) ^ 2)) ∂(gaussianMatrix 1 (n + N)) := by
+          + Real.sqrt (∑ i, H 0 (Fin.natAdd n i) ^ 2)) ∂(gaussianMatrix (Fin 1) (Fin (n + N))) := by
         refine integral_mono hYsup ((hsq _).add (hsq _)) fun H => ?_
         exact ciSup_le fun t => gu_Y_le t.1.1 t.1.2 (hI1 _ t.2) (hI2 _ t.2) H
-    _ = ∫ H, Real.sqrt (∑ j, H 0 (Fin.castAdd N j) ^ 2) ∂(gaussianMatrix 1 (n + N))
-          + ∫ H, Real.sqrt (∑ i, H 0 (Fin.natAdd n i) ^ 2) ∂(gaussianMatrix 1 (n + N)) :=
+    _ = ∫ H, Real.sqrt (∑ j, H 0 (Fin.castAdd N j) ^ 2) ∂(gaussianMatrix (Fin 1) (Fin (n + N)))
+          + ∫ H, Real.sqrt (∑ i, H 0 (Fin.natAdd n i) ^ 2) ∂(gaussianMatrix (Fin 1) (Fin (n + N))) :=
         integral_add (hsq _) (hsq _)
     _ ≤ Real.sqrt n + Real.sqrt N :=
         add_le_add (integral_sqrt_sum_sq_gaussianMatrix_entry_le _)
@@ -217,21 +217,21 @@ Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solutio
 `GaussianMatrix.gordon_upper`.
 atlas: gordon -/
 theorem integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt {N n : ℕ} :
-    ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n) ≤ Real.sqrt N + Real.sqrt n := by
+    ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) ≤ Real.sqrt N + Real.sqrt n := by
   have hs : 0 ≤ Real.sqrt N + Real.sqrt n := add_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
   rcases Nat.eq_zero_or_pos N with hN | hN
   · subst hN
-    have h0 : ∀ A : Fin 0 → Fin n → ℝ, specNorm (Matrix.of A) = 0 := fun A => by
-      rw [Subsingleton.elim (Matrix.of A) 0, specNorm_zero]
+    have h0 : ∀ A : Matrix (Fin 0) (Fin n) ℝ, specNorm A = 0 := fun A => by
+      rw [Subsingleton.elim A 0, specNorm_zero]
     simp only [h0, integral_zero]
     exact hs
   rcases Nat.eq_zero_or_pos n with hn | hn
   · subst hn
-    have h0 : ∀ A : Fin N → Fin 0 → ℝ, specNorm (Matrix.of A) = 0 := fun A => by
-      rw [Subsingleton.elim (Matrix.of A) 0, specNorm_zero]
+    have h0 : ∀ A : Matrix (Fin N) (Fin 0) ℝ, specNorm A = 0 := fun A => by
+      rw [Subsingleton.elim A 0, specNorm_zero]
     simp only [h0, integral_zero]
     exact hs
-  set E := ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n) with hE
+  set E := ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) with hE
   set s := Real.sqrt N + Real.sqrt n
   by_contra hcon
   push Not at hcon
@@ -263,12 +263,12 @@ private theorem gl_mp_split (n N : ℕ) :
     Equiv.piCongrLeft_symm_apply]
 
 private theorem gl_mp_row (n N : ℕ) :
-    MeasurePreserving (fun H : Fin 1 → Fin (n + N) → ℝ => H 0) (gaussianMatrix 1 (n + N))
+    MeasurePreserving (fun H : Matrix (Fin 1) (Fin (n + N)) ℝ => H 0) (gaussianMatrix (Fin 1) (Fin (n + N)))
       (Measure.pi fun _ : Fin (n + N) => gaussianReal 0 1) :=
-  measurePreserving_eval (fun _ : Fin 1 => Measure.pi fun _ : Fin (n + N) => gaussianReal 0 1) 0
+  measurePreserving_gaussianMatrix_row 0
 
 private theorem gl_integral_castAdd (n N : ℕ) (f : (Fin n → ℝ) → ℝ) (hf : Measurable f) :
-    ∫ H, f (fun j => H 0 (Fin.castAdd N j)) ∂(gaussianMatrix 1 (n + N))
+    ∫ H, f (fun j => H 0 (Fin.castAdd N j)) ∂(gaussianMatrix (Fin 1) (Fin (n + N)))
       = ∫ x, f x ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1) := by
   have h := (measurePreserving_fst (μ := Measure.pi fun _ : Fin n => gaussianReal 0 1)
     (ν := Measure.pi fun _ : Fin N => gaussianReal 0 1)).comp
@@ -277,7 +277,7 @@ private theorem gl_integral_castAdd (n N : ℕ) (f : (Fin n → ℝ) → ℝ) (h
   rfl
 
 private theorem gl_integral_natAdd (n N : ℕ) (f : (Fin N → ℝ) → ℝ) (hf : Measurable f) :
-    ∫ H, f (fun i => H 0 (Fin.natAdd n i)) ∂(gaussianMatrix 1 (n + N))
+    ∫ H, f (fun i => H 0 (Fin.natAdd n i)) ∂(gaussianMatrix (Fin 1) (Fin (n + N)))
       = ∫ x, f x ∂(Measure.pi fun _ : Fin N => gaussianReal 0 1) := by
   have h := (measurePreserving_snd (μ := Measure.pi fun _ : Fin n => gaussianReal 0 1)
     (ν := Measure.pi fun _ : Fin N => gaussianReal 0 1)).comp
@@ -343,7 +343,7 @@ private theorem gl_matrix_side {N n : ℕ} (A : Matrix (Fin N) (Fin n) ℝ) (ε 
 /-- The comparison process `⟨g, u⟩ + ⟨h, v⟩` written with one Gaussian row. -/
 private theorem gl_lin_append {N n : ℕ} (u : EuclideanSpace ℝ (Fin n))
     (v : EuclideanSpace ℝ (Fin N))
-    (H : Fin 1 → Fin (n + N) → ℝ) :
+    (H : Matrix (Fin 1) (Fin (n + N)) ℝ) :
     linForm (fun _ k => Fin.append (fun j => u j) (fun i => v i) k) H
       = ∑ j, u j * H 0 (Fin.castAdd N j) + ∑ i, v i * H 0 (Fin.natAdd n i) := by
   unfold linForm
@@ -357,7 +357,7 @@ private theorem gl_gauss_side {N n : ℕ} (hN : 0 < N) (ε : ℝ)
     (U : Finset (EuclideanSpace ℝ (Fin n))) (T : Finset (EuclideanSpace ℝ (Fin N)))
     (hU : ∀ u ∈ U, ‖u‖ = 1) (hUne : Nonempty U)
     (hcov : ∀ y : EuclideanSpace ℝ (Fin N), ‖y‖ = 1 → ∃ v ∈ T, ‖y - v‖ ≤ ε)
-    (H : Fin 1 → Fin (n + N) → ℝ) :
+    (H : Matrix (Fin 1) (Fin (n + N)) ℝ) :
     (1 - ε) * Real.sqrt (∑ i, H 0 (Fin.natAdd n i) ^ 2)
         - Real.sqrt (∑ j, H 0 (Fin.castAdd N j) ^ 2)
       ≤ ⨅ u : U, ⨆ v : T,
@@ -396,13 +396,13 @@ private theorem gl_gauss_side {N n : ℕ} (hN : 0 < N) (ε : ℝ)
   linarith
 
 private theorem gl_integrable_sqrt_sumsq {k m : ℕ} (σ : Fin k → Fin m) :
-    Integrable (fun H : Fin 1 → Fin m → ℝ => Real.sqrt (∑ j, H 0 (σ j) ^ 2))
-      (gaussianMatrix 1 m) := by
-  have hQ : Integrable (fun H : Fin 1 → Fin m → ℝ => ∑ j, H 0 (σ j) ^ 2)
-      (gaussianMatrix 1 m) :=
+    Integrable (fun H : Matrix (Fin 1) (Fin m) ℝ => Real.sqrt (∑ j, H 0 (σ j) ^ 2))
+      (gaussianMatrix (Fin 1) (Fin m)) := by
+  have hQ : Integrable (fun H : Matrix (Fin 1) (Fin m) ℝ => ∑ j, H 0 (σ j) ^ 2)
+      (gaussianMatrix (Fin 1) (Fin m)) :=
     integrable_finsetSum _ fun j _ => (memLp_gaussianMatrix_entry 0 (σ j) 2 (by simp)).integrable_sq
   refine Integrable.mono' ((integrable_const 1).add hQ) (by fun_prop : Continuous
-    (fun H : Fin 1 → Fin m → ℝ => Real.sqrt (∑ j, H 0 (σ j) ^ 2))).aestronglyMeasurable
+    (fun H : Matrix (Fin 1) (Fin m) ℝ => Real.sqrt (∑ j, H 0 (σ j) ^ 2))).aestronglyMeasurable
     (Filter.Eventually.of_forall fun H => ?_)
   have hQ0 : 0 ≤ ∑ j, H 0 (σ j) ^ 2 := Finset.sum_nonneg fun _ _ => sq_nonneg _
   rw [Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg _)]
@@ -427,8 +427,8 @@ private theorem gl_coeff_same {N n : ℕ} (u : EuclideanSpace ℝ (Fin n))
 private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ) (hε : 0 < ε) :
     (1 - ε) * ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin N => gaussianReal 0 1)
         - ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1)
-      ≤ ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n)
-        + ε * ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n) := by
+      ≤ ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n))
+        + ε * ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) := by
   -- finite `ε`-nets of the two unit spheres
   obtain ⟨Fu, hFuS, hFufin, hFucov⟩ := Metric.finite_approx_of_totallyBounded
     (isCompact_sphere (0 : EuclideanSpace ℝ (Fin n)) 1).totallyBounded ε hε
@@ -469,8 +469,8 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
     fun u v _ k => Fin.append (fun j => u.1 j) (fun i => v.1 i) k with hb
   set a : U → T → Fin N → Fin n → ℝ := fun u v i j => v.1 i * u.1 j with ha
   have hsame : ∀ (u : U) (t s : T),
-      ∫ H, (linForm (b u t) H - linForm (b u s) H) ^ 2 ∂(gaussianMatrix 1 (n + N))
-        ≤ ∫ G, (linForm (a u t) G - linForm (a u s) G) ^ 2 ∂(gaussianMatrix N n) := by
+      ∫ H, (linForm (b u t) H - linForm (b u s) H) ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (n + N)))
+        ≤ ∫ G, (linForm (a u t) G - linForm (a u s) G) ^ 2 ∂(gaussianMatrix (Fin N) (Fin n)) := by
     intro u t s
     simp_rw [linForm_sub_linForm]
     rw [integral_linForm_sq_gaussianMatrix, integral_linForm_sq_gaussianMatrix]
@@ -478,8 +478,8 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
     rw [gu_coeffY_sq, gl_coeff_same _ _ _ (hU1 _ u.2)]
     simp
   have hdiff : ∀ (u v : U) (t s : T), u ≠ v →
-      ∫ G, (linForm (a u t) G - linForm (a v s) G) ^ 2 ∂(gaussianMatrix N n)
-        ≤ ∫ H, (linForm (b u t) H - linForm (b v s) H) ^ 2 ∂(gaussianMatrix 1 (n + N)) := by
+      ∫ G, (linForm (a u t) G - linForm (a v s) G) ^ 2 ∂(gaussianMatrix (Fin N) (Fin n))
+        ≤ ∫ H, (linForm (b u t) H - linForm (b v s) H) ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (n + N))) := by
     intro u v t s _
     simp_rw [linForm_sub_linForm]
     rw [integral_linForm_sq_gaussianMatrix, integral_linForm_sq_gaussianMatrix]
@@ -493,26 +493,26 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
     (fun u t => integral_linForm_gaussianMatrix _) (fun u t => integral_linForm_gaussianMatrix _)
     hsame hdiff
   -- integrability
-  have hsMin : Integrable (fun A : Fin N → Fin n → ℝ => sigmaMin (Matrix.of A))
-      (gaussianMatrix N n) :=
+  have hsMin : Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => sigmaMin A)
+      (gaussianMatrix (Fin N) (Fin n)) :=
     (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-      (fun A : Fin N → Fin n → ℝ => sigmaMin (Matrix.of A)) 1 zero_le_one
+      (fun A : Matrix (Fin N) (Fin n) ℝ => sigmaMin A) 1 zero_le_one
       fun X Y => by
-        rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm (Matrix.of X) (Matrix.of Y)).1
-  have hspec : Integrable (fun A : Fin N → Fin n → ℝ => specNorm (Matrix.of A))
-      (gaussianMatrix N n) :=
+        rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y).1
+  have hspec : Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A)
+      (gaussianMatrix (Fin N) (Fin n)) :=
     (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-      (fun A : Fin N → Fin n → ℝ => specNorm (Matrix.of A)) 1 zero_le_one
+      (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A) 1 zero_le_one
       fun X Y => by
-        rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm (Matrix.of X) (Matrix.of Y)).1
+        rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y).1
   have hXmm : Integrable (fun H => ⨅ u : U, ⨆ t : T, linForm (b u t) H)
-      (gaussianMatrix 1 (n + N)) :=
+      (gaussianMatrix (Fin 1) (Fin (n + N))) :=
     integrable_iInf_of_fintype (fun u H => ⨆ t : T, linForm (b u t) H)
       (fun u => integrable_iSup_of_fintype (fun t H => linForm (b u t) H)
         (fun t => integrable_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable))
       (fun u => Measurable.iSup fun t => (continuous_linForm _).measurable)
   have hYmm : Integrable (fun G => ⨅ u : U, ⨆ t : T, linForm (a u t) G)
-      (gaussianMatrix N n) :=
+      (gaussianMatrix (Fin N) (Fin n)) :=
     integrable_iInf_of_fintype (fun u G => ⨆ t : T, linForm (a u t) G)
       (fun u => integrable_iSup_of_fintype (fun t G => linForm (a u t) G)
         (fun t => integrable_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable))
@@ -525,23 +525,23 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
   calc (1 - ε) * ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin N => gaussianReal 0 1)
         - ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1)
       = ∫ H, ((1 - ε) * Real.sqrt (∑ i, H 0 (Fin.natAdd n i) ^ 2)
-          - Real.sqrt (∑ j, H 0 (Fin.castAdd N j) ^ 2)) ∂(gaussianMatrix 1 (n + N)) := by
+          - Real.sqrt (∑ j, H 0 (Fin.castAdd N j) ^ 2)) ∂(gaussianMatrix (Fin 1) (Fin (n + N))) := by
         rw [integral_sub (hh.const_mul _) hg, integral_const_mul]
         simp only at hEN hEn
         rw [hEN, hEn]
-    _ ≤ ∫ H, (⨅ u : U, ⨆ t : T, linForm (b u t) H) ∂(gaussianMatrix 1 (n + N)) := by
+    _ ≤ ∫ H, (⨅ u : U, ⨆ t : T, linForm (b u t) H) ∂(gaussianMatrix (Fin 1) (Fin (n + N))) := by
         refine integral_mono ((hh.const_mul _).sub hg) hXmm fun H => ?_
         exact gl_gauss_side hN ε U T hU1 hUne hcovT H
-    _ ≤ ∫ G, (⨅ u : U, ⨆ t : T, linForm (a u t) G) ∂(gaussianMatrix N n) := hGM
-    _ ≤ ∫ A, (sigmaMin (Matrix.of A) + ε * specNorm (Matrix.of A)) ∂(gaussianMatrix N n) := by
+    _ ≤ ∫ G, (⨅ u : U, ⨆ t : T, linForm (a u t) G) ∂(gaussianMatrix (Fin N) (Fin n)) := hGM
+    _ ≤ ∫ A, (sigmaMin A + ε * specNorm A) ∂(gaussianMatrix (Fin N) (Fin n)) := by
         refine integral_mono hYmm (hsMin.add (hspec.const_mul ε)) fun G => ?_
-        refine le_trans (le_of_eq ?_) (gl_matrix_side (Matrix.of G) ε U T hT1 hcovU hsub)
+        refine le_trans (le_of_eq ?_) (gl_matrix_side G ε U T hT1 hcovU hsub)
         congr 1; funext u; congr 1; funext t
-        simp only [linForm, ha, Matrix.of_apply]
+        simp only [linForm, ha]
         refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
         ring
-    _ = ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n)
-          + ε * ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n) := by
+    _ = ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n))
+          + ε * ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) := by
         rw [integral_add hsMin (hspec.const_mul ε), integral_const_mul]
 
 /-- **Gordon's lower bound.** For an `N × n` standard Gaussian matrix with `n ≥ 1`,
@@ -551,8 +551,8 @@ Gordon 1985; Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Pro
 `GaussianMatrix.gordon_lower`.
 atlas: gordon -/
 theorem sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix {N n : ℕ} (hn : 1 ≤ n) :
-    Real.sqrt N - Real.sqrt n ≤ ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n) := by
-  have hpos : 0 ≤ ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n) :=
+    Real.sqrt N - Real.sqrt n ≤ ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) := by
+  have hpos : 0 ≤ ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) :=
     integral_nonneg fun A => Real.iInf_nonneg fun _ => Real.sqrt_nonneg _
   rcases le_or_gt N n with hNn | hNn
   · have : Real.sqrt N ≤ Real.sqrt n := Real.sqrt_le_sqrt (by exact_mod_cast hNn)
@@ -562,12 +562,12 @@ theorem sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix {N n : ℕ} (hn : 1 �
     with hENdef
   set En := ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1)
     with hEndef
-  set E := ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n) with hE
-  set Sp := ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n) with hSp
+  set E := ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) with hE
+  set Sp := ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) with hSp
   have hD : Real.sqrt N - Real.sqrt n ≤ EN - En :=
     sqrt_sub_sqrt_le_integral_sqrt_sum_sq_sub hn hNn.le
   have hEN0 : 0 ≤ EN := integral_nonneg fun _ => Real.sqrt_nonneg _
-  have hSp0 : 0 ≤ Sp := integral_nonneg fun A => specNorm_nonneg (Matrix.of A)
+  have hSp0 : 0 ≤ Sp := integral_nonneg fun A => specNorm_nonneg A
   have key : ∀ ε : ℝ, 0 < ε → EN - En - ε * (EN + Sp) ≤ E := by
     intro ε hε
     have := gl_scaled_bound (N := N) (n := n) hN (by omega) ε hε
@@ -596,23 +596,79 @@ Davidson–Szarek 2001, Thm II.13. Atlas: `gordon`. Ported from Prove2me solutio
 `GaussianMatrix.gordon`.
 atlas: gordon -/
 theorem gordon_extreme_singular_values {N n : ℕ} (hn : 1 ≤ n) :
-    Integrable (fun A : Fin N → Fin n → ℝ => sigmaMin (Matrix.of A)) (gaussianMatrix N n) ∧
-    Integrable (fun A : Fin N → Fin n → ℝ => specNorm (Matrix.of A)) (gaussianMatrix N n) ∧
-    Real.sqrt N - Real.sqrt n ≤ ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n) ∧
-    ∫ A, sigmaMin (Matrix.of A) ∂(gaussianMatrix N n)
-      ≤ ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n) ∧
-    ∫ A, specNorm (Matrix.of A) ∂(gaussianMatrix N n) ≤ Real.sqrt N + Real.sqrt n := by
+    Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => sigmaMin A) (gaussianMatrix (Fin N) (Fin n)) ∧
+    Integrable (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A) (gaussianMatrix (Fin N) (Fin n)) ∧
+    Real.sqrt N - Real.sqrt n ≤ ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) ∧
+    ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n))
+      ≤ ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) ∧
+    ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) ≤ Real.sqrt N + Real.sqrt n := by
   have hI1 := (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-    (fun A : Fin N → Fin n → ℝ => sigmaMin (Matrix.of A)) 1 zero_le_one fun X Y => by
-      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm (Matrix.of X) (Matrix.of Y)).1
+    (fun A : Matrix (Fin N) (Fin n) ℝ => sigmaMin A) 1 zero_le_one fun X Y => by
+      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y).1
   have hI2 := (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-    (fun A : Fin N → Fin n → ℝ => specNorm (Matrix.of A)) 1 zero_le_one fun X Y => by
-      rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm (Matrix.of X) (Matrix.of Y)).1
+    (fun A : Matrix (Fin N) (Fin n) ℝ => specNorm A) 1 zero_le_one fun X Y => by
+      rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y).1
   refine ⟨hI1, hI2, sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix hn, ?_,
     integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt⟩
   exact integral_mono hI1 hI2 fun A => by
     have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
-    exact sigmaMin_le_specNorm (Matrix.of A)
+    exact sigmaMin_le_specNorm A
 
+
+/-! ### Random matrices with a Gaussian law -/
+
+/-- `integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ`. Atlas: `gordon`. -/
+theorem integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {N n : ℕ}
+    {X : Ω → Matrix (Fin N) (Fin n) ℝ} (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ) :
+    ∫ ω, specNorm (X ω) ∂μ ≤ Real.sqrt N + Real.sqrt n := by
+  have hc : Continuous (specNorm : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm specNorm 1 fun X Y => by
+      rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y
+  rw [show ∫ ω, specNorm (X ω) ∂μ = ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) from
+    hX.integral_comp hc.aestronglyMeasurable]
+  exact integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt
+
+/-- `sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ`. Atlas: `gordon`. -/
+theorem sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {N n : ℕ}
+    {X : Ω → Matrix (Fin N) (Fin n) ℝ} (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ)
+    (hn : 1 ≤ n) :
+    Real.sqrt N - Real.sqrt n ≤ ∫ ω, sigmaMin (X ω) ∂μ := by
+  have hc : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
+      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
+  rw [show ∫ ω, sigmaMin (X ω) ∂μ = ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) from
+    hX.integral_comp hc.aestronglyMeasurable]
+  exact sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix hn
+
+/-- `gordon_extreme_singular_values` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ`. Atlas: `gordon`. -/
+theorem gordon_extreme_singular_values_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} {N n : ℕ}
+    {X : Ω → Matrix (Fin N) (Fin n) ℝ} (hX : HasLaw X (gaussianMatrix (Fin N) (Fin n)) μ)
+    (hn : 1 ≤ n) :
+    Integrable (fun ω => sigmaMin (X ω)) μ ∧ Integrable (fun ω => specNorm (X ω)) μ ∧
+    Real.sqrt N - Real.sqrt n ≤ ∫ ω, sigmaMin (X ω) ∂μ ∧
+    ∫ ω, sigmaMin (X ω) ∂μ ≤ ∫ ω, specNorm (X ω) ∂μ ∧
+    ∫ ω, specNorm (X ω) ∂μ ≤ Real.sqrt N + Real.sqrt n := by
+  have hs : Continuous (specNorm : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm specNorm 1 fun X Y => by
+      rw [one_mul]; exact abs_specNorm_sub_specNorm_le_frobNorm X Y
+  have hm : Continuous (sigmaMin : Matrix (Fin N) (Fin n) ℝ → ℝ) :=
+    continuous_of_abs_sub_le_mul_frobNorm sigmaMin 1 fun X Y => by
+      rw [one_mul]; exact abs_sigmaMin_sub_sigmaMin_le_frobNorm X Y
+  obtain ⟨h1, h2, h3, h4, h5⟩ := gordon_extreme_singular_values (N := N) hn
+  have e1 : ∫ ω, sigmaMin (X ω) ∂μ = ∫ A, sigmaMin A ∂(gaussianMatrix (Fin N) (Fin n)) :=
+    hX.integral_comp hm.aestronglyMeasurable
+  have e2 : ∫ ω, specNorm (X ω) ∂μ = ∫ A, specNorm A ∂(gaussianMatrix (Fin N) (Fin n)) :=
+    hX.integral_comp hs.aestronglyMeasurable
+  rw [← hX.map_eq] at h1 h2
+  refine ⟨h1.comp_aemeasurable hX.aemeasurable, h2.comp_aemeasurable hX.aemeasurable, ?_, ?_, ?_⟩
+  · rw [e1]; exact h3
+  · rw [e1, e2]; exact h4
+  · rw [e2]; exact h5
 
 end NLAlib

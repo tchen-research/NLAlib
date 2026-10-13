@@ -9,7 +9,7 @@ positive semidefiniteness. Horn–Johnson 2013, §§7.4.4–7.4.6.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator BigOperators
+open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
@@ -27,9 +27,10 @@ theorem frobInner_eq_nuclearNorm_of_polar {M U : Matrix n n ℝ}
       (CFC.sqrt_nonneg (Mᵀ * M)).star_eq
   have hMQ : U * Q = M := hM
   have hPair : frobInner M U = Q.trace := by
-    rw [frobInner_eq_trace]
+    rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial]
     nth_rw 1 [← hMQ]
-    rw [Matrix.transpose_mul, Matrix.mul_assoc, hU.transpose_mul_self, Matrix.mul_one, hQs]
+    rw [Matrix.transpose_mul, Matrix.mul_assoc, (show Uᵀ * U = 1 from hU), Matrix.mul_one, hQs]
   exact hPair.trans (nuclearNorm_eq_trace_sqrt_gram M).symm
 
 omit [DecidableEq m] [DecidableEq n] in
@@ -37,7 +38,10 @@ omit [DecidableEq m] [DecidableEq n] in
 square cross-product pairing. Horn–Johnson 2013, §7.4.4. -/
 theorem frobInner_mul_eq_frobInner_mul_transpose (A B : Matrix m n ℝ) (U : Matrix m m ℝ) :
     frobInner A (U * B) = frobInner (A * Bᵀ) U := by
-  rw [frobInner_eq_trace, frobInner_eq_trace, Matrix.transpose_mul, Matrix.transpose_transpose,
+  rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul,
+      Matrix.transpose_transpose,
     Matrix.trace_mul_cycle']
   rw [Matrix.mul_assoc]
 
@@ -49,7 +53,7 @@ theorem frobSq_sub_mul_eq_of_cross_polar (A B : Matrix m n ℝ) (U : Matrix m m 
     (hU : HasOrthonormalCols U)
     (hPolar : U * CFC.sqrt ((A * Bᵀ)ᵀ * (A * Bᵀ)) = A * Bᵀ) :
     frobSq (A - U * B) = frobSq A + frobSq B - 2 * nuclearNorm (A * Bᵀ) := by
-  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU.transpose_mul_self,
+  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU,
     frobInner_mul_eq_frobInner_mul_transpose, frobInner_eq_nuclearNorm_of_polar hU hPolar]
   ring
 
@@ -62,7 +66,7 @@ theorem frobSq_add_frobSq_sub_two_nuclearNorm_le_sub_mul
     frobSq A + frobSq B - 2 * nuclearNorm (A * Bᵀ) ≤ frobSq (A - U * B) := by
   have h := frobInner_le_nuclearNorm_of_specNorm_le_one (A * Bᵀ) U
     (specNorm_le_one_of_orthonormal hU)
-  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU.transpose_mul_self,
+  rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU,
     frobInner_mul_eq_frobInner_mul_transpose]
   linarith
 
@@ -96,12 +100,14 @@ theorem trace_eq_nuclearNorm_iff_posSemidef (M : Matrix n n ℝ) :
     have hHH : H * H = Q := CFC.sqrt_mul_sqrt_self _ hQ.nonneg
     have hMQ : U * Q = M := hM
     have hNorm : frobSq H = Q.trace := by
-      rw [frobSq, frobInner_eq_trace, hHs, hHH]
+      rw [frobSq, frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, hHs, hHH]
     have hPair : frobInner H (U * H) = M.trace := by
-      rw [frobInner_eq_trace, hHs, ← Matrix.mul_assoc,
+      rw [frobInner_eq_trace, RCLike.re_to_real,
+      Matrix.conjTranspose_eq_transpose_of_trivial, hHs, ← Matrix.mul_assoc,
         Matrix.trace_mul_cycle, hHH, Matrix.trace_mul_comm, hMQ]
     have hFrob : frobSq (H - U * H) = 0 := by
-      rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU.transpose_mul_self, hNorm, hPair,
+      rw [frobSq_sub, frobSq_mul_left_of_orthonormal hU, hNorm, hPair,
         hTrace, nuclearNorm_eq_trace_sqrt_gram]
       change Q.trace - 2 * Q.trace + Q.trace = 0
       ring

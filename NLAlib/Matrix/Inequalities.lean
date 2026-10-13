@@ -5,7 +5,6 @@ import NLAlib.Matrix.Inequalities.BlockQuadratic
 import NLAlib.Matrix.Inequalities.BlockStrictContraction
 import NLAlib.Matrix.Inequalities.ColumnDeterminantBound
 import NLAlib.Matrix.Inequalities.ComplexDiagonalMajorization
-import NLAlib.Matrix.Inequalities.ComplexTraceTail
 import NLAlib.Matrix.Inequalities.CompressionDeterminant
 import NLAlib.Matrix.Inequalities.DeterminantConvexityToolkit
 import NLAlib.Matrix.Inequalities.DeterminantInequalityToolkit

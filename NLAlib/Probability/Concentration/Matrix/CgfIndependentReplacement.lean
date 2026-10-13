@@ -13,7 +13,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open MeasureTheory ProbabilityTheory
 open scoped Matrix.Norms.L2Operator
-set_option autoImplicit false
 open NLAlib
 
 /-- For independent Hermitian random matrices `H`, `X`, replacing `X` by `matrixLog 𝔼 matrixExp X`

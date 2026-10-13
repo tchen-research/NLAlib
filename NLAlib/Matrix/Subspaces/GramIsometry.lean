@@ -24,7 +24,10 @@ theorem norm_toEuclideanLin_apply_eq_of_gram_eq (A : Matrix m n ℝ) (B : Matrix
     ‖A.toEuclideanLin x‖ = ‖B.toEuclideanLin x‖ := by
   apply (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp
   have h := congrArg (fun M : Matrix n n ℝ => x.ofLp ⬝ᵥ M *ᵥ x.ofLp) hGram
-  rw [← mulVec_dotProduct_mulVec_self A, ← mulVec_dotProduct_mulVec_self B] at h
+  rw [← show (A *ᵥ x.ofLp) ⬝ᵥ (A *ᵥ x.ofLp) = x.ofLp ⬝ᵥ ((Aᵀ * A) *ᵥ x.ofLp) from
+      star_mulVec_dotProduct_mulVec_self A x.ofLp,
+    ← show (B *ᵥ x.ofLp) ⬝ᵥ (B *ᵥ x.ofLp) = x.ofLp ⬝ᵥ ((Bᵀ * B) *ᵥ x.ofLp) from
+      star_mulVec_dotProduct_mulVec_self B x.ofLp] at h
   change ‖(WithLp.toLp 2 (A *ᵥ x.ofLp) : EuclideanSpace ℝ m)‖ ^ 2 =
     ‖(WithLp.toLp 2 (B *ᵥ x.ofLp) : EuclideanSpace ℝ p)‖ ^ 2
   rw [EuclideanSpace.real_norm_sq_eq, EuclideanSpace.real_norm_sq_eq]

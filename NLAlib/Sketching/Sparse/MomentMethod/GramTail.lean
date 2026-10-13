@@ -7,7 +7,6 @@ import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Trace-moment tails of the Gram error
@@ -19,7 +18,7 @@ Ported from `SparseFockFormal.MatrixTail` at commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators InnerProductSpace Matrix.Norms.L2Operator
+open scoped InnerProductSpace Matrix.Norms.L2Operator
 
 namespace NLAlib.SparseSketch
 

@@ -13,8 +13,7 @@ Supports the `sparse-ose` moment proof.
 -/
 
 noncomputable section
-set_option autoImplicit false
-open scoped BigOperators InnerProductSpace Matrix.Norms.L2Operator
+open scoped InnerProductSpace Matrix.Norms.L2Operator
 namespace NLAlib.SparseSketch.Light
 variable {d m n ell : ℕ}
 
@@ -104,7 +103,7 @@ theorem ghat_quadratic_eq_zero_of_zeroLight
     (F : Frame n d) (T : Finset (Site m n))
     (x : Fin d × Pattern m n → ℝ) (hx : SupportedOnBlock T 0 x) :
     quadForm (ghat (m := m) F) x = 0 := by
-  rw [quadForm_eq_dotProduct, ghat_mulVec_eq_zero_of_zeroLight F T x hx]
+  rw [quadForm_def, star_trivial, ghat_mulVec_eq_zero_of_zeroLight F T x hx]
   simp
 
 end NLAlib.SparseSketch.Light

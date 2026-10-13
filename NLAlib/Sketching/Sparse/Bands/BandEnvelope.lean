@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.Bands.BandAssembly
 import NLAlib.Sketching.Sparse.Bands.Mixed.NormalizedBands
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Unconditional concrete uniform band envelope

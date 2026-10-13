@@ -122,8 +122,9 @@ theorem mul_frobSq_le_frobSq_sylvester {L : Matrix m m ℝ} {M : Matrix n n ℝ}
   have hnorm (Y : Matrix m n ℝ) : frobSq (Uᵀ*Y*V) = frobSq Y := by
     have hUr : Uᵀᵀ*Uᵀ=1 := by simpa only [Matrix.transpose_transpose] using hU
     have hVr : Vᵀᵀ*Vᵀ=1 := by simpa only [Matrix.transpose_transpose] using hV
-    have hh := frobSq_mul_right_of_orthonormal hVr (Uᵀ*Y)
-    simpa only [Matrix.transpose_transpose, frobSq_mul_left_of_orthonormal hUr] using hh
+    have hh := frobSq_mul_right_of_orthonormal (V := Vᵀ) hVr (Uᵀ*Y)
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose,
+      frobSq_mul_left_of_orthonormal (Q := Uᵀ) hUr] using hh
   have hb : δ^2*frobSq Z ≤
       frobSq (Matrix.diagonal hL.eigenvalues*Z-Z*Matrix.diagonal hM.eigenvalues) := by
     rw [frobSq_eq_sum_sq, frobSq_eq_sum_sq, Finset.mul_sum]

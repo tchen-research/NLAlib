@@ -151,7 +151,7 @@ theorem step_sub_mem_range (A : Matrix m n ℝ) (b : m → ℝ) (S : Matrix m s 
   let B := moorePenroseInverse (Sᵀ * A)
   have hB : B = Aᵀ * (S * (Bᵀ * B)) := by
     have hsym : (B * (Sᵀ * A))ᵀ = B * (Sᵀ * A) :=
-      moorePenroseInverse_mul_isSymm (Sᵀ * A)
+      moorePenroseInverse_mul_isHermitian (Sᵀ * A)
     calc B = B * (Sᵀ * A) * B :=
           (moorePenroseInverse_mul_moorePenroseInverse (Sᵀ * A)).symm
       _ = (B * (Sᵀ * A))ᵀ * B := by rw [hsym]

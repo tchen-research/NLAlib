@@ -60,7 +60,9 @@ theorem sq_bilinear_le_sq_ratio_mul_quadForm_of_sandwich {A : Matrix n n ℝ}
       _ = N := by rw [hε, hr, hs', one_mul]
   have hE (ε : ℝ) (hε : ε ^ 2 = 1) :
       quadForm A (r • x + (ε * s) • y) = 2 * S + 2 * ε * w := by
-    rw [quadForm_smul_add_smul hA.isHermitian]
+    have h := hA.isHermitian.re_quadForm_smul_add_smul x y r (ε * s)
+    simp only [RCLike.re_to_real, RCLike.ofReal_real_eq_id, id_eq, star_trivial] at h
+    rw [h]
     dsimp [S, w]
     rw [mul_pow, hε, one_mul, hr, hs']
     ring

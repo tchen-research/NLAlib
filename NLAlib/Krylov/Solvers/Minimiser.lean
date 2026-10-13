@@ -195,7 +195,7 @@ theorem IsAffineMinimiser.le_aeval {E : (n → ℝ) → ℝ} {A : Matrix n n ℝ
   rw [← hpoly, add_sub_cancel]
   exact hx.2 y hy
 
-/-- **K1, residual form.** If `x` minimises an objective of the residual,
+/-- **K1, residual form.** If `x` minimises an objective of the projResidual,
 `y ↦ F (c − A y)`, over `x₀ + K_q(A, r₀)`, then `F (c − A x) ≤ F (p(A) r₀)` for every
 residual polynomial `p`. No solution `x⋆` is needed (GMRES on singular or inconsistent
 systems). Source: Saad (2003) [`saad03`], Prop 6.32 (proof); KRYLOV_DEFINITIONS §3.3.

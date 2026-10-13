@@ -12,7 +12,6 @@ Source: Bhatia 1997, Chapter IX.3; atlas `golden-thompson` (pinching helpers).
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 namespace NLAlib
 open Matrix

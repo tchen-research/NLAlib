@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.MomentMethod.GramTail
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # From an orthonormal-column matrix to the Parseval-frame representation

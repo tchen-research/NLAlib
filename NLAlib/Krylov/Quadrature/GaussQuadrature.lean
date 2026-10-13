@@ -29,7 +29,7 @@ Atlas: `lanczos-gauss-quadrature`, `krylov-polynomial-exactness` (partial).
 Deviation from the printed statements: any orthonormal `Q` with `K_q(A,b) ⊆ range Q` is
 allowed, so neither tridiagonality nor the Lanczos recurrence is used.
 
-The projection helpers `mulVec_transpose_mulVec_of_mem_range` and `isSymm_transpose_mul_mul`
+The projection helpers `mulVec_conjTranspose_mulVec_of_mem_range` and `isSymm_transpose_mul_mul`
 live in `NLAlib.Matrix.Subspaces.Projections`; the Rayleigh bounds and the eigen-expansion of
 `cfc` used below live in `NLAlib.Matrix.Functions.CFCQuadratic`.
 -/
@@ -59,7 +59,7 @@ theorem mulVec_pow_transpose_mul_mul_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix 
     Q *ᵥ ((Qᵀ * A * Q) ^ j *ᵥ (Qᵀ *ᵥ b)) = A ^ j *ᵥ b := by
   induction j with
   | zero =>
-    simpa using mulVec_transpose_mulVec_of_mem_range hQ
+    simpa using mulVec_conjTranspose_mulVec_of_mem_range hQ
       (hK (by simpa using pow_mulVec_mem_krylovSpace A b hj))
   | succ j ih =>
     have ih := ih (Nat.lt_of_succ_lt hj)
@@ -67,7 +67,7 @@ theorem mulVec_pow_transpose_mul_mul_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix 
       rw [pow_succ', ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, ih,
         show A *ᵥ (A ^ j *ᵥ b) = A ^ (j + 1) *ᵥ b by rw [Matrix.mulVec_mulVec, ← pow_succ']]
     rw [hstep]
-    exact mulVec_transpose_mulVec_of_mem_range hQ (hK (pow_mulVec_mem_krylovSpace A b hj))
+    exact mulVec_conjTranspose_mulVec_of_mem_range hQ (hK (pow_mulVec_mem_krylovSpace A b hj))
 
 /-- Compressed powers act like powers on `Qᵀ b` up to degree `q`: if `K_q(A,b) ⊆ range Q` and
 `j ≤ q` then `Qᵀ Aʲ b = (QᵀAQ)ʲ Qᵀ b`. Source: Saad (1992) [`saad92`], Lemma 3.1.
@@ -83,7 +83,8 @@ theorem transpose_mulVec_pow_mulVec_eq {A : Matrix n n ℝ} {Q : Matrix n k ℝ}
     calc Qᵀ *ᵥ (A ^ (j + 1) *ᵥ b) = Qᵀ *ᵥ (A *ᵥ (A ^ j *ᵥ b)) := by
           rw [pow_succ', ← Matrix.mulVec_mulVec]
       _ = Qᵀ *ᵥ (A *ᵥ (Q *ᵥ (Qᵀ *ᵥ (A ^ j *ᵥ b)))) := by
-          rw [mulVec_transpose_mulVec_of_mem_range hQ hmem]
+          rw [← Matrix.conjTranspose_eq_transpose_of_trivial Q,
+            mulVec_conjTranspose_mulVec_of_mem_range hQ hmem]
       _ = (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ (A ^ j *ᵥ b)) := by
           simp only [Matrix.mulVec_mulVec, Matrix.mul_assoc]
       _ = (Qᵀ * A * Q) *ᵥ ((Qᵀ * A * Q) ^ j *ᵥ (Qᵀ *ᵥ b)) := by rw [ih (by omega)]
@@ -200,7 +201,9 @@ theorem eigenvalues_transpose_mul_mul_mem_Icc {A : Matrix n n ℝ} (hA : A.IsHer
   set w : k → ℝ := (hB.eigenvectorBasis j).ofLp
   have hw : w ⬝ᵥ w = 1 := by simpa using eigenvectorBasis_dotProduct_eigenvectorBasis hB j j
   have hQw : (Q *ᵥ w) ⬝ᵥ (Q *ᵥ w) = 1 := by
-    rw [mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ, hw]
+    have hQw := star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hQ w
+    simp only [star_trivial] at hQw
+    rw [hQw, hw]
   have hval : hB.eigenvalues j = (Q *ᵥ w) ⬝ᵥ (A *ᵥ (Q *ᵥ w)) := by
     rw [eigenvalues_eq_dotProduct_mulVec hB j, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
       Matrix.dotProduct_mulVec w Qᵀ, Matrix.vecMul_transpose]
@@ -242,12 +245,15 @@ theorem abs_dotProduct_cfc_mulVec_sub_le_of_degree_lt_two_mul {A : Matrix n n �
       2 * E * (b ⬝ᵥ b) := by
   have hAs : A.IsSymm := by
     rw [IsSymm, ← conjTranspose_eq_transpose_of_trivial]; exact hA
-  have hB : (Qᵀ * A * Q).IsHermitian := isHermitian_transpose_mul_mul hA Q
+  have hB : (Qᵀ * A * Q).IsHermitian := Matrix.isHermitian_conjTranspose_mul_mul Q hA
   have hexact := dotProduct_aeval_mulVec_eq_of_degree_lt_two_mul hAs hQ b hK hp
   have h1 := abs_dotProduct_cfc_sub_aeval_le hA (fun i => hfp _ (hspec i)) b
   have h2 := abs_dotProduct_cfc_sub_aeval_le hB
     (fun j => hfp _ (eigenvalues_transpose_mul_mul_mem_Icc hA hQ hB hspec j)) (Qᵀ *ᵥ b)
-  have hcc : (Qᵀ *ᵥ b) ⬝ᵥ (Qᵀ *ᵥ b) ≤ b ⬝ᵥ b := transpose_mulVec_dotProduct_self_le hQ b
+  have hcc : (Qᵀ *ᵥ b) ⬝ᵥ (Qᵀ *ᵥ b) ≤ b ⬝ᵥ b := by
+    have h := sum_norm_sq_conjTranspose_mulVec_le hQ b
+    simp only [Matrix.conjTranspose_eq_transpose_of_trivial, Real.norm_eq_abs, sq_abs] at h
+    simpa only [dotProduct, ← sq] using h
   have h2' : |(Qᵀ *ᵥ b) ⬝ᵥ (cfc f (Qᵀ * A * Q) *ᵥ (Qᵀ *ᵥ b)) -
       (Qᵀ *ᵥ b) ⬝ᵥ (Polynomial.aeval (Qᵀ * A * Q) p *ᵥ (Qᵀ *ᵥ b))| ≤ E * (b ⬝ᵥ b) := by
     rcases le_or_gt 0 E with hE0 | hE0

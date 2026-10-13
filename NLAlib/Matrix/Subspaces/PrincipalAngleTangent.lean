@@ -41,11 +41,11 @@ Stewart–Sun §I.5; arbitrary finite indices and empty frames are included.
 atlas: principal-angles-def (partial) -/
 theorem specNorm_tangentPrincipalAngles_eq_residual_mul_inv {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) (hC : IsUnit (Pᵀ*Q)) :
-    specNorm (tangentPrincipalAngles P Q)=specNorm (residual P Q*(Pᵀ*Q)⁻¹) := by
+    specNorm (tangentPrincipalAngles P Q)=specNorm (projResidual P Q*(Pᵀ*Q)⁻¹) := by
   let e := Fintype.equivFin n
   let C := Pᵀ*Q
   let CF := C.reindex e e
-  let R := residual P Q
+  let R := projResidual P Q
   let RF := R.reindex (Equiv.refl m) e
   have hCF : IsUnit CF := hC.map (Matrix.reindexRingEquiv ℝ e).toMonoidHom
   have hinv : CF⁻¹=(C⁻¹).reindex e e := by
@@ -93,7 +93,7 @@ theorem specNorm_tangentPrincipalAngles_eq_complement_overlap_mul_inv {r : Type*
     specNorm (tangentPrincipalAngles P Q)=specNorm ((Rᵀ*Q)*(Pᵀ*Q)⁻¹) := by
   rw [specNorm_tangentPrincipalAngles_eq_residual_mul_inv hP hQ hC,
     residual_eq_complement_mul_overlap hcomp, Matrix.mul_assoc,
-    specNorm_mul_left_of_hasOrthonormalCols hR.transpose_mul_self]
+    specNorm_mul_left_of_hasOrthonormalCols (show Rᵀ * R = 1 from hR)]
 
 omit [DecidableEq m] in
 /-- A last principal angle strictly below `π/2` makes the overlap

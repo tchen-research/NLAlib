@@ -163,12 +163,15 @@ theorem exists_dilation_orthogonal_diagonalization {m n : ℕ}
   have hW : Wᵀ * W = 1 := by
     simp only [W, Matrix.fromBlocks_transpose, Matrix.transpose_zero,
       Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add,
-      h.transpose_mul_left, h.transpose_mul_right, Matrix.fromBlocks_one]
+      show Uᵀ * U = 1 from h.conjTranspose_mul_left,
+      show Vᵀ * V = 1 from h.conjTranspose_mul_right, Matrix.fromBlocks_one]
   have hA : dilation A = W * dilation (rectDiag (singularValues A)) * Wᵀ := by
     simp only [W, dilation, Matrix.conjTranspose_eq_transpose_of_trivial,
       Matrix.fromBlocks_transpose, Matrix.transpose_zero,
       Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add]
-    rw [← h.eq_mul_transpose, h.transpose_eq, transpose_rectDiag]
+    rw [← show A = U * (rectDiag (singularValues A) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ from h.eq,
+      show Aᵀ = V * (rectDiag (singularValues A) : Matrix (Fin n) (Fin m) ℝ) * Uᵀ from
+        h.conjTranspose_eq, transpose_rectDiag]
   refine ⟨W * R, ?_, ?_⟩
   · rw [Matrix.transpose_mul]
     simp only [Matrix.mul_assoc]

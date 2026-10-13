@@ -13,9 +13,8 @@ the projectors `AB`, `BA`, and the Gram identity `(AᴴA)⁺ = A⁺A⁺ᴴ`
 (`IsMoorePenroseInverse.conjTranspose_mul_self`).
 
 Over `ℝ` the conjugate transpose is definitionally the transpose, so the structure is the old
-real one; the real `ᵀ` statements keep their names (`transpose_mul_eq`, `transpose_inv_mul_eq`,
-`orthogonal_transform`, `transpose_mul_self`) as corollaries, and
-`isMoorePenroseInverse_iff_transpose` restates the definition with `ᵀ`.
+real one: `⟨h₁, h₂, h₃, h₄⟩` accepts `ᵀ` proofs of the last two fields, and
+`Matrix.conjTranspose_eq_transpose_of_trivial` (`@[simp]`) turns the `ᴴ` fields into `ᵀ` goals.
 Existence and the canonical inverse `moorePenroseInverse` (through the SVD) are in
 `Matrix/Basic/MoorePenrose.lean`.
 
@@ -41,31 +40,6 @@ structure IsMoorePenroseInverse {𝕜 : Type*} [RCLike 𝕜] {m n : Type*} [Fint
   conjTranspose_mul_eq : (A * B)ᴴ = A * B
   /-- The row-space projector is Hermitian. -/
   conjTranspose_inv_mul_eq : (B * A)ᴴ = B * A
-
-section Real
-
-variable {m n : Type*} [Fintype m] [Fintype n] {A : Matrix m n ℝ} {B : Matrix n m ℝ}
-
-/-- Over `ℝ` the Penrose identities are the old transpose identities: `ABA = A`, `BAB = B`,
-`(AB)ᵀ = AB`, `(BA)ᵀ = BA`. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem isMoorePenroseInverse_iff_transpose :
-    IsMoorePenroseInverse A B ↔
-      A * B * A = A ∧ B * A * B = B ∧ (A * B)ᵀ = A * B ∧ (B * A)ᵀ = B * A :=
-  ⟨fun h => ⟨h.1, h.2, h.3, h.4⟩, fun h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2⟩⟩
-
-namespace IsMoorePenroseInverse
-
-/-- Over `ℝ`, the image-space projector `A B` is symmetric. -/
-theorem transpose_mul_eq (h : IsMoorePenroseInverse A B) : (A * B)ᵀ = A * B :=
-  h.conjTranspose_mul_eq
-
-/-- Over `ℝ`, the row-space projector `B A` is symmetric. -/
-theorem transpose_inv_mul_eq (h : IsMoorePenroseInverse A B) : (B * A)ᵀ = B * A :=
-  h.conjTranspose_inv_mul_eq
-
-end IsMoorePenroseInverse
-
-end Real
 
 namespace IsMoorePenroseInverse
 
@@ -160,10 +134,11 @@ theorem submatrix (h : IsMoorePenroseInverse A B) (em : p ≃ m) (en : q ≃ n) 
   · simpa only [Matrix.submatrix_mul_equiv, Matrix.conjTranspose_submatrix] using
       congrArg (fun M : Matrix n n 𝕜 => M.submatrix en en) h.conjTranspose_inv_mul_eq
 
-/-- Unitary changes of row and column coordinates (`Uᴴ U = 1`, `Vᴴ V = 1`) transport a
-Moore–Penrose inverse by the reversed changes. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
+/-- Changes of row and column coordinates with orthonormal columns (`Uᴴ U = 1`, `Vᴴ V = 1`;
+`U : Matrix p m 𝕜`, `V : Matrix q n 𝕜`, e.g. unitary) transport a Moore–Penrose inverse by the
+reversed changes. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
 theorem unitary_transform [DecidableEq m] [DecidableEq n]
-    (h : IsMoorePenroseInverse A B) (U : Matrix m m 𝕜) (V : Matrix n n 𝕜)
+    (h : IsMoorePenroseInverse A B) (U : Matrix p m 𝕜) (V : Matrix q n 𝕜)
     (hU : Uᴴ * U = 1) (hV : Vᴴ * V = 1) :
     IsMoorePenroseInverse (U * A * Vᴴ) (V * B * Uᴴ) := by
   constructor
@@ -267,28 +242,6 @@ theorem conjTranspose_mul_self (h : IsMoorePenroseInverse A B) :
     exact h.conjTranspose_inv_mul_eq
   · rw [hCG]
     exact h.conjTranspose_inv_mul_eq
-
-end IsMoorePenroseInverse
-
-/-! ### Real corollaries under the transpose names -/
-
-namespace IsMoorePenroseInverse
-
-variable {m n : Type*} [Fintype m] [Fintype n] {A : Matrix m n ℝ} {B : Matrix n m ℝ}
-
-/-- Orthogonal changes of row and column coordinates transport a real Moore–Penrose
-inverse by the reversed changes. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem orthogonal_transform [DecidableEq m] [DecidableEq n]
-    (h : IsMoorePenroseInverse A B) (U : Matrix m m ℝ) (V : Matrix n n ℝ)
-    (hU : Uᵀ * U = 1) (hV : Vᵀ * V = 1) :
-    IsMoorePenroseInverse (U * A * Vᵀ) (V * B * Uᵀ) :=
-  h.unitary_transform U V hU hV
-
-/-- The real Moore–Penrose inverse of a column Gram matrix is the corresponding
-Gram matrix of the inverse: `(AᵀA)⁺ = A⁺A⁺ᵀ`. Horn–Johnson §7.3; atlas `pseudoinverse`. -/
-theorem transpose_mul_self (h : IsMoorePenroseInverse A B) :
-    IsMoorePenroseInverse (Aᵀ * A) (B * Bᵀ) :=
-  h.conjTranspose_mul_self
 
 end IsMoorePenroseInverse
 

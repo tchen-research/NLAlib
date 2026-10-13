@@ -302,7 +302,7 @@ theorem expErr_zero_le_moorePenroseInverse [DecidableEq m] [DecidableEq n] (A : 
   have hmem : (0 : n → ℝ) - B *ᵥ (A *ᵥ y) ∈ LinearMap.range Aᵀ.mulVecLin := by
     -- `B = B A B = (B A)ᵀ B = Aᵀ Bᵀ B`
     have hBeq : B = Aᵀ * (Bᵀ * B) := by
-      have hsym : (B * A)ᵀ = B * A := moorePenroseInverse_mul_isSymm A
+      have hsym : (B * A)ᵀ = B * A := moorePenroseInverse_mul_isHermitian A
       calc B = B * A * B := (moorePenroseInverse_mul_moorePenroseInverse A).symm
         _ = (B * A)ᵀ * B := by rw [hsym]
         _ = Aᵀ * (Bᵀ * B) := by rw [Matrix.transpose_mul, Matrix.mul_assoc]

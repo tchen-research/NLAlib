@@ -11,7 +11,6 @@ Atlas: `gaussian-integration-by-parts`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 namespace NLAlib

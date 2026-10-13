@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.FiniteLaw.IndependentProduct
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Binary products of explicit finite probability laws
@@ -16,7 +15,6 @@ and the SparseStack sketch literally.
 
 namespace NLAlib.SparseSketch
 
-open scoped BigOperators
 
 namespace FiniteLaw
 

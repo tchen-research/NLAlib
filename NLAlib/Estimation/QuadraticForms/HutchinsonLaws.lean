@@ -41,7 +41,7 @@ theorem integral_quadForm_eq_trace_of_standardGaussian (A : Matrix n n ℝ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hlaw : ∀ i, IsStandardGaussian μ (fun ω => z ω i)) :
     ∫ ω, quadForm A (z ω) ∂μ = A.trace := by
-  have hf := fun i => memLp_two_and_moments_of_isStandardGaussian (hmeas i) (hlaw i)
+  have hf := fun i => memLp_two_and_moments_of_isStandardGaussian (hlaw i)
   exact integral_quadForm_eq_trace A (fun i => (hf i).1)
     (fun _ _ hij => hindep.indepFun hij) (fun i => (hf i).2.1)
     (fun i => (hf i).2.2.1)
@@ -55,7 +55,7 @@ theorem integral_quadForm_eq_trace_of_rademacher (A : Matrix n n ℝ)
     (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hlaw : ∀ i, IsRademacher μ (fun ω => z ω i)) :
     ∫ ω, quadForm A (z ω) ∂μ = A.trace := by
-  have hf := fun i => memLp_two_and_moments_of_isRademacher (hmeas i) (hlaw i)
+  have hf := fun i => memLp_two_and_moments_of_isRademacher (hlaw i)
   exact integral_quadForm_eq_trace A (fun i => (hf i).1)
     (fun _ _ hij => hindep.indepFun hij) (fun i => (hf i).2.1)
     (fun i => (hf i).2.2.1)
@@ -69,7 +69,7 @@ theorem variance_quadForm_of_standardGaussian [DecidableEq n] (A : Matrix n n �
     (hlaw : ∀ i, IsStandardGaussian μ (fun ω => z ω i)) :
     Var[fun ω => quadForm A (z ω); μ] =
       ∑ i, ∑ j, A i j ^ 2 + ∑ i, ∑ j, A i j * A j i := by
-  have hf := fun i => memLp_two_and_moments_of_isStandardGaussian (hmeas i) (hlaw i)
+  have hf := fun i => memLp_two_and_moments_of_isStandardGaussian (hlaw i)
   simpa using variance_quadForm A hmeas hindep (fun i => (hf i).2.1)
     (fun i => (hf i).2.2.1) (fun i => (hf i).2.2.2.1) (fun i => (hf i).2.2.2.2)
 
@@ -82,7 +82,7 @@ theorem variance_quadForm_of_isSymm_of_standardGaussian [DecidableEq n]
     (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hlaw : ∀ i, IsStandardGaussian μ (fun ω => z ω i)) :
     Var[fun ω => quadForm A (z ω); μ] = 2 * frobSq A := by
-  have hf := fun i => memLp_two_and_moments_of_isStandardGaussian (hmeas i) (hlaw i)
+  have hf := fun i => memLp_two_and_moments_of_isStandardGaussian (hlaw i)
   exact variance_quadForm_of_isSymm_of_fourth_moment_eq_three hA hmeas hindep
     (fun i => (hf i).2.1) (fun i => (hf i).2.2.1)
     (fun i => (hf i).2.2.2.1) (fun i => (hf i).2.2.2.2)
@@ -97,7 +97,7 @@ theorem variance_quadForm_of_isSymm_of_rademacher [DecidableEq n]
     (hindep : iIndepFun (fun i ω => z ω i) μ)
     (hlaw : ∀ i, IsRademacher μ (fun ω => z ω i)) :
     Var[fun ω => quadForm A (z ω); μ] = 2 * (frobSq A - ∑ i, A i i ^ 2) := by
-  have hf := fun i => memLp_two_and_moments_of_isRademacher (hmeas i) (hlaw i)
+  have hf := fun i => memLp_two_and_moments_of_isRademacher (hlaw i)
   exact variance_quadForm_of_isSymm_of_fourth_moment_eq_one hA hmeas hindep
     (fun i => (hf i).2.1) (fun i => (hf i).2.2.1)
     (fun i => (hf i).2.2.2.1) (fun i => (hf i).2.2.2.2)
@@ -146,7 +146,7 @@ theorem integral_quadForm_pi_gaussianReal (A : Matrix n n ℝ) :
     (fun i => (measurable_pi_apply i).aemeasurable)
     (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
   intro i
-  exact (measurePreserving_eval (fun _ : n => gaussianReal 0 1) i).map_eq
+  exact (measurePreserving_eval (fun _ : n => gaussianReal 0 1) i).hasLaw
 
 /-- Symmetric Gaussian Hutchinson variance under the canonical product law, without
 coordinate assumptions. Avron–Toledo 2011, Lemma 5; atlas `hutchinson-variance`. -/
@@ -156,7 +156,7 @@ theorem variance_quadForm_pi_gaussianReal {A : Matrix n n ℝ} (hA : A.IsSymm) :
     (fun i => (measurable_pi_apply i).aemeasurable)
     (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
   intro i
-  exact (measurePreserving_eval (fun _ : n => gaussianReal 0 1) i).map_eq
+  exact (measurePreserving_eval (fun _ : n => gaussianReal 0 1) i).hasLaw
 
 end ProductGaussian
 
@@ -173,7 +173,7 @@ theorem variance_quadForm_pi_rademacherMeasure {A : Matrix n n ℝ} (hA : A.IsSy
     (fun i => (measurable_pi_apply i).aemeasurable)
     (iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id))
   intro i
-  exact (measurePreserving_eval (fun _ : n => rademacherMeasure) i).map_eq
+  exact (measurePreserving_eval (fun _ : n => rademacherMeasure) i).hasLaw
 
 end ProductRademacher
 
@@ -182,33 +182,33 @@ section GaussianMatrix
 variable {n : ℕ}
 
 private theorem gaussianMatrix_column_iIndepFun :
-    iIndepFun (fun i (G : Fin n → Fin 1 → ℝ) => G i 0) (gaussianMatrix n 1) := by
-  have hrows : iIndepFun (fun i (G : Fin n → Fin 1 → ℝ) => G i)
-      (gaussianMatrix n 1) :=
-    iIndepFun_pi (X := fun _ x => x) (fun _ => aemeasurable_id)
+    iIndepFun (fun i (G : Matrix (Fin n) (Fin 1) ℝ) => G i 0) (gaussianMatrix (Fin n) (Fin 1)) := by
+  have hrows : iIndepFun (fun i (G : Matrix (Fin n) (Fin 1) ℝ) => G i)
+      (gaussianMatrix (Fin n) (Fin 1)) :=
+    iIndepFun_gaussianMatrix_row
   exact hrows.comp (fun _ row => row 0) (fun _ => measurable_pi_apply 0)
 
 /-- Hutchinson unbiasedness for the column of an actual standard Gaussian matrix.
 Avron–Toledo 2011, Lemma 5; atlas `hutchinson-unbiased`. -/
 theorem integral_quadForm_gaussianMatrix_column (A : Matrix (Fin n) (Fin n) ℝ) :
-    ∫ G, quadForm A (fun i => G i 0) ∂(gaussianMatrix n 1) = A.trace := by
+    ∫ G, quadForm A (fun i => G i 0) ∂(gaussianMatrix (Fin n) (Fin 1)) = A.trace := by
   apply integral_quadForm_eq_trace_of_standardGaussian A
     (fun i => (measurePreserving_gaussianMatrix_entry i 0).measurable.aemeasurable)
     gaussianMatrix_column_iIndepFun
   intro i
-  exact (measurePreserving_gaussianMatrix_entry i 0).map_eq
+  exact (measurePreserving_gaussianMatrix_entry i 0).hasLaw
 
 /-- Symmetric Hutchinson variance for the column of an actual standard Gaussian matrix.
 Avron–Toledo 2011, Lemma 5; atlas `hutchinson-variance`.
 atlas: hutchinson-variance -/
 theorem variance_quadForm_gaussianMatrix_column {A : Matrix (Fin n) (Fin n) ℝ}
     (hA : A.IsSymm) :
-    Var[fun G => quadForm A (fun i => G i 0); gaussianMatrix n 1] = 2 * frobSq A := by
+    Var[fun G => quadForm A (fun i => G i 0); gaussianMatrix (Fin n) (Fin 1)] = 2 * frobSq A := by
   apply variance_quadForm_of_isSymm_of_standardGaussian hA
     (fun i => (measurePreserving_gaussianMatrix_entry i 0).measurable.aemeasurable)
     gaussianMatrix_column_iIndepFun
   intro i
-  exact (measurePreserving_gaussianMatrix_entry i 0).map_eq
+  exact (measurePreserving_gaussianMatrix_entry i 0).hasLaw
 
 end GaussianMatrix
 

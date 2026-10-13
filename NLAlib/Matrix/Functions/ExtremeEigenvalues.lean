@@ -24,7 +24,6 @@ open scoped Pointwise
 open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
 
 noncomputable section
-set_option autoImplicit false
 
 namespace NLAlib
 

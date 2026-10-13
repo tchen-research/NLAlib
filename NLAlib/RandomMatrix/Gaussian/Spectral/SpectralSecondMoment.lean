@@ -35,21 +35,22 @@ namespace NLAlib
 /-! ### The matrix process `X` on `(G, γ)` -/
 
 /-- Joint law of an independent pair `(G, γ)`: Gaussian matrix and standard normal scalar. -/
-private noncomputable abbrev ssbP (p m : ℕ) : Measure ((Fin p → Fin m → ℝ) × ℝ) :=
-  (gaussianMatrix p m).prod (gaussianReal 0 1)
+private noncomputable abbrev ssbP (p m : ℕ) : Measure ((Matrix (Fin p) (Fin m) ℝ) × ℝ) :=
+  (gaussianMatrix (Fin p) (Fin m)).prod (gaussianReal 0 1)
 
 /-- `X_{c,d}(G, γ) = ∑ᵢⱼ cᵢⱼ Gᵢⱼ + d γ`. -/
 private noncomputable def ssbX {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : ℝ)
-    (ω : (Fin p → Fin m → ℝ) × ℝ) : ℝ := linForm c ω.1 + d * ω.2
+    (ω : (Matrix (Fin p) (Fin m) ℝ) × ℝ) : ℝ := linForm c ω.1 + d * ω.2
 
+open scoped Matrix.Norms.L2Operator in
 private theorem ssb_hasGaussianLaw_X {ι : Type*} [Fintype ι] {p m : ℕ} (c : ι → Fin p → Fin m → ℝ)
     (d : ι → ℝ) : HasGaussianLaw (fun ω t => ssbX (c t) (d t) ω) (ssbP p m) := by
-  have h0 : HasGaussianLaw (fun ω : (Fin p → Fin m → ℝ) × ℝ => ω) (ssbP p m) := by
+  have h0 : HasGaussianLaw (fun ω : (Matrix (Fin p) (Fin m) ℝ) × ℝ => ω) (ssbP p m) := by
     have : IsGaussian (ssbP p m) := inferInstance
     exact ⟨by rw [Measure.map_id']; exact this⟩
-  set L : ((Fin p → Fin m → ℝ) × ℝ) →L[ℝ] (ι → ℝ) :=
+  set L : ((Matrix (Fin p) (Fin m) ℝ) × ℝ) →L[ℝ] (ι → ℝ) :=
     (linFormCLM c).comp (ContinuousLinearMap.fst ℝ _ _) +
-      (ContinuousLinearMap.pi fun t => d t • ContinuousLinearMap.snd ℝ (Fin p → Fin m → ℝ) ℝ)
+      (ContinuousLinearMap.pi fun t => d t • ContinuousLinearMap.snd ℝ (Matrix (Fin p) (Fin m) ℝ) ℝ)
   have h := h0.map_fun L
   have e : (fun ω t => ssbX (c t) (d t) ω) = fun ω => L ω := by
     funext ω t
@@ -57,11 +58,11 @@ private theorem ssb_hasGaussianLaw_X {ι : Type*} [Fintype ι] {p m : ℕ} (c : 
   rw [e]; exact h
 
 private theorem ssb_memLp_fst {p m : ℕ} (c : Fin p → Fin m → ℝ) :
-    MemLp (fun ω : (Fin p → Fin m → ℝ) × ℝ => linForm c ω.1) 2 (ssbP p m) :=
+    MemLp (fun ω : (Matrix (Fin p) (Fin m) ℝ) × ℝ => linForm c ω.1) 2 (ssbP p m) :=
   (memLp_linForm_gaussianMatrix c).comp_measurePreserving measurePreserving_fst
 
 private theorem ssb_memLp_snd (p m : ℕ) :
-    MemLp (fun ω : (Fin p → Fin m → ℝ) × ℝ => ω.2) 2 (ssbP p m) :=
+    MemLp (fun ω : (Matrix (Fin p) (Fin m) ℝ) × ℝ => ω.2) 2 (ssbP p m) :=
   (memLp_id_gaussianReal' 2 (by simp)).comp_measurePreserving measurePreserving_snd
 
 private theorem ssb_memLp_X {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : ℝ) :
@@ -81,25 +82,25 @@ private theorem ssb_integral_X {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : �
   simp [integral_linForm_gaussianMatrix, integral_id_gaussianReal]
 
 private theorem ssb_X_sub {p m : ℕ} (c c' : Fin p → Fin m → ℝ) (d d' : ℝ)
-    (ω : (Fin p → Fin m → ℝ) × ℝ) :
+    (ω : (Matrix (Fin p) (Fin m) ℝ) × ℝ) :
     ssbX c d ω - ssbX c' d' ω = ssbX (c - c') (d - d') ω := by
   unfold ssbX
   rw [← linForm_sub_linForm]; ring
 
 private theorem ssb_integral_X_sq {p m : ℕ} (c : Fin p → Fin m → ℝ) (d : ℝ) :
     ∫ ω, ssbX c d ω ^ 2 ∂(ssbP p m) = ∑ i, ∑ j, c i j ^ 2 + d ^ 2 := by
-  have hexp : ∀ ω : (Fin p → Fin m → ℝ) × ℝ, ssbX c d ω ^ 2 =
+  have hexp : ∀ ω : (Matrix (Fin p) (Fin m) ℝ) × ℝ, ssbX c d ω ^ 2 =
       linForm c ω.1 ^ 2 + 2 * d * (linForm c ω.1 * ω.2) + d ^ 2 * ω.2 ^ 2 := by
     intro ω; unfold ssbX; ring
   simp_rw [hexp]
   have i1 := (ssb_memLp_fst c).integrable_sq
-  have i2 : Integrable (fun ω : (Fin p → Fin m → ℝ) × ℝ => 2 * d * (linForm c ω.1 * ω.2))
+  have i2 : Integrable (fun ω : (Matrix (Fin p) (Fin m) ℝ) × ℝ => 2 * d * (linForm c ω.1 * ω.2))
       (ssbP p m) := ((ssb_memLp_fst c).integrable_mul (ssb_memLp_snd p m)).const_mul (2 * d)
   have i3 := (ssb_memLp_snd p m).integrable_sq.const_mul (d ^ 2)
   rw [integral_add (f := fun ω => linForm c ω.1 ^ 2 + 2 * d * (linForm c ω.1 * ω.2)) (i1.add i2) i3,
     integral_add i1 i2, integral_const_mul, integral_const_mul]
   rw [integral_fun_fst (fun G => linForm c G ^ 2), integral_fun_snd (fun x : ℝ => x ^ 2)]
-  have hprod := integral_prod_mul (μ := gaussianMatrix p m) (ν := gaussianReal 0 1)
+  have hprod := integral_prod_mul (μ := gaussianMatrix (Fin p) (Fin m)) (ν := gaussianReal 0 1)
     (fun G => linForm c G) (fun x : ℝ => x)
   rw [hprod, integral_linForm_sq_gaussianMatrix]
   have h1 : ∫ x : ℝ, x ^ 2 ∂(gaussianReal 0 1) = 1 := by
@@ -164,12 +165,12 @@ private theorem ssb_gamma_jensen {ι : Type*} [Fintype ι] [Nonempty ι] (B d : 
 /-- Fubini + Jensen: `𝔼_G (maxₜ Bₜ(G))₊² ≤ 𝔼_{G,γ} (maxₜ Xₜ(G,γ))₊²`. -/
 private theorem ssb_fubini {ι : Type*} [Fintype ι] [Nonempty ι] {p m : ℕ}
     (c : ι → Fin p → Fin m → ℝ) (d : ι → ℝ) :
-    ∫ G, max (⨆ t, linForm (c t) G) 0 ^ 2 ∂(gaussianMatrix p m)
+    ∫ G, max (⨆ t, linForm (c t) G) 0 ^ 2 ∂(gaussianMatrix (Fin p) (Fin m))
       ≤ ∫ ω, max (⨆ t, ssbX (c t) (d t) ω) 0 ^ 2 ∂(ssbP p m) := by
   have hint := ssb_integrable_supsq (μ := ssbP p m) (fun t => ssbX (c t) (d t))
     (fun t => ssb_memLp_X _ _) (fun t => (ssb_continuous_X _ _).measurable)
   rw [integral_prod _ hint]
-  have hL := ssb_integrable_supsq (μ := gaussianMatrix p m) (fun t => linForm (c t))
+  have hL := ssb_integrable_supsq (μ := gaussianMatrix (Fin p) (Fin m)) (fun t => linForm (c t))
     (fun t => memLp_linForm_gaussianMatrix _) (fun t => (continuous_linForm _).measurable)
   refine integral_mono_ae hL hint.integral_prod_left ?_
   filter_upwards [hint.prod_right_ae] with G hG
@@ -281,13 +282,13 @@ private noncomputable def ssbYc {ι : Type*} {p m : ℕ} (x : ι → Fin p → �
 `𝔼_G (maxₜ ⟨xₜ, G yₜ⟩)₊² ≤ 𝔼 (maxₜ Yₜ)₊²`. -/
 private theorem ssb_main_cmp {ι : Type*} [Fintype ι] [Nonempty ι] {p m : ℕ} (x : ι → Fin p → ℝ)
     (y : ι → Fin m → ℝ) :
-    ∫ G, max (⨆ t, linForm (fun k l => x t k * y t l) G) 0 ^ 2 ∂(gaussianMatrix p m)
-      ≤ ∫ H, max (⨆ t, linForm (ssbYc x y t) H) 0 ^ 2 ∂(gaussianMatrix 1 (p + m)) := by
+    ∫ G, max (⨆ t, linForm (fun k l => x t k * y t l) G) 0 ^ 2 ∂(gaussianMatrix (Fin p) (Fin m))
+      ≤ ∫ H, max (⨆ t, linForm (ssbYc x y t) H) 0 ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (p + m))) := by
   set c : ι → Fin p → Fin m → ℝ := fun t k l => x t k * y t l with hc
   set d : ι → ℝ := fun t => ssbN (x t) * ssbN (y t) with hd
   refine (ssb_fubini c d).trans ?_
   have hvar : ∀ t, ∫ ω, ssbX (c t) (d t) ω ^ 2 ∂(ssbP p m)
-      = ∫ H, linForm (ssbYc x y t) H ^ 2 ∂(gaussianMatrix 1 (p + m)) := by
+      = ∫ H, linForm (ssbYc x y t) H ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (p + m))) := by
     intro t
     rw [ssb_integral_X_sq, integral_linForm_sq_gaussianMatrix]
     simp only [ssbYc, hc, hd]
@@ -303,7 +304,7 @@ private theorem ssb_main_cmp {ι : Type*} [Fintype ι] [Nonempty ι] {p m : ℕ}
     ring
   have hinc : ∀ s t, ∫ ω, (ssbX (c s) (d s) ω - ssbX (c t) (d t) ω) ^ 2 ∂(ssbP p m)
       ≤ ∫ H, (linForm (ssbYc x y s) H - linForm (ssbYc x y t) H) ^ 2
-          ∂(gaussianMatrix 1 (p + m)) := by
+          ∂(gaussianMatrix (Fin 1) (Fin (p + m))) := by
     intro s t
     simp_rw [ssb_X_sub, linForm_sub_linForm]
     rw [ssb_integral_X_sq, integral_linForm_sq_gaussianMatrix]
@@ -325,10 +326,10 @@ private theorem ssb_main_cmp {ι : Type*} [Fintype ι] [Nonempty ι] {p m : ℕ}
 
 private theorem ssb_sandwich_entry {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
     (T : Matrix (Fin m) (Fin n) ℝ)
-    (G : Fin p → Fin m → ℝ) (u : Fin a → ℝ) (v : Fin n → ℝ) :
-    ∑ i, ∑ j, u i * (S * Matrix.of G * T) i j * v j
+    (G : Matrix (Fin p) (Fin m) ℝ) (u : Fin a → ℝ) (v : Fin n → ℝ) :
+    ∑ i, ∑ j, u i * (S * G * T) i j * v j
       = ∑ k, ∑ l, ((∑ i, u i * S i k) * (∑ j, T l j * v j)) * G k l := by
-  simp only [Matrix.mul_apply, Matrix.of_apply, Finset.sum_mul, Finset.mul_sum]
+  simp only [Matrix.mul_apply, Finset.sum_mul, Finset.mul_sum]
   simp only [← Fintype.sum_prod_type']
   refine Fintype.sum_equiv
     ({ toFun := fun x => (x.2.2.2, (x.2.2.1, (x.2.1, x.1)))
@@ -419,23 +420,23 @@ private theorem ssb_minkowski {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω
   have hB := Real.sq_sqrt (integral_nonneg fun ω => sq_nonneg (b ω) : 0 ≤ ∫ ω, b ω ^ 2 ∂μ)
   nlinarith [hab]
 
-private theorem ssb_lin_left {p m : ℕ} (w : Fin p → ℝ) (H : Fin 1 → Fin (p + m) → ℝ) :
+private theorem ssb_lin_left {p m : ℕ} (w : Fin p → ℝ) (H : Matrix (Fin 1) (Fin (p + m)) ℝ) :
     ∑ k, w k * H 0 (Fin.castAdd m k) = linForm (fun _ k => Fin.append w (0 : Fin m → ℝ) k) H := by
   unfold linForm; rw [Fin.sum_univ_one, Fin.sum_univ_add]; simp
 
-private theorem ssb_lin_right {p m : ℕ} (w : Fin m → ℝ) (H : Fin 1 → Fin (p + m) → ℝ) :
+private theorem ssb_lin_right {p m : ℕ} (w : Fin m → ℝ) (H : Matrix (Fin 1) (Fin (p + m)) ℝ) :
     ∑ l, w l * H 0 (Fin.natAdd p l) = linForm (fun _ k => Fin.append (0 : Fin p → ℝ) w k) H := by
   unfold linForm; rw [Fin.sum_univ_one, Fin.sum_univ_add]; simp
 
 /-- `𝔼 ∑ᵢ (∑ₖ Wᵢₖ gₖ)² = ‖W‖_F²` for the first block `g` of a Gaussian row. -/
 private theorem ssb_integral_left_sq {r p m : ℕ} (W : Fin r → Fin p → ℝ) :
-    Integrable (fun H : Fin 1 → Fin (p + m) → ℝ => ∑ i, (∑ k, W i k * H 0 (Fin.castAdd m k)) ^ 2)
-      (gaussianMatrix 1 (p + m)) ∧
-    ∫ H, ∑ i, (∑ k, W i k * H 0 (Fin.castAdd m k)) ^ 2 ∂(gaussianMatrix 1 (p + m))
+    Integrable (fun H : Matrix (Fin 1) (Fin (p + m)) ℝ => ∑ i, (∑ k, W i k * H 0 (Fin.castAdd m k)) ^ 2)
+      (gaussianMatrix (Fin 1) (Fin (p + m))) ∧
+    ∫ H, ∑ i, (∑ k, W i k * H 0 (Fin.castAdd m k)) ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (p + m)))
       = ∑ i, ∑ k, W i k ^ 2 := by
   simp_rw [ssb_lin_left]
-  have hi : ∀ i, Integrable (fun H : Fin 1 → Fin (p + m) → ℝ =>
-      linForm (fun _ k => Fin.append (W i) (0 : Fin m → ℝ) k) H ^ 2) (gaussianMatrix 1 (p + m)) :=
+  have hi : ∀ i, Integrable (fun H : Matrix (Fin 1) (Fin (p + m)) ℝ =>
+      linForm (fun _ k => Fin.append (W i) (0 : Fin m → ℝ) k) H ^ 2) (gaussianMatrix (Fin 1) (Fin (p + m))) :=
     fun i => (memLp_linForm_gaussianMatrix _).integrable_sq
   refine ⟨integrable_finsetSum _ fun i _ => hi i, ?_⟩
   rw [integral_finsetSum _ fun i _ => hi i]
@@ -444,13 +445,13 @@ private theorem ssb_integral_left_sq {r p m : ℕ} (W : Fin r → Fin p → ℝ)
   simp
 
 private theorem ssb_integral_right_sq {r p m : ℕ} (W : Fin r → Fin m → ℝ) :
-    Integrable (fun H : Fin 1 → Fin (p + m) → ℝ => ∑ i, (∑ l, W i l * H 0 (Fin.natAdd p l)) ^ 2)
-      (gaussianMatrix 1 (p + m)) ∧
-    ∫ H, ∑ i, (∑ l, W i l * H 0 (Fin.natAdd p l)) ^ 2 ∂(gaussianMatrix 1 (p + m))
+    Integrable (fun H : Matrix (Fin 1) (Fin (p + m)) ℝ => ∑ i, (∑ l, W i l * H 0 (Fin.natAdd p l)) ^ 2)
+      (gaussianMatrix (Fin 1) (Fin (p + m))) ∧
+    ∫ H, ∑ i, (∑ l, W i l * H 0 (Fin.natAdd p l)) ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (p + m)))
       = ∑ i, ∑ l, W i l ^ 2 := by
   simp_rw [ssb_lin_right]
-  have hi : ∀ i, Integrable (fun H : Fin 1 → Fin (p + m) → ℝ =>
-      linForm (fun _ k => Fin.append (0 : Fin p → ℝ) (W i) k) H ^ 2) (gaussianMatrix 1 (p + m)) :=
+  have hi : ∀ i, Integrable (fun H : Matrix (Fin 1) (Fin (p + m)) ℝ =>
+      linForm (fun _ k => Fin.append (0 : Fin p → ℝ) (W i) k) H ^ 2) (gaussianMatrix (Fin 1) (Fin (p + m))) :=
     fun i => (memLp_linForm_gaussianMatrix _).integrable_sq
   refine ⟨integrable_finsetSum _ fun i _ => hi i, ?_⟩
   rw [integral_finsetSum _ fun i _ => hi i]
@@ -474,11 +475,11 @@ private theorem ssb_Y_bound {ι : Type*} [Fintype ι] [Nonempty ι] {a p m n : �
     (hx : ∀ t, ssbN (x t) ≤ α) (hy : ∀ t, ssbN (y t) ≤ β)
     (hxg : ∀ t (g : Fin p → ℝ), ∑ k, x t k * g k ≤ Real.sqrt (∑ i, (∑ k, S i k * g k) ^ 2))
     (hyh : ∀ t (h : Fin m → ℝ), ∑ l, y t l * h l ≤ Real.sqrt (∑ j, (∑ l, T l j * h l) ^ 2)) :
-    ∫ H, max (⨆ t, linForm (ssbYc x y t) H) 0 ^ 2 ∂(gaussianMatrix 1 (p + m))
+    ∫ H, max (⨆ t, linForm (ssbYc x y t) H) 0 ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (p + m)))
       ≤ (β * frobNorm S + α * frobNorm T) ^ 2 := by
-  set Q1 : (Fin 1 → Fin (p + m) → ℝ) → ℝ :=
+  set Q1 : (Matrix (Fin 1) (Fin (p + m)) ℝ) → ℝ :=
     fun H => ∑ i, (∑ k, S i k * H 0 (Fin.castAdd m k)) ^ 2 with hQ1
-  set Q2 : (Fin 1 → Fin (p + m) → ℝ) → ℝ :=
+  set Q2 : (Matrix (Fin 1) (Fin (p + m)) ℝ) → ℝ :=
     fun H => ∑ j, (∑ l, (fun j l => T l j) j l * H 0 (Fin.natAdd p l)) ^ 2 with hQ2
   have hQ10 : ∀ H, 0 ≤ Q1 H := fun H => Finset.sum_nonneg fun _ _ => sq_nonneg _
   have hQ20 : ∀ H, 0 ≤ Q2 H := fun H => Finset.sum_nonneg fun _ _ => sq_nonneg _
@@ -516,17 +517,17 @@ private theorem ssb_Y_bound {ι : Type*} [Fintype ι] [Nonempty ι] {a p m n : �
       ≤ (β * Real.sqrt (Q1 H) + α * Real.sqrt (Q2 H)) ^ 2 := by
     intro H
     refine pow_le_pow_left₀ (le_max_right _ _) (max_le (ciSup_le fun t => hYle H t) (hW0 H)) 2
-  have hint := ssb_integrable_supsq (μ := gaussianMatrix 1 (p + m))
+  have hint := ssb_integrable_supsq (μ := gaussianMatrix (Fin 1) (Fin (p + m)))
     (fun t => linForm (ssbYc x y t)) (fun t => memLp_linForm_gaussianMatrix _)
     (fun t => (continuous_linForm _).measurable)
   refine (integral_mono hint (hm1.add hm2).integrable_sq hpt).trans ?_
   refine (ssb_minkowski _ _ _ (fun H => mul_nonneg hβ (Real.sqrt_nonneg _))
     (fun H => mul_nonneg hα (Real.sqrt_nonneg _)) hm1 hm2).trans (le_of_eq ?_)
-  have s1 : ∫ H, (β * Real.sqrt (Q1 H)) ^ 2 ∂(gaussianMatrix 1 (p + m)) = β ^ 2 * frobSq S := by
+  have s1 : ∫ H, (β * Real.sqrt (Q1 H)) ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (p + m))) = β ^ 2 * frobSq S := by
     simp_rw [mul_pow, Real.sq_sqrt (hQ10 _)]
     rw [integral_const_mul, frobSq_eq_sum_sq]
     congr 1
-  have s2 : ∫ H, (α * Real.sqrt (Q2 H)) ^ 2 ∂(gaussianMatrix 1 (p + m)) = α ^ 2 * frobSq T := by
+  have s2 : ∫ H, (α * Real.sqrt (Q2 H)) ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (p + m))) = α ^ 2 * frobSq T := by
     simp_rw [mul_pow, Real.sq_sqrt (hQ20 _)]
     rw [integral_const_mul]
     congr 1
@@ -542,7 +543,7 @@ private theorem ssb_Y_bound {ι : Type*} [Fintype ι] [Nonempty ι] {a p m n : �
 private theorem ssb_scaled_bound {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
     (T : Matrix (Fin m) (Fin n) ℝ)
     (ha : 0 < a) (hn : 0 < n) (ε : ℝ) (hε : 0 < ε) (hε2 : ε ≤ 1 / 2) :
-    (1 - 2 * ε) ^ 2 * ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)
+    (1 - 2 * ε) ^ 2 * ∫ G, specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m))
       ≤ (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 := by
   -- finite `ε`-nets of the two unit spheres
   obtain ⟨Fu, hFuS, hFufin, hFucov⟩ := Metric.finite_approx_of_totallyBounded
@@ -577,36 +578,36 @@ private theorem ssb_scaled_bound {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ
   -- the vectors `xₜ = Sᵀ uₜ` and `yₜ = T vₜ`
   set x : I → Fin p → ℝ := fun t k => ∑ i, t.1.2 i * S i k with hx
   set y : I → Fin m → ℝ := fun t l => ∑ j, T l j * t.1.1 j with hy
-  have hspec : Integrable (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T) ^ 2)
-      (gaussianMatrix p m) :=
+  have hspec : Integrable (fun G : Matrix (Fin p) (Fin m) ℝ => specNorm (S * G * T) ^ 2)
+      (gaussianMatrix (Fin p) (Fin m)) :=
     (integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-      (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T))
+      (fun G : Matrix (Fin p) (Fin m) ℝ => specNorm (S * G * T))
       (specNorm S * specNorm T) (mul_nonneg (specNorm_nonneg S) (specNorm_nonneg T))
       (abs_specNorm_mul_of_mul_sub_le S T)).2
-  have hL := ssb_integrable_supsq (μ := gaussianMatrix p m)
+  have hL := ssb_integrable_supsq (μ := gaussianMatrix (Fin p) (Fin m))
     (fun t => linForm (fun k l => x t k * y t l)) (fun t => memLp_linForm_gaussianMatrix _)
     (fun t => (continuous_linForm _).measurable)
-  have step1 : ∀ G : Fin p → Fin m → ℝ, (1 - 2 * ε) ^ 2 * specNorm (S * Matrix.of G * T) ^ 2
+  have step1 : ∀ G : Matrix (Fin p) (Fin m) ℝ, (1 - 2 * ε) ^ 2 * specNorm (S * G * T) ^ 2
       ≤ max (⨆ t, linForm (fun k l => x t k * y t l) G) 0 ^ 2 := by
     intro G
-    have hnet := one_sub_two_mul_mul_specNorm_le_iSup (S * Matrix.of G * T) ε hε.le I hI2 hcov
-    have e : (⨆ t : I, ∑ i, ∑ j, t.1.2 i * (S * Matrix.of G * T) i j * t.1.1 j)
+    have hnet := one_sub_two_mul_mul_specNorm_le_iSup (S * G * T) ε hε.le I hI2 hcov
+    have e : (⨆ t : I, ∑ i, ∑ j, t.1.2 i * (S * G * T) i j * t.1.1 j)
         = ⨆ t, linForm (fun k l => x t k * y t l) G := by
       congr 1
       funext t
       exact ssb_sandwich_entry S T G (fun i => t.1.2 i) (fun j => t.1.1 j)
     rw [e] at hnet
-    have h0 : 0 ≤ (1 - 2 * ε) * specNorm (S * Matrix.of G * T) :=
+    have h0 : 0 ≤ (1 - 2 * ε) * specNorm (S * G * T) :=
       mul_nonneg (by linarith) (specNorm_nonneg _)
-    calc (1 - 2 * ε) ^ 2 * specNorm (S * Matrix.of G * T) ^ 2
-        = ((1 - 2 * ε) * specNorm (S * Matrix.of G * T)) ^ 2 := by ring
+    calc (1 - 2 * ε) ^ 2 * specNorm (S * G * T) ^ 2
+        = ((1 - 2 * ε) * specNorm (S * G * T)) ^ 2 := by ring
       _ ≤ _ := pow_le_pow_left₀ h0 (hnet.trans (le_max_left _ _)) 2
-  calc (1 - 2 * ε) ^ 2 * ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)
-      = ∫ G, (1 - 2 * ε) ^ 2 * specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m) :=
+  calc (1 - 2 * ε) ^ 2 * ∫ G, specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m))
+      = ∫ G, (1 - 2 * ε) ^ 2 * specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m)) :=
         (integral_const_mul _ _).symm
-    _ ≤ ∫ G, max (⨆ t, linForm (fun k l => x t k * y t l) G) 0 ^ 2 ∂(gaussianMatrix p m) :=
+    _ ≤ ∫ G, max (⨆ t, linForm (fun k l => x t k * y t l) G) 0 ^ 2 ∂(gaussianMatrix (Fin p) (Fin m)) :=
         integral_mono (hspec.const_mul _) hL step1
-    _ ≤ ∫ H, max (⨆ t, linForm (ssbYc x y t) H) 0 ^ 2 ∂(gaussianMatrix 1 (p + m)) :=
+    _ ≤ ∫ H, max (⨆ t, linForm (ssbYc x y t) H) 0 ^ 2 ∂(gaussianMatrix (Fin 1) (Fin (p + m))) :=
         ssb_main_cmp x y
     _ ≤ (specNorm T * frobNorm S + specNorm S * frobNorm T) ^ 2 :=
         ssb_Y_bound S T x y (specNorm S) (specNorm T) (specNorm_nonneg S)
@@ -626,22 +627,22 @@ standard Gaussian matrix `Γ`, `𝔼 ‖S Γ T‖₂² ≤ (‖S‖₂ ‖T‖_F
 atlas: spectral-second-moment -/
 theorem integral_specNorm_sq_mul_gaussianMatrix_mul_le {a p m n : ℕ} (S : Matrix (Fin a) (Fin p) ℝ)
     (T : Matrix (Fin m) (Fin n) ℝ) :
-    ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)
+    ∫ G, specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m))
       ≤ (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 := by
   have hC : 0 ≤ (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 := sq_nonneg _
-  have hzero : (∀ G : Fin p → Fin m → ℝ, specNorm (S * Matrix.of G * T) = 0) →
-      ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)
+  have hzero : (∀ G : Matrix (Fin p) (Fin m) ℝ, specNorm (S * G * T) = 0) →
+      ∫ G, specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m))
         ≤ (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 := by
     intro h0
-    have : ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m) = 0 := by simp [h0]
+    have : ∫ G, specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m)) = 0 := by simp [h0]
     rw [this]; exact hC
   rcases Nat.eq_zero_or_pos a with ha | ha
   · subst ha
-    exact hzero fun G => by rw [Subsingleton.elim (S * Matrix.of G * T) 0, specNorm_zero]
+    exact hzero fun G => by rw [Subsingleton.elim (S * G * T) 0, specNorm_zero]
   rcases Nat.eq_zero_or_pos n with hn | hn
   · subst hn
-    exact hzero fun G => by rw [Subsingleton.elim (S * Matrix.of G * T) 0, specNorm_zero]
-  set E := ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m) with hE
+    exact hzero fun G => by rw [Subsingleton.elim (S * G * T) 0, specNorm_zero]
+  set E := ∫ G, specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m)) with hE
   set C := (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 with hCdef
   have hE0 : 0 ≤ E := integral_nonneg fun G => sq_nonneg _
   by_contra hcon
@@ -667,13 +668,43 @@ Atlas: `spectral-second-moment`. Ported from Prove2me solution
 atlas: spectral-second-moment -/
 theorem integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le {a p m n : ℕ}
     (S : Matrix (Fin a) (Fin p) ℝ) (T : Matrix (Fin m) (Fin n) ℝ) :
-    Integrable (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T) ^ 2)
-      (gaussianMatrix p m) ∧
-    ∫ G, specNorm (S * Matrix.of G * T) ^ 2 ∂(gaussianMatrix p m)
+    Integrable (fun G : Matrix (Fin p) (Fin m) ℝ => specNorm (S * G * T) ^ 2)
+      (gaussianMatrix (Fin p) (Fin m)) ∧
+    ∫ G, specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m))
       ≤ (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 := by
   refine ⟨(integrable_and_integrable_sq_of_abs_sub_le_mul_frobNorm
-    (fun G : Fin p → Fin m → ℝ => specNorm (S * Matrix.of G * T))
+    (fun G : Matrix (Fin p) (Fin m) ℝ => specNorm (S * G * T))
     (specNorm S * specNorm T) (mul_nonneg (specNorm_nonneg S) (specNorm_nonneg T))
     (abs_specNorm_mul_of_mul_sub_le S T)).2, integral_specNorm_sq_mul_gaussianMatrix_mul_le S T⟩
+
+/-- `integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin p) (Fin m)) μ`. Atlas: `spectral-second-moment`. -/
+theorem integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω}
+    {a p m n : ℕ} {X : Ω → Matrix (Fin p) (Fin m) ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin p) (Fin m)) μ) (S : Matrix (Fin a) (Fin p) ℝ)
+    (T : Matrix (Fin m) (Fin n) ℝ) :
+    Integrable (fun ω => specNorm (S * X ω * T) ^ 2) μ ∧
+    ∫ ω, specNorm (S * X ω * T) ^ 2 ∂μ
+      ≤ (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 := by
+  have hc : Continuous fun G : Matrix (Fin p) (Fin m) ℝ => specNorm (S * G * T) ^ 2 :=
+    (continuous_of_abs_sub_le_mul_frobNorm _ _ (abs_specNorm_mul_of_mul_sub_le S T)).pow 2
+  obtain ⟨h1, h2⟩ := integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le S T
+  have e : ∫ ω, specNorm (S * X ω * T) ^ 2 ∂μ
+      = ∫ G, specNorm (S * G * T) ^ 2 ∂(gaussianMatrix (Fin p) (Fin m)) :=
+    hX.integral_comp hc.aestronglyMeasurable
+  rw [← hX.map_eq] at h1
+  exact ⟨h1.comp_aemeasurable hX.aemeasurable, by rw [e]; exact h2⟩
+
+/-- `integral_specNorm_sq_mul_gaussianMatrix_mul_le` for a random matrix `X` with
+`HasLaw X (gaussianMatrix (Fin p) (Fin m)) μ`. Atlas: `spectral-second-moment`. -/
+theorem integral_specNorm_sq_mul_gaussianMatrix_mul_le_of_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω}
+    {a p m n : ℕ} {X : Ω → Matrix (Fin p) (Fin m) ℝ}
+    (hX : HasLaw X (gaussianMatrix (Fin p) (Fin m)) μ) (S : Matrix (Fin a) (Fin p) ℝ)
+    (T : Matrix (Fin m) (Fin n) ℝ) :
+    ∫ ω, specNorm (S * X ω * T) ^ 2 ∂μ
+      ≤ (specNorm S * frobNorm T + frobNorm S * specNorm T) ^ 2 :=
+  (integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le_of_hasLaw hX S T).2
 
 end NLAlib

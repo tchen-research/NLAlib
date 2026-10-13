@@ -1,4 +1,5 @@
-import NLAlib.Matrix.Spectral.FiniteIndexTransport
+import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.Matrix.Norms.RankNorm
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-!

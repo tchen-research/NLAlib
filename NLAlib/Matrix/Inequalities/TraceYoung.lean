@@ -11,7 +11,6 @@ Source: operator manuscript `lem:traceyoung`, for `noncommutative-khintchine`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
 open Matrix

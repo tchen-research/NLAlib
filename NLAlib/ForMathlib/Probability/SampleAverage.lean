@@ -8,7 +8,6 @@ Source: operator re-derivation `sa:amm-variance`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 namespace NLAlib
 

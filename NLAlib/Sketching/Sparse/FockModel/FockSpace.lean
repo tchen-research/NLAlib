@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.FockModel.TensorOperators
 import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Euclidean realization of the finite sparse--Fock space
@@ -18,7 +17,7 @@ Nothing in this layer is an abstract operator interface.
 
 namespace NLAlib.SparseSketch
 
-open scoped BigOperators Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator
 
 noncomputable section
 

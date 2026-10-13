@@ -10,7 +10,7 @@ This includes singular and empty matrices. Atlas `determinant-derivative`.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators Matrix.Norms.Elementwise
+open scoped Matrix Matrix.Norms.Elementwise
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 

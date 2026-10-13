@@ -9,7 +9,6 @@ Source: Marshall–Olkin–Arnold (2011), Chapters 2–4.
 -/
 
 noncomputable section
-open scoped BigOperators
 
 namespace NLAlib
 

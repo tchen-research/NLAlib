@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.Bands.Heavy.PreservingBound
 import NLAlib.Sketching.Sparse.Bands.EnvelopeArithmetic
 import NLAlib.Sketching.Sparse.Bands.CoefficientBounds
-set_option autoImplicit false
 
 /-!
 # Normalized heavy-band estimates
@@ -16,7 +15,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 
 namespace NLAlib.SparseSketch.Heavy
 
-open scoped BigOperators Matrix.Norms.L2Operator InnerProductSpace
+open scoped Matrix.Norms.L2Operator InnerProductSpace
 
 noncomputable section
 

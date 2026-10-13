@@ -230,7 +230,7 @@ variable {m n : Type*} [Fintype m] [Fintype n]
 theorem IsMoorePenroseInverse.specNorm_one_sub_mul_le [DecidableEq m]
     {A : Matrix m n ℝ} {A' : Matrix n m ℝ} (h : IsMoorePenroseInverse A A') :
     specNorm (1 - A * A') ≤ 1 := by
-  apply specNorm_le_one_of_isSymm_of_isIdempotentElem
+  apply Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem
   · change (1 - A * A')ᵀ = 1 - A * A'
     rw [Matrix.transpose_sub, Matrix.transpose_one,
       show (A * A')ᵀ = A * A' from h.conjTranspose_mul_eq]

@@ -1,6 +1,7 @@
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import NLAlib.Matrix.Norms.Core
+import NLAlib.Matrix.Basic.Orthonormal
 /-!
 # Orthonormal frames, projectors and residuals
 
@@ -8,7 +9,7 @@ Stated over `{𝕜 : Type*} [RCLike 𝕜]` with `conjTranspose` (RCLike round, d
 `𝕜 := ℝ` every definition is definitionally the old real one.
 
 * `NLAlib.HasOrthonormalCols Q`: `Qᴴ Q = I` (at `ℝ`: `Qᵀ Q = I`).
-* `NLAlib.residual Q A = A − Q (Qᴴ A) = (I − QQᴴ) A`, the part of `A` outside `range Q`.
+* `NLAlib.projResidual Q A = A − Q (Qᴴ A) = (I − QQᴴ) A`, the part of `A` outside `range Q`.
 * `NLAlib.IsBestRankApprox k C Y`: `Y` has rank `≤ k` and minimises the Frobenius distance to
   `C` among rank-`≤ k` matrices. Until Eckart–Young is proved (atlas `eckart-young`) this
   optimality property is how `⟦C⟧ₖ` enters statements.
@@ -17,7 +18,7 @@ Stated over `{𝕜 : Type*} [RCLike 𝕜]` with `conjTranspose` (RCLike round, d
 
 * Isometry: `‖Qx‖² = ‖x‖²` for `Q` with orthonormal columns.
 * The orthogonal projector `P = QQᴴ`: idempotence, `Qᴴ(I − P) = 0`.
-* The residual: `residual Q A = (I − QQᴴ) A`, orthogonality to `range Q`, Pythagoras
+* The residual: `projResidual Q A = (I − QQᴴ) A`, orthogonality to `range Q`, Pythagoras
   `‖A‖_F² = ‖QQᴴA‖_F² + ‖(I − QQᴴ)A‖_F²`, `‖(I − QQᴴ)A‖_F ≤ ‖A‖_F`, `‖QᴴA‖_F ≤ ‖A‖_F`.
 * Best approximation in a range: `‖A − QB‖_F² = ‖(I − QQᴴ)A‖_F² + ‖QᴴA − B‖_F²`, and the
   monotonicity of the residual under range inclusion (HMT 2011, Prop. 8.5, Frobenius case).
@@ -38,7 +39,7 @@ Stated over `{𝕜 : Type*} [RCLike 𝕜]` with `conjTranspose` (RCLike round, d
 Every statement is written with `ᴴ` and `star` (F1, transpose twins removed). Over `ℝ` the
 `@[simp]` lemmas `Matrix.conjTranspose_eq_transpose_of_trivial` and `star_trivial` turn them into
 the `ᵀ` / plain dot-product forms; e.g.
-`rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial]` unfolds a real residual, and
+`rw [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial]` unfolds a real projResidual, and
 `rw [← Matrix.conjTranspose_eq_transpose_of_trivial, hQ.conjTranspose_mul_self]` rewrites
 `Qᵀ * Q` to `1`. The pre-F1 real names that leaf files still use in term position are deprecated
 aliases (`docs/renames/2026-10-F1.json`).
@@ -63,30 +64,10 @@ variable {𝕜 : Type*} [RCLike 𝕜] {m n q : Type*} [Fintype m] [Fintype n] [F
 
 /-! ### Definitions -/
 
-/-- `Q` has orthonormal columns: `Qᴴ Q = I` (at `𝕜 = ℝ` this is `Qᵀ Q = I` by definition).
-atlas: orthonormal-columns-def -/
-def HasOrthonormalCols [DecidableEq q] (Q : Matrix m q 𝕜) : Prop := Qᴴ * Q = 1
-
-/-- Residual of `A` after projecting onto the column space of `Q`: `(I − QQᴴ) A`.
-atlas: residual-def -/
-def residual (Q : Matrix m q 𝕜) (A : Matrix m n 𝕜) : Matrix m n 𝕜 := A - Q * (Qᴴ * A)
-
 /-- `Y` is a best rank-`k` Frobenius approximation of `C`.
 atlas: best-rank-approx-def -/
 def IsBestRankApprox (k : ℕ) (C Y : Matrix m n 𝕜) : Prop :=
   Y.rank ≤ k ∧ ∀ Z : Matrix m n 𝕜, Z.rank ≤ k → frobSq (C - Y) ≤ frobSq (C - Z)
-
-/-! ### Bridges -/
-
-omit [Fintype q] in
-/-- Eliminator for `HasOrthonormalCols`: `Qᴴ Q = I`. -/
-theorem HasOrthonormalCols.conjTranspose_mul_self [DecidableEq q] {Q : Matrix m q 𝕜}
-    (hQ : HasOrthonormalCols Q) : Qᴴ * Q = 1 := hQ
-
-omit [Fintype q] in
-/-- `HasOrthonormalCols Q` unfolded: `Qᴴ Q = I`. -/
-theorem hasOrthonormalCols_iff_conjTranspose_mul_self [DecidableEq q] {Q : Matrix m q 𝕜} :
-    HasOrthonormalCols Q ↔ Qᴴ * Q = 1 := Iff.rfl
 
 /-! ### Isometry -/
 
@@ -97,12 +78,6 @@ theorem star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols [DecidableEq q]
     star (U *ᵥ x) ⬝ᵥ (U *ᵥ x) = star x ⬝ᵥ x := by
   rw [star_mulVec_dotProduct_mulVec_self, hU.conjTranspose_mul_self, Matrix.one_mulVec]
 
-/-- Deprecated alias (F1, transpose twins removed): use
-`star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`. -/
-@[deprecated (since := "2026-10-13")]
-alias mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols :=
-  star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols
-
 /-! ### The orthogonal projector `QQᴴ` -/
 
 /-- Idempotence of `P = QQᴴ` for `Q` with orthonormal columns: `P² = P`.
@@ -111,21 +86,12 @@ theorem mul_conjTranspose_mul_mul_conjTranspose [DecidableEq q] {Q : Matrix m q 
     (hQ : HasOrthonormalCols Q) : Q * Qᴴ * (Q * Qᴴ) = Q * Qᴴ := by
   rw [Matrix.mul_assoc, ← Matrix.mul_assoc Qᴴ, hQ.conjTranspose_mul_self, Matrix.one_mul]
 
-/-- Deprecated alias (F1, transpose twins removed): use
-`mul_conjTranspose_mul_mul_conjTranspose`. -/
-@[deprecated (since := "2026-10-13")]
-alias mul_transpose_mul_mul_transpose := mul_conjTranspose_mul_mul_conjTranspose
-
 /-- Idempotence of the complementary projector `I − QQᴴ`. Atlas `projection-facts`. -/
 theorem one_sub_mul_conjTranspose_idem [DecidableEq m] [DecidableEq q] {Q : Matrix m q 𝕜}
     (hQ : HasOrthonormalCols Q) : (1 - Q * Qᴴ) * (1 - Q * Qᴴ) = 1 - Q * Qᴴ := by
   rw [Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one,
     Matrix.one_mul, mul_conjTranspose_mul_mul_conjTranspose hQ]
   abel
-
-/-- Deprecated alias (F1, transpose twins removed): use `one_sub_mul_conjTranspose_idem`. -/
-@[deprecated (since := "2026-10-13")]
-alias one_sub_mul_transpose_idem := one_sub_mul_conjTranspose_idem
 
 /-- `Qᴴ (I − QQᴴ) = 0` for `Q` with orthonormal columns. Atlas `projection-facts`. -/
 theorem conjTranspose_mul_one_sub_mul_conjTranspose [DecidableEq m] [DecidableEq q]
@@ -143,29 +109,29 @@ theorem one_sub_mul_conjTranspose_conjTranspose_mul [DecidableEq m] [DecidableEq
 /-! ### The residual `(I − QQᴴ) A` -/
 
 omit [Fintype n] in
-/-- `residual Q A = (I − QQᴴ) A`. Atlas `projection-facts`. -/
+/-- `projResidual Q A = (I − QQᴴ) A`. Atlas `projection-facts`. -/
 theorem residual_eq_one_sub_mul [DecidableEq m] (Q : Matrix m q 𝕜)
-    (A : Matrix m n 𝕜) : residual Q A = (1 - Q * Qᴴ) * A := by
-  rw [residual, Matrix.sub_mul, Matrix.one_mul, Matrix.mul_assoc]
+    (A : Matrix m n 𝕜) : projResidual Q A = (1 - Q * Qᴴ) * A := by
+  rw [projResidual, Matrix.sub_mul, Matrix.one_mul, Matrix.mul_assoc]
 
 omit [Fintype n] in
-/-- Orthogonal decomposition `A = Q(QᴴA) + residual Q A`. Atlas `projection-facts`. -/
+/-- Orthogonal decomposition `A = Q(QᴴA) + projResidual Q A`. Atlas `projection-facts`. -/
 theorem mul_conjTranspose_mul_add_residual (Q : Matrix m q 𝕜) (A : Matrix m n 𝕜) :
-    Q * (Qᴴ * A) + residual Q A = A := by
-  rw [residual]; abel
+    Q * (Qᴴ * A) + projResidual Q A = A := by
+  rw [projResidual]; abel
 
 omit [Fintype n] in
 /-- The residual is orthogonal to `range Q`: `Qᴴ (I − QQᴴ) A = 0`. Atlas `projection-facts`.
 atlas: projection-facts -/
 theorem conjTranspose_mul_residual [DecidableEq q] {Q : Matrix m q 𝕜}
-    (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) : Qᴴ * residual Q A = 0 := by
-  rw [residual, Matrix.mul_sub, ← Matrix.mul_assoc, hQ.conjTranspose_mul_self, Matrix.one_mul,
+    (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) : Qᴴ * projResidual Q A = 0 := by
+  rw [projResidual, Matrix.mul_sub, ← Matrix.mul_assoc, hQ.conjTranspose_mul_self, Matrix.one_mul,
     sub_self]
 
 /-- The residual is Frobenius-orthogonal to every matrix `QX` with columns in `range Q`.
 Atlas `projection-facts`. -/
 theorem frobInner_mul_residual [DecidableEq q] {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q)
-    (X : Matrix q n 𝕜) (A : Matrix m n 𝕜) : frobInner (Q * X) (residual Q A) = 0 := by
+    (X : Matrix q n 𝕜) (A : Matrix m n 𝕜) : frobInner (Q * X) (projResidual Q A) = 0 := by
   rw [frobInner_eq_trace, Matrix.conjTranspose_mul, Matrix.mul_assoc,
     conjTranspose_mul_residual hQ, Matrix.mul_zero, Matrix.trace_zero, map_zero]
 
@@ -173,20 +139,20 @@ omit [Fintype n] in
 /-- Projecting the residual again changes nothing: `(I − QQᴴ)² A = (I − QQᴴ) A`.
 Atlas `projection-facts`. -/
 theorem residual_residual [DecidableEq q] {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q)
-    (A : Matrix m n 𝕜) : residual Q (residual Q A) = residual Q A := by
-  show residual Q A - Q * (Qᴴ * residual Q A) = residual Q A
+    (A : Matrix m n 𝕜) : projResidual Q (projResidual Q A) = projResidual Q A := by
+  show projResidual Q A - Q * (Qᴴ * projResidual Q A) = projResidual Q A
   rw [conjTranspose_mul_residual hQ, Matrix.mul_zero, sub_zero]
 
 /-- The residual of `QX` vanishes. Atlas `projection-facts`. -/
 theorem residual_mul_self [DecidableEq q] {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q)
-    {p : Type*} [Fintype p] (X : Matrix q p 𝕜) : residual Q (Q * X) = 0 := by
-  rw [residual, ← Matrix.mul_assoc Qᴴ, hQ.conjTranspose_mul_self, Matrix.one_mul, sub_self]
+    {p : Type*} [Fintype p] (X : Matrix q p 𝕜) : projResidual Q (Q * X) = 0 := by
+  rw [projResidual, ← Matrix.mul_assoc Qᴴ, hQ.conjTranspose_mul_self, Matrix.one_mul, sub_self]
 
 /-- The residual commutes with right multiplication: `((I − QQᴴ)A) Ω = (I − QQᴴ)(AΩ)`.
 Atlas `projection-facts`. -/
 theorem residual_mul (Q : Matrix m q 𝕜) (A : Matrix m n 𝕜) {p : Type*} [Fintype p]
-    (Ω : Matrix n p 𝕜) : residual Q A * Ω = residual Q (A * Ω) := by
-  simp only [residual, Matrix.sub_mul, Matrix.mul_assoc]
+    (Ω : Matrix n p 𝕜) : projResidual Q A * Ω = projResidual Q (A * Ω) := by
+  simp only [projResidual, Matrix.sub_mul, Matrix.mul_assoc]
 
 /-- If `range(AΩ) ⊆ range(Q)`, written `Q (Qᴴ (AΩ)) = AΩ`, then `(I − QQᴴ) A Ω = 0`.
 This is how `Q = orth(AΩ)` enters the range-finder analysis (HMT 2011, proof of Thm 9.1).
@@ -195,8 +161,8 @@ Atlas `projection-facts`.
 atlas: projection-facts -/
 theorem residual_mul_eq_zero_of_range {Q : Matrix m q 𝕜} {A : Matrix m n 𝕜} {p : Type*}
     [Fintype p] {Ω : Matrix n p 𝕜} (h : Q * (Qᴴ * (A * Ω)) = A * Ω) :
-    residual Q A * Ω = 0 := by
-  rw [residual_mul, residual, h, sub_self]
+    projResidual Q A * Ω = 0 := by
+  rw [residual_mul, projResidual, h, sub_self]
 
 /-! ### Pythagoras and contraction -/
 
@@ -212,7 +178,7 @@ Atlas `projection-facts`.
 atlas: projection-facts -/
 theorem frobSq_eq_frobSq_proj_add_residual [DecidableEq q] {Q : Matrix m q 𝕜}
     (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) :
-    frobSq A = frobSq (Q * (Qᴴ * A)) + frobSq (residual Q A) := by
+    frobSq A = frobSq (Q * (Qᴴ * A)) + frobSq (projResidual Q A) := by
   conv_lhs => rw [← mul_conjTranspose_mul_add_residual Q A]
   exact frobSq_add_of_frobInner_eq_zero _ _ (frobInner_mul_residual hQ _ A)
 
@@ -220,26 +186,20 @@ theorem frobSq_eq_frobSq_proj_add_residual [DecidableEq q] {Q : Matrix m q 𝕜}
 `‖A‖_F² = ‖QᴴA‖_F² + ‖(I − QQᴴ)A‖_F²`. Atlas `projection-facts`. -/
 theorem frobSq_eq_frobSq_conjTranspose_mul_add_residual [DecidableEq q] {Q : Matrix m q 𝕜}
     (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) :
-    frobSq A = frobSq (Qᴴ * A) + frobSq (residual Q A) := by
+    frobSq A = frobSq (Qᴴ * A) + frobSq (projResidual Q A) := by
   rw [frobSq_eq_frobSq_proj_add_residual hQ A,
     frobSq_mul_left_of_orthonormal hQ.conjTranspose_mul_self]
-
-/-- Deprecated alias (F1, transpose twins removed): use
-`frobSq_eq_frobSq_conjTranspose_mul_add_residual`. -/
-@[deprecated (since := "2026-10-13")]
-alias frobSq_eq_frobSq_transpose_mul_add_residual :=
-  frobSq_eq_frobSq_conjTranspose_mul_add_residual
 
 /-- `‖(I − QQᴴ)A‖_F² = ‖A‖_F² − ‖QᴴA‖_F²`. Atlas `projection-facts`. -/
 theorem frobSq_residual_eq_sub [DecidableEq q]
     {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) :
-    frobSq (residual Q A) = frobSq A - frobSq (Qᴴ * A) := by
+    frobSq (projResidual Q A) = frobSq A - frobSq (Qᴴ * A) := by
   rw [frobSq_eq_frobSq_conjTranspose_mul_add_residual hQ A]; ring
 
 /-- The residual contracts: `‖(I − QQᴴ)A‖_F² ≤ ‖A‖_F²`. Atlas `projection-facts`.
 atlas: projection-facts -/
 theorem frobSq_residual_le [DecidableEq q] {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q)
-    (A : Matrix m n 𝕜) : frobSq (residual Q A) ≤ frobSq A := by
+    (A : Matrix m n 𝕜) : frobSq (projResidual Q A) ≤ frobSq A := by
   rw [frobSq_eq_frobSq_proj_add_residual hQ A]
   exact le_add_of_nonneg_left (frobSq_nonneg _)
 
@@ -248,10 +208,6 @@ theorem frobSq_conjTranspose_mul_le [DecidableEq q] {Q : Matrix m q 𝕜}
     (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) : frobSq (Qᴴ * A) ≤ frobSq A := by
   rw [frobSq_eq_frobSq_conjTranspose_mul_add_residual hQ A]
   exact le_add_of_nonneg_right (frobSq_nonneg _)
-
-/-- Deprecated alias (F1, transpose twins removed): use `frobSq_conjTranspose_mul_le`. -/
-@[deprecated (since := "2026-10-13")]
-alias frobSq_transpose_mul_le := frobSq_conjTranspose_mul_le
 
 /-- The projection contracts: `‖QQᴴA‖_F² ≤ ‖A‖_F²`. Atlas `projection-facts`. -/
 theorem frobSq_proj_le [DecidableEq q] {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q)
@@ -267,9 +223,9 @@ theorem frobSq_proj_le [DecidableEq q] {Q : Matrix m q 𝕜} (hQ : HasOrthonorma
 atlas: projection-facts -/
 theorem frobSq_sub_mul_eq [DecidableEq q]
     {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) (B : Matrix q n 𝕜) :
-    frobSq (A - Q * B) = frobSq (residual Q A) + frobSq (Qᴴ * A - B) := by
-  have hdecomp : A - Q * B = residual Q A + Q * (Qᴴ * A - B) := by
-    rw [residual, Matrix.mul_sub]; abel
+    frobSq (A - Q * B) = frobSq (projResidual Q A) + frobSq (Qᴴ * A - B) := by
+  have hdecomp : A - Q * B = projResidual Q A + Q * (Qᴴ * A - B) := by
+    rw [projResidual, Matrix.mul_sub]; abel
   rw [hdecomp, frobSq_add_of_frobInner_eq_zero _ _ (by
       rw [frobInner_comm]; exact frobInner_mul_residual hQ _ A),
     frobSq_mul_left_of_orthonormal hQ.conjTranspose_mul_self]
@@ -278,7 +234,7 @@ theorem frobSq_sub_mul_eq [DecidableEq q]
 `‖(I − QQᴴ)A‖_F² ≤ ‖A − QB‖_F²` for every `B`. Atlas `projection-facts`. -/
 theorem frobSq_residual_le_frobSq_sub_mul [DecidableEq q] {Q : Matrix m q 𝕜}
     (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜) (B : Matrix q n 𝕜) :
-    frobSq (residual Q A) ≤ frobSq (A - Q * B) := by
+    frobSq (projResidual Q A) ≤ frobSq (A - Q * B) := by
   rw [frobSq_sub_mul_eq hQ A B]
   exact le_add_of_nonneg_right (frobSq_nonneg _)
 
@@ -290,9 +246,9 @@ atlas: projection-facts -/
 theorem frobSq_residual_le_of_eq_mul [DecidableEq q] {q₁ : Type*} [Fintype q₁]
     {Q₁ : Matrix m q₁ 𝕜} {Q₂ : Matrix m q 𝕜} (hQ₂ : HasOrthonormalCols Q₂)
     {C : Matrix q q₁ 𝕜} (hC : Q₁ = Q₂ * C) (A : Matrix m n 𝕜) :
-    frobSq (residual Q₂ A) ≤ frobSq (residual Q₁ A) := by
-  have h : residual Q₁ A = A - Q₂ * (C * (Q₁ᴴ * A)) := by
-    rw [residual, hC, Matrix.mul_assoc, ← hC]
+    frobSq (projResidual Q₂ A) ≤ frobSq (projResidual Q₁ A) := by
+  have h : projResidual Q₁ A = A - Q₂ * (C * (Q₁ᴴ * A)) := by
+    rw [projResidual, hC, Matrix.mul_assoc, ← hC]
   rw [h]
   exact frobSq_residual_le_frobSq_sub_mul hQ₂ A _
 
@@ -317,10 +273,6 @@ theorem conjTranspose_mul_eq_zero_comm {A : Matrix m n 𝕜} {B : Matrix m q �
     Aᴴ * B = 0 ↔ Bᴴ * A = 0 := by
   constructor <;> intro h <;> simpa using congrArg Matrix.conjTranspose h
 
-/-- Deprecated alias (F1, transpose twins removed): use `conjTranspose_mul_eq_zero_comm`. -/
-@[deprecated (since := "2026-10-13")]
-alias transpose_mul_eq_zero_comm := conjTranspose_mul_eq_zero_comm
-
 omit [Fintype q] in
 /-- `(PᴴQ)ᴴ(PᴴQ) = (QᴴP)(QᴴP)ᴴ`: the Gram matrix of `PᴴQ` is the outer Gram matrix of
 `QᴴP`. Atlas `projection-facts`. -/
@@ -340,11 +292,6 @@ theorem conjTranspose_mul_eq_zero_of_completion [DecidableEq m] [DecidableEq n] 
     Matrix.mul_one] at h
   simpa using h
 
-/-- Deprecated alias (F1, transpose twins removed): use
-`conjTranspose_mul_eq_zero_of_completion`. -/
-@[deprecated (since := "2026-10-13")]
-alias transpose_mul_eq_zero_of_completion := conjTranspose_mul_eq_zero_of_completion
-
 omit [Fintype n] in
 /-- For a completion `QQᴴ + QpQpᴴ = I` of `Q`, the residual lies in `range Qp`:
 `(I − QQᴴ)A = Qp (Qpᴴ (I − QQᴴ)A)` (Chen–Persson, proof of `lem:completion`, item 1).
@@ -352,17 +299,12 @@ Atlas `projection-facts`. -/
 theorem residual_eq_mul_conjTranspose_mul_residual [DecidableEq m] [DecidableEq q] {r : Type*}
     [Fintype r] {Q : Matrix m q 𝕜} {Qp : Matrix m r 𝕜} (hQ : HasOrthonormalCols Q)
     (hcomp : Q * Qᴴ + Qp * Qpᴴ = 1) (A : Matrix m n 𝕜) :
-    residual Q A = Qp * (Qpᴴ * residual Q A) := by
-  have h : (Q * Qᴴ + Qp * Qpᴴ) * residual Q A = residual Q A := by
+    projResidual Q A = Qp * (Qpᴴ * projResidual Q A) := by
+  have h : (Q * Qᴴ + Qp * Qpᴴ) * projResidual Q A = projResidual Q A := by
     rw [hcomp, Matrix.one_mul]
   rw [Matrix.add_mul, Matrix.mul_assoc, Matrix.mul_assoc, conjTranspose_mul_residual hQ A,
     Matrix.mul_zero, zero_add] at h
   exact h.symm
-
-/-- Deprecated alias (F1, transpose twins removed): use
-`residual_eq_mul_conjTranspose_mul_residual`. -/
-@[deprecated (since := "2026-10-13")]
-alias residual_eq_mul_transpose_mul_residual := residual_eq_mul_conjTranspose_mul_residual
 
 /-- Columns of a matrix as vectors of Euclidean space. -/
 private def col {k : ℕ} {ι : Type*} (V : Matrix (Fin k) ι 𝕜) (j : ι) :
@@ -427,10 +369,6 @@ theorem exists_unitary_completion {k : ℕ} {ι : Type*} [Fintype ι] [Decidable
     rw [hb (e j) ⟨j, rfl⟩]
     simp only [v, e.injective.extend_apply, col]
 
-/-- Deprecated alias (F1, transpose twins removed): use `exists_unitary_completion`. -/
-@[deprecated (since := "2026-10-13")]
-alias exists_orthogonal_completion := exists_unitary_completion
-
 /-- **Unitary complement.** A matrix `Q` with orthonormal columns has a complement `Qp` with
 orthonormal columns and `QQᴴ + QpQpᴴ = I` (here `Qp` has `k − q` columns). From
 `exists_unitary_completion`. Atlas `orthonormal-completion`.
@@ -458,10 +396,6 @@ theorem exists_unitary_complement {k q : ℕ} (Q : Matrix (Fin k) (Fin q) 𝕜)
     rw [← hWQ a j, ← hWQ b j]
     rfl
 
-/-- Deprecated alias (F1, transpose twins removed): use `exists_unitary_complement`. -/
-@[deprecated (since := "2026-10-13")]
-alias exists_orthonormal_complement := exists_unitary_complement
-
 /-! ### Projected matrices and vectors in a range -/
 
 omit [Fintype m] in
@@ -474,11 +408,6 @@ theorem mulVec_conjTranspose_mulVec_of_mem_range [Fintype m] [DecidableEq q]
   have h : Qᴴ *ᵥ (Q *ᵥ y) = y := by
     rw [Matrix.mulVec_mulVec, hQ.conjTranspose_mul_self, Matrix.one_mulVec]
   simp only [Matrix.mulVecLin_apply, h]
-
-/-- Deprecated alias (F1, transpose twins removed): use
-`mulVec_conjTranspose_mulVec_of_mem_range`. -/
-@[deprecated (since := "2026-10-13")]
-alias mulVec_transpose_mulVec_of_mem_range := mulVec_conjTranspose_mulVec_of_mem_range
 
 omit [Fintype q] in
 /-- The compression `Qᵀ A Q` of a symmetric `A` is symmetric (any `Q`).
@@ -528,10 +457,6 @@ theorem mul_conjTranspose_mul_eq_of_range_le [Fintype m] [DecidableEq q] {q' : T
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
   exact mulVec_conjTranspose_mulVec_of_mem_range hQ' (h ⟨v, rfl⟩)
 
-/-- Deprecated alias (F1, transpose twins removed): use `mul_conjTranspose_mul_eq_of_range_le`. -/
-@[deprecated (since := "2026-10-13")]
-alias mul_transpose_mul_eq_of_range_le := mul_conjTranspose_mul_eq_of_range_le
-
 omit [Fintype m] in
 /-- The orthogonal projector depends only on the range: if `Q`, `Q'` have orthonormal columns
 and the same range, then `QQᴴ = Q'Q'ᴴ`. Atlas `projection-facts`. -/
@@ -548,9 +473,5 @@ theorem mul_conjTranspose_eq_of_range_eq [Fintype m] [DecidableEq q] {q' : Type*
     _ = Q * (Qᴴ * Q') * Q'ᴴ := by
       simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
     _ = Q' * Q'ᴴ := by rw [h2]
-
-/-- Deprecated alias (F1, transpose twins removed): use `mul_conjTranspose_eq_of_range_eq`. -/
-@[deprecated (since := "2026-10-13")]
-alias mul_transpose_eq_of_range_eq := mul_conjTranspose_eq_of_range_eq
 
 end NLAlib

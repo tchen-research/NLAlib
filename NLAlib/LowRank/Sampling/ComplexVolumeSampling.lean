@@ -10,7 +10,6 @@ imported endpoint leaf. Source: `sa:volume-theorem`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Classical Matrix Matrix.Norms.Frobenius
 namespace NLAlib

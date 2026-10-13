@@ -12,7 +12,6 @@ row norm tail. Supports atlas `srht-ose`, source `sh:srht`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix NNReal ENNReal
 namespace NLAlib

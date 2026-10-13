@@ -15,7 +15,6 @@ Upstreaming note: `inner_gramSchmidtNormed_eq_zero_of_lt` is a one-line corollar
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory InnerProductSpace
 namespace NLAlib
 

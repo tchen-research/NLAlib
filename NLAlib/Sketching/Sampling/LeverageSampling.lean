@@ -12,7 +12,6 @@ Atlas: `leverage-sampling-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix NNReal ENNReal ComplexOrder Matrix.Norms.L2Operator
 namespace NLAlib

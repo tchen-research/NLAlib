@@ -11,7 +11,7 @@ left and right orthogonal matrices. Source: Bhatia (1997), Theorem IV.2.1.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 

@@ -94,7 +94,7 @@ theorem exists_ne_isometry_mul_sqrt_gram_eq_of_rank_lt {A U : Matrix m n ℝ}
   let P := Q * moorePenroseInverse Q
   let T := P + P - 1
   have hP : P * P = P := mul_moorePenroseInverse_isIdempotentElem Q
-  have hPs : Pᵀ = P := (mul_moorePenroseInverse_isSymm Q).eq
+  have hPs : Pᵀ = P := (mul_moorePenroseInverse_isHermitian Q).eq
   have hT : Tᵀ * T = 1 := by
     dsimp [T]
     simp only [Matrix.transpose_sub, Matrix.transpose_add, Matrix.transpose_one, hPs,

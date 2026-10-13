@@ -9,7 +9,6 @@ It supports the atlas result `schur-horn` without a spectral sorting of blocks.
 -/
 
 noncomputable section
-open scoped BigOperators
 
 namespace NLAlib
 

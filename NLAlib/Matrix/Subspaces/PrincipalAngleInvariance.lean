@@ -35,7 +35,7 @@ theorem exists_orthogonal_frame_transition {P P' : Matrix m n ℝ}
     (hr : LinearMap.range P.mulVecLin=LinearMap.range P'.mulVecLin) :
     ∃ T : Matrix n n ℝ, Tᵀ*T=1 ∧ T*Tᵀ=1 ∧ P*T=P' := by
   let T := Pᵀ*P'
-  have hPT : P*T=P' := mul_transpose_mul_eq_of_range_le hP hr.ge
+  have hPT : P*T=P' := mul_conjTranspose_mul_eq_of_range_le hP hr.ge
   have hTT : Tᵀ*T=1 := by
     have hgram : (P*T)ᵀ*(P*T)=Tᵀ*T := by
       rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Pᵀ P,

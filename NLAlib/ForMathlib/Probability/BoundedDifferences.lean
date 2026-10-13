@@ -14,7 +14,6 @@ Source: `open_problems_operator_rederivations.tex`, `eq:bd` and
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open MeasureTheory ProbabilityTheory
 

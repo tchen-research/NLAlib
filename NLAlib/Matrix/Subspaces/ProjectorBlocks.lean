@@ -30,7 +30,7 @@ Stewart–Sun §I.5. -/
 theorem specNorm_one_sub_projector_le_one {P : Matrix n n ℝ}
     (hs : P.IsSymm) (hp : IsIdempotentElem P) : specNorm (1-P) ≤ 1 := by
   have hh := one_sub_projector_isSymm_isIdempotentElem hs hp
-  exact specNorm_le_one_of_isSymm_of_isIdempotentElem hh.1 hh.2
+  exact Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem hh.1 hh.2
 
 omit [DecidableEq n] in
 /-- Left projection and its complement split the Frobenius square exactly.

@@ -9,7 +9,6 @@ energies. Source: operator manuscript `sh:parseval`, `sh:count-second`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 open Matrix
 open scoped Matrix

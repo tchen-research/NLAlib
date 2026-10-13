@@ -3,7 +3,6 @@ Ported to NLAlib from commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b.
 Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Light-sector contraction estimate
@@ -17,7 +16,6 @@ namespace NLAlib.SparseSketch
 
 namespace Light
 
-open scoped BigOperators
 
 /-- The first-index contribution to an ordered off-diagonal sum.
 

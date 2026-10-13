@@ -10,7 +10,6 @@ actual `√(n/k) R H D` matrix. Source: `sh:srht-ose`, atlas `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Classical Matrix Matrix.Norms.L2Operator ComplexOrder
 namespace NLAlib
 

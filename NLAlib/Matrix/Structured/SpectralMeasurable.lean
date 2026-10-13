@@ -26,10 +26,10 @@ theorem measurable_specNorm_residual_of {γ m n q : Type*} [MeasurableSpace γ]
     [Fintype m] [Fintype n] [Fintype q] [DecidableEq m] [DecidableEq n]
     (A : Matrix m n ℝ) {Q : γ → Matrix m q ℝ}
     (hQ : ∀ i j, Measurable fun z => Q z i j) :
-    Measurable fun z => specNorm (residual (Q z) A) := by
+    Measurable fun z => specNorm (projResidual (Q z) A) := by
   apply measurable_specNorm_of_entries
   intro i j
-  simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.sub_apply,
+  simp only [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.sub_apply,
       Matrix.mul_apply,
     Matrix.transpose_apply]
   fun_prop

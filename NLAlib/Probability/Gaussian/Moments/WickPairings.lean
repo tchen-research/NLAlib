@@ -11,7 +11,6 @@ Supports atlas `isserlis`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix
 namespace NLAlib

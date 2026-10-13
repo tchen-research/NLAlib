@@ -8,7 +8,6 @@ polynomials certify multiplicities and traces certify exact coupling size.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open Polynomial
 open scoped Matrix
 namespace NLAlib

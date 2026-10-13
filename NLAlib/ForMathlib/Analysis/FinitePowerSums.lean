@@ -9,7 +9,6 @@ These scalar facts support the Schatten comparisons in Bhatia (1997), §IV.2.
 -/
 
 noncomputable section
-open scoped BigOperators
 
 namespace NLAlib
 

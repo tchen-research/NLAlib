@@ -217,13 +217,13 @@ theorem mapAbsCondition_toEuclideanCLM (A : Matrix n n ℝ) (x : EuclideanSpace 
 by its matrix condition number. Gautschi (2004), Definitions 2.3--2.4;
 frontier derivations `psd:map-condition`.
 atlas: condition-number-of-map-def (partial) -/
-theorem mapNormRelativeCondition_toEuclideanCLM_le_conditionNumber
+theorem mapNormRelativeCondition_toEuclideanCLM_le_moorePenroseConditionNumber
     (A : Matrix n n ℝ) (hA : IsUnit A) (x : EuclideanSpace ℝ n) :
     mapNormRelativeCondition (Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A) x ≤
-      conditionNumber A := by
+      moorePenroseConditionNumber A := by
   by_cases hx : Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A x = 0
   · simp only [mapNormRelativeCondition, hx, norm_zero, div_zero]
-    exact conditionNumber_nonneg A
+    exact moorePenroseConditionNumber_nonneg A
   have hBound : ‖x‖ ≤ specNorm A⁻¹ *
       ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A x‖ := by
     calc
@@ -232,7 +232,7 @@ theorem mapNormRelativeCondition_toEuclideanCLM_le_conditionNumber
         rw [toEuclideanCLM_inv_apply_apply hA]
       _ ≤ _ := norm_toEuclideanLin_apply_le A⁻¹ _
   rw [mapNormRelativeCondition, mapAbsCondition_toEuclideanCLM,
-    conditionNumber_eq_mul_specNorm_inv hA]
+    moorePenroseConditionNumber_eq_mul_specNorm_inv hA]
   apply (div_le_iff₀ (norm_pos_iff.mpr hx)).mpr
   calc
     _ ≤ specNorm A * (specNorm A⁻¹ *
@@ -261,12 +261,12 @@ theorem map_conditioning_characterizations
       mapNormRelativeCondition g y = |y * deriv g y / g y|) ∧
     (∀ A : Matrix n n ℝ, IsUnit A → ∀ y : EuclideanSpace ℝ n,
       mapNormRelativeCondition (Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A) y ≤
-        conditionNumber A) :=
+        moorePenroseConditionNumber A) :=
   ⟨specNorm_euclideanJacobian f x, componentRelativeConditionMatrix_apply f x,
     mapComponentRelativeCondition_eq_mapAbsCondition hf,
     mapComponentRelativeCondition_le_diagonal_scaling f x,
     fun g y => ⟨mapAbsCondition_eq_abs_deriv g y,
       mapNormRelativeCondition_eq_abs_mul_deriv_div g y⟩,
-    fun A hA y => mapNormRelativeCondition_toEuclideanCLM_le_conditionNumber A hA y⟩
+    fun A hA y => mapNormRelativeCondition_toEuclideanCLM_le_moorePenroseConditionNumber A hA y⟩
 
 end NLAlib

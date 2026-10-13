@@ -16,7 +16,7 @@ inverse-Wishart moments enter these deterministic identities.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 
@@ -124,7 +124,7 @@ theorem specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive
   have hn : specNorm (moorePenroseInverse A) =
       specNorm (rectDiag (fun k => (singularValues A k)⁻¹) :
         Matrix (Fin n) (Fin m) 𝕜) := by
-    rw [hSVD.moorePenroseInverse_eq_mul_conjTranspose,
+    rw [hSVD.moorePenroseInverse_eq,
       specNorm_mul_conjTranspose_right_of_conjTranspose_mul_self hSVD.conjTranspose_mul_left,
       specNorm_mul_left_of_conjTranspose_mul_self hSVD.conjTranspose_mul_right]
   have hsq : specNorm (moorePenroseInverse A) ^ 2 = (singularValues A r)⁻¹ ^ 2 := by
@@ -141,7 +141,7 @@ theorem moorePenroseInverse_eq_zero_of_rank_eq_zero {m n : ℕ}
   have hσ : ∀ k : ℕ, singularValues A k = 0 := fun k =>
     singularValues_eq_zero_of_rank_le A (by rw [hr]; exact Nat.zero_le k)
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
-  rw [hSVD.moorePenroseInverse_eq_mul_conjTranspose]
+  rw [hSVD.moorePenroseInverse_eq]
   have hd : (rectDiag (fun k => (singularValues A k)⁻¹) :
       Matrix (Fin n) (Fin m) 𝕜) = 0 := by
     ext i j

@@ -9,7 +9,6 @@ linear characteristic factor in both rank-one and bordered constructions.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open Polynomial
 open scoped Matrix
 namespace NLAlib

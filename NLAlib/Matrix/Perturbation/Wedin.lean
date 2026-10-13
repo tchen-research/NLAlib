@@ -102,9 +102,9 @@ theorem max_specNorm_sinePrincipalAngles_le_specNorm_div
   apply h.trans
   apply div_le_div_of_nonneg_right _ hδ.le
   apply max_le
-  · exact specNorm_mul_frame_le (hasOrthonormalCols_headColumns hhat.transpose_mul_right _) E
+  · exact specNorm_mul_frame_le (hasOrthonormalCols_headColumns hhat.conjTranspose_mul_right _) E
   · simpa only [specNorm_transpose] using
-      specNorm_mul_frame_le (hasOrthonormalCols_headColumns hhat.transpose_mul_left _) Eᵀ
+      specNorm_mul_frame_le (hasOrthonormalCols_headColumns hhat.conjTranspose_mul_left _) Eᵀ
 
 /-- The leading singular-space population-gap operator bound holds without
 any smallness hypothesis on the perturbation. Wedin (1972), Section 3; Weyl
@@ -143,11 +143,11 @@ theorem max_specNorm_sinePrincipalAngles_le_two_mul_specNorm_div_population_gap
     nlinarith
   · have hM : M ≤ 1 := max_le
       (specNorm_sinePrincipalAngles_le_one
-        (hasOrthonormalCols_headColumns hA.transpose_mul_left _)
-        (hasOrthonormalCols_headColumns hhat.transpose_mul_left _))
+        (hasOrthonormalCols_headColumns hA.conjTranspose_mul_left _)
+        (hasOrthonormalCols_headColumns hhat.conjTranspose_mul_left _))
       (specNorm_sinePrincipalAngles_le_one
-        (hasOrthonormalCols_headColumns hA.transpose_mul_right _)
-        (hasOrthonormalCols_headColumns hhat.transpose_mul_right _))
+        (hasOrthonormalCols_headColumns hA.conjTranspose_mul_right _)
+        (hasOrthonormalCols_headColumns hhat.conjTranspose_mul_right _))
     have hh := mul_le_mul_of_nonneg_right hM hg.le
     change M * (singularValues A (k - 1) - singularValues A k) ≤ _
     nlinarith

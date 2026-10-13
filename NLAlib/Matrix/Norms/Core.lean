@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import NLAlib.Matrix.Norms.Frobenius
+import NLAlib.Matrix.Basic.Orthonormal
 
 /-!
 # Matrix norms
@@ -228,9 +229,6 @@ theorem specNorm_le_one_of_orthonormal {P : Matrix m n 𝕜} (hP : Pᴴ * P = 1)
     exact specNorm_one_le
   nlinarith [norm_nonneg P]
 
-@[deprecated (since := "2026-10-13")]
-alias specNorm_le_one_of_conjTranspose_mul_self := specNorm_le_one_of_orthonormal
-
 /-- Spectral isometry on the range of a matrix with orthonormal columns: if `PᴴP = I` and
 `X = P (Pᴴ X)` (i.e. `range X ⊆ range P`), then `‖PᴴX‖₂ = ‖X‖₂`. Standard (used in
 Chen–Persson, proof of `lem:tGN-core`, as `‖Q⊥ᵀA⊥‖ = ‖A⊥‖`); atlas `norms-frob-spec`. -/
@@ -248,9 +246,6 @@ theorem specNorm_conjTranspose_mul_of_eq_mul [DecidableEq p] {P : Matrix m n �
       _ ≤ specNorm P * specNorm (Pᴴ * X) := specNorm_mul_le _ _
       _ ≤ 1 * specNorm (Pᴴ * X) := by gcongr; exact specNorm_nonneg _
       _ = specNorm (Pᴴ * X) := one_mul _
-
-@[deprecated (since := "2026-10-13")]
-alias specNorm_transpose_mul_of_eq_mul := specNorm_conjTranspose_mul_of_eq_mul
 
 /-- `‖A‖₂ ≤ ‖A‖_F`. Standard (Golub–Van Loan, 4th ed., eq. (2.3.7)); atlas `norms-frob-spec`.
 atlas: norms-frob-spec -/
@@ -328,9 +323,6 @@ theorem specNorm_mul_conjTranspose_self [DecidableEq m] (A : Matrix m n 𝕜) :
   rw [Matrix.conjTranspose_conjTranspose] at h
   rw [specNorm_eq_norm, h, sq, ← specNorm_eq_norm, specNorm_conjTranspose]
 
-@[deprecated (since := "2026-10-13")]
-alias specNorm_mul_transpose_self := specNorm_mul_conjTranspose_self
-
 /-- An orthogonal projector (Hermitian idempotent `P`) has spectral norm at most `1`
 (it is `0` or `1`). Proof: `‖P‖₂ = ‖PᴴP‖₂ = ‖P‖₂²`. Standard (Golub–Van Loan, 4th ed., §2.5.1);
 audit G0 C1; atlas `norms-frob-spec`, `projection-facts`.
@@ -345,11 +337,7 @@ theorem _root_.Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem {P : Matri
   rw [not_le] at hlt
   nlinarith
 
-@[deprecated (since := "2026-10-13")]
-alias specNorm_le_one_of_isSymm_of_isIdempotentElem :=
-  Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem
-
-/-- The residual `A − Q(QᴴA) = (I − QQᴴ)A` (`NLAlib.residual Q A`, which unfolds to this
+/-- The residual `A − Q(QᴴA) = (I − QQᴴ)A` (`NLAlib.projResidual Q A`, which unfolds to this
 expression) has spectral norm at most `‖A‖₂` when `QᴴQ = I` (`NLAlib.HasOrthonormalCols Q`
 unfolded). Stated without `residual` because `NLAlib.Matrix.Subspaces.Projections` imports this file.
 Standard (HMT 2011, §8.4); audit G0 C1 (`specNorm_residual_le`); atlas `projection-facts`.
@@ -376,9 +364,6 @@ theorem specNorm_sub_mul_conjTranspose_mul_le [DecidableEq p] {Q : Matrix m p �
         (specNorm_nonneg A)
     _ = specNorm A := one_mul _
 
-@[deprecated (since := "2026-10-13")]
-alias specNorm_sub_mul_transpose_mul_le := specNorm_sub_mul_conjTranspose_mul_le
-
 /-- Block bound for row-orthogonal summands: if `XYᴴ = 0` then
 `‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²`, because `(X + Y)(X + Y)ᴴ = XXᴴ + YYᴴ`. Standard (used in HMT 2011,
 proof of Thm 9.1); audit G0 C1; atlas `norms-frob-spec`.
@@ -395,10 +380,6 @@ theorem specNorm_add_sq_le_of_mul_conjTranspose_eq_zero {X Y : Matrix m n 𝕜} 
   rw [← specNorm_mul_conjTranspose_self, ← specNorm_mul_conjTranspose_self,
     ← specNorm_mul_conjTranspose_self, hG]
   exact specNorm_add_le _ _
-
-@[deprecated (since := "2026-10-13")]
-alias specNorm_add_sq_le_of_mul_transpose_eq_zero :=
-  specNorm_add_sq_le_of_mul_conjTranspose_eq_zero
 
 /-- Block bound for column-orthogonal summands: if `XᴴY = 0` then
 `‖X + Y‖₂² ≤ ‖X‖₂² + ‖Y‖₂²` (conjugate transpose of

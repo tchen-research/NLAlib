@@ -11,7 +11,7 @@ clauses remain available in the imported topic modules.
 
 noncomputable section
 open scoped Matrix Matrix.Norms.L2Operator
-open scoped BigOperators ENNReal
+open scoped ENNReal
 namespace NLAlib
 universe u_1 u_2
 

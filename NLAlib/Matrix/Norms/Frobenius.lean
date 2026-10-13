@@ -84,7 +84,6 @@ theorem frobInner_eq_trace (A B : Matrix m n 𝕜) :
   simp only [Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply]
   rw [Finset.sum_comm]
 
-@[deprecated (since := "2026-10-13")] alias frobInner_eq_re_trace := frobInner_eq_trace
 
 /-- The Frobenius pairing is also the real part of the trace of the row cross-product,
 `⟨A, B⟩_F = Re tr(ABᴴ)`. Horn–Johnson §7.4. -/
@@ -435,9 +434,6 @@ atlas: norms-frob-spec -/
 theorem frobSq_mul_left_of_orthonormal [DecidableEq p] {Q : Matrix m p 𝕜}
     (hQ : Qᴴ * Q = 1) (X : Matrix p n 𝕜) : frobSq (Q * X) = frobSq X :=
   frobInner_mul_left_of_orthonormal hQ X X
-
-@[deprecated (since := "2026-10-13")]
-alias frobSq_mul_left_of_conjTranspose_mul_self := frobSq_mul_left_of_orthonormal
 
 /-- Unitary invariance, right: `‖X Vᴴ‖_F² = ‖X‖_F²` when `VᴴV = I`. Atlas `norms-frob-spec`. -/
 theorem frobSq_mul_right_of_orthonormal [DecidableEq p] {V : Matrix n p 𝕜}

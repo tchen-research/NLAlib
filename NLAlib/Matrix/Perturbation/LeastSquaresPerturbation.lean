@@ -136,28 +136,28 @@ theorem norm_least_squares_residual_sub_le {A B : Matrix m n ℝ}
 
 /-- Relative matrix perturbations below the condition-number threshold
 preserve full column rank. Higham, Theorem 20.1. -/
-theorem rank_add_eq_card_of_conditionNumber_mul_lt_one {A E : Matrix m n ℝ}
+theorem rank_add_eq_card_of_moorePenroseConditionNumber_mul_lt_one {A E : Matrix m n ℝ}
     {ε : ℝ} (hA : A.rank=Fintype.card n) (hE : specNorm E ≤ ε*specNorm A)
-    (hsmall : conditionNumber A*ε < 1) : (A+E).rank=Fintype.card n := by
+    (hsmall : moorePenroseConditionNumber A*ε < 1) : (A+E).rank=Fintype.card n := by
   apply rank_add_eq_card_of_pinv_mul_specNorm_lt_one hA
   calc
     _ ≤ specNorm (moorePenroseInverse A)*(ε*specNorm A) :=
       mul_le_mul_of_nonneg_left hE (specNorm_nonneg _)
-    _ = conditionNumber A*ε := by unfold conditionNumber; ring
+    _ = moorePenroseConditionNumber A*ε := by unfold moorePenroseConditionNumber; ring
     _ < 1 := hsmall
 
 /-- The perturbed pseudoinverse norm retains the condition-number
 denominator under the source's relative data hypothesis. Higham, Theorem 20.1. -/
-theorem specNorm_pinv_add_le_of_conditionNumber_mul_lt_one {A E : Matrix m n ℝ}
+theorem specNorm_pinv_add_le_of_moorePenroseConditionNumber_mul_lt_one {A E : Matrix m n ℝ}
     {ε : ℝ} (hA : A.rank=Fintype.card n) (hE : specNorm E ≤ ε*specNorm A)
-    (hsmall : conditionNumber A*ε < 1) :
+    (hsmall : moorePenroseConditionNumber A*ε < 1) :
     specNorm (moorePenroseInverse (A+E)) ≤
-      specNorm (moorePenroseInverse A)/(1-conditionNumber A*ε) := by
-  have hp : specNorm (moorePenroseInverse A)*specNorm E ≤ conditionNumber A*ε := by
+      specNorm (moorePenroseInverse A)/(1-moorePenroseConditionNumber A*ε) := by
+  have hp : specNorm (moorePenroseInverse A)*specNorm E ≤ moorePenroseConditionNumber A*ε := by
     calc
       _ ≤ specNorm (moorePenroseInverse A)*(ε*specNorm A) :=
         mul_le_mul_of_nonneg_left hE (specNorm_nonneg _)
-      _ = _ := by unfold conditionNumber; ring
+      _ = _ := by unfold moorePenroseConditionNumber; ring
   exact (specNorm_pinv_add_le_of_rank_eq_card hA (hp.trans_lt hsmall)).trans
     (div_le_div_of_nonneg_left (specNorm_nonneg _) (sub_pos.mpr hsmall)
       (sub_le_sub_left hp 1))
@@ -167,18 +167,18 @@ before dividing by the nonzero solution. Higham, Theorem 20.1; Wedin §5. -/
 theorem norm_least_squares_sub_le_relative_data {A E : Matrix m n ℝ} {ε : ℝ}
     (hA : A.rank=Fintype.card n) (_hε : 0 ≤ ε)
     (hE : specNorm E ≤ ε*specNorm A) (b f : EuclideanSpace ℝ m)
-    (hf : ‖f‖ ≤ ε*‖b‖) (hsmall : conditionNumber A*ε < 1) :
+    (hf : ‖f‖ ≤ ε*‖b‖) (hsmall : moorePenroseConditionNumber A*ε < 1) :
     let x := (moorePenroseInverse A).toEuclideanLin b
     let y := (moorePenroseInverse (A+E)).toEuclideanLin (b+f)
     let r := b-A.toEuclideanLin x
-    ‖y-x‖ ≤ specNorm (moorePenroseInverse A)/(1-conditionNumber A*ε)*
+    ‖y-x‖ ≤ specNorm (moorePenroseInverse A)/(1-moorePenroseConditionNumber A*ε)*
       (ε*‖b‖+ε*specNorm A*‖x‖+specNorm (moorePenroseInverse A)*ε*specNorm A*‖r‖) := by
   intro x y r
   have hp : specNorm (moorePenroseInverse A)*specNorm E < 1 := by
     calc
       _ ≤ specNorm (moorePenroseInverse A)*(ε*specNorm A) :=
         mul_le_mul_of_nonneg_left hE (specNorm_nonneg _)
-      _ = conditionNumber A*ε := by unfold conditionNumber; ring
+      _ = moorePenroseConditionNumber A*ε := by unfold moorePenroseConditionNumber; ring
       _ < 1 := hsmall
   have ht : ‖f‖+specNorm E*‖x‖+specNorm (moorePenroseInverse A)*specNorm E*‖r‖ ≤
       ε*‖b‖+ε*specNorm A*‖x‖+specNorm (moorePenroseInverse A)*ε*specNorm A*‖r‖ := by
@@ -187,7 +187,7 @@ theorem norm_least_squares_sub_le_relative_data {A E : Matrix m n ℝ} {ε : ℝ
       (mul_le_mul_of_nonneg_left hE (specNorm_nonneg (moorePenroseInverse A))) (norm_nonneg r)
     nlinarith
   exact (norm_least_squares_sub_le_pinv hA hp b f).trans
-    (mul_le_mul (specNorm_pinv_add_le_of_conditionNumber_mul_lt_one hA hE hsmall) ht
+    (mul_le_mul (specNorm_pinv_add_le_of_moorePenroseConditionNumber_mul_lt_one hA hE hsmall) ht
       (by
         exact add_nonneg (add_nonneg (norm_nonneg f)
           (mul_nonneg (specNorm_nonneg E) (norm_nonneg x)))
@@ -199,18 +199,18 @@ relative data hypotheses. Higham, Theorem 20.1; Wedin §5. -/
 theorem norm_least_squares_residual_sub_le_relative_data {A E : Matrix m n ℝ} {ε : ℝ}
     (hA : A.rank=Fintype.card n) (hE : specNorm E ≤ ε*specNorm A)
     (b f : EuclideanSpace ℝ m) (hf : ‖f‖ ≤ ε*‖b‖)
-    (hsmall : conditionNumber A*ε < 1) :
+    (hsmall : moorePenroseConditionNumber A*ε < 1) :
     let r := b-A.toEuclideanLin ((moorePenroseInverse A).toEuclideanLin b)
     let s := (b+f)-(A+E).toEuclideanLin ((moorePenroseInverse (A+E)).toEuclideanLin (b+f))
-    ‖r-s‖ ≤ (1+conditionNumber A)*ε*‖b‖ := by
+    ‖r-s‖ ≤ (1+moorePenroseConditionNumber A)*ε*‖b‖ := by
   intro r s
-  have hB := rank_add_eq_card_of_conditionNumber_mul_lt_one hA hE hsmall
+  have hB := rank_add_eq_card_of_moorePenroseConditionNumber_mul_lt_one hA hE hsmall
   have h := norm_least_squares_residual_sub_le (A := A) (B := A+E) (hA.trans hB.symm) b f
   simp only [add_sub_cancel_left] at h
   have h1 := mul_le_mul_of_nonneg_right
     (mul_le_mul_of_nonneg_left hE (specNorm_nonneg (moorePenroseInverse A))) (norm_nonneg b)
   apply h.trans
-  unfold conditionNumber
+  unfold moorePenroseConditionNumber
   nlinarith
 
 end NLAlib

@@ -13,7 +13,7 @@ labels and rank endpoints are supported. Gu–Eisenstat 1996, Theorem 3.2.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 800000

@@ -27,7 +27,7 @@ Wedin (1972), Section 3. -/
 theorem sub_truncatedMatrix_mul_headColumns_eq_zero (h : IsSVD A U V) (hkn : k ≤ n) :
     (A - h.truncatedMatrix k) * headColumns V hkn = 0 := by
   have hV : HasOrthonormalCols (headColumns V hkn) :=
-    hasOrthonormalCols_headColumns h.transpose_mul_right hkn
+    hasOrthonormalCols_headColumns h.conjTranspose_mul_right hkn
   rw [← h.mul_headColumns_projector hkn, Matrix.sub_mul,
     Matrix.mul_assoc A (headColumns V hkn * (headColumns V hkn)ᵀ),
     Matrix.mul_assoc (headColumns V hkn), (show (headColumns V hkn)ᵀ * headColumns V hkn = 1 from hV), Matrix.mul_one, sub_self]
@@ -37,9 +37,9 @@ left projected original multiplication. Wedin (1972), Section 3; the ambient
 form includes every unmatched rectangular null direction. -/
 theorem sub_truncatedMatrix_mul_residual_headColumns (h : IsSVD A U V)
     (hkm : k ≤ m) (hkn : k ≤ n) (Z : Matrix (Fin n) (Fin p) ℝ) :
-    (A - h.truncatedMatrix k) * residual (headColumns V hkn) Z =
-      residual (headColumns U hkm) (A * Z) := by
-  rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub, ← Matrix.mul_assoc (A - h.truncatedMatrix k),
+    (A - h.truncatedMatrix k) * projResidual (headColumns V hkn) Z =
+      projResidual (headColumns U hkm) (A * Z) := by
+  rw [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub, ← Matrix.mul_assoc (A - h.truncatedMatrix k),
     h.sub_truncatedMatrix_mul_headColumns_eq_zero hkn, Matrix.zero_mul, sub_zero,
     ← h.residual_headColumns_eq_sub_truncatedMatrix hkm, residual_mul]
 
@@ -47,8 +47,8 @@ theorem sub_truncatedMatrix_mul_residual_headColumns (h : IsSVD A U V)
 Wedin (1972), Section 3; no square-shape or nonempty-complement premise occurs. -/
 theorem sub_truncatedMatrix_transpose_mul_residual_headColumns (h : IsSVD A U V)
     (hkm : k ≤ m) (hkn : k ≤ n) (Z : Matrix (Fin m) (Fin p) ℝ) :
-    (A - h.truncatedMatrix k)ᵀ * residual (headColumns U hkm) Z =
-      residual (headColumns V hkn) (Aᵀ * Z) := by
+    (A - h.truncatedMatrix k)ᵀ * projResidual (headColumns U hkm) Z =
+      projResidual (headColumns V hkn) (Aᵀ * Z) := by
   have hh := h.transpose.sub_truncatedMatrix_mul_residual_headColumns hkn hkm Z
   rw [h.truncatedMatrix_transpose k] at hh
   simpa only [Matrix.transpose_sub] using hh

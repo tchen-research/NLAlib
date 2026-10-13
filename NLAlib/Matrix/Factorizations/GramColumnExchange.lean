@@ -8,7 +8,7 @@ Gu–Eisenstat 1996, Theorem 3.2; derivations §alg:rrqr.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 

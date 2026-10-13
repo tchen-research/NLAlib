@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.IIDComparison.ExactMomentTransfer
 import NLAlib.Sketching.Sparse.MomentMethod.SparseStackTheorem
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Exact-s subspace projection tail
@@ -15,7 +14,7 @@ Ported from `SparseFockFormal.UniformExactSMainTheorem` at commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator
 
 namespace NLAlib.SparseSketch.UniformSparse
 

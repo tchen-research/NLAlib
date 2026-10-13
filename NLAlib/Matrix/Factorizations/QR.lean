@@ -356,7 +356,7 @@ end Identities
 
 /-- For every `A : (m+1) × (n+1)` there is an orthogonal `W` with `WᵀA` zero below the pivot in
 its first column: `W` completes `a₀ / ‖a₀‖` to an orthonormal basis
-(`exists_orthogonal_completion`), or `W = I` when `a₀ = 0`. The reflector-free form of one
+(`exists_unitary_completion`), or `W = I` when `a₀ = 0`. The reflector-free form of one
 Householder step. Golub–Van Loan 2013, §5.2.2. -/
 theorem exists_transpose_mul_apply_succ_zero_eq_zero {m n : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (n + 1)) ℝ) :
@@ -381,7 +381,7 @@ theorem exists_transpose_mul_apply_succ_zero_eq_zero {m n : ℕ}
         rw [dotProduct, Finset.sum_div]
         exact Finset.sum_congr rfl fun k _ => by simp only [col_apply]; ring]
       rw [hc2, div_self ha]
-    obtain ⟨W, hW, hWV⟩ := exists_orthogonal_completion V hV
+    obtain ⟨W, hW, hWV⟩ := exists_unitary_completion V hV
       ⟨fun _ => 0, fun a b _ => Subsingleton.elim a b⟩
     refine ⟨W, hW, fun i => ?_⟩
     have hA : ∀ k, A k 0 = c * W k 0 := fun k => by

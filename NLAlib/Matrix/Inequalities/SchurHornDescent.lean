@@ -8,7 +8,7 @@ the residual-weighted spectral pair is strictly inverted. Source: Schur–Horn
 variational rederivation, equation (6), supporting atlas `schur-horn`.
 -/
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

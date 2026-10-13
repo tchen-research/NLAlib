@@ -174,7 +174,7 @@ atlas `weyl-mirsky`, `projection-facts`.
 atlas: projection-facts -/
 theorem singularValues_residual_le {q : Type*} [Fintype q] [DecidableEq q]
     {Q : Matrix m q 𝕜} (hQ : HasOrthonormalCols Q) (A : Matrix m n 𝕜)
-    (k : ℕ) : singularValues (residual Q A) k ≤ singularValues A k := by
+    (k : ℕ) : singularValues (projResidual Q A) k ≤ singularValues A k := by
   classical
   have hP : specNorm (1 - Q * Qᴴ : Matrix m m 𝕜) ≤ 1 := by
     have h := specNorm_sub_mul_conjTranspose_mul_le hQ (1 : Matrix m m 𝕜)

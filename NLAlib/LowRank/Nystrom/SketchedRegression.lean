@@ -33,7 +33,7 @@ are `NLAlib.specNorm_one_le`, `NLAlib.specNorm_le_one_of_orthonormal` and
 * `Qp : Matrix m r ℝ` is the paper's `Q⊥`: orthonormal columns (`hQp`), `Qᵀ Q⊥ = 0`
   (`hQQp`) and completeness `Q Qᵀ + Q⊥ Q⊥ᵀ = I` (`hcomp`), i.e. `[Q  Q⊥]` is orthogonal;
 * `Ψ : Matrix m s ℝ` is the (fixed) sketch, `G₁ := Ψᵀ Q`, `G₂ := Ψᵀ Q⊥`;
-* `residual Q A = A - Q(QᵀA)` is the paper's `E = (I - QQᵀ)A` (called `A⊥` in `lem:tGN-core`);
+* `projResidual Q A = A - Q(QᵀA)` is the paper's `E = (I - QQᵀ)A` (called `A⊥` in `lem:tGN-core`);
 * `hG₁ : IsUnit (G₁ᵀ G₁)` encodes "`G₁` has full column rank"; the paper's `G₁†` is `pinvL G₁`
   and the only property used is `pinvL G₁ * G₁ = 1` (`NLAlib.pinvL_mul`);
 * `sketchedCore Q Ψ A = pinvL (ΨᵀQ) (ΨᵀA)` is the fitted core `X̂ = (ΨᵀQ)† ΨᵀA`,
@@ -46,7 +46,6 @@ Atlas: `sketched-regression`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open scoped Matrix
 
@@ -72,7 +71,7 @@ def sketchedOutput (Q : Matrix m q ℝ) (Ψ : Matrix m s ℝ) (A : Matrix m n �
 out. Atlas `sketched-regression`.
 atlas: sketched-regression -/
 def coreNoise (Q : Matrix m q ℝ) (Ψ : Matrix m s ℝ) (A : Matrix m n ℝ) :
-    Matrix q n ℝ := pinvL (Ψᵀ * Q) * (Ψᵀ * residual Q A)
+    Matrix q n ℝ := pinvL (Ψᵀ * Q) * (Ψᵀ * projResidual Q A)
 
 /-! ### Facts that need only `QᵀQ = I` -/
 
@@ -111,7 +110,7 @@ omit [Fintype s] in
 /-- `Ψᵀ E = G₂ (Q⊥ᵀ E)` where `G₂ = Ψᵀ Q⊥` (Chen–Persson, proof of `lem:completion`).
 Atlas `sketched-regression`. -/
 theorem transpose_mul_residual_eq (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) :
-    Ψᵀ * residual Q A = (Ψᵀ * Qp) * (Qpᵀ * residual Q A) := by
+    Ψᵀ * projResidual Q A = (Ψᵀ * Qp) * (Qpᵀ * projResidual Q A) := by
   conv_lhs => rw [residual_eq_mul_conjTranspose_mul_residual hQ hcomp A,
     Matrix.conjTranspose_eq_transpose_of_trivial]
   rw [Matrix.mul_assoc]
@@ -120,10 +119,10 @@ omit [Fintype s] in
 /-- First display in the proof of `lem:completion` (Chen–Persson):
 `Ψᵀ A = G₁ (QᵀA) + G₂ (Q⊥ᵀ E)` with `G₁ = ΨᵀQ`, `G₂ = ΨᵀQ⊥`. Atlas `sketched-regression`. -/
 theorem sketch_decomp (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) :
-    Ψᵀ * A = (Ψᵀ * Q) * (Qᵀ * A) + (Ψᵀ * Qp) * (Qpᵀ * residual Q A) := by
-  calc Ψᵀ * A = Ψᵀ * (Q * (Qᵀ * A) + residual Q A) := by
+    Ψᵀ * A = (Ψᵀ * Q) * (Qᵀ * A) + (Ψᵀ * Qp) * (Qpᵀ * projResidual Q A) := by
+  calc Ψᵀ * A = Ψᵀ * (Q * (Qᵀ * A) + projResidual Q A) := by
         rw [← Matrix.conjTranspose_eq_transpose_of_trivial Q, mul_conjTranspose_mul_add_residual]
-    _ = (Ψᵀ * Q) * (Qᵀ * A) + (Ψᵀ * Qp) * (Qpᵀ * residual Q A) := by
+    _ = (Ψᵀ * Q) * (Qᵀ * A) + (Ψᵀ * Qp) * (Qpᵀ * projResidual Q A) := by
       rw [Matrix.mul_add, ← Matrix.mul_assoc, transpose_mul_residual_eq Q Qp Ψ A hQ hcomp]
 
 /-- Second display in the proof of `lem:completion`, also `eq:tGN-fitted-core` (Chen–Persson;
@@ -132,7 +131,7 @@ Atlas `sketched-regression`. -/
 theorem sketchedCore_eq (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1)
     (hG₁ : IsUnit ((Ψᵀ * Q)ᵀ * (Ψᵀ * Q))) :
     sketchedCore Q Ψ A =
-      Qᵀ * A + pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * residual Q A) := by
+      Qᵀ * A + pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * projResidual Q A) := by
   unfold sketchedCore
   rw [sketch_decomp Q Qp Ψ A hQ hcomp, Matrix.mul_add,
     ← Matrix.mul_assoc (pinvL (Ψᵀ * Q)) (Ψᵀ * Q), pinvL_mul (G := Ψᵀ * Q) hG₁, Matrix.one_mul,
@@ -143,10 +142,10 @@ theorem sketchedCore_eq (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ + Qp * Qp�
 theorem error_decomp (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1)
     (hG₁ : IsUnit ((Ψᵀ * Q)ᵀ * (Ψᵀ * Q))) :
     A - sketchedOutput Q Ψ A =
-      residual Q A - Q * (pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * residual Q A)) := by
+      projResidual Q A - Q * (pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * projResidual Q A)) := by
   unfold sketchedOutput
   rw [sketchedCore_eq Q Qp Ψ A hQ hcomp hG₁, Matrix.mul_add]
-  rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial]
+  rw [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial]
   rw [sub_add_eq_sub_sub]
 
 /-- Pythagorean identity in the proof of `lem:completion` (Chen–Persson; Tropp–Webber 2023 §5):
@@ -156,7 +155,7 @@ atlas: sketched-regression -/
 theorem frobSq_error [Fintype n] (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1)
     (hG₁ : IsUnit ((Ψᵀ * Q)ᵀ * (Ψᵀ * Q))) :
     frobSq (A - sketchedOutput Q Ψ A) =
-      frobSq (residual Q A) + frobSq (pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * residual Q A)) := by
+      frobSq (projResidual Q A) + frobSq (pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * projResidual Q A)) := by
   rw [error_decomp Q Qp Ψ A hQ hcomp hG₁,
     frobSq_sub_of_frobInner_eq_zero _ _ (by
       rw [frobInner_comm]; exact frobInner_mul_residual hQ _ A),
@@ -167,17 +166,17 @@ theorem frobSq_error [Fintype n] (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ +
 atlas: sketched-regression -/
 theorem frobSq_transpose_mul_residual [Fintype n] [DecidableEq r] (hQ : HasOrthonormalCols Q)
     (hQp : HasOrthonormalCols Qp) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) :
-    frobSq (Qpᵀ * residual Q A) = frobSq (residual Q A) := by
+    frobSq (Qpᵀ * projResidual Q A) = frobSq (projResidual Q A) := by
   conv_rhs => rw [residual_eq_mul_conjTranspose_mul_residual hQ hcomp A,
     Matrix.conjTranspose_eq_transpose_of_trivial]
   rw [frobSq_mul_left_of_orthonormal hQp.conjTranspose_mul_self]
 
 /-- Deterministic core of `lem:tGN-core` and `eq:tGN-fitted-core` (Chen–Persson): the noise
 term `E_core = (ΨᵀQ)† Ψᵀ A⊥` equals `G₁† G₂ B` with `G₁ = ΨᵀQ`, `G₂ = ΨᵀQ⊥`, `B = Q⊥ᵀ A⊥`, where
-`A⊥ = (I - QQᵀ)A = residual Q A` (LRA `core_noise_eq`, there with the noise written out).
+`A⊥ = (I - QQᵀ)A = projResidual Q A` (LRA `core_noise_eq`, there with the noise written out).
 Atlas `sketched-regression`. -/
 theorem coreNoise_eq (hQ : HasOrthonormalCols Q) (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) :
-    coreNoise Q Ψ A = pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * residual Q A) := by
+    coreNoise Q Ψ A = pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * projResidual Q A) := by
   rw [coreNoise, transpose_mul_residual_eq Q Qp Ψ A hQ hcomp,
     ← Matrix.mul_assoc (pinvL (Ψᵀ * Q))]
 
@@ -200,7 +199,7 @@ atlas: sketched-regression -/
 theorem specNorm_transpose_mul_residual [Fintype n] [DecidableEq m] [DecidableEq n] [DecidableEq r]
     {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q) {Qp : Matrix m r ℝ} (hQp : HasOrthonormalCols Qp)
     (hcomp : Q * Qᵀ + Qp * Qpᵀ = 1) (A : Matrix m n ℝ) :
-    specNorm (Qpᵀ * residual Q A) = specNorm (residual Q A) :=
+    specNorm (Qpᵀ * projResidual Q A) = specNorm (projResidual Q A) :=
   specNorm_conjTranspose_mul_of_eq_mul hQp.conjTranspose_mul_self
     (residual_eq_mul_conjTranspose_mul_residual hQ hcomp A)
 

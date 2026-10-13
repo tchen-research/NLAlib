@@ -26,7 +26,7 @@ theorem integrable_specNorm_residual_of_measurable_frame
     (A : Matrix m n ℝ) (Q : Ω → Matrix m l ℝ)
     (hQ : ∀ i j, Measurable fun ω => Q ω i j)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω)) :
-    Integrable (fun ω => specNorm (residual (Q ω) A)) μ := by
+    Integrable (fun ω => specNorm (projResidual (Q ω) A)) μ := by
   refine (integrable_const (specNorm A)).mono'
     (measurable_specNorm_residual_of A hQ).aestronglyMeasurable ?_
   filter_upwards [hQo] with ω hω
@@ -43,11 +43,11 @@ theorem integral_specNorm_residual_le_rpow_integral
     (A : Matrix m n ℝ) (Q : Ω → Matrix m l ℝ)
     (hQ : ∀ i j, Measurable fun ω => Q ω i j)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω)) (q : ℕ) :
-    (∫ ω, specNorm (residual (Q ω) A) ∂μ) ≤
-      (∫ ω, specNorm (residual (Q ω) ((A * Aᵀ) ^ q * A)) ∂μ) ^
+    (∫ ω, specNorm (projResidual (Q ω) A) ∂μ) ≤
+      (∫ ω, specNorm (projResidual (Q ω) ((A * Aᵀ) ^ q * A)) ∂μ) ^
         (1 / (2 * (q : ℝ) + 1)) := by
-  let f := fun ω => specNorm (residual (Q ω) A)
-  let g := fun ω => specNorm (residual (Q ω) ((A * Aᵀ) ^ q * A))
+  let f := fun ω => specNorm (projResidual (Q ω) A)
+  let g := fun ω => specNorm (projResidual (Q ω) ((A * Aᵀ) ^ q * A))
   let r := 2 * q + 1
   have hfi := integrable_specNorm_residual_of_measurable_frame A Q hQ hQo
   have hgi := integrable_specNorm_residual_of_measurable_frame ((A * Aᵀ) ^ q * A) Q hQ hQo
@@ -58,7 +58,7 @@ theorem integral_specNorm_residual_le_rpow_integral
     rw [Real.norm_of_nonneg (pow_nonneg (specNorm_nonneg _) _)]
     exact pow_le_pow_left₀ (specNorm_nonneg _) (specNorm_sub_mul_conjTranspose_mul_le hω A) r
   have hJ := (convexOn_pow r (𝕜 := ℝ)).map_integral_le (continuous_pow r).continuousOn
-    isClosed_Ici (ae_of_all _ fun ω => specNorm_nonneg (residual (Q ω) A)) hfi hfpi
+    isClosed_Ici (ae_of_all _ fun ω => specNorm_nonneg (projResidual (Q ω) A)) hfi hfpi
   have hfg : (fun ω => f ω ^ r) ≤ᵐ[μ] g := by
     filter_upwards [hQo] with ω hω
     exact specNorm_residual_pow_le hω A q
@@ -119,7 +119,7 @@ theorem integral_specNorm_residual_gram_pow_gaussian_le
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Q ω)) (q : ℕ)
     (hQr : ∀ᵐ ω ∂μ, Q ω * ((Q ω)ᵀ * (((A * Aᵀ) ^ q * A) * G ω)) =
       ((A * Aᵀ) ^ q * A) * G ω) :
-    (∫ ω, specNorm (residual (Q ω) A) ∂μ) ≤
+    (∫ ω, specNorm (projResidual (Q ω) A) ∂μ) ≤
       ((1 + Real.sqrt (k / ((p : ℝ) - 1))) * singularValues A k ^ (2 * q + 1) +
         Real.exp 1 * Real.sqrt (k + p) / p *
           Real.sqrt (∑ i : Fin m, if k ≤ (i : ℕ) then
@@ -136,12 +136,12 @@ theorem integral_specNorm_residual_gram_pow_gaussian_le
       change ((A * Aᵀ) ^ q * A).rank ≤ k + p
       rwa [rank_gram_pow_mul]
     have hproj := ae_gaussian_projection_reproduces_of_rank_le C G hG Q hQr hCt
-    have hzero : (fun ω => specNorm (residual (Q ω) A)) =ᵐ[μ] fun _ => 0 := by
+    have hzero : (fun ω => specNorm (projResidual (Q ω) A)) =ᵐ[μ] fun _ => 0 := by
       filter_upwards [hproj, hQo] with ω hω ho
-      have hc : residual (Q ω) C = 0 := by
-        simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, hω, sub_self]
+      have hc : projResidual (Q ω) C = 0 := by
+        simp only [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, hω, sub_self]
       have hpow := specNorm_residual_pow_le ho A q
-      change specNorm (residual (Q ω) A) ^ (2 * q + 1) ≤ specNorm (residual (Q ω) C) at hpow
+      change specNorm (projResidual (Q ω) A) ^ (2 * q + 1) ≤ specNorm (projResidual (Q ω) C) at hpow
       rw [hc, specNorm_zero] at hpow
       exact eq_zero_of_pow_eq_zero (le_antisymm hpow (pow_nonneg (specNorm_nonneg _) _))
     rw [integral_congr_ae hzero, integral_zero]

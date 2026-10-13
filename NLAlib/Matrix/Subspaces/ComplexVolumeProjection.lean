@@ -10,7 +10,6 @@ at every rank and shape. Source: `sa:volume`; supports `volume-sampling`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Classical Matrix InnerProductSpace ComplexOrder
 namespace NLAlib
 

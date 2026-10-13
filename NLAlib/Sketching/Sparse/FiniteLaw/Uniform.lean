@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.FiniteLaw.IndependentProduct
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Small finite-law constructions for uniform exact-s columns
@@ -14,7 +13,6 @@ constructions needed by SparseStack.  The exact-s extension additionally uses
 uniform laws on arbitrary nonempty finite types and finite pushforwards.
 -/
 
-open scoped BigOperators
 
 namespace NLAlib.SparseSketch.FiniteLaw
 

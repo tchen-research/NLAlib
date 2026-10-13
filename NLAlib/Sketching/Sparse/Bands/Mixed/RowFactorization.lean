@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.Bands.Light.NormalizedBands
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Mixed light-heavy row factorizations
@@ -17,7 +16,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 namespace NLAlib.SparseSketch.Mixed
 
 open SparseSketch.Heavy SparseSketch.Light SparseSketch.Directional
-open scoped BigOperators Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator
 
 noncomputable section
 

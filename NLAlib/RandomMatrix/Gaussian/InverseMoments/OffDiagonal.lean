@@ -43,7 +43,7 @@ namespace NLAlib
 /-! ### Off-diagonal second moment -/
 
 /-- Conditional moment: for fixed full-rank `H`, with `c = (HHᵀ)⁻¹ H g` the regression
-coefficients and `Q` the residual, `E[c_a² / Q²] = ((HHᵀ)⁻¹)_{aa} / ((k-n-2)(k-n-4))`. -/
+coefficients and `Q` the projResidual, `E[c_a² / Q²] = ((HHᵀ)⁻¹)_{aa} / ((k-n-2)(k-n-4))`. -/
 private lemma integrable_and_integral_coeff_sq_mul_inv_sq_dist_rowSpace_sq {n k : ℕ}
     (hnk : n + 5 ≤ k) (H : Matrix (Fin n) (Fin k) ℝ) (hH : H.rank = n) (a : Fin n) :
     Integrable (fun g : Fin k → ℝ => (((H * Hᵀ)⁻¹ *ᵥ (H *ᵥ g)) a) ^ 2 *

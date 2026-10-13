@@ -39,8 +39,8 @@ theorem singularValues_smul_of_nonneg (A : Matrix m n ℝ) {c : ℝ} (hc : 0 ≤
     have hfact : c • A = U * (rectDiag (c • singularValues A) : Matrix _ _ ℝ) * Vᵀ := by
       rw [rectDiag_smul, Matrix.mul_smul, Matrix.smul_mul]
       exact congrArg (fun B => c • B) hSVD.eq
-    exact singularValues_eq_of_eq_mul_rectDiag_mul hSVD.transpose_mul_left
-      hSVD.transpose_mul_right (fun i => mul_nonneg hc (singularValues_nonneg A i))
+    exact singularValues_eq_of_eq_mul_rectDiag_mul hSVD.conjTranspose_mul_left
+      hSVD.conjTranspose_mul_right (fun i => mul_nonneg hc (singularValues_nonneg A i))
       (fun i j hij => mul_le_mul_of_nonneg_left (singularValues_antitone A hij) hc) hfact hk
   · rw [singularValues_eq_zero_of_min_le _ (by omega),
       singularValues_eq_zero_of_min_le A (by omega), mul_zero]

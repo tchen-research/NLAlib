@@ -8,7 +8,6 @@ sequence distribution. Supports the with-replacement `sh:srht-ose` variant.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Classical Matrix Matrix.Norms.L2Operator ComplexOrder
 namespace NLAlib

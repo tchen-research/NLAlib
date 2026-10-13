@@ -36,12 +36,12 @@ theorem norm_least_squares_sub_div_le {A E : Matrix m n ℝ} {ε : ℝ}
     (hA : A.rank=Fintype.card n) (b f : EuclideanSpace ℝ m)
     (hx : (moorePenroseInverse A).toEuclideanLin b ≠ 0) (hε : 0 ≤ ε)
     (hE : specNorm E ≤ ε*specNorm A) (hf : ‖f‖ ≤ ε*‖b‖)
-    (hsmall : conditionNumber A*ε < 1) :
+    (hsmall : moorePenroseConditionNumber A*ε < 1) :
     let x := (moorePenroseInverse A).toEuclideanLin b
     let y := (moorePenroseInverse (A+E)).toEuclideanLin (b+f)
     let r := b-A.toEuclideanLin x
-    ‖y-x‖/‖x‖ ≤ conditionNumber A*ε/(1-conditionNumber A*ε)*
-      (2+(conditionNumber A+1)*‖r‖/(specNorm A*‖x‖)) := by
+    ‖y-x‖/‖x‖ ≤ moorePenroseConditionNumber A*ε/(1-moorePenroseConditionNumber A*ε)*
+      (2+(moorePenroseConditionNumber A+1)*‖r‖/(specNorm A*‖x‖)) := by
   intro x y r
   have hb : ‖b‖ ≤ specNorm A*‖x‖+‖r‖ := by
     calc
@@ -60,10 +60,10 @@ atlas: least-squares-perturbation (partial) -/
 theorem norm_least_squares_residual_sub_div_le {A E : Matrix m n ℝ} {ε : ℝ}
     (hA : A.rank=Fintype.card n) (b f : EuclideanSpace ℝ m) (hb : b ≠ 0)
     (hE : specNorm E ≤ ε*specNorm A) (hf : ‖f‖ ≤ ε*‖b‖)
-    (hsmall : conditionNumber A*ε < 1) :
+    (hsmall : moorePenroseConditionNumber A*ε < 1) :
     let r := b-A.toEuclideanLin ((moorePenroseInverse A).toEuclideanLin b)
     let s := (b+f)-(A+E).toEuclideanLin ((moorePenroseInverse (A+E)).toEuclideanLin (b+f))
-    ‖r-s‖/‖b‖ ≤ (1+conditionNumber A)*ε := by
+    ‖r-s‖/‖b‖ ≤ (1+moorePenroseConditionNumber A)*ε := by
   intro r s
   apply (div_le_iff₀ (norm_pos_iff.mpr hb)).mpr
   exact norm_least_squares_residual_sub_le_relative_data hA hE b f hf hsmall
@@ -75,12 +75,12 @@ theorem norm_least_squares_sub_div_le_angle_ratios {A E : Matrix m n ℝ} {ε : 
     (hA : A.rank=Fintype.card n) (b f : EuclideanSpace ℝ m)
     (hx : (moorePenroseInverse A).toEuclideanLin b ≠ 0) (hε : 0 ≤ ε)
     (hE : specNorm E ≤ ε*specNorm A) (hf : ‖f‖ ≤ ε*‖b‖)
-    (hsmall : conditionNumber A*ε < 1) :
+    (hsmall : moorePenroseConditionNumber A*ε < 1) :
     let x := (moorePenroseInverse A).toEuclideanLin b
     let y := (moorePenroseInverse (A+E)).toEuclideanLin (b+f)
     let r := b-A.toEuclideanLin x
-    ‖y-x‖/‖x‖ ≤ ε*(2*conditionNumber A/(‖A.toEuclideanLin x‖/‖b‖)+
-      conditionNumber A^2*(‖r‖/‖A.toEuclideanLin x‖))/(1-conditionNumber A*ε) := by
+    ‖y-x‖/‖x‖ ≤ ε*(2*moorePenroseConditionNumber A/(‖A.toEuclideanLin x‖/‖b‖)+
+      moorePenroseConditionNumber A^2*(‖r‖/‖A.toEuclideanLin x‖))/(1-moorePenroseConditionNumber A*ε) := by
   intro x y r
   obtain ⟨hL,hb⟩ := pinv_solution_norm_pos hA b hx
   exact least_squares_forward_angle_coefficient_le
@@ -97,41 +97,41 @@ theorem exists_least_squares_angle_error_bound {A E : Matrix m n ℝ} {ε : ℝ}
     (hA : A.rank=Fintype.card n) (b f : EuclideanSpace ℝ m)
     (hx : (moorePenroseInverse A).toEuclideanLin b ≠ 0) (hε : 0 ≤ ε)
     (hE : specNorm E ≤ ε*specNorm A) (hf : ‖f‖ ≤ ε*‖b‖)
-    (hsmall : conditionNumber A*ε < 1) :
+    (hsmall : moorePenroseConditionNumber A*ε < 1) :
     let x := (moorePenroseInverse A).toEuclideanLin b
     let y := (moorePenroseInverse (A+E)).toEuclideanLin (b+f)
     let r := b-A.toEuclideanLin x
     ∃ θ : ℝ, 0 ≤ θ ∧ θ < Real.pi/2 ∧
       Real.cos θ=‖A.toEuclideanLin x‖/‖b‖ ∧
       Real.sin θ=‖r‖/‖b‖ ∧ Real.tan θ=‖r‖/‖A.toEuclideanLin x‖ ∧
-      (let C := 2*conditionNumber A/Real.cos θ+conditionNumber A^2*Real.tan θ
-       ‖y-x‖/‖x‖ ≤ ε*C/(1-conditionNumber A*ε) ∧
-       (ε ≤ 1/(2*conditionNumber A) →
-         ‖y-x‖/‖x‖ ≤ ε*C+2*conditionNumber A*C*ε^2)) := by
+      (let C := 2*moorePenroseConditionNumber A/Real.cos θ+moorePenroseConditionNumber A^2*Real.tan θ
+       ‖y-x‖/‖x‖ ≤ ε*C/(1-moorePenroseConditionNumber A*ε) ∧
+       (ε ≤ 1/(2*moorePenroseConditionNumber A) →
+         ‖y-x‖/‖x‖ ≤ ε*C+2*moorePenroseConditionNumber A*C*ε^2)) := by
   intro x y r
   obtain ⟨θ,hθ,hθ',hc,hs,ht⟩ := exists_least_squares_angle hA b hx
   have hbound := norm_least_squares_sub_div_le_angle_ratios hA b f hx hε hE hf hsmall
-  have hC : 0 ≤ 2*conditionNumber A/Real.cos θ+conditionNumber A^2*Real.tan θ := by
-    have hκ := conditionNumber_nonneg A
+  have hC : 0 ≤ 2*moorePenroseConditionNumber A/Real.cos θ+moorePenroseConditionNumber A^2*Real.tan θ := by
+    have hκ := moorePenroseConditionNumber_nonneg A
     rw [hc,ht]
     positivity
   refine ⟨θ,hθ,hθ',hc,hs,ht,?_,?_⟩
   · simpa only [hc,ht] using hbound
   · intro hhalf
-    have hκpos : 0 < conditionNumber A := by
+    have hκpos : 0 < moorePenroseConditionNumber A := by
       have hA0 : A ≠ 0 := by
         intro hz
         have hnorm := specNorm_pos_of_pinv_solution_ne_zero hA b hx
         rw [hz,specNorm_zero] at hnorm
         linarith
-      have hκ := one_le_conditionNumber hA0
+      have hκ := one_le_moorePenroseConditionNumber hA0
       linarith
-    have hhalf' : conditionNumber A*ε ≤ 1/2 := by
+    have hhalf' : moorePenroseConditionNumber A*ε ≤ 1/2 := by
       have h := (le_div_iff₀ (mul_pos (by norm_num : (0:ℝ)<2) hκpos)).mp hhalf
       nlinarith
-    have he := first_order_reciprocal_bound_le (conditionNumber_nonneg A) hC hε hhalf'
-    apply (show ‖y-x‖/‖x‖ ≤ ε*(2*conditionNumber A/Real.cos θ+
-      conditionNumber A^2*Real.tan θ)/(1-conditionNumber A*ε) from by
+    have he := first_order_reciprocal_bound_le (moorePenroseConditionNumber_nonneg A) hC hε hhalf'
+    apply (show ‖y-x‖/‖x‖ ≤ ε*(2*moorePenroseConditionNumber A/Real.cos θ+
+      moorePenroseConditionNumber A^2*Real.tan θ)/(1-moorePenroseConditionNumber A*ε) from by
         simpa only [hc,ht] using hbound).trans he
 
 /-- Complete original least-squares perturbation contract: full column rank
@@ -144,7 +144,7 @@ theorem least_squares_perturbation {A E : Matrix m n ℝ} {ε : ℝ}
     (hA : A.rank=Fintype.card n) (b f : EuclideanSpace ℝ m)
     (hx : (moorePenroseInverse A).toEuclideanLin b ≠ 0) (hε : 0 ≤ ε)
     (hE : specNorm E ≤ ε*specNorm A) (hf : ‖f‖ ≤ ε*‖b‖)
-    (hsmall : conditionNumber A*ε < 1) :
+    (hsmall : moorePenroseConditionNumber A*ε < 1) :
     let x := (moorePenroseInverse A).toEuclideanLin b
     let y := (moorePenroseInverse (A+E)).toEuclideanLin (b+f)
     let r := b-A.toEuclideanLin x
@@ -154,19 +154,19 @@ theorem least_squares_perturbation {A E : Matrix m n ℝ} {ε : ℝ}
     (∀ z : n → ℝ, IsLeastSquaresSolution A b.ofLp z → z=x.ofLp) ∧
     IsLeastSquaresSolution (A+E) (b+f).ofLp y.ofLp ∧
     (∀ z : n → ℝ, IsLeastSquaresSolution (A+E) (b+f).ofLp z → z=y.ofLp) ∧
-    ‖y-x‖/‖x‖ ≤ conditionNumber A*ε/(1-conditionNumber A*ε)*
-      (2+(conditionNumber A+1)*‖r‖/(specNorm A*‖x‖)) ∧
-    ‖r-s‖/‖b‖ ≤ (1+2*conditionNumber A)*ε ∧
-    ‖r-s‖/‖b‖ ≤ (1+conditionNumber A)*ε ∧
+    ‖y-x‖/‖x‖ ≤ moorePenroseConditionNumber A*ε/(1-moorePenroseConditionNumber A*ε)*
+      (2+(moorePenroseConditionNumber A+1)*‖r‖/(specNorm A*‖x‖)) ∧
+    ‖r-s‖/‖b‖ ≤ (1+2*moorePenroseConditionNumber A)*ε ∧
+    ‖r-s‖/‖b‖ ≤ (1+moorePenroseConditionNumber A)*ε ∧
     (∃ θ : ℝ, 0 ≤ θ ∧ θ < Real.pi/2 ∧
       Real.cos θ=‖A.toEuclideanLin x‖/‖b‖ ∧ Real.sin θ=‖r‖/‖b‖ ∧
       Real.tan θ=‖r‖/‖A.toEuclideanLin x‖ ∧
-      (let C := 2*conditionNumber A/Real.cos θ+conditionNumber A^2*Real.tan θ
-       ‖y-x‖/‖x‖ ≤ ε*C/(1-conditionNumber A*ε) ∧
-       (ε ≤ 1/(2*conditionNumber A) →
-         ‖y-x‖/‖x‖ ≤ ε*C+2*conditionNumber A*C*ε^2))) := by
+      (let C := 2*moorePenroseConditionNumber A/Real.cos θ+moorePenroseConditionNumber A^2*Real.tan θ
+       ‖y-x‖/‖x‖ ≤ ε*C/(1-moorePenroseConditionNumber A*ε) ∧
+       (ε ≤ 1/(2*moorePenroseConditionNumber A) →
+         ‖y-x‖/‖x‖ ≤ ε*C+2*moorePenroseConditionNumber A*C*ε^2))) := by
   intro x y r s
-  have hB := rank_add_eq_card_of_conditionNumber_mul_lt_one hA hE hsmall
+  have hB := rank_add_eq_card_of_moorePenroseConditionNumber_mul_lt_one hA hE hsmall
   have hb : b ≠ 0 := (norm_pos_iff.mp (pinv_solution_norm_pos hA b hx).2)
   have hres := norm_least_squares_residual_sub_div_le hA b f hb hE hf hsmall
   refine ⟨hB,isLeastSquaresSolution_toEuclideanLin_pinv A b,
@@ -176,6 +176,6 @@ theorem least_squares_perturbation {A E : Matrix m n ℝ} {ε : ℝ}
     norm_least_squares_sub_div_le hA b f hx hε hE hf hsmall,?_,hres,
     exists_least_squares_angle_error_bound hA b f hx hε hE hf hsmall⟩
   apply hres.trans
-  exact mul_le_mul_of_nonneg_right (by linarith [conditionNumber_nonneg A]) hε
+  exact mul_le_mul_of_nonneg_right (by linarith [moorePenroseConditionNumber_nonneg A]) hε
 
 end NLAlib

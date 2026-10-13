@@ -7,7 +7,7 @@ import NLAlib.Matrix.Factorizations.CholeskyStep
 # Coordinate Cholesky residual pivots
 
 A single coordinate pivot `choleskyStep` (Matrix/Factorizations/CholeskyStep) is the one-column
-Nyström residual (`choleskyStep_eq_sub_nystrom`), also at zero pivots. The diagonal-over-trace
+Nyström projResidual (`choleskyStep_eq_sub_nystrom`), also at zero pivots. The diagonal-over-trace
 pivot probabilities `choleskyPivotProbability` give the one-step means of RPCholesky.
 Source: Chen--Epperly--Tropp--Webber (2025); manuscript `sa:rp-update`.
 -/

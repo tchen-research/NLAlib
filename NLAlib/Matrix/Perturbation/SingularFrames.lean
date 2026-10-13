@@ -68,10 +68,10 @@ variable {m n k : ℕ} {A : Matrix (Fin m) (Fin n) ℝ}
 /-- Transposing an actual real SVD exchanges its paired orthogonal frames.
 Horn–Johnson 2013, Section 2.6; Wedin frame helper. -/
 theorem transpose (h : IsSVD A U V) : IsSVD Aᵀ V U := by
-  refine ⟨h.transpose_mul_right, h.transpose_mul_left, ?_, h.mul_transpose_right,
-    h.mul_transpose_left⟩
+  refine ⟨h.conjTranspose_mul_right, h.conjTranspose_mul_left, ?_, h.mul_conjTranspose_right,
+    h.mul_conjTranspose_left⟩
   rw [singularValues_transpose]
-  exact h.transpose_eq
+  exact h.conjTranspose_eq
 
 /-- The actual leading right singular frame maps to the leading left frame
 through its ordered diagonal singular coefficient. Wedin (1972), Section 3. -/
@@ -128,17 +128,17 @@ theorem mul_headColumns_projector (h : IsSVD A U V) (hkn : k ≤ n) :
 /-- The left leading-frame residual is exactly the matched SVD tail.
 Wedin (1972), Section 3. -/
 theorem residual_headColumns_eq_sub_truncatedMatrix (h : IsSVD A U V) (hkm : k ≤ m) :
-    residual (headColumns U hkm) A = A - h.truncatedMatrix k := by
-  rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc, h.headColumns_projector_mul hkm]
+    projResidual (headColumns U hkm) A = A - h.truncatedMatrix k := by
+  rw [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc, h.headColumns_projector_mul hkm]
 
 /-- The right leading-frame residual of the transpose is the transposed tail.
 Wedin (1972), Section 3. -/
 theorem residual_headColumns_transpose_eq_sub_truncatedMatrix_transpose
     (h : IsSVD A U V) (hkn : k ≤ n) :
-    residual (headColumns V hkn) Aᵀ = (A - h.truncatedMatrix k)ᵀ := by
+    projResidual (headColumns V hkn) Aᵀ = (A - h.truncatedMatrix k)ᵀ := by
   have hp := congrArg Matrix.transpose (h.mul_headColumns_projector hkn)
   simp only [Matrix.transpose_mul, Matrix.transpose_transpose] at hp
-  rw [residual, Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc, hp, Matrix.transpose_sub]
+  rw [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc, hp, Matrix.transpose_sub]
 
 end IsSVD
 end NLAlib

@@ -13,7 +13,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open scoped Matrix.Norms.L2Operator ComplexOrder
 open NLAlib
-set_option autoImplicit false
 
 /-- Variational formula for the trace exponential: `traceExp (H + log A)` is the greatest value of `tr
 (T H) + tr A - D(T; A)` over positive definite `T`.

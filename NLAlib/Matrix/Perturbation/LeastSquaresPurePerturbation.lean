@@ -28,7 +28,7 @@ theorem exists_pos_forall_sqrt_pinv_fit_sub_div_le (A : Matrix m n ℝ)
           (((A + E) * moorePenroseInverse (A + E)) *ᵥ b -
             (A * moorePenroseInverse A) *ᵥ b)) /
         Real.sqrt (((A * moorePenroseInverse A) *ᵥ b) ⬝ᵥ ((A * moorePenroseInverse A) *ᵥ b)) ≤
-        (conditionNumber A / leastSquaresCos A b + ε) * (specNorm E / specNorm A) := by
+        (moorePenroseConditionNumber A / leastSquaresCos A b + ε) * (specNorm E / specNorm A) := by
   intro ε hε
   let a := specNorm (moorePenroseInverse A)
   have ha : 0 ≤ a := specNorm_nonneg _
@@ -43,10 +43,10 @@ theorem exists_pos_forall_sqrt_pinv_fit_sub_div_le (A : Matrix m n ℝ)
   let Q := (A + E) * moorePenroseInverse (A + E)
   let Ny := Real.sqrt ((P *ᵥ b) ⬝ᵥ (P *ᵥ b))
   let Nb := Real.sqrt (b ⬝ᵥ b)
-  have hRHS : 0 ≤ (conditionNumber A / leastSquaresCos A b + ε) *
+  have hRHS : 0 ≤ (moorePenroseConditionNumber A / leastSquaresCos A b + ε) *
       (specNorm E / specNorm A) := by
     unfold leastSquaresCos
-    have hκ := conditionNumber_nonneg A
+    have hκ := moorePenroseConditionNumber_nonneg A
     have hM := specNorm_nonneg A
     positivity
   by_cases hy : P *ᵥ b = 0
@@ -83,16 +83,16 @@ theorem exists_pos_forall_sqrt_pinv_fit_sub_div_le (A : Matrix m n ℝ)
     exact (sqrt_mulVec_dotProduct_le_specNorm_mul (Q - P) b).trans
       (mul_le_mul_of_nonneg_right hgap hNb.le)
   have hcoeff : a * specNorm E * Nb / Ny =
-      conditionNumber A / leastSquaresCos A b * (specNorm E / specNorm A) := by
-    unfold conditionNumber leastSquaresCos
+      moorePenroseConditionNumber A / leastSquaresCos A b * (specNorm E / specNorm A) := by
+    unfold moorePenroseConditionNumber leastSquaresCos
     change a * specNorm E * Nb / Ny =
       specNorm A * a / (Ny / Nb) * (specNorm E / specNorm A)
     field_simp
   change _ / Ny ≤ _
   calc
     _ ≤ a * specNorm E * Nb / Ny := div_le_div_of_nonneg_right hbound hNy.le
-    _ = conditionNumber A / leastSquaresCos A b * (specNorm E / specNorm A) := hcoeff
-    _ ≤ (conditionNumber A / leastSquaresCos A b + ε) * (specNorm E / specNorm A) :=
+    _ = moorePenroseConditionNumber A / leastSquaresCos A b * (specNorm E / specNorm A) := hcoeff
+    _ ≤ (moorePenroseConditionNumber A / leastSquaresCos A b + ε) * (specNorm E / specNorm A) :=
       mul_le_mul_of_nonneg_right (by linarith) (div_nonneg he hM.le)
 
 /-- **Least squares, `x` under perturbation of `A` (first order).** The solution sensitivity
@@ -106,16 +106,16 @@ theorem exists_pos_forall_sqrt_pinv_solution_sub_div_le (A : Matrix m n ℝ)
       Real.sqrt ((moorePenroseInverse (A + E) *ᵥ b - moorePenroseInverse A *ᵥ b) ⬝ᵥ
           (moorePenroseInverse (A + E) *ᵥ b - moorePenroseInverse A *ᵥ b)) /
         Real.sqrt ((moorePenroseInverse A *ᵥ b) ⬝ᵥ (moorePenroseInverse A *ᵥ b)) ≤
-        (conditionNumber A + conditionNumber A ^ 2 * leastSquaresTan A b / leastSquaresEta A b +
+        (moorePenroseConditionNumber A + moorePenroseConditionNumber A ^ 2 * leastSquaresTan A b / leastSquaresEta A b +
           ε) * (specNorm E / specNorm A) := by
   intro ε hε
   let a := specNorm (moorePenroseInverse A)
-  let C := conditionNumber A + conditionNumber A ^ 2 * leastSquaresTan A b / leastSquaresEta A b
+  let C := moorePenroseConditionNumber A + moorePenroseConditionNumber A ^ 2 * leastSquaresTan A b / leastSquaresEta A b
   have ha : 0 ≤ a := specNorm_nonneg _
   have hC : 0 ≤ C := by
     dsimp [C]
     unfold leastSquaresTan leastSquaresEta
-    have hκ := conditionNumber_nonneg A
+    have hκ := moorePenroseConditionNumber_nonneg A
     have hM := specNorm_nonneg A
     positivity
   by_cases hx : moorePenroseInverse A *ᵥ b = 0
@@ -144,7 +144,7 @@ theorem exists_pos_forall_sqrt_pinv_solution_sub_div_le (A : Matrix m n ℝ)
       Matrix.toLin'_apply, WithLp.ofLp_toLp, Matrix.mulVec_mulVec] using h
   have hcoeff : C = specNorm A * a + specNorm A * a ^ 2 * R / X := by
     dsimp [C]
-    unfold conditionNumber leastSquaresTan leastSquaresEta
+    unfold moorePenroseConditionNumber leastSquaresTan leastSquaresEta
     have hr : b - (A * moorePenroseInverse A) *ᵥ b = r := by
       dsimp [r, x]
       rw [Matrix.mulVec_mulVec]

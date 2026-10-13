@@ -132,7 +132,7 @@ theorem isLeastSquaresSolution_iff_forall_dotProduct_mulVec_eq_zero (A : Matrix 
 Stewart–Sun 1990, §III.1. -/
 theorem transpose_mul_mul_moorePenroseInverse (A : Matrix m n ℝ) :
     Aᵀ * (A * moorePenroseInverse A) = Aᵀ := by
-  rw [← (mul_moorePenroseInverse_isSymm A).eq, Matrix.conjTranspose_eq_transpose_of_trivial,
+  rw [← (mul_moorePenroseInverse_isHermitian A).eq, Matrix.conjTranspose_eq_transpose_of_trivial,
     ← Matrix.transpose_mul,
     mul_moorePenroseInverse_mul]
 
@@ -277,7 +277,7 @@ theorem IsLeastSquaresSolution.dotProduct_self_moorePenroseInverse_mulVec_le
   have horth : x₀ ⬝ᵥ z = 0 := by
     have hA' : A' = Aᵀ * A'ᵀ * A' := by
       rw [← Matrix.transpose_mul, ← Matrix.conjTranspose_eq_transpose_of_trivial,
-        (moorePenroseInverse_mul_isSymm A).eq,
+        (moorePenroseInverse_mul_isHermitian A).eq,
         moorePenroseInverse_mul_moorePenroseInverse]
     have hx₀ : x₀ = Aᵀ *ᵥ ((A'ᵀ * A') *ᵥ b) := by
       change A' *ᵥ b = _

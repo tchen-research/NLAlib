@@ -10,7 +10,6 @@ Source: operator manuscript `sa:filter`; supports `polynomial-filter-range-finde
 -/
 
 noncomputable section
-set_option autoImplicit false
 open Polynomial
 open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib

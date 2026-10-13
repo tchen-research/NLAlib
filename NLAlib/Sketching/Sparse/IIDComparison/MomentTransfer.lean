@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.IIDComparison.DistributionBridges
 import NLAlib.Matrix.Functions.TracePowerConvexity
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Exact trace-moment transfer identities
@@ -19,7 +18,7 @@ namespace NLAlib.SparseSketch
 
 open SparseStackSelectors
 
-open scoped BigOperators InnerProductSpace Matrix
+open scoped InnerProductSpace Matrix
 
 noncomputable section
 

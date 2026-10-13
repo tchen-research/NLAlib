@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.FockModel.OccupationPattern
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Directional occupation profiles
@@ -18,7 +17,6 @@ namespace NLAlib.SparseSketch
 
 namespace Directional
 
-open scoped BigOperators
 
 /-- The occupation profile retained by the directional norm arguments.  This
 is a count-level abstraction; it does not assert that a site move is valid.

@@ -28,7 +28,7 @@ theorem isHermitian_of_invariant_orthonormal_frame {A : Matrix n n ℝ}
   exact heq ▸ (Matrix.isHermitian_conjTranspose_mul_mul Q hA : (Qᵀ * A * Q).IsHermitian)
 
 omit [DecidableEq n] [DecidableEq k] [DecidableEq r] in
-/-- The complementary overlap satisfies the exact residual Sylvester
+/-- The complementary overlap satisfies the exact projResidual Sylvester
 equation. Davis–Kahan §6; neither coefficient Hermiticity is assumed here. -/
 theorem sylvester_complement_overlap_eq {A E : Matrix n n ℝ}
     (hA : A.IsHermitian) (hE : E.IsHermitian)

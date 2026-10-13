@@ -48,9 +48,9 @@ theorem specNorm_moorePenroseInverse_sub_le_goldenRatio_max_sq (A B : Matrix m n
   let Q := b*B
   let e := specNorm (B-A)
   let d := max (specNorm a^2) (specNorm b^2)*e
-  have hPs : P.IsSymm := mul_moorePenroseInverse_isSymm A
+  have hPs : P.IsSymm := mul_moorePenroseInverse_isHermitian A
   have hPi : IsIdempotentElem P := mul_moorePenroseInverse_isIdempotentElem A
-  have hQs : Q.IsSymm := moorePenroseInverse_mul_isSymm B
+  have hQs : Q.IsSymm := moorePenroseInverse_mul_isHermitian B
   have hQi : IsIdempotentElem Q := moorePenroseInverse_mul_isIdempotentElem B
   have hPnorm := specNorm_one_sub_projector_le_one hPs hPi
   have hQnorm := specNorm_one_sub_projector_le_one hQs hQi
@@ -105,13 +105,13 @@ theorem specNorm_moorePenroseInverse_sub_le_goldenRatio_mul_of_rank_eq
   let QA := a*A
   let QB := b*B
   let d := specNorm a*specNorm b*specNorm (B-A)
-  have hPAs : PA.IsSymm := mul_moorePenroseInverse_isSymm A
+  have hPAs : PA.IsSymm := mul_moorePenroseInverse_isHermitian A
   have hPAi : IsIdempotentElem PA := mul_moorePenroseInverse_isIdempotentElem A
-  have hPBs : PB.IsSymm := mul_moorePenroseInverse_isSymm B
+  have hPBs : PB.IsSymm := mul_moorePenroseInverse_isHermitian B
   have hPBi : IsIdempotentElem PB := mul_moorePenroseInverse_isIdempotentElem B
-  have hQAs : QA.IsSymm := moorePenroseInverse_mul_isSymm A
+  have hQAs : QA.IsSymm := moorePenroseInverse_mul_isHermitian A
   have hQAi : IsIdempotentElem QA := moorePenroseInverse_mul_isIdempotentElem A
-  have hQBs : QB.IsSymm := moorePenroseInverse_mul_isSymm B
+  have hQBs : QB.IsSymm := moorePenroseInverse_mul_isHermitian B
   have hQBi : IsIdempotentElem QB := moorePenroseInverse_mul_isIdempotentElem B
   have hblk := moorePenroseInverse_sub_blocks A B
   change QB*(b-a)*PA= -b*(B-A)*a ∧ QB*(b-a)*(1-PA)=b*(1-PA) ∧

@@ -100,12 +100,12 @@ theorem measurable_pinvL_entry_of {a b : Type*} [Fintype a] [Fintype b] [Decidab
 Atlas `gn-expected-error` (measurability helper). -/
 theorem measurable_frobSq_residual_of {m n q : Type*} [Fintype m] [Fintype n] [Fintype q]
     (A : Matrix m n ℝ) {Qf : γ → Matrix m q ℝ} (hQ : ∀ i j, Measurable fun z => Qf z i j) :
-    Measurable fun z => frobSq (residual (Qf z) A) := by
+    Measurable fun z => frobSq (projResidual (Qf z) A) := by
   have hQt : ∀ i j, Measurable fun z => (Qf z)ᵀ i j := fun i j => hQ j i
   have hA : ∀ i j, Measurable fun _ : γ => A i j := fun _ _ => measurable_const
   have hD := measurable_mul_entry_of hQ (measurable_mul_entry_of hQt hA)
-  have hR : ∀ i j, Measurable fun z => residual (Qf z) A i j := fun i j => by
-    simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.sub_apply]
+  have hR : ∀ i j, Measurable fun z => projResidual (Qf z) A i j := fun i j => by
+    simp only [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.sub_apply]
     exact measurable_const.sub (hD i j)
   unfold frobSq; simp only [frobInner_eq_sum_mul]
   exact Finset.measurable_sum _ fun i _ => Finset.measurable_sum _ fun j _ =>

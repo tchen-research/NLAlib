@@ -14,7 +14,6 @@ degree, a convenience form that is a candidate for upstreaming.
 -/
 
 noncomputable section
-open scoped BigOperators
 open Polynomial
 namespace NLAlib
 

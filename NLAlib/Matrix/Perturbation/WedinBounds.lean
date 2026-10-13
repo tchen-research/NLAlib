@@ -64,9 +64,9 @@ theorem singular_subspace_perturbation_bounds
   refine ⟨hR, hS, ?_, ?_, ?_, ?_⟩
   · rw [hR, hS, specNorm_neg, specNorm_neg]
     apply max_le
-    · exact specNorm_mul_frame_le (hasOrthonormalCols_headColumns hhat.transpose_mul_right _) E
+    · exact specNorm_mul_frame_le (hasOrthonormalCols_headColumns hhat.conjTranspose_mul_right _) E
     · simpa only [specNorm_transpose] using
-        specNorm_mul_frame_le (hasOrthonormalCols_headColumns hhat.transpose_mul_left _) Eᵀ
+        specNorm_mul_frame_le (hasOrthonormalCols_headColumns hhat.conjTranspose_mul_left _) Eᵀ
   · intro hδ
     exact ⟨max_specNorm_sinePrincipalAngles_le_max_residual_div hA hhat hk hδ,
       max_specNorm_sinePrincipalAngles_le_specNorm_div hA hhat hk hδ,

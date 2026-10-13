@@ -58,7 +58,7 @@ theorem exists_orthogonal_idempotent_range_blocks {n : Type*}
         (Fin P.rank ⊕ Fin (Fintype.card n - P.rank)) ℝ).toBlocks₂₁ = 0 by
         ext i j; simp [Matrix.toBlocks₂₁]] using h
   have hPQ : P * Q = Q := mul_eq_of_range_le_of_isIdempotentElem hP hRange.le
-  have hQP : Q * (Qᵀ * P) = P := mul_transpose_mul_eq_of_range_le hQ hRange.ge
+  have hQP : Q * (Qᵀ * P) = P := mul_conjTranspose_mul_eq_of_range_le hQ hRange.ge
   have hRP : Rᵀ * P = 0 := by
     calc
       Rᵀ * P = Rᵀ * (Q * (Qᵀ * P)) := congrArg (fun A : Matrix n n ℝ => Rᵀ * A) hQP.symm

@@ -33,7 +33,7 @@ theorem qr_decomposition {m n : Type*} [Fintype m] [Fintype n]
       IsQR A Q R ∧ (∀ i, 0 ≤ R i i) ∧
         Rᵀ * R = Aᵀ * A ∧
         (∀ k, singularValues R k = singularValues A k) ∧
-        conditionNumber R = conditionNumber A ∧
+        moorePenroseConditionNumber R = moorePenroseConditionNumber A ∧
         (∀ e : n ↪ m, ∃ W : Matrix m m ℝ, ∃ T : Matrix m n ℝ,
           HasOrthonormalCols W ∧ W * Wᵀ = 1 ∧ W.submatrix id e = Q ∧
             W * T = A ∧ T.submatrix e id = R ∧
@@ -48,7 +48,7 @@ theorem qr_decomposition {m n : Type*} [Fintype m] [Fintype n]
   refine ⟨Q, R, ⟨hFactor.symm, hQ, hUpper⟩, hDiag,
     transpose_mul_self_eq_of_qr hQ hFactor,
     congrFun (singularValues_eq_of_qr hQ hFactor),
-    conditionNumber_eq_of_qr hQ hFactor, ?_, ?_⟩
+    moorePenroseConditionNumber_eq_of_qr hQ hFactor, ?_, ?_⟩
   · intro e
     obtain ⟨W, T, hW, hCols, hFullFactor, hCorner, hZero⟩ :=
       exists_full_qr_completion hQ hFactor e

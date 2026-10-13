@@ -16,7 +16,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open scoped Matrix.Norms.L2Operator ComplexOrder
 open NLAlib
-set_option autoImplicit false
 
 /-- Lieb's concavity theorem over `Fin d`, the proof step for `lieb_concavity`. -/
 private theorem lieb_concavity_fin {d : ℕ} [NeZero d]

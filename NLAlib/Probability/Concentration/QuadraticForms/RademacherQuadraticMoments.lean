@@ -11,7 +11,6 @@ Source: Hutchinson 1989; operator manuscript `sh:count-second`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix
 namespace NLAlib

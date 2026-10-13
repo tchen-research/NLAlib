@@ -108,12 +108,12 @@ matrix. Stewart–Sun §I.5, including empty frames.
 atlas: principal-angles-def (partial) -/
 theorem specNorm_sinePrincipalAngles_eq_residual {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
-    specNorm (sinePrincipalAngles P Q) = specNorm (residual P Q) := by
+    specNorm (sinePrincipalAngles P Q) = specNorm (projResidual P Q) := by
   let C := (Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)
   have hs := specNorm_sq_eq_specNorm_transpose_mul_self (sinePrincipalAngles P Q)
   rw [transpose_sinePrincipalAngles_mul_self hP hQ] at hs
   simp only [specNorm_eq_norm, Matrix.l2_opNorm_diagonal] at hs
-  have hr := specNorm_sq_eq_specNorm_transpose_mul_self (residual P Q)
+  have hr := specNorm_sq_eq_specNorm_transpose_mul_self (projResidual P Q)
   rw [transpose_residual_mul_residual_eq_one_sub_overlap hP hQ] at hr
   have hc := specNorm_gram_sub_one_eq_norm_singularValues_sq_sub_one C
   have heq : Cᵀ*C-1 = ((Pᵀ*Q)ᵀ*(Pᵀ*Q)-1).reindex
@@ -130,7 +130,7 @@ theorem specNorm_sinePrincipalAngles_eq_residual {P Q : Matrix m n ℝ}
   rw [hn] at hc
   change specNorm (sinePrincipalAngles P Q)^2 =
     ‖(fun j : Fin (Fintype.card n) => 1-singularValues C j^2)‖ at hs
-  nlinarith [specNorm_nonneg (sinePrincipalAngles P Q), specNorm_nonneg (residual P Q)]
+  nlinarith [specNorm_nonneg (sinePrincipalAngles P Q), specNorm_nonneg (projResidual P Q)]
 
 /-- The sine-angle Frobenius square is width minus overlap Frobenius square.
 Stewart–Sun §I.5, including the empty frame.
@@ -148,12 +148,12 @@ theorem frobSq_sinePrincipalAngles_eq_card_sub_overlap {P Q : Matrix m n ℝ}
   exact Fin.sum_univ_eq_sum_range (fun j => singularValues
     ((Pᵀ*Q).reindex (Fintype.equivFin n) (Fintype.equivFin n)) j^2) (Fintype.card n)
 
-/-- The actual sine-angle Frobenius norm equals the residual Frobenius norm.
+/-- The actual sine-angle Frobenius norm equals the projResidual Frobenius norm.
 Stewart–Sun §I.5.
 atlas: principal-angles-def (partial) -/
 theorem frobNorm_sinePrincipalAngles_eq_residual {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
-    frobNorm (sinePrincipalAngles P Q) = frobNorm (residual P Q) := by
+    frobNorm (sinePrincipalAngles P Q) = frobNorm (projResidual P Q) := by
   rw [frobNorm, frobNorm, frobSq_sinePrincipalAngles_eq_card_sub_overlap hP hQ,
     frobSq_residual_eq_sub hP, Matrix.conjTranspose_eq_transpose_of_trivial,
     frobSq_frame_eq_card hQ]
@@ -194,7 +194,7 @@ omit [DecidableEq n] in
 coordinates. Stewart–Sun §I.5; the complement may be empty. -/
 theorem residual_eq_complement_mul_overlap {r : Type*} [Fintype r]
     {P Q : Matrix m n ℝ} {R : Matrix m r ℝ}
-    (hcomp : P*Pᵀ+R*Rᵀ=1) : residual P Q = R*(Rᵀ*Q) := by
+    (hcomp : P*Pᵀ+R*Rᵀ=1) : projResidual P Q = R*(Rᵀ*Q) := by
   have heq : (1 : Matrix m m ℝ)-P*Pᵀ=R*Rᵀ := by
     rw [← hcomp]
     abel
@@ -228,6 +228,6 @@ theorem specNorm_sinePrincipalAngles_le_one {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
     specNorm (sinePrincipalAngles P Q) ≤ 1 := by
   rw [specNorm_sinePrincipalAngles_eq_residual hP hQ]
-  exact (specNorm_sub_mul_transpose_mul_le hP Q).trans (specNorm_le_one_of_orthonormal hQ)
+  exact (specNorm_sub_mul_conjTranspose_mul_le hP Q).trans (specNorm_le_one_of_orthonormal hQ)
 
 end NLAlib

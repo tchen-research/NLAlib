@@ -11,7 +11,7 @@ Atlas: `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators ENNReal
+open scoped Matrix Matrix.Norms.L2Operator ENNReal
 
 namespace NLAlib
 
@@ -95,7 +95,7 @@ theorem IsSVD.schattenDualCoefficients_attain {m n : ℕ}
       (Real.rpow_le_rpow (singularValues_nonneg A j) (singularValues_antitone A hij) hpq.sub_one_pos.le)
       (Real.rpow_nonneg (schattenNorm_nonneg A p) _)
   constructor
-  · rw [schattenNorm_mul_rectDiag_mul_transpose h.transpose_mul_left h.transpose_mul_right
+  · rw [schattenNorm_mul_rectDiag_mul_transpose h.conjTranspose_mul_left h.conjTranspose_mul_right
       _ hb0 hb, sum_schattenDualCoefficients_rpow_eq_one A hpq hA, Real.one_rpow]
   · rw [h.frobInner_mul_rectDiag_mul_transpose,
       sum_singularValues_mul_schattenDualCoefficients_eq A hpq hA]
@@ -213,7 +213,7 @@ theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
       split_ifs <;> norm_num
   constructor
   · rw [← schattenNorm_one, schattenNorm_mul_rectDiag_mul_transpose
-      h.transpose_mul_left h.transpose_mul_right _ hb0 hb]
+      h.conjTranspose_mul_left h.conjTranspose_mul_right _ hb0 hb]
     simp [leadingSingularCoefficients, hN]
   · rw [h.frobInner_mul_rectDiag_mul_transpose]
     simpa [leadingSingularCoefficients, hN] using hfirst

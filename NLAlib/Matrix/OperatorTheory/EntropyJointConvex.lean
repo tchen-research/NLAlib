@@ -13,7 +13,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder Kronecker
 open NLAlib Matrix
-set_option autoImplicit false
 
 private lemma left_pos {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) (h : A.PosDef) :
     (jointTensorLeft A).PosDef :=

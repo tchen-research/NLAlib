@@ -133,10 +133,6 @@ theorem mul_pinvL_isHermitian [DecidableEq n] (G : Matrix m n 𝕜) :
   rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, Matrix.conjTranspose_nonsing_inv,
     Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
 
-/-- Deprecated alias (F1, transpose twins removed): use `mul_pinvL_isHermitian`. -/
-@[deprecated (since := "2026-10-13")]
-alias mul_pinvL_isSymm := mul_pinvL_isHermitian
-
 /-- `Gᴴ (GGᴴ)⁻¹ G` is Hermitian (unconditionally). Penrose identity `(G⁺G)ᴴ = G⁺G`;
 HMT 2011 §A.2; atlas `pseudoinverse`. -/
 theorem pinvR_mul_isHermitian [DecidableEq m] (G : Matrix m n 𝕜) :
@@ -144,10 +140,6 @@ theorem pinvR_mul_isHermitian [DecidableEq m] (G : Matrix m n 𝕜) :
   unfold Matrix.IsHermitian pinvR
   rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, Matrix.conjTranspose_nonsing_inv,
     Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
-
-/-- Deprecated alias (F1, transpose twins removed): use `pinvR_mul_isHermitian`. -/
-@[deprecated (since := "2026-10-13")]
-alias pinvR_mul_isSymm := pinvR_mul_isHermitian
 
 /-- `G (GᴴG)⁻¹ Gᴴ` is idempotent when `GᴴG` is invertible, so it is the orthogonal projector
 onto `range G`. HMT 2011 §A.2; atlas `pseudoinverse`.

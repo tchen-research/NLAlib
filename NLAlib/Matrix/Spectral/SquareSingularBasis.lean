@@ -28,8 +28,8 @@ theorem exists_orthogonal_transpose_mul_mul_eq_diagonal_singularValues
   let AF := A.reindex e e
   obtain ⟨V, W, h⟩ := exists_isSVD AF
   refine ⟨V.reindex e.symm e.symm, W.reindex e.symm e.symm,
-    HasOrthonormalCols.reindex h.transpose_mul_left _ _,
-    HasOrthonormalCols.reindex h.transpose_mul_right _ _, ?_⟩
+    HasOrthonormalCols.reindex h.conjTranspose_mul_left _ _,
+    HasOrthonormalCols.reindex h.conjTranspose_mul_right _ _, ?_⟩
   have hBack : AF.reindex e.symm e.symm = A := by ext i j; simp [AF]
   have hEq := congrArg (fun M : Matrix (Fin (Fintype.card p))
       (Fin (Fintype.card p)) ℝ => M.reindex e.symm e.symm)

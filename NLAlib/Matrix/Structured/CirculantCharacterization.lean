@@ -10,9 +10,8 @@ case is included separately. Horn–Johnson 2013, §0.9.7.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators Fin.NatCast Fin.IntCast
+open scoped Matrix Fin.NatCast Fin.IntCast
 namespace NLAlib
-set_option autoImplicit false
 
 /-- The cyclic shift sends coordinate `j` to `j+1` modulo the positive
 dimension. This uses Mathlib's native circulant convention.

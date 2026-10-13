@@ -568,15 +568,6 @@ theorem eq_head_add_tail (h : IsSVD A U V) (k : ℕ) :
   funext i
   simp only [Pi.add_apply]; split_ifs <;> simp
 
-/-! Deprecated real (`ᵀ`) names of the `IsSVD` API (F1, transpose twins removed); leaf files still
-use them in term position, where the general statement elaborates at `ℝ`. -/
-
-@[deprecated (since := "2026-10-13")] alias transpose_mul_left := IsSVD.conjTranspose_mul_left
-@[deprecated (since := "2026-10-13")] alias transpose_mul_right := IsSVD.conjTranspose_mul_right
-@[deprecated (since := "2026-10-13")] alias mul_transpose_left := IsSVD.mul_conjTranspose_left
-@[deprecated (since := "2026-10-13")] alias mul_transpose_right := IsSVD.mul_conjTranspose_right
-@[deprecated (since := "2026-10-13")] alias transpose_mul_mul := IsSVD.conjTranspose_mul_mul
-@[deprecated (since := "2026-10-13")] alias transpose_eq := IsSVD.conjTranspose_eq
 
 end IsSVD
 

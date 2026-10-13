@@ -13,7 +13,7 @@ Atlas: `horn-product-inequality`, `schatten-norms-def`.
 -/
 
 noncomputable section
-open scoped BigOperators Matrix
+open scoped Matrix
 
 namespace NLAlib
 

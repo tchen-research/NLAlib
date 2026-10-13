@@ -8,7 +8,6 @@ import NLAlib.Sketching.Sparse.Bands.Ladder
 import NLAlib.Sketching.Sparse.Bands.EnvelopeArithmetic
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Light raising row factorization
@@ -18,7 +17,7 @@ Ported from `SparseFockFormal.LightBandsConcrete` at commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators InnerProductSpace Matrix.Norms.L2Operator
+open scoped InnerProductSpace Matrix.Norms.L2Operator
 
 namespace NLAlib.SparseSketch.Light
 

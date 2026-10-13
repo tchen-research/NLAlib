@@ -10,7 +10,6 @@ Atlas: `isserlis`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix MatrixOrder
 namespace NLAlib

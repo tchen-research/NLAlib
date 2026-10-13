@@ -12,8 +12,6 @@ Source: generalises `SparseFockFormal.DirectionalConcrete.normSq_sum_le_card` (s
 Euclidean coordinates), commit b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-set_option autoImplicit false
-open scoped BigOperators
 namespace NLAlib
 
 /-- The squared norm of a finite sum is at most the number of terms times the sum of the squared

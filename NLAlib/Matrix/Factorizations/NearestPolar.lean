@@ -10,7 +10,7 @@ for every competing isometry. Atlas `polar-decomposition`.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator BigOperators
+open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 
@@ -53,11 +53,11 @@ private theorem exists_svd_polar_with_distance {m n : ℕ} (A : Matrix (Fin m) (
   let U := L * J * Rᵀ
   let Q := R * Matrix.diagonal (fun i : Fin n => singularValues A i) * Rᵀ
   have hJ := hasOrthonormalCols_rectDiag_one hCard
-  have hL : HasOrthonormalCols L := hSVD.transpose_mul_left
+  have hL : HasOrthonormalCols L := hSVD.conjTranspose_mul_left
   have hRt : HasOrthonormalCols Rᵀ := by
     change Rᵀᵀ * Rᵀ = 1
     rw [Matrix.transpose_transpose]
-    exact hSVD.mul_transpose_right
+    exact hSVD.mul_conjTranspose_right
   have hU : HasOrthonormalCols U := by
     change (L * J * Rᵀ)ᵀ * (L * J * Rᵀ) = 1
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]

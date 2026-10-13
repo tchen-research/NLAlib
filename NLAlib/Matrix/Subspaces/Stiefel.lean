@@ -14,7 +14,6 @@ Supports atlas `haar-orthogonal`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory Metric
 open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
@@ -131,8 +130,8 @@ theorem exists_orthogonalGroup_smul_eq {n k : ℕ} (hkn : k ≤ n)
     (Q Q' : Stiefel n k) :
     ∃ O : Matrix.orthogonalGroup (Fin n) ℝ, O • Q = Q' := by
   let e := Fin.castLEEmb hkn
-  obtain ⟨W, hW, hWQ⟩ := exists_orthogonal_completion Q.val Q.property e
-  obtain ⟨V, hV, hVQ⟩ := exists_orthogonal_completion Q'.val Q'.property e
+  obtain ⟨W, hW, hWQ⟩ := exists_unitary_completion Q.val Q.property e
+  obtain ⟨V, hV, hVQ⟩ := exists_unitary_completion Q'.val Q'.property e
   simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at hW hV
   have hWt : W * Wᵀ = 1 := mul_eq_one_comm.mp hW
   let O := V * Wᵀ

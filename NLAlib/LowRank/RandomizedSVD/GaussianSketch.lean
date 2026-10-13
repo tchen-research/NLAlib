@@ -28,7 +28,6 @@ Atlas: `rsvd-expected-error`, `gn-expected-error`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open MeasureTheory ProbabilityTheory
 open scoped Matrix ENNReal
@@ -232,15 +231,15 @@ theorem completion_reduction_gaussian_integrable [IsProbabilityMeasure μ] {m s 
     (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ) :
     Integrable (fun ω => frobSq (A - sketchedOutput Q (Ψ ω) A)) μ ∧
     ∫ ω, frobSq (A - sketchedOutput Q (Ψ ω) A) ∂μ
-      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) := by
+      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual Q A) := by
   have hQQp : Qᵀ * Qp = 0 :=
     conjTranspose_mul_eq_zero_of_completion hQ.conjTranspose_mul_self hQp.conjTranspose_mul_self
       hcomp
   obtain ⟨hG₁, hG₁m, hGi⟩ :=
-    completion_gaussian_inputs hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A) hqs
-  have hG₂ := integral_frobSq_pinvL_block_mul_block_mul hΨ Q Qp hQ hQp hQQp (Qpᵀ * residual Q A)
+    completion_gaussian_inputs hΨ Q Qp hQ hQp hQQp (Qpᵀ * projResidual Q A) hqs
+  have hG₂ := integral_frobSq_pinvL_block_mul_block_mul hΨ Q Qp hQ hQp hQQp (Qpᵀ * projResidual Q A)
   refine ⟨?_, completion_reduction Q Qp A hQ hQp hcomp hq hqs Ψ hG₁ hG₂ hG₁m hGi⟩
-  refine ((integrable_const (frobSq (residual Q A))).add hGi).congr ?_
+  refine ((integrable_const (frobSq (projResidual Q A))).add hGi).congr ?_
   filter_upwards [hG₁] with ω h
   exact (frobSq_error Q Qp (Ψ ω) A hQ hcomp h).symm
 
@@ -261,7 +260,7 @@ theorem completion_reduction_gaussian [IsProbabilityMeasure μ] {m s q r : ℕ}
     (Ψ : Ωs → Matrix (Fin m) (Fin s) ℝ)
     (hΨ : HasLaw Ψ (gaussianMatrix (Fin m) (Fin s)) μ) :
     ∫ ω, frobSq (A - sketchedOutput Q (Ψ ω) A) ∂μ
-      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) :=
+      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual Q A) :=
   (completion_reduction_gaussian_integrable Q Qp A hQ hQp hcomp hq hqs Ψ hΨ).2
 
 end Completion
@@ -304,7 +303,7 @@ theorem completion_gaussian_of_orthonormal {ι : Type*} [Fintype ι] [DecidableE
     (hq : 1 ≤ q) (hqs : q + 2 ≤ s) :
     Integrable (fun y => frobSq (A - sketchedOutput Q y A)) (gaussianMatrix (Fin m) (Fin s)) ∧
     ∫ y, frobSq (A - sketchedOutput Q y A) ∂gaussianMatrix (Fin m) (Fin s)
-      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (residual Q A) := by
+      = (1 + (q : ℝ) / (s - q - 1)) * frobSq (projResidual Q A) := by
   obtain ⟨r, Qp, hQp, hcomp⟩ := exists_unitary_complement Q hQ
   exact completion_reduction_gaussian_integrable (μ := gaussianMatrix (Fin m) (Fin s)) Q Qp A hQ hQp
     hcomp hq hqs (fun y => y) HasLaw.id

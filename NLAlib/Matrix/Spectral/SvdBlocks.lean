@@ -10,7 +10,7 @@ HMT 2011, Theorems 9.1 and 10.5; atlas `rsvd-expected-error`, `gn-expected-error
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 
 /-- The padded squared singular-value tail has the same value when summed over
@@ -123,7 +123,7 @@ theorem exists_svd_right_blocks {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ)
     apply Finset.sum_congr rfl
     intro j _
     simp
-  refine ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.transpose_mul_left, hV₁, hV₂, hcross, ?_⟩
+  refine ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.conjTranspose_mul_left, hV₁, hV₂, hcross, ?_⟩
   rw [hF, bestRankFrobSq_eq_singularValueTailSq, htail]
 
 end NLAlib

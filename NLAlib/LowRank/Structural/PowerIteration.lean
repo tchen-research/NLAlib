@@ -159,7 +159,7 @@ orthonormal columns, so that hypothesis is dropped. Atlas `power-iteration-deter
 atlas: power-iteration-deterministic -/
 theorem specNorm_residual_pow_le {q' : Type*} [Fintype q'] [DecidableEq q']
     {Q : Matrix m q' ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) (q : ℕ) :
-    specNorm (residual Q A) ^ (2 * q + 1) ≤ specNorm (residual Q ((A * Aᵀ) ^ q * A)) := by
+    specNorm (projResidual Q A) ^ (2 * q + 1) ≤ specNorm (projResidual Q ((A * Aᵀ) ^ q * A)) := by
   have hPs : (1 - Q * Qᵀ)ᵀ = 1 - Q * Qᵀ := by
     rw [Matrix.transpose_sub, Matrix.transpose_one, Matrix.transpose_mul,
       Matrix.transpose_transpose]
@@ -175,12 +175,12 @@ Atlas `power-iteration-deterministic`.
 atlas: power-iteration-deterministic -/
 theorem specNorm_residual_le_rpow {q' : Type*} [Fintype q'] [DecidableEq q']
     {Q : Matrix m q' ℝ} (hQ : HasOrthonormalCols Q) (A : Matrix m n ℝ) (q : ℕ) :
-    specNorm (residual Q A) ≤
-      specNorm (residual Q ((A * Aᵀ) ^ q * A)) ^ (1 / (2 * (q : ℝ) + 1)) := by
+    specNorm (projResidual Q A) ≤
+      specNorm (projResidual Q ((A * Aᵀ) ^ q * A)) ^ (1 / (2 * (q : ℝ) + 1)) := by
   have h := specNorm_residual_pow_le hQ A q
   have hne : 2 * q + 1 ≠ 0 := by omega
   have hcast : (1 / (2 * (q : ℝ) + 1)) = ((2 * q + 1 : ℕ) : ℝ)⁻¹ := by push_cast; ring
-  rw [hcast, ← Real.pow_rpow_inv_natCast (specNorm_nonneg (residual Q A)) hne]
+  rw [hcast, ← Real.pow_rpow_inv_natCast (specNorm_nonneg (projResidual Q A)) hne]
   exact Real.rpow_le_rpow (pow_nonneg (specNorm_nonneg _) _) h
     (inv_nonneg.2 (Nat.cast_nonneg _))
 

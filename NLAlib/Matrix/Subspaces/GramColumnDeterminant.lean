@@ -26,7 +26,7 @@ theorem det_gram_fromCols_eq_mul_frobSq_sub_projector
   let P := B * moorePenroseInverse B
   by_cases hG : IsUnit G
   · let := hG.nonempty_invertible.some
-    have hP : Pᵀ = P := (mul_moorePenroseInverse_isSymm B).eq
+    have hP : Pᵀ = P := (mul_moorePenroseInverse_isHermitian B).eq
     have hPP : P * P = P := mul_moorePenroseInverse_isIdempotentElem B
     have hcomp : (1 - P)ᵀ * (1 - P) = 1 - P := by
       rw [Matrix.transpose_sub, Matrix.transpose_one, hP, Matrix.sub_mul, Matrix.mul_sub,

@@ -11,7 +11,7 @@ Horn–Johnson 2013, §§7.4.4–7.4.6 and Corollary 7.4.1.5.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -102,18 +102,18 @@ theorem exists_orthogonal_pair_attaining_singularValue_pairing (A B : Matrix m n
   obtain ⟨LB, RB, hB⟩ := exists_isSVD B
   let U := LA * LBᵀ
   let T := RB * RAᵀ
-  have hLA : HasOrthonormalCols LA := hA.transpose_mul_left
-  have hRA : HasOrthonormalCols RA := hA.transpose_mul_right
-  have hLB : HasOrthonormalCols LB := hB.transpose_mul_left
-  have hRB : HasOrthonormalCols RB := hB.transpose_mul_right
+  have hLA : HasOrthonormalCols LA := hA.conjTranspose_mul_left
+  have hRA : HasOrthonormalCols RA := hA.conjTranspose_mul_right
+  have hLB : HasOrthonormalCols LB := hB.conjTranspose_mul_left
+  have hRB : HasOrthonormalCols RB := hB.conjTranspose_mul_right
   have hLBt : HasOrthonormalCols LBᵀ := by
     change LBᵀᴴ * LBᵀ = 1
     rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
-    exact hB.mul_transpose_left
+    exact hB.mul_conjTranspose_left
   have hRAt : HasOrthonormalCols RAᵀ := by
     change RAᵀᴴ * RAᵀ = 1
     rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
-    exact hA.mul_transpose_right
+    exact hA.mul_conjTranspose_right
   refine ⟨U, T, hLA.mul hLBt, hRB.mul hRAt, ?_⟩
   have hAligned : U * B * T = LA *
       (rectDiag (singularValues B) :

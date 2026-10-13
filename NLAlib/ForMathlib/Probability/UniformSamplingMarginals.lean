@@ -9,7 +9,6 @@ Heidary's MIT-licensed sampling coupling, pinned in UniformSamplingCoupling.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Classical ENNReal NNReal
 namespace NLAlib
 

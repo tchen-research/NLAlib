@@ -13,7 +13,7 @@ Supports atlas `schur-horn`.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 

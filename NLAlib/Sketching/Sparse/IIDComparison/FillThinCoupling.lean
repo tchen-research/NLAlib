@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.UniformSparse
 import NLAlib.Sketching.Sparse.IIDComparison.IndependentCopyLift
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Fill/thin coupling for uniform signed exact-s columns
@@ -19,7 +18,7 @@ SparseStack constants: the number of nonempty blocks is bounded by
 `min(K,s)` and has expectation `s*(1-p0(b))`.
 -/
 
-open scoped BigOperators InnerProductSpace
+open scoped InnerProductSpace
 
 namespace NLAlib.SparseSketch.UniformSparse
 

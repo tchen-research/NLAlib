@@ -8,7 +8,7 @@ attainer ingredients for Schatten duality, Bhatia (1997), §IV.2.
 -/
 
 noncomputable section
-open scoped Matrix Matrix.Norms.L2Operator BigOperators
+open scoped Matrix Matrix.Norms.L2Operator
 
 namespace NLAlib
 
@@ -78,7 +78,7 @@ theorem IsSVD.frobInner_mul_rectDiag_mul_transpose {m n : Type*} [Fintype m] [Fi
     frobInner A (U * (rectDiag b : Matrix (Fin p) (Fin q) ℝ) * Vᵀ) =
       ∑ i ∈ Finset.range (min p q), singularValues A i * b i := by
   conv_lhs => rw [h.eq, Matrix.conjTranspose_eq_transpose_of_trivial]
-  rw [frobInner_mul_transpose_right_of_orthonormal h.transpose_mul_right,
-    frobInner_mul_left_of_orthonormal h.transpose_mul_left, frobInner_rectDiag_rectDiag]
+  rw [frobInner_mul_transpose_right_of_orthonormal h.conjTranspose_mul_right,
+    frobInner_mul_left_of_orthonormal h.conjTranspose_mul_left, frobInner_rectDiag_rectDiag]
 
 end NLAlib

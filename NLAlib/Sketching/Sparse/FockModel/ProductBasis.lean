@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.FockModel.TernaryJacobi
 import NLAlib.Sketching.Sparse.FockModel.SiteKernels
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Finite product Fock basis
@@ -17,7 +16,7 @@ b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 
 namespace NLAlib.SparseSketch
 
-open scoped BigOperators InnerProductSpace
+open scoped InnerProductSpace
 open SparseSketch.FiniteLaw
 
 noncomputable section

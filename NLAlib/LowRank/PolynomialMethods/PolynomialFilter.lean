@@ -128,9 +128,9 @@ theorem residual_sq_le_of_filtered_blocks
     (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)
     {Q : Matrix m q ℝ} (hQo : HasOrthonormalCols Q)
     (hQ : Q * (Qᵀ * Y) = Y) :
-    specNorm (residual Q A) ^ 2 ≤ specNorm S₂ ^ 2 +
+    specNorm (projResidual Q A) ^ 2 ≤ specNorm S₂ ^ 2 +
       specNorm (S₂ * D * Ω₂ * R * Cinv) ^ 2 ∧
-    frobSq (residual Q A) ≤ frobSq S₂ + frobSq (S₂ * D * Ω₂ * R * Cinv) := by
+    frobSq (projResidual Q A) ≤ frobSq S₂ + frobSq (S₂ * D * Ω₂ * R * Cinv) := by
   let Z := Y * R * Cinv * V₁ᵀ
   let T := S₂ * D * Ω₂ * R * Cinv
   have hQZ : Q * (Qᵀ * Z) = Z := by
@@ -139,8 +139,8 @@ theorem residual_sq_le_of_filtered_blocks
     rw [← Matrix.mul_assoc Qᵀ Y, ← Matrix.mul_assoc Q, hQ]
   have hdiff : A - Z = U₂ * (S₂ * V₂ᵀ - T * V₁ᵀ) :=
     sub_mul_mul_mul_transpose_eq_of_filtered_blocks hA hY hR hC
-  have hres : residual Q A = residual Q (A - Z) := by
-    simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub, hQZ]
+  have hres : projResidual Q A = projResidual Q (A - Z) := by
+    simp only [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub, hQZ]
     abel
   have horth : (S₂ * V₂ᵀ) * (-(T * V₁ᵀ))ᵀ = 0 := by
     have hV' : V₂ᵀ * V₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hV
@@ -162,13 +162,13 @@ theorem residual_sq_le_of_filtered_blocks
     simp only [Matrix.transpose_mul, Matrix.transpose_transpose]
     exact frobInner_mul_mul_eq_zero _ _ _ _ (conjTranspose_mul_eq_zero_comm.1 hV)
   constructor
-  · calc specNorm (residual Q A) ^ 2 ≤ specNorm (A - Z) ^ 2 :=
+  · calc specNorm (projResidual Q A) ^ 2 ≤ specNorm (A - Z) ^ 2 :=
           pow_le_pow_left₀ (specNorm_nonneg _) (by
             rw [hres]; exact specNorm_sub_mul_conjTranspose_mul_le hQo.conjTranspose_mul_self _) 2
       _ ≤ _ := by
           rw [hdiff, specNorm_mul_left_of_hasOrthonormalCols hU₂t, sub_eq_add_neg]
           exact hs
-  · calc frobSq (residual Q A) ≤ frobSq (A - Z) := by
+  · calc frobSq (projResidual Q A) ≤ frobSq (A - Z) := by
           rw [hres]; exact frobSq_residual_le hQo _
       _ = _ := by
           rw [hdiff, frobSq_mul_left_of_orthonormal hU₂.conjTranspose_mul_self,
@@ -197,9 +197,9 @@ theorem residual_sq_le_of_polynomial_filter
     {Q : Matrix m q ℝ} (hQo : HasOrthonormalCols Q)
     (hQ : Q * (Qᵀ * (aeval (A * Aᵀ) p * A * Ω)) =
       aeval (A * Aᵀ) p * A * Ω) :
-    specNorm (residual Q A) ^ 2 ≤ specNorm S₂ ^ 2 +
+    specNorm (projResidual Q A) ^ 2 ≤ specNorm S₂ ^ 2 +
       specNorm (S₂ * aeval (S₂ᵀ * S₂) p * (V₂ᵀ * Ω) * R * Cinv) ^ 2 ∧
-    frobSq (residual Q A) ≤ frobSq S₂ +
+    frobSq (projResidual Q A) ≤ frobSq S₂ +
       frobSq (S₂ * aeval (S₂ᵀ * S₂) p * (V₂ᵀ * Ω) * R * Cinv) :=
   residual_sq_le_of_filtered_blocks hA
     (aeval_gram_mul_mul_eq_of_block_decomposition hA hU₁ hU₂ hU hV₁ hV₂ hV p Ω)
@@ -266,7 +266,7 @@ theorem specNorm_residual_sq_le_of_polynomial_filter_envelopes
     (hτ : 0 ≤ τ) (hmax : ∀ i, i < min a b → |s₂ i * p.eval (s₂ i ^ 2)| ≤ τ)
     {Q : Matrix m q ℝ} (hQo : HasOrthonormalCols Q)
     (hQ : Q * (Qᵀ * (aeval (A * Aᵀ) p * A * Ω)) = aeval (A * Aᵀ) p * A * Ω) :
-    specNorm (residual Q A) ^ 2 ≤
+    specNorm (projResidual Q A) ^ 2 ≤
       specNorm (rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ) ^ 2 +
         (τ / c) ^ 2 * specNorm (V₂ᵀ * Ω) ^ 2 * specNorm R ^ 2 := by
   let S₂ : Matrix (Fin a) (Fin b) ℝ := rectDiag s₂
@@ -299,7 +299,7 @@ theorem specNorm_residual_sq_le_of_polynomial_filter_envelopes
         mul_le_mul_of_nonneg_left hCi
           (mul_nonneg (mul_nonneg hτ (specNorm_nonneg _)) (specNorm_nonneg _))
       _ = _ := by ring
-  calc specNorm (residual Q A) ^ 2 ≤ specNorm S₂ ^ 2 +
+  calc specNorm (projResidual Q A) ^ 2 ≤ specNorm S₂ ^ 2 +
         specNorm (S₂ * D * (V₂ᵀ * Ω) * R * Cinv) ^ 2 := hcore
     _ ≤ specNorm S₂ ^ 2 + ((τ / c) * specNorm (V₂ᵀ * Ω) * specNorm R) ^ 2 :=
       add_le_add le_rfl (pow_le_pow_left₀ (specNorm_nonneg _) hchain 2)
@@ -324,7 +324,7 @@ theorem specNorm_residual_sq_le_filterTailMaxAbs_div_filterHeadMinAbs
     (hR : (V₁ᵀ * Ω) * R = 1) (hc : 0 < filterHeadMinAbs s₁ p)
     {Q : Matrix m q ℝ} (hQo : HasOrthonormalCols Q)
     (hQ : Q * (Qᵀ * (aeval (A * Aᵀ) p * A * Ω)) = aeval (A * Aᵀ) p * A * Ω) :
-    specNorm (residual Q A) ^ 2 ≤
+    specNorm (projResidual Q A) ^ 2 ≤
       specNorm (rectDiag s₂ : Matrix (Fin a) (Fin b) ℝ) ^ 2 +
         (filterTailMaxAbs s₂ p a b / filterHeadMinAbs s₁ p) ^ 2 *
           specNorm (V₂ᵀ * Ω) ^ 2 * specNorm R ^ 2 :=

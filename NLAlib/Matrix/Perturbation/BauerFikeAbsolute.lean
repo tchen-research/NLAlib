@@ -39,7 +39,7 @@ theorem mul_addGroupNorm_le_diagonal_residual (N : AddGroupNorm (n → ℂ))
   simpa only [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hδ] using
     mul_le_mul_of_nonneg_right (hsep i) (norm_nonneg (x i))
 
-/-- The residual Bauer–Fike bound for any induced absolute norm.
+/-- The projResidual Bauer–Fike bound for any induced absolute norm.
 Source: Horn–Johnson (2013), Corollary 6.3.4; the matrix-action assumption
 also permits any larger compatible norm bound. The nonzero approximate
 eigenvector premise handles the denominator exactly.

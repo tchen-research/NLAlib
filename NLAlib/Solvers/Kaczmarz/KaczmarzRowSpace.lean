@@ -14,7 +14,6 @@ Atlas: `kaczmarz-inconsistent`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open scoped Matrix
 open Matrix MeasureTheory

@@ -21,11 +21,11 @@ Wedin (1972), Section 3; no spectral separation is assumed for the identity. -/
 theorem coupled_residual_headColumns_left (h : IsSVD A U V) (hkm : k ≤ m) (hkn : k ≤ n)
     (Uhat : Matrix (Fin m) (Fin p) ℝ) (Vhat : Matrix (Fin n) (Fin p) ℝ)
     (T : Matrix (Fin p) (Fin p) ℝ) :
-    (A - h.truncatedMatrix k) * residual (headColumns V hkn) Vhat -
-      residual (headColumns U hkm) Uhat * T =
-        residual (headColumns U hkm) (A * Vhat - Uhat * T) := by
+    (A - h.truncatedMatrix k) * projResidual (headColumns V hkn) Vhat -
+      projResidual (headColumns U hkm) Uhat * T =
+        projResidual (headColumns U hkm) (A * Vhat - Uhat * T) := by
   rw [h.sub_truncatedMatrix_mul_residual_headColumns hkm hkn Vhat, residual_mul]
-  simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub]
+  simp only [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub]
   abel
 
 /-- The second ambient complementary singular residual equation is exact.
@@ -33,22 +33,22 @@ Wedin (1972), Section 3; unmatched rectangular null directions are retained. -/
 theorem coupled_residual_headColumns_right (h : IsSVD A U V) (hkm : k ≤ m) (hkn : k ≤ n)
     (Uhat : Matrix (Fin m) (Fin p) ℝ) (Vhat : Matrix (Fin n) (Fin p) ℝ)
     (T : Matrix (Fin p) (Fin p) ℝ) :
-    (A - h.truncatedMatrix k)ᵀ * residual (headColumns U hkm) Uhat -
-      residual (headColumns V hkn) Vhat * T =
-        residual (headColumns V hkn) (Aᵀ * Uhat - Vhat * T) := by
+    (A - h.truncatedMatrix k)ᵀ * projResidual (headColumns U hkm) Uhat -
+      projResidual (headColumns V hkn) Vhat * T =
+        projResidual (headColumns V hkn) (Aᵀ * Uhat - Vhat * T) := by
   rw [h.sub_truncatedMatrix_transpose_mul_residual_headColumns hkm hkn Uhat, residual_mul]
-  simp only [residual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub]
+  simp only [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_sub]
   abel
 
 end IsSVD
 
 private theorem specNorm_residual_le {m n k : Type*} [Fintype m] [Fintype n] [Fintype k]
     [DecidableEq m] [DecidableEq n] [DecidableEq k] {Q : Matrix m k ℝ} (hQ : HasOrthonormalCols Q) (R : Matrix m n ℝ) :
-    specNorm (residual Q R) ≤ specNorm R := specNorm_sub_mul_transpose_mul_le hQ R
+    specNorm (projResidual Q R) ≤ specNorm R := specNorm_sub_mul_conjTranspose_mul_le hQ R
 
 private theorem frobNorm_residual_le {m n k : Type*} [Fintype m] [Fintype n] [Fintype k]
     [DecidableEq k] {Q : Matrix m k ℝ} (hQ : HasOrthonormalCols Q) (R : Matrix m n ℝ) :
-    frobNorm (residual Q R) ≤ frobNorm R := Real.sqrt_le_sqrt (frobSq_residual_le hQ R)
+    frobNorm (projResidual Q R) ≤ frobNorm R := Real.sqrt_le_sqrt (frobSq_residual_le hQ R)
 
 /-- Wedin's exact maximum-residual operator bound for the leading left and
 right singular spaces of actual SVDs. Wedin (1972), Section 3. The denominator
@@ -74,16 +74,16 @@ theorem max_specNorm_sinePrincipalAngles_le_max_residual_div
   let Uhat₁ := headColumns Uhat (hk.trans (min_le_left m n))
   let Vhat₁ := headColumns Vhat (hk.trans (min_le_right m n))
   let t : Fin k → ℝ := fun i => singularValues (A + E) i
-  have hU : HasOrthonormalCols U₁ := hasOrthonormalCols_headColumns hA.transpose_mul_left _
-  have hV : HasOrthonormalCols V₁ := hasOrthonormalCols_headColumns hA.transpose_mul_right _
-  have hUh : HasOrthonormalCols Uhat₁ := hasOrthonormalCols_headColumns hhat.transpose_mul_left _
-  have hVh : HasOrthonormalCols Vhat₁ := hasOrthonormalCols_headColumns hhat.transpose_mul_right _
+  have hU : HasOrthonormalCols U₁ := hasOrthonormalCols_headColumns hA.conjTranspose_mul_left _
+  have hV : HasOrthonormalCols V₁ := hasOrthonormalCols_headColumns hA.conjTranspose_mul_right _
+  have hUh : HasOrthonormalCols Uhat₁ := hasOrthonormalCols_headColumns hhat.conjTranspose_mul_left _
+  have hVh : HasOrthonormalCols Vhat₁ := hasOrthonormalCols_headColumns hhat.conjTranspose_mul_right _
   have ht : ∀ i : Fin k, singularValues (A + E) (k - 1) ≤ t i := by
     intro i
     exact singularValues_antitone (A + E) (by have hi := i.isLt; omega)
   have hh := sub_mul_max_specNorm_le_max_coupled_residual
     (singularValues_nonneg (A + E) (k - 1)) ht
-    (hA.specNorm_sub_truncatedMatrix k).le (residual U₁ Uhat₁) (residual V₁ Vhat₁)
+    (hA.specNorm_sub_truncatedMatrix k).le (projResidual U₁ Uhat₁) (projResidual V₁ Vhat₁)
   rw [hA.coupled_residual_headColumns_left, hA.coupled_residual_headColumns_right] at hh
   have hcontr := max_le_max (specNorm_residual_le hU (A * Vhat₁ - Uhat₁ * Matrix.diagonal t))
     (specNorm_residual_le hV (Aᵀ * Uhat₁ - Vhat₁ * Matrix.diagonal t))
@@ -118,16 +118,16 @@ theorem sqrt_add_sq_frobNorm_sinePrincipalAngles_le_sqrt_add_sq_residual_div
   let Uhat₁ := headColumns Uhat (hk.trans (min_le_left m n))
   let Vhat₁ := headColumns Vhat (hk.trans (min_le_right m n))
   let t : Fin k → ℝ := fun i => singularValues (A + E) i
-  have hU : HasOrthonormalCols U₁ := hasOrthonormalCols_headColumns hA.transpose_mul_left _
-  have hV : HasOrthonormalCols V₁ := hasOrthonormalCols_headColumns hA.transpose_mul_right _
-  have hUh : HasOrthonormalCols Uhat₁ := hasOrthonormalCols_headColumns hhat.transpose_mul_left _
-  have hVh : HasOrthonormalCols Vhat₁ := hasOrthonormalCols_headColumns hhat.transpose_mul_right _
+  have hU : HasOrthonormalCols U₁ := hasOrthonormalCols_headColumns hA.conjTranspose_mul_left _
+  have hV : HasOrthonormalCols V₁ := hasOrthonormalCols_headColumns hA.conjTranspose_mul_right _
+  have hUh : HasOrthonormalCols Uhat₁ := hasOrthonormalCols_headColumns hhat.conjTranspose_mul_left _
+  have hVh : HasOrthonormalCols Vhat₁ := hasOrthonormalCols_headColumns hhat.conjTranspose_mul_right _
   have ht : ∀ i : Fin k, singularValues (A + E) (k - 1) ≤ t i := by
     intro i
     exact singularValues_antitone (A + E) (by have hi := i.isLt; omega)
   have hh := sub_sq_mul_add_sq_frobNorm_le_add_sq_coupled_residual
     (singularValues_nonneg (A + E) (k - 1)) ht (hA.specNorm_sub_truncatedMatrix k).le hδ.le
-    (residual U₁ Uhat₁) (residual V₁ Vhat₁)
+    (projResidual U₁ Uhat₁) (projResidual V₁ Vhat₁)
   rw [hA.coupled_residual_headColumns_left, hA.coupled_residual_headColumns_right] at hh
   have hF := pow_le_pow_left₀ (frobNorm_nonneg _)
     (frobNorm_residual_le hU (A * Vhat₁ - Uhat₁ * Matrix.diagonal t)) 2

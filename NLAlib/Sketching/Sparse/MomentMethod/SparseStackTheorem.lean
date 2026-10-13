@@ -6,7 +6,6 @@ import NLAlib.Sketching.Sparse.MomentMethod.IndependentFrame
 import NLAlib.Sketching.Sparse.MomentMethod.FrameOfMatrix
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Explicit fully independent SparseStack theorem

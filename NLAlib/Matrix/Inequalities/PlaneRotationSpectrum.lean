@@ -7,7 +7,7 @@ an exact linear diagonal increment. Source: Schur–Horn variational rederivatio
 equation (6), supporting the atlas result `schur-horn`.
 -/
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

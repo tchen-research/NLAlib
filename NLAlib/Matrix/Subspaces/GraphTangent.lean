@@ -34,7 +34,7 @@ theorem subspaceTangent_range_graph_eq_specNorm
     (hU₁ : HasOrthonormalCols U₁) (hU₂ : HasOrthonormalCols U₂)
     (hU : U₁ᵀ * U₂ = 0) (F : Matrix r k ℝ) :
     subspaceTangent U₁ U₂ (LinearMap.range (U₁ + U₂ * F).mulVecLin) = specNorm F := by
-  have hU' : U₂ᵀ * U₁ = 0 := transpose_mul_eq_zero_comm.1 hU
+  have hU' : U₂ᵀ * U₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hU
   have hhead : ∀ z : k → ℝ, U₁ᵀ *ᵥ ((U₁ + U₂ * F) *ᵥ z) = z := by
     intro z
     rw [Matrix.mulVec_mulVec, Matrix.mul_add, ← Matrix.mul_assoc, show U₁ᵀ * U₁ = 1 from hU₁, hU,
@@ -149,7 +149,7 @@ theorem vectorTangentToFrame_graph_col_le
       star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols hU₁ e]
     simp [e]
   have horth : U₁.col i ⬝ᵥ (U₂ *ᵥ F.col i) = 0 := by
-    have hU' : U₂ᵀ * U₁ = 0 := transpose_mul_eq_zero_comm.1 hU
+    have hU' : U₂ᵀ * U₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hU
     rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, he,
       Matrix.mulVec_mulVec, hU', Matrix.zero_mulVec, zero_dotProduct]
   have hw : U₁.col i + U₂ *ᵥ F.col i ∈ LinearMap.range Q.mulVecLin := by

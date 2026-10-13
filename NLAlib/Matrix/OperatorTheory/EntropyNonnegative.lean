@@ -14,7 +14,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open scoped Matrix.Norms.L2Operator ComplexOrder
 open NLAlib
-set_option autoImplicit false
 
 /-- Matrix relative entropy of positive definite matrices is nonnegative.
 

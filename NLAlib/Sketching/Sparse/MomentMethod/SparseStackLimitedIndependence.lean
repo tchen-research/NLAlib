@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.FiniteLaw.LocalMoments
 import NLAlib.Sketching.Sparse.MomentMethod.SparseStackTheorem
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Limited-independence transfer for SparseStack
@@ -27,7 +26,7 @@ seed-length claim is asserted here: those are separate generator facts, not
 needed for the distributional theorem formalized below.
 -/
 
-open scoped BigOperators InnerProductSpace Matrix.Norms.L2Operator
+open scoped InnerProductSpace Matrix.Norms.L2Operator
 
 namespace NLAlib.SparseSketch
 

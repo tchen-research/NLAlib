@@ -10,7 +10,7 @@ Atlas: `ky-fan-norms-def`.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 

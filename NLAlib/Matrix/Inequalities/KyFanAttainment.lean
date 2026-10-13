@@ -8,7 +8,7 @@ Atlas: `ky-fan-maximum-principle`.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 
@@ -82,11 +82,11 @@ theorem exists_trace_twoSided_compression_eq_kyFanNorm {m n : Type*}
   obtain ⟨P, R, hSVD⟩ := exists_isSVD A
   let em := Fin.castLEEmb (hk.trans (min_le_left _ _))
   let en := Fin.castLEEmb (hk.trans (min_le_right _ _))
-  have hP : HasOrthonormalCols P := hSVD.transpose_mul_left
-  have hR : HasOrthonormalCols R := hSVD.transpose_mul_right
+  have hP : HasOrthonormalCols P := hSVD.conjTranspose_mul_left
+  have hR : HasOrthonormalCols R := hSVD.conjTranspose_mul_right
   refine ⟨P.submatrix id em, R.submatrix id en, hP.submatrix_cols em,
     hR.submatrix_cols en, ?_⟩
-  have hwhole : Pᵀ * A * R = rectDiag (singularValues A) := hSVD.transpose_mul_mul
+  have hwhole : Pᵀ * A * R = rectDiag (singularValues A) := hSVD.conjTranspose_mul_mul
   have h1 := Matrix.submatrix_mul_equiv Pᵀ A em (Equiv.refl m) id
   have h2 := Matrix.submatrix_mul_equiv (Pᵀ * A) R em (Equiv.refl n) en
   simp only [Equiv.coe_refl, Matrix.submatrix_id_id] at h1 h2

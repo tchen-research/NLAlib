@@ -200,7 +200,7 @@ theorem volumeSamplingExpectedFrobSq_nonneg (A : Matrix (Fin m) (Fin n) ℝ) {k 
   exact mul_nonneg (div_nonneg (volumeSamplingWeight_nonneg A S)
     (volumeSamplingNormalizer_pos A hk).le) (frobSq_nonneg _)
 
-/-- Sampling exactly the input rank has zero expected residual, hence zero residual
+/-- Sampling exactly the input rank has zero expected projResidual, hence zero residual
 on every positive-probability outcome of the finite volume law.
 Source: manuscript `sa:volume-theorem`, exact-rank endpoint.
 atlas: volume-sampling (partial) -/

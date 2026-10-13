@@ -17,6 +17,7 @@ import NLAlib.Matrix.Basic.MoorePenrose
 import NLAlib.Matrix.Basic.MoorePenroseProjector
 import NLAlib.Matrix.Basic.MoorePenroseRank
 import NLAlib.Matrix.Basic.MoorePenroseTransformations
+import NLAlib.Matrix.Basic.Orthonormal
 import NLAlib.Matrix.Basic.PSDDuality
 import NLAlib.Matrix.Basic.PenroseIdentities
 import NLAlib.Matrix.Basic.PositiveDefiniteClosure

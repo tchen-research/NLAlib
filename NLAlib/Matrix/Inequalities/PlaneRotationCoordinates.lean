@@ -7,7 +7,7 @@ stationarity. Source: variational rederivation, equation (1); supports atlas
 `schur-horn`.
 -/
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

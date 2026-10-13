@@ -6,7 +6,7 @@ For `Q : n × k` with orthonormal columns (the reference subspace `range Q`) and
 `X : n × k'`, the largest principal angle `θ_max` between `range Q` and `range X` enters NLAlib
 through its sine and tangent, defined as spectral norms so that the projection API applies:
 
-* `NLAlib.sinThetaMax Q X = ‖(I − QQᵀ) X‖₂ = ‖residual Q X‖₂` (meaningful for orthonormal `X`);
+* `NLAlib.sinThetaMax Q X = ‖(I − QQᵀ) X‖₂ = ‖projResidual Q X‖₂` (meaningful for orthonormal `X`);
 * `NLAlib.tanThetaMax Q X = ‖(I − QQᵀ) X (QᵀX)⁻¹‖₂` (square `QᵀX`; meaningful when `QᵀX` is
   invertible, junk value `0` otherwise because Mathlib's inverse of a singular matrix is `0`);
   this form needs no orthonormality of `X`, and depends only on `range X`
@@ -24,7 +24,7 @@ characterisation (`specNorm_residual_sq_eq_one_sub_sigmaMin_sq`), symmetry
 for `residual` and apply to `sinThetaMax` by unfolding.
 
 Deviation from the atlas notes: basis independence in this layer-0 file uses
-`mul_transpose_eq_of_range_eq` (Projections) instead of `transpose_mul_mul_eq_of_range_le`
+`mul_conjTranspose_eq_of_range_eq` (Projections) instead of `transpose_mul_mul_eq_of_range_le`
 (Krylov/Block, layer 1, not importable here). The single-vector `tanSqAngle` of
 `Krylov/Ritz.lean` is the `k = 1` case of `tanThetaMax` squared (bridge in
 `Krylov/PowerMethod.lean`).
@@ -51,7 +51,7 @@ variable {n k k' : Type*} [Fintype n] [DecidableEq n] [Fintype k] [DecidableEq k
 and `k' ≤ k` columns this is `√(1 − σ_min(QᵀX)²)` (`specNorm_residual_sq_eq_one_sub_sigmaMin_sq`).
 Source: Golub–Van Loan (2013) [`gvl13`], Thm 2.5.1; Stewart–Sun (1990) [`ss90`], Thm I.5.5.
 atlas: principal-angles-def (partial) -/
-def sinThetaMax (Q : Matrix n k ℝ) (X : Matrix n k' ℝ) : ℝ := specNorm (residual Q X)
+def sinThetaMax (Q : Matrix n k ℝ) (X : Matrix n k' ℝ) : ℝ := specNorm (projResidual Q X)
 
 /-- The tangent of the largest principal angle between `range Q` (`Q` orthonormal) and
 `range X` (`X` any block with the same number of columns and `QᵀX` invertible):
@@ -62,7 +62,7 @@ Golub–Van Loan (2013) [`gvl13`], §8.2.4. Alternative: a definition via
 `tan ∘ principalAnglesFintype` would need the SVD; this one is index-free and basis-independent in `X`.
 atlas: principal-angles-def (partial) -/
 def tanThetaMax (Q : Matrix n k ℝ) (X : Matrix n k ℝ) : ℝ :=
-  specNorm (residual Q X * (Qᵀ * X)⁻¹)
+  specNorm (projResidual Q X * (Qᵀ * X)⁻¹)
 
 /-! ### Elementary properties -/
 
@@ -79,7 +79,7 @@ theorem tanThetaMax_nonneg (Q : Matrix n k ℝ) (X : Matrix n k ℝ) : 0 ≤ tan
 [`gvl13`], §2.5.3. Atlas `principal-angles-def` (helper). -/
 theorem sinThetaMax_le_one {Q : Matrix n k ℝ} {Q' : Matrix n k' ℝ} (hQ : HasOrthonormalCols Q)
     (hQ' : HasOrthonormalCols Q') : sinThetaMax Q Q' ≤ 1 :=
-  (specNorm_sub_mul_transpose_mul_le hQ Q').trans (specNorm_le_one_of_orthonormal hQ')
+  (specNorm_sub_mul_conjTranspose_mul_le hQ Q').trans (specNorm_le_one_of_orthonormal hQ')
 
 omit [Fintype k'] [DecidableEq k'] in
 /-- The residual depends only on the range of the orthonormal frame: if `range Q = range P`
@@ -88,8 +88,8 @@ then `(I − QQᵀ) X = (I − PPᵀ) X`. Helper for `principal-angles-def` (bel
 theorem residual_eq_of_range_eq {k₂ : Type*} [Fintype k₂] [DecidableEq k₂] {Q : Matrix n k ℝ}
     {P : Matrix n k₂ ℝ} (hQ : HasOrthonormalCols Q) (hP : HasOrthonormalCols P)
     (h : LinearMap.range Q.mulVecLin = LinearMap.range P.mulVecLin) (X : Matrix n k' ℝ) :
-    residual Q X = residual P X := by
-  rw [residual_eq_one_sub_mul, residual_eq_one_sub_mul, mul_transpose_eq_of_range_eq hQ hP h]
+    projResidual Q X = projResidual P X := by
+  rw [residual_eq_one_sub_mul, residual_eq_one_sub_mul, mul_conjTranspose_eq_of_range_eq hQ hP h]
 
 /-! ### Basis independence -/
 
@@ -110,15 +110,15 @@ theorem sinThetaMax_le_of_range_le {a b : Type*} [Fintype a] [DecidableEq a] [Fi
     (hY : HasOrthonormalCols Y) (hZ : HasOrthonormalCols Z)
     (hle : LinearMap.range Z.mulVecLin ≤ LinearMap.range Y.mulVecLin) :
     sinThetaMax Q Z ≤ sinThetaMax Q Y := by
-  have hZY : Y * (Yᵀ * Z) = Z := mul_transpose_mul_eq_of_range_le hY hle
+  have hZY : Y * (Yᵀ * Z) = Z := mul_conjTranspose_mul_eq_of_range_le hY hle
   have hU : (Yᵀ * Z)ᵀ * (Yᵀ * Z) = 1 := by
     rw [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc,
       ← Matrix.mul_assoc Y, Matrix.mul_assoc Y, hZY]
     exact hZ
-  calc sinThetaMax Q Z = specNorm (residual Q Y * (Yᵀ * Z)) := by
+  calc sinThetaMax Q Z = specNorm (projResidual Q Y * (Yᵀ * Z)) := by
         rw [sinThetaMax, residual_mul, hZY]
-    _ ≤ specNorm (residual Q Y) * specNorm (Yᵀ * Z) := specNorm_mul_le _ _
-    _ ≤ specNorm (residual Q Y) * 1 :=
+    _ ≤ specNorm (projResidual Q Y) * specNorm (Yᵀ * Z) := specNorm_mul_le _ _
+    _ ≤ specNorm (projResidual Q Y) * 1 :=
         mul_le_mul_of_nonneg_left (specNorm_le_one_of_orthonormal hU) (specNorm_nonneg _)
     _ = sinThetaMax Q Y := mul_one _
 
@@ -189,7 +189,7 @@ atlas: principal-angles-def (partial) -/
 theorem tanThetaMax_congr_left {Q P : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
     (hP : HasOrthonormalCols P) (h : LinearMap.range Q.mulVecLin = LinearMap.range P.mulVecLin)
     (X : Matrix n k ℝ) : tanThetaMax Q X = tanThetaMax P X := by
-  have hPQ : Q * (Qᵀ * P) = P := mul_transpose_mul_eq_of_range_le hQ h.ge
+  have hPQ : Q * (Qᵀ * P) = P := mul_conjTranspose_mul_eq_of_range_le hQ h.ge
   set W := Qᵀ * P with hWdef
   have hW : Wᵀ * W = 1 := by
     rw [hWdef, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc, ← hWdef, hPQ]
@@ -215,12 +215,12 @@ theorem sinThetaMax_eq_specNorm_transpose_mul {r : Type*} [Fintype r] [Decidable
     (Q : Matrix n k ℝ) {Qp : Matrix n r ℝ} (hQp : HasOrthonormalCols Qp)
     (hc : Q * Qᵀ + Qp * Qpᵀ = 1) (X : Matrix n k' ℝ) :
     sinThetaMax Q X = specNorm (Qpᵀ * X) := by
-  have hres : residual Q X = Qp * (Qpᵀ * X) := by
+  have hres : projResidual Q X = Qp * (Qpᵀ * X) := by
     rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, ← hc,
       add_sub_cancel_left, Matrix.mul_assoc]
   have hQp' : Qpᵀ * Qp = 1 := hQp
   rw [sinThetaMax, hres]
-  refine (specNorm_transpose_mul_of_eq_mul hQp' ?_).symm.trans ?_
+  refine (specNorm_conjTranspose_mul_of_eq_mul hQp' ?_).symm.trans ?_
   · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
   · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
 
@@ -231,12 +231,12 @@ theorem tanThetaMax_eq_specNorm_transpose_mul_mul {r : Type*} [Fintype r] [Decid
     (Q : Matrix n k ℝ) {Qp : Matrix n r ℝ} (hQp : HasOrthonormalCols Qp)
     (hc : Q * Qᵀ + Qp * Qpᵀ = 1) (X : Matrix n k ℝ) :
     tanThetaMax Q X = specNorm (Qpᵀ * X * (Qᵀ * X)⁻¹) := by
-  have hres : residual Q X = Qp * (Qpᵀ * X) := by
+  have hres : projResidual Q X = Qp * (Qpᵀ * X) := by
     rw [residual_eq_one_sub_mul, Matrix.conjTranspose_eq_transpose_of_trivial, ← hc,
       add_sub_cancel_left, Matrix.mul_assoc]
   have hQp' : Qpᵀ * Qp = 1 := hQp
   rw [tanThetaMax, hres, Matrix.mul_assoc Qp]
-  refine (specNorm_transpose_mul_of_eq_mul hQp' ?_).symm.trans ?_
+  refine (specNorm_conjTranspose_mul_of_eq_mul hQp' ?_).symm.trans ?_
   · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul]
   · rw [Matrix.conjTranspose_eq_transpose_of_trivial, ← Matrix.mul_assoc Qpᵀ, hQp', Matrix.one_mul,
       Matrix.mul_assoc]
@@ -248,7 +248,7 @@ orthonormal columns. Source: Stewart–Sun (1990) [`ss90`], §I.5; Golub–Van L
 atlas: principal-angles-def (partial) -/
 theorem frobSq_residual_eq_card_sub {Q : Matrix n k ℝ} {Q' : Matrix n k' ℝ}
     (hQ : HasOrthonormalCols Q) (hQ' : HasOrthonormalCols Q') :
-    frobSq (residual Q Q') = Fintype.card k' - frobSq (Qᵀ * Q') := by
+    frobSq (projResidual Q Q') = Fintype.card k' - frobSq (Qᵀ * Q') := by
   have hQ'' : Q'ᵀ * Q' = 1 := hQ'
   rw [frobSq_residual_eq_sub hQ, Matrix.conjTranspose_eq_transpose_of_trivial, frobSq,
       frobInner_eq_trace, RCLike.re_to_real,
@@ -299,7 +299,7 @@ atlas: principal-angles-def (partial) -/
 theorem sinThetaMax_lt_one_iff_isUnit {Q Q' : Matrix n k ℝ} (hQ : HasOrthonormalCols Q)
     (hQ' : HasOrthonormalCols Q') : sinThetaMax Q Q' < 1 ↔ IsUnit (Qᵀ * Q') := by
   rcases isEmpty_or_nonempty k with hk | hk
-  · have hR : residual Q Q' = 0 := Subsingleton.elim _ _
+  · have hR : projResidual Q Q' = 0 := Subsingleton.elim _ _
     have hUnit := isUnit_of_subsingleton (Qᵀ * Q')
     exact ⟨fun _ => hUnit, fun _ => by simp [sinThetaMax, hR, specNorm_zero]⟩
   · have hEq : sinThetaMax Q Q' ^ 2 = 1 - sigmaMin (Qᵀ * Q') ^ 2 :=

@@ -12,7 +12,7 @@ orthogonal projector onto `range A`, `ℓᵢ(A) = (A A⁺)ᵢᵢ` (`NLAlib.lever
   `range A`, `ℓᵢ = ‖U_{i,:}‖²`; in particular the row norms do not depend on the basis.
 
 The basis-independence step is the projector identity
-`mul_transpose_eq_mul_moorePenroseInverse` (`NLAlib.Matrix.Basic.MoorePenroseProjector`): if `Q`
+`mul_conjTranspose_eq_mul_moorePenroseInverse` (`NLAlib.Matrix.Basic.MoorePenroseProjector`): if `Q`
 has orthonormal columns, `range Y ⊆ range Q` and `rank Y` is at least the number of columns of
 `Q`, then `QQᵀ = Y Y⁺`.
 

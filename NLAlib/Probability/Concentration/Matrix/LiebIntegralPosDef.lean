@@ -13,7 +13,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 open MeasureTheory ProbabilityTheory Matrix
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 open NLAlib
-set_option autoImplicit false
 
 /-- The expectation of an integrable, almost surely positive definite random matrix is positive
 definite.

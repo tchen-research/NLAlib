@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.Bands.Ladder
 import NLAlib.Matrix.Norms.EntryBounds
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Concrete finite ladder iteration
@@ -17,7 +16,7 @@ and proves the closed vacuum-word estimate used by the moment method.
 
 namespace NLAlib.SparseSketch
 
-open scoped BigOperators Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator
 
 noncomputable section
 

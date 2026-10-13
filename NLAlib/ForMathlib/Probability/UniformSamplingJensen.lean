@@ -9,7 +9,6 @@ Source: operator re-derivation `sh:convex-sampling`; supports `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Classical ENNReal
 namespace NLAlib

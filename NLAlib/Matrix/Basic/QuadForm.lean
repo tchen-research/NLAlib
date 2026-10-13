@@ -159,10 +159,6 @@ theorem quadForm_conjTranspose_mul_mul {k : Type*} [Fintype k] (A : Matrix n n �
   rw [quadForm, quadForm, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
     Matrix.dotProduct_mulVec (star v) Wᴴ, Matrix.star_mulVec]
 
-/-- Deprecated alias (F1, transpose twins removed): use `quadForm_conjTranspose_mul_mul`. -/
-@[deprecated (since := "2026-10-13")]
-alias quadForm_transpose_mul_mul := quadForm_conjTranspose_mul_mul
-
 /-- `(Aᴴ A y)ᴴ y = (Ay)ᴴ (Ay)`: the quadratic form of the normal-equations matrix. Helper for
 `cgls-lsqr-bound`. -/
 theorem quadForm_conjTranspose_mul_self {m : Type*} [Fintype m] (A : Matrix m n 𝕜)

@@ -10,7 +10,6 @@ Source: operator manuscript `eq:scalarpair` and `eq:young`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 namespace NLAlib
 
 /-- Paired mixed powers are bounded by the two endpoint powers for nonnegative

@@ -118,18 +118,40 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   where the proof uses `Fin` structure (orthogonal completion, `Fin.castLE`, dimension
   arithmetic), and are stated over `Fintype` otherwise. A theorem stated over `Fin` because a
   dependency was, is a defect to fix at the dependency.
+- Norms (F4, 2026-10-13). `Matrix m n 𝕜` has no global norm in Mathlib; Mathlib offers four as
+  scoped instances (`Matrix.Norms.Elementwise`, `.Operator`, `.Frobenius`, `.L2Operator`) and a
+  signature cannot show which one is open. NLAlib therefore names its matrix norms: in a public
+  statement a matrix norm is always one of `specNorm A` (spectral / L2 operator norm; needs
+  `[DecidableEq n]` on the column index only), `frobNorm A`, `frobSq A` (`= frobNorm A ^ 2`),
+  `nuclearNorm A` (`= schattenNorm A 1`), `schattenNorm A (p : ℝ≥0∞)`, `kyFanNorm A k`. The
+  notation `‖A‖` applied to a matrix appears in statements only in `Matrix/Functions/`,
+  `Matrix/OperatorTheory/` (C*-algebra and CFC files, under a file-level
+  `open scoped Matrix.Norms.L2Operator`), in `ForMathlib/`, and in the two bridge lemmas
+  `specNorm_eq_norm` (L2Operator scope) and `frobNorm_eq_norm` (Frobenius scope). No other file
+  opens a `Matrix.Norms.*` scope at file level; a proof that needs Mathlib's normed API writes
+  `open scoped Matrix.Norms.L2Operator in` before that one declaration and rewrites through the
+  bridge (`scripts/check_norms.py`). The vector 2-norm is `‖WithLp.toLp 2 x‖` (Mathlib's
+  `EuclideanSpace`, 𝕜-generic): squared norms are `‖WithLp.toLp 2 x‖ ^ 2`, unit vectors
+  `‖WithLp.toLp 2 x‖ = 1`; `Real.sqrt (x ⬝ᵥ x)`, `{x // x ⬝ᵥ x = 1}` and `x ⬝ᵥ x` *as a norm* are
+  not used in statements (`x ⬝ᵥ y` as a pairing is fine). Bridges:
+  `norm_toLp_sq_eq_re_star_dotProduct` (𝕜), `norm_toLp_sq_eq_dotProduct_self` (ℝ), in
+  `Matrix/Norms/Core.lean`.
+- Condition number (F4). `conditionNumber (A : Matrix n n 𝕜) : ℝ≥0∞` is the textbook
+  `‖A‖₂ ‖A⁻¹‖₂` for invertible `A` and `⊤` otherwise (`conditionNumber_of_isUnit`,
+  `conditionNumber_eq_top_iff`, `one_le_conditionNumber`, `conditionNumber_eq_singularValues_ratio`);
+  perturbation bounds take `(hA : IsUnit A)` and are stated with `(conditionNumber A).toReal`.
+  The pseudoinverse quantity `‖A‖₂ ‖A⁺‖₂ = σ₁/σ_r` (0 at `A = 0`) is `moorePenroseConditionNumber A : ℝ`
+  (any shape); it is not "the" condition number.
 - Vocabulary (over `𝕜` unless marked ℝ): `frobInner A B` (the real part of the Frobenius pairing,
   `RCLike.re (∑ i, ∑ j, star (A i j) * B i j)`; the `𝕜`-valued pairing is `(Aᴴ * B).trace` and has
-  no name), `frobSq`, `frobNorm` (bridge `frobNorm_eq_norm` to Mathlib's Frobenius norm under
-  `open scoped Matrix.Norms.Frobenius`); `specNorm A` (`= ‖A‖` under the L2 operator norm, bridge
-  `specNorm_eq_norm`; it needs `[DecidableEq n]` on the column index only, no `[DecidableEq m]`);
-  core and merged files state norms with `specNorm`/`frobNorm`, `‖A‖` under
-  `open scoped Matrix.Norms.L2Operator` is written directly only in the CFC and Probability files;
-  `HasOrthonormalCols Q := Qᴴ * Q = 1` (take the hypothesis in this form; at ℝ a `Qᵀ * Q = 1` term
+  no name); `HasOrthonormalCols Q := Qᴴ * Q = 1` and `projResidual Q A = A - Q * (Qᴴ * A)`
+  (both in `Matrix/Basic/Orthonormal.lean`, upstream of `Norms`; every orthonormality hypothesis
+  is `HasOrthonormalCols`, never a raw `Pᴴ * P = 1` or `Pᵀ * P = 1`; at ℝ a `Qᵀ * Q = 1` term
   elaborates against it, and a `Qᵀ * Q` goal is rewritten with `hQ.conjTranspose_mul_self` after
-  `rw [← Matrix.conjTranspose_eq_transpose_of_trivial]`); `residual Q A = A - Q * (Qᴴ * A)`;
-  `quadForm A z := star z ⬝ᵥ (A *ᵥ z)` (`𝕜`-valued, Mathlib's `PosSemidef` form; real consumers take
-  `RCLike.re`, and over ℂ `0 ≤ quadForm A z` needs `open scoped ComplexOrder`) and
+  `rw [← Matrix.conjTranspose_eq_transpose_of_trivial]`; `projResidual` is not the linear-system
+  residual `b − Ax`); `quadForm A z := star z ⬝ᵥ (A *ᵥ z)` (`𝕜`-valued, Mathlib's `PosSemidef`
+  form; real consumers take `RCLike.re`, and over ℂ `0 ≤ quadForm A z` needs
+  `open scoped ComplexOrder`) and
   `rayleighQuotient A x` (real-valued); two pseudoinverses: `moorePenroseInverse A`
   (Basic/MoorePenrose) is the general Moore–Penrose inverse, defined for every matrix including
   rank-deficient and empty ones, and is the default in statements; `pinvL A = (AᴴA)⁻¹Aᴴ` and
@@ -144,7 +166,12 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   `obtain ⟨U, V, hA⟩ := exists_isSVD A`, whose auto-params set `p = card m`, `q = card n` (square
   `Fin a` factors at `Fin a` indices; decision E′, `docs/rclike/F1b-alpha.md`); the smallest
   eigenvalue of a Hermitian `A` is `hA.eigenvalues₀ ⟨Fintype.card n - 1, _⟩` (Rayleigh form
-  `Matrix.IsHermitian.eigenvalues₀_last_eq_iInf`), with no `lamMin`; the Loewner order `≤` (§2);
+  `Matrix.IsHermitian.eigenvalues₀_last_eq_iInf`), with no `lamMin`; the smallest singular value
+  of `A : Matrix m n 𝕜` with `card n ≤ card m` is `singularValues A (Fintype.card n - 1)`
+  (variational form `singularValues_last_eq_iInf`), with no `sigmaMin`; `lambdaMax A` /
+  `lambdaMin A := sSup / sInf (spectrum ℝ A)` over 𝕜 (bridges `lambdaMax_eq_eigenvalues₀_zero`,
+  `lambdaMin_eq_eigenvalues₀_last` for Hermitian `A`; junk otherwise); the Loewner order `≤` (§2);
+  PSD hypotheses are `A.PosSemidef` or `0 ≤ A`, never `0 ≤ lambdaMin A`;
   `gaussianMatrix m n` (a measure on `Matrix m n ℝ`, the push-forward of the i.i.d. product
   measure by `Matrix.of`) and `linForm c G` for its linear forms (coefficient array `c`, sample
   `G : Matrix m n ℝ`) (ℝ); `IsSubspaceEmbedding S U ε` (ℝ); `krylovSpace A b q` (over any field, as are
@@ -159,19 +186,36 @@ Before the `v0.1` tag renames are direct. From `v0.1` on, a renamed public decla
   `Matrix.measurable_iff_entries`, `Matrix.ofMeasurableEquiv`, `Measurable.matrix_mul`); state
   measurability of a matrix-valued map as `Measurable T`, not entrywise. Laws are stated with
   Mathlib's `HasLaw X ν μ` (fields `.aemeasurable`, `.map_eq`), never as `μ.map X = …`: a standard
-  Gaussian matrix is `HasLaw X (gaussianMatrix m n) μ`, and the scalar laws `IsStandardGaussian μ g`
-  / `IsRademacher μ r` are `abbrev`s of `HasLaw g (gaussianReal 0 1) μ` / `HasLaw r rademacherMeasure μ`
-  (`IsGaussian`/`HasGaussianLaw` for vectors are Mathlib's). A theorem about `gaussianMatrix`
+  Gaussian matrix is `HasLaw X (gaussianMatrix m n) μ`, a standard Gaussian vector
+  `HasLaw x (gaussianVector n) μ`, a scalar `HasLaw g (gaussianReal 0 1) μ`, a Rademacher vector
+  `HasLaw r (rademacherVector n) μ`, a sign `HasLaw r rademacherMeasure μ` (`gaussianVector n` and
+  `rademacherVector n` are the product measures on `n → ℝ`; there are no `IsStandardGaussian` /
+  `IsRademacher` abbreviations; `IsGaussian`/`HasGaussianLaw` for general Gaussian vectors are
+  Mathlib's). A law hypothesis is never accompanied by the measurability or probability-measure
+  facts it implies. Random signs are ℝ-valued (`±1`), never `Bool`. A theorem about `gaussianMatrix`
   itself integrates against it (the primary, most general form) and has a corollary
   `<name>_of_hasLaw` for a random matrix with that law in the same file; no `_of_map_eq` wrappers.
-  Tails are `μ.real s ≤ c` (not `μ s ≤ ENNReal.ofReal c` or `(μ s).toReal ≤ c`). Orthonormality
+  Tails are failure probabilities `μ.real s ≤ c` (not `μ s ≤ ENNReal.ofReal c`, not
+  `(μ s).toReal ≤ c`, not success forms `1 - δ ≤ …`), in every layer. Sketch-distribution
+  theorems conclude `μ.real {ω | ¬ IsSubspaceEmbedding (S ω) U ε} ≤ δ` (`docs/SKETCH_INTERFACE.md`).
+  "Expected" quantities are integrals against a stated law, never recursions or finite sums
+  (those are lemmas). Orthonormality
   hypotheses are `HasOrthonormalCols V`. Prefer statements without integrability hypotheses
   (prove the `lintegral` form, then convert). `Matrix` has no global norm: Mathlib results that need
   a normed space on the sample space (Fernique, `HasGaussianLaw.map_fun`, `IsGaussian` of a product)
   are used under `open scoped Matrix.Norms.L2Operator` (whose topology is `Matrix`'s, so the Borel
   instance applies) or after flattening (`integral_gaussianMatrix_eq`, `gaussianMatrix_map_uncurry`).
 - Constants explicit, never `∃ C`. Degenerate cases match the source. Two-sided bounds are two
-  theorems. General form first, corollaries after.
+  theorems; a `let`–`∧` bundle is never a public theorem (each conjunct is its own theorem with
+  its own atlas tag). General form first, corollaries after. Definitions are total in Mathlib's
+  style; the theorem, not the definition, carries the hypothesis that excludes the junk value
+  (`IsUnit`, `DifferentiableAt`, …), and the docstring of the definition states the junk value.
+  Hypotheses that follow from others are not taken (`(A + B).IsHermitian` next to `hA hB`;
+  `Measurable g` next to `HasLaw g ν μ`). Spectral statements never quantify over Mathlib's
+  chosen eigenvector basis (`hA.eigenvectorBasis i`); they take an eigenvector `u` with
+  `A *ᵥ u = c • u` and `‖WithLp.toLp 2 u‖ = 1`, and the extreme eigenvalue is `hA.eigenvalues₀ 0`
+  or the last index. Docstrings cite published sources only: no manuscript keys, commit hashes,
+  audit labels, or "actual"/"genuine" (`scripts/check_docstrings.py`).
 - Every hypothesis explicit; no `axiom`, no `native_decide`; `sorry` only in a named scaffold
   (docstring `SCAFFOLD: <atlas id>`, catalogued).
 - Scaffolding well-known theorems is encouraged, not merely tolerated: a confidently stated

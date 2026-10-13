@@ -11,7 +11,6 @@ The general-pseudoinverse raw-sketch formulation is a separate bridge.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix ENNReal
 namespace NLAlib
@@ -53,9 +52,9 @@ theorem integrable_and_integral_frobSq_sub_sketchedOutput_le_rank_factor_gaussia
     linarith
   have hXm : AEMeasurable Ω μ := hΩ.aemeasurable
   have hYm : AEMeasurable Ψ μ := hΨ.aemeasurable
-  have hres : Measurable fun x => frobSq (residual (Qf x) A) :=
+  have hres : Measurable fun x => frobSq (projResidual (Qf x) A) :=
     measurable_frobSq_residual_of A hQf
-  have hYi : Integrable (fun ω => frobSq (residual (Qf (Ω ω)) A)) μ := by
+  have hYi : Integrable (fun ω => frobSq (projResidual (Qf (Ω ω)) A)) μ := by
     refine (integrable_const (frobSq A)).mono' (hres.comp_aemeasurable hXm).aestronglyMeasurable ?_
     filter_upwards [hQo] with ω h
     rw [Real.norm_of_nonneg (frobSq_nonneg _)]
@@ -67,7 +66,7 @@ theorem integrable_and_integral_frobSq_sub_sketchedOutput_le_rank_factor_gaussia
   have hL : ∫⁻ ω, ENNReal.ofReal
         (frobSq (A - sketchedOutput (Qf (Ω ω)) (Ψ ω) A)) ∂μ
       = ∫⁻ ω, ENNReal.ofReal ((1 + (q : ℝ) / (s - q - 1))
-          * frobSq (residual (Qf (Ω ω)) A)) ∂μ := by
+          * frobSq (projResidual (Qf (Ω ω)) A)) ∂μ := by
     refine (lintegral_of_indepFun hXm hYm hind
       (g := fun x y => ENNReal.ofReal (frobSq (A - sketchedOutput (Qf x) y A)))
       (ENNReal.measurable_ofReal.comp hgm).aemeasurable).trans ?_
@@ -79,7 +78,7 @@ theorem integrable_and_integral_frobSq_sub_sketchedOutput_le_rank_factor_gaussia
     · exact (Measurable.lintegral_prod_right' (ENNReal.measurable_ofReal.comp hgm)).aemeasurable
   have hcond : ∫ ω, frobSq (A - sketchedOutput (Qf (Ω ω)) (Ψ ω) A) ∂μ
       = ∫ ω, (1 + (q : ℝ) / (s - q - 1))
-          * frobSq (residual (Qf (Ω ω)) A) ∂μ := by
+          * frobSq (projResidual (Qf (Ω ω)) A) ∂μ := by
     have hLm : AEStronglyMeasurable
         (fun ω => frobSq (A - sketchedOutput (Qf (Ω ω)) (Ψ ω) A)) μ :=
       (hgm.comp_aemeasurable (hXm.prodMk hYm)).aestronglyMeasurable
@@ -103,7 +102,7 @@ theorem integrable_and_integral_frobSq_sub_sketchedOutput_le_rank_factor_gaussia
   have hRange := rsvd_main_gaussian hA hU₂ hV₁ hV₂ hV hkt Ω hΩ
     (fun ω => Qf (Ω ω)) hQo hQr
   apply mul_le_mul_of_nonneg_left _ hc0
-  simpa only [residual, Matrix.conjTranspose_eq_transpose_of_trivial] using hRange
+  simpa only [projResidual, Matrix.conjTranspose_eq_transpose_of_trivial] using hRange
 
 /-- **Generalized Nyström with Gaussian sketches** (Chen–Persson, Theorem `thm:GN`; Tropp–Webber
 2023, Thm 5.1). `Ω` (`n × t`) and `Ψ` (`m × s`) independent standard Gaussian matrices,

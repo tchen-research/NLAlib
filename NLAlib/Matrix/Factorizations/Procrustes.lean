@@ -9,7 +9,7 @@ positive semidefiniteness. Horn–Johnson 2013, §§7.4.4–7.4.6.
 -/
 
 noncomputable section
-open scoped Matrix MatrixOrder Matrix.Norms.L2Operator BigOperators
+open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
 namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 

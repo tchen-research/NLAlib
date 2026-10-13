@@ -12,7 +12,6 @@ supports `sa:volume-theorem` and `volume-sampling`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Classical Matrix Matrix.Norms.Frobenius ComplexOrder
 namespace NLAlib
 

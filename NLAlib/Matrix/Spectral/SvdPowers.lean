@@ -49,8 +49,8 @@ theorem singularValues_gram_pow_mul (A : Matrix (Fin m) (Fin n) ℝ) (q j : ℕ)
     singularValues ((A * Aᵀ) ^ q * A) j = singularValues A j ^ (2 * q + 1) := by
   by_cases hj : j < min m n
   · obtain ⟨U, V, h⟩ := exists_isSVD A
-    exact singularValues_eq_of_eq_mul_rectDiag_mul h.transpose_mul_left
-      h.transpose_mul_right (fun i => pow_nonneg (singularValues_nonneg A i) _)
+    exact singularValues_eq_of_eq_mul_rectDiag_mul h.conjTranspose_mul_left
+      h.conjTranspose_mul_right (fun i => pow_nonneg (singularValues_nonneg A i) _)
       (fun a b hab => pow_le_pow_left₀ (singularValues_nonneg A b)
         (singularValues_antitone A hab) _) (h.gram_pow_mul_eq q) hj
   · rw [singularValues_eq_zero_of_min_le _ (by simpa only [Fintype.card_fin] using not_lt.mp hj),

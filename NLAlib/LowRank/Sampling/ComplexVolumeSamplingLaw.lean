@@ -15,7 +15,6 @@ law above the input rank. Source: `sa:volume`; atlas `volume-sampling`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Classical Matrix ComplexOrder NNReal ENNReal
 namespace NLAlib

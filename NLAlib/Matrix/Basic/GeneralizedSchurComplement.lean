@@ -68,17 +68,17 @@ theorem one_sub_mul_moorePenroseInverse_mul_eq_zero_of_fromBlocks_posSemidef
     exact hM.submatrix (Sum.inl : m → m ⊕ n)
   have hAt : Aᵀ = A := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hA.isHermitian.eq
-  have hAd := moorePenroseInverse_isSymm (A := A) hA.isHermitian
+  have hAd := Matrix.IsHermitian.moorePenroseInverse (A := A) hA.isHermitian
   have hAdt : (moorePenroseInverse A)ᵀ = moorePenroseInverse A := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hAd.eq
   have hRowCol : moorePenroseInverse A * A = A * moorePenroseInverse A := by
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_mul, hAt,
-      hAdt] using (mul_moorePenroseInverse_isSymm A).eq
+      hAdt] using (mul_moorePenroseInverse_isHermitian A).eq
   let F : Matrix m m ℝ := 1 - moorePenroseInverse A * A
   have hFs : Fᵀ = F := by
     dsimp [F]
     rw [Matrix.transpose_sub, Matrix.transpose_one, ← Matrix.conjTranspose_eq_transpose_of_trivial,
-      (moorePenroseInverse_mul_isSymm A).eq]
+      (moorePenroseInverse_mul_isHermitian A).eq]
   have hAF : A * F = 0 := by
     dsimp [F]
     rw [Matrix.mul_sub, Matrix.mul_one, ← Matrix.mul_assoc, mul_moorePenroseInverse_mul, sub_self]
@@ -167,7 +167,7 @@ theorem posSemidef_fromBlocks_iff
     refine ⟨hA, hCompat, ?_⟩
     rw [Matrix.posSemidef_iff_dotProduct_mulVec]
     refine ⟨hC.isHermitian.sub
-      ((moorePenroseInverse_posSemidef hA).conjTranspose_mul_mul_same B).isHermitian, ?_⟩
+      ((Matrix.PosSemidef.moorePenroseInverse hA).conjTranspose_mul_mul_same B).isHermitian, ?_⟩
     intro x
     have h := hM.dotProduct_mulVec_nonneg (Sum.elim (-(moorePenroseInverse A *ᵥ (B *ᵥ x))) x)
     simp only [star_trivial] at h ⊢
@@ -177,7 +177,7 @@ theorem posSemidef_fromBlocks_iff
     have hRange : A * moorePenroseInverse A * B = B := by
       rw [Matrix.sub_mul, Matrix.one_mul] at hCompat
       exact (sub_eq_zero.mp hCompat).symm
-    have hCorr := (moorePenroseInverse_posSemidef hA).conjTranspose_mul_mul_same B
+    have hCorr := (Matrix.PosSemidef.moorePenroseInverse hA).conjTranspose_mul_mul_same B
     have hC : C.IsHermitian := by
       simpa only [schurComplement, Matrix.conjTranspose_eq_transpose_of_trivial,
         sub_add_cancel] using hS.isHermitian.add hCorr.isHermitian
@@ -255,7 +255,7 @@ theorem generalized_schur_nonneg_and_le
   refine ⟨hS.nonneg, ?_⟩
   rw [Matrix.le_iff, schurComplement, sub_sub_cancel]
   simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-    (moorePenroseInverse_posSemidef hA).conjTranspose_mul_mul_same B
+    (Matrix.PosSemidef.moorePenroseInverse hA).conjTranspose_mul_mul_same B
 
 omit [DecidableEq m] in
 /-- **Schur complement below the trailing block**: for `A ⪰ 0`, `C − M / A = Bᵀ A⁺ B ⪰ 0`

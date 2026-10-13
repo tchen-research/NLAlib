@@ -237,7 +237,7 @@ theorem quadForm_sub_le_of_isCGIterate {A : Matrix n n ℝ} (hA : A.IsHermitian)
     exact h.trans (by positivity)
 
 /-- **Finite termination of CG.** For positive definite `A` with `A x⋆ = c`, once `q` reaches the
-grade `ν(A, r₀)` of the initial residual, every `q`-th CG iterate is the solution `x⋆`. The
+grade `ν(A, r₀)` of the initial projResidual, every `q`-th CG iterate is the solution `x⋆`. The
 proof: `x⋆ − x₀ ∈ K_ν(A, r₀)` (`sub_mem_krylovSpace_krylovGrade`), so the `A`-norm error of the
 minimiser is `0`. Source: Saad (2003) [`saad03`], Prop 6.3 and §6.7; Trefethen–Bau (1997)
 [`tb97`], Thm 38.1 (CG converges in at most `n` steps). Uses atlas `krylov-grade`.

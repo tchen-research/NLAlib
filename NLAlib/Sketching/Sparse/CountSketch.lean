@@ -13,7 +13,6 @@ Source: operator manuscript `sh:count-hollow`, `sh:count-second`, `sparse-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory Matrix
 open scoped Matrix
 namespace NLAlib

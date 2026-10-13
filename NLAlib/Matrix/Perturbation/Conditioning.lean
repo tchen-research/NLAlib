@@ -3,9 +3,9 @@ import NLAlib.Matrix.Perturbation.LeastSquaresPurePerturbation
 /-!
 # Condition numbers and the sensitivity of linear systems and least squares
 
-* Condition number (`conditionNumber`, its API and the distance to singularity live in
+* Condition number (`moorePenroseConditionNumber`, its API and the distance to singularity live in
   `NLAlib.Matrix.Perturbation.ConditionNumber` and `…DistanceToSingularity`): here
-  `κ(A) = ‖A‖₂/σ_min(A)` under full column rank (`conditionNumber_eq_div_sigmaMin`) and
+  `κ(A) = ‖A‖₂/σ_min(A)` under full column rank (`moorePenroseConditionNumber_eq_div_sigmaMin`) and
   `‖P‖₂ ≥ 1` for a nonzero idempotent. Golub–Van Loan 2013, §2.6.2; Higham 2002, Thm 6.5.
   Atlas: `condition-number-def`.
 * Linear systems (Trefethen–Bau 1997, Thm 12.1–12.2; Higham 2002, Thm 7.2; Golub–Van Loan
@@ -53,9 +53,9 @@ variable {m n : ℕ}
 `sigmaMin`. This covers invertible square `A`. Golub–Van Loan 2013, §5.3.2 (`κ₂(A) = σ₁/σ_n`);
 Trefethen–Bau 1997, Thm 12.2 discussion / eq. (12.14).
 atlas: condition-number-def (partial) -/
-theorem conditionNumber_eq_div_sigmaMin (A : Matrix (Fin m) (Fin n) ℝ) (hn : 0 < n)
-    (hA : A.rank = n) : conditionNumber A = specNorm A / sigmaMin A := by
-  rw [conditionNumber, specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A
+theorem moorePenroseConditionNumber_eq_div_sigmaMin (A : Matrix (Fin m) (Fin n) ℝ) (hn : 0 < n)
+    (hA : A.rank = n) : moorePenroseConditionNumber A = specNorm A / sigmaMin A := by
+  rw [moorePenroseConditionNumber, specNorm_moorePenroseInverse_eq_inv_singularValues_last_positive A
     (by omega), sigmaMin_eq_singularValues_last A (by simpa only [Fintype.card_fin] using hn),
     Fintype.card_fin, hA]
   ring
@@ -72,13 +72,13 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 `‖x - x̂‖/‖x‖ ≤ κ(A) ‖b - A x̂‖/‖b‖`. Higham 2002, eq. (7.4) / Thm 7.2 discussion;
 Golub–Van Loan 2013, §3.5.3; Trefethen–Bau 1997, Thm 12.1 (eq. (12.15)).
 atlas: linear-system-perturbation (partial) -/
-theorem sqrt_dotProduct_sub_div_le_conditionNumber_mul {A : Matrix n n ℝ} (hA : IsUnit A)
+theorem sqrt_dotProduct_sub_div_le_moorePenroseConditionNumber_mul {A : Matrix n n ℝ} (hA : IsUnit A)
     {x b : n → ℝ} (hx : A *ᵥ x = b) (hb : b ≠ 0) (x' : n → ℝ) :
     Real.sqrt ((x - x') ⬝ᵥ (x - x')) / Real.sqrt (x ⬝ᵥ x) ≤
-      conditionNumber A * (Real.sqrt ((b - A *ᵥ x') ⬝ᵥ (b - A *ᵥ x')) /
+      moorePenroseConditionNumber A * (Real.sqrt ((b - A *ᵥ x') ⬝ᵥ (b - A *ᵥ x')) /
         Real.sqrt (b ⬝ᵥ b)) := by
   have hd : IsUnit A.det := (Matrix.isUnit_iff_isUnit_det A).mp hA
-  rw [conditionNumber_eq_mul_specNorm_inv hA]
+  rw [moorePenroseConditionNumber_eq_mul_specNorm_inv hA]
   have hbpos : 0 < Real.sqrt (b ⬝ᵥ b) := sqrt_dotProduct_self_pos hb
   have hbx : Real.sqrt (b ⬝ᵥ b) ≤ specNorm A * Real.sqrt (x ⬝ᵥ x) := by
     rw [← hx]; exact sqrt_mulVec_dotProduct_le_specNorm_mul A x
@@ -106,12 +106,12 @@ theorem sqrt_dotProduct_sub_div_le_conditionNumber_mul {A : Matrix n n ℝ} (hA 
 `A (x + Δx) = b + Δb`: `‖Δx‖/‖x‖ ≤ κ(A) ‖Δb‖/‖b‖`. Trefethen–Bau 1997, Thm 12.1 (condition number
 of `b ↦ x` is at most `κ(A)`); Golub–Van Loan 2013, Thm 2.6.2 with `ΔA = 0`.
 atlas: linear-system-perturbation (partial) -/
-theorem sqrt_dotProduct_div_le_conditionNumber_mul_of_mulVec_add {A : Matrix n n ℝ}
+theorem sqrt_dotProduct_div_le_moorePenroseConditionNumber_mul_of_mulVec_add {A : Matrix n n ℝ}
     (hA : IsUnit A) {x b Δx Δb : n → ℝ} (hx : A *ᵥ x = b) (hb : b ≠ 0)
     (hΔ : A *ᵥ (x + Δx) = b + Δb) :
     Real.sqrt (Δx ⬝ᵥ Δx) / Real.sqrt (x ⬝ᵥ x) ≤
-      conditionNumber A * (Real.sqrt (Δb ⬝ᵥ Δb) / Real.sqrt (b ⬝ᵥ b)) := by
-  have h := sqrt_dotProduct_sub_div_le_conditionNumber_mul hA hx hb (x + Δx)
+      moorePenroseConditionNumber A * (Real.sqrt (Δb ⬝ᵥ Δb) / Real.sqrt (b ⬝ᵥ b)) := by
+  have h := sqrt_dotProduct_sub_div_le_moorePenroseConditionNumber_mul hA hx hb (x + Δx)
   have e1 : x - (x + Δx) = -Δx := by abel
   have e2 : b - A *ᵥ (x + Δx) = -Δb := by rw [hΔ]; abel
   rwa [e1, e2, neg_dotProduct, dotProduct_neg, neg_neg, neg_dotProduct, dotProduct_neg,
@@ -129,12 +129,12 @@ atlas: linear-system-perturbation (partial) -/
 theorem sqrt_dotProduct_div_le_of_add_mulVec_add {A ΔA : Matrix n n ℝ} (hA : IsUnit A)
     {x b Δx Δb : n → ℝ} (hx : A *ᵥ x = b) (hb : b ≠ 0)
     (hΔ : (A + ΔA) *ᵥ (x + Δx) = b + Δb)
-    (hsmall : conditionNumber A * (specNorm ΔA / specNorm A) < 1) :
+    (hsmall : moorePenroseConditionNumber A * (specNorm ΔA / specNorm A) < 1) :
     Real.sqrt (Δx ⬝ᵥ Δx) / Real.sqrt (x ⬝ᵥ x) ≤
-      conditionNumber A / (1 - conditionNumber A * (specNorm ΔA / specNorm A)) *
+      moorePenroseConditionNumber A / (1 - moorePenroseConditionNumber A * (specNorm ΔA / specNorm A)) *
         (specNorm ΔA / specNorm A + Real.sqrt (Δb ⬝ᵥ Δb) / Real.sqrt (b ⬝ᵥ b)) := by
   have hd : IsUnit A.det := (Matrix.isUnit_iff_isUnit_det A).mp hA
-  rw [conditionNumber_eq_mul_specNorm_inv hA] at hsmall ⊢
+  rw [moorePenroseConditionNumber_eq_mul_specNorm_inv hA] at hsmall ⊢
   have hbx : Real.sqrt (b ⬝ᵥ b) ≤ specNorm A * Real.sqrt (x ⬝ᵥ x) := by
     rw [← hx]; exact sqrt_mulVec_dotProduct_le_specNorm_mul A x
   have hdx : Δx = A⁻¹ *ᵥ (Δb - ΔA *ᵥ (x + Δx)) := by
@@ -200,21 +200,21 @@ theorem sqrt_dotProduct_div_le_of_add_mulVec_add {A ΔA : Matrix n n ℝ} (hA : 
 `(A + ΔA)(x + Δx) = b + Δb` and `κ(A) ‖ΔA‖/‖A‖ < 1`, the relative forward error obeys
 `‖Δx‖/‖x‖ ≤ κ(A)/(1 - κ(A)‖ΔA‖/‖A‖) · (‖ΔA‖/‖A‖ + ‖Δb‖/‖b‖)`, and every approximate solution
 `x̂` obeys the a posteriori bound `‖x - x̂‖/‖x‖ ≤ κ(A) ‖b - A x̂‖/‖b‖`. Bundles
-`sqrt_dotProduct_div_le_of_add_mulVec_add` and `sqrt_dotProduct_sub_div_le_conditionNumber_mul`.
+`sqrt_dotProduct_div_le_of_add_mulVec_add` and `sqrt_dotProduct_sub_div_le_moorePenroseConditionNumber_mul`.
 Higham 2002, Thm 7.2; Golub–Van Loan 2013, Thm 2.6.2.
 atlas: linear-system-perturbation -/
 theorem linear_system_perturbation {A ΔA : Matrix n n ℝ} (hA : IsUnit A)
     {x b Δx Δb : n → ℝ} (hx : A *ᵥ x = b) (hb : b ≠ 0)
     (hΔ : (A + ΔA) *ᵥ (x + Δx) = b + Δb)
-    (hsmall : conditionNumber A * (specNorm ΔA / specNorm A) < 1) :
+    (hsmall : moorePenroseConditionNumber A * (specNorm ΔA / specNorm A) < 1) :
     Real.sqrt (Δx ⬝ᵥ Δx) / Real.sqrt (x ⬝ᵥ x) ≤
-        conditionNumber A / (1 - conditionNumber A * (specNorm ΔA / specNorm A)) *
+        moorePenroseConditionNumber A / (1 - moorePenroseConditionNumber A * (specNorm ΔA / specNorm A)) *
           (specNorm ΔA / specNorm A + Real.sqrt (Δb ⬝ᵥ Δb) / Real.sqrt (b ⬝ᵥ b)) ∧
       ∀ x' : n → ℝ, Real.sqrt ((x - x') ⬝ᵥ (x - x')) / Real.sqrt (x ⬝ᵥ x) ≤
-        conditionNumber A * (Real.sqrt ((b - A *ᵥ x') ⬝ᵥ (b - A *ᵥ x')) /
+        moorePenroseConditionNumber A * (Real.sqrt ((b - A *ᵥ x') ⬝ᵥ (b - A *ᵥ x')) /
           Real.sqrt (b ⬝ᵥ b)) :=
   ⟨sqrt_dotProduct_div_le_of_add_mulVec_add hA hx hb hΔ hsmall,
-    sqrt_dotProduct_sub_div_le_conditionNumber_mul hA hx hb⟩
+    sqrt_dotProduct_sub_div_le_moorePenroseConditionNumber_mul hA hx hb⟩
 
 end LinearSystem
 
@@ -240,7 +240,7 @@ theorem sqrt_dotProduct_mul_moorePenroseInverse_sub_div_le (A : Matrix m n ℝ) 
   set Nb := Real.sqrt (b ⬝ᵥ b)
   set Ndb := Real.sqrt (Δb ⬝ᵥ Δb)
   have hP : specNorm P ≤ 1 :=
-    specNorm_le_one_of_isSymm_of_isIdempotentElem (mul_moorePenroseInverse_isSymm A)
+    Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem (mul_moorePenroseInverse_isHermitian A)
       (mul_moorePenroseInverse_isIdempotentElem A)
   have hdy : P *ᵥ (b + Δb) - P *ᵥ b = P *ᵥ Δb := by rw [Matrix.mulVec_add]; abel
   rw [hdy]
@@ -280,7 +280,7 @@ theorem sqrt_dotProduct_moorePenroseInverse_sub_div_le (A : Matrix m n ℝ) (b �
     Real.sqrt ((moorePenroseInverse A *ᵥ (b + Δb) - moorePenroseInverse A *ᵥ b) ⬝ᵥ
         (moorePenroseInverse A *ᵥ (b + Δb) - moorePenroseInverse A *ᵥ b)) /
       Real.sqrt ((moorePenroseInverse A *ᵥ b) ⬝ᵥ (moorePenroseInverse A *ᵥ b)) ≤
-      conditionNumber A / (leastSquaresEta A b * leastSquaresCos A b) *
+      moorePenroseConditionNumber A / (leastSquaresEta A b * leastSquaresCos A b) *
         (Real.sqrt (Δb ⬝ᵥ Δb) / Real.sqrt (b ⬝ᵥ b)) := by
   set A' := moorePenroseInverse A
   set x := A' *ᵥ b
@@ -293,10 +293,10 @@ theorem sqrt_dotProduct_moorePenroseInverse_sub_div_le (A : Matrix m n ℝ) (b �
   rw [hdx]
   have h1 : Real.sqrt ((A' *ᵥ Δb) ⬝ᵥ (A' *ᵥ Δb)) ≤ specNorm A' * Ndb :=
     sqrt_mulVec_dotProduct_le_specNorm_mul A' Δb
-  have hRHS : 0 ≤ conditionNumber A / (leastSquaresEta A b * leastSquaresCos A b) *
+  have hRHS : 0 ≤ moorePenroseConditionNumber A / (leastSquaresEta A b * leastSquaresCos A b) *
       (Ndb / Nb) := by
     unfold leastSquaresEta leastSquaresCos
-    have := conditionNumber_nonneg A
+    have := moorePenroseConditionNumber_nonneg A
     have := specNorm_nonneg A
     positivity
   by_cases hx : x = 0
@@ -312,9 +312,9 @@ theorem sqrt_dotProduct_moorePenroseInverse_sub_div_le (A : Matrix m n ℝ) (b �
   have hNy : 0 < Ny := sqrt_dotProduct_self_pos hy
   have hNb : 0 < Nb := sqrt_dotProduct_self_pos hb
   have hα : 0 < specNorm A := by rw [specNorm_eq_norm]; exact norm_pos_iff.mpr hA
-  have hconst : conditionNumber A / (leastSquaresEta A b * leastSquaresCos A b) =
+  have hconst : moorePenroseConditionNumber A / (leastSquaresEta A b * leastSquaresCos A b) =
       specNorm A' * Nb / Nx := by
-    unfold leastSquaresEta leastSquaresCos conditionNumber
+    unfold leastSquaresEta leastSquaresCos moorePenroseConditionNumber
     change specNorm A * specNorm A' / (specNorm A * Nx / Ny * (Ny / Nb)) = _
     field_simp
   rw [hconst]

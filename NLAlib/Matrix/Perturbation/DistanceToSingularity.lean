@@ -109,11 +109,11 @@ number. Higham, Theorem 6.5.
 atlas: condition-number-def (partial) -/
 theorem isLeast_relative_singular_perturbations (A : Matrix n n ℝ) (hA : IsUnit A) :
     IsLeast ((fun E : Matrix n n ℝ => specNorm E / specNorm A) ''
-      {E | ¬ IsUnit (A + E)}) (1 / conditionNumber A) := by
+      {E | ¬ IsUnit (A + E)}) (1 / moorePenroseConditionNumber A) := by
   have hNorm := specNorm_pos_of_isUnit hA
   obtain ⟨E, hE, hNormE⟩ := exists_not_isUnit_add_specNorm_eq_inv_specNorm_inv A hA
-  have hRel : (1 / specNorm A⁻¹) / specNorm A = 1 / conditionNumber A := by
-    rw [conditionNumber_eq_mul_specNorm_inv hA]
+  have hRel : (1 / specNorm A⁻¹) / specNorm A = 1 / moorePenroseConditionNumber A := by
+    rw [moorePenroseConditionNumber_eq_mul_specNorm_inv hA]
     ring
   constructor
   · refine ⟨E, hE, ?_⟩

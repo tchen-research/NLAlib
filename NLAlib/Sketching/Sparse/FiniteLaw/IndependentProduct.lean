@@ -11,8 +11,6 @@ the literal product masses. Source: sparse-Fock pinned commit
 -/
 
 noncomputable section
-set_option autoImplicit false
-open scoped BigOperators
 namespace NLAlib.SparseSketch
 namespace FiniteLaw
 variable {α β ι κ : Type*}

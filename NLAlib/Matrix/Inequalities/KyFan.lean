@@ -14,7 +14,7 @@ Atlas: `ky-fan-maximum-principle`, `ky-fan-norms-def`. The definitions of `kyFan
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 

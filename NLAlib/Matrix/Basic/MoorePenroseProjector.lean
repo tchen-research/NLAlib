@@ -73,9 +73,4 @@ theorem mul_conjTranspose_eq_mul_moorePenroseInverse [DecidableEq m] [DecidableE
   have hM0 : M = 0 := (frobSq_eq_zero_iff M).1 (le_antisymm hle (frobSq_nonneg M))
   exact sub_eq_zero.1 hM0
 
-/-- Deprecated alias (F1, transpose twins removed): use
-`mul_conjTranspose_eq_mul_moorePenroseInverse`. -/
-@[deprecated (since := "2026-10-13")]
-alias mul_transpose_eq_mul_moorePenroseInverse := mul_conjTranspose_eq_mul_moorePenroseInverse
-
 end NLAlib

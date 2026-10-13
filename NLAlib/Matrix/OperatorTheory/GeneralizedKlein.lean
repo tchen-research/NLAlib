@@ -12,7 +12,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open scoped Matrix.Norms.L2Operator ComplexOrder
 open Matrix
-set_option autoImplicit false
 private theorem trace_pair {d : Type*} [Fintype d] [DecidableEq d] (U V : Matrix d d ℂ)
     (a b : d → ℝ) :
     (trace ((U * diagonal (fun j => (a j : ℂ)) * Uᴴ) *

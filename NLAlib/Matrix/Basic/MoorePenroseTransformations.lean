@@ -53,10 +53,6 @@ theorem _root_.Matrix.IsHermitian.moorePenroseInverse {A : Matrix n n 𝕜} (hA 
     (NLAlib.moorePenroseInverse A).IsHermitian := by
   rw [Matrix.IsHermitian, ← moorePenroseInverse_conjTranspose, hA.eq]
 
-/-- Deprecated alias (F1, transpose twins removed): use `Matrix.IsHermitian.moorePenroseInverse`. -/
-@[deprecated (since := "2026-10-13")]
-alias moorePenroseInverse_isSymm := Matrix.IsHermitian.moorePenroseInverse
-
 /-- The general inverse of a left-isometric product is the reverse adjoint product:
 `(Q A)⁺ = A⁺ Qᴴ` when `Qᴴ Q = 1`.
 Horn--Johnson 2013, Problem 7.3.P7; supports `condition-number-def` for rectangular frames. -/
@@ -89,12 +85,6 @@ theorem moorePenroseInverse_mul_left_of_hasOrthonormalCols [DecidableEq m]
   · rw [hBA]
     exact h.conjTranspose_inv_mul_eq
 
-/-- Deprecated alias (F1, transpose twins removed): use
-`moorePenroseInverse_mul_left_of_hasOrthonormalCols`. -/
-@[deprecated (since := "2026-10-13")]
-alias moorePenroseInverse_mul_left_eq_mul_conjTranspose :=
-  moorePenroseInverse_mul_left_of_hasOrthonormalCols
-
 /-- The actual Moore--Penrose inverse of a positive-semidefinite matrix
 is positive semidefinite, including singular matrices. Horn--Johnson,
 Section 7.3; supports `generalized-schur-complement-psd`. -/
@@ -103,9 +93,5 @@ theorem _root_.Matrix.PosSemidef.moorePenroseInverse [DecidableEq n]
   have hB := hA.isHermitian.moorePenroseInverse
   have h := hA.mul_mul_conjTranspose_same (NLAlib.moorePenroseInverse A)
   simpa only [hB.eq, moorePenroseInverse_mul_moorePenroseInverse] using h
-
-/-- Deprecated alias (F1, transpose twins removed): use `Matrix.PosSemidef.moorePenroseInverse`. -/
-@[deprecated (since := "2026-10-13")]
-alias moorePenroseInverse_posSemidef := Matrix.PosSemidef.moorePenroseInverse
 
 end NLAlib

@@ -10,7 +10,6 @@ the original probability space is needed. Source: manuscript `sh:sparse` and
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 namespace NLAlib
 open SparseSketch

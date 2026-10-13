@@ -7,8 +7,6 @@ Source: the finite contraction calculation in operator manuscript
 `sh:count-second`; supports `sparse-ose`.
 -/
 
-set_option autoImplicit false
-open scoped BigOperators
 namespace NLAlib
 
 /-- The off-diagonal double sum equals the full double sum minus its diagonal.

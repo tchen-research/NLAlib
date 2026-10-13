@@ -29,7 +29,7 @@ Atlas: `lanczos-gauss-quadrature`, `krylov-polynomial-exactness` (partial).
 Deviation from the printed statements: any orthonormal `Q` with `K_q(A,b) ⊆ range Q` is
 allowed, so neither tridiagonality nor the Lanczos recurrence is used.
 
-The projection helpers `mulVec_transpose_mulVec_of_mem_range` and `isSymm_transpose_mul_mul`
+The projection helpers `mulVec_conjTranspose_mulVec_of_mem_range` and `isSymm_transpose_mul_mul`
 live in `NLAlib.Matrix.Subspaces.Projections`; the Rayleigh bounds and the eigen-expansion of
 `cfc` used below live in `NLAlib.Matrix.Functions.CFCQuadratic`.
 -/

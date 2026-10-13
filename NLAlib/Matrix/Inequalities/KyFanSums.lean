@@ -11,7 +11,7 @@ Atlas: `ky-fan-maximum-principle`.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 

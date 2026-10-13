@@ -8,7 +8,6 @@ residuals to Mathlib's Frobenius norm. Source: `sa:volume-theorem`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Matrix Matrix.Norms.Frobenius ComplexOrder
 namespace NLAlib
 

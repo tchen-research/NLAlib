@@ -129,8 +129,8 @@ theorem frobSq_residual_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Matrix m
     {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}
     (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ))
     {Q : Matrix m q ℝ} (hQo : HasOrthonormalCols Q) (hQ : Q * (Qᵀ * (A * Ω)) = A * Ω) :
-    frobSq (residual Q A) ≤ frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) := by
-  calc frobSq (residual Q A)
+    frobSq (projResidual Q A) ≤ frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) := by
+  calc frobSq (projResidual Q A)
       ≤ frobSq (A - Q * (Qᵀ * (A * Ω * pinvR Ω₁ * V₁ᵀ))) :=
         frobSq_residual_le_frobSq_sub_mul hQo A _
     _ = frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) := by rw [mul_transpose_mul_competitor hQ]

@@ -93,9 +93,9 @@ theorem singularValues_eq_of_qr {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
 Moore--Penrose inverse, including singular and zero-rank matrices.
 Golub--Van Loan, Section 2.6.2; supports `qr-decomposition`.
 atlas: qr-decomposition (partial) -/
-theorem conditionNumber_eq_of_qr [DecidableEq m] {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
-    (hQ : HasOrthonormalCols Q) (hFactor : Q * R = A) : conditionNumber R = conditionNumber A := by
-  rw [← hFactor, conditionNumber_mul_left_of_hasOrthonormalCols Q R hQ]
+theorem moorePenroseConditionNumber_eq_of_qr [DecidableEq m] {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
+    (hQ : HasOrthonormalCols Q) (hFactor : Q * R = A) : moorePenroseConditionNumber R = moorePenroseConditionNumber A := by
+  rw [← hFactor, moorePenroseConditionNumber_mul_left_of_hasOrthonormalCols Q R hQ]
 
 /-- Under full column rank, the QR frame projector is the actual
 Moore--Penrose orthogonal range projector. Trefethen--Bau, Theorem 7.2;

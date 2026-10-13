@@ -6,11 +6,9 @@ import NLAlib.Sketching.Sparse.FockModel.TensorOperators
 import NLAlib.Sketching.Sparse.MomentMethod.Frame
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 namespace NLAlib.SparseSketch
 
-open scoped BigOperators
 
 noncomputable section
 

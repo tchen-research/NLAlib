@@ -16,7 +16,7 @@ Theorems 4.3.45 and 4.3.48; Marshall–Olkin–Arnold (2011), 9.B.1–9.B.2.
 Atlas: `schur-horn`. All finite real dimensions, signs and multiplicities occur.
 -/
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

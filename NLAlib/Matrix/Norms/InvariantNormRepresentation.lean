@@ -10,7 +10,7 @@ Atlas: `unitarily-invariant-norm-def`.
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 
 namespace NLAlib
 namespace OrthogonallyInvariantNorm
@@ -47,11 +47,11 @@ theorem seminorm_eq_toSymmetricGaugeFin_singularValues {m n : ℕ}
     (ν : OrthogonallyInvariantNorm (Fin m) (Fin n)) (A : Matrix (Fin m) (Fin n) ℝ) :
     ν.seminorm A = ν.toSymmetricGaugeFin.value (fun i : Fin (min m n) => singularValues A i) := by
   obtain ⟨U, V, hSVD⟩ := exists_isSVD A
-  have hU : HasOrthonormalCols U := hSVD.transpose_mul_left
+  have hU : HasOrthonormalCols U := hSVD.conjTranspose_mul_left
   have hVt : HasOrthonormalCols Vᵀ := by
     change Vᵀᵀ * Vᵀ = 1
     rw [Matrix.transpose_transpose]
-    exact hSVD.mul_transpose_right
+    exact hSVD.mul_conjTranspose_right
   calc
     ν.seminorm A = ν.seminorm (U * rectDiag (singularValues A) * Vᵀ) := congrArg ν.seminorm hSVD.eq
     _ = ν.seminorm (rectDiag (singularValues A)) := by

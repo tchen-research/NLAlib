@@ -26,8 +26,8 @@ theorem singularValues_transpose [DecidableEq m] [DecidableEq n] (A : Matrix m n
   funext k
   by_cases hk : k < min (Fintype.card n) (Fintype.card m)
   · obtain ⟨U, V, h⟩ := exists_isSVD A
-    exact singularValues_eq_of_eq_mul_rectDiag_mul h.transpose_mul_right h.transpose_mul_left
-      (singularValues_nonneg A) (singularValues_antitone A) h.transpose_eq hk
+    exact singularValues_eq_of_eq_mul_rectDiag_mul h.conjTranspose_mul_right h.conjTranspose_mul_left
+      (singularValues_nonneg A) (singularValues_antitone A) h.conjTranspose_eq hk
   · rw [singularValues_eq_zero_of_min_le _ (not_lt.1 hk),
       singularValues_eq_zero_of_min_le _ (by rw [min_comm]; exact not_lt.1 hk)]
 

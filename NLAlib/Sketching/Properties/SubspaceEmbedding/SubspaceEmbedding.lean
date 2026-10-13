@@ -16,7 +16,7 @@ Facts about `NLAlib.IsSubspaceEmbedding S U ε` (Woodruff 2014 §2.1; Martinsson
 The converse of the Gram form is in `NLAlib.Sketching.Properties.SubspaceEmbedding.Gram`; the singular-value
 form is in `NLAlib.Sketching.Properties.SubspaceEmbedding.SingularValueEmbedding` and its finite-index transport.
 The matrix facts used here (`mulVec_dotProduct_mulVec_self`,
-`abs_dotProduct_mulVec_le_specNorm`, `mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`) are
+`abs_dotProduct_mulVec_le_specNorm`, `star_mulVec_dotProduct_mulVec_self_of_hasOrthonormalCols`) are
 in `NLAlib.Matrix.Norms.Core` and `NLAlib.Matrix.Subspaces.Projections`.
 
 Atlas: `ose-def`.

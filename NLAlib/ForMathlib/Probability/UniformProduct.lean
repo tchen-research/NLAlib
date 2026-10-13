@@ -9,7 +9,6 @@ operator re-derivation `sh:convex-sampling`, atlas `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open ProbabilityTheory
 open scoped Classical ENNReal

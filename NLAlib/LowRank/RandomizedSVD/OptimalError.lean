@@ -17,7 +17,7 @@ Atlas: `rsvd-expected-error`.
 
 noncomputable section
 open MeasureTheory ProbabilityTheory
-open scoped Matrix ENNReal BigOperators
+open scoped Matrix ENNReal
 namespace NLAlib
 
 /-- A target rank at least the input width has zero optimal Frobenius error.
@@ -43,7 +43,7 @@ theorem integrable_frobSq_residual_of_measurable_frame
     (A : Matrix m n ℝ) (X : Ω → α) (hX : AEMeasurable X μ)
     (Qf : α → Matrix m q ℝ) (hQf : ∀ i j, Measurable fun x => Qf x i j)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (X ω))) :
-    Integrable (fun ω => frobSq (residual (Qf (X ω)) A)) μ := by
+    Integrable (fun ω => frobSq (projResidual (Qf (X ω)) A)) μ := by
   refine (integrable_const (frobSq A)).mono'
     ((measurable_frobSq_residual_of A hQf).comp_aemeasurable hX).aestronglyMeasurable ?_
   filter_upwards [hQo] with ω hω
@@ -84,8 +84,8 @@ theorem integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian
     (hQf : ∀ i j, Measurable fun x => Qf x i j)
     (hQo : ∀ᵐ ω ∂μ, HasOrthonormalCols (Qf (G ω)))
     (hQr : ∀ᵐ ω ∂μ, Qf (G ω) * ((Qf (G ω))ᵀ * (A * G ω)) = A * G ω) :
-    Integrable (fun ω => frobSq (residual (Qf (G ω)) A)) μ ∧
-      (∫ ω, frobSq (residual (Qf (G ω)) A) ∂μ) ≤
+    Integrable (fun ω => frobSq (projResidual (Qf (G ω)) A)) μ ∧
+      (∫ ω, frobSq (projResidual (Qf (G ω)) A) ∂μ) ≤
         (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
   have hX := hG.aemeasurable
   refine ⟨integrable_frobSq_residual_of_measurable_frame A _ hX Qf hQf hQo, ?_⟩
@@ -98,10 +98,10 @@ theorem integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian
     exact hb
   · have hfull := ae_gaussian_projection_reproduces_of_width_le A G hG
       (fun ω => Qf (G ω)) hQr (by omega : n ≤ t)
-    have hz : (fun ω => frobSq (residual (Qf (G ω)) A)) =ᵐ[μ]
+    have hz : (fun ω => frobSq (projResidual (Qf (G ω)) A)) =ᵐ[μ]
         fun _ => (0 : ℝ) := by
       filter_upwards [hfull] with ω hω
-      simp [residual, hω]
+      simp [projResidual, hω]
     rw [integral_congr_ae hz, integral_zero, bestRankFrobSq_eq_zero_of_width_le A (by omega)]
     simp
 
@@ -128,7 +128,7 @@ theorem frobSq_truncatedRsvdOutput_eq {m n q : ℕ}
     (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) =
-      frobSq (residual Q A) + bestRankFrobSq k (Qᵀ * A) := by
+      frobSq (projResidual Q A) + bestRankFrobSq k (Qᵀ * A) := by
   unfold truncatedRsvdOutput
   rw [frobSq_sub_mul_eq hQ, Matrix.conjTranspose_eq_transpose_of_trivial,
     frobSq_sub_truncatedSVD_eq_bestRankFrobSq]
@@ -143,7 +143,7 @@ theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual
     {m n q : Type*} [Fintype m] [Fintype n] [Fintype q] [DecidableEq q]
     {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {Y : Matrix q n ℝ} {k : ℕ}
     (hY : IsBestRankApprox k (Qᵀ * A) Y) (hQ : HasOrthonormalCols Q) :
-    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + frobSq (residual Q A) := by
+    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + frobSq (projResidual Q A) := by
   obtain ⟨B, hB⟩ := exists_isBestRankApprox A k
   have hRank : (Qᵀ * B).rank ≤ k := (Matrix.rank_mul_le_right Qᵀ B).trans hB.1
   have hBest := hY.2 (Qᵀ * B) hRank
@@ -161,9 +161,9 @@ theorem IsBestRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_two_mul_frobSq_res
     {m n q : Type*} [Fintype m] [Fintype n] [Fintype q] [DecidableEq q]
     {Q : Matrix m q ℝ} {A : Matrix m n ℝ} {Y : Matrix q n ℝ} {k : ℕ}
     (hY : IsBestRankApprox k (Qᵀ * A) Y) (hQ : HasOrthonormalCols Q) :
-    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + 2 * frobSq (residual Q A) := by
+    frobSq (A - Q * Y) ≤ bestRankFrobSq k A + 2 * frobSq (projResidual Q A) := by
   have h := hY.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual hQ
-  linarith [frobSq_nonneg (residual Q A)]
+  linarith [frobSq_nonneg (projResidual Q A)]
 
 /-- Ordinary projected truncation has squared Frobenius error at most the
 actual rank-`k` optimum plus squared projection error. The small truncated SVD
@@ -175,7 +175,7 @@ theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_frobSq_residual
     {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) ≤
-      bestRankFrobSq k A + frobSq (residual Q A) := by
+      bestRankFrobSq k A + frobSq (projResidual Q A) := by
   have hY := isBestRankApprox_truncatedSVD (Qᵀ * A) k
   exact hY.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual hQ
 
@@ -188,9 +188,9 @@ theorem frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_two_mul_frobSq_resi
     {m n q : ℕ} (Q : Matrix (Fin m) (Fin q) ℝ) (hQ : HasOrthonormalCols Q)
     (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ) :
     frobSq (A - truncatedRsvdOutput Q A k) ≤
-      bestRankFrobSq k A + 2 * frobSq (residual Q A) := by
+      bestRankFrobSq k A + 2 * frobSq (projResidual Q A) := by
   have h := frobSq_sub_truncatedRsvdOutput_le_bestRankFrobSq_add_frobSq_residual Q hQ A k
-  linarith [frobSq_nonneg (residual Q A)]
+  linarith [frobSq_nonneg (projResidual Q A)]
 
 /-- Actual postprocessed RSVD has integrable scalar squared error. This uses
 continuity of the optimum, not a measurability assumption on an arbitrary
@@ -209,7 +209,7 @@ theorem integrable_frobSq_truncatedRsvdOutput_of_measurable_frame
     (continuous_bestRankFrobSq k).measurable.comp hCompressed
   have hValue := (measurable_frobSq_residual_of A hQf).add hOpt
   have hEq : (fun ω => frobSq (A - truncatedRsvdOutput (Qf (X ω)) A k)) =ᵐ[μ]
-      fun ω => frobSq (residual (Qf (X ω)) A) + bestRankFrobSq k ((Qf (X ω))ᵀ * A) := by
+      fun ω => frobSq (projResidual (Qf (X ω)) A) + bestRankFrobSq k ((Qf (X ω))ᵀ * A) := by
     filter_upwards [hQo] with ω hω
     exact frobSq_truncatedRsvdOutput_eq _ hω A k
   have hMeas := (hValue.comp_aemeasurable hX).aestronglyMeasurable.congr hEq.symm
@@ -261,7 +261,7 @@ theorem integrable_and_integral_frobSq_truncatedRsvdOutput_le_bestRankFrobSq_gau
         fun _ => (0 : ℝ) := by
       filter_upwards [hfull, hQo] with ω hω horth
       rw [frobSq_truncatedRsvdOutput_eq _ horth, hcompressed]
-      simp [residual, hω]
+      simp [projResidual, hω]
     rw [integral_congr_ae hz, integral_zero, hOpt]
     simp
 
@@ -277,8 +277,8 @@ theorem integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFr
     {m n k t : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (hkt : k + 2 ≤ t)
     (G : Ω → Matrix (Fin n) (Fin t) ℝ)
     (hG : HasLaw G (gaussianMatrix (Fin n) (Fin t)) μ) :
-    Integrable (fun ω => frobSq (residual (gaussianRangeFrame A t (G ω)) A)) μ ∧
-      (∫ ω, frobSq (residual (gaussianRangeFrame A t (G ω)) A) ∂μ) ≤
+    Integrable (fun ω => frobSq (projResidual (gaussianRangeFrame A t (G ω)) A)) μ ∧
+      (∫ ω, frobSq (projResidual (gaussianRangeFrame A t (G ω)) A) ∂μ) ≤
         (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k A := by
   exact integrable_and_integral_frobSq_residual_le_bestRankFrobSq_gaussian A hkt G hG
     (gaussianRangeFrame A t) (measurable_gaussianRangeFrame_entry A t)

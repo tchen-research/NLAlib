@@ -15,7 +15,6 @@ Supports atlas `haar-orthogonal`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory InnerProductSpace
 open scoped Matrix Matrix.Norms.L2Operator
 open scoped Classical

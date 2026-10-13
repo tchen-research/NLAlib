@@ -13,7 +13,7 @@ Source: Marshall–Olkin–Arnold (2011), Chapters 1–4.
 -/
 
 noncomputable section
-open scoped BigOperators Matrix
+open scoped Matrix
 
 namespace NLAlib
 

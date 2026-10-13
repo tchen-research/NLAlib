@@ -7,7 +7,6 @@ Source: operator re-derivation `pg:row-bound`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 

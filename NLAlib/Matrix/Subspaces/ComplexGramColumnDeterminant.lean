@@ -13,7 +13,6 @@ Source: operator re-derivation `sa:volume-column`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Classical Matrix Matrix.Norms.Frobenius ComplexOrder
 namespace NLAlib
 

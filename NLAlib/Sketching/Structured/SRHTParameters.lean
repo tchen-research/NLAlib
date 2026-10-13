@@ -7,7 +7,6 @@ Gaussian-linearization threshold. Source: `sh:flatten-constants`, atlas `srht-os
 -/
 
 noncomputable section
-set_option autoImplicit false
 namespace NLAlib
 
 /-- The manuscript's actual numerical row bound, retaining its Hanson–Wright

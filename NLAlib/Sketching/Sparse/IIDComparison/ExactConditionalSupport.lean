@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.IIDComparison.ExactColumnMarginals
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Exact-s conditional support moments
@@ -14,7 +13,6 @@ Ported from `SparseFockFormal.UniformExactSBarycenter` at commit
 b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`.
 -/
 
-open scoped BigOperators
 
 namespace NLAlib.SparseSketch.UniformSparse
 

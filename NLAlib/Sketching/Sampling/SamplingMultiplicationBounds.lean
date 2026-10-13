@@ -8,7 +8,6 @@ Atlas: `amm-sampling`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Matrix Matrix.Norms.Frobenius NNReal
 namespace NLAlib

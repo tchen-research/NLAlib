@@ -163,7 +163,7 @@ projector uniqueness). -/
 theorem one_sub_mul_moorePenroseInverse_mul_eq_residual {m q p : Type*} [Fintype m]
     [Fintype q] [DecidableEq m] [DecidableEq q] {Q : Matrix m q ℝ} (hQ : HasOrthonormalCols Q)
     {Y : Matrix m t ℝ} (hQY : Q * (Qᵀ * Y) = Y) (hr : Fintype.card q ≤ Y.rank)
-    (F : Matrix m p ℝ) : (1 - Y * moorePenroseInverse Y) * F = residual Q F := by
+    (F : Matrix m p ℝ) : (1 - Y * moorePenroseInverse Y) * F = projResidual Q F := by
   rw [← mul_conjTranspose_eq_mul_moorePenroseInverse hQ hQY hr, residual_eq_one_sub_mul]
 
 end Structural
@@ -196,7 +196,7 @@ theorem integrable_and_integral_trace_sub_nystrom_le {n r k t : ℕ}
       ∫ ω, (A - nystrom A (Ω ω)).trace ∂μ ≤ (1 + (k : ℝ) / (t - k - 1)) * bestRankFrobSq k F := by
   obtain ⟨hint, hle⟩ :=
     integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq F hkt Ω hΩ
-  have hae : (fun ω => frobSq (residual (gaussianRangeFrame F t (Ω ω)) F))
+  have hae : (fun ω => frobSq (projResidual (gaussianRangeFrame F t (Ω ω)) F))
       =ᵐ[μ] fun ω => (A - nystrom A (Ω ω)).trace := by
     have ho := ae_hasOrthonormalCols_gaussianRangeFrame_of_hasLaw F Ω hΩ
     have hp := ae_project_gaussianRangeFrame_of_hasLaw F Ω hΩ

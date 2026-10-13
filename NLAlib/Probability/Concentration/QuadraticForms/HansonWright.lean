@@ -26,10 +26,9 @@ Atlas: `hanson-wright`. Vershynin 2018, Theorem 6.2.1.
 -/
 
 open MeasureTheory ProbabilityTheory Real
-open scoped BigOperators NNReal Matrix.Norms.L2Operator
+open scoped NNReal Matrix.Norms.L2Operator
 
 noncomputable section
-set_option autoImplicit false
 
 namespace NLAlib
 

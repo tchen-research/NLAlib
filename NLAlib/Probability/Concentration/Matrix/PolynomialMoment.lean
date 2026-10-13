@@ -11,7 +11,6 @@ Source: operator manuscript, final proof of `thm:khintchine`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped Matrix Matrix.Norms.L2Operator ComplexOrder
 namespace NLAlib

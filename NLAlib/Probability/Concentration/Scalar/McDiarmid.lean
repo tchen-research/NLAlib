@@ -12,7 +12,6 @@ Boucheron–Lugosi–Massart 2013, Theorem 6.2.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 
 open MeasureTheory ProbabilityTheory

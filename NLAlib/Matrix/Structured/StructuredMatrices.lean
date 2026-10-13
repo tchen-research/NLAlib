@@ -10,9 +10,8 @@ nonvanishing; repeated parameters are allowed. Horn–Johnson §§0.9.7–0.9.12
 -/
 
 noncomputable section
-open scoped Matrix BigOperators
+open scoped Matrix
 namespace NLAlib
-set_option autoImplicit false
 
 /-- Toeplitz entries use ordinary integer differences, not modular index
 arithmetic. Horn–Johnson 2013, §0.9.7.

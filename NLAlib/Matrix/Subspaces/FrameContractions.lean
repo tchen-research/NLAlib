@@ -38,7 +38,7 @@ omit [DecidableEq m] [DecidableEq n] in
 Stewart–Sun §I.5. -/
 theorem frobNorm_transpose_frame_mul_le {Q : Matrix m r ℝ}
     (hQ : HasOrthonormalCols Q) (E : Matrix m n ℝ) : frobNorm (Qᵀ*E) ≤ frobNorm E := by
-  have hh := frobSq_transpose_mul_le hQ E
+  have hh := frobSq_conjTranspose_mul_le hQ E
   exact Real.sqrt_le_sqrt hh
 
 omit [DecidableEq m] [DecidableEq n] in

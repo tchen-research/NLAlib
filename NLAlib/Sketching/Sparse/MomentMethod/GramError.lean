@@ -4,7 +4,6 @@ Released under the MIT license; see docs/ports/sparse-fock-MIT.txt. -/
 import NLAlib.Sketching.Sparse.MomentMethod.Frame
 import NLAlib.Sketching.Properties.SubspaceEmbedding.Gram
 
-set_option autoImplicit false
 
 /-!
 # Gram error of a sketch on a Parseval frame

@@ -13,7 +13,6 @@ Source: operator re-derivation `sh:srht-quadratic`; supports `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory ProbabilityTheory
 open scoped Matrix ENNReal NNReal
 namespace NLAlib

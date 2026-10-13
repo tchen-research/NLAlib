@@ -12,7 +12,6 @@ Source: Joel A. Tropp, An Introduction to Matrix Concentration Inequalities, arX
 -/
 open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 open NLAlib
-set_option autoImplicit false
 
 /-- The logarithm is operator concave on `(0, ∞)`, i.e. `-log` is operator convex there.
 

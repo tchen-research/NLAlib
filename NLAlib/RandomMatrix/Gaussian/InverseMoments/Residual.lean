@@ -4,7 +4,7 @@ Ported from the Prove2me workspace (Gaussian Random Matrices series, solutions
 -/
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.SchurComplement
 /-!
-# Diagonal of the inverse Gram matrix and the law of the residual
+# Diagonal of the inverse Gram matrix and the law of the projResidual
 
 For `G` with rows indexed by `Fin (n + 1)`, `H` the matrix of the rows other than `i` and
 `g = Gᵢ`:

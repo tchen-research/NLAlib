@@ -121,7 +121,7 @@ private theorem prod_singularValues_mul_le_fin {m p n : ℕ}
     have hkn : k ≤ n := hk.trans ((min_le_right m (min p n)).trans (min_le_right p n))
     let Q := V.submatrix id (Fin.castLE hkn)
     have hQ : HasOrthonormalCols Q :=
-      HasOrthonormalCols.submatrix_cols hT.transpose_mul_right
+      HasOrthonormalCols.submatrix_cols hT.conjTranspose_mul_right
         ⟨Fin.castLE hkn, Fin.castLE_injective hkn⟩
     have hdetT := hT.det_gram_mul_submatrix_eq_prod_sq_singularValues hkn
     have hA := det_gram_mul_le_det_gram_mul_prod_sq_singularValues A (B * Q)

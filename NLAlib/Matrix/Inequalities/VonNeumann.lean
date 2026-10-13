@@ -36,7 +36,7 @@ theorem frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le {r : ℕ} (X E : 
     (hX : X.rank ≤ r) : frobInner X E ≤ Real.sqrt r * frobNorm X * specNorm E := by
   set P : Matrix m m ℝ := X * moorePenroseInverse X with hPdef
   have hPX : P * X = X := mul_moorePenroseInverse_mul X
-  have hs : P.IsSymm := mul_moorePenroseInverse_isSymm X
+  have hs : P.IsSymm := mul_moorePenroseInverse_isHermitian X
   have hp : IsIdempotentElem P := mul_moorePenroseInverse_isIdempotentElem X
   have hinner : frobInner X E = frobInner X (P * E) := by
     have h := frobInner_mul_mul P X (1 : Matrix m m ℝ) E
@@ -50,7 +50,7 @@ theorem frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le {r : ℕ} (X E : 
   have hspec : specNorm (P * E) ≤ specNorm E :=
     calc specNorm (P * E) ≤ specNorm P * specNorm E := specNorm_mul_le P E
       _ ≤ 1 * specNorm E :=
-        mul_le_mul_of_nonneg_right (specNorm_le_one_of_isSymm_of_isIdempotentElem hs hp)
+        mul_le_mul_of_nonneg_right (Matrix.IsHermitian.specNorm_le_one_of_isIdempotentElem hs hp)
           (specNorm_nonneg E)
       _ = specNorm E := one_mul _
   have hfrob : frobNorm (P * E) ≤ Real.sqrt r * specNorm E :=
@@ -193,14 +193,14 @@ theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) �
         _ = ∑ j : Fin m, P j (Fin.castLE (min_le_left m n) l) ^ 2 := by
             rw [← Fin.sum_univ_eq_sum_range (fun i => p i l ^ 2) m]
             simp [p]
-        _ = 1 := sum_sq_col_eq_one h.transpose_mul_left _
+        _ = 1 := sum_sq_col_eq_one h.conjTranspose_mul_left _
     · calc ∑ i ∈ Finset.range k, r i l ^ 2 ≤ ∑ i ∈ Finset.range n, r i l ^ 2 :=
             Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_subset_range.2 hkn)
               (fun _ _ _ => sq_nonneg _)
         _ = ∑ j : Fin n, R j (Fin.castLE (min_le_right m n) l) ^ 2 := by
             rw [← Fin.sum_univ_eq_sum_range (fun i => r i l ^ 2) n]
             simp [r]
-        _ = 1 := sum_sq_col_eq_one h.transpose_mul_right _
+        _ = 1 := sum_sq_col_eq_one h.conjTranspose_mul_right _
   have hrow : ∀ i, ∑ l, p i l ^ 2 ≤ 1 ∧ ∑ l, r i l ^ 2 ≤ 1 := by
     intro i
     constructor
@@ -208,13 +208,13 @@ theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) �
       · calc ∑ l, p i l ^ 2 = ∑ l : Fin (min m n),
               (fun j => P ⟨i, hi⟩ j ^ 2) (Fin.castLE (min_le_left m n) l) := by simp [p, hi]
           _ ≤ ∑ j, P ⟨i, hi⟩ j ^ 2 := sum_castLE_le _ _ fun _ => sq_nonneg _
-          _ = 1 := sum_sq_row_eq_one h.mul_transpose_left _
+          _ = 1 := sum_sq_row_eq_one h.mul_conjTranspose_left _
       · simp [p, hi]
     · by_cases hi : i < n
       · calc ∑ l, r i l ^ 2 = ∑ l : Fin (min m n),
               (fun j => R ⟨i, hi⟩ j ^ 2) (Fin.castLE (min_le_right m n) l) := by simp [r, hi]
           _ ≤ ∑ j, R ⟨i, hi⟩ j ^ 2 := sum_castLE_le _ _ fun _ => sq_nonneg _
-          _ = 1 := sum_sq_row_eq_one h.mul_transpose_right _
+          _ = 1 := sum_sq_row_eq_one h.mul_conjTranspose_right _
       · simp [r, hi]
   let w : Fin (min m n) → ℝ := fun l => ∑ i ∈ Finset.range k, (p i l ^ 2 + r i l ^ 2) / 2
   have hw0 : ∀ l, 0 ≤ w l := fun l =>
@@ -265,8 +265,8 @@ theorem frobInner_le_sum_singularValues_mul {m n : ℕ} (X E : Matrix (Fin m) (F
     have hU : HasOrthonormalCols Uᵀ := by
       rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
         Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
-      exact h.mul_transpose_left
-    rw [hDdef, singularValues_mul_orthogonal _ h.transpose_mul_right,
+      exact h.mul_conjTranspose_left
+    rw [hDdef, singularValues_mul_orthogonal _ h.conjTranspose_mul_right,
       singularValues_isometry_mul hU]
   have hinner : frobInner X E =
       frobInner (rectDiag (singularValues X) : Matrix (Fin m) (Fin n) ℝ) D := by

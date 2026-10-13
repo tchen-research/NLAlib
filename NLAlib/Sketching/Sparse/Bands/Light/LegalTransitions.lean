@@ -12,8 +12,7 @@ Supports the `sparse-ose` moment proof.
 -/
 
 noncomputable section
-set_option autoImplicit false
-open scoped BigOperators InnerProductSpace Matrix.Norms.L2Operator
+open scoped InnerProductSpace Matrix.Norms.L2Operator
 namespace NLAlib.SparseSketch.Light
 variable {d m n ell : ℕ}
 

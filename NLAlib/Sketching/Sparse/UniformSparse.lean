@@ -7,7 +7,6 @@ import Mathlib.Data.Set.PowersetCard
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Uniform signed exact-s columns (OSNAP)
@@ -20,7 +19,7 @@ coordinates; every signed support vector therefore has the same number of
 representatives and the induced column law is exactly uniform.
 -/
 
-open scoped BigOperators InnerProductSpace
+open scoped InnerProductSpace
 
 namespace NLAlib.SparseSketch.UniformSparse
 

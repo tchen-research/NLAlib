@@ -4,7 +4,7 @@ import NLAlib.Matrix.Spectral.SigmaMinTransport
 # Principal-angle bridges to variational minima and tangent ratios
 
 The largest-sine formula holds also for unequal frame widths (through the
-residual Gram identity `transpose_residual_mul_residual_eq_one_sub_overlap`). For equal widths the actual largest tangent has the exact
+projResidual Gram identity `transpose_residual_mul_residual_eq_one_sub_overlap`). For equal widths the actual largest tangent has the exact
 sine ratio. These results connect the first-course principal-angle API to
 the native singular spectrum. Source: Stewart--Sun, Section I.5;
 Golub--Van Loan, Theorem 2.5.1. Atlas: `principal-angles-def`.
@@ -26,7 +26,7 @@ atlas: principal-angles-def (partial) -/
 theorem specNorm_residual_sq_eq_one_sub_sigmaMin_sq [Nonempty p]
     {P : Matrix m n ℝ} {Q : Matrix m p ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) :
-    specNorm (residual P Q) ^ 2 = 1 - sigmaMin (Pᵀ * Q) ^ 2 := by
+    specNorm (projResidual P Q) ^ 2 = 1 - sigmaMin (Pᵀ * Q) ^ 2 := by
   let C := Pᵀ * Q
   let en := Fintype.equivFin n
   let ep := Fintype.equivFin p
@@ -69,7 +69,7 @@ theorem specNorm_residual_sq_eq_one_sub_sigmaMin_sq [Nonempty p]
   rw [hGramTransport, specNorm_reindex, specNorm_sub_comm, hPi] at hGramNorm
   have hSigma : sigmaMin C = singularValues CF last := by
     rw [sigmaMin_eq_singularValues_last C hp, ← singularValues_reindex C en ep]
-  have hResidual := specNorm_sq_eq_specNorm_transpose_mul_self (residual P Q)
+  have hResidual := specNorm_sq_eq_specNorm_transpose_mul_self (projResidual P Q)
   rw [transpose_residual_mul_residual_eq_one_sub_overlap hP hQ] at hResidual
   exact hResidual.trans (hGramNorm.trans (by rw [hSigma]))
 
@@ -119,17 +119,17 @@ give zero on both sides. Stewart--Sun, Theorem I.5.5;
 supports `principal-angles-def`. -/
 theorem specNorm_residual_mul_inv_sq_eq_div_residual_sq {P Q : Matrix m n ℝ}
     (hP : HasOrthonormalCols P) (hQ : HasOrthonormalCols Q) (hC : IsUnit (Pᵀ * Q)) :
-    specNorm (residual P Q * (Pᵀ * Q)⁻¹) ^ 2 =
-      specNorm (residual P Q) ^ 2 / (1 - specNorm (residual P Q) ^ 2) := by
+    specNorm (projResidual P Q * (Pᵀ * Q)⁻¹) ^ 2 =
+      specNorm (projResidual P Q) ^ 2 / (1 - specNorm (projResidual P Q) ^ 2) := by
   rcases isEmpty_or_nonempty n with hn | hn
-  · have hR : residual P Q = 0 := Subsingleton.elim _ _
+  · have hR : projResidual P Q = 0 := Subsingleton.elim _ _
     simp [hR, specNorm_zero]
   · have hn : 0 < Fintype.card n := Fintype.card_pos
     let last : Fin (Fintype.card n) := ⟨Fintype.card n - 1, by omega⟩
-    have hSin : specNorm (residual P Q) = Real.sin (principalAnglesFintype P Q last) :=
+    have hSin : specNorm (projResidual P Q) = Real.sin (principalAnglesFintype P Q last) :=
       (specNorm_sinePrincipalAngles_eq_residual hP hQ).symm.trans
         (specNorm_sinePrincipalAngles_eq_sin_last hP hQ hn)
-    have hTan : specNorm (residual P Q * (Pᵀ * Q)⁻¹) =
+    have hTan : specNorm (projResidual P Q * (Pᵀ * Q)⁻¹) =
         Real.tan (principalAnglesFintype P Q last) :=
       (specNorm_tangentPrincipalAngles_eq_residual_mul_inv hP hQ hC).symm.trans
         (specNorm_tangentPrincipalAngles_eq_tan_last hP hQ hC hn)

@@ -10,7 +10,6 @@ assumed as concentration or variance hypotheses. Source: operator re-derivation
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Classical
 namespace NLAlib
 

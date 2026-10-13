@@ -5,7 +5,6 @@ import NLAlib.Sketching.Sparse.Bands.ScalarBounds
 import NLAlib.Sketching.Sparse.FockModel.TernaryJacobi
 import Mathlib.Tactic
 
-set_option autoImplicit false
 
 /-!
 # Scalar coefficient bounds for normalized sparse-Fock bands

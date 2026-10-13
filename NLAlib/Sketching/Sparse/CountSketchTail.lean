@@ -8,7 +8,6 @@ Source: operator manuscript `sh:count-ose`; supports `sparse-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option backward.isDefEq.respectTransparency false
 open MeasureTheory Matrix
 open scoped Matrix

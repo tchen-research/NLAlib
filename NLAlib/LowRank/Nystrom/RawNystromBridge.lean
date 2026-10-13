@@ -12,7 +12,6 @@ Source: Tropp–Webber 2023, Section 5. Atlas: `gn-expected-error`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 open scoped Matrix
 namespace NLAlib
 

@@ -40,7 +40,6 @@ all size-`k` subsets. Sources: Hoeffding 1963; operator re-derivation
 -/
 
 noncomputable section
-set_option autoImplicit false
 open MeasureTheory
 open scoped ENNReal NNReal Classical
 namespace NLAlib

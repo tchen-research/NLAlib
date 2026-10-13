@@ -137,18 +137,10 @@ theorem mul_moorePenroseInverse_isHermitian (A : Matrix m n 𝕜) :
     (A * moorePenroseInverse A).IsHermitian :=
   (isMoorePenroseInverse A).conjTranspose_mul_eq
 
-/-- Deprecated alias (F1, transpose twins removed): use `mul_moorePenroseInverse_isHermitian`. -/
-@[deprecated (since := "2026-10-13")]
-alias mul_moorePenroseInverse_isSymm := mul_moorePenroseInverse_isHermitian
-
 /-- The row-space projector `A⁺ A` is Hermitian. -/
 theorem moorePenroseInverse_mul_isHermitian (A : Matrix m n 𝕜) :
     (moorePenroseInverse A * A).IsHermitian :=
   (isMoorePenroseInverse A).conjTranspose_inv_mul_eq
-
-/-- Deprecated alias (F1, transpose twins removed): use `moorePenroseInverse_mul_isHermitian`. -/
-@[deprecated (since := "2026-10-13")]
-alias moorePenroseInverse_mul_isSymm := moorePenroseInverse_mul_isHermitian
 
 /-- The Moore–Penrose column-space projector is idempotent at every rank. -/
 theorem mul_moorePenroseInverse_isIdempotentElem (A : Matrix m n 𝕜) :
@@ -279,10 +271,6 @@ theorem IsSVD.moorePenroseInverse_eq {m n : Type*} [Fintype m] [Fintype n] [Deci
     moorePenroseInverse A =
       V * (rectDiag (fun k => (singularValues A k)⁻¹) : Matrix (Fin q) (Fin p) 𝕜) * Uᴴ :=
   (NLAlib.isMoorePenroseInverse A).unique h.isMoorePenroseInverse
-
-/-- Deprecated alias (F1, transpose twins removed): use `IsSVD.moorePenroseInverse_eq`. -/
-@[deprecated (since := "2026-10-13")]
-alias IsSVD.moorePenroseInverse_eq_mul_conjTranspose := IsSVD.moorePenroseInverse_eq
 
 /-! ### The row projector `A⁺A` and the smallest positive singular value -/
 

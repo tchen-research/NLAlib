@@ -6,7 +6,7 @@ import NLAlib.Matrix.Functions.CFCTrace
 # Eigenspace projectors and one-vector sine bounds
 
 The projector is the existing matrix functional calculus of the spectral
-indicator. Finite spectral expansion controls its complementary residual,
+indicator. Finite spectral expansion controls its complementary projResidual,
 including an empty complementary spectrum. Parlett §11.7;
 atlas `eigenvalue-residual-bounds`.
 -/

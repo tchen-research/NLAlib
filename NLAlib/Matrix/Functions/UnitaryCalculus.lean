@@ -20,7 +20,6 @@ Atlas: `golden-thompson`, `operator-monotone-convex` (supporting calculus).
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open scoped Matrix Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 

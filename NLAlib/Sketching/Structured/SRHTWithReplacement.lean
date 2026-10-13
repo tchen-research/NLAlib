@@ -10,7 +10,6 @@ width. Source: `sh:srht-ose`; atlas `srht-ose`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 set_option maxHeartbeats 600000
 open MeasureTheory ProbabilityTheory
 open scoped Classical Matrix Matrix.Norms.L2Operator ENNReal ComplexOrder

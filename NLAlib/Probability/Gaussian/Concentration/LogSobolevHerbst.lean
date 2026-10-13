@@ -14,7 +14,6 @@ Ledoux 2001, Theorems 5.1 and 5.3; atlas `herbst`.
 -/
 
 noncomputable section
-set_option autoImplicit false
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped Topology ENNReal

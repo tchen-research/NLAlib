@@ -19521,7 +19521,7 @@
    ],
    "area": "matrix-subspace-perturbation",
    "kind": "definition",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "For $Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with orthonormal columns, the canonical angles $0\\le\\theta_1\\le\\dots\\le\\theta_k\\le\\pi/2$ are defined by $\\cos\\theta_i=\\sigma_i(Q^\\top\\hat Q)$ (so $\\|\\sin\\Theta\\|=\\sin\\theta_k=\\sqrt{1-\\sigma_k(Q^\\top\\hat Q)^2}$), and $\\sin\\Theta(Q,\\hat Q)=\\operatorname{diag}(\\sin\\theta_i)$. Characterisations, with $Q_\\perp$ an orthonormal complement of $Q$: $\\|\\sin\\Theta\\|=\\|Q_\\perp^\\top\\hat Q\\|=\\|(I-QQ^\\top)\\hat Q\\|=\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|$; $\\|\\sin\\Theta\\|_F^2=k-\\|Q^\\top\\hat Q\\|_F^2=\\tfrac12\\|QQ^\\top-\\hat Q\\hat Q^\\top\\|_F^2$; $\\Theta$ depends only on the ranges, is symmetric in $(Q,\\hat Q)$; if $\\theta_k<\\pi/2$, $\\|\\tan\\Theta\\|=\\|(Q_\\perp^\\top\\hat Q)(Q^\\top\\hat Q)^{-1}\\|$.",
    "hypotheses": [
     "$Q,\\hat Q\\in\\mathbb R^{n\\times k}$ with $Q^\\top Q=\\hat Q^\\top\\hat Q=I_k$",
@@ -19571,7 +19571,7 @@
     "subspaces"
    ],
    "notes": "State with matrices (HasOrthonormalCols) rather than submodules, as every consumer manipulates frames; give the submodule-level invariance as a lemma. Define the angles through NLAlib.singularValues (Qᵀ Q̂) on Fin k indices and expose ‖sin Θ‖ as specNorm (residual Q Q̂) so the projections API applies directly. Consumers: davis-kahan-sin-theta, wedin-sin-theta, pseudoinverse-perturbation (projector part), subspace-iteration-expected and block-krylov-lra (gap-dependent tan Θ forms), random-start-power (tan θ of the start vector), hmt-9-1-spectral (Ω₂Ω₁† is a tan Θ), leverage-score approximation from approximate bases. Recommendation: prove.",
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "formalizations": [
     {
      "library": "nlalib",
@@ -23118,7 +23118,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "The Cholesky recursion ($a \\mapsto \\sqrt a$, $b \\mapsto b/\\sqrt a$, continue on the Schur complement $C - bb^\\top/a$) succeeds (every pivot $> 0$) iff $A$ is positive definite (for symmetric $A$); on success $L L^\\top = A$ with $L$ lower triangular with positive diagonal, and $L$ is unique. For positive semidefinite $A$, pivoted (diagonal-pivoting) Cholesky never fails, stops after $\\operatorname{rank} A$ steps and returns $L L^\\top = A$.",
    "hypotheses": [
     "$A$ symmetric"
@@ -23230,7 +23230,7 @@
     "algorithm"
    ],
    "notes": "Uses `Matrix.PosDef.fromBlocks₁₁` (Schur complement positivity) for the iff. Consumers: partial-cholesky-nystrom, preconditioned-cg (P^{1/2}), sylvester-inertia.",
-   "updated_at": "2026-10-11"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "partial-cholesky-nystrom",
@@ -23356,7 +23356,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "Classical and modified Gram–Schmidt on the columns of $A \\in \\mathbb{R}^{m\\times n}$, as recursions, produce $Q$ with orthonormal columns and upper triangular $R$ with $A = QR$ and $r_{jj} > 0$; step $k$ breaks down iff $a_k \\in \\operatorname{span}(a_1,\\dots,a_{k-1})$ (in exact arithmetic CGS and MGS give the same $Q, R$). $Q$ is the graded orthonormal basis of the column flag.",
    "hypotheses": [
     "$A$ with linearly independent columns (for no breakdown)"
@@ -23563,7 +23563,7 @@
     "algorithm"
    ],
    "notes": "Mathlib `gramSchmidtNormed`/`gramSchmidtOrthonormalBasis` is the classical form on an inner product space; the matrix statement and the MGS recursion are the targets. Same pattern as `IsGradedKrylovBasis`.",
-   "updated_at": "2026-10-11"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "householder-reflector-def",
@@ -23794,7 +23794,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "definition",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "A Givens rotation $G(i,j,\\theta)$ is the identity except for the $2\\times2$ rotation block in rows/columns $i,j$; it is orthogonal and can zero one chosen entry. An upper Hessenberg $H$ has $H = QR$ with $Q$ a product of $n-1$ rotations; $RQ$ is again upper Hessenberg (tridiagonal if $H$ is symmetric tridiagonal).",
    "hypotheses": [],
    "conclusion": "$G$ orthogonal; $G x$ zeroes $x_j$; Hessenberg QR in $n-1$ rotations; $RQ$ Hessenberg",
@@ -23973,7 +23973,7 @@
     "hessenberg"
    ],
    "notes": "The structure-preservation lemma is what the QR algorithm on Hessenberg/tridiagonal form uses.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "hessenberg-reduction",
@@ -23985,7 +23985,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "For $A \\in \\mathbb{R}^{n\\times n}$ there is orthogonal $Q$ with $Q^\\top A Q = H$ upper Hessenberg, constructed by $n-2$ Householder reflectors; if $A$ is symmetric, $H$ is symmetric tridiagonal. When the first column of $Q$ is fixed and $H$ is unreduced, $Q$ and $H$ are determined up to signs (implicit Q theorem), and the columns of $Q$ form the Arnoldi basis of $(A, q_1)$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$"
@@ -24118,7 +24118,7 @@
     "eigenvalues"
    ],
    "notes": "Existence is a Householder recursion; the implicit Q theorem is the link to `ArnoldiDecomp` (exists_sign) and was left open in round 8.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "least-squares-normal-equations",
@@ -24435,7 +24435,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "identity",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "Let $A_0 = A$, $A_{j-1} = Q_j R_j$ (QR), $A_j = R_j Q_j$, and $\\underline{Q}^{(k)} = Q_1\\cdots Q_k$, $\\underline{R}^{(k)} = R_k \\cdots R_1$. Then $A^k = \\underline{Q}^{(k)} \\underline{R}^{(k)}$ and $A_k = \\underline{Q}^{(k)\\top} A \\underline{Q}^{(k)}$: the QR algorithm is simultaneous (subspace) iteration started from $I$, and each $A_k$ is orthogonally similar to $A$. A QR step preserves upper Hessenberg form and symmetry (hence tridiagonality), and the shifted step $A - \\mu I = QR$, $A_+ = RQ + \\mu I$ is again a similarity.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$; a QR factorization chosen at each step"
@@ -24598,7 +24598,7 @@
     "qr-algorithm"
    ],
    "notes": "The convergence theorem (T&B Thm 28.4, under |λ₁|>…>|λₙ| and a nondegeneracy condition on the eigenvector matrix) is a separate future entry that consumes subspace-iteration-convergence.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "sylvester-inertia",
@@ -24610,7 +24610,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "Inertia (numbers of positive, negative, zero eigenvalues) is invariant under congruence $A \\mapsto X^\\top A X$ with $X$ invertible. Consequently, for symmetric $A$ with $A - xI = L D L^\\top$, the number of eigenvalues of $A$ less than $x$ equals the number of negative entries of $D$; for unreduced symmetric tridiagonal $T$ the number of sign changes in the Sturm sequence $\\det(T_k - xI)$ counts the eigenvalues below $x$ (bisection).",
    "hypotheses": [
     "$A$ symmetric; $X$ invertible; for the count, $LDL^\\top$ of $A - xI$ exists (or the Sturm sequence has no zero)"
@@ -24745,7 +24745,7 @@
     "bisection"
    ],
    "notes": "Mathlib has the uniqueness half of Sylvester's law for quadratic forms (`QuadraticMap.Equivalent.sigPos_eq`/`sigNeg_eq`, `QuadraticForm.sigPos_weightedSumSquares`, Mathlib.LinearAlgebra.QuadraticForm.Signature); the matrix statement is stated through `Matrix.toQuadraticForm'`. The Sturm count is what bisection and spectrum-slicing estimators use.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "golub-kahan-bidiagonalization",
@@ -24756,7 +24756,7 @@
    ],
    "area": "krylov-bases",
    "kind": "identity",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "Starting from $u_1 = b/\\|b\\|$, the recursion $A^\\top u_k = \\beta_{k-1} v_{k-1} + \\alpha_k v_k$, $A v_k = \\alpha_k u_k + \\beta_k u_{k+1}$ produces orthonormal $U_k, V_k$ and lower bidiagonal $B_k$ with $A V_k = U_{k+1} \\underline{B}_k$ and $A^\\top U_{k+1} = V_k \\underline{B}_k^\\top + \\alpha_{k+1} v_{k+1} e_{k+1}^\\top$; $V_k$ is the Lanczos basis of $(A^\\top A, A^\\top b)$ and $U_k$ that of $(AA^\\top, b)$, with $B_k^\\top B_k$ the Lanczos tridiagonal of $A^\\top A$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$, $b \\ne 0$, $k \\le$ grade"
@@ -24884,7 +24884,7 @@
     "lsqr"
    ],
    "notes": "Links LSQR (CGLS) to the Lanczos layer; the SVD-computation use (T&B Lect. 31) is the motivation.",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "cg-recurrence",
@@ -25359,7 +25359,7 @@
    ],
    "area": "krylov-bases",
    "kind": "theorem",
-   "status": "proved",
+   "status": "scaffold",
    "informal": "The recursion ($\\alpha_k = \\|A^\\top u_k - \\beta_{k-1} v_{k-1}\\|$, $v_k$ its normalisation, $\\beta_k = \\|A v_k - \\alpha_k u_k\\|$, $u_{k+1}$ its normalisation) produces the graded bases $U_{k+1}$ of $(AA^\\top, b)$ and $V_k$ of $(A^\\top A, A^\\top b)$, succeeds iff $k+1 \\le$ both grades, and its $\\alpha_k, \\beta_k$ are the entries of $B_k = U^\\top A V$.",
    "hypotheses": [
     "$b \\ne 0$"
@@ -25435,7 +25435,7 @@
     "realisation"
    ],
    "notes": "Realisation theorem kept separate from the predicate (ALGORITHM_CONVENTIONS §2).",
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "qr-algorithm-convergence",

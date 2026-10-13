@@ -9,7 +9,8 @@ of those results. This script rewrites, for every result,
   * each such formalization's `status` (`proved` if sorry-free, `scaffold` if it depends on sorry
     and its docstring starts with `SCAFFOLD:`, `stated` otherwise) and `partial: true` when the
     tag reads `atlas: <id> (partial)` (the declaration covers only part of the statement),
-  * the result's `status` (`proved` / `scaffold` / `stated` from its non-partial NLAlib
+  * the result's `status` (`proved` only if every non-partial NLAlib formalization is sorry-free;
+    otherwise `scaffold` / `stated` from its non-partial NLAlib
     formalizations; a result with none keeps its hand-set `candidate` / `planned` / `assumed`),
   * `uses_defs`: the NLAlib definitions occurring in the statements of its formalizations.
 The human-written fields (title, informal statement, hypotheses, sources, depends_on, …) are
@@ -59,7 +60,7 @@ for r in atlas["results"]:
     forms = new + others
     sts = {f["status"] for f in new if not f.get("partial")}
     status = r["status"]
-    if "proved" in sts: status = "proved"
+    if sts and sts == {"proved"}: status = "proved"   # every non-partial formalization is sorry-free
     elif "scaffold" in sts: status = "scaffold"
     elif "stated" in sts: status = "stated"
     elif r["status"] in ("proved", "scaffold", "stated"):

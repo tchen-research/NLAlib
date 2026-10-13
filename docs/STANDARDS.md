@@ -277,6 +277,15 @@ declarations, and runs the two scripts. Statements that exist in Mathlib are not
 consumer cites them under `mathlib_prereqs`. Renames ship a map in `docs/renames/<date>-<topic>.json`
 (`{"old.name": "new.name"}`) so the atlas and any external reference can be updated mechanically.
 
+When a full result is split into component theorems, an entry may record a reviewed `proof_family`
+with `clauses` (each a mathematical `statement` and a list of fully qualified `decls`). The clauses
+must cover the entire human statement, including side conditions and equality cases. Individual
+components keep their accurate tags; no artificial conjunction theorem is needed for bookkeeping.
+The synchronizer checks that every listed theorem exists and is tagged for the entry, and derives
+the family's status from all its indexed proof dependencies. A missing or untagged component is an
+error; an unfinished component makes the family a scaffold. This annotation records reviewed
+coverage, not a substitute for a Lean proof or an automatic check of mathematical equivalence.
+
 ## 6. Checks before a PR
 
 ```

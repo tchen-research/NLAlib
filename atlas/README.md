@@ -41,11 +41,16 @@ array, document id = slug) or on Prove2me later.
     variant is recorded under `formalizations` with its own status but does not promote the result.
   - `formalizations[]`: `{library, decl, module?, status, usage?, note?}`. **Generated for
     `library: nlalib`**: a declaration whose docstring ends with the tag line `atlas: <id>` is a
-    formalization of that result (`atlas: <id> (partial)` lists it with `partial: true` without
-    promoting the result), and `scripts/sync_atlas.py` rewrites these entries, the result's
+    formalization of that result (`atlas: <id> (partial)` lists a component with `partial: true`
+    without promoting the result alone), and `scripts/sync_atlas.py` rewrites these entries, the result's
     `status` and its `uses_defs` from `atlas/declarations.json` (`usage`/`note` are kept by
     declaration name). Entries for other libraries are hand-written. A statement that Mathlib
     already has is not a result of this atlas; consumers cite it under `mathlib_prereqs`.
+  - `proof_family`: optional, reviewed complete coverage by component theorems, with
+    `clauses[]: {statement, decls[]}`. The clauses cover the whole human statement. The synchronizer
+    verifies each theorem's tag and derives status from all listed proof dependencies, so a
+    split theorem family can be proved without adding a redundant conjunction declaration.
+    Missing or untagged references are errors; any unfinished component makes it scaffold.
   - `uses_defs[]`: generated; the NLAlib definitions occurring in the Lean statements.
   - `depends_on[]`: ids whose proofs this one consumes. In-degree of this graph is the reuse score
     the viewer ranks by.

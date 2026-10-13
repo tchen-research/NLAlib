@@ -13,7 +13,7 @@ noncomputable section
 set_option autoImplicit false
 open MeasureTheory
 namespace NLAlib
-open SparseFock.PaperParameters SparseFock.MainTheoremAssembly
+open SparseSketch
 
 /-- An arbitrary random variable with the actual independent signed-selector
 law gives a SparseStack embedding with probability at least 1-delta.
@@ -24,24 +24,26 @@ theorem measure_sparseStack_embedding_success_ge_of_map_eq
     {n d : ℕ} {δ ε : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1)
     (hε : 0 < ε) (hε1 : ε ≤ 1)
     {U : Matrix (Fin n) (Fin d) ℝ} (hU : HasOrthonormalCols U)
-    (Z : Ω → SparseFock.SparseStackDistribution.RawSample
-      (roundedS (failureOrder d δ) ε) (roundedB d (failureOrder d δ) ε) n)
+    (Z : Ω → SparseStackSelectors
+      (sparseColumnSparsity (sparseMomentOrder d δ) ε) (sparseBlockRows d (sparseMomentOrder d δ) ε)
+          n)
     (hZ : Measurable Z)
-    (hlaw : μ.map Z = sparseStackMeasure (roundedS (failureOrder d δ) ε)
-      (roundedB d (failureOrder d δ) ε) n (canonicalB_pos hε hε1)) :
+    (hlaw : μ.map Z = sparseStackMeasure (sparseColumnSparsity (sparseMomentOrder d δ) ε)
+      (sparseBlockRows d (sparseMomentOrder d δ) ε) n (canonicalB_pos hε hε1)) :
     1 - δ ≤ μ.real {ω | IsSubspaceEmbedding
-      (SparseFock.SparseStackModel.stackMatrix
-        (SparseFock.SparseStackDistribution.toSample (Z ω))) U ε} := by
-  have hmass := SparseFock.FiniteLaw.real_preimage_of_map_eq_toMeasure
-    (SparseFock.SparseStackDistribution.rawSampleLaw
-      (roundedS (failureOrder d δ) ε) (roundedB d (failureOrder d δ) ε) n
+      (sparseStackMatrix
+        (SparseStackSelectors.toSample (Z ω))) U ε} := by
+  have hmass := FiniteLaw.real_preimage_of_map_eq_toMeasure
+    (sparseStackSelectorLaw
+      (sparseColumnSparsity (sparseMomentOrder d δ) ε) (sparseBlockRows d (sparseMomentOrder d δ) ε)
+          n
       (canonicalB_pos hε hε1)) Z hZ hlaw
-    {z | IsSubspaceEmbedding (SparseFock.SparseStackModel.stackMatrix
-      (SparseFock.SparseStackDistribution.toSample z)) U ε}
-  rw [← SparseFock.FiniteLaw.real_toMeasure] at hmass
+    {z | IsSubspaceEmbedding (sparseStackMatrix
+      (SparseStackSelectors.toSample z)) U ε}
+  rw [← FiniteLaw.real_toMeasure] at hmass
   change μ.real {ω | IsSubspaceEmbedding
-    (SparseFock.SparseStackModel.stackMatrix
-      (SparseFock.SparseStackDistribution.toSample (Z ω))) U ε} = _ at hmass
+    (sparseStackMatrix
+      (SparseStackSelectors.toSample (Z ω))) U ε} = _ at hmass
   rw [hmass]
   exact measure_sparseStack_embedding_success_ge hδ hδ1 hε hε1 hU
 
@@ -54,23 +56,23 @@ theorem measure_uniformSparse_embedding_success_ge_of_map_eq
     {n d : ℕ} {δ ε : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1)
     (hε : 0 < ε) (hε1 : ε ≤ 1)
     {U : Matrix (Fin n) (Fin d) ℝ} (hU : HasOrthonormalCols U)
-    (X : Ω → SparseFock.UniformExactS.ExactSample
-      (roundedS (failureOrder d δ) ε * roundedB d (failureOrder d δ) ε)
-      (roundedS (failureOrder d δ) ε) n)
+    (X : Ω → UniformSparseSample
+      (sparseColumnSparsity (sparseMomentOrder d δ) ε * sparseBlockRows d (sparseMomentOrder d δ) ε)
+      (sparseColumnSparsity (sparseMomentOrder d δ) ε) n)
     (hX : Measurable X)
     (hlaw : μ.map X = uniformSparseMeasure
-      (roundedS (failureOrder d δ) ε * roundedB d (failureOrder d δ) ε)
-      (roundedS (failureOrder d δ) ε) n
-      (SparseFock.UniformExactS.exactS_le_rows (canonicalB_pos hε hε1))) :
+      (sparseColumnSparsity (sparseMomentOrder d δ) ε * sparseBlockRows d (sparseMomentOrder d δ) ε)
+      (sparseColumnSparsity (sparseMomentOrder d δ) ε) n
+      (UniformSparse.le_rows (canonicalB_pos hε hε1))) :
     1 - δ ≤ μ.real {ω | IsSubspaceEmbedding
-      (SparseFock.UniformExactS.sketchMatrix (X ω)) U ε} := by
-  have hmass := SparseFock.FiniteLaw.real_preimage_of_map_eq_toMeasure
-    (SparseFock.UniformExactS.exactSampleLaw
-      (SparseFock.UniformExactS.exactS_le_rows (canonicalB_pos hε hε1))) X hX hlaw
-    {x | IsSubspaceEmbedding (SparseFock.UniformExactS.sketchMatrix x) U ε}
-  rw [← SparseFock.FiniteLaw.real_toMeasure] at hmass
+      (uniformSparseMatrix (X ω)) U ε} := by
+  have hmass := FiniteLaw.real_preimage_of_map_eq_toMeasure
+    (uniformSparseSampleLaw
+      (UniformSparse.le_rows (canonicalB_pos hε hε1))) X hX hlaw
+    {x | IsSubspaceEmbedding (uniformSparseMatrix x) U ε}
+  rw [← FiniteLaw.real_toMeasure] at hmass
   change μ.real {ω | IsSubspaceEmbedding
-    (SparseFock.UniformExactS.sketchMatrix (X ω)) U ε} = _ at hmass
+    (uniformSparseMatrix (X ω)) U ε} = _ at hmass
   rw [hmass]
   exact measure_uniformSparse_embedding_success_ge hδ hδ1 hε hε1 hU
 

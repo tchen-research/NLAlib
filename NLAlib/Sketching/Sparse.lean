@@ -1,12 +1,19 @@
+import NLAlib.Sketching.Sparse.Bands
 import NLAlib.Sketching.Sparse.CountSketch
 import NLAlib.Sketching.Sparse.CountSketchExpectation
 import NLAlib.Sketching.Sparse.CountSketchMoments
 import NLAlib.Sketching.Sparse.CountSketchTail
+import NLAlib.Sketching.Sparse.FiniteLaw
+import NLAlib.Sketching.Sparse.FockModel
+import NLAlib.Sketching.Sparse.IIDComparison
+import NLAlib.Sketching.Sparse.MomentMethod
 import NLAlib.Sketching.Sparse.SparseEmbedding
 import NLAlib.Sketching.Sparse.SparseEmbeddingTransport
 import NLAlib.Sketching.Sparse.SparseFiniteIndex
-import NLAlib.Sketching.Sparse.SparseFock
 import NLAlib.Sketching.Sparse.SparseLaws
+import NLAlib.Sketching.Sparse.SparseStack
+import NLAlib.Sketching.Sparse.SparseStackLaw
+import NLAlib.Sketching.Sparse.UniformSparse
 
 /-! # `Sketching/Sparse`
 

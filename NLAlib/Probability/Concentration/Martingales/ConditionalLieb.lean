@@ -37,7 +37,7 @@ theorem condExp_traceExp_add_le_traceExp_add_matrixLog_of_ae_posDef_condExp
       (fun ω => traceExp (H + X ω)) := by
     filter_upwards [hHerm] with ω hω
     rw [(posDef_matrixExp_and_matrixLog_matrixExp _ hω).2]
-  have hJ := ConcaveOn.condExp_map_le_of_condExp_mem hm (lieb_concavity_finite H hH)
+  have hJ := ConcaveOn.condExp_map_le_of_condExp_mem hm (lieb_concavity H hH)
     (continuousOn_traceExp_add_matrixLog H) hpos hExp (hTrace.congr heq.symm) hmean
   filter_upwards [hJ, condExp_congr_ae heq] with ω hω hEq
   rw [← hEq]

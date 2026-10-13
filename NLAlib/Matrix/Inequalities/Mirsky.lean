@@ -83,12 +83,8 @@ theorem sum_abs_singularValues_add_sub_le_sum_prefix {m n : ℕ}
   change (∑ i ∈ S, |δ i|) ≤ _
   linarith
 
-/-- Rectangular Mirsky: the entire absolute singular-value difference vector is
-weakly majorized by the perturbation singular list. Bhatia 1997, Theorem IV.3.4.
-The vector has the actual thin rectangular dimension, with rank-deficient zeros;
-its coordinatewise differences are not assumed already sorted.
-atlas: lidskii (partial) -/
-theorem weaklyMajorized_abs_singularValues_add_sub {m n : ℕ}
+/-- `Fin` step of `weaklyMajorized_abs_singularValues_add_sub`. -/
+private theorem weaklyMajorized_abs_singularValues_add_sub_fin {m n : ℕ}
     (A E : Matrix (Fin m) (Fin n) ℝ) :
     WeaklyMajorized (fun i : Fin (min m n) =>
       |singularValues (A + E) i - singularValues A i|)
@@ -101,17 +97,19 @@ theorem weaklyMajorized_abs_singularValues_add_sub {m n : ℕ}
     sum_fin_ite_lt_eq_sum_castLE hcard]
   exact sum_abs_singularValues_add_sub_le_sum_prefix A E S
 
-/-- Rectangular Mirsky on arbitrary finite real matrix row and column indices,
-using Mathlib's actual native singular values. Bhatia 1997, Theorem IV.3.4.
-All finite shapes, empty dimensions and padded singular zeros are included.
+/-- Rectangular Mirsky: the entire absolute singular-value difference vector is
+weakly majorized by the perturbation singular list, on arbitrary finite real matrix row and
+column indices. Bhatia 1997, Theorem IV.3.4. The vector has the actual thin rectangular
+dimension `min (card m) (card n)`, with rank-deficient zeros; its coordinatewise differences are
+not assumed already sorted. Empty dimensions are included.
 atlas: lidskii (partial) -/
-theorem weaklyMajorized_abs_toEuclideanLin_singularValues_add_sub {m n : Type*}
+theorem weaklyMajorized_abs_singularValues_add_sub {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq n] (A E : Matrix m n ℝ) :
     WeaklyMajorized (fun i : Fin (min (Fintype.card m) (Fintype.card n)) =>
-      |(A + E).toEuclideanLin.singularValues i - A.toEuclideanLin.singularValues i|)
-      (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => E.toEuclideanLin.singularValues i) := by
+      |singularValues (A + E) i - singularValues A i|)
+      (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues E i) := by
   classical
-  have h := weaklyMajorized_abs_singularValues_add_sub
+  have h := weaklyMajorized_abs_singularValues_add_sub_fin
     (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
     (E.reindex (Fintype.equivFin m) (Fintype.equivFin n))
   have hadd : A.reindex (Fintype.equivFin m) (Fintype.equivFin n) +

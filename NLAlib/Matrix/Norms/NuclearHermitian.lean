@@ -52,9 +52,9 @@ theorem gram_cfc_abs_eq {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- Absolute functional calculus preserves every native singular value of a
 real Hermitian matrix. -/
-theorem toEuclideanLin_singularValues_cfc_abs {n : Type*} [Fintype n] [DecidableEq n]
+theorem singularValues_cfc_abs {n : Type*} [Fintype n] [DecidableEq n]
     {A : Matrix n n ℝ} (hA : A.IsHermitian) (k : ℕ) :
-    (cfc (abs : ℝ → ℝ) A).toEuclideanLin.singularValues k = A.toEuclideanLin.singularValues k :=
+    singularValues (cfc (abs : ℝ → ℝ) A) k = singularValues A k :=
   singularValues_eq_of_gram_eq _ _ (gram_cfc_abs_eq hA) k
 
 /-- The nuclear norm of a real Hermitian matrix is the sum of the absolute
@@ -67,7 +67,8 @@ theorem nuclearNorm_eq_sum_abs_eigenvalues₀ {n : Type*} [Fintype n] [Decidable
   calc
     nuclearNorm A = nuclearNorm (cfc (abs : ℝ → ℝ) A) := by
       unfold nuclearNorm kyFanNorm
-      simp_rw [toEuclideanLin_singularValues_cfc_abs hA]
+      simp only [← singularValues_eq_linearMap]
+      simp_rw [singularValues_cfc_abs hA]
     _ = (cfc (abs : ℝ → ℝ) A).trace := nuclearNorm_eq_trace_of_posSemidef hAbs
     _ = ∑ i : Fin (Fintype.card n), |hA.eigenvalues₀ i| := by
       rw [trace_cfc_eq_sum_eigenvalues hA (abs : ℝ → ℝ)]

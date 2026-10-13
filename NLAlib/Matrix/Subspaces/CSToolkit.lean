@@ -32,7 +32,7 @@ theorem cs_decomposition_properties {p q n : Type*}
     (hCard : Fintype.card p ≤ Fintype.card q)
     (P : Matrix n n ℝ) (hP : IsIdempotentElem P) :
     (∃ e : p ↪ q,
-      let c := fun i : p => U.toBlocks₁₁.toEuclideanLin.singularValues ((Fintype.equivFin p) i)
+      let c := fun i : p => singularValues U.toBlocks₁₁ ((Fintype.equivFin p) i)
       (∀ i, c i ∈ Set.Icc (0 : ℝ) 1) ∧
       ∃ V₁ W₁ : Matrix p p ℝ, ∃ V₂ W₂ : Matrix q q ℝ,
         HasOrthonormalCols V₁ ∧ HasOrthonormalCols W₁ ∧
@@ -46,10 +46,10 @@ theorem cs_decomposition_properties {p q n : Type*}
       ∃ H : Matrix n (Fin P.rank ⊕ Fin (Fintype.card n - P.rank)) ℝ,
         HasOrthonormalCols H ∧ H * Hᵀ = 1 ∧
         Hᵀ * P * H = Matrix.fromBlocks 1 (rectDiag t) 0 0 ∧
-        (∀ i, P.toEuclideanLin.singularValues i =
+        (∀ i, singularValues P i =
           if i < P.rank then Real.sqrt (1 + t i ^ 2) else 0) ∧
-        (∀ i, 1 < P.toEuclideanLin.singularValues i ↔ i < g) ∧
-        (∀ i < g, t i = Real.sqrt (P.toEuclideanLin.singularValues i ^ 2 - 1))) ∧
+        (∀ i, 1 < singularValues P i ↔ i < g) ∧
+        (∀ i < g, t i = Real.sqrt (singularValues P i ^ 2 - 1))) ∧
     (∀ hr : 0 < P.rank, ∃ Q W : Matrix n (Fin P.rank) ℝ,
       HasOrthonormalCols Q ∧ HasOrthonormalCols W ∧
       LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin ∧

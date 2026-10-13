@@ -21,7 +21,7 @@ theorem exists_complex_rectangular_svd {m n : ℕ}
     (A : Matrix (Fin m) (Fin n) ℂ) :
     ∃ V : Matrix.unitaryGroup (Fin m) ℂ, ∃ W : Matrix.unitaryGroup (Fin n) ℂ,
       (V : Matrix (Fin m) (Fin m) ℂ)ᴴ * A * (W : Matrix (Fin n) (Fin n) ℂ) =
-        (rectDiag (fun i => A.toEuclideanLin.singularValues i) :
+        (rectDiag (fun i => singularValues A i) :
           Matrix (Fin m) (Fin n) ℝ).map Complex.ofReal := by
   let a := A.toEuclideanLin
   let h := a.isSymmetric_adjoint_comp_self
@@ -78,5 +78,6 @@ theorem exists_complex_rectangular_svd {m n : ℕ}
   rw [Matrix.mul_assoc, ← hV, ← Matrix.mul_assoc,
     show (V : Matrix (Fin m) (Fin m) ℂ)ᴴ * (V : Matrix (Fin m) (Fin m) ℂ) = 1
       from Unitary.coe_star_mul_self V, Matrix.one_mul]
+  rfl
 
 end NLAlib

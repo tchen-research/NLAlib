@@ -20,7 +20,7 @@ theorem exists_orthogonal_transpose_mul_mul_eq_diagonal_singularValues
     {p : Type*} [Fintype p] [DecidableEq p] (A : Matrix p p ℝ) :
     ∃ V W : Matrix p p ℝ, HasOrthonormalCols V ∧ HasOrthonormalCols W ∧
       Vᵀ * A * W = Matrix.diagonal
-        (fun i => A.toEuclideanLin.singularValues ((Fintype.equivFin p) i)) := by
+        (fun i => singularValues A ((Fintype.equivFin p) i)) := by
   let e := Fintype.equivFin p
   let AF := A.reindex e e
   obtain ⟨V, W, h⟩ := exists_isSVD AF

@@ -10,10 +10,8 @@ noncomputable section
 open scoped Matrix
 namespace NLAlib
 
-/-- Every finite selection of zero-padded natural singular indices obeys Mirsky's
-absolute-difference sum bound. Bhatia 1997, Theorem IV.3.4; all padding indices,
-empty selections, empty shapes and rank-deficient zeros are covered. -/
-theorem sum_abs_singularValues_add_sub_le_sum_range {m n : ℕ}
+/-- `Fin` step of `sum_abs_singularValues_add_sub_le_sum_range`. -/
+private theorem sum_abs_singularValues_add_sub_le_sum_range_fin {m n : ℕ}
     (A E : Matrix (Fin m) (Fin n) ℝ) (S : Finset ℕ) :
     (∑ i ∈ S, |singularValues (A + E) i - singularValues A i|) ≤
       ∑ j ∈ Finset.range S.card, singularValues E j := by
@@ -48,15 +46,16 @@ theorem sum_abs_singularValues_add_sub_le_sum_range {m n : ℕ}
     _ ≤ _ := Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono hcard)
       (fun j _ _ => singularValues_nonneg E j)
 
-/-- Mirsky's finite-selection inequality on arbitrary finite real matrix row and
-column indices, with every natural zero-padding index included.
-Bhatia 1997, Theorem IV.3.4. -/
-theorem sum_abs_toEuclideanLin_singularValues_add_sub_le_sum_range {m n : Type*}
+/-- Every finite selection of zero-padded natural singular indices obeys Mirsky's
+absolute-difference sum bound, on arbitrary finite real matrix row and column indices.
+Bhatia 1997, Theorem IV.3.4; all padding indices, empty selections, empty shapes and
+rank-deficient zeros are covered. -/
+theorem sum_abs_singularValues_add_sub_le_sum_range {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq n] (A E : Matrix m n ℝ) (S : Finset ℕ) :
-    (∑ i ∈ S, |(A + E).toEuclideanLin.singularValues i - A.toEuclideanLin.singularValues i|) ≤
-      ∑ j ∈ Finset.range S.card, E.toEuclideanLin.singularValues j := by
+    (∑ i ∈ S, |singularValues (A + E) i - singularValues A i|) ≤
+      ∑ j ∈ Finset.range S.card, singularValues E j := by
   classical
-  have h := sum_abs_singularValues_add_sub_le_sum_range
+  have h := sum_abs_singularValues_add_sub_le_sum_range_fin
     (A.reindex (Fintype.equivFin m) (Fintype.equivFin n))
     (E.reindex (Fintype.equivFin m) (Fintype.equivFin n)) S
   have hadd : A.reindex (Fintype.equivFin m) (Fintype.equivFin n) +
@@ -68,19 +67,19 @@ theorem sum_abs_toEuclideanLin_singularValues_add_sub_le_sum_range {m n : Type*}
 
 /-- Mirsky weak majorization on any finite zero-padded length, without a dimension
 bound on that length. Bhatia 1997, Theorem IV.3.4; native arbitrary finite indices. -/
-theorem weaklyMajorized_abs_toEuclideanLin_singularValues_add_sub_padded {m n : Type*}
+theorem weaklyMajorized_abs_singularValues_add_sub_padded {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq n] (A E : Matrix m n ℝ) (d : ℕ) :
     WeaklyMajorized (fun i : Fin d =>
-      |(A + E).toEuclideanLin.singularValues i - A.toEuclideanLin.singularValues i|)
-      (fun i : Fin d => E.toEuclideanLin.singularValues i) := by
+      |singularValues (A + E) i - singularValues A i|)
+      (fun i : Fin d => singularValues E i) := by
   classical
   rw [weaklyMajorized_iff_sum_le]
   intro S
   let e : Fin d ↪ ℕ := ⟨Fin.val, Fin.val_injective⟩
-  have h := sum_abs_toEuclideanLin_singularValues_add_sub_le_sum_range A E (S.map e)
+  have h := sum_abs_singularValues_add_sub_le_sum_range A E (S.map e)
   simp only [Finset.sum_map, e, Function.Embedding.coeFn_mk, Finset.card_map] at h
   have hcard : S.card ≤ d := by simpa using Finset.card_le_univ S
-  rw [sumLargest_eq_prefix_of_antitone _ (fun i j hij => E.toEuclideanLin.singularValues_antitone hij),
+  rw [sumLargest_eq_prefix_of_antitone _ (fun i j hij => singularValues_antitone E hij),
     sum_fin_ite_lt_eq_sum_castLE hcard]
   simp only [Fin.val_castLE]
   rw [Fin.sum_univ_eq_sum_range]

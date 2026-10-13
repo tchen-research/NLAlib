@@ -13,8 +13,9 @@ API. All statements include empty finite index types.
 
 Source: Tropp 2015, §2.1 and the unitary dilation proof of Theorem 8.5.2;
 `Re-derivations/matrix_toolkit_operator_derivations.tex`, §7 and its implementation
-map. The local private `unitary_calculus` proof in `JensenIsometricCompression`
-provides the reflection specialization of the CFC transport argument.
+map. The reflection specialisations (`cfc_reflection_conj`, `spectrum_reflection_conj`) and the
+reindexing transport `cfc_reindex_of_isHermitian` serve the operator Jensen inequality
+(`OperatorTheory/JensenIsometricCompression`).
 Atlas: `golden-thompson`, `operator-monotone-convex` (supporting calculus).
 -/
 
@@ -197,6 +198,27 @@ theorem traceExp_reflection_conj (R A : Matrix ι ι ℂ)
   simpa only [hR] using
     traceExp_unitary_conj ⟨R, reflection_mem_unitary R hR hR2⟩ A
 
+omit [DecidableEq ι] in
+/-- Conjugation by a self-adjoint matrix `R` preserves Hermitian matrices: `(R * A * R)ᴴ = R * A * R`.
+Source: reflection pinching, Tropp 2015, Theorem 8.5.2; atlas `operator-monotone-convex` (helper). -/
+theorem isHermitian_reflection_conj (R A : Matrix ι ι ℂ) (hR : Rᴴ = R) (hA : A.IsHermitian) :
+    (R * A * R).IsHermitian := by
+  simpa only [hR] using Matrix.isHermitian_mul_mul_conjTranspose R hA
+
+/-- Conjugation by a self-adjoint involution preserves the real spectrum.
+Source: reflection pinching, Tropp 2015, Theorem 8.5.2; atlas `operator-monotone-convex` (helper). -/
+theorem spectrum_reflection_conj (R A : Matrix ι ι ℂ) (hR : Rᴴ = R) (hR2 : R * R = 1) :
+    spectrum ℝ (R * A * R) = spectrum ℝ A := by
+  simpa only [hR] using spectrum_unitary_conj ⟨R, reflection_mem_unitary R hR hR2⟩ A
+
+/-- Every real function on a Hermitian matrix's finite spectrum commutes with conjugation by a
+self-adjoint involution: `cfc f (R * A * R) = R * cfc f A * R`.
+Source: reflection pinching, Tropp 2015, Theorem 8.5.2; atlas `operator-monotone-convex` (helper). -/
+theorem cfc_reflection_conj (R A : Matrix ι ι ℂ) (hR : Rᴴ = R) (hR2 : R * R = 1)
+    (hA : A.IsHermitian) (f : ℝ → ℝ) :
+    cfc f (R * A * R) = R * cfc f A * R := by
+  simpa only [hR] using cfc_unitary_conj ⟨R, reflection_mem_unitary R hR hR2⟩ f A hA
+
 /-- Positive definiteness is preserved and reflected by a self-adjoint involution.
 Source: invertible quadratic-form congruence, Tropp 2015, §2.1.5;
 atlas `golden-thompson` (helper). -/
@@ -298,6 +320,27 @@ theorem posDef_reindex_iff {n r : Type*} (e : n ≃ r) (A : Matrix n n ℂ) :
     exact h'
   · intro h
     exact h.submatrix e.symm.injective
+
+/-- Equivalent finite labels commute with the real continuous functional calculus of a Hermitian
+matrix: `cfc f (reindex e e A) = reindex e e (cfc f A)` for every `f : ℝ → ℝ` (the spectrum is
+finite, so no continuity premise is needed).
+Source: star-algebra transport of continuous functional calculus via `reindexStarAlgEquiv`;
+atlas `operator-monotone-convex` (helper). -/
+theorem cfc_reindex_of_isHermitian {n : Type*} [Fintype n] [DecidableEq n] {r : Type*}
+    [Fintype r] [DecidableEq r] (e : n ≃ r) (f : ℝ → ℝ) (A : Matrix n n ℂ) (hA : A.IsHermitian) :
+    cfc f (Matrix.reindex e e A) = Matrix.reindex e e (cfc f A) := by
+  cases isEmpty_or_nonempty n with
+  | inl h =>
+      have : IsEmpty r := e.symm.isEmpty
+      exact Subsingleton.elim _ _
+  | inr h =>
+      let E := reindexStarAlgEquiv e
+      have hc : Continuous E :=
+        E.toAlgEquiv.toLinearEquiv.toLinearMap.continuous_of_finiteDimensional
+      symm
+      change E (cfc f A) = cfc f (E A)
+      exact StarAlgHomClass.map_cfc (p := IsSelfAdjoint) (q := IsSelfAdjoint) E f A
+        (A.finite_real_spectrum.continuousOn f) hc hA (hA.reindex e)
 
 /-- Equivalent finite labels commute with the matrix logarithm for Hermitian input.
 Source: star-algebra transport of continuous functional calculus; helper for

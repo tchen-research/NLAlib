@@ -29,22 +29,34 @@ private def L {p m : ℕ} (u : Fin p × Fin m → ℝ) (G : Fin p → Fin m → 
 /-- Euclidean inner product of coefficient vectors. -/
 private def ip {p m : ℕ} (u v : Fin p × Fin m → ℝ) : ℝ := ∑ e, u e * v e
 
+private lemma L_eq_linForm (u : Fin n × Fin t → ℝ) (G : Fin n → Fin t → ℝ) :
+    L u G = linForm (Function.curry u) G := by
+  simp only [L, linForm, Fintype.sum_prod_type, Function.curry_apply]
+
+private lemma ip_eq_sum_sum (u v : Fin n × Fin t → ℝ) :
+    ip u v = ∑ i, ∑ j, Function.curry u i j * Function.curry v i j := by
+  simp only [ip, Fintype.sum_prod_type, Function.curry_apply]
+
 private lemma integrable_L2 (u v : Fin n × Fin t → ℝ) :
-    Integrable (fun G => L u G * L v G) (gaussianMatrix n t) :=
-  integrable_linear_mul_two_gaussianMatrix u v
+    Integrable (fun G => L u G * L v G) (gaussianMatrix n t) := by
+  simp_rw [L_eq_linForm]
+  exact integrable_linForm_mul_two_gaussianMatrix _ _
 
 private lemma integrable_L4 (u v w z : Fin n × Fin t → ℝ) :
-    Integrable (fun G => L u G * L v G * L w G * L z G) (gaussianMatrix n t) :=
-  integrable_linear_mul_four_gaussianMatrix u v w z
+    Integrable (fun G => L u G * L v G * L w G * L z G) (gaussianMatrix n t) := by
+  simp_rw [L_eq_linForm]
+  exact integrable_linForm_mul_four_gaussianMatrix _ _ _ _
 
 private lemma integral_L2 (u v : Fin n × Fin t → ℝ) :
-    ∫ G, L u G * L v G ∂(gaussianMatrix n t) = ip u v :=
-  integral_linear_mul_two_gaussianMatrix u v
+    ∫ G, L u G * L v G ∂(gaussianMatrix n t) = ip u v := by
+  simp_rw [L_eq_linForm, ip_eq_sum_sum]
+  exact integral_linForm_mul_two_gaussianMatrix _ _
 
 private lemma integral_L4 (u v w z : Fin n × Fin t → ℝ) :
     ∫ G, L u G * L v G * L w G * L z G ∂(gaussianMatrix n t)
-      = ip u v * ip w z + ip u w * ip v z + ip u z * ip v w :=
-  integral_linear_mul_four_gaussianMatrix u v w z
+      = ip u v * ip w z + ip u w * ip v z + ip u z * ip v w := by
+  simp_rw [L_eq_linForm, ip_eq_sum_sum]
+  exact integral_linForm_mul_four_gaussianMatrix _ _ _ _
 
 /-- Coefficient vector of `Ω ↦ ∑ₖ f k Ω k ℓ` (a linear form in column `ℓ`). -/
 private def col (f : Fin n → ℝ) (ℓ : Fin t) : Fin n × Fin t → ℝ :=

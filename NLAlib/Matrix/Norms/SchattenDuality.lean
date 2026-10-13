@@ -21,7 +21,7 @@ attainer. At a nonzero matrix and `1 < p`, these are
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 def schattenDualCoefficients {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) (p : ℝ) (i : ℕ) : ℝ :=
-  A.toEuclideanLin.singularValues i ^ (p - 1) / schattenNorm A p ^ (p - 1)
+  singularValues A i ^ (p - 1) / schattenNorm A p ^ (p - 1)
 
 /-- A nonzero matrix's normalized singular power coefficients have conjugate
 power sum one, with the exact source scaling.

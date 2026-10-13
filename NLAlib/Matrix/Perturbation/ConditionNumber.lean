@@ -115,9 +115,9 @@ theorem conditionNumber_eq_eigenvalues₀_ratio [Nonempty n]
   have hPos : 0 < A.rank := by rw [hRank]; exact Fintype.card_pos
   rw [conditionNumber_eq_singularValues_ratio A hPos, hRank]
   exact congrArg₂ (fun a b : ℝ => a / b)
-    (toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef hA.posSemidef
+    (singularValues_eq_eigenvalues₀_of_posSemidef hA.posSemidef
       ⟨0, Fintype.card_pos⟩)
-    (toEuclideanLin_singularValues_eq_eigenvalues₀_of_posSemidef hA.posSemidef
+    (singularValues_eq_eigenvalues₀_of_posSemidef hA.posSemidef
       ⟨Fintype.card n - 1, Nat.sub_lt Fintype.card_pos (by decide : 0 < 1)⟩)
 
 end NLAlib

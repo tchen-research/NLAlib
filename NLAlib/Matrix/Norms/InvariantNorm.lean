@@ -46,8 +46,8 @@ def matrixValue (A : Matrix m n ℝ) : ℝ :=
 by Ky Fan weak majorization and the vector norm triangle inequality. -/
 theorem matrixValue_add_le (A B : Matrix m n ℝ) :
     Φ.matrixValue (A + B) ≤ Φ.matrixValue A + Φ.matrixValue B := by
-  have hweak := weaklyMajorized_toEuclideanLin_singularValues_add A B
-  have h := Φ.value_le_of_weaklyMajorized (fun i => LinearMap.singularValues_nonneg _ i) hweak
+  have hweak := weaklyMajorized_singularValues_add A B
+  have h := Φ.value_le_of_weaklyMajorized (fun i => singularValues_nonneg _ i) hweak
   exact h.trans (map_add_le_add Φ.seminorm
     (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i)
     (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues B i))
@@ -67,9 +67,8 @@ theorem eq_zero_of_matrixValue_eq_zero (A : Matrix m n ℝ) (hA : Φ.matrixValue
   have hσ : (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues A i) = 0 :=
     Φ.eq_zero_of_map_eq_zero _ hA
   apply (nuclearNorm_eq_zero_iff A).mp
-  change (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)), A.toEuclideanLin.singularValues i) = 0
-  rw [← Fin.sum_univ_eq_sum_range (fun i => A.toEuclideanLin.singularValues i)]
-  change (∑ i : Fin (min (Fintype.card m) (Fintype.card n)), singularValues A i) = 0
+  change (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)), singularValues A i) = 0
+  rw [← Fin.sum_univ_eq_sum_range (fun i => singularValues A i)]
   rw [hσ]
   simp
 

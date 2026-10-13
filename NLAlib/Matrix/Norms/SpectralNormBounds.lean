@@ -120,4 +120,28 @@ theorem specNorm_blockDiagonal_const_le {κ : Type*} [Fintype κ] [DecidableEq �
   rw [Finset.sum_comm, Finset.sum_comm (f := fun j k => x (j, k) ^ 2), Finset.mul_sum]
   exact Finset.sum_le_sum fun k _ => sum_sq_mulVec_le_specNorm_sq A _
 
+omit [Fintype m] [DecidableEq m] in
+/-- A diagonal entry is bounded by the spectral norm: `|Aᵢᵢ| ≤ ‖A‖₂`.
+Moved from the Hanson–Wright chain (HighDimProb commit c0cb8d9); atlas `hanson-wright` (helper). -/
+theorem abs_diag_le_specNorm (A : Matrix n n ℝ) (i : n) :
+    |A i i| ≤ specNorm A := by
+  let e : EuclideanSpace ℝ n := EuclideanSpace.single i (1 : ℝ)
+  have hcoord :
+      |A i i| ≤ ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A e‖ := by
+    have h :=
+      PiLp.norm_apply_le
+        (x := Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A e) i
+    simpa [e, Matrix.toEuclideanCLM_toLp, Matrix.mulVec_single_one, Real.norm_eq_abs]
+      using h
+  have hop :=
+    (Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A).le_opNorm e
+  have he_norm : ‖e‖ = 1 := by
+    simp [e]
+  calc
+    |A i i| ≤ ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A e‖ := hcoord
+    _ ≤ ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℝ) A‖ * ‖e‖ := hop
+    _ = specNorm A := by
+      rw [he_norm, mul_one]
+      rfl
+
 end NLAlib

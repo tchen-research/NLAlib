@@ -65,7 +65,7 @@ are excluded exactly because they have no last singular value. -/
 theorem specNorm_inv_eq_inv_singularValues_last {r : Type*}
     [Fintype r] [DecidableEq r] (C : Matrix r r ℝ) (hC : IsUnit C)
     (hr : 0 < Fintype.card r) :
-    specNorm C⁻¹ = 1 / C.toEuclideanLin.singularValues (Fintype.card r - 1) := by
+    specNorm C⁻¹ = 1 / singularValues C (Fintype.card r - 1) := by
   have hRank : C.rank = Fintype.card r := Matrix.rank_of_isUnit C hC
   rw [← moorePenroseInverse_eq_inv_of_isUnit _ hC, specNorm_moorePenroseInverse_eq_fintype,
     hRank, if_neg (Nat.ne_of_gt hr), singularValues_reindex,

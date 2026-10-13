@@ -61,19 +61,19 @@ atlas: schatten-norms-def (partial) -/
 theorem schattenNorm_add_le (A B : Matrix m n ℝ) {p : ℝ} (hp : 1 ≤ p) :
     schattenNorm (A + B) p ≤ schattenNorm A p + schattenNorm B p := by
   let N := min (Fintype.card m) (Fintype.card n)
-  have hsum := (weaklyMajorized_toEuclideanLin_singularValues_add A B).sum_rpow_le
-    (fun i => LinearMap.singularValues_nonneg _ i)
-    (fun i => add_nonneg (LinearMap.singularValues_nonneg _ i) (LinearMap.singularValues_nonneg _ i)) hp
+  have hsum := (weaklyMajorized_singularValues_add A B).sum_rpow_le
+    (fun i => singularValues_nonneg _ i)
+    (fun i => add_nonneg (singularValues_nonneg _ i) (singularValues_nonneg _ i)) hp
   have hroot := Real.rpow_le_rpow (Finset.sum_nonneg (fun (i : Fin N) (_ : i ∈ Finset.univ) =>
-    Real.rpow_nonneg (LinearMap.singularValues_nonneg (A + B).toEuclideanLin i) p)) hsum
+    Real.rpow_nonneg (singularValues_nonneg (A + B) i) p)) hsum
       (one_div_nonneg.mpr (le_trans zero_le_one hp))
   have htri := Real.Lp_add_le_of_nonneg (Finset.univ : Finset (Fin N))
-    (f := fun i => A.toEuclideanLin.singularValues i) (g := fun i => B.toEuclideanLin.singularValues i) hp
-    (fun i _ => LinearMap.singularValues_nonneg _ i) (fun i _ => LinearMap.singularValues_nonneg _ i)
+    (f := fun i => singularValues A i) (g := fun i => singularValues B i) hp
+    (fun i _ => singularValues_nonneg _ i) (fun i _ => singularValues_nonneg _ i)
   have h := hroot.trans htri
-  rw [Fin.sum_univ_eq_sum_range (fun i => (A + B).toEuclideanLin.singularValues i ^ p) N,
-    Fin.sum_univ_eq_sum_range (fun i => A.toEuclideanLin.singularValues i ^ p) N,
-    Fin.sum_univ_eq_sum_range (fun i => B.toEuclideanLin.singularValues i ^ p) N] at h
+  rw [Fin.sum_univ_eq_sum_range (fun i => singularValues (A + B) i ^ p) N,
+    Fin.sum_univ_eq_sum_range (fun i => singularValues A i ^ p) N,
+    Fin.sum_univ_eq_sum_range (fun i => singularValues B i ^ p) N] at h
   exact h
 
 omit [DecidableEq m] in
@@ -81,18 +81,18 @@ omit [DecidableEq m] in
 theorem schattenNorm_smul (A : Matrix m n ℝ) (c : ℝ) {p : ℝ} (hp : 0 < p) :
     schattenNorm (c • A) p = |c| * schattenNorm A p := by
   have hsum : 0 ≤ ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      A.toEuclideanLin.singularValues i ^ p :=
-    Finset.sum_nonneg (fun i _ => Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p)
+      singularValues A i ^ p :=
+    Finset.sum_nonneg (fun i _ => Real.rpow_nonneg (singularValues_nonneg _ i) p)
   unfold schattenNorm
-  simp_rw [← singularValues_eq_linearMap, singularValues_smul, singularValues_eq_linearMap,
-    Real.mul_rpow (abs_nonneg c) (LinearMap.singularValues_nonneg _ _), ← Finset.mul_sum]
+  simp_rw [singularValues_smul, Real.mul_rpow (abs_nonneg c) (singularValues_nonneg _ _),
+    ← Finset.mul_sum]
   rw [Real.mul_rpow (Real.rpow_nonneg (abs_nonneg c) p) hsum,
     one_div, Real.rpow_rpow_inv (abs_nonneg c) hp.ne']
 
 omit [DecidableEq m] in
 /-- At every positive exponent, the Schatten norm vanishes on the zero matrix. -/
 theorem schattenNorm_zero {p : ℝ} (hp : 0 < p) : schattenNorm (0 : Matrix m n ℝ) p = 0 := by
-  simp [schattenNorm, LinearMap.singularValues_zero, Real.zero_rpow hp.ne',
+  simp [schattenNorm, singularValues_eq_linearMap, Real.zero_rpow hp.ne',
     Real.zero_rpow (show p⁻¹ ≠ 0 from inv_ne_zero hp.ne')]
 
 /-- At every positive exponent, the finite Schatten power sum separates zero,
@@ -102,15 +102,15 @@ theorem schattenNorm_eq_zero_iff (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
   constructor
   · intro h
     have hsum0 : (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-        A.toEuclideanLin.singularValues i ^ p) = 0 :=
+        singularValues A i ^ p) = 0 :=
       (Real.rpow_eq_zero (Finset.sum_nonneg fun i _ =>
-        Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p) (by positivity)).mp h
+        Real.rpow_nonneg (singularValues_nonneg _ i) p) (by positivity)).mp h
     have hi (i : ℕ) (hi : i ∈ Finset.range (min (Fintype.card m) (Fintype.card n))) :
-        A.toEuclideanLin.singularValues i = 0 := by
-      have hpw : A.toEuclideanLin.singularValues i ^ p = 0 :=
+        singularValues A i = 0 := by
+      have hpw : singularValues A i ^ p = 0 :=
         (Finset.sum_eq_zero_iff_of_nonneg (fun j _ =>
-          Real.rpow_nonneg (LinearMap.singularValues_nonneg _ j) p)).mp hsum0 i hi
-      exact (Real.rpow_eq_zero (LinearMap.singularValues_nonneg _ i) hp.ne').mp hpw
+          Real.rpow_nonneg (singularValues_nonneg _ j) p)).mp hsum0 i hi
+      exact (Real.rpow_eq_zero (singularValues_nonneg _ i) hp.ne').mp hpw
     apply (nuclearNorm_eq_zero_iff A).mp
     exact Finset.sum_eq_zero hi
   · rintro rfl

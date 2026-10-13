@@ -257,6 +257,21 @@ theorem frobNorm_one_sq [DecidableEq n] : frobNorm (1 : Matrix n n ℝ) ^ 2 = Fi
   rw [frobNorm_sq, frobSq_eq_sum_sq]
   simp [Matrix.one_apply]
 
+/-- The diagonal carries at most the whole Frobenius mass: `∑ᵢ Aᵢᵢ² ≤ ‖A‖_F²`.
+Moved from the Hanson–Wright chain (HighDimProb commit c0cb8d9); atlas `hanson-wright` (helper). -/
+theorem sum_diag_sq_le_frobSq (A : Matrix n n ℝ) :
+    (∑ i, A i i ^ 2) ≤ frobSq A := by
+  simp only [frobSq_eq_sum_sq]
+  exact Finset.sum_le_sum fun i _ => by
+    exact Finset.single_le_sum (fun j _ => sq_nonneg (A i j)) (Finset.mem_univ i)
+
+/-- `∑ᵢ Aᵢᵢ² ≤ ‖A‖_F²`, stated with `frobNorm A ^ 2`.
+Moved from the Hanson–Wright chain (HighDimProb commit c0cb8d9); atlas `hanson-wright` (helper). -/
+theorem sum_diag_sq_le_frobNorm_sq (A : Matrix n n ℝ) :
+    (∑ i, A i i ^ 2) ≤ frobNorm A ^ 2 := by
+  rw [frobNorm_sq]
+  exact sum_diag_sq_le_frobSq A
+
 /-! ### Rows and dot products -/
 
 /-- `v ⬝ᵥ v ≥ 0` for real vectors (Mathlib has only the `star` forms

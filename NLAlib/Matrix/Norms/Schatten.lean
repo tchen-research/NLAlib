@@ -21,7 +21,7 @@ atlas: schatten-norms-def (partial) -/
 def schattenNorm {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) (p : ℝ) : ℝ :=
   (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-    A.toEuclideanLin.singularValues i ^ p) ^ (1 / p)
+    singularValues A i ^ p) ^ (1 / p)
 
 /-- The Schatten norm at an extended exponent, with infinity defined exactly
 as the spectral norm. Norm theorems use `1 ≤ p`.
@@ -45,19 +45,19 @@ theorem schattenNormExtended_eq_of_ne_top {m n : Type*} [Fintype m] [Fintype n] 
 theorem schattenNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) (p : ℝ) : 0 ≤ schattenNorm A p :=
   Real.rpow_nonneg (Finset.sum_nonneg fun i _ =>
-    Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p) _
+    Real.rpow_nonneg (singularValues_nonneg _ i) p) _
 
 /-- Relabeling matrix rows and columns preserves every Schatten power sum. -/
 theorem schattenNorm_reindex {m n r s : Type*} [Fintype m] [Fintype n] [Fintype r] [Fintype s]
     [DecidableEq n] [DecidableEq s] (A : Matrix m n ℝ) (em : m ≃ r) (en : n ≃ s) (p : ℝ) :
     schattenNorm (A.reindex em en) p = schattenNorm A p := by
-  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_reindex,
+  simp only [schattenNorm, singularValues_reindex,
     ← Fintype.card_congr em, ← Fintype.card_congr en]
 
 /-- The Schatten-1 norm is precisely the nuclear norm, at every matrix shape. -/
 @[simp] theorem schattenNorm_one {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) : schattenNorm A 1 = nuclearNorm A := by
-  simp [schattenNorm, nuclearNorm, kyFanNorm]
+  simp [schattenNorm, nuclearNorm, kyFanNorm, singularValues_eq_linearMap]
 
 /-- `Fin` step of `schattenNorm_two`. -/
 private theorem schattenNorm_two_fin {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) :
@@ -82,17 +82,17 @@ variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 /-- Orthogonal left multiplication preserves every finite Schatten power sum. -/
 theorem schattenNorm_orthogonal_mul (A : Matrix m n ℝ) {U : Matrix m m ℝ}
     (hU : HasOrthonormalCols U) (p : ℝ) : schattenNorm (U * A) p = schattenNorm A p := by
-  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_isometry_mul hU A]
+  simp only [schattenNorm, singularValues_isometry_mul hU A]
 
 omit [DecidableEq m] in
 /-- Orthogonal right multiplication preserves every finite Schatten power sum. -/
 theorem schattenNorm_mul_orthogonal (A : Matrix m n ℝ) {V : Matrix n n ℝ}
     (hV : HasOrthonormalCols V) (p : ℝ) : schattenNorm (A * V) p = schattenNorm A p := by
-  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_mul_orthogonal A hV]
+  simp only [schattenNorm, singularValues_mul_orthogonal A hV]
 
 /-- Transposition preserves every finite Schatten power sum. -/
 theorem schattenNorm_transpose (A : Matrix m n ℝ) (p : ℝ) : schattenNorm Aᵀ p = schattenNorm A p := by
-  simp only [schattenNorm, ← singularValues_eq_linearMap, singularValues_transpose, min_comm]
+  simp only [schattenNorm, singularValues_transpose, min_comm]
 
 end FiniteIndex
 

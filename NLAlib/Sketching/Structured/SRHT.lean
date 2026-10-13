@@ -66,7 +66,7 @@ theorem measure_srht_gram_failure_le_of_flat_rows
       congr 1
       ext a b
       by_cases hab : a = b <;> simp [Matrix.map_apply, Matrix.one_apply, hab]
-    have hnorm := specNorm_le_spectralNorm_map_ofReal
+    have hnorm := specNorm_le_norm_map_ofReal
       ((srhtSketch H ξ T * U)ᵀ * (srhtSketch H ξ T * U) - 1)
     rw [hm] at hnorm
     exact hT.le.trans hnorm

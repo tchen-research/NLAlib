@@ -6,8 +6,8 @@ import Mathlib.LinearAlgebra.Matrix.Hermitian
 # Quadratic forms
 
 `NLAlib.quadForm A z = zᵀ A z` and its algebraic API: the expansion as a double sum
-(`quadForm_eq_sum`) and of its square (`quadForm_sq_eq_sum`), invariance under relabelling
-(`quadForm_reindex`), the polarisation expansion on two vectors (`quadForm_smul_add_smul`), the
+(`quadForm_eq_sum`, `quadForm_eq_sum_mul_mul`) and of its square (`quadForm_sq_eq_sum`),
+invariance under relabelling (`quadForm_reindex`), the polarisation expansion on two vectors (`quadForm_smul_add_smul`), the
 rank-one form (`quadForm_vecMulVec_self`), congruence (`quadForm_transpose_mul_mul`) and the
 normal-equations form (`quadForm_transpose_mul_self`); and the Rayleigh quotient
 `rayleighQuotient A x = xᵀAx / xᵀx`. Layer 0: used by the Krylov layer (spectral measure, CG
@@ -37,6 +37,13 @@ def quadForm (A : Matrix n n ℝ) (z : n → ℝ) : ℝ := z ⬝ᵥ (A *ᵥ z)
 theorem quadForm_eq_sum (A : Matrix n n ℝ) (z : n → ℝ) :
     quadForm A z = ∑ i, ∑ j, A i j * (z i * z j) := by
   simp only [quadForm, dotProduct, Matrix.mulVec, Finset.mul_sum]
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
+
+/-- The quadratic form as the double sum `zᵀ A z = ∑ᵢ ∑ⱼ zᵢ Aᵢⱼ zⱼ` (the order of factors used
+throughout the Hanson–Wright proof). Atlas `hanson-wright` (helper). -/
+theorem quadForm_eq_sum_mul_mul (A : Matrix n n ℝ) (z : n → ℝ) :
+    quadForm A z = ∑ i, ∑ j, z i * A i j * z j := by
+  rw [quadForm_eq_sum]
   exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
 
 /-- Expansion `(zᵀ A z)² = ∑ᵢⱼₖₗ A_ij A_kl z_i z_j z_k z_l`. Atlas: `hutchinson-variance`

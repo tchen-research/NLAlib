@@ -45,12 +45,12 @@ theorem singular_subspace_perturbation_bounds_fintype
       (hk.trans (min_le_left _ _))).reindex em.symm (Equiv.refl (Fin k))
     let Vhat₁ := (headColumns (Vhat.reindex en en)
       (hk.trans (min_le_right _ _))).reindex en.symm (Equiv.refl (Fin k))
-    let T := Matrix.diagonal (fun i : Fin k => (A + E).toEuclideanLin.singularValues i)
+    let T := Matrix.diagonal (fun i : Fin k => singularValues (A + E) i)
     let R := A * Vhat₁ - Uhat₁ * T
     let S := Aᵀ * Uhat₁ - Vhat₁ * T
-    let δ := (A + E).toEuclideanLin.singularValues (k - 1) -
-      A.toEuclideanLin.singularValues k
-    let g := A.toEuclideanLin.singularValues (k - 1) - A.toEuclideanLin.singularValues k
+    let δ := singularValues (A + E) (k - 1) -
+      singularValues A k
+    let g := singularValues A (k - 1) - singularValues A k
     R = -(E * Vhat₁) ∧ S = -(Eᵀ * Uhat₁) ∧
       max (specNorm R) (specNorm S) ≤ specNorm E ∧
       (0 < δ →
@@ -68,8 +68,8 @@ theorem singular_subspace_perturbation_bounds_fintype
         frobNorm (sinePrincipalAngles U₁ Uhat₁) = 0 ∧
         frobNorm (sinePrincipalAngles V₁ Vhat₁) = 0) ∧
       (k = min (Fintype.card m) (Fintype.card n) →
-        A.toEuclideanLin.singularValues k = 0 ∧
-        (A + E).toEuclideanLin.singularValues k = 0) := by
+        singularValues A k = 0 ∧
+        singularValues (A + E) k = 0) := by
   intro em en U₁ V₁ Uhat₁ Vhat₁ T R S δ g
   let AF := A.reindex em en
   let EF := E.reindex em en
@@ -80,9 +80,9 @@ theorem singular_subspace_perturbation_bounds_fintype
   let VhatF := headColumns (Vhat.reindex en en) (hk.trans (min_le_right _ _))
   let RF := AF * VhatF - UhatF * T
   let SF := AFᵀ * UhatF - VhatF * T
-  have hσA : singularValues AF = A.toEuclideanLin.singularValues :=
+  have hσA : singularValues AF = singularValues A :=
     singularValues_reindex A _ _
-  have hσB : singularValues (AF + EF) = (A + E).toEuclideanLin.singularValues :=
+  have hσB : singularValues (AF + EF) = singularValues (A + E) :=
     singularValues_reindex (A + E) _ _
   have h := singular_subspace_perturbation_bounds (A := AF) (E := EF) hA hhat hk
   change (AF * VhatF - UhatF * Matrix.diagonal (fun i : Fin k => singularValues (AF + EF) i) =

@@ -26,10 +26,10 @@ theorem exists_orthogonal_idempotent_canonical_spectrum {n : Type*}
     ∃ H : Matrix n (Fin P.rank ⊕ Fin (Fintype.card n - P.rank)) ℝ,
       HasOrthonormalCols H ∧ H * Hᵀ = 1 ∧
       Hᵀ * P * H = Matrix.fromBlocks 1 (rectDiag t) 0 0 ∧
-      (∀ i, P.toEuclideanLin.singularValues i =
+      (∀ i, singularValues P i =
         if i < P.rank then Real.sqrt (1 + t i ^ 2) else 0) ∧
-      (∀ i, 1 < P.toEuclideanLin.singularValues i ↔ i < g) ∧
-      (∀ i < g, t i = Real.sqrt (P.toEuclideanLin.singularValues i ^ 2 - 1)) := by
+      (∀ i, 1 < singularValues P i ↔ i < g) ∧
+      (∀ i < g, t i = Real.sqrt (singularValues P i ^ 2 - 1)) := by
   obtain ⟨g, hg, t, ht0, ht, htpos, H, hH, hHt, hBlock⟩ :=
     exists_orthogonal_idempotent_canonical P hP
   let N := Matrix.fromBlocks (1 : Matrix (Fin P.rank) (Fin P.rank) ℝ)
@@ -42,14 +42,13 @@ theorem exists_orthogonal_idempotent_canonical_spectrum {n : Type*}
       P = (H * Hᵀ) * P * (H * Hᵀ) := by rw [hHt]; simp
       _ = H * (Hᵀ * P * H) * Hᵀ := by simp only [Matrix.mul_assoc]
       _ = H * N * Hᵀ := by rw [hBlock]
-  have hSpec (i : ℕ) : P.toEuclideanLin.singularValues i =
+  have hSpec (i : ℕ) : singularValues P i =
       if i < P.rank then Real.sqrt (1 + t i ^ 2) else 0 := by
     calc
-      _ = (H * N * Hᵀ).toEuclideanLin.singularValues i :=
-        congrArg (fun A : Matrix n n ℝ => A.toEuclideanLin.singularValues i) hForm
-      _ = N.toEuclideanLin.singularValues i := by
-        rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
-          singularValues_mul_isometry_transpose hH, singularValues_isometry_mul hH]
+      _ = singularValues (H * N * Hᵀ) i :=
+        congrArg (fun A : Matrix n n ℝ => singularValues A i) hForm
+      _ = singularValues N i := by
+        rw [singularValues_mul_isometry_transpose hH, singularValues_isometry_mul hH]
       _ = _ := singularValues_oblique_canonical t ht0 ht (fun j hj => hz j (hg.trans hj)) i
   refine ⟨g, hg, t, ht0, ht, htpos, H, hH, hHt, hBlock, hSpec, ?_, ?_⟩
   · intro i

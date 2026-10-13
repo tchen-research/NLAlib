@@ -36,16 +36,10 @@ theorem exists_unitary_idempotent_canonical {n : Type*}
     simp only [K, Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_zero,
       Matrix.fromBlocks_multiply, Matrix.mul_zero, Matrix.zero_mul,
       add_zero, zero_add, hV, hW, Matrix.fromBlocks_one]
-  have hpos (i : ℕ) : 0 < T.toEuclideanLin.singularValues i ↔ i < T.rank := by
-    rw [LinearMap.singularValues_pos_iff_lt_finrank_range]
-    have hr : Module.finrank ℂ T.toEuclideanLin.range = T.rank :=
-      (T.rank_eq_finrank_range_toLin
-        (EuclideanSpace.basisFun (Fin P.rank) ℂ).toBasis
-        (EuclideanSpace.basisFun (Fin (Fintype.card n - P.rank)) ℂ).toBasis).symm
-    rw [hr]
+  have hpos (i : ℕ) : 0 < singularValues T i ↔ i < T.rank := singularValues_pos_iff T i
   refine ⟨T.rank, le_min T.rank_le_height T.rank_le_width,
-    (fun i => T.toEuclideanLin.singularValues i), T.toEuclideanLin.singularValues_nonneg,
-    T.toEuclideanLin.singularValues_antitone, hpos, H * K, ?_, ?_, ?_⟩
+    (fun i => singularValues T i), singularValues_nonneg T,
+    singularValues_antitone T, hpos, H * K, ?_, ?_, ?_⟩
   · rw [Matrix.conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Hᴴ H K,
       hH, Matrix.one_mul, hK]
   · rw [Matrix.conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc K Kᴴ Hᴴ,

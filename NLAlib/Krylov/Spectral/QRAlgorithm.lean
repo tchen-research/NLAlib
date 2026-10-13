@@ -31,9 +31,11 @@ The (shifted) QR algorithm, driven by any QR routine `qr` and any shift sequence
 The convergence theorem (T&B Thm 28.4) is a separate future entry consuming
 `subspace-iteration-convergence`.
 
-Uses from `NLAlib.Matrix.Factorizations.Givens` (group D-B): `IsUpperHessenberg`,
-`IsTridiagonal`, `isUpperHessenberg_mul_of_isQR`, `isUpperHessenberg_givensQR_snd_mul_fst`,
-`isQR_givensQR`, `IsUpperHessenberg.isTridiagonal_of_isSymm`.
+Uses the shape predicates `IsUpperHessenberg`, `IsTridiagonal` and their closure lemmas
+(`IsUpperHessenberg.sub_smul_one`, `IsUpperHessenberg.add_smul_one`,
+`IsUpperHessenberg.isTridiagonal_of_isSymm`) from `NLAlib.Matrix.Structured.Hessenberg`, and
+`isUpperHessenberg_mul_of_isQR`, `isUpperHessenberg_givensQR_snd_mul_fst`, `isQR_givensQR` from
+`NLAlib.Matrix.Factorizations.Givens`.
 
 Source: Trefethen–Bau (1997) [`tb97`], Lect. 28 (Thm 28.3), Lect. 29; Golub–Van Loan (2013)
 [`gvl13`], §7.3.1, §7.4.2, §8.3.
@@ -61,22 +63,6 @@ theorem add_smul_one_eq_transpose_mul_mul_of_isQR {H Q R : Matrix (Fin n) (Fin n
   have hQQ : Qᵀ * Q = 1 := h.orth
   rw [← h.transpose_mul_eq, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_smul, Matrix.mul_one,
     Matrix.smul_mul, hQQ, sub_add_cancel]
-
-/-- Subtracting a multiple of the identity keeps upper Hessenberg form. Helper for
-`qr-algorithm-simultaneous-iteration`. -/
-theorem IsUpperHessenberg.sub_smul_one {H : Matrix (Fin n) (Fin n) ℝ} (hH : IsUpperHessenberg H)
-    (μ : ℝ) : IsUpperHessenberg (H - μ • (1 : Matrix (Fin n) (Fin n) ℝ)) := by
-  intro i j hij
-  have hne : i ≠ j := fun h => by subst h; omega
-  simp [hH i j hij, Matrix.one_apply_ne hne]
-
-/-- Adding a multiple of the identity keeps upper Hessenberg form. Helper for
-`qr-algorithm-simultaneous-iteration`. -/
-theorem IsUpperHessenberg.add_smul_one {H : Matrix (Fin n) (Fin n) ℝ} (hH : IsUpperHessenberg H)
-    (μ : ℝ) : IsUpperHessenberg (H + μ • (1 : Matrix (Fin n) (Fin n) ℝ)) := by
-  intro i j hij
-  have hne : i ≠ j := fun h => by subst h; omega
-  simp [hH i j hij, Matrix.one_apply_ne hne]
 
 /-! ### The recursion -/
 

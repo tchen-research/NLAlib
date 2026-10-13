@@ -17,6 +17,7 @@ import NLAlib.ForMathlib.Analysis.Lipschitz
 import NLAlib.ForMathlib.Analysis.LipschitzApprox
 import NLAlib.ForMathlib.Analysis.LogPowerMean
 import NLAlib.ForMathlib.Analysis.Matrix
+import NLAlib.ForMathlib.Analysis.NormSumSq
 import NLAlib.ForMathlib.Analysis.OneSidedVariation
 import NLAlib.ForMathlib.Analysis.OrderedSchur
 import NLAlib.ForMathlib.Analysis.OrderedSimultaneousSchur

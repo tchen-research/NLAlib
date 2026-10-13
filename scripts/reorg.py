@@ -19,7 +19,7 @@ Probability/Concentration/Basic Probability/Concentration/Scalar Probability/Con
 RandomMatrix/Basic RandomMatrix/General RandomMatrix/Spectral RandomMatrix/SubGaussian RandomMatrix/Rademacher RandomMatrix/Haar RandomMatrix/Covariance
 RandomMatrix/Gaussian/Basic RandomMatrix/Gaussian/Invariance RandomMatrix/Gaussian/Moments RandomMatrix/Gaussian/Spectral RandomMatrix/Gaussian/Wishart RandomMatrix/Gaussian/InverseMoments
 Krylov/Spaces Krylov/Processes Krylov/Solvers Krylov/Spectral Krylov/Quadrature Krylov/MatrixFunctions
-Sketching/Basic Sketching/Gaussian Sketching/Structured Sketching/Sparse Sketching/Sparse/SparseFock Sketching/Sampling
+Sketching/Basic Sketching/Gaussian Sketching/Structured Sketching/Sparse Sketching/Sparse/FiniteLaw Sketching/Sparse/MomentMethod Sketching/Sparse/IIDComparison Sketching/Sparse/FockModel Sketching/Sparse/Bands Sketching/Sparse/Bands/Directional Sketching/Sparse/Bands/Heavy Sketching/Sparse/Bands/Light Sketching/Sparse/Bands/Mixed Sketching/Sampling
 Sketching/Properties/JL Sketching/Properties/SubspaceEmbedding Sketching/Properties/ApproxMatrixMultiplication
 LowRank/Structural LowRank/RangeFinding LowRank/RandomizedSVD LowRank/Nystrom LowRank/Cholesky LowRank/PolynomialMethods LowRank/Sampling
 Estimation/Basic Estimation/Trace Estimation/Diagonal Estimation/QuadraticForms Estimation/Quadrature Estimation/Spectral

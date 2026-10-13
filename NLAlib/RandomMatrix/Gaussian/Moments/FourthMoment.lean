@@ -19,8 +19,8 @@ lemmas:
   the entries, `E ∏ₑ fₑ(G_e) = ∏ₑ E fₑ(X)`;
 * `integral_entry_mul_four_gaussianMatrix`: `E[G_{e₁} G_{e₂} G_{e₃} G_{e₄}] =
   δ₁₂δ₃₄ + δ₁₃δ₂₄ + δ₁₄δ₂₃`;
-* `integral_linear_mul_four_gaussianMatrix`, `integral_linear_mul_two_gaussianMatrix` (and the
-  `integrable_` versions): the same for linear forms `⟨u, G⟩ = ∑ₑ uₑ G_e`,
+* `integral_linForm_mul_four_gaussianMatrix`, `integral_linForm_mul_two_gaussianMatrix` (and the
+  `integrable_` versions): the same for linear forms `⟨u, G⟩ = linForm u G = ∑ᵢⱼ uᵢⱼ Gᵢⱼ`,
   `E[⟨u,G⟩⟨v,G⟩⟨w,G⟩⟨z,G⟩] = ⟨u,v⟩⟨w,z⟩ + ⟨u,w⟩⟨v,z⟩ + ⟨u,z⟩⟨v,w⟩`.
 
 Proof source: Prove2me workspace, Gaussian Random Matrices series (solution
@@ -174,37 +174,21 @@ private lemma L4_expand (u v w z : Fin p × Fin m → ℝ) (G : Fin p → Fin m 
   exact Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ =>
     Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => by ring
 
-/-- The product of two linear forms in a Gaussian matrix is integrable. Atlas:
-`gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
-`GaussianMatrix.frobenius_fourth_moment` (`integrable_L2`). -/
-theorem integrable_linear_mul_two_gaussianMatrix (u v : Fin p × Fin m → ℝ) :
-    Integrable (fun G : Fin p → Fin m → ℝ =>
-      (∑ e, u e * G e.1 e.2) * (∑ e, v e * G e.1 e.2)) (gaussianMatrix p m) := by
-  change Integrable (fun G => L u G * L v G) _
+private lemma integrable_L2 (u v : Fin p × Fin m → ℝ) :
+    Integrable (fun G => L u G * L v G) (gaussianMatrix p m) := by
   simp_rw [L2_expand]
   exact integrable_finsetSum _ fun e2 _ => integrable_finsetSum _ fun e1 _ =>
     (integrable_mono2 e1 e2).const_mul _
 
-/-- The product of four linear forms in a Gaussian matrix is integrable. Atlas:
-`gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
-`GaussianMatrix.frobenius_fourth_moment` (`integrable_L4`). -/
-theorem integrable_linear_mul_four_gaussianMatrix (u v w z : Fin p × Fin m → ℝ) :
-    Integrable (fun G : Fin p → Fin m → ℝ =>
-      (∑ e, u e * G e.1 e.2) * (∑ e, v e * G e.1 e.2) * (∑ e, w e * G e.1 e.2) *
-        (∑ e, z e * G e.1 e.2)) (gaussianMatrix p m) := by
-  change Integrable (fun G => L u G * L v G * L w G * L z G) _
+private lemma integrable_L4 (u v w z : Fin p × Fin m → ℝ) :
+    Integrable (fun G => L u G * L v G * L w G * L z G) (gaussianMatrix p m) := by
   simp_rw [L4_expand]
   exact integrable_finsetSum _ fun e4 _ => integrable_finsetSum _ fun e3 _ =>
     integrable_finsetSum _ fun e2 _ => integrable_finsetSum _ fun e1 _ =>
     (integrable_entry_mul_four_gaussianMatrix e1 e2 e3 e4).const_mul _
 
-/-- **Covariance of linear forms**: `E[⟨u,G⟩⟨v,G⟩] = ⟨u,v⟩` for a standard Gaussian matrix `G`.
-Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
-`GaussianMatrix.frobenius_fourth_moment` (`integral_L2`). -/
-theorem integral_linear_mul_two_gaussianMatrix (u v : Fin p × Fin m → ℝ) :
-    ∫ G, (∑ e, u e * G e.1 e.2) * (∑ e, v e * G e.1 e.2) ∂(gaussianMatrix p m)
-      = ∑ e, u e * v e := by
-  change ∫ G, L u G * L v G ∂(gaussianMatrix p m) = ip u v
+private lemma integral_L2 (u v : Fin p × Fin m → ℝ) :
+    ∫ G, L u G * L v G ∂(gaussianMatrix p m) = ip u v := by
   simp_rw [L2_expand]
   rw [integral_finsetSum _ fun e2 _ => integrable_finsetSum _ fun e1 _ =>
     (integrable_mono2 e1 e2).const_mul _]
@@ -216,18 +200,9 @@ theorem integral_linear_mul_two_gaussianMatrix (u v : Fin p × Fin m → ℝ) :
   simp_rw [this]
   simp [ip, mul_ite]
 
-/-- **Isserlis (Wick) formula for linear forms**: for a standard Gaussian matrix `G`,
-`E[⟨u,G⟩⟨v,G⟩⟨w,G⟩⟨z,G⟩] = ⟨u,v⟩⟨w,z⟩ + ⟨u,w⟩⟨v,z⟩ + ⟨u,z⟩⟨v,w⟩`, where
-`⟨u,G⟩ = ∑ₑ uₑ G_e`. Isserlis 1918. Atlas: `gaussian-frob-fourth-moment` (helper). Ported from
-Prove2me solution `GaussianMatrix.frobenius_fourth_moment` (`integral_L4`).
-atlas: gaussian-frob-fourth-moment -/
-theorem integral_linear_mul_four_gaussianMatrix (u v w z : Fin p × Fin m → ℝ) :
-    ∫ G, (∑ e, u e * G e.1 e.2) * (∑ e, v e * G e.1 e.2) * (∑ e, w e * G e.1 e.2) *
-        (∑ e, z e * G e.1 e.2) ∂(gaussianMatrix p m)
-      = (∑ e, u e * v e) * (∑ e, w e * z e) + (∑ e, u e * w e) * (∑ e, v e * z e)
-        + (∑ e, u e * z e) * (∑ e, v e * w e) := by
-  change ∫ G, L u G * L v G * L w G * L z G ∂(gaussianMatrix p m)
-      = ip u v * ip w z + ip u w * ip v z + ip u z * ip v w
+private lemma integral_L4 (u v w z : Fin p × Fin m → ℝ) :
+    ∫ G, L u G * L v G * L w G * L z G ∂(gaussianMatrix p m)
+      = ip u v * ip w z + ip u w * ip v z + ip u z * ip v w := by
   simp_rw [L4_expand]
   have hI : ∀ e1 e2 e3 e4 : Fin p × Fin m, Integrable (fun G : Fin p → Fin m → ℝ =>
       (u e1 * v e2 * w e3 * z e4) * (G e1.1 e1.2 * G e2.1 e2.2 * G e3.1 e3.2 * G e4.1 e4.2))
@@ -259,6 +234,54 @@ theorem integral_linear_mul_four_gaussianMatrix (u v w z : Fin p × Fin m → �
   · rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
   · exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
+
+private lemma linForm_eq_L (c : Fin p → Fin m → ℝ) (G : Fin p → Fin m → ℝ) :
+    linForm c G = L (Function.uncurry c) G := by
+  simp only [linForm, L, Fintype.sum_prod_type, Function.uncurry_apply_pair]
+
+private lemma sum_sum_mul_eq_ip (u v : Fin p → Fin m → ℝ) :
+    ∑ i, ∑ j, u i j * v i j = ip (Function.uncurry u) (Function.uncurry v) := by
+  simp only [ip, Fintype.sum_prod_type, Function.uncurry_apply_pair]
+
+/-- The product of two linear forms `⟨u,G⟩⟨v,G⟩` in a Gaussian matrix is integrable. Atlas:
+`gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
+`GaussianMatrix.frobenius_fourth_moment` (`integrable_L2`). -/
+theorem integrable_linForm_mul_two_gaussianMatrix (u v : Fin p → Fin m → ℝ) :
+    Integrable (fun G => linForm u G * linForm v G) (gaussianMatrix p m) := by
+  simp_rw [linForm_eq_L]
+  exact integrable_L2 _ _
+
+/-- The product of four linear forms `⟨u,G⟩⟨v,G⟩⟨w,G⟩⟨z,G⟩` in a Gaussian matrix is integrable.
+Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
+`GaussianMatrix.frobenius_fourth_moment` (`integrable_L4`). -/
+theorem integrable_linForm_mul_four_gaussianMatrix (u v w z : Fin p → Fin m → ℝ) :
+    Integrable (fun G => linForm u G * linForm v G * linForm w G * linForm z G)
+      (gaussianMatrix p m) := by
+  simp_rw [linForm_eq_L]
+  exact integrable_L4 _ _ _ _
+
+/-- **Covariance of linear forms**: `E[⟨u,G⟩⟨v,G⟩] = ⟨u,v⟩ = ∑ᵢⱼ uᵢⱼ vᵢⱼ` for a standard Gaussian
+matrix `G`; `u = v` gives `integral_linForm_sq_gaussianMatrix`.
+Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
+`GaussianMatrix.frobenius_fourth_moment` (`integral_L2`). -/
+theorem integral_linForm_mul_two_gaussianMatrix (u v : Fin p → Fin m → ℝ) :
+    ∫ G, linForm u G * linForm v G ∂(gaussianMatrix p m) = ∑ i, ∑ j, u i j * v i j := by
+  simp_rw [linForm_eq_L, sum_sum_mul_eq_ip]
+  exact integral_L2 _ _
+
+/-- **Isserlis (Wick) formula for linear forms**: for a standard Gaussian matrix `G`,
+`E[⟨u,G⟩⟨v,G⟩⟨w,G⟩⟨z,G⟩] = ⟨u,v⟩⟨w,z⟩ + ⟨u,w⟩⟨v,z⟩ + ⟨u,z⟩⟨v,w⟩`, where
+`⟨u,G⟩ = linForm u G = ∑ᵢⱼ uᵢⱼ Gᵢⱼ` and `⟨u,v⟩ = ∑ᵢⱼ uᵢⱼ vᵢⱼ`. Isserlis 1918.
+Atlas: `gaussian-frob-fourth-moment` (helper). Ported from Prove2me solution
+`GaussianMatrix.frobenius_fourth_moment` (`integral_L4`).
+atlas: gaussian-frob-fourth-moment -/
+theorem integral_linForm_mul_four_gaussianMatrix (u v w z : Fin p → Fin m → ℝ) :
+    ∫ G, linForm u G * linForm v G * linForm w G * linForm z G ∂(gaussianMatrix p m)
+      = (∑ i, ∑ j, u i j * v i j) * (∑ i, ∑ j, w i j * z i j)
+        + (∑ i, ∑ j, u i j * w i j) * (∑ i, ∑ j, v i j * z i j)
+        + (∑ i, ∑ j, u i j * z i j) * (∑ i, ∑ j, v i j * w i j) := by
+  simp_rw [linForm_eq_L, sum_sum_mul_eq_ip]
+  exact integral_L4 _ _ _ _
 
 /-! ### The Frobenius fourth moment -/
 
@@ -320,10 +343,10 @@ theorem integral_frobSq_mul_gaussianMatrix_mul_sq (S : Matrix (Fin a) (Fin p) �
   have hL4 : ∀ u v w z : Fin p × Fin m → ℝ,
       ∫ G, L u G * L v G * L w G * L z G ∂(gaussianMatrix p m)
         = ip u v * ip w z + ip u w * ip v z + ip u z * ip v w :=
-    integral_linear_mul_four_gaussianMatrix
+    integral_L4
   have hI4 : ∀ u v w z : Fin p × Fin m → ℝ,
       Integrable (fun G => L u G * L v G * L w G * L z G) (gaussianMatrix p m) :=
-    integrable_linear_mul_four_gaussianMatrix
+    integrable_L4
   simp_rw [frobSq_sq_eq]
   rw [integral_finsetSum _ fun x _ => integrable_finsetSum _ fun y _ => hI4 _ _ _ _]
   have h1 : ∀ x : Fin a × Fin n, ∫ G, ∑ y : Fin a × Fin n,

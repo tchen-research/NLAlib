@@ -18,8 +18,8 @@ Horn–Johnson 2013, Corollary 3.4.3.3; supports `cs-decomposition`. -/
 theorem singularValues_one_sub_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
     (ht0 : ∀ i, 0 ≤ t i) (ht : Antitone t)
     (hz : ∀ i, min r s ≤ i → t i = 0) (k : ℕ) :
-    ((1 : Matrix (Fin r ⊕ Fin s) (Fin r ⊕ Fin s) ℝ) -
-      Matrix.fromBlocks 1 (rectDiag t) 0 0).toEuclideanLin.singularValues k =
+    singularValues ((1 : Matrix (Fin r ⊕ Fin s) (Fin r ⊕ Fin s) ℝ) -
+      Matrix.fromBlocks 1 (rectDiag t) 0 0) k =
       if k < s then Real.sqrt (1 + t k ^ 2) else 0 := by
   let L := (1 : Matrix (Fin r ⊕ Fin s) (Fin r ⊕ Fin s) ℝ) -
     Matrix.fromBlocks 1 (rectDiag t) 0 0
@@ -40,12 +40,11 @@ theorem singularValues_one_sub_oblique_canonical {r s : ℕ} (t : ℕ → ℝ)
       Matrix.one_mul, Matrix.mul_zero, Matrix.zero_mul, Matrix.neg_mul, Matrix.mul_neg,
       neg_neg, neg_zero, add_zero]
   calc
-    _ = A.toEuclideanLin.singularValues k := by
-      rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap, ← hA, singularValues_reindex,
+    _ = singularValues A k := by
+      rw [← hA, singularValues_reindex,
         singularValues_transpose]
-    _ = B.toEuclideanLin.singularValues k := by
-      rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
-        ← singularValues_transpose A, ← singularValues_transpose B]
+    _ = singularValues B k := by
+      rw [← singularValues_transpose A, ← singularValues_transpose B]
       apply singularValues_eq_of_gram_eq
       simpa only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose] using hGram
     _ = _ := singularValues_oblique_canonical t ht0 ht (by simpa only [min_comm] using hz) k

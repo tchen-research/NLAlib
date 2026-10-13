@@ -15,7 +15,7 @@ set_option backward.isDefEq.respectTransparency false
 
 private theorem native_singularValue_zero_eq_specNorm {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) :
-    A.toEuclideanLin.singularValues 0 = specNorm A :=
+    singularValues A 0 = specNorm A :=
   singularValues_zero_eq_specNorm A
 
 /-- An idempotent and its complement have a common norm factor at least one,
@@ -49,11 +49,10 @@ theorem exists_idempotent_complement_norm_factor {n : Type*}
       if 0 < Fintype.card n - P.rank then Real.sqrt (1 + t 0 ^ 2) else 0 := by
     rw [← native_singularValue_zero_eq_specNorm]
     calc
-      _ = (H * (1 - N) * Hᵀ).toEuclideanLin.singularValues 0 :=
-        congrArg (fun A : Matrix n n ℝ => A.toEuclideanLin.singularValues 0) hForm
-      _ = (1 - N).toEuclideanLin.singularValues 0 := by
-        rw [← singularValues_eq_linearMap, ← singularValues_eq_linearMap,
-          singularValues_mul_isometry_transpose hH, singularValues_isometry_mul hH]
+      _ = singularValues (H * (1 - N) * Hᵀ) 0 :=
+        congrArg (fun A : Matrix n n ℝ => singularValues A 0) hForm
+      _ = singularValues (1 - N) 0 := by
+        rw [singularValues_mul_isometry_transpose hH, singularValues_isometry_mul hH]
       _ = _ := singularValues_one_sub_oblique_canonical t ht0 ht hz 0
   refine ⟨Real.sqrt (1 + t 0 ^ 2), ?_, ?_, ?_, ?_⟩
   · have hs := Real.sq_sqrt (show 0 ≤ 1 + t 0 ^ 2 by positivity)

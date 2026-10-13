@@ -26,7 +26,7 @@ theorem orthogonal_procrustes_properties {m n : Type*} [Fintype m] [Fintype n]
     IsLeast {z : ℝ | ∃ (U : Matrix m m ℝ) (T : Matrix n n ℝ),
       HasOrthonormalCols U ∧ HasOrthonormalCols T ∧ frobSq (A - U * B * T) = z}
       (∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-        (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2) ∧
+        (singularValues A i - singularValues B i) ^ 2) ∧
     (∀ C : Matrix m m ℝ, 0 < Fintype.card m →
       IsLeast {z : ℝ | ∃ (c : ℝ) (U : Matrix m m ℝ),
         HasOrthonormalCols U ∧ frobSq (C - c • U) = z}
@@ -35,11 +35,11 @@ theorem orthogonal_procrustes_properties {m n : Type*} [Fintype m] [Fintype n]
       IsLeast {z : ℝ | ∃ (c : ℝ) (U : Matrix m m ℝ),
         HasOrthonormalCols U ∧ frobSq (C - c • U) = z} 0) ∧
     (frobSq (A - B) = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2 ↔
+      (singularValues A i - singularValues B i) ^ 2 ↔
       frobInner A B = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-        A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i) ∧
+        singularValues A i * singularValues B i) ∧
     (frobSq (A - B) = ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
-      (A.toEuclideanLin.singularValues i - B.toEuclideanLin.singularValues i) ^ 2 →
+      (singularValues A i - singularValues B i) ^ 2 →
       (A * Bᵀ).PosSemidef ∧ (Bᵀ * A).PosSemidef) := by
   refine ⟨isLeast_frobSq_sub_orthogonal_mul A B,
     isLeast_frobSq_sub_orthogonal_mul_mul A B, isLeast_frobSq_sub_scaled_orthogonal,

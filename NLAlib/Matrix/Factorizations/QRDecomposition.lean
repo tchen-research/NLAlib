@@ -32,7 +32,7 @@ theorem qr_decomposition {m n : Type*} [Fintype m] [Fintype n]
     ∃ Q : Matrix m n ℝ, ∃ R : Matrix n n ℝ,
       IsQR A Q R ∧ (∀ i, 0 ≤ R i i) ∧
         Rᵀ * R = Aᵀ * A ∧
-        (∀ k, R.toEuclideanLin.singularValues k = A.toEuclideanLin.singularValues k) ∧
+        (∀ k, singularValues R k = singularValues A k) ∧
         conditionNumber R = conditionNumber A ∧
         (∀ e : n ↪ m, ∃ W : Matrix m m ℝ, ∃ T : Matrix m n ℝ,
           HasOrthonormalCols W ∧ W * Wᵀ = 1 ∧ W.submatrix id e = Q ∧

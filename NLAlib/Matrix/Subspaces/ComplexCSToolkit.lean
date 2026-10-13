@@ -32,7 +32,7 @@ theorem complex_cs_decomposition_properties {p q n : Type*}
     (hCard : Fintype.card p ≤ Fintype.card q)
     (P : Matrix n n ℂ) (hP : IsIdempotentElem P) :
     (∃ e : p ↪ q,
-      let c := fun i : p => U.toBlocks₁₁.toEuclideanLin.singularValues ((Fintype.equivFin p) i)
+      let c := fun i : p => singularValues U.toBlocks₁₁ ((Fintype.equivFin p) i)
       (∀ i, c i ∈ Set.Icc (0 : ℝ) 1) ∧
       ∃ V₁ W₁ : Matrix p p ℂ, ∃ V₂ W₂ : Matrix q q ℂ,
         V₁ᴴ * V₁ = 1 ∧ W₁ᴴ * W₁ = 1 ∧ V₂ᴴ * V₂ = 1 ∧ W₂ᴴ * W₂ = 1 ∧
@@ -45,10 +45,10 @@ theorem complex_cs_decomposition_properties {p q n : Type*}
       ∃ H : Matrix n (Fin P.rank ⊕ Fin (Fintype.card n - P.rank)) ℂ,
         Hᴴ * H = 1 ∧ H * Hᴴ = 1 ∧
         Hᴴ * P * H = Matrix.fromBlocks 1 ((rectDiag t).map Complex.ofReal) 0 0 ∧
-        (∀ i, P.toEuclideanLin.singularValues i =
+        (∀ i, singularValues P i =
           if i < P.rank then Real.sqrt (1 + t i ^ 2) else 0) ∧
-        (∀ i, 1 < P.toEuclideanLin.singularValues i ↔ i < g) ∧
-        (∀ i < g, t i = Real.sqrt (P.toEuclideanLin.singularValues i ^ 2 - 1))) ∧
+        (∀ i, 1 < singularValues P i ↔ i < g) ∧
+        (∀ i < g, t i = Real.sqrt (singularValues P i ^ 2 - 1))) ∧
     (∀ hr : 0 < P.rank, ∃ Q W : Matrix n (Fin P.rank) ℂ,
       Qᴴ * Q = 1 ∧ Wᴴ * W = 1 ∧
       LinearMap.range Q.toEuclideanLin = LinearMap.range P.toEuclideanLin ∧

@@ -20,7 +20,7 @@ namespace NLAlib
 /-- Every Ky Fan sum is nonnegative, including the zero seminorm. -/
 theorem kyFanNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
     (A : Matrix m n ℝ) (k : ℕ) :
-    0 ≤ kyFanNorm A k := Finset.sum_nonneg fun i _ => LinearMap.singularValues_nonneg _ i
+    0 ≤ kyFanNorm A k := Finset.sum_nonneg fun i _ => singularValues_nonneg _ i
 
 /-- The zero prefix is zero. -/
 @[simp] theorem kyFanNorm_zero {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
@@ -127,8 +127,8 @@ theorem specNorm_le_kyFanNorm {m n : Type*} [Fintype m] [Fintype n]
     specNorm A ≤ kyFanNorm A k := by
   rw [← kyFanNorm_one_eq_specNorm A]
   simp only [kyFanNorm, Finset.sum_range_one]
-  change A.toEuclideanLin.singularValues 0 ≤ _
-  exact Finset.single_le_sum (fun i _ => LinearMap.singularValues_nonneg _ i)
+  change singularValues A 0 ≤ _
+  exact Finset.single_le_sum (fun i _ => singularValues_nonneg _ i)
     (Finset.mem_range.mpr (by omega))
 
 /-- A positive Ky Fan prefix vanishes exactly on the zero matrix. -/

@@ -2083,10 +2083,9 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.integral_linear_mul_four_gaussianMatrix",
+     "decl": "NLAlib.integral_linForm_mul_four_gaussianMatrix",
      "module": "NLAlib.RandomMatrix.Gaussian.Moments.FourthMoment",
-     "status": "proved",
-     "usage": "**Isserlis (Wick) formula for linear forms**: for a standard Gaussian matrix `G`, `E[⟨u,G⟩⟨v,G⟩⟨w,G⟩⟨z,G⟩] = ⟨u,v⟩⟨w,z⟩ + ⟨u,w⟩⟨v,z⟩ + ⟨u,z⟩⟨v,w⟩`, where `⟨u,G⟩ = ∑ₑ uₑ G_e`."
+     "status": "proved"
     },
     {
      "library": "nlalib",
@@ -2103,7 +2102,8 @@
    ],
    "uses_defs": [
     "NLAlib.frobSq",
-    "NLAlib.gaussianMatrix"
+    "NLAlib.gaussianMatrix",
+    "NLAlib.linForm"
    ],
    "variants": [
     "gaussian-frob-second-moment",
@@ -2115,7 +2115,7 @@
    "tags": [
     "done"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "isserlis",
@@ -3823,35 +3823,35 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_le_div_of_net",
-     "module": "NLAlib.Probability.Concentration.Basic.Net",
+     "module": "NLAlib.Matrix.Norms.Net",
      "status": "proved",
      "usage": "Deterministic net lemma, operator form `(1-ε)⁻¹`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_le_div_of_net_bilinear",
-     "module": "NLAlib.Probability.Concentration.Basic.Net",
+     "module": "NLAlib.Matrix.Norms.Net",
      "status": "proved",
      "usage": "Bilinear form `(1-2ε)⁻¹`, `ε < 1/2`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_le_div_of_net_quadForm",
-     "module": "NLAlib.Probability.Concentration.Basic.Net",
+     "module": "NLAlib.Matrix.Norms.Net",
      "status": "proved",
      "usage": "Quadratic form for symmetric `B`, `(1-2ε)⁻¹`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.exists_finset_sphere_net",
-     "module": "NLAlib.Probability.Concentration.Basic.Net",
+     "module": "NLAlib.Matrix.Norms.Net",
      "status": "proved",
      "usage": "Sphere ε-net of unit vectors with `card ≤ (1 + 2/ε)^{card ι}` (volumetric argument)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.exists_finset_net_specNorm_le",
-     "module": "NLAlib.Probability.Concentration.Basic.Net",
+     "module": "NLAlib.Matrix.Norms.Net",
      "status": "proved",
      "usage": "A net independent of `A`: `‖Ax‖ ≤ M` on the net gives `specNorm A ≤ M/(1-ε)`."
     },
@@ -3880,7 +3880,7 @@
     "foundation",
     "done"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "notes": "Standard form: ‖A‖ ≤ (1−ε)⁻¹ max_N ‖Ax‖ (Vershynin 2012 Lem 5.3(i)); the (1−2ε)⁻¹ form is for bilinear forms."
   },
   {
@@ -4637,11 +4637,10 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.lieb_concavity_finite",
-     "module": "NLAlib.Matrix.OperatorTheory.LiebTraceFunction",
+     "decl": "NLAlib.lieb_concavity",
+     "module": "NLAlib.Matrix.OperatorTheory.LiebConcavity",
      "status": "proved",
-     "partial": true,
-     "usage": "The existing Lieb concavity theorem on the actual positive-definite cone, transported to every nonempty finite index type."
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -4727,7 +4726,7 @@
    "difficulty": 5,
    "priority": "later",
    "tags": [],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "noncommutative-khintchine",
@@ -5439,26 +5438,26 @@
    "uses_defs": [
     "NLAlib.HasOrthonormalCols",
     "NLAlib.IsSubspaceEmbedding",
-    "NLAlib.SparseFock.PaperParameters.failureOrder",
-    "NLAlib.SparseFock.PaperParameters.roundedB",
-    "NLAlib.SparseFock.PaperParameters.roundedM",
-    "NLAlib.SparseFock.PaperParameters.roundedS",
-    "NLAlib.SparseFock.SparseStackDistribution.RawSample",
-    "NLAlib.SparseFock.SparseStackDistribution.SignedHash",
-    "NLAlib.SparseFock.SparseStackDistribution.toSample",
-    "NLAlib.SparseFock.SparseStackModel.Sign",
-    "NLAlib.SparseFock.SparseStackModel.stackMatrix",
-    "NLAlib.SparseFock.UniformExactS.ExactColumn",
-    "NLAlib.SparseFock.UniformExactS.ExactSample",
-    "NLAlib.SparseFock.UniformExactS.ExactSupport",
-    "NLAlib.SparseFock.UniformExactS.sketchMatrix",
+    "NLAlib.SparseSketch.Sign",
+    "NLAlib.SparseSketch.SignedHash",
+    "NLAlib.SparseStackSelectors",
+    "NLAlib.SparseStackSelectors.toSample",
+    "NLAlib.UniformSparseColumn",
+    "NLAlib.UniformSparseSample",
+    "NLAlib.UniformSparseSupport",
     "NLAlib.countSketchLaw",
     "NLAlib.countSketchMatrix",
     "NLAlib.frobSq",
     "NLAlib.leverageScore",
+    "NLAlib.sparseBlockRows",
+    "NLAlib.sparseColumnSparsity",
+    "NLAlib.sparseMomentOrder",
+    "NLAlib.sparseRows",
+    "NLAlib.sparseStackMatrix",
     "NLAlib.sparseStackMatrixOn",
     "NLAlib.sparseStackMeasure",
     "NLAlib.specNorm",
+    "NLAlib.uniformSparseMatrix",
     "NLAlib.uniformSparseMatrixOn",
     "NLAlib.uniformSparseMeasure"
    ],
@@ -5473,7 +5472,7 @@
    "tags": [
     "ose"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "amm-sampling",
@@ -5747,11 +5746,10 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.measure_le_spectralNorm_leverage_gram_sub_one",
+     "decl": "NLAlib.measure_le_norm_leverage_gram_sub_one",
      "module": "NLAlib.Sketching.Sampling.LeverageSampling",
      "status": "proved",
-     "partial": true,
-     "usage": "Leverage-dominating probabilities give the exact complex Gram failure bound `2 d exp(-β k ε²/(3d))` for the literal finite sampling/rescaling algorithm."
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -5790,7 +5788,7 @@
     "sampling",
     "ose"
    ],
-   "updated_at": "2026-10-12"
+   "updated_at": "2026-10-13"
   },
   {
    "id": "volume-sampling",
@@ -17948,7 +17946,7 @@
     "majorization"
    ],
    "notes": "Proof route with what NLAlib already has: tr(QᵀAQ) = ∑ᵢ λᵢ(QᵀAQ) ≤ ∑_{i≤k} λᵢ(A) by the compression half of Cauchy interlacing (NLAlib.eigenvalues₀_compression_le), equality at eigenvectors; the singular-value form is von Neumann (NLAlib.frobInner_le_sum_singularValues_mul) applied to ⟨A, UVᵀ⟩, since UVᵀ has k unit singular values. Consumers: ky-fan-norms-def (triangle inequality), schur-horn (Schur half is immediate: take Q = coordinate vectors), lidskii, eigenvalue sums in PCA/subspace objectives, block-krylov-lra (MM15's per-vector and Ky Fan error guarantees), nystrom-randomized and hutchpp (trace of the top-k part). Recommendation: prove.",
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "formalizations": [
     {
      "library": "nlalib",
@@ -18016,11 +18014,10 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.weaklyMajorized_toEuclideanLin_singularValues_add",
+     "decl": "NLAlib.weaklyMajorized_singularValues_add",
      "module": "NLAlib.Matrix.Inequalities.KyFanSums",
      "status": "proved",
-     "partial": true,
-     "usage": "Singular values of a sum are weakly majorized by the coordinatewise sum of its two decreasing singular-value lists, for arbitrary finite matrix indices."
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -18035,7 +18032,8 @@
     "NLAlib.Majorized",
     "NLAlib.WeaklyMajorized",
     "NLAlib.eigenvaluePrefix",
-    "NLAlib.kyFanNorm"
+    "NLAlib.kyFanNorm",
+    "NLAlib.singularValues"
    ],
    "variants": []
   },
@@ -18682,7 +18680,7 @@
     "weyl-mirsky",
     "eigenvalue-perturbation-symmetric"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "formalizations": [
     {
      "library": "nlalib",
@@ -18714,14 +18712,6 @@
      "status": "proved",
      "partial": true,
      "usage": "Rectangular Mirsky: the entire absolute singular-value difference vector is weakly majorized by the perturbation singular list."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.weaklyMajorized_abs_toEuclideanLin_singularValues_add_sub",
-     "module": "NLAlib.Matrix.Inequalities.Mirsky",
-     "status": "proved",
-     "partial": true,
-     "usage": "Rectangular Mirsky on arbitrary finite real matrix row and column indices, using Mathlib's actual native singular values."
     },
     {
      "library": "nlalib",
@@ -18806,7 +18796,7 @@
    "variants": [
     "weyl-product-singular-values"
    ],
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "formalizations": [
     {
      "library": "nlalib",
@@ -18815,14 +18805,6 @@
      "status": "proved",
      "partial": true,
      "usage": "Horn's full singular-value product inequality implies every positive power-sum prefix comparison, including rank-deficient matrices and all padded prefixes."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.sum_range_toEuclideanLin_singularValues_mul_rpow_le",
-     "module": "NLAlib.Matrix.Inequalities.HornPowerSums",
-     "status": "proved",
-     "partial": true,
-     "usage": "The full positive-power Horn prefix comparison in native linear-map singular values, for arbitrary finite compatible matrix indices."
     },
     {
      "library": "nlalib",
@@ -19277,7 +19259,7 @@
     "singular-values"
    ],
    "notes": "Mathlib already has the algebra of ⊗ₖ and vec (cite it, do not re-prove); the spectral/norm facts are the gap. Consumers: Kronecker/Khatri–Rao and tensor sketches (TensorSketch, Kronecker JL; not yet in the atlas), Kronecker-structured least squares, gaussian-frob-second-moment / gaussian-amm restated through vec and Kronecker covariance, Hutchinson with Kronecker-structured probes. Recommendation: prove. Rectangular correction: native domain-side singular-value multisets multiply exactly, including domain zeros. In thin-list notation, the pairwise products contain min(m,n) min(p,q) entries; append min(mp,nq)-min(m,n)min(p,q) zeros. An unqualified thin-list equality misses these extra zeros.",
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "formalizations": [
     {
      "library": "nlalib",
@@ -19329,11 +19311,10 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.multiset_toEuclideanLin_singularValues_kronecker",
+     "decl": "NLAlib.multiset_singularValues_kronecker",
      "module": "NLAlib.Matrix.Structured.KroneckerSingularValues",
      "status": "proved",
-     "partial": true,
-     "usage": "The singular values of a rectangular Kronecker product are all pairwise products of the two native domain-side singular-value lists, with multiplicities."
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -28701,7 +28682,7 @@
     "projectors"
    ],
    "notes": "Consumers: principal-angles-def (CSD is the canonical form behind sin Θ/cos Θ), davis-kahan-sin-theta, wedin-sin-theta, oblique projectors in Nyström / generalized Nyström and sketch-and-solve-ls analyses (‖P‖ = ‖I − P‖ = 1/cos θ at proper positive rank), subspace-iteration-convergence. The real and complex forms use singular bases, equal-Gram isometries and orthogonal/unitary completion. Source corrections: the CS factors have sizes p,p,q,q and act as (V1⊕V2)* U (W1⊕W2). The secant formula needs positive projection rank; ‖P‖=‖I−P‖ requires both range and kernel to have positive dimension. The formalization treats zero, full and empty ranks separately.",
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "formalizations": [
     {
      "library": "nlalib",
@@ -28923,6 +28904,7 @@
     "NLAlib.csCanonicalMatrix",
     "NLAlib.principalAnglesFintype",
     "NLAlib.rectDiag",
+    "NLAlib.singularValues",
     "NLAlib.specNorm"
    ],
    "variants": []
@@ -32038,7 +32020,7 @@
     "orthogonal-matrices"
    ],
    "notes": "Consumers: aligning subspace bases before comparing them (`principal-angles-def`, `davis-kahan-sin-theta`, `wedin-sin-theta` applications), comparing sketches up to rotation. Prove from von Neumann (`frobInner_le_sum_singularValues_mul`) plus attainment at the polar factor.",
-   "updated_at": "2026-10-12",
+   "updated_at": "2026-10-13",
    "formalizations": [
     {
      "library": "nlalib",
@@ -32180,7 +32162,8 @@
     "NLAlib.HasOrthonormalCols",
     "NLAlib.frobInner",
     "NLAlib.frobSq",
-    "NLAlib.nuclearNorm"
+    "NLAlib.nuclearNorm",
+    "NLAlib.singularValues"
    ],
    "variants": []
   },

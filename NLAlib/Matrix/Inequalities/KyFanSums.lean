@@ -64,24 +64,24 @@ theorem majorized_eigenvalues₀_add {n : Type*} [Fintype n] [DecidableEq n]
 of its two decreasing singular-value lists, for arbitrary finite matrix indices.
 Fan (1949), Theorem 1; includes empty matrix shapes.
 atlas: ky-fan-maximum-principle (partial) -/
-theorem weaklyMajorized_toEuclideanLin_singularValues_add {m n : Type*}
+theorem weaklyMajorized_singularValues_add {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] (A B : Matrix m n ℝ) :
     WeaklyMajorized
-      (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => (A + B).toEuclideanLin.singularValues i)
+      (fun i : Fin (min (Fintype.card m) (Fintype.card n)) => singularValues (A + B) i)
       (fun i : Fin (min (Fintype.card m) (Fintype.card n)) =>
-        A.toEuclideanLin.singularValues i + B.toEuclideanLin.singularValues i) := by
+        singularValues A i + singularValues B i) := by
   intro k hk
   have hkN : k ≤ min (Fintype.card m) (Fintype.card n) := by simpa using hk
   have hantiA : Antitone (fun i : Fin (min (Fintype.card m) (Fintype.card n)) =>
-      A.toEuclideanLin.singularValues i) := fun i j hij => LinearMap.singularValues_antitone _ hij
+      singularValues A i) := fun i j hij => singularValues_antitone _ hij
   have hantiB : Antitone (fun i : Fin (min (Fintype.card m) (Fintype.card n)) =>
-      B.toEuclideanLin.singularValues i) := fun i j hij => LinearMap.singularValues_antitone _ hij
+      singularValues B i) := fun i j hij => singularValues_antitone _ hij
   have hantiAB : Antitone (fun i : Fin (min (Fintype.card m) (Fintype.card n)) =>
-      (A + B).toEuclideanLin.singularValues i) := fun i j hij => LinearMap.singularValues_antitone _ hij
+      singularValues (A + B) i) := fun i j hij => singularValues_antitone _ hij
   rw [sumLargest_eq_prefix_of_antitone _ hantiAB,
     sumLargest_eq_prefix_of_antitone _ (hantiA.add hantiB)]
-  rw [sum_fin_ite_lt_eq_sum_range hkN (fun i => (A + B).toEuclideanLin.singularValues i),
-    sum_fin_ite_lt_eq_sum_range hkN (fun i => A.toEuclideanLin.singularValues i + B.toEuclideanLin.singularValues i)]
+  rw [sum_fin_ite_lt_eq_sum_range hkN (fun i => singularValues (A + B) i),
+    sum_fin_ite_lt_eq_sum_range hkN (fun i => singularValues A i + singularValues B i)]
   rw [Finset.sum_add_distrib]
   exact kyFanNorm_add_le A B k
 

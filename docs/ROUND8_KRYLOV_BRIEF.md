@@ -111,8 +111,8 @@ so do them first and build them:
    the error bound `‖f(A)b − Q f(T) Qᵀ b‖² ≤ (2E)² ‖b‖²` (§3.7, §3.9). Then
    `lanczos-quadrature-analytic-error` and `lanczos-quadrature-lipschitz-error` only if their
    polynomial inputs exist (they probably do not yet: say so, do not scaffold them).
-2. `Matrix/Projections.lean`: `orthonormalBasisMatrix S` for a submodule of `n → ℝ` (orthonormal
-   columns, range `= S`, index `Fin (finrank S)`), and receive the matrix helpers that
+2. `Matrix/Projections.lean` (now `Matrix/Subspaces/OrthonormalBasisMatrix.lean`):
+   `orthonormalBasisMatrix S` for a submodule of `n → ℝ` (orthonormal columns, range `= S`, index `Fin (finrank S)`), and receive the matrix helpers that
    `GaussQuadrature.lean`'s docstrings flag as belonging in `Matrix/`
    (`mulVec_transpose_mulVec_of_mem_range`, `isSymm_transpose_mul_mul`, the Rayleigh bounds): move
    them, keep names unless STANDARDS says otherwise, update `GaussQuadrature.lean` and `SLQ.lean`.

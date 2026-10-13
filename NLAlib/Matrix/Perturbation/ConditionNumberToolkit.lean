@@ -23,8 +23,8 @@ atlas: condition-number-def -/
 theorem condition_number_characterizations (A : Matrix m n ℝ) :
     conditionNumber (0 : Matrix m n ℝ) = 0 ∧
     (A ≠ 0 → 1 ≤ conditionNumber A) ∧
-    (0 < A.rank → conditionNumber A = A.toEuclideanLin.singularValues 0 /
-      A.toEuclideanLin.singularValues (A.rank - 1)) ∧
+    (0 < A.rank → conditionNumber A = singularValues A 0 /
+      singularValues A (A.rank - 1)) ∧
     (∀ c : ℝ, c ≠ 0 → conditionNumber (c • A) = conditionNumber A) ∧
     conditionNumber Aᵀ = conditionNumber A ∧
     conditionNumber (Aᵀ * A) = conditionNumber A ^ 2 ∧

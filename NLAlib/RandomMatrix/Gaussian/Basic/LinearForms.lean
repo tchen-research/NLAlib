@@ -1,4 +1,5 @@
 import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
+import NLAlib.RandomMatrix.Gaussian.Moments.FourthMoment
 /-!
 # Linear forms of a Gaussian matrix
 
@@ -11,7 +12,8 @@ linear forms of a standard Gaussian matrix `G`:
   linear map;
 * `hasGaussianLaw_linForm_gaussianMatrix`: any finite family `(⟨a t, G⟩)ₜ` is jointly Gaussian;
 * `integral_linForm_gaussianMatrix`, `integral_linForm_sq_gaussianMatrix`: `𝔼⟨c, G⟩ = 0`,
-  `𝔼⟨c, G⟩² = ∑ᵢⱼ cᵢⱼ²`;
+  `𝔼⟨c, G⟩² = ∑ᵢⱼ cᵢⱼ²` (the diagonal case of the covariance
+  `integral_linForm_mul_two_gaussianMatrix` of `Moments/FourthMoment`);
 * `𝔼 √(∑ⱼ H_{0,σ(j)}²) ≤ √k` (`integral_sqrt_sum_sq_gaussianMatrix_entry_le`).
 
 The definition `linForm` with `linForm_eq_frobInner`, `continuous_linForm`, and the entrywise
@@ -78,45 +80,13 @@ theorem linForm_sub_linForm {p m : ℕ} (c d : Fin p → Fin m → ℝ) (G : Fin
     linForm c G - linForm d G = linForm (c - d) G := by
   simp only [linForm, ← Finset.sum_sub_distrib, Pi.sub_apply, sub_mul]
 
-/-- `𝔼⟨c, G⟩² = ∑ᵢⱼ cᵢⱼ²`. Ported from Prove2me solution `GaussianMatrix.gordon_upper`
-(helper `gu_integral_lin_sq`). Atlas: helper of `gordon`. -/
+/-- `𝔼⟨c, G⟩² = ∑ᵢⱼ cᵢⱼ²`: the case `u = v` of `integral_linForm_mul_two_gaussianMatrix`.
+Ported from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_integral_lin_sq`).
+Atlas: helper of `gordon`. -/
 theorem integral_linForm_sq_gaussianMatrix {p m : ℕ} (c : Fin p → Fin m → ℝ) :
     ∫ G, linForm c G ^ 2 ∂(gaussianMatrix p m) = ∑ i, ∑ j, c i j ^ 2 := by
-  have hexp : ∀ G : Fin p → Fin m → ℝ, linForm c G ^ 2 =
-      ∑ i, ∑ k, ∑ j, ∑ l, c i j * c k l * (G i j * G k l) := by
-    intro G
-    unfold linForm
-    rw [sq, Finset.sum_mul_sum]
-    refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun k _ => ?_
-    rw [Finset.sum_mul_sum]
-    refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun l _ => ?_
-    ring
-  simp_rw [hexp]
-  rw [integral_finsetSum _ fun i _ => integrable_finsetSum _ fun k _ =>
-    integrable_finsetSum _ fun j _ => integrable_finsetSum _ fun l _ =>
-    integrable_const_mul_gaussianMatrix_entry_mul i k j l _]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  rw [integral_finsetSum _ fun k _ =>
-    integrable_finsetSum _ fun j _ => integrable_finsetSum _ fun l _ =>
-    integrable_const_mul_gaussianMatrix_entry_mul i k j l _]
-  rw [Finset.sum_eq_single i]
-  · rw [integral_finsetSum _ fun j _ => integrable_finsetSum _ fun l _ =>
-      integrable_const_mul_gaussianMatrix_entry_mul i i j l _]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    rw [integral_finsetSum _ fun l _ => integrable_const_mul_gaussianMatrix_entry_mul i i j l _]
-    rw [Finset.sum_eq_single j]
-    · rw [integral_const_mul, integral_gaussianMatrix_entry_mul]; simp [sq]
-    · intro l _ hl
-      rw [integral_const_mul, integral_gaussianMatrix_entry_mul]; simp [Ne.symm hl]
-    · simp
-  · intro k _ hk
-    rw [integral_finsetSum _ fun j _ => integrable_finsetSum _ fun l _ =>
-      integrable_const_mul_gaussianMatrix_entry_mul i k j l _]
-    refine Finset.sum_eq_zero fun j _ => ?_
-    rw [integral_finsetSum _ fun l _ => integrable_const_mul_gaussianMatrix_entry_mul i k j l _]
-    refine Finset.sum_eq_zero fun l _ => ?_
-    rw [integral_const_mul, integral_gaussianMatrix_entry_mul]; simp [Ne.symm hk]
-  · simp
+  simp only [sq]
+  exact integral_linForm_mul_two_gaussianMatrix c c
 
 /-- `⟨c, G⟩ ∈ L²`. Ported from Prove2me solution
 `GaussianMatrix.spectral_second_moment_bound` (helper `ssb_memLp_lin`). Atlas: helper of

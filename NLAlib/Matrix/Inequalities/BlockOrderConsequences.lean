@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Inequalities.BlockStrictContraction
+import NLAlib.Matrix.Functions.HermitianCalculus
 import Mathlib.Data.Matrix.ColumnRowPartitioned
 
 /-!
@@ -15,22 +16,6 @@ open Matrix
 open scoped MatrixOrder Matrix.Norms.L2Operator
 namespace NLAlib
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-
-omit [DecidableEq m] [DecidableEq n] in
-/-- The direct sum of two PSD real matrices is PSD. Horn--Johnson (2013),
-Section 7.7; helper for equal-diagonal block order. -/
-theorem fromBlocks_zero_posSemidef {A : Matrix m m ℝ} {C : Matrix n n ℝ}
-    (hA : A.PosSemidef) (hC : C.PosSemidef) :
-    (fromBlocks A 0 0 C).PosSemidef := by
-  apply Matrix.PosSemidef.of_dotProduct_mulVec_nonneg (hA.isHermitian.fromBlocks (by simp) hC.isHermitian)
-  intro z
-  have hz : z = Sum.elim (z ∘ Sum.inl) (z ∘ Sum.inr) := by ext i; cases i <;> rfl
-  rw [hz]
-  simpa only [star_trivial, Matrix.fromBlocks_mulVec, Function.comp_def,
-    Sum.elim_inl, Sum.elim_inr, Matrix.zero_mulVec, add_zero, zero_add,
-    sumElim_dotProduct_sumElim] using
-    add_nonneg (hA.dotProduct_mulVec_nonneg (z ∘ Sum.inl))
-      (hC.dotProduct_mulVec_nonneg (z ∘ Sum.inr))
 
 omit [DecidableEq n] in
 /-- For PSD real matrices, a symmetric equal-diagonal block matrix is PSD
@@ -60,7 +45,7 @@ theorem posSemidef_equal_diagonal_fromBlocks_iff_le
         Matrix.transpose_one, Matrix.fromRows_mul, Matrix.one_mul,
         Matrix.fromRows_mul_fromCols] at h
       simpa only [Matrix.mul_one] using h
-    have hDiag := fromBlocks_zero_posSemidef (Matrix.le_iff.mp hBA) (Matrix.le_iff.mp hBA)
+    have hDiag := posSemidef_fromBlocks_diag (Matrix.le_iff.mp hBA) (Matrix.le_iff.mp hBA)
     convert hEq.add hDiag using 1
     ext i j
     cases i <;> cases j <;> simp [Matrix.fromBlocks]

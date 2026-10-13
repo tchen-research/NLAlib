@@ -97,11 +97,12 @@ theorem sum_range_rpow_le_of_nonneg_of_prod_le (x y : ℕ → ℝ) {r : ℕ}
 
 /-- Horn's full singular-value product inequality implies every positive
 power-sum prefix comparison, including rank-deficient matrices and all padded
-prefixes. Horn–Johnson (1991), §3.3; Bhatia (1997), §IV.2.
+prefixes, for arbitrary finite compatible index types (empty shapes included).
+Horn–Johnson (1991), §3.3; Bhatia (1997), §IV.2.
 atlas: horn-product-inequality (partial) -/
-theorem sum_range_singularValues_mul_rpow_le {m n q : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) (B : Matrix (Fin n) (Fin q) ℝ)
-    (N : ℕ) {p : ℝ} (hp : 0 < p) :
+theorem sum_range_singularValues_mul_rpow_le {m n q : Type*}
+    [Fintype m] [Fintype n] [Fintype q] [DecidableEq n] [DecidableEq q]
+    (A : Matrix m n ℝ) (B : Matrix n q ℝ) (N : ℕ) {p : ℝ} (hp : 0 < p) :
     (∑ i ∈ Finset.range N, singularValues (A * B) i ^ p) ≤
       ∑ i ∈ Finset.range N, (singularValues A i * singularValues B i) ^ p := by
   apply sum_range_rpow_le_of_nonneg_of_prod_le
@@ -113,24 +114,5 @@ theorem sum_range_singularValues_mul_rpow_le {m n q : ℕ}
     (fun i j hij => mul_le_mul (singularValues_antitone A hij) (singularValues_antitone B hij)
       (singularValues_nonneg B j) (singularValues_nonneg A i))
     (prod_singularValues_mul_le A B) N hp
-
-/-- The full positive-power Horn prefix comparison in native linear-map
-singular values, for arbitrary finite compatible matrix indices. All padded
-prefixes, empty shapes and rank defects are included.
-atlas: horn-product-inequality (partial) -/
-theorem sum_range_toEuclideanLin_singularValues_mul_rpow_le {m n q : Type*}
-    [Fintype m] [Fintype n] [Fintype q] [DecidableEq n] [DecidableEq q]
-    (A : Matrix m n ℝ) (B : Matrix n q ℝ) (N : ℕ) {p : ℝ} (hp : 0 < p) :
-    (∑ i ∈ Finset.range N, (A * B).toEuclideanLin.singularValues i ^ p) ≤
-      ∑ i ∈ Finset.range N, (A.toEuclideanLin.singularValues i * B.toEuclideanLin.singularValues i) ^ p := by
-  let em := Fintype.equivFin m
-  let en := Fintype.equivFin n
-  let eq := Fintype.equivFin q
-  have h := sum_range_singularValues_mul_rpow_le (A.reindex em en) (B.reindex en eq) N hp
-  have hmul : A.reindex em en * B.reindex en eq = (A * B).reindex em eq := by
-    simpa only [Matrix.reindex_apply] using Matrix.submatrix_mul_equiv A B em.symm en.symm eq.symm
-  rw [hmul] at h
-  simp only [em, en, eq, singularValues_reindex] at h
-  exact h
 
 end NLAlib

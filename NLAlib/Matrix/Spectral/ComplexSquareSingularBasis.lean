@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Subspaces.ComplexGramIsometry
+import NLAlib.Matrix.Spectral.SVD
 import Mathlib.Analysis.InnerProductSpace.SingularValues
 
 /-!
@@ -22,7 +23,7 @@ theorem exists_unitary_conjTranspose_mul_mul_eq_diagonal_singularValues
     {n : Type*} [Fintype n] [DecidableEq n] (A : Matrix n n ℂ) :
     ∃ V W : Matrix.unitaryGroup n ℂ,
       (V : Matrix n n ℂ)ᴴ * A * (W : Matrix n n ℂ) = Matrix.diagonal
-        (fun i => (A.toEuclideanLin.singularValues ((Fintype.equivFin n) i) : ℂ)) := by
+        (fun i => (singularValues A ((Fintype.equivFin n) i) : ℂ)) := by
   let a := A.toEuclideanLin
   let h := a.isSymmetric_adjoint_comp_self
   have hdim : finrank ℂ (EuclideanSpace ℂ n) = Fintype.card n := finrank_euclideanSpace
@@ -71,5 +72,6 @@ theorem exists_unitary_conjTranspose_mul_mul_eq_diagonal_singularValues
   rw [Matrix.mul_assoc, ← hV, ← Matrix.mul_assoc,
     show (V : Matrix n n ℂ)ᴴ * (V : Matrix n n ℂ) = 1 from Unitary.coe_star_mul_self V,
     Matrix.one_mul]
+  rfl
 
 end NLAlib

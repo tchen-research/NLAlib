@@ -25,24 +25,24 @@ theorem schattenNorm_mul_le_mul_specNorm (A : Matrix m n ℝ) (B : Matrix n q �
   let N := max (min (Fintype.card m) (Fintype.card n)) (min (Fintype.card m) (Fintype.card q))
   have hNA : min (Fintype.card m) (Fintype.card n) ≤ N := le_max_left _ _
   have hNAB : min (Fintype.card m) (Fintype.card q) ≤ N := le_max_right _ _
-  have hSA : 0 ≤ ∑ i ∈ Finset.range N, A.toEuclideanLin.singularValues i ^ p :=
-    Finset.sum_nonneg fun i _ => Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p
-  have hpow : (∑ i ∈ Finset.range N, (A * B).toEuclideanLin.singularValues i ^ p) ≤
-      specNorm B ^ p * ∑ i ∈ Finset.range N, A.toEuclideanLin.singularValues i ^ p := by
+  have hSA : 0 ≤ ∑ i ∈ Finset.range N, singularValues A i ^ p :=
+    Finset.sum_nonneg fun i _ => Real.rpow_nonneg (singularValues_nonneg _ i) p
+  have hpow : (∑ i ∈ Finset.range N, singularValues (A * B) i ^ p) ≤
+      specNorm B ^ p * ∑ i ∈ Finset.range N, singularValues A i ^ p := by
     rw [Finset.mul_sum]
     apply Finset.sum_le_sum
     intro i _
     calc
-      _ ≤ (A.toEuclideanLin.singularValues i * specNorm B) ^ p :=
-        Real.rpow_le_rpow (LinearMap.singularValues_nonneg _ i)
+      _ ≤ (singularValues A i * specNorm B) ^ p :=
+        Real.rpow_le_rpow (singularValues_nonneg _ i)
           (singularValues_mul_le_mul_specNorm A B i) hp.le
-      _ = _ := by rw [Real.mul_rpow (LinearMap.singularValues_nonneg _ i) (specNorm_nonneg B)]; ring
+      _ = _ := by rw [Real.mul_rpow (singularValues_nonneg _ i) (specNorm_nonneg B)]; ring
   rw [schattenNorm_eq_sum_range_rpow_of_min_le (A * B) hNAB hp,
     schattenNorm_eq_sum_range_rpow_of_min_le A hNA hp]
   calc
-    _ ≤ (specNorm B ^ p * ∑ i ∈ Finset.range N, A.toEuclideanLin.singularValues i ^ p) ^ (1 / p) :=
+    _ ≤ (specNorm B ^ p * ∑ i ∈ Finset.range N, singularValues A i ^ p) ^ (1 / p) :=
       Real.rpow_le_rpow (Finset.sum_nonneg fun i _ =>
-        Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p) hpow (by positivity)
+        Real.rpow_nonneg (singularValues_nonneg _ i) p) hpow (by positivity)
     _ = _ := by
       rw [Real.mul_rpow (Real.rpow_nonneg (specNorm_nonneg B) p) hSA, one_div,
         Real.rpow_rpow_inv (specNorm_nonneg B) hp.ne', mul_comm]
@@ -54,24 +54,24 @@ theorem schattenNorm_mul_le_specNorm_mul (A : Matrix m n ℝ) (B : Matrix n q �
   let N := max (min (Fintype.card n) (Fintype.card q)) (min (Fintype.card m) (Fintype.card q))
   have hNB : min (Fintype.card n) (Fintype.card q) ≤ N := le_max_left _ _
   have hNAB : min (Fintype.card m) (Fintype.card q) ≤ N := le_max_right _ _
-  have hSB : 0 ≤ ∑ i ∈ Finset.range N, B.toEuclideanLin.singularValues i ^ p :=
-    Finset.sum_nonneg fun i _ => Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p
-  have hpow : (∑ i ∈ Finset.range N, (A * B).toEuclideanLin.singularValues i ^ p) ≤
-      specNorm A ^ p * ∑ i ∈ Finset.range N, B.toEuclideanLin.singularValues i ^ p := by
+  have hSB : 0 ≤ ∑ i ∈ Finset.range N, singularValues B i ^ p :=
+    Finset.sum_nonneg fun i _ => Real.rpow_nonneg (singularValues_nonneg _ i) p
+  have hpow : (∑ i ∈ Finset.range N, singularValues (A * B) i ^ p) ≤
+      specNorm A ^ p * ∑ i ∈ Finset.range N, singularValues B i ^ p := by
     rw [Finset.mul_sum]
     apply Finset.sum_le_sum
     intro i _
     calc
-      _ ≤ (specNorm A * B.toEuclideanLin.singularValues i) ^ p :=
-        Real.rpow_le_rpow (LinearMap.singularValues_nonneg _ i)
+      _ ≤ (specNorm A * singularValues B i) ^ p :=
+        Real.rpow_le_rpow (singularValues_nonneg _ i)
           (singularValues_mul_le_specNorm_mul A B i) hp.le
-      _ = _ := Real.mul_rpow (specNorm_nonneg A) (LinearMap.singularValues_nonneg _ i)
+      _ = _ := Real.mul_rpow (specNorm_nonneg A) (singularValues_nonneg _ i)
   rw [schattenNorm_eq_sum_range_rpow_of_min_le (A * B) hNAB hp,
     schattenNorm_eq_sum_range_rpow_of_min_le B hNB hp]
   calc
-    _ ≤ (specNorm A ^ p * ∑ i ∈ Finset.range N, B.toEuclideanLin.singularValues i ^ p) ^ (1 / p) :=
+    _ ≤ (specNorm A ^ p * ∑ i ∈ Finset.range N, singularValues B i ^ p) ^ (1 / p) :=
       Real.rpow_le_rpow (Finset.sum_nonneg fun i _ =>
-        Real.rpow_nonneg (LinearMap.singularValues_nonneg _ i) p) hpow (by positivity)
+        Real.rpow_nonneg (singularValues_nonneg _ i) p) hpow (by positivity)
     _ = _ := by
       rw [Real.mul_rpow (Real.rpow_nonneg (specNorm_nonneg A) p) hSB, one_div,
         Real.rpow_rpow_inv (specNorm_nonneg A) hp.ne']

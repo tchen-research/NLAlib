@@ -54,7 +54,7 @@ theorem forall_invariantNorm_le_iff_weaklyMajorized (A B : Matrix m n ℝ) :
   · intro h ν
     rw [ν.seminorm_eq_toSymmetricGauge_matrixValue A, ν.seminorm_eq_toSymmetricGauge_matrixValue B]
     exact ν.toSymmetricGauge.value_le_of_weaklyMajorized
-      (fun i => LinearMap.singularValues_nonneg _ i) h
+      (fun i => singularValues_nonneg _ i) h
 
 /-- Every invariant norm has a fixed actual symmetric gauge representation,
 valid simultaneously for every matrix of that shape.
@@ -74,11 +74,11 @@ atlas: lidskii (partial) -/
 theorem invariantNorm_rectangularDiagonal_singularValues_add_sub_le
     (ν : OrthogonallyInvariantNorm m n) (A E : Matrix m n ℝ) :
     ν.seminorm (rectangularDiagonalMatrix (fun i : Fin (min (Fintype.card m) (Fintype.card n)) =>
-      (A + E).toEuclideanLin.singularValues i - A.toEuclideanLin.singularValues i)) ≤ ν.seminorm E := by
+      singularValues (A + E) i - singularValues A i)) ≤ ν.seminorm E := by
   let d : Fin (min (Fintype.card m) (Fintype.card n)) → ℝ := fun i =>
-    (A + E).toEuclideanLin.singularValues i - A.toEuclideanLin.singularValues i
+    singularValues (A + E) i - singularValues A i
   have h := ν.toSymmetricGauge.value_le_of_weaklyMajorized
-    (fun i => abs_nonneg (d i)) (weaklyMajorized_abs_toEuclideanLin_singularValues_add_sub A E)
+    (fun i => abs_nonneg (d i)) (weaklyMajorized_abs_singularValues_add_sub A E)
   change ν.toSymmetricGauge.value (fun i => |d i|) ≤ ν.toSymmetricGauge.matrixValue E at h
   rw [ν.toSymmetricGauge.value_abs, ν.value_toSymmetricGauge,
     ← ν.seminorm_eq_toSymmetricGauge_matrixValue E] at h

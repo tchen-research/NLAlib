@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.TraceYoung
+import NLAlib.Matrix.Functions.TraceYoung
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 /-!
 # Closing a polynomial trace moment recursion

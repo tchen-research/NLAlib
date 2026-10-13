@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.TracePowers
+import NLAlib.Matrix.Functions.TracePowers
 import Mathlib.Analysis.Matrix.PosDef
 
 /-!

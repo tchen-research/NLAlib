@@ -1,4 +1,4 @@
-import NLAlib.Matrix.OperatorTheory.Basic
+import NLAlib.Matrix.Functions.Basic
 /-!
 # Hermitian unitary dilation of an isometry
 

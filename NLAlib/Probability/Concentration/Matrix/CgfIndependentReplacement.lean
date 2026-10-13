@@ -1,5 +1,5 @@
 import NLAlib.Probability.Concentration.Matrix.ProbabilisticLieb
-import NLAlib.Matrix.OperatorTheory.TraceExpConvex
+import NLAlib.Matrix.Functions.TraceExpConvex
 import Mathlib.Probability.Independence.Basic
 
 /-!

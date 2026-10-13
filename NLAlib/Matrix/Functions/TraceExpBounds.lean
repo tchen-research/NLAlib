@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.TraceExpMonotone
+import NLAlib.Matrix.Functions.TraceExpMonotone
 import NLAlib.Matrix.Functions.UnitaryCalculus
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 import NLAlib.ForMathlib.Analysis.Matrix.Order

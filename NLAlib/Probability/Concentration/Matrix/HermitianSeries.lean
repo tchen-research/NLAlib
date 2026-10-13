@@ -2,7 +2,7 @@ import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.GaussianMgfCgf
 import NLAlib.Probability.Concentration.Matrix.RademacherMgfCgf
 import NLAlib.Probability.SubGaussian.EvenMoments
-import NLAlib.Matrix.Inequalities.TraceExpMonotone
+import NLAlib.Matrix.Functions.TraceExpMonotone
 import NLAlib.Matrix.Functions.TraceExpBounds
 /-!
 # Theorem 4.6.1 — Hermitian series with sub-Gaussian coefficients

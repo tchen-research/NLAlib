@@ -16,7 +16,7 @@ Exit 1 on any hit. `python3 scripts/check_norms.py [paths…]`.
 import re, sys, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-EXEMPT = ("NLAlib/Matrix/Functions/", "NLAlib/Matrix/OperatorTheory/", "NLAlib/ForMathlib/",
+EXEMPT = ("NLAlib/Matrix/Functions/", "NLAlib/ForMathlib/",
           "NLAlib/Sketching/Sparse/")  # Sparse: frozen quarry (F3)
 BRIDGES = {"NLAlib/Matrix/Norms/Core.lean", "NLAlib/Matrix/Norms/Frobenius.lean"}
 SIG_START = re.compile(r"^(?:@\[[^\]]*\]\s*)?(?:private |protected |noncomputable )*(theorem|lemma|def|abbrev|instance|structure)\b")

@@ -49,7 +49,7 @@ From `v0.1` on, retain a deprecated alias for one release before removal.
 - Layers (a module imports only its own layer and lower; `scripts/check_layers.py`):
   −1 `ForMathlib` · 0 `Matrix`, `Polynomial` · 1 `Probability`, `Krylov` · 2 `RandomMatrix` · 3 `Sketching` ·
   4 `LowRank`, `Estimation` · 5 `Solvers`. Each top-level directory is split into topic subdirectories
-  (`Matrix/{Basic,Norms,Spectral,Subspaces,Factorizations,Perturbation,Inequalities,OperatorTheory,
+  (`Matrix/{Basic,Norms,Spectral,Subspaces,Factorizations,Perturbation,Inequalities,
   Functions,Structured,Calculus}`, `Probability/{Gaussian,Concentration,…}`, `RandomMatrix/{Gaussian,…}`,
   …); content files live in those subdirectories and every `<Dir>.lean` is a
   generated aggregator, never edited by hand: after creating, moving or deleting a file run
@@ -67,6 +67,12 @@ From `v0.1` on, retain a deprecated alias for one release before removal.
   for upstreaming (real inequalities, integrability of finite suprema, measure-preserving
   coordinate updates, `det ≠ 0` from full rank). Files are named after the Mathlib directory they
   would land in (`ForMathlib/Analysis/Real.lean`, `ForMathlib/MeasureTheory/Integral.lean`).
+- `Matrix/Functions/` is the deterministic matrix-function theory: functional calculus,
+  exponential/logarithm, operator monotonicity/convexity, perspectives, entropy, and trace-function
+  inequalities (including Golden–Thompson and Lieb). Probability-specific expectations, MGFs,
+  independence, martingales and tail bounds live under `Probability/Concentration/` and import
+  this theory. Place results by their mathematical subject, not the paper or application that
+  first needed them; do not create another operator-theory directory beside matrix functions.
 - The spectral core (`Matrix/Norms/{Frobenius,Core}`, `Matrix/Subspaces/Projections`,
   `Matrix/Basic/{Pseudoinverse,PenroseIdentities,MoorePenrose*,QuadForm}`,
   `Matrix/Spectral/{Core,SVD,CourantFischer,Weyl,EckartYoung}`, `Matrix/Inequalities/Mirsky`) is
@@ -130,8 +136,8 @@ From `v0.1` on, retain a deprecated alias for one release before removal.
   `schattenNorm_eq_of_ne_top` and `schattenNorm_ofReal` connect the main interface to this
   formula. Use the main interface for endpoint-inclusive statements. Retain bundled adapters
   such as `schattenSeminorm` and `schattenInvariantNorm` for Mathlib's generic norm APIs. The
-  notation `‖A‖` applied to a matrix appears in statements only in `Matrix/Functions/`,
-  `Matrix/OperatorTheory/` (C*-algebra and CFC files, under a file-level
+  notation `‖A‖` applied to a matrix appears in statements only in `Matrix/Functions/`
+  (C*-algebra and CFC files, under a file-level
   `open scoped Matrix.Norms.L2Operator`), in `ForMathlib/`, and in the two bridge lemmas
   `specNorm_eq_norm` (L2Operator scope) and `frobNorm_eq_norm` (Frobenius scope). No other file
   opens a `Matrix.Norms.*` scope at file level; a proof that needs Mathlib's normed API writes

@@ -1,6 +1,6 @@
-import NLAlib.Matrix.OperatorTheory.LiebConcavity
+import NLAlib.Matrix.Functions.LiebConcavity
 import NLAlib.Matrix.Functions.UnitaryCalculus
-import NLAlib.Matrix.OperatorTheory.CoordinatePinching
+import NLAlib.Matrix.Functions.CoordinatePinching
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 /-!
 # Golden–Thompson via finite pinching

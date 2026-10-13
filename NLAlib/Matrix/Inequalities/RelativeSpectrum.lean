@@ -1,6 +1,6 @@
 import NLAlib.Matrix.Spectral.DefiniteCongruence
 import NLAlib.Matrix.Spectral.CourantFischer
-import NLAlib.Matrix.OperatorTheory.LoewnerHeinz
+import NLAlib.Matrix.Functions.LoewnerHeinz
 /-!
 # Relative spectrum and Loewner order
 

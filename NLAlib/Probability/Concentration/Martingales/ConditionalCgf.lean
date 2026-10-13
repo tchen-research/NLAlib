@@ -1,5 +1,5 @@
 import NLAlib.Probability.Concentration.Matrix.BernsteinMgfCgf
-import NLAlib.Matrix.OperatorTheory.LiebTraceFunction
+import NLAlib.Matrix.Functions.LiebTraceFunction
 import NLAlib.ForMathlib.MeasureTheory.MatrixConditionalExpectation
 /-!
 # One-sided conditional matrix Bernstein cumulant bounds

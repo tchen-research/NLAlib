@@ -10421,7 +10421,7 @@
   "name":
   "NLAlib.OperatorConvexOn",
   "module":
-  "NLAlib.Matrix.OperatorTheory.Basic",
+  "NLAlib.Matrix.Functions.Basic",
   "line":
   34,
   "kind":
@@ -10441,7 +10441,7 @@
   "name":
   "NLAlib.OperatorConvexOn.cfc_conjTranspose_mul_mul_le",
   "module":
-  "NLAlib.Matrix.OperatorTheory.JensenIsometricCompression",
+  "NLAlib.Matrix.Functions.JensenIsometricCompression",
   "line":
   104,
   "kind":
@@ -57101,7 +57101,7 @@
   "name":
   "NLAlib.cfc_log_le_cfc_log",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+  "NLAlib.Matrix.Functions.LoewnerHeinz",
   "line":
   61,
   "kind":
@@ -57161,7 +57161,7 @@
   "name":
   "NLAlib.cfc_rpow_le_cfc_rpow",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+  "NLAlib.Matrix.Functions.LoewnerHeinz",
   "line":
   31,
   "kind":
@@ -61776,7 +61776,7 @@
   "name":
   "NLAlib.concaveOn_cfc_rpow",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+  "NLAlib.Matrix.Functions.LoewnerHeinz",
   "line":
   73,
   "kind":
@@ -62187,7 +62187,7 @@
   "name":
   "NLAlib.conjTranspose_coordinateReflection",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   27,
   "kind":
@@ -62592,7 +62592,7 @@
   "name":
   "NLAlib.continuousOn_traceExp_add_matrixLog",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LiebTraceFunction",
+  "NLAlib.Matrix.Functions.LiebTraceFunction",
   "line":
   23,
   "kind":
@@ -63015,7 +63015,7 @@
   "name":
   "NLAlib.convexOn_relativeEntropy",
   "module":
-  "NLAlib.Matrix.OperatorTheory.EntropyJointConvex",
+  "NLAlib.Matrix.Functions.EntropyJointConvex",
   "line":
   49,
   "kind":
@@ -63056,7 +63056,7 @@
   "name":
   "NLAlib.convexOn_traceExp_isHermitian",
   "module":
-  "NLAlib.Matrix.OperatorTheory.TraceExpConvex",
+  "NLAlib.Matrix.Functions.TraceExpConvex",
   "line":
   22,
   "kind":
@@ -63116,7 +63116,7 @@
   "name":
   "NLAlib.convex_setOf_posDef",
   "module":
-  "NLAlib.Matrix.Inequalities.LogDetConcavity",
+  "NLAlib.Matrix.Functions.LogDetConcavity",
   "line":
   18,
   "kind":
@@ -63136,7 +63136,7 @@
   "name":
   "NLAlib.convex_set_isHermitian",
   "module":
-  "NLAlib.Matrix.OperatorTheory.TraceExpConvex",
+  "NLAlib.Matrix.Functions.TraceExpConvex",
   "line":
   15,
   "kind":
@@ -63258,7 +63258,7 @@
   "name":
   "NLAlib.coordinatePinch",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   53,
   "kind":
@@ -63278,7 +63278,7 @@
   "name":
   "NLAlib.coordinatePinch_apply",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   59,
   "kind":
@@ -63298,7 +63298,7 @@
   "name":
   "NLAlib.coordinatePinched",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   73,
   "kind":
@@ -63318,7 +63318,7 @@
   "name":
   "NLAlib.coordinatePinched_apply_self",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   108,
   "kind":
@@ -63338,7 +63338,7 @@
   "name":
   "NLAlib.coordinatePinched_empty",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   79,
   "kind":
@@ -63359,7 +63359,7 @@
   "name":
   "NLAlib.coordinatePinched_insert",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   86,
   "kind":
@@ -63379,7 +63379,7 @@
   "name":
   "NLAlib.coordinatePinched_univ",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   98,
   "kind":
@@ -63399,7 +63399,7 @@
   "name":
   "NLAlib.coordinateReflection",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   21,
   "kind":
@@ -63419,7 +63419,7 @@
   "name":
   "NLAlib.coordinateReflection_mul_diagonal_mul",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   44,
   "kind":
@@ -63439,7 +63439,7 @@
   "name":
   "NLAlib.coordinateReflection_mul_self",
   "module":
-  "NLAlib.Matrix.OperatorTheory.CoordinatePinching",
+  "NLAlib.Matrix.Functions.CoordinatePinching",
   "line":
   36,
   "kind":
@@ -65431,7 +65431,7 @@
   "name":
   "NLAlib.det_rpow_mul_le_det_smul_add",
   "module":
-  "NLAlib.Matrix.Inequalities.LogDetConcavity",
+  "NLAlib.Matrix.Functions.LogDetConcavity",
   "line":
   113,
   "kind":
@@ -65471,7 +65471,7 @@
   "name":
   "NLAlib.det_smul_add_eq_rpow_mul_iff",
   "module":
-  "NLAlib.Matrix.Inequalities.LogDetConcavity",
+  "NLAlib.Matrix.Functions.LogDetConcavity",
   "line":
   121,
   "kind":
@@ -82947,7 +82947,7 @@
   "name":
   "NLAlib.generalized_klein",
   "module":
-  "NLAlib.Matrix.OperatorTheory.GeneralizedKlein",
+  "NLAlib.Matrix.Functions.GeneralizedKlein",
   "line":
   45,
   "kind":
@@ -83845,7 +83845,7 @@
   "name":
   "NLAlib.golden_thompson",
   "module":
-  "NLAlib.Matrix.OperatorTheory.GoldenThompson",
+  "NLAlib.Matrix.Functions.GoldenThompson",
   "line":
   137,
   "kind":
@@ -83865,7 +83865,7 @@
   "name":
   "NLAlib.golden_thompson_trace",
   "module":
-  "NLAlib.Matrix.OperatorTheory.GoldenThompson",
+  "NLAlib.Matrix.Functions.GoldenThompson",
   "line":
   170,
   "kind":
@@ -99158,7 +99158,7 @@
   "name":
   "NLAlib.inv_le_inv_of_posDef",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+  "NLAlib.Matrix.Functions.LoewnerHeinz",
   "line":
   48,
   "kind":
@@ -100868,7 +100868,7 @@
   "name":
   "NLAlib.isGreatest_variational_trace",
   "module":
-  "NLAlib.Matrix.OperatorTheory.VariationalTrace",
+  "NLAlib.Matrix.Functions.VariationalTrace",
   "line":
   16,
   "kind":
@@ -100890,7 +100890,7 @@
   "name":
   "NLAlib.isGreatest_variational_traceExp",
   "module":
-  "NLAlib.Matrix.OperatorTheory.VariationalTraceExp",
+  "NLAlib.Matrix.Functions.VariationalTraceExp",
   "line":
   17,
   "kind":
@@ -103286,7 +103286,7 @@
   "name":
   "NLAlib.isometry_reflection_identities",
   "module":
-  "NLAlib.Matrix.OperatorTheory.JensenReflectionAlgebra",
+  "NLAlib.Matrix.Functions.JensenReflectionAlgebra",
   "line":
   15,
   "kind":
@@ -103591,7 +103591,7 @@
   "name":
   "NLAlib.jointTensorEval",
   "module":
-  "NLAlib.Matrix.OperatorTheory.JointTensor",
+  "NLAlib.Matrix.Functions.JointTensor",
   "line":
   34,
   "kind":
@@ -103611,7 +103611,7 @@
   "name":
   "NLAlib.jointTensorLeft",
   "module":
-  "NLAlib.Matrix.OperatorTheory.JointTensor",
+  "NLAlib.Matrix.Functions.JointTensor",
   "line":
   18,
   "kind":
@@ -103631,7 +103631,7 @@
   "name":
   "NLAlib.jointTensorRight",
   "module":
-  "NLAlib.Matrix.OperatorTheory.JointTensor",
+  "NLAlib.Matrix.Functions.JointTensor",
   "line":
   24,
   "kind":
@@ -103651,7 +103651,7 @@
   "name":
   "NLAlib.jointTensorVec",
   "module":
-  "NLAlib.Matrix.OperatorTheory.JointTensor",
+  "NLAlib.Matrix.Functions.JointTensor",
   "line":
   30,
   "kind":
@@ -106739,7 +106739,7 @@
   "name":
   "NLAlib.lieb_concavity",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LiebConcavity",
+  "NLAlib.Matrix.Functions.LiebConcavity",
   "line":
   52,
   "kind":
@@ -107164,7 +107164,7 @@
   "name":
   "NLAlib.loewner_heinz_real",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+  "NLAlib.Matrix.Functions.LoewnerHeinz",
   "line":
   105,
   "kind":
@@ -107224,7 +107224,7 @@
   "name":
   "NLAlib.log_det_smul_add_eq_iff",
   "module":
-  "NLAlib.Matrix.Inequalities.LogDetConcavity",
+  "NLAlib.Matrix.Functions.LogDetConcavity",
   "line":
   78,
   "kind":
@@ -107244,7 +107244,7 @@
   "name":
   "NLAlib.log_det_smul_add_ge",
   "module":
-  "NLAlib.Matrix.Inequalities.LogDetConcavity",
+  "NLAlib.Matrix.Functions.LogDetConcavity",
   "line":
   70,
   "kind":
@@ -108570,7 +108570,7 @@
   "name":
   "NLAlib.matrixPerspective",
   "module":
-  "NLAlib.Matrix.OperatorTheory.Basic",
+  "NLAlib.Matrix.Functions.Basic",
   "line":
   48,
   "kind":
@@ -108591,7 +108591,7 @@
   "name":
   "NLAlib.matrixPerspective_jointly_operatorConvex",
   "module":
-  "NLAlib.Matrix.OperatorTheory.PerspectiveConvex",
+  "NLAlib.Matrix.Functions.PerspectiveConvex",
   "line":
   19,
   "kind":
@@ -116334,7 +116334,7 @@
   "name":
   "NLAlib.nat_mul_mul_re_trace_mul_pow_le",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceYoung",
+  "NLAlib.Matrix.Functions.TraceYoung",
   "line":
   122,
   "kind":
@@ -119507,7 +119507,7 @@
   "name":
   "NLAlib.operatorConvexOn_neg_log",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LogOperatorConcave",
+  "NLAlib.Matrix.Functions.LogOperatorConcave",
   "line":
   16,
   "kind":
@@ -119527,7 +119527,7 @@
   "name":
   "NLAlib.operator_jensen",
   "module":
-  "NLAlib.Matrix.OperatorTheory.OperatorJensen",
+  "NLAlib.Matrix.Functions.OperatorJensen",
   "line":
   18,
   "kind":
@@ -121682,7 +121682,7 @@
   "name":
   "NLAlib.posDef_of_posDef_le",
   "module":
-  "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+  "NLAlib.Matrix.Functions.LoewnerHeinz",
   "line":
   20,
   "kind":
@@ -127086,7 +127086,7 @@
   "name":
   "NLAlib.re_trace_diagonal_mul_conj_diagonal",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceYoung",
+  "NLAlib.Matrix.Functions.TraceYoung",
   "line":
   40,
   "kind":
@@ -127146,7 +127146,7 @@
   "name":
   "NLAlib.re_trace_mul_diagonal_pow_mul_le",
   "module":
-  "NLAlib.Matrix.Inequalities.TracePowers",
+  "NLAlib.Matrix.Functions.TracePowers",
   "line":
   79,
   "kind":
@@ -127166,7 +127166,7 @@
   "name":
   "NLAlib.re_trace_mul_diagonal_pow_mul_mul_diagonal_pow",
   "module":
-  "NLAlib.Matrix.Inequalities.TracePowers",
+  "NLAlib.Matrix.Functions.TracePowers",
   "line":
   35,
   "kind":
@@ -127186,7 +127186,7 @@
   "name":
   "NLAlib.re_trace_mul_pow_mul_le_trace_sq_mul_pow",
   "module":
-  "NLAlib.Matrix.Inequalities.TracePowers",
+  "NLAlib.Matrix.Functions.TracePowers",
   "line":
   123,
   "kind":
@@ -127226,7 +127226,7 @@
   "name":
   "NLAlib.re_trace_pow_eq_sum_eigenvalues_pow",
   "module":
-  "NLAlib.Matrix.Inequalities.TracePowers",
+  "NLAlib.Matrix.Functions.TracePowers",
   "line":
   21,
   "kind":
@@ -127246,7 +127246,7 @@
   "name":
   "NLAlib.re_trace_pow_mul_pow_eq_sum_overlap",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceYoung",
+  "NLAlib.Matrix.Functions.TraceYoung",
   "line":
   68,
   "kind":
@@ -127266,7 +127266,7 @@
   "name":
   "NLAlib.re_trace_pow_nonneg_of_even",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceYoung",
+  "NLAlib.Matrix.Functions.TraceYoung",
   "line":
   108,
   "kind":
@@ -127286,7 +127286,7 @@
   "name":
   "NLAlib.re_trace_pow_nonneg_of_posSemidef",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceYoung",
+  "NLAlib.Matrix.Functions.TraceYoung",
   "line":
   115,
   "kind":
@@ -127306,7 +127306,7 @@
   "name":
   "NLAlib.re_trace_sub_mul_sub_pow_le",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceMeanValue",
+  "NLAlib.Matrix.Functions.TraceMeanValue",
   "line":
   40,
   "kind":
@@ -127326,7 +127326,7 @@
   "name":
   "NLAlib.re_trace_sub_sq_mul_pow",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceMeanValue",
+  "NLAlib.Matrix.Functions.TraceMeanValue",
   "line":
   19,
   "kind":
@@ -128335,7 +128335,7 @@
   "name":
   "NLAlib.relativeEntropy",
   "module":
-  "NLAlib.Matrix.OperatorTheory.Basic",
+  "NLAlib.Matrix.Functions.Basic",
   "line":
   22,
   "kind":
@@ -128356,7 +128356,7 @@
   "name":
   "NLAlib.relativeEntropy_complex",
   "module":
-  "NLAlib.Matrix.OperatorTheory.Basic",
+  "NLAlib.Matrix.Functions.Basic",
   "line":
   29,
   "kind":
@@ -128380,7 +128380,7 @@
   "name":
   "NLAlib.relativeEntropy_eq_jointTensorEval_sub_trace",
   "module":
-  "NLAlib.Matrix.OperatorTheory.JointTensorRepresentation",
+  "NLAlib.Matrix.Functions.JointTensorRepresentation",
   "line":
   251,
   "kind":
@@ -128400,7 +128400,7 @@
   "name":
   "NLAlib.relativeEntropy_nonneg",
   "module":
-  "NLAlib.Matrix.OperatorTheory.EntropyNonnegative",
+  "NLAlib.Matrix.Functions.EntropyNonnegative",
   "line":
   18,
   "kind":
@@ -135391,7 +135391,7 @@
   "name":
   "NLAlib.specNorm_pow_two_mul_le_trace_pow",
   "module":
-  "NLAlib.Matrix.Spectral.TracePowerBounds",
+  "NLAlib.Matrix.Functions.TracePowerBounds",
   "line":
   34,
   "kind":
@@ -138358,7 +138358,7 @@
   "name":
   "NLAlib.strictConcaveOn_log_det",
   "module":
-  "NLAlib.Matrix.Inequalities.LogDetConcavity",
+  "NLAlib.Matrix.Functions.LogDetConcavity",
   "line":
   29,
   "kind":
@@ -138378,7 +138378,7 @@
   "name":
   "NLAlib.strictConvexOn_trace_inv",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceInverseConvexity",
+  "NLAlib.Matrix.Functions.TraceInverseConvexity",
   "line":
   17,
   "kind":
@@ -141058,7 +141058,7 @@
   "name":
   "NLAlib.sum_norm_sq_unitary_col",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceYoung",
+  "NLAlib.Matrix.Functions.TraceYoung",
   "line":
   33,
   "kind":
@@ -141078,7 +141078,7 @@
   "name":
   "NLAlib.sum_norm_sq_unitary_row",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceYoung",
+  "NLAlib.Matrix.Functions.TraceYoung",
   "line":
   21,
   "kind":
@@ -143646,7 +143646,7 @@
   "name":
   "NLAlib.traceExp_add_matrixLog_diagonal_le",
   "module":
-  "NLAlib.Matrix.OperatorTheory.GoldenThompson",
+  "NLAlib.Matrix.Functions.GoldenThompson",
   "line":
   100,
   "kind":
@@ -143668,7 +143668,7 @@
   "name":
   "NLAlib.traceExp_add_matrixLog_le",
   "module":
-  "NLAlib.Matrix.OperatorTheory.GoldenThompson",
+  "NLAlib.Matrix.Functions.GoldenThompson",
   "line":
   187,
   "kind":
@@ -143812,7 +143812,7 @@
   "name":
   "NLAlib.traceExp_le_traceExp",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceExpMonotone",
+  "NLAlib.Matrix.Functions.TraceExpMonotone",
   "line":
   30,
   "kind":
@@ -144558,7 +144558,7 @@
   "name":
   "NLAlib.trace_inv_smul_add_eq_iff",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceInverseConvexity",
+  "NLAlib.Matrix.Functions.TraceInverseConvexity",
   "line":
   78,
   "kind":
@@ -144578,7 +144578,7 @@
   "name":
   "NLAlib.trace_inv_smul_add_le",
   "module":
-  "NLAlib.Matrix.Inequalities.TraceInverseConvexity",
+  "NLAlib.Matrix.Functions.TraceInverseConvexity",
   "line":
   70,
   "kind":
@@ -144878,7 +144878,7 @@
   "name":
   "NLAlib.trace_mul_pow_mul_mul_pow_conjStarAlgAut",
   "module":
-  "NLAlib.Matrix.Inequalities.TracePowers",
+  "NLAlib.Matrix.Functions.TracePowers",
   "line":
   68,
   "kind":
@@ -144958,7 +144958,7 @@
   "name":
   "NLAlib.trace_pow_nonneg_of_even",
   "module":
-  "NLAlib.Matrix.Spectral.TracePowerBounds",
+  "NLAlib.Matrix.Functions.TracePowerBounds",
   "line":
   27,
   "kind":

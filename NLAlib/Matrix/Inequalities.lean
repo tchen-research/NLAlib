@@ -26,7 +26,6 @@ import NLAlib.Matrix.Inequalities.KyFanAttainment
 import NLAlib.Matrix.Inequalities.KyFanNorms
 import NLAlib.Matrix.Inequalities.KyFanSums
 import NLAlib.Matrix.Inequalities.Lidskii
-import NLAlib.Matrix.Inequalities.LogDetConcavity
 import NLAlib.Matrix.Inequalities.Majorization
 import NLAlib.Matrix.Inequalities.MajorizationConvex
 import NLAlib.Matrix.Inequalities.MajorizationHLP
@@ -58,12 +57,7 @@ import NLAlib.Matrix.Inequalities.SeparatingPSDVector
 import NLAlib.Matrix.Inequalities.SingularValueMajorization
 import NLAlib.Matrix.Inequalities.StrictRelativeSpectrum
 import NLAlib.Matrix.Inequalities.SzaszDeterminant
-import NLAlib.Matrix.Inequalities.TraceExpMonotone
-import NLAlib.Matrix.Inequalities.TraceInverseConvexity
-import NLAlib.Matrix.Inequalities.TraceMeanValue
-import NLAlib.Matrix.Inequalities.TracePowers
 import NLAlib.Matrix.Inequalities.TraceTail
-import NLAlib.Matrix.Inequalities.TraceYoung
 import NLAlib.Matrix.Inequalities.VonNeumann
 import NLAlib.Matrix.Inequalities.Wielandt
 

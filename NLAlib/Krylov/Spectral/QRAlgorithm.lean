@@ -61,7 +61,9 @@ theorem add_smul_one_eq_transpose_mul_mul_of_isQR {H Q R : Matrix (Fin n) (Fin n
     (h : IsQR (H - μ • (1 : Matrix (Fin n) (Fin n) ℝ)) Q R) :
     R * Q + μ • (1 : Matrix (Fin n) (Fin n) ℝ) = Qᵀ * H * Q := by
   have hQQ : Qᵀ * Q = 1 := h.orth
-  rw [← h.transpose_mul_eq, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_smul, Matrix.mul_one,
+  have hR : Qᵀ * (H - μ • (1 : Matrix (Fin n) (Fin n) ℝ)) = R := by
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial Q] using h.conjTranspose_mul_eq
+  rw [← hR, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_smul, Matrix.mul_one,
     Matrix.smul_mul, hQQ, sub_add_cancel]
 
 /-! ### The recursion -/

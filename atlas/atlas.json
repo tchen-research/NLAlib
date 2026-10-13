@@ -1507,55 +1507,55 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.relativeEntropy",
-     "module": "NLAlib.Matrix.OperatorTheory.Basic",
+     "module": "NLAlib.Matrix.Functions.Basic",
      "status": "proved",
      "usage": "The matrix relative entropy `D(A; H) = re tr (A (log A - log H) - (A - H))`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.OperatorConvexOn",
-     "module": "NLAlib.Matrix.OperatorTheory.Basic",
+     "module": "NLAlib.Matrix.Functions.Basic",
      "status": "proved",
      "usage": "`f` is operator convex on the convex set `I`: `f (t A + (1-t) H) ≼ t f(A) + (1-t) f(H)` for all Hermitian `A`, `H` of every size with spectra in `I`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.matrixPerspective",
-     "module": "NLAlib.Matrix.OperatorTheory.Basic",
+     "module": "NLAlib.Matrix.Functions.Basic",
      "status": "proved",
      "usage": "The matrix perspective `A^{1/2} f(A^{-1/2} H A^{-1/2}) A^{1/2}`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.generalized_klein",
-     "module": "NLAlib.Matrix.OperatorTheory.GeneralizedKlein",
+     "module": "NLAlib.Matrix.Functions.GeneralizedKlein",
      "status": "proved"
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.lieb_concavity",
-     "module": "NLAlib.Matrix.OperatorTheory.LiebConcavity",
+     "module": "NLAlib.Matrix.Functions.LiebConcavity",
      "status": "proved",
      "usage": "Needs `[NeZero d]`; pass `hH : H.IsHermitian` to get `ConcaveOn ℝ {A | A.PosDef} (fun A => traceExp (H + matrixLog A))`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.operatorConvexOn_neg_log",
-     "module": "NLAlib.Matrix.OperatorTheory.LogOperatorConcave",
+     "module": "NLAlib.Matrix.Functions.LogOperatorConcave",
      "status": "proved",
      "usage": "No arguments; gives `ch8_operatorConvexOn (Set.Ioi 0) (fun x => -Real.log x)` (log is operator concave), ready to feed to `ch8_operator_jensen` or `ch8_perspective_convex`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.operator_jensen",
-     "module": "NLAlib.Matrix.OperatorTheory.OperatorJensen",
+     "module": "NLAlib.Matrix.Functions.OperatorJensen",
      "status": "proved",
      "usage": "Pass `hf : ch8_operatorConvexOn I f`, Hermitian `A₁`, `A₂` with `spectrum ℝ Aᵢ ⊆ I`, and `K₁`, `K₂` with `hK : K₁ᴴ * K₁ + K₂ᴴ * K₂ = 1`; gives `loewnerLE (f (K₁ᴴ A₁ K₁ + K₂ᴴ A₂ K₂)) (K₁ᴴ f(A₁) K₁ + K₂ᴴ f(A₂) K₂)` with `f` applied through `ch8_matrixFunction`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.matrixPerspective_jointly_operatorConvex",
-     "module": "NLAlib.Matrix.OperatorTheory.PerspectiveConvex",
+     "module": "NLAlib.Matrix.Functions.PerspectiveConvex",
      "status": "proved",
      "usage": "Pass `hf : ch8_operatorConvexOn (Set.Ioi 0) f`, positive definite `A₁ A₂ H₁ H₂` and `0 ≤ t ≤ 1`; gives joint operator convexity of `ch8_perspective f` in `loewnerLE` along the segment."
     }
@@ -1639,21 +1639,21 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.golden_thompson",
-     "module": "NLAlib.Matrix.OperatorTheory.GoldenThompson",
+     "module": "NLAlib.Matrix.Functions.GoldenThompson",
      "status": "proved",
      "usage": "Pass Hermitian H,K; gives traceExp(H+K) ≤ re(trace(matrixExp H * matrixExp K)) over any finite index type, including empty matrices."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.golden_thompson_trace",
-     "module": "NLAlib.Matrix.OperatorTheory.GoldenThompson",
+     "module": "NLAlib.Matrix.Functions.GoldenThompson",
      "status": "proved",
      "usage": "Pass Hermitian H,K; gives trace(matrixExp(H+K)) ≤ trace(matrixExp H * matrixExp K) in ComplexOrder, including equality of imaginary parts."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.traceExp_add_matrixLog_le",
-     "module": "NLAlib.Matrix.OperatorTheory.GoldenThompson",
+     "module": "NLAlib.Matrix.Functions.GoldenThompson",
      "status": "proved",
      "usage": "Pass Hermitian H and positive-definite X; gives traceExp(H+matrixLog X) ≤ re(trace(matrixExp H * X)) over any finite index type."
     },
@@ -4713,7 +4713,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.lieb_concavity",
-     "module": "NLAlib.Matrix.OperatorTheory.LiebConcavity",
+     "module": "NLAlib.Matrix.Functions.LiebConcavity",
      "status": "proved",
      "partial": true
     },
@@ -20358,7 +20358,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.cfc_rpow_le_cfc_rpow",
-     "module": "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+     "module": "NLAlib.Matrix.Functions.LoewnerHeinz",
      "status": "proved",
      "partial": true,
      "usage": "The Loewner--Heinz inequality for the actual real symmetric functional calculus, including both exponents zero and one."
@@ -20366,7 +20366,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.inv_le_inv_of_posDef",
-     "module": "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+     "module": "NLAlib.Matrix.Functions.LoewnerHeinz",
      "status": "proved",
      "partial": true,
      "usage": "Inversion reverses Loewner order on positive definite real matrices."
@@ -20374,7 +20374,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.cfc_log_le_cfc_log",
-     "module": "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+     "module": "NLAlib.Matrix.Functions.LoewnerHeinz",
      "status": "proved",
      "partial": true,
      "usage": "The logarithm is operator monotone for positive definite real matrices."
@@ -20382,7 +20382,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.concaveOn_cfc_rpow",
-     "module": "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+     "module": "NLAlib.Matrix.Functions.LoewnerHeinz",
      "status": "proved",
      "partial": true,
      "usage": "Operator concavity of every real power between zero and one on the real positive-semidefinite cone."
@@ -20390,7 +20390,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.loewner_heinz_real",
-     "module": "NLAlib.Matrix.OperatorTheory.LoewnerHeinz",
+     "module": "NLAlib.Matrix.Functions.LoewnerHeinz",
      "status": "proved",
      "usage": "Use the complete contract for löwner–heinz and inverse antitonicity for real symmetric matrices, or apply its documented component declarations for individual clauses."
     }
@@ -21243,7 +21243,7 @@
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
-     "usage": "**Full QR factorization**: `A = QR` with `Q : m × m` orthogonal and `R : m × n` upper trapezoidal."
+     "usage": "Full QR over RCLike: A = Q * R, Q unitary and R upper trapezoidal; no shape or rank restriction."
     },
     {
      "library": "nlalib",
@@ -21255,7 +21255,7 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.transpose_mul_self_eq_of_qr",
+     "decl": "NLAlib.conjTranspose_mul_self_eq_of_qr",
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
@@ -21263,27 +21263,27 @@
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.IsQR.transpose_mul_eq",
+     "decl": "NLAlib.IsQR.conjTranspose_mul_eq",
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
-     "usage": "`Qᵀ A = R`."
+     "usage": "Qᴴ * A = R for thin QR over RCLike."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.IsQR.transpose_mul_self_eq",
+     "decl": "NLAlib.IsQR.conjTranspose_mul_self_eq",
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
-     "usage": "`Aᵀ A = Rᵀ R`: `Rᵀ` is a (Cholesky) triangular factor of the Gram matrix `AᵀA`."
+     "usage": "Aᴴ * A = Rᴴ * R for thin QR, including rank-deficient inputs; no positive-diagonal convention is imposed."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.IsQR.isUnit_transpose_mul_self_iff",
+     "decl": "NLAlib.IsQR.isUnit_conjTranspose_mul_self_iff",
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
-     "usage": "**Full column rank iff nonzero diagonal**: `AᵀA` is invertible iff every `R_ii ≠ 0`."
+     "usage": "Aᴴ * A is invertible iff every diagonal entry of R is nonzero."
     },
     {
      "library": "nlalib",
@@ -21299,7 +21299,7 @@
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
-     "usage": "**Pseudoinverse via QR**: under full column rank (`R_ii ≠ 0`), `(AᵀA)⁻¹Aᵀ = R⁻¹Qᵀ`."
+     "usage": "Under full column rank (nonzero diagonal of R), pinvL A = R⁻¹ * Qᴴ."
     },
     {
      "library": "nlalib",
@@ -21307,15 +21307,15 @@
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
-     "usage": "The Moore–Penrose inverse via QR: under full column rank, `A⁺ = R⁻¹ Qᵀ`."
+     "usage": "Under full column rank (nonzero diagonal of R), A⁺ = R⁻¹ * Qᴴ."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.IsQR.mul_transpose_eq",
+     "decl": "NLAlib.IsQR.mul_conjTranspose_eq",
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
-     "usage": "**`QQᵀ` is the orthogonal projector onto `range A`**: `QQᵀ = AA⁺` under full column rank."
+     "usage": "Under full column rank, Q * Qᴴ = A * A⁺ is the orthogonal range projector."
     },
     {
      "library": "nlalib",
@@ -21331,7 +21331,7 @@
      "module": "NLAlib.Matrix.Factorizations.QR",
      "status": "proved",
      "partial": true,
-     "usage": "**Uniqueness of the thin QR with positive diagonal**: two thin QR factorizations of the same `A` whose `R` factors have positive diagonals coincide."
+     "usage": "Two real thin QR factorizations with positive diagonal have equal Q and R factors."
     },
     {
      "library": "nlalib",
@@ -32149,7 +32149,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.strictConcaveOn_log_det",
-     "module": "NLAlib.Matrix.Inequalities.LogDetConcavity",
+     "module": "NLAlib.Matrix.Functions.LogDetConcavity",
      "status": "proved",
      "partial": true,
      "usage": "Use strict log-determinant concavity on the entire real positive-definite cone."
@@ -32157,7 +32157,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.log_det_smul_add_ge",
-     "module": "NLAlib.Matrix.Inequalities.LogDetConcavity",
+     "module": "NLAlib.Matrix.Functions.LogDetConcavity",
      "status": "proved",
      "partial": true,
      "usage": "Apply the log-determinant Jensen inequality including endpoint weights."
@@ -32165,7 +32165,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.log_det_smul_add_eq_iff",
-     "module": "NLAlib.Matrix.Inequalities.LogDetConcavity",
+     "module": "NLAlib.Matrix.Functions.LogDetConcavity",
      "status": "proved",
      "partial": true,
      "usage": "Rewrite interior equality in log-determinant Jensen as equality of the two matrices."
@@ -32173,14 +32173,14 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.det_rpow_mul_le_det_smul_add",
-     "module": "NLAlib.Matrix.Inequalities.LogDetConcavity",
+     "module": "NLAlib.Matrix.Functions.LogDetConcavity",
      "status": "proved",
      "partial": true
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.det_smul_add_eq_rpow_mul_iff",
-     "module": "NLAlib.Matrix.Inequalities.LogDetConcavity",
+     "module": "NLAlib.Matrix.Functions.LogDetConcavity",
      "status": "proved",
      "partial": true
     },
@@ -32217,7 +32217,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.strictConvexOn_trace_inv",
-     "module": "NLAlib.Matrix.Inequalities.TraceInverseConvexity",
+     "module": "NLAlib.Matrix.Functions.TraceInverseConvexity",
      "status": "proved",
      "partial": true,
      "usage": "Use strict convexity of inverse trace on the real positive-definite cone."
@@ -32225,7 +32225,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.trace_inv_smul_add_le",
-     "module": "NLAlib.Matrix.Inequalities.TraceInverseConvexity",
+     "module": "NLAlib.Matrix.Functions.TraceInverseConvexity",
      "status": "proved",
      "partial": true,
      "usage": "Apply inverse-trace Jensen including endpoint weights."
@@ -32233,7 +32233,7 @@
     {
      "library": "nlalib",
      "decl": "NLAlib.trace_inv_smul_add_eq_iff",
-     "module": "NLAlib.Matrix.Inequalities.TraceInverseConvexity",
+     "module": "NLAlib.Matrix.Functions.TraceInverseConvexity",
      "status": "proved",
      "partial": true,
      "usage": "Rewrite interior inverse-trace Jensen equality as matrix equality."

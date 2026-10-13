@@ -13,7 +13,7 @@ diagonal basis is a weighted sum of squared entries.
  symmetric `B`.
 
 The complex real-part form `re tr (Aʳ) = ∑ᵢ λᵢʳ` is `re_trace_pow_eq_sum_eigenvalues_pow`
-(`NLAlib.Matrix.Inequalities.TracePowers`).
+(`NLAlib.Matrix.Functions.TracePowers`).
 Source: finite spectral theorem and trace cyclicity; helpers for atlas
 `wishart-lambda-min-tail`, `noncommutative-khintchine`, `sparse-ose`.
 -/

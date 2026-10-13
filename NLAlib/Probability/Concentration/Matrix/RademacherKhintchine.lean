@@ -1,6 +1,6 @@
 import NLAlib.Probability.Concentration.Matrix.RademacherPolynomialMoments
 import NLAlib.Probability.Concentration.Matrix.PolynomialMoment
-import NLAlib.Matrix.Inequalities.TraceMeanValue
+import NLAlib.Matrix.Functions.TraceMeanValue
 /-!
 # Integer noncommutative Khintchine: Rademacher coefficients
 

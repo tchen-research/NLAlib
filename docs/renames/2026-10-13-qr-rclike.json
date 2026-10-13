@@ -1,0 +1,10 @@
+{
+  "NLAlib.transpose_mul_self_eq_of_qr": "NLAlib.conjTranspose_mul_self_eq_of_qr",
+  "NLAlib.IsQR.transpose_mul_eq": "NLAlib.IsQR.conjTranspose_mul_eq",
+  "NLAlib.IsQR.transpose_mul_self_eq": "NLAlib.IsQR.conjTranspose_mul_self_eq",
+  "NLAlib.IsQR.isUnit_transpose_mul_self_iff": "NLAlib.IsQR.isUnit_conjTranspose_mul_self_iff",
+  "NLAlib.IsQR.mul_transpose_eq": "NLAlib.IsQR.mul_conjTranspose_eq",
+  "NLAlib.IsFullQR.transpose_mul_eq": "NLAlib.IsFullQR.conjTranspose_mul_eq",
+  "NLAlib.IsFullQR.mul_transpose_self": "NLAlib.IsFullQR.mul_conjTranspose_self",
+  "NLAlib.transpose_borderedUpper_one": "NLAlib.conjTranspose_borderedUpper_one"
+}

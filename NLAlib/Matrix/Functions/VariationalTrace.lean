@@ -1,4 +1,4 @@
-import NLAlib.Matrix.OperatorTheory.EntropyNonnegative
+import NLAlib.Matrix.Functions.EntropyNonnegative
 import Mathlib.Tactic.Linarith
 
 /-!

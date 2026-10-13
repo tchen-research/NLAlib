@@ -4,35 +4,38 @@ import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
 /-!
 # The QR factorization
 
-The factorization predicates of `docs/ALGORITHM_CONVENTIONS.md` §1 for `A = QR`:
+The factorization predicates of `docs/ALGORITHM_CONVENTIONS.md` §1 for `A = QR`, over any
+`RCLike` scalar field:
 
 * `IsQR A Q R` (**thin** QR): `A : m × n`, `Q : m × n` with orthonormal columns
   (`HasOrthonormalCols Q`), `R : n × n` upper triangular (Mathlib's `Matrix.IsUpperTriangular`,
   i.e. `R.BlockTriangular id`), `A = QR`. The row index `m` is any `Fintype`; the column index `n`
   is any `Fintype` with a `LinearOrder`, because triangularity needs the order.
-* `IsFullQR A Q R` (**full** QR): `A : Fin m × Fin n`, `Q : m × m` orthogonal, `R : m × n` upper
+* `IsFullQR A Q R` (**full** QR): `A : Fin m × Fin n`, `Q : m × m` unitary, `R : m × n` upper
   trapezoidal (`IsUpperTrapezoidal R`: `R i j = 0` for `j < i`), `A = QR`; no relation between
   `m` and `n` is required.
 
-Neither predicate fixes the signs of the diagonal of `R`: Householder QR produces the
-Trefethen–Bau signs, Gram–Schmidt produces `R_ii ≥ 0`. Sign normalisation is the lemma
-`IsQR.diagonal_mul`, and uniqueness (`IsQR.eq_of_diag_pos`) is stated for positive diagonals.
+Neither predicate fixes the phases of the diagonal of `R`. `IsQR.diagonal_mul` changes the
+unit phases; over `ℝ` these are signs. The real Householder QR produces the Trefethen–Bau
+signs, while real Gram–Schmidt produces `R_ii ≥ 0`. Real uniqueness with positive diagonals
+is `IsQR.eq_of_diag_pos`. Complex existence and positive-real-diagonal uniqueness are not
+yet supplied by this API.
 
 ## Contents
 
-* Identities: `Qᵀ A = R` (`IsQR.transpose_mul_eq`), `Aᵀ A = Rᵀ R` (`IsQR.transpose_mul_self_eq`,
-  so `Rᵀ` is the Cholesky factor of `AᵀA` when `R_ii > 0`), full column rank iff `R_ii ≠ 0`
-  (`IsQR.isUnit_transpose_mul_self_iff`), `A⁺ = R⁻¹ Qᵀ` (`pinvL_eq_of_isQR`,
-  `moorePenroseInverse_eq_of_isQR`), `QQᵀ = AA⁺` (`IsQR.mul_transpose_eq`) and
+* Identities: `Qᴴ A = R` (`IsQR.conjTranspose_mul_eq`), `Aᴴ A = Rᴴ R` (`IsQR.conjTranspose_mul_self_eq`,
+  identifying the Gram factorization), full column rank iff `R_ii ≠ 0`
+  (`IsQR.isUnit_conjTranspose_mul_self_iff`), `A⁺ = R⁻¹ Qᴴ` (`pinvL_eq_of_isQR`,
+  `moorePenroseInverse_eq_of_isQR`), `QQᴴ = AA⁺` (`IsQR.mul_conjTranspose_eq`) and
   `range A = range Q` (`IsQR.range_mulVecLin_eq`).
-* Transport: sign normalisation `IsQR.diagonal_mul`, row reindexing `IsQR.submatrix_rows`,
+* Transport: unit-phase changes `IsQR.diagonal_mul`, row reindexing `IsQR.submatrix_rows`,
   thin from full `IsFullQR.isQR_castLE`.
-* Existence: `exists_isFullQR` (induction with an orthogonal completion step,
+* Existence: `exists_isFullQR` for real matrices (induction with an orthogonal completion step,
   `isFullQR_mul_borderedUpper`; realised constructively by `householderQR` in
-  `NLAlib.Matrix.Factorizations.Householder`). Thin existence, `exists_isQR` (`R_ii ≥ 0`, for
+  `NLAlib.Matrix.Factorizations.Householder`). Real thin existence, `exists_isQR` (`R_ii ≥ 0`, for
   `|n| ≤ |m|`) and `exists_isQR_of_isUnit` (`R_ii > 0` under full column rank), is in
   `NLAlib.Matrix.Factorizations.QRExistence` (Cholesky of the Gram matrix).
-* Uniqueness: `IsQR.eq_of_diag_pos` (positive diagonals).
+* Uniqueness: `IsQR.eq_of_diag_pos` (real positive diagonals).
 
 Sources: Trefethen–Bau 1997 [`tb97`], Lect. 7 (Thm 7.1, 7.2); Golub–Van Loan 2013 [`gvl13`],
 §5.2 (Thm 5.2.1, 5.2.3).
@@ -50,17 +53,19 @@ namespace NLAlib
 
 section Predicates
 
+variable {𝕜 : Type*} [RCLike 𝕜]
+
 variable {m : Type*} [Fintype m] {n : Type*} [Fintype n] [LinearOrder n]
 
 /-- **Thin QR factorization**: `A = QR` with `Q : m × n` having orthonormal columns and
-`R : n × n` upper triangular. The signs of `R_ii` are not fixed (see `IsQR.diagonal_mul`); the
+`R : n × n` upper triangular. The phases of `R_ii` are not fixed (see `IsQR.diagonal_mul`); the
 alternative convention `R_ii ≥ 0` is a separate conjunct where it is needed (`exists_isQR`).
 Trefethen–Bau 1997, Lect. 7 (reduced QR); Golub–Van Loan 2013, Thm 5.2.3 (thin QR).
 atlas: qr-decomposition (partial) -/
-structure IsQR (A Q : Matrix m n ℝ) (R : Matrix n n ℝ) : Prop where
+structure IsQR (A Q : Matrix m n 𝕜) (R : Matrix n n 𝕜) : Prop where
   /-- The factorization `A = QR`. -/
   eq : A = Q * R
-  /-- `Q` has orthonormal columns, `Qᵀ Q = I`. -/
+  /-- `Q` has orthonormal columns, `Qᴴ Q = I`. -/
   orth : HasOrthonormalCols Q
   /-- `R` is upper triangular. -/
   upper : R.IsUpperTriangular
@@ -69,50 +74,54 @@ end Predicates
 
 section Trapezoidal
 
+variable {𝕜 : Type*} [RCLike 𝕜]
+
 variable {m n : ℕ}
 
 /-- A rectangular matrix is **upper trapezoidal** (upper triangular in the rectangular sense):
 `R i j = 0` whenever `j < i`. For square matrices this is Mathlib's `IsUpperTriangular`
 (`isUpperTrapezoidal_iff_isUpperTriangular`). Golub–Van Loan 2013, §5.2 (the `R` of a full QR).
 atlas: qr-decomposition (partial) -/
-def IsUpperTrapezoidal (R : Matrix (Fin m) (Fin n) ℝ) : Prop :=
+def IsUpperTrapezoidal {α : Type*} [Zero α] (R : Matrix (Fin m) (Fin n) α) : Prop :=
   ∀ (i : Fin m) (j : Fin n), (j : ℕ) < i → R i j = 0
 
 /-- On square matrices, upper trapezoidal is Mathlib's upper triangular (bridge lemma).
 Golub–Van Loan 2013, §3.1. -/
-theorem isUpperTrapezoidal_iff_isUpperTriangular (R : Matrix (Fin n) (Fin n) ℝ) :
+theorem isUpperTrapezoidal_iff_isUpperTriangular {α : Type*} [Zero α]
+    (R : Matrix (Fin n) (Fin n) α) :
     IsUpperTrapezoidal R ↔ R.IsUpperTriangular :=
   ⟨fun h _ _ hij => h _ _ hij, fun h _ _ hij => h (Fin.lt_def.2 hij)⟩
 
-/-- **Full QR factorization**: `A = QR` with `Q : m × m` orthogonal and `R : m × n` upper
+/-- **Full QR factorization**: `A = QR` with `Q : m × m` unitary (orthogonal over `ℝ`)
+and `R : m × n` upper
 trapezoidal. No relation between `m` and `n` is assumed. Trefethen–Bau 1997, Lect. 7 (full QR);
 Golub–Van Loan 2013, Thm 5.2.1.
 atlas: qr-decomposition (partial) -/
-structure IsFullQR (A : Matrix (Fin m) (Fin n) ℝ) (Q : Matrix (Fin m) (Fin m) ℝ)
-    (R : Matrix (Fin m) (Fin n) ℝ) : Prop where
+structure IsFullQR (A : Matrix (Fin m) (Fin n) 𝕜) (Q : Matrix (Fin m) (Fin m) 𝕜)
+    (R : Matrix (Fin m) (Fin n) 𝕜) : Prop where
   /-- The factorization `A = QR`. -/
   eq : A = Q * R
-  /-- `Q` is orthogonal, `Qᵀ Q = I`. -/
+  /-- `Q` is unitary, `Qᴴ Q = I`. -/
   orth : HasOrthonormalCols Q
   /-- `R` is upper trapezoidal. -/
   upper : IsUpperTrapezoidal R
 
-/-- The `Q` of a full QR is orthogonal on both sides: `Q Qᵀ = I`. Golub–Van Loan 2013, §2.1. -/
-theorem IsFullQR.mul_transpose_self {A : Matrix (Fin m) (Fin n) ℝ} {Q : Matrix (Fin m) (Fin m) ℝ}
-    {R : Matrix (Fin m) (Fin n) ℝ} (h : IsFullQR A Q R) : Q * Qᵀ = 1 :=
+/-- The `Q` of a full QR is unitary on both sides: `Q Qᴴ = I`. Golub–Van Loan 2013, §2.1. -/
+theorem IsFullQR.mul_conjTranspose_self {A : Matrix (Fin m) (Fin n) 𝕜} {Q : Matrix (Fin m) (Fin m) 𝕜}
+    {R : Matrix (Fin m) (Fin n) 𝕜} (h : IsFullQR A Q R) : Q * Qᴴ = 1 :=
   mul_eq_one_comm.mp h.orth
 
-/-- The `R` of a full QR is `Qᵀ A`. Golub–Van Loan 2013, §5.2. -/
-theorem IsFullQR.transpose_mul_eq {A : Matrix (Fin m) (Fin n) ℝ} {Q : Matrix (Fin m) (Fin m) ℝ}
-    {R : Matrix (Fin m) (Fin n) ℝ} (h : IsFullQR A Q R) : Qᵀ * A = R := by
-  rw [h.eq, ← Matrix.mul_assoc, show Qᵀ * Q = 1 from h.orth, Matrix.one_mul]
+/-- The `R` of a full QR is `Qᴴ A`. Golub–Van Loan 2013, §5.2. -/
+theorem IsFullQR.conjTranspose_mul_eq {A : Matrix (Fin m) (Fin n) 𝕜} {Q : Matrix (Fin m) (Fin m) 𝕜}
+    {R : Matrix (Fin m) (Fin n) 𝕜} (h : IsFullQR A Q R) : Qᴴ * A = R := by
+  rw [h.eq, ← Matrix.mul_assoc, show Qᴴ * Q = 1 from h.orth, Matrix.one_mul]
 
 /-- **Thin QR from full QR**: if `n ≤ m`, the first `n` columns of `Q` and the first `n` rows
 of `R` form a thin QR. Trefethen–Bau 1997, Lect. 7 (reduced from full QR); Golub–Van Loan 2013,
 Thm 5.2.3 (proof).
 atlas: qr-decomposition (partial) -/
-theorem IsFullQR.isQR_castLE {A : Matrix (Fin m) (Fin n) ℝ} {Q : Matrix (Fin m) (Fin m) ℝ}
-    {R : Matrix (Fin m) (Fin n) ℝ} (h : IsFullQR A Q R) (hnm : n ≤ m) :
+theorem IsFullQR.isQR_castLE {A : Matrix (Fin m) (Fin n) 𝕜} {Q : Matrix (Fin m) (Fin m) 𝕜}
+    {R : Matrix (Fin m) (Fin n) 𝕜} (h : IsFullQR A Q R) (hnm : n ≤ m) :
     IsQR A (Q.submatrix id (Fin.castLE hnm)) (R.submatrix (Fin.castLE hnm) id) where
   eq := by
     obtain ⟨r, rfl⟩ : ∃ r, m = n + r := ⟨m - n, by omega⟩
@@ -126,35 +135,35 @@ theorem IsFullQR.isQR_castLE {A : Matrix (Fin m) (Fin n) ℝ} {Q : Matrix (Fin m
     rw [hz, add_zero]
     rfl
   orth := by
-    change (Q.submatrix id (Fin.castLE hnm))ᵀ * Q.submatrix id (Fin.castLE hnm) = 1
-    rw [Matrix.transpose_submatrix, ← Matrix.submatrix_mul _ _ _ _ _ Function.bijective_id,
-      show Qᵀ * Q = 1 from h.orth, Matrix.submatrix_one _ (Fin.castLE_injective hnm)]
+    change (Q.submatrix id (Fin.castLE hnm))ᴴ * Q.submatrix id (Fin.castLE hnm) = 1
+    rw [Matrix.conjTranspose_submatrix, ← Matrix.submatrix_mul _ _ _ _ _ Function.bijective_id,
+      show Qᴴ * Q = 1 from h.orth, Matrix.submatrix_one _ (Fin.castLE_injective hnm)]
   upper := fun i j hij => h.upper (Fin.castLE hnm i) j hij
 
 /-- The rectangular bordered matrix `[[r], [0, M]]`: first row `r`, zeros below the pivot, and
 trailing block `M`. The `R` of one Householder step. (Rectangular analogue of
 `borderedMatrix` in `NLAlib.Matrix.Factorizations.Triangular`; `borderedUpper (vecCons 1 0) M` is
 `diag(1, M)`.) Golub–Van Loan 2013, §5.2.2. -/
-def borderedUpper (r : Fin (n + 1) → ℝ) (M : Matrix (Fin m) (Fin n) ℝ) :
-    Matrix (Fin (m + 1)) (Fin (n + 1)) ℝ :=
+def borderedUpper (r : Fin (n + 1) → 𝕜) (M : Matrix (Fin m) (Fin n) 𝕜) :
+    Matrix (Fin (m + 1)) (Fin (n + 1)) 𝕜 :=
   Matrix.of (vecCons r fun i => vecCons 0 (M i))
 
 @[simp]
-theorem borderedUpper_zero (r : Fin (n + 1) → ℝ) (M : Matrix (Fin m) (Fin n) ℝ) (j : Fin (n + 1)) :
+theorem borderedUpper_zero (r : Fin (n + 1) → 𝕜) (M : Matrix (Fin m) (Fin n) 𝕜) (j : Fin (n + 1)) :
     borderedUpper r M 0 j = r j := rfl
 
 @[simp]
-theorem borderedUpper_succ_zero (r : Fin (n + 1) → ℝ) (M : Matrix (Fin m) (Fin n) ℝ)
+theorem borderedUpper_succ_zero (r : Fin (n + 1) → 𝕜) (M : Matrix (Fin m) (Fin n) 𝕜)
     (i : Fin m) : borderedUpper r M i.succ 0 = 0 := by
   simp [borderedUpper]
 
 @[simp]
-theorem borderedUpper_succ_succ (r : Fin (n + 1) → ℝ) (M : Matrix (Fin m) (Fin n) ℝ)
+theorem borderedUpper_succ_succ (r : Fin (n + 1) → 𝕜) (M : Matrix (Fin m) (Fin n) 𝕜)
     (i : Fin m) (j : Fin n) : borderedUpper r M i.succ j.succ = M i j := by
   simp [borderedUpper]
 
 /-- `[[r], [0, M]]` is upper trapezoidal when `M` is. Golub–Van Loan 2013, §5.2.2. -/
-theorem isUpperTrapezoidal_borderedUpper (r : Fin (n + 1) → ℝ) {M : Matrix (Fin m) (Fin n) ℝ}
+theorem isUpperTrapezoidal_borderedUpper (r : Fin (n + 1) → 𝕜) {M : Matrix (Fin m) (Fin n) 𝕜}
     (hM : IsUpperTrapezoidal M) : IsUpperTrapezoidal (borderedUpper r M) := by
   intro i j hij
   induction i using Fin.cases with
@@ -165,8 +174,8 @@ theorem isUpperTrapezoidal_borderedUpper (r : Fin (n + 1) → ℝ) {M : Matrix (
     | succ j => simpa using hM i j (by simpa using hij)
 
 /-- `diag(1, M) [[r], [0, N]] = [[r], [0, M N]]`. Golub–Van Loan 2013, §1.3 (block products). -/
-theorem borderedUpper_one_mul_borderedUpper {k : ℕ} (M : Matrix (Fin m) (Fin m) ℝ)
-    (r : Fin (k + 1) → ℝ) (N : Matrix (Fin m) (Fin k) ℝ) :
+theorem borderedUpper_one_mul_borderedUpper {k : ℕ} (M : Matrix (Fin m) (Fin m) 𝕜)
+    (r : Fin (k + 1) → 𝕜) (N : Matrix (Fin m) (Fin k) 𝕜) :
     borderedUpper (vecCons 1 0) M * borderedUpper r N = borderedUpper r (M * N) := by
   ext i j
   induction i using Fin.cases with
@@ -177,7 +186,7 @@ theorem borderedUpper_one_mul_borderedUpper {k : ℕ} (M : Matrix (Fin m) (Fin m
     | succ j => simp [Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- `diag(1, I) = I`. -/
-theorem borderedUpper_one_one : borderedUpper (vecCons 1 0) (1 : Matrix (Fin m) (Fin m) ℝ) = 1 := by
+theorem borderedUpper_one_one : borderedUpper (vecCons 1 0) (1 : Matrix (Fin m) (Fin m) 𝕜) = 1 := by
   ext i j
   induction i using Fin.cases with
   | zero =>
@@ -189,26 +198,26 @@ theorem borderedUpper_one_one : borderedUpper (vecCons 1 0) (1 : Matrix (Fin m) 
     | zero => simp
     | succ j => simp [Matrix.one_apply]
 
-/-- `diag(1, M)ᵀ = diag(1, Mᵀ)`. -/
-theorem transpose_borderedUpper_one (M : Matrix (Fin m) (Fin m) ℝ) :
-    (borderedUpper (vecCons 1 0) M)ᵀ = borderedUpper (vecCons 1 0) Mᵀ := by
+/-- The adjoint of a block diagonal matrix is block diagonal with adjoint trailing block. -/
+theorem conjTranspose_borderedUpper_one (M : Matrix (Fin m) (Fin m) 𝕜) :
+    (borderedUpper (vecCons 1 0) M)ᴴ = borderedUpper (vecCons 1 0) Mᴴ := by
   ext i j
   induction i using Fin.cases with
   | zero => induction j using Fin.cases <;> simp
   | succ i => induction j using Fin.cases <;> simp
 
-/-- **One step of a full QR**: if `W` is orthogonal, `B = WᵀA` has zeros below the pivot in its
+/-- **One step of a full QR**: if `W` is unitary, `B = WᴴA` has zeros below the pivot in its
 first column, and `B(1:, 1:) = Q'R'` is a full QR, then
 `A = (W · diag(1, Q')) · [[B(0, :)], [0, R']]` is a full QR. This is the inductive step of every
-orthogonal triangularisation (Householder, Givens, orthogonal completion).
+unitary triangularisation (Householder, Givens, unitary completion).
 Trefethen–Bau 1997, Lect. 10, eq. (10.1)–(10.3); Golub–Van Loan 2013, §5.2.2. -/
-theorem isFullQR_mul_borderedUpper {A : Matrix (Fin (m + 1)) (Fin (n + 1)) ℝ}
-    {W : Matrix (Fin (m + 1)) (Fin (m + 1)) ℝ} (hW : HasOrthonormalCols W)
-    (hB : ∀ i : Fin m, (Wᵀ * A) i.succ 0 = 0) {Q' : Matrix (Fin m) (Fin m) ℝ}
-    {R' : Matrix (Fin m) (Fin n) ℝ} (h' : IsFullQR ((Wᵀ * A).submatrix Fin.succ Fin.succ) Q' R') :
-    IsFullQR A (W * borderedUpper (vecCons 1 0) Q') (borderedUpper ((Wᵀ * A) 0) R') where
+theorem isFullQR_mul_borderedUpper {A : Matrix (Fin (m + 1)) (Fin (n + 1)) 𝕜}
+    {W : Matrix (Fin (m + 1)) (Fin (m + 1)) 𝕜} (hW : HasOrthonormalCols W)
+    (hB : ∀ i : Fin m, (Wᴴ * A) i.succ 0 = 0) {Q' : Matrix (Fin m) (Fin m) 𝕜}
+    {R' : Matrix (Fin m) (Fin n) 𝕜} (h' : IsFullQR ((Wᴴ * A).submatrix Fin.succ Fin.succ) Q' R') :
+    IsFullQR A (W * borderedUpper (vecCons 1 0) Q') (borderedUpper ((Wᴴ * A) 0) R') where
   eq := by
-    have hblock : borderedUpper (vecCons 1 0) Q' * borderedUpper ((Wᵀ * A) 0) R' = Wᵀ * A := by
+    have hblock : borderedUpper (vecCons 1 0) Q' * borderedUpper ((Wᴴ * A) 0) R' = Wᴴ * A := by
       rw [borderedUpper_one_mul_borderedUpper, ← h'.eq]
       ext i j
       induction i using Fin.cases with
@@ -217,14 +226,14 @@ theorem isFullQR_mul_borderedUpper {A : Matrix (Fin (m + 1)) (Fin (n + 1)) ℝ}
         induction j using Fin.cases with
         | zero => rw [borderedUpper_succ_zero, hB]
         | succ j => rw [borderedUpper_succ_succ]; rfl
-    rw [Matrix.mul_assoc, hblock, ← Matrix.mul_assoc, mul_eq_one_comm.mp (show Wᵀ * W = 1 from hW),
+    rw [Matrix.mul_assoc, hblock, ← Matrix.mul_assoc, mul_eq_one_comm.mp (show Wᴴ * W = 1 from hW),
       Matrix.one_mul]
   orth := by
-    change (W * borderedUpper (vecCons 1 0) Q')ᵀ * (W * borderedUpper (vecCons 1 0) Q') = 1
-    rw [Matrix.transpose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Wᵀ, show Wᵀ * W = 1 from hW,
+    change (W * borderedUpper (vecCons 1 0) Q')ᴴ * (W * borderedUpper (vecCons 1 0) Q') = 1
+    rw [Matrix.conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Wᴴ, show Wᴴ * W = 1 from hW,
       Matrix.one_mul,
-      transpose_borderedUpper_one, borderedUpper_one_mul_borderedUpper,
-      show Q'ᵀ * Q' = 1 from h'.orth, borderedUpper_one_one]
+      conjTranspose_borderedUpper_one, borderedUpper_one_mul_borderedUpper,
+      show Q'ᴴ * Q' = 1 from h'.orth, borderedUpper_one_one]
   upper := isUpperTrapezoidal_borderedUpper _ h'.upper
 
 end Trapezoidal
@@ -233,39 +242,43 @@ end Trapezoidal
 
 section Gram
 
+variable {𝕜 : Type*} [RCLike 𝕜]
+
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
 
 /-- The Gram matrix of every thin QR factor equals the original Gram matrix,
-even at deficient rank: `A = QR` with `QᵀQ = I` gives `RᵀR = AᵀA` (no triangularity needed).
+even at deficient rank: `A = QR` with `QᴴQ = I` gives `RᴴR = AᴴA` (no triangularity needed).
 Trefethen--Bau, Theorem 7.1.
 atlas: qr-decomposition (partial) -/
-theorem transpose_mul_self_eq_of_qr {A Q : Matrix m n ℝ} {R : Matrix n n ℝ}
-    (hQ : HasOrthonormalCols Q) (hFactor : Q * R = A) : Rᵀ * R = Aᵀ * A := by
-  rw [← hFactor, Matrix.transpose_mul]
-  have hGram : Qᵀ * Q = 1 := hQ
+theorem conjTranspose_mul_self_eq_of_qr {A Q : Matrix m n 𝕜} {R : Matrix n n 𝕜}
+    (hQ : HasOrthonormalCols Q) (hFactor : Q * R = A) : Rᴴ * R = Aᴴ * A := by
+  rw [← hFactor, Matrix.conjTranspose_mul]
+  have hGram : Qᴴ * Q = 1 := hQ
   calc
-    Rᵀ * R = Rᵀ * (Qᵀ * Q) * R := by rw [hGram, Matrix.mul_one]
-    _ = Rᵀ * Qᵀ * (Q * R) := by simp only [Matrix.mul_assoc]
+    Rᴴ * R = Rᴴ * (Qᴴ * Q) * R := by rw [hGram, Matrix.mul_one]
+    _ = Rᴴ * Qᴴ * (Q * R) := by simp only [Matrix.mul_assoc]
 
 end Gram
 
 section Identities
 
-variable {m : Type*} [Fintype m] {n : Type*} [Fintype n] [LinearOrder n] {A Q : Matrix m n ℝ}
-  {R : Matrix n n ℝ}
+variable {𝕜 : Type*} [RCLike 𝕜]
+
+variable {m : Type*} [Fintype m] {n : Type*} [Fintype n] [LinearOrder n] {A Q : Matrix m n 𝕜}
+  {R : Matrix n n 𝕜}
 
 namespace IsQR
 
-/-- `Qᵀ A = R`. Trefethen–Bau 1997, Lect. 7; Golub–Van Loan 2013, §5.2.
+/-- `Qᴴ A = R`. Trefethen–Bau 1997, Lect. 7; Golub–Van Loan 2013, §5.2.
 atlas: qr-decomposition (partial) -/
-theorem transpose_mul_eq (h : IsQR A Q R) : Qᵀ * A = R := by
-  rw [h.eq, ← Matrix.mul_assoc, show Qᵀ * Q = 1 from h.orth, Matrix.one_mul]
+theorem conjTranspose_mul_eq (h : IsQR A Q R) : Qᴴ * A = R := by
+  rw [h.eq, ← Matrix.mul_assoc, show Qᴴ * Q = 1 from h.orth, Matrix.one_mul]
 
-/-- `Aᵀ A = Rᵀ R`: `Rᵀ` is a (Cholesky) triangular factor of the Gram matrix `AᵀA`.
+/-- `Aᴴ A = Rᴴ R`: `Rᴴ` is a (Cholesky) triangular factor of the Gram matrix `AᴴA`.
 Trefethen–Bau 1997, Lect. 11 (normal equations via QR); Golub–Van Loan 2013, §5.2.
 atlas: qr-decomposition (partial) -/
-theorem transpose_mul_self_eq (h : IsQR A Q R) : Aᵀ * A = Rᵀ * R :=
-  (transpose_mul_self_eq_of_qr h.orth h.eq.symm).symm
+theorem conjTranspose_mul_self_eq (h : IsQR A Q R) : Aᴴ * A = Rᴴ * R :=
+  (conjTranspose_mul_self_eq_of_qr h.orth h.eq.symm).symm
 
 /-- `det R = ∏ R_ii` (Mathlib's `det_of_isUpperTriangular`). Golub–Van Loan 2013, §3.1. -/
 theorem det_eq (h : IsQR A Q R) : R.det = ∏ i, R i i :=
@@ -276,13 +289,13 @@ theorem isUnit_det_iff (h : IsQR A Q R) : IsUnit R.det ↔ ∀ i, R i i ≠ 0 :=
   rw [h.det_eq, isUnit_iff_ne_zero, Finset.prod_ne_zero_iff]
   simp
 
-/-- **Full column rank iff nonzero diagonal**: `AᵀA` is invertible iff every `R_ii ≠ 0`.
+/-- **Full column rank iff nonzero diagonal**: `AᴴA` is invertible iff every `R_ii ≠ 0`.
 Trefethen–Bau 1997, Thm 7.2 (proof); Golub–Van Loan 2013, Thm 5.2.3.
 atlas: qr-decomposition (partial) -/
-theorem isUnit_transpose_mul_self_iff (h : IsQR A Q R) :
-    IsUnit (Aᵀ * A) ↔ ∀ i, R i i ≠ 0 := by
-  rw [Matrix.isUnit_iff_isUnit_det, h.transpose_mul_self_eq, Matrix.det_mul, Matrix.det_transpose,
-    IsUnit.mul_iff, and_self, h.isUnit_det_iff]
+theorem isUnit_conjTranspose_mul_self_iff (h : IsQR A Q R) :
+    IsUnit (Aᴴ * A) ↔ ∀ i, R i i ≠ 0 := by
+  rw [Matrix.isUnit_iff_isUnit_det, h.conjTranspose_mul_self_eq, Matrix.det_mul,
+    Matrix.det_conjTranspose, IsUnit.mul_iff, isUnit_star, and_self, h.isUnit_det_iff]
 
 /-- `range A = range Q` when `R` is invertible. Trefethen–Bau 1997, Lect. 7 (the columns of `Q`
 span the column flag); Golub–Van Loan 2013, Thm 5.2.3.
@@ -296,20 +309,23 @@ theorem range_mulVecLin_eq (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) :
   · rw [h.eq, Matrix.mulVecLin_mul]; exact LinearMap.range_comp_le_range _ _
   · rw [hQ, Matrix.mulVecLin_mul]; exact LinearMap.range_comp_le_range _ _
 
-/-- **Sign normalisation**: multiplying `Q` on the right and `R` on the left by a diagonal sign
-matrix `D` (`D² = I`) gives another thin QR. Trefethen–Bau 1997, Thm 7.1 (proof, sign choice);
+/-- **Unit-phase change**: multiplying `Q` on the right by a diagonal unitary matrix and
+`R` on the left by its adjoint gives another thin QR. Real signs are a special case.
+Trefethen–Bau 1997, Thm 7.1 (proof, sign choice);
 Golub–Van Loan 2013, §5.2. -/
-theorem diagonal_mul (h : IsQR A Q R) (d : n → ℝ) (hd : ∀ i, d i * d i = 1) :
-    IsQR A (Q * diagonal d) (diagonal d * R) where
+theorem diagonal_mul (h : IsQR A Q R) (d : n → 𝕜) (hd : ∀ i, star (d i) * d i = 1) :
+    IsQR A (Q * diagonal d) (diagonal (star ∘ d) * R) where
   eq := by
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc (diagonal d), diagonal_mul_diagonal,
-      show (fun i => d i * d i) = fun _ => 1 from funext hd, diagonal_one, Matrix.one_mul, h.eq]
+      show (fun i => d i * (star ∘ d) i) = fun _ => 1 from funext fun i => by
+        simpa only [Function.comp_apply, mul_comm] using hd i,
+      diagonal_one, Matrix.one_mul, h.eq]
   orth := by
-    change (Q * diagonal d)ᵀ * (Q * diagonal d) = 1
-    rw [Matrix.transpose_mul, diagonal_transpose, Matrix.mul_assoc, ← Matrix.mul_assoc Qᵀ,
-      show Qᵀ * Q = 1 from h.orth, Matrix.one_mul, diagonal_mul_diagonal,
-      show (fun i => d i * d i) = fun _ => 1 from funext hd, diagonal_one]
-  upper := (blockTriangular_diagonal d).mul h.upper
+    change (Q * diagonal d)ᴴ * (Q * diagonal d) = 1
+    rw [Matrix.conjTranspose_mul, diagonal_conjTranspose, Matrix.mul_assoc, ← Matrix.mul_assoc Qᴴ,
+      show Qᴴ * Q = 1 from h.orth, Matrix.one_mul, diagonal_mul_diagonal]
+    exact (congrArg diagonal (funext hd)).trans diagonal_one
+  upper := (blockTriangular_diagonal (star ∘ d)).mul h.upper
 
 /-- **Row reindexing**: a thin QR of `A` transports along any bijection of the row index.
 Bridge from `Fin` to general `Fintype` row indices. -/
@@ -318,37 +334,37 @@ theorem submatrix_rows (h : IsQR A Q R) {m' : Type*} [Fintype m'] (e : m' ≃ m)
   eq := by
     rw [h.eq, Matrix.submatrix_mul _ _ _ id _ Function.bijective_id, Matrix.submatrix_id_id]
   orth := by
-    change (Q.submatrix e id)ᵀ * Q.submatrix e id = 1
-    rw [Matrix.transpose_submatrix, ← Matrix.submatrix_mul _ _ _ _ _ e.bijective,
-      show Qᵀ * Q = 1 from h.orth, Matrix.submatrix_id_id]
+    change (Q.submatrix e id)ᴴ * Q.submatrix e id = 1
+    rw [Matrix.conjTranspose_submatrix, ← Matrix.submatrix_mul _ _ _ _ _ e.bijective,
+      show Qᴴ * Q = 1 from h.orth, Matrix.submatrix_id_id]
   upper := h.upper
 
 end IsQR
 
-/-- **Pseudoinverse via QR**: under full column rank (`R_ii ≠ 0`), `(AᵀA)⁻¹Aᵀ = R⁻¹Qᵀ`.
+/-- **Pseudoinverse via QR**: under full column rank (`R_ii ≠ 0`), `(AᴴA)⁻¹Aᴴ = R⁻¹Qᴴ`.
 Trefethen–Bau 1997, Lect. 11 (Alg. 11.2); Golub–Van Loan 2013, §5.3.3.
 atlas: qr-decomposition (partial) -/
-theorem pinvL_eq_of_isQR (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) : pinvL A = R⁻¹ * Qᵀ := by
+theorem pinvL_eq_of_isQR (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) : pinvL A = R⁻¹ * Qᴴ := by
   have hdet : IsUnit R.det := h.isUnit_det_iff.2 hR
-  have hdetT : IsUnit Rᵀ.det := by rwa [Matrix.det_transpose]
-  rw [pinvL, Matrix.conjTranspose_eq_transpose_of_trivial]
-  rw [h.transpose_mul_self_eq, Matrix.mul_inv_rev]
-  conv_lhs => rw [h.eq, Matrix.transpose_mul]
-  rw [Matrix.mul_assoc, ← Matrix.mul_assoc Rᵀ⁻¹, Matrix.nonsing_inv_mul _ hdetT, Matrix.one_mul]
+  have hdetT : IsUnit Rᴴ.det := by simpa only [Matrix.det_conjTranspose, isUnit_star] using hdet
+  rw [pinvL]
+  rw [h.conjTranspose_mul_self_eq, Matrix.mul_inv_rev]
+  conv_lhs => rw [h.eq, Matrix.conjTranspose_mul]
+  rw [Matrix.mul_assoc, ← Matrix.mul_assoc Rᴴ⁻¹, Matrix.nonsing_inv_mul _ hdetT, Matrix.one_mul]
 
-/-- The Moore–Penrose inverse via QR: under full column rank, `A⁺ = R⁻¹ Qᵀ`.
+/-- The Moore–Penrose inverse via QR: under full column rank, `A⁺ = R⁻¹ Qᴴ`.
 Trefethen–Bau 1997, Lect. 11; Golub–Van Loan 2013, §5.3.3.
 atlas: qr-decomposition (partial) -/
 theorem moorePenroseInverse_eq_of_isQR (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) :
-    moorePenroseInverse A = R⁻¹ * Qᵀ := by
-  rw [moorePenroseInverse_eq_pinvL A (h.isUnit_transpose_mul_self_iff.2 hR),
+    moorePenroseInverse A = R⁻¹ * Qᴴ := by
+  rw [moorePenroseInverse_eq_pinvL A (h.isUnit_conjTranspose_mul_self_iff.2 hR),
     pinvL_eq_of_isQR h hR]
 
-/-- **`QQᵀ` is the orthogonal projector onto `range A`**: `QQᵀ = AA⁺` under full column rank.
+/-- **`QQᴴ` is the orthogonal projector onto `range A`**: `QQᴴ = AA⁺` under full column rank.
 Trefethen–Bau 1997, Lect. 6–7; Golub–Van Loan 2013, §5.2.
 atlas: qr-decomposition (partial) -/
-theorem IsQR.mul_transpose_eq (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) :
-    Q * Qᵀ = A * moorePenroseInverse A := by
+theorem IsQR.mul_conjTranspose_eq (h : IsQR A Q R) (hR : ∀ i, R i i ≠ 0) :
+    Q * Qᴴ = A * moorePenroseInverse A := by
   rw [moorePenroseInverse_eq_of_isQR h hR, h.eq, Matrix.mul_assoc, ← Matrix.mul_assoc R,
     Matrix.mul_nonsing_inv _ (h.isUnit_det_iff.2 hR), Matrix.one_mul]
 
@@ -415,7 +431,7 @@ theorem exists_isFullQR : ∀ {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ), ∃ 
 `A` whose `R` factors have positive diagonals coincide. (Positivity of the diagonal forces full
 column rank, so no separate rank hypothesis is needed.) Trefethen–Bau 1997, Thm 7.2;
 Golub–Van Loan 2013, Thm 5.2.3. Proof: `T := Q₂ᵀQ₁` satisfies `T R₁ = R₂` and
-`Tᵀ R₂ = R₁` (`IsQR.transpose_mul_eq`), so `T = R₂R₁⁻¹` and `Tᵀ = R₁R₂⁻¹` are both upper
+`Tᵀ R₂ = R₁` (`IsQR.conjTranspose_mul_eq`), so `T = R₂R₁⁻¹` and `Tᵀ = R₁R₂⁻¹` are both upper
 triangular, hence `T` is diagonal, with `T_ii R₁ii = R₂ii`, `T_ii R₂ii = R₁ii`, so `T_ii² = 1`,
 `T_ii > 0`; thus `T = I`, `R₂ = R₁` and `Q₂ = A R₂⁻¹ = Q₁`.
 atlas: qr-decomposition (partial) -/
@@ -425,10 +441,12 @@ theorem IsQR.eq_of_diag_pos {m : Type*} [Fintype m] {n : Type*} [Fintype n] [Lin
   have hd₁ : IsUnit R₁.det := h₁.isUnit_det_iff.2 fun i => (hR₁ i).ne'
   have hd₂ : IsUnit R₂.det := h₂.isUnit_det_iff.2 fun i => (hR₂ i).ne'
   set T := Q₂ᵀ * Q₁ with hTdef
-  have hT : T * R₁ = R₂ := by rw [Matrix.mul_assoc, ← h₁.eq, h₂.transpose_mul_eq]
+  have hT : T * R₁ = R₂ := by
+    rw [Matrix.mul_assoc, ← h₁.eq]
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using h₂.conjTranspose_mul_eq
   have hT' : Tᵀ * R₂ = R₁ := by
-    rw [hTdef, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc, ← h₂.eq,
-      h₁.transpose_mul_eq]
+    rw [hTdef, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc, ← h₂.eq]
+    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using h₁.conjTranspose_mul_eq
   have hinv₁ : R₁⁻¹.IsUpperTriangular := by
     have := R₁.invertibleOfIsUnitDet hd₁; exact blockTriangular_inv_of_blockTriangular h₁.upper
   have hinv₂ : R₂⁻¹.IsUpperTriangular := by

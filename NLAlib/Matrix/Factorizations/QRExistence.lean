@@ -62,6 +62,6 @@ theorem exists_isQR_of_isUnit {A : Matrix m n ℝ} (hA : IsUnit (Aᵀ * A)) :
     exact h1 ▸ Matrix.rank_le_card_height A
   obtain ⟨Q, R, h, hpos⟩ := exists_isQR A hn
   exact ⟨Q, R, h, fun i => lt_of_le_of_ne (hpos i)
-    (h.isUnit_transpose_mul_self_iff.1 hA i).symm⟩
+    (h.isUnit_conjTranspose_mul_self_iff.1 hA i).symm⟩
 
 end NLAlib

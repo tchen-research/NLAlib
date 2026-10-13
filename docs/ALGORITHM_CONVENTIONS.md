@@ -9,9 +9,13 @@ introduce perturbed-relation hypotheses or rounding models.
 Every classical algorithm is stated as three declarations:
 
 1. **The factorization predicate** (what the output *is*): `IsLU A L U`, `IsPLU A P L U`,
-   `IsCholesky A L`, `IsQR A Q R` (thin: `Q : Matrix m (Fin n) ℝ`, `HasOrthonormalCols Q`, `R` upper
+   `IsCholesky A L`, `IsQR A Q R` (thin: `Q : Matrix m n 𝕜`, `HasOrthonormalCols Q`, `R` upper
    triangular), `IsFullQR`, `IsHessenbergForm A Q H`. These live in `NLAlib/Matrix/Factorizations/`
-   (layer 0) with existence, uniqueness and the identities consumers use (`Qᵀ A = R`, `A⁺ = R⁻¹Qᵀ`).
+   (layer 0) with existence, uniqueness and the identities consumers use (`Qᴴ A = R`, `A⁺ = R⁻¹Qᴴ`).
+   Choose the scalar assumptions from the factorization itself: algebraic factorizations can
+   use fields or rings; orthonormal factorizations use `RCLike`. A real implementation does not
+   justify restricting its mathematical specification to real matrices. Several existing
+   predicates still need this migration; this paragraph describes the intended interface.
 2. **The algorithm as a total recursion** over an ordered index: `lu`, `cholesky`, `gramSchmidt`,
    `householderQR`, `cgRecurrence`, `lanczosRecurrence`. Total because Lean has `x / 0 = 0` and
    `√(negative) = 0`: a bad pivot produces junk, never an error. Recursions are over `Fin n`
@@ -39,6 +43,11 @@ grade, not a predicate: `lanczosBeta_eq_zero_iff` (`β_j = 0 ↔ ν(A, b) ≤ j`
 (`r_k = 0 ↔ ν(A, r₀) ≤ k` for `A ≻ 0`). A `CGSucceeds`/`LanczosSucceeds` predicate would be
 `True` for `A ≻ 0` / symmetric `A`, so none is defined.
 
+This describes the intended exact-arithmetic contracts. The CG and Lanczos recurrence
+realization theorems currently depend on experimental scaffolds; their presence is not a
+completed correctness proof. Check the declaration index's transitive `sorry` flag and the
+default import inventory before advertising a proved algorithm guarantee.
+
 ## 2. Conventions
 - Names: recursion `fooBar` (lowerCamel), success predicate `FooSucceeds` (UpperCamel, Prop),
   factorization predicate `IsFoo`, realisation theorem `isFoo_fooBar`/`isFoo_of_fooSucceeds`,
@@ -48,8 +57,11 @@ grade, not a predicate: `lanczosBeta_eq_zero_iff` (`β_j = 0 ↔ ν(A, b) ≤ j`
 - Permutations: `Matrix.PEquiv.toMatrix` / `Equiv.Perm` permutation matrices from Mathlib.
 - One elimination step is a Schur complement: use `Matrix.fromBlocks` and Mathlib's block
   lemmas (`Matrix.PosDef.fromBlocks₁₁`, `det_fromBlocks₁₁`, `inv_fromBlocks…`).
-- Real matrices, explicit constants, hypotheses explicit; eigenvalue algorithms are stated for
-  symmetric `A` first.
+- State reusable specifications over their natural scalar domain. A particular implemented
+  recursion may remain real while its complex counterpart is unfinished; document that scope
+  separately from the predicate and its identities. Hermitian eigenvalue statements use
+  `RCLike` where applicable; genuinely real algorithms and real spectral normal forms retain
+  their real domain. Constants and hypotheses follow `STANDARDS.md`.
 - Atlas: predicate and existence/uniqueness share the factorization's id (`lu-decomposition`,
   `qr-decomposition`); the algorithm's success/realisation theorems have their own id
   (`lu-algorithm`, `cholesky-algorithm`, `householder-qr`, `gram-schmidt`, `cg-recurrence`,

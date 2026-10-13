@@ -1,4 +1,4 @@
-import NLAlib.Matrix.Inequalities.LogDetConcavity
+import NLAlib.Matrix.Functions.LogDetConcavity
 /-!
 # Homogeneity of the positive determinant root
 

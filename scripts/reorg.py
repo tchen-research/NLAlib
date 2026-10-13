@@ -11,7 +11,7 @@ Declaration names never change (one flat `namespace NLAlib`); only paths and imp
 import json, pathlib, re, subprocess, sys, collections
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TREE = """ForMathlib/Algebra ForMathlib/Analysis ForMathlib/MeasureTheory ForMathlib/Probability ForMathlib/Topology ForMathlib/LinearAlgebra ForMathlib/Order ForMathlib/Logic ForMathlib/Data ForMathlib/Combinatorics
-Matrix/Basic Matrix/Norms Matrix/Spectral Matrix/Subspaces Matrix/Factorizations Matrix/Perturbation Matrix/Inequalities Matrix/OperatorTheory Matrix/Functions Matrix/Structured Matrix/Calculus
+Matrix/Basic Matrix/Norms Matrix/Spectral Matrix/Subspaces Matrix/Factorizations Matrix/Perturbation Matrix/Inequalities Matrix/Functions Matrix/Structured Matrix/Calculus
 Polynomial/Chebyshev Polynomial/Interpolation Polynomial/BestApproximation Polynomial/FunctionApproximation
 Probability/Basic Probability/Moments Probability/Sampling Probability/SubGaussian Probability/Rademacher Probability/ChiSquare
 Probability/Gaussian/Basic Probability/Gaussian/Calculus Probability/Gaussian/Moments Probability/Gaussian/Comparison Probability/Gaussian/Concentration

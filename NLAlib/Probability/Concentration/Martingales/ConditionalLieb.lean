@@ -1,5 +1,5 @@
 import NLAlib.ForMathlib.MeasureTheory.ConditionalJensen
-import NLAlib.Matrix.OperatorTheory.LiebTraceFunction
+import NLAlib.Matrix.Functions.LiebTraceFunction
 /-!
 # Actual conditional Lieb inequality for a fixed Hermitian offset
 

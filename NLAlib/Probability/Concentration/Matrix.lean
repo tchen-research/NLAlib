@@ -15,7 +15,6 @@ import NLAlib.Probability.Concentration.Matrix.IntrinsicHermitianBernstein
 import NLAlib.Probability.Concentration.Matrix.LaplaceExpectations
 import NLAlib.Probability.Concentration.Matrix.LaplaceTails
 import NLAlib.Probability.Concentration.Matrix.LiebIntegralPosDef
-import NLAlib.Probability.Concentration.Matrix.LiebJensen
 import NLAlib.Probability.Concentration.Matrix.LiebRegularityShiftIntegrable
 import NLAlib.Probability.Concentration.Matrix.MasterBounds
 import NLAlib.Probability.Concentration.Matrix.MasterSumExponentialIntegrable

@@ -5,7 +5,6 @@ import NLAlib.Matrix.Functions
 import NLAlib.Matrix.Inequalities
 import NLAlib.Matrix.Measurability
 import NLAlib.Matrix.Norms
-import NLAlib.Matrix.OperatorTheory
 import NLAlib.Matrix.Perturbation
 import NLAlib.Matrix.Spectral
 import NLAlib.Matrix.Structured

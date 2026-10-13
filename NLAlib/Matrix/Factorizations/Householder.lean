@@ -318,6 +318,7 @@ theorem isFullQR_householderQR : ∀ {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ
       exact this
     have key := isFullQR_mul_borderedUpper hW hB
       (isFullQR_householderQR ((Hᵀ * A).submatrix Fin.succ Fin.succ))
+    simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at key
     rw [hHdef, householder_transpose] at key
     rw [householderQ_succ_succ]
     exact key

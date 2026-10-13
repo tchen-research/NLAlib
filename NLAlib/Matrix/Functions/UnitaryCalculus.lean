@@ -1,6 +1,6 @@
 import NLAlib.Matrix.Functions.HermitianCalculus
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import NLAlib.Matrix.OperatorTheory.TraceExpConvex
+import NLAlib.Matrix.Functions.TraceExpConvex
 
 /-!
 # Unitary covariance of matrix functional calculus
@@ -15,7 +15,7 @@ Source: Tropp 2015, §2.1 and the unitary dilation proof of Theorem 8.5.2;
 `Re-derivations/matrix_toolkit_operator_derivations.tex`, §7 and its implementation
 map. The reflection specialisations (`cfc_reflection_conj`, `spectrum_reflection_conj`) and the
 reindexing transport `cfc_reindex_of_isHermitian` serve the operator Jensen inequality
-(`OperatorTheory/JensenIsometricCompression`).
+(`Functions/JensenIsometricCompression`).
 Atlas: `golden-thompson`, `operator-monotone-convex` (supporting calculus).
 -/
 

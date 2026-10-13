@@ -46,7 +46,7 @@ theorem qr_decomposition {m n : Type*} [Fintype m] [Fintype n]
   obtain ⟨hFactor, hQ, hUpper⟩ := hQR
   replace hFactor := hFactor.symm
   refine ⟨Q, R, ⟨hFactor.symm, hQ, hUpper⟩, hDiag,
-    transpose_mul_self_eq_of_qr hQ hFactor,
+    conjTranspose_mul_self_eq_of_qr hQ hFactor,
     congrFun (singularValues_eq_of_qr hQ hFactor),
     moorePenroseConditionNumber_eq_of_qr hQ hFactor, ?_, ?_⟩
   · intro e

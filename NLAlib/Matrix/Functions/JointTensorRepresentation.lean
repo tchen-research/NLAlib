@@ -1,8 +1,8 @@
-import NLAlib.Matrix.OperatorTheory.JointTensor
+import NLAlib.Matrix.Functions.JointTensor
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
-import NLAlib.Matrix.OperatorTheory.EntropyNonnegative
+import NLAlib.Matrix.Functions.EntropyNonnegative
 
 /-!
 # Relative entropy as a tensor perspective

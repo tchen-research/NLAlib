@@ -1,4 +1,4 @@
-import NLAlib.Matrix.OperatorTheory.VariationalTraceExp
+import NLAlib.Matrix.Functions.VariationalTraceExp
 
 /-!
 # Convexity of the Hermitian trace exponential

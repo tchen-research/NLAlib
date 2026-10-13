@@ -4,6 +4,11 @@ The findings below record the pre-fix snapshot. The implementation follow-up at 
 records the authorized changes and their completed validation. Original source
 locations and counts are retained as audit evidence, not a description of the revised API.
 
+The subsequent [public contract review](PUBLIC_CONTRACT_REVIEW_2026-10-13.md) found additional
+families of missed restrictions, including real-only factorization and least-squares contracts.
+The validation recorded here establishes compilation and proof status for the checkpoint;
+it does not establish completion of the mathematical interface audit.
+
 ## Verdict
 
 The library interoperates with its pinned Mathlib, and much of its mathematical core is a

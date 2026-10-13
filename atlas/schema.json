@@ -154,7 +154,7 @@
           },
           "formalizations": {
             "type": "array",
-            "description": "Where (if anywhere) this result exists in Lean. Empty for planned/candidate.",
+            "description": "Where (if anywhere) this result exists in Lean. Candidate entries may list proved partial components while other clauses remain open.",
             "items": {
               "type": "object",
               "required": [
@@ -199,7 +199,33 @@
                 },
                 "partial": {
                   "type": "boolean",
-                  "description": "The declaration formalizes only part of the statement; listed, but does not promote the result's status."
+                  "description": "The declaration formalizes only part of the statement. It does not promote status alone; a reviewed complete proof_family may combine component theorems."
+                }
+              }
+            }
+          },
+          "proof_family": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["clauses"],
+            "description": "Reviewed complete coverage of this statement by a family of component theorems. All listed declarations must be tagged for this result; status is derived from their generated proof dependencies. Do not add this field to an incomplete family.",
+            "properties": {
+              "clauses": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["statement", "decls"],
+                  "properties": {
+                    "statement": {"type": "string", "minLength": 1},
+                    "decls": {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {"type": "string", "minLength": 1}
+                    }
+                  }
                 }
               }
             }

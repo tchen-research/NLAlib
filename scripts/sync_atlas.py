@@ -9,7 +9,8 @@ of those results. This script rewrites, for every result,
   * each such formalization's `status` (`proved` if sorry-free, `scaffold` if it depends on sorry)
     and `partial: true` when the
     tag reads `atlas: <id> (partial)` (the declaration covers only part of the statement),
-  * the result's `status` (`proved` only if every non-partial NLAlib formalization is sorry-free;
+  * the result's `status` (`proved` only if every non-partial NLAlib formalization and every
+    declaration in a reviewed complete `proof_family` is sorry-free;
     otherwise `scaffold` / `stated` from its non-partial NLAlib
     formalizations; a result with none keeps its hand-set `candidate` / `planned` / `assumed`),
   * `uses_defs`: the NLAlib definitions occurring in the statements of its formalizations.
@@ -20,6 +21,7 @@ never touched. Run after `lake env lean scripts/ExtractDecls.lean`.
   python3 scripts/sync_atlas.py --check  # exit 1 if a rewrite would change anything
 """
 import datetime, json, pathlib, sys
+from atlas_proof_status import proof_family_status
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ATLAS = ROOT / "atlas/atlas.json"
@@ -28,6 +30,13 @@ atlas = json.load(open(ATLAS))
 decls = json.load(open(ROOT / "atlas/declarations.json"))
 by_id = {r["id"]: r for r in atlas["results"]}
 errors, changes = [], []
+declaration_index = {d["name"]: d for d in decls}
+family_statuses = {}
+for r in atlas["results"]:
+    try:
+        family_statuses[r["id"]] = proof_family_status(r, declaration_index)
+    except (ValueError, KeyError, TypeError, AttributeError) as e:
+        errors.append(f"{r['id']}: {e}")
 
 # id -> [declaration records], in source order
 tagged = {}
@@ -59,8 +68,10 @@ for r in atlas["results"]:
         new.append(f)
     forms = new + others
     sts = {f["status"] for f in new if not f.get("partial")}
+    if family_statuses[r["id"]]:
+        sts.add(family_statuses[r["id"]])
     status = r["status"]
-    if sts and sts == {"proved"}: status = "proved"   # every non-partial formalization is sorry-free
+    if sts and sts == {"proved"}: status = "proved"   # every required proof is sorry-free
     elif "scaffold" in sts: status = "scaffold"
     elif "stated" in sts: status = "stated"
     elif r["status"] in ("proved", "scaffold", "stated"):

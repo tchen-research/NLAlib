@@ -15,6 +15,10 @@ Lean v4.33.1; the exact Mathlib revision is pinned in lake-manifest.json.
 - atlas.json catalogues research results, hypotheses, sources, formalizations and their status.
   `scaffold` includes results depending on unfinished proofs. Ordinary helpers need no atlas
   entry of their own; their status is still recorded in declarations.json.
+- `proof_family.clauses` records reviewed full coverage by a family of component theorems.
+  Each clause lists its mathematical statement and tagged declaration names. Status is generated
+  from every listed proof dependency; an individually partial component is not an open item
+  when the complete reviewed family is proved.
 
 ## Finding and using a result
 

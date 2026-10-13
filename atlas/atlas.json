@@ -8668,7 +8668,7 @@
    ],
    "area": "estimation",
    "kind": "application",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Actual independent Rademacher probes combine the deterministic Lanczos compression error with the proved Hutchinson tail. General analytic rates retain the domain and magnitude parameters rho and M; relative rates require a PSD matrix function and positive trace.",
    "hypotheses": [
     "$A=A^\\top\\in\\mathbb R^{n\\times n}$ has spectrum in [a,c], a<c; m>=1 probes have mutually independent Rademacher coordinates, and q>=1",
@@ -8842,7 +8842,58 @@
     "krylov"
    ],
    "updated_at": "2026-10-13",
-   "notes": "The case f = 1/x (tr A⁻¹) is proved 2026-10-10 from the Chebyshev 1/x approximation; general analytic f waits on bernstein-ellipse-approx."
+   "notes": "The supplied compression-frame contract is fully covered by the analytic, Lipschitz and Rademacher proof family. Analytic rates use the explicit ellipse parameter and magnitude; positive-trace relative rates and a computable positive scalar lower-bound variant are included. The inverse has its separate Chebyshev endpoint-ratio rate. No construction or matrix-vector operation count is asserted for the supplied frames.",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For a real symmetric matrix with spectrum in the stated interval, orthonormal compression frames containing each probe's K_q give deterministic quadrature error at most twice the uniform degree-below-2q polynomial approximation error times the average squared probe norm.",
+      "decls": [
+       "NLAlib.abs_compressionQuadratureEstimate_sub_hutchinsonEstimate_le"
+      ]
+     },
+     {
+      "statement": "For a nonempty finite family of independent Rademacher coordinates, analyticity and a magnitude bound M on the open Bernstein ellipse of parameter rho greater than one give the advertised additive threshold 4nM divided by rho to the power 2q minus one and rho minus one, with the Hanson-Wright tail coefficient one over 256e squared.",
+      "decls": [
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_open_bernsteinEllipse"
+      ]
+     },
+     {
+      "statement": "For the same actual Rademacher law, an L-Lipschitz function on the spectral interval gives the additive quadrature threshold pi L n times interval length divided by 4q and the same Hanson-Wright tail.",
+      "decls": [
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitzOnWith"
+      ]
+     },
+     {
+      "statement": "For a positive semidefinite matrix function with positive trace and relative epsilon in zero to one, paying half the relative budget with deterministic quadrature error and taking at least 1024e squared epsilon inverse squared log of 2 over delta probes gives relative failure probability at most delta.",
+      "decls": [
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_of_le_card",
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_card_ge"
+      ]
+     },
+     {
+      "statement": "A positive analytic approximation order q satisfying the advertised logarithmic bound involving n, M, rho and the positive trace supplies the relative deterministic budget; a positive lower bound on the scalar function supplies the stated computable replacement involving f_min.",
+      "decls": [
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_log_order",
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_analytic_lower_bound"
+      ]
+     },
+     {
+      "statement": "The analytic logarithmic order bound also gives an absolute-error tail, while Lipschitz functions have separate absolute and relative order budgets and a relative order budget using a positive scalar lower bound.",
+      "decls": [
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_analytic_log_order",
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_le_of_hasLaw_rademacherVector_lipschitz_order",
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_order",
+       "NLAlib.measureReal_abs_compressionQuadratureEstimate_sub_trace_gt_mul_trace_le_of_hasLaw_rademacherVector_lipschitz_lower_bound"
+      ]
+     },
+     {
+      "statement": "The inverse function on a positive spectral interval has the separate Chebyshev quadrature rate in the square-root endpoint ratio; arbitrary analytic-function rates retain their explicit ellipse and magnitude parameters.",
+      "decls": [
+       "NLAlib.abs_compressionQuadratureEstimate_inv_sub_hutchinsonEstimate_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "sketch-and-solve-ls",
@@ -14362,12 +14413,13 @@
    "area": "krylov-linear-systems",
    "kind": "definition",
    "status": "candidate",
-   "informal": "$\\mathcal P_k^0 = \\{p \\in \\mathbb R[x] : \\deg p \\le k,\\ p(0) = 1\\}$ and, for $S \\subseteq \\mathbb C$, $\\varepsilon_k(S) = \\inf_{p\\in\\mathcal P_k^0}\\sup_{z\\in S}|p(z)|$. Characterisation: $x \\in x_0 + \\mathcal K_k(A, r_0)$ iff $b - Ax = p(A)r_0$ for some $p \\in \\mathcal P_k^0$ (and then $x - x_\\star = p(A)(x_0 - x_\\star)$ when $Ax_\\star = b$). $\\varepsilon_k$ is antitone in $k$, monotone in $S$, attained for finite or compact $S$, and $\\varepsilon_k([a,b]) = 1/T_k\\big(\\tfrac{b+a}{b-a}\\big)$ for $0<a<b$.",
+   "informal": "$\\mathcal P_k^0 = \\{p \\in \\mathbb R[x] : \\deg p \\le k,\\ p(0) = 1\\}$ and, for $S \\subseteq \\mathbb C$, $\\varepsilon_k(S) = \\inf_{p\\in\\mathcal P_k^0}\\sup_{z\\in S}|p(z)|$. For any $A$, every $x \\in x_0 + \\mathcal K_k(A,r_0)$ has residual $b-Ax=p(A)r_0$ for some $p\\in\\mathcal P_k^0$, and every such polynomial residual has an affine-Krylov representative. If $A$ is invertible, membership of a specified $x$ is equivalent to this residual-polynomial condition, and $x-x_\\star=p(A)(x_0-x_\\star)$ when $Ax_\\star=b$. $\\varepsilon_k$ is antitone in $k$, monotone in $S$, attained for finite or compact $S$, and $\\varepsilon_k([a,b]) = 1/T_k\\big(\\tfrac{b+a}{b-a}\\big)$ for $0<a<b$.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$, $b, x_0 \\in \\mathbb R^n$, $r_0 = b - Ax_0$, $k \\in \\mathbb N$",
-    "$S \\subseteq \\mathbb C$ (or $\\subseteq \\mathbb R$)"
+    "$S \\subseteq \\mathbb C$ (or $\\subseteq \\mathbb R$)",
+    "Invertibility of $A$ is required only for the converse at a specified $x$ and the error-polynomial identity."
    ],
-   "conclusion": "$x - x_0 \\in \\mathcal K_k(A,r_0) \\iff \\exists p \\in \\mathcal P_k^0,\\ b - Ax = p(A)r_0$; $\\varepsilon_{k+1}(S) \\le \\varepsilon_k(S)$; $S \\subseteq S' \\Rightarrow \\varepsilon_k(S) \\le \\varepsilon_k(S')$; the infimum is a minimum for finite $S$; $\\varepsilon_k([a,b]) = 1/T_k(\\frac{b+a}{b-a})$",
+   "conclusion": "$x-x_0\\in\\mathcal K_k(A,r_0)\\Rightarrow\\exists p\\in\\mathcal P_k^0,\\ b-Ax=p(A)r_0$; every $p\\in\\mathcal P_k^0$ has such an affine-Krylov representative; if $A$ is invertible, the implication is an equivalence for a specified $x$; $\\varepsilon_{k+1}(S)\\le\\varepsilon_k(S)$; $S\\subseteq S^\\prime\\Rightarrow\\varepsilon_k(S)\\le\\varepsilon_k(S^\\prime)$; the infimum is a minimum for finite $S$; $\\varepsilon_k([a,b])=1/T_k(\\frac{b+a}{b-a})$",
    "sources": [
     {
      "source": "saad03",
@@ -14403,7 +14455,7 @@
     "krylov",
     "definition"
    ],
-   "notes": "The affine-Krylov ↔ residual-polynomial step is currently a private lemma inside `NLAlib/Krylov/CG.lean` (`exists_degree_lt_one_sub_eq_X_mul`); making it public removes duplication. The value ε_k([a,b]) is the existing `isLeast_chebyshev_minimax`. Consumers (highest in-degree of this group): gmres-def, gmres-diagonalizable, gmres-elman, gmres-bgt, crouzeix-palencia (GMRES corollary), minres-bound, chebyshev-iteration, richardson-iteration, fom-def, cg-convergence (refactor). Prove. Round 8: the residual-polynomial algebra (deg p ≤ q, p(0) = 1 ↔ p = 1 − X s) and the Krylov correspondence x − x₀ ∈ K_q ↔ c − A x = p(A) r₀ are proved; the ε_k(S) clauses (antitone in k, monotone in S, attained) are open.",
+   "notes": "The residual-polynomial algebra and affine-Krylov realization are proved in Krylov/LinearSystems/ResidualPolynomial. The iff for a specified iterate correctly takes IsUnit A: for A=0 a residual cannot detect a nonzero nullspace displacement. The interval minimax value is supplied by isLeast_chebyshev_minimax. The set-dependent minimax monotonicity and attainment clauses remain open. Consumers include GMRES, MINRES, Chebyshev and Richardson iteration, and FOM.",
    "updated_at": "2026-10-13",
    "formalizations": [
     {
@@ -14519,7 +14571,7 @@
     "definition",
     "gmres"
    ],
-   "notes": "Mirror `NLAlib.IsCGIterate` (variational definition, existence by projection, no algorithm). Real primary statement: for real A, b, x₀ the real GMRES residual equals the complex one (for real r₀, replacing a complex p by its real-coefficient part never increases ‖p(A)r₀‖), so complex-spectrum bounds (gmres-diagonalizable, gmres-bgt, crouzeix-palencia) apply to the real definition. Consumers: gmres-diagonalizable, gmres-elman, gmres-bgt, minres-bound, gmres-any-convergence-curve, restarted GMRES(m) (Elman per cycle), sketched GMRES (Nakatsukasa–Tropp 2024: minimise ‖S(b − AQy)‖ over a Krylov basis; a sketch-and-solve consumer with `sketch-and-solve-ls`). The Arnoldi least-squares clause can be split off if arnoldi-relation lags. Prove. Round 8: the predicate, existence (via orthonormal-basis-matrix), residual orthogonality r ⟂ A K_q, uniqueness, polynomial form, monotonicity in q and finite termination at the grade are proved; the Arnoldi least-squares clause ‖r_k‖ = min_y ‖‖r₀‖e₁ − H̲_k y‖ is open (needs the Arnoldi relation). Scope audit: the real variational and polynomial-residual theory is checked. The stated complex form and reduced Arnoldi least-squares clause are not covered by the current declarations, so their full bundle is recorded as candidate with proved partial formalizations.",
+   "notes": "The real variational predicate, existence, residual orthogonality, uniqueness, polynomial characterization, monotonicity and termination at the grade are proved. The real reduced Arnoldi least-squares clause is proved under gmres-arnoldi-form. The complex form remains open, including the bridge identifying real data with the corresponding complex GMRES residual. This entry remains candidate because its full advertised real and complex contract is not yet covered.",
    "updated_at": "2026-10-12",
    "formalizations": [
     {
@@ -14799,7 +14851,7 @@
     "bound",
     "real"
    ],
-   "notes": "Each clause is polynomial-spectral-bound applied to the GMRES polynomial characterisation plus a polynomial from two-interval-minimax or chebyshev-minimax. Consumers: preconditioned MINRES for saddle-point / KKT systems, LSMR (MINRES on the normal equations) inside sketch-and-precondition least squares, regularised indefinite solves in randomized Newton methods. Prove. Round 8: the spectral min–max bound ‖r_q‖² ≤ max_i |p(λ_i)|² ‖r₀‖² for symmetric A and the definite Chebyshev rate are proved; the two-interval indefinite bound waits on two-interval-minimax.",
+   "notes": "The symmetric spectral polynomial bound and definite Chebyshev rate are proved. The equal-width indefinite two-interval polynomial prerequisite two-interval-minimax is now proved, but its explicit MINRES consumer bound remains open. Consumers include preconditioned MINRES for saddle-point systems and regularized indefinite solves.",
    "updated_at": "2026-10-12",
    "formalizations": [
     {
@@ -14951,7 +15003,7 @@
     "polynomial-method",
     "real"
    ],
-   "notes": "The identity is an induction on the coupled recurrences (the ρ_k bookkeeping is the work). Preconditioned form: replace A by P⁻¹A with aP ≼ A ≼ bP. Consumers: LSRN (Meng–Saunders–Mahoney 2014) runs Chebyshev semi-iteration on the sketch-preconditioned normal equations; polynomial preconditioning and Chebyshev filtering in subspace iteration; the kernel polynomial method for spectral densities (same recurrence). Prove. Round 8: defined via polyIterate with the Chebyshev residual, A-norm and residual bounds 2ρ^q proved; the three-term recurrence (Saad Alg. 12.1) is open.",
+   "notes": "The polynomially defined iterate, first step, residual and energy rates, and an equivalent three-term recurrence are proved. The coupled rho_k, d_k recursion stated above still needs an explicit realization bridge to that iterate; its exact reciprocal-Chebyshev residual bound also remains to be exposed. A polynomial specification alone does not complete the stated algorithm guarantee.",
    "updated_at": "2026-10-12",
    "formalizations": [
     {
@@ -19448,7 +19500,7 @@
    ],
    "area": "matrix-majorization",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $A\\in\\mathbb R^{m\\times p}$, $B\\in\\mathbb R^{p\\times n}$ and every $k$: $\\prod_{i\\le k}\\sigma_i(AB)\\le\\prod_{i\\le k}\\sigma_i(A)\\sigma_i(B)$ (Horn). Consequently (Weyl's majorant theorem) $\\sum_{i\\le k}\\sigma_i(AB)^s\\le\\sum_{i\\le k}\\sigma_i(A)^s\\sigma_i(B)^s$ for every $s>0$; in particular $\\|AB\\|_{(k)}\\le\\sum_{i\\le k}\\sigma_i(A)\\sigma_i(B)$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times p}$, $B\\in\\mathbb R^{p\\times n}$ (`Fin` indices)",
@@ -19512,7 +19564,23 @@
    ],
    "uses_defs": [
     "NLAlib.singularValues"
-   ]
+   ],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For compatible finite real matrices A and B, every zero-padded prefix of singular values satisfies Horn's product inequality, including rank-deficient and empty shapes.",
+      "decls": [
+       "NLAlib.prod_singularValues_mul_le"
+      ]
+     },
+     {
+      "statement": "For every positive real exponent and every prefix, the singular-value power sum of AB is bounded by the corresponding power sum of products; exponent one gives the stated Ky Fan comparison.",
+      "decls": [
+       "NLAlib.sum_range_singularValues_mul_rpow_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "eigenvalue-perturbation-symmetric",
@@ -21683,7 +21751,7 @@
    ],
    "area": "matrix-conditioning",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$A\\in\\mathbb R^{m\\times n}$ of full column rank, $x=\\arg\\min\\|Ax-b\\|$ with $x\\ne0$, $r=b-Ax$. Let $\\|\\Delta A\\|\\le\\varepsilon\\|A\\|$, $\\|\\Delta b\\|\\le\\varepsilon\\|b\\|$, $\\kappa(A)\\varepsilon<1$, $y=\\arg\\min\\|(A+\\Delta A)y-(b+\\Delta b)\\|$, $s=(b+\\Delta b)-(A+\\Delta A)y$. Then $$\\frac{\\|x-y\\|}{\\|x\\|}\\le\\frac{\\kappa\\varepsilon}{1-\\kappa\\varepsilon}\\Big(2+(\\kappa+1)\\frac{\\|r\\|}{\\|A\\|\\|x\\|}\\Big),\\qquad\\frac{\\|r-s\\|}{\\|b\\|}\\le(1+2\\kappa)\\varepsilon.$$ First-order form: $\\frac{\\|x-y\\|}{\\|x\\|}\\le\\varepsilon\\big(\\frac{2\\kappa}{\\cos\\theta}+\\kappa^2\\tan\\theta\\big)+O(\\varepsilon^2)$, $\\sin\\theta=\\|r\\|/\\|b\\|$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$, $\\operatorname{rank}A=n$, $b\\in\\mathbb R^m$ with $A^\\top b\\ne0$",
@@ -21833,7 +21901,29 @@
     "NLAlib.moorePenroseInverse",
     "NLAlib.specNorm"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For full-column-rank real A, nonzero least-squares solution, nonnegative relative perturbation size epsilon, and kappa epsilon less than one, the actual Moore-Penrose least-squares solutions satisfy the advertised finite relative solution-error bound.",
+      "decls": [
+       "NLAlib.norm_least_squares_sub_div_le"
+      ]
+     },
+     {
+      "statement": "Under the same relative data and matrix perturbation bounds with nonzero data, the actual least-squares residuals satisfy the stronger relative residual-error coefficient one plus kappa, hence the advertised one plus twice kappa bound.",
+      "decls": [
+       "NLAlib.norm_least_squares_residual_sub_div_le"
+      ]
+     },
+     {
+      "statement": "The geometric angle of the data to the column space has the stated sine, cosine and tangent ratios and gives the quoted first-order coefficient with an explicit quadratic remainder when epsilon is at most one over twice kappa.",
+      "decls": [
+       "NLAlib.exists_least_squares_angle_error_bound"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "cholesky-decomposition",
@@ -27622,7 +27712,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$A$ is normal ($AA^*=A^*A$) iff it is unitarily diagonalizable iff $\\|A\\|_F^2=\\sum|\\lambda_i|^2$ iff it has an orthonormal eigenbasis; block triangular normal matrices are block diagonal; two normal matrices are unitarily similar iff they have the same eigenvalues. A real normal matrix is real orthogonally similar to a direct sum of $1\\times1$ blocks and $2\\times2$ blocks $\\begin{pmatrix}a&b\\\\-b&a\\end{pmatrix}$ (skew-symmetric and orthogonal matrices as special cases). Fuglede–Putnam: for normal $A,B$, $AX=XB\\iff A^*X=XB^*$.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$ with $AA^*=A^*A$ (or real with $AA^\\top=A^\\top A$)"
@@ -27862,7 +27952,55 @@
     "NLAlib.IsRealNormalForm",
     "NLAlib.frobSq"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "A complex square matrix is normal exactly when it is unitarily diagonalizable, and exactly when it has a complete orthonormal eigenbasis, including empty dimensions.",
+      "decls": [
+       "NLAlib.normal_iff_exists_unitary_diagonalization",
+       "NLAlib.normal_iff_exists_orthonormalBasis_eigenvectors"
+      ]
+     },
+     {
+      "statement": "For a complete characteristic-root list with multiplicities, equality between squared eigenvalue magnitudes and squared Frobenius norm characterizes complex normality.",
+      "decls": [
+       "NLAlib.sum_norm_sq_characteristic_eq_frobSq_iff_normal"
+      ]
+     },
+     {
+      "statement": "A complex normal block upper triangular matrix has zero off-diagonal block and equals its block diagonal part.",
+      "decls": [
+       "NLAlib.upper_fromBlocks_eq_diagonal_of_normal"
+      ]
+     },
+     {
+      "statement": "Two complex normal matrices of the same shape are unitarily similar exactly when their characteristic polynomials, hence eigenvalues with multiplicities, coincide.",
+      "decls": [
+       "NLAlib.exists_unitary_similarity_iff_charpoly_eq_of_normal"
+      ]
+     },
+     {
+      "statement": "Every finite real normal matrix has an orthogonal similarity to disjoint scalar and two-dimensional rotation-dilation blocks with equal diagonal entries and opposite off-diagonal entries, including empty dimension.",
+      "decls": [
+       "NLAlib.exists_orthogonal_real_normal_form"
+      ]
+     },
+     {
+      "statement": "Real skew-symmetric matrices have zero scalar blocks and zero-diagonal skew blocks, while real orthogonal matrices have scalar signs and planar rotation blocks whose coefficients satisfy the unit-circle equation.",
+      "decls": [
+       "NLAlib.exists_orthogonal_real_skew_normal_form",
+       "NLAlib.exists_orthogonal_real_orthogonal_normal_form"
+      ]
+     },
+     {
+      "statement": "For complex normal square matrices of arbitrary compatible sizes and a rectangular intertwiner, intertwining the matrices is equivalent to intertwining their adjoints, including empty dimensions.",
+      "decls": [
+       "NLAlib.mul_eq_mul_iff_conjTranspose_mul_eq_mul_conjTranspose_of_normal_rectangular"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "diagonalizable-def",
@@ -30146,7 +30284,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$A$ has an LU factorization with nonsingular $L$ iff for each $i<n$ the row $A[i+1,1{:}i]$ is a combination of the rows of $A[1{:}i,1{:}i]$ (row inclusion); dually for nonsingular $U$ and column inclusion. If $\\operatorname{rank}A=k$ and the leading $j\\times j$ blocks are nonsingular for $j\\le k$, $A=LU$ with either factor unit triangular.",
    "hypotheses": [
     "$A\\in\\mathbb R^{n\\times n}$, possibly singular"
@@ -30254,7 +30392,29 @@
     "NLAlib.IsUnitUpperTriangular",
     "NLAlib.leadingMinor"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For an arbitrary finite ordered real square matrix, unit-lower-times-upper LU exists exactly when each leading row prefix is a linear combination of the preceding leading row prefixes, allowing singular and empty matrices.",
+      "decls": [
+       "NLAlib.exists_isLU_iff_rowInclusion"
+      ]
+     },
+     {
+      "statement": "Lower-times-unit-upper LU exists exactly when the dual leading-column inclusion condition holds, without nonzero-pivot assumptions.",
+      "decls": [
+       "NLAlib.exists_lower_unitUpper_iff_columnInclusion"
+      ]
+     },
+     {
+      "statement": "If every positive-order leading principal minor through the rank is nonzero, both unit-lower LU and lower-times-unit-upper factorizations exist, including rank zero.",
+      "decls": [
+       "NLAlib.exists_unit_triangular_factorizations_of_leading_minors_through_rank"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "eigenvalue-order-and-counting",
@@ -30899,7 +31059,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For symmetric $A\\in\\mathbb R^{n\\times n}$ and $S\\in\\mathbb R^{n\\times n}$ with singular values $\\sigma_1\\ge\\dots\\ge\\sigma_n$, for each $k$ there is $\\theta_k\\in[\\sigma_n^2,\\sigma_1^2]$ with $\\lambda_k(SAS^\\top)=\\theta_k\\lambda_k(A)$ (same ordering). Hence $\\sigma_n^2\\lambda_k(A)\\le\\lambda_k(SAS^\\top)\\le\\sigma_1^2\\lambda_k(A)$ for $\\lambda_k(A)\\ge0$ (reversed for $\\lambda_k(A)<0$), and $SAS^\\top$ has no more positive (negative) eigenvalues than $A$.",
    "hypotheses": [
     "$A=A^\\top\\in\\mathbb R^{n\\times n}$",
@@ -31002,7 +31162,31 @@
     "NLAlib.singularValues",
     "NLAlib.specNorm"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For a finite real symmetric matrix and any square congruence transformation, each sorted congruence eigenvalue is the corresponding original eigenvalue times a factor between the squared smallest singular value and squared spectral norm, including singular transformations.",
+      "decls": [
+       "NLAlib.exists_eigenvalues₀_congruence_scale"
+      ]
+     },
+     {
+      "statement": "For nonnegative original eigenvalues the extreme-singular-value bounds have the advertised order, and for nonpositive original eigenvalues their order reverses.",
+      "decls": [
+       "NLAlib.eigenvalues₀_congruence_bounds_of_nonneg",
+       "NLAlib.eigenvalues₀_congruence_bounds_of_nonpos"
+      ]
+     },
+     {
+      "statement": "An arbitrary real congruence transformation cannot increase either the number of positive eigenvalues or the number of negative eigenvalues.",
+      "decls": [
+       "NLAlib.card_eigenvalues₀_pos_congruence_le",
+       "NLAlib.card_eigenvalues₀_neg_congruence_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "simultaneous-diagonalization-congruence",
@@ -31419,7 +31603,7 @@
    ],
    "area": "matrix-spectral",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Let $A=V\\Lambda V^{-1}$ be diagonalisable and $E$ arbitrary. Every eigenvalue $\\hat\\lambda$ of $A+E$ satisfies $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\kappa(V)\\,|||E|||$ for any matrix norm induced by an absolute vector norm (e.g. $\\|\\cdot\\|_1,\\|\\cdot\\|_2,\\|\\cdot\\|_\\infty$), with $\\kappa(V)=|||V|||\\,|||V^{-1}|||$. If $A$ is normal, $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\|E\\|_2$. Residual form: for $\\hat x\\ne0$ and $r=A\\hat x-\\hat\\lambda\\hat x$, $\\min_i|\\hat\\lambda-\\lambda_i|\\le\\kappa(V)\\|r\\|/\\|\\hat x\\|$ (and $\\le\\|r\\|_2/\\|\\hat x\\|_2$ for normal $A$).",
    "hypotheses": [
     "$A=V\\Lambda V^{-1}\\in\\mathbb C^{n\\times n}$, $\\Lambda$ diagonal",
@@ -31540,7 +31724,35 @@
    "uses_defs": [
     "NLAlib.specNorm"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For an invertible complex diagonalizing matrix and any induced absolute vector norm, every perturbed spectral point lies within the norm of the perturbation times the diagonalizer's norm condition number of a listed original eigenvalue, allowing repeated eigenvalues.",
+      "decls": [
+       "NLAlib.exists_eigenvalue_distance_le_perturbation_of_absolute_norm"
+      ]
+     },
+     {
+      "statement": "For the same arbitrary induced absolute norm and every nonzero approximate eigenvector, the distance to a listed original eigenvalue is bounded by the diagonalizer's norm condition number times residual norm divided by vector norm.",
+      "decls": [
+       "NLAlib.exists_eigenvalue_distance_le_residual_div_of_absolute_norm"
+      ]
+     },
+     {
+      "statement": "For a complex normal matrix, every perturbed spectral point is within the perturbation's spectral norm of the original spectrum, with coefficient one and no normality assumption on the perturbed matrix.",
+      "decls": [
+       "NLAlib.exists_mem_spectrum_distance_le_norm_perturbation_of_normal"
+      ]
+     },
+     {
+      "statement": "For a complex normal matrix and any nonzero approximate eigenvector, the distance to the original spectrum is bounded by Euclidean residual norm divided by Euclidean vector norm with coefficient one.",
+      "decls": [
+       "NLAlib.exists_mem_spectrum_distance_le_euclidean_residual_div_of_normal"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "hoffman-wielandt-normal",
@@ -32174,7 +32386,7 @@
    ],
    "area": "matrix-factorizations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Every real $m\\times n$ matrix with $m\\ge n$ has $A=UQ$, $Q=(A^\\top A)^{1/2}\\succeq0$ and $U^\\top U=I_n$, at arbitrary rank. The positive factor is unique; the polar isometry is unique iff $\\operatorname{rank}A=n$, when $U=A(A^\\top A)^{-1/2}$. For $m\\le n$, $A=PU$ with $P=(AA^\\top)^{1/2}$ and a coisometry $UU^\\top=I_m$, unique iff $\\operatorname{rank}A=m$. In the square case one orthogonal $U$ gives $A=PU=UQ$. Every tall polar isometry and every wide polar coisometry is a nearest such factor to $A$ in every orthogonally invariant norm on its real matrix space.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$; $m\\ge n$ for the isometry version and $m\\le n$ for the coisometry version"
@@ -32314,7 +32526,62 @@
     "NLAlib.UnitarilyInvariantNorm.seminorm",
     "NLAlib.polarFrame"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "Every real matrix with at least as many rows as columns has an orthonormal-column factor U with U sqrt(AᵀA)=A, including arbitrary rank and empty dimensions.",
+      "decls": [
+       "NLAlib.exists_isometry_mul_sqrt_gram_eq"
+      ]
+     },
+     {
+      "statement": "In any orthonormal-column factorization A=UQ with Q positive semidefinite, Q is uniquely the positive Gram square root sqrt(AᵀA).",
+      "decls": [
+       "NLAlib.eq_sqrt_gram_of_isometry_mul_eq"
+      ]
+     },
+     {
+      "statement": "A tall polar isometry is unique exactly at full column rank, equals A times the inverse Gram square root then, and has a distinct alternative at deficient rank.",
+      "decls": [
+       "NLAlib.polar_isometry_unique_iff_rank_eq_card",
+       "NLAlib.eq_polarFrame_of_isometry_mul_sqrt_gram_eq",
+       "NLAlib.exists_ne_isometry_mul_sqrt_gram_eq_of_rank_lt"
+      ]
+     },
+     {
+      "statement": "Every real matrix with at least as many columns as rows has a coisometry U with sqrt(AAᵀ) U=A, including arbitrary rank and empty dimensions.",
+      "decls": [
+       "NLAlib.exists_sqrt_rowGram_mul_coisometry_eq"
+      ]
+     },
+     {
+      "statement": "A wide polar coisometry is unique exactly at full row rank, including an empty row index type.",
+      "decls": [
+       "NLAlib.polar_coisometry_unique_iff_rank_eq_card"
+      ]
+     },
+     {
+      "statement": "For square real matrices, the same orthogonal polar factor works in both A=U sqrt(AᵀA) and A=sqrt(AAᵀ) U.",
+      "decls": [
+       "NLAlib.exists_isometry_mul_sqrt_gram_eq",
+       "NLAlib.sqrt_rowGram_mul_eq_of_isometry_mul_sqrt_gram_eq"
+      ]
+     },
+     {
+      "statement": "Every tall polar isometry minimizes distance to A among all isometries in every orthogonally invariant norm on arbitrary finite real matrix indices.",
+      "decls": [
+       "NLAlib.invariantNorm_sub_polar_le_sub_isometry"
+      ]
+     },
+     {
+      "statement": "Every wide polar coisometry minimizes distance to A among all coisometries in every orthogonally invariant norm on arbitrary finite real matrix indices.",
+      "decls": [
+       "NLAlib.invariantNorm_sub_polar_le_sub_coisometry"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "orthogonal-procrustes",
@@ -32326,7 +32593,7 @@
    ],
    "area": "matrix-projections",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $A,B\\in\\mathbb R^{m\\times n}$: $\\min_{U\\in O(m)}\\|A-UB\\|_F^2=\\|A\\|_F^2-2\\sum_i\\sigma_i(AB^\\top)+\\|B\\|_F^2$, attained at the orthogonal polar factor of $AB^\\top$; $\\min_{U,T\\text{ orth.}}\\|A-UBT\\|_F^2=\\sum_i(\\sigma_i(A)-\\sigma_i(B))^2$; in positive dimension $n>0$, the best $cU$ approximation of square $A$ is $(\\tfrac1n\\operatorname{tr}P)U_0$ for $A=PU_0$. Equality $\\|A-B\\|_F^2=\\sum_i(\\sigma_i(A)-\\sigma_i(B))^2$ holds iff $\\operatorname{tr}AB^\\top=\\sum\\sigma_i(A)\\sigma_i(B)$, and then $AB^\\top,B^\\top A\\succeq0$. In dimension zero the attained minimum for scaled orthogonal approximation is zero, with no division by the dimension.",
    "hypotheses": [
     "$A,B\\in\\mathbb R^{m\\times n}$",
@@ -32509,7 +32776,44 @@
     "NLAlib.nuclearNorm",
     "NLAlib.singularValues"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For arbitrary finite real rectangular A and B, the minimum of ||A-UB||_F² over orthogonal left rotations is ||A||_F²+||B||_F²-2||ABᵀ||_*, attained by every orthogonal polar factor of ABᵀ.",
+      "decls": [
+       "NLAlib.isLeast_frobSq_sub_orthogonal_mul",
+       "NLAlib.frobSq_sub_mul_eq_of_cross_polar"
+      ]
+     },
+     {
+      "statement": "The attained two-sided orthogonal Procrustes minimum is the sum of squared differences of the singular values over the thin dimension, including deficient rank and empty shapes.",
+      "decls": [
+       "NLAlib.isLeast_frobSq_sub_orthogonal_mul_mul"
+      ]
+     },
+     {
+      "statement": "In positive square dimension, the optimal real scaled-orthogonal approximation is (tr sqrt(AAᵀ)/n) U for any left polar factor, with attained minimum ||A||_F²-||A||_*²/n.",
+      "decls": [
+       "NLAlib.isLeast_frobSq_sub_scaled_orthogonal",
+       "NLAlib.frobSq_sub_trace_rowGram_avg_smul_leftPolar_eq"
+      ]
+     },
+     {
+      "statement": "In square dimension zero, the attained scaled-orthogonal minimum is zero without division by the dimension.",
+      "decls": [
+       "NLAlib.isLeast_frobSq_sub_scaled_orthogonal_of_isEmpty"
+      ]
+     },
+     {
+      "statement": "Frobenius Mirsky equality is equivalent to equality of the signed von Neumann singular-value pairing, and implies positive semidefiniteness of ABᵀ and BᵀA.",
+      "decls": [
+       "NLAlib.frobSq_sub_eq_sum_singularValues_sub_sq_iff",
+       "NLAlib.posSemidef_cross_products_of_frobSq_sub_eq_sum_singularValues_sub_sq"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "kantorovich-inequality",
@@ -32717,11 +33021,12 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
-   "informal": "For PSD $A,B\\in\\mathbb R^{n\\times n}$: if $A\\succ0$ and $B$ has positive diagonal then $A\\circ B\\succ0$; Hadamard powers $A^{\\circ k}$ and $[f(a_{ij})]$ for $f$ with nonnegative Taylor coefficients (radius $>\\max|a_{ij}|$) are PSD, $[e^{a_{ij}}]\\succeq0$ (PD iff no two rows of $A$ coincide); Oppenheim: $\\det(A\\circ B)\\ge\\max\\{\\det A\\prod b_{ii},\\det B\\prod a_{ii}\\}$; for $A,B\\succ0$: $A^{-1}\\circ B^{-1}\\succeq(A\\circ B)^{-1}$, $A\\circ A^{-1}\\succeq I$, and $\\lambda_{\\min}(A\\circ B)\\ge\\max\\{\\lambda_{\\min}(AB),\\lambda_{\\min}(AB^\\top)\\}$; For real symmetric comparands, Hadamard products preserve the dominance $x^*Ax\\ge|x^*Bx|$.",
+   "status": "proved",
+   "informal": "For PSD $A,B\\in\\mathbb R^{n\\times n}$: if $A\\succ0$ and $B$ has positive diagonal then $A\\circ B\\succ0$; Hadamard powers $A^{\\circ k}$ and $[f(a_{ij})]$ for $f$ with nonnegative Taylor coefficients (radius $>\\max|a_{ij}|$) are PSD, $[e^{a_{ij}}]\\succeq0$ (PD iff no two rows of $A$ coincide); Oppenheim: $\\det(A\\circ B)\\ge\\max\\{\\det A\\prod b_{ii},\\det B\\prod a_{ii}\\}$; for $A,B\\succ0$: $A^{-1}\\circ B^{-1}\\succeq(A\\circ B)^{-1}$, $A\\circ A^{-1}\\succeq I$, and, in positive dimension, $\\lambda_{\\min}(A\\circ B)\\ge\\max\\{\\lambda_{\\min}(AB),\\lambda_{\\min}(AB^\\top)\\}$; For real symmetric comparands, Hadamard products preserve the dominance $x^*Ax\\ge|x^*Bx|$.",
    "hypotheses": [
     "$A,B\\in\\mathbb R^{n\\times n}$ PSD (PD where stated)",
-    "real symmetric comparands for the absolute quadratic dominance clause"
+    "real symmetric comparands for the absolute quadratic dominance clause",
+    "$n\\ge1$ for the minimum-eigenvalue clause."
    ],
    "conclusion": "the listed Loewner, determinant and eigenvalue inequalities for $A\\circ B$",
    "sources": [
@@ -32950,7 +33255,62 @@
    "uses_defs": [
     "NLAlib.quadForm"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The Hadamard product of a real positive definite A and a real positive semidefinite B with strictly positive diagonal is positive definite.",
+      "decls": [
+       "NLAlib.posDef_hadamard_of_posDef_of_diag_pos"
+      ]
+     },
+     {
+      "statement": "Every natural entrywise power of a real PSD matrix is PSD, including the zeroth all-ones power.",
+      "decls": [
+       "NLAlib.posSemidef_map_pow"
+      ]
+     },
+     {
+      "statement": "Entrywise convergent scalar power series with nonnegative coefficients preserve real PSD matrices, and strict membership of every entry in the formal convergence radius supplies the analytic-radius version.",
+      "decls": [
+       "NLAlib.posSemidef_map_of_nonneg_powerSeries",
+       "NLAlib.posSemidef_map_ofScalarsSum_of_lt_radius"
+      ]
+     },
+     {
+      "statement": "The entrywise exponential of a real PSD matrix is PSD and is positive definite exactly when the matrix rows are pairwise distinct.",
+      "decls": [
+       "NLAlib.posSemidef_map_exp",
+       "NLAlib.posDef_map_exp_iff_rows_injective"
+      ]
+     },
+     {
+      "statement": "For real PSD A and B, Oppenheim's lower bound is det(A⊙B)≥max(det(A)∏Bᵢᵢ,det(B)∏Aᵢᵢ).",
+      "decls": [
+       "NLAlib.max_det_mul_prod_diag_le_det_hadamard"
+      ]
+     },
+     {
+      "statement": "For real positive definite A and B, (A⊙B)⁻¹≤A⁻¹⊙B⁻¹ and I≤A⊙A⁻¹ in Loewner order.",
+      "decls": [
+       "NLAlib.inv_hadamard_le_hadamard_inv",
+       "NLAlib.one_le_hadamard_inv"
+      ]
+     },
+     {
+      "statement": "In positive finite dimension, the minimum real eigenvalue of A⊙B for real positive definite A and B is at least the maximum of the minimum real spectra of AB and ABᵀ.",
+      "decls": [
+       "NLAlib.max_sInf_spectrum_mul_le_sInf_spectrum_hadamard"
+      ]
+     },
+     {
+      "statement": "For real symmetric A,B,C,D, absolute quadratic dominance of B by A and of D by C implies absolute quadratic dominance of B⊙D by A⊙C.",
+      "decls": [
+       "NLAlib.abs_quadForm_hadamard_le_of_abs_quadForm_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "log-det-concavity",
@@ -32963,8 +33323,8 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
-   "informal": "On symmetric positive definite matrices: $A\\mapsto\\log\\det A$ is strictly concave, i.e. $\\det(\\alpha A+(1-\\alpha)B)\\ge(\\det A)^\\alpha(\\det B)^{1-\\alpha}$ for $0<\\alpha<1$ with equality iff $A=B$; for $n\\ge1$, for $n\\ge1$, for $n\\ge1$, $A\\mapsto(\\det A)^{1/n}$ is concave (Minkowski: $(\\det(A+B))^{1/n}\\ge(\\det A)^{1/n}+(\\det B)^{1/n}$, equality iff $A=cB$ for some $c>0$ for some $c>0$ for some $c>0$); and $A\\mapsto\\operatorname{tr}A^{-1}$ is strictly convex.",
+   "status": "proved",
+   "informal": "On symmetric positive definite matrices: $A\\mapsto\\log\\det A$ is strictly concave, i.e. $\\det(\\alpha A+(1-\\alpha)B)\\ge(\\det A)^\\alpha(\\det B)^{1-\\alpha}$ for $0<\\alpha<1$ with equality iff $A=B$; for $n\\ge1$, $A\\mapsto(\\det A)^{1/n}$ is concave (Minkowski: $(\\det(A+B))^{1/n}\\ge(\\det A)^{1/n}+(\\det B)^{1/n}$, equality iff $A=cB$ for some $c>0$); and $A\\mapsto\\operatorname{tr}A^{-1}$ is strictly convex.",
    "hypotheses": [
     "$A,B\\in\\mathbb R^{n\\times n}$ symmetric positive definite",
     "$0<\\alpha<1$",
@@ -33127,7 +33487,46 @@
     }
    ],
    "uses_defs": [],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "Log determinant is strictly concave on the real positive definite cone, including the empty-dimensional singleton cone.",
+      "decls": [
+       "NLAlib.strictConcaveOn_log_det"
+      ]
+     },
+     {
+      "statement": "For positive definite A,B and positive normalized weights, determinant Jensen holds in real-power form with equality exactly when A=B.",
+      "decls": [
+       "NLAlib.det_rpow_mul_le_det_smul_add",
+       "NLAlib.det_smul_add_eq_rpow_mul_iff"
+      ]
+     },
+     {
+      "statement": "In positive finite dimension, det(A)^(1/n) is concave on the real positive definite cone, with normalized endpoint weights included and interior equality exactly at positive proportionality.",
+      "decls": [
+       "NLAlib.concaveOn_det_rpow_inv_card",
+       "NLAlib.det_smul_add_rpow_inv_card_eq_iff"
+      ]
+     },
+     {
+      "statement": "In positive finite dimension, Minkowski's determinant-root inequality holds for positive definite A,B, with equality exactly when A=cB for a positive real c.",
+      "decls": [
+       "NLAlib.det_rpow_inv_card_add_le",
+       "NLAlib.det_add_rpow_inv_card_eq_iff"
+      ]
+     },
+     {
+      "statement": "Trace of the inverse is strictly convex on the real positive definite cone, including dimension zero; Jensen includes endpoint weights and interior equality is exactly A=B.",
+      "decls": [
+       "NLAlib.strictConvexOn_trace_inv",
+       "NLAlib.trace_inv_smul_add_le",
+       "NLAlib.trace_inv_smul_add_eq_iff"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "loewner-relative-spectrum",
@@ -33312,7 +33711,7 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $X\\in\\mathbb R^{p\\times q}$: $\\begin{bmatrix}I&X\\\\X^\\top&I\\end{bmatrix}\\succeq0$ ($\\succ0$) iff $\\|X\\|\\le1$ ($<1$). For $H=\\begin{bmatrix}A&B\\\\B^\\top&C\\end{bmatrix}$ with $A,C\\succeq0$, TFAE: $H\\succeq0$; $(x^\\top Ax)(y^\\top Cy)\\ge(x^\\top By)^2$ for all $x,y$; $x^\\top Ax+y^\\top Cy\\ge2|x^\\top By|$; $B=A^{1/2}XC^{1/2}$ with $\\|X\\|\\le1$; if $A,C\\succ0$ also $\\rho(B^\\top A^{-1}BC^{-1})\\le1$ (strict versions characterise $H\\succ0$, equivalently $A\\succ0$ and $C-B^\\top A^{-1}B\\succ0$). For $A,B\\succeq0$: $A\\succeq B$ iff $\\begin{bmatrix}A&B\\\\B&A\\end{bmatrix}\\succeq0$. For $H\\succ0$ and an index set $\\alpha$: $(H^{-1})_{\\alpha\\alpha}\\succeq(H_{\\alpha\\alpha})^{-1}$; $\\begin{bmatrix}A&X\\\\X^\\top&X^\\top A^{-1}X\\end{bmatrix}\\succeq0$ for $A\\succ0$.",
    "hypotheses": [
     "real symmetric block matrices",
@@ -33539,7 +33938,67 @@
     "NLAlib.quadForm",
     "NLAlib.specNorm"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For every finite real rectangular X, the identity-diagonal block matrix is PSD exactly when specNorm(X)≤1 and PD exactly when specNorm(X)<1, including empty blocks.",
+      "decls": [
+       "NLAlib.posSemidef_identity_fromBlocks_iff_specNorm_le_one",
+       "NLAlib.posDef_identity_fromBlocks_iff_specNorm_lt_one"
+      ]
+     },
+     {
+      "statement": "For real PSD diagonal blocks A,C, PSD of [[A,B],[Bᵀ,C]] is equivalent both to the product quadratic test for all x,y and to the absolute bilinear-sum test for all x,y.",
+      "decls": [
+       "NLAlib.posSemidef_fromBlocks_iff_bilinear_tests"
+      ]
+     },
+     {
+      "statement": "For real PD diagonal blocks A,C, block PD is equivalent to strict product tests for nonzero x and y and to strict absolute bilinear-sum tests when (x,y)≠(0,0).",
+      "decls": [
+       "NLAlib.posDef_fromBlocks_iff_strict_bilinear_tests"
+      ]
+     },
+     {
+      "statement": "For real PSD A,C, including singular and empty blocks, block PSD is equivalent to B=sqrt(A) X sqrt(C) for a contraction X; for PD A,C, block PD is equivalent to such a factorization with specNorm(X)<1.",
+      "decls": [
+       "NLAlib.posSemidef_fromBlocks_iff_exists_sqrt_contraction_factor",
+       "NLAlib.posDef_fromBlocks_iff_exists_strict_sqrt_contraction_factor"
+      ]
+     },
+     {
+      "statement": "For real PD A,C, block PSD and block PD are respectively equivalent to spectralRadius(BᵀA⁻¹BC⁻¹)≤1 and <1.",
+      "decls": [
+       "NLAlib.fromBlocks_positivity_iff_relative_spectralRadius"
+      ]
+     },
+     {
+      "statement": "For arbitrary real diagonal blocks, [[A,B],[Bᵀ,C]] is PD exactly when A and its Schur complement C-BᵀA⁻¹B are PD.",
+      "decls": [
+       "NLAlib.posDef_fromBlocks_iff_posDef_and_schur"
+      ]
+     },
+     {
+      "statement": "For real PSD A,B, the equal-diagonal block [[A,B],[B,A]] is PSD exactly when B≤A.",
+      "decls": [
+       "NLAlib.posSemidef_equal_diagonal_fromBlocks_iff_le"
+      ]
+     },
+     {
+      "statement": "For real PD H, inverse of every injectively indexed principal compression is bounded above by the corresponding compression of H⁻¹, including empty compressions.",
+      "decls": [
+       "NLAlib.inv_submatrix_le_submatrix_inv"
+      ]
+     },
+     {
+      "statement": "For real PD A and arbitrary finite rectangular X, [[A,X],[Xᵀ,XᵀA⁻¹X]] is PSD.",
+      "decls": [
+       "NLAlib.fromBlocks_inverse_gram_posSemidef"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "hadamard-fischer-inequalities",
@@ -33553,10 +34012,10 @@
    ],
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
-   "informal": "For symmetric positive definite $A\\in\\mathbb R^{n\\times n}$: $\\det A\\le\\prod_ia_{ii}$ with equality iff $A$ is diagonal (Hadamard), hence $|\\det B|\\le\\prod_j\\|b_j\\|_2$ for any square $B$ with columns $b_j$ (equality iff orthogonal columns or a zero column); $\\det\\begin{bmatrix}A_{11}&A_{12}\\\\A_{21}&A_{22}\\end{bmatrix}\\le\\det A_{11}\\det A_{22}$ (Fischer); $\\det A_{\\alpha\\cup\\beta}\\det A_{\\alpha\\cap\\beta}\\le\\det A_\\alpha\\det A_\\beta$ (Koteljanskiĭ); and the normalised products $P_k^{1/\\binom{n-1}{k-1}}$ of $k\\times k$ principal minors decrease in $k$ (Szász).",
+   "status": "proved",
+   "informal": "For symmetric positive definite $A\\in\\mathbb R^{n\\times n}$: $\\det A\\le\\prod_ia_{ii}$ with equality iff $A$ is diagonal for positive definite $A$; for PSD $A$, equality holds iff $A$ is diagonal or some diagonal entry is zero (Hadamard), hence $|\\det B|\\le\\prod_j\\|b_j\\|_2$ for any square $B$ with columns $b_j$ (equality iff orthogonal columns or a zero column); $\\det\\begin{bmatrix}A_{11}&A_{12}\\\\A_{21}&A_{22}\\end{bmatrix}\\le\\det A_{11}\\det A_{22}$ (Fischer); $\\det A_{\\alpha\\cup\\beta}\\det A_{\\alpha\\cap\\beta}\\le\\det A_\\alpha\\det A_\\beta$ (Koteljanskiĭ); and the normalised products $P_k^{1/\\binom{n-1}{k-1}}$ of $k\\times k$ principal minors decrease in $k$ (Szász).",
    "hypotheses": [
-    "$A=A^\\top\\succ0$ (PSD by continuity)",
+    "$A=A^\\top\\succ0$; determinant inequalities also hold for PSD input, with equality cases qualified separately.",
     "$\\alpha,\\beta\\subseteq\\{1,\\dots,n\\}$"
    ],
    "conclusion": "the listed determinant inequalities with equality cases",
@@ -33628,7 +34087,7 @@
     "determinants",
     "positive-definite"
    ],
-   "notes": "Consumers: `volume-sampling` and column subset selection (Gram determinants bounded by products of column norms; NLAlib already has the base-times-height identity `det_gram_fromCols_eq_mul_frobSq_sub_projector`), `rpcholesky` / `partial-cholesky-nystrom` (determinants of pivot blocks), determinant bounds for random matrices. Prove Hadamard from Cholesky ($\\det A=\\prod L_{ii}^2$, `IsCholesky.det_eq_prod_sq`, with $L_{ii}^2\\le a_{ii}$) or QR ($|\\det B|=\\prod|R_{ii}|\\le\\prod\\|b_j\\|$); Fischer from the Schur complement $A_{22}-A_{21}A_{11}^{-1}A_{12}\\preceq A_{22}$; Koteljanskiĭ uses overlapping Schur blocks; Szász uses inverse-Hadamard, Jacobi deletion identities and finite subset incidence products.",
+   "notes": "Consumers: `volume-sampling` and column subset selection (Gram determinants bounded by products of column norms; NLAlib already has the base-times-height identity `det_gram_fromCols_eq_mul_frobSq_sub_projector`), `rpcholesky` / `partial-cholesky-nystrom` (determinants of pivot blocks), determinant bounds for random matrices. Prove Hadamard from Cholesky ($\\det A=\\prod L_{ii}^2$, `IsCholesky.det_eq_prod_sq`, with $L_{ii}^2\\le a_{ii}$) or QR ($|\\det B|=\\prod|R_{ii}|\\le\\prod\\|b_j\\|$); Fischer from the Schur complement $A_{22}-A_{21}A_{11}^{-1}A_{12}\\preceq A_{22}$; Koteljanskiĭ uses overlapping Schur blocks; Szász uses inverse-Hadamard, Jacobi deletion identities and finite subset incidence products. Equality in PSD Hadamard is diagonal structure or a zero diagonal entry. The Fischer, Koteljanski, and nontrivial Szász equality characterizations are stated on positive definite input; their PSD extensions assert the inequalities without importing those equality characterizations.",
    "updated_at": "2026-10-13",
    "formalizations": [
     {
@@ -33808,7 +34267,52 @@
     "NLAlib.principalMinor",
     "NLAlib.principalMinorProduct"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For real PSD A, det(A)≤∏Aᵢᵢ; equality is exactly diagonal structure for PD A, while for PSD A it is diagonal structure or a zero diagonal entry.",
+      "decls": [
+       "NLAlib.det_le_prod_diag_of_posSemidef",
+       "NLAlib.det_eq_prod_diag_iff_isDiag_of_posDef",
+       "NLAlib.det_eq_prod_diag_iff_of_posSemidef"
+      ]
+     },
+     {
+      "statement": "For every finite real square B, |det(B)| is bounded by the product of its column Euclidean norms, with equality exactly for orthogonal columns or a zero column.",
+      "decls": [
+       "NLAlib.abs_det_le_prod_column_norm",
+       "NLAlib.abs_det_eq_prod_column_norm_iff"
+      ]
+     },
+     {
+      "statement": "For real PSD block matrices, Fischer's determinant bound is det(H)≤det(A)det(C), and for PD H equality is exactly a zero off-diagonal block.",
+      "decls": [
+       "NLAlib.det_fromBlocks_le_mul_det_of_posSemidef",
+       "NLAlib.det_fromBlocks_eq_mul_det_iff_of_posDef"
+      ]
+     },
+     {
+      "statement": "Koteljanski's union/intersection principal-minor inequality holds for every real PSD matrix and arbitrary finite index sets; for PD matrices equality is exactly vanishing of the off-diagonal overlapping Schur block.",
+      "decls": [
+       "NLAlib.det_principal_union_mul_inter_le_of_posSemidef",
+       "NLAlib.det_principal_union_mul_inter_eq_iff_of_posDef"
+      ]
+     },
+     {
+      "statement": "Szász's normalized principal-minor products are antitone over the valid orders 1≤k≤l≤n for real PSD matrices, with no nontrivial comparison in dimensions zero or one.",
+      "decls": [
+       "NLAlib.principalMinorProduct_normalized_antitone"
+      ]
+     },
+     {
+      "statement": "For real PD matrices, equality in a nontrivial consecutive normalized Szász comparison, 1≤k<n, is exactly diagonal structure.",
+      "decls": [
+       "NLAlib.principalMinorProduct_normalized_succ_eq_iff_isDiag"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "chebyshev-projection-lebesgue-constant",

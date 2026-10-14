@@ -1,0 +1,1268 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{array,booktabs,longtable,enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\setlength{\emergencystretch}{3em}
+\setlength{\parskip}{4pt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\N}{\mathbb N}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\inner}[2]{\left\langle#1,#2\right\rangle}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Span}{span}
+\newcommand{\code}[1]{\ifmmode\text{\small\nolinkurl{#1}}\else{\small\nolinkurl{#1}}\fi}
+\title{Four focused mathematical reroutes\\
+Explicit reciprocal denominators, finite degree transfer,\\
+Jacobi borders, and rational measure modification}
+\author{Mathematical handoff for Lean formalization}
+\date{14 October 2026}
+\begin{document}
+\maketitle
+
+This standalone note contains only the four requested targets. It gives
+mathematical derivations and identifies reusable statements; it does not
+implement or claim new Lean proofs.
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Reciprocal exponential approximation.} An explicit degree-$n$
+denominator is positive and strictly increasing on the half-line for $n\ge1$.
+Its uniform error is at most $\sqrt{40/21}\,3^{-n}$, which retains the earlier
+$\sqrt2\,3^{-n}$ inequality. Its construction needs no weighted minimizer.
+The lower bound needed for the exact root limit $1/3$ is retained and proved
+separately in Appendix~\ref{app:retained-lower}; that proof still uses weighted
+minimax and alternation.
+\item \textbf{The polynomial Bernstein limit for $|x|$.} A finite inequality
+transfers a sufficiently large source degree to any target degree. A scalar
+liminf then proves convergence. No limiting entire function or coefficient
+subsequence is required. Finite complex polynomial growth on ellipses remains
+an explicit, already available input.
+\item \textbf{Radau and Lobatto borders.} A telescoping matrix-power identity
+proves locality and the exact moment-preservation thresholds. Scalar Schur
+complements determine the borders and keep their spectra in the interval.
+\item \textbf{Christoffel--Uvarov modification.} A real coefficient system
+proves existence and the nonzero normalization determinant for every
+denominator degree, including $m>n$. Polynomial remainders also cover repeated
+roots. The false complex-point nonvanishing conclusion is explicitly corrected.
+\end{enumerate}
+
+All sums defining the new denominators and coefficient systems are finite.
+Empty matrices have determinant one. Every normalization or inverse below
+comes with its required nonvanishing or positivity hypothesis. The proof
+interfaces are distinguished from the mathematics they express.
+
+The public declarations cited below were checked in the saved index at
+\href{https://github.com/tchen-research/NLAlib/tree/e5725bb94e5bd8e326d58ad219260b0218e74c9e}
+{commit \texttt{e5725bb94e5b}}. The current local index is different and omits
+some of those declarations; reuse is therefore qualified by that snapshot.
+No build or new kernel verification is claimed.
+
+\tableofcontents
+\clearpage
+
+
+\section{Reciprocal exponential approximation: an explicit increasing denominator}
+\label{sec:explicit-reciprocal}
+
+The upper-bound construction can be made completely explicit. Two finite
+polynomial resolvents replace the weighted minimizer, alternation, and
+extrapolation used to construct the previous denominator. The new bound is
+$\sqrt{40/21}\,3^{-n}\le\sqrt2\,3^{-n}$, so it retains the previously
+stated constant as well as the sharp root rate.
+The previously proved lower bound is still needed to identify the root limit.
+We do not claim that the construction below replaces that lower-bound proof.
+
+\subsection{The denominator and its quantitative statement}
+
+Let $\mathcal P_n$ be the real polynomials of degree at most $n$, and let
+$D:\mathcal P_n\to\mathcal P_n$ be differentiation. Define
+\[
+ L_j(x)=\sum_{r=0}^j(-1)^r\binom jr\frac{x^r}{r!},\qquad
+ g_n(x)=\sum_{j=0}^n\frac{4(-1)^j}{3^{j+1}}L_j(x).
+\]
+For $n\ge1$ put
+\begin{equation}\label{eq:explicit-denominator}
+ H_n(x)=\frac{15}{26}\sum_{r=0}^n
+       \left((4/3)^{r+1}-4^{-r-1}\right)D^r g_n(x),
+ \qquad Q_n(t)=H_n(4t),
+\end{equation}
+and set $Q_0(t)=1$. Thus all coefficients of $Q_n$ are explicit rational
+numbers obtained from finite sums. Some monomial coefficients can be negative;
+coefficientwise positivity is neither asserted nor needed.
+
+\begin{theorem}\label{thm:positive-reciprocal}
+For $n\ge1$, $Q_n$ has degree exactly $n$ and satisfies
+\[
+ Q_n(t)>0,\qquad Q_n'(t)>0\qquad(t\ge0).
+\]
+For every integer $n\ge0$,
+\begin{equation}\label{eq:explicit-reciprocal-error}
+ \sup_{t\ge0}\left|e^{-t}-\frac1{Q_n(t)}\right|
+ \le\sqrt{\frac{40}{21}}\,3^{-n}\le\sqrt2\,3^{-n}.
+\end{equation}
+\end{theorem}
+
+The following proof needs finite polynomial identities, exponential integrals,
+the spectral theorem for a real symmetric tridiagonal matrix, and scalar
+Cauchy--Schwarz. It uses no minimizing polynomial.
+
+\subsection{Finite orthogonality and the exact squared error}
+
+Write $f(x)=e^{x/4}$ and
+\[
+ \langle u,v\rangle=\int_0^\infty u(x)v(x)e^{-x}\,dx.
+\]
+The finite Rodrigues identity
+\[
+ L_j(x)=\frac{e^x}{j!}D^j(e^{-x}x^j)
+\]
+and $j$ integrations by parts give
+\[
+ \langle L_j,p\rangle
+ =\frac{(-1)^j}{j!}\int_0^\infty x^j e^{-x}D^jp(x)\,dx.
+\]
+The boundary terms vanish: derivatives of $e^{-x}x^j$ of order below $j$
+vanish at zero, and exponential decay handles infinity. For a polynomial $p$
+of degree less than $j$ the result is zero. Since the leading coefficient of
+$L_j$ is $(-1)^j/j!$, the identity also gives $\langle L_j,L_j\rangle=1$.
+The same integrations by parts with $p=f$, using
+$\int_0^\infty x^j e^{-s x}\,dx=j!/s^{j+1}$, give
+\[
+ \langle f,L_j\rangle=\frac{4(-1)^j}{3^{j+1}},
+ \qquad \langle f,f\rangle=2.
+\]
+Expanding a square and summing a finite geometric progression now proves
+\begin{equation}\label{eq:laguerre-finite-error}
+ \int_0^\infty |f(x)-g_n(x)|^2e^{-x}\,dx
+ =2-\sum_{j=0}^n\frac{16}{9^{j+1}}
+ =\frac2{3^{2n+2}}.
+\end{equation}
+No infinite orthogonal expansion or completeness theorem is involved.
+
+\subsection{Two smoothing steps control both value and derivative}
+
+For $a>0$, nilpotence $D^{n+1}=0$ gives the finite identity
+\[
+ R_a=(aI-D)^{-1}=\sum_{r=0}^n a^{-r-1}D^r.
+\]
+For a polynomial $p$, repeated integration by parts yields
+\[
+ (R_ap)(x)=\int_0^\infty e^{-au}p(x+u)\,du.
+\]
+It can also be verified termwise from the finite Taylor formula and
+$\int_0^\infty u^re^{-au}\,du=r!/a^{r+1}$. The elementary resolvent identity
+is $(b-a)R_aR_b=R_a-R_b$. Therefore
+\[
+ H_n=\frac{15}{8}R_{3/4}R_4g_n
+     =\frac{15}{26}(R_{3/4}-R_4)g_n.
+\]
+Put
+\[
+ k(u)=\frac{15}{26}(e^{-3u/4}-e^{-4u}),\qquad
+ \ell(u)=-k'(u)
+       =\frac{15}{26}\left(\frac34e^{-3u/4}-4e^{-4u}\right).
+\]
+Then
+\[
+ H_n(x)=\int_0^\infty k(u)g_n(x+u)\,du,\qquad
+ H_n'(x)=\int_0^\infty\ell(u)g_n(x+u)\,du.
+\]
+The second identity is integration by parts, using $k(0)=0$. These formulas
+require no differentiation under an improper integral: $H_n$ is already
+the finite polynomial in \eqref{eq:explicit-denominator}. Direct integration
+also gives
+\[
+ \int_0^\infty k(u)e^{u/4}\,du=1,\qquad
+ \int_0^\infty\ell(u)e^{u/4}\,du=\frac14.
+\]
+Thus the two kernels applied to $f(x+u)$ give $f(x)$ and $f(x)/4$.
+
+For $x\ge0$, the weighted squared error on $[x,\infty)$ is bounded by
+\eqref{eq:laguerre-finite-error}. Apply Cauchy--Schwarz to each kernel,
+using
+\[
+ \int_0^\infty k(u)^2e^u\,du=\frac{15}{28},\qquad
+ \int_0^\infty\ell(u)^2e^u\,du=\frac{135}{224}.
+\]
+For example, the first integral equals
+$\frac{225}{676}(2-8/15+1/7)=15/28$; the second equals
+$\frac{225}{676}(9/8-8/5+16/7)=135/224$.
+This gives the two simultaneous estimates
+\begin{align}
+ |H_n(x)-f(x)|
+ &\le C\,3^{-n}e^{x/2},\qquad C=\sqrt{\frac5{42}},
+ \label{eq:twice-smooth-value}\\
+ |H_n'(x)-f(x)/4|
+ &\le C'\,3^{-n}e^{x/2},\qquad C'=\sqrt{\frac{15}{112}}.
+ \label{eq:twice-smooth-derivative}
+\end{align}
+For clarity, the factor $e^{x/2}$ comes from
+\[
+ \int_0^\infty |f(x+u)-g_n(x+u)|^2e^{-u}\,du
+ =e^x\int_x^\infty |f(t)-g_n(t)|^2e^{-t}\,dt.
+\]
+
+\subsection{A finite tridiagonal bound proves positivity beyond the cutoff}
+
+First consider $0\le x\le4n$, with $n\ge5$. Dividing
+\eqref{eq:twice-smooth-value}--\eqref{eq:twice-smooth-derivative} by $f(x)$
+gives
+\[
+ H_n(x)\ge f(x)\left(1-C(e/3)^n\right)>0,
+\]
+\[
+ H_n'(x)\ge\frac{f(x)}4
+   \left(1-4C'(e/3)^n\right)>0.
+\]
+For the value, use $C<1$ and $e/3<1$. For the derivative, square its
+nonnegative error factor and use
+\[
+ 16(C')^2(e/3)^{2n}
+ <\frac{15}{7}(11/12)^{10}
+ =\frac{129687123005}{144473849856}<1.
+\]
+Here $e<11/4$ follows from its power series: for $k\ge3$,
+$k!\ge6\,3^{k-3}$, with strict inequality for $k\ge4$, so the tail is
+strictly less than $1/4$ after the first three terms $1+1+1/2$.
+
+The four remaining positive degrees are checked by finite rational
+arithmetic. In the table, $H_n(x)=d_n^{-1}\sum_{r=0}^n a_rx^r$:
+\[
+\begin{array}{c|r|rrrrr}
+ n&d_n&a_0&a_1&a_2&a_3&a_4\\\hline
+ 1&216&215&60&&&\\
+ 2&7776&7745&1860&360&&\\
+ 3&279936&280055&70620&6840&1440&\\
+ 4&10077696&10075985&2513220&341640&10080&4320
+\end{array}
+\]
+Every displayed coefficient is positive; hence both $H_n$ and $H_n'$
+are strictly positive on $[0,\infty)$ for $1\le n\le4$.
+
+For $x\ge4n$, use the location of the roots of the finitely many $L_j$.
+Here a deliberately coarse bound is enough. Put
+$P_j=(-1)^j j!L_j$. Direct comparison of coefficients gives
+\[
+ P_0=1,\quad P_1=x-1,\quad
+ P_{j+1}=(x-(2j+1))P_j-j^2P_{j-1}.
+\]
+Consequently $P_j(x)=\det(xI-J_j)$, where $J_j$ is the $j\times j$
+real symmetric matrix indexed by $r=0,\ldots,j-1$ with
+\[
+ (J_j)_{rr}=2r+1,\qquad
+ (J_j)_{r,r+1}=(J_j)_{r+1,r}=r+1.
+\]
+This determinant recurrence is just expansion along the last row.
+For any real vector $v$, the inequality $2ab\le a^2+b^2$ gives
+\[
+ v^\top J_jv\le(4j-2)\|v\|_2^2\qquad(j\ge1).
+\]
+Indeed, the coefficient of $v_r^2$ after this estimate is at most
+$(2r+1)+r+(r+1)=4r+2\le4j-2$; missing boundary terms only decrease it.
+Thus all the roots $\lambda_{j,1},\ldots,\lambda_{j,j}$ of $P_j$ are
+real and satisfy $\lambda_{j,k}\le4j-2<4j$. For $1\le j\le n$ and
+$x\ge4n$,
+\[
+ \frac{4(-1)^j}{3^{j+1}}L_j(x)
+ =\frac4{3^{j+1}j!}\prod_{k=1}^j(x-\lambda_{j,k}).
+\]
+Every factor is strictly positive. The product rule shows that every
+derivative through order $j$ is strictly positive there, and higher
+derivatives vanish. The $j=0$ term is the positive constant $4/3$.
+It follows that $g_n(x)>0$, that all its derivatives are nonnegative,
+and that $g_n'(x)>0$ when $n\ge1$.
+Every coefficient multiplying $D^rg_n$ in
+\eqref{eq:explicit-denominator} is positive. That finite expression proves
+$H_n(x)>0$ and $H_n'(x)>0$ for $x\ge4n$.
+
+This completes the positivity proof on the whole half-line. Notice that
+the cutoff $4n$ is used only to prove monotonicity. The approximation-error
+cutoff below is different. Finally the coefficient of $x^n$ in $H_n$ is
+$\frac58\frac4{3^{n+1}n!}>0$, proving its degree assertion.
+
+\subsection{Uniform reciprocal error and the retained lower bound}
+
+For $n\ge1$ set
+\[
+ \delta_n=C\,3^{-n},\qquad
+ a_n=4n\log3+4\log\frac1{2C}>0.
+\]
+Then $\delta_ne^{a_n/4}=1/2$. On $[0,a_n]$,
+\eqref{eq:twice-smooth-value} implies $H_n\ge f/2$, so
+\[
+ \left|f(x)^{-1}-H_n(x)^{-1}\right|
+ =\frac{|H_n(x)-f(x)|}{f(x)H_n(x)}
+ \le2\delta_n.
+\]
+For $x\ge a_n$, monotonicity and the bound at $a_n$ give
+\[
+ H_n(x)^{-1}\le H_n(a_n)^{-1}\le2e^{-a_n/4}
+ =4\delta_n,\qquad
+ f(x)^{-1}\le e^{-a_n/4}=2\delta_n.
+\]
+Both quantities are nonnegative; hence their difference in absolute value
+is at most their maximum, proving \eqref{eq:explicit-reciprocal-error}
+after $x=4t$, since $4C=\sqrt{40/21}<\sqrt2$. For $n=0$, $Q_0=1$
+has error $1\le\sqrt{40/21}$ directly.
+
+Define $E_{0,n}$ as the infimum of the uniform errors of real rational
+functions of type $(0,n)$ with no pole on $[0,\infty)$. The lower estimate
+from the earlier document, reproduced in Appendix~\ref{app:retained-lower}, is
+\[
+ E_{0,n}(e^{-t};[0,\infty))\ge
+ \frac{3^{-n}}{6\sqrt{(4n+4)\log3+\log4}}.
+\]
+Together with the explicit upper bound above it gives
+\[
+ \lim_{n\to\infty}E_{0,n}(e^{-t};[0,\infty))^{1/n}=\frac13.
+\]
+\emph{Dependency retained:} the cited lower estimate uses the previous
+weighted-minimax comparison and the finite Gram identity. The Gram identity
+by itself is an $L^2$ polynomial-approximation statement and does not directly
+give a lower bound for uniform reciprocal approximation. The present route
+fully replaces the upper-bound construction, but does not silently claim to
+remove that separate lower-bound argument.
+
+\paragraph{Operator form and formalization interface.}
+For every finite-dimensional real symmetric or complex Hermitian positive
+semidefinite operator $A$, diagonalization gives
+\[
+ Q_n(A)\succ0,\qquad
+ \|e^{-A}-Q_n(A)^{-1}\|_2
+ \le\sqrt{\frac{40}{21}}\,3^{-n}\le\sqrt2\,3^{-n}.
+\]
+The denominator definition is a finite polynomial sum. The new reusable
+lemmas are the two polynomial-resolvent integral identities, their two
+scalar error estimates, and a coarse spectral bound for $J_j$.
+The declaration index was searched for Laguerre and reciprocal-exponential
+approximation results; it does not currently supply this construction.
+The tridiagonal determinant and spectral steps can reuse the existing
+Jacobi-matrix and symmetric-matrix interfaces. No weighted minimizer,
+alternation theorem, or extrapolation theorem is required for this upper
+bound.
+
+
+\section{The Bernstein limit for \texorpdfstring{$|x|$}{abs(x)} by a finite degree-transfer inequality}
+\label{sec:finite-bernstein}
+
+\paragraph{Outcome.}
+There is a route that removes the limiting entire function altogether.
+For a target degree $N$, restrict and rescale a best polynomial of a much
+larger degree $n$, then discard its Chebyshev coefficients above $N$.
+A bound uniform in the source degree $n$ gives a comparison of the two
+finite errors. Taking a scalar liminf proves convergence. No normal-family
+theorem, diagonal extraction of coefficients, or compactness of a space
+of entire functions is used. The one existing complex-analytic input is
+the finite polynomial growth estimate on a Bernstein ellipse; even the
+new change-of-variables estimate below uses only real inverse functions.
+
+Write
+\[
+ E_n=\inf_{\deg p\le n}\max_{-1\le x\le1}|\,|x|-p(x)|.
+\]
+All polynomials in this definition are real. Their complex evaluations
+will be used only for finite inequalities.
+
+\subsection{Two finite polynomial facts}
+For $\rho>1$, write
+\[
+ \mathcal E_\rho=
+ \left\{(w+w^{-1})/2:|w|=\rho\right\}
+\]
+for the Bernstein ellipse, and let its filled version include the interior.
+We use the already available polynomial growth inequality
+\begin{equation}
+ \deg p\le n,\quad \|p\|_{[-1,1]}\le M
+ \quad\Longrightarrow\quad
+ |p(z)|\le M\rho^n\quad
+ (z\text{ in the filled ellipse}).
+ \label{eq:bern-finite-growth}
+\end{equation}
+At $\rho=1$, the assertion simply means the original interval bound.
+One proof applies the maximum-modulus principle to the ordinary
+polynomial $v^np((v+v^{-1})/2)$ on $|v|\le1$, and substitutes $v=w^{-1}$.
+There is no limiting family of analytic functions in this fact.
+
+The companion truncation statement can be proved with only finite Fourier
+orthogonality. If a real polynomial $r$ has $|r(z)|\le M$ on
+$\mathcal E_\rho$, then there is a real polynomial $q$ of degree at most $N$
+such that
+\begin{equation}
+ \|r-q\|_{[-1,1]}\le
+ \frac{2M\rho^{-N}}{\rho-1}.
+ \label{eq:bern-finite-truncation}
+\end{equation}
+Indeed, the finite Laurent expansion is
+\[
+ r((w+w^{-1})/2)=\sum_{k=-d}^{d}c_kw^k,
+ \qquad c_{-k}=c_k\in\R.
+\]
+Integrating this finite identity against $e^{-ik\theta}$ on
+$w=\rho e^{i\theta}$ gives $|c_k|\le M\rho^{-k}$ for $k\ge0$.
+Take
+$q(x)=c_0+2\sum_{k=1}^{\min(N,d)}c_kT_k(x)$, use
+$|T_k(x)|\le1$ on $[-1,1]$, and sum a finite geometric tail.
+This proves \eqref{eq:bern-finite-truncation} without an infinite
+Chebyshev series or a theorem about analytic approximation.
+
+\subsection{A small-coordinate lemma using real arithmetic}
+\begin{lemma}\label{lem:bern-sine-coordinates}
+If $\zeta=x+iy$ and $r=|\zeta|\le1/2$, there exist real $a,b$ such that
+\[
+ \sin(a+ib)=\zeta,\qquad
+ |a+ib|\le2r,\qquad
+ |b|\le\frac{|y|}{\sqrt{1-r^2}}.
+\]
+Consequently $\zeta$ belongs to the filled Bernstein ellipse of parameter
+$e^{|b|}$, with the interval understood when $b=0$.
+\end{lemma}
+\begin{proof}
+If $y=0$, take $b=0$ and $a=\arcsin x$ using the real inverse sine.
+If $y\ne0$, put
+\[
+ v=\frac{\sqrt{(1-r^2)^2+4y^2}-(1-r^2)}2>0.
+\]
+Then
+\[
+ v(v+1-r^2)=y^2,
+ \qquad \frac{x^2}{1+v}+\frac{y^2}{v}=1,
+ \qquad v\le\frac{y^2}{1-r^2}.
+\]
+Set
+\[
+ a=\arcsin\!\left(\frac{x}{\sqrt{1+v}}\right),
+ \qquad b=\operatorname{sgn}(y)\operatorname{arsinh}\sqrt v.
+\]
+The real formulas for sine, cosine, hyperbolic sine and hyperbolic cosine
+give $\sin a\cosh b=x$ and $\cos a\sinh b=y$. Thus
+$\sin(a+ib)=x+iy$. The real derivative bounds
+$|\arcsin u|\le2|u|$ for $|u|\le1/2$ and
+$\operatorname{arsinh}u\le u$ for $u\ge0$ give
+\[
+ |a|\le2|x|,\qquad
+ |b|\le\sqrt v\le\frac{|y|}{\sqrt{1-r^2}}
+ \le2|y|.
+\]
+Their squares imply $|a+ib|\le2r$.
+Finally $\sin(a+ib)=(w+w^{-1})/2$ with
+$w=i e^{-i(a+ib)}$; either $w$ or $w^{-1}$ has modulus $e^{|b|}$.
+\end{proof}
+
+This lemma deliberately avoids a complex inverse-sine function, its
+branch cut, and a theorem about convergence of its rescalings.
+
+\subsection{The uniform finite bound after subtracting a comparison polynomial}
+For even $n=2m\ge2$, use the explicit polynomial
+\[
+ S_n(x)=\frac2\pi+\frac4\pi\sum_{j=1}^{m}
+      \frac{(-1)^{j+1}T_{2j}(x)}{4j^2-1}.
+\]
+The known absolutely convergent Chebyshev expansion of $|x|$ gives
+\begin{equation}
+ \|S_n-|x|\|_{[-1,1]}=\frac2{\pi(n+1)},
+ \qquad S_n(0)=\frac2{\pi(n+1)}.
+ \label{eq:bern-comparison}
+\end{equation}
+The norm upper bound is the telescoping coefficient tail, and equality
+holds at zero since the omitted terms there have the same sign.
+
+Choose a minimizer $p_n$, whose existence is a finite-dimensional
+compactness result already available in the library, and put
+\[
+ P_n(z)=np_n(z/n),\quad B_n(z)=nS_n(z/n),\quad D_n=P_n-B_n.
+\]
+Since $E_n\le2/(\pi(n+1))$, we have
+\begin{equation}
+ \|D_n\|_{[-n,n]}\le nE_n+\frac{2n}{\pi(n+1)}
+ \le\frac4\pi.
+ \label{eq:bern-bounded-difference}
+\end{equation}
+
+\begin{lemma}[Uniform bound with an explicit source-degree threshold]
+\label{lem:bern-uniform-finite}
+Let $R\ge0$ and let $n\ge2$ be even, with
+\[
+ n\ge2\max(1,R^2).
+\]
+For every $z\in\C$ with $|z|\le R$,
+\begin{equation}
+ |P_n(z)|\le\frac{6(1+R^2)}\pi
+                   e^{|\operatorname{Im}z|+1}.
+ \label{eq:bern-uniform-finite}
+\end{equation}
+\end{lemma}
+\begin{proof}
+The threshold implies $R/n\le1/2$. Apply
+Lemma~\ref{lem:bern-sine-coordinates} to $z/n$, obtaining $u=a+ib$.
+Equation~\eqref{eq:bern-finite-growth}, applied to
+$D_n(n\,\cdot)$, gives
+\[
+ |D_n(z)|\le(4/\pi)e^{n|b|}.
+\]
+The finite Chebyshev recurrence gives
+$T_{2j}(\sin u)=(-1)^j\cos(2ju)$. Therefore
+\[
+ B_n(z)=\frac{2n}{\pi(n+1)}+
+       \frac{4n}{\pi}\sum_{j=1}^{n/2}
+       \frac{1-\cos(2ju)}{4j^2-1}.
+\]
+Twice integrating the derivative of cosine over a real parameter gives
+\[
+ 1-\cos w=w^2\int_0^1(1-s)\cos(sw)\,ds,
+ \qquad |1-\cos w|\le\frac{|w|^2}{2}e^{|\operatorname{Im}w|}.
+\]
+Since $j^2/(4j^2-1)\le1/3$ for $j\ge1$ and $|u|\le2|z|/n$,
+\[
+ |B_n(z)|\le\frac2\pi+
+     \frac{4n^2}{3\pi}|u|^2e^{n|b|}
+ \le\frac{2+(16/3)R^2}{\pi}e^{n|b|}.
+\]
+Adding the bound for $D_n$ yields
+$|P_n(z)|\le6(1+R^2)e^{n|b|}/\pi$.
+
+For $0\le s\le1/4$, $(1-s)^{-1/2}\le1+2s$.
+Lemma~\ref{lem:bern-sine-coordinates} and the threshold now imply
+\[
+ n|b|\le\frac{|\operatorname{Im}z|}{\sqrt{1-R^2/n^2}}
+ \le |\operatorname{Im}z|+\frac{2R^3}{n^2}
+ \le |\operatorname{Im}z|+1.
+\]
+The final inequality follows separately for $R\le1$ and $R\ge1$;
+in fact the last added term is at most $1/2$.
+\end{proof}
+
+\subsection{A finite comparison of two degrees}
+\begin{theorem}[Degree transfer]\label{thm:bern-degree-transfer}
+Fix $0<\alpha<1$ and $N\ge1$. Set
+\[
+ t=\frac{1-\alpha}{2},\quad
+ R=\alpha N\cosh t,\quad c=t(1-e^{-t})>0.
+\]
+For every even $n\ge2$ satisfying $n\ge2\max(1,R^2)$,
+\begin{equation}
+ NE_N\le\frac{nE_n}{\alpha}+
+ \frac{12e(1+\alpha^2N^2\cosh^2t)}
+      {\pi\alpha(e^t-1)}e^{-cN}.
+ \label{eq:bern-degree-transfer}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Apply \eqref{eq:bern-finite-truncation}, with $\rho=e^t$, to the
+finite polynomial
+\[
+ r(x)=\frac{P_n(\alpha Nx)}{\alpha N}
+     =\frac{n}{\alpha N}p_n\!\left(\frac{\alpha Nx}{n}\right).
+\]
+On the ellipse, $|\alpha Nz|\le R$ and
+$|\operatorname{Im}(\alpha Nz)|\le\alpha N\sinh t$.
+Lemma~\ref{lem:bern-uniform-finite} gives the bound
+\[
+ M=\frac{6(1+R^2)}{\pi\alpha N}
+           e^{\alpha N\sinh t+1}.
+\]
+On the real interval the argument of $p_n$ lies in $[-1,1]$, since
+$\alpha N\le R\le n/2$. Hence
+$\|r-|x|\|\le nE_n/(\alpha N)$. Adding the truncation error and
+multiplying by $N$ gives the asserted inequality with exponent
+$N(\alpha\sinh t-t)$. Finally
+\[
+ \alpha=1-2t\le e^{-2t},\qquad
+ \sinh t\le te^t,\qquad
+ \alpha\sinh t-t\le-t(1-e^{-t})=-c.
+\]
+\end{proof}
+
+\subsection{Convergence uses only a scalar liminf}
+Let $b=\liminf_{m\to\infty}(2m)E_{2m}$.
+For every fixed $N$, every $0<\alpha<1$, and every $\eta>0$, there are
+arbitrarily large even $n$ with $nE_n\le b+\eta$.
+Choose one above the explicit threshold in
+Theorem~\ref{thm:bern-degree-transfer}. Its error term does not depend on
+$n$. Letting $\eta\downarrow0$ therefore gives
+\[
+ NE_N\le\frac b\alpha+
+ \frac{12e(1+\alpha^2N^2\cosh^2t)}
+      {\pi\alpha(e^t-1)}e^{-cN}.
+\]
+The second term tends to zero as $N\to\infty$, so
+$\limsup NE_N\le b/\alpha$. Let $\alpha\uparrow1$.
+Since the full limsup dominates the even liminf $b$, this already forces
+the even subsequence to converge to $b$. Symmetrization gives
+$E_{2m+1}=E_{2m}$, and
+$(2m+1)E_{2m+1}=(1+1/(2m))(2m)E_{2m}$, so the full sequence converges:
+\begin{equation}
+ \lim_{n\to\infty}nE_n=\beta=b.
+ \label{eq:bern-limit}
+\end{equation}
+
+For completeness, positivity has a finite dual certificate. Put
+$K=\lfloor n/2\rfloor+1$, $w_j=1-|j|/(K+1)$, and
+\[
+ F_K(t)=\frac1{K+1}\left|\sum_{j=0}^{K}e^{ijt}\right|^2,
+ \qquad
+ \Lambda(h)=\frac1{2\pi}\int_{-\pi}^{\pi}
+       h(\sin t)\cos(4Kt)F_K(2t)\,dt.
+\]
+The kernel $F_K$ is nonnegative with normalized integral one, hence
+$\|\Lambda\|\le1$. Every frequency of its modulated version has
+absolute value at least $2K>n$, so $\Lambda(p)=0$ for $\deg p\le n$.
+Finite Fourier orthogonality and direct integration of $|\sin t|$ give
+\[
+ E_n\ge|\Lambda(|x|)|
+ =\sum_{j=-K}^{K}\frac{2w_j}{\pi(4(2K+j)^2-1)}
+ \ge\frac{2(K+1)}{\pi(36K^2-1)}
+ \ge\frac1{18\pi(n+1)}.
+\]
+Together with \eqref{eq:bern-comparison}, this proves
+\[
+ \frac1{18\pi}\le\beta\le\frac2\pi.
+\]
+These coarse enclosing constants establish positivity and finiteness;
+no numerical value of the Bernstein constant is asserted here.
+
+\paragraph{Formalization boundary and checked reuse.}
+The new centerpiece is the explicit finite inequality
+\eqref{eq:bern-degree-transfer}. It replaces all of the comparison-function
+limit, local uniform convergence, coefficient subsequence, and entire
+function truncation steps of the previous derivation. Besides real
+arithmetic, finite trigonometric sums and real-variable integration, it
+uses the already proved ellipse growth inequality
+\eqref{eq:bern-finite-growth}. Thus it does not pretend to remove complex
+evaluation from the proof, but it needs no new complex compactness theory.
+
+The following names were checked against the saved public declaration
+index at commit \texttt{e5725bb94e5b}; the current checkout's smaller
+index does not list all of them, so their local availability should be
+checked when choosing the formalization branch:
+\begin{itemize}
+\item \code{NLAlib.exists_degree_le_norm_sub_eq_minimaxError} supplies each
+      finite-dimensional minimizer.
+\item \code{NLAlib.hasSum_chebyshevCoeff_abs_mul_eval_T},
+      \code{NLAlib.chebyshevCoeff_abs_even}, and
+      \code{NLAlib.tsum_abs_chebyshevCoeff_abs_tail} supply
+      \eqref{eq:bern-comparison}.
+\item \code{NLAlib.norm_eval_le_mul_pow_of_mem_filledBernsteinEllipse}
+      supplies \eqref{eq:bern-finite-growth}.
+\item \code{NLAlib.exists_degree_le_abs_sub_eval_le_of_open_bernsteinEllipse}
+      can supply \eqref{eq:bern-finite-truncation}; the finite Laurent
+      proof above is an alternative requiring a smaller interface.
+\item Mathlib's real \code{Real.arcsin}, \code{Real.hasDerivAt_arcsin},
+      \code{Real.arsinh}, and \code{Real.sinh_arsinh} are present in the
+      checked local Mathlib source. They suffice for the coordinate lemma;
+      a complex inverse-sine definition is unnecessary.
+\end{itemize}
+
+
+
+\section{Radau and Lobatto borders from finite propagation}
+\label{focused:borders}
+
+The main simplification is to construct the borders by two scalar Schur
+complements and to prove moment preservation by a telescoping identity.
+No counting of walks and no limiting argument is needed.
+All matrix indices in this section start at zero.
+
+\subsection{A single locality lemma}
+
+\begin{lemma}[Rooted matrix-power locality]
+Let $A,B$ be tridiagonal $N\times N$ matrices over a field, with $N\ge1$.
+Suppose $A_{ij}=B_{ij}$ whenever $i+j<s$, where $s\ge0$ is an integer.
+Then
+\[
+ (A^k)_{00}=(B^k)_{00}\qquad(0\le k\le s).
+ \tag{BL1}
+\]
+\end{lemma}
+\begin{proof}
+Induction in $r$ gives
+$(A^r)_{0i}=0$ for $i>r$ and $(B^r)_{j0}=0$ for $j>r$.
+For $k\ge1$, use the noncommutative telescoping identity
+\[
+ A^k-B^k=\sum_{r=0}^{k-1}A^r(A-B)B^{k-1-r}.
+\]
+In the $(0,0)$ entry, a potentially nonzero summand has
+$i\le r$, $j\le k-1-r$, and therefore $i+j\le k-1<s$.
+The middle factor $(A-B)_{ij}$ is zero. The case $k=0$ is immediate.
+\end{proof}
+
+In particular, changing only the diagonal entry at index $q$ preserves
+moments through degree $2q$. Adding a coupling between indices $q$ and
+$q+1$ preserves them through degree $2q+1$. These thresholds are sharp:
+if the earlier off-diagonals are $a_1,\ldots,a_q$, a change $\delta$ in
+that diagonal first contributes
+$\delta\prod_{j=1}^q a_j^2$ at degree $2q+1$; adding a previously zero
+coupling $b$ first contributes $b^2\prod_{j=1}^q a_j^2$ at degree $2q+2$.
+Empty products equal one. The same induction on support verifies these
+first nonzero contributions.
+
+\subsection{Why a Jacobi compression already has the required moments}
+
+Let $\mu$ be a nonzero finite positive measure supported in $[a,c]$,
+$a<c$, and put $h_0=\int1\,d\mu$. Suppose its polynomial inner product
+is positive definite through degree $N-1$. Let
+$p_0,\ldots,p_{N-1}$ be its orthonormal polynomials, with positive
+leading coefficients and $p_0=h_0^{-1/2}$, and define
+\[
+ (J_N)_{ij}=\int t p_i(t)p_j(t)\,d\mu(t).
+\]
+Polynomial degrees show that $J_N$ is symmetric tridiagonal, and
+\[
+ aI\preceq J_N\preceq cI.
+ \tag{BL2}
+\]
+For $0\le r<N$, the coefficient vector of $t^rp_0$ in this basis is
+$J_N^re_0$: until this degree, multiplication followed by orthogonal
+projection has discarded nothing. Consequently, for $r,s<N$,
+\[
+ h_0^{-1}\int t^{r+s}\,d\mu
+   =(J_N^re_0)^\top(J_N^se_0).
+\]
+This gives moments through $2N-2$. The one remaining moment is
+\[
+ h_0^{-1}\int t^{2N-1}\,d\mu
+ =\int t(t^{N-1}p_0)^2\,d\mu
+ =(J_N^{N-1}e_0)^\top J_N(J_N^{N-1}e_0).
+\]
+Thus
+\[
+ \int t^k\,d\mu=h_0(J_N^k)_{00}\qquad(0\le k\le2N-1).
+ \tag{BL3}
+\]
+Only the $N$ displayed orthonormal polynomials are required. In
+particular, this proof does not ask for a normalized polynomial of
+degree $N$, which might fail at finite-support termination.
+
+\subsection{Radau: one last diagonal and one Schur complement}
+
+Assume $q\ge1$ and the polynomial inner product is positive definite
+through degree $q$. Write
+\[
+ J_{q+1}=\begin{pmatrix}J_q&b e\\b e^\top&\alpha_q\end{pmatrix},
+ \qquad e=e_{q-1},\quad b>0.
+\]
+Here $b=a_q=\sqrt{\beta_q}$ in the monic recurrence convention.
+The strict inequalities $aI\prec J_q\prec cI$ follow directly from
+the quadratic-form formula: a nonzero polynomial of degree at most
+$q-1$ cannot vanish at all the support points other than one endpoint.
+Positive definiteness through degree $q$ supplies at least $q+1$
+support points.
+
+Define
+\begin{align*}
+ d_a&=a+b^2 e^\top(J_q-aI)^{-1}e,&
+ R_a&=\begin{pmatrix}J_q&b e\\b e^\top&d_a\end{pmatrix},\\
+ d_c&=c-b^2 e^\top(cI-J_q)^{-1}e,&
+ R_c&=\begin{pmatrix}J_q&b e\\b e^\top&d_c\end{pmatrix}.
+\end{align*}
+The Schur complement of $J_q-aI$ in $R_a-aI$ is zero. Hence
+$R_a-aI$ is positive semidefinite and singular. The same Schur
+complement in $J_{q+1}-aI$ is nonnegative, so $d_a\le\alpha_q$.
+Similarly $d_c\ge\alpha_q$ and $cI-R_c$ is positive semidefinite
+and singular. Combining this with (BL2) yields
+\[
+ aI\preceq R_a\preceq J_{q+1}\preceq R_c\preceq cI,
+ \qquad a\in\operatorname{spec}(R_a),\quad
+ c\in\operatorname{spec}(R_c).
+ \tag{BL4}
+\]
+Both borders differ from $J_{q+1}$ only at diagonal index $q$.
+Equations (BL1) and (BL3) therefore give
+\[
+ h_0(R_a^k)_{00}=\int t^k\,d\mu=h_0(R_c^k)_{00}
+ \qquad(0\le k\le2q).
+ \tag{BL5}
+\]
+
+For comparison with the usual formula, set
+$\pi_j(t)=\det(tI-J_j)$, $\pi_0=1$.
+A cofactor gives
+$e^\top(xI-J_q)^{-1}e=\pi_{q-1}(x)/\pi_q(x)$, hence
+\[
+ d_z=z-\beta_q\frac{\pi_{q-1}(z)}{\pi_q(z)},\qquad z=a,c.
+ \tag{BL6}
+\]
+Expansion in the last row gives
+$\det(tI-R_z)=(t-d_z)\pi_q(t)-\beta_q\pi_{q-1}(t)$.
+Thus the standard polynomial border and the Schur-complement border
+are exactly the same construction.
+For $q=0$, use the one-by-one matrices $[a]$ and $[c]$; only the
+constant moment is claimed.
+
+\subsection{Lobatto: two endpoint equations}
+
+Let $q\ge0$, set $N=q+1$, and assume that $J_N$ is defined and
+\[
+ aI\prec J_N\prec cI.
+ \tag{BL7}
+\]
+These are the exact endpoint-invertibility and positivity hypotheses
+used below. A clean sufficient measure hypothesis is at least $q+2$
+support points in $[a,c]$. Merely $q+1$ support points need not suffice
+when the support includes an endpoint.
+Put $e=e_q$ and
+\[
+ r(x)=e^\top(xI-J_N)^{-1}e,
+ \qquad
+ \gamma=\frac{c-a}{r(c)-r(a)},\qquad
+ d=a-\gamma r(a)=c-\gamma r(c).
+\]
+Since $r(a)<0<r(c)$, one has $\gamma>0$. Define
+\[
+ B=\begin{pmatrix}J_N&\sqrt\gamma e\\
+                   \sqrt\gamma e^\top&d\end{pmatrix}.
+ \tag{BL8}
+\]
+The endpoint Schur complements are both zero:
+\[
+ d-a-\gamma e^\top(J_N-aI)^{-1}e=0,
+ \qquad
+ c-d-\gamma e^\top(cI-J_N)^{-1}e=0.
+\]
+Therefore
+\[
+ aI\preceq B\preceq cI,\qquad
+ a,c\in\operatorname{spec}(B).
+ \tag{BL9}
+\]
+Compare $B$ with $\operatorname{diag}(J_N,d)$. Their only differences
+are at $(q,q+1)$ and $(q+1,q)$, so (BL1) gives equality of rooted
+moments through degree $2q+1$. Using (BL3),
+\[
+ h_0(B^k)_{00}=\int t^k\,d\mu\qquad(0\le k\le2q+1).
+ \tag{BL10}
+\]
+No original Jacobi coefficient after index $q$ is needed.
+Again $r(x)=\pi_q(x)/\pi_{q+1}(x)$, and
+\[
+ \det(tI-B)=(t-d)\pi_{q+1}(t)-\gamma\pi_q(t).
+\]
+The two endpoint equations therefore also prove the advertised
+characteristic-polynomial formula.
+
+\subsection{Nodes, weights, and degenerate cases}
+
+Each nondegenerate border is a real symmetric tridiagonal matrix with
+nonzero off-diagonals. If an eigenvector has first coordinate zero,
+the eigenvector equations successively force every coordinate to be
+zero. Thus each eigenspace has dimension at most one, all eigenvalues
+are distinct, and every normalized eigenvector $u_i$ has
+$(u_i)_0\ne0$. Spectral diagonalization gives the quadrature rule
+\[
+ Q(f)=\sum_i w_i f(\theta_i),\qquad
+ w_i=h_0|(u_i)_0|^2>0,
+ \qquad \sum_i w_i=h_0.
+ \tag{BL11}
+\]
+Equations (BL4), (BL9) put the nodes in $[a,c]$ and include the
+prescribed endpoint or endpoints. Equations (BL5), (BL10) prove
+the required exactness for every polynomial by linearity.
+This proves the Radau and Lobatto border theorems entirely from
+finite matrix algebra and the compression identity (BL3).
+
+When a hypothesis of strict endpoint invertibility fails at finite
+termination, do not divide by the vanishing determinant. The original
+atomic spectral measure already supplies exact quadrature. In the
+special Lobatto case $q=0$, the two-endpoint rule remains meaningful
+even if a weight vanishes:
+\[
+ w_a=\int\frac{c-t}{c-a}\,d\mu(t),\qquad
+ w_c=\int\frac{t-a}{c-a}\,d\mu(t).
+\]
+For the zero measure take zero weights. If $a=c$, the one support
+point gives the entire integral and no two-distinct-endpoint theorem
+is asserted.
+
+\paragraph{Signs retained from the audit.}
+For remainder ``integral minus rule'', positive derivatives of order
+$2q+1$ make left Radau a lower bound and right Radau an upper bound.
+Positive derivatives of order $2q+2$ make Lobatto an upper bound.
+The first two directions must not be reversed. The already established
+Hermite-interpolation remainder proof needs no change.
+
+\paragraph{Lean reuse and the new lemma.}
+The declaration snapshot saved with the earlier audit, at repository
+commit \texttt{e5725bb94e5bd8e326d58ad219260b0218e74c9e}, verifies
+\code{NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq_sum},
+\code{NLAlib.LanczosDecomp.cfc_T_apply_zero_zero},
+\code{NLAlib.LanczosDecomp.charpoly_T_monic}, and
+\code{NLAlib.integral_pow_spectralMeasure}, all without \texttt{sorry}.
+They supply the existing moment and spectral-measure interfaces.
+The new reusable proof burden is (BL1), followed by the two scalar
+Schur-complement calculations. The current local declaration index
+inspected for this note does not contain
+these Lanczos declarations; the reuse claim is against the specified
+verified snapshot, not against that local index.
+
+\section{Christoffel--Uvarov modification by an invertible coefficient system}
+\label{focused:modification}
+
+The finite coefficient system is more general than a formula written
+in terms of roots. It permits repeated roots, never introduces
+negative-index orthogonal polynomials, and makes the normalization
+determinant's nonvanishing a one-line positivity argument.
+
+\subsection{A real system that works for every denominator degree}
+
+Let $\mu$ be a finite positive measure on a compact interval $I$ and
+$L(f)=\int f\,d\mu$. Let $u,v\in\mathbb R[t]$ be nonzero,
+$\ell=\deg u$, $m=\deg v$, and suppose
+\[
+ v(t)\ne0\ (t\in I),\qquad u(t)/v(t)>0\ (t\in I).
+\]
+Define $\widehat L(f)=L(uf/v)$ and fix $n\ge0$. Assume
+$\widehat L(s^2)>0$ for every nonzero real polynomial $s$ of degree
+less than $n$. This condition is vacuous for $n=0$.
+Continuity on the compact interval makes every integral below finite.
+Common factors of $u$ and $v$ may be cancelled, but cancellation is
+not required for the construction.
+
+Set $d=n+\ell$ and $\lambda=\operatorname{lc}(u)\ne0$.
+For a polynomial $P$ of degree at most $d$, define the $d$ linear
+constraints $\mathcal C(P)$ to be
+\[
+ \begin{array}{ll}
+ [t^i](P\bmod u),&0\le i<\ell,\\[2pt]
+ L(t^rP/v),&0\le r<n.
+ \end{array}
+ \tag{CU1}
+\]
+Polynomial remainder is defined over the coefficient field, so $u$
+need not be monic. When $\ell=0$ there are no remainder constraints.
+The desired numerator $P=u\widehat\pi_n$ is characterized by
+\[
+ \mathcal C(P)=0,\qquad [t^d]P=\lambda.
+ \tag{CU2}
+\]
+Indeed, the first constraints say $u\mid P$; hence $P/u$ is monic
+of degree $n$, and the remaining constraints are exactly its
+orthogonality for $\widehat L$.
+
+For $0\le j<d$, take the column $\mathcal C(t^j)$ and form the real
+$d\times d$ matrix
+\[
+ M=[\mathcal C(1)\ \mathcal C(t)\ \cdots\ \mathcal C(t^{d-1})],
+ \qquad b=\mathcal C(t^d).
+\]
+The complete computation is the single finite linear system
+\[
+ M c=-\lambda b,\qquad
+ P(t)=\lambda t^d+\sum_{j=0}^{d-1}c_jt^j,
+ \qquad \widehat\pi_n=P/u.
+ \tag{CU3}
+\]
+
+\begin{lemma}[The normalization matrix is nonsingular]
+Under the stated positivity hypothesis, $\det M\ne0$.
+\end{lemma}
+\begin{proof}
+Let $S$ have degree less than $d$ and $\mathcal C(S)=0$.
+The remainder equations give $S=us$ with $\deg s<n$.
+The other equations say $\widehat L(t^rs)=0$ for $0\le r<n$.
+Take their linear combination with the coefficients of $s$ to get
+$\widehat L(s^2)=0$. Positivity gives $s=0$, hence $S=0$.
+Thus the square matrix has zero kernel.
+\end{proof}
+
+For $d=0$ the matrix is empty, its determinant is one, and
+$P=u$, $\widehat\pi_0=1$. If $n=0$ but $\ell>0$, the remainder
+matrix on $1,\ldots,t^{\ell-1}$ is the identity; again $P=u$.
+No degree comparison between $m$ and $n$ has entered the proof.
+
+\subsection{The determinant formula, with its exact normalization minor}
+
+Let $D(t)$ be the $(d+1)\times(d+1)$ determinant whose first row is
+$(1,t,\ldots,t^d)$ and whose remaining rows are the constraints:
+\[
+ D(t)=\det\begin{pmatrix}
+ 1&t&\cdots&t^d\\
+ \mathcal C(1)&\mathcal C(t)&\cdots&\mathcal C(t^d)
+ \end{pmatrix}.
+ \tag{CU4}
+\]
+Expanding the first row and applying any component of $\mathcal C$
+produces a determinant with two equal rows. Thus $\mathcal C(D)=0$.
+The highest coefficient is exactly
+\[
+ \Delta=[t^d]D(t)=(-1)^d\det M\ne0.
+\]
+Consequently
+\[
+ \boxed{\quad
+ \widehat\pi_n(t)=\frac{\lambda D(t)}{\Delta u(t)}.
+ \quad}
+ \tag{CU5}
+\]
+The quotient is polynomial by (CU1), including at zeros of $u$.
+This proves the formula and its nonzero normalization, rather than
+assuming either. It uses only polynomial division, a finite moment
+matrix, and positivity. There is no need to split real polynomials
+into complex roots.
+
+\subsection{A unified small determinant, including $m>n$}
+
+If the original monic orthogonal polynomials needed below exist,
+the full monomial system can be compressed further. Put
+\[
+ b_0=\max(n-m,0),\qquad s=\min(n,m),\qquad
+ \mathcal V=\operatorname{span}
+ \{\pi_{b_0},\pi_{b_0+1},\ldots,\pi_{n+\ell}\}.
+ \tag{CU6}
+\]
+Precisely, assume the displayed polynomials and all preceding ones
+are monic and orthogonal, with nonzero squared norms through degree
+$b_0-1$. These are the norms used to remove the earlier coefficients.
+There are $\ell+s+1$ displayed polynomials. A numerator satisfying
+(CU2) belongs to $\mathcal V$: if $n\ge m$, test its orthogonality
+with $v r$, $\deg r<n-m$, to get $L(Pr)=0$, which removes the
+coefficients of $\pi_0,\ldots,\pi_{n-m-1}$. If $n<m$, the assertion
+just says that all polynomials through degree $n+\ell$ are allowed.
+
+On $\mathcal V$, the entire set of orthogonality equations is
+equivalent to only $s$ inverse-moment equations:
+\[
+ P\bmod u=0,\qquad L(t^rP/v)=0\quad(0\le r<s).
+ \tag{CU7}
+\]
+For $n<m$ this is the original system. For $n\ge m$, divide each
+test polynomial $h$, $\deg h<n$, as $h=v a+b$ with
+$\deg a<n-m$ and $\deg b<m$. Then
+$L(hP/v)=L(aP)+L(bP/v)$; its first term vanishes by membership in
+$\mathcal V$, and the second by (CU7).
+
+Replace the first row in (CU4) by the basis in (CU6), and the
+constraints by the $\ell+s$ rows in (CU7). The determinant now has
+size $\ell+s+1$, its degree is at most $n+\ell$, and its leading
+coefficient is
+\[
+ \Delta_{\rm small}=(-1)^{\ell+s}
+ \det\!\big[\mathcal C_{\rm small}(\pi_j)\big]_
+          {j=b_0}^{n+\ell-1}\ne0.
+ \tag{CU8}
+\]
+To prove nonvanishing, a vector in this minor's kernel produces
+$S\in\mathcal V$ of degree less than $n+\ell$ satisfying (CU7).
+The equivalence just proved recovers all of (CU1), so the same
+positivity argument gives $S=0$.
+Formula (CU5) holds with this smaller determinant and normalization.
+
+This is the precise correction to the often displayed index range:
+\[
+ \begin{array}{c|c|c}
+ &\text{polynomial columns}&\text{inverse-moment rows}\\\hline
+ m\le n&\pi_{n-m},\ldots,\pi_{n+\ell}&m\\
+ m>n&\pi_0,\ldots,\pi_{n+\ell}&n
+ \end{array}
+\]
+For $m>n$, imposing $m$ independent Cauchy-transform equations would
+generally overdetermine the problem. One needs the $n$ combinations
+in (CU7). If original orthogonal polynomials are unavailable beyond
+a finite-support termination index, retain the monomial system
+(CU1)--(CU5), whose existence needs only the modified positivity
+assumption through degree $n-1$.
+
+For a concrete $m>n$ check, take $\mu=(\delta_{-1}+\delta_1)/2$,
+$u=1$, $v=t^2+1$, and $n=1$. The single coefficient equation is
+$(1/2)c_0=0$, so $\widehat\pi_1=t$. Its two individual Cauchy
+values are both $L(t/(\pm i-t))=-1/2$, rather than zero. The required
+combined equation $L(t/(t^2+1))=0$ does hold. Thus the two pole rows
+cannot replace the one orthogonality row in this case.
+
+\subsection{Recovering root and Cauchy-transform formulas}
+
+If $u$ has distinct complex roots $u_i$, the remainder rows can be
+replaced by $P(u_i)=0$: the Vandermonde matrix makes this an invertible
+change of rows. Repeated roots require the corresponding derivative
+or Hasse-derivative conditions; retaining polynomial remainders
+avoids that extra interface entirely.
+
+If $v$ has distinct complex roots $v_j$, define
+$\eta_k(z)=L(\pi_k(t)/(z-t))$. For $0\le r<s\le m$,
+\[
+ \frac{t^r}{v(t)}=
+ \sum_{j=1}^m\frac{v_j^r}{v'(v_j)(t-v_j)},\qquad
+ L\!\left(\frac{t^r\pi_k(t)}{v(t)}\right)
+ =-\sum_{j=1}^m\frac{v_j^r\eta_k(v_j)}{v'(v_j)}.
+ \tag{CU9}
+\]
+Clear denominators: the polynomial identity has degree less than
+$m$ and agrees at the $m$ distinct roots. For $m\le n$, $s=m$,
+and the coefficient matrix $(v_j^r/v'(v_j))_{r,j}$ is invertible.
+Hence the familiar $m$ separate Cauchy-transform rows are equivalent.
+For $m>n$, retain the $n$ displayed combinations, not $m$ separate
+rows. Repeated denominator roots are already covered by (CU1);
+partial fractions with higher powers are an optional presentation,
+not a prerequisite for the theorem.
+
+Complex conjugate roots present no reality problem. The primary
+coefficient system (CU3) is real and has a unique solution. Its
+root-based versions therefore produce the same real polynomial,
+even if their intermediate determinants are complex.
+
+Once these monic polynomials are obtained, no separate modification
+algorithm is needed for the recurrence coefficients. If $c_j$ is
+the coefficient of $t^{j-1}$ in $\widehat\pi_j$ (with $c_0=0$), then
+\[
+ \widehat\alpha_j=c_j-c_{j+1},\qquad
+ \widehat\beta_j=\widehat h_j/\widehat h_{j-1}\quad(j\ge1),
+ \qquad \widehat h_j=L(u\widehat\pi_j^2/v).
+\]
+The norm ratio requires $\widehat h_{j-1}>0$; an orthonormal
+off-diagonal is $\sqrt{\widehat\beta_j}$. This states exactly which
+additional moment positivity is used when extending the recurrence.
+
+\subsection{The complex-point nonvanishing correction remains necessary}
+
+For a single Christoffel shift $z$ and monic original polynomials,
+the formula is
+\[
+ \widehat\pi_j(t)=
+ \frac{\pi_{j+1}(t)-\pi_{j+1}(z)\pi_j(t)/\pi_j(z)}{t-z},
+ \qquad \pi_j(z)\ne0.
+ \tag{CU10}
+\]
+Its numerator is divisible by $t-z$. This does \emph{not} imply
+$\widehat\pi_j(z)\ne0$: the numerator may have a double root there.
+For the standard Gaussian probability measure,
+$\pi_1(t)=t$, $\pi_2(t)=t^2-1$. At $z=i$,
+\[
+ \widehat\pi_1(t)=\frac{t^2-1-2it}{t-i}=t-i,
+ \qquad \widehat\pi_1(i)=0.
+ \tag{CU11}
+\]
+The original Gaussian orthogonal polynomials have real roots, so
+$\pi_k(i)\ne0$ for every $k$. Thus even nonvanishing at the shift
+for all original polynomials does not repair the false conclusion.
+For real $z$ strictly outside the support interval, the modified
+functional has constant sign and becomes positive after an overall
+sign change; the usual root-location theorem then does give the
+extra nonvanishing. That additional real-order hypothesis must be
+stated explicitly.
+
+\paragraph{Formalization boundary.}
+The coefficient formulation requires no complex-analysis library and
+no theorem about sequential modification algorithms. Its reusable
+pieces are the polynomial remainder map, finite integrals, the
+positive-definite Gram argument, and Cramer's rule. Root splitting
+and partial fractions are only corollaries for matching traditional
+notation. No complete Christoffel--Uvarov declaration was found in
+the inspected local declaration index or in the saved audit snapshot.
+
+
+\appendix
+\section{The retained lower bound for reciprocal approximation}
+\label{app:retained-lower}
+
+This appendix makes the exact root-limit conclusion self-contained. It is
+the earlier lower-bound route, not an additional simplification of it.
+The explicit positive denominator in Section~\ref{sec:explicit-reciprocal}
+does not require any of the minimax machinery used here.
+
+Put $f(x)=e^{x/4}$ and use the same weighted inner product and $g_n$ as in
+Section~\ref{sec:explicit-reciprocal}. Orthogonality of $f-g_n$ to every
+polynomial of degree at most $n$ strengthens the finite Gram calculation to
+\begin{equation}
+ \int_0^\infty(f-p)^2e^{-x}\,dx
+ =\frac2{3^{2n+2}}+\int_0^\infty(p-g_n)^2e^{-x}\,dx
+ \ge\frac2{3^{2n+2}}\qquad(\deg p\le n).
+ \label{eq:retained-gram-lower}
+\end{equation}
+
+Fix $a>0$. Let $q$ minimize
+$\max_{[0,a]}e^{-x/2}|f(x)-q(x)|$ over degree-at-most-$n$ polynomials.
+Existence follows without an infinite-dimensional compactness theorem:
+a bounded sublevel bounds the polynomial at $n+1$ fixed distinct points;
+the Vandermonde inverse bounds its coefficients; the objective is continuous
+on this closed bounded finite-dimensional set.
+
+The weighted alternation argument gives $n+2$ ordered extrema with alternating
+signs. To recall its exact dependency, if there were at most $n+1$ alternating
+sign blocks on the compact extremal set, choose one root between each pair
+of blocks. A polynomial of degree at most $n$ can then have the sign of the
+error everywhere on that set and be nonzero there. A sufficiently small
+multiple strictly decreases the weighted error near the extremal set, while
+compactness leaves a uniform strict margin on its complement. This contradicts
+minimality. The error is nonzero because $f^{(n+1)}>0$ on the interval.
+
+Between those extrema lie $n+1$ distinct zeros
+$t_0<\cdots<t_n$ of $f-q$, all in $(0,a)$. Thus $q$ is the Newton interpolant
+of $f$ at those points:
+\[
+ q(x)=\sum_{j=0}^n f[t_0,\ldots,t_j]
+                  \prod_{\ell<j}(x-t_\ell).
+\]
+Every displayed divided difference is positive by repeated Rolle's theorem.
+For $x\ge a$, all factors are nonnegative, and the interpolation remainder
+is also nonnegative, because $f^{(n+1)}>0$. Consequently
+\begin{equation}
+ 0<q(x)\le f(x)\qquad(x\ge a).
+ \label{eq:retained-extrapolation}
+\end{equation}
+
+Now set $a=(4n+4)\log3+\log4>2$. Suppose an admissible reciprocal $1/p$
+has uniform error
+\[
+ \epsilon<\frac1{2\sqrt a\,3^{n+1}}
+\]
+relative to $e^{-x/4}$ on the half-line. Its value at zero and the absence
+of poles imply $p>0$ everywhere on the connected half-line. Since
+$\epsilon e^{a/4}<1/2$, on $[0,a]$ we have
+\[
+ p\le2f,\qquad |p-f|\le\epsilon pf\le2\epsilon e^{x/2}.
+\]
+Minimality of $q$ gives the same weighted error bound for $q$ on this
+interval. Combining it with \eqref{eq:retained-extrapolation} and
+\eqref{eq:retained-gram-lower} yields
+\[
+ \frac2{3^{2n+2}}
+ \le\int_0^\infty(q-f)^2e^{-x}\,dx
+ \le4a\epsilon^2+2e^{-a/2}
+ =4a\epsilon^2+\frac1{3^{2n+2}},
+\]
+contradicting the assumed error. A nonzero constant numerator can be absorbed
+into $p$; a zero numerator has error one. Scaling the independent variable
+back therefore proves, for every $n\ge0$,
+\[
+ E_{0,n}(e^{-x};[0,\infty))\ge
+ \frac{3^{-n}}{6\sqrt{(4n+4)\log3+\log4}}.
+\]
+Together with the new explicit upper bound, taking $n$th roots gives $1/3$.
+This argument identifies precisely the weighted-minimax component that still
+remains if the entire two-sided theorem is to be formalized.
+
+\section{Source and verification notes}
+The existing source document is
+\code{open_mathematical_items_operator_derivations.tex}; it is not modified
+by this separate note. The derivations here replace the specified upper-bound,
+degree-transfer, border, and coefficient-system arguments. The retained lower
+bound is reproduced only to make its dependency explicit.
+
+For classical context, the reciprocal root limit is recorded in
+\href{https://doi.org/10.1137/0719077}{A. Sch\"onhage,
+\emph{Rational Approximation to $e^{-x}$ and Related $\mathcal L^2$-Problems}
+(1982)}. The polynomial Bernstein limit and its usual entire-function
+formulation are discussed in
+\href{https://lubinsky.math.gatech.edu/Research\%20papers/BrnstnDec05CA.pdf}
+{D. S. Lubinsky, \emph{On the Bernstein Constants of Polynomial Approximation}}.
+The finite proofs in this note spell out their own inequalities and
+normalizations; no claim of historical novelty is made.
+
+All named NLAlib reuse claims refer to the
+\href{https://github.com/tchen-research/NLAlib/blob/e5725bb94e5bd8e326d58ad219260b0218e74c9e/atlas/declarations.json}
+{saved public declaration index}. Mathematical review, availability of a
+declaration in that snapshot, and a new Lean proof are separate assertions.
+Only the first two are claimed here.
+\end{document}

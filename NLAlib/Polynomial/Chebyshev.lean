@@ -4,6 +4,7 @@ import NLAlib.Polynomial.Chebyshev.ColleagueMatrix
 import NLAlib.Polynomial.Chebyshev.Core
 import NLAlib.Polynomial.Chebyshev.CosineBasis
 import NLAlib.Polynomial.Chebyshev.EvenChebyshevFilter
+import NLAlib.Polynomial.Chebyshev.ExtremalBounds
 import NLAlib.Polynomial.Chebyshev.Growth
 import NLAlib.Polynomial.Chebyshev.Integral
 import NLAlib.Polynomial.Chebyshev.Markov

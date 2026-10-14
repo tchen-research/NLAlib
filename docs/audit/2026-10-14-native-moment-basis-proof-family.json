@@ -1,0 +1,31 @@
+{
+  "recurrence-coefficient-moment-sensitivity": {
+    "clauses": [
+      {
+        "statement": "For every actual fixed native bounded-degree polynomial basis, constructed duals and its actual moments L(b_k) reconstruct L on the whole bounded-degree space, preserve the positive order-n Hankel domain, and give exactly the original alpha-then-mass-and-beta output without higher moments.",
+        "decls": [
+          "NLAlib.coordinateMomentFunctional_polynomialBasis_eq_of_degree_lt",
+          "NLAlib.hankelMomentMatrix_coordinate_polynomialBasis_eq",
+          "NLAlib.momentRecurrenceMap_polynomialBasisMomentVector_eq"
+        ]
+      },
+      {
+        "statement": "At the actual modified moment vector the Euclidean Jacobian is the original functional's actual sensitivity matrix in that prescribed fixed basis; every included alpha/beta sensitivity row is exactly its native basis representation coefficient, including the highest alpha row of degree at most 2n-1.",
+        "decls": [
+          "NLAlib.euclideanJacobian_momentRecurrenceMap_polynomialBasis_eq",
+          "NLAlib.polynomialBasisCoordinate_alphaSensitivity_eq_repr",
+          "NLAlib.polynomialBasisCoordinate_betaSensitivity_eq_repr"
+        ]
+      },
+      {
+        "statement": "The actual fixed-basis absolute condition number is the spectral norm of the original sensitivity matrix and its normwise relative condition number includes the actual input/output norms; positive nonempty moment systems prove both vectors nonzero, so the relative normalization is defined.",
+        "decls": [
+          "NLAlib.mapAbsCondition_momentRecurrenceMap_polynomialBasis_eq_specNorm",
+          "NLAlib.mapNormRelativeCondition_momentRecurrenceMap_polynomialBasis_eq",
+          "NLAlib.momentCoordinates_ne_zero_of_posDef",
+          "NLAlib.momentRecurrenceMap_ne_zero_of_posDef"
+        ]
+      }
+    ]
+  }
+}

@@ -568,7 +568,7 @@ theorem exists_isPLU_abs_le_one {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) :
 `i` of `U` satisfies `|uᵢⱼ| ≤ 2^i M` (each elimination step at most doubles the entries, since
 the multipliers are bounded by one). Trefethen–Bau 1997, Lect. 22; Higham 2002, §9.3,
 eq. (9.13) (Wilkinson's bound). Exact arithmetic.
-atlas: lu-growth-factor -/
+atlas: lu-growth-factor (partial) -/
 theorem abs_luPartialPivot_upper_le {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {M : ℝ}
     (hM : ∀ i j, |A i j| ≤ M) (i j : Fin n) :
     |(luPartialPivot A).2.2 i j| ≤ 2 ^ (i : ℕ) * M := by
@@ -601,7 +601,7 @@ theorem abs_luPartialPivot_upper_le {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {
 /-- **Growth factor of partial pivoting**: `max |uᵢⱼ| ≤ 2^{n−1} max |aᵢⱼ|`, stated with an
 entrywise bound `M` on `A`. The bound is attained (Wilkinson's example), which is not
 formalized. Trefethen–Bau 1997, Lect. 22, eq. (22.4); Higham 2002, §9.3, eq. (9.13).
-atlas: lu-growth-factor -/
+atlas: lu-growth-factor (partial) -/
 theorem abs_luPartialPivot_upper_le_two_pow {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {M : ℝ}
     (hM : ∀ i j, |A i j| ≤ M) (i j : Fin n) :
     |(luPartialPivot A).2.2 i j| ≤ 2 ^ (n - 1) * M := by

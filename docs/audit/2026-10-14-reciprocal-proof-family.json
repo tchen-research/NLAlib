@@ -1,0 +1,115 @@
+{
+  "exp-rational-halfline": {
+    "scope": "All retained polynomial and type-(0,n) reciprocal clauses are proved. The user-excluded type-(n,n) Halphen asymptotic is outside this family.",
+    "clauses": [
+      {
+        "statement": "Every polynomial degree has exact uniform best error one half for exp(-x) on the positive half-line and exp(x) on the negative half-line, expressed as the least attainable uniform bound.",
+        "decls": [
+          "NLAlib.isLeast_uniform_polynomial_exp_neg_error",
+          "NLAlib.isLeast_uniform_polynomial_exp_error_negative_halfLine"
+        ]
+      },
+      {
+        "statement": "The actual finite two-resolvent denominator has the displayed finite derivative formula and exact degree, and after x=4t is positive on the entire half-line with strictly positive derivative in positive degree.",
+        "decls": [
+          "NLAlib.doubleResolventExponentialDenominator_eq_sum",
+          "NLAlib.natDegree_reciprocalExponentialDenominator",
+          "NLAlib.reciprocalExponentialDenominator_eval_pos",
+          "NLAlib.reciprocalExponentialDenominator_derivative_eval_pos",
+          "NLAlib.reciprocalExponentialDenominator_strictMonoOn_halfLine"
+        ]
+      },
+      {
+        "statement": "The actual explicit reciprocal approximation has uniform error at most sqrt(40/21)/3^n, hence at most sqrt(2)/3^n, in every degree including degree zero.",
+        "decls": [
+          "NLAlib.abs_exp_neg_sub_inv_reciprocalExponentialDenominator_le",
+          "NLAlib.abs_exp_neg_sub_inv_reciprocalExponentialDenominator_le_sqrt_two"
+        ]
+      },
+      {
+        "statement": "The native canonical RatFunc type-(0,n) pole-free minimax infimum has geometric lower and upper bounds with the finite truncation prefactor; every finite degree has strictly positive error.",
+        "decls": [
+          "NLAlib.type_zero_rational_exp_error_ge_geometric_lower_bound",
+          "NLAlib.reciprocalExponentialMinimaxError_ge_geometric_lower_bound",
+          "NLAlib.reciprocalExponentialMinimaxError_le_geometric_upper_bound",
+          "NLAlib.reciprocalExponentialMinimaxError_pos"
+        ]
+      },
+      {
+        "statement": "The actual type-(0,n) rational minimax error on the positive half-line has exact nth-root limit one third.",
+        "decls": [
+          "NLAlib.tendsto_rpow_reciprocalExponentialMinimaxError_inv_nat"
+        ]
+      },
+      {
+        "statement": "Affine reflection preserves the exact canonical rational error-bound set and its infimum, so the original atlas orientation exp(x) on the negative half-line has the same geometric bounds and exact nth-root limit one third.",
+        "decls": [
+          "NLAlib.negativeHalfLineExponentialUniformErrorBounds_eq",
+          "NLAlib.negativeHalfLineExponentialMinimaxError_eq",
+          "NLAlib.negativeHalfLineExponentialMinimaxError_ge_geometric_lower_bound",
+          "NLAlib.negativeHalfLineExponentialMinimaxError_le_geometric_upper_bound",
+          "NLAlib.tendsto_rpow_negativeHalfLineExponentialMinimaxError_inv_nat"
+        ]
+      },
+      {
+        "statement": "For any finite real symmetric or complex Hermitian positive semidefinite matrix, including the empty size, the explicit denominator evaluates to a positive definite matrix and its inverse approximates the actual matrix exponential in spectral norm with the same dimension-independent scalar bound.",
+        "decls": [
+          "NLAlib.posDef_aeval_reciprocalExponentialDenominator",
+          "NLAlib.specNorm_matrixExp_neg_sub_inv_aeval_reciprocalExponentialDenominator_le"
+        ]
+      }
+    ],
+    "source": "four_focused_mathematical_reroutes.tex Section 1 and retained reciprocal lower-bound appendix; open_mathematical_items_operator_derivations.tex RC1-RC10",
+    "proof_route": "Finite Rodrigues Gram identities and weighted minimax lower certificate; explicit two-resolvent smoothing with exact kernel square norms; shifted monic-recurrence coefficient induction replaces the source Jacobi eigenvalue tail argument; canonical rational-function normalization and logarithmic sandwich prove the actual root limit.",
+    "trust": "No new axiom, sorry, native_decide, certificate supplied as a hypothesis, or minimizer assumed on the noncompact half-line.",
+    "verification": "All endpoint and support modules checked individually with Lean; root must run repository-wide build, Audit.lean, layer check, generated declaration/atlas checks before PR. This inventory records retained scope only and must not be installed as a full atlas proof family for the composite card."
+  },
+  "abs-best-approx-asymptotics": {
+    "scope": "The retained polynomial Bernstein limit, positivity, finite degree transfer, and coarse enclosure are proved for the native polynomial minimax error. The user-excluded Stahl rational equivalent is outside this inventory; printed decimal digits of the Bernstein constant are not formally certified.",
+    "clauses": [
+      {
+        "statement": "Actual degree-bounded real minimizers exist, the even-degree Chebyshev comparison gives E_(2m) <= 2/(pi*(2m+1)), and symmetrization proves E_(2m+1)=E_(2m).",
+        "decls": [
+          "NLAlib.exists_degree_le_absoluteMinimaxError",
+          "NLAlib.absoluteMinimaxError_even_le",
+          "NLAlib.absoluteMinimaxError_odd_eq_even"
+        ]
+      },
+      {
+        "statement": "For each alpha in (0,1), every positive target degree compares to every sufficiently large even source degree via the actual finite polynomial scaling and an explicit exponentially decaying target-degree remainder.",
+        "decls": [
+          "NLAlib.norm_scaled_absolute_approximant_le",
+          "NLAlib.mul_absoluteMinimaxError_le_degreeTransfer",
+          "NLAlib.tendsto_bernsteinDegreeTransferRemainder"
+        ]
+      },
+      {
+        "statement": "The actual scaled native minimax error n*E_n converges along all integer degrees to the real constant defined by its even-degree liminf.",
+        "decls": [
+          "NLAlib.tendsto_nat_mul_absoluteMinimaxError"
+        ]
+      },
+      {
+        "statement": "The actual finite modulated Fejer dual annihilates all competitors of the prescribed degree, has uniform functional norm at most one, and yields E_n >= 1/(18*pi*(n+1)). No dual certificate is assumed as a hypothesis.",
+        "decls": [
+          "NLAlib.absoluteFejerDual_eval_eq_zero",
+          "NLAlib.abs_absoluteFejerDual_le",
+          "NLAlib.div_le_neg_absoluteFejerDual_abs",
+          "NLAlib.one_div_eighteen_pi_mul_succ_le_absoluteMinimaxError"
+        ]
+      },
+      {
+        "statement": "The Bernstein limit is strictly positive and lies in [1/(18*pi),2/pi]; a positive constant with the full scaled limit therefore exists.",
+        "decls": [
+          "NLAlib.bernsteinConstant_pos",
+          "NLAlib.bernsteinConstant_mem_Icc",
+          "NLAlib.exists_pos_tendsto_nat_mul_absoluteMinimaxError"
+        ]
+      }
+    ],
+    "source": "four_focused_mathematical_reroutes.tex Section 2; open_mathematical_items_operator_derivations.tex Bernstein polynomial subcase.",
+    "proof_route": "Finite real polynomial minimizers, finite sine-coordinate growth and Bernstein-ellipse approximation, scalar degree-transfer liminf closure, and a genuine finite modulated Fejer integral lower certificate. No limiting entire function is required.",
+    "trust": "No new axiom, sorry, native_decide, assumed dual certificate, or assumed minimizer.",
+    "verification": "Fresh direct Lean checks of the positive enclosure and finite parity endpoint pass. Repository-wide compilation and trusted audits remain the integrating parent's required checks. This inventory records retained scope only and must not be installed as a full atlas proof family for the composite card."
+  }
+}

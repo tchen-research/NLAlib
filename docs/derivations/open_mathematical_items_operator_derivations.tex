@@ -1,0 +1,2769 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{array,longtable,booktabs,enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\setlength{\emergencystretch}{3em}
+\setlength{\parskip}{4pt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\N}{\mathbb N}
+\newcommand{\F}{\mathbb F}
+\newcommand{\E}{\mathbb E}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\inner}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\op}{\mathrm{op}}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\conv}{conv}
+\newcommand{\code}[1]{\ifmmode\text{\small\nolinkurl{#1}}\else{\small\nolinkurl{#1}}\fi}
+\title{Remaining mathematical items in NLAlib\\
+Finite linear algebra, operator proofs, and a statement audit}
+\author{Mathematical handoff for subsequent Lean formalization}
+\date{13 October 2026}
+\begin{document}
+\maketitle
+
+\section*{Scope and evidence}
+The refreshed public site and the repository agree at commit
+\href{https://github.com/tchen-research/NLAlib/tree/e5725bb94e5bd8e326d58ad219260b0218e74c9e}
+{\texttt{e5725bb94e5b}}: 291 entries are marked proved and 63 are open
+(56 candidate, 6 scaffold, 1 assumed). All 108 matrix-analysis-toolkit
+entries are marked proved. This supersedes the earlier list of twelve
+matrix candidates; those were a catalogue-status mismatch.
+
+This note selects \textbf{33 mathematical entries} across the catalogue.
+It includes structural algebra, probability identities, approximation
+theory, and quadrature. The 30 excluded entries concern algorithm
+definitions, recurrences, implementation identities, query models,
+or algorithm-specific convergence and performance guarantees; they
+are listed at the end so the scope decision is reviewable.
+The unbiasedness entries are included for their expectation identities,
+and interpolative decomposition for its existence theorem.
+
+The purpose is to give mathematics that another agent can formalize.
+No Lean source is changed, no axiom is proposed, and no new kernel
+verification is claimed. Declaration names and signatures were checked
+against the commit-pinned \code{atlas/declarations.json}; catalogue
+contracts were read from \code{atlas/atlas.json}. Additional Mathlib
+names were inspected in the local checkout at commit
+\texttt{0df444a360ea}. These checks identify reusable interfaces;
+they are not a fresh build of the remote repository.
+
+\paragraph{Read the status of each route literally.}
+Most sections give complete mathematical reductions to standard finite
+algebra and scalar analysis. The Crouzeix--Palencia section explicitly
+retains its scalar Cauchy-transform boundary theorem. The two sharp
+approximation entries still retain the Stahl and Halphen strong
+asymptotics; finite certificates are not presented as proofs of those
+asymptotics. The unspecified early-truncation identity cannot be
+reconstructed from its catalogue title. Several other advertised
+clauses need hypothesis or sign repairs, which are stated where used.
+
+\paragraph{Shared conventions.}
+Matrix norms without a subscript are Euclidean operator norms, and
+$\|\cdot\|_F$ is Frobenius norm. Adjoint means conjugate transpose;
+in real statements it is transpose. Empty sums and products are $0$
+and $1$, respectively. Measures in positive orthogonality statements
+are nonzero finite positive Borel measures with the required finite
+moments. A finite target of order $n$ requires only finitely many
+moments, not an infinite-dimensional polynomial completion.
+For monic orthogonal polynomials, $h_j=\int\pi_j^2\,d\mu$,
+$\beta_j=h_j/h_{j-1}$, and the symmetric Jacobi off-diagonal is
+$a_j=\sqrt{\beta_j}$; normalization is made explicit in each section.
+
+\tableofcontents
+\clearpage
+
+
+\section{Positive real moments: normalization and one scalar tangent}
+\label{math:moment}
+\paragraph{Catalogue item.} \code{positive-real-moment-comparison}.
+Let $(\Omega,\mathcal F,\mu)$ be any probability space, let $f\ge0$
+be almost everywhere strongly measurable, and suppose
+$0<p\le q$ and $f^q$ is integrable. Set $M=\int f^q\,d\mu$. Then
+\[
+ \left(\int f^p\,d\mu\right)^{1/p}\le M^{1/q}.
+\]
+No assumption $p\ge1$ is needed.
+
+\begin{proof}
+The case $p=q$ is equality. Otherwise set $a=p/q\in(0,1)$.
+The scalar tangent inequality
+\[
+ t^a\le (1-a)+at\qquad(t\ge0)
+\]
+follows by differentiating on $(0,\infty)$ and checking $t=0$.
+If $M=0$, positivity gives $f^q=0$ almost everywhere, hence $f=0$
+almost everywhere. If $M>0$, apply the inequality to $g=f^q/M$.
+It first proves integrability of $g^a$, by domination by $1-a+ag$,
+and then gives $\int g^a\le1$. Thus $\int f^p\le M^{p/q}$;
+raising to the positive power $1/p$ proves the assertion.
+\end{proof}
+
+\paragraph{Actual reuse.}
+Mathlib already contains
+\code{MeasureTheory.eLpNorm'_le_eLpNorm'_of_exponent_le},
+\code{MeasureTheory.eLpNorm_le_eLpNorm_of_exponent_le}, and
+\code{MeasureTheory.MemLp.mono_exponent} in
+\code{MeasureTheory/Function/LpSeminorm/CompareExp.lean}.
+The first takes real exponents with $0<p\le q$, including exponents
+below one. The rooted integral formulation is a conversion using
+\code{MeasureTheory.MemLp.eLpNorm_eq_integral_rpow_norm}.
+The direct proof above is useful if avoiding extended-nonnegative-real
+conversions makes the wrapper shorter; it is not a missing probability theorem.
+
+\section{Random projections and unbiased trace identities}
+\label{math:trace}
+\paragraph{Catalogue items.}
+\code{hutchpp-unbiased}, \code{xtrace-unbiased}.
+These are expectation identities; no estimator construction or
+iteration analysis is required.
+
+Let $A\in\R^{d\times d}$ be arbitrary, including nonsymmetric $A$.
+Let $Q^\top Q=I$, put $P=QQ^\top$, and write
+\[
+ D(Q,w)=\tr(Q^\top AQ)+w^\top(I-P)A(I-P)w.
+\]
+For an isotropic probe $w$ we assume genuine finite second moments and
+$\mathbb E(w_iw_j)=\delta_{ij}$. In particular
+$\mathbb E\|w\|^2=d$. Finite summation gives
+\[
+ \mathbb E(w^\top Bw)=\tr B.
+\]
+The scalar terms are integrable because
+$2|w_iw_j|\le w_i^2+w_j^2$. Cyclicity and $P^2=P$ give
+\[
+ \tr(Q^\top AQ)+\tr((I-P)A(I-P))
+ =\tr(AP)+\tr(A(I-P))=\tr A.                 \tag{T1}
+\]
+
+\begin{lemma}[Uniform domination removes the integrability side condition]
+For every orthonormal $Q$ and every $w$,
+\[
+ |D(Q,w)|\le \|A\|_2\bigl(d+\|w\|^2\bigr). \tag{T2}
+\]
+\end{lemma}
+\begin{proof}
+The trace term is the sum of at most $d$ numbers $q_j^\top Aq_j$,
+each bounded in absolute value by $\|A\|_2$. Orthogonal projection
+is contractive, so the other term is at most $\|A\|_2\|w\|^2$.
+The proof also covers empty columns and $d=0$.
+\end{proof}
+
+Suppose $S$ is any random element, $Q(S)$ is measurable and has
+orthonormal columns almost surely, and $S$ and $w$ are independent.
+Their joint law is the product of their marginal laws. Bound (T2)
+proves integrability on that product law. Integrate first in $w$,
+use (T1), and integrate in $S$:
+\[
+ \mathbb E D(Q(S),w)=\tr A.                  \tag{T3}
+\]
+This uses neither a conditional distribution nor a standard Borel
+assumption on the underlying probability space. A finite nonempty
+average of such terms has the same mean; mutual independence between
+the terms is unnecessary.
+
+For leave-one-out probes $w_1,\ldots,w_m$, assume the family is
+independent and each probe is measurable and isotropic. Let
+$S_i=(w_j)_{j\ne i}$ and $Q_i=F_i(S_i)$ for a measurable $F_i$.
+Independence of disjoint subfamilies gives $S_i\perp w_i$;
+composition preserves independence, and (T2)--(T3) apply to each $i$.
+Identical distribution is sufficient but unnecessary. Exchangeability
+alone would not establish this independence.
+
+\paragraph{Actual reuse and the remaining wrapper.}
+The snapshot already has
+\code{NLAlib.integral_deflatedTraceEstimate_eq_trace},
+\code{NLAlib.integral_deflatedTraceEstimate_comp_eq_trace}, and
+\code{NLAlib.integral_leaveOneOutDeflatedTraceEstimate_eq_trace}.
+The last two require product-law integrability explicitly; (T2)
+discharges it for a measurable orthonormal correction.
+Mathlib's \code{ProbabilityTheory.iIndepFun.indepFun_finset}
+(and its almost-everywhere version)
+supplies held-out independence. This is the precise missing iid
+construction bridge recorded in the refreshed catalogue.
+
+\section{Interpolative decomposition without strong RRQR}
+\label{math:id}
+\paragraph{Catalogue item.} \code{interpolative-decomposition}.
+Let $A\in\R^{m\times n}$ and $0\le k\le\rank A$.
+There exist $k$ distinct column indices $J$ and
+$T\in\R^{k\times n}$ such that
+\[
+ T[:,J]=I_k,\qquad |T_{ij}|\le1,\qquad
+ \|A-A[:,J]T\|_2\le\sqrt{1+k(n-k)}\,\sigma_{k+1}(A). \tag{ID}
+\]
+Here singular values past the smaller dimension are zero.
+If $\rank A=k$, this is an exact factorization.
+
+\begin{proof}
+For $k=0$ take empty $J,T$; (ID) is $\|A\|_2=\sigma_1(A)$.
+For $k>0$, take an SVD and let $V\in\R^{k\times n}$ be its first
+$k$ right singular rows, so $VV^\top=I_k$.
+Choose $J$ maximizing $|\det V[:,J]|$ among the finitely many
+$k$-subsets. Some minor is nonzero because $V$ has row rank $k$.
+Define
+\[
+ T=V[:,J]^{-1}V.
+\]
+Cramer's rule expresses $T_{ij}$ as the ratio of a one-column
+replacement determinant to the maximal determinant. Replacement by
+an already selected column either gives zero or the same minor;
+otherwise it gives a $k$-subset minor up to sign. Hence $|T_{ij}|\le1$.
+
+Let $A_k$ be the rank-$k$ SVD truncation, $F=A-A_k$, and let $S_J$
+be the coordinate inclusion selecting columns $J$. Since $A_k=BV$
+for an $m\times k$ matrix $B$,
+\[
+ A_kS_JT=A_k,\qquad
+ A-AS_JT=F(I-S_JT).                          \tag{ID1}
+\]
+After moving $J$ first, write $T=[I_k\ T_2]$. Then
+\[
+ I-S_JT=\begin{pmatrix}0&-T_2\\0&I_{n-k}\end{pmatrix},
+ \quad
+ \|I-S_JT\|_2\le\sqrt{1+\|T_2\|_2^2}
+ \le\sqrt{1+k(n-k)}.
+\]
+The first inequality follows immediately by applying the block
+matrix to $(x,y)$; no norm formula at dimension zero is needed.
+Combine this with $\|F\|_2=\sigma_{k+1}(A)$ in (ID1).
+If $k=n$, $T_2$ has no columns and the residual is exactly zero.
+\end{proof}
+
+\paragraph{Why this route is shorter.}
+Maximize a minor of the \emph{right singular frame}, not the volume
+of the original columns. No singular-value estimates for a QR trailing
+block are needed. The selected columns of $A$ are independent because
+their images under the top left singular vectors have invertible
+matrix $\diag(\sigma_1,\ldots,\sigma_k)V[:,J]$.
+This is an existence proof; the catalogue's additional claim about an
+efficient coefficient-$2$ construction belongs to algorithmic scope.
+
+\paragraph{Actual reuse.}
+\code{NLAlib.exists_svd_right_blocks_specNorm} already supplies an
+orthogonal right-frame decomposition and the exact tail norm.
+The additional lemma is only finite maximal-minor interpolation.
+The same proof gives a Frobenius bound with
+$\|A-A_k\|_F$ in place of $\sigma_{k+1}(A)$.
+
+\section{Projected truncation: a complete identity and a precise scope limit}
+\label{math:truncation}
+\paragraph{Catalogue item.} \code{truncation-lemma}.
+For every $Q$ with orthonormal columns and every compatible $X$,
+orthogonality gives the exact identity
+\[
+ \|A-QX\|_F^2
+ =\|(I-QQ^\top)A\|_F^2+\|Q^\top A-X\|_F^2. \tag{PT}
+\]
+Indeed the two summands in
+$A-QX=(I-QQ^\top)A+Q(Q^\top A-X)$ have zero Frobenius inner
+product, and multiplication by $Q$ preserves the Frobenius norm.
+Take $X$ to be any best rank-at-most-$k$ approximation of $Q^\top A$.
+If $A_k$ is a best rank-at-most-$k$ approximation of $A$, then
+$Q^\top A_k$ is an admissible competitor, so
+\[
+ \|A-QX\|_F^2\le\|(I-QQ^\top)A\|_F^2+\|A-A_k\|_F^2.
+\]
+This is stronger than the advertised coefficient $2$ on the projection
+residual, and includes $k=0$ and empty matrices.
+
+\paragraph{Do not invent the unspecified component.}
+This ordinary statement is already proved under
+\code{truncation-lemma-projected}, including
+\code{NLAlib.IsBestFrobRankApprox.frobSq_sub_mul_le_bestRankFrobSq_add_frobSq_residual}.
+The remaining catalogue text mentions an ``early-truncated variant''
+without defining its output or giving its identity. Its two historical
+external declaration pointers are explicitly unverified in the atlas.
+Equation (PT) is available for any specified $X$, but does not identify
+an unspecified algorithm output. That clause is not counted as closed
+by the present derivation.
+
+
+\section{Vector-relative minimal polynomials and Krylov grade}
+\label{struct:grade}
+\paragraph{Catalogue target.} \code{krylov-grade}. The remaining extension is
+over an arbitrary field, with a vector-relative annihilator and a divisibility
+bridge. No inner product, spectral theorem, or principal-ideal construction is
+needed for the following route.
+
+Let $V$ be an $n$-dimensional vector space over a field $\F$, let $A:V\to V$
+be linear, and put
+\[
+ K_q(A,b)=\Span\{b,Ab,\ldots,A^{q-1}b\},\qquad K_0=\{0\}.
+\]
+Choose the least integer $\nu\ge0$ for which $A^\nu b\in K_\nu$.
+Such an integer exists with $\nu\le n$: otherwise the first $n+1$ powers
+are independent, by taking the highest nonzero coefficient of a relation.
+For every $q\le\nu$, that same argument proves independence of
+$b,\ldots,A^{q-1}b$. Thus there are unique $c_0,\ldots,c_{\nu-1}$ such that
+\[
+ A^\nu b=-\sum_{j<\nu}c_j A^j b.
+\]
+Define $\mu_b(t)=t^\nu+\sum_{j<\nu}c_jt^j$; when $\nu=0$, this is $1$
+and $b=0$.
+
+\begin{lemma}[Division is the whole annihilator interface]
+For every $p\in\F[t]$,
+\[
+ p(A)b=0\quad\Longleftrightarrow\quad\mu_b\mid p.
+ \tag{S1}
+\]
+In particular, $\mu_b$ is the unique monic polynomial of least degree
+annihilating $b$, and generates the vector-annihilator ideal.
+\end{lemma}
+\begin{proof}
+Divide $p=q\mu_b+r$ with $\deg r<\nu$. Polynomial evaluation commutes with
+$A$, so $p(A)b=r(A)b$. Independence of the first $\nu$ powers forces all
+coefficients of $r$ to vanish. Conversely a multiple of $\mu_b$ annihilates
+$b$. For $\nu=0$, division by $1$ has zero remainder and every polynomial
+annihilates the zero vector.
+\end{proof}
+
+\begin{theorem}[All grade conclusions over a field]
+For every $q\ge0$,
+\[
+ \dim K_q=\min(q,\nu),\qquad
+ (b,Ab,\ldots,A^{q-1}b)\text{ independent}\ \Longleftrightarrow\ q\le\nu.
+\]
+Moreover $AK_\nu\subseteq K_\nu$, $K_q=K_\nu$ for $q\ge\nu$,
+$\mu_b\mid\mu_A$, and $\nu\le\deg\mu_A\le n$.
+If $A$ is invertible, $A^{-1}b\in K_\nu$.
+\end{theorem}
+\begin{proof}
+Applying $A$ to each spanning vector of $K_\nu$ remains in that space:
+only its last vector uses the defining relation. Induction therefore puts
+every later power in $K_\nu$, proving saturation and the dimension formula.
+The matrix minimal polynomial $\mu_A$ annihilates $b$, so (S1) gives
+divisibility. Cayley--Hamilton gives $\mu_A\mid p_A$ and hence the degree
+bound. If $b\ne0$ and $A$ is invertible, the constant coefficient
+$c_0$ is nonzero. Otherwise $\mu_b=tq$ and
+$0=Aq(A)b$ would imply $q(A)b=0$, contradicting minimal degree.
+Multiplying the defining relation by $A^{-1}$ gives the explicit witness
+\[
+ A^{-1}b=-c_0^{-1}\bigl(A^{\nu-1}b+c_{\nu-1}A^{\nu-2}b+\cdots+c_1b\bigr).
+\]
+For $b=0$ membership is immediate. Dimension zero is included.
+\end{proof}
+
+\paragraph{Verified reuse and the actual new interface.}
+The snapshot already has \code{NLAlib.mem_krylovSpace_iff} and
+\code{NLAlib.finrank_krylovSpace_le} over an arbitrary field. Thus the
+catalogue note that \code{krylovSpace} itself still needs generalization
+is stale. The indexed \code{NLAlib.krylovGrade},
+\code{NLAlib.finrank_krylovSpace},
+\code{NLAlib.linearIndependent_pow_mulVec_iff_le_krylovGrade}, and
+\code{NLAlib.krylovSpace_eq_of_krylovGrade_le} are still real statements.
+The reusable addition is (S1), followed by the field-general grade bridge.
+This avoids constructing a new polynomial-module annihilator merely to
+recover polynomial division.
+
+\section{Companion matrices and cyclic vectors without rational canonical form}
+\label{struct:companion}
+\paragraph{Catalogue target and correction.} \code{companion-matrix}.
+For a real matrix, ``every eigenvalue geometrically simple'' must refer
+to eigenvalues and eigenspaces over $\C$, or more generally a splitting
+field. Real eigenvalues alone do not suffice: two copies of
+$\left(\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right)$ have no real
+eigenvalue, but their minimal polynomial has degree $2<4$.
+The algebraic equivalences below hold over every field; the geometric
+criterion is stated over a splitting field.
+
+For $p(t)=t^n+c_{n-1}t^{n-1}+\cdots+c_0$, define $C_p$ by
+\[
+ C_pe_j=e_{j+1}\ (0\le j<n-1),\qquad
+ C_pe_{n-1}=-\sum_{j<n}c_je_j.
+ \tag{S2}
+\]
+For $n=0$, $p=1$ and $C_p$ is the empty matrix.
+The first $n$ Krylov vectors of $e_0$ are the standard basis when $n>0$.
+Equation (S2) gives $p(C_p)e_0=0$, hence $p(C_p)C_p^je_0=0$ for every
+basis vector. No polynomial of degree below $n$ annihilates $e_0$.
+Thus $\mu_{C_p}=p$. Cayley--Hamilton and equality of monic degrees give
+$p_{C_p}=p$ without a determinant expansion.
+
+\begin{lemma}[A vector realizes the operator minimal polynomial]
+Every finite-dimensional operator over any field has a vector $b$ with
+$\mu_b=\mu_A$.
+\end{lemma}
+\begin{proof}
+The zero-dimensional case uses $b=0$ and $\mu_A=1$. Otherwise factor
+$\mu_A=\prod_{j=1}^s f_j^{e_j}$ into distinct monic irreducibles.
+Since $\mu_A/f_j$ has smaller degree, $(\mu_A/f_j)(A)$ is not the zero
+operator. Choose $w_j$ on which it is nonzero, and set
+\[
+ b_j=(\mu_A/f_j^{e_j})(A)w_j.
+\]
+Then $f_j^{e_j}(A)b_j=0$ but $f_j^{e_j-1}(A)b_j\ne0$.
+By (S1), $\mu_{b_j}=f_j^{e_j}$. Put $b=\sum_jb_j$.
+If $p(A)b=0$, apply $(\mu_A/f_j^{e_j})(A)$: it kills every $b_l$ with
+$l\ne j$, and yields
+$f_j^{e_j}\mid p\,(\mu_A/f_j^{e_j})$.
+Coprimality implies $f_j^{e_j}\mid p$ for all $j$, hence $\mu_A\mid p$.
+The converse holds because $\mu_A(A)=0$. Apply (S1) once more.
+\end{proof}
+
+\begin{theorem}[The companion and centralizer characterizations]
+For $A\in\F^{n\times n}$, the following are equivalent:
+\[
+ \deg\mu_A=n;\qquad \mu_A=p_A;\qquad
+ A\text{ is similar to }C_{p_A};\qquad
+ \text{some }b\text{ has grade }n.
+ \tag{S3}
+\]
+When these hold, every $B$ commuting with $A$ is $q(A)$ for a unique
+polynomial $q$ of degree $<n$ (with $q=0$ in dimension zero).
+\end{theorem}
+\begin{proof}
+The first two statements are equivalent because $\mu_A\mid p_A$ and
+both are monic. The preceding lemma supplies a grade-$n$ vector if
+$\deg\mu_A=n$. A grade-$n$ vector is a basis generator; in the basis
+$(b,Ab,\ldots,A^{n-1}b)$, its annihilating relation is exactly (S2).
+Conversely the companion basis is cyclic and similarity preserves
+minimal polynomials. If $AB=BA$, expand $Bb=q(A)b$ in that Krylov basis.
+Then $BA^jb=A^jBb=q(A)A^jb$ for all basis vectors, so $B=q(A)$.
+Uniqueness follows by applying to $b$ and using independence.
+\end{proof}
+
+\paragraph{The geometric criterion, with its finite proof.}
+Pass to a field where $p_A$ splits. The degree of the minimal polynomial
+is unchanged by scalar extension: the largest independent initial
+segment of $I,A,A^2,\ldots$ is unchanged, since the rank of their
+coordinate matrix is determined by nonzero minors.
+Write the primary spaces as $V_\lambda=\ker(A-\lambda I)^n$.
+Bezout identities between distinct powers of $t-\lambda$ give
+$V=\bigoplus_\lambda V_\lambda$; on $V_\lambda$ write
+$A=\lambda I+N_\lambda$, with $N_\lambda$ nilpotent.
+This decomposition requires only polynomial Bezout: for coprime $f,g$
+and $(fg)(A)=0$, an identity $uf+vg=1$ writes each vector as a sum
+from $\ker f(A)$ and $\ker g(A)$, with zero intersection; iterate.
+
+Let $m=\dim V_\lambda$ and let $e$ be the nilpotency index of $N=N_\lambda$.
+Its characteristic polynomial is $t^m$: choose a basis adapted to the
+increasing kernels of its powers, so its matrix is strictly triangular.
+If $\dim\ker N=1$, the map
+\[
+ \ker N^{j+1}/\ker N^j\longrightarrow\ker N,\qquad [x]\longmapsto N^jx
+\]
+is injective, so successive dimensions increase by at most one.
+They cannot stop increasing before reaching the whole space: equality
+$\ker N^j=\ker N^{j+1}$ propagates to all later powers.
+Consequently $e=m$. Conversely, if $e=m$, choose $v$ with $N^{m-1}v\ne0$.
+The vectors $v,Nv,\ldots,N^{m-1}v$ are independent (apply a suitable
+power of $N$ to the first nonzero coefficient of a relation), hence
+form a basis, and $\ker N$ is one-dimensional.
+Now
+\[
+ \deg\mu_A=\sum_\lambda e_\lambda\le
+ \sum_\lambda\dim V_\lambda=n,
+\]
+with equality exactly when each eigenspace has dimension one.
+This proves the repaired geometric equivalence in (S3), including
+repeated eigenvalues. It avoids Jordan form and the module structure theorem.
+
+\paragraph{Verified reuse.}
+The field-general \code{NLAlib.mem_krylovSpace_iff} supplies the cyclic
+span interface. The local Mathlib file
+\code{Mathlib/RingTheory/Polynomial/Basic.lean} contains
+\code{Polynomial.sup_ker_aeval_eq_ker_aeval_mul_of_coprime}, matching
+the Bezout decomposition above. No companion declaration appears among
+the target's formalizations; (S2), (S1), and the cyclic-basis identity
+are the small interfaces to add, rather than a full canonical-form API.
+
+\section{Residual-polynomial minimax: quotient out invisible coefficients}
+\label{struct:residual}
+\paragraph{Catalogue target.} \code{residual-polynomial}.
+Let $\mathcal P_k^0=\{p\in\R[t]:\deg p\le k,\ p(0)=1\}$.
+For nonempty compact $S\subset\C$, set
+\[
+ M_S(p)=\max_{z\in S}|p(z)|,\qquad
+ \varepsilon_k(S)=\inf_{p\in\mathcal P_k^0}M_S(p).
+\]
+Set $M_\varnothing(p)=\varepsilon_k(\varnothing)=0$.
+For arbitrary sets, use the supremum in $[0,\infty]$; the constant
+polynomial $1$ ensures $0\le\varepsilon_k(S)\le1$.
+
+\paragraph{Residual algebra and the invertibility distinction.}
+Put $r_0=b-Ax_0$. Writing $x=x_0+q(A)r_0$ with $\deg q<k$ gives
+\[
+ b-Ax=(I-Aq(A))r_0=p(A)r_0,\qquad p(t)=1-tq(t).
+ \tag{S4}
+\]
+Conversely $p(0)=1$ implies $p=1-tq$ with $\deg q<k$; this constructs
+an affine-Krylov representative for every residual polynomial.
+For a \emph{specified} $x$, equality of residuals with that representative
+only implies their difference lies in $\ker A$. Thus invertibility is
+needed to recover membership of that particular $x$; $A=0$ shows why.
+If $Ax_\star=b$ and $x=x_0+q(A)r_0$, however,
+\[
+ x-x_\star=p(A)(x_0-x_\star)
+ \tag{S5}
+\]
+holds even for singular $A$, because $r_0=-A(x_0-x_\star)$.
+The catalogue's suggestion that (S5) itself requires invertibility is
+unnecessary. The identity uses the polynomial constructed in (S4);
+an arbitrary residual identity alone still cannot determine the error
+when $A$ is singular. For $k=0$, take $q=0$ and $p=1$.
+
+\begin{theorem}[Monotonicity and attainment]
+For all sets for which the extended supremum convention is used,
+\[
+ \varepsilon_{k+1}(S)\le\varepsilon_k(S),\qquad
+ S\subseteq T\Longrightarrow\varepsilon_k(S)\le\varepsilon_k(T).
+\]
+If $S$ is compact, including finite or empty $S$, the infimum is attained.
+\end{theorem}
+\begin{proof}
+The two inequalities follow respectively by enlarging the polynomial
+class and by increasing each polynomial's objective. For attainment,
+the empty case is immediate. Write
+$p_a(z)=1+\sum_{j=1}^k a_jz^j$ with $a\in\R^k$, and let
+\[
+ N=\{a:\ \sum_{j=1}^k a_jz^j=0\text{ for every }z\in S\}.
+\]
+Choose the Euclidean orthogonal complement $N^\perp$.
+Projecting $a$ onto this complement does not change $p_a$ on $S$.
+There are finitely many $z_1,\ldots,z_m\in S$ such that
+\[
+ N=\{a:\ \sum_j a_jz_l^j=0\text{ for }1\le l\le m\}.
+ \tag{S6}
+\]
+Indeed, start with $\R^k$; whenever the current intersection exceeds
+$N$, choose a vector outside $N$ and a point detecting it. Intersecting
+with that point's evaluation kernel strictly lowers the dimension.
+After at most $k$ steps the intersection is $N$.
+If $N^\perp=\{0\}$, $p=1$ already minimizes. Otherwise (S6) and
+compactness of its unit sphere give $c>0$ with
+\[
+ c\|a\|\le\max_l\left|\sum_j a_jz_l^j\right|
+ \quad(a\in N^\perp).
+ \tag{S7}
+\]
+The minimum is strictly positive on that sphere because evaluation
+there is injective. On the nonempty sublevel $M_S(p_a)\le1$,
+(S7) gives $\|a\|\le2/c$.
+Choose $R\ge\max_{z\in S}|z|$. The explicit estimate
+\[
+ |M_S(p_a)-M_S(p_{a'})|
+ \le\sum_{j=1}^k|a_j-a'_j|R^j
+ \tag{S8}
+\]
+proves continuity. Therefore the sublevel inside $N^\perp$ is closed
+and bounded in a finite-dimensional real space, hence compact.
+It contains $a=0$, and a continuous function attains a minimum there.
+Outside it the objective exceeds $1$, so this is a global minimum.
+\end{proof}
+
+The point of (S6)--(S8) is that the original coefficient sublevel can
+be unbounded when $S$ has few points. Compactness must be applied
+after removing coefficients invisible on $S$, rather than asserted
+for all coefficients.
+
+\paragraph{The sharp interval value.}
+For $0<a<b$, put $c=(b+a)/(b-a)>1$. Then
+\[
+ \varepsilon_k([a,b])=\frac1{T_k(c)},\qquad
+ p_*(x)=\frac{T_k((a+b-2x)/(b-a))}{T_k(c)}.
+ \tag{S9}
+\]
+For $k=0$, both statements read $1=1$.
+For $k\ge1$, $p_*(0)=1$ and its values at
+$x_j=(a+b-(b-a)\cos(j\pi/k))/2$, $0\le j\le k$, are
+$(-1)^j/T_k(c)$. A competitor of smaller sup norm makes
+$p-p_*$ have alternating strict signs at these $k+1$ points,
+so it has $k$ distinct roots between them. It also vanishes at
+$0<a$, yielding $k+1$ distinct roots despite degree at most $k$.
+This is impossible; the upper bound follows from $|T_k|\le1$ on
+$[-1,1]$.
+
+\paragraph{Verified reuse.}
+The indexed
+\code{NLAlib.sub_mem_krylovSpace_iff_exists_sub_mulVec_eq} has the
+required \code{IsUnit A} for the specified-iterate converse.
+\code{NLAlib.exists_sub_eq_aeval_mulVec_of_sub_mem_krylovSpace}
+already proves (S5) without invertibility, and
+\code{NLAlib.isLeast_chebyshev_minimax} already supplies (S9).
+The remaining minimax interface is the finite coefficient argument
+(S6)--(S8) and elementary monotonicity.
+
+\section{Numerical range: a sphere projected onto a disk}
+\label{struct:fov}
+\paragraph{Catalogue target.} \code{field-of-values-def}.
+For a complex matrix $A$ on an $n$-dimensional Euclidean space, define
+\[
+ W(A)=\{x^*Ax:\ \|x\|=1\}.
+\]
+For real matrices this means the numerical range of the complexification.
+If $n=0$, $W(A)=\varnothing$. All set statements below still hold then;
+the interval using smallest and largest eigenvalues explicitly requires
+$n>0$.
+
+\begin{lemma}[The two-dimensional compression lemma]
+The numerical range of every complex $2\times2$ matrix is convex.
+\end{lemma}
+\begin{proof}
+For a unit vector $x=(u,v)$ set
+\[
+ r_1=2\operatorname{Re}(\bar u v),\quad
+ r_2=2\operatorname{Im}(\bar u v),\quad r_3=|u|^2-|v|^2.
+\]
+Direct expansion gives $r_1^2+r_2^2+r_3^2=1$ and
+\[
+ x^*Bx=\tfrac12\tr B+\tfrac12(b_{12}+b_{21})r_1
+       +\tfrac{i}{2}(b_{12}-b_{21})r_2
+       +\tfrac12(b_{11}-b_{22})r_3.
+ \tag{S10}
+\]
+Conversely every $r\in S^2\subset\R^3$ comes from such a vector:
+if $r_3>-1$, use
+$u=\sqrt{(1+r_3)/2}$ and $v=(r_1+ir_2)/(2u)$;
+if $r_3=-1$, use $(u,v)=(0,1)$.
+Thus $W(B)=\tfrac12\tr B+L(S^2)$ for a real-linear map
+$L:\R^3\to\C\simeq\R^2$.
+
+Rank--nullity gives a unit $h\in\ker L$. If $\|r\|\le1$, choose
+\[
+ t=-\langle r,h\rangle+
+       \sqrt{\langle r,h\rangle^2+1-\|r\|^2}.
+\]
+Then $\|r+th\|=1$ and $L(r+th)=L(r)$. Hence
+$L(S^2)=L(\overline B(0,1))$. A linear image of a convex ball is
+convex. This proof handles rank-zero and rank-one maps as well as
+genuine ellipses, without classifying ellipse axes.
+\end{proof}
+
+\begin{theorem}[All numerical-range properties]
+$W(A)$ is compact and convex, contains every eigenvalue, and is
+contained in $\{z:|z|\le\|A\|\}$. Moreover
+\begin{align*}
+ W(\alpha A+\beta I)&=\alpha W(A)+\beta,\\
+ W(U^*AU)&=W(A)\quad(U\text{ unitary}),\\
+ W(Q^*AQ)&\subseteq W(A)\quad(Q^*Q=I).
+\end{align*}
+For $n>0$ and $H=(A+A^*)/2$,
+\[
+ \operatorname{Re}W(A)=[\lambda_{\min}(H),\lambda_{\max}(H)].
+ \tag{S11}
+\]
+If $A$ is normal, $W(A)=\conv\sigma(A)$.
+\end{theorem}
+\begin{proof}
+Compactness is the continuous image of the finite-dimensional unit
+sphere. A normalized eigenvector gives its eigenvalue in $W(A)$,
+and Cauchy--Schwarz gives $|x^*Ax|\le\|A\|$ for unit $x$.
+The affine formula is an expansion; the two isometry formulas follow
+by sending $x$ to $Ux$ or $Qx$, and using $U^*$ for the reverse inclusion.
+
+For convexity, choose $x,y$ representing two points. Their complex
+span has dimension at most two. In dimension one the compression
+is scalar and the two points coincide. In dimension two choose an
+orthonormal basis $Q$ of that span. Both points belong to $W(Q^*AQ)$;
+the preceding lemma puts their segment there, and compression
+inclusion puts the segment in $W(A)$. The empty case is convex too.
+
+For (S11), $\operatorname{Re}(x^*Ax)=x^*Hx$. Diagonalizing $H$
+expresses these values as $\sum_j\lambda_j|x_j|^2$ and bounds them
+between the two extreme eigenvalues. Both endpoints occur.
+Every intermediate value occurs by combining normalized eigenvectors
+of the two extremes with coefficients $\sqrt t,\sqrt{1-t}$;
+if the extremes coincide there is only one value.
+For normal $A$, its unitary diagonalization similarly gives
+$x^*Ax=\sum_j\lambda_j|x_j|^2$.
+Conversely any finite convex combination of the eigenvalue list is
+realized by $x_j=\sqrt{w_j}$. Repeated eigenvalues cause no problem;
+the empty list gives the empty convex hull.
+\end{proof}
+
+\paragraph{Verified reuse and formalization boundary.}
+\code{NLAlib.exists_unitary_diagonalization_of_normal} and
+\code{NLAlib.normal_iff_exists_orthonormalBasis_eigenvectors} are
+already indexed. Orthonormal completion and Hermitian spectral
+decomposition are existing matrix interfaces. The new geometric
+work is precisely (S10) and the explicit one-dimensional correction
+inside $\ker L$; there is no contour integral or separation theorem.
+
+\section{Positive Hermitian part: kernels and scalar products}
+\label{struct:accretive}
+\paragraph{Catalogue target.} \code{psd-hermitian-part}.
+Write $A=H+iK$ with $H=H^*$ and $K=K^*$.
+
+\begin{theorem}[Kernel, rank, and row/column inclusion]
+If $H\succeq0$, then
+\[
+ \ker A=\ker A^*=\ker H\cap\ker K,
+ \qquad \rank H\le\rank A.
+ \tag{S12}
+\]
+If additionally $\rank H=\rank A$, $A$ has both row and column
+inclusion for every leading principal cut. In particular this holds
+when $H\succ0$, in which case every principal block of $A$ is invertible.
+\end{theorem}
+\begin{proof}
+If $Ax=0$, its quadratic form has real part $x^*Hx=0$.
+Diagonalizing the positive semidefinite $H$ shows $Hx=0$,
+and $Ax=0$ then gives $Kx=0$. The converse is immediate, and the
+same proof applies to $A^*=H-iK$. Rank--nullity gives the rank bound.
+With equality of ranks, inclusion of kernels gives
+$\ker A=\ker H$ and hence $\ker H\subseteq\ker K$.
+
+Let $I$ be a leading index set, $J$ its complement, and
+$B=A_{II}$. If $Bz=0$, extend $z$ by zero on $J$ to $\widetilde z$.
+Then $\widetilde z^*H\widetilde z=\operatorname{Re}(z^*Bz)=0$,
+so $H\widetilde z=0$, then $K\widetilde z=0$ and
+$A\widetilde z=A^*\widetilde z=0$. In particular
+$A_{JI}z=0$. Thus
+\[
+ \ker B\subseteq\ker A_{JI},
+\]
+which is equivalent to every row of $A_{JI}$ lying in the row span
+of $B$: a linear functional vanishing on $\ker B$ factors through
+$z\mapsto Bz$, then extends from $\ran B$ to the whole codomain.
+Applying the same argument to $B^*$ gives
+$\ker B^*\subseteq\ker A_{IJ}^*$, equivalent to every column of
+$A_{IJ}$ lying in the column space of $B$.
+This proves the required local row and column conditions, in fact
+for all rows or columns beyond each cut.
+If $H\succ0$, every principal $H_{II}$ is positive definite,
+so $Bz=0$ forces $z=0$ without the rank-equality argument.
+\end{proof}
+
+Assume now $H\succ0$ and $n\ge1$, and let
+\[
+ T=H^{-1/2}KH^{-1/2}=T^*,\qquad t_1,\ldots,t_n\in\R
+\]
+be its eigenvalues. Congruence and the Hermitian spectral theorem give
+the exact identities
+\[
+ |\det A|=\det H\prod_{j=1}^n\sqrt{1+t_j^2},\qquad
+ |\det K|=\det H\prod_{j=1}^n|t_j|.
+ \tag{S13}
+\]
+Only this simultaneous reduction is needed; $H$ and $K$ need not commute.
+
+\begin{lemma}[Finite product inequality]
+For $x_j\ge0$ and $n\ge1$,
+\[
+ \prod_{j=1}^n(1+x_j)\ge
+   \left(1+\left(\prod_{j=1}^nx_j\right)^{1/n}\right)^n.
+ \tag{S14}
+\]
+\end{lemma}
+\begin{proof}
+If some $x_j=0$, the right side is $1$ and the claim is immediate.
+Otherwise expand the left side as $\sum_{r=0}^n e_r(x)$.
+The $\binom nr$ terms in $e_r$ have product
+$(\prod_jx_j)^{\binom{n-1}{r-1}}$, because each index occurs in that
+many subsets. Arithmetic--geometric mean therefore gives
+\[
+ e_r(x)\ge\binom nr\left(\prod_jx_j\right)^{r/n}.
+\]
+Summing is the binomial formula. For $n>1$, equality holds exactly
+when all $x_j$ agree: necessity follows already from the $r=1$
+AM--GM inequality in the positive case, and from the product being
+$1$ in the zero case. For $n=1$, equality is automatic.
+\end{proof}
+
+\begin{theorem}[Ostrowski--Taussky and Fan with exact constants]
+If $H\succ0$, then
+\[
+ \det H\le|\det A|,
+ \tag{S15}
+\]
+with equality exactly when $K=0$. For $n\ge1$,
+\[
+ (\det H)^{2/n}+|\det K|^{2/n}\le|\det A|^{2/n}.
+ \tag{S16}
+\]
+For $n\ge2$,
+\[
+ \det H+|\det K|\le|\det A|.
+ \tag{S17}
+\]
+\end{theorem}
+\begin{proof}
+Equation (S15) follows from (S13), since every factor is at least one;
+equality forces every $t_j=0$, hence $T=K=0$.
+Apply (S14) to $x_j=t_j^2$, take the $n$-th root, and multiply by
+$(\det H)^{2/n}$ to obtain (S16).
+For (S17), set $x_j=t_j^2$ and $v=\prod_j|t_j|$.
+In the subset expansion of $\prod_j(1+x_j)$ retain the empty subset,
+the full subset, $\{1\}$, and its complement. These are four distinct
+subsets when $n\ge2$. All other summands are nonnegative, and
+\[
+ \prod_j(1+x_j)\ge1+v^2+x_1+\prod_{j=2}^n x_j
+       \ge1+v^2+2v=(1+v)^2.
+\]
+The second inequality is just $a+b\ge2\sqrt{ab}$ for nonnegative
+$a,b$. Taking square roots and multiplying by $\det H$ proves the
+claim using only a finite expansion and a quadratic inequality.
+\end{proof}
+
+\paragraph{Boundary cases and equality audit.}
+The restriction $n\ge2$ in (S17) is essential:
+$H=K=[1]$ would assert $2\le\sqrt2$ in dimension one.
+The exponents in (S16) require $n\ge1$; dimension zero is not an
+instance of that formula. Equation (S15) does include dimension zero,
+where both determinants are $1$ and $K$ is the zero matrix.
+For $n>1$, equality in (S16) is equivalent to
+$T^2=t^2I$ for some $t\ge0$. In (S17), equality for $n=2$ means
+$|t_1|=|t_2|$, and for $n>2$ it means $K=0$.
+
+\paragraph{Verified reuse.}
+Hermitian spectral decomposition, positive square roots and congruence
+are existing matrix interfaces. The currently indexed row-inclusion
+theorems, including \code{NLAlib.exists_isLU_iff_rowInclusion}, use real
+scalars; their row-annihilator proof extends over $\C$, but the existing
+signature must not be cited as the complex theorem. The new work here
+is (S12), the kernel-factorization argument at a principal cut, and the
+finite scalar inequality (S14). No numerical-range convexity is needed.
+
+
+\section{Orthogonal polynomials from finite moment systems}
+\label{sec:orthogonal-foundations}
+\paragraph{Targets and conventions.}
+This section covers \code{orthogonal-polynomials-measure-def},
+\code{hankel-moment-positivity}, and \code{formal-orthogonal-polynomials}.
+Let $\mu$ be a finite positive Borel measure on $\R$, with all absolute
+moments finite. For a result using polynomials of degree at most $d$, it is
+enough to assume finiteness of the moments actually used (in particular,
+the absolute moment of order $2d$ for their Gram matrix). Write
+\[
+ L(f)=\int f(t)\,d\mu(t),\quad m_r=L(t^r),\quad
+ M_n=(m_{i+j})_{0\le i,j<n},\quad \Delta_n=\det M_n,\quad \Delta_0=1.
+\]
+The useful primitive is the finite bilinear form $L(fg)$ on polynomials of
+bounded degree. No global inner product on $\R[X]$, no completion, and no
+measure-dependent Hilbert-space instance is needed.
+
+\begin{lemma}[The support interface]
+For every real polynomial $p$ whose square is integrable,
+\[
+ L(p^2)=0\quad\Longleftrightarrow\quad
+ p=0\text{ on }\operatorname{supp}\mu.
+\]
+Consequently $L(pq)$ is positive definite on the space $\mathcal P_d$ of
+polynomials of degree at most $d$ if and only if the support contains at
+least $d+1$ distinct points.
+\end{lemma}
+\begin{proof}
+If $L(p^2)=0$, then $p^2=0$ almost everywhere. If $p(t_0)\ne0$ at a support
+point, continuity gives a neighbourhood where $p^2$ is bounded below by a
+positive constant, and that neighbourhood has positive measure, a
+contradiction. Conversely a finite Borel measure on $\R$ gives full measure
+to its support, so vanishing there implies zero integral. A nonzero
+polynomial of degree at most $d$ has at most $d$ roots. If instead the
+support has at most $d$ points, the product of $X-t$ over those points is a
+nonzero polynomial in $\mathcal P_d$ of zero norm. The empty product is $1$;
+thus this argument includes the zero measure.
+\end{proof}
+
+\paragraph{Existence by one linear solve.}
+Assume that the support contains at least $k$ points, so $M_k$ is positive
+definite and invertible. Put $v_k=(m_k,\ldots,m_{2k-1})^\top$ and solve
+\[
+ M_kc=-v_k,\qquad \pi_k(X)=X^k+\sum_{j<k}c_jX^j.                 \tag{OF1}
+\]
+For $k=0$ this means $\pi_0=1$. The equations say exactly
+$L(\pi_kX^j)=0$ for $j<k$. They prove existence and uniqueness of the monic
+degree-$k$ polynomial orthogonal to all lower degrees. Its norm
+$h_k=L(\pi_k^2)$ is positive if the support has at least $k+1$ points.
+The triangular coefficient matrix with diagonal $1$ shows that
+$\pi_0,\ldots,\pi_d$ span $\mathcal P_d$. Orthogonality to all of them
+therefore forces a member of $\mathcal P_d$ to vanish whenever that form
+is positive definite.
+
+If the support consists of exactly $N$ distinct points, the positive-norm
+family is precisely $\pi_0,\ldots,\pi_{N-1}$, and (OF1) still uniquely
+defines
+\[
+ \pi_N(X)=\prod_{t\in\operatorname{supp}\mu}(X-t),\qquad h_N=0.   \tag{OF2}
+\]
+Indeed the displayed polynomial is monic and has zero product integral
+against every polynomial, so uniqueness in (OF1) applies. There is no
+division by $h_N$ and no normalized $p_N$. Beyond this point the phrase
+``the orthogonal polynomial'' requires an additional convention and is
+not supplied by positive-definite orthogonalization. For $\mu=0$, $N=0$,
+the positive-norm family is empty and the terminal polynomial is $1$.
+
+\paragraph{Hankel positivity without a general Sylvester theorem.}
+If $p=\sum_{j<n}c_jX^j$, finite linearity of the integral gives
+\[
+ L(p^2)=c^\top M_nc.                                           \tag{OF3}
+\]
+For a positive measure each $M_n$ is already PSD. Thus $M_n\succ0$ is
+equivalent simply to $\Delta_n>0$: diagonalize $M_n$, whose eigenvalues
+are nonnegative, and use their product. Moreover $M_n\succ0$ implies all
+its leading principal submatrices are PD. It follows immediately that
+\[
+ M_n\succ0\quad\Longleftrightarrow\quad
+ \Delta_1,\ldots,\Delta_n>0.
+\]
+This special-purpose proof avoids formalizing Sylvester's criterion for
+arbitrary symmetric matrices. At $n=0$, both sides are vacuous truths.
+
+\paragraph{Determinants and coefficients.}
+Whenever $\Delta_k\ne0$, finite determinant expansion gives
+\[
+ \pi_k(X)=\frac1{\Delta_k}
+ \det\begin{pmatrix}
+ m_0&m_1&\cdots&m_k\\
+ m_1&m_2&\cdots&m_{k+1}\\
+ \vdots&\vdots&&\vdots\\
+ m_{k-1}&m_k&\cdots&m_{2k-1}\\
+ 1&X&\cdots&X^k
+ \end{pmatrix}.                                               \tag{OF4}
+\]
+The coefficient of $X^k$ is $1$; applying $L(X^j\cdot)$ for $j<k$
+repeats one of the first $k$ rows, proving (OF1). The $k=0$ formula is
+the $1\times1$ determinant $1$.
+Define $E_0=0$, and for $k\ge1$ define $E_k$ as the determinant with row
+indices $0,\ldots,k-1$ and column indices $0,\ldots,k-2,k$ of the Hankel
+array $(m_{i+j})$. This explicit definition removes the ambiguity in a
+``deleted penultimate column'' convention. If $c_k$ is the coefficient of
+$X^{k-1}$ in $\pi_k$, (OF4) yields $c_k=-E_k/\Delta_k$.
+The unit triangular change from monomials to monic orthogonal polynomials
+gives
+\[
+ \Delta_n=\prod_{j<n}h_j,\qquad h_k=\frac{\Delta_{k+1}}{\Delta_k}.
+                                                                    \tag{OF5}
+\]
+The recurrence derived below therefore has
+\[
+ \alpha_k=\frac{E_{k+1}}{\Delta_{k+1}}-\frac{E_k}{\Delta_k},\qquad
+ \beta_k=\frac{h_k}{h_{k-1}}
+        =\frac{\Delta_{k+1}\Delta_{k-1}}{\Delta_k^2}\quad(k\ge1). \tag{OF6}
+\]
+Only use these quotients when their denominators are nonzero. In the
+finite-support case $\beta_N=0$ is valid, but $\alpha_N$ is not defined by
+a norm quotient.
+
+\paragraph{Spectral-measure bridge.}
+For real symmetric $A$ and any $b$, let
+$\mu_b=\sum_i(u_i^\top b)^2\delta_{\lambda_i}$, without normalizing its
+mass. The spectral theorem gives
+\[
+ L(pq)=\langle p(A)b,q(A)b\rangle,\qquad
+ M_n=K_n^\top K_n,\quad K_n=[b,Ab,\ldots,A^{n-1}b].             \tag{OF7}
+\]
+Consequently $M_n\succ0$ iff $n\le\operatorname{grade}(A,b)$.
+If $b=0$, the grade is zero and only the empty Gram matrix is PD.
+In the nonzero case the monic polynomial of order $k$ agrees with
+$\det(XI-T_k)$: both are monic of degree $k$ and orthogonal to every lower
+degree, including the terminal case $k=\operatorname{grade}(A,b)$.
+
+\paragraph{Formal orthogonality is purely bilinear.}
+For $L:\C[X]\to\C$ linear, use $B(p,q)=L(pq)$, not $L(p\overline q)$.
+Assume every $\Delta_n\ne0$. The same systems (OF1) give unique monic
+$\pi_k$ orthogonal to lower degrees; the unit triangular determinant
+identity (OF5) gives $h_k=L(\pi_k^2)\ne0$. Hence division by $h_k$ is valid,
+even though positivity and real zeros are unavailable. Conversely,
+a monic orthogonal sequence with every $h_k\ne0$ gives
+$\Delta_n=\prod_{k<n}h_k\ne0$. Alternatively, uniqueness of the monic
+lower-degree orthogonality problem for every $k$ makes each square system
+(OF1) uniquely solvable and therefore makes $M_k$ invertible.
+Merely assuming pairwise orthogonality, without uniqueness or nonzero
+norms, is insufficient: the zero functional is an immediate counterexample.
+The multiplication symmetry $B(Xp,q)=B(p,Xq)$ gives the same three-term
+recurrence below, now with $\beta_k\ne0$ rather than $\beta_k>0$.
+
+\paragraph{Verified reuse and remaining interface.}
+The declaration snapshot contains
+\code{NLAlib.integral_eval_mul_eval_spectralMeasure},
+\code{NLAlib.integral_pow_spectralMeasure},
+\code{NLAlib.linearIndependent_pow_mulVec_iff_le_krylovGrade},
+\code{NLAlib.LanczosDecomp.charpoly_T_monic}, and
+\code{NLAlib.LanczosDecomp.integral_eval_charpoly_mul_eq_zero}.
+They directly supply (OF7), the grade test, and the final uniqueness bridge.
+For a general measure the new interface is finite moment integrability,
+the support lemma, and the coefficient-system definition (OF1).
+
+\section{The Jacobi matrix is compressed multiplication}
+\label{sec:monic-recurrence}
+\paragraph{Target and normalization.}
+The target is \code{monic-orthogonal-recurrence}. Whenever $h_j>0$ set
+\[
+ p_j=\pi_j/\sqrt{h_j},\quad h_0=\mu(\R),\quad
+ \alpha_j=\frac{L(X\pi_j^2)}{h_j},\quad
+ \beta_j=\frac{h_j}{h_{j-1}},\quad a_j=\sqrt{\beta_j}\quad(j\ge1).
+\]
+Here $\beta_j$ is the \emph{monic} recurrence coefficient, whereas
+\code{NLAlib.LanczosDecomp.beta} denotes the off-diagonal $a_j$.
+Keeping these separate prevents a missing square in every norm or
+continued-fraction formula. Put $\pi_{-1}=0$, $\pi_0=1$; no actual negative
+index is needed in a formal implementation.
+
+\begin{theorem}[Three-term recurrence and the norm product]
+Below the positive-norm termination index,
+\[
+ \pi_{j+1}=(X-\alpha_j)\pi_j-\beta_j\pi_{j-1},\qquad
+ h_j=h_0\prod_{i=1}^{j}\beta_i=h_0\prod_{i=1}^{j}a_i^2.         \tag{OF8}
+\]
+The first recurrence is $\pi_1=X-\alpha_0$.
+It also constructs the terminal $\pi_N$ from $\pi_{N-1},\pi_{N-2}$
+when the support has $N$ points.
+\end{theorem}
+\begin{proof}
+Expand $X\pi_j-\pi_{j+1}$ in the monic basis
+$\pi_0,\ldots,\pi_j$. For $i\le j-2$ its coefficient times $h_i$ is
+$L(X\pi_j\pi_i)=L(\pi_jX\pi_i)=0$ because $\deg(X\pi_i)<j$.
+The coefficient at $\pi_j$ is $\alpha_j$.
+For $j\ge1$, $X\pi_{j-1}-\pi_j$ has degree below $j$, so the coefficient
+at $\pi_{j-1}$ times $h_{j-1}$ is $L(\pi_jX\pi_{j-1})=h_j$.
+This proves the recurrence; telescoping the norm ratios proves the
+product. The proof only divides by norms before the terminal index.
+\end{proof}
+
+In the orthonormal basis, compression of multiplication by $X$ to
+$\mathcal P_{q-1}$ is the symmetric matrix
+\[
+ J_q=\begin{pmatrix}
+ \alpha_0&a_1&&\\a_1&\alpha_1&\ddots&\\
+ &\ddots&\ddots&a_{q-1}\\&&a_{q-1}&\alpha_{q-1}
+ \end{pmatrix}.
+\]
+Expansion of $\det(XI-J_{j+1})$ in its last row and then the remaining
+last column gives
+$D_{j+1}=(X-\alpha_j)D_j-a_j^2D_{j-1}$, with $D_0=1,D_1=X-\alpha_0$.
+Induction against (OF8) proves $D_j=\pi_j$. This finite determinant
+identity is also the denominator recurrence for the convergents of the
+Jacobi continued fraction.
+
+\paragraph{Christoffel--Darboux without division by $x-y$.}
+For $m\ge1$ with $h_0,\ldots,h_{m-1}>0$, multiplication of the two
+recurrences by $\pi_j(y)$ and $\pi_j(x)$ and subtraction gives a
+telescoping identity:
+\[
+ (x-y)\sum_{j<m}\frac{\pi_j(x)\pi_j(y)}{h_j}
+ =\frac{\pi_m(x)\pi_{m-1}(y)-\pi_{m-1}(x)\pi_m(y)}{h_{m-1}}.
+                                                                    \tag{OF9}
+\]
+This is a polynomial identity for \emph{all} $x,y$, including $x=y$;
+there is no removable-singularity interface to formalize. Multiplying by
+$h_n$ and setting $m=n+1$ gives the monic formula
+\[
+ (x-y)\sum_{k=0}^{n}\left(\prod_{i=k+1}^{n}\beta_i\right)
+ \pi_k(x)\pi_k(y)
+ =\pi_{n+1}(x)\pi_n(y)-\pi_n(x)\pi_{n+1}(y).                  \tag{OF10}
+\]
+Differentiate (OF9) formally in $x$ and then substitute $y=x$:
+\[
+ \sum_{j<m}p_j(x)^2
+ =\frac{\pi_m'(x)\pi_{m-1}(x)-\pi_{m-1}'(x)\pi_m(x)}{h_{m-1}}
+ >0.                                                          \tag{OF11}
+\]
+Strict positivity follows from the term $p_0(x)^2=1/h_0$.
+If also $h_m>0$, the right side is
+$a_m[p_m'(x)p_{m-1}(x)-p_{m-1}'(x)p_m(x)]$.
+At finite-support termination use (OF11), not this normalized version,
+because $p_m$ then does not exist.
+
+\paragraph{Verified reuse.}
+\code{NLAlib.LanczosDecomp.X_mul_poly},
+\code{NLAlib.LanczosDecomp.charpoly_restrict_T_mul_poly_zero},
+\code{NLAlib.LanczosDecomp.integral_poly_mul_poly}, and
+\code{NLAlib.LanczosDecomp.sub_mul_sum_eval_poly_mul}
+already provide the normalized recurrence, normalization bridge,
+orthogonality, and nonconfluent identity in their stated index ranges.
+The additional general-measure route above uses finite basis expansion
+and formal polynomial differentiation; it does not require differentiating
+an integral.
+
+\paragraph{Terminal convention.}
+At $N$-point termination with $N\ge1$, define
+$\beta_N=h_N/h_{N-1}=0$ and $a_N=0$.
+Then the norm product (OF8) remains valid at $j=N$, with both sides zero;
+it does not define $p_N$. The characteristic-polynomial bridge (OF7)
+can be justified either by the checked orthogonality declaration or by
+the determinant recurrence just proved, so it is not an extra assumption.
+
+\section{Zeros and strict interlacing from an unreduced tridiagonal matrix}
+\label{sec:orthogonal-zeros}
+\paragraph{Targets.}
+This covers \code{orthogonal-polynomial-zeros} and the strict-interlacing
+part of \code{jacobi-matrix-identities}. Suppose the support has at least
+$q$ points and $q\ge1$, so $h_0,\ldots,h_{q-1}>0$ and
+$a_1,\ldots,a_{q-1}>0$.
+
+\begin{lemma}[One coordinate determines every Jacobi eigenvector]
+For an eigenvector $v$ of $J_q$, its first coordinate determines all
+coordinates. Every nonzero eigenvector has $v_0\ne0$, every eigenvalue
+is simple, and every squared first coordinate is positive.
+The same conclusion holds for the last coordinate.
+\end{lemma}
+\begin{proof}
+The first row gives $a_1v_1=(\theta-\alpha_0)v_0$; each successive row
+gives $a_{j+1}v_{j+1}=(\theta-\alpha_j)v_j-a_jv_{j-1}$.
+All coefficients used to divide are positive. An eigenvector with
+$v_0=0$ vanishes by induction. Evaluation at the first coordinate is an
+injective linear map from the eigenspace into $\R$, so its dimension is
+at most one. A real symmetric matrix has an orthonormal eigenbasis;
+therefore algebraic and geometric multiplicity agree and each eigenvalue
+is simple. Reverse the coordinate order for the final claim. For $q=1$
+the conclusions are immediate without a recurrence step.
+\end{proof}
+
+Thus $\pi_q=\det(XI-J_q)$ has $q$ distinct real roots. If the support has
+at least $q+1$ points, $a_q>0$ and $\pi_q,\pi_{q+1}$ have no common
+root: a common root in (OF8) would successively force
+$\pi_{q-1},\ldots,\pi_0$ to vanish there, contradicting $\pi_0=1$.
+Cauchy's weak interlacing for the leading principal submatrix $J_q$ of
+$J_{q+1}$ is already available. Equality in either inequality would be a
+common root, so with eigenvalues in decreasing order,
+\[
+ \theta_{i+1}(J_{q+1})<\theta_i(J_q)<\theta_i(J_{q+1})
+ \qquad(1\le i\le q).                                        \tag{OF12}
+\]
+This proof needs no confluent Christoffel--Darboux theorem and no
+perturbation argument.
+
+\paragraph{Strict location and spectral gaps.}
+Suppose $\operatorname{supp}\mu\subseteq[a,b]$ and it has more than $q$
+points. For a unit eigenvector $v$ put $r=\sum_{j<q}v_jp_j$.
+Compression of multiplication gives
+\[
+ \theta=L(Xr^2),\quad L(r^2)=1,\quad
+ \theta-a=L((X-a)r^2),\quad b-\theta=L((b-X)r^2).
+\]
+Both last quantities are positive. At most one support point is $a$,
+whereas the nonzero polynomial $r$ has at most $q-1$ roots; hence there
+is a support point strictly above $a$ where $r\ne0$. Continuity and the
+support interface make the first integral positive. The other endpoint
+is identical. Thus $a<\theta<b$. With an unbounded support, use every
+finite lower or upper support bound that exists; this gives the usual
+open-convex-hull statement. At finite-support termination the roots are
+the support points, so strict endpoint inequalities must not be asserted.
+
+For the gap claim, let $(c,d)$ contain no support point and suppose two
+distinct zeros $r<s$ of $\pi_q$ lie there. If the support has more than
+$q$ points, put $g=\pi_q/((X-r)(X-s))$, a polynomial of degree $q-2$.
+Orthogonality gives
+\[
+ 0=L(\pi_qg)=L\bigl((X-r)(X-s)g^2\bigr).                     \tag{OF13}
+\]
+On the support $(t-r)(t-s)>0$. The polynomial $g$ cannot vanish on the
+whole support, so the last integral is strictly positive, a
+contradiction. This proof only integrates a polynomial. The claim is
+automatic for $q=1$ and, at $q=N$, from the node polynomial (OF2).
+
+\paragraph{Checked reuse.}
+% Exact names: NLAlib.LanczosDecomp.eigenvalues₀_restrict_T_le
+% and NLAlib.LanczosDecomp.eigenvalues₀_le_eigenvalues₀_restrict_T.
+\code{NLAlib.LanczosDecomp.eigenvalues}\textsubscript{0}\code{_restrict_T_le} and
+\code{NLAlib.LanczosDecomp.eigenvalues}\textsubscript{0}\code{_le_eigenvalues}\textsubscript{0}\code{_restrict_T}
+provide weak interlacing. The snapshot also contains
+\code{NLAlib.LanczosDecomp.beta_ne_zero} for arbitrary valid
+decompositions, and
+\code{NLAlib.LanczosDecomp.beta_arnoldiDecomp_pos} for the canonical
+construction. Nonzero off-diagonals suffice for simplicity and strict
+interlacing; positive signs implement our normalized polynomial convention.
+
+\section{Christoffel numbers from a finite orthogonal matrix}
+\label{sec:christoffel-numbers}
+The target is \code{gauss-christoffel-numbers}. Let $q\ge1$ and let
+$\theta_i$ be the distinct eigenvalues of $J_q$ with unit eigenvectors
+$u_i$. Evaluate the recurrence at a zero of $\pi_q$ to obtain
+\[
+ J_q\mathbf p(\theta_i)=\theta_i\mathbf p(\theta_i),\qquad
+ \mathbf p=(p_0,\ldots,p_{q-1})^\top.                          \tag{OF14}
+\]
+In the last row the discarded term is proportional to $\pi_q$, so this
+remains valid at termination where $p_q$ is undefined. Since
+$p_0=1/\sqrt{h_0}$, the vector is nonzero. The one-dimensional eigenspace
+therefore gives
+\[
+ u_i=\pm\frac{\mathbf p(\theta_i)}{\|\mathbf p(\theta_i)\|},\qquad
+ w_i=h_0(u_i)_0^2
+     =\left(\sum_{j<q}p_j(\theta_i)^2\right)^{-1}>0.            \tag{OF15}
+\]
+The $w_i$ are weights for $\mu$, whereas $(u_i)_0^2$ are weights for
+$\mu/h_0$. For $\mu_b$ the mass is $h_0=\|b\|^2$.
+Put the eigenvectors in the columns of an orthogonal matrix $U$.
+The identity $UU^\top=I$ gives directly
+\[
+ \sum_iw_ip_j(\theta_i)p_k(\theta_i)=\delta_{jk}\quad(j,k<q),
+ \qquad\sum_iw_i=h_0.                                       \tag{OF16}
+\]
+Thus discrete orthogonality does not need a pre-existing Gauss rule.
+Conversely, for $\deg f\le2q-1$ divide $f=s\pi_q+r$, where
+$\deg s<q$, $\deg r<q$. The first part has both zero integral and zero
+nodal values. Expanding $r$ in the $p_j$ and using (OF16) with $k=0$ yields
+\[
+ L(f)=\sum_iw_if(\theta_i)=h_0e_0^\top f(J_q)e_0.              \tag{OF17}
+\]
+The empty rule $q=0$ has mass zero; it cannot represent a nonzero measure.
+
+\paragraph{Checked reuse.}
+\code{NLAlib.LanczosDecomp.cfc_T_apply_zero_zero},
+\code{NLAlib.LanczosDecomp.dotProduct_cfc_T_mulVec_eq_sum}, and
+\code{NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq_sum}
+already give the spectral sum and polynomial quadrature for a Lanczos
+decomposition. The new short interface is (OF14) and its normalization.
+
+\section{Recurrence-coefficient bounds by scalar Cauchy--Schwarz}
+\label{sec:coefficient-bounds}
+The target is \code{recurrence-coefficient-bounds}. Suppose
+$\operatorname{supp}\mu\subseteq[a,b]$ and it has more than $k+1$ points.
+The probability measure $p_k^2\mu$ gives
+\[
+ \alpha_k=L(Xp_k^2),\qquad a<\alpha_k<b.                      \tag{OF18}
+\]
+For strictness $(X-a)p_k^2$ and $(b-X)p_k^2$ cannot vanish identically
+on the support: outside either endpoint there are more than $k$ support
+points, but $p_k$ has degree $k$.
+For $k\ge1$ with $h_k>0$, Cauchy--Schwarz gives
+\[
+ 0<a_k=L(Xp_{k-1}p_k)
+ \le\sqrt{L(X^2p_{k-1}^2)}\le\max\{|a|,|b|\},
+ \qquad 0<\beta_k=a_k^2\le\max\{a^2,b^2\}.                   \tag{OF19}
+\]
+There is no $k=0$ norm-ratio coefficient here. Since
+$L(p_{k-1}p_k)=0$, replacing $X$ by $X-(a+b)/2$ also proves the optional
+stronger bound $a_k\le(b-a)/2$.
+For a symmetric matrix, the same finite-vector calculations are
+$\alpha_j=v_j^\top Av_j$ and $a_j=v_{j-1}^\top Av_j$, with orthonormal
+$v_j$. Rayleigh's inequality and Cauchy--Schwarz give
+\[
+ \lambda_{\min}(A)\le\alpha_j\le\lambda_{\max}(A),\qquad
+ 0<a_j\le\|A\|_2\quad(1\le j<\operatorname{grade}(A,b)).
+\]
+The next off-diagonal at termination is zero. The catalogue uses $\beta$
+for both $a_j$ and $a_j^2$ in different clauses; (OF19) distinguishes them.
+
+\section{Discrete measures as diagonal matrix problems}
+\label{sec:discrete-jacobi}
+The target is \code{discrete-measure-jacobi-matrix}. Let
+$\mu=\sum_{r=1}^Nw_r\delta_{t_r}$, with distinct real $t_r$ and $w_r>0$.
+Put $D=\diag(t_1,\ldots,t_N)$ and $b_r=\sqrt{w_r}$. Then
+\[
+ L(f)=b^\top f(D)b,\qquad
+ K_N=\diag(\sqrt w)\,(t_r^{\,j})_{r,\,0\le j<N}.              \tag{OF20}
+\]
+The Vandermonde determinant and positive weights make $K_N$ invertible,
+so the grade is $N$. This proves the exact dimension without analyzing
+a recurrence algorithm. For $N\ge1$, define
+$Q_{rj}=\sqrt{w_r}\,p_j(t_r)$, $0\le j<N$.
+Orthogonality gives $Q^\top Q=I$; as $Q$ is square, $QQ^\top=I$ too.
+The recurrence and the terminal node polynomial give
+\[
+ Q^\top DQ=J_N,\qquad Q^\top b=\sqrt{h_0}\,e_0,\qquad
+ \sum_{j<N}p_j(t_r)p_j(t_s)=\frac{\delta_{rs}}{w_r}.            \tag{OF21}
+\]
+For the last formula $QQ^\top=I$ first gives denominator
+$\sqrt{w_rw_s}$; this equals $w_r$ on the diagonal and is irrelevant
+when $r\ne s$ because the numerator is zero. The coefficients of the
+discrete monic polynomials and those of a positively oriented graded
+compression of $(D,b)$ therefore coincide, by uniqueness.
+This is an identity of mathematical constructions, with no procedural
+claim. For $N=0$ the matrices are empty and the grade is zero; no
+first-coordinate vector $e_0$ is invoked.
+
+Conversely the spectral measure of $(J_q,\sqrt{h_0}e_0)$ is exactly
+$\sum_iw_i\delta_{\theta_i}$ by (OF15). For matrix spectral measures take
+$h_0=\|b\|^2$. The definition \code{NLAlib.spectralMeasure} and the
+checked integral and grade identities in (OF7) are existing entry points;
+the new general discrete bridge is the explicit evaluation matrix $Q$.
+
+\section{Symmetry and squaring the variable}
+\label{sec:symmetric-measure}
+The target is \code{symmetric-measure-even-odd-reduction}.
+If reflection $t\mapsto-t$ preserves $\mu$, the polynomial
+$(-1)^k\pi_k(-X)$ is monic of degree $k$ and orthogonal to lower degrees,
+by change of variables. Uniqueness gives
+\[
+ \pi_k(-X)=(-1)^k\pi_k(X),\qquad \alpha_k=0\quad(h_k>0).       \tag{OF22}
+\]
+The second assertion holds because $X\pi_k^2$ is odd. The parity assertion
+also includes the terminal polynomial of a finite-support measure.
+Let $s(t)=t^2$, $\nu_+=s_*\mu$, and $\nu_-=s_*(t^2\mu)$, where
+$\int f\,d(t^2\mu)=\int t^2f(t)\,d\mu$. Parity gives monic $r_k^+,r_k^-$
+such that
+\[
+ \pi_{2k}(t)=r_k^+(t^2),\qquad
+ \pi_{2k+1}(t)=t\,r_k^-(t^2).                                \tag{OF23}
+\]
+For $j<k$, the two orthogonality calculations are
+\[
+ \int r_k^+(u)u^j\,d\nu_+(u)=L(\pi_{2k}X^{2j})=0,\qquad
+ \int r_k^-(u)u^j\,d\nu_-(u)=L(\pi_{2k+1}X^{2j+1})=0.
+\]
+The squared norms are $h_{2k}$ and $h_{2k+1}$. Thus these are precisely
+the monic orthogonal polynomials for the push-forward measures, wherever
+the positive-norm families exist, and with the same terminal interpretation
+when a displayed norm vanishes. In particular $\nu_-$ can be zero (if
+$\mu$ is supported at $0$); do not normalize it in that case.
+
+\paragraph{The augmented matrix identity.}
+For a real rectangular matrix $B$ put
+\[
+ M=\begin{pmatrix}0&B\\B^\top&0\end{pmatrix},\quad c=(u,0),\quad
+ S=\diag(I,-I).
+\]
+Then $SMS=-M$ and $Sc=c$. Spectral projectors for opposite eigenvalues
+are carried into one another by $S$, with equal squared projections of
+$c$; hence the spectral measure of $(M,c)$ is symmetric. Moreover
+\[
+ M^{2j}c=((BB^\top)^ju,0),\qquad
+ M^{2j+1}c=(0,B^\top(BB^\top)^ju).
+\]
+Taking moments gives
+\[
+ \nu_+=\mu_u(BB^\top),\qquad
+ \nu_-=\mu_{B^\top u}(B^\top B).                              \tag{OF24}
+\]
+One can avoid spectral-projector bookkeeping altogether: the displayed
+matrix-power identities prove equality of polynomial integrals, and
+Lagrange interpolation on the union of two finite supports then proves
+equality of their discrete measures, atom by atom. Odd moments similarly
+prove the reflection identity. This also handles $u=0$ or $B^\top u=0$.
+
+\section{Complex Jacobi resolvents by finite block elimination}
+\label{sec:complex-jacobi-resolvent}
+This is the complex-variable part of \code{jacobi-matrix-identities}.
+Let $q\ge1$ and regard $J_q$ as complex Hermitian. For $z\notin\R$, every
+real symmetric principal block has $zI-J$ invertible: the imaginary part
+of $v^*(zI-J)v$ is $(\operatorname{Im}z)\|v\|^2$, so its kernel is zero.
+Consequently all inverses and denominators in
+\[
+ e_0^*(zI-J_q)^{-1}e_0
+ =\cfrac1{z-\alpha_0-
+       \cfrac{a_1^2}{z-\alpha_1-
+       \cfrac{a_2^2}{\ddots-
+       \cfrac{a_{q-1}^2}{z-\alpha_{q-1}}}}}                   \tag{OF25}
+\]
+exist in the ordinary field sense. Formally use recursion: if $R_j$ is
+the first diagonal resolvent entry of the trailing block on indices
+$j,\ldots,q-1$, solving its two block rows gives
+\[
+ R_{q-1}=(z-\alpha_{q-1})^{-1},\qquad
+ R_j=(z-\alpha_j-a_{j+1}^2R_{j+1})^{-1}.
+\]
+The scalar Schur-complement denominator is nonzero because the whole
+trailing block and its next trailing block are both invertible.
+
+For a more robust division interface put
+$D_j(z)=\det(zI-J_q[\{j,\ldots,q-1\}])$, with $D_q=1$ and
+$D_{q-1}=z-\alpha_{q-1}$. Laplace expansion and Cramer's rule give
+\[
+ D_j=(z-\alpha_j)D_{j+1}-a_{j+1}^2D_{j+2}\quad(j\le q-2),
+ \qquad e_0^*(zI-J_q)^{-1}e_0=\frac{D_1(z)}{D_0(z)}.           \tag{OF26}
+\]
+The quotient is valid for every complex $z$ with $D_0(z)\ne0$, including
+real points where an intermediate denominator in (OF25) vanishes.
+There (OF25) is an identity of rational functions, not a literal nested
+formula using totalized division. For instance at $z=0$ the matrix
+$J_2=\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$ has an
+invertible $zI-J_2$, but the inner denominator in $1/(z-1/z)$ is zero.
+The determinant quotient correctly gives zero.
+
+The spectral decomposition also gives
+\[
+ h_0e_0^*(zI-J_q)^{-1}e_0=\sum_i\frac{w_i}{z-\theta_i}.        \tag{OF27}
+\]
+Together with (OF17), this is the $q$-point Gauss or Jacobi convergent of
+$\int(z-t)^{-1}\,d\mu(t)$: its coefficients at infinity match moments
+through order $2q-1$. For compact support, use the uniformly convergent
+geometric series when $|z|$ exceeds the support radius. For a general
+finite-moment measure one may instead assert equality of those finite
+moment coefficients, without claiming convergence of an infinite power
+series. The finite matrix identity itself requires no analytic
+continued-fraction convergence theorem. At $q=0$, define the zero scalar
+approximant separately instead of using a nonexistent first coordinate.
+
+\paragraph{Checked reuse and new interfaces.}
+\code{NLAlib.LanczosDecomp.inv_smul_one_sub_T_apply_zero_zero}
+exists for real $x$ above the original spectrum. The additional proof is
+nonreal invertibility plus finite Schur-complement recursion. The rational
+Cramer formula precisely handles real intermediate poles. Strict
+interlacing was handled independently in (OF12); the checked
+Golub--Welsch and nonconfluent CD statements need no new proofs.
+
+
+% Advanced orthogonal-polynomial and quadrature handoff; snapshot e5725bb.
+% Mathematical derivations only.  No new Lean proof is claimed.
+
+\section{Exactness and uniqueness of quadrature by polynomial division}
+\label{sec:quadrature-exactness}
+\textbf{Atlas item:} \code{quadrature-exactness-characterisation}.
+Let $L(p)=\int p\,d\mu$, let $n\ge1$, and let
+$\tau_1,\ldots,\tau_n$ be distinct real nodes.  Write
+$\omega(t)=\prod_{i=1}^n(t-\tau_i)$ and let $\ell_i$ be their Lagrange
+basis.  Only the moments used below are required to be finite.
+For $0\le k\le n$, the rule $Q(f)=\sum_i\lambda_i f(\tau_i)$ is exact
+on $\mathcal P_{n-1+k}$ if and only if
+\begin{equation}
+ \lambda_i=L(\ell_i)\quad(1\le i\le n),\qquad
+ L(\omega s)=0\quad(s\in\mathcal P_{k-1}),
+ \tag{AQ1}
+\end{equation}
+where $\mathcal P_{-1}=\{0\}$.
+Indeed, necessity follows by testing $\ell_i$ and $\omega s$.
+For sufficiency divide $p=\omega s+r$, with $\deg r<n$ and
+$\deg s\le k-1$; then $Q(p)=Q(r)=L(r)=L(p)$.
+This is one Euclidean-division lemma, with no quadrature-specific analysis.
+
+Suppose $L(p^2)>0$ for every nonzero $p\in\mathcal P_n$; for a positive
+measure this follows from more than $n$ support points.  No $n$-node
+rule is exact in degree $2n$, since $Q(\omega^2)=0<L(\omega^2)$.
+Exactness through degree $2n-1$ forces $\omega=\pi_n$, the unique monic
+orthogonal polynomial, by (AQ1).  Conversely its roots and the
+interpolatory weights give that exactness.  Moreover
+\begin{equation}
+ \lambda_i=L(\ell_i^2)>0,
+ \tag{AQ2}
+\end{equation}
+because $Q(\ell_i^2)=\lambda_i$ and $\deg\ell_i^2\le2n-2$.
+Thus the Gauss rule is the unique $n$-atom positive measure with the
+first $2n$ moments of $\mu$, with uniqueness understood up to permutation.
+The same reasoning even excludes any rule with fewer than $n$ nodes
+matching these moments: square its nodal polynomial.
+
+At exactly $n$ support points, the $n$-point Gauss rule is the measure
+itself and is exact for every integrable function.  Its uniqueness from
+the first $2n$ moments still follows from positive definiteness on
+$\mathcal P_{n-1}$ and (AQ1); the assertion that degree $2n$ is impossible
+does not hold in this terminal case.  The zero-node rule is exact on
+$\mathcal P_{-1}$, and is exact on constants only for the zero measure.
+
+For a symmetric matrix and a nonzero vector $b$, take
+$L(p)=b^\top p(A)b$.  Existing Lanczos moment matching and characteristic
+polynomial orthogonality identify $\pi_q=\det(tI-T_q)$, so (AQ1) gives
+the intrinsic uniqueness of its spectral quadrature rule, without
+re-proving Lanczos moment identities.
+\textbf{Verified reuse:}
+\code{NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq_sum},
+\code{NLAlib.LanczosDecomp.integral_eval_charpoly_mul_eq_zero}, and
+\code{NLAlib.integral_eval_spectralMeasure}.
+The general-measure theorem still needs the short division-and-integration
+wrapper; the existing Lebesgue-interval specialization
+\code{NLAlib.gauss_lebesgue_quadrature_of_orthogonal_nodal} is not that wrapper.
+
+\section{Derivative remainders from an explicit finite Hermite interpolant}
+\label{sec:gauss-derivative-remainder}
+\textbf{Atlas item:} \code{gauss-quadrature-derivative-remainder}.
+Assume $a<c$, $n\ge1$, $\mu$ is finite, positive and supported in $[a,c]$,
+and its $n$-point Gauss rule exists.  Let $f\in C^{2n}([a,c])$.
+There is no need to develop a general Hermite-interpolation package first.
+With the Lagrange basis of the Gauss nodes define explicitly
+\begin{align}
+ H(t)=\sum_i\bigl[&f(\tau_i)
+       (1-2\ell_i'(\tau_i)(t-\tau_i))\ell_i(t)^2\\
+       &+f'(\tau_i)(t-\tau_i)\ell_i(t)^2\bigr].
+ \tag{AQ3}
+\end{align}
+Direct evaluation proves $\deg H\le2n-1$,
+$H(\tau_i)=f(\tau_i)$ and $H'(\tau_i)=f'(\tau_i)$.
+Exactness gives $Q(f)=L(H)$.
+
+For $x$ not a node, put
+$C_x=(f(x)-H(x))/\pi_n(x)^2$.  The function
+$g(t)=f(t)-H(t)-C_x\pi_n(t)^2$ vanishes at $x$ and has a double zero
+at each node.  Repeated Rolle's theorem gives a zero of $g^{(2n)}$
+between the extreme zeros.  Therefore
+\begin{equation}
+ f(x)-H(x)=\frac{f^{(2n)}(\xi_x)}{(2n)!}\pi_n(x)^2,
+ \qquad \xi_x\in(a,c).
+ \tag{AQ4}
+\end{equation}
+At nodes the remainder is zero.  The only new real-analysis helper is:
+a $C^r$ function with zeros whose multiplicities sum to at least $r+1$
+has a zero of its $r$-th derivative between the extreme distinct zeros.
+Its proof is induction: differentiation retains multiplicity $m-1$
+at each old zero and supplies one zero in each gap by Rolle.
+No choice of a measurable map $x\mapsto\xi_x$ is used.
+
+Writing $h_n=L(\pi_n^2)$, pointwise upper and lower bounds in (AQ4)
+and positivity of $L$ prove
+\begin{equation}
+ \frac{\min_{[a,c]}f^{(2n)}}{(2n)!}h_n
+ \le L(f)-Q(f)\le
+ \frac{\max_{[a,c]}f^{(2n)}}{(2n)!}h_n.
+ \tag{AQ5}
+\end{equation}
+If $h_n>0$, put $d=(2n)![L(f)-Q(f)]/h_n$.
+Continuity and the intermediate-value theorem imply that
+$f^{(2n)}(\xi)=d$ for some $\xi\in(a,c)$: otherwise its difference
+from $d$ has one strict sign throughout the connected open interval.
+(AQ4) then has that strict sign off the nodes, whose complement has
+positive $\pi_n^2\mu$-mass, contradicting the definition of $d$.
+This argument also handles the possibility that a minimum or maximum
+of the derivative is attained only at an endpoint.
+If $h_n=0$, the support is contained in the nodes, the rule is exact,
+and any $\xi\in(a,c)$ works.  Thus
+\begin{equation}
+ L(f)-Q(f)=\frac{f^{(2n)}(\xi)}{(2n)!}\,h_n.
+ \tag{AQ6}
+\end{equation}
+For a singleton interval retain exactness, but do not assert existence
+of a point in the empty interval $(a,c)$.
+
+For $L=L_b$, the already proved identity
+\code{NLAlib.integral_eval_mul_eval_spectralMeasure} gives
+$h_q=\|\pi_q(A)b\|^2$.  This proves the matrix derivative remainder.
+On a positive spectral interval, $1/t$ and $1/t^2$ have positive
+even derivatives, whereas $\log t$ has negative even derivatives.
+Consequently Gauss gives lower bounds for the first two and an upper
+bound for the logarithm.  If $b=0$, both sides are zero separately.
+\textbf{Remaining interface:} the finite multiplicity version of Rolle;
+ordinary Lagrange remainders alone do not justify doubled nodes.
+
+\section{Radau and Lobatto: weighted moments first, Jacobi borders second}
+\label{sec:radau-lobatto}
+\textbf{Atlas item:} \code{gauss-radau-lobatto}.
+Use monic recurrences
+$\pi_{j+1}=(t-\alpha_j)\pi_j-\beta_j\pi_{j-1}$,
+$\beta_j=h_j/h_{j-1}$, and symmetric Jacobi off-diagonals
+$a_j=\sqrt{\beta_j}$.  Thus the catalogue's symmetric coupling
+written $\beta_q$ is $a_q$ in this document.
+
+\subsection*{The rules and their exactness}
+For left Radau, let $\phi_q^a$ be the monic degree-$q$ polynomial
+orthogonal for $d\nu_a=(t-a)d\mu$.  Use the nodes $a$ and the zeros of
+$\phi_q^a$, and interpolatory weights for $\mu$.
+Its nodal polynomial $(t-a)\phi_q^a$ is orthogonal for $\mu$ to
+$\mathcal P_{q-1}$, so (AQ1), with $n=q+1$ and $k=q$, proves
+exactness through degree $2q$.  Right Radau is identical using
+$d\nu_c=(c-t)d\mu$ and fixed node $c$.
+The moment matrix for each modified measure on $\mathcal P_{q-1}$
+must be positive definite to specify its degree-$q$ monic polynomial;
+zero norm at degree $q$ is allowed as a terminal case.
+For example, at least $q+1$ support points of $\mu$ suffice for
+the required left or right degree-$q$ construction, even if one
+endpoint is an atom.
+
+For Lobatto use
+$d\nu_{ac}=(t-a)(c-t)d\mu$, its degree-$q$ monic polynomial
+$\phi_q^{ac}$, and the nodes $a,c$ and its $q$ roots.
+Then $(t-a)(t-c)\phi_q^{ac}$ is orthogonal for $\mu$ to
+$\mathcal P_{q-1}$, so the $q+2$ node rule is exact through degree
+$2q+1$.  Its interior weights are positive by testing
+$(t-a)(c-t)r_i(t)^2$, where $r_i$ is the Lagrange basis polynomial
+on the $q$ interior nodes.  Endpoint weights are obtained by testing
+$(c-t)(\phi_q^{ac})^2$ and $(t-a)(\phi_q^{ac})^2$; they are
+nonnegative, and strictly positive precisely when the corresponding
+integrals are positive.
+
+\textbf{Support correction.}  The precise construction requires positive
+definiteness of the modified moment matrix on $\mathcal P_{q-1}$
+and the indicated nonzero endpoint-weight integrals if all $q+2$
+weights are to be positive.  A clean sufficient condition is at least
+$q+2$ support points of $\mu$.  The catalogue assumption
+$\operatorname{grade}(A,b)\ge q+1$ alone does not guarantee this:
+if the measure has exactly $q+1$ atoms including both endpoints,
+then $\nu_{ac}$ has only $q-1$ atoms.  A degree-$q$ interior
+orthogonal polynomial is then not uniquely determined.
+At such finite termination use the actual atomic measure, which is
+already an exact quadrature rule for every function, instead of
+asserting a nondegenerate $q+2$ node Lobatto rule.
+For $q=0$, Lobatto is simply the two-endpoint linear rule,
+with weights $L((c-t)/(c-a))$ and $L((t-a)/(c-a))$;
+one may vanish.  Radau at $q=0$ is the one prescribed endpoint
+with weight $L(1)$.
+
+\subsection*{Explicit borders and their moment proof}
+Let $J_q$ be the original symmetric Jacobi matrix.
+For $q\ge1$, left Radau is represented by
+\begin{equation}
+ J^R_{q+1}=\begin{pmatrix}J_q&a_qe_q\\a_qe_q^\top&\alpha^R\end{pmatrix},
+ \qquad
+ \alpha^R=a-\beta_q\frac{\pi_{q-1}(a)}{\pi_q(a)}.
+ \tag{AQ7}
+\end{equation}
+The characteristic-polynomial expansion is
+$(t-\alpha^R)\pi_q(t)-\beta_q\pi_{q-1}(t)$, which vanishes at $a$.
+It is orthogonal to $\mathcal P_{q-1}$; dividing by $t-a$ identifies
+it with $\phi_q^a$ by uniqueness.  The denominators are nonzero when
+the original measure has more than $q$ support points, since the
+zeros of $\pi_q$ lie strictly between the extreme support points.
+Right Radau substitutes $c$ for $a$.
+
+Under the sufficient nondegeneracy condition above, let $J_{q+1}$
+be the original Jacobi block, set
+$r(x)=\pi_q(x)/\pi_{q+1}(x)$, and define
+\begin{equation}
+ \gamma=\frac{c-a}{r(c)-r(a)}>0,
+ \qquad d=a-\gamma r(a)=c-\gamma r(c),
+ \qquad
+ J^L_{q+2}=\begin{pmatrix}J_{q+1}&\sqrt\gamma e_{q+1}\\
+                  \sqrt\gamma e_{q+1}^{\top}&d\end{pmatrix}.
+ \tag{AQ8}
+\end{equation}
+The positivity follows from
+$r(x)=e_{q+1}^{\top}(xI-J_{q+1})^{-1}e_{q+1}$:
+$r(a)<0<r(c)$.  Its characteristic polynomial
+$(t-d)\pi_{q+1}(t)-\gamma\pi_q(t)$ vanishes at both endpoints.
+Orthogonality to $\mathcal P_{q-1}$ identifies it with
+$(t-a)(t-c)\phi_q^{ac}(t)$.
+
+For an independent matrix proof of exactness expand
+$e_1^\top J^ke_1$ as a finite sum over index walks.
+A walk starting at index $0$ cannot visit index $q$ and return
+using fewer than $2q$ edges; a visit to its diagonal requires at
+least $2q+1$ steps.  Hence the changed last diagonal in (AQ7)
+preserves moments through degree $2q$.
+Similarly a walk using the new coupling of (AQ8) has length at
+least $2q+2$, proving moment matching through degree $2q+1$.
+This uses finite matrix powers, not a quadrature convergence theorem.
+Spectral diagonalization supplies the positive weights
+$L(1)|e_1^\top u_i|^2$.
+
+\subsection*{Remainders and the repaired signs}
+Repeat the Rolle argument with a simple interpolation condition at
+each prescribed endpoint and double conditions at all interior nodes.
+Writing the remainder as integral minus quadrature, obtain
+\begin{align}
+ R_a(f)&=\frac{f^{(2q+1)}(\xi)}{(2q+1)!}
+            \int(t-a)(\phi_q^a(t))^2\,d\mu(t),\tag{AQ9}\\
+ R_c(f)&=\frac{f^{(2q+1)}(\xi)}{(2q+1)!}
+            \int(t-c)(\phi_q^c(t))^2\,d\mu(t),\tag{AQ10}\\
+ R_L(f)&=\frac{f^{(2q+2)}(\xi)}{(2q+2)!}
+            \int(t-a)(t-c)(\phi_q^{ac}(t))^2\,d\mu(t).\tag{AQ11}
+\end{align}
+One can first prove the min/max derivative inequalities; the
+single-$\xi$ conclusion follows exactly as in (AQ6), with the
+nonnegative weight or its negative.  Zero weighted norm means exactness.
+Thus a positive odd derivative makes \emph{left Radau a lower bound}
+and \emph{right Radau an upper bound}.  The catalogue states these two
+directions in reverse.  A positive even derivative makes Lobatto
+an upper bound, as the catalogue correctly states.
+For $1/t$ and $1/t^2$ on a positive interval the odd derivatives are
+negative, so the useful inverse-form bounds are
+$Q_c(f)\le L(f)\le Q_a(f)$, alongside the Gauss lower bound.
+
+The discrete orthogonality is an immediate consequence of exactness:
+$Q_L(pr)=L(pr)$ whenever $\deg p+\deg r\le2q+1$.
+For the Chebyshev weight $(1-t^2)^{-1/2}dt$, put $N=q+1$;
+the Lobatto nodes are $\cos(j\pi/N)$, $0\le j\le N$,
+with endpoint weights $\pi/(2N)$ and other weights $\pi/N$.
+Exactness through degree $2N-1$ follows by summing
+$\cos(kj\pi/N)$ with half endpoint weights: the sum is zero
+for $1\le k\le2N-1$, while the constant sum is $N$.
+This finite geometric-sum verification also covers $N=1$.
+
+\section{Christoffel kernel polynomials and the finite boundary correction}
+\label{sec:christoffel-kernel}
+\textbf{Atlas item:} \code{kernel-polynomials-christoffel}.
+Let $L$ be a positive or quasi-definite polynomial functional,
+with monic orthogonal polynomials $\pi_j$ and nonzero squared norms
+$h_j=L(\pi_j^2)$.  For a complex shift $z$, use the bilinear
+complexification of $L$, not a conjugate-linear inner product.
+Suppose $\pi_j(z)\ne0$ through every index actually used, including
+the one succeeding the highest requested degree.  Put
+\begin{equation}
+ q_j=-\frac{\pi_{j+1}(z)}{\pi_j(z)},\quad
+ \widehat\pi_j(t)=\frac{\pi_{j+1}(t)+q_j\pi_j(t)}{t-z},\quad
+ \widehat L(p)=L((t-z)p).
+ \tag{AQ12}
+\end{equation}
+The numerator vanishes at $t=z$, so polynomial division yields
+a monic polynomial of degree $j$.  For $\deg r<j$,
+$\widehat L(\widehat\pi_jr)=0$, and
+\begin{equation}
+ \widehat h_j=\widehat L(\widehat\pi_j^2)=q_jh_j\ne0.
+ \tag{AQ13}
+\end{equation}
+Indeed the $\pi_{j+1}$ term is orthogonal to $\widehat\pi_j$, and
+$L(\pi_j\widehat\pi_j)=h_j$.  This proves existence and
+quasi-definiteness to the stated order by finite algebra.
+
+Set $e_{-1}=0$ and $e_j=\beta_{j+1}/q_j$.  Evaluating the original
+recurrence at $z$ gives
+$\alpha_j=z+q_j+e_{j-1}$.  Comparing the next-to-leading coefficients
+of the monic polynomials in (AQ12), and using (AQ13), gives
+\begin{equation}
+ \widehat\alpha_j=z+q_j+e_j,
+ \qquad \widehat\beta_j=q_je_{j-1}\quad(j\ge1).
+ \tag{AQ14}
+\end{equation}
+For the first identity, if $s_j$ is the coefficient of $t^{j-1}$
+in $\pi_j$, then the corresponding coefficient in
+$\widehat\pi_j$ is $s_{j+1}+q_j+z$; subtract consecutive
+coefficients and use $\alpha_{j+1}=z+q_{j+1}+e_j$.
+
+Here the nonsymmetric monic Jacobi matrix has diagonal $\alpha_j$,
+superdiagonal $1$ and subdiagonal $\beta_j$.
+With $L_n$ unit lower bidiagonal of subdiagonal $e_{j-1}$ and
+$U_n$ upper bidiagonal of diagonal $q_j$ and superdiagonal $1$,
+\begin{equation}
+ J_n^{\rm mon}-zI=L_nU_n,\qquad
+ \widehat J_n^{\rm mon}=U_nL_n+zI+
+                 e_{n-1}E_{n-1,n-1}\quad(n\ge1).
+ \tag{AQ15}
+\end{equation}
+The last rank-one term is essential: finite multiplication drops
+the path through index $n$, so the last diagonal of $U_nL_n$
+is $q_{n-1}$ rather than $q_{n-1}+e_{n-1}$.
+The uncorrected identity is valid for the infinite formal bidiagonal
+arrays, or for leading blocks computed from a one-index larger
+factorization.  Symmetric Jacobi matrices require the usual diagonal
+similarity using the norms $h_j$; the displayed $LU$ factors refer
+to the monic matrix.  At dimension zero the identities are empty.
+
+\textbf{Nonvanishing correction.}  The assertion
+$\widehat\pi_n(z)\ne0$ is false for general complex $z$, even for
+a positive real measure.  For the standard Gaussian probability
+measure, $\pi_1=t$, $\pi_2=t^2-1$, and $z=i$ give
+$\widehat\pi_1(t)=t-i$, so $\widehat\pi_1(i)=0$, while every
+$\pi_k(i)\ne0$ because the original roots are real.
+For real $z$ strictly outside the support interval, $(t-z)\mu$
+has constant sign; after an overall sign change it is positive.
+Its orthogonal-polynomial zeros are in the support interval, and
+the additional nonvanishing is then valid.
+
+For SPD $A$ and $z=0$, the transformed functional is
+$\widehat L(p)=r_0^\top A p(A)r_0$.  The vectors
+$\widehat\pi_j(A)r_0$ are mutually $A$-orthogonal and belong to
+successive Krylov spaces with nonzero leading coefficients.
+Consequently they are the CG search directions up to nonzero
+individual normalizations, by uniqueness of orthogonalization in
+each graded space.  This is the appropriate mathematical statement;
+the actual CG normalization must be supplied separately.
+The symmetric factorization has pivots
+$d_0=\alpha_0$, $d_j=\alpha_j-a_j^2/d_{j-1}$ and
+subdiagonal $a_j/d_{j-1}$, all well defined before termination by
+positive definiteness.  Existing CG span and conjugacy results can
+then identify the coefficients without a new algorithm proof.
+
+\section{Second-kind polynomials and Markov convergence without continued-fraction machinery}
+\label{sec:second-kind-markov}
+\textbf{Atlas item:} \code{jacobi-fraction-second-kind}.
+Let $\mu$ be finite and positive, supported in $[a,c]$, with
+$\mu_0=L(1)>0$.  For every degree for which $\pi_n$ is defined put
+\begin{equation}
+ F(z)=\int\frac{d\mu(t)}{z-t},\qquad
+ \sigma_n(z)=\int\frac{\pi_n(z)-\pi_n(t)}{z-t}\,d\mu(t),\qquad
+ \rho_n(z)=\int\frac{\pi_n(t)}{z-t}\,d\mu(t).
+ \tag{AQ16}
+\end{equation}
+The divided difference in the middle is a polynomial in $(z,t)$,
+including at $z=t$; hence $\sigma_n$ is genuinely a polynomial of
+degree at most $n-1$.  Direct substitution of the monic recurrence gives
+\begin{equation}
+ \sigma_0=0,\quad \sigma_1=\mu_0,\quad
+ \sigma_{n+1}=(z-\alpha_n)\sigma_n-\beta_n\sigma_{n-1}
+ \quad(n\ge1).
+ \tag{AQ17}
+\end{equation}
+The extra term is $L(\pi_n)$, which vanishes for $n\ge1$.
+Thus $\sigma_n=\mu_0\pi_{n-1}^{[1]}$, where the associated monic
+polynomials use the coefficients shifted by one index.
+This establishes the numerator identity by a finite recurrence.
+
+If $\tau_i$ are the roots of $\pi_n$, then
+\begin{equation}
+ \sigma_n(\tau_i)=\pi_n'(\tau_i)L(\ell_i),\qquad
+ \frac{\sigma_n(z)}{\pi_n(z)}
+       =\sum_{i=1}^n\frac{\lambda_i}{z-\tau_i}.
+ \tag{AQ18}
+\end{equation}
+The first formula follows by cancellation inside the divided difference.
+For the second, multiply by $\pi_n$: two polynomials of degree at most
+$n-1$ agree at all $n$ roots.  This proof avoids a general partial-fraction
+theorem.  For $n\ge1$, equivalently, a cofactor expansion of the finite Jacobi
+resolvent gives
+$\sigma_n/\pi_n=\mu_0e_1^\top(zI-J_n)^{-1}e_1$.
+Its spectral expansion is valid at every complex $z$ outside the
+spectrum of $J_n$.
+
+\textbf{Division correction.}  A literal nested continued fraction
+requires the inner denominators to be nonzero, whereas the polynomial
+ratio and the full resolvent need only their final denominator nonzero.
+For example, $J_2=\left(\begin{smallmatrix}1&1\\1&0\end{smallmatrix}\right)$
+is invertible at $z=0$, and the resolvent $(0I-J_2)^{-1}_{11}$ is zero,
+but its displayed inner fraction contains $1/0$.
+Formalize continued fractions as numerator/denominator pairs satisfying
+(AQ17), or add the tail-resolvent nonvanishing hypotheses.
+They hold automatically for nonreal $z$ and for real $z$ outside
+the full support interval.  The existing real theorem
+\code{NLAlib.inv_smul_one_sub_jacobiMatrix_apply_zero_zero}
+uses a positive-definiteness hypothesis precisely to avoid these poles.
+
+Two exact identities are particularly useful:
+\begin{equation}
+ F(z)-\frac{\sigma_n(z)}{\pi_n(z)}
+  =\frac{\rho_n(z)}{\pi_n(z)}
+  =\frac{1}{\pi_n(z)^2}\int\frac{\pi_n(t)^2}{z-t}\,d\mu(t),
+ \qquad z\notin[a,c].
+ \tag{AQ19}
+\end{equation}
+The second follows because
+$(\pi_n(z)-\pi_n(t))/(z-t)$ has degree $n-1$ in $t$, so its
+product with $\pi_n(t)$ integrates to zero.  These are finite polynomial
+orthogonality identities, even though $F$ itself is a transform.
+
+Moment matching and a finite geometric identity also give an explicit
+expansion at infinity.  Let $R\ge\max(|a|,|c|)$, $|z|>R$.
+Subtract the first $2n$ terms of $1/(z-t)$ from each of the two
+equal-moment measures in (AQ18); the remainder is
+$t^{2n}/(z^{2n}(z-t))$.  Therefore
+\begin{equation}
+ \left|F(z)-\frac{\sigma_n(z)}{\pi_n(z)}\right|
+ \le \frac{2\mu_0 R^{2n}}{|z|^{2n}(|z|-R)}.
+ \tag{AQ20}
+\end{equation}
+This proves the stated $O(z^{-2n-1})$ with an explicit bound.
+
+\subsection*{A finite Bernstein proof of locally uniform Markov convergence}
+Assume $a<c$ and let $K\subset\C\setminus[a,c]$ be nonempty and compact. Put
+$\delta=\operatorname{dist}(K,[a,c])>0$.
+For $z\in K$, the function $g_z(u)=1/(z-a-(c-a)u)$ on $[0,1]$
+has Lipschitz constant at most $(c-a)/\delta^2$.
+For an integer $N\ge1$ its Bernstein polynomial is
+\[
+ B_Ng_z(u)=\sum_{j=0}^N g_z(j/N)\binom Nj u^j(1-u)^{N-j}.
+\]
+The binomial weights sum to one, and their variance for $j/N$
+is $u(1-u)/N$.  Finite Cauchy--Schwarz therefore gives
+\[
+ |B_Ng_z(u)-g_z(u)|
+ \le\frac{c-a}{\delta^2}\sqrt{\frac{u(1-u)}N}
+ \le\frac{c-a}{2\delta^2\sqrt N}.
+\]
+For $n\ge1$ use $N=2n-1$ and Gauss exactness.  Both measures have mass $\mu_0$,
+so
+\begin{equation}
+ \sup_{z\in K}\left|F(z)-\frac{\sigma_n(z)}{\pi_n(z)}\right|
+ \le\frac{\mu_0(c-a)}{\delta^2\sqrt{2n-1}}\longrightarrow0.
+ \tag{AQ21}
+\end{equation}
+This proves the full locally uniform conclusion, without a theorem
+about infinite continued fractions or complex polynomial approximation.
+An empty compact set gives a vacuous uniform assertion; for $a=c$
+the measure has one support point and its one-point rule is exact.
+Infinite support is required if the sequence is to continue in all
+degrees.  At finite support size $N_0$, the $N_0$-point rule is already
+exact, and the rational approximants can be extended by the constant
+value $F$ thereafter.  Higher orthogonal polynomials with positive norm
+must not be invented after this terminal index.
+
+\section{Continuity from a fixed finite moment matrix}
+\label{sec:recurrence-continuity}
+\textbf{Atlas item:} \code{recurrence-coefficient-continuity}.
+Fix $n\ge1$.  In fact only moments through degree $2n-1$ are needed
+for the $n$-point rule and its Jacobi coefficients.
+Let $m_j^{(N)}\to m_j$ for these finitely many indices, and assume
+the limiting moment matrix
+$M_n=(m_{i+j})_{0\le i,j<n}$ is positive definite.
+Positive definiteness is open: if its smallest eigenvalue is $\eta>0$,
+then $\|M_n^{(N)}-M_n\|<\eta/2$ implies
+$M_n^{(N)}\succeq(\eta/2)I$.
+Thus all relevant polynomials and norms exist for all sufficiently
+large $N$, even if some early measures have too few support points.
+
+The coefficient vector of
+$\pi_k=t^k+\sum_{j<k}c_jt^j$, $1\le k\le n$, is
+\begin{equation}
+ c=-M_k^{-1}(m_k,\ldots,m_{2k-1})^\top.
+ \tag{AQ22}
+\end{equation}
+Every entry is a rational function of finitely many moments whose
+denominator stays nonzero.  Hence these coefficients converge.
+The formulas
+$h_j=L(\pi_j^2)$,
+$\alpha_j=L(t\pi_j^2)/h_j$ and
+$\beta_j=h_j/h_{j-1}$ then give coefficient convergence for $j<n$;
+include $\beta_0=\mu_0$ separately if that convention is used.
+For $R=\max(1,|a|,|c|)$,
+\[
+ \sup_{t\in[a,c]}|\pi_n^{(N)}(t)-\pi_n(t)|
+ \le\sum_{j=0}^{n-1}|c_j^{(N)}-c_j|R^j\longrightarrow0.
+\]
+
+The corresponding symmetric Jacobi matrices converge in norm,
+since square root is continuous on their positive subdiagonal squares.
+Ordered eigenvalue perturbation bounds imply convergence of the ordered
+Gauss nodes.  Simplicity of the limiting nodes means their gaps are
+eventually bounded away from zero.  Recover the weights from the
+Vandermonde equations
+\begin{equation}
+ \sum_{i=1}^n\lambda_i\tau_i^k=m_k,
+ \qquad 0\le k<n.
+ \tag{AQ23}
+\end{equation}
+The Vandermonde determinant is a product of nonzero node differences,
+so inversion is continuous and the weights converge.
+This avoids choosing eigenvectors continuously or defining spectral
+projectors along a sequence.
+At $n=0$ all coefficient, node and weight assertions are empty.
+\textbf{Mathematical reduction:} finite matrix inversion, positivity
+of a limiting Gram matrix, ordered symmetric eigenvalue continuity,
+and one Vandermonde solve.  Weak convergence of measures is unnecessary
+once the specified moments converge.
+
+\section{Contour kernels as the difference of two resolvents}
+\label{sec:gauss-contour-kernel}
+\textbf{Atlas item:} \code{gauss-remainder-contour-kernel}.
+Let $\Gamma$ be a positively oriented piecewise $C^1$ Jordan contour
+whose interior contains $[a,c]$, and assume $f$ is holomorphic on
+an open set containing the contour \emph{and its closed interior}.
+The alternative standard hypothesis is that $\Gamma$ is a cycle
+null-homologous in the holomorphy domain and has winding number one
+at every point of $[a,c]$.
+Holomorphy merely near the contour, as in the catalogue hypothesis,
+is insufficient for Cauchy's formula.
+
+Cauchy's scalar formula, integrated against $\mu$ and against its
+Gauss atomic measure, gives
+\begin{equation}
+ L(f)-Q_n(f)=\frac1{2\pi i}\oint_\Gamma
+ f(z)\left(F(z)-\sum_i\frac{\lambda_i}{z-\tau_i}\right)\,dz
+ =\frac1{2\pi i}\oint_\Gamma f(z)\frac{\rho_n(z)}{\pi_n(z)}\,dz.
+ \tag{AQ24}
+\end{equation}
+For a matrix spectral measure this step is a finite sum of scalar
+Cauchy formulas, so it needs no interchange theorem for two arbitrary
+integrals.  For a general finite measure, put
+$\delta_\Gamma=\operatorname{dist}(\Gamma,[a,c])>0$;
+the integrand is bounded by
+$\max_\Gamma|f|/\delta_\Gamma$ times the contour-speed function.
+Its integral is at most
+$\mu_0\ell(\Gamma)\max_\Gamma|f|/\delta_\Gamma<\infty$,
+which justifies Fubini directly.
+
+Writing $K_n=\rho_n/\pi_n$, the triangle inequality yields exactly
+\begin{equation}
+ |L(f)-Q_n(f)|\le\frac{\ell(\Gamma)}{2\pi}
+                    \max_\Gamma|K_n|\max_\Gamma|f|.
+ \tag{AQ25}
+\end{equation}
+The positive-norm identity (AQ19) additionally yields
+$|K_n(z)|\le h_n/(\operatorname{dist}(z,[a,c])|\pi_n(z)|^2)$.
+The circle specialization is the first useful formal statement:
+\code{NLAlib.eval_interpolate_eq_circleIntegral} and
+\code{NLAlib.sub_eval_interpolate_eq_circleIntegral} already expose
+Cauchy formulas using \code{circleIntegral};
+\code{NLAlib.nodal_resolvent_eq_sum_basis_div} supplies their exact
+finite rational identity.  General contours require the corresponding
+contour API, but no new quadrature argument.
+
+\section{Moment sensitivity by differentiating orthogonality once}
+\label{sec:moment-sensitivity}
+\textbf{Atlas item:} \code{recurrence-coefficient-moment-sensitivity}.
+Fix $n\ge1$. Let $b_0,\ldots,b_{2n-1}$ be a fixed basis of
+$\mathcal P_{2n-1}$, independent of the moments, and let
+$m_k=L(b_k)$.  Denote the coefficient of $b_k$ in a polynomial $p$
+by $c_k[p]$.  For a perturbation vector $v$ define the linear functional
+$\dot L(p)=\sum_k v_kc_k[p]$.
+Use the open domain where the Gram matrix on $\mathcal P_{n-1}$
+is positive definite.  Formula (AQ22), after a fixed basis change,
+makes all quantities below differentiable rational functions of $m$.
+No family of representing measures for every nearby moment vector
+is necessary.
+
+The product rule for a moment-dependent polynomial is simply
+\begin{equation}
+ \frac{d}{d\varepsilon}\bigg|_{0} L_\varepsilon(p_\varepsilon)
+       =\dot L(p)+L(\dot p).
+ \tag{AQ26}
+\end{equation}
+Since $\pi_j$ is monic, $\deg\dot\pi_j<j$.
+Differentiating $L(\pi_j\pi_i)=0$, $i<j$, gives
+$L(\dot\pi_j\pi_i)=-\dot L(\pi_j\pi_i)$, because
+$L(\pi_j\dot\pi_i)=0$.  Consequently
+\begin{equation}
+ \dot\pi_j=-\sum_{i<j}\frac{\dot L(\pi_j\pi_i)}{h_i}\pi_i
+ \quad(0\le j\le n),\qquad
+ \dot h_j=\dot L(\pi_j^2)\quad(0\le j<n).
+ \tag{AQ27}
+\end{equation}
+Differentiate $\beta_j=h_j/h_{j-1}$ to obtain, for $1\le j<n$,
+\begin{equation}
+ \dot\beta_j=\dot L(\Psi_{2j}),\qquad
+ \Psi_{2j}=\beta_j\left(\frac{\pi_j^2}{h_j}
+                     -\frac{\pi_{j-1}^2}{h_{j-1}}\right).
+ \tag{AQ28}
+\end{equation}
+For $0\le j<n$ and $\alpha_j=L(t\pi_j^2)/h_j$,
+the quotient rule and (AQ27) give
+\begin{align}
+ \dot\alpha_j&=\dot L(\Psi_{2j+1}),\tag{AQ29}\\
+ \Psi_{2j+1}
+ &=\frac{(t-\alpha_j)\pi_j^2-2\beta_j\pi_{j-1}\pi_j}{h_j}
+  =\frac{\pi_j\pi_{j+1}}{h_j}
+       -\frac{\pi_{j-1}\pi_j}{h_{j-1}}.\tag{AQ30}
+\end{align}
+The terms indexed $j-1$ are omitted at $j=0$.
+To verify the only cross term, use
+$t\pi_j=\pi_{j+1}+\alpha_j\pi_j+\beta_j\pi_{j-1}$:
+$L(t\pi_j\dot\pi_j)=-\beta_j\dot L(\pi_j\pi_{j-1})$.
+Thus the entire sensitivity result is a differentiation of finite
+linear systems and their orthogonality identities.
+
+In orthonormal notation $p_j=\pi_j/\sqrt{h_j}$ these become
+$\Psi_{2j}=\beta_j(p_j^2-p_{j-1}^2)$ and
+$\Psi_{2j+1}=a_{j+1}p_jp_{j+1}-a_jp_{j-1}p_j$,
+when those normalized polynomials exist.
+\textbf{Indexing repairs:} $\beta_0=L(1)$ has
+$\dot\beta_0=\dot L(1)$; (AQ28) is not its formula.
+For the highest requested diagonal coefficient $\alpha_{n-1}$,
+use the monic expression (AQ30).  It requires only moments through
+$2n-1$; the expression involving $p_n$ and $a_n$ separately would
+apparently require $h_n$ and the additional moment $m_{2n}$,
+although their product cancels that dependence.
+
+Taking $v$ to be the $k$-th coordinate vector proves
+\begin{equation}
+ \frac{\partial\alpha_j}{\partial m_k}=c_k[\Psi_{2j+1}],\qquad
+ \frac{\partial\beta_j}{\partial m_k}=c_k[\Psi_{2j}]
+ \quad(1\le j<n),\qquad
+ \frac{\partial\beta_0}{\partial m_k}=c_k[1].
+ \tag{AQ31}
+\end{equation}
+Here the $\alpha_j$ identity is for $0\le j<n$ and every moment
+coordinate has $0\le k<2n$.
+After putting rows in the declared output order, the induced norm
+of this Jacobian is the \emph{absolute} local condition number.
+The relative condition number also has the factor
+$\|m\|/\|\Phi(m)\|$ whenever the latter normalization is defined.
+The verified bridge
+\code{NLAlib.specNorm_euclideanJacobian} already identifies the
+Euclidean Jacobian norm with \code{NLAlib.mapAbsCondition}.
+
+\section{Rational measure modification as a finite constrained polynomial space}
+\label{sec:christoffel-uvarov}
+\textbf{Atlas item:} \code{christoffel-uvarov-modification}.
+Let $u,v\in\R[t]$ be coprime, of degrees $\ell,m$, with simple
+complex roots $u_1,\ldots,u_\ell$ and $v_1,\ldots,v_m$, no roots
+on the compact support interval, and $u/v>0$ there.
+Suppose the positive modified functional
+$\widehat L(p)=L(up/v)$ is positive definite on $\mathcal P_{n-1}$.
+This suffices for a unique degree-$n$ monic $\widehat\pi_n$.
+The following finite system gives a direct route to the determinant
+formula, including $m>n$, without a chain of modification algorithms.
+
+Set $P=u\widehat\pi_n$.  It is characterized by
+\begin{equation}
+ \deg P\le n+\ell,\qquad
+ P(u_i)=0\ (1\le i\le\ell),\qquad
+ L(t^rP/v)=0\ (0\le r<n),\qquad
+ [t^{n+\ell}]P=\operatorname{lc}(u).
+ \tag{AQ32}
+\end{equation}
+Necessity is immediate.  Conversely the root conditions imply
+$u\mid P$, so $P/u$ is monic of degree $n$ and satisfies exactly
+the defining orthogonality for $\widehat L$.
+The homogeneous system obtained by replacing the last condition by
+zero has only the zero solution: then $P=u s$ with $\deg s<n$,
+and its equations give $\widehat L(s^2)=0$, hence $s=0$.
+For complex coefficients apply the same argument to
+$\widehat L(s\overline s)>0$; the equations annihilate every
+complex polynomial of degree $<n$, including $\overline s$.
+Therefore the square coefficient matrix is invertible.  This is
+the exact reason that its normalization determinant does not vanish.
+
+Take any fixed polynomial basis $p_0,\ldots,p_{n+\ell}$ with
+$\deg p_j=j$ and leading coefficient one (monomials always work).
+Form the $(n+\ell+1)\times(n+\ell+1)$ determinant $D(t)$ whose
+first row is $(p_0(t),\ldots,p_{n+\ell}(t))$, whose next $\ell$
+rows are evaluations at the roots $u_i$, and whose remaining $n$
+rows are
+\[
+ \left(L(t^r p_j(t)/v(t))\right)_{0\le j\le n+\ell},
+ \qquad 0\le r<n.
+\]
+Let $d=[t^{n+\ell}]D(t)$.  The preceding invertibility argument
+proves $d\ne0$ and
+\begin{equation}
+ u(t)\widehat\pi_n(t)=\operatorname{lc}(u)\,\frac{D(t)}d.
+ \tag{AQ33}
+\end{equation}
+This bordered formula works for every $m$, including $m>n$, and
+uses no negative-index orthogonal polynomial.
+Choosing monomials also avoids requesting original orthogonal
+polynomials past a finite-support termination index.
+
+When $m\le n$ and the original polynomials up to $n+\ell$ exist,
+there is a smaller familiar formula.  Orthogonality applied to
+$vr$, $\deg r<n-m$, shows $L(Pr)=0$; hence
+\[
+ P\in\operatorname{span}\{\pi_{n-m},\ldots,\pi_{n+\ell}\}.
+\]
+For $0\le r<n$, divide $t^r$ by $v$ and use partial fractions of
+the remainder.  The remaining conditions in (AQ32) reduce exactly to
+\begin{equation}
+ P(u_i)=0,\qquad
+ L\!\left(\frac{P(t)}{v_j-t}\right)=0
+ \quad(1\le j\le m).
+ \tag{AQ34}
+\end{equation}
+Indeed the polynomials $v(t)/(t-v_j)$ form a basis of
+$\mathcal P_{m-1}$, as evaluation at each distinct root proves.
+Thus (AQ33) reduces to a determinant with first row
+$\pi_{n-m},\ldots,\pi_{n+\ell}$, evaluation rows at $u_i$,
+and Cauchy-transform rows $\rho_k(v_j)$, exactly the catalogue form.
+
+For $m>n$, all the functionals in the larger bordered formula can
+still be computed from Cauchy transforms.  For the chosen basis put
+$\eta_k(z)=L(p_k(t)/(z-t))$; these are $\rho_k$ when $p_k=\pi_k$.
+Since $r<m$,
+\begin{equation}
+ \frac{t^r}{v(t)}=\sum_{j=1}^m
+       \frac{v_j^r}{v'(v_j)(t-v_j)},\qquad
+ L\!\left(\frac{t^rp_k(t)}{v(t)}\right)
+   =-\sum_{j=1}^m\frac{v_j^r\eta_k(v_j)}{v'(v_j)}.
+ \tag{AQ35}
+\end{equation}
+Multiply the rational identity by $v$ and test its values at its
+$m$ roots to prove it.  Complex conjugate roots cause no difficulty:
+the unique normalized solution is real because conjugation preserves
+all the real coefficient equations.
+
+For a quadratic divisor, $u=1$, $m=2$, and $n\ge2$, (AQ34) yields
+\[
+ \widehat\pi_n=\pi_n+s_n\pi_{n-1}+t_n\pi_{n-2},\qquad
+ \begin{pmatrix}\rho_{n-1}(v_1)&\rho_{n-2}(v_1)\\
+                 \rho_{n-1}(v_2)&\rho_{n-2}(v_2)\end{pmatrix}
+ \binom{s_n}{t_n}=-\binom{\rho_n(v_1)}{\rho_n(v_2)}.
+\]
+Its determinant is nonzero by the same uniqueness argument.
+For $n<2$ use (AQ32), rather than nonexistent negative indices.
+Once $\widehat\pi_j$ are known, the modified recurrence coefficients
+are simply $\widehat h_j/\widehat h_{j-1}$ and
+$\widehat L(t\widehat\pi_j^2)/\widehat h_j$.
+The derivation establishes these exact identities, not the numerical
+stability of any update algorithm.
+
+\section{Rational Gauss quadrature by clearing a fixed denominator}
+\label{sec:rational-gauss}
+\textbf{Atlas item:} \code{rational-gauss-quadrature}.
+Let $n\ge1$ and
+$\omega(t)=\prod_{j=1}^{r}(1+\zeta_jt)^{s_j}$ have degree
+$m=\sum_js_j\le2n$, with distinct nonzero $\zeta_j$ and no zeros
+on $[a,c]$.  Repeated equal $\zeta_j$ are combined first.
+Suppose $d\nu=d\mu/\omega$ is a positive measure and its $n$-point
+Gauss rule is $(\tau_i,\lambda_i^G)$.
+Define $w_i=\omega(\tau_i)\lambda_i^G$.
+For every polynomial $p$ of degree at most $2n-1$,
+\begin{equation}
+ \int\frac{p}{\omega}\,d\mu
+ =\int p\,d\nu
+ =\sum_i\lambda_i^G p(\tau_i)
+ =\sum_iw_i\frac{p(\tau_i)}{\omega(\tau_i)}.
+ \tag{AQ36}
+\end{equation}
+Conversely, exactness on this rational space implies polynomial
+exactness for the weights $w_i/\omega(\tau_i)$ and measure $\nu$,
+so the uniqueness theorem identifies that rule as Gauss.
+This is a change of measure and a finite polynomial identity.
+
+Polynomial division and partial fractions prove the exact space equality
+\begin{equation}
+ \left\{\frac p\omega:\deg p\le2n-1\right\}
+ =\mathcal P_{2n-1-m}\ \oplus\
+   \operatorname{span}\{(1+\zeta_jt)^{-s}:1\le s\le s_j\},
+ \tag{AQ37}
+\end{equation}
+with $\mathcal P_{-1}=\{0\}$ when $m=2n$.
+The directness follows by clearing denominators and examining the
+principal part at each pole; alternatively successively evaluate
+the cleared numerator and its derivatives at that pole.
+For $m=0$ this is ordinary polynomial Gauss quadrature.
+For $n=0$ necessarily $m=0$, the space is $\{0\}$ and the assertion
+is vacuous.
+
+\textbf{Positivity correction.}  Nonvanishing of $\omega$ alone
+does not make $\mu/\omega$ a positive measure when complex poles
+are permitted.  The algebraic equivalence (AQ36) still makes sense
+for a complex functional if a polynomial-exact rule is supplied,
+but positive Gauss weights and real interior nodes need positivity
+as an additional hypothesis.  A real nonvanishing denominator has
+constant sign on the interval; one may divide by $|\omega|$ and
+restore that constant sign.  A conjugate-paired denominator positive
+on the interval is another sufficient hypothesis.  None of these
+claims requires constructing or analyzing a rational Krylov algorithm.
+
+
+\section{Crouzeix--Palencia: finite matrix algebra around one analytic interface}
+\label{math:cp}
+\paragraph{Catalogue item.} \code{crouzeix-palencia}.
+The target is
+\[
+ \|p(A)\|_2\le(1+\sqrt2)\max_{z\in W(A)}|p(z)|.
+\]
+For dimension zero the left side is zero; state that case separately
+instead of taking a maximum over the empty numerical range.
+For positive dimension the following isolates precisely the part that
+cannot presently be replaced by finite algebra.
+
+\begin{lemma}[An algebra homomorphism estimate]
+Let $\mathcal B$ be a unital normed algebra of scalar functions with
+the supremum norm, and let $\Phi:\mathcal B\to\C^{d\times d}$ be a
+bounded unital algebra homomorphism, with $d\ge1$. Suppose that for every $f$ there
+is $g\in\mathcal B$ with
+\[
+ \|g\|\le\|f\|,\qquad
+ \|\Phi(f)+\Phi(g)^*\|_2\le2\|f\|.
+                                                        \tag{CP1}
+\]
+Then $\|\Phi\|\le1+\sqrt2$.
+\end{lemma}
+\begin{proof}
+Put $K=\|\Phi\|\ge1$, and for $\|f\|\le1$ write
+$F=\Phi(f)$, $G=\Phi(g)$, $S=F+G^*$. Multiplicativity gives
+\[
+ (FF^*)^2=FS^*FF^*-\Phi(fgf)F^*.
+\]
+Consequently $\|F\|^4\le2K^3+K^2$. Taking the supremum over the
+unit ball yields $K^4\le2K^3+K^2$, so $K^2\le2K+1$.
+\end{proof}
+This is the short algebra argument of
+\href{https://arxiv.org/abs/1708.08633}{Ransford--Schwenninger};
+it requires no extremizing function or compactness of a function ball.
+
+\paragraph{A finite definition of the evaluation homomorphism.}
+Factor the minimal polynomial over $\C$ as
+$m_A(z)=\prod_{j=1}^s(z-\lambda_j)^{r_j}$.
+For a function holomorphic near the spectrum, let $H_f$ be the unique
+polynomial of degree less than $\deg m_A$ satisfying
+\[
+ H_f^{(\ell)}(\lambda_j)=f^{(\ell)}(\lambda_j)
+ \quad(0\le\ell<r_j).
+\]
+Confluent interpolation, or polynomial Chinese remainders, gives
+existence and uniqueness. Define $\Phi(f)=H_f(A)$.
+Leibniz's finite rule shows $H_{fg}\equiv H_fH_g\pmod {m_A}$;
+therefore $\Phi$ is a unital homomorphism and agrees with polynomial
+evaluation. This definition uses a finite list of scalar derivatives,
+not a general functional calculus for nonnormal operators.
+If the spectrum lies inside a bounded domain $\Omega$, choose a small
+closed disk around each $\lambda_j$ contained in $\Omega$.
+Scalar Cauchy estimates bound every required jet by a constant times
+$\|f\|_{\overline\Omega}$. The fixed confluent interpolation matrix
+then proves boundedness of $\Phi$.
+
+\paragraph{The indispensable analytic lemma, stated explicitly.}
+For a smooth bounded convex domain $\Omega$ containing $W(A)$ in its
+interior, let $f$ be holomorphic on $\Omega$ and continuous on
+$\overline\Omega$. The scalar transform
+\[
+ g(z)=\frac1{2\pi i}\int_{\partial\Omega}
+             \frac{\overline{f(\zeta)}}{\zeta-z}\,d\zeta
+\]
+extends continuously to $\overline\Omega$ and satisfies
+$\|g\|_{\overline\Omega}\le\|f\|_{\overline\Omega}$.
+The matrix density, with $\nu$ the outward unit normal and
+$R=(\zeta I-A)^{-1}$, is
+\[
+ M(\zeta)=\frac{\nu R+\overline\nu R^*}{2\pi}\succeq0,
+ \qquad \int_{\partial\Omega}M\,ds=2I,
+ \qquad \Phi(f)+\Phi(g)^*=\int_{\partial\Omega}fM\,ds.
+                                                        \tag{CP2}
+\]
+The positivity itself is finite algebra:
+\[
+ 2\pi M
+ =R^*\{\nu(\overline\zeta I-A^*)+
+                 \overline\nu(\zeta I-A)\}R\succeq0,
+\]
+by the supporting half-plane inequality for $W(A)$.
+Matrix Cauchy--Schwarz and $\int M=2I$ imply
+$\|\int fM\|\le2\|f\|$, giving (CP1).
+The scalar boundary-extension/contraction theorem and Cauchy identities
+in (CP2) are the analytic content of
+\href{https://arxiv.org/abs/1702.00668}{Crouzeix--Palencia}.
+Shrinking such convex neighborhoods to the compact set $W(A)$ gives
+the polynomial target, by uniform continuity of $p$.
+
+\paragraph{Audit status.}
+The homomorphism lemma and jet construction above are complete
+reductions. The scalar boundary theorem, its matrix Cauchy bridge,
+and the smooth-neighborhood approximation still require analytic
+formalization. Merely postulating (CP1) for polynomial evaluation
+would hide the main difficulty: the partner $g$ need not be a
+polynomial. No proof using only finite linear algebra is claimed here.
+
+\section{The two sharp approximation entries: reusable subcases and exact residual tasks}
+\label{math:sharp}
+\paragraph{Catalogue items.}
+\code{abs-best-approx-asymptotics}, \code{exp-rational-halfline}.
+These entries bundle several different claims:
+\[
+ nE_{n,0}(|x|;[-1,1])\longrightarrow\beta,
+ \quad e^{\pi\sqrt n}E_{n,n}(|x|;[-1,1])\longrightarrow8,
+\]
+\[
+ E_{0,n}(e^{-x};[0,\infty))^{1/n}\longrightarrow\tfrac13,
+ \quad \frac{E_{n,n}(e^{-x};[0,\infty))}
+ {2H^{n+1/2}}\longrightarrow1.
+\]
+Here $0<H<1$ is Halphen's constant in the convention
+$H\simeq1/9.28902549$. The decimal is not its formal definition.
+The earlier document
+\code{polynomial_approximation_operator_derivations.tex}
+contains a coefficient-compactness proof of the polynomial Bernstein
+limit and a finite Laguerre Gram proof of the reciprocal root limit.
+Those are mathematical derivations, not declarations found in the
+current Lean index. Both arguments are reconstructed below in a shorter
+form. The present note does not upgrade their status to machine-checked
+results.
+
+\subsection{The polynomial Bernstein limit by subtracting a comparison polynomial}
+Write $E_n=E_{n,0}(|x|;[-1,1])$. Symmetrization shows
+$E_{2m+1}=E_{2m}$. For even $n=2m$, the known Chebyshev expansion gives
+\[
+ S_n(x)=\frac2\pi+\frac4\pi\sum_{j=1}^m
+       \frac{(-1)^{j+1}T_{2j}(x)}{4j^2-1},\qquad
+ \|S_n-|x|\|=\frac2{\pi(n+1)}.              \tag{B1}
+\]
+The upper estimate follows by summing the absolute coefficient tail;
+at $x=0$ the omitted terms have the same sign, proving equality.
+
+A finite dual certificate gives positivity of the eventual constant.
+For $K=\lfloor n/2\rfloor+1$ set
+\[
+ F_K(t)=\frac1{K+1}\left|\sum_{j=0}^K e^{ijt}\right|^2,
+ \qquad
+ \Lambda(h)=\frac1{2\pi}\int_{-\pi}^{\pi}
+             h(\sin t)\cos(4Kt)F_K(2t)\,dt.
+\]
+$F_K\ge0$ has normalized integral one, so $\|\Lambda\|\le1$.
+The multiplier has only frequencies with absolute value at least
+$2K>n$, whereas $p(\sin t)$ has frequencies at most $n$ for
+$\deg p\le n$. Hence $\Lambda(p)=0$.
+Direct integration of $|\sin t|$ gives its nonzero even Fourier
+coefficients $-2/(\pi(4j^2-1))$. Writing
+$w_j=1-|j|/(K+1)$ gives the finite calculation
+\[
+ |\Lambda(|x|)|=
+ \sum_{j=-K}^K\frac{2w_j}{\pi(4(2K+j)^2-1)}
+ \ge\frac{2(K+1)}{\pi(36K^2-1)}
+ \ge\frac1{18\pi(n+1)}.                    \tag{B2}
+\]
+Thus $1/(18\pi(n+1))\le E_n\le2/(\pi n)$ for $n\ge1$.
+
+Put $B_n(z)=nS_n(z/n)$ for even $n$. Let $a$ be the local complex
+inverse of sine at zero, so $a(0)=0,a'(0)=1$.
+For each fixed disk, $n a(z/n)\to z$ uniformly; this follows directly
+from $a(u)-u=o(|u|)$. The finite Chebyshev recurrence gives
+$T_{2j}(\sin u)=(-1)^j\cos(2ju)$ and therefore
+\[
+ B_n(z)=\frac{2n}{\pi(n+1)}+
+ \frac{4n}{\pi}\sum_{j=1}^{n/2}
+       \frac{1-\cos(2ja(z/n))}{4j^2-1}.     \tag{B3}
+\]
+Use the continuous extension
+\[
+ \frac{1-\cos(tz)}{t^2}
+ =z^2\int_0^1(1-s)\cos(stz)\,ds
+\]
+at $t=0$. With mesh $2/n$, (B3) is a Riemann sum whose extra
+weights are $4j^2/(4j^2-1)$. Their error is $O(1/n)$ uniformly
+on each fixed disk, since $\sum_{j\ge1}(4j^2-1)^{-1}=1/2$.
+Uniform continuity on compact rectangles proves
+\[
+ B_n\longrightarrow B(z)=\frac2\pi+
+       \frac2\pi\int_0^1\frac{1-\cos(tz)}{t^2}\,dt,
+ \quad |B(z)|\le\frac{2+|z|^2}{\pi}e^{|\operatorname{Im}z|}. \tag{B4}
+\]
+The cosine series shows directly that $B$ is entire.
+
+Choose even minimizers $p_n$ and an even subsequence with
+$nE_n\to b=\liminf_{n\text{ even}}nE_n$.
+Set $D_n(z)=np_n(z/n)-B_n(z)$. By (B1),
+$\|D_n\|_{[-n,n]}<4/\pi$ and $\deg D_n\le n$.
+For a degree-$n$ polynomial $p$ with $\|p\|_{[-1,1]}\le M$,
+apply the disk maximum principle to the polynomial
+$v^np((v+v^{-1})/2)$, expanded to remove negative powers.
+Substitution $v=1/w$ gives
+\[
+ |p((w+w^{-1})/2)|\le M|w|^n\quad(|w|\ge1).
+\]
+For $D_n$ this implies, wherever the chosen local inverse $a(z/n)$
+is defined (in particular on each fixed disk for all sufficiently
+large $n$),
+\[
+ |D_n(z)|\le\frac4\pi
+          \exp\bigl(n|\operatorname{Im}a(z/n)|\bigr).       \tag{B5}
+\]
+The right side is bounded on each fixed disk, uniformly for large $n$.
+For completeness, coefficient compactness here needs only scalar
+compactness: on $|z|=R$, finite Fourier orthogonality bounds the
+$k$th coefficient by $M_RR^{-k}$. Take a diagonal subsequence of
+coefficients. On any smaller disk the geometric bound controls all
+tails, proving locally uniform convergence to an entire $D$.
+Equation (B5) passes to the limit as
+$|D(z)|\le(4/\pi)e^{|\operatorname{Im}z|}$.
+Thus $F=B+D$ is entire, real and even, with
+\[
+ |F(z)|\le\frac{6+|z|^2}{\pi}e^{|\operatorname{Im}z|},\qquad
+ |F(x)-|x||\le b\quad(x\in\R).              \tag{B6}
+\]
+
+Finally fix $0<\alpha<1$, set $t=(1-\alpha)/2$ and $\rho=e^t$.
+Then $c=t(1-e^{-t})>0$ and
+$\alpha\sinh t-t\le-c$, since $\alpha\le e^{-2t}$ and
+$\sinh t\le te^t$. On the Bernstein ellipse of parameter $\rho$,
+the function $G_N(w)=F(\alpha Nw)/(\alpha N)$ has bound
+\[
+ M_N=\frac{6+(\alpha N\cosh t)^2}{\pi\alpha N}
+                   e^{\alpha N\sinh t}.
+\]
+Degree-$N$ Chebyshev truncation has error at most
+$2M_N\rho^{-N}/(\rho-1)$. On $[-1,1]$, (B6) adds error
+$b/(\alpha N)$ relative to $|w|$. Hence
+\[
+ NE_N\le\frac b\alpha+
+ \frac{2(6+(\alpha N\cosh t)^2)}{\pi\alpha(e^t-1)}e^{-cN}.
+\]
+Take the limsup and then $\alpha\uparrow1$. The odd-even identity
+and $E_{2m}\to0$ show the full liminf is $b$ as well. Consequently
+\[
+ nE_n\longrightarrow\beta=b,\qquad
+ \frac1{18\pi}\le\beta\le\frac2\pi.
+\]
+This proves existence and positivity of the sharp limit; it does not
+certify printed decimal digits of $\beta$. The formalization uses the
+already available ellipse approximation bound, finite Fourier
+orthogonality, scalar subsequence compactness, and a local sine inverse.
+
+\paragraph{Verified reuse for this limit.}
+The coefficient expansion and tail in (B1) are supplied by
+\code{NLAlib.hasSum_chebyshevCoeff_abs_mul_eval_T},
+\code{NLAlib.chebyshevCoeff_abs_even}, and
+\code{NLAlib.tsum_abs_chebyshevCoeff_abs_tail}.
+The finite polynomial growth estimate preceding (B5) already appears as
+\code{NLAlib.norm_eval_le_mul_pow_of_mem_filledBernsteinEllipse}.
+The final approximation step can directly use
+\code{NLAlib.exists_degree_le_abs_sub_eval_le_of_open_bernsteinEllipse},
+with its stated constant $2M\rho^{-N}/(\rho-1)$.
+Thus the new work is the scaling/compactness bridge and its finite dual
+lower bound, rather than either Chebyshev approximation theorem.
+
+\subsection{An exact finite certificate shared by both rational targets}
+Write $E_{m,n}(f;I)$ for pole-free rational minimax error on a compact
+real interval. Choose a nonempty finite family of distinct nodes
+$t_i\in I$, positive weights
+$a_i$, signs $s_i\in\{-1,1\}$ and $\eta\ge0$ such that
+\begin{align}
+ \sum_i a_i s_i t_i^j&=0 &&(0\le j\le m),\tag{RC1}\\
+ \sum_i a_i(s_i f(t_i)-\eta)t_i^j&=0 &&(0\le j\le n).\tag{RC2}
+\end{align}
+Then $E_{m,n}(f;I)\ge\eta$.
+
+\begin{proof}
+Every admissible $P/Q$ can be reduced and scaled so $Q>0$ on $I$.
+For $e=\|f-P/Q\|_I$, multiply the nodewise inequality
+$s_i(f(t_i)Q(t_i)-P(t_i))\le eQ(t_i)$ by $a_i$ and sum.
+(RC1)--(RC2) turn its left side into
+$\eta\sum_i a_iQ(t_i)$. This sum is positive, so $e\ge\eta$.
+Take the infimum. This includes zero numerators and degree defects;
+no existence of a nondefective minimizer is assumed.
+\end{proof}
+
+For an upper bound it suffices to exhibit $P,Q$, with $Q>0$, and
+verify $-\eta Q\le fQ-P\le\eta Q$ on $I$.
+For $f(x)=|x|$, these are four polynomial sign inequalities on
+$[-1,0]$ and $[0,1]$. These are explicit finite sufficient certificates
+for fixed-degree upper and lower bounds. This does not by itself give
+certificates uniform in the degree with the sharp asymptotic constant.
+The current snapshot already supplies
+\code{NLAlib.exists_unique_norm_sub_eq_rationalMinimaxError} and
+\code{NLAlib.le_rationalMinimaxError_of_alternation}; use them instead
+of reproving minimizer existence or rational alternation.
+
+\subsection{An exact parity reduction for the Stahl clause}
+Uniqueness of the best rational approximant to an even function makes
+that approximant even. For a reduced rational $P/Q$ with no pole at
+zero, evenness implies $P(-x)Q(x)=P(x)Q(-x)$. Coprimality makes
+$Q(-x)=cQ(x)$; evaluating at zero gives $c=1$, and then $P$ is even.
+Consequently, for every $m\ge0$,
+\[
+ E_{2m,2m}(|x|;[-1,1])
+ =E_{m,m}(\sqrt t;[0,1])
+ =E_{2m+1,2m+1}(|x|;[-1,1]).               \tag{RC3}
+\]
+Both directions follow by the substitution $t=x^2$ and the even
+reduced representation. In particular the exact sharp dependency is
+the square-root case of
+\href{https://arxiv.org/abs/math/9301217}{Stahl's strong asymptotic}:
+\[
+ e^{\pi\sqrt{2m}} E_{m,m}(\sqrt t;[0,1])\longrightarrow8.
+\]
+Since $\sqrt{2m+1}-\sqrt{2m}\to0$, it implies the full sequence
+in (RC3). The finite parity reduction is complete; the strong
+asymptotic is not proved by this reduction.
+
+\subsection{Compactifying the exponential with a quantitative finite surrogate}
+Set $t=(1+x)^{-1}$ and
+\[
+ F(t)=\begin{cases}e^{1-1/t},&t>0,\\0,&t=0.\end{cases}
+\]
+Substitution and multiplication by $t^n$ carry type-$(n,n)$ rational
+functions to type-$(n,n)$ functions. A rational approximant with finite
+error on the half-line is bounded at infinity, so its transformed
+singularity at $t=0$ is removable. Conversely a pole-free transformed
+function is bounded and pole-free on the half-line. Hence
+\[
+ E_{n,n}(e^{-x};[0,\infty))=E_{n,n}(F;[0,1]). \tag{RC4}
+\]
+For $0<t\le1$, $F'(t)=t^{-2}e^{1-1/t}\le4/e<2$;
+therefore $F$ is $2$-Lipschitz on $[0,1]$.
+For an integer $M\ge1$, let its degree-$M$ Bernstein polynomial be
+\[
+ B_MF(t)=\sum_{j=0}^M F(j/M)\binom Mj t^j(1-t)^{M-j}.
+\]
+Finite binomial moment identities and Cauchy--Schwarz give
+\[
+ |B_MF(t)-F(t)|\le2\sqrt{t(1-t)/M}\le M^{-1/2}. \tag{RC5}
+\]
+For any two target functions on the same domain, the triangle
+inequality followed by infima gives
+$|E_{m,n}(f)-E_{m,n}(g)|\le\|f-g\|$.
+Choosing $M_n=\lceil H^{-4n}\rceil$ in (RC5) gives
+\[
+ |E_{n,n}(F)-E_{n,n}(B_{M_n}F)|\le H^{2n}=o(H^n). \tag{RC6}
+\]
+This converts the Halphen equivalent into an equivalent sequence of
+finite polynomial-target rational problems. Certified enclosures of
+the finitely many coefficients may replace their exact values if the
+resulting uniform error is also $o(H^n)$.
+
+To finish by certificates one must construct, for every large $n$,
+an upper approximant and a lower certificate with errors
+$(2\sqrt H+o(1))H^n$. A lower estimate with an unspecified
+exponential base does not suffice. The classical sharp input is
+\href{https://doi.org/10.1070/SM2002v193n01ABEH000619}
+{Aptekarev's strong-asymptotic theorem}. Neither (RC6) nor the existence
+of minimizers supplies those asymptotically sharp certificates.
+
+\subsection{Two shorter subcases that should not remain bundled with that gap}
+Polynomial approximation of $e^{-x}$ on $[0,\infty)$ has exact
+minimax error $1/2$ at every degree: a nonconstant polynomial has
+unbounded error, whereas a constant $c$ has error
+$\max\{|c|,|1-c|\}\ge1/2$, attained at $c=1/2$.
+
+For the reciprocal-polynomial clause, the earlier finite Gram route
+reduces the entire root limit to
+\[
+ \frac{3^{-n}}{6\sqrt{(4n+4)\log3+\log4}}
+ \le E_{0,n}(e^{-x};[0,\infty))\le\sqrt2\,3^{-n}. \tag{RC7}
+\]
+Taking logarithms and dividing by $n$ immediately gives $1/3$.
+Here is a self-contained reconstruction of (RC7). Scaling $x$ lets
+us approximate $e^{-x/4}$ instead. Put $f(x)=e^{x/4}$,
+$\langle u,v\rangle=\int_0^\infty uv e^{-x}\,dx$, and
+\[
+ L_j(x)=\sum_{r=0}^j(-1)^r\binom jr\frac{x^r}{r!}.
+\]
+The finite Leibniz identity
+$L_j=e^x D^j(e^{-x}x^j)/j!$, integrated by parts $j$ times, gives
+\[
+ \langle L_j,p\rangle=\frac{(-1)^j}{j!}
+             \int_0^\infty x^je^{-x}p^{(j)}(x)\,dx.
+\]
+Boundary terms vanish at zero because the derivatives of $x^je^{-x}$
+of order below $j$ vanish, and at infinity by exponential decay.
+Using $\int_0^\infty x^re^{-s x}\,dx=r!/s^{r+1}$ gives
+\[
+ \langle L_i,L_j\rangle=\delta_{ij},\qquad
+ c_j=\langle f,L_j\rangle=\frac{4(-1)^j}{3^{j+1}},\qquad
+ \langle f,f\rangle=2.
+\]
+The $L_j$ form a basis of $\mathcal P_n$, by their nonzero triangular
+leading coefficients. For $g_n=\sum_{j=0}^nc_jL_j$, finite expansion
+of a square therefore proves
+\[
+ \|f-p\|_{L^2(e^{-x})}^2
+ =\frac{2}{3^{2n+2}}+\|p-g_n\|_{L^2(e^{-x})}^2. \tag{RC8}
+\]
+There is no use of completeness of a Laguerre expansion.
+
+On $\mathcal P_n$, differentiation satisfies $D^{n+1}=0$. Thus
+$(I-D)^{-1}=\sum_{j=0}^nD^j$, and integration by parts gives
+\[
+ ((I-D)^{-1}g)(x)=e^x\int_x^\infty g(t)e^{-t}\,dt.
+\]
+Set $s_n=\tfrac34(I-D)^{-1}g_n$. Since the same integral expression,
+with factor $3/4$, fixes $f$, Cauchy--Schwarz and (RC8) imply
+\[
+ |f(x)-s_n(x)|\le\frac{\sqrt2}{4\,3^n}e^{x/2}\quad(x\ge0).
+                                                               \tag{RC9}
+\]
+For $a>0$ let $q=q_{n,a}$ minimize
+$\max_{[0,a]}e^{-x/2}|f(x)-q(x)|$, and denote the minimum by
+$\delta_{n,a}$. Existence follows from bounded values at $n+1$
+fixed nodes, invertibility of the Vandermonde matrix, and coefficient
+compactness. The usual sign-perturbation proof of alternation works
+with any strictly positive continuous weight: if the nonzero
+extremal error had at most $n+1$ alternating sign blocks, put roots
+between consecutive blocks and perturb by a small polynomial of the
+matching sign. Compactness gives a strict improvement, a contradiction.
+Thus $f-q$ has $n+1$ distinct zeros $t_0<\cdots<t_n$ in $(0,a)$.
+
+Newton interpolation at these zeros gives
+\[
+ q(x)=\sum_{j=0}^n f[t_0,\ldots,t_j]
+                    \prod_{\ell<j}(x-t_\ell).
+\]
+Repeated Rolle's theorem gives positivity of every displayed divided
+difference, and of the interpolation remainder for $x\ge a$.
+Consequently
+\[
+ 0<q(x)\le f(x),\qquad q'(x)\ge0\quad(x\ge a). \tag{RC10}
+\]
+The derivative assertion includes $n=0$, when it is zero. By (RC9),
+$\delta_{n,a}\le\sqrt2/(4\,3^n)$.
+
+For the upper bound choose $a=4n\log3+\log4$. On $[0,a]$,
+$\delta_{n,a}e^{x/4}\le1/2$, hence $q\ge f/2$ and
+$|f^{-1}-q^{-1}|\le2\delta_{n,a}$.
+For $x\ge a$, (RC10) yields
+\[
+ 0\le q(x)^{-1}-f(x)^{-1}\le q(a)^{-1}
+ \le2e^{-a/4}=\sqrt2\,3^{-n}.
+\]
+This denominator is positive on the entire half-line and proves the
+upper bound in (RC7).
+
+For the lower bound choose $a=(4n+4)\log3+\log4>2$ and suppose
+an admissible reciprocal $1/p$ had error
+$\epsilon<1/(2\sqrt a\,3^{n+1})$.
+Its value at zero and absence of poles make $p>0$ throughout the
+half-line. Since $\epsilon e^{a/4}<1/2$, on $[0,a]$ one has
+$p\le2f$ and $|p-f|\le2\epsilon e^{x/2}$.
+Optimality of $q_{n,a}$ gives the same last bound for $q$.
+Beyond $a$, (RC10) gives $|q-f|\le f$. Therefore (RC8) implies
+\[
+ \frac2{3^{2n+2}}
+ \le\int_0^\infty(q-f)^2e^{-x}\,dx
+ \le4a\epsilon^2+2e^{-a/2}
+ =4a\epsilon^2+\frac1{3^{2n+2}},
+\]
+contradicting the chosen $\epsilon$. No half-line minimizer is needed.
+Absorbing a nonzero constant numerator into $p$ handles type $(0,n)$;
+the zero numerator has error one and cannot beat this lower bound.
+This proves (RC7) and the root limit.
+
+\paragraph{Operator consequence.}
+For each $n$ the constructed positive denominator $q_n$ satisfies
+\[
+ \|e^{-A}-q_n(4A)^{-1}\|_2\le\sqrt2\,3^{-n}
+\]
+for every finite-dimensional PSD $A$, by diagonalization.
+The constant is independent of the largest eigenvalue.
+
+\paragraph{What remains open in these proposed routes.}
+The outstanding new mathematics is an easier proof of Stahl's
+prefactor and the Halphen strong equivalent, or asymptotically sharp
+explicit certificates replacing them. The Bernstein-limit and
+reciprocal-root subcases have existing mathematical routes to reuse.
+They must be tracked separately from the two strong asymptotics.
+
+
+\appendix
+\section{Coverage of the refreshed catalogue}
+The following list accounts for every selected entry, including the clauses
+that are explicitly retained as dependencies rather than proved here.
+\begin{longtable}{@{}p{0.43\textwidth}p{0.53\textwidth}@{}}
+\toprule
+Catalogue identifier & Route or remaining boundary\\
+\midrule\endhead
+\code{truncation-lemma} & Projection Pythagoras; unspecified early variant left open\\
+\code{xtrace-unbiased} & Disjoint-family independence and an integrable uniform bound\\
+\code{positive-real-moment-comparison} & Scalar tangent inequality; existing real-exponent Lp comparison\\
+\code{hutchpp-unbiased} & Product-law integration of the trace split\\
+\code{krylov-grade} & Annihilator ideal and polynomial division\\
+\code{residual-polynomial} & Finite evaluation image and compact sublevel sets\\
+\code{field-of-values-def} & Two-dimensional compression and the Bloch sphere\\
+\code{crouzeix-palencia} & Finite homomorphism estimate; analytic boundary theorem retained\\
+\code{jacobi-matrix-identities} & Unreduced Jacobi recurrence and rational resolvent identities\\
+\code{interpolative-decomposition} & Maximal minor of a right singular frame\\
+\code{orthogonal-polynomials-measure-def} & Invertible finite Hankel systems\\
+\code{hankel-moment-positivity} & Gram quadratic forms and determinant expansion\\
+\code{orthogonal-polynomial-zeros} & Jacobi eigenspaces and no-common-root recurrence\\
+\code{gauss-christoffel-numbers} & Normalized evaluation vectors\\
+\code{quadrature-exactness-characterisation} & Polynomial division by the node polynomial\\
+\code{gauss-quadrature-derivative-remainder} & Hermite interpolation and scalar Rolle theory\\
+\code{gauss-radau-lobatto} & Modified measures and endpoint factors; signs repaired\\
+\code{kernel-polynomials-christoffel} & Exact polynomial division and bidiagonal products\\
+\code{formal-orthogonal-polynomials} & Nonsingular bilinear Hankel systems\\
+\code{jacobi-fraction-second-kind} & Polynomial difference quotients and resolvents\\
+\code{symmetric-measure-even-odd-reduction} & Uniqueness, parity, and the square-map pushforward\\
+\code{recurrence-coefficient-bounds} & Rayleigh quotients and Cauchy--Schwarz\\
+\code{monic-orthogonal-recurrence} & Compressed multiplication and telescoping identities\\
+\code{recurrence-coefficient-continuity} & Continuity of finite inverses and simple real roots\\
+\code{gauss-remainder-contour-kernel} & Scalar Cauchy formula after exact resolvent cancellation\\
+\code{recurrence-coefficient-moment-sensitivity} & Differentiate finite orthogonality equations\\
+\code{christoffel-uvarov-modification} & Finite constrained coefficient systems\\
+\code{discrete-measure-jacobi-matrix} & Weighted evaluation matrix and Vandermonde rank\\
+\code{rational-gauss-quadrature} & Common-denominator polynomial space\\
+\code{companion-matrix} & Cyclic basis and annihilator polynomial\\
+\code{psd-hermitian-part} & Kernel inclusion and whitening\\
+\code{abs-best-approx-asymptotics} & Parity and finite certificates; Stahl equivalent remains\\
+\code{exp-rational-halfline} & Finite Gram proof of 1/3; Halphen equivalent remains\\
+\bottomrule
+\end{longtable}
+\section{Algorithmic entries excluded from this request}
+These thirty entries remain in the catalogue, but are outside this note's
+mathematical scope. This exclusion is by the advertised task, not by the
+area name: a structural theorem in a Krylov area may be included, whereas
+an iteration or estimator performance guarantee is excluded.
+\begin{longtable}{@{}p{0.57\textwidth}p{0.39\textwidth}@{}}
+\toprule
+Catalogue identifier & Area\\
+\midrule\endhead
+\code{tgn-expected-error} & Randomized algorithm guarantees (consumers)\\
+\code{etrsvd} & Randomized algorithm guarantees (consumers)\\
+\code{etgn} & Randomized algorithm guarantees (consumers)\\
+\code{rsvd-tail} & Randomized algorithm guarantees (consumers)\\
+\code{nystrom-randomized} & Randomized algorithm guarantees (consumers)\\
+\code{block-krylov-lra} & Randomized algorithm guarantees (consumers)\\
+\code{hutchpp} & Trace, diagonal and quadratic-form estimation\\
+\code{sketch-and-solve-ls} & Randomized solvers (consumers)\\
+\code{sketch-and-precondition} & Randomized solvers (consumers)\\
+\code{nystrom-pcg} & Randomized solvers (consumers)\\
+\code{gmres-def} & Polynomial methods for linear systems\\
+\code{gmres-diagonalizable} & Polynomial methods for linear systems\\
+\code{gmres-elman} & Polynomial methods for linear systems\\
+\code{minres-bound} & Polynomial methods for linear systems\\
+\code{fom-def} & Polynomial methods for linear systems\\
+\code{chebyshev-iteration} & Polynomial methods for linear systems\\
+\code{richardson-iteration} & Polynomial methods for linear systems\\
+\code{gmres-bgt} & Field of values and non-normal GMRES theory\\
+\code{gmres-any-convergence-curve} & Field of values and non-normal GMRES theory\\
+\code{arnoldi-fa-error} & Krylov approximation of f(A)b\\
+\code{matvec-query-model} & Krylov bases: grade, Arnoldi and Lanczos relations\\
+\code{partial-cholesky-nystrom} & Deterministic structural lemmas\\
+\code{qr-algorithm-simultaneous-iteration} & Ritz values and eigenvector angles\\
+\code{golub-kahan-bidiagonalization} & Krylov bases: grade, Arnoldi and Lanczos relations\\
+\code{cg-recurrence} & Polynomial methods for linear systems\\
+\code{lanczos-recurrence-algorithm} & Krylov bases: grade, Arnoldi and Lanczos relations\\
+\code{golub-kahan-recurrence} & Krylov bases: grade, Arnoldi and Lanczos relations\\
+\code{qr-algorithm-convergence} & Ritz values and eigenvector angles\\
+\code{rayleigh-quotient-iteration} & Ritz values and eigenvector angles\\
+\code{modified-chebyshev-algorithm} & Orthogonal polynomials, Jacobi matrices and Gauss-type quadrature\\
+\bottomrule
+\end{longtable}
+\section{Source and verification record}
+The coverage census and current contracts come from the
+\href{https://research.chen.pw/NLAlib/}{NLAlib Atlas} and the
+\href{https://github.com/tchen-research/NLAlib/blob/e5725bb94e5bd8e326d58ad219260b0218e74c9e/atlas/atlas.json}{commit-pinned catalogue}.
+Reusable public names were checked in the
+\href{https://github.com/tchen-research/NLAlib/blob/e5725bb94e5bd8e326d58ad219260b0218e74c9e/atlas/declarations.json}{same snapshot's declaration index}.
+The two historical external LRA truncation names are absent from that
+index and are explicitly marked unverified in the catalogue; no reuse
+claim is made for them.
+
+The proof routes distinguish three obligations: a mathematical identity,
+its measure/topology or matrix-coordinate interface, and a final Lean
+statement matching the catalogue. A completed first obligation does not
+by itself certify either of the others. No catalogue status is changed
+by this document.
+\end{document}

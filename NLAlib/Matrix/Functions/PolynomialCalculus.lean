@@ -20,8 +20,9 @@ with `U = hA.eigenvectorUnitary` and `λ = hA.eigenvalues`) and a real polynomia
   `quadForm_aeval_mulVec_le`: the energy-norm form `‖p(A) v‖_A² ≤ M² ‖v‖_A²` for positive
   semidefinite `A` (spectrum in `S ⊆ [0, ∞)`).
 
-Mathlib's isometric `norm_cfc_le` needs a complex C⋆-algebra and does not apply to real
-matrices, so the bounds are proved directly from the eigendecomposition.
+These bounds are proved directly from the eigendecomposition. Mathlib also supplies
+an isometric real functional calculus for matrices under `Matrix.Norms.L2Operator`,
+so `norm_cfc_le` is available for both real symmetric and complex Hermitian matrices.
 
 These are the polynomial spectral bounds consumed by the Krylov layer (`cg-convergence`,
 `lanczos-gauss-quadrature`, `spectral-measure`) together with the Chebyshev bounds of

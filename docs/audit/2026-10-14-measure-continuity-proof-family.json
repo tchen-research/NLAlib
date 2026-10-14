@@ -1,0 +1,42 @@
+{
+  "recurrence-coefficient-continuity": {
+    "scope": "All original card conclusions hold for actual positive measures with polynomial moments. Only the first 2n monomial moments need converge, the limiting support may have exactly n points, and early systems may be singular. Finite positive compactly supported measures are included by the existing polynomial-moment integrability theorem.",
+    "clauses": [
+      {
+        "statement": "Finite moment convergence makes the actual measure Hankel determinants converge and, at the nondegenerate limiting support threshold, makes the approximating Hankel systems eventually positive definite.",
+        "decls": [
+          "NLAlib.tendsto_hankelMomentDet_of_moment_convergence",
+          "NLAlib.eventually_posDef_hankelMomentMatrix_of_moment_convergence"
+        ]
+      },
+      {
+        "statement": "Every coefficient of each actual canonical monic measure polynomial through order n converges; every included squared norm and monic alpha/beta recurrence coefficient converges for k<n, including the constant zero beta boundary convention.",
+        "decls": [
+          "NLAlib.tendsto_coeff_monicOrthogonalPolynomial_of_moment_convergence",
+          "NLAlib.tendsto_orthogonalPolynomialNorm_of_moment_convergence",
+          "NLAlib.tendsto_orthogonalRecurrenceAlpha_of_moment_convergence",
+          "NLAlib.tendsto_orthogonalRecurrenceBeta_of_moment_convergence"
+        ]
+      },
+      {
+        "statement": "Actual measure monic polynomials through order n converge uniformly on every bounded real set and in particular the order-n polynomial converges uniformly on each fixed compact interval [a,b].",
+        "decls": [
+          "NLAlib.tendstoUniformlyOn_monicOrthogonalPolynomial_of_moment_convergence",
+          "NLAlib.tendstoUniformlyOn_monicOrthogonalPolynomial_Icc_of_moment_convergence"
+        ]
+      },
+      {
+        "statement": "The actual normalized measure Jacobi matrices converge in spectral distance, and the actual canonically ordered n-point Gauss nodes and integrated-cardinal weights converge at each index.",
+        "decls": [
+          "NLAlib.tendsto_specNorm_orthogonalPolynomialJacobiMatrix_sub_of_moment_convergence",
+          "NLAlib.tendsto_gaussNodes_of_moment_convergence",
+          "NLAlib.tendsto_gaussWeights_of_moment_convergence"
+        ]
+      }
+    ],
+    "source": "Gautschi (2004), Theorem 2.32 and its corollary; open_mathematical_items_operator_derivations.tex AQ22–AQ23.",
+    "proof_route": "Native measure moments converge in the finite Pi coordinate space. Smooth finite polynomial functionals and exact moment-truncation identities turn the checked canonical data continuity into actual measure convergence. Positive determinant and measure Hankel PSD derive eventual positive definiteness.",
+    "trust": "No new axiom, sorry, native_decide, assumed coefficient/node/weight convergence, or smooth representing-measure family.",
+    "verification": "Direct Lean check and olean export pass without warnings; integrating parent must complete repository-wide checks and atlas synchronization."
+  }
+}

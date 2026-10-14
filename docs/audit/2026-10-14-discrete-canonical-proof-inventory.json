@@ -1,0 +1,38 @@
+{
+  "discrete-measure-jacobi-matrix": {
+    "scope": "The actual finite discrete mathematical construction in OF20–OF21. The composite card's procedural Stieltjes-algorithm and cost clauses remain outside this inventory, so this must not be installed as a full atlas proof family where those clauses remain.",
+    "clauses": [
+      {
+        "statement": "The finite atomic measure is exactly the spectral measure of the diagonal node matrix at its square-root-weight vector; distinct nodes and positive weights give full Krylov grade by a weighted Vandermonde determinant.",
+        "decls": [
+          "NLAlib.spectralMeasure_diagonal_sqrt_eq_sum_dirac",
+          "NLAlib.krylovGrade_diagonal_sqrt_eq_card"
+        ]
+      },
+      {
+        "statement": "The actual canonical normalized polynomial evaluation matrix Q_(rj)=sqrt(w_r)*p_j(t_r) has orthonormal columns and rows, including the empty size.",
+        "decls": [
+          "NLAlib.hasOrthonormalCols_discreteOrthogonalPolynomialEvaluationMatrix",
+          "NLAlib.discreteOrthogonalPolynomialEvaluationMatrix_mul_conjTranspose_eq_one"
+        ]
+      },
+      {
+        "statement": "The actual evaluation matrix conjugates the diagonal atomic node matrix to the canonical normalized multiplication Jacobi matrix. In positive dimension it transforms the square-root atomic weights to the first coordinate scaled by the square-root mass.",
+        "decls": [
+          "NLAlib.conjTranspose_discreteOrthogonalPolynomialEvaluationMatrix_mul_diagonal_mul_eq_jacobi",
+          "NLAlib.conjTranspose_discreteOrthogonalPolynomialEvaluationMatrix_mulVec_sqrt_eq_single"
+        ]
+      },
+      {
+        "statement": "The actual canonical normalized moment polynomials satisfy the exact dual orthogonality sum at atomic nodes with reciprocal-weight diagonal normalization.",
+        "decls": [
+          "NLAlib.sum_eval_orthonormalMomentPolynomial_diagonal_sqrt_mul_eq_div_weight"
+        ]
+      }
+    ],
+    "source": "Gautschi (2004), Section 2.2.3; open_mathematical_items_operator_derivations.tex OF20–OF21.",
+    "proof_route": "Actual diagonal spectral moments, weighted Vandermonde grade, finite positive Hankel normalization, square-frame orthogonality, and termwise finite matrix multiplication.",
+    "trust": "No new axiom, sorry, native_decide, assumed polynomial orthogonality, or assumed Lanczos frame.",
+    "verification": "Direct Lean check and olean export pass without warnings; the integrating parent performs full builds, audits, indexing, and atlas synchronization."
+  }
+}

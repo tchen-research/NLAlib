@@ -1,6 +1,8 @@
 import NLAlib.Matrix.Norms.BlockNormBounds
 import NLAlib.Matrix.Norms.ColumnNorms
+import NLAlib.Matrix.Norms.Continuity
 import NLAlib.Matrix.Norms.Core
+import NLAlib.Matrix.Norms.DeflatedTraceBounds
 import NLAlib.Matrix.Norms.EntryBounds
 import NLAlib.Matrix.Norms.EuclideanOperatorBounds
 import NLAlib.Matrix.Norms.FanDominance

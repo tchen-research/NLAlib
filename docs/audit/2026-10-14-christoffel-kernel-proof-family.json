@@ -1,0 +1,74 @@
+{
+  "kernel-polynomials-christoffel": {
+    "scope": "Exact finite Christoffel polynomials, norms, recurrence identities, monic Darboux factors with finite boundary correction, corrected real nonvanishing, actual SPD spectral graded A-conjugate directions up to nonzero normalization, and positive-pivot symmetric Jacobi/Lanczos LDL. Procedural Hestenes-Stiefel normalization and coefficient recovery remain separate experimental algorithm contracts.",
+    "clauses": [
+      {
+        "statement": "The exact X-z quotient is monic of degree n and orthogonal for the weighted functional, is its canonical monic polynomial, and has modified norm equal to q_n times the original norm. Nonvanishing original evaluations make the required modified Hankel systems nonsingular; a globally quasi-definite functional remains quasi-definite under the all-order condition.",
+        "decls": [
+          "NLAlib.X_sub_C_mul_christoffelPolynomial",
+          "NLAlib.isMonicOrthogonalPolynomial_christoffelPolynomial",
+          "NLAlib.monicOrthogonalPolynomial_polynomialWeightedFunctional_X_sub_C",
+          "NLAlib.orthogonalPolynomialNorm_polynomialWeightedFunctional_X_sub_C",
+          "NLAlib.hankelMomentDet_polynomialWeightedFunctional_X_sub_C_ne_zero",
+          "NLAlib.quasiDefinitePolynomialWeightedFunctional_X_sub_C"
+        ]
+      },
+      {
+        "statement": "The quotient is the scaled reproducing kernel. At real modification points for a positive measure its transformed value is nonzero when the original value is nonzero; exterior real support intervals derive the original nonvanishing. No arbitrary complex transformed nonvanishing is asserted.",
+        "decls": [
+          "NLAlib.christoffelPolynomial_eq_C_mul_monicOrthogonalKernelPolynomial",
+          "NLAlib.eval_monicOrthogonalPolynomial_ne_zero_of_outside_support_interval",
+          "NLAlib.eval_christoffelPolynomial_ne_zero_of_real",
+          "NLAlib.eval_christoffelPolynomial_ne_zero_of_outside_support_interval"
+        ]
+      },
+      {
+        "statement": "The original alpha coefficient equals z+q_n+e_(n-1) with zero boundary; modified alpha equals z+q_n+e_n and modified positive-order beta equals q_n e_(n-1), under only the required finite moment systems and nonvanishing evaluations. The alpha identity includes zero next norm at finite-support termination.",
+        "decls": [
+          "NLAlib.orthogonalRecurrenceAlpha_eq_add_christoffelQuotient_christoffelElimination_of_finite",
+          "NLAlib.orthogonalRecurrenceAlpha_polynomialWeightedFunctional_X_sub_C_of_finite",
+          "NLAlib.orthogonalRecurrenceBeta_polynomialWeightedFunctional_X_sub_C_of_finite"
+        ]
+      },
+      {
+        "statement": "The actual finite monic Jacobi matrix minus zI equals its bidiagonal LU product, and the modified matrix equals the reversed product plus zI and its precise terminal-coordinate correction. Both hold under finite-prefix hypotheses and include empty and terminal atomic matrices.",
+        "decls": [
+          "NLAlib.monicJacobiMatrix_sub_scalar_one_eq_christoffel_factors_of_finite",
+          "NLAlib.monicJacobiMatrix_christoffel_eq_reversed_factors_add_boundary_of_finite"
+        ]
+      },
+      {
+        "statement": "The actual X-weighted spectral moment pairing is matrix A-energy; for SPD A it is nondegenerate through grade and derives zero-shift denominator nonvanishing. The actual finite spectral and energy-weighted monic Jacobi matrices have their respective forward and corrected reversed Christoffel factorization.",
+        "decls": [
+          "NLAlib.polynomialWeightedFunctional_spectralMeasure_X_mul",
+          "NLAlib.posDef_hankelMomentMatrix_polynomialWeightedFunctional_spectralMeasure_X",
+          "NLAlib.eval_monicOrthogonalPolynomial_spectralMeasure_zero_ne_zero",
+          "NLAlib.monicOrthogonalPolynomial_weighted_spectralMeasure_eq_christoffelPolynomial",
+          "NLAlib.monicJacobiMatrix_spectralMeasure_eq_christoffel_factors",
+          "NLAlib.monicJacobiMatrix_weighted_spectralMeasure_eq_reversed_factors_add_boundary"
+        ]
+      },
+      {
+        "statement": "Before termination the actual zero-shift Christoffel Krylov vectors are nonzero graded directions and mutually A-conjugate. Every nonzero direction in the next Krylov space orthogonal in A-energy to the preceding space is their nonzero scalar multiple, establishing the mathematical CG direction interpretation up to normalization.",
+        "decls": [
+          "NLAlib.christoffelPolynomial_spectralMeasure_krylov_direction",
+          "NLAlib.dotProduct_christoffelPolynomial_spectralMeasure_mulVec_eq_zero",
+          "NLAlib.exists_nonzero_smul_christoffelPolynomial_spectralMeasure_of_krylov_direction"
+        ]
+      },
+      {
+        "statement": "For an actual SPD symmetric Jacobi matrix the recursively defined LDL pivots are positive and the explicit unit lower bidiagonal LDL transpose product equals the matrix. The actual SPD Lanczos compression has the same positive-pivot factorization.",
+        "decls": [
+          "NLAlib.jacobiLDLPivot_pos_of_posDef",
+          "NLAlib.jacobiMatrix_eq_ldl_of_posDef",
+          "NLAlib.LanczosDecomp.jacobiLDLPivot_pos",
+          "NLAlib.LanczosDecomp.T_eq_ldl"
+        ]
+      }
+    ],
+    "source": "Gautschi (2004), Lemma 1.53 through Theorem 1.57; open_mathematical_items_operator_derivations.tex AQ12–AQ15 and its SPD graded-direction/LDL interpretation.",
+    "proof_route": "Exact polynomial division and finite orthogonality; positive real diagonal kernel; direct finite norm expansion at terminal systems; finite bidiagonal matrix identities; actual spectral matrix-energy pairing and grade injectivity; uniqueness of the monic energy polynomial; Schur-complement induction for positive LDL pivots.",
+    "trust": "No new axiom, sorry, native_decide, globally quasi-definite extension assumed for a finite measure, or procedural CG scaffold consumed.",
+    "verification": "New and revised Christoffel leaves and existing kernel/bidiagonal consumers check directly. Parent LDL modules checked separately. Integrating parent completes full build, audits, declaration indexing, and atlas synchronization."
+  }
+}

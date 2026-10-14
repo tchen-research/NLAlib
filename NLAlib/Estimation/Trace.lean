@@ -1,4 +1,5 @@
 import NLAlib.Estimation.Trace.HutchinsonTail
+import NLAlib.Estimation.Trace.Independent
 import NLAlib.Estimation.Trace.Unbiased
 
 /-! # `Estimation/Trace`

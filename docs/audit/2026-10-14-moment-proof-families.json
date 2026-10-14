@@ -1,0 +1,20 @@
+{
+  "hankel-moment-positivity": {
+    "clauses": [
+      {"statement": "The squared bilinear norm of any finite monomial expansion is exactly its Hankel coefficient quadratic form.", "decls": ["NLAlib.functional_sum_monomial_sq_eq_dotProduct"]},
+      {"statement": "Positive-measure Hankel matrices are positive semidefinite; positive definiteness is equivalent to the support threshold and positivity of all leading Hankel determinants, including order zero.", "decls": ["NLAlib.posSemidef_hankelMomentMatrix", "NLAlib.posDef_hankelMomentMatrix_iff_le_support_encard", "NLAlib.posDef_hankelMomentMatrix_iff_leading_dets_pos"]},
+      {"statement": "The canonical monic polynomial is the normalized bordered Hankel determinant, and its next coefficient is the explicitly indexed shifted Hankel determinant ratio.", "decls": ["NLAlib.monicOrthogonalPolynomial_eq_inv_smul_det_borderedHankelMatrix", "NLAlib.nextCoeff_monicOrthogonalPolynomial_eq_neg_shiftedHankelMomentDet_div"]},
+      {"statement": "Finite Hankel determinants are products of the monic norms, and norm and recurrence coefficients obey the norm, beta, and shifted alpha determinant ratios whenever their denominators are nonzero.", "decls": ["NLAlib.hankelMomentDet_eq_prod_orthogonalPolynomialNorm", "NLAlib.orthogonalPolynomialNorm_eq_div_hankelMomentDet", "NLAlib.orthogonalRecurrenceBeta_eq_hankelMomentDet_ratio", "NLAlib.orthogonalRecurrenceAlpha_eq_shiftedHankelMomentDet_sub"]},
+      {"statement": "For the actual spectral measure the Hankel matrix is the Krylov Gram matrix and it is positive definite exactly up to the Krylov grade.", "decls": ["NLAlib.hankelMomentMatrix_spectralMeasure_eq_transpose_mul", "NLAlib.posDef_hankelMomentMatrix_spectralMeasure_iff"]}
+    ]
+  },
+  "recurrence-coefficient-moment-sensitivity": {
+    "clauses": [
+      {"statement": "Canonical polynomial coefficients and recurrence data are smooth on each finite positive Hankel coordinate system; no representing measure in a neighborhood is assumed.", "decls": ["NLAlib.contDiffAt_momentRecurrenceMap"]},
+      {"statement": "Differentiating the actual moment pairing gives the product rule, and differentiated monic orthogonality gives the lower-degree polynomial variation and squared-norm variation.", "decls": ["NLAlib.hasDerivAt_functional_polynomial", "NLAlib.monicOrthogonalPolynomialDeriv_eq_sum", "NLAlib.hasDerivAt_orthogonalPolynomialNorm"]},
+      {"statement": "The actual alpha and positive-order monic beta derivatives are the moment variation evaluated on their explicit monic sensitivity polynomials, with the equivalent adjacent-polynomial alpha form and a separate total-mass derivative at order zero.", "decls": ["NLAlib.hasDerivAt_orthogonalRecurrenceAlpha", "NLAlib.orthogonalRecurrenceAlphaSensitivityPolynomial_eq_adjacent", "NLAlib.hasDerivAt_orthogonalRecurrenceBeta", "NLAlib.hasDerivAt_mass_of_moment_derivatives"]},
+      {"statement": "For every fixed polynomial coordinate chart the actual Euclidean Jacobian, in alpha-then-mass-and-beta output order, is the displayed coefficient sensitivity matrix.", "decls": ["NLAlib.euclideanJacobian_momentRecurrenceMap_eq"]},
+      {"statement": "The absolute condition number is the spectral norm of the actual Jacobian; the normwise relative condition number includes the input/output norm factor.", "decls": ["NLAlib.mapAbsCondition_momentRecurrenceMap_eq_specNorm", "NLAlib.mapNormRelativeCondition_momentRecurrenceMap_eq"]}
+    ]
+  }
+}

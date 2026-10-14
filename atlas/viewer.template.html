@@ -306,7 +306,21 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   const COV_ST = [['nlalib', 'in NLAlib', '✓'], ['partial', 'partial', '◐'], ['scaffold', 'unfinished proof dependency', '◧'], ['mathlib', 'in Mathlib', 'M'], ['candidate', 'candidate', '○'], ['out-of-scope', 'out of scope', '–']];
   const bstate = { book: Object.keys(COVERAGE).sort((a, b) => COVERAGE[b].items.length - COVERAGE[a].items.length)[0] || null, status: new Set(), chapter: null };
   const defNode = {}; A.results.filter(r => r.kind === 'definition').forEach(r => r.formalizations.forEach(f => { if (f.library === 'nlalib' && f.decl && declByName[f.decl] && declByName[f.decl].kind !== 'theorem' && !defNode[f.decl]) defNode[f.decl] = r.id; }));
-  const hasFormalProof = r => r.status === 'proved' && ((r.formalizations || []).some(f => f.library === 'nlalib' && f.decl && f.status === 'proved' && !f.partial && declByName[f.decl] && !declByName[f.decl].sorry) || ((r.proof_family?.clauses || []).length > 0 && r.proof_family.clauses.every(c => c.decls.length > 0 && c.decls.every(d => declByName[d] && !declByName[d].sorry && (r.formalizations || []).some(f => f.library === 'nlalib' && f.decl === d && f.status === 'proved')))));
+  const hasFormalProof = r => {
+    if (r.status !== 'proved') return false;
+    // An explicit reviewed family is authoritative: a legacy single-theorem
+    // entry cannot bypass an unfinished component of the full statement.
+    if (r.proof_family) {
+      const clauses = r.proof_family.clauses || [];
+      return clauses.length > 0 && clauses.every(c => c.decls.length > 0 &&
+        c.decls.every(d => declByName[d] && !declByName[d].sorry &&
+          (r.formalizations || []).some(f => f.library === 'nlalib' &&
+            f.decl === d && f.status === 'proved')));
+    }
+    return (r.formalizations || []).some(f => f.library === 'nlalib' &&
+      f.decl && f.status === 'proved' && !f.partial &&
+      declByName[f.decl] && !declByName[f.decl].sorry);
+  };
   const linkStatus = (depId, consId) => { const d = byId[depId], c = byId[consId]; if (!(inLean(d) || d.status === 'assumed')) return 'pending'; return hasFormalProof(c) ? 'proved' : c.status === 'scaffold' ? 'scaffold' : 'pending'; };
   const LINK = { proved: 'proved', scaffold: 'scaffold', pending: 'pending' };
   const topArea = r => { let a = areaById[r.area]; while (a.parent) a = areaById[a.parent]; return a; };

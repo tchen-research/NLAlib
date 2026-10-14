@@ -24,6 +24,8 @@ private theorem spectrum_mul_nonempty_and_sInf_nonneg_of_posDef_aux [Nonempty n]
     (spectrum ℝ (A * B)).Nonempty ∧ 0 ≤ sInf (spectrum ℝ (A * B)) := by
   let : Invertible A := hA.isUnit.invertible
   obtain ⟨S, d, hS, hAA, hBB, hd⟩ := exists_definite_pair_congruence_diagonal hA.inv hB.isHermitian
+  change A⁻¹ = S * Sᵀ at hAA
+  change B = S * diagonal d * Sᵀ at hBB
   have hs : spectrum ℝ (A * B) = Set.range d := by
     simpa only [Matrix.inv_inv_of_invertible] using
       spectrum_inverse_mul_eq_range_of_congruence hS hAA hBB

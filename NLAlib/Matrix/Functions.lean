@@ -1,7 +1,9 @@
 import NLAlib.Matrix.Functions.Basic
 import NLAlib.Matrix.Functions.CFCQuadratic
 import NLAlib.Matrix.Functions.CFCTrace
+import NLAlib.Matrix.Functions.ComplexResolvent
 import NLAlib.Matrix.Functions.CoordinatePinching
+import NLAlib.Matrix.Functions.DiagonalCalculus
 import NLAlib.Matrix.Functions.DiagonalFilter
 import NLAlib.Matrix.Functions.DilationIdentities
 import NLAlib.Matrix.Functions.EntropyJointConvex
@@ -31,6 +33,7 @@ import NLAlib.Matrix.Functions.PerspectiveSqrtNormalization
 import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Functions.PolynomialSeries
+import NLAlib.Matrix.Functions.ReciprocalExponential
 import NLAlib.Matrix.Functions.TraceExpBounds
 import NLAlib.Matrix.Functions.TraceExpConvex
 import NLAlib.Matrix.Functions.TraceExpMonotone

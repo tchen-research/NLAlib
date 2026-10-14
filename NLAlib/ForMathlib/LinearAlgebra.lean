@@ -1,13 +1,17 @@
 import NLAlib.ForMathlib.LinearAlgebra.ComapDimension
 import NLAlib.ForMathlib.LinearAlgebra.CommonEigenvector
 import NLAlib.ForMathlib.LinearAlgebra.IsolatedCharpoly
+import NLAlib.ForMathlib.LinearAlgebra.KernelProducts
 import NLAlib.ForMathlib.LinearAlgebra.LagrangeAffine
 import NLAlib.ForMathlib.LinearAlgebra.LagrangeBounds
 import NLAlib.ForMathlib.LinearAlgebra.LagrangeIntegerGrid
+import NLAlib.ForMathlib.LinearAlgebra.LagrangeQuadrature
 import NLAlib.ForMathlib.LinearAlgebra.LagrangeReindex
 import NLAlib.ForMathlib.LinearAlgebra.Matrix
+import NLAlib.ForMathlib.LinearAlgebra.MatrixScalarExtension
 import NLAlib.ForMathlib.LinearAlgebra.OrderedCommonEigenvector
 import NLAlib.ForMathlib.LinearAlgebra.PencilLine
+import NLAlib.ForMathlib.LinearAlgebra.PolynomialDegreeLT
 import NLAlib.ForMathlib.LinearAlgebra.SeparatingRows
 
 /-! # `ForMathlib/LinearAlgebra`

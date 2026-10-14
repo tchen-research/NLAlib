@@ -54,6 +54,11 @@ import NLAlib.Matrix.Spectral.NormalIntertwining
 import NLAlib.Matrix.Spectral.NormalRectangularIntertwining
 import NLAlib.Matrix.Spectral.NormalSimilarity
 import NLAlib.Matrix.Spectral.NormalSpectral
+import NLAlib.Matrix.Spectral.NumericalRange
+import NLAlib.Matrix.Spectral.NumericalRangeConvex
+import NLAlib.Matrix.Spectral.NumericalRangeHermitian
+import NLAlib.Matrix.Spectral.NumericalRangeNormal
+import NLAlib.Matrix.Spectral.NumericalRangeTwo
 import NLAlib.Matrix.Spectral.OrderedSchur
 import NLAlib.Matrix.Spectral.OrderedSimultaneousTriangularization
 import NLAlib.Matrix.Spectral.OrderedSymmetricDiagonalization

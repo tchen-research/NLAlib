@@ -482,7 +482,7 @@ private theorem integrable_and_integral_rpow_inv_sum_sq_aux {d : ℕ} (q : ℝ) 
 
 /-- **Negative moments of a chi-square variable are finite.** For `0 ≤ q < d/2`, `(χ²_d)^{-q}` is
 integrable. HMT 2011, proof of Lemma A.10; Johnson–Kotz–Balakrishnan, ch. 18.
-atlas: chi-square-neg-moment -/
+atlas: chi-square-neg-moment (partial) -/
 theorem integrable_rpow_inv_sum_sq_gaussianVector {d : ℕ} (q : ℝ) (hq : 0 ≤ q)
     (hqd : q < (d : ℝ) / 2) :
     Integrable (fun x : Fin d → ℝ => ((∑ j, x j ^ 2)⁻¹) ^ q) (gaussianVector (Fin d)) :=
@@ -494,7 +494,7 @@ theorem integrable_rpow_inv_sum_sq_gaussianVector {d : ℕ} (q : ℝ) (hq : 0 �
 Standard Gamma-integral computation (e.g. HMT 2011, proof of Lemma A.10; Johnson–Kotz–
 Balakrishnan, ch. 18). Proof: Euler representation of `S^{-q}` and of `(1 + 2v)^{-d/2}`, Tonelli,
 and the Laplace transform of `χ²_d`.
-atlas: chi-square-neg-moment -/
+atlas: chi-square-neg-moment (partial) -/
 theorem integral_rpow_inv_sum_sq_gaussianVector {d : ℕ} (q : ℝ) (hq : 0 ≤ q)
     (hqd : q < (d : ℝ) / 2) :
     ∫ x, ((∑ j, x j ^ 2)⁻¹) ^ q ∂(gaussianVector (Fin d))
@@ -610,7 +610,7 @@ private lemma sqrt_pi_div_lt_rpow {n : ℕ} (hn : 5 ≤ n) :
 HMT 2011, Lemma A.10 (the moment step of the pseudoinverse Frobenius tail bound): the negative
 moment formula with `q = (d-1)/2`, then `Γ(1/2) = √π`, the duplication formula, log-convexity
 of `Γ` and Stirling.
-atlas: chi-square-neg-moment -/
+atlas: chi-square-neg-moment (partial) -/
 theorem integral_rpow_inv_sum_sq_gaussianVector_lt {d : ℕ} (hd : 5 ≤ d) :
     ∫ x, ((∑ j, x j ^ 2)⁻¹) ^ (((d : ℝ) - 1) / 2) ∂(gaussianVector (Fin d))
       < (3 / (d : ℝ)) ^ (((d : ℝ) - 1) / 2) := by
@@ -622,7 +622,7 @@ theorem integral_rpow_inv_sum_sq_gaussianVector_lt {d : ℕ} (hd : 5 ≤ d) :
 /-! ### The second inverse moment -/
 
 /-- For `d ≥ 5`, `(χ²_d)^{-2}` is integrable. HMT 2011, Prop A.6 / Lemma A.9.
-atlas: chi-square-neg-moment -/
+atlas: chi-square-neg-moment (partial) -/
 theorem integrable_inv_sum_sq_pow_two_gaussianVector {d : ℕ} (hd : 5 ≤ d) :
     Integrable (fun x : Fin d → ℝ => ((∑ j, x j ^ 2)⁻¹) ^ 2) (gaussianVector (Fin d)) := by
   have hd' : (5 : ℝ) ≤ d := by exact_mod_cast hd
@@ -636,7 +636,7 @@ Used for the inverse-Wishart second moments (Tropp–Webber 2023, App. B; HMT 20
 Lemma A.9). The sources prove it by a separate Laplace-transform computation; here it is the case
 `q = 2` of `integral_rpow_inv_sum_sq_gaussianVector`, using
 `Γ(d/2) = (d/2 - 1)(d/2 - 2) Γ(d/2 - 2)`.
-atlas: chi-square-neg-moment -/
+atlas: chi-square-neg-moment (partial) -/
 theorem integral_inv_sum_sq_pow_two_gaussianVector {d : ℕ} (hd : 5 ≤ d) :
     ∫ x, ((∑ j, x j ^ 2)⁻¹) ^ 2 ∂(gaussianVector (Fin d))
       = 1 / (((d : ℝ) - 2) * ((d : ℝ) - 4)) := by

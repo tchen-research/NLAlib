@@ -46,7 +46,7 @@ variable {n : ℕ}
 
 /-- `A = Q H Qᵀ` is a **Hessenberg form** of `A`: `Q` orthogonal and `H` upper Hessenberg.
 Trefethen–Bau 1997, Lect. 26 (`A = Q H Q*`); Golub–Van Loan 2013, §7.4.3 (`QᵀAQ = H`).
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 structure IsHessenbergForm (A Q H : Matrix (Fin n) (Fin n) ℝ) : Prop where
   /-- `Q` is orthogonal, `QᵀQ = I`. -/
   orth : HasOrthonormalCols Q
@@ -64,7 +64,7 @@ theorem mul_transpose_self (h : IsHessenbergForm A Q H) : Q * Qᵀ = 1 :=
   mul_eq_one_comm.mp h.orth
 
 /-- `QᵀAQ = H`. Golub–Van Loan 2013, §7.4.3.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 theorem transpose_mul_mul_eq (h : IsHessenbergForm A Q H) : Qᵀ * A * Q = H := by
   rw [h.eq, Matrix.mul_assoc, Matrix.mul_assoc, show Qᵀ * Q = 1 from h.orth, Matrix.mul_one,
     ← Matrix.mul_assoc, show Qᵀ * Q = 1 from h.orth, Matrix.one_mul]
@@ -76,7 +76,7 @@ theorem isHermitian (h : IsHessenbergForm A Q H) (hA : A.IsHermitian) : H.IsHerm
 
 /-- **Symmetric ⇒ tridiagonal**: a Hessenberg form of a symmetric matrix is (symmetric)
 tridiagonal. Trefethen–Bau 1997, Lect. 26 (the Hermitian case); Golub–Van Loan 2013, §8.3.1.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 theorem isTridiagonal (h : IsHessenbergForm A Q H) (hA : A.IsHermitian) : IsTridiagonal H :=
   h.hess.isTridiagonal_of_isHermitian (h.isHermitian hA)
 
@@ -89,7 +89,7 @@ end IsHessenbergForm
 recurse on the trailing block of `PAP` and pad its vectors with a leading zero. Matrices of
 size `≤ 2` are already Hessenberg (no reflector). Trefethen–Bau 1997, Alg. 26.1;
 Golub–Van Loan 2013, Alg. 7.4.2.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 def hessenbergReflectors : {n : ℕ} → Matrix (Fin n) (Fin n) ℝ → List (Fin n → ℝ)
   | 0, _ => []
   | 1, _ => []
@@ -101,18 +101,18 @@ def hessenbergReflectors : {n : ℕ} → Matrix (Fin n) (Fin n) ℝ → List (Fi
 
 /-- The orthogonal factor of Hessenberg reduction: the product `P₁ P₂ ⋯ P_{n−2}` of the
 reflectors. Trefethen–Bau 1997, Lect. 26.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 def hessenbergQ (A : Matrix (Fin n) (Fin n) ℝ) : Matrix (Fin n) (Fin n) ℝ :=
   ((hessenbergReflectors A).map householder).prod
 
 /-- The Hessenberg matrix `H = QᵀAQ` of the reduction. Trefethen–Bau 1997, Alg. 26.1.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 def hessenbergH (A : Matrix (Fin n) (Fin n) ℝ) : Matrix (Fin n) (Fin n) ℝ :=
   (hessenbergQ A)ᵀ * A * hessenbergQ A
 
 /-- **Hessenberg reduction** `A ↦ (Q, H)` by Householder reflectors. Trefethen–Bau 1997,
 Alg. 26.1; Golub–Van Loan 2013, Alg. 7.4.2.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 def hessenbergReduction (A : Matrix (Fin n) (Fin n) ℝ) :
     Matrix (Fin n) (Fin n) ℝ × Matrix (Fin n) (Fin n) ℝ :=
   (hessenbergQ A, hessenbergH A)
@@ -142,7 +142,7 @@ theorem apply_zero_of_mem_hessenbergReflectors :
 /-- **`Q e₀ = e₀`**: the first column of the Householder `Q` is `e₀` (so `q₁ = e₁` in
 Trefethen–Bau's numbering, which fixes `Q` up to signs by the implicit Q theorem).
 Golub–Van Loan 2013, §7.4.3.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 theorem hessenbergQ_mulVec_single_zero (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) :
     hessenbergQ A *ᵥ Pi.single 0 1 = Pi.single 0 1 := by
   unfold hessenbergQ
@@ -189,7 +189,7 @@ theorem hessenbergQ_add_three (k : ℕ) (A : Matrix (Fin (k + 3)) (Fin (k + 3)) 
 **The reduction produces a Hessenberg matrix**: `QᵀAQ` is upper Hessenberg for the Householder
 `Q`, for every `A`. Trefethen–Bau 1997, Lect. 26 (Alg. 26.1); Golub–Van Loan 2013, §7.4.3.
 The block recursion preserves the first-column support and reduces the trailing block dimension.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 theorem isUpperHessenberg_hessenbergH : ∀ {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ),
     IsUpperHessenberg (hessenbergH A)
   | 0, _ => by intro i; exact i.elim0
@@ -245,7 +245,7 @@ theorem isUpperHessenberg_hessenbergH : ∀ {n : ℕ} (A : Matrix (Fin n) (Fin n
 /-- **Realisation of Hessenberg reduction**: `(hessenbergQ A, hessenbergH A)` is a Hessenberg
 form of every square `A`, with `Q` a product of `n − 2` Householder reflectors.
 Trefethen–Bau 1997, Lect. 26, Alg. 26.1; Golub–Van Loan 2013, Alg. 7.4.2.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 theorem isHessenbergForm_hessenbergReduction (A : Matrix (Fin n) (Fin n) ℝ) :
     IsHessenbergForm A (hessenbergReduction A).1 (hessenbergReduction A).2 where
   orth := hessenbergQ_transpose_mul_self A
@@ -260,7 +260,7 @@ theorem isHessenbergForm_hessenbergReduction (A : Matrix (Fin n) (Fin n) ℝ) :
 /-- **Every square matrix is orthogonally similar to an upper Hessenberg matrix**; if `A` is
 symmetric, to a symmetric tridiagonal one (`IsHessenbergForm.isTridiagonal`).
 Trefethen–Bau 1997, Lect. 26; Golub–Van Loan 2013, §7.4.3.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 theorem exists_isHessenbergForm (A : Matrix (Fin n) (Fin n) ℝ) :
     ∃ Q H, IsHessenbergForm A Q H :=
   ⟨_, _, isHessenbergForm_hessenbergReduction A⟩
@@ -271,7 +271,7 @@ theorem exists_isHessenbergForm (A : Matrix (Fin n) (Fin n) ℝ) :
 an unreduced first Hessenberg matrix differ by a diagonal sign matrix, whose first entry is one.
 Source: Golub–Van Loan 2013, Theorem 7.4.2; matrix toolkit rederivations, `lem:intertwine`.
 The oriented equation `H₂(Q₂ᵀQ₁)=(Q₂ᵀQ₁)H₁` uses precisely the given unreduced matrix.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 theorem IsHessenbergForm.exists_sign {A Q₁ H₁ Q₂ H₂ : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ}
     (h₁ : IsHessenbergForm A Q₁ H₁) (h₂ : IsHessenbergForm A Q₂ H₂)
     (hcol : Q₁.col 0 = Q₂.col 0) (hH : IsUnreducedHessenberg H₁) :

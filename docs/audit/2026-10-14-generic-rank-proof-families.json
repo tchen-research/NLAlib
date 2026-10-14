@@ -1,0 +1,26 @@
+{
+  "gaussian-full-rank-ae": {
+    "clauses": [
+      {
+        "statement": "In standard flat real matrix-entry coordinates, the singular row-Gram locus is Lebesgue-null in the wide case and the singular column-Gram locus is Lebesgue-null in the tall case, including empty dimensions.",
+        "decls": [
+          "Matrix.volume_det_mul_transpose_eq_zero",
+          "Matrix.volume_det_transpose_mul_eq_zero"
+        ]
+      },
+      {
+        "statement": "For the actual standard Gaussian matrix law, the row Gram in the wide case and the column Gram in the tall case are units almost surely.",
+        "decls": [
+          "NLAlib.gaussianMatrix_ae_isUnit_mul_transpose",
+          "NLAlib.gaussianMatrix_ae_isUnit_transpose_mul"
+        ]
+      },
+      {
+        "statement": "An actual real standard Gaussian matrix has rank equal to the minimum of its row and column counts almost surely, with no nonempty-dimension premise.",
+        "decls": [
+          "NLAlib.gaussianMatrix_ae_rank_eq"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "jacobi-matrix-identities": {
+    "clauses": [
+      {
+        "statement": "The actual canonical moment Jacobi compression has monic alpha diagonal and positive square-root monic-beta adjacent entries, and its normalized polynomials satisfy the corresponding three-term recurrence. Actual signed Lanczos T has its own diagonal and signed off-diagonal coefficient matrix.",
+        "decls": [
+          "NLAlib.orthogonalPolynomialJacobiMatrix_apply_self_eq_alpha",
+          "NLAlib.orthogonalPolynomialJacobiMatrix_superdiagonal_eq_sqrt_beta",
+          "NLAlib.X_mul_orthonormalMomentPolynomial",
+          "NLAlib.LanczosDecomp.T_eq_jacobiMatrix",
+          "NLAlib.orthogonalPolynomialJacobiMatrix_eq_jacobiMatrix"
+        ]
+      },
+      {
+        "statement": "Actual Lanczos eigenvalues and squared first eigenvector coordinates give the normalized Golub–Welsch rule, original starting-vector mass restores the original measure rule, and the first 2q moments are integrated exactly. Every node is simple and every first-coordinate weight is positive.",
+        "decls": [
+          "NLAlib.LanczosDecomp.cfc_T_apply_zero_zero",
+          "NLAlib.LanczosDecomp.dotProduct_cfc_T_mulVec_eq_sum",
+          "NLAlib.LanczosDecomp.dotProduct_aeval_mulVec_eq_sum",
+          "NLAlib.LanczosDecomp.eigenvalues_T_injective",
+          "NLAlib.LanczosDecomp.sq_eigenvectorBasis_T_apply_zero_pos"
+        ]
+      },
+      {
+        "statement": "Consecutive actual leading signed Lanczos compressions strictly interlace whenever the larger valid decomposition exists, including its displayed grade terminal order.",
+        "decls": [
+          "NLAlib.LanczosDecomp.eigenvalues₀_restrict_T_strict_interlacing"
+        ]
+      },
+      {
+        "statement": "The actual signed normalized Christoffel–Darboux identity holds after multiplying by x-y, and its formal derivative gives the strictly positive confluent identity. The generic monic norm-divided identity extends the kernel through zero-norm termination without a nonexistent normalized terminal polynomial.",
+        "decls": [
+          "NLAlib.LanczosDecomp.sub_mul_sum_eval_poly_mul",
+          "NLAlib.LanczosDecomp.sum_sq_eval_poly_eq_confluent_and_pos",
+          "NLAlib.sub_mul_eval_monicOrthogonalKernelPolynomial",
+          "NLAlib.sum_sq_eval_orthonormalMomentPolynomial_eq_confluent_and_pos",
+          "NLAlib.sum_sq_eval_orthonormalMomentPolynomial_eq_normalized_confluent_and_pos"
+        ]
+      },
+      {
+        "statement": "The actual nonreal Jacobi resolvent is the literal nested complex fraction for arbitrary signed real coefficients, and every intermediate scalar Schur denominator is proved nonzero. The actual signed Lanczos matrix inherits this formula.",
+        "decls": [
+          "NLAlib.det_smul_one_sub_map_ne_zero_of_im_ne_zero",
+          "NLAlib.inv_smul_one_sub_map_jacobiMatrix_apply_zero_zero",
+          "NLAlib.jacobiFraction_map_ne_zero_of_im_ne_zero",
+          "NLAlib.jacobiFraction_step_denominator_ne_zero_of_im_ne_zero",
+          "NLAlib.LanczosDecomp.inv_smul_one_sub_map_T_apply_zero_zero",
+          "NLAlib.inv_smul_one_sub_map_orthogonalPolynomialJacobiMatrix_apply_zero_zero"
+        ]
+      },
+      {
+        "statement": "Cramer gives the robust trailing/full determinant quotient at every complex point, including real intermediate nested-fraction poles; the finite polynomial continuant is the actual characteristic denominator of every leading signed Lanczos compression.",
+        "decls": [
+          "NLAlib.inv_smul_one_sub_map_jacobiMatrix_apply_zero_zero_eq_det_ratio",
+          "NLAlib.eval_jacobiContinuant_eq_det",
+          "NLAlib.charpoly_jacobiMatrix_eq_jacobiContinuant",
+          "NLAlib.LanczosDecomp.jacobiContinuant_eq_charpoly_restrict_T"
+        ]
+      },
+      {
+        "statement": "The actual canonical finite Jacobi resolvent is the original-mass-normalized second-kind ratio and Gauss Stieltjes partial fraction, and its rooted moments match all original measure moments through degree 2n-1, including finite-support termination. No infinite analytic continued-fraction convergence is asserted.",
+        "decls": [
+          "NLAlib.eval_map_secondKindPolynomial_div_eq_mass_mul_jacobi_resolvent",
+          "NLAlib.functional_X_pow_eq_mass_mul_jacobi_pow_apply_zero_zero",
+          "NLAlib.integral_pow_eq_mass_mul_orthogonalPolynomialJacobiMatrix_pow",
+          "NLAlib.eval_map_secondKindPolynomial_div_eq_sum_gaussWeights_div_of_ne_gaussNodes",
+          "NLAlib.eval_map_secondKindPolynomial_div_eq_mass_mul_jacobiFraction"
+        ]
+      },
+      {
+        "statement": "At order zero the scalar approximant is zero and the empty characteristic denominator is one; no nonexistent first coordinate is used.",
+        "decls": [
+          "NLAlib.jacobiFraction_zero",
+          "NLAlib.jacobiContinuant_zero"
+        ]
+      }
+    ]
+  },
+  "monic-orthogonal-recurrence": {
+    "clauses": [
+      {
+        "statement": "Canonical monic moment polynomials satisfy the three-term recurrence, including order zero and the final finite-support monic polynomial. Actual leading signed Lanczos characteristic polynomials have exactly the actual alpha and squared signed-beta recurrence.",
+        "decls": [
+          "NLAlib.monicOrthogonalPolynomial_succ_eq",
+          "NLAlib.LanczosDecomp.charpoly_restrict_T_succ_eq"
+        ]
+      },
+      {
+        "statement": "The generic monic norm equals its mass times the product of positive-order monic beta ratios; any two orders have the corresponding finite product telescope. Actual leading Lanczos characteristic norms equal starting-vector squared norm times squared stored off-diagonal products.",
+        "decls": [
+          "NLAlib.orthogonalPolynomialNorm_eq_prod_beta",
+          "NLAlib.orthogonalPolynomialNorm_mul_prod_beta_eq",
+          "NLAlib.LanczosDecomp.integral_sq_charpoly_restrict_T_eq_norm_sq_mul_prod_beta_sq"
+        ]
+      },
+      {
+        "statement": "The actual canonical Jacobi diagonal is its monic norm quotient alpha, and its positive adjacent entry is sqrt(monic beta) with square equal to beta. Actual signed Lanczos diagonal and stored off-diagonal squares give those same spectral-measure norm quotients.",
+        "decls": [
+          "NLAlib.orthogonalPolynomialJacobiMatrix_apply_self_eq_alpha",
+          "NLAlib.orthogonalPolynomialJacobiMatrix_superdiagonal_eq_sqrt_beta",
+          "NLAlib.sq_orthogonalPolynomialJacobiMatrix_superdiagonal_eq_beta",
+          "NLAlib.LanczosDecomp.orthogonalRecurrenceAlpha_spectralMeasure_eq_alpha",
+          "NLAlib.LanczosDecomp.orthogonalRecurrenceBeta_spectralMeasure_eq_beta_sq"
+        ]
+      },
+      {
+        "statement": "Positive monic norms give the normalized canonical three-term recurrence with square-root-beta coefficients. No terminal zero-norm polynomial is normalized.",
+        "decls": [
+          "NLAlib.X_mul_orthonormalMomentPolynomial",
+          "NLAlib.orthogonalPolynomialJacobiMatrix_eq_jacobiMatrix"
+        ]
+      },
+      {
+        "statement": "The multiplied monic Christoffel–Darboux polynomial identity is valid for all x,y, and its explicit recurrence-product weighted sum has the advertised monic numerator. Division by x-y is used only when x differs from y.",
+        "decls": [
+          "NLAlib.X_sub_C_mul_monicOrthogonalKernelPolynomial",
+          "NLAlib.sub_mul_eval_monicOrthogonalKernelPolynomial",
+          "NLAlib.sub_mul_sum_prod_beta_mul_eval_monicOrthogonalPolynomial"
+        ]
+      },
+      {
+        "statement": "Formal polynomial differentiation gives the monic norm-divided confluent identity and its strictly positive normalized square sum, including a terminal top monic polynomial. When the top norm is positive, the square-root-beta fully normalized Wronskian is the same kernel. Arbitrary signed actual Lanczos normalized polynomials satisfy their signed Wronskian and strict positivity.",
+        "decls": [
+          "NLAlib.eval_monicOrthogonalKernelPolynomial_self",
+          "NLAlib.sum_sq_eval_orthonormalMomentPolynomial_eq_confluent_and_pos",
+          "NLAlib.sum_sq_eval_orthonormalMomentPolynomial_eq_normalized_confluent_and_pos",
+          "NLAlib.LanczosDecomp.sum_sq_eval_poly_eq_confluent_and_pos"
+        ]
+      },
+      {
+        "statement": "The actual finite Jacobi denominator continuants are the monic characteristic polynomials, including the empty order-zero denominator. Every leading signed Lanczos characteristic polynomial equals its coefficient continuant; this is the advertised denominator identification, not an equivalence hypothesis.",
+        "decls": [
+          "NLAlib.eval_jacobiContinuant_eq_det",
+          "NLAlib.charpoly_jacobiMatrix_eq_jacobiContinuant",
+          "NLAlib.LanczosDecomp.jacobiContinuant_eq_charpoly_restrict_T",
+          "NLAlib.jacobiContinuant_zero"
+        ]
+      },
+      {
+        "statement": "At exact grade the actual final monic norm is zero and the final monic beta equals the squared zero terminal coupling, including the zero-grade coefficient boundary. Mass h0 remains distinct from the boundary recurrence beta0=0.",
+        "decls": [
+          "NLAlib.LanczosDecomp.integral_sq_charpoly_T_eq_zero_of_eq_grade",
+          "NLAlib.LanczosDecomp.orthogonalRecurrenceBeta_spectralMeasure_eq_beta_sq_of_eq_grade"
+        ]
+      }
+    ]
+  }
+}

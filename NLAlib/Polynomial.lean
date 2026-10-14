@@ -2,6 +2,7 @@ import NLAlib.Polynomial.BestApproximation
 import NLAlib.Polynomial.Chebyshev
 import NLAlib.Polynomial.FunctionApproximation
 import NLAlib.Polynomial.Interpolation
+import NLAlib.Polynomial.OrthogonalPolynomials
 import NLAlib.Polynomial.Quadrature
 
 /-! # `Polynomial`

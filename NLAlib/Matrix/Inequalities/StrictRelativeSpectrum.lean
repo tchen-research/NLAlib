@@ -33,6 +33,8 @@ theorem posDef_sub_iff_relative_spectralRadius_lt_one {A B : Matrix n n ℝ}
     (hA : A.PosDef) (hB : B.PosSemidef) :
     (A - B).PosDef ↔ spectralRadius ℝ (A⁻¹ * B) < 1 := by
   obtain ⟨S, d, hS, hAA, hBB, hd⟩ := exists_definite_pair_congruence_diagonal hA hB.isHermitian
+  change A = S * Sᵀ at hAA
+  change B = S * diagonal d * Sᵀ at hBB
   have hdiff : A - B = S * diagonal (fun i => 1 - d i) * Sᵀ := by
     calc
       A - B = S * 1 * Sᵀ - S * diagonal d * Sᵀ := by rw [Matrix.mul_one, ← hAA, ← hBB]

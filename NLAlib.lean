@@ -1,11 +1,13 @@
 import NLAlib.Estimation
 import NLAlib.ForMathlib
 import NLAlib.Krylov.MatrixFunctions
-import NLAlib.Krylov.Quadrature.ExponentialQuadrature
+import NLAlib.Krylov.Quadrature
+import NLAlib.Krylov.Solvers.ChristoffelDirections
 import NLAlib.Krylov.Solvers.GMRESArnoldi
 import NLAlib.Krylov.Solvers.PolynomialMethods
 import NLAlib.Krylov.Solvers.Preconditioned
 import NLAlib.Krylov.Spaces
+import NLAlib.Krylov.Spectral.CharacteristicPolynomial
 import NLAlib.Krylov.Spectral.PowerMethod
 import NLAlib.Krylov.Spectral.SubspaceIteration
 import NLAlib.LowRank.Cholesky.CholeskyPivot

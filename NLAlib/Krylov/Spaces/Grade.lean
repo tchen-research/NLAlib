@@ -34,27 +34,27 @@ open Polynomial
 
 namespace NLAlib
 
-variable {n : Type*} [Fintype n] [DecidableEq n]
+variable {K : Type*} [Field K] {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The grade of `b` with respect to `A`: `ν(A, b) = dim span {Aⁱ b : i ∈ ℕ}`, equivalently the
 degree of the monic polynomial `μ_{A,b}` of least degree with `μ_{A,b}(A) b = 0`.
 Source: Saad (2003) [`saad03`], Def. before Prop 6.1; Liesen–Strakoš (2013) [`ls13`], §2.2.
-Deviation: real scalars only (the atlas entry allows any field).
+The scalar field is arbitrary, including real and complex instances.
 atlas: krylov-grade (partial) -/
-def krylovGrade (A : Matrix n n ℝ) (b : n → ℝ) : ℕ :=
-  Module.finrank ℝ (Submodule.span ℝ (Set.range fun i : ℕ => (A ^ i) *ᵥ b))
+def krylovGrade (A : Matrix n n K) (b : n → K) : ℕ :=
+  Module.finrank K (Submodule.span K (Set.range fun i : ℕ => (A ^ i) *ᵥ b))
 
-variable (A : Matrix n n ℝ) (b : n → ℝ)
+variable (A : Matrix n n K) (b : n → K)
 
 /-- Every Krylov space lies in the span of all the `Aⁱ b`. -/
 private lemma krylovSpace_le_span_range (q : ℕ) :
-    krylovSpace A b q ≤ Submodule.span ℝ (Set.range fun i : ℕ => (A ^ i) *ᵥ b) :=
+    krylovSpace A b q ≤ Submodule.span K (Set.range fun i : ℕ => (A ^ i) *ᵥ b) :=
   Submodule.span_mono <| by rintro _ ⟨i, rfl⟩; exact ⟨i, rfl⟩
 
 /-- Linear independence of `b, …, A^q b` splits off the last vector. -/
 private lemma linearIndependent_pow_mulVec_succ_iff (q : ℕ) :
-    LinearIndependent ℝ (fun i : Fin (q + 1) => (A ^ (i : ℕ)) *ᵥ b) ↔
-      LinearIndependent ℝ (fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b) ∧
+    LinearIndependent K (fun i : Fin (q + 1) => (A ^ (i : ℕ)) *ᵥ b) ↔
+      LinearIndependent K (fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b) ∧
         (A ^ q) *ᵥ b ∉ krylovSpace A b q := by
   have h : (fun i : Fin (q + 1) => (A ^ (i : ℕ)) *ᵥ b) =
       Fin.snoc (fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b) ((A ^ q) *ᵥ b) := by
@@ -66,7 +66,7 @@ private lemma linearIndependent_pow_mulVec_succ_iff (q : ℕ) :
 /-- If no `Aⁱ b` with `i < q` lies in the previous Krylov space, the first `q` are independent. -/
 private lemma linearIndependent_pow_mulVec_of_forall_not_mem {q : ℕ}
     (h : ∀ i < q, (A ^ i) *ᵥ b ∉ krylovSpace A b i) :
-    LinearIndependent ℝ (fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b) := by
+    LinearIndependent K (fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b) := by
   induction q with
   | zero => exact linearIndependent_empty_type
   | succ q ih =>
@@ -75,7 +75,7 @@ private lemma linearIndependent_pow_mulVec_of_forall_not_mem {q : ℕ}
 
 /-- Once `A^q b ∈ K_q`, the space `K_q` is `A`-invariant. -/
 private lemma mulVec_mem_krylovSpace_of_pow_mulVec_mem {q : ℕ}
-    (hq : (A ^ q) *ᵥ b ∈ krylovSpace A b q) {x : n → ℝ} (hx : x ∈ krylovSpace A b q) :
+    (hq : (A ^ q) *ᵥ b ∈ krylovSpace A b q) {x : n → K} (hx : x ∈ krylovSpace A b q) :
     A *ᵥ x ∈ krylovSpace A b q := by
   have h := mulVec_mem_krylovSpace_succ A b hx
   rw [krylovSpace_succ] at h
@@ -96,7 +96,7 @@ private lemma pow_mulVec_mem_of_pow_mulVec_mem {q : ℕ}
 /-- Once `A^q b ∈ K_q`, the span of all `Aⁱ b` is `K_q`. -/
 private lemma span_range_eq_of_pow_mulVec_mem {q : ℕ}
     (hq : (A ^ q) *ᵥ b ∈ krylovSpace A b q) :
-    Submodule.span ℝ (Set.range fun i : ℕ => (A ^ i) *ᵥ b) = krylovSpace A b q :=
+    Submodule.span K (Set.range fun i : ℕ => (A ^ i) *ᵥ b) = krylovSpace A b q :=
   le_antisymm (Submodule.span_le.2 <| by
     rintro _ ⟨i, rfl⟩; exact pow_mulVec_mem_of_pow_mulVec_mem A b hq i)
     (krylovSpace_le_span_range A b q)
@@ -147,7 +147,7 @@ theorem krylovGrade_le_of_pow_mulVec_mem {q : ℕ} (hq : (A ^ q) *ᵥ b ∈ kryl
 /-- The span of all `Aⁱ b` is `K_ν(A,b)`. Source: Saad (2003) [`saad03`], Prop 6.2.
 Atlas: `krylov-grade`. -/
 theorem span_range_pow_mulVec_eq_krylovSpace_krylovGrade :
-    Submodule.span ℝ (Set.range fun i : ℕ => (A ^ i) *ᵥ b) =
+    Submodule.span K (Set.range fun i : ℕ => (A ^ i) *ᵥ b) =
       krylovSpace A b (krylovGrade A b) :=
   span_range_eq_of_pow_mulVec_mem A b (pow_krylovGrade_mulVec_mem_krylovSpace A b)
 
@@ -167,7 +167,7 @@ theorem krylovSpace_le_krylovSpace_krylovGrade (q : ℕ) :
 /-- **Invariance.** `K_ν(A,b)` is `A`-invariant: `x ∈ K_ν → A x ∈ K_ν`.
 Source: Saad (2003) [`saad03`], Prop 6.2. Atlas: `krylov-grade` (partial: invariance).
 atlas: krylov-grade (partial) -/
-theorem mulVec_mem_krylovSpace_krylovGrade {x : n → ℝ}
+theorem mulVec_mem_krylovSpace_krylovGrade {x : n → K}
     (hx : x ∈ krylovSpace A b (krylovGrade A b)) :
     A *ᵥ x ∈ krylovSpace A b (krylovGrade A b) :=
   mulVec_mem_krylovSpace_of_pow_mulVec_mem A b (pow_krylovGrade_mulVec_mem_krylovSpace A b) hx
@@ -183,12 +183,12 @@ theorem krylovSpace_eq_of_krylovGrade_le {q : ℕ} (h : krylovGrade A b ≤ q) :
 Source: Saad (2003) [`saad03`], Prop 6.1–6.2. Atlas: `krylov-grade` (partial: independence).
 atlas: krylov-grade (partial) -/
 theorem linearIndependent_pow_mulVec_iff_le_krylovGrade {q : ℕ} :
-    LinearIndependent ℝ (fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b) ↔ q ≤ krylovGrade A b := by
+    LinearIndependent K (fun i : Fin q => (A ^ (i : ℕ)) *ᵥ b) ↔ q ≤ krylovGrade A b := by
   constructor
   · intro hli
-    have h1 : Module.finrank ℝ (krylovSpace A b q) = q := by
+    have h1 : Module.finrank K (krylovSpace A b q) = q := by
       rw [krylovSpace, finrank_span_eq_card hli, Fintype.card_fin]
-    calc q = Module.finrank ℝ (krylovSpace A b q) := h1.symm
+    calc q = Module.finrank K (krylovSpace A b q) := h1.symm
       _ ≤ krylovGrade A b := Submodule.finrank_mono (krylovSpace_le_span_range A b q)
   · intro hq
     exact linearIndependent_pow_mulVec_of_forall_not_mem A b fun i hi =>
@@ -198,8 +198,8 @@ theorem linearIndependent_pow_mulVec_iff_le_krylovGrade {q : ℕ} :
 Source: Saad (2003) [`saad03`], Prop 6.3. Atlas: `krylov-grade` (partial: dimension).
 atlas: krylov-grade (partial) -/
 theorem finrank_krylovSpace (q : ℕ) :
-    Module.finrank ℝ (krylovSpace A b q) = min q (krylovGrade A b) := by
-  have hle : ∀ q ≤ krylovGrade A b, Module.finrank ℝ (krylovSpace A b q) = q := fun q hq => by
+    Module.finrank K (krylovSpace A b q) = min q (krylovGrade A b) := by
+  have hle : ∀ q ≤ krylovGrade A b, Module.finrank K (krylovSpace A b q) = q := fun q hq => by
     rw [krylovSpace, finrank_span_eq_card
       ((linearIndependent_pow_mulVec_iff_le_krylovGrade A b).2 hq), Fintype.card_fin]
   rcases le_total q (krylovGrade A b) with h | h
@@ -210,10 +210,10 @@ theorem finrank_krylovSpace (q : ℕ) :
 Source: Saad (2003) [`saad03`], Prop 6.1 (`μ_{A,b} ∣ μ_A`). Atlas: `krylov-grade` (partial).
 atlas: krylov-grade (partial) -/
 theorem krylovGrade_le_natDegree_minpoly :
-    krylovGrade A b ≤ (minpoly ℝ A).natDegree := by
-  set p := minpoly ℝ A
+    krylovGrade A b ≤ (minpoly K A).natDegree := by
+  set p := minpoly K A
   set m := p.natDegree
-  have hint : IsIntegral ℝ A := Algebra.IsIntegral.isIntegral A
+  have hint : IsIntegral K A := Algebra.IsIntegral.isIntegral A
   have hmon : p.Monic := minpoly.monic hint
   have hpdeg : p.degree = m := degree_eq_natDegree hmon.ne_zero
   refine krylovGrade_le_of_pow_mulVec_mem A b (q := m) ?_
@@ -226,7 +226,7 @@ theorem krylovGrade_le_natDegree_minpoly :
     rwa [hpdeg] at h
   have hmem := (mem_krylovSpace_iff A b m (-(aeval A (p - X ^ m) *ᵥ b))).2
     ⟨-(p - X ^ m), by rwa [degree_neg], by rw [map_neg, Matrix.neg_mulVec]⟩
-  have hp : aeval A p = 0 := minpoly.aeval ℝ A
+  have hp : aeval A p = 0 := minpoly.aeval K A
   rw [map_sub, hp, zero_sub, Matrix.neg_mulVec, neg_neg, map_pow, aeval_X] at hmem
   exact hmem
 
@@ -234,7 +234,7 @@ theorem krylovGrade_le_natDegree_minpoly :
 Source: Saad (2003) [`saad03`], Prop 6.1. Atlas: `krylov-grade` (partial).
 atlas: krylov-grade (partial) -/
 theorem krylovGrade_le_card : krylovGrade A b ≤ Fintype.card n :=
-  (Submodule.finrank_le _).trans (Module.finrank_fintype_fun_eq_card ℝ).le
+  (Submodule.finrank_le _).trans (Module.finrank_fintype_fun_eq_card K).le
 
 /-- The grade vanishes exactly for the zero vector: `ν(A,b) = 0 ↔ b = 0`.
 Source: Liesen–Strakoš (2013) [`ls13`], §2.2. Atlas: `krylov-grade` (partial).
@@ -255,29 +255,42 @@ injectively, hence onto, itself, and `r₀ = A (x⋆ − x₀)` lies in it.
 Source: Saad (2003) [`saad03`], Prop 6.3 and §6.1 (`A⁻¹ b ∈ K_ν(A, b)`).
 Atlas: `krylov-grade` (partial: finite termination).
 atlas: krylov-grade (partial) -/
-theorem sub_mem_krylovSpace_krylovGrade {A : Matrix n n ℝ} (hA : IsUnit A) {c xs : n → ℝ}
-    (hxs : A *ᵥ xs = c) (x₀ : n → ℝ) :
+theorem sub_mem_krylovSpace_krylovGrade {A : Matrix n n K} (hA : IsUnit A) {c xs : n → K}
+    (hxs : A *ᵥ xs = c) (x₀ : n → K) :
     xs - x₀ ∈ krylovSpace A (c - A *ᵥ x₀) (krylovGrade A (c - A *ᵥ x₀)) := by
   set r := c - A *ᵥ x₀
-  set K := krylovSpace A r (krylovGrade A r)
+  set S := krylovSpace A r (krylovGrade A r)
   have hr : r = A *ᵥ (xs - x₀) := by simp only [r, Matrix.mulVec_sub, hxs]
-  have hrK : r ∈ K := by
+  have hrK : r ∈ S := by
     simpa using pow_mulVec_mem_krylovSpace_krylovGrade A r 0
-  let f : K →ₗ[ℝ] K := (Matrix.mulVecLin A).restrict fun x hx =>
+  let f : S →ₗ[K] S := (Matrix.mulVecLin A).restrict fun x hx =>
     mulVec_mem_krylovSpace_krylovGrade A r hx
   have hinjA : Function.Injective (Matrix.mulVec A) :=
     Matrix.mulVec_injective_iff_isUnit.2 hA
   have hinj : Function.Injective f := fun x y hxy =>
     Subtype.ext (hinjA (congrArg Subtype.val hxy))
   obtain ⟨y, hy⟩ := (LinearMap.injective_iff_surjective.1 hinj) ⟨r, hrK⟩
-  have hy' : A *ᵥ (y : n → ℝ) = A *ᵥ (xs - x₀) := by
+  have hy' : A *ᵥ (y : n → K) = A *ᵥ (xs - x₀) := by
     rw [← hr]; exact congrArg Subtype.val hy
   rw [← hinjA hy']
   exact y.2
 
+/-- For an invertible matrix, the inverse image of the starting vector belongs
+to the grade-sized Krylov space, including zero vectors and empty matrices.
+Source: Saad (2003), Proposition 6.3; operator derivations, Section 5.
+atlas: krylov-grade (partial) -/
+theorem inv_mulVec_mem_krylovSpace_krylovGrade {A : Matrix n n K}
+    (hA : IsUnit A) (b : n → K) :
+    A⁻¹ *ᵥ b ∈ krylovSpace A b (krylovGrade A b) := by
+  have hsol : A *ᵥ (A⁻¹ *ᵥ b) = b := by
+    rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv A
+      ((Matrix.isUnit_iff_isUnit_det _).mp hA), Matrix.one_mulVec]
+  simpa only [sub_zero, Matrix.mulVec_zero] using
+    sub_mem_krylovSpace_krylovGrade hA hsol (0 : n → K)
+
 /-- A polynomial of degree below the grade that annihilates `b` is zero: the vectors
 `b, A b, …, A^{ν−1} b` are linearly independent. Helper for `krylov-grade`. -/
-theorem eq_zero_of_aeval_mulVec_eq_zero {A : Matrix n n ℝ} {b : n → ℝ} {p : ℝ[X]}
+theorem eq_zero_of_aeval_mulVec_eq_zero {A : Matrix n n K} {b : n → K} {p : K[X]}
     (hp : p.degree < krylovGrade A b) (h0 : aeval A p *ᵥ b = 0) : p = 0 := by
   set ν := krylovGrade A b
   have hli := (linearIndependent_pow_mulVec_iff_le_krylovGrade A b (q := ν)).2 le_rfl

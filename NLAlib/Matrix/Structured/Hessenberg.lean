@@ -92,7 +92,7 @@ theorem IsUpperHessenberg.add_smul_one {H : Matrix (Fin n) (Fin n) ℝ} (hH : Is
 
 /-- `H` has **no zero subdiagonal entry** (`H (j+1) j ≠ 0`) and is upper Hessenberg.
 Golub–Van Loan 2013, §7.4.3 ("unreduced"); Trefethen–Bau 1997, Lect. 26.
-atlas: hessenberg-reduction -/
+atlas: hessenberg-reduction (partial) -/
 def IsUnreducedHessenberg (H : Matrix (Fin n) (Fin n) ℝ) : Prop :=
   IsUpperHessenberg H ∧ ∀ i j : Fin n, (i : ℕ) = j + 1 → H i j ≠ 0
 

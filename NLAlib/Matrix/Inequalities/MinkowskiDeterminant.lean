@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Inequalities.DeterminantRoot
+import NLAlib.Matrix.Basic.PositiveDefiniteClosure
 /-!
 # Minkowski's determinant inequality and exact equality
 
@@ -93,6 +94,24 @@ theorem det_rpow_inv_card_add_le {A B : Matrix n n ℝ}
     A.det ^ (1 / (Fintype.card n : ℝ)) + B.det ^ (1 / (Fintype.card n : ℝ)) ≤
       (A + B).det ^ (1 / (Fintype.card n : ℝ)) :=
   (det_add_rpow_inv_card_ge_and_eq_iff_aux hA hB hN).1
+
+/-- Minkowski's determinant-root inequality extends continuously to positive
+semidefinite real matrices in positive dimension, including singular inputs.
+Source: Horn–Johnson (2013), Corollary 7.6.8; supports Fan's accretive determinant bound. -/
+theorem det_rpow_inv_card_add_le_of_posSemidef {A B : Matrix n n ℝ}
+    (hA : A.PosSemidef) (hB : B.PosSemidef) (hN : 0 < Fintype.card n) :
+    A.det ^ (1 / (Fintype.card n : ℝ)) + B.det ^ (1 / (Fintype.card n : ℝ)) ≤
+      (A + B).det ^ (1 / (Fintype.card n : ℝ)) := by
+  have hexp : 0 ≤ 1 / (Fintype.card n : ℝ) := by positivity
+  have hdet : Continuous (fun M : Matrix n n ℝ => M.det) := by fun_prop
+  have hroot : Continuous (fun M : Matrix n n ℝ => M.det ^ (1 / (Fintype.card n : ℝ))) :=
+    (Real.continuous_rpow_const hexp).comp hdet
+  apply le_of_posSemidef_of_continuous_of_forall_posDef
+    (continuous_const.add hroot) (hroot.comp (continuous_const.add continuous_id))
+    (fun Y hY => ?_) hB
+  apply le_of_posSemidef_of_continuous_of_forall_posDef
+    (hroot.add continuous_const) (hroot.comp (continuous_id.add continuous_const))
+    (fun X hX => det_rpow_inv_card_add_le hX hY hN) hA
 
 /-- Equality in Minkowski's determinant inequality holds exactly at positive proportionality `A = c • B`. Horn–Johnson 2013, Theorem 7.6.10.
 atlas: log-det-concavity (partial) -/

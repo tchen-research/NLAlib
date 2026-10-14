@@ -2,6 +2,7 @@ import NLAlib.ForMathlib.Analysis.BernsteinParameter
 import NLAlib.ForMathlib.Analysis.BinomialRootComparison
 import NLAlib.ForMathlib.Analysis.BoundedVariationIntegral
 import NLAlib.ForMathlib.Analysis.Calculus
+import NLAlib.ForMathlib.Analysis.Complex
 import NLAlib.ForMathlib.Analysis.Convex
 import NLAlib.ForMathlib.Analysis.CotangentBounds
 import NLAlib.ForMathlib.Analysis.CotangentIntegral
@@ -11,6 +12,7 @@ import NLAlib.ForMathlib.Analysis.CotangentOddCorrection
 import NLAlib.ForMathlib.Analysis.CotangentPrefix
 import NLAlib.ForMathlib.Analysis.CotangentRemainder
 import NLAlib.ForMathlib.Analysis.CotangentSamples
+import NLAlib.ForMathlib.Analysis.DegreeTransferLimit
 import NLAlib.ForMathlib.Analysis.DerivativeLimit
 import NLAlib.ForMathlib.Analysis.DescendingFactorialSeries
 import NLAlib.ForMathlib.Analysis.DirichletKernelBounds
@@ -19,6 +21,7 @@ import NLAlib.ForMathlib.Analysis.EquispacedProducts
 import NLAlib.ForMathlib.Analysis.EvenGeometricSeries
 import NLAlib.ForMathlib.Analysis.ExpBounds
 import NLAlib.ForMathlib.Analysis.FejerKernel
+import NLAlib.ForMathlib.Analysis.FejerModulation
 import NLAlib.ForMathlib.Analysis.FinitePairNorm
 import NLAlib.ForMathlib.Analysis.FinitePowerSums
 import NLAlib.ForMathlib.Analysis.FiniteProductBounds

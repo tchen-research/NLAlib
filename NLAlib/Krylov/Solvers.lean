@@ -1,5 +1,6 @@
 import NLAlib.Krylov.Solvers.CG
 import NLAlib.Krylov.Solvers.CGRecurrence
+import NLAlib.Krylov.Solvers.ChristoffelDirections
 import NLAlib.Krylov.Solvers.GMRES
 import NLAlib.Krylov.Solvers.GMRESArnoldi
 import NLAlib.Krylov.Solvers.Minimizer

@@ -1,6 +1,7 @@
 import NLAlib.ForMathlib.Analysis.Calculus.Conditioning
 import NLAlib.Matrix.Perturbation.ConditionNumber
 import NLAlib.Matrix.Perturbation.LeastSquaresGeometry
+import Mathlib.Analysis.Calculus.LineDeriv.Basic
 
 /-!
 # Condition numbers of Euclidean maps
@@ -49,6 +50,25 @@ theorem euclideanJacobian_apply
     Matrix.toLin_symm, LinearMap.toMatrix_apply, PiLp.basisFun_apply]
 
 omit [DecidableEq n] in
+/-- Each Euclidean Jacobian entry is the scalar derivative along its input
+coordinate line. The line derivative is Mathlib's `lineDeriv`. -/
+theorem euclideanJacobian_apply_eq_deriv
+    {f : EuclideanSpace ℝ m → EuclideanSpace ℝ n} {x : EuclideanSpace ℝ m}
+    (hf : DifferentiableAt ℝ f x) (i : n) (j : m) :
+    euclideanJacobian f x i j =
+      deriv (fun t : ℝ => f (x + t • EuclideanSpace.single j 1) i) 0 := by
+  let ev : EuclideanSpace ℝ n →L[ℝ] ℝ :=
+    (ContinuousLinearMap.proj i).comp
+      (PiLp.continuousLinearEquiv 2 ℝ (fun _ : n => ℝ)).toContinuousLinearMap
+  have hi : DifferentiableAt ℝ (fun y => f y i) x := ev.differentiableAt.comp x hf
+  have hF : fderiv ℝ (fun y => f y i) x = ev.comp (fderiv ℝ f x) :=
+    (ev.hasFDerivAt.comp x hf.hasFDerivAt).fderiv
+  rw [euclideanJacobian_apply]
+  have h := hi.lineDeriv_eq_fderiv (v := EuclideanSpace.single j 1)
+  rw [hF] at h
+  exact h.symm
+
+omit [DecidableEq n] in
 open scoped Matrix.Norms.L2Operator in
 /-- The absolute condition number of a differentiable map is the spectral norm of its
 Euclidean Jacobian. Gautschi 2004, Definition 2.3.
@@ -70,7 +90,9 @@ def componentRelativeConditionMatrix
 
 /-- The Euclidean componentwise relative condition number: the spectral norm of the relative
 condition matrix. Gautschi 2004, Definition 2.4; its relative reading needs every input and
-output coordinate nonzero, and `f` differentiable at `x` (the value is `0` otherwise).
+output coordinate nonzero, and `f` differentiable at `x`. The total definition uses
+real division by zero coordinatewise; a zero coordinate does not force the whole
+scaled-matrix norm to vanish.
 atlas: condition-number-of-map-def -/
 def mapComponentRelativeCondition
     (f : EuclideanSpace ℝ m → EuclideanSpace ℝ n) (x : EuclideanSpace ℝ m) : ℝ :=

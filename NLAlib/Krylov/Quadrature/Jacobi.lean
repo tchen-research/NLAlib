@@ -1,5 +1,6 @@
 import NLAlib.Matrix.Spectral.CourantFischer
-import NLAlib.Krylov.Processes.LanczosRecurrence
+import NLAlib.Krylov.Processes.Lanczos
+import NLAlib.Krylov.Quadrature.SpectralMeasure
 /-!
 # Jacobi matrices: orthogonal polynomials, Gauss rules, interlacing, continued fractions
 

@@ -1,0 +1,61 @@
+{
+  "formal-orthogonal-polynomials": {
+    "clauses": [
+      {"statement": "Quasi-definiteness iff unique monic lower-degree orthogonality at every order.", "decls": ["NLAlib.quasiDefinitePolynomialFunctional_iff_forall_existsUnique"]},
+      {"statement": "The canonical formal polynomials satisfy the three-term monic recurrence at every order, including its zero-order boundary.", "decls": ["NLAlib.monicOrthogonalPolynomial_succ_eq"]},
+      {"statement": "The monic recurrence subdiagonal coefficients are nonzero at every positive order.", "decls": ["NLAlib.orthogonalRecurrenceBeta_ne_zero_of_quasiDefinite"]}
+    ]
+  },
+  "orthogonal-polynomials-measure-def": {
+    "clauses": [
+      {"statement": "The squared integral form below degree n is positive definite iff there are at least n support points.", "decls": ["NLAlib.integral_sq_eval_pos_iff_le_support_encard"]},
+      {"statement": "At every order up to support termination the monic lower-degree orthogonality problem has a unique solution.", "decls": ["NLAlib.existsUnique_isMonicOrthogonalPolynomial_polynomialIntegral"]},
+      {"statement": "The canonical family spans every bounded-degree polynomial space.", "decls": ["NLAlib.exists_sum_smul_monicOrthogonalPolynomial_eq_of_degree_le"]},
+      {"statement": "Before support termination every canonical squared norm is positive and distinct canonical orders are orthogonal.", "decls": ["NLAlib.orthogonalPolynomialNorm_pos_of_lt_support_encard", "NLAlib.polynomialIntegral_monicOrthogonalPolynomial_mul_eq_zero"]},
+      {"statement": "For finite support, the terminal canonical polynomial is the support node polynomial and its squared norm is zero.", "decls": ["NLAlib.monicOrthogonalPolynomial_eq_nodal_support", "NLAlib.orthogonalPolynomialNorm_eq_zero_of_finite_support"]},
+      {"statement": "For a spectral measure, support cardinality is the Krylov grade and the canonical monic polynomial is the actual Lanczos charpoly.", "decls": ["NLAlib.support_encard_spectralMeasure_eq_krylovGrade", "NLAlib.LanczosDecomp.monicOrthogonalPolynomial_spectralMeasure_eq_charpoly_T"]}
+    ]
+  },
+  "gauss-christoffel-numbers": {
+    "clauses": [
+      {"statement": "The actual Lanczos polynomial-evaluation vector at a Gauss node is a Jacobi eigenvector.", "decls": ["NLAlib.LanczosDecomp.T_mulVec_eval_poly_eq_smul"]},
+      {"statement": "Every chosen unit Jacobi eigenvector is its normalized evaluation vector up to a real sign.", "decls": ["NLAlib.LanczosDecomp.exists_eigenvectorBasis_T_eq_sign_smul_eval_poly"]},
+      {"statement": "The original-measure Gauss weight is the reciprocal sum of squared orthonormal-polynomial evaluations.", "decls": ["NLAlib.LanczosDecomp.mul_sq_eigenvectorBasis_T_apply_zero_eq_inv_sum_sq_eval_poly"]},
+      {"statement": "The first q orthonormal Lanczos polynomials are orthonormal for the actual mass-scaled Gauss rule.", "decls": ["NLAlib.LanczosDecomp.sum_weight_mul_eval_poly_mul_eval_poly"]}
+    ]
+  },
+  "quadrature-exactness-characterisation": {
+    "clauses": [
+      {"statement": "Exactness below n+k is equivalent to integrated-cardinal weights and nodal orthogonality below k.", "decls": ["NLAlib.integral_eq_quadrature_iff"]},
+      {"statement": "Gauss-degree exactness is equivalent to monic nodal orthogonality and the integrated-cardinal rule.", "decls": ["NLAlib.polynomial_gauss_exactness_iff"]},
+      {"statement": "With more than n support points no n-node rule is exact through degree 2n.", "decls": ["NLAlib.not_integral_eq_quadrature_degree_two_mul"]},
+      {"statement": "The actual canonical Gauss rule exists, is positive, and is exact through degree 2n-1.", "decls": ["NLAlib.integral_eval_eq_sum_gaussWeights_mul_eval", "NLAlib.quadrature_weight_pos_of_gauss_exact"]},
+      {"statement": "The first 2n moments identify every distinct-node n-atom rule with the actual Gauss rule, up to permutation.", "decls": ["NLAlib.rule_eq_gaussNodes_gaussWeights_of_moments"]},
+      {"statement": "The first 2q matrix moments uniquely identify the actual Lanczos Gauss rule, including exact grade termination.", "decls": ["NLAlib.LanczosDecomp.rule_eq_up_to_permutation_of_moments"]}
+    ]
+  },
+  "recurrence-coefficient-bounds": {
+    "clauses": [
+      {"statement": "For more than k+1 compact support points, the real monic diagonal coefficient lies strictly between the interval endpoints.", "decls": ["NLAlib.orthogonalRecurrenceAlpha_mem_Ioo"]},
+      {"statement": "At positive orders the monic norm-ratio coefficient is positive and at most the largest squared endpoint.", "decls": ["NLAlib.orthogonalRecurrenceBeta_pos_and_le"]},
+      {"statement": "Every actual Lanczos diagonal lies between the ambient smallest and largest Hermitian eigenvalues.", "decls": ["NLAlib.LanczosDecomp.alpha_mem_Icc_lambdaMin_lambdaMax"]},
+      {"statement": "Every signed off-diagonal has magnitude at most the ambient spectral norm; canonical positive off-diagonals are positive and satisfy this upper bound before breakdown.", "decls": ["NLAlib.LanczosDecomp.abs_beta_le_specNorm", "NLAlib.beta_arnoldiDecomp_pos_and_le_specNorm"]}
+    ]
+  },
+  "orthogonal-polynomial-zeros": {
+    "clauses": [
+      {"statement": "Actual Lanczos and canonical moment Jacobi eigenvalues are exactly the zeros of the canonical monic polynomial, and are simple.", "decls": ["NLAlib.LanczosDecomp.monicOrthogonalPolynomial_spectralMeasure_eq_charpoly_T", "NLAlib.LanczosDecomp.eigenvalues_T_injective", "NLAlib.nodal_gaussNodes_eq_monicOrthogonalPolynomial", "NLAlib.gaussNodes_injective"]},
+      {"statement": "Actual nonterminal Lanczos and general canonical Gauss nodes lie strictly between the active support extrema.", "decls": ["NLAlib.LanczosDecomp.eigenvalues_T_mem_Ioo_sInf_sSup_support", "NLAlib.gaussNodes_mem_Ioo_sInf_sSup_support", "NLAlib.gaussNodes_mem_Ioo"]},
+      {"statement": "Consecutive actual Lanczos and canonical moment Jacobi spectra strictly interlace before termination.", "decls": ["NLAlib.LanczosDecomp.eigenvalues₀_restrict_T_strict_interlacing", "NLAlib.eigenvalues₀_orthogonalPolynomialJacobiMatrix_strict_interlacing"]},
+      {"statement": "A support-free open interval contains at most one actual Lanczos or canonical Gauss node, including finite-support termination.", "decls": ["NLAlib.LanczosDecomp.eq_of_eigenvalues_T_mem_support_gap", "NLAlib.eq_of_gaussNodes_mem_support_gap", "NLAlib.eq_of_eval_monicOrthogonalPolynomial_eq_zero_of_mem_support_gap_le"]},
+      {"statement": "Every normalized actual Lanczos Gauss weight and every original-measure canonical integrated-cardinal weight is strictly positive.", "decls": ["NLAlib.LanczosDecomp.sq_eigenvectorBasis_T_apply_zero_pos", "NLAlib.gaussWeights_pos"]}
+    ]
+  },
+  "gauss-quadrature-general-measure": {
+    "clauses": [
+      {"statement": "Every distinct-node interpolatory cardinal rule integrates all polynomials below its node count.", "decls": ["NLAlib.integral_eval_eq_sum_integral_basis_mul_eval_of_degree_lt"]},
+      {"statement": "The actual moment construction gives distinct real roots of the canonical monic orthogonal polynomial.", "decls": ["NLAlib.gaussNodes_injective", "NLAlib.nodal_gaussNodes_eq_monicOrthogonalPolynomial"]},
+      {"statement": "The actual integrated-cardinal Gauss rule has positive weights, total mass, and degree-2n-1 exactness.", "decls": ["NLAlib.gaussWeights_pos", "NLAlib.sum_gaussWeights_eq_measure_univ", "NLAlib.integral_eval_eq_sum_gaussWeights_mul_eval"]}
+    ]
+  }
+}

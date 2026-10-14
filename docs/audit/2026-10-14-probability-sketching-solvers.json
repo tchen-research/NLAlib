@@ -1,0 +1,2685 @@
+{
+  "reviewer": "primary agent",
+  "date": "2026-10-14",
+  "method": "Human mathematical read-back of actual signatures, with source checks for implicit scopes and definitions; not an automated equivalence proof. Baseline findings are preserved under baseline_audit.",
+  "records": [
+    {
+      "id": "gaussian-matrix-def",
+      "outcome": "matched",
+      "readback": "The matrix measure is the measurable matrix view of independent standard real Gaussian coordinates; its native IsGaussian instance agrees with the product law.",
+      "evidence": [
+        "NLAlib.hasSubgaussianMGF_id_gaussianReal",
+        "NLAlib.gaussianMatrix",
+        "NLAlib.isGaussian_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "087078a3b45b7f8727ded5822867321bcc02af80b58b985f5731a1a12703d0a4",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-matrix-def",
+        "outcome": "matched",
+        "readback": "The matrix measure is the measurable matrix view of independent standard real Gaussian coordinates; its native IsGaussian instance agrees with the product law.",
+        "evidence": [
+          "NLAlib.hasSubgaussianMGF_id_gaussianReal",
+          "NLAlib.gaussianMatrix",
+          "NLAlib.isGaussian_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "087078a3b45b7f8727ded5822867321bcc02af80b58b985f5731a1a12703d0a4",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "087078a3b45b7f8727ded5822867321bcc02af80b58b985f5731a1a12703d0a4"
+    },
+    {
+      "id": "rotation-invariance",
+      "outcome": "matched",
+      "readback": "Left and right fixed orthogonal multiplication preserve the standard matrix law.",
+      "evidence": [
+        "NLAlib.hasLaw_gaussianMatrix_orthogonal"
+      ],
+      "findings": [],
+      "statement_sha256": "c43fb4d59036aa20e09fcda44e841a76b2039f8dc886028c6b19bc29215f5192",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "rotation-invariance",
+        "outcome": "matched",
+        "readback": "Left and right fixed orthogonal multiplication preserve the standard matrix law.",
+        "evidence": [
+          "NLAlib.hasLaw_gaussianMatrix_orthogonal"
+        ],
+        "findings": [],
+        "statement_sha256": "c43fb4d59036aa20e09fcda44e841a76b2039f8dc886028c6b19bc29215f5192",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "c43fb4d59036aa20e09fcda44e841a76b2039f8dc886028c6b19bc29215f5192"
+    },
+    {
+      "id": "block-law-indep",
+      "outcome": "matched",
+      "readback": "Orthogonal left compressions are standard Gaussian, and mutually perpendicular frames give independent compressed blocks.",
+      "evidence": [
+        "NLAlib.hasLaw_gaussianMatrix_block",
+        "NLAlib.gaussianMatrix_indepFun_block"
+      ],
+      "findings": [],
+      "statement_sha256": "506e5ea1955a773c670aca341b47fc919ed4918d88349f4687aa6f2ffdf1111c",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "block-law-indep",
+        "outcome": "matched",
+        "readback": "Orthogonal left compressions are standard Gaussian, and mutually perpendicular frames give independent compressed blocks.",
+        "evidence": [
+          "NLAlib.hasLaw_gaussianMatrix_block",
+          "NLAlib.gaussianMatrix_indepFun_block"
+        ],
+        "findings": [],
+        "statement_sha256": "506e5ea1955a773c670aca341b47fc919ed4918d88349f4687aa6f2ffdf1111c",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "506e5ea1955a773c670aca341b47fc919ed4918d88349f4687aa6f2ffdf1111c"
+    },
+    {
+      "id": "gaussian-frob-second-moment",
+      "outcome": "matched",
+      "readback": "The exact squared Frobenius expectation of S G T is frobSq S times frobSq T.",
+      "evidence": [
+        "NLAlib.integral_frobSq_mul_gaussianMatrix_mul"
+      ],
+      "findings": [],
+      "statement_sha256": "159bd2dd2e4900015125d62bd5c9add7ed58733f1608bce48b17e66c665e4317",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-frob-second-moment",
+        "outcome": "matched",
+        "readback": "The exact squared Frobenius expectation of S G T is frobSq S times frobSq T.",
+        "evidence": [
+          "NLAlib.integral_frobSq_mul_gaussianMatrix_mul"
+        ],
+        "findings": [],
+        "statement_sha256": "159bd2dd2e4900015125d62bd5c9add7ed58733f1608bce48b17e66c665e4317",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "159bd2dd2e4900015125d62bd5c9add7ed58733f1608bce48b17e66c665e4317"
+    },
+    {
+      "id": "gaussian-frob-fourth-moment",
+      "outcome": "matched",
+      "readback": "The fourth Frobenius moment is the squared second moment plus twice the product of the two Gram Frobenius squares.",
+      "evidence": [
+        "NLAlib.integral_entry_mul_four_gaussianMatrix",
+        "NLAlib.integral_linForm_mul_four_gaussianMatrix",
+        "NLAlib.integral_frobSq_mul_gaussianMatrix_mul_sq"
+      ],
+      "findings": [],
+      "statement_sha256": "9190acf9eb769592415f43e01c1b3ec3b4402c1228c85926404164cbd17ca0cf",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-frob-fourth-moment",
+        "outcome": "matched",
+        "readback": "The fourth Frobenius moment is the squared second moment plus twice the product of the two Gram Frobenius squares.",
+        "evidence": [
+          "NLAlib.integral_entry_mul_four_gaussianMatrix",
+          "NLAlib.integral_linForm_mul_four_gaussianMatrix",
+          "NLAlib.integral_frobSq_mul_gaussianMatrix_mul_sq"
+        ],
+        "findings": [],
+        "statement_sha256": "9190acf9eb769592415f43e01c1b3ec3b4402c1228c85926404164cbd17ca0cf",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "9190acf9eb769592415f43e01c1b3ec3b4402c1228c85926404164cbd17ca0cf"
+    },
+    {
+      "id": "isserlis",
+      "outcome": "matched",
+      "readback": "Centered finite Gaussian coordinate products are sums over pairings of covariance products; odd products integrate to zero, with a law transport to arbitrary spaces.",
+      "evidence": [
+        "NLAlib.integral_prod_eval_gaussian_eq_sum_pairings",
+        "NLAlib.integral_prod_eval_gaussian_eq_sum_integral_mul_pairings",
+        "NLAlib.integral_prod_eval_gaussian_eq_zero_of_odd",
+        "NLAlib.integral_prod_gaussianVector_eq_sum_pairings",
+        "NLAlib.integral_prod_dotProduct_eq_sum_gaussianPairingWeight",
+        "NLAlib.integral_prod_dotProduct_eq_zero_of_odd"
+      ],
+      "findings": [],
+      "statement_sha256": "50add974d7e563ade09e93da4a00a9f3269a4fd3ce3aab4ecdb12c33683c8632",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "isserlis",
+        "outcome": "matched",
+        "readback": "Centered finite Gaussian coordinate products are sums over pairings of covariance products; odd products integrate to zero, with a law transport to arbitrary spaces.",
+        "evidence": [
+          "NLAlib.integral_prod_eval_gaussian_eq_sum_pairings",
+          "NLAlib.integral_prod_eval_gaussian_eq_sum_integral_mul_pairings",
+          "NLAlib.integral_prod_eval_gaussian_eq_zero_of_odd",
+          "NLAlib.integral_prod_gaussianVector_eq_sum_pairings",
+          "NLAlib.integral_prod_dotProduct_eq_sum_gaussianPairingWeight",
+          "NLAlib.integral_prod_dotProduct_eq_zero_of_odd"
+        ],
+        "findings": [],
+        "statement_sha256": "50add974d7e563ade09e93da4a00a9f3269a4fd3ce3aab4ecdb12c33683c8632",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "50add974d7e563ade09e93da4a00a9f3269a4fd3ce3aab4ecdb12c33683c8632"
+    },
+    {
+      "id": "gaussian-amm",
+      "outcome": "matched",
+      "readback": "For a nonempty Gaussian sketch, squared Frobenius multiplication error has the advertised exact numerator divided by the sketch width.",
+      "evidence": [
+        "NLAlib.integral_frobSq_mul_gram_mul_transpose_sub"
+      ],
+      "findings": [],
+      "statement_sha256": "6ecae5d20c2d05b8013c31949cd0b9685a337cd4df27cb62d0f8b71c4ead7ab1",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-amm",
+        "outcome": "matched",
+        "readback": "For a nonempty Gaussian sketch, squared Frobenius multiplication error has the advertised exact numerator divided by the sketch width.",
+        "evidence": [
+          "NLAlib.integral_frobSq_mul_gram_mul_transpose_sub"
+        ],
+        "findings": [],
+        "statement_sha256": "6ecae5d20c2d05b8013c31949cd0b9685a337cd4df27cb62d0f8b71c4ead7ab1",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "6ecae5d20c2d05b8013c31949cd0b9685a337cd4df27cb62d0f8b71c4ead7ab1"
+    },
+    {
+      "id": "gaussian-full-rank-ae",
+      "outcome": "matched",
+      "readback": "The singular row/column Gram loci are Lebesgue-null in standard flat matrix-entry coordinates under the respective wide/tall dimension hypotheses. Standard Gaussian matrices have rank min(rows,columns) almost surely and the corresponding Gram is a unit almost surely. Empty dimensions are included.",
+      "evidence": [
+        "Matrix.volume_det_mul_transpose_eq_zero",
+        "Matrix.volume_det_transpose_mul_eq_zero",
+        "NLAlib.gaussianMatrix_ae_isUnit_mul_transpose",
+        "NLAlib.gaussianMatrix_ae_isUnit_transpose_mul",
+        "NLAlib.gaussianMatrix_ae_rank_eq"
+      ],
+      "findings": [],
+      "statement_sha256": "d04145142374f044ea68f73097398025f923e398d67f9b37a54cc44e4de15113",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-full-rank-ae",
+        "outcome": "partial",
+        "readback": "Standard Gaussian matrices have rank min(rows,columns) almost surely; the appropriate full-row or full-column Gram is a unit almost surely.",
+        "evidence": [
+          "NLAlib.gaussianMatrix_ae_isUnit_mul_transpose",
+          "NLAlib.gaussianMatrix_ae_isUnit_transpose_mul",
+          "NLAlib.gaussianMatrix_ae_rank_eq"
+        ],
+        "findings": [
+          "The informal card advertises Lebesgue-null determinant sets, while its tagged public endpoints state Gaussian almost-sure rank. The source uses polynomial null-set facts; a public volume endpoint is not attached to this card. Record this difference instead of inferring a volume theorem from a Gaussian endpoint."
+        ],
+        "statement_sha256": "e3f13a79c0a175cce1b481d399a1140dd8cf25afdd0ed4bea63e4faf7172cab4",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "d04145142374f044ea68f73097398025f923e398d67f9b37a54cc44e4de15113"
+    },
+    {
+      "id": "chi-square-lower-tail",
+      "outcome": "matched",
+      "readback": "The Gaussian sum of squares obeys the Chernoff lower bound and its optimized power and Laurent–Massart variants with explicit positive dimension.",
+      "evidence": [
+        "NLAlib.measureReal_sum_sq_le_le_exp_mul_rpow",
+        "NLAlib.measureReal_sum_sq_le_le_gaussianVector",
+        "NLAlib.measureReal_sum_sq_le_one_sub_mul_le_gaussianVector",
+        "NLAlib.measureReal_sum_sq_le_sub_two_sqrt_mul_le_gaussianVector"
+      ],
+      "findings": [],
+      "statement_sha256": "7897d57172c0f04498ae2a5691a91b3d5a12514081fdd3645c6ee9449769befa",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "chi-square-lower-tail",
+        "outcome": "matched",
+        "readback": "The Gaussian sum of squares obeys the Chernoff lower bound and its optimized power and Laurent–Massart variants with explicit positive dimension.",
+        "evidence": [
+          "NLAlib.measureReal_sum_sq_le_le_exp_mul_rpow",
+          "NLAlib.measureReal_sum_sq_le_le_gaussianVector",
+          "NLAlib.measureReal_sum_sq_le_one_sub_mul_le_gaussianVector",
+          "NLAlib.measureReal_sum_sq_le_sub_two_sqrt_mul_le_gaussianVector"
+        ],
+        "findings": [],
+        "statement_sha256": "7897d57172c0f04498ae2a5691a91b3d5a12514081fdd3645c6ee9449769befa",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "7897d57172c0f04498ae2a5691a91b3d5a12514081fdd3645c6ee9449769befa"
+    },
+    {
+      "id": "chi-square-upper-tail",
+      "outcome": "matched",
+      "readback": "The Gaussian sum of squares obeys both multiplicative logarithmic and additive square-root upper tails.",
+      "evidence": [
+        "NLAlib.measureReal_le_sum_sq_le_exp_mul_rpow",
+        "NLAlib.measureReal_le_sum_sq_le_gaussianVector",
+        "NLAlib.measureReal_add_two_sqrt_mul_add_le_sum_sq_le_gaussianVector"
+      ],
+      "findings": [],
+      "statement_sha256": "027d8cfee2b87583a84bc017e2c73e63ebc9ac3dcfd02494ff568132a3da2742",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "chi-square-upper-tail",
+        "outcome": "matched",
+        "readback": "The Gaussian sum of squares obeys both multiplicative logarithmic and additive square-root upper tails.",
+        "evidence": [
+          "NLAlib.measureReal_le_sum_sq_le_exp_mul_rpow",
+          "NLAlib.measureReal_le_sum_sq_le_gaussianVector",
+          "NLAlib.measureReal_add_two_sqrt_mul_add_le_sum_sq_le_gaussianVector"
+        ],
+        "findings": [],
+        "statement_sha256": "027d8cfee2b87583a84bc017e2c73e63ebc9ac3dcfd02494ff568132a3da2742",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "027d8cfee2b87583a84bc017e2c73e63ebc9ac3dcfd02494ff568132a3da2742"
+    },
+    {
+      "id": "inverse-chi-square-moment",
+      "outcome": "matched",
+      "readback": "At dimension at least three, the inverse sum of squares is integrable with expectation 1/(d-2).",
+      "evidence": [
+        "NLAlib.integrable_inv_sum_sq_gaussianVector",
+        "NLAlib.integral_inv_sum_sq_gaussianVector"
+      ],
+      "findings": [],
+      "statement_sha256": "19d7c1f000e960e93fe740333c6bdba7473748a4e066fe9c97586516771de6e6",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "inverse-chi-square-moment",
+        "outcome": "matched",
+        "readback": "At dimension at least three, the inverse sum of squares is integrable with expectation 1/(d-2).",
+        "evidence": [
+          "NLAlib.integrable_inv_sum_sq_gaussianVector",
+          "NLAlib.integral_inv_sum_sq_gaussianVector"
+        ],
+        "findings": [],
+        "statement_sha256": "19d7c1f000e960e93fe740333c6bdba7473748a4e066fe9c97586516771de6e6",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "19d7c1f000e960e93fe740333c6bdba7473748a4e066fe9c97586516771de6e6"
+    },
+    {
+      "id": "inverse-wishart-mean",
+      "outcome": "matched",
+      "readback": "When the column count exceeds the row count by at least two, the inverse Gram entries are integrable and their mean matrix is the advertised scalar identity.",
+      "evidence": [
+        "NLAlib.integrable_and_integral_inv_self_mul_transpose_gaussianMatrix",
+        "NLAlib.integral_inv_self_mul_transpose_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "8096efac3e8c7d0111bf7d80359b209633b2f762af668bfcd7c661308e3bcb17",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "inverse-wishart-mean",
+        "outcome": "matched",
+        "readback": "When the column count exceeds the row count by at least two, the inverse Gram entries are integrable and their mean matrix is the advertised scalar identity.",
+        "evidence": [
+          "NLAlib.integrable_and_integral_inv_self_mul_transpose_gaussianMatrix",
+          "NLAlib.integral_inv_self_mul_transpose_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "8096efac3e8c7d0111bf7d80359b209633b2f762af668bfcd7c661308e3bcb17",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "8096efac3e8c7d0111bf7d80359b209633b2f762af668bfcd7c661308e3bcb17"
+    },
+    {
+      "id": "pinv-frob-moment",
+      "outcome": "matched",
+      "readback": "The full-row pseudoinverse Frobenius square equals the inverse-Gram trace and has expectation r/(k-r-1) in the finite-moment regime.",
+      "evidence": [
+        "NLAlib.frobSq_pinvR_eq_trace_inv",
+        "NLAlib.integrable_and_integral_frobSq_pinvR_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "2cb5fd21372a4feafe3d98062bda80fc28f599fdfdeaf67c9d9b60edeb41f8cd",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "pinv-frob-moment",
+        "outcome": "matched",
+        "readback": "The full-row pseudoinverse Frobenius square equals the inverse-Gram trace and has expectation r/(k-r-1) in the finite-moment regime.",
+        "evidence": [
+          "NLAlib.frobSq_pinvR_eq_trace_inv",
+          "NLAlib.integrable_and_integral_frobSq_pinvR_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "2cb5fd21372a4feafe3d98062bda80fc28f599fdfdeaf67c9d9b60edeb41f8cd",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "2cb5fd21372a4feafe3d98062bda80fc28f599fdfdeaf67c9d9b60edeb41f8cd"
+    },
+    {
+      "id": "pinv-frob-fourth-moment",
+      "outcome": "matched",
+      "readback": "The fourth pseudoinverse Frobenius moment is integrable and equals the displayed rational function for k >= r+4.",
+      "evidence": [
+        "NLAlib.integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "a855d0ce38f52d614dd309c0f07caf1ad66b444562bfdb0eb62ee9503aa88437",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "pinv-frob-fourth-moment",
+        "outcome": "matched",
+        "readback": "The fourth pseudoinverse Frobenius moment is integrable and equals the displayed rational function for k >= r+4.",
+        "evidence": [
+          "NLAlib.integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "a855d0ce38f52d614dd309c0f07caf1ad66b444562bfdb0eb62ee9503aa88437",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "a855d0ce38f52d614dd309c0f07caf1ad66b444562bfdb0eb62ee9503aa88437"
+    },
+    {
+      "id": "inverse-wishart-frob-moment",
+      "outcome": "matched",
+      "readback": "The inverse Gram squared Frobenius expectation equals r(k-1)/[(k-r)(k-r-1)(k-r-3)].",
+      "evidence": [
+        "NLAlib.integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "0857437e7618b91c451d488469c9bc063c50faf373217d3efcd9000cbf8c66cf",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "inverse-wishart-frob-moment",
+        "outcome": "matched",
+        "readback": "The inverse Gram squared Frobenius expectation equals r(k-1)/[(k-r)(k-r-1)(k-r-3)].",
+        "evidence": [
+          "NLAlib.integrable_and_integral_frobSq_inv_self_mul_transpose_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "0857437e7618b91c451d488469c9bc063c50faf373217d3efcd9000cbf8c66cf",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "0857437e7618b91c451d488469c9bc063c50faf373217d3efcd9000cbf8c66cf"
+    },
+    {
+      "id": "pinv-spectral-tail",
+      "outcome": "matched",
+      "readback": "The pseudoinverse spectral tail has the stated power and a stronger prefactor 1/sqrt(2 pi (k-r+1)); positive thresholds and r>=2 are explicit.",
+      "evidence": [
+        "NLAlib.gaussianMatrix_lt_specNorm_pinvR_le"
+      ],
+      "findings": [],
+      "statement_sha256": "c282980f7d28044f05c613601d6605a038a1236c153d784b398751f6066038b6",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "pinv-spectral-tail",
+        "outcome": "matched",
+        "readback": "The pseudoinverse spectral tail has the stated power and a stronger prefactor 1/sqrt(2 pi (k-r+1)); positive thresholds and r>=2 are explicit.",
+        "evidence": [
+          "NLAlib.gaussianMatrix_lt_specNorm_pinvR_le"
+        ],
+        "findings": [],
+        "statement_sha256": "c282980f7d28044f05c613601d6605a038a1236c153d784b398751f6066038b6",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "c282980f7d28044f05c613601d6605a038a1236c153d784b398751f6066038b6"
+    },
+    {
+      "id": "pinv-spectral-expectation",
+      "outcome": "matched",
+      "readback": "The pseudoinverse spectral norm is integrable and its expectation is bounded by e sqrt(k)/(k-r), also for r=1.",
+      "evidence": [
+        "NLAlib.integrable_and_integral_specNorm_pinvR_gaussianMatrix_le"
+      ],
+      "findings": [],
+      "statement_sha256": "fd25c4ae1cc029df2183a1eb4fb26e25d5d23fa998ea24bf63f3df453f85204d",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "pinv-spectral-expectation",
+        "outcome": "matched",
+        "readback": "The pseudoinverse spectral norm is integrable and its expectation is bounded by e sqrt(k)/(k-r), also for r=1.",
+        "evidence": [
+          "NLAlib.integrable_and_integral_specNorm_pinvR_gaussianMatrix_le"
+        ],
+        "findings": [],
+        "statement_sha256": "fd25c4ae1cc029df2183a1eb4fb26e25d5d23fa998ea24bf63f3df453f85204d",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "fd25c4ae1cc029df2183a1eb4fb26e25d5d23fa998ea24bf63f3df453f85204d"
+    },
+    {
+      "id": "pinv-frob-tail",
+      "outcome": "matched",
+      "readback": "For t>=1 and k>=r+4 the exact Frobenius-square failure event is bounded by 4 t^(-(k-r)/2).",
+      "evidence": [
+        "NLAlib.gaussianMatrix_lt_frobSq_pinvR_le"
+      ],
+      "findings": [],
+      "statement_sha256": "fa30c41972a3061d40b63ad360d437147d68ac1c753fe4ea8ff0a0e2596b8a67",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "pinv-frob-tail",
+        "outcome": "matched",
+        "readback": "For t>=1 and k>=r+4 the exact Frobenius-square failure event is bounded by 4 t^(-(k-r)/2).",
+        "evidence": [
+          "NLAlib.gaussianMatrix_lt_frobSq_pinvR_le"
+        ],
+        "findings": [],
+        "statement_sha256": "fa30c41972a3061d40b63ad360d437147d68ac1c753fe4ea8ff0a0e2596b8a67",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "fa30c41972a3061d40b63ad360d437147d68ac1c753fe4ea8ff0a0e2596b8a67"
+    },
+    {
+      "id": "inverse-wishart-spectral-moment",
+      "outcome": "matched",
+      "readback": "The natural-power expectation is bounded by the pth power of the advertised rooted constant, with explicit 1<=p<=18 and k>=r+2p.",
+      "evidence": [
+        "NLAlib.integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le"
+      ],
+      "findings": [],
+      "statement_sha256": "aa176dfe872dd9c72b0339f2547ded3afd3f9ab2444aaca8927836b0bb2f20ef",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "inverse-wishart-spectral-moment",
+        "outcome": "matched",
+        "readback": "The natural-power expectation is bounded by the pth power of the advertised rooted constant, with explicit 1<=p<=18 and k>=r+2p.",
+        "evidence": [
+          "NLAlib.integrable_and_integral_specNorm_inv_self_mul_transpose_pow_gaussianMatrix_le"
+        ],
+        "findings": [],
+        "statement_sha256": "aa176dfe872dd9c72b0339f2547ded3afd3f9ab2444aaca8927836b0bb2f20ef",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "aa176dfe872dd9c72b0339f2547ded3afd3f9ab2444aaca8927836b0bb2f20ef"
+    },
+    {
+      "id": "gaussian-concentration",
+      "outcome": "matched",
+      "readback": "Frobenius-Lipschitz matrix functions are integrable and have the one-sided Gaussian upper tail at mean+L t for L>0 and t>=0.",
+      "evidence": [
+        "NLAlib.measureReal_ge_le_of_lipschitz_gaussianVector",
+        "NLAlib.gaussian_concentration"
+      ],
+      "findings": [],
+      "statement_sha256": "e8b6912c174f98513872fb2af03057710a30a316882d881f0536ee71e9ba1bc0",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-concentration",
+        "outcome": "matched",
+        "readback": "Frobenius-Lipschitz matrix functions are integrable and have the one-sided Gaussian upper tail at mean+L t for L>0 and t>=0.",
+        "evidence": [
+          "NLAlib.measureReal_ge_le_of_lipschitz_gaussianVector",
+          "NLAlib.gaussian_concentration"
+        ],
+        "findings": [],
+        "statement_sha256": "e8b6912c174f98513872fb2af03057710a30a316882d881f0536ee71e9ba1bc0",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "e8b6912c174f98513872fb2af03057710a30a316882d881f0536ee71e9ba1bc0"
+    },
+    {
+      "id": "norm-lipschitz",
+      "outcome": "matched",
+      "readback": "Every padded singular value and the spectral norm are Lipschitz in the Frobenius distance; the spectral-distance refinement is provided by the Weyl API.",
+      "evidence": [
+        "NLAlib.abs_specNorm_sub_specNorm_le_frobNorm",
+        "NLAlib.continuous_singularValues_array",
+        "NLAlib.continuous_sq_singularValues_transpose_last_array",
+        "NLAlib.singularValues_zero_eq_specNorm",
+        "NLAlib.abs_singularValues_sub_le_frobNorm"
+      ],
+      "findings": [],
+      "statement_sha256": "e528a51fe57c5647d34e87a687bdd113334e4a02358922964db672ca3a20b01d",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "norm-lipschitz",
+        "outcome": "matched",
+        "readback": "Every padded singular value and the spectral norm are Lipschitz in the Frobenius distance; the spectral-distance refinement is provided by the Weyl API.",
+        "evidence": [
+          "NLAlib.abs_specNorm_sub_specNorm_le_frobNorm",
+          "NLAlib.continuous_singularValues_array",
+          "NLAlib.continuous_sq_singularValues_transpose_last_array",
+          "NLAlib.singularValues_zero_eq_specNorm",
+          "NLAlib.abs_singularValues_sub_le_frobNorm"
+        ],
+        "findings": [],
+        "statement_sha256": "e528a51fe57c5647d34e87a687bdd113334e4a02358922964db672ca3a20b01d",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "e528a51fe57c5647d34e87a687bdd113334e4a02358922964db672ca3a20b01d"
+    },
+    {
+      "id": "gordon",
+      "outcome": "matched",
+      "readback": "The smallest domain-side padded singular value and operator norm are integrable and satisfy the sqrt(N) +/- sqrt(n) expectation bounds for n>=1.",
+      "evidence": [
+        "NLAlib.integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt",
+        "NLAlib.sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix",
+        "NLAlib.gordon_extreme_singular_values"
+      ],
+      "findings": [],
+      "statement_sha256": "3b80f2bf459779fd5622da21a017a8520dc0ab78b181d16b359758480a1be918",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gordon",
+        "outcome": "matched",
+        "readback": "The smallest domain-side padded singular value and operator norm are integrable and satisfy the sqrt(N) +/- sqrt(n) expectation bounds for n>=1.",
+        "evidence": [
+          "NLAlib.integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt",
+          "NLAlib.sqrt_sub_sqrt_le_integral_sigmaMin_gaussianMatrix",
+          "NLAlib.gordon_extreme_singular_values"
+        ],
+        "findings": [],
+        "statement_sha256": "3b80f2bf459779fd5622da21a017a8520dc0ab78b181d16b359758480a1be918",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "3b80f2bf459779fd5622da21a017a8520dc0ab78b181d16b359758480a1be918"
+    },
+    {
+      "id": "chevet",
+      "outcome": "matched",
+      "readback": "The sandwiched Gaussian spectral norm is integrable with mean bounded by specNorm S*frobNorm T + frobNorm S*specNorm T.",
+      "evidence": [
+        "NLAlib.integral_specNorm_mul_gaussianMatrix_mul_le",
+        "NLAlib.integrable_and_integral_specNorm_mul_gaussianMatrix_mul_le"
+      ],
+      "findings": [],
+      "statement_sha256": "c65445ac2926b4b2a24a359cb5dbb9db4971abc3e558e065914e2d04ba778abb",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "chevet",
+        "outcome": "matched",
+        "readback": "The sandwiched Gaussian spectral norm is integrable with mean bounded by specNorm S*frobNorm T + frobNorm S*specNorm T.",
+        "evidence": [
+          "NLAlib.integral_specNorm_mul_gaussianMatrix_mul_le",
+          "NLAlib.integrable_and_integral_specNorm_mul_gaussianMatrix_mul_le"
+        ],
+        "findings": [],
+        "statement_sha256": "c65445ac2926b4b2a24a359cb5dbb9db4971abc3e558e065914e2d04ba778abb",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "c65445ac2926b4b2a24a359cb5dbb9db4971abc3e558e065914e2d04ba778abb"
+    },
+    {
+      "id": "spectral-second-moment",
+      "outcome": "matched",
+      "readback": "The second spectral expectation is bounded by the square of the same Chevet constant.",
+      "evidence": [
+        "NLAlib.integral_specNorm_sq_mul_gaussianMatrix_mul_le",
+        "NLAlib.integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le"
+      ],
+      "findings": [],
+      "statement_sha256": "4f604530bfeb2f6b6eb1ff6819971a2ddf54c0bb3eb0b715182fcca376a27497",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "spectral-second-moment",
+        "outcome": "matched",
+        "readback": "The second spectral expectation is bounded by the square of the same Chevet constant.",
+        "evidence": [
+          "NLAlib.integral_specNorm_sq_mul_gaussianMatrix_mul_le",
+          "NLAlib.integrable_and_integral_specNorm_sq_mul_gaussianMatrix_mul_le"
+        ],
+        "findings": [],
+        "statement_sha256": "4f604530bfeb2f6b6eb1ff6819971a2ddf54c0bb3eb0b715182fcca376a27497",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "4f604530bfeb2f6b6eb1ff6819971a2ddf54c0bb3eb0b715182fcca376a27497"
+    },
+    {
+      "id": "smin-lower-tail",
+      "outcome": "matched",
+      "readback": "For positive domain dimension the domain-side smallest singular value has the advertised Gaussian lower tail; the Lean result also allows wide matrices.",
+      "evidence": [
+        "NLAlib.measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "8b61d5689905f144ccae23b66b75873e08a149efa6d940173f94870a16b2ade6",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "smin-lower-tail",
+        "outcome": "matched",
+        "readback": "For positive domain dimension the domain-side smallest singular value has the advertised Gaussian lower tail; the Lean result also allows wide matrices.",
+        "evidence": [
+          "NLAlib.measure_sigmaMin_le_sqrt_sub_sqrt_sub_le_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "8b61d5689905f144ccae23b66b75873e08a149efa6d940173f94870a16b2ade6",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "8b61d5689905f144ccae23b66b75873e08a149efa6d940173f94870a16b2ade6"
+    },
+    {
+      "id": "smin-small-ball",
+      "outcome": "matched",
+      "readback": "The stated smallest-singular-value power tail holds under n<=N and the squared threshold condition; negative thresholds are harmless and allowed by Lean.",
+      "evidence": [
+        "NLAlib.exists_iInf_norm_mulVec_le_of_singularValues_last_le",
+        "NLAlib.measure_sq_dist_colSpace_le_le_gaussianReal",
+        "NLAlib.measure_sq_dist_col_span_le_le_gaussianMatrix",
+        "NLAlib.measure_sigmaMin_le_le_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "bb5de3e599a1259d6d6dd88b2852e29db3dcfdf44c5905914c2c71e93666c9e4",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "smin-small-ball",
+        "outcome": "matched",
+        "readback": "The stated smallest-singular-value power tail holds under n<=N and the squared threshold condition; negative thresholds are harmless and allowed by Lean.",
+        "evidence": [
+          "NLAlib.exists_iInf_norm_mulVec_le_of_singularValues_last_le",
+          "NLAlib.measure_sq_dist_colSpace_le_le_gaussianReal",
+          "NLAlib.measure_sq_dist_col_span_le_le_gaussianMatrix",
+          "NLAlib.measure_sigmaMin_le_le_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "bb5de3e599a1259d6d6dd88b2852e29db3dcfdf44c5905914c2c71e93666c9e4",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "bb5de3e599a1259d6d6dd88b2852e29db3dcfdf44c5905914c2c71e93666c9e4"
+    },
+    {
+      "id": "extreme-singular-values-deviation",
+      "outcome": "matched",
+      "readback": "The joint smallest/largest singular-value interval has probability at least 1-2 exp(-t^2/2), with positive domain dimension.",
+      "evidence": [
+        "NLAlib.measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix",
+        "NLAlib.one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "89dfcc8164a0e6a46e8309f80211cafdc7c2fa301a54f842f141ecd55ce68060",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "extreme-singular-values-deviation",
+        "outcome": "matched",
+        "readback": "The joint smallest/largest singular-value interval has probability at least 1-2 exp(-t^2/2), with positive domain dimension.",
+        "evidence": [
+          "NLAlib.measure_sqrt_add_sqrt_add_le_specNorm_le_gaussianMatrix",
+          "NLAlib.one_sub_le_measure_sigmaMin_and_specNorm_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "89dfcc8164a0e6a46e8309f80211cafdc7c2fa301a54f842f141ecd55ce68060",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "89dfcc8164a0e6a46e8309f80211cafdc7c2fa301a54f842f141ecd55ce68060"
+    },
+    {
+      "id": "haar-orthogonal",
+      "outcome": "matched",
+      "readback": "The actual canonical measurable QR map, with a null-set fallback, pushes Gaussian matrices to the Stiefel Haar law and square matrices to orthogonal Haar.",
+      "evidence": [
+        "NLAlib.gaussianMatrix_map_canonicalQRFrame",
+        "NLAlib.gaussianMatrix_map_canonicalQR_orthogonal"
+      ],
+      "findings": [],
+      "statement_sha256": "f5832ad32bbdb8368ca09d245faaaad7673133217c2df3ce1be62b2cf87e1864",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "haar-orthogonal",
+        "outcome": "matched",
+        "readback": "The actual canonical measurable QR map, with a null-set fallback, pushes Gaussian matrices to the Stiefel Haar law and square matrices to orthogonal Haar.",
+        "evidence": [
+          "NLAlib.gaussianMatrix_map_canonicalQRFrame",
+          "NLAlib.gaussianMatrix_map_canonicalQR_orthogonal"
+        ],
+        "findings": [],
+        "statement_sha256": "f5832ad32bbdb8368ca09d245faaaad7673133217c2df3ce1be62b2cf87e1864",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "f5832ad32bbdb8368ca09d245faaaad7673133217c2df3ce1be62b2cf87e1864"
+    },
+    {
+      "id": "rademacher-khintchine",
+      "outcome": "matched",
+      "readback": "Actual sign laws give MGF proxy one; weighted sums give proxy squared Euclidean coefficient norm and the explicit Gamma moment bound for every real p>0.",
+      "evidence": [
+        "NLAlib.hasSubgaussianMGF_of_hasLaw_rademacherMeasure",
+        "NLAlib.hasSubgaussianMGF_sum_mul_rademacher",
+        "NLAlib.integral_abs_rpow_sum_mul_rademacher_le"
+      ],
+      "findings": [],
+      "statement_sha256": "f1fdedd794c82afda7e561ddf578ee5bb87aa7ac58d9c95222102792e3119c78",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "rademacher-khintchine",
+        "outcome": "matched",
+        "readback": "Actual sign laws give MGF proxy one; weighted sums give proxy squared Euclidean coefficient norm and the explicit Gamma moment bound for every real p>0.",
+        "evidence": [
+          "NLAlib.hasSubgaussianMGF_of_hasLaw_rademacherMeasure",
+          "NLAlib.hasSubgaussianMGF_sum_mul_rademacher",
+          "NLAlib.integral_abs_rpow_sum_mul_rademacher_le"
+        ],
+        "findings": [],
+        "statement_sha256": "f1fdedd794c82afda7e561ddf578ee5bb87aa7ac58d9c95222102792e3119c78",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "f1fdedd794c82afda7e561ddf578ee5bb87aa7ac58d9c95222102792e3119c78"
+    },
+    {
+      "id": "epsilon-net-norm",
+      "outcome": "matched",
+      "readback": "Finite unit-sphere nets have the advertised volume cardinality bound; pointwise norm bounds on a net imply the operator bound, including empty domains.",
+      "evidence": [
+        "NLAlib.specNorm_le_div_of_net",
+        "NLAlib.specNorm_le_div_of_net_bilinear",
+        "NLAlib.specNorm_le_div_of_net_quadForm",
+        "NLAlib.exists_finset_sphere_net",
+        "NLAlib.exists_finset_net_specNorm_le"
+      ],
+      "findings": [],
+      "statement_sha256": "5f5cea87d246bb9f3c7836975807b70fa9a7ed1fb5ca892a510b789ae28bb313",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "epsilon-net-norm",
+        "outcome": "matched",
+        "readback": "Finite unit-sphere nets have the advertised volume cardinality bound; pointwise norm bounds on a net imply the operator bound, including empty domains.",
+        "evidence": [
+          "NLAlib.specNorm_le_div_of_net",
+          "NLAlib.specNorm_le_div_of_net_bilinear",
+          "NLAlib.specNorm_le_div_of_net_quadForm",
+          "NLAlib.exists_finset_sphere_net",
+          "NLAlib.exists_finset_net_specNorm_le"
+        ],
+        "findings": [],
+        "statement_sha256": "5f5cea87d246bb9f3c7836975807b70fa9a7ed1fb5ca892a510b789ae28bb313",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "5f5cea87d246bb9f3c7836975807b70fa9a7ed1fb5ca892a510b789ae28bb313"
+    },
+    {
+      "id": "subgaussian-matrix-norm",
+      "outcome": "matched",
+      "readback": "Independent isotropic rows with directional MGF proxy K squared give simultaneous padded-smallest and largest singular tails, with the explicit 32e and 1024e squared constants.",
+      "evidence": [
+        "NLAlib.measure_extreme_singular_failure_le_of_independent_isotropic_rows"
+      ],
+      "findings": [],
+      "statement_sha256": "4936e932d4523b59b75a203344ffbc406bd2cc13b640ba482c2dc82027334988",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "subgaussian-matrix-norm",
+        "outcome": "matched",
+        "readback": "Independent isotropic rows with directional MGF proxy K squared give simultaneous padded-smallest and largest singular tails, with the explicit 32e and 1024e squared constants.",
+        "evidence": [
+          "NLAlib.measure_extreme_singular_failure_le_of_independent_isotropic_rows"
+        ],
+        "findings": [],
+        "statement_sha256": "4936e932d4523b59b75a203344ffbc406bd2cc13b640ba482c2dc82027334988",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "4936e932d4523b59b75a203344ffbc406bd2cc13b640ba482c2dc82027334988"
+    },
+    {
+      "id": "bernstein-scalar",
+      "outcome": "matched",
+      "readback": "Independent centered subexponential coordinates give a two-sided sum tail with coefficient 1/64 and the min of quadratic/linear exponents; integrability is derived.",
+      "evidence": [
+        "NLAlib.bernstein_sum_of_lintegral_exp_abs_le_two",
+        "NLAlib.integrable_of_lintegral_exp_abs_le_two",
+        "NLAlib.integrable_exp_mul_of_lintegral_exp_abs_le_two",
+        "NLAlib.mgf_le_of_lintegral_exp_abs_le_two"
+      ],
+      "findings": [],
+      "statement_sha256": "80cfbb9dda7fbc96e53d05c4a0a879909af44af49718939b9927384f84e50bc5",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "bernstein-scalar",
+        "outcome": "matched",
+        "readback": "Independent centered subexponential coordinates give a two-sided sum tail with coefficient 1/64 and the min of quadratic/linear exponents; integrability is derived.",
+        "evidence": [
+          "NLAlib.bernstein_sum_of_lintegral_exp_abs_le_two",
+          "NLAlib.integrable_of_lintegral_exp_abs_le_two",
+          "NLAlib.integrable_exp_mul_of_lintegral_exp_abs_le_two",
+          "NLAlib.mgf_le_of_lintegral_exp_abs_le_two"
+        ],
+        "findings": [],
+        "statement_sha256": "80cfbb9dda7fbc96e53d05c4a0a879909af44af49718939b9927384f84e50bc5",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "80cfbb9dda7fbc96e53d05c4a0a879909af44af49718939b9927384f84e50bc5"
+    },
+    {
+      "id": "hanson-wright",
+      "outcome": "matched",
+      "readback": "Independent centered coordinates with the exponential-square condition give the exact stated Hanson–Wright form with constant 1/(20736 e squared); the MGF-proxy variant has 1/(256 e squared).",
+      "evidence": [
+        "NLAlib.hanson_wright_mgf",
+        "NLAlib.hanson_wright_of_lintegral_exp_sq_le_two"
+      ],
+      "findings": [],
+      "statement_sha256": "0b00c5e103d3d4fa4463f23db0076cee3c11e40f349b05121d03ceeac4144f78",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "hanson-wright",
+        "outcome": "matched",
+        "readback": "Independent centered coordinates with the exponential-square condition give the exact stated Hanson–Wright form with constant 1/(20736 e squared); the MGF-proxy variant has 1/(256 e squared).",
+        "evidence": [
+          "NLAlib.hanson_wright_mgf",
+          "NLAlib.hanson_wright_of_lintegral_exp_sq_le_two"
+        ],
+        "findings": [],
+        "statement_sha256": "0b00c5e103d3d4fa4463f23db0076cee3c11e40f349b05121d03ceeac4144f78",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "0b00c5e103d3d4fa4463f23db0076cee3c11e40f349b05121d03ceeac4144f78"
+    },
+    {
+      "id": "mcdiarmid",
+      "outcome": "matched",
+      "readback": "Actual independent measurable coordinates and measurable bounded coordinate differences give separate upper and lower tails without final integrability assumptions.",
+      "evidence": [
+        "NLAlib.hasSubgaussianMGF_pi_of_coordinate_oscillation",
+        "NLAlib.hasSubgaussianMGF_of_independent_coordinate_oscillation",
+        "NLAlib.mcdiarmid_upper_tail",
+        "NLAlib.mcdiarmid_lower_tail"
+      ],
+      "findings": [],
+      "statement_sha256": "9c791965530b43ef3d2d119cfb346a3b06461846e51ae02fa3cb7f75dbafde83",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "mcdiarmid",
+        "outcome": "matched",
+        "readback": "Actual independent measurable coordinates and measurable bounded coordinate differences give separate upper and lower tails without final integrability assumptions.",
+        "evidence": [
+          "NLAlib.hasSubgaussianMGF_pi_of_coordinate_oscillation",
+          "NLAlib.hasSubgaussianMGF_of_independent_coordinate_oscillation",
+          "NLAlib.mcdiarmid_upper_tail",
+          "NLAlib.mcdiarmid_lower_tail"
+        ],
+        "findings": [],
+        "statement_sha256": "9c791965530b43ef3d2d119cfb346a3b06461846e51ae02fa3cb7f75dbafde83",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "9c791965530b43ef3d2d119cfb346a3b06461846e51ae02fa3cb7f75dbafde83"
+    },
+    {
+      "id": "matrix-laplace",
+      "outcome": "matched",
+      "readback": "Independent integrable Hermitian summands with integrable exponentials give expectation and tail bounds using the trace exponential of their cumulant sum, in positive dimension.",
+      "evidence": [
+        "NLAlib.cumulantSum",
+        "NLAlib.integral_lambdaMax_le_log_integral_traceExp_div",
+        "NLAlib.log_integral_traceExp_div_le_integral_lambdaMin",
+        "NLAlib.measureReal_lambdaMax_ge_le_exp_mul_integral_traceExp",
+        "NLAlib.measureReal_lambdaMin_le_le_exp_mul_integral_traceExp",
+        "NLAlib.integral_lambdaMax_sum_le_log_traceExp_cumulantSum_div",
+        "NLAlib.measureReal_lambdaMax_sum_ge_le_exp_mul_traceExp_cumulantSum",
+        "NLAlib.log_traceExp_cumulantSum_div_le_integral_lambdaMin_sum",
+        "NLAlib.measureReal_lambdaMin_sum_le_le_exp_mul_traceExp_cumulantSum",
+        "NLAlib.trace_cgf_subadditivity"
+      ],
+      "findings": [],
+      "statement_sha256": "ca1e8759801a7eb35cf917f3494fb14c27ac99f90c8f5d178c450053a82c1a2a",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-laplace",
+        "outcome": "matched",
+        "readback": "Independent integrable Hermitian summands with integrable exponentials give expectation and tail bounds using the trace exponential of their cumulant sum, in positive dimension.",
+        "evidence": [
+          "NLAlib.cumulantSum",
+          "NLAlib.integral_lambdaMax_le_log_integral_traceExp_div",
+          "NLAlib.log_integral_traceExp_div_le_integral_lambdaMin",
+          "NLAlib.measureReal_lambdaMax_ge_le_exp_mul_integral_traceExp",
+          "NLAlib.measureReal_lambdaMin_le_le_exp_mul_integral_traceExp",
+          "NLAlib.integral_lambdaMax_sum_le_log_traceExp_cumulantSum_div",
+          "NLAlib.measureReal_lambdaMax_sum_ge_le_exp_mul_traceExp_cumulantSum",
+          "NLAlib.log_traceExp_cumulantSum_div_le_integral_lambdaMin_sum",
+          "NLAlib.measureReal_lambdaMin_sum_le_le_exp_mul_traceExp_cumulantSum",
+          "NLAlib.trace_cgf_subadditivity"
+        ],
+        "findings": [],
+        "statement_sha256": "ca1e8759801a7eb35cf917f3494fb14c27ac99f90c8f5d178c450053a82c1a2a",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "ca1e8759801a7eb35cf917f3494fb14c27ac99f90c8f5d178c450053a82c1a2a"
+    },
+    {
+      "id": "matrix-gaussian-series",
+      "outcome": "matched",
+      "readback": "Actual independent Gaussian or sign coefficients give rectangular operator expectation and tail bounds with the two-Gram variance maximum and dimension sum.",
+      "evidence": [
+        "NLAlib.gaussianSeriesTail",
+        "NLAlib.hermitianSecondMoment_hermitianSeries_eq",
+        "NLAlib.integral_lambdaMax_hermitianSeries_le",
+        "NLAlib.measureReal_lambdaMax_hermitianSeries_ge_le",
+        "NLAlib.rectSecondMoment_matrixSeries_eq",
+        "NLAlib.integral_specNorm_matrixSeries_le",
+        "NLAlib.measureReal_specNorm_matrixSeries_ge_le"
+      ],
+      "findings": [],
+      "statement_sha256": "c371393f9190e13b04b4b99e7071218d7bde5c91eb162fc50981d688839f0bef",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-gaussian-series",
+        "outcome": "matched",
+        "readback": "Actual independent Gaussian or sign coefficients give rectangular operator expectation and tail bounds with the two-Gram variance maximum and dimension sum.",
+        "evidence": [
+          "NLAlib.gaussianSeriesTail",
+          "NLAlib.hermitianSecondMoment_hermitianSeries_eq",
+          "NLAlib.integral_lambdaMax_hermitianSeries_le",
+          "NLAlib.measureReal_lambdaMax_hermitianSeries_ge_le",
+          "NLAlib.rectSecondMoment_matrixSeries_eq",
+          "NLAlib.integral_specNorm_matrixSeries_le",
+          "NLAlib.measureReal_specNorm_matrixSeries_ge_le"
+        ],
+        "findings": [],
+        "statement_sha256": "c371393f9190e13b04b4b99e7071218d7bde5c91eb162fc50981d688839f0bef",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "c371393f9190e13b04b4b99e7071218d7bde5c91eb162fc50981d688839f0bef"
+    },
+    {
+      "id": "matrix-chernoff",
+      "outcome": "matched",
+      "readback": "Independent measurable bounded PSD summands have lower/upper spectral tails and expectation bounds, with zero-bound degeneracies handled by the named tail definitions.",
+      "evidence": [
+        "NLAlib.integral_lambdaMin_sum_ge_chernoff",
+        "NLAlib.integral_lambdaMax_sum_le_chernoff",
+        "NLAlib.measureReal_lambdaMin_sum_le_le_chernoffLowerTail",
+        "NLAlib.measureReal_lambdaMax_sum_ge_le_chernoffUpperTail"
+      ],
+      "findings": [],
+      "statement_sha256": "3662bca763fb8d064b796e036f22dbdb56f676004120783087acfc3c695a4686",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-chernoff",
+        "outcome": "matched",
+        "readback": "Independent measurable bounded PSD summands have lower/upper spectral tails and expectation bounds, with zero-bound degeneracies handled by the named tail definitions.",
+        "evidence": [
+          "NLAlib.integral_lambdaMin_sum_ge_chernoff",
+          "NLAlib.integral_lambdaMax_sum_le_chernoff",
+          "NLAlib.measureReal_lambdaMin_sum_le_le_chernoffLowerTail",
+          "NLAlib.measureReal_lambdaMax_sum_ge_le_chernoffUpperTail"
+        ],
+        "findings": [],
+        "statement_sha256": "3662bca763fb8d064b796e036f22dbdb56f676004120783087acfc3c695a4686",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "3662bca763fb8d064b796e036f22dbdb56f676004120783087acfc3c695a4686"
+    },
+    {
+      "id": "matrix-bernstein",
+      "outcome": "matched",
+      "readback": "Centered independent bounded rectangular summands have the stated dimension-sum spectral tail and expectation bounds with the actual variance matrices.",
+      "evidence": [
+        "NLAlib.rectSecondMoment",
+        "NLAlib.hermitianSecondMoment",
+        "NLAlib.bernsteinTail",
+        "NLAlib.hermitianSecondMoment_sum_eq",
+        "NLAlib.integral_lambdaMax_sum_le_of_lambdaMax_le",
+        "NLAlib.measureReal_lambdaMax_sum_ge_le_bernsteinTail",
+        "NLAlib.rectSecondMoment_sum_eq",
+        "NLAlib.integral_specNorm_sum_le_of_specNorm_le",
+        "NLAlib.measureReal_specNorm_sum_ge_le_bernsteinTail"
+      ],
+      "findings": [],
+      "statement_sha256": "eef024a2de649f28dc75b33385cb69b26091276a9841c8a341a3568d8b4c83a6",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-bernstein",
+        "outcome": "matched",
+        "readback": "Centered independent bounded rectangular summands have the stated dimension-sum spectral tail and expectation bounds with the actual variance matrices.",
+        "evidence": [
+          "NLAlib.rectSecondMoment",
+          "NLAlib.hermitianSecondMoment",
+          "NLAlib.bernsteinTail",
+          "NLAlib.hermitianSecondMoment_sum_eq",
+          "NLAlib.integral_lambdaMax_sum_le_of_lambdaMax_le",
+          "NLAlib.measureReal_lambdaMax_sum_ge_le_bernsteinTail",
+          "NLAlib.rectSecondMoment_sum_eq",
+          "NLAlib.integral_specNorm_sum_le_of_specNorm_le",
+          "NLAlib.measureReal_specNorm_sum_ge_le_bernsteinTail"
+        ],
+        "findings": [],
+        "statement_sha256": "eef024a2de649f28dc75b33385cb69b26091276a9841c8a341a3568d8b4c83a6",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "eef024a2de649f28dc75b33385cb69b26091276a9841c8a341a3568d8b4c83a6"
+    },
+    {
+      "id": "intrinsic-dimension",
+      "outcome": "matched",
+      "readback": "Nonzero variance/mean envelopes give the exact intrinsic Bernstein threshold and Chernoff threshold, and the advertised constants in their expectation/tail formulas.",
+      "evidence": [
+        "NLAlib.intrinsicDimension",
+        "NLAlib.traceFunction",
+        "NLAlib.measureReal_specNorm_sum_ge_le_intrinsicDimension_mul_exp",
+        "NLAlib.integral_specNorm_sum_le_of_intrinsicDimension",
+        "NLAlib.integral_lambdaMax_sum_le_of_intrinsicDimension",
+        "NLAlib.measureReal_lambdaMax_sum_ge_le_intrinsicDimension_mul_exp_chernoff",
+        "NLAlib.measureReal_lambdaMax_sum_ge_le_intrinsicDimension_mul_exp"
+      ],
+      "findings": [],
+      "statement_sha256": "1208feb3da94d4a4bfc67fb019db8974917eb8681230bd53b2035b32985c3c02",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "intrinsic-dimension",
+        "outcome": "matched",
+        "readback": "Nonzero variance/mean envelopes give the exact intrinsic Bernstein threshold and Chernoff threshold, and the advertised constants in their expectation/tail formulas.",
+        "evidence": [
+          "NLAlib.intrinsicDimension",
+          "NLAlib.traceFunction",
+          "NLAlib.measureReal_specNorm_sum_ge_le_intrinsicDimension_mul_exp",
+          "NLAlib.integral_specNorm_sum_le_of_intrinsicDimension",
+          "NLAlib.integral_lambdaMax_sum_le_of_intrinsicDimension",
+          "NLAlib.measureReal_lambdaMax_sum_ge_le_intrinsicDimension_mul_exp_chernoff",
+          "NLAlib.measureReal_lambdaMax_sum_ge_le_intrinsicDimension_mul_exp"
+        ],
+        "findings": [],
+        "statement_sha256": "1208feb3da94d4a4bfc67fb019db8974917eb8681230bd53b2035b32985c3c02",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "1208feb3da94d4a4bfc67fb019db8974917eb8681230bd53b2035b32985c3c02"
+    },
+    {
+      "id": "matrix-chernoff-sampling",
+      "outcome": "matched",
+      "readback": "Independent PSD identity-mean summands bounded by L give the two averaged-Gram exponential bounds; rank-one isotropic samples are a specialization.",
+      "evidence": [
+        "NLAlib.matrix_chernoff_sampling_lower",
+        "NLAlib.matrix_chernoff_sampling_upper"
+      ],
+      "findings": [],
+      "statement_sha256": "ba69d48cc01f15e4fccdf55ebf46d52f621a6a2a1a385d5cb5d6a70e8e4f0a92",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-chernoff-sampling",
+        "outcome": "matched",
+        "readback": "Independent PSD identity-mean summands bounded by L give the two averaged-Gram exponential bounds; rank-one isotropic samples are a specialization.",
+        "evidence": [
+          "NLAlib.matrix_chernoff_sampling_lower",
+          "NLAlib.matrix_chernoff_sampling_upper"
+        ],
+        "findings": [],
+        "statement_sha256": "ba69d48cc01f15e4fccdf55ebf46d52f621a6a2a1a385d5cb5d6a70e8e4f0a92",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "ba69d48cc01f15e4fccdf55ebf46d52f621a6a2a1a385d5cb5d6a70e8e4f0a92"
+    },
+    {
+      "id": "matrix-freedman",
+      "outcome": "matched",
+      "readback": "Adapted Hermitian integrable increments with conditional mean zero, upper-only bound, and genuine local predictable quadratic moments satisfy the exact anytime Bernstein crossing bound.",
+      "evidence": [
+        "NLAlib.lieb_concavity",
+        "NLAlib.ae_condExp_matrixExp_one_le_and_condExp_sq_posSemidef_and_matrixLog_le",
+        "NLAlib.condExp_traceExp_add_le_traceExp_add_matrixLog_of_ae_posDef_condExp",
+        "NLAlib.condExp_traceExp_add_le_traceExp_add_matrixLog_of_predictable",
+        "NLAlib.matrix_freedman",
+        "NLAlib.measure_exists_matrix_crossing_le_of_condExp_sq",
+        "NLAlib.supermartingale_matrixCompensatedTracePotential_of_condExp_sq",
+        "NLAlib.condExp_traceExp_variance_update_le"
+      ],
+      "findings": [],
+      "statement_sha256": "f610536fc608d303f88c966ddb2fe62be62bd160e68098247de6ee9c719d2c61",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-freedman",
+        "outcome": "matched",
+        "readback": "Adapted Hermitian integrable increments with conditional mean zero, upper-only bound, and genuine local predictable quadratic moments satisfy the exact anytime Bernstein crossing bound.",
+        "evidence": [
+          "NLAlib.lieb_concavity",
+          "NLAlib.ae_condExp_matrixExp_one_le_and_condExp_sq_posSemidef_and_matrixLog_le",
+          "NLAlib.condExp_traceExp_add_le_traceExp_add_matrixLog_of_ae_posDef_condExp",
+          "NLAlib.condExp_traceExp_add_le_traceExp_add_matrixLog_of_predictable",
+          "NLAlib.matrix_freedman",
+          "NLAlib.measure_exists_matrix_crossing_le_of_condExp_sq",
+          "NLAlib.supermartingale_matrixCompensatedTracePotential_of_condExp_sq",
+          "NLAlib.condExp_traceExp_variance_update_le"
+        ],
+        "findings": [],
+        "statement_sha256": "f610536fc608d303f88c966ddb2fe62be62bd160e68098247de6ee9c719d2c61",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "f610536fc608d303f88c966ddb2fe62be62bd160e68098247de6ee9c719d2c61"
+    },
+    {
+      "id": "noncommutative-khintchine",
+      "outcome": "matched",
+      "readback": "Both actual independent Gaussian and sign laws satisfy the integer even trace-moment inequality and its rooted form; p=1 equality and zero dimensions are included.",
+      "evidence": [
+        "NLAlib.integral_re_trace_rademacherSeries_pow_le",
+        "NLAlib.integral_re_trace_gaussianSeries_pow_le",
+        "NLAlib.integral_re_trace_gaussianSeries_pow_le_of_hasLaw",
+        "NLAlib.integral_re_trace_gaussianSeries_pow_rpow_le_of_hasLaw",
+        "NLAlib.integral_re_trace_rademacherSeries_pow_le_of_hasLaw",
+        "NLAlib.integral_re_trace_rademacherSeries_pow_rpow_le_of_hasLaw",
+        "NLAlib.integral_re_trace_independent_series_sq"
+      ],
+      "findings": [],
+      "statement_sha256": "c47ff146e32fa34e760163eb2d464e5de1bf17d1bd6c0082eb34c60a9ff893ad",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "noncommutative-khintchine",
+        "outcome": "matched",
+        "readback": "Both actual independent Gaussian and sign laws satisfy the integer even trace-moment inequality and its rooted form; p=1 equality and zero dimensions are included.",
+        "evidence": [
+          "NLAlib.integral_re_trace_rademacherSeries_pow_le",
+          "NLAlib.integral_re_trace_gaussianSeries_pow_le",
+          "NLAlib.integral_re_trace_gaussianSeries_pow_le_of_hasLaw",
+          "NLAlib.integral_re_trace_gaussianSeries_pow_rpow_le_of_hasLaw",
+          "NLAlib.integral_re_trace_rademacherSeries_pow_le_of_hasLaw",
+          "NLAlib.integral_re_trace_rademacherSeries_pow_rpow_le_of_hasLaw",
+          "NLAlib.integral_re_trace_independent_series_sq"
+        ],
+        "findings": [],
+        "statement_sha256": "c47ff146e32fa34e760163eb2d464e5de1bf17d1bd6c0082eb34c60a9ff893ad",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "c47ff146e32fa34e760163eb2d464e5de1bf17d1bd6c0082eb34c60a9ff893ad"
+    },
+    {
+      "id": "jl-distributional",
+      "outcome": "matched",
+      "readback": "The scaled Gaussian sketch obeys the stated strict squared-norm distortion failure bound, including zero sketch rows where the bound is trivial.",
+      "evidence": [
+        "NLAlib.jl_distributional"
+      ],
+      "findings": [],
+      "statement_sha256": "42d901cac0b2fabec62911c89ef9e6a289dc42a690e2126faa425a38db328c69",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "jl-distributional",
+        "outcome": "matched",
+        "readback": "The scaled Gaussian sketch obeys the stated strict squared-norm distortion failure bound, including zero sketch rows where the bound is trivial.",
+        "evidence": [
+          "NLAlib.jl_distributional"
+        ],
+        "findings": [],
+        "statement_sha256": "42d901cac0b2fabec62911c89ef9e6a289dc42a690e2126faa425a38db328c69",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "42d901cac0b2fabec62911c89ef9e6a289dc42a690e2126faa425a38db328c69"
+    },
+    {
+      "id": "jl-lemma",
+      "outcome": "matched",
+      "readback": "A union bound on the actual Gaussian law gives pairwise distortion, a logarithmic failure-budget theorem, probability one half and an actual linear-map existence result.",
+      "evidence": [
+        "NLAlib.jl_lemma",
+        "NLAlib.jl_lemma_prob_le_of_log_le",
+        "NLAlib.jl_lemma_prob_le_half",
+        "NLAlib.jl_lemma_exists"
+      ],
+      "findings": [],
+      "statement_sha256": "1aab73b536241a6e834b3a45d77225ff318d5d537043366433a32c1d324a5a8d",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "jl-lemma",
+        "outcome": "matched",
+        "readback": "A union bound on the actual Gaussian law gives pairwise distortion, a logarithmic failure-budget theorem, probability one half and an actual linear-map existence result.",
+        "evidence": [
+          "NLAlib.jl_lemma",
+          "NLAlib.jl_lemma_prob_le_of_log_le",
+          "NLAlib.jl_lemma_prob_le_half",
+          "NLAlib.jl_lemma_exists"
+        ],
+        "findings": [],
+        "statement_sha256": "1aab73b536241a6e834b3a45d77225ff318d5d537043366433a32c1d324a5a8d",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "1aab73b536241a6e834b3a45d77225ff318d5d537043366433a32c1d324a5a8d"
+    },
+    {
+      "id": "jl-subgaussian",
+      "outcome": "matched",
+      "readback": "Mutually independent centered unit-second-moment entries with common MGF proxy give the advertised fixed-vector squared-norm failure tail.",
+      "evidence": [
+        "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_isotropic_rows",
+        "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_subgaussian_entries"
+      ],
+      "findings": [],
+      "statement_sha256": "b9021de7f858715b7d4cfe3de8e2ab86b95b9891f96d2f15f19d79dd9a7b20e2",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "jl-subgaussian",
+        "outcome": "matched",
+        "readback": "Mutually independent centered unit-second-moment entries with common MGF proxy give the advertised fixed-vector squared-norm failure tail.",
+        "evidence": [
+          "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_isotropic_rows",
+          "NLAlib.measure_lt_abs_mulVec_sq_sub_le_of_independent_subgaussian_entries"
+        ],
+        "findings": [],
+        "statement_sha256": "b9021de7f858715b7d4cfe3de8e2ab86b95b9891f96d2f15f19d79dd9a7b20e2",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "b9021de7f858715b7d4cfe3de8e2ab86b95b9891f96d2f15f19d79dd9a7b20e2"
+    },
+    {
+      "id": "ose-def",
+      "outcome": "matched",
+      "readback": "Orthonormal frames give equivalent range preservation, coordinate quadratic bounds, finite domain-side singular-value interval, and Gram spectral error formulations.",
+      "evidence": [
+        "NLAlib.IsSubspaceEmbedding",
+        "NLAlib.specNorm_transpose_mul_self_sub_one_le_of_isSubspaceEmbedding",
+        "NLAlib.isSubspaceEmbedding_iff_specNorm_transpose_mul_self_sub_one_le",
+        "NLAlib.isSubspaceEmbedding_iff_singularValues",
+        "NLAlib.isSubspaceEmbedding_iff_of_hasOrthonormalCols",
+        "NLAlib.isSubspaceEmbedding_mul_right_iff",
+        "NLAlib.IsSubspaceEmbedding.mono",
+        "NLAlib.isSubspaceEmbedding_of_specNorm_transpose_mul_self_sub_one_le"
+      ],
+      "findings": [],
+      "statement_sha256": "e25d5ec9b9da23e46b67fe1a4488900074fae6b89689f334b66d64ccbeeada41",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "ose-def",
+        "outcome": "matched",
+        "readback": "Orthonormal frames give equivalent range preservation, coordinate quadratic bounds, finite domain-side singular-value interval, and Gram spectral error formulations.",
+        "evidence": [
+          "NLAlib.IsSubspaceEmbedding",
+          "NLAlib.specNorm_transpose_mul_self_sub_one_le_of_isSubspaceEmbedding",
+          "NLAlib.isSubspaceEmbedding_iff_specNorm_transpose_mul_self_sub_one_le",
+          "NLAlib.isSubspaceEmbedding_iff_singularValues",
+          "NLAlib.isSubspaceEmbedding_iff_of_hasOrthonormalCols",
+          "NLAlib.isSubspaceEmbedding_mul_right_iff",
+          "NLAlib.IsSubspaceEmbedding.mono",
+          "NLAlib.isSubspaceEmbedding_of_specNorm_transpose_mul_self_sub_one_le"
+        ],
+        "findings": [],
+        "statement_sha256": "e25d5ec9b9da23e46b67fe1a4488900074fae6b89689f334b66d64ccbeeada41",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "e25d5ec9b9da23e46b67fe1a4488900074fae6b89689f334b66d64ccbeeada41"
+    },
+    {
+      "id": "gaussian-ose",
+      "outcome": "matched",
+      "readback": "A fixed orthonormal frame is preserved with success at least 1-delta under the explicit 18(d+2 log(2/delta))/epsilon squared row budget.",
+      "evidence": [
+        "NLAlib.isSubspaceEmbedding_of_forall_sqrt_le",
+        "NLAlib.one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "212d8272323896cd46a2766b914ee3cfbb8c715fb153f6820da89ab9f7456174",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-ose",
+        "outcome": "partial",
+        "readback": "A fixed orthonormal frame is preserved with success at least 1-delta under the explicit 18(d+2 log(2/delta))/epsilon squared row budget.",
+        "evidence": [
+          "NLAlib.isSubspaceEmbedding_of_forall_sqrt_le",
+          "NLAlib.one_sub_le_measure_isSubspaceEmbedding_gaussianMatrix"
+        ],
+        "findings": [
+          "The human hypotheses omit 0<epsilon<=1 and 0<delta<=1, both explicit and needed by the Lean theorem. Add them."
+        ],
+        "statement_sha256": "ffc777e0c13760589a3699807cca15e54c90f3fa0e055e8630ce170cbc7ff549",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "212d8272323896cd46a2766b914ee3cfbb8c715fb153f6820da89ab9f7456174"
+    },
+    {
+      "id": "srht-ose",
+      "outcome": "matched",
+      "readback": "A shared sign diagonal and independent uniform distinct-row subset give the actual classical SRHT Gram tail; separate endpoints handle full rows, zero subspace and iid-with-replacement variants.",
+      "evidence": [
+        "NLAlib.measure_srht_gram_failure_le_of_sharp_sample_size",
+        "NLAlib.measure_srht_gram_failure_le_of_manuscript_sample_size"
+      ],
+      "findings": [],
+      "statement_sha256": "d595c8cfcaff9cdf766166adf00d135871d75ea426906a0cdebdfa9d7209a448",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "srht-ose",
+        "outcome": "matched",
+        "readback": "A shared sign diagonal and independent uniform distinct-row subset give the actual classical SRHT Gram tail; separate endpoints handle full rows, zero subspace and iid-with-replacement variants.",
+        "evidence": [
+          "NLAlib.measure_srht_gram_failure_le_of_sharp_sample_size",
+          "NLAlib.measure_srht_gram_failure_le_of_manuscript_sample_size"
+        ],
+        "findings": [],
+        "statement_sha256": "d595c8cfcaff9cdf766166adf00d135871d75ea426906a0cdebdfa9d7209a448",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "d595c8cfcaff9cdf766166adf00d135871d75ea426906a0cdebdfa9d7209a448"
+    },
+    {
+      "id": "sparse-ose",
+      "outcome": "matched",
+      "readback": "The three actual CountSketch, block SparseStack and uniform exact-s laws have separate Gram/error and embedding endpoints; rounded rows and sparsity bounds are explicit and the zero subspace is preserved.",
+      "evidence": [
+        "NLAlib.integral_frobSq_countSketch_gram_error_eq",
+        "NLAlib.measure_countSketch_gram_failure_le",
+        "NLAlib.measure_countSketch_gram_failure_le_of_rows",
+        "NLAlib.measure_countSketch_embedding_failure_le_of_rows",
+        "NLAlib.measure_sparseStack_embedding_success_ge",
+        "NLAlib.measure_sparseStack_gram_failure_le",
+        "NLAlib.measure_uniformSparse_embedding_success_ge",
+        "NLAlib.measure_uniformSparse_gram_failure_le",
+        "NLAlib.sparse_embedding_parameters",
+        "NLAlib.measure_sparseStack_embedding_success_ge_of_hasLaw",
+        "NLAlib.measure_uniformSparse_embedding_success_ge_of_hasLaw",
+        "NLAlib.measure_sparseStack_embedding_success_ge_fintype",
+        "NLAlib.measure_uniformSparse_embedding_success_ge_fintype"
+      ],
+      "findings": [],
+      "statement_sha256": "410ae696fa1d8890f61344d391d4f142fcfcf3a77dce4b09edebc3f47a67fd3b",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "sparse-ose",
+        "outcome": "matched",
+        "readback": "The three actual CountSketch, block SparseStack and uniform exact-s laws have separate Gram/error and embedding endpoints; rounded rows and sparsity bounds are explicit and the zero subspace is preserved.",
+        "evidence": [
+          "NLAlib.integral_frobSq_countSketch_gram_error_eq",
+          "NLAlib.measure_countSketch_gram_failure_le",
+          "NLAlib.measure_countSketch_gram_failure_le_of_rows",
+          "NLAlib.measure_countSketch_embedding_failure_le_of_rows",
+          "NLAlib.measure_sparseStack_embedding_success_ge",
+          "NLAlib.measure_sparseStack_gram_failure_le",
+          "NLAlib.measure_uniformSparse_embedding_success_ge",
+          "NLAlib.measure_uniformSparse_gram_failure_le",
+          "NLAlib.sparse_embedding_parameters",
+          "NLAlib.measure_sparseStack_embedding_success_ge_of_hasLaw",
+          "NLAlib.measure_uniformSparse_embedding_success_ge_of_hasLaw",
+          "NLAlib.measure_sparseStack_embedding_success_ge_fintype",
+          "NLAlib.measure_uniformSparse_embedding_success_ge_fintype"
+        ],
+        "findings": [],
+        "statement_sha256": "410ae696fa1d8890f61344d391d4f142fcfcf3a77dce4b09edebc3f47a67fd3b",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "410ae696fa1d8890f61344d391d4f142fcfcf3a77dce4b09edebc3f47a67fd3b"
+    },
+    {
+      "id": "amm-sampling",
+      "outcome": "partial",
+      "readback": "The actual iid column/row pair law has exact Frobenius variance (W squared - frobSq AB)/c; the complex bare norm uses the Frobenius scope, confirmed in its source.",
+      "evidence": [
+        "NLAlib.integral_frobenius_sampled_mul_sub_sq",
+        "NLAlib.integral_frobenius_sampled_mul_sub_sq_of_columnRowProbabilities",
+        "NLAlib.mul_eq_zero_of_sum_columnRowWeight_eq_zero",
+        "NLAlib.integral_frobSq_sampled_mul_sub_of_columnRowProbabilities",
+        "NLAlib.integral_frobenius_sampled_mul_sub_sq_le_of_probability_domination"
+      ],
+      "findings": [
+        "The complex declarations use bare matrix norms under Matrix.Norms.Frobenius. Mathematics matches, but the current named-norm standard would make the public signature less ambiguous."
+      ],
+      "statement_sha256": "ec42cbcd1d23dce5ec9974ad777fbf9b62cf66cbf58b4aa09b7977c5b443ed6e",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "amm-sampling",
+        "outcome": "partial",
+        "readback": "The actual iid column/row pair law has exact Frobenius variance (W squared - frobSq AB)/c; the complex bare norm uses the Frobenius scope, confirmed in its source.",
+        "evidence": [
+          "NLAlib.integral_frobenius_sampled_mul_sub_sq",
+          "NLAlib.integral_frobenius_sampled_mul_sub_sq_of_columnRowProbabilities",
+          "NLAlib.mul_eq_zero_of_sum_columnRowWeight_eq_zero",
+          "NLAlib.integral_frobSq_sampled_mul_sub_of_columnRowProbabilities",
+          "NLAlib.integral_frobenius_sampled_mul_sub_sq_le_of_probability_domination"
+        ],
+        "findings": [
+          "The complex declarations use bare matrix norms under Matrix.Norms.Frobenius. Mathematics matches, but the current named-norm standard would make the public signature less ambiguous."
+        ],
+        "statement_sha256": "ec42cbcd1d23dce5ec9974ad777fbf9b62cf66cbf58b4aa09b7977c5b443ed6e",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "ec42cbcd1d23dce5ec9974ad777fbf9b62cf66cbf58b4aa09b7977c5b443ed6e"
+    },
+    {
+      "id": "amm-ose",
+      "outcome": "matched",
+      "readback": "The entrywise-measurable JL second-moment hypothesis implies the nonnegative extended Frobenius-error integral bound, avoiding an unjustified finite-integral premise.",
+      "evidence": [
+        "NLAlib.lintegral_frobSq_transpose_mul_sketch_sub_le"
+      ],
+      "findings": [],
+      "statement_sha256": "fb8cd997b19bcf051bd19bc840f02df04521228b2d10a4e616768889f92c4c6b",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "amm-ose",
+        "outcome": "matched",
+        "readback": "The entrywise-measurable JL second-moment hypothesis implies the nonnegative extended Frobenius-error integral bound, avoiding an unjustified finite-integral premise.",
+        "evidence": [
+          "NLAlib.lintegral_frobSq_transpose_mul_sketch_sub_le"
+        ],
+        "findings": [],
+        "statement_sha256": "fb8cd997b19bcf051bd19bc840f02df04521228b2d10a4e616768889f92c4c6b",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "fb8cd997b19bcf051bd19bc840f02df04521228b2d10a4e616768889f92c4c6b"
+    },
+    {
+      "id": "leverage-scores",
+      "outcome": "matched",
+      "readback": "Leverage scores are projector diagonals between zero and one summing to rank; any orthonormal range basis gives the same row squared norms.",
+      "evidence": [
+        "NLAlib.leverageScore",
+        "NLAlib.leverageScore_nonneg",
+        "NLAlib.leverageScore_le_one",
+        "NLAlib.sum_leverageScore_eq_rank",
+        "NLAlib.leverageScore_eq_sum_sq_of_hasOrthonormalCols"
+      ],
+      "findings": [],
+      "statement_sha256": "9671e7a602a0fe422c49f5d0312ed70d88486936a0b942a398fbb66b32d58608",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "leverage-scores",
+        "outcome": "matched",
+        "readback": "Leverage scores are projector diagonals between zero and one summing to rank; any orthonormal range basis gives the same row squared norms.",
+        "evidence": [
+          "NLAlib.leverageScore",
+          "NLAlib.leverageScore_nonneg",
+          "NLAlib.leverageScore_le_one",
+          "NLAlib.sum_leverageScore_eq_rank",
+          "NLAlib.leverageScore_eq_sum_sq_of_hasOrthonormalCols"
+        ],
+        "findings": [],
+        "statement_sha256": "9671e7a602a0fe422c49f5d0312ed70d88486936a0b942a398fbb66b32d58608",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "9671e7a602a0fe422c49f5d0312ed70d88486936a0b942a398fbb66b32d58608"
+    },
+    {
+      "id": "leverage-sampling-ose",
+      "outcome": "matched",
+      "readback": "Actual iid leverage-dominated complex row sampling gives the stated sample-size embedding tail; a separate zero-range result avoids normalizing a zero law.",
+      "evidence": [
+        "NLAlib.measure_le_norm_leverage_gram_sub_one",
+        "NLAlib.measure_leverage_embedding_failure_le_of_sample_size",
+        "NLAlib.norm_mulVec_sq_bounds_of_zero_range"
+      ],
+      "findings": [],
+      "statement_sha256": "bbdcdfa066bd67c925df7ac5f951a5730edb18535390b6f4020f3b9a111dae2c",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "leverage-sampling-ose",
+        "outcome": "matched",
+        "readback": "Actual iid leverage-dominated complex row sampling gives the stated sample-size embedding tail; a separate zero-range result avoids normalizing a zero law.",
+        "evidence": [
+          "NLAlib.measure_le_norm_leverage_gram_sub_one",
+          "NLAlib.measure_leverage_embedding_failure_le_of_sample_size",
+          "NLAlib.norm_mulVec_sq_bounds_of_zero_range"
+        ],
+        "findings": [],
+        "statement_sha256": "bbdcdfa066bd67c925df7ac5f951a5730edb18535390b6f4020f3b9a111dae2c",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "bbdcdfa066bd67c925df7ac5f951a5730edb18535390b6f4020f3b9a111dae2c"
+    },
+    {
+      "id": "volume-sampling",
+      "outcome": "partial",
+      "readback": "The true determinant-weighted complex column-subset law has the exact elementary-symmetric ratio error and the k+1 best-rank Frobenius comparison.",
+      "evidence": [
+        "NLAlib.integral_complexVolumeSampling_residual_norm_sq_eq_and_le_bestRank",
+        "NLAlib.integral_complexVolumeSampling_residual_norm_sq_le_mul_truncatedSVD",
+        "NLAlib.ae_complexVolumeSamplingResidual_rank_eq_zero",
+        "NLAlib.integral_complexVolumeSampling_residual_norm_sq_eq_normalizer_ratio",
+        "NLAlib.integral_complexVolumeSampling_residual_norm_sq_eq_elementary_ratio",
+        "NLAlib.integral_complexVolumeSampling_residual_norm_sq_le_mul_tail",
+        "NLAlib.integral_complexVolumeSampling_residual_norm_sq_rank_eq_zero",
+        "NLAlib.complexGramElementary_pos_iff",
+        "NLAlib.sum_re_det_complex_gram_principal_minors_eq",
+        "NLAlib.complexVolumeSamplingNormalizer_pos_iff",
+        "NLAlib.volumeSamplingExpectedFrobSq_eq_mul_normalizer_succ_div",
+        "NLAlib.volumeSamplingExpectedFrobSq_le_mul_bestRankFrobSq",
+        "NLAlib.volumeSamplingExpectedFrobSq_rank_eq_zero",
+        "NLAlib.sub_volumeSample_projector_mul_eq_zero_of_card_eq_rank",
+        "NLAlib.integral_frobSq_volumeSamplingResidual_le_mul_bestRankFrobSq",
+        "NLAlib.integral_frobSq_volumeSamplingResidual_eq_mul_normalizer_succ_div",
+        "NLAlib.integral_frobSq_volumeSamplingResidual_rank_eq_zero",
+        "NLAlib.det_gram_fromCols_eq_mul_frobenius_norm_sq_sub_rangeProjector"
+      ],
+      "findings": [
+        "The complex endpoint uses bare matrix norm under Matrix.Norms.Frobenius; its source scope confirms the squared Frobenius interpretation."
+      ],
+      "statement_sha256": "27e1ca0ea6fd5ea1d5ae85bc9efe1d4ea73e14b09556bf32fb041d2d6ec1a13e",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "volume-sampling",
+        "outcome": "partial",
+        "readback": "The true determinant-weighted complex column-subset law has the exact elementary-symmetric ratio error and the k+1 best-rank Frobenius comparison.",
+        "evidence": [
+          "NLAlib.integral_complexVolumeSampling_residual_norm_sq_eq_and_le_bestRank",
+          "NLAlib.integral_complexVolumeSampling_residual_norm_sq_le_mul_truncatedSVD",
+          "NLAlib.ae_complexVolumeSamplingResidual_rank_eq_zero",
+          "NLAlib.integral_complexVolumeSampling_residual_norm_sq_eq_normalizer_ratio",
+          "NLAlib.integral_complexVolumeSampling_residual_norm_sq_eq_elementary_ratio",
+          "NLAlib.integral_complexVolumeSampling_residual_norm_sq_le_mul_tail",
+          "NLAlib.integral_complexVolumeSampling_residual_norm_sq_rank_eq_zero",
+          "NLAlib.complexGramElementary_pos_iff",
+          "NLAlib.sum_re_det_complex_gram_principal_minors_eq",
+          "NLAlib.complexVolumeSamplingNormalizer_pos_iff",
+          "NLAlib.volumeSamplingExpectedFrobSq_eq_mul_normalizer_succ_div",
+          "NLAlib.volumeSamplingExpectedFrobSq_le_mul_bestRankFrobSq",
+          "NLAlib.volumeSamplingExpectedFrobSq_rank_eq_zero",
+          "NLAlib.sub_volumeSample_projector_mul_eq_zero_of_card_eq_rank",
+          "NLAlib.integral_frobSq_volumeSamplingResidual_le_mul_bestRankFrobSq",
+          "NLAlib.integral_frobSq_volumeSamplingResidual_eq_mul_normalizer_succ_div",
+          "NLAlib.integral_frobSq_volumeSamplingResidual_rank_eq_zero",
+          "NLAlib.det_gram_fromCols_eq_mul_frobenius_norm_sq_sub_rangeProjector"
+        ],
+        "findings": [
+          "The complex endpoint uses bare matrix norm under Matrix.Norms.Frobenius; its source scope confirms the squared Frobenius interpretation."
+        ],
+        "statement_sha256": "27e1ca0ea6fd5ea1d5ae85bc9efe1d4ea73e14b09556bf32fb041d2d6ec1a13e",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "27e1ca0ea6fd5ea1d5ae85bc9efe1d4ea73e14b09556bf32fb041d2d6ec1a13e"
+    },
+    {
+      "id": "sketch-and-solve-ls",
+      "outcome": "unformalized",
+      "readback": "No catalogued Lean endpoint exists for either the deterministic least-squares comparison or the extra AMM sample-complexity clause.",
+      "evidence": [],
+      "findings": [
+        "The final hypotheses include 0<=epsilon<1. Both the deterministic least-squares target and the additional O(d/epsilon) AMM algorithmic guarantee still lack local formalizations."
+      ],
+      "statement_sha256": "f92a299d6a5b6ce43da0e14c85a4584cd2f5df29cdfef5dbf53f1cf3f5b2fc81",
+      "status_at_review": "candidate",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "sketch-and-solve-ls",
+        "outcome": "unformalized",
+        "readback": "No catalogued Lean endpoint exists for either the deterministic least-squares comparison or the extra AMM sample-complexity clause.",
+        "evidence": [],
+        "findings": [
+          "The embedding parameter needs 0<=epsilon<1. The O(d/epsilon) AMM clause is a separate undeclared algorithmic guarantee."
+        ],
+        "statement_sha256": "1e57ee836a605f307b4068681dc34dd7e0173a1f385b59b8e170c5230bd316f5",
+        "status_at_review": "candidate"
+      },
+      "status_at_final_review": "candidate",
+      "reviewed_statement_sha256": "f92a299d6a5b6ce43da0e14c85a4584cd2f5df29cdfef5dbf53f1cf3f5b2fc81"
+    },
+    {
+      "id": "sketch-and-precondition",
+      "outcome": "unformalized",
+      "readback": "No catalogued Lean endpoint exists for the sketched QR right-preconditioning condition-number guarantee.",
+      "evidence": [],
+      "findings": [
+        "The final hypotheses include full column rank, invertible triangular factor and 0<=epsilon<1. The preconditioned condition-number guarantee remains an unformalized target."
+      ],
+      "statement_sha256": "893f44629d279b2268ca1a53efee74f4197d76266e659a7c5c34df62452ea1a2",
+      "status_at_review": "candidate",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "sketch-and-precondition",
+        "outcome": "unformalized",
+        "readback": "No catalogued Lean endpoint exists for the sketched QR right-preconditioning condition-number guarantee.",
+        "evidence": [],
+        "findings": [
+          "The right inverse R requires full column rank/invertible triangular factor, and 0<=epsilon<1; the informal hypotheses omit both."
+        ],
+        "statement_sha256": "1e36d4dd6f0d385669e8a5d326d3f49ddfc5b9fd867c2fc4a7198932dabcfe42",
+        "status_at_review": "candidate"
+      },
+      "status_at_final_review": "candidate",
+      "reviewed_statement_sha256": "893f44629d279b2268ca1a53efee74f4197d76266e659a7c5c34df62452ea1a2"
+    },
+    {
+      "id": "randomized-kaczmarz",
+      "outcome": "matched",
+      "readback": "The actual iid row-path expectation equals the finite recursion and is bounded by the Frobenius condition-number contraction for a nonzero full-column-rank consistent matrix.",
+      "evidence": [
+        "NLAlib.Kaczmarz.expErr_le",
+        "NLAlib.integral_sqErr_kaczmarzRowPathPMF",
+        "NLAlib.integral_sqErr_kaczmarz_le_frobConditionNumber"
+      ],
+      "findings": [],
+      "statement_sha256": "1ed681d54ca84609e4127d05062336ba3539173b532a2fc68dc0e1fb3c944619",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "randomized-kaczmarz",
+        "outcome": "matched",
+        "readback": "The actual iid row-path expectation equals the finite recursion and is bounded by the Frobenius condition-number contraction for a nonzero full-column-rank consistent matrix.",
+        "evidence": [
+          "NLAlib.Kaczmarz.expErr_le",
+          "NLAlib.integral_sqErr_kaczmarzRowPathPMF",
+          "NLAlib.integral_sqErr_kaczmarz_le_frobConditionNumber"
+        ],
+        "findings": [],
+        "statement_sha256": "1ed681d54ca84609e4127d05062336ba3539173b532a2fc68dc0e1fb3c944619",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "1ed681d54ca84609e4127d05062336ba3539173b532a2fc68dc0e1fb3c944619"
+    },
+    {
+      "id": "sketch-and-project",
+      "outcome": "matched",
+      "readback": "The actual finite iid sketch law realizes the Euclidean pseudoinverse iteration and its contraction on the transpose range, from a lower quadratic mean-projector bound.",
+      "evidence": [
+        "NLAlib.SketchProject.step",
+        "NLAlib.SketchProject.expErr",
+        "NLAlib.SketchProject.expectedProjector",
+        "NLAlib.SketchProject.integral_sqErr_pathLaw_le",
+        "NLAlib.SketchProject.integral_sqErr_pathLaw_le_of_sub_mem_range",
+        "NLAlib.SketchProject.integral_sqErr_iidPathLaw_le_of_sub_mem_range",
+        "NLAlib.SketchProject.integral_sqErr_iidPathLaw_le"
+      ],
+      "findings": [],
+      "statement_sha256": "1fb13ab15d9cb9beb3a72f83fbea9eb58a284256b0cab4d454ba11f760298ed6",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "sketch-and-project",
+        "outcome": "matched",
+        "readback": "The actual finite iid sketch law realizes the Euclidean pseudoinverse iteration and its contraction on the transpose range, from a lower quadratic mean-projector bound.",
+        "evidence": [
+          "NLAlib.SketchProject.step",
+          "NLAlib.SketchProject.expErr",
+          "NLAlib.SketchProject.expectedProjector",
+          "NLAlib.SketchProject.integral_sqErr_pathLaw_le",
+          "NLAlib.SketchProject.integral_sqErr_pathLaw_le_of_sub_mem_range",
+          "NLAlib.SketchProject.integral_sqErr_iidPathLaw_le_of_sub_mem_range",
+          "NLAlib.SketchProject.integral_sqErr_iidPathLaw_le"
+        ],
+        "findings": [],
+        "statement_sha256": "1fb13ab15d9cb9beb3a72f83fbea9eb58a284256b0cab4d454ba11f760298ed6",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "1fb13ab15d9cb9beb3a72f83fbea9eb58a284256b0cab4d454ba11f760298ed6"
+    },
+    {
+      "id": "nystrom-pcg",
+      "outcome": "unformalized",
+      "readback": "No Lean formalization is catalogued; the O(1) condition-number claim needs a precise preconditioner, rank budget, probability and numeric constant before a formal contract.",
+      "evidence": [],
+      "findings": [
+        "The card is an underspecified research target, not a verified quantitative theorem."
+      ],
+      "statement_sha256": "c0592298f36cebb0700e0fe5efbdff55093e393cff856a1858dabd88da329654",
+      "status_at_review": "candidate",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "nystrom-pcg",
+        "outcome": "unformalized",
+        "readback": "No Lean formalization is catalogued; the O(1) condition-number claim needs a precise preconditioner, rank budget, probability and numeric constant before a formal contract.",
+        "evidence": [],
+        "findings": [
+          "The card is an underspecified research target, not a verified quantitative theorem."
+        ],
+        "statement_sha256": "c0592298f36cebb0700e0fe5efbdff55093e393cff856a1858dabd88da329654",
+        "status_at_review": "candidate"
+      },
+      "status_at_final_review": "candidate",
+      "reviewed_statement_sha256": "c0592298f36cebb0700e0fe5efbdff55093e393cff856a1858dabd88da329654"
+    },
+    {
+      "id": "gaussian-conditioning",
+      "outcome": "matched",
+      "readback": "Independent Gaussian multiplication factors the total Bochner squared-Frobenius integral; orthogonal-block pseudoinverse specializations have the same law transport.",
+      "evidence": [
+        "NLAlib.integral_frobSq_mul_gaussian_mul_of_indepFun",
+        "NLAlib.integral_frobSq_mul_block_mul_pinvR_block",
+        "NLAlib.integral_frobSq_pinvL_block_mul_block_mul",
+        "NLAlib.integral_frobSq_pinvR_block"
+      ],
+      "findings": [],
+      "statement_sha256": "3adc6aa5ccc1e78cffbac68eb32074889aab7963f3bdf563ad8f98f4a8446cab",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-conditioning",
+        "outcome": "matched",
+        "readback": "Independent Gaussian multiplication factors the total Bochner squared-Frobenius integral; orthogonal-block pseudoinverse specializations have the same law transport.",
+        "evidence": [
+          "NLAlib.integral_frobSq_mul_gaussian_mul_of_indepFun",
+          "NLAlib.integral_frobSq_mul_block_mul_pinvR_block",
+          "NLAlib.integral_frobSq_pinvL_block_mul_block_mul",
+          "NLAlib.integral_frobSq_pinvR_block"
+        ],
+        "findings": [],
+        "statement_sha256": "3adc6aa5ccc1e78cffbac68eb32074889aab7963f3bdf563ad8f98f4a8446cab",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "3adc6aa5ccc1e78cffbac68eb32074889aab7963f3bdf563ad8f98f4a8446cab"
+    },
+    {
+      "id": "gaussian-integration-by-parts",
+      "outcome": "matched",
+      "readback": "The scalar and coordinate Gaussian integration-by-parts identities are proved under differentiability and explicit polynomial growth; the correlated Gaussian bounded-function variant is additional.",
+      "evidence": [
+        "NLAlib.integral_mul_eq_integral_deriv_gaussianReal_of_integrable",
+        "NLAlib.integral_mul_eq_integral_deriv_gaussianReal",
+        "NLAlib.integral_mul_eq_sum_covariance_mul_integral",
+        "NLAlib.integral_mul_eq_integral_deriv_gaussianReal_of_polynomial_growth",
+        "NLAlib.integral_deriv_mul_eq_integral_mul_mul_sub_deriv_gaussianReal",
+        "NLAlib.integral_coord_mul_eq_integral_fderiv_gaussianVector",
+        "NLAlib.integral_coordinate_mul_eq_integral_gaussian_of_hasDerivAt_update",
+        "NLAlib.integral_coordinate_mul_eq_integral_fderiv_gaussian"
+      ],
+      "findings": [],
+      "statement_sha256": "d9a71374a6dae2fb3e78fbdefec0b0ab10372e64d316e38410c2ed7365c643e5",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-integration-by-parts",
+        "outcome": "matched",
+        "readback": "The scalar and coordinate Gaussian integration-by-parts identities are proved under differentiability and explicit polynomial growth; the correlated Gaussian bounded-function variant is additional.",
+        "evidence": [
+          "NLAlib.integral_mul_eq_integral_deriv_gaussianReal_of_integrable",
+          "NLAlib.integral_mul_eq_integral_deriv_gaussianReal",
+          "NLAlib.integral_mul_eq_sum_covariance_mul_integral",
+          "NLAlib.integral_mul_eq_integral_deriv_gaussianReal_of_polynomial_growth",
+          "NLAlib.integral_deriv_mul_eq_integral_mul_mul_sub_deriv_gaussianReal",
+          "NLAlib.integral_coord_mul_eq_integral_fderiv_gaussianVector",
+          "NLAlib.integral_coordinate_mul_eq_integral_gaussian_of_hasDerivAt_update",
+          "NLAlib.integral_coordinate_mul_eq_integral_fderiv_gaussian"
+        ],
+        "findings": [],
+        "statement_sha256": "d9a71374a6dae2fb3e78fbdefec0b0ab10372e64d316e38410c2ed7365c643e5",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "d9a71374a6dae2fb3e78fbdefec0b0ab10372e64d316e38410c2ed7365c643e5"
+    },
+    {
+      "id": "ornstein-uhlenbeck",
+      "outcome": "matched",
+      "readback": "Gaussian invariance and derivative commutation are proved, together with the entropy time derivative under a positive lower bound and C1 polynomial growth.",
+      "evidence": [
+        "NLAlib.ornsteinUhlenbeck",
+        "NLAlib.integral_ornsteinUhlenbeck",
+        "NLAlib.hasDerivAt_ornsteinUhlenbeck",
+        "NLAlib.hasDerivAt_integral_ornsteinUhlenbeck_mul_log",
+        "NLAlib.hasDerivAt_entropy_ornsteinUhlenbeck_of_polynomial_growth",
+        "NLAlib.hasDerivAt_ornsteinUhlenbeck_of_polynomial_growth",
+        "NLAlib.ornsteinUhlenbeckFisherIntegrand"
+      ],
+      "findings": [],
+      "statement_sha256": "414709dabe9be9929b06d34d72cfe4848837f60fcaa43e0d23666a7c909fcb2c",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "ornstein-uhlenbeck",
+        "outcome": "matched",
+        "readback": "Gaussian invariance and derivative commutation are proved, together with the entropy time derivative under a positive lower bound and C1 polynomial growth.",
+        "evidence": [
+          "NLAlib.ornsteinUhlenbeck",
+          "NLAlib.integral_ornsteinUhlenbeck",
+          "NLAlib.hasDerivAt_ornsteinUhlenbeck",
+          "NLAlib.hasDerivAt_integral_ornsteinUhlenbeck_mul_log",
+          "NLAlib.hasDerivAt_entropy_ornsteinUhlenbeck_of_polynomial_growth",
+          "NLAlib.hasDerivAt_ornsteinUhlenbeck_of_polynomial_growth",
+          "NLAlib.ornsteinUhlenbeckFisherIntegrand"
+        ],
+        "findings": [],
+        "statement_sha256": "414709dabe9be9929b06d34d72cfe4848837f60fcaa43e0d23666a7c909fcb2c",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "414709dabe9be9929b06d34d72cfe4848837f60fcaa43e0d23666a7c909fcb2c"
+    },
+    {
+      "id": "gaussian-log-sobolev",
+      "outcome": "matched",
+      "readback": "C1 Gaussian Sobolev functions with finite square and gradient-square moments have integrable entropy and the sharp constant-two inequality; no entropy hypothesis remains in the final endpoint.",
+      "evidence": [
+        "NLAlib.entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian",
+        "NLAlib.sineTruncation",
+        "NLAlib.integrable_sq_mul_log_sq_gaussian",
+        "NLAlib.entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian_of_integrable",
+        "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal_of_integrable",
+        "NLAlib.HasEuclideanLogSobolev",
+        "NLAlib.entropy_le_half_integral_sq_deriv_div_gaussianReal",
+        "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal"
+      ],
+      "findings": [],
+      "statement_sha256": "42af8124aadd92d48083f007774d7c601e3d83621abfeaa16332c8494fd7b7ec",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-log-sobolev",
+        "outcome": "matched",
+        "readback": "C1 Gaussian Sobolev functions with finite square and gradient-square moments have integrable entropy and the sharp constant-two inequality; no entropy hypothesis remains in the final endpoint.",
+        "evidence": [
+          "NLAlib.entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian",
+          "NLAlib.sineTruncation",
+          "NLAlib.integrable_sq_mul_log_sq_gaussian",
+          "NLAlib.entropy_sq_le_two_mul_integral_sum_sq_fderiv_gaussian_of_integrable",
+          "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal_of_integrable",
+          "NLAlib.HasEuclideanLogSobolev",
+          "NLAlib.entropy_le_half_integral_sq_deriv_div_gaussianReal",
+          "NLAlib.entropy_sq_le_two_mul_integral_sq_deriv_gaussianReal"
+        ],
+        "findings": [],
+        "statement_sha256": "42af8124aadd92d48083f007774d7c601e3d83621abfeaa16332c8494fd7b7ec",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "42af8124aadd92d48083f007774d7c601e3d83621abfeaa16332c8494fd7b7ec"
+    },
+    {
+      "id": "entropy-tensorization",
+      "outcome": "matched",
+      "readback": "Finite product probability measures and measurable nonnegative functions with integrable f log f satisfy entropy tensorization in each updated coordinate.",
+      "evidence": [
+        "NLAlib.entropy_pi_le_sum_integral_entropy_update",
+        "NLAlib.entropy_pi_le_sum_integral_entropy_update_of_nonneg"
+      ],
+      "findings": [],
+      "statement_sha256": "15cedd8b96b19a4a4fbff43aa881290055d0a2aa80c1d8dd974d7f4327d2feff",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "entropy-tensorization",
+        "outcome": "matched",
+        "readback": "Finite product probability measures and measurable nonnegative functions with integrable f log f satisfy entropy tensorization in each updated coordinate.",
+        "evidence": [
+          "NLAlib.entropy_pi_le_sum_integral_entropy_update",
+          "NLAlib.entropy_pi_le_sum_integral_entropy_update_of_nonneg"
+        ],
+        "findings": [],
+        "statement_sha256": "15cedd8b96b19a4a4fbff43aa881290055d0a2aa80c1d8dd974d7f4327d2feff",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "15cedd8b96b19a4a4fbff43aa881290055d0a2aa80c1d8dd974d7f4327d2feff"
+    },
+    {
+      "id": "herbst",
+      "outcome": "matched",
+      "readback": "A genuine Euclidean Dirichlet LSI gives the centered Lipschitz MGF and tail, with nonnegative constants and degenerate total-division conventions explicit.",
+      "evidence": [
+        "NLAlib.integral_exp_mul_le_exp_of_entropy_le",
+        "NLAlib.hasSubgaussianMGF_of_logSobolev",
+        "NLAlib.measureReal_ge_le_of_logSobolev",
+        "NLAlib.hasEuclideanLogSobolev_gaussianVector"
+      ],
+      "findings": [],
+      "statement_sha256": "0a23bdbc8fb30c577adc7dc7f5afdb8af5337bbff976d93bbc752e18627871b0",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "herbst",
+        "outcome": "matched",
+        "readback": "A genuine Euclidean Dirichlet LSI gives the centered Lipschitz MGF and tail, with nonnegative constants and degenerate total-division conventions explicit.",
+        "evidence": [
+          "NLAlib.integral_exp_mul_le_exp_of_entropy_le",
+          "NLAlib.hasSubgaussianMGF_of_logSobolev",
+          "NLAlib.measureReal_ge_le_of_logSobolev",
+          "NLAlib.hasEuclideanLogSobolev_gaussianVector"
+        ],
+        "findings": [],
+        "statement_sha256": "0a23bdbc8fb30c577adc7dc7f5afdb8af5337bbff976d93bbc752e18627871b0",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "0a23bdbc8fb30c577adc7dc7f5afdb8af5337bbff976d93bbc752e18627871b0"
+    },
+    {
+      "id": "slepian",
+      "outcome": "matched",
+      "readback": "Centered finite Gaussian vectors with equal coordinate variances and ordered increments satisfy both strict and closed-threshold maximum probability comparisons.",
+      "evidence": [
+        "NLAlib.slepian_inequality",
+        "NLAlib.slepian_inequality_ge"
+      ],
+      "findings": [],
+      "statement_sha256": "7f61e92d92261e0ed703949f5a8016ff51d13863bb3a39f6a5a675d3199e511b",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "slepian",
+        "outcome": "matched",
+        "readback": "Centered finite Gaussian vectors with equal coordinate variances and ordered increments satisfy both strict and closed-threshold maximum probability comparisons.",
+        "evidence": [
+          "NLAlib.slepian_inequality",
+          "NLAlib.slepian_inequality_ge"
+        ],
+        "findings": [],
+        "statement_sha256": "7f61e92d92261e0ed703949f5a8016ff51d13863bb3a39f6a5a675d3199e511b",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "7f61e92d92261e0ed703949f5a8016ff51d13863bb3a39f6a5a675d3199e511b"
+    },
+    {
+      "id": "sudakov-fernique",
+      "outcome": "matched",
+      "readback": "Centered finite Gaussian vectors with ordered increments satisfy the expected finite supremum comparison; no equal-variance assumption is used.",
+      "evidence": [
+        "NLAlib.sudakov_fernique_inequality"
+      ],
+      "findings": [],
+      "statement_sha256": "79ded2eed6e29bef174253d41eb68e18bef25d90dbda4737e748fb3696c190e6",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "sudakov-fernique",
+        "outcome": "matched",
+        "readback": "Centered finite Gaussian vectors with ordered increments satisfy the expected finite supremum comparison; no equal-variance assumption is used.",
+        "evidence": [
+          "NLAlib.sudakov_fernique_inequality"
+        ],
+        "findings": [],
+        "statement_sha256": "79ded2eed6e29bef174253d41eb68e18bef25d90dbda4737e748fb3696c190e6",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "79ded2eed6e29bef174253d41eb68e18bef25d90dbda4737e748fb3696c190e6"
+    },
+    {
+      "id": "gordon-minimax",
+      "outcome": "matched",
+      "readback": "Finite doubly indexed centered Gaussian arrays with the stated within-row and cross-row increment inequalities give the expected infimum-supremum comparison.",
+      "evidence": [
+        "NLAlib.gordon_minimax_inequality",
+        "NLAlib.integral_le_integral_of_covariance_hessian_nonneg"
+      ],
+      "findings": [],
+      "statement_sha256": "23c669b91020b73492aa15c66888f421c29a364ddf413bb5ba430e3eeabafdbf",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gordon-minimax",
+        "outcome": "matched",
+        "readback": "Finite doubly indexed centered Gaussian arrays with the stated within-row and cross-row increment inequalities give the expected infimum-supremum comparison.",
+        "evidence": [
+          "NLAlib.gordon_minimax_inequality",
+          "NLAlib.integral_le_integral_of_covariance_hessian_nonneg"
+        ],
+        "findings": [],
+        "statement_sha256": "23c669b91020b73492aa15c66888f421c29a364ddf413bb5ba430e3eeabafdbf",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "23c669b91020b73492aa15c66888f421c29a364ddf413bb5ba430e3eeabafdbf"
+    },
+    {
+      "id": "chi-square-neg-moment",
+      "outcome": "partial",
+      "readback": "For real q>=0 below d/2 the inverse radial moment has the exact Gamma formula; the second moment and a high-moment bound at q=(d-1)/2 for d>=5 are separately exposed.",
+      "evidence": [
+        "NLAlib.integrable_rpow_inv_sum_sq_gaussianVector",
+        "NLAlib.integral_rpow_inv_sum_sq_gaussianVector",
+        "NLAlib.integral_rpow_inv_sum_sq_gaussianVector_lt",
+        "NLAlib.integrable_inv_sum_sq_pow_two_gaussianVector",
+        "NLAlib.integral_inv_sum_sq_pow_two_gaussianVector"
+      ],
+      "findings": [
+        "The informal rooted C/d phrase is broader than the listed high-moment endpoint. The exact Gamma and second-moment clauses match; do not mistake that for full rooted-moment coverage."
+      ],
+      "statement_sha256": "4932d2700aba83039d53f4600e7abfb344cb29053b55495d7e384c85f554d046",
+      "status_at_review": "candidate",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "chi-square-neg-moment",
+        "outcome": "partial",
+        "readback": "For real q>=0 below d/2 the inverse radial moment has the exact Gamma formula; the second moment and a high-moment bound at q=(d-1)/2 for d>=5 are separately exposed.",
+        "evidence": [
+          "NLAlib.integrable_rpow_inv_sum_sq_gaussianVector",
+          "NLAlib.integral_rpow_inv_sum_sq_gaussianVector",
+          "NLAlib.integral_rpow_inv_sum_sq_gaussianVector_lt",
+          "NLAlib.integrable_inv_sum_sq_pow_two_gaussianVector",
+          "NLAlib.integral_inv_sum_sq_pow_two_gaussianVector"
+        ],
+        "findings": [
+          "The informal rooted C/d phrase is broader than the listed high-moment endpoint. The exact Gamma and second-moment clauses match; do not mistake that for full rooted-moment coverage."
+        ],
+        "statement_sha256": "4932d2700aba83039d53f4600e7abfb344cb29053b55495d7e384c85f554d046",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "candidate",
+      "reviewed_statement_sha256": "4932d2700aba83039d53f4600e7abfb344cb29053b55495d7e384c85f554d046"
+    },
+    {
+      "id": "tail-integral",
+      "outcome": "matched",
+      "readback": "A measurable nonnegative random variable with the strict positive-tail bound has the extended layer-cake upper bound; an integrable nonnegative envelope also gives integrability and the Bochner bound.",
+      "evidence": [
+        "NLAlib.lintegral_rpow_mul_exp_le",
+        "NLAlib.lintegral_le_of_tail_le",
+        "NLAlib.integrable_of_tail_le",
+        "NLAlib.integral_le_of_tail_le",
+        "NLAlib.integrable_of_tail_le_rpow",
+        "NLAlib.integral_le_of_tail_le_rpow"
+      ],
+      "findings": [],
+      "statement_sha256": "93aeb39637b85a2f16b1453537ed618105ebebdfe65b18d89bdff22feaec4a62",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "tail-integral",
+        "outcome": "matched",
+        "readback": "A measurable nonnegative random variable with the strict positive-tail bound has the extended layer-cake upper bound; an integrable nonnegative envelope also gives integrability and the Bochner bound.",
+        "evidence": [
+          "NLAlib.lintegral_rpow_mul_exp_le",
+          "NLAlib.lintegral_le_of_tail_le",
+          "NLAlib.integrable_of_tail_le",
+          "NLAlib.integral_le_of_tail_le",
+          "NLAlib.integrable_of_tail_le_rpow",
+          "NLAlib.integral_le_of_tail_le_rpow"
+        ],
+        "findings": [],
+        "statement_sha256": "93aeb39637b85a2f16b1453537ed618105ebebdfe65b18d89bdff22feaec4a62",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "93aeb39637b85a2f16b1453537ed618105ebebdfe65b18d89bdff22feaec4a62"
+    },
+    {
+      "id": "wishart-lambda-min-tail",
+      "outcome": "matched",
+      "readback": "The exact integrated Edelman coefficient bounds the squared smallest transpose singular-value law for 1<=r<=k, with the scalar chi-square equality and polynomial consequence.",
+      "evidence": [
+        "NLAlib.gaussianMatrix_one_sigmaMin_transpose_sq_le_eq",
+        "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral",
+        "NLAlib.gammaRatio_le",
+        "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le",
+        "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality"
+      ],
+      "findings": [],
+      "statement_sha256": "569f604e6f689e42acf16dddcf3dbf8863918212190e62b93643c7549455f1a4",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "wishart-lambda-min-tail",
+        "outcome": "matched",
+        "readback": "The exact integrated Edelman coefficient bounds the squared smallest transpose singular-value law for 1<=r<=k, with the scalar chi-square equality and polynomial consequence.",
+        "evidence": [
+          "NLAlib.gaussianMatrix_one_sigmaMin_transpose_sq_le_eq",
+          "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral",
+          "NLAlib.gammaRatio_le",
+          "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le",
+          "NLAlib.gaussianMatrix_sigmaMin_transpose_sq_le_le_lintegral_of_weak_inequality"
+        ],
+        "findings": [],
+        "statement_sha256": "569f604e6f689e42acf16dddcf3dbf8863918212190e62b93643c7549455f1a4",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "569f604e6f689e42acf16dddcf3dbf8863918212190e62b93643c7549455f1a4"
+    },
+    {
+      "id": "positive-real-moment-comparison",
+      "outcome": "matched",
+      "readback": "An a.e. nonnegative a.e. strongly measurable function with finite q moment has finite p moment and the rooted Lyapunov comparison for every real 0<p<=q, including p<1.",
+      "evidence": [
+        "NLAlib.integrable_rpow_and_integral_rpow_inv_le"
+      ],
+      "findings": [],
+      "statement_sha256": "8c6bc497f7086b9abdd214c8f3471c1700387d2e8f39f4ce63bb79fc82d8a7f1",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "positive-real-moment-comparison",
+        "outcome": "unformalized",
+        "readback": "An a.e. nonnegative a.e. strongly measurable function with finite q moment has finite p moment and the rooted Lyapunov comparison for every real 0<p<=q, including p<1.",
+        "evidence": [],
+        "findings": [],
+        "statement_sha256": "8c6bc497f7086b9abdd214c8f3471c1700387d2e8f39f4ce63bb79fc82d8a7f1",
+        "status_at_review": "candidate"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "8c6bc497f7086b9abdd214c8f3471c1700387d2e8f39f4ce63bb79fc82d8a7f1"
+    },
+    {
+      "id": "gaussian-positive-moments",
+      "outcome": "matched",
+      "readback": "The standard Gaussian radial real-power moment equals 2^q Gamma(m/2+q)/Gamma(m/2) in positive dimension, and is integrable for q>=0.",
+      "evidence": [
+        "NLAlib.integral_radial_gaussianVector",
+        "NLAlib.integral_rpow_mul_exp_neg_sq_div_two",
+        "NLAlib.integrable_rpow_sum_sq_gaussianVector",
+        "NLAlib.integral_rpow_sum_sq_gaussianVector",
+        "NLAlib.integral_abs_rpow_gaussianReal"
+      ],
+      "findings": [],
+      "statement_sha256": "11bc471968c4d46015f604fad8ff16228d2d1e40f23bdc39678d134118c39b1b",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-positive-moments",
+        "outcome": "matched",
+        "readback": "The standard Gaussian radial real-power moment equals 2^q Gamma(m/2+q)/Gamma(m/2) in positive dimension, and is integrable for q>=0.",
+        "evidence": [
+          "NLAlib.integral_radial_gaussianVector",
+          "NLAlib.integral_rpow_mul_exp_neg_sq_div_two",
+          "NLAlib.integrable_rpow_sum_sq_gaussianVector",
+          "NLAlib.integral_rpow_sum_sq_gaussianVector",
+          "NLAlib.integral_abs_rpow_gaussianReal"
+        ],
+        "findings": [],
+        "statement_sha256": "11bc471968c4d46015f604fad8ff16228d2d1e40f23bdc39678d134118c39b1b",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "11bc471968c4d46015f604fad8ff16228d2d1e40f23bdc39678d134118c39b1b"
+    },
+    {
+      "id": "gaussian-inverse-spectral-probe-moment",
+      "outcome": "matched",
+      "readback": "The inverse-Gram spectral real-power moment is integrable and bounded by the explicit Gaussian probe Gamma quotient for 0<q<(k-r+1)/2.",
+      "evidence": [
+        "NLAlib.integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMatrix_le"
+      ],
+      "findings": [],
+      "statement_sha256": "c9bd53d07d96be88921f5339c8076bde7ef853a8456cee76f408523fb4bdb48b",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-inverse-spectral-probe-moment",
+        "outcome": "matched",
+        "readback": "The inverse-Gram spectral real-power moment is integrable and bounded by the explicit Gaussian probe Gamma quotient for 0<q<(k-r+1)/2.",
+        "evidence": [
+          "NLAlib.integrable_and_integral_rpow_specNorm_inv_self_mul_transpose_gaussianMatrix_le"
+        ],
+        "findings": [],
+        "statement_sha256": "c9bd53d07d96be88921f5339c8076bde7ef853a8456cee76f408523fb4bdb48b",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "c9bd53d07d96be88921f5339c8076bde7ef853a8456cee76f408523fb4bdb48b"
+    },
+    {
+      "id": "inverse-wishart-spectral-moment-real-sharp",
+      "outcome": "matched",
+      "readback": "Every positive real moment below half the row-column gap has the sharp rooted e squared (k+r-1)/(2(k-r) squared) bound.",
+      "evidence": [
+        "NLAlib.integrable_and_integral_half_gap_rpow_specNorm_inv_gaussianMatrix_le",
+        "NLAlib.integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp",
+        "NLAlib.integral_rpow_specNorm_inv_gaussianMatrix_rpow_inv_le_sharp"
+      ],
+      "findings": [],
+      "statement_sha256": "6e7b1e8d1602ffb6f054296c1620037a9a7d315bf1f7437af018a242b578d0ac",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "inverse-wishart-spectral-moment-real-sharp",
+        "outcome": "matched",
+        "readback": "Every positive real moment below half the row-column gap has the sharp rooted e squared (k+r-1)/(2(k-r) squared) bound.",
+        "evidence": [
+          "NLAlib.integrable_and_integral_half_gap_rpow_specNorm_inv_gaussianMatrix_le",
+          "NLAlib.integrable_and_integral_rpow_specNorm_inv_gaussianMatrix_le_sharp",
+          "NLAlib.integral_rpow_specNorm_inv_gaussianMatrix_rpow_inv_le_sharp"
+        ],
+        "findings": [],
+        "statement_sha256": "6e7b1e8d1602ffb6f054296c1620037a9a7d315bf1f7437af018a242b578d0ac",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "6e7b1e8d1602ffb6f054296c1620037a9a7d315bf1f7437af018a242b578d0ac"
+    },
+    {
+      "id": "pinv-spectral-expectation-sharp",
+      "outcome": "matched",
+      "readback": "For 1<=r<k the Gaussian pseudoinverse spectral mean has the e/(k-r)*sqrt((k+r-1)/2) upper bound and integrability.",
+      "evidence": [
+        "NLAlib.integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_sharp"
+      ],
+      "findings": [],
+      "statement_sha256": "6596cd9a6a985b65813c40f1575f72438c49347eebd7501037a61d35244c2771",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "pinv-spectral-expectation-sharp",
+        "outcome": "matched",
+        "readback": "For 1<=r<k the Gaussian pseudoinverse spectral mean has the e/(k-r)*sqrt((k+r-1)/2) upper bound and integrability.",
+        "evidence": [
+          "NLAlib.integrable_and_integral_specNorm_pinvR_gaussianMatrix_le_sharp"
+        ],
+        "findings": [],
+        "statement_sha256": "6596cd9a6a985b65813c40f1575f72438c49347eebd7501037a61d35244c2771",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "6596cd9a6a985b65813c40f1575f72438c49347eebd7501037a61d35244c2771"
+    },
+    {
+      "id": "gaussian-simple-spectrum",
+      "outcome": "matched",
+      "readback": "For r<=k the real Gram characteristic polynomial is separable almost surely, and its indexed Hermitian eigenvalues are injective almost surely.",
+      "evidence": [
+        "NLAlib.ae_charpoly_separable_self_mul_transpose_gaussianMatrix",
+        "NLAlib.ae_injective_eigenvalues_self_mul_transpose_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "565b6bff1a84cf7159b17d2087026a0855c87715bef1bfc7a30c241416f64ed9",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-simple-spectrum",
+        "outcome": "matched",
+        "readback": "For r<=k the real Gram characteristic polynomial is separable almost surely, and its indexed Hermitian eigenvalues are injective almost surely.",
+        "evidence": [
+          "NLAlib.ae_charpoly_separable_self_mul_transpose_gaussianMatrix",
+          "NLAlib.ae_injective_eigenvalues_self_mul_transpose_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "565b6bff1a84cf7159b17d2087026a0855c87715bef1bfc7a30c241416f64ed9",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "565b6bff1a84cf7159b17d2087026a0855c87715bef1bfc7a30c241416f64ed9"
+    },
+    {
+      "id": "gaussian-hard-edge-weak-inequality",
+      "outcome": "matched",
+      "readback": "Every nonnegative smooth compact positive-half-line test satisfies the exact 4X psi prime + 2(m-X) psi integrated inequality, both on matrices and on its law.",
+      "evidence": [
+        "NLAlib.ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix",
+        "NLAlib.integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix",
+        "NLAlib.integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "4a7590e0aedf00d640ea5377f7b0cde0eb7b691ed88395aabd4da138f0f3d0ae",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-hard-edge-weak-inequality",
+        "outcome": "matched",
+        "readback": "Every nonnegative smooth compact positive-half-line test satisfies the exact 4X psi prime + 2(m-X) psi integrated inequality, both on matrices and on its law.",
+        "evidence": [
+          "NLAlib.ae_tendsto_unshiftedGram_softMin_energy_gaussianMatrix",
+          "NLAlib.integral_sigmaMin_transpose_sq_unshifted_weak_nonneg_gaussianMatrix",
+          "NLAlib.integral_sigmaMin_transpose_sq_law_unshifted_weak_nonneg_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "4a7590e0aedf00d640ea5377f7b0cde0eb7b691ed88395aabd4da138f0f3d0ae",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "4a7590e0aedf00d640ea5377f7b0cde0eb7b691ed88395aabd4da138f0f3d0ae"
+    },
+    {
+      "id": "weak-derivative-antitone-density",
+      "outcome": "matched",
+      "readback": "The positive test-derivative integral sign gives a nonnegative antitone density on the half-line under the stated regular/local-regular sigma-finite measure hypotheses.",
+      "evidence": [
+        "NLAlib.exists_antitoneOn_withDensity_eq_of_locally_regular_weak_deriv_nonneg",
+        "NLAlib.exists_antitoneOn_withDensity_eq_of_weak_deriv_nonneg"
+      ],
+      "findings": [],
+      "statement_sha256": "82e04eb7c610b0a0a79951dc9d6b088bc1a6f2c64e21a4f97e3794976f448bdd",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "weak-derivative-antitone-density",
+        "outcome": "matched",
+        "readback": "The positive test-derivative integral sign gives a nonnegative antitone density on the half-line under the stated regular/local-regular sigma-finite measure hypotheses.",
+        "evidence": [
+          "NLAlib.exists_antitoneOn_withDensity_eq_of_locally_regular_weak_deriv_nonneg",
+          "NLAlib.exists_antitoneOn_withDensity_eq_of_weak_deriv_nonneg"
+        ],
+        "findings": [],
+        "statement_sha256": "82e04eb7c610b0a0a79951dc9d6b088bc1a6f2c64e21a4f97e3794976f448bdd",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "82e04eb7c610b0a0a79951dc9d6b088bc1a6f2c64e21a4f97e3794976f448bdd"
+    },
+    {
+      "id": "gamma-weighted-antitone-density",
+      "outcome": "matched",
+      "readback": "The exact weak Gamma-drift inequality for a finite positive real measure gives a measurable nonnegative antitone density times the stated Gamma weight on the positive half-line.",
+      "evidence": [
+        "NLAlib.exists_gamma_weighted_antitone_density_of_weak_inequality"
+      ],
+      "findings": [],
+      "statement_sha256": "ba947a820e141fa4179657cc4af68fa96c1523ce23912abb86c4c4cfbf5a614f",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gamma-weighted-antitone-density",
+        "outcome": "matched",
+        "readback": "The exact weak Gamma-drift inequality for a finite positive real measure gives a measurable nonnegative antitone density times the stated Gamma weight on the positive half-line.",
+        "evidence": [
+          "NLAlib.exists_gamma_weighted_antitone_density_of_weak_inequality"
+        ],
+        "findings": [],
+        "statement_sha256": "ba947a820e141fa4179657cc4af68fa96c1523ce23912abb86c4c4cfbf5a614f",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "ba947a820e141fa4179657cc4af68fa96c1523ce23912abb86c4c4cfbf5a614f"
+    },
+    {
+      "id": "gaussian-matrix-mulvec-law",
+      "outcome": "matched",
+      "readback": "The Gaussian mulVec push-forward has independent centered entries with variance the vector squared norm; transpose and right orthonormal multiplication preserve their corresponding Gaussian laws.",
+      "evidence": [
+        "NLAlib.hasLaw_gaussianMatrix_transpose",
+        "NLAlib.hasLaw_gaussianMatrix_mul_right",
+        "NLAlib.gaussianMatrix_map_mulVec_of_dotProduct_self_eq_one",
+        "NLAlib.gaussianMatrix_map_mulVec",
+        "NLAlib.hasSubgaussianMGF_mulVec_apply_gaussianMatrix"
+      ],
+      "findings": [],
+      "statement_sha256": "7519a7a262fef9d133f1540ae0bfc6caba6873491d6bb8843b8503f4ca25b434",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-matrix-mulvec-law",
+        "outcome": "matched",
+        "readback": "The Gaussian mulVec push-forward has independent centered entries with variance the vector squared norm; transpose and right orthonormal multiplication preserve their corresponding Gaussian laws.",
+        "evidence": [
+          "NLAlib.hasLaw_gaussianMatrix_transpose",
+          "NLAlib.hasLaw_gaussianMatrix_mul_right",
+          "NLAlib.gaussianMatrix_map_mulVec_of_dotProduct_self_eq_one",
+          "NLAlib.gaussianMatrix_map_mulVec",
+          "NLAlib.hasSubgaussianMGF_mulVec_apply_gaussianMatrix"
+        ],
+        "findings": [],
+        "statement_sha256": "7519a7a262fef9d133f1540ae0bfc6caba6873491d6bb8843b8503f4ca25b434",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "7519a7a262fef9d133f1540ae0bfc6caba6873491d6bb8843b8503f4ca25b434"
+    },
+    {
+      "id": "subgaussian-max",
+      "outcome": "matched",
+      "readback": "A common MGF proxy gives finite maximum and absolute-maximum expectation bounds, the strict absolute tail for t>=0 and Gamma moments for real p>0 without independence.",
+      "evidence": [
+        "NLAlib.measureReal_lt_abs_le_of_hasSubgaussianMGF",
+        "NLAlib.integral_abs_rpow_le_of_hasSubgaussianMGF",
+        "NLAlib.integral_iSup_le_sqrt_of_hasSubgaussianMGF",
+        "NLAlib.integral_iSup_abs_le_sqrt_of_hasSubgaussianMGF"
+      ],
+      "findings": [],
+      "statement_sha256": "bf7cd1fb14ec52d618f2b62e2b3ace12b8f176ac9c8704d94e0e6a0e0105fb0d",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "subgaussian-max",
+        "outcome": "matched",
+        "readback": "A common MGF proxy gives finite maximum and absolute-maximum expectation bounds, the strict absolute tail for t>=0 and Gamma moments for real p>0 without independence.",
+        "evidence": [
+          "NLAlib.measureReal_lt_abs_le_of_hasSubgaussianMGF",
+          "NLAlib.integral_abs_rpow_le_of_hasSubgaussianMGF",
+          "NLAlib.integral_iSup_le_sqrt_of_hasSubgaussianMGF",
+          "NLAlib.integral_iSup_abs_le_sqrt_of_hasSubgaussianMGF"
+        ],
+        "findings": [],
+        "statement_sha256": "bf7cd1fb14ec52d618f2b62e2b3ace12b8f176ac9c8704d94e0e6a0e0105fb0d",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "bf7cd1fb14ec52d618f2b62e2b3ace12b8f176ac9c8704d94e0e6a0e0105fb0d"
+    },
+    {
+      "id": "subgaussian-spec-norm",
+      "outcome": "matched",
+      "readback": "A uniform subgaussian bilinear-marginal hypothesis implies the exact two-sided-net spectral threshold tail with constant 2 and log 9.",
+      "evidence": [
+        "NLAlib.measureReal_lt_specNorm_le_of_hasSubgaussianMGF"
+      ],
+      "findings": [],
+      "statement_sha256": "6e7c6a1827729028206a33d486456771b1da7ad57b5fbcf845face8a33a8224d",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "subgaussian-spec-norm",
+        "outcome": "matched",
+        "readback": "A uniform subgaussian bilinear-marginal hypothesis implies the exact two-sided-net spectral threshold tail with constant 2 and log 9.",
+        "evidence": [
+          "NLAlib.measureReal_lt_specNorm_le_of_hasSubgaussianMGF"
+        ],
+        "findings": [],
+        "statement_sha256": "6e7c6a1827729028206a33d486456771b1da7ad57b5fbcf845face8a33a8224d",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "6e7c6a1827729028206a33d486456771b1da7ad57b5fbcf845face8a33a8224d"
+    },
+    {
+      "id": "kaczmarz-inconsistent",
+      "outcome": "matched",
+      "readback": "The finite recursion and true row-path expectations obey the sum-of-geometric-errors bound and convergence horizon on the transpose range, with arbitrary reference point.",
+      "evidence": [
+        "NLAlib.Kaczmarz.expErr_le_add",
+        "NLAlib.Kaczmarz.expErr_le_add_div_sq",
+        "NLAlib.Kaczmarz.expErr_le_add_of_sub_mem_range",
+        "NLAlib.Kaczmarz.expErr_le_add_div_sq_of_sub_mem_range",
+        "NLAlib.integral_sqErr_kaczmarz_le_add_of_sub_mem_range",
+        "NLAlib.integral_sqErr_kaczmarz_le_add_div_sq_of_sub_mem_range"
+      ],
+      "findings": [],
+      "statement_sha256": "90aaa3121635f5ba0d761417f76900bac0d49026140ac3817a8ad84611e1d498",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "kaczmarz-inconsistent",
+        "outcome": "matched",
+        "readback": "The finite recursion and true row-path expectations obey the sum-of-geometric-errors bound and convergence horizon on the transpose range, with arbitrary reference point.",
+        "evidence": [
+          "NLAlib.Kaczmarz.expErr_le_add",
+          "NLAlib.Kaczmarz.expErr_le_add_div_sq",
+          "NLAlib.Kaczmarz.expErr_le_add_of_sub_mem_range",
+          "NLAlib.Kaczmarz.expErr_le_add_div_sq_of_sub_mem_range",
+          "NLAlib.integral_sqErr_kaczmarz_le_add_of_sub_mem_range",
+          "NLAlib.integral_sqErr_kaczmarz_le_add_div_sq_of_sub_mem_range"
+        ],
+        "findings": [],
+        "statement_sha256": "90aaa3121635f5ba0d761417f76900bac0d49026140ac3817a8ad84611e1d498",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "90aaa3121635f5ba0d761417f76900bac0d49026140ac3817a8ad84611e1d498"
+    },
+    {
+      "id": "kaczmarz-rank-deficient",
+      "outcome": "matched",
+      "readback": "The zero-start finite expectation contracts to the Moore–Penrose consistent solution without rank assumptions; the actual nonzero row law is bridged by the Kaczmarz law API.",
+      "evidence": [
+        "NLAlib.Kaczmarz.expErr_le_of_sub_mem_range",
+        "NLAlib.Kaczmarz.expErr_zero_le_moorePenroseInverse"
+      ],
+      "findings": [],
+      "statement_sha256": "d45900065e0649d3d047457c6304ce668232c3c905096873c943f723ffd1c683",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "kaczmarz-rank-deficient",
+        "outcome": "matched",
+        "readback": "The zero-start finite expectation contracts to the Moore–Penrose consistent solution without rank assumptions; the actual nonzero row law is bridged by the Kaczmarz law API.",
+        "evidence": [
+          "NLAlib.Kaczmarz.expErr_le_of_sub_mem_range",
+          "NLAlib.Kaczmarz.expErr_zero_le_moorePenroseInverse"
+        ],
+        "findings": [],
+        "statement_sha256": "d45900065e0649d3d047457c6304ce668232c3c905096873c943f723ffd1c683",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "d45900065e0649d3d047457c6304ce668232c3c905096873c943f723ffd1c683"
+    },
+    {
+      "id": "matrix-calculus-def",
+      "outcome": "matched",
+      "readback": "The named matrix functions use native continuous functional calculus and the complex Hermitian matrix order; exponential positivity and logarithmic inversion have explicit Hermitian hypotheses.",
+      "evidence": [
+        "NLAlib.matrixExp",
+        "NLAlib.matrixLog",
+        "NLAlib.traceExp",
+        "NLAlib.posDef_matrixExp_and_matrixLog_matrixExp",
+        "NLAlib.lambdaMax",
+        "NLAlib.lambdaMin"
+      ],
+      "findings": [],
+      "statement_sha256": "f738154d45c53c58ee933819d9c5a1c4336f03ceea12cdc3d3d152c34639f25f",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-calculus-def",
+        "outcome": "matched",
+        "readback": "The named matrix functions use native continuous functional calculus and the complex Hermitian matrix order; exponential positivity and logarithmic inversion have explicit Hermitian hypotheses.",
+        "evidence": [
+          "NLAlib.matrixExp",
+          "NLAlib.matrixLog",
+          "NLAlib.traceExp",
+          "NLAlib.posDef_matrixExp_and_matrixLog_matrixExp",
+          "NLAlib.lambdaMax",
+          "NLAlib.lambdaMin"
+        ],
+        "findings": [],
+        "statement_sha256": "f738154d45c53c58ee933819d9c5a1c4336f03ceea12cdc3d3d152c34639f25f",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "175cd6d2f7ae3e6728fea0b17a62a4310028e0ce47aad574c972ca4a36e11adf"
+    },
+    {
+      "id": "scalar-laws-def",
+      "outcome": "matched",
+      "readback": "The Gaussian and Rademacher probability measures and native HasLaw statements give the standard real scalar distributions; these are actual laws, not unconstrained predicates.",
+      "evidence": [
+        "NLAlib.gaussianVector",
+        "NLAlib.rademacherMeasure",
+        "NLAlib.rademacherVector"
+      ],
+      "findings": [],
+      "statement_sha256": "6cf43dbeb7b84ccaa5a142b42adc02c8da4f4bcea819b58fd7316cd3fca2c7d2",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "scalar-laws-def",
+        "outcome": "matched",
+        "readback": "The Gaussian and Rademacher probability measures and native HasLaw statements give the standard real scalar distributions; these are actual laws, not unconstrained predicates.",
+        "evidence": [
+          "NLAlib.gaussianVector",
+          "NLAlib.rademacherMeasure",
+          "NLAlib.rademacherVector"
+        ],
+        "findings": [],
+        "statement_sha256": "6cf43dbeb7b84ccaa5a142b42adc02c8da4f4bcea819b58fd7316cd3fca2c7d2",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "2cb5eba0f14ece67018d3a0469945ac26edd5b945c63b256115ac583572298d2"
+    },
+    {
+      "id": "kaczmarz-def",
+      "outcome": "matched",
+      "readback": "The total row projection step uses division by the row squared norm, and its finite recursion is connected to the actual row-weighted PMF for nonzero matrices.",
+      "evidence": [
+        "NLAlib.Kaczmarz.step",
+        "NLAlib.Kaczmarz.prob",
+        "NLAlib.Kaczmarz.expErr",
+        "NLAlib.Kaczmarz.run",
+        "NLAlib.frobConditionNumber",
+        "NLAlib.kaczmarzRowPathPMF"
+      ],
+      "findings": [],
+      "statement_sha256": "988afb408182b45500114e80543790c1e98ece6e3ecc52a25aa6c03fc8723c55",
+      "status_at_review": "proved",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "kaczmarz-def",
+        "outcome": "matched",
+        "readback": "The total row projection step uses division by the row squared norm, and its finite recursion is connected to the actual row-weighted PMF for nonzero matrices.",
+        "evidence": [
+          "NLAlib.Kaczmarz.step",
+          "NLAlib.Kaczmarz.prob",
+          "NLAlib.Kaczmarz.expErr",
+          "NLAlib.Kaczmarz.run",
+          "NLAlib.frobConditionNumber",
+          "NLAlib.kaczmarzRowPathPMF"
+        ],
+        "findings": [],
+        "statement_sha256": "988afb408182b45500114e80543790c1e98ece6e3ecc52a25aa6c03fc8723c55",
+        "status_at_review": "proved"
+      },
+      "status_at_final_review": "proved",
+      "reviewed_statement_sha256": "71ebc5f73523ff8878ade4a0d251cf3114ec270cc652b657480c277514addbdd"
+    }
+  ],
+  "declaration_index_sha256": "42b5ff8c57ddc51701cb227524021ee24226573f12c29bed402146dc89de4642",
+  "final_index_validation": "All primary proof references resolve in the freshly extracted declaration index. Historical baseline records are preserved unchanged."
+}

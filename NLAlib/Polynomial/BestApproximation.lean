@@ -1,12 +1,27 @@
+import NLAlib.Polynomial.BestApproximation.Absolute
+import NLAlib.Polynomial.BestApproximation.AbsoluteBernsteinBounds
+import NLAlib.Polynomial.BestApproximation.AbsoluteBernsteinLimit
+import NLAlib.Polynomial.BestApproximation.AbsoluteLower
 import NLAlib.Polynomial.BestApproximation.Affine
 import NLAlib.Polynomial.BestApproximation.AlternatingInterpolant
 import NLAlib.Polynomial.BestApproximation.AlternationLowerBound
 import NLAlib.Polynomial.BestApproximation.Basic
+import NLAlib.Polynomial.BestApproximation.BernsteinDegreeTransfer
+import NLAlib.Polynomial.BestApproximation.BernsteinFiniteGrowth
 import NLAlib.Polynomial.BestApproximation.BestInterpolant
 import NLAlib.Polynomial.BestApproximation.ChebyshevLebesgue
+import NLAlib.Polynomial.BestApproximation.DoubleResolventExponential
+import NLAlib.Polynomial.BestApproximation.DoubleResolventPositiveHalfLine
+import NLAlib.Polynomial.BestApproximation.DoubleResolventPositivity
 import NLAlib.Polynomial.BestApproximation.Equioscillation
 import NLAlib.Polynomial.BestApproximation.EquioscillationCertificate
 import NLAlib.Polynomial.BestApproximation.EquispacedLebesgue
+import NLAlib.Polynomial.BestApproximation.ExponentialHalfLine
+import NLAlib.Polynomial.BestApproximation.ExponentialRationalBounds
+import NLAlib.Polynomial.BestApproximation.ExponentialRationalReflection
+import NLAlib.Polynomial.BestApproximation.ExponentialReciprocalLower
+import NLAlib.Polynomial.BestApproximation.ExponentialReciprocalRootLimit
+import NLAlib.Polynomial.BestApproximation.ExponentialSmoothingKernel
 import NLAlib.Polynomial.BestApproximation.ExtremalSigns
 import NLAlib.Polynomial.BestApproximation.GapBoundary
 import NLAlib.Polynomial.BestApproximation.GapDirections
@@ -27,6 +42,9 @@ import NLAlib.Polynomial.BestApproximation.InterpolationProjection
 import NLAlib.Polynomial.BestApproximation.Jackson
 import NLAlib.Polynomial.BestApproximation.JacksonPeriodic
 import NLAlib.Polynomial.BestApproximation.JacksonPolynomial
+import NLAlib.Polynomial.BestApproximation.LaguerreProjection
+import NLAlib.Polynomial.BestApproximation.LaguerreProjectionTail
+import NLAlib.Polynomial.BestApproximation.LaguerreResolvent
 import NLAlib.Polynomial.BestApproximation.LebesgueAffine
 import NLAlib.Polynomial.BestApproximation.LebesgueLower
 import NLAlib.Polynomial.BestApproximation.LobattoCardinals
@@ -44,6 +62,8 @@ import NLAlib.Polynomial.BestApproximation.RationalExistence
 import NLAlib.Polynomial.BestApproximation.RationalLowerBound
 import NLAlib.Polynomial.BestApproximation.RationalPerturbation
 import NLAlib.Polynomial.BestApproximation.RationalUniqueness
+import NLAlib.Polynomial.BestApproximation.ReciprocalExponentialUpper
+import NLAlib.Polynomial.BestApproximation.ResidualMinimax
 import NLAlib.Polynomial.BestApproximation.RootReferenceGrid
 import NLAlib.Polynomial.BestApproximation.RootSampleLower
 import NLAlib.Polynomial.BestApproximation.RootSamples
@@ -55,6 +75,7 @@ import NLAlib.Polynomial.BestApproximation.SawtoothSquareWave
 import NLAlib.Polynomial.BestApproximation.SawtoothZeros
 import NLAlib.Polynomial.BestApproximation.SineBasis
 import NLAlib.Polynomial.BestApproximation.SquareWave
+import NLAlib.Polynomial.BestApproximation.WeightedMinimax
 
 /-! # `Polynomial/BestApproximation`
 

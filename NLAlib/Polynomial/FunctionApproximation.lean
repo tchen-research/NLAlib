@@ -1,4 +1,5 @@
 import NLAlib.Polynomial.FunctionApproximation.AbsoluteChebyshevSeries
+import NLAlib.Polynomial.FunctionApproximation.AbsoluteFiniteGrowth
 import NLAlib.Polynomial.FunctionApproximation.AnalyticApproximation
 import NLAlib.Polynomial.FunctionApproximation.AnalyticCoefficients
 import NLAlib.Polynomial.FunctionApproximation.AnalyticFourier
@@ -21,6 +22,7 @@ import NLAlib.Polynomial.FunctionApproximation.ChebyshevSeriesUniqueness
 import NLAlib.Polynomial.FunctionApproximation.Clenshaw
 import NLAlib.Polynomial.FunctionApproximation.EllipseCompact
 import NLAlib.Polynomial.FunctionApproximation.EllipseGeometry
+import NLAlib.Polynomial.FunctionApproximation.EllipseImaginary
 import NLAlib.Polynomial.FunctionApproximation.Exponential
 import NLAlib.Polynomial.FunctionApproximation.ExponentialChebyshevSeries
 import NLAlib.Polynomial.FunctionApproximation.FejerChebyshev
@@ -29,6 +31,7 @@ import NLAlib.Polynomial.FunctionApproximation.LowerBounds
 import NLAlib.Polynomial.FunctionApproximation.Monomial
 import NLAlib.Polynomial.FunctionApproximation.Sign
 import NLAlib.Polynomial.FunctionApproximation.SignChebyshevSeries
+import NLAlib.Polynomial.FunctionApproximation.SineCoordinates
 import NLAlib.Polynomial.FunctionApproximation.TwoIntervals
 
 /-! # `Polynomial/FunctionApproximation`

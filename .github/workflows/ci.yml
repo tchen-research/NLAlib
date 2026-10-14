@@ -51,6 +51,7 @@ jobs:
           pip install --quiet jsonschema
           python3 scripts/check_atlas.py
           python3 scripts/check_polynomial_matrix_scope.py
+          python3 scripts/check_card_audit.py
       - name: Book coverage references and proof status
         run: python3 scripts/coverage.py
       - name: Site builds

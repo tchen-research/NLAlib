@@ -30,6 +30,7 @@ import NLAlib.Matrix.Factorizations.QRExistence
 import NLAlib.Matrix.Factorizations.QRSpectral
 import NLAlib.Matrix.Factorizations.RankRevealingLeading
 import NLAlib.Matrix.Factorizations.RankRevealingTrailing
+import NLAlib.Matrix.Factorizations.RowInclusionKernel
 import NLAlib.Matrix.Factorizations.ScaledOrthogonal
 import NLAlib.Matrix.Factorizations.StrongRankRevealingQR
 import NLAlib.Matrix.Factorizations.SymmetricLU

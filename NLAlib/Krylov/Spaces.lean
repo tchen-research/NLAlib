@@ -1,7 +1,12 @@
 import NLAlib.Krylov.Spaces.Basic
 import NLAlib.Krylov.Spaces.Block
+import NLAlib.Krylov.Spaces.CompanionSimilarity
+import NLAlib.Krylov.Spaces.Cyclic
+import NLAlib.Krylov.Spaces.CyclicEigenspaces
 import NLAlib.Krylov.Spaces.Grade
+import NLAlib.Krylov.Spaces.MinimalPolynomial
 import NLAlib.Krylov.Spaces.Polynomial
+import NLAlib.Krylov.Spaces.ScalarExtension
 
 /-! # `Krylov/Spaces`
 

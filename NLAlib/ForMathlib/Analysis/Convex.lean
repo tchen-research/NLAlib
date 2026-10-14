@@ -1,4 +1,5 @@
 import NLAlib.ForMathlib.Analysis.Convex.Integral
+import NLAlib.ForMathlib.Analysis.Convex.SphereImage
 
 /-! # `ForMathlib/Analysis/Convex`
 

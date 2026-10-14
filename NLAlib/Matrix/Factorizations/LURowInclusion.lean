@@ -18,14 +18,14 @@ variable {n : Type*} [Fintype n] [LinearOrder n]
 of the preceding original rows' entries in those same columns.
 Horn–Johnson 2013, Theorem 3.5.3, row inclusion property.
 atlas: lu-row-inclusion (partial) -/
-def HasRowInclusion (A : Matrix n n ℝ) : Prop :=
-  ∀ i : n, ∃ c : n → ℝ, (∀ j : n, ¬j < i → c j = 0) ∧
+def HasRowInclusion {K : Type*} [Field K] (A : Matrix n n K) : Prop :=
+  ∀ i : n, ∃ c : n → K, (∀ j : n, ¬j < i → c j = 0) ∧
     ∀ k : n, k < i → A i k = ∑ j : n, c j * A j k
 
 /-- Column inclusion is row inclusion of the transpose; this is exactly the
 dual leading-column condition. Horn–Johnson 2013, Theorem 3.5.3.
 atlas: lu-row-inclusion (partial) -/
-def HasColumnInclusion (A : Matrix n n ℝ) : Prop := HasRowInclusion Aᵀ
+def HasColumnInclusion {K : Type*} [Field K] (A : Matrix n n K) : Prop := HasRowInclusion Aᵀ
 
 /-- Row inclusion produces a unit lower elimination matrix with an upper
 triangular product, without divisions or nonzero pivot assumptions.

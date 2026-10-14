@@ -14,45 +14,47 @@ This is the definite part of `simultaneous-diagonalization-congruence`.
 
 noncomputable section
 open Matrix Polynomial
-open scoped MatrixOrder
+open scoped MatrixOrder ComplexOrder
 
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 open scoped Matrix.Norms.L2Operator in
-/-- A positive definite and symmetric pair is simultaneously congruent to
-the identity and a real diagonal, in factor form. The diagonal entries are
-nonnegative whenever the second matrix is PSD.
-Horn--Johnson (2013), Theorem 7.6.1.
+/-- A positive definite and Hermitian pair over real or complex scalars is
+simultaneously congruent to the identity and a real diagonal in factor form.
+The diagonal entries are nonnegative whenever the second matrix is PSD.
+Horn–Johnson (2013), Theorem 7.6.1; extends the real form to `RCLike`.
 atlas: simultaneous-diagonalization-congruence (partial) -/
-theorem exists_definite_pair_congruence_diagonal {A B : Matrix n n ℝ}
-    (hA : A.PosDef) (hB : B.IsHermitian) :
-    ∃ (S : Matrix n n ℝ) (d : n → ℝ), IsUnit S ∧ A = S * Sᵀ ∧
-      B = S * diagonal d * Sᵀ ∧ (B.PosSemidef → ∀ i, 0 ≤ d i) := by
+theorem exists_definite_pair_congruence_diagonal {𝕜 : Type*} [RCLike 𝕜]
+    {A B : Matrix n n 𝕜} (hA : A.PosDef) (hB : B.IsHermitian) :
+    ∃ (S : Matrix n n 𝕜) (d : n → ℝ), IsUnit S ∧ A = S * Sᴴ ∧
+      B = S * diagonal (fun i => (d i : 𝕜)) * Sᴴ ∧ (B.PosSemidef → ∀ i, 0 ≤ d i) := by
   let R := CFC.sqrt A
   have hR : IsUnit R := (CFC.isUnit_sqrt_iff A hA.posSemidef.nonneg).mpr hA.isUnit
   have hRd := (Matrix.isUnit_iff_isUnit_det R).mp hR
-  have hRt : Rᵀ = R := by
-    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-      (CFC.sqrt_nonneg A).posSemidef.isHermitian.eq
-  have hRit : R⁻¹ᵀ = R⁻¹ := by rw [Matrix.transpose_nonsing_inv, hRt]
+  have hRt : Rᴴ = R := (CFC.sqrt_nonneg A).posSemidef.isHermitian.eq
+  have hRit : R⁻¹ᴴ = R⁻¹ := by rw [Matrix.conjTranspose_nonsing_inv, hRt]
   have hSq : R * R = A := CFC.sqrt_mul_sqrt_self A hA.posSemidef.nonneg
   have hRRi : R * R⁻¹ = 1 := Matrix.mul_nonsing_inv R hRd
   have hRiR : R⁻¹ * R = 1 := Matrix.nonsing_inv_mul R hRd
   let H := R⁻¹ * B * R⁻¹
   have hH : H.IsHermitian := by
-    simpa only [H, Matrix.conjTranspose_eq_transpose_of_trivial, hRit] using
-      Matrix.isHermitian_mul_mul_conjTranspose R⁻¹ hB
-  let U : Matrix n n ℝ := hH.eigenvectorUnitary
-  have hUU : U * Uᵀ = 1 := eigenvectorUnitary_mul_transpose_self hH
+    simpa only [H, hRit] using Matrix.isHermitian_mul_mul_conjTranspose R⁻¹ hB
+  let U : Matrix n n 𝕜 := hH.eigenvectorUnitary
+  have hUU : U * Uᴴ = 1 := by
+    simpa only [U, ← Matrix.star_eq_conjTranspose, Unitary.coe_star] using
+      Unitary.coe_mul_star_self hH.eigenvectorUnitary
   have hU : IsUnit U := (Matrix.isUnit_iff_isUnit_det U).mpr
     (Matrix.isUnit_det_of_right_inverse hUU)
+  have hSpectral : H = U * diagonal (fun i => (hH.eigenvalues i : 𝕜)) * Uᴴ := by
+    simpa only [Unitary.conjStarAlgAut_apply, Matrix.star_eq_conjTranspose, Function.comp_def, U]
+      using hH.spectral_theorem
   refine ⟨R * U, hH.eigenvalues, hR.mul hU, ?_, ?_, ?_⟩
   · symm
     calc
-      (R * U) * (R * U)ᵀ = R * (U * Uᵀ) * R := by
-        rw [Matrix.transpose_mul, hRt]
+      (R * U) * (R * U)ᴴ = R * (U * Uᴴ) * R := by
+        rw [Matrix.conjTranspose_mul, hRt]
         simp only [Matrix.mul_assoc]
       _ = A := by rw [hUU, Matrix.mul_one, hSq]
   · have hRHR : R * H * R = B := by
@@ -62,15 +64,13 @@ theorem exists_definite_pair_congruence_diagonal {A B : Matrix n n ℝ}
         _ = B := by rw [hRRi, hRiR, Matrix.one_mul, Matrix.mul_one]
     calc
       B = R * H * R := hRHR.symm
-      _ = R * (U * diagonal hH.eigenvalues * Uᵀ) * R := by
-        rw [← eq_eigenvectorUnitary_mul_diagonal_mul_transpose hH]
-      _ = (R * U) * diagonal hH.eigenvalues * (R * U)ᵀ := by
-        rw [Matrix.transpose_mul, hRt]
+      _ = R * (U * diagonal (fun i => (hH.eigenvalues i : 𝕜)) * Uᴴ) * R := by rw [← hSpectral]
+      _ = (R * U) * diagonal (fun i => (hH.eigenvalues i : 𝕜)) * (R * U)ᴴ := by
+        rw [Matrix.conjTranspose_mul, hRt]
         simp only [Matrix.mul_assoc]
   · intro hBPSD
     have hHPSD : H.PosSemidef := by
-      simpa only [H, Matrix.conjTranspose_eq_transpose_of_trivial, hRit] using
-        hBPSD.mul_mul_conjTranspose_same R⁻¹
+      simpa only [H, hRit] using hBPSD.mul_mul_conjTranspose_same R⁻¹
     exact hHPSD.eigenvalues_nonneg
 
 /-- Simultaneous congruence to identity and a diagonal makes the relative

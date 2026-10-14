@@ -12,7 +12,7 @@ import json, pathlib, re, subprocess, sys, collections
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TREE = """ForMathlib/Algebra ForMathlib/Analysis ForMathlib/MeasureTheory ForMathlib/Probability ForMathlib/Topology ForMathlib/LinearAlgebra ForMathlib/Order ForMathlib/Logic ForMathlib/Data ForMathlib/Combinatorics
 Matrix/Basic Matrix/Norms Matrix/Spectral Matrix/Subspaces Matrix/Factorizations Matrix/Perturbation Matrix/Inequalities Matrix/Functions Matrix/Structured Matrix/Calculus
-Polynomial/Chebyshev Polynomial/Interpolation Polynomial/BestApproximation Polynomial/FunctionApproximation Polynomial/Quadrature
+Polynomial/Chebyshev Polynomial/Interpolation Polynomial/BestApproximation Polynomial/FunctionApproximation Polynomial/OrthogonalPolynomials Polynomial/Quadrature
 Probability/Basic Probability/Moments Probability/Sampling Probability/SubGaussian Probability/Rademacher Probability/ChiSquare
 Probability/Gaussian/Basic Probability/Gaussian/Calculus Probability/Gaussian/Moments Probability/Gaussian/Comparison Probability/Gaussian/Concentration
 Probability/Concentration/Basic Probability/Concentration/Scalar Probability/Concentration/Matrix Probability/Concentration/QuadraticForms Probability/Concentration/Entropy Probability/Concentration/Martingales
@@ -29,7 +29,7 @@ LAYER = {"ForMathlib": -1, "Matrix": 0, "Polynomial": 0, "Probability": 1, "Kryl
          "Sketching": 3, "LowRank": 4, "Estimation": 4, "Solvers": 5}
 GROUPS = {"M1": ["Matrix"], "M2": ["Concentration"], "M3": ["Gaussian"], "M4": ["Sketching"],
           "M5": ["Krylov", "Polynomial", "ForMathlib"], "M6": ["LowRank", "Estimation", "Solvers"]}
-DECL = re.compile(r"^\s*(@\[[^\]]*\]\s*)?(noncomputable\s+|protected\s+|private\s+)*(theorem|lemma|def|abbrev|structure|instance|inductive|class|opaque|axiom)\s", re.M)
+DECL = re.compile(r"^\s*(@\[[^\]]*\]\s*)?((?:noncomputable|protected|private|nonrec|scoped|local|unsafe|partial)\s+)*(theorem|lemma|def|abbrev|structure|instance|inductive|class|opaque|axiom)\s", re.M)
 
 def is_aggregator(p):   # declaration-free AND the aggregator of a sibling directory of the same name
     return (not DECL.search(p.read_text())) and p.with_suffix("").is_dir()
@@ -155,6 +155,12 @@ def prune_aggregators():
     return removed
 def gen_aggregators(root_dir):
     """Write <Dir>.lean for every directory under NLAlib/ (recursively) importing its files and sub-aggregators."""
+    for d in (ROOT / "NLAlib").rglob("*"):
+        if d.is_dir():
+            existing = d.with_suffix(".lean")
+            if existing.exists() and DECL.search(existing.read_text(encoding="utf-8")):
+                raise ValueError(f"refusing to overwrite declarations in {existing.relative_to(ROOT)}; "
+                                 "move its content into a topic file such as Basic.lean first")
     removed = prune_aggregators()
     made = []
     for d in sorted({p for p in (ROOT / "NLAlib").rglob("*") if p.is_dir()} | {ROOT / "NLAlib"}, key=lambda p: len(p.parts), reverse=True):

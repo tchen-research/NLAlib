@@ -1,0 +1,187 @@
+{
+  "gauss-quadrature-derivative-remainder": {
+    "clauses": [
+      {
+        "statement": "A rule exact through degree 2n-1 equals the integral of the actual Hermite interpolant of the sampled values and first derivatives.",
+        "decls": [
+          "NLAlib.integral_hermiteInterpolate_eq_quadrature"
+        ]
+      },
+      {
+        "statement": "At every point of the closed interval, the actual finite Hermite interpolant has the order-2n derivative remainder at an interior point, with squared monic nodal factor.",
+        "decls": [
+          "NLAlib.exists_sub_eval_hermiteInterpolate_eq"
+        ]
+      },
+      {
+        "statement": "For a finite compactly supported positive measure and a Gauss-degree rule with interior distinct nodes, the integral error is one interior order-2n derivative value divided by (2n)!, times the squared nodal integral; no measurable selection is assumed.",
+        "decls": [
+          "NLAlib.exists_integral_sub_quadrature_eq_iteratedDeriv_mul_nodal_sq"
+        ]
+      },
+      {
+        "statement": "The actual canonical Gauss rule of every finite compactly supported positive measure has this derivative remainder with its canonical monic orthogonal-polynomial norm, including finite-support termination.",
+        "decls": [
+          "NLAlib.exists_integral_sub_gaussRule_eq_iteratedDeriv_mul_norm",
+          "NLAlib.integral_eq_quadrature_of_integral_nodal_sq_eq_zero"
+        ]
+      },
+      {
+        "statement": "Every valid actual Lanczos decomposition has the matrix derivative remainder with the squared Euclidean norm of its monic characteristic polynomial applied to the starting vector, including exact Krylov termination.",
+        "decls": [
+          "NLAlib.LanczosDecomp.exists_quadForm_sub_cfc_T_eq_iteratedDeriv_mul_norm"
+        ]
+      },
+      {
+        "statement": "A nonnegative order-2q derivative makes the actual Lanczos Gauss value a lower bound, and a nonpositive order-2q derivative makes it an upper bound.",
+        "decls": [
+          "NLAlib.LanczosDecomp.norm_sq_mul_cfc_T_le_quadForm_of_iteratedDeriv_nonneg",
+          "NLAlib.LanczosDecomp.quadForm_le_norm_sq_mul_cfc_T_of_iteratedDeriv_nonpos"
+        ]
+      }
+    ]
+  },
+  "gauss-radau-lobatto": {
+    "clauses": [
+      {
+        "statement": "Actual intrinsic interpolatory endpoint rules follow from modified nodal orthogonality, with degree thresholds 2q and 2q+1; weighted squared cardinal tests prove the positive weights under the original support nondegeneracy.",
+        "decls": [
+          "NLAlib.integral_eval_eq_endpoint_quadrature_of_modified_orthogonality",
+          "NLAlib.integral_eval_eq_twoEndpoint_quadrature_of_modified_orthogonality",
+          "NLAlib.endpoint_quadrature_weight_pos_of_exact",
+          "NLAlib.twoEndpoint_quadrature_weight_pos_of_exact"
+        ]
+      },
+      {
+        "statement": "The actual Radau and Lobatto Schur borders have the designated endpoint eigenvalues and interval matrix order. The exact strict shift hypotheses are explicit; original support q+1 and q+2 respectively are clean sufficient conditions.",
+        "decls": [
+          "NLAlib.radauJacobiMatrices_bounds_and_endpoints",
+          "NLAlib.lobattoJacobiMatrix_bounds_and_endpoints",
+          "NLAlib.finRadauSchurBorders_bounds_and_endpoints",
+          "NLAlib.finLobattoSchurBorder_bounds_and_endpoints"
+        ]
+      },
+      {
+        "statement": "Last-coordinate cofactors yield the explicit monic minus-ratio Radau corners, positive Lobatto coupling and both common-corner formulas, and the actual appended-border monic characteristic recurrence.",
+        "decls": [
+          "NLAlib.resolvent_last_last_eq_charpoly_leading_div_charpoly",
+          "NLAlib.leftRadauCorner_single_last_eq_charpoly_ratio",
+          "NLAlib.rightRadauCorner_single_last_eq_charpoly_ratio",
+          "NLAlib.lobattoCouplingSq_and_corner_single_last_eq_charpoly_ratio",
+          "NLAlib.lobattoCouplingSq_pos",
+          "NLAlib.charpoly_symmetricBorder_single_last"
+        ]
+      },
+      {
+        "statement": "Finite propagation of matrix powers preserves the original rooted moments through 2q for Radau and 2q+1 for Lobatto. The canonical Jacobi matrix supplies those original measure moments, including its displayed terminal order.",
+        "decls": [
+          "NLAlib.pow_apply_zero_eq_of_isTridiagonal_of_eq_below_add",
+          "NLAlib.integral_pow_eq_mass_mul_orthogonalPolynomialJacobiMatrix_pow",
+          "NLAlib.integral_pow_eq_mass_mul_radauJacobiMatrix_pow",
+          "NLAlib.integral_pow_eq_mass_mul_lobattoJacobiMatrix_pow"
+        ]
+      },
+      {
+        "statement": "The constructed endpoint matrices' actual eigenvalue/first-coordinate-weight rules have the stated polynomial exactness, distinct nodes, positive weights and original total mass. Their remaining nodal products are the canonical modified monic polynomials, and these weighted functionals are native polynomial-density measure integrals.",
+        "decls": [
+          "NLAlib.integral_eval_eq_sum_leftRadauWeights_mul_eval",
+          "NLAlib.integral_eval_eq_sum_rightRadauWeights_mul_eval",
+          "NLAlib.integral_eval_eq_sum_lobattoWeights_mul_eval",
+          "NLAlib.radauNodes_injective_and_weights_pos",
+          "NLAlib.lobattoNodes_injective_and_weights_pos",
+          "NLAlib.sum_endpointJacobiWeights",
+          "NLAlib.exists_leftRadauNodes_eq_endpoint_modified_roots",
+          "NLAlib.exists_rightRadauNodes_eq_endpoint_modified_roots",
+          "NLAlib.exists_lobattoNodes_eq_twoEndpoint_modified_roots",
+          "NLAlib.polynomialIntegral_withDensity_polynomial"
+        ]
+      },
+      {
+        "statement": "The actual endpoint matrices have single-interior-point odd/even derivative remainders. Nonnegative odd derivatives give left Radau lower and right Radau upper bounds; nonnegative even derivatives give the Lobatto upper bound, with original operator quadratic-form consumers. Every orientation is reversed for a nonpositive derivative.",
+        "decls": [
+          "NLAlib.exists_integral_sub_leftRadauJacobiRule_eq_iteratedDeriv_mul",
+          "NLAlib.exists_integral_sub_rightRadauJacobiRule_eq_iteratedDeriv_mul",
+          "NLAlib.exists_integral_sub_lobattoJacobiRule_eq_iteratedDeriv_mul",
+          "NLAlib.norm_sq_mul_cfc_leftRadauJacobiMatrix_le_quadForm_of_iteratedDeriv_nonneg",
+          "NLAlib.quadForm_le_norm_sq_mul_cfc_rightRadauJacobiMatrix_of_iteratedDeriv_nonneg",
+          "NLAlib.quadForm_le_norm_sq_mul_cfc_lobattoJacobiMatrix_of_iteratedDeriv_nonneg",
+          "NLAlib.integral_le_mass_mul_cfc_leftRadauJacobiMatrix_of_iteratedDeriv_nonpos",
+          "NLAlib.mass_mul_cfc_rightRadauJacobiMatrix_le_integral_of_iteratedDeriv_nonpos",
+          "NLAlib.mass_mul_cfc_lobattoJacobiMatrix_le_integral_of_iteratedDeriv_nonpos",
+          "NLAlib.quadForm_le_norm_sq_mul_cfc_leftRadauJacobiMatrix_of_iteratedDeriv_nonpos",
+          "NLAlib.norm_sq_mul_cfc_rightRadauJacobiMatrix_le_quadForm_of_iteratedDeriv_nonpos",
+          "NLAlib.norm_sq_mul_cfc_lobattoJacobiMatrix_le_quadForm_of_iteratedDeriv_nonpos"
+        ]
+      },
+      {
+        "statement": "An opposite endpoint in a Radau rule forces exactness for every function, so the derivative formula retains zero signed nodal norm without requiring endpoint jets. Intrinsic zero-nodal-norm rules also cover finite atomic termination independently of smoothness. The actual canonical terminal Gauss rule supplies the finite-support fallback for any function without assuming an output exactness certificate or smoothness.",
+        "decls": [
+          "NLAlib.integral_eq_radau_degree_rule_of_both_endpoints",
+          "NLAlib.exists_integral_sub_radau_degree_rule_eq_iteratedDeriv_mul",
+          "NLAlib.integral_eq_endpoint_quadrature_of_integral_nodal_eq_zero",
+          "NLAlib.integral_eq_twoEndpoint_quadrature_of_integral_nodal_eq_zero",
+          "NLAlib.integral_eq_gaussRule_of_support_encard"
+        ]
+      },
+      {
+        "statement": "The explicit zero-order two-endpoint affine weights are nonnegative and preserve total mass without strict endpoint shifts, including a vanishing endpoint weight and the zero measure; a coincident-endpoint interval has its exact one-node mass rule.",
+        "decls": [
+          "NLAlib.endpointLinearWeights_nonneg",
+          "NLAlib.integral_eval_eq_endpointLinearWeights_mul_eval",
+          "NLAlib.sum_endpointLinearWeights",
+          "NLAlib.endpointLinearWeights_zero",
+          "NLAlib.integral_eq_mass_mul_of_ae_mem_singleton_interval"
+        ]
+      },
+      {
+        "statement": "The actual Lobatto rule reproduces every original polynomial pairing within its degree threshold, giving discrete orthogonality whenever the degree sum is at most 2q+1.",
+        "decls": [
+          "NLAlib.sum_lobattoWeights_mul_eval_mul_eval_eq_integral"
+        ]
+      },
+      {
+        "statement": "The explicit first-kind Chebyshev Lobatto cosine rule has the endpoint half weights, degree 2N-1 exactness, positivity, mass pi, and boundary/interior discrete mode norms.",
+        "decls": [
+          "NLAlib.integral_eval_measureT_eq_chebyshevLobattoRule",
+          "NLAlib.chebyshevLobattoWeight_pos",
+          "NLAlib.sum_chebyshevLobattoWeight",
+          "NLAlib.sum_chebyshevLobattoWeight_mul_eval_T_mul_eval_T"
+        ]
+      }
+    ],
+    "boundary": "The nondegenerate Lobatto construction uses exact positive Schur shifts, with at least q+2 original support points as a clean sufficient hypothesis. A blanket q+1 grade is false; smaller terminal rules and zero/singleton cases use their intrinsic exactness branches."
+  },
+  "symmetric-measure-even-odd-reduction": {
+    "clauses": [
+      {
+        "statement": "For every defined order of a symmetric positive polynomial-moment measure, the canonical monic polynomial has its degree parity and the recurrence diagonal vanishes, including support termination.",
+        "decls": [
+          "NLAlib.neg_one_pow_mul_comp_neg_X_monicOrthogonalPolynomial_polynomialIntegral",
+          "NLAlib.orthogonalRecurrenceAlpha_polynomialIntegral_eq_zero"
+        ]
+      },
+      {
+        "statement": "The even canonical monic polynomials are the canonical monic polynomials of the native square pushforward composed with X², and the odd canonical polynomials are X times those of the native weighted square pushforward composed with X².",
+        "decls": [
+          "NLAlib.monicOrthogonalPolynomial_two_mul_eq_comp_X_sq",
+          "NLAlib.monicOrthogonalPolynomial_two_mul_add_one_eq_X_mul_comp_X_sq"
+        ]
+      },
+      {
+        "statement": "The actual rectangular symmetric dilation at the upper-block seed has a native symmetric spectral measure; its square pushforward is the left normal matrix spectral measure at the original seed, and its weighted square pushforward is the right normal matrix spectral measure at the transposed seed.",
+        "decls": [
+          "NLAlib.map_neg_spectralMeasure_dilation",
+          "NLAlib.map_sq_spectralMeasure_dilation",
+          "NLAlib.map_sq_withDensity_sq_spectralMeasure_dilation"
+        ]
+      },
+      {
+        "statement": "Every valid actual even-order augmented Lanczos monic characteristic polynomial reduces to the left-normal canonical polynomial at X², and every odd-order one reduces to X times the right-normal canonical polynomial at X², including Krylov termination.",
+        "decls": [
+          "NLAlib.LanczosDecomp.charpoly_T_dilation_two_mul_eq_comp_X_sq",
+          "NLAlib.LanczosDecomp.charpoly_T_dilation_two_mul_add_one_eq_X_mul_comp_X_sq"
+        ]
+      }
+    ]
+  }
+}

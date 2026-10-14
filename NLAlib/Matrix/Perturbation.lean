@@ -10,6 +10,7 @@ import NLAlib.Matrix.Perturbation.DavisKahanPopulation
 import NLAlib.Matrix.Perturbation.DavisKahanTop
 import NLAlib.Matrix.Perturbation.DistanceToSingularity
 import NLAlib.Matrix.Perturbation.EigenspaceProjector
+import NLAlib.Matrix.Perturbation.EigenvalueContinuity
 import NLAlib.Matrix.Perturbation.EigenvaluePencil
 import NLAlib.Matrix.Perturbation.EigenvaluePerturbation
 import NLAlib.Matrix.Perturbation.EigenvalueTrace

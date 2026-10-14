@@ -30,6 +30,8 @@ theorem smul_le_iff_relative_spectrum_lower {A B : Matrix n n ℝ}
     (hA : A.PosDef) (hB : B.IsHermitian) (a : ℝ) :
     a • A ≤ B ↔ ∀ z ∈ spectrum ℝ (A⁻¹ * B), a ≤ z := by
   obtain ⟨S, d, hS, hAA, hBB, -⟩ := exists_definite_pair_congruence_diagonal hA hB
+  change A = S * Sᵀ at hAA
+  change B = S * diagonal d * Sᵀ at hBB
   have hsc : a • A = S * (a • (1 : Matrix n n ℝ)) * Sᵀ := by
     simp only [hAA, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul]
   rw [spectrum_inverse_mul_eq_range_of_congruence hS hAA hBB, hsc, hBB,
@@ -44,6 +46,8 @@ theorem le_smul_iff_relative_spectrum_upper {A B : Matrix n n ℝ}
     (hA : A.PosDef) (hB : B.IsHermitian) (b : ℝ) :
     B ≤ b • A ↔ ∀ z ∈ spectrum ℝ (A⁻¹ * B), z ≤ b := by
   obtain ⟨S, d, hS, hAA, hBB, -⟩ := exists_definite_pair_congruence_diagonal hA hB
+  change A = S * Sᵀ at hAA
+  change B = S * diagonal d * Sᵀ at hBB
   have hsc : b • A = S * (b • (1 : Matrix n n ℝ)) * Sᵀ := by
     simp only [hAA, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul]
   rw [spectrum_inverse_mul_eq_range_of_congruence hS hAA hBB, hsc, hBB,
@@ -249,6 +253,8 @@ theorem det_eq_iff_eq_of_posSemidef_le_posDef {A B : Matrix n n ℝ}
   constructor
   · intro hdet
     obtain ⟨S, d, hS, hAA, hBB, hd⟩ := exists_definite_pair_congruence_diagonal hA hB.isHermitian
+    change A = S * Sᵀ at hAA
+    change B = S * diagonal d * Sᵀ at hBB
     have hs : S.det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det S).mp hS).ne_zero
     have hp : ∏ i, d i = 1 := by
       apply mul_left_cancel₀ hs

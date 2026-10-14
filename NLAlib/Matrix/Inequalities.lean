@@ -1,3 +1,6 @@
+import NLAlib.Matrix.Inequalities.AccretiveDeterminant
+import NLAlib.Matrix.Inequalities.AccretiveInclusion
+import NLAlib.Matrix.Inequalities.AccretiveKernels
 import NLAlib.Matrix.Inequalities.BlockContraction
 import NLAlib.Matrix.Inequalities.BlockOrderConsequences
 import NLAlib.Matrix.Inequalities.BlockQuadratic

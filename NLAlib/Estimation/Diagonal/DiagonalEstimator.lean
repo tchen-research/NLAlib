@@ -66,6 +66,19 @@ section Probability
 
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
 
+omit [IsProbabilityMeasure μ] in
+/-- Isotropic second moments alone make each coordinate of the diagonal estimator
+unbiased. Neither independent coordinates nor zero means are needed. Coordinate
+almost-everywhere measurability and the diagonal second moments also imply integrability.
+Source: Bekas–Kokiopoulou–Saad (2007), §2, by the row-selector quadratic form.
+atlas: diagonal-estimator -/
+theorem integral_mul_mulVec_apply_eq_of_second_moments (A : Matrix n n ℝ)
+    {z : Ω → n → ℝ} (hmeas : ∀ j, AEMeasurable (fun ω => z ω j) μ)
+    (hsecond : ∀ j k, ∫ ω, z ω j * z ω k ∂μ = if j = k then 1 else 0) (i : n) :
+    ∫ ω, z ω i * (A *ᵥ z ω) i ∂μ = A i i := by
+  simp_rw [← quadForm_rowSelector]
+  rw [integral_quadForm_eq_trace_of_second_moments _ hmeas hsecond, trace_rowSelector]
+
 /-- **The diagonal estimator is unbiased.** If the coordinates of `z` are square-integrable,
 pairwise independent, centred and of unit second moment, then `𝔼[zᵢ (A z)ᵢ] = A_ii`.
 Source: Bekas–Kokiopoulou–Saad (2007) [`bks07`], §2 (eq. (2.1)). Atlas: `diagonal-estimator`;

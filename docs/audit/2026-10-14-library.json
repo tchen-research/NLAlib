@@ -6,7 +6,9 @@
     "docs/audit/2026-10-14-matrix-krylov.json",
     "docs/audit/2026-10-14-polynomial-quadrature.json",
     "docs/audit/2026-10-14-estimation-lowrank.json",
-    "docs/audit/2026-10-14-probability-sketching-solvers.json"
+    "docs/audit/2026-10-14-probability-sketching-solvers.json",
+    "docs/audit/2026-10-14-research-candidates.json",
+    "docs/audit/2026-10-14-deeper-matrix-methods.json"
   ],
   "formalization_exclusions": {
     "crouzeix_palencia": "Analytic interface, matrix Cauchy bridge, and smooth-neighborhood approximation",
@@ -88,5 +90,21 @@
     ],
     "audit_output": "docs/audit/2026-10-14-validation.md",
     "note": "Full kernel audits passed; final metadata-only atlas tag repairs were rebuilt and reindexed. No theorem statements or proof terms changed in those repairs."
+  },
+  "candidate_extension": {
+    "report": "docs/audit/2026-10-14-research-candidates.json",
+    "baseline_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
+    "new_candidates": 52,
+    "scope": "Mathematical source review of newly added unformalized candidates; historical Lean integration validation below applies only to its original scope."
+  },
+  "deeper_candidate_extension": {
+    "report": "docs/audit/2026-10-14-deeper-matrix-methods.json",
+    "baseline_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
+    "new_candidates": 40,
+    "scope": "Deeper mathematical source review and additional unformalized candidates; historical Lean build/audit validation applies only to its original scope."
+  },
+  "candidate_catalog_review": {
+    "report": "docs/audit/2026-10-14-candidate-catalog-review.json",
+    "scope": "Category, naming, dependency-routing and viewer review with final validation; no change to Lean declarations or proof status."
   }
 }

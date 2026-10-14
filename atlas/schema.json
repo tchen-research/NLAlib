@@ -73,7 +73,7 @@
               "integer",
               "null"
             ],
-            "description": "Import layer of the realising module (0 Matrix/Polynomial, 1 Concentration, 2 Gaussian, 3 Sketching, 4 LowRank/Estimation/Krylov, 5 Solvers); null for sub-areas."
+            "description": "Import layer of the realising module (0 Matrix/Polynomial, 1 Probability/Krylov, 2 RandomMatrix, 3 Sketching, 4 LowRank/Estimation, 5 Solvers); null for sub-areas."
           }
         }
       }

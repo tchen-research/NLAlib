@@ -1,0 +1,1852 @@
+{
+  "date": "2026-10-14",
+  "baseline_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
+  "scope": "Selective new NLA and matrix-analysis candidates; no Lean formalization and no OpenProblemsInNLA source material used for this addition.",
+  "method": "Read current-main standards, targeting guide, atlas and declarations; reviewed the recent atlas/proof-scope PRs. Screened the requested books, lecture notes, researcher lists and papers for reusable missing mathematics. Read selected statements and proofs, re-derived tractable core identities, and checked endpoint cases and dependency boundaries. Individual readbacks state the extent of the audit. A source review is not a kernel proof or a certification of every theorem in a screened paper. Existing atlas cards and historical Lean audit records are preserved.",
+  "counts": {
+    "new_candidates": 52,
+    "new_areas": 10,
+    "new_sources": 19,
+    "atlas_results_before": 354,
+    "atlas_results_after": 406
+  },
+  "source_screening": {
+    "root": [
+      {
+        "id": "gaussian-residual-certificate",
+        "source_labels": [
+          {
+            "source": "hmt11",
+            "label": "§4.3, Lemma 4.1 (a posteriori error estimation)"
+          }
+        ],
+        "derivation_review": "Derivation checked: for R nonzero, project each probe onto a top right singular vector. The scalar normal density bound gives P(|Z|<t) <= sqrt(2/pi)*t; at t=sqrt(pi/2)/alpha independence yields alpha^(-s). R=0 and zero-dimensional matrices have empty failure events. The probes must be independent of the residual construction. This is a certificate for any residual operator, not a claim about a particular stopping algorithm. Formalization should use HasLaw and the actual maximum of finitely many probe norms.",
+        "confidence": "Mathematical derivation checked; no Lean proof or compiler verification claimed."
+      },
+      {
+        "id": "adaptive-gaussian-residual-certification",
+        "source_labels": [
+          {
+            "source": "hmt11",
+            "label": "§§4.3–4.4; fresh-probe extension derived by conditioning and a countable union bound"
+          }
+        ],
+        "derivation_review": "Audited extension, not quoted as a separate HMT theorem: condition on each history, apply the fixed-residual certificate, integrate, then use countable subadditivity. No independence between different stage failures is required. The union event gives a statement stronger than one restricted to stopping times; no termination or expected-work guarantee follows. Predictable random budgets are a further variant, not part of this first target. Reusing training probes is excluded: an orthogonal projection onto range(A*Omega) annihilates its own training residual probes.",
+        "confidence": "Mathematical derivation checked; no Lean proof or compiler verification claimed."
+      },
+      {
+        "id": "laplacian-resistance-leverage",
+        "source_labels": [
+          {
+            "source": "ss11",
+            "label": "§§2.1–2.3 and Lemma 3 (Projection Matrix); componentwise extension"
+          }
+        ],
+        "derivation_review": "Checked by CL^dagger C^T = C C^dagger, the Penrose identities and the trace/rank of a projector. The kernel of L consists of vectors constant on each connected component, proving the n-c extension of the source connected-graph n-1 formula. Orientation signs cancel. Resistance is asserted only for pairs joined by an edge (or, in a later extension, within one component): the pseudoinverse quadratic form is not the infinite electrical resistance across distinct components. Reuse Mathlib graph/incidence notions where available; weighted incidence and the physical-resistance bridge are prerequisites.",
+        "confidence": "Mathematical derivation checked; no Lean proof or compiler verification claimed."
+      },
+      {
+        "id": "resistance-sampling-spectral-sparsifier",
+        "source_labels": [
+          {
+            "source": "ss11",
+            "label": "Theorem 1 and Lemmas 3–4; explicit high-probability variant via matrix Chernoff"
+          },
+          {
+            "source": "tropp15",
+            "label": "Theorem 5.1.1, matrix Chernoff"
+          }
+        ],
+        "derivation_review": "This is a derived Chernoff version, not the original paper's half-probability constant. Whiten on range(L), whose dimension is r: each unscaled sampled rank-one summand has mean I and norm r. Lower and upper Chernoff tails are bounded by r*exp(-q*epsilon^2/(2r)) and r*exp(-q*epsilon^2/(3r)); add them and undo whitening. Every sampled Laplacian vanishes on ker(L), so the sandwich extends to the full vertex space. r=0 is the deterministic zero-graph case, kept separate to avoid dividing by zero. This card promises sampled-edge count, not nearly-linear computation of resistances.",
+        "confidence": "Mathematical derivation checked; no Lean proof or compiler verification claimed."
+      },
+      {
+        "id": "operator-monotone-modulus-continuity",
+        "source_labels": [
+          {
+            "source": "bhatia97",
+            "label": "Theorem X.1.1"
+          },
+          {
+            "source": "pmm25",
+            "label": "Theorem 2.7 proof, zero-at-origin case"
+          }
+        ],
+        "derivation_review": "Audited order proof: put t=||A-B||_2, so A<=B+tI and B<=A+tI. Operator monotonicity and scalar concavity imply f(B+tI)<=f(B)+f(t)I by simultaneous functional calculus; reverse A,B. The Hermitian norm/order equivalence finishes. For f(0)>0 apply the result to f-f(0); do not silently identify f(B) with a rank-truncated function of B. Mathlib's operator-monotone predicate and CFC should be reused.",
+        "confidence": "Mathematical derivation checked; no Lean proof or compiler verification claimed."
+      },
+      {
+        "id": "operator-monotone-schatten-transfer",
+        "source_labels": [
+          {
+            "source": "pmm25",
+            "label": "Theorem 2.6, with Theorems 2.4–2.5 as nuclear/Frobenius corollaries"
+          }
+        ],
+        "derivation_review": "Checked the proof's eigenvalue-deficit comparison using decreasing f(x)/x and concavity, followed by the ordered PSD inequality ||X-Y||_Sp^p <= tr(X^p)-tr(Y^p). The printed ratio argument divides by eigenvalues, deficits and the optimal tail: zero terms must be removed and the zero-tail case proved separately, or handled by a justified positive regularization limit. k=0 follows directly. No stronger ordinary Frobenius residual premise, unordered nuclear transfer, or scalar-concave spectral transfer is asserted. f(Ahat)_k is not f(Ahat_k) if f(0)>0. The trace-superadditivity input (McCarthy, source Lemma 2.3) remains an explicit prerequisite to formalize.",
+        "confidence": "Mathematical derivation checked; no Lean proof or compiler verification claimed."
+      },
+      {
+        "id": "ordered-schatten-trace-deficit",
+        "source_labels": [
+          {
+            "source": "pmm25",
+            "label": "Lemma 2.3 and its McCarthy trace-superadditivity input"
+          }
+        ],
+        "derivation_review": "Independent finite-dimensional derivation checked: the concatenated spectra of X and Y are majorized by the spectrum of X+Y padded with zeros. For each top-k sum, span the selected eigenvectors of X and Y, enlarge to dimension k when k<=n, and apply the Ky Fan principle; for k>=n use total trace. Convexity of t^p gives trace superadditivity. Set X=A-B, Y=B. This avoids requiring operator monotonicity of t^(p-1), which fails outside its appropriate range. Empty dimensions and singular PSD matrices cause no inverse or division problems.",
+        "confidence": "Mathematical derivation checked; no Lean proof or compiler verification claimed."
+      }
+    ],
+    "nla": [
+      {
+        "topic": "Scope and duplicate check",
+        "decision": "selected",
+        "detail": "Read local and origin/main policies; searched 354-result current-main atlas plus declaration index. Existing Sylvester solvability/separation, ordinary Arnoldi-GMRES, Kronecker spectral theory, pseudoinverses, and structured-matrix definitions are reused rather than duplicated. The 13 cards are candidate statements only, not Lean formalizations. No OpenProblemsInNLA material is used."
+      },
+      {
+        "topic": "Fessler–Nadakuditi textbook",
+        "decision": "selected",
+        "sources": [
+          "https://doi.org/10.1017/9781009418164"
+        ],
+        "checked": "Inspected supplied book title/copyright, §§5.6.1–5.6.5, §§7.4–7.5.4, and §§9.2–9.2.3.",
+        "detail": "Verified ridge equations by stacking and SVD; reconstructed orthogonal TSVD bias/noise and Landweber scalar recurrence. Explicitly distinguish the rank-deficient Landweber limit from the book full-column-rank arbitrary-initializer statement. For hard/soft thresholding, audited scalar objectives plus von Neumann/Eckart–Young reductions and tie cases. Did not generalize the textbook informal any-minimizer claim for arbitrary unitarily invariant objectives."
+      },
+      {
+        "topic": "Displacement structure",
+        "decision": "selected",
+        "sources": [
+          "https://arxiv.org/pdf/1609.09494",
+          "https://doi.org/10.1137/16M1096426"
+        ],
+        "checked": "Read §1 definition (1.4) and all of Theorem 2.1 proof, including (2.1), low-rank correction, and (2.2).",
+        "detail": "Confirmed νk rank through the common block-Krylov column span; checked inverse factors q(A) and p(B), retaining poles on the B-side via q(B)p(B)^{-1}. Avoided dividing by σ_j=0 and avoided an unneeded rational-extremizer existence assumption. No elliptic-function constants or specialized Hankel-decay corollaries added."
+      },
+      {
+        "topic": "Cai–Candès–Shen proximal identity",
+        "decision": "selected",
+        "sources": [
+          "https://arxiv.org/pdf/0810.3286",
+          "https://doi.org/10.1137/080738970"
+        ],
+        "checked": "Read §2.1 and complete Theorem 2.1 proof.",
+        "detail": "The printed τ=0 theorem proof divides by τ later; split τ=0 as an immediate identity case. A von Neumann trace proof avoids needing to import the nuclear subgradient formula and extends transparently to complex matrices. No matrix-completion convergence or empirical rank-monotonicity claim imported."
+      },
+      {
+        "topic": "Flexible GMRES",
+        "decision": "selected",
+        "sources": [
+          "https://www-users.cse.umn.edu/~saad/IterMethBook_2ndEd.pdf"
+        ],
+        "checked": "Read §9.4.1 equations (9.22)–(9.26), Proposition 9.2, and breakdown caveat Proposition 9.3.",
+        "detail": "Selected the reusable trial-space residual identity and minimization. Variable preconditioners produce arbitrary trial columns, not a fixed Krylov polynomial. No automatic happy-breakdown or global convergence claim."
+      },
+      {
+        "topic": "Matrix-equation Galerkin",
+        "decision": "selected",
+        "sources": [
+          "https://arxiv.org/pdf/1908.06016v2"
+        ],
+        "checked": "Read Definition 2.1, Proposition 2.2 and full vectorization proof.",
+        "detail": "Retained SPD of the complete Frobenius operator and the tensor-product trial space. Reconstructed cross-term cancellation to verify uniqueness and unequal reduced dimensions. Did not promote nearby coefficientwise symmetry assertions or nonsymmetric generalizations."
+      },
+      {
+        "topic": "Darve online course and Darve–Wootters textbook",
+        "decision": "selected",
+        "sources": [
+          "https://ericdarve.github.io/NLA/content/intro.html",
+          "https://ericdarve.github.io/NLA/content/splitting_methods_definition.html",
+          "https://doi.org/10.1137/1.9781611976557"
+        ],
+        "checked": "Reviewed online contents, splitting Theorem 31 with full Schur-scaling proof, and SOR page. Prior supplied PDF is image-based, so precise new proof reference is the online lecture page.",
+        "detail": "Most core material duplicates existing targets. Added exact stationary error recurrence and the spectral-radius convergence criterion. SOR code comments alone do not constitute a proof of 0<ω<2 convergence; no new SOR guarantee was taken from them."
+      },
+      {
+        "topic": "Donoho recent publications",
+        "decision": "screened-no-new-asymptotic-card",
+        "sources": [
+          "https://arxiv.org/search/math?searchtype=author&query=Donoho,+D+L",
+          "https://arxiv.org/search/?query=Donoho,+David&searchtype=author&abstracts=show&order=-announced_date_first&size=50",
+          "https://arxiv.org/html/2505.00326v1",
+          "https://arxiv.org/abs/2210.04488",
+          "https://arxiv.org/abs/2009.12297"
+        ],
+        "checked": "Provided D L math filter stops at 2022; expanded David all-fields search to include 2025–2026, then read SteinSense setup and theory sections and shrinkage-model abstracts.",
+        "detail": "2026 data repetition and model-collapse papers are outside NLA foundations. SteinSense depends on AMP state evolution and asymptotic vector recovery; optimal eigenvalue shrinkage/ScreeNOT need explicit spiked/noise-limit models. Selected exact finite-dimensional spectral shrinkage/proximal foundations instead. These papers were screened for fit, not independently certified in full."
+      },
+      {
+        "topic": "Andrea Montanari recent publications",
+        "decision": "screened-no-new-asymptotic-card",
+        "sources": [
+          "https://arxiv.org/search/math?searchtype=author&query=Montanari,+A",
+          "https://arxiv.org/html/2606.27774v1"
+        ],
+        "checked": "Filtered out Arthur N. and Annamaria Montanari names from the author results; inspected 2026 Andrea papers. For block-Wishart work, read Proposition 1, Theorem 1, the variational-formula proof and the stated dependency on Theorem 3/free-probability fixed points.",
+        "detail": "Block-Wishart variational spectra are relevant but require proportional asymptotics n/p→α, fixed block size, an operator-valued limiting measure and substantial free probability. Did not turn a limiting support-edge formula into a finite-matrix eigenvalue bound. Ising/ERM/IAMP papers are outside this NLA primitive batch. This is scope screening, not a full paper proof certification."
+      },
+      {
+        "topic": "Meyer and Brunton book material",
+        "decision": "screened-no-additional-card-in-this-batch",
+        "checked": "Revisited earlier extracted Meyer nonnegative spectral-radius/M-matrix material and Brunton controllability/observability, Gramian and balanced-reduction sections.",
+        "detail": "General power convergence, SVD, projectors and Sylvester foundations are already covered. Full control/model-reduction and Perron–Frobenius developments are not added here; Gramian integral identities were flagged to the matrix-analysis agent as a possible compact prerequisite. No local file paths used as atlas citations."
+      }
+    ],
+    "randnla": [
+      {
+        "scope": "Current-main duplicate and API review",
+        "source": "NLAlib main 5c3dfbe; atlas-current-main.json and decls-current-main.json",
+        "checked": "Read current standards and targeting guide after discovering E:\\NLAlib was an older checkout. Checked 354-card current-main atlas and generated declarations.",
+        "decision": "Existing leverage scores, fixed-cardinality real/complex volume sampling, Gaussian AMM, inverse Wishart, Hutchinson variance/tails, hutchpp-unbiased and corrected iid XTrace are reused. No duplicate fixed-k DPP or XTrace repair is proposed. Candidate uses_defs left empty because declarations do not exist yet. No Lean files or builds touched."
+      },
+      {
+        "scope": "Martinsson recent author listing and selected survey",
+        "urls": [
+          "https://arxiv.org/search/math?searchtype=author&query=Martinsson,+P",
+          "https://arxiv.org/abs/2512.05286",
+          "https://arxiv.org/abs/2509.21963",
+          "https://arxiv.org/abs/2511.07773"
+        ],
+        "checked": "Read current first-page titles/abstracts and Pearce–Martinsson Randomized Algorithms for Low-Rank Matrix and Tensor Decompositions, especially §§3–4.3, including independent auxiliary probes and leave-one-out certificates.",
+        "decision": "Recent IterativeCUR, fast direct solver and multibody/domain-decomposition papers are application-specific; the existing ID/RRQR/SVD/Schur-complement families supply their core foundations. Independent certification is delegated to the parent audit; no tensor-decomposition catalogue expansion from this subtask. Excluded papers were screened for scope, not fully proof-audited."
+      },
+      {
+        "scope": "Dereziński recent author listing and regularized-sketch proof",
+        "urls": [
+          "https://arxiv.org/search/cs?searchtype=author&query=Derezi%C5%84ski,+M",
+          "https://arxiv.org/abs/2605.09755v1",
+          "https://arxiv.org/abs/2508.14234",
+          "https://arxiv.org/abs/2506.17556"
+        ],
+        "checked": "Screened recent 2025–2026 author-list entries. Read Definition 3.1, Lemma 3.3 and its complete proof in Chenakkod–Dereziński. Read ridge-leverage paper Lemma 4 and Theorem 5 proof.",
+        "decision": "Extracted regularized approximation→range error, ridge/effective dimension and normalized sampling. The λ=0 inverse step needs a separate kernel-inclusion argument. The generic sketch-power runtime theorem, accelerated Newton inference, Block-Nyström and query lower bounds were not added; sparse-OSE iterative decoupling overlaps the parent matrix-chaos/universality audit."
+      },
+      {
+        "scope": "Mahoney recent author listing and PRISM derivation audit",
+        "urls": [
+          "https://arxiv.org/search/cs?searchtype=author&query=Mahoney,+M+W",
+          "https://arxiv.org/abs/2601.22137v1"
+        ],
+        "checked": "Screened 2025–2026 entries, read PRISM Theorems 1–2, §§4.1–4.2 and proofs B.2–B.3.",
+        "decision": "Deferred the printed generic convergence claim. Theorem 1 assumes ||A||₂≤1 and A² symmetric, while B.2 infers A² has eigenvalues in [0,1] and residual eigenvalues strictly below 1. J=[[0,1],[-1,0]] has ||J||₂=1 and J²=−I but violates that inference; X←X(I+α(I−X²)) with α≥1/2 grows on this example. Singular A also invalidates the strict residual endpoint without extra hypotheses. Theorem 2 prints noncentered N(1,1/p), and its displayed constants differ from B.3. These issues are not silently repaired into a purported theorem. Standard sign/polar/Schulz foundations should use established sources. AutoSpec and recent model-quality/serving papers are outside the chosen reusable NLA batch; not fully audited."
+      },
+      {
+        "scope": "Christopher Musco recent research page",
+        "urls": [
+          "https://www.chrismusco.com/",
+          "https://arxiv.org/abs/2609.28472v2",
+          "https://arxiv.org/abs/2605.31430",
+          "https://arxiv.org/abs/2408.12385",
+          "https://arxiv.org/abs/2505.16932"
+        ],
+        "checked": "Read current research list and recent-paper abstracts. Fully checked Hutch# §2/Theorem 1.1. Examined PCP definitions and optimization-transfer proof from the primary Cohen–Elder–Musco–Musco–Persu paper.",
+        "decision": "Added centered two-sided cancellation, general independent control-variate variance and exact Gaussian variance, instead of only an end-to-end Hutch# application card. Matrix-function transfer and fresh-probe certification are delegated to the parent. Normal-matrix spectral density, Chebyshev moment matching, Polar Express and hierarchical matrix learning remain screened follow-ups; no claims that their complete proofs were audited."
+      },
+      {
+        "scope": "Frequent Directions source correction",
+        "urls": [
+          "https://arxiv.org/abs/1501.01711v2"
+        ],
+        "checked": "Read Algorithm 2.1 and complete §2 proofs of Properties 1–3 and Theorems 1.1–1.2. Re-derived the singular-value loss and covariance certificate.",
+        "decision": "Accepted the mathematical statements after independently repairing a reversed inequality in the displayed proof of Property 3: summing each nonnegative loss gives ||A||F²−||B||F²≥ℓΔ. No streaming realization, mergeability or runtime claim is represented as already formalized."
+      },
+      {
+        "scope": "Determinantal foundations",
+        "urls": [
+          "https://arxiv.org/abs/2005.03185"
+        ],
+        "checked": "Read §§3–4.3. Re-derived normalization by determinant multilinearity, inclusion marginals by generating-polynomial coefficients, cardinality moments by indicator sums, and ridge bridge by SVD.",
+        "decision": "Added only variable-size L-ensemble foundations missing from current main. Fixed-k volume sampling is already proved; the general marginal-kernel formulas must not be asserted for arbitrary cardinality-conditioned k-DPPs."
+      },
+      {
+        "scope": "Hutch# proof scope and endpoint check",
+        "urls": [
+          "https://arxiv.org/abs/2609.28472v2"
+        ],
+        "checked": "Checked Theorem 1.1, Equation (7), Facts 2.1–2.2 and their law-of-total-variance derivation. Unequal sketch widths r,s were checked by the same factorization.",
+        "decision": "Formula 2/(rs)(||AᵀA||F²+||A||F⁴) follows from existing Gaussian AMM and the independent-control-variate identity. Widths positive, both Gaussian laws and their independence are explicit. A=0 is exact; relative-tail division needs that branch. Weighted adaptive interpolation, Hutch-flat and query-optimality lower bounds were not selected or fully audited."
+      },
+      {
+        "scope": "Explicit ridge-sampling variant",
+        "urls": [
+          "https://arxiv.org/abs/1511.07263",
+          "https://arxiv.org/abs/1501.01571"
+        ],
+        "checked": "Re-derived a full-dimension Bernstein tail from normalized summands, with norm bound t/s and variance bound t/s.",
+        "decision": "The card explicitly states an elementary 2d prefactor and sufficient constant 3 in sample size, rather than misattributing the source’s sharper effective-dimension logarithm. It is a general-positive-λ variant, with positive-probability support and the t=0 trivial branch distinguished."
+      }
+    ],
+    "matrix": [
+      {
+        "source": "tropp22-matrix-analysis",
+        "checked": "Read the proofs and hypotheses in Lectures 8, 12, 14 and 16; compared the resulting candidates with current-main atlas entries and declarations.",
+        "scope": "Positive-map block arguments and matrix-function derivative completion were checked directly. Schatten smoothness is limited to the even-integer proof actually supplied. Existing operator Jensen, Schur-product and generalized Klein results are reused rather than duplicated."
+      },
+      {
+        "source": "tropp22-matrix-analysis",
+        "checked": "Detected that Proposition 16.26's unrestricted congruence equality for the geometric mean fails for singular transformations.",
+        "scope": "Only the definition and independently derived block maximum are retained. For A=diag(1,4), B=diag(4,1), and the rank-one orthogonal projector P onto (1,1), P(A#B)P=2P while (PAP)#(PBP)=2.5P. A congruence equality requires an invertible congruence; singular maps have a transformer inequality."
+      },
+      {
+        "source": "tropp22-matrix-analysis",
+        "checked": "Checked the positive-map norm proof's regularization and the Daleckii–Krein polynomial approximation step.",
+        "scope": "The ordinary-trace regularization has Phi_epsilon(I)=Phi(I)+epsilon*n*I, not epsilon*I. The derivative target is a real Fréchet derivative on Hermitian matrices; uniform derivative approximation supplies the step beyond a merely directional calculation."
+      },
+      {
+        "source": "tropp20-randomized-notes",
+        "checked": "Read Lecture 6 Gaussian width and the restricted lower bound; checked the conversion from the normalized Gaussian matrix to standard entries.",
+        "scope": "Width integrability follows from compactness and a Lipschitz support function. Gordon comparison and Gaussian concentration give the stated lower tail; empty sets and dimension-zero cases are excluded."
+      },
+      {
+        "source": "Tropp, An Introduction to Matrix Concentration Inequalities / Tro19 notes",
+        "checked": "Compared the requested matrix-concentration toolkit with the current-main atlas.",
+        "scope": "Basic matrix Laplace, Chernoff, Bernstein, Gaussian-series and intrinsic-dimension targets are already represented. No duplicate concentration-core cards are added here."
+      },
+      {
+        "source": "blnv25-chaos",
+        "checked": "Read §§2.1–2.4 and the full iterated-Khintchine proof in Appendix A.2, including the intermediate flattenings.",
+        "scope": "Retained definitions, a directly checked one-sided decoupling theorem with q^q constant, and the subgaussian upper bound with degree-dependent constants. Reverse decoupling without symmetry, optional moment refinements and stronger chaos Rosenthal inequalities are not claimed."
+      },
+      {
+        "source": "bbvh23-free",
+        "checked": "Checked Corollary 2.2, Lemma 2.5, the parameter definitions, and the proof of Proposition 4.6; inspected the interpolation/resolvent structure in §§5–6.",
+        "scope": "The displayed norm bound follows exactly by the centered Hermitian free-norm bound 2 sigma. The entire long free-comparison proof was not independently reconstructed. This is explicitly an unproved, later candidate with substantial prerequisites."
+      },
+      {
+        "source": "Bandeira, Boedihardjo and van Handel, Matrix Concentration Inequalities and Free Probability II: Two-sided Bounds and Applications (arXiv:2406.11453v2)",
+        "checked": "Read the introductory theorem statements and covariance setup and examined the ultracontractivity route.",
+        "scope": "Deferred the full two-sided/free-spectrum/universality package; the first-paper covariance-sensitive norm bound supplies a smaller initial target. No standalone definition-only covariance card is added."
+      },
+      {
+        "source": "Higham, Functions of Matrices: Theory and Computation, Chapter 10; Higham, The Scaling and Squaring Method for the Matrix Exponential Revisited, p.749",
+        "checked": "Checked the printed noncommutative integral formula and independently derived it from the finite perturbation identity.",
+        "scope": "No commutation or normality assumption is inserted. Mathlib's commutative-algebra exponential derivative is a prerequisite to distinguish, not a substitute for this matrix theorem."
+      },
+      {
+        "source": "Current Mathlib and NLAlib declaration indices",
+        "checked": "Searched existing positive-map, matrix-function, square-root, exponential and inequality interfaces before selecting targets.",
+        "scope": "Existing PositiveLinearMap, CFC and square-root objects are prerequisites; only matrix-specific bridge statements or absent notions are candidate cards."
+      },
+      {
+        "source": "OpenProblemsInNLA",
+        "checked": "Excluded by the user's latest instruction.",
+        "scope": "No statement, reference or candidate is drawn from this repository."
+      }
+    ],
+    "osi": [
+      {
+        "scope": "Selective OSI source audit",
+        "urls": [
+          "https://arxiv.org/html/2508.21189v1"
+        ],
+        "checked": "Read Definition 1.2, Proposition 1.15, all of §2.1 and §2.2, including proofs. Independently checked the second-moment identity, pseudoinverse norm control, Markov/union constants, and HMT composition over both real and complex fields.",
+        "decision": "Three foundational candidates only. No sparse, tensor, small-ball, runtime, or algorithm-implementation claim was added."
+      },
+      {
+        "scope": "Duplicate and hypothesis audit",
+        "source": "C:/Users/ASUS/.codex/worktrees/atlas-research-candidates/NLAlib/atlas/atlas.json",
+        "checked": "Compared OSI and cross-term statements with ose-def, sparse-ose, amm-ose, hmt-9-1-frobenius, existing Gaussian range-finder results, and regularized-approximation-range-error.",
+        "decision": "OSI and its probability contract are absent. The third card consumes the existing deterministic range bound under a new sketch-law assumption. It is distinct from regularized spectral approximation. Existing area sketching-ose reused; no repo files or Lean declarations changed."
+      },
+      {
+        "scope": "Source transcription corrections",
+        "source": "cemt25-osi",
+        "checked": "Proposition 1.15's prose after the minimum-singular-value formula and Imported Theorem 2.3's output shape.",
+        "decision": "The sentence saying σ_min=0 iff the null space is trivial has its logic reversed; the displayed spectral criterion is correct. Theorem 2.3 types QQ*A as n×n despite an n×d input; its correct shape is n×d. Neither transcription error enters these cards."
+      }
+    ],
+    "additional_recent_papers_and_books": [
+      {
+        "source": "Bandeira et al., Matrix Concentration and Equivalent Operators on Fock Spaces",
+        "url": "https://arxiv.org/abs/2610.01982v1",
+        "checked": "Screened introduction, main-results setup, equivalent Hermite/Fock operators and the partial-transpose parameter.",
+        "decision": "Deferred the Fock-space and commutation framework; the earlier covariance-sensitive Gaussian norm theorem is a smaller first target. No full proof certification of this paper."
+      },
+      {
+        "source": "Bandeira and Bölcskei, Matrix Discrepancy for Representations of Finite Groups",
+        "url": "https://arxiv.org/abs/2606.12181v1",
+        "checked": "Inspected Theorem 2 and the partial-coloring/Gaussian-correlation route.",
+        "decision": "Deferred representation-specific discrepancy and the substantial Gaussian-correlation prerequisites; selective screening only."
+      },
+      {
+        "source": "Bandeira, Random Matrices, Intrinsic Freeness, and Sharp Non-Asymptotic Inequalities",
+        "url": "https://arxiv.org/abs/2510.01021v1",
+        "checked": "Screened Sections 1–3 on intrinsic freeness, universality and matrix chaos.",
+        "decision": "Used as a map of the field; selected cards cite the primary proof papers."
+      },
+      {
+        "source": "Bandeira, Kunisky, Mixon and Zeng, On the concentration of Gaussian Cayley matrices",
+        "url": "https://arxiv.org/abs/2212.00066",
+        "checked": "Screened the structured Gaussian-series and representation-theory benchmark.",
+        "decision": "Deferred the group-specific application; covariance-sensitive norm and matrix-chaos tools have wider reuse."
+      },
+      {
+        "source": "Tropp recent publication list, checked 2026-10-14",
+        "url": "https://tropp.caltech.edu/papers.html",
+        "checked": "Read current 2025–2026 publication and preprint entries; checked the abstracts and revision histories of the linked universality, eigenvalue-comparison, structured-sketch and kernel-preconditioning papers.",
+        "papers": [
+          "https://arxiv.org/abs/2603.05803v2",
+          "https://arxiv.org/abs/2603.04365v5",
+          "https://arxiv.org/abs/2508.21189v1",
+          "https://arxiv.org/abs/2304.12465v6"
+        ],
+        "decision": "Selected the short OSI core for a separate proof audit. Universality/exchangeable counterparts and corrected extreme-eigenvalue comparison are relevant follow-ups requiring dedicated full proof review. Specialized kernel-preconditioner guarantees remain consumers of existing Nyström/CG and new regularized-sketch foundations. No theorem card is justified solely by an abstract."
+      },
+      {
+        "source": "Carl D. Meyer, Matrix Analysis and Applied Linear Algebra, second edition (2023)",
+        "checked": "Table of contents and selected DFT, nonnegative-matrix/Perron–Frobenius and matrix-function/resolvent material.",
+        "decision": "Core SVD, projectors, power convergence and Sylvester facts are already represented. Nonnegative-matrix comparisons and spectral sensitivity remain possible later directions. Avoid duplicate Mathlib DFT objects. Selective screening, not a complete book proof audit."
+      },
+      {
+        "source": "Lawrence Susanka, Linear Algebra in Context: A Gateway to the Discrete Fourier Transform, Bilinear and Sesquilinear Forms, Algebras, Tensors and Mechanics (2025)",
+        "doi": "10.1007/978-3-031-78424-8",
+        "checked": "Table of contents and selected DFT/FFT development.",
+        "decision": "General bilinear-form, algebra and mechanics coverage has lower priority in this NLA expansion. No full-book audit or new DFT implementation claim."
+      },
+      {
+        "source": "Xian-Da Zhang, Matrix Analysis and Applications (2017)",
+        "doi": "10.1017/9781108277587",
+        "checked": "Table of contents and selected GSVD/TLS, generalized Rayleigh/eigenproblem, quadratic-pencil and matrix differential/projection material.",
+        "decision": "Used for gap finding. The batch selects independently audited regularization and matrix-calculus primitives; no unsupported generalized-pencil or TLS guarantee is imported."
+      }
+    ]
+  },
+  "independent_review": {
+    "matrix_and_nla": "Independent second readback checked adaptive Gaussian hypotheses, PSD majorization, graph Chernoff constants, displacement rank/Zolotarev formulas, spectral thresholding and SPD Galerkin equivalence. Deterministic adaptive sample counts and confidence factors were made explicit.",
+    "randnla": "Independent second readback checked ridge sampling norm/variance constants, PCP optimization transfer, unequal-width Hutch# variance, DPP generating-polynomial identities and FD certificates. The rank parameter and tail energy in the regularized range-error corollary were made explicit.",
+    "matrix_probability": "Independent second readback checked random-coloring decoupling, all coefficient-flattening shapes and the iteration invariant. The subgaussian comparison prerequisite and scalar-dimension logarithm endpoint are explicit in the iterated-Khintchine notes."
+  },
+  "validation": {
+    "scope": "Metadata, source-audit inventory, site generation, existing viewer tests and mathematical rendering. These checks do not prove the mathematical claims.",
+    "checks": [
+      {
+        "check": "python scripts/check_atlas.py",
+        "exit_code": 0,
+        "output": "experimental proof inventory: 23 sorry-dependent declarations indexed and excluded from the default import\natlas OK: 406 results, 17129 declarations scanned; atlas in sync"
+      },
+      {
+        "check": "python scripts/check_layers.py",
+        "exit_code": 0,
+        "output": "import layers OK"
+      },
+      {
+        "check": "python scripts/check_card_audit.py",
+        "exit_code": 0,
+        "output": "Source ledger: 30/30 active mathematical scopes complete, 1 deferred; 372 checked, sorry-free theorem anchors.\n406/406 cards reviewed in 413 traceable records; 6 overbroad proof-status claims reopened."
+      },
+      {
+        "check": "python -m unittest discover -s scripts/tests",
+        "exit_code": 0,
+        "output": ".................\n----------------------------------------------------------------------\nRan 17 tests in 0.197s\n\nOK"
+      },
+      {
+        "check": "python scripts/build_site.py",
+        "exit_code": 0,
+        "output": "built site/index.html (10247079 bytes)"
+      },
+      {
+        "check": "python scripts/build_viewer.py",
+        "exit_code": 0,
+        "output": "built C:\\Users\\ASUS\\.codex\\worktrees\\atlas-research-candidates\\NLAlib\\atlas\\viewer.html (10695146 bytes)"
+      },
+      {
+        "check": "KaTeX 0.16.11 parse check",
+        "exit_code": 0,
+        "output": "{\n  \"candidate_cards\": 52,\n  \"math_expressions\": 640,\n  \"failures\": []\n}"
+      },
+      {
+        "check": "git diff --check",
+        "exit_code": 0,
+        "output": ""
+      }
+    ],
+    "existing_atlas_records": "All 354 previous results, their formalization metadata, sources, areas and libraries preserved exactly as JSON data.",
+    "new_candidates": "All new records have candidate status, empty formalizations and empty generated uses_defs; no new dependency cycle or OpenProblemsInNLA citation.",
+    "lean_build_and_kernel_audit_rerun": false,
+    "lean_validation_note": "No Lean source or generated declaration-index change. For the metadata checker only, reused the existing sorries/direct-sorries inventories from the clean operator audit checkout. That commit and this baseline have identical Git trees. This is reuse of baseline evidence, not a fresh Lean build or kernel audit.",
+    "baseline_evidence": {
+      "source_commit": "d0364504d90f8d32e6bfd0eccd1ca72e26268886",
+      "target_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
+      "identical_tree": "8b0c7da1e0c3bf8721c40677df80343032b05246",
+      "artifact_sha256": {
+        "sorries.txt": "cfaec54cbf086ef2130c757070fc60c77f0f1e9bcd3e95ac445aae3873d4a3ff",
+        "direct-sorries.txt": "4e735a94ddeecfb5ffa60aa3390f2304cc7f42ad4e115f3168f724265e471771"
+      }
+    }
+  },
+  "records": [
+    {
+      "id": "gaussian-residual-certificate",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-residual-certificate",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For a fixed real rectangular matrix $R$, $s\\ge1$ independent standard Gaussian test vectors give the upper certificate $U=\\alpha\\sqrt{2/\\pi}\\max_{j\\le s}\\|Rg_j\\|_2$ with $\\mathbb P\\{\\|R\\|_2>U\\}\\le\\alpha^{-s}$.",
+        "hypotheses": [
+          "$R\\in\\mathbb R^{m\\times n}$ is deterministic, $s\\ge1$, and $\\alpha>1$",
+          "$g_1,\\ldots,g_s$ are mutually independent with law $N(0,I_n)$"
+        ],
+        "conclusion": "$\\mathbb P\\{\\|R\\|_2>\\alpha\\sqrt{2/\\pi}\\max_{j\\le s}\\|Rg_j\\|_2\\}\\le\\alpha^{-s}$"
+      },
+      "source_labels": [
+        {
+          "source": "hmt11",
+          "label": "§4.3, Lemma 4.1 (a posteriori error estimation)"
+        }
+      ],
+      "readback": "Derivation checked: for R nonzero, project each probe onto a top right singular vector. The scalar normal density bound gives P(|Z|<t) <= sqrt(2/pi)*t; at t=sqrt(pi/2)/alpha independence yields alpha^(-s). R=0 and zero-dimensional matrices have empty failure events. The probes must be independent of the residual construction. This is a certificate for any residual operator, not a claim about a particular stopping algorithm. Formalization should use HasLaw and the actual maximum of finitely many probe norms.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "root"
+    },
+    {
+      "id": "adaptive-gaussian-residual-certification",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "adaptive-gaussian-residual-certification",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "At stage $t$, choose $R_t$ using the history $\\mathcal F_t$, then draw $s_t$ fresh independent standard Gaussian probes. For deterministic $\\alpha_t>1$ with $\\sum_{t\\ge0}\\alpha_t^{-s_t}\\le\\delta$, every finite output stage is simultaneously certified with probability at least $1-\\delta$.",
+        "hypotheses": [
+          "$R_t$ is $\\mathcal F_t$-measurable for each $t\\ge0$",
+          "Conditional on $\\mathcal F_t$, the $s_t\\ge1$ test vectors are iid $N(0,I_n)$, independent of the data used to choose $R_t$",
+          "$U_t=\\alpha_t\\sqrt{2/\\pi}\\max_{j\\le s_t}\\|R_tg_{tj}\\|_2$, $\\alpha_t>1$, and $\\sum_t\\alpha_t^{-s_t}\\le\\delta$",
+          "$\\tau$ is a measurable stage index with values in $\\mathbb N\\cup\\{\\infty\\}$"
+        ],
+        "conclusion": "$\\mathbb P\\{\\exists t:\\|R_t\\|_2>U_t\\}\\le\\delta$, hence $\\mathbb P\\{\\tau<\\infty,\\ \\|R_\\tau\\|_2>U_\\tau\\}\\le\\delta$"
+      },
+      "source_labels": [
+        {
+          "source": "hmt11",
+          "label": "§§4.3–4.4; fresh-probe extension derived by conditioning and a countable union bound"
+        }
+      ],
+      "readback": "Audited extension, not quoted as a separate HMT theorem: condition on each history, apply the fixed-residual certificate, integrate, then use countable subadditivity. No independence between different stage failures is required. The union event gives a statement stronger than one restricted to stopping times; no termination or expected-work guarantee follows. Predictable random budgets are a further variant, not part of this first target. Reusing training probes is excluded: an orthogonal projection onto range(A*Omega) annihilates its own training residual probes.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "root"
+    },
+    {
+      "id": "laplacian-resistance-leverage",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "laplacian-resistance-leverage",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For a finite weighted graph, let $B$ be any oriented incidence matrix, $W=\\operatorname{diag}(w_e)$ with positive edge weights, $C=W^{1/2}B$, and $L=C^\\top C$. The projector $\\Pi=CL^\\dagger C^\\top$ has diagonal $\\Pi_{ee}=w_eR_e$, where $R_e=b_e^\\top L^\\dagger b_e$; consequently $0\\le w_eR_e\\le1$ and $\\sum_e w_eR_e=|V|-c$.",
+        "hypotheses": [
+          "A finite undirected loop-free graph, any edge orientation, and weights $w_e>0$",
+          "$c$ is the number of connected components, including isolated vertices",
+          "$b_e^\\top$ is row $e$ of $B$; $R_e=b_e^\\top L^\\dagger b_e$ is the resistance between the endpoints of that edge"
+        ],
+        "conclusion": "$\\Pi=\\operatorname{proj}_{\\operatorname{range}C}$, $\\Pi_{ee}=w_eR_e\\in[0,1]$, and $\\sum_e w_eR_e=\\operatorname{rank}L=|V|-c$"
+      },
+      "source_labels": [
+        {
+          "source": "ss11",
+          "label": "§§2.1–2.3 and Lemma 3 (Projection Matrix); componentwise extension"
+        }
+      ],
+      "readback": "Checked by CL^dagger C^T = C C^dagger, the Penrose identities and the trace/rank of a projector. The kernel of L consists of vectors constant on each connected component, proving the n-c extension of the source connected-graph n-1 formula. Orientation signs cancel. Resistance is asserted only for pairs joined by an edge (or, in a later extension, within one component): the pseudoinverse quadratic form is not the infinite electrical resistance across distinct components. Reuse Mathlib graph/incidence notions where available; weighted incidence and the physical-resistance bridge are prerequisites.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "root"
+    },
+    {
+      "id": "resistance-sampling-spectral-sparsifier",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "resistance-sampling-spectral-sparsifier",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $r=|V|-c\\ge1$ and sample $q$ edges independently with probabilities $p_e=w_eR_e/r$, adding $w_e/(qp_e)$ for every occurrence. For $0<\\varepsilon<1$, the sampled Laplacian $\\widetilde L$ satisfies a relative Loewner sandwich except with probability at most $2r\\exp(-q\\varepsilon^2/(3r))$.",
+        "hypotheses": [
+          "A weighted graph as in the effective-resistance/leverage identity, with $r=\\operatorname{rank}L\\ge1$",
+          "$q\\ge1$, $0<\\varepsilon<1$, and iid edge samples with $p_e=w_eR_e/r$",
+          "$\\widetilde L=q^{-1}\\sum_{a=1}^q(w_{e_a}/p_{e_a})b_{e_a}b_{e_a}^\\top$"
+        ],
+        "conclusion": "$\\mathbb P\\{\\neg[(1-\\varepsilon)L\\preceq\\widetilde L\\preceq(1+\\varepsilon)L]\\}\\le2r\\exp(-q\\varepsilon^2/(3r))$; in particular $q\\ge3r\\varepsilon^{-2}\\log(2r/\\delta)$ suffices for failure $\\le\\delta$, $0<\\delta<1$"
+      },
+      "source_labels": [
+        {
+          "source": "ss11",
+          "label": "Theorem 1 and Lemmas 3–4; explicit high-probability variant via matrix Chernoff"
+        },
+        {
+          "source": "tropp15",
+          "label": "Theorem 5.1.1, matrix Chernoff"
+        }
+      ],
+      "readback": "This is a derived Chernoff version, not the original paper's half-probability constant. Whiten on range(L), whose dimension is r: each unscaled sampled rank-one summand has mean I and norm r. Lower and upper Chernoff tails are bounded by r*exp(-q*epsilon^2/(2r)) and r*exp(-q*epsilon^2/(3r)); add them and undo whitening. Every sampled Laplacian vanishes on ker(L), so the sandwich extends to the full vertex space. r=0 is the deterministic zero-graph case, kept separate to avoid dividing by zero. This card promises sampled-edge count, not nearly-linear computation of resistances.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "root"
+    },
+    {
+      "id": "operator-monotone-modulus-continuity",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "operator-monotone-modulus-continuity",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For PSD matrices and a continuous nonnegative operator-monotone function with $f(0)=0$, $\\|f(A)-f(B)\\|_2\\le f(\\|A-B\\|_2)$. This converts matrix approximation into approximation of a matrix function without requiring commutation or ordering of $A,B$.",
+        "hypotheses": [
+          "$A,B\\succeq0$ are finite Hermitian matrices of the same size",
+          "$f:[0,\\infty)\\to[0,\\infty)$ is continuous and operator monotone in every matrix dimension, and $f(0)=0$"
+        ],
+        "conclusion": "$\\|f(A)-f(B)\\|_2\\le f(\\|A-B\\|_2)$"
+      },
+      "source_labels": [
+        {
+          "source": "bhatia97",
+          "label": "Theorem X.1.1"
+        },
+        {
+          "source": "pmm25",
+          "label": "Theorem 2.7 proof, zero-at-origin case"
+        }
+      ],
+      "readback": "Audited order proof: put t=||A-B||_2, so A<=B+tI and B<=A+tI. Operator monotonicity and scalar concavity imply f(B+tI)<=f(B)+f(t)I by simultaneous functional calculus; reverse A,B. The Hermitian norm/order equivalence finishes. For f(0)>0 apply the result to f-f(0); do not silently identify f(B) with a rank-truncated function of B. Mathlib's operator-monotone predicate and CFC should be reused.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "root"
+    },
+    {
+      "id": "operator-monotone-schatten-transfer",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "operator-monotone-schatten-transfer",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For $A\\succeq\\widehat A\\succeq0$, a near-optimal rank-$k$ Schatten trace deficit transfers, with the same relative error, to any continuous nonnegative operator-monotone matrix function. For $p=1$ the premise is exactly nuclear residual error; for $p=2$ it is the stronger Frobenius trace-deficit premise.",
+        "hypotheses": [
+          "$A,\\widehat A\\in\\mathbb R^{n\\times n}$, $A\\succeq\\widehat A\\succeq0$, $n\\ge1$, $0\\le k<n$, $1\\le p<\\infty$, and $\\varepsilon\\ge0$",
+          "$f:[0,\\infty)\\to[0,\\infty)$ is continuous and operator monotone",
+          "$\\|A\\|_{S_p}^p-\\|\\widehat A_k\\|_{S_p}^p\\le(1+\\varepsilon)\\|A-A_k\\|_{S_p}^p$",
+          "$X_k$ and $f(X)_k$ use the same ordered orthonormal eigenvectors of $X$, including a consistent choice within ties"
+        ],
+        "conclusion": "$\\|f(A)-f(\\widehat A)_k\\|_{S_p}^p\\le(1+\\varepsilon)\\|f(A)-f(A)_k\\|_{S_p}^p$"
+      },
+      "source_labels": [
+        {
+          "source": "pmm25",
+          "label": "Theorem 2.6, with Theorems 2.4–2.5 as nuclear/Frobenius corollaries"
+        }
+      ],
+      "readback": "Checked the eigenvalue-deficit comparison using decreasing f(x)/x and concavity, followed by the ordered PSD Schatten trace-deficit inequality. Zero deficits can be omitted. For a positive optimal tail, add eta*I to both matrices, choose the admissible relative error from their trace-deficit/tail ratio, and pass to eta down to zero by continuity; its limit is at most the original epsilon. If the optimal tail is zero, the premise and A >= Ahat >= Ahat_k force Ahat_k=A (zero ordered trace deficit), hence Ahat=A; the conclusion is exact even when f(0)>0. This supplies the endpoint branches missing from the printed ratio argument. k=0 is direct. No ordinary Frobenius residual premise, unordered nuclear transfer, or scalar-concave spectral transfer is asserted. f(Ahat)_k is not f(Ahat_k) if f(0)>0. The ordered-schatten-trace-deficit card records the McCarthy input independently.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "root"
+    },
+    {
+      "id": "ordered-schatten-trace-deficit",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "ordered-schatten-trace-deficit",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For finite Hermitian matrices $A\\succeq B\\succeq0$ and $1\\le p<\\infty$, $\\|A-B\\|_{S_p}^p\\le\\|A\\|_{S_p}^p-\\|B\\|_{S_p}^p$. At $p=1$ equality holds. The equivalent trace superadditivity $\\operatorname{tr}(X+Y)^p\\ge\\operatorname{tr}X^p+\\operatorname{tr}Y^p$ for PSD $X,Y$ is a useful companion.",
+        "hypotheses": [
+          "$A,B$ are finite Hermitian matrices with $A\\succeq B\\succeq0$",
+          "$1\\le p<\\infty$"
+        ],
+        "conclusion": "$\\|A-B\\|_{S_p}^p\\le\\|A\\|_{S_p}^p-\\|B\\|_{S_p}^p$, with equality for $p=1$"
+      },
+      "source_labels": [
+        {
+          "source": "pmm25",
+          "label": "Lemma 2.3 and its McCarthy trace-superadditivity input"
+        }
+      ],
+      "readback": "Independent finite-dimensional derivation checked: the concatenated spectra of X and Y are majorized by the spectrum of X+Y padded with zeros. For each top-k sum, span the selected eigenvectors of X and Y, enlarge to dimension k when k<=n, and apply the Ky Fan principle; for k>=n use total trace. Convexity of t^p gives trace superadditivity. Set X=A-B, Y=B. This avoids requiring operator monotonicity of t^(p-1), which fails outside its appropriate range. Empty dimensions and singular PSD matrices cause no inverse or division problems.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "root"
+    },
+    {
+      "id": "tikhonov-spectral-filter",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "tikhonov-spectral-filter",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For any real or complex rectangular $A$ and $\\beta>0$, the unique minimizer of $\\|Ax-b\\|_2^2+\\beta\\|x\\|_2^2$ is $x_\\beta=(A^*A+\\beta I)^{-1}A^*b=\\sum_{i=1}^{r}\\frac{\\sigma_i}{\\sigma_i^2+\\beta}v_i u_i^*b$, where $r=\\operatorname{rank}A$. Moreover $x_\\beta\\to A^\\dagger b$ as $\\beta\\downarrow0$ and $\\|x_\\beta(b+e)-x_\\beta(b)\\|_2\\le \\|e\\|_2/(2\\sqrt\\beta)$. No full-rank assumption on $A$ is needed.",
+        "hypotheses": [
+          "$A\\in\\mathbb K^{m\\times n}$, $\\mathbb K=\\mathbb R$ or $\\mathbb C$, $b,e\\in\\mathbb K^m$",
+          "$\\beta>0$"
+        ],
+        "conclusion": "$x_\\beta=(A^*A+\\beta I)^{-1}A^*b$ uniquely minimizes the penalized residual; its SVD filter is $\\sigma/(\\sigma^2+\\beta)$, with the stated limit and noise bound."
+      },
+      "source_labels": [
+        {
+          "source": "fessler-nadakuditi24",
+          "label": "§5.6.5, equations (5.44)–(5.48); noise bound is the scalar corollary 2√β σ ≤ σ²+β"
+        }
+      ],
+      "readback": "Proof audit: the stacked matrix [A;√β I] has full column rank, so ordinary least-squares normal equations give existence and uniqueness. SVD diagonalizes its Gram matrix. The limit uses only the r positive singular values and zero kernel coefficients. The noise constant follows from (σ−√β)²≥0; it is an explicit derived corollary, not a statistical risk guarantee. Treat β=0 through the pseudoinverse limit, not an unguarded inverse formula.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "truncated-svd-regularization",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "truncated-svd-regularization",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Fix an SVD of $A$ and $1\\le k\\le\\operatorname{rank}A$. Let $V_k,U_k$ contain the first k singular vectors and $A_k=U_k\\Sigma_k V_k^*$. Then $x_k(b)=A_k^\\dagger b=V_k\\Sigma_k^{-1}U_k^*b$ uniquely minimizes $\\|Ax-b\\|_2$ over $x\\in\\operatorname{range}(V_k)$. Also $\\|A_k^\\dagger\\|_2=1/\\sigma_k(A)$, and for data $b=Ax+e$, $\\|x_k(b)-x\\|_2^2\\le\\|(I-V_kV_k^*)x\\|_2^2+\\|e\\|_2^2/\\sigma_k(A)^2$.",
+        "hypotheses": [
+          "An SVD of $A$ is fixed, with singular values in nonincreasing order",
+          "$1\\le k\\le\\operatorname{rank}A$"
+        ],
+        "conclusion": "$x_k$ is the restricted least-squares solution and the discarded-subspace bias is orthogonal to its propagated noise."
+      },
+      "source_labels": [
+        {
+          "source": "fessler-nadakuditi24",
+          "label": "§§5.6.1–5.6.4, equations (5.39)–(5.43); orthogonal bias–noise decomposition derived from (5.42)"
+        }
+      ],
+      "readback": "Proof audit: put x=V_k z and use A V_k=U_k Σ_k; positive diagonal Σ_k gives the unique reduced least-squares solution. For b=Ax+e, the error is −(I−V_kV_k*)x+A_k†e; its terms lie in orthogonal subspaces, yielding the squared bound. Fix an SVD at a cutoff tie instead of claiming the top-k subspace is canonical. Source uses one-based σ_k; Lean singularValues uses index k−1.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "landweber-spectral-filter",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "landweber-spectral-filter",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For $A\\ne0$ and $0<\\eta<2/\\|A\\|_2^2$, let $x_0=0$ and $x_{t+1}=x_t+\\eta A^*(b-Ax_t)$. Then $x_t=\\sum_{i=1}^{r}\\frac{1-(1-\\eta\\sigma_i^2)^t}{\\sigma_i}v_i u_i^*b$ and $x_t\\to A^\\dagger b$, even when $A$ is rank deficient or the system is inconsistent. With an arbitrary initial point, the limit is $A^\\dagger b+P_{\\ker A}x_0$. If $A=0$, every iterate equals $x_0$.",
+        "hypotheses": [
+          "$A\\in\\mathbb K^{m\\times n}$, $b\\in\\mathbb K^m$",
+          "$A\\ne0$, $0<\\eta<2/\\|A\\|_2^2$"
+        ],
+        "conclusion": "The finite-iteration filter is $[1-(1-\\eta\\sigma^2)^t]/\\sigma$ on positive singular values; only the initial kernel component survives."
+      },
+      "source_labels": [
+        {
+          "source": "fessler-nadakuditi24",
+          "label": "§§9.2–9.2.3, equations (9.2), (9.7)–(9.12); rank-deficient extension by the same SVD coordinate recurrence"
+        }
+      ],
+      "readback": "Proof audit: solve the scalar recurrence in each positive right-singular direction; |1−ησ_i²|<1 gives convergence. Kernel coordinates do not change. Fessler explicitly requires full column rank when convergence to one fixed minimizer from every initializer is asserted. This card instead states the correct rank-deficient limit and records it as a derived extension. It makes no unproved early-stopping statistical optimality claim.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "singular-value-shrinkage-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "singular-value-shrinkage-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For a function $\\phi:[0,\\infty)\\to[0,\\infty)$ with $\\phi(0)=0$, define $\\mathcal S_\\phi(A)=U\\operatorname{diag}(\\phi(\\sigma_i(A)))V^*$ using a rectangular SVD. Establish that this is independent of the singular-vector choices, including repeated and zero singular values, and is equivariant under left and right unitary transformations. The soft-threshold map is $D_\\tau(A)=\\mathcal S_{s\\mapsto(s-\\tau)_+}(A)$ for $\\tau\\ge0$.",
+        "hypotheses": [
+          "$A\\in\\mathbb K^{m\\times n}$, $\\mathbb K=\\mathbb R$ or $\\mathbb C$",
+          "$\\phi(s)\\ge0$ for $s\\ge0$ and $\\phi(0)=0$"
+        ],
+        "conclusion": "A well-defined unitarily equivariant rectangular spectral shrinkage map, with singular-value soft thresholding as a specialization."
+      },
+      "source_labels": [
+        {
+          "source": "cai-candes-shen10",
+          "label": "§2.1, equations (2.1)–(2.2), and the SVD-independence observation"
+        },
+        {
+          "source": "fessler-nadakuditi24",
+          "label": "§7.5, equations (7.32) and (7.35)"
+        }
+      ],
+      "readback": "Definition-first target. Proof audit: equal positive singular values receive equal multipliers, so simultaneous changes of basis in a singular subspace cancel; φ(0)=0 removes the independent zero-space choices. Do not use the unrestricted assertion that every minimizer of an arbitrary unitarily invariant objective shares a prescribed SVD; that requires additional conditions. The general φ interface is an explicit algebraic extension of the cited soft-threshold definition.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "nuclear-norm-proximal",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "nuclear-norm-proximal",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For every real or complex rectangular $Y$ and $\\tau\\ge0$, $D_\\tau(Y)$ is the unique minimizer of $X\\mapsto\\frac12\\|X-Y\\|_F^2+\\tau\\|X\\|_*$. Thus the proximal map of the nuclear norm is obtained by replacing each singular value $\\sigma$ by $(\\sigma-\\tau)_+$.",
+        "hypotheses": [
+          "$Y\\in\\mathbb K^{m\\times n}$",
+          "$\\tau\\ge0$"
+        ],
+        "conclusion": "$D_\\tau(Y)=\\operatorname*{argmin}_X\\{\\tfrac12\\|X-Y\\|_F^2+\\tau\\|X\\|_*\\}$, with a unique minimizer."
+      },
+      "source_labels": [
+        {
+          "source": "cai-candes-shen10",
+          "label": "Theorem 2.1"
+        },
+        {
+          "source": "fessler-nadakuditi24",
+          "label": "§7.5.4, equation (7.35)"
+        }
+      ],
+      "readback": "Proof audit: von Neumann trace inequality reduces the objective to a sum of scalar quadratic-plus-linear terms, attained by aligned singular vectors; scalar minimization gives (σ−τ)+. Strict convexity of the Frobenius quadratic gives uniqueness. This also supplies a direct complex-field proof; the paper states the real case. Handle τ=0 separately from the paper proof expression W=τ^{-1}U₁Σ₁V₁*. This is a deterministic proximal identity, not an optimal-noise-threshold theorem.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "rank-penalty-thresholding",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "rank-penalty-thresholding",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For $\\lambda>0$, a global minimizer of $\\frac12\\|Y-X\\|_F^2+\\lambda\\operatorname{rank}X$ is obtained by retaining singular values of $Y$ strictly above $\\sqrt{2\\lambda}$ and setting those below it to zero. At equality either retaining or discarding that singular direction is optimal. If no singular value equals the threshold, this gives the unique minimizing matrix. For $\\lambda=0$, the unique minimizer is $Y$.",
+        "hypotheses": [
+          "$Y\\in\\mathbb K^{m\\times n}$",
+          "$\\lambda\\ge0$"
+        ],
+        "conclusion": "Exact finite-dimensional global minimization by the cutoff $\\sqrt{2\\lambda}$, with explicit tie behavior."
+      },
+      "source_labels": [
+        {
+          "source": "fessler-nadakuditi24",
+          "label": "§§7.4, 7.5.1, 7.5.3; equations (7.28), (7.30), (7.34)"
+        }
+      ],
+      "readback": "Proof audit: for each possible rank use Eckart–Young, then compare retaining a singular value (cost λ) with dropping it (cost σ²/2). Repeated singular values at exactly √(2λ) make the minimizer nonunique; choosing a fixed strict-threshold rule gives one minimizer, not a classification of all possible tie-subspace rotations. This threshold is derived from a deterministic penalized objective and is not the asymptotic Gavish–Donoho noise-optimal cutoff.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "displacement-rank-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "displacement-rank-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For $X\\in\\mathbb C^{m\\times n}$ and square $A,B$ of compatible sizes, its Sylvester displacement is $AX-XB$ and its displacement rank is $\\operatorname{rank}(AX-XB)$. A rank bound $\\le\\nu$ is equivalent to a generator factorization $AX-XB=MN^*$ with $M\\in\\mathbb C^{m\\times\\nu}$ and $N\\in\\mathbb C^{n\\times\\nu}$. Reuse the existing Sylvester linear-map definition; expose the rank and generator interface, including rank zero.",
+        "hypotheses": [
+          "$A\\in\\mathbb C^{m\\times m}$, $B\\in\\mathbb C^{n\\times n}$, $X\\in\\mathbb C^{m\\times n}$"
+        ],
+        "conclusion": "$\\operatorname{rank}(AX-XB)\\le\\nu\\iff\\exists M,N:\\ AX-XB=MN^*$."
+      },
+      "source_labels": [
+        {
+          "source": "beckermann-townsend17",
+          "label": "§1, equation (1.1)"
+        }
+      ],
+      "readback": "Definition-first interface for structured approximation and matrix equations. Proof audit: rank factorization gives the generators, padded with zero columns when needed; rank of a product gives the converse. Do not infer low numerical rank from low displacement rank without the spectral-separation hypotheses of the decay theorem.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "displacement-polynomial-rank",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "displacement-polynomial-rank",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "If $\\operatorname{rank}(AX-XB)\\le\\nu$ and polynomials $p,q$ have degree at most $k$, then $\\operatorname{rank}(p(A)Xq(B)-q(A)Xp(B))\\le\\nu k$. If $q(A)$ and $p(B)$ are invertible, the same bound holds for $X-q(A)^{-1}p(A)Xq(B)p(B)^{-1}$. No normality or disjoint-spectrum hypothesis is needed for these algebraic rank bounds.",
+        "hypotheses": [
+          "$A,X,B$ are compatible complex matrices",
+          "$\\operatorname{rank}(AX-XB)\\le\\nu$, $\\deg p,\\deg q\\le k$",
+          "For the rational form only: $q(A)$ and $p(B)$ are invertible"
+        ],
+        "conclusion": "$\\operatorname{rank}(p(A)Xq(B)-q(A)Xp(B))\\le\\nu k$ and its inverse-scaled rational counterpart."
+      },
+      "source_labels": [
+        {
+          "source": "beckermann-townsend17",
+          "label": "Proof of Theorem 2.1, equation (2.1) and the construction of Y"
+        }
+      ],
+      "readback": "Proof audit: telescope A^s X−X B^s, expand p(z)q(w)−q(z)p(w), and collect columns in span{M,AM,…,A^{k−1}M}. This yields νk, not the weaker νk² obtained by bounding every term separately. Multiplication by invertible q(A) and p(B) preserves rank. Writing the right factor as q(B)p(B)^{-1} permits poles of p/q on the B side; q(B) need not be invertible.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "zolotarev-number-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "zolotarev-number-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For nonempty disjoint compact sets $E,F\\subset\\mathbb C$ and $k\\ge0$, define $Z_k(E,F)$ as the infimum over degree-at-most-k polynomial pairs $p,q$ with q nonzero on E and p nonzero on F of $(\\sup_E|p/q|)(\\sup_F|q/p|)$. This reciprocal form allows poles of p/q on F. Establish $Z_0=1$, nonnegativity, monotonicity in k and set inclusion, symmetry $Z_k(E,F)=Z_k(F,E)$, and submultiplicativity $Z_{k+\\ell}\\le Z_k Z_\\ell$.",
+        "hypotheses": [
+          "$E,F\\subset\\mathbb C$ are nonempty, compact and disjoint",
+          "$k,\\ell\\in\\mathbb N$"
+        ],
+        "conclusion": "The rational separation quantity and its basic order, symmetry and product laws."
+      },
+      "source_labels": [
+        {
+          "source": "beckermann-townsend17",
+          "label": "§1, equation (1.4) and the properties immediately following it"
+        }
+      ],
+      "readback": "Definition-first target. Proof audit: constant pair p=q=1 makes the admissible class nonempty and bounds the infimum by one; swapping p,q gives symmetry; multiplying admissible pairs gives submultiplicativity via ε-approximating minimizers. The suprema are finite by compactness and nonvanishing denominators. No attainment or elliptic-function formula is needed. Do not represent poles on F by Lean division-by-zero junk values.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "displacement-singular-value-decay",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "displacement-singular-value-decay",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $A\\in\\mathbb C^{m\\times m}$ and $B\\in\\mathbb C^{n\\times n}$ be normal, with spectra in disjoint nonempty compact sets E and F. If $\\operatorname{rank}(AX-XB)\\le\\nu$, then $\\sigma_{j+\\nu k}(X)\\le Z_k(E,F)\\sigma_j(X)$ whenever $j\\ge1$ and $j+\\nu k\\le\\min(m,n)$. A prerequisite form bounds the left side by $\\|q(A)^{-1}p(A)\\|_2\\,\\|q(B)p(B)^{-1}\\|_2\\sigma_j(X)$ for each admissible pair p,q, without assuming normality.",
+        "hypotheses": [
+          "Normal $A,B$ with $\\sigma(A)\\subset E$, $\\sigma(B)\\subset F$",
+          "$\\operatorname{rank}(AX-XB)\\le\\nu$, $k\\ge0$, $1\\le j\\le j+\\nu k\\le\\min(m,n)$"
+        ],
+        "conclusion": "$\\sigma_{j+\\nu k}(X)\\le Z_k(E,F)\\sigma_j(X)$."
+      },
+      "source_labels": [
+        {
+          "source": "beckermann-townsend17",
+          "label": "Theorem 2.1 and its proof; the per-rational bound precedes equation (2.2)"
+        }
+      ],
+      "readback": "Proof audit: combine the rank-νk rational correction with a transported best rank-(j−1) approximation. Eckart–Young gives the residual bound, and normal functional calculus bounds each rational factor by its scalar supremum. Take an infimum over rational pairs rather than assuming an extremizer exists. Retain the multiplicative inequality when σ_j=0 instead of dividing by it as the printed last display does. No claim that every Toeplitz/Hankel matrix is low rank; normality and separated spectral sets are substantive. One-based source indices translate by subtracting one in Lean.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "flexible-gmres-residual-minimization",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "flexible-gmres-residual-minimization",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let V have orthonormal columns, $AZ=V\\overline H$, and $b-Ax_0=Vg$. Then for every y, $\\|b-A(x_0+Zy)\\|_2=\\|g-\\overline H y\\|_2$. Thus any least-squares minimizer y produces a residual minimizer over $x_0+\\operatorname{range}Z$. In FGMRES, $g=\\|r_0\\|_2 e_1$ and the columns of Z may arise from varying, nonlinear, or inexact preconditioners; only the displayed realized Arnoldi relation is required.",
+        "hypotheses": [
+          "$A,Z,V,\\overline H$ have compatible sizes; V has orthonormal columns",
+          "$AZ=V\\overline H$ and $b-Ax_0=Vg$"
+        ],
+        "conclusion": "$\\|b-A(x_0+Zy)\\|_2=\\|g-\\overline H y\\|_2$; reduced least-squares minimization yields full residual minimization on the trial space."
+      },
+      "source_labels": [
+        {
+          "source": "saad03",
+          "label": "§9.4.1, equations (9.22)–(9.26) and Proposition 9.2"
+        }
+      ],
+      "readback": "Proof audit: expand the residual using AZ=V Hbar, then use the isometry induced by orthonormal V. No linear independence of Z and no invertibility of A is needed for the residual identity or attainment in finite-dimensional least squares. A separate recurrence-realization theorem is needed before labelling this a guarantee of an executable algorithm. Happy breakdown requires extra conditions in FGMRES (Saad Proposition 9.3); do not copy the ordinary GMRES automatic-exactness claim.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "matrix-equation-galerkin-optimality",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-equation-galerkin-optimality",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $\\mathcal S$ be a real linear map on rectangular real matrices, self-adjoint and positive definite for the Frobenius inner product, and let $\\mathcal S(X)=F$. Let V,W have orthonormal columns and $X_h=VYW^T$. The Galerkin condition $V^T(F-\\mathcal S(X_h))W=0$ is equivalent to $X_h$ being the unique minimizer over $Z=VTW^T$ of $\\langle X-Z,\\mathcal S(X-Z)\\rangle_F$. In particular it applies to $\\mathcal S(X)=\\sum_j A_j X B_j$ whenever the resulting operator is SPD.",
+        "hypotheses": [
+          "$\\mathcal S$ is linear, Frobenius self-adjoint, and $\\langle Z,\\mathcal S(Z)\\rangle_F>0$ for every nonzero Z",
+          "$\\mathcal S(X)=F$; V,W have orthonormal columns; $X_h\\in\\{VYW^T\\}$"
+        ],
+        "conclusion": "Galerkin residual orthogonality is equivalent to unique minimum error in the $\\mathcal S$ energy quadratic form on the tensor-product trial space."
+      },
+      "source_labels": [
+        {
+          "source": "palitta-simoncini19",
+          "label": "Definition 2.1 and Proposition 2.2, equations (2.1)–(2.3)"
+        }
+      ],
+      "readback": "Proof audit: vectorization turns the trial space into range(W⊗V) and the multiterm map into Σ B_jᵀ⊗A_j; alternatively expand the energy and use residual orthogonality to cancel the cross term. Strict positivity gives uniqueness. Rectangular reduced factors with unequal column counts are allowed by the same proof (the paper notes this before using equal counts for convenience). Assume SPD of the whole operator, not of every coefficient; arbitrary nonsymmetric Sylvester equations need not have this energy-minimization property.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "stationary-splitting-convergence",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "stationary-splitting-convergence",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $A=M-N$ with M invertible and iterate $x_{k+1}=M^{-1}Nx_k+M^{-1}b$. For any exact solution $x_*$, $x_k-x_*=(M^{-1}N)^k(x_0-x_*)$. The condition $\\rho(M^{-1}N)<1$ is equivalent to: for every b there is a unique solution of $Ax=b$, and the iteration converges to it from every initial point. In the forward direction, $A=M(I-M^{-1}N)$ is invertible.",
+        "hypotheses": [
+          "$A,M,N\\in\\mathbb K^{n\\times n}$, $A=M-N$, M invertible",
+          "$x_{k+1}=M^{-1}Nx_k+M^{-1}b$"
+        ],
+        "conclusion": "Exact error-power identity and equivalence between $\\rho(M^{-1}N)<1$ and convergence to the unique solution for every right-hand side and initializer."
+      },
+      "source_labels": [
+        {
+          "source": "darve26-notes",
+          "label": "Splitting Methods and Convergence Theory, Theorem 31: https://ericdarve.github.io/NLA/content/splitting_methods_definition.html"
+        },
+        {
+          "source": "darve-wootters21",
+          "label": "Classical iterative methods"
+        }
+      ],
+      "readback": "Proof audit: subtract the fixed-point equation and induct. Forward convergence and invertibility follow from the existing matrix-power/Neumann-series API. Conversely choose b=0 and basis initial vectors to obtain powers tending to zero, then the existing spectral-radius criterion. Darve proves the general case by Schur triangularization plus diagonal scaling to an equivalent induced norm. The formulation says convergence to the unique solution, not merely existence of a limit (iteration matrix I has limits for b=0 but does not solve every system).",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "nla"
+    },
+    {
+      "id": "projection-cost-preserving-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "projection-cost-preserving-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "A rank-$k$ projection-cost-preserving sketch $\\widetilde A$ of $A$ has a single offset $c\\ge0$, independent of the projector, such that $(1-\\varepsilon)\\|(I-P)A\\|_F^2\\le\\|(I-P)\\widetilde A\\|_F^2+c\\le(1+\\varepsilon)\\|(I-P)A\\|_F^2$ for every rank-$k$ orthogonal projector $P$. The one-sided version replaces $1-\\varepsilon$ by $1$.",
+        "hypotheses": [
+          "$A\\in\\mathbb R^{n\\times d}$ and $\\widetilde A\\in\\mathbb R^{n\\times s}$",
+          "$0\\le k\\le n$, $0\\le\\varepsilon<1$ and one fixed $c\\ge0$",
+          "$P=P^\\top=P^2$ and $\\operatorname{rank}P=k$"
+        ],
+        "conclusion": "The displayed two-sided or one-sided inequality holds uniformly in $P$ with the same offset $c$."
+      },
+      "source_labels": [
+        {
+          "source": "cemmp15",
+          "label": "§3, Definitions 1–2"
+        }
+      ],
+      "readback": "Audit: checked the actual quantifiers in Definitions 1–2. The offset is nonnegative and chosen before P; allowing it to depend on P destroys the intended interface. Exact rank k matches the source; rank-at-most-k should be a separately proved variant. Before formalizing, add the named predicate and bridge projector-based expressions to existing projResidual/rangeProjector. The zero-cost case is retained.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "projection-cost-optimization-transfer",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "projection-cost-optimization-transfer",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For a family $\\mathcal P$ of rank-$k$ orthogonal projectors, let $P_\\star$ minimize the original squared residual cost. If $\\widetilde A$ is an $\\varepsilon$-PCP sketch with fixed $c\\ge0$ and $\\widetilde P\\in\\mathcal P$ is a $\\gamma$-approximate minimizer of the unshifted sketch cost, then $\\|(I-\\widetilde P)A\\|_F^2\\le\\gamma(1+\\varepsilon)/(1-\\varepsilon)\\,\\|(I-P_\\star)A\\|_F^2$. The one-sided PCP version gives $\\gamma(1+\\varepsilon)$.",
+        "hypotheses": [
+          "$0\\le\\varepsilon<1$, $\\gamma\\ge1$ and fixed $c\\ge0$",
+          "$P_\\star,\\widetilde P\\in\\mathcal P$; $P_\\star$ attains the original minimum",
+          "$\\|(I-\\widetilde P)\\widetilde A\\|_F^2\\le\\gamma\\inf_{P\\in\\mathcal P}\\|(I-P)\\widetilde A\\|_F^2$",
+          "The PCP inequalities hold for all $P\\in\\mathcal P$"
+        ],
+        "conclusion": "$\\|(I-\\widetilde P)A\\|_F^2\\le\\gamma\\frac{1+\\varepsilon}{1-\\varepsilon}\\|(I-P_\\star)A\\|_F^2$; under one-sided PCP the denominator is omitted."
+      },
+      "source_labels": [
+        {
+          "source": "cemmp15",
+          "label": "§3.1, Lemmas 3–4"
+        }
+      ],
+      "readback": "Audit: chaining the two PCP inequalities leaves (1−γ)c on the upper side. This is nonpositive exactly because c≥0 and γ≥1; deleting that hypothesis would invalidate the usual unshifted approximate-minimizer conclusion. No k-means algorithm or attainment theorem is assumed implicitly. A pointwise competitor form avoids infimum/attainment machinery and should be the first reusable lemma.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "singular-value-shrinkage-certificate",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "singular-value-shrinkage-certificate",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $C=U\\operatorname{diag}(\\sigma_1,\\ldots,\\sigma_\\ell)V^\\top$ be a thin SVD with $V^\\top V=I_\\ell$, $1\\le\\ell\\le d$, and $\\delta=\\sigma_\\ell^2$. Define $B=\\operatorname{diag}(\\sqrt{\\sigma_i^2-\\delta})V^\\top$. Then $C^\\top C-B^\\top B=\\delta VV^\\top$, hence $0\\preceq C^\\top C-B^\\top B\\preceq\\delta I$ and $\\|C\\|_F^2-\\|B\\|_F^2=\\ell\\delta$.",
+        "hypotheses": [
+          "$C\\in\\mathbb R^{\\ell\\times d}$, $1\\le\\ell\\le d$",
+          "The singular values are nonnegative and descending, and $U,V$ are the thin SVD factors",
+          "$B$ is formed by subtracting $\\sigma_\\ell^2$ from all $\\ell$ squared singular values before taking square roots"
+        ],
+        "conclusion": "$C^\\top C-B^\\top B=\\delta VV^\\top$, $0\\preceq C^\\top C-B^\\top B\\preceq\\delta I$, and $\\|C\\|_F^2-\\|B\\|_F^2=\\ell\\delta$."
+      },
+      "source_labels": [
+        {
+          "source": "glpw15",
+          "label": "Algorithm 2.1 and §2, Properties 1–3"
+        }
+      ],
+      "readback": "Audit: direct SVD multiplication gives the exact identity; summing diagonal losses gives ℓδ. It includes deficient rank, where δ=0. This is a single-step mathematical certificate, not a claim that a streaming implementation has been formalized. A later algorithm card must establish row insertion, telescoping, mergeability and its own complexity model. The source v2 Property 3 proof contains a reversed inequality in its displayed telescoping line; the correct inequality follows directly from loss ≥ℓδ and agrees with the property as stated.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "covariance-loss-tail-bound",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "covariance-loss-tail-bound",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For $D=A^\\top A-B^\\top B$, suppose $0\\preceq D\\preceq\\Delta I$ and $\\ell\\Delta\\le\\operatorname{tr}D$. For $0\\le k<\\ell$ with $k\\le d$, write $E_k=\\sum_{j>k}\\sigma_j(A)^2$. Then $\\Delta\\le E_k/(\\ell-k)$ and $\\|D\\|_2\\le E_k/(\\ell-k)$. If $P_B$ projects onto any top-$k$ right singular subspace of $B$, then $\\|A(I-P_B)\\|_F^2\\le\\ell E_k/(\\ell-k)$.",
+        "hypotheses": [
+          "$A\\in\\mathbb R^{n\\times d}$ and $B\\in\\mathbb R^{b\\times d}$",
+          "$\\Delta\\ge0$, $0\\le k<\\ell$, $k\\le d$",
+          "$D=A^\\top A-B^\\top B$ satisfies $0\\preceq D\\preceq\\Delta I$ and $\\ell\\Delta\\le\\operatorname{tr}D$",
+          "$P_B$ is a rank-$k$ maximizer of $\\operatorname{tr}(PB^\\top B)$ for the projection clause"
+        ],
+        "conclusion": "$\\Delta,\\|D\\|_2\\le E_k/(\\ell-k)$ and $\\|A(I-P_B)\\|_F^2\\le\\ell E_k/(\\ell-k)$."
+      },
+      "source_labels": [
+        {
+          "source": "glpw15",
+          "label": "§2, proofs of Theorems 1.1–1.2"
+        }
+      ],
+      "readback": "Audit: for the top-k right projector P of A, tr(D)≤tr(PD)+tr((I−P)AᵀA)≤kΔ+E_k. Rearrangement gives the covariance bound; top-k variational optimality for B gives residual≤E_k+kΔ. This proof uses only the displayed certificate and is reusable for mergeable sketches. It covers k=0 and zero spectral tails. Do not label it a completed Frequent Directions algorithm guarantee until the streaming process realizes the certificate.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "ridge-leverage-effective-dimension",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "ridge-leverage-effective-dimension",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For rows $a_i^\\top$ of $A\\in\\mathbb R^{n\\times d}$ and $\\lambda>0$, set $H=A^\\top A+\\lambda I$, $\\tau_i^\\lambda=a_i^\\top H^{-1}a_i$ and $d_{\\rm eff}^\\lambda(A)=\\sum_i\\tau_i^\\lambda$. Then $0\\le\\tau_i^\\lambda\\le1$ and $d_{\\rm eff}^\\lambda(A)=\\operatorname{tr}(A^\\top AH^{-1})=\\sum_j\\sigma_j(A)^2/(\\sigma_j(A)^2+\\lambda)\\le\\operatorname{rank}A$. Each score and the sum are nonincreasing in $\\lambda$.",
+        "hypotheses": [
+          "$A\\in\\mathbb R^{n\\times d}$ with arbitrary rank; $\\lambda>0$",
+          "$a_i$ denotes the transpose of the $i$th row"
+        ],
+        "conclusion": "$\\tau_i^\\lambda\\in[0,1]$, $\\sum_i\\tau_i^\\lambda=\\sum_j\\sigma_j(A)^2/(\\sigma_j(A)^2+\\lambda)\\le\\operatorname{rank}A$, and these quantities decrease as $\\lambda$ increases."
+      },
+      "source_labels": [
+        {
+          "source": "cmm17",
+          "label": "§2, ridge-score definition (6) and Lemma 4"
+        },
+        {
+          "source": "dm20-dpp",
+          "label": "§4.1 and §4.3"
+        }
+      ],
+      "readback": "Audit: the spectral sum follows by SVD and cyclicity of trace. The matrix A H⁻¹ Aᵀ has eigenvalues σ²/(σ²+λ) in [0,1], proving the score bounds, while inverse antitonicity proves monotonicity. This general-λ row formulation is the transpose of the low-rank column convention in Cohen–Musco–Musco. Restrict λ>0 for the inverse formula; a λ=0 Moore–Penrose extension and its limit need separate bridge lemmas. This is distinct from existing intrinsicDimension, which is tr(V)/||V||₂.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "ridge-effective-dimension-tail",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "ridge-effective-dimension-tail",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For $\\lambda>0$ and $0\\le k\\le\\min(n,d)$, $d_{\\rm eff}^\\lambda(A)\\le k+\\lambda^{-1}\\sum_{j>k}\\sigma_j(A)^2$. In particular, if $k\\ge1$ and $E_k=\\|A-A_k\\|_F^2>0$, choosing $\\lambda=E_k/k$ gives $d_{\\rm eff}^\\lambda(A)\\le2k$.",
+        "hypotheses": [
+          "$A\\in\\mathbb R^{n\\times d}$, $\\lambda>0$ and $0\\le k\\le\\min(n,d)$",
+          "$k\\ge1$ and $E_k>0$ for the specialization $\\lambda=E_k/k$"
+        ],
+        "conclusion": "$d_{\\rm eff}^\\lambda(A)\\le k+E_k/\\lambda$; at $\\lambda=E_k/k>0$ this is at most $2k$."
+      },
+      "source_labels": [
+        {
+          "source": "cmm17",
+          "label": "Lemma 4"
+        },
+        {
+          "source": "cd26-power",
+          "label": "Lemma 3.3, final spectral-sum estimate"
+        }
+      ],
+      "readback": "Audit: split the spectral sum at k, bound its first k summands by 1 and each remaining summand by σ_j²/λ. The proof needs no probabilistic argument or rank assumption. The displayed specialization must not divide by a zero tail; when E_k=0, ordinary leverage scores sum to rank(A)≤k instead, or take the λ↓0 limit after it is proved. The source uses the zero-ridge pseudoinverse convention, so that endpoint is recorded explicitly rather than silently passed through total division.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "ridge-sampling-regularized-approximation",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "ridge-sampling-regularized-approximation",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $H=A^\\top A+\\lambda I$ with $\\lambda>0$ and choose upper scores $u_i\\ge\\tau_i^\\lambda(A)$, total $t=\\sum_i u_i>0$, and $p_i=u_i/t$. Independently sample $s\\ge1$ rows, rescaling a sampled row $a_i^\\top$ by $(sp_i)^{-1/2}$, to form $B$. For $0<\\varepsilon<1$, $$\\Pr\\{\\|H^{-1/2}(B^\\top B-A^\\top A)H^{-1/2}\\|_2>\\varepsilon\\}\\le2d\\exp\\!\\left(-\\frac{s\\varepsilon^2}{2t(1+\\varepsilon/3)}\\right).$$ Hence $s\\ge3t\\varepsilon^{-2}\\log(2d/\\delta)$ suffices for $(1-\\varepsilon)H\\preceq B^\\top B+\\lambda I\\preceq(1+\\varepsilon)H$ with probability at least $1-\\delta$.",
+        "hypotheses": [
+          "$A\\in\\mathbb R^{n\\times d}$, $d\\ge1$, $\\lambda>0$",
+          "$u_i\\ge\\tau_i^\\lambda(A)$, $t=\\sum_i u_i>0$, $p_i=u_i/t$",
+          "$s\\ge1$ iid row indices with law $p$; only positive-probability rows are divided by $p_i$",
+          "$0<\\varepsilon<1$ and $0<\\delta<1$"
+        ],
+        "conclusion": "The displayed explicit Bernstein tail holds; its sample-size corollary gives the two-sided regularized Loewner approximation."
+      },
+      "source_labels": [
+        {
+          "source": "cmm17",
+          "label": "Theorem 5 and its normalized-summand proof"
+        },
+        {
+          "source": "tropp15",
+          "label": "Theorem 6.1.1; elementary dimension-prefactor variant"
+        }
+      ],
+      "readback": "Audit: write v_i=H⁻¹ᐟ²a_i and M=Σv_iv_iᵀ≤I. Each centered summand is X=(v_iv_iᵀ/p_i−M)/s with ||X||₂≤t/s because ||M||₂≤tr M≤t; ΣE X²≤(t/s)M≤(t/s)I. Matrix Bernstein gives the stated exponent, and 2(1+ε/3)≤8/3<3 gives the sample-size constant. This is a general-λ, elementary 2d-prefactor variant derived from the source proof, not the sharper intrinsic-dimension logarithm in Theorem 5. An A=0 case is deterministic and should be an explicit trivial branch if t=0. Remaining work: sampling-law/rescaling definition, PSD square-root normalization bridge, and integration of the existing concentration API. Sampling without replacement is not claimed.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "regularized-approximation-range-error",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "regularized-approximation-range-error",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $P$ be the orthogonal projector onto $\\operatorname{range}(B)$ and assume $BB^\\top+\\lambda I\\succeq(1-\\varepsilon)(AA^\\top+\\lambda I)$, where $0\\le\\varepsilon<1$ and $\\lambda>0$. Then $I-P\\preceq\\lambda(BB^\\top+\\lambda I)^{-1}\\preceq\\lambda(1-\\varepsilon)^{-1}(AA^\\top+\\lambda I)^{-1}$. Consequently $\\|(I-P)A\\|_2^2\\le\\lambda/(1-\\varepsilon)$ and $\\|(I-P)A\\|_F^2\\le\\lambda d_{\\rm eff}^\\lambda(A)/(1-\\varepsilon)$. For $\\varepsilon=1/2$, this yields the spectral bound $2\\lambda$ and the Frobenius bound $2(k\\lambda+E_k)$.",
+        "hypotheses": [
+          "$A\\in\\mathbb R^{m\\times n}$ and $B\\in\\mathbb R^{m\\times s}$; $P=\\operatorname{rangeProjector}(B)$",
+          "$\\lambda>0$, $0\\le\\varepsilon<1$",
+          "$BB^\\top+\\lambda I\\succeq(1-\\varepsilon)(AA^\\top+\\lambda I)$"
+        ],
+        "conclusion": "$\\|(I-P)A\\|_2^2\\le\\lambda/(1-\\varepsilon)$ and $\\|(I-P)A\\|_F^2\\le\\lambda d_{\\rm eff}^\\lambda(A)/(1-\\varepsilon)\\le(k\\lambda+E_k)/(1-\\varepsilon)$."
+      },
+      "source_labels": [
+        {
+          "source": "cd26-power",
+          "label": "Definition 3.1 and Lemma 3.3"
+        }
+      ],
+      "readback": "Audit: diagonalize BBᵀ to compare I−P with its ridge inverse, apply inverse antitonicity, then take the norm or trace of Aᵀ(I−P)A. Only the lower regularized approximation is used. The displayed general-ε form is the same proof as Lemma 3.3; the paper states ε=1/2. Its λ=0 case cannot use an ordinary inverse: handle it separately by kernel inclusion, which forces range(A)⊆range(B) and zero residual. Thus the endpoint is valid but requires a different proof branch. B need not be written AS for this lemma; algorithm realization remains separate.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "l-ensemble-law",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "l-ensemble-law",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For real symmetric $L\\succeq0$, the finite-subset weights $\\Pr(S)=\\det(L_{S,S})/\\det(I+L)$ define a probability law on all subsets, including the empty set. Its multivariate generating polynomial is $\\mathbb E\\prod_{i\\in S}z_i=\\det(I+\\operatorname{diag}(z)L)/\\det(I+L)$; in particular $\\sum_S\\det(L_{S,S})=\\det(I+L)>0$.",
+        "hypotheses": [
+          "$L\\in\\mathbb R^{n\\times n}$ symmetric positive semidefinite",
+          "$S\\subseteq\\{1,\\ldots,n\\}$, with empty principal determinant equal to $1$",
+          "$z\\in\\mathbb R^n$ for the generating-polynomial identity"
+        ],
+        "conclusion": "The displayed weights are a probability law and its generating polynomial is $\\det(I+\\operatorname{diag}(z)L)/\\det(I+L)$."
+      },
+      "source_labels": [
+        {
+          "source": "dm20-dpp",
+          "label": "§3, Definitions 2–4"
+        }
+      ],
+      "readback": "Audit: expand det(I+diag(z)L) by multilinearity, choosing the identity or L row at each index; the coefficient indexed by S is det(L_SS). PSD principal minors are nonnegative and the empty term is 1. This supplies normalization without a nonsingularity assumption on L. Current NLAlib has fixed-cardinality volume-sampling measures; this is the missing variable-cardinality law, not a replacement. Build a PMF/Measure and bridge conditioning on |S|=k to the existing volume law for Gram kernels when its normalizer is positive. A complex Hermitian extension can reuse the same proof after taking real principal determinants.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "l-ensemble-marginals",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "l-ensemble-marginals",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For the L-ensemble law, $K=L(I+L)^{-1}$ satisfies $\\Pr(J\\subseteq S)=\\det(K_{J,J})$. Consequently $\\Pr(i\\in S)=K_{ii}$, $\\mathbb E|S|=\\operatorname{tr}K$, $\\operatorname{Var}(|S|)=\\operatorname{tr}(K-K^2)$ and $\\operatorname{Cov}(1_{i\\in S},1_{j\\in S})=-K_{ij}^2$ for $i\\ne j$. For $L=AA^\\top/\\lambda$, the singleton marginals are the ridge leverage scores and the expected size is $d_{\\rm eff}^\\lambda(A)$.",
+        "hypotheses": [
+          "$L\\in\\mathbb R^{n\\times n}$ symmetric positive semidefinite and $S$ has its L-ensemble law",
+          "$K=L(I+L)^{-1}$; $J$ is any subset",
+          "$A\\in\\mathbb R^{n\\times d}$ and $\\lambda>0$ for the ridge specialization"
+        ],
+        "conclusion": "$\\Pr(J\\subseteq S)=\\det K_{J,J}$, with the stated singleton, covariance, size-moment and ridge-score identities."
+      },
+      "source_labels": [
+        {
+          "source": "dm20-dpp",
+          "label": "§3, L-ensemble to marginal-kernel relation; §4.1 and §4.3"
+        }
+      ],
+      "readback": "Audit: insert z=1+t in the L-ensemble generating polynomial and factor I+L to obtain det(I+diag(t)K); comparing coefficients gives every inclusion probability. First and second indicator moments yield the covariance and cardinality variance. For the ridge bridge, A(AᵀA+λI)⁻¹Aᵀ=AAᵀ(AAᵀ+λI)⁻¹ follows by SVD or the push-through identity. No inverse of L, general-position hypothesis or fixed cardinality is required. These marginal identities must not be asserted for arbitrary k-DPPs: conditioning on cardinality changes the kernel description.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "two-sided-sketch-centered-error",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "two-sided-sketch-centered-error",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For $A\\in\\mathbb R^{m\\times n}$ and square $L\\in\\mathbb R^{m\\times m}$, $R\\in\\mathbb R^{n\\times n}$, set $T=\\operatorname{tr}(A^\\top AR)+\\operatorname{tr}(A^\\top LA)-\\operatorname{tr}(A^\\top LAR)$. Then $T-\\|A\\|_F^2=-\\operatorname{tr}(A^\\top(L-I)A(R-I))$. Thus independent random $L,R$ with means $I$ and integrable entries give $\\mathbb ET=\\|A\\|_F^2$.",
+        "hypotheses": [
+          "$A\\in\\mathbb R^{m\\times n}$, $L\\in\\mathbb R^{m\\times m}$ and $R\\in\\mathbb R^{n\\times n}$",
+          "For the expectation clause: $L,R$ are independent random matrices, each entry integrable, with $\\mathbb EL=I_m$ and $\\mathbb ER=I_n$"
+        ],
+        "conclusion": "$T-\\|A\\|_F^2=-\\operatorname{tr}(A^\\top(L-I)A(R-I))$; under the stated random-matrix assumptions, $\\mathbb ET=\\|A\\|_F^2$."
+      },
+      "source_labels": [
+        {
+          "source": "chmp26",
+          "label": "Equation (2), Equation (7) and §2; centered reformulation"
+        }
+      ],
+      "readback": "Audit: expand the product (L−I)A(R−I) and use trace linearity; this cancels both first-order sketch errors exactly. Independence factors each remaining centered entry product, and entrywise integrability is sufficient for their product integrability on the independent joint law. No Gaussian or PSD assumption is needed for this identity. Substituting L=ΨΨᵀ/s and R=ΩΩᵀ/r gives the Hutch# formula. Independence cannot be dropped merely because both marginals are isotropic.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "independent-control-variate-variance",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "independent-control-variate-variance",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $M$ be fixed real symmetric and $B$ a random symmetric matrix independent of $r\\ge1$ iid standard Gaussian probes $g_j$, with $\\mathbb E\\|M-B\\|_F^2<\\infty$. For $T=\\operatorname{tr}B+r^{-1}\\sum_{j=1}^r g_j^\\top(M-B)g_j$, one has $\\mathbb E[T\\mid B]=\\operatorname{tr}M$ and $\\operatorname{Var}T=(2/r)\\mathbb E\\|M-B\\|_F^2$.",
+        "hypotheses": [
+          "$M\\in\\mathbb R^{n\\times n}$ symmetric and deterministic",
+          "$B$ a measurable random symmetric matrix with $\\mathbb E\\|M-B\\|_F^2<\\infty$",
+          "$r\\ge1$ iid standard Gaussian vectors jointly independent of $B$"
+        ],
+        "conclusion": "$\\mathbb E T=\\operatorname{tr}M$ and $\\operatorname{Var}T=\\frac2r\\mathbb E\\|M-B\\|_F^2$, with the conditional expectation identically $\\operatorname{tr}M$."
+      },
+      "source_labels": [
+        {
+          "source": "chmp26",
+          "label": "§2, Equation (7), Fact 2.1 and proof of Theorem 1.1"
+        },
+        {
+          "source": "mmmw21",
+          "label": "§3, low-rank control-variate construction"
+        }
+      ],
+      "readback": "Audit: condition on B, apply the existing Gaussian quadratic-form mean/variance to M−B, and average r independent terms. The conditional mean is constant, so its variance term vanishes in total variance. The square-integrability assumption makes every step well-defined. Neither positivity nor low rank of B is needed. Current hutchpp-unbiased already proves projection-specific unbiasedness; the new reusable content is arbitrary independent control matrices and the exact variance identity. A product-measure/Fubini proof can avoid a large conditional-expectation API while preserving this meaning.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "two-sided-gaussian-frobenius-variance",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "two-sided-gaussian-frobenius-variance",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Let $\\Omega\\in\\mathbb R^{n\\times r}$ and $\\Psi\\in\\mathbb R^{m\\times s}$ be independent standard Gaussian matrices, $r,s\\ge1$. For $$H=\\frac{\\|A\\Omega\\|_F^2}{r}+\\frac{\\|\\Psi^\\top A\\|_F^2}{s}-\\frac{\\|\\Psi^\\top A\\Omega\\|_F^2}{rs},$$ one has $\\mathbb EH=\\|A\\|_F^2$ and $$\\operatorname{Var}H=\\frac2{rs}\\bigl(\\|A^\\top A\\|_F^2+\\|A\\|_F^4\\bigr)\\le\\frac4{rs}\\|A\\|_F^4.$$ The case $r=s$ is Hutch# Theorem 1.1.",
+        "hypotheses": [
+          "$A\\in\\mathbb R^{m\\times n}$ is deterministic, with no symmetry or rank requirement",
+          "$r,s\\ge1$",
+          "$\\Omega$ and $\\Psi$ have standard Gaussian matrix laws and are independent"
+        ],
+        "conclusion": "$\\mathbb EH=\\|A\\|_F^2$ and $\\operatorname{Var}H=2(\\|A^\\top A\\|_F^2+\\|A\\|_F^4)/(rs)\\le4\\|A\\|_F^4/(rs)$."
+      },
+      "source_labels": [
+        {
+          "source": "chmp26",
+          "label": "Theorem 1.1, Fact 2.2 and §2 proof; unequal sketch-width extension"
+        }
+      ],
+      "readback": "Audit: use the previous control-variate identity with M=AᵀA and B=AᵀΨΨᵀA/s. Existing gaussian-amm gives E||M−B||F²=(||AᵀA||F²+||A||F⁴)/s. Multiplication by 2/r proves the formula, including unequal widths; the source states equal widths. All moments are finite Gaussian polynomial moments. The inequality uses Σσ⁴≤(Σσ²)². A=0 is exact, not an exceptional division case. For A≠0, Chebyshev yields failure ≤4/(rs ε²); constant failure with r=s therefore takes order 1/ε probes per side. This card does not claim the paper’s query lower bound, adaptive weighted variant, or generalized-Nyström/Hutch-flat extension has been audited or formalized.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "randnla"
+    },
+    {
+      "id": "positive-map-kadison",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "positive-map-kadison",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "A positive unital complex-linear map satisfies $\\Phi(A)^2\\preceq\\Phi(A^2)$ on Hermitian inputs.",
+        "hypotheses": [
+          "$\\Phi:M_n(\\mathbb C)\\to M_k(\\mathbb C)$ is complex-linear, positive and unital",
+          "$A=A^*$"
+        ],
+        "conclusion": "$\\Phi(A)^2\\preceq\\Phi(A^2)$"
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Theorem 12.17"
+        }
+      ],
+      "readback": "Proof audit: resolve A into spectral projectors P_j, form the PSD block sum of [[1,lambda_j],[lambda_j,lambda_j^2]] tensor Phi(P_j), then take the Schur complement of I. Positivity suffices because the source matrices lie in the commutative algebra generated by one Hermitian A. Do not extend to Phi(A)*Phi(A) <= Phi(A*A) for arbitrary A without stronger positivity assumptions.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "positive-map-inverse-jensen",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "positive-map-inverse-jensen",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Inversion obeys $\\Phi(A)^{-1}\\preceq\\Phi(A^{-1})$ under positive unital matrix maps.",
+        "hypotheses": [
+          "$\\Phi:M_n(\\mathbb C)\\to M_k(\\mathbb C)$ is positive, complex-linear and unital",
+          "$A\\succ0$"
+        ],
+        "conclusion": "$\\Phi(A)\\succ0,\\qquad\\Phi(A)^{-1}\\preceq\\Phi(A^{-1})$"
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Theorem 12.19 (Choi inequality)"
+        }
+      ],
+      "readback": "Proof audit: the PSD block sum uses [[lambda,1],[1,lambda^-1]] tensor Phi(P_lambda), followed by the Schur complement of Phi(A). The source assumes strict positivity of Phi; in finite dimensions positivity and unitality imply it: A >= aI with a>0 gives Phi(A) >= aI. This is the reciprocal-function inequality, not Choi's complete-positivity classification.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "positive-map-norm-at-identity",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "positive-map-norm-at-identity",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Every positive complex-linear map between nonzero complex matrix algebras satisfies $\\|\\Phi\\|_{2\\to2}=\\|\\Phi(I)\\|_2$.",
+        "hypotheses": [
+          "$n,k\\ge1$ and $\\Phi:M_n(\\mathbb C)\\to M_k(\\mathbb C)$ is positive and complex-linear",
+          "The induced map norm uses the spectral norm on both matrix spaces"
+        ],
+        "conclusion": "$\\sup_{\\|A\\|_2\\le1}\\|\\Phi(A)\\|_2=\\|\\Phi(I)\\|_2$"
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Theorem 12.22, Corollary 12.23 and Proposition 12.24"
+        }
+      ],
+      "readback": "Proof audit: every complex contraction is the average of two unitaries by SVD and sigma=(exp(i theta)+exp(-i theta))/2. The spectral-projector block argument makes a unital positive map contractive on unitaries and hence contractions. Normalize by Phi(I)^(-1/2) when positive definite. For general Phi, use Phi_epsilon(A)=Phi(A)+epsilon tr(A)I. Correct a source typo: with ordinary trace Phi_epsilon(I)=Phi(I)+epsilon*n I, not Phi(I)+epsilon I; the limit is unchanged. Complete positivity is unnecessary.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-divided-differences-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-divided-differences-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "The first divided difference uses the derivative at equal arguments, and its values on a finite list of nodes form the Löwner matrix.",
+        "hypotheses": [
+          "$f:\\mathbb R\\to\\mathbb R$; useful identities assume $f\\in C^1(I)$ on an open interval",
+          "Finite real nodes $\\lambda_i\\in I$, with repetitions permitted"
+        ],
+        "conclusion": "$L_f(\\lambda)_{ij}=f^{[1]}(\\lambda_i,\\lambda_j),\\quad f^{[1]}(x,y)=\\begin{cases}(f(x)-f(y))/(x-y),&x\\ne y,\\\\f'(x),&x=y.\\end{cases}$"
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Definitions 14.3–14.4"
+        }
+      ],
+      "readback": "Use Mathlib deriv; total definitions retain its standard junk value outside differentiability. Bridge to existing Polynomial.dividedDifference evaluation lemmas instead of duplicating the polynomial object. Audit: f[1](x,y)=integral_0^1 fprime((1-t)y+tx)dt proves symmetry and joint continuity, including repeated nodes. Never replace the confluent value by division by zero.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-function-frechet-divided-difference",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-function-frechet-divided-difference",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For a $C^1$ scalar function, the Fréchet derivative on Hermitian matrices is the Schur multiplier by the divided-difference matrix in an eigenbasis.",
+        "hypotheses": [
+          "$I\\subset\\mathbb R$ is an open interval and $f\\in C^1(I)$",
+          "$A,H$ are Hermitian, $\\operatorname{spec}(A)\\subset I$",
+          "$U$ is unitary and $A=U\\operatorname{diag}(\\lambda)U^*$; repeated eigenvalues are allowed"
+        ],
+        "conclusion": "$D(cfc\\,f)(A)[H]=U\\bigl(L_f(\\lambda)\\circ(U^*HU)\\bigr)U^*$"
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Theorem 14.13; Lemma 14.14"
+        },
+        {
+          "source": "bhatia97",
+          "label": "Theorem V.3.3"
+        }
+      ],
+      "readback": "State HasFDerivAt on the real normed space of Hermitian matrices, not a complex derivative of arbitrary C1 scalar f. Audit: differentiate polynomials by sum_j A^j H A^(r-1-j), handle equal eigenvalues by fprime, and transport by U. The notes sketch the C1 limit. Uniform approximation of f and fprime on a compact spectral interval bounds divided-difference error by sup|fprime-pprime|, hence gives uniform Frobenius operator bounds for derivatives. Local uniform derivative convergence completes the Fréchet argument, including repeated eigenvalues. Existence of directional derivatives alone is insufficient.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-monotone-loewner-criterion",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-monotone-loewner-criterion",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "A $C^1$ function on an open real interval is matrix monotone in every size iff every Löwner matrix is PSD.",
+        "hypotheses": [
+          "$I\\subset\\mathbb R$ is an open interval, $f\\in C^1(I)$",
+          "Matrix monotonicity means $A\\preceq B\\Rightarrow f(A)\\preceq f(B)$ for Hermitian matrices with spectra in $I$, in every finite dimension"
+        ],
+        "conclusion": "$f\\text{ is matrix monotone on }I\\iff\\forall n,\\ \\forall\\lambda\\in I^n,\\ L_f(\\lambda)\\succeq0$"
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Theorem 14.5 and §14.4"
+        }
+      ],
+      "readback": "Audit: necessity tests the derivative at a diagonal matrix in rank-one direction 11*. Sufficiency integrates the derivative along A+t(B-A); positivity follows from the Schur product theorem. The segment remains in the spectral interval by Rayleigh bounds. Retain the all-dimensions quantifier; this does not merely characterize scalar monotonicity. Reuse existing operator-convex machinery where appropriate.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-exponential-frechet-integral",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-exponential-frechet-integral",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "The exponential is Fréchet differentiable at every real or complex square matrix, without commutation or normality assumptions.",
+        "hypotheses": [
+          "$A,E\\in\\mathbb K^{n\\times n}$ with $\\mathbb K=\\mathbb R$ or $\\mathbb C$"
+        ],
+        "conclusion": "$D\\exp(A)[E]=\\int_0^1\\exp((1-t)A)\\,E\\,\\exp(tA)\\,dt$"
+      },
+      "source_labels": [
+        {
+          "source": "higham08",
+          "label": "Chapter 10: sensitivity of the matrix exponential"
+        },
+        {
+          "source": "higham09-exponential",
+          "label": "Preamble p.749, displayed Fréchet-derivative integral"
+        }
+      ],
+      "readback": "Use the algebra exponential on the full matrix space, with a bridge to matrixExp on Hermitian inputs. Audit: differentiate exp((1-t)(A+E))*exp(tA) in t to obtain exp(A+E)-exp(A)=integral exp((1-t)(A+E))*E*exp(tA)dt. Replace the first factor by exp((1-t)A); the exponential power series gives a uniform O(specNorm(E)^2) remainder. Existing Mathlib hasFDerivAt_exp assumes a commutative Banach algebra and cannot apply directly to arbitrary matrices.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-geometric-mean-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-geometric-mean-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "The geometric mean is $A\\#B=A^{1/2}(A^{-1/2}BA^{-1/2})^{1/2}A^{1/2}$ for positive-definite $A$ and PSD $B$.",
+        "hypotheses": [
+          "$A\\succ0$, $B\\succeq0$ are real symmetric or complex Hermitian"
+        ],
+        "conclusion": "$A\\#B=A^{1/2}(A^{-1/2}BA^{-1/2})^{1/2}A^{1/2}$"
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Definition 16.15"
+        }
+      ],
+      "readback": "Reuse CFC.sqrt and matrix inverse. The initial target is the explicit formula with positive-definite first input; any total implementation has documented junk values outside this domain. A singular-first-input extension by regularization is a later API task, and is not obtained merely by inserting a pseudoinverse. Audit: positivity and A#A=A follow directly. Do not import the notes' congruence equality for arbitrary singular transformations: general transformer maps give an inequality; equality is justified for invertible congruences.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-geometric-mean-block-maximum",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-geometric-mean-block-maximum",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For $A\\succ0$ and $B\\succeq0$, the geometric mean $A\\#B$ is the greatest Hermitian $X$ for which the block matrix $\\begin{bmatrix}A&X\\\\X&B\\end{bmatrix}$ is positive semidefinite.",
+        "hypotheses": [
+          "$A\\succ0$ and $B\\succeq0$ are square real symmetric or complex Hermitian matrices of the same size",
+          "$X=X^*$"
+        ],
+        "conclusion": "The block matrix with off-diagonal blocks $A\\#B$ is PSD, and $\\begin{bmatrix}A&X\\\\X&B\\end{bmatrix}\\succeq0$ implies $X\\preceq A\\#B$."
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Definition 16.15 and Theorem 12.16 (derived block characterization)"
+        }
+      ],
+      "readback": "Independent derivation audit: congruence by diag(A^(-1/2),A^(-1/2)) and the Schur complement turn block positivity into Y^2 <= C, where Y=A^(-1/2)XA^(-1/2) and C=A^(-1/2)BA^(-1/2). The spectral theorem gives Y <= |Y|=sqrt(Y^2), and square-root monotonicity gives |Y| <= sqrt(C). Equality is attained at Y=sqrt(C). X need not be PSD. For complex matrices use the corresponding CFC square-root monotonicity bridge rather than silently treating the existing real-only atlas target as complex.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "schatten-even-moment-smoothness",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "schatten-even-moment-smoothness",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For an even integer $p\\ge2$, the averaged $p$th powers of the Schatten norms of $X+Y$ and $X-Y$ satisfy the quadratic smoothness bound with coefficient $p-1$.",
+        "hypotheses": [
+          "$p=2r$ for an integer $r\\ge1$",
+          "$X,Y$ are real or complex rectangular matrices of the same shape"
+        ],
+        "conclusion": "$\\left(\\frac{\\|X+Y\\|_p^p+\\|X-Y\\|_p^p}{2}\\right)^{2/p}\\le\\|X\\|_p^2+(p-1)\\|Y\\|_p^2$."
+      },
+      "source_labels": [
+        {
+          "source": "tropp22-matrix-analysis",
+          "label": "Theorem 8.2, even-integer proof in §8.5"
+        }
+      ],
+      "readback": "Proof audit is deliberately restricted to the even-integer case proved in §8.5. Hermitian dilation changes each Schatten p norm by the same factor 2^(1/p). For Hermitian inputs set u(t)=E_sign tr(X+sign*sqrt(t)Y)^p. The polynomial derivative and generalized Klein inequality give u'(t) <= p(p-1)/2 * ||Y||_p^2 * u(t)^(1-2/p); integrating the derivative of u^(2/p), with a zero-value regularization, yields the claim. Reuse the already formalized generalized Klein machinery. The lecture's extension to arbitrary real p>=2 is left as an exercise and is not included in this target.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "gaussian-width-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-width-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Gaussian width is the expected support function of a nonempty compact subset of Euclidean space.",
+        "hypotheses": [
+          "$T\\subseteq\\mathbb R^n$ is nonempty and compact",
+          "$g\\sim N(0,I_n)$"
+        ],
+        "conclusion": "$w(T):=\\mathbb E\\sup_{x\\in T}\\langle g,x\\rangle$; establish finite integrability and the basic translation, orthogonal-invariance and convex-hull identities needed for matrix embeddings."
+      },
+      "source_labels": [
+        {
+          "source": "tropp20-randomized-notes",
+          "label": "Definition 6.4 and Example 6.5"
+        }
+      ],
+      "readback": "Audit: the support function is finite and Lipschitz with constant sup_{x in T}||x||, so it is measurable and integrable against a Gaussian vector. Translation adds the centered scalar <g,a>, orthogonal invariance follows from the Gaussian law, and convexification leaves a support function unchanged. For a nonzero subspace L, the width of its unit sphere equals E||P_L g||. Reuse the existing Gaussian-vector law. This is ordinary Gaussian width, not E sup |<g,x>|; the empty set is excluded explicitly.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "gaussian-width-restricted-minimum",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-width-restricted-minimum",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "A standard Gaussian matrix has a uniformly positive action on a compact part of the unit sphere once the number of rows dominates its Gaussian width.",
+        "hypotheses": [
+          "$m,n\\ge1$ and $G\\in\\mathbb R^{m\\times n}$ has independent standard normal entries",
+          "$T\\subseteq S^{n-1}$ is nonempty and compact",
+          "$t\\ge0$"
+        ],
+        "conclusion": "$\\mathbb P\\{\\inf_{x\\in T}\\|Gx\\|_2<\\sqrt m-1-w(T)-t\\}\\le e^{-t^2/2}$."
+      },
+      "source_labels": [
+        {
+          "source": "tropp20-randomized-notes",
+          "label": "Theorem 6.8, lower bound with normalization converted to standard Gaussian entries"
+        },
+        {
+          "source": "gordon85",
+          "label": "Gaussian min-max comparison underlying the restricted minimum estimate"
+        }
+      ],
+      "readback": "Derivation audit: Gordon's comparison gives E inf_{x in T}||Gx|| >= E||g_m||-w(T), and E||g_m|| >= sqrt(m)-1. The restricted infimum is 1-Lipschitz as a function of G in Frobenius norm, so Gaussian concentration yields the displayed tail. Compactness gives a measurable attained infimum. The lecture uses Gamma=G/sqrt(m); all factors have been converted explicitly. A strict event is used so no atom claim is silently required when the threshold is zero or negative.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-chaos-flattenings-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-chaos-flattenings-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "Represent a matrix-valued homogeneous polynomial through its coefficient tensor, independent coordinate groups, and the family of matrix flattenings that controls its norm.",
+        "hypotheses": [
+          "$q,m,d_1,d_2\\ge1$ and $A_{i_1,\\ldots,i_q}\\in\\mathbb R^{d_1\\times d_2}$",
+          "The vectors $h^{(1)},\\ldots,h^{(q)}\\in\\mathbb R^m$ are independent copies with independent identically distributed coordinates"
+        ],
+        "conclusion": "Define $Y=\\sum_{i_1,\\ldots,i_q}h^{(1)}_{i_1}\\cdots h^{(q)}_{i_q}A_{i_1,\\ldots,i_q}$ and $\\sigma(A)=\\max_{S\\subseteq[q]}\\|A_{[S\\cup\\{q+1\\}\\mid S^c\\cup\\{q+2\\}]}\\|_2$, where modes $q+1,q+2$ are the original row and column indices."
+      },
+      "source_labels": [
+        {
+          "source": "blnv25-chaos",
+          "label": "§§2.1–2.2, equations (1)–(4)"
+        }
+      ],
+      "readback": "Definition audit: each flattening is an ordinary finite matrix obtained by grouping index modes, with the original matrix row mode on the row side and column mode on the column side. For q=1, the two flattenings give the familiar square roots of the row and column variance norms. Decoupled Y allows coincident indices; comparison to the coupled multilinear chaos requires coefficients to vanish whenever two indices coincide. Overlapping row/column flattenings used in stronger Rosenthal bounds are a different family and are not silently included. The flattening for S has d1*m^|S| rows and d2*m^(q-|S|) columns.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-chaos-decoupling-upper",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-chaos-decoupling-upper",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "The expected spectral norm of a centered multilinear matrix chaos is bounded by that of its fully decoupled version, with an explicit constant depending only on its degree.",
+        "hypotheses": [
+          "$q,m\\ge1$ and $h_1,\\ldots,h_m$ are independent identically distributed centered integrable real random variables",
+          "$A_{i_1,\\ldots,i_q}$ are fixed real rectangular matrices and vanish whenever two indices coincide",
+          "$X=\\sum h_{i_1}\\cdots h_{i_q}A_{i_1,\\ldots,i_q}$ and $Y$ uses q independent copies of the coordinate vector as in the decoupled-chaos definition"
+        ],
+        "conclusion": "$\\mathbb E\\|X\\|_2\\le q^q\\,\\mathbb E\\|Y\\|_2$."
+      },
+      "source_labels": [
+        {
+          "source": "blnv25-chaos",
+          "label": "Theorem 2.1, upper direction; the explicit nonoptimal constant here follows from the coloring argument"
+        }
+      ],
+      "readback": "Independent proof audit: color each coordinate uniformly with q colors and retain a term only when its index in position t has color t. Conditional averaging over the coloring gives E_color X_color=q^(-q)X. For a fixed coloring the coordinate classes are disjoint, so X_color has the law of the conditional expectation of Y obtained by retaining only the coordinates whose colors match their positions; centering kills the remaining terms. Apply norm Jensen twice. Integrability follows because nonzero terms have distinct independent integrable factors. No coefficient permutation symmetry is needed for this upper direction. A reverse comparison is not claimed: antisymmetric coefficients can make X vanish while Y is nonzero.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "matrix-chaos-iterated-khintchine",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "matrix-chaos-iterated-khintchine",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For each fixed degree, the expected norm of a decoupled subgaussian matrix chaos is bounded by the largest coefficient flattening, with the logarithmic loss obtained by iterating the linear matrix Khintchine inequality.",
+        "hypotheses": [
+          "$q,m,d_1,d_2\\ge1$, $d=\\max(d_1,d_2)$, and $A_{i_1,\\ldots,i_q}\\in\\mathbb R^{d_1\\times d_2}$",
+          "All entries of the q coordinate groups are independent copies of a centered real random variable h",
+          "$K>0$ satisfies $\\mathbb E\\exp(h^2/K^2)\\le2$",
+          "Y and $\\sigma(A)$ are the decoupled chaos and flattening parameter defined above"
+        ],
+        "conclusion": "For every integer $q\\ge1$ there exists a constant $C_q>0$, depending only on q, such that $\\mathbb E\\|Y\\|_2\\le C_qK^q[\\log(d+m)]^{q/2}\\sigma(A)$ for every admissible coefficient family and coordinate law."
+      },
+      "source_labels": [
+        {
+          "source": "blnv25-chaos",
+          "label": "Theorem 2.4, upper bound; §2.4 and Appendix A.2"
+        }
+      ],
+      "readback": "Proof audit: Appendix A.2 conditions on q-1 coordinate groups and applies the linear subgaussian noncommutative Khintchine inequality. Its row and column variance matrices are the two relevant intermediate flattenings of a lower-order chaos. Iterating the maximum estimate in Lemma A.1 yields the largest final flattening. Intermediate dimensions are bounded by d*m^q, so their logarithms are absorbed into a degree-dependent multiple of log(d+m). The displayed admissible-K version avoids boundary issues in defining an Orlicz norm. Constants are existential and degree-dependent, exactly as supported by the source. Only the upper estimate is targeted; the optional L^log(m) refinement, lower estimates and stronger Rosenthal inequalities are deferred. The arbitrary centered-subgaussian linear bound needs a subgaussian-process comparison (the source cites Vershynin, Corollary 8.6.3), beyond the existing Gaussian/Rademacher NCK API. Use log(2D) for each linear step or treat D=1 separately; the final log(d+m) already avoids zero.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "gaussian-series-covariance-sensitive-norm",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "gaussian-series-covariance-sensitive-norm",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "The expected norm of a centered Hermitian Gaussian series has a leading term twice its usual variance scale and a smaller correction governed by the full covariance of its entries.",
+        "hypotheses": [
+          "$d\\ge2$, $A_1,\\ldots,A_s\\in\\mathbb C^{d\\times d}$ are Hermitian, and the $g_i$ are independent standard real normal variables",
+          "$X=\\sum_i g_iA_i$",
+          "$\\sigma^2=\\|\\sum_iA_i^2\\|_2$ and $v^2=\\|\\sum_i\\operatorname{vec}(A_i)\\operatorname{vec}(A_i)^*\\|_2$, with vectorization using the unnormalized Frobenius inner product"
+        ],
+        "conclusion": "There exists a universal constant $C>0$ such that $\\mathbb E\\|X\\|_2\\le2\\sigma+C\\sqrt{\\sigma v}\\,(\\log d)^{3/4}$ for every such series."
+      },
+      "source_labels": [
+        {
+          "source": "bbvh23-free",
+          "label": "Corollary 2.2, Lemma 2.5 and the parameters in §2.1"
+        }
+      ],
+      "readback": "Audit scope: checked the exact parameter definitions and the deduction of this centered Hermitian bound from Corollary 2.2 and Lemma 2.5, where the free-model norm is at most 2 sigma and the error parameter is sqrt(sigma*v). Read the proof of the alignment estimate in Proposition 4.6: covariance diagonalization makes coefficient matrices Hilbert-Schmidt orthogonal, completion to a Hilbert-Schmidt basis and Cauchy-Schwarz bound the crossing contractions. Inspected the Gaussian-lift interpolation and resolvent argument in §§5–6, but did not independently reconstruct that entire long proof. This remains an unproved, later-priority candidate with substantial interpolation/free-comparison prerequisites. The covariance here is the full d^2-by-d^2 entry covariance, not E[X^2]. The complex covariance uses vec(A_i)vec(A_i)*. The zero-variance case is included; d>=2 prevents a vanishing logarithm in dimension one.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "matrix"
+    },
+    {
+      "id": "osi-def",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "osi-def",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "An $(r,\\alpha)$-OSI is a random $\\Omega\\in\\mathbb F^{d\\times k}$ satisfying $\\mathbb E[\\Omega\\Omega^*]=I_d$ and, for every fixed $r$-dimensional subspace $V$, $\\mathbb P\\{\\forall x\\in V:\\|\\Omega^*x\\|_2^2\\ge\\alpha\\|x\\|_2^2\\}\\ge19/20$.",
+        "hypotheses": [
+          "$\\mathbb F\\in\\{\\mathbb R,\\mathbb C\\}$; integers $1\\le r\\le d$, $k\\ge r$, and $0<\\alpha\\le1$",
+          "$\\Omega$ is a measurable random matrix with finite entrywise second moments"
+        ],
+        "conclusion": "The OSI contract is $\\mathbb E[\\Omega\\Omega^*]=I_d$ and, for every deterministic $Q\\in\\mathbb F^{d\\times r}$ with $Q^*Q=I_r$, $\\mathbb P\\{Q^*\\Omega\\Omega^*Q\\succeq\\alpha I_r\\}\\ge19/20$. The latter event is equivalent to $\\sigma_{\\min}(\\Omega^*Q)^2\\ge\\alpha$; isotropy is equivalent to $\\mathbb E\\|\\Omega^*x\\|_2^2=\\|x\\|_2^2$ for every deterministic $x$."
+      },
+      "source_labels": [
+        {
+          "source": "cemt25-osi",
+          "label": "Definition 1.2; Proposition 1.15"
+        }
+      ],
+      "readback": "Audit: the good event may depend on the fixed subspace. Isotropy supplies an expectation identity, not an almost-sure upper embedding bound. A two-sided OSE implies this contract only when isotropy is also established. This card uses positive subspace dimension; dimension zero is vacuous. No independence among entries or columns is assumed.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "osi"
+    },
+    {
+      "id": "osi-cross-residual-bound",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "osi-cross-residual-bound",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For fixed orthonormal $Q,Q_\\perp$ with orthogonal ranges and fixed $B$, an $(r,\\alpha)$-OSI satisfies $\\|B(Q_\\perp^*\\Omega)(Q^*\\Omega)^\\dagger\\|_F^2\\le(20/\\alpha)\\|B\\|_F^2$ with probability at least $9/10$, jointly with full row rank of $Q^*\\Omega$.",
+        "hypotheses": [
+          "$\\mathbb F\\in\\{\\mathbb R,\\mathbb C\\}$; $Q\\in\\mathbb F^{n\\times r}$, $Q_\\perp\\in\\mathbb F^{n\\times s}$, $B\\in\\mathbb F^{t\\times s}$ are deterministic",
+          "$1\\le r\\le n$, $s,t\\ge0$, $Q^*Q=I_r$, $Q_\\perp^*Q_\\perp=I_s$, $Q^*Q_\\perp=0$",
+          "$\\Omega\\in\\mathbb F^{n\\times k}$ is an $(r,\\alpha)$-OSI, $k\\ge r$, $0<\\alpha\\le1$"
+        ],
+        "conclusion": "$\\mathbb P\\{\\operatorname{rank}(Q^*\\Omega)=r\\ \\text{and}\\ \\|B(Q_\\perp^*\\Omega)(Q^*\\Omega)^\\dagger\\|_F^2\\le(20/\\alpha)\\|B\\|_F^2\\}\\ge9/10$."
+      },
+      "source_labels": [
+        {
+          "source": "cemt25-osi",
+          "label": "Lemma 2.1; explicit constant from its proof, Equation (2.1)"
+        }
+      ],
+      "readback": "Audit derivation: on the injection event, ||(Q*Ω)†||₂²≤1/α. Isotropy gives E||BQ_perp*Ω||F²=||B||F². Markov at 20 and a union bound give failure at most 1/20+1/20. These events need not be independent. If B=0, the numerator vanishes identically and no division by ||B||F² is needed. This is a probability bound, not a bound on the expectation of the pseudoinverse cross term.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "osi"
+    },
+    {
+      "id": "osi-range-finder-frobenius",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "osi-range-finder-frobenius",
+        "type": "unformalized candidate draft",
+        "status": "candidate",
+        "informal": "For an $(r,\\alpha)$-OSI $\\Omega$, let $P$ project onto $\\operatorname{range}(A\\Omega)$. Then $\\|(I-P)A\\|_F^2\\le(1+20/\\alpha)\\|A-A_r\\|_F^2$ with probability at least $9/10$.",
+        "hypotheses": [
+          "$A\\in\\mathbb F^{m\\times n}$ is deterministic, $\\mathbb F\\in\\{\\mathbb R,\\mathbb C\\}$, and $1\\le r\\le\\min(m,n)$",
+          "$\\Omega\\in\\mathbb F^{n\\times k}$ is an $(r,\\alpha)$-OSI, $k\\ge r$, $0<\\alpha\\le1$",
+          "$P$ is the orthogonal projector onto $\\operatorname{range}(A\\Omega)$; $A_r$ is any best Frobenius-norm approximation of rank at most $r$"
+        ],
+        "conclusion": "$\\mathbb P\\{\\|A-PA\\|_F^2\\le(1+20/\\alpha)\\sum_{j>r}\\sigma_j(A)^2\\}\\ge9/10$. The output $PA$ has rank at most $k$; since $\\alpha\\le1$, the displayed factor is at most $21/\\alpha$."
+      },
+      "source_labels": [
+        {
+          "source": "cemt25-osi",
+          "label": "Theorem 2.2 and proof; constants made explicit using Lemma 2.1"
+        }
+      ],
+      "readback": "Audit derivation: apply the cross-residual lemma with the leading and trailing right singular frames and B=Σ₂; insert its bound into the existing deterministic HMT inequality. The fixed input permits choosing these frames before sampling. Zero tail gives exact recovery on the injection event. Output rank is at most k, not necessarily r; no expectation or spectral relative-error guarantee is asserted.",
+      "evidence": [],
+      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+      "review_group": "osi"
+    }
+  ]
+}

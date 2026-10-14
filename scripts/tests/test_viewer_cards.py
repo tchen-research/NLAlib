@@ -10,6 +10,11 @@ class ViewerCardTests(unittest.TestCase):
         result = subprocess.run(["node", str(script)], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_area_cards_and_counts_follow_filters(self):
+        script = pathlib.Path(__file__).with_name("viewer_areas.js")
+        result = subprocess.run(["node", str(script)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

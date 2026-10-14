@@ -1,0 +1,593 @@
+{
+  "date": "2026-10-14",
+  "scope": "Pre-PR catalog categorization, naming and index review of the 92 new candidates and directly related existing categories. Includes regression and browser verification of the mixed parent/subsection area renderer.",
+  "baseline_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
+  "review_method": "Independent read-only reviews of taxonomy, names/bibliography, and checks/index provenance, followed by root integration and final validation. Stable IDs are retained; no Lean declaration names or formalizations are added.",
+  "counts": {
+    "atlas_results": 446,
+    "new_candidates_in_pr": 92,
+    "additional_subsections_in_this_review": 2,
+    "recategorized_cards": 13
+  },
+  "changes": [
+    {
+      "collection": "areas",
+      "id": "gaussian",
+      "fields": {
+        "summary": {
+          "before": "What a standard Gaussian matrix does: invariance, moments, inverse moments of the pseudoinverse, extreme singular values. The bottleneck for every Gaussian-sketch argument.",
+          "after": "Matrix-valued random models: Gaussian laws and inverse moments, spectral bounds, covariance, matrix chaos, Gaussian comparison and spectral universality."
+        }
+      }
+    },
+    {
+      "collection": "areas",
+      "id": "gaussian-extreme",
+      "fields": {
+        "summary": {
+          "before": "",
+          "after": "Spectral norm, extreme eigenvalue and singular-value estimates, including lower bounds for sample covariance matrices."
+        },
+        "name": {
+          "before": "Extreme singular values and concentration",
+          "after": "Extreme eigenvalues, singular values and covariance"
+        }
+      }
+    },
+    {
+      "collection": "areas",
+      "id": "concentration",
+      "fields": {
+        "summary": {
+          "before": "Scalar and matrix tail bounds. The matrix side is done (Tropp Ch. 3–8); the scalar side is scattered across Mathlib and external libraries.",
+          "after": "Scalar and matrix probability bounds, Gaussian and exchangeable-pair identities, moment-generating functions, independence and martingales. Deterministic matrix-function theory lives under Matrix."
+        }
+      }
+    },
+    {
+      "collection": "areas",
+      "id": "sketching-sampling",
+      "fields": {
+        "summary": {
+          "before": "",
+          "after": "Importance sampling, leverage scores, determinant-weighted subsets, L-ensembles and their exact sampling and moment identities."
+        },
+        "name": {
+          "before": "Leverage scores and importance sampling",
+          "after": "Leverage scores, volume sampling and determinantal laws"
+        }
+      }
+    },
+    {
+      "collection": "areas",
+      "id": "matrix-conditioning",
+      "fields": {
+        "summary": {
+          "before": "Neumann series and inverse perturbation, condition numbers, forward-error bounds for linear systems and least squares, Cholesky and QR as existence-and-uniqueness statements.",
+          "after": "Inverse perturbation and condition numbers, forward-error bounds for linear systems and least squares, and reduced-Hessian solvability of constrained systems."
+        },
+        "name": {
+          "before": "Inverses, conditioning and factorizations",
+          "after": "Linear systems, inverses and conditioning"
+        },
+        "title": {
+          "before": "Inverses, conditioning and factorizations",
+          "after": "Linear systems, inverses and conditioning"
+        }
+      }
+    },
+    {
+      "collection": "areas",
+      "id": "matrix-regularization",
+      "fields": {
+        "summary": {
+          "before": "Finite-dimensional deterministic regularization identities, stability bounds, and filtered pseudoinverses.",
+          "after": "Ordinary and total least squares, spectral regularization and filtered pseudoinverses, and nearest positive-semidefinite matrices."
+        },
+        "name": {
+          "before": "Regularized least squares and spectral filters",
+          "after": "Least squares, regularization and matrix nearness"
+        }
+      }
+    },
+    {
+      "collection": "areas",
+      "id": "matrix-functions",
+      "fields": {
+        "summary": {
+          "before": "Fréchet derivatives, divided differences, positive-map inequalities and positive-definite matrix means.",
+          "after": "Functional calculus, Fréchet derivatives and divided differences, positive maps and matrix means, sign and polar iterations, and trace-exponential representations."
+        }
+      }
+    },
+    {
+      "collection": "areas",
+      "id": "matrix-equations",
+      "fields": {
+        "parent": {
+          "before": null,
+          "after": "matrix"
+        },
+        "priority": {
+          "before": null,
+          "after": "next"
+        },
+        "order": {
+          "before": null,
+          "after": 34
+        },
+        "name": {
+          "before": null,
+          "after": "Sylvester, Lyapunov and Stein equations"
+        },
+        "summary": {
+          "before": null,
+          "after": "Solvability, separation, stability and residuals of finite matrix equations, with ADI and doubling recurrences. Projection methods remain under Krylov."
+        },
+        "id": {
+          "before": null,
+          "after": "matrix-equations"
+        }
+      }
+    },
+    {
+      "collection": "areas",
+      "id": "gaussian-comparison",
+      "fields": {
+        "parent": {
+          "before": null,
+          "after": "gaussian"
+        },
+        "priority": {
+          "before": null,
+          "after": "next"
+        },
+        "order": {
+          "before": null,
+          "after": 28
+        },
+        "name": {
+          "before": null,
+          "after": "Gaussian comparison and spectral universality"
+        },
+        "summary": {
+          "before": null,
+          "after": "Gaussian proxies with matching full covariance, extreme-eigenvalue comparisons and resolvent-trace universality for independent matrix sums."
+        },
+        "id": {
+          "before": null,
+          "after": "gaussian-comparison"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "matrix-calculus-def",
+      "fields": {
+        "area": {
+          "before": "concentration-matrix",
+          "after": "matrix-functions"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "sylvester-separation-bound",
+      "fields": {
+        "area": {
+          "before": "matrix-subspace-perturbation",
+          "after": "matrix-equations"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "sylvester-equation",
+      "fields": {
+        "area": {
+          "before": "matrix-subspace-perturbation",
+          "after": "matrix-equations"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "laplacian-resistance-leverage",
+      "fields": {
+        "notes": {
+          "before": "Checked by CL^dagger C^T = C C^dagger, the Penrose identities and the trace/rank of a projector. The kernel of L consists of vectors constant on each connected component, proving the n-c extension of the source connected-graph n-1 formula. Orientation signs cancel. Resistance is asserted only for pairs joined by an edge (or, in a later extension, within one component): the pseudoinverse quadratic form is not the infinite electrical resistance across distinct components. Reuse Mathlib graph/incidence notions where available; weighted incidence and the physical-resistance bridge are prerequisites.",
+          "after": "Checked by CL^dagger C^T = C C^dagger, the Penrose identities and the trace/rank of a projector. The kernel of L consists of vectors constant on each connected component, proving the n-c extension of the source connected-graph n-1 formula. Orientation signs cancel. Resistance is asserted only for pairs joined by an edge (or, in a later extension, within one component): the pseudoinverse quadratic form is not the infinite electrical resistance across distinct components. Reuse Mathlib graph/incidence notions where available; weighted incidence and the physical-resistance bridge are prerequisites. The deterministic statement uses projector diagonals and rank, so it belongs in Matrix without importing Sketching. A bridge to the named leverage-score API belongs downstream in Sketching/Sampling."
+        },
+        "depends_on": {
+          "before": [
+            "pseudoinverse",
+            "projection-facts",
+            "leverage-scores",
+            "rank-inequalities"
+          ],
+          "after": [
+            "pseudoinverse",
+            "projection-facts",
+            "rank-inequalities"
+          ]
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "singular-value-shrinkage-def",
+      "fields": {
+        "conclusion": {
+          "before": "A well-defined unitarily equivariant rectangular spectral shrinkage map, with singular-value soft thresholding as a specialization.",
+          "after": "A well-defined unitarily equivariant rectangular singular-value transform, with singular-value soft thresholding as a specialization."
+        },
+        "title": {
+          "before": "Singular-value shrinkage maps and independence of the chosen SVD",
+          "after": "Singular-value transforms and independence of the chosen SVD"
+        },
+        "aliases": {
+          "before": [
+            "singular value shrinkage",
+            "SVT operator",
+            "soft thresholding"
+          ],
+          "after": [
+            "singular value shrinkage",
+            "SVT operator",
+            "soft thresholding",
+            "singular-value transform"
+          ]
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "displacement-polynomial-rank",
+      "fields": {
+        "notes": {
+          "before": "Proof audit: telescope A^s X−X B^s, expand p(z)q(w)−q(z)p(w), and collect columns in span{M,AM,…,A^{k−1}M}. This yields νk, not the weaker νk² obtained by bounding every term separately. Multiplication by invertible q(A) and p(B) preserves rank. Writing the right factor as q(B)p(B)^{-1} permits poles of p/q on the B side; q(B) need not be invertible.",
+          "after": "Proof audit: telescope A^s X−X B^s, expand p(z)q(w)−q(z)p(w), and collect columns in span{M,AM,…,A^{k−1}M}. This yields νk, not the weaker νk² obtained by bounding every term separately. Multiplication by invertible q(A) and p(B) preserves rank. Writing the right factor as q(B)p(B)^{-1} permits poles of p/q on the B side; q(B) need not be invertible. The proof uses the span and rank of a concatenated matrix of columns M, AM, ..., A^(k-1)M; no import of the higher-layer Krylov API is required."
+        },
+        "depends_on": {
+          "before": [
+            "displacement-rank-def",
+            "rank-inequalities",
+            "block-krylov-subspace"
+          ],
+          "after": [
+            "displacement-rank-def",
+            "rank-inequalities"
+          ]
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "l-ensemble-law",
+      "fields": {
+        "area": {
+          "before": "sketching-regularization",
+          "after": "sketching-sampling"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "l-ensemble-marginals",
+      "fields": {
+        "area": {
+          "before": "sketching-regularization",
+          "after": "sketching-sampling"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "kkt-reduced-hessian",
+      "fields": {
+        "area": {
+          "before": "matrix-factorizations",
+          "after": "matrix-conditioning"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "lyapunov-stability-gramian",
+      "fields": {
+        "area": {
+          "before": "matrix-conditioning",
+          "after": "matrix-equations"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "sylvester-separation-residual-conditioning",
+      "fields": {
+        "area": {
+          "before": "matrix-conditioning",
+          "after": "matrix-equations"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "adi-sylvester-rational-error",
+      "fields": {
+        "area": {
+          "before": "krylov-matrix-equations",
+          "after": "matrix-equations"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "lyapunov-adi-residual-factor",
+      "fields": {
+        "area": {
+          "before": "krylov-matrix-equations",
+          "after": "matrix-equations"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "stein-gramian-smith-doubling",
+      "fields": {
+        "area": {
+          "before": "krylov-matrix-equations",
+          "after": "matrix-equations"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "row-volume-inverse-moment",
+      "fields": {
+        "title": {
+          "before": "Inverse Gram and covariance identities under row-volume sampling",
+          "after": "Inverse Gram and covariance bounds under row-volume sampling"
+        },
+        "informal": {
+          "before": "The inverse Gram matrix of a determinant-weighted row subset has an explicit Loewner upper bound, with equality exactly under an appropriate support hypothesis.",
+          "after": "The inverse Gram matrix of a determinant-weighted row subset has an explicit Loewner upper bound, with equality under full support."
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "row-volume-regression-error",
+      "fields": {
+        "notes": {
+          "before": "Proof audit for one right-hand side y: for a supported S and j outside S, det(X_S*X_S)|x_j*X_S^−1y_S−y_j|²=det([X,y]_(S+j)*[X,y]_(S+j)). Sum by T=S+j. Each (d+1)-row T is counted at most d+1 times, exactly d+1 under general position. Cauchy–Binet and det([X,y]*[X,y])=det(X*X)|| (I−P_X)y||² finish the bound. Sum over columns for Y; arbitrary y and Hermitian quadratic-form separation give the operator statement. The operator product is (I−H_S)*(I−H_S), not (I−H_S)^2: H_S is generally oblique. Exact-fit data and n=d give zero loss. Counterexample to unrestricted equality: X=[1;0], y=[0;1] gives expected loss 1, whereas (d+1) optimum loss is 2. This corrects the overstatement in Theorem 3.2 of 2510.02513v2.",
+          "after": "Proof audit for one right-hand side y: for a supported S and j outside S, det(X_S*X_S)|x_j*X_S^−1y_S−y_j|²=det([X,y]_(S+j)*[X,y]_(S+j)). Sum by T=S+j. Each (d+1)-row T is counted at most d+1 times, exactly d+1 under general position. Cauchy–Binet and det([X,y]*[X,y])=det(X*X)|| (I−P_X)y||² finish the bound. Sum over columns for Y; arbitrary y and Hermitian quadratic-form separation give the operator statement. The operator product is (I−H_S)*(I−H_S), not (I−H_S)^2: H_S is generally oblique. Exact-fit data and n=d give zero loss. Counterexample to unrestricted equality: X=[1;0], y=[0;1] gives expected loss 1, whereas (d+1) optimum loss is 2. This corrects the overstatement in Theorem 3.2 of 2510.02513v2. Prove the common fixed-input determinant-weighted residual moment lemma in Sketching/Sampling, then apply it in the LowRank interpolation and Solvers regression consumers. The related consumer card is not a permitted import of Solvers by LowRank."
+        },
+        "variants": {
+          "before": [],
+          "after": [
+            "adaptive-pivoting-projection-dpp"
+          ]
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "adaptive-pivoting-projection-dpp",
+      "fields": {
+        "notes": {
+          "before": "Independent realization proof: write M_t=(I−Π_t)Q* where Π_t projects onto the t selected columns of Q*. Because Q*Q=I_k, M_tM_t*=I−Π_t has trace k−t, so the displayed probabilities normalize and a positive pivot raises rank by one. Gram–Schmidt determinant multiplication gives the ordered path probability |det Q_S|²/k!; all k! orders of a nonsingular S are supported, giving the projection-DPP law. Apply the audited row-volume expectation/risk formulas columnwise. Zero leverage rows are never selected. The source states unconditional equality in its regression and interpolation formulas; the counterexample Q=[1;0], A=[0;1] disproves that. The inequality here is valid for every orthonormal Q; general position restores equality. The greedy pivoting rule on an arbitrary matrix is not claimed to sample its volume law.",
+          "after": "Independent realization proof: write M_t=(I−Π_t)Q* where Π_t projects onto the t selected columns of Q*. Because Q*Q=I_k, M_tM_t*=I−Π_t has trace k−t, so the displayed probabilities normalize and a positive pivot raises rank by one. Gram–Schmidt determinant multiplication gives the ordered path probability |det Q_S|²/k!; all k! orders of a nonsingular S are supported, giving the projection-DPP law. Apply the audited row-volume expectation/risk formulas columnwise. Zero leverage rows are never selected. The source states unconditional equality in its regression and interpolation formulas; the counterexample Q=[1;0], A=[0;1] disproves that. The inequality here is valid for every orthonormal Q; general position restores equality. The greedy pivoting rule on an arbitrary matrix is not claimed to sample its volume law. Prove the common fixed-input determinant-weighted residual moment lemma in Sketching/Sampling, then apply it in the LowRank interpolation and Solvers regression consumers. The related consumer card is not a permitted import of Solvers by LowRank."
+        },
+        "depends_on": {
+          "before": [
+            "volume-sampling",
+            "row-volume-pseudoinverse-unbiased",
+            "row-volume-regression-error",
+            "partial-cholesky-nystrom"
+          ],
+          "after": [
+            "volume-sampling",
+            "row-volume-pseudoinverse-unbiased",
+            "partial-cholesky-nystrom",
+            "row-volume-sampling-deletion-law"
+          ]
+        },
+        "variants": {
+          "before": [],
+          "after": [
+            "row-volume-regression-error"
+          ]
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "gaussian-proxy-eigenvalue-comparison",
+      "fields": {
+        "area": {
+          "before": "gaussian-extreme",
+          "after": "gaussian-comparison"
+        }
+      }
+    },
+    {
+      "collection": "results",
+      "id": "cauchy-transform-gaussian-universality",
+      "fields": {
+        "area": {
+          "before": "gaussian-extreme",
+          "after": "gaussian-comparison"
+        }
+      }
+    },
+    {
+      "collection": "sources",
+      "id": "pmm25",
+      "fields": {
+        "doi": {
+          "before": null,
+          "after": "10.1137/23M1619435"
+        }
+      }
+    },
+    {
+      "collection": "sources",
+      "id": "cemmp15",
+      "fields": {
+        "authors": {
+          "before": [
+            "M. B. Cohen",
+            "S. Elder",
+            "C. Musco",
+            "C. Musco",
+            "M. Persu"
+          ],
+          "after": [
+            "M. B. Cohen",
+            "S. Elder",
+            "Cameron Musco",
+            "Christopher Musco",
+            "M. Persu"
+          ]
+        }
+      }
+    },
+    {
+      "collection": "sources",
+      "id": "cmm17",
+      "fields": {
+        "authors": {
+          "before": [
+            "M. B. Cohen",
+            "C. Musco",
+            "C. Musco"
+          ],
+          "after": [
+            "M. B. Cohen",
+            "Cameron Musco",
+            "Christopher Musco"
+          ]
+        }
+      }
+    }
+  ],
+  "schema_documentation_change": "The layer-field description now correctly identifies deterministic Krylov as layer 1, matching STANDARDS and check_layers; this does not change the schema structure.",
+  "dependency_routing": "Removed unnecessary higher-layer leverage/Krylov prerequisites from deterministic matrix statements. Replaced the LowRank-to-Solvers prerequisite by a shared Sketching prerequisite and related-card links, with explicit implementation guidance for the common residual lemma.",
+  "historical_audit_scope": "The two preceding reports record their original research-pass snapshots and validation. This report supersedes their final placement/title/bibliography metadata where listed; all mathematical hypotheses, formulas and formalization statuses remain as audited. The word exactly in the inverse-moment overview was corrected to the sufficient full-support equality condition already stated by its conclusion.",
+  "validation": {
+    "status": "passed",
+    "checks": {
+      "surface": {
+        "exit_code": 0
+      },
+      "layers": {
+        "exit_code": 0
+      },
+      "names": {
+        "exit_code": 0
+      },
+      "sync": {
+        "exit_code": 0
+      },
+      "atlas": {
+        "exit_code": 0
+      },
+      "polynomial-scope": {
+        "exit_code": 0
+      },
+      "card-audit": {
+        "exit_code": 0
+      },
+      "unit": {
+        "exit_code": 0
+      },
+      "coverage": {
+        "exit_code": 0
+      },
+      "site": {
+        "exit_code": 0
+      },
+      "viewer": {
+        "exit_code": 0
+      },
+      "candidate-math": {
+        "exit_code": 0
+      },
+      "whitespace": {
+        "exit_code": 0
+      }
+    },
+    "unit_tests": 18,
+    "math_rendering": {
+      "candidate_cards": 92,
+      "expressions": 1283,
+      "failures": 0
+    },
+    "card_audit": {
+      "cards": 446,
+      "records": 454
+    },
+    "declaration_index_entries": 8683,
+    "preservation": {
+      "old_results": 354,
+      "original_statement_status_formalizations_unchanged": true,
+      "original_card_metadata_changes": {
+        "matrix-calculus-def": [
+          "area"
+        ],
+        "sylvester-separation-bound": [
+          "area"
+        ],
+        "sylvester-equation": [
+          "area"
+        ]
+      },
+      "lean_sources_generated_indexes_import_inventory_and_toolchain_unchanged": true,
+      "all_new_candidates_have_empty_formalizations": true,
+      "new_candidate_higher_layer_dependencies": 0
+    },
+    "coverage": {
+      "exit_code": 0,
+      "preexisting_status_warnings": 236,
+      "warning_records_identical_to_baseline": true,
+      "generated_book_reports_unchanged": true,
+      "note": "Passing reference validation does not resolve the existing hand-authored book-status discrepancies or unmatched source labels."
+    },
+    "lean_build": "Not run, as requested: this PR changes no Lean source, generated declaration index or toolchain input.",
+    "axiom_audit": {
+      "command": "lake env lean scripts/Audit.lean",
+      "exit_code": 0,
+      "provenance": "Fresh audit against existing compiled artifacts from an identical-source checkout; no Lean library rebuild.",
+      "compiled_checkout_commit": "d0364504d90f8d32e6bfd0eccd1ca72e26268886",
+      "baseline_and_compiled_checkout_tree": "8b0c7da1e0c3bf8721c40677df80343032b05246",
+      "output": "audited 16247 declarations (8561 public theorems) in [NLAlib]; 23 theorems depend on sorry: [NLAlib.cgRecurrence_r_eq_zero_of_krylovGrade_le,\n NLAlib.cgRecurrence_x_eq_of_krylovGrade_le,\n NLAlib.dotProduct_cgRecurrence_p_mulVec_eq_zero,\n NLAlib.dotProduct_cgRecurrence_r_eq_zero,\n NLAlib.dotProduct_cgRecurrence_r_eq_zero_of_mem,\n NLAlib.dotProduct_golubKahan_eq,\n NLAlib.golubKahanSucceeds_iff,\n NLAlib.isCGIterate_cgRecurrence,\n NLAlib.isGradedKrylovBasis_golubKahanU_V,\n NLAlib.isGradedKrylovBasis_lanczosRecurrence,\n NLAlib.lanczosAlpha_eq_alpha,\n NLAlib.lanczosBeta_eq_beta,\n NLAlib.lanczosBeta_eq_zero_iff,\n NLAlib.lanczosBeta_eq_zero_of_krylovGrade_le,\n NLAlib.lanczosBeta_pos,\n NLAlib.lanczosBeta_succ_eq_dotProduct,\n NLAlib.lanczosRecurrence_eq_arnoldiBasis,\n NLAlib.lanczosRecurrence_eq_zero_of_krylovGrade_le,\n NLAlib.partialCholeskyFactor_mul_transpose_eq_nystrom,\n NLAlib.partialCholeskyResidual_eq_sub_nystrom,\n NLAlib.range_qrAlgorithmQ_castLE_eq_subspaceIterate,\n NLAlib.span_cgRecurrence_p,\n NLAlib.span_cgRecurrence_r]\nOK: no axioms beyond propext / Classical.choice / Quot.sound (and sorryAx in scaffolds)\n",
+      "note": "The 23 sorry-dependent theorems are the pre-existing experimental inventory and remain excluded from the default import. This audit does not certify the unformalized candidate statements."
+    }
+  },
+  "viewer_review": {
+    "bug": "When an area acquired subsections, renderAreas omitted results assigned directly to its parent while counting them in the status bar.",
+    "previously_hidden_cards": {
+      "matrix": 5,
+      "estimation": 13,
+      "krylov": 8
+    },
+    "fix": "Render direct parent cards as General results alongside ordered subsections and recursively include deeper descendants exactly once. Status bars use visible cards and retain the full section total while filtered.",
+    "regression_test": "scripts/tests/viewer_areas.js",
+    "test_scope": "All 446 current cards, every status, priorities, application filtering, searches, combined filters and a mixed parent/child/grandchild fixture. In-memory mutations restoring the omission and stale filtered counts were both rejected.",
+    "browser_verification": {
+      "all_cards_displayed": 446,
+      "estimation": {
+        "displayed": 15,
+        "proved": 9,
+        "candidate": 6
+      },
+      "candidate_filter_estimation": {
+        "displayed": 6,
+        "section_total": 15
+      },
+      "restored_card_detail": "hutchinson-unbiased",
+      "schema_footer": "0.2, read from atlas data"
+    }
+  }
+}

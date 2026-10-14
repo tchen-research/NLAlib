@@ -369,24 +369,31 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   // ---------- area map ----------
   function renderAreas() {
     const el = document.getElementById('areas'); el.innerHTML = '';
-    const tops = A.areas.filter(a => !a.parent);
+    const tops = A.areas.filter(a => !a.parent).sort((a, b) => a.order - b.order);
     tops.forEach(top => {
-      const subs = A.areas.filter(a => a.parent === top.id);
-      const groups = subs.length ? subs : [top];
+      // A parent may have results of its own as well as populated subsections.
+      // Walk the whole subtree so adding a subsection never hides existing cards.
+      const groups = [];
+      function visit(area, names) {
+        groups.push({ area, label: names.join(' › ') });
+        A.areas.filter(a => a.parent === area.id).sort((a, b) => a.order - b.order)
+          .forEach(a => visit(a, names.concat(a.name)));
+      }
+      visit(top, []);
       const all = A.results.filter(r => topArea(r).id === top.id);
       const vis = all.filter(matches);
       if (!vis.length && (state.q || state.status.size || state.pri || state.hideapps)) return;
-      const sec = document.createElement('section'); sec.className = 'area';
-      const counts = STATUS.map(s => [s.id, all.filter(r => r.status === s.id).length]);
-      const total = all.length;
+      const sec = document.createElement('section'); sec.className = 'area'; sec.dataset.area = top.id;
+      const counts = STATUS.map(s => [s.id, vis.filter(r => r.status === s.id).length]);
+      const total = vis.length;
       sec.innerHTML = `<div class="area-head"><div><h2 style="margin-top:0">${esc(top.name)}${top.priority ? ` <span class="pill" style="vertical-align:middle;font-size:.7rem">${top.priority}</span>` : ''}</h2><p>${esc(top.summary)}</p></div>
-        <div><div class="eyebrow">Status of ${total} results</div><div class="stack">${counts.filter(c => c[1]).map(([s, n]) => `<span class="s-${s}" style="flex:${n}" title="${SG[s].label}: ${n}"></span>`).join('')}</div>
+        <div><div class="eyebrow">Status of ${total} results${total !== all.length ? ` shown · ${all.length} total` : ''}</div><div class="stack">${counts.filter(c => c[1]).map(([s, n]) => `<span class="s-${s}" style="flex:${n}" title="${SG[s].label}: ${n}"></span>`).join('')}</div>
         <div class="stack-lbl">${counts.filter(c => c[1]).map(([s, n]) => `${SG[s].glyph} ${n} ${SG[s].label.toLowerCase()}`).join(' · ')}</div></div></div>`;
       groups.forEach(g => {
-        const rows = vis.filter(r => r.area === g.id).sort((a, b) => indeg(b.id) - indeg(a.id) || a.title.localeCompare(b.title));
+        const rows = vis.filter(r => r.area === g.area.id).sort((a, b) => indeg(b.id) - indeg(a.id) || a.title.localeCompare(b.title));
         if (!rows.length) return;
         const row = document.createElement('div'); row.className = 'sub-row';
-        row.innerHTML = `<div class="name">${subs.length ? esc(g.name) : ''}</div><div class="chips"></div>`;
+        row.innerHTML = `<div class="name">${esc(g.label || (groups.length > 1 ? 'General results' : ''))}</div><div class="chips"></div>`;
         const chips = row.querySelector('.chips');
         rows.forEach(r => chips.appendChild(chip(r)));
         sec.appendChild(row);
@@ -649,7 +656,7 @@ kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--l
   });
   document.addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') { if (!document.getElementById('tab-graph').hidden && document.activeElement.tagName !== 'INPUT') fitGraph(); } if (e.key === 'Escape' && state.sel) select(state.sel); });
   renderSources(); renderLibs();
-  document.getElementById('foot').innerHTML = `Data: <code>atlas/atlas.json</code> (schema 0.1, updated ${A.updated_at}). ${A.results.length} results, ${A.sources.length} sources, ${A.libraries.length} Lean libraries. Status is the atlas's judgement of the statement as written: an external library proving a variant is recorded under “Lean” but does not change the status. Reuse counts are in-degrees of the atlas dependency graph, so they reflect the arguments catalogued here, not the literature. A link is proved when the consumer has a Lean proof in NLAlib (complete modulo named scaffolds) and the dependency is stated in NLAlib or assumed as a hypothesis; it says the implication is checked, not that either endpoint is.`;
+  document.getElementById('foot').innerHTML = `Data: <code>atlas/atlas.json</code> (schema ${esc(A.schema_version)}, updated ${A.updated_at}). ${A.results.length} results, ${A.sources.length} sources, ${A.libraries.length} Lean libraries. Status is the atlas's judgement of the statement as written: an external library proving a variant is recorded under “Lean” but does not change the status. Reuse counts are in-degrees of the atlas dependency graph, so they reflect the arguments catalogued here, not the literature. A link is proved when the consumer has a Lean proof in NLAlib (complete modulo named scaffolds) and the dependency is stated in NLAlib or assumed as a hypothesis; it says the implication is checked, not that either endpoint is.`;
   renderAll();
   function selectHash() {
     const h = (location.hash || '').slice(1);

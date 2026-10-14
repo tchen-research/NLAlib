@@ -1,5 +1,6 @@
 import NLAlib.ForMathlib.Algebra.BoundedPartialFractions
 import NLAlib.ForMathlib.Algebra.DiagonalSums
+import NLAlib.ForMathlib.Algebra.InsertionWords
 import NLAlib.ForMathlib.Algebra.InterlacingInterpolation
 import NLAlib.ForMathlib.Algebra.InterlacingWeights
 import NLAlib.ForMathlib.Algebra.Intervals

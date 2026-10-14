@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Functions.Basic
 import NLAlib.Matrix.Functions.CFCQuadratic
 import NLAlib.Matrix.Functions.CFCTrace
+import NLAlib.Matrix.Functions.CenteredWordBounds
 import NLAlib.Matrix.Functions.ComplexResolvent
 import NLAlib.Matrix.Functions.CoordinatePinching
 import NLAlib.Matrix.Functions.DiagonalCalculus
@@ -15,6 +16,8 @@ import NLAlib.Matrix.Functions.FunctionalCalculusEigenvalues
 import NLAlib.Matrix.Functions.GeneralizedKlein
 import NLAlib.Matrix.Functions.GoldenThompson
 import NLAlib.Matrix.Functions.HermitianCalculus
+import NLAlib.Matrix.Functions.HermitianMoments
+import NLAlib.Matrix.Functions.InsertionWordBounds
 import NLAlib.Matrix.Functions.IntrinsicDimension
 import NLAlib.Matrix.Functions.InverseCalculus
 import NLAlib.Matrix.Functions.JensenBlockCalculus
@@ -33,6 +36,7 @@ import NLAlib.Matrix.Functions.PerspectiveSqrtNormalization
 import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Functions.PolynomialSeries
+import NLAlib.Matrix.Functions.RankOneWords
 import NLAlib.Matrix.Functions.ReciprocalExponential
 import NLAlib.Matrix.Functions.TraceExpBounds
 import NLAlib.Matrix.Functions.TraceExpConvex

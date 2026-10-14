@@ -1,4 +1,7 @@
 import NLAlib.Probability.Moments.Comparison
+import NLAlib.Probability.Moments.Euclidean
+import NLAlib.Probability.Moments.FiniteWeighted
+import NLAlib.Probability.Moments.GaussianRadialization
 
 /-! # `Probability/Moments`
 

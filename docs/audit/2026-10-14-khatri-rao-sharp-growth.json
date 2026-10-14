@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-14",
+  "baseline_commit": "5ed3c1d2ec153575c23d65eb0c305c3adbde48bd",
+  "scope": "One new Khatri-Rao sharp-growth card and its reusable proof interfaces; all pre-existing human-authored cards are preserved.",
+  "source_url": "https://github.com/DiarHaidary/Results/blob/main/manuscripts/08-Khatri-Rao-Embeddings-and-Approximation/Khatri_Rao_Embeddings_and_Approximation_Focused.pdf",
+  "method": "Independent mathematical read-back of upper/lower contracts, probability laws, explicit witness geometry, constants and proof dependencies; Lean kernel validation is recorded separately.",
+  "counts": {
+    "new_cards": 1,
+    "reviewed_cards": 1
+  },
+  "validation": {
+    "status": "passed",
+    "build": "lake build NLAlib NLAlib.Experimental: completed successfully (5572 jobs)",
+    "trusted_audit": "audited 16372 declarations reachable through import NLAlib; no deferred or nonstandard axioms",
+    "complete_audit": "audited 16663 declarations (8740 public theorems); 23 existing sorry-dependent experimental theorems; no nonstandard axioms",
+    "focused_audit": "audited 6 sharp Khatri-Rao contracts; only propext, Classical.choice and Quot.sound; no deferred assumptions",
+    "linters": "0 errors in 9682 declarations plus 6690 automatically generated declarations",
+    "declaration_index": "8865 public NLAlib declarations and 370 external declarations extracted",
+    "atlas": "447 results in sync; new card proved with 15 sorry-free formalizations in a reviewed complete proof family",
+    "card_audit": "447/447 cards reviewed in 455 traceable records",
+    "existing_metadata": "All 446 pre-existing cards and every prior source record preserved exactly against 5ed3c1d2ec153575c23d65eb0c305c3adbde48bd",
+    "repository_checks": [
+      {
+        "check": "sync-check",
+        "exit_code": 0
+      },
+      {
+        "check": "layers",
+        "exit_code": 0
+      },
+      {
+        "check": "names",
+        "exit_code": 0
+      },
+      {
+        "check": "atlas",
+        "exit_code": 0
+      },
+      {
+        "check": "polynomial-scope",
+        "exit_code": 0
+      },
+      {
+        "check": "card-audit",
+        "exit_code": 0
+      },
+      {
+        "check": "unit-tests",
+        "exit_code": 0
+      },
+      {
+        "check": "import-surface",
+        "exit_code": 0
+      },
+      {
+        "check": "coverage",
+        "exit_code": 0
+      },
+      {
+        "check": "site",
+        "exit_code": 0
+      }
+    ],
+    "lean_examples_and_focused_audits": [
+      {
+        "file": "Examples/Downstream.lean",
+        "strict": false,
+        "exit_code": 0
+      },
+      {
+        "file": "Examples/Probability.lean",
+        "strict": false,
+        "exit_code": 0
+      },
+      {
+        "file": "Examples/PolynomialApproximation.lean",
+        "strict": false,
+        "exit_code": 0
+      },
+      {
+        "file": "Examples/KhatriRao.lean",
+        "strict": false,
+        "exit_code": 0
+      },
+      {
+        "file": "scripts/AuditRitz.lean",
+        "strict": false,
+        "exit_code": 0
+      },
+      {
+        "file": "scripts/AuditSubspaces.lean",
+        "strict": false,
+        "exit_code": 0
+      },
+      {
+        "file": "scripts/AuditGaussianInverse.lean",
+        "strict": true,
+        "exit_code": 0
+      },
+      {
+        "file": "scripts/AuditNewProofs.lean",
+        "strict": true,
+        "exit_code": 0
+      },
+      {
+        "file": "scripts/AuditKhatriRao.lean",
+        "strict": true,
+        "exit_code": 0
+      }
+    ],
+    "mathematical_review": "Independent integrated read-back passed: upper assumptions, lower law and coordinate identification, sharp growth, constants, atlas coverage and layering."
+  },
+  "records": [
+    {
+      "id": "khatri-rao-sharp-growth",
+      "audit_phase": "final",
+      "baseline_audit": {
+        "id": "khatri-rao-sharp-growth",
+        "type": "New mathematical target requested by the user; no prior proof-status claim.",
+        "status": "planned",
+        "informal": "For fixed tensor order $d\\ge2$, accuracy and confidence, the worst-case embedding cost of independent isotropic sub-Gaussian tensor-product probes has rank order $r\\log^{d-1}(er)$ for factor classes containing the independent-sign witnesses. The upper guarantee is uniform over fixed subspaces and admissible mode dimensions. Explicit independent-sign constructions give the matching obstruction.",
+        "hypotheses": [
+          "$d\\ge2$, mode dimensions $n_1,\\ldots,n_d$, $r\\ge1$ and a deterministic isometry $U:\\mathbb R^r\\to\\bigotimes_j\\mathbb R^{n_j}$",
+          "The $m$ probe rows are iid tensor products $z_i=\\bigotimes_jg_i^{(j)}$; factors are independent and isotropic, with arbitrary coordinate dependence within each factor",
+          "$K>0$ and $\\mathbb E\\exp(\\langle u,g^{(j)}\\rangle^2/K^2)\\le2$ for every unit $u$ and every factor",
+          "$0<\\varepsilon,\\delta<1$, $t=\\log(4r/\\delta)$ and $\\Pi_{i,:}=m^{-1/2}z_i^\\top$"
+        ],
+        "conclusion": "There is a constant $C_{d,K}>0$ such that $m\\ge C_{d,K}[rt/\\varepsilon^2+(rt^{d-1}+t^d)/\\varepsilon]$ implies $\\mathbb P\\{\\Pi\\text{ fails to embed }\\operatorname{range}(U)\\text{ with squared-norm distortion }\\varepsilon\\}\\le\\delta$. Conversely, put $k=d-1$, $h=\\lfloor\\log r/(2k\\log2)\\rfloor$ and $c_d=[2(4k\\log2)^k]^{-1}$. For $r\\ge2^{4k}$ the explicit independent-sign construction with mode dimensions $(r,h,\\ldots,h)$ has failure probability at least $1-\\exp(-\\sqrt r)$ for every integer $1\\le m\\le c_dr(\\log r)^k$ and every $\\varepsilon<1$. Thus the fixed-parameter rank order is sharp; the lower claim concerns these constructed subspaces, not every subspace or every factor law."
+      },
+      "source_labels": [
+        {
+          "source": "heidary26-khatri-rao",
+          "label": "Theorem 2.1 (core:thm:ose); Proposition lower:prop:rademacher; Appendix closed:thm:moment"
+        }
+      ],
+      "readback": "The upper theorem quantifies actual independent probability laws on each vector factor, assumes coordinate second moments equal to the identity and the lower Lebesgue exponential-square integral bound on every unit direction, and concludes the actual iid normalized tensor sketch fails IsSubspaceEmbedding with probability at most delta. It takes no moment, one-step recursion, covariance tail or missing-proof hypothesis. The frame is deterministic and orthonormal. Its constant depends only on order and K; max(1,K) enlarges only internal coefficients. The full sample budget has variance r*t/epsilon^2 and large-row (r*t^(d-1)+t^d)/epsilon, t=log(4r/delta). A separate proved arithmetic and probability corollary yields r(1+log r)^(d-1) growth at fixed parameters. The Rademacher specialization discharges all factor hypotheses at K=10, a sufficient unoptimized parameter. The lower construction has first mode r and common modes h=floor(log r/(2(d-1)log 2)); its explicit frame has orthonormal columns and does not depend on sample width. Coordinate bijectivity, the literal probe identity and measure-preserving factor regrouping identify it with the same independent tensor construction. For r>=2^(4(d-1)), every positive width up to r(log r)^(d-1)/[2(4(d-1)log 2)^(d-1)] has failure at least 1-exp(-sqrt r), at every distortion below one. The rank-deficient width branch is included. Sharpness applies to classes containing this sign witness, not every law or every K>0. The source Gaussian/spherical lower variants and approximation results are not claims of this card.",
+      "evidence": [
+        "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le",
+        "NLAlib.khatriRaoSharpEmbeddingConstant_pos",
+        "NLAlib.khatriRao_budget_le_fixedParameterConstant_mul_rank_log_pow",
+        "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le_of_rank_log_budget",
+        "NLAlib.khatriRaoFixedParameterConstant_pos",
+        "NLAlib.lintegral_exp_sq_dotProduct_rademacherVector_le_two",
+        "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_rademacher_le",
+        "NLAlib.hasOrthonormalCols_khatriRaoCommonIsometry",
+        "NLAlib.bijective_khatriRaoCommonIndex",
+        "NLAlib.measurePreserving_khatriRaoCommonFactors",
+        "NLAlib.khatriRaoCommonRow_eq_khatriRaoProbe",
+        "NLAlib.khatriRaoLowerMode_bounds",
+        "NLAlib.khatriRaoLowerConstant_pos",
+        "NLAlib.one_sub_exp_neg_sqrt_le_measureReal_not_isSubspaceEmbedding_of_le_lower_growth"
+      ],
+      "formalization_status": "Complete reviewed proof family: 15 indexed, sorry-free formalizations; all six main contracts pass the focused axiom audit and the default library audit.",
+      "review_group": "sketching",
+      "proof_route": "Finite centered rank-one moment comparison; coarser Cauchy-Schwarz radialization uses additional finite moments supplied by the unchanged exponential-square factor hypothesis. No external covariance theorem is assumed."
+    }
+  ]
+}

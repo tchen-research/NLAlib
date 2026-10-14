@@ -2226,6 +2226,226 @@
   "sorry":
   false,
   "signature":
+  "MeasureTheory.HasFiniteNatMoments.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] (f : Ω → ℝ) (μ : MeasureTheory.Measure Ω) :\n  Prop",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  19,
+  "kind":
+  "def",
+  "doc":
+  "A real random variable has finite natural moments if every natural power is integrable. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.add.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  {f g : Ω → ℝ} (hf : MeasureTheory.HasFiniteNatMoments f μ) (hg : MeasureTheory.HasFiniteNatMoments g μ) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => f ω + g ω) μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.add",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  58,
+  "kind":
+  "theorem",
+  "doc":
+  "Sums preserve finiteness of all natural moments. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.comp_measurePreserving.{u_1, u_2} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} {f : Ω → ℝ} {Ω' : Type u_2} [MeasurableSpace Ω'] {ν : MeasureTheory.Measure Ω'}\n  (hf : MeasureTheory.HasFiniteNatMoments f μ) {T : Ω' → Ω} (hT : MeasureTheory.MeasurePreserving T ν μ) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => f (T ω)) ν",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.comp_measurePreserving",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  87,
+  "kind":
+  "theorem",
+  "doc":
+  "Measure-preserving substitution preserves finiteness of all natural moments. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.const_mul.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  {f : Ω → ℝ} (hf : MeasureTheory.HasFiniteNatMoments f μ) (c : ℝ) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => c * f ω) μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.const_mul",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  52,
+  "kind":
+  "theorem",
+  "doc":
+  "Multiplication by a scalar preserves finiteness of all natural moments. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.integrable.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  {f : Ω → ℝ} (hf : MeasureTheory.HasFiniteNatMoments f μ) : MeasureTheory.Integrable f μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.integrable",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  26,
+  "kind":
+  "theorem",
+  "doc":
+  "Every finite-natural-moment variable is integrable. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.matrix_pow_entry.{u_1, u_2} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsFiniteMeasure μ] {ι : Type u_2} [Fintype ι] [DecidableEq ι]\n  {A : Ω → Matrix ι ι ℝ} (hA : ∀ (i j : ι), MeasureTheory.HasFiniteNatMoments (fun ω => A ω i j) μ) (p : ℕ) (i j : ι) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => (A ω ^ p) i j) μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.matrix_pow_entry",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "Every entry of a matrix power has finite natural moments when all entries do. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.mul.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  {f g : Ω → ℝ} (hf : MeasureTheory.HasFiniteNatMoments f μ) (hg : MeasureTheory.HasFiniteNatMoments g μ) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => f ω * g ω) μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.mul",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  43,
+  "kind":
+  "theorem",
+  "doc":
+  "Products preserve finiteness of all natural moments. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.pow.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω} {f : Ω → ℝ}\n  (hf : MeasureTheory.HasFiniteNatMoments f μ) (p : ℕ) : MeasureTheory.HasFiniteNatMoments (fun ω => f ω ^ p) μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.pow",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  30,
+  "kind":
+  "theorem",
+  "doc":
+  "A power of a finite-natural-moment variable has finite natural moments. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.sum.{u_1, u_2} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsFiniteMeasure μ] {ι : Type u_2} (s : Finset ι) {f : ι → Ω → ℝ}\n  (hf : ∀ i ∈ s, MeasureTheory.HasFiniteNatMoments (f i) μ) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => ∑ i ∈ s, f i ω) μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.sum",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  74,
+  "kind":
+  "theorem",
+  "doc":
+  "Finite sums preserve finiteness of all natural moments. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.HasFiniteNatMoments.trace_matrix_pow.{u_1, u_2} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsFiniteMeasure μ] {ι : Type u_2} [Fintype ι] [DecidableEq ι]\n  {A : Ω → Matrix ι ι ℝ} (hA : ∀ (i j : ι), MeasureTheory.HasFiniteNatMoments (fun ω => A ω i j) μ) (p : ℕ) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => (A ω ^ p).trace) μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.trace_matrix_pow",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  105,
+  "kind":
+  "theorem",
+  "doc":
+  "Traces of matrix powers have finite natural moments when all entries do. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.Integrable.sqrt_mul_sqrt.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  {f g : Ω → ℝ} (hf : MeasureTheory.Integrable f μ) (hg : MeasureTheory.Integrable g μ) (hf0 : ∀ (ω : Ω), 0 ≤ f ω)\n  (hg0 : ∀ (ω : Ω), 0 ≤ g ω) : MeasureTheory.Integrable (fun ω => √(f ω) * √(g ω)) μ",
+  "name":
+  "MeasureTheory.Integrable.sqrt_mul_sqrt",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.SqrtIntegral",
+  "line":
+  16,
+  "kind":
+  "theorem",
+  "doc":
+  "The product of square roots of two nonnegative integrable functions is integrable. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "MeasureTheory.ae_condExp_le_condExp_of_ae_le.{u_1, u_2} {Ω : Type u_1} {n : Type u_2} {m mΩ : MeasurableSpace Ω}\n  [Fintype n] [DecidableEq n] {μ : MeasureTheory.Measure Ω} (hm : m ≤ mΩ) [MeasureTheory.SigmaFinite (μ.trim hm)]\n  {X Y : Ω → Matrix n n ℂ} (hX : MeasureTheory.Integrable X μ) (hY : MeasureTheory.Integrable Y μ) (hXY : X ≤ᵐ[μ] Y) :\n  μ[X | m] ≤ᵐ[μ] μ[Y | m]",
   "name":
   "MeasureTheory.ae_condExp_le_condExp_of_ae_le",
@@ -2357,6 +2577,26 @@
   "theorem",
   "doc":
   "The weighted integral mean-value theorem also permits a nonpositive weight, by\nnegating the integrand and weight together. This gives the right-Radau and Lobatto\nderivative remainders with their original negative nodal factors. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.hasFiniteNatMoments_const.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsFiniteMeasure μ] (c : ℝ) : MeasureTheory.HasFiniteNatMoments (fun x => c) μ",
+  "name":
+  "MeasureTheory.hasFiniteNatMoments_const",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "Constant variables have finite natural moments on a finite measure space. ",
   "atlas_partial":
   [],
   "atlas":
@@ -2757,6 +2997,26 @@
   "theorem",
   "doc":
   "A nonnegative variable with tail `P{f > t} ≤ exp(-t/2)` has second moment at most `8`\n(Vershynin 2018, Lemma 1.2.1). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "MeasureTheory.integral_sqrt_mul_sqrt_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  {f g : Ω → ℝ} (hf : MeasureTheory.Integrable f μ) (hg : MeasureTheory.Integrable g μ) (hf0 : ∀ (ω : Ω), 0 ≤ f ω)\n  (hg0 : ∀ (ω : Ω), 0 ≤ g ω) : ∫ (ω : Ω), √(f ω) * √(g ω) ∂μ ≤ √((∫ (ω : Ω), f ω ∂μ) * ∫ (ω : Ω), g ω ∂μ)",
+  "name":
+  "MeasureTheory.integral_sqrt_mul_sqrt_le",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.SqrtIntegral",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "Cauchy–Schwarz bounds an integral of a square-root product by the square root of the\nproduct of its two integrals. ",
   "atlas_partial":
   [],
   "atlas":
@@ -9831,6 +10091,27 @@
   [],
   "atlas":
   ["ose-def"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.IsSubspaceEmbedding"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsSubspaceEmbedding.card_le.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} {r : Type u_3} [Fintype m] [Fintype n]\n  [Fintype r] [DecidableEq r] {S : Matrix m n ℝ} {U : Matrix n r ℝ} {ε : ℝ} (h : NLAlib.IsSubspaceEmbedding S U ε)\n  (hU : NLAlib.HasOrthonormalCols U) (hε : ε < 1) : Fintype.card r ≤ Fintype.card m",
+  "name":
+  "NLAlib.IsSubspaceEmbedding.card_le",
+  "module":
+  "NLAlib.Sketching.Properties.SubspaceEmbedding.Dimension",
+  "line":
+  17,
+  "kind":
+  "theorem",
+  "doc":
+  "A subspace embedding at distortion below one has at least as many rows as orthonormal\ncolumns in the embedded space. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.IsSubspaceEmbedding"],
   "sorry":
@@ -54832,6 +55113,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.abs_dotProduct_pow_mulVec_le_sum_abs_eigenvalues_pow.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  {A : Matrix ι ι ℝ} (hA : A.IsHermitian) (y : ι → ℝ) (k : ℕ) :\n  |y ⬝ᵥ (A ^ k).mulVec y| ≤ ∑ i, ((hA.eigenvectorBasis i).ofLp ⬝ᵥ y) ^ 2 * |hA.eigenvalues i| ^ k",
+  "name":
+  "NLAlib.abs_dotProduct_pow_mulVec_le_sum_abs_eigenvalues_pow",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneWords",
+  "line":
+  79,
+  "kind":
+  "theorem",
+  "doc":
+  "Absolute quadratic forms of powers are bounded by the corresponding\nmoments of the absolute eigenvalues, retaining the test vector weights. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.quadForm"],
   "sorry":
   false,
@@ -57605,6 +57906,67 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.abs_trace_insertionWord_vecMulVec_le.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {A : Matrix ι ι ℝ}\n  (hA : A.IsHermitian) (y : ι → ℝ) (w : List Bool) (hw : 0 < List.count true w) :\n  |(NLAlib.insertionWord A (Matrix.vecMulVec y y) w).trace| ≤\n    (y ⬝ᵥ y) ^ (List.count true w - 1) * y ⬝ᵥ (cfc (fun x => |x| ^ List.count false w) A).mulVec y",
+  "name":
+  "NLAlib.abs_trace_insertionWord_vecMulVec_le",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  115,
+  "kind":
+  "theorem",
+  "doc":
+  "The trace of any insertion word with rank-one positive marked factor\nis bounded by one absolute spectral moment; all insertion positions have\nthe same bound. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.abs_trace_insertionWord_vecMulVec_le_trace_mul_pow.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  {A : Matrix ι ι ℝ} (hA : A.IsHermitian) (y : ι → ℝ) (w : List Bool) :\n  |(NLAlib.insertionWord A (Matrix.vecMulVec y y) w).trace| ≤\n    (cfc (fun x => |x| ^ List.count false w) A * Matrix.vecMulVec y y ^ List.count true w).trace",
+  "name":
+  "NLAlib.abs_trace_insertionWord_vecMulVec_le_trace_mul_pow",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  129,
+  "kind":
+  "theorem",
+  "doc":
+  "The canonical positive trace moment bounds every rank-one insertion\nword, including the zero-insertion case. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.subInsertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.abs_trace_insertionWord_vecMulVec_sub_one_le_sum.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  {A : Matrix ι ι ℝ} (hA : A.IsHermitian) (y : ι → ℝ) (w : List Bool) :\n  |(NLAlib.insertionWord A (Matrix.vecMulVec y y - 1) w).trace| ≤\n    (List.map (fun v => (cfc (fun x => |x| ^ List.count false w) A * Matrix.vecMulVec y y ^ List.count true v.2).trace)\n        (NLAlib.subInsertionWords w)).sum",
+  "name":
+  "NLAlib.abs_trace_insertionWord_vecMulVec_sub_one_le_sum",
+  "module":
+  "NLAlib.Matrix.Functions.CenteredWordBounds",
+  "line":
+  76,
+  "kind":
+  "theorem",
+  "doc":
+  "Expanding a centered rank-one word and taking absolute values keeps\nthe absolute spectral factor and every rank-one moment. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.specNorm"],
   "sorry":
   false,
@@ -57620,6 +57982,26 @@
   "theorem",
   "doc":
   "The absolute trace of a real square matrix is bounded by its dimension times its\nspectral norm. This includes empty matrices. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.abs_trace_pow_le_trace_cfc_abs_pow.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {A : Matrix ι ι ℝ}\n  (hA : A.IsHermitian) (k : ℕ) : |(A ^ k).trace| ≤ (cfc (fun x => |x| ^ k) A).trace",
+  "name":
+  "NLAlib.abs_trace_pow_le_trace_cfc_abs_pow",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  106,
+  "kind":
+  "theorem",
+  "doc":
+  "The absolute trace of a real symmetric power is at most its\nabsolute spectral trace moment. ",
   "atlas_partial":
   [],
   "atlas":
@@ -57641,6 +58023,26 @@
   "theorem",
   "doc":
   "A trace power-product with two copies of the same direction is bounded by\nspectral powers times the squared Frobenius direction size. Source: Frobenius\nCauchy--Schwarz; atlas wishart-lambda-min-tail (Hessian growth helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.abs_trace_prod_pow_mul_vecMulVec_le.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {A : Matrix ι ι ℝ}\n  (hA : A.IsHermitian) (y : ι → ℝ) (ks : List ℕ) (hne : ks ≠ []) :\n  |(List.map (fun k => A ^ k * Matrix.vecMulVec y y) ks).prod.trace| ≤\n    (y ⬝ᵥ y) ^ (ks.length - 1) * y ⬝ᵥ (cfc (fun x => |x| ^ ks.sum) A).mulVec y",
+  "name":
+  "NLAlib.abs_trace_prod_pow_mul_vecMulVec_le",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneWords",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "A nonempty cyclic word with real rank-one insertions is bounded by\none absolute spectral moment and a power of the rank-one trace.\nThis is the direction-preserving estimate for higher insertions in the\nfinite-moment Khatri--Rao covariance proof. ",
   "atlas_partial":
   [],
   "atlas":
@@ -60288,6 +60690,27 @@
   "atlas":
   ["recurrence-coefficient-bounds"]},
  {"uses":
+  ["NLAlib.khatriRaoCommonDimensions",
+   "NLAlib.khatriRaoCommonIndex"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.bijective_khatriRaoCommonIndex (r h k : ℕ) : Function.Bijective NLAlib.khatriRaoCommonIndex",
+  "name":
+  "NLAlib.bijective_khatriRaoCommonIndex",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "The paired and dependent multi-index coordinates describe exactly the same tensor\nambient space.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -61997,6 +62420,26 @@
   "theorem",
   "doc":
   "Source-transport helper `centeredQuadraticForm_eq_diagonal_add_offDiagonal` for Hanson–Wright.\nAtlas `hanson-wright` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.centeredRankOneCovariance {r : ℕ} (y : Fin r → ℝ) : Matrix (Fin r) (Fin r) ℝ",
+  "name":
+  "NLAlib.centeredRankOneCovariance",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  24,
+  "kind":
+  "def",
+  "doc":
+  "The centered rank-one covariance matrix of a vector sample. ",
   "atlas_partial":
   [],
   "atlas":
@@ -65419,6 +65862,26 @@
   "theorem",
   "doc":
   "The trailing block of a positive-diagonal factor is the Cholesky factor\nof the Schur complement. Higham, Theorem 10.1; supports\n`cholesky-decomposition`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.choose_mul_factorial_le_mul_pow {p q k : ℕ} (hpq : p ≤ q) :\n  (2 * p).choose (k + 2) * (k + 2).factorial ≤ 2 * p * (2 * q) ^ (k + 1)",
+  "name":
+  "NLAlib.choose_mul_factorial_le_mul_pow",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  57,
+  "kind":
+  "theorem",
+  "doc":
+  "The factorial binomial coefficient is bounded using the terminal moment order.\nSource: descending factorial bounded by a power.\nAtlas: `khatri-rao-sharp-growth`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -70341,6 +70804,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.continuous_khatriRaoProbe {d : ℕ} {n : Fin d → ℕ} : Continuous NLAlib.khatriRaoProbe",
+  "name":
+  "NLAlib.continuous_khatriRaoProbe",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  30,
+  "kind":
+  "theorem",
+  "doc":
+  "Each tensor-product coordinate is a continuous polynomial in the factors. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.linForm"],
   "sorry":
   false,
@@ -71812,6 +72295,46 @@
   "theorem",
   "doc":
   "An orthonormal frame removes the identity contribution from the embedded\nGram matrix. Source: manuscript `sh:count-hollow`; supports `sparse-ose`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.count_false_add_count_true_eq_length (w : List Bool) : List.count false w + List.count true w = w.length",
+  "name":
+  "NLAlib.count_false_add_count_true_eq_length",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "The two Boolean counts add up to the length of the word. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.subInsertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.counts_of_mem_subInsertionWords {w : List Bool} {v : ℕ × List Bool} (hv : v ∈ NLAlib.subInsertionWords w) :\n  List.count false v.2 = List.count false w ∧ List.count true v.2 + v.1 = List.count true w",
+  "name":
+  "NLAlib.counts_of_mem_subInsertionWords",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  135,
+  "kind":
+  "theorem",
+  "doc":
+  "Deleting marked positions preserves every unmarked position and\naccounts for all the original marks. ",
   "atlas_partial":
   [],
   "atlas":
@@ -75778,6 +76301,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.div_trace_cfc_abs_pow_le_sqrt_div_trace_even_pow.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  {A : Matrix ι ι ℝ} (hA : A.IsHermitian) (k : ℕ) {c : ℝ} (hc : 0 < c) :\n  (cfc (fun x => |x| ^ k) A).trace / c ≤ √((A ^ (2 * (k / 2))).trace / c) * √((A ^ (2 * ((k + 1) / 2))).trace / c)",
+  "name":
+  "NLAlib.div_trace_cfc_abs_pow_le_sqrt_div_trace_even_pow",
+  "module":
+  "NLAlib.Matrix.Functions.HermitianMoments",
+  "line":
+  43,
+  "kind":
+  "theorem",
+  "doc":
+  "Dividing all trace moments by the same positive mass preserves spectral\nCauchy–Schwarz interpolation. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.HasDividedPolynomialMoments"],
   "sorry":
   false,
@@ -76492,6 +77035,26 @@
   "atlas":
   ["golub-kahan-bidiagonalization",
    "golub-kahan-recurrence"]},
+ {"uses":
+  ["NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.dotProduct_khatriRaoProbe_cons {d : ℕ} {n : Fin (d + 1) → ℕ} (a : ((j : Fin (d + 1)) → Fin (n j)) → ℝ)\n  (g₀ : Fin (n 0) → ℝ) (g : (j : Fin d) → Fin (n j.succ) → ℝ) :\n  a ⬝ᵥ NLAlib.khatriRaoProbe (Fin.cons g₀ g) = (fun i => ∑ b, a (Fin.cons i b) * NLAlib.khatriRaoProbe g b) ⬝ᵥ g₀",
+  "name":
+  "NLAlib.dotProduct_khatriRaoProbe_cons",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  41,
+  "kind":
+  "theorem",
+  "doc":
+  "Splitting off the first mode turns a tensor contraction into a linear\nform in its first vector factor. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.moorePenroseInverse"],
   "sorry":
@@ -81393,6 +81956,46 @@
   "def",
   "doc":
   "The source's filter `b_k(x)=U_{2k}(sqrt(x))/(2k+1)`, as a polynomial.\nSource: Kuczyński–Woźniakowski (1992) [`kw92`], §3. Helper for `random-start-power`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.evenMomentInterpolation (u : ℕ → ℝ) (k : ℕ) : ℝ",
+  "name":
+  "NLAlib.evenMomentInterpolation",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  23,
+  "kind":
+  "def",
+  "doc":
+  "Cauchy--Schwarz interpolation between neighboring even moments.\nSource: Heidary, Appendix `closed:thm:moment`.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.evenMomentInterpolation"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.evenMomentInterpolation_le_pow {u : ℕ → ℝ} {q k : ℕ} {x : ℝ} (hu : ∀ (p : ℕ), 0 ≤ u p) (hx : 0 ≤ x)\n  (hk : k ≤ 2 * q) (hbound : ∀ p ≤ q, u p ≤ x ^ (2 * p)) : NLAlib.evenMomentInterpolation u k ≤ x ^ k",
+  "name":
+  "NLAlib.evenMomentInterpolation_le_pow",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "A common even-power barrier bounds the interpolated odd powers as well.\nSource: Cauchy--Schwarz and monotonicity of the square root.\nAtlas: `khatri-rao-sharp-growth`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -88995,6 +89598,26 @@
   "atlas":
   ["ky-fan-maximum-principle"]},
  {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_trace_insertionWord_eq_prod_pow_mul.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (A X : Matrix ι ι ℝ)\n  (w : List Bool) (hw : 0 < List.count true w) :\n  ∃ ks,\n    ks ≠ [] ∧\n      ks.length = List.count true w ∧\n        ks.sum = List.count false w ∧ (NLAlib.insertionWord A X w).trace = (List.map (fun k => A ^ k * X) ks).prod.trace",
+  "name":
+  "NLAlib.exists_trace_insertionWord_eq_prod_pow_mul",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  71,
+  "kind":
+  "theorem",
+  "doc":
+  "A word containing a marked factor has the same trace as a nonempty\ncyclic product of powers followed by marked factors. The exponents sum\nto its number of unmarked factors. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.HasOrthonormalCols",
    "NLAlib.kyFanNorm"],
   "sorry":
@@ -90221,6 +90844,87 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.gaussianEvenMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.factorial_le_gaussianEvenMoment (p : ℕ) : ↑p.factorial ≤ NLAlib.gaussianEvenMoment p",
+  "name":
+  "NLAlib.factorial_le_gaussianEvenMoment",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "Scalar Gaussian even moments dominate the ordinary factorial.\nSource: comparison of the product factors. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.factorial_le_succ_pow_pred (n : ℕ) : n.factorial ≤ (n + 1) ^ (n - 1)",
+  "name":
+  "NLAlib.factorial_le_succ_pow_pred",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FactorialMomentBounds",
+  "line":
+  27,
+  "kind":
+  "theorem",
+  "doc":
+  "Keeping the initial unit factor saves one power in an elementary factorial bound.\nSource: comparison of each remaining factor with `n+1`.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianRadialMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.factorial_mul_gaussianRadialMoment_div_gaussianEvenMoment_le_sq {r k d : ℕ} (hd : 1 ≤ d) :\n  4 ^ d * (2 * ↑(2 * k).factorial) ^ d * NLAlib.gaussianRadialMoment r (2 * k) / NLAlib.gaussianEvenMoment (2 * k) ≤\n    (4 ^ d * 2 ^ (k * (d - 1)) * ↑k.factorial ^ (d - 1) * (↑r + 4 * (↑k + 1)) ^ k) ^ 2",
+  "name":
+  "NLAlib.factorial_mul_gaussianRadialMoment_div_gaussianEvenMoment_le_sq",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  102,
+  "kind":
+  "theorem",
+  "doc":
+  "The Gaussian divisor saves one factorial order in a radial covariance budget.\nSource: Gaussian averaging and the central binomial estimate.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.factorial_radial_coefficient_le {r p d : ℕ} (hr : 1 ≤ r) (hp : 2 ≤ p) (hd : 2 ≤ d) :\n  2 * 4 ^ d * 2 ^ ((p - 1) * (d - 1)) * (p - 1).factorial ^ (d - 1) * (r + 4 * p) ^ (p - 1) ≤\n    p.factorial * 2 ^ (3 * d + 4) * r * (2 ^ (d - 1) * p ^ (d - 2) * (r + 4 * p)) ^ (p - 2)",
+  "name":
+  "NLAlib.factorial_radial_coefficient_le",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FactorialMomentBounds",
+  "line":
+  44,
+  "kind":
+  "theorem",
+  "doc":
+  "A direction-preserving radial budget fits a factorial envelope with explicit\ngeometric constants. Source: elementary factorial and binomial comparisons.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -90236,6 +90940,26 @@
   "theorem",
   "doc":
   "The factorial estimate `(2m)! / m! ≤ (2m + 1)ᵐ`, used to sum the square-exponential moment\nseries. Atlas `hanson-wright` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.factorial_two_mul_le_four_pow_mul_factorial_sq (n : ℕ) : (2 * n).factorial ≤ 4 ^ n * n.factorial ^ 2",
+  "name":
+  "NLAlib.factorial_two_mul_le_four_pow_mul_factorial_sq",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FactorialMomentBounds",
+  "line":
+  15,
+  "kind":
+  "theorem",
+  "doc":
+  "The central binomial coefficient bounds the doubled factorial.\nSource: the binomial sum at one. Atlas: `khatri-rao-sharp-growth`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -90919,6 +91643,66 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.finiteMomentBarrier (q : ℕ) (ν R t : ℝ) : ℝ",
+  "name":
+  "NLAlib.finiteMomentBarrier",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  124,
+  "kind":
+  "def",
+  "doc":
+  "A terminal-order square-root plus linear barrier for factorial recurrences.\nThe shift by one removes the square-root derivative singularity at the origin.\nSource: Heidary, Appendix `closed:thm:moment`.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.finiteMomentBarrier"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.finiteMomentBarrier_le_sqrt_add_mul {ν R : ℝ} {q m : ℕ} (hν : 0 ≤ ν) (hm : 1 ≤ m) :\n  NLAlib.finiteMomentBarrier q ν R ↑m ≤ 2 * √(↑q * ν * ↑m) + 2 * ↑q * R",
+  "name":
+  "NLAlib.finiteMomentBarrier_le_sqrt_add_mul",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  247,
+  "kind":
+  "theorem",
+  "doc":
+  "At a positive integer time the shifted barrier has the usual\n`2 √(q ν m) + 2 q R` form. Source: the terminal-order finite recurrence comparison.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.finiteMomentBarrier"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.finiteMomentBarrier_mono {q : ℕ} {ν R : ℝ} (hν : 0 ≤ ν) : Monotone (NLAlib.finiteMomentBarrier q ν R)",
+  "name":
+  "NLAlib.finiteMomentBarrier_mono",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  131,
+  "kind":
+  "theorem",
+  "doc":
+  "The factorial recurrence barrier increases with time.\nSource: monotonicity of the square root.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.finiteMomentFunctional.{u_1} {𝕜 : Type u_1} [Field 𝕜] {d : ℕ} (m : Fin d → 𝕜) : Polynomial 𝕜 →ₗ[𝕜] 𝕜",
   "name":
   "NLAlib.finiteMomentFunctional",
@@ -90970,6 +91754,67 @@
   "theorem",
   "doc":
   "Truncating moments preserves every pairing below the truncation degree. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.finiteMomentUpdate (ν R : ℝ) (u : ℕ → ℝ) (p : ℕ) : ℝ",
+  "name":
+  "NLAlib.finiteMomentUpdate",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  29,
+  "kind":
+  "def",
+  "doc":
+  "The factorial update for even moments, with variance `ν` and radius `R`.\nSource: Heidary, equation `closed:eq:update`.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.finiteMomentUpdate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.finiteMomentUpdate_le {ν R x : ℝ} {u : ℕ → ℝ} {p q : ℕ} (hν : 0 ≤ ν) (hR : 0 ≤ R) (hp : 1 ≤ p) (hpq : p ≤ q)\n  (hx : 2 * ↑q * R < x) (hu : ∀ (i : ℕ), 0 ≤ u i) (hbound : ∀ i ≤ q, u i ≤ x ^ (2 * i)) :\n  NLAlib.finiteMomentUpdate ν R u p ≤ 2 * ↑p * x ^ (2 * p - 1) * (↑q * ν / (x - 2 * ↑q * R))",
+  "name":
+  "NLAlib.finiteMomentUpdate_le",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  78,
+  "kind":
+  "theorem",
+  "doc":
+  "The factorial update is bounded by the derivative of a common power barrier.\nSource: Heidary, Appendix `closed:thm:moment`, using a coarser terminal-order\nbarrier instead of Gaussian pairing coefficients.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.finiteMomentBarrier",
+   "NLAlib.finiteMomentUpdate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.finiteMomentUpdate_le_barrier_sub {ν R : ℝ} {u : ℕ → ℝ} {p q n : ℕ} (hν : 0 < ν) (hR : 0 ≤ R) (hp : 1 ≤ p)\n  (hpq : p ≤ q) (hu : ∀ (i : ℕ), 0 ≤ u i) (hbound : ∀ i ≤ q, u i ≤ NLAlib.finiteMomentBarrier q ν R ↑n ^ (2 * i)) :\n  NLAlib.finiteMomentUpdate ν R u p ≤\n    NLAlib.finiteMomentBarrier q ν R (↑n + 1) ^ (2 * p) - NLAlib.finiteMomentBarrier q ν R ↑n ^ (2 * p)",
+  "name":
+  "NLAlib.finiteMomentUpdate_le_barrier_sub",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  156,
+  "kind":
+  "theorem",
+  "doc":
+  "A common power barrier dominates one discrete factorial moment update.\nSource: Heidary, Appendix `closed:thm:moment`, with a shifted terminal-order\nbarrier and coarser explicit numerical constants.\nAtlas: `khatri-rao-sharp-growth`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -96683,6 +97528,66 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.gaussianEvenMoment (p : ℕ) : ℝ",
+  "name":
+  "NLAlib.gaussianEvenMoment",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  20,
+  "kind":
+  "def",
+  "doc":
+  "The scalar standard Gaussian even moment, written as a product of odd integers.\nSource: the Gaussian Gamma integral. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianEvenMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianEvenMoment_eq_gamma (p : ℕ) : NLAlib.gaussianEvenMoment p = 2 ^ p * Real.Gamma (↑p + 1 / 2) / √Real.pi",
+  "name":
+  "NLAlib.gaussianEvenMoment_eq_gamma",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  34,
+  "kind":
+  "theorem",
+  "doc":
+  "The scalar Gaussian even moment has the Gamma closed form.\nSource: the Gaussian Gamma recurrence. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianEvenMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianEvenMoment_pos (p : ℕ) : 0 < NLAlib.gaussianEvenMoment p",
+  "name":
+  "NLAlib.gaussianEvenMoment_pos",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  28,
+  "kind":
+  "theorem",
+  "doc":
+  "Scalar Gaussian even moments are positive.\nSource: their product form. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.gaussianLogOverlap {n : ℕ} (g : Fin (n + 1) → ℝ) : ℝ",
   "name":
   "NLAlib.gaussianLogOverlap",
@@ -97650,6 +98555,66 @@
   "instance",
   "doc":
   "The canonical complete pairing family is finite. Source: operator\nre-derivation `pg:wick`; the construction includes odd and empty lengths. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianRadialMoment (r p : ℕ) : ℝ",
+  "name":
+  "NLAlib.gaussianRadialMoment",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  24,
+  "kind":
+  "def",
+  "doc":
+  "The natural moment of a squared standard Gaussian radius.\nSource: the chi-square Gamma integral. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianRadialMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianRadialMoment_eq_gamma {r : ℕ} (hr : 1 ≤ r) (p : ℕ) :\n  NLAlib.gaussianRadialMoment r p = 2 ^ p * Real.Gamma (↑r / 2 + ↑p) / Real.Gamma (↑r / 2)",
+  "name":
+  "NLAlib.gaussianRadialMoment_eq_gamma",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  51,
+  "kind":
+  "theorem",
+  "doc":
+  "The Gaussian radial moment has the Gamma closed form.\nSource: the chi-square Gamma recurrence. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianRadialMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianRadialMoment_le_pow (r p : ℕ) : NLAlib.gaussianRadialMoment r p ≤ (↑r + 2 * ↑p) ^ p",
+  "name":
+  "NLAlib.gaussianRadialMoment_le_pow",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  93,
+  "kind":
+  "theorem",
+  "doc":
+  "A radial Gaussian product moment is bounded by its largest possible factor.\nSource: monotonicity of finite products. Atlas: `khatri-rao-sharp-growth`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -100605,6 +101570,26 @@
   "atlas":
   ["ornstein-uhlenbeck"]},
  {"uses":
+  ["NLAlib.finiteMomentBarrier"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasDerivAt_finiteMomentBarrier {q : ℕ} {ν R t : ℝ} (hq : 1 ≤ q) (hν : 0 < ν) (ht : 0 ≤ t) :\n  HasDerivAt (NLAlib.finiteMomentBarrier q ν R) (↑q * ν / √(2 * ↑q * ν * (t + 1))) t",
+  "name":
+  "NLAlib.hasDerivAt_finiteMomentBarrier",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  140,
+  "kind":
+  "theorem",
+  "doc":
+  "The shifted barrier has the derivative used to compare the finite recurrence.\nSource: the chain rule.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.finiteMomentFunctional"],
   "sorry":
   false,
@@ -101687,6 +102672,26 @@
   "atlas":
   ["eigenvalue-residual-bounds"]},
  {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasFiniteNatMoments_coordinate_of_dotProduct.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ}\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {y : Ω → Fin r → ℝ} (hy : Measurable y)\n  (hmom : ∀ (p : ℕ), MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ p) μ) (a : Fin r) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => y ω a) μ",
+  "name":
+  "NLAlib.hasFiniteNatMoments_coordinate_of_dotProduct",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  85,
+  "kind":
+  "theorem",
+  "doc":
+  "Finite moments of the squared vector norm imply finite natural moments of each scalar\ncoordinate, including odd powers. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["Matrix.instMeasurableSpace",
    "NLAlib.gaussianMatrix"],
   "sorry":
@@ -102128,6 +103133,27 @@
   "theorem",
   "doc":
   "Independent standard Gaussian coordinates form a standard Gaussian vector. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoProbe",
+   "NLAlib.khatriRaoSampleLaw"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasLaw_projected_khatriRaoProbe_samples {d m : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  {r : ℕ} (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) :\n  ProbabilityTheory.HasLaw (fun g i => U.transpose.mulVec (NLAlib.khatriRaoProbe (g i)))\n    (MeasureTheory.Measure.pi fun x =>\n      MeasureTheory.Measure.map (fun g => U.transpose.mulVec (NLAlib.khatriRaoProbe g)) (MeasureTheory.Measure.pi ν))\n    (NLAlib.khatriRaoSampleLaw ν m)",
+  "name":
+  "NLAlib.hasLaw_projected_khatriRaoProbe_samples",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  53,
+  "kind":
+  "theorem",
+  "doc":
+  "Projected tensor probes from independent factor samples have the actual\nproduct law of their individual push-forward distributions. ",
   "atlas_partial":
   [],
   "atlas":
@@ -102611,6 +103637,27 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.khatriRaoCommonIsometry"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasOrthonormalCols_khatriRaoCommonIsometry (r k : ℕ) {h : ℕ} (hh : 0 < h) :\n  NLAlib.HasOrthonormalCols (NLAlib.khatriRaoCommonIsometry r h k)",
+  "name":
+  "NLAlib.hasOrthonormalCols_khatriRaoCommonIsometry",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  52,
+  "kind":
+  "theorem",
+  "doc":
+  "The common-factor construction has orthonormal columns whenever its common mode is\nnonempty.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
  {"uses":
   ["NLAlib.HasOrthonormalCols"],
   "sorry":
@@ -103267,6 +104314,26 @@
   "theorem",
   "doc":
   "The scalar Schur equation has the expected strict derivative at the\norigin whenever the remaining block excludes the original eigenvalue.\nSource: Horn–Johnson (2013), Theorem 6.3.12; the quadratic coupling has zero\nfirst derivative at zero, and Banach-algebra inversion is smooth there. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.rademacherVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasSubgaussianMGF_dotProduct_rademacherVector.{u_1} {ι : Type u_1} [Fintype ι] (u : ι → ℝ)\n  (hu : ‖WithLp.toLp 2 u‖ = 1) : ProbabilityTheory.HasSubgaussianMGF (fun x => u ⬝ᵥ x) 1 (NLAlib.rademacherVector ι)",
+  "name":
+  "NLAlib.hasSubgaussianMGF_dotProduct_rademacherVector",
+  "module":
+  "NLAlib.Probability.Rademacher.DirectionalExpSquare",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "A unit directional projection of independent signs has sub-Gaussian\nMGF variance proxy one. ",
   "atlas_partial":
   [],
   "atlas":
@@ -104982,6 +106049,27 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.khatriRaoProbe",
+   "NLAlib.khatriRaoSampleLaw"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.iIndepFun_projected_khatriRaoProbe_samples {d m : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  {r : ℕ} (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) :\n  ProbabilityTheory.iIndepFun (fun i g => U.transpose.mulVec (NLAlib.khatriRaoProbe (g i)))\n    (NLAlib.khatriRaoSampleLaw ν m)",
+  "name":
+  "NLAlib.iIndepFun_projected_khatriRaoProbe_samples",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "The projected rows of independent Khatri–Rao factor samples are independent. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -106090,6 +107178,168 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.insertionWord.{u_1} {R : Type u_1} [Semiring R] (A X : R) (w : List Bool) : R",
+  "name":
+  "NLAlib.insertionWord",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  64,
+  "kind":
+  "def",
+  "doc":
+  "Evaluate a binary insertion word at an ordinary factor and a marked factor. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.insertionWordGaps : List Bool → List ℕ × ℕ",
+  "name":
+  "NLAlib.insertionWordGaps",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  17,
+  "kind":
+  "def",
+  "doc":
+  "The exponents before marked positions, and the final unmarked run. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWordGaps"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.insertionWordGaps_length_sum (w : List Bool) :\n  (NLAlib.insertionWordGaps w).1.length = List.count true w ∧\n    (NLAlib.insertionWordGaps w).1.sum + (NLAlib.insertionWordGaps w).2 = List.count false w",
+  "name":
+  "NLAlib.insertionWordGaps_length_sum",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "Gap compression preserves both the number of marked positions and\nthe total number of unmarked positions. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.insertionWord_eq_pow_of_count_true_eq_zero.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (A X : Matrix ι ι ℝ)\n  (w : List Bool) (hw : List.count true w = 0) : NLAlib.insertionWord A X w = A ^ List.count false w",
+  "name":
+  "NLAlib.insertionWord_eq_pow_of_count_true_eq_zero",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "A word with no marked positions is the ordinary power. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.insertionWordGaps"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.insertionWord_eq_prod_gaps_mul_pow.{u_1} {R : Type u_1} [Semiring R] (A X : R) (w : List Bool) :\n  NLAlib.insertionWord A X w =\n    (List.map (fun k => A ^ k * X) (NLAlib.insertionWordGaps w).1).prod * A ^ (NLAlib.insertionWordGaps w).2",
+  "name":
+  "NLAlib.insertionWord_eq_prod_gaps_mul_pow",
+  "module":
+  "NLAlib.Matrix.Functions.InsertionWordBounds",
+  "line":
+  50,
+  "kind":
+  "theorem",
+  "doc":
+  "Gap compression is an exact algebraic identity in every semiring. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.subInsertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.insertionWord_sub_one_eq_sum.{u_1} {R : Type u_1} [Ring R] (A H : R) (w : List Bool) :\n  NLAlib.insertionWord A (H - 1) w =\n    (List.map (fun v => (-1) ^ v.1 * NLAlib.insertionWord A H v.2) (NLAlib.subInsertionWords w)).sum",
+  "name":
+  "NLAlib.insertionWord_sub_one_eq_sum",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  167,
+  "kind":
+  "theorem",
+  "doc":
+  "Subtracting the identity in every marked position expands into\nsigned words with some marked positions deleted. No factors commute. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.insertionWords : ℕ → ℕ → List (List Bool)",
+  "name":
+  "NLAlib.insertionWords",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  17,
+  "kind":
+  "def",
+  "doc":
+  "Binary words of length `n` with precisely `j` marked positions. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.insertionWords_eq_nil_of_lt {n j : ℕ} (hnj : n < j) : NLAlib.insertionWords n j = []",
+  "name":
+  "NLAlib.insertionWords_eq_nil_of_lt",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  54,
+  "kind":
+  "theorem",
+  "doc":
+  "Insertion words vanish when more positions are marked than available. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.integrableOn_eval_mul_exp_neg_mul_Ioi (p : Polynomial ℝ) {s : ℝ} (hs : 0 < s) :\n  MeasureTheory.IntegrableOn (fun x => Polynomial.eval x p * Real.exp (-(s * x))) (Set.Ioi 0) MeasureTheory.volume",
   "name":
   "NLAlib.integrableOn_eval_mul_exp_neg_mul_Ioi",
@@ -106226,6 +107476,27 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianRadialMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_gaussianEvenMoment_mul_integral_dotProduct_self_pow_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {r p : ℕ} (hr : 1 ≤ r) (hp : 1 ≤ p)\n  (y : Ω → Fin r → ℝ) (hy : Measurable y) {A : ℝ} (hA : 0 ≤ A)\n  (hdir :\n    ∀ (a : Fin r → ℝ),\n      MeasureTheory.Integrable (fun ω => (a ⬝ᵥ y ω) ^ (2 * p)) μ ∧\n        ∫ (ω : Ω), (a ⬝ᵥ y ω) ^ (2 * p) ∂μ ≤ A * (a ⬝ᵥ a) ^ p) :\n  MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ p) μ ∧\n    NLAlib.gaussianEvenMoment p * ∫ (ω : Ω), (y ω ⬝ᵥ y ω) ^ p ∂μ ≤ A * NLAlib.gaussianRadialMoment r p",
+  "name":
+  "NLAlib.integrable_and_gaussianEvenMoment_mul_integral_dotProduct_self_pow_le",
+  "module":
+  "NLAlib.Probability.Moments.GaussianRadialization",
+  "line":
+  20,
+  "kind":
+  "theorem",
+  "doc":
+  "Gaussian averaging converts a homogeneous directional even-moment budget\ninto a radial budget, retaining its exact scalar Gaussian divisor.\nSource: Heidary, equation `variance:eq:row-moment`.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["Matrix.instMeasurableSpace",
    "NLAlib.frobNorm",
    "NLAlib.gaussianMatrix"],
@@ -106243,6 +107514,27 @@
   "theorem",
   "doc":
   "A function of a Gaussian matrix that is `L`-Lipschitz for the Frobenius norm,\n`|h X - h Y| ≤ L ‖X - Y‖_F`, is integrable with integrable square under\n`gaussianMatrix (Fin p) (Fin m)`.\nPorted from Prove2me solution `GaussianMatrix.gordon_upper` (helper `gu_integrable_of_lip`;\nidentical copies in `gordon_lower`, `gordon`, `chevet`, `spectral_second_moment`). Atlas:\n`norm-lipschitz` (integrability consequence). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_dotProduct_pow_two_mul_gaussianVector.{u_1} {α : Type u_1} [Fintype α] (w : α → ℝ)\n  (p : ℕ) :\n  MeasureTheory.Integrable (fun z => (w ⬝ᵥ z) ^ (2 * p)) (NLAlib.gaussianVector α) ∧\n    ∫ (z : α → ℝ), (w ⬝ᵥ z) ^ (2 * p) ∂NLAlib.gaussianVector α = NLAlib.gaussianEvenMoment p * (w ⬝ᵥ w) ^ p",
+  "name":
+  "NLAlib.integrable_and_integral_dotProduct_pow_two_mul_gaussianVector",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  107,
+  "kind":
+  "theorem",
+  "doc":
+  "Every linear form of a Gaussian vector has its exact even natural moment.\nSource: Gaussian rotational invariance and the scalar moment formula.\nAtlas: `khatri-rao-sharp-growth`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -106856,6 +108148,169 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.frobSq"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_norm_mulVec_pow_two_mul_le.{u_1, u_2, u_3} {Ω : Type u_1} {α : Type u_2} {β : Type u_3}\n  [MeasurableSpace Ω] [Fintype α] [Fintype β] {μ : MeasureTheory.Measure Ω} (z : Ω → α → ℝ) (hz : AEMeasurable z μ)\n  {p : ℕ} (hp : 0 < p) {C : ℝ} (hC : 0 ≤ C)\n  (hmoment :\n    ∀ (a : α → ℝ),\n      MeasureTheory.Integrable (fun ω => (a ⬝ᵥ z ω) ^ (2 * p)) μ ∧\n        ∫ (ω : Ω), (a ⬝ᵥ z ω) ^ (2 * p) ∂μ ≤ C * ‖WithLp.toLp 2 a‖ ^ (2 * p))\n  (T : Matrix β α ℝ) :\n  MeasureTheory.Integrable (fun ω => ‖WithLp.toLp 2 (T.mulVec (z ω))‖ ^ (2 * p)) μ ∧\n    ∫ (ω : Ω), ‖WithLp.toLp 2 (T.mulVec (z ω))‖ ^ (2 * p) ∂μ ≤ C * NLAlib.frobSq T ^ p",
+  "name":
+  "NLAlib.integrable_and_integral_norm_mulVec_pow_two_mul_le",
+  "module":
+  "NLAlib.Probability.Moments.Euclidean",
+  "line":
+  18,
+  "kind":
+  "theorem",
+  "doc":
+  "A homogeneous directional even-moment bound controls every linear image\nby its Frobenius norm, with the same constant. No coordinate independence\nis needed. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_pow_two_mul_dotProduct_khatriRaoProbe_le {d : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  {p : ℕ} (hp : 0 < p) {B : ℝ} (hB : 0 ≤ B)\n  (hmoment :\n    ∀ (j : Fin d) (a : Fin (n j) → ℝ),\n      MeasureTheory.Integrable (fun g => (a ⬝ᵥ g) ^ (2 * p)) (ν j) ∧\n        ∫ (g : Fin (n j) → ℝ), (a ⬝ᵥ g) ^ (2 * p) ∂ν j ≤ B * ‖WithLp.toLp 2 a‖ ^ (2 * p))\n  (a : ((j : Fin d) → Fin (n j)) → ℝ) :\n  MeasureTheory.Integrable (fun g => (a ⬝ᵥ NLAlib.khatriRaoProbe g) ^ (2 * p)) (MeasureTheory.Measure.pi ν) ∧\n    ∫ (g : (i : Fin d) → Fin (n i) → ℝ), (a ⬝ᵥ NLAlib.khatriRaoProbe g) ^ (2 * p) ∂MeasureTheory.Measure.pi ν ≤\n      B ^ d * ‖WithLp.toLp 2 a‖ ^ (2 * p)",
+  "name":
+  "NLAlib.integrable_and_integral_pow_two_mul_dotProduct_khatriRaoProbe_le",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoMoments",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "Independent vector factors multiply homogeneous directional even-moment\nbudgets. Arbitrary coordinate dependence within each factor is allowed.\nFinite Jensen keeps the Euclidean tensor coefficient norm exactly.\nSource: Heidary, Lemma 2.2, tensor induction. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_pow_two_mul_dotProduct_khatriRaoProbe_le_of_exp_sq {d : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  {K : ℝ} (hK : 0 < K)\n  (hpsi :\n    ∀ (j : Fin d) (u : Fin (n j) → ℝ),\n      ‖WithLp.toLp 2 u‖ = 1 → ∫⁻ (g : Fin (n j) → ℝ), ENNReal.ofReal (Real.exp ((u ⬝ᵥ g / K) ^ 2)) ∂ν j ≤ 2)\n  {p : ℕ} (hp : 0 < p) (a : ((j : Fin d) → Fin (n j)) → ℝ) :\n  MeasureTheory.Integrable (fun g => (a ⬝ᵥ NLAlib.khatriRaoProbe g) ^ (2 * p)) (MeasureTheory.Measure.pi ν) ∧\n    ∫ (g : (i : Fin d) → Fin (n i) → ℝ), (a ⬝ᵥ NLAlib.khatriRaoProbe g) ^ (2 * p) ∂MeasureTheory.Measure.pi ν ≤\n      (2 * ↑p.factorial * K ^ (2 * p)) ^ d * ‖WithLp.toLp 2 a‖ ^ (2 * p)",
+  "name":
+  "NLAlib.integrable_and_integral_pow_two_mul_dotProduct_khatriRaoProbe_le_of_exp_sq",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoMoments",
+  "line":
+  144,
+  "kind":
+  "theorem",
+  "doc":
+  "Independent isotropic-scale sub-Gaussian vector factors have directional\ntensor moments with factorial growth. Only the directional square-exponential\nbound is needed here; neither centered factors nor coordinate independence is\nassumed. Source: Heidary, Lemma 2.2, with the unoptimized scalar budget\n`2 p! K^(2p)` in place of the isotropy-anchored improvement. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_pow_two_mul_dotProduct_le_of_directional_exp_sq.{u_1} {α : Type u_1} [Fintype α]\n  (ν : MeasureTheory.Measure (α → ℝ)) [MeasureTheory.IsProbabilityMeasure ν] {K : ℝ} (hK : 0 < K)\n  (hpsi : ∀ (u : α → ℝ), ‖WithLp.toLp 2 u‖ = 1 → ∫⁻ (g : α → ℝ), ENNReal.ofReal (Real.exp ((u ⬝ᵥ g / K) ^ 2)) ∂ν ≤ 2)\n  (p : ℕ) (a : α → ℝ) :\n  MeasureTheory.Integrable (fun g => (a ⬝ᵥ g) ^ (2 * p)) ν ∧\n    ∫ (g : α → ℝ), (a ⬝ᵥ g) ^ (2 * p) ∂ν ≤ 2 * ↑p.factorial * K ^ (2 * p) * ‖WithLp.toLp 2 a‖ ^ (2 * p)",
+  "name":
+  "NLAlib.integrable_and_integral_pow_two_mul_dotProduct_le_of_directional_exp_sq",
+  "module":
+  "NLAlib.Probability.SubGaussian.ExpSquareMoments",
+  "line":
+  63,
+  "kind":
+  "theorem",
+  "doc":
+  "A directional square-exponential bound implies the homogeneous even\nmoment budget `2 p! K^(2p) ‖a‖^(2p)`, also for noncentered vector laws.\nThis is the unoptimized factorial form of Heidary, Lemma 2.2. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_pow_two_mul_dotProduct_projected_khatriRaoProbe_le {d : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  {K : ℝ} (hK : 0 < K)\n  (hpsi :\n    ∀ (j : Fin d) (u : Fin (n j) → ℝ),\n      ‖WithLp.toLp 2 u‖ = 1 → ∫⁻ (g : Fin (n j) → ℝ), ENNReal.ofReal (Real.exp ((u ⬝ᵥ g / K) ^ 2)) ∂ν j ≤ 2)\n  {r : ℕ} (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) (hU : NLAlib.HasOrthonormalCols U) {p : ℕ} (hp : 0 < p)\n  (a : Fin r → ℝ) :\n  MeasureTheory.Integrable (fun g => (a ⬝ᵥ U.transpose.mulVec (NLAlib.khatriRaoProbe g)) ^ (2 * p))\n      (MeasureTheory.Measure.pi ν) ∧\n    ∫ (g : (i : Fin d) → Fin (n i) → ℝ),\n        (a ⬝ᵥ U.transpose.mulVec (NLAlib.khatriRaoProbe g)) ^ (2 * p) ∂MeasureTheory.Measure.pi ν ≤\n      (2 * ↑p.factorial * K ^ (2 * p)) ^ d * ‖WithLp.toLp 2 a‖ ^ (2 * p)",
+  "name":
+  "NLAlib.integrable_and_integral_pow_two_mul_dotProduct_projected_khatriRaoProbe_le",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoMoments",
+  "line":
+  164,
+  "kind":
+  "theorem",
+  "doc":
+  "Restricting independent square-exponentially bounded tensor factors to\nan orthonormal subspace keeps the same homogeneous directional moment\nbudget. Source: Heidary, Lemma 2.2, applied to the projected probe. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_pow_two_mul_le_of_lintegral_exp_sq_le_two.{u_1} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} {X : Ω → ℝ} (hX : AEMeasurable X μ) {K : ℝ} (hK : 0 < K)\n  (hpsi : ∫⁻ (ω : Ω), ENNReal.ofReal (Real.exp ((X ω / K) ^ 2)) ∂μ ≤ 2) (p : ℕ) :\n  MeasureTheory.Integrable (fun ω => X ω ^ (2 * p)) μ ∧ ∫ (ω : Ω), X ω ^ (2 * p) ∂μ ≤ 2 * ↑p.factorial * K ^ (2 * p)",
+  "name":
+  "NLAlib.integrable_and_integral_pow_two_mul_le_of_lintegral_exp_sq_le_two",
+  "module":
+  "NLAlib.Probability.SubGaussian.ExpSquareMoments",
+  "line":
+  19,
+  "kind":
+  "theorem",
+  "doc":
+  "A square-exponential bound gives finite even moments with the factorial\nbudget `2 p! K^(2p)`. The variable need not have mean zero. The nonnegative\nintegral hypothesis also proves integrability of each moment. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoMomentRadius",
+   "NLAlib.khatriRaoVarianceBudget"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_rankOneProbe_le_factorial.{u_1} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {r p d : ℕ} (hr : 1 ≤ r) (hp : 2 ≤ p)\n  (hd : 2 ≤ d) (y : Ω → Fin r → ℝ) (hy : Measurable y) {K : ℝ} (hK : 0 ≤ K)\n  (hdir :\n    ∀ (n : ℕ),\n      1 ≤ n →\n        ∀ (a : Fin r → ℝ),\n          MeasureTheory.Integrable (fun ω => (a ⬝ᵥ y ω) ^ (2 * n)) μ ∧\n            ∫ (ω : Ω), (a ⬝ᵥ y ω) ^ (2 * n) ∂μ ≤ (2 * ↑n.factorial * K ^ (2 * n)) ^ d * (a ⬝ᵥ a) ^ n)\n  (x : Fin r → ℝ) :\n  MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ (p - 1) * (x ⬝ᵥ y ω) ^ 2) μ ∧\n    ∫ (ω : Ω), (y ω ⬝ᵥ y ω) ^ (p - 1) * (x ⬝ᵥ y ω) ^ 2 ∂μ ≤\n      ↑p.factorial / 2 * NLAlib.khatriRaoVarianceBudget d K r * NLAlib.khatriRaoMomentRadius d K r p ^ (p - 2) * x ⬝ᵥ x",
+  "name":
+  "NLAlib.integrable_and_integral_rankOneProbe_le_factorial",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  234,
+  "kind":
+  "theorem",
+  "doc":
+  "Directional product-factor moment budgets imply a raw factorial covariance\nbudget retaining each test direction. This is the finite-moment input needed\nfor the sharp Khatri--Rao rank logarithm.\nSource: Heidary, Appendix `appendix:factorial`; all numerical constants here\nare explicit and coarser than the optimized manuscript constants.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianRadialMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_rankOneProbe_le_sqrt.{u_1} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {r p : ℕ} (hr : 1 ≤ r) (hp : 2 ≤ p)\n  (y : Ω → Fin r → ℝ) (hy : Measurable y) {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B)\n  (hfour :\n    ∀ (a : Fin r → ℝ),\n      MeasureTheory.Integrable (fun ω => (a ⬝ᵥ y ω) ^ 4) μ ∧ ∫ (ω : Ω), (a ⬝ᵥ y ω) ^ 4 ∂μ ≤ A * (a ⬝ᵥ a) ^ 2)\n  (hhigh :\n    ∀ (a : Fin r → ℝ),\n      MeasureTheory.Integrable (fun ω => (a ⬝ᵥ y ω) ^ (2 * (2 * p - 2))) μ ∧\n        ∫ (ω : Ω), (a ⬝ᵥ y ω) ^ (2 * (2 * p - 2)) ∂μ ≤ B * (a ⬝ᵥ a) ^ (2 * p - 2))\n  (x : Fin r → ℝ) :\n  MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ (p - 1) * (x ⬝ᵥ y ω) ^ 2) μ ∧\n    ∫ (ω : Ω), (y ω ⬝ᵥ y ω) ^ (p - 1) * (x ⬝ᵥ y ω) ^ 2 ∂μ ≤\n      √(A * (B * NLAlib.gaussianRadialMoment r (2 * p - 2) / NLAlib.gaussianEvenMoment (2 * p - 2))) * x ⬝ᵥ x",
+  "name":
+  "NLAlib.integrable_and_integral_rankOneProbe_le_sqrt",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  66,
+  "kind":
+  "theorem",
+  "doc":
+  "The square-root form of the direction-preserving raw matrix moment bound.\nSource: Cauchy--Schwarz and Gaussian radialization.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["Matrix.instMeasurableSpace",
    "NLAlib.gaussianMatrix"],
   "sorry":
@@ -107282,6 +108737,207 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_sum_mul_sq_pow_le.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω]\n  [Fintype ι] {μ : MeasureTheory.Measure Ω} (c : ι → ℝ) (X : ι → Ω → ℝ) (hX : ∀ (i : ι), AEMeasurable (X i) μ) {p : ℕ}\n  (hp : 0 < p) (hXi : ∀ (i : ι), MeasureTheory.Integrable (fun ω => X i ω ^ (2 * p)) μ) {C : ℝ}\n  (hmoment : ∀ (i : ι), ∫ (ω : Ω), X i ω ^ (2 * p) ∂μ ≤ C) :\n  MeasureTheory.Integrable (fun ω => (∑ i, (c i * X i ω) ^ 2) ^ p) μ ∧\n    ∫ (ω : Ω), (∑ i, (c i * X i ω) ^ 2) ^ p ∂μ ≤ C * (∑ i, c i ^ 2) ^ p",
+  "name":
+  "NLAlib.integrable_and_integral_sum_mul_sq_pow_le",
+  "module":
+  "NLAlib.Probability.Moments.FiniteWeighted",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "A finite Euclidean sum of scalar variables with a common even-moment\nbudget is bounded by the squared coefficient norm to the matching power.\nThe scalar variables may be arbitrarily dependent. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_sum_trace_words.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω] [Fintype ι]\n  [DecidableEq ι] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] (A : Matrix ι ι ℝ)\n  (X : Ω → Matrix ι ι ℝ) (ws : List (List Bool))\n  (hi : ∀ w ∈ ws, MeasureTheory.Integrable (fun ω => (NLAlib.insertionWord A (X ω) w).trace) μ) :\n  MeasureTheory.Integrable (fun ω => (List.map (fun w => NLAlib.insertionWord A (X ω) w) ws).sum.trace) μ ∧\n    ∫ (ω : Ω), (List.map (fun w => NLAlib.insertionWord A (X ω) w) ws).sum.trace ∂μ =\n      (List.map (fun w => ∫ (ω : Ω), (NLAlib.insertionWord A (X ω) w).trace ∂μ) ws).sum",
+  "name":
+  "NLAlib.integrable_and_integral_sum_trace_words",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.InsertionMomentExpansion",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "Integrating a list sum of trace words commutes with both finite sums. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_trace_add_centered_rankOne_pow_le.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2}\n  [MeasurableSpace Ω] [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ]\n  (y : Ω → ι → ℝ) (hy : Measurable y) (hsecond : ∀ (i j : ι), ∫ (ω : Ω), y ω i * y ω j ∂μ = if i = j then 1 else 0)\n  {A : Matrix ι ι ℝ} (hA : A.IsHermitian) {p : ℕ} (hp : 1 ≤ p) {v R : ℝ} (hv : 2 ≤ v) (hR : 1 ≤ R)\n  (hraw :\n    ∀ (l : ℕ),\n      2 ≤ l →\n        l ≤ 2 * p →\n          ∀ (x : ι → ℝ),\n            MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ (l - 1) * (x ⬝ᵥ y ω) ^ 2) μ ∧\n              ∫ (ω : Ω), (y ω ⬝ᵥ y ω) ^ (l - 1) * (x ⬝ᵥ y ω) ^ 2 ∂μ ≤ ↑l.factorial / 2 * v * R ^ (l - 2) * x ⬝ᵥ x) :\n  MeasureTheory.Integrable (fun ω => ((A + (Matrix.vecMulVec (y ω) (y ω) - 1)) ^ (2 * p)).trace) μ ∧\n    ∫ (ω : Ω), ((A + (Matrix.vecMulVec (y ω) (y ω) - 1)) ^ (2 * p)).trace ∂μ ≤\n      (A ^ (2 * p)).trace +\n        ∑ k ∈ Finset.range (2 * p - 1),\n          ↑((2 * p).choose (k + 2)) * ↑(k + 2).factorial / 2 * (4 * v) * (2 * R) ^ k *\n            (cfc (fun x => |x| ^ (2 * p - (k + 2))) A).trace",
+  "name":
+  "NLAlib.integrable_and_integral_trace_add_centered_rankOne_pow_le",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneStep",
+  "line":
+  244,
+  "kind":
+  "theorem",
+  "doc":
+  "Actual centered isotropic rank-one covariance samples satisfy the finite\ntrace-moment update used by the sharp Khatri--Rao embedding bound.\nSource: Heidary, Lemma `closed:lem:step`; the explicit centering factors here\nare `4v` and `2R` rather than the manuscript's optimized shift.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_trace_add_pow_eq_sum_insertionWords.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2}\n  [MeasurableSpace Ω] [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ]\n  (A : Matrix ι ι ℝ) (X : Ω → Matrix ι ι ℝ) (n : ℕ)\n  (hi :\n    ∀ j ≤ n,\n      ∀ w ∈ NLAlib.insertionWords n j, MeasureTheory.Integrable (fun ω => (NLAlib.insertionWord A (X ω) w).trace) μ) :\n  MeasureTheory.Integrable (fun ω => ((A + X ω) ^ n).trace) μ ∧\n    ∫ (ω : Ω), ((A + X ω) ^ n).trace ∂μ =\n      ∑ j ∈ Finset.range (n + 1),\n        (List.map (fun w => ∫ (ω : Ω), (NLAlib.insertionWord A (X ω) w).trace ∂μ) (NLAlib.insertionWords n j)).sum",
+  "name":
+  "NLAlib.integrable_and_integral_trace_add_pow_eq_sum_insertionWords",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.InsertionMomentExpansion",
+  "line":
+  40,
+  "kind":
+  "theorem",
+  "doc":
+  "The integral of a matrix trace power is the sum of the integrated\ninsertion coefficients. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_trace_centered_insertionWord_le_factorial.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2}\n  [MeasurableSpace Ω] [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ]\n  (y : Ω → ι → ℝ) (hy : Measurable y) (hsecond : ∀ (i j : ι), ∫ (ω : Ω), y ω i * y ω j ∂μ = if i = j then 1 else 0)\n  {A : Matrix ι ι ℝ} (hA : A.IsHermitian) (w : List Bool) (hw : 2 ≤ List.count true w) {v R : ℝ} (hv : 2 ≤ v)\n  (hR : 1 ≤ R)\n  (hraw :\n    ∀ (l : ℕ),\n      2 ≤ l →\n        l ≤ List.count true w →\n          ∀ (x : ι → ℝ),\n            MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ (l - 1) * (x ⬝ᵥ y ω) ^ 2) μ ∧\n              ∫ (ω : Ω), (y ω ⬝ᵥ y ω) ^ (l - 1) * (x ⬝ᵥ y ω) ^ 2 ∂μ ≤ ↑l.factorial / 2 * v * R ^ (l - 2) * x ⬝ᵥ x) :\n  MeasureTheory.Integrable (fun ω => (NLAlib.insertionWord A (Matrix.vecMulVec (y ω) (y ω) - 1) w).trace) μ ∧\n    ∫ (ω : Ω), (NLAlib.insertionWord A (Matrix.vecMulVec (y ω) (y ω) - 1) w).trace ∂μ ≤\n      ↑(List.count true w).factorial / 2 * (4 * v) * (2 * R) ^ (List.count true w - 2) *\n        (cfc (fun x => |x| ^ List.count false w) A).trace",
+  "name":
+  "NLAlib.integrable_and_integral_trace_centered_insertionWord_le_factorial",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneStep",
+  "line":
+  177,
+  "kind":
+  "theorem",
+  "doc":
+  "A factorial raw rank-one moment profile bounds every centered word with\nat least two insertions, with explicit centering constants `4v` and `2R`.\nSource: the rank-one word expansion in Heidary, Lemma `closed:lem:step`.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_trace_insertionWord_sub_one_le.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2}\n  [MeasurableSpace Ω] [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} (y : Ω → ι → ℝ) (hy : Measurable y)\n  {A : Matrix ι ι ℝ} (hA : A.IsHermitian) (w : List Bool) {B : ℝ}\n  (hmoment :\n    ∀ l ≤ List.count true w,\n      MeasureTheory.Integrable\n          (fun ω => (cfc (fun x => |x| ^ List.count false w) A * Matrix.vecMulVec (y ω) (y ω) ^ l).trace) μ ∧\n        ∫ (ω : Ω), (cfc (fun x => |x| ^ List.count false w) A * Matrix.vecMulVec (y ω) (y ω) ^ l).trace ∂μ ≤\n          B * (cfc (fun x => |x| ^ List.count false w) A).trace) :\n  MeasureTheory.Integrable (fun ω => (NLAlib.insertionWord A (Matrix.vecMulVec (y ω) (y ω) - 1) w).trace) μ ∧\n    ∫ (ω : Ω), (NLAlib.insertionWord A (Matrix.vecMulVec (y ω) (y ω) - 1) w).trace ∂μ ≤\n      2 ^ List.count true w * B * (cfc (fun x => |x| ^ List.count false w) A).trace",
+  "name":
+  "NLAlib.integrable_and_integral_trace_insertionWord_sub_one_le",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneStep",
+  "line":
+  50,
+  "kind":
+  "theorem",
+  "doc":
+  "A uniform bound on the positive rank-one moments bounds any centered\ninsertion word, with one factor of two for each expanded insertion. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_trace_mul_vecMulVec_eq.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω]\n  [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} (y : Ω → ι → ℝ) (hy : Measurable y)\n  (hsecond : ∀ (i j : ι), ∫ (ω : Ω), y ω i * y ω j ∂μ = if i = j then 1 else 0) (C : Matrix ι ι ℝ) :\n  MeasureTheory.Integrable (fun ω => (C * Matrix.vecMulVec (y ω) (y ω)).trace) μ ∧\n    ∫ (ω : Ω), (C * Matrix.vecMulVec (y ω) (y ω)).trace ∂μ = C.trace",
+  "name":
+  "NLAlib.integrable_and_integral_trace_mul_vecMulVec_eq",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneStep",
+  "line":
+  106,
+  "kind":
+  "theorem",
+  "doc":
+  "An isotropic vector integrates a rank-one trace test to the test trace.\nSource: the isotropic quadratic-form identity.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_trace_mul_vecMulVec_pow_succ_le.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2}\n  [MeasurableSpace Ω] [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} (y : Ω → ι → ℝ) (p : ℕ) {a : ℝ}\n  (hmoment :\n    ∀ (x : ι → ℝ),\n      MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ p * (x ⬝ᵥ y ω) ^ 2) μ ∧\n        ∫ (ω : Ω), (y ω ⬝ᵥ y ω) ^ p * (x ⬝ᵥ y ω) ^ 2 ∂μ ≤ a * x ⬝ᵥ x)\n  (C : Matrix ι ι ℝ) (hC : C.PosSemidef) :\n  MeasureTheory.Integrable (fun ω => (C * Matrix.vecMulVec (y ω) (y ω) ^ (p + 1)).trace) μ ∧\n    ∫ (ω : Ω), (C * Matrix.vecMulVec (y ω) (y ω) ^ (p + 1)).trace ∂μ ≤ a * C.trace",
+  "name":
+  "NLAlib.integrable_and_integral_trace_mul_vecMulVec_pow_succ_le",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneMomentTrace",
+  "line":
+  23,
+  "kind":
+  "theorem",
+  "doc":
+  "Directional rank-one moment control lifts to every PSD trace test,\nincluding integrability of the tested matrix moment. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_trace_mul_vecMulVec_sub_one_eq_zero.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2}\n  [MeasurableSpace Ω] [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ]\n  (y : Ω → ι → ℝ) (hy : Measurable y) (hsecond : ∀ (i j : ι), ∫ (ω : Ω), y ω i * y ω j ∂μ = if i = j then 1 else 0)\n  (C : Matrix ι ι ℝ) :\n  MeasureTheory.Integrable (fun ω => (C * (Matrix.vecMulVec (y ω) (y ω) - 1)).trace) μ ∧\n    ∫ (ω : Ω), (C * (Matrix.vecMulVec (y ω) (y ω) - 1)).trace ∂μ = 0",
+  "name":
+  "NLAlib.integrable_and_integral_trace_mul_vecMulVec_sub_one_eq_zero",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneStep",
+  "line":
+  124,
+  "kind":
+  "theorem",
+  "doc":
+  "Centering an isotropic rank-one covariance sample kills every linear trace test.\nSource: isotropy. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_trace_mul_vecMulVec_sub_one_sq_le.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2}\n  [MeasurableSpace Ω] [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ]\n  (y : Ω → ι → ℝ) (hy : Measurable y) (hsecond : ∀ (i j : ι), ∫ (ω : Ω), y ω i * y ω j ∂μ = if i = j then 1 else 0)\n  {v : ℝ}\n  (hmoment :\n    ∀ (x : ι → ℝ),\n      MeasureTheory.Integrable (fun ω => y ω ⬝ᵥ y ω * (x ⬝ᵥ y ω) ^ 2) μ ∧\n        ∫ (ω : Ω), y ω ⬝ᵥ y ω * (x ⬝ᵥ y ω) ^ 2 ∂μ ≤ v * x ⬝ᵥ x)\n  (C : Matrix ι ι ℝ) (hC : C.PosSemidef) :\n  MeasureTheory.Integrable (fun ω => (C * (Matrix.vecMulVec (y ω) (y ω) - 1) ^ 2).trace) μ ∧\n    ∫ (ω : Ω), (C * (Matrix.vecMulVec (y ω) (y ω) - 1) ^ 2).trace ∂μ ≤ v * C.trace",
+  "name":
+  "NLAlib.integrable_and_integral_trace_mul_vecMulVec_sub_one_sq_le",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneStep",
+  "line":
+  136,
+  "kind":
+  "theorem",
+  "doc":
+  "The variance of a centered isotropic rank-one covariance sample is bounded\nby its raw second moment, retaining each positive trace test.\nSource: `E(H-I)^2=E H^2-I`.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["Matrix.instMeasurableSpace",
    "NLAlib.bestRankFrobSq",
    "NLAlib.gaussianMatrix",
@@ -107304,6 +108960,47 @@
   ["nystrom-randomized"],
   "atlas":
   ["nystrom-randomized"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_integral_weighted_sq_pow_le.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω]\n  [Fintype ι] {μ : MeasureTheory.Measure Ω} (w : ι → ℝ) (hw : ∀ (i : ι), 0 ≤ w i) (hsum : ∑ i, w i = 1) (X : ι → Ω → ℝ)\n  (hX : ∀ (i : ι), AEMeasurable (X i) μ) (p : ℕ)\n  (hXi : ∀ (i : ι), MeasureTheory.Integrable (fun ω => X i ω ^ (2 * p)) μ) {C : ℝ}\n  (hmoment : ∀ (i : ι), ∫ (ω : Ω), X i ω ^ (2 * p) ∂μ ≤ C) :\n  MeasureTheory.Integrable (fun ω => (∑ i, w i * X i ω ^ 2) ^ p) μ ∧ ∫ (ω : Ω), (∑ i, w i * X i ω ^ 2) ^ p ∂μ ≤ C",
+  "name":
+  "NLAlib.integrable_and_integral_weighted_sq_pow_le",
+  "module":
+  "NLAlib.Probability.Moments.FiniteWeighted",
+  "line":
+  17,
+  "kind":
+  "theorem",
+  "doc":
+  "A convex combination of squares preserves a common even-moment budget.\nThis is finite Jensen followed by integration, with integrability deduced\nfrom the same pointwise domination. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianRadialMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_and_sq_integral_rankOneProbe_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure μ] {r p : ℕ} (hr : 1 ≤ r) (hp : 2 ≤ p) (y : Ω → Fin r → ℝ) (hy : Measurable y)\n  {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B)\n  (hfour :\n    ∀ (a : Fin r → ℝ),\n      MeasureTheory.Integrable (fun ω => (a ⬝ᵥ y ω) ^ 4) μ ∧ ∫ (ω : Ω), (a ⬝ᵥ y ω) ^ 4 ∂μ ≤ A * (a ⬝ᵥ a) ^ 2)\n  (hhigh :\n    ∀ (a : Fin r → ℝ),\n      MeasureTheory.Integrable (fun ω => (a ⬝ᵥ y ω) ^ (2 * (2 * p - 2))) μ ∧\n        ∫ (ω : Ω), (a ⬝ᵥ y ω) ^ (2 * (2 * p - 2)) ∂μ ≤ B * (a ⬝ᵥ a) ^ (2 * p - 2))\n  (x : Fin r → ℝ) :\n  MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ (p - 1) * (x ⬝ᵥ y ω) ^ 2) μ ∧\n    (∫ (ω : Ω), (y ω ⬝ᵥ y ω) ^ (p - 1) * (x ⬝ᵥ y ω) ^ 2 ∂μ) ^ 2 ≤\n      A * (x ⬝ᵥ x) ^ 2 * (B * NLAlib.gaussianRadialMoment r (2 * p - 2) / NLAlib.gaussianEvenMoment (2 * p - 2))",
+  "name":
+  "NLAlib.integrable_and_sq_integral_rankOneProbe_le",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  20,
+  "kind":
+  "theorem",
+  "doc":
+  "Cauchy--Schwarz and Gaussian averaging retain a test direction in a raw\nrank-one covariance moment. The returned scalar expression is the quadratic\nform of the expected matrix power `E[(y yᵀ)^p]`.\nSource: the radialization route of Heidary, Appendix `appendix:factorial`,\nwith a coarser higher-moment Cauchy--Schwarz bound.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -108416,6 +110113,26 @@
   "theorem",
   "doc":
   "The square wave is integrable under normalized circle Haar measure.\nSource: bounded measurable functions on a probability space; helper for sharp `jackson-lipschitz`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_khatriRaoProbe_mul_khatriRaoProbe {d : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  (hsecond : ∀ (j : Fin d) (a b : Fin (n j)), ∫ (g : Fin (n j) → ℝ), g a * g b ∂ν j = if a = b then 1 else 0)\n  (a b : (j : Fin d) → Fin (n j)) :\n  MeasureTheory.Integrable (fun g => NLAlib.khatriRaoProbe g a * NLAlib.khatriRaoProbe g b) (MeasureTheory.Measure.pi ν)",
+  "name":
+  "NLAlib.integrable_khatriRaoProbe_mul_khatriRaoProbe",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  95,
+  "kind":
+  "theorem",
+  "doc":
+  "Every pair of tensor-product coordinates is integrable under isotropic\nfactor laws. Diagonal second moments equal to one force square integrability. ",
   "atlas_partial":
   [],
   "atlas":
@@ -109534,6 +111251,26 @@
   "theorem",
   "doc":
   "A measurable orthonormal frame and a probe with finite squared Euclidean norm give an\nintegrable deflated scalar trace kernel on the product measure. The frame distribution has\nno moment assumptions. Source: supplied operator derivations, (T2), helper for\n`hutchpp-unbiased` and `xtrace-unbiased`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.rankOneCovarianceSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_trace_pow_rankOneCovarianceSum.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ}\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {y : Ω → Fin r → ℝ} (hy : Measurable y)\n  (hmom : ∀ (p : ℕ), MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ p) μ) (n p : ℕ) :\n  MeasureTheory.Integrable (fun ω => (NLAlib.rankOneCovarianceSum y ω ^ p).trace) (MeasureTheory.Measure.pi fun x => μ)",
+  "name":
+  "NLAlib.integrable_trace_pow_rankOneCovarianceSum",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  112,
+  "kind":
+  "theorem",
+  "doc":
+  "Centered iid covariance sums have integrable polynomial trace moments whenever the sample\nhas finite moments of its squared norm. ",
   "atlas_partial":
   [],
   "atlas":
@@ -113276,6 +115013,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_khatriRaoProbe_mul_khatriRaoProbe {d : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  (hsecond : ∀ (j : Fin d) (a b : Fin (n j)), ∫ (g : Fin (n j) → ℝ), g a * g b ∂ν j = if a = b then 1 else 0)\n  (a b : (j : Fin d) → Fin (n j)) :\n  ∫ (g : (i : Fin d) → Fin (n i) → ℝ),\n      NLAlib.khatriRaoProbe g a * NLAlib.khatriRaoProbe g b ∂MeasureTheory.Measure.pi ν =\n    if a = b then 1 else 0",
+  "name":
+  "NLAlib.integral_khatriRaoProbe_mul_khatriRaoProbe",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "Independent isotropic factor laws have isotropic tensor-product probes.\nNo independence among coordinates of a single factor is needed. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.laguerrePolynomial"],
   "sorry":
   false,
@@ -114530,6 +116287,27 @@
   "atlas":
   ["spectral-measure"]},
  {"uses":
+  ["NLAlib.gaussianRadialMoment",
+   "NLAlib.gaussianVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_pow_sum_sq_gaussianVector {r : ℕ} (hr : 1 ≤ r) (p : ℕ) :\n  ∫ (z : Fin r → ℝ), (∑ i, z i ^ 2) ^ p ∂NLAlib.gaussianVector (Fin r) = NLAlib.gaussianRadialMoment r p",
+  "name":
+  "NLAlib.integral_pow_sum_sq_gaussianVector",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  74,
+  "kind":
+  "theorem",
+  "doc":
+  "The squared Gaussian radius has its exact natural product moment.\nSource: Gaussian polar integration. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -114570,6 +116348,26 @@
   ["symmetric-measure-even-odd-reduction"],
   "atlas":
   ["symmetric-measure-even-odd-reduction"]},
+ {"uses":
+  ["NLAlib.gaussianEvenMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_pow_two_mul_gaussianReal (p : ℕ) :\n  ∫ (z : ℝ), z ^ (2 * p) ∂ProbabilityTheory.gaussianReal 0 1 = NLAlib.gaussianEvenMoment p",
+  "name":
+  "NLAlib.integral_pow_two_mul_gaussianReal",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.NaturalMoments",
+  "line":
+  83,
+  "kind":
+  "theorem",
+  "doc":
+  "The scalar Gaussian has its exact even natural moment.\nSource: the scalar Gaussian Gamma integral. Atlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -114826,6 +116624,27 @@
   "atlas":
   ["isserlis"]},
  {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_projected_khatriRaoProbe_mul_projected_khatriRaoProbe {d : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  (hsecond : ∀ (j : Fin d) (a b : Fin (n j)), ∫ (g : Fin (n j) → ℝ), g a * g b ∂ν j = if a = b then 1 else 0) {r : ℕ}\n  (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) (hU : NLAlib.HasOrthonormalCols U) (i j : Fin r) :\n  ∫ (g : (i : Fin d) → Fin (n i) → ℝ),\n      U.transpose.mulVec (NLAlib.khatriRaoProbe g) i *\n        U.transpose.mulVec (NLAlib.khatriRaoProbe g) j ∂MeasureTheory.Measure.pi ν =\n    if i = j then 1 else 0",
+  "name":
+  "NLAlib.integral_projected_khatriRaoProbe_mul_projected_khatriRaoProbe",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  125,
+  "kind":
+  "theorem",
+  "doc":
+  "Restricting independent isotropic tensor probes to an orthonormal\nsubspace preserves their identity second-moment matrix. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.quadForm"],
   "sorry":
   false,
@@ -114950,6 +116769,27 @@
   [],
   "atlas":
   ["hutchinson-unbiased"]},
+ {"uses":
+  ["NLAlib.khatriRaoProbe",
+   "NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_quadForm_khatriRaoProbe_eq_trace {d : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)]\n  (hsecond : ∀ (j : Fin d) (a b : Fin (n j)), ∫ (g : Fin (n j) → ℝ), g a * g b ∂ν j = if a = b then 1 else 0)\n  (A : Matrix ((j : Fin d) → Fin (n j)) ((j : Fin d) → Fin (n j)) ℝ) :\n  ∫ (g : (i : Fin d) → Fin (n i) → ℝ), NLAlib.quadForm A (NLAlib.khatriRaoProbe g) ∂MeasureTheory.Measure.pi ν = A.trace",
+  "name":
+  "NLAlib.integral_quadForm_khatriRaoProbe_eq_trace",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  112,
+  "kind":
+  "theorem",
+  "doc":
+  "Quadratic forms of tensor-product probes have the expected trace whenever\nthe independent factors are isotropic. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.quadForm",
    "NLAlib.rademacherVector"],
@@ -116776,6 +118616,48 @@
   "theorem",
   "doc":
   "The genuine uniform-subset trace MGF is below the uniform-iid trace MGF.\nSource: Hoeffding comparison from the explicit support-extension coupling. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_trace_add_pow_le_of_centered_word_budgets.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω]\n  [Fintype ι] [DecidableEq ι] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] (A : Matrix ι ι ℝ)\n  (X : Ω → Matrix ι ι ℝ) {n : ℕ} (hn : 2 ≤ n) (ν R : ℝ) (T : ℕ → ℝ)\n  (hi :\n    ∀ j ≤ n,\n      ∀ w ∈ NLAlib.insertionWords n j, MeasureTheory.Integrable (fun ω => (NLAlib.insertionWord A (X ω) w).trace) μ)\n  (hlinear : ∀ w ∈ NLAlib.insertionWords n 1, ∫ (ω : Ω), (NLAlib.insertionWord A (X ω) w).trace ∂μ = 0)\n  (hbudget :\n    ∀ (j : ℕ),\n      2 ≤ j →\n        j ≤ n →\n          ∀ w ∈ NLAlib.insertionWords n j,\n            ∫ (ω : Ω), (NLAlib.insertionWord A (X ω) w).trace ∂μ ≤ ↑j.factorial / 2 * ν * R ^ (j - 2) * T (n - j)) :\n  ∫ (ω : Ω), ((A + X ω) ^ n).trace ∂μ ≤\n    (A ^ n).trace +\n      ∑ k ∈ Finset.range (n - 1), ↑(n.choose (k + 2)) * ↑(k + 2).factorial / 2 * ν * R ^ k * T (n - (k + 2))",
+  "name":
+  "NLAlib.integral_trace_add_pow_le_of_centered_word_budgets",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.InsertionMomentExpansion",
+  "line":
+  93,
+  "kind":
+  "theorem",
+  "doc":
+  "Removing the centered linear term leaves the factorial coefficient\nrecurrence used by the covariance moment comparison. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_trace_add_pow_le_sum_choose.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω] [Fintype ι]\n  [DecidableEq ι] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] (A : Matrix ι ι ℝ)\n  (X : Ω → Matrix ι ι ℝ) (n : ℕ) (b : ℕ → ℝ)\n  (hi :\n    ∀ j ≤ n,\n      ∀ w ∈ NLAlib.insertionWords n j, MeasureTheory.Integrable (fun ω => (NLAlib.insertionWord A (X ω) w).trace) μ)\n  (hb : ∀ j ≤ n, ∀ w ∈ NLAlib.insertionWords n j, ∫ (ω : Ω), (NLAlib.insertionWord A (X ω) w).trace ∂μ ≤ b j) :\n  ∫ (ω : Ω), ((A + X ω) ^ n).trace ∂μ ≤ ∑ j ∈ Finset.range (n + 1), ↑(n.choose j) * b j",
+  "name":
+  "NLAlib.integral_trace_add_pow_le_sum_choose",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.InsertionMomentExpansion",
+  "line":
+  66,
+  "kind":
+  "theorem",
+  "doc":
+  "Uniform per-word budgets sum to binomial coefficient budgets. ",
   "atlas_partial":
   [],
   "atlas":
@@ -120255,6 +122137,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.centeredRankOneCovariance"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isHermitian_centeredRankOneCovariance {r : ℕ} (y : Fin r → ℝ) : (NLAlib.centeredRankOneCovariance y).IsHermitian",
+  "name":
+  "NLAlib.isHermitian_centeredRankOneCovariance",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  38,
+  "kind":
+  "theorem",
+  "doc":
+  "A centered rank-one covariance matrix is real symmetric. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.dilation"],
   "sorry":
   false,
@@ -120515,6 +122417,26 @@
   [],
   "atlas":
   ["qr-algorithm-simultaneous-iteration"]},
+ {"uses":
+  ["NLAlib.rankOneCovarianceSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isHermitian_rankOneCovarianceSum.{u_1} {Ω : Type u_1} {r : ℕ} (y : Ω → Fin r → ℝ) {n : ℕ} (ω : Fin n → Ω) :\n  (NLAlib.rankOneCovarianceSum y ω).IsHermitian",
+  "name":
+  "NLAlib.isHermitian_rankOneCovarianceSum",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  "Every centered covariance sum is real symmetric. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -122022,6 +123944,30 @@
   [],
   "atlas":
   ["ose-def"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoProbe",
+   "NLAlib.khatriRaoSketch",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isSubspaceEmbedding_khatriRaoSketch_iff {d m : ℕ} {n : Fin d → ℕ} {r : ℕ} (hm : 0 < m)\n  (g : Fin m → (j : Fin d) → Fin (n j) → ℝ) (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ)\n  (hU : NLAlib.HasOrthonormalCols U) {ε : ℝ} (hε : 0 ≤ ε) :\n  NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoSketch g) U ε ↔\n    NLAlib.specNorm\n        ((↑m)⁻¹ •\n            ∑ i,\n              Matrix.vecMulVec (U.transpose.mulVec (NLAlib.khatriRaoProbe (g i)))\n                (U.transpose.mulVec (NLAlib.khatriRaoProbe (g i))) -\n          1) ≤\n      ε",
+  "name":
+  "NLAlib.isSubspaceEmbedding_khatriRaoSketch_iff",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  140,
+  "kind":
+  "theorem",
+  "doc":
+  "The norm bound on the empirical covariance error is exactly the\nsubspace-embedding property of the normalized Khatri–Rao sketch. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.IsSubspaceEmbedding"],
   "sorry":
@@ -124129,6 +126075,675 @@
   ["krylov-grade"],
   "atlas":
   ["krylov-grade"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonDimensions (r h k : ℕ) : Fin (k + 1) → ℕ",
+  "name":
+  "NLAlib.khatriRaoCommonDimensions",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  25,
+  "kind":
+  "def",
+  "doc":
+  "Mode dimensions for the common-factor obstruction: first mode `r`, remaining modes `h`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoCommonDimensions"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonFactors {r h k : ℕ} (ξ : Fin r → ℝ) (η : Fin k → Fin h → ℝ) (j : Fin (k + 1)) :\n  Fin (NLAlib.khatriRaoCommonDimensions r h k j) → ℝ",
+  "name":
+  "NLAlib.khatriRaoCommonFactors",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  28,
+  "kind":
+  "def",
+  "doc":
+  "Package the free and common factors as one dependent tuple of tensor factors. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoCommonDimensions"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonIndex {r h k : ℕ} (a : Fin r × (Fin k → Fin h)) (j : Fin (k + 1)) :\n  Fin (NLAlib.khatriRaoCommonDimensions r h k j)",
+  "name":
+  "NLAlib.khatriRaoCommonIndex",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  34,
+  "kind":
+  "def",
+  "doc":
+  "Package paired tensor coordinates as a dependent multi-index. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonIsometry (r h k : ℕ) : Matrix (Fin r × (Fin k → Fin h)) (Fin r) ℝ",
+  "name":
+  "NLAlib.khatriRaoCommonIsometry",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  46,
+  "kind":
+  "def",
+  "doc":
+  "The common-factor isometry sends `eₐ` to `eₐ ⊗ b^⊗k`, with\n`b = h^(-1/2) (1,…,1)`. The tensor coordinates are paired with their first mode. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonProjection {r h k : ℕ} (ξ : Fin r → ℝ) (η : Fin k → Fin h → ℝ) : Fin r → ℝ",
+  "name":
+  "NLAlib.khatriRaoCommonProjection",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  88,
+  "kind":
+  "def",
+  "doc":
+  "The projected common-factor row is the free sign vector times the product of the\nnormalized common-factor coordinate sums. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonRow {r h k : ℕ} (ξ : Fin r → ℝ) (η : Fin k → Fin h → ℝ) : Fin r × (Fin k → Fin h) → ℝ",
+  "name":
+  "NLAlib.khatriRaoCommonRow",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  72,
+  "kind":
+  "def",
+  "doc":
+  "A raw tensor row from one free factor and `k` common factors. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoCommonDimensions",
+   "NLAlib.khatriRaoCommonFactors",
+   "NLAlib.khatriRaoCommonIndex",
+   "NLAlib.khatriRaoCommonRow",
+   "NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonRow_eq_khatriRaoProbe {r h k : ℕ} (ξ : Fin r → ℝ) (η : Fin k → Fin h → ℝ)\n  (a : Fin r × (Fin k → Fin h)) :\n  NLAlib.khatriRaoCommonRow ξ η a =\n    NLAlib.khatriRaoProbe (NLAlib.khatriRaoCommonFactors ξ η) (NLAlib.khatriRaoCommonIndex a)",
+  "name":
+  "NLAlib.khatriRaoCommonRow_eq_khatriRaoProbe",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  77,
+  "kind":
+  "theorem",
+  "doc":
+  "The paired-coordinate witness row is the library's tensor-product probe evaluated in\nthe corresponding dependent multi-index.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
+ {"uses":
+  ["NLAlib.khatriRaoCommonIsometry",
+   "NLAlib.khatriRaoCommonProjection",
+   "NLAlib.khatriRaoCommonRow"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonRow_mul_khatriRaoCommonIsometry {r h k : ℕ} (ξ : Fin r → ℝ) (η : Fin k → Fin h → ℝ) (a : Fin r) :\n  ∑ t, NLAlib.khatriRaoCommonRow ξ η t * NLAlib.khatriRaoCommonIsometry r h k t a =\n    NLAlib.khatriRaoCommonProjection ξ η a",
+  "name":
+  "NLAlib.khatriRaoCommonRow_mul_khatriRaoCommonIsometry",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "Tensor contraction against the explicit isometry equals its product-of-sums formula. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonSignLaw (r h k m : ℕ) : MeasureTheory.Measure (Fin m → (Fin r → ℝ) × (Fin k → Fin h → ℝ))",
+  "name":
+  "NLAlib.khatriRaoCommonSignLaw",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  190,
+  "kind":
+  "def",
+  "doc":
+  "Independent Rademacher factors for every row: `r` signs in the first mode and `h` signs\nin each of the remaining `k` modes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonSketch {r h k m : ℕ} (z : Fin m → (Fin r → ℝ) × (Fin k → Fin h → ℝ)) :\n  Matrix (Fin m) (Fin r × (Fin k → Fin h)) ℝ",
+  "name":
+  "NLAlib.khatriRaoCommonSketch",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  108,
+  "kind":
+  "def",
+  "doc":
+  "A normalized tensor sketch with the common-factor coordinate representation. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoCommonIsometry",
+   "NLAlib.khatriRaoCommonProjection",
+   "NLAlib.khatriRaoCommonSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCommonSketch_mul_khatriRaoCommonIsometry {r h k m : ℕ} (z : Fin m → (Fin r → ℝ) × (Fin k → Fin h → ℝ))\n  (i : Fin m) (a : Fin r) :\n  (NLAlib.khatriRaoCommonSketch z * NLAlib.khatriRaoCommonIsometry r h k) i a =\n    (√↑m)⁻¹ * NLAlib.khatriRaoCommonProjection (z i).1 (z i).2 a",
+  "name":
+  "NLAlib.khatriRaoCommonSketch_mul_khatriRaoCommonIsometry",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  114,
+  "kind":
+  "theorem",
+  "doc":
+  "The rows of the sketched common-factor isometry are its normalized projected samples. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoCovarianceScaleConstant (d : ℕ) (K : ℝ) : ℝ",
+  "name":
+  "NLAlib.khatriRaoCovarianceScaleConstant",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoUpper",
+  "line":
+  26,
+  "kind":
+  "def",
+  "doc":
+  "The coefficient controlling both variance and large-row scales in the\nKhatri–Rao covariance moment estimate. Its dependence is only on tensor\norder and the directional sub-Gaussian parameter. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoEmbeddingConstant (d : ℕ) (C : ℝ) : ℝ",
+  "name":
+  "NLAlib.khatriRaoEmbeddingConstant",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  152,
+  "kind":
+  "def",
+  "doc":
+  "A uniform constant which absorbs the square-root and large-row terms\nwhen converting a Khatri–Rao trace-moment scale to a sample budget. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoFixedParameterConstant (d : ℕ) (C ε δ : ℝ) : ℝ",
+  "name":
+  "NLAlib.khatriRaoFixedParameterConstant",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoGrowth",
+  "line":
+  22,
+  "kind":
+  "def",
+  "doc":
+  "An explicit constant converting the full embedding budget into its\nfixed-accuracy, fixed-confidence rank growth. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoFixedParameterConstant"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoFixedParameterConstant_pos (d : ℕ) {C ε δ : ℝ} (hC : 0 < C) (hε : 0 < ε) (hδ : 0 < δ) (hδ1 : δ < 1) :\n  0 < NLAlib.khatriRaoFixedParameterConstant d C ε δ",
+  "name":
+  "NLAlib.khatriRaoFixedParameterConstant_pos",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoGrowth",
+  "line":
+  28,
+  "kind":
+  "theorem",
+  "doc":
+  "The fixed-parameter sampling constant is positive at positive\naccuracy and a confidence parameter strictly between zero and one.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoLowerConstant (k : ℕ) : ℝ",
+  "name":
+  "NLAlib.khatriRaoLowerConstant",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLowerGrowth",
+  "line":
+  22,
+  "kind":
+  "def",
+  "doc":
+  "The explicit lower sampling constant `1/[2(4k log 2)^k]` for tensor order `k+1`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoLowerConstant"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoLowerConstant_pos {k : ℕ} (hk : 0 < k) : 0 < NLAlib.khatriRaoLowerConstant k",
+  "name":
+  "NLAlib.khatriRaoLowerConstant_pos",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLowerGrowth",
+  "line":
+  107,
+  "kind":
+  "theorem",
+  "doc":
+  "The explicit lower-growth sampling constant is strictly positive at every positive\ntensor-tail order.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoLowerMode (r k : ℕ) : ℕ",
+  "name":
+  "NLAlib.khatriRaoLowerMode",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLowerGrowth",
+  "line":
+  18,
+  "kind":
+  "def",
+  "doc":
+  "Common-mode dimension `⌊log r / (2k log 2)⌋` for the order-`k+1` Rademacher witness. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoLowerMode"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoLowerMode_bounds {r k : ℕ} (hk : 0 < k) (hr : 4 * ↑k * Real.log 2 ≤ Real.log ↑r) :\n  0 < NLAlib.khatriRaoLowerMode r k ∧\n    Real.log ↑r / (4 * ↑k * Real.log 2) ≤ ↑(NLAlib.khatriRaoLowerMode r k) ∧\n      ↑(NLAlib.khatriRaoLowerMode r k) ≤ Real.log ↑r / (2 * ↑k * Real.log 2)",
+  "name":
+  "NLAlib.khatriRaoLowerMode_bounds",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLowerGrowth",
+  "line":
+  26,
+  "kind":
+  "theorem",
+  "doc":
+  "Above the explicit logarithmic threshold, the common mode is positive and lies between\n`log r/(4k log 2)` and `log r/(2k log 2)`. Thus the non-free mode dimensions grow only\nlogarithmically.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoMomentOrder (r : ℕ) (δ : ℝ) : ℕ",
+  "name":
+  "NLAlib.khatriRaoMomentOrder",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  156,
+  "kind":
+  "def",
+  "doc":
+  "The logarithmic terminal moment order used by the sharp Khatri–Rao\nembedding estimate. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoMomentOrder"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoMomentOrder_bounds {r : ℕ} (hr : 1 ≤ r) {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) :\n  1 ≤ NLAlib.khatriRaoMomentOrder r δ ∧\n    Real.log (4 * ↑r / δ) ≤ ↑(NLAlib.khatriRaoMomentOrder r δ) ∧\n      ↑(NLAlib.khatriRaoMomentOrder r δ) ≤ 2 * Real.log (4 * ↑r / δ)",
+  "name":
+  "NLAlib.khatriRaoMomentOrder_bounds",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  173,
+  "kind":
+  "theorem",
+  "doc":
+  "The chosen terminal moment order is positive and lies between the\ndimension-to-confidence logarithm and twice that logarithm. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoMomentRadius (d : ℕ) (K : ℝ) (r p : ℕ) : ℝ",
+  "name":
+  "NLAlib.khatriRaoMomentRadius",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  178,
+  "kind":
+  "def",
+  "doc":
+  "An explicit raw covariance moment radius at natural order `p`.\nSource: the coarsened Gaussian averaging factorial envelope.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoMomentRadius"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoMomentRadius_mono {d r : ℕ} {K : ℝ} (hK : 0 ≤ K) : Monotone (NLAlib.khatriRaoMomentRadius d K r)",
+  "name":
+  "NLAlib.khatriRaoMomentRadius_mono",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  184,
+  "kind":
+  "theorem",
+  "doc":
+  "The explicit raw covariance radius increases with the moment order.\nSource: monotonicity of nonnegative natural powers.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoProbe {d : ℕ} {n : Fin d → ℕ} (g : (j : Fin d) → Fin (n j) → ℝ) : ((j : Fin d) → Fin (n j)) → ℝ",
+  "name":
+  "NLAlib.khatriRaoProbe",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  25,
+  "kind":
+  "def",
+  "doc":
+  "The tensor-product vector whose coordinate at a multi-index is the\nproduct of the corresponding factor coordinates. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoSampleLaw {d : ℕ} {n : Fin d → ℕ} (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) (m : ℕ) :\n  MeasureTheory.Measure (Fin m → (j : Fin d) → Fin (n j) → ℝ)",
+  "name":
+  "NLAlib.khatriRaoSampleLaw",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  29,
+  "kind":
+  "def",
+  "doc":
+  "The law of `m` independent samples of independent vector factors.\nCoordinates within any individual factor may be dependent. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoSampleLaw"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoSampleLaw_isProbabilityMeasure {d m : ℕ} {n : Fin d → ℕ}\n  (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ)) [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)] :\n  MeasureTheory.IsProbabilityMeasure (NLAlib.khatriRaoSampleLaw ν m)",
+  "name":
+  "NLAlib.khatriRaoSampleLaw_isProbabilityMeasure",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  35,
+  "kind":
+  "instance",
+  "doc":
+  "Independent sampling of probability factor laws is again a probability law. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoSharpEmbeddingConstant (d : ℕ) (K : ℝ) : ℝ",
+  "name":
+  "NLAlib.khatriRaoSharpEmbeddingConstant",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoUpper",
+  "line":
+  33,
+  "kind":
+  "def",
+  "doc":
+  "An explicit sufficient constant in the sharp Khatri–Rao embedding\nsample budget. It is deliberately unoptimized and independent of all mode\ndimensions, subspace rank, accuracy and confidence. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoSharpEmbeddingConstant"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoSharpEmbeddingConstant_pos (d : ℕ) (K : ℝ) : 0 < NLAlib.khatriRaoSharpEmbeddingConstant d K",
+  "name":
+  "NLAlib.khatriRaoSharpEmbeddingConstant_pos",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoUpper",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "The explicit sharp embedding sample-budget constant is positive for\nevery tensor order and every real parameter.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoSketch {d m : ℕ} {n : Fin d → ℕ} (g : Fin m → (j : Fin d) → Fin (n j) → ℝ) :\n  Matrix (Fin m) ((j : Fin d) → Fin (n j)) ℝ",
+  "name":
+  "NLAlib.khatriRaoSketch",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  42,
+  "kind":
+  "def",
+  "doc":
+  "The Khatri–Rao sketch with tensor-product rows scaled by `1 / sqrt m`.\nFor zero rows, the resulting matrix is the unique empty-row matrix. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoProbe",
+   "NLAlib.khatriRaoSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoSketch_mul_apply {d m : ℕ} {n : Fin d → ℕ} {r : ℕ} (g : Fin m → (j : Fin d) → Fin (n j) → ℝ)\n  (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) (i : Fin m) (a : Fin r) :\n  (NLAlib.khatriRaoSketch g * U) i a = 1 / √↑m * U.transpose.mulVec (NLAlib.khatriRaoProbe (g i)) a",
+  "name":
+  "NLAlib.khatriRaoSketch_mul_apply",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  89,
+  "kind":
+  "theorem",
+  "doc":
+  "Multiplying the normalized sketch by a subspace frame restricts each\ntensor probe to the corresponding projected row. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoVarianceBudget (d : ℕ) (K : ℝ) (r : ℕ) : ℝ",
+  "name":
+  "NLAlib.khatriRaoVarianceBudget",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  172,
+  "kind":
+  "def",
+  "doc":
+  "An explicit variance scale for tensor directional sub-Gaussian moments.\nSource: the coarsened Gaussian averaging factorial envelope.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoVarianceBudget"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRaoVarianceBudget_pos {d r : ℕ} {K : ℝ} (hr : 1 ≤ r) (hK : 0 < K) :\n  0 < NLAlib.khatriRaoVarianceBudget d K r",
+  "name":
+  "NLAlib.khatriRaoVarianceBudget_pos",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  194,
+  "kind":
+  "theorem",
+  "doc":
+  "The explicit raw covariance variance is positive in positive rank and scale.\nSource: the explicit factorial envelope.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoFixedParameterConstant"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.khatriRao_budget_le_fixedParameterConstant_mul_rank_log_pow {d : ℕ} (hd : 2 ≤ d) {C r ε δ : ℝ} (hC : 0 ≤ C)\n  (hr : 1 ≤ r) (hε : 0 < ε) (hδ : 0 < δ) (hδ1 : δ < 1) :\n  C * (r * Real.log (4 * r / δ) / ε ^ 2 + (r * Real.log (4 * r / δ) ^ (d - 1) + Real.log (4 * r / δ) ^ d) / ε) ≤\n    NLAlib.khatriRaoFixedParameterConstant d C ε δ * r * (1 + Real.log r) ^ (d - 1)",
+  "name":
+  "NLAlib.khatriRao_budget_le_fixedParameterConstant_mul_rank_log_pow",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoGrowth",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "The logarithmic budget has the sharp rank growth at every fixed\naccuracy and confidence. This estimate is uniform over real ranks `r≥1`.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
  {"uses":
   [],
   "sorry":
@@ -126393,6 +129008,27 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.finiteMomentBarrier",
+   "NLAlib.finiteMomentUpdate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.le_finiteMomentBarrier_pow {ν R : ℝ} {q : ℕ} {M : ℕ → ℕ → ℝ} (hν : 0 < ν) (hR : 0 ≤ R) (hq : 1 ≤ q)\n  (hM : ∀ (n p : ℕ), 0 ≤ M n p) (hzero : ∀ (n : ℕ), M n 0 = 1) (hinit : ∀ (p : ℕ), 1 ≤ p → p ≤ q → M 0 p = 0)\n  (hstep : ∀ (n p : ℕ), 1 ≤ p → p ≤ q → M (n + 1) p ≤ M n p + NLAlib.finiteMomentUpdate ν R (M n) p) (n p : ℕ) :\n  p ≤ q → M n p ≤ NLAlib.finiteMomentBarrier q ν R ↑n ^ (2 * p)",
+  "name":
+  "NLAlib.le_finiteMomentBarrier_pow",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  216,
+  "kind":
+  "theorem",
+  "doc":
+  "Every nonnegative even-moment sequence satisfying the factorial recurrence\nis bounded by an explicit square-root plus linear terminal-order barrier.\nSource: Heidary, Appendix `closed:thm:moment`; numerical constants are coarsened\nto avoid optimizing Gaussian pairing coefficients.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -126655,6 +129291,26 @@
   ["loewner-relative-spectrum"],
   "atlas":
   ["loewner-relative-spectrum"]},
+ {"uses":
+  ["NLAlib.finiteMomentUpdate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.le_sqrt_add_mul_pow_of_finiteMomentUpdate {ν R : ℝ} {q m : ℕ} {M : ℕ → ℕ → ℝ} (hν : 0 < ν) (hR : 0 ≤ R)\n  (hq : 1 ≤ q) (hm : 1 ≤ m) (hM : ∀ (n p : ℕ), 0 ≤ M n p) (hzero : ∀ (n : ℕ), M n 0 = 1)\n  (hinit : ∀ (p : ℕ), 1 ≤ p → p ≤ q → M 0 p = 0)\n  (hstep : ∀ (n p : ℕ), 1 ≤ p → p ≤ q → M (n + 1) p ≤ M n p + NLAlib.finiteMomentUpdate ν R (M n) p) :\n  M m q ≤ (2 * √(↑q * ν * ↑m) + 2 * ↑q * R) ^ (2 * q)",
+  "name":
+  "NLAlib.le_sqrt_add_mul_pow_of_finiteMomentUpdate",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  262,
+  "kind":
+  "theorem",
+  "doc":
+  "The explicit factorial recurrence bound at the terminal moment order.\nSource: Heidary, Appendix `closed:thm:moment`; this gives the same square-root\nand linear scales with coarser explicit numerical constants.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -127709,6 +130365,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.length_and_count_of_mem_insertionWords {n j : ℕ} {w : List Bool} (hw : w ∈ NLAlib.insertionWords n j) :\n  w.length = n ∧ List.count true w = j",
+  "name":
+  "NLAlib.length_and_count_of_mem_insertionWords",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "Every insertion word has the specified length and number of marked positions. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.hessenbergReflectors"],
   "sorry":
   false,
@@ -127744,6 +130420,46 @@
   "theorem",
   "doc":
   "Householder QR uses `min m n` reflectors. Trefethen–Bau 1997, Alg. 10.1. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.length_insertionWords (n j : ℕ) : (NLAlib.insertionWords n j).length = n.choose j",
+  "name":
+  "NLAlib.length_insertionWords",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "There are `n.choose j` insertion words. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.subInsertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.length_subInsertionWords (w : List Bool) : (NLAlib.subInsertionWords w).length = 2 ^ List.count true w",
+  "name":
+  "NLAlib.length_subInsertionWords",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  125,
+  "kind":
+  "theorem",
+  "doc":
+  "Each marked position gives two choices in the identity expansion. ",
   "atlas_partial":
   [],
   "atlas":
@@ -128054,6 +130770,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.rademacherVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.lintegral_exp_sq_dotProduct_rademacherVector_le_two.{u_1} {ι : Type u_1} [Fintype ι] (u : ι → ℝ)\n  (hu : ‖WithLp.toLp 2 u‖ = 1) :\n  ∫⁻ (x : ι → ℝ), ENNReal.ofReal (Real.exp ((u ⬝ᵥ x) ^ 2 / 10 ^ 2)) ∂NLAlib.rademacherVector ι ≤ 2",
+  "name":
+  "NLAlib.lintegral_exp_sq_dotProduct_rademacherVector_le_two",
+  "module":
+  "NLAlib.Probability.Rademacher.DirectionalExpSquare",
+  "line":
+  44,
+  "kind":
+  "theorem",
+  "doc":
+  "Independent sign vectors satisfy the manuscript's directional\nexponential-square factor hypothesis with the fixed parameter `10`.\nThis parameter is sufficient and is not claimed optimal.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
  {"uses":
   [],
   "sorry":
@@ -131960,6 +134696,47 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.khatriRaoProbe"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measurable_khatriRaoProbe {d : ℕ} {n : Fin d → ℕ} : Measurable NLAlib.khatriRaoProbe",
+  "name":
+  "NLAlib.measurable_khatriRaoProbe",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  36,
+  "kind":
+  "theorem",
+  "doc":
+  "The tensor-product probe is measurable for the product Borel structures. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.khatriRaoSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measurable_khatriRaoSketch {d m : ℕ} {n : Fin d → ℕ} : Measurable NLAlib.khatriRaoSketch",
+  "name":
+  "NLAlib.measurable_khatriRaoSketch",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  48,
+  "kind":
+  "theorem",
+  "doc":
+  "The literal normalized Khatri–Rao sketch is measurable in all its factors. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.lanczosRayleighRelativeError"],
   "sorry":
   false,
@@ -132414,6 +135191,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measurable_trace_insertionWord_vecMulVec_sub_one.{u_1, u_2} {Ω : Type u_1} {ι : Type u_2} [MeasurableSpace Ω]\n  [Fintype ι] [DecidableEq ι] (y : Ω → ι → ℝ) (hy : Measurable y) (A : Matrix ι ι ℝ) (w : List Bool) :\n  Measurable fun ω => (NLAlib.insertionWord A (Matrix.vecMulVec (y ω) (y ω) - 1) w).trace",
+  "name":
+  "NLAlib.measurable_trace_insertionWord_vecMulVec_sub_one",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneStep",
+  "line":
+  27,
+  "kind":
+  "theorem",
+  "doc":
+  "A matrix insertion word in a measurable vector has measurable trace. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -132515,6 +135312,28 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.khatriRaoCommonDimensions",
+   "NLAlib.khatriRaoCommonFactors",
+   "NLAlib.rademacherVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measurePreserving_khatriRaoCommonFactors (r h k : ℕ) :\n  MeasureTheory.MeasurePreserving (fun z => NLAlib.khatriRaoCommonFactors z.1 z.2)\n    ((NLAlib.rademacherVector (Fin r)).prod (MeasureTheory.Measure.pi fun x => NLAlib.rademacherVector (Fin h)))\n    (MeasureTheory.Measure.pi fun j => NLAlib.rademacherVector (Fin (NLAlib.khatriRaoCommonDimensions r h k j)))",
+  "name":
+  "NLAlib.measurePreserving_khatriRaoCommonFactors",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  197,
+  "kind":
+  "theorem",
+  "doc":
+  "Regrouping the free and common sign vectors has precisely the heterogeneous independent\nRademacher factor law used by the library's tensor-product construction.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
  {"uses":
   ["NLAlib.rademacherMeasure"],
   "sorry":
@@ -133587,6 +136406,147 @@
   [],
   "atlas":
   ["subgaussian-spec-norm"]},
+ {"uses":
+  ["NLAlib.rankOneCovarianceMoment",
+   "NLAlib.rankOneCovarianceSum",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measureReal_lt_specNorm_rankOneCovarianceSum_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ}\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {y : Ω → Fin r → ℝ} (hy : Measurable y)\n  (hmom : ∀ (p : ℕ), MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ p) μ) {m q : ℕ} (hq : 0 < q) {t : ℝ}\n  (ht : 0 < t) :\n  (MeasureTheory.Measure.pi fun x => μ).real {ω | t < NLAlib.specNorm (NLAlib.rankOneCovarianceSum y ω)} ≤\n    ↑r * NLAlib.rankOneCovarianceMoment y μ m q / t ^ (2 * q)",
+  "name":
+  "NLAlib.measureReal_lt_specNorm_rankOneCovarianceSum_le",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  290,
+  "kind":
+  "theorem",
+  "doc":
+  "Markov's inequality for the spectral norm of an iid centered covariance sum, given its\nnormalized trace moment. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.centeredRankOneCovariance",
+   "NLAlib.rankOneCovarianceSum",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measureReal_lt_specNorm_smul_rankOneCovarianceSum_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ}\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {y : Ω → Fin r → ℝ} (hy : Measurable y)\n  (hmom : ∀ (p : ℕ), MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ p) μ) (hr : 0 < r) {ν R : ℝ} (hν : 0 < ν)\n  (hR : 0 ≤ R) {q m : ℕ} (hq : 1 ≤ q) (hm : 1 ≤ m) {ε : ℝ} (hε : 0 < ε)\n  (hstep :\n    ∀ (p : ℕ),\n      1 ≤ p →\n        p ≤ q →\n          ∀ (A : Matrix (Fin r) (Fin r) ℝ),\n            A.IsHermitian →\n              ∫ (v : Ω), ((A + NLAlib.centeredRankOneCovariance (y v)) ^ (2 * p)).trace ∂μ ≤\n                (A ^ (2 * p)).trace +\n                  ∑ k ∈ Finset.range (2 * p - 1),\n                    ↑((2 * p).choose (k + 2)) * ↑(k + 2).factorial / 2 * ν * R ^ k *\n                      (cfc (fun x => |x| ^ (2 * p - (k + 2))) A).trace) :\n  (MeasureTheory.Measure.pi fun x => μ).real {ω | ε < NLAlib.specNorm ((↑m)⁻¹ • NLAlib.rankOneCovarianceSum y ω)} ≤\n    ↑r * ((2 * √(↑q * ν * ↑m) + 2 * ↑q * R) / (↑m * ε)) ^ (2 * q)",
+  "name":
+  "NLAlib.measureReal_lt_specNorm_smul_rankOneCovarianceSum_le",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  324,
+  "kind":
+  "theorem",
+  "doc":
+  "A finite-moment concentration bound for the empirical covariance of actual iid vector\nsamples. A source one-step trace estimate yields a spectral failure probability with the\nvariance and radius scales `2√(qνm)+2qR`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoCommonIsometry",
+   "NLAlib.khatriRaoCommonSignLaw",
+   "NLAlib.khatriRaoCommonSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoCommonSketch_eq_one_of_lt {r h k m : ℕ} (hh : 0 < h) (hmr : m < r)\n  {ε : ℝ} (hε : ε < 1) :\n  (NLAlib.khatriRaoCommonSignLaw r h k m).real\n      {z | ¬NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoCommonSketch z) (NLAlib.khatriRaoCommonIsometry r h k) ε} =\n    1",
+  "name":
+  "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoCommonSketch_eq_one_of_lt",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  312,
+  "kind":
+  "theorem",
+  "doc":
+  "Below the target dimension the common-factor sketch fails deterministically. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoSampleLaw",
+   "NLAlib.khatriRaoSharpEmbeddingConstant",
+   "NLAlib.khatriRaoSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le {d r m : ℕ} {n : Fin d → ℕ} (hd : 2 ≤ d) (hr : 1 ≤ r)\n  (hm : 1 ≤ m) (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ))\n  [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)] {K : ℝ} (hK : 0 < K)\n  (hpsi :\n    ∀ (j : Fin d) (u : Fin (n j) → ℝ),\n      ‖WithLp.toLp 2 u‖ = 1 → ∫⁻ (g : Fin (n j) → ℝ), ENNReal.ofReal (Real.exp ((u ⬝ᵥ g / K) ^ 2)) ∂ν j ≤ 2)\n  (hsecond : ∀ (j : Fin d) (a b : Fin (n j)), ∫ (g : Fin (n j) → ℝ), g a * g b ∂ν j = if a = b then 1 else 0)\n  (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) (hU : NLAlib.HasOrthonormalCols U) {ε δ : ℝ} (hε : 0 < ε)\n  (hδ : 0 < δ) (hδ1 : δ ≤ 1)\n  (hbudget :\n    NLAlib.khatriRaoSharpEmbeddingConstant d K *\n        (↑r * Real.log (4 * ↑r / δ) / ε ^ 2 + (↑r * Real.log (4 * ↑r / δ) ^ (d - 1) + Real.log (4 * ↑r / δ) ^ d) / ε) ≤\n      ↑m) :\n  (NLAlib.khatriRaoSampleLaw ν m).real {g | ¬NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoSketch g) U ε} ≤ δ",
+  "name":
+  "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoUpper",
+  "line":
+  103,
+  "kind":
+  "theorem",
+  "doc":
+  "Independent isotropic directionally sub-Gaussian vector factors give\nthe sharp Khatri–Rao subspace-embedding sample budget at every confidence.\nCoordinates within one factor may be dependent. Source: Heidary, Theorem\n2.1, with an explicit unoptimized constant from the finite-moment derivation.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoFixedParameterConstant",
+   "NLAlib.khatriRaoSampleLaw",
+   "NLAlib.khatriRaoSharpEmbeddingConstant",
+   "NLAlib.khatriRaoSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le_of_rank_log_budget {d r m : ℕ} {n : Fin d → ℕ}\n  (hd : 2 ≤ d) (hr : 1 ≤ r) (hm : 1 ≤ m) (ν : (j : Fin d) → MeasureTheory.Measure (Fin (n j) → ℝ))\n  [∀ (j : Fin d), MeasureTheory.IsProbabilityMeasure (ν j)] {K : ℝ} (hK : 0 < K)\n  (hpsi :\n    ∀ (j : Fin d) (u : Fin (n j) → ℝ),\n      ‖WithLp.toLp 2 u‖ = 1 → ∫⁻ (g : Fin (n j) → ℝ), ENNReal.ofReal (Real.exp ((u ⬝ᵥ g / K) ^ 2)) ∂ν j ≤ 2)\n  (hsecond : ∀ (j : Fin d) (a b : Fin (n j)), ∫ (g : Fin (n j) → ℝ), g a * g b ∂ν j = if a = b then 1 else 0)\n  (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) (hU : NLAlib.HasOrthonormalCols U) {ε δ : ℝ} (hε : 0 < ε)\n  (hδ : 0 < δ) (hδ1 : δ < 1)\n  (hbudget :\n    NLAlib.khatriRaoFixedParameterConstant d (NLAlib.khatriRaoSharpEmbeddingConstant d K) ε δ * ↑r *\n        (1 + Real.log ↑r) ^ (d - 1) ≤\n      ↑m) :\n  (NLAlib.khatriRaoSampleLaw ν m).real {g | ¬NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoSketch g) U ε} ≤ δ",
+  "name":
+  "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le_of_rank_log_budget",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoGrowth",
+  "line":
+  98,
+  "kind":
+  "theorem",
+  "doc":
+  "At fixed factor parameter, accuracy and confidence, a constant times\n`r log(er)^(d-1)` rows suffices under the actual independent factor law.\nThe constant is explicit and independent of rank and mode dimensions.\nSource: Heidary, Theorem `core:thm:ose`.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoSampleLaw",
+   "NLAlib.khatriRaoSharpEmbeddingConstant",
+   "NLAlib.khatriRaoSketch",
+   "NLAlib.rademacherVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_rademacher_le {d r m : ℕ} {n : Fin d → ℕ} (hd : 2 ≤ d)\n  (hr : 1 ≤ r) (hm : 1 ≤ m) (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) (hU : NLAlib.HasOrthonormalCols U)\n  {ε δ : ℝ} (hε : 0 < ε) (hδ : 0 < δ) (hδ1 : δ ≤ 1)\n  (hbudget :\n    NLAlib.khatriRaoSharpEmbeddingConstant d 10 *\n        (↑r * Real.log (4 * ↑r / δ) / ε ^ 2 + (↑r * Real.log (4 * ↑r / δ) ^ (d - 1) + Real.log (4 * ↑r / δ) ^ d) / ε) ≤\n      ↑m) :\n  (NLAlib.khatriRaoSampleLaw (fun j => NLAlib.rademacherVector (Fin (n j))) m).real\n      {g | ¬NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoSketch g) U ε} ≤\n    δ",
+  "name":
+  "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_rademacher_le",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoSigns",
+  "line":
+  23,
+  "kind":
+  "theorem",
+  "doc":
+  "Independent-coordinate Rademacher factors satisfy the sharp embedding upper budget with\nthe fixed admissible square-exponential parameter `10`. There are no distributional hypotheses\nleft for the caller to prove. The numerical constant is deliberately unoptimized.\nSource: Heidary, Theorem 2.1, specialized to the law in Proposition `lower:prop:rademacher`.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
  {"uses":
   ["NLAlib.gaussianSeriesTail",
    "NLAlib.specNorm"],
@@ -140192,6 +143152,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.khatriRaoEmbeddingConstant"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.mul_sqrt_add_pow_div_le_of_khatriRao_budget {d : ℕ} (hd : 1 ≤ d) {C r m t q ε : ℝ} (hC : 0 ≤ C) (hr : 0 ≤ r)\n  (hm : 0 < m) (ht : 0 ≤ t) (hq : 0 ≤ q) (hqt : q ≤ 2 * t) (hε : 0 < ε)\n  (hbudget : NLAlib.khatriRaoEmbeddingConstant d C * (r * t / ε ^ 2 + (r * t ^ (d - 1) + t ^ d) / ε) ≤ m) :\n  C * (√(q * r / m) + q ^ (d - 1) * (r + q) / m) ≤ ε",
+  "name":
+  "NLAlib.mul_sqrt_add_pow_div_le_of_khatriRao_budget",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  202,
+  "kind":
+  "theorem",
+  "doc":
+  "The sharp sample budget controls a moment error scale whenever the\nchosen moment order is at most twice the logarithmic order.\nSource: Heidary, Theorem 2.1, final upper-bound arithmetic. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -144261,6 +147241,28 @@
   "atlas":
   ["quadrature-exactness-characterisation"]},
  {"uses":
+  ["NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoCommonIsometry",
+   "NLAlib.khatriRaoCommonSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.not_isSubspaceEmbedding_khatriRaoCommonSketch_of_all_one {r h k m : ℕ} (hh : 0 < h) (hm : 0 < m)\n  (hsize : 2 * m ≤ r * h ^ k) (z : Fin m → (Fin r → ℝ) × (Fin k → Fin h → ℝ)) (i : Fin m)\n  (hξ : ∀ (a : Fin r), (z i).1 a ^ 2 = 1) (hη : ∀ (j : Fin k) (t : Fin h), (z i).2 j t = 1) {ε : ℝ} (hε : ε < 1) :\n  ¬NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoCommonSketch z) (NLAlib.khatriRaoCommonIsometry r h k) ε",
+  "name":
+  "NLAlib.not_isSubspaceEmbedding_khatriRaoCommonSketch_of_all_one",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  165,
+  "kind":
+  "theorem",
+  "doc":
+  "A single all-positive common-factor row obstructs every distortion below one when its\nunscaled squared norm is at least twice the sketch size. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -145414,6 +148416,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.khatriRaoMomentRadius"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.one_le_khatriRaoMomentRadius {d r p : ℕ} {K : ℝ} (hp : 1 ≤ p) (hK : 1 ≤ K) :\n  1 ≤ NLAlib.khatriRaoMomentRadius d K r p",
+  "name":
+  "NLAlib.one_le_khatriRaoMomentRadius",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  218,
+  "kind":
+  "theorem",
+  "doc":
+  "Positive rank and a capped sub-Gaussian scale give a radius of at least one.\nSource: the explicit factorial envelope.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.lebesgueConstant"],
   "sorry":
   false,
@@ -145576,6 +148598,74 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.one_lt_log_four_mul_rank_div {r : ℕ} (hr : 1 ≤ r) {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) : 1 < Real.log (4 * ↑r / δ)",
+  "name":
+  "NLAlib.one_lt_log_four_mul_rank_div",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  160,
+  "kind":
+  "theorem",
+  "doc":
+  "The dimension-to-confidence logarithm exceeds one for positive rank\nand a failure probability at most one. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoCommonIsometry",
+   "NLAlib.khatriRaoCommonSignLaw",
+   "NLAlib.khatriRaoCommonSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.one_sub_exp_neg_sqrt_le_measureReal_not_isSubspaceEmbedding_khatriRaoCommonSketch {r h k m : ℕ} (hh : 0 < h)\n  (hm : 0 < m) (hrm : r ≤ m) (hsize : 2 * m ≤ r * h ^ k) (hprob : √↑r ≤ ↑r * (1 / 2) ^ (h * k)) {ε : ℝ} (hε : ε < 1) :\n  1 - Real.exp (-√↑r) ≤\n    (NLAlib.khatriRaoCommonSignLaw r h k m).real\n      {z | ¬NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoCommonSketch z) (NLAlib.khatriRaoCommonIsometry r h k) ε}",
+  "name":
+  "NLAlib.one_sub_exp_neg_sqrt_le_measureReal_not_isSubspaceEmbedding_khatriRaoCommonSketch",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  330,
+  "kind":
+  "theorem",
+  "doc":
+  "An exponential version of the explicit Rademacher obstruction, uniform in the number\nof rows once `m ≥ r`. Its two deterministic side inequalities isolate the floor/log arithmetic\nused in the sharp-growth corollary. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoCommonIsometry",
+   "NLAlib.khatriRaoCommonSignLaw",
+   "NLAlib.khatriRaoCommonSketch",
+   "NLAlib.khatriRaoLowerConstant",
+   "NLAlib.khatriRaoLowerMode"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.one_sub_exp_neg_sqrt_le_measureReal_not_isSubspaceEmbedding_of_le_lower_growth {r k m : ℕ} (hk : 0 < k)\n  (hr : 2 ^ (4 * k) ≤ r) (hm : 0 < m) (hbudget : ↑m ≤ NLAlib.khatriRaoLowerConstant k * ↑r * Real.log ↑r ^ k) {ε : ℝ}\n  (hε : ε < 1) :\n  1 - Real.exp (-√↑r) ≤\n    (NLAlib.khatriRaoCommonSignLaw r (NLAlib.khatriRaoLowerMode r k) k m).real\n      {z |\n        ¬NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoCommonSketch z)\n            (NLAlib.khatriRaoCommonIsometry r (NLAlib.khatriRaoLowerMode r k) k) ε}",
+  "name":
+  "NLAlib.one_sub_exp_neg_sqrt_le_measureReal_not_isSubspaceEmbedding_of_le_lower_growth",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLowerGrowth",
+  "line":
+  116,
+  "kind":
+  "theorem",
+  "doc":
+  "For every `r ≥ 2^(4k)`, the order-`k+1` Rademacher tensor sketch fails at every distortion\nbelow one with probability at least `1-exp(-√r)` for every positive integer sample size at most\n`r(log r)^k/[2(4k log 2)^k]`. This is Proposition `lower:prop:rademacher` of\n`Khatri_Rao_Embeddings_and_Approximation_Focused.tex`; `k=d-1`.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
  {"uses":
   ["NLAlib.evenChebyshevFilter"],
   "sorry":
@@ -145787,6 +148877,29 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.IsSubspaceEmbedding",
+   "NLAlib.khatriRaoCommonIsometry",
+   "NLAlib.khatriRaoCommonSignLaw",
+   "NLAlib.khatriRaoCommonSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.one_sub_pow_le_measureReal_not_isSubspaceEmbedding_khatriRaoCommonSketch {r h k m : ℕ} (hh : 0 < h) (hm : 0 < m)\n  (hsize : 2 * m ≤ r * h ^ k) {ε : ℝ} (hε : ε < 1) :\n  1 - (1 - (1 / 2) ^ (h * k)) ^ m ≤\n    (NLAlib.khatriRaoCommonSignLaw r h k m).real\n      {z | ¬NLAlib.IsSubspaceEmbedding (NLAlib.khatriRaoCommonSketch z) (NLAlib.khatriRaoCommonIsometry r h k) ε}",
+  "name":
+  "NLAlib.one_sub_pow_le_measureReal_not_isSubspaceEmbedding_khatriRaoCommonSketch",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  277,
+  "kind":
+  "theorem",
+  "doc":
+  "The finite-size Rademacher obstruction: if `r h^k ≥ 2m`, every all-positive common-factor\nrow forces failure, and such a row occurs with probability `1-(1-2^(-hk))^m`.\nThis is the explicit construction in Proposition `lower:prop:rademacher` of\n`Khatri_Rao_Embeddings_and_Approximation_Focused.tex`.\natlas: khatri-rao-sharp-growth (partial) ",
+  "atlas_partial":
+  ["khatri-rao-sharp-growth"],
+  "atlas":
+  ["khatri-rao-sharp-growth"]},
  {"uses":
   [],
   "sorry":
@@ -152619,6 +155732,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.prod_list_sum_mul_pow_le.{u_1} {ι : Type u_1} [Fintype ι] (w x : ι → ℝ) (hw : ∀ (i : ι), 0 ≤ w i)\n  (hx : ∀ (i : ι), 0 ≤ x i) (ks : List ℕ) (hne : ks ≠ []) :\n  (List.map (fun k => ∑ i, w i * x i ^ k) ks).prod ≤ (∑ i, w i) ^ (ks.length - 1) * ∑ i, w i * x i ^ ks.sum",
+  "name":
+  "NLAlib.prod_list_sum_mul_pow_le",
+  "module":
+  "NLAlib.ForMathlib.Analysis.WeightedPowerProducts",
+  "line":
+  63,
+  "kind":
+  "theorem",
+  "doc":
+  "A nonempty product of weighted natural moments is bounded by the\nmoment at the sum of the exponents, times the appropriate total weight. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.borderedUpper",
    "NLAlib.householder"],
   "sorry":
@@ -155111,6 +158244,170 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneCovarianceMoment.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ} (y : Ω → Fin r → ℝ)\n  (μ : MeasureTheory.Measure Ω) (n p : ℕ) : ℝ",
+  "name":
+  "NLAlib.rankOneCovarianceMoment",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  33,
+  "kind":
+  "def",
+  "doc":
+  "The normalized even trace moment of the centered iid covariance sum. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.centeredRankOneCovariance",
+   "NLAlib.rankOneCovarianceMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneCovarianceMoment_le_sqrt_add_mul_pow.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ}\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {y : Ω → Fin r → ℝ} (hy : Measurable y)\n  (hmom : ∀ (p : ℕ), MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ p) μ) (hr : 0 < r) {ν R : ℝ} (hν : 0 < ν)\n  (hR : 0 ≤ R) {q m : ℕ} (hq : 1 ≤ q) (hm : 1 ≤ m)\n  (hstep :\n    ∀ (p : ℕ),\n      1 ≤ p →\n        p ≤ q →\n          ∀ (A : Matrix (Fin r) (Fin r) ℝ),\n            A.IsHermitian →\n              ∫ (v : Ω), ((A + NLAlib.centeredRankOneCovariance (y v)) ^ (2 * p)).trace ∂μ ≤\n                (A ^ (2 * p)).trace +\n                  ∑ k ∈ Finset.range (2 * p - 1),\n                    ↑((2 * p).choose (k + 2)) * ↑(k + 2).factorial / 2 * ν * R ^ k *\n                      (cfc (fun x => |x| ^ (2 * p - (k + 2))) A).trace) :\n  NLAlib.rankOneCovarianceMoment y μ m q ≤ (2 * √(↑q * ν * ↑m) + 2 * ↑q * R) ^ (2 * q)",
+  "name":
+  "NLAlib.rankOneCovarianceMoment_le_sqrt_add_mul_pow",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  267,
+  "kind":
+  "theorem",
+  "doc":
+  "The iid covariance moment bound obtained from the actual one-step trace estimate and\nthe finite factorial recurrence. The constants retain the square-root variance scale and\nthe linear radius scale. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.rankOneCovarianceMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneCovarianceMoment_nonneg.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ} (y : Ω → Fin r → ℝ)\n  (μ : MeasureTheory.Measure Ω) (n p : ℕ) : 0 ≤ NLAlib.rankOneCovarianceMoment y μ n p",
+  "name":
+  "NLAlib.rankOneCovarianceMoment_nonneg",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  151,
+  "kind":
+  "theorem",
+  "doc":
+  "Normalized covariance moments are nonnegative, without an integrability side condition. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.centeredRankOneCovariance",
+   "NLAlib.finiteMomentUpdate",
+   "NLAlib.rankOneCovarianceMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneCovarianceMoment_succ_le.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ} {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure μ] {y : Ω → Fin r → ℝ} (hy : Measurable y)\n  (hmom : ∀ (p : ℕ), MeasureTheory.Integrable (fun ω => (y ω ⬝ᵥ y ω) ^ p) μ) (hr : 0 < r) {ν R : ℝ} (hν : 0 ≤ ν)\n  (hR : 0 ≤ R) (n p : ℕ)\n  (hstep :\n    ∀ (A : Matrix (Fin r) (Fin r) ℝ),\n      A.IsHermitian →\n        ∫ (v : Ω), ((A + NLAlib.centeredRankOneCovariance (y v)) ^ (2 * p)).trace ∂μ ≤\n          (A ^ (2 * p)).trace +\n            ∑ k ∈ Finset.range (2 * p - 1),\n              ↑((2 * p).choose (k + 2)) * ↑(k + 2).factorial / 2 * ν * R ^ k *\n                (cfc (fun x => |x| ^ (2 * p - (k + 2))) A).trace) :\n  NLAlib.rankOneCovarianceMoment y μ (n + 1) p ≤\n    NLAlib.rankOneCovarianceMoment y μ n p + NLAlib.finiteMomentUpdate ν R (NLAlib.rankOneCovarianceMoment y μ n) p",
+  "name":
+  "NLAlib.rankOneCovarianceMoment_succ_le",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  201,
+  "kind":
+  "theorem",
+  "doc":
+  "A one-sample centered matrix trace estimate implies the factorial recurrence for the\nactual iid covariance process. All sample integrability follows from finite squared-norm\nmoments; no eigenvector measurability is required. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.rankOneCovarianceMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneCovarianceMoment_zero.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ} {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure μ] (y : Ω → Fin r → ℝ) (hr : 0 < r) (n : ℕ) :\n  NLAlib.rankOneCovarianceMoment y μ n 0 = 1",
+  "name":
+  "NLAlib.rankOneCovarianceMoment_zero",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  159,
+  "kind":
+  "theorem",
+  "doc":
+  "The zeroth normalized trace moment is one for a positive target dimension. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.rankOneCovarianceMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneCovarianceMoment_zero_samples.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {r : ℕ} (y : Ω → Fin r → ℝ)\n  (μ : MeasureTheory.Measure Ω) {p : ℕ} (hp : 0 < p) : NLAlib.rankOneCovarianceMoment y μ 0 p = 0",
+  "name":
+  "NLAlib.rankOneCovarianceMoment_zero_samples",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  165,
+  "kind":
+  "theorem",
+  "doc":
+  "Before drawing any samples every positive-order centered moment vanishes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneCovarianceSum.{u_1} {Ω : Type u_1} {r : ℕ} (y : Ω → Fin r → ℝ) {n : ℕ} (ω : Fin n → Ω) :\n  Matrix (Fin r) (Fin r) ℝ",
+  "name":
+  "NLAlib.rankOneCovarianceSum",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  28,
+  "kind":
+  "def",
+  "doc":
+  "The centered covariance sum over a finite tuple of iid vector samples. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.centeredRankOneCovariance",
+   "NLAlib.rankOneCovarianceSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneCovarianceSum_cons.{u_1} {Ω : Type u_1} {r : ℕ} (y : Ω → Fin r → ℝ) {n : ℕ} (ω : Fin n → Ω) (v : Ω) :\n  NLAlib.rankOneCovarianceSum y (Fin.cons v ω) =\n    NLAlib.rankOneCovarianceSum y ω + NLAlib.centeredRankOneCovariance (y v)",
+  "name":
+  "NLAlib.rankOneCovarianceSum_cons",
+  "module":
+  "NLAlib.Probability.Concentration.Matrix.RankOneCovariance",
+  "line":
+  57,
+  "kind":
+  "theorem",
+  "doc":
+  "Prepending one sample adds its centered covariance matrix to the sum. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.moorePenroseConditionNumber",
    "NLAlib.specNorm"],
   "sorry":
@@ -155653,6 +158950,26 @@
   [],
   "atlas":
   ["rank-inequalities"]},
+ {"uses":
+  ["NLAlib.khatriRaoMomentOrder"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rank_mul_exp_neg_two_mul_khatriRaoMomentOrder_le {r : ℕ} (hr : 1 ≤ r) {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) :\n  ↑r * Real.exp (-2 * ↑(NLAlib.khatriRaoMomentOrder r δ)) ≤ δ / 4",
+  "name":
+  "NLAlib.rank_mul_exp_neg_two_mul_khatriRaoMomentOrder_le",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  186,
+  "kind":
+  "theorem",
+  "doc":
+  "The terminal trace-moment order makes the exponential tail smaller\nthan the requested failure probability, with a factor-four reserve. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.moorePenroseInverse"],
   "sorry":
@@ -170912,6 +174229,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.subInsertionWords : List Bool → List (ℕ × List Bool)",
+  "name":
+  "NLAlib.subInsertionWords",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  117,
+  "kind":
+  "def",
+  "doc":
+  "Expand each marked position into either a retained mark or a deleted\nidentity factor. The first coordinate counts the deletions. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.sub_eq_mulVec_dotProduct_sub_of_polarization.{u_2, u_3} {k : Type u_2} {n : Type u_3} [Fintype k] [Fintype n]\n  (S : Matrix k n ℝ) (u v : n → ℝ) :\n  S.mulVec ((1 / 2) • (u + v)) ⬝ᵥ S.mulVec ((1 / 2) • (u + v)) - (1 / 2) • (u + v) ⬝ᵥ (1 / 2) • (u + v) -\n      (S.mulVec ((1 / 2) • (u - v)) ⬝ᵥ S.mulVec ((1 / 2) • (u - v)) - (1 / 2) • (u - v) ⬝ᵥ (1 / 2) • (u - v)) =\n    S.mulVec u ⬝ᵥ S.mulVec v - u ⬝ᵥ v",
   "name":
   "NLAlib.sub_eq_mulVec_dotProduct_sub_of_polarization",
@@ -173382,6 +176719,48 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_insertionWords_succ_succ.{u_1} {R : Type u_1} [Semiring R] (A X : R) (n j : ℕ) :\n  (List.map (NLAlib.insertionWord A X) (NLAlib.insertionWords (n + 1) (j + 1))).sum =\n    A * (List.map (NLAlib.insertionWord A X) (NLAlib.insertionWords n (j + 1))).sum +\n      X * (List.map (NLAlib.insertionWord A X) (NLAlib.insertionWords n j)).sum",
+  "name":
+  "NLAlib.sum_insertionWords_succ_succ",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  80,
+  "kind":
+  "theorem",
+  "doc":
+  "Each noncommutative coefficient satisfies Pascal's insertion recursion. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_insertionWords_zero.{u_1} {R : Type u_1} [Semiring R] (A X : R) (n : ℕ) :\n  (List.map (NLAlib.insertionWord A X) (NLAlib.insertionWords n 0)).sum = A ^ n",
+  "name":
+  "NLAlib.sum_insertionWords_zero",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "The zero-insertion binomial coefficient is the corresponding power. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.sawtoothGridAngle"],
   "sorry":
   false,
@@ -173891,6 +177270,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.sum_mul_pow_mul_sum_mul_pow_le.{u_1} {ι : Type u_1} [Fintype ι] (w x : ι → ℝ) (hw : ∀ (i : ι), 0 ≤ w i)\n  (hx : ∀ (i : ι), 0 ≤ x i) (a b : ℕ) :\n  (∑ i, w i * x i ^ a) * ∑ i, w i * x i ^ b ≤ (∑ i, w i) * ∑ i, w i * x i ^ (a + b)",
+  "name":
+  "NLAlib.sum_mul_pow_mul_sum_mul_pow_le",
+  "module":
+  "NLAlib.ForMathlib.Analysis.WeightedPowerProducts",
+  "line":
+  19,
+  "kind":
+  "theorem",
+  "doc":
+  "Two nonnegative weighted power moments are bounded by their joint\nmoment times the total weight. The weights need not sum to one. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.sum_mul_sq_eq_of_support.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (r u : n → ℝ) (ρ : ℝ) (S : Finset n)\n  (hS : ∀ i ∈ S, r i = ρ) (hu : ‖WithLp.toLp 2 u‖ = 1) (hsupport : ∀ i ∉ S, u i = 0) : ∑ i, r i * u i ^ 2 = ρ",
   "name":
   "NLAlib.sum_mul_sq_eq_of_support",
@@ -174152,6 +177551,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.sum_norm_sq_tensor_slices {d : ℕ} {n : Fin (d + 1) → ℕ} (a : ((j : Fin (d + 1)) → Fin (n j)) → ℝ) :\n  ∑ i, ∑ b, a (Fin.cons i b) ^ 2 = ∑ b, a b ^ 2",
+  "name":
+  "NLAlib.sum_norm_sq_tensor_slices",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoBasic",
+  "line":
+  63,
+  "kind":
+  "theorem",
+  "doc":
+  "Splitting the first tensor index preserves the squared coefficient norm. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.sum_norm_sq_unitary_col.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (U : ↥(Matrix.unitaryGroup ι ℂ))\n  (j : ι) : ∑ i, ‖↑U i j‖ ^ 2 = 1",
   "name":
   "NLAlib.sum_norm_sq_unitary_col",
@@ -174223,6 +177642,26 @@
   "theorem",
   "doc":
   "The limiting double off-diagonal kernel reduces to the pairs involving\nthe unique top coordinate. Source: operator soft minimum Hessian limit;\natlas `wishart-lambda-min-tail` (exact gap sum helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_pow_mul_pow_le_div {a x : ℝ} (ha : 0 ≤ a) (hax : a < x) (n : ℕ) :\n  ∑ k ∈ Finset.range n, a ^ k * x ^ (n - 1 - k) ≤ x ^ n / (x - a)",
+  "name":
+  "NLAlib.sum_pow_mul_pow_le_div",
+  "module":
+  "NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "A positive finite geometric convolution is bounded by its infinite envelope.\nSource: the finite geometric identity.\nAtlas: `khatri-rao-sharp-growth`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -175021,6 +178460,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.khatriRaoCommonProjection"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_sq_khatriRaoCommonProjection_of_all_one {r h k : ℕ} (hh : 0 < h) (ξ : Fin r → ℝ) (η : Fin k → Fin h → ℝ)\n  (hξ : ∀ (a : Fin r), ξ a ^ 2 = 1) (hη : ∀ (j : Fin k) (t : Fin h), η j t = 1) :\n  ∑ a, NLAlib.khatriRaoCommonProjection ξ η a ^ 2 = ↑r * ↑h ^ k",
+  "name":
+  "NLAlib.sum_sq_khatriRaoCommonProjection_of_all_one",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoLower",
+  "line":
+  146,
+  "kind":
+  "theorem",
+  "doc":
+  "When all the common signs are positive and the free signs have squared value one, the\nunscaled projected row has squared norm `r h^k`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.frobSq"],
   "sorry":
   false,
@@ -175157,6 +178616,27 @@
   "theorem",
   "doc":
   "Summing over ordered pairs of distinct elements of `s`, either index may be summed first.\n\nSource: ported from `SparseFockFormal.DirectionalConcrete.sum_erase_comm` (generalised from `ℝ`\nto an additive commutative monoid), b9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports\n`sparse-ose`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord",
+   "NLAlib.insertionWords"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_sum_insertionWords_eq_add_pow.{u_1} {R : Type u_1} [Semiring R] (A X : R) (n : ℕ) :\n  ∑ j ∈ Finset.range (n + 1), (List.map (NLAlib.insertionWord A X) (NLAlib.insertionWords n j)).sum = (A + X) ^ n",
+  "name":
+  "NLAlib.sum_sum_insertionWords_eq_add_pow",
+  "module":
+  "NLAlib.ForMathlib.Algebra.InsertionWords",
+  "line":
+  90,
+  "kind":
+  "theorem",
+  "doc":
+  "Summing all insertion coefficients gives the noncommutative binomial expansion. ",
   "atlas_partial":
   [],
   "atlas":
@@ -178677,6 +182157,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.trace_cfc_abs_pow_le_sqrt_trace_even_pow.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] {A : Matrix ι ι ℝ}\n  (hA : A.IsHermitian) (k : ℕ) :\n  (cfc (fun x => |x| ^ k) A).trace ≤ √((A ^ (2 * (k / 2))).trace * (A ^ (2 * ((k + 1) / 2))).trace)",
+  "name":
+  "NLAlib.trace_cfc_abs_pow_le_sqrt_trace_even_pow",
+  "module":
+  "NLAlib.Matrix.Functions.HermitianMoments",
+  "line":
+  19,
+  "kind":
+  "theorem",
+  "doc":
+  "An absolute spectral trace power is bounded by the geometric mean of its two neighboring\neven trace powers. Source: spectral Cauchy–Schwarz, used in Appendix `closed:thm:moment` of\nthe Khatri–Rao embedding manuscript. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.trace_cfc_eq_sum_eigenvalues.{u_1, u_2} {𝕜 : Type u_1} [RCLike 𝕜] {n : Type u_2} [Fintype n] [DecidableEq n]\n  {A : Matrix n n 𝕜} (hA : A.IsHermitian) (f : ℝ → ℝ) : (cfc f A).trace = ∑ i, ↑(f (hA.eigenvalues i))",
   "name":
   "NLAlib.trace_cfc_eq_sum_eigenvalues",
@@ -178993,6 +182493,46 @@
   "theorem",
   "doc":
   "`tr B = tr A` for the Hutchinson block matrix. Atlas: `hutchinson-tail` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_insertionWord_le_of_count_true_eq_two.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (A X : Matrix ι ι ℝ)\n  (hA : A.IsHermitian) (hX : X.IsHermitian) (w : List Bool) (hw : List.count true w = 2)\n  (hn : Even (List.count false w)) : (NLAlib.insertionWord A X w).trace ≤ (A ^ List.count false w * X ^ 2).trace",
+  "name":
+  "NLAlib.trace_insertionWord_le_of_count_true_eq_two",
+  "module":
+  "NLAlib.Matrix.Functions.CenteredWordBounds",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  "Two insertions in an even trace word are bounded by the quadratic\nvariance trace, with no absolute-moment replacement of the variance. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.insertionWord"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_insertionWord_of_count_true_eq_one.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (A X : Matrix ι ι ℝ)\n  (w : List Bool) (hw : List.count true w = 1) : (NLAlib.insertionWord A X w).trace = (A ^ List.count false w * X).trace",
+  "name":
+  "NLAlib.trace_insertionWord_of_count_true_eq_one",
+  "module":
+  "NLAlib.Matrix.Functions.CenteredWordBounds",
+  "line":
+  21,
+  "kind":
+  "theorem",
+  "doc":
+  "A word with one insertion has the cyclic trace of that insertion\ntimes the full ordinary power. ",
   "atlas_partial":
   [],
   "atlas":
@@ -179362,6 +182902,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.trace_mul_pow_mul_le_trace_sq_mul_pow.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (C A : Matrix ι ι ℝ)\n  (hC : C.IsHermitian) (hA : A.IsHermitian) {n l : ℕ} (hn : Even n) (hl : l ≤ n) :\n  (C * A ^ l * C * A ^ (n - l)).trace ≤ (C ^ 2 * A ^ n).trace",
+  "name":
+  "NLAlib.trace_mul_pow_mul_le_trace_sq_mul_pow",
+  "module":
+  "NLAlib.Matrix.Functions.CenteredWordBounds",
+  "line":
+  32,
+  "kind":
+  "theorem",
+  "doc":
+  "Complexification carries the two-insertion trace AM--GM inequality\nback to real symmetric matrices. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.trace_mul_pow_mul_mul_pow_conjStarAlgAut.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  (U : ↥(Matrix.unitaryGroup ι ℂ)) (C H : Matrix ι ι ℂ) (a b : ℕ) :\n  have E := (Unitary.conjStarAlgAut ℂ (Matrix ι ι ℂ)) U;\n  (E C * E H ^ a * E C * E H ^ b).trace = (C * H ^ a * C * H ^ b).trace",
   "name":
   "NLAlib.trace_mul_pow_mul_mul_pow_conjStarAlgAut",
@@ -179393,6 +182953,26 @@
   "theorem",
   "doc":
   "A trace pairing with a frame-projector difference is the corresponding\ncompression-trace difference. Standard cyclic trace identity. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_mul_vecMulVec_pow_succ.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (C : Matrix ι ι ℝ) (y : ι → ℝ)\n  (p : ℕ) : (C * Matrix.vecMulVec y y ^ (p + 1)).trace = (y ⬝ᵥ y) ^ p * y ⬝ᵥ C.mulVec y",
+  "name":
+  "NLAlib.trace_mul_vecMulVec_pow_succ",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneWords",
+  "line":
+  43,
+  "kind":
+  "theorem",
+  "doc":
+  "Pairing a rank-one power with a matrix gives its directional moment. ",
   "atlas_partial":
   [],
   "atlas":
@@ -179493,6 +183073,26 @@
   "theorem",
   "doc":
   "Cyclicity of trace collapses the derivative of a noncommutative matrix\npower to one trace term. Source: ported from SparseFockFormal,\n`TracePowerConvexity.trace_power_derivative_sum`; atlas\n`wishart-lambda-min-tail` (operator calculus helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_prod_map_mul_vecMulVec.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (y : ι → ℝ)\n  (Bs : List (Matrix ι ι ℝ)) (hne : Bs ≠ []) :\n  (List.map (fun B => B * Matrix.vecMulVec y y) Bs).prod.trace = (List.map (fun B => y ⬝ᵥ B.mulVec y) Bs).prod",
+  "name":
+  "NLAlib.trace_prod_map_mul_vecMulVec",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneWords",
+  "line":
+  64,
+  "kind":
+  "theorem",
+  "doc":
+  "The trace of a nonempty cyclic rank-one word is exactly the product\nof its scalar quadratic forms. ",
   "atlas_partial":
   [],
   "atlas":
@@ -179928,6 +183528,48 @@
   [],
   "atlas":
   ["gram-schmidt"]},
+ {"uses":
+  ["NLAlib.khatriRaoProbe",
+   "NLAlib.khatriRaoSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.transpose_khatriRaoSketch_mul_self {d m : ℕ} {n : Fin d → ℕ} {r : ℕ} (hm : 0 < m)\n  (g : Fin m → (j : Fin d) → Fin (n j) → ℝ) (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) :\n  (NLAlib.khatriRaoSketch g * U).transpose * (NLAlib.khatriRaoSketch g * U) =\n    (↑m)⁻¹ •\n      ∑ i,\n        Matrix.vecMulVec (U.transpose.mulVec (NLAlib.khatriRaoProbe (g i)))\n          (U.transpose.mulVec (NLAlib.khatriRaoProbe (g i)))",
+  "name":
+  "NLAlib.transpose_khatriRaoSketch_mul_self",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  102,
+  "kind":
+  "theorem",
+  "doc":
+  "The restricted sketch Gram matrix is the exact empirical covariance\nof the projected tensor-product probes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.khatriRaoProbe",
+   "NLAlib.khatriRaoSketch"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.transpose_khatriRaoSketch_mul_self_sub_one {d m : ℕ} {n : Fin d → ℕ} {r : ℕ} (hm : 0 < m)\n  (g : Fin m → (j : Fin d) → Fin (n j) → ℝ) (U : Matrix ((j : Fin d) → Fin (n j)) (Fin r) ℝ) :\n  (NLAlib.khatriRaoSketch g * U).transpose * (NLAlib.khatriRaoSketch g * U) - 1 =\n    (↑m)⁻¹ •\n      ∑ i,\n        (Matrix.vecMulVec (U.transpose.mulVec (NLAlib.khatriRaoProbe (g i)))\n            (U.transpose.mulVec (NLAlib.khatriRaoProbe (g i))) -\n          1)",
+  "name":
+  "NLAlib.transpose_khatriRaoSketch_mul_self_sub_one",
+  "module":
+  "NLAlib.Sketching.Structured.KhatriRaoEmbedding",
+  "line":
+  126,
+  "kind":
+  "theorem",
+  "doc":
+  "The restricted Gram error is the empirical average of the centered\nrank-one covariance matrices of the projected probes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.HasOrthonormalCols",
    "NLAlib.krylovSpace"],
@@ -180902,6 +184544,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.khatriRaoVarianceBudget"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.two_le_khatriRaoVarianceBudget {d r : ℕ} {K : ℝ} (hr : 1 ≤ r) (hK : 1 ≤ K) :\n  2 ≤ NLAlib.khatriRaoVarianceBudget d K r",
+  "name":
+  "NLAlib.two_le_khatriRaoVarianceBudget",
+  "module":
+  "NLAlib.RandomMatrix.Covariance.KhatriRaoMoments",
+  "line":
+  203,
+  "kind":
+  "theorem",
+  "doc":
+  "Capping the scale below by one makes the raw variance at least two.\nSource: the explicit factorial envelope.\nAtlas: `khatri-rao-sharp-growth`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -181646,6 +185308,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.vecMulVec_mul_mul_vecMulVec.{u_1} {ι : Type u_1} [Fintype ι] (y : ι → ℝ) (B : Matrix ι ι ℝ) :\n  Matrix.vecMulVec y y * B * Matrix.vecMulVec y y = (y ⬝ᵥ B.mulVec y) • Matrix.vecMulVec y y",
+  "name":
+  "NLAlib.vecMulVec_mul_mul_vecMulVec",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneWords",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "Sandwiching a matrix by one real rank-one matrix gives its quadratic\nform times that same rank-one matrix. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.vecMulVec_mul_prod_map_mul_vecMulVec.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (y : ι → ℝ)\n  (Bs : List (Matrix ι ι ℝ)) :\n  Matrix.vecMulVec y y * (List.map (fun B => B * Matrix.vecMulVec y y) Bs).prod =\n    (List.map (fun B => y ⬝ᵥ B.mulVec y) Bs).prod • Matrix.vecMulVec y y",
+  "name":
+  "NLAlib.vecMulVec_mul_prod_map_mul_vecMulVec",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneWords",
+  "line":
+  51,
+  "kind":
+  "theorem",
+  "doc":
+  "Multiplying rank-one-separated factors after an initial rank-one\nmatrix contracts each factor to a scalar quadratic form. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.vecMulVec_ne_zero.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} {K : Type u_3} [Field K] {x : m → K} {y : n → K}\n  (hx : x ≠ 0) (hy : y ≠ 0) : Matrix.vecMulVec x y ≠ 0",
   "name":
   "NLAlib.vecMulVec_ne_zero",
@@ -181657,6 +185359,26 @@
   "theorem",
   "doc":
   "A nonzero right column and nonzero left row give a nonzero outer product.\nSource: Horn–Johnson (2013), §1.4; the assertion includes rectangular shapes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.vecMulVec_pow_succ.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι] (y : ι → ℝ) (p : ℕ) :\n  Matrix.vecMulVec y y ^ (p + 1) = (y ⬝ᵥ y) ^ p • Matrix.vecMulVec y y",
+  "name":
+  "NLAlib.vecMulVec_pow_succ",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneWords",
+  "line":
+  33,
+  "kind":
+  "theorem",
+  "doc":
+  "A positive natural power of a real rank-one matrix is the same\nrank-one matrix times a power of its trace. ",
   "atlas_partial":
   [],
   "atlas":

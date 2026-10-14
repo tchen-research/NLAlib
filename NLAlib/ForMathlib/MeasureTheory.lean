@@ -13,7 +13,9 @@ import NLAlib.ForMathlib.MeasureTheory.MapProd
 import NLAlib.ForMathlib.MeasureTheory.Matrix
 import NLAlib.ForMathlib.MeasureTheory.MatrixConditionalExpectation
 import NLAlib.ForMathlib.MeasureTheory.MomentInterpolation
+import NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability
 import NLAlib.ForMathlib.MeasureTheory.PolynomialZeroSets
+import NLAlib.ForMathlib.MeasureTheory.SqrtIntegral
 import NLAlib.ForMathlib.MeasureTheory.TailComparison
 import NLAlib.ForMathlib.MeasureTheory.WeightedCauchySchwarz
 

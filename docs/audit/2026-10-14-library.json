@@ -8,7 +8,8 @@
     "docs/audit/2026-10-14-estimation-lowrank.json",
     "docs/audit/2026-10-14-probability-sketching-solvers.json",
     "docs/audit/2026-10-14-research-candidates.json",
-    "docs/audit/2026-10-14-deeper-matrix-methods.json"
+    "docs/audit/2026-10-14-deeper-matrix-methods.json",
+    "docs/audit/2026-10-14-khatri-rao-sharp-growth.json"
   ],
   "formalization_exclusions": {
     "crouzeix_palencia": "Analytic interface, matrix Cauchy bridge, and smooth-neighborhood approximation",
@@ -106,5 +107,11 @@
   "candidate_catalog_review": {
     "report": "docs/audit/2026-10-14-candidate-catalog-review.json",
     "scope": "Category, naming, dependency-routing and viewer review with final validation; no change to Lean declarations or proof status."
+  },
+  "khatri_rao_extension": {
+    "report": "docs/audit/2026-10-14-khatri-rao-sharp-growth.json",
+    "baseline_commit": "5ed3c1d2ec153575c23d65eb0c305c3adbde48bd",
+    "new_cards": 1,
+    "scope": "One new Khatri-Rao sharp-growth card and its reusable proof interfaces; all pre-existing human-authored cards are preserved."
   }
 }

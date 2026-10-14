@@ -1,3 +1,4 @@
+import NLAlib.RandomMatrix.Covariance
 import NLAlib.RandomMatrix.Gaussian
 import NLAlib.RandomMatrix.Haar
 import NLAlib.RandomMatrix.SubGaussian

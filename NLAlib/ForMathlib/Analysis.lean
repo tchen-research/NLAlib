@@ -20,8 +20,10 @@ import NLAlib.ForMathlib.Analysis.DyadicSeries
 import NLAlib.ForMathlib.Analysis.EquispacedProducts
 import NLAlib.ForMathlib.Analysis.EvenGeometricSeries
 import NLAlib.ForMathlib.Analysis.ExpBounds
+import NLAlib.ForMathlib.Analysis.FactorialMomentBounds
 import NLAlib.ForMathlib.Analysis.FejerKernel
 import NLAlib.ForMathlib.Analysis.FejerModulation
+import NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence
 import NLAlib.ForMathlib.Analysis.FinitePairNorm
 import NLAlib.ForMathlib.Analysis.FinitePowerSums
 import NLAlib.ForMathlib.Analysis.FiniteProductBounds
@@ -64,6 +66,7 @@ import NLAlib.ForMathlib.Analysis.SchurTriangularization
 import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
 import NLAlib.ForMathlib.Analysis.SpecialFunctions
 import NLAlib.ForMathlib.Analysis.TriangularBasis
+import NLAlib.ForMathlib.Analysis.WeightedPowerProducts
 
 /-! # `ForMathlib/Analysis`
 

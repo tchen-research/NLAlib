@@ -1,6 +1,7 @@
 import NLAlib.Probability.SubGaussian.CenteredSquare
 import NLAlib.Probability.SubGaussian.EvenMoments
 import NLAlib.Probability.SubGaussian.ExpSquare
+import NLAlib.Probability.SubGaussian.ExpSquareMoments
 import NLAlib.Probability.SubGaussian.Moments
 import NLAlib.Probability.SubGaussian.OrliczMGF
 

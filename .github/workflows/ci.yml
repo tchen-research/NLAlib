@@ -30,6 +30,7 @@ jobs:
           lake env lean Examples/Downstream.lean
           lake env lean Examples/Probability.lean
           lake env lean Examples/PolynomialApproximation.lean
+          lake env lean Examples/KhatriRao.lean
           lake env lean scripts/AuditRitz.lean
           lake env lean scripts/AuditSubspaces.lean
       - name: Experimental development axiom inventory
@@ -38,6 +39,7 @@ jobs:
         run: |
           lake env lean -DautoImplicit=false scripts/AuditGaussianInverse.lean
           lake env lean -DautoImplicit=false scripts/AuditNewProofs.lean
+          lake env lean -DautoImplicit=false scripts/AuditKhatriRao.lean
       - name: Declaration index is current
         run: |
           lake env lean scripts/ExtractDecls.lean

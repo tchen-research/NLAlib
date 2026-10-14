@@ -8049,4 +8049,92 @@
   "atlas_partial":
   [],
   "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "PositiveLinearMap.{u_1, u_2, u_3} (R : Type u_1) (E₁ : Type u_2) (E₂ : Type u_3) [Semiring R] [AddCommMonoid E₁]\n  [PartialOrder E₁] [AddCommMonoid E₂] [PartialOrder E₂] [_root_.Module R E₁] [_root_.Module R E₂] : Type (max u_2 u_3)",
+  "name":
+  "PositiveLinearMap",
+  "module":
+  "Mathlib.Algebra.Order.Module.PositiveLinearMap",
+  "line":
+  30,
+  "library":
+  "mathlib",
+  "kind":
+  "inductive",
+  "doc":
+  "A positive linear map is a linear map that is also an order homomorphism. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosSemidef.{u_2, u_3} {n : Type u_2} {R : Type u_3} [Ring R] [PartialOrder R] [StarRing R] (M : Matrix n n R) :\n  Prop",
+  "name":
+  "Matrix.PosSemidef",
+  "module":
+  "Mathlib.LinearAlgebra.Matrix.PosDef",
+  "line":
+  57,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "A matrix `M : Matrix n n R` is positive semidefinite if it is Hermitian and `xᴴ * M * x` is\nnonnegative for all `x` of finite support. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "deriv.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜] {F : Type v} [AddCommGroup F] [_root_.Module 𝕜 F]\n  [TopologicalSpace F] (f : 𝕜 → F) (x : 𝕜) : F",
+  "name":
+  "deriv",
+  "module":
+  "Mathlib.Analysis.Calculus.Deriv.Basic",
+  "line":
+  148,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "Derivative of `f` at the point `x`, if it exists.  Zero otherwise.\n\nIf the derivative exists (i.e., `∃ f', HasDerivAt f f' x`), then\n`f x' = f x + (x' - x) • deriv f x + o(x' - x)` where `x'` converges to `x`.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "HasFDerivAt.{u_1, u_2, u_3} {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {E : Type u_2} [AddCommGroup E]\n  [_root_.Module 𝕜 E] [TopologicalSpace E] {F : Type u_3} [AddCommGroup F] [_root_.Module 𝕜 F] [TopologicalSpace F]\n  (f : E → F) (f' : E →L[𝕜] F) (x : E) : Prop",
+  "name":
+  "HasFDerivAt",
+  "module":
+  "Mathlib.Analysis.Calculus.FDeriv.Defs",
+  "line":
+  118,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "A function `f` has the continuous linear map `f'` as derivative at `x` if\n`f x' = f x + f' (x' - x) + o (x' - x)` when `x'` tends to `x`. ",
+  "atlas_partial":
+  [],
+  "atlas":
   []}]

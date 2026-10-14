@@ -1,4 +1,5 @@
 import NLAlib.Sketching.Properties.SubspaceEmbedding.Basic
+import NLAlib.Sketching.Properties.SubspaceEmbedding.Dimension
 import NLAlib.Sketching.Properties.SubspaceEmbedding.FiniteIndexTransport
 import NLAlib.Sketching.Properties.SubspaceEmbedding.Gram
 import NLAlib.Sketching.Properties.SubspaceEmbedding.SingularValueEmbedding

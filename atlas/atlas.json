@@ -46500,6 +46500,238 @@
    "variants": [],
    "mathlib_prereqs": [],
    "updated_at": "2026-10-14"
+  },
+  {
+   "id": "khatri-rao-sharp-growth",
+   "title": "Sharp dimension growth for Khatri–Rao embeddings",
+   "area": "sketching-ose",
+   "kind": "theorem",
+   "status": "proved",
+   "informal": "For fixed tensor order $d\\ge2$, accuracy and confidence, the worst-case embedding cost of independent isotropic sub-Gaussian tensor-product probes has rank order $r\\log^{d-1}(er)$ for factor classes containing the independent-sign witnesses. The upper guarantee is uniform over fixed subspaces and admissible mode dimensions. Explicit independent-sign constructions give the matching obstruction.",
+   "hypotheses": [
+    "$d\\ge2$, mode dimensions $n_1,\\ldots,n_d$, $r\\ge1$ and a deterministic isometry $U:\\mathbb R^r\\to\\bigotimes_j\\mathbb R^{n_j}$",
+    "The $m$ probe rows are iid tensor products $z_i=\\bigotimes_jg_i^{(j)}$; factors are independent and isotropic, with arbitrary coordinate dependence within each factor",
+    "$K>0$ and $\\mathbb E\\exp(\\langle u,g^{(j)}\\rangle^2/K^2)\\le2$ for every unit $u$ and every factor",
+    "$0<\\varepsilon,\\delta<1$, $t=\\log(4r/\\delta)$ and $\\Pi_{i,:}=m^{-1/2}z_i^\\top$"
+   ],
+   "conclusion": "There is a constant $C_{d,K}>0$ such that $m\\ge C_{d,K}[rt/\\varepsilon^2+(rt^{d-1}+t^d)/\\varepsilon]$ implies $\\mathbb P\\{\\Pi\\text{ fails to embed }\\operatorname{range}(U)\\text{ with squared-norm distortion }\\varepsilon\\}\\le\\delta$. Conversely, put $k=d-1$, $h=\\lfloor\\log r/(2k\\log2)\\rfloor$ and $c_d=[2(4k\\log2)^k]^{-1}$. For $r\\ge2^{4k}$ the explicit independent-sign construction with mode dimensions $(r,h,\\ldots,h)$ has failure probability at least $1-\\exp(-\\sqrt r)$ for every integer $1\\le m\\le c_dr(\\log r)^k$ and every $\\varepsilon<1$. Thus the fixed-parameter rank order is sharp; the lower claim concerns these constructed subspaces, not every subspace or every factor law.",
+   "sources": [
+    {
+     "source": "heidary26-khatri-rao",
+     "label": "Theorem 2.1 (core:thm:ose); Proposition lower:prop:rademacher; Appendix closed:thm:moment"
+    }
+   ],
+   "depends_on": [
+    "ose-def",
+    "scalar-laws-def"
+   ],
+   "aliases": [
+    "Khatri–Rao embedding",
+    "Khatri Rao sharp growth",
+    "tensor-product subspace embedding",
+    "sharp logarithmic sketch dimension",
+    "rank-one product probes"
+   ],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lintegral_exp_sq_dotProduct_rademacherVector_le_two",
+     "module": "NLAlib.Probability.Rademacher.DirectionalExpSquare",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to a unit coefficient vector to discharge the directional exponential-square factor hypothesis for independent signs at K=10."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.khatriRaoFixedParameterConstant_pos",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoGrowth",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use with positive accuracy, a confidence parameter below one and a positive upper constant to obtain a positive fixed-parameter sampling constant."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.khatriRao_budget_le_fixedParameterConstant_mul_rank_log_pow",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoGrowth",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use to dominate the full logarithmic sampling budget by the explicit constant times r times (1+log r)^(d-1) at fixed accuracy and confidence."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le_of_rank_log_budget",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoGrowth",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the actual-factor embedding guarantee directly from the fixed-parameter rank-logarithmic sampling budget."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.bijective_khatriRaoCommonIndex",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoLower",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use to identify paired witness coordinates with the dependent multi-index coordinates of the tensor ambient space."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasOrthonormalCols_khatriRaoCommonIsometry",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoLower",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply when the common mode is positive to certify that the explicit lower-bound frame has orthonormal columns."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.khatriRaoCommonRow_eq_khatriRaoProbe",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoLower",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite the explicit paired witness row as the library tensor probe after regrouping its free and common factors."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measurePreserving_khatriRaoCommonFactors",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoLower",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use to transport the paired free/common Rademacher law to the actual heterogeneous independent-factor tensor law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.one_sub_pow_le_measureReal_not_isSubspaceEmbedding_khatriRaoCommonSketch",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoLower",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the finite-size lower obstruction when the common-mode rank product is at least twice the sample width."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.khatriRaoLowerMode_bounds",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoLowerGrowth",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply above r>=2^(4k), k>0, to obtain positivity and logarithmic upper and lower bounds for the common mode."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.khatriRaoLowerConstant_pos",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoLowerGrowth",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use at positive tensor-tail order to obtain positivity of the explicit matching lower-growth constant."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.one_sub_exp_neg_sqrt_le_measureReal_not_isSubspaceEmbedding_of_le_lower_growth",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoLowerGrowth",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply above the rank threshold to every positive width up to the explicit r(log r)^k budget, giving failure at least 1-exp(-sqrt r) for every distortion below one."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_rademacher_le",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoSigns",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the upper theorem to independent Rademacher factors using only the orthonormal frame and numerical sampling budget."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.khatriRaoSharpEmbeddingConstant_pos",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoUpper",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use to discharge positivity of the explicit upper sampling constant for any tensor order and factor parameter."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le",
+     "module": "NLAlib.Sketching.Structured.KhatriRaoUpper",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to independent isotropic factor laws satisfying the unit-direction exponential-square bound and a fixed orthonormal frame under the full accuracy and confidence budget."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.IsSubspaceEmbedding",
+    "NLAlib.khatriRaoCommonDimensions",
+    "NLAlib.khatriRaoCommonFactors",
+    "NLAlib.khatriRaoCommonIndex",
+    "NLAlib.khatriRaoCommonIsometry",
+    "NLAlib.khatriRaoCommonRow",
+    "NLAlib.khatriRaoCommonSignLaw",
+    "NLAlib.khatriRaoCommonSketch",
+    "NLAlib.khatriRaoFixedParameterConstant",
+    "NLAlib.khatriRaoLowerConstant",
+    "NLAlib.khatriRaoLowerMode",
+    "NLAlib.khatriRaoProbe",
+    "NLAlib.khatriRaoSampleLaw",
+    "NLAlib.khatriRaoSharpEmbeddingConstant",
+    "NLAlib.khatriRaoSketch",
+    "NLAlib.rademacherVector"
+   ],
+   "variants": [
+    "gaussian-ose",
+    "srht-ose",
+    "sparse-ose"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "now",
+   "tags": [
+    "ose",
+    "tensor",
+    "covariance",
+    "sharp-bound"
+   ],
+   "notes": "The finite-moment derivation is used. The formal proof may enlarge numerical constants while preserving the full factor assumptions and rank, accuracy and confidence dependence. The matching bounded-entry witness is the Rademacher construction; Gaussian and spherical lower-bound variants, covariance accuracy refinements, and approximation guarantees elsewhere in the manuscript are not bundled into this card. The independent-sign admissibility bridge uses the convenient fixed exponential-square parameter K=10; it does not assert the optimal threshold K²=8/3. The sharpness clause applies to factor classes containing these witnesses (in particular, K≥10). The upper bound itself is valid for every K>0 under its stated factor hypothesis.",
+   "updated_at": "2026-10-14",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For every independent isotropic vector-factor law satisfying the directional exponential-square bound, the actual normalized sketch embeds every fixed orthonormal frame with failure at most delta under the full sharp accuracy/confidence budget; its explicit constant is strictly positive and depends only on d,K.",
+      "decls": [
+       "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le",
+       "NLAlib.khatriRaoSharpEmbeddingConstant_pos"
+      ]
+     },
+     {
+      "statement": "At fixed accuracy, confidence and factor parameter, a positive explicit constant times r(1+log r)^(d-1) rows suffices; this is r log(er)^(d-1).",
+      "decls": [
+       "NLAlib.khatriRao_budget_le_fixedParameterConstant_mul_rank_log_pow",
+       "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_le_of_rank_log_budget",
+       "NLAlib.khatriRaoFixedParameterConstant_pos"
+      ]
+     },
+     {
+      "statement": "Independent-coordinate Rademacher factors satisfy the directional exponential-square condition with fixed K=10 and obey the actual sharp upper embedding guarantee without caller-supplied isotropy or moment hypotheses.",
+      "decls": [
+       "NLAlib.lintegral_exp_sq_dotProduct_rademacherVector_le_two",
+       "NLAlib.measureReal_not_isSubspaceEmbedding_khatriRaoSketch_rademacher_le"
+      ]
+     },
+     {
+      "statement": "The explicit common-factor witness is an orthonormal frame in the tensor ambient coordinates; its paired-coordinate factor law is measure-preservingly the true heterogeneous independent Rademacher factor law, and its rows are the library tensor probes.",
+      "decls": [
+       "NLAlib.hasOrthonormalCols_khatriRaoCommonIsometry",
+       "NLAlib.bijective_khatriRaoCommonIndex",
+       "NLAlib.measurePreserving_khatriRaoCommonFactors",
+       "NLAlib.khatriRaoCommonRow_eq_khatriRaoProbe"
+      ]
+     },
+     {
+      "statement": "For r>=2^(4(d-1)), the common mode is floor(log r/(2(d-1)log 2)), is positive and logarithmic, and the explicit positive lower constant gives failure at least 1-exp(-sqrt r) uniformly over every positive integer width up to c_d r(log r)^(d-1) and every distortion below one.",
+      "decls": [
+       "NLAlib.khatriRaoLowerMode_bounds",
+       "NLAlib.khatriRaoLowerConstant_pos",
+       "NLAlib.one_sub_exp_neg_sqrt_le_measureReal_not_isSubspaceEmbedding_of_le_lower_growth"
+      ]
+     }
+    ]
+   }
   }
  ],
  "sources": [
@@ -48182,6 +48414,17 @@
    "arxiv": "1312.6003",
    "doi": "10.1070/SM2015v206n01ABEH004447",
    "role": "Short exposition of Stahl's argument, read in full for the contour-density representation and positivity mechanism. The downloaded arXiv PDF is v1 with a July 2018 manuscript date."
+  },
+  {
+   "id": "heidary26-khatri-rao",
+   "type": "paper",
+   "title": "The Sharp Logarithmic Cost of Khatri–Rao Subspace Embeddings",
+   "authors": [
+    "Diar Heidary"
+   ],
+   "year": 2026,
+   "url": "https://github.com/DiarHaidary/Results/blob/main/manuscripts/08-Khatri-Rao-Embeddings-and-Approximation/Khatri_Rao_Embeddings_and_Approximation_Focused.pdf",
+   "role": "Primary source for the sharp fixed-parameter embedding growth rate; finite-moment upper proof and bounded-entry lower construction."
   }
  ],
  "libraries": [

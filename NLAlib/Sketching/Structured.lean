@@ -1,3 +1,11 @@
+import NLAlib.Sketching.Structured.KhatriRaoBasic
+import NLAlib.Sketching.Structured.KhatriRaoEmbedding
+import NLAlib.Sketching.Structured.KhatriRaoGrowth
+import NLAlib.Sketching.Structured.KhatriRaoLower
+import NLAlib.Sketching.Structured.KhatriRaoLowerGrowth
+import NLAlib.Sketching.Structured.KhatriRaoMoments
+import NLAlib.Sketching.Structured.KhatriRaoSigns
+import NLAlib.Sketching.Structured.KhatriRaoUpper
 import NLAlib.Sketching.Structured.SRHT
 import NLAlib.Sketching.Structured.SRHTCore
 import NLAlib.Sketching.Structured.SRHTFlattening

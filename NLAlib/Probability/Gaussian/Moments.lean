@@ -1,6 +1,7 @@
 import NLAlib.Probability.Gaussian.Moments.ExpectationNormDiff
 import NLAlib.Probability.Gaussian.Moments.Isserlis
 import NLAlib.Probability.Gaussian.Moments.Khintchine
+import NLAlib.Probability.Gaussian.Moments.NaturalMoments
 import NLAlib.Probability.Gaussian.Moments.PolynomialLinearMoments
 import NLAlib.Probability.Gaussian.Moments.PositiveMoments
 import NLAlib.Probability.Gaussian.Moments.SeriesKhintchine

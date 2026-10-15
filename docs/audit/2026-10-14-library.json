@@ -9,7 +9,8 @@
     "docs/audit/2026-10-14-probability-sketching-solvers.json",
     "docs/audit/2026-10-14-research-candidates.json",
     "docs/audit/2026-10-14-deeper-matrix-methods.json",
-    "docs/audit/2026-10-14-khatri-rao-sharp-growth.json"
+    "docs/audit/2026-10-14-khatri-rao-sharp-growth.json",
+    "docs/audit/2026-10-15-revisited-sources.json"
   ],
   "formalization_exclusions": {
     "crouzeix_palencia": "Analytic interface, matrix Cauchy bridge, and smooth-neighborhood approximation",
@@ -40,7 +41,7 @@
       "reason": "The scalar recurrence and matrix polynomial identity are proved. A recursion and cost theorem for the advertised matrix-vector algorithm remain separate obligations."
     },
     "chi-square-neg-moment": {
-      "reason": "Exact negative moments and the existing high-moment rooted bound are proved. They do not alone establish the card's broader universal-constant rooted range."
+      "reason": "Exact negative moments and the endpoint moment bound at q=(d-1)/2 are proved. The complete rooted bound across all q>0 with d>=2q+1, including dimensions 2–4, has no indexed theorem; its corrected explicit domains and derivation are recorded in the 2026-10-15 revisit."
     }
   },
   "remaining_analytic_boundary": {
@@ -113,5 +114,11 @@
     "baseline_commit": "5ed3c1d2ec153575c23d65eb0c305c3adbde48bd",
     "new_cards": 1,
     "scope": "One new Khatri-Rao sharp-growth card and its reusable proof interfaces; all pre-existing human-authored cards are preserved."
+  },
+  "revisited_source_extension": {
+    "report": "docs/audit/2026-10-15-revisited-sources.json",
+    "baseline_commit": "849cf33ba15bf08d0c5c3590a09ba9ce60db9bc4",
+    "new_candidates": 43,
+    "scope": "Unformalized NLA/matrix-analysis candidates and precise partial-proof coverage; no new Lean validation is claimed."
   }
 }

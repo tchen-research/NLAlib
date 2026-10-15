@@ -1,6 +1,6 @@
 {
  "schema_version": "0.2",
- "updated_at": "2026-10-14",
+ "updated_at": "2026-10-15",
  "areas": [
   {
    "id": "matrix",
@@ -159,10 +159,10 @@
   },
   {
    "id": "estimation",
-   "name": "Trace, diagonal and quadratic-form estimation",
+   "name": "Trace, diagonal and spectral estimation",
    "parent": null,
    "order": 20,
-   "summary": "Hutchinson-type estimators, their variance and tails; randomized Krylov estimators (random-start power and Lanczos, stochastic Lanczos quadrature). Small statements with very high reuse.",
+   "summary": "Trace, diagonal and quadratic-form estimators, residual certificates, and spectral-density reconstruction from randomized Krylov or Chebyshev moments.",
    "priority": "now",
    "module": "NLAlib/Estimation",
    "layer": 4
@@ -409,11 +409,59 @@
   },
   {
    "id": "gaussian-comparison",
-   "name": "Gaussian comparison and spectral universality",
+   "name": "Gaussian comparison, free models and spectral laws",
    "parent": "gaussian",
    "order": 28,
    "priority": "next",
-   "summary": "Gaussian proxies with matching full covariance, extreme-eigenvalue comparisons and resolvent-trace universality for independent matrix sums."
+   "summary": "Gaussian proxies with matching covariance, spectral comparisons with free models, resolvent-trace universality, and variational formulas for limiting matrix spectra."
+  },
+  {
+   "id": "matrix-nonnegative",
+   "name": "Nonnegative matrices and M-matrices",
+   "parent": "matrix",
+   "order": 35,
+   "priority": "next",
+   "summary": "Perron–Frobenius theory, Collatz–Wielandt certificates, primitive power limits, inverse positivity and elimination for nonsingular M-matrices. Positivity in this area is entrywise, rather than the Loewner order."
+  },
+  {
+   "id": "matrix-fourier",
+   "name": "Fourier methods and structured matrix computation",
+   "parent": "matrix",
+   "order": 36,
+   "priority": "next",
+   "summary": "Fourier diagonalization, circulant solves and pseudoinverses, exact FFT realizations and Toeplitz products through circulant embeddings."
+  },
+  {
+   "id": "matrix-model-reduction",
+   "name": "Dynamic mode decomposition, realization and model reduction",
+   "parent": "matrix",
+   "order": 37,
+   "priority": "next",
+   "summary": "Finite snapshot operators, exact Hankel realization, Gramian balancing, balanced truncation and empirical interpolation."
+  },
+  {
+   "id": "matrix-hierarchical",
+   "name": "Hierarchical matrices and structured direct solvers",
+   "parent": "matrix",
+   "order": 38,
+   "priority": "next",
+   "summary": "HODLR and nested HSS/HBS representations, explicit storage and matvec models, compression certificates and inverse rank structure."
+  },
+  {
+   "id": "estimation-spectral-density",
+   "name": "Spectral density and robust moment reconstruction",
+   "parent": "estimation",
+   "order": 39,
+   "priority": "next",
+   "summary": "Probability measures on matrix spectra, noisy Chebyshev moments, positive kernel reconstruction, and Hermitian or normal matrix query algorithms."
+  },
+  {
+   "id": "gaussian-structured",
+   "name": "Structured random matrices and matrix discrepancy",
+   "parent": "gaussian",
+   "order": 40,
+   "priority": "later",
+   "summary": "Finite-group Fourier blocks, structured Gaussian ensembles, and spectral signings proved with random-matrix and partial-coloring methods."
   }
  ],
  "results": [
@@ -10249,15 +10297,16 @@
    "area": "gaussian-extreme",
    "kind": "identity",
    "status": "candidate",
-   "informal": "For $\\chi^2_d$ and $q$ with $2q < d$: $\\mathbb{E}[(\\chi^2_d)^{-q}]$ in closed form via the Gamma function, with the $L^q$ bound $\\|(\\chi^2_d)^{-1}\\|_{L^q} \\le C/d$, and $\\mathbb{E}[(\\chi^2_d)^{-2}] = 1/((d-2)(d-4))$.",
+   "informal": "For $S\\sim\\chi_d^2$, negative moments have a Gamma-function formula. The inverse second moment is explicit, and a uniform rooted-moment estimate is available when the exponent stays at least one half below the integrability threshold.",
    "hypotheses": [
-    "$d \\ge 2q+1$"
+    "$d\\ge1$ is an integer and $S=\\sum_{i=1}^d g_i^2$ for independent standard real Gaussian $g_i$",
+    "For the exact formula: $0\\le q<d/2$. For the rooted bound: $q>0$ and $d\\ge2q+1$. For the inverse second moment: $d\\ge5$"
    ],
-   "conclusion": "$\\mathbb{E}[(\\chi^2_d)^{-q}] = \\frac{\\Gamma(d/2-q)}{2^q\\Gamma(d/2)}$",
+   "conclusion": "$\\mathbb E S^{-q}=\\Gamma(d/2-q)/(2^q\\Gamma(d/2))$. For $q>0$ and $d\\ge2q+1$, $(\\mathbb ES^{-q})^{1/q}\\le4/d$; for $d\\ge5$ the constant can be $3$. Also $\\mathbb ES^{-2}=1/((d-2)(d-4))$ for $d\\ge5$.",
    "sources": [
     {
      "source": "hmt11",
-     "label": "Prop A.5"
+     "label": "Lemma A.10 and its Gamma-moment proof; Proposition A.6 / Lemma A.9 for the inverse second moment"
     },
     {
      "source": "tw23",
@@ -10322,8 +10371,8 @@
     "foundation",
     "port"
    ],
-   "notes": "Port of chi_square_neg_moment, inv_chi_square_Lq_bound, inv_sq_chi_square_moment. Statement audit 2026-10-14: current declarations cover only the components recorded in the per-card audit; the additional source clauses remain pending.",
-   "updated_at": "2026-10-14"
+   "notes": "Coverage checked against current main on 2026-10-15: the exact Gamma formula and its integrability are already proved for 0<=q<d/2, and the inverse second moment is proved for d>=5. A sorry-free theorem also proves E[S^(-(d-1)/2)]<(3/d)^((d-1)/2) for d>=5. The full card remains a candidate because a theorem linking that endpoint to every smaller positive exponent, taking the root, and handling dimensions 2–4 is not indexed for this card. Mathematically, monotonicity of positive rooted moments on a probability space gives the d>=5 bound. The endpoint q=(d-1)/2 values in dimensions 2,3,4 give d times the rooted moment equal to pi, 3, and 2*pi^(1/3), respectively, all below 4. The uniform bound must not be read as valid for every 2q<d without the displayed gap condition; it diverges as q approaches d/2 at fixed d. No Lean statement or proof-status tag was changed.",
+   "updated_at": "2026-10-15"
   },
   {
    "id": "tail-integral",
@@ -46732,6 +46781,1828 @@
      }
     ]
    }
+  },
+  {
+   "id": "nonnegative-perron-eigenpair",
+   "title": "Every nonnegative matrix has a Perron eigenpair",
+   "area": "matrix-nonnegative",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Every entrywise nonnegative real square matrix has a nonnegative eigenvector for its spectral radius. This includes reducible matrices and the zero spectral-radius case.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$, $n\\ge1$, and $A_{ij}\\ge0$ for every $i,j$; $\\rho(A)$ is the spectral radius of the complexification"
+   ],
+   "conclusion": "There is $p\\ge0$ with $\\sum_i p_i=1$ and $Ap=\\rho(A)p$. The transpose gives a normalized nonnegative left eigenvector as well.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "§7.2, Theorem 7.2.1, pp. 799–801; normalized-resolvent proof variant reconstructed independently"
+    }
+   ],
+   "depends_on": [
+    "matrix-power-convergence"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "Perron eigenvector",
+    "nonnegative eigenpair",
+    "spectral radius eigenvalue"
+   ],
+   "variants": [],
+   "notes": "All matrix and vector inequalities here are entrywise. Neither positivity of every coordinate, simplicity, nor a spectral gap follows without additional hypotheses. Reuse the existing complexified spectral-radius and Neumann-series API.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "Perron eigenvector",
+    "nonnegative eigenpair",
+    "spectral radius eigenvalue"
+   ]
+  },
+  {
+   "id": "irreducible-perron-frobenius",
+   "title": "Irreducible Perron–Frobenius theorem and positive spectral projector",
+   "area": "matrix-nonnegative",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "An irreducible nonnegative matrix has strictly positive right and left Perron vectors and an algebraically simple Perron root. Its Perron spectral projector is positive and explicitly rank one.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$, $n\\ge1$, is entrywise nonnegative, nonzero and irreducible (its directed support graph is strongly connected)",
+    "$r=\\rho(A)$; normalize right and left Perron vectors by $\\sum_i p_i=\\sum_i q_i=1$"
+   ],
+   "conclusion": "$r>0$, $p,q>0$, $Ap=rp$, $A^\\top q=rq$, and $r$ has algebraic multiplicity one. Every nonzero nonnegative eigenvector is a positive multiple of the corresponding Perron vector. The spectral projector at $r$ is $P=pq^\\top/(q^\\top p)>0$.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "§7.3, Theorem 7.3.1, pp. 804–805; §7.4, Theorem 7.4.1, Lemma 7.4.2 and Corollary 7.4.4, pp. 809–811"
+    }
+   ],
+   "depends_on": [
+    "nonnegative-perron-eigenpair"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "Perron–Frobenius theorem",
+    "irreducible matrix",
+    "Perron spectral projector"
+   ],
+   "variants": [],
+   "notes": "The nonzero assumption handles the 1×1 zero matrix under the usual graph-theoretic irreducibility convention. Irreducibility does not exclude other eigenvalues on the spectral circle; primitivity is a separate condition. The projector is generally oblique.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "Perron–Frobenius theorem",
+    "irreducible matrix",
+    "Perron spectral projector"
+   ]
+  },
+  {
+   "id": "nonnegative-spectral-radius-comparison",
+   "title": "Entrywise domination controls the spectral radius",
+   "area": "matrix-nonnegative",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Entrywise absolute-value domination controls spectral radii even for a complex matrix. A nonzero entrywise increase strictly raises the spectral radius when the smaller nonnegative matrix is irreducible.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$, $n\\ge1$, is entrywise nonnegative; $B\\in\\mathbb C^{n\\times n}$ and $|B_{ij}|\\le A_{ij}$",
+    "For the strict variant, $A$ is nonzero and irreducible, $E\\ge0$ entrywise and $E\\ne0$"
+   ],
+   "conclusion": "$\\rho(B)\\le\\rho(A)$. In the strict variant, $\\rho(A+E)>\\rho(A)$. In particular $0\\le A\\le C$ entrywise implies $\\rho(A)\\le\\rho(C)$.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "Corollary 4.11.6 and (4.11.18), pp. 621–622; Theorem 7.4.1, (7.4.7), pp. 809–811"
+    }
+   ],
+   "depends_on": [
+    "matrix-power-convergence",
+    "irreducible-perron-frobenius"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "entrywise spectral radius comparison",
+    "absolute-value domination",
+    "strict Perron monotonicity"
+   ],
+   "variants": [],
+   "notes": "Entrywise order must not be confused with Loewner order. No corresponding monotonicity of spectral radius for arbitrary signed entrywise-ordered matrices is asserted.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "entrywise spectral radius comparison",
+    "absolute-value domination",
+    "strict Perron monotonicity"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "spectrum.pow_norm_pow_one_div_tendsto_nhds_spectralRadius",
+     "present": true,
+     "note": "Gelfand formula; entrywise inequalities can use the induced infinity norm inside the proof."
+    }
+   ]
+  },
+  {
+   "id": "collatz-wielandt-certificates",
+   "title": "Collatz–Wielandt variational formulas and Perron root certificates",
+   "area": "matrix-nonnegative",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Positive test vectors give certified lower and upper bounds for a nonnegative matrix’s spectral radius. For irreducible matrices both bounds are attained at the Perron vector; reducible matrices require care about the domain and attainment.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$, $n\\ge1$, is entrywise nonnegative",
+    "$\\alpha(x)=\\min_i(Ax)_i/x_i$ and $\\beta(x)=\\max_i(Ax)_i/x_i$ for $x>0$"
+   ],
+   "conclusion": "$\\alpha(x)\\le\\rho(A)\\le\\beta(x)$ for every $x>0$, and $\\rho(A)=\\inf_{x>0}\\beta(x)$. If $A$ is irreducible and nonzero, $\\rho(A)=\\min_{x>0}\\beta(x)=\\max_{x>0}\\alpha(x)$. For arbitrary $A\\ge0$, the support-aware formula is $\\rho(A)=\\max_{0\\ne x\\ge0}\\min_{i:x_i>0}(Ax)_i/x_i$.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "Theorem 7.3.2, pp. 805–806, and Theorem 7.4.7, p. 817; resolvent proof of the general infimum formula is an audited extension"
+    }
+   ],
+   "depends_on": [
+    "nonnegative-perron-eigenpair",
+    "irreducible-perron-frobenius",
+    "matrix-power-convergence"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "Collatz–Wielandt",
+    "Perron root certificate",
+    "weighted row-sum bounds"
+   ],
+   "variants": [],
+   "notes": "Each minimum over coordinates is over a nonempty finite set. Reducible matrices need not have a positive Perron vector, so the upper infimum need not be a minimum and the positive-vector max-min need not equal the spectral radius. This is a useful a posteriori certificate for Perron iterations.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "Collatz–Wielandt",
+    "Perron root certificate",
+    "weighted row-sum bounds"
+   ]
+  },
+  {
+   "id": "primitive-perron-power-limit",
+   "title": "Primitive matrices: Perron projector limit and normalized power iteration",
+   "area": "matrix-nonnegative",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Primitivity is exactly the missing hypothesis that turns irreducible Perron theory into convergence of normalized powers and the nonnegative power method.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$, $n\\ge1$, is entrywise nonnegative, nonzero and irreducible; $r=\\rho(A)$",
+    "$p,q>0$ are Perron vectors and $\\sum_i p_i=1$; $P=pq^\\top/(q^\\top p)$"
+   ],
+   "conclusion": "The following are equivalent: some $A^m$ with $m\\ge1$ is entrywise positive; $r$ is the only eigenvalue of modulus $r$; and $(A/r)^k$ converges. In this case $(A/r)^k\\to P$. For every $0\\ne x\\ge0$, $A^kx/\\sum_i(A^kx)_i\\to p$. If $\\theta$ is strictly between $\\rho(A/r-P)$ and $1$, then $\\|(A/r)^k-P\\|_2\\le C_\\theta\\theta^k$ for all $k\\ge0$ and some finite $C_\\theta$.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "Theorems 7.5.2–7.5.3, pp. 820–821; Exercise 7.5.5(a), p. 823; quantitative geometric rate derived using matrix-power bounds"
+    }
+   ],
+   "depends_on": [
+    "irreducible-perron-frobenius",
+    "matrix-power-convergence"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "primitive matrix",
+    "Perron power method",
+    "aperiodic matrix convergence"
+   ],
+   "variants": [],
+   "notes": "The geometric estimate uses any rate strictly larger than the subdominant spectral radius and permits a nontrivial prefactor. A defective subdominant eigenvalue prevents an unqualified exact-ratio rate. All normalization denominators are positive for nonzero nonnegative initial vectors.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "primitive matrix",
+    "Perron power method",
+    "aperiodic matrix convergence"
+   ]
+  },
+  {
+   "id": "nonsingular-m-matrix-characterizations",
+   "title": "Nonsingular M-matrices: inverse positivity, stability and positive scaling",
+   "area": "matrix-nonnegative",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For a real Z-matrix, nonsingular M-matrix structure can be recognized spectrally, through its inverse or principal minors, or by a positive vector certificate. These characterizations support monotone linear solves and convergent splittings.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$, $n\\ge1$, is a Z-matrix: $A_{ij}\\le0$ for $i\\ne j$"
+   ],
+   "conclusion": "The following are equivalent: $A$ is invertible with $A^{-1}\\ge0$ entrywise; $A=sI-B$ with $B\\ge0$ and $s>\\rho(B)$; every eigenvalue of $A$ has positive real part; all nonempty principal minors are positive; and there exists $x>0$ with $Ax>0$. The last condition is equivalently strict row diagonal dominance of $A\\operatorname{diag}(x)$ with positive diagonal. Such $A$ satisfies $Au\\ge0\\Rightarrow u\\ge0$.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "Corollary 4.11.7, Definition 4.11.8 and Theorem 4.11.9, pp. 622–624; Exercise 4.11.14, p. 642"
+    }
+   ],
+   "depends_on": [
+    "nonnegative-perron-eigenpair",
+    "nonnegative-spectral-radius-comparison",
+    "collatz-wielandt-certificates",
+    "matrix-power-convergence"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "nonsingular M-matrix",
+    "inverse-positive Z-matrix",
+    "positive diagonal scaling"
+   ],
+   "variants": [],
+   "notes": "Meyer uses M-matrix to mean nonsingular M-matrix; the title makes this convention explicit because other sources permit singular M-matrices. Positivity and inequalities are entrywise. The positive-scaling criterion is strict diagonal dominance, not an unqualified weak-dominance test.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "nonsingular M-matrix",
+    "inverse-positive Z-matrix",
+    "positive diagonal scaling"
+   ]
+  },
+  {
+   "id": "m-matrix-schur-complement",
+   "title": "Principal elimination preserves nonsingular M-matrices",
+   "area": "matrix-nonnegative",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Every principal submatrix and every principal Schur complement of a nonsingular M-matrix is again a nonsingular M-matrix. The converse block criterion explains why elimination preserves inverse positivity.",
+   "hypotheses": [
+    "$A=\\begin{pmatrix}E&F\\\\G&H\\end{pmatrix}$ is a real Z-matrix with two nonempty principal blocks",
+    "For the Schur-complement equivalence assume $E$ is invertible and put $S=H-GE^{-1}F$"
+   ],
+   "conclusion": "$A$ is a nonsingular M-matrix iff both $E$ and $S$ are nonsingular M-matrices. In the forward direction every nonempty principal submatrix of $A$ is also a nonsingular M-matrix, and $S^{-1}$ is the bottom-right principal block of $A^{-1}$.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "Theorem 4.11.9, (4.11.22)–(4.11.23) and their block-inverse proof, pp. 623–624; Schur-complement equivalence is an audited block-matrix consequence"
+    }
+   ],
+   "depends_on": [
+    "nonsingular-m-matrix-characterizations"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "M-matrix elimination",
+    "Schur complement closure",
+    "monotone block solve"
+   ],
+   "variants": [],
+   "notes": "This is an entrywise inverse-positivity theorem for generally nonsymmetric matrices; it is distinct from the existing PSD Schur-complement theorem. Rectangular off-diagonal blocks are allowed, and no symmetry is assumed.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "M-matrix elimination",
+    "Schur complement closure",
+    "monotone block solve"
+   ]
+  },
+  {
+   "id": "regular-splitting-inverse-positivity",
+   "title": "Regular splittings: inverse positivity is equivalent to convergence",
+   "area": "krylov-linear-systems",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "A regular splitting converts inverse positivity into a spectral-radius convergence certificate. Consequently every regular splitting of a nonsingular M-matrix converges, and nonnegative data give a monotone iteration from zero.",
+   "hypotheses": [
+    "$A=M-N\\in\\mathbb R^{n\\times n}$, $n\\ge1$, $M$ invertible, $M^{-1}\\ge0$ and $N\\ge0$ entrywise",
+    "$H=M^{-1}N$ and $x_{k+1}=Hx_k+M^{-1}b$"
+   ],
+   "conclusion": "$A$ is invertible with $A^{-1}\\ge0$ iff $\\rho(H)<1$. Under these conditions the iteration converges to $A^{-1}b$ for every $b,x_0$. If $b\\ge0$ and $x_0=0$, then $0\\le x_k\\le x_{k+1}\\le A^{-1}b$.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "Theorem 4.11.9, (4.11.24) and proof, pp. 623–625; converse and monotone-iterate consequences reconstructed from the same factorization"
+    }
+   ],
+   "depends_on": [
+    "nonsingular-m-matrix-characterizations",
+    "stationary-splitting-convergence"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "regular splitting",
+    "inverse-positive iteration",
+    "monotone stationary solve"
+   ],
+   "variants": [],
+   "notes": "The printed (4.11.24) statement omits N≥0, although its proof uses it. Both M^-1≥0 and N≥0 are required here. No Z-matrix assumption on A is needed for the equivalence itself; M-matrix structure is one sufficient certificate of inverse positivity.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "regular splitting",
+    "inverse-positive iteration",
+    "monotone stationary solve"
+   ]
+  },
+  {
+   "id": "circulant-fourier-diagonalization",
+   "title": "Fourier diagonalization of circulants and their singular values",
+   "area": "matrix-fourier",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "The normalized DFT simultaneously diagonalizes all circulant matrices. Their singular values, spectral norm and invertibility are therefore read directly from the Fourier transform of their first column.",
+   "hypotheses": [
+    "$n\\ge1$, $c\\in\\mathbb C^{\\mathbb Z/n\\mathbb Z}$, and $C_{ij}=c_{i-j}$",
+    "$F_{jk}=e^{-2\\pi i jk/n}$, $U=F/\\sqrt n$, and $\\widehat c=Fc$"
+   ],
+   "conclusion": "$U$ is unitary and $UCU^*=\\operatorname{diag}(\\widehat c)$. The singular-value multiset of $C$ is $\\{|\\widehat c_j|:0\\le j<n\\}$, $\\|C\\|_2=\\max_j|\\widehat c_j|$, and $C$ is invertible iff every $\\widehat c_j\\ne0$. In that case $\\kappa_2(C)=\\max_j|\\widehat c_j|/\\min_j|\\widehat c_j|$.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "§5.5, Exercise 5.5.22, p. 754, with normalization and singular-value/conditioning consequences derived from the unitary diagonalization"
+    }
+   ],
+   "depends_on": [
+    "structured-matrices-def",
+    "svd",
+    "condition-number-def"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "circulant Fourier diagonalization",
+    "circulant spectrum",
+    "DFT singular values"
+   ],
+   "variants": [],
+   "notes": "Use Mathlib’s ZMod.dft and Matrix.circulant rather than introducing duplicate foundational objects. The normalized unitary U and unnormalized transform F must be distinguished: the diagonal entries are Fc, not Uc. Singular values are a multiset before sorting.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "circulant Fourier diagonalization",
+    "circulant spectrum",
+    "DFT singular values"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ZMod.dft",
+     "present": true,
+     "note": "Reuse the existing negative-exponent, unnormalized finite Fourier transform."
+    },
+    {
+     "decl": "ZMod.dft_dft",
+     "present": true,
+     "note": "Existing Fourier inversion theorem."
+    },
+    {
+     "decl": "Matrix.circulant",
+     "present": true,
+     "note": "Its (i,j) entry is c(i-j), matching the convention used here."
+    }
+   ]
+  },
+  {
+   "id": "circulant-fourier-pseudoinverse",
+   "title": "Circulant least squares and pseudoinverses by Fourier division",
+   "area": "matrix-fourier",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Fourier coordinates reduce a circulant linear solve or least-squares problem to independent scalar divisions. Setting reciprocal zero modes to zero gives the Moore–Penrose inverse and the minimum-norm least-squares solution.",
+   "hypotheses": [
+    "$n\\ge1$, $C=\\operatorname{circulant}(c)\\in\\mathbb C^{n\\times n}$; $F_{jk}=e^{-2\\pi i jk/n}$, $U=F/\\sqrt n$, $\\lambda=Fc$",
+    "$d_j=\\lambda_j^{-1}$ when $\\lambda_j\\ne0$, and $d_j=0$ otherwise; $b\\in\\mathbb C^n$"
+   ],
+   "conclusion": "$C^+=U^*\\operatorname{diag}(d)U=\\operatorname{circulant}(F^{-1}d)$. The minimum-norm least-squares solution is $x_*=F^{-1}(d\\odot Fb)$. Its squared residual is $\\sum_{j:\\lambda_j=0}|(Ub)_j|^2$, and $Cx=b$ is solvable iff $(Fb)_j=0$ at every zero mode. If every mode is nonzero, this is the unique exact solution.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "§5.5, Exercise 5.5.24, p. 755; rank-deficient extension independently derived from Exercise 5.5.22 and the Moore–Penrose equations"
+    }
+   ],
+   "depends_on": [
+    "circulant-fourier-diagonalization",
+    "pseudoinverse"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "circulant pseudoinverse",
+    "Fourier least squares",
+    "frequency-domain linear solve"
+   ],
+   "variants": [],
+   "notes": "The source exercise assumes nonsingularity. The pseudoinverse and residual formulas here are explicit audited extensions, obtained by applying the existing Moore–Penrose API to a diagonal matrix. They do not reinterpret a totalized matrix inverse as the pseudoinverse.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "circulant pseudoinverse",
+    "Fourier least squares",
+    "frequency-domain linear solve"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ZMod.dft",
+     "present": true,
+     "note": "Reuse the existing negative-exponent, unnormalized finite Fourier transform."
+    },
+    {
+     "decl": "ZMod.dft_dft",
+     "present": true,
+     "note": "Existing Fourier inversion theorem."
+    },
+    {
+     "decl": "Matrix.circulant",
+     "present": true,
+     "note": "Its (i,j) entry is c(i-j), matching the convention used here."
+    }
+   ]
+  },
+  {
+   "id": "radix-two-fft-realization",
+   "title": "Radix-2 FFT: exact DFT realization and arithmetic-operation count",
+   "area": "matrix-fourier",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "The even–odd butterfly recurrence computes the existing DFT exactly. For a length $2^s$ input it uses at most $(n/2)s$ complex multiplications and $ns$ complex additions/subtractions, when roots of unity are supplied as constants.",
+   "hypotheses": [
+    "$s\\in\\mathbb N$, $n=2^s$, $x\\in\\mathbb C^n$, and $\\omega_n=e^{-2\\pi i/n}$",
+    "For $n=1$ return $x$; for $n=2m$, recursively compute $e=\\operatorname{FFT}_m(x_{2j})$ and $o=\\operatorname{FFT}_m(x_{2j+1})$, then return $y_k=e_k+\\omega_n^k o_k$ and $y_{k+m}=e_k-\\omega_n^k o_k$ for $0\\le k<m$"
+   ],
+   "conclusion": "This recurrence returns $F_nx$, with $F_{jk}=\\omega_n^{jk}$. Counting one supplied-constant multiplication per butterfly and two additions/subtractions gives $M_0=A_0=0$, $M_s=2M_{s-1}+2^{s-1}$ and $A_s=2A_{s-1}+2^s$, hence $M_s=s2^{s-1}$ for $s\\ge1$ and $A_s=s2^s$. Multiplication by trivial roots may be omitted, so these are upper bounds for an optimized implementation.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "§5.5, Theorem 5.5.11, p. 743, algorithm pp. 746–747, Theorem 5.5.12, pp. 747–748, and Exercise 5.5.27, p. 756"
+    },
+    {
+     "source": "susanka25",
+     "label": "§6.9, The Fast Fourier Transform Algorithm, pp. 344–346"
+    }
+   ],
+   "depends_on": [],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "radix-2 FFT",
+    "Cooley–Tukey recurrence",
+    "DFT arithmetic complexity"
+   ],
+   "variants": [],
+   "notes": "Exact complex arithmetic only. Roots are supplied or precomputed; indexing/permutation, twiddle generation, memory movement and bit complexity are outside the counted operations. This is an algorithm-to-specification bridge, not just a Fourier factorization or a wall-clock speed claim.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "radix-2 FFT",
+    "Cooley–Tukey recurrence",
+    "DFT arithmetic complexity"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ZMod.dft",
+     "present": true,
+     "note": "Reuse the existing negative-exponent, unnormalized finite Fourier transform."
+    },
+    {
+     "decl": "ZMod.dft_dft",
+     "present": true,
+     "note": "Existing Fourier inversion theorem."
+    }
+   ]
+  },
+  {
+   "id": "toeplitz-circulant-fft-product",
+   "title": "Toeplitz matrix–vector products by zero-padded circulant embedding",
+   "area": "matrix-fourier",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "A rectangular Toeplitz product is a cropped circulant product. Sufficient zero padding prevents wraparound, so FFTs compute the exact product in nearly linear arithmetic cost without forming the dense Toeplitz matrix.",
+   "hypotheses": [
+    "$T\\in\\mathbb C^{m\\times n}$, $m,n\\ge1$, has entries $T_{ij}=t_{j-i}$; choose $L\\ge m+n-1$",
+    "Define a length-$L$ first column by $c_0=t_0$, $c_k=t_{-k}$ for $1\\le k<m$, $c_{L-j}=t_j$ for $1\\le j<n$, and zero elsewhere; let $E_n$ pad an $n$-vector to length $L$ and $P_m$ retain the first $m$ coordinates"
+   ],
+   "conclusion": "$T=P_m\\operatorname{circulant}(c)E_n$, hence $Tx=P_m F_L^{-1}((F_Lc)\\odot(F_LE_nx))$. If $L$ is a power of two, the radix-2 algorithm realizes this formula with $O(L\\log L)$ complex arithmetic operations; with $F_Lc$ precomputed, each product needs two transforms and $L$ pointwise multiplications.",
+   "sources": [
+    {
+     "source": "meyer23",
+     "label": "§5.5, convolution theorem (5.5.37), p. 742, and Exercises 5.5.22 and 5.5.25, pp. 754–755; rectangular Toeplitz embedding derived entrywise"
+    }
+   ],
+   "depends_on": [
+    "structured-matrices-def",
+    "circulant-fourier-diagonalization",
+    "radix-two-fft-realization"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "aliases": [
+    "Toeplitz FFT multiplication",
+    "circulant embedding",
+    "zero padding and aliasing"
+   ],
+   "variants": [],
+   "notes": "The diagonal sign convention T_ij=t_(j-i) matches NLAlib’s existing Toeplitz definition. The source gives a convolution embedding; the rectangular Toeplitz statement is an audited consequence. This is a fast multiplication result, not an assertion that a cropped inverse circulant solves a Toeplitz system.",
+   "difficulty": 3,
+   "priority": "next",
+   "updated_at": "2026-10-15",
+   "tags": [
+    "Toeplitz FFT multiplication",
+    "circulant embedding",
+    "zero padding and aliasing"
+   ],
+   "mathlib_prereqs": [
+    {
+     "decl": "ZMod.dft",
+     "present": true,
+     "note": "Reuse the existing negative-exponent, unnormalized finite Fourier transform."
+    },
+    {
+     "decl": "ZMod.dft_dft",
+     "present": true,
+     "note": "Existing Fourier inversion theorem."
+    },
+    {
+     "decl": "Matrix.circulant",
+     "present": true,
+     "note": "Its (i,j) entry is c(i-j), matching the convention used here."
+    }
+   ]
+  },
+  {
+   "id": "dmd-linear-consistency",
+   "title": "DMD snapshot consistency and exact finite trajectory reconstruction",
+   "area": "matrix-model-reduction",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "The snapshot operator $A=YX^\\dagger$ reproduces every training pair exactly if and only if $\\ker X\\subseteq\\ker Y$. This remains true for rank-deficient data and gives exact reconstruction of a sequential training trajectory without a diagonalizability assumption.",
+   "hypotheses": [
+    "$X,Y\\in\\mathbb K^{n\\times m}$, $\\mathbb K=\\mathbb R$ or $\\mathbb C$, and $A=YX^\\dagger$ uses the full Moore–Penrose inverse",
+    "For the trajectory clause, $X=[x_0,\\ldots,x_{m-1}]$ and $Y=[x_1,\\ldots,x_m]$ with $m\\ge1$"
+   ],
+   "conclusion": "$AX=Y\\iff\\ker X\\subseteq\\ker Y$, with residual $Y-AX=Y(I-X^\\dagger X)$. Under this condition every linear fit agrees with $A$ on $\\operatorname{range}X$, and sequential data satisfy $x_j=A^jx_0$ for $0\\le j\\le m$.",
+   "sources": [
+    {
+     "source": "tu14-dmd",
+     "label": "Definition 2 and Theorem 2; trajectory corollary by finite induction"
+    },
+    {
+     "source": "brunton-kutz22",
+     "label": "§7.2, equations (7.13)–(7.16) and (7.24)–(7.25), pp. 261–264"
+    }
+   ],
+   "depends_on": [
+    "pseudoinverse",
+    "least-squares-normal-equations"
+   ],
+   "aliases": [
+    "dynamic mode decomposition",
+    "DMD linear consistency",
+    "snapshot exactness",
+    "data-driven linear dynamics"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "model-reduction"
+   ],
+   "notes": "This adds the consistency/reconstruction bridge rather than duplicating generic least squares. The least-squares fit is generally nonunique; YX† is its minimum-Frobenius-norm representative. No conclusion about unseen times, noisy-data accuracy, Koopman convergence, or a modal eigenbasis is implied.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "dmd-reduced-eigenpair-lifting",
+   "title": "Reduced DMD: eigenpair lifting and the effect of SVD truncation",
+   "area": "matrix-model-reduction",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For retained positive singular triplets of $X$, put $B=YV_r\\Sigma_r^{-1}$, $A_r=BU_r^*$ and $\\widetilde A_r=U_r^*B$. Their nonzero spectra agree, and reduced eigenvectors lift to exact eigenvectors of $A_r$. The operator is $YX^\\dagger$ only when all positive singular directions are retained.",
+   "hypotheses": [
+    "$X,Y\\in\\mathbb C^{n\\times m}$, $1\\le r\\le\\operatorname{rank}X$, and $(U_r,\\Sigma_r,V_r)$ is a retained SVD block with orthonormal columns and positive diagonal $\\Sigma_r$",
+    "$B=YV_r\\Sigma_r^{-1}$, $A_r=BU_r^*$ and $\\widetilde A_r=U_r^*B$"
+   ],
+   "conclusion": "$\\det(zI_n-A_r)=z^{n-r}\\det(zI_r-\\widetilde A_r)$. If $\\widetilde A_rw=\\lambda w$, $w\\ne0$, $\\lambda\\ne0$, then $Bw\\ne0$ and $A_rBw=\\lambda Bw$; conversely, if $A_r\\phi=\\lambda\\phi$, $\\phi\\ne0$ and $\\lambda\\ne0$, then $U_r^*\\phi\\ne0$ and $\\widetilde A_rU_r^*\\phi=\\lambda U_r^*\\phi$. The projected mode has residual $A_rU_rw-\\lambda U_rw=(I-U_rU_r^*)Bw$.",
+   "sources": [
+    {
+     "source": "tu14-dmd",
+     "label": "Algorithm 2 and Theorems 1 and 3; characteristic polynomial and retained-SVD extension derived algebraically"
+    },
+    {
+     "source": "brunton-kutz22",
+     "label": "§7.2, equations (7.18)–(7.23), pp. 262–263"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "pseudoinverse",
+    "dmd-linear-consistency"
+   ],
+   "aliases": [
+    "exact DMD modes",
+    "projected DMD modes",
+    "truncated DMD",
+    "AB BA nonzero spectra"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "model-reduction"
+   ],
+   "notes": "Distinguish the full least-squares operator from its truncated-SVD surrogate. Projected modes U_r w need not be eigenvectors of A_r. Repeated or defective eigenvalues are allowed; a diagonal eigenvector matrix is not assumed. The characteristic-polynomial identity records algebraic multiplicities, stronger than merely matching eigenvalue sets.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "hankel-svd-era-realization",
+   "title": "Hankel SVD and ERA recover a minimal realization up to similarity",
+   "area": "matrix-model-reduction",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "Finite Hankel matrices of exact Markov parameters factor as observability times controllability. If this factorization has full state rank, the untruncated ERA formulas reconstruct the original system up to an invertible change of coordinates and reproduce every Markov parameter.",
+   "hypotheses": [
+    "$A\\in\\mathbb K^{n\\times n}$, $B\\in\\mathbb K^{n\\times q}$, $C\\in\\mathbb K^{p\\times n}$, $n,p,q\\ge1$, and positive block horizons $s,t$",
+    "$O_s=[C;CA;\\ldots;CA^{s-1}]$, $R_t=[B,AB,\\ldots,A^{t-1}B]$, with $\\operatorname{rank}O_s=\\operatorname{rank}R_t=n$",
+    "$H_0=[CA^{i+j}B]_{i<s,j<t}=O_sR_t$, $H_1=[CA^{i+j+1}B]_{i<s,j<t}=O_sAR_t$, and $H_0=U\\Sigma V^*$ is its compact rank-n SVD"
+   ],
+   "conclusion": "Let $E_q$ select the first input block columns and $E_p^*$ the first output block rows. Then $\\widehat A=\\Sigma^{-1/2}U^*H_1V\\Sigma^{-1/2}$, $\\widehat B=\\Sigma^{1/2}V^*E_q$, $\\widehat C=E_p^*U\\Sigma^{1/2}$ satisfy $\\widehat A=T^{-1}AT$, $\\widehat B=T^{-1}B$, $\\widehat C=CT$ with $T=R_tV\\Sigma^{-1/2}$. Hence $\\widehat C\\widehat A^j\\widehat B=CA^jB$ for every $j\\ge0$, and every realization of these Markov parameters has state dimension at least $n=\\operatorname{rank}H_0$.",
+   "sources": [
+    {
+     "source": "brunton-kutz22",
+     "label": "§9.3, equations (9.39)–(9.46), pp. 375–377; exact full-rank realization proof reconstructed"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "pseudoinverse",
+    "rank-inequalities"
+   ],
+   "aliases": [
+    "eigensystem realization algorithm",
+    "ERA",
+    "Ho–Kalman realization",
+    "block Hankel realization",
+    "Markov parameters"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "model-reduction"
+   ],
+   "notes": "This is the finite state-space Hankel matrix, not the polynomial moment Hankel matrix. Full state rank is essential for exact similarity; truncating nonzero Hankel singular values yields a reduced model without this exact recovery guarantee. No stability assumption is needed for finite-horizon realization. A feedthrough D is copied separately from the time-zero impulse output.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "gramian-svd-balancing",
+   "title": "SVD balancing of Gramian factors and balanced POD coordinates",
+   "area": "matrix-model-reduction",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "An SVD of the product of observability and controllability factors constructs biorthogonal trial and test bases that balance both compressed Gramian forms. When all state directions are retained and both Gramians are positive definite, the same formulas give an invertible balancing transformation, including repeated Hankel singular values.",
+   "hypotheses": [
+    "$R\\in\\mathbb K^{n\\times a}$, $O\\in\\mathbb K^{b\\times n}$, $P=RR^*$, $Q=O^*O$, and $H=OR$",
+    "$1\\le r\\le\\operatorname{rank}H$ and $(U_r,\\Sigma_r,V_r)$ consists of r positive singular triplets of H, with orthonormal left and right columns",
+    "$\\Psi=RV_r\\Sigma_r^{-1/2}$ and $\\Phi=O^*U_r\\Sigma_r^{-1/2}$"
+   ],
+   "conclusion": "$\\Phi^*\\Psi=I_r$, $\\Phi^*P\\Phi=\\Sigma_r$ and $\\Psi^*Q\\Psi=\\Sigma_r$. If $P,Q\\succ0$ and $r=n$, then $T=\\Psi$ is invertible, $T^{-1}=\\Phi^*$, $T^{-1}PT^{-*}=T^*QT=\\Sigma$, and $T^{-1}PQT=\\Sigma^2$. The positive eigenvalues of $PQ$ are the squares of the positive singular values of $OR$.",
+   "sources": [
+    {
+     "source": "brunton-kutz22",
+     "label": "§9.2, equations (9.14)–(9.22) and (9.29)–(9.35), pp. 365–372; square-root/SVD construction supplies the repeated-eigenvalue-safe proof"
+    },
+    {
+     "source": "redmann19-balanced",
+     "label": "§1, Cholesky-factor/SVD balancing construction"
+    }
+   ],
+   "depends_on": [
+    "svd",
+    "lyapunov-stability-gramian"
+   ],
+   "aliases": [
+    "balanced proper orthogonal decomposition",
+    "BPOD",
+    "square-root balancing",
+    "Hankel singular values",
+    "Gramian balancing"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "model-reduction"
+   ],
+   "notes": "For arbitrary snapshot factors these are balanced compressed quadratic forms, not automatically the infinite-horizon Gramians of the reduced dynamical system. The book’s argument that an arbitrary eigenbasis of PQ diagonalizes P and Q needs a choice of basis inside repeated-eigenvalue spaces; the SVD construction avoids that hidden assumption.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "balanced-truncation-energy-bound",
+   "title": "Balanced truncation: an energy proof of the input–output error bound",
+   "area": "matrix-model-reduction",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Two balanced Lyapunov identities yield a finite-horizon output-error bound for the actual truncated state equation. Each distinct discarded balancing value contributes at most twice that value to the induced L² norm; the usual twice-the-tail-sum estimate follows.",
+   "hypotheses": [
+    "$A\\in\\mathbb K^{n\\times n}$, $B\\in\\mathbb K^{n\\times m}$, $C\\in\\mathbb K^{p\\times n}$, $\\Sigma=\\operatorname{diag}(\\sigma_1,\\ldots,\\sigma_n)$ with $\\sigma_1\\ge\\cdots\\ge\\sigma_n>0$",
+    "$A\\Sigma+\\Sigma A^*=-BB^*$ and $A^*\\Sigma+\\Sigma A=-C^*C$; retain the first $0\\le r\\le n$ coordinates, giving $A_{11},B_1,C_1$",
+    "For $T\\ge0$ and $u\\in L^2([0,T])$, use zero-initial-state convolution solutions of $\\dot x=Ax+Bu$ and $\\dot x_r=A_{11}x_r+B_1u$, with outputs $y=Cx$ and $y_r=C_1x_r$"
+   ],
+   "conclusion": "$\\|y-y_r\\|_{L^2(0,T)}\\le2\\!\\sum_{\\tau\\in\\{\\sigma_{r+1},\\ldots,\\sigma_n\\}}\\!\\tau\\,\\|u\\|_{L^2(0,T)}\\le2\\sum_{j=r+1}^n\\sigma_j\\|u\\|_{L^2(0,T)}$, where the first sum counts each distinct value once. The bound is uniform in T and therefore holds on $[0,\\infty)$. If A and $A_{11}$ are Hurwitz, it gives $\\|C(sI-A)^{-1}B-C_1(sI-A_{11})^{-1}B_1\\|_{H^\\infty}\\le2\\sum_{j>r}\\sigma_j$.",
+   "sources": [
+    {
+     "source": "redmann19-balanced",
+     "label": "Lemma 2.1 and Theorem 2.2, plus the unrestricted specialization F_T=G_T=0 on p. 6"
+    },
+    {
+     "source": "brunton-kutz22",
+     "label": "§9.2, equation (9.27), p. 369; non-strict bound and actual Gramian hypotheses supplied"
+    }
+   ],
+   "depends_on": [
+    "gramian-svd-balancing",
+    "lyapunov-stability-gramian",
+    "matrix-calculus-def"
+   ],
+   "aliases": [
+    "balanced truncation",
+    "H-infinity model reduction bound",
+    "Enns–Glover bound",
+    "balanced energy estimate"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "model-reduction"
+   ],
+   "notes": "The main energy statement uses the two displayed finite-matrix identities and does not need an unproved stability-preservation claim. The transfer-function corollary explicitly assumes both state matrices Hurwitz. Approximate or finite-window empirical Gramians generally have correction terms and do not satisfy this bound automatically. No strict inequality, optimality, or lower-bound equality is asserted.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "deim-greedy-interpolation",
+   "title": "DEIM greedy interpolation: no breakdown and a sharp projection factor",
+   "area": "matrix-model-reduction",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "The greedy DEIM selection produces distinct sampling coordinates and an invertible sampled basis. Its interpolation operator reproduces the chosen subspace and amplifies the orthogonal-projection error by at most the inverse sampled-basis norm.",
+   "hypotheses": [
+    "$U=[u_1,\\ldots,u_r]\\in\\mathbb K^{n\\times r}$ has orthonormal columns and $1\\le r\\le n$",
+    "Choose $i_1\\in\\operatorname{argmax}_i|u_1(i)|$. At stage $j>1$, solve $(P_{j-1}^*U_{j-1})c=P_{j-1}^*u_j$, form $v_j=u_j-U_{j-1}c$, and choose $i_j\\in\\operatorname{argmax}_i|v_j(i)|$; $P_j=[e_{i_1},\\ldots,e_{i_j}]$",
+    "$P=P_r$, $M=P^*U$ and $\\Pi=UM^{-1}P^*$"
+   ],
+   "conclusion": "Every stage is well-defined, the indices are distinct, and M is invertible. $\\Pi^2=\\Pi$, $\\Pi U=U$, $P^*\\Pi=P^*$, and for every f, $\\|f-\\Pi f\\|_2\\le\\|M^{-1}\\|_2\\|(I-UU^*)f\\|_2$. If $0<r<n$, $\\|I-\\Pi\\|_2=\\|\\Pi\\|_2=\\|M^{-1}\\|_2$; for $r=n$, $\\Pi=I$.",
+   "sources": [
+    {
+     "source": "brunton-kutz22",
+     "label": "§13.5, equation (13.17), Figure 13.15 and Table 13.1, pp. 502–504; no-breakdown and oblique-norm estimate derived"
+    }
+   ],
+   "depends_on": [
+    "pseudoinverse",
+    "cs-decomposition"
+   ],
+   "aliases": [
+    "discrete empirical interpolation",
+    "DEIM",
+    "gappy POD interpolation",
+    "sampling reconstruction"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "model-reduction"
+   ],
+   "notes": "The recurrence is specified with consistent j versus j−1 indices; the printed table mixes these indices. Any maximizing index resolves ties. This is the matrix interpolation guarantee, not a guarantee of stability or global trajectory error for a nonlinear reduced model. The error estimate is proved directly from the oblique projector; no uninspected theorem or claimed optimal greedy conditioning is used.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "hodlr-storage-matvec",
+   "title": "HODLR representations: exact reconstruction, storage and matvec cost",
+   "area": "matrix-hierarchical",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "A binary cluster tree with low-rank sibling interactions defines an exact HODLR representation. Applying the stored factors gives the represented matrix–vector product with storage and work proportional to the sum of block sizes times ranks, with an explicit logarithmic-depth bound.",
+   "hypotheses": [
+    "A rooted full binary tree partitions N coordinates: each internal cluster is the disjoint union of children $I_\\alpha,I_\\beta$, and leaves partition the root; all internal nodes have depths in $\\{0,\\ldots,L-1\\}$ and each leaf has size at most b",
+    "For every internal node, $A[I_\\alpha,I_\\beta]=U_{\\alpha\\beta}V_{\\alpha\\beta}^*$ and $A[I_\\beta,I_\\alpha]=U_{\\beta\\alpha}V_{\\beta\\alpha}^*$, each with at most k columns; diagonal leaf blocks are stored densely",
+    "Exact arithmetic; one scalar multiplication or addition counts as one operation, while coordinate gathering and conjugation are not charged"
+   ],
+   "conclusion": "The dense leaf blocks and embedded sibling factors reconstruct A uniquely. The representation stores at most $S=\\sum_{\\tau\\text{ leaf}}|I_\\tau|^2+\\sum_{\\tau\\text{ internal}}2k|I_\\tau|\\le Nb+2NkL$ scalar entries. The algorithm that adds each leaf action and each $U(V^*x)$ sibling action returns Ax using at most 2S scalar multiply/add operations.",
+   "sources": [
+    {
+     "source": "martinsson-oneil25-direct",
+     "label": "§§4.1 and 4.4, additive representation (23); explicit counts and realization proved by tree partitioning"
+    }
+   ],
+   "depends_on": [
+    "rank-inequalities"
+   ],
+   "aliases": [
+    "hierarchically off-diagonal low rank",
+    "HODLR",
+    "hierarchical matvec",
+    "HODLR storage"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "hierarchical"
+   ],
+   "notes": "The matrix representation is input data; constructing its low-rank factors is a separate task. The depth L is explicit, so an unbalanced tree is not silently assigned logarithmic depth. Zero ranks and a root that is already a leaf are permitted. Rank-dependent bounds do not imply dimension-independent complexity when k grows with N.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "hodlr-levelwise-compression-error",
+   "title": "HODLR compression: summing levelwise spectral errors",
+   "area": "matrix-hierarchical",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "When a hierarchical approximation is assembled from disjoint sibling blocks, spectral errors accumulate by levels rather than by the total number of blocks. Frobenius errors add in squares across the individual blocks.",
+   "hypotheses": [
+    "A and $\\widehat A$ use the same binary cluster tree as a HODLR representation, with at most L internal depths",
+    "For every sibling interaction at depth $\\ell$, each directed block error has spectral norm at most $\\varepsilon_\\ell\\ge0$; every diagonal leaf-block error has spectral norm at most $\\varepsilon_D\\ge0$"
+   ],
+   "conclusion": "$\\|A-\\widehat A\\|_2\\le\\varepsilon_D+\\sum_{\\ell=0}^{L-1}\\varepsilon_\\ell$. Also $\\|A-\\widehat A\\|_F^2$ is exactly the sum of squared Frobenius errors of all directed sibling blocks and diagonal leaf blocks.",
+   "sources": [
+    {
+     "source": "martinsson-oneil25-direct",
+     "label": "§4.1, additive representation (23); derived deterministic error certificate"
+    }
+   ],
+   "depends_on": [
+    "hodlr-storage-matvec"
+   ],
+   "aliases": [
+    "HODLR error accumulation",
+    "hierarchical compression certificate",
+    "levelwise spectral error"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 2,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "hierarchical"
+   ],
+   "notes": "This is a derived certificate for the actual reconstructed blocks, not a stability theorem for an arbitrary compression or inversion algorithm. Local tolerance claims on nested coefficient matrices alone do not imply the hypotheses without controlling their basis factors.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "hss-nested-bases-matvec",
+   "title": "Nested HSS/HBS bases: exact two-pass matvec and linear storage",
+   "area": "matrix-hierarchical",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "Nested bases share the representation of interactions across tree levels. The upward aggregation and downward distribution algorithm realizes the full matrix action with an explicit storage/work budget; when leaf size and ranks are comparable, both are linear in N times rank.",
+   "hypotheses": [
+    "A full binary cluster tree has N coordinates, q leaves of sizes $n_\\tau\\le b$, and row/column ranks $r_\\tau\\le k$ with $k\\ge1$; take root rank zero",
+    "Leaf bases $U_\\tau,V_\\tau\\in\\mathbb K^{n_\\tau\\times r_\\tau}$ and dense diagonals $D_\\tau$ are stored. At a nonleaf node with children $\\alpha,\\beta$, $U_\\tau=\\operatorname{diag}(U_\\alpha,U_\\beta)E_\\tau$ and $V_\\tau=\\operatorname{diag}(V_\\alpha,V_\\beta)F_\\tau$",
+    "Sibling blocks are $A[I_\\alpha,I_\\beta]=U_\\alpha B_{\\alpha\\beta}V_\\beta^*$ and $A[I_\\beta,I_\\alpha]=U_\\beta B_{\\beta\\alpha}V_\\alpha^*$; exact arithmetic and the scalar multiply/add cost model are used"
+   ],
+   "conclusion": "The upward recursion $\\widehat x_\\tau=V_\\tau^*x_{I_\\tau}$ uses leaf multiplication and $F_\\tau^*[\\widehat x_\\alpha;\\widehat x_\\beta]$; the downward recursion propagates E and adds sibling coupling actions, finally returning $D_\\tau x_{I_\\tau}+U_\\tau\\widehat y_\\tau$ on leaves. It returns Ax and uses at most $2S$ operations, with $S=\\sum_{\\tau\\text{ leaf}}(n_\\tau^2+2n_\\tau r_\\tau)+\\sum_{\\tau\\text{ internal}}[2(r_\\alpha+r_\\beta)r_\\tau+2r_\\alpha r_\\beta]\\le Nb+2Nk+6k^2(q-1)$. If $k\\le n_\\tau\\le2k$ for all leaves, $S\\le10Nk$.",
+   "sources": [
+    {
+     "source": "martinsson-oneil25-direct",
+     "label": "§§7.1–7.2, common block-row/column bases and multilevel representations; explicit recurrence and parameter counts derived"
+    }
+   ],
+   "depends_on": [
+    "hodlr-storage-matvec"
+   ],
+   "aliases": [
+    "hierarchically semiseparable",
+    "HSS",
+    "hierarchically block separable",
+    "HBS",
+    "nested basis",
+    "two-pass matvec"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "hierarchical"
+   ],
+   "notes": "The root transfer matrices have zero columns and are not stored. The recurrence states the link between the data structure and matrix action, not just an existence claim about low rank. Common bases for whole off-diagonal block rows/columns are stronger than separate low rank of each sibling block.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "block-separable-inverse-reduction",
+   "title": "Block-separable inversion reduces a large inverse to a compressed core",
+   "area": "matrix-hierarchical",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "For $A=D+UCV^*$, a Woodbury rearrangement separates $A^{-1}$ into a compressed-core inverse and a rank-complement correction. With block-diagonal D,U,V, the construction preserves common off-diagonal row and column bases and can be applied recursively whenever the required pivots exist.",
+   "hypotheses": [
+    "$D\\in\\mathbb K^{N\\times N}$ and $M=V^*D^{-1}U\\in\\mathbb K^{K\\times K}$ are invertible, $0\\le K\\le N$, $U,V\\in\\mathbb K^{N\\times K}$ and $C\\in\\mathbb K^{K\\times K}$",
+    "$H=M^{-1}$, $S=C+H$, $E=D^{-1}UH$, $F^*=HV^*D^{-1}$ and $G=D^{-1}-D^{-1}UHV^*D^{-1}$"
+   ],
+   "conclusion": "$A=D+UCV^*$ is invertible iff S is invertible; in that case $A^{-1}=ES^{-1}F^*+G$ and $\\operatorname{rank}G=N-K$. If D,U,V are conformally block diagonal, E,F,G are block diagonal, so every off-diagonal inverse block factors through the corresponding E and F blocks.",
+   "sources": [
+    {
+     "source": "martinsson-oneil25-direct",
+     "label": "§7.1, Lemma 8 and equations (47)–(52); invertibility equivalence and rank proof reconstructed"
+    }
+   ],
+   "depends_on": [
+    "rank-inequalities",
+    "complementary-nullities"
+   ],
+   "aliases": [
+    "block separable inverse",
+    "hierarchical skeletonization core",
+    "Woodbury compressed inverse",
+    "HBS inverse reduction"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "hierarchical"
+   ],
+   "notes": "Invertibility of A alone does not make D or V*D⁻¹U invertible. Those hypotheses are stated explicitly, unlike informal readings of the compressed inverse formula. The core C itself need not be invertible. This is exact algebra and a recursive building block, with no blanket stability or linear factorization-cost claim.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "hss-inverse-rank-preservation",
+   "title": "Inversion preserves exact HSS off-diagonal cut ranks",
+   "area": "matrix-hierarchical",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "An invertible matrix and its inverse have the same ranks across every complementary off-diagonal cut. Consequently a matrix with bounded HSS cut ranks has an inverse with the same rank bounds, and these cut spaces admit nested bases on the same cluster tree.",
+   "hypotheses": [
+    "$A\\in\\mathbb K^{N\\times N}$ is invertible and a fixed binary cluster tree partitions its coordinates",
+    "For every nonroot cluster I, both $\\operatorname{rank}A[I,I^c]$ and $\\operatorname{rank}A[I^c,I]$ are at most k"
+   ],
+   "conclusion": "For every cluster I, $\\operatorname{rank}A^{-1}[I,I^c]=\\operatorname{rank}A[I,I^c]$ and $\\operatorname{rank}A^{-1}[I^c,I]=\\operatorname{rank}A[I^c,I]$. Choosing bases of these cut column and row spaces yields nested HSS/HBS bases of rank at most k for $A^{-1}$ on the same tree.",
+   "sources": [
+    {
+     "source": "martinsson-oneil25-direct",
+     "label": "§§7.1–7.2, closure under inversion; unconditional cut-rank statement derived from complementary nullities"
+    }
+   ],
+   "depends_on": [
+    "complementary-nullities",
+    "hss-nested-bases-matvec"
+   ],
+   "aliases": [
+    "HSS inverse closure",
+    "off-diagonal inverse rank",
+    "complementary cut rank",
+    "semiseparable inverse"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "matrix methods",
+    "hierarchical"
+   ],
+   "notes": "Exact whole-cut rank is the hypothesis. Low rank of each individual sibling block alone is a HODLR condition and does not justify this HSS claim. This existence theorem requires no nonsingular diagonal pivots; a particular inversion algorithm may require them. Small numerical ranks do not follow without additional conditioning estimates.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "chebyshev-lipschitz-coefficient-energy",
+   "title": "Lipschitz functions have bounded weighted Chebyshev coefficient energy",
+   "area": "polynomial-series",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "A global square-summability estimate controls the simultaneous size of Chebyshev coefficients, beyond separate coefficient decay bounds.",
+   "hypotheses": [
+    "$f:[-1,1]\\to\\mathbb R$ is $L$-Lipschitz, $L\\ge0$, with the standard coefficients $a_j$ of `chebyshev-coefficients-def`",
+    "For the tensor variant, $f:[-1,1]^d\\to\\mathbb R$ is $L$-Lipschitz for Euclidean distance, $d\\ge1$, and $c_\\alpha$ are its coefficients in the orthonormal basis $\\widetilde T_\\alpha=\\prod_i\\widetilde T_{\\alpha_i}$, where $\\widetilde T_0=1/\\sqrt\\pi$ and $\\widetilde T_j=\\sqrt{2/\\pi}T_j$ for $j\\ge1$"
+   ],
+   "conclusion": "$\\sum_{j\\ge1}j^2a_j^2\\le L^2$, with equality for $f(x)=c+Lx$. In normalized tensor coordinates, $\\sum_{\\alpha\\in\\mathbb N^d}\\|\\alpha\\|_2^2c_\\alpha^2\\le d\\pi^dL^2/2$.",
+   "sources": [
+    {
+     "source": "mmrs26-chebyshev-matching",
+     "label": "Lemma 13; Appendix A.1, Lemma 31; audited extension from smooth to Lipschitz functions"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "chebyshev-second-kind"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "global Chebyshev coefficient decay",
+    "weighted Chebyshev Sobolev bound",
+    "MMRS Lemma 13"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The univariate displayed constant uses standard, unnormalized coefficients; the source uses orthonormal coefficients and constant pi/2. The Lipschitz extension follows by an absolutely continuous cosine pullback, or by smooth approximation and finite-sum limits. Do not differentiate an arbitrary infinite series term by term without justification.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "chebyshev-moment-wasserstein",
+   "title": "Weighted Chebyshev moment error controls Wasserstein distance",
+   "area": "estimation-spectral-density",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Higher moments may be substantially noisier while still controlling the spectral distribution. The estimate includes atomic measures and a tensor version for complex-plane spectra.",
+   "hypotheses": [
+    "$\\mu,\\nu$ are probability measures supported on $[-1,1]$, $k\\ge1$, and $\\Gamma^2=\\sum_{j=1}^k j^{-2}|\\int T_j\\,d\\mu-\\int T_j\\,d\\nu|^2$",
+    "For the tensor variant on $[-1,1]^d$, $d\\ge1$, use normalized tensor moments and $\\Gamma_d^2=\\sum_{\\alpha\\in\\{0,\\ldots,k\\}^d\\setminus\\{0\\}}\\|\\alpha\\|_2^{-2}|\\int\\widetilde T_\\alpha\\,d\\mu-\\int\\widetilde T_\\alpha\\,d\\nu|^2$"
+   ],
+   "conclusion": "$W_1(\\mu,\\nu)\\le36/k+\\Gamma$. In $d$ dimensions with Euclidean transport cost, $W_1(\\mu,\\nu)\\le36d/k+\\sqrt{d\\pi^d/2}\\,\\Gamma_d$; for $d=2$ this is $72/k+\\pi\\Gamma_2$.",
+   "sources": [
+    {
+     "source": "mmrs26-chebyshev-matching",
+     "label": "Theorem 1, §3.1; Appendix A, Theorem 32"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-lipschitz-coefficient-energy",
+    "jackson-lipschitz"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "robust Chebyshev moment matching",
+    "noisy moments Wasserstein",
+    "MMRS Theorems 1 and 32"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "Requires a damped Chebyshev Jackson approximant whose coefficient magnitudes do not increase; bare existence of a degree-k approximant is insufficient. Zeroth moments cancel because both measures have mass one. The source proof writes a density expansion for a general measure; the audited argument instead pairs the finite approximating polynomial directly against the signed measure, covering atoms and endpoint mass.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "chebyshev-moment-simplex-regression",
+   "title": "Simplex regression reconstructs a measure from noisy moments",
+   "area": "estimation-spectral-density",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "A finite weighted least-squares problem on Chebyshev nodes turns moment estimates into a nonnegative probability measure, with an explicit optimization-tolerance allowance.",
+   "hypotheses": [
+    "$\\mu$ is supported on $[-1,1]$, $k,g\\ge1$, $x_i=\\cos((2i-1)\\pi/(2g))$ for $1\\le i\\le g$, and $\\|v\\|_{w,k}^2=\\sum_{j=1}^k v_j^2/j^2$",
+    "$\\widehat m\\in\\mathbb R^k$, $\\|\\widehat m-(\\int T_j\\,d\\mu)_{j=1}^k\\|_{w,k}\\le\\Gamma$, and $z$ lies in the probability simplex",
+    "The weighted residual of $z$ is at most the minimum residual over the simplex plus $\\eta\\ge0$; set $\\nu=\\sum_{i=1}^g z_i\\delta_{x_i}$"
+   ],
+   "conclusion": "$W_1(\\mu,\\nu)\\le36/k+2\\Gamma+\\pi\\sqrt{k}/(2g)+\\eta$. In particular $g=\\lceil k^{3/2}\\rceil$ gives $(36+\\pi/2)/k+2\\Gamma+\\eta$. A minimizer exists.",
+   "sources": [
+    {
+     "source": "mmrs26-chebyshev-matching",
+     "label": "Corollary 2; Algorithm 1; Appendix C, Lemma 44 and proof of Corollary 2; explicit standard-basis/tolerance derivation"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-moment-wasserstein"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "Chebyshev moment regression",
+    "positive moment reconstruction",
+    "weighted moment least squares"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "All moments here use T_j, consistently with the univariate moment bound. The source appendix switches to normalized polynomials; its constants must not be copied unchanged. The source return line has an inconsistent upper index; the output has exactly g atoms. The card certifies a specified optimization residual, not exact finite-time convergence or a bit-complexity bound for a numerical QP solver.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "chebyshev-spectral-density-query",
+   "title": "Adaptive probe counts reduce Hermitian spectral-density queries",
+   "area": "estimation-spectral-density",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "Reuse random probes across Chebyshev recurrences and decrease their number for higher moments; weighted moment recovery then estimates the entire eigenvalue distribution.",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$ is symmetric, $n\\ge1$, $S>0$, $\\|A\\|_2\\le S$, and $B=A/S$; only products with $A$ are queried",
+    "$k\\ge2$, $0<\\delta<1$, $\\gamma=1/(k\\sqrt{1+\\log k})$, and $\\ell_j=\\lceil1+C\\log^2(k/\\delta)/(nj\\gamma^2)\\rceil$ for a sufficiently large universal $C$",
+    "Draw $\\ell_1$ independent Rademacher vectors $g_i\\in\\{-1,1\\}^n$; estimate $m_j=n^{-1}\\operatorname{tr}T_j(B)$ using the first $\\ell_j$ probes and their shared three-term Chebyshev recurrences; apply simplex regression with $g=\\lceil k^{3/2}\\rceil$ nodes and zero optimization error, then scale the law by $S$"
+   ],
+   "conclusion": "With probability at least $1-\\delta$, $W_1(\\mu_A,\\widehat\\mu_A)\\le(38+\\pi/2)S/k$. The number of matrix-vector products is $O(k+k^2(1+\\log k)^2\\log^2(k/\\delta)/n)$. For $0<\\varepsilon<1$, choosing $k=\\lceil(38+\\pi/2)/\\varepsilon\\rceil$ gives error $\\varepsilon S$; a separate full-recovery branch caps the query count at $n$.",
+   "sources": [
+    {
+     "source": "mmrs26-chebyshev-matching",
+     "label": "§5, Lemma 18 and Theorem 19; recurrence reuse and explicit recovery constant reconstructed"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-moment-simplex-regression",
+    "hutchinson-tail",
+    "polynomial-spectral-bound"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "Hermitian spectral density estimation",
+    "decreasing Hutchinson probe budget",
+    "dimension-adaptive Chebyshev queries"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The global constant C is existential as in the source. Symmetry is essential: the printed Lemma 18 relies on the standing symmetric-matrix setting, since norm(A)<=1 alone does not bound T_j(A). Dependence between different estimated moments is harmless because the proof uses a union bound. The cap counts oracle queries only: reconstructing the matrix and diagonalizing it has substantial additional cost. Scale estimation and finite precision are outside this contract.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "odd-polynomial-sign-minimax",
+   "title": "Odd minimax sign polynomials: alternation and the optimal cubic",
+   "area": "polynomial-best",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "The odd polynomial subspace has its own alternation count on a positive interval, yielding a closed formula for the best cubic polar update.",
+   "hypotheses": [
+    "$0<\\ell<u$, $q\\ge0$, $d=2q+1$, and $\\mathcal P_d^{\\mathrm{odd}}=\\operatorname{span}\\{x,x^3,\\ldots,x^{2q+1}\\}$",
+    "$E(p)=\\max_{x\\in[\\ell,u]}|1-p(x)|$"
+   ],
+   "conclusion": "There is a unique minimizer $p_*$, characterized by $q+2$ ordered alternating extremal points. With $E_*=E(p_*)$, $0<E_*<1$, $p_*(\\ell)=\\min p_*=1-E_*$, and $\\max p_*=1+E_*$. For $d=3$, $p_*(x)=\\beta(3\\alpha x-(\\alpha x)^3)/2$, where $\\alpha=\\sqrt{3/(u^2+\\ell u+\\ell^2)}$ and $\\beta=4/(2+\\ell u(\\ell+u)\\alpha^3)$; $E_*=\\beta-1$.",
+   "sources": [
+    {
+     "source": "apmg26-polar-express",
+     "label": "Appendix C, Lemmas C.1–C.2; Appendix F, equations (16)–(17)"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "equioscillation"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "odd polynomial equioscillation",
+    "optimal cubic polar update",
+    "scaled Newton–Schulz minimax polynomial"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The interval must be nondegenerate: uniqueness and q+2 distinct alternation points fail for a singleton when q>0. This uses a Haar-space form of alternation, not the degree-d unrestricted polynomial theorem with d+2 points. Optimality is among odd polynomials, not all polynomials or rational functions.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "odd-polynomial-composition-minimax",
+   "title": "Greedy odd minimax updates minimize the error of their composition",
+   "area": "polynomial-best",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Optimizing each interval image separately is globally optimal among compositions with the same number of odd-polynomial stages and the same degree bound per stage.",
+   "hypotheses": [
+    "$0<\\ell_1<u_1$, $d=2q+1$ with $q\\ge0$, and $T\\ge1$",
+    "At stage $t$, let $p_t$ minimize $\\max_{x\\in[\\ell_t,u_t]}|1-p(x)|$ over $p\\in\\mathcal P_d^{\\mathrm{odd}}$; set $\\ell_{t+1}=p_t(\\ell_t)$ and $u_{t+1}=2-\\ell_{t+1}$",
+    "$P_T=p_T\\circ\\cdots\\circ p_1$"
+   ],
+   "conclusion": "$P_T([\\ell_1,u_1])=[\\ell_{T+1},u_{T+1}]$ and $\\max_{[\\ell_1,u_1]}|1-P_T|=1-\\ell_{T+1}\\le\\max_{[\\ell_1,u_1]}|1-\\widetilde p_T\\circ\\cdots\\circ\\widetilde p_1|$ for every $\\widetilde p_t\\in\\mathcal P_d^{\\mathrm{odd}}$.",
+   "sources": [
+    {
+     "source": "apmg26-polar-express",
+     "label": "Theorem 3.1; Appendix C induction, with omitted sign cases supplied"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "odd-polynomial-sign-minimax"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "greedy composition optimality",
+    "Polar Express optimality",
+    "composed odd sign approximation"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The comparison class is T compositions of degree-at-most-d odd polynomials. It is smaller than all polynomials of degree d^T. No uniqueness of the factorization is claimed. Competing intermediate ranges may be negative or cross zero; the proof must treat those cases before dividing endpoint ratios.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "polar-minimax-polynomial-iteration",
+   "title": "Minimax polynomial polar iteration: matrix realization and convergence",
+   "area": "matrix-functions",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "Odd scalar updates lift to matrix products while preserving singular directions; the scalar composition theorem gives a worst-case polar-factor guarantee, including rank-deficient inputs with a positive gap on their nonzero singular values.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{m\\times n}$, $m,n\\ge1$, with compact SVD $A=U_r\\Sigma_rV_r^*$ and canonical partial polar factor $Q=U_rV_r^*$; for $A=0$, set $Q=0$",
+    "$0<\\ell<1$ and every nonzero singular value of $A$ belongs to $[\\ell,1]$; $d=2q+1$ with $q\\ge1$ and $T\\ge1$",
+    "Choose the greedy minimax polynomials $p_t(x)=\\sum_{j=0}^q a_{t,j}x^{2j+1}$ for the successive interval images, and iterate $X_0=A$, $X_t=\\sum_{j=0}^q a_{t,j}X_{t-1}(X_{t-1}^*X_{t-1})^j$"
+   ],
+   "conclusion": "$X_T=U_rP_T(\\Sigma_r)V_r^*$ and $\\|Q-X_T\\|_2=\\max_{1\\le i\\le r}|1-P_T(\\sigma_i)|\\le1-\\ell_{T+1}\\le(1-\\ell^2)^{(q+1)^T}$ (the norm is zero when $r=0$). The interval error equals the worst-case matrix error over this spectral class. Given the scalar coefficients, Horner evaluation uses at most $(q+1)T$ matrix products.",
+   "sources": [
+    {
+     "source": "apmg26-polar-express",
+     "label": "§2 equations (3)–(6), Theorems 3.1 and 3.3, Appendices D–E; complex and rank-support derivation"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "odd-polynomial-composition-minimax",
+    "polar-decomposition",
+    "svd"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "Polar Express matrix convergence",
+    "singular-value polynomial iteration",
+    "rank-deficient polar approximation"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The exponent is (q+1)^T for d=2q+1. Appendix D v5 prints (d+1)^T inconsistently; that stronger expression is not imported. The paper uses rank-reduced SVD notation; zero singular directions stay zero and the target is the canonical partial isometry. The complex extension replaces transposes by adjoints. Scalar minimax coefficient computation and floating-point roundoff are not included in the matrix-product count.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "normal-matrix-mixed-chebyshev-moments",
+   "title": "Mixed spectral moments of a normal matrix form a cross-Gram matrix",
+   "area": "matrix-spectral",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "The commuting Hermitian real and imaginary parts of a normal matrix turn complex-plane spectral moments into two one-dimensional polynomial recurrences.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$ is normal, $n\\ge1$, $\\|A\\|_2\\le1$, $\\|b\\|_2=1$, $H=(A+A^*)/2$, and $K=(A-A^*)/(2i)$",
+    "For any orthonormal eigenbasis $(u_s)$, let $\\mu_{A,b}=\\sum_s|u_s^*b|^2\\delta_{(\\operatorname{Re}\\lambda_s,\\operatorname{Im}\\lambda_s)}$; use $\\widetilde T_0=1/\\sqrt\\pi$ and $\\widetilde T_j=\\sqrt{2/\\pi}T_j$ for $j\\ge1$",
+    "$M\\in\\mathbb N$, $X_j=\\widetilde T_j(H)b$, $Y_j=\\widetilde T_j(K)b$ for $0\\le j\\le M$"
+   ],
+   "conclusion": "$\\mu_{A,b}$ is an eigenbasis-independent probability measure and $\\Gamma_{jk}=\\int\\widetilde T_j(x)\\widetilde T_k(y)\\,d\\mu_{A,b}=X_j^*Y_k$, so $\\Gamma=X^*Y$. More generally $\\int\\overline{p(x)}q(y)\\,d\\mu_{A,b}=b^*p(H)^*q(K)b$. The normalized Chebyshev recurrences compute all moments with at most $4M$ queries to $A$ and $A^*$ and $O(n(M+1)^2)$ additional arithmetic.",
+   "sources": [
+    {
+     "source": "mmsuw26-normal-density",
+     "label": "§2.1, Lemma 2.1, equation (2.5), Algorithm 1; §2.4 cost accounting"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "normal-matrices"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "normal matrix mixed moments",
+    "Toeplitz decomposition spectral measure",
+    "cross-Gram Chebyshev moments"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "Normality gives simultaneous unitary diagonalization of H and K; the identity is not asserted for arbitrary matrices. Multiplicity weights are spectral-projector weights, so the measure is independent of the chosen eigenbasis. Storage is O(nM+M^2) when the moment matrix is retained; the paper's O(nM) summary presumes M=O(n) or streamed output. The initial normalized recurrence has a special second step.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "tensor-chebyshev-kernel-measure",
+   "title": "Positive tensor Chebyshev kernels approximate probability measures",
+   "area": "estimation-spectral-density",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "Explicit nonnegative kernels reconstruct a probability measure from its finite mixed moments and give a deterministic Wasserstein approximation guarantee.",
+   "hypotheses": [
+    "$M\\ge1$, $\\theta=\\pi/(M+2)$, $\\rho_j=((M+2-j)\\cos(j\\theta)+\\sin(j\\theta)\\cot\\theta)/(M+2)$ for $0\\le j\\le M$",
+    "$K_M(x,r)=\\sum_{j=0}^M\\rho_j\\widetilde T_j(x)\\widetilde T_j(r)$, with the normalized Chebyshev polynomials; $\\mu$ is a probability measure on $[-1,1]^d$, $d\\ge1$",
+    "$\\nu$ is the mixture against $\\mu(dr)$ of the product kernels $\\prod_{i=1}^d K_M(x_i,r_i)(1-x_i^2)^{-1/2}\\,dx_i$"
+   ],
+   "conclusion": "$\\nu$ is a probability measure, its density is determined by the mixed Chebyshev moments with coordinate degrees at most $M$, and $W_1(\\mu,\\nu)\\le6d/M$ for Euclidean transport cost. In particular the complex-plane case gives $12/M$. The kernel operator is a positive sup-norm contraction and satisfies $\\|f-K_M^{\\otimes d}f\\|_\\infty\\le(6/M)\\sum_i L_i$ for coordinate Lipschitz bounds $L_i$.",
+   "sources": [
+    {
+     "source": "mmsuw26-normal-density",
+     "label": "§2.2, equations (2.6)–(2.18), Theorem 2.2, Lemmas 2.3–2.4 and 2.6, Theorem 2.5"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "chebyshev-coefficients-def",
+    "jackson-lipschitz"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "multivariate kernel polynomial method",
+    "positive Chebyshev smoothing",
+    "Jackson damping spectral density"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The input law may be atomic; only the output has an absolutely continuous density. Endpoint singularities of the Chebyshev weight are integrable and are interpreted measure-theoretically. Arbitrary noisy moment arrays need not yield a positive density: positivity here follows from exact moments of an actual probability measure. A finite weighted empirical spectral measure supplies such moments even when it is random.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "normal-spectral-density-query",
+   "title": "A random start estimates the spectral density of a normal matrix",
+   "area": "estimation-spectral-density",
+   "kind": "algorithm",
+   "status": "candidate",
+   "informal": "One complex-sphere probe, two Chebyshev recurrences, and positive kernel reconstruction approximate a normal matrix's eigenvalue distribution in the complex plane.",
+   "hypotheses": [
+    "$A\\in\\mathbb C^{n\\times n}$ is normal, $n\\ge1$, with a supplied $S>0$ satisfying $\\|A\\|_2\\le S$; products with both $A$ and $A^*$ are available",
+    "$M\\ge2$, $0<\\delta<1$, and $b$ is uniform on the complex unit sphere, equivalently the real sphere $\\mathcal S^{2n-1}$",
+    "Apply the mixed-moment recurrence and tensor kernel reconstruction to $A/S$ and $b$, then push the output measure forward by $z\\mapsto Sz$; set $R^2=\\frac{8}{2n-1}\\log\\frac{2(M+1)^2-2}{\\delta}$"
+   ],
+   "conclusion": "With probability at least $1-\\delta$, $W_1(\\mu_A,\\widehat\\mu_A)\\le S\\left(84/M+\\pi R\\sqrt{5+(\\pi/2)\\log M}\\right)$. Consequently the error is $O\\!\\left(S[M^{-1}+\\sqrt{\\log(M/\\delta)\\log(M)/n}]\\right)$, using at most $4M$ matrix-vector queries, $O(nM^2)$ other arithmetic, and $O(nM+M^2)$ storage. A tensor Gauss–Chebyshev discretization gives at most $(M+1)^2$ positive atoms with another $72S/M$ error and $O(M^3)$ arithmetic.",
+   "sources": [
+    {
+     "source": "mmsuw26-normal-density",
+     "label": "Theorem 1.1, Algorithms 1–3; §2.3 Proposition 2.8 and Lemmas 2.9–2.10; §2.4; conservative explicit constants from the audited MMRS bound"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "normal-matrix-mixed-chebyshev-moments",
+    "tensor-chebyshev-kernel-measure",
+    "chebyshev-moment-wasserstein"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "normal matrix spectral density",
+    "complex-plane density estimation",
+    "random-start bivariate KPM"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The explicit leading constant 84 is 72 from the reviewed tensor moment bound plus 12 from the kernel error. The source uses a sharper Jackson constant for the same asymptotic theorem. Both A and A* queries and the supplied scale are essential. With a single probe, the stochastic term persists as M increases. The O(nM) storage simplification applies when M=O(n); scale estimation and roundoff are not counted.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "gaussian-free-spectrum-two-sided",
+   "title": "Two-sided Gaussian spectrum comparison with the free model",
+   "area": "gaussian-comparison",
+   "kind": "bound",
+   "status": "candidate",
+   "priority": "later",
+   "difficulty": 5,
+   "informal": "A Gaussian matrix spectrum is close to its free semicircular model in both Hausdorff directions. This controls missing spectral points and both extreme eigenvalues, beyond an upper norm bound.",
+   "hypotheses": [
+    "$d\\ge2$, $A_0,\\ldots,A_s\\in\\mathbb C^{d\\times d}$ are Hermitian; $g_i$ are independent standard real Gaussians and $X=A_0+\\sum_i g_iA_i$",
+    "$X_f=A_0\\otimes1+\\sum_i A_i\\otimes s_i$, where the $s_i$ are freely independent semicircular elements of variance one in a unital $C^*$-probability space with faithful tracial state",
+    "$\\sigma^2=\\|\\sum_iA_i^2\\|_2$, $v^2=\\|\\sum_i\\operatorname{vec}(A_i)\\operatorname{vec}(A_i)^*\\|_2$, $\\widetilde v=\\sqrt{\\sigma v}$, and $\\sigma_*^2=\\sup_{\\|u\\|=\\|w\\|=1}\\sum_i|u^*A_iw|^2$; vectorization uses unnormalized Frobenius geometry"
+   ],
+   "conclusion": "There is a universal $C>0$ such that, for all $t\\ge0$, $\\mathbb P\\{d_H(\\operatorname{spec}X,\\operatorname{spec}X_f)>C\\widetilde v(\\log d)^{3/4}+C\\sigma_*t\\}\\le e^{-t^2}$. The same tail controls $|f(X)-f(X_f)|$ for $f=\\lambda_{\\min},\\lambda_{\\max},\\|\\cdot\\|$, and $|\\mathbb Ef(X)-f(X_f)|\\le C\\widetilde v(\\log d)^{3/4}$.",
+   "sources": [
+    {
+     "source": "bcsvh25-free-two-sided",
+     "label": "Theorem 2.2, Corollary 2.3; §§4–5, especially Corollary 4.4 and Lemmas 5.1–5.2"
+    }
+   ],
+   "depends_on": [
+    "gaussian-series-covariance-sensitive-norm",
+    "gaussian-concentration"
+   ],
+   "aliases": [
+    "Hausdorff spectral comparison",
+    "two-sided free probability bounds",
+    "lower spectral edge"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "tags": [
+    "matrix-method",
+    "source-revisited"
+   ],
+   "notes": "This is a spectral-set comparison, not an eigenvalue-by-eigenvalue matching or multiplicity theorem. The noncentered mean is unrestricted. A faithful free model and its resolvent ultracontractivity are substantial prerequisites. Handle zero covariance directly; d>=2 is essential to this logarithmic normalization.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "gaussian-quadratic-free-spectrum",
+   "title": "Gaussian quadratic spectra via shifted Hermitian linearization",
+   "area": "gaussian-comparison",
+   "kind": "bound",
+   "status": "candidate",
+   "priority": "later",
+   "difficulty": 5,
+   "informal": "A two-sided spectral comparison extends to a Gaussian Gram matrix plus an arbitrary deterministic Hermitian shift, covering centered covariance spectra.",
+   "hypotheses": [
+    "$d\\ge2$, $X=A_0+\\sum_i g_iA_i\\in\\mathbb C^{d\\times d}$, with independent standard real Gaussian $g_i$; $A_i$ need not be Hermitian; $B=B^*$",
+    "$X_f=A_0\\otimes1+\\sum_iA_i\\otimes s_i$ in a faithful tracial free semicircular model",
+    "$\\sigma^2=\\max\\{\\|\\sum_iA_iA_i^*\\|_2,\\|\\sum_iA_i^*A_i\\|_2\\}$, $v^2=\\|\\sum_i\\operatorname{vec}(A_i)\\operatorname{vec}(A_i)^*\\|_2$, $\\widetilde v=\\sqrt{\\sigma v}$ and $\\sigma_*^2=\\sup_{\\|u\\|=\\|w\\|=1}\\sum_i|u^*A_iw|^2$"
+   ],
+   "conclusion": "For a universal $C>0$ and every $t\\ge\\widetilde v(\\log d)^{3/4}$, if $\\sigma_*>0$ then $\\mathbb P\\{d_H(\\operatorname{spec}(XX^*+B),\\operatorname{spec}(X_fX_f^*+B\\otimes1))>C(\\|X_f\\|+\\|B\\|_2^{1/2})t+Ct^2\\}\\le\\exp(-t^2/\\sigma_*^2)$. If $\\sigma_*=0$, the spectral sets agree deterministically.",
+   "sources": [
+    {
+     "source": "bcsvh25-free-two-sided",
+     "label": "Theorem 2.5 and §5.3 (Lemma 5.3)"
+    }
+   ],
+   "depends_on": [
+    "gaussian-free-spectrum-two-sided",
+    "matrix-calculus-def",
+    "hermitian-dilation"
+   ],
+   "aliases": [
+    "quadratic Gaussian spectral comparison",
+    "centered sample covariance free spectrum",
+    "Gram linearization"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "tags": [
+    "matrix-method",
+    "source-revisited"
+   ],
+   "notes": "The auxiliary shift makes the Gram square root strictly positive, so extra zero eigenvalues of the dilation cannot contaminate the reverse inclusion. Padding rectangular matrices needs a separate dimension/zero-spectrum bridge. This is not a claim about arbitrary nonlinear matrix chaos.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "scree-threshold-root",
+   "title": "A unique, stable threshold from the singular-value D-transform",
+   "area": "lra-spectral-shrinkage",
+   "kind": "theorem",
+   "status": "candidate",
+   "priority": "next",
+   "difficulty": 4,
+   "informal": "The scalar equation underlying ScreeNOT has one root above the noise spectrum; it is computable by bisection and continuous under weak convergence together with convergence of the spectral edge.",
+   "hypotheses": [
+    "$H$ is a probability measure on $[0,b]$, $b=\\max\\operatorname{supp}H>0$, $0<\\gamma\\le1$, and $\\lim_{y\\downarrow b}\\int(y-z)^{-2}\\,dH(z)=\\infty$",
+    "For $y>b$, set $\\varphi_H(y)=\\int y/(y^2-z^2)\\,dH(z)$, $\\widetilde\\varphi(y)=\\gamma\\varphi_H(y)+(1-\\gamma)/y$, $D=\\varphi_H\\widetilde\\varphi$, and $\\Psi(y)=yD'(y)/D(y)$"
+   ],
+   "conclusion": "$\\Psi$ is continuous and strictly increasing, with limits $-\\infty$ at $b$ and $-2$ at infinity. Hence there is a unique $T_\\gamma(H)\\in(b,\\sqrt3\\,b]$ with $\\Psi(T_\\gamma(H))=-4$. Bisection on $[b,\\sqrt3\\,b]$, using the endpoint limit at $b$, encloses the root in an interval of length $(\\sqrt3-1)b/2^j$ after $j$ steps. If $H_n\\Rightarrow H$, $\\max\\operatorname{supp}H_n\\to b$ and $\\gamma_n\\to\\gamma\\in(0,1]$, with each $H_n$ satisfying the same nonzero-edge and thickness conditions, then $T_{\\gamma_n}(H_n)\\to T_\\gamma(H)$.",
+   "sources": [
+    {
+     "source": "dgr23-screenot",
+     "label": "Lemma 8 and Supplement Appendix A; Lemma 3 and Appendix D.1; bisection bracket derived from the integral kernel"
+    }
+   ],
+   "depends_on": [],
+   "aliases": [
+    "ScreeNOT root",
+    "D-transform threshold",
+    "singular value hard threshold selection"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "tags": [
+    "matrix-method",
+    "source-revisited"
+   ],
+   "notes": "Finite empirical measures with positive largest atom satisfy the edge condition. An evaluation of Psi uses all p singular values, so j bisection steps cost O(pj) scalar arithmetic after the singular values are supplied; computing an SVD is not included. Weak convergence alone is insufficient because isolated outliers can move the upper support edge. The zero measure at the origin is excluded. This card is the deterministic numerical core, not the full asymptotic MSE-oracle theorem.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "matrix-k-transform-stability",
+   "title": "Positive-matrix certificates for K-transform stability",
+   "area": "matrix-functions",
+   "kind": "theorem",
+   "status": "candidate",
+   "priority": "next",
+   "difficulty": 5,
+   "informal": "Positivity of the derivative of a matrix K-transform can be tested through a strict positive-matrix supersolution of a completely positive map, providing a certificate for a stable spectral branch.",
+   "hypotheses": [
+    "$k\\ge1$, $\\alpha>0$, and $\\nu$ is a compactly supported probability measure on Hermitian $k\\times k$ matrices; $S\\succ0$ and $S^{-1}+T\\succ0$ for every $T\\in\\operatorname{supp}\\nu$",
+    "$K(S)=\\int T(I+ST)^{-1}\\,d\\nu(T)-\\alpha^{-1}S^{-1}$; for $Z_T=S^{1/2}TS^{1/2}$ set $C_T=Z_T(I+Z_T)^{-1}$ and $\\mathcal L_S(H)=\\alpha\\int C_THC_T\\,d\\nu(T)$"
+   ],
+   "conclusion": "$DK(S)[\\Delta]=\\alpha^{-1}S^{-1}\\Delta S^{-1}-\\int T(I+ST)^{-1}\\Delta(I+TS)^{-1}T\\,d\\nu(T)$. The following are equivalent: $DK(S)$ is positive definite for the real Frobenius inner product on Hermitian matrices; $\\|\\mathcal L_S\\|_{F\\to F}<1$; there exists $Y\\succ0$ with $\\mathcal L_S(Y)\\prec Y$; there exists $B\\succ0$ with $DK(S)[B]\\succ0$. In this case $(I-\\mathcal L_S)^{-1}=\\sum_{j\\ge0}\\mathcal L_S^j$ preserves positive semidefiniteness.",
+   "sources": [
+    {
+     "source": "ms26-block-wishart",
+     "label": "§4, Lemma 6 and derivative/stability identities (PDF equations (20)–(21); HTML equations (103)–(107)), with corrected positivity justification"
+    }
+   ],
+   "depends_on": [
+    "matrix-calculus-def",
+    "inverse-perturbation"
+   ],
+   "aliases": [
+    "K-transform stability certificate",
+    "matrix Dyson stability",
+    "positive map supersolution"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "tags": [
+    "matrix-method",
+    "source-revisited"
+   ],
+   "notes": "The map L_S preserves the PSD cone and is self-adjoint for the Frobenius inner product. It need not be a positive semidefinite operator for that inner product when T is indefinite; the source makes this false intermediate assertion. The equivalence survives using a spectral-radius argument. Strict inequalities and compact support provide a uniform inverse gap. The norm is the induced norm on the real Hilbert space of Hermitian matrices with Frobenius geometry; positivity of a map means preservation of the PSD cone.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "block-wishart-variational-edges",
+   "title": "Variational spectral edges of a block-Wishart law",
+   "area": "gaussian-comparison",
+   "kind": "theorem",
+   "status": "candidate",
+   "priority": "later",
+   "difficulty": 5,
+   "informal": "The edges of a block-Wishart limiting law admit finite-matrix variational formulas using the stable branch of its K-transform, including indefinite block coefficients.",
+   "hypotheses": [
+    "$k\\ge1$, $\\alpha>0$, $\\nu$ is a compactly supported probability law on Hermitian $k\\times k$ matrices. Let $\\mu_{\\alpha,\\nu}$ be the compactly supported probability measure characterized by $s(z)=\\alpha\\operatorname{Tr}S(z)/k=\\int(\\lambda-z)^{-1}\\,d\\mu_{\\alpha,\\nu}(\\lambda)$, where $\\operatorname{Im}S(z)\\succ0$ and $K(S(z))=zI$ for $\\operatorname{Im}z>0$",
+    "$K(S)=\\int T(I+ST)^{-1}\\,d\\nu(T)-\\alpha^{-1}S^{-1}$ and $\\mathcal P_- =\\{S\\succ0:S^{-1}+T\\succ0\\ \\forall T\\in\\operatorname{supp}\\nu,\\ DK(S)\\text{ is positive definite in Frobenius geometry}\\}$"
+   ],
+   "conclusion": "$\\inf\\operatorname{supp}\\mu_{\\alpha,\\nu}=\\sup_{S\\in\\mathcal P_-}\\lambda_{\\min}(K(S))$. Equivalently the law has strictly positive support exactly when there are $S,B\\succ0$ such that $S^{-1}+T\\succ0$ on the support, $DK(S)[B]\\succ0$ and $K(S)\\succ0$. The upper edge equals minus the lower edge obtained by applying the same formula to the pushforward of $\\nu$ under $T\\mapsto-T$.",
+   "sources": [
+    {
+     "source": "ms26-block-wishart",
+     "label": "Theorem 1, Theorem 3, Corollary 1 and Remark 3.1; §§3–4"
+    }
+   ],
+   "depends_on": [
+    "matrix-k-transform-stability"
+   ],
+   "aliases": [
+    "block Wishart spectral edge",
+    "matrix valued Stieltjes inverse",
+    "indefinite covariance spectral support"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "tags": [
+    "matrix-method",
+    "source-revisited"
+   ],
+   "notes": "The characterized law corresponds to normalization W=(1/n)(X* tensor I_k)diag(T_i)(X tensor I_k), n/p->alpha with k fixed. The claim concerns the limiting law, not automatically the smallest eigenvalue of every finite sample. No-outlier/support convergence and the row-law assumptions are separate bridges. The stable domain is essential; optimizing over all positive S can select a wrong analytic branch. Existence and uniqueness of the characterized law and its faithful free-operator realization are external prerequisites; the existing Gaussian Cauchy-transform universality card does not supply them.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "block-wishart-log-potential",
+   "title": "Variational log potential of a block-Wishart law",
+   "area": "gaussian-comparison",
+   "kind": "identity",
+   "status": "candidate",
+   "priority": "later",
+   "difficulty": 5,
+   "informal": "Outside the lower spectral edge, the normalized log-determinant limit is the minimum of an explicit finite-matrix potential on the stable K-transform branch.",
+   "hypotheses": [
+    "$k\\ge1$, $\\alpha>0$, $\\nu$ is a compactly supported probability law on Hermitian $k\\times k$ matrices. Let $\\mu_{\\alpha,\\nu}$ be the compactly supported probability measure characterized by $s(z)=\\alpha\\operatorname{Tr}S(z)/k=\\int(\\lambda-z)^{-1}\\,d\\mu_{\\alpha,\\nu}(\\lambda)$, where $\\operatorname{Im}S(z)\\succ0$ and $K(S(z))=zI$ for $\\operatorname{Im}z>0$",
+    "$K(S)=\\int T(I+ST)^{-1}\\,d\\nu(T)-\\alpha^{-1}S^{-1}$ and $\\mathcal P_- =\\{S\\succ0:S^{-1}+T\\succ0\\ \\forall T\\in\\operatorname{supp}\\nu,\\ DK(S)\\text{ is positive definite in Frobenius geometry}\\}$",
+    "$u<\\zeta_-:=\\inf\\operatorname{supp}\\mu_{\\alpha,\\nu}$ and $g(S;u)=-\\alpha u\\operatorname{Tr}S+\\alpha\\int\\log\\det(I+TS)\\,d\\nu(T)-\\log\\det S-k(\\log\\alpha+1)$"
+   ],
+   "conclusion": "$\\int\\log(\\lambda-u)\\,d\\mu_{\\alpha,\\nu}(\\lambda)=k^{-1}\\min_{S\\in\\mathcal P_-}g(S;u)$. The minimum is attained at the real continuation $S(u)$ satisfying $K(S(u))=uI$. Although $I+TS$ need not be Hermitian, its determinant is positive because it is similar to $I+S^{1/2}TS^{1/2}\\succ0$.",
+   "sources": [
+    {
+     "source": "ms26-block-wishart",
+     "label": "Theorem 2 and its proof in §3, using Theorem 3"
+    }
+   ],
+   "depends_on": [
+    "block-wishart-variational-edges",
+    "matrix-calculus-def",
+    "determinant-derivative"
+   ],
+   "aliases": [
+    "block Wishart log determinant",
+    "matrix K-transform variational potential"
+   ],
+   "formalizations": [],
+   "uses_defs": [],
+   "variants": [],
+   "mathlib_prereqs": [],
+   "tags": [
+    "matrix-method",
+    "source-revisited"
+   ],
+   "notes": "Tr is unnormalized, while the law and output potential are normalized by k. The minimum is over the stable domain, not the full positive cone. A finite matrix logdet convergence result also needs separation from sample spectra; weak convergence alone does not justify integrating an unbounded logarithm. The right-of-spectrum version follows by sign reflection.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "coefficient-block-partial-transpose",
+   "title": "A partially transposed coefficient Gram matrix measures noncommutativity",
+   "area": "matrix-spectral",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "A finite Hermitian block matrix supplies a Gaussian-series parameter bounded by both the variance and entry-covariance parameters, and unchanged by tensoring with an identity.",
+   "hypotheses": [
+    "$A_1,\\ldots,A_s\\in\\mathbb C^{d\\times d}$ are Hermitian, $s,d\\ge1$, $C=[A_jA_i]_{i,j=1}^s$, and $\\kappa=\\sqrt{\\lambda_{\\max}(C)}$",
+    "$\\sigma^2=\\|\\sum_i A_i^2\\|_2$ and $v^2=\\|\\sum_i\\operatorname{vec}(A_i)\\operatorname{vec}(A_i)^*\\|_2$"
+   ],
+   "conclusion": "$C$ is Hermitian, $\\lambda_{\\max}(C)\\ge0$, $\\|C\\|_2\\le\\min(\\sigma^2,v^2)$, and $\\kappa\\le\\min(\\sigma,v)$. Pairwise commuting coefficients give $\\kappa=\\sigma$. For every $r\\ge1$, replacing each $A_i$ by $A_i\\otimes I_r$ leaves $\\kappa$ unchanged.",
+   "sources": [
+    {
+     "source": "bknpw26-fock",
+     "label": "§1.1 equations (7)–(8), Propositions 1.3–1.4"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "norms-frob-spec"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "partial-transpose Gaussian parameter",
+    "kappa noncommutativity parameter",
+    "amplification-invariant variance refinement"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 3,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The block C can be indefinite: kappa uses its largest eigenvalue, not the square root of its spectral norm. Nonnegativity follows from the positive diagonal blocks. This is finite matrix analysis; no Fock-space object is needed for the statement.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "gaussian-series-partial-transpose-norm",
+   "title": "A noncommutativity parameter sharpens Gaussian trace moments and spectral norm",
+   "area": "gaussian-chaos",
+   "kind": "bound",
+   "status": "candidate",
+   "informal": "Finite Hermite-degree truncation gives a Gaussian matrix-series bound with the correct square-root logarithmic correction and an amplification-invariant coefficient parameter.",
+   "hypotheses": [
+    "$X=\\sum_{i=1}^s g_iA_i$, with fixed Hermitian $A_i\\in\\mathbb C^{d\\times d}$, $d,s\\ge1$, and independent real $g_i\\sim N(0,1)$",
+    "$\\sigma^2=\\|\\sum_i A_i^2\\|_2$, $\\kappa^2=\\lambda_{\\max}([A_jA_i]_{i,j})$, and $p\\ge1$ is an integer; $\\operatorname{tr}_d=d^{-1}\\operatorname{Tr}$"
+   ],
+   "conclusion": "$\\left(\\mathbb E\\operatorname{tr}_d(X^{2p})\\right)^{1/(2p)}\\le2\\sqrt{\\sigma^2+(p-1)\\kappa^2}$, and $\\mathbb E\\|X\\|_2\\le2\\sigma+6\\kappa\\sqrt{\\log d}$. Equivalently the unnormalized trace bound gains a factor $d^{1/(2p)}$.",
+   "sources": [
+    {
+     "source": "bknpw26-fock",
+     "label": "Theorem 1.5; §2 Theorem 2.1, Proposition 2.3 and Corollary 2.4; Appendix A.2"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "coefficient-block-partial-transpose",
+    "gaussian-matrix-def"
+   ],
+   "uses_defs": [],
+   "variants": [
+    "gaussian-series-covariance-sensitive-norm"
+   ],
+   "aliases": [
+    "strengthened noncommutative Khintchine",
+    "finite Hermite truncation norm bound",
+    "Fock-space Gaussian matrix concentration"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "next",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The source trace is normalized; NLAlib matrix trace is not. The spectral-norm estimate includes d=1 by a separate scalar Gaussian argument, since Appendix A.2 assumes d>=2. All-zero coefficients are handled directly. This does not claim that kappa is a norm or satisfies the triangle inequality. For each p, the proof uses the finite complex Hermite space of dimension binomial(s+p,p); the vacuum identity is exact at that cutoff and does not require convergence of unbounded Fock operators.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "gaussian-cayley-fourier-block-law",
+   "title": "Finite-group Fourier transform splits Gaussian convolution into independent blocks",
+   "area": "gaussian-structured",
+   "kind": "identity",
+   "status": "candidate",
+   "informal": "A group convolution matrix with circular complex Gaussian coefficients is unitarily equivalent in law to independent Gaussian blocks, repeated with representation-theoretic multiplicities.",
+   "hypotheses": [
+    "$G$ is a finite group of order $N$, $\\rho$ its left regular representation, and $\\{\\pi\\}$ a complete set of inequivalent irreducible unitary complex representations with dimensions $d_\\pi$",
+    "$z_g=\\xi_g+i\\eta_g$, where all $\\xi_g,\\eta_g$ are independent real $N(0,1)$ variables, and $Z_G=\\sum_{g\\in G}z_g\\rho(g)$"
+   ],
+   "conclusion": "There is a deterministic unitary $U$ such that $Z_G\\overset{\\mathrm{law}}=U\\left[\\bigoplus_\\pi I_{d_\\pi}\\otimes\\sqrt{N/d_\\pi}\\,Z_\\pi\\right]U^*$, where every entry of every $Z_\\pi\\in\\mathbb C^{d_\\pi\\times d_\\pi}$ is independent with the same circular Gaussian convention. Thus $\\|Z_G\\|_2\\overset{\\mathrm{law}}=\\max_\\pi\\sqrt{N/d_\\pi}\\|Z_\\pi\\|_2$.",
+   "sources": [
+    {
+     "source": "bkmz24-cayley",
+     "label": "§3, Lemma 7 and its Peter–Weyl/Schur-orthogonality proof"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "rotation-invariance"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "Gaussian group convolution",
+    "Gaussian Cayley Fourier blocks",
+    "noncommutative Fourier Gaussian law"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 4,
+   "priority": "later",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "Real and imaginary parts each have variance one, so E|z_g|²=2. Under the alternative variance-one complex convention both sides must be rescaled consistently. Independent Fourier blocks are asserted for circular complex coefficients; real coefficients impose conjugacy relations. The finite-group decomposition and Schur orthogonality are substantive representation-theoretic prerequisites.",
+   "updated_at": "2026-10-15"
+  },
+  {
+   "id": "finite-group-matrix-discrepancy",
+   "title": "Finite-group convolution matrices admit square-root spectral signings",
+   "area": "gaussian-structured",
+   "kind": "theorem",
+   "status": "candidate",
+   "informal": "A single signing of a finite group controls every irreducible Fourier block, hence every finite-dimensional unitary representation, without a logarithmic factor.",
+   "hypotheses": [
+    "$G$ is a finite group of order $N\\ge1$; $\\rho:G\\to U(N)$ is the left regular representation"
+   ],
+   "conclusion": "There is a universal $C>0$ such that one can choose $\\varepsilon:G\\to\\{-1,1\\}$ with $\\|\\sum_g\\varepsilon_g\\rho(g)\\|_2\\le C\\sqrt N$. The same signs satisfy $\\|\\sum_g\\varepsilon_g\\pi(g)\\|_2\\le C\\sqrt N$ for every finite-dimensional unitary complex representation $\\pi$.",
+   "sources": [
+    {
+     "source": "bb26-group-discrepancy",
+     "label": "Theorem 2 and following remark; §2 Lemmas 3–4 and §3 Lemma 5/partial-coloring proof, version 2"
+    }
+   ],
+   "formalizations": [],
+   "depends_on": [
+    "gaussian-cayley-fourier-block-law",
+    "gaussian-series-covariance-sensitive-norm",
+    "gaussian-concentration",
+    "noncommutative-khintchine",
+    "hermitian-dilation"
+   ],
+   "uses_defs": [],
+   "variants": [],
+   "aliases": [
+    "group Matrix Spencer theorem",
+    "spectral signing of convolution",
+    "finite-group matrix discrepancy"
+   ],
+   "mathlib_prereqs": [],
+   "difficulty": 5,
+   "priority": "later",
+   "tags": [
+    "source-reviewed"
+   ],
+   "notes": "The constant is existential and independent of the group and representation dimension. This is an existence theorem, not a randomized-sign guarantee or a polynomial-time construction. The proof uses a Gaussian correlation inequality and a partial-coloring theorem as deep prerequisites, not as unproved assumptions inside an advertised Lean proof. Version 2 is essential to the audited dimension split. Real Gaussian Fourier blocks need not be independent: the proof combines their correlated norm events with the Gaussian correlation inequality. Representation multiplicities do not create additional norm constraints.",
+   "updated_at": "2026-10-15"
   }
  ],
  "sources": [
@@ -48425,6 +50296,222 @@
    "year": 2026,
    "url": "https://github.com/DiarHaidary/Results/blob/main/manuscripts/08-Khatri-Rao-Embeddings-and-Approximation/Khatri_Rao_Embeddings_and_Approximation_Focused.pdf",
    "role": "Primary source for the sharp fixed-parameter embedding growth rate; finite-moment upper proof and bounded-entry lower construction."
+  },
+  {
+   "id": "meyer23",
+   "type": "book",
+   "title": "Matrix Analysis and Applied Linear Algebra, Second Edition",
+   "authors": [
+    "Carl D. Meyer"
+   ],
+   "year": 2023,
+   "doi": "10.1137/1.9781611977448",
+   "url": "https://doi.org/10.1137/1.9781611977448",
+   "role": "Inspected second-edition text: nonnegative matrices, Perron–Frobenius theory, nonsingular M-matrices, Fourier/circulant identities and FFT. Printed omissions are corrected explicitly in the derivation audit."
+  },
+  {
+   "id": "susanka25",
+   "type": "book",
+   "title": "Linear Algebra in Context: A Gateway to the Discrete Fourier Transform, Bilinear and Sesquilinear Forms, Algebras, Tensors and Mechanics",
+   "authors": [
+    "Lawrence Susanka"
+   ],
+   "year": 2025,
+   "doi": "10.1007/978-3-031-78424-8",
+   "url": "https://doi.org/10.1007/978-3-031-78424-8",
+   "role": "Inspected Chapter 6, especially §6.9, pp. 344–346, for the radix-2 DFT recurrence and arithmetic-operation model."
+  },
+  {
+   "id": "brunton-kutz22",
+   "type": "book",
+   "title": "Data-Driven Science and Engineering: Machine Learning, Dynamical Systems, and Control, second edition",
+   "authors": [
+    "S. L. Brunton",
+    "J. N. Kutz"
+   ],
+   "year": 2022,
+   "doi": "10.1017/9781009089517",
+   "url": "https://doi.org/10.1017/9781009089517",
+   "role": "DMD, balanced coordinates, Hankel realization and empirical interpolation; selected formulas audited with rank and stability qualifications."
+  },
+  {
+   "id": "tu14-dmd",
+   "type": "paper",
+   "title": "On Dynamic Mode Decomposition: Theory and Applications",
+   "authors": [
+    "J. H. Tu",
+    "C. W. Rowley",
+    "D. M. Luchtenburg",
+    "S. L. Brunton",
+    "J. N. Kutz"
+   ],
+   "year": 2014,
+   "arxiv": "1312.0041",
+   "doi": "10.3934/jcd.2014.1.391",
+   "url": "https://arxiv.org/abs/1312.0041",
+   "role": "Exact DMD definition, eigenpair lifting and linear consistency, Theorems 1–3."
+  },
+  {
+   "id": "martinsson-oneil25-direct",
+   "type": "survey",
+   "title": "Fast Direct Solvers",
+   "authors": [
+    "P.-G. Martinsson",
+    "M. O’Neil"
+   ],
+   "year": 2025,
+   "arxiv": "2511.07773",
+   "url": "https://arxiv.org/abs/2511.07773",
+   "role": "HODLR and nested HSS/HBS representations, block-separable inversion, and explicit qualifications on stability."
+  },
+  {
+   "id": "redmann19-balanced",
+   "type": "paper",
+   "title": "An L²_T-error bound for time-limited balanced truncation",
+   "authors": [
+    "M. Redmann"
+   ],
+   "year": 2019,
+   "arxiv": "1907.05478",
+   "url": "https://arxiv.org/abs/1907.05478",
+   "role": "Audited energy proof of the classical balanced-truncation bound via the zero-correction specialization of Lemma 2.1 and Theorem 2.2."
+  },
+  {
+   "id": "mmrs26-chebyshev-matching",
+   "type": "paper",
+   "title": "Sharper Bounds for Chebyshev Moment Matching, with Applications",
+   "authors": [
+    "Cameron Musco",
+    "Christopher Musco",
+    "Lucas Rosenblatt",
+    "Apoorv Vikram Singh"
+   ],
+   "year": 2026,
+   "url": "https://arxiv.org/abs/2408.12385v3",
+   "arxiv": "2408.12385v3",
+   "doi": "10.48550/arXiv.2408.12385",
+   "role": "Version 3, 18 May 2026: coefficient energy, robust moment reconstruction, and matrix spectral-density queries; probability laws may be atomic."
+  },
+  {
+   "id": "apmg26-polar-express",
+   "type": "paper",
+   "title": "The Polar Express: Optimal Matrix Sign Methods and Their Application to the Muon Algorithm",
+   "authors": [
+    "Noah Amsel",
+    "David Persson",
+    "Christopher Musco",
+    "Robert M. Gower"
+   ],
+   "year": 2026,
+   "url": "https://arxiv.org/abs/2505.16932v5",
+   "arxiv": "2505.16932v5",
+   "doi": "10.48550/arXiv.2505.16932",
+   "role": "Version 5, 4 May 2026: odd-polynomial minimax approximation, greedy composition, and exact-arithmetic polar iteration. The correct convergence exponent is the one in Theorem 3.3, not the inconsistent display in Appendix D."
+  },
+  {
+   "id": "mmsuw26-normal-density",
+   "type": "paper",
+   "title": "Spectral density estimation for normal matrices",
+   "authors": [
+    "Cameron Musco",
+    "Christopher Musco",
+    "Rikhav Shah",
+    "John Urschel",
+    "Nicholas West"
+   ],
+   "year": 2026,
+   "url": "https://arxiv.org/abs/2605.31430v2",
+   "arxiv": "2605.31430v2",
+   "doi": "10.48550/arXiv.2605.31430",
+   "role": "Version 2, 30 September 2026: mixed moment factorization, positive tensor kernel approximation, and complex normal spectral-density estimation with access to both A and A*."
+  },
+  {
+   "id": "bcsvh25-free-two-sided",
+   "type": "paper",
+   "title": "Matrix Concentration Inequalities and Free Probability II: Two-sided Bounds and Applications",
+   "authors": [
+    "A. S. Bandeira",
+    "G. Cipolloni",
+    "D. Schröder",
+    "R. van Handel"
+   ],
+   "year": 2025,
+   "url": "https://arxiv.org/abs/2406.11453v2",
+   "arxiv": "2406.11453v2",
+   "role": "Two-sided spectral-set comparison and quadratic Gaussian linearization; v2 audited."
+  },
+  {
+   "id": "dgr23-screenot",
+   "type": "paper",
+   "title": "ScreeNOT: Exact MSE-Optimal Singular Value Thresholding in Correlated Noise",
+   "authors": [
+    "D. L. Donoho",
+    "M. Gavish",
+    "E. Romanov"
+   ],
+   "year": 2023,
+   "url": "https://arxiv.org/abs/2009.12297v3",
+   "doi": "10.1214/22-AOS2232",
+   "role": "Deterministic D-transform threshold root and continuity; statistical oracle scope kept separate."
+  },
+  {
+   "id": "ms26-block-wishart",
+   "type": "paper",
+   "title": "Variational Formulas for the Spectrum of Block Wishart Matrices",
+   "authors": [
+    "A. Montanari",
+    "B. Saeed"
+   ],
+   "year": 2026,
+   "url": "https://arxiv.org/abs/2606.27774v1",
+   "arxiv": "2606.27774v1",
+   "role": "Matrix K-transform stability, variational edges and log potential; source intermediate positivity assertion repaired."
+  },
+  {
+   "id": "bknpw26-fock",
+   "type": "paper",
+   "title": "Matrix Concentration and Equivalent Operators on Fock Spaces",
+   "authors": [
+    "Afonso S. Bandeira",
+    "Dmitriy Kunisky",
+    "Petar Nizić-Nikolac",
+    "Lucas Pesenti",
+    "Robert Wang"
+   ],
+   "year": 2026,
+   "url": "https://arxiv.org/abs/2610.01982v1",
+   "arxiv": "2610.01982v1",
+   "role": "Version 1, 1 October 2026. Finite coefficient-block parameter and Gaussian trace-moment bounds audited through §2 and Appendix A.2; general Γ-Fock applications only screened."
+  },
+  {
+   "id": "bkmz24-cayley",
+   "type": "paper",
+   "title": "On the concentration of Gaussian Cayley matrices",
+   "authors": [
+    "Afonso S. Bandeira",
+    "Dmitriy Kunisky",
+    "Dustin G. Mixon",
+    "Xinmeng Zeng"
+   ],
+   "year": 2024,
+   "url": "https://arxiv.org/abs/2212.00066v1",
+   "arxiv": "2212.00066v1",
+   "doi": "10.1016/j.acha.2024.101694",
+   "role": "The exact Fourier block law (Lemma 7) is audited using the 2022 preprint; journal publication is Applied and Computational Harmonic Analysis 73 (2024), 101694."
+  },
+  {
+   "id": "bb26-group-discrepancy",
+   "type": "paper",
+   "title": "Matrix Discrepancy for Representations of Finite Groups",
+   "authors": [
+    "Afonso S. Bandeira",
+    "Helmut Bölcskei"
+   ],
+   "year": 2026,
+   "url": "https://arxiv.org/abs/2606.12181v2",
+   "arxiv": "2606.12181v2",
+   "doi": "10.48550/arXiv.2606.12181",
+   "role": "Version 2, 27 June 2026. Group convolution signing via subset Gaussian mass and iterated partial coloring; v2 corrects the high-dimensional threshold used in the proof."
   }
  ],
  "libraries": [

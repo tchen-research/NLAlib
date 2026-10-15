@@ -313,7 +313,7 @@
         "scope": "The displayed norm bound follows exactly by the centered Hermitian free-norm bound 2 sigma. The entire long free-comparison proof was not independently reconstructed. This is explicitly an unproved, later candidate with substantial prerequisites."
       },
       {
-        "source": "Bandeira, Boedihardjo and van Handel, Matrix Concentration Inequalities and Free Probability II: Two-sided Bounds and Applications (arXiv:2406.11453v2)",
+        "source": "Bandeira, Cipolloni, Schröder and van Handel, Matrix Concentration Inequalities and Free Probability II: Two-sided Bounds and Applications (arXiv:2406.11453v2)",
         "checked": "Read the introductory theorem statements and covariance setup and examined the ultracontractivity route.",
         "scope": "Deferred the full two-sided/free-spectrum/universality package; the first-paper covariance-sensitive norm bound supplies a smaller initial target. No standalone definition-only covariance card is added."
       },

@@ -169,10 +169,10 @@
   },
   {
    "id": "krylov",
-   "name": "Krylov methods",
+   "name": "Krylov and iterative methods",
    "parent": null,
    "order": 24,
-   "summary": "Krylov subspaces, Lanczos, conjugate gradient, Gauss quadrature and the spectral measure: deterministic theory resting on the matrix and polynomial layers. Randomized Krylov guarantees (random-start Lanczos, block Krylov, SLQ) sit with their consumers in low-rank approximation and estimation.",
+   "summary": "Stationary linear iterations, Krylov subspaces, Lanczos, conjugate gradient, Gauss quadrature and the spectral measure: deterministic theory resting on the matrix and polynomial layers. Randomized Krylov guarantees (random-start Lanczos, block Krylov, SLQ) sit with their consumers in low-rank approximation and estimation.",
    "priority": "next",
    "module": "NLAlib/Krylov",
    "layer": 1
@@ -190,9 +190,9 @@
   {
    "id": "gaussian-concentration-tools",
    "name": "Gaussian measure: log-Sobolev and comparison",
-   "parent": "gaussian",
+   "parent": "concentration",
    "order": 26,
-   "summary": "The machinery behind Gaussian concentration and Gordon's theorem: integration by parts, the Ornstein–Uhlenbeck semigroup, log-Sobolev, Herbst, Slepian and Sudakov–Fernique."
+   "summary": "Gaussian-vector geometry and the machinery behind Gaussian concentration and Gordon's theorem: Gaussian width, integration by parts, the Ornstein–Uhlenbeck semigroup, log-Sobolev, Herbst, Slepian and Sudakov–Fernique."
   },
   {
    "id": "polynomial",
@@ -228,11 +228,11 @@
   },
   {
    "id": "krylov-linear-systems",
-   "name": "Polynomial methods for linear systems",
-   "title": "Polynomial methods for linear systems",
+   "name": "Iterative methods for linear systems",
+   "title": "Iterative methods for linear systems",
    "parent": "krylov",
    "order": 28,
-   "summary": "Residual polynomials; GMRES, MINRES, FOM, preconditioned CG, CGLS/LSQR, Chebyshev iteration and Richardson, with their spectral convergence bounds."
+   "summary": "Stationary and regular splittings, Richardson and Chebyshev iteration, residual polynomials, GMRES, MINRES, FOM, preconditioned CG and CGLS/LSQR, with their convergence certificates and spectral bounds."
   },
   {
    "id": "krylov-nonnormal",
@@ -437,7 +437,7 @@
    "parent": "matrix",
    "order": 37,
    "priority": "next",
-   "summary": "Finite snapshot operators, exact Hankel realization, Gramian balancing, balanced truncation and empirical interpolation."
+   "summary": "Finite snapshot operators, exact Hankel realization, Gramian balancing and empirical interpolation."
   },
   {
    "id": "matrix-hierarchical",
@@ -457,11 +457,11 @@
   },
   {
    "id": "gaussian-structured",
-   "name": "Structured random matrices and matrix discrepancy",
+   "name": "Structured random matrices",
    "parent": "gaussian",
    "order": 40,
    "priority": "later",
-   "summary": "Finite-group Fourier blocks, structured Gaussian ensembles, and spectral signings proved with random-matrix and partial-coloring methods."
+   "summary": "Finite-group Fourier blocks and structured Gaussian ensembles."
   }
  ],
  "results": [
@@ -44952,7 +44952,7 @@
   {
    "id": "matrix-inverse-newton-schulz",
    "title": "Newton–Schulz inverse iteration: exact residual squaring",
-   "area": "matrix-conditioning",
+   "area": "matrix-functions",
    "kind": "theorem",
    "status": "candidate",
    "informal": "For $X_{k+1}=X_k(2I-AX_k)$, the right residual $E_k=I-AX_k$ satisfies $E_k=E_0^{2^k}$. The condition $\\rho(E_0)<1$ guarantees invertibility of $A$ and convergence to $A^{-1}$.",
@@ -44989,7 +44989,7 @@
     "source-reviewed"
    ],
    "notes": "No assumption AX0=X0A is needed. Since AX0=I-E0 is invertible in finite square dimension, A is invertible. The norm bound requires ||E0||2<1, whereas spectral-radius convergence alone permits transient growth. This card specifies a mathematical iteration and does not certify roundoff stability or a stopping tolerance.",
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-15"
   },
   {
    "id": "polar-newton-iteration",
@@ -46340,7 +46340,7 @@
   {
    "id": "gaussian-proxy-eigenvalue-comparison",
    "title": "One-sided extreme-eigenvalue comparison with a Gaussian proxy",
-   "area": "gaussian-comparison",
+   "area": "concentration-matrix",
    "kind": "bound",
    "difficulty": 5,
    "priority": "later",
@@ -46378,7 +46378,7 @@
    "uses_defs": [],
    "variants": [],
    "mathlib_prereqs": [],
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-15"
   },
   {
    "id": "exchangeable-matrix-covariance",
@@ -47516,53 +47516,6 @@
    "updated_at": "2026-10-15"
   },
   {
-   "id": "balanced-truncation-energy-bound",
-   "title": "Balanced truncation: an energy proof of the input–output error bound",
-   "area": "matrix-model-reduction",
-   "kind": "bound",
-   "status": "candidate",
-   "informal": "Two balanced Lyapunov identities yield a finite-horizon output-error bound for the actual truncated state equation. Each distinct discarded balancing value contributes at most twice that value to the induced L² norm; the usual twice-the-tail-sum estimate follows.",
-   "hypotheses": [
-    "$A\\in\\mathbb K^{n\\times n}$, $B\\in\\mathbb K^{n\\times m}$, $C\\in\\mathbb K^{p\\times n}$, $\\Sigma=\\operatorname{diag}(\\sigma_1,\\ldots,\\sigma_n)$ with $\\sigma_1\\ge\\cdots\\ge\\sigma_n>0$",
-    "$A\\Sigma+\\Sigma A^*=-BB^*$ and $A^*\\Sigma+\\Sigma A=-C^*C$; retain the first $0\\le r\\le n$ coordinates, giving $A_{11},B_1,C_1$",
-    "For $T\\ge0$ and $u\\in L^2([0,T])$, use zero-initial-state convolution solutions of $\\dot x=Ax+Bu$ and $\\dot x_r=A_{11}x_r+B_1u$, with outputs $y=Cx$ and $y_r=C_1x_r$"
-   ],
-   "conclusion": "$\\|y-y_r\\|_{L^2(0,T)}\\le2\\!\\sum_{\\tau\\in\\{\\sigma_{r+1},\\ldots,\\sigma_n\\}}\\!\\tau\\,\\|u\\|_{L^2(0,T)}\\le2\\sum_{j=r+1}^n\\sigma_j\\|u\\|_{L^2(0,T)}$, where the first sum counts each distinct value once. The bound is uniform in T and therefore holds on $[0,\\infty)$. If A and $A_{11}$ are Hurwitz, it gives $\\|C(sI-A)^{-1}B-C_1(sI-A_{11})^{-1}B_1\\|_{H^\\infty}\\le2\\sum_{j>r}\\sigma_j$.",
-   "sources": [
-    {
-     "source": "redmann19-balanced",
-     "label": "Lemma 2.1 and Theorem 2.2, plus the unrestricted specialization F_T=G_T=0 on p. 6"
-    },
-    {
-     "source": "brunton-kutz22",
-     "label": "§9.2, equation (9.27), p. 369; non-strict bound and actual Gramian hypotheses supplied"
-    }
-   ],
-   "depends_on": [
-    "gramian-svd-balancing",
-    "lyapunov-stability-gramian",
-    "matrix-calculus-def"
-   ],
-   "aliases": [
-    "balanced truncation",
-    "H-infinity model reduction bound",
-    "Enns–Glover bound",
-    "balanced energy estimate"
-   ],
-   "formalizations": [],
-   "uses_defs": [],
-   "variants": [],
-   "mathlib_prereqs": [],
-   "difficulty": 4,
-   "priority": "next",
-   "tags": [
-    "matrix methods",
-    "model-reduction"
-   ],
-   "notes": "The main energy statement uses the two displayed finite-matrix identities and does not need an unproved stability-preservation claim. The transfer-function corollary explicitly assumes both state matrices Hurwitz. Approximate or finite-window empirical Gramians generally have correction terms and do not satisfy this bound automatically. No strict inequality, optimality, or lower-bound equality is asserted.",
-   "updated_at": "2026-10-15"
-  },
-  {
    "id": "deim-greedy-interpolation",
    "title": "DEIM greedy interpolation: no breakdown and a sharp projection factor",
    "area": "matrix-model-reduction",
@@ -48088,7 +48041,7 @@
   {
    "id": "normal-matrix-mixed-chebyshev-moments",
    "title": "Mixed spectral moments of a normal matrix form a cross-Gram matrix",
-   "area": "matrix-spectral",
+   "area": "estimation-spectral-density",
    "kind": "identity",
    "status": "candidate",
    "informal": "The commuting Hermitian real and imaginary parts of a normal matrix turn complex-plane spectral moments into two one-dimensional polynomial recurrences.",
@@ -48561,47 +48514,6 @@
     "source-reviewed"
    ],
    "notes": "Real and imaginary parts each have variance one, so E|z_g|²=2. Under the alternative variance-one complex convention both sides must be rescaled consistently. Independent Fourier blocks are asserted for circular complex coefficients; real coefficients impose conjugacy relations. The finite-group decomposition and Schur orthogonality are substantive representation-theoretic prerequisites.",
-   "updated_at": "2026-10-15"
-  },
-  {
-   "id": "finite-group-matrix-discrepancy",
-   "title": "Finite-group convolution matrices admit square-root spectral signings",
-   "area": "gaussian-structured",
-   "kind": "theorem",
-   "status": "candidate",
-   "informal": "A single signing of a finite group controls every irreducible Fourier block, hence every finite-dimensional unitary representation, without a logarithmic factor.",
-   "hypotheses": [
-    "$G$ is a finite group of order $N\\ge1$; $\\rho:G\\to U(N)$ is the left regular representation"
-   ],
-   "conclusion": "There is a universal $C>0$ such that one can choose $\\varepsilon:G\\to\\{-1,1\\}$ with $\\|\\sum_g\\varepsilon_g\\rho(g)\\|_2\\le C\\sqrt N$. The same signs satisfy $\\|\\sum_g\\varepsilon_g\\pi(g)\\|_2\\le C\\sqrt N$ for every finite-dimensional unitary complex representation $\\pi$.",
-   "sources": [
-    {
-     "source": "bb26-group-discrepancy",
-     "label": "Theorem 2 and following remark; §2 Lemmas 3–4 and §3 Lemma 5/partial-coloring proof, version 2"
-    }
-   ],
-   "formalizations": [],
-   "depends_on": [
-    "gaussian-cayley-fourier-block-law",
-    "gaussian-series-covariance-sensitive-norm",
-    "gaussian-concentration",
-    "noncommutative-khintchine",
-    "hermitian-dilation"
-   ],
-   "uses_defs": [],
-   "variants": [],
-   "aliases": [
-    "group Matrix Spencer theorem",
-    "spectral signing of convolution",
-    "finite-group matrix discrepancy"
-   ],
-   "mathlib_prereqs": [],
-   "difficulty": 5,
-   "priority": "later",
-   "tags": [
-    "source-reviewed"
-   ],
-   "notes": "The constant is existential and independent of the group and representation dimension. This is an existence theorem, not a randomized-sign guarantee or a polynomial-time construction. The proof uses a Gaussian correlation inequality and a partial-coloring theorem as deep prerequisites, not as unproved assumptions inside an advertised Lean proof. Version 2 is essential to the audited dimension split. Real Gaussian Fourier blocks need not be independent: the proof combines their correlated norm events with the Gaussian correlation inequality. Representation multiplicities do not create additional norm constraints.",
    "updated_at": "2026-10-15"
   }
  ],

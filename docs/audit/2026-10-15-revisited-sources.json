@@ -1672,44 +1672,6 @@
       "boundary_audit": "Zero singular directions must be excluded from inverse square roots. No condition that positive singular values be distinct is imposed. If r<n, ΨΦ* is an oblique projector and neither matrix is a two-sided inverse."
     },
     {
-      "id": "balanced-truncation-energy-bound",
-      "audit_phase": "final",
-      "baseline_audit": {
-        "id": "balanced-truncation-energy-bound",
-        "type": "unformalized candidate draft",
-        "status": "candidate",
-        "informal": "Two balanced Lyapunov identities yield a finite-horizon output-error bound for the actual truncated state equation. Each distinct discarded balancing value contributes at most twice that value to the induced L² norm; the usual twice-the-tail-sum estimate follows.",
-        "hypotheses": [
-          "$A\\in\\mathbb K^{n\\times n}$, $B\\in\\mathbb K^{n\\times m}$, $C\\in\\mathbb K^{p\\times n}$, $\\Sigma=\\operatorname{diag}(\\sigma_1,\\ldots,\\sigma_n)$ with $\\sigma_1\\ge\\cdots\\ge\\sigma_n>0$",
-          "$A\\Sigma+\\Sigma A^*=-BB^*$ and $A^*\\Sigma+\\Sigma A=-C^*C$; retain the first $0\\le r\\le n$ coordinates, giving $A_{11},B_1,C_1$",
-          "For $T\\ge0$ and $u\\in L^2([0,T])$, use zero-initial-state convolution solutions of $\\dot x=Ax+Bu$ and $\\dot x_r=A_{11}x_r+B_1u$, with outputs $y=Cx$ and $y_r=C_1x_r$"
-        ],
-        "conclusion": "$\\|y-y_r\\|_{L^2(0,T)}\\le2\\!\\sum_{\\tau\\in\\{\\sigma_{r+1},\\ldots,\\sigma_n\\}}\\!\\tau\\,\\|u\\|_{L^2(0,T)}\\le2\\sum_{j=r+1}^n\\sigma_j\\|u\\|_{L^2(0,T)}$, where the first sum counts each distinct value once. The bound is uniform in T and therefore holds on $[0,\\infty)$. If A and $A_{11}$ are Hurwitz, it gives $\\|C(sI-A)^{-1}B-C_1(sI-A_{11})^{-1}B_1\\|_{H^\\infty}\\le2\\sum_{j>r}\\sigma_j$.",
-        "notes": "The main energy statement uses the two displayed finite-matrix identities and does not need an unproved stability-preservation claim. The transfer-function corollary explicitly assumes both state matrices Hurwitz. Approximate or finite-window empirical Gramians generally have correction terms and do not satisfy this bound automatically. No strict inequality, optimality, or lower-bound equality is asserted."
-      },
-      "source_labels": [
-        {
-          "source": "redmann19-balanced",
-          "label": "Lemma 2.1 and Theorem 2.2, plus the unrestricted specialization F_T=G_T=0 on p. 6"
-        },
-        {
-          "source": "brunton-kutz22",
-          "label": "§9.2, equation (9.27), p. 369; non-strict bound and actual Gramian hypotheses supplied"
-        }
-      ],
-      "readback": "The main energy statement uses the two displayed finite-matrix identities and does not need an unproved stability-preservation claim. The transfer-function corollary explicitly assumes both state matrices Hurwitz. Approximate or finite-window empirical Gramians generally have correction terms and do not satisfy this bound automatically. No strict inequality, optimality, or lower-bound equality is asserted. Repeated balancing values may be removed in blocks; the proof even permits a cut inside a repeated value because only the discarded block must be scalar. r=n and T=0 give zero error. A common feedthrough D cancels. Finite positive definiteness of Σ alone does not establish that A is Hurwitz.",
-      "evidence": [],
-      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
-      "review_group": "revisited-matrix-methods",
-      "derivation": [
-        "First discard a block Σ2=τI. Let e=[x1−xr;x2], f=[x1+xr;x2], h=A21 xr+B2 u. Then e′=Ae+[0;h], f′=Af+2Bu−[0;h], and y−yr=Ce.",
-        "Differentiate V=e*Σe+τ² f*Σ^-1 f. The h cross terms cancel because Σ2=τI. The Lyapunov identities give V′=−||y−yr||²−τ²||B*Σ^-1 f||²+4τ² Re⟨B*Σ^-1 f,u⟩≤−||y−yr||²+4τ²||u||² by completing the square.",
-        "V(0)=0 and V(T)≥0 give the 2τ bound. Delete successive constant-value tail blocks; each principal truncated system inherits the same two Lyapunov identities. The triangle inequality produces the sum over distinct discarded values.",
-        "Extend from regular controls to L² controls by continuity of finite-time convolution, or work directly with absolutely continuous trajectories. Monotone convergence extends the uniform finite-horizon inequality to infinite time. For stable transfer functions, the Fourier/Plancherel identification gives the H∞ corollary."
-      ],
-      "boundary_audit": "Repeated balancing values may be removed in blocks; the proof even permits a cut inside a repeated value because only the discarded block must be scalar. r=n and T=0 give zero error. A common feedthrough D cancels. Finite positive definiteness of Σ alone does not establish that A is Hurwitz."
-    },
-    {
       "id": "deim-greedy-interpolation",
       "audit_phase": "final",
       "baseline_audit": {
@@ -2573,33 +2535,6 @@
       "review_group": "revisited-bandeira-matrix-methods"
     },
     {
-      "id": "finite-group-matrix-discrepancy",
-      "audit_phase": "final",
-      "baseline_audit": {
-        "id": "finite-group-matrix-discrepancy",
-        "type": "new unformalized candidate",
-        "status": "candidate",
-        "informal": "A single signing of a finite group controls every irreducible Fourier block, hence every finite-dimensional unitary representation, without a logarithmic factor.",
-        "hypotheses": [
-          "$G$ is a finite group of order $N\\ge1$; $\\rho:G\\to U(N)$ is the left regular representation"
-        ],
-        "conclusion": "There is a universal $C>0$ such that one can choose $\\varepsilon:G\\to\\{-1,1\\}$ with $\\|\\sum_g\\varepsilon_g\\rho(g)\\|_2\\le C\\sqrt N$. The same signs satisfy $\\|\\sum_g\\varepsilon_g\\pi(g)\\|_2\\le C\\sqrt N$ for every finite-dimensional unitary complex representation $\\pi$.",
-        "title": "Finite-group convolution matrices admit square-root spectral signings",
-        "area": "gaussian-structured",
-        "notes": "The constant is existential and independent of the group and representation dimension. This is an existence theorem, not a randomized-sign guarantee or a polynomial-time construction. The proof uses a Gaussian correlation inequality and a partial-coloring theorem as deep prerequisites, not as unproved assumptions inside an advertised Lean proof. Version 2 is essential to the audited dimension split. Real Gaussian Fourier blocks need not be independent: the proof combines their correlated norm events with the Gaussian correlation inequality. Representation multiplicities do not create additional norm constraints."
-      },
-      "source_labels": [
-        {
-          "source": "bb26-group-discrepancy",
-          "label": "Theorem 2 and following remark; §2 Lemmas 3–4 and §3 Lemma 5/partial-coloring proof, version 2"
-        }
-      ],
-      "readback": "For a subset S and irreducible block pi of dimension d, unitarity gives variance |S|, Schur orthogonality gives entry-covariance <=N/d, and the scalar Gaussian Lipschitz variance is <=|S|. Low-dimensional blocks use noncommutative Khintchine. For d>(eN/|S|)^4, intrinsic-freeness concentration gives expected norm O(sqrt|S|); log³(d)/d is decreasing in this range because d>e^4. This is the corrected v2 threshold; v1 used power 2, where the monotonicity step is not justified. Gaussian concentration gives each block an arbitrarily small power-law failure in eN/|S|. The norm constraints are centrally symmetric convex sets, so the Gaussian correlation inequality yields joint mass at least exp(-c|S|), with c chosen for the partial-coloring lemma. Iterated partial coloring fixes a uniform positive fraction of remaining signs at each round. The accumulated bound is C sqrt(N) sum_t sqrt((1-delta)^t(1+t log(1/(1-delta)))), a convergent series independent of N. Finally every unitary representation decomposes into the already controlled irreducibles, proving simultaneous coverage. Hermitian dilation supplies the nonselfadjoint Gaussian block comparison, with universal factors absorbed in C. The external Gaussian correlation and partial-coloring theorems were checked as explicit prerequisite statements, not reproved in this screening. More explicitly, write r=N/|S|>=1 and q=er. The high-dimensional term is bounded using f(d)=log(d)^3/d, whose derivative is log(d)^2(3-log(d))/d^2<0 for d>e^3; the v2 cutoff d>q^4>=e^4 lies in that range. For C3>=max(1,log 2), the number of irreducibles is at most N and 2 sum_pi p_pi/|S| <=2e^(-C3)(|S|/N)^(C3-1), which can be made <=delta log 2 for partial coloring. The norm constraint is a genuine convex body on R^S: regular-representation orthogonality gives ||sum_g x_g rho(g)||_F^2=N||x||_2^2, hence its spectral norm is at least ||x||_2, ensuring boundedness. Real block events are correlated; their independence is never used. The N=1 case has norm 1 and is covered by enlarging the universal constant.",
-      "evidence": [],
-      "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
-      "review_group": "revisited-bandeira-matrix-methods"
-    },
-    {
       "id": "chi-square-neg-moment",
       "audit_phase": "final",
       "baseline_audit": {
@@ -2856,5 +2791,96 @@
     "remaining_boundaries": "General tensor/mechanics applications, general Gamma-Fock/SYK developments, simple-group classification corollaries and full statistical oracle packages are not silently asserted by these cards. Substantial free-law, representation-theoretic and concentration prerequisites are explicitly identified in the audits. The Pearce–Martinsson tensor survey received scope screening, not a full derivation audit.",
     "already_represented_sources": "Fessler, Zhang, Darve–Wootters and the Tropp notes were not wholly removed from the existing atlas; this revisit adds nonduplicative targets rather than repeating their existing results.",
     "excluded_by_user": "OpenProblemsInNLA was not used."
+  },
+  "withdrawn_records": [
+    {
+      "withdrawal": {
+        "date": "2026-10-15",
+        "reason": "Outside the core scope: continuous-time input-output control and H-infinity model reduction.",
+        "authorization": "User requested removal after the category/scope review."
+      },
+      "record": {
+        "id": "balanced-truncation-energy-bound",
+        "audit_phase": "final",
+        "baseline_audit": {
+          "id": "balanced-truncation-energy-bound",
+          "type": "unformalized candidate draft",
+          "status": "candidate",
+          "informal": "Two balanced Lyapunov identities yield a finite-horizon output-error bound for the actual truncated state equation. Each distinct discarded balancing value contributes at most twice that value to the induced L² norm; the usual twice-the-tail-sum estimate follows.",
+          "hypotheses": [
+            "$A\\in\\mathbb K^{n\\times n}$, $B\\in\\mathbb K^{n\\times m}$, $C\\in\\mathbb K^{p\\times n}$, $\\Sigma=\\operatorname{diag}(\\sigma_1,\\ldots,\\sigma_n)$ with $\\sigma_1\\ge\\cdots\\ge\\sigma_n>0$",
+            "$A\\Sigma+\\Sigma A^*=-BB^*$ and $A^*\\Sigma+\\Sigma A=-C^*C$; retain the first $0\\le r\\le n$ coordinates, giving $A_{11},B_1,C_1$",
+            "For $T\\ge0$ and $u\\in L^2([0,T])$, use zero-initial-state convolution solutions of $\\dot x=Ax+Bu$ and $\\dot x_r=A_{11}x_r+B_1u$, with outputs $y=Cx$ and $y_r=C_1x_r$"
+          ],
+          "conclusion": "$\\|y-y_r\\|_{L^2(0,T)}\\le2\\!\\sum_{\\tau\\in\\{\\sigma_{r+1},\\ldots,\\sigma_n\\}}\\!\\tau\\,\\|u\\|_{L^2(0,T)}\\le2\\sum_{j=r+1}^n\\sigma_j\\|u\\|_{L^2(0,T)}$, where the first sum counts each distinct value once. The bound is uniform in T and therefore holds on $[0,\\infty)$. If A and $A_{11}$ are Hurwitz, it gives $\\|C(sI-A)^{-1}B-C_1(sI-A_{11})^{-1}B_1\\|_{H^\\infty}\\le2\\sum_{j>r}\\sigma_j$.",
+          "notes": "The main energy statement uses the two displayed finite-matrix identities and does not need an unproved stability-preservation claim. The transfer-function corollary explicitly assumes both state matrices Hurwitz. Approximate or finite-window empirical Gramians generally have correction terms and do not satisfy this bound automatically. No strict inequality, optimality, or lower-bound equality is asserted."
+        },
+        "source_labels": [
+          {
+            "source": "redmann19-balanced",
+            "label": "Lemma 2.1 and Theorem 2.2, plus the unrestricted specialization F_T=G_T=0 on p. 6"
+          },
+          {
+            "source": "brunton-kutz22",
+            "label": "§9.2, equation (9.27), p. 369; non-strict bound and actual Gramian hypotheses supplied"
+          }
+        ],
+        "readback": "The main energy statement uses the two displayed finite-matrix identities and does not need an unproved stability-preservation claim. The transfer-function corollary explicitly assumes both state matrices Hurwitz. Approximate or finite-window empirical Gramians generally have correction terms and do not satisfy this bound automatically. No strict inequality, optimality, or lower-bound equality is asserted. Repeated balancing values may be removed in blocks; the proof even permits a cut inside a repeated value because only the discarded block must be scalar. r=n and T=0 give zero error. A common feedthrough D cancels. Finite positive definiteness of Σ alone does not establish that A is Hurwitz.",
+        "evidence": [],
+        "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+        "review_group": "revisited-matrix-methods",
+        "derivation": [
+          "First discard a block Σ2=τI. Let e=[x1−xr;x2], f=[x1+xr;x2], h=A21 xr+B2 u. Then e′=Ae+[0;h], f′=Af+2Bu−[0;h], and y−yr=Ce.",
+          "Differentiate V=e*Σe+τ² f*Σ^-1 f. The h cross terms cancel because Σ2=τI. The Lyapunov identities give V′=−||y−yr||²−τ²||B*Σ^-1 f||²+4τ² Re⟨B*Σ^-1 f,u⟩≤−||y−yr||²+4τ²||u||² by completing the square.",
+          "V(0)=0 and V(T)≥0 give the 2τ bound. Delete successive constant-value tail blocks; each principal truncated system inherits the same two Lyapunov identities. The triangle inequality produces the sum over distinct discarded values.",
+          "Extend from regular controls to L² controls by continuity of finite-time convolution, or work directly with absolutely continuous trajectories. Monotone convergence extends the uniform finite-horizon inequality to infinite time. For stable transfer functions, the Fourier/Plancherel identification gives the H∞ corollary."
+        ],
+        "boundary_audit": "Repeated balancing values may be removed in blocks; the proof even permits a cut inside a repeated value because only the discarded block must be scalar. r=n and T=0 give zero error. A common feedthrough D cancels. Finite positive definiteness of Σ alone does not establish that A is Hurwitz."
+      }
+    },
+    {
+      "withdrawal": {
+        "date": "2026-10-15",
+        "reason": "Outside the core scope: finite-group spectral signing existence without a current numerical-linear-algebra consumer.",
+        "authorization": "User requested removal after the category/scope review."
+      },
+      "record": {
+        "id": "finite-group-matrix-discrepancy",
+        "audit_phase": "final",
+        "baseline_audit": {
+          "id": "finite-group-matrix-discrepancy",
+          "type": "new unformalized candidate",
+          "status": "candidate",
+          "informal": "A single signing of a finite group controls every irreducible Fourier block, hence every finite-dimensional unitary representation, without a logarithmic factor.",
+          "hypotheses": [
+            "$G$ is a finite group of order $N\\ge1$; $\\rho:G\\to U(N)$ is the left regular representation"
+          ],
+          "conclusion": "There is a universal $C>0$ such that one can choose $\\varepsilon:G\\to\\{-1,1\\}$ with $\\|\\sum_g\\varepsilon_g\\rho(g)\\|_2\\le C\\sqrt N$. The same signs satisfy $\\|\\sum_g\\varepsilon_g\\pi(g)\\|_2\\le C\\sqrt N$ for every finite-dimensional unitary complex representation $\\pi$.",
+          "title": "Finite-group convolution matrices admit square-root spectral signings",
+          "area": "gaussian-structured",
+          "notes": "The constant is existential and independent of the group and representation dimension. This is an existence theorem, not a randomized-sign guarantee or a polynomial-time construction. The proof uses a Gaussian correlation inequality and a partial-coloring theorem as deep prerequisites, not as unproved assumptions inside an advertised Lean proof. Version 2 is essential to the audited dimension split. Real Gaussian Fourier blocks need not be independent: the proof combines their correlated norm events with the Gaussian correlation inequality. Representation multiplicities do not create additional norm constraints."
+        },
+        "source_labels": [
+          {
+            "source": "bb26-group-discrepancy",
+            "label": "Theorem 2 and following remark; §2 Lemmas 3–4 and §3 Lemma 5/partial-coloring proof, version 2"
+          }
+        ],
+        "readback": "For a subset S and irreducible block pi of dimension d, unitarity gives variance |S|, Schur orthogonality gives entry-covariance <=N/d, and the scalar Gaussian Lipschitz variance is <=|S|. Low-dimensional blocks use noncommutative Khintchine. For d>(eN/|S|)^4, intrinsic-freeness concentration gives expected norm O(sqrt|S|); log³(d)/d is decreasing in this range because d>e^4. This is the corrected v2 threshold; v1 used power 2, where the monotonicity step is not justified. Gaussian concentration gives each block an arbitrarily small power-law failure in eN/|S|. The norm constraints are centrally symmetric convex sets, so the Gaussian correlation inequality yields joint mass at least exp(-c|S|), with c chosen for the partial-coloring lemma. Iterated partial coloring fixes a uniform positive fraction of remaining signs at each round. The accumulated bound is C sqrt(N) sum_t sqrt((1-delta)^t(1+t log(1/(1-delta)))), a convergent series independent of N. Finally every unitary representation decomposes into the already controlled irreducibles, proving simultaneous coverage. Hermitian dilation supplies the nonselfadjoint Gaussian block comparison, with universal factors absorbed in C. The external Gaussian correlation and partial-coloring theorems were checked as explicit prerequisite statements, not reproved in this screening. More explicitly, write r=N/|S|>=1 and q=er. The high-dimensional term is bounded using f(d)=log(d)^3/d, whose derivative is log(d)^2(3-log(d))/d^2<0 for d>e^3; the v2 cutoff d>q^4>=e^4 lies in that range. For C3>=max(1,log 2), the number of irreducibles is at most N and 2 sum_pi p_pi/|S| <=2e^(-C3)(|S|/N)^(C3-1), which can be made <=delta log 2 for partial coloring. The norm constraint is a genuine convex body on R^S: regular-representation orthogonality gives ||sum_g x_g rho(g)||_F^2=N||x||_2^2, hence its spectral norm is at least ||x||_2, ensuring boundedness. Real block events are correlated; their independence is never used. The N=1 case has norm 1 and is covered by enlarging the universal constant.",
+        "evidence": [],
+        "formalization_status": "Candidate only; no Lean declaration or proof is claimed.",
+        "review_group": "revisited-bandeira-matrix-methods"
+      }
+    }
+  ],
+  "catalogue_withdrawal": {
+    "date": "2026-10-15",
+    "note": "The original batch counts and source-screening sections record the addition event. Two cards were subsequently removed at the user request; their unchanged mathematical review records are preserved separately in withdrawn_records and are no longer active card reviews.",
+    "removed_ids": [
+      "balanced-truncation-energy-bound",
+      "finite-group-matrix-discrepancy"
+    ],
+    "retained_new_candidates": 41,
+    "current_atlas_results": 488
   }
 }

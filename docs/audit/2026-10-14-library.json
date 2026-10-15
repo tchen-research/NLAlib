@@ -120,5 +120,47 @@
     "baseline_commit": "849cf33ba15bf08d0c5c3590a09ba9ce60db9bc4",
     "new_candidates": 43,
     "scope": "Unformalized NLA/matrix-analysis candidates and precise partial-proof coverage; no new Lean validation is claimed."
+  },
+  "catalogue_scope_cleanup": {
+    "date": "2026-10-15",
+    "baseline_commit": "6886918346afb81ba77e71fbbe5daa67c93d2bae",
+    "removed_cards": [
+      {
+        "id": "balanced-truncation-energy-bound",
+        "reason": "Outside the core scope: continuous-time input-output control and H-infinity model reduction."
+      },
+      {
+        "id": "finite-group-matrix-discrepancy",
+        "reason": "Outside the core scope: finite-group spectral signing existence without a current numerical-linear-algebra consumer."
+      }
+    ],
+    "category_changes": {
+      "gaussian-concentration-tools": "Reparented under Probability and concentration.",
+      "krylov": "Broadened the parent label to Krylov and iterative methods.",
+      "krylov-linear-systems": "Broadened to Iterative methods for linear systems, retaining stationary and regular splitting together and the existing M-matrix dependency cross-link.",
+      "normal-matrix-mixed-chebyshev-moments": "estimation-spectral-density",
+      "gaussian-proxy-eigenvalue-comparison": "concentration-matrix",
+      "matrix-inverse-newton-schulz": "matrix-functions"
+    },
+    "withdrawn_review_records": "docs/audit/2026-10-15-revisited-sources.json#withdrawn_records",
+    "validation": {
+      "status": "passed",
+      "scope": "Index, atlas, audit-record and viewer checks only; no Lean source changes or rebuild.",
+      "checks": [
+        "sync",
+        "atlas",
+        "names",
+        "card-audit",
+        "scope",
+        "unit-tests",
+        "import-surface",
+        "coverage",
+        "site"
+      ],
+      "active_cards": 488,
+      "review_records": 497,
+      "unit_tests": 18,
+      "preservation": "All retained mathematical statements, sources, original audit record payloads, Lean files and generated declaration indices are unchanged."
+    }
   }
 }

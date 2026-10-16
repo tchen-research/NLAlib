@@ -1,6 +1,7 @@
 import NLAlib.Krylov.Processes.Arnoldi
 import NLAlib.Krylov.Processes.ArnoldiProcess
 import NLAlib.Krylov.Processes.Bidiagonalization
+import NLAlib.Krylov.Processes.HessenbergReduction
 import NLAlib.Krylov.Processes.Lanczos
 import NLAlib.Krylov.Processes.LanczosRecurrence
 

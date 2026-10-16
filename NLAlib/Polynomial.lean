@@ -1,3 +1,4 @@
+import NLAlib.Polynomial.Approximation
 import NLAlib.Polynomial.BestApproximation
 import NLAlib.Polynomial.Chebyshev
 import NLAlib.Polynomial.FunctionApproximation

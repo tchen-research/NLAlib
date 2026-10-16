@@ -3,6 +3,9 @@ import NLAlib.ForMathlib.Analysis.BinomialRootComparison
 import NLAlib.ForMathlib.Analysis.BoundedVariationIntegral
 import NLAlib.ForMathlib.Analysis.Calculus
 import NLAlib.ForMathlib.Analysis.Complex
+import NLAlib.ForMathlib.Analysis.ComplexWeightedAverage
+import NLAlib.ForMathlib.Analysis.ConeRayleigh
+import NLAlib.ForMathlib.Analysis.ContinuousSecant
 import NLAlib.ForMathlib.Analysis.Convex
 import NLAlib.ForMathlib.Analysis.CotangentBounds
 import NLAlib.ForMathlib.Analysis.CotangentIntegral
@@ -27,6 +30,7 @@ import NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence
 import NLAlib.ForMathlib.Analysis.FinitePairNorm
 import NLAlib.ForMathlib.Analysis.FinitePowerSums
 import NLAlib.ForMathlib.Analysis.FiniteProductBounds
+import NLAlib.ForMathlib.Analysis.FiniteWeightedHolder
 import NLAlib.ForMathlib.Analysis.FourierBoundedVariation
 import NLAlib.ForMathlib.Analysis.FourierCircle
 import NLAlib.ForMathlib.Analysis.FourierConvolution
@@ -55,7 +59,11 @@ import NLAlib.ForMathlib.Analysis.OrthonormalCons
 import NLAlib.ForMathlib.Analysis.OrthonormalEigenline
 import NLAlib.ForMathlib.Analysis.OrthonormalSum
 import NLAlib.ForMathlib.Analysis.PeakComparison
+import NLAlib.ForMathlib.Analysis.PenaltyLimits
 import NLAlib.ForMathlib.Analysis.PencilTriangularization
+import NLAlib.ForMathlib.Analysis.PolarNewtonScalar
+import NLAlib.ForMathlib.Analysis.PolarSchulzScalar
+import NLAlib.ForMathlib.Analysis.PolynomialDifferential
 import NLAlib.ForMathlib.Analysis.PowerBoundedEigen
 import NLAlib.ForMathlib.Analysis.PowerInequalities
 import NLAlib.ForMathlib.Analysis.ProperInverse
@@ -63,6 +71,7 @@ import NLAlib.ForMathlib.Analysis.RangeIsometry
 import NLAlib.ForMathlib.Analysis.Real
 import NLAlib.ForMathlib.Analysis.RealRootedPeaks
 import NLAlib.ForMathlib.Analysis.SchurTriangularization
+import NLAlib.ForMathlib.Analysis.SecondDerivativeBound
 import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
 import NLAlib.ForMathlib.Analysis.SpecialFunctions
 import NLAlib.ForMathlib.Analysis.TriangularBasis

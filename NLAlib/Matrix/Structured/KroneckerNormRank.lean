@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Structured.KroneckerSpectrum
 import NLAlib.Matrix.Spectral.QuadraticProbe
 import NLAlib.ForMathlib.Analysis.FinitePairNorm
+import NLAlib.Matrix.Structured.KroneckerFrames
 /-!
 # Spectral norm and rank of Kronecker products
 
@@ -39,27 +40,17 @@ theorem specNorm_kronecker_of_isHermitian {m n : Type*} [Fintype m] [Fintype n]
 
 open scoped Matrix.Norms.L2Operator in
 /-- Spectral norms multiply exactly under a Kronecker product of arbitrary finite
-rectangular real matrices. Horn–Johnson 1991, Theorem 4.2.15. Empty dimensions,
+rectangular real or complex matrices. Horn–Johnson 1991, Theorem 4.2.15. Empty dimensions,
 zero matrices, and rank deficient factors are included.
 atlas: kronecker-spectral -/
-theorem specNorm_kronecker {m n p q : Type*}
+theorem specNorm_kronecker {𝕜 m n p q : Type*} [RCLike 𝕜]
     [Fintype m] [Fintype n] [Fintype p] [Fintype q]
     [DecidableEq m] [DecidableEq n] [DecidableEq p] [DecidableEq q]
-    (A : Matrix m n ℝ) (B : Matrix p q ℝ) :
+    (A : Matrix m n 𝕜) (B : Matrix p q 𝕜) :
     specNorm (A ⊗ₖ B) = specNorm A * specNorm B := by
-  have hA : (Aᵀ * A).IsHermitian := by
-    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-      Matrix.isHermitian_conjTranspose_mul_self A
-  have hB : (Bᵀ * B).IsHermitian := by
-    simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
-      Matrix.isHermitian_conjTranspose_mul_self B
-  have hsq : specNorm (A ⊗ₖ B) ^ 2 = (specNorm A * specNorm B) ^ 2 := by
-    rw [specNorm_sq_eq_specNorm_transpose_mul_self, ← Matrix.kroneckerMap_transpose,
-      ← Matrix.mul_kronecker_mul, specNorm_kronecker_of_isHermitian hA hB,
-      ← specNorm_sq_eq_specNorm_transpose_mul_self,
-      ← specNorm_sq_eq_specNorm_transpose_mul_self, mul_pow]
-  nlinarith [specNorm_nonneg (A ⊗ₖ B),
-    mul_nonneg (specNorm_nonneg A) (specNorm_nonneg B)]
+  obtain ⟨U, V, hA⟩ := exists_isThinSVD A
+  obtain ⟨P, Q, hB⟩ := exists_isThinSVD B
+  exact specNorm_kronecker_of_thinSVD hA hB
 
 /-- An orthogonal diagonalization computes rank by counting its nonzero diagonal
 entries. Horn–Johnson 2013, Section 4.1; all zero multiplicities are included.

@@ -15,8 +15,8 @@ open scoped Matrix ENNReal
 namespace NLAlib
 
 /-- Zero padding a positive-exponent singular-value power sum leaves it unchanged. -/
-theorem sum_range_singularValues_rpow_eq_of_min_le {m n : Type*}
-    [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) {N : ℕ}
+theorem sum_range_singularValues_rpow_eq_of_min_le {𝕜 m n : Type*} [RCLike 𝕜]
+    [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n 𝕜) {N : ℕ}
     (hN : min (Fintype.card m) (Fintype.card n) ≤ N) {p : ℝ} (hp : 0 < p) :
     (∑ i ∈ Finset.range N, singularValues A i ^ p) =
       ∑ i ∈ Finset.range (min (Fintype.card m) (Fintype.card n)), singularValues A i ^ p := by
@@ -29,8 +29,8 @@ theorem sum_range_singularValues_rpow_eq_of_min_le {m n : Type*}
 open scoped Matrix.Norms.L2Operator in
 /-- Schatten norms may be written with any sufficiently long zero-padded
 singular-value list, including empty shapes. -/
-theorem schattenNormReal_eq_sum_range_rpow_of_min_le {m n : Type*}
-    [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n ℝ) {N : ℕ}
+theorem schattenNormReal_eq_sum_range_rpow_of_min_le {𝕜 m n : Type*} [RCLike 𝕜]
+    [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m n 𝕜) {N : ℕ}
     (hN : min (Fintype.card m) (Fintype.card n) ≤ N) {p : ℝ} (hp : 0 < p) :
     schattenNormReal A p = (∑ i ∈ Finset.range N, singularValues A i ^ p) ^ (1 / p) := by
   rw [sum_range_singularValues_rpow_eq_of_min_le A hN hp]

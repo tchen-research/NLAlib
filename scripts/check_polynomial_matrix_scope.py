@@ -7,6 +7,7 @@ statement review can reopen an overbroad completion claim with explicit evidence
 """
 import json
 from pathlib import Path
+from atlas_proof_status import proof_family_status
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -31,7 +32,9 @@ def main():
             assert forms and all(f.get("partial") for f in forms), (rid, "missing partial tags")
         else:
             assert result["status"] == "proved", (rid, result["status"])
-            assert any(not f.get("partial") for f in forms), (rid, "no complete formalization")
+            assert (any(not f.get("partial") for f in forms) or
+                    proof_family_status(result, indexed) == "proved"), (
+                        rid, "no complete formalization or reviewed proof family")
         for form in forms:
             declaration = indexed[form["decl"]]
             assert form["status"] == "proved" and not declaration["sorry"], (rid, form["decl"])

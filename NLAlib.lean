@@ -1,6 +1,7 @@
 import NLAlib.Estimation
 import NLAlib.ForMathlib
 import NLAlib.Krylov.MatrixFunctions
+import NLAlib.Krylov.Processes.HessenbergReduction
 import NLAlib.Krylov.Quadrature
 import NLAlib.Krylov.Solvers.ChristoffelDirections
 import NLAlib.Krylov.Solvers.GMRESArnoldi

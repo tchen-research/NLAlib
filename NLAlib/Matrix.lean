@@ -1,9 +1,12 @@
 import NLAlib.Matrix.Basic
 import NLAlib.Matrix.Calculus
+import NLAlib.Matrix.Equations
 import NLAlib.Matrix.Factorizations
 import NLAlib.Matrix.Functions
+import NLAlib.Matrix.Graph
 import NLAlib.Matrix.Inequalities
 import NLAlib.Matrix.Measurability
+import NLAlib.Matrix.Nonnegative
 import NLAlib.Matrix.Norms
 import NLAlib.Matrix.Perturbation
 import NLAlib.Matrix.Spectral

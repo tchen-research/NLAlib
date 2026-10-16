@@ -16,7 +16,7 @@ namespace NLAlib
 /-- Toeplitz entries use ordinary integer differences, not modular index
 arithmetic. Horn–Johnson 2013, §0.9.7.
 atlas: structured-matrices-def (partial) -/
-def toeplitzMatrix {m n : ℕ} (t : ℤ → ℝ) : Matrix (Fin m) (Fin n) ℝ :=
+def toeplitzMatrix {R : Type*} {m n : ℕ} (t : ℤ → R) : Matrix (Fin m) (Fin n) R :=
   fun i j => t ((j.val : ℤ) - (i.val : ℤ))
 
 /-- Hankel entries use ordinary natural-number sums. Horn–Johnson 2013,

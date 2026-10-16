@@ -5,12 +5,14 @@ import NLAlib.ForMathlib.Algebra.InterlacingInterpolation
 import NLAlib.ForMathlib.Algebra.InterlacingWeights
 import NLAlib.ForMathlib.Algebra.Intervals
 import NLAlib.ForMathlib.Algebra.LagrangeWronskian
+import NLAlib.ForMathlib.Algebra.NewtonCayley
 import NLAlib.ForMathlib.Algebra.OffDiagonalSums
 import NLAlib.ForMathlib.Algebra.OrderedNodalProducts
 import NLAlib.ForMathlib.Algebra.OrderedNodalWeights
 import NLAlib.ForMathlib.Algebra.Polynomial
 import NLAlib.ForMathlib.Algebra.PolynomialDividedDifference
 import NLAlib.ForMathlib.Algebra.PolynomialGeometricResolvent
+import NLAlib.ForMathlib.Algebra.PolynomialRootPartition
 import NLAlib.ForMathlib.Algebra.PositiveCardinalWronskian
 import NLAlib.ForMathlib.Algebra.Reciprocal
 import NLAlib.ForMathlib.Algebra.SignedCoefficients

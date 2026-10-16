@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Norms.BlockDiagonalBounds
 import NLAlib.Matrix.Norms.BlockNormBounds
 import NLAlib.Matrix.Norms.ColumnNorms
 import NLAlib.Matrix.Norms.Continuity
@@ -7,6 +8,8 @@ import NLAlib.Matrix.Norms.EntryBounds
 import NLAlib.Matrix.Norms.EuclideanOperatorBounds
 import NLAlib.Matrix.Norms.FanDominance
 import NLAlib.Matrix.Norms.Frobenius
+import NLAlib.Matrix.Norms.GramSymmetry
+import NLAlib.Matrix.Norms.HermitianFrobenius
 import NLAlib.Matrix.Norms.InvariantNorm
 import NLAlib.Matrix.Norms.InvariantNormRepresentation
 import NLAlib.Matrix.Norms.KyFanNorm
@@ -24,6 +27,7 @@ import NLAlib.Matrix.Norms.Schatten
 import NLAlib.Matrix.Norms.SchattenComparison
 import NLAlib.Matrix.Norms.SchattenDuality
 import NLAlib.Matrix.Norms.SchattenEndpoints
+import NLAlib.Matrix.Norms.SchattenEvenMoments
 import NLAlib.Matrix.Norms.SchattenInvariant
 import NLAlib.Matrix.Norms.SchattenNorms
 import NLAlib.Matrix.Norms.SchattenProducts
@@ -32,6 +36,7 @@ import NLAlib.Matrix.Norms.SchattenTrace
 import NLAlib.Matrix.Norms.SingleColumn
 import NLAlib.Matrix.Norms.SpectralNormBounds
 import NLAlib.Matrix.Norms.SymmetricGauge
+import NLAlib.Matrix.Norms.UnitaryInvariance
 
 /-! # `Matrix/Norms`
 

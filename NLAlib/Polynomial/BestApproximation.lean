@@ -32,6 +32,8 @@ import NLAlib.Polynomial.BestApproximation.GapProperness
 import NLAlib.Polynomial.BestApproximation.GapRank
 import NLAlib.Polynomial.BestApproximation.GapWeightSigns
 import NLAlib.Polynomial.BestApproximation.GapWronskian
+import NLAlib.Polynomial.BestApproximation.GreedyOddMinimax
+import NLAlib.Polynomial.BestApproximation.GreedyOddMinimaxExistence
 import NLAlib.Polynomial.BestApproximation.InterpolationPeakCharts
 import NLAlib.Polynomial.BestApproximation.InterpolationPeakDerivatives
 import NLAlib.Polynomial.BestApproximation.InterpolationPeakMaxima
@@ -53,7 +55,13 @@ import NLAlib.Polynomial.BestApproximation.LobattoKernelBound
 import NLAlib.Polynomial.BestApproximation.Minimax
 import NLAlib.Polynomial.BestApproximation.MinimaxError
 import NLAlib.Polynomial.BestApproximation.NodeSimplex
+import NLAlib.Polynomial.BestApproximation.OddMinimax
+import NLAlib.Polynomial.BestApproximation.OddMinimaxInterval
+import NLAlib.Polynomial.BestApproximation.OddUpdates
 import NLAlib.Polynomial.BestApproximation.PeakComparison
+import NLAlib.Polynomial.BestApproximation.PolarMinimaxContraction
+import NLAlib.Polynomial.BestApproximation.PolarTaylor
+import NLAlib.Polynomial.BestApproximation.PolarTaylorCoefficients
 import NLAlib.Polynomial.BestApproximation.RationalCancellation
 import NLAlib.Polynomial.BestApproximation.RationalCompactness
 import NLAlib.Polynomial.BestApproximation.RationalDirections

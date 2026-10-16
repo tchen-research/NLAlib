@@ -8,11 +8,13 @@ import NLAlib.ForMathlib.LinearAlgebra.LagrangeIntegerGrid
 import NLAlib.ForMathlib.LinearAlgebra.LagrangeQuadrature
 import NLAlib.ForMathlib.LinearAlgebra.LagrangeReindex
 import NLAlib.ForMathlib.LinearAlgebra.Matrix
+import NLAlib.ForMathlib.LinearAlgebra.MatrixBicommutant
 import NLAlib.ForMathlib.LinearAlgebra.MatrixScalarExtension
 import NLAlib.ForMathlib.LinearAlgebra.OrderedCommonEigenvector
 import NLAlib.ForMathlib.LinearAlgebra.PencilLine
 import NLAlib.ForMathlib.LinearAlgebra.PolynomialDegreeLT
 import NLAlib.ForMathlib.LinearAlgebra.SeparatingRows
+import NLAlib.ForMathlib.LinearAlgebra.SignPrimaryDecomposition
 
 /-! # `ForMathlib/LinearAlgebra`
 

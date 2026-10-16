@@ -1,15 +1,24 @@
 import NLAlib.Matrix.Basic.CauchyBinet
 import NLAlib.Matrix.Basic.CauchyBinetAdjoint
+import NLAlib.Matrix.Basic.ColumnSpaceFactorization
 import NLAlib.Matrix.Basic.ComplementaryNullities
 import NLAlib.Matrix.Basic.ComplementaryRank
 import NLAlib.Matrix.Basic.CoordinateUpdates
 import NLAlib.Matrix.Basic.DeterminantDiagonalUpdate
 import NLAlib.Matrix.Basic.Dilation
+import NLAlib.Matrix.Basic.GeneralTikhonov
+import NLAlib.Matrix.Basic.GeneralTikhonovEndpoints
+import NLAlib.Matrix.Basic.GeneralTikhonovFilter
 import NLAlib.Matrix.Basic.GeneralizedSchurComplement
 import NLAlib.Matrix.Basic.Gram
 import NLAlib.Matrix.Basic.GramVanishing
 import NLAlib.Matrix.Basic.JacobiBlockMinor
 import NLAlib.Matrix.Basic.JacobiMinor
+import NLAlib.Matrix.Basic.KKT
+import NLAlib.Matrix.Basic.KKTMinimization
+import NLAlib.Matrix.Basic.KernelFrame
+import NLAlib.Matrix.Basic.Landweber
+import NLAlib.Matrix.Basic.LandweberLimit
 import NLAlib.Matrix.Basic.LeadingMinor
 import NLAlib.Matrix.Basic.LeastSquares
 import NLAlib.Matrix.Basic.MoorePenrose
@@ -25,12 +34,22 @@ import NLAlib.Matrix.Basic.PositiveDefiniteClosure
 import NLAlib.Matrix.Basic.PositiveSemidefiniteSeries
 import NLAlib.Matrix.Basic.Pseudoinverse
 import NLAlib.Matrix.Basic.QuadForm
+import NLAlib.Matrix.Basic.QuadraticMinimization
 import NLAlib.Matrix.Basic.RankBounds
+import NLAlib.Matrix.Basic.RankFactorization
 import NLAlib.Matrix.Basic.RankInequalities
+import NLAlib.Matrix.Basic.RankOneCorrection
+import NLAlib.Matrix.Basic.ResidualEnergy
 import NLAlib.Matrix.Basic.SchurComplement
 import NLAlib.Matrix.Basic.SchurRank
 import NLAlib.Matrix.Basic.Selection
 import NLAlib.Matrix.Basic.SingletonInverse
+import NLAlib.Matrix.Basic.Tikhonov
+import NLAlib.Matrix.Basic.TikhonovLimit
+import NLAlib.Matrix.Basic.TotalLeastSquares
+import NLAlib.Matrix.Basic.TotalLeastSquaresGap
+import NLAlib.Matrix.Basic.TotalLeastSquaresInfimum
+import NLAlib.Matrix.Basic.TruncatedSVDRegularization
 
 /-! # `Matrix/Basic`
 

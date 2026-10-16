@@ -599,8 +599,9 @@ theorem abs_luPartialPivot_upper_le {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {
       linarith
 
 /-- **Growth factor of partial pivoting**: `max |uᵢⱼ| ≤ 2^{n−1} max |aᵢⱼ|`, stated with an
-entrywise bound `M` on `A`. The bound is attained (Wilkinson's example), which is not
-formalized. Trefethen–Bau 1997, Lect. 22, eq. (22.4); Higham 2002, §9.3, eq. (9.13).
+entrywise bound `M` on `A`. Wilkinson attainment is proved by
+`exists_luPartialPivot_growth_eq_two_pow` in `LUGrowthSharpness`.
+Trefethen–Bau 1997, Lect. 22, eq. (22.4); Higham 2002, §9.3, eq. (9.13).
 atlas: lu-growth-factor (partial) -/
 theorem abs_luPartialPivot_upper_le_two_pow {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {M : ℝ}
     (hM : ∀ i j, |A i j| ≤ M) (i j : Fin n) :

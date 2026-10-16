@@ -29,17 +29,17 @@ theorem multiset_eigenvalues_eq_of_orthogonal_diagonalization {n : Type*}
   · simpa using hroots.symm
   · exact Finset.prod_ne_zero_iff.mpr fun _ _ => Polynomial.X_sub_C_ne_zero _
 
-/-- Tensor products of orthogonal matrices are orthogonal.
+/-- Tensor products of rectangular column isometries are column isometries.
 Horn–Johnson 1991, Theorem 4.2.15; all finite index types, including empty ones.
 -/
-theorem hasOrthonormalCols_kronecker {m n : Type*} [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n] {U : Matrix m m ℝ} {V : Matrix n n ℝ}
+theorem hasOrthonormalCols_kronecker {𝕜 m n p q : Type*} [RCLike 𝕜]
+    [Fintype m] [Fintype n] [Fintype p] [Fintype q]
+    [DecidableEq n] [DecidableEq q] {U : Matrix m n 𝕜} {V : Matrix p q 𝕜}
     (hUo : HasOrthonormalCols U) (hVo : HasOrthonormalCols V) :
     HasOrthonormalCols (U ⊗ₖ V) := by
-  have hU : Uᵀ * U = 1 := hUo
-  have hV : Vᵀ * V = 1 := hVo
-  change (U ⊗ₖ V)ᵀ * (U ⊗ₖ V) = 1
-  rw [← Matrix.kroneckerMap_transpose, ← Matrix.mul_kronecker_mul, hU, hV,
+  change (U ⊗ₖ V)ᴴ * (U ⊗ₖ V) = 1
+  rw [Matrix.conjTranspose_kronecker, ← Matrix.mul_kronecker_mul,
+    hUo.conjTranspose_mul_self, hVo.conjTranspose_mul_self,
     Matrix.one_kronecker_one]
 
 /-- Kronecker products of real symmetric matrices are symmetric.

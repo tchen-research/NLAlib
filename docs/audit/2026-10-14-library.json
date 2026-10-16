@@ -1,166 +1,175 @@
 {
-  "date": "2026-10-14",
-  "baseline_commit": "e5725bb94e5bd8e326d58ad219260b0218e74c9e",
-  "method": "Mathematical statement and domain read-back against actual indexed Lean signatures and owning definitions; kernel dependency audits are separate. Unformalized candidates and excluded analytic results are reviewed as mathematical claims, not certified Lean proofs.",
-  "reports": [
-    "docs/audit/2026-10-14-matrix-krylov.json",
-    "docs/audit/2026-10-14-polynomial-quadrature.json",
-    "docs/audit/2026-10-14-estimation-lowrank.json",
-    "docs/audit/2026-10-14-probability-sketching-solvers.json",
-    "docs/audit/2026-10-14-research-candidates.json",
-    "docs/audit/2026-10-14-deeper-matrix-methods.json",
-    "docs/audit/2026-10-14-khatri-rao-sharp-growth.json",
-    "docs/audit/2026-10-15-revisited-sources.json"
-  ],
-  "formalization_exclusions": {
-    "crouzeix_palencia": "Analytic interface, matrix Cauchy bridge, and smooth-neighborhood approximation",
-    "sharp_asymptotics": "Stahl and Halphen sharp equivalents",
-    "lra": "Chen–Persson items only"
+ "date": "2026-10-14",
+ "baseline_commit": "e5725bb94e5bd8e326d58ad219260b0218e74c9e",
+ "method": "Mathematical statement and domain read-back against actual indexed Lean signatures and owning definitions; kernel dependency audits are separate. Unformalized candidates and excluded analytic results are reviewed as mathematical claims, not certified Lean proofs.",
+ "reports": [
+  "docs/audit/2026-10-14-matrix-krylov.json",
+  "docs/audit/2026-10-14-polynomial-quadrature.json",
+  "docs/audit/2026-10-14-estimation-lowrank.json",
+  "docs/audit/2026-10-14-probability-sketching-solvers.json",
+  "docs/audit/2026-10-14-research-candidates.json",
+  "docs/audit/2026-10-14-deeper-matrix-methods.json",
+  "docs/audit/2026-10-14-khatri-rao-sharp-growth.json",
+  "docs/audit/2026-10-15-revisited-sources.json",
+  "docs/audit/2026-10-16-matrix-toolkit.json"
+ ],
+ "formalization_exclusions": {
+  "crouzeix_palencia": "Analytic interface, matrix Cauchy bridge, and smooth-neighborhood approximation",
+  "sharp_asymptotics": "Stahl and Halphen sharp equivalents",
+  "lra": "Chen–Persson items only"
+ },
+ "reroute_document": "docs/derivations/four_focused_mathematical_reroutes.tex",
+ "routes_rerouted_by_user": {
+  "abs-best-approx-asymptotics": "Bernstein polynomial limit from finite degree-transfer inequalities; the scaled errors converge to a positive constant with explicit enclosure.",
+  "exp-rational-halfline": "Reciprocal root limit 1/3 from native weighted minimax lower bounds and an explicit positive polynomial denominator; includes reflection and PSD functional calculus.",
+  "gauss-radau-lobatto": "Jacobi-border realization and moment preservation",
+  "christoffel-uvarov-modification": "General rational modification finite determinant formula, including denominator degree greater than polynomial order"
+ },
+ "scope_changes": {
+  "nystrom-structural": {
+   "reason": "The structural projector, rank and positivity clauses are proved. The card itself records its Schur-complement clause as not yet formalized."
   },
-  "reroute_document": "docs/derivations/four_focused_mathematical_reroutes.tex",
-  "routes_rerouted_by_user": {
-    "abs-best-approx-asymptotics": "Bernstein polynomial limit from finite degree-transfer inequalities; the scaled errors converge to a positive constant with explicit enclosure.",
-    "exp-rational-halfline": "Reciprocal root limit 1/3 from native weighted minimax lower bounds and an explicit positive polynomial denominator; includes reflection and PSD functional calculus.",
-    "gauss-radau-lobatto": "Jacobi-border realization and moment preservation",
-    "christoffel-uvarov-modification": "General rational modification finite determinant formula, including denominator degree greater than polynomial order"
+  "sketched-regression": {
+   "reason": "The residual Frobenius endpoint is proved. The additional arbitrary complementary-range error-matrix clause is not the statement of that theorem."
   },
-  "scope_changes": {
-    "lu-growth-factor": {
-      "reason": "The existing Lean bounds prove the upper bounds. Attainment by the displayed worst-case examples is a separate clause without a linked proof."
-    },
-    "hessenberg-reduction": {
-      "reason": "A Hessenberg similarity decomposition and the upper-Hessenberg structure are proved. The advertised coincidence with the Arnoldi basis is not supplied by those declarations."
-    },
-    "nystrom-structural": {
-      "reason": "The structural projector, rank and positivity clauses are proved. The card itself records its Schur-complement clause as not yet formalized."
-    },
-    "sketched-regression": {
-      "reason": "The residual Frobenius endpoint is proved. The additional arbitrary complementary-range error-matrix clause is not the statement of that theorem."
-    },
-    "clenshaw-recurrence": {
-      "reason": "The scalar recurrence and matrix polynomial identity are proved. A recursion and cost theorem for the advertised matrix-vector algorithm remain separate obligations."
-    },
-    "chi-square-neg-moment": {
-      "reason": "Exact negative moments and the endpoint moment bound at q=(d-1)/2 are proved. The complete rooted bound across all q>0 with d>=2q+1, including dimensions 2–4, has no indexed theorem; its corrected explicit domains and derivation are recorded in the 2026-10-15 revisit."
-    }
+  "clenshaw-recurrence": {
+   "reason": "The scalar recurrence and matrix polynomial identity are proved. A recursion and cost theorem for the advertised matrix-vector algorithm remain separate obligations."
   },
-  "remaining_analytic_boundary": {
-    "gauss-remainder-contour-kernel": "Deferred by the user on 2026-10-14; all new contour files are excluded from this PR and saved in the local archive. The other 30 mathematical source scopes are the active integration scope."
-  },
-  "source_document": "docs/derivations/open_mathematical_items_operator_derivations.tex",
-  "source_completion_ledger": "docs/audit/2026-10-14-operator-targets.json",
-  "deferred_targets": {
-    "gauss-remainder-contour-kernel": {
-      "reason": "User requested deferral and local preservation before merging the other targets.",
-      "date": "2026-10-14",
-      "local_archive": "E:/NLAlib-local/DeferredJordanContour-2026-10-14",
-      "included_in_pr": false
-    }
-  },
-  "local_validation": {
-    "status": "passed",
-    "checks": [
-      "atlas",
-      "audit",
-      "build",
-      "card-review",
-      "coverage",
-      "downstream",
-      "experimental-build",
-      "extract",
-      "families",
-      "gaussian-inverse",
-      "layers",
-      "lint",
-      "names",
-      "new-proofs",
-      "polynomial-approximation",
-      "polynomial-scope",
-      "probability",
-      "report-index",
-      "ritz",
-      "root-card-review",
-      "site",
-      "source-ledger",
-      "subspaces",
-      "surface",
-      "sync",
-      "trusted-audit",
-      "unit",
-      "usage",
-      "whitespace"
-    ],
-    "audit_output": "docs/audit/2026-10-14-validation.md",
-    "note": "Full kernel audits passed; final metadata-only atlas tag repairs were rebuilt and reindexed. No theorem statements or proof terms changed in those repairs."
-  },
-  "candidate_extension": {
-    "report": "docs/audit/2026-10-14-research-candidates.json",
-    "baseline_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
-    "new_candidates": 52,
-    "scope": "Mathematical source review of newly added unformalized candidates; historical Lean integration validation below applies only to its original scope."
-  },
-  "deeper_candidate_extension": {
-    "report": "docs/audit/2026-10-14-deeper-matrix-methods.json",
-    "baseline_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
-    "new_candidates": 40,
-    "scope": "Deeper mathematical source review and additional unformalized candidates; historical Lean build/audit validation applies only to its original scope."
-  },
-  "candidate_catalog_review": {
-    "report": "docs/audit/2026-10-14-candidate-catalog-review.json",
-    "scope": "Category, naming, dependency-routing and viewer review with final validation; no change to Lean declarations or proof status."
-  },
-  "khatri_rao_extension": {
-    "report": "docs/audit/2026-10-14-khatri-rao-sharp-growth.json",
-    "baseline_commit": "5ed3c1d2ec153575c23d65eb0c305c3adbde48bd",
-    "new_cards": 1,
-    "scope": "One new Khatri-Rao sharp-growth card and its reusable proof interfaces; all pre-existing human-authored cards are preserved."
-  },
-  "revisited_source_extension": {
-    "report": "docs/audit/2026-10-15-revisited-sources.json",
-    "baseline_commit": "849cf33ba15bf08d0c5c3590a09ba9ce60db9bc4",
-    "new_candidates": 43,
-    "scope": "Unformalized NLA/matrix-analysis candidates and precise partial-proof coverage; no new Lean validation is claimed."
-  },
-  "catalogue_scope_cleanup": {
-    "date": "2026-10-15",
-    "baseline_commit": "6886918346afb81ba77e71fbbe5daa67c93d2bae",
-    "removed_cards": [
-      {
-        "id": "balanced-truncation-energy-bound",
-        "reason": "Outside the core scope: continuous-time input-output control and H-infinity model reduction."
-      },
-      {
-        "id": "finite-group-matrix-discrepancy",
-        "reason": "Outside the core scope: finite-group spectral signing existence without a current numerical-linear-algebra consumer."
-      }
-    ],
-    "category_changes": {
-      "gaussian-concentration-tools": "Reparented under Probability and concentration.",
-      "krylov": "Broadened the parent label to Krylov and iterative methods.",
-      "krylov-linear-systems": "Broadened to Iterative methods for linear systems, retaining stationary and regular splitting together and the existing M-matrix dependency cross-link.",
-      "normal-matrix-mixed-chebyshev-moments": "estimation-spectral-density",
-      "gaussian-proxy-eigenvalue-comparison": "concentration-matrix",
-      "matrix-inverse-newton-schulz": "matrix-functions"
-    },
-    "withdrawn_review_records": "docs/audit/2026-10-15-revisited-sources.json#withdrawn_records",
-    "validation": {
-      "status": "passed",
-      "scope": "Index, atlas, audit-record and viewer checks only; no Lean source changes or rebuild.",
-      "checks": [
-        "sync",
-        "atlas",
-        "names",
-        "card-audit",
-        "scope",
-        "unit-tests",
-        "import-surface",
-        "coverage",
-        "site"
-      ],
-      "active_cards": 488,
-      "review_records": 497,
-      "unit_tests": 18,
-      "preservation": "All retained mathematical statements, sources, original audit record payloads, Lean files and generated declaration indices are unchanged."
-    }
+  "chi-square-neg-moment": {
+   "reason": "Exact negative moments and the endpoint moment bound at q=(d-1)/2 are proved. The complete rooted bound across all q>0 with d>=2q+1, including dimensions 2–4, has no indexed theorem; its corrected explicit domains and derivation are recorded in the 2026-10-15 revisit."
   }
+ },
+ "remaining_analytic_boundary": {
+  "gauss-remainder-contour-kernel": "Deferred by the user on 2026-10-14; all new contour files are excluded from this PR and saved in the local archive. The other 30 mathematical source scopes are the active integration scope."
+ },
+ "source_document": "docs/derivations/open_mathematical_items_operator_derivations.tex",
+ "source_completion_ledger": "docs/audit/2026-10-14-operator-targets.json",
+ "deferred_targets": {
+  "gauss-remainder-contour-kernel": {
+   "reason": "User requested deferral and local preservation before merging the other targets.",
+   "date": "2026-10-14",
+   "local_archive": "E:/NLAlib-local/DeferredJordanContour-2026-10-14",
+   "included_in_pr": false
+  }
+ },
+ "local_validation": {
+  "status": "passed",
+  "checks": [
+   "atlas",
+   "audit",
+   "build",
+   "card-review",
+   "coverage",
+   "downstream",
+   "experimental-build",
+   "extract",
+   "families",
+   "gaussian-inverse",
+   "layers",
+   "lint",
+   "names",
+   "new-proofs",
+   "polynomial-approximation",
+   "polynomial-scope",
+   "probability",
+   "report-index",
+   "ritz",
+   "root-card-review",
+   "site",
+   "source-ledger",
+   "subspaces",
+   "surface",
+   "sync",
+   "trusted-audit",
+   "unit",
+   "usage",
+   "whitespace"
+  ],
+  "audit_output": "docs/audit/2026-10-14-validation.md",
+  "note": "Full kernel audits passed; final metadata-only atlas tag repairs were rebuilt and reindexed. No theorem statements or proof terms changed in those repairs."
+ },
+ "candidate_extension": {
+  "report": "docs/audit/2026-10-14-research-candidates.json",
+  "baseline_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
+  "new_candidates": 52,
+  "scope": "Mathematical source review of newly added unformalized candidates; historical Lean integration validation below applies only to its original scope."
+ },
+ "deeper_candidate_extension": {
+  "report": "docs/audit/2026-10-14-deeper-matrix-methods.json",
+  "baseline_commit": "5c3dfbea60b3ccfb4c1f328dc89979dce790a1b1",
+  "new_candidates": 40,
+  "scope": "Deeper mathematical source review and additional unformalized candidates; historical Lean build/audit validation applies only to its original scope."
+ },
+ "candidate_catalog_review": {
+  "report": "docs/audit/2026-10-14-candidate-catalog-review.json",
+  "scope": "Category, naming, dependency-routing and viewer review with final validation; no change to Lean declarations or proof status."
+ },
+ "khatri_rao_extension": {
+  "report": "docs/audit/2026-10-14-khatri-rao-sharp-growth.json",
+  "baseline_commit": "5ed3c1d2ec153575c23d65eb0c305c3adbde48bd",
+  "new_cards": 1,
+  "scope": "One new Khatri-Rao sharp-growth card and its reusable proof interfaces; all pre-existing human-authored cards are preserved."
+ },
+ "revisited_source_extension": {
+  "report": "docs/audit/2026-10-15-revisited-sources.json",
+  "baseline_commit": "849cf33ba15bf08d0c5c3590a09ba9ce60db9bc4",
+  "new_candidates": 43,
+  "scope": "Unformalized NLA/matrix-analysis candidates and precise partial-proof coverage; no new Lean validation is claimed."
+ },
+ "catalogue_scope_cleanup": {
+  "date": "2026-10-15",
+  "baseline_commit": "6886918346afb81ba77e71fbbe5daa67c93d2bae",
+  "removed_cards": [
+   {
+    "id": "balanced-truncation-energy-bound",
+    "reason": "Outside the core scope: continuous-time input-output control and H-infinity model reduction."
+   },
+   {
+    "id": "finite-group-matrix-discrepancy",
+    "reason": "Outside the core scope: finite-group spectral signing existence without a current numerical-linear-algebra consumer."
+   }
+  ],
+  "category_changes": {
+   "gaussian-concentration-tools": "Reparented under Probability and concentration.",
+   "krylov": "Broadened the parent label to Krylov and iterative methods.",
+   "krylov-linear-systems": "Broadened to Iterative methods for linear systems, retaining stationary and regular splitting together and the existing M-matrix dependency cross-link.",
+   "normal-matrix-mixed-chebyshev-moments": "estimation-spectral-density",
+   "gaussian-proxy-eigenvalue-comparison": "concentration-matrix",
+   "matrix-inverse-newton-schulz": "matrix-functions"
+  },
+  "withdrawn_review_records": "docs/audit/2026-10-15-revisited-sources.json#withdrawn_records",
+  "validation": {
+   "status": "passed",
+   "scope": "Index, atlas, audit-record and viewer checks only; no Lean source changes or rebuild.",
+   "checks": [
+    "sync",
+    "atlas",
+    "names",
+    "card-audit",
+    "scope",
+    "unit-tests",
+    "import-surface",
+    "coverage",
+    "site"
+   ],
+   "active_cards": 488,
+   "review_records": 497,
+   "unit_tests": 18,
+   "preservation": "All retained mathematical statements, sources, original audit record payloads, Lean files and generated declaration indices are unchanged."
+  }
+ },
+ "resolved_scope_changes": {
+  "lu-growth-factor": {
+   "reason": "The existing Lean bounds prove the upper bounds. Attainment by the displayed worst-case examples is a separate clause without a linked proof.",
+   "resolution_date": "2026-10-16",
+   "resolution_report": "docs/audit/2026-10-16-matrix-toolkit.json",
+   "resolution": "Combines the actual partial-pivot elimination bound with an explicit Wilkinson input attaining the bound for every positive dimension."
+  },
+  "hessenberg-reduction": {
+   "reason": "A Hessenberg similarity decomposition and the upper-Hessenberg structure are proved. The advertised coincidence with the Arnoldi basis is not supplied by those declarations.",
+   "resolution_date": "2026-10-16",
+   "resolution_report": "docs/audit/2026-10-16-matrix-toolkit.json",
+   "resolution": "Combines actual Householder Hessenberg reduction, its symmetric tridiagonal specialization, the implicit-Q sign theorem, and the exact Arnoldi identification under positive subdiagonal normalization."
+  }
+ }
 }

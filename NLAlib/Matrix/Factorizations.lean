@@ -1,8 +1,12 @@
+import NLAlib.Matrix.Factorizations.CanonicalPolar
 import NLAlib.Matrix.Factorizations.Cholesky
 import NLAlib.Matrix.Factorizations.CholeskyCharacterization
 import NLAlib.Matrix.Factorizations.CholeskyDefinite
 import NLAlib.Matrix.Factorizations.CholeskyPivotProbability
+import NLAlib.Matrix.Factorizations.DEIMGreedy
+import NLAlib.Matrix.Factorizations.DEIMProjection
 import NLAlib.Matrix.Factorizations.EliminationStep
+import NLAlib.Matrix.Factorizations.GeneralizedSVD
 import NLAlib.Matrix.Factorizations.Givens
 import NLAlib.Matrix.Factorizations.GramColumnExchange
 import NLAlib.Matrix.Factorizations.GramSchmidt
@@ -10,6 +14,7 @@ import NLAlib.Matrix.Factorizations.GramSchmidtClassical
 import NLAlib.Matrix.Factorizations.Hessenberg
 import NLAlib.Matrix.Factorizations.Householder
 import NLAlib.Matrix.Factorizations.LU
+import NLAlib.Matrix.Factorizations.LUGrowthSharpness
 import NLAlib.Matrix.Factorizations.LULeadingRank
 import NLAlib.Matrix.Factorizations.LURowInclusion
 import NLAlib.Matrix.Factorizations.MaximumVolumeBudget

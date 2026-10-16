@@ -8137,4 +8137,48 @@
   "atlas_partial":
   [],
   "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "ZMod.dft.{u_1} {N : ℕ} [NeZero N] {E : Type u_1} [AddCommGroup E] [_root_.Module ℂ E] : (ZMod N → E) ≃ₗ[ℂ] ZMod N → E",
+  "name":
+  "ZMod.dft",
+  "module":
+  "Mathlib.Analysis.Fourier.ZMod",
+  "line":
+  84,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "The discrete Fourier transform on `ℤ / N ℤ` (with the counting measure), bundled as a linear\nequivalence. Denoted as `𝓕` within the `ZMod` namespace.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "ZMod.dft_dft.{u_1} {N : ℕ} [NeZero N] {E : Type u_1} [AddCommGroup E] [_root_.Module ℂ E] (Φ : ZMod N → E) :\n  ZMod.dft (ZMod.dft Φ) = fun j => ↑N • Φ (-j)",
+  "name":
+  "ZMod.dft_dft",
+  "module":
+  "Mathlib.Analysis.Fourier.ZMod",
+  "line":
+  176,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "Fourier inversion formula, discrete case. ",
+  "atlas_partial":
+  [],
+  "atlas":
   []}]

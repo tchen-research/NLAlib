@@ -38,6 +38,8 @@ import NLAlib.Matrix.Perturbation.PseudoinverseNormControl
 import NLAlib.Matrix.Perturbation.PseudoinversePerturbation
 import NLAlib.Matrix.Perturbation.PseudoinverseProjectors
 import NLAlib.Matrix.Perturbation.PseudoinverseSpectralPerturbation
+import NLAlib.Matrix.Perturbation.Pseudospectrum
+import NLAlib.Matrix.Perturbation.PseudospectrumResolvent
 import NLAlib.Matrix.Perturbation.RayleighDerivative
 import NLAlib.Matrix.Perturbation.ResidualBounds
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueContinuousBranch

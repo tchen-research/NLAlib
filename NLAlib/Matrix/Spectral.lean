@@ -1,12 +1,17 @@
 import NLAlib.Matrix.Spectral.AdjugateRankOne
 import NLAlib.Matrix.Spectral.CharpolySimplicity
+import NLAlib.Matrix.Spectral.CommutingHermitian
 import NLAlib.Matrix.Spectral.CommutingSpectra
 import NLAlib.Matrix.Spectral.ComplexQZ
 import NLAlib.Matrix.Spectral.Complexification
+import NLAlib.Matrix.Spectral.ComplexificationUnits
+import NLAlib.Matrix.Spectral.ConvergentPeripheral
+import NLAlib.Matrix.Spectral.CoordinateRankOne
 import NLAlib.Matrix.Spectral.Core
 import NLAlib.Matrix.Spectral.CourantFischer
 import NLAlib.Matrix.Spectral.DefiniteCongruence
 import NLAlib.Matrix.Spectral.DefinitePairCalculus
+import NLAlib.Matrix.Spectral.DeflatedPeripheral
 import NLAlib.Matrix.Spectral.DiagonalDominanceCorollaries
 import NLAlib.Matrix.Spectral.DiagonalDominanceStability
 import NLAlib.Matrix.Spectral.Diagonalizable
@@ -23,13 +28,19 @@ import NLAlib.Matrix.Spectral.EigenvectorDeflationBlocks
 import NLAlib.Matrix.Spectral.EigenvectorDeflationConverse
 import NLAlib.Matrix.Spectral.EigenvectorDeflationSpectrum
 import NLAlib.Matrix.Spectral.EigenvectorPairing
+import NLAlib.Matrix.Spectral.EigenvectorSpectrum
 import NLAlib.Matrix.Spectral.GeneralizedEigenDecay
 import NLAlib.Matrix.Spectral.GeneralizedEigenPairing
+import NLAlib.Matrix.Spectral.GeneralizedSchur
 import NLAlib.Matrix.Spectral.GershgorinBasic
 import NLAlib.Matrix.Spectral.GershgorinBounds
 import NLAlib.Matrix.Spectral.GershgorinCounting
 import NLAlib.Matrix.Spectral.GramSingularValues
+import NLAlib.Matrix.Spectral.GramSpectralSums
 import NLAlib.Matrix.Spectral.HaynsworthInertia
+import NLAlib.Matrix.Spectral.HermitianExtremaNorm
+import NLAlib.Matrix.Spectral.HermitianMinimum
+import NLAlib.Matrix.Spectral.HurwitzCayley
 import NLAlib.Matrix.Spectral.IndefiniteCongruence
 import NLAlib.Matrix.Spectral.Inertia
 import NLAlib.Matrix.Spectral.InertiaSturm
@@ -54,6 +65,7 @@ import NLAlib.Matrix.Spectral.NormalIntertwining
 import NLAlib.Matrix.Spectral.NormalRectangularIntertwining
 import NLAlib.Matrix.Spectral.NormalSimilarity
 import NLAlib.Matrix.Spectral.NormalSpectral
+import NLAlib.Matrix.Spectral.NormalizedPSDPair
 import NLAlib.Matrix.Spectral.NumericalRange
 import NLAlib.Matrix.Spectral.NumericalRangeConvex
 import NLAlib.Matrix.Spectral.NumericalRangeHermitian
@@ -70,6 +82,7 @@ import NLAlib.Matrix.Spectral.PrincipalMinorPSD
 import NLAlib.Matrix.Spectral.PrincipalMinors
 import NLAlib.Matrix.Spectral.ProductSingularValues
 import NLAlib.Matrix.Spectral.ProductWeyl
+import NLAlib.Matrix.Spectral.ProjectorDeflationPowers
 import NLAlib.Matrix.Spectral.QuadraticProbe
 import NLAlib.Matrix.Spectral.QuasiPencilBasis
 import NLAlib.Matrix.Spectral.QuasiTriangular
@@ -109,6 +122,7 @@ import NLAlib.Matrix.Spectral.SingularValueScaling
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
 import NLAlib.Matrix.Spectral.SmallTriangularSimilarity
 import NLAlib.Matrix.Spectral.SpectralBounds
+import NLAlib.Matrix.Spectral.SpectralGramFactor
 import NLAlib.Matrix.Spectral.SpectralMinimum
 import NLAlib.Matrix.Spectral.SpectrumCount
 import NLAlib.Matrix.Spectral.SpectrumCountContinuity
@@ -120,6 +134,9 @@ import NLAlib.Matrix.Spectral.SylvesterBlocks
 import NLAlib.Matrix.Spectral.SylvesterCriterion
 import NLAlib.Matrix.Spectral.SylvesterQualitative
 import NLAlib.Matrix.Spectral.SylvesterSimilarity
+import NLAlib.Matrix.Spectral.TensorExtremeEigenvalues
+import NLAlib.Matrix.Spectral.ThinSVD
+import NLAlib.Matrix.Spectral.ThinSingularFunctions
 import NLAlib.Matrix.Spectral.TraceEigenvalues
 import NLAlib.Matrix.Spectral.Weyl
 

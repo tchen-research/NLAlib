@@ -18,6 +18,7 @@ import NLAlib.Matrix.Subspaces.ComplexProjectionBounds
 import NLAlib.Matrix.Subspaces.ComplexProjectionComposition
 import NLAlib.Matrix.Subspaces.ComplexVolumeProjection
 import NLAlib.Matrix.Subspaces.ComplexVolumeProjectorTrace
+import NLAlib.Matrix.Subspaces.CoordinateFrames
 import NLAlib.Matrix.Subspaces.FrameContractions
 import NLAlib.Matrix.Subspaces.FrameFourthContractions
 import NLAlib.Matrix.Subspaces.GramColumnDeterminant

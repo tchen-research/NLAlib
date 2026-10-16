@@ -8,6 +8,7 @@ import NLAlib.Matrix.Inequalities.BlockStrictContraction
 import NLAlib.Matrix.Inequalities.ColumnDeterminantBound
 import NLAlib.Matrix.Inequalities.CompressionDeterminant
 import NLAlib.Matrix.Inequalities.DeterminantRoot
+import NLAlib.Matrix.Inequalities.EvenSchattenSmoothness
 import NLAlib.Matrix.Inequalities.FiniteExponentialGram
 import NLAlib.Matrix.Inequalities.FischerDeterminant
 import NLAlib.Matrix.Inequalities.HadamardDeterminant
@@ -44,6 +45,7 @@ import NLAlib.Matrix.Inequalities.PlaneRotationCoordinates
 import NLAlib.Matrix.Inequalities.PlaneRotationDerivative
 import NLAlib.Matrix.Inequalities.PlaneRotationSpectrum
 import NLAlib.Matrix.Inequalities.PositiveSpectralEndpoints
+import NLAlib.Matrix.Inequalities.PositiveTracePowers
 import NLAlib.Matrix.Inequalities.PrincipalMinorProductBounds
 import NLAlib.Matrix.Inequalities.PrincipalMinorProducts
 import NLAlib.Matrix.Inequalities.PrincipalOverlapDeterminant

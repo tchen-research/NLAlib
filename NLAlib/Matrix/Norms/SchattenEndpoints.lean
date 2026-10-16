@@ -21,7 +21,7 @@ open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- The `(p,∞,p)` Schatten product endpoint for every positive finite exponent,
 with exact constant one and all rank/empty-dimension cases. -/
-theorem schattenNormReal_mul_le_mul_specNorm (A : Matrix m n ℝ) (B : Matrix n q ℝ)
+theorem schattenNormReal_mul_le_mul_specNorm {𝕜 : Type*} [RCLike 𝕜] (A : Matrix m n 𝕜) (B : Matrix n q 𝕜)
     {p : ℝ} (hp : 0 < p) : schattenNormReal (A * B) p ≤ schattenNormReal A p * specNorm B := by
   let N := max (min (Fintype.card m) (Fintype.card n)) (min (Fintype.card m) (Fintype.card q))
   have hNA : min (Fintype.card m) (Fintype.card n) ≤ N := le_max_left _ _
@@ -52,7 +52,7 @@ open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- The `(∞,p,p)` Schatten product endpoint for every positive finite exponent,
 with exact constant one and all rank/empty-dimension cases. -/
-theorem schattenNormReal_mul_le_specNorm_mul (A : Matrix m n ℝ) (B : Matrix n q ℝ)
+theorem schattenNormReal_mul_le_specNorm_mul {𝕜 : Type*} [RCLike 𝕜] (A : Matrix m n 𝕜) (B : Matrix n q 𝕜)
     {p : ℝ} (hp : 0 < p) : schattenNormReal (A * B) p ≤ specNorm A * schattenNormReal B p := by
   let N := max (min (Fintype.card n) (Fintype.card q)) (min (Fintype.card m) (Fintype.card q))
   have hNB : min (Fintype.card n) (Fintype.card q) ≤ N := le_max_left _ _

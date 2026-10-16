@@ -1,5 +1,12 @@
+import NLAlib.Probability.Gaussian.Comparison.CenteredMatrixLaw
 import NLAlib.Probability.Gaussian.Comparison.GordonMinimax
 import NLAlib.Probability.Gaussian.Comparison.Interpolation
+import NLAlib.Probability.Gaussian.Comparison.MatrixCauchyEndpoints
+import NLAlib.Probability.Gaussian.Comparison.MatrixCoordinateLaws
+import NLAlib.Probability.Gaussian.Comparison.ResamplingAffine
+import NLAlib.Probability.Gaussian.Comparison.ResamplingInterpolation
+import NLAlib.Probability.Gaussian.Comparison.ResamplingQuadratic
+import NLAlib.Probability.Gaussian.Comparison.ResamplingStein
 import NLAlib.Probability.Gaussian.Comparison.Slepian
 import NLAlib.Probability.Gaussian.Comparison.SlepianTails
 import NLAlib.Probability.Gaussian.Comparison.SudakovFernique

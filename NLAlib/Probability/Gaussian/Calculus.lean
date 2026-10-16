@@ -1,3 +1,7 @@
+import NLAlib.Probability.Gaussian.Calculus.AffineBilinearIntegrationByParts
+import NLAlib.Probability.Gaussian.Calculus.AffineProductIntegrationByParts
+import NLAlib.Probability.Gaussian.Calculus.BilinearIntegrationByParts
+import NLAlib.Probability.Gaussian.Calculus.ComplexIntegrationByParts
 import NLAlib.Probability.Gaussian.Calculus.IntegrationByParts
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeck
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeckEntropy

@@ -7,6 +7,8 @@ import NLAlib.ForMathlib.Logic
 import NLAlib.ForMathlib.MeasureTheory
 import NLAlib.ForMathlib.Order
 import NLAlib.ForMathlib.Probability
+import NLAlib.ForMathlib.RepresentationTheory
+import NLAlib.ForMathlib.RingTheory
 import NLAlib.ForMathlib.Topology
 
 /-! # `ForMathlib`

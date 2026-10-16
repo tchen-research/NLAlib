@@ -4,6 +4,7 @@ import NLAlib.ForMathlib.Probability.FiniteProductEvents
 import NLAlib.ForMathlib.Probability.HasLaw
 import NLAlib.ForMathlib.Probability.IndepExpSum
 import NLAlib.ForMathlib.Probability.Independence
+import NLAlib.ForMathlib.Probability.IndependentQuadratic
 import NLAlib.ForMathlib.Probability.NonnegativeSupermartingale
 import NLAlib.ForMathlib.Probability.PMF
 import NLAlib.ForMathlib.Probability.SampleAverage

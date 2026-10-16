@@ -15,6 +15,13 @@ import NLAlib.Matrix.Structured.ConformalBlocks
 import NLAlib.Matrix.Structured.Displacement
 import NLAlib.Matrix.Structured.DisplacementDecay
 import NLAlib.Matrix.Structured.DynamicModeDecomposition
+import NLAlib.Matrix.Structured.FiniteGroupCayleyFourier
+import NLAlib.Matrix.Structured.FiniteGroupCayleyNorm
+import NLAlib.Matrix.Structured.FiniteGroupFourierBasic
+import NLAlib.Matrix.Structured.FiniteGroupFourierCompleteness
+import NLAlib.Matrix.Structured.FiniteGroupFourierNormalization
+import NLAlib.Matrix.Structured.FiniteGroupFourierOrthogonality
+import NLAlib.Matrix.Structured.FiniteGroupFourierUnitarity
 import NLAlib.Matrix.Structured.FourierCirculant
 import NLAlib.Matrix.Structured.FourierSolve
 import NLAlib.Matrix.Structured.GenericRank
@@ -25,6 +32,11 @@ import NLAlib.Matrix.Structured.HSSClusterRanges
 import NLAlib.Matrix.Structured.HSSConstruction
 import NLAlib.Matrix.Structured.HSSCutRanks
 import NLAlib.Matrix.Structured.HankelRealization
+import NLAlib.Matrix.Structured.HermiteCompression
+import NLAlib.Matrix.Structured.HermiteIndices
+import NLAlib.Matrix.Structured.HermiteLadders
+import NLAlib.Matrix.Structured.HermiteNorm
+import NLAlib.Matrix.Structured.HermiteOrder
 import NLAlib.Matrix.Structured.Hessenberg
 import NLAlib.Matrix.Structured.HessenbergIntertwining
 import NLAlib.Matrix.Structured.HierarchicalError
@@ -40,6 +52,7 @@ import NLAlib.Matrix.Structured.JacobiLDL
 import NLAlib.Matrix.Structured.KroneckerFrames
 import NLAlib.Matrix.Structured.KroneckerIdentities
 import NLAlib.Matrix.Structured.KroneckerNormRank
+import NLAlib.Matrix.Structured.KroneckerOrder
 import NLAlib.Matrix.Structured.KroneckerSingularValues
 import NLAlib.Matrix.Structured.KroneckerSpectrum
 import NLAlib.Matrix.Structured.LastResolvent
@@ -52,6 +65,9 @@ import NLAlib.Matrix.Structured.RadixTwoDFT
 import NLAlib.Matrix.Structured.RadixTwoDFTSplit
 import NLAlib.Matrix.Structured.RadixTwoFFT
 import NLAlib.Matrix.Structured.RadixTwoRoots
+import NLAlib.Matrix.Structured.Realification
+import NLAlib.Matrix.Structured.RectangularCoefficientBlocks
+import NLAlib.Matrix.Structured.RectangularDilationBounds
 import NLAlib.Matrix.Structured.StructuredMatrices
 import NLAlib.Matrix.Structured.SylvesterADI
 import NLAlib.Matrix.Structured.ToeplitzCirculant

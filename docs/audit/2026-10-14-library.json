@@ -11,7 +11,9 @@
   "docs/audit/2026-10-14-deeper-matrix-methods.json",
   "docs/audit/2026-10-14-khatri-rao-sharp-growth.json",
   "docs/audit/2026-10-15-revisited-sources.json",
-  "docs/audit/2026-10-16-matrix-toolkit.json"
+  "docs/audit/2026-10-16-matrix-toolkit.json",
+  "docs/audit/2026-10-16-probability-additions.json",
+  "docs/audit/2026-10-16-random-probability.json"
  ],
  "formalization_exclusions": {
   "crouzeix_palencia": "Analytic interface, matrix Cauchy bridge, and smooth-neighborhood approximation",
@@ -34,9 +36,6 @@
   },
   "clenshaw-recurrence": {
    "reason": "The scalar recurrence and matrix polynomial identity are proved. A recursion and cost theorem for the advertised matrix-vector algorithm remain separate obligations."
-  },
-  "chi-square-neg-moment": {
-   "reason": "Exact negative moments and the endpoint moment bound at q=(d-1)/2 are proved. The complete rooted bound across all q>0 with d>=2q+1, including dimensions 2–4, has no indexed theorem; its corrected explicit domains and derivation are recorded in the 2026-10-15 revisit."
   }
  },
  "remaining_analytic_boundary": {
@@ -55,38 +54,40 @@
  "local_validation": {
   "status": "passed",
   "checks": [
-   "atlas",
-   "audit",
-   "build",
-   "card-review",
-   "coverage",
-   "downstream",
-   "experimental-build",
-   "extract",
-   "families",
-   "gaussian-inverse",
+   "full-build",
+   "complete-audit",
+   "declaration-index",
+   "atlas-sync",
    "layers",
-   "lint",
-   "names",
-   "new-proofs",
-   "polynomial-approximation",
-   "polynomial-scope",
-   "probability",
-   "report-index",
-   "ritz",
-   "root-card-review",
-   "site",
-   "source-ledger",
-   "subspaces",
-   "surface",
-   "sync",
+   "atlas",
+   "unit-tests",
+   "import-surface",
    "trusted-audit",
-   "unit",
-   "usage",
-   "whitespace"
+   "declaration-lint",
+   "downstream-example",
+   "probability-example",
+   "polynomial-example",
+   "khatri-rao-example",
+   "ritz-audit",
+   "subspace-audit",
+   "gaussian-inverse-audit",
+   "new-proofs-audit",
+   "khatri-rao-audit",
+   "names",
+   "historical-scope",
+   "card-audit",
+   "coverage",
+   "site"
   ],
-  "audit_output": "docs/audit/2026-10-14-validation.md",
-  "note": "Full kernel audits passed; final metadata-only atlas tag repairs were rebuilt and reindexed. No theorem statements or proof terms changed in those repairs."
+  "public_index_declarations": 10814,
+  "new_public_declarations": 657,
+  "new_sorry_declarations": 0,
+  "default_import_sorry": 0,
+  "unchanged_experimental_sorry_theorems": 23,
+  "audit_output": "audited 20719 declarations (10764 public theorems) in [NLAlib]; 23 theorems depend on sorry: [NLAlib.cgRecurrence_r_eq_zero_of_krylovGrade_le,\n NLAlib.cgRecurrence_x_eq_of_krylovGrade_le,\n NLAlib.dotProduct_cgRecurrence_p_mulVec_eq_zero,\n NLAlib.dotProduct_cgRecurrence_r_eq_zero,\n NLAlib.dotProduct_cgRecurrence_r_eq_zero_of_mem,\n NLAlib.dotProduct_golubKahan_eq,\n NLAlib.golubKahanSucceeds_iff,\n NLAlib.isCGIterate_cgRecurrence,\n NLAlib.isGradedKrylovBasis_golubKahanU_V,\n NLAlib.isGradedKrylovBasis_lanczosRecurrence,\n NLAlib.lanczosAlpha_eq_alpha,\n NLAlib.lanczosBeta_eq_beta,\n NLAlib.lanczosBeta_eq_zero_iff,\n NLAlib.lanczosBeta_eq_zero_of_krylovGrade_le,\n NLAlib.lanczosBeta_pos,\n NLAlib.lanczosBeta_succ_eq_dotProduct,\n NLAlib.lanczosRecurrence_eq_arnoldiBasis,\n NLAlib.lanczosRecurrence_eq_zero_of_krylovGrade_le,\n NLAlib.partialCholeskyFactor_mul_transpose_eq_nystrom,\n NLAlib.partialCholeskyResidual_eq_sub_nystrom,\n NLAlib.range_qrAlgorithmQ_castLE_eq_subspaceIterate,\n NLAlib.span_cgRecurrence_p,\n NLAlib.span_cgRecurrence_r]\nOK: no axioms beyond propext / Classical.choice / Quot.sound (and sorryAx in scaffolds)",
+  "trusted_audit_output": "audited 20428 declarations reachable through import NLAlib",
+  "index_status_readback": "All twelve retained cards and the added scalar comparison are proved; all seven excluded targets and twenty-four added candidates remain open.",
+  "report": "docs/audit/2026-10-16-random-probability.json"
  },
  "candidate_extension": {
   "report": "docs/audit/2026-10-14-research-candidates.json",
@@ -170,6 +171,50 @@
    "resolution_date": "2026-10-16",
    "resolution_report": "docs/audit/2026-10-16-matrix-toolkit.json",
    "resolution": "Combines actual Householder Hessenberg reduction, its symmetric tridiagonal specialization, the implicit-Q sign theorem, and the exact Arnoldi identification under positive subdiagonal normalization."
+  },
+  "chi-square-neg-moment": {
+   "date": "2026-10-16",
+   "reason": "The complete rooted moment bound is now proved, including dimensions 2–4 and arbitrary q>0 with d>=2q+1.",
+   "report": "docs/audit/2026-10-16-random-probability.json",
+   "previous_reason": "Exact negative moments and the endpoint moment bound at q=(d-1)/2 are proved. The complete rooted bound across all q>0 with d>=2q+1, including dimensions 2–4, has no indexed theorem; its corrected explicit domains and derivation are recorded in the 2026-10-15 revisit."
   }
- }
+ },
+ "validation_history": [
+  {
+   "status": "passed",
+   "checks": [
+    "atlas",
+    "audit",
+    "build",
+    "card-review",
+    "coverage",
+    "downstream",
+    "experimental-build",
+    "extract",
+    "families",
+    "gaussian-inverse",
+    "layers",
+    "lint",
+    "names",
+    "new-proofs",
+    "polynomial-approximation",
+    "polynomial-scope",
+    "probability",
+    "report-index",
+    "ritz",
+    "root-card-review",
+    "site",
+    "source-ledger",
+    "subspaces",
+    "surface",
+    "sync",
+    "trusted-audit",
+    "unit",
+    "usage",
+    "whitespace"
+   ],
+   "audit_output": "docs/audit/2026-10-14-validation.md",
+   "note": "Full kernel audits passed; final metadata-only atlas tag repairs were rebuilt and reindexed. No theorem statements or proof terms changed in those repairs."
+  }
+ ]
 }

@@ -1,0 +1,1545 @@
+{
+ "date": "2026-10-16",
+ "baseline_commit": "faef0a270d762f0bf0e90603544d50f289873d0e",
+ "scope": "Selective catalogue additions from the user-supplied research-directions list; these 24 cards are open candidates, not formalization claims.",
+ "method": "Compared the current declaration index, atlas cards and original papers, checked dimensions, constants, probability conventions and endpoint restrictions; grouped cards by mathematical subject.",
+ "counts": {
+  "new_sources": 14,
+  "new_cards": 24,
+  "new_areas": 2
+ },
+ "overlap_audit": [
+  {
+   "direction": "MSS interlacing",
+   "decision": "add",
+   "proposed": [
+    "interlacing-family-root-selection",
+    "mixed-characteristic-polynomial-roots",
+    "random-frame-spectral-selection",
+    "frame-spectral-partition"
+   ],
+   "existing": [
+    "cauchy-interlacing",
+    "orthogonal-polynomial-zeros"
+   ],
+   "distinction": "Matrix/principal-submatrix interlacing does not provide a common-interlacing polynomial family or outcome selection."
+  },
+  {
+   "direction": "BSS barriers",
+   "decision": "add",
+   "proposed": [
+    "deterministic-rank-one-sparsification"
+   ],
+   "existing": [
+    "resistance-sampling-spectral-sparsifier"
+   ],
+   "distinction": "Existential deterministic O(n/epsilon^2) support versus iid resistance sampling with an additional logarithmic factor."
+  },
+  {
+   "direction": "Restricted invertibility",
+   "decision": "add",
+   "proposed": [
+    "stable-rank-restricted-invertibility",
+    "singular-tail-restricted-invertibility"
+   ],
+   "existing": [
+    "rank-revealing-qr"
+   ],
+   "distinction": "Subset size below rank with stable-rank or tail guarantees; neither exact QR factorization nor RRQR coefficient control."
+  },
+  {
+   "direction": "Operator scaling",
+   "decision": "add focused capacity API",
+   "proposed": [
+    "operator-capacity-scaling-identities",
+    "operator-capacity-near-balanced-certificate"
+   ],
+   "existing": [
+    "positive-map-kadison",
+    "matrix-geometric-mean-def"
+   ],
+   "distinction": "Determinant infima and normalization certificates are absent. Approximate scalability/exact attainment are deliberately not conflated."
+  },
+  {
+   "direction": "Strong-convergence polynomial method and classical sequel",
+   "decision": "add precise quantitative applications",
+   "proposed": [
+    "permutation-polynomial-norm-comparison",
+    "gaussian-polynomial-growing-coefficients",
+    "haar-polynomial-growing-coefficients"
+   ],
+   "existing": [
+    "gaussian-free-spectrum-two-sided"
+   ],
+   "distinction": "Noncommutative polynomials with growing matrix coefficient dimension, distinct from affine Gaussian/free spectra. Polynomial approximation prerequisites can be reused."
+  },
+  {
+   "direction": "Universality",
+   "decision": "add",
+   "proposed": [
+    "independent-sum-spectrum-universality",
+    "matrix-resolvent-gaussian-universality"
+   ],
+   "existing": [
+    "cauchy-transform-gaussian-universality"
+   ],
+   "distinction": "Full spectral sets and expected matrices versus a normalized trace scalar resolvent. Full real covariance matching retained."
+  },
+  {
+   "direction": "Heterogeneous Gaussian structure",
+   "decision": "add",
+   "proposed": [
+    "heterogeneous-gaussian-schatten-row-comparison",
+    "heterogeneous-gaussian-schatten-moments"
+   ],
+   "existing": [
+    "gaussian-spectral-mean"
+   ],
+   "distinction": "Sharp dependence on the entire variance profile and p, not just worst-case variance or a generic norm concentration inequality."
+  },
+  {
+   "direction": "Extremal independent entries and superconcentration",
+   "decision": "add",
+   "proposed": [
+    "independent-entry-gaussian-extremum",
+    "independent-entry-small-deviation"
+   ],
+   "existing": [
+    "gaussian-spectral-lipschitz"
+   ],
+   "distinction": "Comparator dimension independent of p and t^(3/2) small-deviation behavior."
+  },
+  {
+   "direction": "Finite free convolution",
+   "decision": "add",
+   "proposed": [
+    "finite-free-additive-convolution",
+    "finite-free-multiplicative-convolution"
+   ],
+   "existing": [
+    "charpoly-cayley-hamilton"
+   ],
+   "distinction": "Expected characteristic polynomial identities and polynomial root barriers, not concentration of matrix spectra."
+  },
+  {
+   "direction": "Multivariate trace inequalities",
+   "decision": "add",
+   "proposed": [
+    "multivariate-araki-lieb-thirring",
+    "multivariate-golden-thompson"
+   ],
+   "existing": [
+    "golden-thompson",
+    "operator-monotone-convex"
+   ],
+   "distinction": "Ordered complex products integrated against explicit beta densities; no naive multivariate trace-product extension."
+  },
+  {
+   "direction": "Shifted QR",
+   "decision": "add",
+   "proposed": [
+    "shifted-qr-rapid-decoupling"
+   ],
+   "existing": [
+    "qr-algorithm-simultaneous-iteration",
+    "qr-algorithm-convergence",
+    "hessenberg-reduction"
+   ],
+   "distinction": "Exact arithmetic, source-specified shifts, quantitative eigenvector-conditioning and Ritz-finder contracts."
+  },
+  {
+   "direction": "Matrix Dyson equation",
+   "decision": "add deterministic representation",
+   "proposed": [
+    "matrix-dyson-stieltjes-representation"
+   ],
+   "existing": [
+    "matrix-k-transform-stability",
+    "block-wishart-variational-edges"
+   ],
+   "distinction": "Self-energy fixed-point equation and matrix-valued Stieltjes measure, independent of the local K-transform certificate."
+  }
+ ],
+ "deferred_directions": [
+  {
+   "direction": "Operator-scaling complexity and rank equivalences",
+   "reason": "Retain as a direction, but no vague paper-wide card: exact-scaling attainment needs separate orbit conditions, and bit complexity requires an explicit arithmetic model."
+  },
+  {
+   "direction": "Abstract polynomial-method transfer theorem",
+   "reason": "The source method is represented by exact quantitative permutation and classical-ensemble statements. No generic trace-expansion implication is asserted without its full distributional-support and remainder hypotheses."
+  },
+  {
+   "direction": "Asymmetric finite free convolution",
+   "reason": "Useful extension but omitted in this selective batch; the additive and multiplicative symmetric operations already establish the missing framework."
+  },
+  {
+   "direction": "Quantum recovery and Petz maps",
+   "reason": "Trace inequalities fit NLAlib directly; information-theoretic recovery applications would expand the library beyond its current scope."
+  },
+  {
+   "direction": "Finite-precision shifted QR sequel",
+   "reason": "Deferred until the library has a finite-precision computation model; no unsupported stability claim added."
+  },
+  {
+   "direction": "Full matrix-Dyson local law and universality",
+   "reason": "A1/A2 spatial-decay and B1–B4 random-matrix hypotheses are substantial; keep deterministic representation separate and do not present a generic unqualified local law."
+  }
+ ],
+ "primary_source_evidence": [
+  {
+   "source": "mss13-interlacing",
+   "url": "https://arxiv.org/abs/1306.3969",
+   "version_header": "arXiv:1306.3969v4  [math.CO]  14 Apr 2014",
+   "pdf_page_count": 21,
+   "labels": [
+    {
+     "result": "interlacing-family-root-selection",
+     "label": "Theorem 3.4 and Lemma 3.5, PDF p. 6"
+    },
+    {
+     "result": "mixed-characteristic-polynomial-roots",
+     "label": "Theorem 4.1, Corollary 4.4 and Theorem 5.1, PDF pp. 8–11"
+    },
+    {
+     "result": "random-frame-spectral-selection",
+     "label": "Theorem 1.4, p. 3"
+    },
+    {
+     "result": "frame-spectral-partition",
+     "label": "Corollary 1.5, p. 3"
+    }
+   ]
+  },
+  {
+   "source": "bss08-sparsifiers",
+   "url": "https://arxiv.org/abs/0808.0163",
+   "version_header": "Twice-Ramanujan Sparsiﬁers∗",
+   "pdf_page_count": 21,
+   "labels": [
+    {
+     "result": "deterministic-rank-one-sparsification",
+     "label": "Theorem 3.1, pp. 5–6; barrier construction in §3.2"
+    }
+   ]
+  },
+  {
+   "source": "ss09-restricted",
+   "url": "https://arxiv.org/abs/0911.1114",
+   "version_header": "arXiv:0911.1114v4  [math.FA]  2 Oct 2010",
+   "pdf_page_count": 7,
+   "labels": [
+    {
+     "result": "stable-rank-restricted-invertibility",
+     "label": "Theorem 2, p. 2"
+    }
+   ]
+  },
+  {
+   "source": "ny16-restricted",
+   "url": "https://arxiv.org/abs/1601.00948",
+   "version_header": "arXiv:1601.00948v2  [math.FA]  25 Nov 2016",
+   "pdf_page_count": 25,
+   "labels": [
+    {
+     "result": "singular-tail-restricted-invertibility",
+     "label": "Theorem 6, p. 4"
+    }
+   ]
+  },
+  {
+   "source": "ggow15-scaling",
+   "url": "https://arxiv.org/abs/1511.03730",
+   "version_header": "arXiv:1511.03730v4  [cs.CC]  24 Jan 2019",
+   "pdf_page_count": 63,
+   "labels": [
+    {
+     "result": "operator-capacity-scaling-identities",
+     "label": "Definition 2.6, Proposition 2.7, Theorem 3.11, PDF pp. 20 and 33"
+    },
+    {
+     "result": "operator-capacity-near-balanced-certificate",
+     "label": "Theorem 2.12 and Lemmas 3.4, 3.6, pp. 22–23 and 28–31"
+    }
+   ]
+  },
+  {
+   "source": "cgtv24-strong",
+   "url": "https://arxiv.org/abs/2405.16026",
+   "version_header": "arXiv:2405.16026v3  [math.PR]  11 Feb 2025",
+   "pdf_page_count": 37,
+   "labels": [
+    {
+     "result": "permutation-polynomial-norm-comparison",
+     "label": "§3.1 and Theorem 3.9, pp. 8 and 12"
+    }
+   ]
+  },
+  {
+   "source": "cgv24-classical",
+   "url": "https://arxiv.org/abs/2412.00593",
+   "version_header": "A NEW APPROACH TO STRONG CONVERGENCE II.",
+   "pdf_page_count": 53,
+   "labels": [
+    {
+     "result": "gaussian-polynomial-growing-coefficients",
+     "label": "Theorem 1.1 and Corollary 1.2, pp. 2–3 (GUE specialization)"
+    },
+    {
+     "result": "haar-polynomial-growing-coefficients",
+     "label": "Theorem 1.5, p. 4 (unitary specialization)"
+    }
+   ]
+  },
+  {
+   "source": "bvh22-universality",
+   "url": "https://arxiv.org/abs/2201.05142",
+   "version_header": "arXiv:2201.05142v3  [math.PR]  25 Jun 2024",
+   "pdf_page_count": 89,
+   "labels": [
+    {
+     "result": "independent-sum-spectrum-universality",
+     "label": "Theorem 2.6, pp. 11–12"
+    },
+    {
+     "result": "matrix-resolvent-gaussian-universality",
+     "label": "Theorem 2.10, PDF p. 12"
+    }
+   ]
+  },
+  {
+   "source": "lvhy17-nonhomogeneous",
+   "url": "https://arxiv.org/abs/1711.00807",
+   "version_header": "arXiv:1711.00807v2  [math.PR]  21 Aug 2018",
+   "pdf_page_count": 36,
+   "labels": [
+    {
+     "result": "heterogeneous-gaussian-schatten-row-comparison",
+     "label": "Corollary 1.4, p. 4"
+    },
+    {
+     "result": "heterogeneous-gaussian-schatten-moments",
+     "label": "Theorem 1.1, first estimate, pp. 2–3"
+    }
+   ]
+  },
+  {
+   "source": "bvh24-extremal",
+   "url": "https://arxiv.org/abs/2401.06284",
+   "version_header": "arXiv:2401.06284v2  [math.PR]  19 Mar 2025",
+   "pdf_page_count": 35,
+   "labels": [
+    {
+     "result": "independent-entry-gaussian-extremum",
+     "label": "Model 1.3 and Theorem 1.7, pp. 2 and 4"
+    },
+    {
+     "result": "independent-entry-small-deviation",
+     "label": "Theorem 1.4, p. 3"
+    }
+   ]
+  },
+  {
+   "source": "mss15-finite-free",
+   "url": "https://arxiv.org/abs/1504.00350",
+   "version_header": "arXiv:1504.00350v2  [math.CO]  3 Jul 2019",
+   "pdf_page_count": 37,
+   "labels": [
+    {
+     "result": "finite-free-additive-convolution",
+     "label": "Definition 1.1, Theorems 1.2, 1.3 and 1.11, pp. 2–3 and 7"
+    },
+    {
+     "result": "finite-free-multiplicative-convolution",
+     "label": "Definition 1.4 and Theorems 1.5–1.6, pp. 3–4"
+    }
+   ]
+  },
+  {
+   "source": "sbt16-trace",
+   "url": "https://arxiv.org/abs/1604.03023",
+   "version_header": "arXiv:1604.03023v3  [math-ph]  20 Aug 2016",
+   "pdf_page_count": 21,
+   "labels": [
+    {
+     "result": "multivariate-araki-lieb-thirring",
+     "label": "Theorem 3.2, equations (30), (33), pp. 6–7"
+    },
+    {
+     "result": "multivariate-golden-thompson",
+     "label": "Corollary 3.3, equations (32), (38), p. 8"
+    }
+   ]
+  },
+  {
+   "source": "bgvs21-qr",
+   "url": "https://arxiv.org/abs/2111.07976",
+   "version_header": "arXiv:2111.07976v4  [math.NA]  16 Oct 2023",
+   "pdf_page_count": 31,
+   "labels": [
+    {
+     "result": "shifted-qr-rapid-decoupling",
+     "label": "Definition 1.5, Theorem 1.6, pp. 6–8"
+    }
+   ]
+  },
+  {
+   "source": "aek16-dyson",
+   "url": "https://arxiv.org/abs/1604.08188",
+   "version_header": "arXiv:1604.08188v5  [math.PR]  28 Feb 2018",
+   "pdf_page_count": 61,
+   "labels": [
+    {
+     "result": "matrix-dyson-stieltjes-representation",
+     "label": "§2.1 and Proposition 2.1, PDF pp. 4–5; bound (4.1)"
+    }
+   ]
+  }
+ ],
+ "records": [
+  {
+   "id": "interlacing-family-root-selection",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "interlacing-family-root-selection",
+    "title": "Interlacing families select a leaf below the average largest root",
+    "area": "polynomial-interlacing",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "Common interlacing enables deterministic spectral selection.",
+    "hypotheses": [
+     "A finite nonempty rooted family of real-rooted polynomials of equal positive degree with positive leading coefficients; every sibling family is nonempty and has a common interlacing; internal polynomials are sums of their descendants."
+    ],
+    "conclusion": "Some leaf $f$ satisfies $\\maxroot(f)\\le\\maxroot(f_{\\varnothing})$.",
+    "sources": [
+     {
+      "source": "mss13-interlacing",
+      "label": "Theorem 3.4 and Lemma 3.5, PDF p. 6"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "interlacing families"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Selection is existential; no efficient root-computation guarantee is asserted.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Selection is existential; no efficient root-computation guarantee is asserted.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "mss13-interlacing",
+     "label": "Theorem 3.4 and Lemma 3.5, PDF p. 6"
+    }
+   ]
+  },
+  {
+   "id": "mixed-characteristic-polynomial-roots",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "mixed-characteristic-polynomial-roots",
+    "title": "Mixed characteristic polynomials: expectation identity and root bound",
+    "area": "polynomial-interlacing",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$A_1,\\ldots,A_m\\in\\mathbb C^{d\\times d}$ are PSD, $d\\ge1$, $m\\ge0$; $\\mu[A](x):=\\left.\\prod_{i=1}^m(1-\\partial_{z_i})\\det(xI+\\sum_{i=1}^m z_iA_i)\\right|_{z=0}$."
+    ],
+    "conclusion": "$\\mu[A]$ is real-rooted; $A_i=\\mathbb E v_iv_i^*$ for independent finitely supported vectors gives $\\mu[A]=\\mathbb E\\det(xI-\\sum_i v_iv_i^*)$. If $\\sum_iA_i=I$ and $\\operatorname{Tr}A_i\\le\\varepsilon$, then $\\maxroot\\mu[A]\\le(1+\\sqrt\\varepsilon)^2$.",
+    "sources": [
+     {
+      "source": "mss13-interlacing",
+      "label": "Theorem 4.1, Corollary 4.4 and Theorem 5.1, PDF pp. 8–11"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "mixed characteristic polynomial"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Expected polynomial, with its determinant differential definition.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Expected polynomial, with its determinant differential definition.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "mss13-interlacing",
+     "label": "Theorem 4.1, Corollary 4.4 and Theorem 5.1, PDF pp. 8–11"
+    }
+   ]
+  },
+  {
+   "id": "random-frame-spectral-selection",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "random-frame-spectral-selection",
+    "title": "A finite random frame has a spectrally bounded outcome",
+    "area": "matrix-spectral-selection",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "Independent finitely supported $v_1,\\ldots,v_m\\in\\mathbb C^d$, $d,m\\ge1$, $\\varepsilon>0$, $\\sum_{i=1}^m\\mathbb E v_iv_i^*=I$, $\\mathbb E\\|v_i\\|_2^2\\le\\varepsilon$ for all $i\\in[m]$."
+    ],
+    "conclusion": "$\\mathbb P\\{\\|\\sum_i v_iv_i^*\\|_2\\le(1+\\sqrt\\varepsilon)^2\\}>0$.",
+    "sources": [
+     {
+      "source": "mss13-interlacing",
+      "label": "Theorem 1.4, p. 3"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [
+     "interlacing-family-root-selection",
+     "mixed-characteristic-polynomial-roots"
+    ],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "MSS spectral selection"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Positive probability only; no confidence parameter.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Positive probability only; no confidence parameter.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "mss13-interlacing",
+     "label": "Theorem 1.4, p. 3"
+    }
+   ]
+  },
+  {
+   "id": "frame-spectral-partition",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "frame-spectral-partition",
+    "title": "A Parseval frame admits a spectral partition",
+    "area": "matrix-spectral-selection",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$u_1,\\ldots,u_m\\in\\mathbb C^d$, $d,m\\ge1$, $\\sum_{i=1}^m u_iu_i^*=I$, $\\|u_i\\|_2^2\\le\\delta$ for all $i\\in[m]$, $\\delta\\ge0$, $r\\ge1$ integer."
+    ],
+    "conclusion": "There is a partition $S_1,\\ldots,S_r$ with $\\|\\sum_{i\\in S_j}u_iu_i^*\\|_2\\le(r^{-1/2}+\\sqrt\\delta)^2$ for every $j$.",
+    "sources": [
+     {
+      "source": "mss13-interlacing",
+      "label": "Corollary 1.5, p. 3"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [
+     "random-frame-spectral-selection"
+    ],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "Weaver spectral partition"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Empty partition classes are allowed.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Empty partition classes are allowed.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "mss13-interlacing",
+     "label": "Corollary 1.5, p. 3"
+    }
+   ]
+  },
+  {
+   "id": "deterministic-rank-one-sparsification",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "deterministic-rank-one-sparsification",
+    "title": "Deterministic spectral sparsification of an identity decomposition",
+    "area": "matrix-spectral-selection",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "Reweight only linearly many rank-one terms using spectral barriers.",
+    "hypotheses": [
+     "$v_1,\\ldots,v_m\\in\\mathbb R^n$, $n\\ge1$, $\\sum_i v_iv_i^\\top=I$, $d>1$."
+    ],
+    "conclusion": "There are $s_i\\ge0$ with $|\\{i:s_i\\ne0\\}|\\le dn$ and $I\\preceq\\sum_i s_iv_iv_i^\\top\\preceq\\frac{d+1+2\\sqrt d}{d+1-2\\sqrt d}I$.",
+    "sources": [
+     {
+      "source": "bss08-sparsifiers",
+      "label": "Theorem 3.1, pp. 5–6; barrier construction in §3.2"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [
+     "resistance-sampling-spectral-sparsifier"
+    ],
+    "aliases": [
+     "BSS sparsification",
+     "spectral barriers"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "This card specifies the sparse reweighting theorem. The source constructs it deterministically; implementation and operation counts need a separate realization bridge. Unlike resistance sampling, there is no logarithmic factor in the support budget.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. This card specifies the sparse reweighting theorem. The source constructs it deterministically; implementation and operation counts need a separate realization bridge. Unlike resistance sampling, there is no logarithmic factor in the support budget.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "bss08-sparsifiers",
+     "label": "Theorem 3.1, pp. 5–6; barrier construction in §3.2"
+    }
+   ]
+  },
+  {
+   "id": "stable-rank-restricted-invertibility",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "stable-rank-restricted-invertibility",
+    "title": "Stable-rank restricted invertibility for an identity decomposition",
+    "area": "matrix-spectral-selection",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$\\sum_{i=1}^m v_iv_i^\\top=I_n$, $v_i\\in\\mathbb R^n$, $m,n\\ge1$, $L\\in\\mathbb R^{n\\times n}\\setminus\\{0\\}$, $0<\\varepsilon<1$."
+    ],
+    "conclusion": "Some $\\sigma\\subseteq[m]$ has $|\\sigma|\\ge\\lfloor\\varepsilon^2\\|L\\|_F^2/\\|L\\|_2^2\\rfloor$, independent columns $(Lv_i)_{i\\in\\sigma}$, and $\\|\\sum_{i\\in\\sigma}a_iLv_i\\|_2^2>(1-\\varepsilon)^2\\|L\\|_F^2\\|a\\|_2^2/m$ for every nonzero $a\\in\\mathbb R^\\sigma$.",
+    "sources": [
+     {
+      "source": "ss09-restricted",
+      "label": "Theorem 2, p. 2"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "restricted invertibility",
+     "stable-rank column selection"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "The quadratic form is equivalent to the source eigenvalue on the selected span and handles the empty selection vacuously. Source is constructive; this card claims existence.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. The quadratic form is equivalent to the source eigenvalue on the selected span and handles the empty selection vacuously. Source is constructive; this card claims existence.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "ss09-restricted",
+     "label": "Theorem 2, p. 2"
+    }
+   ]
+  },
+  {
+   "id": "singular-tail-restricted-invertibility",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "singular-tail-restricted-invertibility",
+    "title": "Restricted invertibility controlled by singular-value tails",
+    "area": "matrix-spectral-selection",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$A:\\mathbb R^m\\to\\mathbb R^n$, $1\\le k<\\operatorname{rank}A$; $\\sigma_i(A)$ are decreasing and zero-padded, with one-based indices."
+    ],
+    "conclusion": "There is a universal $C>0$ and $\\sigma\\subseteq[m]$, $|\\sigma|=k$, such that $AJ_\\sigma$ is injective and $\\|(AJ_\\sigma)^{-1}:A(\\mathbb R^\\sigma)\\to\\mathbb R^\\sigma\\|_2\\le C\\min_{k<r\\le\\operatorname{rank}A}\\sqrt{\\frac{mr}{(r-k)\\sum_{i=r}^m\\sigma_i(A)^2}}$.",
+    "sources": [
+     {
+      "source": "ny16-restricted",
+      "label": "Theorem 6, p. 4"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [
+     "stable-rank-restricted-invertibility"
+    ],
+    "aliases": [
+     "Naor–Youssef column selection"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "The minimum is over integers. Inversion is on the selected range; no square invertibility or column normalization is required.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. The minimum is over integers. Inversion is on the selected range; no square invertibility or column normalization is required.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "ny16-restricted",
+     "label": "Theorem 6, p. 4"
+    }
+   ]
+  },
+  {
+   "id": "operator-capacity-scaling-identities",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "operator-capacity-scaling-identities",
+    "title": "Operator capacity under invertible scaling and tensor products",
+    "area": "matrix-functions",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$T(X)=\\sum_iA_iXA_i^*$ on $M_n(\\mathbb C)$, $n\\ge1$, and $\\operatorname{cap}(T):=\\inf_{X\\succ0,\\det X=1}\\det T(X)$.",
+     "$B,C$ invertible; $T_{B,C}(X)=BT(CXC^*)B^*$; $T_j$ acts on $M_{n_j}(\\mathbb C)$."
+    ],
+    "conclusion": "$\\operatorname{cap}(T_{B,C})=|\\det B|^2|\\det C|^2\\operatorname{cap}(T)$ and $\\operatorname{cap}(T_1\\otimes T_2)=\\operatorname{cap}(T_1)^{n_2}\\operatorname{cap}(T_2)^{n_1}$.",
+    "sources": [
+     {
+      "source": "ggow15-scaling",
+      "label": "Definition 2.6, Proposition 2.7, Theorem 3.11, PDF pp. 20 and 33"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "operator scaling capacity"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Capacity is an infimum; no optimizer or exact doubly stochastic scaling is assumed.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Capacity is an infimum; no optimizer or exact doubly stochastic scaling is assumed.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "ggow15-scaling",
+     "label": "Definition 2.6, Proposition 2.7, Theorem 3.11, PDF pp. 20 and 33"
+    }
+   ]
+  },
+  {
+   "id": "operator-capacity-near-balanced-certificate",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "operator-capacity-near-balanced-certificate",
+    "title": "Near doubly stochasticity certifies rank and capacity",
+    "area": "matrix-functions",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$T(X)=\\sum_iA_iXA_i^*$ on $M_n(\\mathbb C)$, $n\\ge1$, and $\\operatorname{cap}(T):=\\inf_{X\\succ0,\\det X=1}\\det T(X)$.",
+     "$T(I)=I$ or $T^*(I)=I$; $\\operatorname{ds}(T):=\\|T(I)-I\\|_F^2+\\|T^*(I)-I\\|_F^2$."
+    ],
+    "conclusion": "If $\\operatorname{ds}(T)\\le\\varepsilon\\le1/(n+1)$, then $\\operatorname{rank}T(X)\\ge\\operatorname{rank}X$ for every $X\\succeq0$ and $(1-\\sqrt{n\\varepsilon})^n\\le\\operatorname{cap}(T)\\le1$. Conversely, $\\operatorname{cap}(T)\\ge e^{-\\delta}$, $0\\le\\delta\\le1/6$, implies $\\operatorname{ds}(T)\\le6\\delta$.",
+    "sources": [
+     {
+      "source": "ggow15-scaling",
+      "label": "Theorem 2.12 and Lemmas 3.4, 3.6, pp. 22–23 and 28–31"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [
+     "operator-capacity-scaling-identities"
+    ],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "approximate double stochasticity"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "These normalized capacity certificates do not identify approximate scalability with existence of an exact scaling.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. These normalized capacity certificates do not identify approximate scalability with existence of an exact scaling.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "ggow15-scaling",
+     "label": "Theorem 2.12 and Lemmas 3.4, 3.6, pp. 22–23 and 28–31"
+    }
+   ]
+  },
+  {
+   "id": "permutation-polynomial-norm-comparison",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "permutation-polynomial-norm-comparison",
+    "title": "Permutation polynomials: quantitative norm comparison with free Haar unitaries",
+    "area": "gaussian-comparison",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$d\\ge2$, $N\\ge2$; $S_i^N$ are independent uniform $N$-permutations restricted to $\\mathbf1_N^\\perp$; $u_i$ are free Haar unitaries in the reduced group C*-algebra.",
+     "$P\\in M_D(\\mathbb C)\\otimes\\mathbb C\\langle u,u^*\\rangle$ is self-adjoint of degree $q_0\\ge1$; $K:=\\sup_{V}\\|P(V,V^*)\\|$, supremum over all unitary tuples in all dimensions; $0<\\varepsilon<K-\\|P(u,u^*)\\|$."
+    ],
+    "conclusion": "$\\mathbb P\\{\\|P(S^N,S^{N*})\\|\\ge\\|P(u,u^*)\\|+\\varepsilon\\}\\le\\frac{CD}{N}(Kq_0\\log d/\\varepsilon)^8\\log(eK/\\varepsilon)$, with universal $C$.",
+    "sources": [
+     {
+      "source": "cgtv24-strong",
+      "label": "§3.1 and Theorem 3.9, pp. 8 and 12"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "strong convergence polynomial method"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Restriction removes the trivial representation. The full universal norm K differs from the reduced free norm in the event; this is an upper-tail theorem, not a local law.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Restriction removes the trivial representation. The full universal norm K differs from the reduced free norm in the event; this is an upper-tail theorem, not a local law.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "cgtv24-strong",
+     "label": "§3.1 and Theorem 3.9, pp. 8 and 12"
+    }
+   ]
+  },
+  {
+   "id": "gaussian-polynomial-growing-coefficients",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "gaussian-polynomial-growing-coefficients",
+    "title": "Gaussian polynomial norm bounds with growing matrix coefficients",
+    "area": "gaussian-comparison",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$G_1^N,\\ldots,G_r^N$ are independent normalized GUE matrices (off-diagonal variance $1/N$); $s_i$ are free variance-one semicircular operators; $P$ has $D\\times D$ coefficients, degree $q_0\\ge1$, and $\\|P(s)\\|>0$."
+    ],
+    "conclusion": "There is $c=c(q_0,r)>0$ such that, for $0<\\varepsilon\\le1$ and $D\\le e^{cN\\varepsilon^2}$, $\\mathbb P\\{\\|P(G^N)\\|\\ge(1+\\varepsilon)\\|P(s)\\|\\}\\le\\frac{N}{c\\varepsilon}e^{-cN\\varepsilon^2}$. For any sequence $P_N$ of bounded degree, $\\|P_N(s)\\|>0$, and $D_N=e^{o(N)}$, the corresponding norm ratio tends to one almost surely.",
+    "sources": [
+     {
+      "source": "cgv24-classical",
+      "label": "Theorem 1.1 and Corollary 1.2, pp. 2–3 (GUE specialization)"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "GUE strong convergence"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "The nonzero limiting norm avoids the printed non-strict tail event for the zero polynomial; zero is deterministic.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. The nonzero limiting norm avoids the printed non-strict tail event for the zero polynomial; zero is deterministic.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "cgv24-classical",
+     "label": "Theorem 1.1 and Corollary 1.2, pp. 2–3 (GUE specialization)"
+    }
+   ]
+  },
+  {
+   "id": "haar-polynomial-growing-coefficients",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "haar-polynomial-growing-coefficients",
+    "title": "Haar polynomial norm bounds with growing matrix coefficients",
+    "area": "gaussian-comparison",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "Independent Haar $U_i^N\\in U(N)$; free Haar $u_i$; $P$ of degree $q_0\\ge1$, with $D\\times D$ coefficients and $\\|P(u,u^*)\\|>0$."
+    ],
+    "conclusion": "For $0<c=c(q_0,r)<1$, $1/(c\\sqrt N)\\le\\varepsilon\\le1$ and $D\\le\\exp(cN\\varepsilon^2/\\log^2(N\\varepsilon^2))$, $\\mathbb P\\{\\|P(U^N,U^{N*})\\|\\ge(1+\\varepsilon)\\|P(u,u^*)\\|\\}\\le\\frac{N}{c\\varepsilon}\\exp[-cN\\varepsilon^2/\\log^2(N\\varepsilon^2)]$.",
+    "sources": [
+     {
+      "source": "cgv24-classical",
+      "label": "Theorem 1.5, p. 4 (unitary specialization)"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "Haar strong convergence"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Quantitative unitary bound; the logarithmic loss is retained.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Quantitative unitary bound; the logarithmic loss is retained.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "cgv24-classical",
+     "label": "Theorem 1.5, p. 4 (unitary specialization)"
+    }
+   ]
+  },
+  {
+   "id": "independent-sum-spectrum-universality",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "independent-sum-spectrum-universality",
+    "title": "Independent sums and matching Gaussian matrices have close spectra",
+    "area": "gaussian-comparison",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$X=Z_0+\\sum_i Z_i\\in M_d(\\mathbb C)_{sa}$, $d\\ge1$, deterministic $Z_0$, independent centered Hermitian $Z_i$ with $\\|Z_i\\|_2\\le R<\\infty$ a.s.; $G$ has jointly real-Gaussian Hermitian entries with the same mean and full covariance of real and imaginary entries.",
+     "$\\sigma:=\\|\\sum_i\\mathbb E Z_i^2\\|_2^{1/2}$, $\\sigma_*:=\\sup_{\\|v\\|_2=\\|w\\|_2=1}(\\mathbb E|v^*(X-\\mathbb EX)w|^2)^{1/2}$."
+    ],
+    "conclusion": "With universal $C$, for every $t\\ge0$, $\\mathbb P\\{d_H(\\operatorname{sp}X,\\operatorname{sp}G)>C(\\sigma_*\\sqrt t+R^{1/3}\\sigma^{2/3}t^{2/3}+Rt)\\}\\le de^{-t}$.",
+    "sources": [
+     {
+      "source": "bvh22-universality",
+      "label": "Theorem 2.6, pp. 11–12"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [
+     "cauchy-transform-gaussian-universality"
+    ],
+    "aliases": [
+     "spectrum universality"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Any joint coupling of X and G is allowed. This is Hausdorff distance of spectral sets, not an ordered-eigenvalue coupling.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Any joint coupling of X and G is allowed. This is Hausdorff distance of spectral sets, not an ordered-eigenvalue coupling.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "bvh22-universality",
+     "label": "Theorem 2.6, pp. 11–12"
+    }
+   ]
+  },
+  {
+   "id": "matrix-resolvent-gaussian-universality",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "matrix-resolvent-gaussian-universality",
+    "title": "Matching Gaussian covariance controls the expected matrix resolvent",
+    "area": "gaussian-comparison",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$X=Z_0+\\sum_i Z_i\\in M_d(\\mathbb C)_{sa}$, $d\\ge1$, deterministic $Z_0$, independent centered Hermitian $Z_i$ with $\\|Z_i\\|_2\\le R<\\infty$ a.s.; $G$ has jointly real-Gaussian Hermitian entries with the same mean and full covariance of real and imaginary entries.",
+     "$\\sigma:=\\|\\sum_i\\mathbb E Z_i^2\\|_2^{1/2}$, $\\operatorname{Im}z>0$."
+    ],
+    "conclusion": "$\\|\\mathbb E(zI-X)^{-1}-\\mathbb E(zI-G)^{-1}\\|_2\\le C\\,[R\\sigma^2+R^3\\log(2d)]/(\\operatorname{Im}z)^4$, with universal $C$.",
+    "sources": [
+     {
+      "source": "bvh22-universality",
+      "label": "Theorem 2.10, PDF p. 12"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [
+     "cauchy-transform-gaussian-universality"
+    ],
+    "aliases": [
+     "matrix resolvent universality"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Matrix-valued comparison. log(2d) makes the dimension-one case explicit and only enlarges the bound. Normalized-trace Cauchy comparison is a distinct existing card.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Matrix-valued comparison. log(2d) makes the dimension-one case explicit and only enlarges the bound. Normalized-trace Cauchy comparison is a distinct existing card.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "bvh22-universality",
+     "label": "Theorem 2.10, PDF p. 12"
+    }
+   ]
+  },
+  {
+   "id": "heterogeneous-gaussian-schatten-row-comparison",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "heterogeneous-gaussian-schatten-row-comparison",
+    "title": "Gaussian Schatten norms are controlled by Euclidean row lengths",
+    "area": "gaussian-extreme",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$X$ is real symmetric, $X_{ij}=b_{ij}g_{ij}$ for $i\\ge j$, with independent standard real Gaussians and symmetric $b_{ij}\\ge0$.",
+     "$2\\le p\\le\\infty$; $R_p(X):=\\|((\\sum_jX_{ij}^2)^{1/2})_i\\|_{\\ell_p}$."
+    ],
+    "conclusion": "There is universal $C\\ge1$ with $\\mathbb P\\{R_p(X)\\ge t\\}\\le\\mathbb P\\{\\|X\\|_{S_p}\\ge t\\}\\le C\\mathbb P\\{R_p(X)\\ge t/C\\}$ for $t\\ge0$. In particular $\\mathbb E R_p(X)\\le\\mathbb E\\|X\\|_{S_p}\\le C\\mathbb E R_p(X)$.",
+    "sources": [
+     {
+      "source": "lvhy17-nonhomogeneous",
+      "label": "Corollary 1.4, p. 4"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "dimension-free Gaussian row geometry"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Gaussian structure matters; no arbitrary subgaussian two-sided comparison is claimed.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Gaussian structure matters; no arbitrary subgaussian two-sided comparison is claimed.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "lvhy17-nonhomogeneous",
+     "label": "Corollary 1.4, p. 4"
+    }
+   ]
+  },
+  {
+   "id": "heterogeneous-gaussian-schatten-moments",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "heterogeneous-gaussian-schatten-moments",
+    "title": "Sharp Schatten moments for heterogeneous Gaussian entries",
+    "area": "gaussian-extreme",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$X$ is real symmetric, $X_{ij}=b_{ij}g_{ij}$ for $i\\ge j$, with independent standard real Gaussians and symmetric $b_{ij}\\ge0$.",
+     "$2\\le p<\\infty$; $F_p(b):=(\\sum_i(\\sum_jb_{ij}^2)^{p/2})^{1/p}+\\sqrt p(\\sum_i\\max_jb_{ij}^p)^{1/p}$."
+    ],
+    "conclusion": "$cF_p(b)\\le(\\mathbb E\\|X\\|_{S_p}^p)^{1/p}\\le CF_p(b)$ for universal $0<c\\le C<\\infty$.",
+    "sources": [
+     {
+      "source": "lvhy17-nonhomogeneous",
+      "label": "Theorem 1.1, first estimate, pp. 2–3"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "variance-profile Schatten moments"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Unnormalized Schatten norm. Constants are uniform in dimension, p and all variance profiles.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Unnormalized Schatten norm. Constants are uniform in dimension, p and all variance profiles.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "lvhy17-nonhomogeneous",
+     "label": "Theorem 1.1, first estimate, pp. 2–3"
+    }
+   ]
+  },
+  {
+   "id": "independent-entry-gaussian-extremum",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "independent-entry-gaussian-extremum",
+    "title": "A smaller iid Gaussian matrix dominates all normalized Gram moments",
+    "area": "gaussian-extreme",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$X_{ij}=b_{ij}\\xi_{ij}$ is real $n\\times m$, $n,m\\ge1$, $b_{ij}\\ge0$; independent symmetric $\\xi_{ij}$ satisfy $\\mathbb E\\xi_{ij}^{2p}\\le\\mathbb Eg^{2p}$ for every integer $p\\ge1$, $g\\sim N(0,1)$.",
+     "$\\sigma_1^2=\\max_j\\sum_i b_{ij}^2$, $\\sigma_2^2=\\max_i\\sum_j b_{ij}^2$, $\\sigma_*^2=\\max_{ij}b_{ij}^2$.",
+     "$\\sigma_*=1$; $Y$ is $\\lceil\\sigma_1^2\\rceil\\times\\lceil\\sigma_2^2\\rceil$ with independent $N(0,1)$ entries."
+    ],
+    "conclusion": "$\\mathbb E[\\operatorname{tr}_n(XX^\\top)^p]\\le\\mathbb E[\\operatorname{tr}_{\\lceil\\sigma_1^2\\rceil}(YY^\\top)^p]$ for every integer $p\\ge1$.",
+    "sources": [
+     {
+      "source": "bvh24-extremal",
+      "label": "Model 1.3 and Theorem 1.7, pp. 2 and 4"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "Gaussian extremum principle"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Each trace is divided by its own row dimension; the comparator does not depend on p.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Each trace is divided by its own row dimension; the comparator does not depend on p.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "bvh24-extremal",
+     "label": "Model 1.3 and Theorem 1.7, pp. 2 and 4"
+    }
+   ]
+  },
+  {
+   "id": "independent-entry-small-deviation",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "independent-entry-small-deviation",
+    "title": "Variance-profile spectral-norm tails at the small-deviation scale",
+    "area": "gaussian-extreme",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$X_{ij}=b_{ij}\\xi_{ij}$ is real $n\\times m$, $n,m\\ge1$, $b_{ij}\\ge0$; independent symmetric $\\xi_{ij}$ satisfy $\\mathbb E\\xi_{ij}^{2p}\\le\\mathbb Eg^{2p}$ for every integer $p\\ge1$, $g\\sim N(0,1)$.",
+     "$\\sigma_1^2=\\max_j\\sum_i b_{ij}^2$, $\\sigma_2^2=\\max_i\\sum_j b_{ij}^2$, $\\sigma_*^2=\\max_{ij}b_{ij}^2$.",
+     "$0<\\sigma_1\\le\\sigma_2$, $\\sigma_*>0$, $0\\le t\\le\\sigma_1^{1/3}\\sigma_2/\\sigma_*^{4/3}$."
+    ],
+    "conclusion": "$\\mathbb P\\{\\|X\\|_2>\\sigma_1+\\sigma_2+\\sigma_*^{4/3}\\sigma_1^{-1/3}t\\}\\le\\frac{n\\sigma_*^2}{c\\sigma_1^2}e^{-ct^{3/2}}$ for a universal $c>0$.",
+    "sources": [
+     {
+      "source": "bvh24-extremal",
+      "label": "Theorem 1.4, p. 3"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [
+     "independent-entry-gaussian-extremum"
+    ],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "matrix superconcentration"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Transpose exchanges the row and column scales. Zero profiles are deterministic.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Transpose exchanges the row and column scales. Zero profiles are deterministic.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "bvh24-extremal",
+     "label": "Theorem 1.4, p. 3"
+    }
+   ]
+  },
+  {
+   "id": "finite-free-additive-convolution",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "finite-free-additive-convolution",
+    "title": "Finite free additive convolution: matrix identity and root barriers",
+    "area": "polynomial-interlacing",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$p(x)=\\sum_{i=0}^d(-1)^ia_ix^{d-i}$ and $q(x)=\\sum_{i=0}^d(-1)^ib_ix^{d-i}$ are monic degree-$d$ real-rooted polynomials, $d\\ge1$; $p\\boxplus_dq:=\\sum_{k=0}^d(-1)^kx^{d-k}\\sum_{i+j=k}\\frac{(d-i)!(d-j)!}{d!(d-k)!}a_ib_j$."
+    ],
+    "conclusion": "$p\\boxplus_dq$ is real-rooted; if $p=\\chi_A,q=\\chi_B$ for Hermitian $A,B$ and Haar $U\\in U(d)$, then $p\\boxplus_dq=\\mathbb E\\chi_{A+UBU^*}$. For $w>0$, $\\mathcal R_{p\\boxplus_dq}(w)\\le\\mathcal R_p(w)+\\mathcal R_q(w)$, where $\\mathcal R_p(w)=K_p(w)-1/w$ and $K_p$ inverts $p'/(dp)$ above the largest root. Equality holds precisely when $p$ or $q$ is $(x-\\lambda)^d$.",
+    "sources": [
+     {
+      "source": "mss15-finite-free",
+      "label": "Definition 1.1, Theorems 1.2, 1.3 and 1.11, pp. 2–3 and 7"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "finite free additive convolution"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Expected characteristic polynomial; no spectral-probability guarantee.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Expected characteristic polynomial; no spectral-probability guarantee.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "mss15-finite-free",
+     "label": "Definition 1.1, Theorems 1.2, 1.3 and 1.11, pp. 2–3 and 7"
+    }
+   ]
+  },
+  {
+   "id": "finite-free-multiplicative-convolution",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "finite-free-multiplicative-convolution",
+    "title": "Finite free multiplicative convolution preserves nonnegative roots",
+    "area": "polynomial-interlacing",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$p(x)=\\sum_{i=0}^d(-1)^ia_ix^{d-i}$ and $q(x)=\\sum_{i=0}^d(-1)^ib_ix^{d-i}$ are monic with nonnegative roots, $d\\ge1$; $(p\\boxtimes_dq)(x):=\\sum_{i=0}^d(-1)^ia_ib_i\\binom di^{-1}x^{d-i}$."
+    ],
+    "conclusion": "$p\\boxtimes_dq$ has nonnegative roots and $\\maxroot(p\\boxtimes_dq)\\le\\maxroot(p)\\maxroot(q)$. For $p=\\chi_A,q=\\chi_B$, $A,B\\succeq0$, and Haar $U\\in U(d)$, $p\\boxtimes_dq=\\mathbb E\\chi_{AUBU^*}$.",
+    "sources": [
+     {
+      "source": "mss15-finite-free",
+      "label": "Definition 1.4 and Theorems 1.5–1.6, pp. 3–4"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "finite free multiplicative convolution"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "The product AUBU* need not be Hermitian; the identity is for its characteristic polynomial.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. The product AUBU* need not be Hermitian; the identity is for its characteristic polynomial.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "mss15-finite-free",
+     "label": "Definition 1.4 and Theorems 1.5–1.6, pp. 3–4"
+    }
+   ]
+  },
+  {
+   "id": "multivariate-araki-lieb-thirring",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "multivariate-araki-lieb-thirring",
+    "title": "Multivariate Araki–Lieb–Thirring integral inequality",
+    "area": "matrix-trace",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$A_1,\\ldots,A_k\\succeq0$, $1\\le p<\\infty$, $0<r<1$; $\\beta_r(t)=\\sin(\\pi r)/(2r[\\cosh(\\pi t)+\\cos(\\pi r)])$."
+    ],
+    "conclusion": "$\\log\\||\\prod_{j=1}^k A_j^r|^{1/r}\\|_{S_p}\\le\\int_{\\mathbb R}\\beta_r(t)\\log\\|\\prod_{j=1}^kA_j^{1+it}\\|_{S_p}\\,dt$.",
+    "sources": [
+     {
+      "source": "sbt16-trace",
+      "label": "Theorem 3.2, equations (30), (33), pp. 6–7"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "multivariate ALT"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Products keep their displayed order. PSD endpoints use the positive-regularization limit, with log(0)=-infinity; r=1 is equality.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Products keep their displayed order. PSD endpoints use the positive-regularization limit, with log(0)=-infinity; r=1 is equality.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "sbt16-trace",
+     "label": "Theorem 3.2, equations (30), (33), pp. 6–7"
+    }
+   ]
+  },
+  {
+   "id": "multivariate-golden-thompson",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "multivariate-golden-thompson",
+    "title": "Multivariate Golden–Thompson through an ordered integral",
+    "area": "matrix-trace",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$H_1,\\ldots,H_k$ Hermitian, $1\\le p<\\infty$, $\\beta_0(t)=\\pi/[2(\\cosh(\\pi t)+1)]$."
+    ],
+    "conclusion": "$\\log\\|e^{\\sum_jH_j}\\|_{S_p}\\le\\int_{\\mathbb R}\\beta_0(t)\\log\\|\\prod_{j=1}^k e^{(1+it)H_j}\\|_{S_p}\\,dt$.",
+    "sources": [
+     {
+      "source": "sbt16-trace",
+      "label": "Corollary 3.3, equations (32), (38), p. 8"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [
+     "multivariate-araki-lieb-thirring"
+    ],
+    "uses_defs": [],
+    "variants": [
+     "golden-thompson"
+    ],
+    "aliases": [
+     "ordered multivariate trace inequality"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "The beta densities integrate to one. This does not assert the false naive product-of-three-exponentials bound.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. The beta densities integrate to one. This does not assert the false naive product-of-three-exponentials bound.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "sbt16-trace",
+     "label": "Corollary 3.3, equations (32), (38), p. 8"
+    }
+   ]
+  },
+  {
+   "id": "shifted-qr-rapid-decoupling",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "shifted-qr-rapid-decoupling",
+    "title": "A deterministic shifted-QR strategy rapidly decouples a Hessenberg matrix",
+    "area": "matrix-factorizations",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$H_0\\in\\mathbb C^{n\\times n}$, $n\\ge2$, is upper Hessenberg and diagonalizable, $\\kappa_V(H_0):=\\inf_{H_0=V\\Lambda V^{-1}}\\|V\\|_2\\|V^{-1}\\|_2\\le B$, $B\\ge1$; $k\\in\\{2,4,8,\\ldots\\}$, $k<n$, $0<\\delta<1$.",
+     "$\\operatorname{dec}_\\delta$ is the first strategy iteration with some $|(H_t)_{i+1,i}|\\le\\delta\\|H_t\\|_2$; $\\operatorname{OptRitz}$ returns 2-optimal degree-k Ritz values in cost $T_{\\rm Ritz}(k,2,\\delta)$ as defined by the source."
+    ],
+    "conclusion": "The source strategy $\\operatorname{Sh}_{k,B}$ has $\\operatorname{dec}_\\delta(H_0)\\le\\lceil4\\log_2(1/\\delta)\\rceil$ and, before decoupling, per-iteration cost at most $(\\log_2 k+N_{\\rm net}(0.002B^{-(8\\log_2k+4)/(k-1)}))\\,7kn^2+T_{\\rm Ritz}(k,2,\\delta)+\\log_2k$, where $N_{\\rm net}(\\eta)\\le4/\\eta^2$.",
+    "sources": [
+     {
+      "source": "bgvs21-qr",
+      "label": "Definition 1.5, Theorem 1.6, pp. 6–8"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [
+     "hessenberg-reduction",
+     "bauer-fike"
+    ],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "Hessenberg shifted QR"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Exact arithmetic; degree-k strategy iterations are counted. Ceiling makes the integer-time rounding explicit. Realizing the §4 strategy and Ritz-finder contract is part of the target; arbitrary practical shifts are not covered.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Exact arithmetic; degree-k strategy iterations are counted. Ceiling makes the integer-time rounding explicit. Realizing the §4 strategy and Ritz-finder contract is part of the target; arbitrary practical shifts are not covered.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "bgvs21-qr",
+     "label": "Definition 1.5, Theorem 1.6, pp. 6–8"
+    }
+   ]
+  },
+  {
+   "id": "matrix-dyson-stieltjes-representation",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "matrix-dyson-stieltjes-representation",
+    "title": "The matrix Dyson solution is a compactly supported matrix Stieltjes transform",
+    "area": "matrix-equations",
+    "kind": "theorem",
+    "status": "candidate",
+    "informal": "",
+    "hypotheses": [
+     "$A\\in M_N(\\mathbb C)$ Hermitian, $N\\ge1$; complex-linear $\\mathcal S:M_N\\to M_N$ preserves PSD matrices and is self-adjoint for $\\langle R,T\\rangle=N^{-1}\\operatorname{Tr}(R^*T)$.",
+     "$M:\\mathbb H\\to M_N(\\mathbb C)$ is the holomorphic positive-imaginary solution of $-M(z)^{-1}=zI-A+\\mathcal S[M(z)]$."
+    ],
+    "conclusion": "There is a unique PSD matrix-valued measure $V$ with $V(\\mathbb R)=I$, supported on $[-\\kappa,\\kappa]$, $\\kappa=\\|A\\|_2+2\\|\\mathcal S\\|_{\\mathrm{op}\\to\\mathrm{op}}^{1/2}$, such that $M(z)=\\int(\\tau-z)^{-1}V(d\\tau)$; here the norm of $\\mathcal S$ is induced by the matrix spectral norm. Also $\\|M(z)\\|_2\\le1/\\operatorname{Im}z$.",
+    "sources": [
+     {
+      "source": "aek16-dyson",
+      "label": "§2.1 and Proposition 2.1, PDF pp. 4–5; bound (4.1)"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "matrix Dyson equation",
+     "matrix-valued Stieltjes transform"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "foundation",
+     "source-reviewed"
+    ],
+    "notes": "Deterministic equation theory. The target assumes the positive-imaginary holomorphic solution; it does not bundle the separately sourced existence theorem, A1/A2 stability, or a probabilistic local law.",
+    "updated_at": "2026-10-16"
+   },
+   "readback": "Reviewed the original source labels listed on this card and searched existing atlas/declaration entries for overlap. The mathematical claim is retained as an open candidate, with explicit assumptions and conventions. Deterministic equation theory. The target assumes the positive-imaginary holomorphic solution; it does not bundle the separately sourced existence theorem, A1/A2 stability, or a probabilistic local law.",
+   "evidence": [],
+   "source_readback": [
+    {
+     "source": "aek16-dyson",
+     "label": "§2.1 and Proposition 2.1, PDF pp. 4–5; bound (4.1)"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1231 @@
+{
+ "date": "2026-10-16",
+ "baseline_commit": "faef0a270d762f0bf0e90603544d50f289873d0e",
+ "scope": "The twelve direct probability/concentration reroute targets; seven deep-input targets remain open by user choice. A separately reviewed scalar Gaussian comparison is exposed as a reusable proved addition.",
+ "source_derivations": "docs/derivations/random_matrices_probability_concentration_reroutes_2026_10_16.tex",
+ "method": "Read back actual source clauses, native laws, expectations, mathematical definitions and checked Lean theorem statements. Independent clause and constant reviews supplement kernel checks. All twelve retained source scopes are complete; final integration checks are recorded separately.",
+ "records": [
+  {
+   "id": "chi-square-neg-moment",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "chi-square-neg-moment",
+    "title": "Negative moments of chi-square",
+    "aliases": [
+     "inverse chi-square moments",
+     "negative moments of chi-square",
+     "inverse Gamma moments"
+    ],
+    "area": "gaussian-extreme",
+    "kind": "identity",
+    "status": "candidate",
+    "informal": "For $S\\sim\\chi_d^2$, negative moments have a Gamma-function formula. The inverse second moment is explicit, and a uniform rooted-moment estimate is available when the exponent stays at least one half below the integrability threshold.",
+    "hypotheses": [
+     "$d\\ge1$ is an integer and $S=\\sum_{i=1}^d g_i^2$ for independent standard real Gaussian $g_i$",
+     "For the exact formula: $0\\le q<d/2$. For the rooted bound: $q>0$ and $d\\ge2q+1$. For the inverse second moment: $d\\ge5$"
+    ],
+    "conclusion": "$\\mathbb E S^{-q}=\\Gamma(d/2-q)/(2^q\\Gamma(d/2))$. For $q>0$ and $d\\ge2q+1$, $(\\mathbb ES^{-q})^{1/q}\\le4/d$; for $d\\ge5$ the constant can be $3$. Also $\\mathbb ES^{-2}=1/((d-2)(d-4))$ for $d\\ge5$.",
+    "sources": [
+     {
+      "source": "hmt11",
+      "label": "Lemma A.10 and its Gamma-moment proof; Proposition A.6 / Lemma A.9 for the inverse second moment"
+     },
+     {
+      "source": "tw23",
+      "label": "App. B"
+     }
+    ],
+    "formalizations": [
+     {
+      "library": "nlalib",
+      "decl": "NLAlib.integrable_rpow_inv_sum_sq_gaussianVector",
+      "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+      "status": "proved",
+      "partial": true,
+      "usage": "Apply `NLAlib.integrable_rpow_inv_sum_sq_gaussianVector` with its displayed hypotheses: **Negative moments of a chi-square variable are finite.** For `0 ≤ q < d/2`, `(χ²_d)^{-q}` is integrable."
+     },
+     {
+      "library": "nlalib",
+      "decl": "NLAlib.integral_rpow_inv_sum_sq_gaussianVector",
+      "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+      "status": "proved",
+      "partial": true,
+      "usage": "Apply `NLAlib.integral_rpow_inv_sum_sq_gaussianVector` with its displayed hypotheses: **Negative moments of a chi-square variable.** For `0 ≤ q < d/2`, `E[(χ²_d)^{-q}] = Γ(d/2 - q) / (2^q Γ(d/2))`."
+     },
+     {
+      "library": "nlalib",
+      "decl": "NLAlib.integral_rpow_inv_sum_sq_gaussianVector_lt",
+      "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+      "status": "proved",
+      "partial": true,
+      "usage": "Apply `NLAlib.integral_rpow_inv_sum_sq_gaussianVector_lt` with its displayed hypotheses: **`L^{(d-1)/2}` bound for the inverse chi-square.** For `d ≥ 5`, `E[(χ²_d)^{-(d-1)/2}] < (3/d)^{(d-1)/2}` (integrability is `integrable_rpow_inv_sum_sq_gaussianVector` at `q = (d-1)/2`)."
+     },
+     {
+      "library": "nlalib",
+      "decl": "NLAlib.integrable_inv_sum_sq_pow_two_gaussianVector",
+      "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+      "status": "proved",
+      "partial": true,
+      "usage": "Apply `NLAlib.integrable_inv_sum_sq_pow_two_gaussianVector` with its displayed hypotheses: For `d ≥ 5`, `(χ²_d)^{-2}` is integrable."
+     },
+     {
+      "library": "nlalib",
+      "decl": "NLAlib.integral_inv_sum_sq_pow_two_gaussianVector",
+      "module": "NLAlib.Probability.ChiSquare.ChiSquare",
+      "status": "proved",
+      "partial": true,
+      "usage": "Apply `NLAlib.integral_inv_sum_sq_pow_two_gaussianVector` with its displayed hypotheses: **Second inverse moment of a chi-square variable.** For `d ≥ 5`, `E[(χ²_d)^{-2}] = 1/((d-2)(d-4))`."
+     }
+    ],
+    "depends_on": [
+     "chi-square-lower-tail"
+    ],
+    "uses_defs": [
+     "NLAlib.gaussianVector"
+    ],
+    "variants": [
+     "inverse-chi-square-moment"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 3,
+    "priority": "now",
+    "tags": [
+     "foundation",
+     "port"
+    ],
+    "notes": "Coverage checked against current main on 2026-10-15: the exact Gamma formula and its integrability are already proved for 0<=q<d/2, and the inverse second moment is proved for d>=5. A sorry-free theorem also proves E[S^(-(d-1)/2)]<(3/d)^((d-1)/2) for d>=5. The full card remains a candidate because a theorem linking that endpoint to every smaller positive exponent, taking the root, and handling dimensions 2–4 is not indexed for this card. Mathematically, monotonicity of positive rooted moments on a probability space gives the d>=5 bound. The endpoint q=(d-1)/2 values in dimensions 2,3,4 give d times the rooted moment equal to pi, 3, and 2*pi^(1/3), respectively, all below 4. The uniform bound must not be read as valid for every 2q<d without the displayed gap condition; it diverges as q approaches d/2 at fixed d. No Lean statement or proof-status tag was changed.",
+    "updated_at": "2026-10-15"
+   },
+   "readback": "The existing exact Gamma formula and inverse second moment are retained with their stated domains. Rooted-moment monotonicity extends the endpoint estimate to every positive q with 2q+1<=d. Dimensions 2,3,4 are checked separately from the exact formula and Gamma identities. Constants4/d in all admissible dimensions and3/d for d>=5 match the card; no extension to all q<d/2 is claimed.",
+   "evidence": [
+    "NLAlib.integrable_inv_sum_sq_pow_two_gaussianVector",
+    "NLAlib.integrable_rpow_inv_sum_sq_gaussianVector",
+    "NLAlib.integral_inv_sum_sq_pow_two_gaussianVector",
+    "NLAlib.integral_rpow_inv_sum_sq_gaussianVector",
+    "NLAlib.integral_rpow_inv_sum_sq_gaussianVector_root_le_four_div",
+    "NLAlib.integral_rpow_inv_sum_sq_gaussianVector_root_le_three_div",
+    "NLAlib.integral_rpow_inv_sum_sq_root_le_four_div_of_hasLaw"
+   ],
+   "source_clauses": [
+    {
+     "statement": "For 0<=q<d/2 the negative moment is integrable and equals Gamma(d/2-q)/(2^q Gamma(d/2)).",
+     "decls": [
+      "NLAlib.integrable_rpow_inv_sum_sq_gaussianVector",
+      "NLAlib.integral_rpow_inv_sum_sq_gaussianVector"
+     ]
+    },
+    {
+     "statement": "For q>0 and 2q+1<=d the rooted negative moment is <=4/d, improved to3/d if d>=5; the bound transports along the standard Gaussian vector law.",
+     "decls": [
+      "NLAlib.integral_rpow_inv_sum_sq_gaussianVector_root_le_four_div",
+      "NLAlib.integral_rpow_inv_sum_sq_gaussianVector_root_le_three_div",
+      "NLAlib.integral_rpow_inv_sum_sq_root_le_four_div_of_hasLaw"
+     ]
+    },
+    {
+     "statement": "For d>=5 the second inverse moment is integrable and exactly1/((d-2)(d-4)).",
+     "decls": [
+      "NLAlib.integrable_inv_sum_sq_pow_two_gaussianVector",
+      "NLAlib.integral_inv_sum_sq_pow_two_gaussianVector"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "gaussian-width-def",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "gaussian-width-def",
+    "title": "Gaussian width of a compact set",
+    "area": "gaussian-concentration-tools",
+    "kind": "definition",
+    "difficulty": 2,
+    "informal": "Gaussian width is the expected support function of a nonempty compact subset of Euclidean space.",
+    "hypotheses": [
+     "$T\\subseteq\\mathbb R^n$ is nonempty and compact",
+     "$g\\sim N(0,I_n)$"
+    ],
+    "conclusion": "$w(T):=\\mathbb E\\sup_{x\\in T}\\langle g,x\\rangle$; establish finite integrability and the basic translation, orthogonal-invariance and convex-hull identities needed for matrix embeddings.",
+    "sources": [
+     {
+      "source": "tropp20-randomized-notes",
+      "label": "Definition 6.4 and Example 6.5"
+     }
+    ],
+    "depends_on": [
+     "scalar-laws-def",
+     "rotation-invariance"
+    ],
+    "aliases": [
+     "Gaussian width",
+     "Gaussian mean width",
+     "expected support function"
+    ],
+    "notes": "Audit: the support function is finite and Lipschitz with constant sup_{x in T}||x||, so it is measurable and integrable against a Gaussian vector. Translation adds the centered scalar <g,a>, orthogonal invariance follows from the Gaussian law, and convexification leaves a support function unchanged. For a nonzero subspace L, the width of its unit sphere equals E||P_L g||. Reuse the existing Gaussian-vector law. This is ordinary Gaussian width, not E sup |<g,x>|; the empty set is excluded explicitly.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "priority": "next",
+    "tags": [
+     "foundation"
+    ],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "gaussianWidth is the integral of the ordinary real support function against Mathlib stdGaussian on an arbitrary finite-dimensional real inner-product space. Compactness and nonemptiness give finite support attainment, radius domination, continuity and integrability. Translation, orthogonal invariance and convexification are proved against the actual Gaussian law; the absolute value is not inserted in the supremum.",
+   "evidence": [
+    "NLAlib.gaussianWidth_closure_convexHull",
+    "NLAlib.gaussianWidth_convexHull",
+    "NLAlib.gaussianWidth_image_add",
+    "NLAlib.gaussianWidth_image_linearIsometryEquiv",
+    "NLAlib.integrable_realSupportFunction_stdGaussian"
+   ],
+   "source_clauses": [
+    {
+     "statement": "The expected ordinary support function of every nonempty compact set is integrable.",
+     "decls": [
+      "NLAlib.integrable_realSupportFunction_stdGaussian"
+     ]
+    },
+    {
+     "statement": "Ordinary Gaussian width is invariant under translations.",
+     "decls": [
+      "NLAlib.gaussianWidth_image_add"
+     ]
+    },
+    {
+     "statement": "Ordinary Gaussian width is invariant under orthogonal linear isometry equivalences.",
+     "decls": [
+      "NLAlib.gaussianWidth_image_linearIsometryEquiv"
+     ]
+    },
+    {
+     "statement": "Taking a convex hull or its closure leaves Gaussian width unchanged.",
+     "decls": [
+      "NLAlib.gaussianWidth_convexHull",
+      "NLAlib.gaussianWidth_closure_convexHull"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "gaussian-width-restricted-minimum",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "gaussian-width-restricted-minimum",
+    "title": "Gaussian width controls a restricted minimum singular value",
+    "area": "gaussian-extreme",
+    "kind": "bound",
+    "difficulty": 4,
+    "informal": "A standard Gaussian matrix has a uniformly positive action on a compact part of the unit sphere once the number of rows dominates its Gaussian width.",
+    "hypotheses": [
+     "$m,n\\ge1$ and $G\\in\\mathbb R^{m\\times n}$ has independent standard normal entries",
+     "$T\\subseteq S^{n-1}$ is nonempty and compact",
+     "$t\\ge0$"
+    ],
+    "conclusion": "$\\mathbb P\\{\\inf_{x\\in T}\\|Gx\\|_2<\\sqrt m-1-w(T)-t\\}\\le e^{-t^2/2}$.",
+    "sources": [
+     {
+      "source": "tropp20-randomized-notes",
+      "label": "Theorem 6.8, lower bound with normalization converted to standard Gaussian entries"
+     },
+     {
+      "source": "gordon85",
+      "label": "Gaussian min-max comparison underlying the restricted minimum estimate"
+     }
+    ],
+    "depends_on": [
+     "gaussian-width-def",
+     "gordon-minimax",
+     "gaussian-concentration"
+    ],
+    "aliases": [
+     "Gordon escape through a mesh",
+     "restricted Gaussian singular value",
+     "Gaussian width embedding lower bound"
+    ],
+    "notes": "Derivation audit: Gordon's comparison gives E inf_{x in T}||Gx|| >= E||g_m||-w(T), and E||g_m|| >= sqrt(m)-1. The restricted infimum is 1-Lipschitz as a function of G in Frobenius norm, so Gaussian concentration yields the displayed tail. Compactness gives a measurable attained infimum. The lecture uses Gamma=G/sqrt(m); all factors have been converted explicitly. A strict event is used so no atom claim is silently required when the threshold is zero or negative.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "priority": "next",
+    "tags": [
+     "foundation"
+    ],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "restrictedMinimum is the actual infimum of Euclidean matrix-action lengths over T, attained for compact nonempty T. Its spectral and Frobenius perturbation bounds are deterministic. Finite nets of T and the row unit sphere give genuine finite Gordon processes and actual Gaussian expectations. Passing the net scale to zero gives E restrictedMinimum>=E||g_m||-w(T)>=sqrt(m)-1-w(T). Gaussian concentration of the negative minimum yields exactly the strict failure event with exp(-t^2/2); the HasLaw corollary needs no extra measurability or atom assumption. n=0 is harmless because a nonempty unit-sphere set then cannot exist.",
+   "evidence": [
+    "NLAlib.integrable_restrictedMinimum_gaussianMatrix",
+    "NLAlib.integral_norm_sub_gaussianWidth_le_integral_restrictedMinimum",
+    "NLAlib.measureReal_restrictedMinimum_lt_sqrt_sub_gaussianWidth_le",
+    "NLAlib.measureReal_restrictedMinimum_lt_sqrt_sub_gaussianWidth_le_of_hasLaw",
+    "NLAlib.sqrt_sub_one_sub_gaussianWidth_le_integral_restrictedMinimum"
+   ],
+   "source_clauses": [
+    {
+     "statement": "The compact restricted minimum is integrable and its expectation is bounded below by sqrt(m)-1-w(T).",
+     "decls": [
+      "NLAlib.integrable_restrictedMinimum_gaussianMatrix",
+      "NLAlib.integral_norm_sub_gaussianWidth_le_integral_restrictedMinimum",
+      "NLAlib.sqrt_sub_one_sub_gaussianWidth_le_integral_restrictedMinimum"
+     ]
+    },
+    {
+     "statement": "For t>=0 the strict lower-tail failure probability is at most exp(-t^2/2), both for the standard matrix law and every random matrix with that law.",
+     "decls": [
+      "NLAlib.measureReal_restrictedMinimum_lt_sqrt_sub_gaussianWidth_le",
+      "NLAlib.measureReal_restrictedMinimum_lt_sqrt_sub_gaussianWidth_le_of_hasLaw"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "gaussian-series-partial-transpose-norm",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "gaussian-series-partial-transpose-norm",
+    "title": "A noncommutativity parameter sharpens Gaussian trace moments and spectral norm",
+    "area": "gaussian-chaos",
+    "kind": "bound",
+    "status": "candidate",
+    "informal": "Finite Hermite-degree truncation gives a Gaussian matrix-series bound with the correct square-root logarithmic correction and an amplification-invariant coefficient parameter.",
+    "hypotheses": [
+     "$X=\\sum_{i=1}^s g_iA_i$, with fixed Hermitian $A_i\\in\\mathbb C^{d\\times d}$, $d,s\\ge1$, and independent real $g_i\\sim N(0,1)$",
+     "$\\sigma^2=\\|\\sum_i A_i^2\\|_2$, $\\kappa^2=\\lambda_{\\max}([A_jA_i]_{i,j})$, and $p\\ge1$ is an integer; $\\operatorname{tr}_d=d^{-1}\\operatorname{Tr}$"
+    ],
+    "conclusion": "$\\left(\\mathbb E\\operatorname{tr}_d(X^{2p})\\right)^{1/(2p)}\\le2\\sqrt{\\sigma^2+(p-1)\\kappa^2}$, and $\\mathbb E\\|X\\|_2\\le2\\sigma+6\\kappa\\sqrt{\\log d}$. Equivalently the unnormalized trace bound gains a factor $d^{1/(2p)}$.",
+    "sources": [
+     {
+      "source": "bknpw26-fock",
+      "label": "Theorem 1.5; §2 Theorem 2.1, Proposition 2.3 and Corollary 2.4; Appendix A.2"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [
+     "coefficient-block-partial-transpose",
+     "gaussian-matrix-def"
+    ],
+    "uses_defs": [],
+    "variants": [
+     "gaussian-series-covariance-sensitive-norm"
+    ],
+    "aliases": [
+     "strengthened noncommutative Khintchine",
+     "finite Hermite truncation norm bound",
+     "Fock-space Gaussian matrix concentration"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 5,
+    "priority": "next",
+    "tags": [
+     "source-reviewed"
+    ],
+    "notes": "The source trace is normalized; NLAlib matrix trace is not. The spectral-norm estimate includes d=1 by a separate scalar Gaussian argument, since Appendix A.2 assumes d>=2. All-zero coefficients are handled directly. This does not claim that kappa is a norm or satisfies the triangle inequality. For each p, the proof uses the finite complex Hermite space of dimension binomial(s+p,p); the vacuum identity is exact at that cutoff and does not require convergence of unbounded Fock operators.",
+    "updated_at": "2026-10-15"
+   },
+   "readback": "All source clauses hold for actual complex Hermitian coefficient arrays, arbitrary nonempty finite coefficient and matrix index types, actual joint standard real Gaussian measures and arbitrary-space HasLaw transport. The normalized trace moment is expressed explicitly as ordinary trace divided by card(d); its unnormalized version has exactly the required card(d)^(1/(2p)) factor. The coefficient block may be indefinite: the proof uses its largest real eigenvalue, never its spectral norm. Native probabilists Hermite polynomials are shown orthonormal by polynomial Gaussian integration by parts with all unbounded polynomial integrability discharged. A finite total-degree basis, restricted cutoff commutator, number operator and exact vacuum identity give the finite deterministic norm and actual even moments. The moment optimization yields correction constant four, which implies the advertised constant six and log(2d) intermediate estimate. Dimension one, kappa=0, singular and all-zero arrays are included. The finite model does not assume an abstract moment/expectation certificate or Hermite completeness. The amplification invariance and kappa<=min(sigma,v) properties are supplied by the already proved coefficient-block-partial-transpose dependency.",
+   "evidence": [
+    "NLAlib.integral_normalized_re_trace_gaussianSeries_even_pow_rpow_le_coefficientBlock",
+    "NLAlib.integral_normalized_re_trace_gaussianSeries_even_pow_rpow_le_coefficientBlock_of_hasLaw",
+    "NLAlib.integral_re_trace_gaussianSeries_even_pow_eq_frobSq_hermiteVacuum",
+    "NLAlib.integral_re_trace_gaussianSeries_even_pow_le_coefficientBlock",
+    "NLAlib.integral_re_trace_gaussianSeries_even_pow_rpow_le_coefficientBlock",
+    "NLAlib.integral_re_trace_gaussianSeries_even_pow_rpow_le_coefficientBlock_of_hasLaw",
+    "NLAlib.integral_specNorm_gaussianSeries_le_partialTranspose",
+    "NLAlib.integral_specNorm_gaussianSeries_le_partialTranspose_four",
+    "NLAlib.integral_specNorm_gaussianSeries_le_partialTranspose_log_two",
+    "NLAlib.integral_specNorm_gaussianSeries_le_partialTranspose_of_hasLaw",
+    "NLAlib.specNorm_hermiteSeriesCreation_add_conjTranspose_le",
+    "NLAlib.specNorm_sq_hermiteSeriesCreation_le"
+   ],
+   "source_clauses": [
+    {
+     "statement": "For every integer p>=1 the normalized rooted actual even Gaussian trace moment is at most 2 sqrt(sigma^2+(p-1)kappa^2), with no loss in the leading constant or cutoff index.",
+     "decls": [
+      "NLAlib.integral_normalized_re_trace_gaussianSeries_even_pow_rpow_le_coefficientBlock",
+      "NLAlib.integral_normalized_re_trace_gaussianSeries_even_pow_rpow_le_coefficientBlock_of_hasLaw"
+     ]
+    },
+    {
+     "statement": "The equivalent unnormalized rooted trace bound includes exactly the dimension factor d^(1/(2p)).",
+     "decls": [
+      "NLAlib.integral_re_trace_gaussianSeries_even_pow_rpow_le_coefficientBlock",
+      "NLAlib.integral_re_trace_gaussianSeries_even_pow_rpow_le_coefficientBlock_of_hasLaw"
+     ]
+    },
+    {
+     "statement": "The actual expected matrix spectral norm is at most 2 sigma+6 kappa sqrt(log d) for all d,s>=1, with HasLaw transport and all zero/degenerate arrays included.",
+     "decls": [
+      "NLAlib.integral_specNorm_gaussianSeries_le_partialTranspose",
+      "NLAlib.integral_specNorm_gaussianSeries_le_partialTranspose_of_hasLaw"
+     ]
+    },
+    {
+     "statement": "The intermediate bound 2 sigma+4 kappa sqrt(log(2d)) holds; in fact the stronger log(d) bound with constant four is proved.",
+     "decls": [
+      "NLAlib.integral_specNorm_gaussianSeries_le_partialTranspose_four",
+      "NLAlib.integral_specNorm_gaussianSeries_le_partialTranspose_log_two"
+     ]
+    },
+    {
+     "statement": "The moment theorem is realized by an actual finite Hermite model with exact vacuum identity and the required largest-eigenvalue compression bound.",
+     "decls": [
+      "NLAlib.integral_re_trace_gaussianSeries_even_pow_eq_frobSq_hermiteVacuum",
+      "NLAlib.integral_re_trace_gaussianSeries_even_pow_le_coefficientBlock",
+      "NLAlib.specNorm_sq_hermiteSeriesCreation_le",
+      "NLAlib.specNorm_hermiteSeriesCreation_add_conjTranspose_le"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "gaussian-series-covariance-sensitive-norm",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "gaussian-series-covariance-sensitive-norm",
+    "title": "Covariance-sensitive norm bound for a Hermitian Gaussian series",
+    "area": "gaussian-chaos",
+    "kind": "bound",
+    "difficulty": 5,
+    "priority": "later",
+    "informal": "The expected norm of a centered Hermitian Gaussian series has a leading term twice its usual variance scale and a smaller correction governed by the full covariance of its entries.",
+    "hypotheses": [
+     "$d\\ge2$, $A_1,\\ldots,A_s\\in\\mathbb C^{d\\times d}$ are Hermitian, and the $g_i$ are independent standard real normal variables",
+     "$X=\\sum_i g_iA_i$",
+     "$\\sigma^2=\\|\\sum_iA_i^2\\|_2$ and $v^2=\\|\\sum_i\\operatorname{vec}(A_i)\\operatorname{vec}(A_i)^*\\|_2$, with vectorization using the unnormalized Frobenius inner product"
+    ],
+    "conclusion": "There exists a universal constant $C>0$ such that $\\mathbb E\\|X\\|_2\\le2\\sigma+C\\sqrt{\\sigma v}\\,(\\log d)^{3/4}$ for every such series.",
+    "sources": [
+     {
+      "source": "bbvh23-free",
+      "label": "Corollary 2.2 and Lemma 2.5; proof chain Proposition 4.6, §§5–6 and §7.1"
+     }
+    ],
+    "depends_on": [
+     "matrix-gaussian-series",
+     "noncommutative-khintchine",
+     "isserlis",
+     "gaussian-integration-by-parts",
+     "gaussian-concentration"
+    ],
+    "aliases": [
+     "intrinsic freeness",
+     "sharp Gaussian matrix norm",
+     "full covariance Gaussian bound",
+     "Bandeira Boedihardjo van Handel"
+    ],
+    "tags": [
+     "foundation",
+     "random-matrix",
+     "covariance",
+     "proof-prerequisites-needed"
+    ],
+    "notes": "Expanded audit: reconstructed the proof chain through BBvH §§4.2–6.3 and §7.1, rather than only the corollary. Covariance diagonalization and the Hilbert–Schmidt basis identity give the alignment bound w(X,X')^4<=v(X)sigma(X)v(X')sigma(X'). The diagonal/Wigner Gaussian lift preserves variance and suppresses entry covariance; signed-permutation symmetry cancels the factorized derivative terms, leaving crossing contractions controlled by Lemma 4.5. The resolvent-moment differential inequality uses five resolvent powers and integrates to the 1/3 limiting coefficient in Theorem 6.1. Wick expansion, vanishing crossing pairings and removal of adjacent noncrossing pairs supply the required weak asymptotic freeness. A spectral net and Gaussian resolvent concentration give Theorem 2.1; tail integration and the free-series bound <=2 sigma give the displayed norm estimate. Audit corrections: the exact Wigner covariance equality v(X_0^N)=sqrt(2/N)v(X) requires N>=2 (use an upper bound for N=1); integrating the displayed derivative yields finite-N factor (1+sqrt(2/N))^2/3, although the text prints (1+2/N)^2/3. Both tend to 1/3, so the final theorem is unchanged. Treat zero variance, p=1 in moment differentiation, zero spectral-net mesh and zero resolvent-comparison epsilon separately. Remaining substantial prerequisites are multilinear complex interpolation for noncommutative Lp spaces and a faithful free semicircular C*-model with its norm/spectral calculus; these were identified and their use checked, not independently formalized or certified. Full d^2-dimensional entry covariance uses unnormalized Hilbert–Schmidt geometry, whereas proof traces are normalized. This remains an unproved later-priority candidate.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "For arbitrary finite Hermitian complex coefficient arrays and matrix dimension d>=2, including an empty coefficient family, the actual expected spectral norm satisfies 2 sigma+C sqrt(sigma*v)(log d)^(3/4) with explicit universal strictly positive C=6/(log 2)^(1/4). The covariance matrix is exactly the already defined sum of unnormalized Frobenius vectorized coefficient outer products. The proof uses the actual sharp partial-transpose Gaussian theorem and its existing kappa<=min(sigma,v) inequality, hence kappa<=sqrt(sigma*v), followed by the elementary logarithm comparison. The actual standard Gaussian measure and arbitrary-space joint-law transports are both provided. No free comparison, asymptotic freeness or concentration result is assumed, and no two-sided free-spectrum comparison is claimed.",
+   "evidence": [
+    "NLAlib.covarianceSensitiveCorrectionConstant_pos",
+    "NLAlib.integral_specNorm_gaussianSeries_le_covarianceSensitive",
+    "NLAlib.integral_specNorm_gaussianSeries_le_covarianceSensitive_of_hasLaw"
+   ],
+   "source_clauses": [
+    {
+     "statement": "There is one universal positive real constant C valid for every Hermitian series.",
+     "decls": [
+      "NLAlib.covarianceSensitiveCorrectionConstant_pos"
+     ]
+    },
+    {
+     "statement": "The actual expected norm is bounded by 2 sigma+C sqrt(sigma*v)(log d)^(3/4) using unnormalized full entry covariance, for every d>=2.",
+     "decls": [
+      "NLAlib.integral_specNorm_gaussianSeries_le_covarianceSensitive"
+     ]
+    },
+    {
+     "statement": "The same theorem holds on arbitrary sample spaces with the actual joint standard Gaussian law, including zero variance and empty coefficient families.",
+     "decls": [
+      "NLAlib.integral_specNorm_gaussianSeries_le_covarianceSensitive_of_hasLaw"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "matrix-chaos-flattenings-def",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "matrix-chaos-flattenings-def",
+    "title": "Decoupled matrix chaos and coefficient tensor flattenings",
+    "area": "gaussian-chaos",
+    "kind": "definition",
+    "difficulty": 2,
+    "informal": "Represent a matrix-valued homogeneous polynomial through its coefficient tensor, independent coordinate groups, and the family of matrix flattenings that controls its norm.",
+    "hypotheses": [
+     "$q,m,d_1,d_2\\ge1$ and $A_{i_1,\\ldots,i_q}\\in\\mathbb R^{d_1\\times d_2}$",
+     "The vectors $h^{(1)},\\ldots,h^{(q)}\\in\\mathbb R^m$ are independent copies with independent identically distributed coordinates"
+    ],
+    "conclusion": "Define $Y=\\sum_{i_1,\\ldots,i_q}h^{(1)}_{i_1}\\cdots h^{(q)}_{i_q}A_{i_1,\\ldots,i_q}$ and $\\sigma(A)=\\max_{S\\subseteq[q]}\\|A_{[S\\cup\\{q+1\\}\\mid S^c\\cup\\{q+2\\}]}\\|_2$, where modes $q+1,q+2$ are the original row and column indices.",
+    "sources": [
+     {
+      "source": "blnv25-chaos",
+      "label": "§§2.1–2.2, equations (1)–(4)"
+     }
+    ],
+    "depends_on": [
+     "kronecker-spectral",
+     "matrix-norms-def"
+    ],
+    "aliases": [
+     "matrix chaos",
+     "tensor flattening",
+     "decoupled homogeneous polynomial",
+     "chaos variance parameter"
+    ],
+    "notes": "Definition audit: each flattening is an ordinary finite matrix obtained by grouping index modes, with the original matrix row mode on the row side and column mode on the column side. For q=1, the two flattenings give the familiar square roots of the row and column variance norms. Decoupled Y allows coincident indices; comparison to the coupled multilinear chaos requires coefficients to vanish whenever two indices coincide. Overlapping row/column flattenings used in stronger Rosenthal bounds are a different family and are not silently included. The flattening for S has d1*m^|S| rows and d2*m^(q-|S|) columns.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "priority": "next",
+    "tags": [
+     "foundation"
+    ],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "An actual finite coefficient array indexed by arbitrary finite chaos modes and coordinate indices defines disjoint row/column coefficient flattenings and the actual decoupled polynomial. Empty mode subsets are singleton function types. The maximum variance and nonempty-row covariance parameters are named spectral norms; q=0 covariance is zero. Exact dimensions, permutation invariance, and both degree-one variance identities are proved. Definitions generalize real matrices to RCLike scalars without changing the real specialization.",
+   "evidence": [
+    "NLAlib.card_chaosFlattening_cols",
+    "NLAlib.card_chaosFlattening_rows",
+    "NLAlib.specNorm_chaosFlattening_empty_sq",
+    "NLAlib.specNorm_chaosFlattening_reindex",
+    "NLAlib.specNorm_chaosFlattening_univ_sq"
+   ],
+   "source_clauses": [
+    {
+     "statement": "The S-flattening has d1*m^|S| rows and d2*m^(q-|S|) columns, with disjoint chaos coordinate groups.",
+     "decls": [
+      "NLAlib.card_chaosFlattening_rows",
+      "NLAlib.card_chaosFlattening_cols"
+     ]
+    },
+    {
+     "statement": "Changing the row or column ordering preserves the flattening spectral norm.",
+     "decls": [
+      "NLAlib.specNorm_chaosFlattening_reindex"
+     ]
+    },
+    {
+     "statement": "For one chaos mode, the two flattening norms square to the row and column variance norms.",
+     "decls": [
+      "NLAlib.specNorm_chaosFlattening_empty_sq",
+      "NLAlib.specNorm_chaosFlattening_univ_sq"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "matrix-chaos-decoupling-upper",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "matrix-chaos-decoupling-upper",
+    "title": "One-sided decoupling of multilinear matrix chaos",
+    "area": "gaussian-chaos",
+    "kind": "bound",
+    "difficulty": 3,
+    "informal": "The expected spectral norm of a centered multilinear matrix chaos is bounded by that of its fully decoupled version, with an explicit constant depending only on its degree.",
+    "hypotheses": [
+     "$q,m\\ge1$ and $h_1,\\ldots,h_m$ are independent identically distributed centered integrable real random variables",
+     "$A_{i_1,\\ldots,i_q}$ are fixed real rectangular matrices and vanish whenever two indices coincide",
+     "$X=\\sum h_{i_1}\\cdots h_{i_q}A_{i_1,\\ldots,i_q}$ and $Y$ uses q independent copies of the coordinate vector as in the decoupled-chaos definition"
+    ],
+    "conclusion": "$\\mathbb E\\|X\\|_2\\le q^q\\,\\mathbb E\\|Y\\|_2$.",
+    "sources": [
+     {
+      "source": "blnv25-chaos",
+      "label": "Theorem 2.1, upper direction; the explicit nonoptimal constant here follows from the coloring argument"
+     }
+    ],
+    "depends_on": [
+     "matrix-chaos-flattenings-def"
+    ],
+    "aliases": [
+     "matrix chaos decoupling",
+     "multilinear decoupling upper bound",
+     "random coloring decoupling"
+    ],
+    "notes": "Independent proof audit: color each coordinate uniformly with q colors and retain a term only when its index in position t has color t. Conditional averaging over the coloring gives E_color X_color=q^(-q)X. For a fixed coloring the coordinate classes are disjoint, so X_color has the law of the conditional expectation of Y obtained by retaining only the coordinates whose colors match their positions; centering kills the remaining terms. Apply norm Jensen twice. Integrability follows because nonzero terms have distinct independent integrable factors. No coefficient permutation symmetry is needed for this upper direction. A reverse comparison is not claimed: antisymmetric coefficients can make X vanish while Y is nonzero.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "priority": "next",
+    "tags": [
+     "foundation"
+    ],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "The actual coupled polynomial with diagonal-free coefficient support is bounded in expected spectral norm by q^q times its fully decoupled polynomial. The primary theorem uses genuine finite product probability laws and proves all needed integrability from coordinate first moments. Coordinate laws may vary with the coordinate index, a valid strengthening of the IID source. The coloring identity is proved by exact finite counting; retained coordinates have the original product law and mixed coordinates preserve the decoupled product law. Centered integration kills precisely the nonretained terms, after which norm Jensen proves each retained-color expectation bound. No coefficient permutation symmetry or reverse inequality is asserted. Empty coefficients, q>m, and degree one are included. HasLaw transports the full result to arbitrary sample spaces.",
+   "evidence": [
+    "NLAlib.integrable_coupledMatrixChaos",
+    "NLAlib.integral_specNorm_coupledMatrixChaos_le",
+    "NLAlib.integral_specNorm_coupledMatrixChaos_le_of_hasLaw"
+   ],
+   "source_clauses": [
+    {
+     "statement": "Every nonzero coupled-chaos term is integrable under distinct-coordinate support and finite coordinate first moments.",
+     "decls": [
+      "NLAlib.integrable_coupledMatrixChaos"
+     ]
+    },
+    {
+     "statement": "The expected coupled spectral norm is at most q^q times the expected fully decoupled spectral norm for centered independent coordinates.",
+     "decls": [
+      "NLAlib.integral_specNorm_coupledMatrixChaos_le"
+     ]
+    },
+    {
+     "statement": "The same inequality holds for random coordinate arrays on arbitrary probability spaces with the corresponding joint product laws.",
+     "decls": [
+      "NLAlib.integral_specNorm_coupledMatrixChaos_le_of_hasLaw"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "matrix-chaos-iterated-khintchine",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "matrix-chaos-iterated-khintchine",
+    "title": "Iterated noncommutative Khintchine bound for decoupled chaos",
+    "area": "gaussian-chaos",
+    "kind": "bound",
+    "difficulty": 5,
+    "priority": "later",
+    "informal": "For each fixed degree, the expected norm of a decoupled subgaussian matrix chaos is bounded by the largest coefficient flattening, with the logarithmic loss obtained by iterating the linear matrix Khintchine inequality.",
+    "hypotheses": [
+     "$q,m,d_1,d_2\\ge1$, $d=\\max(d_1,d_2)$, and $A_{i_1,\\ldots,i_q}\\in\\mathbb R^{d_1\\times d_2}$",
+     "All entries of the q coordinate groups are independent copies of a centered real random variable h",
+     "$K>0$ satisfies $\\mathbb E\\exp(h^2/K^2)\\le2$",
+     "Y and $\\sigma(A)$ are the decoupled chaos and flattening parameter defined above"
+    ],
+    "conclusion": "For every integer $q\\ge1$ there exists a constant $C_q>0$, depending only on q, such that $\\mathbb E\\|Y\\|_2\\le C_qK^q[\\log(d+m)]^{q/2}\\sigma(A)$ for every admissible coefficient family and coordinate law.",
+    "sources": [
+     {
+      "source": "blnv25-chaos",
+      "label": "Theorem 2.4, upper bound; §2.4 and Appendix A.2"
+     }
+    ],
+    "depends_on": [
+     "matrix-chaos-flattenings-def",
+     "noncommutative-khintchine"
+    ],
+    "aliases": [
+     "iterated matrix Khintchine",
+     "subgaussian matrix chaos norm",
+     "tensor flattening chaos bound"
+    ],
+    "tags": [
+     "foundation",
+     "random-matrix",
+     "matrix-chaos"
+    ],
+    "notes": "Proof audit: Appendix A.2 conditions on q-1 coordinate groups and applies the linear subgaussian noncommutative Khintchine inequality. Its row and column variance matrices are the two relevant intermediate flattenings of a lower-order chaos. Iterating the maximum estimate in Lemma A.1 yields the largest final flattening. Intermediate dimensions are bounded by d*m^q, so their logarithms are absorbed into a degree-dependent multiple of log(d+m). The displayed admissible-K version avoids boundary issues in defining an Orlicz norm. Constants are existential and degree-dependent, exactly as supported by the source. Only the upper estimate is targeted; the optional L^log(m) refinement, lower estimates and stronger Rosenthal inequalities are deferred. The arbitrary centered-subgaussian linear bound needs a subgaussian-process comparison (the source cites Vershynin, Corollary 8.6.3), beyond the existing Gaussian/Rademacher NCK API. Use log(2D) for each linear step or treat D=1 separately; the final log(d+m) already avoids zero.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "A genuine fully decoupled finite real coefficient array satisfies the complete ordinary iterated Khintchine estimate, with the complete maximum over all ordinary flattenings. The product measure over pairs (mode, coordinate) has marginal nu_i at (t,i), so all groups and all coordinates are independent. The nu_i may vary with i; specializing them all to the source law gives exactly the IID statement.",
+   "evidence": [
+    "NLAlib.chaosKhintchineConstant_pos",
+    "NLAlib.expectedDecoupledMatrixChaosNorm_le_budget",
+    "NLAlib.expectedDecoupledMatrixChaosNorm_le_sigma_mul_log_rpow",
+    "NLAlib.integral_specNorm_decoupledMatrixChaos_le_sigma_mul_log_rpow_of_hasLaw"
+   ],
+   "source_clauses": [
+    {
+     "statement": "The advertised constant is positive, depends only on q, and is explicitly 200^q*(q+4)^(q/2).",
+     "decls": [
+      "NLAlib.chaosKhintchineConstant_pos"
+     ]
+    },
+    {
+     "statement": "The actual expected norm is at most (200*K)^q times log(4*d1*d2*m^q)^(q/2)*sigma(A).",
+     "decls": [
+      "NLAlib.expectedDecoupledMatrixChaosNorm_le_budget"
+     ]
+    },
+    {
+     "statement": "The full source bound has logarithmic exponent q/2 on log(max(d1,d2)+m) and the complete coefficient-flattening variance parameter.",
+     "decls": [
+      "NLAlib.expectedDecoupledMatrixChaosNorm_le_sigma_mul_log_rpow"
+     ]
+    },
+    {
+     "statement": "The same bound holds on arbitrary probability spaces with the corresponding actual joint product law.",
+     "decls": [
+      "NLAlib.integral_specNorm_decoupledMatrixChaos_le_sigma_mul_log_rpow_of_hasLaw"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "matrix-chaos-strong-khintchine",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "matrix-chaos-strong-khintchine",
+    "title": "Strong matrix-chaos bound using variance and covariance flattenings",
+    "area": "gaussian-chaos",
+    "kind": "bound",
+    "difficulty": 5,
+    "priority": "later",
+    "informal": "A decoupled subgaussian matrix chaos admits a dimension-free leading variance term, with logarithmic loss confined to coefficient flattenings that place both matrix indices on one side.",
+    "hypotheses": [
+     "$q,m,d_1,d_2\\ge1$, $d=\\max(d_1,d_2)$, and $A_{i_1,\\ldots,i_q}\\in\\mathbb R^{d_1\\times d_2}$",
+     "$Y=\\sum_{i_1,\\ldots,i_q}\\prod_{j=1}^q h^{(j)}_{i_j}A_{i_1,\\ldots,i_q}$, where all coordinates are independent copies of centered real $h$ and $\\mathbb E e^{h^2/K^2}\\le2$ for $K>0$",
+     "$\\sigma(A)=\\max_{R\\subseteq[q]}\\|A_{[\\,R\\cup\\{q+1\\}\\mid([q]\\setminus R)\\cup\\{q+2\\}\\,]}\\|_2$, using coefficient-tensor flattenings",
+     "$v(A)=\\max_{\\varnothing\\ne R\\subseteq[q]}\\|A_{[\\,R\\mid([q]\\setminus R)\\cup\\{q+1,q+2\\}\\,]}\\|_2$"
+    ],
+    "conclusion": "For each integer $q\\ge1$ there exists $C_q>0$, depending only on q, such that $\\mathbb E\\|Y\\|_2\\le C_q K^q\\{\\sigma(A)+[\\log(d+m)]^{(q+2)/2}v(A)\\}$ for every admissible coefficient family and coordinate law.",
+    "sources": [
+     {
+      "source": "blnv25-chaos",
+      "label": "Theorem 2.5, parameter (5), Lemma A.1 and Appendix A.3 (Theorem A.5 and induction)"
+     }
+    ],
+    "depends_on": [
+     "matrix-chaos-flattenings-def",
+     "matrix-chaos-iterated-khintchine",
+     "gaussian-series-covariance-sensitive-norm",
+     "hermitian-dilation"
+    ],
+    "aliases": [
+     "iterated strong noncommutative Khintchine",
+     "covariance flattenings",
+     "strong subgaussian matrix chaos bound"
+    ],
+    "tags": [
+     "foundation",
+     "random-matrix",
+     "matrix-chaos",
+     "covariance"
+    ],
+    "notes": "Audit: the linear Gaussian bound follows by Hermitian dilation from the covariance-sensitive Gaussian norm theorem, then Young's inequality moves sqrt(sigma*v)*log(D)^(3/4) into sigma+v*log(D)^(3/2). A direct symmetrization/contraction proof supplies Gaussian domination for arbitrary centered subgaussian coefficients; details are recorded in the derivation audit. For the q-step induction, condition on q-1 coordinate groups. The two variance flattenings are bounded by the strong induction hypothesis, whereas the covariance flattening is bounded by ordinary iterated NCK of degree q-1. Every variance term is a sigma-type flattening; every logarithmic term is v-type. The largest dimensions of these intermediate matrices are at most dm and max(d^2,m), and 3/2+(q-1)/2=(q+2)/2 gives the final exponent. Use log(2D) in the linear step or handle D=1 separately; log(d+m) is positive for all stated dimensions. The nonempty row subset in v is essential. q=1 recovers the full entry-covariance term; coefficients that vanish give both parameters zero. No independence within the original undecoupled chaos is silently assumed: this card is expressly for the decoupled model.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "A genuine fully decoupled finite real coefficient array satisfies the exact source-form expected spectral-norm estimate. The covariance branch keeps a nonempty original row subset, and only this covariance correction receives the dimension logarithm. The product measure over pairs (mode, coordinate) has marginal nu_i at (t,i), so all groups and all coordinates are independent. The nu_i may vary with i; specializing them all to the source law gives exactly the IID statement.",
+   "evidence": [
+    "NLAlib.chaosStrongKhintchineConstant_pos",
+    "NLAlib.expectedDecoupledMatrixChaosNorm_le_budget",
+    "NLAlib.expectedDecoupledMatrixChaosNorm_le_sigma_add_covariance_mul_log_rpow",
+    "NLAlib.integral_specNorm_decoupledMatrixChaos_le_sigma_add_covariance_mul_log_rpow_of_hasLaw"
+   ],
+   "source_clauses": [
+    {
+     "statement": "The advertised constant is positive, depends only on q, and is explicitly 200^q*(1+q*(q+4)^(q/2)/(2*log 2)).",
+     "decls": [
+      "NLAlib.chaosStrongKhintchineConstant_pos"
+     ]
+    },
+    {
+     "statement": "The actual expected norm is at most (200*K)^q times sigma(A)+(q/2)*log(4*d1*d2*m^q)^(q/2)*v(A).",
+     "decls": [
+      "NLAlib.expectedDecoupledMatrixChaosNorm_le_budget"
+     ]
+    },
+    {
+     "statement": "The full source bound has logarithmic exponent (q+2)/2 on log(max(d1,d2)+m) and the complete coefficient-flattening variance and nonempty-row covariance parameters.",
+     "decls": [
+      "NLAlib.expectedDecoupledMatrixChaosNorm_le_sigma_add_covariance_mul_log_rpow"
+     ]
+    },
+    {
+     "statement": "The same bound holds on arbitrary probability spaces with the corresponding actual joint product law.",
+     "decls": [
+      "NLAlib.integral_specNorm_decoupledMatrixChaos_le_sigma_add_covariance_mul_log_rpow_of_hasLaw"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "exchangeable-matrix-covariance",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "exchangeable-matrix-covariance",
+    "title": "Matrix covariance identities from an exchangeable pair",
+    "area": "concentration-matrix",
+    "kind": "identity",
+    "difficulty": 3,
+    "priority": "next",
+    "informal": "An exchangeable pair with linear conditional regression turns a matrix covariance into a finite difference; independent summand resampling realizes the required pair.",
+    "hypotheses": [
+     "$(X,X')$ is an exchangeable pair of square-integrable Hermitian $d\\times d$ matrices, $\\mu=\\mathbb EX$, and $\\alpha>0$ satisfies $\\mathbb E[X-X'\\mid X]=\\alpha(X-\\mu)$",
+     "$F$ is a measurable matrix-valued function such that $F(X)$ is square-integrable; $\\operatorname{tr}$ may be the normalized or ordinary trace, used consistently"
+    ],
+    "conclusion": "$\\mathbb E\\operatorname{tr}[(X-\\mu)F(X)]=(2\\alpha)^{-1}\\mathbb E\\operatorname{tr}[(X-X')(F(X)-F(X'))]$ and $\\mathbb E[(X-\\mu)\\otimes(X-\\mu)]=(2\\alpha)^{-1}\\mathbb E[(X-X')\\otimes(X-X')]$. If $X=\\sum_{i=1}^nS_i$ for independent square-integrable summands, $n\\ge1$, and $X'=X-S_I+S_I'$ with $I$ independent uniform and $S_i'$ independent copies, these hypotheses hold with $\\alpha=1/n$.",
+    "sources": [
+     {
+      "source": "tropp26-exchangeable-universality",
+      "label": "§6.3, equations (6.3)–(6.6), extending scalar Proposition 2.4"
+     }
+    ],
+    "depends_on": [],
+    "aliases": [
+     "matrix Stein pair covariance",
+     "exchangeable resampling identity",
+     "matrix discrete integration by parts"
+    ],
+    "tags": [
+     "foundation",
+     "random-matrix",
+     "probability"
+    ],
+    "notes": "Audit: conditional regression gives alpha times the left side as E tr[(X-X')F(X)]. Swapping the pair changes this to -E tr[(X-X')F(X')]; average the two. Apply the same calculation entrywise to obtain the tensor identity. For independent sums, condition first on all original summands, average the uniform index, then use the tower property; identical distribution of the summands is not required. Square integrability and Cauchy–Schwarz justify every product. The covariance tensor is the bilinear real-coordinate second moment (unstarred tensor product), not the PSD matrix E[(X-mu)^2]; Hermitian symmetry recovers the conjugated entry covariance. The realized pair, not merely an abstract regression hypothesis, is included for use by matrix universality.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "Actual equality of the swapped joint laws, actual conditional regression on X, and square integrability imply trace discrete integration by parts. Every product integrability obligation follows from L2 via bilinear Holder; no testing-function or covariance conclusion is assumed. Arbitrary real continuous linear coordinates give every mixed real/imaginary entry covariance, and an actual finite matrix of all selected real-coordinate second moments is proved equal to its resampling-difference tensor. The unstarred Kronecker version is also proved, and is never confused with E[(X-EX)^2]. The independent-sum construction uses separate product laws nu_i, an independent uniform index, and independent copies; its actual swapped joint law, square integrability, sum of means, regression conditional on all originals, and regression conditional on X are proved. Identical distributions are not required. The general identities hold for alpha nonzero, so include the source's alpha>0; a nonempty index type gives alpha=1/card(iota)>0. Empty matrix dimensions and singular distributions cause no difficulty. Hermitian hypotheses are unnecessary for these identities, so the complex-matrix specialization is stronger than the source.",
+   "evidence": [
+    "NLAlib.condExp_independentResampling_originals",
+    "NLAlib.condExp_independentResampling_sum",
+    "NLAlib.identDistrib_independentResampling_pair",
+    "NLAlib.integral_bilin_exchangeable",
+    "NLAlib.integral_coordinate_covariance_exchangeable",
+    "NLAlib.integral_independentResamplingOriginal",
+    "NLAlib.integral_kronecker_exchangeable",
+    "NLAlib.integral_real_covariance_tensor_exchangeable",
+    "NLAlib.integral_trace_mul_exchangeable",
+    "NLAlib.memLp_independentResamplingOriginal"
+   ],
+   "source_clauses": [
+    {
+     "statement": "For an actual exchangeable square-integrable matrix pair with conditional regression E[X-X'|X]=alpha(X-EX), and a measurable square-integrable F(X), E tr((X-EX)F(X))=(2alpha)^(-1) E tr((X-X')(F(X)-F(X'))). Ordinary trace is formalized; scalar multiplication gives any consistent normalization.",
+     "decls": [
+      "NLAlib.integral_trace_mul_exchangeable",
+      "NLAlib.integral_bilin_exchangeable"
+     ]
+    },
+    {
+     "statement": "For every finite real coordinate system r, E[vecMulVec(r(X-EX),r(X-EX))]=(2alpha)^(-1) E[vecMulVec(r(X-X'),r(X-X'))]. Equivalently every pair of real continuous linear functionals satisfies the matching coordinate identity. The unstarred Kronecker tensor identity holds as well.",
+     "decls": [
+      "NLAlib.integral_real_covariance_tensor_exchangeable",
+      "NLAlib.integral_coordinate_covariance_exchangeable",
+      "NLAlib.integral_kronecker_exchangeable"
+     ]
+    },
+    {
+     "statement": "For independent nonidentically distributed square-integrable summands on a nonempty finite index type, independent uniform-coordinate replacement is an actual exchangeable pair, and the original sum is square integrable with expectation equal to the sum of the individual means.",
+     "decls": [
+      "NLAlib.identDistrib_independentResampling_pair",
+      "NLAlib.memLp_independentResamplingOriginal",
+      "NLAlib.integral_independentResamplingOriginal"
+     ]
+    },
+    {
+     "statement": "The realized independent resampling construction has genuine conditional regression E[X-X'|all originals]=(X-EX)/card(iota), and hence E[X-X'|X]=(X-EX)/card(iota).",
+     "decls": [
+      "NLAlib.condExp_independentResampling_originals",
+      "NLAlib.condExp_independentResampling_sum"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "subgaussian-gaussian-series-comparison",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "subgaussian-gaussian-series-comparison",
+    "title": "Gaussian domination of finite centered subgaussian series",
+    "area": "gaussian-subgaussian",
+    "kind": "bound",
+    "status": "candidate",
+    "informal": "A finite independent centered subgaussian series in any real normed space has expected norm at most ten times its exponential-square scale times the corresponding Gaussian-series expectation. The comparison also holds with any deterministic affine offset.",
+    "hypotheses": [
+     "$I$ is a finite index set, $E$ is a real normed vector space, $a_i\\in E$ and $z\\in E$ are deterministic, and $K>0$",
+     "$\\xi_i$ are independent real random variables, each centered, with genuine nonnegative moments $\\mathbb E\\exp((\\xi_i/K)^2)\\le2$; their laws may differ",
+     "$g_i$ are independent standard real Gaussian variables"
+    ],
+    "conclusion": "$\\mathbb E\\|\\sum_{i\\in I}\\xi_i a_i\\|\\le10K\\,\\mathbb E\\|\\sum_{i\\in I}g_i a_i\\|$. More strongly, $\\mathbb E\\|z+\\sum_i\\xi_i a_i\\|\\le\\mathbb E\\|z+10K\\sum_i g_i a_i\\|$.",
+    "sources": [
+     {
+      "source": "random-probability-reroutes-2026",
+      "label": "Lemma subgaussian-gaussian-domination, subsection Iterated Khintchine without a subgaussian-process theorem, lines 739–855"
+     }
+    ],
+    "aliases": [
+     "scalar Gaussian domination",
+     "Banach series subgaussian comparison",
+     "finite contraction Gaussian comparison",
+     "centered Orlicz series"
+    ],
+    "tags": [
+     "foundation",
+     "probability",
+     "random-matrix",
+     "done"
+    ],
+    "uses_defs": [
+     "NLAlib.gaussianVector"
+    ],
+    "depends_on": [
+     "gaussian-matrix-def",
+     "gaussian-positive-moments"
+    ],
+    "variants": [
+     "matrix-chaos-iterated-khintchine",
+     "matrix-chaos-strong-khintchine"
+    ],
+    "notes": "The implementation permits different coordinate laws and arbitrary real normed E; completeness and finite dimension are unnecessary. It uses actual finite product measures. The exponential assumption is a nonnegative lower Lebesgue integral, so nonintegrable Bochner junk values cannot satisfy it; all first moments and norm integrability are derived. The centered independent-copy difference has doubled exponential-square scale. Genuine upper-tail domination, an even convex affine norm profile, the explicit Gaussian first moment lower bound 2/3, and finite product coordinate replacement preserve the factor 10K without a dimension factor. Empty index sets, zero coefficients and arbitrary offsets are included. Mathlib's HasSubgaussianMGF.memLp is used only to extract integrability after the existing OrliczMGF conversion; no subgaussian-process theorem or desired conclusion is assumed.",
+    "formalizations": [],
+    "updated_at": "2026-10-16"
+   },
+   "readback": "The implementation permits different coordinate laws and arbitrary real normed E; completeness and finite dimension are unnecessary. It uses actual finite product measures. The exponential assumption is a nonnegative lower Lebesgue integral, so nonintegrable Bochner junk values cannot satisfy it; all first moments and norm integrability are derived. The centered independent-copy difference has doubled exponential-square scale. Genuine upper-tail domination, an even convex affine norm profile, the explicit Gaussian first moment lower bound 2/3, and finite product coordinate replacement preserve the factor 10K without a dimension factor. Empty index sets, zero coefficients and arbitrary offsets are included. Mathlib's HasSubgaussianMGF.memLp is used only to extract integrability after the existing OrliczMGF conversion; no subgaussian-process theorem or desired conclusion is assumed.",
+   "evidence": [
+    "NLAlib.integral_norm_add_sum_smul_pi_le_gaussian_of_lintegral_exp_sq",
+    "NLAlib.integral_norm_sum_smul_pi_le_gaussian_of_lintegral_exp_sq"
+   ],
+   "source_clauses": [
+    {
+     "statement": "A finite independent centered subgaussian series with the stated exponential-square scale has expected norm at most 10K times the Gaussian-series expectation.",
+     "decls": [
+      "NLAlib.integral_norm_sum_smul_pi_le_gaussian_of_lintegral_exp_sq"
+     ]
+    },
+    {
+     "statement": "The same Gaussian replacement comparison holds inside an affine norm with any deterministic offset z.",
+     "decls": [
+      "NLAlib.integral_norm_add_sum_smul_pi_le_gaussian_of_lintegral_exp_sq"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "gaussian-cayley-fourier-block-law",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "gaussian-cayley-fourier-block-law",
+    "title": "Finite-group Fourier transform splits Gaussian convolution into independent blocks",
+    "area": "gaussian-structured",
+    "kind": "identity",
+    "status": "candidate",
+    "informal": "A group convolution matrix with circular complex Gaussian coefficients is unitarily equivalent in law to independent Gaussian blocks, repeated with representation-theoretic multiplicities.",
+    "hypotheses": [
+     "$G$ is a finite group of order $N$, $\\rho$ its left regular representation, and $\\{\\pi\\}$ a complete set of inequivalent irreducible unitary complex representations with dimensions $d_\\pi$",
+     "$z_g=\\xi_g+i\\eta_g$, where all $\\xi_g,\\eta_g$ are independent real $N(0,1)$ variables, and $Z_G=\\sum_{g\\in G}z_g\\rho(g)$"
+    ],
+    "conclusion": "There is a deterministic unitary $U$ such that $Z_G\\overset{\\mathrm{law}}=U\\left[\\bigoplus_\\pi I_{d_\\pi}\\otimes\\sqrt{N/d_\\pi}\\,Z_\\pi\\right]U^*$, where every entry of every $Z_\\pi\\in\\mathbb C^{d_\\pi\\times d_\\pi}$ is independent with the same circular Gaussian convention. Thus $\\|Z_G\\|_2\\overset{\\mathrm{law}}=\\max_\\pi\\sqrt{N/d_\\pi}\\|Z_\\pi\\|_2$.",
+    "sources": [
+     {
+      "source": "bkmz24-cayley",
+      "label": "§3, Lemma 7 and its Peter–Weyl/Schur-orthogonality proof"
+     }
+    ],
+    "formalizations": [],
+    "depends_on": [
+     "rotation-invariance"
+    ],
+    "uses_defs": [],
+    "variants": [],
+    "aliases": [
+     "Gaussian group convolution",
+     "Gaussian Cayley Fourier blocks",
+     "noncommutative Fourier Gaussian law"
+    ],
+    "mathlib_prereqs": [],
+    "difficulty": 4,
+    "priority": "later",
+    "tags": [
+     "source-reviewed"
+    ],
+    "notes": "Real and imaginary parts each have variance one, so E|z_g|²=2. Under the alternative variance-one complex convention both sides must be rescaled consistently. Independent Fourier blocks are asserted for circular complex coefficients; real coefficients impose conjugacy relations. The finite-group decomposition and Schur orthogonality are substantive representation-theoretic prerequisites.",
+    "updated_at": "2026-10-15"
+   },
+   "readback": "An arbitrary finite group, arbitrary finite representation labels and finite positive coordinate types are used. The input assumptions are genuine native complex representations, their matrix unitarity and irreducibility, pairwise inequivalence by native Representation.Equiv, and completeness quantified over every finite-dimensional irreducible complex representation. No coefficient orthogonality, Fourier unitarity, dimension sum, decomposition or Gaussian block law is assumed. A native finite averaging projection gives the actual intertwiner; Schur and ordinary trace identify all matrix-unit averages, proving exact coefficient orthogonality. The coefficient span is invariant; its orthogonal complement is invariant by actual left-translation inner-product invariance. A minimal nonzero invariant subspace is irreducible. Completeness and evaluation at the group identity express its vectors as listed coefficients, forcing a contradiction. Thus the coefficients span, and normalized orthonormal columns form a genuine Mathlib OrthonormalBasis. Both Fourier Gram identities and sum d_pi^2=N are derived. The actual regular Cayley matrix is intertwined pointwise with blockDiagonal'(I_d_pi kronecker B_pi), first index multiplicity and second representation. Normalization Z_pi=sqrt(d_pi/N) B_pi agrees entrywise with multiplication by the normalized coefficient transform. The checked circular-complex coisometry theorem supplies the full joint product law and independence of all normalized block entries, including their independent real and imaginary N(0,1) coordinates. Reconstruction and the exact dependent repeated-block spectral norm prove both requested identities pointwise on the original sample space, stronger than identity in law. Singular/zero blocks and the trivial group are included. The complete family is nonempty; the explicit Nonempty P instance in the finite-max capstone is the nonempty domain needed to write sup', and follows from the derived positive dimension sum under the other hypotheses.",
+   "evidence": [
+    "NLAlib.exists_finiteGroupCayley_fourier_gaussian_blocks",
+    "NLAlib.finiteGroupCayleyMatrix_eq_fourier_mul_blocks_mul_conjTranspose",
+    "NLAlib.finiteGroupCayleyMatrix_eq_fourier_normalized_blocks",
+    "NLAlib.finiteGroupCayleyMatrix_mul_fourier",
+    "NLAlib.finiteGroupCoefficientSpan_eq_top",
+    "NLAlib.finiteGroupCoefficientTransform_mul_conjTranspose",
+    "NLAlib.finiteGroupFourierMatrix_hasOrthonormalCols",
+    "NLAlib.finiteGroupFourierMatrix_mul_conjTranspose",
+    "NLAlib.finiteGroupFourier_conjTranspose_mul_cayley_mul_fourier",
+    "NLAlib.hasLaw_finiteGroupNormalizedBlocks",
+    "NLAlib.hasLaw_finiteGroupNormalizedBlocks_of_hasLaw",
+    "NLAlib.hasLaw_realify_finiteGroupNormalizedBlocks_of_hasLaw",
+    "NLAlib.iIndepFun_finiteGroupNormalizedBlocks_of_hasLaw",
+    "NLAlib.specNorm_finiteGroupCayleyMatrix_eq_max_blocks",
+    "NLAlib.specNorm_finiteGroupCayleyMatrix_eq_max_normalized_blocks",
+    "NLAlib.sum_sq_card_irreducible_dimensions"
+   ],
+   "source_clauses": [
+    {
+     "statement": "Schur coefficient orthogonality is derived from actual unitary irreducible representations, with exact normalization 1/d_pi.",
+     "decls": [
+      "NLAlib.finiteGroupCoefficientTransform_mul_conjTranspose",
+      "NLAlib.finiteGroupFourierMatrix_hasOrthonormalCols"
+     ]
+    },
+    {
+     "statement": "The matrix coefficients are complete, give a genuine Fourier orthonormal basis, and satisfy sum d_pi^2=N without assuming those conclusions.",
+     "decls": [
+      "NLAlib.finiteGroupCoefficientSpan_eq_top",
+      "NLAlib.sum_sq_card_irreducible_dimensions",
+      "NLAlib.finiteGroupFourierMatrix_mul_conjTranspose"
+     ]
+    },
+    {
+     "statement": "A deterministic actual unitary Fourier matrix decomposes every Cayley matrix into representation blocks repeated d_pi times, with the specified coordinate order.",
+     "decls": [
+      "NLAlib.finiteGroupCayleyMatrix_mul_fourier",
+      "NLAlib.finiteGroupFourier_conjTranspose_mul_cayley_mul_fourier",
+      "NLAlib.finiteGroupCayleyMatrix_eq_fourier_mul_blocks_mul_conjTranspose",
+      "NLAlib.finiteGroupCayleyMatrix_eq_fourier_normalized_blocks"
+     ]
+    },
+    {
+     "statement": "Every entry of every actual normalized block is jointly independent circular complex Gaussian, with real and imaginary parts independent N(0,1), and arbitrary sample-space transport.",
+     "decls": [
+      "NLAlib.hasLaw_finiteGroupNormalizedBlocks",
+      "NLAlib.hasLaw_finiteGroupNormalizedBlocks_of_hasLaw",
+      "NLAlib.iIndepFun_finiteGroupNormalizedBlocks_of_hasLaw",
+      "NLAlib.hasLaw_realify_finiteGroupNormalizedBlocks_of_hasLaw"
+     ]
+    },
+    {
+     "statement": "The exact pointwise norm is max_pi sqrt(N/d_pi)||Z_pi||; this gives the advertised norm identity in law.",
+     "decls": [
+      "NLAlib.specNorm_finiteGroupCayleyMatrix_eq_max_blocks",
+      "NLAlib.specNorm_finiteGroupCayleyMatrix_eq_max_normalized_blocks"
+     ]
+    },
+    {
+     "statement": "There exist deterministic unitary coordinates and actual blocks on the original sample space satisfying all source clauses together, stronger than the requested identities in law.",
+     "decls": [
+      "NLAlib.exists_finiteGroupCayley_fourier_gaussian_blocks"
+     ]
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed."
+  },
+  {
+   "id": "cauchy-transform-gaussian-universality",
+   "audit_phase": "final",
+   "baseline_audit": {
+    "id": "cauchy-transform-gaussian-universality",
+    "title": "Cauchy-transform comparison under matching Gaussian covariance",
+    "area": "gaussian-comparison",
+    "kind": "bound",
+    "difficulty": 5,
+    "priority": "later",
+    "informal": "The expected normalized resolvent trace of an independent matrix sum differs from that of its Gaussian proxy by a third resampling moment divided by the fourth power of the imaginary part.",
+    "hypotheses": [
+     "$d,n\\ge1$, $S_1,\\ldots,S_n$ are independent Hermitian $d\\times d$ matrices with finite third moments, $X=\\sum_iS_i$, and $S_i'$ are independent copies",
+     "$Z$ is Hermitian Gaussian with the same mean and full real-coordinate covariance as $X$",
+     "$\\zeta\\in\\mathbb C\\setminus\\mathbb R$, $\\eta=|\\operatorname{Im}\\zeta|$, $\\operatorname{tr}_d=d^{-1}\\operatorname{Tr}$, $G_\\zeta(U)=\\mathbb E\\operatorname{tr}_d(\\zeta I-U)^{-1}$ and $M_3=\\sum_i\\mathbb E\\operatorname{tr}_d|S_i-S_i'|^3$"
+    ],
+    "conclusion": "$|G_\\zeta(X)-G_\\zeta(Z)|\\le M_3/\\eta^4$. In particular, if $\\|S_i-\\mathbb ES_i\\|_2\\le L$ almost surely and $\\sigma^2=\\|\\sum_i\\mathbb E(S_i-\\mathbb ES_i)^2\\|_2$, then $|G_\\zeta(X)-G_\\zeta(Z)|\\le4L\\sigma^2/\\eta^4$.",
+    "sources": [
+     {
+      "source": "tropp26-exchangeable-universality",
+      "label": "Theorem 8.1; bounded-summand Theorem II; §§6–7 and §8.1"
+     }
+    ],
+    "depends_on": [
+     "matrix-function-block-divided-differences",
+     "exchangeable-matrix-covariance",
+     "gaussian-integration-by-parts",
+     "schatten-norms-def"
+    ],
+    "aliases": [
+     "Stieltjes transform universality",
+     "matrix resolvent trace Gaussian approximation",
+     "exchangeable counterparts"
+    ],
+    "tags": [
+     "random-matrix",
+     "resolvent",
+     "covariance"
+    ],
+    "notes": "Audit: construct a triple by resampling the same uniform index with two independent copies. The third counterpart is independent of the first pair's difference, which produces the covariance term in discrete IBP. In interpolation EX+sqrt(t)(X-EX)+sqrt(1-t)(Z-EZ), exact matching cancels the Gaussian derivative term and leaves two ordered second differences of h'=R_zeta^2, each with factor n*sqrt(t)/4. Each second difference has three resolvent words with four total resolvent factors and three resampling differences. Resolvent norms are <=1/eta; Schatten/expectation Hölder with exponents 3,3,3 bounds each word by (M3/n)/eta^4. Thus |u'(t)|<=(3/2)sqrt(t)*M3/eta^4 and integration gives exactly M3/eta^4. The bounded case follows from |S_i-S_i'|^3 <=2L(S_i-S_i')^2 and E(S_i-S_i')^2=2E(S_i-ES_i)^2. This proof uses ordered differences and is unaffected by the source's incorrect identification with half a mixed Hessian. All expectations and endpoint limits are justified by finite third moments and the uniform resolvent bound; the source's generic rational IBP statement would need additional integrability for polynomial functions.",
+    "status": "candidate",
+    "formalizations": [],
+    "uses_defs": [],
+    "variants": [],
+    "mathlib_prereqs": [],
+    "updated_at": "2026-10-14"
+   },
+   "readback": "The two actual matrix-law capstones match every source clause. Arbitrary nonempty finite summand and matrix index types are used. The independent sum is the genuine product of arbitrary nonidentical probability laws, each almost surely Hermitian with finite third spectral-norm moment. The comparison law is an actual almost surely Hermitian matrix law whose full vector of real and imaginary entries has native HasGaussianLaw. The hypotheses require equality of actual matrix means and every mixed real-coordinate covariance of the genuine independent sum. The Gaussian input is not a covariance/expectation certificate. L3 of each original summand derives L2/L1 and every copy-difference cubic integrability premise. The original matrix M3 is retained exactly after full-coordinate pushforward and almost-sure Hermitian reconstruction. Actual Gaussian centering preserves full covariance and gives zero means, with Gaussian matrix integrability derived through the real-coordinate continuous linear equivalence. Actual resampling, genuine conditional regression, finite-coordinate complex Gaussian integration by parts, the real covariance tensor identity, and actual D independence from the second replacement supply exact cancellation. Ordered resolvent finite differences give exactly six words; no incorrect half-mixed-Hessian identification is used. The expected cubic estimate and the exact square-root-speed integral give M3/eta^4 with constant one. The bounded consequence derives every required third moment from the centered spectral bound and proves M3<=4L sigma^2 using actual independent-copy square expectations. Zero bound, zero variance, singular covariance, singular matrices and dimension one are included. Separate actual measures construct the needed independent coupling; the final difference of expectations refers only to the original laws.",
+   "evidence": [
+    "NLAlib.norm_integral_normalizedTrace_resolvent_sum_sub_gaussian_le_matrixDifferenceThirdMoment",
+    "NLAlib.norm_integral_normalizedTrace_resolvent_sum_sub_gaussian_le_four_mul_bound_mul_variance",
+    "NLAlib.norm_integral_normalizedTrace_resolvent_sum_sub_gaussian_le_matrixDifferenceThirdMoment_of_hasLaw",
+    "NLAlib.norm_integral_normalizedTrace_resolvent_sum_sub_gaussian_le_four_mul_bound_mul_variance_of_hasLaw"
+   ],
+   "source_clauses": [
+    {
+     "statement": "For an actual independent Hermitian matrix sum X with finite third norm moments and an actual Hermitian Gaussian matrix law having the same actual mean and full real-entry covariance, every nonreal zeta satisfies |E tr_d (zeta I-X)^(-1)-E tr_d (zeta I-Z)^(-1)|<=M3/|Im zeta|^4, where tr_d is ordinary trace divided by d and M3 is the actual sum_i E tr_d |S_i-S_i'|^3 under independent same-law copies.",
+     "decls": [
+      "NLAlib.norm_integral_normalizedTrace_resolvent_sum_sub_gaussian_le_matrixDifferenceThirdMoment"
+     ]
+    },
+    {
+     "statement": "If each centered summand has spectral norm at most L almost surely, then all needed third moments follow and the same actual resolvent-expectation difference is at most 4L sigma^2/|Im zeta|^4, where sigma^2 is the spectral norm of the actual sum of centered second matrix moments.",
+     "decls": [
+      "NLAlib.norm_integral_normalizedTrace_resolvent_sum_sub_gaussian_le_four_mul_bound_mul_variance"
+     ]
+    }
+   ],
+   "normalization_readback": "normalizedTrace(A) is exactly (card(n):Complex)^(-1) times the ordinary trace. matrixDifferenceThirdMoment(nu) is exactly sum_i integral_(nu_i prod nu_i) schattenNormReal(S-S',3)^3/card(n). The checked CFC bridge schattenNormReal_pow_nat_eq_re_trace_cfc_abs identifies the third Schatten power of each Hermitian difference with Re tr(cfc(x=>|x|^3)(S-S')); its trace is real and positive, so the definition is the source's E tr_d |S-S'|^3 with no missing dimension/root factor. The actual independent-copy moment is preserved under almost-sure Hermitian reconstruction, and the true resampling moments on P.prod gamma are all M3/card(iota). The expected six-word constant6, exact derivative coefficient card(iota)*sqrt(t)/4, and integral_0^1 (3/2)sqrt(t)=1 give the final constant one.",
+   "supporting_proof_modules": [
+    "NLAlib.Probability.Exchangeable.Bilinear",
+    "NLAlib.Probability.Exchangeable.MatrixCovariance",
+    "NLAlib.Probability.Exchangeable.IndependentSum",
+    "NLAlib.Probability.Exchangeable.ThirdCopy",
+    "NLAlib.Probability.Exchangeable.ThirdCopyMoments",
+    "NLAlib.Probability.Exchangeable.ThirdCopyLaws",
+    "NLAlib.Probability.Exchangeable.ThirdCopyPairLaw",
+    "NLAlib.Probability.Exchangeable.ThirdCopyBilinear",
+    "NLAlib.Probability.Gaussian.Calculus.ComplexIntegrationByParts",
+    "NLAlib.Probability.Gaussian.Calculus.BilinearIntegrationByParts",
+    "NLAlib.Probability.Gaussian.Calculus.AffineBilinearIntegrationByParts",
+    "NLAlib.Probability.Gaussian.Calculus.AffineProductIntegrationByParts",
+    "NLAlib.Probability.Gaussian.Comparison.ResamplingAffine",
+    "NLAlib.Probability.Gaussian.Comparison.ResamplingQuadratic",
+    "NLAlib.Probability.Gaussian.Comparison.ResamplingStein",
+    "NLAlib.Probability.Gaussian.Comparison.ResamplingInterpolation",
+    "NLAlib.Probability.Gaussian.Comparison.MatrixCoordinateLaws",
+    "NLAlib.Probability.Gaussian.Comparison.CenteredMatrixLaw",
+    "NLAlib.Probability.Gaussian.Comparison.MatrixCauchyEndpoints",
+    "NLAlib.Matrix.Basic.RealCoordinates",
+    "NLAlib.Matrix.Basic.NormalizedTrace",
+    "NLAlib.Matrix.Functions.HermitianCoordinates",
+    "NLAlib.Matrix.Functions.HermitianResolvent",
+    "NLAlib.Matrix.Functions.ResolventMeasurability",
+    "NLAlib.Matrix.Functions.ResolventDifferences",
+    "NLAlib.Matrix.Functions.ResolventDerivatives",
+    "NLAlib.Matrix.Functions.ResolventCoordinateBounds",
+    "NLAlib.Matrix.Functions.ResolventCoordinateDifferences",
+    "NLAlib.Matrix.Functions.ResolventWordBounds",
+    "NLAlib.Matrix.Norms.SchattenWords",
+    "NLAlib.Matrix.Norms.SchattenMoments",
+    "NLAlib.Matrix.Norms.SchattenThirdMoment",
+    "NLAlib.Probability.Moments.Schatten",
+    "NLAlib.Probability.Moments.ResolventRemainder",
+    "NLAlib.Probability.Moments.MatrixDifference",
+    "NLAlib.Probability.Moments.MatrixDifferenceBound",
+    "NLAlib.Probability.Moments.MatrixDifferenceTransport",
+    "NLAlib.RandomMatrix.Gaussian.Comparison.CauchyInterpolation",
+    "NLAlib.RandomMatrix.Gaussian.Comparison.CauchyTransform",
+    "NLAlib.RandomMatrix.Gaussian.Comparison.CauchyTransformLaw"
+   ],
+   "supporting_cfc_bridges": [
+    "NLAlib.schattenNormReal_pow_nat_eq_re_trace_cfc_abs",
+    "NLAlib.cfc_abs_pow_three_le_smul_sq",
+    "NLAlib.schattenNormReal_pow_three_le_specNorm_mul_re_trace_sq",
+    "NLAlib.integral_matrix_sub_copy_sq",
+    "NLAlib.matrixDifferenceThirdMoment_le_four_mul_bound_mul_variance"
+   ],
+   "independent_reviews": [
+    {
+     "reviewer": "catalogue_sources",
+     "result": "pass",
+     "readback": "Independently checked the actual laws, interpolation, endpoint limits, preservation of the original M3 and exact constants one and four against the source and Lean statements."
+    },
+    {
+     "reviewer": "matrix_chaos",
+     "result": "pass",
+     "readback": "Independently checked ordered insertion signs, all factors in 6 to 3/2 to 1, full real/imaginary covariance matching, actual means, Hermitian support, degenerate Gaussian laws and the bounded variance consequence."
+    }
+   ],
+   "formalization_status": "Complete source scope; targeted builds and all final repository integration checks passed.",
+   "arbitrary_space_transport": {
+    "module": "NLAlib.RandomMatrix.Gaussian.Comparison.CauchyTransformLaw",
+    "anchors": [
+     "NLAlib.norm_integral_normalizedTrace_resolvent_sum_sub_gaussian_le_matrixDifferenceThirdMoment_of_hasLaw",
+     "NLAlib.norm_integral_normalizedTrace_resolvent_sum_sub_gaussian_le_four_mul_bound_mul_variance_of_hasLaw"
+    ],
+    "readback": "The same original matrix-law hypotheses transport to arbitrary sample spaces through actual HasLaw X_i nu_i and iIndepFun X, and actual HasLaw G rho. Native iIndepFun.hasLaw_pi gives the true joint summand law. The measurable total normalized trace resolvent transports both expectations exactly. No Gaussian comparison assumption, covariance condition, moment equality or analytic estimate is added beyond the two parent capstones, and no independence between the comparison matrix and the original family is required because the comparison concerns only their expectations. Finite decidable nonempty index types need no index measurable-space instance.",
+    "check_status": "Both complete HasLaw wrappers passed the targeted build in cauchy-transform-law-build.log (3895 jobs); their exact integral-measurability transports also passed independently in cauchy-law-helpers.log."
+   }
+  }
+ ],
+ "local_validation": {
+  "status": "passed",
+  "checks": [
+   "full-build",
+   "complete-audit",
+   "declaration-index",
+   "atlas-sync",
+   "layers",
+   "atlas",
+   "unit-tests",
+   "import-surface",
+   "trusted-audit",
+   "declaration-lint",
+   "downstream-example",
+   "probability-example",
+   "polynomial-example",
+   "khatri-rao-example",
+   "ritz-audit",
+   "subspace-audit",
+   "gaussian-inverse-audit",
+   "new-proofs-audit",
+   "khatri-rao-audit",
+   "names",
+   "historical-scope",
+   "card-audit",
+   "coverage",
+   "site"
+  ],
+  "public_index_declarations": 10814,
+  "new_public_declarations": 657,
+  "new_sorry_declarations": 0,
+  "default_import_sorry": 0,
+  "unchanged_experimental_sorry_theorems": 23,
+  "audit_output": "audited 20719 declarations (10764 public theorems) in [NLAlib]; 23 theorems depend on sorry: [NLAlib.cgRecurrence_r_eq_zero_of_krylovGrade_le,\n NLAlib.cgRecurrence_x_eq_of_krylovGrade_le,\n NLAlib.dotProduct_cgRecurrence_p_mulVec_eq_zero,\n NLAlib.dotProduct_cgRecurrence_r_eq_zero,\n NLAlib.dotProduct_cgRecurrence_r_eq_zero_of_mem,\n NLAlib.dotProduct_golubKahan_eq,\n NLAlib.golubKahanSucceeds_iff,\n NLAlib.isCGIterate_cgRecurrence,\n NLAlib.isGradedKrylovBasis_golubKahanU_V,\n NLAlib.isGradedKrylovBasis_lanczosRecurrence,\n NLAlib.lanczosAlpha_eq_alpha,\n NLAlib.lanczosBeta_eq_beta,\n NLAlib.lanczosBeta_eq_zero_iff,\n NLAlib.lanczosBeta_eq_zero_of_krylovGrade_le,\n NLAlib.lanczosBeta_pos,\n NLAlib.lanczosBeta_succ_eq_dotProduct,\n NLAlib.lanczosRecurrence_eq_arnoldiBasis,\n NLAlib.lanczosRecurrence_eq_zero_of_krylovGrade_le,\n NLAlib.partialCholeskyFactor_mul_transpose_eq_nystrom,\n NLAlib.partialCholeskyResidual_eq_sub_nystrom,\n NLAlib.range_qrAlgorithmQ_castLE_eq_subspaceIterate,\n NLAlib.span_cgRecurrence_p,\n NLAlib.span_cgRecurrence_r]\nOK: no axioms beyond propext / Classical.choice / Quot.sound (and sorryAx in scaffolds)",
+  "trusted_audit_output": "audited 20428 declarations reachable through import NLAlib",
+  "index_status_readback": "All twelve retained cards and the added scalar comparison are proved; all seven excluded targets and twenty-four added candidates remain open."
+ },
+ "counts": {
+  "retained_targets": 12,
+  "completed_retained_source_scopes": 12,
+  "additional_proved_comparisons": 1,
+  "open_retained_source_scopes": 0,
+  "excluded_deep_input_targets": 7
+ }
+}

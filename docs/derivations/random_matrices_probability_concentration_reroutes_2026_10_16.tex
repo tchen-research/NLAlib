@@ -1,0 +1,2262 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{array,longtable,booktabs}
+\usepackage{xurl}
+\usepackage[unicode,hidelinks]{hyperref}
+\usepackage{microtype}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{3em}
+\allowdisplaybreaks
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\N}{\mathbb N}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left|#1\right|}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareRobustCommand{\code}[1]{{\footnotesize\urlstyle{tt}\nolinkurl{#1}}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\title{Random Matrices, Probability, and Concentration\\
+Proof Routes for the Remaining Open Items}
+\author{Mathematical derivations and audit for NLAlib}
+\date{16 October 2026}
+\begin{document}
+\maketitle
+
+\textbf{Scope.} The
+\href{https://research.chen.pw/NLAlib/}{live catalogue}
+on 16 October 2026 lists 15 open cards in Random matrices and four in
+Probability and concentration. This document covers all 19, with the
+current statements, constants, and side conditions. It is a mathematical
+handoff for formalization, not a collection of newly implemented Lean proofs.
+No Lean source or catalogue status was changed.
+
+\textbf{Principal new route.} The partial-transpose Gaussian moment
+bound can be proved using a finite Hermite space of dimension
+$\binom{s+p}{p}$. Together with the now-formalized coefficient-block
+inequalities, it proves the covariance-sensitive norm target and the
+strong matrix-chaos target without their former free-probability
+dependency. The latter even admits the better logarithmic exponent
+$q/2$ in the displayed explicit bound. A finite scalar domination lemma
+also avoids a general subgaussian-process comparison theorem.
+
+\textbf{What is and is not closed here.} Twelve cards receive direct
+derivations using finite identities and already available analysis.
+Seven cards receive explicit reductions with a retained deep input:
+three require the BMV trace-exponential positivity theorem, two require
+two-sided affine free-spectrum comparison, and two require the global
+stable-branch characterization of the block-Wishart law. The retained
+inputs are specified in the relevant sections. Their consequences are
+proved, but those inputs are not silently treated as existing Lean results
+or claimed to have elementary proofs here. These are classical or recent
+proved mathematical results; ``open'' refers to the catalogue's
+formalization status.
+
+\textbf{Snapshot and reuse.} The parsed site atlas agrees with the
+repository atlas at commit
+\href{https://github.com/tchen-research/NLAlib/tree/faef0a270d762f0bf0e90603544d50f289873d0e}
+{\texttt{faef0a270d762f0bf0e90603544d50f289873d0e}}.
+All named NLAlib reuse pointers were checked in the corresponding public
+declaration index with \code{sorry=false}. Mathlib names are accompanied
+by the source module inspected. This is a statement-availability check,
+not a claim that proposed new applications were compiled.
+
+\textbf{Conventions.} The operator norm is denoted by $\norm{\cdot}$ unless
+another norm is specified. The adjoint is $*$; real transpose is $T$ or
+$\mathsf T$. Ordinary trace is unnormalized. A normalized trace is always
+written $\tr_d=d^{-1}\operatorname{Tr}$ or displayed with its factor.
+Hermitian matrices form a real vector space even when their entries are
+complex; covariance matching refers to every real-coordinate second
+moment. All logarithms are natural.
+
+\textbf{One law-transport principle for the whole document.} If finitely
+many random objects $X_i$ on an arbitrary probability space are independent
+with laws $\mu_i$, their joint law is $\bigotimes_i\mu_i$. Every measurable
+matrix expression in them therefore has the same law as the corresponding
+expression on that finite product. Independent copies are constructed by
+adding product factors. Nonnegative integrals transfer by the map-integral
+identity, and ordinary expectations transfer after integrability is checked.
+All state spaces here are finite-dimensional Borel spaces; no
+standard-Borel assumption on the original sample space is required.
+Conditioning in the proofs can usually be implemented as iterated product
+integration with deterministic matrix coefficients.
+
+\tableofcontents
+\clearpage
+\section*{Coverage and dependency ledger}
+\addcontentsline{toc}{section}{Coverage and dependency ledger}
+``Direct'' means that the mathematical derivation is supplied here.
+``BMV'', ``Free'', and ``Branch'' identify a retained input, as described
+above. None of these labels changes the atlas's proof status.
+\small
+\begin{longtable}{@{}r p{0.64\textwidth} l l@{}}
+\toprule
+No. & Atlas id & Section & Route \\
+\midrule
+\endfirsthead
+\toprule
+No. & Atlas id & Section & Route \\
+\midrule
+\endhead
+1 & \code{chi-square-neg-moment} & \ref{route:chi-square-neg-moment} & Direct \\
+2 & \code{gaussian-width-def} & \ref{route:gaussian-width-def} & Direct \\
+3 & \code{gaussian-width-restricted-minimum} & \ref{route:gaussian-width-restricted-minimum} & Direct \\
+4 & \code{matrix-chaos-flattenings-def} & \ref{route:matrix-chaos-flattenings-def} & Direct \\
+5 & \code{matrix-chaos-decoupling-upper} & \ref{route:matrix-chaos-decoupling-upper} & Direct \\
+6 & \code{matrix-chaos-iterated-khintchine} & \ref{route:matrix-chaos-iterated-khintchine} & Direct \\
+7 & \code{gaussian-series-covariance-sensitive-norm} & \ref{route:gaussian-series-covariance-sensitive-norm} & Direct \\
+8 & \code{gaussian-trace-mgf-comparison} & \ref{route:gaussian-trace-mgf-comparison} & BMV \\
+9 & \code{gaussian-proxy-eigenvalue-comparison} & \ref{route:gaussian-proxy-eigenvalue-comparison} & BMV \\
+10 & \code{exchangeable-matrix-covariance} & \ref{route:exchangeable-matrix-covariance} & Direct \\
+11 & \code{cauchy-transform-gaussian-universality} & \ref{route:cauchy-transform-gaussian-universality} & Direct \\
+12 & \code{matrix-chaos-strong-khintchine} & \ref{route:matrix-chaos-strong-khintchine} & Direct \\
+13 & \code{sample-covariance-fourth-moment-lower} & \ref{route:sample-covariance-fourth-moment-lower} & BMV \\
+14 & \code{gaussian-free-spectrum-two-sided} & \ref{route:gaussian-free-spectrum-two-sided} & Free \\
+15 & \code{gaussian-quadratic-free-spectrum} & \ref{route:gaussian-quadratic-free-spectrum} & Free \\
+16 & \code{block-wishart-variational-edges} & \ref{route:block-wishart-variational-edges} & Branch \\
+17 & \code{block-wishart-log-potential} & \ref{route:block-wishart-log-potential} & Branch \\
+18 & \code{gaussian-series-partial-transpose-norm} & \ref{route:gaussian-series-partial-transpose-norm} & Direct \\
+19 & \code{gaussian-cayley-fourier-block-law} & \ref{route:gaussian-cayley-fourier-block-law} & Direct \\
+\bottomrule
+\end{longtable}
+\normalsize
+\clearpage
+\section{Four targets needing only finite comparisons and linear algebra}
+
+\subsection{Negative chi-square moments: reuse the endpoint and interpolate}
+\label{route:chi-square-neg-moment}
+\textbf{Atlas id:} \code{chi-square-neg-moment}.
+Let $S=\sum_{i=1}^d g_i^2$, with independent standard real Gaussian
+coordinates and $d\ge1$. The existing density or Gamma-integral calculation
+gives, for $0\le q<d/2$,
+\[
+ \mathbb E S^{-q}
+ =\frac1{2^{d/2}\Gamma(d/2)}
+      \int_0^\infty s^{d/2-q-1}e^{-s/2}\,ds
+ =\frac{\Gamma(d/2-q)}{2^q\Gamma(d/2)}.                 \tag{W1}
+\]
+The exponent at zero is greater than $-1$, which is the integrability
+condition; the exponential controls infinity. Also $S>0$ almost surely,
+so the value assigned to an inverse on the null event $S=0$ is irrelevant.
+For $q=0$ the answer is $1$. Two uses of the Gamma recurrence at $q=2$
+give $\mathbb E S^{-2}=1/((d-2)(d-4))$ when $d\ge5$.
+These statements are already proved in the current declaration index.
+
+The remaining uniform bound requires no further Gamma estimate. Put
+$r=(d-1)/2$ and suppose $0<q\le r$. Concavity of $u\mapsto u^{q/r}$ on
+the nonnegative half-line, on a probability space, gives
+\[
+ \mathbb E S^{-q}\le(\mathbb E S^{-r})^{q/r},\qquad
+ (\mathbb E S^{-q})^{1/q}\le(\mathbb E S^{-r})^{1/r}.    \tag{W2}
+\]
+For $q=r$ this is equality. Integrability of the smaller power also follows
+from $u^{q/r}\le1+u$, so Jensen has all its hypotheses.
+For $d\ge5$, the already proved endpoint inequality
+$\mathbb E S^{-r}<(3/d)^r$ finishes the desired bound $3/d$.
+For the only remaining admissible dimensions, (W1) evaluates the endpoint
+exactly:
+\[
+\begin{array}{c|c|c}
+ d&r& d(\mathbb ES^{-r})^{1/r}\\\hline
+ 2&1/2&\pi\\
+ 3&1&3\\
+ 4&3/2&2\pi^{1/3}.
+\end{array}
+\]
+Each entry is below $4$ (use $\pi<4$, and $\pi<8$ in the last case).
+For $d=1$, the hypotheses $q>0$ and $d\ge2q+1$ are incompatible.
+This proves the complete card, including the distinction between mere
+integrability $2q<d$ and the stronger uniform-bound condition $2q+1\le d$.
+The latter cannot be dropped: the Gamma factor in (W1) diverges as
+$q\uparrow d/2$ at fixed $d$.
+
+\paragraph{Verified reuse.}
+The exact formula, integrability, and large-dimension endpoint are
+\code{NLAlib.integral_rpow_inv_sum_sq_gaussianVector},
+\code{NLAlib.integrable_rpow_inv_sum_sq_gaussianVector}, and
+\code{NLAlib.integral_rpow_inv_sum_sq_gaussianVector_lt}.
+Even the interpolation step (W2) already exists as
+\code{NLAlib.integral_norm_rpow_inv_le}, applied to the nonnegative random
+variable $S^{-1}$. The second inverse moment is
+\code{NLAlib.integral_inv_sum_sq_pow_two_gaussianVector}.
+Thus the missing formal work for this card is principally the endpoint
+assembly, dimensions $2,3,4$, and transport along the Gaussian law.
+
+\subsection{Gaussian width: define the support function first}
+\label{route:gaussian-width-def}
+\textbf{Atlas id:} \code{gaussian-width-def}.
+For a nonempty compact $T\subset\R^n$, put
+$R_T=\max_{x\in T}\norm x_2$ and
+\[
+ h_T(z)=\max_{x\in T}\langle z,x\rangle,\qquad
+ w(T)=\mathbb E h_T(g),\quad g\sim N(0,I_n).
+\]
+Compactness supplies both maxima. The pointwise inequalities
+\[
+ |h_T(z)|\le R_T\norm z_2,\qquad
+ |h_T(z)-h_T(z')|\le R_T\norm{z-z'}_2                 \tag{W3}
+\]
+follow by bounding each linear functional and taking suprema. In particular,
+the support function is continuous and integrable, since
+$\mathbb E\norm g_2\le\sqrt{\mathbb E\norm g_2^2}=\sqrt n$.
+This avoids any measurable-maximizer theorem or selection of a random
+maximizing point. If $x_0\in T$, then $h_T(g)\ge\langle g,x_0\rangle$,
+so $0\le w(T)\le R_T\sqrt n$.
+
+The basic identities now hold before integration:
+\[
+ h_{T+a}(z)=h_T(z)+\langle z,a\rangle,\quad
+ h_{UT}(z)=h_T(U^Tz),\quad
+ h_{\operatorname{conv}T}(z)=h_T(z)
+                     =h_{\overline{\operatorname{conv}}T}(z).    \tag{W4}
+\]
+The last equality follows first for each finite convex combination, then
+by continuity for its closure. It proves the corresponding expected
+identities without an additional compactness argument: the same support
+function is finite and integrable. Alternatively the closed convex hull
+is closed and bounded, hence compact in finite dimension.
+Centering and rotational invariance of $g$ give
+\[
+ w(T+a)=w(T),\qquad w(UT)=w(T)\quad(U^TU=I),\qquad
+ w(\operatorname{conv}T)=w(T).
+\]
+Also $w(cT)=c\,w(T)$ for $c\ge0$, and inclusion of sets increases width.
+Width here has no absolute value inside the supremum. In particular every
+singleton has width zero, regardless of its distance from the origin.
+
+If $L\ne\{0\}$ is a subspace and $T$ is its unit sphere, then
+$h_T(z)=\norm{P_Lz}_2$: Cauchy--Schwarz gives the upper bound, and normalize
+$P_Lz$ to attain it when nonzero. When it is zero every unit vector in $L$
+attains zero. Choosing an orthonormal basis of $L$ shows
+$w(T)=\mathbb E\norm{g_{\dim L}}_2$. The unit sphere of the zero subspace
+is empty and is intentionally outside this definition. If $n=0$, the only
+nonempty compact subset is $\{0\}$ and its width is zero.
+
+\paragraph{Verified reuse.}
+Use \code{NLAlib.integrable_of_lipschitz_gaussianVector} with (W3),
+\code{NLAlib.gaussianVector_map_toLp_eq_stdGaussian}, and
+\code{NLAlib.hasLaw_gaussianMatrix_orthogonal} with one matrix column.
+The compact support-function construction is the small deterministic
+interface to add; a new theory of Gaussian processes is unnecessary.
+
+\subsection{Restricted minimum: finite Gordon arrays and deterministic nets}
+\label{route:gaussian-width-restricted-minimum}
+\textbf{Atlas id:} \code{gaussian-width-restricted-minimum}.
+Let $m,n\ge1$, let $G$ be a standard real $m\times n$ Gaussian matrix,
+and let $\varnothing\ne T\subset S^{n-1}$ be compact. Define
+$f(G)=\min_{x\in T}\norm{Gx}_2$. For every $A,B$,
+\[
+ |f(A)-f(B)|\le\norm{A-B}_2\le\norm{A-B}_F.             \tag{W5}
+\]
+One proves this by testing the minimizer of one matrix in the other and
+then reversing the roles. Thus $f$ is measurable and integrable, without
+choosing those minimizers measurably.
+
+Here is the full reduction to the already proved \emph{finite} Gordon
+theorem. Choose finite nonempty sets $T_0\subset T$, $V_0\subset S^{m-1}$.
+Let $a\sim N(0,I_m)$, $b\sim N(0,I_n)$ and $\gamma\sim N(0,1)$ be
+independent of each other and of $G$. For $x\in T_0$, $y\in V_0$, set
+\[
+ U_{xy}=\langle a,y\rangle+\langle b,x\rangle,\qquad
+ V_{xy}=\langle Gx,y\rangle+\gamma.
+\]
+Both arrays are centered jointly Gaussian. For fixed $x$, their increment
+variances in $y$ agree. For $x,x'\in T_0$, $y,y'\in V_0$, putting
+$u=\langle x,x'\rangle$, $v=\langle y,y'\rangle$, gives
+\[
+ \mathbb E(U_{xy}-U_{x'y'})^2=4-2u-2v,\quad
+ \mathbb E(V_{xy}-V_{x'y'})^2=2-2uv,
+\]
+whose difference is $2(1-u)(1-v)\ge0$. The finite Gordon inequality in
+the indexed orientation therefore yields
+\[
+ \mathbb E\max_{y\in V_0}\langle a,y\rangle-w(T_0)
+ \le\mathbb E\min_{x\in T_0}\max_{y\in V_0}\langle Gx,y\rangle. \tag{W6}
+\]
+Here $\mathbb E\min_x\langle b,x\rangle=-w(T_0)$ follows from symmetry
+$b\overset{\rm law}=-b$, and the common scalar $\gamma$ integrates to zero.
+
+For $\epsilon>0$ choose deterministic finite $\epsilon$-nets
+$T_\epsilon\subset T$ and $V_\epsilon\subset S^{m-1}$. The support-function
+errors are at most $\epsilon\norm b$ and $\epsilon\norm a$. Moreover
+\[
+ \left|\min_{x\in T_\epsilon}\max_{y\in V_\epsilon}\langle Gx,y\rangle
+                  -f(G)\right|\le2\epsilon\norm G_F.            \tag{W7}
+\]
+For the inner maximum approximate a unit vector attaining $\norm{Gx}$;
+for the outer minimum approximate a minimizing point of $T$. These are
+deterministic inequalities for each matrix, not random choices used as
+measurable functions. Since all three norm expectations are finite,
+(W6)--(W7) pass to the limit simply by bounding expectation differences.
+They prove
+\[
+ \mathbb Ef(G)\ge\mathbb E\norm a_2-w(T).                       \tag{W8}
+\]
+
+The already proved Gordon singular-value theorem with one column gives
+$\mathbb E\norm a_2\ge\sqrt m-1$. An elementary independent check is:
+for $m\ge2$, the chi-density and Gamma recurrence give
+$\mathbb E\norm a=(m-1)\mathbb E\norm a^{-1}$, while Cauchy--Schwarz
+gives $\mathbb E\norm a\,\mathbb E\norm a^{-1}\ge1$; hence
+$\mathbb E\norm a\ge\sqrt{m-1}\ge\sqrt m-1$. For $m=1$, nonnegativity
+is sufficient for the asserted weaker bound.
+Gaussian concentration applied to $-f$, whose Lipschitz constant is one
+by (W5), now gives for $t\ge0$
+\[
+ \boxed{\mathbb P\{f(G)<\sqrt m-1-w(T)-t\}\le e^{-t^2/2}.}       \tag{W9}
+\]
+The event is contained in $\{f(G)\le\mathbb Ef(G)-t\}$.
+If the displayed threshold is nonpositive, it is empty; the strict event
+avoids making any assertion about an atom at zero.
+
+\paragraph{Verified reuse.}
+The exact finite array interface is \code{NLAlib.gordon_minimax_inequality}.
+The required tail is \code{NLAlib.gaussian_concentration}, or its
+arbitrary-space transport \code{NLAlib.gaussian_concentration_of_hasLaw}.
+Use \code{NLAlib.gordon_extreme_singular_values} with one column for the
+Gaussian radius bound. Only compact nets and (W7) bridge the existing finite
+comparison to the set-indexed target; no separable-process extension is needed.
+
+\subsection{Gaussian Cayley matrices: explicit finite Fourier certificates}
+\label{route:gaussian-cayley-fourier-block-law}
+\textbf{Atlas id:} \code{gaussian-cayley-fourier-block-law}.
+Let $G$ be a finite group of order $N\ge1$, and let $\pi$ run through a
+complete family of inequivalent irreducible unitary complex representations,
+of dimensions $d_\pi$. The route below proves the required finite Fourier
+decomposition directly; it does not need a general Peter--Weyl theorem.
+
+\paragraph{Finite Schur averaging.}
+For a map $M:\C^{d_\tau}\to\C^{d_\pi}$, put
+\[
+ \mathcal A_{\pi\tau}(M)=\frac1N\sum_{g\in G}\pi(g)M\tau(g)^*.
+\]
+Changing the summation variable shows this is an intertwiner. Its kernel
+and range are invariant. Thus a nonzero intertwiner between irreducibles
+is an isomorphism, so it vanishes when $\pi\ne\tau$. For $\pi=\tau$,
+choose an eigenvalue of the intertwiner over $\C$; the nonzero kernel of
+$\mathcal A-\lambda I$ is invariant and therefore is the whole space.
+The intertwiner is scalar. Taking traces identifies the scalar:
+$\mathcal A_{\pi\pi}(M)=\tr(M)I/d_\pi$.
+Applying this to a matrix unit gives the coefficient identity
+\[
+ \frac1N\sum_{g\in G}\pi(g)_{ia}\overline{\tau(g)_{jb}}
+ =\begin{cases}d_\pi^{-1}\delta_{ij}\delta_{ab},&\pi=\tau,\\
+                 0,&\pi\ne\tau.\end{cases}                    \tag{W10}
+\]
+There is no probability in this step.
+
+\paragraph{Completeness without a dimension formula as an extra axiom.}
+On $\C^G$, with counting inner product, define
+$\psi_{\pi ab}(g)=\sqrt{d_\pi/N}\,\pi(g^{-1})_{ab}$.
+Equation (W10), with $g\mapsto g^{-1}$, makes these functions orthonormal.
+Their span $M$ is invariant under $\rho(h)f(g)=f(h^{-1}g)$, since
+\[
+ \rho(h)\psi_{\pi ab}=\sum_c\psi_{\pi ac}\pi(h)_{cb}.           \tag{W11}
+\]
+Their orthogonal complement is invariant as well, because $\rho(h)$ is
+unitary and its inverse is another group element.
+If $M^\perp\ne0$, choose a nonzero invariant subspace $W\subseteq M^\perp$
+of minimal dimension. Its restricted representation is irreducible, hence
+equivalent to some $\pi$ by completeness of the given list. Let
+$J:\C^{d_\pi}\to W$ be an invertible intertwiner. Evaluation at the
+identity $e\in G$ gives, for $v\in\C^{d_\pi}$,
+\[
+ (Jv)(g)=(\rho(g^{-1})Jv)(e)=(J\pi(g^{-1})v)(e).
+\]
+The last expression is a linear combination of the coefficients
+$\pi(g^{-1})_{ab}$, so $Jv\in M$, a contradiction. Thus the orthonormal
+family is a basis, and $\sum_\pi d_\pi^2=N$ follows from its size.
+With columns $\psi_{\pi ab}$, the unitary matrix $U$ satisfies, by (W11),
+\[
+ U^*\rho(h)U=\bigoplus_\pi I_{d_\pi}\otimes\pi(h).              \tag{W12}
+\]
+The index $a$ is the multiplicity coordinate; $b$ is the representation
+coordinate. Stating this order explicitly avoids a tensor-transpose error.
+
+\paragraph{Gaussian independence by realification of one unitary.}
+For $z_g=\xi_g+i\eta_g$, all $2N$ real coordinates independent $N(0,1)$,
+define
+\[
+ B_\pi=\sum_gz_g\pi(g),\qquad Z_\pi=\sqrt{d_\pi/N}\,B_\pi.
+\]
+The transformation from $(z_g)$ to the concatenated entries of $(Z_\pi)$
+has coefficient rows $\sqrt{d_\pi/N}\,\pi(g)_{ab}$. They are orthonormal
+by (W10), and their number is $N$, so this transformation is unitary.
+If its complex matrix is $F=P+iQ$, the real transformation of real and
+imaginary coordinates is
+\[
+ \mathcal R(F)=\begin{bmatrix}P&-Q\\Q&P\end{bmatrix},\qquad
+ \mathcal R(F)^T\mathcal R(F)=I.
+\]
+Real Gaussian rotational invariance therefore says that all the resulting
+real and imaginary coordinates are again independent standard normals.
+This proves independence of every entry across every $Z_\pi$, without
+developing a new complex Gaussian covariance API.
+
+Finally (W12) holds pointwise for every coefficient vector, so
+\[
+ Z_G=\sum_gz_g\rho(g)
+ =U\left[\bigoplus_\pi I_{d_\pi}\otimes
+                   \sqrt{N/d_\pi}\,Z_\pi\right]U^*.
+\]
+This is stronger than the requested identity in law, with the blocks
+defined on the original space. Orthogonal direct sums and unitary invariance
+give the claimed norm law
+$\norm{Z_G}_2\overset{\rm law}=\max_\pi\sqrt{N/d_\pi}\norm{Z_\pi}_2$.
+The convention is $\mathbb E|z_g|^2=2$. Real-only Gaussian coefficients do
+not satisfy the stated independence conclusion; conjugate representations
+then impose relations. For the trivial group, $N=d_\pi=1$, and every
+identity reduces to the single circular Gaussian variable.
+
+\paragraph{Verified reuse and what remains to package.}
+Mathlib already supplies
+\code{Representation.IsIrreducible.bijective_or_eq_zero} and
+\code{Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed}
+in \code{Mathlib.RepresentationTheory.Irreducible}.
+Their local source was inspected. These replace the two Schur-lemma
+arguments. Equation (W10), the finite matrix-coefficient basis (W11),
+and the realification calculation are the useful small bridges to add.
+The probability input is the already proved
+\code{NLAlib.hasLaw_gaussianMatrix_orthogonal} on a real $2N$-dimensional
+one-column Gaussian matrix. Thus neither infinite-dimensional harmonic
+analysis nor an independent complex normal-distribution library is needed.
+
+
+\section{Matrix chaos through finite coefficient arrays}
+
+This section covers five open cards.  The principal change of route is that
+the new partial-transpose estimate can be proved entirely on a finite
+Hermite space.  It supplies the strong linear estimate needed for chaos,
+so that the strong chaos theorem need not wait for a free-probability
+comparison theorem.  All laws may be realized on an arbitrary probability
+space: independence identifies their finite-dimensional joint laws with
+product laws, and the calculations below take place on those product laws.
+
+\subsection{Coefficient flattenings are reindexed finite matrices}
+\label{route:matrix-chaos-flattenings-def}
+\noindent\code{matrix-chaos-flattenings-def}.
+
+Let $q,m,d_1,d_2\geq1$, and let
+$A_{i_1,\ldots,i_q}\in\R^{d_1\times d_2}$.  Regard the coefficients as the
+array
+\[
+ a(i_1,\ldots,i_q,a,b)=(A_{i_1,\ldots,i_q})_{ab}.
+\]
+For $S\subseteq[q]$, define the ordinary finite matrix $F_S$ by
+\[
+ (F_S)_{((i_t)_{t\in S},a),((i_t)_{t\notin S},b)}
+       =a(i_1,\ldots,i_q,a,b),\qquad
+ \sigma(A)=\max_{S\subseteq[q]}\norm{F_S}.
+\]
+Products over an empty set are singleton index types.  Thus $F_S$ has
+$d_1m^{|S|}$ rows and $d_2m^{q-|S|}$ columns.  No tensor-product
+construction is needed: an entry is obtained by the unique assembly of
+its row and column coordinates.  Changing the ordering within either
+index set multiplies by permutation matrices, so preserves the norm.
+
+For independent coordinate groups $h^{(1)},\ldots,h^{(q)}$, define
+\[
+ Y=\sum_{i_1,\ldots,i_q=1}^m
+       \left(\prod_{t=1}^q h^{(t)}_{i_t}\right)A_{i_1,\ldots,i_q}.
+\]
+Coincident values of indices in different groups are allowed.  For $q=1$,
+direct multiplication of horizontal and vertical block matrices gives
+\[
+ \norm{F_\varnothing}^2=\left\|\sum_iA_iA_i^*\right\|,
+ \qquad
+ \norm{F_{\{1\}}}^2=\left\|\sum_iA_i^*A_i\right\|.
+\]
+The covariance flattenings needed later are
+\[
+ (V_S)_{(i_t)_{t\in S},((i_t)_{t\notin S},a,b)}
+       =a(i_1,\ldots,i_q,a,b),\qquad
+ v(A)=\max_{\varnothing\ne S\subseteq[q]}\norm{V_S}.
+\]
+The row subset is nonempty, and both original matrix coordinates are on
+the column side.  These are different from flattenings that repeat a
+coordinate on both sides; no such overlapping flattening is used here.
+
+\paragraph{Finite bookkeeping lemma.}
+Freeze the last chaos coordinate $j=i_q$ and write
+$Y=\sum_jh_j^{(q)}B_j$, where $B_j$ is a chaos of degree $q-1$.
+Form its horizontal, vertical, and vectorization matrices
+\[
+ R=[B_1\ \cdots\ B_m],\qquad
+ C=[B_1^*\ \cdots\ B_m^*]^*,\qquad
+ V_{j,(a,b)}=(B_j)_{ab}.
+\]
+Each is a lower-degree chaos obtained by moving $j$ into its matrix
+indices.  Its coefficient parameters satisfy
+\begin{align*}
+ &\sigma(R),\sigma(C)\leq\sigma(A),\qquad
+ v(R),v(C)\leq v(A),\\
+ &\sigma(V)\leq v(A).
+\end{align*}
+Here a symbol such as $\sigma(R)$ means the parameter of the coefficient
+array of that lower-degree chaos.  To verify the first line, append $j$
+to the column or row subset of an $F$-flattening; for a $v$-flattening,
+the new matrix coordinates, including $j$, all go to its column side.
+For the second line, every variance flattening of $V$ has row set
+$\{q\}\cup S$, which is nonempty, and has $a,b$ on its column side.
+These are entrywise identifications up to permutations, not norm estimates
+for an abstract tensor product.  For degree zero set $\sigma(B)=\norm B$
+and $v(B)=0$ only for purposes of induction.
+
+\paragraph{Sources and reuse.}
+The definitions agree with
+\href{https://arxiv.org/html/2412.18468v2}{Bandeira--Lucca--Nizi\'c-Nikolac--van Handel,
+Sections 2.1--2.2}.  Existing block multiplication, permutation isometries,
+and \code{NLAlib.dilation_identities} suffice for the finite matrix
+interfaces; a new general-purpose tensor library is unnecessary.
+
+\subsection{One-sided decoupling by a finite coloring average}
+\label{route:matrix-chaos-decoupling-upper}
+\noindent\code{matrix-chaos-decoupling-upper}.
+
+\begin{theorem}
+Suppose $h_1,\ldots,h_m$ are independent centered integrable real variables,
+and $A_{i_1,\ldots,i_q}=0$ whenever two indices coincide.  If $X$ is the
+coupled chaos and $Y$ its fully decoupled version, then
+\[
+                     \mathbb E\norm X\leq q^q\mathbb E\norm Y.
+\]
+No symmetry under permutations of the $q$ coefficient indices is required.
+\end{theorem}
+\begin{proof}
+Average over the finite set of colorings $c:[m]\to[q]$, giving each
+coloring mass $q^{-m}$.  Put
+\[
+ X_c=\sum_{i_1,\ldots,i_q}
+       \prod_{t=1}^q\bigl(1_{\{c(i_t)=t\}}h_{i_t}\bigr)
+       A_{i_1,\ldots,i_q}.
+\]
+For a nonzero coefficient all indices are distinct, so exactly the
+fraction $q^{-q}$ of colorings retains its term.  Hence
+$\mathbb E_c X_c=q^{-q}X$, and the triangle inequality for a finite
+convex combination gives
+\[
+ \mathbb E\norm X\leq q^q\mathbb E_c\mathbb E\norm{X_c}.
+\]
+Fix $c$.  In the product realization of $Y$, retain the coordinates
+$h_i^{(t)}$ with $c(i)=t$ and integrate every other coordinate.  Centering
+makes every term containing a nonretained coordinate vanish.  The
+resulting function $Y_c$ has exactly the same law as $X_c$: the retained
+coordinates come from disjoint independent classes.  Pointwise in the
+retained coordinates, the norm of the integrated matrix is at most the
+integral of its norm.  Thus $\mathbb E\norm{X_c}\leq\mathbb E\norm Y$.
+This proves the assertion using only finite-product integration and
+finite sums; a general conditional-expectation interface is optional.
+
+All terms are integrable.  In $X$ the nonzero terms use distinct
+independent factors, and in $Y$ they use independent groups, so the
+expectation of each absolute scalar product is a product of finite first
+moments.  If $q>m$, $X=0$ because no distinct tuple exists.  For $q=1$
+the assertion is equality.  The zero coefficient family is immediate.
+\end{proof}
+
+This is the coloring proof of the upper direction of
+\href{https://arxiv.org/html/2412.18468v2}{the matrix chaos decoupling theorem}.
+It gives the numerical constant $q^q$ directly.  It proves no reverse
+inequality: antisymmetric coefficients can make $X$ identically zero
+while $Y$ is nonzero.
+
+\subsection{Partial transpose: a finite Hermite matrix proof}
+\label{route:gaussian-series-partial-transpose-norm}
+\noindent\code{gaussian-series-partial-transpose-norm}.
+
+For Hermitian $A_1,\ldots,A_s\in\C^{d\times d}$ with $s,d\geq1$, put
+\[
+ X=\sum_{i=1}^sg_iA_i,\quad
+ S=\sum_iA_i^2,\quad \sigma^2=\norm S,\quad
+ T=[A_jA_i]_{i,j=1}^s,\quad \kappa^2=\lambda_{\max}(T).
+\]
+The matrix $T$ is Hermitian, but is generally not positive semidefinite.
+The already established coefficient-block theorem gives
+\[
+ 0\leq\kappa\leq\sigma,
+ \qquad T\preceq\kappa^2I,
+ \qquad \kappa\leq v,
+ \quad
+ v^2=\left\|\sum_i\operatorname{vec}(A_i)
+                       \operatorname{vec}(A_i)^*\right\|.
+\]
+The use of the largest eigenvalue, rather than the absolute largest
+eigenvalue, is essential in the following estimate.
+
+\begin{theorem}\label{thm:finite-hermite-partial-transpose}
+For every integer $p\geq1$,
+\[
+ \left(\mathbb E\,d^{-1}\tr X^{2p}\right)^{1/(2p)}
+       \leq2\sqrt{\sigma^2+(p-1)\kappa^2}.
+\]
+Moreover,
+\[
+ \mathbb E\norm X\leq2\sigma+6\kappa\sqrt{\log d}.
+\]
+For $d\geq2$ the slightly more precise intermediate bound is
+$2\sigma+4\kappa\sqrt{\log(2d)}$.
+\end{theorem}
+\begin{proof}
+Fix $p$ and use the finite orthonormal basis
+\[
+ \{e_\alpha:\alpha\in\N^s,\ |\alpha|\leq p\}
+ \quad\hbox{of }H_p,
+ \qquad \dim H_p=\binom{s+p}{p}.
+\]
+Define finite matrices
+\[
+ C_i e_\alpha=
+ \begin{cases}
+ \sqrt{\alpha_i+1}\,e_{\alpha+e_i},&|\alpha|<p,\\
+ 0,&|\alpha|=p,
+ \end{cases}
+ \qquad
+ C_i^*e_\alpha=\sqrt{\alpha_i}\,e_{\alpha-e_i},
+\]
+with zero understood when $\alpha_i=0$.  Let $P$ project onto degrees
+at most $p-1$, and let $N e_\alpha=|\alpha|e_\alpha$.  Direct basis
+calculation gives
+\[
+ C_i^*C_jP=(\delta_{ij}I+C_jC_i^*)P,
+ \qquad \sum_iC_iC_i^*=N.
+\]
+The first identity is deliberately restricted to $P$; the unqualified
+commutation relation would be false at the cutoff.
+
+Set $L=\sum_iA_i\otimes C_i$, and let
+$Bz=((I_d\otimes C_i^*)z)_i$.  On $\C^d\otimes PH_p$ the preceding
+identities give the finite factorization
+\begin{align*}
+ L^*L
+ &=S\otimes I+\sum_{i,j}A_iA_j\otimes C_jC_i^*\\
+ &=S\otimes I+B^*(T\otimes I)B
+ \preceq\sigma^2I+\kappa^2(I_d\otimes N)\\
+ &\preceq\bigl(\sigma^2+(p-1)\kappa^2\bigr)I.
+\end{align*}
+The identification of the block index in $B^*(T\otimes I)B$ follows by
+interchanging $i,j$ in its sum.  Also $L$ annihilates degree $p$, and
+$L^*L$ preserves degree.  Consequently the same norm bound applies on
+the whole finite space:
+\[
+ \norm L^2\leq\sigma^2+(p-1)\kappa^2,
+ \qquad
+ \norm{L+L^*}\leq2\sqrt{\sigma^2+(p-1)\kappa^2}.
+\]
+
+Here is a finite verification of the probabilistic identity.  Define
+the monic probabilists' Hermite polynomials by
+$H_0=1$, $H_1=x$, and
+$H_{k+1}=xH_k-kH_{k-1}$.  The scalar Gaussian moment recurrence implies,
+by linearity on monomials,
+\[
+             \mathbb E[g f(g)]=\mathbb E[f'(g)]
+             \quad\hbox{for every polynomial }f.
+\]
+This does not apply a bounded-test-function Stein lemma to an unbounded
+polynomial.  It follows directly from the finite moment formulas.
+Induction gives $H_k'=kH_{k-1}$ and
+$\mathbb E[H_k(g)f(g)]=\mathbb E[f^{(k)}(g)]$.
+Thus $h_k=H_k/\sqrt{k!}$ are orthonormal and
+\[
+ gh_k=\sqrt{k+1}\,h_{k+1}+\sqrt{k}\,h_{k-1}.
+\]
+Independence makes the finite family
+$h_\alpha(g)=\prod_i h_{\alpha_i}(g_i)$ orthonormal.  Identify
+$e_\alpha$ with $h_\alpha$.  Starting at the constant polynomial, the
+first $p$ applications of multiplication by $X(g)$ never require a
+degree exceeding $p$.  Hence, for each standard basis vector $u_a$,
+\[
+ (L+L^*)^p(u_a\otimes e_0)
+       \quad\hbox{represents exactly}\quad X(g)^p u_a.
+\]
+Taking its squared norm, summing over $a$, and using that $X$ is
+Hermitian proves
+\[
+ \mathbb E\,d^{-1}\tr X^{2p}
+   =d^{-1}\sum_{a=1}^d\norm{(L+L^*)^p(u_a\otimes e_0)}^2
+   \leq\norm{L+L^*}^{2p}.
+\]
+Only a finite orthonormal family is used.  No completeness assertion for
+all Hermite polynomials, unbounded operator, or infinite Fock space is
+needed.
+
+For the norm estimate suppose first $d\geq2$, put
+$\ell=\log(2d)>1$, and assume $\kappa>0$.  Choose the integer
+\[
+              p=\left\lceil\ell+\frac{\sigma\sqrt\ell}{\kappa}
+                 \right\rceil.
+\]
+The scalar inequalities $p\geq\ell$ and $e^u\leq1+2u$ for
+$0\leq u\leq1/2$ imply $d^{1/(2p)}\leq1+\ell/p$.
+Since $\kappa\leq\sigma$,
+\begin{align*}
+ \sigma^2+p\kappa^2
+ &\leq\sigma^2+\ell\kappa^2+\sigma\kappa\sqrt\ell+\kappa^2
+ \leq(\sigma+\kappa\sqrt\ell)^2,\\
+ \frac\ell p(\sigma+\kappa\sqrt\ell)&\leq\kappa\sqrt\ell.
+\end{align*}
+For a Hermitian matrix, $\norm X^{2p}\leq\tr X^{2p}$, and the scalar
+$L^{2p}$ bound gives
+\begin{align*}
+ \mathbb E\norm X
+ &\leq2d^{1/(2p)}\sqrt{\sigma^2+(p-1)\kappa^2}\\
+ &\leq2\sigma+4\kappa\sqrt{\log(2d)}
+ \leq2\sigma+6\kappa\sqrt{\log d}.
+\end{align*}
+The last step uses $\log(2d)\leq2\log d$ and $4\sqrt2<6$.
+If $\kappa=0$, take $p\to\infty$ in the moment bound to obtain
+$\mathbb E\norm X\leq2\sigma$; alternatively the diagonal blocks of
+$T\preceq0$ force every $A_i=0$.  If $d=1$, $X$ is a scalar real
+Gaussian of variance $\sigma^2$, and
+$\mathbb E|X|=\sqrt{2/\pi}\,\sigma\leq2\sigma$.
+All-zero coefficients are included in these arguments.
+\end{proof}
+
+\paragraph{Reuse and normalization audit.}
+The declaration index at the recorded snapshot marks each of
+\code{NLAlib.coefficientBlock_variance_covariance_bounds},
+\code{NLAlib.integral_prod_gaussianVector_eq_sum_pairings}, and
+\code{NLAlib.integral_abs_rpow_gaussianReal} as
+\code{sorry = false}.  The first supplies the coefficient bounds; the
+last two supply Gaussian moments and their arbitrary-space transport.
+The already proved
+\code{NLAlib.integral_re_trace_gaussianSeries_pow_rpow_le_of_hasLaw}
+also supplies ordinary Gaussian noncommutative Khintchine directly.
+The finite proof above strengthens it with $\kappa$.
+The source is
+\href{https://arxiv.org/html/2610.01982v1}{Bandeira--Kunisky--Nizi\'c-Nikolac--Pesenti--Wang,
+Section 2 and Appendix A.2}.  Its trace is normalized; for the library's
+unnormalized trace multiply the rooted moment bound by $d^{1/(2p)}$.
+
+\subsection{Iterated Khintchine without a subgaussian-process theorem}
+\label{route:matrix-chaos-iterated-khintchine}
+\noindent\code{matrix-chaos-iterated-khintchine}.
+
+\begin{lemma}[Scalar domination, followed by finite contraction]
+\label{lem:subgaussian-gaussian-domination}
+Let $h_i$ be independent centered real variables satisfying
+$\mathbb E e^{h_i^2/K^2}\leq2$ for $K>0$.  For arbitrary vectors $a_i$
+in a finite-dimensional normed space,
+\[
+          \mathbb E\left\|\sum_i h_i a_i\right\|
+        \leq 10K\,\mathbb E\left\|\sum_i g_i a_i\right\|.
+\]
+\end{lemma}
+\begin{proof}
+Introduce independent copies $h_i'$.  Centering and Jensen give
+$\mathbb E\norm{\sum_i h_i a_i}
+ \leq\mathbb E\norm{\sum_i\xi_i a_i}$, with
+$\xi_i=h_i-h_i'$ symmetric and independent.  Since
+$(h-h')^2\leq2h^2+2(h')^2$, Cauchy--Schwarz and independence give
+\[
+ \mathbb E e^{\xi_i^2/(4K^2)}\leq2,
+ \qquad \mathbb P\{|\xi_i|>t\}\leq2e^{-t^2/(4K^2)}.
+\]
+For a standard Gaussian $g$ and $x\geq0$,
+\[
+ \mathbb P\{|g|>x\}
+ \geq2\int_x^{x+1}\frac{e^{-u^2/2}}{\sqrt{2\pi}}\,du
+ \geq\sqrt{2/\pi}\,e^{-(x+1)^2/2}.
+\]
+At $t=4K(1+x)$, the preceding upper bound on the tail of $|\xi_i|$
+is no larger than this lower bound.  Indeed
+$2e^{-4(1+x)^2}\leq\sqrt{2/\pi}e^{-(1+x)^2/2}$.
+For $t<4K$, the tail of $4K(1+|g|)$ is one.  Therefore
+\[
+                  |\xi_i|\ \hbox{is stochastically dominated by}
+                     \ 4K(1+|g|).
+\]
+
+Here is the only contraction principle required.  For fixed $z,a$,
+\[
+        t\longmapsto\tfrac12(\norm{z+ta}+\norm{z-ta})
+\]
+is even and convex, hence nondecreasing for $t\geq0$.  Nonnegative
+variables ordered by all their upper tails have ordered expectations
+against every nondecreasing continuous nonnegative function.  A direct
+proof approximates that function from below by increasing step
+functions and applies monotone convergence.  Apply this observation
+one coordinate at a time, averaging independent signs.  Since a
+symmetric variable has the law of an independent sign times its
+absolute value, this proves
+\begin{align*}
+ \mathbb E\norm{\sum_i\xi_i a_i}
+ &\leq4K\,\mathbb E\norm{\sum_i\varepsilon_i(1+|g_i|)a_i}\\
+ &\leq4K\left(\mathbb E\norm{\sum_i\varepsilon_i a_i}
+                  +\mathbb E\norm{\sum_i g_i a_i}\right).
+\end{align*}
+Finally Jensen over the Gaussian magnitudes, conditional on the signs,
+gives
+\[
+ \sqrt{2/\pi}\,\mathbb E\norm{\sum_i\varepsilon_i a_i}
+       \leq\mathbb E\norm{\sum_i g_i a_i}.
+\]
+Thus the constant $4(1+\sqrt{\pi/2})<10$ works.  No coupling theorem,
+generic chaining, or comparison of arbitrary subgaussian processes is
+needed.  All needed integrability follows from the assumed exponential
+square moment.
+\end{proof}
+
+For rectangular coefficients $B_j\in\R^{r\times c}$, let
+\[
+ \sigma_B=\max\left\{\left\|\sum_jB_jB_j^*\right\|^{1/2},
+                    \left\|\sum_jB_j^*B_j\right\|^{1/2}\right\}.
+\]
+Hermitian dilation and either the existing Gaussian Khintchine theorem
+or Theorem~\ref{thm:finite-hermite-partial-transpose} with
+$\kappa\leq\sigma$ imply
+\[
+ \mathbb E\norm{\sum_jg_jB_j}
+          \leq5\sqrt{\log(2(r+c))}\,\sigma_B.
+\]
+For completeness choose $p=\lceil\log(2(r+c))\rceil$.  Then
+$p\leq2\log(2(r+c))$, $(r+c)^{1/(2p)}\leq\sqrt e$, and the bound
+$2\sqrt p\,\sigma_B$ for the normalized rooted moment proves the
+claim because $2\sqrt{2e}<5$.
+Lemma~\ref{lem:subgaussian-gaussian-domination} gives the linear
+subgaussian estimate with constant $50K$.
+
+Put
+\[
+                  \mathcal L=\log(4d_1d_2m^q)>1.
+\]
+At every step of the flattening recursion the product of the two matrix
+dimensions and all remaining chaos dimensions equals $d_1d_2m^q$.
+Consequently every logarithm $\log(2(r+c))$ encountered is at most
+$\mathcal L$.  At one step use
+$\sigma_B\leq\norm R+\norm C$, integrate the other coordinate groups,
+and apply the same argument to both lower-degree matrices.  Induction
+therefore gives, even with the convenient larger linear constant $100$,
+\[
+             \mathbb E\norm Y
+       \leq(200K)^q\mathcal L^{q/2}\sigma(A).
+\]
+Since $d=\max(d_1,d_2)$ and
+\[
+ \mathcal L\leq(q+4)\log(d+m),
+\]
+the exact advertised form follows with the explicit admissible constant
+\[
+                    C_q=200^q(q+4)^{q/2}.
+\]
+The constant is intentionally nonoptimal.  The proof preserves the
+degree dependence, the exponent $q/2$, and the complete coefficient
+flattening parameter of
+\href{https://arxiv.org/html/2412.18468v2}{Theorem 2.4 of the matrix chaos paper}.
+In particular $d=m=1$ is harmless because $\log(d+m)=\log2>0$.
+
+\subsection{Strong chaos from the finite partial-transpose theorem}
+\label{route:matrix-chaos-strong-khintchine}
+\noindent\code{matrix-chaos-strong-khintchine}.
+
+\begin{theorem}
+Under the hypotheses of the two chaos norm cards, a stronger estimate is
+\[
+ \mathbb E\norm Y\leq(200K)^q
+       \left\{\sigma(A)+\frac q2
+          [\log(4d_1d_2m^q)]^{q/2}v(A)\right\}.
+\]
+In particular the requested bound with error exponent $(q+2)/2$ holds
+with
+\[
+ C_q=200^q\left(1+
+            \frac{q(q+4)^{q/2}}{2\log2}\right).
+\]
+\end{theorem}
+\begin{proof}
+First establish the strong linear inequality.  For rectangular
+$B_j\in\R^{r\times c}$ write
+\[
+ \mathcal D(B_j)=\begin{pmatrix}0&B_j\\B_j^*&0\end{pmatrix},
+ \qquad v_B=\norm{[\operatorname{vec}(B_j)^*]_j}.
+\]
+Then $\sigma(\mathcal D(B))=\sigma_B$.
+As real vector spaces with Frobenius inner product,
+$\mathcal D/\sqrt2$ is an isometry.  Applying it to each column of
+the coefficient-vector matrix proves
+$v(\mathcal D(B))=\sqrt2\,v_B$ exactly.
+Theorem~\ref{thm:finite-hermite-partial-transpose} and the proved
+$\kappa\leq v$ bound therefore yield
+\[
+ \mathbb E\norm{\sum_jg_jB_j}
+ \leq2\sigma_B+6\sqrt2\,v_B\sqrt{\log(r+c)}.
+\]
+Lemma~\ref{lem:subgaussian-gaussian-domination}, followed by
+$\sigma_B\leq\norm R+\norm C$, gives the convenient uniform version
+\[
+ \mathbb E\norm{\sum_jh_jB_j}
+ \leq100K\left(\norm R+\norm C+\sqrt{\mathcal L}\,\norm V\right)
+ \tag{SC}
+\]
+whenever $\mathcal L\geq\log(2(r+c))$.
+
+Use the same fixed $\mathcal L=\log(4d_1d_2m^q)>1$ throughout the
+recursion.  We prove the stronger claim with $r$ remaining groups and
+the same global $\mathcal L$:
+\[
+ \mathbb E\norm{Y_r}
+ \leq(200K)^r
+       \{\sigma(Y_r)+(r/2)\mathcal L^{r/2}v(Y_r)\}.
+\]
+At $r=0$ this is the identity for a deterministic matrix.  At a positive
+step apply (SC) conditionally on the first $r-1$ groups, which here means
+an iterated integral on the finite product law.  Apply the strong
+induction hypothesis to $R,C$, and the ordinary chaos estimate to $V$.
+The finite bookkeeping lemma ensures that their variance and covariance
+parameters are bounded by the indicated original parameters.  Hence,
+writing $a=100$, the upper bound is at most
+\begin{align*}
+ aK(2aK)^{r-1}\{&2\sigma(A)
+    +(r-1)\mathcal L^{(r-1)/2}v(A)
+    +\mathcal L^{r/2}v(A)\}\\
+ &\leq(2aK)^r\{\sigma(A)+(r/2)\mathcal L^{r/2}v(A)\}.
+\end{align*}
+The last step uses $\mathcal L\geq1$.  In the covariance branch the
+frozen last index is a row coordinate, so its ultimate row subset is
+nonempty; this is the reason the definition of $v$ excludes the empty
+subset and still covers every term needed here.
+
+Finally let $L_0=\log(d+m)\geq\log2$.  Use
+$\mathcal L\leq(q+4)L_0$ and
+$L_0^{q/2}\leq L_0^{(q+2)/2}/\log2$ to obtain the advertised conclusion
+with the stated $C_q$.  Zero coefficients and one-dimensional matrices
+are included without taking a logarithm of one.
+\end{proof}
+
+\paragraph{What changed relative to the original dependency graph.}
+\href{https://arxiv.org/html/2412.18468v2}{Theorem 2.5 and Appendix A.3}
+use a covariance-sensitive Gaussian norm theorem to supply their linear
+step.  The later
+\href{https://arxiv.org/html/2610.01982v1}{finite Hermite estimate}
+supplies (SC) directly, with a square-root logarithm.  Thus the finite
+proof above proves every displayed chaos bound, with explicit constants,
+without assuming that deeper comparison theorem.  The covariance-sensitive
+Gaussian norm card itself is also an immediate corollary: for $d\geq2$,
+\[
+ 6\kappa\sqrt{\log d}
+ \leq\frac{6}{(\log2)^{1/4}}
+          \sqrt{\sigma v}\,(\log d)^{3/4},
+\]
+because $\kappa\leq\min(\sigma,v)\leq\sqrt{\sigma v}$.
+This is a change of proof route, not a claim that the earlier sharper
+free-model comparison has been proved by the same argument.
+
+
+\section{Covariance bounds, free spectra, and block-Wishart variational formulas}
+
+\subsection{Covariance-sensitive Gaussian norms without a free model}
+\label{route:gaussian-series-covariance-sensitive-norm}
+\noindent\code{gaussian-series-covariance-sensitive-norm}.
+This card has a substantially shorter route than the original free-comparison
+argument.  Use the finite Hermite theorem
+\ref{thm:finite-hermite-partial-transpose} together with the coefficient-block
+inequality that is now proved in the toolkit.
+
+For Hermitian coefficients set
+\[
+ V=\sum_i A_i^2,\qquad
+ C=\sum_i\operatorname{vec}(A_i)\operatorname{vec}(A_i)^*,\qquad
+ T=(A_jA_i)_{i,j},\qquad
+ \sigma=\norm V^{1/2},\quad v=\norm C^{1/2},\quad
+ \kappa=\sqrt{\lambda_{\max}(T)}.
+\]
+All vectorizations here use the unnormalized Frobenius inner product.
+The existing theorem
+\code{NLAlib.coefficientBlock_variance_covariance_bounds}, verified with
+\code{sorry=false}, gives
+\[
+ 0\leq\kappa\leq\min\{\sigma,v\}\leq\sqrt{\sigma v}.
+\]
+Together with the finite Hermite norm estimate it follows that, for \(d\geq2\),
+\begin{align*}
+ \mathbb E\norm{\textstyle\sum_i g_iA_i}
+ &\leq2\sigma+6\kappa\sqrt{\log d}\\
+ &\leq2\sigma+
+ \frac{6}{(\log2)^{1/4}}\sqrt{\sigma v}\,(\log d)^{3/4}.
+\end{align*}
+This proves the exact advertised leading constant \(2\), with an explicit
+choice for the universal correction constant.  In fact the preceding
+\(\kappa\sqrt{\log d}\) estimate is stronger.
+
+For clarity, the finite mechanism behind the reused theorem is as follows.
+On the finite space spanned by multiindices \(a\in\N^s\) with \(|a|\leq p\),
+let \(C_i\) be truncated creation matrices and
+\(L=\sum_i A_i\otimes C_i\).  On degrees at most \(p-1\),
+\[
+ L^*L=V\otimes I+B^*(T\otimes I)B,
+ \qquad B^*B=\operatorname{diag}(|a|),
+\]
+where \(B\) stacks the annihilators \(C_i^*\).  On the top degree \(L=0\).
+Hence \(\norm L^2\leq\sigma^2+(p-1)\kappa^2\).
+The product Hermite recurrence identifies the squared norm of
+\((L+L^*)^p\) applied to the vacuum with the Gaussian \(2p\)-th moment.
+No infinite Fock space, asymptotic freeness, resolvent comparison, or
+multilinear interpolation is needed for this card.
+If the coefficient index set is empty, or \(\sigma=0\), every coefficient is
+zero and the conclusion is immediate.  This also avoids any nonempty-index
+side condition in the existing coefficient-block theorem.
+
+\paragraph{Audit.}
+The classical statement is
+\href{https://arxiv.org/abs/2108.06312v2}{Bandeira--Boedihardjo--van Handel,
+Corollary 2.2}.  The proof above is a different route through the finite
+Hermite estimate.  It does \emph{not} prove comparison with the exact free
+norm, which can be smaller than \(2\sigma\), or any reverse spectral inclusion.
+
+\subsection{Two-sided free spectral comparison: finite geometric and probabilistic bridges}
+\label{route:gaussian-free-spectrum-two-sided}
+\noindent\code{gaussian-free-spectrum-two-sided}.
+Assume \(d\geq2\). Write \(X=A_0+\sum_i g_iA_i\), with Hermitian coefficients, and let \(F=X_f\)
+be the faithful free semicircular model.  Put
+\[
+ \delta=\sqrt{\sigma v},\qquad
+ b=\sigma_*,\qquad \ell=\log d,
+ \qquad R_Y(z)=(zI-Y)^{-1}.
+\]
+The following decomposition separates ordinary finite matrix analysis from
+the two genuinely substantial free comparison inputs.  Unlike a direct
+appeal to a spectral-set theorem, the inputs concern a single resolvent at
+a single deterministic point.
+
+\paragraph{Two exact analytic inputs still to prove.}
+Let \(\tau_d=\operatorname{Tr}/d\) and use \(\tau_d\otimes\tau\) on the free
+model.  For \(z=x+i\eta\), \(\eta>0\), \(q\geq1\), retain the resolvent
+moment comparison
+\begin{equation}
+ \left|
+ \bigl(\mathbb E\tau_d|R_X(z)|^{4q}\bigr)^{1/(4q)}
+ -\norm{R_F(z)}_{L^{4q}(\tau_d\otimes\tau)}
+ \right|
+ \leq\frac83\frac{\delta^4(q+1)^3}{\eta^5}.
+ \tag{RM}\label{eq:free-rm}
+\end{equation}
+The factor is obtained from the \(2p\)-resolvent statement with \(p=2q\).
+The other input is the localized free resolvent estimate: for a universal
+\(U\geq1\),
+\begin{equation}
+ \norm{R_F(x+i\eta)}
+ \leq U\left(
+ \norm{R_F(x+i\eta)}_{L^{4q}(\tau_d\otimes\tau)}
+ +\frac b{\eta^2}\right),
+ \quad x\in\operatorname{spec}F,\quad q\geq\log d.
+ \tag{LU}\label{eq:free-lu}
+\end{equation}
+These are, respectively, the resolvent comparison in
+\href{https://arxiv.org/abs/2108.06312v2}{BBvH, Theorem 6.1} and the
+localized estimate in
+\href{https://arxiv.org/abs/2406.11453v2}{BCSvH, Corollary 4.4}.
+They are named prerequisites of this reroute, not consequences of the
+covariance-sensitive norm theorem just proved.  In particular, an upper
+norm bound alone cannot detect missing interior spectral points.
+
+\paragraph{Parameter and Lipschitz identities.}
+Finite Cauchy--Schwarz gives
+\begin{equation}
+ b\leq\min\{\sigma,v\}\leq\delta,
+ \qquad \sigma\leq\sqrt d\,b.
+ \label{eq:free-parameters}
+\end{equation}
+For the first inequality involving \(v\), test the covariance matrix against
+the vectorization of a rank-one matrix of Frobenius norm one.  For the
+inequality involving \(\sigma\), sum squared coordinates in an orthonormal
+basis.  For the last inequality, fix a unit vector \(w\) and sum
+\(\sum_i|e_j^*A_iw|^2\leq b^2\) over \(j\).
+For real coefficient vectors \(g,h\),
+\[
+ \norm{X(g)-X(h)}\leq b\norm{g-h}_2,
+ \qquad
+ \bigl|\norm{R_{X(g)}(z)}-\norm{R_{X(h)}(z)}\bigr|
+ \leq\frac b{\eta^2}\norm{g-h}_2.
+\]
+The second statement follows from the resolvent identity and
+\(\norm{R_Y(x+i\eta)}\leq\eta^{-1}\).  Existing Gaussian Lipschitz
+concentration therefore applies to the real-valued function
+\(g\mapsto\norm{R_{X(g)}(z)}\).
+
+\paragraph{Single-point bounds from the two inputs.}
+Set \(q=\lceil\log d\rceil\), so \(q\geq1\) and
+\(d^{1/(4q)}\leq e^{1/4}\).
+Ordinary scalar Gaussian concentration and integration of its tail give
+\[
+ \bigl(\mathbb E\norm{R_X(z)}^{4q}\bigr)^{1/(4q)}
+ \leq\mathbb E\norm{R_X(z)}+10\frac b{\eta^2}\sqrt q.
+\]
+For example, apply Minkowski to the mean and centered fluctuation, then
+integrate the bound \(2e^{-r^2/(2L^2)}\), \(L=b/\eta^2\); the displayed
+constant is deliberately generous.  The inequalities
+\(\tau_d|R|^{4q}\leq\norm R^{4q}\leq d\tau_d|R|^{4q}\),
+\eqref{eq:free-rm}, and concentration now give, with probability at least
+\(1-e^{-r^2}\),
+\begin{equation}
+ \norm{R_X(z)}
+ \leq e^{1/4}\norm{R_F(z)}
+  +e^{1/4}\frac83\frac{\delta^4(q+1)^3}{\eta^5}
+  +\sqrt2\frac b{\eta^2}r.
+ \label{eq:free-point-upper}
+\end{equation}
+For \(x\in\operatorname{spec}F\), \eqref{eq:free-lu} and the reverse
+direction of \eqref{eq:free-rm} give, with the same probability,
+\begin{equation}
+ \norm{R_X(x+i\eta)}
+ \geq\frac1{U\eta}
+  -\frac83\frac{\delta^4(q+1)^3}{\eta^5}
+  -\frac b{\eta^2}(1+10\sqrt q+\sqrt2r).
+ \label{eq:free-point-lower}
+\end{equation}
+Here \(\norm{R_F(x+i\eta)}=1/\eta\) because \(x\) belongs to its spectrum.
+These estimates make the separate roles of moment comparison and
+localized ultracontractivity explicit.
+
+\paragraph{Finite grids, with no dependence on the size of the mean.}
+The deterministic free norm bound is
+\(\norm{F-A_0\otimes1}\leq2\sigma\).
+Consequently \(\operatorname{spec}F\) lies in the union of \(d\) intervals
+of radius \(2\sigma\) about the eigenvalues of \(A_0\).  By
+\eqref{eq:free-parameters}, this set has a \(b\)-net whose points belong to
+\(\operatorname{spec}F\) and whose cardinality is at most \(6d^{3/2}\).
+Take a maximal \(b\)-separated subset within each interval and count the
+disjoint gaps; no interval between widely separated eigenvalues of \(A_0\)
+needs to be covered.
+
+For the other direction, the classical Gaussian-series bound and Gaussian
+concentration imply, except on an event of probability \(e^{-r^2}\),
+\[
+ \norm{X-A_0}\leq
+ \sigma\sqrt{2\log(2d)}+\sqrt2\,b r=:M_r.
+\]
+Thus the random spectrum lies in the union of the same \(d\) intervals,
+now of radius \(M_r\).  A fixed grid of mesh at most \(b\) for these intervals
+has at most \(8d^2(1+r)\) points.  Here one can use
+\(\log(2d)\leq d\) for \(d\geq2\).
+This coarse polynomial bound suffices.  Its logarithm is bounded by a
+universal multiple of \(\log d+r^2\).
+
+Use \eqref{eq:free-point-upper} on this second grid, and
+\eqref{eq:free-point-lower} on the first.  More explicitly, for fixed
+\(t\geq0\), set
+\[
+ r=\sqrt{t^2+\log3},\qquad N_0=8d^2(1+r),\qquad
+ a=\sqrt{t^2+\log(3N_0)}.
+\]
+The norm-envelope failure probability is \(e^{-t^2}/3\).
+Both grids have at most \(N_0\) points, and using pointwise tail parameter
+\(a\) makes each grid failure probability at most \(e^{-t^2}/3\).
+These grids are deterministic: their radii depend on \(t\), not on the
+sample.  To bound the resulting error, note that \(r\leq t+2\) and
+\(t+3\leq4e^{t^2/2}\), so
+\[
+ \log(3N_0)\leq\log96+2\ell+t^2/2
+                 \leq9\ell+t^2/2,
+ \qquad a\leq2t+3\sqrt\ell.
+\]
+The scalar resolvent identity
+\[
+ \bigl|\norm{R_Y(x+i\eta)}-\norm{R_Y(x'+i\eta)}\bigr|
+ \leq\frac{|x-x'|}{\eta^2}
+\]
+extends the lower estimate with an additional \(b/\eta^2\) error and the
+upper estimate with \((1+e^{1/4})b/\eta^2\).  In the upper estimate both
+resolvents change with the grid point.
+Using this bound for \(a\), \(q\leq(5/2)\ell\),
+\(q+1\leq4\ell\), and \(e^{1/4}<4/3\), all errors can be bounded by
+\[
+ 250\frac{\delta^4\ell^3}{\eta^5}
+ +40\frac{b(\sqrt\ell+t)}{\eta^2}.
+\]
+The harmless constants for \(\ell\in[\log2,1]\) must be retained:
+\(q+1\leq(1+2/\log2)\ell\), and
+\(b\sqrt\ell\leq(\log2)^{-1/4}\delta\ell^{3/4}\).
+
+Choose
+\[
+ \eta=D\bigl(\delta\ell^{3/4}+bt\bigr)
+\]
+with \(D=1000U\): since
+\(b\sqrt\ell\leq2\delta\ell^{3/4}\), the error multiplied by \(\eta\)
+is at most \(250/D^4+80/D\leq1/(2U)\).
+The errors are therefore at most
+\(\min\{1/2,1/(2U)\}/\eta\).
+At a random spectral point \(x\in\operatorname{spec}X\), the left side of
+\eqref{eq:free-point-upper} equals \(1/\eta\).  It follows that
+\(\norm{R_F(x+i\eta)}\geq c/\eta\), and hence
+\(\operatorname{dist}(x,\operatorname{spec}F)\leq3\eta\),
+using \(2e^{1/4}<3\).
+At a free spectral point, \eqref{eq:free-point-lower} similarly gives
+\(\operatorname{dist}(x,\operatorname{spec}X)\leq2U\eta\).
+We have proved, conditional exactly on (RM) and (LU),
+\[
+ \mathbb P\left\{d_H(\operatorname{spec}X,\operatorname{spec}F)
+ >C\delta(\log d)^{3/4}+Cbt\right\}\leq e^{-t^2},
+ \qquad C=3000U^2.
+\]
+No arbitrary compact-set entropy theorem is required: only finite unions of
+intervals and a finite union bound.  If \(b=0\), all coefficients vanish
+and both spectral sets equal \(\operatorname{spec}A_0\); handle this before
+constructing any grid or choosing \(\eta\).
+
+For nonempty compact subsets of \(\R\), the maps minimum, maximum, and
+maximum absolute value are all 1-Lipschitz for Hausdorff distance.  Integrating
+the displayed tail yields each expectation assertion, since
+\[
+ \int_0^\infty e^{-t^2}\,dt=\frac{\sqrt\pi}{2},
+ \qquad b\leq\delta,
+ \qquad (\log d)^{3/4}\geq(\log2)^{3/4}.
+\]
+For example, \(9000U^2\) is a single constant valid for both the stated
+tail and all three expectation inequalities: integration multiplies the
+tail constant by at most
+\(1+\sqrt\pi/[2(\log2)^{3/4}]<3\).
+The theorem controls sets, not eigenvalue multiplicities or ordered matching.
+
+\paragraph{A concrete free model and a finite algebra interface.}
+There is no need to develop an abstract theory of every noncommutative
+probability space first.  On the Hilbert space with orthonormal basis all
+finite words over \(\{1,\ldots,s\}\), let \(L_i e_w=e_{iw}\) and
+\(s_i=L_i+L_i^*\).  Left creation satisfies \(L_i^*L_j=\delta_{ij}I\), so
+\[
+ \norm{\sum_i A_i\otimes L_i}^2=\norm{\sum_iA_i^2},
+ \qquad \norm{\sum_iA_i\otimes s_i}\leq2\sigma.
+\]
+The vacuum moment of a word in the \(s_i\)'s is its finite noncrossing-pairing
+sum: expansion into creation and annihilation operators proves this by
+induction on word length.  These moments are cyclic, so the vacuum state is
+tracial.  It is faithful on the generated algebra: right fields commute with
+left fields, their vacuum polynomials span every finite word, and an element
+annihilating the vacuum consequently annihilates a dense subspace.  The same
+argument applies to matrices of such elements.
+
+Every vacuum moment of order at most \(2p\) can be computed in the finite
+word space of lengths at most \(p\).  This gives a concrete target for the
+combinatorial parts of (RM).  It does not justify replacing the operator
+spectrum by the spectrum of a single finite truncation: truncation creates
+boundary eigenvalues.  The uniform resolvent moment comparison (RM) and the
+localized bound (LU), including their constants independent of \(A_0\),
+remain the analytic work for this card.
+
+\subsection{Quadratic spectra from one shifted block matrix}
+\label{route:gaussian-quadratic-free-spectrum}
+\noindent\code{gaussian-quadratic-free-spectrum}.
+For \(d\geq2\), this card reduces completely to the preceding affine spectral comparison.
+All additional work is a deterministic block identity and scalar estimates;
+there is no new nonlinear Gaussian comparison theorem.
+
+\begin{lemma}[Shifted Gram linearization, with both spectral directions]
+Let \(X,Y\) be square matrices or bounded operators in their respective
+unital \(C^*\)-algebras, let \(B=B^*\), and let \(\varepsilon>0\).  Form
+\[
+ B_\varepsilon=B+(\norm B+4\varepsilon^2)I,\qquad
+ H_\varepsilon(X)=
+ \begin{bmatrix}0&X&B_\varepsilon^{1/2}\\
+ X^*&0&0\\B_\varepsilon^{1/2}&0&0\end{bmatrix}.
+\]
+If the spectra of \(H_\varepsilon(X)\) and \(H_\varepsilon(Y)\) have
+Hausdorff distance at most \(\varepsilon\), then
+\[
+ d_H\bigl(\operatorname{spec}(XX^*+B),
+          \operatorname{spec}(YY^*+B)\bigr)
+ \leq4\bigl(\norm Y+\sqrt{\norm B}\bigr)\varepsilon+5\varepsilon^2.
+\]
+\end{lemma}
+\begin{proof}
+Write \(Z=[X\ B_\varepsilon^{1/2}]\).  The displayed block matrix is the
+Hermitian dilation of \(Z\), and \(ZZ^*=XX^*+B_\varepsilon\succeq
+4\varepsilon^2I\).  Its nonzero spectrum consists of the positive and
+negative square roots of \(\operatorname{spec}(ZZ^*)\).  This follows from
+the block equations \(Zw=\lambda u\), \(Z^*u=\lambda w\), or from the block
+inverse when \(\lambda\neq0\); it works for operators as well as matrices.
+
+If \(a\) is a positive spectral square root on one side, then
+\(a\geq2\varepsilon\).  A spectral point on the other side at distance at
+most \(\varepsilon\) is strictly positive, so it cannot be an artificial
+zero or a negative square root.  Therefore the positive square-root spectral
+sets themselves have Hausdorff distance at most \(\varepsilon\).
+Let
+\(M=\norm{YY^*+B_\varepsilon}^{1/2}\).
+For a point \(a\) from the \(X\)-side choose \(b\) from the \(Y\)-side with
+\(|a-b|\leq\varepsilon\); then \(b\leq M\) and
+\(|a^2-b^2|\leq2M\varepsilon+\varepsilon^2\).
+For the reverse direction start with \(b\leq M\) and use exactly the same
+inequality.  In particular, the reverse estimate does not introduce
+\(\norm X\).
+Translate both squared spectra by \(-\norm B-4\varepsilon^2\), and use
+\[
+ M\leq\sqrt{\norm Y^2+2\norm B+4\varepsilon^2}
+ \leq\norm Y+\sqrt{2\norm B}+2\varepsilon.
+\]
+The claimed, slightly coarser, constants follow.
+\end{proof}
+
+For \(X=A_0+\sum_i g_iA_i\), the random coefficients in the linearization
+are
+\[
+ D_i=\begin{bmatrix}0&A_i&0\\A_i^*&0&0\\0&0&0\end{bmatrix}.
+\]
+Direct block multiplication gives
+\[
+ \sigma(D)=\sigma(A),\qquad v(D)\leq\sqrt2\,v(A),\qquad
+ \sigma_*(D)=\sigma_*(A),\qquad
+ \delta(D)\leq2^{1/4}\delta(A).
+\]
+For the covariance inequality split a vector against the upper and lower
+off-diagonal vectorizations and use \(|a+b|^2\leq2|a|^2+2|b|^2\).
+For the weak variance upper bound use
+\[
+ \left(\sum_i|u_1^*A_iw_2+u_2^*A_i^*w_1|^2\right)^{1/2}
+ \leq\sigma_*(A)
+  (\norm{u_1}\norm{w_2}+\norm{u_2}\norm{w_1})
+ \leq\sigma_*(A)\norm u\norm w.
+\]
+The reverse inequality follows by restricting to \(u_2=w_1=0\).
+
+If the affine comparison constant in the preceding subsection is \(C_a\),
+define the numerical factor
+\[
+ \gamma=2^{1/4}
+ \left(1+\frac{\log3}{\log2}\right)^{3/4},
+ \qquad D=C_a(\gamma+1).
+\]
+For \(t\geq\delta(\log d)^{3/4}\), \(\sigma_*>0\), use the affine theorem
+in dimension \(3d\) with tail parameter \(t/\sigma_*\) and choose
+\(\varepsilon=Dt\).  Since \(\log(3d)\leq
+(1+\log3/\log2)\log d\), the resulting exceptional probability is at most
+\(\exp(-t^2/\sigma_*^2)\).  The deterministic lemma then gives the exact
+form in the card, with any universal
+\(C\geq\max\{4D,5D^2\}\).
+If \(\sigma_*=0\), all \(A_i=0\), and both original spectral sets agree
+without a tail argument.
+
+\paragraph{Reuse and audit.}
+The verified declarations \code{NLAlib.dilation},
+\code{NLAlib.dilation_sq}, and \code{NLAlib.dilation_identities} provide the
+finite matrix algebra.  The operator version needs the same block inverse,
+not a new finite-dimensional SVD.  The positive shift is essential for the
+reverse inclusion.  The dimension in the affine theorem is \(3d\), not
+\(d\); the factor \(\gamma\) above records the resulting logarithm.  This
+matches the mechanism of
+\href{https://arxiv.org/abs/2406.11453v2}{BCSvH, Lemma 5.3}, with the
+dimension conversion made explicit.
+
+\subsection{Block-Wishart edges: simplify the finite part of global inversion}
+\label{route:block-wishart-variational-edges}
+\noindent\code{block-wishart-variational-edges}.
+Let \(k\geq1\), \(\alpha>0\), and let \(\nu\) be a compactly supported
+probability law on Hermitian \(k\times k\) matrices.  Throughout,
+\(\operatorname{Tr}\) is unnormalized.  Define
+\[
+ K(S)=\int T(I+ST)^{-1}\,d\nu(T)-\alpha^{-1}S^{-1},
+ \qquad
+ \mathcal D_0=\{S\succ0:S^{-1}+T\succ0\text{ on }\operatorname{supp}\nu\}.
+\]
+Write \(\mathcal P_-\) for the points of \(\mathcal D_0\) at which \(DK\)
+is positive definite as an operator on the real Hilbert space of Hermitian
+matrices with Frobenius inner product.
+
+\paragraph{The now-proved local interface.}
+Set
+\[
+ C_S(T)=T(I+ST)^{-1}=(I+TS)^{-1}T,
+ \quad W_S(T)=S^{1/2}C_S(T)S^{1/2},
+ \quad \mathcal L_S(H)=\alpha\int W_S(T)H W_S(T)\,d\nu(T).
+\]
+These matrices \(C_S(T),W_S(T)\) are Hermitian even for indefinite \(T\).
+For \(H=S^{-1/2}\Delta S^{-1/2}\),
+\[
+ DK(S)[\Delta]=\alpha^{-1}S^{-1/2}
+              (H-\mathcal L_S(H))S^{-1/2}.
+\]
+The following statements have already been verified with \code{sorry=false}:
+\code{NLAlib.hasFDerivAt_matrixKTransform_of_posDef},
+\code{NLAlib.matrixKTransformDeriv_eq_congruence},
+\code{NLAlib.matrixKTransform_stability_iff}, and
+\code{NLAlib.matrixKTransform_supersolution_iff_derivative_witness}.
+In particular,
+\begin{equation}
+ S\in\mathcal P_-
+ \quad\Longleftrightarrow\quad
+ S\in\mathcal D_0\ \text{and there is }B\succ0
+ \text{ with }\mathcal L_S(B)\prec B.
+ \label{eq:wishart-witness}
+\end{equation}
+The map \(\mathcal L_S\) preserves positive semidefinite matrices and is
+self-adjoint in Frobenius geometry.  It need not be positive semidefinite
+in that Hilbert-space geometry.  For example, conjugation by
+\(\operatorname{diag}(1,-1)\) negates the Hermitian off-diagonal matrix.
+Thus the erroneous stronger assertion in the source's discussion following
+its equation (103) must not be reused.  The verified stability equivalence
+above already supplies the corrected argument.
+
+\begin{lemma}[A single weighted contraction proves global injectivity]
+The map \(K\) is injective on \(\mathcal P_-\).
+\end{lemma}
+\begin{proof}
+Fix \(S,R\in\mathcal P_-\).  The inverse identity gives
+\[
+ \alpha S^{1/2}(K(S)-K(R))R^{1/2}
+   =(I-\mathcal G)H,
+ \quad H=S^{-1/2}(S-R)R^{-1/2},
+ \quad\mathcal G(H)=\alpha\int W_S(T)H W_R(T)\,d\nu(T).
+\]
+Choose witnesses \(B,D\succ0\) in \eqref{eq:wishart-witness} and numbers
+\(0\leq a,b<1\) satisfying
+\[
+ \mathcal L_S(B)\preceq aB,\qquad
+ \mathcal L_R(D)\preceq bD.
+\]
+These numbers can be the largest eigenvalues of the corresponding
+positive congruences.  Conjugate \(\mathcal G\) by
+\(H=B^{1/2}ZD^{1/2}\).  The resulting map is
+\[
+ \widetilde{\mathcal G}(Z)=\alpha\int P(T)ZQ(T)\,d\nu(T),
+ \quad P=B^{-1/2}W_SB^{1/2},\quad Q=D^{1/2}W_RD^{-1/2}.
+\]
+For unit vectors \(u,v\), scalar integral Cauchy--Schwarz yields
+\begin{align*}
+ |u^*\widetilde{\mathcal G}(Z)v|
+ &\leq\norm Z
+ \left(\alpha\int\norm{P^*u}^2d\nu\right)^{1/2}
+ \left(\alpha\int\norm{Qv}^2d\nu\right)^{1/2}\\
+ &\leq\sqrt{ab}\,\norm Z.
+\end{align*}
+Consequently \(\norm{\widetilde{\mathcal G}}\leq\sqrt{ab}<1\) in the
+ordinary matrix operator norm.  Thus \(I-\mathcal G\) is invertible by a
+Neumann series in this equivalent weighted norm.  If \(K(S)=K(R)\), the
+displayed difference identity forces \(H=0\), hence \(S=R\).
+\end{proof}
+This replaces products over \(2p\) copies of the measure and estimates of
+iterated Frobenius norms by one Cauchy--Schwarz inequality.  It does not need
+\(\mathcal G\) to preserve Hermitian matrices.
+
+\begin{lemma}[An explicit path to a common convex region]
+The stable domain \(\mathcal P_-\) is open and path connected.
+\end{lemma}
+\begin{proof}
+Openness follows from the uniform positive gap on the compact support,
+continuity of inversion, and strict positivity of the finite-dimensional
+derivative.  For connectedness set \(Y=S^{-1}\) and write the witness
+condition in the equivalent form
+\[
+ \mathcal F_Y(B_0):=
+ \alpha\int T(Y+T)^{-1}B_0(Y+T)^{-1}T\,d\nu(T)\prec B_0,
+ \quad B_0\succ0.
+\]
+Here $B_0=Y^{1/2}BY^{1/2}$ converts a witness for $\mathcal L_S$ into
+a witness for $\mathcal F_Y$; congruence by $Y^{1/2}$ verifies the equivalence.
+If this holds, it continues to hold on the whole ray \(Y_t=Y+tB_0\),
+\(t\geq0\).  Indeed, put
+\(Q=B_0^{-1/2}(Y+T)B_0^{-1/2}\succ0\).  Functional calculus of this single
+matrix gives \((Q+tI)^{-2}\preceq Q^{-2}\), hence
+\[
+ (Y_t+T)^{-1}B_0(Y_t+T)^{-1}
+ \preceq(Y+T)^{-1}B_0(Y+T)^{-1}.
+\]
+Congruence by \(T\) and integration preserve this inequality.  This is a
+commuting functional-calculus argument; it does not assert that the
+function \(x\mapsto x^{-2}\) is operator monotone.
+
+Let \(M=\max_{T\in\operatorname{supp}\nu}\norm T\) and
+\(c=\sqrt\alpha M+1\).  The region
+\[
+ \mathcal G_0=\{Y\succ(M+c)I\}
+\]
+is convex and lies in the stable domain in inverse coordinates, since
+\(\mathcal F_Y(I)\preceq\alpha M^2c^{-2}I\prec I\).
+Every ray \(Y+tB_0\) eventually enters this region; for example take
+\(t>(M+c-\lambda_{\min}(Y))_+/\lambda_{\min}(B_0)\).
+Two rays and a straight segment inside \(\mathcal G_0\) join any two points.
+Invert this path to obtain a path in \(\mathcal P_-\).
+\end{proof}
+
+\paragraph{The precise remaining global bridge.}
+The two lemmas above and the inverse function theorem make \(K\) a
+diffeomorphism from \(\mathcal P_-\) onto its open image \(\mathcal U\).
+They do \emph{not} identify this image with the correct spectral branch.
+For the characterized probability law in the card, the remaining bridge is
+\begin{equation}
+ \mathcal U=\{U=U^*:W-U\otimes1\succ0\},\qquad
+ \operatorname{spec}W=\operatorname{supp}\mu_{\alpha,\nu},
+ \label{eq:wishart-global-bridge}
+\end{equation}
+for a faithful bounded realization \(W\), with
+\(K^{-1}(uI)=S(u)\) on the scalar line.  The relevant normalization is
+\[
+ S(u)=\alpha^{-1}(\operatorname{id}\otimes\tau)
+                (W-uI)^{-1},\qquad
+ \frac\alpha k\operatorname{Tr}S(u)
+       =\int\frac{d\mu_{\alpha,\nu}(\lambda)}{\lambda-u}.
+\]
+This is the substantive branch-identification part of
+\href{https://arxiv.org/abs/2606.27774v1}{Montanari--Saeed, Theorem 3}.
+Its proof requires more than local derivative positivity.  In particular,
+neither connectedness nor global injectivity alone implies surjectivity
+onto the spectral positivity domain.
+
+\paragraph{A real-variable replacement for the final continuation argument.}
+There is a useful further reduction of the global bridge.  Suppose a
+faithful bounded realization \(W\) has been constructed, and its outside
+resolvent transform \(\widehat S(U)\) has been proved to lie in
+\(\mathcal P_-\) and satisfy \(K(\widehat S(U))=U\) for
+\(U\in\mathcal O:=\{U:W-U\otimes1\succ0\}\).
+These are still prerequisites; the scalar characterization in the card
+does not by itself establish them for nonscalar \(U\).
+The remaining surjectivity then follows without contour integration or a
+general Stieltjes inversion theorem.
+
+Here is the elementary scalar obstruction needed.  If \(\rho\) is a
+compactly supported positive measure on \([0,\infty)\), with
+\(0\in\operatorname{supp}\rho\), then
+\[
+ h(x)=\int(\lambda-x)^{-1}\,d\rho(\lambda),\qquad x<0,
+\]
+cannot have a real-analytic continuation to a neighborhood of zero.
+Indeed, such a continuation would have Taylor coefficients bounded by
+\(C R^{-n}\) for some \(C,R>0\).  Differentiation at negative \(x\),
+followed by monotone convergence as \(x\uparrow0\), would give
+\[
+ \int\lambda^{-n-1}\,d\rho(\lambda)
+   =\frac{h^{(n)}(0)}{n!}\leq C R^{-n}.
+\]
+For any \(0<r<R\), support at zero gives \(\rho([0,r])>0\); the left
+side is at least \(\rho([0,r])r^{-n-1}\), contradicting the bound as
+\(n\to\infty\).  An atom at zero already contradicts the \(n=0\) bound.
+
+Apply this obstruction as follows.  The open set \(\mathcal O\) is
+contained in the connected open image \(K(\mathcal P_-)\).  If the
+containment were proper, a path in the latter image would meet
+\(U_0\in\partial\mathcal O\).  Here
+\(W-U_0\otimes1\succeq0\), and zero belongs to its spectrum and, by
+faithfulness, to its scalar spectral support.  The local real-analytic
+inverse of \(K\) at \(U_0\) agrees with \(\widehat S\) just inside
+\(\mathcal O\), by global injectivity.  Its scalar trace on
+\(U_0+xI\), \(x<0\), would therefore analytically continue the above
+\(h\) across zero, a contradiction.  The analyticity needed here is only
+that of the finite matrix map \(K\) and its local inverse; uniform
+Neumann expansions on the compact \(T\)-support give analyticity of
+\(K\).  This closes the final global-coverage step once the stated
+outside-resolvent prerequisites are available.  It does not assume that
+an arbitrary complex continuation across a spectral cut is impossible:
+the real continuation from below a positive spectral endpoint is the
+property used.
+
+Once \eqref{eq:wishart-global-bridge} is supplied, the edge formula is a
+short order argument.  If \(U\in\mathcal U\), then
+\(W\succ U\otimes1\succeq\lambda_{\min}(U)I\), so
+\(\lambda_{\min}(U)\leq\inf\operatorname{spec}W\).
+Conversely, every \(u<\inf\operatorname{spec}W\) has \(uI\in\mathcal U\).
+Taking suprema and changing coordinates through \(U=K(S)\) gives
+\[
+ \inf\operatorname{supp}\mu_{\alpha,\nu}
+   =\sup_{S\in\mathcal P_-}\lambda_{\min}(K(S)).
+\]
+Strict positivity of the left endpoint is equivalent to some \(S\in
+\mathcal P_-\) having \(K(S)\succ0\); substituting the already-proved
+derivative-witness equivalence gives the exact \(S,B\succ0\) certificate
+in the card.  The upper edge follows from reflection \(T\mapsto-T\).
+No convergence of the extreme eigenvalues of finite random samples is
+asserted by this argument.
+
+\subsection{Block-Wishart log potential through a finite inverse Hessian}
+\label{route:block-wishart-log-potential}
+\noindent\code{block-wishart-log-potential}.
+Retain the notation above and the explicit global bridge
+\eqref{eq:wishart-global-bridge}.  Only the following consequences of that
+bridge are needed here: \(\mathcal U=K(\mathcal P_-)\) is convex;
+\(uI\in\mathcal U\) exactly for \(u<\zeta_-\); and its scalar inverse branch
+has the displayed Stieltjes trace.  The minimization proof itself can be
+carried out entirely in the \(k^2\)-dimensional real space of Hermitian
+matrices.
+
+For \(S\in\mathcal P_-\), define
+\[
+ g(S;u)=-\alpha u\operatorname{Tr}S
+       +\alpha\int\log\det(I+TS)\,d\nu(T)
+       -\log\det S-k(\log\alpha+1).
+\]
+There is a convenient all-Hermitian spelling of the logarithm:
+\begin{equation}
+ \log\det(I+TS)=\log\det S+\log\det(S^{-1}+T).
+ \label{eq:wishart-log-hermitian}
+\end{equation}
+Both determinants on the right are strictly positive.  Equivalently,
+\(I+TS\) is similar to \(I+S^{1/2}TS^{1/2}\succ0\).  Thus there is no
+complex logarithm and no choice of branch.  Compactness of the support
+gives a uniform positive spectral gap locally in \(S\), justifying
+differentiation under this finite matrix-valued integral.
+
+Jacobi's determinant identity and the inverse derivative give
+\begin{equation}
+ D_Sg(S;u)[H]=\alpha\operatorname{Tr}((K(S)-uI)H),
+ \qquad D_S^2g(S;u)[H,H]=\alpha\langle H,DK(S)[H]\rangle_F.
+ \label{eq:wishart-gradient}
+\end{equation}
+For a direct proof of the first identity, differentiate
+\(\log\det(I+TS)\) to get
+\(\operatorname{Tr}((I+TS)^{-1}TH)=\operatorname{Tr}(C_S(T)H)\), and
+differentiate \(\log\det S\) to get \(\operatorname{Tr}(S^{-1}H)\).
+The traces are real because their factors are Hermitian.
+The finite determinant derivative can itself be proved by expanding
+\(\det(I+tA)=1+t\operatorname{Tr}A+O(t^2)\); this uses no complex analysis.
+The existing real-matrix theorem \code{NLAlib.hasDerivAt_det} is available,
+but its complex-Hermitian transport must be supplied explicitly if used.
+
+\begin{theorem}[Global minimum assuming the branch bridge]
+For every \(u<\zeta_-\), the unique minimum of \(g(\cdot;u)\) on
+\(\mathcal P_-\) occurs at \(S_u=K^{-1}(uI)\).
+\end{theorem}
+\begin{proof}
+Fix any \(S_1\in\mathcal P_-\), put \(\Delta=K(S_1)-uI\), and use the
+straight segment \(U_t=uI+t\Delta\) in the convex image \(\mathcal U\).
+Let \(S_t=K^{-1}(U_t)\).  Ordinary finite-dimensional inverse differentiation
+gives
+\[
+ \dot S_t=DK(S_t)^{-1}[\Delta].
+\]
+By \eqref{eq:wishart-gradient},
+\[
+ \frac d{dt}g(S_t;u)
+  =\alpha t\langle\Delta,DK(S_t)^{-1}[\Delta]\rangle_F\geq0.
+\]
+The inverse of a positive definite self-adjoint operator is positive
+definite, so this derivative is strictly positive for \(t>0\) when
+\(\Delta\neq0\).  Integrating proves the minimum and uniqueness.
+This argument does not require \(\mathcal P_-\) to be convex.  Positivity
+of the Hessian on a nonconvex domain, by itself, would not prove a global
+minimum.
+\end{proof}
+
+It remains to identify the minimum value, including its constant.
+Differentiating along the critical scalar branch cancels the \(S_u\)
+derivative and gives
+\[
+ \frac d{du}\frac1k g(S_u;u)
+  =-\frac\alpha k\operatorname{Tr}S_u
+  =-\int\frac{d\mu_{\alpha,\nu}(\lambda)}{\lambda-u}
+  =\frac d{du}\int\log(\lambda-u)\,d\mu_{\alpha,\nu}(\lambda).
+\]
+The difference is constant on \(( -\infty,\zeta_-)\).
+To determine it, set \(u=-r\) and write
+\(S_{-r}=(\alpha r)^{-1}R_r\).  The branch at infinity satisfies
+\(R_r=I+O(r^{-1})\).  This expansion can be obtained directly from the
+finite equation
+\[
+ R_r^{-1}=I+\frac1r\int
+ T\bigl(I+(\alpha r)^{-1}R_rT\bigr)^{-1}\,d\nu(T)
+\]
+by the finite-dimensional implicit function theorem at \(r^{-1}=0,R=I\);
+the global bridge identifies this local solution with the Stieltjes branch.
+Consequently,
+\[
+ -\alpha(-r)\operatorname{Tr}S_{-r}=k+o(1),\quad
+ \int\log\det(I+TS_{-r})\,d\nu=o(1),\quad
+ -\log\det S_{-r}=k\log(\alpha r)+o(1).
+\]
+It follows that \(k^{-1}g(S_{-r};-r)-\log r\to0\).
+Compact support also gives
+\(\int\log(\lambda+r)d\mu-\log r\to0\), so the constant is zero.  Thus
+\[
+ \int\log(\lambda-u)\,d\mu_{\alpha,\nu}(\lambda)
+   =\frac1k\min_{S\in\mathcal P_-}g(S;u).
+\]
+The factor \(\alpha/k\) in the Stieltjes trace and the term
+\(-k(\log\alpha+1)\) are both necessary; dropping either changes this
+normalization.  Reflection gives the analogous formula to the right of
+the support.
+
+\paragraph{Status of the reroutes.}
+The covariance norm card is fully reduced to finite Hermite algebra and
+already-proved coefficient-block bounds.  The quadratic card is a complete
+reduction to the affine spectral comparison.  For the affine card, (RM)
+and (LU) remain explicit analytic prerequisites; the elementary
+concentration, finite-grid, and Hausdorff steps above are proved.
+For the two block-Wishart cards, global branch identification
+\eqref{eq:wishart-global-bridge} remains a prerequisite.  The weighted
+contraction, connectedness, edge optimization, minimum, and normalization
+arguments above are independent finite-dimensional derivations around
+that one core.  Weak convergence of sample laws alone does not justify
+either an edge limit or integration of an unbounded logarithm; those
+finite-sample assertions are not part of these cards.
+
+
+\section{Gaussian replacement, exchangeable covariance, and resolvent comparison}
+
+All matrices in this section are finite-dimensional.  The Hermitian matrices
+are regarded as a real vector space, including in the complex case.  Thus
+``matching covariance'' always means equality of every real-coordinate
+second moment.  Equality of $\mathbb E H^2$ alone is insufficient.
+Independent copies and Gaussian proxies can be constructed on a product
+of their finite-dimensional laws.  Every asserted probability or expectation
+then transfers back by equality in distribution.  No standard-Borel
+assumption on the original probability space is needed.
+
+\subsection{Gaussian replacement for the trace MGF}
+\label{route:gaussian-trace-mgf-comparison}
+\code{gaussian-trace-mgf-comparison}.
+The reroute uses one quadratic form, scalar Taylor's formula, and symmetry.
+It retains the deterministic BMV/Stahl theorem as an explicit deep input;
+the argument below does not prove that theorem.
+
+\paragraph{The precise retained input.}
+For Hermitian $A,H$, write $F_H(t)=\operatorname{Tr}e^{A+tH}$.
+BMV/Stahl supplies a positive finite measure $\nu_{A,H}$ supported on
+$[\lambda_{\min}(H),\lambda_{\max}(H)]$ such that
+\[
+ F_H(t)=\int e^{tx}\,d\nu_{A,H}(x)\qquad(t\in\R).
+\]
+Consequently, for $H\preceq RI$ and $0\le t\le1$,
+\begin{equation}\label{eq:comparison-bmv-two}
+ 0\le F_H''(t)\le e^{tR}F_H''(0),\qquad
+ \frac{F_H(a)+F_H(-a)}2\ge F_H(0)+\frac{a^2}2F_H''(0).
+\end{equation}
+The first inequality follows by integrating $x^2e^{tx}$; the second follows
+from $\cosh(ax)\ge1+a^2x^2/2$.  These two scalar consequences are the entire
+BMV interface required here.  The reference is
+\href{https://arxiv.org/abs/1107.4875v3}{Stahl's BMV theorem}; the comparison
+target is \href{https://arxiv.org/html/2603.04365v5#S4.SS6}{Tropp,
+Propositions 4.6--4.8}.  In particular, no random-offset conditional Lieb
+inequality is involved in this replacement argument.
+
+\paragraph{A finite covariance calculation.}
+The first two directional derivatives are
+\[
+ F_H'(0)=\operatorname{Tr}(He^A),\qquad
+ Q_A(H):=F_H''(0)
+ =\int_0^1\operatorname{Tr}\bigl(H e^{(1-s)A}H e^{sA}\bigr)\,ds.
+\]
+The second identity follows by differentiating the exponential once and
+using cyclicity of the trace.  In an eigenbasis $A=\diag(a_1,\ldots,a_d)$,
+\[
+ Q_A(H)=\sum_{i,j}|H_{ij}|^2
+       \int_0^1e^{(1-s)a_j+sa_i}\,ds.
+\]
+This is a nonnegative quadratic form on the real coordinates of $H$,
+bounded by $d e^{\norm{A}}\norm{H}^2$.  Thus finite second moments suffice
+for its integrability, and covariance matching gives
+$\mathbb E Q_A(W)=\mathbb E Q_A(G)$.
+
+\paragraph{One replacement, with only an upper bound.}
+Assume $\mathbb EW=0$, $W\preceq RI$, $R\ge0$, and
+$\mathbb E\norm{W}^2<\infty$.  Let $G$ be centered Gaussian with the full
+covariance of $W$.  Set
+\[
+ \gamma_R^2=2\int_0^1(1-s)e^{Rs}\,ds.
+\]
+Apply Taylor's formula pointwise to $F_W$ on $[0,1]$, and then the first
+inequality in \eqref{eq:comparison-bmv-two}.  Integration gives
+\[
+ \mathbb E\operatorname{Tr}e^{A+W}
+ \le\operatorname{Tr}e^A+\frac{\gamma_R^2}{2}\mathbb E Q_A(W).
+\]
+Since $G$ and $-G$ have the same law, the second inequality in
+\eqref{eq:comparison-bmv-two} gives
+\[
+ \mathbb E\operatorname{Tr}e^{A+\gamma_RG}
+ =\mathbb E\frac{F_G(\gamma_R)+F_G(-\gamma_R)}2
+ \ge\operatorname{Tr}e^A+\frac{\gamma_R^2}{2}\mathbb E Q_A(G).
+\]
+This proves the one-step comparison.  It avoids differentiating an
+expectation on an interval of negative parameters: such expectations
+need not exist for an upper-bounded, heavy-negative-tailed $W$.
+The left side is bounded by $d e^{\lambda_{\max}(A)+R}$; Gaussian
+exponential moments make the right side finite.
+
+\paragraph{Independent sums and all endpoints.}
+Let $W_i$ be independent centered Hermitian matrices with finite second
+moments and $W_i\preceq RI$.  On a product space choose independent
+centered $G_i$ with the covariance of $W_i$, also independent of all $W_i$.
+Apply the preceding deterministic-offset inequality with
+$W\leftarrow\theta W_i$ and offset equal to the sum of all other terms,
+then integrate over that offset.  Finitely many replacements give, for
+$\theta\ge0$,
+\begin{equation}\label{eq:comparison-trace-mgf}
+ \mathbb E\operatorname{Tr}e^{\theta(\sum_iW_i+\Delta)}
+ \le\mathbb E\operatorname{Tr}e^{g_R(\theta)Z+\theta\Delta},
+ \quad
+ g_R(\theta)=\theta\sqrt{2\int_0^1(1-s)e^{\theta Rs}\,ds},
+\end{equation}
+where $Z$ has the law of $\sum_iG_i$.  The mixed intermediate expectations
+are finite: the unreplaced summands have a deterministic upper spectral
+bound, while the replaced part is Gaussian.  For $R>0$,
+$g_R(\theta)^2=2(e^{\theta R}-1-\theta R)/R^2$; the integral definition
+also gives $g_0(\theta)=\theta$ and $g_R(0)=0$ without division by zero.
+Empty sums cause no change.  In dimension zero both traces vanish.
+
+\paragraph{Reusable declarations and remaining work.}
+The snapshot contains sorry-free
+\code{NLAlib.gaussian_eq_map_gaussianVector_sqrt_covariance_of_centered},
+\code{NLAlib.traceExp_le_traceExp}, and
+\code{NLAlib.traceExp_smul_eq_sum}.  They support Gaussian construction
+and integrability bounds.  The new finite bookkeeping is the covariance
+identity for $Q_A$ and iteration of one-step replacement.  The
+BMV consequences \eqref{eq:comparison-bmv-two} remain a genuine prerequisite.
+
+\subsection{Extreme eigenvalues from the Gaussian proxy}
+\label{route:gaussian-proxy-eigenvalue-comparison}
+\code{gaussian-proxy-eigenvalue-comparison}.
+Assume the preceding hypotheses with $d\ge1$, and put
+\[
+ Y=\sum_iW_i,\quad
+ \mu=\mathbb E\lambda_{\max}(Z+\Delta),\quad
+ \varphi=\mathbb E\lambda_{\max}(Z),\quad
+ s_*^2=\sup_{\norm{u}=1}\operatorname{Var}(u^*Zu),\quad
+ V=R\varphi/3+s_*^2.
+\]
+Here $\varphi\ge0$ by the Rayleigh variational formula and centering.
+
+\paragraph{The exact Lipschitz constant.}
+Write $Z=\sum_{j=1}^m g_jA_j$ with independent standard real Gaussian
+coordinates and Hermitian $A_j$.  For each unit $u$,
+$\sum_j(u^*A_ju)^2=\operatorname{Var}(u^*Zu)\le s_*^2$.
+Taking the supremum of the Rayleigh quotients and applying finite
+Cauchy--Schwarz proves that
+$g\mapsto\lambda_{\max}(\sum_jg_jA_j+\Delta)$ is $s_*$-Lipschitz.
+The Gaussian centered MGF inequality therefore gives
+\[
+ \log\mathbb E e^{a\lambda_{\max}(Z+\Delta)}
+ \le a\mu+\frac{a^2s_*^2}{2}\qquad(a\ge0).
+\]
+Use the MGF form itself, rather than attempting to recover its sharp
+constant by integrating a tail inequality.  It is already supplied by
+the sorry-free pair
+\code{NLAlib.hasEuclideanLogSobolev_gaussianVector} and
+\code{NLAlib.hasSubgaussianMGF_of_logSobolev}.
+
+\paragraph{Reduction to a scalar sub-gamma inequality.}
+The trace is at most $d$ times the exponential of the largest eigenvalue.
+Since $g=g_R(\theta)\ge\theta$, Weyl's inequality gives
+\[
+ \mathbb E\lambda_{\max}(gZ+\theta\Delta)
+ \le\theta\mu+(g-\theta)\varphi.
+\]
+For $b=R\theta/3<1$, expansion of the exponential and
+$(k+2)!\ge2\,3^k$ yield
+\[
+ g^2\le\frac{\theta^2}{1-b},\qquad
+ g-\theta=\frac{g^2-\theta^2}{g+\theta}
+ \le\frac{R\theta^2}{6(1-b)}
+ \quad(\theta>0).
+\]
+Combining these estimates with \eqref{eq:comparison-trace-mgf} gives
+\begin{equation}\label{eq:comparison-subgamma}
+ \log\mathbb E\operatorname{Tr}e^{\theta(Y+\Delta)}
+ \le\log d+\theta\mu+
+ \frac{V\theta^2}{2(1-c\theta)},\qquad c=R/3.
+\end{equation}
+Both the expectation and the tail claim now follow from the same scalar
+substitution.  For $V>0$ and $s>0$, put
+\[
+ a=\sqrt{2s/V},\qquad \theta=\frac{a}{1+ca}.
+\]
+Then
+\[
+ -\theta(\sqrt{2Vs}+cs)+\frac{V\theta^2}{2(1-c\theta)}=-s.
+\]
+Exponential Markov applied to the largest eigenvalue proves
+\[
+ \mathbb P\{\lambda_{\max}(Y+\Delta)
+       \ge\mu+\sqrt{2Vs}+cs\}\le de^{-s}.
+\]
+For the expectation, Jensen and the trace bound give
+\[
+ \mathbb E\lambda_{\max}(Y+\Delta)
+ \le\mu+\frac{\log d}{\theta}
+             +\frac{V\theta}{2(1-c\theta)}.
+\]
+The same substitution with $s=\log d>0$ gives exactly
+\[
+ \mathbb E\lambda_{\max}(Y+\Delta)
+ \le\mu+\sqrt{2V\log d}+\frac R3\log d.
+\]
+For $d=1$, let $\theta\downarrow0$, or use the scalar centering directly.
+
+\paragraph{Degenerate cases and the tail event.}
+If $R=0$, then $W_i\preceq0$ and $\mathbb EW_i=0$ imply $W_i=0$ almost
+surely: apply expectation to the nonnegative variable $-\operatorname{Tr}W_i$.
+The proxy is zero as well.  The strict event
+\[
+ \{\lambda_{\max}(Y+\Delta)>
+                      \mu+\sqrt{2Vs}+(R/3)s\}
+\]
+is therefore empty, and its probability is at most $de^{-s}$ for every
+$s\ge0$.  A non-strict event at the deterministic mean would be false
+for large $s$.  If $V=0$, then $s_*=0$; polarization of finitely many
+quadratic forms gives $Z=0$ almost surely.  Matching covariance and
+independence then imply all centered $W_i=0$.  For $R>0$ the non-strict
+tail event is empty when $s>0$, and the $s=0$ bound is trivial.
+Thus the atlas's strict event holds universally; the non-strict event
+holds under its stated additional condition $R>0$.
+A lower tail follows by applying this theorem to $-W_i,-\Delta$, but
+requires the separate lower bound $W_i\succeq-R_-I$.
+
+The sorry-free declarations
+\code{NLAlib.integral_lambdaMax_le_log_integral_traceExp_div} and
+\code{NLAlib.measureReal_lambdaMax_ge_le_exp_mul_integral_traceExp}
+already supply the two Laplace steps.  The only deep unproved dependency
+of this route is inherited from the preceding BMV-based replacement.
+
+\subsection{Exchangeable covariance by an antisymmetric difference}
+\label{route:exchangeable-matrix-covariance}
+\code{exchangeable-matrix-covariance}.
+Let $(X,X')$ be exchangeable, square-integrable Hermitian matrices,
+$\mu=\mathbb EX$, and assume
+$\mathbb E[X-X'\mid X]=\alpha(X-\mu)$ with $\alpha>0$.
+For a measurable $F$ with $F(X)$ square-integrable, conditional expectation
+and exchangeability give respectively
+\[
+ \alpha\mathbb E\tr[(X-\mu)F(X)]
+       =\mathbb E\tr[(X-X')F(X)],\qquad
+ \mathbb E\tr[(X-X')F(X)]
+       =-\mathbb E\tr[(X-X')F(X')].
+\]
+Their average proves
+\begin{equation}\label{eq:comparison-exchangeable}
+ \mathbb E\tr[(X-\mu)F(X)]
+ =\frac1{2\alpha}\mathbb E\tr[(X-X')(F(X)-F(X'))].
+\end{equation}
+Every product is integrable by finite-dimensional Cauchy--Schwarz.
+Real and imaginary parts can be treated separately.  The trace can be
+ordinary or normalized, as long as the same convention is used throughout.
+
+Choose real coordinates $x_a$ on the Hermitian space.  Apply the same
+argument to $\mathbb E[(x_a-x'_a)(x_b-\mu_b)]$, first using regression
+and then swapping.  This proves, for every $a,b$,
+\[
+ \mathbb E[(x_a-\mu_a)(x_b-\mu_b)]
+   =\frac1{2\alpha}\mathbb E[(x_a-x'_a)(x_b-x'_b)].
+\]
+These finitely many equalities are exactly
+\[
+ \mathbb E[(X-\mu)\otimes(X-\mu)]
+   =\frac1{2\alpha}\mathbb E[(X-X')\otimes(X-X')].
+\]
+The tensor product is bilinear over the real Hermitian space; it is not
+the matrix product $\mathbb E(X-\mu)^2$.
+
+\paragraph{Realizing the pair without conditional laws.}
+For $X=\sum_{i=1}^nS_i$, $n\ge1$, with independent square-integrable
+$S_i$, take independent copies $S_i'$ and an independent uniform $I$.
+Set $X'=X-S_I+S_I'$.  Conditional on $I=i$, swapping $S_i,S_i'$ preserves
+the product law; averaging proves exchangeability.  Conditional on all
+original summands,
+\[
+ \mathbb E[X-X'\mid S_1,\ldots,S_n]
+   =\frac1n\sum_i(S_i-\mathbb ES_i)=\frac{X-\mathbb EX}{n}.
+\]
+The tower property yields the required regression with $\alpha=1/n$.
+Identical distributions are not required.  A finite product of the
+summand laws gives the construction on any underlying probability space.
+No analytic matrix-function theorem is needed for this card.
+The reference is \href{https://arxiv.org/html/2603.05803v2#S6.SS3}{Tropp,
+Section 6.3}; the proof above is the complete coordinate argument.
+
+\subsection{Cauchy-transform universality with constant one}
+\label{route:cauchy-transform-gaussian-universality}
+\code{cauchy-transform-gaussian-universality}.
+Let $d,n\ge1$, let $S_i$ be independent Hermitian matrices with finite
+third moments, put $X=\sum_iS_i$, $\mu=\mathbb EX$, and let $Z$ be an
+independent Gaussian matrix with the same mean and full covariance.
+Fix $\zeta\notin\R$, write $\eta=|\operatorname{Im}\zeta|$, and use
+$\tr_d=d^{-1}\operatorname{Tr}$ throughout this subsection.  Define
+\[
+ R_A=(\zeta I-A)^{-1},\qquad f(A)=R_A^2,\qquad
+ M_3=\sum_i\mathbb E\tr_d|S_i-S_i'|^3.
+\]
+The desired estimate is
+\begin{equation}\label{eq:comparison-cauchy-target}
+ \left|\mathbb E\tr_d R_X-\mathbb E\tr_d R_Z\right|
+ \le\frac{M_3}{\eta^4}.
+\end{equation}
+
+\paragraph{Only two finite resolvent identities are needed.}
+For Hermitian $A,B,C$ and arbitrary directions $H,K$, set
+\begin{align*}
+ L(A,B)[H]&=R_A^2HR_B+R_AHR_B^2,\\
+ T(A,B,C)[H,K]&=R_A^2HR_BKR_C+R_AHR_B^2KR_C+R_AHR_BKR_C^2.
+\end{align*}
+Multiplication by the inverses proves $R_A-R_B=R_A(A-B)R_B$.
+Use this identity once in each product to obtain
+\begin{align}
+ f(A)-f(B)&=L(A,B)[A-B],\label{eq:comparison-L}\\
+ Df(C)[H]&=L(C,C)[H],\nonumber\\
+ L(A,B)[H]-Df(C)[H]
+   &=T(A,B,C)[H,B-C]+T(A,C,C)[A-C,H].\label{eq:comparison-T}
+\end{align}
+For the last equation, insert $L(A,C)[H]$ between the two terms and
+telescope first the right argument and then the left argument.
+This proves the ordered identity directly.  One must not identify an
+ordered second difference with half a mixed Hessian: the latter is the
+sum of the two orders, divided by two only after a valid symmetry argument.
+
+\paragraph{A third copy that decouples the covariance.}
+Take a second independent copy $S_i''$ and use the same uniform index $I$:
+\[
+ X'=X-S_I+S_I',\qquad X''=X-S_I+S_I'',\qquad
+ D=X-X',\quad E=X'-X'',\quad F=X-X''.
+\]
+For each fixed $I=i$, $X''$ is independent of $D=S_i-S_i'$ and has
+the law of $X$.  As this law does not depend on $i$, $X''$ and $D$ are
+also independent without conditioning.  This conclusion is particular
+to this resampling construction; an arbitrary exchangeable triple would
+not suffice.  The covariance identity from the preceding subsection is
+\[
+ \operatorname{Cov}_{\otimes}(X)=\frac n2\mathbb E(D\otimes D).
+\]
+
+\paragraph{Interpolation and exact cancellation.}
+Set
+\[
+ Y_t=\mu+\sqrt t(X-\mu)+\sqrt{1-t}(Z-\mu),\quad
+ u(t)=\mathbb E\tr_d R_{Y_t},\qquad0\le t\le1,
+\]
+and define $Y_t',Y_t''$ by replacing $X$ with $X',X''$.
+Cyclicity of trace gives $D\tr_d R_A[H]=\tr_d(HR_A^2)$, hence
+\[
+ u'(t)=\frac1{2\sqrt t}\mathbb E\tr_d[(X-\mu)f(Y_t)]
+       -\frac1{2\sqrt{1-t}}\mathbb E\tr_d[(Z-\mu)f(Y_t)].
+\]
+For the first term apply \eqref{eq:comparison-exchangeable} while fixing
+$Z$, and then \eqref{eq:comparison-L}; this gives
+$\frac n4\mathbb E\tr_d[D L(Y_t,Y_t')[D]]$.
+For the second term, ordinary Gaussian integration by parts in real
+coordinates gives one half of the covariance paired with $Df(Y_t)$.
+By covariance matching, the last covariance identity, and independence
+of $D$ from $(X'',Z)$, that term is
+$\frac n4\mathbb E\tr_d[D Df(Y_t'')[D]]$.
+Thus \eqref{eq:comparison-T} yields the exact six-word identity
+\begin{align}\label{eq:comparison-sixwords}
+ u'(t)=\frac{n\sqrt t}{4}\mathbb E\tr_d\bigl[
+ D T(Y_t,Y_t',Y_t'')[D,E]
+ +D T(Y_t,Y_t'',Y_t'')[F,D]\bigr].
+\end{align}
+This derivation only uses finite coordinate Gaussian integration by parts;
+it does not import a general rational-function IBP theorem with unstated
+integrability hypotheses.
+
+\paragraph{Each of the six words has the same bound.}
+The spectral theorem gives $\norm{R_A}\le\eta^{-1}$ for Hermitian $A$.
+For arbitrary matrices, normalized Schatten H\"older and the ideal property
+give
+\[
+ |\tr_d(H_1B_1H_2B_2H_3B_3)|
+ \le\prod_{j=1}^3\bigl(\tr_d|H_j|^3\bigr)^{1/3}
+                 \prod_{j=1}^3\norm{B_j}.
+\]
+Ordinary scalar H\"older under expectation now applies even though the
+three differences are dependent.  Exchangeability of the three copies
+gives
+\[
+ \mathbb E\tr_d|D|^3=\mathbb E\tr_d|E|^3
+   =\mathbb E\tr_d|F|^3=M_3/n.
+\]
+Every term in \eqref{eq:comparison-sixwords} contains four resolvent
+factors and three such differences, so
+\[
+ |u'(t)|\le\frac{n\sqrt t}{4}\cdot6\cdot
+                  \frac{M_3}{n\eta^4}
+             =\frac32\sqrt t\,\frac{M_3}{\eta^4}.
+\]
+Integrate and use $\int_0^1\frac32\sqrt t\,dt=1$ to obtain
+\eqref{eq:comparison-cauchy-target} with its exact constant.
+
+\paragraph{Analytic justification and a real-matrix interface.}
+On each compact subinterval of $(0,1)$ the derivative of the trace
+resolvent is bounded by a constant times $\norm{X-\mu}+\norm{Z-\mu}$,
+which is integrable.  The functions $f$ and $Df$ are bounded in norm by
+$\eta^{-2}$ and $2\eta^{-3}$ times the direction norm, respectively;
+Gaussian IBP applies coordinatewise.  The six-word expression is
+integrable by the finite third moments.  At the two endpoints,
+$|\tr_d R_{Y_t}|\le\eta^{-1}$ and pointwise continuity imply convergence
+by dominated convergence.  Apply the fundamental theorem on
+$[a,1-a]$ and let $a\downarrow0$.
+
+The current Schatten product bounds are stated over $\R$.  Their complex
+use can be obtained with no loss by the finite realification
+\[
+ \mathcal R(A)=\begin{pmatrix}\operatorname{Re}A&-\operatorname{Im}A\\
+                         \operatorname{Im}A&\operatorname{Re}A\end{pmatrix}.
+\]
+It preserves products and adjoints; singular values occur twice, so it
+preserves the operator norm and normalized Schatten norms.  Also
+$\tr_{2d}\mathcal R(A)=\operatorname{Re}\tr_d A$.
+Multiply one factor of a trace word by a unit complex scalar making its
+trace real and nonnegative, and then realify.  This proves the complex
+absolute-trace inequality with exactly the same constant.  The repeated
+singular values follow by realifying a complex SVD; the realified unitary
+matrices are orthogonal.
+
+\paragraph{Bounded summands.}
+If $T_i=S_i-\mathbb ES_i$ satisfies $\norm{T_i}\le L$, then
+$\norm{S_i-S_i'}\le2L$ and functional calculus gives
+\[
+ |S_i-S_i'|^3\preceq2L(S_i-S_i')^2,
+ \qquad \mathbb E(S_i-S_i')^2=2\mathbb ET_i^2.
+\]
+Therefore, with $\sigma^2=\norm{\sum_i\mathbb ET_i^2}$,
+\[
+ M_3\le4L\tr_d\sum_i\mathbb ET_i^2\le4L\sigma^2.
+\]
+This proves the advertised $4L\sigma^2/\eta^4$ consequence, including
+$L=0$ and $\sigma=0$.
+
+\paragraph{Verified reusable statements.}
+All of the following are sorry-free in the inspected snapshot:
+\code{NLAlib.integral_mul_eq_sum_covariance_mul_integral},
+\code{NLAlib.integral_mul_eq_integral_deriv_gaussianReal},
+\code{NLAlib.rationalBlockDifference_sub_left},
+\code{NLAlib.rationalBlockDifference_sub_right},
+\code{NLAlib.rationalSecondBlockDifference_resolvent},
+\code{NLAlib.rationalSecondBlockDifference_mul},
+\code{NLAlib.schattenNormReal_mul_le_mul},
+\code{NLAlib.schattenNormReal_mul_le_specNorm_mul}, and
+\code{NLAlib.schattenNormReal_mul_le_mul_specNorm}.
+The first two apply to real and imaginary components separately.  The
+explicit formulas above can either bypass the rational-block interface
+or be proved by specializing it.  This card has no BMV dependency.
+For comparison, see
+\href{https://arxiv.org/html/2603.05803v2#S8}{Tropp, Theorem 8.1}.
+
+\subsection{Sample-covariance lower bound from fourth moments}
+\label{route:sample-covariance-fourth-moment-lower}
+\code{sample-covariance-fourth-moment-lower}.
+Let $d\ge2$, let $w\in\R^d$ be centered with finite fourth moments,
+and let $K=\mathbb Eww^{\mathsf T}\succ0$.  Assume $\beta\ge1$ and
+\[
+ \operatorname{Var}(\langle w,a\rangle^2)
+       \le\beta^2\bigl(\mathbb E\langle w,a\rangle^2\bigr)^2
+       \quad(a\in\R^d).
+\]
+For independent copies, write
+$\widehat K=n^{-1}\sum_iw_iw_i^{\mathsf T}$.
+We prove that, for $0<\varepsilon,\delta<1$,
+\[
+ n\ge\frac{26\beta^2\max\{d,\log(d/\delta)\}}{\varepsilon^2}
+ \quad\Longrightarrow\quad
+ \mathbb P\{(1-\varepsilon)K\preceq\widehat K\}\ge1-\delta.
+\]
+This route uses the preceding Gaussian proxy comparison, and therefore
+inherits its isolated BMV input.  It does not truncate the observations.
+
+\paragraph{Whitening gives a bounded lower increment for free.}
+Put $v=K^{-1/2}w$.  Then $\mathbb Evv^{\mathsf T}=I$, and for unit $u$,
+$\operatorname{Var}(\langle v,u\rangle^2)\le\beta^2$.
+For
+\[
+ T_i=\frac{v_iv_i^{\mathsf T}-I}{n},\qquad Y=\sum_iT_i,
+\]
+we have $\mathbb ET_i=0$ and $T_i\succeq-I/n$, although $\norm{v_i}$
+need not be bounded.  The fourth moments guarantee finite second moments
+of $T_i$.  Its centered Gaussian proxy $Z$ satisfies
+\[
+ \operatorname{Var}(u^{\mathsf T}Zu)
+ =\frac1n\operatorname{Var}(\langle v,u\rangle^2)
+ \le\beta^2/n\qquad(\norm{u}=1).
+\]
+Taking the supremum gives $s_*^2\le\beta^2/n$.
+
+\paragraph{A finite net estimate with the required numerical constant.}
+Take a $1/8$-net $\mathcal N$ on the real unit sphere of size at most
+$17^d$.  For symmetric $Z$,
+\[
+ \norm{Z}\le\frac43\max_{u\in\mathcal N}|u^{\mathsf T}Zu|.
+\]
+Indeed, approximate a unit vector maximizing the absolute quadratic
+form; the discrepancy of the two forms is at most
+$2(1/8)\norm{Z}$, which can be moved to the left side.
+Each scalar form is centered Gaussian with variance at most $\beta^2/n$.
+For any finite collection of centered Gaussians of variance at most
+$v^2$, the bound
+$\mathbb E\max_j|g_j|\le v\sqrt{2\log(2N)}$ follows from
+$\mathbb Ee^{t\max_j|g_j|}\le2N e^{t^2v^2/2}$ and optimization;
+no independence of the forms is used.  Thus
+\[
+ \mathbb E\norm Z\le\frac43\frac\beta{\sqrt n}
+       \sqrt{2\log(2\cdot17^d)}
+       \le a:=\sqrt{12\beta^2d/n}.
+\]
+For the last inequality, $d\ge2$, $\log17<3$, and $\log2<3/4$ imply
+$\log(2\cdot17^d)\le27d/8$.  The two logarithmic bounds are certified
+by positive finite partial sums for $e^3>17$ and $e^{3/4}>2$.
+
+\paragraph{The failure event and arithmetic certificate.}
+Apply the upper proxy theorem to $-T_i$, with $R=1/n$, or equivalently
+its lower-tail version to $T_i$.  Gaussian symmetry gives
+$\mathbb E\lambda_{\min}(Z)=-\mathbb E\lambda_{\max}(Z)\ge-a$.
+For $s=\log(d/\delta)>0$, the probability of
+\[
+ \lambda_{\min}(Y)
+ \le-\left[a+\sqrt{\frac{2s}{n}(\beta^2+a/3)}+\frac{s}{3n}\right]
+\]
+is at most $de^{-s}=\delta$.  This is the lower-tail failure event;
+reversing its inequality would not express the desired conclusion.
+Under the sample-size assumption, the three error terms satisfy
+\[
+ a\le\frac{53}{78}\varepsilon,\qquad
+ \sqrt{\frac{2s}{n}(\beta^2+a/3)}\le\frac{24}{78}\varepsilon,
+ \qquad \frac{s}{3n}\le\frac1{78}\varepsilon.
+\]
+For a purely rational check, the first inequality uses
+$a^2\le(6/13)\varepsilon^2$ and $53^2\ge2808$.
+For the second, use $\varepsilon\le1$, $\beta\ge1$, and the first bound:
+\[
+ \frac{2s}{n}(\beta^2+a/3)
+ \le\frac{\varepsilon^2}{13}
+          \left(1+\frac{53}{234}\right)
+ =\frac{574}{78^2}\varepsilon^2
+ \le\frac{24^2}{78^2}\varepsilon^2.
+\]
+The third follows from $s/n\le\varepsilon^2/(26\beta^2)$.
+The terms sum to at most $\varepsilon$.  Hence
+$\mathbb P\{\lambda_{\min}(Y)<-\varepsilon\}\le\delta$;
+on its complement $I+Y\succeq(1-\varepsilon)I$.
+Congruence by $K^{1/2}$ gives the required event for $\widehat K$.
+Positive definiteness of $K$ is exactly what justifies whitening.
+
+The net interfaces are already sorry-free:
+\code{NLAlib.exists_finset_sphere_net} and
+\code{NLAlib.specNorm_le_div_of_net_quadForm}.
+The reference target is
+\href{https://arxiv.org/html/2603.04365v5#S3.SS3}{Tropp, Theorem 3.3}.
+The finite net and the displayed rational inequalities account for the
+constant $26$ explicitly; the result is one-sided covariance preservation,
+not a two-sided error guarantee.
+
+\section*{Implementation order and audit record}
+\addcontentsline{toc}{section}{Implementation order and audit record}
+The highest-value shared new lemma is the finite Hermite moment bound:
+it feeds the partial-transpose card, covariance-sensitive norm card, and
+both chaos norm estimates. Its proof uses only finitely many Gaussian
+polynomial moments, sparse finite matrices, and the coefficient-block
+order bound. The scalar domination lemma and the coefficient-reindexing
+identities should be packaged separately so that all chaos proofs reuse them.
+
+The next small interfaces are support functions plus compact nets, the
+exchangeable-pair coordinate identity, realification of complex Schatten
+norms, and the six ordered resolvent words. They provide the width and
+universality results without importing a larger process, rational-function,
+or complex integration framework. The Fourier card needs finite Schur
+averaging and an explicit orthonormal coefficient basis; it does not need
+infinite-dimensional harmonic analysis.
+
+The remaining deep inputs should remain explicit dependencies. A
+covariance-sensitive norm bound does not imply two-sided spectral-set
+comparison, local invertibility of a matrix transform does not identify
+its physical global branch, and a positive second trace-exponential
+derivative does not establish the higher positivity supplied by BMV.
+The document keeps these distinctions throughout.
+
+Independent mathematical checks were performed across the finite Hermite,
+chaos, Gaussian width, Fourier, exchangeable-pair, resolvent, and variational
+reductions. The checks include the Gaussian variance conventions, normalized
+versus unnormalized traces, the Cauchy-transform constant $1$, the sample-size
+constant $26$, and all stated degenerate cases. No numerical experiment is
+used as proof. The exact original contracts and their primary source labels
+remain available in the
+\href{https://github.com/tchen-research/NLAlib/blob/faef0a270d762f0bf0e90603544d50f289873d0e/atlas/atlas.json}
+{dated atlas snapshot}; source links are also placed beside the derivations.
+\end{document}

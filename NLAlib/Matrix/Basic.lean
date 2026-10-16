@@ -25,6 +25,7 @@ import NLAlib.Matrix.Basic.MoorePenrose
 import NLAlib.Matrix.Basic.MoorePenroseProjector
 import NLAlib.Matrix.Basic.MoorePenroseRank
 import NLAlib.Matrix.Basic.MoorePenroseTransformations
+import NLAlib.Matrix.Basic.NormalizedTrace
 import NLAlib.Matrix.Basic.Orthonormal
 import NLAlib.Matrix.Basic.PSDDuality
 import NLAlib.Matrix.Basic.PenroseIdentities
@@ -39,6 +40,7 @@ import NLAlib.Matrix.Basic.RankBounds
 import NLAlib.Matrix.Basic.RankFactorization
 import NLAlib.Matrix.Basic.RankInequalities
 import NLAlib.Matrix.Basic.RankOneCorrection
+import NLAlib.Matrix.Basic.RealCoordinates
 import NLAlib.Matrix.Basic.ResidualEnergy
 import NLAlib.Matrix.Basic.SchurComplement
 import NLAlib.Matrix.Basic.SchurRank

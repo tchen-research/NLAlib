@@ -14,6 +14,7 @@ import NLAlib.Matrix.Spectral.DefinitePairCalculus
 import NLAlib.Matrix.Spectral.DeflatedPeripheral
 import NLAlib.Matrix.Spectral.DiagonalDominanceCorollaries
 import NLAlib.Matrix.Spectral.DiagonalDominanceStability
+import NLAlib.Matrix.Spectral.DiagonalSingularValues
 import NLAlib.Matrix.Spectral.Diagonalizable
 import NLAlib.Matrix.Spectral.DiagonalizableBlocks
 import NLAlib.Matrix.Spectral.DiagonalizablePrincipal

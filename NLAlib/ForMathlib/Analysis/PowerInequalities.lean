@@ -118,4 +118,13 @@ theorem rpow_le_sqrt_mul_rpow_of_nat_pow_le
     ← Real.rpow_mul hq, hr, ← Real.sqrt_eq_rpow] at h
   exact h
 
+/-- Three nonnegative factors are bounded by the sum of their cubes.
+This division-free arithmetic-geometric mean inequality also covers zeros. -/
+theorem three_mul_mul_mul_le_add_cube {a b c : ℝ}
+    (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) :
+    3*a*b*c ≤ a^3+b^3+c^3 := by
+  have h := mul_nonneg (add_nonneg (add_nonneg ha hb) hc)
+    (add_nonneg (add_nonneg (sq_nonneg (a-b)) (sq_nonneg (b-c))) (sq_nonneg (c-a)))
+  nlinarith
+
 end NLAlib

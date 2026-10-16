@@ -1,8 +1,10 @@
 import NLAlib.RandomMatrix.Gaussian.Basic
+import NLAlib.RandomMatrix.Gaussian.Comparison
 import NLAlib.RandomMatrix.Gaussian.Invariance
 import NLAlib.RandomMatrix.Gaussian.InverseMoments
 import NLAlib.RandomMatrix.Gaussian.Moments
 import NLAlib.RandomMatrix.Gaussian.Spectral
+import NLAlib.RandomMatrix.Gaussian.Structured
 import NLAlib.RandomMatrix.Gaussian.Wishart
 
 /-! # `RandomMatrix/Gaussian`

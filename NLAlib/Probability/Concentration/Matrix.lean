@@ -32,6 +32,7 @@ import NLAlib.Probability.Concentration.Matrix.RankOneMomentTrace
 import NLAlib.Probability.Concentration.Matrix.RankOneStep
 import NLAlib.Probability.Concentration.Matrix.Sampling
 import NLAlib.Probability.Concentration.Matrix.SubgaussianMgfCgf
+import NLAlib.Probability.Concentration.Matrix.SubgaussianRectangularSeries
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
 import NLAlib.Probability.Concentration.Matrix.TraceIntegrability
 import NLAlib.Probability.Concentration.Matrix.VarianceAdditivity

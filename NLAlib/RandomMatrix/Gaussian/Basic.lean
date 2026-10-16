@@ -3,6 +3,7 @@ import NLAlib.RandomMatrix.Gaussian.Basic.LinearForms
 import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
 import NLAlib.RandomMatrix.Gaussian.Basic.LipschitzConcentration
 import NLAlib.RandomMatrix.Gaussian.Basic.PolynomialGrowth
+import NLAlib.RandomMatrix.Gaussian.Basic.RowSplitting
 
 /-! # `RandomMatrix/Gaussian/Basic`
 

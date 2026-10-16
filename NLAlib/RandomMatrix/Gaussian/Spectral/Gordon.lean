@@ -1,10 +1,12 @@
 import NLAlib.Matrix.Spectral.Weyl
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import NLAlib.Matrix.Spectral.Core
+import NLAlib.Matrix.Norms.RankOneDifferences
 import NLAlib.Probability.Gaussian.Comparison.SudakovFernique
 import NLAlib.Probability.Gaussian.Comparison.GordonMinimax
 import NLAlib.Probability.Gaussian.Moments.ExpectationNormDiff
 import NLAlib.RandomMatrix.Gaussian.Basic.LinearForms
+import NLAlib.RandomMatrix.Gaussian.Basic.RowSplitting
 /-!
 # Gordon's bounds for the extreme singular values of a Gaussian matrix
 
@@ -47,34 +49,9 @@ private theorem gu_coeff_ineq {N n : ℕ} (u u' : EuclideanSpace ℝ (Fin n))
     (v v' : EuclideanSpace ℝ (Fin N))
     (hu : ‖u‖ = 1) (hu' : ‖u'‖ = 1) (hv : ‖v‖ = 1) (hv' : ‖v'‖ = 1) :
     ∑ i, ∑ j, (v i * u j - v' i * u' j) ^ 2 ≤ ∑ j, (u j - u' j) ^ 2 + ∑ i, (v i - v' i) ^ 2 := by
-  have su : ∑ j, u j ^ 2 = 1 := by rw [← EuclideanSpace.real_norm_sq_eq, hu, one_pow]
-  have su' : ∑ j, u' j ^ 2 = 1 := by rw [← EuclideanSpace.real_norm_sq_eq, hu', one_pow]
-  have sv : ∑ i, v i ^ 2 = 1 := by rw [← EuclideanSpace.real_norm_sq_eq, hv, one_pow]
-  have sv' : ∑ i, v' i ^ 2 = 1 := by rw [← EuclideanSpace.real_norm_sq_eq, hv', one_pow]
-  set α := ∑ j, u j * u' j with hαdef
-  set β := ∑ i, v i * v' i with hβdef
-  have hL : ∑ i, ∑ j, (v i * u j - v' i * u' j) ^ 2
-      = (∑ i, v i ^ 2) * (∑ j, u j ^ 2) - 2 * (β * α) + (∑ i, v' i ^ 2) * (∑ j, u' j ^ 2) := by
-    rw [hαdef, hβdef, Finset.sum_mul_sum, Finset.sum_mul_sum, Finset.sum_mul_sum, Finset.mul_sum]
-    simp only [Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
-    refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-    ring
-  have hRu : ∑ j, (u j - u' j) ^ 2 = ∑ j, u j ^ 2 - 2 * α + ∑ j, u' j ^ 2 := by
-    rw [hαdef, Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    ring
-  have hRv : ∑ i, (v i - v' i) ^ 2 = ∑ i, v i ^ 2 - 2 * β + ∑ i, v' i ^ 2 := by
-    rw [hβdef, Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    ring
-  have hα : α ≤ 1 := by
-    have : 0 ≤ ∑ j, (u j - u' j) ^ 2 := Finset.sum_nonneg fun _ _ => sq_nonneg _
-    linarith
-  have hβ : β ≤ 1 := by
-    have : 0 ≤ ∑ i, (v i - v' i) ^ 2 := Finset.sum_nonneg fun _ _ => sq_nonneg _
-    linarith
-  rw [hL, hRu, hRv, su, su', sv, sv']
-  nlinarith [mul_nonneg (sub_nonneg.2 hα) (sub_nonneg.2 hβ)]
+  simpa only [frobSq_eq_sum_sq, Matrix.sub_apply, Matrix.vecMulVec_apply,
+    EuclideanSpace.real_norm_sq_eq, PiLp.sub_apply] using
+    frobSq_vecMulVec_sub_le_norm_sq_add u u' v v' hu hu' hv hv'
 
 /-- Increments of the comparison process `⟨g, u⟩ + ⟨h, v⟩`, written with one Gaussian row
 `H₀ ∈ ℝ^{n+N}`. -/
@@ -246,47 +223,6 @@ theorem integral_specNorm_gaussianMatrix_le_sqrt_add_sqrt {N n : ℕ} :
 
 /-! ### Lower bound -/
 
-private theorem gl_mp_split (n N : ℕ) :
-    MeasurePreserving
-      (fun x : Fin (n + N) → ℝ => ((fun j : Fin n => x (Fin.castAdd N j)),
-        (fun i : Fin N => x (Fin.natAdd n i))))
-      (Measure.pi fun _ : Fin (n + N) => gaussianReal 0 1)
-      ((Measure.pi fun _ : Fin n => gaussianReal 0 1).prod
-        (Measure.pi fun _ : Fin N => gaussianReal 0 1)) := by
-  have h1 := (measurePreserving_piCongrLeft (α := fun _ : Fin (n + N) => ℝ)
-    (fun _ : Fin (n + N) => gaussianReal 0 1) finSumFinEquiv).symm
-  have h2 := measurePreserving_sumPiEquivProdPi (X := fun _ : Fin n ⊕ Fin N => ℝ)
-    (fun _ => gaussianReal 0 1)
-  have h3 := h2.comp h1
-  convert h3 using 1
-  funext x
-  simp [MeasurableEquiv.sumPiEquivProdPi, Equiv.sumPiEquivProdPi, MeasurableEquiv.piCongrLeft,
-    Equiv.piCongrLeft_symm_apply]
-
-private theorem gl_mp_row (n N : ℕ) :
-    MeasurePreserving (fun H : Matrix (Fin 1) (Fin (n + N)) ℝ => H 0) (gaussianMatrix (Fin 1) (Fin (n + N)))
-      (Measure.pi fun _ : Fin (n + N) => gaussianReal 0 1) :=
-  measurePreserving_gaussianMatrix_row 0
-
-private theorem gl_integral_castAdd (n N : ℕ) (f : (Fin n → ℝ) → ℝ) (hf : Measurable f) :
-    ∫ H, f (fun j => H 0 (Fin.castAdd N j)) ∂(gaussianMatrix (Fin 1) (Fin (n + N)))
-      = ∫ x, f x ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1) := by
-  have h := (measurePreserving_fst (μ := Measure.pi fun _ : Fin n => gaussianReal 0 1)
-    (ν := Measure.pi fun _ : Fin N => gaussianReal 0 1)).comp
-      ((gl_mp_split n N).comp (gl_mp_row n N))
-  rw [← h.map_eq, integral_map h.measurable.aemeasurable hf.aestronglyMeasurable]
-  rfl
-
-private theorem gl_integral_natAdd (n N : ℕ) (f : (Fin N → ℝ) → ℝ) (hf : Measurable f) :
-    ∫ H, f (fun i => H 0 (Fin.natAdd n i)) ∂(gaussianMatrix (Fin 1) (Fin (n + N)))
-      = ∫ x, f x ∂(Measure.pi fun _ : Fin N => gaussianReal 0 1) := by
-  have h := (measurePreserving_snd (μ := Measure.pi fun _ : Fin n => gaussianReal 0 1)
-    (ν := Measure.pi fun _ : Fin N => gaussianReal 0 1)).comp
-      ((gl_mp_split n N).comp (gl_mp_row n N))
-  rw [← h.map_eq, integral_map h.measurable.aemeasurable hf.aestronglyMeasurable]
-  rfl
-
-
 /-! ### New for the lower bound -/
 
 private theorem gl_norm_toLp {κ : Type*} [Fintype κ] (x : κ → ℝ) :
@@ -410,11 +346,9 @@ private theorem gl_coeff_same {N n : ℕ} (u : EuclideanSpace ℝ (Fin n))
     (v v' : EuclideanSpace ℝ (Fin N))
     (hu : ‖u‖ = 1) :
     ∑ i, ∑ j, (v i * u j - v' i * u j) ^ 2 = ∑ i, (v i - v' i) ^ 2 := by
-  have su : ∑ j, u j ^ 2 = 1 := by rw [← EuclideanSpace.real_norm_sq_eq, hu, one_pow]
-  refine Finset.sum_congr rfl fun i _ => ?_
-  have : ∀ j, (v i * u j - v' i * u j) ^ 2 = (v i - v' i) ^ 2 * u j ^ 2 := fun j => by ring
-  simp_rw [this]
-  rw [← Finset.mul_sum, su, mul_one]
+  simpa only [frobSq_eq_sum_sq, Matrix.sub_apply, Matrix.vecMulVec_apply,
+    EuclideanSpace.real_norm_sq_eq, PiLp.sub_apply] using
+    frobSq_vecMulVec_sub_same_eq_norm_sq u v v' hu
 
 /-- The comparison bound at a fixed net scale `ε`:
 `(1 - ε) 𝔼‖h_N‖ - 𝔼‖g_n‖ ≤ 𝔼 σ_min(G) + ε 𝔼‖G‖`. -/
@@ -513,8 +447,8 @@ private theorem gl_scaled_bound {N n : ℕ} (hN : 0 < N) (hn : 0 < n) (ε : ℝ)
       (fun u => Measurable.iSup fun t => (continuous_linForm _).measurable)
   have hg := gl_integrable_sqrt_sumsq (m := n + N) (fun j : Fin n => Fin.castAdd N j)
   have hh := gl_integrable_sqrt_sumsq (m := n + N) (fun i : Fin N => Fin.natAdd n i)
-  have hEN := gl_integral_natAdd n N (fun x => Real.sqrt (∑ i, x i ^ 2)) (by fun_prop)
-  have hEn := gl_integral_castAdd n N (fun x => Real.sqrt (∑ j, x j ^ 2)) (by fun_prop)
+  have hEN := integral_gaussianMatrix_row_natAdd n N (fun x => Real.sqrt (∑ i, x i ^ 2)) (by fun_prop)
+  have hEn := integral_gaussianMatrix_row_castAdd n N (fun x => Real.sqrt (∑ j, x j ^ 2)) (by fun_prop)
   -- chain of inequalities
   calc (1 - ε) * ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin N => gaussianReal 0 1)
         - ∫ x, Real.sqrt (∑ i, x i ^ 2) ∂(Measure.pi fun _ : Fin n => gaussianReal 0 1)

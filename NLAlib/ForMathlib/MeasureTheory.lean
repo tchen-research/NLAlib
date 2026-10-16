@@ -1,9 +1,12 @@
 import NLAlib.ForMathlib.MeasureTheory.AbsoluteContinuity
+import NLAlib.ForMathlib.MeasureTheory.AffineDifferentiation
+import NLAlib.ForMathlib.MeasureTheory.AffineSeries
 import NLAlib.ForMathlib.MeasureTheory.CompactSupportDifferentiation
 import NLAlib.ForMathlib.MeasureTheory.ConditionalComparison
 import NLAlib.ForMathlib.MeasureTheory.ConditionalJensen
 import NLAlib.ForMathlib.MeasureTheory.ConditionalParameterJensen
 import NLAlib.ForMathlib.MeasureTheory.FinitePolynomialMoments
+import NLAlib.ForMathlib.MeasureTheory.IndependentSections
 import NLAlib.ForMathlib.MeasureTheory.IntegrableSup
 import NLAlib.ForMathlib.MeasureTheory.Integral
 import NLAlib.ForMathlib.MeasureTheory.IntegralConvergence
@@ -13,11 +16,16 @@ import NLAlib.ForMathlib.MeasureTheory.IntegralUpdate
 import NLAlib.ForMathlib.MeasureTheory.MapProd
 import NLAlib.ForMathlib.MeasureTheory.Matrix
 import NLAlib.ForMathlib.MeasureTheory.MatrixConditionalExpectation
+import NLAlib.ForMathlib.MeasureTheory.MatrixIntegral
+import NLAlib.ForMathlib.MeasureTheory.MatrixInverse
 import NLAlib.ForMathlib.MeasureTheory.MomentInterpolation
 import NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability
 import NLAlib.ForMathlib.MeasureTheory.PolynomialZeroSets
+import NLAlib.ForMathlib.MeasureTheory.ProductConditional
+import NLAlib.ForMathlib.MeasureTheory.ProductSelection
 import NLAlib.ForMathlib.MeasureTheory.SqrtIntegral
 import NLAlib.ForMathlib.MeasureTheory.TailComparison
+import NLAlib.ForMathlib.MeasureTheory.TailOrder
 import NLAlib.ForMathlib.MeasureTheory.WeightedCauchySchwarz
 
 /-! # `ForMathlib/MeasureTheory`

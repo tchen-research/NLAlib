@@ -27,7 +27,9 @@ import NLAlib.Matrix.Functions.GeometricMeanIdentities
 import NLAlib.Matrix.Functions.GoldenThompson
 import NLAlib.Matrix.Functions.HermiteDifferentiation
 import NLAlib.Matrix.Functions.HermitianCalculus
+import NLAlib.Matrix.Functions.HermitianCoordinates
 import NLAlib.Matrix.Functions.HermitianMoments
+import NLAlib.Matrix.Functions.HermitianResolvent
 import NLAlib.Matrix.Functions.InsertionWordBounds
 import NLAlib.Matrix.Functions.IntrinsicDimension
 import NLAlib.Matrix.Functions.InverseCalculus
@@ -102,6 +104,12 @@ import NLAlib.Matrix.Functions.RationalBlocks
 import NLAlib.Matrix.Functions.RationalCalculus
 import NLAlib.Matrix.Functions.RationalDerivatives
 import NLAlib.Matrix.Functions.ReciprocalExponential
+import NLAlib.Matrix.Functions.ResolventCoordinateBounds
+import NLAlib.Matrix.Functions.ResolventCoordinateDifferences
+import NLAlib.Matrix.Functions.ResolventDerivatives
+import NLAlib.Matrix.Functions.ResolventDifferences
+import NLAlib.Matrix.Functions.ResolventMeasurability
+import NLAlib.Matrix.Functions.ResolventWordBounds
 import NLAlib.Matrix.Functions.SignCharacterization
 import NLAlib.Matrix.Functions.SignExistence
 import NLAlib.Matrix.Functions.SignNewton

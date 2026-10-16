@@ -15,15 +15,15 @@ open scoped Matrix ComplexOrder
 open MeasureTheory ProbabilityTheory Matrix
 namespace NLAlib
 
-variable {ι : Type*} [Fintype ι] [DecidableEq ι] {n : ℕ}
+variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
 
 open scoped Matrix.Norms.L2Operator in
 /-- Every polynomial trace product of a finite Gaussian matrix series is
 absolutely integrable. Source: polynomial growth and Gaussian moments;
 supports `noncommutative-khintchine`. -/
 theorem integrable_re_trace_gaussianSeries_product
-    (A : Fin n → Matrix ι ι ℂ) (B C : Matrix ι ι ℂ) (r s : ℕ) :
-    Integrable (fun x : Fin n → ℝ =>
+    (A : κ → Matrix ι ι ℂ) (B C : Matrix ι ι ℂ) (r s : ℕ) :
+    Integrable (fun x : κ → ℝ =>
       (B * (∑ i, x i • A i) ^ r * C * (∑ i, x i • A i) ^ s).trace.re)
       (gaussianVector _) := by
   apply integrable_gaussianVector_of_polynomial_growth
@@ -35,8 +35,8 @@ open scoped Matrix.Norms.L2Operator in
 integrable. Source: polynomial growth and Gaussian absolute moments;
 supports the coordinate Stein step for `noncommutative-khintchine`. -/
 theorem integrable_coordinate_mul_re_trace_gaussianSeries_product
-    (A : Fin n → Matrix ι ι ℂ) (B C : Matrix ι ι ℂ) (r s : ℕ) (i : Fin n) :
-    Integrable (fun x : Fin n → ℝ => x i *
+    (A : κ → Matrix ι ι ℂ) (B C : Matrix ι ι ℂ) (r s : ℕ) (i : κ) :
+    Integrable (fun x : κ → ℝ => x i *
       (B * (∑ j, x j • A j) ^ r * C * (∑ j, x j • A j) ^ s).trace.re)
       (gaussianVector _) := by
   let D := ‖(reTraceCLM : Matrix ι ι ℂ →L[ℝ] ℝ)‖ * ‖B‖ * ‖C‖ *
@@ -61,8 +61,8 @@ open scoped Matrix.Norms.L2Operator in
 Source: the preceding polynomial-growth theorem; supports
 `noncommutative-khintchine`. -/
 theorem integrable_re_trace_mul_gaussianSeries_pow
-    (A : Fin n → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (q : ℕ) :
-    Integrable (fun x : Fin n → ℝ => (B * (∑ i, x i • A i) ^ q).trace.re)
+    (A : κ → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (q : ℕ) :
+    Integrable (fun x : κ → ℝ => (B * (∑ i, x i • A i) ^ q).trace.re)
       (gaussianVector _) := by
   simpa only [pow_zero, mul_one] using
     integrable_re_trace_gaussianSeries_product A B 1 q 0
@@ -71,8 +71,8 @@ open scoped Matrix.Norms.L2Operator in
 /-- A Gaussian coordinate times a one-power trace is absolutely integrable.
 Source: polynomial Gaussian moments; supports `noncommutative-khintchine`. -/
 theorem integrable_coordinate_mul_re_trace_mul_gaussianSeries_pow
-    (A : Fin n → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (q : ℕ) (i : Fin n) :
-    Integrable (fun x : Fin n → ℝ => x i * (B * (∑ j, x j • A j) ^ q).trace.re)
+    (A : κ → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (q : ℕ) (i : κ) :
+    Integrable (fun x : κ → ℝ => x i * (B * (∑ j, x j • A j) ^ q).trace.re)
       (gaussianVector _) := by
   simpa only [pow_zero, mul_one] using
     integrable_coordinate_mul_re_trace_gaussianSeries_product A B 1 q 0 i
@@ -83,16 +83,16 @@ the genuine noncommutative product rule and all integrability is discharged.
 Source: manuscript Gaussian `eq:recursion`; supports
 `noncommutative-khintchine`. -/
 theorem integral_coordinate_mul_re_trace_mul_gaussianSeries_pow
-    (A : Fin n → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (q : ℕ) (i : Fin n) :
-    (∫ x : Fin n → ℝ, x i * (B * (∑ j, x j • A j) ^ q).trace.re
+    (A : κ → Matrix ι ι ℂ) (B : Matrix ι ι ℂ) (q : ℕ) (i : κ) :
+    (∫ x : κ → ℝ, x i * (B * (∑ j, x j • A j) ^ q).trace.re
       ∂(gaussianVector _)) =
       ∑ l ∈ Finset.range q,
-        ∫ x : Fin n → ℝ,
+        ∫ x : κ → ℝ,
           (B * (∑ j, x j • A j) ^ (q.pred - l) *
             A i * (∑ j, x j • A j) ^ l).trace.re
           ∂(gaussianVector _) := by
-  let f := fun x : Fin n → ℝ => (B * (∑ j, x j • A j) ^ q).trace.re
-  let df := fun x : Fin n → ℝ => ∑ l ∈ Finset.range q,
+  let f := fun x : κ → ℝ => (B * (∑ j, x j • A j) ^ q).trace.re
+  let df := fun x : κ → ℝ => ∑ l ∈ Finset.range q,
     (B * (∑ j, x j • A j) ^ (q.pred - l) * A i * (∑ j, x j • A j) ^ l).trace.re
   have hdi : Integrable df (gaussianVector _) := by
     apply integrable_finsetSum

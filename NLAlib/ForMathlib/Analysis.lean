@@ -3,6 +3,7 @@ import NLAlib.ForMathlib.Analysis.BinomialRootComparison
 import NLAlib.ForMathlib.Analysis.BoundedVariationIntegral
 import NLAlib.ForMathlib.Analysis.Calculus
 import NLAlib.ForMathlib.Analysis.Complex
+import NLAlib.ForMathlib.Analysis.ComplexCoordinates
 import NLAlib.ForMathlib.Analysis.ComplexWeightedAverage
 import NLAlib.ForMathlib.Analysis.ConeRayleigh
 import NLAlib.ForMathlib.Analysis.ContinuousSecant
@@ -21,11 +22,13 @@ import NLAlib.ForMathlib.Analysis.DescendingFactorialSeries
 import NLAlib.ForMathlib.Analysis.DirichletKernelBounds
 import NLAlib.ForMathlib.Analysis.DyadicSeries
 import NLAlib.ForMathlib.Analysis.EquispacedProducts
+import NLAlib.ForMathlib.Analysis.EvenConvex
 import NLAlib.ForMathlib.Analysis.EvenGeometricSeries
 import NLAlib.ForMathlib.Analysis.ExpBounds
 import NLAlib.ForMathlib.Analysis.FactorialMomentBounds
 import NLAlib.ForMathlib.Analysis.FejerKernel
 import NLAlib.ForMathlib.Analysis.FejerModulation
+import NLAlib.ForMathlib.Analysis.FiniteCoordinateDerivative
 import NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence
 import NLAlib.ForMathlib.Analysis.FinitePairNorm
 import NLAlib.ForMathlib.Analysis.FinitePowerSums
@@ -39,6 +42,7 @@ import NLAlib.ForMathlib.Analysis.GeometricRate
 import NLAlib.ForMathlib.Analysis.HarmonicRemainder
 import NLAlib.ForMathlib.Analysis.ImplicitFunction
 import NLAlib.ForMathlib.Analysis.InnerProductSpace
+import NLAlib.ForMathlib.Analysis.IntegralSpeed
 import NLAlib.ForMathlib.Analysis.InvariantCompression
 import NLAlib.ForMathlib.Analysis.InverseConvexity
 import NLAlib.ForMathlib.Analysis.InversePowerSeries
@@ -46,8 +50,10 @@ import NLAlib.ForMathlib.Analysis.Lipschitz
 import NLAlib.ForMathlib.Analysis.LipschitzApprox
 import NLAlib.ForMathlib.Analysis.LobattoKernel
 import NLAlib.ForMathlib.Analysis.LobattoKernelSum
+import NLAlib.ForMathlib.Analysis.LogDimensionBudget
 import NLAlib.ForMathlib.Analysis.LogPowerMean
 import NLAlib.ForMathlib.Analysis.LogRationalBound
+import NLAlib.ForMathlib.Analysis.LogarithmicMomentOptimization
 import NLAlib.ForMathlib.Analysis.Matrix
 import NLAlib.ForMathlib.Analysis.NormSumSq
 import NLAlib.ForMathlib.Analysis.Normed
@@ -74,6 +80,7 @@ import NLAlib.ForMathlib.Analysis.SchurTriangularization
 import NLAlib.ForMathlib.Analysis.SecondDerivativeBound
 import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
 import NLAlib.ForMathlib.Analysis.SpecialFunctions
+import NLAlib.ForMathlib.Analysis.SupportFunction
 import NLAlib.ForMathlib.Analysis.TriangularBasis
 import NLAlib.ForMathlib.Analysis.WeightedPowerProducts
 

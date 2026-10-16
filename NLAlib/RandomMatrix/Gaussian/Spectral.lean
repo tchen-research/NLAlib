@@ -1,6 +1,7 @@
 import NLAlib.RandomMatrix.Gaussian.Spectral.Chevet
 import NLAlib.RandomMatrix.Gaussian.Spectral.Deviation
 import NLAlib.RandomMatrix.Gaussian.Spectral.Gordon
+import NLAlib.RandomMatrix.Gaussian.Spectral.RestrictedMinimum
 import NLAlib.RandomMatrix.Gaussian.Spectral.SketchRank
 import NLAlib.RandomMatrix.Gaussian.Spectral.SmallBall
 import NLAlib.RandomMatrix.Gaussian.Spectral.SpectralSecondMoment

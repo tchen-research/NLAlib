@@ -89,10 +89,10 @@ theorem schattenNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m
     exact schattenNormReal_nonneg A _
 
 open scoped Matrix.Norms.L2Operator in
-/-- Relabeling the rows and columns of a real matrix preserves every Schatten power sum.
-Real-only until `singularValues_reindex` is generalised. -/
+/-- Relabeling the rows and columns preserves every Schatten power sum over
+any real or complex scalar field. -/
 theorem schattenNormReal_reindex {m n r s : Type*} [Fintype m] [Fintype n] [Fintype r] [Fintype s]
-    [DecidableEq n] [DecidableEq s] (A : Matrix m n ℝ) (em : m ≃ r) (en : n ≃ s) (p : ℝ) :
+    [DecidableEq n] [DecidableEq s] (A : Matrix m n 𝕜) (em : m ≃ r) (en : n ≃ s) (p : ℝ) :
     schattenNormReal (A.reindex em en) p = schattenNormReal A p := by
   simp only [schattenNormReal, singularValues_reindex,
     ← Fintype.card_congr em, ← Fintype.card_congr en]

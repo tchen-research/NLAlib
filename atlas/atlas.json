@@ -1,6 +1,6 @@
 {
  "schema_version": "0.2",
- "updated_at": "2026-10-16",
+ "updated_at": "2026-10-17",
  "areas": [
   {
    "id": "matrix",
@@ -49090,7 +49090,9 @@
     }
    ],
    "depends_on": [
-    "matrix-exponential-frechet-integral"
+    "matrix-exponential-frechet-integral",
+    "simple-eigenvalue-perturbation",
+    "simultaneous-diagonalization"
    ],
    "aliases": [
     "BMV theorem",
@@ -49100,16 +49102,311 @@
    ],
    "tags": [
     "foundation",
-    "matrix-functions",
-    "proof-prerequisites-needed"
+    "matrix-functions"
    ],
-   "notes": "Concrete consumer: gaussian-trace-mgf-comparison. Audited the complete short Eremenko exposition and the scalar differentiation consequence, while retaining its substantial prerequisites: analytic eigenvalue branches of a Hermitian pencil (Rellich), algebraic Riemann surfaces and contour deformation on them. The proof constructs the density by residues, checks its Laplace transform by Cauchy's theorem, then deforms the contour to a real-level boundary where integration by parts gives the required sign. This is not a claimed independent certification of all analytic-surface prerequisites. Compact support and bounded convergence justify derivatives. Repeated eigenvalues follow by approximation and weak compactness at fixed mass; scalar shifts extend the PSD-direction statement, and entire continuation gives all real t. Scalar H gives a point mass. Do not replace this theorem by the much easier convexity of Tr exp: higher even directional derivatives are essential.",
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Proved on 2026-10-17 by the planar root-sum reorganization of Stahl's contour argument. The actual upper characteristic-root sum retains algebraic multiplicities and is holomorphic through collisions, using a root-free fixed-circle logarithmic derivative and spectral upper hemicontinuity. Constructed inverse branches have the proved half-plane labels and Schwarz symmetry. Actual free-loop contour changes identify the original density with its exponential moment; smooth thin ellipses prove nonnegativity without real-axis root limits or a global spectral surface. The checked atom-plus-density identity constructs a finite positive measure. Strict-spectrum approximants stay in the exact original spectral interval, and compactness removes repeated eigenvalues; scalar directions and empty dimension are included. NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives proves the full card: all-real representation, total mass, every tilted-moment derivative identity, and the spectral-endpoint bounds for even derivatives. Generic contour/measure facts live in ForMathlib; eigenvalue-pencil construction in Matrix/Perturbation; trace representation and positivity in Matrix/Functions.",
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.neg_sum_integral_exp_mul_deriv_nonneg",
+     "module": "NLAlib.ForMathlib.Analysis.Calculus.ExponentialBoundarySign",
+     "status": "proved",
+     "partial": true,
+     "usage": "Prove the real positivity calculation for a finite chain from nonnegative heights and phase derivatives, with corner endpoint terms cancelling; this does not construct the spectral boundary."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.im_pos_iff_slope_pos_of_tendsto_affine",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.ExteriorHalfPlane",
+     "status": "proved",
+     "partial": true,
+     "usage": "A continuous exterior branch avoiding the real axis in the upper half-plane has positive imaginary part exactly when its nonzero real affine asymptotic slope is positive."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Polynomial.analyticAt_sum_roots_in_circle",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+     "status": "proved",
+     "partial": true,
+     "usage": "For a finite family of fixed polynomials with analytic scalar coefficients, the sum of roots inside any root-free fixed circle depends analytically on the parameter."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Polynomial.analyticAt_sum_filter_roots_upper_of_upperHemicontinuous",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+     "status": "proved",
+     "partial": true,
+     "usage": "An upper hemicontinuous polynomial root family avoiding the real axis has an analytic sum of upper-half-plane roots when its coefficients are analytic."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsCompactExpRepresentation.iteratedDeriv_eq_integral",
+     "module": "NLAlib.ForMathlib.MeasureTheory.CompactExponential",
+     "status": "proved",
+     "partial": true,
+     "usage": "Given a constructed finite positive compact-support representation, identify every derivative with its exponentially tilted moment."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsCompactExpRepresentation.exp_mul_iteratedDeriv_even_zero_le",
+     "module": "NLAlib.ForMathlib.MeasureTheory.CompactExponential",
+     "status": "proved",
+     "partial": true,
+     "usage": "Given the representation, bound each even derivative below by the exponential of the lower support endpoint times its value at zero."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsCompactExpRepresentation.iteratedDeriv_even_le_exp_mul_zero",
+     "module": "NLAlib.ForMathlib.MeasureTheory.CompactExponential",
+     "status": "proved",
+     "partial": true,
+     "usage": "Given the representation, bound each even derivative above by the exponential of the upper support endpoint times its value at zero."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_branches_sum_integral_eq_trace_matrixExp_sub_atoms",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialBranchRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Distinct real diagonal slopes admit exterior eigenvalue branches whose contour densities give the atom-plus-density identity for the trace exponential."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_branches_sum_integral_eq_trace_matrixExp_sub_atoms_fixed_circle",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialBranchRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "One exterior circle suffices for every real Laplace parameter in the matrix atom-plus-density formula."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialBranchRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "The exterior branches of a matrix pencil with distinct diagonal slopes give an integrable circle density on any compact interval containing the slopes."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_trace_matrixExp_sub_atoms",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Explicit exterior eigenvalue branches give Stahl's atom-plus-density transform identity for the matrix exponential."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_exp_mul_traceExponentialCircleDensity_eq_trace_matrixExp_sub_atoms",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Stahl's candidate density satisfies the matrix trace-exponential Laplace identity when the exterior branches, their asymptotics, and their trace identity are supplied."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.traceExponentialCircleDensity_re_nonneg_of_exterior_branches",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialContourPositivity",
+     "status": "proved",
+     "partial": true,
+     "usage": "The exact fixed-circle density is nonnegative away from the finitely many slopes."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_diagonal_of_injective",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialContourPositivity",
+     "status": "proved",
+     "partial": true,
+     "usage": "A Hermitian pencil with distinct real diagonal slopes has a positive finite exponential representing measure on every closed interval containing those slopes."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_eigenvalue_branches_real_circle_density",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialContourReal",
+     "status": "proved",
+     "partial": true,
+     "usage": "exterior eigenvalue branches of a Hermitian pencil with distinct real slopes yield a real contour candidate density on every sufficiently large circle, for every real density parameter."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_branches_integral_real_circleDensity_eq_traceExp_sub_atoms",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialContourReal",
+     "status": "proved",
+     "partial": true,
+     "usage": "For Hermitian A and distinct real diagonal slopes, construct one exterior branch family and a real fixed-circle density; prove weighted integrability and the trace-minus-atoms identity for every real parameter. Nonnegativity of the density remains open."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_branches_isCompactExpRepresentation_of_circleDensity_nonneg",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialDensityMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "A Hermitian pencil with distinct diagonal slopes supplies actual exterior branches such that nonnegativity of their real circle density almost everywhere on the chosen spectral interval constructs a positive finite measure there."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eventually_circleDensity_eq_neg_circleIntegral_of_exterior_inverse_branches",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialInverseContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Stahl's circle density equals the negative exponential moment of any inverse branch family with the actual pencil spectrum and affine asymptotes."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_branches_circleDensity_eq_neg_circleIntegral",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialInverseContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Constructing the inverse pencil branches gives the common-circle inverse-moment formula for any established exterior family of the original pencil."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_of_commute",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "Construct a finite positive representing measure on the spectral interval for commuting Hermitian matrices, including repeated eigenvalues and empty dimensions."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_of_tendsto",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass positive representations on a common compact interval to limits of both matrices in a pencil; the approximating representations remain an explicit prerequisite."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialRepresentation",
+     "status": "proved",
+     "usage": "Apply to arbitrary finite Hermitian A,H to construct a positive finite measure on the exact spectral interval of H representing traceExp(A+tH) for every real t."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialRepresentation",
+     "status": "proved",
+     "usage": "Obtain the positive measure, its total mass, all tilted-moment derivative identities, and both spectral-endpoint bounds on even derivatives directly from Hermitian A,H."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_of_diagonal_simple",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialSimpleSpectrumLimit",
+     "status": "proved",
+     "partial": true,
+     "usage": "A positive-measure representation for every simple real diagonal direction implies the representation for arbitrary Hermitian directions."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms_of_isHermitian",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialSpectralRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "A Hermitian coefficient with distinct eigenvalues has the exterior-circle atom-plus-density representation for every complex matrix `A`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_eigenvalue_branches_of_diagonal",
+     "module": "NLAlib.Matrix.Perturbation.ExteriorEigenvalueBranches",
+     "status": "proved",
+     "partial": true,
+     "usage": "Distinct diagonal slopes give a complete indexed collection of distinct analytic eigenvalue branches outside one common disk."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_eigenvalue_branches_sub_real_diagonal",
+     "module": "NLAlib.Matrix.Perturbation.ExteriorEigenvalueBranches",
+     "status": "proved",
+     "partial": true,
+     "usage": "Construct all eigenvalue branches of A-z diag(b) simultaneously outside one disk, with pairwise distinct values and the affine asymptotes required by the contour representation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_eigenvalue_branches_sub_real_diagonal_conj_eq",
+     "module": "NLAlib.Matrix.Perturbation.ExteriorEigenvalueReflection",
+     "status": "proved",
+     "partial": true,
+     "usage": "Hermitian pencils with distinct real diagonal slopes admit exterior branches satisfying Schwarz reflection on one common exterior domain."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_eigenvalue_branches",
+     "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueBranches",
+     "status": "proved",
+     "partial": true,
+     "usage": "Distinct real slopes, away from `s`, give all exterior inverse branches."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff",
+     "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueHalfPlane",
+     "status": "proved",
+     "partial": true,
+     "usage": "For Hermitian `A`, the constructed exterior inverse branches are in the upper half-plane precisely for indices with `bᵢ < s`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff_conj_eq",
+     "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueReflection",
+     "status": "proved",
+     "partial": true,
+     "usage": "Constructed inverse branches of a Hermitian pencil have both the correct upper-half-plane labels and Schwarz reflection on one common exterior domain."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_eigenvalue_branches_root_sum",
+     "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueRootSum",
+     "status": "proved",
+     "partial": true,
+     "usage": "One constructed family of exterior inverse branches supplies holomorphy, the complete spectral list, the strict-sublevel labels, Schwarz reflection, and the identity with the actual upper-root sum throughout the exterior upper half-plane."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.analyticAt_inversePencilUpperRootSum",
+     "module": "NLAlib.Matrix.Perturbation.PencilRootSum",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual upper-root sum of a Hermitian pencil is analytic throughout both nonreal half-planes."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_eigenvalue_branch_of_diagonal",
+     "module": "NLAlib.Matrix.Perturbation.SimpleEigenvalueAnalyticBranch",
+     "status": "proved",
+     "partial": true,
+     "usage": "Distinct diagonal slopes give holomorphic exterior eigenvalue branches with expansion `z * dᵢ + Aᵢᵢ + O(z⁻¹)`."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsCompactExpRepresentation",
+    "NLAlib.exponentialAtomicMeasure",
+    "NLAlib.inversePencilUpperRootSum",
+    "NLAlib.lambdaMax",
+    "NLAlib.lambdaMin",
+    "NLAlib.matrixExp",
+    "NLAlib.traceExp",
+    "NLAlib.traceExponentialCircleDensity"
+   ],
    "variants": [],
-   "mathlib_prereqs": [],
-   "updated_at": "2026-10-14"
+   "mathlib_prereqs": [
+    {
+     "decl": "ProbabilityTheory.iteratedDeriv_mgf",
+     "present": true,
+     "note": "The native tilted-moment derivative formula; compact support supplies exponential integrability at every real parameter."
+    },
+    {
+     "decl": "isCompact_setOfPred_finiteMeasure_le_of_compactSpace",
+     "present": true,
+     "note": "Compactness of positive finite measures with bounded mass on a compact Hausdorff Borel space."
+    },
+    {
+     "decl": "ContDiffAt.implicitFunction",
+     "present": true,
+     "note": "Analytic regularity at order omega constructs the local complex eigenvalue branches."
+    }
+   ],
+   "updated_at": "2026-10-17"
   },
   {
    "id": "gaussian-trace-mgf-comparison",

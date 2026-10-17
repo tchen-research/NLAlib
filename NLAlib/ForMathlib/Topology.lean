@@ -1,5 +1,6 @@
 import NLAlib.ForMathlib.Topology.ComplexPolynomialApproximation
 import NLAlib.ForMathlib.Topology.Order
+import NLAlib.ForMathlib.Topology.PathSubdivision
 import NLAlib.ForMathlib.Topology.ProperLocalHomeomorph
 
 /-! # `ForMathlib/Topology`

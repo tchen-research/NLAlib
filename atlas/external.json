@@ -8143,6 +8143,72 @@
   "sorry":
   false,
   "signature":
+  "ProbabilityTheory.iteratedDeriv_mgf.{u_1} {Ω : Type u_1} {m : MeasurableSpace Ω} {X : Ω → ℝ}\n  {μ : MeasureTheory.Measure Ω} {t : ℝ} (ht : t ∈ interior (ProbabilityTheory.integrableExpSet X μ)) (n : ℕ) :\n  iteratedDeriv n (ProbabilityTheory.mgf X μ) t = ∫ (x : Ω), (fun ω => X ω ^ n * Real.exp (t * X ω)) x ∂μ",
+  "name":
+  "ProbabilityTheory.iteratedDeriv_mgf",
+  "module":
+  "Mathlib.Probability.Moments.MGFAnalytic",
+  "line":
+  81,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "For `t ∈ interior (integrableExpSet X μ)`, the n-th derivative of `mgf X μ` at `t` is\n`μ[X ^ n * exp (t * X)]`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "isCompact_setOfPred_finiteMeasure_le_of_compactSpace.{u_1} (E : Type u_1) [MeasurableSpace E] [TopologicalSpace E]\n  [T2Space E] [BorelSpace E] [CompactSpace E] (C : NNReal) : IsCompact {μ | μ.mass ≤ C}",
+  "name":
+  "isCompact_setOfPred_finiteMeasure_le_of_compactSpace",
+  "module":
+  "Mathlib.MeasureTheory.Measure.Prokhorov",
+  "line":
+  69,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "In a compact space, the set of finite measures with mass at most `C` is compact. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "ContDiffAt.implicitFunction.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [RCLike 𝕜] {E₁ : Type u_2} [NormedAddCommGroup E₁]\n  [NormedSpace 𝕜 E₁] [CompleteSpace E₁] {E₂ : Type u_3} [NormedAddCommGroup E₂] [NormedSpace 𝕜 E₂] [CompleteSpace E₂]\n  {F : Type u_4} [NormedAddCommGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] {u : E₁ × E₂} {f : E₁ × E₂ → F}\n  {n : WithTop ℕ∞} (cdf : ContDiffAt 𝕜 n f u) (pn : n ≠ 0)\n  (if₂ : (fderiv 𝕜 f u ∘SL ContinuousLinearMap.inr 𝕜 E₁ E₂).IsInvertible) : E₁ → E₂",
+  "name":
+  "ContDiffAt.implicitFunction",
+  "module":
+  "Mathlib.Analysis.Calculus.ImplicitContDiff",
+  "line":
+  54,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "Implicit function `ψ` defined by `f (x, ψ x) = f u`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "ZMod.dft.{u_1} {N : ℕ} [NeZero N] {E : Type u_1} [AddCommGroup E] [_root_.Module ℂ E] : (ZMod N → E) ≃ₗ[ℂ] ZMod N → E",
   "name":
   "ZMod.dft",

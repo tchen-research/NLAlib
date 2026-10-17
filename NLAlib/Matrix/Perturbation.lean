@@ -15,6 +15,8 @@ import NLAlib.Matrix.Perturbation.EigenvaluePencil
 import NLAlib.Matrix.Perturbation.EigenvaluePerturbation
 import NLAlib.Matrix.Perturbation.EigenvalueTrace
 import NLAlib.Matrix.Perturbation.EigenvalueVariation
+import NLAlib.Matrix.Perturbation.ExteriorEigenvalueBranches
+import NLAlib.Matrix.Perturbation.ExteriorEigenvalueReflection
 import NLAlib.Matrix.Perturbation.GoldenRatioBlock
 import NLAlib.Matrix.Perturbation.GramSingularBounds
 import NLAlib.Matrix.Perturbation.HoffmanWielandtNormal
@@ -42,6 +44,7 @@ import NLAlib.Matrix.Perturbation.Pseudospectrum
 import NLAlib.Matrix.Perturbation.PseudospectrumResolvent
 import NLAlib.Matrix.Perturbation.RayleighDerivative
 import NLAlib.Matrix.Perturbation.ResidualBounds
+import NLAlib.Matrix.Perturbation.SimpleEigenvalueAnalyticBranch
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueContinuousBranch
 import NLAlib.Matrix.Perturbation.SimpleEigenvalueImplicitBranch
 import NLAlib.Matrix.Perturbation.SimpleEigenvaluePersistence

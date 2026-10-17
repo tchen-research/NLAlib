@@ -130,6 +130,12 @@ import NLAlib.Matrix.Functions.TraceEvenSmoothness
 import NLAlib.Matrix.Functions.TraceExpBounds
 import NLAlib.Matrix.Functions.TraceExpConvex
 import NLAlib.Matrix.Functions.TraceExpMonotone
+import NLAlib.Matrix.Functions.TraceExponentialBranchRepresentation
+import NLAlib.Matrix.Functions.TraceExponentialContour
+import NLAlib.Matrix.Functions.TraceExponentialContourReal
+import NLAlib.Matrix.Functions.TraceExponentialMeasure
+import NLAlib.Matrix.Functions.TraceExponentialSpectralRepresentation
+import NLAlib.Matrix.Functions.TraceExponentialSpectrum
 import NLAlib.Matrix.Functions.TraceInverseConvexity
 import NLAlib.Matrix.Functions.TraceMeanValue
 import NLAlib.Matrix.Functions.TracePowerBounds

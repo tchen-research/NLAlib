@@ -273,6 +273,18 @@ theorem cfc_diagonal_real (f : ℝ → ℝ) (x : ι → ℝ) :
   simp only [cfc_algebraMap] at heq
   exact heq.symm
 
+/-- The exponential acts entrywise on a real diagonal matrix. This reusable
+calculus lemma was previously private in `GoldenThompson`.
+Source: diagonal CFC; Stahl §1.3.1 and Tropp 2015, §2.1.11;
+atlas `trace-exponential-stahl` (partial), `golden-thompson` (partial). -/
+theorem matrixExp_diagonal_real (h : ι → ℝ) :
+    matrixExp (Matrix.diagonal fun i => (h i : ℂ)) =
+      Matrix.diagonal fun i => (Real.exp (h i) : ℂ) := by
+  have hh : (Matrix.diagonal fun i => (h i : ℂ)).IsHermitian :=
+    Matrix.isHermitian_diagonal_of_self_adjoint _ (by ext i; simp)
+  rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp hh]
+  exact cfc_diagonal_real Real.exp h
+
 omit [DecidableEq ι] in
 /-- Equivalent finite labels preserve the complex trace. Source: the private
 `trace_reindex` helper in `IntrinsicBernstein`, by reindexing the diagonal sum;
@@ -356,5 +368,36 @@ theorem matrixLog_reindex_of_isHermitian {n : Type*} [Fintype n] [DecidableEq n]
   change E (cfc Real.log A) = cfc Real.log (E A)
   exact StarAlgHomClass.map_cfc (p := IsSelfAdjoint) (q := IsSelfAdjoint) E Real.log A
     hf hc hA (hA.reindex e)
+
+/-- The trace exponential of a real diagonal matrix is the sum of the scalar
+exponentials. Source: the diagonal exponential series; atlas
+`trace-exponential-stahl` (helper). -/
+theorem traceExp_diagonal_real (a : ι → ℝ) :
+    traceExp (Matrix.diagonal (fun i => (a i : ℂ))) = ∑ i, Real.exp (a i) := by
+  rw [traceExp_complex, matrixExp_diagonal_real]
+  simp only [Matrix.trace, Matrix.diag_apply, Matrix.diagonal_apply_eq,
+    Complex.re_sum, Complex.ofReal_re]
+
+/-- Every diagonal node in a unitary congruence belongs to the original real
+spectrum. Source: similarity invariance of the spectrum; atlas
+`trace-exponential-stahl` (helper). -/
+theorem mem_real_spectrum_of_orthonormal_congruence_diagonal
+    (H U : Matrix ι ι ℂ) (b : ι → ℝ) (hU : HasOrthonormalCols U)
+    (hH : Uᴴ * H * U = Matrix.diagonal (fun i => (b i : ℂ))) (i : ι) :
+    b i ∈ spectrum ℝ H := by
+  have hleft : Uᴴ * U = 1 := hU
+  have hright : U * Uᴴ = 1 := mul_eq_one_comm.mp hleft
+  let V : unitary (Matrix ι ι ℂ) :=
+    ⟨Uᴴ, by simpa only [Unitary.mem_iff, Matrix.star_eq_conjTranspose, Matrix.conjTranspose_conjTranspose]
+      using And.intro hright hleft⟩
+  have hs := spectrum_unitary_conj V H
+  have hdiag : (V : Matrix ι ι ℂ) * H * (V : Matrix ι ι ℂ)ᴴ =
+      Matrix.diagonal (fun j => (b j : ℂ)) := by
+    simpa only [V, Matrix.conjTranspose_conjTranspose] using hH
+  rw [hdiag] at hs
+  rw [← hs]
+  apply (spectrum.algebraMap_mem_iff ℂ).mp
+  rw [spectrum_diagonal]
+  exact ⟨i, rfl⟩
 
 end NLAlib

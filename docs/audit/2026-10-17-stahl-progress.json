@@ -1,0 +1,318 @@
+{
+  "date": "2026-10-17",
+  "target": "trace-exponential-stahl",
+  "status": "partial",
+  "full_positive_measure_theorem_proved": false,
+  "branch": "codex/stahl-trace-representation",
+  "baseline_commit": "6231e9b1cc9e4c8010ec09f3aab82e6e0af4ef4c",
+  "sources": [
+    "https://arxiv.org/html/1107.4875v3",
+    "https://www.math.purdue.edu/~eremenko/dvi/bmv2.pdf"
+  ],
+  "completed": [
+    {
+      "scope": "Real atom-plus-density identity for distinct real diagonal directions",
+      "declaration": "NLAlib.exists_exterior_branches_integral_real_circleDensity_eq_traceExp_sub_atoms",
+      "read_back": "For Hermitian A and injective real diagonal slopes, construct one exterior branch family. For any fixed circle outside the common disk, the contour density is real; its exponentially weighted integral is integrable on each compact interval containing the slopes and equals traceExp(A-t diag b) minus the explicit atomic exponential sum for every real t. No density positivity is claimed."
+    },
+    {
+      "scope": "General Hermitian simple-spectrum coefficient, complex density",
+      "declaration": "NLAlib.exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms_of_isHermitian",
+      "read_back": "Unitary diagonalization transports the fixed-circle transform identity to any Hermitian coefficient with injective eigenvalues, with no commutation condition on A."
+    },
+    {
+      "scope": "Eigenvalue branches near infinity",
+      "declaration": "NLAlib.exists_exterior_eigenvalue_branches_sub_real_diagonal",
+      "read_back": "Construct all branches of A-z diag b outside a common disk with holomorphy, complete distinct spectral values and affine asymptotes. An analytic reciprocal remainder also gives O(1/z)."
+    },
+    {
+      "scope": "Real sign mechanism",
+      "declaration": "NLAlib.neg_sum_integral_exp_mul_deriv_nonneg",
+      "read_back": "Integration by parts gives a nonnegative boundary contribution for finite smooth chains whose heights and phase derivatives satisfy the specified signs. Internal endpoint terms cancel, permitting corners. The actual spectral boundary is not constructed."
+    },
+    {
+      "scope": "Compactness of positive representations",
+      "declaration": "NLAlib.exists_finiteMeasure_exp_mul_eq_of_tendsto",
+      "read_back": "Pointwise limits of positive finite exponential representations on a common compact interval retain one such measure for every real parameter; convergence at zero provides the mass bound."
+    },
+    {
+      "scope": "Commuting Hermitian pencils",
+      "declaration": "NLAlib.exists_isCompactExpRepresentation_traceExp_of_commute",
+      "read_back": "Construct the positive finite atomic representing measure on the direction spectral interval for commuting Hermitian A,H, including empty dimensions and repeated eigenvalues."
+    },
+    {
+      "scope": "Mass and derivative consequences once a positive measure is constructed",
+      "declaration": "NLAlib.IsCompactExpRepresentation.iteratedDeriv_eq_integral",
+      "read_back": "Compact support supplies real analyticity, total mass F(0), all tilted-moment derivative identities, even-derivative nonnegativity and the sharp endpoint exponential bounds."
+    }
+  ],
+  "open_obligations": [
+    "Construct or normalize the global characteristic spectral surface, including reducible or singular curves.",
+    "Construct the finite level-set boundary with compatible local differential expressions and orientations; prove internal-edge cancellation and exterior-contour identification.",
+    "Prove conjugate arc pairing, endpoint behavior, and the height/phase sign conditions for the constructed boundary.",
+    "Deduce nonnegativity of the constructed contour density for general noncommuting Hermitian pencils.",
+    "Construct the positive measure from atoms and density, then combine the proved compactness API with a checked approximation preserving a common spectral interval to remove simple-spectrum restrictions.",
+    "Complete the final all-dimension, all-real-parameter positive-measure theorem after proving the density sign and the required approximation."
+  ],
+  "library_design": [
+    "General contour, finite-measure and scalar-calculus facts live under ForMathlib.",
+    "Matrix eigenvalue-branch construction lives under Matrix/Perturbation.",
+    "Trace representation and its commuting specialization live under Matrix/Functions.",
+    "The previously private diagonal exponential helper is shared publicly in UnitaryCalculus and reused by GoldenThompson.",
+    "The full atlas item remains candidate; all recorded formalizations are explicitly partial."
+  ],
+  "validation": {
+    "leaf_compilation": "passed with autoImplicit=false",
+    "independent_statement_readback": "passed for the 16 new source leaves and moved helpers",
+    "representative_axiom_checks": "only propext, Classical.choice, Quot.sound",
+    "full_build": "passed (6036 jobs)",
+    "atlas_index": "passed: 10894 public declarations; 80 added, all sorry-free",
+    "complete_experimental_build": "passed (6048 jobs)",
+    "default_axiom_audit": "passed: 20566 reachable declarations, no sorry or unsupported axioms",
+    "experimental_sorry_inventory": "unchanged: 23 pre-existing declarations",
+    "new_public_declarations_by_kind": {
+      "inductive": 1,
+      "theorem": 76,
+      "constructor": 1,
+      "def": 2
+    },
+    "schema_validation": "passed independently with PowerShell Test-Json, JSON Schema draft 2020-12",
+    "integration_checks": [
+      {
+        "check": "experimental-build",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\experimental-build.log"
+      },
+      {
+        "check": "axiom-inventory",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\axiom-inventory.log"
+      },
+      {
+        "check": "trusted-audit",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\trusted-audit.log"
+      },
+      {
+        "check": "declaration-index",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\declaration-index.log"
+      },
+      {
+        "check": "atlas-sync",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\atlas-sync.log"
+      },
+      {
+        "check": "layers",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\layers.log"
+      },
+      {
+        "check": "names",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\names.log"
+      },
+      {
+        "check": "atlas",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\atlas.log"
+      },
+      {
+        "check": "import-surface",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\import-surface.log"
+      },
+      {
+        "check": "card-audit",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\card-audit.log"
+      },
+      {
+        "check": "linters",
+        "exit_code": 0,
+        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\linters.log"
+      }
+    ],
+    "partial_formalizations": 18,
+    "all_new_declarations_sorry_free": true,
+    "native_prerequisite_signatures": "375 external declarations; all three newly recorded Mathlib prerequisites present",
+    "final_whitespace_cleanup": "Three source leaves and their dependency recompiled; six declaration docstrings regenerated with the standard record function; all non-doc index fields unchanged."
+  },
+  "new_sources": [
+    {
+      "path": "NLAlib/ForMathlib/Analysis/Calculus/ExponentialBoundarySign.lean",
+      "lines": 174,
+      "theorems": [
+        "integral_exp_mul_deriv_eq_sub",
+        "neg_integral_exp_mul_deriv_eq_of_endpoints_eq_zero",
+        "neg_integral_exp_mul_deriv_nonneg",
+        "neg_sum_integral_exp_mul_deriv_eq_of_endpoints_eq_zero",
+        "neg_sum_integral_exp_mul_deriv_nonneg",
+        "neg_inv_pi_mul_integral_exp_mul_deriv_eq_and_nonneg"
+      ]
+    },
+    {
+      "path": "NLAlib/ForMathlib/Analysis/Complex/ExteriorCircleCauchy.lean",
+      "lines": 191,
+      "theorems": [
+        "circleIntegral_eq_of_differentiableOn_exterior",
+        "circleIntegral_inv_mul_eq_of_differentiableOn_exterior",
+        "two_pi_i_inv_mul_circleIntegral_inv_mul_eq_zero_of_tendsto",
+        "two_pi_i_inv_mul_circleIntegral_inv_mul_eq_of_tendsto",
+        "two_pi_i_inv_mul_circleIntegral_div_sub_eq_of_tendsto"
+      ]
+    },
+    {
+      "path": "NLAlib/ForMathlib/MeasureTheory/CircleIntegralFubini.lean",
+      "lines": 75,
+      "theorems": [
+        "intervalIntegrable_circleIntegral_and_integral_circleIntegral_eq",
+        "integral_circleIntegral_eq_circleIntegral_integral"
+      ]
+    },
+    {
+      "path": "NLAlib/ForMathlib/MeasureTheory/CircleIntegralReflection.lean",
+      "lines": 59,
+      "theorems": [
+        "conj_eq_neg_of_conj_eq",
+        "normalized_im_eq_zero_of_conj_eq"
+      ]
+    },
+    {
+      "path": "NLAlib/ForMathlib/MeasureTheory/CompactExponential.lean",
+      "lines": 165,
+      "theorems": [
+        "integrable_exp",
+        "mem_interior_integrableExpSet",
+        "measureReal_univ_eq",
+        "iteratedDeriv_eq_integral",
+        "integrable_pow_mul_exp",
+        "iteratedDeriv_even_nonneg",
+        "exp_mul_iteratedDeriv_even_zero_le",
+        "iteratedDeriv_even_le_exp_mul_zero",
+        "analyticAt",
+        "mono",
+        "exists_isCompactExpRepresentation_of_tendsto"
+      ]
+    },
+    {
+      "path": "NLAlib/ForMathlib/MeasureTheory/CompactLaplaceLimit.lean",
+      "lines": 135,
+      "theorems": [
+        "exists_finiteMeasure_integral_eq_of_tendsto",
+        "exists_finiteMeasure_exp_mul_eq_of_tendsto_of_mass_le",
+        "exists_finiteMeasure_exp_mul_eq_of_tendsto"
+      ]
+    },
+    {
+      "path": "NLAlib/ForMathlib/MeasureTheory/ExponentialAtomic.lean",
+      "lines": 59,
+      "theorems": [
+        "exponentialAtomicMeasure_toMeasure",
+        "integral_exponentialAtomicMeasure",
+        "isCompactExpRepresentation_exponentialAtomicMeasure"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Functions/TraceExponentialBranchRepresentation.lean",
+      "lines": 136,
+      "theorems": [
+        "exists_exterior_branches_sum_integral_eq_trace_matrixExp_sub_atoms",
+        "exists_exterior_branches_sum_integral_eq_trace_matrixExp_sub_atoms_fixed_circle",
+        "exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Functions/TraceExponentialContour.lean",
+      "lines": 451,
+      "theorems": [
+        "circleIntegral_exp_add_mul_eq_of_differentiableOn_exterior",
+        "traceExponentialCircleDensity_eq_of_differentiableOn_exterior",
+        "two_pi_i_inv_mul_circleIntegral_exp_add_mul_div_sub_eq",
+        "intervalIntegrable_exp_mul_circleIntegral_exp_add_mul",
+        "intervalIntegrable_exp_mul_traceExponentialCircleDensity",
+        "integral_exp_mul_traceExponentialCircleDensity_eq_sum_integral",
+        "integral_exp_mul_circleIntegral_exp_add_mul",
+        "integral_exp_mul_circleIntegral_exp_add_mul_eq_sub_atom",
+        "sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_sub_atoms",
+        "sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_of_trace",
+        "differentiable_trace_matrixExp_sub_smul",
+        "sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_trace_matrixExp_sub_atoms",
+        "integral_exp_mul_traceExponentialCircleDensity_eq_trace_matrixExp_sub_atoms"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Functions/TraceExponentialContourReal.lean",
+      "lines": 172,
+      "theorems": [
+        "normalized_circleIntegral_exp_add_mul_im_eq_zero",
+        "sum_ite_normalized_circleIntegral_exp_add_mul_im_eq_zero",
+        "exists_exterior_eigenvalue_branches_real_circle_density",
+        "exists_exterior_branches_integral_real_circleDensity_eq_traceExp_sub_atoms"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Functions/TraceExponentialMeasure.lean",
+      "lines": 89,
+      "theorems": [
+        "traceExp_add_smul_eq_sum_of_diagonalization",
+        "exists_isCompactExpRepresentation_traceExp_of_commute",
+        "exists_isCompactExpRepresentation_traceExp_of_tendsto"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Functions/TraceExponentialSpectralRepresentation.lean",
+      "lines": 68,
+      "theorems": [
+        "exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms_of_isHermitian"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Functions/TraceExponentialSpectrum.lean",
+      "lines": 106,
+      "theorems": [
+        "exists_eigenbasis_of_injective_mem_spectrum",
+        "spectrum_eq_range_of_injective_mem_spectrum",
+        "trace_matrixExp_eq_sum_exp_of_eigenbasis",
+        "trace_matrixExp_eq_sum_exp_of_injective_mem_spectrum"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Perturbation/ExteriorEigenvalueBranches.lean",
+      "lines": 128,
+      "theorems": [
+        "exists_exterior_eigenvalue_branches_of_diagonal",
+        "exists_exterior_eigenvalue_branches_sub_real_diagonal"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Perturbation/ExteriorEigenvalueReflection.lean",
+      "lines": 137,
+      "theorems": [
+        "conj_mem_spectrum_conjTranspose",
+        "eventually_exterior_eigenvalue_branches_conj_eq",
+        "exists_exterior_eigenvalue_branches_sub_real_diagonal_conj_eq"
+      ]
+    },
+    {
+      "path": "NLAlib/Matrix/Perturbation/SimpleEigenvalueAnalyticBranch.lean",
+      "lines": 250,
+      "theorems": [
+        "analyticAt_simpleEigenvalueSchurFunction",
+        "exists_analytic_simpleEigenvalueSchurFunction_branch",
+        "exists_analytic_eigenvalue_branch_of_scalar_block",
+        "exists_analytic_eigenvalue_branch_of_diagonal",
+        "exists_analytic_eigenvalue_branch_diagonal_expansion",
+        "exists_exterior_eigenvalue_branch_of_diagonal"
+      ]
+    }
+  ],
+  "optional_support_api": "An explicit upper-support-vanishing theorem for the untruncated contour density is not exposed. The target measure can instead be constructed by restricting its density to the compact spectral interval, using the proved interval transform identity.",
+  "atlas_counts": {
+    "proved": 390,
+    "candidate": 116,
+    "assumed": 1,
+    "scaffold": 6
+  }
+}

@@ -1,10 +1,15 @@
 import NLAlib.ForMathlib.MeasureTheory.AbsoluteContinuity
 import NLAlib.ForMathlib.MeasureTheory.AffineDifferentiation
 import NLAlib.ForMathlib.MeasureTheory.AffineSeries
+import NLAlib.ForMathlib.MeasureTheory.CircleIntegralFubini
+import NLAlib.ForMathlib.MeasureTheory.CircleIntegralReflection
+import NLAlib.ForMathlib.MeasureTheory.CompactExponential
+import NLAlib.ForMathlib.MeasureTheory.CompactLaplaceLimit
 import NLAlib.ForMathlib.MeasureTheory.CompactSupportDifferentiation
 import NLAlib.ForMathlib.MeasureTheory.ConditionalComparison
 import NLAlib.ForMathlib.MeasureTheory.ConditionalJensen
 import NLAlib.ForMathlib.MeasureTheory.ConditionalParameterJensen
+import NLAlib.ForMathlib.MeasureTheory.ExponentialAtomic
 import NLAlib.ForMathlib.MeasureTheory.FinitePolynomialMoments
 import NLAlib.ForMathlib.MeasureTheory.IndependentSections
 import NLAlib.ForMathlib.MeasureTheory.IntegrableSup

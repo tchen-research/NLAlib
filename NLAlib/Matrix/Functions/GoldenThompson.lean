@@ -22,17 +22,6 @@ open scoped Matrix.Norms.L2Operator MatrixOrder ComplexOrder
 namespace NLAlib
 open Matrix
 
-private theorem diagonal_real_isHermitian {ι : Type*} [DecidableEq ι] (h : ι → ℝ) :
-    (diagonal fun i => (h i : ℂ)).IsHermitian := by
-  exact isHermitian_diagonal_of_self_adjoint _ (by ext i; simp)
-
-private theorem matrixExp_diagonal_real {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (h : ι → ℝ) :
-    matrixExp (diagonal fun i => (h i : ℂ)) =
-      diagonal fun i => (Real.exp (h i) : ℂ) := by
-  rw [matrixExp, ← CFC.real_exp_eq_normedSpace_exp (diagonal_real_isHermitian h)]
-  exact cfc_diagonal_real Real.exp h
-
 private theorem traceExp_add_matrixLog_coordinatePinch {d : ℕ} [NeZero d]
     (h : Fin d → ℝ) (X : Matrix (Fin d) (Fin d) ℂ) (hX : X.PosDef) (k : Fin d) :
     (coordinatePinch k X).PosDef ∧
@@ -43,7 +32,8 @@ private theorem traceExp_add_matrixLog_coordinatePinch {d : ℕ} [NeZero d]
   have hR : Rᴴ = R := conjTranspose_coordinateReflection k
   have hR2 : R * R = 1 := coordinateReflection_mul_self k
   have hRX : (R * X * R).PosDef := (posDef_reflection_conj_iff R X hR hR2).2 hX
-  have hc := lieb_concavity H (diagonal_real_isHermitian h)
+  have hc := lieb_concavity H
+    (Matrix.isHermitian_diagonal_of_self_adjoint (fun i => (h i : ℂ)) (by ext i; simp))
   have hp := hc.1 hX hRX (show (0 : ℝ) ≤ 1 / 2 by norm_num)
     (show (0 : ℝ) ≤ 1 / 2 by norm_num) (show (1 / 2 : ℝ) + 1 / 2 = 1 by norm_num)
   have he := hc.2 hX hRX (show (0 : ℝ) ≤ 1 / 2 by norm_num)
